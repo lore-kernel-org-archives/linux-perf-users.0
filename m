@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43ABC4F55D1;
-	Wed, 16 Sep 2026 11:48:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0359E485CE7;
+	Wed, 16 Sep 2026 11:48:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789559338; cv=none; b=X7oH7bhq1mns2J50yGdENeO/ZOqXITmf+W+gk9KD7psWT02otw0cKlHXgu29K0tLzznzKEBj1sfg7PyqPjeep2MqFu8FMrUOKqNnfaUTMMO+k4tzStHA6LxXy/3hbg/pcY2jDxocWSJxwwvMdOnug09OxWT+yDEogTQOa7lZU7Q=
+	t=1789559336; cv=none; b=sYQuRugRqxiBl+deXIHjsqk9BoHzwouVSlrBQZLpdCV2EtCrSja2laTN+hL2JsrY8aX/4kkeZmYBC5p2i2/euGPdRln6QeJJYDptDx7/Hsc0mTO774hj2e2Ys3lRBB1kIeoR842cWb5qcu8Su+1nF/oi2yZB8gWPvvizfHmRjrA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789559338; c=relaxed/simple;
-	bh=0RrEKkQQ18XV851YtvsGnUyVTlvFAQUr15uGrg82rLw=;
+	s=arc-20240116; t=1789559336; c=relaxed/simple;
+	bh=vcrRIdYWh+TkOxK4o1c2gaMNRQIaB920uKIymM152zw=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=miuUBNveW3hEbH6cqnhY56rdSNbZ/SMVNcQyQd4ZSc6Gz+ckrLXtPVLBXTj+Y06TJA4rmlCS09jLEpDPr0Vl4UWOoJUbrOSy3GThksJdXejU7Cb5wWn7ccXp+eZ8C8uEFR70tlw/zT/C3LYz9bDm2xzBs6Tx5Fx0BHNPXzQOgZo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ASHTa6iq; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version; b=iTeG4wqY3JmDvaVhGhzTHDCYRWMVHkMa4elBFwznbGKn77c/fJugeuA+nivA1+Rc1BSjcB4ecAt9GYaAxzrHDNetKZIrYNCtwTA78Q2zpzeUTZirdQcykUrDv0MgLQlJnNIyM6oj9c5huDupXZxByY+vh//OqtiWv9sNzydj+o0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DFoKHSS6; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ASHTa6iq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 056811F00893;
-	Wed, 16 Sep 2026 11:48:42 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DFoKHSS6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3247A1F000FF;
+	Wed, 16 Sep 2026 11:48:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789559327;
-	bh=xZGMU8f+NYH2x2PwqSoReKlyDd/t+XJGm61nMsMGlLk=;
+	s=k20260515; t=1789559322;
+	bh=PesbCEUBP8rgUhZmjbD7d1nULNdWHibHSP58/nvi8YQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=ASHTa6iqTwszFANfnEMNr5TgcLI6llu8N8zqEJ98kHzhf+9DP9/PHsO8Q9+5GEelR
-	 VDvLxA8k1OclFgWD8TlXC/Dj2SsoK8jri1eJ6Bs4pZZF9BCcjk1TOOaSGQswE1QQ+c
-	 1yru528UZXO+OVfBDs66+5M3+qQOFVZ1A7DXeklOofKTzQlf7DuvkgZtKdv2k1KnNj
-	 9ybjE0rSaL6z+O7ys3LMRgD1NordEMjmUjuRWfUyr+/1GTzG+EUMg4BcziGj22GSEZ
-	 3mhw6yQ+gYsmBaHvap9B66xhHyc6iTwtWuNY63DfVAcWOCkmUN8XmrvpnaoW7yv84E
-	 01d8iPovR1oFg==
+	b=DFoKHSS6Wc5dAw+q2UZL7zludAYyTJLK7sU6VXzaC/EgL+ifZGwqe+tXbeFWLTK3Y
+	 xYYmZaNVHz0yt7j5wrnM/x1EZKd9ONqtPAlP3Y4AgWzYmtGQpvfpmTTps7TBAGaCQb
+	 gaG2IdzFcqsE3SbxRXqXGyAt8BzyQeQ0/KbPm/Jl3zGYgHB6hhXUziffxFRpSdJJuK
+	 Oaww+z1S4/3LbE10TSfYyfrb2o1Nh/7rZNwCbRrbB3qUwBGS5R4mOkEmG5MRUkH/26
+	 UOb0NCu96g6EsXYrYED2uFXM8l3tZGWcix47grRIUjqYv3XdU6rrwPhPODutv5onL1
+	 CzqMwoKfjzusQ==
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Namhyung Kim <namhyung@kernel.org>
 Cc: Ingo Molnar <mingo@kernel.org>,
@@ -38,9 +38,9 @@ Cc: Ingo Molnar <mingo@kernel.org>,
 	linux-kernel@vger.kernel.org,
 	linux-perf-users@vger.kernel.org,
 	Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 12/12] perf mem record: Use the IBS swfilt filter when available
-Date: Wed, 16 Sep 2026 08:47:39 -0300
-Message-ID: <20260916114740.48230-13-acme@kernel.org>
+Subject: [PATCH 11/12] perf mem record: Request PERF_SAMPLE_CPU by default
+Date: Wed, 16 Sep 2026 08:47:38 -0300
+Message-ID: <20260916114740.48230-12-acme@kernel.org>
 X-Mailer: git-send-email 2.55.0
 In-Reply-To: <20260916114740.48230-1-acme@kernel.org>
 References: <20260916114740.48230-1-acme@kernel.org>
@@ -54,196 +54,82 @@ Content-Transfer-Encoding: 8bit
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-IBS events with exclude_{user,kernel} bits, as used in per-thread mode
-when kernel samples are not allowed, are rejected by the kernel on
-hardware without the privilege filter, so a per-thread 'perf mem
-record' fails:
+The data-type profiling per-sample stream keys cross-CPU contention on
+sample->cpu: without PERF_SAMPLE_CPU the cpu field is the (u32)-1 "no
+CPU info" sentinel, documented as such in perf_session__deliver_event(),
+and same-instance reads and writes from different cores are
+indistinguishable from same-CPU traffic, so pahole's false-sharing
+detector cannot tell them apart.
 
-  $ perf mem record -o /dev/null -- true
-  Error:
-  Failure to open event 'ibs_op/ldlat=0/u' on PMU 'ibs_op' which will be removed.
-  Invalid event (ibs_op/ldlat=0/u) in per-thread mode, enable system wide with '-a'.
+builtin-record.c already defines --sample-cpu and 'perf mem record'
+forwards unknown options to the record parser, so passing it explicitly
+works today; make it the default, next to the -d (addr) and -W (weight)
+the command already requests, documenting it in perf-mem(1).
 
-Kernel v6.14 added swfilt, a software privilege filter that makes those
-events usable per-thread, exposed as the 'swfilt' format term
-(d29e744c71673a71 "perf/x86: Relax privilege filter restriction on AMD
-IBS"):
+The rec_argv array is sized as nine arguments per memory PMU plus the
+user arguments, not counting the arguments __cmd_record() adds itself,
+up to eight with all the optional flags.  On PMUs with separate load and
+store events the four event arguments plus the fixed ones already filled
+the array to its last slot, so this new argument would write past it;
+reserve space for the fixed arguments explicitly.
 
-  $ perf record -e ibs_op/ldlat=0,swfilt=1/ -- true
-
-Give the ibs_op memory events a name variant with the swfilt term, used
-when the PMU exposes it as a format term, keeping the names that need
-system wide mode otherwise.
-
-The variant is used even for records that end up without exclude bits,
-e.g. a plain system wide one: perf record adds those bits itself when
-the first open fails with EACCES on an unprivileged setup, after the
-event name has been built, so the term has to be in it for that retry:
-
-  $ perf record -v -e ibs_op/ldlat=0/ -- true
-  kernel.perf_event_paranoid=2, trying to fall back to excluding kernel and hypervisor  samples
-  Failure to open event 'ibs_op/ldlat=0/u' on PMU 'ibs_op' which will be removed.
-  Invalid event (ibs_op/ldlat=0/u) in per-thread mode, enable system wide with '-a'.
-
-With no exclude bits the kernel discards nothing.
-
-This makes the per-thread 'perf mem record' that the data type profiling
-shell test does work: the skip added by patch 1 is driven by that record
-failing, so it now runs on AMD kernels with swfilt, and keeps skipping on
-kernels without it.  The 'Test data symbol' shell test matches the exact
-ibs_op event string, so its regex now accepts terms added after
-ldlat=150, and it only checks ldlat when the captured term has it: on
-uarch without ldlat the swfilt variant makes the capture non-empty
-("swfilt=1"), that the old 'ldlat=0' check would reject.
-
-Suggested-by: Namhyung Kim <namhyung@kernel.org>
 Assisted-by: LLM
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/arch/x86/util/mem-events.c      | 17 ++++++++++++++---
- tools/perf/tests/shell/test_data_symbol.sh |  6 ++++--
- tools/perf/util/mem-events.c               | 21 +++++++++++++++++----
- tools/perf/util/mem-events.h               |  2 ++
- 4 files changed, 37 insertions(+), 9 deletions(-)
+ tools/perf/Documentation/perf-mem.txt |  4 ++++
+ tools/perf/builtin-mem.c              | 18 ++++++++++++++++--
+ 2 files changed, 20 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/arch/x86/util/mem-events.c b/tools/perf/arch/x86/util/mem-events.c
-index b38f519020ff8c6f..034053dc762101dc 100644
---- a/tools/perf/arch/x86/util/mem-events.c
-+++ b/tools/perf/arch/x86/util/mem-events.c
-@@ -7,7 +7,10 @@
+diff --git a/tools/perf/Documentation/perf-mem.txt b/tools/perf/Documentation/perf-mem.txt
+index 4d164836d0943119..fe51c5e3333dc4a0 100644
+--- a/tools/perf/Documentation/perf-mem.txt
++++ b/tools/perf/Documentation/perf-mem.txt
+@@ -14,6 +14,10 @@ DESCRIPTION
+ -----------
+ "perf mem record" runs a command and gathers memory operation data
+ from it, into perf.data. Perf record options are accepted and are passed through.
++It also requests the address (-d), the weight (-W, where supported) and the
++CPU id (--sample-cpu) of every sampled access by default; the CPU id is what
++lets per-sample analysis tell reads and writes to the same data from
++different cores apart from same-CPU traffic.
  
- #define MEM_LOADS_AUX		0x8203
+ "perf mem report" displays the result. It invokes perf report with the
+ right set of options to display a memory access profile. By default, loads
+diff --git a/tools/perf/builtin-mem.c b/tools/perf/builtin-mem.c
+index 6101a26b3a781e69..6f38cda1a45ada16 100644
+--- a/tools/perf/builtin-mem.c
++++ b/tools/perf/builtin-mem.c
+@@ -99,8 +99,13 @@ static int __cmd_record(int argc, const char **argv, struct perf_mem *mem,
+ 	argc = parse_options(argc, argv, options, record_usage,
+ 			     PARSE_OPT_KEEP_UNKNOWN);
  
--#define E(t, n, s, l, a) { .tag = t, .name = n, .event_name = s, .ldlat = l, .aux_event = a }
-+#define E_INIT(t, n, s, l, a, sf) {					\
-+	.tag = t, .name = n, .event_name = s, .swfilt_name = sf,	\
-+	.ldlat = l, .aux_event = a }
-+#define E(t, n, s, l, a) E_INIT(t, n, s, l, a, NULL)
+-	/* Max number of arguments multiplied by number of PMUs that can support them. */
+-	rec_argc = argc + 9 * (perf_pmu__mem_events_num_mem_pmus(pmu) + 1);
++	/*
++	 * Max number of arguments multiplied by number of PMUs that can
++	 * support them, plus the arguments added directly below, at most:
++	 * "record", "-W", "-d", "--sample-cpu", "--phys-data",
++	 * "--data-page-size", "--all-user" and "--all-kernel".
++	 */
++	rec_argc = argc + 8 + 9 * (perf_pmu__mem_events_num_mem_pmus(pmu) + 1);
  
- struct perf_mem_event perf_mem_events_intel[PERF_MEM_EVENTS__MAX] = {
- 	E("ldlat-loads",	"%s/mem-loads,ldlat=%u/P",	"mem-loads",	true,	0),
-@@ -21,14 +24,22 @@ struct perf_mem_event perf_mem_events_intel_aux[PERF_MEM_EVENTS__MAX] = {
- 	E(NULL,			NULL,				NULL,		false,	0),
- };
+ 	if (mem->cpu_list)
+ 		rec_argc += 2;
+@@ -135,6 +140,15 @@ static int __cmd_record(int argc, const char **argv, struct perf_mem *mem,
  
-+/*
-+ * IBS events with exclude_{user,kernel} bits set, as used by perf to
-+ * record per-thread when kernel samples are not allowed, are rejected
-+ * by the kernel on hardware without the privilege filter unless the
-+ * swfilt software filter is used, so these events carry a variant of
-+ * their names with the swfilt term, used by perf_pmu__mem_events_name()
-+ * when the kernel exposes the term.
-+ */
- struct perf_mem_event perf_mem_events_amd[PERF_MEM_EVENTS__MAX] = {
- 	E(NULL,		NULL,		NULL,	false,	0),
- 	E(NULL,		NULL,		NULL,	false,	0),
--	E("mem-ldst",	"%s//",		NULL,	false,	0),
-+	E_INIT("mem-ldst",	"%s//",		NULL,	false,	0, "%s/swfilt=1/"),
- };
- 
- struct perf_mem_event perf_mem_events_amd_ldlat[PERF_MEM_EVENTS__MAX] = {
- 	E(NULL,		NULL,		NULL,	false,	0),
- 	E(NULL,		NULL,		NULL,	false,	0),
--	E("mem-ldst",	"%s/ldlat=%u/",	NULL,	true,	0),
-+	E_INIT("mem-ldst",	"%s/ldlat=%u/",	NULL,	true,	0, "%s/ldlat=%u,swfilt=1/"),
- };
-diff --git a/tools/perf/tests/shell/test_data_symbol.sh b/tools/perf/tests/shell/test_data_symbol.sh
-index d61b5659a46d9a77..52c837fddb639595 100755
---- a/tools/perf/tests/shell/test_data_symbol.sh
-+++ b/tools/perf/tests/shell/test_data_symbol.sh
-@@ -65,15 +65,17 @@ if (($is_amd >= 1)); then
- 	# --ldlat on AMD:
- 	# o Zen4 and earlier uarch does not support ldlat
- 	# o Even on supported platforms, it's disabled (--ldlat=0) by default.
-+	# o Kernels with the swfilt term add it even when ldlat is not
-+	#   supported, so only check ldlat when the term is present.
- 	ldlat=${BASH_REMATCH[1]}
--	if [[ -n $ldlat ]]; then
-+	if [[ $ldlat == *ldlat=* ]]; then
- 		if ! [[ "$ldlat" =~ ldlat=0 ]]; then
- 			echo "ERROR: ldlat not initialized to 0?"
- 			exit 1
- 		fi
- 
- 		mem_events="$(perf mem record -v --ldlat=150 -e list 2>&1)"
--		if ! [[ "$mem_events" =~ ^mem-ldst.*ibs_op/ldlat=150/.*available ]]; then
-+		if ! [[ "$mem_events" =~ ^mem-ldst.*ibs_op/ldlat=150[,/].*available ]]; then
- 			echo "ERROR: --ldlat not honored?"
- 			exit 1
- 		fi
-diff --git a/tools/perf/util/mem-events.c b/tools/perf/util/mem-events.c
-index 0b49fce251fcc184..8f74cd085e500231 100644
---- a/tools/perf/util/mem-events.c
-+++ b/tools/perf/util/mem-events.c
-@@ -82,6 +82,7 @@ static const char *perf_pmu__mem_events_name(struct perf_pmu *pmu, int i,
- 					     char *buf, size_t buf_size)
- {
- 	struct perf_mem_event *e;
-+	const char *name;
- 
- 	if (i >= PERF_MEM_EVENTS__MAX || !pmu)
- 		return NULL;
-@@ -90,24 +91,36 @@ static const char *perf_pmu__mem_events_name(struct perf_pmu *pmu, int i,
- 	if (!e || !e->name)
- 		return NULL;
+ 	rec_argv[i++] = "-d";
  
 +	/*
-+	 * Use the swfilt variant of the name when the PMU exposes the term.
-+	 * It is not conditional on the event already having exclude bits:
-+	 * perf record adds those bits itself when the first open fails with
-+	 * EACCES on an unprivileged setup, after this name has been built,
-+	 * and that retry only succeeds with the term in the name.  With no
-+	 * exclude bits the kernel doesn't discard anything.
++	 * The data-type profiling per-sample stream keys cross-CPU
++	 * contention on sample->cpu (PERF_SAMPLE_CPU); without it the cpu
++	 * field is the (u32)-1 'no CPU info' sentinel and same-instance
++	 * reads and writes from different cores are indistinguishable
++	 * from same-CPU traffic.
 +	 */
-+	name = e->name;
-+	if (e->swfilt_name && perf_pmu__has_format(pmu, "swfilt"))
-+		name = e->swfilt_name;
++	rec_argv[i++] = "--sample-cpu";
 +
- 	if (i == PERF_MEM_EVENTS__LOAD || i == PERF_MEM_EVENTS__LOAD_STORE) {
- 		if (e->ldlat) {
- 			if (!e->aux_event) {
- 				/* ARM and Most of Intel */
- 				scnprintf(buf, buf_size,
--					  e->name, pmu->name,
-+					  name, pmu->name,
- 					  perf_mem_events__loads_ldlat);
- 			} else {
- 				/* Intel with mem-loads-aux event */
- 				scnprintf(buf, buf_size,
--					  e->name, pmu->name, pmu->name,
-+					  name, pmu->name, pmu->name,
- 					  perf_mem_events__loads_ldlat);
- 			}
- 		} else {
- 			if (!e->aux_event) {
- 				/* AMD and POWER */
- 				scnprintf(buf, buf_size,
--					  e->name, pmu->name);
-+					  name, pmu->name);
- 			} else {
- 				return NULL;
- 			}
-@@ -117,7 +130,7 @@ static const char *perf_pmu__mem_events_name(struct perf_pmu *pmu, int i,
- 
- 	if (i == PERF_MEM_EVENTS__STORE) {
- 		scnprintf(buf, buf_size,
--			  e->name, pmu->name);
-+			  name, pmu->name);
- 		return buf;
- 	}
- 
-diff --git a/tools/perf/util/mem-events.h b/tools/perf/util/mem-events.h
-index 5b98076904b0b689..41f628fad10709b9 100644
---- a/tools/perf/util/mem-events.h
-+++ b/tools/perf/util/mem-events.h
-@@ -11,6 +11,8 @@ struct perf_mem_event {
- 	u32		aux_event;
- 	const char	*tag;
- 	const char	*name;
-+	/* Name with the swfilt software privilege filter, when supported. */
-+	const char	*swfilt_name;
- 	const char	*event_name;
- };
+ 	if (mem->phys_addr)
+ 		rec_argv[i++] = "--phys-data";
  
 -- 
 2.55.0
