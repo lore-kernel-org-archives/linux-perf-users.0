@@ -1,78 +1,189 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44FA33DB32B
-	for <linux-perf-users@vger.kernel.org>; Wed, 16 Sep 2026 12:01:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D20D112D1F1
+	for <linux-perf-users@vger.kernel.org>; Wed, 16 Sep 2026 12:01:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789560074; cv=none; b=JvVQ9TmDHZxxWLUZcVsN5eEc2Zr9lR1P2FHiCi4VT90h2lpFsjBgGy8pRcrOgGXIqEJOs5E7o/UFwp1b8qaSiRs3FD6I2FnTmJC8OOsmLknCyWmreDvZQscvR0YWCruZ60BTFtcBEJ9V83PvTB2Msw8/dC6r8vWnLOaEK7oMTiw=
+	t=1789560106; cv=none; b=Fq7N27tbhLMclQHpFXnyexcM5M++GpAVnNmhXmyzxfHKzMpeKrJDhtr3Bf1/TGkLfVeD5esotkuK84BLeRRD2v4ps1Y2/d/dyY1soQd9jF88r9yIK0JA6NSioQKBSix6gB7O/2kyd5yBh1u4DR955YwtUf7AhojW/7nCNsDocFM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789560074; c=relaxed/simple;
-	bh=2zufNHMU+QG2XDMLvtMKK1cq+T4nR1CBmReUnb4BPOQ=;
+	s=arc-20240116; t=1789560106; c=relaxed/simple;
+	bh=IDgP9hFKwaV02R/GDgsO5B/S5BjlvgePgYg3h/L3SVg=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=NuwxEF68jGt5R/bJ0sFhM3KgQ30zkki0nqOc+Ld46AOvK++Tk8bWVWgEfPOx8zxpJ3QWkZ1knnvriI9P13E9eKgEaNGycxP7sSRBbRjMMRaxG0rN4IJVJ5tQhB3XuRnGKmiV+LALiDJ+KIfoQLaowXoBFICHMHevfU6vTcVKRyE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CSDAF8V8; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=ECD6OS2mqX29oGFaX1AwqUtZaGsrFzmsoOlx9BNb2Mk/Hkr6Z/AJWg6VsOykwniuTimahl96Ta/XJW+PpJFmBGLGh6e2WcIJgiC6oDTqkPrHplmW2eM80a0JmJheZqjQ7ebOVjv02bH8ZWrPzVJbRxsEM2WnKI2LP4xKQgmyUB0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UEXEt9GC; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CSDAF8V8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2293C1F00893;
-	Wed, 16 Sep 2026 12:01:03 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UEXEt9GC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D22991F00893;
+	Wed, 16 Sep 2026 12:01:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789560063;
-	bh=wFLb8PTHP1B2bubT0hxb1f9MRytSxVi3NjQq8dG7Nww=;
+	s=k20260515; t=1789560098;
+	bh=DW8K83nEtopkIl/ftA1gjV38a/VVnX+xVlyJV9HaGAk=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=CSDAF8V8Q51ylnZ5KJZrkWG5sy3LEirabOZbSmElUwI4+m5iMuuQ9Ufe13JxvHjEf
-	 JHEwOncMtP+N0lPdQ3jzG5uYWOqCEQejF2SmEKKliRb/u30pZf4TANk4KZPnH93uuG
-	 O8IKNredLqLwtNHW+CdQn2c+E8wyj5pHGjm4SYKdcPEPyPMtYzu0zbtrnrr0ZsZFbS
-	 LHac79SZcTIZhb9bWEcZ5PTwNy4Od25/0lFWBCf99D2KjySrU69GnbDhpxU/wyT5q8
-	 5ZmRe2BhgYQhT8bD/gdH8zyVFM7fFqCGJySe593X+WXeLKOWOW8y1y/FCCVpKWry5o
-	 Z0HC/BXgupmOA==
+	b=UEXEt9GCxwXeJRuRE+6VUoGdOs2Rq9qXPm8h3ypSlQkOoi5f66Xr5UQOFXrwvuqgG
+	 7MTD3h7LWt8mQkiBlsiOvLa9sHabrltJxYiKeZHW5gzdTfUMFCUh1rMJD2BTYQhlbk
+	 OHSSvliB/pWrlvBHRBk/WNVUqkkUdp6akBV2dVDd8/X+c+cLKOwfhm1ALlNWnf6lJh
+	 JY89HvjZRkSAZExkduXuccUzpOPiUsviAsncDF/nZBlfRYxaWL0cpGguTLogkG+6Vz
+	 dLuCEEgFv4eypm8mo8oRVfVNZJ6cwTpnF+raySAvRkuvEYD7jqHoGNnrGVDs/oViTZ
+	 MRK+ibqCkYJ9A==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 10/12] perf annotate-data: Resolve type DIEs in the
- debug file they came from
+Subject: Re: [PATCH 03/12] perf config: Move perf_config__set_variable() to
+ util/config.c
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Arnaldo Carvalho de Melo" <acme@kernel.org>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260916114740.48230-11-acme@kernel.org>
+In-Reply-To: <20260916114740.48230-4-acme@kernel.org>
 References: <20260916114740.48230-1-acme@kernel.org>
- <20260916114740.48230-11-acme@kernel.org>
+ <20260916114740.48230-4-acme@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Wed, 16 Sep 2026 12:01:02 +0000
-Message-Id: <20260916120103.2293C1F00893@smtp.kernel.org>
+Date: Wed, 16 Sep 2026 12:01:38 +0000
+Message-Id: <20260916120138.D22991F00893@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-> From: Arnaldo Carvalho de Melo <acme@redhat.com>
->=20
-> A 'perf report -s type' on a 783 MB AMD IBS data type profiling session
-> hangs, burning all of a CPU and producing no output:
->=20
->   =E2=AC=A2 [acme@toolbx perf-tools-next]$ perf report --progress -s type=
- -i perf.data.ibs > /dev/null
->   Processing events... [100.0%] 746M / 746M
->   Merging related events... [ 58.0%] 293828 / 506686
->   Merging related events... [ 59.0%] 298894 / 506686
->   Merging related events... [ 60.0%] 303960 / 506686
->   Merging related events... [ 61.0%] 309026 / 506686
->   [ ... nothing else, ever ... ]
->=20
-> It is a spin and not a slow path: with perf-stuck the CPU time used
-> grows by a whole interval on every sample, while the [stack] mapping,
-> [ ... ]
->=20
-> Fixes: 06b2ce75386df04b ("perf annotate-data: Maintain variable type info=
-")
-> Fixes: 55ee3d005d62279d ("perf annotate-data: Add a cache for global vari=
-able types")
-> Assisted-by: LLM
-> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Thank you for your contribution! Sashiko AI review found 2 potential issue(=
+s) to consider:
+- [High] perf: hardcoded system_config=3Dfalse wipes out system config file
+- [Low] perf: missing limits.h inclusion for PATH_MAX causes musl build fai=
+lure
+--
 
-Sashiko has reviewed this patch and found no issues. It looks great!
+commit dd0d85968ed396c9cbcce556b124511aed73efb9
+Author: Arnaldo Carvalho de Melo <acme@redhat.com>
+
+    perf config: Move perf_config__set_variable() to util/config.c
+   =20
+    It is code from the 'perf config' builtin to set a variable in the
+    configuration file perf is using, the user's ~/.perfconfig, or the file
+    named by the PERF_CONFIG environment variable when it is set, rewriting
+    that file from the config set, the same rewrite 'perf config' does,
+    i.e. the comments in it are not preserved, as the config set carries
+    just the key-value pairs.  It has to honour PERF_CONFIG, that makes perf
+    read only that file: the config set is loaded from it, so writing
+    ~/.perfconfig would replace it with the exclusive file's entries.
+
+> diff --git a/tools/perf/util/config.c b/tools/perf/util/config.c
+> index 31c6618d3b3da..3f9753b2a7bdf 100644
+> --- a/tools/perf/util/config.c
+> +++ b/tools/perf/util/config.c
+
+[ ... ]
+
+> @@ -876,6 +876,76 @@ void perf_config__exit(void)
+>  	config_set =3D NULL;
+>  }
+> =20
+> +int perf_config_set__write(struct perf_config_set *set,
+> +			   const char *file_name, bool system_config)
+> +{
+> +	struct perf_config_section *section =3D NULL;
+> +	struct perf_config_item *item =3D NULL;
+> +	FILE *fp;
+> +
+> +	fp =3D fopen(file_name, "w");
+> +	if (!fp)
+> +		return -1;
+> +
+> +	fprintf(fp, "# this file is auto-generated.\n");
+> +
+> +	/* overwrite configvariables */
+> +	perf_config_sections__for_each_entry(&set->sections, section) {
+> +		if (!system_config && section->from_system_config)
+> +			continue;
+> +		fprintf(fp, "[%s]\n", section->name);
+> +
+> +		perf_config_items__for_each_entry(&section->items, item) {
+> +			if (!system_config && item->from_system_config)
+> +				continue;
+> +			if (item->value)
+> +				fprintf(fp, "\t%s =3D %s\n",
+> +					item->name, item->value);
+> +		}
+> +	}
+> +	fclose(fp);
+> +
+> +	return 0;
+> +}
+> +
+> +/*
+> + * Set @var=3D@value in the configuration file perf is using: the user's
+> + * ~/.perfconfig, or the file named by the PERF_CONFIG environment
+> + * variable.  The latter has to be honoured as it makes perf read only
+> + * that file, so the config set came from it and writing ~/.perfconfig
+> + * would replace it with the exclusive file's entries.  Rewriting the
+> + * file from the config set is the same rewrite 'perf config' does: the
+> + * comments are not preserved, as the config set carries just the
+> + * key-value pairs.
+> + */
+> +int perf_config__set_variable(const char *var, const char *value)
+> +{
+> +	char path[PATH_MAX];
+
+[Severity: Low]
+Does this file need an explicit #include <limits.h>? The function uses the
+PATH_MAX macro, and while glibc may implicitly include it through other
+headers, strict musl compilation might fail without the required
+POSIX-specified header.
+
+> +	char *user_config =3D mkpath(path, sizeof(path), "%s/.perfconfig", gete=
+nv("HOME"));
+> +	const char *config_filename =3D config_exclusive_filename ?: user_confi=
+g;
+> +	struct perf_config_set *set;
+> +	int ret =3D -1;
+> +
+> +	set =3D perf_config_set__new();
+> +	if (!set)
+> +		goto out_err;
+> +
+> +	if (perf_config_set__collect(set, config_filename, var, value) < 0) {
+> +		pr_err("Failed to add '%s=3D%s'\n", var, value);
+> +		goto out_err;
+> +	}
+> +
+> +	if (perf_config_set__write(set, config_filename, /*system_config=3D*/fa=
+lse) < 0) {
+
+[Severity: High]
+Could hardcoding system_config to false here risk wiping out the system
+configuration file?
+
+If a user sets PERF_CONFIG=3D/etc/perfconfig (setting config_exclusive_file=
+name),
+this call to perf_config__set_variable() will read that file. Because the f=
+ile
+path matches perf_etc_perfconfig(), all loaded items are flagged with
+from_system_config =3D true.
+
+When perf_config_set__write() is then called with system_config=3Dfalse, it
+checks:
+
+tools/perf/util/config.c:perf_config_set__write() {
+...
+		if (!system_config && section->from_system_config)
+			continue;
+...
+}
+
+This actively filters out items that originated from the system config, whi=
+ch
+could effectively truncate the file and cause data loss for the system-wide
+configuration.
+
+> +		pr_err("Failed to set the configs on %s\n", config_filename);
+> +		goto out_err;
+> +	}
+> +
+> +	ret =3D 0;
+> +out_err:
+> +	perf_config_set__delete(set);
+> +	return ret;
+> +}
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260916114740.4823=
-0-1-acme@kernel.org?part=3D10
-
+0-1-acme@kernel.org?part=3D3
