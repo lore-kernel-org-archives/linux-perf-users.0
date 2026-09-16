@@ -1,46 +1,47 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C8014E50D3;
-	Wed, 16 Sep 2026 18:54:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7619349B468;
+	Wed, 16 Sep 2026 19:02:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789584855; cv=none; b=BhyY/Y4WCy39v4k+ajZaIw/KiMpefuDIm9PkSKxouq434YTdYM5azp9AY7RlJr12/URUVXmkMBNIbaaHgE8awo9KfZJ7TkzSXozvXImVbeAaFoDrLyvydd3HFHJhmuEVPHl8SB9ub23VhDPh4bwJ+xq9kfivvBEcjp27tETmwsw=
+	t=1789585350; cv=none; b=JKHg1OQkrlGwKTanzr38Y3eZbxCBFVEJ5/T8QKS/qbAPS3o1NylnFO0vxnlZU5w/4dMEH21a3T/7WvP6fW5fWB81i8ZOSd0VMVt2MrAAOirTVdSv9f5LQ6I6C2W5JmVYM2gsMA44FtrZg8L48CtPN+rW3zDl5+h1ETi1gr9qVlw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789584855; c=relaxed/simple;
-	bh=nq4yxfPmxq8tg8A4+oWfRMiPvyMERaFSE2FqEAd1yc4=;
+	s=arc-20240116; t=1789585350; c=relaxed/simple;
+	bh=cx6YlY2EdJ+cNjWHxG0MUy1VTj9IPDy5W9mL2MWARdk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lMlQM7dhWTwfLu75gKvXsFoMklL3QQE7BS2+oXbkX82VrRQ/iT2ZmiO+TEwpPZZ3DLh6xduB0ovUYCOCe5o2GqtE8rUOSCM7fSoel3fQUHjmNHmHQhvxuuhB95rlOtvQaz7pdwCXAKPF+X3D8ebbzfuADGHYOOvDfDAEBclX0Z0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RId118fD; arc=none smtp.client-ip=100.103.45.18
+	 Content-Type:Content-Disposition:In-Reply-To; b=aSClskXDEoQ7mxOufLYu14/IDDh/cXlmfs2svf7P/bMdVjn0apAGy4OVW+s6jXKA03vjWI8Yc1fJFYOYNXKG1FPZyqYARGGKsyEe3O5zEt/VAqEUYxaYauG6J1Gsv5J60xzDF8QdFpoyDPfNhMtLKpntP87s7hyapvL9r8YEKHA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BD5h3PL0; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RId118fD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0C8651F000FF;
-	Wed, 16 Sep 2026 18:53:57 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BD5h3PL0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F14601F000FF;
+	Wed, 16 Sep 2026 19:02:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789584837;
-	bh=EUc04wLsH81TP/wK2o6rPFRNswhGGYkw4lx3QOdluX0=;
+	s=k20260515; t=1789585333;
+	bh=Xo27toqevnPdEBMDm6fesTvae198prwaWdMkd4Swf6Q=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=RId118fDO8PGYTbyDNE+4TnhP3BO7oB+RCHtfcCb0EkM/a2A76vHKhPX9PzGsTAHe
-	 mbv1Kdjmf2ArrTxxMTvz+v859UPCYf4yEor7EVwBefVdRDAsDOCR+7qegUHuB5Ri2t
-	 Z5YyS8EEZOnWmCdb31WQVq+KOUCxqgwLz9rGBT7di38zEeKkSYr5nIeWtLv/TFnZvA
-	 v/HDlgurKMr6U3P/P3DwYamSOSj/37H/9i6bDhY2UsZDFF9eMjamqXudVFrZr3gSjB
-	 TIzYfuUXMhfnP4M6+ifaFGX/pJe3imJuVWK8IaHlP8fCpx4jtQo4pC0onWiZO+o4N4
-	 j7Jg4XtAm3Z/A==
-Date: Wed, 16 Sep 2026 11:53:55 -0700
-From: Namhyung Kim <namhyung@kernel.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
+	b=BD5h3PL0Mn1piVpYcwogBCSkESdoFyZgEqOt/AKS1UHLApsUTjFdJjas+gUBwhoVG
+	 8Sy9JHm0QVLkSPIrrrF7QRdmKXpvjppCHX5o5Mnc31MV9KKQ/YUn0J89eGcptHctJW
+	 b9tGU42q56jK4TBiWw/RLTQmr6HMSb6SgBtqZbwn0a8C1+4HQCOOqlZWKSbEF1AP6G
+	 sSjzjSQ8hY5kgJ59q6DmbOzVLmU4jThPTLd36acQHoEBFBRLpFi3RpmLgja0PFwph7
+	 W+iSCkPGaZ1J/PZdGAn1uH7SlF7Wqyr+SQGYXra7Yw4YhCnhNmVKVvNmalOlTqUASu
+	 gVA3cPvgSRjsA==
+Date: Wed, 16 Sep 2026 16:02:10 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Ian Rogers <irogers@google.com>
+Cc: Namhyung Kim <namhyung@kernel.org>, Ingo Molnar <mingo@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
 	James Clark <james.clark@linaro.org>, Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
 	Adrian Hunter <adrian.hunter@intel.com>,
 	Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org,
 	linux-perf-users@vger.kernel.org,
 	Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: Re: [PATCH 04/12] perf debuginfo: Let the user skip and disable
- debuginfod fetches
-Message-ID: <aqrlw1YzYHFBdvcz@google.com>
+Subject: Re: [PATCH 02/12] perf debuginfo: Fetch debuginfo keyed by build ID
+ using debuginfod
+Message-ID: <aqrnssk8iekDb2jC@x2>
 References: <20260916114740.48230-1-acme@kernel.org>
- <20260916114740.48230-5-acme@kernel.org>
+ <20260916114740.48230-3-acme@kernel.org>
+ <CAP-5=fWr46YKripkCvFHO23k+0SUHfGgYBTDc_qp=ev_Fucc1Q@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -49,111 +50,112 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20260916114740.48230-5-acme@kernel.org>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAP-5=fWr46YKripkCvFHO23k+0SUHfGgYBTDc_qp=ev_Fucc1Q@mail.gmail.com>
 
-On Wed, Sep 16, 2026 at 08:47:31AM -0300, Arnaldo Carvalho de Melo wrote:
-> From: Arnaldo Carvalho de Melo <acme@redhat.com>
-> 
-> When a fetch is in progress, the way it prints progress is how one
-> gets out of it: 's' aborts the current fetch via the debuginfod
-> client's progress callback protocol and remembers the build ID, so
-> that the rest of the session doesn't ask for it again, the user may
-> have skipped it for being too big; 'd' additionally disables debuginfod
-> for the rest of the session, clearing DEBUGINFOD_URLS so that libdwfl's
-> own client, that reads it in every query, stops fetching too, and, using
-> perf_config__set_variable(), moved to util/config.c in the previous
-> patch, writes core.debuginfod=false to the configuration file directly,
-> the user's ~/.perfconfig or the one named by PERF_CONFIG, the same
-> rewrite 'perf config' does -- the comments are not preserved, as the
-> config set carries just the key-value pairs -- and SIGINT, SIGQUIT and
-> SIGTERM are intercepted while the terminal is in raw mode, so that it is
-> restored and the signal is re-raised when the user interrupts a fetch.
-> 
-> In the TUI nothing is shown yet, printing to stderr would garble the
-> browser display and draining stdin would eat the keys the browser
-> wants, that comes in the next patch.
-> 
-> The interaction state -- the terminal settings, the signal dispositions
-> and the progress and cancellation state -- is process global, so the
-> fetches stay serialized: a second fetch resetting the cancellation
-> state would drop the 's'/'d' keypress that was meant for the fetch
-> already in progress, and the serialization the lookup state needs
-> already provides the lock the interaction state uses.
-> 
-> Since the debuginfo fetching this builds on is opt-out, a fetch that
-> the user asked to skip is not restarted by the next request for the
-> same build ID in the same session, it is remembered as a cancellation
-> on the misses list, where the debug message can tell it apart from a
-> plain miss.
-> 
-> Assisted-by: LLM
-> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-> ---
-[SNIP]
-> +/*
-> + * The stdio fetch UI: the terminal is in raw mode, see
-> + * debuginfod__fetch(), so the keypresses are on stdin, drain them.
-> + */
-> +static void debuginfod__poll_cancel_keys(void)
-> +{
-> +	char ch;
-> +
-> +	while (read(STDIN_FILENO, &ch, 1) == 1)
-> +		debuginfod__cancel_key(ch);
+On Wed, Sep 16, 2026 at 10:59:31AM -0700, Ian Rogers wrote:
+> On Wed, Sep 16, 2026 at 4:48 AM Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
+> >
+> > perf already uses debuginfod to fetch source files when annotating
+> > (via probe-finder.c) and 'perf probe' has open_from_debuginfod(),
+> > which queries debuginfo keyed by build ID when a module's debuginfo
+> > isn't found locally, largely the same thing this adds; eventually
+> > that one could be moved over to the new helper.  For the analysis
+> > tools there was no way to obtain the debuginfo for a DSO in a
+> > profile when it isn't available locally under the name the DSO was
+> > opened with, for instance the vmlinux for the kernel a profile was
+> > recorded on when processing it on another machine, or after the
+> > kernel and its debuginfo package got upgraded in between.
+> >
+> > Add debuginfo__find_build_id(), that uses the debuginfod client to
+> > locate a debuginfo file keyed by the build ID, checking its local
+> > cache first and then querying the servers in DEBUGINFOD_URLS, and
+> > debuginfo__new_build_id(), that opens the DWARF in the file it finds.
+ 
+> When do we have a build ID but not a DSO? The current intent is that
 
-Isn't it block indefinitely when users don't press any key?  I'm curious
-how it can escape from the loop when it finishes to fetch.
+Trying to parse this: Before we had a PERF_RECORD_MMAP with a dso name
+that we, at the end, when enabled, would look for a build-id to add to
+the perf.data headers, now we get both in the PERF_RECORD_MMAP3, right?
 
-Thanks,
-Namhyung
+> dso__debuginfo hide these complexities. We currently don't purge DSOs
 
-> +}
-> +
-> +/*
-> + * Print a warning and a progress indicator when the debuginfod client
-> + * ends up fetching a file, which can be big, such as the vmlinux for a
-> + * kernel profiled on another machine or before it got upgraded, so that
-> + * users know perf is not stuck, and let them bail out: 's' skips this
-> + * fetch and remembers the build ID, so that the rest of the session
-> + * doesn't ask for it again, 'd' also disables debuginfod for the rest
-> + * of the session.
-> + *
-> + * The client invokes this both while fetching, where 'a' is the number
-> + * of bytes transferred so far and 'b' the total size, zero when it
-> + * doesn't know it yet, and, before committing to a server, from the
-> + * cache cleanup, that scans the debuginfod client cache, with 'a' being
-> + * the number of cache files scanned so far and 'b' zero.
-> + *
-> + * In the stdio case the progress goes to stderr, a \r terminated line,
-> + * the keys are drained from stdin, that debuginfod__fetch() put in raw
-> + * mode.
-> + */
-> +static int debuginfod_progress_fn(debuginfod_client *c __maybe_unused,
-> +				  long a, long b)
-> +{
-> +	if (debuginfod_signal)
-> +		return 1;
-> +
-> +	if (!isatty(STDERR_FILENO) || use_browser)
-> +		return 0;
-> +
-> +	if (isatty(STDIN_FILENO)) {
-> +		debuginfod__poll_cancel_keys();
-> +		if (debuginfod_fetch_cancelled)
-> +			return 1;
-> +	}
-> +
-> +	if (!debuginfod_progress_started) {
-> +		fprintf(stderr, "Fetching debuginfo by build ID from the debuginfod servers, this may take a while for large files such as the vmlinux, press 's' to skip, 'd' to skip and disable\n");
-> +		debuginfod_progress_started = true;
-> +	}
-> +
-> +	if (a >= 0) {
-> +		if (b > 0)
-> +			fprintf(stderr, "  %ld/%ld MiB fetched\r", a >> 20, b >> 20);
-> +		else
-> +			fprintf(stderr, "  %ld MiB fetched\r", a >> 20);
-> +	}
-> +
-> +	return 0;
-> +}
+From the cache, right, and that is a problem, we need to do that LRU you
+mention, to not have a ever growing cache.
+
+There is a recent patch from someone at Uber about another aspect of
+this, the symtabs loaded in memory for resolving symbols are not in any
+way constrained, we go on loading, not purging, hope that patch gets
+resubmitted addressing the sashiko reviews that were acknowledged.
+
+> and the first call to dso__debuginfo should trigger loading with the
+> DSO owning the debuginfo. With this change we now have a duplication
+> of DSO's data, keyed by build ID and mapping directly to the
+> debuginfo. I can't see a performance or efficiency gain and we could
+> potentially implement some kind of LRU mechanism for DSOs, which would
+> benefit memory usage for things like perf top.
+ 
+> > The debuginfod client fails when DEBUGINFOD_URLS isn't set even when
+> > what it wants is in its local cache, and the distro setup scripts that
+> > populate it from /etc/debuginfod don't reach cron jobs, systemd services
+> > and other environments that don't source the profile scripts, so also
+> > set it from the .urls files in /etc/debuginfod when not set.
+ 
+> I found the explanation above hard to follow. Are we setting an
+> environment variable because debuginfod isn't respecting its /etc
+> setup?
+
+IIRC what I saw was the debuginfod client not finding things in the
+cache when that DEBUGINFO_URLS variable wasn't set, so setting it
+doesn't mean to ask for downloads necessarily, but to use what is
+already cached locally.
+ 
+> > That has
+> > to happen before any thread that can call getenv() is started, as
+> > setenv() is not thread safe, and there are getenv()s outside the fetch
+> > lock: libdebuginfod reads DEBUGINFOD_URLS in every debuginfod_begin(),
+> > which perf also does in build-id.c, probe-event.c and probe-finder.c,
+> > so do it from symbol__init(), on the single-threaded setup, and not
+> > lazily from the fetch path.
+> >
+> > Querying servers, possibly third party ones, sends off-box the build
+> > IDs of the binaries being analysed and a fetch can take a while, so
+> > this is opt-out: on by default, off with --no-debuginfod, with
+> > core.debuginfod=false, per tool with report.debuginfod and
+> > top.debuginfod, and, since users that set buildid.dir to /dev/null
+> > (e.g. Linus) or otherwise turn the local build-id cache off clearly
+> > don't want fetched files stored on the box, off too in that case.
+
+> > The opt-outs also cover libdwfl's own debuginfod client, that reads
+> > DEBUGINFOD_URLS in every query: when debuginfod is off, be it with
+> > --no-debuginfod, core.debuginfod=false or by disabling the build-id
+> > cache, the variable is set to the empty string, that the client treats
+> > as an opt-out and fails the query without even looking at its cache,
+> > instead of being exported from /etc/debuginfod.  Tools that manage
+> > DEBUGINFOD_URLS themselves, such as 'perf record --debuginfod', keep
+> > doing so.
+ 
+> Libdwfl is part of elfutils and so is debuginfod. Is it possible to
+> share clients?
+
+We need to stop using ~/.debug/ and move to have the cache where elfutils
+libraries have it.
+
+Transitioning should just use ~/.debug if available but saving copies of
+local DSOs like perf does in the elfutils cache directory.
+
+<SNIP>
+ 
+> > +static bool build_id__equal(const struct build_id *a, const struct build_id *b)
+> > +{
+> > +       return a->size == b->size && memcmp(a->data, b->data, a->size) == 0;
+> > +}
+> 
+> This is probably worth moving to the build-id.[ch] file. I see similar
+> logic in places like __dso_id__cmp,  dso__missing_buildid_cache in
+> builitin-buildid-cache.c and sort__dcacheline_cmp. dso__build_id_equal
+> has some special backward compatibility checks.
+
+Agreed, will do.
+
+- Arnaldo
