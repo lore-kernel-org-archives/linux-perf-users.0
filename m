@@ -1,189 +1,127 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D20D112D1F1
-	for <linux-perf-users@vger.kernel.org>; Wed, 16 Sep 2026 12:01:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4788E3B1EFE
+	for <linux-perf-users@vger.kernel.org>; Wed, 16 Sep 2026 12:05:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789560106; cv=none; b=Fq7N27tbhLMclQHpFXnyexcM5M++GpAVnNmhXmyzxfHKzMpeKrJDhtr3Bf1/TGkLfVeD5esotkuK84BLeRRD2v4ps1Y2/d/dyY1soQd9jF88r9yIK0JA6NSioQKBSix6gB7O/2kyd5yBh1u4DR955YwtUf7AhojW/7nCNsDocFM=
+	t=1789560361; cv=none; b=GDC7u7zq4VF9lkbjBPwI7Hkb4w5Q05AujaAd9ZZJE4l53huO994WykfKPW7CqV/kiqsFRjfbzUyB+vMXdFnCntTDuUPWdAfKPoFS4UlUI7CUB/0cjf/Y/dewNjGiZsgu27cpPj+PxhbPQVQmzu6/cr0dMolaNlWlmWlbdomu4Ng=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789560106; c=relaxed/simple;
-	bh=IDgP9hFKwaV02R/GDgsO5B/S5BjlvgePgYg3h/L3SVg=;
+	s=arc-20240116; t=1789560361; c=relaxed/simple;
+	bh=0kv08uSui9A/OrrKj5Z02PlWSU9GYJgFn4nt0QgLjAg=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=ECD6OS2mqX29oGFaX1AwqUtZaGsrFzmsoOlx9BNb2Mk/Hkr6Z/AJWg6VsOykwniuTimahl96Ta/XJW+PpJFmBGLGh6e2WcIJgiC6oDTqkPrHplmW2eM80a0JmJheZqjQ7ebOVjv02bH8ZWrPzVJbRxsEM2WnKI2LP4xKQgmyUB0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UEXEt9GC; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=JpuTL2lRKOKLHC7r5v7TquHB8fdJW86fuxov20unc0NrC3TTeCHEgMa6CbZ/76Z9mMuuer8h4r+L1tVwNo5f8PBrL5poHdwVfE885cutJjZoZXu6yCkwLBSliW2MWOxuXghjAK43h+hgRjszo/2NF2+fTPurAHBB/jyVFUl7+yQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gh9jzEm1; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UEXEt9GC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D22991F00893;
-	Wed, 16 Sep 2026 12:01:38 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gh9jzEm1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A9BE11F000FF;
+	Wed, 16 Sep 2026 12:05:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789560098;
-	bh=DW8K83nEtopkIl/ftA1gjV38a/VVnX+xVlyJV9HaGAk=;
+	s=k20260515; t=1789560354;
+	bh=1dViLppvaxtrTDS/j1vSuNhsnTTTHy36+uMxZk+AKAA=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=UEXEt9GCxwXeJRuRE+6VUoGdOs2Rq9qXPm8h3ypSlQkOoi5f66Xr5UQOFXrwvuqgG
-	 7MTD3h7LWt8mQkiBlsiOvLa9sHabrltJxYiKeZHW5gzdTfUMFCUh1rMJD2BTYQhlbk
-	 OHSSvliB/pWrlvBHRBk/WNVUqkkUdp6akBV2dVDd8/X+c+cLKOwfhm1ALlNWnf6lJh
-	 JY89HvjZRkSAZExkduXuccUzpOPiUsviAsncDF/nZBlfRYxaWL0cpGguTLogkG+6Vz
-	 dLuCEEgFv4eypm8mo8oRVfVNZJ6cwTpnF+raySAvRkuvEYD7jqHoGNnrGVDs/oViTZ
-	 MRK+ibqCkYJ9A==
+	b=gh9jzEm1GwJk1SM/uzQMZZTnz7Q60Gml7K0pfcMTKAwd9qwXymMRUoBG0vAIh0VFH
+	 TUMlZxxfZQwnhPUwCCafMJuXh2CkVfbG7IEOmgB8SwepbpjZQ6Cw0nsFubQLHwO1yo
+	 6uwwr+2EOlJUaQOC9FPVcXHoUnwbTgyBnU3X1w4FiagBgIS+MmOeTTNy7lJX0IY6zA
+	 XFYlRqqBb09rv5d71IOx2n1Uir06OwoasKf2owemXpC1KMX+Qr2G0o2nazH0P1AwQY
+	 g5aUx/wG+0Wxfc828KSQGUh3FJD9O+IXkhP6XisDQqpnGRt2LoiTw49i+Mhu4uYTZb
+	 xqSwe733E0JLw==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 03/12] perf config: Move perf_config__set_variable() to
- util/config.c
+Subject: Re: [PATCH 06/12] perf symbol: Fall back to fetching the vmlinux by
+ build ID
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Arnaldo Carvalho de Melo" <acme@kernel.org>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260916114740.48230-4-acme@kernel.org>
+In-Reply-To: <20260916114740.48230-7-acme@kernel.org>
 References: <20260916114740.48230-1-acme@kernel.org>
- <20260916114740.48230-4-acme@kernel.org>
+ <20260916114740.48230-7-acme@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Wed, 16 Sep 2026 12:01:38 +0000
-Message-Id: <20260916120138.D22991F00893@smtp.kernel.org>
+Date: Wed, 16 Sep 2026 12:05:54 +0000
+Message-Id: <20260916120554.A9BE11F000FF@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 2 potential issue(=
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
 s) to consider:
-- [High] perf: hardcoded system_config=3Dfalse wipes out system config file
-- [Low] perf: missing limits.h inclusion for PATH_MAX causes musl build fai=
-lure
+- [Medium] perf symbol: NULL pointer dereference in trampoline map adjustme=
+nt due to lock dropping
 --
 
-commit dd0d85968ed396c9cbcce556b124511aed73efb9
+commit 54cc3e4d87729d86b17ea862346d56f11117f916
 Author: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-    perf config: Move perf_config__set_variable() to util/config.c
-   =20
-    It is code from the 'perf config' builtin to set a variable in the
-    configuration file perf is using, the user's ~/.perfconfig, or the file
-    named by the PERF_CONFIG environment variable when it is set, rewriting
-    that file from the config set, the same rewrite 'perf config' does,
-    i.e. the comments in it are not preserved, as the config set carries
-    just the key-value pairs.  It has to honour PERF_CONFIG, that makes perf
-    read only that file: the config set is loaded from it, so writing
-    ~/.perfconfig would replace it with the exclusive file's entries.
+    perf symbol: Fall back to fetching the vmlinux by build ID
 
-> diff --git a/tools/perf/util/config.c b/tools/perf/util/config.c
-> index 31c6618d3b3da..3f9753b2a7bdf 100644
-> --- a/tools/perf/util/config.c
-> +++ b/tools/perf/util/config.c
+    A profile recorded on a kernel that is no longer installed, be it
+    because the machine was rebooted into a new kernel or because the
+    profile is being processed on another machine, can't have its kernel
+    symbols resolved. As a last resort, when the kernel symbols can't be
+    found locally and the user didn't specify a kallsyms file, fetch the
+    vmlinux keyed by the kernel build ID recorded in the perf.data file
+    using the debuginfod client and use it for symbols.
 
+> diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
+> index 1d70c43bb24ee..ccb6217119416 100644
+> --- a/tools/perf/util/symbol.c
+> +++ b/tools/perf/util/symbol.c
 [ ... ]
-
-> @@ -876,6 +876,76 @@ void perf_config__exit(void)
->  	config_set =3D NULL;
->  }
+> @@ -2257,7 +2280,53 @@ static int dso__load_kernel_sym(struct dso *dso, s=
+truct map *map)
+>  		pr_debug("Using %s for symbols\n", kallsyms_filename);
+>  	free(kallsyms_allocated_filename);
 > =20
-> +int perf_config_set__write(struct perf_config_set *set,
-> +			   const char *file_name, bool system_config)
-> +{
-> +	struct perf_config_section *section =3D NULL;
-> +	struct perf_config_item *item =3D NULL;
-> +	FILE *fp;
+> -	if (err > 0 && !dso__is_kcore(dso)) {
+> +	/*
+> +	 * The kallsyms may be unavailable or restricted, e.g.
+> +	 * /proc/kallsyms with kernel.perf_event_paranoid > 1, try to fetch
+> +	 * the vmlinux keyed by the build ID using debuginfod as a last
+> +	 * resort, honoring --ignore-vmlinux and --ignore-vmlinux_buildid
+> +	 * like the other vmlinux sources above.
+> +	 */
+> +	if (err <=3D 0 && !user_kallsyms &&
+> +	    !symbol_conf.ignore_vmlinux &&
+> +	    !symbol_conf.ignore_vmlinux_buildid) {
+> +		char *fetched_path =3D NULL;
 > +
-> +	fp =3D fopen(file_name, "w");
-> +	if (!fp)
-> +		return -1;
-> +
-> +	fprintf(fp, "# this file is auto-generated.\n");
-> +
-> +	/* overwrite configvariables */
-> +	perf_config_sections__for_each_entry(&set->sections, section) {
-> +		if (!system_config && section->from_system_config)
-> +			continue;
-> +		fprintf(fp, "[%s]\n", section->name);
-> +
-> +		perf_config_items__for_each_entry(&section->items, item) {
-> +			if (!system_config && item->from_system_config)
-> +				continue;
-> +			if (item->value)
-> +				fprintf(fp, "\t%s =3D %s\n",
-> +					item->name, item->value);
-> +		}
-> +	}
-> +	fclose(fp);
-> +
-> +	return 0;
-> +}
-> +
-> +/*
-> + * Set @var=3D@value in the configuration file perf is using: the user's
-> + * ~/.perfconfig, or the file named by the PERF_CONFIG environment
-> + * variable.  The latter has to be honoured as it makes perf read only
-> + * that file, so the config set came from it and writing ~/.perfconfig
-> + * would replace it with the exclusive file's entries.  Rewriting the
-> + * file from the config set is the same rewrite 'perf config' does: the
-> + * comments are not preserved, as the config set carries just the
-> + * key-value pairs.
-> + */
-> +int perf_config__set_variable(const char *var, const char *value)
-> +{
-> +	char path[PATH_MAX];
+> +		/*
+> +		 * dso__load() holds dso->lock while it calls us, and the
+> +		 * fetch below can take a long time, blocked on the network
+> +		 * or on the terminal, waiting for the user: do it with the
+> +		 * lock dropped, as dso__debuginfo() does for the debuginfo
+> +		 * of a DSO, so that the threads that need this dso don't get
+> +		 * stuck behind a server round trip.  Nothing of the dso is
+> +		 * touched by the fetch, the symbols are loaded with the lock
+> +		 * held again, and only if the fetch brought a file back.
+> +		 */
+> +		mutex_unlock(dso__lock(dso));
+> +		err =3D dso__fetch_vmlinux_build_id(dso, &fetched_path);
+> +		mutex_lock(dso__lock(dso));
 
-[Severity: Low]
-Does this file need an explicit #include <limits.h>? The function uses the
-PATH_MAX macro, and while glibc may implicitly include it through other
-headers, strict musl compilation might fail without the required
-POSIX-specified header.
+[Severity: Medium]
+Could dropping the lock here lead to a race condition that causes a NULL
+pointer dereference?
 
-> +	char *user_config =3D mkpath(path, sizeof(path), "%s/.perfconfig", gete=
-nv("HOME"));
-> +	const char *config_filename =3D config_exclusive_filename ?: user_confi=
-g;
-> +	struct perf_config_set *set;
-> +	int ret =3D -1;
-> +
-> +	set =3D perf_config_set__new();
-> +	if (!set)
-> +		goto out_err;
-> +
-> +	if (perf_config_set__collect(set, config_filename, var, value) < 0) {
-> +		pr_err("Failed to add '%s=3D%s'\n", var, value);
-> +		goto out_err;
-> +	}
-> +
-> +	if (perf_config_set__write(set, config_filename, /*system_config=3D*/fa=
-lse) < 0) {
+If a second thread enters dso__load() while the lock is dropped here, it
+would see dso__loaded(dso) is still false and also enter
+dso__load_kernel_sym(). Both threads would eventually return and
+consecutively call machine__map_x86_64_entry_trampolines().
 
-[Severity: High]
-Could hardcoding system_config to false here risk wiping out the system
-configuration file?
+Since machine__map_x86_64_entry_trampolines_cb() translates map->pgoff
+in place without idempotency guarantees:
 
-If a user sets PERF_CONFIG=3D/etc/perfconfig (setting config_exclusive_file=
-name),
-this call to perf_config__set_variable() will read that file. Because the f=
-ile
-path matches perf_etc_perfconfig(), all loaded items are flagged with
-from_system_config =3D true.
+tools/perf/util/machine.c:machine__map_x86_64_entry_trampolines_cb()
+    dest_map =3D maps__find(args->kmaps, map__pgoff(map));
+    if (RC_CHK_ACCESS(dest_map) !=3D RC_CHK_ACCESS(map))
+        map__set_pgoff(map, map__map_ip(dest_map, map__pgoff(map)));
 
-When perf_config_set__write() is then called with system_config=3Dfalse, it
-checks:
-
-tools/perf/util/config.c:perf_config_set__write() {
-...
-		if (!system_config && section->from_system_config)
-			continue;
-...
-}
-
-This actively filters out items that originated from the system config, whi=
-ch
-could effectively truncate the file and cause data loss for the system-wide
-configuration.
-
-> +		pr_err("Failed to set the configs on %s\n", config_filename);
-> +		goto out_err;
-> +	}
-> +
-> +	ret =3D 0;
-> +out_err:
-> +	perf_config_set__delete(set);
-> +	return ret;
-> +}
+Would the second execution fail to find dest_map due to the modified
+pgoff, and subsequently pass NULL to map__map_ip(), resulting in a
+fatal NULL pointer dereference?
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260916114740.4823=
-0-1-acme@kernel.org?part=3D3
+0-1-acme@kernel.org?part=3D6
