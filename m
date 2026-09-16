@@ -1,48 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 776BA4D9548;
-	Wed, 16 Sep 2026 17:35:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73DC94D7D5C;
+	Wed, 16 Sep 2026 17:37:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789580159; cv=none; b=crwllaZ6UJhTdJt7SayoUP/bqRf3nPHdxKLko4sN+RXxZOadp42vnMVdsAE/6AjJ2MLtB9hn5cFnv+uAh8JIrEDlV+EW9tHcD07vQonLEZJ+g0cTAkWdOaSZrDnFhmJ9gpAlh2dOS+kyrPSYusCFpJep7xUzJiDyfcWvtgzBftI=
+	t=1789580282; cv=none; b=s2rlB1fwRlhb1jjUUdxbSym5mXYcd5ugBlv435jdSlvtwfhq+vjrpUr6HyxTurBB1O0c42wwfUBu+Yx8i8NCvh4yYAn/He8X5MFK3jktUYkkmUbReaL3Hah3DifOQvypRM0xyg0drI+ZzkGes1mGaoCVmKvvGiqspbPWuErQRGU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789580159; c=relaxed/simple;
-	bh=UzgvU2D3N1Tr0bxLinAWdJFu7EBcDYSy2p6JXSjXsqM=;
+	s=arc-20240116; t=1789580282; c=relaxed/simple;
+	bh=KBCTpoXddPEBQASF0EkOURQ6hc0B0Nn6Gm7KcEgcJCY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sFRJV3HOKHf/hvNeTCD87TsbfD0KClYM4l5c1PX01If5AhedNaQYaw025bbd4euGOFuovVW14ycjpR+Au5/e29RYvtJj3MU1HsLhs2S41h1CBMMbAews42OeLOLTrDlPODqx/+HpbUcV0PAnafhHh1tPF9krLWvxk5wECcrkdjc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jldI7fg0; arc=none smtp.client-ip=100.103.45.18
+	 Content-Type:Content-Disposition:In-Reply-To; b=aV4OuNM78fCkUpF8BPxrStU1/AjJhiRJAuG7cA+pQ8yI2FLxTBfgnYYuJ/fRfGPdHsDiuJ0jUiyBbJcNOudVBmVnGtfdDNYDFvYuY1RdArl+xIi9S1RCA/otRzMujR3CveEGrKDt3pHk3/okenvEDUyvMy+EzW8KEyLbDGMe6Ac=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NwshFiJh; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jldI7fg0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A3EBD1F000FF;
-	Wed, 16 Sep 2026 17:35:49 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NwshFiJh"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B70D41F000FF;
+	Wed, 16 Sep 2026 17:37:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789580150;
-	bh=lz/TQhxBzEP+HHtTRuAb4x/tXjOKPhiKUxO/kKdETtI=;
+	s=k20260515; t=1789580275;
+	bh=NjiQu1d/ioLIe0RIZP31gpzjmhAaKhSMxIvNddDeA38=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=jldI7fg0Kx5LIGgnzSj+RmvhUaOG9wTr2+hHs9t4M+7lz6G6b5/xfQhFYdN8Nxv+w
-	 LOSaLjWq2tC4oSNQsaDaljrtbIQRaKxTZuYtXvWdhLwG+TLf90E3729/wGsHEYZa/X
-	 tXUTZ6a4rZ2IL9zAp7U5kOW9h2Vkojau7SJnkdFoKC2fHzwXssfgIRfyuFKYu35wyi
-	 CvXRVK5qlVb8ji2+oNaKub6lH3XykwA8yDacdHN1dU9ELS1ak79hQoOMtpE/gzie/J
-	 kkKeNHLwmNgo05L5zTFVCqTSZWpYnpFaz+uDjLGmnqZbqOE7WnA74/6tViQ8n1ks7u
-	 ET/b7tTREnMRg==
-Date: Wed, 16 Sep 2026 10:35:48 -0700
+	b=NwshFiJhNz1xiYcjPeBFcQ4x4LPBSO0WwaTsoDMTMeNxZvUt4QG4mghQFKsjRMwoC
+	 brUh5ED7od6Dwv3biSb5sOR/MTCYBhX/mXRv7DAzqTwI6k2Tb1BlhZMnT5Rw/4sXdj
+	 cY3dxtURgrs9ErE1mtT6SKOWoAizXIKmPjoFm01sNhBo+eDTDNJQwIpoHbB8tLkPTi
+	 8T1X4Pw71cKmelLXYWgL76PG2YReM9vFAX7feVV7zqFR0ocNJ2jL7x0VVHEO0kHAtK
+	 kWLLczsugylwwvz45Y2OHjxKsympGrOLSt6cZKyPXu3pIIc5CcYSV2iMCyJgzuEoDo
+	 1fu4cuZFizeJg==
+Date: Wed, 16 Sep 2026 10:37:54 -0700
 From: Namhyung Kim <namhyung@kernel.org>
 To: Ian Rogers <irogers@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	James Clark <james.clark@linaro.org>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nick Desaulniers <ndesaulniers@google.com>,
-	Bill Wendling <morbo@google.com>,
-	Thomas Richter <tmricht@linux.ibm.com>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	llvm@lists.linux.dev
-Subject: Re: [PATCH 0/9] perf build: Fix builds with clang and BUILD_NONDISTRO
-Message-ID: <aqrTdAVfVkzltJct@google.com>
+Cc: sashiko-reviews@lists.linux.dev, linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH 3/9] perf libbfd: Include the headers that are used
+Message-ID: <aqrT8kgw9ob-ILOj@google.com>
 References: <20260916061218.3061216-1-irogers@google.com>
+ <20260916061218.3061216-4-irogers@google.com>
+ <20260916062233.192271F000FF@smtp.kernel.org>
+ <CAP-5=fWNMrnB9KNjCGOc0A+kwvWWsxYc092x=q6CLK+-g3nwFw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -51,92 +44,68 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20260916061218.3061216-1-irogers@google.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAP-5=fWNMrnB9KNjCGOc0A+kwvWWsxYc092x=q6CLK+-g3nwFw@mail.gmail.com>
 
-On Tue, Sep 15, 2026 at 11:12:09PM -0700, Ian Rogers wrote:
-> Several perf build configurations are broken, and stayed broken because
-> the build test suite doesn't cover them.
+On Wed, Sep 16, 2026 at 08:54:16AM -0700, Ian Rogers wrote:
+> On Tue, Sep 15, 2026 at 11:22 PM <sashiko-bot@kernel.org> wrote:
+> >
+> > Thank you for your contribution! Sashiko AI review found 1 potential issue(s) to consider:
+> > - [Low] perf libbfd: build failure on musl due to missing <stdarg.h>
+> > --
+> >
+> > commit b4b64b7fbd73cf480fc5aaa2ad17802e8f46fbcc
+> > Author: Ian Rogers <irogers@google.com>
+> >
+> > perf libbfd: Include the headers that are used
+> >
+> > This patch explicitly includes several POSIX headers directly into libbfd.c
+> > instead of relying on indirect inclusions. It also reorders the includes to
+> > group system headers before perf's own headers.
+> >
+> > > diff --git a/tools/perf/util/libbfd.c b/tools/perf/util/libbfd.c
+> > > index 131bfedf48cdf..1b23a261a9ced 100644
+> > > --- a/tools/perf/util/libbfd.c
+> > > +++ b/tools/perf/util/libbfd.c
+> > > @@ -1,5 +1,19 @@
+> > >  // SPDX-License-Identifier: GPL-2.0
+> > >  #include "libbfd.h"
+> > > +
+> > > +#include <errno.h>
+> > > +#include <inttypes.h>
+> > > +#include <limits.h>
+> > > +#include <stdint.h>
+> > > +#include <stdio.h>
+> > > +#include <stdlib.h>
+> > > +#include <string.h>
+> > > +
+> > > +#include <fcntl.h>
+> > > +#include <pthread.h>
+> > > +
+> > > +#include <tools/dis-asm-compat.h>
+> >
+> > [Severity: Low]
+> > Does this inclusion order break the build on musl libc?
+> >
+> > Because <tools/dis-asm-compat.h> uses va_start and va_end in an inline
+> > function, it strictly requires <stdarg.h>. Previously, this requirement
+> > was satisfied implicitly because it was included later in the file, after
+> > other headers provided the necessary declarations.
+> >
+> > Moving <tools/dis-asm-compat.h> higher up in the file exposes this missing
+> > dependency, which will cause va_start and va_end to be undeclared in strict
+> > environments like musl.
+> >
+> > [ ... ]
 > 
-> Three of them fail outright:
-> 
->   $ make CC=clang BUILD_NONDISTRO=1
->   util/libbfd.c:56:1: error: mutex 'bfd_mutex' is still held at the end
->   of function [-Werror,-Wthread-safety-analysis]
-> 
->   $ make BUILD_NONDISTRO=1 NO_DEMANGLE=1
->   util/symbol.c:2714: error: 'DMGL_PARAMS' undeclared
-> 
->   $ make CC=clang-19
->   *** Specify CROSS_COMPILE or add CLANG_TARGET_FLAGS for x86_64
-> 
-> A fourth is worse for being silent. "make CC=clang" appends clang's
-> --target= and -fintegrated-as to CXX, but CXX is only set to clang++ by
-> "make LLVM=1", so it is still g++ and rejects both. Feature tests are
-> allowed to fail, so nothing is reported: the build succeeds and just
-> quietly drops libllvm and C++ demangling support.
-> 
->   $ make CC=clang && grep LIBLLVM .config-detected
->   (nothing, whereas a gcc build reports CONFIG_LIBLLVM=y)
-> 
-> The patches are grouped as:
-> 
->   1-2  Fix the two build failures, in libbfd.c and symbol.c.
->   3-4  Include the headers that are used directly rather than relying
->        on other headers to drag them in. No functional change.
->   5-7  Fix the clang handling in Makefile.config: don't give clang's
->        flags to a non-clang CXX, and use the CC that was asked for
->        instead of hard coding "clang" when picking the target triple
->        and when testing the compiler version.
->   8    Remove three build test entries left behind by the removal of
->        the options they tested. None of them define what to build, so
->        each silently repeats "make_pure" and the suite spends six
->        builds appearing to cover options that no longer exist.
->   9    Add build tests for the configurations above, so they don't
->        break again. As a build that loses a feature still succeeds,
->        the clang tests also check that libLLVM is still built in.
-> 
-> Testing:
-> 
->  - 13 build configurations (gcc, clang, versioned clang, LLVM=1,
->    BUILD_NONDISTRO, NO_DEMANGLE, NO_LIBDW, NO_LIBELF, DEBUG, asan,
->    refcount checking) pass, where two failed before the series.
->  - Every patch builds on its own, so the series stays bisectable.
->  - Each fix was confirmed by reintroducing the bug and checking that
->    the test added in patch 9 fails:
-> 
->      CXX flags given to g++     make_clang             fails on libLLVM
->      libbfd thread safety       make_clang_nondistro   fails to compile
->      symbol.c demangling        make_nondistro_no_demangle  likewise
-> 
-> Ian Rogers (9):
->   perf libbfd: Fix the clang -Wthread-safety build failure
->   perf symbol: Fix the build when demangling with libbfd
->   perf libbfd: Include the headers that are used
->   perf pmu: Include the headers that are used
->   perf build: Only pass clang flags to CXX when CXX is clang
->   perf build: Use the given CC rather than clang in clang builds
->   perf build: Check the version of the compiler that is used
->   perf build: Remove leftovers of removed build options
->   perf test: Add build tests for clang and libbfd demangling
+> I don't plan to fix this as the issue is minor and relates to an
+> include, not the code itself. The series has no other Sashiko
+> feedback.
+> https://sashiko.dev/#/patchset/20260916061218.3061216-1-irogers%40google.com
 
-Acked-by: Namhyung Kim <namhyung@kernel.org>
+I think <stdarg.h> should be included by <tools/dis-asm-compat.h> then.
+But it looks like a separate issue.
 
 Thanks,
 Namhyung
 
-> 
->  tools/perf/Makefile.config | 13 +++++++---
->  tools/perf/Makefile.perf   |  3 ---
->  tools/perf/tests/make      | 50 ++++++++++++++++++++++++++++++++++----
->  tools/perf/util/Build      |  2 +-
->  tools/perf/util/libbfd.c   | 41 ++++++++++++++++++++++++++-----
->  tools/perf/util/libbfd.h   |  9 +++++++
->  tools/perf/util/pmu.c      |  5 +++-
->  tools/perf/util/symbol.c   | 18 +++++++++++---
->  8 files changed, 119 insertions(+), 22 deletions(-)
-> 
-> 
-> base-commit: 91b0782fc9e9d2f0a40b5256146e014802fdbb36
-> -- 
-> 2.55.0.1032.g73a4cd73de-goog
-> 
