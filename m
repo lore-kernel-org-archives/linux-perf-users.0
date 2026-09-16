@@ -1,28 +1,28 @@
 Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 865CB3B1ED1;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B06253B47F0;
 	Wed, 16 Sep 2026 01:30:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789522228; cv=none; b=okQu//x8OqK9l69D0iCZvgGNojfjK7eX37PWZMyRhO2yG+6HgSBzaozL9JFjKdzs41uHhoCWHRIrnzXn+ExMTmT7YAa7CC3ag+9J9z86CnOaTchOG/1BrmN8p5qJoZeAZw3aYlyelZjjOL9fRYTiOeJGC4OHy3arELblANn0/v4=
+	t=1789522228; cv=none; b=kZfeJ21ef8UiiZ82mKoxCShYuiMEWK//r3G3/ZjdPAlAWbBA2xB7LhJFtMv3OTkuDqxOnQC6aE/IbxMieV3mwLdqhgTo1w27S4QKBrbt4D8WejETSOW0t5cOft20nTqj39yzH0SzyVzmpz0vuscdPJE2VJ7r0k//AfKKaj1OaFw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1789522228; c=relaxed/simple;
-	bh=5cenqpQBsJKSzPGP23ZNodOBWN/bw6yIFMxX+C4bJ98=;
+	bh=KC5Ebn92W23t2J+hbN8i7Vtf8adzx46OQkVXzzpFXUE=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=A0Xb6DIO4dCEGJX5A7zMlqSU+VmquQJrE/UR9ojLcMI/RSEudIEa8SJPYO1pVpSeW2+VFUUZeeF5DqFf9PG/EVasocqQHyA3RSvY9hSvhram8iUJ8vyJb2EzGpPVfBjpgzvaMi6eaz1sJ+Wi+++mwWTi9sxUY6J/aK9abx/k/Jk=
+	 MIME-Version; b=An/7th1tW7NzNeC5HyXPOTW1efjPQV/S7luhEe1CmveqxObfRsFC3lEhbniFw8NXYwBc431/CGhZXm1pcn3JrWOq7tkdhqjZ/+Dox7xkKdpgATqm4f3fFn8fphpxxfLHH7acZryzZvAVbIHTzwPdsszufsPI760X62q4fA5KvSs=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
 Received: from mail.maildlp.com (unknown [172.19.163.198])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4hl1XV2939zYQtsS;
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4hl1XV3cn3zYQtrj;
 	Wed, 16 Sep 2026 09:30:02 +0800 (CST)
 Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id 6748740577;
+	by mail.maildlp.com (Postfix) with ESMTP id 9C77B40578;
 	Wed, 16 Sep 2026 09:30:06 +0800 (CST)
 Received: from huawei.com (unknown [10.67.174.45])
-	by APP4 (Coremail) with UTF8SMTPA id gCh0CgAn+CoH8alqUcjbAQ--.36458S17;
-	Wed, 16 Sep 2026 09:30:05 +0800 (CST)
+	by APP4 (Coremail) with UTF8SMTPA id gCh0CgAn+CoH8alqUcjbAQ--.36458S20;
+	Wed, 16 Sep 2026 09:30:06 +0800 (CST)
 From: Tengda Wu <wutengda@huaweicloud.com>
 To: Namhyung Kim <namhyung@kernel.org>,
 	james.clark@linaro.org,
@@ -44,9 +44,9 @@ Cc: Peter Zijlstra <peterz@infradead.org>,
 	linux-kernel@vger.kernel.org,
 	llvm@lists.linux.dev,
 	Tengda Wu <wutengda@huaweicloud.com>
-Subject: [PATCH v6 15/26] perf annotate-arm64: Track return type after call instructions
-Date: Wed, 16 Sep 2026 01:29:29 +0000
-Message-Id: <4cc79c0f84c37c27c2c82edd75498d6ccc27fe51.1789521520.git.wutengda@huaweicloud.com>
+Subject: [PATCH v6 18/26] perf annotate-data: Expand type_state_reg imm_value to u64
+Date: Wed, 16 Sep 2026 01:29:32 +0000
+Message-Id: <12af931b0d7a666f1d8403c01f1a3677698374ba.1789521520.git.wutengda@huaweicloud.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <cover.1789521520.git.wutengda@huaweicloud.com>
 References: <cover.1789521520.git.wutengda@huaweicloud.com>
@@ -57,10 +57,10 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:gCh0CgAn+CoH8alqUcjbAQ--.36458S17
-X-Coremail-Antispam: 1UD129KBjvJXoW7tFy3ZFykGF13Xw4kuFWDCFg_yoW8CFWrp3
-	WDuryUKr1UGr47KrnxJrWfXryrCrW7W34jkw17twnavFW2yr4fJFZ7KFyaqa1rXr9xCw48
-	AwsFkr45Cw4xCaUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+X-CM-TRANSID:gCh0CgAn+CoH8alqUcjbAQ--.36458S20
+X-Coremail-Antispam: 1UD129KBjvJXoWxJr18try5GrW7ZF1DCr4kZwb_yoW8Cw43p3
+	90k347Jw1UWr4YgrnxtFWrXF1S9r13Za4fGryYgw1fZFWfXFn3tryIqr4YyFW8W3s7Cw1U
+	JwnYqr4Dt3ykGaUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
 	9KBjDU0xBIdaVrnRJUUUH2b4IE77IF4wAFF20E14v26rWj6s0DM7CY07I20VC2zVCF04k2
 	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28IrcIa0xkI8VA2jI8067AKxVWUAV
 	Cq3wA2048vs2IY020Ec7CjxVAFwI0_Xr0E3s1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0
@@ -78,57 +78,53 @@ X-Coremail-Antispam: 1UD129KBjvJXoW7tFy3ZFykGF13Xw4kuFWDCFg_yoW8CFWrp3
 	U==
 X-CM-SenderInfo: pzxwv0hjgdqx5xdzvxpfor3voofrz/
 
-Enable data type profiling to track function return values in arm64
-annotations by looking up the DWARF return type of called functions.
+The arm64 'adrp + add/ldr' instruction pair involves global variable address
+calculation and passing, which requires storing the 64-bit address in
+type_state_reg. Currently, there is no field in type_state_reg that can
+hold such an address. The most likely candidate for reuse is imm_value,
+but it is defined as u32, which limits the size of values it can carry.
+
+To address this, expand imm_value from u32 to u64. Also update related
+compilation warnings and fix the sign-extension issue introduced by this
+change.
 
 Signed-off-by: Tengda Wu <wutengda@huaweicloud.com>
 ---
- tools/perf/util/annotate-arch/annotate-arm64.c | 18 +++++++++++++++++-
- 1 file changed, 17 insertions(+), 1 deletion(-)
+ tools/perf/util/annotate-arch/annotate-x86.c | 4 ++--
+ tools/perf/util/annotate-data.h              | 2 +-
+ 2 files changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/tools/perf/util/annotate-arch/annotate-arm64.c b/tools/perf/util/annotate-arch/annotate-arm64.c
-index cd369fcd7dc0..d3d994a22cf9 100644
---- a/tools/perf/util/annotate-arch/annotate-arm64.c
-+++ b/tools/perf/util/annotate-arch/annotate-arm64.c
-@@ -462,7 +462,7 @@ static bool is_readonly_branch_or_cmp(const char *name)
- }
+diff --git a/tools/perf/util/annotate-arch/annotate-x86.c b/tools/perf/util/annotate-arch/annotate-x86.c
+index aa381d25a63b..f5e40cef08ab 100644
+--- a/tools/perf/util/annotate-arch/annotate-x86.c
++++ b/tools/perf/util/annotate-arch/annotate-x86.c
+@@ -536,11 +536,11 @@ static void update_insn_state_x86(struct type_state *state,
  
- static void update_insn_state_arm64(struct type_state *state,
--				    struct data_loc_info *dloc, Dwarf_Die *cu_die __maybe_unused,
-+				    struct data_loc_info *dloc, Dwarf_Die *cu_die,
- 				    struct disasm_line *dl)
- {
- 	struct annotated_insn_loc loc;
-@@ -485,6 +485,8 @@ static void update_insn_state_arm64(struct type_state *state,
- 		struct symbol *func = dl->ops.target.sym;
- 		const char *call_name;
- 		u64 call_addr;
-+		struct type_state_reg *tsr;
-+		Dwarf_Die type_die;
+ 		if (src->imm) {
+ 			tsr->kind = TSR_KIND_CONST;
+-			tsr->imm_value = src->offset;
++			tsr->imm_value = (s64)src->offset;
+ 			tsr->offset = 0;
+ 			tsr->ok = true;
  
- 		call_name = func ? func->name : dl->ops.target.name;
- 		pr_debug_dtp("call [%x] %s\n", insn_offset, call_name ?: "<unknown>");
-@@ -502,6 +504,20 @@ static void update_insn_state_arm64(struct type_state *state,
- 				continue;
- 			invalidate_reg_state(reg);
+-			pr_debug_dtp("mov [%x] imm=%#x -> reg%d\n",
++			pr_debug_dtp("mov [%x] imm=%#"PRIx64" -> reg%d\n",
+ 				     insn_offset, tsr->imm_value, dst->reg1);
+ 			return;
  		}
-+
-+		/* Update register with the return type (if any) */
-+		if (call_name && die_find_func_rettype(cu_die, call_name, &type_die)) {
-+			tsr = &state->regs[state->ret_reg];
-+			invalidate_reg_state(tsr);
-+			tsr->type = type_die;
-+			tsr->kind = TSR_KIND_TYPE;
-+			tsr->offset = 0;
-+			tsr->ok = true;
-+
-+			pr_debug_dtp("call [%x] return -> reg%d",
-+				     insn_offset, state->ret_reg);
-+			pr_debug_type_name(&type_die, tsr->kind);
-+		}
- 		return;
- 	}
- 
+diff --git a/tools/perf/util/annotate-data.h b/tools/perf/util/annotate-data.h
+index 68e3feda2eda..62efdcd8a79a 100644
+--- a/tools/perf/util/annotate-data.h
++++ b/tools/perf/util/annotate-data.h
+@@ -173,7 +173,7 @@ extern struct annotated_data_stat ann_data_stat;
+  */
+ struct type_state_reg {
+ 	Dwarf_Die type;
+-	u32 imm_value;
++	u64 imm_value;
+ 	/*
+ 	 * The offset within the struct that the register points to.
+ 	 * A value of 0 means the register points to the beginning.
 -- 
 2.34.1
 
