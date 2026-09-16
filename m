@@ -1,125 +1,86 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC7473793B0;
-	Wed, 16 Sep 2026 15:05:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7F05151355F
+	for <linux-perf-users@vger.kernel.org>; Wed, 16 Sep 2026 15:27:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789571113; cv=none; b=u24LPnviynfgwEiFGwCdS1kT8dvEug0ey8d+253Pr/WvPbmAtKxn/x/2eYVaZVI9Zbcc+DatwERbiaIY3a4nviVHGd/GiBzibfoIL8S54g72shsCb4QQFY87U88hw1SpOpnrR4tUZdyH5d1R3dDU6iy691hZVmN0jTr2waTHMFI=
+	t=1789572454; cv=none; b=eF1nCttZEQHxln2FNwK+UBp0dyinClGyJH8CHMqIz2tykqlrNqmAhDbb85gxqdjguRvN+zWj7uYdB5wjU9uPuQOQNmfz2GDT7v/qf9jCWfcilYNTaD+yps64BYwlVEi+O/DP77f5O+u1Dw2awFc6dqCFoqkXMG/xiD6orW0m4lM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789571113; c=relaxed/simple;
-	bh=lecKlwiZpOx67XjPELGhrtr2sWO32diwhhQ25lBYHPo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tyVO0zk5vAXNdp+qnNeTSual0ZRqWSHWlwHuDyp/kE/HEQVWk9HM7mPH2wps3UYqU7QAcXwxEL7sbJ1IkE3Gab3uo3xCSzZeimIYBSWz2P8diqwf/dZ5dl61LTZnePJhfUpYNAbAM+YP371JZ83Pp9LD5AndQm9p10r/SZCq1IE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=AVJxnD7c; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	s=arc-20240116; t=1789572454; c=relaxed/simple;
+	bh=/8VW9Dvo83Z09jxBj+TCP4E44skMYFi0oXPi1csETxg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=BX/M3ZPhgghXvBMRnxXpuI8aoKWj/+6B1XewaIhd/O4Hc1Wqm6jT2mQVaXGCzZ/uRE6yS+xWs+J2Wo44XhUFE/POQzQO2Jksj+FARuvSfBtHqLgqOKykuANkZYCttgMkEHchE6VURGAy3Ti9jCBM9GKIbKPSdiXAx8f9lIzABDs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=fHVRJNkU; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="AVJxnD7c"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id B14C540E01F9;
-	Wed, 16 Sep 2026 15:05:06 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id 8aWCoS_NYVkT; Wed, 16 Sep 2026 15:04:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1789571096; bh=OavHCWMHrrNZGtQQFEfuOdSXz4SUqFw84RfIgt32BKk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=AVJxnD7chINUYXPPYH+EdWJImtVKM/uBwqDV3xpl5zS/oMqUAOxJyeY+CJxGH+k6w
-	 OLbMjMvMvC6X7jNBelPQQbyxQp0RKdipnK3MwJNupxQCtVKVXnJlNVUrnXotiaMqb4
-	 NkCtzIHawBNz3IYpMeGqk+ClEHzQ5GEPK5rmD5VewoxhI6EpLkcbZb7/5JwqiVpOcU
-	 9ppRoKSnsrzXZWKkbZ/7I7iLB15FjyPord+7ZEL2k8cXnL7pK0mMBWE9kQ3Z+SaGR1
-	 WCMUBZ6ri0Y9wgf2acLcNo8A61qdZ/yCdPvyOOYO4h0mDq5LwGJntzZ3xZUk/wKF1c
-	 NE4Z/v3QqbaP6GSLQjcuq/rAi+WbO4oMSV5ggBnDDGu8UoJG5oRLA0iD6FwI7E27U5
-	 0ZSLj5BcDOypfYw6z0+o/zFzyEB7mUlO4ts8KUHNVoQm8F1/hxYyJ5X6sWIZqRFylE
-	 XMUzNqGE3gnijP995wLg1l//5+O0JK7ELFl01EBmA4P2NOxD7Yb39LLTugKoVgNoRE
-	 l6wXziTY9mRN6nTp3VBRHhq2UP7c+ziRS1jvP8pDG2VjzgGGeno/yqu7/jb3wZKs3L
-	 XDNkz5lFINBnUVfDHcvSIvrEoPdiAbrJnCdDEPx0HRUlZNuMgCSdMYollCjN0LU6ni
-	 V0XxXhL4svuDld+AMHfZDjKs=
-Received: from stx.tnic (unknown [IPv6:2600:1700:38ca:c00::a])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 5B00240E00B9;
-	Wed, 16 Sep 2026 15:04:40 +0000 (UTC)
-Date: Wed, 16 Sep 2026 08:04:36 -0700
-From: Borislav Petkov <bp@alien8.de>
-To: Luka Absandze <absandze@amazon.de>, Sandipan Das <sandipan.das@amd.com>
-Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
-	namhyung@kernel.org, tglx@kernel.org, dave.hansen@linux.intel.com,
-	x86@kernel.org, yaoz@meta.com, dwmw2@infradead.org,
-	kim.phillips@amd.com, kvm@vger.kernel.org,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] perf/x86/amd: Reject AMD Merge event as a countable event
-Message-ID: <20260916150436.GAaqqwBD8KvgTVrmc3@fat_crate.local>
-References: <20260916123315.89042-1-absandze@amazon.de>
+	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="fHVRJNkU"
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D3335176A;
+	Wed, 16 Sep 2026 08:27:24 -0700 (PDT)
+Received: from [10.2.212.23] (e121345-lin.cambridge.arm.com [10.2.212.23])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9531F3F86F;
+	Wed, 16 Sep 2026 08:27:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
+	t=1789572448; bh=/8VW9Dvo83Z09jxBj+TCP4E44skMYFi0oXPi1csETxg=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=fHVRJNkUub0vnRQHEeeucLmufQDlnCzbbvwgUI6h2FazgMh/QXc40U/xAGdmOy6X4
+	 A4JemSKBr9Zez8hCtP8GaEenU6az1OKPCAwAM7DWrMYbWaioxLmByccOQ6fVD40mwG
+	 0VhWBm1lb6s/F5eDR2GFZnd38q34ntUbhYHUNpvo=
+Message-ID: <aaafc5a8-e64a-4091-b615-257e48c34781@arm.com>
+Date: Wed, 16 Sep 2026 16:27:20 +0100
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20260916123315.89042-1-absandze@amazon.de>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] perf/arm-cmn: Fix multi-filter encoding
+To: Leo Yan <leo.yan@arm.com>
+Cc: will@kernel.org, mark.rutland@arm.com, ilkka@os.amperecomputing.com,
+ linux-perf-users@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+References: <ec590cd4cc61b54d6ad3b306b69777ad7729c9d6.1789475062.git.robin.murphy@arm.com>
+ <20260916093146.GG200420@e132581.arm.com>
+From: Robin Murphy <robin.murphy@arm.com>
+Content-Language: en-GB
+In-Reply-To: <20260916093146.GG200420@e132581.arm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-+ Sandipan
+On 16/09/2026 10:31 am, Leo Yan wrote:
+> On Tue, Sep 15, 2026 at 01:24:22PM +0100, Robin Murphy wrote:
+>> The current special-case for EVICT_STATE_SEL filtering effectively
+>> assigns the "filter" and "filter2" controls in the opposite order from
+>> how the CMN S3 r2 TRM states "Filtering is programmed in pmu_hbt_lbt_sel
+>> and pmu_evict_state_sel". On reflection, not only does this seem
+>> unnecessarily non-obvious to users, but it's also likely to be a problem
+>> for scaling to a full multi-filter abstraction in future. There is a
+>> logical order to filters based on their bitfield positions in the
+>> pmu_event_sel register, which the TRM descriptions allude to, and the
+>> cmn_filter_select enum already (almost) follows, so let's fix the UABI
+>> to follow suit while it's still unreleased.
+>>
+>> Fixes: 09178f536bb9 ("perf/arm-cmn: Plumb in new filter types")
+>> Signed-off-by: Robin Murphy <robin.murphy@arm.com>
+> 
+> It's hard to say how useful my review is, but I went through the patch
+> and also asked AI to explain the rationale. It makes sense to me:
+> 
+> Reviewed-by: Leo Yan <leo.yan@arm.com>
+> 
+> Seems we could implement a generic way to navigate filters based on
+> the hardware bitfield ordering, e.g. filter_next(sel) and
+> filter_prev(sel). This can be deferred until we have more combined
+> filters.
 
-On Wed, Sep 16, 2026 at 12:33:15PM +0000, Luka Absandze wrote:
-> AMD event select 0xFFF (Merge) is the hardware control encoding used by
-> Large Increment per Cycle (LIPC) pairs.  When written into an odd
-> counter's PerfCtl it turns that counter into the upper 16 bits of a
-> 64-bit merged accumulator; any subsequent arming write (-(2^47-1)) is
-> silently truncated to its low 16 bits, while hwc->prev_count retains the
-> full value.
-> 
-> This is particularly problematic with a KVM guest, which will program
-> the Merge encoding into its own odd vPMC as a normal part of scheduling
-> a LIPC event.  KVM intercepts that write and faithfully forwards it to
-> the host as a raw event carrying the Merge encoding, where it is
-> accepted as an ordinary countable event. Once a counter's PerfCtl holds
-> the Merge encoding, every later user of that counter gets a first delta
-> inflated by 2^47
-> 
-> Reject Merge (AMD_MERGE_EVENT) in amd_core_hw_config() so it cannot be
-> submitted as a user-visible event.  The pair mechanism programs it
-> itself via x86_pmu.perf_ctr_pair_en; nothing else should do so.
-> 
-> Fixes: 5738891229a2 ("perf/x86/amd: Add support for Large Increment per Cycle Events")
-> Reported-by: Yao Zhou <yaoz@meta.com>
-> Signed-off-by: Luka Absandze <absandze@amazon.de>
-> ---
->  arch/x86/events/amd/core.c | 8 ++++++--
->  1 file changed, 6 insertions(+), 2 deletions(-)
-> 
-> diff --git a/arch/x86/events/amd/core.c b/arch/x86/events/amd/core.c
-> index 49b6b8fce566..cb655c751e5b 100644
-> --- a/arch/x86/events/amd/core.c
-> +++ b/arch/x86/events/amd/core.c
-> @@ -380,8 +380,12 @@ static int amd_core_hw_config(struct perf_event *event)
->  	else if (event->attr.exclude_guest)
->  		event->hw.config |= AMD64_EVENTSEL_HOSTONLY;
->  
-> -	if ((x86_pmu.flags & PMU_FL_PAIR) && amd_is_pair_event_code(&event->hw))
-> -		event->hw.flags |= PERF_X86_EVENT_PAIR;
-> +	if (x86_pmu.flags & PMU_FL_PAIR) {
-> +		if ((event->hw.config & AMD64_EVENTSEL_EVENT) == AMD_MERGE_EVENT)
-> +			return -EINVAL;
-> +		if (amd_is_pair_event_code(&event->hw))
-> +			event->hw.flags |= PERF_X86_EVENT_PAIR;
-> +	}
->  
->  	if (has_branch_stack(event))
->  		return static_call(amd_pmu_branch_hw_config)(event);
-> -- 
-> 2.47.3
-> 
+Yup, that's the direction this was always heading - in the (near-ish) 
+future we definitely are going to have to support different events 
+having overlapping combinations of multiple filters, and even more cases 
+of one event having different filters per CMN model. Thus one option I 
+realised I'd like to keep open, in case arrays get too clunky, is to 
+encode cmn_filter_select values in a bitmap, wherein a mapping of bits 
+to CMN_EVENT_FILTER*() fields could always be implied based on this 
+consistent ordering.
 
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+Thanks,
+Robin.
