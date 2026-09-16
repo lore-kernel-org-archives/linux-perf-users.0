@@ -1,203 +1,119 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B85D4F7987;
-	Wed, 16 Sep 2026 13:57:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A109C496D5C;
+	Wed, 16 Sep 2026 14:02:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789567055; cv=none; b=GB3mQ7iMtn01bU6fCdviykouGWTVS5XpuxuLHDSWVLeIsQSIVS7w5PLtNV7o92A3UD/dFtb9MzDCXCwtXrjl45Z4R8Jlf+9FWCmyMNam13o5QW3C/zUKoFnWN8wwYEreHBCs7td9OpmzB3L+1gRTdw1MWGjQsJvanYecvzixYGA=
+	t=1789567344; cv=none; b=Xk/OJTpOCbYWH8WHGT7HoBicmN5IClku0ENrg/350Z0uvp17BUL3zzL2vZcGUhQgG3d1ickkaB/Tv5cAI7Z3TOHF4M4m2WUZRjW1mF+TMk+jmXDizGt/5YXAzb5FntrMN5lrmRYppdzH8A/W4eTg+SKwPFMJOchB+SgDPQXoXUw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789567055; c=relaxed/simple;
-	bh=t46hs0/GEgmiGgZp9Os84+OnNOORKYKQb8jdq05gkxs=;
+	s=arc-20240116; t=1789567344; c=relaxed/simple;
+	bh=uqeg/tEdSna7bYqoVqFFTobsC2dLJUX55+mZkBOvi50=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IQos4XNJOHRa/WGt2uVHnsCJwgTg5y1vNbo7BlR66OGKSxkN7LBvkJc6OvRX/Z5edMABLNRFmDdDF90mbMAwK9nvDNEEqIE8PJAMgvE1sFTriB+b2b97jk54+KCcPg40tOpwdPDaOFMUzjWxGyFrYLVgLAuGTGRECKdYpg7GfoM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=j28oebvK; arc=none smtp.client-ip=100.103.45.18
+	 Content-Type:Content-Disposition:In-Reply-To; b=hiJuxHJqIgda7go9l5kVL5y9eHJlVCPZN74k2aScP9yrUDggpLPzQvV3PTVIU6EDusl9X9/c7HTiy00ASKvxb2Oi89vDNJu+01Z4fxAcidEQG7Mm+nWoIugf9reumtbSPkkVNYIzC+01gzpji3Ajjx2sBVCS+aBUiS5RNPrdH0E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hv6HBG3n; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="j28oebvK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EDA561F000FF;
-	Wed, 16 Sep 2026 13:57:25 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hv6HBG3n"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 641A61F000FF;
+	Wed, 16 Sep 2026 14:02:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789567046;
-	bh=+mvIy+ktfyCO7J35CXJ94gRBdKzmzDuLPLFeOqM1y24=;
+	s=k20260515; t=1789567343;
+	bh=4wW3rLkY/v7pVduAC/PyGBiRUBE1iuH3F9MxNjBZjSY=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=j28oebvKbBFT/nU1bd70pbZcnAZWAMV3kmDAdf1VUu4h2xwujuol0OJ2oXG/aFsDq
-	 VCFYYL2aYxaodyPvbpHhTPv8footUbbq7HMxEEXasLhIAIYCa5/tL0YxYXJ5u2QoGy
-	 vBVHIqKdflCS6RxKL1o7fLdDoCpBm/FT+lCx8bowIlwctl+TbUq4BLKEKDhuf5/RKU
-	 LjrZmVWOj/h58DZHjxXa9KPahuW+Kf+Hl8RI8vA9H/gZEAkjuD17JsEVs8nHcYxZCM
-	 HqIXbiKTcAL7RqS3XiZi9vR10doSdiK7O8yd9PC0U5paxR5tDwMphwO8TwETbbOQLX
-	 jed7115szDXvg==
-Date: Wed, 16 Sep 2026 10:57:23 -0300
+	b=hv6HBG3nfOPvATJBQ9ydWtz5nlmItmz0weShgtLJqW0xPzNk4gDp4cC6mFIVLbioP
+	 tE+WmcTanjJowy3wr01h8X/WmUhVm8dgnh5UFaX0IdU6RHafUp0NiT13HtIXINtp5Y
+	 C1UKhAPf86vQucaR6C1+ibTxWb5v3UDY82hiebEAWe26mArczOmwxToms8N9vBwCCz
+	 +XcfRSttYoYmbj8+GWzC+gDg7/x6wD75RrZUAKPOHujnL+je2j+vuue6hxPZUgv51q
+	 YrwKF8uQlyI+F3edsXUJBdE2Gi3FId/ZgnZ6i7XNLs4OPbhF6EFaCd7dnYoKqvx3mj
+	 Y1xmdCpzRb58w==
+Date: Wed, 16 Sep 2026 11:02:19 -0300
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Chun-Tse Shao <ctshao@google.com>
-Cc: Ian Rogers <irogers@google.com>, Namhyung Kim <namhyung@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	James Clark <james.clark@linaro.org>,
-	Thomas Falcon <thomas.falcon@intel.com>,
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+To: sashiko-reviews@lists.linux.dev
+Cc: Chun-Tse Shao <ctshao@google.com>, linux-perf-users@vger.kernel.org
 Subject: Re: [PATCH v9] perf evsel: Find process with busy PMUs for EBUSY
-Message-ID: <aqqgQ_sbzwBTmKJ8@x2>
+Message-ID: <aqqha44XgcO_qQjp@x2>
 References: <CAP-5=fVzG-2oJ1gN=s-W+2r58k8P4M-E3r8aP9zJ2aK_w-K9vQ@mail.gmail.com>
  <20260915204951.2935261-2-ctshao@google.com>
+ <20260915205836.654691F000FF@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20260915204951.2935261-2-ctshao@google.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20260915205836.654691F000FF@smtp.kernel.org>
 
-On Tue, Sep 15, 2026 at 01:49:51PM -0700, Chun-Tse Shao wrote:
-> It parses fdinfo with PMU type, comparing with the event which failed to
-> open, and report the processes causing EBUSY error.
-> 
-> Testing cycles and intel_pt//
-> 
->   $ ./perf stat -e cycles &
->   [1] 55569
->   $ ./perf stat -e intel_pt// &
->   [2] 55683
->   $ ./perf stat -e intel_pt//
->   Error:
->   The PMU intel_pt counters are busy and in use by another process.
->   Possible processes:
->   55683 ./perf stat -e intel_pt//
-> 
-> Only perf with intel_pt was reported.
+On Tue, Sep 15, 2026 at 08:58:35PM +0000, sashiko-bot@kernel.org wrote:
+> Thank you for your contribution! Sashiko AI review found 1 potential issue(s) to consider:
+> - [Low] perf: missing POSIX header inclusions for libc functions
+> --
+> commit d5be35562f4cbefd7876eec8560215b17ee34b81
+> Author: Chun-Tse Shao <ctshao@google.com>
+ 
+> perf evsel: Find process with busy PMUs for EBUSY
+ 
+> This commit parses fdinfo with PMU type, comparing it with the event which
+> failed to open, and reports the processes causing EBUSY errors.
+ 
+> > diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+ 
+> [ ... ]
+ 
+> > +			/* Let's check the PMU type reserved by this process */
+> > +			scnprintf(buf, sizeof(buf), "%s/fdinfo/%s",
+> > +				  proc_entry->d_name, fd_entry->d_name);
+> > +			fdinfo_fd = openat(dirfd(proc_dir), buf, O_RDONLY | O_NONBLOCK);
+ 
+> [Severity: Low]
+> Will this compile under musl libc without explicitly including <fcntl.h> for
+> openat and O_NONBLOCK, as well as <unistd.h> for read and close?
 
-I'll apply this after addressing Sashiko's comments about missing
-headers for building on musl libc systems, thanks.
+Added while merging this patch...
+ 
+> [Severity: Low]
+> Does this require <stdio.h> to be explicitly included for sscanf to prevent
+> musl libc build failures?
+
+... ditto ...
+ 
+> > +					   "perf_event_attr.type:\t%u",
+> > +					   &perf_event_type) == 1) {
+> > +					/* continue parsing */
+> > +				} else if (sscanf(line,
+> > +						  "pmu_type:\t%u",
+> > +						  &pmu_type) == 1) {
+> > +					/* continue parsing */
+> > +				}
+> > +				line = strtok_r(NULL, "\n", &saveptr);
+> > +			}
+ 
+> [ ... ]
+ 
+> > @@ -4304,10 +4355,12 @@ static int dump_perf_event_processes(char *msg, size_t size)
+> >  				for (ssize_t i = 0; i < cmdline_size; i++) {
+> >  					if (buf[i] == '\0')
+> >  						buf[i] = ' ';
+> > +					else if (!isprint((unsigned char)buf[i]))
+ 
+> [Severity: Low]
+> Does this require <ctype.h> to be explicitly included for isprint to ensure
+> compatibility with musl libc builds?
+
+⬢ [acme@tb-five-perf perf-tools-next]$ grep ctype tools/perf/util/evs
+evsel.c          evsel_config.h   evsel_fprintf.c  evsel_fprintf.h  evsel.h          evswitch.c       evswitch.h       
+⬢ [acme@tb-five-perf perf-tools-next]$ grep ctype tools/perf/util/evsel.c 
+#include <linux/ctype.h>
+⬢ [acme@tb-five-perf perf-tools-next]$ grep -w isprint tools/include/linux/ctype.h 
+#define isprint(c)	((__ismask(c)&(_P|_U|_L|_D|_SP)) != 0)
+⬢ [acme@tb-five-perf perf-tools-next]$
+
+We need to update review-prompts to cover this case.
+
+Anyway:
+
+Thanks, applied to perf-tools-next, for v7.4.
 
 - Arnaldo
- 
-> Reviewed-by: Ian Rogers <irogers@google.com>
-> Signed-off-by: Chun-Tse Shao <ctshao@google.com>
-> Assisted-by: Gemini:gemini-3.1-pro-preview
-> ---
-> v9:
->   - Rebased onto perf-tools-next
-> ---
->  tools/perf/util/evsel.c | 69 ++++++++++++++++++++++++++++++++++++-----
->  1 file changed, 62 insertions(+), 7 deletions(-)
-> 
-> diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-> index b44fd880d2d5..f3f5519d0d3d 100644
-> --- a/tools/perf/util/evsel.c
-> +++ b/tools/perf/util/evsel.c
-> @@ -4354,8 +4354,11 @@ static bool find_process(const char *name)
->  	return ret ? false : true;
->  }
-> 
-> -static int dump_perf_event_processes(char *msg, size_t size)
-> +static int dump_perf_event_processes(const struct evsel *evsel,
-> +				     char *msg, size_t size)
->  {
-> +	const struct perf_event_attr *failed_attr = &evsel->core.attr;
-> +	u32 target_pmu_type = evsel->pmu ? evsel->pmu->type : UINT32_MAX;
->  	DIR *proc_dir;
->  	struct dirent *proc_entry;
->  	int printed = 0;
-> @@ -4386,6 +4389,15 @@ static int dump_perf_event_processes(char *msg, size_t size)
->  			continue;
->  		}
->  		while ((fd_entry = readdir(fd_dir)) != NULL) {
-> +			const char *target_lnk = "anon_inode:[perf_event]";
-> +			size_t target_lnk_len = sizeof("anon_inode:[perf_event]") - 1;
-> +			char fdinfo_buf[1024];
-> +			int fdinfo_fd;
-> +			ssize_t fdinfo_size;
-> +			char *line;
-> +			char *saveptr;
-> +			u32 perf_event_type = UINT32_MAX;
-> +			u32 pmu_type = UINT32_MAX;
->  			ssize_t link_size;
-> 
->  			if (fd_entry->d_type != DT_LNK)
-> @@ -4394,12 +4406,51 @@ static int dump_perf_event_processes(char *msg, size_t size)
->  			if (link_size < 0)
->  				continue;
->  			/* Take care as readlink doesn't null terminate the string. */
-> -			if (!strncmp(buf, "anon_inode:[perf_event]", link_size)) {
-> +			if (link_size != (ssize_t)target_lnk_len ||
-> +			    strncmp(buf, target_lnk, target_lnk_len))
-> +				continue;
-> +
-> +			/* Let's check the PMU type reserved by this process */
-> +			scnprintf(buf, sizeof(buf), "%s/fdinfo/%s",
-> +				  proc_entry->d_name, fd_entry->d_name);
-> +			fdinfo_fd = openat(dirfd(proc_dir), buf, O_RDONLY | O_NONBLOCK);
-> +			if (fdinfo_fd == -1)
-> +				continue;
-> +			fdinfo_size = read(fdinfo_fd, fdinfo_buf, sizeof(fdinfo_buf) - 1);
-> +			close(fdinfo_fd);
-> +			if (fdinfo_size < 0)
-> +				continue;
-> +			fdinfo_buf[fdinfo_size] = '\0';
-> +
-> +			line = strtok_r(fdinfo_buf, "\n", &saveptr);
-> +			while (line) {
-> +				if (sscanf(line,
-> +					   "perf_event_attr.type:\t%u",
-> +					   &perf_event_type) == 1) {
-> +					/* continue parsing */
-> +				} else if (sscanf(line,
-> +						  "pmu_type:\t%u",
-> +						  &pmu_type) == 1) {
-> +					/* continue parsing */
-> +				}
-> +				line = strtok_r(NULL, "\n", &saveptr);
-> +			}
-> +
-> +			/* Report the process which reserves the conflicted PMU. */
-> +			/* If fdinfo does not contain PMU type, report it too. */
-> +			if (perf_event_type == failed_attr->type ||
-> +			    pmu_type == failed_attr->type ||
-> +			    (target_pmu_type != UINT32_MAX &&
-> +			     pmu_type == target_pmu_type) ||
-> +			    (perf_event_type == UINT32_MAX &&
-> +			     pmu_type == UINT32_MAX)) {
->  				int cmdline_fd;
->  				ssize_t cmdline_size;
-> 
-> -				scnprintf(buf, sizeof(buf), "%s/cmdline", proc_entry->d_name);
-> -				cmdline_fd = openat(dirfd(proc_dir), buf, O_RDONLY);
-> +				scnprintf(buf, sizeof(buf),
-> +					  "%s/cmdline",
-> +					  proc_entry->d_name);
-> +				cmdline_fd = openat(dirfd(proc_dir), buf, O_RDONLY | O_NONBLOCK);
->  				if (cmdline_fd == -1)
->  					continue;
->  				cmdline_size = read(cmdline_fd, buf, sizeof(buf) - 1);
-> @@ -4410,10 +4461,12 @@ static int dump_perf_event_processes(char *msg, size_t size)
->  				for (ssize_t i = 0; i < cmdline_size; i++) {
->  					if (buf[i] == '\0')
->  						buf[i] = ' ';
-> +					else if (!isprint((unsigned char)buf[i]))
-> +						buf[i] = '.';
->  				}
-> -
->  				if (printed == 0)
-> -					printed += scnprintf(msg, size, "Possible processes:\n");
-> +					printed += scnprintf(msg, size,
-> +							     "Possible processes:\n");
-> 
->  				printed += scnprintf(msg + printed, size - printed,
->  						"%s %s\n", proc_entry->d_name, buf);
-> @@ -4535,7 +4588,9 @@ int evsel__open_strerror(struct evsel *evsel, struct target *target,
->  			msg, size,
->  			"The PMU %s counters are busy and in use by another process.\n",
->  			evsel->pmu ? evsel->pmu->name : "");
-> -		return printed + dump_perf_event_processes(msg + printed, size - printed);
-> +		return printed + dump_perf_event_processes(evsel,
-> +							   msg + printed,
-> +							   size - printed);
->  		break;
->  	case EINVAL:
->  		if (evsel->core.attr.sample_type & PERF_SAMPLE_CODE_PAGE_SIZE && perf_missing_features.code_page_size)
-> --
-> 2.55.0.1032.g73a4cd73de-goog
