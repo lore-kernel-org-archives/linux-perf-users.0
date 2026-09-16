@@ -1,159 +1,193 @@
-Received: from mail-pj1-f72.google.com (mail-pj1-f72.google.com [209.85.216.72])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B01DE5013D6
-	for <linux-perf-users@vger.kernel.org>; Wed, 16 Sep 2026 23:44:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.72
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A267D472521;
+	Wed, 16 Sep 2026 23:45:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789602264; cv=none; b=dN5iFMIdb0+i8F+M7nQSy+F8lsgRH2XD30nXpXe9i/R/fIZetphAnc5heB30FlKC4u3sFjqvr1qlWbeOQ+ifSDwuRcQ3rYTcSdZsWNx+wP5Ql4bTimQfmEnkWThEGo2X8HB+uq3BfMxVIjaNXi887gPB/ghys/+CaFTApYA+HXM=
+	t=1789602333; cv=none; b=SALJWOO0q/j5/HEs+iYtFXwRlw0ByrHKnazVq6tBpSsL0769PTX2ZTXRiML/9h+O6zy20xKsWUD6QSJoEgpfEgL4K6VM7nO7mYgJg+KQ4fbJClsJaKfCestk2hR/r7VoTPxK8y8o29yb3rdwcmiwnng4ZhfwoaOwa1/mTx33o1Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789602264; c=relaxed/simple;
-	bh=jeEJpcUOnMW1H6iQsMNBSRPc1DiwXIDweaguQDaQWkA=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=Q4Q8+OdZbcdl+N4YlzquMNAF9sypSOJMtb0aDRiweXzh2y9MhFCYoPErpfYWoFG+HtLtZdwxjZaa4Xc8hORujqj8BKYqDHYRmgstMnU2LCvCq9nbyCsTCXXpY/0fOtW0zd3QvPJ1nA8IR3jTd1XdX3afA/qHnP0JHAMHTiIyam8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=vWBKjFJu; arc=none smtp.client-ip=209.85.216.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
+	s=arc-20240116; t=1789602333; c=relaxed/simple;
+	bh=Kh3rKS1+K7TDXnwpcYYaSVeBFbOeWE/01LMZJFeCs8k=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=I3tzTN5EkEL2uAg7O5FKFbtvaKNajTQfNfMG70Zcke3R//OtbqX8ESgPzlAS78oxd4y3pIsHE90m+E5+UbEut+umlETOVEzh0sSfZ2AmSBAf6I3BApVoUtGDsHNRusIoVEBAy1wijaBYUErUmNKBvXjVc7E+Ktk2jWjLxxoQSC0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HDmAf4+L; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vWBKjFJu"
-Received: by mail-pj1-f72.google.com with SMTP id 98e67ed59e1d1-38ea32e57e2so497846a91.1
-        for <linux-perf-users@vger.kernel.org>; Wed, 16 Sep 2026 16:44:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1789602261; x=1790207061; darn=vger.kernel.org;
-        h=content-type:cc:to:from:subject:message-id:references:mime-version
-         :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=Juznuv85kRzuednz/BkmExb07fgMhpHO/r2YE0AU9aA=;
-        b=vWBKjFJudfRw7A2p+0nHk/bCpqH4l4+T8oj/cp16S6aO7SqI/wcplnQbyTFJ4BvJp2
-         EYw08kK6NyCPOcfqog0kdzodi6nMw7IYUbzXPN5r5F0vw8/GsggsOzLZgo8GP2LIBReZ
-         x+ZrEeuid8QTXfnIMHB+lkH9FVnacdR7rKPuLUZFG9BVc0aPDXcvQc6YXS+sN51Xxkza
-         wfXTcUjkpTHqE5HqvqqRjKmvv7XSyKZhgtCfMT3G9yI39Wt8UnLU+2PsGTVo/O9J8UIf
-         J0nBh7217gHHxC2BblXKI5yjantSJ3FEV5Zmr8R7wSSB6kycz8jI3kUbUDC+c2atGn06
-         Ahgw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1789602261; x=1790207061;
-        h=content-type:cc:to:from:subject:message-id:references:mime-version
-         :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=Juznuv85kRzuednz/BkmExb07fgMhpHO/r2YE0AU9aA=;
-        b=R77eU6bzvcODAYQDwg0JDSNNUtOzo6JQVSgM4NrfEWdpMHpWpyt0Saye6qDzDdGGBt
-         gX6585ZaGaACJGrpnxQNx+Zzl0Rwb+ASDLa4GmQUP/HyRO2IPVl7gQ4FuyABnw79fXE4
-         oIoZdRaOsSzfE+rI0gd9p6HkMqpdDXblyJnZ6PkNJvJUTpcOTjgiZHmifL8ELRJMOkXb
-         +S9bQQQd8+1/gm/DR7LducvPJeX/Qx4CojfqrS7oEHmxgR4RCvnK3wAMEr7SxdHbOvwQ
-         8oG8V7xnHvxSBAUMGnKSKnndaG3DajFOPDeG8Mwx82Lit4WrlJtDFR1hsOJZKCF8kCoi
-         1qkw==
-X-Forwarded-Encrypted: i=1; AKwUvBxelu9iwlpNkaCFA8Zc/N9YwHoGUn4bGY19CiBLMEkEyAlPZgBCRraZf9L8946Jiht7lpuBBjT/7atbxt5XTJl8@vger.kernel.org
-X-Gm-Message-State: AFuF++ldtMZGHpyTdeL4CDbyt7YsDFXz1QoXrHthZGfUDY7KNnolS7uK
-	80FQWo0t3qehDsqK+7ZFNLHle80TqnrYxx5Kulsq4tBVEpYPYuTPlGs2IGvzq+xJPZpHapPituX
-	bOJynwyLRHA==
-X-Received: from dlbvv15.prod.google.com ([2002:a05:7022:5f0f:b0:143:7a1a:167d])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:5108:b0:39d:b769:3067
- with SMTP id 98e67ed59e1d1-39e1df6154emr9932917a91.0.1789602260835; Wed, 16
- Sep 2026 16:44:20 -0700 (PDT)
-Date: Wed, 16 Sep 2026 16:44:02 -0700
-In-Reply-To: <20260916234402.437113-1-irogers@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HDmAf4+L"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E282B1F000FF;
+	Wed, 16 Sep 2026 23:45:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1789602332;
+	bh=Uom+5GiRwnUi0P13tTGi61WOHauRp/h8S/b2KqC1Afk=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References;
+	b=HDmAf4+LvbmJSAoQRmaGZ2c2JeChzAbl08VlEepE6bI4BXd4YKpP0Ukb9lhdtMtTF
+	 HNUofo1oxUREMHfcP9KNAjrKP0QQlkeXuYmtD00rDEaFt9fHDKV9BsjZU76LdwXvfg
+	 la9tvag7dT8NkJOmmq0wMp1pWwz4jAtu708Bj05Kv6dYm8XdJevRGR5gyUg5t9oWwa
+	 Aeo8GeMCBIbpx3lCBZKZ8/1HDgBMuCW8G1sL9LbZ9IE0qw29fhud7UzGmUtDH8Ly20
+	 kkh2QcnFg9fsfnmEoImihNReVklcb4lNcN9crUYuyiOyFWHwyAq1J0pCyLvYIDSZ4I
+	 Zx0w60SifExYQ==
+Date: Thu, 17 Sep 2026 08:45:26 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Sean Christopherson <seanjc@google.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>, Peter Zijlstra
+ <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, x86@kernel.org,
+ Jinchao Wang <wangjinchao600@gmail.com>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Thomas Gleixner <tglx@linutronix.de>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ "H . Peter Anvin" <hpa@zytor.com>, Alexander Shishkin
+ <alexander.shishkin@linux.intel.com>, Ian Rogers <irogers@google.com>,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ linux-doc@vger.kernel.org, linux-perf-users@vger.kernel.org, Paolo Bonzini
+ <pbonzini@redhat.com>, kvm@vger.kernel.org
+Subject: Re: [PATCH v16 02/13] KVM: x86: Prevent host DR7 debug register
+ leak into guest OS on NMI
+Message-Id: <20260917084526.18128cef47424990d42bb6ce@kernel.org>
+In-Reply-To: <aqgGRKOE138ePqmX@google.com>
+References: <178939017565.94750.9431053336761330458.stgit@devnote2>
+	<178939019982.94750.4441254006258061798.stgit@devnote2>
+	<aqgGRKOE138ePqmX@google.com>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-References: <20260916063545.3103314-1-irogers@google.com> <20260916234402.437113-1-irogers@google.com>
-X-Mailer: git-send-email 2.55.0.1082.g2b9226bbc0-goog
-Message-ID: <20260916234402.437113-4-irogers@google.com>
-Subject: [PATCH v3 3/3] perf libbfd: Report success when an address is found
-From: Ian Rogers <irogers@google.com>
-To: irogers@google.com, acme@kernel.org, namhyung@kernel.org
-Cc: adrian.hunter@intel.com, james.clark@linaro.org, jolsa@kernel.org, 
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
-	mingo@redhat.com, peterz@infradead.org, tmricht@linux.ibm.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-libbfd__addr2line() only reports success when the caller asked for a file
-name. addr2inlines() passes a NULL file as it just wants the inline_node
-populating, so libbfd__addr2line() returns 0 for it unless
-bfd_find_inliner_info() happened to find an inline frame. addr2line() in
-srcline.c treats 0 as a failure and tries the next addr2line
-implementation, which appends its own frames to the inline_node libbfd
-already appended to. Every frame that isn't inlined is then reported
-twice, which happens by default when perf is built with libbfd but
-without libdw as the fallback order is then libbfd followed by the
-addr2line command:
+Hi Sean,
 
-  $ perf record --call-graph dwarf -- perf test -w inlineloop 1
-  $ perf script --fields +srcline
-  ...
-	    56051a994f8e parent+0x2e (perf)
-    inlineloop.c:32
-	    56051a99503a inlineloop+0x8a (perf)
-    inlineloop.c:47
-	    56051a99503a inlineloop+0x8a (perf)
-    inlineloop.c:47
-	    56051a95841a cmd_test+0xb7a (perf)
-    ??:0
-	    56051a95841a cmd_test+0xb7a (perf)
-    ??:0
-  ...
+Thanks for your review!
 
-Report success whenever the address is found, like libdw__addr2line()
-does, and clear the frames appended so far when appending fails so that a
-following implementation starts from an empty node.
+On Mon, 14 Sep 2026 07:35:48 -0700
+Sean Christopherson <seanjc@google.com> wrote:
 
-Fixes: 257046a36750 ("perf srcline: Fallback between addr2line implementations")
-Signed-off-by: Ian Rogers <irogers@google.com>
-Assisted-by: Antigravity:gemini-3.1-pro
----
- tools/perf/util/libbfd.c | 16 +++++++++++++---
- 1 file changed, 13 insertions(+), 3 deletions(-)
+> On Mon, Sep 14, 2026, Masami Hiramatsu (Google) wrote:
+> > From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> > 
+> > When KVM enters a guest OS, host hardware breakpoints are disabled
+> > before running the guest. However, an NMI can occur during guest
+> > execution, where local_db_save() or arch_install_hw_breakpoint()
+> > can be invoked.
+> > 
+> > In particular, if local_db_save() or arch_install_hw_breakpoint()
+> > is executed from NMI, hardware DR7 can be modified or restored with
+> > host breakpoint settings, leaking host breakpoints into the guest OS
+> > or clobbering the guest's debug registers.
+> 
+> Not for local_db_save(), at least not AFAICT.  On VM-Exit, both Intel and AMD
+> purge DR7, i.e. load 0x400, so local_db_save() => local_db_restore() is more or
+> less a nop.  Even if that weren't the case, actually saving/restoring DR7 would
+> be the right thing to do, in any context.
 
-diff --git a/tools/perf/util/libbfd.c b/tools/perf/util/libbfd.c
-index d87242d88525..a907d7c1ac94 100644
---- a/tools/perf/util/libbfd.c
-+++ b/tools/perf/util/libbfd.c
-@@ -287,6 +287,7 @@ int libbfd__addr2line(const char *dso_name, u64 addr,
- 		int cnt = 0;
- 
- 		if (node && inline_list__append_dso_a2l(dso, node, sym)) {
-+			inline_node__clear_frames(node);
- 			ret = 0;
- 			goto out;
- 		}
-@@ -300,23 +301,32 @@ int libbfd__addr2line(const char *dso_name, u64 addr,
- 
- 			if (node != NULL) {
- 				if (inline_list__append_dso_a2l(dso, node, sym)) {
-+					inline_node__clear_frames(node);
- 					ret = 0;
- 					goto out;
- 				}
--				// found at least one inline frame
--				ret = 1;
- 			}
- 		}
- 	}
- 
- 	if (file) {
- 		*file = a2l->filename ? strdup(a2l->filename) : NULL;
--		ret = *file ? 1 : 0;
-+		if (!*file) {
-+			/* Leave ret as 0 so that another addr2line is tried. */
-+			goto out;
-+		}
- 	}
- 
- 	if (line)
- 		*line = a2l->line;
- 
-+	/*
-+	 * The address was found, report success so that the caller doesn't try
-+	 * another addr2line implementation that would append the inline frames
-+	 * above a second time.
-+	 */
-+	ret = 1;
-+
- out:
- 	mutex_unlock(dso__lock(dso));
- 	return ret;
+OK.
+
+> 
+> > Introduce a per-CPU flag, cpu_dr_in_guest, to indicate that the CPU
+> > is executing in guest mode. Set this flag in vcpu_enter_guest()
+> > during entering the guest with disabling host breakpoints.
+> > If this flag is set, local_db_save() and local_db_restore() return
+> > immediately, and arch_install_hw_breakpoint() returns an error.
+> > In addition, protect cpu_dr_in_guest in within_cpu_entry() to
+> > prevent recursive #DB exceptions.
+> > 
+> > Fixes: f85d40160691 ("KVM: X86: Disable hardware breakpoints unconditionally before kvm_x86->run()")
+> > Assisted-by: Antigravity:gemini-3.8-flash
+> > Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> > ---
+> > Changes in v16:
+> >  - Newly added.
+> > ---
+> >  arch/x86/include/asm/debugreg.h |    6 ++++++
+> >  arch/x86/kernel/hw_breakpoint.c |   10 ++++++++++
+> >  arch/x86/kvm/x86.c              |    7 +++++++
+> >  3 files changed, 23 insertions(+)
+> > 
+> > diff --git a/arch/x86/include/asm/debugreg.h b/arch/x86/include/asm/debugreg.h
+> > index 854d82b88ff4..50f830972698 100644
+> > --- a/arch/x86/include/asm/debugreg.h
+> > +++ b/arch/x86/include/asm/debugreg.h
+> > @@ -18,6 +18,7 @@
+> >  #define DR7_FIXED_1	0x00000400
+> >  
+> >  DECLARE_PER_CPU(unsigned long, cpu_dr7);
+> > +DECLARE_PER_CPU(bool, cpu_dr_in_guest);
+> >  
+> >  #ifndef CONFIG_PARAVIRT_XXL
+> >  /*
+> > @@ -129,6 +130,9 @@ static __always_inline unsigned long local_db_save(void)
+> >  {
+> >  	unsigned long dr7;
+> >  
+> > +	if (this_cpu_read(cpu_dr_in_guest))
+> > +		return 0;
+> 
+> This is broken.  If an NMI hits between KVM writing cpu_dr_in_guest and clearing
+> DR7, and there are active breakpoints, then local_db_save() won't disable breakpoints
+> as it should, and the relevant code in exc_nmi() will run with breakpoints enabled.
+> 
+> 	kvm_load_xfeatures(vcpu, true);
+> 
+> 	this_cpu_write(cpu_dr_in_guest, true);
+> 	barrier();
+> 
+>   <NMI here is problematic>
+> 
+> 	if (unlikely(vcpu->arch.switch_db_regs &&
+> 		     !(vcpu->arch.switch_db_regs & KVM_DEBUGREG_AUTO_SWITCH))) {
+> 		set_debugreg(DR7_FIXED_1, 7);
+> 		set_debugreg(vcpu->arch.eff_db[0], 0);
+
+Oops, indeed! OK, so local_db_save/restore will just work as it is,
+but modifying DR7 should directly be prohibited.
+
+> 
+> > +
+> >  	if (cpu_feature_enabled(X86_FEATURE_HYPERVISOR) && !hw_breakpoint_active())
+> >  		return 0;
+> >  
+> > @@ -157,6 +161,8 @@ static __always_inline void local_db_restore(unsigned long dr7)
+> >  	 * not be good.
+> >  	 */
+> >  	barrier();
+> > +	if (this_cpu_read(cpu_dr_in_guest))
+> > +		return;
+> >  	if (dr7)
+> >  		set_debugreg(dr7, 7);
+> >  }
+> > diff --git a/arch/x86/kernel/hw_breakpoint.c b/arch/x86/kernel/hw_breakpoint.c
+> > index f846c15f21ca..68de7ed79d88 100644
+> > --- a/arch/x86/kernel/hw_breakpoint.c
+> > +++ b/arch/x86/kernel/hw_breakpoint.c
+> > @@ -40,6 +40,9 @@
+> >  DEFINE_PER_CPU(unsigned long, cpu_dr7);
+> >  EXPORT_PER_CPU_SYMBOL(cpu_dr7);
+> >  
+> > +DEFINE_PER_CPU(bool, cpu_dr_in_guest);
+> > +EXPORT_PER_CPU_SYMBOL_GPL(cpu_dr_in_guest);
+> > +
+> >  /* Per cpu debug address registers values */
+> >  static DEFINE_PER_CPU(unsigned long, cpu_debugreg[HBP_NUM]);
+> >  
+> > @@ -102,6 +105,9 @@ int arch_install_hw_breakpoint(struct perf_event *bp)
+> >  
+> >  	lockdep_assert_irqs_disabled();
+> >  
+> > +	if (this_cpu_read(cpu_dr_in_guest))
+> > +		return -EBUSY;
+> 
+> If we decide this is how to fix arch_install_hw_breakpoint() clobbering DRs from
+> NMI context, I would rather have more generic flag to tell perf that KVM is about
+> to enter the guest, e.g. so that we don't have to separately solve the same problem
+> for other perf events:
+> 
+> https://lore.kernel.org/all/3585d823-00f3-46ae-a799-b62a95743e76@linux.intel.com
+
+OK, so introducing a new (someting like) cpu_in_trans_guest flag and check it
+from all affected places?
+
+Thank you,
+
 -- 
-2.55.0.1082.g2b9226bbc0-goog
-
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
