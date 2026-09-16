@@ -1,43 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F6233D7D64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 227AD4D90D6
 	for <linux-perf-users@vger.kernel.org>; Wed, 16 Sep 2026 11:57:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789559848; cv=none; b=mIKXIvvMAdUDySvvROVpGsO3izuciPoeySu1IHAJWyRqeVvivAnOu5TZnQHU2dB9YTZiA+UOu4bUxRgxApiTWvSQn02HM2yH/lIYINo6z+xaXfyJcDOmEgcOmG62IEpn1gFBldGGgK5X5+tahaqFt2ktH1km+nP/mM4nWnWu4cQ=
+	t=1789559851; cv=none; b=I6lo4tttC9o2FKa9XzRaMdejas1M73r+S2c4sVZTs0eoXskJQdglD5RY/lI9RGhkoTYj6pz0Jp3KihDtcUmGajyjqxWlWhC1TKOrHRnFeMegTZfcwbHLSP3hOaDJqOgmTWsFQFFDnrI+vaQHiz2nvlkDmHKqMPsXQIy4K41tOsY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789559848; c=relaxed/simple;
-	bh=Grf4BEvHHZaDdLdgM5RdMHhPEmEU8FTmC8UOa0Mljno=;
+	s=arc-20240116; t=1789559851; c=relaxed/simple;
+	bh=1fN9Ok/xmwjI7URc1nsA4UR883Mc6Fnhkp5nYXERgdU=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=ulzP0/ppx31+thyK9nhq+u8WKUHLfBT0lv8LWxXElLjI7aVg8EcPUMZIwSg3qJb1zPvf0KMxzukCnVkWsNAmWw7lee9MYvnPstilD41eGAS+x2Iqkaa5myT9gdkBMosfCN9nsVgvQsv4jQi4KQ2/lyghTqfgrGqiwlZFFiEQ4Mg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fIDJoiD3; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=ZLOzURkMnz10MQZY7bsQWXFJ/K++a7LbTSa2qL0Sdn9UxPzt2E25fuuBE+9RokS1mSwG8P6XlOORfzy3cyeA2mEhcW8GBvJcwiSQwTKNJtcxPHGMs9R5DD4IGQNmx9EL5mR0RL/SyZtFFXCSR1cJKfi6UMCFVhvuPLWYcDb0bLc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KmVSvHPc; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fIDJoiD3"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 232061F00893;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KmVSvHPc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D85D71F00898;
 	Wed, 16 Sep 2026 11:57:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789559843;
-	bh=2W8tF8fScmtB/c0MO4katzBarsoejcN1PvrhRcN1GqI=;
+	s=k20260515; t=1789559844;
+	bh=6WhVAO3GacHLScevUgrTwXVVdf2cQ4RCEAs2LVkenrI=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=fIDJoiD3CF6qc6Xj8Cg0hxiln/zarn+6Kdt59WUjvESTwNgp2P9ETe++/L2mBF11V
-	 I2OVdj4f6h3Q9fznbNGYWRoJMlcN1MoJhXHN+LNGs2q+4w4wZUmeHhCsfkFouF/AUX
-	 TPQbSdkOnJEuPQO01sKCgNE+KyfwyidUdNZG/5jYphnIyItUTaS8Z8kRFN5A5/TKTI
-	 ln8j4vR69Xp9o3TcdG+QOiyGhih7OIyT4UaMpUUcvhszbOXVs0vKPXTYpI6zs5D8ZA
-	 Ggao9LbYpMPs/j0f3wDb0A+RPqrN6MTPQXjfy4Ee6ZfH+39/2ac7bJ7ZmHxfI4j5RJ
-	 uBThYYN9fQACg==
+	b=KmVSvHPcbVv2qtOOD5hJCtwcbJm9PzHFCwLPRGJozv3ryRyOjsSyllOw8phdl0PME
+	 dyM6FMwjVgrmgvgMULAk7+33dec1R/BOAGeXUejHUu+cq++s407Cubim9tDrM9cuwY
+	 c12Jap0ypyuJBwWj6lhqCMyrP2z+hmpNEDM7dU+we4n8KtI/Pjlp46FANWKGLwMLXI
+	 Bs2exSj+Txs38JKOEzvjGHNeccWxElTlTzHi1JWlEEtQee4DVtZKcNuHcb791j2c6N
+	 FVQY99LcMI1MQkHq7x/7/yheByLZrILCYJqwfcFPw6Zi8XbutAIx+m2nrSh4+Ixzrt
+	 F9QgNsrE8E68g==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 08/12] perf report: Add --progress option
+Subject: Re: [PATCH 02/12] perf debuginfo: Fetch debuginfo keyed by build ID
+ using debuginfod
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Arnaldo Carvalho de Melo" <acme@kernel.org>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260916114740.48230-9-acme@kernel.org>
+In-Reply-To: <20260916114740.48230-3-acme@kernel.org>
 References: <20260916114740.48230-1-acme@kernel.org>
- <20260916114740.48230-9-acme@kernel.org>
+ <20260916114740.48230-3-acme@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Wed, 16 Sep 2026 11:57:22 +0000
-Message-Id: <20260916115723.232061F00893@smtp.kernel.org>
+Date: Wed, 16 Sep 2026 11:57:23 +0000
+Message-Id: <20260916115723.D85D71F00898@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -46,23 +47,22 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
 > From: Arnaldo Carvalho de Melo <acme@redhat.com>
 >=20
-> Processing a large data type profiling session, e.g. an AMD IBS one, can
-> take a long time and, when using the stdio output, 'perf report' gives no
-> feedback about which phase it is in nor about how far along it is: the
-> TUI has a progress bar for that, but in the stdio case the ui_progress
-> updates, that are already there, are dropped on the floor.
+> perf already uses debuginfod to fetch source files when annotating
+> (via probe-finder.c) and 'perf probe' has open_from_debuginfod(),
+> which queries debuginfo keyed by build ID when a module's debuginfo
+> isn't found locally, largely the same thing this adds; eventually
+> that one could be moved over to the new helper.  For the analysis
+> tools there was no way to obtain the debuginfo for a DSO in a
+> profile when it isn't available locally under the name the DSO was
+> opened with, for instance the vmlinux for the kernel a profile was
+> recorded on when processing it on another machine, or after the
+> kernel and its debuginfo package got upgraded in between.
 >=20
-> Add a --progress option that installs a stdio backend for ui_progress,
-> ui/stdio/progress.c, printing the phase title, the percentage done and
-> the current/total counts to stderr:
->=20
->   Processing events... [ 42.3%] 317M / 746M
->   Merging related events... [ 61.0%] 309026 / 506686
->   Sorting events for output... [ 98.2%] 14132 / 14387
+> Add debuginfo__find_build_id(), that uses the debuginfod client to
+> locate a debuginfo file keyed by the build ID, checking its local
 > [ ... ]
->   88: Test that perf report handles truncated perf.data gracefully (no cr=
-ash, no segfault =E2=80=94 clean error exit).: Ok
->   =E2=AC=A2 [acme@toolbx perf-tools-next]$
+> that make NO_LIBDW=3D1 on a system that has the debuginfod client
+> keeps linking.
 >=20
 > Assisted-by: LLM
 > Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
@@ -71,5 +71,5 @@ Sashiko has reviewed this patch and found no issues. It looks great!
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260916114740.4823=
-0-1-acme@kernel.org?part=3D8
+0-1-acme@kernel.org?part=3D2
 
