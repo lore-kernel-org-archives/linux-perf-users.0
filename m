@@ -1,540 +1,104 @@
-Received: from out-2uec-a113.jellyfish.systems (out-2uec-a113.jellyfish.systems [63.250.43.113])
+Received: from mail-yx2-f12.google.com (mail-yx2-f12.google.com [74.125.224.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CBDE36074F
-	for <linux-perf-users@vger.kernel.org>; Wed, 16 Sep 2026 16:16:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=63.250.43.113
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789575414; cv=none; b=AnJxBv7FbP+zGoF2vmcmvHlTpADziDHuZf0qPni/XSKk5UFDggL8kUKvofJNbdQ0yBgx2XsjoDzOeN8bIa3XP2vf/81tbe2IYDi68jozAbgPOhpGX3UTlXaTHF743oxHm7G3bVy0pwDLTI2HCJDFSP5yqv08fiZBtdzECYSktVI=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789575414; c=relaxed/simple;
-	bh=m85Ei046pGaHQ1bb2sq9uqBWK3qTOxvlC9tEX2125B4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=lNmFwZqUEpSWLAWmaTxBx7lu1NNJ0WZW0rN+1QRAixeLT0IvHvPyKg2TeOjbSSUYGH/LCCqqfSVgFEaJZ9FaMNNJ/n1NW1qOVq8030CDvzFcR7nw4kimARWmGw1rO3e3iqo7gDD5FAMRvQIpwF3/nZ9ZgLCV0s3Vw28DUFJBL0k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=tychen.cc; spf=pass smtp.mailfrom=tychen.cc; dkim=pass (2048-bit key) header.d=tychen.cc header.i=@tychen.cc header.b=POi3uZcn; arc=none smtp.client-ip=63.250.43.113
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=tychen.cc
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tychen.cc
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE29C39E180
+	for <linux-perf-users@vger.kernel.org>; Wed, 16 Sep 2026 16:18:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.224.140
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1789575540; cv=pass; b=a8mwjKeJF7e+GIJtBO0rU7JpCSb+xtkMXe6JzLnaWiRNfRHZ+7MVmrTqQLGQ6sL89+bm3KYd6412GOFqcKTGq0TwkPWApNuiTF5rHvA8qjExeJAxFd+hqVULCGZSFS07V9XoEzsxGzgVY85nmy094uJkkkwI0Ej9N2k3HKc6twg=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1789575540; c=relaxed/simple;
+	bh=w5MPTKLB/ozka36Nqkc737SbWWuJPMz4Oyqj6MfUOSQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=U28nrQvnssQa0muI336KpmL/4WSRPG4/cqWNx4SW4nJgk1/jmE0oXUQaOgobOqrcNNZWEON3f2ERIVWNYATuBaKfR/V1v+f2TcCvlN9z62MsrPe7uLgs08VZHhKAup5vAHaG+JmMEspcfyeNHRRmRcRpnQmUpwjZSkXLCTrqQYQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=uber.com; spf=fail smtp.mailfrom=uber.com; dkim=pass (1024-bit key) header.d=uber.com header.i=@uber.com header.b=roB0KAiL; arc=pass smtp.client-ip=74.125.224.140
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=uber.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=uber.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tychen.cc header.i=@tychen.cc header.b="POi3uZcn"
-Received: from fedora (unknown [117.147.120.98])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mail.spacemail.com (Postfix) with ESMTPSA id 4hlP5g4RXYz8sWN;
-	Wed, 16 Sep 2026 16:11:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tychen.cc;
-	s=spacemail; t=1789575098;
-	bh=wdv0Ct5RL7y/bWSPN0HuVAGS4/ZmWxUYIOG19TOM51o=;
-	h=From:To:Cc:Subject:Date:From;
-	b=POi3uZcnfcCafo/CX0jNjHwMbabcDk7bGh+wVVavY/47RpHGu9G14EZpsIgUfgJfl
-	 A95k3z1O9lYGzLHhNbx2C02LW+Cc2s0neFYBKF8kJSogvFErUPDw5mcAZAO2CGFlTI
-	 ivTc9Us7EgnyYUh1ZciTAs2f6kpQT2CX2jiY40YCs2OaW690a5Dx3iq37nQPYgNTbg
-	 1QIVrh+lcN4vzJvRdLKF4w55q8zGELXF1Xuo+6B5UNn/OugVoWPBk1dKbyWEPqnPsz
-	 qx0Jx6cO6YVnKiJw+S3qbDjXero8KyG9VrO/EdSqja1icT/dA6FUivWrWC/PGk5Jml
-	 l2q/btvVoR3dA==
-From: Tianyi Chen <hi@tychen.cc>
-To: Namhyung Kim <namhyung@kernel.org>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: irogers@google.com,
-	swapnil.sapkal@amd.com,
-	ravi.bangoria@amd.com,
-	linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] perf sched stats: Reject mismatched or incomplete snapshots
-Date: Thu, 17 Sep 2026 00:11:25 +0800
-Message-ID: <20260916161125.2548499-1-hi@tychen.cc>
-X-Mailer: git-send-email 2.55.0
+	dkim=pass (1024-bit key) header.d=uber.com header.i=@uber.com header.b="roB0KAiL"
+Received: by mail-yx2-f12.google.com with SMTP id 00721157ae682-85d43ac8d1dso9631737b3.3
+        for <linux-perf-users@vger.kernel.org>; Wed, 16 Sep 2026 09:18:58 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1789575537; cv=none;
+        d=google.com; s=arc-20260327;
+        b=qspj+NBYV2tDs/fSBDlASLiCMgBa/x5RyEQC9NCW6AAqDu0SU0eTpjtQEAnYOSD4+L
+         GyLRMY0KeNfsnnpD75eV1TLLe47L5r14K+HQjJ6y0Xr0JSYujD+fNVonZgK9yDn2JQi7
+         bt9nDaqj90Bbt98w4p5M/mozoDAUDv6/lhjyYNCW/jvBVq7tzEeDwZmqgqlEczJeZRij
+         AGEoY/+rsPA1RJ4mo8otBA/X+lLQV+LslRSHshjaqxpL/HBVVE4BWyWQljcP8ITgVrbb
+         +M6ASWQGPVsRLDfe9zfSA8/3cwRXdLxlnsDfoYYJyfH+popJotHSOOWsBo0HhtvAHroI
+         igCQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=w5MPTKLB/ozka36Nqkc737SbWWuJPMz4Oyqj6MfUOSQ=;
+        fh=0zVHGC//SC94CWFKHtFt4lnskmkXkJNNy7lE0FDd3Ck=;
+        b=LGuL2dNwm07So+tsYtPSjX4ADJWZ30Tcf8Rn0GBN62b5RK608+zFWlKvPuj5x0pgBR
+         HFHhKa17jK5ERSkmn6wS9UmM5DGLQBc4WSZ4O73saBFyPY11jmyOmB/FGgE3pkhAa4bX
+         RT8zJ8PzTLbIZzMNq/7Gwf9EK/1EK5B6MmKA4/dbcvAynEnyDCWDWgbtfcWwwWhaAQir
+         cIoV6Hhm9A/tsfR9890k0LT2SZsWoWYL9Dy40l46Esjh3HYQh8EUyalP81FmbrUOVL6v
+         fUdgtM9Z5pVkUJE30nNTD8R5xsq4Z9s/o/fivqtTboo5hsnrJDAK/dFBxhBC5GQ7qnnF
+         nw0g==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=uber.com; s=google; t=1789575537; x=1790180337; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=w5MPTKLB/ozka36Nqkc737SbWWuJPMz4Oyqj6MfUOSQ=;
+        b=roB0KAiL4RZ/wVFgNWx7lDmJnLMHWittfcZDvvRzemow3ux2tZnPq9WrFtPb7D2r2J
+         e6OT3iQBnTsQ7ExS3/obEnn5/SOYnYkAY8u9HUIOQTLSHa3QH8u3rI/AYePh91+PK3dr
+         YmYPNe1apbYYG5ujNaAp8PDaUU9IWqTSAyJ7I=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1789575537; x=1790180337;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=w5MPTKLB/ozka36Nqkc737SbWWuJPMz4Oyqj6MfUOSQ=;
+        b=PyefMnqntCBBL6fjwW21jrweyVJ25H5lT8yDLQ7548q4MQMXna/8G8lNnJpaYttgGy
+         EYQfmLM5hZbz+jSMcQwPO1gKZ6z2Nibgxq2uuFWr2egs6neojF7DXESsxHV181yYgDlf
+         4Q9VEPcu3ML9C7rxLz1CChWOtQxAasvkgIhJKXMT6NidO9tBgNeKR8+Q0v5NsSVsVKcZ
+         hUptYuhKekd7nHHPzgbAefdUfpJ4zCYEjzGOZm1n8eQ2oX9JgFZ3eVhToXCqEn9FOKtP
+         QiTH5YTTxD0/VZm7czTyeVduu+Xynhnyn4TG6Bjd2GryjrY8z3xKxT5GHK1cAK25jalX
+         yAqg==
+X-Gm-Message-State: AFuF++nwVe134PDS6jMDyX19qBEr0a5yebAT8tMH/o5Li6UEyyCrspoP
+	f9BY5dZOWCYB8QqxE2jaCvxLLWG3hjvQXFZWIvLu0pSPpml8SdgrLMxKilsb426tBnSqtB2TMEi
+	lNdV/bF0rDsgXADTTyd2MOxDSJFCmka5/Tn89W7NF0BfldpnukwViCKja5g==
+X-Gm-Gg: AYBFou3oSMbcfNEuXFUr4OVX3yT/b+qeQ3f1G4stFFzzevtQf938SGacWQXnLZqycM/
+	yGmaZMYtuYN7vIcrZfgf145cK0mmuQ6kB0k+07fG8r0rjwzVF+a14N4TaZQ7NEs8VyzhVG3C5Qo
+	mg8lknAQj7cda6Kvc/CladqMxFvLsn933nWIVn0CAjN52B5DLD12NwsZZKG0MVWBppA7kVdEf5z
+	aY1ZEK6n+bKJAJTvSt/zxcQcD5SE68jbTmGmsaUKo+9EyM0+KEO83YyKZIhcb0c/s/GgKGYHVCH
+	HsEzigrDHFY4ICjxyqUiFOb4QCZvIvRchWwuQUOrdjEy7KebTYGg0eWoSD3zlRmOmNeQgz+oAwV
+	lFXSIuu+NA70=
+X-Received: by 2002:a05:690c:c4fa:b0:894:4ded:2746 with SMTP id
+ 00721157ae682-8944ded2c07mr490757b3.36.1789575537294; Wed, 16 Sep 2026
+ 09:18:57 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Envelope-From: hi@tychen.cc
+References: <20260915-perf-symbol-memory-send-v1-0-1d3360e21f07@uber.com>
+ <20260915-perf-symbol-memory-send-v1-3-1d3360e21f07@uber.com> <20260915185430.B345F1F00893@smtp.kernel.org>
+In-Reply-To: <20260915185430.B345F1F00893@smtp.kernel.org>
+From: Alireza Haghdoost <haghdoost@uber.com>
+Date: Wed, 16 Sep 2026 09:18:40 -0700
+X-Gm-Features: AcwNN1Uy3Zqq6R4enMp4Fli0DczTZO3ER4_1FQ5ycuvVfC9y3_e0ol3-NJdyleU
+Message-ID: <CA+w=M=RVrr4Ek5EkfSbuFGNAOMsQQ9ZJ_AKeyyXJ78rupAa9HA@mail.gmail.com>
+Subject: Re: [PATCH 3/4] perf script: Add --lazy-load-symbols for lazy symbol loading
+To: sashiko-reviews@lists.linux.dev
+Cc: linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The before and after records are paired by list position. If a CPU or
-domain disappears, counters can be subtracted from a different record
-or left as absolute values. An extra record can also advance the cursor
-past the list.
-
-Identify the second snapshot by its timestamp or CPU ordering, and
-require matching CPU/domain IDs and versions before subtracting. Check
-that every record has a counterpart before printing, and propagate
-errors from either input of diff.
-
-Add a shell test with synthetic snapshots, including equal timestamps,
-CPU filtering, and missing or reordered CPU/domain records.
-
-Fixes: 5a357ae6ad63 ("perf sched stats: Add support for report subcommand")
-Assisted-by: LLM
-Signed-off-by: Tianyi Chen <hi@tychen.cc>
----
-The new shell test passes with GCC and Clang ASan/UBSan and fails on
-unpatched perf. Live and record/report/diff checks with temporary
-/proc/schedstat fixtures also pass.
-
- tools/perf/Documentation/perf-sched.txt       |   6 +-
- tools/perf/builtin-sched.c                    | 189 ++++++++++++------
- tools/perf/tests/shell/schedstat_snapshots.sh | 155 ++++++++++++++
- 3 files changed, 283 insertions(+), 67 deletions(-)
- create mode 100755 tools/perf/tests/shell/schedstat_snapshots.sh
-
-diff --git a/tools/perf/Documentation/perf-sched.txt b/tools/perf/Documentation/perf-sched.txt
-index 4da06215163a..fe0abef2bd13 100644
---- a/tools/perf/Documentation/perf-sched.txt
-+++ b/tools/perf/Documentation/perf-sched.txt
-@@ -95,8 +95,10 @@ There are several variants of 'perf sched':
-    events, ``try_to_wakeup()`` call among others. This is useful in understanding the
-    scheduler behavior for the workload.
- 
--   Note: The tool will not give correct results if there is topological reordering or
--         online/offline of cpus in between capturing snapshots of `/proc/schedstat`.
-+   Note: Reports reject incomplete snapshots and mismatched CPU or domain IDs.
-+         Topology changes that retain the same IDs, including CPUs going offline
-+         and returning online between snapshots, cannot be detected and may still
-+         produce incorrect results.
- 
-     Example usage:
-         perf sched stats record -- sleep 1
-diff --git a/tools/perf/builtin-sched.c b/tools/perf/builtin-sched.c
-index dd39a4fb6c7a..9e7d170b30ad 100644
---- a/tools/perf/builtin-sched.c
-+++ b/tools/perf/builtin-sched.c
-@@ -4281,18 +4281,18 @@ struct schedstat_cpu {
- };
- 
- static struct list_head cpu_head = LIST_HEAD_INIT(cpu_head);
--static struct schedstat_cpu *cpu_second_pass;
--static struct schedstat_domain *domain_second_pass;
-+static struct list_head *cpu_second_pass;
-+static struct list_head *domain_second_pass;
-+static u64 schedstat_timestamp;
- static bool after_workload_flag;
- static bool verbose_field;
- 
- static void free_schedstat(struct list_head *head);
- 
--static void store_schedstat_cpu_diff(struct schedstat_cpu *after_workload)
-+static void store_schedstat_cpu_diff(struct perf_record_schedstat_cpu *before,
-+				    struct perf_record_schedstat_cpu *after)
- {
--	struct perf_record_schedstat_cpu *before = cpu_second_pass->cpu_data;
--	struct perf_record_schedstat_cpu *after = after_workload->cpu_data;
--	__u16 version = after_workload->cpu_data->version;
-+	__u16 version = after->version;
- 
- #define CPU_FIELD(_type, _name, _desc, _format, _is_pct, _pct_of, _ver)	\
- 	(before->_ver._name = after->_ver._name - before->_ver._name)
-@@ -4308,11 +4308,10 @@ static void store_schedstat_cpu_diff(struct schedstat_cpu *after_workload)
- #undef CPU_FIELD
- }
- 
--static void store_schedstat_domain_diff(struct schedstat_domain *after_workload)
-+static void store_schedstat_domain_diff(struct perf_record_schedstat_domain *before,
-+				       struct perf_record_schedstat_domain *after)
- {
--	struct perf_record_schedstat_domain *before = domain_second_pass->domain_data;
--	struct perf_record_schedstat_domain *after = after_workload->domain_data;
--	__u16 version = after_workload->domain_data->version;
-+	__u16 version = after->version;
- 
- #define DOMAIN_FIELD(_type, _name, _desc, _format, _is_jiffies, _ver)	\
- 	(before->_ver._name = after->_ver._name - before->_ver._name)
-@@ -4814,12 +4813,35 @@ static int show_schedstat_data(struct list_head *head1, struct cpu_domain_map **
-  * other after completion of the workload. The above linked list stores the diff of the cpu and
-  * domain statistics.
-  */
-+static int schedstat_snapshot_error(void)
-+{
-+	pr_err("Incompatible or incomplete schedstat snapshots\n");
-+	return -EINVAL;
-+}
-+
-+static bool schedstat_domains_complete(void)
-+{
-+	struct schedstat_cpu *cpu;
-+
-+	if (!domain_second_pass)
-+		return true;
-+	cpu = list_entry(cpu_second_pass, struct schedstat_cpu, cpu_list);
-+	return domain_second_pass == &cpu->domain_head;
-+}
-+
-+static int schedstat_snapshots_complete(void)
-+{
-+	if (!after_workload_flag || !cpu_second_pass ||
-+	    cpu_second_pass->next != &cpu_head || !schedstat_domains_complete())
-+		return schedstat_snapshot_error();
-+	return 0;
-+}
-+
- static int perf_sched__process_schedstat(const struct perf_tool *tool __maybe_unused,
- 					 struct perf_session *session __maybe_unused,
- 					 union perf_event *event)
- {
- 	struct perf_cpu this_cpu;
--	static __u32 initial_cpu;
- 
- 	switch (event->header.type) {
- 	case PERF_RECORD_SCHEDSTAT_CPU:
-@@ -4836,63 +4858,91 @@ static int perf_sched__process_schedstat(const struct perf_tool *tool __maybe_un
- 		return 0;
- 
- 	if (event->header.type == PERF_RECORD_SCHEDSTAT_CPU) {
--		struct schedstat_cpu *temp = zalloc(sizeof(*temp));
--
--		if (!temp)
--			return -ENOMEM;
--
--		temp->cpu_data = zalloc(sizeof(*temp->cpu_data));
--		if (!temp->cpu_data)
--			return -ENOMEM;
-+		struct perf_record_schedstat_cpu *data = &event->schedstat_cpu;
-+		struct schedstat_cpu *cpu;
- 
--		memcpy(temp->cpu_data, &event->schedstat_cpu, sizeof(*temp->cpu_data));
--
--		if (!list_empty(&cpu_head) && temp->cpu_data->cpu == initial_cpu)
--			after_workload_flag = true;
--
--		if (!after_workload_flag) {
--			if (list_empty(&cpu_head))
--				initial_cpu = temp->cpu_data->cpu;
--
--			list_add_tail(&temp->cpu_list, &cpu_head);
--			INIT_LIST_HEAD(&temp->domain_head);
--		} else {
--			if (temp->cpu_data->cpu == initial_cpu) {
--				cpu_second_pass = list_first_entry(&cpu_head, struct schedstat_cpu,
--								   cpu_list);
--				cpu_second_pass->cpu_data->timestamp =
--					temp->cpu_data->timestamp - cpu_second_pass->cpu_data->timestamp;
--			} else {
--				cpu_second_pass = list_next_entry(cpu_second_pass, cpu_list);
-+		if (list_empty(&cpu_head)) {
-+			after_workload_flag = false;
-+			cpu_second_pass = &cpu_head;
-+			domain_second_pass = NULL;
-+			schedstat_timestamp = data->timestamp;
-+		} else if (!after_workload_flag) {
-+			cpu = list_last_entry(&cpu_head, struct schedstat_cpu, cpu_list);
-+			/* Snapshots share a timestamp and list CPUs in increasing order. */
-+			if (data->timestamp != schedstat_timestamp ||
-+			    data->cpu <= cpu->cpu_data->cpu) {
-+				after_workload_flag = true;
-+				schedstat_timestamp = data->timestamp;
- 			}
--			domain_second_pass = list_first_entry(&cpu_second_pass->domain_head,
--							      struct schedstat_domain, domain_list);
--			store_schedstat_cpu_diff(temp);
--			free(temp->cpu_data);
--			free(temp);
- 		}
--	} else if (event->header.type == PERF_RECORD_SCHEDSTAT_DOMAIN) {
--		struct schedstat_cpu *cpu_tail;
--		struct schedstat_domain *temp = zalloc(sizeof(*temp));
- 
--		if (!temp)
--			return -ENOMEM;
-+		if (after_workload_flag) {
-+			if (data->timestamp != schedstat_timestamp || !schedstat_domains_complete())
-+				return schedstat_snapshot_error();
-+			cpu_second_pass = cpu_second_pass->next;
-+			if (cpu_second_pass == &cpu_head)
-+				return schedstat_snapshot_error();
-+			cpu = list_entry(cpu_second_pass, struct schedstat_cpu, cpu_list);
-+			if (data->cpu != cpu->cpu_data->cpu ||
-+			    data->version != cpu->cpu_data->version ||
-+			    data->timestamp < cpu->cpu_data->timestamp)
-+				return schedstat_snapshot_error();
-+			cpu->cpu_data->timestamp = data->timestamp - cpu->cpu_data->timestamp;
-+			store_schedstat_cpu_diff(cpu->cpu_data, data);
-+			domain_second_pass = cpu->domain_head.next;
-+			return 0;
-+		}
- 
--		temp->domain_data = zalloc(sizeof(*temp->domain_data));
--		if (!temp->domain_data)
-+		cpu = zalloc(sizeof(*cpu));
-+		if (!cpu)
- 			return -ENOMEM;
-+		cpu->cpu_data = memdup(data, sizeof(*data));
-+		if (!cpu->cpu_data) {
-+			free(cpu);
-+			return -ENOMEM;
-+		}
-+		INIT_LIST_HEAD(&cpu->domain_head);
-+		list_add_tail(&cpu->cpu_list, &cpu_head);
-+	} else {
-+		struct perf_record_schedstat_domain *data = &event->schedstat_domain;
-+		struct schedstat_domain *domain;
-+		struct schedstat_cpu *cpu;
-+
-+		if (list_empty(&cpu_head) || data->timestamp != schedstat_timestamp)
-+			return schedstat_snapshot_error();
-+		if (after_workload_flag) {
-+			cpu = list_entry(cpu_second_pass, struct schedstat_cpu, cpu_list);
-+			if (domain_second_pass == &cpu->domain_head)
-+				return schedstat_snapshot_error();
-+			domain = list_entry(domain_second_pass, struct schedstat_domain,
-+					    domain_list);
-+			if (data->cpu != domain->domain_data->cpu ||
-+			    data->domain != domain->domain_data->domain ||
-+			    data->version != domain->domain_data->version)
-+				return schedstat_snapshot_error();
-+			store_schedstat_domain_diff(domain->domain_data, data);
-+			domain_second_pass = domain_second_pass->next;
-+			return 0;
-+		}
- 
--		memcpy(temp->domain_data, &event->schedstat_domain, sizeof(*temp->domain_data));
--
--		if (!after_workload_flag) {
--			cpu_tail = list_last_entry(&cpu_head, struct schedstat_cpu, cpu_list);
--			list_add_tail(&temp->domain_list, &cpu_tail->domain_head);
--		} else {
--			store_schedstat_domain_diff(temp);
--			domain_second_pass = list_next_entry(domain_second_pass, domain_list);
--			free(temp->domain_data);
--			free(temp);
-+		cpu = list_last_entry(&cpu_head, struct schedstat_cpu, cpu_list);
-+		if (data->cpu != cpu->cpu_data->cpu || data->version != cpu->cpu_data->version)
-+			return schedstat_snapshot_error();
-+		if (!list_empty(&cpu->domain_head)) {
-+			domain = list_last_entry(&cpu->domain_head, struct schedstat_domain,
-+						 domain_list);
-+			if (data->domain <= domain->domain_data->domain)
-+				return schedstat_snapshot_error();
- 		}
-+		domain = zalloc(sizeof(*domain));
-+		if (!domain)
-+			return -ENOMEM;
-+		domain->domain_data = memdup(data, sizeof(*data));
-+		if (!domain->domain_data) {
-+			free(domain);
-+			return -ENOMEM;
-+		}
-+		list_add_tail(&domain->domain_list, &cpu->domain_head);
- 	}
- 
- 	return 0;
-@@ -4947,6 +4997,8 @@ static int perf_sched__schedstat_report(struct perf_sched *sched)
- 	user_requested_cpus = evlist__core(session->evlist)->user_requested_cpus;
- 
- 	err = perf_session__process_events(session);
-+	if (!err)
-+		err = schedstat_snapshots_complete();
- 
- 	if (!err) {
- 		setup_pager();
-@@ -4976,7 +5028,7 @@ static int perf_sched__schedstat_diff(struct perf_sched *sched,
- 	struct list_head cpu_head_ses0, cpu_head_ses1;
- 	struct perf_session *session[2];
- 	struct perf_data data[2] = {0};
--	int ret = 0, err = 0;
-+	int ret = 0;
- 	static const char *defaults[] = {
- 		"perf.data.old",
- 		"perf.data",
-@@ -5009,8 +5061,10 @@ static int perf_sched__schedstat_diff(struct perf_sched *sched,
- 		goto out_delete_ses0;
- 	}
- 
--	err = perf_session__process_events(session[0]);
--	if (err) {
-+	ret = perf_session__process_events(session[0]);
-+	if (!ret)
-+		ret = schedstat_snapshots_complete();
-+	if (ret) {
- 		free_schedstat(&cpu_head);
- 		goto out_delete_ses0;
- 	}
-@@ -5028,8 +5082,10 @@ static int perf_sched__schedstat_diff(struct perf_sched *sched,
- 		goto out_delete_ses1;
- 	}
- 
--	err = perf_session__process_events(session[1]);
--	if (err) {
-+	ret = perf_session__process_events(session[1]);
-+	if (!ret)
-+		ret = schedstat_snapshots_complete();
-+	if (ret) {
- 		free_schedstat(&cpu_head);
- 		goto out_delete_ses1;
- 	}
-@@ -5152,6 +5208,9 @@ static int perf_sched__schedstat_live(struct perf_sched *sched,
- 					       user_requested_cpus);
- 	if (err)
- 		goto out;
-+	err = schedstat_snapshots_complete();
-+	if (err)
-+		goto out;
- 
- 	setup_pager();
- 
-diff --git a/tools/perf/tests/shell/schedstat_snapshots.sh b/tools/perf/tests/shell/schedstat_snapshots.sh
-new file mode 100755
-index 000000000000..a4bdf2673d43
---- /dev/null
-+++ b/tools/perf/tests/shell/schedstat_snapshots.sh
-@@ -0,0 +1,155 @@
-+#!/bin/sh
-+# Validate CPU and domain pairing in perf sched stats snapshots
-+# SPDX-License-Identifier: GPL-2.0
-+
-+set -e
-+
-+# shellcheck source=lib/setup_python.sh
-+. "$(dirname "$0")/lib/setup_python.sh"
-+
-+if ! perf version --build-options | grep -q 'libtraceevent:.*on'; then
-+	echo "[Skip] perf sched requires libtraceevent"
-+	exit 2
-+fi
-+
-+$PYTHON - <<'PY'
-+import os
-+import re
-+import struct
-+import subprocess
-+import sys
-+import tempfile
-+
-+# Native-endian perf.data with only NRCPUS and CPU_DOMAIN_INFO features.
-+endian = '<' if sys.byteorder == 'little' else '>'
-+
-+
-+def pack(fmt, *values):
-+    return struct.pack(endian + fmt, *values)
-+
-+
-+def string(value):
-+    data = value.encode() + b'\0'
-+    return pack('I', len(data)) + data
-+
-+
-+def cpu(cpu_id, timestamp, value, version):
-+    return pack('IHHQIHH6I3Q', 85, 0, 72, timestamp, cpu_id, version, 0,
-+                *([value] * 9))
-+
-+
-+def domain(cpu_id, domain_id, timestamp, value, version):
-+    # All supported versions use the largest union member's record size.
-+    return pack('IHHQIHH45I4x', 86, 0, 208, timestamp, cpu_id, version,
-+                domain_id, *([value] * 45))
-+
-+
-+def snapshot(timestamp, value, version=17, cpus=(0, 1, 2), domains=(0, 1)):
-+    records = []
-+    for cpu_id in cpus:
-+        records.append(cpu(cpu_id, timestamp, value + cpu_id * 100, version))
-+        for domain_id in domains:
-+            records.append(domain(cpu_id, domain_id, timestamp,
-+                                  value + cpu_id * 100, version))
-+    return records
-+
-+
-+def write_file(path, records, version=17):
-+    metadata = pack('II', version, 2)
-+    for cpu_id in range(3):
-+        metadata += pack('II', cpu_id, 2)
-+        for domain_id in range(2):
-+            metadata += pack('I', domain_id)
-+            if version >= 17:
-+                metadata += string('SMT' if domain_id == 0 else 'MC')
-+            metadata += string('7') + string('0-2')
-+    features = [pack('II', 3, 3), metadata]
-+    data = b''.join(records)
-+    offset = 104 + len(data) + 16 * len(features)
-+    sections = b''
-+    for feature in features:
-+        sections += pack('QQ', offset, len(feature))
-+        offset += len(feature)
-+    header = pack('13Q', 0x32454c4946524550, 104, 144, 104, 0,
-+                  104, len(data), 0, 0, (1 << 7) | (1 << 32), 0, 0, 0)
-+    with open(path, 'wb') as output:
-+        output.write(header + data + sections + b''.join(features))
-+
-+
-+def run(args, valid, domains=True):
-+    result = subprocess.run(['perf', 'sched', 'stats'] + args,
-+                            stdout=subprocess.PIPE, stderr=subprocess.PIPE,
-+                            text=True, timeout=10)
-+    if valid:
-+        assert result.returncode == 0, result.stderr
-+        assert re.search(r'^yld_count\s+:\s+10\b', result.stdout, re.M), result.stdout
-+        if domains:
-+            assert re.search(r'^busy_lb_count\s+:\s+10\b', result.stdout, re.M), result.stdout
-+        else:
-+            assert 'busy_lb_count' not in result.stdout, result.stdout
-+    else:
-+        assert result.returncode > 0, (args, result.returncode, result.stdout)
-+        assert 'Incompatible or incomplete schedstat snapshots' in result.stderr
-+        assert not result.stdout, result.stdout
-+    assert 'Sanitizer' not in result.stderr, result.stderr
-+
-+
-+with tempfile.TemporaryDirectory(prefix='perf-schedstat-') as directory:
-+    good = os.path.join(directory, 'good.data')
-+    test = os.path.join(directory, 'test.data')
-+    before = snapshot(100, 1000)
-+    after = snapshot(200, 1010)
-+    write_file(good, before + after)
-+
-+    for version in (15, 16, 17):
-+        for timestamp in (100, 200):
-+            write_file(test, snapshot(100, 1000, version) +
-+                       snapshot(timestamp, 1010, version), version)
-+            run(['report', '-C', '0,1,2', '-i', test], True)
-+            run(['diff', test, test], True)
-+    print('Matching snapshots, including equal timestamps: [Success]')
-+
-+    write_file(test, snapshot(100, 1000, domains=()) +
-+               snapshot(200, 1010, domains=()))
-+    run(['report', '-C', '0,1,2', '-i', test], True, domains=False)
-+    run(['diff', test, test], True, domains=False)
-+    print('CPUs without domains: [Success]')
-+
-+    write_file(test, before + snapshot(200, 1010, cpus=(0, 1)))
-+    run(['report', '-C', '0,1', '-i', test], True)
-+    run(['report', '-C', '1', '-i', good], True)
-+    write_file(test, snapshot(100, 1000, cpus=(0, 1)) +
-+               snapshot(200, 1010, cpus=(0, 1)))
-+    run(['diff', good, test], True)
-+    print('CPU filtering and different CPU sets across files: [Success]')
-+
-+    write_file(test, snapshot(100, 0xfffffffa, cpus=(0,)) +
-+               snapshot(200, 4, cpus=(0,)))
-+    run(['report', '-C', '0', '-i', test], True)
-+    print('Wrapping 32-bit counters: [Success]')
-+
-+    cases = {
-+        'missing first CPU': before + snapshot(200, 1010, cpus=(1, 2)),
-+        'missing middle CPU': before + snapshot(200, 1010, cpus=(0, 2)),
-+        'missing last CPU': before + snapshot(200, 1010, cpus=(0, 1)),
-+        'added CPU': snapshot(100, 1000, cpus=(0, 1)) + after,
-+        'reordered CPUs': before + snapshot(200, 1010, cpus=(0, 2, 1)),
-+        'equal timestamp, missing first CPU': before + snapshot(100, 1010, cpus=(1, 2)),
-+        'missing first domain': before + snapshot(200, 1010, domains=(1,)),
-+        'missing last domain': before + after[:-1],
-+        'added domain': snapshot(100, 1000, domains=(0,)) + after,
-+        'reordered domains': before + snapshot(200, 1010, domains=(1, 0)),
-+        'domain without CPU': before[1:] + after,
-+        'wrong domain CPU': before + [after[0], domain(1, 0, 200, 1010, 17)] + after[2:],
-+        'changed version': before + snapshot(200, 1010, version=16),
-+        'backwards timestamp': before + snapshot(50, 1010),
-+        'third snapshot': before + after + snapshot(300, 1020),
-+        'missing second snapshot': before,
-+    }
-+    for name, records in cases.items():
-+        write_file(test, records)
-+        run(['report', '-C', '0,1,2', '-i', test], False)
-+        run(['diff', test, good], False)
-+        run(['diff', good, test], False)
-+        print(name + ': [Success]')
-+PY
-
-base-commit: 91b0782fc9e9d2f0a40b5256146e014802fdbb36
--- 
-2.55.0
-
+> Thank you for your contribution! Sashiko AI review found 1 potential issu=
+e(s) to consider:
+> - [Medium] perf: memory exhaustion in ondemand_read_name() via truncated =
+ELF
+> --
+Thanks, this is valid. The constant file offset is intentional because
+each iteration rereads a larger prefix, but a positive short read must
+be treated as EOF. I=E2=80=99ll detect n < want after checking the returned
+bytes for a terminator, abort the lookup as a truncated string table,
+and add this fix to v2.
