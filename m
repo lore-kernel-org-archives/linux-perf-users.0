@@ -1,625 +1,567 @@
-Received: from mail-qk2-f12.google.com (mail-qk2-f12.google.com [74.125.230.204])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02DE8415B60
-	for <linux-perf-users@vger.kernel.org>; Wed, 16 Sep 2026 17:59:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.230.204
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789581606; cv=pass; b=CVSAh5E6WKey8lf6R3vfsCHSJLri6MZEwD/VG7r1w6otLw8R9K4ysYh7M/3DBHuMfCj+3M9T1xoBv2/wHwxp8xIWLeryyu4Vi0GUWIg4HTyW/BbBIIimpwKwIegrmAp6AeYRznqp+xXlxKIFFXQb3HOcE9/N8LbgfqmYY/1fqwo=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789581606; c=relaxed/simple;
-	bh=phHc/Hq7GhwLfrvuXhUlkMEFZpHArhpTjZxf2I/CxsQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=n0nijXx7EJ6VGqfWf/Xp9907r4z8+/3Q0jdYmMHGX/yOXBc7GXJ3XaRT93e9NwVplA+tcItdNq7tbhmpMpkwP6zrNH2aqNba6dJrBCwyc5Ur7bnhRPftoE/luLvE+jjFiHT//Olf9EMXRaHaBAEiYsVO2nRl/K97jGME3LhWo7A=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=J7r/jjaG; arc=pass smtp.client-ip=74.125.230.204
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D1C34D956B;
+	Wed, 16 Sep 2026 18:32:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1789583562; cv=none; b=uFBdGtt/beGPJ2LabV+bIaA8rvQRFsVQk6oiHcy/falx2aOnHQq99GjFsJVZ87PD8omZFWJRgNzkh5+A8OyBZljaD/ly14pl6jdRarcL9DPH/5hXXVYu7TqqdHH1jUr7i5H6EOGZo8h/VCCcpqHEKwGTnm4w52y3L8McNXRri+Q=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1789583562; c=relaxed/simple;
+	bh=AXWFIwZRol/Yzw+Ddzslgzly/bDe8ciGWp6Jing1K5M=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=d+fCcmn6jbRuN/qBkm7FXXfRtkVCFYRhB53BPVzBVK40GDt5eE/SAkUk2HCnu2RN100Q+pv+YbBSjCIiZw9gNKQ/VfXFyo7zDVI4KoZic8udUXmWa602h3+czseeTzGmuF7b1QgEAR+zNIsY9MKxJk9Sw8pka8tDbXMIVm8qQmY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ffM7c99d; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="J7r/jjaG"
-Received: by mail-qk2-f12.google.com with SMTP id d75a77b69052e-530411c7ee1so362801cf.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 16 Sep 2026 10:59:51 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1789581589; cv=none;
-        d=google.com; s=arc-20260327;
-        b=HFUrA0jbEXU7vNdhz+QRpoj4kunbuAbZVoiu68QPH+fzNhFsq7dLogZABcH+sj1SEv
-         gFX8etA1eA/hzBrRsB6YhoJffHU9v+76D0v4SYNwUNe4a9qvOvMWlnnVg3QsAzXS1ME9
-         pnfBGnZnJAEXgVCTtgLXrJl/swKvyyLApkIm0BFC+i1pWdsIJ/udWwUIPDbKN4H7SiY/
-         c+88fGHwtfpOfDF9j29C9tKK1WDiviY91ex3DnOE3lbUjtOg7o7zBX9IPnnOC7qO82FF
-         LWW/qiczTM2hhLoigE4a5uJWXTExvVjxwHbNZRVrNwaFa5JLDQ3IvUrXR2vhyDb3uEfd
-         fokw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=eUm2nBDUGJ3be1Pu+106O/aK1tA7hL04j1FWoINl4o4=;
-        fh=nIhdFNKZuQXhTyQqfNF3x2ACtH4OjYXL+/znTQX0CQY=;
-        b=AsCKuujSV4NvKJqYxCzPeymAm8fmh17ajZ21eqXVOWQ2YHC2yaBxxCpnwaOnEH6c7q
-         lp8Oaio+fzE4JluVR98tLWQkmu7Q2MNQymZpSp65fZeEdxt/+fM+GqqbmY+XSb2PwhQ9
-         C+LMJ/vBYx3iY00ZODp9U+TQVyaZqPguqgZdQvaodJAXFo5Nf7JAhoT+JXJcf/Tp/9BW
-         TqlpuMdtFIXFXkWZ837Vd2Ot8Uyum9P38GhBkj6cOHO6Jyq39re0FiRAgYL/KgwSZGvB
-         FiwTEcyh6vlc4m55lmLGWgZR+BeKke1V6U7+BjAF7+npEISJ1dv6wspWlUbFJ7wEMt8+
-         YsjA==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1789581589; x=1790186389; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=eUm2nBDUGJ3be1Pu+106O/aK1tA7hL04j1FWoINl4o4=;
-        b=J7r/jjaGHGB09yFa11RnjRA8CjKJ62qfZ2ckToipxXz1UFIPj6wSO/SnVujV3T9DMU
-         EiRuvgqS4iu4Md1N3RzjCM8HdbKS0WHmIlm0P35/AISsoEtlw9isvMJTnY+dqX4TJ4YT
-         NXFTI8OsPatxvY46212ra0JyMeYYwYDXLlNoql5vVmVZpg13e0y87yQ4c/v7cJE5THR+
-         mBzVc3DMRkqLY2VV5uNzmfdf3c4THIT2u9ayaKUiF3BX714mrhoaTh5cuE46maMeTFfv
-         RcGo8/YwTgAgguhUjBcIuzL81JA6AnO2qmwE++a1FXxVyr0D7YPPsFFLOY9kc27qKLLM
-         WoXA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1789581589; x=1790186389;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=eUm2nBDUGJ3be1Pu+106O/aK1tA7hL04j1FWoINl4o4=;
-        b=BQftIeHbv8FyVPLjgkpncZ3InVeg6CHT7rvmKORgU2e0TCJNms/U0jerTMZRJvjYw8
-         eALOaItUMONnvGmlkm6phBXPh0zS1jcSR/hiwmQcCxBA6UrtFIuXfPV7VawiO8IJ/crP
-         ZspC6l8c43vNVJrfQcDClX1ncDgCPBsZzjyuNhTdNPYWzgaXfQLoOZZHedohhOTWGMrV
-         8uaCDKtVojkN0RUxoBazl1X+8TeoaxSCwuj+Svmk34SUTFnixULG2qJLR/csU1dfJXgx
-         PHmCPuHwluAcc0WgKopBqxv4hZ0KDkkD96orybd6q7RqBXhE9E8WVBW3AgPJVFkOvUvK
-         0SyQ==
-X-Forwarded-Encrypted: i=1; AKwUvByEKz1W8XhG5HIt4+Knp0cTBRm9eW3bX5UfB1Qhhpyq4hYHQ0EB2GCJVmcs+4X+SYCPJTfYA30NHdOKZdUSw6b1@vger.kernel.org
-X-Gm-Message-State: AFuF++kViiUdnn/vM1fDWR5YryxcBIUewtkKqcV/wQsqNgG9Vu9vT47z
-	scuCum/3I1Cpn5pEc2so82bFSpfzK1cuwieR5kAaZOiqBjnFbh1fs4Ax6VIOhXDD1jayzh0EBk8
-	MFckUtSh8Wegdb+7zu2ibJjkAOjSwXXlIXjR/Rn9E
-X-Gm-Gg: AYBFou266UTetLv3XDCXPq016zMj+VdRgWwktdgIYm09Ium2EFrxgbD9cDuDMIzZbbf
-	1dk+VXL/Y7Zi7uLbUu3UAM8xgRFc5+imvvFjcILE/amXGDr96P/RniV9CN+oOgriPDy/JoDgFya
-	mA559tarY+9nFpDCAnvAGW/zZZfGz35FWYMeVzZNbAdI8B8jrrAiink7fclu43UU5rrP9Lx/S7l
-	zWxtxjrTGuoN98KlwVvX5M4YpAiiodxPRW/zU4S3x6+UtG5Z02uARVIY6Gd5VjRnoBB9Y3aqrxX
-	KsgKVqM4UjUazWyXhiQV/4bxpJmajODiTDH9ExkL2yYGD9dQvNni041E5N3QnurYDbSSRK5kvUS
-	yNuZ5EYTXExPtsBPKKZM=
-X-Received: by 2002:a05:622a:4207:b0:531:282:6560 with SMTP id
- d75a77b69052e-5328df7e748mr857551cf.15.1789581583877; Wed, 16 Sep 2026
- 10:59:43 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ffM7c99d"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D6BE41F000FF;
+	Wed, 16 Sep 2026 18:32:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1789583541;
+	bh=LSbRet1ivf7iNCvC2Zjc9IzG5wAlp1UUsbwjASAKJkk=;
+	h=From:To:Cc:Subject:Date;
+	b=ffM7c99dZ6S95bqh0sF6Umw4+SrIiH/PoKoagzt3w0q9Zu1sw8oF7H6NbISby5Cx4
+	 wmPZpbO+wC1T/8CorgViLwmpun0CiuyVtFwXwK81rab1LricMN7CdMaObMKs1tHKF8
+	 Dn/aUDb9QOXi+4Zk5lSX03XYMDECI/5BCQRbgS/QUNp7/Wd7wJ8PUYvHoBC+9J2o8b
+	 NTt57tZcpas+abH41GEu1RMEHq6E6gDIWD7AohpDbczzLVwCl0U4WmjptD00F27Fwj
+	 sYc3HjqyQLDQCxufxXs9dDm3vQCCEUHKrLEsepqP0Com1v2i7alPacjrk/b6wCUL7J
+	 gu3CC6/HqQbAA==
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Ingo Molnar <mingo@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	James Clark <james.clark@linaro.org>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Clark Williams <williams@redhat.com>,
+	linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	Arnaldo Carvalho de Melo <acme@kernel.org>
+Subject: [PATCH v6 0/12] perf tools: Annotate fixes, stdio progress indication, debuginfo-client in more places
+Date: Wed, 16 Sep 2026 15:32:01 -0300
+Message-ID: <20260916183215.54305-1-acme@kernel.org>
+X-Mailer: git-send-email 2.55.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260916114740.48230-1-acme@kernel.org> <20260916114740.48230-3-acme@kernel.org>
-In-Reply-To: <20260916114740.48230-3-acme@kernel.org>
-From: Ian Rogers <irogers@google.com>
-Date: Wed, 16 Sep 2026 10:59:31 -0700
-X-Gm-Features: AcwNN1VHRxZ8T6jFxHxe0fBWiJ7kIxDmT2H5H6nRSUv1vr_fFx2TOWa2x3wW00s
-Message-ID: <CAP-5=fWr46YKripkCvFHO23k+0SUHfGgYBTDc_qp=ev_Fucc1Q@mail.gmail.com>
-Subject: Re: [PATCH 02/12] perf debuginfo: Fetch debuginfo keyed by build ID
- using debuginfod
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>, Ingo Molnar <mingo@kernel.org>, 
-	Thomas Gleixner <tglx@linutronix.de>, James Clark <james.clark@linaro.org>, 
-	Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Wed, Sep 16, 2026 at 4:48=E2=80=AFAM Arnaldo Carvalho de Melo
-<acme@kernel.org> wrote:
->
-> From: Arnaldo Carvalho de Melo <acme@redhat.com>
->
-> perf already uses debuginfod to fetch source files when annotating
-> (via probe-finder.c) and 'perf probe' has open_from_debuginfod(),
-> which queries debuginfo keyed by build ID when a module's debuginfo
-> isn't found locally, largely the same thing this adds; eventually
-> that one could be moved over to the new helper.  For the analysis
-> tools there was no way to obtain the debuginfo for a DSO in a
-> profile when it isn't available locally under the name the DSO was
-> opened with, for instance the vmlinux for the kernel a profile was
-> recorded on when processing it on another machine, or after the
-> kernel and its debuginfo package got upgraded in between.
->
-> Add debuginfo__find_build_id(), that uses the debuginfod client to
-> locate a debuginfo file keyed by the build ID, checking its local
-> cache first and then querying the servers in DEBUGINFOD_URLS, and
-> debuginfo__new_build_id(), that opens the DWARF in the file it finds.
+Hi,
 
-When do we have a build ID but not a DSO? The current intent is that
-dso__debuginfo hide these complexities. We currently don't purge DSOs
-and the first call to dso__debuginfo should trigger loading with the
-DSO owning the debuginfo. With this change we now have a duplication
-of DSO's data, keyed by build ID and mapping directly to the
-debuginfo. I can't see a performance or efficiency gain and we could
-potentially implement some kind of LRU mechanism for DSOs, which would
-benefit memory usage for things like perf top.
+This came out of work on data type profiling, but none of them depends on that
+work and nothing in this series needs anything from it, so sending them
+separately.
 
-> The debuginfod client fails when DEBUGINFOD_URLS isn't set even when
-> what it wants is in its local cache, and the distro setup scripts that
-> populate it from /etc/debuginfod don't reach cron jobs, systemd services
-> and other environments that don't source the profile scripts, so also
-> set it from the .urls files in /etc/debuginfod when not set.
+The fixes:
 
-I found the explanation above hard to follow. Are we setting an
-environment variable because debuginfod isn't respecting its /etc
-setup?
+  - 'perf report -s type' spins forever, burning all of a CPU with no
+    output, on the dwz compressed debug info of zlib-ng (libz.so.1):
+    die_collect_vars() saves the dwarf_dieoffset() of the type DIE,
+    which is relative to the file that DIE lives in, the dwz common
+    file for the types shared by more than one CU, and resolving one of
+    those offsets in the main debug file does not fail, it parses
+    whatever is at that offset there, in this case a typedef whose
+    DW_AT_type refers to itself, which is what makes the "follow the
+    typedefs and qualifiers until a pointer or an array type" loop in
+    die_get_pointer_type() spin.  The offset is now resolved in the file
+    it was recorded as coming from, which the CU of the collected DIE
+    tells exactly rather than having to be inferred from what is at the
+    offset, and the type chases and the struct/union member nesting are
+    bounded, so a debug info file broken in some other way makes perf
+    give up on a type with a pr_debug instead of looking like it hung
+    (patch 10);
 
-> That has
-> to happen before any thread that can call getenv() is started, as
-> setenv() is not thread safe, and there are getenv()s outside the fetch
-> lock: libdebuginfod reads DEBUGINFOD_URLS in every debuginfod_begin(),
-> which perf also does in build-id.c, probe-event.c and probe-finder.c,
-> so do it from symbol__init(), on the single-threaded setup, and not
-> lazily from the fetch path.
->
-> Querying servers, possibly third party ones, sends off-box the build
-> IDs of the binaries being analysed and a fetch can take a while, so
-> this is opt-out: on by default, off with --no-debuginfod, with
-> core.debuginfod=3Dfalse, per tool with report.debuginfod and
-> top.debuginfod, and, since users that set buildid.dir to /dev/null
-> (e.g. Linus) or otherwise turn the local build-id cache off clearly
-> don't want fetched files stored on the box, off too in that case.
->
-> The opt-outs also cover libdwfl's own debuginfod client, that reads
-> DEBUGINFOD_URLS in every query: when debuginfod is off, be it with
-> --no-debuginfod, core.debuginfod=3Dfalse or by disabling the build-id
-> cache, the variable is set to the empty string, that the client treats
-> as an opt-out and fails the query without even looking at its cache,
-> instead of being exported from /etc/debuginfod.  Tools that manage
-> DEBUGINFOD_URLS themselves, such as 'perf record --debuginfod', keep
-> doing so.
+  - the data type browser prints, in its samples view (-n,
+    annotate.show_nr_samples), a local variable initialized to zero and
+    never updated, so every member shows up as having no samples while
+    the period and percent columns for the same entry are filled in
+    (patch 7);
 
-Libdwfl is part of elfutils and so is debuginfod. Is it possible to
-share clients?
+  - the 'perf data type profiling' shell test turns "this PMU cannot
+    record these events" into a test failure: the script runs under
+    'set -e', so the bare 'perf mem record' aborts it through the EXIT
+    trap, which reports a signal that never happened, instead of
+    reaching the code right below meant to report the failure (patch 1).
 
-> The fetches are serialized, as the lookup state they use is process
-> global, so two concurrent fetches would race for it, and serializing
-> also means that a request for a build ID that is being fetched doesn't
-> start a second download of the same file: it waits for the fetch to
-> finish and is answered from the entry the fetch published, keyed by the
-> build ID, with the path of the file that came back, checked before
-> being handed out in case the debuginfod client cache is cleaned from
-> under us.
->
-> Make dso__debuginfo() use debuginfo__new_build_id() as a fallback,
-> keyed by the build ID recorded in the perf.data file, so that
-> consumers such as the data type profiler can resolve the types of
-> DSOs whose debuginfo can be fetched this way.  Do the fetch outside
-> dso__lock, a fetch from a remote debuginfod server can take a while
-> and would otherwise block anything else using this dso, and remember
-> the build IDs that were a miss, so that consumers revisiting a set of
-> DSOs repeatedly, such as the data type profiler on every hist entry
-> DSO switch, don't pay server round trips per attempt.
->
-> debuginfo__new_build_id() needs libdw to open the DWARF, so it lives
-> in debuginfo.o, built only with CONFIG_LIBDW, while the libdebuginfod
-> feature check is independent of NO_LIBDW; keep the new build ID
-> prototypes under HAVE_LIBDW_SUPPORT too, with stubs otherwise, so
-> that make NO_LIBDW=3D1 on a system that has the debuginfod client
-> keeps linking.
->
-> Assisted-by: LLM
-> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-> ---
->  tools/perf/Documentation/perf-annotate.txt |   8 +
->  tools/perf/Documentation/perf-config.txt   |  19 ++
->  tools/perf/Documentation/perf-report.txt   |  12 +
->  tools/perf/Documentation/perf-top.txt      |  11 +
->  tools/perf/builtin-annotate.c              |   3 +
->  tools/perf/builtin-report.c                |   7 +
->  tools/perf/builtin-top.c                   |   7 +
->  tools/perf/util/config.c                   |   3 +
->  tools/perf/util/debuginfo.c                | 327 +++++++++++++++++++++
->  tools/perf/util/debuginfo.h                |  36 +++
->  tools/perf/util/dso.c                      |  19 ++
->  tools/perf/util/symbol.c                   |  12 +
->  tools/perf/util/symbol_conf.h              |   1 +
->  tools/perf/util/util.c                     | 103 +++++++
->  tools/perf/util/util.h                     |   8 +
->  15 files changed, 576 insertions(+)
->
-> diff --git a/tools/perf/Documentation/perf-annotate.txt b/tools/perf/Docu=
-mentation/perf-annotate.txt
-> index 1a90b09a12d5abb1..12edc3337b86f099 100644
-> --- a/tools/perf/Documentation/perf-annotate.txt
-> +++ b/tools/perf/Documentation/perf-annotate.txt
-> @@ -58,6 +58,14 @@ OPTIONS
->  --ignore-vmlinux::
->         Ignore vmlinux files.
->
-> +--debuginfod::
-> +--no-debuginfod::
-> +       Fetch debuginfo keyed by build ID from the debuginfod servers
-> +       configured in DEBUGINFOD_URLS, checking the local debuginfod
-> +       client cache first, when it is not available locally, on for
-> +       these commands by default.  See the --debuginfod option of
-> +       'perf report' for how to turn it off.
-> +
->  --itrace::
->         Options for decoding instruction tracing data. The options are:
->
-> diff --git a/tools/perf/Documentation/perf-config.txt b/tools/perf/Docume=
-ntation/perf-config.txt
-> index 9b223f8928299945..688306abe847a0df 100644
-> --- a/tools/perf/Documentation/perf-config.txt
-> +++ b/tools/perf/Documentation/perf-config.txt
-> @@ -216,6 +216,14 @@ core.*::
->         addr2line-timeout::
->                 Sets a timeout (in milliseconds) for parsing 'addr2line'
->                 output.  The default timeout is 5s.
-> +       debuginfod::
-> +               When set to 'false', disable fetching debuginfo keyed by
-> +               build ID from the debuginfod servers configured in
-> +               DEBUGINFOD_URLS.  It is on by default, can be overridden =
-per
-> +               tool with the 'report.debuginfod' and 'top.debuginfod'
-> +               options and per invocation with --no-debuginfod; it is of=
-f
-> +               too when the local build-id cache is disabled, e.g.
-> +               'buildid.dir' set to /dev/null.
->
->  tui.*, gtk.*::
->         Subcommands that can be configured here are 'top', 'report' and '=
-annotate'.
-> @@ -562,6 +570,14 @@ report.*::
->                 This option can change default stat behavior with empty r=
-esults.
->                 If it's set true, 'perf report --stat' will not show 0 st=
-ats.
->
-> +       report.debuginfod::
-> +               Fetch debuginfo keyed by build ID from the debuginfod
-> +               servers configured in DEBUGINFOD_URLS, checking the local
-> +               debuginfod client cache first, when it is not available
-> +               locally.  On by default, set to 'false' to disable it for
-> +               'perf report', globally with 'core.debuginfod=3Dfalse' or=
- per
-> +               invocation with --no-debuginfod.
-> +
->  top.*::
->         top.children::
->                 Same as 'report.children'. So if it is enabled, the outpu=
-t of 'top'
-> @@ -569,6 +585,9 @@ top.*::
->                 column by default.
->                 The default is 'true'.
->
-> +       top.debuginfod::
-> +               Same as 'report.debuginfod', for 'perf top'.
-> +
+The features:
 
-It seems unfortunate to duplicate this option. I wonder if it should
-be a "core" option. There's likely similar clean up necessary for
-addr2line.
+  - 'perf report --progress' prints the phase it is in and how far
+    along it is to stderr: the TUI shows that with a progress bar, but
+    in the stdio case the ui_progress updates that are already there are
+    dropped on the floor.  It is what makes a slow run tell itself apart
+    from a stuck one (patch 8);
 
->         top.call-graph::
->                 This is identical to 'call-graph.record-mode', except it =
-is
->                 applicable only for 'top' subcommand. This option ONLY se=
-tup
-> diff --git a/tools/perf/Documentation/perf-report.txt b/tools/perf/Docume=
-ntation/perf-report.txt
-> index 1a4706329c6cef1d..2e11c0a97a016853 100644
-> --- a/tools/perf/Documentation/perf-report.txt
-> +++ b/tools/perf/Documentation/perf-report.txt
-> @@ -366,6 +366,18 @@ OPTIONS
->  --ignore-vmlinux::
->         Ignore vmlinux files.
->
-> +--debuginfod::
-> +--no-debuginfod::
-> +       Fetch debuginfo keyed by build ID from the debuginfod servers
-> +       configured in DEBUGINFOD_URLS, checking the local debuginfod
-> +       client cache first, when it is not available locally, on for
-> +       these commands by default.  It can be turned off per invocation
-> +       with --no-debuginfod, per tool with the "report.debuginfod"
-> +       config option or globally with "core.debuginfod" set to false.
-> +       It is disabled as well when the local build-id cache is turned
-> +       off, e.g. "buildid.dir" set to /dev/null, as that asks for
-> +       fetched files not to be kept on the box.
-> +
->  --kallsyms=3D<file>::
->          kallsyms pathname
->
-> diff --git a/tools/perf/Documentation/perf-top.txt b/tools/perf/Documenta=
-tion/perf-top.txt
-> index 2da2a16bbf260685..345dd9ee9b6bab88 100644
-> --- a/tools/perf/Documentation/perf-top.txt
-> +++ b/tools/perf/Documentation/perf-top.txt
-> @@ -83,6 +83,17 @@ Default is to monitor all CPUS.
->  --ignore-vmlinux::
->         Ignore vmlinux files.
->
-> +--debuginfod::
-> +--no-debuginfod::
-> +       Fetch debuginfo keyed by build ID from the debuginfod servers
-> +       configured in DEBUGINFOD_URLS, checking the local debuginfod
-> +       client cache first, when it is not available locally, on for
-> +       these commands by default.  Turn it off per invocation with
-> +       --no-debuginfod, with the "top.debuginfod" config option or
-> +       globally with "core.debuginfod" set to false.  Disabled as well
-> +       when the build-id cache is off, e.g. "buildid.dir" set to
-> +       /dev/null.
-> +
->  --kallsyms=3D<file>::
->         kallsyms pathname
->
-> diff --git a/tools/perf/builtin-annotate.c b/tools/perf/builtin-annotate.=
-c
-> index 850fc72fa75fe7df..d6a201c1866d363f 100644
-> --- a/tools/perf/builtin-annotate.c
-> +++ b/tools/perf/builtin-annotate.c
-> @@ -733,6 +733,9 @@ int cmd_annotate(int argc, const char **argv)
->         OPT_BOOLEAN(0, "stdio2", &annotate.use_stdio2, "Use the stdio int=
-erface"),
->         OPT_BOOLEAN(0, "ignore-vmlinux", &symbol_conf.ignore_vmlinux,
->                      "don't load vmlinux even if found"),
-> +       OPT_BOOLEAN(0, "debuginfod", &symbol_conf.debuginfod,
-> +                   "fetch debuginfo keyed by build ID from the debuginfo=
-d "
-> +                   "servers, on by default, use --no-debuginfod to turn =
-off"),
->         OPT_STRING('k', "vmlinux", &symbol_conf.vmlinux_name,
->                    "file", "vmlinux pathname"),
->         OPT_BOOLEAN('m', "modules", &symbol_conf.use_modules,
-> diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
-> index 279e61c2366cb294..442c0822e614197f 100644
-> --- a/tools/perf/builtin-report.c
-> +++ b/tools/perf/builtin-report.c
-> @@ -134,6 +134,10 @@ static int report__config(const char *var, const cha=
-r *value, void *cb)
->                 symbol_conf.event_group =3D perf_config_bool(var, value);
->                 return 0;
->         }
-> +       if (!strcmp(var, "report.debuginfod")) {
-> +               symbol_conf.debuginfod =3D perf_config_bool(var, value);
-> +               return 0;
-> +       }
->         if (!strcmp(var, "report.percent-limit")) {
->                 double pcnt =3D strtof(value, NULL);
->
-> @@ -1346,6 +1350,9 @@ int cmd_report(int argc, const char **argv)
->                    "file", "vmlinux pathname"),
->         OPT_BOOLEAN(0, "ignore-vmlinux", &symbol_conf.ignore_vmlinux,
->                      "don't load vmlinux even if found"),
-> +       OPT_BOOLEAN(0, "debuginfod", &symbol_conf.debuginfod,
-> +                   "fetch debuginfo keyed by build ID from the debuginfo=
-d "
-> +                   "servers, on by default, use --no-debuginfod to turn =
-off"),
->         OPT_STRING(0, "kallsyms", &symbol_conf.kallsyms_name,
->                    "file", "kallsyms pathname"),
->         OPT_BOOLEAN('f', "force", &symbol_conf.force, "don't complain, do=
- it"),
-> diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
-> index c2562d49be46a9a1..2be6859fd4aee141 100644
-> --- a/tools/perf/builtin-top.c
-> +++ b/tools/perf/builtin-top.c
-> @@ -1436,6 +1436,10 @@ static int perf_top_config(const char *var, const =
-char *value, void *cb __maybe_
->                 symbol_conf.cumulate_callchain =3D perf_config_bool(var, =
-value);
->                 return 0;
->         }
-> +       if (!strcmp(var, "top.debuginfod")) {
-> +               symbol_conf.debuginfod =3D perf_config_bool(var, value);
-> +               return 0;
-> +       }
->
->         return 0;
->  }
-> @@ -1508,6 +1512,9 @@ int cmd_top(int argc, const char **argv)
->                    "file", "vmlinux pathname"),
->         OPT_BOOLEAN(0, "ignore-vmlinux", &symbol_conf.ignore_vmlinux,
->                     "don't load vmlinux even if found"),
-> +       OPT_BOOLEAN(0, "debuginfod", &symbol_conf.debuginfod,
-> +                   "fetch debuginfo keyed by build ID from the debuginfo=
-d "
-> +                   "servers, on by default, use --no-debuginfod to turn =
-off"),
->         OPT_STRING(0, "kallsyms", &symbol_conf.kallsyms_name,
->                    "file", "kallsyms pathname"),
->         OPT_BOOLEAN('K', "hide_kernel_symbols", &top.hide_kernel_symbols,
-> diff --git a/tools/perf/util/config.c b/tools/perf/util/config.c
-> index b2972c35c1eca68c..31c6618d3b3daf22 100644
-> --- a/tools/perf/util/config.c
-> +++ b/tools/perf/util/config.c
-> @@ -470,6 +470,9 @@ static int perf_default_core_config(const char *var, =
-const char *value)
->         if (!strcmp(var, "core.addr2line-disable-warn"))
->                 symbol_conf.addr2line_disable_warn =3D perf_config_bool(v=
-ar, value);
->
-> +       if (!strcmp(var, "core.debuginfod"))
-> +               symbol_conf.debuginfod =3D perf_config_bool(var, value);
-> +
->         /* Add other config variables here. */
->         return 0;
->  }
-> diff --git a/tools/perf/util/debuginfo.c b/tools/perf/util/debuginfo.c
-> index 84a78b30ceac1066..be5882d9c2204797 100644
-> --- a/tools/perf/util/debuginfo.c
-> +++ b/tools/perf/util/debuginfo.c
-> @@ -7,16 +7,22 @@
->
->  #include <errno.h>
->  #include <fcntl.h>
-> +#include <limits.h>
-> +#include <pthread.h>
-> +#include <stdbool.h>
->  #include <stdio.h>
->  #include <stdlib.h>
->  #include <string.h>
->  #include <unistd.h>
-> +#include <linux/list.h>
->  #include <linux/zalloc.h>
-> +#include <api/fs/fs.h>
->
->  #include "build-id.h"
->  #include "dso.h"
->  #include "debug.h"
->  #include "debuginfo.h"
-> +#include "mutex.h"
->  #include "symbol.h"
->
->  #ifdef HAVE_DEBUGINFOD_SUPPORT
-> @@ -139,6 +145,327 @@ struct debuginfo *debuginfo__new(const char *path)
->         return __debuginfo__new(buf);
->  }
->
-> +#ifdef HAVE_DEBUGINFOD_SUPPORT
-> +/*
-> + * Users can disable the local build-id/.debug cache by setting
-> + * buildid.dir to /dev/null, meaning they don't want fetched
-> + * binaries/debuginfo stored on the box; the debuginfod client keeps
-> + * its own cache in ~/.cache/debuginfod_client, so honour that intent
-> + * and don't fetch at all in that case.
-> + */
-> +static bool debuginfod__cache_disabled(void)
-> +{
-> +       return !strcmp(buildid_dir, "/dev/null");
-> +}
-> +
-> +/*
-> + * Build IDs that shouldn't be searched for again in this session: the
-> + * ones already searched for on the debuginfod servers without success,
-> + * so that callers that see the same DSO over and over, such as the data
-> + * type profiler switching between DSOs on every hist entry, don't pay a
-> + * server round trip again for each miss.  The cache of successes is the
-> + * debuginfod client's own, in the local filesystem.
-> + *
-> + * Guarded by debuginfod__fetch_lock: it is only read by the lookups
-> + * below, that run with that lock held, and written by fetches, that run
-> + * with it held too.
-> + */
-> +struct debuginfod_miss {
-> +       struct list_head        node;
-> +       struct build_id         bid;
-> +};
-> +
-> +static LIST_HEAD(debuginfod__misses);
-> +
-> +/*
-> + * Was the search for this build ID already made and settled, i.e. the
-> + * servers had nothing for it?
-> + */
-> +static bool debuginfod__missed(const struct build_id *bid)
-> +{
-> +       struct debuginfod_miss *miss;
-> +
-> +       list_for_each_entry(miss, &debuginfod__misses, node) {
-> +               if (miss->bid.size =3D=3D bid->size &&
-> +                   !memcmp(miss->bid.data, bid->data, bid->size))
-> +                       return true;
-> +       }
-> +
-> +       return false;
-> +}
-> +
-> +static void debuginfod__miss_add(const struct build_id *bid)
-> +{
-> +       struct debuginfod_miss *miss =3D zalloc(sizeof(*miss));
-> +
-> +       if (miss =3D=3D NULL)
-> +               return;
-> +
-> +       miss->bid =3D *bid;
-> +
-> +       list_add(&miss->node, &debuginfod__misses);
-> +}
-> +
-> +/*
-> + * One fetch at a time.
-> + *
-> + * The lookup state below is process global, so two concurrent fetches,
-> + * which dso__debuginfo() makes possible by taking the fetch out of
-> + * dso__lock, would race for it: the second one could answer from a list
-> + * the first one is concurrently updating, and put the same build ID on
-> + * the misses list twice.
-> + *
-> + * Serializing also means a second request for a build ID that is being
-> + * fetched waits here for the fetch to finish, instead of starting a sec=
-ond
-> + * download of the same file, and is then answered from the entry the fe=
-tch
-> + * published, or from the misses list, with no client at all.  Should th=
-e
-> + * fetches ever run in parallel, that wait has to come back explicitly, =
-with
-> + * this lock split in two: one only for the lookup state, that the waite=
-rs
-> + * sleep on, and one held around each fetch, with the thread that finds =
-a
-> + * fetch in progress waiting on the former for the entry to be published=
-.
-> + *
-> + * What that costs is that a fetch for one build ID blocks a fetch for
-> + * another one, and it is what parallel downloads would fix.  Worth doin=
-g
-> + * only if the wait turns out to be long, because it mostly is not: the
-> + * lookups below answer the second and later requests for a build ID fro=
-m
-> + * memory, so after the first pass over the build IDs of a workload, whi=
-ch
-> + * is the only time anything is fetched at all, the serialization has
-> + * nothing left to serialize.  Start there if a profile with many DSOs t=
-o
-> + * fetch shows up in a profile of perf itself.
-> + */
-> +static struct mutex debuginfod__fetch_lock;
-> +
-> +static void debuginfod__fetch_lock_setup(void)
-> +{
-> +       mutex_init(&debuginfod__fetch_lock);
-> +}
-> +
-> +static void debuginfod__fetch_lock_init(void)
-> +{
-> +       static pthread_once_t once =3D PTHREAD_ONCE_INIT;
-> +
-> +       pthread_once(&once, debuginfod__fetch_lock_setup);
-> +}
-> +
-> +/*
-> + * The build IDs already fetched in this session, and the path of the fi=
-le
-> + * that came back for each, so that the repeated requests for the same b=
-uild
-> + * ID, dso__debuginfo() is called per symbol annotated, are answered wit=
-h a
-> + * strdup() instead of another client: the file is in the debuginfod cli=
-ent
-> + * cache already and its path checked before being handed out, in case t=
-hat
-> + * cache is cleaned from under us.
-> + *
-> + * Guarded by debuginfod__fetch_lock.  Only a fetch that brought a file =
-back
-> + * gets an entry: one that didn't is recorded in debuginfod__misses as a=
- miss,
-> + * and that is what keeps the rest of the session from asking for it aga=
-in.
-> + * Like debuginfod__misses this grows with the number of build IDs in th=
-e
-> + * workload, one small entry each, and is not trimmed.
-> + */
-> +struct debuginfo_lookup {
-> +       struct list_head         node;
-> +       struct build_id          bid;
-> +       char                    *path;
-> +};
-> +
-> +static LIST_HEAD(debuginfo_lookups);
-> +
-> +static bool build_id__equal(const struct build_id *a, const struct build=
-_id *b)
-> +{
-> +       return a->size =3D=3D b->size && memcmp(a->data, b->data, a->size=
-) =3D=3D 0;
-> +}
+  - the debuginfo for a DSO, and the kernel symbols, can now be fetched
+    keyed by the build ID recorded in the perf.data file, using the
+    debuginfod client, for the cases where they are not available
+    locally under the name the DSO was opened with: a vmlinux for a
+    kernel that since got upgraded, or a profile recorded on another
+    machine.  It is off with --no-debuginfod, with core.debuginfod=false,
+    and when the build-id cache is turned off (patch 2), opt-outs that
+    also clear DEBUGINFOD_URLS, that libdwfl's own debuginfod client
+    reads, so that it doesn't fetch behind perf's back;
 
-This is probably worth moving to the build-id.[ch] file. I see similar
-logic in places like __dso_id__cmp,  dso__missing_buildid_cache in
-builitin-buildid-cache.c and sort__dcacheline_cmp. dso__build_id_equal
-has some special backward compatibility checks.
+  - a fetch that ends up taking a while, e.g. that vmlinux, or one for
+    the vmlinux of a kernel profiled on another machine, doesn't leave
+    the user staring at a stuck looking terminal: in the stdio
+    interface, the progress is a line on stderr, in the TUI a window
+    over the browser, and 's' aborts the current fetch while remembering
+    the build ID, so that the rest of the session doesn't ask for it
+    again, the user may have skipped it for being too big; 'd'
+    additionally disables debuginfod for the rest of the session,
+    clearing DEBUGINFOD_URLS so that libdwfl's own client stops too, and
+    writes core.debuginfod=false into the configuration file perf is
+    using, ~/.perfconfig or the one named by PERF_CONFIG, making it
+    permanent.  This is spread over three patches, with the move of
+    perf_config__set_variable() to util/config.c as a prep patch, the
+    stdio keys and the TUI window (patches 3 to 5);
 
-[snip]
+  - 'perf mem record' asks for PERF_SAMPLE_CPU by default, as without
+    it the cpu field is the (u32)-1 "no CPU info" sentinel and
+    per-sample analysis cannot tell accesses from different cores apart
+    from same-CPU traffic (patch 11), and uses the IBS swfilt software
+    privilege filter, when the kernel exposes it, so that per-thread
+    recording works where only system wide recording did (patch 12).
 
-Thanks,
-Ian
+Which file a saved type DIE offset belongs to is settled with
+dwarf_cu_getdwarf(), new in elfutils 0.160, so the libdw feature test
+now probes for it and the message in Makefile.config says 0.160 where it
+said 0.157: 0.157 to 0.159 is from 2014 and has no such symbol, and
+those versions now lose dwarf support with that message instead of
+failing to link util/dwarf-aux.c.
+
+Best regards,
+
+- Arnaldo
+
+What changed from v5 (ef0ac8e44d43d2aa86842d2f83ad41d1c058d949):
+
+  PATCH 2/9, "perf debuginfo: Fetch debuginfo keyed by build ID using
+  debuginfod", was split [Namhyung Kim review of PATCH v3 2/8,
+  <aqdPNG6szS6YJjOi@google.com>]: the fetch stays in patch 2, the way
+  to get out of a slow fetch, that was folded at the end of patch 2 in
+  v5, is now patches 3 to 5, each separately cherry-pickable, and
+  carrying on their own the answer to his "I'm not sure what would be
+  the good default.  But with this, it can slow down the process
+  especially when the binary is not in the debuginfod": on by default,
+  with the way to skip the one in progress and to disable the feature
+  right where the wait is felt.  Patch 3, "perf config: Move
+  perf_config__set_variable() to util/config.c", is the prep patch,
+  patch 4, "perf debuginfo: Let the user skip and disable debuginfod
+  fetches", has the stdio 's'/'d' keys, and patch 5, "perf debuginfo:
+  Show the debuginfod fetch progress and keys in the TUI", the TUI
+  window over the browser.
+
+  PATCH 4/12, "perf debuginfo: Let the user skip and disable debuginfod
+  fetches" [that same review of the 'd' key semantics]:
+
+  - 'd' now writes core.debuginfod=false into the configuration file
+    directly, the user's ~/.perfconfig or the one named by PERF_CONFIG,
+    via perf_config__set_variable(), moved from builtin-config.c to
+    util/config.c by the prep patch so that util/debuginfo.c can use
+    it, and clears DEBUGINFOD_URLS so that libdwfl's own debuginfod
+    client stops for the rest of the session too: in v5 it only
+    disabled debuginfod for the rest of the session and pointed at
+    'perf config' to make that permanent.
+
+  PATCH 5/12, "perf debuginfo: Show the debuginfod fetch progress and
+  keys in the TUI":
+
+  - The progress and the keys are no longer stdio-only: printing to
+    stderr would garble the TUI browser display, so in v5 a fetch in
+    progress in the TUI showed nothing and there was no way to skip or
+    disable it, the thing that makes a slow fetch indistinguishable
+    from a stuck perf.  The TUI now draws a window over the browser
+    with the fetch progress and drains the 's'/'d' keys from the TUI
+    input queue: the TUI owns the terminal and its input queue, and the
+    browser thread is the one doing the fetch, so nobody else is
+    reading from it while the fetch blocks it.  No terminal settings or
+    signal dispositions are touched in that case, the terminal is the
+    TUI's own and so are the SIGINT/SIGTERM handlers, that restore it
+    before exiting.
+
+  - The slang calls stay in ui/tui/, behind the ui__key_pending()/
+    ui__key_read()/ui__progress_window()/ui__progress_window_end()
+    primitives declared in ui/util.h and implemented in ui/tui/util.c,
+    with inline stubs for builds without slang: the plan is to reduce
+    the number of libraries perf needs to build, or swap slang for
+    something else, such as ncurses, at some point, so nothing outside
+    ui/ calls slang directly.  The text in the window is word wrapped
+    to the available columns, as constrained terminals, such as a
+    smartphone running termux, crop the tail of a long line and would
+    hide the 'd' option hint.
+
+  Patches 1, 3, 4, 5, 6, 7, 8 and 9 are unchanged from v5, renumbered
+  as 1, 6, 7, 8, 9, 10, 11 and 12 with the split.
+
+What changed from v4 (f801de4e80289566):
+
+  PATCH 1/8, "perf test: Skip data_type_profiling when the PMU cannot
+  record memory events" [Namhyung Kim review of PATCH v3 1/8]:
+
+  - Namhyung suggested adding a fallback to the 'swfilt' term for
+    ibs_op instead of only skipping the test on a PMU that refuses
+    per-thread memory events.  The new PATCH 9 does that for the ibs_op
+    memory events, using the swfilt software privilege filter the
+    kernel exposes as a format term since v6.14, which makes the
+    per-thread 'perf mem record' the test does work on AMD; the skip
+    stays for kernels without it.  The term is in the event name even
+    for records that end up without exclude bits, e.g. plain system
+    wide ones: 'perf record' adds those bits itself when the first
+    open fails with EACCES, after the name was built, and the retry
+    only succeeds with the term already in the name:
+
+      $ perf record -v -e ibs_op/ldlat=0/ -- true
+      kernel.perf_event_paranoid=2, trying to fall back to excluding kernel and hypervisor  samples
+      Failure to open event 'ibs_op/ldlat=0/u' on PMU 'ibs_op' which will be removed.
+      Invalid event (ibs_op/ldlat=0/u) in per-thread mode, enable system wide with '-a'.
+
+    with no exclude bits the kernel discards nothing.  The 'Test data
+    symbol' shell test matches the event string, so its regex now
+    accepts terms added after ldlat=150.
+
+  PATCH 2/8, "perf debuginfo: Fetch debuginfo keyed by build ID using
+  debuginfod" [sashiko-bot review of PATCH v4 2/8]:
+
+  - debuginfod__setup_urls_env() moved from util/debuginfo.c to
+    util/util.c, next to perf_debuginfod_setup(), and its declaration
+    from util/debuginfo.h to util/util.h: debuginfo.o is only built with
+    CONFIG_LIBDW, so with libdebuginfod but without libdw the
+    declaration was an empty stub and the setup was skipped exactly for
+    build-id.c and probe-event.c, the debuginfod users that are built
+    without libdw and that the commit message lists as reading
+    DEBUGINFOD_URLS in every debuginfod_begin().
+
+  PATCH 8/8, "perf mem record: Request PERF_SAMPLE_CPU by default"
+  [sashiko-bot review of PATCH v4 8/8]:
+
+  - The rec_argv array now reserves room for the fixed arguments
+    __cmd_record() adds, up to eight with all the optional flags; a
+    pre-existing under-allocation, the array was nine arguments per
+    memory PMU plus the user arguments, and on a PMU with separate load
+    and store events the four event arguments plus the fixed ones
+    already filled it to the last slot, so this new --sample-cpu
+    argument would write past it, e.g. with --phys-data --data-page-size
+    --all-user.
+
+  Patches 1, 3, 4, 5, 6 and 7 are unchanged from v4: sashiko-bot found
+  no issues in them.
+
+What changed from v3 (2433e9f0bf86cfc3):
+
+  PATCH 2/8, "perf debuginfo: Fetch debuginfo keyed by build ID using
+  debuginfod" [sashiko-bot review of PATCH v3 2/8]:
+
+  - DEBUGINFOD_URLS is no longer set from the fetch path: setenv() is
+    not thread safe and libdebuginfod reads it with getenv() in every
+    debuginfod_begin(), which perf also does from build-id.c,
+    probe-event.c and probe-finder.c, paths that don't go through the
+    fetch lock, so a thread taking one of them could race with the
+    setenv() a fetch was doing.  This is now done from symbol__init(),
+    before the threads are started, from the .urls files in
+    /etc/debuginfod when it isn't set, and the pthread_once() and the
+    call in debuginfod__fetch() are gone with it.
+
+  - The in-flight fetch wait was dead code and is gone: with
+    debuginfod__fetch_lock held across the whole lookup and fetch, no
+    second thread could ever see an entry being fetched, so the
+    condition variable, the waiters and the publication dance could not
+    run.  debuginfo_lookup__new() became debuginfo_lookup__add(), called
+    after a fetch that brought a file back: lookups remember only the
+    successful fetches, one entry each, answered with a strdup() and
+    re-fetched if that file goes away, and a request for a build ID
+    being fetched waits for the lock and is answered from the misses
+    list or from the entry, so a download still can't happen twice.
+    debuginfod__missed_lock, always taken under the fetch lock, is gone
+    with it.
+
+  PATCH 3/8, "perf symbol: Fall back to fetching the vmlinux by build ID"
+  [sashiko-bot review of PATCH v3 3/8]:
+
+  - The check for a concurrent load, made after taking dso->lock back
+    from the fetch, is now dso__has_symbols() and not dso__loaded():
+    dso__load() sets the latter even for an attempt that failed, so a
+    thread whose fetch failed could make a thread whose fetch succeeded
+    discard the vmlinux it just downloaded and carry on with an empty
+    kernel dso, as loaded is set and nothing would try again.
+
+  PATCH 6/8, "perf scripts: Add perf-stuck, to tell where a running perf
+  is stuck" [sashiko-bot review of PATCH v3 6/8]:
+
+  - The review asked whether the %s of a dwarf_diename() that returns
+    NULL in perf-die-chain would abort the macro.  Checked, not changed:
+    with GDB 17.2, printf prints "(null)" for a NULL char *, including
+    for an inferior call returning one, and the macro carries on.  The
+    other %s in the file, dloc->ms->sym->name in perf-dso, can't be NULL
+    either: the only caller of find_data_type() dereferences ms->sym and
+    ms->map to build the data_loc_info before that frame can exist, so
+    no change there as well.
+
+  - Patches 1, 4, 5, 7 and 8 are unchanged from v3: sashiko-bot found
+    no issues in them.
+
+What changed from v2 (00cffc7df5abfa68):
+
+  PATCH 2/8, "perf debuginfo: Fetch debuginfo keyed by build ID using
+  debuginfod" [sashiko-bot review of PATCH v2 2/8]:
+
+  - The conditions to fetch, debuginfod being enabled, the build-id cache
+    being on and the build ID not having been a miss already, are now
+    looked at with the fetch lock held, as they are the state the fetch
+    itself changes: deciding them outside the lock and fetching inside it
+    let a second thread repeat the fetch the first one had just made, or
+    repeat one that had just been turned off, and put the same build ID
+    on the misses list twice.
+
+  - A build ID that is already being fetched is waited for, instead of
+    fetched again: there was nothing that said "this one is in flight", so
+    a second thread wanting it blocked on the fetch lock and then did its
+    own complete fetch, which, while the first one is still running, is a
+    second download of the same file, with a second client, a second
+    progress line and a second turn at the terminal, for the same answer.
+    It now sleeps on a condition variable and is woken with whatever the
+    fetch settled: the file, when there is one, or the not available, when
+    it found nothing or the user cancelled it, with no retry.
+
+  - And a fetch that brought a file back is remembered, so that the ones
+    that need the same build ID later, e.g. annotating another symbol of
+    the same DSO, are answered with a strdup() instead of another client:
+    the file stays in the debuginfod client cache, and its path is checked
+    before being handed out, in case that cache gets cleaned from under
+    us.
+
+  - The fetches are still one at a time, so a fetch for one build ID waits
+    for a fetch for another one: the terminal mode, the signal
+    dispositions, the progress line and the 's'/'d' keys are process
+    global, and sharing them between concurrent fetches, refcounted, is
+    left for later, noted in the code.  It matters less than it sounds,
+    now that the build IDs of a workload are answered from memory after
+    the first pass over them.
+
+  PATCH 3/8, "perf symbol: Fall back to fetching the vmlinux by build ID"
+  [sashiko-bot review of PATCH v2 3/8]:
+
+  - The fetch is no longer made with dso->lock held: dso__load() holds it
+    across dso__load_kernel_sym(), and a fetch can block for a long time
+    on the network, or on the terminal, waiting for the user, which would
+    stall every other thread that needs the kernel dso.  It is dropped
+    just around the fetch, nothing of the dso is touched while it is, and
+    the symbols are loaded with the lock held again, the same way
+    dso__debuginfo() already does it for the debuginfo of a DSO.  If
+    another thread got the symbols for the dso in the meantime, the file
+    that came back is not loaded a second time.
+
+  PATCH 5/8, "perf report: Add --progress option" [sashiko-bot review of
+  PATCH v2 5/8]:
+
+  - A phase that starts when the progress stack is full is now just not
+    shown, and its finish() is swallowed, instead of force completing the
+    phase that encloses it to make room: that one still gets its own
+    finish() later, which would then complete the phase above it, and so
+    on, one premature completion per nesting level.  Reproduced by
+    building with STDIO_PROGRESS__MAX_DEPTH set to 1: v2 prints
+    "Processing events... [100.0%]" while it is at 99.7%, before the
+    nested phase even runs, v3 warns and keeps the outer phase to
+    complete when it really does.  With the 8 slots in the tree this
+    cannot be hit, the phases perf has nest at most 2 deep, but the
+    bookkeeping was wrong.
+
+  PATCH 6/8, "perf scripts: Add perf-stuck, to tell where a running perf
+  is stuck" [sashiko-bot review of PATCH v2 6/8]:
+
+  - The perf-dso GDB macro read dloc->ms.map->dso->name and
+    dloc->ms.sym->name, but struct data_loc_info.ms is a
+    'struct map_symbol *', so GDB's C evaluator needs -> there: as it
+    was, 'perf-stuck.sh -g' would have failed to evaluate it.
+
+  - The one pre-existing issue in PATCH 7/8, the unbounded member type
+    chase in die_get_member_type() and the unbounded recursion in
+    die_find_member(), is not addressed here, it went to the perf TODO
+    list as item 180, as it is not on the path this series fixes.
+
+  Other changes since v2:
+
+  - PATCH 2/8: a refetch made because the cached file was cleaned from
+    under us now updates the entry the same way the first fetch does,
+    and an entry with no path and no error is fetched again instead of
+    answered; as it was, the entry kept the first fetch's success with
+    no path, so the later lookups it existed for returned success with
+    a NULL path, which debuginfo__new_build_id() cannot open and the
+    vmlinux fallback in PATCH 3 would take as a file that came back
+    and dereference.
+
+  - PATCH 3/8: the commit message said the ignore_vmlinux_buildid that
+    'perf record' and 'perf probe' set internally is what keeps them
+    away from the fallback, but 'perf probe' only sets it for the
+    commands other than --list, --del and --add when given an offline
+    vmlinux; the message now says that and that a 'perf probe' that
+    does not set it, e.g. --funcs or --add without --vmlinux on a
+    system with a restricted /proc/kallsyms, can have the kernel
+    debuginfo fetched, like the other tools.
+
+  - PATCH 7/8: the kerneldoc of die_get_type_die() said the type would
+    be looked up in the main file and then in the alt file, using the
+    one that has a DIE with the saved tag, but the function
+    deliberately resolves in only the file the offset was recorded as
+    belonging to, with no fallback, and @from_alt was missing from the
+    parameter list; it now describes that, and the die_collect_vars()
+    and die_collect_global_vars() kerneldocs, which still said the
+    type could be retrieved with dwarf_offdie() and the offset alone,
+    now point at die_get_type_die().
+
+  - PATCH 7/8: the comment on the member->truncated flag said the
+    browser reads it, but the browser picks between ';' and '{' from
+    the children list, so a member cut by the nesting limit is drawn
+    like a complete leaf; the comment now says the flag is for the
+    JSON exporter added in a later series.
+
+  - PATCH 2/8: a search aborted by the user, with 's' or a signal, is
+    now remembered for the rest of the session: the threads already
+    waiting for that fetch were told there was nothing to share, but a
+    request that arrived later started a new download of the same file,
+    which the user may have skipped for being too big.  debuginfod__misses
+    now records such a cancellation as a cancellation, the 's' message
+    says the build ID will not be fetched again in this session and the
+    debug message tells a cancellation and a server miss apart.  The
+    lookup entry is also now allocated and published by a
+    debuginfo_lookup__new() helper called before the fetch, instead of
+    an allocation whose failure was only checked after it.
+
+  - Patches 1, 4 and 8 are unchanged from v2: sashiko-bot found no
+    issues in them.
+
+What changed from v1 (060dccedab1617dc):
+
+  PATCH 2/8, "perf debuginfo: Fetch debuginfo keyed by build ID using
+  debuginfod" [sashiko-bot review of PATCH 2/8]:
+
+  - Included <limits.h> for PATH_MAX, that was coming in through a
+    glibc transitive include and fails to build with musl libc.
+
+  - debuginfod__setup_urls_env() now goes through pthread_once, so that
+    the setenv() of DEBUGINFOD_URLS happens exactly once: setenv() is
+    not thread safe and this is on the fetch path, which
+    dso__debuginfo() deliberately takes outside dso__lock.
+
+  - The fetch now runs with debuginfod__fetch_lock held, so that the
+    process global state it uses — the terminal settings, the SIGINT/
+    SIGTERM dispositions and the progress and cancellation state — is
+    only ever touched by one fetch at a time.  A second concurrent
+    fetch would otherwise have taken the first one's raw mode as the
+    state to restore, leaving the terminal broken when it was done, and
+    would reset the cancellation state from under the fetch already in
+    progress.  Serializing also keeps two fetches from racing for the
+    same keypresses and the same progress line, and a second fetch has
+    nothing to gain from running in parallel with a first one reading
+    the same kind of file off the same servers.
+
+  - An interrupt that lands after the fetch already succeeded is no
+    longer swallowed: at that point the terminal and the signal
+    dispositions are the original ones again, so the signal is re-raised,
+    the same way the failure path does, instead of perf carrying on as
+    if the user had not asked it to stop.
+
+  PATCH 6/8, "perf scripts: Add perf-stuck, to tell where a running perf
+  is stuck" [sashiko-bot review of PATCH 6/8]:
+
+  - /proc/<pid>/stat is now parsed with the parenthesized command name
+    removed first, so that a process with spaces in its name no longer
+    shifts every field after it: watching a process named 'my sleep'
+    used to report "sleep)" as its state and a garbage RSS.
+
+  - The CPU time is printed with awk's printf "%d" instead of relying on
+    its default output format, that switches to scientific notation,
+    which the bash arithmetic below cannot parse, once the sum of utime
+    and stime goes past six digits, i.e. some 16 minutes of CPU at
+    100 Hz.
+
+  - The process can go away between the '-d /proc/<pid>' check and the
+    read of /proc/<pid>/stat, so the read is now checked: a failed or
+    empty one reports "process gone" instead of 'set -u' aborting the
+    script on an unbound field, which is what would have hidden the
+    very exit the script is meant to report.
+
+  - The command line printed when the script starts has its control
+    characters stripped, so that a process started with escape sequences
+    in its arguments, e.g. one replaying a log line, does not get them
+    replayed on the terminal of whoever runs this.
+
+  - The two pre-existing issues sashiko-bot raised that are outside the
+    scope of this series, the child entries and their hists arrays
+    leaked by the data type browser teardown and the missing <stdio.h>
+    and <stdlib.h> includes in ui/browsers/annotate-data.c, are
+    recorded as items 178 and 179 of the perf TODO list for follow-up
+    work.
+
+  - Patches 1, 3, 4, 5, 7 and 8 are unchanged from v1: sashiko-bot
+    found no issues in them.
+
+Arnaldo Carvalho de Melo (12):
+  perf test: Skip data_type_profiling when the PMU cannot record memory
+    events
+  perf debuginfo: Fetch debuginfo keyed by build ID using debuginfod
+  perf config: Move perf_config__set_variable() to util/config.c
+  perf debuginfo: Let the user skip and disable debuginfod fetches
+  perf debuginfo: Show the debuginfod fetch progress and keys in the TUI
+  perf symbol: Fall back to fetching the vmlinux by build ID
+  perf annotate-data: Show the sample count in the data-type browser
+  perf report: Add --progress option
+  perf scripts: Add perf-stuck, to tell where a running perf is stuck
+  perf annotate-data: Resolve type DIEs in the debug file they came from
+  perf mem record: Request PERF_SAMPLE_CPU by default
+  perf mem record: Use the IBS swfilt filter when available
+
+ tools/build/feature/test-libdw.c              |  15 +-
+ tools/perf/Documentation/perf-annotate.txt    |  10 +
+ tools/perf/Documentation/perf-config.txt      |  19 +
+ tools/perf/Documentation/perf-mem.txt         |   4 +
+ tools/perf/Documentation/perf-report.txt      |  31 +
+ tools/perf/Documentation/perf-top.txt         |  16 +
+ tools/perf/Makefile.config                    |   2 +-
+ tools/perf/arch/x86/util/mem-events.c         |  17 +-
+ tools/perf/builtin-annotate.c                 |   3 +
+ tools/perf/builtin-config.c                   |  70 +-
+ tools/perf/builtin-mem.c                      |  18 +-
+ tools/perf/builtin-report.c                   |  18 +
+ tools/perf/builtin-top.c                      |   7 +
+ tools/perf/scripts/perf-stuck.gdb             | 104 +++
+ tools/perf/scripts/perf-stuck.sh              | 194 ++++++
+ tools/perf/tests/shell/data_type_profiling.sh |  46 +-
+ tools/perf/tests/shell/test_data_symbol.sh    |   6 +-
+ tools/perf/ui/Build                           |   1 +
+ tools/perf/ui/browsers/annotate-data.c        |   2 +-
+ tools/perf/ui/progress.h                      |   2 +
+ tools/perf/ui/stdio/progress.c                | 185 ++++++
+ tools/perf/ui/tui/util.c                      | 177 +++++
+ tools/perf/ui/util.h                          |  42 ++
+ tools/perf/util/annotate-data.c               |  59 +-
+ tools/perf/util/annotate-data.h               |   3 +
+ tools/perf/util/config.c                      |  73 +++
+ tools/perf/util/config.h                      |   2 +
+ tools/perf/util/debuginfo.c                   | 608 ++++++++++++++++++
+ tools/perf/util/debuginfo.h                   |  36 ++
+ tools/perf/util/dso.c                         |  19 +
+ tools/perf/util/dwarf-aux.c                   | 171 ++++-
+ tools/perf/util/dwarf-aux.h                   |  33 +
+ tools/perf/util/mem-events.c                  |  21 +-
+ tools/perf/util/mem-events.h                  |   2 +
+ tools/perf/util/ordered-events.c              |  17 +-
+ tools/perf/util/session.c                     |  12 +-
+ tools/perf/util/symbol.c                      |  83 ++-
+ tools/perf/util/symbol_conf.h                 |   1 +
+ tools/perf/util/util.c                        | 103 +++
+ tools/perf/util/util.h                        |   8 +
+ 40 files changed, 2105 insertions(+), 135 deletions(-)
+
+base-commit: 91b0782fc9e9d2f0a40b5256146e014802fdbb36
+v5-head: ef0ac8e44d43d2aa86842d2f83ad41d1c058d949
+v4-head: f801de4e80289566670e6b735198606b672e74e8
+v3-head: 2433e9f0bf86cfc3d9966b467042563596c9ebdb
+v2-head: 00cffc7df5abfa6850beb360deb830d8495163ce
+v1-head: 060dccedab1617dcbf6e2be64ed97afe3f3fac63
+--
+Assisted-by: LLM
