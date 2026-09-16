@@ -1,44 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89C0F5AEC6C
-	for <linux-perf-users@vger.kernel.org>; Wed, 16 Sep 2026 18:38:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2FB14D9F68
+	for <linux-perf-users@vger.kernel.org>; Wed, 16 Sep 2026 18:40:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789583928; cv=none; b=dxRxcNyqC0pd3bmxeC1/lGowjusiwW17+SsILU2nK0l38GcxrGYZsW5nQi5AErvVyDKt0bls4LuzEx9DD6Jude3jKl0CZHwzBIgK63CqiMjp6rb13lH4Ud10wjcDSagWl4YSwvUtLkladTc4bWlI7LSzIhoG0TEzhlIsd83vZXY=
+	t=1789584025; cv=none; b=Uah4BCSslCXlY4YPigH58qYFShpGKKvMmabObW70m6QE4n7RsDN+pmQ0ekZqSXvsMkYiVU+amVf0N615Bps8D0T+QYgmBXEqz6C2wqy0WYnf7eEoHbJ2yGu6dtJmu1sMQ2zeWWm0hvxnS/IgMjY25tPVYE1UgwFLnJ7m8i4HsaQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789583928; c=relaxed/simple;
-	bh=NHWeOBMHitjIGnRLH6L18A+8WqEprbgKrpAf/ciQDks=;
+	s=arc-20240116; t=1789584025; c=relaxed/simple;
+	bh=rez3glegKjtgUD4bOVIgvOEZ30PMNiQl42EPiumDeAc=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=UNMcsSVOkEGtE241LusYctGQfgERhrIQOBYEcMbou/HG7sJL53APEv4ffbqoIKmJdv9EAQEFZpzizkFdkzQn9Cx0oSDWm4J+yB3W6TQC0z0RAsWhAGcBgM7C2O69YlsNJP2Jb3fam5bqpHTIxTfwTi5LfmKqiTq4h900iqmv9S8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=m99QOx4k; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=Z1O++Y6SMNou+O5IQiaKSimUx7YkzXkrNkQe4DC/KhnOZ5nVp6oq572jln8FCDswEKOdtp5yMLK32xmkUzbbEM+5KJdeByvIMMDS6VL4X3k/+j/7SdIEry8Te7xyzFHi4gXvm2DZjNLS+Y2bJFSonYHgoC0i8swIkMTB2+dQazI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TYM5lp1L; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="m99QOx4k"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7A8351F00893;
-	Wed, 16 Sep 2026 18:38:26 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TYM5lp1L"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3BD8C1F000FF;
+	Wed, 16 Sep 2026 18:40:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789583906;
-	bh=V6I2F7jsjiZD40TLRpjxp7fHajvAndefk/W1IdoJXrQ=;
+	s=k20260515; t=1789584003;
+	bh=5oNgT7ZqJVq7otbh9Wp+jQJ9agGnd5c6xoqIQHuvOBI=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=m99QOx4klXAPffLQV7kd+2lfndnc/EfLol1Dimps6QrW9orSUKNVbz6jbYEgTI0xa
-	 6k4lZ8Xzz2l63fMcM2AuQIq8lZDT6f0/+wH+OSmFKp8deokVyji2Xg+k3gdrm+a16e
-	 dsKoHFrT8cCSvZjb/HMQ9LAiQf9KiPMhUlmlKRZVmjuAFSW4VN9v3pD/ShEWrNzLim
-	 VFm0VJjPsNs7n8+TD/tU9IXk9fIB9muBBMWR/BRCoMyKYi+OwYrZhNCMqgKwHPkjoM
-	 ZA/Y6hnbFD6PbeMtV0i/QIMMu4BVGES9r3LXHY0zQC3lR+D12dICaBbVYWchVvyZfs
-	 jKVAd/Ng41rtw==
+	b=TYM5lp1LZwhOH/07o6qMFNFD0MfruU6wgya7eeVEyRp+VenkNepNsd0TLJKxrIiaV
+	 c6BIijKQtBipvRoe9TeVwYtdVARoIZ4ApoqqmiQ+Bk6bIHL7rQc1amEu9fTzhvqa5P
+	 HxJUFqjihr7ILYrEj0K9OMLw05nFrROChXed2hXFmxOPuqpMZvFlDhaJvoqZNsRK4a
+	 sdAzjUzNIYHC9DarSS7RaFMCP8k9DYRF0nJrFXJc4WF4TAGSavB91CkuVodrBLUA93
+	 cUOswB3Vc9c7Ueulp838aQnw+qDmPGCQeJo9TbytS3i5SZmxekMgtwGkPmYDX6eZtu
+	 +aCDk408QNiPw==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 01/12] perf test: Skip data_type_profiling when the PMU
- cannot record memory events
+Subject: Re: [PATCH 02/12] perf debuginfo: Fetch debuginfo keyed by build ID
+ using debuginfod
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Arnaldo Carvalho de Melo" <acme@kernel.org>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260916183215.54305-2-acme@kernel.org>
+In-Reply-To: <20260916183215.54305-3-acme@kernel.org>
 References: <20260916183215.54305-1-acme@kernel.org>
- <20260916183215.54305-2-acme@kernel.org>
+ <20260916183215.54305-3-acme@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Wed, 16 Sep 2026 18:38:26 +0000
-Message-Id: <20260916183826.7A8351F00893@smtp.kernel.org>
+Date: Wed, 16 Sep 2026 18:40:02 +0000
+Message-Id: <20260916184003.3BD8C1F000FF@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -47,26 +47,23 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
 > From: Arnaldo Carvalho de Melo <acme@redhat.com>
 >=20
-> The test records with 'perf mem record' in per-thread mode and its only
-> guard matches one specific message:
+> perf already uses debuginfod to fetch source files when annotating
+> (via probe-finder.c) and 'perf probe' has open_from_debuginfod(),
+> which queries debuginfo keyed by build ID when a module's debuginfo
+> isn't found locally, largely the same thing this adds; eventually
+> that one could be moved over to the new helper.  For the analysis
+> tools there was no way to obtain the debuginfo for a DSO in a
+> profile when it isn't available locally under the name the DSO was
+> opened with, for instance the vmlinux for the kernel a profile was
+> recorded on when processing it on another machine, or after the
+> kernel and its debuginfo package got upgraded in between.
 >=20
->   perf mem record -o /dev/null -- true 2>&1 | \
->         grep -q "failed: no PMU supports the memory events" && exit 2
->=20
-> A PMU that has memory events but refuses them per-thread falls through
-> it, and AMD IBS does:
->=20
->   $ perf mem record -o /dev/null -- true
->   Error:
->   Failure to open event 'ibs_op/ldlat=3D0/u' on PMU 'ibs_op' which will b=
-e removed.
->   Invalid event (ibs_op/ldlat=3D0/u) in per-thread mode, enable system wi=
-de with '-a'.
+> Add debuginfo__find_build_id(), that uses the debuginfod client to
+> locate a debuginfo file keyed by the build ID, checking its local
 > [ ... ]
+> that make NO_LIBDW=3D1 on a system that has the debuginfod client
+> keeps linking.
 >=20
-> Fixes: f60a5c22967b ("perf tests: Test annotate with data type profiling =
-and rust")
-> Acked-by: Namhyung Kim <namhyung@kernel.org>
 > Assisted-by: LLM
 > Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 
@@ -74,5 +71,5 @@ Sashiko has reviewed this patch and found no issues. It looks great!
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260916183215.5430=
-5-1-acme@kernel.org?part=3D1
+5-1-acme@kernel.org?part=3D2
 
