@@ -1,28 +1,28 @@
-Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55A813AE188;
-	Wed, 16 Sep 2026 01:30:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0AE939184C;
+	Wed, 16 Sep 2026 01:30:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789522223; cv=none; b=tBniPnnXHtK61keuOKtbUQUWItFEHSkwaZq13DsSgQ9np0v9L6gbWe3K/VafQTUKBPAdfU5OVuBJKkYIfnSUidgDnO0caYEp5U+cSpiEajcgVRSt54TEK/lX/C1t/o2gb+WbTB2duA2N0QvWhk3/ammYKWEnH38BAQVvpg/44KM=
+	t=1789522222; cv=none; b=Fb7tFUe5MJbbBJJrLsXP52sihDcGMOBFLIZZ6MikwXlh9O8cRa9ZFeDo+WYiU7qtbrNGuvusxLTfyGAV3nn6O6PgSMgb8Pv8I/f59mTeSorYv+a8Ckg1CscFVvPCZovsCW6FQ6yx8pfyfxIoAaXzDe8euqxDcvCVb/49dxTzJjI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789522223; c=relaxed/simple;
-	bh=gu/irH4xHKyQrTYNpvzC0VdmiHz2BuMy+VGA/tohtYw=;
+	s=arc-20240116; t=1789522222; c=relaxed/simple;
+	bh=mQOEnFNDPytHbQQT9IAXpz28luodl7krkuFVgcN+Mng=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=C43wGIIYamPI1EEnlABVxnWSYqDO4FScH2R1Pmv5D/gAHQs+hJpnRqpuFCHgfI3YnKrYM6UWhLy/nnKLhQIFUNpX21m/P7OgGV20MHriZ1ntq41k9PRnMhNEUjw7S7BvsqugsOyTVU3Pjkj3lhGMl6wdW3g7pyPc+Nx0/c7XbkU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=none smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
+	 MIME-Version; b=U5Dge5up9UiXLgfOmKSKOILcfn8LmaVDjrMS0mU6eixix97WTmgHXXIG0Qw7fKeyrtNjG9G8Q5fFYnSeaoVVFaxuZkjwFvEXSZi0Pd7FVYfnnc5qdPvXf1Xpytkq9YIjUI1MNmUFu6GMlmT8zDKc98gKFGw7EUV+t/ZYcqfiCg0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.170])
-	by dggsgout12.his.huawei.com (SkyGuard) with ESMTPS id 4hl1XK0j86zKHMV4;
-	Wed, 16 Sep 2026 09:29:53 +0800 (CST)
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.198])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4hl1XT4JzMzYQtp4;
+	Wed, 16 Sep 2026 09:30:01 +0800 (CST)
 Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id B42814056B;
-	Wed, 16 Sep 2026 09:30:06 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTP id B429940576;
+	Wed, 16 Sep 2026 09:30:05 +0800 (CST)
 Received: from huawei.com (unknown [10.67.174.45])
-	by APP4 (Coremail) with UTF8SMTPA id gCh0CgAn+CoH8alqUcjbAQ--.36458S21;
-	Wed, 16 Sep 2026 09:30:06 +0800 (CST)
+	by APP4 (Coremail) with UTF8SMTPA id gCh0CgAn+CoH8alqUcjbAQ--.36458S10;
+	Wed, 16 Sep 2026 09:30:05 +0800 (CST)
 From: Tengda Wu <wutengda@huaweicloud.com>
 To: Namhyung Kim <namhyung@kernel.org>,
 	james.clark@linaro.org,
@@ -44,9 +44,9 @@ Cc: Peter Zijlstra <peterz@infradead.org>,
 	linux-kernel@vger.kernel.org,
 	llvm@lists.linux.dev,
 	Tengda Wu <wutengda@huaweicloud.com>
-Subject: [PATCH v6 19/26] perf annotate-data: Track imm_value for stack variables
-Date: Wed, 16 Sep 2026 01:29:33 +0000
-Message-Id: <8b29a11ea56bdc9973e3ab65d6f5ebdea0927bfa.1789521520.git.wutengda@huaweicloud.com>
+Subject: [PATCH v6 08/26] perf annotate: Adapt arch__dwarf_regnum() for arm64
+Date: Wed, 16 Sep 2026 01:29:22 +0000
+Message-Id: <1f03970d9efc5195283158362873d1e445b4afe5.1789521520.git.wutengda@huaweicloud.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <cover.1789521520.git.wutengda@huaweicloud.com>
 References: <cover.1789521520.git.wutengda@huaweicloud.com>
@@ -57,10 +57,10 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:gCh0CgAn+CoH8alqUcjbAQ--.36458S21
-X-Coremail-Antispam: 1UD129KBjvJXoWxGF18uw17Jw1DGFyUGFW8Crg_yoW7JF4xpr
-	WDWFy7W3W7Wr4IqrsxJF4UXr93Gws2gF1Fk3s0qFnayFyxtr1fG3s7tFW5tF47Cryvyw17
-	Jwn0kr4DXw47KaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+X-CM-TRANSID:gCh0CgAn+CoH8alqUcjbAQ--.36458S10
+X-Coremail-Antispam: 1UD129KBjvJXoW7ury3uw48Cr47ZF1DGF1Utrb_yoW8CF1fpw
+	4xC343Ar10kr4FqwsxXFs3WFy3G3WfAa13uF1ktwn7Can7WryrJw4SyF1F9a13Ars7Jr1Y
+	yr4qqw18WFnxCaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
 	9KBjDU0xBIdaVrnRJUUUH2b4IE77IF4wAFF20E14v26rWj6s0DM7CY07I20VC2zVCF04k2
 	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28IrcIa0xkI8VA2jI8067AKxVWUAV
 	Cq3wA2048vs2IY020Ec7CjxVAFwI0_Xr0E3s1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0
@@ -72,143 +72,70 @@ X-Coremail-Antispam: 1UD129KBjvJXoWxGF18uw17Jw1DGFyUGFW8Crg_yoW7JF4xpr
 	IEc7CjxVA2Y2ka0xkIwI1lc7CjxVAaw2AFwI0_GFv_Wrylc7CjxVAKzI0EY4vE52x082I5
 	MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr
 	0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVW8ZVWrXwCIc40Y0x0E
-	wIxGrwCI42IY6xIIjxv20xvE14v26r4j6ryUMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8Jr
-	0_Cr1UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8JVWxJwCI
+	wIxGrwCI42IY6xIIjxv20xvE14v26r1I6r4UMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8Jr
+	0_Cr1UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI
 	42IY6I8E87Iv6xkF7I0E14v26r4UJVWxJrUvcSsGvfC2KfnxnUUI43ZEXa7sRNg4S3UUUU
 	U==
 X-CM-SenderInfo: pzxwv0hjgdqx5xdzvxpfor3voofrz/
 
-Currently, imm_value is tracked in registers but dropped when values
-are saved to or loaded from stack variables during type profiling.
-If a register of type TSR_KIND_CONST is stored to the stack, its value
-will be lost.
+Currently, arch__dwarf_regnum() assumes that all architectures use a
+register prefix character (e.g., '%' for x86) defined by
+arch->objdump.register_char, and uses it to match register names in
+objdump output. However, this assumption does not hold for arm64,
+where assembly syntax uses bare register names like 'x0', 'w1'
+without any prefix.
 
-Add an imm_value field to struct type_state_stack and update
-set_stack_state() and findnew_stack_state() to accept and preserve the
-immediate value when updating stack state.
+As a result, arm64 builds may fail to correctly recognize register
+names from objdump disassembly, leading to incomplete or incorrect
+annotation output.
 
-Reviewed-by: Shuai Xue <xueshuai@linux.alibaba.com>
+To address this:
+
+- Make the register prefix check optional, allowing architectures
+  without a prefix character to be parsed correctly.
+
+- Extend the delimiter set in strpbrk() to include the closing square
+  bracket ']'. In arm64 assembly, memory operands often use bracketed
+  syntax such as '[x1, #16]' or '[x2]'. Adding ']' ensures clean
+  extraction of register names like 'x2' without trailing characters.
+
+Reviewed-by: Namhyung Kim <namhyung@kernel.org>
 Signed-off-by: Tengda Wu <wutengda@huaweicloud.com>
 ---
- tools/perf/util/annotate-arch/annotate-x86.c |  8 ++++++--
- tools/perf/util/annotate-data.c              | 13 +++++++------
- tools/perf/util/annotate-data.h              |  5 +++--
- 3 files changed, 16 insertions(+), 10 deletions(-)
+ tools/perf/util/annotate.c | 12 +++++++-----
+ 1 file changed, 7 insertions(+), 5 deletions(-)
 
-diff --git a/tools/perf/util/annotate-arch/annotate-x86.c b/tools/perf/util/annotate-arch/annotate-x86.c
-index f5e40cef08ab..21729e153fa0 100644
---- a/tools/perf/util/annotate-arch/annotate-x86.c
-+++ b/tools/perf/util/annotate-arch/annotate-x86.c
-@@ -591,6 +591,7 @@ static void update_insn_state_x86(struct type_state *state,
- 				tsr->type = stack->type;
- 				tsr->kind = stack->kind;
- 				tsr->offset = stack->ptr_offset;
-+				tsr->imm_value = stack->imm_value;
- 				tsr->ok = true;
- 			} else if (die_get_member_type(&stack->type,
- 						       offset - stack->offset,
-@@ -598,6 +599,7 @@ static void update_insn_state_x86(struct type_state *state,
- 				tsr->type = type_die;
- 				tsr->kind = TSR_KIND_TYPE;
- 				tsr->offset = 0;
-+				tsr->imm_value = 0;
- 				tsr->ok = true;
- 			} else {
- 				invalidate_reg_state(tsr);
-@@ -773,10 +775,12 @@ static void update_insn_state_x86(struct type_state *state,
- 				 */
- 				if (!stack->compound)
- 					set_stack_state(stack, offset, tsr->kind,
--							&tsr->type, tsr->offset);
-+							&tsr->type, tsr->offset,
-+							tsr->imm_value);
- 			} else {
- 				findnew_stack_state(state, offset, tsr->kind,
--						    &tsr->type, tsr->offset);
-+						    &tsr->type, tsr->offset,
-+						    tsr->imm_value);
- 			}
+diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
+index d3482eba9283..86a4beec6528 100644
+--- a/tools/perf/util/annotate.c
++++ b/tools/perf/util/annotate.c
+@@ -2582,19 +2582,21 @@ int annotate_check_args(void)
  
- 			if (dst->reg1 == fbreg) {
-diff --git a/tools/perf/util/annotate-data.c b/tools/perf/util/annotate-data.c
-index d9f0bfd3f0a7..8bd9b6370277 100644
---- a/tools/perf/util/annotate-data.c
-+++ b/tools/perf/util/annotate-data.c
-@@ -594,7 +594,7 @@ struct type_state_stack *find_stack_state(struct type_state *state,
- }
- 
- void set_stack_state(struct type_state_stack *stack, int offset, u8 kind,
--			    Dwarf_Die *type_die, int ptr_offset)
-+			    Dwarf_Die *type_die, int ptr_offset, u64 imm_value)
+ int arch__dwarf_regnum(const struct arch *arch, const char *str)
  {
- 	int tag;
- 	Dwarf_Word size;
-@@ -611,8 +611,9 @@ void set_stack_state(struct type_state_stack *stack, int offset, u8 kind,
- 	stack->offset = offset;
- 	stack->ptr_offset = ptr_offset;
- 	stack->kind = kind;
-+	stack->imm_value = imm_value;
+-	const char *p;
++	const char *p = str;
+ 	char *regname, *q;
+ 	int reg;
  
--	if (kind == TSR_KIND_POINTER) {
-+	if (kind == TSR_KIND_POINTER || kind == TSR_KIND_CONST) {
- 		stack->compound = false;
- 		return;
- 	}
-@@ -633,18 +634,18 @@ void set_stack_state(struct type_state_stack *stack, int offset, u8 kind,
- struct type_state_stack *findnew_stack_state(struct type_state *state,
- 						    int offset, u8 kind,
- 						    Dwarf_Die *type_die,
--						    int ptr_offset)
-+						    int ptr_offset, u64 imm_value)
- {
- 	struct type_state_stack *stack = find_stack_state(state, offset);
+-	p = strchr(str, arch->objdump.register_char);
+-	if (p == NULL)
+-		return -1;
++	if (arch->objdump.register_char) {
++		p = strchr(str, arch->objdump.register_char);
++		if (p == NULL)
++			return -1;
++	}
  
- 	if (stack) {
--		set_stack_state(stack, offset, kind, type_die, ptr_offset);
-+		set_stack_state(stack, offset, kind, type_die, ptr_offset, imm_value);
- 		return stack;
- 	}
+ 	regname = strdup(p);
+ 	if (regname == NULL)
+ 		return -1;
  
- 	stack = malloc(sizeof(*stack));
- 	if (stack) {
--		set_stack_state(stack, offset, kind, type_die, ptr_offset);
-+		set_stack_state(stack, offset, kind, type_die, ptr_offset, imm_value);
- 		list_add(&stack->list, &state->stack_vars);
- 	}
- 	return stack;
-@@ -939,7 +940,7 @@ static void update_var_state(struct type_state *state, struct data_loc_info *dlo
- 				continue;
+-	q = strpbrk(regname, ",) ");
++	q = strpbrk(regname, ",)] ");
+ 	if (q)
+ 		*q = '\0';
  
- 			findnew_stack_state(state, offset, TSR_KIND_TYPE,
--					    &mem_die, /*ptr_offset=*/0);
-+					    &mem_die, /*ptr_offset=*/0, /*imm_value=*/0);
- 
- 			if (var->reg == state->stack_reg) {
- 				pr_debug_dtp("var [%"PRIx64"] %#x(reg%d)",
-diff --git a/tools/perf/util/annotate-data.h b/tools/perf/util/annotate-data.h
-index 62efdcd8a79a..de92459e8502 100644
---- a/tools/perf/util/annotate-data.h
-+++ b/tools/perf/util/annotate-data.h
-@@ -199,6 +199,7 @@ struct type_state_stack {
- 	int size;
- 	bool compound;
- 	u8 kind;
-+	u64 imm_value;
- };
- 
- /*
-@@ -253,9 +254,9 @@ bool has_reg_type(struct type_state *state, int reg);
- struct type_state_stack *findnew_stack_state(struct type_state *state,
- 						int offset, u8 kind,
- 						Dwarf_Die *type_die,
--						int ptr_offset);
-+						int ptr_offset, u64 imm_value);
- void set_stack_state(struct type_state_stack *stack, int offset, u8 kind,
--				Dwarf_Die *type_die, int ptr_offset);
-+				Dwarf_Die *type_die, int ptr_offset, u64 imm_value);
- struct type_state_stack *find_stack_state(struct type_state *state,
- 						int offset);
- void invalidate_reg_state(struct type_state_reg *reg);
 -- 
 2.34.1
 
