@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31613261B8D;
-	Wed, 16 Sep 2026 11:48:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D98EA4EE85B;
+	Wed, 16 Sep 2026 11:48:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789559302; cv=none; b=pSLucrLGPGEej2g5i1bn58BOECf0fveRqo1HB5eroJ1cEzIkSHRbZrhKvG1Ghj5DsVSS5BlYaznpYiXnG988Nmnp+rl9CuWKTbPOv9ePLSNhwcTXVAksquMsHoCJSWGJWLAgtrohioSkYoOnporalhwAr6hyzYD20xcO+oO4wwg=
+	t=1789559308; cv=none; b=tCTb47L+GFQhdZ3OHbFMrGfEQnYjdr/HFa/wG8KT+0qzKY+oThnLn5nsS2Tj/gv3Qb0sThXrvd/Tu1kqo1rtlHv9ri16iKVRIKpZpUeSgK7Z9wHjITgYuomnKWHbt34b3ikis5HdYWCLhFpAYajqK4eFlB733KPoZbsD++/qZ3Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789559302; c=relaxed/simple;
-	bh=Ytpm/am8TbLHqiUqhZ7sU4G+ccKooQdYSniobfxb3ws=;
+	s=arc-20240116; t=1789559308; c=relaxed/simple;
+	bh=Bd2K/rqZn6g+lgvp2xT3sh0Dn+kx24gKxAFoEyZyDew=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=HOHPBPb/Jxj2CAb7Akh5FkMxZwkAPpCOxc3qf2+g6quhI8eSxYubHjBzv0Xx72SiAVhD6bIqDt5hVI3SSkH9VOT1eEVdFrHR6Xeh6C/3y6EN0OPeS1xsh482d4+5I0ZnDldCA7N4pRIunwN9fvlpHHM/eJrhrq36JzqdD0Yi1DU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Md9qhfLC; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version; b=A1f5Y3G7TN0rIXxKhqutblH4QluSLzlUluNDBH5DA7vbs6TNgTMzfZINRsHXnT1a2m805MMTVONR7WIiAoSsB7sLpJo8ov0SYI6VGM4NIzo0Tq+Sbuu0MMPFhhfAI59ltO/6mzZNeNxwEQPr86zw/34YK+PL6f+nL+G4dmfuO3w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Qgaa5A1o; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Md9qhfLC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C99561F00893;
-	Wed, 16 Sep 2026 11:48:04 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Qgaa5A1o"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5080F1F0089A;
+	Wed, 16 Sep 2026 11:48:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789559288;
-	bh=G73mPiNbqNi5jS9R06XuhUInSIvW+d8V75TUl3+PIsA=;
+	s=k20260515; t=1789559293;
+	bh=tyorP+8dHgC23zrQXtgg7WR8CCFWQiokgDbNUQmf/Gs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=Md9qhfLCJrGT1WcSI/oUKrUMRrrCbheACgSjr3cshJOkOACU+9jf7Ak4YFi5+aAER
-	 yErNq7f1Ma3VTsUB+xHtsWXcyWNBYG08vNGIE8AJIqQGgC3R6zie5/dHvJDJv1kiPX
-	 mTnkfDUsuYFlrZjFvFUuvW/BOhd/OUkmc9VHZYFJeK6IY6nuuWhxYsXgM+x/kFd0Lg
-	 Bfr9R1C+EOV5xWRQzYcbKQE9hrcJ9h1XvlH0EBYBZaN1uOtYrZpw0dtwRQNEmPbQ2G
-	 a+KYDiK0NPBldByuvrBqmJfZlVjuYNHdz1/JchsA6oc3UhU/4IYgR67lVqGgVDRumr
-	 TiRK9eYHj5LhA==
+	b=Qgaa5A1oUz06cT0sFlHxJw7+Jz3oHbg+DlY8R13PiESL03LZFJZGQ2fF+AZxQHGsh
+	 jhkXSrEhzP4UwCmOf13hu5/FA/T34VDu/HNldv7sN1RxxJgWOmOI6LK4ZadiPxqecJ
+	 ZKBtRS5jTxAKqymbAP4107STm+eFNYZ7YOdmbmQ/0ASjX7rZLdpTe9OGWGkN005cF5
+	 hnJygoFtRUZ1p5y+RgivZXEli4nMe35tNXuY320WFKgukk1eTFgDfYm+y6lKROOLCN
+	 P21Qp1OJuv3qhwRFr4nlFRGWVpUETt1ZapkdAO8khPUOtH4BkqfyL5NNnhG0g3tQtY
+	 FsDQQ6flhJ8Dw==
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Namhyung Kim <namhyung@kernel.org>
 Cc: Ingo Molnar <mingo@kernel.org>,
@@ -38,9 +38,9 @@ Cc: Ingo Molnar <mingo@kernel.org>,
 	linux-kernel@vger.kernel.org,
 	linux-perf-users@vger.kernel.org,
 	Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 04/12] perf debuginfo: Let the user skip and disable debuginfod fetches
-Date: Wed, 16 Sep 2026 08:47:31 -0300
-Message-ID: <20260916114740.48230-5-acme@kernel.org>
+Subject: [PATCH 05/12] perf debuginfo: Show the debuginfod fetch progress and keys in the TUI
+Date: Wed, 16 Sep 2026 08:47:32 -0300
+Message-ID: <20260916114740.48230-6-acme@kernel.org>
 X-Mailer: git-send-email 2.55.0
 In-Reply-To: <20260916114740.48230-1-acme@kernel.org>
 References: <20260916114740.48230-1-acme@kernel.org>
@@ -54,564 +54,456 @@ Content-Transfer-Encoding: 8bit
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-When a fetch is in progress, the way it prints progress is how one
-gets out of it: 's' aborts the current fetch via the debuginfod
-client's progress callback protocol and remembers the build ID, so
-that the rest of the session doesn't ask for it again, the user may
-have skipped it for being too big; 'd' additionally disables debuginfod
-for the rest of the session, clearing DEBUGINFOD_URLS so that libdwfl's
-own client, that reads it in every query, stops fetching too, and, using
-perf_config__set_variable(), moved to util/config.c in the previous
-patch, writes core.debuginfod=false to the configuration file directly,
-the user's ~/.perfconfig or the one named by PERF_CONFIG, the same
-rewrite 'perf config' does -- the comments are not preserved, as the
-config set carries just the key-value pairs -- and SIGINT, SIGQUIT and
-SIGTERM are intercepted while the terminal is in raw mode, so that it is
-restored and the signal is re-raised when the user interrupts a fetch.
+The stdio only fetch UI left a fetch in progress in the TUI with
+nothing on screen, indistinguishable from perf being stuck, with no way
+out of it: the browser thread is the one doing the fetch, so it draws a
+window over itself with the fetch progress and drains the 's'/'d' keys
+from the input queue it owns, via the new ui__key_pending()/
+ui__key_read()/ui__progress_window()/ui__progress_window_end()
+primitives declared in ui/util.h and implemented in ui/tui/util.c, with
+inline no-ops for builds without slang, keeping callers free of #ifdefs:
+slang stays behind the ui/ layer, as the plan is to reduce the number of
+libraries perf needs to build, or swap slang for something else, such as
+ncurses, at some point.  No terminal settings or signal dispositions are
+touched in that case: the terminal is the TUI's own and so are the
+SIGINT/SIGTERM handlers, that restore it before exiting.
 
-In the TUI nothing is shown yet, printing to stderr would garble the
-browser display and draining stdin would eat the keys the browser
-wants, that comes in the next patch.
-
-The interaction state -- the terminal settings, the signal dispositions
-and the progress and cancellation state -- is process global, so the
-fetches stay serialized: a second fetch resetting the cancellation
-state would drop the 's'/'d' keypress that was meant for the fetch
-already in progress, and the serialization the lookup state needs
-already provides the lock the interaction state uses.
-
-Since the debuginfo fetching this builds on is opt-out, a fetch that
-the user asked to skip is not restarted by the next request for the
-same build ID in the same session, it is remembered as a cancellation
-on the misses list, where the debug message can tell it apart from a
-plain miss.
+The text in the window is word wrapped to the available columns, so
+that constrained terminals, such as a smartphone running termux, get
+all of it, including the 'd' option hint, instead of having the tail of
+the long progress line cropped; the title line is written without
+padding, so that the box border characters fill the rest of it.
 
 Assisted-by: LLM
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/Documentation/perf-annotate.txt |   4 +-
- tools/perf/Documentation/perf-report.txt   |  11 +-
- tools/perf/Documentation/perf-top.txt      |  10 +-
- tools/perf/util/debuginfo.c                | 311 ++++++++++++++++++---
- 4 files changed, 296 insertions(+), 40 deletions(-)
+ tools/perf/Documentation/perf-report.txt |   9 +-
+ tools/perf/Documentation/perf-top.txt    |   5 +-
+ tools/perf/ui/tui/util.c                 | 177 +++++++++++++++++++++++
+ tools/perf/ui/util.h                     |  42 ++++++
+ tools/perf/util/debuginfo.c              |  64 ++++++--
+ 5 files changed, 277 insertions(+), 20 deletions(-)
 
-diff --git a/tools/perf/Documentation/perf-annotate.txt b/tools/perf/Documentation/perf-annotate.txt
-index 12edc3337b86f099..25af1d166dc4c877 100644
---- a/tools/perf/Documentation/perf-annotate.txt
-+++ b/tools/perf/Documentation/perf-annotate.txt
-@@ -64,7 +64,9 @@ OPTIONS
- 	configured in DEBUGINFOD_URLS, checking the local debuginfod
- 	client cache first, when it is not available locally, on for
- 	these commands by default.  See the --debuginfod option of
--	'perf report' for how to turn it off.
-+	'perf report' for how to turn it off, including the 's' and
-+	'd' keys that skip a fetch in progress while 'perf' is
-+	waiting for it.
- 
- --itrace::
- 	Options for decoding instruction tracing data. The options are:
 diff --git a/tools/perf/Documentation/perf-report.txt b/tools/perf/Documentation/perf-report.txt
-index 2e11c0a97a016853..0a821490d6a0f895 100644
+index 0a821490d6a0f895..0a4f61283b9542f7 100644
 --- a/tools/perf/Documentation/perf-report.txt
 +++ b/tools/perf/Documentation/perf-report.txt
-@@ -374,9 +374,14 @@ OPTIONS
- 	these commands by default.  It can be turned off per invocation
- 	with --no-debuginfod, per tool with the "report.debuginfod"
- 	config option or globally with "core.debuginfod" set to false.
--	It is disabled as well when the local build-id cache is turned
--	off, e.g. "buildid.dir" set to /dev/null, as that asks for
--	fetched files not to be kept on the box.
-+	While a fetch is in progress, 's' skips the current fetch and
-+	'd' skips it and disables debuginfod for the rest of the
-+	session, writing core.debuginfod=false to the configuration
-+	file so that it stays disabled in the next runs too; in the
-+	stdio interface the progress is a line on stderr.  It is
-+	disabled as well when the local build-id cache is turned off,
-+	e.g. "buildid.dir" set to /dev/null, as that asks for fetched
-+	files not to be kept on the box.
+@@ -378,10 +378,11 @@ OPTIONS
+ 	'd' skips it and disables debuginfod for the rest of the
+ 	session, writing core.debuginfod=false to the configuration
+ 	file so that it stays disabled in the next runs too; in the
+-	stdio interface the progress is a line on stderr.  It is
+-	disabled as well when the local build-id cache is turned off,
+-	e.g. "buildid.dir" set to /dev/null, as that asks for fetched
+-	files not to be kept on the box.
++	stdio interface the progress is a line on stderr, in the TUI a
++	window over the browser.  It is disabled as well when the local
++	build-id cache is turned off, e.g. "buildid.dir" set to
++	/dev/null, as that asks for fetched files not to be kept on the
++	box.
  
  --kallsyms=<file>::
          kallsyms pathname
 diff --git a/tools/perf/Documentation/perf-top.txt b/tools/perf/Documentation/perf-top.txt
-index 345dd9ee9b6bab88..f38b54267125cb08 100644
+index f38b54267125cb08..3ab8121480175b51 100644
 --- a/tools/perf/Documentation/perf-top.txt
 +++ b/tools/perf/Documentation/perf-top.txt
-@@ -90,9 +90,13 @@ Default is to monitor all CPUS.
- 	client cache first, when it is not available locally, on for
- 	these commands by default.  Turn it off per invocation with
- 	--no-debuginfod, with the "top.debuginfod" config option or
--	globally with "core.debuginfod" set to false.  Disabled as well
--	when the build-id cache is off, e.g. "buildid.dir" set to
--	/dev/null.
-+	globally with "core.debuginfod" set to false.  While a fetch is
-+	in progress, 's' skips the current fetch and 'd' skips it and
-+	disables debuginfod for the rest of the session, writing
-+	core.debuginfod=false to the configuration file so that it
-+	stays disabled in the next runs too; in the stdio interface the
-+	progress is a line on stderr.  Disabled as well when the
-+	build-id cache is off, e.g. "buildid.dir" set to /dev/null.
+@@ -95,8 +95,9 @@ Default is to monitor all CPUS.
+ 	disables debuginfod for the rest of the session, writing
+ 	core.debuginfod=false to the configuration file so that it
+ 	stays disabled in the next runs too; in the stdio interface the
+-	progress is a line on stderr.  Disabled as well when the
+-	build-id cache is off, e.g. "buildid.dir" set to /dev/null.
++	progress is a line on stderr, in the TUI a window over the
++	browser.  Disabled as well when the build-id cache is off, e.g.
++	"buildid.dir" set to /dev/null.
  
  --kallsyms=<file>::
  	kallsyms pathname
+diff --git a/tools/perf/ui/tui/util.c b/tools/perf/ui/tui/util.c
+index e4d322ce0b54cbc6..c3274b92b0e22d73 100644
+--- a/tools/perf/ui/tui/util.c
++++ b/tools/perf/ui/tui/util.c
+@@ -4,6 +4,7 @@
+ #include <string.h>
+ #include <stdlib.h>
+ #include <sys/ttydefaults.h>
++#include <linux/kernel.h>
+ 
+ #include "../browser.h"
+ #include "../keysyms.h"
+@@ -11,6 +12,7 @@
+ #include "../ui.h"
+ #include "../util.h"
+ #include "../libslang.h"
++#include "units.h"
+ 
+ static void ui_browser__argv_write(struct ui_browser *browser,
+ 				   void *entry, int row)
+@@ -272,3 +274,178 @@ struct perf_error_ops perf_tui_eops = {
+ 	.error		= perf_tui__error,
+ 	.warning	= perf_tui__warning,
+ };
++
++/*
++ * The debuginfod fetch progress window, drawn over the browser while a
++ * fetch that can be big, such as the vmlinux for a kernel profiled on
++ * another machine, is in progress: with nothing on screen the browser
++ * looks hung, which is what makes users interrupt perf, see
++ * util/debuginfo.c, that polls the 's'/'d' keys with ui__key_pending()
++ * /ui__key_read().
++ *
++ * The client calls the progress callback at every write chunk, so only
++ * redraw when the fetched bytes change: a resize is picked up by the
++ * ui__refresh_dimensions() on the next redraw, and taking the window
++ * down erases exactly the rows it was drawn at, saved at draw time.
++ *
++ * The text is word wrapped to the available columns: constrained
++ * terminals, such as a smartphone running termux, have far fewer of
++ * them and would crop the tail of a long line, hiding the 'd' option,
++ * leaving no visible way out of the fetch.
++ */
++#define PROGRESS_WINDOW_MAX_LINES 12
++
++static bool progress_window__shown;
++static char progress_window__bytes[64];
++static int progress_window__y, progress_window__rows;
++
++/*
++ * Word wrap @text, on spaces, into lines of at most @width characters,
++ * breaking words that don't fit whole, returning the number of lines.
++ */
++static int progress_window__wrap(const char *text, int width,
++				 char lines[PROGRESS_WINDOW_MAX_LINES][256])
++{
++	int nr_lines = 0;
++	const char *p = text;
++
++	while (*p && nr_lines < PROGRESS_WINDOW_MAX_LINES) {
++		char *line = lines[nr_lines++];
++		int len = 0;
++		bool space = false;
++
++		line[0] = '\0';
++		while (*p) {
++			const char *word;
++			int wlen, avail;
++
++			while (*p == ' ' || *p == '\n')
++				++p;
++			if (*p == '\0')
++				break;
++			word = p;
++			while (*p && *p != ' ' && *p != '\n')
++				++p;
++			wlen = p - word;
++			avail = width - len - (space ? 1 : 0);
++			if (wlen > avail) {
++				if (len > 0) {
++					p = word;
++					break;
++				}
++				if (avail > 0) {
++					/* The word doesn't fit whole */
++					memcpy(line, word, avail);
++					len = avail;
++					line[len] = '\0';
++					p = word + avail;
++				}
++				break;
++			}
++			if (space)
++				line[len++] = ' ';
++			memcpy(line + len, word, wlen);
++			len += wlen;
++			line[len] = '\0';
++			space = true;
++		}
++	}
++
++	return nr_lines;
++}
++
++void ui__progress_window(const char *title, const char *text,
++			 u64 fetched, u64 total)
++{
++	static char lines[PROGRESS_WINDOW_MAX_LINES][256];
++	char buf_cur[20], buf_tot[20], bytes[64];
++	size_t len;
++	int y, height, nr_lines, inner, i;
++
++	if (use_browser != 1)
++		return;
++
++	unit_number__scnprintf(buf_cur, sizeof(buf_cur), fetched);
++	if (total) {
++		unit_number__scnprintf(buf_tot, sizeof(buf_tot), total);
++		scnprintf(bytes, sizeof(bytes), "  %s / %s fetched",
++			  buf_cur, buf_tot);
++	} else {
++		scnprintf(bytes, sizeof(bytes),
++			  "  %s fetched, size unknown", buf_cur);
++	}
++
++	if (progress_window__shown && !strcmp(bytes, progress_window__bytes))
++		return;
++
++	scnprintf(progress_window__bytes, sizeof(progress_window__bytes),
++		  "%s", bytes);
++	progress_window__shown = true;
++
++	ui__refresh_dimensions(false);
++	mutex_lock(&ui__lock);
++	inner = SLtt_Screen_Cols - 2;
++	if (inner > 255)
++		inner = 255;
++	nr_lines = progress_window__wrap(text, inner, lines);
++	height = nr_lines + 3;
++
++	SLsmg_set_color(0);
++	if (progress_window__rows)
++		SLsmg_fill_region(progress_window__y, 0, progress_window__rows,
++				  SLtt_Screen_Cols, ' ');
++	y = (SLtt_Screen_Rows - height) / 2;
++	if (y < 0)
++		y = 0;
++	progress_window__y = y;
++	progress_window__rows = height;
++
++	SLsmg_draw_box(y, 0, height, SLtt_Screen_Cols);
++	SLsmg_gotorc(y++, 1);
++	len = strlen(title);
++	if (len > (size_t)inner)
++		len = inner;
++	SLsmg_write_nchars(title, len);
++	for (i = 0; i < nr_lines; i++, y++) {
++		SLsmg_gotorc(y, 1);
++		SLsmg_write_nstring(lines[i], SLtt_Screen_Cols - 2);
++	}
++	SLsmg_gotorc(y, 1);
++	SLsmg_write_nstring(bytes, SLtt_Screen_Cols - 2);
++	SLsmg_refresh();
++	mutex_unlock(&ui__lock);
++}
++
++void ui__progress_window_end(void)
++{
++	if (!progress_window__shown || use_browser != 1)
++		return;
++
++	progress_window__shown = false;
++	progress_window__bytes[0] = '\0';
++
++	mutex_lock(&ui__lock);
++	SLsmg_set_color(0);
++	SLsmg_fill_region(progress_window__y, 0, progress_window__rows,
++			  SLtt_Screen_Cols, ' ');
++	progress_window__rows = 0;
++	SLsmg_refresh();
++	mutex_unlock(&ui__lock);
++}
++
++/*
++ * The keys typed while the fetch blocks the thread that runs the
++ * browser are in the TUI input queue: nobody else is reading it, the
++ * browser is the thread doing the fetch, so the progress callback in
++ * util/debuginfo.c can drain it through these, that keep slang behind
++ * the ui/ layer.
++ */
++bool ui__key_pending(void)
++{
++	return use_browser == 1 && SLang_input_pending(0) > 0;
++}
++
++int ui__key_read(void)
++{
++	return SLang_getkey();
++}
+diff --git a/tools/perf/ui/util.h b/tools/perf/ui/util.h
+index e30cea807564f92f..053240ea9dfa6fc0 100644
+--- a/tools/perf/ui/util.h
++++ b/tools/perf/ui/util.h
+@@ -2,9 +2,51 @@
+ #ifndef _PERF_UI_UTIL_H_
+ #define _PERF_UI_UTIL_H_ 1
+ 
++#include <stdbool.h>
+ #include <stdarg.h>
++#include <linux/compiler.h>
++#include <linux/types.h>
+ 
+ int ui__getch(int delay_secs);
++
++/*
++ * The TUI owns the terminal and its input queue, so the rest of perf
++ * asks the ui/ layer for progress display and for the keys typed while
++ * it is not reading them, instead of touching slang or stdin directly:
++ * slang stays behind these, as the plan is to reduce the number of
++ * libraries perf needs to build, or swap slang for something else,
++ * such as ncurses, at some point.
++ *
++ * ui__progress_window() draws and updates a window over the browser
++ * telling that a long operation, for now the debuginfod fetch in
++ * util/debuginfo.c, is in progress, with @fetched/@total as the bytes
++ * fetched so far and the total when known, 0 otherwise, while
++ * ui__progress_window_end() takes the window down.  The keys typed
++ * while the fetch blocks the browser are drained with
++ * ui__key_pending()/ui__key_read().
++ */
++#ifndef HAVE_SLANG_SUPPORT
++/*
++ * Without the TUI there is no browser to draw over and no input queue
++ * owned by a UI: the stdio progress and keys for the debuginfod fetch
++ * live in util/debuginfo.c, so these are no-ops, keeping callers free
++ * of #ifdefs.
++ */
++static inline bool ui__key_pending(void) { return false; }
++static inline int ui__key_read(void) { return -1; }
++static inline void ui__progress_window(const char *title __maybe_unused,
++				       const char *text __maybe_unused,
++				       u64 fetched __maybe_unused,
++				       u64 total __maybe_unused) {}
++static inline void ui__progress_window_end(void) {}
++#else /* HAVE_SLANG_SUPPORT */
++bool ui__key_pending(void);
++int ui__key_read(void);
++void ui__progress_window(const char *title, const char *text,
++			 u64 fetched, u64 total);
++void ui__progress_window_end(void);
++#endif /* HAVE_SLANG_SUPPORT */
++
+ int ui__popup_menu(int argc, char * const argv[], int *keyp);
+ int ui__help_window(const char *text);
+ int ui__dialog_yesno(const char *msg);
 diff --git a/tools/perf/util/debuginfo.c b/tools/perf/util/debuginfo.c
-index be5882d9c2204797..e2066fce2450c6fb 100644
+index e2066fce2450c6fb..a111ddc4731309c0 100644
 --- a/tools/perf/util/debuginfo.c
 +++ b/tools/perf/util/debuginfo.c
-@@ -9,21 +9,25 @@
- #include <fcntl.h>
- #include <limits.h>
- #include <pthread.h>
-+#include <signal.h>
- #include <stdbool.h>
- #include <stdio.h>
- #include <stdlib.h>
- #include <string.h>
-+#include <termios.h>
- #include <unistd.h>
- #include <linux/list.h>
- #include <linux/zalloc.h>
- #include <api/fs/fs.h>
- 
- #include "build-id.h"
-+#include "config.h"
- #include "dso.h"
- #include "debug.h"
- #include "debuginfo.h"
- #include "mutex.h"
- #include "symbol.h"
-+#include "term.h"
+@@ -151,11 +151,14 @@ struct debuginfo *debuginfo__new(const char *path)
  
  #ifdef HAVE_DEBUGINFOD_SUPPORT
- #include <elfutils/debuginfod.h>
-@@ -146,6 +150,134 @@ struct debuginfo *debuginfo__new(const char *path)
+ /*
+- * use_browser tells whether a full screen UI, the TUI for now, owns
+- * the terminal and its input queue: the fetch progress and the
+- * skip/disable keys below are stdio only when it doesn't.
++ * The TUI side of the fetch interaction is behind the ui/ layer: slang
++ * stays in ui/tui/, callers ask for pending keys and for the fetch
++ * progress window with the ui__ primitives in ui/util.h, implemented in
++ * ui/tui/util.c for the slang TUI and as no-ops in builds without it.
+  */
+ #include "ui/ui.h"
++#include "ui/util.h"
++#include "ui/helpline.h"
+ 
+ static bool debuginfod_progress_started;
+ static bool debuginfod_fetch_cancelled;
+@@ -176,11 +179,15 @@ static void debuginfod_signal_handler(int sig)
+ 
+ /*
+  * Say that the fetch in progress was skipped, and where disabling it
+- * lands.
++ * lands: the stdio case prints on stderr, the TUI shows it on its
++ * helpline, as the window with the fetch progress goes away with it.
+  */
+ static void debuginfod__skipped(const char *msg)
+ {
+-	fprintf(stderr, "\n%s\n", msg);
++	if (use_browser > 0)
++		ui_helpline__puts(msg);
++	else
++		fprintf(stderr, "\n%s\n", msg);
  }
  
- #ifdef HAVE_DEBUGINFOD_SUPPORT
+ /*
+@@ -193,7 +200,8 @@ static void debuginfod__skipped(const char *msg)
+  * write core.debuginfod=false to the configuration file, the same
+  * rewrite 'perf config' does, the comments are not preserved as the
+  * config set carries just the key-value pairs, pointing at
+- * 'perf config' when that rewrite can't be done.
++ * 'perf config' when that rewrite can't be done.  Shared by the stdio
++ * and the TUI fetch UIs.
+  */
+ static void debuginfod__cancel_key(int key)
+ {
+@@ -229,6 +237,16 @@ static void debuginfod__poll_cancel_keys(void)
+ 		debuginfod__cancel_key(ch);
+ }
+ 
 +/*
-+ * use_browser tells whether a full screen UI, the TUI for now, owns
-+ * the terminal and its input queue: the fetch progress and the
-+ * skip/disable keys below are stdio only when it doesn't.
++ * The TUI fetch UI: the browser thread is the one doing the fetch, so
++ * its input queue has the keys typed while it was busy, drain those.
 + */
-+#include "ui/ui.h"
-+
-+static bool debuginfod_progress_started;
-+static bool debuginfod_fetch_cancelled;
-+
-+/*
-+ * A fetch can be interrupted with Ctrl-C, Ctrl-\ or SIGTERM while stdin
-+ * is in raw mode: the handler only records the signal, the progress
-+ * callback aborts the query, and debuginfod__fetch() restores the
-+ * terminal and raises the signal again, so that it is not left in raw
-+ * mode when perf dies mid-fetch.
-+ */
-+static volatile sig_atomic_t debuginfod_signal;
-+
-+static void debuginfod_signal_handler(int sig)
++static void debuginfod__tui_poll_cancel_keys(void)
 +{
-+	debuginfod_signal = sig;
++	while (ui__key_pending())
++		debuginfod__cancel_key(ui__key_read());
 +}
 +
-+/*
-+ * Say that the fetch in progress was skipped, and where disabling it
-+ * lands.
-+ */
-+static void debuginfod__skipped(const char *msg)
-+{
-+	fprintf(stderr, "\n%s\n", msg);
-+}
+ /*
+  * Print a warning and a progress indicator when the debuginfod client
+  * ends up fetching a file, which can be big, such as the vmlinux for a
+@@ -246,7 +264,9 @@ static void debuginfod__poll_cancel_keys(void)
+  *
+  * In the stdio case the progress goes to stderr, a \r terminated line,
+  * the keys are drained from stdin, that debuginfod__fetch() put in raw
+- * mode.
++ * mode.  In the TUI the progress is drawn in a window over the browser
++ * and the keys come from the TUI input queue, slang stays behind the
++ * ui/ layer, see the comment on ui/util.h.
+  */
+ static int debuginfod_progress_fn(debuginfod_client *c __maybe_unused,
+ 				  long a, long b)
+@@ -254,7 +274,18 @@ static int debuginfod_progress_fn(debuginfod_client *c __maybe_unused,
+ 	if (debuginfod_signal)
+ 		return 1;
+ 
+-	if (!isatty(STDERR_FILENO) || use_browser)
++	if (use_browser > 0) {
++		ui__progress_window("Fetching debuginfo by build ID from the debuginfod servers",
++				    "This may take a while for large files such as the vmlinux, press 's' to skip, 'd' to skip and disable",
++				    a > 0 ? (u64)a : 0, b > 0 ? (u64)b : 0);
 +
-+/*
-+ * 's': skip this fetch, and remember the build ID so that the rest of
-+ * the session doesn't ask for it again, the query is aborted by
-+ * returning a non-zero value from the progress callback, as the
-+ * debuginfod client docs prescribe.  'd': also disable debuginfod for
-+ * the rest of the session, clearing DEBUGINFOD_URLS so that libdwfl's
-+ * own client, that reads it in every query, stops fetching too, and
-+ * write core.debuginfod=false to the configuration file, the same
-+ * rewrite 'perf config' does, the comments are not preserved as the
-+ * config set carries just the key-value pairs, pointing at
-+ * 'perf config' when that rewrite can't be done.
-+ */
-+static void debuginfod__cancel_key(int key)
-+{
-+	if (key == 's' || key == 'S') {
-+		debuginfod_fetch_cancelled = true;
-+		debuginfod__skipped("Skipping this debuginfod fetch, this build ID will not be fetched again in this session, press 'd' to also disable it for the other ones");
-+	} else if (key == 'd' || key == 'D') {
-+		debuginfod_fetch_cancelled = true;
-+		symbol_conf.debuginfod = false;
-+		/*
-+		 * libdwfl's own debuginfod client reads DEBUGINFOD_URLS
-+		 * in every query, so clear it to stop it as well.
-+		 */
-+		setenv("DEBUGINFOD_URLS", "", 1);
-+		if (perf_config__set_variable("core.debuginfod", "false"))
-+			debuginfod__skipped("Skipping this debuginfod fetch and disabling debuginfod for this session, run 'perf config core.debuginfod=false' to also disable it permanently");
-+		else if (config_exclusive_filename)
-+			debuginfod__skipped("Skipping this debuginfod fetch and disabling debuginfod for this session and in the configuration file");
-+		else
-+			debuginfod__skipped("Skipping this debuginfod fetch and disabling debuginfod for this session and in ~/.perfconfig");
-+	}
-+}
-+
-+/*
-+ * The stdio fetch UI: the terminal is in raw mode, see
-+ * debuginfod__fetch(), so the keypresses are on stdin, drain them.
-+ */
-+static void debuginfod__poll_cancel_keys(void)
-+{
-+	char ch;
-+
-+	while (read(STDIN_FILENO, &ch, 1) == 1)
-+		debuginfod__cancel_key(ch);
-+}
-+
-+/*
-+ * Print a warning and a progress indicator when the debuginfod client
-+ * ends up fetching a file, which can be big, such as the vmlinux for a
-+ * kernel profiled on another machine or before it got upgraded, so that
-+ * users know perf is not stuck, and let them bail out: 's' skips this
-+ * fetch and remembers the build ID, so that the rest of the session
-+ * doesn't ask for it again, 'd' also disables debuginfod for the rest
-+ * of the session.
-+ *
-+ * The client invokes this both while fetching, where 'a' is the number
-+ * of bytes transferred so far and 'b' the total size, zero when it
-+ * doesn't know it yet, and, before committing to a server, from the
-+ * cache cleanup, that scans the debuginfod client cache, with 'a' being
-+ * the number of cache files scanned so far and 'b' zero.
-+ *
-+ * In the stdio case the progress goes to stderr, a \r terminated line,
-+ * the keys are drained from stdin, that debuginfod__fetch() put in raw
-+ * mode.
-+ */
-+static int debuginfod_progress_fn(debuginfod_client *c __maybe_unused,
-+				  long a, long b)
-+{
-+	if (debuginfod_signal)
-+		return 1;
-+
-+	if (!isatty(STDERR_FILENO) || use_browser)
-+		return 0;
-+
-+	if (isatty(STDIN_FILENO)) {
-+		debuginfod__poll_cancel_keys();
++		debuginfod__tui_poll_cancel_keys();
 +		if (debuginfod_fetch_cancelled)
 +			return 1;
++		return 0;
 +	}
 +
-+	if (!debuginfod_progress_started) {
-+		fprintf(stderr, "Fetching debuginfo by build ID from the debuginfod servers, this may take a while for large files such as the vmlinux, press 's' to skip, 'd' to skip and disable\n");
-+		debuginfod_progress_started = true;
-+	}
-+
-+	if (a >= 0) {
-+		if (b > 0)
-+			fprintf(stderr, "  %ld/%ld MiB fetched\r", a >> 20, b >> 20);
-+		else
-+			fprintf(stderr, "  %ld MiB fetched\r", a >> 20);
-+	}
-+
-+	return 0;
-+}
-+
- /*
-  * Users can disable the local build-id/.debug cache by setting
-  * buildid.dir to /dev/null, meaning they don't want fetched
-@@ -163,8 +295,11 @@ static bool debuginfod__cache_disabled(void)
-  * ones already searched for on the debuginfod servers without success,
-  * so that callers that see the same DSO over and over, such as the data
-  * type profiler switching between DSOs on every hist entry, don't pay a
-- * server round trip again for each miss.  The cache of successes is the
-- * debuginfod client's own, in the local filesystem.
-+ * server round trip again for each miss, and the ones whose search the
-+ * user cancelled, maybe because what was being downloaded is too big,
-+ * so that the next request for the same build ID doesn't restart a
-+ * download that was refused.  The cache of successes is the debuginfod
-+ * client's own, in the local filesystem.
-  *
-  * Guarded by debuginfod__fetch_lock: it is only read by the lookups
-  * below, that run with that lock held, and written by fetches, that run
-@@ -173,28 +308,37 @@ static bool debuginfod__cache_disabled(void)
- struct debuginfod_miss {
- 	struct list_head	node;
- 	struct build_id		bid;
-+	bool			cancelled;
- };
++	if (!isatty(STDERR_FILENO))
+ 		return 0;
  
- static LIST_HEAD(debuginfod__misses);
+ 	if (isatty(STDIN_FILENO)) {
+@@ -502,11 +533,14 @@ static int debuginfod__fetch(const struct build_id *bid, char **path)
+ 	 * Make stdin deliver keypresses without waiting for a newline,
+ 	 * the progress callback above polls it for the 's'/'d' keys,
+ 	 * only in the stdio case with both stdin and stderr being a
+-	 * terminal: the pipe cases have no business being poked here,
+-	 * and in the TUI the terminal and its input queue are the
+-	 * browser's own.  Intercept SIGINT, SIGQUIT and SIGTERM so that
+-	 * the terminal is restored before the process dies, the handler
+-	 * only records the signal and the callback aborts the query.
++	 * terminal: the TUI draws its own progress window over the
++	 * browser and drains the keys from the input queue the browser
++	 * owns, with the ui__ primitives, and the pipe cases have no
++	 * business being poked here.  Intercept SIGINT, SIGQUIT and
++	 * SIGTERM so that the terminal is restored before the process
++	 * dies, the handler only records the signal and the callback
++	 * aborts the query; in the TUI the terminal is the TUI's own and
++	 * so are those signal handlers, that restore it before exiting.
+ 	 * The handlers go in before the terminal mode changes, so that a
+ 	 * signal landing in between is caught and the raw mode is
+ 	 * restored.
+@@ -538,7 +572,9 @@ static int debuginfod__fetch(const struct build_id *bid, char **path)
+ 		sigaction(SIGTERM, &orig_sigterm, NULL);
  
- /*
-- * Was the search for this build ID already made and settled, i.e. the
-- * servers had nothing for it?
-+ * Was the search for this build ID already settled, by the servers
-+ * having nothing or by the user cancelling it?  When it was, @cancelled
-+ * tells the two apart, so that the debug message can say which one it
-+ * was.
-  */
--static bool debuginfod__missed(const struct build_id *bid)
-+static bool debuginfod__missed(const struct build_id *bid, bool *cancelled)
- {
- 	struct debuginfod_miss *miss;
-+	bool found = false;
-+
-+	*cancelled = false;
- 
- 	list_for_each_entry(miss, &debuginfod__misses, node) {
- 		if (miss->bid.size == bid->size &&
--		    !memcmp(miss->bid.data, bid->data, bid->size))
--			return true;
-+		    !memcmp(miss->bid.data, bid->data, bid->size)) {
-+			found = true;
-+			*cancelled = miss->cancelled;
-+			break;
-+		}
+ 	debuginfod_end(c);
+-	if (debuginfod_progress_started) {
++	if (use_browser > 0)
++		ui__progress_window_end();
++	else if (debuginfod_progress_started) {
+ 		fputc('\n', stderr);
+ 		debuginfod_progress_started = false;
  	}
- 
--	return false;
-+	return found;
- }
- 
--static void debuginfod__miss_add(const struct build_id *bid)
-+static void debuginfod__miss_add(const struct build_id *bid, bool cancelled)
- {
- 	struct debuginfod_miss *miss = zalloc(sizeof(*miss));
- 
-@@ -202,6 +346,7 @@ static void debuginfod__miss_add(const struct build_id *bid)
- 		return;
- 
- 	miss->bid = *bid;
-+	miss->cancelled = cancelled;
- 
- 	list_add(&miss->node, &debuginfod__misses);
- }
-@@ -209,11 +354,17 @@ static void debuginfod__miss_add(const struct build_id *bid)
- /*
-  * One fetch at a time.
-  *
-- * The lookup state below is process global, so two concurrent fetches,
-+ * The terminal settings, the signal dispositions and the progress and
-+ * cancellation state below are process global, so two concurrent fetches,
-  * which dso__debuginfo() makes possible by taking the fetch out of
-- * dso__lock, would race for it: the second one could answer from a list
-- * the first one is concurrently updating, and put the same build ID on
-- * the misses list twice.
-+ * dso__lock, would fight over them: the second one would take the first
-+ * one's raw mode as the state to restore and leave the terminal broken when
-+ * it is done, and resetting the cancellation state would drop the 's'/'d'
-+ * keypress that was meant for the fetch already in progress.  Serializing
-+ * also keeps the two from racing for the same keypresses and for the same
-+ * progress line, and a second fetch has nothing to gain from running in
-+ * parallel with a first one reading the same kind of file off the same
-+ * servers.
-  *
-  * Serializing also means a second request for a build ID that is being
-  * fetched waits here for the fetch to finish, instead of starting a second
-@@ -221,11 +372,16 @@ static void debuginfod__miss_add(const struct build_id *bid)
-  * published, or from the misses list, with no client at all.  Should the
-  * fetches ever run in parallel, that wait has to come back explicitly, with
-  * this lock split in two: one only for the lookup state, that the waiters
-- * sleep on, and one held around each fetch, with the thread that finds a
-- * fetch in progress waiting on the former for the entry to be published.
-+ * sleep on, and one for the process global state above, held around each
-+ * fetch, with the thread that finds a fetch in progress waiting on the
-+ * former for the entry to be published.
-  *
-  * What that costs is that a fetch for one build ID blocks a fetch for
-- * another one, and it is what parallel downloads would fix.  Worth doing
-+ * another one, and it is what parallel downloads would fix: the terminal
-+ * in raw mode, the signal dispositions, the progress line and the 's'/'d'
-+ * keys would have to become per fetch and refcounted, so that N fetches
-+ * share one terminal session and one signal handler, with the first one in
-+ * setting them up and the last one out putting them back.  Worth doing
-  * only if the wait turns out to be long, because it mostly is not: the
-  * lookups below answer the second and later requests for a build ID from
-  * memory, so after the first pass over the build IDs of a workload, which
-@@ -256,10 +412,11 @@ static void debuginfod__fetch_lock_init(void)
-  * cache is cleaned from under us.
-  *
-  * Guarded by debuginfod__fetch_lock.  Only a fetch that brought a file back
-- * gets an entry: one that didn't is recorded in debuginfod__misses as a miss,
-- * and that is what keeps the rest of the session from asking for it again.
-- * Like debuginfod__misses this grows with the number of build IDs in the
-- * workload, one small entry each, and is not trimmed.
-+ * gets an entry: one that didn't is recorded in debuginfod__misses, either
-+ * as a miss or as a user cancellation, and that is what keeps the rest of
-+ * the session from asking for it again.  Like debuginfod__misses this grows
-+ * with the number of build IDs in the workload, one small entry each, and is
-+ * not trimmed.
-  */
- struct debuginfo_lookup {
- 	struct list_head	 node;
-@@ -317,12 +474,18 @@ static void debuginfo_lookup__add(const struct build_id *bid, const char *path)
- }
- 
- /*
-- * The fetch itself.  Called with debuginfod__fetch_lock held for the
-- * whole of it, see the comment there.
-+ * The fetch itself, and, in the stdio case, the terminal in raw mode
-+ * and the signal dispositions swapped for the ones that restore it, so
-+ * that the caller has to hold debuginfod__fetch_lock for the whole of
-+ * it, see the comment there.
-  */
- static int debuginfod__fetch(const struct build_id *bid, char **path)
- {
- 	char sbuild_id[SBUILD_ID_SIZE];
-+	struct termios orig_termios;
-+	struct sigaction sa, orig_sigint, orig_sigquit, orig_sigterm;
-+	bool term_set = false, sigint_set = false, sigquit_set = false;
-+	bool sigterm_set = false;
- 	debuginfod_client *c;
- 	int fd;
- 
-@@ -330,20 +493,96 @@ static int debuginfod__fetch(const struct build_id *bid, char **path)
- 	if (c == NULL)
- 		return -1;
- 
-+	debuginfod_set_progressfn(c, debuginfod_progress_fn);
-+
-+	debuginfod_fetch_cancelled = false;
-+	debuginfod_signal = 0;
-+
-+	/*
-+	 * Make stdin deliver keypresses without waiting for a newline,
-+	 * the progress callback above polls it for the 's'/'d' keys,
-+	 * only in the stdio case with both stdin and stderr being a
-+	 * terminal: the pipe cases have no business being poked here,
-+	 * and in the TUI the terminal and its input queue are the
-+	 * browser's own.  Intercept SIGINT, SIGQUIT and SIGTERM so that
-+	 * the terminal is restored before the process dies, the handler
-+	 * only records the signal and the callback aborts the query.
-+	 * The handlers go in before the terminal mode changes, so that a
-+	 * signal landing in between is caught and the raw mode is
-+	 * restored.
-+	 */
-+	if (isatty(STDIN_FILENO) && isatty(STDERR_FILENO) && !use_browser) {
-+		memset(&sa, 0, sizeof(sa));
-+		sa.sa_handler = debuginfod_signal_handler;
-+		sigemptyset(&sa.sa_mask);
-+		if (sigaction(SIGINT, &sa, &orig_sigint) == 0)
-+			sigint_set = true;
-+		if (sigaction(SIGQUIT, &sa, &orig_sigquit) == 0)
-+			sigquit_set = true;
-+		if (sigaction(SIGTERM, &sa, &orig_sigterm) == 0)
-+			sigterm_set = true;
-+
-+		set_term_quiet_input(&orig_termios);
-+		term_set = true;
-+	}
-+
- 	fd = debuginfod_find_debuginfo(c, bid->data, bid->size, path);
- 
--	debuginfod_end(c);
-+	if (term_set)
-+		tcsetattr(STDIN_FILENO, TCSANOW, &orig_termios);
-+	if (sigint_set)
-+		sigaction(SIGINT, &orig_sigint, NULL);
-+	if (sigquit_set)
-+		sigaction(SIGQUIT, &orig_sigquit, NULL);
-+	if (sigterm_set)
-+		sigaction(SIGTERM, &orig_sigterm, NULL);
- 
-+	debuginfod_end(c);
-+	if (debuginfod_progress_started) {
-+		fputc('\n', stderr);
-+		debuginfod_progress_started = false;
-+	}
- 	if (fd < 0) {
- 		build_id__snprintf(bid, sbuild_id, sizeof(sbuild_id));
-+		if (debuginfod_fetch_cancelled || debuginfod_signal) {
-+			pr_debug("debuginfod search for build ID %s cancelled by the user\n",
-+				 sbuild_id);
-+			/*
-+			 * Remember it so that the rest of the session doesn't
-+			 * ask for the same file again: the user may have
-+			 * skipped it for being too big.
-+			 */
-+			debuginfod__miss_add(bid, true);
-+			/*
-+			 * The terminal is restored, die as the user asked;
-+			 * the original dispositions are back in place.
-+			 */
-+			if (debuginfod_signal)
-+				raise(debuginfod_signal);
-+			return -1;
-+		}
- 		pr_debug("No debuginfo found for build ID %s in debuginfod\n",
- 			 sbuild_id);
--		debuginfod__miss_add(bid);
-+		debuginfod__miss_add(bid, false);
- 		return -1;
- 	}
- 
- 	close(fd);
- 
-+	/*
-+	 * The interrupt can land after the file is already here, in which
-+	 * case there is no failure to report, but the user still asked for
-+	 * perf to stop, and the terminal and the signal dispositions are
-+	 * back to what they were, so honour it here as well instead of
-+	 * swallowing it and going on.
-+	 */
-+	if (debuginfod_signal) {
-+		build_id__snprintf(bid, sbuild_id, sizeof(sbuild_id));
-+		pr_debug("debuginfod found the debuginfo for build ID %s, but the search was interrupted, exiting\n",
-+			 sbuild_id);
-+		raise(debuginfod_signal);
-+	}
-+
- 	return 0;
- }
- 
-@@ -397,7 +636,7 @@ static int debuginfo_lookup__find_build_id(const struct build_id *bid, char **pa
-  * Querying servers, possibly third party, sends the build IDs of the
-  * binaries being analysed off the box, so this is opt-out: on by
-  * default, switchable off with --no-debuginfod, with
-- * core.debuginfod=false, with the per-tool
-+ * core.debuginfod=false (what the 'd' key writes), with the per-tool
-  * report.debuginfod/top.debuginfod, and it is off too when the user
-  * disabled the local build-id/.debug cache, e.g. with
-  * buildid.dir = /dev/null, as is the case for users that don't want
-@@ -417,25 +656,31 @@ int debuginfo__find_build_id(const struct build_id *bid, char **path)
- 
- 	/*
- 	 * The checks below have to be made with the lock held, as they look
--	 * at the state the fetch changes: a build ID the fetch in progress
--	 * just settled as a miss is settled for whoever is waiting for the
--	 * lock as well.  Deciding here and fetching there would repeat a
--	 * fetch that was already made, and put the same build ID on the
--	 * misses list twice.
-+	 * at the state the fetch changes: debuginfod can be turned off while
-+	 * a fetch is in progress, by the 'd' key in its progress line, and a
-+	 * build ID the fetch in progress just settled, as a miss or as a
-+	 * cancellation, is settled for whoever is waiting for the lock as
-+	 * well.  Deciding here and fetching there would repeat a fetch that
-+	 * was already made, and put the same build ID on the misses list
-+	 * twice.
- 	 */
- 	debuginfod__fetch_lock_init();
- 	mutex_lock(&debuginfod__fetch_lock);
- 
- 	if (symbol_conf.debuginfod) {
-+		bool cancelled;
-+
- 		if (debuginfod__cache_disabled()) {
- 			pr_debug("Build-id cache disabled (buildid dir is '%s'), not using debuginfod\n",
- 				 buildid_dir);
--		} else if (debuginfod__missed(bid)) {
-+		} else if (debuginfod__missed(bid, &cancelled)) {
- 			char sbuild_id[SBUILD_ID_SIZE];
- 
- 			build_id__snprintf(bid, sbuild_id, sizeof(sbuild_id));
--			pr_debug("Not searching build ID %s in debuginfod again, it was a miss earlier\n",
--				 sbuild_id);
-+			pr_debug("Not searching build ID %s in debuginfod again, %s\n",
-+				 sbuild_id,
-+				 cancelled ? "the user cancelled the search earlier" :
-+					     "it was a miss earlier");
- 		} else {
- 			err = debuginfo_lookup__find_build_id(bid, path);
- 		}
 -- 
 2.55.0
 
