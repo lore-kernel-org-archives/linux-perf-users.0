@@ -1,86 +1,164 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7F05151355F
-	for <linux-perf-users@vger.kernel.org>; Wed, 16 Sep 2026 15:27:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789572454; cv=none; b=eF1nCttZEQHxln2FNwK+UBp0dyinClGyJH8CHMqIz2tykqlrNqmAhDbb85gxqdjguRvN+zWj7uYdB5wjU9uPuQOQNmfz2GDT7v/qf9jCWfcilYNTaD+yps64BYwlVEi+O/DP77f5O+u1Dw2awFc6dqCFoqkXMG/xiD6orW0m4lM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789572454; c=relaxed/simple;
-	bh=/8VW9Dvo83Z09jxBj+TCP4E44skMYFi0oXPi1csETxg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=BX/M3ZPhgghXvBMRnxXpuI8aoKWj/+6B1XewaIhd/O4Hc1Wqm6jT2mQVaXGCzZ/uRE6yS+xWs+J2Wo44XhUFE/POQzQO2Jksj+FARuvSfBtHqLgqOKykuANkZYCttgMkEHchE6VURGAy3Ti9jCBM9GKIbKPSdiXAx8f9lIzABDs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=fHVRJNkU; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from mail-qk2-f12.google.com (mail-qk2-f12.google.com [74.125.230.204])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54D984D7948
+	for <linux-perf-users@vger.kernel.org>; Wed, 16 Sep 2026 15:54:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.230.204
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1789574072; cv=pass; b=R3ipKFwPspzzYlO0otu2+TCmEo9C6obkAtibAs/ssZ/Mm5bTyuQ8q0n17fF3JdH14CgBpTnrLY4SchoLjh82boMiWIs1aXw+SwJmZO5hoVy0VQ9Te3BXJUCYT+dxmvKM73Rop/6xpHf8W12+IHf81bwrkyarh/RA2vSmMMVt9As=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1789574072; c=relaxed/simple;
+	bh=7TPfKC0S+AyjVWxEL3kMuQSa0P4aYfLH4X9y6XPnkiM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=DgmIwAK2JwhB3Pc1NuzhKjFa93EoadpLhtqg82FAcANUcSv+zLOnfZvtBivCH8bqJYYPll5oHKk/Ck8cKQPC/mbHV4naGVBorqtcVKRObIKafE+hSXnDYhYwQUgCvHX62g1CoTHA0XYJRReddL1ElmA4RJRXGqQE7mn8E+SKfBk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=wTaUl6Fy; arc=pass smtp.client-ip=74.125.230.204
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="fHVRJNkU"
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D3335176A;
-	Wed, 16 Sep 2026 08:27:24 -0700 (PDT)
-Received: from [10.2.212.23] (e121345-lin.cambridge.arm.com [10.2.212.23])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9531F3F86F;
-	Wed, 16 Sep 2026 08:27:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
-	t=1789572448; bh=/8VW9Dvo83Z09jxBj+TCP4E44skMYFi0oXPi1csETxg=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=fHVRJNkUub0vnRQHEeeucLmufQDlnCzbbvwgUI6h2FazgMh/QXc40U/xAGdmOy6X4
-	 A4JemSKBr9Zez8hCtP8GaEenU6az1OKPCAwAM7DWrMYbWaioxLmByccOQ6fVD40mwG
-	 0VhWBm1lb6s/F5eDR2GFZnd38q34ntUbhYHUNpvo=
-Message-ID: <aaafc5a8-e64a-4091-b615-257e48c34781@arm.com>
-Date: Wed, 16 Sep 2026 16:27:20 +0100
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="wTaUl6Fy"
+Received: by mail-qk2-f12.google.com with SMTP id d75a77b69052e-530411c7ee1so306671cf.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 16 Sep 2026 08:54:30 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1789574069; cv=none;
+        d=google.com; s=arc-20260327;
+        b=AQx7pxqP1GGvpQFMTlC6TJwkEb8qdIDo0Z/XSiRBqZQZGw320ErAU80h8f9yhdCowU
+         NQBJHXHt5yBYD5KCPqPZflUehmdzZ6Me2GSykOopBaoqux2rkAXHNNkqlmS3mBwp9k9l
+         Ykc8qbFSTygusmDLiJVulL/SZggfqWvZ8SdE8LmMwnUjnVtRtuYLiVZsN+jeki4RDArM
+         MTbmqx/IDdJCGupY0LyaLxTe10Z07poZhHTM/QqERuy0ON8qVSjiN1//55Xf0C9uvQ4m
+         AlL0FRJy0QhOUCHYSpB02Gqg2gr8oKM1r0xa5MQJMidVCo1XU6Dp95AFYnIz5j6MeyO5
+         5+2w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=LakOb0bCO9P4LHmMzGLPHsI3voGyQnWQGSKhp2smfTU=;
+        fh=0zVHGC//SC94CWFKHtFt4lnskmkXkJNNy7lE0FDd3Ck=;
+        b=SBJFNyfdl0Zm/hz41eIyq8AHI6Bb9tDEhLtE6Dz7VyWgO+ulWrQFFDGr2TLOB7TpLd
+         PFPjWj6dXg08vkMYqwM3+kiJ6T/CPvfaSZo7SRovrBXxTtGB4jI351pcocFISKtKWSX0
+         j5VIFHoraWl+z9LoOI1dKq1K9V1WqWANfaK8ickZajPXvWRCo/QRcYnjyN7NHR+Dbc6c
+         yOHYt1BQ/1jdJg4pecjtj2tTo7LVS35XqOL9wlV3VjeJ4DshLMX6vEOi1RQQHCug0H65
+         abb8fp9gJlL4qnlllhGo/ApYH2JxX0bYb69ZFrEdcaf769ZkMZhJJJvJ879zpC/Dbvsk
+         QsTw==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1789574069; x=1790178869; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=LakOb0bCO9P4LHmMzGLPHsI3voGyQnWQGSKhp2smfTU=;
+        b=wTaUl6FyJXyhDdlQuQlb5P+pazC7XMAClZLjWUdG2nFMbQS0zYAcGhZIhyvsBtAZwD
+         6/Ywu4LyFPFgR766o06uihZ7LMMdvconwXcIh4CmPBYdgiHCWwq9XnC2Aqw7paeKUC1h
+         0NlxlCeqF6Wrxi9OIIVJsvz0tDbGvm04WoxIOPSd1vvCY4JTZRTn/ejQY2FpsGpbm3hz
+         fIx1ogFocGBhIBmWO3oKWoxyinZeYEJO02w1yv8fGYx9QlG9TOwUm8U7sgWHuS+45vXB
+         MWpMpcswXcca1xgmBiNapM7FRtLvtsXjlgDw4Y80XKQtiQDYFBw8lpHBQjSTI454Y0GD
+         uIpA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1789574069; x=1790178869;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=LakOb0bCO9P4LHmMzGLPHsI3voGyQnWQGSKhp2smfTU=;
+        b=hqCwb7wfgB/s8R6sAVXpve0VeKiPxrNhmATDikiIGUe0aHH+Yo1UU9KbBVF03YQiWP
+         OKUvPSQ9sbXsXTaVUnoVkJSVbRDU7qkplc9Cdxi1BoJDt68pYdirMZH45pD0f6QKxH8T
+         TWSki6EYrrDncOkoRQC9TnirvzPMm6/xktEiQ204R+Pb9vXJO1hSGuJTOWiDkxPUPWdF
+         bHj8RevEUa4Tkw1eJFujDe3TmfmqX1lgGQA74I5eu9byDW5Qp4O5R7ByyBB7IoBQC57T
+         vhzYCkT70YN8sl+8JXEPD1hnsx+T+8xMi36hhdbGlrRLg7zjaisuuHm/p9rSM5GkjpbS
+         jHjA==
+X-Gm-Message-State: AFuF++lIm7ZjzW5WDadMfidJpW4Dj9IhT1jpoiQ+WGlBoCwTD7SlDF4V
+	MMwhiXnhsd61p1H83yD0SNaQ4UwJKwtdCCmwNp2bZJdwV5cWjLBbDG7vlvjZrPwmSoVO8pAx8T+
+	v5oOyNUEL17NquVm4/LLY2CMkkuUV28n2jdnnKvBVFzcdmQaeq9msd/rvdB1NTw==
+X-Gm-Gg: AYBFou22hB+n//aeqwR5+XvEK1VPWwAQgmKqHU3wyFBjLFFBAhtnwbrS6IqtsuxmAbE
+	isA9K2VTKABvLo7BMf3+iUgoycHfa+ZpjLczkYPilKbrGIgGwrOtOM7VW2yAYoStMzEjwwraOg+
+	849hnQIjBuhEI1uXb/GuiZoobtuUu6Ir/6UE0JMiM9PYHe0eE/TFtdYJAfDXWACHZLuPxYv78pN
+	/xJozfy02NxMJiHmBLyoFM2vyOuaTz+5v8dDHDKhn/03xrj82/Dw+uZBrXaM+34NSePB0w3p379
+	CZl3W9LvFkxupXYW0fHBBhmHh2qyCSu81rarb2ETu0sjNi6IJt79Dd4poVSsJk6NwN+OwsMBzp+
+	JBNUnq4t0
+X-Received: by 2002:ac8:7f09:0:b0:531:282:6560 with SMTP id
+ d75a77b69052e-5327e6f2a86mr15289401cf.15.1789574067947; Wed, 16 Sep 2026
+ 08:54:27 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] perf/arm-cmn: Fix multi-filter encoding
-To: Leo Yan <leo.yan@arm.com>
-Cc: will@kernel.org, mark.rutland@arm.com, ilkka@os.amperecomputing.com,
- linux-perf-users@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-References: <ec590cd4cc61b54d6ad3b306b69777ad7729c9d6.1789475062.git.robin.murphy@arm.com>
- <20260916093146.GG200420@e132581.arm.com>
-From: Robin Murphy <robin.murphy@arm.com>
-Content-Language: en-GB
-In-Reply-To: <20260916093146.GG200420@e132581.arm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20260916061218.3061216-1-irogers@google.com> <20260916061218.3061216-4-irogers@google.com>
+ <20260916062233.192271F000FF@smtp.kernel.org>
+In-Reply-To: <20260916062233.192271F000FF@smtp.kernel.org>
+From: Ian Rogers <irogers@google.com>
+Date: Wed, 16 Sep 2026 08:54:16 -0700
+X-Gm-Features: AcwNN1V-7vNOQhejVrikEYGwQUihp15qdbep1GsDRqgE0RceZn_9nikCmJynvoE
+Message-ID: <CAP-5=fWNMrnB9KNjCGOc0A+kwvWWsxYc092x=q6CLK+-g3nwFw@mail.gmail.com>
+Subject: Re: [PATCH 3/9] perf libbfd: Include the headers that are used
+To: sashiko-reviews@lists.linux.dev
+Cc: linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 16/09/2026 10:31 am, Leo Yan wrote:
-> On Tue, Sep 15, 2026 at 01:24:22PM +0100, Robin Murphy wrote:
->> The current special-case for EVICT_STATE_SEL filtering effectively
->> assigns the "filter" and "filter2" controls in the opposite order from
->> how the CMN S3 r2 TRM states "Filtering is programmed in pmu_hbt_lbt_sel
->> and pmu_evict_state_sel". On reflection, not only does this seem
->> unnecessarily non-obvious to users, but it's also likely to be a problem
->> for scaling to a full multi-filter abstraction in future. There is a
->> logical order to filters based on their bitfield positions in the
->> pmu_event_sel register, which the TRM descriptions allude to, and the
->> cmn_filter_select enum already (almost) follows, so let's fix the UABI
->> to follow suit while it's still unreleased.
->>
->> Fixes: 09178f536bb9 ("perf/arm-cmn: Plumb in new filter types")
->> Signed-off-by: Robin Murphy <robin.murphy@arm.com>
-> 
-> It's hard to say how useful my review is, but I went through the patch
-> and also asked AI to explain the rationale. It makes sense to me:
-> 
-> Reviewed-by: Leo Yan <leo.yan@arm.com>
-> 
-> Seems we could implement a generic way to navigate filters based on
-> the hardware bitfield ordering, e.g. filter_next(sel) and
-> filter_prev(sel). This can be deferred until we have more combined
-> filters.
+On Tue, Sep 15, 2026 at 11:22=E2=80=AFPM <sashiko-bot@kernel.org> wrote:
+>
+> Thank you for your contribution! Sashiko AI review found 1 potential issu=
+e(s) to consider:
+> - [Low] perf libbfd: build failure on musl due to missing <stdarg.h>
+> --
+>
+> commit b4b64b7fbd73cf480fc5aaa2ad17802e8f46fbcc
+> Author: Ian Rogers <irogers@google.com>
+>
+> perf libbfd: Include the headers that are used
+>
+> This patch explicitly includes several POSIX headers directly into libbfd=
+.c
+> instead of relying on indirect inclusions. It also reorders the includes =
+to
+> group system headers before perf's own headers.
+>
+> > diff --git a/tools/perf/util/libbfd.c b/tools/perf/util/libbfd.c
+> > index 131bfedf48cdf..1b23a261a9ced 100644
+> > --- a/tools/perf/util/libbfd.c
+> > +++ b/tools/perf/util/libbfd.c
+> > @@ -1,5 +1,19 @@
+> >  // SPDX-License-Identifier: GPL-2.0
+> >  #include "libbfd.h"
+> > +
+> > +#include <errno.h>
+> > +#include <inttypes.h>
+> > +#include <limits.h>
+> > +#include <stdint.h>
+> > +#include <stdio.h>
+> > +#include <stdlib.h>
+> > +#include <string.h>
+> > +
+> > +#include <fcntl.h>
+> > +#include <pthread.h>
+> > +
+> > +#include <tools/dis-asm-compat.h>
+>
+> [Severity: Low]
+> Does this inclusion order break the build on musl libc?
+>
+> Because <tools/dis-asm-compat.h> uses va_start and va_end in an inline
+> function, it strictly requires <stdarg.h>. Previously, this requirement
+> was satisfied implicitly because it was included later in the file, after
+> other headers provided the necessary declarations.
+>
+> Moving <tools/dis-asm-compat.h> higher up in the file exposes this missin=
+g
+> dependency, which will cause va_start and va_end to be undeclared in stri=
+ct
+> environments like musl.
+>
+> [ ... ]
 
-Yup, that's the direction this was always heading - in the (near-ish) 
-future we definitely are going to have to support different events 
-having overlapping combinations of multiple filters, and even more cases 
-of one event having different filters per CMN model. Thus one option I 
-realised I'd like to keep open, in case arrays get too clunky, is to 
-encode cmn_filter_select values in a bitmap, wherein a mapping of bits 
-to CMN_EVENT_FILTER*() fields could always be implied based on this 
-consistent ordering.
+I don't plan to fix this as the issue is minor and relates to an
+include, not the code itself. The series has no other Sashiko
+feedback.
+https://sashiko.dev/#/patchset/20260916061218.3061216-1-irogers%40google.co=
+m
 
 Thanks,
-Robin.
+Ian
+
+> --
+> Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260916061218.30=
+61216-1-irogers@google.com?part=3D3
