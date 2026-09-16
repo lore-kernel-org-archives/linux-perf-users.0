@@ -1,84 +1,65 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85FAE3ACF17
-	for <linux-perf-users@vger.kernel.org>; Wed, 16 Sep 2026 01:43:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B0561A2C04
+	for <linux-perf-users@vger.kernel.org>; Wed, 16 Sep 2026 01:44:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789523017; cv=none; b=j/UK5KcZtY36IX+6KsWrAhmbppD/bDv/crnqM9nKSGUWfp+ebS1WakgiDsF2fo3c4/j+GbLuRk6SfPe1wOPdevuhMNtluiIFVE/kdNLpqSYYK12J4bMmBBCiBT40R/K48Z2/l2k6re+S7QczLD+t3tzo5/QvVwswUYWRc+scKDg=
+	t=1789523064; cv=none; b=Rm3PLm6YPCcKIUwTTArdelclG6N3NBHQTL8LxhWF9xkl1me9kBr+hFmAEL7J7BOw5tuoQU8PBuWWqUomj70yw6G3dVtYEeGnM6rC88GWM03R9/FSMkYXtCaOegdy6FGldYe6PxN2tBGPSn1qPFz0OQ2GLBhuABOvsqvPx3CqvIo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789523017; c=relaxed/simple;
-	bh=z6T/3zDuFB/smNXMMWL5fHyBx2+xTPuMrFR4Mms6v5U=;
+	s=arc-20240116; t=1789523064; c=relaxed/simple;
+	bh=WF3U/kmtnk/TT/RinqKFUh8IyoK4EXDp7yo7cfBc0wI=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=kProgPKOFm0LHR+thQ3jW0Z5UkBA5pRtPhovsVISWMEMSK8hsTqFDUsGCUwyHNJZoEHLYLds/ZljJg3239HqPQvANhz4ODTDRV4n9XqwQo5ElTSPC60+ch/zf74DCnAO0oRmd8up43DwA14jyU0AC1/72yB52XVZh94EMHQ455Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IE/UQ0vP; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=WqZpy0N4WjJGd2RExnDxm6yZCx/7Jzqs1XQMXtSp38rnT+7+2fjVRZoOPV+9AJi5lmlcEOEBM2SygQZiHywvR1njYWl0k+K2eqLINYKQYtlfPykvVrJ8/sIBiWwurq/UYD/FThNW5XYAbUr1QWjy7CSfi8vylhaf9DwHd8ZifPM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cGdychl9; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IE/UQ0vP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D21FC1F00893;
-	Wed, 16 Sep 2026 01:43:30 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cGdychl9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8F9F91F000FF;
+	Wed, 16 Sep 2026 01:44:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789523011;
-	bh=C7T8E38sSMC4zvw0EMEV4Rd1IIaAeyhPVdlLWS9q1co=;
+	s=k20260515; t=1789523051;
+	bh=WF3U/kmtnk/TT/RinqKFUh8IyoK4EXDp7yo7cfBc0wI=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=IE/UQ0vPBQSrki7gPFpY3YRhRWoPaBhzTLeACveuKrbsdmvaw7e7DpcjjMDNLl0uv
-	 ZrutXnlbCeR3Hs9D3ORDM2eq4nNBQavo9RI61xpLRI/O9roql+IhAyEUB1h6QX2NU6
-	 8KyHCB6HNF02c+ZakRuJPnlx0x4/mJkvhK45kD09AEjRz2sVam7wmVUb23taOZHPiJ
-	 jVx4xBBcl3Ft9m0UaZVxDKQMu//9reYeq/7GC2vEW5afma3hU3gAFzsNIZgmaMw37X
-	 vqm6+QgJuG85oJ0l3WtwTty/bGwdXiFLpH/yWo6moqkQIlbMYa8rJFQ8kDVyk0Z/oT
-	 tpqVLMZ+ImE4Q==
+	b=cGdychl9yxW/lDjO+zpInh+C1je/OTuHrzSZt2glVb+0QHdNBIjyeaX+0rLLOVYp3
+	 Z3mhyKssTWwB604B+SuzX58NlwjG+4ou/LuB9gaMWQMWMV3c3ZTjm8fF6xv2P/wgSI
+	 TMRXL0RpX7jGlDyMdFDPCIK02X/89bW7Ia8hm0dQvqcdvlTBaRhjl+eLSONN9olF23
+	 HwK+KzareJOvOQYxA3RbI2sQqE4hGba8b8kAPWwsmM3aYJ1J7tzc7x7siFpTF4wB2y
+	 sQcfOiXQ9D8O2nV4dpepEA+Eg0dHmHXElmPWASwdtWGRIl8gST1NJrgIYqX5Lsq8SY
+	 fYlsg+GjGbSlQ==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v6 13/26] perf annotate-arm64: Enable instruction
- tracking support
+Subject: Re: [PATCH v6 19/26] perf annotate-data: Track imm_value for stack
+ variables
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Tengda Wu" <wutengda@huaweicloud.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <c6c920ced23d0292b2de141070b1d9727701318a.1789521520.git.wutengda@huaweicloud.com>
+In-Reply-To: <8b29a11ea56bdc9973e3ab65d6f5ebdea0927bfa.1789521520.git.wutengda@huaweicloud.com>
 References: <cover.1789521520.git.wutengda@huaweicloud.com>
- <c6c920ced23d0292b2de141070b1d9727701318a.1789521520.git.wutengda@huaweicloud.com>
+ <8b29a11ea56bdc9973e3ab65d6f5ebdea0927bfa.1789521520.git.wutengda@huaweicloud.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Wed, 16 Sep 2026 01:43:30 +0000
-Message-Id: <20260916014330.D21FC1F00893@smtp.kernel.org>
+Date: Wed, 16 Sep 2026 01:44:11 +0000
+Message-Id: <20260916014411.8F9F91F000FF@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-> Enable basic instruction tracking for arm64 by implementing three
-> essential functions in the find_data_type_block() call path:
+> Currently, imm_value is tracked in registers but dropped when values
+> are saved to or loaded from stack variables during type profiling.
+> If a register of type TSR_KIND_CONST is stored to the stack, its value
+> will be lost.
 >=20
->   find_data_type_block
->     -> arch_supports_insn_tracking  (1)
->     -> find_data_type_insn
->          -> init_type_state         (2)
->          -> update_var_state
->          -> update_insn_state       (3)
+> Add an imm_value field to struct type_state_stack and update
+> set_stack_state() and findnew_stack_state() to accept and preserve the
+> immediate value when updating stack state.
 >=20
-> Changes:
->=20
-> * arch_supports_insn_tracking(): add arm64 to the list of supported
->   architectures, allowing find_data_type_block() to proceed with data
->   type analysis.
->=20
-> * init_type_state(): correctly identify ret_reg, stack_reg, and
->   caller-saved registers for arm64 during type state initialization.
->=20
-> * update_insn_state(): add the update_insn_state_arm64() callback with
->   conservative register invalidation for call instructions and those with
->   destination register(s), preventing stale type propagation. Full
->   instruction-level analysis support will be added incrementally in
->   later patches.
->=20
-> With these changes, arm64 gains support for basic variable type
-> inference during instruction tracking.
->=20
-> Signed-off-by: Li Huafei <lihuafei1@huawei.com>
+> Reviewed-by: Shuai Xue <xueshuai@linux.alibaba.com>
 > Signed-off-by: Tengda Wu <wutengda@huaweicloud.com>
 
 Sashiko has reviewed this patch and found no issues. It looks great!
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/cover.1789521520.gi=
-t.wutengda@huaweicloud.com?part=3D13
+t.wutengda@huaweicloud.com?part=3D19
 
