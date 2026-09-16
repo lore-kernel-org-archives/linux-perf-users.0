@@ -1,166 +1,638 @@
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05C33381B1A
-	for <linux-perf-users@vger.kernel.org>; Wed, 16 Sep 2026 02:51:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2E651BD9D0
+	for <linux-perf-users@vger.kernel.org>; Wed, 16 Sep 2026 03:35:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789527111; cv=none; b=m9+PjbwFgdIVKNB1VGQ+NfPsFxy0Ohhlw20z6BVEGhpY4CqbwJnGjiO9YKzX2NSP/JXJP3Ae1DUmV7stwcTbzKh5LcNVAfbs9IIK2M01H/8RyTmj7RIprxbcStydosaRXkQxOFsv49nKQkcg3of1WlpGTmD7qtAX4k9YmMgHuQE=
+	t=1789529725; cv=none; b=bbJLpKGR7sBiLb0F3obZyJ97fHVfy+6Be7rwdXTr5k2IhcSU+XskBPzstDxcWHp8fUJfmPNmddH+fXPlGEopNUSFMUCfR2DGSvEspUiJdbjGOPCIWk8iZbYtxIX/Su1tErKlW8+9/lMI5TNHl6UCl0jimo8JHW/gSzdLLwdbbBQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789527111; c=relaxed/simple;
-	bh=06gKiNVc1QrDhEqs1eL0c9nkajXFAE9ETqo3O0UxMwc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=oYMWMGWHUfChF5zVKGWgWLvYHOPiQf6wOOY5GVpHtr1qmdHTXRhl+G1JEsoxnBZOGkNslrgWT50zPaBiRyBe5qqbnkcdNBgIArV3iJ+1IBSzH9hI9x8rITdrotikfW1KPD8NFl1sup2fLbdqkKnuvFxyN2OL4/+4E95EFt3bd7M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.198])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4hl3Lh3xkczYQtlM
-	for <linux-perf-users@vger.kernel.org>; Wed, 16 Sep 2026 10:51:40 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.252])
-	by mail.maildlp.com (Postfix) with ESMTP id C259540576
-	for <linux-perf-users@vger.kernel.org>; Wed, 16 Sep 2026 10:51:44 +0800 (CST)
-Received: from [10.67.110.36] (unknown [10.67.110.36])
-	by APP3 (Coremail) with UTF8SMTPA id _Ch0CgB3OW4_BKpqCcXZAQ--.45614S2;
-	Wed, 16 Sep 2026 10:51:44 +0800 (CST)
-Message-ID: <205dd76b-4d9e-46d3-b302-6c8e521511e2@huaweicloud.com>
-Date: Wed, 16 Sep 2026 10:51:43 +0800
+	s=arc-20240116; t=1789529725; c=relaxed/simple;
+	bh=mgJ/kzcGpUmNnZXXd9Cf9RodKfxzYCQ496yZXK9lWn4=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=srIl/l5bCx2jjs86/ht562bTBcvtiIhkCBgF/MxM/iBq8wQzjH+sYJmIJkPzAEGqORKb5YzdNIVsOOMFMkDdX2jBojj9HqsDbLWttgm4C9sSqamdI7IqOENG3eQle5V/b3JjiuQvYOJ+4bqRj/nfN7SSfuINoM3pNyZMNwL4cqw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=ltgz4ZY/; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="ltgz4ZY/"
+Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 68FLVxRH1805566;
+	Wed, 16 Sep 2026 03:35:05 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=VXY3yp
+	NZ1ATYF7lWdcNjCNKsqpEDzlcQSSUwK7ZPYzM=; b=ltgz4ZY/Dr3pfc/IPxrbnM
+	VaMEpi5YTW2hoMEypoVDp7VE7D949u+eZV2SRfzBPuMqsciVeJleWzPaNXx9rUZb
+	2XODwJr7NcsFV2B6gdMjNo84cfoLYS77KAZpwkouG4TJTDIbtHOYDTMcyql+v9Cx
+	5jyfVf1Ivu+cAGcfEWgc4h0DALB8rtCs6GT9+DeOBeIDZkwwCKHWoqNzHe758zqp
+	+e3hcOdz9BP7+nmVRdV2cjiNQdNzrsc3ex9/fPViYYXZCWFJjBErPW+u2+tIofMg
+	MMkUFYT+shIk8KB0eP9SNv5fmhN+wVv6gHH/+n+isC2g/0+dOadyuSTmKrawwSAQ
+	==
+Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4gmv5htg7m-1
+	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
+	Wed, 16 Sep 2026 03:35:05 +0000 (GMT)
+Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma12.dal12v.mail.ibm.com (8.18.1.11/8.18.1.11) with ESMTP id 68G2WZ2i464062;
+	Wed, 16 Sep 2026 03:35:04 GMT
+Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
+	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 4gq03vcg3j-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 16 Sep 2026 03:35:04 +0000 (GMT)
+Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
+	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 68G3Z0s040698230
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 16 Sep 2026 03:35:00 GMT
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id BDC8320040;
+	Wed, 16 Sep 2026 03:35:00 +0000 (GMT)
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 6B4412004E;
+	Wed, 16 Sep 2026 03:34:55 +0000 (GMT)
+Received: from smtpclient.apple (unknown [9.39.20.137])
+	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Wed, 16 Sep 2026 03:34:55 +0000 (GMT)
+Content-Type: text/plain;
+	charset=utf-8
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 02/26] perf llvm: Fix arm64 adrp instruction
- disassembly mismatch with objdump
-To: sashiko-reviews@lists.linux.dev
-Cc: linux-perf-users@vger.kernel.org
-References: <cover.1789521520.git.wutengda@huaweicloud.com>
- <63d15af66450065329b08f41794738c2e8c811ab.1789521520.git.wutengda@huaweicloud.com>
- <20260916014303.D5A931F00898@smtp.kernel.org>
-Content-Language: en-US
-From: Tengda Wu <wutengda@huaweicloud.com>
-In-Reply-To: <20260916014303.D5A931F00898@smtp.kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:_Ch0CgB3OW4_BKpqCcXZAQ--.45614S2
-X-Coremail-Antispam: 1UD129KBjvJXoWxuryDGw4UZrW7KrW8uFWDCFg_yoW5uFy3pF
-	n7CaykWFyxArsYvwnF9r4xXF13A39xKFW5Wr45CrWFkrs8Cr1xJr4fKrW29asrXrn5Z3yY
-	vrWqvFyDAF1kArJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUglb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7Cj
-	xVAFwI0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7
-	CjxVAFwI0_GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8C
-	rVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4
-	IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkE
-	bVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67
-	AF67kF1VAFwI0_Jrv_JF1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI
-	42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMI
-	IF0xvEx4A2jsIE14v26r4j6F4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Cr1j6rxdYxBIdaVF
-	xhVjvjDU0xZFpf9x07UE-erUUUUU=
-X-CM-SenderInfo: pzxwv0hjgdqx5xdzvxpfor3voofrz/
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3864.300.41.1.7\))
+Subject: Re: [PATCH V5 4/6] tools/perf: Add powerpc callback support for
+ arch_perf_record__need_read
+From: Athira Rajeev <atrajeev@linux.ibm.com>
+In-Reply-To: <C4D6F159-C76B-4C58-A61F-288C15C34D33@linux.ibm.com>
+Date: Wed, 16 Sep 2026 09:04:48 +0530
+Cc: maddy@linux.ibm.com, linux-perf-users@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, hbathini@linux.vnet.ibm.com,
+        tejas05@linux.ibm.com, tshah@linux.ibm.com, venkat88@linux.ibm.com,
+        usha.r2@ibm.com, Jiri Olsa <jolsa@kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <2CA2114E-DABF-48DC-B742-B43E0C39DDD5@linux.ibm.com>
+References: <20260807144135.2607-1-atrajeev@linux.ibm.com>
+ <20260807144135.2607-5-atrajeev@linux.ibm.com>
+ <a6424439-d42e-4f62-92ee-525c7f2d4277@intel.com>
+ <00D2E602-E43D-4D23-9304-133263424B3B@linux.ibm.com>
+ <ecbfbe14-5202-4efe-b829-1eb2590cceaf@intel.com>
+ <04E662EC-0CC0-47C1-91B9-A96BA93496A7@linux.ibm.com>
+ <0baf654e-be23-45f0-b213-c7beaf73e70b@intel.com>
+ <C4D6F159-C76B-4C58-A61F-288C15C34D33@linux.ibm.com>
+To: Peter Zijlstra <peterz@infradead.org>
+X-Mailer: Apple Mail (2.3864.300.41.1.7)
+X-TM-AS-GCONF: 00
+X-Proofpoint-Reinject: loops=2 maxloops=12
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwOTE2MDA0NCBTYWx0ZWRfX2LYohfwZmHCL
+ SttRAYnKuTm5RtP82x+qlOusHCfAtloxXTYKXyTTt3bH8xREba8Pg7kvZ37Q8tKeCFScidvt+EM
+ 5syNG9ocr4AVKtuCWeWcVkfXqCjvBTY+9TQL/8s4HLE6bCL8E2YOmNonQ6nKKb9Kw+tWQ7abPiJ
+ k1ZL2IVP3pTI6cTyvtN1G+8sm4bHTzLW5aH7moFGhp7zPuq3OT1mbbGBcbXDm+biElBY6yoP0oK
+ r58jaEIKkLKBRq0+byDHWTwIffA7IVInn78xS61MaoBxFrD16Owq6y8K9G9Y9QCn5AMc1NWA55R
+ 4NF+c2CAzfA5/sjZ0nRaeX8Goj0uZUX21et0Qi4OS7ZbxSuKUrEj0CH2khcX+LcG/uzPpNuWyxX
+ cwCghwcS+ovQxaN/3aXKrgN8cmR0iCC2fuCBC+vAPvcRw0KQgu4R7YYkKq+/LClAAguJQF3C8Zc
+ QSY7oYfoevJiJUKn7oA==
+X-Proofpoint-Spam-Info: AW1haW4tMjYwOTE2MDA0NCBTYWx0ZWRfX7iX4/ePL9dQd
+ Mu96yXl08Xn7z1yt7//+tb/x9sDl3rqKHKmes+SISfxoOJ0jRYzaj2vqV5/HYdqFhVIGbx60tbI
+ 6F3s8EFiSrBrJAzoE65VqocQGrfawoE=
+X-Authority-Analysis: v=2.4 cv=Zsx4uN7G c=1 sm=1 tr=0 ts=6aaa0e69 cx=c_pps
+ a=bLidbwmWQ0KltjZqbj+ezA==:117 a=bLidbwmWQ0KltjZqbj+ezA==:17
+ a=IkcTkHD0fZMA:10 a=VdqzKS8jKosA:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=RnoormkPH1_aCDwRdu11:22 a=Y2IxJ9c9Rs8Kov3niI8_:22 a=VwQbUJbxAAAA:8
+ a=VnNF1IyMAAAA:8 a=QyXUC8HyAAAA:8 a=p5WFYJvHaKwG1_fJtE8A:9 a=QEXdDO2ut3YA:10
+X-Proofpoint-ORIG-GUID: iAwskQLDeFL-VrxGSwy-tPRQkfj7e2jD
+X-Proofpoint-GUID: JjaHCcelNljbNUzD5Z9lP4NEy3XOGg0p
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1176,Hydra:6.1.134,FMLib:17.12.100.49
+ definitions=2026-09-15_05,2026-09-15_02,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ malwarescore=0 impostorscore=0 clxscore=1015 priorityscore=1501
+ lowpriorityscore=0 bulkscore=0 adultscore=0 phishscore=0 spamscore=0
+ suspectscore=0 classifier=typeunknown authscore=0 authtc= authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.22.0-2609040000
+ definitions=main-2609160044
 
 
 
-On 2026/9/16 9:43, sashiko-bot@kernel.org wrote:
-> Thank you for your contribution! Sashiko AI review found 1 potential issue(s) to consider:
-> - [Medium] perf: arm64 pcrel load formatting failure aborts disassembly
-> --
+> On 17 Aug 2026, at 11:32=E2=80=AFPM, Athira Rajeev =
+<atrajeev@linux.ibm.com> wrote:
+>=20
+>=20
+>=20
+>> On 14 Aug 2026, at 7:51=E2=80=AFPM, Adrian Hunter =
+<adrian.hunter@intel.com> wrote:
+>>=20
+>> On 13/08/2026 21:40, Athira Rajeev wrote:
+>>>=20
+>>>=20
+>>>> On 13 Aug 2026, at 1:17=E2=80=AFPM, Adrian Hunter =
+<adrian.hunter@intel.com> wrote:
+>>>>=20
+>>>> On 13/08/2026 10:36, Athira Rajeev wrote:
+>>>>>=20
+>>>>>=20
+>>>>>> On 13 Aug 2026, at 11:52=E2=80=AFAM, Adrian Hunter =
+<adrian.hunter@intel.com> wrote:
+>>>>>>=20
+>>>>>> On 07/08/2026 17:41, Athira Rajeev wrote:
+>>>>>>> Implement the arch_perf_record__need_read() =
+architecture-specific hook
+>>>>>>> for powerpc in arch/powerpc/util/evsel.c.
+>>>>>>>=20
+>>>>>>> The HTM kernel driver sets event->count to the number of records =
+still
+>>>>>>> staged in its internal buffers (total_size / record_size), and =
+to 0
+>>>>>>> once the stream is exhausted.  This hook reads that count for =
+every open
+>>>>>>> htm evsel via perf_evsel__read() and accumulates the values into
+>>>>>>> total_pending_records.  A non-zero total means at least one HTM =
+target
+>>>>>>> still has records pending; the recording loop added in the =
+previous
+>>>>>>> patch will perform another mmap-read pass.
+>>>>>>>=20
+>>>>>>> The drain uses a two-layer safety check: event->count detects =
+records
+>>>>>>> staged by the driver, and record__bytes_written() in the drain =
+loop
+>>>>>>> confirms data was actually moved into perf.data.  This =
+combination
+>>>>>>> handles the case where the driver count is briefly stale while =
+hardware
+>>>>>>> is still flushing.
+>>>>>>>=20
+>>>>>>> The implementation scans the evlist using evsel__pmu_name() to =
+identify
+>>>>>>> HTM events by their kernel-assigned PMU name rather than the
+>>>>>>> user-visible event name, preventing false matches.  It iterates =
+the fd/
+>>>>>>> sample-id xyarray, and skips any evsel whose fd and sample-id =
+arrays are
+>>>>>>> mismatched to avoid reading stale state.  When the accumulated =
+record
+>>>>>>> count reaches zero the hook returns 0 and the recording loop =
+proceeds to
+>>>>>>> disable and close the events.
+>>>>>>=20
+>>>>>> This looks like the proposed driver:
+>>>>>>=20
+>>>>>> =
+https://lore.kernel.org/all/20260701083806.79358-1-atrajeev@linux.ibm.com/=
 
-Interesting. In the v5 version, Sashiko reviewed and approved this patch.
+>>>>>=20
+>>>>> Hi Adrian,
+>>>>> Thank you for the review.
+>>>>>=20
+>>>>> Could you please help clarify which specific aspect of the driver =
+breaks the perf ABI? Is it the sysfs format ABI where encoding raw =
+hardware topology identifiers (nodeindex, nodalchipindex, =
+coreindexonchip) are used as perf_event_attr.config bit fields?
+>>>>> I am trying to confirm so that I get your feedback correctly for =
+reworking on changes.
+>>>>=20
+>>>> This "draining" and "read" usage looked unusual, so I asked AI:
+>>>>=20
+>>>> I have just applied the patches for powerpc htm kernel driver - =
+they are now the last 5 patches committed. Examine the design in
+>>>> comparison to how other PMU drivers are implemented. Does it =
+violate the kernel API for PMUs?=20
+>>>>=20
+>>>> It said yes.
+>>>=20
+>>> Hi Adrian,
+>>> Thanks for taking the time to check this.
+>>>=20
+>>> I agree with the assessment. The core problems I understand are:
+>>> - pmu->read() issues hcalls that stop the hardware trace and dump =
+the data, so any read() call ends up
+>>> silently draining and stopping the trace =E2=80=94 which isn't what =
+read() is for.
+>>> - event->count is being used to signal "more data pending" which =
+breaks the expected semantics.
+>>>=20
+>>> I'm going to rework this rather than continue posting on top of it.
+>>> Here is my rework plan for your review:
+>>>=20
+>>> Kernel side: workqueue-based approach:
+>>> -  pmu->read() becomes a no-op. No hcalls, no side effects.
+>>> -  pmu->stop() issues hypervisor call to freeze the hardware buffer, =
+then schedules a
+>>>   work_struct (htm_drain_work_fn()) that runs in process context and =
+drains the frozen buffer
+>>>   chunk by chunk into the AUX ring via perf_aux_output_end(), =
+backing off on -ENOSPC to let
+>>>   userspace consume between chunks. event->count is no longer used =
+as a flow-control signal.
+>>=20
+>> That sounds a bit like pmu->stop() wouldn't actually stop.
+>> I can imagine there could be issues with that.  I suspect
+>> only someone like Peter Zijlstra can advise you.
+> Sure, thanks for directing Adrian,
+> Adding Peter Zijlstra to the thread..
+>=20
+> Hi Peter,
+>=20
+> I am working on a perf PMU driver for HTM (Hardware Trace Macro) on
+> IBM POWER systems.  HTM captures hardware trace data via the H_HTM
+> hypervisor call.  The driver in the patch series exposes it as a perf =
+AUX PMU so trace
+> data can be correlated with other perf events in perf.data.
+>=20
+> Patch series: =
+https://lore.kernel.org/linux-perf-users/20260807144135.2607-1-atrajeev@li=
+nux.ibm.com/
+> =
+https://lore.kernel.org/linux-perf-users/20260807143734.1224-1-atrajeev@li=
+nux.ibm.com/
+>=20
+> Adrian Hunter reviewed the series and we have some queries. I am =
+reaching out for
+> your guidance on the right kernel mechanism for draining trace data =
+into the
+> perf AUX buffer. Please read details below and help share your =
+thoughts.
+> Apologies for the long text, I tried to explain context and concerns =
+that
+> came out of the review.
+>=20
+Hi Peter,
 
-> 
-> commit ad5ee451ad40bd108c85e2fea401d911d9304dee
-> Author: Tengda Wu <wutengda@huaweicloud.com>
-> 
-> perf llvm: Fix arm64 adrp instruction disassembly mismatch with objdump
-> 
-> This commit fixes an inconsistency in how libllvm parses arm64 adrp
-> instructions by manually extracting the target address via
-> symbol_lookup_callback(). The extracted address is then converted to match
-> objdump's format, ensuring compatibility with existing parsers.
-> 
->> diff --git a/tools/perf/util/llvm.c b/tools/perf/util/llvm.c
->> index a0deb742a7331..a78845689aa1c 100644
->> --- a/tools/perf/util/llvm.c
->> +++ b/tools/perf/util/llvm.c
-> [ ... ]
->> @@ -228,12 +240,42 @@ int symbol__disassemble_llvm(const char *filename, struct symbol *sym,
-> [ ... ]
->>  		if (storage.pcrel_load_addr != 0) {
->> -			char *name = llvm_name_for_data(dso, filename,
->> +			char *name;
->> +
->> +			if (arch__is_arm64(args->arch)) {
->> +				/*
->> +				 * For arm64, replace the immediate operand with
->> +				 * the resolved address to match objdump's output.
->> +				 *
->> +				 * Example conversion:
->> +				 *   From: adrp  x18, 8014
->> +				 *   To:   adrp  x18, ffff800081f5f000
->> +				 */
->> +				char *s = strchr(disasm_buf, ',');
->> +
->> +				if (s == NULL)
->> +					goto err;
-> 
-> [Severity: Medium]
-> Could this error path escalate a minor string formatting mismatch into a
-> complete failure of the disassembly operation?
-> 
-> If an ARM64 instruction triggers a PC-relative load but its disassembled
-> text lacks a comma (e.g., due to an unexpected mnemonic format from LLVM,
-> or data incorrectly decoded as an instruction)
-
-Is such a possibility actually possible? At least so far I haven't seen it.
-If it does exist, it should probably be considered an LLVM bug?
-
-                                                , strchr() returns NULL and
-> triggers this abort.
-
-The abort should be the expected behavior; otherwise, this problem would be
-silently propagated to the arm64_mov__parse stage, making it hard to detect.
-
-> 
-> Because the error path in symbol__disassemble_llvm() fails to clean up
-> partially populated lists, aborting the disassembly here discards the LLVM
-> disassembly for the function. When the fallback disassembler takes over,
-> this leaves interleaved, corrupted disassembly lines and causes a memory
-> leak.
-> 
-
-This should be referring to here:
-
-symbol__disassemble_llvm:
-		llvm_addr2line(filename, pc, &args->fileloc,
-			       (unsigned int *)&args->line_nr, false, NULL);
-
-		dl = disasm_line__new(args);
-		if (dl == NULL)
-			goto err;  // args->fileloc is not freed
-
-		annotation_line__add(&dl->al, &notes->src->source);
-
-		free(args->fileloc);
-
-This is a pre-existing issue. Currently it does not affect this patch, because
-when this patch does goto err, llvm_addr2line has not been called yet. So I will
-*keep this patch unchanged* and submit a separate patch to fix this issue.
+Gentle ping on this. Sorry to bother you again. Just wanted to check if =
+you could a chance to read through my query and
+if had any thoughts or if you need any additional context from my side.
 
 Thanks,
-Tengda
+Athira
+>=20
+> Hardware constraints
+> --------------------
+> HTM is a one-shot, firmware-managed trace buffer:
+>=20
+> - Buffer size is fixed at boot time.
+>   Cannot be changed without a reboot.
+> - No hardware interrupt (no PMI, no DMA completion signal).
+> - The entire buffer is read after issuing a stop hcall.
+>   Not while tracing is active.
+> - Buffer must be copied chunk by chunk via a hypervisor hcall into
+>   the perf AUX ring (physically contiguous pages).
+>=20
+> What V5 of patch series did
+> -----------
+> In V5, pmu->read() did all the work:
+>=20
+> - On the first call: issued stop hcall to freeze the hardware
+>   buffer, then called hcall to dump the trace data into the
+>   AUX ring via perf_aux_output_begin() / perf_aux_output_end().
+> - Subsequent calls: skipped the stop (already frozen), copied the
+>   next chunk, advanced aux_buf->head.
+> - Set event->count to the record count written, or 1 if the AUX
+>   ring was full (-ENOSPC, meaning "retry"), or 0 at EOF.
+> - Userspace polled event->count via perf_evsel__read() in a new
+>   weak arch_perf_record__need_read() hook added to builtin-record.c;
+>   a non-zero count triggered another record__mmap_read_all() + retry.
+>=20
+> Review from Adrian flagged concerns with this:
+>=20
+> Concern 1: pmu->read() issues stop on its first call =E2=80=94
+>            a hardware side effect inside pmu->read().
+>=20
+> Concern 2: event->count is used as a flow-control signal
+>            (1 =3D "retry", 0 =3D "done") rather than a real counter.
+>=20
+>=20
+> Addressing the two concerns for V6
+> -----------------------------------
+> Concern 2 is straightforward to fix: remove all event->count
+> manipulation from pmu->read().  Loop termination is detected by
+> AUX head not advancing.  No event->count needed.
+>=20
+> Concern 1 is harder.  The query I have is:
+>=20
+> Is it acceptable for pmu->read() to issue stop hcall exactly
+> once (on the first drain call, not on all subsequent calls),
+> then copy trace data chunk via perf_aux_output_begin() / dump trace =
+data
+> / perf_aux_output_end()?
+>=20
+> The reason for considering this approach for HTM specifically:
+>=20
+> - htm_event_init() rejects all non-sampling opens with -EOPNOTSUPP:
+>=20
+>       if (!is_sampling_event(event))
+>           return -EOPNOTSUPP;
+>=20
+>   So perf stat, BPF helpers, and any other non-record caller get
+>   -EOPNOTSUPP at perf_event_open() time.  An HTM fd can only exist
+>   inside a perf record session.  The only caller of read(fd) on an
+>   HTM event is from read hook - HTM's own drain code =E2=80=94 which
+>   calls it deliberately, knowing stop fires on the first
+>   call.  There is no unsuspecting caller path for HTM.
+>=20
+> - After the first call, pmu->read() is a pure data-mover with no
+>   further hardware side effects.
+>=20
+>=20
+> Alternative: workqueue after pmu->stop()
+> -----------------------------------------
+> If pmu->read() having any hardware side effect is not right path,
+> the alternative I was proposing is a workqueue-based approach:
+>=20
+> - pmu->read() becomes a true no-op.
+> - pmu->stop() issues hcall stop operation to freeze the hardware =
+buffer,
+>   then schedules a work_struct (say htm_drain_work_fn()) that runs in
+>   process context and drains the frozen buffer chunk by chunk into
+>   the AUX ring via perf_aux_output_begin() / perf_aux_output_end(),
+>   backing off on -ENOSPC between chunks.
+> - event->count is not used as a flow-control signal.
+> - deconfigure the tracing ( releasing the resources ) in =
+event->destroy()
+>=20
+> Tools side:
+> - arch_perf_record__need_read() hook is dropped =E2=80=94 no changes =
+to builtin-record.c.
+> - A custom "read_finish" callback in the HTM "auxtrace_record" polls
+>   auxtrace_mmap__read_head() until the AUX head stops advancing,
+>   with a bounded maximum wait.  This ensures the workqueue drain
+>   completes before evlist__close() frees the mmaps.
+>=20
+> Adrian's concern with this approach: "That sounds like pmu->stop()
+> wouldn't actually stop.=E2=80=9D
+>=20
+> Traced through the tools code, workqueue lifetime looks safe to me =
+based on this teardown sequence:
+>=20
+> main poll loop exits
+>     |
+>     v
+> out_child: (builtin-record.c)
+>     record__mmap_read_all(rec, true)   <- final AUX ring drain
+>     |
+>     |        <- read_finish called here,
+>     |              fd still open at this point
+>     |
+> perf_session__delete()                                   |
+>     v
+> return from __cmd_record()
+>     |
+>     v
+> cmd_record():
+>     evlist__delete(rec->evlist)
+>         +-- evlist__close()
+>                 +-- close(*fd)         <- fd closed here
+>                                           -> release the resources
+>=20
+> So event->destroy fires after "read_finish" .
+> cancel_work_sync() in event->destroy ensures the drain
+> workqueue finishes before releasing the hypervisor
+> buffer.  The fd is still open when read_finish runs,
+> so it can safely wait for the drain.
+>=20
+> Peterz, I have tried to summarize these below and I am seeking for
+> your guidance here. Please share your thoughts.
+>=20
+> --------------------
+> 1. Is it acceptable for pmu->read() to issue stop tracing once on
+>  the first drain call, given that HTM events can only be opened
+>  by perf record (non-sampling opens rejected in
+>  htm_event_init()), so there is no unsuspecting caller path?
+>=20
+> 2. If not, is the workqueue-after-pmu->stop() approach safe?
+>  Releasing the resources ( deconfigure ) will be placed in
+>  event->destroy (not pmu->del()), which fires only at close(fd) =E2=80=94=
+ after
+>  cancel_work_sync() ensures the workqueue is done.  The AUX mmaps
+>  also remain valid until evlist__munmap() at that same point.
+>  So the workqueue can call perf_aux_output_begin() /
+>  perf_aux_output_end() safely because the hypervisor buffer and
+>  AUX mmaps are still live when it runs.  Is this reasoning correct,
+>  or does the perf core free AUX resources (free_aux / rb teardown)
+>  earlier than event->destroy?
+>=20
+> 3. Is there a third approach we can go with ? please suggest if there =
+is
+>  another way. =20
+>=20
+> Thank you,
+> Athira Rajeev
+>=20
+>>=20
+>>>=20
+>>> Tools side:
+>>> -  arch_perf_record__need_read() hook and record__final_aux_data() =
+are dropped entirely =E2=80=94 no changes to builtin-record.c.
+>>> -  =E2=80=9Cread_finish" callback is implemented in the HTM =
+auxtrace_record:
+>>>    During normal recording (evsel->disabled =3D=3D false) it returns =
+immediately.=20
+>>>    At session teardown, evlist__disable() sets evsel->disabled =3D =
+true before the=20
+>>>    final record__mmap_read_all() call.=20
+>>>    The read_finish callback detects this and polls aux_head (via =
+perf_mmap__read_head())
+>>>    in a loop, yielding delay between polls, until the AUX head stops =
+advancing =E2=80=94 signalling the
+>>>    workqueue drain is complete.=20
+>>>   This gives the kernel workqueue time to finish copying chunks =
+before evlist__close() frees the mmaps.
+>>>   The wait has a bounded maximum, so a stalled drain can't hang perf =
+record indefinitely.
+>>> - snapshot_finish returns -EINVAL since HTM does not support =
+snapshot mode.
+>>>=20
+>>> HTM has no interrupt and trace data is consumed after pmu stop .  =
+Hence making this read_finish callback for
+>>> auxtrace_record to consume data.
+>>>=20
+>>> With this, data collection is moved of from .read() entirely and =
+uses work queue based approach.
+>>> Can you please review , Does this approach look acceptable before I =
+send the updated series?
+>>>=20
+>>> Thanks,
+>>> Athira
+>>>=20
+>>>=20
+>>>>=20
+>>>>>=20
+>>>>> Thanks,
+>>>>> Athira
+>>>>>=20
+>>>>>>=20
+>>>>>> breaks the perf ABI.
+>>>>>>=20
+>>>>>> I am not going to review any more tools patches for now.
+>>>>>>=20
+>>>>>>>=20
+>>>>>>> Signed-off-by: Athira Rajeev <atrajeev@linux.ibm.com>
+>>>>>>> ---
+>>>>>>> Changes in V5:
+>>>>>>> - When an HTM evsel is a group sibling (evsel->core.leader !=3D
+>>>>>>> &evsel->core), read through its group leader's struct perf_evsel
+>>>>>>> instead of the sibling directly.  perf_evsel__read_size() uses
+>>>>>>> evsel->nr_members to compute the read buffer size; nr_members is =
+0
+>>>>>>> for siblings, so size=3D0 is passed to readn(), which returns =
+<=3D0 and
+>>>>>>> leaves count.val=3D0, causing the drain loop to terminate =
+prematurely.
+>>>>>>> Reading through the leader avoids the zero-size buffer and =
+correctly
+>>>>>>> accumulates the leader's pending count.  HTM events are always
+>>>>>>> standalone or per-target leaders in practice; the leader =
+redirect
+>>>>>>> handles any grouped configuration without losing counts.
+>>>>>>>=20
+>>>>>>> Changes in V4:
+>>>>>>> - No changes from V3.
+>>>>>>>=20
+>>>>>>> Changes in V3:
+>>>>>>> - Use evsel__pmu_name(evsel) instead of strstarts(evsel->name, =
+"htm")
+>>>>>>> to identify HTM events, matching by kernel-assigned PMU name =
+rather
+>>>>>>> than user-visible event name.
+>>>>>>> - Remove the redundant two-pass loop (first pass to set =
+found_htm,
+>>>>>>> second to accumulate counts); a single pass with =
+evsel__pmu_name()
+>>>>>>> is sufficient. if no HTM event exists total_pending_records =
+stays 0
+>>>>>>> and the function returns 0.
+>>>>>>> - Remove the dead !strcmp(evsel->name, "dummy:u") check;
+>>>>>>> - evsel__pmu_name() will never return "htm" for a dummy:u =
+software
+>>>>>>> event.
+>>>>>>> - Rename total_pending_bytes -> total_pending_records to match =
+what
+>>>>>>> the driver actually reports (event->count =3D total_size / =
+record_size,
+>>>>>>> a record count, not a byte count).
+>>>>>>> - Add #include <string.h> for musl compatibility (strcmp() =
+without
+>>>>>>> it warns on some toolchains).
+>>>>>>>=20
+>>>>>>> Changes in V2:
+>>>>>>> - Implements the renamed arch_perf_record__need_read() hook (V1
+>>>>>>> implemented arch_record__collect_final_data()).
+>>>>>>> - Skips evsels whose fd and sample-id xyarrays are mismatched, =
+avoiding
+>>>>>>> stale-state reads.  V1 had no such guard.
+>>>>>>> - evlist__enable cycling is removed; that responsibility now =
+belongs to
+>>>>>>> the drain loop in builtin-record.c added in patch 3.
+>>>>>>> - File location changed to arch/powerpc/util/evsel.c (V1 used
+>>>>>>> arch/powerpc/util/powerpc-htm.c).
+>>>>>>> - Patch is now 4/6 instead of 4/9.
+>>>>>>>=20
+>>>>>>> tools/perf/arch/powerpc/util/evsel.c | 77 =
+++++++++++++++++++++++++++++
+>>>>>>> 1 file changed, 77 insertions(+)
+>>>>>>>=20
+>>>>>>> diff --git a/tools/perf/arch/powerpc/util/evsel.c =
+b/tools/perf/arch/powerpc/util/evsel.c
+>>>>>>> index 2f733cdc8dbb..2b7851c70677 100644
+>>>>>>> --- a/tools/perf/arch/powerpc/util/evsel.c
+>>>>>>> +++ b/tools/perf/arch/powerpc/util/evsel.c
+>>>>>>> @@ -1,8 +1,85 @@
+>>>>>>> // SPDX-License-Identifier: GPL-2.0
+>>>>>>> #include <stdio.h>
+>>>>>>> +#include <string.h>
+>>>>>>> +#include <unistd.h>
+>>>>>>> +#include <linux/string.h>
+>>>>>>> #include "util/evsel.h"
+>>>>>>> +#include "util/record.h"
+>>>>>>> +#include "util/evlist.h"
+>>>>>>> +#include "util/debug.h"
+>>>>>>> +#include <internal/xyarray.h>
+>>>>>>> +#include <internal/lib.h>
+>>>>>>>=20
+>>>>>>> void arch_evsel__set_sample_weight(struct evsel *evsel)
+>>>>>>> {
+>>>>>>> evsel__set_sample_bit(evsel, WEIGHT_STRUCT);
+>>>>>>> }
+>>>>>>> +
+>>>>>>> +/*
+>>>>>>> + * powerpc implementation of arch_perf_record__need_read().
+>>>>>>> + *
+>>>>>>> + * Reads event->count for every open HTM evsel by issuing a =
+direct
+>>>>>>> + * read() on the event fd with a plain u64 buffer, bypassing =
+the
+>>>>>>> + * PERF_FORMAT_GROUP path in perf_evsel__read().  When an HTM =
+evsel is
+>>>>>>> + * a group sibling, evsel__config() sets PERF_FORMAT_GROUP on =
+its attr;
+>>>>>>> + * perf_evsel__read() would then call perf_evsel__read_group() =
+which
+>>>>>>> + * sizes the buffer by evsel->nr_members (0 for siblings), =
+causing the
+>>>>>>> + * kernel to return -ENOSPC.  Reading the fd directly with =
+sizeof(u64)
+>>>>>>> + * retrieves the HTM driver's plain pending-record count =
+regardless of
+>>>>>>> + * group membership.
+>>>>>>> + *
+>>>>>>> + * Returns: 1 if more data exists, 0 if collection is complete
+>>>>>>> + */
+>>>>>>> +int arch_perf_record__need_read(struct evlist *evlist)
+>>>>>>> +{
+>>>>>>> + struct evsel *evsel;
+>>>>>>> + u64 total_pending_records =3D 0;
+>>>>>>> + int x, y;
+>>>>>>> +
+>>>>>>> + /* there was an error during record__open */
+>>>>>>> + if (!evlist)
+>>>>>>> + return 0;
+>>>>>>> +
+>>>>>>> + /* Read HTM event counts to check if more data is available */
+>>>>>>> + evlist__for_each_entry(evlist, evsel) {
+>>>>>>> + struct perf_evsel *rd_evsel;
+>>>>>>> + struct xyarray *xy;
+>>>>>>> +
+>>>>>>> + if (strcmp(evsel__pmu_name(evsel), "htm"))
+>>>>>>> + continue;
+>>>>>>> +
+>>>>>>> + /*
+>>>>>>> + * For group siblings nr_members =3D=3D 0, which makes
+>>>>>>> + * perf_evsel__read_size() return 0 and readn() fail.
+>>>>>>> + * Read through the leader instead; perf_evsel__read_group()
+>>>>>>> + * extracts the leader's own count from the group buffer.
+>>>>>>> + */
+>>>>>>> + if (evsel->core.leader !=3D &evsel->core)
+>>>>>>> + rd_evsel =3D evsel->core.leader;
+>>>>>>> + else
+>>>>>>> + rd_evsel =3D &evsel->core;
+>>>>>>> +
+>>>>>>> + xy =3D rd_evsel->sample_id;
+>>>>>>> +
+>>>>>>> + if (xy =3D=3D NULL || rd_evsel->fd =3D=3D NULL)
+>>>>>>> + continue;
+>>>>>>> +
+>>>>>>> + if (xyarray__max_x(rd_evsel->fd) !=3D xyarray__max_x(xy) ||
+>>>>>>> +    xyarray__max_y(rd_evsel->fd) !=3D xyarray__max_y(xy)) {
+>>>>>>> + pr_debug("Unmatched FD vs sample ID array for HTM event\n");
+>>>>>>> + continue;
+>>>>>>> + }
+>>>>>>> +
+>>>>>>> + for (x =3D 0; x < xyarray__max_x(xy); x++) {
+>>>>>>> + for (y =3D 0; y < xyarray__max_y(xy); y++) {
+>>>>>>> + struct perf_counts_values count =3D { .val =3D 0 };
+>>>>>>> +
+>>>>>>> + if (perf_evsel__read(rd_evsel, x, y, &count) =3D=3D 0)
+>>>>>>> + total_pending_records +=3D count.val;
+>>>>>>> + }
+>>>>>>> + }
+>>>>>>> + }
+>>>>>>> +
+>>>>>>> + /* Collection is complete only when ALL hardware queues have =
+no pending records */
+>>>>>>> + return (total_pending_records > 0) ? 1 : 0;
+>>>>>>> +}
 
->> +
->> +				s++;
->> +				*s = '\0';
->> +				disasm_len = strlen(disasm_buf);
->> +				disasm_len += scnprintf(disasm_buf + disasm_len,
->> +							sizeof(disasm_buf) - disasm_len,
->> +							" %"PRIx64,
->>  							storage.pcrel_load_addr);
-> [ ... ]
-> 
 
