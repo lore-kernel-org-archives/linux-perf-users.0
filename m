@@ -1,43 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18AC6371897;
-	Wed, 16 Sep 2026 12:51:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38DE8375ADF
+	for <linux-perf-users@vger.kernel.org>; Wed, 16 Sep 2026 12:59:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789563110; cv=none; b=jYWHwvLP+U8bjgi+A3WigP+3tG6jS2AxzOUT0rEpvacoCIFCmdbUP5NHcWQah8DS/DJ/rueUj7lLOxEWztWti20Zb555bpKFZ016AYYHXJXt5D9F13gSn31iO+FKUFoZ2eo+6sLNNlRhAdumEJFfhjvUE8lbQnlQoU4mKGvPqvI=
+	t=1789563585; cv=none; b=uD3h13D9efKfp5Y9dC6H8mnQg9PHc3v3yJMVAchRSgBSnhmZrPGVtxu8OhtcS6ouJBe0Lj4S0loYoNAVk6C12iFtDn764QoQfcTYhaDI3SVeEXNSFOnR5LWRuDeOIhcTErGJGPlQKEOTiS4J7cOBQESDrarvKLq24k3kfw+0ZMw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789563110; c=relaxed/simple;
-	bh=TPQjG+w09wCHruYtAJmv+95BMyhOXGtFraaarwzEmGM=;
+	s=arc-20240116; t=1789563585; c=relaxed/simple;
+	bh=mW0tlTDPDUgJegtqhHcj54C7j43fGQKbG9TO6fgTV1Y=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=bG6B+APvgD0Dw/mOYDatya9bEZ+yJ3JUu2c8m1RipFmvAhUoQvC0RP0VGXqXR90WrJsiEjmcHqv8K9U8VzGfwwdOBnsCLp2wAHKHE91iykUxEVagtt00TxNR1bD1+OZOBeLX084CKtW6HuJb5zlnU0eLC0fZvHcX65AuhUciHss=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lvQDpGg7; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=Gwmi/dDWJYJo1zu2JPPt6l+z/KIIRcSiaYuoCBqqTxf5b0a0p8OD+9AjJhGMVyidt8bdbos1oH2nBSd3ZZPXfRAew0W9W43xR4WmFBSwhXQtFJst7ece0pKaBMS8JYTRLdQ4VcCI7cj0r9V/ozjM7unQbsWe0iu1drRyFAe0JoI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GWIuXZBo; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lvQDpGg7"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0E96F1F00893;
-	Wed, 16 Sep 2026 12:51:46 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GWIuXZBo"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 017161F000FF;
+	Wed, 16 Sep 2026 12:59:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789563106;
-	bh=5skq9KdtHxqvy+/GURDRtaDb+8mGgfKxhyoDMzASm/g=;
+	s=k20260515; t=1789563584;
+	bh=+WbyzW3ju8UPD88wyBTBNnFWOYw6Dh0zJ4P70vQr1QA=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=lvQDpGg7b9bcTqBridJrwB2uKje++b26mj70H6HXku95fhb0I4eZhvB/ORjPpQM65
-	 yQAVg8MxA0+DgybCaHwxu5Vq4CtO00Gd5n9II0dnDoMCf3XWnS9dmwxkiclNcCQeKP
-	 CaexOU9xKEw7PrsamrtnAxX1ija05dGTVWjfbOvUtPikt2wL3OaFaRNT/wizpNNGli
-	 +Elfn160XRmYu49sstS5IUWG0dJXOHAu92aXQLx2rXDtAQWnZmwUJB61G6V7DdWCdk
-	 VXhXUZBdlA/aZCeQbAaY6R+P+d8ZLqHjC1v14RyIjNq69mm7N0/SfhU2FKKd1xjr5Y
-	 GoxvZx0vp0xSA==
+	b=GWIuXZBo1sgEzQtz0lh314YT3BpsjTrlQTmB5SEhl1Ks0U1T+S/+IeCSabfJSM6K3
+	 yXDcCFcZ62pgChfQRMMKRbccM2Rc0teSlPjQQS0sWqTwp2C5FihbioCgMzYC84/M0l
+	 1ZYz9aldJZXZof9auKQU+OFMl0LRW9fXeH7skTcmEMEaAmjOaVHRCXgN9BJooQVzgn
+	 Qavws3iiC1HwYmkYz3yrYmw0EHcvi1Ubrj6Z01S5iFysTI7NPmg8Tc1SpC54iwzi95
+	 SzgLgfmeB/vbKzV+FOP2jqsRqmiTurFDLpFcKIvqQ+3LgvSF6Z8XzWDSEr+ek2B3Cn
+	 k1nxSJHre4CiQ==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH] perf/x86/amd: Reject AMD Merge event as a countable
- event
+Subject: Re: [PATCH v2] perf/x86/amd: Move NMI latency window to last-resort
+ suppression
 Reply-To: sashiko-reviews@lists.linux.dev
-To: "Luka Absandze" <absandze@amazon.de>
-Cc: kvm@vger.kernel.org, linux-perf-users@vger.kernel.org
-In-Reply-To: <20260916123315.89042-1-absandze@amazon.de>
-References: <20260916123315.89042-1-absandze@amazon.de>
+To: "Guanghui Feng" <guanghuifeng@linux.alibaba.com>
+Cc: linux-perf-users@vger.kernel.org
+In-Reply-To: <20260916125016.2266596-1-guanghuifeng@linux.alibaba.com>
+References: <20260916093217.GH4121339@noisy.programming.kicks-ass.net>
+ <20260916125016.2266596-1-guanghuifeng@linux.alibaba.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Wed, 16 Sep 2026 12:51:45 +0000
-Message-Id: <20260916125146.0E96F1F00893@smtp.kernel.org>
+Date: Wed, 16 Sep 2026 12:59:43 +0000
+Message-Id: <20260916125944.017161F000FF@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -46,63 +47,93 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
 Thank you for your contribution! Sashiko AI review found 1 potential issue(=
 s) to consider:
-- [High] perf/x86/amd: -EINVAL on AMD_MERGE_EVENT causes KVM retry storm
+- [High] x86/nmi: TOCTOU race in perf_nmi_window_active() causes spurious p=
+anic
 --
 
-commit 74f1b4944fbb968a39b8b39a32bd5ffa921c5814
-Author: Luka Absandze <absandze@amazon.de>
+commit 48f851c34890a3a07c65994472936573ea009e9e
+Author: Guanghui Feng <guanghuifeng@linux.alibaba.com>
 
-perf/x86/amd: Reject AMD Merge event as a countable event
+perf/x86/amd: Move NMI latency window to last-resort suppression
 
-This commit modifies amd_core_hw_config() to reject the AMD Merge event
-(AMD_MERGE_EVENT) as a user-visible event by returning -EINVAL. It prevents=
- a
-counter's PerfCtl from holding the Merge encoding inappropriately, which co=
-uld
-otherwise artificially inflate deltas.
+This commit delays claiming NMIs in the perf handler when no counter
+overflowed, allowing other NMI handlers to run first. It updates the NMI
+dispatch path to consult the latency window twice: once to skip the
+reason port read, and a second time as a last resort to suppress
+bogus unknown NMI reports.
 
-> diff --git a/arch/x86/events/amd/core.c b/arch/x86/events/amd/core.c
-> index 49b6b8fce5664..cb655c751e5b1 100644
-> --- a/arch/x86/events/amd/core.c
-> +++ b/arch/x86/events/amd/core.c
-> @@ -380,8 +380,12 @@ static int amd_core_hw_config(struct perf_event *eve=
-nt)
+> diff --git a/arch/x86/kernel/nmi.c b/arch/x86/kernel/nmi.c
+> index 3c9f60d6ca5a7..1226c18e37a61 100644
+> --- a/arch/x86/kernel/nmi.c
+> +++ b/arch/x86/kernel/nmi.c
+
 [ ... ]
-> -	if ((x86_pmu.flags & PMU_FL_PAIR) && amd_is_pair_event_code(&event->hw))
-> -		event->hw.flags |=3D PERF_X86_EVENT_PAIR;
-> +	if (x86_pmu.flags & PMU_FL_PAIR) {
-> +		if ((event->hw.config & AMD64_EVENTSEL_EVENT) =3D=3D AMD_MERGE_EVENT)
-> +			return -EINVAL;
+
+> @@ -407,38 +430,50 @@ static noinstr void default_do_nmi(struct pt_regs *=
+regs)
+>  	}
+> =20
+>  	/*
+> -	 * Non-CPU-specific NMI: NMI sources can be processed on any CPU.
+> +	 * If the perf NMI latency window is still open, a recently handled PMC
+> +	 * overflow may have generated a latent NMI that arrives too late to be
+> +	 * paired with that overflow. Skip the expensive reason port read
+> +	 * (inb 0x61 + global nmi_reason_lock) which is a known scalability
+> +	 * bottleneck when spurious PMIs arrive at high frequency on AMD.
+>  	 *
+> -	 * Another CPU may be processing panic routines while holding
+> -	 * nmi_reason_lock. Check if the CPU issued the IPI for crash dumping,
+> -	 * and if so, call its callback directly.  If there is no CPU preparing
+> -	 * crash dump, we simply loop here.
+> +	 * NMI_UNKNOWN handlers (hpwdt, etc.) are still invoked below via
+> +	 * unknown_nmi_error(), so hardware watchdog NMIs are not lost.
+>  	 */
+> -	while (!raw_spin_trylock(&nmi_reason_lock)) {
+> -		run_crash_ipi_callback(regs);
+> -		cpu_relax();
+> -	}
+> +	if (!perf_nmi_window_active()) {
 
 [Severity: High]
-Does returning a permanent -EINVAL error here cause an opportunistic retry =
-storm
-in KVM?
+Could this introduce a race condition with jiffies updates on other CPUs?
 
-If a KVM guest programs a Large Increment per Cycle (LIPC) event by writing
-AMD_MERGE_EVENT to an odd vPMC, KVM intercepts this and attempts to create a
-raw host perf event.  When this fails with -EINVAL, KVM's reprogram_counter=
-()
-propagates the error to kvm_pmu_handle_event():
+Looking at perf_nmi_window_active(), it evaluates the window state against
+the globally incrementing jiffies variable:
 
-arch/x86/kvm/pmu.c:kvm_pmu_handle_event() {
+arch/x86/events/amd/core.c:perf_nmi_window_active() {
     ...
-		if (reprogram_counter(pmc))
-			set_bit(pmc->idx, pmu->reprogram_pmi);
+    return !time_after(jiffies, this_cpu_read(perf_nmi_tstamp));
+}
+
+If perf_nmi_window_active() returns true here in default_do_nmi(), the
+NMI reason port read is skipped and execution proceeds down to
+unknown_nmi_error().
+
+If a timer interrupt on another CPU increments jiffies between this first
+check and the second check inside unknown_nmi_error():
+
+arch/x86/kernel/nmi.c:unknown_nmi_error() {
+    ...
+    if (perf_nmi_window_active())
+        return;
     ...
 }
 
-Because KVM treats all failures as transient and unconditionally re-adds the
-failing counter to pmu->reprogram_pmi, on every subsequent PMU refresh KVM
-will repeatedly retry the failed counter.
+Would this cause the second check to evaluate to false, resulting in a
+fall-through that logs a bogus "unknown NMI" error and potentially triggers
+a spurious kernel panic if unknown_nmi_panic is set?
 
-Could this create a permanent retry storm that degrades VM performance and
-wastes host CPU cycles?
+> +		/*
+> +		 * Non-CPU-specific NMI: NMI sources can be processed on any CPU.
+> +		 *
+> +		 * Another CPU may be processing panic routines while holding
+> +		 * nmi_reason_lock. Check if the CPU issued the IPI for crash
+> +		 * dumping, and if so, call its callback directly.  If there is no
+> +		 * CPU preparing crash dump, we simply loop here.
+> +		 */
 
-> +		if (amd_is_pair_event_code(&event->hw))
-> +			event->hw.flags |=3D PERF_X86_EVENT_PAIR;
-> +	}
+[ ... ]
 
 --=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260916123315.8904=
-2-1-absandze@amazon.de?part=3D1
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260916125016.2266=
+596-1-guanghuifeng@linux.alibaba.com?part=3D1
