@@ -1,228 +1,153 @@
-Received: from mail-qk2-f12.google.com (mail-qk2-f12.google.com [74.125.230.204])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.6])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 969B238734A
-	for <linux-perf-users@vger.kernel.org>; Tue, 15 Sep 2026 23:08:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.230.204
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789513726; cv=pass; b=h9jMDF3eLO68Qq6gIEW00GSGQhaZX4+nRoDqaRu+gU6NHruFTW7iuXuSi1Nmu32c1/RYKlmdy6wrFvPerJb/UUh8PIYhRhjYaxy3glWQLUwoKW5TEtLDYddsedAMIZaDBPkBbEJMqkJARvjjvVJD4qPxdpaSKgrLyMDFMeOVvq4=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789513726; c=relaxed/simple;
-	bh=KOUhTSeaiK/3e6yS6I0ed3hBCbUzC9LUyLBATohlb9w=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=pIRCAbGdj0gklCsFgvQQS0r3iPBCjVmNdiNozzE08uxGipUPFklIUBJixW8/BP/NXSxL6n4wB0aAGu4rDSAbKKRixHTqRzZYwVqRhxe8J7EDsoBHoc5G8VcKiEHZPZucGU0zJqzQvXwuTSSDHvvadslxft8JNBdloC7XXoXqt6A=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=A0s2XEK+; arc=pass smtp.client-ip=74.125.230.204
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87B5A41754;
+	Wed, 16 Sep 2026 00:15:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.6
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1789517702; cv=none; b=rSkU2O2uw6gGYwnwNupraALxZFrgEZf65xRwINX+Z2wd+r0v1amyoh0p74hhgfstAkze/ilg/ZWPoaiMA7dzyXAck13Gakju258CtlqeuTrfSu0IgeSpmZW5QeJwtUz8UYqifn09MruoZ9wG6HBGB+SKdXtIjsnHqIc35FAqaJk=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1789517702; c=relaxed/simple;
+	bh=6wkzB37WCFKiZHUr29tzMDp7rsArxV0EsXrovr3/xAw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=AuFKO0Z0DvkZq9w4Xs8/7gFZalc4tKVqzI9NPGBvK2hZyziJF9mCFT7g2g/aORxNNq4Qzzo7E4j9OdVyJvXDiXRe7SscoAtrb/+L6ysHnyXiZVY38ha8t3y28pZdgEZMlE8G2xEUyjtN1PT3vyQkRamMaEI2tDNDbR/2RvEcF1I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=m3X7B1Da; arc=none smtp.client-ip=192.198.163.6
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="A0s2XEK+"
-Received: by mail-qk2-f12.google.com with SMTP id d75a77b69052e-53012819c04so54411cf.0
-        for <linux-perf-users@vger.kernel.org>; Tue, 15 Sep 2026 16:08:44 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1789513723; cv=none;
-        d=google.com; s=arc-20260327;
-        b=XDIiMt6RKsVqqgc1J0i8EW+CJmv9xuwefaVUMsj8UtNWCj5fGFksWj/zzIjhU82aoH
-         vT+gVr97oy9maPqsFeoL6tzWtvlHCTfdgUPllq/qBI30j64AykxEqcbtJRZOohGAEjN9
-         Y2LTJZJJfOAtF4AYk7IUsfCcZ6i129Eln40vubMdmfaJEuNgwQ+V07XkUlqoxhcr3eP7
-         oM2ZOPMCP2TKbZ1bL+rWOZ0FC0SpzAliMdqKEsi5/HJhzptI8JnReqeN6XMyoZIk1noq
-         NEjf08XGxObusLDFv+63NWAhImLHmExzNRT74LqwPL8EQeLXvbXb79VaTzQbIaRnc+Cz
-         W4pA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=nXZV/vndv5wPvyFjhGHkBqgl7hDd9VEPk7jLPc3L5VU=;
-        fh=i9k2xsml9N7skd4fFS35KekNaRFrXofnIKwePsHWM3A=;
-        b=PzA4eAuXNsnNLb6WDYVEZHZPLC9OmXPSzKWDjSoommBUx3XKn+askjGAVG3GZ8+vvF
-         xI4iFXNuX9oYcuyYTogWgvQcUxeSUaLk1qJuZNuw/P53hAI+yI3utDCxhJzpoSrAlUqz
-         PpO2zwfTAAgFWHbwwawDJmPn+eeMcW5XnqiYNs4WffPUxlFJFtL8ZE33vlC9rihEobAr
-         zBsws0MpHtI59339K+KoIFVef3R3r/g1VOLj2vbmlOXk9F5M09mtiAWRLjRViTZKwt9L
-         ztKGyPuzrhFwIbZ9S9lo+QvWw0cacjfGYZzFjYcb/hZ/JLxtSFxRE1NLYjKD0pvN6PoI
-         e6GQ==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1789513723; x=1790118523; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=nXZV/vndv5wPvyFjhGHkBqgl7hDd9VEPk7jLPc3L5VU=;
-        b=A0s2XEK+7KdvH5wcbwooIEbSebOF0PeBe5dHI8wKa8yc7l6MV7GFRDy9KQsfAwtVm4
-         /XVSkEsNGBF9wTC/oq7MYAkdWSCfa8QvBJq0Wiz/lz3R8vbMArX2mp2Va2jYlOnm6y15
-         HhHiheRLhskEzroVyyyRO6Na6SERLaZpgScAOz/IK27qdrzO5M9O9tGvGvy2PjGQ4q6N
-         qc/RDCYNKrhmk7fzxWfo9vZT8R5MwenTpCO114olNdg3yiyllblxtMpeP4mCtX6zrxS1
-         N/Pk3887QDDO+SZoPWcMeRGmwG0KJozQNWAeeoAJ1LdSL5hIIgIg7HEATmpL9dSdxrpd
-         RfZw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1789513723; x=1790118523;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=nXZV/vndv5wPvyFjhGHkBqgl7hDd9VEPk7jLPc3L5VU=;
-        b=hNR3Nh1SDgoCMSm0jv+om8afXlFYU434JwPZuV4OgeQGIjIIljAVkUHby87nLg7h92
-         KBfWdTvbJV1sft0f+u6XMTkOsITxDDxPxvZnqyX5gynJEr8lzciBsr/dMn2BlJjXq4SP
-         YhVNAS8eUPK9n/TUJ8m/NYQNyu5j5JXzh+9+74ERdJl1Pwogg/VdJ+R6BQnFAV8zeSjo
-         vhYs3p2mwTyMnsw9VTAdcv0IxF3qWGJepUP9wcbFflryZT3wp52SYHhZe9riCBqc9rD4
-         66ngxNJDO8Cey0AQUK7ltY15xmk39VJB/IbYImw2odywYOIAjeM2Xd3M7BPeAaKhTJVk
-         +RHg==
-X-Forwarded-Encrypted: i=1; AKwUvBxWsQ9hjLa0L+eguL7o/zsuStKOPQ4QJFaqQgS9pR0yGf8qPxMKQ706U2Z09U1kfV0SwYyepffv0sUgmJfyudht@vger.kernel.org
-X-Gm-Message-State: AFuF++kYSxzl4yA+PDjvzoSVsuf8TxpqGDtnlQvHzJSBF4WD9DADVUL3
-	Au5wC/CHlljtHSoifMd78UHlew9ZsJHrAF7XQxFSf9qxqwq15flT7pOJs6IhcoTCm5Be6UfhSER
-	bez8f34C+HjO/ZlIuY/8YOBfuY/9l4lWokMLe2ukz
-X-Gm-Gg: AYBFou2AyEPk3iD6NFQTsgc3UhA4dWdRdZyC9umStSZ9orshNFna7Px7EzgKfl9rhdE
-	4I+uC9WE2ehcpCfTRJqQf9SOm+QKw1xCY3yyXOzgO3nYl99oEWjuzCZk2Sk6Xb7sUynFyZ9JsdC
-	rQfXUZGs80O/guckEfdjSMnHJ/janGnNDCaqwpsQgXxpXZWJknikzg1MNVVgsavu13iuRwe1eHM
-	q69FFDNYzWL0Rc8LS3F/UNG6rh8bU5sgP98tABBZSzJMm6EI7Fw9oKRmYwuf8SEPMtmyorpk4v2
-	S+BWDMgkeboSpgT4cfA9ijbzfjYEbKx86HI7hWSBxd3jlvJSYfmNQ/Y=
-X-Received: by 2002:ac8:7f09:0:b0:52b:806e:2633 with SMTP id
- d75a77b69052e-5327f53205emr1735971cf.1.1789513722780; Tue, 15 Sep 2026
- 16:08:42 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="m3X7B1Da"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1789517701; x=1821053701;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=6wkzB37WCFKiZHUr29tzMDp7rsArxV0EsXrovr3/xAw=;
+  b=m3X7B1DacrFYsMFof5eMqwWSDyFxFNY6+0AA+P90oZPFaVEPtkT6t/dy
+   wHj+Zd7fHBp2nVrXrMa3Fc/wx2QcQJz6IIIZZgsOAYiGtn+cnmk0y530R
+   knRHhSIFuOIVAGkTzX6ec20QiIFUrYgvEnsUDAPtVYGRCZ3imZadqvnZP
+   J2y9lYW8lRnvNcSqf5+UgD2a15DIMRO9jq93HUSE+AV/FslQNDum1V0hF
+   Gz4nUAnL6E1cd/KHNV7vUQndIApwtVzW2hJZam32LtZjJRx1N0BGuUQ5T
+   f51g3aausJeEnVs1o5HIqWOU1plSM85hB5n8xMfbROfGpoHYkIAOP44Fq
+   w==;
+X-CSE-ConnectionGUID: FxtPbHw3QV+gkJwqLjuymg==
+X-CSE-MsgGUID: 9VJ4PSBDT3y9PLq1O5E0Hw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11905"; a="398264"
+X-IronPort-AV: E=Sophos;i="6.27,103,1787036400"; 
+   d="scan'208";a="398264"
+Received: from fmviesa012.fm.intel.com ([10.60.135.152])
+  by fmvoesa116.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Sep 2026 17:15:00 -0700
+X-CSE-ConnectionGUID: aNMzMdNOSCC+JCU+KgCHrA==
+X-CSE-MsgGUID: aNhXg/LeQWySfg1qHaCtvg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.27,103,1787036400"; 
+   d="scan'208";a="1405878"
+Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.241.239]) ([10.124.241.239])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Sep 2026 17:14:56 -0700
+Message-ID: <e812551f-8323-461e-a8ce-34551988f7c5@linux.intel.com>
+Date: Wed, 16 Sep 2026 08:14:53 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <ag8X7gcDw6jpJsLq@decadent.org.uk> <CAP-5=fUy-hwmD2WXpmzJAE4k3U4WNYEezy3Dh1cVSFw_LPGJzw@mail.gmail.com>
-In-Reply-To: <CAP-5=fUy-hwmD2WXpmzJAE4k3U4WNYEezy3Dh1cVSFw_LPGJzw@mail.gmail.com>
-From: Ian Rogers <irogers@google.com>
-Date: Tue, 15 Sep 2026 16:08:31 -0700
-X-Gm-Features: AcwNN1Wtp8dOgchZJHXl0So7z-gIbgSPFpF-r8lmQRpUWSedho2akDrRnSm_CxI
-Message-ID: <CAP-5=fVJbFrR-uUWTSkx_CHqxagKWhbshWxQ2YD-_QANtUDdqw@mail.gmail.com>
-Subject: Re: [PATCH 0/3] Fix out-of-tree build of some tools
-To: Ben Hutchings <benh@debian.org>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Steven Rostedt <rostedt@goodmis.org>, Tomas Glozar <tglozar@redhat.com>, 
-	linux-perf-users@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-On Thu, May 21, 2026 at 10:50=E2=80=AFAM Ian Rogers <irogers@google.com> wr=
-ote:
->
-> On Thu, May 21, 2026 at 7:57=E2=80=AFAM Ben Hutchings <benh@debian.org> w=
-rote:
-> >
-> > perf and rtla currently don't fully support out-of-tree builds, as
-> > they may still create files in their source directory.  This series
-> > fixes all the instances of this problem that I have found.
-> >
-> > Ben.
->
-> Thanks for the cleanup! I ran Sashiko locally and it noted that we
-> should also fix the clean steps to remove these files (I'll copy the
-> full text below).
-> Reviewed-by: Ian Rogers <irogers@google.com>
-
-Hi Ben,
-
-Did you make any progress on this? Checking upstream I don't see the
-patches as landed and they look useful.
-
-Thanks,
-Ian
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] perf/x86/amd/uncore: turn amd_uncore_ctx events into a
+ flexible array
+To: Ian Rogers <irogers@google.com>, Rosen Penev <rosenp@gmail.com>
+Cc: linux-perf-users@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>,
+ Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
+ James Clark <james.clark@linaro.org>, Thomas Gleixner <tglx@kernel.org>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+ "H. Peter Anvin" <hpa@zytor.com>,
+ "open list:PERFORMANCE EVENTS SUBSYSTEM" <linux-kernel@vger.kernel.org>
+References: <20260523011904.101720-1-rosenp@gmail.com>
+ <CAP-5=fXyyj6w1mR71B6e+j7sV9GA-Gs1ibfp5pCuY6T+W+xWjQ@mail.gmail.com>
+Content-Language: en-US
+From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
+In-Reply-To: <CAP-5=fXyyj6w1mR71B6e+j7sV9GA-Gs1ibfp5pCuY6T+W+xWjQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
 
-> ```
-> commit cf212be834ce6b0df5cccdbc4ad977a917ff8e48
->    Author: Ben Hutchings <benh@debian.org>
->
->    perf tools: Put Python egg info in output directory
->
->    Installing the Python extension currently creates an egg-info
->    directory in the source tree, preventing a fully out-of-tree build.
->
->    Add the necessary runes to the setup.py comamnd line to relocate the
->    egg-info directory in an out-of-tree build.
->
->    > diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
->    > index fc92d6ceac5b..b9a9bdddb89a 100644
->    > --- a/tools/perf/Makefile.perf
->    > +++ b/tools/perf/Makefile.perf
->    > @@ -905,7 +910,9 @@ install-bin: install-tools install-tests
->    >  install: install-bin try-install-man
->    >
->    >  install-python_ext:
->    > -       $(PYTHON_WORD) util/setup.py --quiet install
-> --root=3D'/$(DESTDIR_SQ)'
->    > +       $(PYTHON_WORD) util/setup.py --quiet \
->    > +               $(if $(OUTPUT),egg_info --egg-base $(OUTPUT)) \
->    > +               install --root=3D'/$(DESTDIR_SQ)'
->
->    This relocates the egg-info directory to the output directory, which
->    helps keep the source tree clean. However, does the `python-clean`
->    target need to be updated to clean up this directory?
->
->    Currently, `python-clean` is defined as:
->
->    python-clean :=3D $(call QUIET_CLEAN, python) $(RM) -r
-> $(PYTHON_EXTBUILD) $(OUTPUT)python/perf*.so
->
->    Should we also clean `$(OUTPUT)/perf.egg-info` (or `perf.egg-info` for
->    in-tree builds) to ensure `make clean` removes all generated python
->    metadata? For example:
->
->    python-clean :=3D $(call QUIET_CLEAN, python) \
->                    $(RM) -r $(PYTHON_EXTBUILD) $(OUTPUT)python/perf*.so \
->                    $(OUTPUT)perf.egg-info perf.egg-info
->
->    commit dd754ea75966ec7ade41500afeb32d944f20a8f9
->    Author: Ben Hutchings <benh@debian.org>
->
->    perf tools: Put Python bytecode in output directory
->
->    The PMU events are processed into C sources by Python scripts,
-> which
->    normally results in writing bytecode for each module into the
-> source
->    tree.  This prevents a fully out-of-tree build.
->
->    To fix this, set $PYTHONPYCACHEPREFIX to relocate the bytecode cache
->    directory in an out-of-tree build.
->
->    > diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
->    > index fc92d6ceac5b..b9a9bdddb89a 100644
->    > --- a/tools/perf/Makefile.perf
->    > +++ b/tools/perf/Makefile.perf
->    > @@ -400,6 +400,11 @@ PYTHON_EXTBUILD_LIB :=3D
-> $(PYTHON_EXTBUILD)lib/
->    >  PYTHON_EXTBUILD_TMP :=3D $(PYTHON_EXTBUILD)tmp/
->    >  export PYTHON_EXTBUILD_LIB PYTHON_EXTBUILD_TMP
->    >
->    > +# Put Python bytecode in output directory
->    > +ifdef OUTPUT
->    > +export PYTHONPYCACHEPREFIX :=3D $(OUTPUT)/__pycache__
->    > +endif
->    > +
->    >  python-clean :=3D $(call QUIET_CLEAN, python) $(RM) -r
-> $(PYTHON_EXTBUILD) $(OUTPUT)python/perf*.so
->
->    Similar to the egg-info relocation, does `python-clean` need to
-> clean up
->    the relocated `__pycache__` directory under `$(OUTPUT)`?
->
->    If `PYTHONPYCACHEPREFIX` is exported to `$(OUTPUT)/__pycache__`, runni=
-ng
->    `make clean` currently leaves this directory behind. Should we add it =
-to
->    the `RM` list in `python-clean`? For example:
->
->    python-clean :=3D $(call QUIET_CLEAN, python) \
->                    $(RM) -r $(PYTHON_EXTBUILD)
-> $(OUTPUT)python/perf*.so \
->                    $(if $(OUTPUT),$(OUTPUT)/__pycache__)
-> ```
+On 9/16/2026 4:58 AM, Ian Rogers wrote:
+> On Fri, May 22, 2026 at 6:19 PM Rosen Penev <rosenp@gmail.com> wrote:
+>> The events pointer was kzalloc_node()'d immediately after the parent
+>> struct allocation, with the count (pmu->num_counters) trivially
+>> available beforehand.  Move events to the struct tail as a flexible
+>> array member and fold the two allocations into a single kzalloc_node()
+>> with struct_size(), dropping the separate kfree(ctx->events) in the
+>> free path.
+>>
+>> Assisted-by: Claude:Opus-4.7
+>> Signed-off-by: Rosen Penev <rosenp@gmail.com>
+>> ---
+>>  arch/x86/events/amd/uncore.c | 15 +++------------
+>>  1 file changed, 3 insertions(+), 12 deletions(-)
+>>
+>> diff --git a/arch/x86/events/amd/uncore.c b/arch/x86/events/amd/uncore.c
+>> index 05cff39968ec..0e265fc1fef8 100644
+>> --- a/arch/x86/events/amd/uncore.c
+>> +++ b/arch/x86/events/amd/uncore.c
+>> @@ -39,11 +39,11 @@ static int pmu_version;
+>>  struct amd_uncore_ctx {
+>>         int refcnt;
+>>         int cpu;
+>> -       struct perf_event **events;
+>>         unsigned long active_mask[BITS_TO_LONGS(NUM_COUNTERS_MAX)];
+>>         int nr_active;
+>>         struct hrtimer hrtimer;
+>>         u64 hrtimer_duration;
+>> +       struct perf_event *events[];
+> As the number of counters is fixed and events doesn't grow, this makes
+> sense to me. Dapeng, what do you think?
+It looks good to me. But it seems there is no Sashikio review, so better
+resend to trigger Sashiko review for double check. Thanks.
+
+
 >
 > Thanks,
 > Ian
 >
-> > Ben Hutchings (3):
-> >   rtla: Fix output files in source tree
-> >   perf tools: Put Python egg info in output directory
-> >   perf tools: Put Python bytecode in output directory
-> >
-> >  tools/perf/Makefile.perf            |  9 ++++++++-
-> >  tools/tracing/rtla/Makefile         | 31 ++++++++++++++++++-----------
-> >  tools/tracing/rtla/tests/timerlat.t |  4 ++--
-> >  3 files changed, 29 insertions(+), 15 deletions(-)
-> >
+>>  };
+>>
+>>  struct amd_uncore_pmu {
+>> @@ -488,10 +488,8 @@ static void amd_uncore_ctx_free(struct amd_uncore *uncore, unsigned int cpu)
+>>                 if (cpu == ctx->cpu)
+>>                         cpumask_clear_cpu(cpu, &pmu->active_mask);
+>>
+>> -               if (!--ctx->refcnt) {
+>> -                       kfree(ctx->events);
+>> +               if (!--ctx->refcnt)
+>>                         kfree(ctx);
+>> -               }
+>>
+>>                 *per_cpu_ptr(pmu->ctx, cpu) = NULL;
+>>         }
+>> @@ -536,18 +534,11 @@ static int amd_uncore_ctx_init(struct amd_uncore *uncore, unsigned int cpu)
+>>                 /* Allocate context if sibling does not exist */
+>>                 if (!curr) {
+>>                         node = cpu_to_node(cpu);
+>> -                       curr = kzalloc_node(sizeof(*curr), GFP_KERNEL, node);
+>> +                       curr = kzalloc_node(struct_size(curr, events, pmu->num_counters), GFP_KERNEL, node);
+>>                         if (!curr)
+>>                                 goto fail;
+>>
+>>                         curr->cpu = cpu;
+>> -                       curr->events = kzalloc_node(sizeof(*curr->events) *
+>> -                                                   pmu->num_counters,
+>> -                                                   GFP_KERNEL, node);
+>> -                       if (!curr->events) {
+>> -                               kfree(curr);
+>> -                               goto fail;
+>> -                       }
+>>
+>>                         amd_uncore_init_hrtimer(curr);
+>>                         curr->hrtimer_duration = (u64)update_interval * NSEC_PER_MSEC;
+>> --
+>> 2.54.0
+>>
