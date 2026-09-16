@@ -1,129 +1,79 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F1BB48FF7F
-	for <linux-perf-users@vger.kernel.org>; Wed, 16 Sep 2026 16:45:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 980555221EA
+	for <linux-perf-users@vger.kernel.org>; Wed, 16 Sep 2026 16:46:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789577116; cv=none; b=qDHA+Z3jqMRp6vmagQ8Hpm0YcRZkZDpcu5a2Qt6g7l3tePjxyixM2uPbdNmLuFUemY7/BVNNiBhJFwFS+emBeV9hrHmoFjWzDF8p16/SLo3CHWqw1eXXnimvVde8V0kgsMRfZ4zUali/oeZIrJ+PDzcNEpWt0791bzy8R0V+2nQ=
+	t=1789577194; cv=none; b=DyrFDdP8ZZ7y4vy99W2z66x0JvbSql7hWzrTZ8Y6a294MCTWCUiHX6zwR7sv+0t5B0pSUqbOiWXs9FetwVwTt2umButTvoAT2QsqYi9Ao2ipUDfVkIgOqhylofbGLoAgxi4+w1YCb61b8day4eDrfZlpRoRhgidfyMsqfl7C6+c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789577116; c=relaxed/simple;
-	bh=iMHj/d7VjzyuREFnFTZqIxPV3u2M7aFBIWcEm3PpEYo=;
+	s=arc-20240116; t=1789577194; c=relaxed/simple;
+	bh=yncWyk66OXn1hjtIQx0JXW4TYDl+U2LcyjIOp9QN7ms=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=J0IacizFdIEtrpS3vaXjOUvtTBg0zHSBs020AiF9L2Q0bTMP4OA4q06xJANjqgp9fS+29mH4xOPcjkdqB3jmFpl+i556rUPf5+4aQe+CVixY5egDAQSCC8vEiG5qOJvGTGfl8HaGO+dUPpxvHmqVPhWZzoGU7NvnIrroeIhxbjo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YYGBw9hs; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=f5PeZ38nsiplR+K7MrfHaIHbsr0uD2MuOgLMvuu3fy0ZTXnZmUBB9CKH1PtC0Mt6q46t9W0xRUYR/5C/ujBPjOkYdd2t2lyzw0v4TX6ZHzr8+qXY3YYWL5c8/FvnVGIyxSXW+q0CI8iwJWg+D1eX+JnQizDKyjE7bgSaQfS0Oig=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HlwESQaO; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YYGBw9hs"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8E5981F00893;
-	Wed, 16 Sep 2026 16:45:03 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HlwESQaO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 67B591F000FF;
+	Wed, 16 Sep 2026 16:46:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789577103;
-	bh=OtwCaUZ/EFvDb/JYYL7b4gZgAaYtiKd+c3tsedxUs6w=;
+	s=k20260515; t=1789577179;
+	bh=yncWyk66OXn1hjtIQx0JXW4TYDl+U2LcyjIOp9QN7ms=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=YYGBw9hsiq/M1M02ZiFVOQnCIms4nv0MOO1xj/Hms2fC1x21qIYB+ocLiSeu4/TX3
-	 EfhJrNZYmo2uGSGmc+7pGJsvsPWSK3dFEEksn3PAPaUDRjIE/4i5oT3ab5a1dcgNYt
-	 ap51UQY8kQb1pnbepiS8NoNi26HXr9Xpgkhg8jWkmP7aJZck3aISElJBYY1WvV5RKH
-	 sN3fWQ9vbKkAIJEA38gECHSU4a0G1uD9/34ocRSC5BnBYb1harhn1NrqrXPBCCtK8q
-	 6DAPgoqV9dc9lr3ifGpjEEh3GelHAKl4EEmZJvhirTFfEkv8HZJTiGrJGdcvnJdnG7
-	 cvuf1DogRX69w==
+	b=HlwESQaOUrvo/LRSICp0BW6APdkVVmnktwAt27Z+WLnkhb3fvdw+WcAyqfytIcBFl
+	 pWx/3w3Xh8sDCSd/ucOMgeS87o61I8kipchAUh767gGc/HjaN8taePbvnkmKB/8ELZ
+	 D0ncXqmO1HoOo8pcLuisVCc086dY9DuuMbCjVAZBdcx3ebZgFKKvktjCTJblwmkUzf
+	 S6CaNiZNNikZWl95rXGVdRJjMoKeF55OGNSO7/bWkoXXdYZgpTmZmi3Fu5dWtQpNmv
+	 l/xC+i+pCeu3ofAB+XG4bNLlh+3kqJI8GztRZaxc3Aiw1EZDFT8Crr6Jcn/2urUOZO
+	 RmqHCEWB4rZ1w==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v10 3/6] perf header: Support memory ranges
+Subject: Re: [PATCH v10 2/6] perf mem: Add support for printing
+ PERF_MEM_LVLNUM_L0
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Thomas Falcon" <thomas.falcon@intel.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260916163127.318885-4-thomas.falcon@intel.com>
+In-Reply-To: <20260916163127.318885-3-thomas.falcon@intel.com>
 References: <20260916163127.318885-1-thomas.falcon@intel.com>
- <20260916163127.318885-4-thomas.falcon@intel.com>
+ <20260916163127.318885-3-thomas.falcon@intel.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Wed, 16 Sep 2026 16:45:03 +0000
-Message-Id: <20260916164503.8E5981F00893@smtp.kernel.org>
+Date: Wed, 16 Sep 2026 16:46:18 +0000
+Message-Id: <20260916164619.67B591F000FF@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
-s) to consider:
-- [Medium] perf: memory leak of env->memory_ranges when parsing malformed d=
-ata
---
+> From: Dapeng Mi <dapeng1.mi@linux.intel.com>
+>=20
+> Add support for printing PERF_MEM_LVLNUM_L0 in perf mem report.
+>=20
+> The L0 cache is newly added a small piece of cache which is
+> the closest, lowest-latency memory cache tied directly to the
+> execution pipeline.
+>=20
+> The table "Table 9-4. Data Source Field Encodings for Panther
+> Cove and Coyote Cove Microarchitectures" in the ISE doc chapter
+> "9.2.1 Panther Cove and Coyote Cove Microarchitectures Memory
+> Auxiliary Field Layout"[1] indicates the code "01H" means the
+> "L0 Hit - Minimal latency core cache hit. This request was
+> satisfied by the L0 data cache."
+>=20
+> [1]: https://www.intel.com/content/www/us/en/content-details/922690/intel=
+-architecture-instruction-set-extensions-programming-reference.html
+>=20
+> Assisted-by: Sashiko:gemini-3.1-pro-preview
+> Reviewed-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
+> Reviewed-by: Ian Rogers <irogers@google.com>
+> Reviewed-by: Namhyung Kim <namhyung@kernel.org>
+> Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
+> Co-developed-by: Thomas Falcon <thomas.falcon@intel.com>
+> Signed-off-by: Thomas Falcon <thomas.falcon@intel.com>
 
-commit 1ab84913c01dd8ba27d90b19de21357887b69fea
-Author: Thomas Falcon <thomas.falcon@intel.com>
-
-perf header: Support memory ranges
-
-This commit introduces support for tracking different types of memory
-ranges, such as persistent or CXL-attached memory. It parses ACPI MRRM
-data exposed via sysfs and saves it in the perf.data file header under
-a new feature bit.
-
-Link: https://lore.kernel.org/lkml/20250505173819.419271-1-tony.luck@intel.=
-com/
-
-> diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
-> index ec2935c0ed04e..38f2da9de5f0d 100644
-> --- a/tools/perf/util/header.c
-> +++ b/tools/perf/util/header.c
-
-[ ... ]
-
-> @@ -4227,6 +4372,65 @@ static int process_cpu_domain_info(struct feat_fd =
-*ff, void *data __maybe_unused
->  	return ret;
->  }
-> =20
-> +static int process_memory_ranges(struct feat_fd *ff, void *data __maybe_=
-unused)
-> +{
-> +	struct perf_env *env =3D &ff->ph->env;
-> +	struct memory_range *ranges, *r;
-> +	u32 nr_memory_ranges, i;
-
-[ ... ]
-
-> +	ranges =3D calloc(nr_memory_ranges, sizeof(*ranges));
-> +	if (!ranges)
-> +		return -1;
-> +
-> +	for (i =3D 0; i < nr_memory_ranges; i++) {
-> +		r =3D &ranges[i];
-> +
-> +		if (do_read_u64(ff, &r->base))
-> +			goto error;
-> +		if (do_read_u64(ff, &r->length))
-> +			goto error;
-> +		if (do_read_u32(ff, (u32 *) &r->node))
-> +			goto error;
-> +		if (__do_read(ff, &r->local_region_id, sizeof(u8)))
-> +			goto error;
-> +		if (__do_read(ff, &r->remote_region_id, sizeof(u8)))
-> +			goto error;
-> +	}
-> +
-> +	env->memory_ranges =3D ranges;
-> +	env->nr_memory_ranges =3D nr_memory_ranges;
-
-[Severity: Medium]
-If a malformed perf.data file or pipe stream contains multiple
-HEADER_MEMORY_RANGES sections, process_memory_ranges() in
-tools/perf/util/header.c could be executed multiple times.
-
-Can this assignment cause a memory leak by overwriting env->memory_ranges
-without freeing the previously allocated array?
-
-Could this leak be exploited to cause a Denial of Service (OOM) in the
-userspace perf tool when processing untrusted pipe streams?
-
-> +
-> +	return 0;
-> +error:
-> +	zfree(&ranges);
-> +	return -1;
-> +}
+Sashiko has reviewed this patch and found no issues. It looks great!
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260916163127.3188=
-85-1-thomas.falcon@intel.com?part=3D3
+85-1-thomas.falcon@intel.com?part=3D2
+
