@@ -1,105 +1,74 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 875DB42AF9A
-	for <linux-perf-users@vger.kernel.org>; Wed, 16 Sep 2026 09:00:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F1DB4455633
+	for <linux-perf-users@vger.kernel.org>; Wed, 16 Sep 2026 09:31:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789549231; cv=none; b=E0mP8Jm68XYCBx33OCYzk9BL3ZdldHHmniZeb5pDfAj+3k1kFSQGyqk6wGG6TOBj0HWsw8a33G3jxTpPUhLPaZ3n00EeKJyAgI8V1CSjLnEQ7L2Nj7b1DH7/yFgzA8rQytV5k/4gqWQsXgvR8KxYSVsmlU5+1Vv4TD4sFSoKl0Y=
+	t=1789551135; cv=none; b=ivVmiO+yXUo6kO9Ct5BpK4C998UkT1PnHePL6ZcyMPZ8mNajRRHXXb7251PjOVNNeH+ek1QFzPz7/pYVeKBE/RKevD4+rDElu2V+LwzKNdeGUrJrkwEZ+tZXt1Yx2zWf5W/MiRWEXtB14Xda/tExjpJmPIz0DUXMVnVashz9BAc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789549231; c=relaxed/simple;
-	bh=KksKKf+xs7wuw6LcLyMTWugPYCRuLqL437ebxNdbO1U=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=QBE5BqZWql4J8+Znm9dEBw5R2XbTd8DBSqUZ3sghWebBfIV4irZ57LIhAAGq7J/PRGeDaY+zNw9oyw/rRVWCNhS//ghQ/yYrjIeIuR9KZpmTjiWpx4Wd41OjANlKjuTE0WjLQRRUz7Z5jW49MAsrePL/lvEcEnOuUBs1MeO/a4A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FLJk5bHT; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1789551135; c=relaxed/simple;
+	bh=la8IZH7YDw9SpimkZ00WJV6Uu78AQvTllZ8srncgV48=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=STau2A7MPXqs5XGzNMyAsvKEpB2YH3ox9aBW3Nxtn8ng/f2LP0d0TQu8G2b4txjBdE1+EOtdeftMLsuJ2cQLVibH+svldklYOKT7+8YDYhNuGsiO+k16jvLcd2auxEF7SzdeIzkchhZD2uhu813oX6X4ao06ncY/Dv3eCF3PGzw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=tkVrWgyN; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FLJk5bHT"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6B3C01F000FF;
-	Wed, 16 Sep 2026 09:00:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789549209;
-	bh=9b2Jw1EsNQxpKdN5h/IbZe8Q5fdlV+jpFrjbkefkD1Q=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=FLJk5bHTTUZPQ+RnW4BGrR20YP2JFfSJjN/Tric+6vcpWPU8OgshrItYimZ9gFV4K
-	 smnhyCg3RMIEPUClvmiBmplCuoz7drTGz7RdDTdd0QiGOSgIuXLbmr4oORT7GXG1qG
-	 967MktbJFSEic+zROcqg4b2zl5i6UbXmOQhuwslO0unZ4EA/QmKpw9yrdCr3VKiKZZ
-	 EpK+VUuwjy1dgwrcY4LWZHHZlMN9IRfSs6ajT744TlQTfNSY8y/tAS0SSaLmGc2sgg
-	 ul1Oz7JUHzqwB9r8U3vIrJaYFh7u5JcUrbOxe5FQilNaaA4GQh+/bPTe49tTNG9AD5
-	 gIcHvvXRZXbng==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v3] perf riscv: Add perf_regs_load and enable the dwarf
- unwind test
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Chen Pei" <cp0613@linux.alibaba.com>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260916084626.1166-1-cp0613@linux.alibaba.com>
-References: <20260916084626.1166-1-cp0613@linux.alibaba.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Wed, 16 Sep 2026 09:00:08 +0000
-Message-Id: <20260916090009.6B3C01F000FF@smtp.kernel.org>
+	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="tkVrWgyN"
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EE2B71516;
+	Wed, 16 Sep 2026 02:31:44 -0700 (PDT)
+Received: from localhost (unknown [10.2.196.114])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 20E763F86F;
+	Wed, 16 Sep 2026 02:31:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
+	t=1789551108; bh=la8IZH7YDw9SpimkZ00WJV6Uu78AQvTllZ8srncgV48=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=tkVrWgyNZIfYoSjTq2nXj1v9dgPhjECHns2uDsk8j/reWdWO6k/k8YYt6AgeoYT1a
+	 KHNlXDLeOLKCtLL5y3AvmboVa4iBJd7+Nn/EJaFVi5nkdgZzEdybvRvpaaFpDP+ih1
+	 tUtY6+ZH1VaWfJrw5ZqDBzW1UyWC06AJ9qGirzfo=
+Date: Wed, 16 Sep 2026 10:31:46 +0100
+From: Leo Yan <leo.yan@arm.com>
+To: Robin Murphy <robin.murphy@arm.com>
+Cc: will@kernel.org, mark.rutland@arm.com, ilkka@os.amperecomputing.com,
+	linux-perf-users@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v2] perf/arm-cmn: Fix multi-filter encoding
+Message-ID: <20260916093146.GG200420@e132581.arm.com>
+References: <ec590cd4cc61b54d6ad3b306b69777ad7729c9d6.1789475062.git.robin.murphy@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ec590cd4cc61b54d6ad3b306b69777ad7729c9d6.1789475062.git.robin.murphy@arm.com>
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
-s) to consider:
-- [Medium] perf: NULL pointer dereference in test__arch_unwind_sample() on =
-OOM
---
+On Tue, Sep 15, 2026 at 01:24:22PM +0100, Robin Murphy wrote:
+> The current special-case for EVICT_STATE_SEL filtering effectively
+> assigns the "filter" and "filter2" controls in the opposite order from
+> how the CMN S3 r2 TRM states "Filtering is programmed in pmu_hbt_lbt_sel
+> and pmu_evict_state_sel". On reflection, not only does this seem
+> unnecessarily non-obvious to users, but it's also likely to be a problem
+> for scaling to a full multi-filter abstraction in future. There is a
+> logical order to filters based on their bitfield positions in the
+> pmu_event_sel register, which the TRM descriptions allude to, and the
+> cmn_filter_select enum already (almost) follows, so let's fix the UABI
+> to follow suit while it's still unreleased.
+> 
+> Fixes: 09178f536bb9 ("perf/arm-cmn: Plumb in new filter types")
+> Signed-off-by: Robin Murphy <robin.murphy@arm.com>
 
-commit 5845b516a9f1970f694021ec56b60a02bd3f3b49
-Author: Chen Pei <cp0613@linux.alibaba.com>
+It's hard to say how useful my review is, but I went through the patch
+and also asked AI to explain the rationale. It makes sense to me:
 
-perf riscv: Add perf_regs_load and enable the dwarf unwind test
+Reviewed-by: Leo Yan <leo.yan@arm.com>
 
-This commit adds perf_regs_load() and an architecture-specific unwind
-sample helper for RISC-V. It also wires RISC-V into the test gates to
-enable the DWARF unwind test on this architecture.
+Seems we could implement a generic way to navigate filters based on
+the hardware bitfield ordering, e.g. filter_next(sel) and
+filter_prev(sel). This can be deferred until we have more combined
+filters.
 
-> diff --git a/tools/perf/arch/riscv/tests/dwarf-unwind.c b/tools/perf/arch=
-/riscv/tests/dwarf-unwind.c
-> new file mode 100644
-> index 0000000000000..fe0c32ea0e05a
-> --- /dev/null
-> +++ b/tools/perf/arch/riscv/tests/dwarf-unwind.c
-
-[ ... ]
-
-> +int test__arch_unwind_sample(struct perf_sample *sample,
-> +		struct thread *thread)
-> +{
-> +	struct regs_dump *regs =3D perf_sample__user_regs(sample);
-> +	u64 *buf;
-> +
-> +	buf =3D calloc(PERF_REGS_MAX, sizeof(u64));
-> +	if (!buf) {
-> +		pr_debug("failed to allocate sample uregs data\n");
-> +		return -1;
-> +	}
-> +
-> +	perf_regs_load(buf);
-> +	regs->abi  =3D PERF_SAMPLE_REGS_ABI;
-
-[Severity: Medium]
-Is it possible for perf_sample__user_regs() to return a NULL pointer?
-
-If memory allocation fails during perf_sample__user_regs(), it returns NULL.
-Since the subsequent calloc() for buf may still succeed, could this lead to=
- an
-unconditional NULL pointer dereference when assigning regs->abi?
-
-Would it be better to verify that regs is not NULL before attempting to=20
-assign values to its fields?
-
-> +	regs->regs =3D buf;
-> +	regs->mask =3D PERF_REGS_MASK;
-> +
-> +	return sample_ustack(sample, thread, buf);
-> +}
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260916084626.1166=
--1-cp0613@linux.alibaba.com?part=3D1
+Thanks,
+Leo
