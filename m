@@ -1,69 +1,58 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A03513ED3BB
-	for <linux-perf-users@vger.kernel.org>; Wed, 16 Sep 2026 06:47:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F5513EDE59
+	for <linux-perf-users@vger.kernel.org>; Wed, 16 Sep 2026 06:47:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789541248; cv=none; b=mQuz8zHHokb2gbLeouSG/665bER4QNuwKE9mKb0LpDnkb914Rqjr29T/1BSek3gbPb7x2DcCqsjFgOWyVssPUKmYh8Wwz/Wn9qrzhHfLIixYPIYFabYTNj2IuGLXmrE+M5LdYqCyG9XG/OCfKU4m/flElPn7rXrY0IIjZGmqulQ=
+	t=1789541253; cv=none; b=h3QFsHKCUsnnmXCog2HmkOESZmd8oAQxENAblSH8gzGj5Rxwvx34l5bn/R6lUyYzhNJ78OnPD9fuQ3h9QrNpomdI9sUNBFfU3vNtVhvqRddyhB8sIll0VoSb7GaCgb/+v40QNRfl7EJ7dMiFvohN5s1VomkMvszmbmT0Y16Hemo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789541248; c=relaxed/simple;
-	bh=hZhfNVyJrjMd4c6JKTI5Yik/rzxlCRIhA9D1blN6ol4=;
+	s=arc-20240116; t=1789541253; c=relaxed/simple;
+	bh=yOecCktOFLbaXcJIfyYsRkltk8DsASG+nnR2wO/0oRo=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=Ad8gR+gWW4ZVduxGAeH0d7mGiQOCpbgV5HGheZTF7Rup2p9KifSM6sZ46Kjcu28JQYncf0edPCLP94OE2/HCdrl2PbA4qfbZ6nL0w5pnh8RL5rcr9FRo7RL2VhNyTyT1EJ6sPLezNnOfu5LjRGxM+e/K6y/r85rZ3+tEC0jOW+k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lU7wOBvd; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=YlV/ZnWKCA11N4Si0iTjm8ug/YgpdQtxs36tQgJp9jXO7fpQol817BcdY9MGWumvQXDBJe1EAV5olPgcZTXliY64JD22URZNZimgtSwc9PlxG+MhJUu52OcxRp9OHqqmp7wfWSy7hT4Z0tdd53oqji8hVpZGzDh4/hqCL7HMcmo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=X5xqm9bf; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lU7wOBvd"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 22D181F00899;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="X5xqm9bf"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DB2C11F00898;
 	Wed, 16 Sep 2026 06:47:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789541247;
-	bh=dujLCUv1HR2XkWyND1xwdQ2NC2tDHjZOJ1kVKnHmI3A=;
+	s=k20260515; t=1789541248;
+	bh=yOecCktOFLbaXcJIfyYsRkltk8DsASG+nnR2wO/0oRo=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=lU7wOBvdRNadP9SYCCeymApEivkKFR+e+GGn94tAp4go3kQ7osdG6NZ90qJBnXT/d
-	 Zt6poBfwlb5cedYGJr8qCeeAPSMimIYL2jntjtCKJwfDUTRrBP8w/izhqXPt34sj7H
-	 DavYszQyIBJ0xJizknWpkKMRL5Efl2+mzdihpnkEeUrRQmdl996bBdb+9RZcEltd77
-	 SA1UrAPSSJAkfP39FOLZglWLxDweXU7AxIMMdeYR87bHKaRzCSPYmbwfjFh2mEGNTA
-	 JFdqH3pyrcrYH0KFlwC5/T2dmZwNy0JNkXqMgnUTksy693OtgCOZOlETogBuhEj4fl
-	 1SQV1llEIMTzg==
+	b=X5xqm9bf4w0p+urn9DXwUB002nlvEjh1HOBX+hVbutJq9HAfmKGb9FHltCNIYJAv0
+	 ZG02MMwVKyN0IcaFj6lg0IM5s0zSDHLkFNSaMtuG2lgj3hifRLZJhTl1LB/PbcEivm
+	 foVPIgVGU3ApRhhpt4rnFG4QE2urjjIjw/rsOhWoES0hlcZX6qle24NrqeRrar4P7T
+	 TaRf9w5D4mf41ykRW5wDj2KAhsNFJIKsAkDqIOPGwwBVsEavB347sNEBL4oRlPcflg
+	 Qhk5/0Vw978aCw3KgiFPfm6WArptIBG3qm2TDZ5KN0IkzZL1m0uxplbfVvkKDP6Brw
+	 d8tzD9v5Acygw==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v2 3/3] perf libbfd: Report success when an address is
- found
+Subject: Re: [PATCH v2 2/3] perf dso: Separate libbfd and cmd addr2line
+ caches to fix confusion
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Ian Rogers" <irogers@google.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260916063545.3103314-4-irogers@google.com>
+In-Reply-To: <20260916063545.3103314-3-irogers@google.com>
 References: <20260914170759.1992947-1-irogers@google.com>
  <20260916063545.3103314-1-irogers@google.com>
- <20260916063545.3103314-4-irogers@google.com>
+ <20260916063545.3103314-3-irogers@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Wed, 16 Sep 2026 06:47:26 +0000
-Message-Id: <20260916064727.22D181F00899@smtp.kernel.org>
+Date: Wed, 16 Sep 2026 06:47:27 +0000
+Message-Id: <20260916064727.DB2C11F00898@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-> libbfd__addr2line() only reports success when the caller asked for a file
-> name. addr2inlines() passes a NULL file as it just wants the inline_node
-> populating, so libbfd__addr2line() returns 0 for it unless
-> bfd_find_inliner_info() happened to find an inline frame. addr2line() in
-> srcline.c treats 0 as a failure and tries the next addr2line
-> implementation, which appends its own frames to the inline_node libbfd
-> already appended to. Every frame that isn't inlined is then reported
-> twice, which happens by default when perf is built with libbfd but
-> without libdw as the fallback order is then libbfd followed by the
-> addr2line command:
->=20
->   $ perf record --call-graph dwarf -- perf test -w inlineloop 1
->   $ perf script --fields +srcline
->   ...
-> 	    56051a994f8e parent+0x2e (perf)
-> [ ... ]
-> does, and clear the frames appended so far when appending fails so that a
-> following implementation starts from an empty node.
+> When a dso executes addr2line via libbfd it instantiates an a2l_data
+> pointer. If the DSO later executes via the command-line fallback due
+> to an inlined bug, the a2l pointer is unconditionally populated with a
+> child_process process wrapper. If libbfd is queried again, the offline
+> reader attempts to cast struct a2l_data into child_process, coercing
+> random arbitrary instruction addresses and causing silent aborts. This
+> cleanly splits the caches.
 >=20
 > Fixes: 257046a36750 ("perf srcline: Fallback between addr2line implementa=
 tions")
@@ -73,5 +62,5 @@ Sashiko has reviewed this patch and found no issues. It looks great!
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260916063545.3103=
-314-1-irogers@google.com?part=3D3
+314-1-irogers@google.com?part=3D2
 
