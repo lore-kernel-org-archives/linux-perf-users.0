@@ -1,27 +1,27 @@
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4113339A079;
-	Wed, 16 Sep 2026 01:30:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD3BC3ACA7E;
+	Wed, 16 Sep 2026 01:30:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789522221; cv=none; b=LIV9VbtN7hniDG1fMWfx8/QiNbhBMNbzcWYGJ53As9PJbKwzYZIoEWkxaS9k+ZkbAhglmF6xR9D0+6+0TNwMlD7kItKgvhaSHCUOJGMrSu94y2+w2+yVWpI2M8TfjIqtT0VTXgDEczrMr870PbiRpmNr5Fqagwn/hg1ZaMaFhvs=
+	t=1789522222; cv=none; b=YR9GIQY6tq9Y3am20cofRKULWNIramdoa5t98cR8i+kMDr2xTVmxwDcV+p0giQPRGxJvzlDKjqjOsqw+1xqW3axTUeysw9sZNNozJYuDfiad54xwQMgYvLJWZNZrbfkGgBienA+KDfP9lxyEVdbUd1tnT9fmbi1FrvY7lIJCauo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789522221; c=relaxed/simple;
-	bh=Dhx3hnjwKiiS2Yil9+J4DZRTudq9W0jw18hCA64LhIU=;
+	s=arc-20240116; t=1789522222; c=relaxed/simple;
+	bh=I8s3IRLIG6/0sh4VgQx4eFZKk5wCQhypjzz0IrTQSWc=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=KfjFuKLgFrA4DwePBu4KaCBvxFVVY0MQG4EZMTTTEFDuAKm4s7745WYiE5047OL8p26iyZ9/zOZ8ihgQgtSXgfz3ZtdNLPacNky5w9XBJtmfLKIpkgAMcDKyjJxAWdxPmQdl2+6RUqgqKe6IA8PgfqWxp9Wki6kuS/0WVy3t+a0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+	 MIME-Version; b=uOIrse6SxnAVWNwgRnA6qYNjUGMvCqsKM4N7sYCKEfTbfiwdv9VA5pCDHdghZTQEnmB1FI+5KdaQ/Qf/vWIg+kf/1wI3U5osDXJu80FGt2rD0DGOp8XZh+UQyNE9FwmG4WY0BhMyOxVGbV1d4K/rgISNTGH47dOoYPAnuAb4ycI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.198])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4hl1XT3DSMzYQtmy;
-	Wed, 16 Sep 2026 09:30:01 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.19.163.177])
+	by dggsgout12.his.huawei.com (SkyGuard) with ESMTPS id 4hl1XJ2wZPzKHMRB;
+	Wed, 16 Sep 2026 09:29:52 +0800 (CST)
 Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id 89D904057A;
-	Wed, 16 Sep 2026 09:30:05 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTP id 02D7E4058F;
+	Wed, 16 Sep 2026 09:30:06 +0800 (CST)
 Received: from huawei.com (unknown [10.67.174.45])
-	by APP4 (Coremail) with UTF8SMTPA id gCh0CgAn+CoH8alqUcjbAQ--.36458S8;
+	by APP4 (Coremail) with UTF8SMTPA id gCh0CgAn+CoH8alqUcjbAQ--.36458S13;
 	Wed, 16 Sep 2026 09:30:05 +0800 (CST)
 From: Tengda Wu <wutengda@huaweicloud.com>
 To: Namhyung Kim <namhyung@kernel.org>,
@@ -44,9 +44,9 @@ Cc: Peter Zijlstra <peterz@infradead.org>,
 	linux-kernel@vger.kernel.org,
 	llvm@lists.linux.dev,
 	Tengda Wu <wutengda@huaweicloud.com>
-Subject: [PATCH v6 06/26] perf annotate: Introduce extract_op_location callback for arch-specific parsing
-Date: Wed, 16 Sep 2026 01:29:20 +0000
-Message-Id: <a492844346e8f61b175c099b48bc94ce275a8b97.1789521520.git.wutengda@huaweicloud.com>
+Subject: [PATCH v6 11/26] perf arm-spe: Set default synthesized event period to 1
+Date: Wed, 16 Sep 2026 01:29:25 +0000
+Message-Id: <40acb41b77fcb4aef1efe720c651563043800ff3.1789521520.git.wutengda@huaweicloud.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <cover.1789521520.git.wutengda@huaweicloud.com>
 References: <cover.1789521520.git.wutengda@huaweicloud.com>
@@ -57,331 +57,114 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:gCh0CgAn+CoH8alqUcjbAQ--.36458S8
-X-Coremail-Antispam: 1UD129KBjvJXoWxtr13tF45uFy8Wr1kuw1xZrb_yoWfKF4xpw
-	4Du34YyF1rKr4YgwsxXFs5W3Wakw4rWF1Y9r17KwsrAFn2vrn5Jan2gF1ayF1rJrZ5ur1j
-	vF4qvr48XryrGaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUHIb4IE77IF4wAFF20E14v26rWj6s0DM7CY07I20VC2zVCF04k2
+X-CM-TRANSID:gCh0CgAn+CoH8alqUcjbAQ--.36458S13
+X-Coremail-Antispam: 1UD129KBjvJXoWxXFy7CFyxXFWkWw1kJryftFb_yoW5uw43pr
+	nFga4ftr1kJry8Kw17Ar4UuFy3tw4FvF1fGF1xGrWUAw1UKry8tr17try5Cr4UWr1Fyr12
+	qFyqgw1UGr1Utr7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUH2b4IE77IF4wAFF20E14v26rWj6s0DM7CY07I20VC2zVCF04k2
 	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28IrcIa0xkI8VA2jI8067AKxVWUAV
 	Cq3wA2048vs2IY020Ec7CjxVAFwI0_Xr0E3s1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0
 	rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267
 	AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7Cj
-	xVAFwI0_Cr1j6rxdM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F4
-	0Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC
-	6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7M4IIrI
-	8v6xkF7I0E8cxan2IY04v7MxkF7I0En4kS14v26r4a6rW5MxkF7I0Ew4C26cxK6c8Ij28I
-	cwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r
-	1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_GFv_WrylIxkGc2Ij
-	64vIr41lIxAIcVC0I7IYx2IY67AKxVWUCVW8JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr
-	1j6F4UJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1l
-	IxAIcVC2z280aVCY1x0267AKxVW8Jr0_Cr1UYxBIdaVFxhVjvjDU0xZFpf9x0piPkusUUU
-	UU=
+	xVAFwI0_GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrV
+	C2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE
+	7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxc
+	IEc7CjxVA2Y2ka0xkIwI1lc7CjxVAaw2AFwI0_GFv_Wrylc7CjxVAKzI0EY4vE52x082I5
+	MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr
+	0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVW8ZVWrXwCIc40Y0x0E
+	wIxGrwCI42IY6xIIjxv20xvE14v26r4j6ryUMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8Jr
+	0_Cr1UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8JVWxJwCI
+	42IY6I8E87Iv6xkF7I0E14v26r4UJVWxJrUvcSsGvfC2KfnxnUUI43ZEXa7sRNg4S3UUUU
+	U==
 X-CM-SenderInfo: pzxwv0hjgdqx5xdzvxpfor3voofrz/
 
-Assembly syntax for operands varies significantly across different
-architectures, which prevents the operand location (op_loc) parsing
-logic in annotate_get_insn_location() from being directly reused.
+When using --itrace=M for data type profiling on arm64, the 'Percent'
+values in perf annotate output are all zero:
 
-To simplify the core logic and improve maintainability, move the
-operand parsing inside the for_each_insn_op_loc loop into arch-specific
-extract_op_location callbacks. This refactoring is intended to be a
-cleanup with no functional changes.
+Annotate type: 'struct mmu_gather_batch' in [kernel.kallsyms] (15 samples):
+============================================================================
+ Percent     offset       size  field
+    0.00          0       0x10  struct mmu_gather_batch  {
+    0.00          0        0x8      struct mmu_gather_batch*    next;
+    0.00        0x8        0x4      unsigned int        nr;
+    0.00        0xc        0x4      unsigned int        max;
+    0.00       0x10          0      struct encoded_page*[]      encoded_pages;
+                                };
 
-Reviewed-by: Namhyung Kim <namhyung@kernel.org>
-Signed-off-by: Li Huafei <lihuafei1@huawei.com>
+However, adding the -n option (show-nr-samples) reveals non-zero sample counts:
+
+Annotate type: 'struct mmu_gather_batch' in [kernel.kallsyms] (15 samples):
+============================================================================
+ Samples     offset       size  field
+      15          0       0x10  struct mmu_gather_batch  {
+      13          0        0x8      struct mmu_gather_batch*    next;
+       2        0x8        0x4      unsigned int        nr;
+       0        0xc        0x4      unsigned int        max;
+       0       0x10          0      struct encoded_page*[]      encoded_pages;
+                                };
+
+The root cause is that when --itrace is used with non-i/y options
+(e.g., --itrace=M), the period remains zero after parsing. During
+subsequent propagation, the final percentage calculation results
+in zero:
+
+   arm_spe_prep_sample()
+      sample->period = spe->synth_opts.period;
+
+   __hists__add_entry()
+      he.stat.period = sample->period;
+
+   annotated_data_type__update_samples()
+      h->period += period;
+      h->addr[offset].period += period;
+
+   print_annotated_data_value()
+      double percent = h->period ? (100.0 * period / h->period) : 0;
+
+Fix this by defaulting the period to 1 in the ARM SPE auxtrace info
+processing path if it is not explicitly specified. This ensures that
+downstream tool components can correctly accumulate periods and compute
+event percentages for all synthesized SPE events.
+
+With this fix applied, the result is as follows:
+
+Annotate type: 'struct mmu_gather_batch' in [kernel.kallsyms] (15 samples):
+============================================================================
+ Percent     offset       size  field
+  100.00          0       0x10  struct mmu_gather_batch  {
+   86.67          0        0x8      struct mmu_gather_batch*    next;
+   13.33        0x8        0x4      unsigned int        nr;
+    0.00        0xc        0x4      unsigned int        max;
+    0.00       0x10          0      struct encoded_page*[]      encoded_pages;
+                                };
+
 Signed-off-by: Tengda Wu <wutengda@huaweicloud.com>
 ---
- .../util/annotate-arch/annotate-powerpc.c     |  9 ++
- tools/perf/util/annotate-arch/annotate-x86.c  | 79 ++++++++++++++++
- tools/perf/util/annotate.c                    | 94 +------------------
- tools/perf/util/annotate.h                    |  2 +
- tools/perf/util/disasm.h                      |  4 +
- 5 files changed, 99 insertions(+), 89 deletions(-)
+ tools/perf/util/arm-spe.c | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-diff --git a/tools/perf/util/annotate-arch/annotate-powerpc.c b/tools/perf/util/annotate-arch/annotate-powerpc.c
-index 218207b52581..00b93296fc94 100644
---- a/tools/perf/util/annotate-arch/annotate-powerpc.c
-+++ b/tools/perf/util/annotate-arch/annotate-powerpc.c
-@@ -390,6 +390,14 @@ static void update_insn_state_powerpc(struct type_state *state,
- }
- #endif /* HAVE_LIBDW_SUPPORT */
- 
-+static void extract_op_location_powerpc(const struct arch *arch __maybe_unused,
-+					struct disasm_line *dl,
-+					const char *op_str __maybe_unused, int op_idx,
-+					struct annotated_op_loc *op_loc)
-+{
-+	get_powerpc_regs(dl->raw.raw_insn, !op_idx, op_loc);
-+}
-+
- const struct arch *arch__new_powerpc(const struct e_machine_and_e_flags *id,
- 				     const char *cpuid __maybe_unused)
- {
-@@ -406,5 +414,6 @@ const struct arch *arch__new_powerpc(const struct e_machine_and_e_flags *id,
- #ifdef HAVE_LIBDW_SUPPORT
- 	arch->update_insn_state = update_insn_state_powerpc;
- #endif
-+	arch->extract_op_location = extract_op_location_powerpc;
- 	return arch;
- }
-diff --git a/tools/perf/util/annotate-arch/annotate-x86.c b/tools/perf/util/annotate-arch/annotate-x86.c
-index 7e6136536393..1acf31a2c759 100644
---- a/tools/perf/util/annotate-arch/annotate-x86.c
-+++ b/tools/perf/util/annotate-arch/annotate-x86.c
-@@ -1,6 +1,8 @@
- // SPDX-License-Identifier: GPL-2.0
- #include <string.h>
-+#include <stdlib.h>
- #include <linux/compiler.h>
-+#include <linux/ctype.h>
- #include <linux/zalloc.h>
- #include <assert.h>
- #include <inttypes.h>
-@@ -809,6 +811,82 @@ static void update_insn_state_x86(struct type_state *state,
- }
- #endif
- 
-+/*
-+ * Get register number and access offset from the given instruction.
-+ * It assumes AT&T x86 asm format like OFFSET(REG).
-+ * Fills @reg and @offset when return 0.
-+ */
-+static int extract_reg_offset(const struct arch *arch, const char *str,
-+			      struct annotated_op_loc *op_loc)
-+{
-+	char *p;
-+
-+	if (arch->objdump.register_char == 0)
-+		return -1;
+diff --git a/tools/perf/util/arm-spe.c b/tools/perf/util/arm-spe.c
+index ae7a5e9c3892..7805a1a98a89 100644
+--- a/tools/perf/util/arm-spe.c
++++ b/tools/perf/util/arm-spe.c
+@@ -2043,6 +2043,17 @@ int arm_spe_process_auxtrace_info(union perf_event *event,
+ 		err = -EINVAL;
+ 		goto err_free_queues;
+ 	}
 +
 +	/*
-+	 * It should start from offset, but it's possible to skip 0
-+	 * in the asm.  So 0(%rax) should be same as (%rax).
-+	 *
-+	 * However, it also start with a segment select register like
-+	 * %gs:0x18(%rbx).  In that case it should skip the part.
++	 * When --itrace is used with non-i/y options (e.g., --itrace=M),
++	 * the period remains 0 because the parser does not apply a default
++	 * for those paths. However, synthesized SPE events such as memory
++	 * accesses, TLB walks, and cache misses still require a valid
++	 * sample->period to correctly accumulate periods and compute event
++	 * percentages. Set it to 1 to ensure proper accounting.
 +	 */
-+	if (*str == arch->objdump.register_char) {
-+		/* FIXME: Handle other segment registers */
-+		if (!strncmp(str, "%gs:", 4))
-+			op_loc->segment = INSN_SEG_X86_GS;
++	spe->synth_opts.period = spe->synth_opts.period ?: 1;
 +
-+		while (*str && !isdigit(*str) &&
-+		       *str != arch->objdump.memory_ref_char)
-+			str++;
-+	}
-+
-+	op_loc->offset = strtol(str, &p, 0);
-+	op_loc->reg1 = arch__dwarf_regnum(arch, p);
-+	if (op_loc->reg1 == -1)
-+		return -1;
-+
-+	/* Get the second register */
-+	if (op_loc->multi_regs)
-+		op_loc->reg2 = arch__dwarf_regnum(arch, p + 1);
-+
-+	return 0;
-+}
-+
-+static void extract_op_location_x86(const struct arch *arch,
-+				    struct disasm_line *dl __maybe_unused,
-+				    const char *op_str, int op_idx __maybe_unused,
-+				    struct annotated_op_loc *op_loc)
-+{
-+	if (op_str == NULL)
-+		return;
-+
-+	if (strchr(op_str, arch->objdump.memory_ref_char)) {
-+		op_loc->mem_ref = true;
-+		extract_reg_offset(arch, op_str, op_loc);
-+	} else {
-+		const char *s = op_str;
-+		char *p = NULL;
-+
-+		/* FIXME: Handle other segment registers */
-+		if (!strncmp(op_str, "%gs:", 4)) {
-+			op_loc->segment = INSN_SEG_X86_GS;
-+			op_loc->offset = strtol(op_str + 4, &p, 0);
-+			if (p && p != op_str + 4)
-+				op_loc->imm = true;
-+			return;
-+		}
-+
-+		if (*s == arch->objdump.register_char) {
-+			op_loc->reg1 = arch__dwarf_regnum(arch, s);
-+		} else if (*s == arch->objdump.imm_char) {
-+			op_loc->offset = strtol(s + 1, &p, 0);
-+			if (p && p != s + 1)
-+				op_loc->imm = true;
-+		}
-+	}
-+}
-+
- const struct arch *arch__new_x86(const struct e_machine_and_e_flags *id, const char *cpuid)
- {
- 	struct arch *arch = zalloc(sizeof(*arch));
-@@ -848,5 +926,6 @@ const struct arch *arch__new_x86(const struct e_machine_and_e_flags *id, const c
- #ifdef HAVE_LIBDW_SUPPORT
- 	arch->update_insn_state = update_insn_state_x86;
- #endif
-+	arch->extract_op_location = extract_op_location_x86;
- 	return arch;
- }
-diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
-index b0f8a8d37333..d3482eba9283 100644
---- a/tools/perf/util/annotate.c
-+++ b/tools/perf/util/annotate.c
-@@ -2580,7 +2580,7 @@ int annotate_check_args(void)
- 	return 0;
- }
- 
--static int arch__dwarf_regnum(const struct arch *arch, const char *str)
-+int arch__dwarf_regnum(const struct arch *arch, const char *str)
- {
- 	const char *p;
- 	char *regname, *q;
-@@ -2603,51 +2603,6 @@ static int arch__dwarf_regnum(const struct arch *arch, const char *str)
- 	return reg < 0 ? -1 : reg;
- }
- 
--/*
-- * Get register number and access offset from the given instruction.
-- * It assumes AT&T x86 asm format like OFFSET(REG).  Maybe it needs
-- * to revisit the format when it handles different architecture.
-- * Fills @reg and @offset when return 0.
-- */
--static int extract_reg_offset(const struct arch *arch, const char *str,
--			      struct annotated_op_loc *op_loc)
--{
--	char *p;
--
--	if (arch->objdump.register_char == 0)
--		return -1;
--
--	/*
--	 * It should start from offset, but it's possible to skip 0
--	 * in the asm.  So 0(%rax) should be same as (%rax).
--	 *
--	 * However, it also start with a segment select register like
--	 * %gs:0x18(%rbx).  In that case it should skip the part.
--	 */
--	if (*str == arch->objdump.register_char) {
--		if (arch__is_x86(arch)) {
--			/* FIXME: Handle other segment registers */
--			if (!strncmp(str, "%gs:", 4))
--				op_loc->segment = INSN_SEG_X86_GS;
--		}
--
--		while (*str && !isdigit(*str) &&
--		       *str != arch->objdump.memory_ref_char)
--			str++;
--	}
--
--	op_loc->offset = strtol(str, &p, 0);
--	op_loc->reg1 = arch__dwarf_regnum(arch, p);
--	if (op_loc->reg1 == -1)
--		return -1;
--
--	/* Get the second register */
--	if (op_loc->multi_regs)
--		op_loc->reg2 = arch__dwarf_regnum(arch, p + 1);
--
--	return 0;
--}
--
- /**
-  * annotate_get_insn_location - Get location of instruction
-  * @arch: the architecture info
-@@ -2703,50 +2658,11 @@ int annotate_get_insn_location(const struct arch *arch, struct disasm_line *dl,
- 		/* Invalidate the register by default */
- 		op_loc->reg1 = -1;
- 		op_loc->reg2 = -1;
-+		op_loc->mem_ref = mem_ref;
-+		op_loc->multi_regs = multi_regs;
- 
--		if (insn_str == NULL) {
--			if (!arch__is_powerpc(arch))
--				continue;
--		}
--
--		/*
--		 * For powerpc, call get_powerpc_regs function which extracts the
--		 * required fields for op_loc, ie reg1, reg2, offset from the
--		 * raw instruction.
--		 */
--		if (arch__is_powerpc(arch)) {
--			op_loc->mem_ref = mem_ref;
--			op_loc->multi_regs = multi_regs;
--			get_powerpc_regs(dl->raw.raw_insn, !i, op_loc);
--		} else if (strchr(insn_str, arch->objdump.memory_ref_char)) {
--			op_loc->mem_ref = true;
--			op_loc->multi_regs = multi_regs;
--			extract_reg_offset(arch, insn_str, op_loc);
--		} else {
--			const char *s = insn_str;
--			char *p = NULL;
--
--			if (arch__is_x86(arch)) {
--				/* FIXME: Handle other segment registers */
--				if (!strncmp(insn_str, "%gs:", 4)) {
--					op_loc->segment = INSN_SEG_X86_GS;
--					op_loc->offset = strtol(insn_str + 4,
--								&p, 0);
--					if (p && p != insn_str + 4)
--						op_loc->imm = true;
--					continue;
--				}
--			}
--
--			if (*s == arch->objdump.register_char) {
--				op_loc->reg1 = arch__dwarf_regnum(arch, s);
--			}
--			else if (*s == arch->objdump.imm_char) {
--				op_loc->offset = strtol(s + 1, &p, 0);
--				if (p && p != s + 1)
--					op_loc->imm = true;
--			}
--		}
-+		if (arch->extract_op_location)
-+			arch->extract_op_location(arch, dl, insn_str, i, op_loc);
- 	}
- 
- 	return 0;
-diff --git a/tools/perf/util/annotate.h b/tools/perf/util/annotate.h
-index 4c49d41e73a4..6cd3ef537564 100644
---- a/tools/perf/util/annotate.h
-+++ b/tools/perf/util/annotate.h
-@@ -524,6 +524,8 @@ int annotate_parse_percent_type(const struct option *opt, const char *_str,
- 
- int annotate_check_args(void);
- 
-+int arch__dwarf_regnum(const struct arch *arch, const char *str);
-+
- /**
-  * struct annotated_op_loc - Location info of instruction operand
-  * @reg1: First register in the operand
-diff --git a/tools/perf/util/disasm.h b/tools/perf/util/disasm.h
-index 3a42166f7f49..7a1c889f2c50 100644
---- a/tools/perf/util/disasm.h
-+++ b/tools/perf/util/disasm.h
-@@ -16,6 +16,7 @@ struct symbol;
- struct data_loc_info;
- struct type_state;
- struct disasm_line;
-+struct annotated_op_loc;
- 
- struct e_machine_and_e_flags {
- 	uint32_t e_flags;
-@@ -49,6 +50,9 @@ struct arch {
- 				struct data_loc_info *dloc, Dwarf_Die *cu_die,
- 				struct disasm_line *dl);
- #endif
-+	void		(*extract_op_location)(const struct arch *arch, struct disasm_line *dl,
-+					       const char *op_str, int op_idx,
-+					       struct annotated_op_loc *op_loc);
- };
- 
- struct ins {
+ 	if (spe->synth_opts.period > 1)
+ 		ui__warning("Arm SPE has a hardware-based sampling period.\n\n"
+ 			    "--itrace periods > 1i downsample by an interval of n SPE samples rather than n instructions.\n");
 -- 
 2.34.1
 
