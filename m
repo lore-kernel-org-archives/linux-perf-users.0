@@ -1,56 +1,56 @@
-Received: from mail-pl1-f199.google.com (mail-pl1-f199.google.com [209.85.214.199])
+Received: from mail-pj1-f72.google.com (mail-pj1-f72.google.com [209.85.216.72])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9C303EB0E6
-	for <linux-perf-users@vger.kernel.org>; Wed, 16 Sep 2026 06:13:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4198C3F105C
+	for <linux-perf-users@vger.kernel.org>; Wed, 16 Sep 2026 06:13:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789539207; cv=none; b=EZ/VlqJI1oYg5ISp3C49MiIHPaoOszJBaV+ThH8666VHSn0fq0spuxWklZBlb9bZQTNFC5xS/8Y8CoNE3lkxu8MkqM0o3HPAyyDERWWaCvPwa4ShUE7iJmi0retf+Ffmdh4iq7YX2OQtGIUcatjz37XwQ8+4HgGVQ1hyoGo6J9U=
+	t=1789539209; cv=none; b=TnLL0QqNUYwhawR+1CxKCVh1Kebvm+xLblxYI0XOoDcfCUIr5GpQZ63LCY0fi8LiZDLxZPMposr4xUs92mKmlyWRAGFG2bmaC4KfqNakZInDuU0R8lBuGRC0UqVF/pSHQzWMIXh+fLkyee4CTbbp2KAC8S9idUOIbpkoq22gCjI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789539207; c=relaxed/simple;
-	bh=9AQBOX7WHaFtXKrai6q48Xl/HvE+e0N8DcJlpSobYXI=;
+	s=arc-20240116; t=1789539209; c=relaxed/simple;
+	bh=/UxG/z8oqDwP9CIwjcJWyPbDAUY4rJGItVrJwkdYtcs=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=uWefjo/mORj/9Pynj9WaZogyJU6jaQfbkZtd1JGpGduwhJkdXULwrlcFO02GEiPo140fU4nlBAkDC3nhhjwMFKAar2685hKrTaN0jbKvzrVqCe9ENS8pPcFv+Dw8pn7hVVRo+AQMdNtGww3zTMMVNAnYCX5CLpmquGHy38fZJA0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=rcr2L7sD; arc=none smtp.client-ip=209.85.214.199
+	 To:Content-Type; b=XnYF3en8KQ6DclyXi+Ja60YF0QeW3ygCHWZlaGyIB7G0hnS8ibMXpdrCP+2T1cQmVA5RWhDOvKiXX6K7XjmbPQ2y51ssjR3cfVoXAtacfLwyszPm+8KyeNH8l54FUB8ohhYYddJM0QRHR2QFwJTbsca276imSrQnFOmhV6bknws=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=S5X1sQhf; arc=none smtp.client-ip=209.85.216.72
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rcr2L7sD"
-Received: by mail-pl1-f199.google.com with SMTP id d9443c01a7336-2dd7d0751efso17839035ad.0
-        for <linux-perf-users@vger.kernel.org>; Tue, 15 Sep 2026 23:13:25 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="S5X1sQhf"
+Received: by mail-pj1-f72.google.com with SMTP id 98e67ed59e1d1-39af92138f9so3165708a91.0
+        for <linux-perf-users@vger.kernel.org>; Tue, 15 Sep 2026 23:13:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1789539205; x=1790144005; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1789539207; x=1790144007; darn=vger.kernel.org;
         h=content-type:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=icwakIRxoRygxUn8RuGulJXMD/67KQ1hy2QcRu7qTfU=;
-        b=rcr2L7sDxZVTco3JJcBMrGiBH2FJI4pOWDgpEz+WDX8TE7SVe15tzeYAHFqLhLFoBD
-         WygyNCbivXUQWA8oiw2jNTk2U5g/wg5vniZV6zh1OXIXpihls5NTNEATd/AH9xGB0rGW
-         473FX/a5mzKlQ/v1t6KvdYy30Vuy0d7HRp/Zuo6aYWxlDH1b2Tw4sGkGvXastJilb+EG
-         6w5TGVDFgYlJ+UYYfHKdyVEzNqP5mXwUXN6CXob+NmVeACXFvtJN5V9dtcwJ2mBtkX+q
-         cTPws6PUj8E3xlub0B8AE0TvIX08Fby9O+09cBGwlQLQJ8uR6PWUVRh7gXcbgNQ0gXuX
-         G0OA==
+        bh=mE+VIvBqxJWeI7GLiq81u6doV2s7RHiOZIS5UCF0zbk=;
+        b=S5X1sQhf8PRD27TmBaTV9nyWZgFb4WxZheW59NQRHqiF4qGeGbjdZTBNjuf+5LTGoW
+         k7iRZHKHjfGiM3DGjU0Jk/HtYkqa5BxBfUCfxyWnADN4nQY45mZtG+Jaughht4oZ3ZAy
+         X8zTcTs9XhzYHOuk5jvxc+sgT5QsWd4F5ARVugsbdnuxtPlULrc0A9ZTVUscGSKtj5IM
+         ubV9HCiHt7sXGUCCb9bWtEOw3/Muaomv3OkoWskb0NoGYyU2GM/74lCGMFv8UWWyr1YD
+         ghOzHzmt6RdICW8tLOG79O3xfRLmS03tc8vBT9UrTbxoXS6essbUwVzhUzt1WrPlS9rV
+         /Kkw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1789539205; x=1790144005;
+        d=1e100.net; s=20260707; t=1789539207; x=1790144007;
         h=content-type:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=icwakIRxoRygxUn8RuGulJXMD/67KQ1hy2QcRu7qTfU=;
-        b=zNHwC8/TvQ+5R+f96cjf1xgDwQcHNjqSn96f0auqlZIgZcVHS41Wq6ZdiFKk4O8D3p
-         t+RiU4BkENtyRmRqA10/HQwgwK8nUSj5Gd2qnPJRl2NZ7Gbn/Bd+ETsrrhZm324VagOE
-         t14ARqiON7/gqOXcTXWc7HrBrVWKOpPsfFxvr8IUoRbXRTGOo3a4eeU3kcAXpXAotGIO
-         3RIIEYXvq1VdKnps9ZxveQFsNKkeO1+PLQLggxmb3zrdgpCLclzNKwL29jYBqNfp0Beo
-         8vSCzwFrtid1At1UyBQpSdGdD2Rvs+4euZ56KnhxUgoTM2azQLGHAX4pwLEfgqZwCeYB
-         rzfQ==
-X-Forwarded-Encrypted: i=1; AKwUvByxY5qlw4IRprlEPaJkhxUKq0+tE9SLh/hXNzEiVPNjNNtr0cbNFbeQdQU61xAiQVLOtJlV8e2gcmYOKghDcOUN@vger.kernel.org
-X-Gm-Message-State: AFuF++ki7z2kiWSg0WkgRgJYTe3xbRaKSkFEyFldf9gmKUBC6nu8awui
-	2QQkTorsid5fbVXVwOUypCdWnOOxwUmUHT0TxMjprHL+aykkm2XP52piz8epQl0j8pLV5hkGKDU
-	mpODNxenfLg==
-X-Received: from dyhb21.prod.google.com ([2002:a05:7300:1495:b0:32b:7182:c3b7])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:903:2446:b0:2d8:d4d2:d13a
- with SMTP id d9443c01a7336-2dd7655b5f3mr91909395ad.22.1789539204632; Tue, 15
- Sep 2026 23:13:24 -0700 (PDT)
-Date: Tue, 15 Sep 2026 23:12:16 -0700
+        bh=mE+VIvBqxJWeI7GLiq81u6doV2s7RHiOZIS5UCF0zbk=;
+        b=Ru9f0T1q/bpcB/P+ZU1IS7yMado1dtiaDuDsJaJBcWnwR8TNPxYdwZevkcS8da+Dn6
+         Ora1qiihHOzim7aUpQetLqudPwWFRJEFx/Piq1B+n4qdd0+5fsObt+em0Rg1uZPC+Y+G
+         iIP7wSsaknSBFa/cMyamqRR44QzgNTVRgMQeTtxN3DqBmqVSjrWX5rNHBmpgDzLCLfFd
+         jC2ejlcxBCG23B3F2ynmBAlflz+Ty6K1tyb9k+7sl70eB0/JkftuvhubNJTKNtm8AvYx
+         axJogci5z2dqwwObNygvHyc2dDpd1JNSd9OlYaLkVvgZYMqmtUDiCheiv3J+xBvzC6od
+         pcYA==
+X-Forwarded-Encrypted: i=1; AKwUvBw4vXoZ3hCo07TySFi/vS2IBHpaes25A/pGye2tRLZArLkqamacsyrGSZkqUcUGvzbMoxvO44oiN8hpitXRDo76@vger.kernel.org
+X-Gm-Message-State: AFuF++kt2LafSPMpZLlOkKQR/Hi4NKxKM/oVI2MAFzlomMuBazcgdCbW
+	XyVPnaG1VJU7idYw2Lo/7WgVjrHU1G7cDrUhLxcgkknkCLwpyzu3AJ8dpn4w6/IhdM8uu8+QlX4
+	7Q+5oUckpZw==
+X-Received: from dlep14-n2.prod.google.com ([2002:a05:701b:458e:20b0:143:9704:de05])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:3941:b0:39e:237c:50de
+ with SMTP id 98e67ed59e1d1-39e237c518amr1393784a91.3.1789539206454; Tue, 15
+ Sep 2026 23:13:26 -0700 (PDT)
+Date: Tue, 15 Sep 2026 23:12:17 -0700
 In-Reply-To: <20260916061218.3061216-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -60,8 +60,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260916061218.3061216-1-irogers@google.com>
 X-Mailer: git-send-email 2.55.0.1032.g73a4cd73de-goog
-Message-ID: <20260916061218.3061216-8-irogers@google.com>
-Subject: [PATCH 7/9] perf build: Check the version of the compiler that is used
+Message-ID: <20260916061218.3061216-9-irogers@google.com>
+Subject: [PATCH 8/9] perf build: Remove leftovers of removed build options
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
@@ -72,40 +72,69 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	linux-kernel@vger.kernel.org, llvm@lists.linux.dev
 Content-Type: text/plain; charset="UTF-8"
 
-The flex and bison flags are adjusted for clang older than 13.0.0, which
-doesn't grok -Wno-unused-but-set-variable. The test is reached because
-CC_NO_CLANG says CC is clang, but the version comes from $(CLANG), which
-defaults to plain "clang" and needn't be the compiler in use:
+NO_LIBDW_DWARF_UNWIND, NO_SYSCALL_TABLE and the embedded clang/LLVM
+support were all removed, but each removal left the matching entry in
+the build test suite behind:
 
-  $ make CC=clang-19 CLANG=clang-12
-  version from $(CLANG) -> 12.0.0, flag stripped
-  version from $(CC)    -> 19.1.7, flag kept
+  run += make_no_libdw_dwarf_unwind
+  run += make_no_syscall_tbl
+  run += make_with_clangllvm
 
-Dropping the flag lets the warnings it suppresses in the generated flex
-and bison code through, and those are errors under -Werror.
+None of these have a make_* variable defining what to build, so $($@)
+expands to nothing and each one silently repeats the plain "make_pure"
+build. The suite therefore spends six builds, as every test is also run
+with O=, appearing to cover options that no longer exist.
 
-Ask $(CC) instead, as that is what compiles the code.
+Remove them, along with the NO_LIBDW_DWARF_UNWIND comment that is still
+in Makefile.perf.
 
-Fixes: 878460e8d0ff ("perf build: Remove -Wno-unused-but-set-variable from the flex flags when building with clang < 13.0.0")
+Fixes: 2e9191573a69 ("perf build: Remove NO_LIBDW_DWARF_UNWIND option")
+Fixes: 3cc550f5bbcf ("perf tools: Remove dependency on libaudit")
+Fixes: 56b11a2126bf ("perf bpf: Remove support for embedding clang for compiling BPF events (-e foo.c)")
 Signed-off-by: Ian Rogers <irogers@google.com>
 Assisted-by: Antigravity:gemini-3.1-pro
 ---
- tools/perf/util/Build | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/perf/Makefile.perf | 3 ---
+ tools/perf/tests/make    | 3 ---
+ 2 files changed, 6 deletions(-)
 
-diff --git a/tools/perf/util/Build b/tools/perf/util/Build
-index d08f2af7d970..a4618e4e4848 100644
---- a/tools/perf/util/Build
-+++ b/tools/perf/util/Build
-@@ -339,7 +339,7 @@ bison_flags := -DYYENABLE_NLS=0 -Wno-unused-but-set-variable
- 
- # Old clangs don't grok -Wno-unused-but-set-variable, remove it
- ifeq ($(CC_NO_CLANG), 0)
--  CLANG_VERSION := $(shell $(CLANG) --version | head -1 | sed 's/.*clang version \([[:digit:]]\+.[[:digit:]]\+.[[:digit:]]\+\).*/\1/g')
-+  CLANG_VERSION := $(shell $(CC) --version | head -1 | sed 's/.*clang version \([[:digit:]]\+.[[:digit:]]\+.[[:digit:]]\+\).*/\1/g')
-   ifeq ($(call version-lt3,$(CLANG_VERSION),13.0.0),1)
-     bison_flags := $(subst -Wno-unused-but-set-variable,,$(bison_flags))
-     flex_flags := $(subst -Wno-unused-but-set-variable,,$(flex_flags))
+diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
+index 2438b40eaaec..53f538cc8e1a 100644
+--- a/tools/perf/Makefile.perf
++++ b/tools/perf/Makefile.perf
+@@ -64,9 +64,6 @@ include ../scripts/utilities.mak
+ #
+ # Define NO_LIBBIONIC if you do not want bionic support
+ #
+-# Define NO_LIBDW_DWARF_UNWIND if you do not want libdw support
+-# for dwarf backtrace post unwind.
+-#
+ # Define NO_LIBTRACEEVENT=1 if you don't want libtraceevent to be linked,
+ # this will remove multiple features and tools, such as 'perf trace',
+ # that need it to read tracefs event format files, etc.
+diff --git a/tools/perf/tests/make b/tools/perf/tests/make
+index f879f8109072..608470ff9c10 100644
+--- a/tools/perf/tests/make
++++ b/tools/perf/tests/make
+@@ -157,7 +157,6 @@ run += make_no_demangle
+ run += make_no_libelf
+ run += make_no_libdw
+ run += make_libunwind
+-run += make_no_libdw_dwarf_unwind
+ run += make_no_backtrace
+ run += make_no_libcapstone
+ run += make_libcapstone_dlopen
+@@ -167,10 +166,8 @@ run += make_no_libbpf
+ run += make_no_libbpf_DEBUG
+ run += make_no_libllvm
+ run += make_no_sdt
+-run += make_no_syscall_tbl
+ run += make_no_babeltrace2
+ run += make_with_coresight
+-run += make_with_clangllvm
+ run += make_no_libpfm4
+ run += make_refcnt_check
+ run += make_help
 -- 
 2.55.0.1032.g73a4cd73de-goog
 
