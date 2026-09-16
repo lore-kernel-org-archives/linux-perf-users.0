@@ -1,140 +1,137 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B30803B1EC0
-	for <linux-perf-users@vger.kernel.org>; Wed, 16 Sep 2026 01:49:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E692419644B
+	for <linux-perf-users@vger.kernel.org>; Wed, 16 Sep 2026 01:51:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789523360; cv=none; b=iN1BLOZJMeBcuOYS1qJUhMYm2sksdYv/AjJnNDCESDKlfGZejWqLSAWhbvUFGCHuYjF/3DR/Z81EjqKLM++hsWnuS/WrREB/Vs+E/DcOuDr54+ZWSBMHA+rE7XnbVyZJAIoKWDU5px6ceC+Dqr/rreLfUymgJa9MhV0nPMe78NE=
+	t=1789523522; cv=none; b=pNfpXcDilgAfVEcmk8VuM6CKPojtbPcqY5/0OGqJ3TtvMxX1g3fJ0zUFI+s55QpHymBUoJ/zV7lget9XwzIGO0rQcS8i/lUOusmeRSgU2FQcWs9IZvgbFkMBEvun3dXSy+7UcqKlVGFtpLCaYQxuDKg5d6dpLNV1+l+eBwwJ9ns=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789523360; c=relaxed/simple;
-	bh=ovfrJgCYDN/X1EEXWTZZyIbSLzgwILEL6eMjva2jQfE=;
+	s=arc-20240116; t=1789523522; c=relaxed/simple;
+	bh=IL6Sxr7SiWXXIbckyWND7JWhDb6NfSyZYxa50dEhvuc=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=pmUn64miuJniB/a2gPJRn6ewwm5y6KDRIGLXlW+DnP8/ayvf+ySQRc0tdqXCAinUKARkfDWJeXoQUr4YwoX69Gq0Yb3FjzA8ok0nElVLbOuV0mGV21sR6mNxIWti7tVglcz5vALSc/QshjTw3nK6VFQwNoqMiJnojK+VU5azZYM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WPa/EDcM; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=g36Nl5PojfUjTJHm3l4Tt5i/V4DlDJ5t8O5E1eCTwCMykO9cftNcQ5xp5sln8jUADq5pdY2JqZ2jyZKMhyBPVJK5FN/l+a3jwMKKOnGRiFiiGq2wZujhEsXrMlvWwZdK9oSTxZ0OYYp946FP0JCGWyiduNNLTa0MbKSExrgk7qI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=e/utAYYQ; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WPa/EDcM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D44C91F000FF;
-	Wed, 16 Sep 2026 01:49:05 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="e/utAYYQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B53C01F000FF;
+	Wed, 16 Sep 2026 01:51:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789523346;
-	bh=hc2MyTL117g53RkZY1Uclwj/t2W5hCvMaHgRkGxjL1Q=;
+	s=k20260515; t=1789523506;
+	bh=V6YZ6VIs/U78RCSjOyjsK8je7C1xpS/bL7yeytk1frQ=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=WPa/EDcMZjLNFrwmiv9VNLrikbgqBDOL4xaJ/dNN9nxc5ZBVd1H3JQTMwgfwHUk5g
-	 wxOvduPW8lFi8ZcIXsBC7Q/91VSHbNc45z1+OMIsUugX+RrOJbmebpr3Jeve8zemJe
-	 7C2qphZyoogLuJrNHMGScTUYBCiAX5ubyKKy9cBpCRSKMohnwXLhaFpJagtbJEWKM9
-	 c2qsSO7fKbgb/IvnW6bEbxigqdljcZo+5DS/T9bhSWUstCDsbsBLAD2jqk509baHuT
-	 dz8LZ/UPRayj8kDv7wrqROu+7XoQhRNWPmOlFMZtQTwHhoE4SWjRfzYbhKmL/+KpuP
-	 xtOouM0yDUdYw==
+	b=e/utAYYQ9pTN93twBcUj+WhHKbJeLY6/MLiWJVFZQqCrkUxKA16CRlfKq5jwxnJAd
+	 V+KXSGwtDhGx2V5DC7z3+4G8KiH7Rg4FrPmmqxelMCGJmd58zyKNYkfG6HwKOd7Cob
+	 CzFAWfR+mJNPDHiNlSu+/WL9kyJtCL1Amgfab50JQFc4EnX2T3lmeDVB4iSiCbcQ0b
+	 /U6UHZf1IGt97/SPelDNoGZ/+6BCDPYtwtO6uOGee1Yz8BFPRkQVoTb7vNCNlzbhtO
+	 DBuwolJUYhwW+D+dF8VrvMOgJkqvxQUobIP8jtBj0wrZfDw23o7IHU1JqLTOA6KxvP
+	 vAvYgM20cCDWw==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v6 21/26] perf annotate-arm64: Support stack variable
+Subject: Re: [PATCH v6 16/26] perf annotate-arm64: Support load instruction
  tracking
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Tengda Wu" <wutengda@huaweicloud.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <11bcde1a75d96b524cc5a7f6fa442025680e56a0.1789521520.git.wutengda@huaweicloud.com>
+In-Reply-To: <f95afe942520e925f209a2cd20c5f55d28c272b9.1789521520.git.wutengda@huaweicloud.com>
 References: <cover.1789521520.git.wutengda@huaweicloud.com>
- <11bcde1a75d96b524cc5a7f6fa442025680e56a0.1789521520.git.wutengda@huaweicloud.com>
+ <f95afe942520e925f209a2cd20c5f55d28c272b9.1789521520.git.wutengda@huaweicloud.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Wed, 16 Sep 2026 01:49:05 +0000
-Message-Id: <20260916014905.D44C91F000FF@smtp.kernel.org>
+Date: Wed, 16 Sep 2026 01:51:46 +0000
+Message-Id: <20260916015146.B53C01F000FF@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+Thank you for your contribution! Sashiko AI review found 2 potential issue(=
 s) to consider:
-- [Medium] perf: stale stack state due to bypassed invalidation in update_s=
-tore_insn_state
+- [Medium] perf annotate: stale lifetime metadata retained on load
+- [Medium] perf annotate: incorrect type propagation for TSR_KIND_POINTER l=
+oads
 --
 
-commit 2ddb0f384d44eeb70844d8c3adc06f8d55101f68
+commit 9763211f6135d1b6c3e44acf4ac681c34ac60395
 Author: Tengda Wu <wutengda@huaweicloud.com>
 
-perf annotate-arm64: Support stack variable tracking
-
-Extend update_insn_state_arm64() to track data types stored on the stack. T=
-he
-implementation handles stack loads and stores to follow data types as they
-move between registers and memory.
+perf annotate-arm64: Support load instruction tracking
+   =20
+Extend update_insn_state_arm64() to handle load instructions, tracking
+register state changes when data is loaded from memory to registers.
 
 > diff --git a/tools/perf/util/annotate-arch/annotate-arm64.c b/tools/perf/=
 util/annotate-arch/annotate-arm64.c
-> index a72c7703dd6b3..8339aab0d314f 100644
+> index d3d994a22cf92..11b2bdceaacb1 100644
 > --- a/tools/perf/util/annotate-arch/annotate-arm64.c
 > +++ b/tools/perf/util/annotate-arch/annotate-arm64.c
+
 [ ... ]
-> +/*
-> + * For store insns: propagate type from @sreg to the memory location ref=
-erenced
-> + * by @dst, applying @mem_spacing to account for multi-regs stores (e.g.=
- stp).
-> + */
-> +static void propagate_store_reg_state(struct type_state *state,
-> +				      struct data_loc_info *dloc,
-> +				      struct disasm_line *dl, int sreg,
-> +				      struct annotated_op_loc *dst,
-> +				      int mem_spacing)
-> +{
-[ ... ]
-> +		if (!has_reg_type(state, sreg) || !state->regs[sreg].ok) {
-> +			stack =3D find_stack_state(state, offset);
-> +			/* Preserve compound states when only a member is overwritten. */
-> +			if (stack && !stack->compound)
-> +				delete_stack_state(state, offset);
-> +
-> +			return;
-> +		}
-[ ... ]
-> +static void update_store_insn_state(struct type_state *state,
+
+> @@ -461,11 +461,210 @@ static bool is_readonly_branch_or_cmp(const char *=
+name)
+> +static int propagate_load_reg_state(struct type_state *state,
 > +				    struct data_loc_info *dloc,
-> +				    struct disasm_line *dl,
+> +				    struct disasm_line *dl, int dreg,
 > +				    struct annotated_op_loc *src,
-> +				    struct annotated_op_loc *dst)
+> +				    struct type_state_reg **src_states,
+> +				    int mem_spacing)
 > +{
-> +	int mem_spacing =3D 0;
+> +	struct type_state_reg *tsr;
+> +	struct type_state_reg *src_tsr =3D src_states[0];
+> +	Dwarf_Die type_die;
+> +	u32 insn_offset =3D dl->al.offset;
+> +	int sreg =3D src->reg1;
+> +	int reg_offset;
 > +
-> +	if (!has_reg_type(state, dst->reg1))
-> +		return;
+> +	if (!has_reg_type(state, dreg))
+> +		return -1;
 > +
-> +	/* Handle the first source register */
-> +	if (has_reg_type(state, src->reg1))
-> +		propagate_store_reg_state(state, dloc, dl, src->reg1,
-> +					  dst, mem_spacing);
+> +	tsr =3D &state->regs[dreg];
+> +	tsr->copied_from =3D -1;
 > +
-> +	if (!src->multi_regs || !has_reg_type(state, src->reg2))
-> +		goto out_adjust;
+> +retry:
+> +	if (arch_get_reg_offset(dloc->arch, src, sreg, state, false, &reg_offse=
+t))
 
 [Severity: Medium]
-Does the has_reg_type() guard here inadvertently skip the stack state
-invalidation logic?
+When acquiring the destination register state here, shouldn't the lifetime
+metadata be cleared (e.g., via tsr->lifetime_active =3D false;)?
 
-Looking at propagate_store_reg_state() above, there is logic to delete the
-stack state if the source register is untracked. However, because
-update_store_insn_state() completely bypasses the call to
-propagate_store_reg_state() when the source register is untracked, this
-cleanup is never reached.
+If the register previously held a variable with an active DWARF lifetime, t=
+he
+newly loaded value inherits this stale lifetime. During function calls,
+caller-saved registers with active lifetimes are preserved rather than
+invalidated. This causes the register's new type to incorrectly survive the
+call, leading to stale type tracking downstream.
 
-If an untracked register is stored into a stack slot previously used for a
-tracked variable, could this leave stale tracking state on the stack, causi=
-ng
-subsequent loads from that slot to inherit the wrong type?
+> +		goto load_non_regoff;
+> +
+> +	reg_offset +=3D mem_spacing;
 
-> +
-> +	/* Handle the second source register */
-> +	mem_spacing =3D arm64__reg_size(dl->ops.source.raw);
-> +
-> +	if (mem_spacing >=3D 0)
-> +		propagate_store_reg_state(state, dloc, dl, src->reg2,
-> +					  dst, mem_spacing);
-> +
-> +out_adjust:
-> +	adjust_reg_index_state(state, dloc, dl, dst);
-> +}
+[ ... ]
+
+> +	/* Handle dereference of TSR_KIND_POINTER registers */
+> +	if (src_tsr->kind =3D=3D TSR_KIND_POINTER &&
+> +	    die_get_member_type(&src_tsr->type,
+> +				src_tsr->offset + reg_offset, &type_die)) {
+> +		tsr->type =3D src_tsr->type;
+> +		tsr->kind =3D TSR_KIND_TYPE;
+> +		tsr->offset =3D src_tsr->offset + reg_offset;
+> +		tsr->imm_value =3D 0;
+> +		tsr->ok =3D true;
+
+[Severity: Medium]
+Does this incorrectly assign the parent struct's type (src_tsr->type) inste=
+ad
+of the member's type (type_die), corrupting type tracking for the loaded
+value?
+
+If the destination register is subsequently used as a base address,
+check_matching_type() will fail because it expects a TSR_KIND_TYPE register
+to hold a pointer type, whereas it now holds a struct type. This breaks
+downstream type inference for the loaded value.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/cover.1789521520.gi=
-t.wutengda@huaweicloud.com?part=3D21
+t.wutengda@huaweicloud.com?part=3D16
