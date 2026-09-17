@@ -1,56 +1,56 @@
-Received: from mail-oa1-f71.google.com (mail-oa1-f71.google.com [209.85.160.71])
+Received: from mail-pl1-f199.google.com (mail-pl1-f199.google.com [209.85.214.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCEDB3E4117
-	for <linux-perf-users@vger.kernel.org>; Thu, 17 Sep 2026 04:53:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.71
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E0A03E410E
+	for <linux-perf-users@vger.kernel.org>; Thu, 17 Sep 2026 04:53:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789620830; cv=none; b=flx0vNR5m8xPU5IqSYUeaHUFl3WrIfTxm+POf1Ox3ipO2frh0bpcczrME5qXRd8JR19m3MWcrHQYg/k4RXKRn+uweVPlH2yOv+E2mukv0ye7T7N+Lvx7l9PU4OQoXcetcb+IOU88uUW5AWUEX9jRs5jsBALXc72npMz90jcbVu0=
+	t=1789620832; cv=none; b=NuhOifqmMhdE2aDjM5CgIA/ERgxFgvubnxDS+70zq5e+VxfbeYMTLw/sZauGCbc1aYQKOOKVBee5rXPPeZDj4N81Q+KiNWQ/yUShPQ41VsPkKOi4wlvVdki7hqlKiYdktm837EmvoPddoMl6k1bli+VuX6bjgY7Lr5Ultcwj7Pc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789620830; c=relaxed/simple;
-	bh=qHu8O6bKMJi1Q+A7KlfHsVcSSZH8sm8qHnQHCRtDrWA=;
+	s=arc-20240116; t=1789620832; c=relaxed/simple;
+	bh=5DklQJpfCFJyN0EZrRZqRXjxXKTZyUSm4Q+g/bsrlA8=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=R5JDVXwR+FqqF/wXJ4dg8T0UD7JyHWQZM7IWvJMqCXE1QHhzu8TsuwzCZfqgql6WQIUnJFk0VePgRcMhJNX8Zj2c+Rxil+yOt6I7iJI3b1yAjLcFMJJqc7OOB9xgrhwC0Wft3hTEKAJoIh7U8ymzgofDtTN6/feZ0FGqb/tvdt4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=CKHbwrcE; arc=none smtp.client-ip=209.85.160.71
+	 To:Cc:Content-Type; b=tOHoQfm0vpqKaQaIVR2JnNcqLh+yyHQtld4wPbBFdDZMCw7qAwirXK3wi0ZyTRaVFBCgvkjq99XNXHzHi63kg5MaGoSM5YzyDBAm0PSki1dtXmwxktjWyvWuvzM+dnsvf6QDDYngIhWMM4M/CtmYabXh3L+Q2gBkwYEJ6vRfQ4M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=OX25Gn7k; arc=none smtp.client-ip=209.85.214.199
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="CKHbwrcE"
-Received: by mail-oa1-f71.google.com with SMTP id 586e51a60fabf-455ad408573so620088fac.3
-        for <linux-perf-users@vger.kernel.org>; Wed, 16 Sep 2026 21:53:48 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="OX25Gn7k"
+Received: by mail-pl1-f199.google.com with SMTP id d9443c01a7336-2d94a158dc8so9215625ad.2
+        for <linux-perf-users@vger.kernel.org>; Wed, 16 Sep 2026 21:53:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1789620827; x=1790225627; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1789620829; x=1790225629; darn=vger.kernel.org;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=uQCmW4sxjAYeijHrikCdGvMhBKSxI0fTqTZnViWlMyA=;
-        b=CKHbwrcE0MQi8oBaZhDAsH0jFGLWw7DvqPSSMAExoGzNxYhuwTnyC+1leBYACVCvqe
-         zsbNKN3JNvBlXLiEoVva99AO7vOJdc0UBLAZwWBXnPoqfxmBpbIeVheSvBZdUlVxdxnV
-         V17FzrZFvRe836mi9DsrB0YPLctk4hRBKlDi89235aO7NRGJJrpAAvOkZI2lwolGyrZt
-         FYkFfT7EzLIxxXvvWSlB2O/adYKMbqqD7boJCedU7L3omXwJgQO7/96RsUamSaQDOMyb
-         +LCShyk8scncJUIh/zuzWzK0zSu3j2xEggJlFi1I1ngqV1wcJ9dlopwzQUtqV//tZMm0
-         b7Jg==
+        bh=ctknpE6kMV5LkwM9lNHtmlsQ1sWEmYmqXPSOFSZmCm4=;
+        b=OX25Gn7kOuOpuWa8t41EIB7Ldk7ZTJVHPh+brxsLz/koIVy6N3BmaKMyy30ZJcnP14
+         IysnRzr6GZQ6xmw953oqfvXTRqKfNp1jAsocJkhT8mw2ryxEG401KsxsFWa6Uam/LV4c
+         Zc5qTgNONK5oP12HGjRuGBEtsB1u3c2AlQ4sOh1zKQJfDc75y1o+3IKcylF83Xcf58aK
+         2lMOZZgRE3A9f2hKpHJq24r2RkGJMNlwUKDuDLXv2jfDLF5feWOpC8iiXbI6ncGVp1Pm
+         JyF8jmqhBGVTu5QIScBoI9EmqX+mmicfIhQnCCCJaf3BFnfwUPq4WiWkZzD9FD5Dfz4t
+         Tiog==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1789620827; x=1790225627;
+        d=1e100.net; s=20260707; t=1789620829; x=1790225629;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=uQCmW4sxjAYeijHrikCdGvMhBKSxI0fTqTZnViWlMyA=;
-        b=XHscRuDi/tzPvXMVKA41vOd6xBml1QNcIV5wx4YvcVkYSKp6ZvkDOcDMfSMG7s8yDp
-         RV8FQdMmJvGCqH2Tp5B4fBD85hLeJCns+MNp8+Ftzu9RRk8UZSFKLu9+P9Yy8umNy0o2
-         SMpV5IEvlPB5qA0MwnXUKDDtA3rQ7s1J4nytHZpx3VHVhGvuPhL96gSJjKEu/W9q304o
-         sJWp7gxt8szneADpS7C0BR3W6pZ+O4ABI9bSxJmpQmfmCAu6KNMpBJkyfrWaOOJ+Hg2M
-         Sppx8SbibmcPmMOp6qBOJ1WL5wuC7GjJvZiAuyhnuIHh5+3pcj7Agy1Gwm8r3dJFoQ1U
-         osIg==
-X-Forwarded-Encrypted: i=1; AKwUvByL0vXd625w15cuCfxZBpBQUQwfGiCHQ9dQFQhr+/D3EaRe5auVAk0r6FupCoksgEn7emtmWgUjY/KFhLEB6///@vger.kernel.org
-X-Gm-Message-State: AFuF++nttiuIlwkWiwI15LP8m+1x0tIukMmrHr2ZNUTOnflMLtPzt0vR
-	KMBLYnSkGWmsTJ+OfWLuCuPkqmQYf+O3mwzs2fHhIuXtseLZtDyJGZOCA07kLOROnLT5XiadK79
-	IeUnQtwZbGg==
-X-Received: from dybfx29.prod.google.com ([2002:a05:7300:c39d:b0:328:3ef3:fe03])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6820:81d8:b0:6aa:e573:9ce0
- with SMTP id 006d021491bc7-6c7d16ce206mr5504911eaf.16.1789620826988; Wed, 16
- Sep 2026 21:53:46 -0700 (PDT)
-Date: Wed, 16 Sep 2026 21:53:22 -0700
+        bh=ctknpE6kMV5LkwM9lNHtmlsQ1sWEmYmqXPSOFSZmCm4=;
+        b=SOjP3pHBCiNg3tqdggMCxKfODMibOYDjgxnV6ciTt03B1twV7rzWyp1AhWHnspUFZf
+         jQ8xVng1XXn6P7ykz+NYVeWbrbndOpe/8N9qIWr9WUg9OUmaq9JXcL13ZgztTVVeavcu
+         wqIREOnh3ExgWwKZm+skzb2yI9g3UN1e7xLgS+3xpwyWs4/W+bvtafcZAvPdYrJm6klU
+         uoV6IFeq+AkwQRF6Kiukm6/N3JcbgnTbw3qUY1qm8PYHNnDycYjXj6CneoinVZRCkDwt
+         +h6YMAFBFIsd8SG3+W451pXFHgG5YUBw3NviopBbtsXMGzrIKG8Psk2IOAfk+LRq0s6R
+         98WA==
+X-Forwarded-Encrypted: i=1; AKwUvBwrA/9PEowKDpifQVKNSQVmpIdQZ7MVHkooNJrGIF1iHVIE405qIzIlLuyeyD8PQyCHprIEXt8mfJN0xE+D1ycQ@vger.kernel.org
+X-Gm-Message-State: AFuF++lrW50fd5mZZnizcTbdBqjxq7w4KobyCO4oCS/nv2oJMKlNd0RP
+	uUqTZxu3wyM3Mifv/v0N/2lpCz4oWHvaPypgzma2xSQjsPsJdKonL4bITlCpDJjPx9MCBwCtCqJ
+	BIvFlyxc9UA==
+X-Received: from dycc4.prod.google.com ([2002:a05:693c:60c4:b0:336:afee:118c])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a20:2584:b0:3da:bea4:6215
+ with SMTP id adf61e73a8af0-3dd5f72046cmr12464935637.19.1789620829321; Wed, 16
+ Sep 2026 21:53:49 -0700 (PDT)
+Date: Wed, 16 Sep 2026 21:53:23 -0700
 In-Reply-To: <20260917045326.63601-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -60,9 +60,9 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260917045326.63601-1-irogers@google.com>
 X-Mailer: git-send-email 2.55.0.1082.g2b9226bbc0-goog
-Message-ID: <20260917045326.63601-7-irogers@google.com>
-Subject: [PATCH v1 07/11] perf ui annotate-data: missing explicit inclusion of
- stdlib.h and stdio.h
+Message-ID: <20260917045326.63601-8-irogers@google.com>
+Subject: [PATCH v1 08/11] perf annotate-data: missing <string.h> inclusion for
+ libc string functions
 From: Ian Rogers <irogers@google.com>
 To: Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
 	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
@@ -73,52 +73,59 @@ Content-Type: text/plain; charset="UTF-8"
 
 Sashiko reported:
 
-  When compiling the Linux kernel performance tools (perf) on a system
-  using musl libc, a build failure occurs in
-  tools/perf/ui/browsers/annotate-data.c due to missing standard
-  header inclusions.
+  When compiling the perf tool with musl libc,
+  tools/perf/util/annotate-data.c fails to build due to the missing
+  <string.h> header.
 
-  The source file directly invokes standard POSIX library functions
-  such as calloc(), free(), and snprintf() without explicitly
-  including <stdlib.h> and <stdio.h>. While glibc implicitly pulls in
-  these declarations via other included headers, musl libc strictly
-  separates standard header declarations and does not implicitly
-  expose them. This namespace isolation causes the compiler to
-  generate implicit-function-declaration errors when encountering
-  these undeclared identifiers, permanently failing the build.
+  The source file utilizes standard C library string and memory
+  functions, such as memset() in init_type_state() and strcmp() in
+  data_type_cmp(). While glibc implicitly pulls in <string.h> via
+  other standard headers, musl libc enforces stricter header
+  separation. Because the header is not explicitly included at the top
+  of the file, the compiler encounters implicit function declarations
+  for these standard string functions. This results in a direct
+  compile-time build error.
 
 Add the header files and use git clang-format to sort.
 
 Reported-by: sashiko-bot@kernel.org
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/ui/browsers/annotate-data.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ tools/perf/util/annotate-data.c | 11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
 
-diff --git a/tools/perf/ui/browsers/annotate-data.c b/tools/perf/ui/browsers/annotate-data.c
-index c6e07a9b6408..5ec02bfe30e4 100644
---- a/tools/perf/ui/browsers/annotate-data.c
-+++ b/tools/perf/ui/browsers/annotate-data.c
-@@ -1,6 +1,9 @@
- // SPDX-License-Identifier: GPL-2.0
- #include <inttypes.h>
-+#include <stdio.h>
-+#include <stdlib.h>
- #include <string.h>
+diff --git a/tools/perf/util/annotate-data.c b/tools/perf/util/annotate-data.c
+index aff60a630fd0..02df833504be 100644
+--- a/tools/perf/util/annotate-data.c
++++ b/tools/perf/util/annotate-data.c
+@@ -4,20 +4,23 @@
+  *
+  * Written by Namhyung Kim <namhyung@kernel.org>
+  */
++#include "annotate-data.h"
++
+ #include <errno.h>
++#include <inttypes.h>
+ #include <stdio.h>
+ #include <stdlib.h>
+-#include <inttypes.h>
++#include <string.h>
 +
  #include <linux/zalloc.h>
- #include <sys/ttydefaults.h>
  
-@@ -10,8 +13,8 @@
- #include "ui/ui.h"
- #include "util/annotate.h"
- #include "util/annotate-data.h"
--#include "util/evsel.h"
- #include "util/evlist.h"
-+#include "util/evsel.h"
- #include "util/sort.h"
- 
- #define FOLDED_SIGN  '+'
+ #include "annotate.h"
+-#include "annotate-data.h"
+-#include "debuginfo.h"
+ #include "debug.h"
++#include "debuginfo.h"
+ #include "dso.h"
+ #include "dwarf-regs.h"
+-#include "evsel.h"
+ #include "evlist.h"
++#include "evsel.h"
+ #include "map.h"
+ #include "map_symbol.h"
+ #include "sort.h"
 -- 
 2.55.0.1082.g2b9226bbc0-goog
 
