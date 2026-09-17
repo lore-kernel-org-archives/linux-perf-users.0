@@ -1,285 +1,204 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from BN1PR04CU002.outbound.protection.outlook.com (mail-eastus2azon11010067.outbound.protection.outlook.com [52.101.56.67])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FC3E443E3F;
-	Thu, 17 Sep 2026 06:53:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789628034; cv=none; b=ArxL3RiZKtL9nWjoVdZ5DOTQ6VPbHYBhVGPgwuz0eewW7RAI5dTGTAUuyQb6/0mdewa6PsUndCUkBGVaOs9e/ixxMyS/4mwxeD1BtXOPAQAwlj0qIg3ONZd2ceAUgQRTGuSppTLDUta+4gHef6T8ehX0v8G622VZESIK4nxtPtU=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789628034; c=relaxed/simple;
-	bh=JmqAWEPVjwgE/1bx2WvsdE2D+QvEYWO3E6EPtYfOOnQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kqwYkZWm1va0x2sY9WP9fFCIzXOZPlDP6dPmZj45MbD/z2b9D7eZ6LLO3rymbVx4+G/05T53TtxoLtUvSqbj4h+4km43Bga7u+XOwrHHjDclZFyn2FGGOjEV1M7BIupwNFRr2ydfipjm8rietl1DIHTYUx7AmORWLaIOmQNIN8c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NCxmC7Us; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2B19442B39;
+	Thu, 17 Sep 2026 06:55:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.56.67
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1789628109; cv=fail; b=DSJfgX6etHrKiDkyIQTko77Hm+zhR2++UG/aw5g2aAuUouDlscw4lcGNodEZXnFkDJk90n/2eHHkEL7A+0kLYqIrUTuV2tZv7DcmbWbeTjgujQS7dALR4rlHGCIh+R/kuCT0T+JJLFBmMDk5gnJQ05z/puBdQRv2i4IQnqjzF30=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1789628109; c=relaxed/simple;
+	bh=5DRhqY/UOmDdI/Fanwvtr0Dv22d9VAhpuvHMMt2vMls=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=mZmQP+ev3Hd9Ax32t9eQdV/nhuK5U9stTgRgLqzkMW3l0gf42QdCqOonBIj8poviwC9QCSqzuPIklgNe+4E8W7Gq5+niIBeT1wjUv3vvrFAzKH9EWaCg4H6OtmhIUwwDf5qvBcjL83LyQ94IijRZc9EK6BWgbU9CIprFYCsM7CU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=17MDVZom; arc=fail smtp.client-ip=52.101.56.67
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NCxmC7Us"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A220E1F000FF;
-	Thu, 17 Sep 2026 06:53:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789628032;
-	bh=utH4PF6qbWgnDQlfP0MYl4dC4Pf37QpCdRdthBuPF0s=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=NCxmC7Ustl0TX6FsrdwjcjsCW7+0eA+qRmMnlIPTNjGRKXu4hQIkq5FWla7nqYftD
-	 W5RmjlC1EdwuXF+Fgwdf9EI3XB366BAQlpSUvQSGrJUsbUuei7iSFTgKYQc1Pku6Oe
-	 HS3DsswD5UzFKEBK5Mtj3w5ZvlIBbG7v9z1j/+XP/5I80k3icKGppESwl3wyRO34Vj
-	 0UuObKjnL4bBBadYOKtkDroeUYRvg7bV1HB1H+j3TP7XKEiVRmA4qlmwnu/t32keEy
-	 8s6zQIrGTZ3YWGjnkB0sDRil9bzKlgZYMEr69mORM09GsgOJrjVcKYkGuOlY+/iLfa
-	 jRH3aaa3JjCHw==
-Date: Wed, 16 Sep 2026 23:53:49 -0700
-From: Namhyung Kim <namhyung@kernel.org>
-To: haghdoost@uber.com
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="17MDVZom"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=TV8u1rBJaor4M/NBlpwEByZ5A02skGvyAvodeAsg4XO13N7KRO4PxiBJ3iHDklTvsNIx4UBV9zunTGNOFuDtE4Ux94iSyKGdSGH9kySaFg1eTg7N6Eg9XiKPya989bXZLDXoDvclSY6gehqAVOpSyivbxiLZ9c0ZnJwpvjPKCyN5A7v6YNT0ueATT17m2qm67djtUWEhCLKxIRsa5E8nYVElW7iDxQkKNOwKN1IbhlQy0zOGKmj7mZw29ikbkMAiLKTGszTItWmfgtdX46PjddZzYyegcecJlsVJUwzT8zMiTePqmr21q8RGvJn8lbqJL1qiVJFwhizau2Sv4dvqaQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=nE6fBU/4PetLQS23yHxd6GXrxOqn4wPdHC8dUfeC1xI=;
+ b=QQ/wwuQtaLnNBqLu7cWPlCOq7Q29eWB/GNEUhmWBaTf/xgHytxkZBWs71vodIPrxEQ08Z+ivSGtxi1lfhtJq8fc8U2kmZmLFBaeNfguG5y9qYJAcsqUtaOaj8immzYguL28zNrxwQoC//hRKQwPZqILdfuVcBCQFBxJ/qUxpjfHRnw7MnoiwSCkwsTJjDgZQM8iAhVLSxxAcFnZwB+L8oQ3HA4Xj1UDRZrRHMYTlM65jA71OpA8tgoA89dfDxDjUcx18Yy3KkbEZ/H0m6uVhk0RwFbGZspJzqg3eIhsKWPFiL6PnVludp7TsK7u5EPmHNj4LDGbgIUJpwWo5BF4uiw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=nE6fBU/4PetLQS23yHxd6GXrxOqn4wPdHC8dUfeC1xI=;
+ b=17MDVZomVHyn1tpoUp2DWo4Dxi1GiXkAEK7079z6Tyg5coizEWr4gke/siYrhSWeaAtj3WmbdkxaaUKqEGSz14xtR0erc+Dj6GrhSZLlEq2mu2LEOrTA+/covSCG3z6wYx+rI+YLMEja/CIqKH/yN/Q1L69IwEYf+VED14gOa94=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from PH7PR12MB5712.namprd12.prod.outlook.com (2603:10b6:510:1e3::13)
+ by PH7PR12MB9127.namprd12.prod.outlook.com (2603:10b6:510:2f6::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.406.12; Thu, 17 Sep
+ 2026 06:55:03 +0000
+Received: from PH7PR12MB5712.namprd12.prod.outlook.com
+ ([fe80::afe1:7dd0:ea71:b7e7]) by PH7PR12MB5712.namprd12.prod.outlook.com
+ ([fe80::afe1:7dd0:ea71:b7e7%4]) with mapi id 15.21.0406.007; Thu, 17 Sep 2026
+ 06:55:03 +0000
+Message-ID: <36afa71a-e939-465e-a348-75b2472651f3@amd.com>
+Date: Thu, 17 Sep 2026 12:24:53 +0530
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH RESEND] perf/x86/amd/uncore: turn amd_uncore_ctx events
+ into a flexible array
+To: Rosen Penev <rosenp@gmail.com>, linux-perf-users@vger.kernel.org
 Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	James Clark <james.clark@linaro.org>,
-	Andrii Nakryiko <andriin@fb.com>,
-	Alexei Starovoitov <ast@kernel.org>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/4] perf script: Add --max-symbol-bytes to bound ELF
- symbol memory
-Message-ID: <aquOfdBVYlr1QE8Z@z2>
-References: <20260915-perf-symbol-memory-send-v1-0-1d3360e21f07@uber.com>
- <20260915-perf-symbol-memory-send-v1-2-1d3360e21f07@uber.com>
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>, James Clark
+ <james.clark@linaro.org>, Thomas Gleixner <tglx@kernel.org>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+ "H. Peter Anvin" <hpa@zytor.com>,
+ "open list:PERFORMANCE EVENTS SUBSYSTEM" <linux-kernel@vger.kernel.org>
+References: <20260916004516.268192-1-rosenp@gmail.com>
+Content-Language: en-US
+From: Sandipan Das <sandipan.das@amd.com>
+In-Reply-To: <20260916004516.268192-1-rosenp@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: MA5PR01CA0014.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:a01:177::11) To PH7PR12MB5712.namprd12.prod.outlook.com
+ (2603:10b6:510:1e3::13)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20260915-perf-symbol-memory-send-v1-2-1d3360e21f07@uber.com>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH7PR12MB5712:EE_|PH7PR12MB9127:EE_
+X-MS-Office365-Filtering-Correlation-Id: 948df65b-88b6-488a-f4ee-08df14889909
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|376014|366016|7416014|23010399003|1800799024|56012099006|10067099003|11063799006|22082099003|18002099003;
+X-Microsoft-Antispam-Message-Info:
+	rijtbvx6cmYAOysQNQhPMnT9cOaryUnsciKudmZah9KJhHhUDo0j5hZSUzNIxlJkDY+Eg56ZLs10mFs1TTfHD9DH8TpyXPECHB1Pe6vY1C6We6j3g2/KMSHvX7NwW3z8pMDy9/HtJVwdYnOvJtVWLzmUxszMSWr/qB35gB1RG9/zsLqQI0qhyrUCfArx+M7/czuUqz04rAHtS/4xCitioZXrbH8AcXjdwWkqGJKBtlD+H6jmBMTaHn2L9O/9to4JMH7z3jtLHNao3s5UR8mtAXENtB7ja1scKngdyglv134r3odHldldzBFIxG4JERGcBK9VV6nOCTxgHTkVAbRswywJXrIbIsqzw0xoHI3YZ0PX+0R+NR3jVU8+W6/ldJWZ4cwaaYdJ3gUlVdSC8oeKM6ODWlHOdZND82H9n9J4rXSvfML3IMroDN+YI/LCYCg147F5/2AGuEN4aeVP09ivyH5WuCkGRxocENOIqYzVItQU7gNcurhj+la8ExUenr6rBE71ejRWAsz/+Kgkr/M22rSLfzCp+CP9t+IH3c2MBp3TGOZ1xBSMGTcSttdsnhG6wcjhULUjsQArT+v8rexEJ22oZuaVia5G77AqNYRZ6zvp/vR3jtjdqFMGh59Z3dDkdheR2VsMLeKfS+y5BubbO4kOr8i4iqzbM2FJqgRWyzw=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB5712.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(7416014)(23010399003)(1800799024)(56012099006)(10067099003)(11063799006)(22082099003)(18002099003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?L2lyOTc1TGZaSVZIZDhoVGhqUDVuQXk3UlQrd2tpeUx0aEV5Z1c0ZHlhTDN3?=
+ =?utf-8?B?RnJSZVhIY245TWQyT0RxZk1wYk5hSGpQL1UrWE5FUTZQSXBGZzJ2dXI3RHRh?=
+ =?utf-8?B?U0NXay81MHBwbVZIcEl1T3RpUmE3dGgrNzVvbzVGUkt5aDh3RU9xM2ZOd2xa?=
+ =?utf-8?B?WnQ4aytVYnZXK2VWWU94MlplMTlleUkzamQrMHFVUkNmM1ZTYldpTFNGc3Vx?=
+ =?utf-8?B?MC94bmZEdFR2dWNWczFFcDhleDRCTmsydS9FUlhGeEw4MlVVa1l3TDU4TXBD?=
+ =?utf-8?B?a2kxWmUwN0JZSE9qdFdnWmx3RDBKSzVmbFE5OFJCWW1iSkFvWElnS1FNNDRR?=
+ =?utf-8?B?aHJZcmhGdWhrS0NESy9FWDNiYUxjMmV6dHl3ZVlGZnJtaFAzNVdQaDA0Q2xu?=
+ =?utf-8?B?NEgrSHNvZXNmZXB3cjgzVUhXVVQzK0FtUG1XOU9lNUdpczJob3IwQzhJTDFD?=
+ =?utf-8?B?cDJzQ2J1VkRoR1IxSXBCV3BEL0xZdSttaFZmUjFvSlgrNjRTb3Q2S0hNMVBN?=
+ =?utf-8?B?Q2xLZVM4a0Q3S1hCNnFLbWpQUWx2K05zeXZIaUNIQWJ5TllwTk0vOXcwdk1n?=
+ =?utf-8?B?bHRlZnVRdlcyT244aDhzSG9WWHlIb3JwSkNTN0RVVTFyOU5ISGI3Z2FmUXkz?=
+ =?utf-8?B?OHBQSHEwTDAzN2VPVmp5OWZKUWYvSE9oaU1SeE1JcDZtOU43U1JOdjVYRWVh?=
+ =?utf-8?B?U0R2blRwdkRjMlFHZUJWMXVHdTlUakdYdHhTM1NPSzlySGNyWkNod3llYkIw?=
+ =?utf-8?B?aXZhZGRkWUZUSXNRQ1NBbTYzR1UxVndTSTRZcDZkYkxlNUNnOUp6d2liRkJT?=
+ =?utf-8?B?RWJmS1BiL3M4ZStEZVIzb1FOWlR0RXgwU1p4V3dMbEhpRnM4c090M2JQVUJH?=
+ =?utf-8?B?dlc1YWFHU2pFVGlqSmVKeFlGcm1wK3lWY2dTeGtzc3BYSHZjd1dRZ0F2TzN4?=
+ =?utf-8?B?R1pkQWZkaWJlS1doYUo4T21sdnNuWjlGL2lqcVo4NjUyclNCZ0xIWU93enRH?=
+ =?utf-8?B?dW9QZzlBeFJ4a2t2YTNTdnJ0cnl3OW81Y0MyUmtZTnhSSk8zRUYwRGNEb2FR?=
+ =?utf-8?B?K1JtYTNvWHdDanZqUUYyZjY3VnJBaXRManBQVXgzUnFwaDJVWXVFeUlSb2Z3?=
+ =?utf-8?B?OUVZbjFnNzVFMXhUQ3BVSmkyV1ZXK01JdWN1bjhtdmxTQXFDZzlyaHBleGZL?=
+ =?utf-8?B?ZUhnSE1QT1dNcGxJMmRoSzhIOFAxYVZxdWRaaEY0VjF1VXRkTlR4RG01OFpT?=
+ =?utf-8?B?bC9ucHV5T2MyMUszUk5iSXNDNVZtaEhVd1Z1WUhyOXhJYU1kdk55THZ4djJB?=
+ =?utf-8?B?S1ZhQktnSWwvSDFGYkpQaW81SngwajBHU2FuMjVnazgrSFFuVWlwK2pGVEF4?=
+ =?utf-8?B?UzJjdHhHZ2hWdzNCekZ3M3hwTXl6dlc0T2dRemRzczhPZkRGUlkxeWNTVVlZ?=
+ =?utf-8?B?ZEdiaUxRK2VYcDcrL25BeTdZNDNFTW51TE1UdHMwc29ucmFBY1hraXNGMlVK?=
+ =?utf-8?B?QXBWRThFaWhYZE95WnZIMVlVSDVtUmRJVVdyZVVvUjl1QmJSbzBEY3l1dTU3?=
+ =?utf-8?B?WVlDWDB1MUlIMnJnaWM3VUhsdXRTRXhuTlJIcWprWEFZbThWYWp5VWRxOCtv?=
+ =?utf-8?B?UllRRjhJaDYvTlA4TWViYWpvT2J3QmhYbUNYdHQ2L2l2Y2REQjExaUcwUjB6?=
+ =?utf-8?B?NVYzOWNSYldQdDRsdExZS2Q2SjBaZkZBcUJKYTYyRS8xT2hWSi9JaisxZi96?=
+ =?utf-8?B?TENSTXRiQ2QvRmZMczFJNFJMYXRRT1llOXFaSWd0WFI0clVOOUk1THFvYXhK?=
+ =?utf-8?B?U0RUem9ibndqRzd6MENvK3NsU0NuaklWVnJBc2xxWGlDY2R5R0x6c1dsVFI1?=
+ =?utf-8?B?ZHNpb0NWRDdHeFh0WmZiTmdndVhxVW5hRU5ZMXc5ZlJNbStEdUd6aWd0Qkpv?=
+ =?utf-8?B?cmtrSE8zY1VUWlE0enQ5ODdReFM0TFpJSXVPdDAxM01USUVyMVRic2hrOVJu?=
+ =?utf-8?B?aXNWd0dyZUtSeHU2bUxyV21lOWpLR2ZjSERVYmYrT2NhR1J5YVZGYWxyQXg1?=
+ =?utf-8?B?VHQ2VUFpNk8vZUQ2ODdHM01rZWdMWFFtR1pJVnRqVG9UdEovQUhUUDg0WC9p?=
+ =?utf-8?B?d1pEbFpIL25OWTdXbkFFdkVCTVZwU3EyNXBaU3gxcVFXVWczZElCU2I3T3Ro?=
+ =?utf-8?B?UXZ5MTRwQ2pSbTJ6REJlNk5qc3NITjAraDJad3MrYVhnMFp2NG80ODNMOGtq?=
+ =?utf-8?B?U2xUQ2JkenRsQUh2MTQ3T2tmVjVWS0s3b3BITXFYQW5ZU1FJNGROSTBmR05U?=
+ =?utf-8?Q?8bqThgkqo+D1X/M2lA?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 948df65b-88b6-488a-f4ee-08df14889909
+X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB5712.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Sep 2026 06:55:02.9836
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: Rcgj+GWLgfqW17fUwqDnE0AZd7YCiERaauBiyKmRRA2D0tpVw/3peRcilkkeaoqR3yhUbVoWQsiHlIfNCw4MsQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB9127
 
-On Tue, Sep 15, 2026 at 11:42:44AM -0700, Alireza Haghdoost via B4 Relay wrote:
-> From: Alireza Haghdoost <haghdoost@uber.com>
+On 16-09-2026 06:15, Rosen Penev wrote:
+> The events pointer was kzalloc_node()'d immediately after the parent
+> struct allocation, with the count (pmu->num_counters) trivially
+> available beforehand.  Move events to the struct tail as a flexible
+> array member and fold the two allocations into a single kzalloc_node()
+> with struct_size(), dropping the separate kfree(ctx->events) in the
+> free path.
 > 
-> perf script eagerly materializes every ELF symbol into an rb-tree kept
-> until process exit. Large profiles can therefore consume substantial
-> anonymous memory, causing perf script to be OOM-killed or forcing the
-> kernel to reclaim memory from co-located workloads.
-
-It's not only for perf script.  Other commands like perf report and perf
-annotate would have the same issue.
-
-> 
-> This patch adds --max-symbol-bytes to bound struct symbol allocations.
-> Once the budget is reached, the ELF loader stops loading symbols, warns
-> once, and lets unresolved addresses appear as [unknown].
-> This allows users to bound the memory footprint upfront and explicitly
-> choose between complete symbolization and avoiding unbounded host memory
-> pressure. perf record already provides a similar --max-size option to
-> bound disk usage.
-
-Please add documentation when you add a new command line option.
-
-> 
-> The counter includes every symbol__new() allocation, but this patch
-> enforces the limit only in the ELF loader, which is the source of the
-> unbounded memory growth addressed here. In this path, reaching the limit
-> can safely produce [unknown] symbols. Other loaders currently treat a
-> failed symbol allocation as an error. Capping those paths would therefore
-> require separate changes whose complexity may outweigh the potential
-> memory savings.
-
-What's the other loaders you meant?
-
-I don't see it produces [unknown] symbols.  Do you mean it just stops
-loading symbols when it hits the limit?
-
-> 
-> Sizes require a B/K/M/G suffix. Zero, the default, means unlimited.
-> 
-> Signed-off-by: Alireza Haghdoost <haghdoost@uber.com>
-> Assisted-by: Kimi:K3
+> Assisted-by: Claude:Opus-4.7
+> Signed-off-by: Rosen Penev <rosenp@gmail.com>
 > ---
->  tools/perf/builtin-script.c   | 31 +++++++++++++++++++++++++++++++
->  tools/perf/util/symbol-elf.c  |  7 +++++++
->  tools/perf/util/symbol.c      | 29 +++++++++++++++++++++++++++--
->  tools/perf/util/symbol.h      |  3 +++
->  tools/perf/util/symbol_conf.h |  1 +
->  5 files changed, 69 insertions(+), 2 deletions(-)
+>  arch/x86/events/amd/uncore.c | 15 +++------------
+>  1 file changed, 3 insertions(+), 12 deletions(-)
 > 
-> diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-> index ad8ca08ceb5f..50fa6ca6455a 100644
-> --- a/tools/perf/builtin-script.c
-> +++ b/tools/perf/builtin-script.c
-> @@ -68,6 +68,7 @@
->  #include "util/thread.h"
->  #include "util/thread_map.h"
->  #include "util/time-utils.h"
-> +#include "util/units.h"
->  #include "util/tool.h"
->  #include "util/trace-event.h"
->  #include "util/unwind.h"
-> @@ -4035,6 +4036,33 @@ static int parse_callret_trace(const struct option *opt __maybe_unused,
->  	return 0;
->  }
->  
-> +static int parse_max_symbol_bytes(const struct option *opt,
-> +				  const char *str, int unset)
-> +{
-> +	unsigned long *max_bytes = (unsigned long *)opt->value;
-> +	static struct parse_tag size_tags[] = {
-> +		{ .tag  = 'B', .mult = 1       },
-> +		{ .tag  = 'K', .mult = 1 << 10 },
-> +		{ .tag  = 'M', .mult = 1 << 20 },
-> +		{ .tag  = 'G', .mult = 1 << 30 },
-> +		{ .tag  = 0 },
-> +	};
-> +	unsigned long bytes;
-> +
-> +	if (unset) {
-> +		*max_bytes = 0;
-> +		return 0;
-> +	}
-> +
-> +	bytes = parse_tag_value(str, size_tags);
-> +	if (bytes != (unsigned long)-1) {
-> +		*max_bytes = bytes;
-> +		return 0;
-> +	}
-> +
-> +	return -1;
-> +}
-> +
->  int cmd_script(int argc, const char **argv)
->  {
->  	bool show_full_info = false;
-> @@ -4135,6 +4163,9 @@ int cmd_script(int argc, const char **argv)
->  		     "Set the maximum stack depth when parsing the callchain, "
->  		     "anything beyond the specified depth will be ignored. "
->  		     "Default: kernel.perf_event_max_stack or " __stringify(PERF_MAX_STACK_DEPTH)),
-> +	OPT_CALLBACK(0, "max-symbol-bytes", &symbol_conf.max_symbol_bytes,
-> +		     "size", "Limit bytes for ELF struct symbol (e.g. 128M; 0=unlimited)",
-> +		     parse_max_symbol_bytes),
->  	OPT_BOOLEAN(0, "reltime", &reltime, "Show time stamps relative to start"),
->  	OPT_BOOLEAN(0, "deltatime", &deltatime, "Show time stamps relative to previous event"),
->  	OPT_BOOLEAN('I', "show-info", &show_full_info,
-> diff --git a/tools/perf/util/symbol-elf.c b/tools/perf/util/symbol-elf.c
-> index e955c3feddcd..914e42d21f70 100644
-> --- a/tools/perf/util/symbol-elf.c
-> +++ b/tools/perf/util/symbol-elf.c
-> @@ -1634,6 +1634,13 @@ dso__load_sym_internal(struct dso *dso, struct map *map, struct symsrc *syms_ss,
->  		int is_label = elf_sym__is_label(&sym);
->  		const char *section_name;
->  		bool used_opd = false;
-
-Please keep a blank line after declaration.
-
-
-> +		if (symbol_conf.max_symbol_bytes &&
-> +		    symbol__bytes_used() >= symbol_conf.max_symbol_bytes) {
-> +			pr_warning_once("perf: symbol memory budget exceeded (%lu bytes), "
-> +					"remaining symbols will be [unknown]\n",
-> +					symbol_conf.max_symbol_bytes);
-> +			break;
-> +		}
->  
->  		if (!is_label && !elf_sym__filter(&sym))
->  			continue;
-> diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
-> index 3587ad243159..62a4f91c2f5d 100644
-> --- a/tools/perf/util/symbol.c
-> +++ b/tools/perf/util/symbol.c
-> @@ -310,14 +310,35 @@ void symbols__fixup_end(struct rb_root_cached *symbols, bool is_kallsyms)
->  		curr->end = roundup(curr->start, 4096) + 4096;
->  }
->  
-> +static size_t symbol_bytes_used;
-> +
-> +size_t symbol__bytes_used(void)
-> +{
-> +	return symbol_bytes_used;
-> +}
-> +
-> +void symbol__account_bytes(size_t bytes)
-> +{
-> +	symbol_bytes_used += bytes;
-> +}
-> +
-> +void symbol__unaccount_bytes(size_t bytes)
-> +{
-> +	symbol_bytes_used -= bytes;
-> +}
-> +
->  struct symbol *symbol__new(u64 start, u64 len, u8 binding, u8 type, const char *name)
->  {
->  	size_t namelen = strlen(name) + 1;
-> -	struct symbol *sym = calloc(1, (symbol_conf.priv_size +
-> -					sizeof(*sym) + namelen));
-> +	size_t alloc_size = symbol_conf.priv_size + sizeof(struct symbol) + namelen;
-
-The convention is 'sizeof(*sym)' rather than 'sizeof(struct symbol)'.
-So that it can easily handle type changes in the future.
-
-
-> +	struct symbol *sym;
-> +
-> +	sym = calloc(1, alloc_size);
->  	if (sym == NULL)
->  		return NULL;
->  
-> +	symbol__account_bytes(alloc_size);
-> +
->  	if (symbol_conf.priv_size) {
->  		if (symbol_conf.init_annotation) {
->  			struct annotation *notes = (void *)sym;
-> @@ -341,6 +362,9 @@ struct symbol *symbol__new(u64 start, u64 len, u8 binding, u8 type, const char *
->  
->  void symbol__delete(struct symbol *sym)
->  {
-> +	size_t alloc_size = symbol_conf.priv_size + sizeof(struct symbol) +
-> +			    sym->namelen + 1;
-
-Ditto.
-
-Thanks,
-Namhyung
-
-> +
->  	if (symbol_conf.priv_size) {
->  		if (symbol_conf.init_annotation) {
->  			struct annotation *notes = symbol__annotation(sym);
-> @@ -348,6 +372,7 @@ void symbol__delete(struct symbol *sym)
->  			annotation__exit(notes);
->  		}
->  	}
-> +	symbol__unaccount_bytes(alloc_size);
->  	free(((void *)sym) - symbol_conf.priv_size);
->  }
->  
-> diff --git a/tools/perf/util/symbol.h b/tools/perf/util/symbol.h
-> index e5cef16b240d..0d5d3792aac1 100644
-> --- a/tools/perf/util/symbol.h
-> +++ b/tools/perf/util/symbol.h
-> @@ -228,6 +228,9 @@ void symbol__elf_init(void);
->  int symbol__annotation_init(void);
->  
->  struct symbol *symbol__new(u64 start, u64 len, u8 binding, u8 type, const char *name);
-> +size_t symbol__bytes_used(void);
-> +void symbol__account_bytes(size_t bytes);
-> +void symbol__unaccount_bytes(size_t bytes);
->  size_t __symbol__fprintf_symname_offs(const struct symbol *sym,
->  				      const struct addr_location *al,
->  				      bool unknown_as_addr,
-> diff --git a/tools/perf/util/symbol_conf.h b/tools/perf/util/symbol_conf.h
-> index 71f60081a85b..6a16c5badd5e 100644
-> --- a/tools/perf/util/symbol_conf.h
-> +++ b/tools/perf/util/symbol_conf.h
-> @@ -120,6 +120,7 @@ struct symbol_conf {
->  	int		pad_output_len_dso;
->  	int		group_sort_idx;
->  	int		addr_range;
-> +	unsigned long	max_symbol_bytes;
->  	DECLARE_BITMAP(parallelism_filter, MAX_NR_CPUS + 1);
+> diff --git a/arch/x86/events/amd/uncore.c b/arch/x86/events/amd/uncore.c
+> index 7181973b5b12..74b9c92d517a 100644
+> --- a/arch/x86/events/amd/uncore.c
+> +++ b/arch/x86/events/amd/uncore.c
+> @@ -39,11 +39,11 @@ static int pmu_version;
+>  struct amd_uncore_ctx {
+>  	int refcnt;
+>  	int cpu;
+> -	struct perf_event **events;
+>  	unsigned long active_mask[BITS_TO_LONGS(NUM_COUNTERS_MAX)];
+>  	int nr_active;
+>  	struct hrtimer hrtimer;
+>  	u64 hrtimer_duration;
+> +	struct perf_event *events[];
 >  };
 >  
-> 
-> -- 
-> Git-155)
-> 
-> 
+>  struct amd_uncore_pmu {
+> @@ -519,10 +519,8 @@ static void amd_uncore_ctx_free(struct amd_uncore *uncore, unsigned int cpu)
+>  		if (cpu == ctx->cpu)
+>  			cpumask_clear_cpu(cpu, &pmu->active_mask);
+>  
+> -		if (!--ctx->refcnt) {
+> -			kfree(ctx->events);
+> +		if (!--ctx->refcnt)
+>  			kfree(ctx);
+> -		}
+>  
+>  		*per_cpu_ptr(pmu->ctx, cpu) = NULL;
+>  	}
+> @@ -567,18 +565,11 @@ static int amd_uncore_ctx_init(struct amd_uncore *uncore, unsigned int cpu)
+>  		/* Allocate context if sibling does not exist */
+>  		if (!curr) {
+>  			node = cpu_to_node(cpu);
+> -			curr = kzalloc_node(sizeof(*curr), GFP_KERNEL, node);
+> +			curr = kzalloc_node(struct_size(curr, events, pmu->num_counters), GFP_KERNEL, node);
+>  			if (!curr)
+>  				goto fail;
+>  
+>  			curr->cpu = cpu;
+> -			curr->events = kzalloc_node(sizeof(*curr->events) *
+> -						    pmu->num_counters,
+> -						    GFP_KERNEL, node);
+> -			if (!curr->events) {
+> -				kfree(curr);
+> -				goto fail;
+> -			}
+>  
+>  			amd_uncore_init_hrtimer(curr);
+>  			curr->hrtimer_duration = (u64)update_interval * NSEC_PER_MSEC;
+
+Reviewed-by: Sandipan Das <sandipan.das@amd.com>
