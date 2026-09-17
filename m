@@ -1,78 +1,118 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C95254706F;
-	Thu, 17 Sep 2026 23:19:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B039D4A8420;
+	Thu, 17 Sep 2026 23:20:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789687191; cv=none; b=M2PONfw7SJrxxiB2nzA5qF7ToA31L2slsGRR4FSCvbEjkbaJiJMzfjPBxyNIbsq4WF2V7VXE1or+U4pG5wxAB/Aad5qGvM8J/fE1O6EFwHpvMeBtMwZO63wNkW2qSd4LAXmBFaBl8CX+45nERAJcyY6AF3lhsbkvhinLsRXjGLw=
+	t=1789687226; cv=none; b=kus0tFQduEe1kerM8FvoZBcxdj51pLM9Lypeizui3ZQ1K5dpVTW+bkusSfEAr1LZnHiu2HqTptcSH7AfM5P72UwHStFMQtNBP00Fp3kuJybL6/Knw0Yx6BMIdUrFMUsgSpSUIH9TdmN9HV77ae+JXqaf5eeLNCF7DfXrcSuzlMI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789687191; c=relaxed/simple;
-	bh=MJEei91VacYcF7nBfvwgGFI/QDcKlgdRZJLyempPRps=;
+	s=arc-20240116; t=1789687226; c=relaxed/simple;
+	bh=QWem72qjwmKB0O3XY14c5S2UFRe6hjbc3nABmDM6yKA=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=uUozMwKyiSMJTyJ/XZFVhMzfwoHLoCIe0oXuGMp5zpqcVEKCOeC9x0nxQ8z/57hM+qh2cj8dMKQe7QVnWgWInoqm3ypiap6PKiXIBzC3/eXFXhAhFzBNpANnNDVs5PWHO/RBrXYcCKQihZ2cG74ggDyLXywUjBV/2T0EoyMrLtw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EXyt9c7p; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=sx0v2MEBvM5+YalKQfpeK+Z4HUeNsp7xI1OJPYXq7iE/HZrA/a3Svzwv6BJELnzzIxx0BJkkm3YctO45zexRs6lTRkWiDAtc80KM+MgXta5emPES3/gxGosSPRNaJTe55tQlP0iHNqTUdwHdTQ/RKAx4dsCrx7hsUtWGyEoLzh4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jcKA+IMc; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EXyt9c7p"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 35B541F000FF;
-	Thu, 17 Sep 2026 23:19:46 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jcKA+IMc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E71D21F000FF;
+	Thu, 17 Sep 2026 23:20:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789687186;
-	bh=MJEei91VacYcF7nBfvwgGFI/QDcKlgdRZJLyempPRps=;
+	s=k20260515; t=1789687222;
+	bh=OVIVIFs1zXRGON3X/HBUQkTMWXvFsHVSwpZ5M/dWsLY=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=EXyt9c7pkD/icXXxNVZA8X8lWCvumS3TBg+kOnXHwK/2uA1OM2lv7lkxeSDccu/Br
-	 IS00r6rSJt85pMMT26ioe3X3o3Ox+fZz6nbwJmgGbQ4pO3jHIPph6uOSuZVnRVxnny
-	 OPhc7p90z2/p+HdzgbX1SfgiTea/S5xCEfXuLBEAebVhx890QcAFB6l+flecDwF/Qr
-	 KLLrh4pPTnrNhKXXav9zCeswTGY0ywfXAtqpvzd1m9yZIUAu3+l3Plhz4wG1IWHMjY
-	 QYUeTxKPGu6gAEVWxTttuzhOsz2qRi8P1oFWtuWl0e21W5HR+ukCx8Rw3nqqnKSB+5
-	 oEp01wU4jwJkQ==
+	b=jcKA+IMcT9v2DecgD/3lYx+GNhkCZR10N0PmYrvuqndjJ12hNx2zjKIETVdhL5Zb6
+	 mdfIH6wyKWLt2dtWbhbt7TD4ZIfFyPiRwETddi46S3uyJSKNE3wS1RFK9JWpl5Vd+j
+	 Il7UIQyk8V9+0lKxzbJ+JjXWEazq/aKegJKwjIgrPcMJNKlrincc95E+WYwtpHGbON
+	 726FIXQMpfqL5ZNF7YPzJ7k8+Y2KpUa2s45Utucb1UlpCitQJEMbAc1cEv5KSbqKqH
+	 tqBH2XUMw3MV/+wkzL1N4CizLClW2SDFBl5JB6FmDp2ruC13n3UjkaOmAlbalg4AHG
+	 e9UjZXZ9LNRyg==
 From: sashiko-bot@kernel.org
-Subject: Re: [RFC PATCH v2 01/11] ptwrite uprobes: Add infrastructure for
- ptwrite uprobes
+Subject: Re: [RFC PATCH v2 03/11] ptwrite uprobes: Add a sample module to
+ exercise interface
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Andi Kleen" <ak@kernel.org>
-Cc: linux-trace-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-In-Reply-To: <20260917230127.924985-2-ak@kernel.org>
+Cc: linux-perf-users@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+In-Reply-To: <20260917230127.924985-4-ak@kernel.org>
 References: <20260917230127.924985-1-ak@kernel.org>
- <20260917230127.924985-2-ak@kernel.org>
+ <20260917230127.924985-4-ak@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Thu, 17 Sep 2026 23:19:45 +0000
-Message-Id: <20260917231946.35B541F000FF@smtp.kernel.org>
+Date: Thu, 17 Sep 2026 23:20:21 +0000
+Message-Id: <20260917232021.E71D21F000FF@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-> uprobes currently always require entering the kernel to log anything.
-> While that works well, it is rather slow.
->=20
-> Modern Intel CPUs have the ptwrite instruction, which can log data to
-> the Processor Trace buffer. Add support in uprobes for patching PTWRITE
-> instead of kernel entries. When a user collects Processor Trace with perf
-> the logged data will appear in the PT log, otherwise the instructions will
-> be nops.
->=20
-> PTWRITE provides much faster logging, but it is missing various
-> features that the full featured probes have.
->=20
-> The instrumentation is similar to optimized uprobes. Add a trampoline
-> page. Replace the original instruction (5 byte nop) with a jump
-> to the trampoline. The nop restriction will be relaxed in a later patch.
-> The trampoline does ptwrites and then jumps back.
->=20
-> Build the high-level infrastructure without any x86-64-specific
-> parts (except for one data structure). Add register/unregister, basic data
-> structures and high level hooks. Add weak stubs to handle the no uprobes
-> or different architectures case.
->=20
-> Assisted-by: omp:gpt-5.6-luna
-> Signed-off-by: Andi Kleen <ak@kernel.org>
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+s) to consider:
+- [Low] samples/uprobe: dead code in parse_probe_args due to loop invariants
+--
 
-Sashiko has reviewed this patch and found no issues. It looks great!
+commit 77dc8c84b5d7c061149ad9471b13f1d9dabd7049
+Author: Andi Kleen <ak@kernel.org>
+
+ptwrite uprobes: Add a sample module to exercise interface
+
+This adds a test module and userspace target program for uprobes ptwrite.
+The module can be configured via parameters to register a ptwrite uprobe at
+a specified offset and emit live registers or immediates into an Intel PT
+stream. It is intended strictly for testing the interface.
+
+> diff --git a/samples/uprobe-ptwrite/uprobe_ptwrite_test.c b/samples/uprob=
+e-ptwrite/uprobe_ptwrite_test.c
+> new file mode 100644
+> --- /dev/null
+> +++ b/samples/uprobe-ptwrite/uprobe_ptwrite_test.c
+[ ... ]
+> +static int parse_probe_args(void)
+> +{
+> +	char *s, *p, *tok;
+> +	unsigned int n =3D 0;
+> +
+> +	s =3D kstrdup(args, GFP_KERNEL);
+> +	if (!s)
+> +		return -ENOMEM;
+> +
+> +	p =3D s;
+> +	while ((tok =3D strsep(&p, ",")) !=3D NULL) {
+> +		struct uprobe_ptwrite_arg *a;
+[ ... ]
+> +		if (tok[0] =3D=3D 'r') {
+[ ... ]
+> +		} else if (tok[0] =3D=3D 'i') {
+[ ... ]
+> +		} else {
+> +			pr_err("bad arg '%s'\n", tok);
+> +			goto err;
+> +		}
+> +		n++;
+> +	}
+> +	if (!n) {
+> +		pr_err("need 1..%d args\n", UPROBE_PTWRITE_MAX_ARGS);
+> +		goto err;
+> +	}
+
+[Severity: Low]
+Is this zero-argument check reachable?=20
+
+Because p is initialized to a non-NULL string returned by kstrdup(), the=20
+strsep() loop will always execute at least once. Inside the loop, any
+invalid token triggers a goto err, skipping this check entirely. If the
+token is valid, n is incremented.
+
+Normal termination of the loop seems to guarantee that n >=3D 1, making this
+condition structurally dead code.
+
+> +	desc.nargs =3D n;
+> +	kfree(s);
+> +	return 0;
+> +err:
+> +	kfree(s);
+> +	return -EINVAL;
+> +}
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260917230127.9249=
-85-2-ak@kernel.org?part=3D1
-
+85-2-ak@kernel.org?part=3D3
