@@ -1,44 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AD493CF685
-	for <linux-perf-users@vger.kernel.org>; Thu, 17 Sep 2026 04:58:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4628D3CF685
+	for <linux-perf-users@vger.kernel.org>; Thu, 17 Sep 2026 04:59:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789621138; cv=none; b=YAlm1Q5YgmfuUeuQPu58dlz+fAOBPT4QCidSiA3y+ZTDnCezGPn6uYkkLAT+Le4dwOf2Dd1qf9LTbxKLiA50IAeD47b2I2T7AJNETp2dA4OZfEjuZb4hHeOva9KO8apAG/k8YpwCF08xZ2GloKMCCwgKOrKGlKnbD82lqH/+eAY=
+	t=1789621144; cv=none; b=Gn+pNBO/YJqOpGyarNI0+uAWBHfQkQebrIp64VyhKLXMHKSwAgjGLqps2NPoLppJ7siq4FuokJVW/BaTbSvSgBtXK8xnqtCGvDAM6kPCWcMjFAg/fvSiTBvNFLgNmL+kgF2d4hOAK/4fMYhbmz+8om6fLLb66foulp4NOf398o8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789621138; c=relaxed/simple;
-	bh=NmNotBnIJefMEB4UXrMtuMy7MjH1sb4iFGyeCD3Ndxg=;
+	s=arc-20240116; t=1789621144; c=relaxed/simple;
+	bh=1rhuQZ0Yc3KMfp4mmAQ7NVxz9sRgs4/szHskXubn9+k=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=IR+0O1lzNrT7lpdx+t6j5AM/Cx5r5bfP3aF91hC0eaWduaQU9i/E2hk5uwgCWWC7jYaMy70zt1HmwL8wyGMuTYbyljcKtG8uIjiPzq38hZwMhJcg/t+y3k+r8GRaR5OjDliShUgnXn3vnEKDxMVFMc6boudL5xDnMK3FCCEYvkY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Tw7BwQkJ; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=Bbg/xHFOIGkAxrmKYEF2eT63QlkkUcdWEHN3LPLM+Ecy9EU6QDRJ20ILkjmAbI3LsuZOxvGl2ZLE7QJu0Um1EmrrnElkFhdMCi2+MnTxwGvDTA9jLpH79w6tVG66vtAGXo3IqGPBrr1alr4bUxdRfUvbQMBGpfkCQvxSBB2jxO8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cOcWYepD; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Tw7BwQkJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E790C1F000FF;
-	Thu, 17 Sep 2026 04:58:56 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cOcWYepD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B8E1D1F000FF;
+	Thu, 17 Sep 2026 04:59:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789621137;
-	bh=CTJIGO+Owgm8QNQYcQ/ljSb5Vdh4W/+d3ACwrki4BI8=;
+	s=k20260515; t=1789621142;
+	bh=kn9l3H6J2Gm+mloxMt9cjSkGZ292BMb1XghBd8YiJXA=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=Tw7BwQkJpBcESLRKREgrczkNTBoGsQjx1Mq3BO+7s0mvFs4+jqghglYo9xK1l5fZV
-	 OUxio+eTXyBKImrBDLoP9Et5gNecPMtK35Aj3wdPEkVc6vLpSvu80LF7AIKGqGFw/X
-	 YOz8XzkWKDcBuXuf7kRvpWK0gfVgcrPEz2zVmxEjEsh32VTSrF4bM2GVyzarnzUnmz
-	 au4hf7olqzviNbvTlXU7Ti5wqXZE21YEmzNP5+9v7zscX1P6wH2rnXtPKGR/RZc9+s
-	 dv99onM2m5eevKg0gixo21gdglFrmebWAnwwr1dpF9H97Uc5WOdSJtkgC4qGTM3uEW
-	 gSja9fBWdLM0A==
+	b=cOcWYepDEU//Jms58aIFHcYW+9Jg6LDxgFGKg8lN8Jh9GDDazsj4ouxlGMfi9FHm2
+	 GIytus8ZH5WhZEbwR9S96QFcRVDNTeF70xAeisjrjqTHRt88ftd+Upx2a85DGAMm0U
+	 pcPbUjdRq1KTzGV8tGMQYXuuLBHV4bumGg/LM7qjf/Lo7EStE7F62C5icuyEgwA1H0
+	 KhwNN6Sz0CERBBQ0eedysbvXKY1kBbBWvXVaCpTKMgvKQsbld4OACFEVyjwUcsyZa8
+	 7iNu57r3YVdP75BNnh+FdTqq31IlA0t5BEcC+KAyFq8zGoNQC0zrXeIvJj+OJgJnuy
+	 +SloPG5V+UhKA==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v1 06/11] perf test: missing stdio.h and signal.h
- inclusions in cmd_test()
+Subject: Re: [PATCH v1 09/11] perf mem: missing stdio.h and limits.h in
+ mem-events.c
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Ian Rogers" <irogers@google.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260917045326.63601-6-irogers@google.com>
+In-Reply-To: <20260917045326.63601-9-irogers@google.com>
 References: <20260917045326.63601-1-irogers@google.com>
- <20260917045326.63601-6-irogers@google.com>
+ <20260917045326.63601-9-irogers@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Thu, 17 Sep 2026 04:58:56 +0000
-Message-Id: <20260917045856.E790C1F000FF@smtp.kernel.org>
+Date: Thu, 17 Sep 2026 04:59:02 +0000
+Message-Id: <20260917045902.B8E1D1F000FF@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -47,19 +47,22 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
 > Sashiko reported:
 >=20
->   When compiling the perf tool against musl libc, the build fails in
->   tools/perf/tests/builtin-test.c due to missing explicit inclusions
->   of <stdio.h> and <signal.h>.
+>   When compiling the perf tool against a strict POSIX C library such
+>   as musl libc, tools/perf/util/mem-events.c fails to build due to the
+>   use of undeclared standard symbols.
 >=20
->   The file relies on standard I/O functions like fdopen() and
->   fprintf(), as well as signal handling constructs like signal(),
->   SIGINT, and SIGTERM within __cmd_test() and related helpers. While
->   glibc may implicitly pull in these definitions through other
->   standard headers such as <stdlib.h> or <unistd.h>, musl libc
->   strictly enforces POSIX namespace separation and avoids implicit
->   header inclusion. Because the required headers are absent, the
->   compiler cannot resolve these standard library types and macros,
->   resulting in a direct compilation failure on musl-based systems.
+>   The source file defines an array using PATH_MAX in
+>   perf_pmu__mem_events_supported(), and utilizes fprintf() with stderr
+>   in perf_pmu__mem_events_list():
+>=20
+>   Because the required <limits.h> and <stdio.h> headers are not
+>   explicitly included, these symbols remain undeclared. While glibc
+>   masks this omission by implicitly pulling in these definitions via
+>   other standard headers, musl libc adheres strictly to POSIX
+>   inclusions. This causes the compiler to reject the undeclared
+>   PATH_MAX macro, the stderr stream, and the fprintf() function,
+>   halting the build process on systems utilizing strict libc
+>   implementations.
 >=20
 > Add the header files and use git clang-format to sort.
 >=20
@@ -70,5 +73,5 @@ Sashiko has reviewed this patch and found no issues. It looks great!
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260917045326.6360=
-1-1-irogers@google.com?part=3D6
+1-1-irogers@google.com?part=3D9
 
