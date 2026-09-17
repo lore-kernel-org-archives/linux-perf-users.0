@@ -1,95 +1,75 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DE0E3769E4
-	for <linux-perf-users@vger.kernel.org>; Thu, 17 Sep 2026 06:49:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BF9D3769E4
+	for <linux-perf-users@vger.kernel.org>; Thu, 17 Sep 2026 06:50:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789627785; cv=none; b=XZC1MvRBFN44Hc0x0kZLaEe6qdw8J4UKz/OpncyMjsCqLF22LGhxFrT9s2x43TNpmtNZDj8rZVf1IUO7UK+oVlxol/fqHSEZwzZ1ptuiN0TSOAH7GATP+yUzBzygqcV9yGzLJ5yF4WP9rSjd8u2wtlwyaTDtbzFHlzqNbQsgny4=
+	t=1789627831; cv=none; b=KaTB5Iv9m43vO6x+9QbF5TTrAZy8R0My7FepoVTBPAr61wqra7ll056kfXdvoLx1U0QbV6kolcrwxNU03lu2qv4+Os3gcXZ9k2vaMv9PYkpsnSkWk8KJV17wCmNNXNfy3um7bUGzEDop41RMi2+VUPT89UlZ1otbrsCCOx4zJvc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789627785; c=relaxed/simple;
-	bh=LJDu4r266Hi3wQmLdzkr0lpnlBDtmoaLvkLZqfQCuAU=;
+	s=arc-20240116; t=1789627831; c=relaxed/simple;
+	bh=Nyg0gTh5/RFSUr7wI1RyKkY+SPBeAyl+gbd43BtfDds=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=t6TzE6L9syld1/vx9TxEPpOURkfgggpw1crbOG+wRcJpm+1IbHDPKge5sOgUrDMh4jJF8AiegOFgPxYbWfRfXxAhsTMLNjk8vJSUZ54S1pmwZBVSQGP8U4JKlOE9yoy8Q+WovCe8oD/2JefBY5mtFG81bchxpgOKzatGZu4A+d0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Wgw8TM5I; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=tPZD8f/LnWeSarqZdVA7F7IVb1d4YkMmUSwXou4YKGNYA7t250yKC5Vd1HAMK/j+IC9tMGcXnRE2a5W+YjuKjj1TCBlDRcyrQljuFjcFeAnBqbA9vBxl21ck2WLUtSmZgN0y260d0GcWloMXOsaFZ+3DdrNrY/K4Mp9V96TkrSY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jv2Vdy6X; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Wgw8TM5I"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 15A7C1F000FF;
-	Thu, 17 Sep 2026 06:49:44 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jv2Vdy6X"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CD7991F000FF;
+	Thu, 17 Sep 2026 06:50:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789627784;
-	bh=UJkX8FT2EY/GVNdq0bF/hmU6KyT0Hs0RkLqabsmbIqw=;
+	s=k20260515; t=1789627830;
+	bh=R1EwhvsNVJajkS0hzSNeZnYsXjG2YhdpoVoZ6yI0lj0=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=Wgw8TM5IpCng7r1goVfdzJIeAnZjsFg2nLdQORretSZ6cb+5zifh25H1FglNBnFY2
-	 B6ia5BaYbSRK4+kO8CWDdlb8hEeW6FORD3hqHUdBlx7s61xzIigq0zXDwiT1Jw9QMO
-	 dpBT7KRr/aK0Aao4DjuzO+ZeQup85P+4oj83im71NJDuX13uFMuG1OfLM1wju70yDg
-	 2pNLPBlAcZhLb5EfCTyznIlWst0UeuOuoHcSihk02tY9pdt7IOP67wYutbxYDuFr4B
-	 Ip6RYGlnVJ1kv9ayLF1iAcK8MAO0U88aw7fenuITr0cFY9hbRA0Y5WIqIgTTXkACLC
-	 3YgrVlPhdAO5A==
+	b=jv2Vdy6XOauk6UjWhk1UMxOwbvt9YR8+hSJKh2Mk0L2wOtuLFnv23zo2D3ZiJqNfe
+	 iVKZVMjYrzvVESXX9BA6BZGULFXq1SRRvCpiHmfYUFAXF8KCewDt2dSqXgbMEY7HE8
+	 eP8ZsCjSkX3aDHWoHujSUNOcfAe5Xxx0gLdfWKi9KGcOt346zPwxMUQ5iza3Bt2uep
+	 4hMzfDFu18gcFi3K4RnwPKju4VsvcbbDTcaF1WeTnNuDQS1RrpOZPchc/7TVlSjZIV
+	 E2tbZDm20kKIU9YqqYkFNsNiwzMxPUSjkxJt3Vq/OmJyzAl8Qi2qF4byiExBmGSwNY
+	 vZ2ydLFb45QDg==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v1 06/13] perf test test_task_analyzer: Isolate in
- temporary directory and make non-exclusive
+Subject: Re: [PATCH v1 05/13] perf trace: Handle fork and exit directly in
+ BPF filter maps
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Ian Rogers" <irogers@google.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <d1ed9832b1d73eb04405a78425a1aa4afa4a8cb6.1789626978.git.irogers@google.com>
+In-Reply-To: <301baf74713ea1b7ea6bce83d83edd8820b6f1d6.1789626978.git.irogers@google.com>
 References: <cover.1789626977.git.irogers@google.com>
- <d1ed9832b1d73eb04405a78425a1aa4afa4a8cb6.1789626978.git.irogers@google.com>
+ <301baf74713ea1b7ea6bce83d83edd8820b6f1d6.1789626978.git.irogers@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Thu, 17 Sep 2026 06:49:43 +0000
-Message-Id: <20260917064944.15A7C1F000FF@smtp.kernel.org>
+Date: Thu, 17 Sep 2026 06:50:29 +0000
+Message-Id: <20260917065029.CD7991F000FF@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
-s) to consider:
-- [Low] perf: tmpdir leak on cd failure in test_task_analyzer.sh
---
+> Updating target or filtered PIDs in userspace upon processing
+> PERF_RECORD_FORK and PERF_RECORD_EXIT events introduces latency between
+> event occurrence and userspace BPF map updates. If a newly forked child
+> executes system calls before userspace processes PERF_RECORD_FORK, those
+> syscalls may be dropped by BPF PID filtering. Conversely, if userspace
+> evicts PIDs asynchronously on PERF_RECORD_EXIT, the kernel may recycle a
+> PID before userspace processes the exit event, causing the late eviction
+> to silently drop a newly created task that received the recycled PID.
+>=20
+> Address this by attaching BTF-typed raw tracepoint BPF programs directly
+> to the scheduler task lifetime tracepoints:
+>=20
+> 1. Attach SEC("tp_btf/sched_process_fork") (sched_process_fork), which
+>    runs in copy_process() in the parent's context before
+>    wake_up_new_task() wakes the child. Using tp_btf rather than
+> [ ... ]
+> all, as evlist__prepare_workload() leaves the child blocked on a pipe
+> until evlist__start_workload(), well after the attach.
+>=20
+> Assisted-by: Antigravity:gemini-3.1-pro
+> Signed-off-by: Ian Rogers <irogers@google.com>
 
-commit dfb340cf14f6e7255460556df8553dcb2273aaae
-Author: Ian Rogers <irogers@google.com>
-
-perf test test_task_analyzer: Isolate in temporary directory and make non-e=
-xclusive
-
-This commit changes the test_task_analyzer script to resolve its execution
-path absolutely, create a temporary directory, and change into it. This
-isolates the test environment, allowing it to run in parallel without
-collisions.
-
-> diff --git a/tools/perf/tests/shell/test_task_analyzer.sh b/tools/perf/te=
-sts/shell/test_task_analyzer.sh
-> index 0314412e63b43..6f729d9508f8d 100755
-> --- a/tools/perf/tests/shell/test_task_analyzer.sh
-> +++ b/tools/perf/tests/shell/test_task_analyzer.sh
-> @@ -1,8 +1,13 @@
->  #!/bin/bash
-> -# perf script task-analyzer tests (exclusive)
-> +# perf script task-analyzer tests
->  # SPDX-License-Identifier: GPL-2.0
-> =20
-> +# Resolve the source directory before changing the working directory bel=
-ow,
-> +# $0 may be a relative path and would no longer resolve from $tmpdir.
-> +perfdir=3D$(cd "$(dirname "$0")/../.." && pwd)
-> +
->  tmpdir=3D$(mktemp -d /tmp/perf-script-task-analyzer-XXXXX)
-> +cd "$tmpdir" || exit 1
-
-[Severity: Low]
-Does this error path force an immediate exit before the cleanup trap is
-established? If the change directory fails and the script exits here, it
-appears the newly created temporary directory will be orphaned in /tmp.
-
->  # TODO: perf script report only supports input from the CWD perf.data fi=
-le, make
->  # it support input from any file.
->  perfdata=3D"perf.data"
+Sashiko has reviewed this patch and found no issues. It looks great!
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/cover.1789626977.gi=
-t.irogers@google.com?part=3D6
+t.irogers@google.com?part=3D5
+
