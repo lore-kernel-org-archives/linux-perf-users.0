@@ -1,211 +1,477 @@
-Received: from mail-pj1-f72.google.com (mail-pj1-f72.google.com [209.85.216.72])
+Received: from mail-pj1-f69.google.com (mail-pj1-f69.google.com [209.85.216.69])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53EFF3A9610
-	for <linux-perf-users@vger.kernel.org>; Thu, 17 Sep 2026 05:07:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.72
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 846D23A9610
+	for <linux-perf-users@vger.kernel.org>; Thu, 17 Sep 2026 05:07:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.69
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789621647; cv=none; b=GzrZKXG8PBojtf4ksKK7XUBEKKfh5Qm3zZddJr6wyfmBTglDXSV/JUivvueNK5mSilh7iesudP9J6LB1mbFSJBKdcIty/k7mEoN0nEhwN7VjpVd+kjFV+TE7kSch0mo9PcP6I1IG2ZEsEJoxna9g/4dkZ5wS92CQgzPT1LlgkKI=
+	t=1789621650; cv=none; b=Ddyu+aTNHgJypOUlgJufIfL/AA5KUSxF1Dy8ipFIEKG038SLYlEjJltPU4rAvypNFxwRWOJLxmNfPq8YrI7rUJcqvplAHQmI57CjK0sNJEptRQHxvUPcsFB3c4gNl7LPn4MD7xMksSRu79rEID5Rmd6JGwMTnKlzEwAXOL/ms2s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789621647; c=relaxed/simple;
-	bh=cFt44SHxGcWDgcO63lFzq/+IFdXSjvSDpV+OhK2AK7c=;
+	s=arc-20240116; t=1789621650; c=relaxed/simple;
+	bh=EoPo5ypiWnepVRbDe39Y+J1lRAlVuS2oMzkmYqfRtcQ=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=OIPNdBZrAUvbAxi8Kv+NCG6Rij5YRK8FzeMUS+4pqk69AZ72QbagNd3Bv+FAT4DGx5QvgxSTbx4YO3UaYQ1C0v5W3GIER1gVa3o9DbCnl+oCanJfuEezpEPwbazd0MmSyTksodfd3QPn7UP5vfGOVPPf6BZv3amMfWIavo/fbRQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=C0K7701B; arc=none smtp.client-ip=209.85.216.72
+	 To:Cc:Content-Type; b=mWo7ukxLkrm1ncWVB0LmUuPnSFREwKrpZE4TFGpoYnOEeQHEfju3vO30Ef77c8jXnoAwhVOIvLgptUDmw/pPg0QVSXM5OMMzwC8Dsq522ksYf9HwZVfyjaNgGhHVwCnN/s5Pv75piWieVOqUPrsXvGv2WG+qS1Bg4haRf/8Z5E0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Ey72k3Bm; arc=none smtp.client-ip=209.85.216.69
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="C0K7701B"
-Received: by mail-pj1-f72.google.com with SMTP id 98e67ed59e1d1-3965ba1ba3eso640920a91.2
-        for <linux-perf-users@vger.kernel.org>; Wed, 16 Sep 2026 22:07:26 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Ey72k3Bm"
+Received: by mail-pj1-f69.google.com with SMTP id 98e67ed59e1d1-38e54b6556aso627811a91.2
+        for <linux-perf-users@vger.kernel.org>; Wed, 16 Sep 2026 22:07:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1789621646; x=1790226446; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1789621648; x=1790226448; darn=vger.kernel.org;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=jZlUINB9kVpvLrcQBGXYEdhSBdWhJN/y2NDxIZPrIk8=;
-        b=C0K7701BJUDweL9fGWbdNOmzuXoYBLxhqaX2R09sPQ3dsDgX9K5PuUY3ayoqZXATpV
-         Edr2l6H7mLz1K1JVrpyCrPwT62qnXClgoJA1XESEQ+Y25dP7/8n6rOzNbUbJ7fJi77v2
-         /CC+YyZx4iHuqTAb8MwunpssS0kjBltLUybOJFEFIWEDYvpBRctG/Ghhq7v5HKbsA/g5
-         2ir2Ah925UAFYp4m5pwlVzA1D5Em2V8GJ213g3xAGWkazm85+ms6y/CMhPwGRkYvJwMI
-         /P139bH9ynbP4Ktk2KA4kJn2paqrvWnOxlZsa7hnkgQGx6lBapBlqwD6dHSQbooU0atd
-         QvLQ==
+        bh=pZ72lov8TCyDVIUq+mzf5it7AyVHEmQS++OUM9G1i7I=;
+        b=Ey72k3Bm3jyzNt/90FUa7yefpQIYNcBhTe2FXPlq41uHhqScj57sOjDjYQeJIK6a+G
+         ItqoaUunxi8JuTNVEfsTDuVBmr9NYLOG1ZlmvzL9g525QDO2/qQX+zCqOgdZqelOG6Jj
+         5zZH3ekymb0FNF/uuxc4wQb8bYEOcof70vQl0unOoCzqxyVQkTch0wpronVti2Tke7Gk
+         z5CG/VMm6+2uupvbpgDcf9RRnvpGkGqBe4ap8UrIvWuDrJ0pvABH2nlUolUsQ6yb8FS8
+         AflDHyZxmY6aOTGuBhqR1nff5dnIY9UoCToVU2bS83gS5UJn7iG4R4V2/2/qgs3uW08X
+         2Pjg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1789621646; x=1790226446;
+        d=1e100.net; s=20260707; t=1789621648; x=1790226448;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=jZlUINB9kVpvLrcQBGXYEdhSBdWhJN/y2NDxIZPrIk8=;
-        b=fkT0MjboRNzSugeD0CdZ/QsiLnwsYUnnEkqlyRUlbJVf6S3T0HD3gTm9rCPMI8Ef7Q
-         2YzlgksXdvAqrzpRobSRmVKWJTApfoQUNrflDNhIddEYZIK3RJsNwQUdiRn/+oo2gO2H
-         7EfYrqbOT4q01ujzyXSxXdeMfMpN7f2BPxiGwKGEO4oOWH0FCXrDciJrMzObE1BfkWEI
-         j6lTyYWPn0SuP8dWj/KJQidrvX5ZffZYTZmzoJdV/AbWH/nG813B+q1F6jTB0r/xm3i9
-         81mZoeJordk9XazDMvUCEdP3XA+sGgLvslZcJcbQVJW31b9XwJ0CTRddQ0hOxVHvf56A
-         mK9Q==
-X-Forwarded-Encrypted: i=1; AKwUvBybY7irjyvwQrPCAFN1P50InnaXeEQsjkMGBf4x7ZAQtsFgdECsIocUgX0LeV5Xq42NJj1dZprZGx3P4Wg3T0/2@vger.kernel.org
-X-Gm-Message-State: AFuF++mI3VV9mRYPc/b5g/0OQhNq4BeHyeX7ofQLfPfQGDDREBATMIYN
-	0dNbZQDZj7qvm81ovbatQ2UEkpRrPl9fROT/XwppcSlN6GcIhdZc3UZOzbQvfl7YMZUO9y7dTVR
-	Y33S7jQ5luw==
-X-Received: from dyu18.prod.google.com ([2002:a05:693c:8112:b0:339:7697:72ea])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:3b91:b0:398:a486:81ec
- with SMTP id 98e67ed59e1d1-39e1e380e12mr16256957a91.11.1789621645452; Wed, 16
- Sep 2026 22:07:25 -0700 (PDT)
-Date: Wed, 16 Sep 2026 22:06:59 -0700
-In-Reply-To: <20260916234652.439778-1-irogers@google.com>
+        bh=pZ72lov8TCyDVIUq+mzf5it7AyVHEmQS++OUM9G1i7I=;
+        b=jEPDRx8oHi7qSjrwnwOoCiZXExR0CKiB076T0J2arhvDXmQinbQnhwPJ38LNgTtcR6
+         yY/aPa/9wUwnl3Tre05g8jMh3zV4uIeU2uUG2XfzmLftw/NBjxHTPZBQe8qsm234ghjl
+         h/6aDXcPM4+K9/UuYj91aWcgCQ9FfFaSaN+TWG5pr4pqtAvKDAgowchkV5GjCXtrnscM
+         XM+FY/LuzidZZaeGc4eIDUU/oKetNwHrmT/QqficT7Rjru1XQe3oa8TbRQQdiT55WS29
+         mpddZhjvsdPx2clZOJUn0pTjfV5E+ldOiq1O+n0k6zZYsP7UefHwNEW1OlQUzZeBdbt8
+         417g==
+X-Forwarded-Encrypted: i=1; AKwUvByxHdR5y7wYa3bPO96Oi4YxkhMvjGclj3fluhpHD+eis6jKuc1EaN3fIxEsfisfWIMS4ZYnOuVb70xRTe+rDlKw@vger.kernel.org
+X-Gm-Message-State: AFuF++l2jg+LYtO9NAAlDnGIUF5aWdvhtpivJBn+UJ6B5f6ZYHvSzxPI
+	QPwfJP317vtZSHXd8h25N9M+xx7ABQ3k5sITRmP2t07kbAzRQ/noI/Bhp0UzGoE2AgZMEn7sujF
+	GFJWFgD+W3A==
+X-Received: from dloo7-n1.prod.google.com ([2002:a05:7023:a47:10b0:143:7976:20e7])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:48cd:b0:39e:2ea1:e2a9
+ with SMTP id 98e67ed59e1d1-39e2ea1e2b7mr7945514a91.8.1789621647474; Wed, 16
+ Sep 2026 22:07:27 -0700 (PDT)
+Date: Wed, 16 Sep 2026 22:07:00 -0700
+In-Reply-To: <20260917050708.704702-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-References: <20260916234652.439778-1-irogers@google.com>
+References: <20260916234652.439778-1-irogers@google.com> <20260917050708.704702-1-irogers@google.com>
 X-Mailer: git-send-email 2.55.0.1082.g2b9226bbc0-goog
-Message-ID: <20260917050708.704702-1-irogers@google.com>
-Subject: [PATCH v4 0/9] perf report/top: Add opt-in --hybrid-merge
+Message-ID: <20260917050708.704702-2-irogers@google.com>
+Subject: [PATCH v4 1/9] perf evlist: Implement evlist__can_merge_hybrid using first_wildcard_match
 From: Ian Rogers <irogers@google.com>
 To: irogers@google.com, acme@kernel.org, namhyung@kernel.org
 Cc: ak@kernel.org, ak@linux.intel.com, andi@firstfloor.org, 
 	linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-On a hybrid machine a wildcard event expands to one event per core
-PMU, so "perf record -e cycles" records cpu_core/cycles/ and
-cpu_atom/cycles/. perf report and perf top then show one histogram per
-PMU, and a symbol that ran on both kinds of core is split across them,
-with each percentage relative to its own PMU's total. There is no way
-to ask for the single combined profile.
+Add logic to dynamically identify mergeable events spawned from the
+same wildcard alias via first_wildcard_match. first_wildcard_match is
+populated when events are parsed, in `perf report` the events come
+from a file and so the first_wildcard_match is computed by matching
+event names.
 
-Add --hybrid-merge to perf report and perf top, which merges the
-histograms of the events that came from the same wildcard into one,
-with percentages taken against the summed period.
+evlist__can_merge_hybrid only tests whether merging is possible and
+doesn't modify the evlist, so that it may be used as a predicate, for
+example, to decide whether to display a hint. The linking of all the
+matching events is done by evlist__merge_hybrid.
 
-Merging is opt-in because it isn't always the right thing to do. The
-cores differ in performance, so a merged cycles count mixes work done
-at different rates and a merged IPC is not the IPC of either core
-type. perf-tips notes this. When merging is possible but wasn't asked
-for, the TUI says so, rather than merging silently.
+is_pmu_core_len identifies core PMUs using the hybrid topology of the
+perf.data file. Should the file lack the topology, the PMUs of this
+machine are scanned but only when the file was recorded on the same
+architecture, as PMU names like "cpu_core" are architecture specific.
 
-core.hybrid-merge in .perfconfig turns it on by default. As a default
-rather than an explicit request it yields to the command line: with
---hierarchy it is ignored with a warning, whereas asking for both
---hierarchy and --hybrid-merge on the command line is an error. For
-the same reason it is silent when there is nothing to merge, so it
-doesn't warn on every invocation on a machine with a single core PMU.
+Signed-off-by: Ian Rogers <irogers@google.com>
+Assisted-by: Antigravity:gemini-3.1-pro
+---
+ tools/perf/util/evlist.c       | 183 +++++++++++++++++++++++++++++++++
+ tools/perf/util/evlist.h       |   3 +
+ tools/perf/util/evsel.h        |   1 +
+ tools/perf/util/hist.h         |   1 +
+ tools/perf/util/parse-events.c |   4 +-
+ tools/perf/util/pmu.c          |  43 +++++++-
+ tools/perf/util/pmu.h          |   3 +
+ tools/perf/util/symbol_conf.h  |   1 +
+ 8 files changed, 236 insertions(+), 3 deletions(-)
 
-perf stat is deliberately untouched. Counting already has its own
-merging options, and this is aimed at sampling.
-
-The events to merge are found with first_wildcard_match, which parsing
-fills in. perf report reads events from a file rather than parsing
-them, so there the wildcard grouping is recovered by matching event
-names, and core PMUs are identified from the perf.data header topology
-so that a file recorded on another machine is read correctly.
-
-Changes in v4:
- - Patch 7: don't warn that there is nothing to merge when merging came
-   from core.hybrid-merge rather than the command line. In v3, setting
-   the config on a machine with a single core PMU made every perf report
-   and perf top warn, which in the TUI is a popup that has to be
-   dismissed. Track whether the option was given on the command line in
-   symbol_conf so an explicit --hybrid-merge still warns, and document
-   the difference.
-
-Changes in v3:
- - Patch 5: remove the redundant if (!pos->merged_hybrid_group) guard
-   around the group member walk in __evlist__enable() and
-   __evlist__disable(), and update the commit message. In v2, that guard
-   claimed to skip walking the members of a merged leader, but
-   merged_hybrid_group is only set on merged members (which have no
-   group members to walk), never on the leader itself.
-
-Changes in v2:
- - The interactive 'M' keystroke that toggled merging in the hists
-   browser is gone. Merging is now asked for on the command line or
-   through core.hybrid-merge, and the browser instead points out that
-   --hybrid-merge is available when there are events it could merge.
- - Fold "perf ui hist: Format group headers iteratively based on
-   proportional visual allocations" into patch 2, as the two only make
-   sense together.
- - New patch 5, so that enabling and disabling a merged set touches
-   every event in it. The merged events are made members of a leader
-   but are not a real group, so each still has to be toggled in its
-   own right.
- - New patch 7, adding core.hybrid-merge.
- - New patch 9, so that "perf test" doesn't inherit the user's
-   ~/.perfconfig. Without it, setting core.hybrid-merge breaks the
-   output matching of unrelated shell tests.
- - Patch 8 adds a C test for the merging decision and a report shell
-   test, rather than only extending the perf top test.
- - Rewrite the commit messages of patches 2, 3, 5 and 8 to describe
-   the problem being solved rather than the diff.
-
-Testing:
-
- - New "Hybrid event merging" perf test with three subtests: merging
-   events of 2 core PMUs, of 3 core PMUs, and events that must not be
-   merged.
- - New "perf report hybrid merge" shell test, and the perf top shell
-   test extended.
- - perf test 13, 17, 27, 30, 31, 66, 67, 68, 78, 102, 113 and 172 pass,
-   covering the hists, --hierarchy and addr2line paths this touches.
- - Builds in 13 configurations, and every patch builds on its own so
-   the series stays bisectable.
-
-Ian Rogers (9):
-  perf evlist: Implement evlist__can_merge_hybrid using
-    first_wildcard_match
-  perf ui hist: Add support for aggregated total_period and merging
-    entries
-  perf tools: Expose opt-in --hybrid-merge
-  perf Documentation: Add tip for hybrid event merging
-  perf evlist: Toggle merged_hybrid_group properly in enable/disable
-  perf tools: Add TUI hints for --hybrid-merge
-  perf config: Add core.hybrid-merge to configure event merging
-  perf test: Expand tests for --hybrid-merge
-  perf test: Isolate test suite from user .perfconfig natively
-
- tools/perf/Documentation/perf-config.txt      |  10 +
- tools/perf/Documentation/perf-report.txt      |   5 +
- tools/perf/Documentation/perf-top.txt         |   5 +
- tools/perf/Documentation/tips.txt             |   2 +
- tools/perf/builtin-report.c                   |  31 +++
- tools/perf/builtin-top.c                      |  35 ++-
- tools/perf/tests/Build                        |   1 +
- tools/perf/tests/builtin-test.c               |  50 +++-
- tools/perf/tests/hybrid-merge.c               | 206 +++++++++++++++
- tools/perf/tests/shell/report_hybrid_merge.sh | 121 +++++++++
- tools/perf/tests/shell/top.sh                 |  73 +++++-
- tools/perf/tests/tests.h                      |   1 +
- tools/perf/ui/browsers/hists.c                |   7 +-
- tools/perf/ui/hist.c                          | 246 +++++++++++++++++-
- tools/perf/util/config.c                      |  10 +
- tools/perf/util/evlist.c                      | 218 +++++++++++++++-
- tools/perf/util/evlist.h                      |   3 +
- tools/perf/util/evsel.h                       |   1 +
- tools/perf/util/hist.h                        |  15 +-
- tools/perf/util/parse-events.c                |   4 +-
- tools/perf/util/pmu.c                         |  43 ++-
- tools/perf/util/pmu.h                         |   3 +
- tools/perf/util/symbol.c                      |   1 +
- tools/perf/util/symbol_conf.h                 |   3 +
- 24 files changed, 1054 insertions(+), 40 deletions(-)
- create mode 100644 tools/perf/tests/hybrid-merge.c
- create mode 100755 tools/perf/tests/shell/report_hybrid_merge.sh
-
-
-base-commit: 91b0782fc9e9d2f0a40b5256146e014802fdbb36
-prerequisite-patch-id: b6fdc526887b71fb66f5fe0c0d41f7ef9493861e
-prerequisite-patch-id: d47077f674c700f4f6296e9367f7ddfe004aea89
-prerequisite-patch-id: ed0db23450840601762fe85ca1bef06ce6d28fe7
-prerequisite-patch-id: d84e6b96d533ee6ed549e26e94216e2da60f7f74
-prerequisite-patch-id: 6e8f19551d771621a5037096626cfe7e271b36f9
-prerequisite-patch-id: 3768dfd588c7439deb741bce44c74763011c6be7
-prerequisite-patch-id: babac99a4faa3b1525e44d3f34ab33a88103334c
-prerequisite-patch-id: 5279827453fea1536abc620aa33c887c44e41ee9
-prerequisite-patch-id: bdc0d648a577142b9270fb59b54496bc2bf8d5ea
-prerequisite-patch-id: f840408dcc3cc637a071f2540b31cc7b8d2ca146
-prerequisite-patch-id: 8f4f390a5a60f62b61c6c9220e96bfce155fa233
-prerequisite-patch-id: bc536fd240b5ddd999c781831a6445cb04ace25c
+diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
+index c3d784727810..930efbb66bc8 100644
+--- a/tools/perf/util/evlist.c
++++ b/tools/perf/util/evlist.c
+@@ -7,6 +7,7 @@
+  */
+ #include "evlist.h"
+ 
++#include <stdio.h>
+ #include <errno.h>
+ #include <inttypes.h>
+ #include <signal.h>
+@@ -53,6 +54,7 @@
+ #include "event.h"
+ #include "evsel.h"
+ #include "evsel_fprintf.h"
++#include "hist.h"
+ #include "intel-tpebs.h"
+ #include "metricgroup.h"
+ #include "mmap.h"
+@@ -125,12 +127,24 @@ struct evlist *evlist__new_default(const struct target *target, bool sample_call
+ 		if (err)
+ 			goto out_err;
+ 	} else {
++		struct evsel *leader = NULL;
++
++		/* Fallback for cross-platform file analysis missing the topology header */
+ 		while ((pmu = perf_pmus__scan_core(pmu)) != NULL) {
+ 			snprintf(buf, sizeof(buf), "%s/cycles/%s", pmu->name,
+ 				can_profile_kernel ? "P" : "Pu");
+ 			err = parse_event(evlist, buf);
+ 			if (err)
+ 				goto out_err;
++
++			if (!leader) {
++				leader = evlist__last(evlist);
++			} else {
++				struct evsel *last = evlist__last(evlist);
++
++				if (last != leader)
++					last->first_wildcard_match = leader;
++			}
+ 		}
+ 	}
+ 
+@@ -148,6 +162,175 @@ struct evlist *evlist__new_default(const struct target *target, bool sample_call
+ 	return NULL;
+ }
+ 
++/**
++ * evlist__hybrid_matches - find events that may be merged across core PMUs.
++ * @evlist: The evlist to check.
++ * @env: The perf_env containing the PMU mapping information, NULL for the
++ *       current machine.
++ * @link: Should the matches be recorded in first_wildcard_match?
++ *
++ * perf record, top, etc. set first_wildcard_match in the event parsing. The
++ * perf.data case (e.g. perf report) recomputes the first_wildcard_match using
++ * string matches for core events on hybrid systems.
++ */
++static bool evlist__hybrid_matches(struct evlist *evlist, struct perf_env *env, bool link)
++{
++	struct evsel *pos;
++	unsigned int nr = 0;
++	bool found = false;
++
++	evlist__for_each_entry(evlist, pos) {
++		if (evsel__is_dummy_event(pos))
++			continue;
++
++		if (pos->core.leader != &pos->core || pos->core.nr_members > 1)
++			return false;
++
++		if (pos->first_wildcard_match)
++			found = true;
++		nr++;
++	}
++
++	/* No events found. */
++	if (nr <= 1)
++		return false;
++
++	/* Found wildcard events from parsing. */
++	if (found)
++		return true;
++
++	/* Try to find matching core events and set the first_wildcard_match. */
++	evlist__for_each_entry(evlist, pos) {
++		const char *pos_name;
++		const char *pos_match;
++		struct evsel *peer;
++
++		if (evsel__is_dummy_event(pos) || pos->first_wildcard_match)
++			continue;
++
++		pos_name = evsel__name(pos);
++		pos_match = pos_name ? strchr(pos_name, '/') : NULL;
++
++		if (!pos_match)
++			continue;
++
++		/* If evsel->core.is_pmu_core missing in report, fallback to perf_env */
++		if (!evsel__is_hybrid(pos)) {
++			if (!is_pmu_core_len(env, pos_name, pos_match - pos_name))
++				continue;
++		}
++
++		peer = pos;
++		list_for_each_entry_continue(peer, &evlist__core(evlist)->entries, core.node) {
++			const char *peer_name;
++			const char *peer_match;
++
++			if (evsel__is_dummy_event(peer) || peer->first_wildcard_match)
++				continue;
++
++			peer_name = evsel__name(peer);
++			peer_match = peer_name ? strchr(peer_name, '/') : NULL;
++			if (!peer_match)
++				continue;
++
++			if (!evsel__is_hybrid(peer)) {
++				if (!is_pmu_core_len(env, peer_name,
++						     peer_match - peer_name))
++					continue;
++			}
++
++			if (strcmp(pos_match, peer_match))
++				continue;
++
++			found = true;
++			if (!link) {
++				/* Just a test, don't modify the evlist. */
++				return true;
++			}
++			/*
++			 * Keep looking so that all the events of this name are
++			 * linked, there may be more than 2 core PMUs.
++			 */
++			peer->first_wildcard_match = pos;
++		}
++	}
++	return found;
++}
++
++/**
++ * evlist__can_merge_hybrid - can events in the evlist be merged across core
++ * PMUs? The evlist isn't modified.
++ * @evlist: The evlist to check.
++ * @env: The perf_env containing the PMU mapping information, NULL for the
++ *       current machine.
++ */
++bool evlist__can_merge_hybrid(struct evlist *evlist, struct perf_env *env)
++{
++	return evlist__hybrid_matches(evlist, env, /*link=*/false);
++}
++
++/*
++ * evlist__merge_hybrid - group hybrid events logically together.
++ * @evlist: The evlist containing events to merge.
++ * @env: The perf_env containing the PMU mapping information, NULL for the
++ *       current machine.
++ *
++ * Iterates through the evlist and merges associated hybrid events by assigning
++ * their first_wildcard_match as their core group leader, modifying their
++ * presentation for a single merged histogram view.
++ */
++void evlist__merge_hybrid(struct evlist *evlist, struct perf_env *env)
++{
++	struct list_head new_list;
++	struct evsel *member, *mtmp;
++	struct evsel *pos, *tmp;
++	int idx = 0;
++
++	/* Compute first_wildcard_match for events that lack it, say from a file. */
++	if (!evlist__hybrid_matches(evlist, env, /*link=*/true))
++		return;
++
++	evlist__for_each_entry_safe(evlist, tmp, pos) {
++		struct evsel *leader, *old_leader;
++
++		if (evsel__is_dummy_event(pos))
++			continue;
++
++		if (!pos->first_wildcard_match)
++			continue;
++
++		leader = evsel__leader(pos->first_wildcard_match);
++		old_leader = evsel__leader(pos);
++		if (old_leader == leader)
++			continue;
++
++		if (old_leader != pos)
++			old_leader->core.nr_members--;
++		pos->core.leader = &leader->core;
++		pos->merged_hybrid_group = true;
++		/* Base is 1 to natively represent the leader */
++		if (leader->core.nr_members == 0)
++			leader->core.nr_members = 1;
++		leader->core.nr_members++;
++	}
++
++	INIT_LIST_HEAD(&new_list);
++
++	while (!list_empty(&evlist__core(evlist)->entries)) {
++		pos = list_first_entry(&evlist__core(evlist)->entries, struct evsel, core.node);
++		list_move_tail(&pos->core.node, &new_list);
++
++		list_for_each_entry_safe(member, mtmp, &evlist__core(evlist)->entries, core.node) {
++			if (member->core.leader == &pos->core)
++				list_move_tail(&member->core.node, &new_list);
++		}
++	}
++	list_splice_init(&new_list, &evlist__core(evlist)->entries);
++
++	evlist__for_each_entry(evlist, pos)
++		pos->core.idx = idx++;
++}
++
+ struct evlist *evlist__new_dummy(void)
+ {
+ 	struct evlist *evlist = evlist__new();
+diff --git a/tools/perf/util/evlist.h b/tools/perf/util/evlist.h
+index 838e263b76f3..0f380421e03d 100644
+--- a/tools/perf/util/evlist.h
++++ b/tools/perf/util/evlist.h
+@@ -331,6 +331,9 @@ static inline void evlist__set_selected(struct evlist *evlist, struct evsel *evs
+ 
+ struct evlist *evlist__new(void);
+ struct evlist *evlist__new_default(const struct target *target, bool sample_callchains);
++struct perf_env;
++bool evlist__can_merge_hybrid(struct evlist *evlist, struct perf_env *env);
++void evlist__merge_hybrid(struct evlist *evlist, struct perf_env *env);
+ struct evlist *evlist__new_dummy(void);
+ struct evlist *evlist__get(struct evlist *evlist);
+ void evlist__put(struct evlist *evlist);
+diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
+index 6f759b0e86e9..5c5799cee601 100644
+--- a/tools/perf/util/evsel.h
++++ b/tools/perf/util/evsel.h
+@@ -53,6 +53,7 @@ struct evsel {
+ 	int			id_pos;
+ 	int			is_pos;
+ 	unsigned int		sample_size;
++	bool			merged_hybrid_group;
+ 
+ 	/*
+ 	 * These fields can be set in the parse-events code or similar.
+diff --git a/tools/perf/util/hist.h b/tools/perf/util/hist.h
+index b30375a203e7..d0ed43807cf6 100644
+--- a/tools/perf/util/hist.h
++++ b/tools/perf/util/hist.h
+@@ -130,6 +130,7 @@ struct hists {
+ 	struct hists_stats	stats;
+ 	u64			event_stream;
+ 	u16			col_len[HISTC_NR_COLS];
++	bool			merge_entries;
+ 	bool			has_callchains;
+ 	int			socket_filter;
+ 	struct perf_hpp_list	*hpp_list;
+diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
+index cc7ad331a49f..e40c16cbef01 100644
+--- a/tools/perf/util/parse-events.c
++++ b/tools/perf/util/parse-events.c
+@@ -1683,7 +1683,7 @@ int parse_events_multi_pmu_add(struct parse_events_state *parse_state,
+ 			strbuf_release(&sb);
+ 			ok++;
+ 		}
+-		if (first_wildcard_match == NULL)
++		if (first_wildcard_match == NULL && !list_empty(list))
+ 			first_wildcard_match = container_of(list->prev, struct evsel, core.node);
+ 	}
+ 
+@@ -1754,7 +1754,7 @@ int parse_events_multi_pmu_add_or_add_pmu(struct parse_events_state *parse_state
+ 			ok++;
+ 			parse_state->wild_card_pmus = true;
+ 		}
+-		if (first_wildcard_match == NULL) {
++		if (first_wildcard_match == NULL && !list_empty(*listp)) {
+ 			first_wildcard_match =
+ 				container_of((*listp)->prev, struct evsel, core.node);
+ 		}
+diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
+index 744e253e851f..01753d5c69d1 100644
+--- a/tools/perf/util/pmu.c
++++ b/tools/perf/util/pmu.c
+@@ -2039,7 +2039,7 @@ int perf_pmu__for_each_format(struct perf_pmu *pmu, void *state, pmu_format_call
+ }
+ 
+ /**
+- * is_pmu_core() - Check if the given PMU name corresponds to a core CPU PMU.
++ * is_pmu_core() - Runtime check if the given PMU name corresponds to a core CPU PMU.
+  * @name: The PMU name to check.
+  *
+  * Core PMUs can be identified by:
+@@ -2060,6 +2060,47 @@ bool is_pmu_core(const char *name)
+ 	       is_sysfs_pmu_core(name);
+ }
+ 
++/**
++ * is_pmu_core_len - Perf env based check if a given string prefix matches a core PMU name.
++ * @env: The perf_env to check within, NULL for the current machine.
++ * @name: The PMU name to check.
++ * @len: The length of the PMU name prefix in the string.
++ */
++bool is_pmu_core_len(struct perf_env *env, const char *name, size_t len)
++{
++	struct perf_pmu *pmu = NULL;
++
++	if (env && env->hybrid_nodes) {
++		for (int i = 0; i < env->nr_hybrid_nodes; i++) {
++			const char *pmu_name = env->hybrid_nodes[i].pmu_name;
++
++			if (strlen(pmu_name) == len && !strncmp(name, pmu_name, len))
++				return true;
++		}
++		return false;
++	}
++
++	/*
++	 * No hybrid topology, either the machine isn't hybrid or the perf.data
++	 * file was written by a perf lacking HEADER_HYBRID_TOPOLOGY. Fall back
++	 * to the PMUs of this machine, which is only meaningful when the data
++	 * was recorded on this architecture. Guessing PMU names from a prefix
++	 * isn't portable, for example, big.LITTLE ARM and Apple core PMUs are
++	 * named after their CPU rather than "cpu_core" and "cpu_atom".
++	 */
++	if (env && strcmp(perf_env__arch(env), perf_env__arch(/*env=*/NULL))) {
++		pr_debug("Can't identify core PMUs of a %s perf.data file recorded without hybrid topology\n",
++			 perf_env__arch(env));
++		return false;
++	}
++
++	while ((pmu = perf_pmus__scan_core(pmu)) != NULL) {
++		if (strlen(pmu->name) == len && !strncmp(name, pmu->name, len))
++			return true;
++	}
++	return false;
++}
++
+ bool perf_pmu__supports_legacy_cache(const struct perf_pmu *pmu)
+ {
+ 	return pmu->is_core;
+diff --git a/tools/perf/util/pmu.h b/tools/perf/util/pmu.h
+index 0d9f3c57e8e8..2c8916ad073e 100644
+--- a/tools/perf/util/pmu.h
++++ b/tools/perf/util/pmu.h
+@@ -16,6 +16,7 @@
+ struct evsel_config_term;
+ struct hashmap;
+ struct perf_cpu_map;
++struct perf_env;
+ struct print_callbacks;
+ 
+ enum {
+@@ -289,6 +290,8 @@ int perf_pmu__for_each_format(struct perf_pmu *pmu, void *state, pmu_format_call
+ u64 perf_pmu__format_unpack(unsigned long *format, u64 config_val);
+ 
+ bool is_pmu_core(const char *name);
++bool is_pmu_core_len(struct perf_env *env, const char *name, size_t len);
++
+ bool perf_pmu__supports_legacy_cache(const struct perf_pmu *pmu);
+ bool perf_pmu__auto_merge_stats(const struct perf_pmu *pmu);
+ bool perf_pmu__have_event(struct perf_pmu *pmu, const char *name);
+diff --git a/tools/perf/util/symbol_conf.h b/tools/perf/util/symbol_conf.h
+index 71f60081a85b..50317bdaf2b6 100644
+--- a/tools/perf/util/symbol_conf.h
++++ b/tools/perf/util/symbol_conf.h
+@@ -38,6 +38,7 @@ enum symbol__weight_mode {
+ 	for ((_weight) = WEIGHT_WEIGHT; (_weight) <= WEIGHT_WEIGHT3; (_weight)++)
+ 
+ struct symbol_conf {
++	bool		hybrid_merge;
+ 	bool		nanosecs;
+ 	unsigned short	priv_size;
+ 	bool		try_vmlinux_path,
 -- 
 2.55.0.1082.g2b9226bbc0-goog
 
