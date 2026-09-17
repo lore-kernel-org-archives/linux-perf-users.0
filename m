@@ -1,56 +1,56 @@
-Received: from mail-pl1-f199.google.com (mail-pl1-f199.google.com [209.85.214.199])
+Received: from mail-pj1-f70.google.com (mail-pj1-f70.google.com [209.85.216.70])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E0A03E410E
-	for <linux-perf-users@vger.kernel.org>; Thu, 17 Sep 2026 04:53:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8477B3E6DE8
+	for <linux-perf-users@vger.kernel.org>; Thu, 17 Sep 2026 04:53:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.70
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789620832; cv=none; b=NuhOifqmMhdE2aDjM5CgIA/ERgxFgvubnxDS+70zq5e+VxfbeYMTLw/sZauGCbc1aYQKOOKVBee5rXPPeZDj4N81Q+KiNWQ/yUShPQ41VsPkKOi4wlvVdki7hqlKiYdktm837EmvoPddoMl6k1bli+VuX6bjgY7Lr5Ultcwj7Pc=
+	t=1789620834; cv=none; b=JfTcAVykNzsX/xkEAGIBkth45CEdpYgCL19/VJYUwI+AX9wBvLIfNToqaamQLR8HIyXEyZ5Dmx95y4sB2Qi+eF/JPb1iNQ1+JMYIMMoGNI2ZFFepeOEm2WKDfKBIC501bCrOWRPpnRMqVaRb9NOFDA8IG9olwuPhoIYSQfOPhaM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789620832; c=relaxed/simple;
-	bh=5DklQJpfCFJyN0EZrRZqRXjxXKTZyUSm4Q+g/bsrlA8=;
+	s=arc-20240116; t=1789620834; c=relaxed/simple;
+	bh=MCRtz/VwUrrtZbKs25VEqKBHP5G4iO3e+pODi2v1Ucc=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=tOHoQfm0vpqKaQaIVR2JnNcqLh+yyHQtld4wPbBFdDZMCw7qAwirXK3wi0ZyTRaVFBCgvkjq99XNXHzHi63kg5MaGoSM5YzyDBAm0PSki1dtXmwxktjWyvWuvzM+dnsvf6QDDYngIhWMM4M/CtmYabXh3L+Q2gBkwYEJ6vRfQ4M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=OX25Gn7k; arc=none smtp.client-ip=209.85.214.199
+	 To:Cc:Content-Type; b=BOdrhCz74Lk/9hF9sRCxlciQ5b+fbiivCeKw4eiQLl+3icEmsBNACy+f81kvytu59z4AqxakBI5T5yEVhKx0FNf9HIcYUx6UYtduDXBqsWjMJxcbXN+6ILms4EPyP+1TRKikzLWcEwRNvwX19DFFrfJrzDYQWRZs2Q7YBgu56JU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=r6ECqb+i; arc=none smtp.client-ip=209.85.216.70
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="OX25Gn7k"
-Received: by mail-pl1-f199.google.com with SMTP id d9443c01a7336-2d94a158dc8so9215625ad.2
-        for <linux-perf-users@vger.kernel.org>; Wed, 16 Sep 2026 21:53:50 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="r6ECqb+i"
+Received: by mail-pj1-f70.google.com with SMTP id 98e67ed59e1d1-398d0010cfaso866307a91.3
+        for <linux-perf-users@vger.kernel.org>; Wed, 16 Sep 2026 21:53:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1789620829; x=1790225629; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1789620832; x=1790225632; darn=vger.kernel.org;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=ctknpE6kMV5LkwM9lNHtmlsQ1sWEmYmqXPSOFSZmCm4=;
-        b=OX25Gn7kOuOpuWa8t41EIB7Ldk7ZTJVHPh+brxsLz/koIVy6N3BmaKMyy30ZJcnP14
-         IysnRzr6GZQ6xmw953oqfvXTRqKfNp1jAsocJkhT8mw2ryxEG401KsxsFWa6Uam/LV4c
-         Zc5qTgNONK5oP12HGjRuGBEtsB1u3c2AlQ4sOh1zKQJfDc75y1o+3IKcylF83Xcf58aK
-         2lMOZZgRE3A9f2hKpHJq24r2RkGJMNlwUKDuDLXv2jfDLF5feWOpC8iiXbI6ncGVp1Pm
-         JyF8jmqhBGVTu5QIScBoI9EmqX+mmicfIhQnCCCJaf3BFnfwUPq4WiWkZzD9FD5Dfz4t
-         Tiog==
+        bh=g9JN/Di+KgTRKeSYgmf/U6+GV+WTwPqrJpuHpwbFA28=;
+        b=r6ECqb+iDFGSOyM4/WWn+XCpwVEKVA2SWTx+OcDKP3H2/7TZ+Cs1VdXv9gRyZ9zMQy
+         k0rG9QNsVhoULctRR/4ZZKYUEtjW5hp71KkEi+Sl5jduATB6K2Rwk5igLDkzqO4TdXDt
+         o+5ucUqiTQPj0H73BxJFtt5yexhnMZYXscVosbuCTs/F398ztLxOxpBLvvPOQmWGCfAE
+         j79n1m9qPT3LGYIMjtFdPPiUq/t9HF57hi5MviiXn8NBMSZIP4Ylr74hYUf9ddL9uCQj
+         hXL6YJPlWqfiRMAEjRdJIQ+3KGm5CfgEXH3T9sgJl8jq1adSDoA7R4mGwHWUbHYQKm+V
+         v6DQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1789620829; x=1790225629;
+        d=1e100.net; s=20260707; t=1789620832; x=1790225632;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=ctknpE6kMV5LkwM9lNHtmlsQ1sWEmYmqXPSOFSZmCm4=;
-        b=SOjP3pHBCiNg3tqdggMCxKfODMibOYDjgxnV6ciTt03B1twV7rzWyp1AhWHnspUFZf
-         jQ8xVng1XXn6P7ykz+NYVeWbrbndOpe/8N9qIWr9WUg9OUmaq9JXcL13ZgztTVVeavcu
-         wqIREOnh3ExgWwKZm+skzb2yI9g3UN1e7xLgS+3xpwyWs4/W+bvtafcZAvPdYrJm6klU
-         uoV6IFeq+AkwQRF6Kiukm6/N3JcbgnTbw3qUY1qm8PYHNnDycYjXj6CneoinVZRCkDwt
-         +h6YMAFBFIsd8SG3+W451pXFHgG5YUBw3NviopBbtsXMGzrIKG8Psk2IOAfk+LRq0s6R
-         98WA==
-X-Forwarded-Encrypted: i=1; AKwUvBwrA/9PEowKDpifQVKNSQVmpIdQZ7MVHkooNJrGIF1iHVIE405qIzIlLuyeyD8PQyCHprIEXt8mfJN0xE+D1ycQ@vger.kernel.org
-X-Gm-Message-State: AFuF++lrW50fd5mZZnizcTbdBqjxq7w4KobyCO4oCS/nv2oJMKlNd0RP
-	uUqTZxu3wyM3Mifv/v0N/2lpCz4oWHvaPypgzma2xSQjsPsJdKonL4bITlCpDJjPx9MCBwCtCqJ
-	BIvFlyxc9UA==
-X-Received: from dycc4.prod.google.com ([2002:a05:693c:60c4:b0:336:afee:118c])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a20:2584:b0:3da:bea4:6215
- with SMTP id adf61e73a8af0-3dd5f72046cmr12464935637.19.1789620829321; Wed, 16
- Sep 2026 21:53:49 -0700 (PDT)
-Date: Wed, 16 Sep 2026 21:53:23 -0700
+        bh=g9JN/Di+KgTRKeSYgmf/U6+GV+WTwPqrJpuHpwbFA28=;
+        b=Eyp1VgS6A6oX9U4u2WLH4Hb3W4l+IoEBExQohwHZ2tRbSqdIRCo2d80Zk16g/e30ZJ
+         zC8dBajWwQHjDYDRknVt6UAYfQIT7BTELU9Nm/tzUFbOjgDE3pieRWGS9WvVQEOiPLq3
+         TRoSj28Z7+tlGkQNlsqqHVZ7i1MEgCu03pSGuBNJE9GpnK0CMJ64T+M3EbbDxd9Xl4U5
+         h61TJ92IFE4rnjp5LaDH8aII4FI0cLbDnuNPfP7bzTrV7g3+KmfYAPGXCR7Udfv+fZdL
+         9LZFr/5vwKv46CCLYBCccds8+jF6QyP92AGUAZTFEzURqmNnDqhQ8T969ffB662CTTSO
+         Qp/g==
+X-Forwarded-Encrypted: i=1; AKwUvBxumIiAKlnq7hUAujyNqse0RiZi+Zph52wdRvH/I/zw89CqgdxvAL8f9N6MZAgvJQEZHkKnUu9GqYo9Hh6aqPeX@vger.kernel.org
+X-Gm-Message-State: AFuF++ntrcPT3CsAMEaONSs8zQZPrkpEn1oc+qSY2GuDtp5G3yFeGZ7C
+	JPOsD/Tw95jdgUnZUauqz5U9fOEgy4Oud4jDx1Sgjq6bX6A+dHzth2Dvi1OD1Sxq9ey8438sVm+
+	Gs9SWkAkMhg==
+X-Received: from dyblf1.prod.google.com ([2002:a05:7301:a01:b0:334:e08b:1b72])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:1811:b0:39d:e54c:8658
+ with SMTP id 98e67ed59e1d1-39e1e250230mr15529129a91.5.1789620831564; Wed, 16
+ Sep 2026 21:53:51 -0700 (PDT)
+Date: Wed, 16 Sep 2026 21:53:24 -0700
 In-Reply-To: <20260917045326.63601-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -60,9 +60,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260917045326.63601-1-irogers@google.com>
 X-Mailer: git-send-email 2.55.0.1082.g2b9226bbc0-goog
-Message-ID: <20260917045326.63601-8-irogers@google.com>
-Subject: [PATCH v1 08/11] perf annotate-data: missing <string.h> inclusion for
- libc string functions
+Message-ID: <20260917045326.63601-9-irogers@google.com>
+Subject: [PATCH v1 09/11] perf mem: missing stdio.h and limits.h in mem-events.c
 From: Ian Rogers <irogers@google.com>
 To: Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
 	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
@@ -73,59 +72,71 @@ Content-Type: text/plain; charset="UTF-8"
 
 Sashiko reported:
 
-  When compiling the perf tool with musl libc,
-  tools/perf/util/annotate-data.c fails to build due to the missing
-  <string.h> header.
+  When compiling the perf tool against a strict POSIX C library such
+  as musl libc, tools/perf/util/mem-events.c fails to build due to the
+  use of undeclared standard symbols.
 
-  The source file utilizes standard C library string and memory
-  functions, such as memset() in init_type_state() and strcmp() in
-  data_type_cmp(). While glibc implicitly pulls in <string.h> via
-  other standard headers, musl libc enforces stricter header
-  separation. Because the header is not explicitly included at the top
-  of the file, the compiler encounters implicit function declarations
-  for these standard string functions. This results in a direct
-  compile-time build error.
+  The source file defines an array using PATH_MAX in
+  perf_pmu__mem_events_supported(), and utilizes fprintf() with stderr
+  in perf_pmu__mem_events_list():
+
+  Because the required <limits.h> and <stdio.h> headers are not
+  explicitly included, these symbols remain undeclared. While glibc
+  masks this omission by implicitly pulling in these definitions via
+  other standard headers, musl libc adheres strictly to POSIX
+  inclusions. This causes the compiler to reject the undeclared
+  PATH_MAX macro, the stderr stream, and the fprintf() function,
+  halting the build process on systems utilizing strict libc
+  implementations.
 
 Add the header files and use git clang-format to sort.
 
 Reported-by: sashiko-bot@kernel.org
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/annotate-data.c | 11 +++++++----
- 1 file changed, 7 insertions(+), 4 deletions(-)
+ tools/perf/util/mem-events.c | 20 +++++++++++++-------
+ 1 file changed, 13 insertions(+), 7 deletions(-)
 
-diff --git a/tools/perf/util/annotate-data.c b/tools/perf/util/annotate-data.c
-index aff60a630fd0..02df833504be 100644
---- a/tools/perf/util/annotate-data.c
-+++ b/tools/perf/util/annotate-data.c
-@@ -4,20 +4,23 @@
-  *
-  * Written by Namhyung Kim <namhyung@kernel.org>
-  */
-+#include "annotate-data.h"
+diff --git a/tools/perf/util/mem-events.c b/tools/perf/util/mem-events.c
+index 0b49fce251fc..64aecc2b67e5 100644
+--- a/tools/perf/util/mem-events.c
++++ b/tools/perf/util/mem-events.c
+@@ -1,22 +1,28 @@
+ // SPDX-License-Identifier: GPL-2.0
++#include "mem-events.h"
 +
- #include <errno.h>
-+#include <inttypes.h>
- #include <stdio.h>
++#include <errno.h>
++#include <limits.h>
+ #include <stddef.h>
++#include <stdio.h>
  #include <stdlib.h>
--#include <inttypes.h>
-+#include <string.h>
+ #include <string.h>
+-#include <errno.h>
+-#include <sys/types.h>
 +
- #include <linux/zalloc.h>
- 
- #include "annotate.h"
--#include "annotate-data.h"
--#include "debuginfo.h"
++#include <linux/kernel.h>
+ #include <sys/stat.h>
++#include <sys/types.h>
+ #include <unistd.h>
++
+ #include <api/fs/fs.h>
+-#include <linux/kernel.h>
++
+ #include "cpumap.h"
+-#include "map_symbol.h"
+-#include "mem-events.h"
+-#include "mem-info.h"
  #include "debug.h"
-+#include "debuginfo.h"
- #include "dso.h"
- #include "dwarf-regs.h"
--#include "evsel.h"
- #include "evlist.h"
-+#include "evsel.h"
- #include "map.h"
- #include "map_symbol.h"
- #include "sort.h"
+ #include "evsel.h"
+-#include "symbol.h"
++#include "map_symbol.h"
++#include "mem-info.h"
+ #include "pmu.h"
+ #include "pmus.h"
++#include "symbol.h"
+ 
+ unsigned int perf_mem_events__loads_ldlat = 30;
+ 
 -- 
 2.55.0.1082.g2b9226bbc0-goog
 
