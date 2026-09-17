@@ -1,56 +1,56 @@
-Received: from mail-pj1-f71.google.com (mail-pj1-f71.google.com [209.85.216.71])
+Received: from mail-pj1-f72.google.com (mail-pj1-f72.google.com [209.85.216.72])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 012813BFAE8
-	for <linux-perf-users@vger.kernel.org>; Thu, 17 Sep 2026 05:07:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.71
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D78793BFAE8
+	for <linux-perf-users@vger.kernel.org>; Thu, 17 Sep 2026 05:07:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789621659; cv=none; b=fOqpQJoG94+NM95jwCJE7/U8UkF+pJH7KlsI2LF4x6mAhuvAtp9LSuL58ECTU6aGnVQSfZuAhJKtBdPhpeCPyg/peTzcGuAP858wj2MvSKw+i3yg0KF3ceZk8I9U0LXymPDgP+j96cjAcKZJCN04lqXeAFLUYY5DV5zvaZw3Eyo=
+	t=1789621662; cv=none; b=DLFktCYiaqKfiPBXgrF6rWlfEluzeEMsbOgS8VkDHMS6KR+Iaj7l5tZ8Xcdu9fRXb1Z4RFQjPV5KWU0wbv8mQEI+/LzQ13TOkWhUbuJjFcNcgh1RNW9DwDazFX8IIk5EIwFmvFI85Qe8jnMzFg764hKBJCKAeiRAErndXOBgdHU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789621659; c=relaxed/simple;
-	bh=B70u4XR/u4bWLXwrT+O9TY/BXXytfR5Z9wno3IAJ7xc=;
+	s=arc-20240116; t=1789621662; c=relaxed/simple;
+	bh=VGFXHwKE8RvMe5GcM8/eT8IIPWWCH+vbmRVym9AjVaw=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=ic/ZRmrVFsnSvo+MHWNA8LPUIu1SGmAS4K5zy4PF6R9XO0aoJ7xsK2Og6K72gBH9R5sLmmAR1asAatEHcPe8VsWs/rKkjvl+J0128uVxy04ixUVzq1OPPVi3cMA4XhwP8rm0sdGQlMjnOK7vriorb8G4F/cKZHIYse9pTGLAyvY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=SrDTmwVh; arc=none smtp.client-ip=209.85.216.71
+	 To:Cc:Content-Type; b=rhFjhHkCOM7T3pBgL5TXGmAbBCZ8SGLyzFWjXcytD20wMDOS07bFZ+k9ochG0or4Wg1AC4IBXWTICwT3B6wNOkbrI4dXGI3449LnP6MuzrKUGxgjGpmoL/sDo5KvhTqimQHH/ihLFjuPc9KarGyjrchwjQ8qsCswDvvtzmBOtIM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=TH61lbk4; arc=none smtp.client-ip=209.85.216.72
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="SrDTmwVh"
-Received: by mail-pj1-f71.google.com with SMTP id 98e67ed59e1d1-398dc3d8f0fso460563a91.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 16 Sep 2026 22:07:37 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="TH61lbk4"
+Received: by mail-pj1-f72.google.com with SMTP id 98e67ed59e1d1-39e087a17dfso811140a91.3
+        for <linux-perf-users@vger.kernel.org>; Wed, 16 Sep 2026 22:07:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1789621657; x=1790226457; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1789621659; x=1790226459; darn=vger.kernel.org;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=AUMujXU7xT8HywyfxATwqV+1Kl/xa26YBCifxmUb964=;
-        b=SrDTmwVhVWjlzjyAMKfQ4E2cLIkf06XCijaK4u+SH3+XSCJO3bRAVt6gNghTD7LBSq
-         aULdBpVxSRo7pG2BiNltx3LP1OIB0tFzVP3sKwr39pzD5up+fYdTtAtLCcq7SKl6gTbu
-         EvEJmorDelXKxh5fg8cEjj++r5GBySHbxA/dwjzZG6RFcstnHc3BAh+ksdNmHUhZn1Ub
-         mebby0UKedjT6WGv9KsIOa/sj/9unprH8WfBZfM/yuYvchSJXuSxHYpNYfo9gyzhI1LU
-         cxQqqkSS1q27CeIRccj/P8CvQdelp5IoqJcb5BKgkAwPOehx98/HXHaLFyCwzouUGZvV
-         kAZQ==
+        bh=modhGu1HXmet1RUOxxEs2p6aFj65PAjxPzqA3IIZT/E=;
+        b=TH61lbk49ORK/mS2Rgtkut5aEiqzri2LNoC6Ir//rh7lEqoda5csmw+3dKzta70Gdg
+         bj2w31ZBLy9A7Bqhb0dSa8BVaio6wT1xevfTV9nUaZNGbEfuvxeTW4+abEbCoWeGAXVt
+         469DQZ/7FqWHTe69ErB/8wz7C7pWTV1I5vhYgXF20zewgXI2oMZjoEK/ZO5oaHgQebdn
+         aKWdMAmtcNno0tCDnY/tl0k/rO3K+z+fWzcS1fVaUJEhQTe7xvpTcOId+je+ddlgKn3e
+         uZ5ODZzpXdGqc2qP7yyEk5R2+Iw3zP9xQhOW448BVH525uWz6DTmReB9ZX6c7GH78HRH
+         XSEA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1789621657; x=1790226457;
+        d=1e100.net; s=20260707; t=1789621659; x=1790226459;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=AUMujXU7xT8HywyfxATwqV+1Kl/xa26YBCifxmUb964=;
-        b=dEDGb6aSKsfKVLEOs/MbkjScshQ9s6s0S/uK8zugzvi4OBtZSgX8hza/YzAtJQdL1L
-         FXxUEqT5JAhBYYY94XE5L3KfHmQgCdGCKHg8cJqJeKP9w1g9yaodKob3p2qvofscVlLB
-         XLX/uogmV9V4jeT0GslwRfTrv8aNt/POdz6CetpRkS6ibTXcsL8B0wVD72PHD8fYADlP
-         D2DzxycdEwfozX/P9q1dXakhPkpzCPjWkW/BQjbLoAp4nZQw1kzAmENoJebCtOiN0evC
-         fotYzudL3Gf0jtVztUOtv2A5+30tMCr5qTUO5OwKoMnc/rJ+h3cgFY2TTwfrt6UiVG0H
-         Hy6Q==
-X-Forwarded-Encrypted: i=1; AKwUvBzFuXC4WMWvsKuMmQrEDe4Z6PTuSIXzsyBsZc68GYY6JCl4sF/2B2w4DO2KFf204fnwoBYlZbdJ74/bbhf7U1EL@vger.kernel.org
-X-Gm-Message-State: AFuF++nvq1d3Zt8SYMjtv3DkVrNAVS2lB8FK3NA4GduKSvE/Mehg83aH
-	ER4WFhaPpv4u2h1wj20FGKZq/QA9cK2qqynvTlakVhYTUigCURNiUqhzPHGo5hysxV8BJ8pm2Xa
-	blZjQyCKlvg==
-X-Received: from dleb1-n2.prod.google.com ([2002:a05:701b:4241:20b0:144:4896:d41])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:5743:b0:39e:4343:857e
- with SMTP id 98e67ed59e1d1-39e43438715mr129146a91.15.1789621656998; Wed, 16
- Sep 2026 22:07:36 -0700 (PDT)
-Date: Wed, 16 Sep 2026 22:07:05 -0700
+        bh=modhGu1HXmet1RUOxxEs2p6aFj65PAjxPzqA3IIZT/E=;
+        b=WkuuKUA+K5D0xa/aL0Pucqqf/+rgBcvmrA5zXN20B8NJ8zUVSSXgBl+jjpTvQ8eVUo
+         oxAUIGvNJKaOVN/v5X5ipexJFiUChoOE/GjSO0VeQUYc+XhDkDCKrFvNnn7s2ARIDy6k
+         znMBqRadtNIbc1J1gqnEJehMAjeoXX3rLZNV8tX5PpAND3S6Zk0FxszBJ89Hi2zDknUD
+         BEWv1ivspJkAhLXYWskG6LFfRsFywnfbafT9R70WUh14kkDTN0mT2LYs4hSCOzitxu3T
+         lFQfvlgDvMKinG3yeI5hChdLIO8ab8b/TggOSfTupZCz/3Qz2AcjICCbBkRLitjbCcmA
+         N6/A==
+X-Forwarded-Encrypted: i=1; AKwUvBwGOBIlBams5nqoPwRUyY+gXz51aLBLoqDsc70KPRXsDTT5RptvyA8psWJnmlLRLC+30T2YfhnUE/4j3KLb7n4K@vger.kernel.org
+X-Gm-Message-State: AFuF++l95IGFl0V64EphUsOtsk4dVKwH1Ufej9tYObW81nPJcQhjlti4
+	qfqbTaHGS94lkV/2wjO/sWsqBxCmhWfXQoXxrRSnoXhp89nTZw7V/V3ZndYYUhlJ2oGLlw2E8jt
+	QOqQP+ZSGOg==
+X-Received: from dyau26.prod.google.com ([2002:a05:7300:601a:b0:335:65c3:a0a9])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:4408:b0:39d:ec24:5ffe
+ with SMTP id 98e67ed59e1d1-39e1e284fd8mr11448900a91.9.1789621658959; Wed, 16
+ Sep 2026 22:07:38 -0700 (PDT)
+Date: Wed, 16 Sep 2026 22:07:06 -0700
 In-Reply-To: <20260917050708.704702-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -60,52 +60,208 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260916234652.439778-1-irogers@google.com> <20260917050708.704702-1-irogers@google.com>
 X-Mailer: git-send-email 2.55.0.1082.g2b9226bbc0-goog
-Message-ID: <20260917050708.704702-7-irogers@google.com>
-Subject: [PATCH v4 6/9] perf tools: Add TUI hints for --hybrid-merge
+Message-ID: <20260917050708.704702-8-irogers@google.com>
+Subject: [PATCH v4 7/9] perf config: Add core.hybrid-merge to configure event merging
 From: Ian Rogers <irogers@google.com>
 To: irogers@google.com, acme@kernel.org, namhyung@kernel.org
 Cc: ak@kernel.org, ak@linux.intel.com, andi@firstfloor.org, 
 	linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-Add dynamic TUI hints prompting users to restart with --hybrid-merge
-when heterogeneous core PMU events are populated in the sample view.
+Provide a core.hybrid-merge configuration option in .perfconfig
+to allow enabling hybrid event aggregation by default, avoiding
+the need to pass --hybrid-merge explicitly on every invocation.
+
+The config value is a default rather than an explicit request, so with
+--hierarchy it is ignored with a warning, while giving both
+--hierarchy and --hybrid-merge on the command line remains an error.
+For the same reason it is silently ignored when there are no events to
+merge, as would be the case on any machine with a single core PMU,
+whereas an explicit --hybrid-merge still warns. Record whether the
+option came from the command line in symbol_conf so both can tell the
+two apart.
+
+perf stat has its own merging options for counting, the sampling
+core.hybrid-merge deliberately doesn't alter it and its
+--hybrid-merge must still be given explicitly.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 Assisted-by: Antigravity:gemini-3.1-pro
 ---
- tools/perf/Documentation/tips.txt | 1 +
- tools/perf/ui/browsers/hists.c    | 7 +++++--
- 2 files changed, 6 insertions(+), 2 deletions(-)
+ tools/perf/Documentation/perf-config.txt | 10 ++++++++
+ tools/perf/builtin-report.c              | 24 ++++++++++++++-----
+ tools/perf/builtin-top.c                 | 30 +++++++++++++++++-------
+ tools/perf/util/config.c                 | 10 ++++++++
+ tools/perf/util/symbol_conf.h            |  2 ++
+ 5 files changed, 62 insertions(+), 14 deletions(-)
 
-diff --git a/tools/perf/Documentation/tips.txt b/tools/perf/Documentation/tips.txt
-index 1c7b309fe6e8..eb6d56d4d8ba 100644
---- a/tools/perf/Documentation/tips.txt
-+++ b/tools/perf/Documentation/tips.txt
-@@ -67,3 +67,4 @@ For parallelism histogram, try: perf report --hierarchy --sort latency,paralleli
- To analyze particular parallelism levels, try: perf report --latency --parallelism=32-64
- To see how parallelism changes over time, try: perf report -F time,latency,parallelism --time-quantum=1s
- When merging events like cycles, different core frequencies and instructions per cycle mean the counts may not fairly reflect time spent in a function.
-+Use --hybrid-merge to merge matching events from hybrid cores into one view
-diff --git a/tools/perf/ui/browsers/hists.c b/tools/perf/ui/browsers/hists.c
-index f62cb2d534ed..593e1fd5759d 100644
---- a/tools/perf/ui/browsers/hists.c
-+++ b/tools/perf/ui/browsers/hists.c
-@@ -3580,9 +3580,12 @@ static int perf_evsel_menu__run(struct evsel_menu *menu,
- 	const char *title = "Available samples";
- 	int delay_secs = hbt ? hbt->refresh : 0;
- 	int key;
-+	const char *help_text = "ESC: exit, ENTER|->: Browse histograms";
+diff --git a/tools/perf/Documentation/perf-config.txt b/tools/perf/Documentation/perf-config.txt
+index 9b223f892829..6cff6f26af8d 100644
+--- a/tools/perf/Documentation/perf-config.txt
++++ b/tools/perf/Documentation/perf-config.txt
+@@ -217,6 +217,16 @@ core.*::
+ 		Sets a timeout (in milliseconds) for parsing 'addr2line'
+ 		output.  The default timeout is 5s.
  
--	if (ui_browser__show(&menu->b, title,
--			     "ESC: exit, ENTER|->: Browse histograms") < 0)
-+	if (!symbol_conf.hybrid_merge && evlist__can_merge_hybrid(evlist, menu->env))
-+		help_text = "ESC: exit, ENTER|->: Browse. Try --hybrid-merge to combine events.";
++	hybrid-merge::
++		Merge matching events from all hybrid core PMUs into one display
++		by default. For example, if a wildcard expands to run on both p-cores and
++		e-cores, this aggregates them into a single view. This applies to
++		'perf report' and 'perf top', it is ignored with '--hierarchy' and
++		doesn't alter 'perf stat' where '--hybrid-merge' must be given
++		explicitly. As a default it is silently ignored when there is
++		nothing to merge, such as on a machine with a single core PMU,
++		whereas an explicit '--hybrid-merge' warns.
 +
-+	if (ui_browser__show(&menu->b, title, help_text) < 0)
- 		return -1;
+ tui.*, gtk.*::
+ 	Subcommands that can be configured here are 'top', 'report' and 'annotate'.
+ 	These values are booleans, for example:
+diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
+index bda4836fc524..57225bc87731 100644
+--- a/tools/perf/builtin-report.c
++++ b/tools/perf/builtin-report.c
+@@ -1120,7 +1120,13 @@ static int __cmd_report(struct report *rep)
+ 		if (evlist__can_merge_hybrid(session->evlist, env)) {
+ 			evlist__merge_hybrid(session->evlist, env);
+ 			evlist__merge_hists_hybrid(session->evlist, false);
+-		} else {
++		} else if (symbol_conf.hybrid_merge_set) {
++			/*
++			 * Only an explicit --hybrid-merge warns. A
++			 * core.hybrid-merge default is silent, as most
++			 * machines aren't hybrid and there is nothing the
++			 * user needs to do about it.
++			 */
+ 			ui__warning("--hybrid-merge: no events to merge across core PMUs\n");
+ 		}
+ 	}
+@@ -1460,8 +1466,9 @@ int cmd_report(int argc, const char **argv)
+ 		    parse_branch_mode),
+ 	OPT_BOOLEAN(0, "branch-history", &branch_call_mode,
+ 		    "add last branch records to call history"),
+-	OPT_BOOLEAN(0, "hybrid-merge", &symbol_conf.hybrid_merge,
+-		    "merge the same event across hybrid core PMUs"),
++	OPT_BOOLEAN_SET(0, "hybrid-merge", &symbol_conf.hybrid_merge,
++			&symbol_conf.hybrid_merge_set,
++			"merge the same event across hybrid core PMUs"),
+ 	OPT_STRING(0, "objdump", &objdump_path, "path",
+ 		   "objdump binary to use for disassembly and annotations"),
+ 	OPT_STRING(0, "addr2line", &addr2line_path, "path",
+@@ -1562,9 +1569,14 @@ int cmd_report(int argc, const char **argv)
+ 	}
  
- 	while (1) {
+ 	if (symbol_conf.report_hierarchy && symbol_conf.hybrid_merge) {
+-		pr_err("Error: --hierarchy and --hybrid-merge are mutually exclusive.\n");
+-		ret = -EINVAL;
+-		goto exit;
++		if (symbol_conf.hybrid_merge_set) {
++			pr_err("Error: --hierarchy and --hybrid-merge are mutually exclusive.\n");
++			ret = -EINVAL;
++			goto exit;
++		}
++		/* A config file default shouldn't fail an explicit option. */
++		pr_warning("core.hybrid-merge ignored: --hierarchy cannot display merged hybrid events\n");
++		symbol_conf.hybrid_merge = false;
+ 	}
+ 
+ 	if (disassembler_style) {
+diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
+index 3bb3337f1244..a3442d2d6edf 100644
+--- a/tools/perf/builtin-top.c
++++ b/tools/perf/builtin-top.c
+@@ -1314,9 +1314,11 @@ static int __cmd_top(struct perf_top *top)
+ 	}
+ 
+ 	/*
+-	 * Use global stat_config that is zero meaning aggr_mode is AGGR_NONE
+-	 * and hybrid_merge is false.
++	 * Use global stat_config that is zero meaning aggr_mode is AGGR_NONE.
++	 * Merging affects the event names as merged events share a name, all
++	 * other stat_config behavior is unwanted here.
+ 	 */
++	stat_config.hybrid_merge = symbol_conf.hybrid_merge;
+ 	evlist__uniquify_evsel_names(top->evlist, &stat_config);
+ 	ret = perf_top__start_counters(top);
+ 	if (ret)
+@@ -1340,7 +1342,13 @@ static int __cmd_top(struct perf_top *top)
+ 		if (evlist__can_merge_hybrid(top->evlist, /*env=*/NULL)) {
+ 			evlist__merge_hybrid(top->evlist, /*env=*/NULL);
+ 			evlist__merge_hists_hybrid(top->evlist, false);
+-		} else {
++		} else if (symbol_conf.hybrid_merge_set) {
++			/*
++			 * Only an explicit --hybrid-merge warns. A
++			 * core.hybrid-merge default is silent, as most
++			 * machines aren't hybrid and there is nothing the
++			 * user needs to do about it.
++			 */
+ 			ui__warning("--hybrid-merge: no events to merge across core PMUs\n");
+ 		}
+ 	}
+@@ -1500,8 +1508,9 @@ int cmd_top(int argc, const char **argv)
+ 	OPT_CALLBACK('e', "event", &parse_events_option_args, "event",
+ 		     "event selector. use 'perf list' to list available events",
+ 		     parse_events_option),
+-	OPT_BOOLEAN(0, "hybrid-merge", &symbol_conf.hybrid_merge,
+-		    "merge the same event across hybrid core PMUs"),
++	OPT_BOOLEAN_SET(0, "hybrid-merge", &symbol_conf.hybrid_merge,
++			&symbol_conf.hybrid_merge_set,
++			"merge the same event across hybrid core PMUs"),
+ 	OPT_CALLBACK(0, "filter", &top.evlist, "filter",
+ 		     "event filter", parse_filter),
+ 	OPT_U64('c', "count", &opts->user_interval, "event period to sample"),
+@@ -1691,9 +1700,14 @@ int cmd_top(int argc, const char **argv)
+ 		usage_with_options(top_usage, options);
+ 
+ 	if (symbol_conf.report_hierarchy && symbol_conf.hybrid_merge) {
+-		pr_err("Error: --hierarchy and --hybrid-merge are mutually exclusive.\n");
+-		status = -EINVAL;
+-		goto out_put_evlist;
++		if (symbol_conf.hybrid_merge_set) {
++			pr_err("Error: --hierarchy and --hybrid-merge are mutually exclusive.\n");
++			status = -EINVAL;
++			goto out_put_evlist;
++		}
++		/* A config file default shouldn't fail an explicit option. */
++		pr_warning("core.hybrid-merge ignored: --hierarchy cannot display merged hybrid events\n");
++		symbol_conf.hybrid_merge = false;
+ 	}
+ 
+ 	if (disassembler_style) {
+diff --git a/tools/perf/util/config.c b/tools/perf/util/config.c
+index b2972c35c1ec..8fe43b032e9a 100644
+--- a/tools/perf/util/config.c
++++ b/tools/perf/util/config.c
+@@ -470,6 +470,16 @@ static int perf_default_core_config(const char *var, const char *value)
+ 	if (!strcmp(var, "core.addr2line-disable-warn"))
+ 		symbol_conf.addr2line_disable_warn = perf_config_bool(var, value);
+ 
++	if (!strcmp(var, "core.hybrid-merge")) {
++		/*
++		 * Note, this is for sampling tools like perf report and top.
++		 * perf stat has its own merging options and the
++		 * stat_config.hybrid_merge of "perf stat --hybrid-merge" is
++		 * deliberately not set here.
++		 */
++		symbol_conf.hybrid_merge = perf_config_bool(var, value);
++	}
++
+ 	/* Add other config variables here. */
+ 	return 0;
+ }
+diff --git a/tools/perf/util/symbol_conf.h b/tools/perf/util/symbol_conf.h
+index 50317bdaf2b6..37d35f42dcc1 100644
+--- a/tools/perf/util/symbol_conf.h
++++ b/tools/perf/util/symbol_conf.h
+@@ -39,6 +39,8 @@ enum symbol__weight_mode {
+ 
+ struct symbol_conf {
+ 	bool		hybrid_merge;
++	/* Was hybrid_merge given on the command line rather than in a config file? */
++	bool		hybrid_merge_set;
+ 	bool		nanosecs;
+ 	unsigned short	priv_size;
+ 	bool		try_vmlinux_path,
 -- 
 2.55.0.1082.g2b9226bbc0-goog
 
