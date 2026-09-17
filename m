@@ -1,44 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C76C14B7A21
-	for <linux-perf-users@vger.kernel.org>; Thu, 17 Sep 2026 16:08:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D9684DEC0F
+	for <linux-perf-users@vger.kernel.org>; Thu, 17 Sep 2026 16:08:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789661286; cv=none; b=lkJIbzz94eS9ZHjda1BJdXUue9CuWCkjlFikD7MkPL+bs4rnQCbPXavNlaDflvfqVpQdiH0WRRjuOAQShRKBW7qBEi8s6zTtnbfHrqjOD6pRDOzCjFR2ftQurFL2ba5DJAvSZkCp4RMuQtM/W/+y+QKHgt/06QI5s7sK679V4XE=
+	t=1789661293; cv=none; b=NjUISeHhmcm543qAvo1EB1HQ9NZsNimtBqOBkFdBsj85aHl6DEv7LS4DRPV/mXa0MX4I8vTB9wUE0AvTiT079Snul1TWHAnLV5aZZ7XInugMfzPLzDFoh/9qIoN+uwwscb4H14NldTSa8ihE7H+HgrIDZE7wnvojRElXmN7WmLM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789661286; c=relaxed/simple;
-	bh=SQ3eEcujQK0Tn0C6OI7jx9fM180gzye+vIqNGpvzvTM=;
+	s=arc-20240116; t=1789661293; c=relaxed/simple;
+	bh=7CMuWvlgyQArtwYpxIBvO/Ifo3rbNxOxNaQCEX+N0sY=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=JlDf7Ym7nT7sH6NFv93QDtZ7cFHmUnhyK+SzUcaO6ul74hoj9M05mV8B156gKmGLErP6k+qrB7lRwT9LXE3nZ6IKJLlgWnMDYKBZ1tDe+bv+Re14EhaiPb6ZNhuoFC7nufs3m89YR0f/pi8aFeYGEgIRXbCg9xtdhtdcjd+NFPM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=l1w9iZB3; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=TJjFsfaCcTiThy6YSQGO5Td8MsBmXCr3K0trntYKQdfJmzu44sgS7qej/WJjvgOocaXczbKE97iDTiHbFqBMBOkq+AKhPEWS6izo4q8bnyD/Vpe8I+EWU3G1zt0YbFBUuYsdX9uf/PMLD2vh8YjpiGkw+t2umUepdogm0HXFAL8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lnFNq0je; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="l1w9iZB3"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8DD4E1F00898;
-	Thu, 17 Sep 2026 16:08:05 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lnFNq0je"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3B7A81F00898;
+	Thu, 17 Sep 2026 16:08:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789661285;
-	bh=Xf0xe5Zq/00fTxl0JoLBMxUuHJvXowOHdgm4GvvH6V0=;
+	s=k20260515; t=1789661291;
+	bh=7CMuWvlgyQArtwYpxIBvO/Ifo3rbNxOxNaQCEX+N0sY=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=l1w9iZB3Qdp0eGslC67AXK69ep37fGQz2AE2lRsLk80lzijMdVVBePimRJdtQo1dP
-	 W6D4uWaA4GbAyjEnravdPCzIchGIVcJKYc0gQbAzOv/TzBX8Ypu9qtgt07k8L/JUTy
-	 pZ4oCSwdnzItMj9d5ieG/QP3V5QjJP45NNPDPCHpS9wCMGFGrvY20jDyvxNkZYLAcD
-	 UlFHrF9MgoeRaUaNaOzGhp1iAFja8TSoMapDAlRb8hn5sNGsEqM6RWWkN9n1csTT+q
-	 yqBbgl2ShijBHRaF9Nw+cmGjbbHTcVqRfX+50Ra7ZugjxBSZlp2ZW+ZWRFfpBC7jVV
-	 jBSOR4pfnazyA==
+	b=lnFNq0jecBS+sjA0lcn9uGLgKa2IaEUes9c5lxSxlvHzC0dv3CftLpUvnU49QyQyt
+	 peCm/cT3cECw5aqgBsZh3j6Fsbcq1iT+7C0KS9bY53sji6ETGY6vRd2jUQ+yqCXhlE
+	 7Ht7pqMqjnjauL1V7XY2V2m0zyb2lGKw/NiVDJqGXkwwezbVQhd6ssmCYDQu8XRKxk
+	 uCtvCHOko3/h31eAM7vUartVhRMwu4+G1IGPenLdAVEToAtv4fyMr/m5fJMNNXt7Ab
+	 J4693j5/F4JQ71CKVKZ3lBLM+ToxKmVlA6cH0iy525LYdsor+l5jgYMMXAsnwoknq8
+	 Js65zk0UNJo/Q==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 06/15] perf symbol: Fall back to fetching the vmlinux by
- build ID
+Subject: Re: [PATCH 13/15] perf annotate-data: Bound the member nesting
+ recursion
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Arnaldo Carvalho de Melo" <acme@kernel.org>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260917155528.62607-7-acme@kernel.org>
+In-Reply-To: <20260917155528.62607-14-acme@kernel.org>
 References: <20260917155528.62607-1-acme@kernel.org>
- <20260917155528.62607-7-acme@kernel.org>
+ <20260917155528.62607-14-acme@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Thu, 17 Sep 2026 16:08:05 +0000
-Message-Id: <20260917160805.8DD4E1F00898@smtp.kernel.org>
+Date: Thu, 17 Sep 2026 16:08:10 +0000
+Message-Id: <20260917160811.3B7A81F00898@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -47,21 +47,12 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
 > From: Arnaldo Carvalho de Melo <acme@redhat.com>
 >=20
-> A profile recorded on a kernel that is no longer installed, e.g. one
-> processed on another machine or after a kernel upgrade, cannot have its
-> kernel symbols resolved: /proc/kallsyms does not match it and the
-> build-id cache may carry only a kallsyms copy with zeroed addresses.
-> Fetch the vmlinux keyed by the build ID recorded in perf.data, using
-> debuginfod, as a last resort when no local source was found, honoring
-> symbol_conf.ignore_vmlinux and ignore_vmlinux_buildid like the other
-> vmlinux sources.
->=20
-> The fetch runs with dso->lock dropped, like dso__debuginfo(), and the
-> file is loaded with the lock held again, only if no other thread got the
-> symbols meanwhile (dso__has_symbols(), not dso__loaded(): the latter is
-> set even for failed attempts).  With the lock dropped two threads can
-> map the x86-64 entry trampolines at once, so that mapping is now
-> idempotent.
+> Members are added recursively, and the same kind of broken DIE can make
+> a member's type point back at one of its own ancestors, recursing until
+> the stack is gone; nothing usable comes out of nesting members 8 deep
+> anyway, so stop there, marking the member as truncated (reported by the
+> JSON exporter added in a later series) and giving up on member types
+> that don't resolve.
 >=20
 > Assisted-by: LLM
 > Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
@@ -70,5 +61,5 @@ Sashiko has reviewed this patch and found no issues. It looks great!
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260917155528.6260=
-7-1-acme@kernel.org?part=3D6
+7-1-acme@kernel.org?part=3D13
 
