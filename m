@@ -1,115 +1,71 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10B89518155
-	for <linux-perf-users@vger.kernel.org>; Thu, 17 Sep 2026 16:59:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02523470EB6;
+	Thu, 17 Sep 2026 17:07:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789664399; cv=none; b=Arqic/kj3C8qoFzzuNc0R5U/DV1Zivcv4MdzQPWBMKAypbvF5kHQrke1LKBVpMfoj6RgUQYcyFHwZ4CekWTrlo6mUFJt+u4WZS+CksAcNtlheUOujJ8OibUTgKgpwYZApQYIixdzwVihEcZznybZVJ4OgdjQqx9CSwpp6+ViY4c=
+	t=1789664880; cv=none; b=cNu0i15piVVumIgDxmFHwFCTMy20No70ncL44F2+n1Ws0/2zpTtWRkuexUwt/DAQHsCJNstZ9MlSQTA/OVQ5ReYt9e2TWI7z91TrKcfBWjpBKHpXea7ywbwC0RtpoFglF76Te8Z/sh3If+DVGhY9BVbFR/SSy7QEsph3gcXC+Fg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789664399; c=relaxed/simple;
-	bh=IAMUKkTX03oW9pI9HrtD2mlMKA8oPTTrlcCDLf05U+g=;
+	s=arc-20240116; t=1789664880; c=relaxed/simple;
+	bh=K8GmGw+ly7aq2IiC9ErXSqow6NQtT9XEbDR//zdXljU=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=r9s8EqcUuIrYawqfpqvnkT6Na02W2AwNeZV9/Y1+WWpBwQLgozh/I4ODSKxTBIfgaxueScDFwKn/bbpIEAS+Gypok4H+mpCCO58v4IwfO9LbF7uGuUFFWtZTJ56DEjZZf4tmBfSxredrjlPW9E6l/iYufDGIEUeonT74E/0d/i8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HmIX/2k4; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=R0rgYQxhvCMDw7PgFyz/72oyjRea9pYGV87AVcyV/TH14/eMUP7QrkCso2Vzi+D6ZBKkN4RpTzUyKK5d3ARutuiHj6r11ZBz7VH98iQlu3fHfu5Np7vuzFGz/lJDgG+Qs64Oddz6gT9GfboH8TDHOw5svcx+nP2D84qJKNa1/o4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hdZQgrxs; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HmIX/2k4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 867A61F0089C;
-	Thu, 17 Sep 2026 16:59:57 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hdZQgrxs"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 902F61F000FF;
+	Thu, 17 Sep 2026 17:07:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789664397;
-	bh=Yl7jq1LoIDi4UZPSJE7iTnbShgNQN0a/I7lTLXccyfY=;
+	s=k20260515; t=1789664878;
+	bh=K8GmGw+ly7aq2IiC9ErXSqow6NQtT9XEbDR//zdXljU=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=HmIX/2k4bHwyDHz7sO9Ih47F88XjharNFQSoCfaZnkvBk6VHVwxJkiLSm710oOLeW
-	 ksWdapywfPOgytZHyA3OUgpKNI4lddtzAiHOX7RcLMSOVDubFWczoToM3R2M0hHjvi
-	 2A+MtYaTWtWULG4/vp+rFAo4e0sPcI9dpdnfsnMUcf5YIVnwUEfnXBQdmEBQn0WYPk
-	 WUxfGDc9yFDvIF+R17MsOcSkJO0nwM8G7gGelgoK2r2cw8YsnMp+ZQ8cEJ31vhiANB
-	 lQee8OwF+6sR8UAxeJ7H9+nuzzJigUeI6mNDUd2JwFnAWmC4I9YEShJjVXszUHIWFY
-	 MdBcI1MK/w0nQ==
+	b=hdZQgrxs6PWCLS3JKXPDXs7bWesaG7AZbkjx2CSrftDofYBxyToTyHRdKCOk+PBkM
+	 Y1ZaB8sSGiLS0Kf5xWe98tb8iIZAymt9J1USeIKf7kMJQTqbE0i21pK4BVrTELG/p0
+	 5GRVCh2uAQGUq6hInjvtU6m360FSvy0uYB0XUle5wV2wOgOk6apbArgRYeN2n/gd3L
+	 1a9ZszzFa/6sXe/vnwFjKNx3arPOlEnXc9RzsZaLVP1UFo+E42nn7E06xmtqtwI5vT
+	 o4Kxb5vyFvTknKetWC/4iOX9lh0/U9jwKp/k8o+IA29qYo1fLb4GW/FKFx5XYxqW+d
+	 vVEA++cPtCLmA==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v2 06/14] perf trace: Handle fork and exit directly in
- BPF filter maps
+Subject: Re: [PATCH v3 02/40] mm/vma: predicate setting mmap_prepare VMA
+ fields on new vma alloc
 Reply-To: sashiko-reviews@lists.linux.dev
-To: "Ian Rogers" <irogers@google.com>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <9e8dbcce45595142d9374b5af2d2db6014049986.1789662556.git.irogers@google.com>
-References: <cover.1789662556.git.irogers@google.com>
- <9e8dbcce45595142d9374b5af2d2db6014049986.1789662556.git.irogers@google.com>
+To: =?utf-8?b?TG9yZW56byBTdG9ha2VzIChBUk0p?= <ljs@kernel.org>
+Cc: "Christian Borntraeger" <borntraeger@linux.ibm.com>, "Alexander Gordeev" <agordeev@linux.ibm.com>, dri-devel@lists.freedesktop.org, bpf@vger.kernel.org, linux-perf-users@vger.kernel.org, linux-rdma@vger.kernel.org, "Marc
+ Zyngier" <maz@kernel.org>, "Heiko Carstens" <hca@linux.ibm.com>, kvm@vger.kernel.org, "Oliver
+ Upton" <oupton@kernel.org>, selinux@vger.kernel.org, "Vasily Gorbik" <gor@linux.ibm.com>, linux-s390@vger.kernel.org, linux-scsi@vger.kernel.org, linux-trace-kernel@vger.kernel.org, kvmarm@lists.linux.dev
+In-Reply-To: <20260917-b4-mmap-prepare-vma-flag-sanify-v3-2-4583d8a23bca@kernel.org>
+References: <20260917-b4-mmap-prepare-vma-flag-sanify-v3-0-4583d8a23bca@kernel.org>
+ <20260917-b4-mmap-prepare-vma-flag-sanify-v3-2-4583d8a23bca@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Thu, 17 Sep 2026 16:59:57 +0000
-Message-Id: <20260917165957.867A61F0089C@smtp.kernel.org>
+Date: Thu, 17 Sep 2026 17:07:57 +0000
+Message-Id: <20260917170757.902F61F000FF@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
-s) to consider:
-- [Medium] perf trace: Dropped sys_enter events for children in attach wind=
-ow
---
+> It only makes sense to manipulate VMA fields if we allocated a new VMA,
+> rather than merged it.
+>=20
+> VMA merging does not compare vm_ops or vm_private_data, so a merged VMA
+> keeps its own, which is also what the legacy f_op->mmap path does since it
+> never touches an existing VMA. Previously set_vma_user_defined_fields()
+> overwrote the merged VMA's fields with those set for the new mapping. In
+> practice these are the same values, with rare exceptions such as shmem
+> selecting vm_ops based on whether the file has been unlinked, so no
+> user-visible change is expected.
+>=20
+> Make this dependency explicit, and additionally constify have_mmap_prepare
+> while we're here.
+>=20
+> Signed-off-by: Lorenzo Stoakes (ARM) <ljs@kernel.org>
 
-commit f502bbaf61708b9eab3d9d484a0f81359acb4676
-Author: Ian Rogers <irogers@google.com>
-
-perf trace: Handle fork and exit directly in BPF filter maps
-
-This commit moves PID tracking from userspace (processing PERF_RECORD_FORK
-and PERF_RECORD_EXIT events) directly into BPF programs attached to schedul=
-er
-tracepoints. This addresses latency issues between event occurrence and
-userspace map updates by immediately updating BPF maps from kernel space.
-
-> diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-> index 9bb8316e334c8..f876f0df06a56 100644
-> --- a/tools/perf/builtin-trace.c
-> +++ b/tools/perf/builtin-trace.c
-> @@ -2055,23 +2055,6 @@ static int trace__process_event(struct trace *trac=
-e, struct machine *machine,
->  			      "LOST %" PRIu64 " events!\n", (u64)event->lost.lost);
->  		ret =3D machine__process_lost_event(machine, event, sample);
->  		break;
-> -	case PERF_RECORD_FORK:
-> -		if (trace->raw_augmented_syscalls &&
-> -		    (augmented_syscalls__has_target_pid(event->fork.ppid) ||
-> -		     augmented_syscalls__has_target_pid(event->fork.ptid))) {
-> -			augmented_syscalls__add_target_pid(event->fork.pid);
-> -		}
-> -		ret =3D machine__process_fork_event(machine, event, sample);
-> -		break;
-
-[Severity: Medium]
-Does removing the PERF_RECORD_FORK handling create a silent blind spot for
-tasks forked during the attach window?
-
-The commit message states that a child forked in this window is still
-traced unaugmented because the BPF sys_enter program returns 1:
-
-tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c:sys_enter() {
-    ...
-    if (has_pids_to_trace && !pid_to_trace__has(getpid()))
-        return 1;
-    ...
-}
-
-However, cmd_trace() explicitly removes the raw_syscalls:sys_enter evsel
-from the evlist during initialization:
-
-tools/perf/builtin-trace.c:cmd_trace() {
-    ...
-    augmented->handler =3D trace__sys_enter;
-    evlist__remove(trace.evlist, evsel);
-    evsel__put_and_free_priv(evsel);
-    ...
-}
-
-Because this evsel is removed, there appears to be no userspace listener
-attached for it. Consequently, when the BPF sys_enter program returns 1
-to allow the kernel to emit the tracepoint, the event is silently dropped
-instead of falling back to unaugmented tracing.
+Sashiko has reviewed this patch and found no issues. It looks great!
 
 --=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/cover.1789662556.gi=
-t.irogers@google.com?part=3D6
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260917-b4-mmap-pr=
+epare-vma-flag-sanify-v3-0-4583d8a23bca@kernel.org?part=3D2
+
