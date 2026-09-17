@@ -1,75 +1,64 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F05B442B39
-	for <linux-perf-users@vger.kernel.org>; Thu, 17 Sep 2026 06:51:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 978B53ACA48
+	for <linux-perf-users@vger.kernel.org>; Thu, 17 Sep 2026 06:52:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789627912; cv=none; b=VKXJdeNzSwj5HQe3kY8QtYWyvLVDS3Id/5/HD5ObiFMyjAZk8aOas3K3JDvlHOF2xbGxLXMTrXYZMsYE3DWQC7pvw7oMllZ3DmqMPpZfAHgVRR4ZNXM3OtAVc+nvOIobULHxVMd+XZZXjzcIdjV7Hh7qOUIL6qKPWMA8bTXynKs=
+	t=1789627922; cv=none; b=F3inkWYLagxMJEiC4PHb6VwJCvdyCuDgCsFsrmO9lO/Md4b8v4IqWBkbJQH/3eqV4Ly8zdM+EG/mfCtiNjhcU+3t4YFLVhjlhV4x2R75a/HKK0RLdQi4mQujDhA9rige3N+etjtlbOfEI2EZH2l5/COOWu+ubE0oFeBgCd8VQtU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789627912; c=relaxed/simple;
-	bh=bDhEtxLHmsNgWBRivuTVurk8JbS0nusC7zqGwK4IMgg=;
+	s=arc-20240116; t=1789627922; c=relaxed/simple;
+	bh=g85k1dUf9qv6kjVQ/O02Sk3o4Jrj0khQLVNXhSbPYU4=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=laTOUamNvfWBvwyvlSQuFSflpySmky2tn6AXtqyL+/diouddK738LcDmAkyw39BivWgxiLKDnm1fuplLcKTR4TDwerEG4W5fx8zDccQzYt3mMzS3Eqyv9b1Tbp7jAM9dClZI/iIu4hUMG5R1anefzUFhA3mkvQ/NHvIusIX4J54=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HiZOpkz/; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=u8l08FiMArAoDrNZ/BeKf3LJGIvjJWMYQjg1MXl5MDVT9Fk/qZn9Z/uIhW5FXC3dzK9Kj+ErVmR0H+VqRe1JxHO5ruWINtxO38XiOp2Q9D0SSQ6J+mtZ8i43OuNpOyINSobD4n4Qe/WAadSmGDNgZuMgPMJJv11fqTIH/zzGOe0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=avCUWYvr; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HiZOpkz/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8CB0D1F000FF;
-	Thu, 17 Sep 2026 06:51:50 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="avCUWYvr"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 542F21F000FF;
+	Thu, 17 Sep 2026 06:52:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789627910;
-	bh=5yFQzHVUHp63sF9XamFkd6R/qClozyTqSNfpP9LI83Y=;
+	s=k20260515; t=1789627921;
+	bh=g85k1dUf9qv6kjVQ/O02Sk3o4Jrj0khQLVNXhSbPYU4=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=HiZOpkz/hX3xXdHwTe6AHoaNUJTJJsnT1ercZuDbT0HdtOXnuy4EQXJTvI5uYSxcG
-	 JKJEfjtHv6NWpPBLiBYLByf3jgq+KPChtNt6zpTqyoCSpGv90bjfBMsUswFgdzAjBb
-	 ADgwbm5hoGE8Lv5ltri+ZZsNh3JCds/fEi9cYAzTSTTQkTmc08onI0fNbczy/cXVIW
-	 MBHgP+/HpgQinHgGesYV4RU2Zgj+Zbbu4iY/GwcYu2pOy752GVfvEp4TaofuVCSMQJ
-	 h7y6aJe//7HsBNICR05x5Ci4Hk5r/k2oYxDkaz6fZoHJ6Nnaz3YejHNjJs8/8QAgfh
-	 UjMDNbWSMLLxQ==
+	b=avCUWYvrHd5RiNzQMse2NLTTW+NEPIMthOTrV33+LVya0SM4ijKzVbAgBIreVpRs3
+	 7/NxmSHtyaScvCdePjl7MBJC4ZeQA1Mo1xZX2ibjZ7iTQvuO1shtQ4Blb1sPbOLRXI
+	 B2dXSEGsuTMrUjNhA4sHFP0rXKpq/ADuK68iJaim0t7PiHyA2d6vef+B+QeV7hkUAI
+	 7+WqyDs6CR7XHc1a5t0iBRlZDBlxgRdw+CBMCZ29DCAHt/OgNBvwH+sOjKoXN9f6kN
+	 oXXuFQRjTL52ZW9+rD2EYO2nCgwAVq6haORR2zRNxGegkaXc51jLx1geteCJLbRz2V
+	 hLvuZqxMf0Vag==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v1 03/13] perf trace: Do not set unaugmented BPF program
- on sys_exit map
+Subject: Re: [PATCH v1 11/13] perf test trace_btf_general: Drop
+ --max-events=1 and make non-exclusive
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Ian Rogers" <irogers@google.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <fc961a7169e4c00c91cf543e5d505cc5deded5f6.1789626978.git.irogers@google.com>
+In-Reply-To: <2116386f185b31e0a0e197d37151d585ddb02019.1789626978.git.irogers@google.com>
 References: <cover.1789626977.git.irogers@google.com>
- <fc961a7169e4c00c91cf543e5d505cc5deded5f6.1789626978.git.irogers@google.com>
+ <2116386f185b31e0a0e197d37151d585ddb02019.1789626978.git.irogers@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Thu, 17 Sep 2026 06:51:50 +0000
-Message-Id: <20260917065150.8CB0D1F000FF@smtp.kernel.org>
+Date: Thu, 17 Sep 2026 06:52:00 +0000
+Message-Id: <20260917065201.542F21F000FF@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-> In trace__init_syscalls_bpf_prog_array_maps(), the BPF program array map
-> for sys_exit (syscalls_sys_exit) was populated with the result of
-> trace__bpf_prog_sys_exit_fd().
+> trace_btf_general.sh used `--max-events=3D1` with `perf trace` on
+> commands such as `mv`, `echo`, and `sleep`. When background activity
+> occurs or tests run in parallel, `perf trace` can capture an event
+> from an unrelated process and exit prematurely before recording the
+> target command's syscalls.
 >=20
-> When a syscall had no specific exit augmenter,
-> trace__find_syscall_bpf_prog() fell back to unaugmented_prog
-> (syscall_unaugmented). However, syscall_unaugmented is a sys_enter
-> program that outputs enter arguments to __augmented_syscalls__.
+> Drop `--max-events=3D1` and let tracing run until the command completes,
+> checking for the expected output with grep (matching trace_btf_enum.sh).
+> Remove the (exclusive) tag so the test runs in parallel.
 >=20
-> As a consequence, when an unaugmented syscall exited, sys_exit
-> tail-called syscall_unaugmented, which interpreted the exit arguments as
-> enter arguments and emitted a duplicate, corrupt sys_enter event into
-> __augmented_syscalls__ right as the syscall completed.
->=20
-> Fix this by:
-> 1. Returning NULL from trace__find_syscall_bpf_prog() when looking up exit
->    augmenters and none is found.
-> 2. Returning -1 from trace__bpf_prog_sys_exit_fd() when no exit program
->    is present.
-> 3. Only updating map_exit_fd when prog_fd >=3D 0.
-> 4. Clearing err =3D 0 when trace__bpf_sys_enter_beauty_map() returns
->    non-zero (indicating the syscall has no augmentable pointer arguments)
->    before continuing the loop, so a trailing run of such syscalls (e.g.
->    'perf trace -e close') does not leave err non-zero on return and abort
->    the session.
+> Running perf trace in parallel is only safe now that the probe tests no
+> longer name their probes "vfs_getname...": perf trace opens everything
+> matching a hardcoded "probe:vfs_getname*" wildcard, which used to pin
+> those probes and make their cleanup fail with -EBUSY.
 >=20
 > Assisted-by: Antigravity:gemini-3.1-pro
 > Signed-off-by: Ian Rogers <irogers@google.com>
@@ -78,5 +67,5 @@ Sashiko has reviewed this patch and found no issues. It looks great!
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/cover.1789626977.gi=
-t.irogers@google.com?part=3D3
+t.irogers@google.com?part=3D11
 
