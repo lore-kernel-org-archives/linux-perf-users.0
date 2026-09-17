@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BFD750EBE1;
-	Thu, 17 Sep 2026 15:56:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 273D45293F4;
+	Thu, 17 Sep 2026 15:56:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789660582; cv=none; b=C3z1i4jfYtiFypXj8n799d3JM8LosYWZMu2gK7W+PVk0KlJSxf6tpOQ7uk3HQDfj9bHOvLGmwi2lVIlGpDnTbsLarPdPIwhZU2LN1GXWUSBtdl2TOymZVMdJ5YHsf9QuXjfC1CeSIuVHNW4gWOj7xkyqpjFZNOFY5jqWe5Wu3hc=
+	t=1789660587; cv=none; b=ilZPPfrMZ2bwmilRn1QTnWn9wEFP/iZWhdc4Qtke29YwAn/pQQrYXMoTfFNhyPrTpEuQUSJSdo05TKm4Ej26VawlCXgJ4+CM6nfZOSHENkg9xNLXbFueGJCRNuIyX2yAzAr7qpiI+2FySKGDKgeEpjioyxSU04EHV9BrgYYXHuA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789660582; c=relaxed/simple;
-	bh=Rfu25ECYoXI+/kV6W/6MswO7S3WKPtf1KRF1KE0xcMM=;
+	s=arc-20240116; t=1789660587; c=relaxed/simple;
+	bh=iLULfbRqUOyy8sxLo0T8y0j5XmaveAsYQ7eAm5INT10=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=PN4tGstdGx0oqF6/0FGnzlCJ5+Z+hk039E2MNTrqrpCUJ4z7yPz+5bRK80AhDcg+b8Z64WArpTgQeOUo5lq9s73GI4Jp4bnaX1kmJ5eKVvj3M/nw/iFAK5Aev2zv6akcL3LYXHfprmGD5LCfN2hZZKCVsiYt0Tz1I9SENPutQkw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eHa+HiIe; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version; b=aC6RXNkjTZoqeViZJM4sTnJ9pWv6elY2yWdYpcgHf8lW97o+u/qfNghs5LI1EIO4VvuTbuTQTuLIuGLT3ShJGM+3lE/AxHRSeBWKxlgDhb9uEtxeapHStsIxF9Xgy5FhwpX/bHSWlPvytE8A1xKllxBvHsLKrJIgQ1jPo80cdUo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GAsrrf2K; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eHa+HiIe"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 49DDA1F00893;
-	Thu, 17 Sep 2026 15:56:17 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GAsrrf2K"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0391D1F000FF;
+	Thu, 17 Sep 2026 15:56:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789660581;
-	bh=/o0j4IyBit4x0M7siaLpgTimP2fXGHf326McwkQdspI=;
+	s=k20260515; t=1789660586;
+	bh=tlvNEhVstLx2sb9EmNRJfJzlsNgRVw9d8I//uWSkWn8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=eHa+HiIeb9PIvN8Ls+lH/lrgTCy51XY8jdeCsF3KROtOHZMunYLMnG6coilKFKSYw
-	 lbl5awVcHyHhy1gbwrV7rgp9dSXNvRVWDGYy0k9m4YwdT3LT0tKrTp2doIWYOcIsnF
-	 XBkKwW0OvQItY8VcFxiAcbS9bltwpc7cXVpaFGuEL0WZ9M6YggrkfGpF9CBK0CuTEq
-	 AEsIN9a7Y5aryo6uRmOcwPigOiF74/Gr/x1ld4yBBwSsb2Tc2s9GSjTj9Lww/zhHhs
-	 EqCDCFmLT1dpCjMsxVRZdrlKZweiIM8BEVaCYd3E7v8aC0H8g3pRQCfuLxyGBSA03s
-	 uXb5o62WjxsfA==
+	b=GAsrrf2KSNfUfrtjJLYovrUuBYd579NmleID6r/5esI+DPx6iSA5ves8nctTIsJvK
+	 d/Q4wUdcmScSl2/wDtwY4lpje1OXJe8rm6coOxsa4+LNogurkkOy8V7ejLPPqZxI5Y
+	 98PFWkM9p1PoibaCtYPllFYMZT9tiHESU05hncRN9jrSaczGdHZjAfpWYzHQfRCUIs
+	 us1EqZPudFBwuQmbuzTJzLZsqlVdt9jNjZ6KHmgO0KZpDlT3R9hnM+QypSEvx21xBZ
+	 p1AE0hDl5aqjzK6evFLIQG4nHABNt+X3B69QK3wI/8bdwzHvuB+h/vqGsZ5u40PIX4
+	 WHfoImPnFtGtA==
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Namhyung Kim <namhyung@kernel.org>
 Cc: Ingo Molnar <mingo@kernel.org>,
@@ -38,9 +38,9 @@ Cc: Ingo Molnar <mingo@kernel.org>,
 	linux-kernel@vger.kernel.org,
 	linux-perf-users@vger.kernel.org,
 	Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 10/15] perf dwarf-aux: Bound the type chases for broken debug info
-Date: Thu, 17 Sep 2026 12:55:21 -0300
-Message-ID: <20260917155528.62607-11-acme@kernel.org>
+Subject: [PATCH 11/15] perf dwarf-aux: Add die_same_file() and die_get_type_die()
+Date: Thu, 17 Sep 2026 12:55:22 -0300
+Message-ID: <20260917155528.62607-12-acme@kernel.org>
 X-Mailer: git-send-email 2.55.0
 In-Reply-To: <20260917155528.62607-1-acme@kernel.org>
 References: <20260917155528.62607-1-acme@kernel.org>
@@ -54,181 +54,207 @@ Content-Transfer-Encoding: 8bit
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-A DIE that is not what it looks like, e.g. one parsed at an offset that
-is not the start of a DIE, can have a DW_AT_type that refers back to
-itself, making the typedef/qualifier chases in die_get_real_type() and
-die_get_pointer_type() spin forever, and the same for the type name
-recursion in die_get_typename_from_type(); 'perf report -s type' did
-exactly that on the dwz compressed debug info of zlib-ng (libz.so.1).
+dwarf_dieoffset() is relative to the file the DIE is in, so an offset
+saved by die_collect_vars()/die_collect_global_vars() is only
+meaningful in that file: add die_same_file(), comparing the Dwarf each
+DIE's CU belongs to, to record which file that is, and
+die_get_type_die() to resolve the offset in it, with the saved tag as a
+sanity check.  Resolving the offset in the main file instead parses
+whatever is at it when it came from the dwz common file.
 
-No sane chain of typedefs and qualifiers is 32 DIEs long, so give up on
-the type with a pr_debug instead of hanging.
+dwarf_cu_getdwarf() is new in elfutils 0.160, so the libdw feature test
+probes for it and Makefile.config says 0.160.
 
 Assisted-by: LLM
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/dwarf-aux.c | 88 ++++++++++++++++++++++++++++---------
- 1 file changed, 68 insertions(+), 20 deletions(-)
+ tools/build/feature/test-libdw.c | 13 ++++++-
+ tools/perf/Makefile.config       |  2 +-
+ tools/perf/util/dwarf-aux.c      | 62 ++++++++++++++++++++++++++++++--
+ tools/perf/util/dwarf-aux.h      | 17 +++++++++
+ 4 files changed, 90 insertions(+), 4 deletions(-)
 
-diff --git a/tools/perf/util/dwarf-aux.c b/tools/perf/util/dwarf-aux.c
-index d7160f87ac7d7ab3..b5ffeea54446408d 100644
---- a/tools/perf/util/dwarf-aux.c
-+++ b/tools/perf/util/dwarf-aux.c
-@@ -266,16 +266,29 @@ Dwarf_Die *die_get_type(Dwarf_Die *vr_die, Dwarf_Die *die_mem)
- 		return NULL;
+diff --git a/tools/build/feature/test-libdw.c b/tools/build/feature/test-libdw.c
+index aabd63ca76b4d7e6..0ebe7bb4adf9d0bc 100644
+--- a/tools/build/feature/test-libdw.c
++++ b/tools/build/feature/test-libdw.c
+@@ -49,8 +49,19 @@ int test_elfutils(void)
+ 	return 0;
  }
  
 +/*
-+ * A DIE that is not what it looks like, e.g. one parsed at an offset
-+ * that is not the start of a DIE, can have a DW_AT_type that refers
-+ * back to itself, making these chases spin forever: bound them and
-+ * report, instead of hanging.
++ * dwarf_cu_getdwarf() needs elfutils 0.160: take its address only, so
++ * that older versions fail the probe instead of the link.
 + */
-+#define MAX_TYPE_CHASE 32
-+
- /* Get a type die, but skip qualifiers */
- Dwarf_Die *__die_get_real_type(Dwarf_Die *vr_die, Dwarf_Die *die_mem)
- {
--	int tag;
-+	int tag, chase = 0;
- 
- 	do {
- 		vr_die = die_get_type(vr_die, die_mem);
- 		if (!vr_die)
--			break;
-+			return NULL;
- 		tag = dwarf_tag(vr_die);
-+		if (++chase > MAX_TYPE_CHASE) {
-+			pr_debug("DWARF: qualifier chase limit reached at DIE 0x%lx\n",
-+				 (unsigned long)dwarf_dieoffset(vr_die));
-+			return NULL;
-+		}
- 	} while (tag == DW_TAG_const_type ||
- 		 tag == DW_TAG_restrict_type ||
- 		 tag == DW_TAG_volatile_type ||
-@@ -296,8 +309,15 @@ Dwarf_Die *__die_get_real_type(Dwarf_Die *vr_die, Dwarf_Die *die_mem)
-  */
- Dwarf_Die *die_get_real_type(Dwarf_Die *vr_die, Dwarf_Die *die_mem)
- {
-+	int chase = 0;
-+
- 	do {
- 		vr_die = __die_get_real_type(vr_die, die_mem);
-+		if (++chase > MAX_TYPE_CHASE) {
-+			pr_debug("DWARF: typedef chase limit reached at DIE 0x%lx\n",
-+				 vr_die ? (unsigned long)dwarf_dieoffset(vr_die) : 0);
-+			return NULL;
-+		}
- 	} while (vr_die && dwarf_tag(vr_die) == DW_TAG_typedef);
- 
- 	return vr_die;
-@@ -314,7 +334,7 @@ Dwarf_Die *die_get_real_type(Dwarf_Die *vr_die, Dwarf_Die *die_mem)
-  */
- Dwarf_Die *die_get_pointer_type(Dwarf_Die *type_die, Dwarf_Die *die_mem)
- {
--	int tag;
-+	int tag, chase = 0;
- 
- 	do {
- 		tag = dwarf_tag(type_die);
-@@ -324,6 +344,11 @@ Dwarf_Die *die_get_pointer_type(Dwarf_Die *type_die, Dwarf_Die *die_mem)
- 		    tag != DW_TAG_restrict_type && tag != DW_TAG_volatile_type &&
- 		    tag != DW_TAG_shared_type)
- 			return NULL;
-+		if (++chase > MAX_TYPE_CHASE) {
-+			pr_debug("DWARF: pointer type chase limit reached at DIE 0x%lx\n",
-+				 (unsigned long)dwarf_dieoffset(type_die));
-+			return NULL;
-+		}
- 		type_die = die_get_type(type_die, die_mem);
- 	} while (type_die);
- 
-@@ -1118,17 +1143,25 @@ Dwarf_Die *die_find_member(Dwarf_Die *st_die, const char *name,
- 			      die_mem);
- }
- 
--/**
-- * die_get_typename_from_type - Get the name of given type DIE
-- * @type_die: a type DIE
-- * @buf: a strbuf for result type name
-- *
-- * Get the name of @type_die and stores it to @buf. Return 0 if succeeded.
-- * and Return -ENOENT if failed to find type name.
-- * Note that the result will stores typedef name if possible, and stores
-- * "*(function_type)" if the type is a function pointer.
-+/*
-+ * The name follows DW_AT_type, so a self-referring DIE makes this
-+ * recurse forever: bound it like the chases above.
-  */
--int die_get_typename_from_type(Dwarf_Die *type_die, struct strbuf *buf)
-+static int __die_get_typename_from_type(Dwarf_Die *type_die, struct strbuf *buf,
-+					int depth);
-+
-+static int __die_get_typename(Dwarf_Die *vr_die, struct strbuf *buf, int depth)
++int test_libdw_cu_getdwarf(void)
 +{
-+	Dwarf_Die type;
++	void *sym = (void *)dwarf_cu_getdwarf;
 +
-+	if (__die_get_real_type(vr_die, &type) == NULL)
-+		return -ENOENT;
-+
-+	return __die_get_typename_from_type(&type, buf, depth);
++	return sym == NULL;
 +}
 +
-+static int __die_get_typename_from_type(Dwarf_Die *type_die, struct strbuf *buf,
-+					int depth)
+ int main(void)
  {
- 	int tag, ret;
- 	const char *tmp = "";
-@@ -1155,7 +1188,12 @@ int die_get_typename_from_type(Dwarf_Die *type_die, struct strbuf *buf)
- 		/* Write a base name */
- 		return strbuf_addf(buf, "%s%s", tmp, name ?: "");
- 	}
--	ret = die_get_typename(type_die, buf);
-+	if (depth >= MAX_TYPE_CHASE) {
-+		pr_debug("DWARF: type name recursion limit reached at DIE 0x%lx\n",
-+			 (unsigned long)dwarf_dieoffset(type_die));
-+		return -ENOENT;
-+	}
-+	ret = __die_get_typename(type_die, buf, depth + 1);
- 	if (ret < 0) {
- 		/* void pointer has no type attribute */
- 		if (tag == DW_TAG_pointer_type && ret == -ENOENT)
-@@ -1166,6 +1204,21 @@ int die_get_typename_from_type(Dwarf_Die *type_die, struct strbuf *buf)
- 	return strbuf_addstr(buf, tmp);
+ 	return test_libdw() + test_libdw_unwind() + test_libdw_getlocations() +
+-	       test_libdw_getcfi() + test_elfutils();
++	       test_libdw_getcfi() + test_libdw_cu_getdwarf() + test_elfutils();
+ }
+diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
+index 4ee7393a39f91d85..0585d71e3182c6dd 100644
+--- a/tools/perf/Makefile.config
++++ b/tools/perf/Makefile.config
+@@ -470,7 +470,7 @@ else
+   else
+     ifneq ($(feature-libdw), 1)
+       ifndef NO_LIBDW
+-        $(warning No libdw.h found or old libdw.h found or elfutils is older than 0.157, disables dwarf support. Please install new elfutils-devel/libdw-dev)
++        $(warning No libdw.h found or old libdw.h found or elfutils is older than 0.160, disables dwarf support. Please install new elfutils-devel/libdw-dev)
+         NO_LIBDW := 1
+       endif
+     endif # Dwarf support
+diff --git a/tools/perf/util/dwarf-aux.c b/tools/perf/util/dwarf-aux.c
+index b5ffeea54446408d..de14d18a9d2f87d8 100644
+--- a/tools/perf/util/dwarf-aux.c
++++ b/tools/perf/util/dwarf-aux.c
+@@ -1680,6 +1680,16 @@ Dwarf_Die *die_find_variable_by_addr(Dwarf_Die *sc_die, Dwarf_Addr addr,
+ 	return result;
+ }
+ 
++/*
++ * Whether two DIEs live in the same debug file, i.e. whether their
++ * offsets have to be resolved in the same file: dwarf_dieoffset() is
++ * relative to the file the DIE is in.
++ */
++bool die_same_file(Dwarf_Die *die_a, Dwarf_Die *die_b)
++{
++	return dwarf_cu_getdwarf(die_a->cu) == dwarf_cu_getdwarf(die_b->cu);
++}
++
+ static int __die_collect_vars_cb(Dwarf_Die *die_mem, void *arg)
+ {
+ 	struct die_var_type **var_types = arg;
+@@ -1724,6 +1734,8 @@ static int __die_collect_vars_cb(Dwarf_Die *die_mem, void *arg)
+ 			vt->is_reg_var_addr = true;
+ 
+ 		vt->die_off = dwarf_dieoffset(&type_die);
++		vt->die_tag = dwarf_tag(&type_die);
++		vt->from_alt = !die_same_file(die_mem, &type_die);
+ 		vt->addr = start;
+ 		vt->end = end;
+ 		vt->has_range = (end != 0 || start != 0);
+@@ -1743,7 +1755,8 @@ static int __die_collect_vars_cb(Dwarf_Die *die_mem, void *arg)
+  *
+  * Save all variables and parameters in the @sc_die and save them to @var_types.
+  * The @var_types is a singly-linked list containing type and location info.
+- * Actual type can be retrieved using dwarf_offdie() with 'die_off' later.
++ * Actual type can be retrieved using die_get_type_die() with 'die_off',
++ * 'die_tag' and 'from_alt' later.
+  *
+  * Callers should free @var_types.
+  */
+@@ -1789,6 +1802,8 @@ static int __die_collect_global_vars_cb(Dwarf_Die *die_mem, void *arg)
+ 		return DIE_FIND_CB_END;
+ 
+ 	vt->die_off = dwarf_dieoffset(&type_die);
++	vt->die_tag = dwarf_tag(&type_die);
++	vt->from_alt = !die_same_file(die_mem, &type_die);
+ 	vt->addr = ops->number;
+ 	vt->end = 0;
+ 	vt->has_range = false;
+@@ -1800,6 +1815,48 @@ static int __die_collect_global_vars_cb(Dwarf_Die *die_mem, void *arg)
+ 	return DIE_FIND_CB_SIBLING;
  }
  
 +/**
-+ * die_get_typename_from_type - Get the name of given type DIE
-+ * @type_die: a type DIE
-+ * @buf: a strbuf for result type name
++ * die_get_type_die - Get a type DIE saved by die_collect_vars()
++ * @dbg: the main debug info
++ * @die_off: offset of the type DIE, from dwarf_dieoffset()
++ * @die_tag: tag that DIE had when the offset was saved
++ * @from_alt: whether the type DIE is in the dwz alt file
++ * @die_mem: where to store the resulting DIE
 + *
-+ * Get the name of @type_die and stores it to @buf. Return 0 if succeeded.
-+ * and Return -ENOENT if failed to find type name.
-+ * Note that the result will stores typedef name if possible, and stores
-+ * "*(function_type)" if the type is a function pointer.
++ * Resolve @die_off in the file it was recorded as belonging to: the
++ * offset is only meaningful there, and there is deliberately no
++ * fallback, as resolving an alt file offset in the main file parses
++ * whatever is at it.  @die_tag is a sanity check.
 + */
-+int die_get_typename_from_type(Dwarf_Die *type_die, struct strbuf *buf)
++Dwarf_Die *die_get_type_die(Dwarf *dbg, u64 die_off, int die_tag, bool from_alt,
++			    Dwarf_Die *die_mem)
 +{
-+	return __die_get_typename_from_type(type_die, buf, 0);
++	Dwarf *target = dbg;
++	Dwarf_Die die;
++
++	if (from_alt) {
++		/*
++		 * No fallback to the main file: resolving an alt file offset in it
++		 * does not fail, it parses whatever is there as a DIE.
++		 */
++		target = dwarf_getalt(dbg);
++		if (target == NULL) {
++			pr_debug("DWARF: no alt (dwz) debug file to resolve the type DIE at offset 0x%lx in\n",
++				 (unsigned long)die_off);
++			return NULL;
++		}
++	}
++
++	if (dwarf_offdie(target, die_off, &die) && dwarf_tag(&die) == die_tag) {
++		*die_mem = die;
++		return die_mem;
++	}
++
++	pr_debug("DWARF: no DIE with tag %d at offset 0x%lx in the %s debug file\n",
++		 die_tag, (unsigned long)die_off, from_alt ? "alt" : "main");
++	return NULL;
 +}
 +
  /**
-  * die_get_typename - Get the name of given variable DIE
-  * @vr_die: a variable DIE
-@@ -1178,12 +1231,7 @@ int die_get_typename_from_type(Dwarf_Die *type_die, struct strbuf *buf)
+  * die_collect_global_vars - Save all global variables
+  * @cu_die: a CU DIE
+@@ -1807,7 +1864,8 @@ static int __die_collect_global_vars_cb(Dwarf_Die *die_mem, void *arg)
+  *
+  * Save all global variables in the @cu_die and save them to @var_types.
+  * The @var_types is a singly-linked list containing type and location info.
+- * Actual type can be retrieved using dwarf_offdie() with 'die_off' later.
++ * Actual type can be retrieved using die_get_type_die() with 'die_off',
++ * 'die_tag' and 'from_alt' later.
+  *
+  * Callers should free @var_types.
   */
- int die_get_typename(Dwarf_Die *vr_die, struct strbuf *buf)
- {
--	Dwarf_Die type;
--
--	if (__die_get_real_type(vr_die, &type) == NULL)
--		return -ENOENT;
--
--	return die_get_typename_from_type(&type, buf);
-+	return __die_get_typename(vr_die, buf, 0);
- }
+diff --git a/tools/perf/util/dwarf-aux.h b/tools/perf/util/dwarf-aux.h
+index 161f0bf980b6ee6a..299ffddab0358baa 100644
+--- a/tools/perf/util/dwarf-aux.h
++++ b/tools/perf/util/dwarf-aux.h
+@@ -152,6 +152,8 @@ int die_get_scopes(Dwarf_Die *cu_die, Dwarf_Addr pc, Dwarf_Die **scopes);
+ struct die_var_type {
+ 	struct die_var_type *next;
+ 	u64 die_off;
++	int die_tag;
++	bool from_alt;	/* die_off is relative to the alt (dwz) file */
+ 	u64 addr;
+ 	u64 end;        /* end address of location range */
+ 	int reg;
+@@ -183,6 +185,21 @@ Dwarf_Die *die_find_variable_by_addr(Dwarf_Die *sc_die, Dwarf_Addr addr,
+ /* Save all variables and parameters in this scope */
+ void die_collect_vars(Dwarf_Die *sc_die, struct die_var_type **var_types);
  
- /**
++/*
++ * Get the type DIE saved by die_collect_vars()/die_collect_global_vars().
++ *
++ * Those save the dwarf_dieoffset() of the type DIE, which is relative
++ * to the file it lives in, so @from_alt, recorded when the offset was
++ * saved, says which file to resolve it in; @die_tag is a sanity check.
++ * Resolving an alt file offset in the main file parses whatever is at
++ * it, which is what hung 'perf report -s type'.
++ */
++Dwarf_Die *die_get_type_die(Dwarf *dbg, u64 die_off, int die_tag, bool from_alt,
++			    Dwarf_Die *die_mem);
++
++/* Whether two DIEs live in the same debug file */
++bool die_same_file(Dwarf_Die *die_a, Dwarf_Die *die_b);
++
+ /* Save all global variables in this CU */
+ void die_collect_global_vars(Dwarf_Die *cu_die, struct die_var_type **var_types);
+ 
 -- 
 2.55.0
 
