@@ -1,153 +1,74 @@
-Received: from mail-pg1-f200.google.com (mail-pg1-f200.google.com [209.85.215.200])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9769E3E40F1
-	for <linux-perf-users@vger.kernel.org>; Thu, 17 Sep 2026 04:53:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AD493CF685
+	for <linux-perf-users@vger.kernel.org>; Thu, 17 Sep 2026 04:58:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789620842; cv=none; b=tdk6AJSy3c+gCp+ALSMqHGucv13jovxqv1cWiwmPSE7a7D931LZPov3I9eq9wYHzi0+5x0+DDgjnf2myT/E6SI4+b5tZWIzr8oJ9jcP+KAFHbteiW/3uqWv+w1+KyDv/0VwuWzF/jhcmxrac3bY4K/MCMKia3BenVWXIxDwS6r0=
+	t=1789621138; cv=none; b=YAlm1Q5YgmfuUeuQPu58dlz+fAOBPT4QCidSiA3y+ZTDnCezGPn6uYkkLAT+Le4dwOf2Dd1qf9LTbxKLiA50IAeD47b2I2T7AJNETp2dA4OZfEjuZb4hHeOva9KO8apAG/k8YpwCF08xZ2GloKMCCwgKOrKGlKnbD82lqH/+eAY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789620842; c=relaxed/simple;
-	bh=3ZLzdVtnwtR5aJqjTSHs54s5O2HaM5Ff5GC1mlFXoPg=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=nHXkliM9SCRr2mYL5yP+r1PIvcLcmpJen9kwGAMTfxK0oOQcKAKPqt7QGTkNR8G/J2pXGytNlbEgWORohzL3DWTIQ4DjTCMsoh1N+UTJQa7VY769dsZffPK5SVOWkhqAlsUnSItDjwJZQc0paI+xziBKNUifHseq/55W9lmr2DU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=M9U9vkIG; arc=none smtp.client-ip=209.85.215.200
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
+	s=arc-20240116; t=1789621138; c=relaxed/simple;
+	bh=NmNotBnIJefMEB4UXrMtuMy7MjH1sb4iFGyeCD3Ndxg=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=IR+0O1lzNrT7lpdx+t6j5AM/Cx5r5bfP3aF91hC0eaWduaQU9i/E2hk5uwgCWWC7jYaMy70zt1HmwL8wyGMuTYbyljcKtG8uIjiPzq38hZwMhJcg/t+y3k+r8GRaR5OjDliShUgnXn3vnEKDxMVFMc6boudL5xDnMK3FCCEYvkY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Tw7BwQkJ; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="M9U9vkIG"
-Received: by mail-pg1-f200.google.com with SMTP id 41be03b00d2f7-cc4b524ce78so314709a12.2
-        for <linux-perf-users@vger.kernel.org>; Wed, 16 Sep 2026 21:53:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1789620837; x=1790225637; darn=vger.kernel.org;
-        h=content-type:cc:to:from:subject:message-id:references:mime-version
-         :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=hnOsEAwGk9LqixLfhLOT7XTvSRQ2plZCSBS+V/wJMfQ=;
-        b=M9U9vkIGB/mGMiCsudAUYITs6OVvBNv6GRtl3r8MFNAHfDn6pddNVa8WJib75Eodtv
-         gwIwgYuW2rRkL36nwEAb2r+68rIiDG3cWeikgk7r64pbJ0SZ9Rjotfa2fXoWInH0dd3z
-         ZiBzW8GUCBY7ET27fcGdl2bzeMVJZlq1bl5Ke3AMeen5GZItxu7MMDWJtdsepLNGLiP0
-         R+X0hSF9pM5V6sjIm2ZkdEfyx4goJTbPyOJzF8e4OZ9k0PfGILYTMgYCZCuustNiukLq
-         lvM9GjBsI3QiK/smZV2gy8jE1hhVnj5R5NFj9Ij4iBOVhe/AvJnbL24X1lI5IR+4Pbze
-         embQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1789620837; x=1790225637;
-        h=content-type:cc:to:from:subject:message-id:references:mime-version
-         :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=hnOsEAwGk9LqixLfhLOT7XTvSRQ2plZCSBS+V/wJMfQ=;
-        b=w0TLm22heIe2DvC7NNJYqPZNJNdNssSFg50g91EOzuV7kikPwISic1Hea5gEuTBys2
-         HJ8NFIJ2YuB6+4sXs8IewS5955hq3JuXk4r+Gplnl5bbBSVB/O0COuLp+VgoyLqGdEbP
-         czVaXIYWy8r973AH1kSBY1i51LnrDZRELccpQI/dn8BCL44Rk0GymX5kXSLns+s3bz1G
-         GHC2q6fgS/K48+GRBiHIvdXrnhMi3VWLABEq0EJ4LXWvS1PuTKrpsfjJx0unYtRI+4C2
-         DZ59Ah5TEKbgaYeudwbywxHNBUhM2IwqXX6yUKVKtqLiZ2uD65rRjcKZs3YaAg8uUDVP
-         TbEA==
-X-Forwarded-Encrypted: i=1; AKwUvBw1F4dWc7yoz0rb7ntjc9R+T7L8Sx8PsRHZMhqGMhrDBMEiBpU+PsBH/5s5WYY8iozDzMQJX2c1MpOZbW8Gk1hz@vger.kernel.org
-X-Gm-Message-State: AFuF++kR6CjRTYSkN7yCBu7399WDhQZ73Qii87IN2AHIPE0quy2GlFly
-	BMrLP2xZbSgvJU6WeVUZEDQJVAmWQjXiHdFpuoIk54HNWbFXy5MPNw7/+6aRKf6qIKU2lM3Tr7T
-	12IP1ealRgw==
-X-Received: from dybme47.prod.google.com ([2002:a05:7301:18af:b0:33b:ece2:d254])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:46:b0:39e:35a0:9c0f
- with SMTP id 98e67ed59e1d1-39e35a0a211mr5638388a91.14.1789620836744; Wed, 16
- Sep 2026 21:53:56 -0700 (PDT)
-Date: Wed, 16 Sep 2026 21:53:26 -0700
-In-Reply-To: <20260917045326.63601-1-irogers@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Tw7BwQkJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E790C1F000FF;
+	Thu, 17 Sep 2026 04:58:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1789621137;
+	bh=CTJIGO+Owgm8QNQYcQ/ljSb5Vdh4W/+d3ACwrki4BI8=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=Tw7BwQkJpBcESLRKREgrczkNTBoGsQjx1Mq3BO+7s0mvFs4+jqghglYo9xK1l5fZV
+	 OUxio+eTXyBKImrBDLoP9Et5gNecPMtK35Aj3wdPEkVc6vLpSvu80LF7AIKGqGFw/X
+	 YOz8XzkWKDcBuXuf7kRvpWK0gfVgcrPEz2zVmxEjEsh32VTSrF4bM2GVyzarnzUnmz
+	 au4hf7olqzviNbvTlXU7Ti5wqXZE21YEmzNP5+9v7zscX1P6wH2rnXtPKGR/RZc9+s
+	 dv99onM2m5eevKg0gixo21gdglFrmebWAnwwr1dpF9H97Uc5WOdSJtkgC4qGTM3uEW
+	 gSja9fBWdLM0A==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v1 06/11] perf test: missing stdio.h and signal.h
+ inclusions in cmd_test()
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Ian Rogers" <irogers@google.com>
+Cc: linux-perf-users@vger.kernel.org
+In-Reply-To: <20260917045326.63601-6-irogers@google.com>
+References: <20260917045326.63601-1-irogers@google.com>
+ <20260917045326.63601-6-irogers@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Thu, 17 Sep 2026 04:58:56 +0000
+Message-Id: <20260917045856.E790C1F000FF@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20260917045326.63601-1-irogers@google.com>
-X-Mailer: git-send-email 2.55.0.1082.g2b9226bbc0-goog
-Message-ID: <20260917045326.63601-11-irogers@google.com>
-Subject: [PATCH v1 11/11] perf mem: missing standard POSIX headers in builtin-mem.c
-From: Ian Rogers <irogers@google.com>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	James Clark <james.clark@linaro.org>, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Cc: sashiko-bot@kernel.org
-Content-Type: text/plain; charset="UTF-8"
 
-Sashiko reported:
+> Sashiko reported:
+>=20
+>   When compiling the perf tool against musl libc, the build fails in
+>   tools/perf/tests/builtin-test.c due to missing explicit inclusions
+>   of <stdio.h> and <signal.h>.
+>=20
+>   The file relies on standard I/O functions like fdopen() and
+>   fprintf(), as well as signal handling constructs like signal(),
+>   SIGINT, and SIGTERM within __cmd_test() and related helpers. While
+>   glibc may implicitly pull in these definitions through other
+>   standard headers such as <stdlib.h> or <unistd.h>, musl libc
+>   strictly enforces POSIX namespace separation and avoids implicit
+>   header inclusion. Because the required headers are absent, the
+>   compiler cannot resolve these standard library types and macros,
+>   resulting in a direct compilation failure on musl-based systems.
+>=20
+> Add the header files and use git clang-format to sort.
+>=20
+> Reported-by: sashiko-bot@kernel.org
+> Signed-off-by: Ian Rogers <irogers@google.com>
 
-  When compiling the perf tool with musl libc, the build fails in
-  tools/perf/builtin-mem.c due to missing explicit include directives
-  for standard POSIX headers.
+Sashiko has reviewed this patch and found no issues. It looks great!
 
-  The source file directly invokes standard libc functions, including
-  calloc() and free() (from stdlib.h), strcmp() and strdup() (from
-  string.h), and printf-family functions (from stdio.h). While glibc
-  often provides these declarations implicitly by pulling them
-  transitively through other headers like <unistd.h>, musl libc
-  strictly enforces POSIX namespace boundaries and does not expose
-  them implicitly.
-
-  Because tools/perf/builtin-mem.c lacks explicit #include directives
-  for <stdlib.h>, <string.h>, and <stdio.h>, compiling against musl
-  libc results in undeclared identifier and implicit function
-  declaration errors for these standard library routines, causing a
-  fatal build failure.
-
-Add the header files and use git clang-format to sort.
-
-Reported-by: sashiko-bot@kernel.org
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/builtin-mem.c | 25 +++++++++++++++----------
- 1 file changed, 15 insertions(+), 10 deletions(-)
-
-diff --git a/tools/perf/builtin-mem.c b/tools/perf/builtin-mem.c
-index 6101a26b3a78..265264a1bdad 100644
---- a/tools/perf/builtin-mem.c
-+++ b/tools/perf/builtin-mem.c
-@@ -1,30 +1,35 @@
- // SPDX-License-Identifier: GPL-2.0
- #include <errno.h>
- #include <inttypes.h>
--#include <sys/types.h>
-+#include <stdio.h>
-+#include <stdlib.h>
-+#include <string.h>
-+
-+#include <linux/err.h>
- #include <sys/stat.h>
-+#include <sys/types.h>
- #include <unistd.h>
--#include "builtin.h"
--#include "perf.h"
- 
- #include <subcmd/parse-options.h>
-+
-+#include "builtin.h"
-+#include "perf.h"
- #include "util/auxtrace.h"
--#include "util/trace-event.h"
--#include "util/tool.h"
--#include "util/session.h"
- #include "util/data.h"
--#include "util/map_symbol.h"
--#include "util/mem-events.h"
- #include "util/debug.h"
- #include "util/dso.h"
- #include "util/map.h"
--#include "util/symbol.h"
-+#include "util/map_symbol.h"
-+#include "util/mem-events.h"
- #include "util/pmus.h"
- #include "util/sample.h"
-+#include "util/session.h"
- #include "util/sort.h"
- #include "util/string2.h"
-+#include "util/symbol.h"
-+#include "util/tool.h"
-+#include "util/trace-event.h"
- #include "util/util.h"
--#include <linux/err.h>
- 
- #define MEM_OPERATION_LOAD	0x1
- #define MEM_OPERATION_STORE	0x2
--- 
-2.55.0.1082.g2b9226bbc0-goog
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260917045326.6360=
+1-1-irogers@google.com?part=3D6
 
