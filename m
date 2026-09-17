@@ -1,145 +1,98 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 683C3598BEB
-	for <linux-perf-users@vger.kernel.org>; Thu, 17 Sep 2026 14:46:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1ABFF397928
+	for <linux-perf-users@vger.kernel.org>; Thu, 17 Sep 2026 15:17:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789656407; cv=none; b=i9BlaHYu+eXWDk5yBoq7PunKgT0qL5622KZh6IkzLDv8BfZKufxgTjxTtYwZyQzMnqM2rWu/pdSVrScF2uvYPZn2FcmmLJiAPdg+PwqKYu1u1z06SrAjsUWQHtycvw0Jj6251OrJbrRyq2UyARuQHhDaBj8Tm45OZ4fR444eMyw=
+	t=1789658258; cv=none; b=R6QcUTXp5fPw+F38RZ3FATp/9KDebmCKht0jLOx0CixQHm37rtFuNH1MXCv/0AJlj9mVctTmr7fu/T8PAlAPM4PKE4EcHLtKEYpLxPn6ZeGwg+FRN9TgXAcXc3FPwO6OUsZ7vjgWilUJfZgUbTt5WQ9QHD5jSyR3WaS6aCN6CS0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789656407; c=relaxed/simple;
-	bh=wYdra0/rb995jwKqL3ELavlEIZq2PrYqyO7Wol0SOSc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Ijlmfag2HVgJ9STNuoN3IrNyLnI7yZJsWmpkdxd/G8oOAUC27f5CqO741KcVXr52xi3rlDWaXgNxO8t9fs2SMOdNVSVMHnjDuvxcROdMlOmBWJQ7pU7ILlwbyK0DNxFHOnAnUaeFsRsT+/AHWpUfUwRPmJcft6jKM3Agl20Yn1M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=EUF3iujl; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1789658258; c=relaxed/simple;
+	bh=yokcjFoYaQjb2AXJXwiS2CgA9icNw4hd0m3OmDjYLh0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=sg762VUFEwh4CHuWbA8XxQfxil89uiUggTwbwEiSZ9+tGqOBYLdwY8liya1q4KUNYUGDyNDjTZvm4eAEXdSBkq4YulgH7RhmMjkH3f52tp+1Y0GJw+IVl2uOLMbCeBPgt6Oc2fmfb2UQ7MwnimywsH15MxmVDH0yKy6V8eZNoQs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=baYHiQhL; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="EUF3iujl"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1789656399; x=1821192399;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=wYdra0/rb995jwKqL3ELavlEIZq2PrYqyO7Wol0SOSc=;
-  b=EUF3iujlKnCs7OlSXxF4KkjuQaZLB7tBsBAp9o1J8YN6BezdjmBoHmFO
-   86/H2MUwYl9SSUm2imQ8eh4LIcbfKMTAVkpqDnmUF+Ed3XDlg9qxeTe52
-   gpVugCq+6z8zNn5LSHCJVXO6WMv+qo4ygd3s+43DUI9EfFl69UEYtTjET
-   BOnXBaelRVDvMNWmLzJvKsUvDfHr/RN6qzGdngTnKmkrbS6SKsxkliUeB
-   dggF+NR+tPDp1ttaotBzzOI++TNFrQxppCdIPtRNwO6/6FdejQySZkF9R
-   qsjlZ1LQGbLScmYdbr0Mo0AowiUhq+wDAIwKPjCdGYzXCCMrBk6gGcwsh
-   g==;
-X-CSE-ConnectionGUID: lJCaC6FDT0iQPvwc81cQug==
-X-CSE-MsgGUID: P+78RksgT5mShJfdGZP9zg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11905"; a="101429521"
-X-IronPort-AV: E=Sophos;i="6.27,103,1787036400"; 
-   d="scan'208";a="101429521"
-Received: from fmviesa012.fm.intel.com ([10.60.135.152])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Sep 2026 07:46:34 -0700
-X-CSE-ConnectionGUID: 2UwuFsgDRD2V5F61XYstEQ==
-X-CSE-MsgGUID: thdfgHLzRAqtu9BPuY/qUQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.27,103,1787036400"; 
-   d="scan'208";a="2058893"
-Received: from soc-cp83kr3.clients.intel.com (HELO [10.122.185.5]) ([10.122.185.5])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Sep 2026 07:46:34 -0700
-Message-ID: <048b0319-470e-4f8b-816f-c7c835a43974@intel.com>
-Date: Thu, 17 Sep 2026 09:46:33 -0500
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="baYHiQhL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 619CD1F008A4
+	for <linux-perf-users@vger.kernel.org>; Thu, 17 Sep 2026 15:17:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1789658230;
+	bh=yokcjFoYaQjb2AXJXwiS2CgA9icNw4hd0m3OmDjYLh0=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc;
+	b=baYHiQhLKHIXv5JcbsYM8h8jWAIdy60s6NhCh0ZGU54W95BOiAuC94Ol2AcpHo47g
+	 xOJkjhXStRdOshTWhG385se+mN0mwxSalEgzP9JG2PQIOLJ/oHEIVw0zHQeJ6cCyxv
+	 qfvHypAZ4Aa+PBTDs1xGLwk8gxllOPs9TBclUTaLcaptPXVE/nH6o6dNw9fmKr/Ga+
+	 euX0r0XKcn50B8jtWh1/A5rkcHzzpSCbjKD97mWUlLgkoyhoofyCpgqfsFLMmV7xqx
+	 ARc5Jnmu7agtqFNmn3zlh9R+1V4XybdteMzm34GCd9fCbp5oeKdHFvfY4O6Spsy5NH
+	 56pQ+Rtftr60g==
+Received: by mail-ed2-f12.google.com with SMTP id 4fb4d7f45d1cf-6a996c8adf3so1647095a12.1
+        for <linux-perf-users@vger.kernel.org>; Thu, 17 Sep 2026 08:17:10 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AKwUvBxNrJYNP24QvIB5SjEcIWq+DNarUc2MV2rMEXUZwS4MvdeLLnLt0g5ym3redvB0TMjFK2rJOwxGbC0SzyZXbaho@vger.kernel.org
+X-Gm-Message-State: AFuF++mnRApLd8QhB76omhNlFqNvIU8jIx48w3f5ORKertPra/mcF7zX
+	2Fk9AmsZqABa/p8MXdc9bvHx2OeIb4ji7GM9sAHStjw0USeGiiaH14poWHFUQY5xKIN1WoXYylf
+	Nk4gqQSQCvTBE1gzXGFYkXx36cLmdWg==
+X-Received: by 2002:a05:6402:460c:b0:6a6:8dd:c76b with SMTP id
+ 4fb4d7f45d1cf-6aa22247992mr11552271a12.1.1789658228391; Thu, 17 Sep 2026
+ 08:17:08 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] perf topdown: Don't require config1==0 for a slots event
-To: Ian Rogers <irogers@google.com>
-Cc: sashiko-reviews@lists.linux.dev, linux-perf-users@vger.kernel.org
-References: <20260916202740.257376-1-zide.chen@intel.com>
- <20260916204416.80E761F000FF@smtp.kernel.org>
- <9e86d9e4-7aee-4c1b-8812-94aecb2a2cea@intel.com>
- <CAP-5=fVkubfWSoQbZRmC7Xg-4SHM-=ickZub7zi4SDuFAhZuCg@mail.gmail.com>
-Content-Language: en-US
-From: "Chen, Zide" <zide.chen@intel.com>
-In-Reply-To: <CAP-5=fVkubfWSoQbZRmC7Xg-4SHM-=ickZub7zi4SDuFAhZuCg@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20260917144134.459819-1-matyasdaniel006@gmail.com>
+In-Reply-To: <20260917144134.459819-1-matyasdaniel006@gmail.com>
+From: Rob Herring <robh@kernel.org>
+Date: Thu, 17 Sep 2026 10:16:56 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqLyPK2rJVAyzCtGtrBSTwOKRZ_EAmE1Xd++9DFaxrrmDw@mail.gmail.com>
+X-Gm-Features: AcwNN1WrkKsI-hJClnXnbb72poP7rLqVHTc23ccK3T-HSnvYyjsVzuH4L2tWH2Y
+Message-ID: <CAL_JsqLyPK2rJVAyzCtGtrBSTwOKRZ_EAmE1Xd++9DFaxrrmDw@mail.gmail.com>
+Subject: Re: [PATCH] dt-bindings: Expand flow lists to block lists
+To: Daniel Matyas <matyasdaniel006@gmail.com>
+Cc: Shenghao Ding <shenghao-ding@ti.com>, Kevin Lu <kevin-lu@ti.com>, Baojun Xu <baojun.xu@ti.com>, 
+	Sen Wang <sen@ti.com>, Peter Huewe <peterhuewe@gmx.de>, Jarkko Sakkinen <jarkko@kernel.org>, 
+	Jason Gunthorpe <jgg@ziepe.ca>, Chunfeng Yun <chunfeng.yun@mediatek.com>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Matthias Brugger <matthias.bgg@gmail.com>, 
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
+	Wim Van Sebroeck <wim@linux-watchdog.org>, Dharma Balasubiramani <dharma.b@microchip.com>, 
+	Jeff LaBundy <jeff@labundy.com>, Simon Glass <sjg@chromium.org>, Linus Walleij <linusw@kernel.org>, 
+	Alexandre Torgue <alexandre.torgue@foss.st.com>, Giuseppe Cavallaro <peppe.cavallaro@st.com>, 
+	Jose Abreu <joabreu@synopsys.com>, Atish Patra <atishp@rivosinc.com>, 
+	Shawn Guo <shawn.guo@linaro.org>, Dmitry Osipenko <digetx@gmail.com>, 
+	Ibrahim Tilki <Ibrahim.Tilki@analog.com>, Okan Sahin <Okan.Sahin@analog.com>, 
+	devicetree@vger.kernel.org, linux-rtc@vger.kernel.org, 
+	Ricard Wanderlof <ricardw@axis.com>, patches@opensource.cirrus.com, 
+	Lukas Wunner <lukas@wunner.de>, Eugen Hristev <ehristev@kernel.org>, mfd@lists.linux.dev, 
+	linux-samsung-soc@vger.kernel.org, linux-mmc@vger.kernel.org, 
+	linux-mtd@lists.infradead.org, linux-amlogic@lists.infradead.org, 
+	netdev@vger.kernel.org, linux-pci@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, linux-phy@lists.infradead.org, 
+	linux-tegra@vger.kernel.org, linux-sound@vger.kernel.org, 
+	linux-integrity@vger.kernel.org, linux-usb@vger.kernel.org, 
+	linux-mediatek@lists.infradead.org, linux-watchdog@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Thu, Sep 17, 2026 at 9:41=E2=80=AFAM Daniel Matyas <matyasdaniel006@gmai=
+l.com> wrote:
+>
+> Running dt_bindings_check returned:
+> [error] string value is redundantly quoted with any quotes (quoted-string=
+s)
+>
 
+That false positive is fixed in newer versions of yamllint since at
+least a year and a half ago. There's also some other quoting checks
+I'd like to turn on, but that bumps the minimum version since unknown
+checks are an error in yamllint.
 
-On 9/16/2026 6:00 PM, Ian Rogers wrote:
-> On Wed, Sep 16, 2026 at 2:52 PM Chen, Zide <zide.chen@intel.com> wrote:
->>
->> On 9/16/2026 3:44 PM, sashiko-bot@kernel.org wrote:
->>> Thank you for your contribution! Sashiko AI review found 1 potential issue(s) to consider:
->>> - [Low] perf: missing explicit <stdio.h> and <string.h> inclusions
->>> --
->>>
->>> commit 197eea3115a0d065dc53e6f96ad2fd38fdb9bc99
->>> Author: Zide Chen <zide.chen@intel.com>
->>>
->>> perf topdown: Don't require config1==0 for a slots event
->>>
->>> This commit modifies the topdown slots architecture check to no longer require
->>> config1 == 0, fixing an issue where explicit slots events were duplicated in
->>> scheduling. It also adds a new test to verify that an explicit metrics_clear
->>> slots event doesn't trigger extra injections.
->>>
->>>> diff --git a/tools/perf/arch/x86/tests/topdown.c b/tools/perf/arch/x86/tests/topdown.c
->>>> index 2b6f47ce49324..b1ce9f83db00e 100644
->>>> --- a/tools/perf/arch/x86/tests/topdown.c
->>>> +++ b/tools/perf/arch/x86/tests/topdown.c
->>> [ ... ]
->>>> @@ -229,10 +229,38 @@ static int test__x86_topdown_slots_injection(struct test_suite *test __maybe_unu
->>>>      return TEST_OK;
->>>>  }
->>>>
->>>> +/*
->>>> + * An explicit "slots,metrics_clear=1" event is still the slots event and
->>>> + * must not cause an extra slots event to be injected into the group.
->>>> + */
->>>> +static int test__x86_topdown_metrics_clear(struct test_suite *test __maybe_unused,
->>>> +                                       int subtest __maybe_unused)
->>>> +{
->>>> +    struct perf_pmu *pmu;
->>>> +    char event_str[128];
->>>> +    int ret;
->>>> +
->>>> +    if (!topdown_sys_has_perf_metrics())
->>>> +            return TEST_OK;
->>>> +
->>>> +    pmu = perf_pmus__find_by_type(PERF_TYPE_RAW);
->>>> +    if (!pmu || !perf_pmu__has_format(pmu, "metrics_clear"))
->>>> +            return TEST_OK;
->>>> +
->>>> +    snprintf(event_str, sizeof(event_str),
->>>> +             "{%s/slots,metrics_clear=1/,%s/topdown-retiring/}",
->>>> +             pmu->name, pmu->name);
->>>
->>> [Severity: Low]
->>> Does this new function test__x86_topdown_metrics_clear() need explicit header
->>> inclusions for musl compatibility?
->>>
->>> This code relies on an implicit declaration of <stdio.h> for snprintf().
->>> Missing POSIX headers can cause build failures when compiling the perf tool
->>> with strict libc implementations like musl instead of glibc.
->>>
->>> Should <stdio.h> (and potentially <string.h>) be explicitly included at the top
->>> of this file to prevent musl compilation failures?
->>
->> Not needed. tools/perf/util/pmu.h, along with debug.h (which is also
->> included), explicitly pulls in <stdio.h>.
->>
->> Additionally, this file already contains other calls to snprintf(). If
->> the required header dependency were missing, those existing uses would
->> already fail to build.
-> 
-> In general we want to avoid transitive includes as they are brittle.
-> For example, if pmu.h and/or debug.h were changed, it might break
-> musl.
+> The files used quotation marks in flow lists because the strings had
+> commas and these commas were interpreted as separators. Convert flow
+> style lists to block style lists, so that there is no problems with the
+> commas.
 
-OK, then I can add stdio.h and string.h to topdown.c.
+If we wanted to fix like this, we should probably just require block
+style everywhere, but I don't think we should do that.
 
-> Thanks,
-> Ian
-
+Rob
