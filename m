@@ -1,277 +1,902 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm2-f11.google.com (mail-wm2-f11.google.com [74.125.225.139])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D44784FC8CB;
-	Thu, 17 Sep 2026 14:10:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C04AF59D62D
+	for <linux-perf-users@vger.kernel.org>; Thu, 17 Sep 2026 14:41:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.225.139
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789654252; cv=none; b=qr+q6YDD4rnT9+dTzdRJBtpktVozk/FV/dkPoUDxFdKzb4YeexVCXu65KrwGjT/7A9EgQtWTPBRVYYyknkXiZK0CbaMxppSmuedO37qjhV0Wo9NnrqF9hXd8kp9OijpeGO1Gmmf7Q3TTrkdOyLmOb+MLxt/BSUeMR1yX/PLmrZ4=
+	t=1789656116; cv=none; b=g03nE0iTyw5MR5PMgCke1idg0P+qhDXzqzonIeyG2EYx/gqDokdC1o/RwpwKYVKSdrUWxlEKBohnMyhAOUF9mL5Q9kzyYvDVsiDF3d5lFOMVf5m9YWaBb7g4621jObobVTxDu6hvD8s5LZwVqQTlsTmSAAl3eVPubzSOGisHzBw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789654252; c=relaxed/simple;
-	bh=/C9f95SWyEmPygIuulycJScYsmXuMozyyQL5PTlWLho=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tYKoxY6WGthLyvQZYTEuVzTWb/J+Jd1VzDdqU+eSk5ppY2vdnQaCR9QoAMjuI9OkVyQNn4CeW8ZXxSsuGIeDrh4auQscP4coVI/pm/+PPsT22hQuM0jmeBI4lpDJLM7ZuvYMD79zgNFW+n4CRMw8CccdyOC2X0LZ05eLIh7DCwY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=W1OQSPQh; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1789656116; c=relaxed/simple;
+	bh=VR+kwkFmvRt7IIsiF048mZ3MVYW3SZjOswQQ6TsOoRc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=HiyS76gpGWNkphOiDmKzSXP6bRZKDABKu5wATXQIjP3di55L6sCvge8txiuiI9VCR7q3RKY9IESp10XdrOC/fCJfvBXjXhTVuDgovHVZ/WHazInEH9m8AIl+kjcH6o4envkI5pXCjQdyxxZYTd/NF5h4bdOK8NteMB54jBYM+NY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ownwRosl; arc=none smtp.client-ip=74.125.225.139
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="W1OQSPQh"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DB69F1F000FF;
-	Thu, 17 Sep 2026 14:10:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789654249;
-	bh=KbrDS6hKlC0VTaC9BV7+naLsGbVr14Ol/r0dwCCcssI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=W1OQSPQh322nQaohrMaAxOagWwbvl9nfa1M8/bJfBh0BVO2wIDl50kW+0OZlfAY9W
-	 I8TRDsOX/HJXa0PKXXSg3zbiITkFW7y0z/NWU4OXDcMlOaG+DI7FxP3vZNlMvJBf3Q
-	 s4BWwM4qRiDe46bp4aSjSK4+BzIY3PD4mAA0IvWHyhgKcP013CBl7DGA1jrzzPq4Z9
-	 XhM0GnOREVbuDkMQVJt1m0PHIDNXJRlaoPvuGHmCCWqjBKgBaa9tv8Gw1LDojsZm3o
-	 M36krUXURWBS3Sc095w9ic0+ppCVGElFpESwfj7+Pmq8CdLtbTXHTLgG85lvR+ni7t
-	 y85DiRIBQEmIg==
-Date: Thu, 17 Sep 2026 15:10:47 +0100
-From: Harry Yoo <harry@kernel.org>
-To: Tim Menninger <tmenninger@everpuredata.com>
-Cc: linux-mm@kvack.org, Chuck Lever <cel@kernel.org>, 
-	linux-nfs@vger.kernel.org, Jon Curley <jcurley@everpuredata.com>, 
-	Eric Badger <ebadger@everpuredata.com>, Vlastimil Babka <vbabka@kernel.org>, 
-	Andrew Morton <akpm@linux-foundation.org>, Hao Li <hao.li@linux.dev>, Christoph Lameter <cl@gentwo.org>, 
-	David Rientjes <rientjes@google.com>, Roman Gushchin <roman.gushchin@linux.dev>, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
-	Adrian Hunter <adrian.hunter@intel.com>, James Clark <james.clark@linaro.org>, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [SLUB] nfs_page cmpxchg_double_fail and perf lock perturbation
- on dual-socket NFS/RDMA
-Message-ID: <aqvy8NqRRRmUlxjR@thinkstation>
-References: <20260916232227.4098143-1-tmenninger@everpuredata.com>
- <aqvq8-6IJBDer90O@thinkstation>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ownwRosl"
+Received: by mail-wm2-f11.google.com with SMTP id 5b1f17b1804b1-49ccea58fe3so1596595e9.1
+        for <linux-perf-users@vger.kernel.org>; Thu, 17 Sep 2026 07:41:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1789656102; x=1790260902; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=uxdo04KgC3ZopuNd4o1TqXYNrHfISkm+8Ow6DwBarvc=;
+        b=ownwRoslxpBe+VrITDjoJh5NP5OC/PbjEVs6NfnVsETHyRqcS5QpjBC5JqKaEsvpr9
+         heiLv8qUryFbHpUvPZzDBsl04uz99A0Q9YiHHYB3bdIFkwkDxAByNlm68PSLVMSe4MCg
+         cyOTmfd1whQmK6RwMlK9euMXmXdddQiYB+pXL2Ltt6Wl9TlhutIah09rWJc8vzw0lLFz
+         ZjE7IYtEZyr26R6v2mCU4k70aQO6L1ebss5it7KUXAGz8gU+IuX/4otWhYdt9rreAuUH
+         5mPQd4GUaNg5h/xIYHQmudCeJVLhVLNj1tanEfz+xeGWbF4qi4ArNW/4QUe7j2VF/Iqs
+         L19g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1789656102; x=1790260902;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=uxdo04KgC3ZopuNd4o1TqXYNrHfISkm+8Ow6DwBarvc=;
+        b=KmfnbLNf8Wr2q5z8+ap32OdGPdHde7SBlgiEz9PVI+6FIUv5mMHc+vqaedWe07mH89
+         BLnbuI7hnL5xd7bOesY/lJbDWulx2klOCZy9uMpbZ+OoNir5VDrN+EUuTbcXHBgzijY6
+         e+Sa30GfbHsAtxhZ5K6Mc/Svek7t+zzbsPmRDKWmMfZzZxxt94ryuXvCviVMksaoMoCj
+         kbuWM5X4TUe6dVI+/AZwIFCDahsPYWWVI54ueH8WWwPVINHW3KUMfFJgiyQaXictElUc
+         qsZsgKnanArPI4jBiR/a0UYnbFc/xCtP7Gny/42RGv2GHU73VRnzPOfxt7PsKGWnbsW1
+         hQ1g==
+X-Forwarded-Encrypted: i=1; AKwUvBySZlhWkaZm4Lf/LpeozyeAqCtXzRLiiN5aQmKmZCRBWSM2lTb85blUUUs3XiQQYk4RSXMg8wOR1mDePZZHZkjn@vger.kernel.org
+X-Gm-Message-State: AFuF++k/Gv92RETUqHvVRR3as0v/Fl8/glWoyIBPCxqRuA98BNtH17GM
+	YXSeEBpFqfgyYOmTt7Q/X5k3Am2waDIX0oebi/sWgRAUoETolQhr/Ai9
+X-Gm-Gg: AYBFou1YPMKKbleyY7Em3XW44QECV3LjTM59vYkIMJk03qZ50rOLpPt7GOZsxGSoM/q
+	0rfRHxAzX9/Of3/BXbX63DX3Mm76nJle8j1tWv8YViPcXPrOcVBEg7rmUeNa6wAWhT8lOBXkJ9i
+	Omlk/UN9nAeqr6u5GqL6iqF57gd+Sv22zlLzU0u/eD6pESbmh+NQLrMOHznQ6u6ybQfuRaOetuL
+	2t+x0i6EPcEAnYxTmo1116XvkybVHzw1vYLpu9UCiRh0CUMeCjBSegakzDAB2adZCY6eJbAitRB
+	8+/VWfm/SOcgt0tyZj7bPdsVUfjq7JihpiS/v0hz45fbMKRHMUyheLoActev1kMJk3PoamrxP9l
+	UxwMemzBd9DVo1zvZ+SGqymIqeVxBYvBfruOfXVU3LgTqugIKxS2hrFOlpN4bayubLDXPVSiIn7
+	tQy2dwxg4EpbtEY6LKvgRFjuOCWL9rjq4OaYHXE7MdmF24mzlDsTkVPPB6PX/td+Xe82BVUOzl5
+	LzTvA==
+X-Received: by 2002:a05:600c:1546:b0:49e:67bf:7e97 with SMTP id 5b1f17b1804b1-49ead86eb48mr87880525e9.10.1789656101568;
+        Thu, 17 Sep 2026 07:41:41 -0700 (PDT)
+Received: from chicken.. ([2a02:2f02:5101:7300:44c:8311:3d26:e514])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-49fbd691d8esm33238755e9.0.2026.09.17.07.41.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 17 Sep 2026 07:41:41 -0700 (PDT)
+From: Daniel Matyas <matyasdaniel006@gmail.com>
+To: Shenghao Ding <shenghao-ding@ti.com>,
+	Kevin Lu <kevin-lu@ti.com>,
+	Baojun Xu <baojun.xu@ti.com>,
+	Sen Wang <sen@ti.com>,
+	Peter Huewe <peterhuewe@gmx.de>,
+	Jarkko Sakkinen <jarkko@kernel.org>,
+	Jason Gunthorpe <jgg@ziepe.ca>,
+	Chunfeng Yun <chunfeng.yun@mediatek.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Wim Van Sebroeck <wim@linux-watchdog.org>,
+	Dharma Balasubiramani <dharma.b@microchip.com>,
+	Jeff LaBundy <jeff@labundy.com>,
+	Simon Glass <sjg@chromium.org>,
+	Linus Walleij <linusw@kernel.org>,
+	Alexandre Torgue <alexandre.torgue@foss.st.com>,
+	Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+	Jose Abreu <joabreu@synopsys.com>,
+	Atish Patra <atishp@rivosinc.com>,
+	Shawn Guo <shawn.guo@linaro.org>,
+	Dmitry Osipenko <digetx@gmail.com>,
+	Ibrahim Tilki <Ibrahim.Tilki@analog.com>,
+	Okan Sahin <Okan.Sahin@analog.com>,
+	devicetree@vger.kernel.org,
+	linux-rtc@vger.kernel.org,
+	Ricard Wanderlof <ricardw@axis.com>,
+	patches@opensource.cirrus.com,
+	Lukas Wunner <lukas@wunner.de>,
+	Eugen Hristev <ehristev@kernel.org>
+Cc: mfd@lists.linux.dev,
+	linux-samsung-soc@vger.kernel.org,
+	linux-mmc@vger.kernel.org,
+	linux-mtd@lists.infradead.org,
+	linux-amlogic@lists.infradead.org,
+	netdev@vger.kernel.org,
+	linux-pci@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	linux-phy@lists.infradead.org,
+	linux-tegra@vger.kernel.org,
+	linux-sound@vger.kernel.org,
+	linux-integrity@vger.kernel.org,
+	linux-usb@vger.kernel.org,
+	linux-mediatek@lists.infradead.org,
+	linux-watchdog@vger.kernel.org,
+	Daniel Matyas <matyasdaniel006@gmail.com>
+Subject: [PATCH] dt-bindings: Expand flow lists to block lists
+Date: Thu, 17 Sep 2026 17:41:34 +0300
+Message-ID: <20260917144134.459819-1-matyasdaniel006@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aqvq8-6IJBDer90O@thinkstation>
+Content-Transfer-Encoding: 8bit
 
-... now I realize we need to add PERFORMANCE EVENTS SUBSYSTEM folks 
-as well ;-)
+Running dt_bindings_check returned:
+[error] string value is redundantly quoted with any quotes (quoted-strings)
 
-Hmm, sounds like perf lock is somehow triggering slab allocations
-and interfering the workload.
+The files used quotation marks in flow lists because the strings had
+commas and these commas were interpreted as separators. Convert flow
+style lists to block style lists, so that there is no problems with the
+commas.
 
-It could be because SLUB is merging nfs_page cache with some other
-cache that perf uses.
+Signed-off-by: Daniel Matyas <matyasdaniel006@gmail.com>
+---
+ .../bindings/display/atmel,lcdc-display.yaml  |  9 ++++---
+ .../devicetree/bindings/eeprom/at24.yaml      |  4 +++-
+ .../devicetree/bindings/example-schema.yaml   |  6 +++--
+ .../bindings/hwmon/pmbus/adi,max20830.yaml    |  6 +++--
+ .../bindings/iio/adc/ti,ads112c14.yaml        |  6 +++--
+ .../bindings/iio/frequency/adi,adf41513.yaml  |  3 ++-
+ .../bindings/iio/frequency/adi,adrf6780.yaml  |  6 +++--
+ .../bindings/iio/temperature/adi,ltc2983.yaml |  6 +++--
+ .../bindings/input/azoteq,iqs7222.yaml        | 12 ++++++----
+ .../bindings/input/google,cros-ec-keyb.yaml   |  6 +++--
+ .../devicetree/bindings/input/input.yaml      |  3 ++-
+ .../devicetree/bindings/input/iqs269a.yaml    | 12 ++++++----
+ .../devicetree/bindings/input/iqs626a.yaml    | 15 ++++++++----
+ .../input/touchscreen/azoteq,iqs7211.yaml     | 24 ++++++++++++-------
+ .../interrupt-controller/riscv,aplic.yaml     |  3 ++-
+ .../bindings/mfd/maxim,max8998.yaml           |  6 +++--
+ .../bindings/mfd/samsung,s5m8767.yaml         | 21 +++++++++++-----
+ .../devicetree/bindings/mmc/arm,pl18x.yaml    |  9 ++++---
+ .../bindings/mtd/amlogic,meson-nand.yaml      |  8 +++++--
+ .../devicetree/bindings/net/snps,dwmac.yaml   |  6 +++--
+ .../bindings/pci/brcm,iproc-pcie.yaml         |  3 ++-
+ .../devicetree/bindings/perf/riscv,pmu.yaml   |  3 ++-
+ .../phy/hisilicon,hi3798cv200-combphy.yaml    |  6 +++--
+ .../bindings/phy/nvidia,tegra20-usb-phy.yaml  |  6 +++--
+ .../bindings/regulator/adi,max77857.yaml      |  6 +++--
+ .../bindings/regulator/maxim,max8997.yaml     |  9 ++++---
+ .../regulator/samsung,s2mpg10-regulator.yaml  |  3 ++-
+ .../regulator/samsung,s2mpg11-regulator.yaml  |  3 ++-
+ .../bindings/regulator/ti,tps65132.yaml       |  3 ++-
+ .../devicetree/bindings/riscv/cpus.yaml       |  6 +++--
+ .../bindings/rtc/abracon,abx80x.yaml          |  6 +++--
+ .../soc/tegra/nvidia,tegra20-pmc.yaml         | 10 +++++---
+ .../bindings/sound/ti,tlv320adc3xxx.yaml      |  6 +++--
+ .../devicetree/bindings/sound/wlf,wm8904.yaml | 18 ++++++++++----
+ .../devicetree/bindings/tpm/tpm-common.yaml   |  6 +++--
+ .../bindings/usb/mediatek,mtk-xhci.yaml       |  3 ++-
+ .../bindings/usb/mediatek,mtu3.yaml           | 12 ++++++----
+ .../bindings/watchdog/atmel,at91sam9-wdt.yaml |  3 ++-
+ 38 files changed, 192 insertions(+), 91 deletions(-)
 
-Could you please check if it reproduces with slab_nomerge kernel
-parameter?
-
-On Thu, Sep 17, 2026 at 02:46:24PM +0100, Harry Yoo wrote:
-> Hi Tim and Chuck, thanks for reporting this to linux-mm.
-> Will take a look at this but let me Cc SLAB ALLOCATOR folks here first.
-> 
-> -- 
-> Cheers,
-> Harry / Hyeonggon
-> 
-> On Wed, Sep 16, 2026 at 11:22:27PM +0000, Tim Menninger wrote:
-> > Chuck Lever suggested I bring this to linux-mm after we found some SLUB
-> > measurements we could not account for while investigating an NFS/RDMA
-> > throughput regression.
-> > 
-> > The original NFS discussion is here for context:
-> > 
-> >     https://lore.kernel.org/linux-nfs/0e2f9688-097c-4bb9-a7ec-82b41bdb3653@slotpi15m67/
-> > 
-> > The NFS regression itself has been separated from this issue. What
-> > remains interesting here is the behavior of the nfs_page slab cache on
-> > this machine, particularly the measurements with and without perf lock.
-> > 
-> > The system is:
-> > 
-> >     Intel Xeon Silver 4516Y+
-> >     2 sockets
-> >     24 cores/socket
-> >     2 threads/core
-> >     96 logical CPUs
-> > 
-> >     NUMA node0 CPUs: 0-23,48-71
-> >     NUMA node1 CPUs: 24-47,72-95
-> >
-> > The workload is a high-throughput NFS/RDMA direct-read workload using
-> > 1 MiB I/O, 160 threads, and iodepth 64.
-> > 
-> > The relevant debug options are all disabled:
-> > 
-> >     # CONFIG_KASAN is not set
-> >     # CONFIG_PROVE_LOCKING is not set
-> >     # CONFIG_LOCK_STAT is not set
-> >     # CONFIG_DEBUG_SPINLOCK is not set
-> >     # CONFIG_DEBUG_LIST is not set
-> > 
-> > All measurements below were collected on the unpatched base kernel:
-> > 
-> >     $ git rev-parse HEAD
-> >     940de590b839f71d6dc846160534bf202401b8b7
-> > 
-> >     $ uname -r
-> >     7.3.0-rc1-mainline+
-> > 
-> > The initial observation was a high apparent contention rate on the
-> > nfs_page slab's list_lock. In 10-second perf-lock captures I was seeing
-> > roughly 4.5M contended acquisitions and about 170-185 us of average
-> > reported wait.
-> > 
-> > Chuck reproduced a similar acquisition rate on a single-node EPYC
-> > system, but saw only about 7 ns average wait and fewer than 100
-> > cmpxchg_double_fail events over a corresponding interval. He suggested
-> > checking cmpxchg_double_fail because __slab_free() drops list_lock and
-> > retries when the freelist cmpxchg fails.
-> >
-> > I repeated the measurements in three placement configurations:
-> > 
-> >     A. workload unpinned, CQs all on node0
-> >     B. workload pinned to node0, CQs all on node0
-> >     C. workload unpinned, CQs balanced across the nodes
-> > 
-> > Without perf lock, throughput is similar in all three:
-> > 
-> >     A. unpinned / CQs node0:       ~45.5 GB/s
-> >     B. node0 pinned / CQs node0:   ~45.7 GB/s
-> >     C. unpinned / balanced CQs:    ~45.5 GB/s
-> > 
-> > During the perf-lock captures, throughput is approximately 25 GB/s.
-> > 
-> > For each instrumented 10-second window I ran:
-> > 
-> >     sudo perf lock record -a -g -o "$D/perf-locks.data" -- sleep 10
-> >     mpstat -P ALL 1 10
-> > 
-> > Before and after the same window I sampled the counters under:
-> > 
-> >     /sys/kernel/slab/nfs_page/
-> > 
-> > I also collected separate 10-second counter and mpstat windows under
-> > the same workload configurations without perf lock.
-> > 
-> > The resulting slab counter deltas were:
-> > 
-> >                             A               B                 C
-> >                      unpinned/node0    node0/node0   unpinned/balanced
-> > 
-> >     free_fastpath
-> >     instrumented        655,917,745    457,936,140       328,670,030
-> >     uninstrumented       34,906,233    119,984,226        59,469,931
-> > 
-> >     free_slowpath
-> >     instrumented        236,735,724      7,720,917       270,716,506
-> >     uninstrumented       85,039,753          2,814        60,145,870
-> > 
-> >     sheaf_flush
-> >     instrumented         39,842,700     42,706,800         8,341,440
-> >     uninstrumented        1,286,400     13,487,700           887,700
-> > 
-> >     barn_put_fail
-> >     instrumented            663,994        711,745           139,037
-> >     uninstrumented           21,464        224,762            14,765
-> > 
-> >     barn_get_fail
-> >     instrumented          4,609,925        840,344         4,651,225
-> >     uninstrumented        1,438,643        224,787         1,017,006
-> > 
-> >     cmpxchg_double_fail
-> >     instrumented             70,524          8,077            28,062
-> >     uninstrumented            7,471            713             1,503
-> > 
-> >     alloc_slowpath
-> >     all cases                     0              0                 0
-> > 
-> > The SLUB counter profile changes substantially with perf lock despite
-> > the lower NFS throughput, and the exact mix depends strongly on
-> > placement.
-> > 
-> > The uninstrumented node0/node0 run also reproduces the barn/sheaf
-> > relationship Chuck pointed out earlier. The nfs_page sheaf capacity is
-> > 60:
-> > 
-> >     sheaf_flush / 60 = 13,487,700 / 60 = 224,795
-> >     barn_put_fail                      = 224,762
-> > 
-> > The placement dependence of free_slowpath is also large. It falls from
-> > about 85M events per 10 seconds in the unpinned/node0 case to 2,814 in
-> > the node0/node0 case.
-> > 
-> > The reported perf-lock result, however, is similar across all three
-> > placements:
-> > 
-> >                          contentions    total wait    average wait
-> >     unpinned/node0         4,782,839      14.39 min      180.47 us
-> >     node0/node0            4,582,012      14.13 min      185.05 us
-> >     unpinned/balanced      4,572,196      12.81 min      168.14 us
-> > 
-> > I also revisited an inconsistency Chuck noticed in my earlier
-> > measurements. Previously I had compared aggregate perf-lock wait from
-> > one 10-second capture with CPU utilization measured during a different
-> > window.
-> > 
-> > I now have paired 10-second mpstat samples for each placement, with and
-> > without perf lock. The node values below are averages of the per-CPU
-> > %idle values for the CPUs in each NUMA node:
-> > 
-> >                                   system-wide       node0       node1
-> >                                   %idle             %idle       %idle
-> > 
-> >     A. unpinned / CQs node0
-> >        uninstrumented                 31.46           8.0        54.6
-> >        instrumented                    3.60           0.06        7.1
-> > 
-> >     B. node0 pinned / CQs node0
-> >        uninstrumented                 84.26          69.2        99.4
-> >        instrumented                   12.07          10.4        13.8
-> > 
-> >     C. unpinned / balanced CQs
-> >        uninstrumented                 66.86          66.7        66.9
-> >        instrumented                   14.83          19.0        10.6
-> > 
-> > This resolves the accounting inconsistency in my earlier measurements.
-> > The large aggregate perf-lock wait and high idle percentage had come
-> > from different windows. In the aligned samples, the system is much
-> > busier during the perf-lock capture than in the corresponding
-> > uninstrumented run.
-> > 
-> > I am still unsure how representative the reported ~170-185 us average
-> > wait is of the uninstrumented workload.
-> > 
-> > The remaining number I am less sure how to interpret is
-> > cmpxchg_double_fail. In the uninstrumented windows I see:
-> > 
-> >     unpinned / CQs node0:       7,471 / 10 sec
-> >     node0 pinned / CQs node0:     713 / 10 sec
-> >     unpinned / balanced CQs:    1,503 / 10 sec
-> > 
-> > compared with fewer than 100 in Chuck's test.
-> > 
-> > I understand that cmpxchg_double_fail counts failed slab freelist
-> > updates rather than failed logical frees, so I am not sure what the
-> > appropriate denominator is here. In particular, the node0/node0 case
-> > still has 713 failures while sustaining full throughput and only 2,814
-> > free_slowpath events over the interval.
-> > 
-> > My questions are:
-> > 
-> > 1. Do the uninstrumented cmpxchg_double_fail rates above look abnormal
-> >    for this workload/topology, or are they within the range one would
-> >    expect from this degree of concurrency and NUMA placement?
-> > 
-> > 2. Is there a less invasive way you would recommend measuring the
-> >    nfs_page list_lock/freelist contention? I would like to distinguish
-> >    the steady-state behavior from what is observed during the perf-lock
-> >    capture.
-> > 
-> > Thanks,
-> > Tim
-
+diff --git a/Documentation/devicetree/bindings/display/atmel,lcdc-display.yaml b/Documentation/devicetree/bindings/display/atmel,lcdc-display.yaml
+index a5cf040ab4ea..51aa13f6a348 100644
+--- a/Documentation/devicetree/bindings/display/atmel,lcdc-display.yaml
++++ b/Documentation/devicetree/bindings/display/atmel,lcdc-display.yaml
+@@ -23,9 +23,12 @@ description:
+ 
+ select:
+   anyOf:
+-    - required: [ 'atmel,dmacon' ]
+-    - required: [ 'atmel,lcdcon2' ]
+-    - required: [ 'atmel,guard-time' ]
++    - required:
++        - atmel,dmacon
++    - required:
++        - atmel,lcdcon2
++    - required:
++        - atmel,guard-time
+ 
+ properties:
+   atmel,dmacon:
+diff --git a/Documentation/devicetree/bindings/eeprom/at24.yaml b/Documentation/devicetree/bindings/eeprom/at24.yaml
+index ef88f46928a4..6d9167cfd12d 100644
+--- a/Documentation/devicetree/bindings/eeprom/at24.yaml
++++ b/Documentation/devicetree/bindings/eeprom/at24.yaml
+@@ -20,7 +20,9 @@ select:
+       contains:
+         anyOf:
+           - pattern: "^atmel,(24(c|cs|mac)[0-9]+|spd)$"
+-          - enum: ["microchip,24aa025e48", "microchip,24aa025e64"]
++          - enum:
++              - microchip,24aa025e48
++              - microchip,24aa025e64
+   required:
+     - compatible
+ 
+diff --git a/Documentation/devicetree/bindings/example-schema.yaml b/Documentation/devicetree/bindings/example-schema.yaml
+index b04f3cc4312c..4ff46f1384b9 100644
+--- a/Documentation/devicetree/bindings/example-schema.yaml
++++ b/Documentation/devicetree/bindings/example-schema.yaml
+@@ -206,10 +206,12 @@ properties:
+ dependencies:
+   # 'vendor,bool-property' is only allowed when 'vendor,string-array-property'
+   # is present
+-  vendor,bool-property: [ 'vendor,string-array-property' ]
++  vendor,bool-property:
++    - vendor,string-array-property
+   # Expressing 2 properties in both orders means all of the set of properties
+   # must be present or none of them.
+-  vendor,string-array-property: [ 'vendor,bool-property' ]
++  vendor,string-array-property:
++    - vendor,bool-property
+ 
+ required:
+   - compatible
+diff --git a/Documentation/devicetree/bindings/hwmon/pmbus/adi,max20830.yaml b/Documentation/devicetree/bindings/hwmon/pmbus/adi,max20830.yaml
+index cc50a4ee44a2..7904dacff789 100644
+--- a/Documentation/devicetree/bindings/hwmon/pmbus/adi,max20830.yaml
++++ b/Documentation/devicetree/bindings/hwmon/pmbus/adi,max20830.yaml
+@@ -67,8 +67,10 @@ required:
+   - vddh-supply
+ 
+ dependencies:
+-  adi,vout-rfb1-ohms: ['adi,vout-rfb2-ohms']
+-  adi,vout-rfb2-ohms: ['adi,vout-rfb1-ohms']
++  adi,vout-rfb1-ohms:
++    - adi,vout-rfb2-ohms
++  adi,vout-rfb2-ohms:
++    - adi,vout-rfb1-ohms
+ 
+ unevaluatedProperties: false
+ 
+diff --git a/Documentation/devicetree/bindings/iio/adc/ti,ads112c14.yaml b/Documentation/devicetree/bindings/iio/adc/ti,ads112c14.yaml
+index facfeee61330..6dd59552a41f 100644
+--- a/Documentation/devicetree/bindings/iio/adc/ti,ads112c14.yaml
++++ b/Documentation/devicetree/bindings/iio/adc/ti,ads112c14.yaml
+@@ -132,8 +132,10 @@ dependencies:
+   refn-supply: [ refp-supply ]
+ 
+ oneOf:
+-  - required: [ refp-supply ]
+-  - required: [ "ti,refp-refn-resistor-ohms" ]
++  - required:
++      - refp-supply
++  - required:
++      - ti,refp-refn-resistor-ohms
+   - properties:
+       refp-supply: false
+       refn-supply: false
+diff --git a/Documentation/devicetree/bindings/iio/frequency/adi,adf41513.yaml b/Documentation/devicetree/bindings/iio/frequency/adi,adf41513.yaml
+index f4fae9210382..c71ebc039af2 100644
+--- a/Documentation/devicetree/bindings/iio/frequency/adi,adf41513.yaml
++++ b/Documentation/devicetree/bindings/iio/frequency/adi,adf41513.yaml
+@@ -166,7 +166,8 @@ properties:
+     type: boolean
+ 
+ dependencies:
+-  adi,charge-pump-resistor-ohms: [ 'adi,charge-pump-current-microamp' ]
++  adi,charge-pump-resistor-ohms:
++    - adi,charge-pump-current-microamp
+ 
+ required:
+   - compatible
+diff --git a/Documentation/devicetree/bindings/iio/frequency/adi,adrf6780.yaml b/Documentation/devicetree/bindings/iio/frequency/adi,adrf6780.yaml
+index f11391ab4b62..2bb3ddd252c9 100644
+--- a/Documentation/devicetree/bindings/iio/frequency/adi,adrf6780.yaml
++++ b/Documentation/devicetree/bindings/iio/frequency/adi,adrf6780.yaml
+@@ -104,8 +104,10 @@ properties:
+     const: 0
+ 
+ dependencies:
+-  adi,lo-x2-en: [ "adi,lo-en" ]
+-  adi,lo-ppf-en: [ "adi,lo-en" ]
++  adi,lo-x2-en:
++    - adi,lo-en
++  adi,lo-ppf-en:
++    - adi,lo-en
+ 
+ required:
+   - compatible
+diff --git a/Documentation/devicetree/bindings/iio/temperature/adi,ltc2983.yaml b/Documentation/devicetree/bindings/iio/temperature/adi,ltc2983.yaml
+index 13e5f29f0588..19fc978deb76 100644
+--- a/Documentation/devicetree/bindings/iio/temperature/adi,ltc2983.yaml
++++ b/Documentation/devicetree/bindings/iio/temperature/adi,ltc2983.yaml
+@@ -284,7 +284,8 @@ patternProperties:
+               type: boolean
+ 
+           dependencies:
+-            adi,current-rotate: [ 'adi,rsense-share' ]
++            adi,current-rotate:
++              - adi,rsense-share
+ 
+       - if:
+           properties:
+@@ -368,7 +369,8 @@ patternProperties:
+       - adi,rsense-handle
+ 
+     dependencies:
+-      adi,current-rotate: [ 'adi,rsense-share' ]
++      adi,current-rotate:
++        - adi,rsense-share
+ 
+     allOf:
+       - if:
+diff --git a/Documentation/devicetree/bindings/input/azoteq,iqs7222.yaml b/Documentation/devicetree/bindings/input/azoteq,iqs7222.yaml
+index 418c168b223b..5043ed4cbd5c 100644
+--- a/Documentation/devicetree/bindings/input/azoteq,iqs7222.yaml
++++ b/Documentation/devicetree/bindings/input/azoteq,iqs7222.yaml
+@@ -396,8 +396,10 @@ patternProperties:
+         description: Specifies the cycle's current reference trim.
+ 
+     dependencies:
+-      azoteq,iref-level: ["azoteq,iref-enable"]
+-      azoteq,iref-trim: ["azoteq,iref-enable"]
++      azoteq,iref-level:
++        - azoteq,iref-enable
++      azoteq,iref-trim:
++        - azoteq,iref-enable
+ 
+     additionalProperties: false
+ 
+@@ -627,8 +629,10 @@ patternProperties:
+         additionalProperties: false
+ 
+     dependencies:
+-      azoteq,ref-weight: ["azoteq,ref-select"]
+-      azoteq,use-prox: ["azoteq,ref-select"]
++      azoteq,ref-weight:
++        - azoteq,ref-select
++      azoteq,use-prox:
++        - azoteq,ref-select
+ 
+     additionalProperties: false
+ 
+diff --git a/Documentation/devicetree/bindings/input/google,cros-ec-keyb.yaml b/Documentation/devicetree/bindings/input/google,cros-ec-keyb.yaml
+index fefaaf46a240..a8e61ad5b52a 100644
+--- a/Documentation/devicetree/bindings/input/google,cros-ec-keyb.yaml
++++ b/Documentation/devicetree/bindings/input/google,cros-ec-keyb.yaml
+@@ -45,8 +45,10 @@ properties:
+       when the keyboard has a custom design for the top row keys.
+ 
+ dependencies:
+-  function-row-physmap: [ 'linux,keymap' ]
+-  google,needs-ghost-filter: [ 'linux,keymap' ]
++  function-row-physmap:
++    - linux,keymap
++  google,needs-ghost-filter:
++    - linux,keymap
+ 
+ required:
+   - compatible
+diff --git a/Documentation/devicetree/bindings/input/input.yaml b/Documentation/devicetree/bindings/input/input.yaml
+index 64d1c46cb2f2..7181af1ac8c2 100644
+--- a/Documentation/devicetree/bindings/input/input.yaml
++++ b/Documentation/devicetree/bindings/input/input.yaml
+@@ -75,6 +75,7 @@ properties:
+     default: 0
+ 
+ dependencies:
+-  linux,input-type: [ "linux,code" ]
++  linux,input-type:
++    - linux,code
+ 
+ additionalProperties: true
+diff --git a/Documentation/devicetree/bindings/input/iqs269a.yaml b/Documentation/devicetree/bindings/input/iqs269a.yaml
+index 2c3f693b8982..e77702feaeca 100644
+--- a/Documentation/devicetree/bindings/input/iqs269a.yaml
++++ b/Documentation/devicetree/bindings/input/iqs269a.yaml
+@@ -272,10 +272,14 @@ properties:
+       in order to be interpreted as a flick or swipe.
+ 
+ dependencies:
+-  azoteq,gesture-swipe: ["linux,keycodes"]
+-  azoteq,timeout-tap-ms: ["linux,keycodes"]
+-  azoteq,timeout-swipe-ms: ["linux,keycodes"]
+-  azoteq,thresh-swipe: ["linux,keycodes"]
++  azoteq,gesture-swipe:
++    - linux,keycodes
++  azoteq,timeout-tap-ms:
++    - linux,keycodes
++  azoteq,timeout-swipe-ms:
++    - linux,keycodes
++  azoteq,thresh-swipe:
++    - linux,keycodes
+ 
+ patternProperties:
+   "^channel@[0-7]$":
+diff --git a/Documentation/devicetree/bindings/input/iqs626a.yaml b/Documentation/devicetree/bindings/input/iqs626a.yaml
+index e424d67b0542..534ee0742fdb 100644
+--- a/Documentation/devicetree/bindings/input/iqs626a.yaml
++++ b/Documentation/devicetree/bindings/input/iqs626a.yaml
+@@ -500,7 +500,8 @@ patternProperties:
+         additionalProperties: false
+ 
+     dependencies:
+-      azoteq,assoc-weight: ["azoteq,assoc-select"]
++      azoteq,assoc-weight:
++        - azoteq,assoc-select
+ 
+     additionalProperties: false
+ 
+@@ -722,10 +723,14 @@ patternProperties:
+         additionalProperties: false
+ 
+     dependencies:
+-      azoteq,gesture-swipe: ["linux,keycodes"]
+-      azoteq,timeout-tap-ms: ["linux,keycodes"]
+-      azoteq,timeout-swipe-ms: ["linux,keycodes"]
+-      azoteq,thresh-swipe: ["linux,keycodes"]
++      azoteq,gesture-swipe:
++        - linux,keycodes
++      azoteq,timeout-tap-ms:
++        - linux,keycodes
++      azoteq,timeout-swipe-ms:
++        - linux,keycodes
++      azoteq,thresh-swipe:
++        - linux,keycodes
+ 
+     additionalProperties: false
+ 
+diff --git a/Documentation/devicetree/bindings/input/touchscreen/azoteq,iqs7211.yaml b/Documentation/devicetree/bindings/input/touchscreen/azoteq,iqs7211.yaml
+index e4dbbafb3779..bb5407649717 100644
+--- a/Documentation/devicetree/bindings/input/touchscreen/azoteq,iqs7211.yaml
++++ b/Documentation/devicetree/bindings/input/touchscreen/azoteq,iqs7211.yaml
+@@ -347,9 +347,12 @@ properties:
+         additionalProperties: false
+ 
+     dependencies:
+-      azoteq,rx-enable: ["azoteq,tx-enable"]
+-      azoteq,tx-enable: ["azoteq,rx-enable"]
+-      azoteq,channel-select: ["azoteq,rx-enable"]
++      azoteq,rx-enable:
++        - azoteq,tx-enable
++      azoteq,tx-enable:
++        - azoteq,rx-enable
++      azoteq,channel-select:
++        - azoteq,rx-enable
+ 
+     additionalProperties: false
+ 
+@@ -592,11 +595,16 @@ properties:
+   touchscreen-swapped-x-y: true
+ 
+ dependencies:
+-  touchscreen-size-x: ["azoteq,num-contacts"]
+-  touchscreen-size-y: ["azoteq,num-contacts"]
+-  touchscreen-inverted-x: ["azoteq,num-contacts"]
+-  touchscreen-inverted-y: ["azoteq,num-contacts"]
+-  touchscreen-swapped-x-y: ["azoteq,num-contacts"]
++  touchscreen-size-x:
++    - azoteq,num-contacts
++  touchscreen-size-y:
++    - azoteq,num-contacts
++  touchscreen-inverted-x:
++    - azoteq,num-contacts
++  touchscreen-inverted-y:
++    - azoteq,num-contacts
++  touchscreen-swapped-x-y:
++    - azoteq,num-contacts
+ 
+ required:
+   - compatible
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/riscv,aplic.yaml b/Documentation/devicetree/bindings/interrupt-controller/riscv,aplic.yaml
+index 0718071444d2..20a52bd25bd8 100644
+--- a/Documentation/devicetree/bindings/interrupt-controller/riscv,aplic.yaml
++++ b/Documentation/devicetree/bindings/interrupt-controller/riscv,aplic.yaml
+@@ -101,7 +101,8 @@ properties:
+       that is mentioned in the "interrupts-extended"
+ 
+ dependencies:
+-  riscv,delegation: [ "riscv,children" ]
++  riscv,delegation:
++    - riscv,children
+ 
+ required:
+   - compatible
+diff --git a/Documentation/devicetree/bindings/mfd/maxim,max8998.yaml b/Documentation/devicetree/bindings/mfd/maxim,max8998.yaml
+index f3c3f64fd012..a4fd1805b13f 100644
+--- a/Documentation/devicetree/bindings/mfd/maxim,max8998.yaml
++++ b/Documentation/devicetree/bindings/mfd/maxim,max8998.yaml
+@@ -130,8 +130,10 @@ properties:
+           - regulator-name
+ 
+ dependencies:
+-  max8998,pmic-buck1-dvs-gpios: [ "max8998,pmic-buck1-dvs-voltage" ]
+-  max8998,pmic-buck2-dvs-gpio: [ "max8998,pmic-buck2-dvs-voltage" ]
++  max8998,pmic-buck1-dvs-gpios:
++    - max8998,pmic-buck1-dvs-voltage
++  max8998,pmic-buck2-dvs-gpio:
++    - max8998,pmic-buck2-dvs-voltage
+ 
+ required:
+   - compatible
+diff --git a/Documentation/devicetree/bindings/mfd/samsung,s5m8767.yaml b/Documentation/devicetree/bindings/mfd/samsung,s5m8767.yaml
+index 249248078c59..df0640423757 100644
+--- a/Documentation/devicetree/bindings/mfd/samsung,s5m8767.yaml
++++ b/Documentation/devicetree/bindings/mfd/samsung,s5m8767.yaml
+@@ -143,12 +143,21 @@ required:
+   - s5m8767,pmic-buck-ds-gpios
+ 
+ dependencies:
+-  s5m8767,pmic-buck2-dvs-voltage: [ 's5m8767,pmic-buck-dvs-gpios' ]
+-  s5m8767,pmic-buck3-dvs-voltage: [ 's5m8767,pmic-buck-dvs-gpios' ]
+-  s5m8767,pmic-buck4-dvs-voltage: [ 's5m8767,pmic-buck-dvs-gpios' ]
+-  s5m8767,pmic-buck2-uses-gpio-dvs: [ 's5m8767,pmic-buck-dvs-gpios', 's5m8767,pmic-buck2-dvs-voltage' ]
+-  s5m8767,pmic-buck3-uses-gpio-dvs: [ 's5m8767,pmic-buck-dvs-gpios', 's5m8767,pmic-buck3-dvs-voltage' ]
+-  s5m8767,pmic-buck4-uses-gpio-dvs: [ 's5m8767,pmic-buck-dvs-gpios', 's5m8767,pmic-buck4-dvs-voltage' ]
++  s5m8767,pmic-buck2-dvs-voltage:
++    - s5m8767,pmic-buck-dvs-gpios
++  s5m8767,pmic-buck3-dvs-voltage:
++    - s5m8767,pmic-buck-dvs-gpios
++  s5m8767,pmic-buck4-dvs-voltage:
++    - s5m8767,pmic-buck-dvs-gpios
++  s5m8767,pmic-buck2-uses-gpio-dvs:
++    - s5m8767,pmic-buck-dvs-gpios
++    - s5m8767,pmic-buck2-dvs-voltage
++  s5m8767,pmic-buck3-uses-gpio-dvs:
++    - s5m8767,pmic-buck-dvs-gpios
++    - s5m8767,pmic-buck3-dvs-voltage
++  s5m8767,pmic-buck4-uses-gpio-dvs:
++    - s5m8767,pmic-buck-dvs-gpios
++    - s5m8767,pmic-buck4-dvs-voltage
+ 
+ additionalProperties: false
+ 
+diff --git a/Documentation/devicetree/bindings/mmc/arm,pl18x.yaml b/Documentation/devicetree/bindings/mmc/arm,pl18x.yaml
+index 8d62be4355a0..fec8ecbb56d5 100644
+--- a/Documentation/devicetree/bindings/mmc/arm,pl18x.yaml
++++ b/Documentation/devicetree/bindings/mmc/arm,pl18x.yaml
+@@ -168,9 +168,12 @@ properties:
+       The GPIO matching the CKIN pin.
+ 
+ dependencies:
+-  st,cmd-gpios: [ "st,use-ckin" ]
+-  st,ck-gpios: [ "st,use-ckin" ]
+-  st,ckin-gpios: [ "st,use-ckin" ]
++  st,cmd-gpios:
++    - st,use-ckin
++  st,ck-gpios:
++    - st,use-ckin
++  st,ckin-gpios:
++    - st,use-ckin
+ 
+ unevaluatedProperties: false
+ 
+diff --git a/Documentation/devicetree/bindings/mtd/amlogic,meson-nand.yaml b/Documentation/devicetree/bindings/mtd/amlogic,meson-nand.yaml
+index fa2aa29be794..00079edc7dd3 100644
+--- a/Documentation/devicetree/bindings/mtd/amlogic,meson-nand.yaml
++++ b/Documentation/devicetree/bindings/mtd/amlogic,meson-nand.yaml
+@@ -85,8 +85,12 @@ patternProperties:
+     dependencies:
+       nand-ecc-strength: [nand-ecc-step-size]
+       nand-ecc-step-size: [nand-ecc-strength]
+-      amlogic,boot-pages: [nand-is-boot-medium, "amlogic,boot-page-step"]
+-      amlogic,boot-page-step: [nand-is-boot-medium, "amlogic,boot-pages"]
++      amlogic,boot-pages:
++        - nand-is-boot-medium
++        - amlogic,boot-page-step
++      amlogic,boot-page-step:
++        - nand-is-boot-medium
++        - amlogic,boot-pages
+ 
+ required:
+   - compatible
+diff --git a/Documentation/devicetree/bindings/net/snps,dwmac.yaml b/Documentation/devicetree/bindings/net/snps,dwmac.yaml
+index 2449311c6d28..8eb84942ce3f 100644
+--- a/Documentation/devicetree/bindings/net/snps,dwmac.yaml
++++ b/Documentation/devicetree/bindings/net/snps,dwmac.yaml
+@@ -605,8 +605,10 @@ required:
+   - phy-mode
+ 
+ dependencies:
+-  snps,reset-active-low: ["snps,reset-gpio"]
+-  snps,reset-delays-us: ["snps,reset-gpio"]
++  snps,reset-active-low:
++    - snps,reset-gpio
++  snps,reset-delays-us:
++    - snps,reset-gpio
+ 
+ allOf:
+   - $ref: ethernet-controller.yaml#
+diff --git a/Documentation/devicetree/bindings/pci/brcm,iproc-pcie.yaml b/Documentation/devicetree/bindings/pci/brcm,iproc-pcie.yaml
+index 18e7981241b5..2f1be6420e23 100644
+--- a/Documentation/devicetree/bindings/pci/brcm,iproc-pcie.yaml
++++ b/Documentation/devicetree/bindings/pci/brcm,iproc-pcie.yaml
+@@ -82,7 +82,8 @@ properties:
+   msi-parent: true
+ 
+ dependencies:
+-  brcm,pcie-ob-axi-offset: ["brcm,pcie-ob"]
++  brcm,pcie-ob-axi-offset:
++    - brcm,pcie-ob
+   brcm,pcie-msi-inten: [msi-controller]
+ 
+ required:
+diff --git a/Documentation/devicetree/bindings/perf/riscv,pmu.yaml b/Documentation/devicetree/bindings/perf/riscv,pmu.yaml
+index d01c677ad3c7..aa2ccf00d136 100644
+--- a/Documentation/devicetree/bindings/perf/riscv,pmu.yaml
++++ b/Documentation/devicetree/bindings/perf/riscv,pmu.yaml
+@@ -90,7 +90,8 @@ properties:
+             bitmap of all MHPMCOUNTERx that can monitor the range of events
+ 
+ dependencies:
+-  riscv,event-to-mhpmevent: [ "riscv,event-to-mhpmcounters" ]
++  riscv,event-to-mhpmevent:
++    - riscv,event-to-mhpmcounters
+ 
+ required:
+   - compatible
+diff --git a/Documentation/devicetree/bindings/phy/hisilicon,hi3798cv200-combphy.yaml b/Documentation/devicetree/bindings/phy/hisilicon,hi3798cv200-combphy.yaml
+index 81001966f657..2040723f5297 100644
+--- a/Documentation/devicetree/bindings/phy/hisilicon,hi3798cv200-combphy.yaml
++++ b/Documentation/devicetree/bindings/phy/hisilicon,hi3798cv200-combphy.yaml
+@@ -48,8 +48,10 @@ required:
+   - resets
+ 
+ oneOf:
+-  - required: ['hisilicon,fixed-mode']
+-  - required: ['hisilicon,mode-select-bits']
++  - required:
++      - hisilicon,fixed-mode
++  - required:
++      - hisilicon,mode-select-bits
+ 
+ additionalProperties: false
+ 
+diff --git a/Documentation/devicetree/bindings/phy/nvidia,tegra20-usb-phy.yaml b/Documentation/devicetree/bindings/phy/nvidia,tegra20-usb-phy.yaml
+index a37e8322dc50..90eba0e6ecdb 100644
+--- a/Documentation/devicetree/bindings/phy/nvidia,tegra20-usb-phy.yaml
++++ b/Documentation/devicetree/bindings/phy/nvidia,tegra20-usb-phy.yaml
+@@ -251,8 +251,10 @@ allOf:
+         - nvidia,xcvr-lsrslew
+ 
+       anyOf:
+-        - required: ["nvidia,xcvr-setup"]
+-        - required: ["nvidia,xcvr-setup-use-fuses"]
++        - required:
++            - nvidia,xcvr-setup
++        - required:
++            - nvidia,xcvr-setup-use-fuses
+ 
+       if:
+         properties:
+diff --git a/Documentation/devicetree/bindings/regulator/adi,max77857.yaml b/Documentation/devicetree/bindings/regulator/adi,max77857.yaml
+index d1fa74aca721..4191c5f3dcd0 100644
+--- a/Documentation/devicetree/bindings/regulator/adi,max77857.yaml
++++ b/Documentation/devicetree/bindings/regulator/adi,max77857.yaml
+@@ -43,8 +43,10 @@ properties:
+     description: Bottom feedback resistor value in ohms for external feedback.
+ 
+ dependencies:
+-  adi,rtop-ohms: [ 'adi,rbot-ohms' ]
+-  adi,rbot-ohms: [ 'adi,rtop-ohms' ]
++  adi,rtop-ohms:
++    - adi,rbot-ohms
++  adi,rbot-ohms:
++    - adi,rtop-ohms
+ 
+ required:
+   - compatible
+diff --git a/Documentation/devicetree/bindings/regulator/maxim,max8997.yaml b/Documentation/devicetree/bindings/regulator/maxim,max8997.yaml
+index 2b266ea43716..acc493840588 100644
+--- a/Documentation/devicetree/bindings/regulator/maxim,max8997.yaml
++++ b/Documentation/devicetree/bindings/regulator/maxim,max8997.yaml
+@@ -251,9 +251,12 @@ required:
+   - regulators
+ 
+ dependencies:
+-  max8997,pmic-buck1-uses-gpio-dvs: [ 'max8997,pmic-buck125-dvs-gpios' ]
+-  max8997,pmic-buck2-uses-gpio-dvs: [ 'max8997,pmic-buck125-dvs-gpios' ]
+-  max8997,pmic-buck5-uses-gpio-dvs: [ 'max8997,pmic-buck125-dvs-gpios' ]
++  max8997,pmic-buck1-uses-gpio-dvs:
++    - max8997,pmic-buck125-dvs-gpios
++  max8997,pmic-buck2-uses-gpio-dvs:
++    - max8997,pmic-buck125-dvs-gpios
++  max8997,pmic-buck5-uses-gpio-dvs:
++    - max8997,pmic-buck125-dvs-gpios
+ 
+ additionalProperties: false
+ 
+diff --git a/Documentation/devicetree/bindings/regulator/samsung,s2mpg10-regulator.yaml b/Documentation/devicetree/bindings/regulator/samsung,s2mpg10-regulator.yaml
+index 7252f94b3a8f..506b61175ae9 100644
+--- a/Documentation/devicetree/bindings/regulator/samsung,s2mpg10-regulator.yaml
++++ b/Documentation/devicetree/bindings/regulator/samsung,s2mpg10-regulator.yaml
+@@ -139,7 +139,8 @@ $defs:
+           property describes the GPIO line used.
+ 
+     dependentRequired:
+-      enable-gpios: [ "samsung,ext-control" ]
++      enable-gpios:
++        - samsung,ext-control
+ 
+ allOf:
+   # Bucks 8, 9, and LDO 1 can not be controlled externally - above definition
+diff --git a/Documentation/devicetree/bindings/regulator/samsung,s2mpg11-regulator.yaml b/Documentation/devicetree/bindings/regulator/samsung,s2mpg11-regulator.yaml
+index 119386325d1b..3a8a2945efd7 100644
+--- a/Documentation/devicetree/bindings/regulator/samsung,s2mpg11-regulator.yaml
++++ b/Documentation/devicetree/bindings/regulator/samsung,s2mpg11-regulator.yaml
+@@ -116,7 +116,8 @@ $defs:
+           property describes the GPIO line used.
+ 
+     dependentRequired:
+-      enable-gpios: [ "samsung,ext-control" ]
++      enable-gpios:
++        - samsung,ext-control
+ 
+ allOf:
+   # Bucks 4, 6, 7 and 10 can not be controlled externally - above definition
+diff --git a/Documentation/devicetree/bindings/regulator/ti,tps65132.yaml b/Documentation/devicetree/bindings/regulator/ti,tps65132.yaml
+index 873d92738eb0..f120f82398dc 100644
+--- a/Documentation/devicetree/bindings/regulator/ti,tps65132.yaml
++++ b/Documentation/devicetree/bindings/regulator/ti,tps65132.yaml
+@@ -48,7 +48,8 @@ patternProperties:
+         description: Regulator active discharge time in microseconds.
+ 
+     dependencies:
+-      active-discharge-gpios: [ 'ti,active-discharge-time-us' ]
++      active-discharge-gpios:
++        - ti,active-discharge-time-us
+ 
+ required:
+   - compatible
+diff --git a/Documentation/devicetree/bindings/riscv/cpus.yaml b/Documentation/devicetree/bindings/riscv/cpus.yaml
+index 5feeb2203050..26914597d049 100644
+--- a/Documentation/devicetree/bindings/riscv/cpus.yaml
++++ b/Documentation/devicetree/bindings/riscv/cpus.yaml
+@@ -151,8 +151,10 @@ anyOf:
+       - riscv,isa-base
+ 
+ dependencies:
+-  riscv,isa-base: [ "riscv,isa-extensions" ]
+-  riscv,isa-extensions: [ "riscv,isa-base" ]
++  riscv,isa-base:
++    - riscv,isa-extensions
++  riscv,isa-extensions:
++    - riscv,isa-base
+ 
+ required:
+   - interrupt-controller
+diff --git a/Documentation/devicetree/bindings/rtc/abracon,abx80x.yaml b/Documentation/devicetree/bindings/rtc/abracon,abx80x.yaml
+index 355b0598411a..9990de48bdd3 100644
+--- a/Documentation/devicetree/bindings/rtc/abracon,abx80x.yaml
++++ b/Documentation/devicetree/bindings/rtc/abracon,abx80x.yaml
+@@ -53,8 +53,10 @@ properties:
+     enum: [0, 3, 6, 11]
+ 
+ dependentRequired:
+-  abracon,tc-diode: ["abracon,tc-resistor"]
+-  abracon,tc-resistor: ["abracon,tc-diode"]
++  abracon,tc-diode:
++    - abracon,tc-resistor
++  abracon,tc-resistor:
++    - abracon,tc-diode
+ 
+ required:
+   - compatible
+diff --git a/Documentation/devicetree/bindings/soc/tegra/nvidia,tegra20-pmc.yaml b/Documentation/devicetree/bindings/soc/tegra/nvidia,tegra20-pmc.yaml
+index f516960dbbef..819adf7e005e 100644
+--- a/Documentation/devicetree/bindings/soc/tegra/nvidia,tegra20-pmc.yaml
++++ b/Documentation/devicetree/bindings/soc/tegra/nvidia,tegra20-pmc.yaml
+@@ -365,9 +365,13 @@ allOf:
+ additionalProperties: false
+ 
+ dependencies:
+-  nvidia,suspend-mode: ['nvidia,core-pwr-off-time', 'nvidia,cpu-pwr-off-time']
+-  nvidia,core-pwr-off-time: ['nvidia,core-pwr-good-time']
+-  nvidia,cpu-pwr-off-time: ['nvidia,cpu-pwr-good-time']
++  nvidia,suspend-mode:
++    - nvidia,core-pwr-off-time
++    - nvidia,cpu-pwr-off-time
++  nvidia,core-pwr-off-time:
++    - nvidia,core-pwr-good-time
++  nvidia,cpu-pwr-off-time:
++    - nvidia,cpu-pwr-good-time
+ 
+ examples:
+   - |
+diff --git a/Documentation/devicetree/bindings/sound/ti,tlv320adc3xxx.yaml b/Documentation/devicetree/bindings/sound/ti,tlv320adc3xxx.yaml
+index 66b76656229f..4e02f2dc5aa8 100644
+--- a/Documentation/devicetree/bindings/sound/ti,tlv320adc3xxx.yaml
++++ b/Documentation/devicetree/bindings/sound/ti,tlv320adc3xxx.yaml
+@@ -125,8 +125,10 @@ properties:
+       Mic bias voltage output on MICBIAS2 pin
+ 
+ dependencies:
+-  ti,micbias1-gpo: ['ti,micbias1-vg']
+-  ti,micbias2-gpo: ['ti,micbias2-vg']
++  ti,micbias1-gpo:
++    - ti,micbias1-vg
++  ti,micbias2-gpo:
++    - ti,micbias2-vg
+ 
+ required:
+   - compatible
+diff --git a/Documentation/devicetree/bindings/sound/wlf,wm8904.yaml b/Documentation/devicetree/bindings/sound/wlf,wm8904.yaml
+index 3029a868e5e1..eb0cf2002865 100644
+--- a/Documentation/devicetree/bindings/sound/wlf,wm8904.yaml
++++ b/Documentation/devicetree/bindings/sound/wlf,wm8904.yaml
+@@ -107,12 +107,20 @@ properties:
+       maxItems: 24
+ 
+ dependencies:
+-  wlf,drc-cfg-names: [ 'wlf,drc-cfg-regs' ]
+-  wlf,drc-cfg-regs: [ 'wlf,drc-cfg-names' ]
++  wlf,drc-cfg-names:
++    - wlf,drc-cfg-regs
++  wlf,drc-cfg-regs:
++    - wlf,drc-cfg-names
+ 
+-  wlf,retune-mobile-cfg-names: [ 'wlf,retune-mobile-cfg-hz', 'wlf,retune-mobile-cfg-regs' ]
+-  wlf,retune-mobile-cfg-regs: [ 'wlf,retune-mobile-cfg-names', 'wlf,retune-mobile-cfg-hz' ]
+-  wlf,retune-mobile-cfg-hz: [ 'wlf,retune-mobile-cfg-names', 'wlf,retune-mobile-cfg-regs' ]
++  wlf,retune-mobile-cfg-names:
++    - wlf,retune-mobile-cfg-hz
++    - wlf,retune-mobile-cfg-regs
++  wlf,retune-mobile-cfg-regs:
++    - wlf,retune-mobile-cfg-names
++    - wlf,retune-mobile-cfg-hz
++  wlf,retune-mobile-cfg-hz:
++    - wlf,retune-mobile-cfg-names
++    - wlf,retune-mobile-cfg-regs
+ 
+ required:
+   - compatible
+diff --git a/Documentation/devicetree/bindings/tpm/tpm-common.yaml b/Documentation/devicetree/bindings/tpm/tpm-common.yaml
+index 3c1241b2a43f..b8853c39ebbf 100644
+--- a/Documentation/devicetree/bindings/tpm/tpm-common.yaml
++++ b/Documentation/devicetree/bindings/tpm/tpm-common.yaml
+@@ -50,8 +50,10 @@ properties:
+ 
+ # must always have both linux,sml-base and linux,sml-size
+ dependentRequired:
+-  linux,sml-base: ['linux,sml-size']
+-  linux,sml-size: ['linux,sml-base']
++  linux,sml-base:
++    - linux,sml-size
++  linux,sml-size:
++    - linux,sml-base
+ 
+ # must only have either memory-region or linux,sml-base
+ # as well as either resets or reset-gpios
+diff --git a/Documentation/devicetree/bindings/usb/mediatek,mtk-xhci.yaml b/Documentation/devicetree/bindings/usb/mediatek,mtk-xhci.yaml
+index 231e6f35a986..af13035f94dc 100644
+--- a/Documentation/devicetree/bindings/usb/mediatek,mtk-xhci.yaml
++++ b/Documentation/devicetree/bindings/usb/mediatek,mtk-xhci.yaml
+@@ -194,7 +194,8 @@ patternProperties:
+     description: The hard wired USB devices.
+ 
+ dependencies:
+-  wakeup-source: [ 'mediatek,syscon-wakeup' ]
++  wakeup-source:
++    - mediatek,syscon-wakeup
+ 
+ required:
+   - compatible
+diff --git a/Documentation/devicetree/bindings/usb/mediatek,mtu3.yaml b/Documentation/devicetree/bindings/usb/mediatek,mtu3.yaml
+index d148e938d647..27d512ada717 100644
+--- a/Documentation/devicetree/bindings/usb/mediatek,mtu3.yaml
++++ b/Documentation/devicetree/bindings/usb/mediatek,mtu3.yaml
+@@ -227,10 +227,14 @@ patternProperties:
+       example if the host mode is enabled.
+ 
+ dependencies:
+-  connector: [ usb-role-switch ]
+-  port: [ usb-role-switch ]
+-  role-switch-default-mode: [ usb-role-switch ]
+-  wakeup-source: [ 'mediatek,syscon-wakeup' ]
++  connector:
++    - usb-role-switch
++  port:
++    - usb-role-switch
++  role-switch-default-mode:
++    - usb-role-switch
++  wakeup-source:
++    - mediatek,syscon-wakeup
+ 
+ required:
+   - compatible
+diff --git a/Documentation/devicetree/bindings/watchdog/atmel,at91sam9-wdt.yaml b/Documentation/devicetree/bindings/watchdog/atmel,at91sam9-wdt.yaml
+index ad27bc518670..fea4f510aa6c 100644
+--- a/Documentation/devicetree/bindings/watchdog/atmel,at91sam9-wdt.yaml
++++ b/Documentation/devicetree/bindings/watchdog/atmel,at91sam9-wdt.yaml
+@@ -104,7 +104,8 @@ allOf:
+           const: hardware
+ 
+ dependencies:
+-  atmel,reset-type: ['atmel,watchdog-type']
++  atmel,reset-type:
++    - atmel,watchdog-type
+ 
+ unevaluatedProperties: false
+ 
 -- 
-Cheers,
-Harry / Hyeonggon
+2.43.0
+
