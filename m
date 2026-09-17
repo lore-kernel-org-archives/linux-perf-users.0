@@ -1,58 +1,146 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f72.google.com (mail-pj1-f72.google.com [209.85.216.72])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00C2E36F8EF
-	for <linux-perf-users@vger.kernel.org>; Thu, 17 Sep 2026 04:06:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3F103E40F1
+	for <linux-perf-users@vger.kernel.org>; Thu, 17 Sep 2026 04:53:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789617996; cv=none; b=bD9a4km2c/+R9XEzOyYJDDDpIngHNIcI2dxjzTr5LSCoUXY6ouKJzbKOAogI2VJ9gNm+fpB9kNzOH3SVaVGWmmjiZdUjqpwrPsC0I2whB7q5UR0VG/Bbpe+Yi6KAbvKCkgkDBg0YfyEFKHLGUGpr2YnUYK8gjno/6OVgkYJfL5Q=
+	t=1789620817; cv=none; b=m+ommXTOFeqZ5Mibijc0Rduj4ShjG13PjUu4Paq8JWRWFAxcXpSFgoLf+CnRxhV8ZU5zShymZLXiTdTmKbDLwwtmkh8f+PZrnJm7MFLh5lSfDM0ccZHEdHXQCtS5Z7RMYmQgBSy5zdI3O5kQCRr1/KXKywUbaC9V5RunDls0xyc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789617996; c=relaxed/simple;
-	bh=hfAFe6WW94xYWMj7rDZjIofFoSinLJRQteId9VzsTzk=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=OHlpyRt9jZgDRqXhdZd4CVMer5xZxluVijktVTDchdAX7AET0PVbjl+bV2SFeY2JBOtiWZ/ULtVrQ/GaNyo2Eixan9AO/yR+46+qHQWY6kPAy8nuMWOrmOdMBZHr3FeiiPzNvqk+oW8wqOizybmVUknEfWjKzdRPM/kqRsk0vE4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hDfgWJae; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1789620817; c=relaxed/simple;
+	bh=4KvZJH6YRwPglA9o3nI6z1rEnSsw3vH+LveBOSJFiwY=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=r+/fiBOnsgjcHZOiIQZAQqAAsgHfDgWNaxafhRPwfftkRlCZOHpKr8cVvp7ra+DNPKjE3PForfv8jdECSo8peeM+whEYrX9w2pFRidT07JWfsC9DRNZnYOaEjV9kGvNUVXthqesxsmI3LG+gakUJvwShlQ2yqM4das7TZq0Jby4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=W8oTM/0X; arc=none smtp.client-ip=209.85.216.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hDfgWJae"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5A2761F00893;
-	Thu, 17 Sep 2026 04:06:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789617994;
-	bh=hfAFe6WW94xYWMj7rDZjIofFoSinLJRQteId9VzsTzk=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=hDfgWJaeny4qFkjYvNTUqjGM7P3q+x0mvrupWsG64nJRZR5lVqPRXZYHpdkoq9VcU
-	 inKuj827836t9WpzZRlp1gorM0pAOUgkzzZgCSpmYx3F8z1HVI3b3IAQXVCoKMKxr2
-	 V6POz5yCwms51zQMs1rPj/MnVz9fEHKQH59PW6i/hA2kgnCVVsdEUy/ya6NbpIAwHr
-	 6eABstoJX3z0gk50wXyJPGpQhU/kM+iLshcxKIxzWcQWX4iE/Fg6FCYPV/UfZqQTSh
-	 OUzhyedUEzwhO3ldvFvYzqaUz8N5OWkQ3I69waCHg52rsy7vXu3RHMGipbDMg2dm5S
-	 1UN042UhYNCug==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v1] tools include: Add missing stdarg.h include
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Ian Rogers" <irogers@google.com>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260917040454.32916-1-irogers@google.com>
-References: <20260917040454.32916-1-irogers@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Thu, 17 Sep 2026 04:06:33 +0000
-Message-Id: <20260917040634.5A2761F00893@smtp.kernel.org>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="W8oTM/0X"
+Received: by mail-pj1-f72.google.com with SMTP id 98e67ed59e1d1-39d8646b10eso524153a91.1
+        for <linux-perf-users@vger.kernel.org>; Wed, 16 Sep 2026 21:53:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1789620815; x=1790225615; darn=vger.kernel.org;
+        h=content-type:cc:to:from:subject:message-id:mime-version:date:from
+         :to:cc:subject:date:message-id:reply-to:content-type;
+        bh=bOKipafnbhub0qpZgGArEWzHEFMMWCTscOxRR7YZKWY=;
+        b=W8oTM/0XH6Zp//oJTh4UyX1ZAtHHqVGx3CBsHuKRF/mdpkbcbhGBBh24vy7YiYjdxW
+         0biKZIDZmdQFBdGpuJe9CQ9b1yJ3X3uiAkzXnS372njNo9z67eACinoWCjyOznxiu9Gd
+         V1JsAPS0Gq4bdQKWtjeJ++lB8cKs38K75DQn+ae2k3iChRR1orYwfSl9hy4k2OsemQnJ
+         Qr9WzFxciimRT13gv/qWgxdSfqI8xOsn+Kr6+y8W9z3Sp6KLiBE9QX4DMSFsCVyitpZ8
+         5WVpmrAW58Jp0M3wunBKsvfn6NVd+5VAzxJ4ysCSU1aoXdLWseFw1no/xOJrqKRevdub
+         syWw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1789620815; x=1790225615;
+        h=content-type:cc:to:from:subject:message-id:mime-version:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=bOKipafnbhub0qpZgGArEWzHEFMMWCTscOxRR7YZKWY=;
+        b=U98TZ2IhYUL+Kfmqcazmb0Wtp7FhvxQnqz3o+/RmGOVGbPbmAywVE+C1RaK2dIiXWc
+         AoxZOibrRHH8Z6fLAYgNzx6vw8Zj0nE59+bFas4h0HdD57j5y2iXkYvY66FJgd6rXiyR
+         u1Bzvy3wt+ljMXky8vwxmT+vxcbP77vBlGgn26qw6zO/G+ap3qOPS38VhA2FSYmosGLv
+         M2hkYda83N5XyldtSJDmo4C/srsGjWj4fIW6UwVHguLkj5uSHd47Zii6InXidX5aBPfq
+         U3P2zIwC07TwdY7OMTOTGCuH6QYb5UFV8J0IP+PdKE7RRUHICozIi24L6ynv8wmwYGqT
+         fgdg==
+X-Forwarded-Encrypted: i=1; AKwUvBxj9su5PIJr4ukXzvMmm5vruePmvWQgHxfXI+u93mU4+bflBYdYcdN9WjxeEFkgyD6wVdSTZKBvkbJ0V2DOI6nj@vger.kernel.org
+X-Gm-Message-State: AFuF++l3IMtrseyWmkvwwEWnUSCgXlVUF4p3bC0gz+uL35Ipp9nasPiS
+	Xvk0L1sVmLMwR1lhFjnOcvQM/pPOdyq0jnhDLWV9WN5OROi9bPfnAnJgOqhKBa8NWR5sLsTWqmQ
+	ZZod+nLElig==
+X-Received: from dli5-n1.prod.google.com ([2002:a05:7022:285:10b0:144:c0e8:a153])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:4a51:b0:39d:ee20:1e28
+ with SMTP id 98e67ed59e1d1-39e1e510f73mr15259716a91.21.1789620814920; Wed, 16
+ Sep 2026 21:53:34 -0700 (PDT)
+Date: Wed, 16 Sep 2026 21:53:16 -0700
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.55.0.1082.g2b9226bbc0-goog
+Message-ID: <20260917045326.63601-1-irogers@google.com>
+Subject: [PATCH v1 01/11] perf aslr: Add missing includes and sort headers
+From: Ian Rogers <irogers@google.com>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	James Clark <james.clark@linaro.org>, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Cc: sashiko-bot@kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-> Header file makes use of varargs but doesn't directly include stdarg.h.
->=20
-> Reported-by: sashiko-bot@kernel.org
-> Closes: https://lore.kernel.org/linux-perf-users/20260916062233.192271F00=
-0FF@smtp.kernel.org/
-> Signed-off-by: Ian Rogers <irogers@google.com>
+Sashiko reported:
 
-Sashiko has reviewed this patch and found no issues. It looks great!
+  When building the perf utility against strict C standard libraries
+  such as musl libc, compilation fails in tools/perf/util/aslr.c due
+  to missing explicit inclusions of <stdlib.h> and <string.h>.
 
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260917040454.3291=
-6-1-irogers@google.com?part=3D1
+  The implementation relies on standard memory management and string
+  functions like malloc(), free(), memcpy(), and memset() in routines
+  such as aslr_tool__findnew_mapping(), aslr_tool__process_sample(),
+  and aslr_tool__delete(). Because the required headers are omitted,
+  the compiler must resolve these calls via implicit function
+  declarations. While glibc may transitively provide these definitions
+  via other headers, musl libc does not. This violates strict C99+
+  standard compliance and triggers fatal build errors under modern
+  compiler configurations.
+
+Add the header files and use git clang-format to sort.
+
+Reported-by: sashiko-bot@kernel.org
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ tools/perf/util/aslr.c | 32 ++++++++++++++++++--------------
+ 1 file changed, 18 insertions(+), 14 deletions(-)
+
+diff --git a/tools/perf/util/aslr.c b/tools/perf/util/aslr.c
+index 027695d96779..f49e965243aa 100644
+--- a/tools/perf/util/aslr.c
++++ b/tools/perf/util/aslr.c
+@@ -1,28 +1,32 @@
+ // SPDX-License-Identifier: GPL-2.0
+ #include "aslr.h"
+ 
++#include <errno.h>
++#include <inttypes.h>
++#include <stdlib.h>
++#include <string.h>
++
++#include <byteswap.h>
++#include <linux/compiler.h>
++#include <linux/zalloc.h>
++#include <unistd.h>
++
++#include <internal/lib.h> /* page_size */
++
+ #include "addr_location.h"
++#include "data.h"
+ #include "debug.h"
++#include "dso.h"
+ #include "event.h"
+-#include "evsel.h"
+ #include "evlist.h"
++#include "evsel.h"
+ #include "machine.h"
+ #include "map.h"
+-#include "thread.h"
+-#include "tool.h"
+-#include "session.h"
+-#include "data.h"
+-#include "dso.h"
+ #include "pmu.h"
+ #include "pmus.h"
+-
+-#include <internal/lib.h>  /* page_size */
+-#include <linux/compiler.h>
+-#include <linux/zalloc.h>
+-#include <errno.h>
+-#include <inttypes.h>
+-#include <unistd.h>
+-#include <byteswap.h>
++#include "session.h"
++#include "thread.h"
++#include "tool.h"
+ 
+ /**
+  * struct remap_addresses_key - Key for mapping original addresses to remapped ones.
+-- 
+2.55.0.1082.g2b9226bbc0-goog
 
