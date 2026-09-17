@@ -1,44 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC5CE3C2785
-	for <linux-perf-users@vger.kernel.org>; Thu, 17 Sep 2026 04:59:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95C773CF685
+	for <linux-perf-users@vger.kernel.org>; Thu, 17 Sep 2026 04:59:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789621160; cv=none; b=Xw9MpjEah19Bvxt8RxvdAw9z3NMQ2Fszmf00Z3b8tyFPZF+QcUs7CvJ1Xz4pfZA2N8CWmvJoURlRpxZLczGGD1suw3wKqtYgWemzYhp1Em4Ct637ETO3hPWF5wuCNjjdhNNqC3zeAbWrwTYqPfwtixu3qUZlq176iN0f1/2wv4k=
+	t=1789621160; cv=none; b=TSeZ4ubBoABJMR09uFy+LwbJW6h1O9VVUDxhqMKv+XB98a/3Debrsgr7cZwZPHT0QyZs/nKHsHNHr55ZO0S7HDHpIcNkMC7KnDbNS6laS1ucxS+Vp5uwPQX0JHGSTkVFVvpjrwqC5PQc/fYP4cX/cAhsoQuNa/bX6JTNRiLxpoY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1789621160; c=relaxed/simple;
-	bh=6RJrGwx0lrVDV03QEUtw3BuYxTuDE43uGUuwxus9RoM=;
+	bh=YHRxCcm1vQUq/OfLjqhZBbSaw5n0EJVbYz342kK2UXg=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=IKPmhFhNQV9ySEQAL/4aL40CwxAt2+8cMYIALbyCPEhOqvfVCFz3ZLPxbJyIx9oYNMkFhCSlAslieg0im2gyPA7lj+Lmww5PrL+wzGE+6vZOWx/P5rRnD1kb8vqiIKbSiUtGRrQeVvDb0C3CZ6I0Y9BCVb9adIhFkEBhmboRoNE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lsGSv2TV; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=hXitX5eS9hE6zrukg4yah9QZ0R5NeLWqL3Xr3Zn3SpU/fd7o95NNEIRQygHbON+ZsCF1N4vtoclFYDzJ/5D7umvYYRO0DQQz38x/Q2c1K1pm8ioBJrAGw99minF4dAH88jVfVn76jGNcqCsFjwcvbLKhozNeSUWnvf+MZN049+E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KtW9X3iG; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lsGSv2TV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6A05B1F000FF;
-	Thu, 17 Sep 2026 04:59:18 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KtW9X3iG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 272181F00893;
+	Thu, 17 Sep 2026 04:59:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789621158;
-	bh=Z0+JUyNoo+4QEPODnKIcAH5dAtdDvoyS7SwntaLMrmo=;
+	s=k20260515; t=1789621159;
+	bh=khJHbFPILdMQaqSECZBKw3v6LJpmvrjc5Bl/4/fDtWw=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=lsGSv2TVA4RcDOCHtJTK/vLeGOS+b8/MOaEyKVqQM1yFpq4q6UIZ4fEoSYxa7BO0m
-	 C883HZlgjUeZq6396kBzCHw2NdXFr8JPrhKamAQTtVdPp8TC/namB32Fwtrj99gClq
-	 ohfVAQTjmVcciITmK9sSENrYMhtc+1ce8Xf1RuO40JuynuaVktYi0dnV0MSiqNpmA1
-	 JEDrM+c+/5/5aF5GtsZKRFCYDGWgd4+fdnfjteLB5rtT7I1J1cUiPK2Xife0drPiAr
-	 PDAn4PB2zJG9LWefetwH39+LyCsv/2Cd9nr/+DKHNhetgN2OO2p7JKVmSz6ngk2B12
-	 s2DLkQCpnOwlQ==
+	b=KtW9X3iGvcX8aUVVu88lkGoBhpnw9ciZrvK+yAAkOkIh+v6CoJzf4ok8bh2JU74PG
+	 /FU8LaTuioOnz8WQyd+FLK//TtBbP3le3PtJg17y/lqlaoONfe9r522I6kv6LUhKxS
+	 0CKDkUNv4SnPTD8AkPPdFbdAxCCpI391aFc/g5W9fYDqJ/Oxuu7yI3amed3KhO90ia
+	 gGBNraMWbfzffHeGUkxhaKDZNA804lFA1hWwMPI7s6X6l5+IfVlVblJIeuD/b4A/lf
+	 Hja6AMMwT2S9aRE6O8wntrxSYX/YppHMkJPaVjhHM93cXnkA8ez1vCF48yv8g/vnHP
+	 Yq34mK7RiJ2oA==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v1 03/11] perf unwind-libdw: missing <stdlib.h> in
- libdw_set_initial_registers()
+Subject: Re: [PATCH v1 08/11] perf annotate-data: missing <string.h>
+ inclusion for libc string functions
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Ian Rogers" <irogers@google.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260917045326.63601-3-irogers@google.com>
+In-Reply-To: <20260917045326.63601-8-irogers@google.com>
 References: <20260917045326.63601-1-irogers@google.com>
- <20260917045326.63601-3-irogers@google.com>
+ <20260917045326.63601-8-irogers@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
 Date: Thu, 17 Sep 2026 04:59:18 +0000
-Message-Id: <20260917045918.6A05B1F000FF@smtp.kernel.org>
+Message-Id: <20260917045919.272181F00893@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -47,18 +47,18 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
 > Sashiko reported:
 >=20
->   When building the perf tool against strict C standard libraries
->   (such as musl libc), compilation fails in
->   tools/perf/util/unwind-libdw.c due to implicit declarations of
->   memory allocation functions.
+>   When compiling the perf tool with musl libc,
+>   tools/perf/util/annotate-data.c fails to build due to the missing
+>   <string.h> header.
 >=20
->   The libdw_set_initial_registers() function dynamically allocates an
->   array of DWARF registers using calloc() and subsequently releases it
->   with free().  However, the source file lacks an explicit #include
->   <stdlib.h>. On build environments where standard headers do not
->   implicitly chain-include <stdlib.h>, these functions remain
->   undeclared, resulting in fatal implicit function declaration errors
->   that break the build.
+>   The source file utilizes standard C library string and memory
+>   functions, such as memset() in init_type_state() and strcmp() in
+>   data_type_cmp(). While glibc implicitly pulls in <string.h> via
+>   other standard headers, musl libc enforces stricter header
+>   separation. Because the header is not explicitly included at the top
+>   of the file, the compiler encounters implicit function declarations
+>   for these standard string functions. This results in a direct
+>   compile-time build error.
 >=20
 > Add the header files and use git clang-format to sort.
 >=20
@@ -69,5 +69,5 @@ Sashiko has reviewed this patch and found no issues. It looks great!
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260917045326.6360=
-1-1-irogers@google.com?part=3D3
+1-1-irogers@google.com?part=3D8
 
