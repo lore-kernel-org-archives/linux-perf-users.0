@@ -1,162 +1,178 @@
-Received: from mail-qt1-f174.google.com (mail-qt1-f174.google.com [209.85.160.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 913C14F93D5
-	for <linux-perf-users@vger.kernel.org>; Thu, 17 Sep 2026 17:58:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.160.174
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789667917; cv=pass; b=oMkHBHUh9OQzfaDyjJ/mMo2MScREHGL/ZKt8qP7LqIUc9IKhiOo3Q3coAJd0w7VjSmtxOdTXQmnAk6y4xbbSCl0Onh4cl9hI2O5W988cuSaWbG/A+DfaQwwBRAmP+4NntEY5iAL2UWOUmhggJmruc+hIew4obWXMP/U1W85guJo=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789667917; c=relaxed/simple;
-	bh=l+PocN5637M3qEv3P3iBxpViv1nZB+zPWLXTvof1XcA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=RGkzWXxaCxTCWKo4p4IhGzxDUtbQ3ough+j1XvdeuhAg13nShCdDZQ/UjUh/RKxdyx98uIT+sQjRHd5X7wtCIPmFFCQd0dI+9FhtLZLs76ojbjTVLPslPozpm7RyP6oDc4uaxdRN+4Pp5iHQtiJlvkFvyPVp4Af/qH3lTBc7UPU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=b7lHyWBO; arc=pass smtp.client-ip=209.85.160.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B38743B71D3;
+	Thu, 17 Sep 2026 18:20:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1789669245; cv=none; b=sN9zsifc8GSaM5JOj//7bPwfBPlhc+aG+PuEmS962tbkO4p+CFz2FqGu79vIn3ULX46RIb2LlSI1e0ynbu+gNZgMjFtCBLlXJADDtT56hT6VhzS5l1kk4Iv0UmxH+JiXLN/Gkf8kLExdhYs0ezRpeye1GrMuOvxoS0MCtB7gQRU=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1789669245; c=relaxed/simple;
+	bh=vvfHoDaghB5jOIUHhmJ4dMJxk8nxK5NWiOJsN3T0Fnk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=MU2PRP8cJYw4dpPxwUGFTUL0mIBzTRc3L1yiqDw5658aGE9RhE0h+Sgp/5CmUJuHzWvluRNUMI6NTptbb4XHqFj7o1TggJZwTDkQkYCXSzmnQeGLoaXHlsHxNBQFbvKIPxkUEYFRULS5wJV8RJ4qZIbz4NX6hA5c7fsGw649QO8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QKDDSC8/; arc=none smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="b7lHyWBO"
-Received: by mail-qt1-f174.google.com with SMTP id d75a77b69052e-53113d72966so30281cf.1
-        for <linux-perf-users@vger.kernel.org>; Thu, 17 Sep 2026 10:58:35 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1789667914; cv=none;
-        d=google.com; s=arc-20260327;
-        b=LTxdiWpuK7MQG1Y2+zVVJAfxAYyIMZ9j4hurcKw8Mxl8hCPGgEVRUM0LdzK/ethcLj
-         geOcTcWqrvVO/NaMlrYAytRmMF024+T1WbliN1soXix9LQqaGrwtm7xNWbzNqttM+VA6
-         Y+zt/d33s/bomoUC0O8gZdzMkQSZHQDGcE4Bc7tuMpQgWnciEEcw+PnCykPf2acaYeur
-         3sJsQeKkJR4QVUJARmMKhK6ydPfqJsIEAKFooYtHJk+MaFo5vMhTHJVpDBEBCmA/z6vu
-         LMwgRy3T4JAcmLmHXtCPvSTayhH5QuoFlbwWWFoh9EnC0kaRB7+IIeT/Z+RaoPEHzcxC
-         2s9A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=zH1jP0g6rTZl7HFb520QhPTGTp2IGGyzoCj2sKE0ORQ=;
-        fh=1ebZxkuXkqffr4Roq2b2M463GF11ndgJLzkikGgWggM=;
-        b=VQQEoK8Toxhc6UiTNof423CJEC0LvafYm6AwlKE4fBuRpEifxg4f+0/AQ+luOBOnnh
-         sq/5DfykP4agP4ZyU4XQVdp4GYzaLT57uj8w7WwVAisvMcVw3RrEP0hWpOSSEZSniZf3
-         iIgq5yBIvHIIL1bqRX1k3sSI8EDqt5yLIhzedS+kZYfYd9E9bQJ6aPbpvMAtSY6oWS6j
-         hQogeIfb0hIavj2niE0gxFnhQYMaWtNQcZ44pgDg5FX9onBurwUv/hs771oF1f+NFRu9
-         xoPvZJgF8Kw99JULEFrJakrIgERWW6M1tz7eFpq+OOhYNy09IfbM/eizJpSPWpSzzHxI
-         G98A==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1789667914; x=1790272714; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=zH1jP0g6rTZl7HFb520QhPTGTp2IGGyzoCj2sKE0ORQ=;
-        b=b7lHyWBOZ1rBFdKSrdjN2HQkOv9o6Mkah8cmBvk9GJzJz+eU/92kIDWJBwhfCfOQ3p
-         bXa33xO95fKHh1XySzMRcdFDrbbOfbRzBO30v9k87/4wog4ycTmIPhVE9pNAXOPfZgG9
-         yNK2nojOIYOMPWv0rUwLyls0YujagnmHNsjr5SgF3xg/VQ9fq7GrH0vb80AjrM0DwoUb
-         skhYS+rlrBi8HrAEawsCNFxpCVi0vkcUc6wy0JMiNplNDqCFDnUZGRgRVTB04d2aeBLy
-         uPQ6tFmGri6gOmsyADOywtc08dOFuK70le392aDqdyRWtG+HCwnkXzyuHQ/bm7JpdL2n
-         D/EA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1789667914; x=1790272714;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=zH1jP0g6rTZl7HFb520QhPTGTp2IGGyzoCj2sKE0ORQ=;
-        b=M3Gzu4Rq1uiN/EOOYvcB3gfjhpfkG0sS0YMyz8qE70ThoOVL5/e2zU1LVkETggO02E
-         XZahHm2lDWeRk4fDVl964YBOtH1B+kzmwP0m97/tTr+rhYHHLzDn6WshPlmGnDZg3+x7
-         IAy6ekqGeHwy++RBj8zb9weMSVBtxP0GZ7M8RVdw+Cl+SgGSANK3bOXc82WUxwcRbkZ4
-         wULBz83sDYyfmP8WU2dqPlGgfppNBTvqS9W3WEl7MZuamX8rzTMJKHPjpYqkhC1PzucB
-         kNtelZuyO/qovKtt5H+SEsi1HTnz6OBnF1jCc6t8EqB3Jlgo3Uzh83pEg+hCWRnvU5hk
-         pxng==
-X-Forwarded-Encrypted: i=1; AKwUvBwLj7owTieuXtAuPi5N0mkdHqPLli9+9WUiZuog1OV4M+PZM0OYMBBuMCGiDpcR/etbgBV8Dcw0bXhNxtKrD/01@vger.kernel.org
-X-Gm-Message-State: AFuF++kR4l7Js2ZnuLf7hqXZuy3BIT48cg7vjfSvg5KocYA+tqbcPL0Q
-	qHTYYK4I2Hn3UMGzVmXI/fRYU6T+xs8T8IN0DZrxSM2mhLzSSyXdooP2bqT9nb1pyRbs5zMP7+K
-	sbaVcXejwa75bdD2+Nabmdjd7uKW/V0mg7y8O6e6X
-X-Gm-Gg: AYBFou3Ykwc1U8A89tWRNKxJOTtD73ASG5GDP5HNIAejl0E2RSlI2lP7K+TDcAc41cu
-	+s1rJd7+27hgB89zatQYQbB86VckRoXXWHxvutKwh9l55RWN57ReGG13Jx6OPf2GI7rVrvWaw6G
-	iYm9JJPqTz1FWdDeursSOwPoC4Fmu9HjGiV9A4Ic7vA8GblW7AMe7yUBVeYUPiMbssQigzhjg9H
-	/UNesdpe9uogQZ7UNeftKOAwBC5jixFc9fBS4x1T4aLU6ZWKYexvwunvvC4nrkfI4iR0Qg2EYzT
-	pF6AfmDmlNmBkUGrv7Od8JFJZBaBgXcuy0RwjxdN/u/4neeKZmmzPT3ZhrtSscuTe4ztWVRle/x
-	2gqXss839
-X-Received: by 2002:a05:622a:e111:10b0:530:ac23:ff40 with SMTP id
- d75a77b69052e-5329d84d69emr874811cf.5.1789667907464; Thu, 17 Sep 2026
- 10:58:27 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QKDDSC8/"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1789669244; x=1821205244;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=vvfHoDaghB5jOIUHhmJ4dMJxk8nxK5NWiOJsN3T0Fnk=;
+  b=QKDDSC8/iiF1fOc4ywXnTVaK8V+4BLSMqmiASUEbUaR0CjvUItguOXOx
+   MzwC0Co9nYV0KZcF0kXkQk55OmIRvkOktaVHDkrBlcQSVnbcZnw084FG8
+   HuwWcyG+JabZSAR5OWA9tmdiVx6wJ0DFSSEInUEbOLMpoG4NpEGRPV4P4
+   Zp0UKtCc5jcYyuU5x37iwsYMyjql+SZ0QDd4sk+UaLEgLGaKGUBePgUwy
+   PjV6m/cT48K1iv+MEyZOk3mRT2ytYUa6jqdvXq/JQAOcEvclHQNX9wyle
+   J4EcbgB312g/VMkuIcKk0WAKlSN1HqeoOXuseKSivcPGw8193YKRu6sdq
+   Q==;
+X-CSE-ConnectionGUID: c3q66Hy/TVqXiKtIlV2rqA==
+X-CSE-MsgGUID: HhO1U04QSFKOH49NlKzhog==
+X-IronPort-AV: E=McAfee;i="6800,10657,11905"; a="115658923"
+X-IronPort-AV: E=Sophos;i="6.27,103,1787036400"; 
+   d="scan'208";a="115658923"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Sep 2026 11:20:42 -0700
+X-CSE-ConnectionGUID: chz2lMONQJKUYleHV7KFkQ==
+X-CSE-MsgGUID: PNq84K0hRX+sXE+wIpomjA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.27,103,1787036400"; 
+   d="scan'208";a="279195620"
+Received: from 9cc2c43eec6b.jf.intel.com ([10.54.77.29])
+  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Sep 2026 11:20:41 -0700
+From: Zide Chen <zide.chen@intel.com>
+To: Namhyung Kim <namhyung@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Ingo Molnar <mingo@redhat.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Ian Rogers <irogers@google.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	James Clark <james.clark@linaro.org>
+Cc: Andi Kleen <ak@linux.intel.com>,
+	linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	thomas.falcon@intel.com,
+	dapeng1.mi@linux.intel.com,
+	xudong.hao@intel.com,
+	Zide Chen <zide.chen@intel.com>
+Subject: [PATCH] perf topdown: Don't require config1==0 for a slots event
+Date: Thu, 17 Sep 2026 11:10:16 -0700
+Message-ID: <20260917181016.381994-1-zide.chen@intel.com>
+X-Mailer: git-send-email 2.55.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260917155528.62607-1-acme@kernel.org> <20260917155528.62607-2-acme@kernel.org>
-In-Reply-To: <20260917155528.62607-2-acme@kernel.org>
-From: Ian Rogers <irogers@google.com>
-Date: Thu, 17 Sep 2026 10:58:15 -0700
-X-Gm-Features: AcwNN1Vxnw54th8UHPKp5uTzWVtQcuNf7uY8my8GErrk-09F_GrhQCeHOeOoHhw
-Message-ID: <CAP-5=fX5+7K_9eApj-t87iFVSbUPZDpgnMYWfSoCcDynrYqixA@mail.gmail.com>
-Subject: Re: [PATCH 01/15] perf debuginfo: Fetch debuginfo keyed by build ID
- using debuginfod
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>, Ingo Molnar <mingo@kernel.org>, 
-	Thomas Gleixner <tglx@linutronix.de>, James Clark <james.clark@linaro.org>, 
-	Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Thu, Sep 17, 2026 at 8:55=E2=80=AFAM Arnaldo Carvalho de Melo
-<acme@kernel.org> wrote:
+arch_is_topdown_slots() requires config1 == 0, so it misidentified
+"cpu/slots,metrics_clear=1/" as not being the slots event, and an
+additional slots event gets inserted, which fails event scheduling
+since the group now needs two fixed counter 3.
 
-[snip]
+  $ perf stat -e "{cpu/slots,metrics_clear=1/,cpu/topdown-retiring/}" -- sleep 1
+  WARNING: events were regrouped to match PMUs
+       <not counted>      slots
+     <not supported>      cpu/slots,metrics_clear=1/
+       <not counted>      cpu/topdown-retiring/
 
-> +/*
-> + * The build IDs already fetched in this session, and the path of the fi=
-le
-> + * that came back for each, so that the repeated requests for the same b=
-uild
-> + * ID, dso__debuginfo() is called per symbol annotated, are answered wit=
-h a
-> + * strdup() instead of another client: the file is in the debuginfod cli=
-ent
-> + * cache already and its path checked before being handed out, in case t=
-hat
-> + * cache is cleaned from under us.
-> + *
-> + * Guarded by debuginfod__fetch_lock.  Only a fetch that brought a file =
-back
-> + * gets an entry: one that didn't is recorded in debuginfod__misses as a=
- miss,
-> + * and that is what keeps the rest of the session from asking for it aga=
-in.
-> + * Like debuginfod__misses this grows with the number of build IDs in th=
-e
-> + * workload, one small entry each, and is not trimmed.
-> + */
-> +struct debuginfo_lookup {
-> +       struct list_head         node;
-> +       struct build_id          bid;
-> +       char                    *path;
-> +};
-> +
-> +static LIST_HEAD(debuginfo_lookups);
+Drop the config1 == 0 check from arch_is_topdown_slots(). This is
+safe: config1 has no bearing on the event's identifying config value
+(TOPDOWN_SLOTS, 0x0400).
 
-I'd still prefer keeping the debuginfos owned by the DSOs rather than
-having debuginfo use a global cache of debuginfos - I expect the
-debuginfos to have some non-trivial memory overhead. With the
-debuginfo in the DSO, when/if the DSO goes away we can reclaim all the
-memory without worrying about a separate global data structure. We can
-find DSOs in multiple ways with dsos__findnew_id:
-https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.gi=
-t/tree/tools/perf/util/dsos.c#n343
-We match by name, but if those differ:
-https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.gi=
-t/tree/tools/perf/util/dsos.c#n117
-We match by inode and/or build ID:
-https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.gi=
-t/tree/tools/perf/util/dso.c#n1473
+The attr.type == PERF_TYPE_RAW check is what actually matters: only the
+core PMU is registered with PERF_TYPE_RAW, and on x86, 0x400 is
+guaranteed to be slots event on core CPU.
 
-So struct dsos is a build ID indexed store of DSOs and their owned
-debuginfo. We find DSOs off a machine, but I believe we always have
-access to the relevant struct machine. In the worst case for probes,
-for example, we need to set up a host machine. Using machines
-inherently provides some lock sharding, and they also have the ability
-to reclaim memory.
+arch_is_topdown_metrics() keeps its own config1 == 0 check, since
+genuine metrics events have no "metrics_clear" and config1 remains 0.
 
-Thanks,
-Ian
+Add a test verifying that an explicit "slots,metrics_clear=1" event in
+a group does not trigger an extra slots event injection.
+
+Fixes: 5b546de9cc17 ("perf topdown: Use attribute to see an event is a topdown metic or slots")
+Signed-off-by: Zide Chen <zide.chen@intel.com>
+Reviewed-by: Ian Rogers <irogers@google.com>
+Reviewed-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
+---
+v2: include stdio.h and string.h for musl compatibility.
+---
+ tools/perf/arch/x86/tests/topdown.c | 30 +++++++++++++++++++++++++++++
+ tools/perf/arch/x86/util/topdown.c  |  3 +--
+ 2 files changed, 31 insertions(+), 2 deletions(-)
+
+diff --git a/tools/perf/arch/x86/tests/topdown.c b/tools/perf/arch/x86/tests/topdown.c
+index 2b6f47ce4932..520075329c37 100644
+--- a/tools/perf/arch/x86/tests/topdown.c
++++ b/tools/perf/arch/x86/tests/topdown.c
+@@ -1,5 +1,7 @@
+ // SPDX-License-Identifier: GPL-2.0
+ #include <errno.h>
++#include <stdio.h>
++#include <string.h>
+ #include "arch-tests.h"
+ #include "../util/topdown.h"
+ #include "debug.h"
+@@ -229,10 +231,38 @@ static int test__x86_topdown_slots_injection(struct test_suite *test __maybe_unu
+ 	return TEST_OK;
+ }
+ 
++/*
++ * An explicit "slots,metrics_clear=1" event is still the slots event and
++ * must not cause an extra slots event to be injected into the group.
++ */
++static int test__x86_topdown_metrics_clear(struct test_suite *test __maybe_unused,
++					   int subtest __maybe_unused)
++{
++	struct perf_pmu *pmu;
++	char event_str[128];
++	int ret;
++
++	if (!topdown_sys_has_perf_metrics())
++		return TEST_OK;
++
++	pmu = perf_pmus__find_by_type(PERF_TYPE_RAW);
++	if (!pmu || !perf_pmu__has_format(pmu, "metrics_clear"))
++		return TEST_OK;
++
++	snprintf(event_str, sizeof(event_str),
++		 "{%s/slots,metrics_clear=1/,%s/topdown-retiring/}",
++		 pmu->name, pmu->name);
++	ret = test_sort(event_str, 2, 1);
++	TEST_ASSERT_EQUAL("explicit metrics_clear slots event isn't duplicated", ret, TEST_OK);
++
++	return TEST_OK;
++}
++
+ static struct test_case x86_topdown_tests[] = {
+ 	TEST_CASE("topdown events", x86_topdown),
+ 	TEST_CASE("topdown sorting", x86_topdown_sorting),
+ 	TEST_CASE("topdown slots injection", x86_topdown_slots_injection),
++	TEST_CASE("topdown metrics_clear no extra slots", x86_topdown_metrics_clear),
+ 	{ .name = NULL, }
+ };
+ 
+diff --git a/tools/perf/arch/x86/util/topdown.c b/tools/perf/arch/x86/util/topdown.c
+index bafd285119d7..64bc64e335a2 100644
+--- a/tools/perf/arch/x86/util/topdown.c
++++ b/tools/perf/arch/x86/util/topdown.c
+@@ -37,8 +37,7 @@ bool topdown_sys_has_perf_metrics(void)
+ bool arch_is_topdown_slots(const struct evsel *evsel)
+ {
+ 	return evsel->core.attr.type == PERF_TYPE_RAW &&
+-	       evsel->core.attr.config == TOPDOWN_SLOTS &&
+-	       evsel->core.attr.config1 == 0;
++	       evsel->core.attr.config == TOPDOWN_SLOTS;
+ }
+ 
+ bool arch_is_topdown_metrics(const struct evsel *evsel)
+-- 
+2.55.0
+
