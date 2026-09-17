@@ -1,152 +1,277 @@
-Received: from SJ2PR03CU001.outbound.protection.outlook.com (mail-westusazon11012014.outbound.protection.outlook.com [52.101.43.14])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D04B52FE28;
-	Thu, 17 Sep 2026 14:08:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.43.14
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789654139; cv=fail; b=EsCR13Usl5Z/uzl8Zf9gtKwhddrUEOGWnbl5xeNteS2Grwqm3zJ8tUPLhkqHQF8aKRXbfzJWLRbgp3pQsIy9JEmYaV5tTZVKDkfsP0Gyccl68PtP4itKFslWNqYSOMaHH/ZPU83RyCIa9QrYwDNinjxqoRKqcU1iiD4eUseaxSA=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789654139; c=relaxed/simple;
-	bh=gHwFn48LKNN4YhJuD8w3RGbBux1DlY+qyfVt2IKp+Pw=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=DrZSr+4/LmzHzcubcQX/3VhurkBXNQACrg6ZOSGI1PAF5KguJetKlxMrk5XqT8QmEWeTFkdmF4tEibg4LXQIwSazZTuOmqoZhWUtYJYVgMS/DhRGI3Ga48BNSRMtO7yUsoVY09CkfHtgLqT4GxEvR32r5DxlKRDsRBUsTpT0D04=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=4A19W+zS; arc=fail smtp.client-ip=52.101.43.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D44784FC8CB;
+	Thu, 17 Sep 2026 14:10:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1789654252; cv=none; b=qr+q6YDD4rnT9+dTzdRJBtpktVozk/FV/dkPoUDxFdKzb4YeexVCXu65KrwGjT/7A9EgQtWTPBRVYYyknkXiZK0CbaMxppSmuedO37qjhV0Wo9NnrqF9hXd8kp9OijpeGO1Gmmf7Q3TTrkdOyLmOb+MLxt/BSUeMR1yX/PLmrZ4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1789654252; c=relaxed/simple;
+	bh=/C9f95SWyEmPygIuulycJScYsmXuMozyyQL5PTlWLho=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=tYKoxY6WGthLyvQZYTEuVzTWb/J+Jd1VzDdqU+eSk5ppY2vdnQaCR9QoAMjuI9OkVyQNn4CeW8ZXxSsuGIeDrh4auQscP4coVI/pm/+PPsT22hQuM0jmeBI4lpDJLM7ZuvYMD79zgNFW+n4CRMw8CccdyOC2X0LZ05eLIh7DCwY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=W1OQSPQh; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="4A19W+zS"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=LD6cYxzn0Btu7O+d7l0fIYO7WYPEv8TZGIzTZ6or+9JXnO4dmdhWBeppogqFa95HrMgLOQ5s0Re9oSIj9pZlDPTDqFZNx2OaUu3QRW3N6FgkB5LC7oFySAuAxuZhh/LvsG7+JeQHdslBsnxkWLMV80ScxqasbsP3jTj5JqRe2iKC6f8r6jujhIL27uZS7lu3ASRpoA/DLSMmBrH44hqnJ7/8vKIJ/jFyFrCNpwXzdC/DwvbfERrnzYTgMxJnYEfVkPCXnw/LqH2IKmlf589cVwNRbjVYT4+ozynR2pH717BRmPrqi1y+S7k0Phl5hMCwDTQzHqslByF9fX04RXnX9A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=i0htdcLLjr4MeNa+SHGYijR0P8V6PUD1/ecZ8U1atdI=;
- b=gn9VxTvrl2zbuQF1i62M5lBpdT/LF18g0+m5JcKMruLdv7MMJHGVbvRNQpn+Q186P44XxGpoy055XbPvjXFuL1EZ+z1ldAgpCiwURhDqKA6JFAAmA0G5Hfdt+4M+IEg+KrM/Qynf6h9NyZ/5fX35Vcmt1tCoRxt2lHN1I9xG2/AoGBca4L3L+ryVuy6I6zhw5wW26Vc2Or9s4gqzwwMlQWGFGmOXgcxCKo6v/T++Ii7EWWSKalHLuQuSvs1CRFCkpklaSJJnIf4yAdxCOwJz6kWrCB0ZvCmZdLvqHufHXNMzgpWF72qviXU4imSv9rHz+Ol8DnRrnKD/BnazPEFt3w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=i0htdcLLjr4MeNa+SHGYijR0P8V6PUD1/ecZ8U1atdI=;
- b=4A19W+zSwHWKIRJ338pU+BRasGkhBXyoL7mbN+tlzFoamMo8rt+D7AuIWH6adW9v7cSKB/cxAWaCXF0mirUuaqeUyVap40iNi/lSrqoHZNUkcYcxDVBBkTdAApSVfez8qQPds4HtSHBYApxP9oAbOq7k6PaK4PRSznwpAx6m2AA=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from PH7PR12MB5712.namprd12.prod.outlook.com (2603:10b6:510:1e3::13)
- by SA1PR12MB999252.namprd12.prod.outlook.com (2603:10b6:806:4dd::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.428.12; Thu, 17 Sep
- 2026 14:08:40 +0000
-Received: from PH7PR12MB5712.namprd12.prod.outlook.com
- ([fe80::afe1:7dd0:ea71:b7e7]) by PH7PR12MB5712.namprd12.prod.outlook.com
- ([fe80::afe1:7dd0:ea71:b7e7%4]) with mapi id 15.21.0406.007; Thu, 17 Sep 2026
- 14:08:40 +0000
-Message-ID: <4240334a-621a-4ac3-91d3-294fddf1f05e@amd.com>
-Date: Thu, 17 Sep 2026 19:38:31 +0530
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 4/5] perf/x86/uncore: Add L3 PMU support for Hygon
- family 18h model 6h
-To: Fu Hao <fuhao@open-hieco.net>, peterz@infradead.org, mingo@redhat.com,
- acme@kernel.org, namhyung@kernel.org, tglx@kernel.org, bp@alien8.de,
- dave.hansen@linux.intel.com, x86@kernel.org,
- alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com,
- james.clark@linaro.org, hpa@zytor.com
-Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
- tingyin.duan@gmail.com
-References: <cover.1788404433.git.fuhao@open-hieco.net>
- <d45936ac077e5a62dae6f40edcafa13644620ed5.1788404433.git.fuhao@open-hieco.net>
-Content-Language: en-US
-From: Sandipan Das <sandipan.das@amd.com>
-In-Reply-To: <d45936ac077e5a62dae6f40edcafa13644620ed5.1788404433.git.fuhao@open-hieco.net>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: MA5P287CA0091.INDP287.PROD.OUTLOOK.COM
- (2603:1096:a01:1d4::13) To PH7PR12MB5712.namprd12.prod.outlook.com
- (2603:10b6:510:1e3::13)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="W1OQSPQh"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DB69F1F000FF;
+	Thu, 17 Sep 2026 14:10:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1789654249;
+	bh=KbrDS6hKlC0VTaC9BV7+naLsGbVr14Ol/r0dwCCcssI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=W1OQSPQh322nQaohrMaAxOagWwbvl9nfa1M8/bJfBh0BVO2wIDl50kW+0OZlfAY9W
+	 I8TRDsOX/HJXa0PKXXSg3zbiITkFW7y0z/NWU4OXDcMlOaG+DI7FxP3vZNlMvJBf3Q
+	 s4BWwM4qRiDe46bp4aSjSK4+BzIY3PD4mAA0IvWHyhgKcP013CBl7DGA1jrzzPq4Z9
+	 XhM0GnOREVbuDkMQVJt1m0PHIDNXJRlaoPvuGHmCCWqjBKgBaa9tv8Gw1LDojsZm3o
+	 M36krUXURWBS3Sc095w9ic0+ppCVGElFpESwfj7+Pmq8CdLtbTXHTLgG85lvR+ni7t
+	 y85DiRIBQEmIg==
+Date: Thu, 17 Sep 2026 15:10:47 +0100
+From: Harry Yoo <harry@kernel.org>
+To: Tim Menninger <tmenninger@everpuredata.com>
+Cc: linux-mm@kvack.org, Chuck Lever <cel@kernel.org>, 
+	linux-nfs@vger.kernel.org, Jon Curley <jcurley@everpuredata.com>, 
+	Eric Badger <ebadger@everpuredata.com>, Vlastimil Babka <vbabka@kernel.org>, 
+	Andrew Morton <akpm@linux-foundation.org>, Hao Li <hao.li@linux.dev>, Christoph Lameter <cl@gentwo.org>, 
+	David Rientjes <rientjes@google.com>, Roman Gushchin <roman.gushchin@linux.dev>, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
+	Adrian Hunter <adrian.hunter@intel.com>, James Clark <james.clark@linaro.org>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [SLUB] nfs_page cmpxchg_double_fail and perf lock perturbation
+ on dual-socket NFS/RDMA
+Message-ID: <aqvy8NqRRRmUlxjR@thinkstation>
+References: <20260916232227.4098143-1-tmenninger@everpuredata.com>
+ <aqvq8-6IJBDer90O@thinkstation>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH7PR12MB5712:EE_|SA1PR12MB999252:EE_
-X-MS-Office365-Filtering-Correlation-Id: 5909d9ca-ceed-471c-d44e-08df14c52c99
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|23010399003|366016|376014|7416014|1800799024|56012099006|4143699003|10067099003|11063799006|921020|22082099003|18002099003;
-X-Microsoft-Antispam-Message-Info:
-	ynCoYZgcCLdv53D65I0hrJwbdZ2snGB7sFqIm6OwubY3LRW2AFq++NtfcoaQLCwda1pZT/34nXD3xC+4GXoGJX0f8n2PZwEDgfqoKl27SmKhuFzmMW3lMiGMkkmuBUl7Kup9ieq2gPQyQnSKiExJh8RE4gNHFnZVtzWJXgwvgKdZ8PPxeIlwpy/UFRo5A2LHovQap9MxY9a7qa3v4z5xmoblDH2sgjpROp9zOsMQkdtAkq+wsnfkhLK+9iQaTDgQuBnUXOwSxm2nvfbWURqAf5Ctz1s/A/DdT54KGdmAnuXSgvndhY31WBHBcZ25jkCKzGE4ml5eAeIlKDVCpsqctdM+h6SLQogXchWgYqhRUdkhHh/ybkoyYv86GEtoRnrrOM1FJgICkp4ruaHBFNTTQG83nV33zeOGNpWI/6COqMQ9ntvLbfQeeduSSTXYn++nM+sq0VmkPOY0fxdQAN6u2HiIxBen5E3kX2p2qCCDp3z+2uxiiE1WMurHTSdhmLM/VrP2BHvr5OK3tn8Gxusi7MJl5paKEob5UtczWZcDlfVSaSz3Nj30Zsa3RvT3ZvJMv2VEYgToA9IMsxWYH2ai9AMy4g7vS7BPdv/pU9vifrNLLbzYfB6qNFAtkrqlqt3Z+HznDaQIxBdPx0n8hIVijiCLtzpMFUY46MH/S1Tc5eFzTyC127oy0wdg62OC/eKkY03aNLQ3cuPHknRcqIWpvQ==
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB5712.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(23010399003)(366016)(376014)(7416014)(1800799024)(56012099006)(4143699003)(10067099003)(11063799006)(921020)(22082099003)(18002099003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?TE43dE1WRk9mRGtIZ0pXWHpMb2NOamI5OUx5NnkxVHRlWU9zSy9ycERuU09K?=
- =?utf-8?B?ZGJPMTI4ai8yQlZvR2dsT3A3TmdYNHhkanZkTmVVWncxU2FDOEtJSDFyUTNq?=
- =?utf-8?B?STkvZHl6UXhsZXVDSjUzRm9HTVFOTUNZUnpYNkRmMTVBdVgrTHhBMmk5UkZX?=
- =?utf-8?B?bW5JTldIbXpDZWVYMGdXdDJEc0R2SHJpOUgwNzZabUVNM294SDQzNFl6WWk4?=
- =?utf-8?B?Z09sVU5PTlE5aytxbDl1SFBsbUxOZEFhdnRCU0pUWVlxQUVCSGg0VkZHT1ZP?=
- =?utf-8?B?UXRSUkVrL3ZWeE1ERStxNHFFUkdnanphd1pTSEp4QWYxcmNjSlZmSkVVd0I0?=
- =?utf-8?B?OEszOFduZzZzTGxlaEJENmZBSGdyenF6UmpGMXNvb2d3SWlSNnV3RUZLUEFn?=
- =?utf-8?B?OEVDVHhVZlJjNUVUMCs2MXdhVzlQaVdlK0xMTHROU0RVMDVQYXo4ODJRWUda?=
- =?utf-8?B?WUpJWm1DSDJJaUxxS1FNdmpiTGlNSllHR2ZrQ2NPa1ZFN2lVNFNCd1RRR2g5?=
- =?utf-8?B?RDJaT2pEcE1ySGRGdGVyamJxSjNnNnN4QTVEU1RkRlhKbHhIN1NuRURLMk1N?=
- =?utf-8?B?dG1helQ5eGJ5MmdNUHllL3ZnTGhLamVLMjU3NEp1TU5EMXlYc0E1OVI3UGFn?=
- =?utf-8?B?MGxSRUZXTVgxUVJ1YmdsSDgvbFYzUy9oZ1N6QWtvcFJpSUFNNzhxbjhJRjA1?=
- =?utf-8?B?ZkFIYmpVc2tHUEJEWXczQzBITzBOK2RGTzhMb21DME5US0xFaW1TcVVjNG1F?=
- =?utf-8?B?VitFZkJKendLNWk0OTF1SE1JTHBFam1abUQrRHA2L2N5ZXI5Z1h0VUJNdS8r?=
- =?utf-8?B?QisrNmVVWXlRUmh1SGFSbnEyZ0tReXZtdkNHZVhBaWRhMm9uZitsZkNFSGxl?=
- =?utf-8?B?bml1djJDbExPRnpUa29BVG1oRlM1UTE3ZHJBZWZrNEpsWVpuMDZiZGpTOG5i?=
- =?utf-8?B?WFpSVGMzSzVPZUdPZTZPSm9HUTBnTmlVMEVNcFB0K1p1dlZsSkRKcTUwYllk?=
- =?utf-8?B?S3l0bU5NMitwYTlMaGZPZFRuaVVFVVZEeVZpUEZ2VVpXTkpMMFQwL2ZUY3E4?=
- =?utf-8?B?TzM4cjFTOFdZTHhvYjRKWnNKOFloTDhSRk0xemFJVnBKYUdsdkF6dStuR2VI?=
- =?utf-8?B?RGZKR04rQVNncHRXRVFRb0V6Q1JzNEtKQzVFS3V1akMxeGdEbUREVFJVcngr?=
- =?utf-8?B?dDI2MnZmczZsRzJaczd5UVI4aUJ4M2ZYS254b1dMVmttSlZLWWVGMVdLS2Vx?=
- =?utf-8?B?OFYya3hCUlFBbnQ2aUdNSjB2MTJYb3FZYjNCTGxSNkJXcmFLdlQ2RzdPOEo0?=
- =?utf-8?B?SWNiMGt5Z0gzMHdsWnlOS1RBKzJIK01YUmJlWTNDNjl4elR3TnQ5cWJlSFcy?=
- =?utf-8?B?Yy9xN21mcGorVUIrdGRxeVZheElQem4yUm1nTzZVdjBFNFBjVHVpNStmQ3pt?=
- =?utf-8?B?R2c2Nm9Kd1NsZjAreFBGRnFzOG1vUytjNk8xUkZxeCtCVTRCaWdGL3hRTGU0?=
- =?utf-8?B?TzdJSDc2aEI2RmRoYlBFMFdoYWYxTFZOM1JkQ1U3WEFEbC8zS3BDdHUxdU12?=
- =?utf-8?B?MHdFaWhObG12QUIwSk9pWEV0eCtqNCsrdVJFcFRLMlJmczVhU1gxV2dZYVU3?=
- =?utf-8?B?SjRHME8yNUNVQXl1OW0xbTdoTmxYNXpQZ2w5alc2QndDZlhkeVk1UExUK3lk?=
- =?utf-8?B?OXBwL0o2NTkwUnkvWXdiNnVtbGppL1FKVUpiRkRqOElZWDVma25jMlp0dlM1?=
- =?utf-8?B?ek01ZHVsRm1SVVFZNjlibmRZL3A3bHlrRGExUkVwUEk2NFVWUCtxMDdNTXYz?=
- =?utf-8?B?Q3JJOStCaGRaYTliNDVtRXBYcjFzSGpvK0pGQXhxdzFiZi9vMjVvcGNFWW0z?=
- =?utf-8?B?K3lKZ0dZRk9LbGlxZk1VZGgwWHVoZng4WHo1VTZ1M3JZcEtwaEx3Sy90cHJK?=
- =?utf-8?B?TXhhZDNyaHdOTVhVblNUUzFOemRYeWNUOGNHSmlEM0lFdEYwdkF6dEx3QUpW?=
- =?utf-8?B?cS9rZGlaMFNEdHUxcVM0bUxxeGl5empQdy85SDJLOVo3S1dqbVlxTktlMjNa?=
- =?utf-8?B?dkNKWG43c1lOZkpXTkVQSUdIa2lrMXJ6VGd6Yk1jRzc3eTBRa0x4YVRyVFpu?=
- =?utf-8?B?RDRGNVpWYkxEVVZuSWg3dXQyQ2tOS2F2b1FodVJURnJ1dGFCNGxhTlpqQktu?=
- =?utf-8?B?dGdWb05WRWtad0RqYm50UCszMXJkbGM3Ri8ya09XY1U1QW9Yb1NBU2xPTjJS?=
- =?utf-8?B?c0owRWxBcXMxdmtFbGRLZ0JLY1hncFhFTWJpYWtRdURhT29vVEttNERBV3Nh?=
- =?utf-8?Q?M+HyTsV4474w0URgli?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5909d9ca-ceed-471c-d44e-08df14c52c99
-X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB5712.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Sep 2026 14:08:40.2141
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: irQg/k3RimevnI/GDFXPhWstcQ/a+SeVOEeaSZ0dZHx+hjNWkiVRDhHGaWr6Z02RNKyEBrrY5bLBOrhIjseosQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR12MB999252
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aqvq8-6IJBDer90O@thinkstation>
 
-On 04-09-2026 08:42, Fu Hao wrote:
-> Adjust the L3 PMU slicemask and threadmask for Hygon family 18h
-> model 6h processor.
+... now I realize we need to add PERFORMANCE EVENTS SUBSYSTEM folks 
+as well ;-)
+
+Hmm, sounds like perf lock is somehow triggering slab allocations
+and interfering the workload.
+
+It could be because SLUB is merging nfs_page cache with some other
+cache that perf uses.
+
+Could you please check if it reproduces with slab_nomerge kernel
+parameter?
+
+On Thu, Sep 17, 2026 at 02:46:24PM +0100, Harry Yoo wrote:
+> Hi Tim and Chuck, thanks for reporting this to linux-mm.
+> Will take a look at this but let me Cc SLAB ALLOCATOR folks here first.
 > 
-> Signed-off-by: Fu Hao <fuhao@open-hieco.net>
-> Tested-by: Tingyin Duan <tingyin.duan@gmail.com>
-> ---
->  arch/x86/events/amd/uncore.c      | 48 ++++++++++++++++++++++++++++++-
->  arch/x86/include/asm/perf_event.h |  8 ++++++
->  2 files changed, 55 insertions(+), 1 deletion(-)
+> -- 
+> Cheers,
+> Harry / Hyeonggon
 > 
+> On Wed, Sep 16, 2026 at 11:22:27PM +0000, Tim Menninger wrote:
+> > Chuck Lever suggested I bring this to linux-mm after we found some SLUB
+> > measurements we could not account for while investigating an NFS/RDMA
+> > throughput regression.
+> > 
+> > The original NFS discussion is here for context:
+> > 
+> >     https://lore.kernel.org/linux-nfs/0e2f9688-097c-4bb9-a7ec-82b41bdb3653@slotpi15m67/
+> > 
+> > The NFS regression itself has been separated from this issue. What
+> > remains interesting here is the behavior of the nfs_page slab cache on
+> > this machine, particularly the measurements with and without perf lock.
+> > 
+> > The system is:
+> > 
+> >     Intel Xeon Silver 4516Y+
+> >     2 sockets
+> >     24 cores/socket
+> >     2 threads/core
+> >     96 logical CPUs
+> > 
+> >     NUMA node0 CPUs: 0-23,48-71
+> >     NUMA node1 CPUs: 24-47,72-95
+> >
+> > The workload is a high-throughput NFS/RDMA direct-read workload using
+> > 1 MiB I/O, 160 threads, and iodepth 64.
+> > 
+> > The relevant debug options are all disabled:
+> > 
+> >     # CONFIG_KASAN is not set
+> >     # CONFIG_PROVE_LOCKING is not set
+> >     # CONFIG_LOCK_STAT is not set
+> >     # CONFIG_DEBUG_SPINLOCK is not set
+> >     # CONFIG_DEBUG_LIST is not set
+> > 
+> > All measurements below were collected on the unpatched base kernel:
+> > 
+> >     $ git rev-parse HEAD
+> >     940de590b839f71d6dc846160534bf202401b8b7
+> > 
+> >     $ uname -r
+> >     7.3.0-rc1-mainline+
+> > 
+> > The initial observation was a high apparent contention rate on the
+> > nfs_page slab's list_lock. In 10-second perf-lock captures I was seeing
+> > roughly 4.5M contended acquisitions and about 170-185 us of average
+> > reported wait.
+> > 
+> > Chuck reproduced a similar acquisition rate on a single-node EPYC
+> > system, but saw only about 7 ns average wait and fewer than 100
+> > cmpxchg_double_fail events over a corresponding interval. He suggested
+> > checking cmpxchg_double_fail because __slab_free() drops list_lock and
+> > retries when the freelist cmpxchg fails.
+> >
+> > I repeated the measurements in three placement configurations:
+> > 
+> >     A. workload unpinned, CQs all on node0
+> >     B. workload pinned to node0, CQs all on node0
+> >     C. workload unpinned, CQs balanced across the nodes
+> > 
+> > Without perf lock, throughput is similar in all three:
+> > 
+> >     A. unpinned / CQs node0:       ~45.5 GB/s
+> >     B. node0 pinned / CQs node0:   ~45.7 GB/s
+> >     C. unpinned / balanced CQs:    ~45.5 GB/s
+> > 
+> > During the perf-lock captures, throughput is approximately 25 GB/s.
+> > 
+> > For each instrumented 10-second window I ran:
+> > 
+> >     sudo perf lock record -a -g -o "$D/perf-locks.data" -- sleep 10
+> >     mpstat -P ALL 1 10
+> > 
+> > Before and after the same window I sampled the counters under:
+> > 
+> >     /sys/kernel/slab/nfs_page/
+> > 
+> > I also collected separate 10-second counter and mpstat windows under
+> > the same workload configurations without perf lock.
+> > 
+> > The resulting slab counter deltas were:
+> > 
+> >                             A               B                 C
+> >                      unpinned/node0    node0/node0   unpinned/balanced
+> > 
+> >     free_fastpath
+> >     instrumented        655,917,745    457,936,140       328,670,030
+> >     uninstrumented       34,906,233    119,984,226        59,469,931
+> > 
+> >     free_slowpath
+> >     instrumented        236,735,724      7,720,917       270,716,506
+> >     uninstrumented       85,039,753          2,814        60,145,870
+> > 
+> >     sheaf_flush
+> >     instrumented         39,842,700     42,706,800         8,341,440
+> >     uninstrumented        1,286,400     13,487,700           887,700
+> > 
+> >     barn_put_fail
+> >     instrumented            663,994        711,745           139,037
+> >     uninstrumented           21,464        224,762            14,765
+> > 
+> >     barn_get_fail
+> >     instrumented          4,609,925        840,344         4,651,225
+> >     uninstrumented        1,438,643        224,787         1,017,006
+> > 
+> >     cmpxchg_double_fail
+> >     instrumented             70,524          8,077            28,062
+> >     uninstrumented            7,471            713             1,503
+> > 
+> >     alloc_slowpath
+> >     all cases                     0              0                 0
+> > 
+> > The SLUB counter profile changes substantially with perf lock despite
+> > the lower NFS throughput, and the exact mix depends strongly on
+> > placement.
+> > 
+> > The uninstrumented node0/node0 run also reproduces the barn/sheaf
+> > relationship Chuck pointed out earlier. The nfs_page sheaf capacity is
+> > 60:
+> > 
+> >     sheaf_flush / 60 = 13,487,700 / 60 = 224,795
+> >     barn_put_fail                      = 224,762
+> > 
+> > The placement dependence of free_slowpath is also large. It falls from
+> > about 85M events per 10 seconds in the unpinned/node0 case to 2,814 in
+> > the node0/node0 case.
+> > 
+> > The reported perf-lock result, however, is similar across all three
+> > placements:
+> > 
+> >                          contentions    total wait    average wait
+> >     unpinned/node0         4,782,839      14.39 min      180.47 us
+> >     node0/node0            4,582,012      14.13 min      185.05 us
+> >     unpinned/balanced      4,572,196      12.81 min      168.14 us
+> > 
+> > I also revisited an inconsistency Chuck noticed in my earlier
+> > measurements. Previously I had compared aggregate perf-lock wait from
+> > one 10-second capture with CPU utilization measured during a different
+> > window.
+> > 
+> > I now have paired 10-second mpstat samples for each placement, with and
+> > without perf lock. The node values below are averages of the per-CPU
+> > %idle values for the CPUs in each NUMA node:
+> > 
+> >                                   system-wide       node0       node1
+> >                                   %idle             %idle       %idle
+> > 
+> >     A. unpinned / CQs node0
+> >        uninstrumented                 31.46           8.0        54.6
+> >        instrumented                    3.60           0.06        7.1
+> > 
+> >     B. node0 pinned / CQs node0
+> >        uninstrumented                 84.26          69.2        99.4
+> >        instrumented                   12.07          10.4        13.8
+> > 
+> >     C. unpinned / balanced CQs
+> >        uninstrumented                 66.86          66.7        66.9
+> >        instrumented                   14.83          19.0        10.6
+> > 
+> > This resolves the accounting inconsistency in my earlier measurements.
+> > The large aggregate perf-lock wait and high idle percentage had come
+> > from different windows. In the aligned samples, the system is much
+> > busier during the perf-lock capture than in the corresponding
+> > uninstrumented run.
+> > 
+> > I am still unsure how representative the reported ~170-185 us average
+> > wait is of the uninstrumented workload.
+> > 
+> > The remaining number I am less sure how to interpret is
+> > cmpxchg_double_fail. In the uninstrumented windows I see:
+> > 
+> >     unpinned / CQs node0:       7,471 / 10 sec
+> >     node0 pinned / CQs node0:     713 / 10 sec
+> >     unpinned / balanced CQs:    1,503 / 10 sec
+> > 
+> > compared with fewer than 100 in Chuck's test.
+> > 
+> > I understand that cmpxchg_double_fail counts failed slab freelist
+> > updates rather than failed logical frees, so I am not sure what the
+> > appropriate denominator is here. In particular, the node0/node0 case
+> > still has 713 failures while sustaining full throughput and only 2,814
+> > free_slowpath events over the interval.
+> > 
+> > My questions are:
+> > 
+> > 1. Do the uninstrumented cmpxchg_double_fail rates above look abnormal
+> >    for this workload/topology, or are they within the range one would
+> >    expect from this degree of concurrency and NUMA placement?
+> > 
+> > 2. Is there a less invasive way you would recommend measuring the
+> >    nfs_page list_lock/freelist contention? I would like to distinguish
+> >    the steady-state behavior from what is observed during the perf-lock
+> >    capture.
+> > 
+> > Thanks,
+> > Tim
 
-There was a proposal to have separate uncore PMU drivers for AMD and Hygon.
-The latest version of that series can be found at
-https://lore.kernel.org/lkml/20260818100118.12944-1-liuqi@hygon.cn/
-
-Can these changes be adapted to that?
+-- 
+Cheers,
+Harry / Hyeonggon
