@@ -1,118 +1,78 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B42E2C237C;
-	Thu, 17 Sep 2026 23:17:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C95254706F;
+	Thu, 17 Sep 2026 23:19:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789687051; cv=none; b=Q5sc21tucgAAnhUAt6XXzR35+eiHLAu6GZRuME0M2uKLvT2PRSYoRqAz+G65U74JkuC0FCp4DmCHvZYmvulbgbnnXmiKLKl7Nhpu69EzibGLfoOdRj67OPPs8cXMWiJn4ehV37IScfmZGwGow67iDwgBAwoGlev3uSQll3JWBS8=
+	t=1789687191; cv=none; b=M2PONfw7SJrxxiB2nzA5qF7ToA31L2slsGRR4FSCvbEjkbaJiJMzfjPBxyNIbsq4WF2V7VXE1or+U4pG5wxAB/Aad5qGvM8J/fE1O6EFwHpvMeBtMwZO63wNkW2qSd4LAXmBFaBl8CX+45nERAJcyY6AF3lhsbkvhinLsRXjGLw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789687051; c=relaxed/simple;
-	bh=iBFwT8EWh55zDdiWYWL5+m7hDyExYrUJ3RKjlvXihw8=;
+	s=arc-20240116; t=1789687191; c=relaxed/simple;
+	bh=MJEei91VacYcF7nBfvwgGFI/QDcKlgdRZJLyempPRps=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=Fa/BAHJZ4CvXmVY7XJk6cVVZmW6ElmC+X464cffMDP0czWFph1QP+gBZ1keeAdgM5ORuRVQV8IKA/aFRKjzmSp3VHaj+hnpc5Udea+fn/LVI276DbyO8xGz0b1CF3GkTbcsGgYu3eJmmZhJA8Eg7msKjzIYsZ5iHsWRglJSrGMY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eKIxcQzZ; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=uUozMwKyiSMJTyJ/XZFVhMzfwoHLoCIe0oXuGMp5zpqcVEKCOeC9x0nxQ8z/57hM+qh2cj8dMKQe7QVnWgWInoqm3ypiap6PKiXIBzC3/eXFXhAhFzBNpANnNDVs5PWHO/RBrXYcCKQihZ2cG74ggDyLXywUjBV/2T0EoyMrLtw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EXyt9c7p; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eKIxcQzZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 913AE1F000FF;
-	Thu, 17 Sep 2026 23:17:24 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EXyt9c7p"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 35B541F000FF;
+	Thu, 17 Sep 2026 23:19:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789687044;
-	bh=EWGe2xa1RMaDFHh4jelc3Zya04H7dEc05/lAWmAFdTc=;
+	s=k20260515; t=1789687186;
+	bh=MJEei91VacYcF7nBfvwgGFI/QDcKlgdRZJLyempPRps=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=eKIxcQzZv7DVAzX6NJztdGc2e1fNZCtfW5NRXC8m3J7H+gmuNAPymzyZ3je2/4V7z
-	 6dII7YYlTcHdnSi7oJCxGv+p8mdpwpYQu585wFJQjIgr/jdaD171T2IVKrfq6ANzdb
-	 fcu9CnQVl3t3C45S8vNhHrh0+fwHXJa9P/2Ykn3/7J06H9BoOeeWPy0jjKCVbecBnJ
-	 mWDDNbkZXqpJodoBkHGIjZUT9m5yKatoPA9WcfluKPDkvDAKoGXx/IvgiePH6+7er2
-	 snqZMlhqOvrXw2Zd4Sqjsr8KVYiWQAxOyC8SrVKyt3N4vPwWD9415zKgUS2vmuK/1a
-	 Yr5+IL1mrDzjA==
+	b=EXyt9c7pkD/icXXxNVZA8X8lWCvumS3TBg+kOnXHwK/2uA1OM2lv7lkxeSDccu/Br
+	 IS00r6rSJt85pMMT26ioe3X3o3Ox+fZz6nbwJmgGbQ4pO3jHIPph6uOSuZVnRVxnny
+	 OPhc7p90z2/p+HdzgbX1SfgiTea/S5xCEfXuLBEAebVhx890QcAFB6l+flecDwF/Qr
+	 KLLrh4pPTnrNhKXXav9zCeswTGY0ywfXAtqpvzd1m9yZIUAu3+l3Plhz4wG1IWHMjY
+	 QYUeTxKPGu6gAEVWxTttuzhOsz2qRi8P1oFWtuWl0e21W5HR+ukCx8Rw3nqqnKSB+5
+	 oEp01wU4jwJkQ==
 From: sashiko-bot@kernel.org
-Subject: Re: [RFC PATCH v2 06/11] ptwrite uprobes: Add basic memory
- references
+Subject: Re: [RFC PATCH v2 01/11] ptwrite uprobes: Add infrastructure for
+ ptwrite uprobes
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Andi Kleen" <ak@kernel.org>
 Cc: linux-trace-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-In-Reply-To: <20260917230127.924985-7-ak@kernel.org>
+In-Reply-To: <20260917230127.924985-2-ak@kernel.org>
 References: <20260917230127.924985-1-ak@kernel.org>
- <20260917230127.924985-7-ak@kernel.org>
+ <20260917230127.924985-2-ak@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Thu, 17 Sep 2026 23:17:24 +0000
-Message-Id: <20260917231724.913AE1F000FF@smtp.kernel.org>
+Date: Thu, 17 Sep 2026 23:19:45 +0000
+Message-Id: <20260917231946.35B541F000FF@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
-s) to consider:
-- [High] x86/uprobes: missing disp32 emission for memory args causes invali=
-d reads
---
+> uprobes currently always require entering the kernel to log anything.
+> While that works well, it is rather slow.
+>=20
+> Modern Intel CPUs have the ptwrite instruction, which can log data to
+> the Processor Trace buffer. Add support in uprobes for patching PTWRITE
+> instead of kernel entries. When a user collects Processor Trace with perf
+> the logged data will appear in the PT log, otherwise the instructions will
+> be nops.
+>=20
+> PTWRITE provides much faster logging, but it is missing various
+> features that the full featured probes have.
+>=20
+> The instrumentation is similar to optimized uprobes. Add a trampoline
+> page. Replace the original instruction (5 byte nop) with a jump
+> to the trampoline. The nop restriction will be relaxed in a later patch.
+> The trampoline does ptwrites and then jumps back.
+>=20
+> Build the high-level infrastructure without any x86-64-specific
+> parts (except for one data structure). Add register/unregister, basic data
+> structures and high level hooks. Add weak stubs to handle the no uprobes
+> or different architectures case.
+>=20
+> Assisted-by: omp:gpt-5.6-luna
+> Signed-off-by: Andi Kleen <ak@kernel.org>
 
-commit a6d11e7a0c907a2ea16451bbea72e2f4d6ed70e8
-Author: Andi Kleen <ak@kernel.org>
-
-ptwrite uprobes: Add basic memory references
-
-Add support for memory references. Currently this is only
-simple cases, no indirect memory references or strings,
-that would require saving/restoring registers. Only 8 and 4 byte
-memory references are supported.
-
-> diff --git a/arch/x86/kernel/uprobes.c b/arch/x86/kernel/uprobes.c
-> --- a/arch/x86/kernel/uprobes.c
-> +++ b/arch/x86/kernel/uprobes.c
-[ ... ]
-> @@ -1431,24 +1463,62 @@ int arch_uprobe_ptwrite_prepare(struct arch_uprob=
-e *auprobe,
-[ ... ]
->  	for (i =3D 0; i < desc->nargs; i++) {
-> -		if (desc->args[i].src =3D=3D UPROBE_PTW_SRC_REG) {
-> +		switch (desc->args[i].src) {
-[ ... ]
-> +		case UPROBE_PTW_SRC_MEM: {
-> +			u8 reg =3D desc->args[i].reg;
-> +			bool wide =3D desc->args[i].size =3D=3D 8;
-> +			unsigned int arg_len =3D (wide ? 9 : 8) +
-> +				((reg & 7) =3D=3D 4) + (!wide && (reg & 8));
-> +
-> +			PTW_NEED(arg_len);
-> +			*p++ =3D 0xf3;
-> +			if (wide)
-> +				*p++ =3D (reg & 8) ? 0x49 : 0x48; /* REX.W */
-> +			else if (reg & 8)
-> +				*p++ =3D 0x41; /* REX.B only (32-bit operand) */
-> +			*p++ =3D 0x0f;
-> +			*p++ =3D 0xae;
-> +			*p++ =3D 0xa0 | (reg & 7); /* mod 10, reg /4, rm reg */
-> +			if ((reg & 7) =3D=3D 4) /* SIB escape: base rsp/esp/r12 */
-> +				*p++ =3D 0x24;
-> +			p +=3D 4;
-
-[Severity: High]
-Does this code miss copying the displacement value for the memory access?
-
-The stub generator in arch_uprobe_ptwrite_prepare() for memory fetch argume=
-nts
-(UPROBE_PTW_SRC_MEM) configures the ptwrite instruction to use a 32-bit
-displacement (mod=3D10) and advances the instruction pointer p by 4 bytes.
-However, it appears to fail to write the requested user displacement
-(desc->args[i].val) into those 4 bytes, leaving them as uninitialized zeroe=
-s.
-
-Will the generated uprobe stub execute a memory fetch with a displacement of
-0 (e.g., reading [reg + 0] instead of [reg + disp32])? This could cause the
-traced application to read incorrect memory, which can lead to capturing
-garbage data in the trace or crashing the application with an unintended
-SIGSEGV.
-
-> +			break;
-> +		}
->  		}
->  	}
+Sashiko has reviewed this patch and found no issues. It looks great!
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260917230127.9249=
-85-2-ak@kernel.org?part=3D6
+85-2-ak@kernel.org?part=3D1
+
