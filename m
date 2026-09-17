@@ -1,98 +1,81 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1ABFF397928
-	for <linux-perf-users@vger.kernel.org>; Thu, 17 Sep 2026 15:17:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A6F159E35E;
+	Thu, 17 Sep 2026 15:30:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789658258; cv=none; b=R6QcUTXp5fPw+F38RZ3FATp/9KDebmCKht0jLOx0CixQHm37rtFuNH1MXCv/0AJlj9mVctTmr7fu/T8PAlAPM4PKE4EcHLtKEYpLxPn6ZeGwg+FRN9TgXAcXc3FPwO6OUsZ7vjgWilUJfZgUbTt5WQ9QHD5jSyR3WaS6aCN6CS0=
+	t=1789659037; cv=none; b=ip4VNdZF+xsjeECkdsGGqd1remR7/I0RvHmlIjtZ08FKp1MJ9YiOGXzEhhYcj3QaCza7o9PnnfyAO9YrV7/u+o5neHPEeZtsVroYwbAz9Jhhh12QaiSsNonDf/l+lWkAsmoSTnUUbJcRu6JsQ0Oqw4yY358jdOd04NhbaGzRb1k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789658258; c=relaxed/simple;
-	bh=yokcjFoYaQjb2AXJXwiS2CgA9icNw4hd0m3OmDjYLh0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=sg762VUFEwh4CHuWbA8XxQfxil89uiUggTwbwEiSZ9+tGqOBYLdwY8liya1q4KUNYUGDyNDjTZvm4eAEXdSBkq4YulgH7RhmMjkH3f52tp+1Y0GJw+IVl2uOLMbCeBPgt6Oc2fmfb2UQ7MwnimywsH15MxmVDH0yKy6V8eZNoQs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=baYHiQhL; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1789659037; c=relaxed/simple;
+	bh=k4aRaW8Rin+eJ9oRbixnfh27smnELwPdMm0CF6snSFY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Z048z2l/e91ACWK98RbgxMKIb3m21/4OIJYrzHZcRIRFtl9F7Wwg5sBa1xSw/fTMtTBcMsOY9iKpoxoKBkpdiklBhk6Il5ribB3XPFwq+TnN1vbgC/8dNpqrRRkl61w3RoowJrsQokunsMF73ks8clEIGtImKKTG9mCSU69TuVQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=pass smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=Y2TFScVh; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="baYHiQhL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 619CD1F008A4
-	for <linux-perf-users@vger.kernel.org>; Thu, 17 Sep 2026 15:17:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789658230;
-	bh=yokcjFoYaQjb2AXJXwiS2CgA9icNw4hd0m3OmDjYLh0=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc;
-	b=baYHiQhLKHIXv5JcbsYM8h8jWAIdy60s6NhCh0ZGU54W95BOiAuC94Ol2AcpHo47g
-	 xOJkjhXStRdOshTWhG385se+mN0mwxSalEgzP9JG2PQIOLJ/oHEIVw0zHQeJ6cCyxv
-	 qfvHypAZ4Aa+PBTDs1xGLwk8gxllOPs9TBclUTaLcaptPXVE/nH6o6dNw9fmKr/Ga+
-	 euX0r0XKcn50B8jtWh1/A5rkcHzzpSCbjKD97mWUlLgkoyhoofyCpgqfsFLMmV7xqx
-	 ARc5Jnmu7agtqFNmn3zlh9R+1V4XybdteMzm34GCd9fCbp5oeKdHFvfY4O6Spsy5NH
-	 56pQ+Rtftr60g==
-Received: by mail-ed2-f12.google.com with SMTP id 4fb4d7f45d1cf-6a996c8adf3so1647095a12.1
-        for <linux-perf-users@vger.kernel.org>; Thu, 17 Sep 2026 08:17:10 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AKwUvBxNrJYNP24QvIB5SjEcIWq+DNarUc2MV2rMEXUZwS4MvdeLLnLt0g5ym3redvB0TMjFK2rJOwxGbC0SzyZXbaho@vger.kernel.org
-X-Gm-Message-State: AFuF++mnRApLd8QhB76omhNlFqNvIU8jIx48w3f5ORKertPra/mcF7zX
-	2Fk9AmsZqABa/p8MXdc9bvHx2OeIb4ji7GM9sAHStjw0USeGiiaH14poWHFUQY5xKIN1WoXYylf
-	Nk4gqQSQCvTBE1gzXGFYkXx36cLmdWg==
-X-Received: by 2002:a05:6402:460c:b0:6a6:8dd:c76b with SMTP id
- 4fb4d7f45d1cf-6aa22247992mr11552271a12.1.1789658228391; Thu, 17 Sep 2026
- 08:17:08 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Y2TFScVh"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=sTfUOkKMGqgqjaFCBY9cwK+mhbSSBWEoZUq8zIqkfmI=; b=Y2TFScVhT4tsYVFry161EhyqSe
+	Hme1WS9xN6vaajiMtnqa0tFXEm1VBXMSwUSWcpD+j0aqgz0+QUKwAyIo7MXChWqf3W2CHRSrffvvb
+	//7bKSIw49o1liqfVlDMtnAYLUgjPQttyP0fUR0ScQuGI7pcM9Fp3ERmddTFgQjCr13Nzyt+nmcRa
+	kMhoTMoPaqTHevxxcKSO7KhMg6C/tb41LnyNRKzv3YyNuyFLXhhgVFM3nvx+DD5qt24MBlKS/srQV
+	nOIRvdgTvv9mLRHYvhjmW3aqR+S9kJozLTRLtmcX2c5GWRK2+C9ANaRh5iedx6gLVDIgNlYNCYcYx
+	jpUAYrlA==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.99.1 #2 (Red Hat Linux))
+	id 1x7E3k-0000000Alj8-3tlT;
+	Thu, 17 Sep 2026 15:30:01 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 058C1301BD5; Thu, 17 Sep 2026 17:30:00 +0200 (CEST)
+Date: Thu, 17 Sep 2026 17:29:59 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Harry Yoo <harry@kernel.org>
+Cc: Tim Menninger <tmenninger@everpuredata.com>, linux-mm@kvack.org,
+	Chuck Lever <cel@kernel.org>, linux-nfs@vger.kernel.org,
+	Jon Curley <jcurley@everpuredata.com>,
+	Eric Badger <ebadger@everpuredata.com>,
+	Vlastimil Babka <vbabka@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Hao Li <hao.li@linux.dev>, Christoph Lameter <cl@gentwo.org>,
+	David Rientjes <rientjes@google.com>,
+	Roman Gushchin <roman.gushchin@linux.dev>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	James Clark <james.clark@linaro.org>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [SLUB] nfs_page cmpxchg_double_fail and perf lock perturbation
+ on dual-socket NFS/RDMA
+Message-ID: <20260917152959.GI4121339@noisy.programming.kicks-ass.net>
+References: <20260916232227.4098143-1-tmenninger@everpuredata.com>
+ <aqvq8-6IJBDer90O@thinkstation>
+ <aqvy8NqRRRmUlxjR@thinkstation>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260917144134.459819-1-matyasdaniel006@gmail.com>
-In-Reply-To: <20260917144134.459819-1-matyasdaniel006@gmail.com>
-From: Rob Herring <robh@kernel.org>
-Date: Thu, 17 Sep 2026 10:16:56 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqLyPK2rJVAyzCtGtrBSTwOKRZ_EAmE1Xd++9DFaxrrmDw@mail.gmail.com>
-X-Gm-Features: AcwNN1WrkKsI-hJClnXnbb72poP7rLqVHTc23ccK3T-HSnvYyjsVzuH4L2tWH2Y
-Message-ID: <CAL_JsqLyPK2rJVAyzCtGtrBSTwOKRZ_EAmE1Xd++9DFaxrrmDw@mail.gmail.com>
-Subject: Re: [PATCH] dt-bindings: Expand flow lists to block lists
-To: Daniel Matyas <matyasdaniel006@gmail.com>
-Cc: Shenghao Ding <shenghao-ding@ti.com>, Kevin Lu <kevin-lu@ti.com>, Baojun Xu <baojun.xu@ti.com>, 
-	Sen Wang <sen@ti.com>, Peter Huewe <peterhuewe@gmx.de>, Jarkko Sakkinen <jarkko@kernel.org>, 
-	Jason Gunthorpe <jgg@ziepe.ca>, Chunfeng Yun <chunfeng.yun@mediatek.com>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Matthias Brugger <matthias.bgg@gmail.com>, 
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
-	Wim Van Sebroeck <wim@linux-watchdog.org>, Dharma Balasubiramani <dharma.b@microchip.com>, 
-	Jeff LaBundy <jeff@labundy.com>, Simon Glass <sjg@chromium.org>, Linus Walleij <linusw@kernel.org>, 
-	Alexandre Torgue <alexandre.torgue@foss.st.com>, Giuseppe Cavallaro <peppe.cavallaro@st.com>, 
-	Jose Abreu <joabreu@synopsys.com>, Atish Patra <atishp@rivosinc.com>, 
-	Shawn Guo <shawn.guo@linaro.org>, Dmitry Osipenko <digetx@gmail.com>, 
-	Ibrahim Tilki <Ibrahim.Tilki@analog.com>, Okan Sahin <Okan.Sahin@analog.com>, 
-	devicetree@vger.kernel.org, linux-rtc@vger.kernel.org, 
-	Ricard Wanderlof <ricardw@axis.com>, patches@opensource.cirrus.com, 
-	Lukas Wunner <lukas@wunner.de>, Eugen Hristev <ehristev@kernel.org>, mfd@lists.linux.dev, 
-	linux-samsung-soc@vger.kernel.org, linux-mmc@vger.kernel.org, 
-	linux-mtd@lists.infradead.org, linux-amlogic@lists.infradead.org, 
-	netdev@vger.kernel.org, linux-pci@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, linux-phy@lists.infradead.org, 
-	linux-tegra@vger.kernel.org, linux-sound@vger.kernel.org, 
-	linux-integrity@vger.kernel.org, linux-usb@vger.kernel.org, 
-	linux-mediatek@lists.infradead.org, linux-watchdog@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aqvy8NqRRRmUlxjR@thinkstation>
 
-On Thu, Sep 17, 2026 at 9:41=E2=80=AFAM Daniel Matyas <matyasdaniel006@gmai=
-l.com> wrote:
->
-> Running dt_bindings_check returned:
-> [error] string value is redundantly quoted with any quotes (quoted-string=
-s)
->
+On Thu, Sep 17, 2026 at 03:10:47PM +0100, Harry Yoo wrote:
+> ... now I realize we need to add PERFORMANCE EVENTS SUBSYSTEM folks 
+> as well ;-)
+> 
+> Hmm, sounds like perf lock is somehow triggering slab allocations
+> and interfering the workload.
 
-That false positive is fixed in newer versions of yamllint since at
-least a year and a half ago. There's also some other quoting checks
-I'd like to turn on, but that bumps the minimum version since unknown
-checks are an error in yamllint.
-
-> The files used quotation marks in flow lists because the strings had
-> commas and these commas were interpreted as separators. Convert flow
-> style lists to block style lists, so that there is no problems with the
-> commas.
-
-If we wanted to fix like this, we should probably just require block
-style everywhere, but I don't think we should do that.
-
-Rob
+perf should not have runtime memory allocation, its build to run from
+NMI context. It can allocate some memory on event creation and the like,
+but once its on, there should be no more allocations happening.
