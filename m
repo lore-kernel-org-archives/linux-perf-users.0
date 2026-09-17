@@ -1,56 +1,56 @@
-Received: from mail-pg1-f198.google.com (mail-pg1-f198.google.com [209.85.215.198])
+Received: from mail-pj1-f71.google.com (mail-pj1-f71.google.com [209.85.216.71])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E1C93BFAE8
-	for <linux-perf-users@vger.kernel.org>; Thu, 17 Sep 2026 05:07:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.198
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 012813BFAE8
+	for <linux-perf-users@vger.kernel.org>; Thu, 17 Sep 2026 05:07:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.71
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789621657; cv=none; b=n1JblQoDtxI19oU6EMn/P/pSFF0ANP6WGZMM7wS5PN3PbM7Rce5vS9LrkH/T/zrrpzhB1dz/U9LGe1S2y15oNqHaSDSXsHnGWyxtbmqF8aOurxQBJKWMvVXD74r6h5hcnPkePVTNDNq0TS+NpWiKOI0EbJ43rtVv4OkN1UqWX+8=
+	t=1789621659; cv=none; b=fOqpQJoG94+NM95jwCJE7/U8UkF+pJH7KlsI2LF4x6mAhuvAtp9LSuL58ECTU6aGnVQSfZuAhJKtBdPhpeCPyg/peTzcGuAP858wj2MvSKw+i3yg0KF3ceZk8I9U0LXymPDgP+j96cjAcKZJCN04lqXeAFLUYY5DV5zvaZw3Eyo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789621657; c=relaxed/simple;
-	bh=3/ksr6dJ9u+8+78rhBbuNe1Illfjcqctrj4X9hAdg80=;
+	s=arc-20240116; t=1789621659; c=relaxed/simple;
+	bh=B70u4XR/u4bWLXwrT+O9TY/BXXytfR5Z9wno3IAJ7xc=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=N+l8TFGfysFjOwBs934V3JVe9Rh8ZF6p2JASPE1kuFM8pzPuNbJyeLw8ca2E406Crv7qjzv6XeRDGDwOkog3tdPbqplAkHeKjXyKGReCVR6EM3NsHwgbBrJ1LPRuqiXVeK3lvXcBO+/etsJAbpTz0iilhrw7uZ/hax0qhcsyjzE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=unQ1RfiF; arc=none smtp.client-ip=209.85.215.198
+	 To:Cc:Content-Type; b=ic/ZRmrVFsnSvo+MHWNA8LPUIu1SGmAS4K5zy4PF6R9XO0aoJ7xsK2Og6K72gBH9R5sLmmAR1asAatEHcPe8VsWs/rKkjvl+J0128uVxy04ixUVzq1OPPVi3cMA4XhwP8rm0sdGQlMjnOK7vriorb8G4F/cKZHIYse9pTGLAyvY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=SrDTmwVh; arc=none smtp.client-ip=209.85.216.71
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="unQ1RfiF"
-Received: by mail-pg1-f198.google.com with SMTP id 41be03b00d2f7-cbe77d6864dso644640a12.2
-        for <linux-perf-users@vger.kernel.org>; Wed, 16 Sep 2026 22:07:35 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="SrDTmwVh"
+Received: by mail-pj1-f71.google.com with SMTP id 98e67ed59e1d1-398dc3d8f0fso460563a91.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 16 Sep 2026 22:07:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1789621655; x=1790226455; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1789621657; x=1790226457; darn=vger.kernel.org;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=BDO7V9sktC4DN+WfGrw9qWRgLecZHvX85rjze0faLb8=;
-        b=unQ1RfiFdWwiktIOmncX7WgGlSpztYurIYPEAJA0WN3EWneRkMRv8DQ+36UnXixQCU
-         GrVBOo+HaiZ8bj97k8XC4T5AZxPKwBd5FOCzSNptwJPYslrfJob3f9RKajNAQ/9tdzSq
-         On2DMtM5Z7W9lkbXl7RVCzTaUhVMTRj8Mzg/Aml8rpuBo7W9Gf67knGKvSFFqZ3p3hma
-         dC+M//25Ixolxbk6iHaH4tOnBDA/BWIHVjzdbfoYBEv3fbzTasBMS0QBZTr0Fwar+sdu
-         qvbFfuvATN4wfSvl0+3zVA1wlF/4t0HU4btsexsdLqo4hECl510JNT4sooFXgq416le5
-         +/6g==
+        bh=AUMujXU7xT8HywyfxATwqV+1Kl/xa26YBCifxmUb964=;
+        b=SrDTmwVhVWjlzjyAMKfQ4E2cLIkf06XCijaK4u+SH3+XSCJO3bRAVt6gNghTD7LBSq
+         aULdBpVxSRo7pG2BiNltx3LP1OIB0tFzVP3sKwr39pzD5up+fYdTtAtLCcq7SKl6gTbu
+         EvEJmorDelXKxh5fg8cEjj++r5GBySHbxA/dwjzZG6RFcstnHc3BAh+ksdNmHUhZn1Ub
+         mebby0UKedjT6WGv9KsIOa/sj/9unprH8WfBZfM/yuYvchSJXuSxHYpNYfo9gyzhI1LU
+         cxQqqkSS1q27CeIRccj/P8CvQdelp5IoqJcb5BKgkAwPOehx98/HXHaLFyCwzouUGZvV
+         kAZQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1789621655; x=1790226455;
+        d=1e100.net; s=20260707; t=1789621657; x=1790226457;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=BDO7V9sktC4DN+WfGrw9qWRgLecZHvX85rjze0faLb8=;
-        b=WO6xo0JGW+5vgtnyRLUkblQIt9SMeaDBRaVS+ajexgCRXEQYslvtAFpGCsOhDesAmd
-         pf70580L6ow3Cg/evJAGGauMeHGvcvsvvixvq/7uGnaNt2kIdIX+Y1EcqFCIzC/g5Eeh
-         u0E7nnCuWKzCUEITknTYFurgL+2AtEPwSOreg3npahfsdeC9O8OjQLhd2ewlaFkwPzCa
-         oBX7snndfUk+1gMYluefMLwvf7XRmkVdrltXmwJte+Q7BhF0TWV1WM7FZ1NbKqqghkyK
-         ddptQQ716NuQOzjBQM6CPlwqWSh6gd9H6Z3ygiJEZXLAUhUG7B/dNLDkWy1A2G2qhBYR
-         gYJQ==
-X-Forwarded-Encrypted: i=1; AKwUvBxpaTh22XOdFedVlORncIdm/SUVshHlRixVrYfkmQPVodsNMrGAJw+lei26nIVfdu+Vs885RKRk6naCPopIa5iJ@vger.kernel.org
-X-Gm-Message-State: AFuF++nMpYZE45ibb5EJ5N5R25ks2uvOgaV+gQ+9/k5UpurUMAhhKdx6
-	5aGWC05f2TkXXjbQI40zcj3l9tmmrElEqS7FwZRrpVTxTAUMZVTEQOfzMku8Puw1gFjYzP9gHzs
-	NWTdlmJWl8A==
-X-Received: from dyaw17-n2.prod.google.com ([2002:a05:693c:4151:20b0:339:c3e:449b])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a21:4a81:b0:3da:3492:83d0
- with SMTP id adf61e73a8af0-3dd5f7ad04cmr12424123637.23.1789621655187; Wed, 16
- Sep 2026 22:07:35 -0700 (PDT)
-Date: Wed, 16 Sep 2026 22:07:04 -0700
+        bh=AUMujXU7xT8HywyfxATwqV+1Kl/xa26YBCifxmUb964=;
+        b=dEDGb6aSKsfKVLEOs/MbkjScshQ9s6s0S/uK8zugzvi4OBtZSgX8hza/YzAtJQdL1L
+         FXxUEqT5JAhBYYY94XE5L3KfHmQgCdGCKHg8cJqJeKP9w1g9yaodKob3p2qvofscVlLB
+         XLX/uogmV9V4jeT0GslwRfTrv8aNt/POdz6CetpRkS6ibTXcsL8B0wVD72PHD8fYADlP
+         D2DzxycdEwfozX/P9q1dXakhPkpzCPjWkW/BQjbLoAp4nZQw1kzAmENoJebCtOiN0evC
+         fotYzudL3Gf0jtVztUOtv2A5+30tMCr5qTUO5OwKoMnc/rJ+h3cgFY2TTwfrt6UiVG0H
+         Hy6Q==
+X-Forwarded-Encrypted: i=1; AKwUvBzFuXC4WMWvsKuMmQrEDe4Z6PTuSIXzsyBsZc68GYY6JCl4sF/2B2w4DO2KFf204fnwoBYlZbdJ74/bbhf7U1EL@vger.kernel.org
+X-Gm-Message-State: AFuF++nvq1d3Zt8SYMjtv3DkVrNAVS2lB8FK3NA4GduKSvE/Mehg83aH
+	ER4WFhaPpv4u2h1wj20FGKZq/QA9cK2qqynvTlakVhYTUigCURNiUqhzPHGo5hysxV8BJ8pm2Xa
+	blZjQyCKlvg==
+X-Received: from dleb1-n2.prod.google.com ([2002:a05:701b:4241:20b0:144:4896:d41])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:5743:b0:39e:4343:857e
+ with SMTP id 98e67ed59e1d1-39e43438715mr129146a91.15.1789621656998; Wed, 16
+ Sep 2026 22:07:36 -0700 (PDT)
+Date: Wed, 16 Sep 2026 22:07:05 -0700
 In-Reply-To: <20260917050708.704702-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -60,125 +60,52 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260916234652.439778-1-irogers@google.com> <20260917050708.704702-1-irogers@google.com>
 X-Mailer: git-send-email 2.55.0.1082.g2b9226bbc0-goog
-Message-ID: <20260917050708.704702-6-irogers@google.com>
-Subject: [PATCH v4 5/9] perf evlist: Toggle merged_hybrid_group properly in enable/disable
+Message-ID: <20260917050708.704702-7-irogers@google.com>
+Subject: [PATCH v4 6/9] perf tools: Add TUI hints for --hybrid-merge
 From: Ian Rogers <irogers@google.com>
 To: irogers@google.com, acme@kernel.org, namhyung@kernel.org
 Cc: ak@kernel.org, ak@linux.intel.com, andi@firstfloor.org, 
 	linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-Merging makes the merged event the leader of the events of the other
-core PMUs so their histograms can be linked, but the result isn't a
-real event group. Each event keeps its own file descriptor and has to
-be enabled and disabled in its own right.
-
-__evlist__enable(), __evlist__disable() and evlist__is_enabled() skip
-anything that isn't a group leader, and the first two then walk the
-group members of the events they do act on. For a merged set that is
-backwards: the members are skipped by the leader test, so their file
-descriptors are never touched, and the walk over the leader's members
-only updates the bookkeeping in evsel->disabled.
-
-Treat an evsel with merged_hybrid_group set as a leader so that it is
-enabled and disabled in its own right via its own file descriptors.
-
-perf top enables and disables by event name. A merged member carries
-the name of its own PMU rather than the name that was asked for, so
-also match it against its leader's name, otherwise naming the event
-toggles only part of the merged set.
+Add dynamic TUI hints prompting users to restart with --hybrid-merge
+when heterogeneous core PMU events are populated in the sample view.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 Assisted-by: Antigravity:gemini-3.1-pro
 ---
- tools/perf/util/evlist.c | 35 ++++++++++++++++++++++++++---------
- 1 file changed, 26 insertions(+), 9 deletions(-)
+ tools/perf/Documentation/tips.txt | 1 +
+ tools/perf/ui/browsers/hists.c    | 7 +++++--
+ 2 files changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
-index 930efbb66bc8..22eb01116992 100644
---- a/tools/perf/util/evlist.c
-+++ b/tools/perf/util/evlist.c
-@@ -753,7 +753,9 @@ static bool evlist__is_enabled(struct evlist *evlist)
- 	struct evsel *pos;
+diff --git a/tools/perf/Documentation/tips.txt b/tools/perf/Documentation/tips.txt
+index 1c7b309fe6e8..eb6d56d4d8ba 100644
+--- a/tools/perf/Documentation/tips.txt
++++ b/tools/perf/Documentation/tips.txt
+@@ -67,3 +67,4 @@ For parallelism histogram, try: perf report --hierarchy --sort latency,paralleli
+ To analyze particular parallelism levels, try: perf report --latency --parallelism=32-64
+ To see how parallelism changes over time, try: perf report -F time,latency,parallelism --time-quantum=1s
+ When merging events like cycles, different core frequencies and instructions per cycle mean the counts may not fairly reflect time spent in a function.
++Use --hybrid-merge to merge matching events from hybrid cores into one view
+diff --git a/tools/perf/ui/browsers/hists.c b/tools/perf/ui/browsers/hists.c
+index f62cb2d534ed..593e1fd5759d 100644
+--- a/tools/perf/ui/browsers/hists.c
++++ b/tools/perf/ui/browsers/hists.c
+@@ -3580,9 +3580,12 @@ static int perf_evsel_menu__run(struct evsel_menu *menu,
+ 	const char *title = "Available samples";
+ 	int delay_secs = hbt ? hbt->refresh : 0;
+ 	int key;
++	const char *help_text = "ESC: exit, ENTER|->: Browse histograms";
  
- 	evlist__for_each_entry(evlist, pos) {
--		if (!evsel__is_group_leader(pos) || !pos->core.fd)
-+		if (!pos->core.fd)
-+			continue;
-+		if (!evsel__is_group_leader(pos) && !pos->merged_hybrid_group)
- 			continue;
- 		/* If at least one event is enabled, evlist is enabled. */
- 		if (!pos->disabled)
-@@ -767,14 +769,19 @@ static void __evlist__disable(struct evlist *evlist, char *evsel_name, bool excl
- 	struct evsel *pos, *member;
- 	struct evlist_cpu_iterator evlist_cpu_itr;
- 	bool has_imm = false;
-+	bool match;
+-	if (ui_browser__show(&menu->b, title,
+-			     "ESC: exit, ENTER|->: Browse histograms") < 0)
++	if (!symbol_conf.hybrid_merge && evlist__can_merge_hybrid(evlist, menu->env))
++		help_text = "ESC: exit, ENTER|->: Browse. Try --hybrid-merge to combine events.";
++
++	if (ui_browser__show(&menu->b, title, help_text) < 0)
+ 		return -1;
  
- 	/* Disable 'immediate' events last */
- 	for (int imm = 0; imm <= 1; imm++) {
- 		evlist__for_each_cpu(evlist_cpu_itr, evlist) {
- 			pos = evlist_cpu_itr.evsel;
--			if (evsel__strcmp(pos, evsel_name))
-+			match = !evsel__strcmp(pos, evsel_name);
-+			if (!match && pos->merged_hybrid_group && evsel__leader(pos))
-+				match = !evsel__strcmp(evsel__leader(pos), evsel_name);
-+			if (!match)
- 				continue;
--			if (pos->disabled || !evsel__is_group_leader(pos) || !pos->core.fd)
-+			if (pos->disabled || (!evsel__is_group_leader(pos) &&
-+					      !pos->merged_hybrid_group) || !pos->core.fd)
- 				continue;
- 			if (excl_dummy && evsel__is_dummy_event(pos))
- 				continue;
-@@ -789,9 +796,12 @@ static void __evlist__disable(struct evlist *evlist, char *evsel_name, bool excl
- 	}
- 
- 	evlist__for_each_entry(evlist, pos) {
--		if (evsel__strcmp(pos, evsel_name))
-+		match = !evsel__strcmp(pos, evsel_name);
-+		if (!match && pos->merged_hybrid_group && evsel__leader(pos))
-+			match = !evsel__strcmp(evsel__leader(pos), evsel_name);
-+		if (!match)
- 			continue;
--		if (!evsel__is_group_leader(pos) || !pos->core.fd)
-+		if ((!evsel__is_group_leader(pos) && !pos->merged_hybrid_group) || !pos->core.fd)
- 			continue;
- 		if (excl_dummy && evsel__is_dummy_event(pos))
- 			continue;
-@@ -827,21 +837,28 @@ static void __evlist__enable(struct evlist *evlist, char *evsel_name, bool excl_
- {
- 	struct evsel *pos, *member;
- 	struct evlist_cpu_iterator evlist_cpu_itr;
-+	bool match;
- 
- 	evlist__for_each_cpu(evlist_cpu_itr, evlist) {
- 		pos = evlist_cpu_itr.evsel;
--		if (evsel__strcmp(pos, evsel_name))
-+		match = !evsel__strcmp(pos, evsel_name);
-+		if (!match && pos->merged_hybrid_group && evsel__leader(pos))
-+			match = !evsel__strcmp(evsel__leader(pos), evsel_name);
-+		if (!match)
- 			continue;
--		if (!evsel__is_group_leader(pos) || !pos->core.fd)
-+		if ((!evsel__is_group_leader(pos) && !pos->merged_hybrid_group) || !pos->core.fd)
- 			continue;
- 		if (excl_dummy && evsel__is_dummy_event(pos))
- 			continue;
- 		evsel__enable_cpu(pos, evlist_cpu_itr.cpu_map_idx);
- 	}
- 	evlist__for_each_entry(evlist, pos) {
--		if (evsel__strcmp(pos, evsel_name))
-+		match = !evsel__strcmp(pos, evsel_name);
-+		if (!match && pos->merged_hybrid_group && evsel__leader(pos))
-+			match = !evsel__strcmp(evsel__leader(pos), evsel_name);
-+		if (!match)
- 			continue;
--		if (!evsel__is_group_leader(pos) || !pos->core.fd)
-+		if ((!evsel__is_group_leader(pos) && !pos->merged_hybrid_group) || !pos->core.fd)
- 			continue;
- 		if (excl_dummy && evsel__is_dummy_event(pos))
- 			continue;
+ 	while (1) {
 -- 
 2.55.0.1082.g2b9226bbc0-goog
 
