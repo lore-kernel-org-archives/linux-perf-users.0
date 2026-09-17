@@ -1,56 +1,56 @@
-Received: from mail-pj1-f70.google.com (mail-pj1-f70.google.com [209.85.216.70])
+Received: from mail-pj1-f69.google.com (mail-pj1-f69.google.com [209.85.216.69])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97F283E411E
-	for <linux-perf-users@vger.kernel.org>; Thu, 17 Sep 2026 05:07:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.70
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 665DE3ED3BA
+	for <linux-perf-users@vger.kernel.org>; Thu, 17 Sep 2026 05:07:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.69
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789621663; cv=none; b=noNDI5uDcgpc3V/VLJi3kBohmWycVohWN6BIYAD5SWSE3zmVQcL5fXaakK5zWktC6K6FRyKRsj39A+Pgyt4yYuYuXoF6bsFt+9kRMXm7yL+qXtZJztike9Bh7/4FyIV+cPvOUuW5Lg0L4TpCec0fnqIL3aWFoTckopfPK4gWOUw=
+	t=1789621664; cv=none; b=lU0e5BrXEzVJVuTXPjdq/gpQ41HZS89krYA2+XiuLkrgxIpZioMAIF7nWzVQS4X3beLLP76kZoKQBkM5/2eMsOKzVTU8JMItoJPgfWu2ynimyhd2ru3XfiOilRhm8Ha4h8SEDyAZ6/9z54fu/GmK73nnXbiC7OitEt+nRj8UtQU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789621663; c=relaxed/simple;
-	bh=8PnJhMbJfPW2TG6Tymzwhur83WhT4MYpBVhb6jWo10Q=;
+	s=arc-20240116; t=1789621664; c=relaxed/simple;
+	bh=on4JPLScYh1nB1A79ixv0ZIEGxwlL+hJyfIBgoB8xxw=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=C0mIQCvoFD9f79P8I+kmUDLvD/pfHMPquRVcQYZLSYTcexCmbJCChS/mv3DjhK6Wa7Hbg8o+SzMR983+Yu8JqWmvgoKQre2RTRgzJPnTcGmNz0INmzfyBJeHUEyAufXzIIbsxqBksXzJc6hcJvPKlbWgCiAojpnSZFgSiu7hukQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=qzb3asPR; arc=none smtp.client-ip=209.85.216.70
+	 To:Cc:Content-Type; b=Cn8MjS3TuGfwhmA5BzdPUltJzHmN96/YL+sHQGtBwbAkyAS2AV74Y51515GD/sCGCe+rMF8Gy64jr9yMO+eo0qLxh+K7TOo9yFSn/V2D5FSEj6GEJYMjpExTAzEd0r065OIx3bBJNpoBn8/059ZSUNYV7agcdpH7lSdH0qKfais=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=huDTWQKF; arc=none smtp.client-ip=209.85.216.69
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qzb3asPR"
-Received: by mail-pj1-f70.google.com with SMTP id 98e67ed59e1d1-39deda201bcso814095a91.2
-        for <linux-perf-users@vger.kernel.org>; Wed, 16 Sep 2026 22:07:41 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="huDTWQKF"
+Received: by mail-pj1-f69.google.com with SMTP id 98e67ed59e1d1-39e18af9f48so740434a91.1
+        for <linux-perf-users@vger.kernel.org>; Wed, 16 Sep 2026 22:07:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1789621661; x=1790226461; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1789621663; x=1790226463; darn=vger.kernel.org;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=6D1ESuvEsdtOmtDCzS/PXitfXFcHsOG4PWfs9i8aKQc=;
-        b=qzb3asPR4TiVQCk/dHxBU0VrHNcnj0Wj7L/QXnzUrFpDL8CpoKDOrvTGHyvdHHHnM2
-         JZr+1xdzKY8zhoBTP9ZfpwdvttLkQaB7f3dDPSC3NwQ/jhKJZEVqtlbS6qdnjxE6+vT2
-         Ub9PtGs9tWC3ge+LNyyS3/kdYnXhJ8N2QGue3D6xhSwMMhvJVSiP3bvLMbaX6x6nTjD2
-         PpkFvuEiqf4Ce6VWv3gbXCUOmcKDpLW70Twagrsa/Dx5JbkZrg0jqhtGzan7scAgkb6R
-         lk16tUKAYTcpla0MRbHKwXmTk/MRzbwfOus264ohgjiXcpJhu1thv1EDS5o1pgPpiber
-         rOeQ==
+        bh=VG4f4AvZoQKble5jQ8SQSDqnqITphIJrYwpkQM1Fgco=;
+        b=huDTWQKF57HjYb5BTvBr63AHWOwdQDq+MHZ9CoZ1IrbWUU1dDyvMR6UpAoigsHryIs
+         0gDS1n/JivJ33JDL2Eq2KhQKP55BwBOgARWjY4ebI5d5JYRcPBbuyCiTcmgH2bF/WvvI
+         RPdkk/gcEw2VrZ8YuA/2GrDBylhyWm8o2psDRX00M3bBoMUjnRT+UplybOv+zEnGrL97
+         M+UuvCWNXAtQd6Ui1gWfFTsDJBhSvtuFHzcfpS4mTEXFYftnBSl2PR3akZPXxTYMKa/0
+         DIbAxIj8PNQ2hsQctWrPW1yh78kUZgaGLAB4fvPUXxDW9Y5+0xKV3ahKD8Nx/PE7kyZh
+         M1Jw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1789621661; x=1790226461;
+        d=1e100.net; s=20260707; t=1789621663; x=1790226463;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=6D1ESuvEsdtOmtDCzS/PXitfXFcHsOG4PWfs9i8aKQc=;
-        b=bhxDDTSLlj7eCFW2+/PFOU4bh+16LWXzB6ZyMaRjoYl9zPnGe7y7RpG2R/QYZ4s1X9
-         MyifpL7bi/JefcbvL2lIUgOrtvK6JP5JovKE50fB5xkorZv8z1E5zN0GeLEItJ9vwYaj
-         x3MCYTL+/2cuqQ+OC/PsKgRhRkT0Mg1rfjCGadVUYp77G8Shud9hdbzM6RHs00rGxPwm
-         FeAmpxwcwU9JH7T9p2mrxvZlWldOZO/4VrlD3eP2XAqR0BNdj9gYnftanI13IUm7iosc
-         85cV5WqdsBYmKHNwJBQCvXtKdyX4nnYjS116F19Lpd/PNCB/sgxitdstARD0vdO7tFLM
-         vG8A==
-X-Forwarded-Encrypted: i=1; AKwUvBw8Cvk4YVPAaZePE8Dos8QD/x4muZDB0vGY02eGjAFLUXGWaUVmvIpSbzJb/tpg5Ab2Z85DX159+mScB7g3CLS4@vger.kernel.org
-X-Gm-Message-State: AFuF++kTLynY+citVGLam44+Rrf3twJgSNEmXKEfQySIzJ9BDIXKUfyb
-	DGtjq5J5hkKvhiWx4w0PXJl5dziqv6hImW9DRlE5uLadgKloH1jXp4dwZFY1UFXiNdGumP/MCaM
-	nfBuzjJ3ITw==
-X-Received: from dyblf16.prod.google.com ([2002:a05:7301:a10:b0:32d:1a84:9293])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:39af:b0:39d:f247:bb3
- with SMTP id 98e67ed59e1d1-39e1e4b0168mr11626573a91.21.1789621660580; Wed, 16
- Sep 2026 22:07:40 -0700 (PDT)
-Date: Wed, 16 Sep 2026 22:07:07 -0700
+        bh=VG4f4AvZoQKble5jQ8SQSDqnqITphIJrYwpkQM1Fgco=;
+        b=dIQoVGPZXkwGzY6tZv9sF4zBoq/ZeXqRrKyhXbiopGI+lLLMpbhzzY+wO9FqWkPVB1
+         /jgn9Ygbs1oOP3btfsqidrtonTKjjpUR1Jlt9W8LvqU/I+i7QgRbG97gPNXwTdjkvXu3
+         xmLzczglZlHpT+m6YlIgxQqrr4YGdpc/yzEavvsC3odD7Ak/pm7WjdbnYj/gO0xYiG9K
+         yv/YB8vWOuxxNrt77tLgj1ar/2xn/8iDGv6ClLbWG4uXLQ2wf5O0HeKh5i+gTsZq0u6V
+         /asIXeg7AFsrYiKp72fTOWf1cplJKFmIazpPZtm4A88EjJQxl4a5ijDL6QxO4qfiHxvv
+         qPsw==
+X-Forwarded-Encrypted: i=1; AKwUvByfAqGS8OUBXZYBrim1DDQ4cv7hzI1rZBgYaBgpJ/HuucJAOeB2jWJSwd5yG/2MdXJCjwN9wSGQP1s8PFieADRg@vger.kernel.org
+X-Gm-Message-State: AFuF++mEpDQKSBdwNIl5oDfp/L0ua51irqdebZtUbYd5MN3BCKXgU2R9
+	joC4FpXz9brqKoIAgUPUh5XZq++Sfii/FMmcDylB4PK2pC+4dG5KXovMrSd6vAmaCmGxKj+MqT+
+	avDgthu161g==
+X-Received: from dldyq18-n2.prod.google.com ([2002:a05:701b:4552:20b0:143:75c2:6d21])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90a:ec8c:b0:37f:e5b1:ec4b
+ with SMTP id 98e67ed59e1d1-39e35da0512mr3873387a91.5.1789621662586; Wed, 16
+ Sep 2026 22:07:42 -0700 (PDT)
+Date: Wed, 16 Sep 2026 22:07:08 -0700
 In-Reply-To: <20260917050708.704702-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -60,505 +60,110 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260916234652.439778-1-irogers@google.com> <20260917050708.704702-1-irogers@google.com>
 X-Mailer: git-send-email 2.55.0.1082.g2b9226bbc0-goog
-Message-ID: <20260917050708.704702-9-irogers@google.com>
-Subject: [PATCH v4 8/9] perf test: Expand tests for --hybrid-merge
+Message-ID: <20260917050708.704702-10-irogers@google.com>
+Subject: [PATCH v4 9/9] perf test: Isolate test suite from user .perfconfig natively
 From: Ian Rogers <irogers@google.com>
 To: irogers@google.com, acme@kernel.org, namhyung@kernel.org
 Cc: ak@kernel.org, ak@linux.intel.com, andi@firstfloor.org, 
 	linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-Add a "Hybrid event merging" test that checks evlist__can_merge_hybrid()
-and evlist__merge_hybrid() directly, covering the events a wildcard
-expanded to over two core PMUs, the same over three, and events that
-must not be merged.
+Running 'perf test' should not inherit the user's ~/.perfconfig
+environment as customizing core properties (like core.hybrid-merge)
+will trivially break stdout matching checks across the shell suite.
 
-Add a report_hybrid_merge.sh shell test that records and then reports
-with --hybrid-merge, and extend top.sh to cover perf top with it.
+Explicitly set PERF_CONFIG to /dev/null inside cmd_test to globally
+sandbox the environment for the entire test workflow. Test specific
+config, like annotate.objdump, is read before the sandboxing so that
+'perf test' still honors it.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 Assisted-by: Antigravity:gemini-3.1-pro
 ---
- tools/perf/tests/Build                        |   1 +
- tools/perf/tests/builtin-test.c               |   1 +
- tools/perf/tests/hybrid-merge.c               | 206 ++++++++++++++++++
- tools/perf/tests/shell/report_hybrid_merge.sh | 121 ++++++++++
- tools/perf/tests/shell/top.sh                 |  73 ++++++-
- tools/perf/tests/tests.h                      |   1 +
- 6 files changed, 392 insertions(+), 11 deletions(-)
- create mode 100644 tools/perf/tests/hybrid-merge.c
- create mode 100755 tools/perf/tests/shell/report_hybrid_merge.sh
+ tools/perf/tests/builtin-test.c | 49 +++++++++++++++++++++++++++++----
+ 1 file changed, 44 insertions(+), 5 deletions(-)
 
-diff --git a/tools/perf/tests/Build b/tools/perf/tests/Build
-index 66944a4f4968..406e48eed1c8 100644
---- a/tools/perf/tests/Build
-+++ b/tools/perf/tests/Build
-@@ -65,6 +65,7 @@ perf-test-y += perf-time-to-tsc.o
- perf-test-y += dlfilter-test.o
- perf-test-y += sigtrap.o
- perf-test-y += event_groups.o
-+perf-test-y += hybrid-merge.o
- perf-test-y += symbols.o
- perf-test-y += util.o
- perf-test-y += hwmon_pmu.o
 diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-test.c
-index 4d0784b16723..6293b37266cf 100644
+index 6293b37266cf..2d53414d8271 100644
 --- a/tools/perf/tests/builtin-test.c
 +++ b/tools/perf/tests/builtin-test.c
-@@ -149,6 +149,7 @@ static struct test_suite *generic_tests[] = {
- 	&suite__dlfilter,
- 	&suite__sigtrap,
- 	&suite__event_groups,
-+	&suite__hybrid_merge,
- 	&suite__symbols,
- 	&suite__util,
- 	&suite__subcmd_help,
-diff --git a/tools/perf/tests/hybrid-merge.c b/tools/perf/tests/hybrid-merge.c
-new file mode 100644
-index 000000000000..426b1d09618e
---- /dev/null
-+++ b/tools/perf/tests/hybrid-merge.c
-@@ -0,0 +1,206 @@
-+// SPDX-License-Identifier: GPL-2.0
-+#include <stdlib.h>
-+#include <string.h>
-+#include <linux/perf_event.h>
-+#include "debug.h"
-+#include "env.h"
-+#include "evlist.h"
-+#include "evsel.h"
-+#include "tests.h"
-+
-+/* A hybrid machine with 2 core PMUs, as read from a perf.data file. */
-+static struct hybrid_node two_core_pmus[] = {
-+	{ .pmu_name = (char *)"cpu_atom", .cpus = (char *)"0-3", },
-+	{ .pmu_name = (char *)"cpu_core", .cpus = (char *)"4-7", },
-+};
-+
-+/* A machine with more than 2 kinds of core, like some Arm big.LITTLE. */
-+static struct hybrid_node three_core_pmus[] = {
-+	{ .pmu_name = (char *)"cpu_atom", .cpus = (char *)"0-3", },
-+	{ .pmu_name = (char *)"cpu_core", .cpus = (char *)"4-7", },
-+	{ .pmu_name = (char *)"cpu_lowpower", .cpus = (char *)"8", },
-+};
-+
-+static struct evsel *test_evsel__new(struct evlist *evlist, const char *name)
-+{
-+	struct perf_event_attr attr = {
-+		.type = PERF_TYPE_RAW,
-+		.size = sizeof(attr),
-+		.config = 0x3c,
-+	};
-+	struct evsel *evsel = evsel__new(&attr);
-+
-+	if (!evsel)
-+		return NULL;
-+
-+	evsel->name = strdup(name);
-+	if (!evsel->name) {
-+		evsel__put(evsel);
-+		return NULL;
-+	}
-+	evlist__add(evlist, evsel);
-+	return evsel;
-+}
-+
-+/*
-+ * The assertions are in helpers taking an already allocated evlist, so that the
-+ * caller can release the evlist however an assertion fails.
-+ */
-+static int check_merge_events(struct evlist *evlist, struct perf_env *env)
-+{
-+	struct evsel *atom_cycles, *core_cycles, *atom_insns, *core_insns, *pos;
-+
-+	/* As if "perf record -e cycles,instructions" ran on a hybrid machine. */
-+	atom_cycles = test_evsel__new(evlist, "cpu_atom/cycles/");
-+	core_cycles = test_evsel__new(evlist, "cpu_core/cycles/");
-+	atom_insns = test_evsel__new(evlist, "cpu_atom/instructions/");
-+	core_insns = test_evsel__new(evlist, "cpu_core/instructions/");
-+	TEST_ASSERT_VAL("failed to allocate evsels",
-+			atom_cycles && core_cycles && atom_insns && core_insns);
-+
-+	TEST_ASSERT_VAL("events should be mergeable",
-+			evlist__can_merge_hybrid(evlist, env));
-+
-+	/* Testing for merging must not alter the evlist. */
-+	evlist__for_each_entry(evlist, pos) {
-+		TEST_ASSERT_VAL("evlist modified by evlist__can_merge_hybrid",
-+				!pos->first_wildcard_match);
-+	}
-+
-+	evlist__merge_hybrid(evlist, env);
-+
-+	TEST_ASSERT_VAL("cycles not merged",
-+			core_cycles->first_wildcard_match == atom_cycles);
-+	/* All the events must be merged, not just the first pair found. */
-+	TEST_ASSERT_VAL("instructions not merged",
-+			core_insns->first_wildcard_match == atom_insns);
-+	TEST_ASSERT_VAL("wrong cycles leader",
-+			evsel__leader(core_cycles) == atom_cycles);
-+	TEST_ASSERT_VAL("wrong instructions leader",
-+			evsel__leader(core_insns) == atom_insns);
-+	TEST_ASSERT_VAL("wrong cycles group size", atom_cycles->core.nr_members == 2);
-+	TEST_ASSERT_VAL("wrong instructions group size", atom_insns->core.nr_members == 2);
-+
-+	return TEST_OK;
-+}
-+
-+static int test__hybrid_merge_events(struct test_suite *test __maybe_unused,
-+				     int subtest __maybe_unused)
-+{
-+	struct perf_env env = {
-+		.nr_hybrid_nodes = ARRAY_SIZE(two_core_pmus),
-+		.hybrid_nodes = two_core_pmus,
-+	};
-+	struct evlist *evlist = evlist__new();
-+	int ret;
-+
-+	TEST_ASSERT_VAL("failed to allocate evlist", evlist);
-+
-+	ret = check_merge_events(evlist, &env);
-+	evlist__put(evlist);
-+	return ret;
-+}
-+
-+static int check_merge_3_core_pmus(struct evlist *evlist, struct perf_env *env)
-+{
-+	struct evsel *atom_cycles, *core_cycles, *lowpower_cycles;
-+
-+	atom_cycles = test_evsel__new(evlist, "cpu_atom/cycles/");
-+	core_cycles = test_evsel__new(evlist, "cpu_core/cycles/");
-+	lowpower_cycles = test_evsel__new(evlist, "cpu_lowpower/cycles/");
-+	TEST_ASSERT_VAL("failed to allocate evsels",
-+			atom_cycles && core_cycles && lowpower_cycles);
-+
-+	evlist__merge_hybrid(evlist, env);
-+
-+	TEST_ASSERT_VAL("second core PMU not merged",
-+			core_cycles->first_wildcard_match == atom_cycles);
-+	TEST_ASSERT_VAL("third core PMU not merged",
-+			lowpower_cycles->first_wildcard_match == atom_cycles);
-+	TEST_ASSERT_VAL("wrong group size", atom_cycles->core.nr_members == 3);
-+
-+	return TEST_OK;
-+}
-+
-+static int test__hybrid_merge_3_core_pmus(struct test_suite *test __maybe_unused,
-+					  int subtest __maybe_unused)
-+{
-+	struct perf_env env = {
-+		.nr_hybrid_nodes = ARRAY_SIZE(three_core_pmus),
-+		.hybrid_nodes = three_core_pmus,
-+	};
-+	struct evlist *evlist = evlist__new();
-+	int ret;
-+
-+	TEST_ASSERT_VAL("failed to allocate evlist", evlist);
-+
-+	ret = check_merge_3_core_pmus(evlist, &env);
-+	evlist__put(evlist);
-+	return ret;
-+}
-+
-+static int check_unmergeable_core_events(struct evlist *evlist, struct perf_env *env)
-+{
-+	/* A single event has nothing to merge with. */
-+	TEST_ASSERT_VAL("failed to allocate evsel",
-+			test_evsel__new(evlist, "cpu_core/cycles/"));
-+	TEST_ASSERT_VAL("a single event shouldn't merge",
-+			!evlist__can_merge_hybrid(evlist, env));
-+
-+	/* Events of different names shouldn't merge. */
-+	TEST_ASSERT_VAL("failed to allocate evsel",
-+			test_evsel__new(evlist, "cpu_atom/instructions/"));
-+	TEST_ASSERT_VAL("events with different names shouldn't merge",
-+			!evlist__can_merge_hybrid(evlist, env));
-+
-+	return TEST_OK;
-+}
-+
-+static int check_unmergeable_uncore_events(struct evlist *evlist, struct perf_env *env)
-+{
-+	/* Matching events on non-core PMUs shouldn't merge. */
-+	TEST_ASSERT_VAL("failed to allocate evsels",
-+			test_evsel__new(evlist, "uncore_imc_0/clockticks/") &&
-+			test_evsel__new(evlist, "uncore_imc_1/clockticks/"));
-+	TEST_ASSERT_VAL("uncore events shouldn't merge",
-+			!evlist__can_merge_hybrid(evlist, env));
-+
-+	return TEST_OK;
-+}
-+
-+static int test__hybrid_merge_unmergeable(struct test_suite *test __maybe_unused,
-+					  int subtest __maybe_unused)
-+{
-+	struct perf_env env = {
-+		.nr_hybrid_nodes = ARRAY_SIZE(two_core_pmus),
-+		.hybrid_nodes = two_core_pmus,
-+	};
-+	struct evlist *evlist = evlist__new();
-+	int ret;
-+
-+	TEST_ASSERT_VAL("failed to allocate evlist", evlist);
-+
-+	ret = check_unmergeable_core_events(evlist, &env);
-+	evlist__put(evlist);
-+	if (ret != TEST_OK)
-+		return ret;
-+
-+	evlist = evlist__new();
-+	TEST_ASSERT_VAL("failed to allocate evlist", evlist);
-+
-+	ret = check_unmergeable_uncore_events(evlist, &env);
-+	evlist__put(evlist);
-+	return ret;
-+}
-+
-+static struct test_case tests__hybrid_merge[] = {
-+	TEST_CASE("Merge events of 2 core PMUs", hybrid_merge_events),
-+	TEST_CASE("Merge events of 3 core PMUs", hybrid_merge_3_core_pmus),
-+	TEST_CASE("Events that shouldn't merge", hybrid_merge_unmergeable),
-+	{	.name = NULL, }
-+};
-+
-+struct test_suite suite__hybrid_merge = {
-+	.desc = "Hybrid event merging",
-+	.test_cases = tests__hybrid_merge,
-+};
-diff --git a/tools/perf/tests/shell/report_hybrid_merge.sh b/tools/perf/tests/shell/report_hybrid_merge.sh
-new file mode 100755
-index 000000000000..aca5d16c6c9d
---- /dev/null
-+++ b/tools/perf/tests/shell/report_hybrid_merge.sh
-@@ -0,0 +1,121 @@
-+#!/bin/bash
-+# SPDX-License-Identifier: GPL-2.0
-+# perf report hybrid merge tests
-+
-+set -e
-+
-+err=0
-+log_dir=$(mktemp -d /tmp/__perf_test.report_hybrid_merge.XXXXXX)
-+perf_data="${log_dir}/perf.data"
-+perf_out="${log_dir}/perf.out"
-+perf_config="${log_dir}/perfconfig"
-+
-+cleanup() {
-+	rm -rf "${log_dir}"
-+	trap - EXIT TERM INT
-+}
-+
-+trap_cleanup() {
-+	echo "Unexpected signal in ${FUNCNAME[1]}"
-+	cleanup
-+	exit 1
-+}
-+trap trap_cleanup EXIT TERM INT
-+
-+# Record 2 events so that all the events of a hybrid machine must be merged,
-+# not just the first pair found.
-+events=""
-+record_events() {
-+	for try in "cycles,instructions" "cpu-clock,task-clock"; do
-+		if perf record -o "${perf_data}" -e "${try}" -- \
-+		   perf test -w thloop 1 >/dev/null 2>&1; then
-+			events="${try//,/ }"
-+			return 0
-+		fi
-+	done
-+	return 1
-+}
-+
-+test_hybrid_merge_report() {
-+	echo "Perf report hybrid merge test"
-+
-+	# Test with multiple fields to ensure formatting alignment doesn't hide members
-+	if ! perf report -i "${perf_data}" --hybrid-merge \
-+			 -F comm,overhead --stdio > "${perf_out}" 2>&1; then
-+		echo "Perf report hybrid merge test [Failed: run err]"
-+		err=1
-+		return
-+	fi
-+
-+	# Check if the output actually contains the 'comm' and 'overhead' headers correctly
-+	if ! grep -qi "Overhead" "${perf_out}"; then
-+		echo "Perf report hybrid merge test [Failed: missing overhead header]"
-+		err=1
-+		return
-+	fi
-+
-+	if ! grep -qi "Command" "${perf_out}"; then
-+		echo "Perf report hybrid merge test [Failed: missing comm header]"
-+		err=1
-+		return
-+	fi
-+
-+	# Every recorded event must be displayed, merged into a group on a
-+	# hybrid machine and separately elsewhere.
-+	if ! perf report -i "${perf_data}" --hybrid-merge --stdio \
-+			 > "${perf_out}" 2>&1; then
-+		echo "Perf report hybrid merge test [Failed: run err]"
-+		err=1
-+		return
-+	fi
-+	for event in ${events}; do
-+		if ! grep -q -- "${event}" "${perf_out}"; then
-+			echo "Perf report hybrid merge test [Failed: missing event ${event}]"
-+			cat "${perf_out}"
-+			err=1
-+			return
-+		fi
-+	done
-+
-+	echo "Perf report hybrid merge test [Success]"
-+}
-+
-+test_hybrid_merge_config() {
-+	echo "Perf report hybrid merge config test"
-+
-+	cat <<EOF > "${perf_config}"
-+[core]
-+	hybrid-merge = true
-+EOF
-+
-+	# Merging from the config file is a default, it must give way to an
-+	# explicitly requested --hierarchy rather than failing.
-+	if ! PERF_CONFIG="${perf_config}" perf report -i "${perf_data}" \
-+	     --hierarchy --stdio > "${perf_out}" 2>&1; then
-+		echo "Perf report hybrid merge config test [Failed: --hierarchy]"
-+		cat "${perf_out}"
-+		err=1
-+		return
-+	fi
-+
-+	# Asking for both on the command line remains an error.
-+	if PERF_CONFIG="${perf_config}" perf report -i "${perf_data}" \
-+	   --hierarchy --hybrid-merge --stdio > "${perf_out}" 2>&1; then
-+		echo "Perf report hybrid merge config test [Failed: no error for both]"
-+		err=1
-+		return
-+	fi
-+
-+	echo "Perf report hybrid merge config test [Success]"
-+}
-+
-+if ! record_events; then
-+	echo "Perf report hybrid merge test [Skipped: perf record failed]"
-+	cleanup
-+	exit 2
-+fi
-+
-+test_hybrid_merge_report
-+test_hybrid_merge_config
-+cleanup
-+exit $err
-diff --git a/tools/perf/tests/shell/top.sh b/tools/perf/tests/shell/top.sh
-index ad7fccd09025..3d52677ccb5f 100755
---- a/tools/perf/tests/shell/top.sh
-+++ b/tools/perf/tests/shell/top.sh
-@@ -35,21 +35,22 @@ test_basic_perf_top() {
- 	# Use -d 1 to avoid flooding output
- 	# Use -e cpu-clock to ensure we get samples
- 	# Use sleep to keep stdin open but silent, preventing EOF loop or interactive spam
--	if ! sleep 10 | timeout 5s perf top --stdio -d 1 -e cpu-clock -p $PID > "${log_file}" 2>&1; then
--		retval=$?
--		if [ $retval -ne 124 ] && [ $retval -ne 0 ]; then
--			echo "Basic perf top test [Failed: perf top failed to start or run (ret=$retval)]"
--			head -n 50 "${log_file}"
--			kill $PID
--			wait $PID 2>/dev/null || true
--			err=1
--			return
--		fi
-+	retval=0
-+	sleep 10 | timeout 5s perf top --stdio -d 1 -e cpu-clock \
-+		-p $PID > "${log_file}" 2>&1 || retval=$?
-+	if [ "${retval:-0}" -ne 124 ] && [ "${retval:-0}" -ne 0 ]; then
-+		echo "Basic perf top test [Failed: perf top failed to start or run (ret=$retval)]"
-+		head -n 50 "${log_file}"
-+		kill $PID 2>/dev/null || true
-+		wait $PID 2>/dev/null || true
-+		err=1
-+		return
- 	fi
+@@ -14,6 +14,8 @@
+ #include <stdlib.h>
+ #include <string.h>
  
--	kill $PID
-+	kill $PID 2>/dev/null || true
- 	wait $PID 2>/dev/null || true
- 
++#include "util/config.h"
 +
- 	# Check for some sample data (percentage)
- 	if ! grep -E -q "[0-9]+\.[0-9]+%" "${log_file}"; then
- 		echo "Basic perf top test [Failed: no sample percentage found]"
-@@ -69,6 +70,56 @@ test_basic_perf_top() {
- 	echo "Basic perf top test [Success]"
+ #include <dirent.h>
+ #include <linux/kernel.h>
+ #include <linux/string.h>
+@@ -1655,11 +1657,30 @@ static int run_workload(const char *work, int argc, const char **argv)
+ 	return -1;
  }
  
-+test_hybrid_merge_perf_top() {
-+	echo "Perf top hybrid merge test"
++/*
++ * Owns the string test_objdump_path points at when it came from the config. It
++ * is reachable for the lifetime of the process so leak checking won't report
++ * it.
++ */
++static char *test_objdump_config_path;
 +
-+	perf test -w thloop 20 &
-+	PID=$!
+ static int perf_test__config(const char *var, const char *value,
+ 			     void *data __maybe_unused)
+ {
+-	if (!strcmp(var, "annotate.objdump"))
+-		test_objdump_path = value;
++	if (!strcmp(var, "annotate.objdump")) {
++		/*
++		 * The config, and so value, is freed by perf_config__exit()
++		 * below, take a copy that lives as long as the tests.
++		 */
++		char *dup = strdup(value);
 +
-+	# Allow it to start
-+	sleep 0.1
++		if (!dup)
++			return -ENOMEM;
 +
-+	# Run without explicitly requesting -e cycles so heavily virtualized
-+	# environments can seamlessly fall back to cpu-clock while real
-+	# hybrid hardware will naturally cover the merge logic.
-+	retval=0
-+	sleep 10 | timeout 5s perf top \
-+			--stdio --hybrid-merge -d 1 -p $PID > "${log_file}" 2>&1 || retval=$?
-+	if [ "${retval:-0}" -ne 124 ] && [ "${retval:-0}" -ne 0 ]; then
-+		echo "Perf top hybrid merge test [Failed: run err=$retval]"
-+		head -n 50 "${log_file}"
-+		kill $PID 2>/dev/null || true
-+		wait $PID 2>/dev/null || true
-+		err=1
-+		return
-+	fi
++		free(test_objdump_config_path);
++		test_objdump_config_path = dup;
++		test_objdump_path = dup;
++	}
+ 
+ 	return 0;
+ }
+@@ -1755,13 +1776,31 @@ int cmd_test(int argc, const char **argv)
+ 	};
+ 	const char * const test_subcommands[] = { "list", NULL };
+ 	struct intlist *skiplist = NULL;
+-        int ret = hists__init();
+ 	struct test_suite **suites;
++	int ret;
+ 
+-        if (ret < 0)
++	ret = hists__init();
++	if (ret < 0)
+                 return ret;
+ 
+-	perf_config(perf_test__config, NULL);
++	/* Read test related config, like annotate.objdump, before isolating. */
++	ret = perf_config(perf_test__config, NULL);
++	if (ret < 0)
++		return ret;
 +
-+	kill $PID 2>/dev/null || true
-+	wait $PID 2>/dev/null || true
-+
-+	# Wait a tiny bit for the file system to catch up on the logs
-+	sleep 0.1
-+
-+	# Check for some sample data (percentage)
-+	if ! grep -E -q "[0-9]+\.[0-9]+%" "${log_file}"; then
-+		echo "Perf top hybrid merge test [Failed: no sample percentage found]"
-+		head -n 50 "${log_file}"
-+		err=1
-+		return
-+	fi
-+
-+	# Check for the test loop symbol to ensure attribution worked
-+	if ! grep -q "test_loop" "${log_file}"; then
-+		echo "Perf top hybrid merge test [Failed: test_loop symbol not found]"
-+		head -n 50 "${log_file}"
-+		err=1
-+		return
-+	fi
-+
-+	echo "Perf top hybrid merge test [Success]"
-+}
-+
- test_basic_perf_top
-+test_hybrid_merge_perf_top
- cleanup
- exit $err
-diff --git a/tools/perf/tests/tests.h b/tools/perf/tests/tests.h
-index cee9e6b62dcc..9c96f33483d1 100644
---- a/tools/perf/tests/tests.h
-+++ b/tools/perf/tests/tests.h
-@@ -177,6 +177,7 @@ DECLARE_SUITE(perf_time_to_tsc);
- DECLARE_SUITE(dlfilter);
- DECLARE_SUITE(sigtrap);
- DECLARE_SUITE(event_groups);
-+DECLARE_SUITE(hybrid_merge);
- DECLARE_SUITE(symbols);
- DECLARE_SUITE(util);
- DECLARE_SUITE(uncore_event_sorting);
++	/*
++	 * Isolate the test suite from the user's ~/.perfconfig to ensure
++	 * behavior isn't impacted by custom variables (e.g. core.hybrid-merge).
++	 * Setting PERF_CONFIG isolates the perf commands run by the shell
++	 * tests, config_exclusive_filename does the same for this process.
++	 * Config values already read by main's perf_config are reset here, so
++	 * far only the hybrid-merge value is known to alter test output.
++	 */
++	if (setenv("PERF_CONFIG", "/dev/null", 1) < 0)
++		return -1;
++	config_exclusive_filename = "/dev/null";
++	perf_config__exit();
++	symbol_conf.hybrid_merge = false;
+ 
+ 	/* Unbuffered output */
+ 	setvbuf(stdout, NULL, _IONBF, 0);
 -- 
 2.55.0.1082.g2b9226bbc0-goog
 
