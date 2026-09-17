@@ -1,196 +1,162 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f72.google.com (mail-pj1-f72.google.com [209.85.216.72])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AB844F85D6;
-	Thu, 17 Sep 2026 16:39:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A900535FC6
+	for <linux-perf-users@vger.kernel.org>; Thu, 17 Sep 2026 16:39:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789663158; cv=none; b=WPXib7Z2HDMRLVyRUIEdP9w0VykKhgsgWfVP9wfPYrT+kfhnARBWQlJgtBSlJwThKfZfxOVslrUhyfGDJFoYaNSLYr2aAFIVc17CqiT4pG6MlA/HCX1OsXYrBXneTv/NILFrYaaesTOT1UNbybcF+Ss2GymYVeV71lDBNkJB8tQ=
+	t=1789663162; cv=none; b=WDdMHigoKNIW71ulwHzBDfFH3leu7BPxA8gffX+ZAdKYMoi7yj6uFXxQmxDTuPZKWboubYpHQ/OYdm1r76MDt2ODLCKPu5DIiNkbdpFIcpI8duWBDXY6SV5MC/OQW3AwLhoy9xszpcQ2ubPzL6P2yZRRaUyzlp+iVWDbA0GbLew=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789663158; c=relaxed/simple;
-	bh=RaKyg3GqRiVqHvw/UDaaHvGcpLhQwigi+RNlsL2zffs=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=uVDS/8fzWoxrsDTMaCAjaA1EM2kyZIl3i9VuSIxulaF5TQ0a1cblKQDxQtuy7OSsFnT0fbuG9rb4unphe1ZfTA/A/rjNvRKPLglv5y9uh5ID0yn3sZo0Hwa8g8SEf6T1etvmVV1m9JMh1EoOD6r+9qK9S2vnYnXwWByiwH3Ymo8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JuzlckQR; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1789663162; c=relaxed/simple;
+	bh=eSh+Od2Brt9WALE+73HznbeDtODL3pp5+z5MTOQkjXc=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=QQRlcXZAJw5qMUoBilGV9UWi27RNDzMY+pREBZH1qy0fa/DUL9zkDw+s9cpKLE7eFcpIoOe1t6aVd9hF9766rKqVltqNMVviwkHiSc8gL8CuvbzuEHPYupCzoo2KCIYArFGUk5RFP0ws/7D9QEQ02TEI/Qx2MBHoA5dYHqnKjjg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=fbLqf47u; arc=none smtp.client-ip=209.85.216.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JuzlckQR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E2FFA1F00898;
-	Thu, 17 Sep 2026 16:38:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789663156;
-	bh=9WoUWUiccCZ5pmncdG/fVn1uDF622HEjGzqeAT5aHc8=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc;
-	b=JuzlckQR6v/NzH0mtru1XZ7iqyxCxBjrCwCFsUHW609jPCf8U6sfhyPJkkpToF69f
-	 siJ7N2NXwspDpQ5dJIIyLpRq7MwSgE3R3mqg5OrgAtBYXQZyoeaTTM2m6j28o+aBbX
-	 I7FSiMwxg1YdjTyYq2YbYkTvH901cTdfYaUc365eMr8X4iPtaA7EQGoTbcu8Y7USWP
-	 bzvY4XKh3JpReezKG88DwuCuMK1EFa2lyia7xTBCesd95C4tljlOVn0ygfLWln5b8m
-	 HFBw3K+lt5pgVgVgyTxhxlY5CZ9zPDN2L69fXPf9G/mWuVci/9xx+4Tz25j31d67md
-	 EUctPDbCJlXcw==
-From: "Lorenzo Stoakes (ARM)" <ljs@kernel.org>
-Date: Thu, 17 Sep 2026 17:22:41 +0100
-Subject: [PATCH v3 32/40] mm/uffd: use predicates for userfaultfd checks
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="fbLqf47u"
+Received: by mail-pj1-f72.google.com with SMTP id 98e67ed59e1d1-396901263b6so1962427a91.2
+        for <linux-perf-users@vger.kernel.org>; Thu, 17 Sep 2026 09:39:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1789663160; x=1790267960; darn=vger.kernel.org;
+        h=content-type:cc:to:from:subject:message-id:references:mime-version
+         :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=LZuAkAIegyvJXHrWuDGz+S8eID/jyc9+D0dd/PTkvdU=;
+        b=fbLqf47uR45EWIDGw3AKnjkAYSwDiPpf1KDOCJNBfjnVdAClcv3pn+LbYhZZoQ+3fo
+         ML3BcqZ3e2VXy+B8KmPlwIfpFN1AUue00ztkx2NN3vobM172ugVpKp+Nw3+2lZDAzfr9
+         yebQkq6skQIW4Rk4BjVGK1fe3y5raUgl/UQVQ+xYLkEghxQocWnxuYqDYI/9B2Ao4qDU
+         NilsCURcAZFZDGD93x4jQeOJ3aFYPOqKhk5/dEnNiZRpx0U3KL0d/1c5onMxA1f4jjUS
+         TH9qbBgkELy1mDVbnxEaStuMX/ysBdL4QNLbwmx5RkY7O7wwjZmFD2os68kdugNA2RjE
+         MPMg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1789663160; x=1790267960;
+        h=content-type:cc:to:from:subject:message-id:references:mime-version
+         :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=LZuAkAIegyvJXHrWuDGz+S8eID/jyc9+D0dd/PTkvdU=;
+        b=DQ1ksYsyX4a7FYdVfTZygozyXSzz79piHBssgh3UZ5mDs0rmjBb7ZM2t/8F6CoGDfC
+         zA6ey8m4THHz+Zlarx+X+9mYAWIrFTaZcpFM0rttEPTshzFC6ncobv1yp+mtU0roOWvj
+         c8BqXbCVYgxtmjA+idbA4YRCQRHsgnyS9K01XgdFsyoiK/H1rNrgUCXsqAjSm9e+Uzwh
+         zbufEMFgCAN4Y8e6KBzl+bEIC9hi4AKNNWUUWMM2a89JbZGLpjmKjclXXaNbhiV2Sn6Q
+         fBKQmvmJdUBV7jnvjdz4W8lMMrS/NWCePR/O5vqpE0dbIUIJZX9RM7T/6qaiUDWd59xT
+         iHZQ==
+X-Forwarded-Encrypted: i=1; AKwUvBykZd8O7vE2WAGcGf2pXnVRVbd7WuN3Ir7BvpZM+4DQlzjZY1xvPBZAE8NRdldMswA9hFYzPTliDSNRsAYWE0tA@vger.kernel.org
+X-Gm-Message-State: AFuF++np2TbN1YvjYSVD9dpeowAjPxXI1J5mhoa4BmcB7sIC8l4bQqN4
+	sv8iG8MlKE46OnxTNbV0jJpJ9YImDkRH+uHr7WRVzAPxBq5pw4PP7I9TFZU023KBc8jMAPuWQ7b
+	slarweovx/g==
+X-Received: from dldz19-n1.prod.google.com ([2002:a05:701b:4193:10b0:143:5722:79ed])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:4a81:b0:39d:f773:37b5
+ with SMTP id 98e67ed59e1d1-39e1df6193cmr22073374a91.0.1789663159634; Thu, 17
+ Sep 2026 09:39:19 -0700 (PDT)
+Date: Thu, 17 Sep 2026 09:38:48 -0700
+In-Reply-To: <cover.1789626977.git.irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20260917-b4-mmap-prepare-vma-flag-sanify-v3-32-4583d8a23bca@kernel.org>
-References: <20260917-b4-mmap-prepare-vma-flag-sanify-v3-0-4583d8a23bca@kernel.org>
-In-Reply-To: <20260917-b4-mmap-prepare-vma-flag-sanify-v3-0-4583d8a23bca@kernel.org>
-To: Andrew Morton <akpm@linux-foundation.org>, 
- "Liam R. Howlett" <liam@infradead.org>, Vlastimil Babka <vbabka@kernel.org>, 
- Jann Horn <jannh@google.com>, Pedro Falcato <pfalcato@suse.de>, 
- David Hildenbrand <david@kernel.org>, Mike Rapoport <rppt@kernel.org>, 
- Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>, 
- Jonathan Corbet <corbet@lwn.net>, 
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
- Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>, 
- Jason Gunthorpe <jgg@ziepe.ca>, Leon Romanovsky <leon@kernel.org>, 
- Paul Moore <paul@paul-moore.com>, 
- Stephen Smalley <stephen.smalley.work@gmail.com>, 
- Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
- Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
- Andrii Nakryiko <andrii@kernel.org>, Eduard Zingerman <eddyz87@gmail.com>, 
- Kumar Kartikeya Dwivedi <memxor@gmail.com>, Zi Yan <ziy@nvidia.com>, 
- Baolin Wang <baolin.wang@linux.alibaba.com>, 
- Nico Pache <nico.pache@linux.dev>, Ryan Roberts <ryan.roberts@arm.com>, 
- Dev Jain <dev.jain@arm.com>, Barry Song <baohua@kernel.org>, 
- Lance Yang <lance.yang@linux.dev>, Usama Arif <usama.arif@linux.dev>, 
- Kiryl Shutsemau <kas@kernel.org>, Doug Gilbert <dgilbert@interlog.com>, 
- "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>, 
- "Martin K. Petersen" <mkp@kernel.org>, Jaya Kumar <jayalk@intworks.biz>, 
- Simona Vetter <simona@ffwll.ch>, Helge Deller <deller@gmx.de>, 
- Sebastian Reichel <sre@kernel.org>, John Hubbard <jhubbard@nvidia.com>, 
- Peter Xu <peterx@redhat.com>, Masami Hiramatsu <mhiramat@kernel.org>, 
- Oleg Nesterov <oleg@redhat.com>, Peter Zijlstra <peterz@infradead.org>, 
- Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>, 
- Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, 
- x86@kernel.org, Arnaldo Carvalho de Melo <acme@kernel.org>, 
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
- Rik van Riel <riel@surriel.com>, Harry Yoo <harry@kernel.org>, 
- Juri Lelli <juri.lelli@redhat.com>, 
- Vincent Guittot <vincent.guittot@linaro.org>, 
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
- David Airlie <airlied@gmail.com>, Will Deacon <will@kernel.org>, 
- "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>, 
- Nick Piggin <npiggin@gmail.com>, Arnd Bergmann <arnd@arndb.de>, 
- Muchun Song <muchun.song@linux.dev>, Oscar Salvador <osalvador@suse.de>, 
- "Matthew Wilcox (Oracle)" <willy@infradead.org>, Jan Kara <jack@suse.cz>, 
- Marc Zyngier <maz@kernel.org>, Oliver Upton <oupton@kernel.org>, 
- Catalin Marinas <catalin.marinas@arm.com>, 
- Madhavan Srinivasan <maddy@linux.ibm.com>, Anup Patel <anup@brainfault.org>, 
- Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>, 
- Albert Ou <aou@eecs.berkeley.edu>, 
- Christian Borntraeger <borntraeger@linux.ibm.com>, 
- Janosch Frank <frankja@linux.ibm.com>, 
- Claudio Imbrenda <imbrenda@linux.ibm.com>, 
- Alexander Gordeev <agordeev@linux.ibm.com>, 
- Gerald Schaefer <gerald.schaefer@linux.ibm.com>, 
- Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, 
- "David S. Miller" <davem@davemloft.net>, 
- Andreas Larsson <andreas@gaisler.com>, 
- Alexander Viro <viro@zeniv.linux.org.uk>, 
- Christian Brauner <brauner@kernel.org>, 
- Matthew Brost <matthew.brost@intel.com>, 
- Joshua Hahn <joshua.hahnjy@gmail.com>, Rakie Kim <rakie.kim@sk.com>, 
- Byungchul Park <byungchul@sk.com>, Gregory Price <gourry@gourry.net>, 
- Ying Huang <ying.huang@linux.alibaba.com>, 
- Alistair Popple <apopple@nvidia.com>, Chris Li <chrisl@kernel.org>, 
- Kairui Song <kasong@tencent.com>, Kemeng Shi <shikemeng@huaweicloud.com>, 
- Nhat Pham <nphamcs@gmail.com>, Baoquan He <baoquan.he@linux.dev>, 
- Youngjun Park <youngjun.park@lge.com>, Johannes Weiner <hannes@cmpxchg.org>, 
- Qi Zheng <qi.zheng@linux.dev>, Shakeel Butt <shakeel.butt@linux.dev>, 
- Axel Rasmussen <axelrasmussen@google.com>, Yuanchu Xie <yuanchu@google.com>, 
- Wei Xu <weixugc@google.com>, Chengming Zhou <chengming.zhou@linux.dev>, 
- Michal Hocko <mhocko@kernel.org>, Miklos Szeredi <miklos@szeredi.hu>, 
- Xu Xin <xu.xin@linux.dev>
-Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
- linux-doc@vger.kernel.org, linux-usb@vger.kernel.org, 
- linux-rdma@vger.kernel.org, selinux@vger.kernel.org, 
- linux-sound@vger.kernel.org, bpf@vger.kernel.org, 
- linux-scsi@vger.kernel.org, linux-fbdev@vger.kernel.org, 
- dri-devel@lists.freedesktop.org, linux-trace-kernel@vger.kernel.org, 
- linux-perf-users@vger.kernel.org, linux-arch@vger.kernel.org, 
- linux-fsdevel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
- kvmarm@lists.linux.dev, linuxppc-dev@lists.ozlabs.org, kvm@vger.kernel.org, 
- kvm-riscv@lists.infradead.org, linux-riscv@lists.infradead.org, 
- linux-s390@vger.kernel.org, sparclinux@vger.kernel.org, 
- fuse-devel@lists.linux.dev, "Lorenzo Stoakes (ARM)" <ljs@kernel.org>
-X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2289; i=ljs@kernel.org;
- h=from:subject:message-id; bh=RaKyg3GqRiVqHvw/UDaaHvGcpLhQwigi+RNlsL2zffs=;
- b=owGbwMvMwCV2fu7ZrsZH9SKMp9WSGLLWCB/OPPvVb8aRBlaPSTM6P2dc4rwuwDBzzqZoPX/27
- rSo12wRHaUsDGJcDLJiiizPv4jvDxIJm9d5wd8NZg4rE8gQBi5OAZjIn1ZGhu/b9ztfWa90el/9
- TetPvC5Nrbrrmvhtz33cqXTRuuHAHX9Ghi+axsy3Htr+lVOdM/mU0QoVzTe+TDpKZk8zz6fZScS
- KswIA
-X-Developer-Key: i=ljs@kernel.org; a=openpgp;
- fpr=E7F417BF5214569E89D04F46CF9DCD8A81E27F14
+Mime-Version: 1.0
+References: <cover.1789626977.git.irogers@google.com>
+X-Mailer: git-send-email 2.55.0.1082.g2b9226bbc0-goog
+Message-ID: <cover.1789662556.git.irogers@google.com>
+Subject: [PATCH v2 00/14] perf trace: Fix BPF filtering and make tracing tests non-exclusive
+From: Ian Rogers <irogers@google.com>
+To: irogers@google.com, acme@kernel.org, namhyung@kernel.org
+Cc: adrian.hunter@intel.com, james.clark@linaro.org, jolsa@kernel.org, 
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+	mingo@redhat.com, peterz@infradead.org
+Content-Type: text/plain; charset="UTF-8"
 
-Rather than directly checking VMA flags, use the newly introduced
-vma_is_kernel_owned() and vma_is_persistent() helpers in userfaultfd when
-assessing VMA suitability for userfaultfd and UFFDIO_MOVE.
+perf trace's BPF augmentation attaches to raw_syscalls:sys_enter and
+raw_syscalls:sys_exit system wide, and used the program return value to
+decide whether a syscall was interesting. Returning 0 from a
+BPF_PROG_TYPE_TRACEPOINT program makes perf_trace_run_bpf_submit() drop
+the event for every listener on that tracepoint, not just for the perf
+trace that installed the program. Any concurrent perf trace, perf record
+or ftrace session watching raw_syscalls therefore lost events, which is
+one of the reasons so many of the perf trace and perf probe shell tests
+had to be marked (exclusive) and run on their own.
 
-Update vma_move_compatible() so it's expressed in terms of VMA
-characteristics rather than arbitrary flags.
+Patch 1 is an independent build fix for the two files the rest of the
+series goes on to rework.
 
-Additionally, update the use of the deprecated VMA flag API when checking
-VMA_SHADOW_STACK_BIT.
+Patches 2 to 6 fix perf trace. They stop the return value being used as
+a filter and do the filtering in BPF maps instead, fix argument handling
+for the __data_loc internal tracepoint fields that syscalls:sys_enter_*
+gained in 6.19, stop the sys_exit program array tail calling a sys_enter
+augmenter, and replace the userspace PERF_RECORD_FORK/PERF_RECORD_EXIT
+bookkeeping with BTF-typed raw tracepoint programs on
+sched_process_{fork,exit,exec}. A task is then registered before its
+first syscall and evicted in do_exit(), rather than whenever userspace
+next drains the ring buffer.
 
-A VMA_IO_BIT check is no longer required but that is fine as a hard
-invariant has been established that only kernel-owned mappings may set
-VMA_IO_BIT so the check is now redundant.
+Patches 7 to 14 deal with the tests. Several collided with each other
+through global state rather than through perf trace: fixed probe names,
+clear_all_probes() disabling tracing events globally, and perf trace's
+hardcoded "probe:vfs_getname*" wildcard pinning probes belonging to
+other tests. With those scoped to a pid they can drop (exclusive) and
+run in parallel again.
 
-Signed-off-by: Lorenzo Stoakes (ARM) <ljs@kernel.org>
----
- mm/userfaultfd.c | 21 +++++++++++++++------
- 1 file changed, 15 insertions(+), 6 deletions(-)
+Tested on x86_64. The trace and probe tests pass under 'perf test -r3',
+which runs the repeats concurrently. Every patch builds individually,
+and the series also builds with BUILD_BPF_SKEL=0.
 
-diff --git a/mm/userfaultfd.c b/mm/userfaultfd.c
-index 949017e60608..ddf0a4a3d399 100644
---- a/mm/userfaultfd.c
-+++ b/mm/userfaultfd.c
-@@ -1754,10 +1754,18 @@ static inline bool move_splits_huge_pmd(unsigned long dst_addr,
- }
- #endif
- 
--static inline bool vma_move_compatible(struct vm_area_struct *vma)
-+static inline bool vma_move_compatible(const struct vm_area_struct *vma)
- {
--	return !(vma->vm_flags & (VM_PFNMAP | VM_IO |  VM_HUGETLB |
--				  VM_MIXEDMAP | VM_SHADOW_STACK));
-+	/* uffd is generally incompatible with kernel-owned mappings. */
-+	if (vma_is_kernel_owned(vma))
-+		return false;
-+	/* The shadow stack should not be written to by userspace. */
-+	if (vma_test_single_mask(vma, VMA_SHADOW_STACK))
-+		return false;
-+	/* hugetlb mappings cannot be safely moved. */
-+	if (vma_is_hugetlb(vma))
-+		return false;
-+	return true;
- }
- 
- static int validate_move_areas(struct userfaultfd_ctx *ctx,
-@@ -2146,10 +2154,11 @@ static bool vma_can_userfault(struct vm_area_struct *vma, vm_flags_t vm_flags,
- {
- 	const struct vm_uffd_ops *ops = vma_uffd_ops(vma);
- 
--	if (vma->vm_flags & (VM_DROPPABLE | VM_SHADOW_STACK))
-+	/* Non-persistent memory is inherently not controllable by userspace. */
-+	if (!vma_is_persistent(vma))
- 		return false;
--
--	if (!vma_is_hugetlb(vma) && (vma->vm_flags & VM_SPECIAL))
-+	/* The shadow stack should not be written to by userspace. */
-+	if (vma_test_single_mask(vma, VMA_SHADOW_STACK))
- 		return false;
- 
- 	vm_flags &= __VM_UFFD_FLAGS;
+Changes since v1:
+- New patch 1 includes <sys/types.h> and <string.h> for the pid_t and
+  strcmp() uses that were relying on the include chain happening to
+  drag them in, which does not hold on libcs such as musl.
+- Patch 5 no longer returns success when the event qualifier filter
+  string fails to allocate. err now defaults to 0 because either
+  tracepoint may legitimately be absent, so the ENOMEM path has to set
+  the error itself rather than rely on that default. It also includes
+  <stdbool.h> for the bool parameters it adds to trace_augment.h.
+- Patch 7 removes the temporary directory if the cd into it fails.
+  That happens before the cleanup trap is installed, so the directory
+  would otherwise be left behind in /tmp.
 
+Ian Rogers (14):
+  perf trace: Include the headers declaring pid_t and strcmp
+  perf trace: Start BPF summary before starting workload
+  perf trace: Skip internal tracepoint fields in formatting and beauty
+    map
+  perf trace: Do not set unaugmented BPF program on sys_exit map
+  perf trace: Filter events in BPF and avoid tracepoint vetoes
+  perf trace: Handle fork and exit directly in BPF filter maps
+  perf test test_task_analyzer: Isolate in temporary directory and make
+    non-exclusive
+  perf test common: Do not globally disable tracing events in
+    clear_all_probes
+  perf test probe_vfs_getname: Scope probe name to PID and make
+    non-exclusive
+  perf test record+probe_libc_inet_pton: Scope event to PID, add
+    retries, and make non-exclusive
+  perf test trace_summary: Improve error diagnostics
+  perf test trace_btf_general: Drop --max-events=1 and make
+    non-exclusive
+  perf test trace_summary: Make non-exclusive
+  perf test uprobe_from_different_cu: Scope probe name to PID
+
+ tools/perf/Documentation/perf-trace.txt       |   5 +
+ tools/perf/builtin-trace.c                    | 335 ++++++++++++++----
+ tools/perf/tests/shell/common/init.sh         |   1 -
+ .../perf/tests/shell/lib/probe_vfs_getname.sh |  34 +-
+ tools/perf/tests/shell/probe_vfs_getname.sh   |   3 +-
+ .../shell/record+probe_libc_inet_pton.sh      |  83 +++--
+ .../shell/record+script_probe_vfs_getname.sh  |  18 +-
+ tools/perf/tests/shell/test_task_analyzer.sh  |  16 +-
+ .../shell/test_uprobe_from_different_cu.sh    |  11 +-
+ .../tests/shell/trace+probe_vfs_getname.sh    |   9 +
+ tools/perf/tests/shell/trace_btf_general.sh   |   8 +-
+ tools/perf/tests/shell/trace_summary.sh       |  14 +-
+ .../bpf_skel/augmented_raw_syscalls.bpf.c     | 291 ++++++++++++++-
+ tools/perf/util/bpf_trace_augment.c           | 174 ++++++++-
+ tools/perf/util/trace_augment.h               |  27 +-
+ 15 files changed, 888 insertions(+), 141 deletions(-)
+
+
+base-commit: 91b0782fc9e9d2f0a40b5256146e014802fdbb36
 -- 
-2.55.0
+2.55.0.1082.g2b9226bbc0-goog
 
