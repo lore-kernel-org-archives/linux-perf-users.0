@@ -1,174 +1,150 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f99.google.com (mail-ed1-f99.google.com [209.85.208.99])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97E563932F7;
-	Thu, 17 Sep 2026 16:25:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A6B93AB273
+	for <linux-perf-users@vger.kernel.org>; Thu, 17 Sep 2026 16:25:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.99
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789662334; cv=none; b=qRhstGwW8ZwTNbNFktHDv7nFwLrhx7lW8+NIs3TLGm4VhPuCMCR71HxMefz1ZLLOipTkTYf3WUpRytUKJ6mGkSbg1LzemlUN48wj5gUoscbzYS3Ra+H44oonH2Cz87sq8HUIbu5FwxgsYVtvJt5UmUt2ItNyUf+AX4k/xwn83TI=
+	t=1789662338; cv=none; b=D5SYw0rEZvtxf7sCNMcqlgN9vMihrfPQfn9KeRFP+Y4twE9HUTwI94a2AfvlCdE1BVi0gsQgh/4EqMYcb1KZ2CBhvqhVG7/HqOTgVgBPPbrOMM3HVH9lvAJ9uGuObuETZuecBZo9goNnwaeHfBKaSVEMAMSFGFRWdD/Y2zBv4Qs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789662334; c=relaxed/simple;
-	bh=w3dS+6CYztzIjEhtJt3yaqv3CXCLNku1+RXavwrSev0=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=RLUJJjfYsqA3U1UiF0V+JAzG7VV7jucH5Zv92xNEpl4+4REz41AXSVPclV0r7VN81RiS4y6Rh9X55Oqj+G3iDdi75jDysIVB5H+CWWzchgy6rVz/a0C55JMfl6f9rZ0v0JCqtpoxCTIYj5L9xV6QHMt2PNlsVMglultB4gm+uF4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jIIfr1dY; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1789662338; c=relaxed/simple;
+	bh=rtvmHSWXSmxkuH2d1GtpV9D/iH6hOVoLVjJ/X0LT4VU=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=kaCDiQIznXIoHGr+bJzQ1GDb7Y8UBblgY9XJE+GPgSrGcn88Hux/r9e8zJ4u0obsPij6aDYz6jLciU2Gxb3uglw4+hhBon7T3QfgLq5W/oDlbjnsTd0N1IX/rgo4ZhGlX++VHPOi47CDMF0mfw7lTjROkySHjFtP4NYPWOeBODA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=everpuredata.com; spf=pass smtp.mailfrom=everpuredata.com; dkim=pass (2048-bit key) header.d=everpuredata.com header.i=@everpuredata.com header.b=rc2gdHiX; arc=none smtp.client-ip=209.85.208.99
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=everpuredata.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=everpuredata.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jIIfr1dY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5EC121F000FF;
-	Thu, 17 Sep 2026 16:25:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789662333;
-	bh=8zUDlDajoLo9shAT2eWSvXFFt1x2wdqtDjriRhbNo6Y=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc;
-	b=jIIfr1dY5Y6yUBVPzpQtob/6PKGQ/KkiAaN6tkH5dtYIPaU7u+htS8ArcPnlhxaXJ
-	 tHJxyzcbqBjgQKUa5UQC/IT790lvfATEygmgoPx7gBSUiC+4ji4Wdp5mMVNWM0NoKy
-	 zHyuAFujuXmFR50iBT3C5hJroCfuXBIuwkbhitV02qQcKqrUlJL/eEMPl+CANyccwK
-	 k3ZV7wtR7pyYo7QLyuI8SNULhv2ot0z9DARSve+y4UekG4p3Ycjuj9H/20kPMpU8Kf
-	 GZT0O8zTdiTinqgWKO98a5x1Yug3NZ/9GWFi/Xgm1t6SuLqfQcS0Hm6Rr7uLRHz024
-	 UwI4k4J7cE4kg==
-From: "Lorenzo Stoakes (ARM)" <ljs@kernel.org>
-Date: Thu, 17 Sep 2026 17:22:14 +0100
-Subject: [PATCH v3 05/40] mm/vma: ensure mmap_prepare doesn't set actions
- on a mergeable vma
+	dkim=pass (2048-bit key) header.d=everpuredata.com header.i=@everpuredata.com header.b="rc2gdHiX"
+Received: by mail-ed1-f99.google.com with SMTP id 4fb4d7f45d1cf-6a20319d030so353861a12.2
+        for <linux-perf-users@vger.kernel.org>; Thu, 17 Sep 2026 09:25:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=everpuredata.com; s=google; t=1789662335; x=1790267135; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=cI+xjeNHVNst3t+SGlRsF85lt+goiabsbiUNU03nAKw=;
+        b=rc2gdHiXG4kPrPnZgypirmqXT1nL4csf38j8bCQRkSOXcFYvWHfcmvpsfwvpE0TvAu
+         eSiyLspLJKF8dPj1SLT+SPQHqqUmRYthPb5aVVo3bCr3PSR4foQbbCuCdzryl3AhDluW
+         uDziRHpEWKlm3yIGJfHd4YvA4fMjvk8rSJnNe68lUxo8fNQBhVeMet0vD83DxU1dPNMF
+         tfX2wDujjO5CDwd5uEH5aq3BklBmPh1v+c0ormFfRhN65hIDjbkiLPZMnxt1rOpsPW0R
+         DRNUNL7buAGH+XTD/nO88Jvk61QwIa+TFTvgcjbBRkOWVs+V8veoNLr3LodiV97m8O2F
+         harA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1789662335; x=1790267135;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to:content-type;
+        bh=cI+xjeNHVNst3t+SGlRsF85lt+goiabsbiUNU03nAKw=;
+        b=W6FlGoxJJCBr1+2fNngfpenAVNy7gbYkLS4uPgeTWOBwzSnAcWvG1nJZKeRRzNqCny
+         wcdxy8BD4Kawzx9Ia7ZPqa6dNBOLwqPZ+tc0JpPrgc11riStcD8RpjpdPxAUquxoWT5M
+         08kW6mSV9W+wxeQc3XFFXj9rmdoHQc6NyftI9CiCIm0a7y4Ax2Srcs2zFxZ/cKWwCRi9
+         /UBUrGIffYMneiHYLXd3KDrj0NsWsjScDRy8j5ntsV3sUeiYabVMmwJLTr4TbwhUwwc+
+         m70XvCPZQO7aIk8D/roeQF/gX/lN4XMILEc3QvgvO23jRMF6Satry4NuAv8DypjaT4Vk
+         7qkQ==
+X-Forwarded-Encrypted: i=1; AKwUvBwuRcXF5EskUDny96IO4qhe2dHEDZiF7vJ2a8PxV5w4zdIxQvO6CPkEjjEEZ9WNkro15zcqYe9m/wUqxfCyGhVH@vger.kernel.org
+X-Gm-Message-State: AFuF++mlf89BbcwnxhrUEgkqE/vUJQ64MuXSXmCx/rDRJOnQXxQROBiO
+	Jkvme8Nyadnqdo7K63WdYwZzYyT2E4VK/A9/rFk7QtyRMofM+rz+Tr4DGbkV1xlp1UujNry07Qs
+	TM+stPHsprdwWspKY4QKM/OmL2syztCdXtnpS
+X-Gm-Gg: AYBFou11E+cuyEY4ttVW/uUi38/1J+omua9RwGu6GzLYxwCgFRJCYh83XgHhOXtEFtk
+	GnnSkxCGnQd1wo7EKhIdMaSiX0KakB7TuJUx8r5hEC3D9obBOBjDXAXQkfKoT+QlXsFAlRA/qEu
+	XaYariUu89G7mM9/lQthgVZZ9tNme7ipSALlH1T/qEt/GfcDIXNrVKVDUdm8xQ4gOr/RFOPyEk7
+	suQxKmWIeATEvMXQH/ysG4VdWctv4nsLKK0ixgIAzLe2iS2lipBoFlp7tEdnDe/B8oYSsqypn+r
+	RIFtAuXbqJ0Xumoj1HOvTxPhL6JlHnnFb6yOnbkrcxqPzGpHTM4O/GWlfzg1in4rzaD3KhxoTML
+	vKM5+N6aBgOZ3KUtt3JjXtu5qQpDO8iMSVmzJqXU=
+X-Received: by 2002:a05:6402:24d4:b0:6a7:ee54:f897 with SMTP id 4fb4d7f45d1cf-6aa2244349emr4232275a12.27.1789662334673;
+        Thu, 17 Sep 2026 09:25:34 -0700 (PDT)
+Received: from c14-smtp-2023.dev.purestorage.com ([208.88.158.128])
+        by smtp-relay.gmail.com with ESMTPS id 4fb4d7f45d1cf-6aa1cf65559sm2670116a12.0.2026.09.17.09.25.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 17 Sep 2026 09:25:34 -0700 (PDT)
+X-Relaying-Domain: everpuredata.com
+Received: from irdv-tmenninger.dev.purestorage.com (irdv-tmenninger.dev.purestorage.com [10.32.149.15])
+	by c14-smtp-2023.dev.purestorage.com (Postfix) with ESMTPS id 1A53034014B;
+	Thu, 17 Sep 2026 09:25:33 -0700 (PDT)
+From: Tim Menninger <tmenninger@everpuredata.com>
+To: Harry Yoo <harry@kernel.org>
+Cc: linux-mm@kvack.org,
+	Chuck Lever <cel@kernel.org>,
+	linux-nfs@vger.kernel.org,
+	Jon Curley <jcurley@everpuredata.com>,
+	Eric Badger <ebadger@everpuredata.com>,
+	Vlastimil Babka <vbabka@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Hao Li <hao.li@linux.dev>,
+	Christoph Lameter <cl@gentwo.org>,
+	David Rientjes <rientjes@google.com>,
+	Roman Gushchin <roman.gushchin@linux.dev>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	James Clark <james.clark@linaro.org>,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [SLUB] nfs_page cmpxchg_double_fail and perf lock perturbation on dual-socket NFS/RDMA
+Date: Thu, 17 Sep 2026 16:25:33 +0000
+Message-Id: <20260917162533.600472-1-tmenninger@everpuredata.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <aqvy8NqRRRmUlxjR@thinkstation>
+References: <aqvy8NqRRRmUlxjR@thinkstation>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20260917-b4-mmap-prepare-vma-flag-sanify-v3-5-4583d8a23bca@kernel.org>
-References: <20260917-b4-mmap-prepare-vma-flag-sanify-v3-0-4583d8a23bca@kernel.org>
-In-Reply-To: <20260917-b4-mmap-prepare-vma-flag-sanify-v3-0-4583d8a23bca@kernel.org>
-To: Andrew Morton <akpm@linux-foundation.org>, 
- "Liam R. Howlett" <liam@infradead.org>, Vlastimil Babka <vbabka@kernel.org>, 
- Jann Horn <jannh@google.com>, Pedro Falcato <pfalcato@suse.de>, 
- David Hildenbrand <david@kernel.org>, Mike Rapoport <rppt@kernel.org>, 
- Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>, 
- Jonathan Corbet <corbet@lwn.net>, 
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
- Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>, 
- Jason Gunthorpe <jgg@ziepe.ca>, Leon Romanovsky <leon@kernel.org>, 
- Paul Moore <paul@paul-moore.com>, 
- Stephen Smalley <stephen.smalley.work@gmail.com>, 
- Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
- Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
- Andrii Nakryiko <andrii@kernel.org>, Eduard Zingerman <eddyz87@gmail.com>, 
- Kumar Kartikeya Dwivedi <memxor@gmail.com>, Zi Yan <ziy@nvidia.com>, 
- Baolin Wang <baolin.wang@linux.alibaba.com>, 
- Nico Pache <nico.pache@linux.dev>, Ryan Roberts <ryan.roberts@arm.com>, 
- Dev Jain <dev.jain@arm.com>, Barry Song <baohua@kernel.org>, 
- Lance Yang <lance.yang@linux.dev>, Usama Arif <usama.arif@linux.dev>, 
- Kiryl Shutsemau <kas@kernel.org>, Doug Gilbert <dgilbert@interlog.com>, 
- "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>, 
- "Martin K. Petersen" <mkp@kernel.org>, Jaya Kumar <jayalk@intworks.biz>, 
- Simona Vetter <simona@ffwll.ch>, Helge Deller <deller@gmx.de>, 
- Sebastian Reichel <sre@kernel.org>, John Hubbard <jhubbard@nvidia.com>, 
- Peter Xu <peterx@redhat.com>, Masami Hiramatsu <mhiramat@kernel.org>, 
- Oleg Nesterov <oleg@redhat.com>, Peter Zijlstra <peterz@infradead.org>, 
- Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>, 
- Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, 
- x86@kernel.org, Arnaldo Carvalho de Melo <acme@kernel.org>, 
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
- Rik van Riel <riel@surriel.com>, Harry Yoo <harry@kernel.org>, 
- Juri Lelli <juri.lelli@redhat.com>, 
- Vincent Guittot <vincent.guittot@linaro.org>, 
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
- David Airlie <airlied@gmail.com>, Will Deacon <will@kernel.org>, 
- "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>, 
- Nick Piggin <npiggin@gmail.com>, Arnd Bergmann <arnd@arndb.de>, 
- Muchun Song <muchun.song@linux.dev>, Oscar Salvador <osalvador@suse.de>, 
- "Matthew Wilcox (Oracle)" <willy@infradead.org>, Jan Kara <jack@suse.cz>, 
- Marc Zyngier <maz@kernel.org>, Oliver Upton <oupton@kernel.org>, 
- Catalin Marinas <catalin.marinas@arm.com>, 
- Madhavan Srinivasan <maddy@linux.ibm.com>, Anup Patel <anup@brainfault.org>, 
- Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>, 
- Albert Ou <aou@eecs.berkeley.edu>, 
- Christian Borntraeger <borntraeger@linux.ibm.com>, 
- Janosch Frank <frankja@linux.ibm.com>, 
- Claudio Imbrenda <imbrenda@linux.ibm.com>, 
- Alexander Gordeev <agordeev@linux.ibm.com>, 
- Gerald Schaefer <gerald.schaefer@linux.ibm.com>, 
- Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, 
- "David S. Miller" <davem@davemloft.net>, 
- Andreas Larsson <andreas@gaisler.com>, 
- Alexander Viro <viro@zeniv.linux.org.uk>, 
- Christian Brauner <brauner@kernel.org>, 
- Matthew Brost <matthew.brost@intel.com>, 
- Joshua Hahn <joshua.hahnjy@gmail.com>, Rakie Kim <rakie.kim@sk.com>, 
- Byungchul Park <byungchul@sk.com>, Gregory Price <gourry@gourry.net>, 
- Ying Huang <ying.huang@linux.alibaba.com>, 
- Alistair Popple <apopple@nvidia.com>, Chris Li <chrisl@kernel.org>, 
- Kairui Song <kasong@tencent.com>, Kemeng Shi <shikemeng@huaweicloud.com>, 
- Nhat Pham <nphamcs@gmail.com>, Baoquan He <baoquan.he@linux.dev>, 
- Youngjun Park <youngjun.park@lge.com>, Johannes Weiner <hannes@cmpxchg.org>, 
- Qi Zheng <qi.zheng@linux.dev>, Shakeel Butt <shakeel.butt@linux.dev>, 
- Axel Rasmussen <axelrasmussen@google.com>, Yuanchu Xie <yuanchu@google.com>, 
- Wei Xu <weixugc@google.com>, Chengming Zhou <chengming.zhou@linux.dev>, 
- Michal Hocko <mhocko@kernel.org>, Miklos Szeredi <miklos@szeredi.hu>, 
- Xu Xin <xu.xin@linux.dev>
-Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
- linux-doc@vger.kernel.org, linux-usb@vger.kernel.org, 
- linux-rdma@vger.kernel.org, selinux@vger.kernel.org, 
- linux-sound@vger.kernel.org, bpf@vger.kernel.org, 
- linux-scsi@vger.kernel.org, linux-fbdev@vger.kernel.org, 
- dri-devel@lists.freedesktop.org, linux-trace-kernel@vger.kernel.org, 
- linux-perf-users@vger.kernel.org, linux-arch@vger.kernel.org, 
- linux-fsdevel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
- kvmarm@lists.linux.dev, linuxppc-dev@lists.ozlabs.org, kvm@vger.kernel.org, 
- kvm-riscv@lists.infradead.org, linux-riscv@lists.infradead.org, 
- linux-s390@vger.kernel.org, sparclinux@vger.kernel.org, 
- fuse-devel@lists.linux.dev, "Lorenzo Stoakes (ARM)" <ljs@kernel.org>
-X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1368; i=ljs@kernel.org;
- h=from:subject:message-id; bh=w3dS+6CYztzIjEhtJt3yaqv3CXCLNku1+RXavwrSev0=;
- b=owGbwMvMwCV2fu7ZrsZH9SKMp9WSGLLWCO+/vHnCoy+HuE5fLHlRPt1qp8T64Jl/V1y40DHtZ
- fPTiz+sfTpKWRjEuBhkxRRZnn8R3x8kEjav84K/G8wcViaQIQxcnAIwkdvqjAwzQ1Ljhcx4prrN
- 2n3L8vw+PsttEWszl93ZWrDtX9Xr5IQEhn9qfvO3fuXmu6sYzP07MHhLa0rMgWMfLvX5KTQF1Jp
- 8OMgDAA==
-X-Developer-Key: i=ljs@kernel.org; a=openpgp;
- fpr=E7F417BF5214569E89D04F46CF9DCD8A81E27F14
+Content-Transfer-Encoding: 8bit
 
-When a user requests an mmap_action be performed in mmap_prepare, this
-involves populating the VMA range with data.
+It reproduces with slab_nomerge.
 
-However, if the VMA is mergeable, it might then mistakenly be merged with
-another VMA without having populated the range.
+I booted the same kernel with:
 
-Every mmap action currently available sets VMA flags such that the VMA
-cannot be merged.
+    $ cat /proc/cmdline
+    ... slab_nomerge ...
 
-However, to ensure that no future mmap action falls foul of this, assert
-that this is the case upon mmap_prepare validation.
+Uninstrumented throughput remains in the high-45 to low-46 GB/s
+range, as before. During perf lock it was around 30 GB/s in these
+runs, versus roughly 25 GB/s previously.
 
-Signed-off-by: Lorenzo Stoakes (ARM) <ljs@kernel.org>
----
- mm/vma.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+The dominant lock measurements are essentially unchanged:
 
-diff --git a/mm/vma.c b/mm/vma.c
-index d6ed10cefc8f..62f2ce1ad5a1 100644
---- a/mm/vma.c
-+++ b/mm/vma.c
-@@ -2809,6 +2809,15 @@ static int mmap_validate(unsigned long prev_start, unsigned long prev_end,
- int mmap_prepare_validate(const struct vm_area_desc *prev_desc,
- 			  const struct vm_area_desc *desc)
- {
-+	/*
-+	 * It is not valid to execute mmap actions for VMAs which can be merged,
-+	 * as any such merge would leave portions of the mapping incorrectly
-+	 * unmapped.
-+	 */
-+	if (vma_flags_can_merge(&desc->vma_flags) &&
-+	    WARN_ON_ONCE(desc->action.type != MMAP_NOTHING))
-+		return -EINVAL;
-+
- 	return mmap_validate(prev_desc->start, prev_desc->end,
- 			     desc->start, desc->end,
- 			     &prev_desc->vma_flags, &desc->vma_flags);
+                         default             slab_nomerge
+    unpinned/node0
+      contentions        4,782,839             4,858,759
+      total wait          14.39 min             14.26 min
+      average wait       180.47 us             176.13 us
 
--- 
-2.55.0
+    node0/node0
+      contentions        4,582,012             4,686,729
+      total wait          14.13 min             14.34 min
+      average wait       185.05 us             183.53 us
 
+    unpinned/balanced
+      contentions        4,572,196             4,544,677
+      total wait          12.81 min             12.56 min
+      average wait       168.14 us             165.84 us
+
+The uninstrumented cmpxchg_double_fail deltas were:
+
+                         default     slab_nomerge
+    unpinned/node0          7,471          8,892
+    node0/node0               713            457
+    unpinned/balanced       1,503          1,504
+
+The CPU-utilization change while perf lock is active also remains.
+System-wide %idle for uninstrumented/instrumented windows was:
+
+                           default                  slab_nomerge
+                       uninstr.   instr.         uninstr.   instr.
+    unpinned/node0      31.46%    3.60%           23.02%    2.15%
+    node0/node0         84.26%   12.07%           84.62%   11.85%
+    unpinned/balanced   66.86%   14.83%           66.58%   14.78%
+
+Thanks,
+Tim
