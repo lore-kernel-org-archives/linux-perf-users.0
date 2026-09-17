@@ -1,60 +1,98 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82511343893;
-	Thu, 17 Sep 2026 10:23:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 472D138F638;
+	Thu, 17 Sep 2026 11:40:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789640614; cv=none; b=RyxVPLXOAJYjwINQPe/9V1f0M5sTaQKj4r2lcz9MxYpKGfv+gUmEixbeCK+QdkAhO/H6wLCVPSieGKntDcz7lTrX+uQ7PaR0rKyxNg3LmOh63Yx7w/fFyni6G6e+wPb/Bf0i5ipCXIVqezTOe5pi67Jz8+s/kT1L/FyO4DlTjpA=
+	t=1789645249; cv=none; b=gz16T8rTcOUVnnehN6bLPd9B+f5WeU6E8gMfZGS4E8TWhA2ueWM2eYvIliaJoVDnNKys3539tLjSqBXRWDO8OhnX3bs3qh/1PW2P6ukJa4aF8/f19zfy/LvNs2Y6GKY3bJn1w8KUejyQbZ6pjz73IeKSZ1y32/3Rgk1HJR1kydo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789640614; c=relaxed/simple;
-	bh=t8wO41taTD6iGpUjRq+yEVHz2UbwzvT/8u1dEcpghc8=;
+	s=arc-20240116; t=1789645249; c=relaxed/simple;
+	bh=BApzGHIqAjiErWcRlmmivBGBfFVBONt4ktRgWMUzDCk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=B4VRs/PigBnEuQ/Jp60MLRaczluPcdnJcPX0dlI6eoivc4lrbPuOmvQ86L5dERBeEX3e29lr9jR/8ekJBJceNwDoLTqscsG6asveUwshMCF1wqyPGWSyeFcdnhxEw7xgdGcoUeAxgZ+evGdVwLOu9p3qJJDG/TQkSnDfNNTiDKo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=pass smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=D4dyPhy8; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=infradead.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=ksfZ0YXW8SbGflRHkz7BYirbdjoKwlsZnAW1q/kIU3Pht6wmvE9yQWOekEj0U9v/MWeaO+0DP52RO7BQ47DkE+FrRZqg5n1GZCqJN6NHBVZ3HGIbMrvlwIZUNMbbI2vFphAAeFld2nyUAzzocVZP7GKADOyZ7z0ZtFZsSO8c9RI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mDBBHK/I; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="D4dyPhy8"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=4A+Pj1WGudSCI8JmGe5z1JrMzxlI+rziCJEAOBn8QD8=; b=D4dyPhy8yv34KN6ankHcC0FNLV
-	KsZnvR+2xtA6Of6ZgdsklrIKaU94pJZJczcIpP82iHQeBjcoXp/0ppOxPSklpXMlzLodRD2ls85Hi
-	faNNP4WXO0RQQ2zEGmjB+AwhT8w5+JAo2YR9Djia7+S4q2iN9hkanAdeaqbp7qGmRidodViGtPXup
-	giY1t6iDEdHu7SimtIgRgeTNQQV91GqAU3YSYHz6hpjknRJLMuBDZl7vgdLOM9uatnFCOJ1JXjBiI
-	KOea0Y0mChiGwCYjkDL+GxbDChRWG5z524aMmbpuyRn1WYZ4f3mpu8bC6KU5ufj6BhbkqoitjeyGo
-	rpaQM3Uw==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x79Gt-00000009U6N-240E;
-	Thu, 17 Sep 2026 10:23:15 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 7B76D300583; Thu, 17 Sep 2026 12:23:14 +0200 (CEST)
-Date: Thu, 17 Sep 2026 12:23:14 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Sean Christopherson <seanjc@google.com>
-Cc: Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	James Clark <james.clark@linaro.org>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	kvm@vger.kernel.org, Jim Mattson <jmattson@google.com>,
-	Mingwei Zhang <mizhang@google.com>,
-	Stephane Eranian <eranian@google.com>,
-	Dapeng Mi <dapeng1.mi@linux.intel.com>
-Subject: Re: [PATCH v3 0/9] perf/x86: Don't write PEBS_ENABLED on KVM
- transitions
-Message-ID: <20260917102314.GI776954@noisy.programming.kicks-ass.net>
-References: <20260508231353.406465-1-seanjc@google.com>
- <anTB6ksbUs18FEf1@google.com>
- <aqLvXM5SPPlQePXs@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mDBBHK/I"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A09061F000FF;
+	Thu, 17 Sep 2026 11:40:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1789645243;
+	bh=BApzGHIqAjiErWcRlmmivBGBfFVBONt4ktRgWMUzDCk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=mDBBHK/IhHEPd17SZQYudlv622AFtJid39i0LAeTPe5KX2n4jjfEibNrHMdEGP/lt
+	 eUgQ97JZr9jtSS+gOZV9ctH5mVpR5Wezp3sekSSbMJ5cOeo6kdk0KT15/6B49AIGEy
+	 W3xTRN8TOmbFo/L3aM1LzCnmwuDCeyPl4is4tqU7CxU3Ioxbh6x+wbfLlNfNi4Nbut
+	 a7/lNdUCvCwU4aCE2PFX04HuH+W5hEeEwQfpeBZl00atZiv1MQM4dBxsjASoERsnQh
+	 U2zQOve9t2ri7i6jgJuS/I7mx5ZPVMsb+fxhyacjpxeRyQ3wCmjEdg7jvg80HHafvW
+	 7dUndTZsEPJPw==
+Date: Thu, 17 Sep 2026 12:40:08 +0100
+From: "Lorenzo Stoakes (ARM)" <ljs@kernel.org>
+To: Mike Rapoport <rppt@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>, 
+	"Liam R. Howlett" <liam@infradead.org>, Vlastimil Babka <vbabka@kernel.org>, 
+	Jann Horn <jannh@google.com>, Pedro Falcato <pfalcato@suse.de>, 
+	David Hildenbrand <david@kernel.org>, Suren Baghdasaryan <surenb@google.com>, 
+	Michal Hocko <mhocko@suse.com>, Jonathan Corbet <corbet@lwn.net>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>, 
+	Jason Gunthorpe <jgg@ziepe.ca>, Leon Romanovsky <leon@kernel.org>, 
+	Paul Moore <paul@paul-moore.com>, Stephen Smalley <stephen.smalley.work@gmail.com>, 
+	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
+	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	Andrii Nakryiko <andrii@kernel.org>, Eduard Zingerman <eddyz87@gmail.com>, 
+	Kumar Kartikeya Dwivedi <memxor@gmail.com>, Zi Yan <ziy@nvidia.com>, 
+	Baolin Wang <baolin.wang@linux.alibaba.com>, Nico Pache <nico.pache@linux.dev>, 
+	Ryan Roberts <ryan.roberts@arm.com>, Dev Jain <dev.jain@arm.com>, Barry Song <baohua@kernel.org>, 
+	Lance Yang <lance.yang@linux.dev>, Usama Arif <usama.arif@linux.dev>, 
+	Kiryl Shutsemau <kas@kernel.org>, Doug Gilbert <dgilbert@interlog.com>, 
+	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>, "Martin K. Petersen" <mkp@kernel.org>, 
+	Jaya Kumar <jayalk@intworks.biz>, Simona Vetter <simona@ffwll.ch>, Helge Deller <deller@gmx.de>, 
+	Sebastian Reichel <sre@kernel.org>, John Hubbard <jhubbard@nvidia.com>, Peter Xu <peterx@redhat.com>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Oleg Nesterov <oleg@redhat.com>, 
+	Peter Zijlstra <peterz@infradead.org>, Thomas Gleixner <tglx@kernel.org>, 
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, Arnaldo Carvalho de Melo <acme@kernel.org>, 
+	Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Rik van Riel <riel@surriel.com>, Harry Yoo <harry@kernel.org>, Juri Lelli <juri.lelli@redhat.com>, 
+	Vincent Guittot <vincent.guittot@linaro.org>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+	David Airlie <airlied@gmail.com>, Will Deacon <will@kernel.org>, 
+	"Aneesh Kumar K.V" <aneesh.kumar@kernel.org>, Nick Piggin <npiggin@gmail.com>, Arnd Bergmann <arnd@arndb.de>, 
+	Muchun Song <muchun.song@linux.dev>, Oscar Salvador <osalvador@suse.de>, 
+	"Matthew Wilcox (Oracle)" <willy@infradead.org>, Jan Kara <jack@suse.cz>, Marc Zyngier <maz@kernel.org>, 
+	Oliver Upton <oupton@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, 
+	Madhavan Srinivasan <maddy@linux.ibm.com>, Anup Patel <anup@brainfault.org>, Paul Walmsley <pjw@kernel.org>, 
+	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
+	Christian Borntraeger <borntraeger@linux.ibm.com>, Janosch Frank <frankja@linux.ibm.com>, 
+	Claudio Imbrenda <imbrenda@linux.ibm.com>, Alexander Gordeev <agordeev@linux.ibm.com>, 
+	Gerald Schaefer <gerald.schaefer@linux.ibm.com>, Heiko Carstens <hca@linux.ibm.com>, 
+	Vasily Gorbik <gor@linux.ibm.com>, "David S. Miller" <davem@davemloft.net>, 
+	Andreas Larsson <andreas@gaisler.com>, Alexander Viro <viro@zeniv.linux.org.uk>, 
+	Christian Brauner <brauner@kernel.org>, Matthew Brost <matthew.brost@intel.com>, 
+	Joshua Hahn <joshua.hahnjy@gmail.com>, Rakie Kim <rakie.kim@sk.com>, Byungchul Park <byungchul@sk.com>, 
+	Gregory Price <gourry@gourry.net>, Ying Huang <ying.huang@linux.alibaba.com>, 
+	Alistair Popple <apopple@nvidia.com>, Chris Li <chrisl@kernel.org>, Kairui Song <kasong@tencent.com>, 
+	Kemeng Shi <shikemeng@huaweicloud.com>, Nhat Pham <nphamcs@gmail.com>, Baoquan He <baoquan.he@linux.dev>, 
+	Youngjun Park <youngjun.park@lge.com>, Johannes Weiner <hannes@cmpxchg.org>, 
+	Qi Zheng <qi.zheng@linux.dev>, Shakeel Butt <shakeel.butt@linux.dev>, 
+	Axel Rasmussen <axelrasmussen@google.com>, Yuanchu Xie <yuanchu@google.com>, Wei Xu <weixugc@google.com>, 
+	Chengming Zhou <chengming.zhou@linux.dev>, Michal Hocko <mhocko@kernel.org>, 
+	Miklos Szeredi <miklos@szeredi.hu>, Xu Xin <xu.xin@linux.dev>, linux-mm@kvack.org, 
+	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, linux-usb@vger.kernel.org, 
+	linux-rdma@vger.kernel.org, selinux@vger.kernel.org, linux-sound@vger.kernel.org, 
+	bpf@vger.kernel.org, linux-scsi@vger.kernel.org, linux-fbdev@vger.kernel.org, 
+	dri-devel@lists.freedesktop.org, linux-trace-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, linux-arch@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, linuxppc-dev@lists.ozlabs.org, 
+	kvm@vger.kernel.org, kvm-riscv@lists.infradead.org, linux-riscv@lists.infradead.org, 
+	linux-s390@vger.kernel.org, sparclinux@vger.kernel.org, fuse-devel@lists.linux.dev
+Subject: Re: [PATCH v2 01/40] mm/vma: fix mmap_prepare file handling, remove
+ file_doesnt_need_get
+Message-ID: <aqvRKarObW1Zy-QD@gremlin>
+References: <20260914-b4-mmap-prepare-vma-flag-sanify-v2-0-7d9781ed5361@kernel.org>
+ <20260914-b4-mmap-prepare-vma-flag-sanify-v2-1-7d9781ed5361@kernel.org>
+ <aquz9Z9JrK_H_E0g@kernel.org>
+ <aqu5jtMV2gyZFrSe@gremlin>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -63,49 +101,30 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <aqLvXM5SPPlQePXs@google.com>
+In-Reply-To: <aqu5jtMV2gyZFrSe@gremlin>
 
-On Thu, Sep 10, 2026 at 10:56:44AM -0700, Sean Christopherson wrote:
-> On Thu, Aug 06, 2026, Sean Christopherson wrote:
-> > On Fri, May 08, 2026, Sean Christopherson wrote:
-> > > Sean Christopherson (9):
-> > >   perf/x86/intel: Ensure guest PEBS path doesn't set unwanted
-> > >     PERF_GLOBAL_CTRL bits
-> > >   perf/x86/intel: Don't write PEBS_ENABLED on host<=>guest xfers if CPU
-> > >     has isolation
-> > >   perf/x86/intel: Don't context switch DS_AREA (and PEBS config) if PEBS
-> > >     is unused
-> > >   perf/x86/intel: Make @data a mandatory param for
-> > >     intel_guest_get_msrs()
-> > >   perf/x86/intel: Invert names of intel_ctrl_{guest,host}_mask
-> > >   perf/x86: KVM: Have perf define a dedicated struct for getting guest
-> > >     PEBS data
-> > >   perf/x86/intel: KVM: Handle cross-mapped PEBS PMCs entirely within KVM
-> > >   KVM: VMX: Drop a redundant pmu->global_ctrl check when processing
-> > >     pebs_enable
-> > >   KVM: VMX: Only tell perf to enable PEBS counters for fully enabled
-> > >     PMCs
-> > > 
-> > >  arch/x86/events/core.c            |  5 +-
-> > >  arch/x86/events/intel/core.c      | 92 +++++++++++++++++++------------
-> > >  arch/x86/events/intel/lbr.c       |  2 +-
-> > >  arch/x86/events/perf_event.h      |  7 ++-
-> > >  arch/x86/include/asm/kvm_host.h   |  9 ---
-> > >  arch/x86/include/asm/perf_event.h | 11 +++-
-> > >  arch/x86/kvm/vmx/pmu_intel.c      | 28 +++++++---
-> > >  arch/x86/kvm/vmx/vmx.c            | 10 ++--
-> > >  arch/x86/kvm/vmx/vmx.h            | 15 ++++-
-> > >  9 files changed, 114 insertions(+), 65 deletions(-)
-> > 
-> > Ping.  This still applies on Linus' tree and against tip/master.
-> 
-> Ping again.  This fixes a real issue and IMO provides much-needed improvements
-> for the KVM<=>perf APIs.
+On Thu, Sep 17, 2026 at 10:57:57AM +0100, Lorenzo Stoakes (ARM) wrote:
+> On Thu, Sep 17, 2026 at 12:33:41PM +0300, Mike Rapoport wrote:
+> > But the patch iteslf needs to be fixed :)
+> >
+> > It seems to be the change that broke the CI.
+> >
+> > The rest is from LLM, take it with a grain of salt :)
+>
+> Ack will assess + respin
 
-Right, finally got around to staring at them. How did you want them
-merged?
+Apologies to everybody's inbox but this will need a respin to resolve a conflict
+in a subsequent commit.
 
-AFAICT 2-4 have Fixes tags and should go in perf/urgent, while the rest
-goes in perf/core?
+This was to fix a sashiko report (not a bug anywhere in production, but could
+lead to bugs in future by accident), and got sashiko + [another AI]-reviewed
+before sending all of which missed it :)) the robot overloads are not quite in
+charge yet ;)
 
-/me tries and finds patch 5 doesn't apply.
+Fix is simple - update flags at the right time. The error was pre-empting
+setting everything rather than just map->vm_file.
+
+Will look through other sashiko stuff then respin a bit later.
+
+--
+Cheers, Lorenzo
