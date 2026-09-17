@@ -1,46 +1,46 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB8BD37F33B;
-	Thu, 17 Sep 2026 01:59:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F73937EFFC;
+	Thu, 17 Sep 2026 01:59:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789610383; cv=none; b=Cn0oPu7/mJNUjuGVPdzDlU716MNomX3jzNg2gw0vyGiBksjNs1MiC+QOsr2L/I0j0dXh+b/B/cXxN4denrjbikmtp7ETKs4f2gfY0DwD7K5kOM6ukYc1J97pMyR/H9QwePN3ahnPMXLsYD/1c3snkjwkFiAQOubgB/KKhNhlM40=
+	t=1789610386; cv=none; b=fh5LatNUpq8crLqYFjvUKVkPYcwA+WEPTLdqfEMk5eImihWG86xZRlsenTIuShxsWI5yF8jKVuXyshoNoua1nKD+q28LaxiuTc33FWGkpTR/1yjAmByyRvGDhmaK/CYw8W92yQtWBn4wVicerkBEBrpX9IBI4sSsvKCEA6P2g0A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789610383; c=relaxed/simple;
-	bh=J9WUaVt3R+dNx4jJxSk3X2XtLqmj5tbYD7tcc9N4XF0=;
+	s=arc-20240116; t=1789610386; c=relaxed/simple;
+	bh=Nvi+zRSbHpoSlgoJwAgVOA+jSwsUBrWCPWHxs5YCIXE=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=nFPpveEq8l6WGaC5f/2FIfc8Mdzvn0Ng1aaAl4XQOE9QSq6DUt230LhuhDetDI13sLG53VK1bxgUE23HjQaXcr8wkWxZqQlQXcMZW58LX770JTnq6oiXHAPtYXSdnzAh6boXixiG3cvKDN0XVDEzHFEqyNsOOUsEApWUZJP6L9s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=e2wF2rsw; arc=none smtp.client-ip=192.198.163.8
+	 MIME-Version; b=NGna5KxrUUlv4j6a7sYbU6eOIL1Em34+g+PoJAAtYDFku5+Yw+rDboXS/phuDv4ugfP0W2YuK/n/P/16Osux9w9rsJtt0/Tkh0bv736s9LhK+0Lv8onDpLg69dmki+gSKsfiDieQOVFk76XxayV8PSQqn3ml2kQzE4fRe0oOAx0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Fp/QoO6Y; arc=none smtp.client-ip=192.198.163.8
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="e2wF2rsw"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Fp/QoO6Y"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1789610381; x=1821146381;
+  t=1789610384; x=1821146384;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=J9WUaVt3R+dNx4jJxSk3X2XtLqmj5tbYD7tcc9N4XF0=;
-  b=e2wF2rsw2H9d3s9pTK/aO+WhJA3Xb0cl1RhsewuRzIDCOlxBV+r9I1TE
-   g++LQt+qd39yeJvzPyItEDj5wV1xIKyHuo3RbTMJdqGDoO8EUV6QkJHZY
-   EtQlFwMX4e7dEDhIvT/WlifEg5qwodetShtZYqeYQH34xXjuHnxyccgoR
-   Q0tfT0xZ/Opk8gmRNgZsf3ZKxBx0+rTZD4uzLL7SW8rKdqYN2To4Hmmx2
-   ec5MQLBpMGGuZJC9DUJHMryhzgqjxkFP1l/s9CG3tCZZOcvivGW6qAf22
-   76frX3Zl5kvF5XCGGwdGvITUM5OnH8vin4P0Gd3jeG0ELGFXoFyhKa4ZW
-   w==;
-X-CSE-ConnectionGUID: w/XD1JQ/RYWzqdWALR0IMw==
-X-CSE-MsgGUID: ZFDgSHD7TJeTQ9AP52TKIg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11905"; a="107498529"
+  bh=Nvi+zRSbHpoSlgoJwAgVOA+jSwsUBrWCPWHxs5YCIXE=;
+  b=Fp/QoO6YKJAFvUhwjzDnLhhUlIXOJLBjw5z51j1xxyq5NtoLU48Rrh8D
+   9H0ySX2g68OpSutNR/FXNosUgBjDoJ6W+BkI1bpX4c/LI9tkyMxZXo2wR
+   Mot4noUgfq01oPg+RRcO8psqcKu6V0BM34KECvKxkb/PgljKysKHMzJeE
+   72pax5NLGhsfmJEZ3/G+hbGiAKi5K63Rr5G7huoCw0FzQABjE8uHrMS3x
+   qYgwp1b0P/X99+J7amJqh+6HrvfOtoZJwRZmzJeGqvs1mUPX9e0KodJoe
+   zUm/IODPcD8eZYAycCNPQ0Fznf+HlvGEQPPzc1reM7a62EK3k/MSM3Y9y
+   A==;
+X-CSE-ConnectionGUID: Cp2HxYT8QvW3uQG4qzMQ2g==
+X-CSE-MsgGUID: 7cv0nON3TkOOgothDjP1SQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11905"; a="107498534"
 X-IronPort-AV: E=Sophos;i="6.27,103,1787036400"; 
-   d="scan'208";a="107498529"
+   d="scan'208";a="107498534"
 Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Sep 2026 18:59:40 -0700
-X-CSE-ConnectionGUID: wWGXIKuNQyOgbbxf/S5+/g==
-X-CSE-MsgGUID: 5NqGQWzvQ3a6v3W0HBe7xg==
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Sep 2026 18:59:44 -0700
+X-CSE-ConnectionGUID: ESoAe1YXQHSOuBFtLNHKwA==
+X-CSE-MsgGUID: f2HJ47tdT7SGiEpdwwkXLg==
 X-ExtLoop1: 1
 Received: from spr.sh.intel.com ([10.112.229.196])
-  by fmviesa003.fm.intel.com with ESMTP; 16 Sep 2026 18:59:37 -0700
+  by fmviesa003.fm.intel.com with ESMTP; 16 Sep 2026 18:59:40 -0700
 From: Dapeng Mi <dapeng1.mi@linux.intel.com>
 To: Peter Zijlstra <peterz@infradead.org>,
 	Ingo Molnar <mingo@redhat.com>,
@@ -58,9 +58,9 @@ Cc: linux-kernel@vger.kernel.org,
 	Falcon Thomas <thomas.falcon@intel.com>,
 	Xudong Hao <xudong.hao@intel.com>,
 	Dapeng Mi <dapeng1.mi@linux.intel.com>
-Subject: [PATCH 01/12] perf/x86/intel: Fix GRT PEBS load/store direction for latency events
-Date: Thu, 17 Sep 2026 09:52:23 +0800
-Message-Id: <20260917015234.981153-2-dapeng1.mi@linux.intel.com>
+Subject: [PATCH 02/12] perf/x86/intel: Fix CMT PEBS load/store direction for latency events
+Date: Thu, 17 Sep 2026 09:52:24 +0800
+Message-Id: <20260917015234.981153-3-dapeng1.mi@linux.intel.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20260917015234.981153-1-dapeng1.mi@linux.intel.com>
 References: <20260917015234.981153-1-dapeng1.mi@linux.intel.com>
@@ -72,68 +72,40 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-On Gracemont, intel_grt_pebs_event_constraints[] applies LAT_CONSTRAINT
-constraints to MEM_UOPS_RETIRED.{LOAD,STORE}_LATENCY, but does not set
-explicit LOAD/STORE flags for those events.
+Same issue exists on Crestmont, intel_cmt_pebs_event_constraints[]
+applies LAT_CONSTRAINT constraints to
+MEM_UOPS_RETIRED.{LOAD,STORE}_LATENCY, but does not set explicit
+LOAD/STORE flags for those events.
 
-The PEBS latency path (pebs_latency_data(), via __grt_latency_data())
-uses the event flags to determine memory operation direction. Without an
+The PEBS latency path (pebs_latency_data(), via cmt_latency_data) uses
+the event flags to determine memory operation direction. Without an
 explicit STORE flag, samples from MEM_UOPS_RETIRED.STORE_LATENCY can be
 misclassified as LOADs.
 
-Set explicit LOAD/STORE flags in intel_grt_pebs_event_constraints[] for:
+Set explicit LOAD/STORE flags in intel_cmt_pebs_event_constraints[] for:
 - MEM_UOPS_RETIRED.LOAD_LATENCY
 - MEM_UOPS_RETIRED.STORE_LATENCY
 
-Also update __grt_latency_data() to explicitly interpret these flags when
-assigning the sampled memory operation direction.
-
 This fixes incorrect STORE sample classification.
 
-Fixes: 39a41278f041 ("perf/x86/intel: Fix PEBS memory access info encoding for ADL")
+Fixes: e99fb45436ea ("perf/x86/intel: Update event constraints and cache_extra_regsfor MTL")
 Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
 ---
- arch/x86/events/intel/ds.c | 16 +++++++++++++---
- 1 file changed, 13 insertions(+), 3 deletions(-)
+ arch/x86/events/intel/ds.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/arch/x86/events/intel/ds.c b/arch/x86/events/intel/ds.c
-index 2edff9754eb2..20674871c6c3 100644
+index 20674871c6c3..434adf15d83c 100644
 --- a/arch/x86/events/intel/ds.c
 +++ b/arch/x86/events/intel/ds.c
-@@ -455,6 +455,7 @@ static inline void pebs_set_tlb_lock(u64 *val, bool tlb, bool lock)
- static u64 __grt_latency_data(struct perf_event *event, u64 status,
- 			       u8 dse, bool tlb, bool lock, bool blk)
- {
-+	union perf_mem_data_src src;
- 	u64 val;
+@@ -1305,8 +1305,8 @@ struct event_constraint intel_grt_pebs_event_constraints[] = {
  
- 	WARN_ON_ONCE(is_hybrid() &&
-@@ -470,7 +471,16 @@ static u64 __grt_latency_data(struct perf_event *event, u64 status,
- 	else
- 		val |= P(BLK, NA);
- 
--	return val;
-+	src.val = val;
-+
-+	if (event->hw.flags &
-+	    (PERF_X86_EVENT_PEBS_LDLAT | PERF_X86_EVENT_PEBS_LD_HSW))
-+		src.mem_op = P(OP, LOAD);
-+	if (event->hw.flags &
-+	    (PERF_X86_EVENT_PEBS_STLAT | PERF_X86_EVENT_PEBS_ST_HSW))
-+		src.mem_op = P(OP, STORE);
-+
-+	return src.val;
- }
- 
- u64 grt_latency_data(struct perf_event *event, u64 status)
-@@ -1288,8 +1298,8 @@ struct event_constraint intel_glm_pebs_event_constraints[] = {
- 
- struct event_constraint intel_grt_pebs_event_constraints[] = {
+ struct event_constraint intel_cmt_pebs_event_constraints[] = {
  	/* Allow all events as PEBS with no flags */
 -	INTEL_HYBRID_LAT_CONSTRAINT(0x5d0, 0x3),
--	INTEL_HYBRID_LAT_CONSTRAINT(0x6d0, 0x3f),
+-	INTEL_HYBRID_LAT_CONSTRAINT(0x6d0, 0xff),
 +	INTEL_HYBRID_LDLAT_CONSTRAINT(0x5d0, 0x3),
-+	INTEL_HYBRID_STLAT_CONSTRAINT(0x6d0, 0x3f),
++	INTEL_HYBRID_STLAT_CONSTRAINT(0x6d0, 0xff),
  	EVENT_CONSTRAINT_END
  };
  
