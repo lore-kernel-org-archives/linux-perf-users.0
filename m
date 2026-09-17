@@ -1,16 +1,16 @@
 Received: from one.firstfloor.org (one.firstfloor.org [65.21.254.221])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8859537187E;
-	Thu, 17 Sep 2026 23:02:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A2694C0402;
+	Thu, 17 Sep 2026 23:02:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.21.254.221
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789686132; cv=none; b=dXlvlRkHH/24sYiJv/APN/U4rO8hFBNVgfw84P/FpJb/1uPdbIzSPnVW3v4TBvXmH9v+kBW/6Q6tgkWe3b/Y2mwX8Xvj7LxTTivZz+XIntVxq54ypj7sH04IAkQHRbWZoSxqCV2l7rdgrGpWDQDoX4QkNPgDoVVvcCBvBIJREaM=
+	t=1789686132; cv=none; b=TTeDa0ERhNAZW1A85XNQugJ4hdS7D6B6m9daq1Mi94LZ3A8Shslmxa54c3m3qgXRyq19sQ4PujnzgQEgVuosn5SRe89NWVskW1WnLE1UP31/Q+Nxfk7mQ3N+1JLD4Yua+modb34ZXf9NirufTgWjhNsVUzpFIXwP4NqBS8vnF1U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1789686132; c=relaxed/simple;
-	bh=hHnjB80nwFRqYHM/dR8DgVHArEfXQ598EZ+/RHeJ3R8=;
+	bh=p65Xtn2gfNRCcXxALqNmqie+QqtqXsjY+lqaHoen8QU=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=rI5xPJBP+Pq+zxZoJDm5+bYLEHxUADVMSUXv82Df3SI9JuHzhs4V5IFhUEIv7iJbFS9PJ/b5QFI88X4x9f/bQlIsS9j1SQG+zAUAWNJ1n8FLITatDSN0S17B5RBfFm5c1QN7t2EQisSVylN1JbZ9NHLZTzIinY9A798m4nlPEEI=
+	 MIME-Version; b=InbEmZGVS/jV3oxp8INW/MSvbwwGUOp3ZYFkZRYiBWKwgWNVPdVhFNJbjJoZB4JpAhwAdF39DriDqIFlHvAARHcaGznI/6HrK/MFeghIHsv7xoSG6gmCehornNL5a214DvSQvP2JHjrm562dY3Uxo/fGAEH5vXXRiLaFC4sXTZ8=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=firstfloor.org; arc=none smtp.client-ip=65.21.254.221
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=firstfloor.org
@@ -18,10 +18,10 @@ Received: from firstfloor.org (c-73-11-123-161.hsd1.or.comcast.net [73.11.123.16
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits))
 	(No client certificate requested)
-	by one.firstfloor.org (Postfix) with ESMTPSA id CF6B45E8A5;
-	Fri, 18 Sep 2026 01:01:54 +0200 (CEST)
+	by one.firstfloor.org (Postfix) with ESMTPSA id 322F15E8AB;
+	Fri, 18 Sep 2026 01:01:55 +0200 (CEST)
 Received: by firstfloor.org (Postfix, from userid 1000)
-	id 9342C1622CE; Thu, 17 Sep 2026 16:01:48 -0700 (PDT)
+	id 963B01622D0; Thu, 17 Sep 2026 16:01:48 -0700 (PDT)
 From: Andi Kleen <ak@kernel.org>
 To: Masami Hiramatsu <mhiramat@kernel.org>
 Cc: Oleg Nesterov <oleg@redhat.com>,
@@ -34,9 +34,9 @@ Cc: Oleg Nesterov <oleg@redhat.com>,
 	linux-perf-users@vger.kernel.org,
 	adrian.hunter@intel.com,
 	Andi Kleen <ak@kernel.org>
-Subject: [RFC PATCH v2 10/11] ptwrite uprobes: Add a tutorial and overview documentation
-Date: Thu, 17 Sep 2026 16:00:37 -0700
-Message-ID: <20260917230127.924985-11-ak@kernel.org>
+Subject: [RFC PATCH v2 11/11] ptwrite uprobes: Add kernel self tests
+Date: Thu, 17 Sep 2026 16:00:38 -0700
+Message-ID: <20260917230127.924985-12-ak@kernel.org>
 X-Mailer: git-send-email 2.54.0
 In-Reply-To: <20260917230127.924985-1-ak@kernel.org>
 References: <20260917230127.924985-1-ak@kernel.org>
@@ -48,422 +48,490 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Document the PTWRITE uprobe interface, syntax, requirements,
-limitations, and usage examples.
+Add kernel selftests for PTWRITE uprobes. Exercise instruction punning,
+multinop patching, fork/exec, and removal of probes.
 
 Assisted-by: omp:gpt-5.6-luna
 Signed-off-by: Andi Kleen <ak@kernel.org>
 ---
- Documentation/trace/index.rst           |   1 +
- Documentation/trace/ptwrite-uprobes.rst | 387 ++++++++++++++++++++++++
- 2 files changed, 388 insertions(+)
- create mode 100644 Documentation/trace/ptwrite-uprobes.rst
+ tools/testing/selftests/Makefile              |   1 +
+ .../test.d/kprobe/uprobe_syntax_errors.tc     |  40 ++++
+ tools/testing/selftests/uprobes/Makefile      |  14 ++
+ tools/testing/selftests/uprobes/ptw_probe.c   | 156 +++++++++++++
+ tools/testing/selftests/uprobes/run_ptw.sh    | 219 ++++++++++++++++++
+ 5 files changed, 430 insertions(+)
+ create mode 100644 tools/testing/selftests/uprobes/Makefile
+ create mode 100644 tools/testing/selftests/uprobes/ptw_probe.c
+ create mode 100755 tools/testing/selftests/uprobes/run_ptw.sh
 
-diff --git a/Documentation/trace/index.rst b/Documentation/trace/index.rst
-index f4058e8e92e3..4ae7b158804b 100644
---- a/Documentation/trace/index.rst
-+++ b/Documentation/trace/index.rst
-@@ -90,6 +90,7 @@ interactions.
- .. toctree::
-    :maxdepth: 1
+diff --git a/tools/testing/selftests/Makefile b/tools/testing/selftests/Makefile
+index 2d960626750e..02f36cbf98ae 100644
+--- a/tools/testing/selftests/Makefile
++++ b/tools/testing/selftests/Makefile
+@@ -135,6 +135,7 @@ TARGETS += tpm2
+ TARGETS += tty
+ TARGETS += ublk
+ TARGETS += uevent
++TARGETS += uprobes
+ TARGETS += user_events
+ TARGETS += vDSO
+ TARGETS += mm
+diff --git a/tools/testing/selftests/ftrace/test.d/kprobe/uprobe_syntax_errors.tc b/tools/testing/selftests/ftrace/test.d/kprobe/uprobe_syntax_errors.tc
+index e12dc967ec76..53f30c0b7d1b 100644
+--- a/tools/testing/selftests/ftrace/test.d/kprobe/uprobe_syntax_errors.tc
++++ b/tools/testing/selftests/ftrace/test.d/kprobe/uprobe_syntax_errors.tc
+@@ -33,4 +33,44 @@ if grep -q "\$current.*" README; then
+ check_error 'p /bin/sh:10 ^$current:u8'	# BAD_VAR
+ fi
  
-+   ptwrite-uprobes
-    user_events
-    uprobetracer
- 
-diff --git a/Documentation/trace/ptwrite-uprobes.rst b/Documentation/trace/ptwrite-uprobes.rst
++# ptwrite options may be written as an offset suffix or as separate tokens.
++# Use /bin/sh's executable entry so registration reaches the parser options.
++ptw_off=
++if command -v readelf >/dev/null 2>&1; then
++	ptw_entry=$(readelf -hW /bin/sh |
++		awk '/Entry point address:/{print $NF; exit}')
++	ptw_load_off=$(readelf -lW /bin/sh |
++		awk '$1 == "LOAD" && $0 ~ / R E/ {print $2; exit}')
++	ptw_load_vaddr=$(readelf -lW /bin/sh |
++		awk '$1 == "LOAD" && $0 ~ / R E/ {print $3; exit}')
++	if [ -n "$ptw_entry" ] && [ -n "$ptw_load_off" ] &&
++		[ -n "$ptw_load_vaddr" ]; then
++		ptw_off=$(( $(printf "%d" "$ptw_load_off") +
++			$(printf "%d" "$ptw_entry") -
++			$(printf "%d" "$ptw_load_vaddr") ))
++	fi
++fi
++if [ "$(uname -m)" = x86_64 ] &&
++	[ -e /sys/devices/intel_pt/format/ptw ] && [ -n "$ptw_off" ]; then
++check_good_ptw() {
++	echo > uprobe_events	# Clear any probe left by an earlier case.
++	echo "$1" > uprobe_events
++	grep -q 'ptw:uprobes/ptw_parser' uprobe_events
++	local ret=$?
++	echo "-:ptw_parser" > uprobe_events
++	return "$ret"
++}
++
++check_good_ptw "ptw:ptw_parser /bin/sh:$ptw_off%multinop %di" || exit 1
++check_good_ptw "ptw:ptw_parser /bin/sh:$ptw_off%nopace %multinop %di" || exit 1
++check_good_ptw "ptw:ptw_parser /bin/sh:$ptw_off %multinop %nopace %di" || exit 1
++
++check_error "ptw:ptw_parser /bin/sh:$ptw_off^%return %di"	# BAD_ADDR_SUFFIX
++check_error "ptw:ptw_parser /bin/sh:$ptw_off^%unknown %di"	# BAD_ADDR_SUFFIX
++if grep -q '\$comm' README; then
++	check_error "ptw:ptw_parser /bin/sh:$ptw_off %multinop %di ^\$comm"	# BAD_FETCH_ARG
++fi
++echo > uprobe_events
++fi
++
+ exit 0
+diff --git a/tools/testing/selftests/uprobes/Makefile b/tools/testing/selftests/uprobes/Makefile
 new file mode 100644
-index 000000000000..5268b8aed9de
+index 000000000000..ee97442f8c9d
 --- /dev/null
-+++ b/Documentation/trace/ptwrite-uprobes.rst
-@@ -0,0 +1,387 @@
-+.. SPDX-License-Identifier: GPL-2.0
-+
-+===============
-+ptwrite uprobes
-+===============
-+
-+.. contents:: :local:
-+
-+Introduction
-+============
-+
-+A classic uprobe enters the kernel for each probe. That causes overhead
-+when the probe is executed frequently.
-+
-+ptwrite uprobes instead rely on hardware tracing that doesn't enter
-+the kernel. It uses the ``PTWRITE`` instruction available on modern
-+Intel CPUs to log data to the Processor Trace buffer. Processor
-+Trace is configured and recorded by Linux perf.
-+
-+There are some limitations of the scheme (see below)
-+but it is a lot faster than classic uprobes.
-+
-+Performance
-+===========
-+
-+Measured on the development kernel in a KVM guest (2 vCPUs) running
-+on an Alder Lake laptop with a probe on a hot function called in a
-+tight loop.
-+
-+    +---------------------------------------+----------------------+--------------------+------------------------+
-+    | mode (2-arg probe)                    | PT off (% of classic)| full (% of classic)| snapshot (% of classic)|
-+    +=======================================+======================+====================+========================+
-+    | classic uprobe (tracefs)              | 100%                 | 100%               | 100%                   |
-+    | classic uprobe (perf probe, tracefs)  | 104%                 |                    |                        |
-+    | classic uprobe (perf probe, perf ring)|                      | 156%               |                        |
-+    | ptwrite %nopace                       | 2%                   | 2%                 | 8%                     |
-+    | ptwrite default                       | 7%                   | 7%                 | 11%                    |
-+    | perf probe ``--ptwrite``              | 7%                   | 7%                 | 12%                    |
-+    +---------------------------------------+----------------------+--------------------+------------------------+
-+
-+The percentages are normalized to the classic tracefs uprobe in each
-+recording mode; lower values represent lower cost per hit.
-+
-+A ``%nopace`` probe costs roughly **2%** as much as a classic uprobe
-+with PT off (about 98% less). The default pacing (on unless ``%nopace``
-+is given) costs roughly 7% as much (about 93% less) in the same mode.
-+The default pacing slows down the probes to avoid data loss when they are
-+too tightly spaced.
-+
-+``snapshot`` refers to ``perf record`` snapshot mode (``-S``) which doesn't
-+save the PT ring buffer constantly.
-+
-+
-+Requirements
-+============
-+
-+- An Intel CPU with Intel PT and PTWRITE. When running as a guest Intel PT
-+  needs to be exposed to the guest.
-+  PT/PTWRITE are available when ``/sys/devices/intel_pt/format/ptw`` exists.
-+- A kernel with ``CONFIG_UPROBE_EVENTS`` enabled.
-+
-+Quick start (tracefs)
-+=====================
-+
-+Pick a probe site, register a probe at its file offset, enable it, run the
-+program under PT, decode.
-+
-+Example 1: probe an existing instruction (punning)
-+--------------------------------------------------
-+
-+Build a small program and probe the entry of ``main``::
-+
-+    $ cat > t.c <<'EOF'
-+    #include <stdio.h>
-+
-+    __attribute__((noinline, noipa)) static unsigned long
-+    target(unsigned long a, unsigned long b)
-+    {
-+        return a * 31 + b;
-+    }
-+
-+    int main(void)
-+    {
-+        unsigned long i, acc = 0;
-+        for (i = 0; i < 100; i++)
-+            acc += target(i, i + 1);
-+        printf("acc=%lu\n", acc);
-+        return 0;
-+    }
-+    EOF
-+    $ gcc -O2 -no-pie -fno-inline -o t t.c
-+
-+``objdump -F`` prints the file offset of every instruction::
-+
-+    $ objdump -d -F t | sed -n "/<main> (File Offset/,+1p"
-+    0000000000401040 <main> (File Offset: 0x1040):
-+      401040:	55			push   %rbp
-+
-+``1040`` is the file offset of ``main``'s first instruction, exactly
-+what the probe line needs. Register the probe there, enable it, run
-+the program under PT and decode::
-+
-+    # echo "ptw:e t:0x1040 %di %si" > /sys/kernel/tracing/uprobe_events
-+    # echo 1 > /sys/kernel/tracing/events/uprobes/e/enable
-+    # perf record -e intel_pt/ptw=1,fup_on_ptw=1/u -o perf.data ./t
-+    # perf script --itrace=qwe -s uprobe-ptwrite-decode.py -i perf.data
-+    record 1: event=uprobes/e id=0x6c2 args=[1, 140728356930600]
-+    summary: records=1 dropped=0 stray=0 unknown=0 errors=0
-+
-+Since it isn't a nop the instruction is "punned": byte 0 is changed
-+to a jump to a trampoline that logs the data and returns to the
-+previous execution.
-+
-+Punning is a probabilistic method that depends on the existing
-+instruction bytes and the placement of the executable in memory.
-+It has a high chance of success on PIE/PIC binaries, but tends
-+to work poorly on non PIE main executables.
-+When punning is not possible the probe is rejected at install
-+time. Options in this case:
-+
-+- Move the probe site to a different instruction which may work.
-+- Rebuild with -fPIE if the main executable is not PIE.
-+- Enable or disable /proc/sys/kernel/randomize_va_space. If the
-+  randomization is enabled it may also just work on a rerun of
-+  the program.
-+- Fall back to a classic uprobe.
-+- Insert a 5-byte NOP which is always supported (see below).
-+
-+Example 2: an explicit 5-byte NOP (inline assembly)
-+---------------------------------------------------
-+
-+Add a 5-byte NOP at the probe point::
-+
-+    $ cat > t.c <<'EOF'
-+    #include <stdio.h>
-+
-+    __attribute__((noinline)) static unsigned long
-+    target(unsigned long a, unsigned long b)
-+    {
-+        asm volatile(".byte 0x0f, 0x1f, 0x44, 0x00, 0x00"); /* nopl */
-+        return a * 31 + b;
-+    }
-+
-+    int main(void)
-+    {
-+        unsigned long i, acc = 0;
-+        for (i = 0; i < 100; i++)
-+            acc += target(i, i + 1);
-+        printf("acc=%lu\n", acc);
-+        return 0;
-+    }
-+    EOF
-+    $ gcc -O2 -no-pie -o t t.c
-+
-+    $ objdump -d -F t | sed -n "/<target> (File Offset/,+1p"
-+    0000000000401170 <target> (File Offset: 0x1170):
-+      401170:	0f 1f 44 00 00		nopl   0x0(%rax,%rax,1)
-+
-+Probe it exactly like example 1::
-+
-+    # echo "ptw:e t:0x1170 %di %si" > /sys/kernel/tracing/uprobe_events
-+    # echo 1 > /sys/kernel/tracing/events/uprobes/e/enable
-+    # perf record -e intel_pt/ptw=1,fup_on_ptw=1/u -o perf.data ./t
-+    # perf script --itrace=qwe -s uprobe-ptwrite-decode.py -i perf.data
-+    record 99: event=uprobes/e id=0x6c2 args=[98, 99]
-+    record 100: event=uprobes/e id=0x6c2 args=[99, 100]
-+    summary: records=100 dropped=0 stray=0 unknown=0 errors=0
-+
-+Configuring ptwrite uprobes
-+===========================
-+
-+ptwrite uprobes is configured like normal uprobes by writing
-+commands to ``/sys/kernel/tracing/uprobe_events``.
-+
-+  ptw[:[GRP/][EVENT]] PATH:OFFSET [FETCHARGS] : set a ptwrite probe
-+  -:[GRP/][EVENT]                             : clear a probe
-+
-+  GRP      : group name. If omitted, "uprobes" is the default (the
-+             event appears under events/uprobes/).
-+  EVENT    : event name. If omitted, one is generated from PATH+OFFSET.
-+  PATH     : path to an executable or a library.
-+  OFFSET   : file offset of the probe site (0x-prefixed hex, see above).
-+  FETCHARGS: probe arguments, up to 8 (see "Argument syntax" below).
-+
-+After creating the ptwrite uprobe it becomes available with its name
-+in ``/sys/kernel/tracing/uprobe_events``. There it can be enabled
-+by writing 1 to its enable field. However it only logs data
-+when a Linux perf PT recording session with ptw=1 is active.
-+
-+perf probe
-+----------
-+
-+``perf probe --ptwrite -x <file>`` creates ptwrite uprobes instead of
-+the classic trap-based ones. The example below uses SDT probes.
-+
-+(this requires installing systemtap-devel or an equivalent package)
-+
-+    $ cat > t.c <<'EOF'
-+    #include <stdio.h>
-+    #include <sys/sdt.h>
-+    __attribute__((noinline, noclone)) static unsigned long
-+    target(unsigned long a, unsigned long b)
-+    {
-+        unsigned long local = a * 2;
-+        STAP_PROBE1(test, rarg, a);
-+        STAP_PROBE1(test, carg, 42);
-+        STAP_PROBE2(test, marg, &local, b);
-+        return a * 31 + b;
-+    }
-+    int main(void)
-+    {
-+        unsigned long i, acc = 0;
-+        for (i = 0; i < 20; i++) {
-+            acc += target(i, i + 1);
-+            asm volatile("pause");
-+        }
-+        printf("acc=%lu\n", acc);
-+        return 0;
-+    }
-+    EOF
-+    $ gcc -O2 -no-pie -o t t.c
-+
-+The first probe point (``rarg``) is a nop 9 bytes into ``target``::
-+
-+    $ objdump -d t | sed -n "/<target>:/,+3p"
-+    0000000000401180 <target>:
-+      401180:	48 8d 04 3f		lea    (%rdi,%rdi,1),%rax
-+      401184:	48 89 44 24 f8		mov    %rax,-0x8(%rsp)
-+      401189:	90			nop
-+
-+Probe it with ``perf probe --ptwrite`` using the function+offset
-+form, then enable, capture and delete it like any ptwrite probe::
-+
-+    $ perf probe --ptwrite -x ./t --add "target+9 %di %si"
-+    Added new event:
-+      probe_t:target      (on target+9 in ./t with %di %si)
-+
-+    # the tracefs line it wrote:
-+    # ptw:probe_t/target ./t:0x1189 arg1=%di arg2=%si
-+
-+    # echo 1 > /sys/kernel/tracing/events/probe_t/target/enable
-+    # perf record -e intel_pt/ptw=1,fup_on_ptw=1/u -o perf.data ./t
-+    # perf script --itrace=qwe -s uprobe-ptwrite-decode.py -i perf.data
-+    record 1: event=probe_t/target id=0x6a9 args=[0, 1]
-+    record 20: event=probe_t/target id=0x6a9 args=[19, 20]
-+    summary: records=20 dropped=0 stray=0 unknown=0 errors=0
-+    # perf probe -d probe_t:target
-+
-+A ``nop`` instruction, as used by SDT probes, is not guaranteed to
-+be ptwrite patchable. It needs a 5-byte NOP, but it can
-+often be punned. If punning fails, the kernel reports
-+``failed to install`` and the probe has to be moved to another site.
-+
-+GCC's ``-fpatchable-function-entry=5`` may emit five one-byte NOPs.
-+To use that site, add ``%multinop`` to the tracefs probe offset::
-+
-+    # echo "ptw:e t:0x1170%multinop %di %si" > /sys/kernel/tracing/uprobe_events
-+
-+The five-byte run must start at an 8-byte-aligned address because it is
-+patched with an atomic eight-byte store. An unaligned ``%multinop`` site is
-+rejected; without ``%multinop``, the run is treated as a pun and may not
-+always succeed.
-+
-+perf probe uses the standard argument syntax for the ptwrite subset
-+(registers, ``$stack``/``$stackN``, ``+disp(%reg)`` memory reads, and
-+``\0x2a``-style constants). Strings, arrays and typed suffixes are not
-+supported by the ptwrite stub and are rejected by the kernel.
-+``%return`` is refused (ptwrite probes are entry-only), and the mode
-+requires ``-x``. The probes are enabled, captured and deleted like
-+classic probes (``perf probe -l``, ``perf probe -d``).
-+They carry the default (LFENCE) pacing. ``%nopace`` cannot be selected
-+through perf probe. Write the tracefs line by hand for that.
-+
-+Argument syntax
-+---------------
-+
-+ptwrite uprobes only support a limited number of argument types
-+compared to classic uprobes.
-+
-+``ptw:<name> <path>:<offset> <arg> ... [options]`` where each ``<arg>`` is one
-+of:
-+
-+- ``%di``, ``%si``, ``%ax`` ...: a live register.
-+- ``\IMM``: a fixed constant (stored in the stub), e.g. ``\0x42``.
-+- ``$stack``: the stack pointer value (never faults).
-+- ``$stackN``: the Nth stack slot (``[%rsp + 8N]``). ``u64`` uses an
-+  8-byte load on the fault-fixup path; ``u32``/``s32``/``x32`` use a 4-byte
-+  load.
-+- ``+<disp>(%reg)``: read memory at ``[reg + disp]``. ``u64`` uses an
-+  8-byte load; ``u32``/``s32``/``x32`` use a 4-byte load (``ptwritel``).
-+  A bad address writes ``0``.
-+
-+Options
-+-------
-+
-+``%nopace`` disables artificial slowdown of the probes. This can cause
-+data loss when they are tightly spaced or have many arguments, but
-+speeds up the probes (see the benchmark section above).
-+
-+``%multinop`` lets users probe a 5-byte nop sequence that is not one
-+instruction. A program could jump to a later nop, which would break when
-+the probe rewrites the site.
-+
-+However there is a common case where gcc's -fpatchable-function-entry=5
-+generates 5 nops for each function that are convenient points
-+for patching, and nobody jumps into the middle of them.
-+
-+The five one-byte NOP sequence must be 8-byte aligned.
-+
-+The encoding format
-+===================
-+
-+Each probe writes a header and the arguments to the PT stream.
-+
-+The header is a 64-bit word. Each argument is one PTWRITE payload exposed by
-+perf as a ``u64`` value.
-+
-+    header word:      bits 63..48  event id (matches the tracefs id in sysfs)
-+                      bits 47..40  number of argument words
-+                      bits 39..0   fixed magic 0x5054525731 ("PTRW1")
-+    arguments:        one PTWRITE payload per FETCHARG
-+
-+If the program itself also executes own ``PTWRITE``, those values mix with the
-+uprobe output in the stream. The decoder uses the header magic to identify
-+uprobe records. Other values are printed as ``manual ptwrite:`` lines (with
-+their IP when ``fup_on_ptw`` is set) and counted in the summary's ``stray``
-+field.
-+
-+To also print the decoded branch stream alongside the records, add
-+``b`` to the itrace options and drop the ``q``
-+
-+    # ``perf script --itrace=web -s uprobe-ptwrite-decode.py -i perf.data``
-+
-+Each decoded branch prints as a ``branch:`` line (from => to, with
-+symbols where resolvable), interleaved with the probe records and any
-+manual ptwrites in delivery order.
-+
-+Other events in the recording, including classic uprobes, tracepoints,
-+and sample events, are printed as ``event:`` lines unless disabled
-+by the decoder.
-+
-+Unsupported instructions for probes
-+===================================
-+
-+The following instructions are always refused for instrumentation:
-+
-+- Traps: ``int3``, ``int1``, ``int imm8``, ``into``, ``iret``
-+  because they save the IP.
-+- System instructions: ``syscall``, ``sysenter``, ``sysexit``
-+  for similar reasons.
-+- Far control flow: ``jmp far``, ``call far``, and the indirect far
-+  forms (call-far, jmp-far).
-+- Relative branches: ``jmp rel8/rel32``, ``jcc rel8/rel32``,
-+  ``loop*``, ``jecxz/jrcxz``, and ``call rel32``. Out-of-line execution
-+  would change their relative targets, and a call's return address would
-+  point into the stub.
-+- Indirect ``call``: the return-address problem also applies to the
-+  register and memory forms.
-+- If the 5 byte area of the instruction crosses a page boundary it
-+  currently cannot be probed (this applies to nop probes too).
-+
-+Other restrictions
-+==================
-+
-+- Each probe needs 4K of process memory and roughly 1K extra in the kernel.
-+- The probe pages are currently only freed on process exit.
-+- Return probes (``%return``/``r:``): ptwrite probes are entry-only
-+  and ``%return`` is refused.
-+- The SDT reference counter (``(REF)``).
-+- EBPF, perf actions, filters, event predicates, histograms, triggers,
-+  profiling and similar advanced trace features are all not supported
-+  since they would require a kernel entry. However some basic filtering
-+  is possible at the perf recording level, for example limit the scope
-+  to a CPU or to a process. PT also supports address filter ranges
-+  that allow filtering by IP.
-+- More than one probe at the same site
-+- Only 4 and 8 byte memory references are supported.
-+- Fetch argument variety: classic probes fetch strings
-+  (``:string``/``:ustring``), arrays, bitfields, nested derefs,
-+  ``$retval``, ``$comm`` and ``$argN``. Ptwrite probes only take live
-+  registers, ``\IMM`` constants, ``$stack``/``$stackN`` and
-+  ``+disp(%reg)`` memory reads. Memory reads are 8-byte words for ``u64``
-+  and 4-byte words for ``u32``/``s32``/``x32``.
-+  (some of this could be relaxed, but it would require a writable stack)
-+- Like normal uprobes one byte of the instruction stream is overwritten
-+  (or 5 bytes for the nop case). If the program reads its own code
-+  it might see different values.
++++ b/tools/testing/selftests/uprobes/Makefile
+@@ -0,0 +1,14 @@
++# SPDX-License-Identifier: GPL-2.0
++# ptwrite uprobe selftests (x86-64).
++ARCH ?= $(shell uname -m 2>/dev/null || echo not)
++CFLAGS += -O2 -Wall -no-pie
++
++TEST_PROGS := run_ptw.sh
++
++ifneq ($(filter x86 x86_64,$(ARCH)),)
++TEST_GEN_FILES := ptw_probe
++else
++TEST_GEN_FILES :=
++endif
++
++include ../lib.mk
+diff --git a/tools/testing/selftests/uprobes/ptw_probe.c b/tools/testing/selftests/uprobes/ptw_probe.c
+new file mode 100644
+index 000000000000..b232fbd4d2aa
+--- /dev/null
++++ b/tools/testing/selftests/uprobes/ptw_probe.c
+@@ -0,0 +1,156 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * ptw_probe - ptwrite uprobe selftest target.
++ */
++#include <stdio.h>
++#include <stdint.h>
++#include <string.h>
++
++static __attribute__((noipa)) uint64_t
++punfn(uint64_t a)
++{
++	uint32_t v;
++
++	asm volatile("mov $0xfff10000, %%eax\n\tmovl %%eax, %0"
++		     : "=r"(v) : : "rax");
++	return v ^ (a * 0x9e3779b97f4a7c15ULL);
++}
++
++static __attribute__((noipa)) uint64_t
++jcc8(uint64_t a)
++{
++	asm volatile("jne 1f\n\tmovabs $0x1111111111111111, %%rax\n\t"
++		     "1:" : "+a"(a) : : "cc");
++	return a;
++}
++
++static __attribute__((noipa)) uint64_t
++nopfn(uint64_t a)
++{
++	asm volatile("nop\n\t"
++		     ".p2align 3, 0x90\n\t"
++		     ".globl nopfn_site\n\t"
++		     "nopfn_site:\n\t"
++		     "nop\n\tnop\n\tnop\n\tnop\n\tnop" ::: "memory");
++	return a * 31 + 7;
++}
++
++/* These symbols are labels defined by the inline assembly above. */
++extern const uint8_t nopfn_site[];
++extern const uint8_t nopfn_unaligned_site[];
++
++static __attribute__((noipa)) uint64_t
++unaligned_nopfn(uint64_t a)
++{
++	asm volatile(".p2align 3, 0x90\n\t"
++		     "nop\n\t"
++		     ".globl nopfn_unaligned_site\n\t"
++		     "nopfn_unaligned_site:\n\t"
++		     "nop\n\tnop\n\tnop\n\tnop\n\tnop" ::: "memory");
++	return a * 13 + 5;
++}
++
++static __attribute__((noipa)) uint64_t
++nop5(uint64_t a)
++{
++	asm volatile(".byte 0x0f, 0x1f, 0x44, 0x00, 0x00" ::: "memory");
++	return a * 7 + 3;
++}
++
++static __attribute__((noipa)) uint64_t
++rzfn(uint64_t a)
++{
++	uint64_t v;
++
++	asm volatile("movq %0, -8(%%rsp)" : : "r"(a) : "memory");
++	asm volatile(".globl rz_probe_site\n\t"
++		     "rz_probe_site:\n\t"
++		     "nop\n\tnop\n\tnop\n\tnop\n\tnop" ::: "memory");
++	asm volatile("movq -8(%%rsp), %0" : "=r"(v) : : "memory");
++	return v ^ 0x55;
++}
++
++static uint8_t load_site_byte(const uint8_t *p)
++{
++	return __atomic_load_n(p, __ATOMIC_RELAXED);
++}
++
++static void dump_site(const char *name, const uint8_t *p)
++{
++	printf("SITE %s %02x%02x%02x%02x%02x\n", name,
++	       load_site_byte(p + 0), load_site_byte(p + 1),
++	       load_site_byte(p + 2), load_site_byte(p + 3),
++	       load_site_byte(p + 4));
++}
++
++static int check_installed(const char *name, const uint8_t *p, uint64_t vaddr)
++{
++	uint32_t rel_u;
++	int32_t rel;
++	unsigned long long target, s, e;
++	FILE *f;
++	char line[256];
++	int found = 0;
++
++	if (load_site_byte(p + 0) != 0xe9)
++		return 1;	/* not installed */
++	rel_u = (uint32_t)load_site_byte(p + 1) |
++		((uint32_t)load_site_byte(p + 2) << 8) |
++		((uint32_t)load_site_byte(p + 3) << 16) |
++		((uint32_t)load_site_byte(p + 4) << 24);
++	rel = (int32_t)rel_u;
++	target = vaddr + 5 + (int64_t)rel;
++	f = fopen("/proc/self/maps", "r");
++	if (!f)
++		return -1;
++	while (fgets(line, sizeof(line), f)) {
++		if (!strstr(line, "[uprobes-ptwrite]"))
++			continue;
++		if (sscanf(line, "%llx-%llx", &s, &e) == 2 &&
++		    target >= s && target < e) {
++			found = 1;
++			break;
++		}
++	}
++	fclose(f);
++	printf("INSTALL %s %s (target %llx)\n", name,
++	       found ? "ok" : "BAD-TARGET", (unsigned long long)target);
++	return found ? 0 : 2;
++}
++
++int main(int argc, char **argv)
++{
++	uint64_t acc = 0x1122334455667788ULL;
++	int i, r, bad = 0;
++
++
++	for (i = 0; i < 100; i++)
++		acc = nopfn(acc + i);
++	for (i = 0; i < 100; i++)
++		acc = unaligned_nopfn(acc + i);
++	for (i = 0; i < 100; i++)
++		acc = nop5(acc + i);
++	for (i = 0; i < 100; i++)
++		acc = rzfn(acc + i);
++	for (i = 0; i < 100; i++)
++		acc = punfn(acc + i);
++	for (i = 0; i < 100; i++)
++		acc = jcc8(acc + i);
++
++	dump_site("punfn", (const uint8_t *)&punfn);
++	dump_site("jcc8", (const uint8_t *)&jcc8);
++	dump_site("nopfn", nopfn_site);
++	dump_site("unaligned_nopfn", nopfn_unaligned_site);
++	dump_site("nop5", (const uint8_t *)&nop5);
++
++	r = check_installed("punfn", (const uint8_t *)&punfn, (uint64_t)&punfn);
++	bad |= r == 2;
++	r = check_installed("nopfn", nopfn_site, (uint64_t)nopfn_site);
++	bad |= r == 2;
++	r = check_installed("nop5", (const uint8_t *)&nop5, (uint64_t)&nop5);
++	bad |= r == 2;
++
++	printf("PTW-PROBE acc=%llx %s\n", (unsigned long long)acc,
++	       bad ? "INSTALL-BAD" : "ok");
++	return bad ? 1 : 0;
++}
+diff --git a/tools/testing/selftests/uprobes/run_ptw.sh b/tools/testing/selftests/uprobes/run_ptw.sh
+new file mode 100755
+index 000000000000..a16b7adeabb7
+--- /dev/null
++++ b/tools/testing/selftests/uprobes/run_ptw.sh
+@@ -0,0 +1,219 @@
++#!/bin/bash
++# SPDX-License-Identifier: GPL-2.0
++# run_ptw.sh - ptwrite uprobes selftests.
++# Root + tracefs + an x86-64 CPU with PTWRITE required
++DIR=$(dirname "$(readlink -f "$0")")
++BIN="$DIR/ptw_probe"
++TR=/sys/kernel/tracing
++EV="$TR/uprobe_events"
++PTW=/sys/devices/intel_pt/format/ptw
++
++cleanup() {
++	if [ -e "$TR/events/uprobes/pw/enable" ]; then
++		echo 0 > "$TR/events/uprobes/pw/enable" 2>/dev/null
++	fi
++	echo "-:pw" >> "$EV" 2>/dev/null
++	echo "-:bad" >> "$EV" 2>/dev/null
++}
++
++if [ ! -e "$PTW" ]; then
++	echo "1..0 # SKIP PTWRITE unavailable"
++	exit 0
++fi
++if [ ! -e "$EV" ] || [ "$(id -u)" != 0 ] || [ ! -x "$BIN" ] ||
++	! command -v objdump >/dev/null 2>&1 ||
++	! command -v readelf >/dev/null 2>&1; then
++	echo "1..0 # SKIP missing tracefs, root, ptw_probe, objdump, or readelf"
++	exit 0
++fi
++trap cleanup EXIT
++
++# the probe sites: the entry instructions
++elf_off() {
++	local v=$1
++	local base=$(readelf -l "$BIN" 2>/dev/null |
++		awk '/LOAD/{if ($1=="LOAD") {print $3; exit}}')
++	[ -n "$base" ] && printf "0x%x" $((v - base))
++}
++
++PUN_V=$(objdump -d "$BIN" | awk '/^[0-9a-f]+ <punfn>:/{print $1;exit}' | tr -d ':')
++JCC_V=$(objdump -d "$BIN" |
++	awk '/^[0-9a-f]+ <jcc8>:/ {f=1; next} f&&/jne/{print $1; exit}' |
++	tr -d ':')
++NOP_V=$(objdump -d "$BIN" | awk '/^[0-9a-f]+ <nopfn_site>:/{print $1;exit}' | tr -d ':')
++NOP5_V=$(objdump -d "$BIN" | awk '/^[0-9a-f]+ <nop5>:/{print $1;exit}' | tr -d ':')
++UNOP_V=$(objdump -d "$BIN" |
++	awk '/^[0-9a-f]+ <nopfn_unaligned_site>:/{print $1;exit}' | tr -d ':')
++RZ_V=$(objdump -d "$BIN" | awk '/^[0-9a-f]+ <rz_probe_site>:/{print $1;exit}' | tr -d ':')
++if [ -z "$PUN_V" ] || [ -z "$JCC_V" ] || [ -z "$FLT_V" ] ||
++   [ -z "$NOP_V" ] || [ -z "$NOP5_V" ] || [ -z "$UNOP_V" ] ||
++   [ -z "$RZ_V" ]; then
++	echo "1..0 # SKIP unable to resolve ptw_probe symbols"
++	exit 0
++fi
++PUN_OFF=$(elf_off 0x$PUN_V)
++JCC_OFF=$(elf_off 0x$JCC_V)
++NOP_OFF=$(elf_off 0x$NOP_V)
++NOP5_OFF=$(elf_off 0x$NOP5_V)
++UNOP_OFF=$(elf_off 0x$UNOP_V)
++RZ_OFF=$(elf_off 0x$RZ_V)
++
++echo "1..10"
++failures=0
++
++# baseline (unprobed)
++base_out=$("$BIN"); base_rc=$?
++base=$(printf '%s' "$base_out" | sed -n 's/.*acc=\([0-9a-f]*\).*/\1/p')
++base_sites=$(printf '%s' "$base_out" | grep '^SITE ')
++[ -z "$base" ] && base=0
++
++# run one probed invocation: $run_rc = exit code, $probe = the acc
++run_one() {
++	out=$("$BIN")
++	run_rc=$?
++	probe=$(printf '%s' "$out" | sed -n 's/.*acc=\([0-9a-f]*\).*/\1/p')
++}
++
++# the site bytes of a fresh invocation must equal the baseline
++sites_match() {
++	[ "$(printf '%s' "$base_sites")" = \
++	  "$("$BIN" | grep '^SITE ')" ]
++}
++
++# emit the TAP line and count failures (tap <num> <ok|not|skip> <desc>)
++tap() {
++	if [ "$2" = ok ]; then
++		echo "ok $1 - $3"
++	elif [ "$2" = skip ]; then
++		echo "ok $1 - $3 # SKIP"
++	else
++		echo "not ok $1 - $3"
++		failures=$((failures + 1))
++	fi
++}
++
++# Install a probe at the site, run the probed binary once, and check the
++# run against the baseline (acc, exit, restored site bytes). A
++# create/enable failure is fatal.
++# Usage: probe_run <num> <offset> <args> <desc>
++probe_run() {
++	local num=$1 off=$2 args=$3 desc=$4
++
++	if ! echo "ptw:pw $BIN:$off $args" >> "$EV" 2>/dev/null; then
++		tap "$num" not "$desc (probe create failed)"
++		exit 1
++	fi
++	if ! echo 1 > "$TR/events/uprobes/pw/enable" 2>/dev/null; then
++		tap "$num" not "$desc (probe enable failed)"
++		exit 1
++	fi
++	run_one
++	echo 0 > "$TR/events/uprobes/pw/enable" 2>/dev/null
++	echo "-:pw" >> "$EV" 2>/dev/null
++	if [ "$probe" = "$base" ] && [ "$run_rc" -eq 0 ] && sites_match; then
++		tap "$num" ok "$desc"
++	else
++		tap "$num" not "$desc (base $base probed $probe rc $run_rc)"
++	fi
++}
++
++# 1: pun out-of-line execution preserves the site instruction's effect
++probe_run 1 $PUN_OFF "%di %si" \
++	"pun out-of-line execution preserves the instruction effect"
++
++# 2: a relative branch site must be refused at enable
++if ! echo "ptw:pw $BIN:$JCC_OFF %di %si" >> "$EV" 2>/dev/null; then
++	tap 2 ok "rel8 jcc site rejected at create"
++else
++	if echo 1 > "$TR/events/uprobes/pw/enable" 2>/dev/null; then
++		echo 0 > "$TR/events/uprobes/pw/enable" 2>/dev/null
++		tap 2 not "rel8 jcc site enabled (expected rejection)"
++	else
++		tap 2 ok "rel8 jcc site rejected (no re-encode)"
++	fi
++	echo "-:pw" >> "$EV" 2>/dev/null
++fi
++
++
++# 3: mini-stress (50 fork/execs survive)
++if ! echo "ptw:pw $BIN:$PUN_OFF %di %si" >> "$EV" 2>/dev/null ||
++   ! echo 1 > "$TR/events/uprobes/pw/enable" 2>/dev/null; then
++	tap 3 not "churn mini-stress setup failed"
++else
++	fails=0
++	for i in $(seq 1 50); do
++		"$BIN" >/dev/null 2>&1 || fails=$((fails + 1))
++	done
++	echo 0 > "$TR/events/uprobes/pw/enable" 2>/dev/null
++	if [ "$fails" -eq 0 ] && sites_match; then
++		tap 3 ok "churn mini-stress (50 execs, 0 failures)"
++	else
++		tap 3 not "churn mini-stress ($fails/50 failed)"
++	fi
++fi
++echo "-:pw" >> "$EV" 2>/dev/null
++
++# 4: an aligned 5x1-byte NOP run takes the atomic patch path
++probe_run 4 "${NOP_OFF}%multinop" "%di %si" \
++	"aligned NOP-composition install (probe fires, target valid, site restored)"
++
++# 5: the single 5-byte NOP keeps the classic 3-phase poke
++probe_run 5 $NOP5_OFF "%di %si" \
++	"single 5-byte-NOP 3-phase install (probe fires, target valid, site restored)"
++
++# 6: enable/disable flip loop (50 re-installs stay correct)
++if ! echo "ptw:pw $BIN:$NOP5_OFF %di %si" >> "$EV" 2>/dev/null ||
++   [ ! -e "$TR/events/uprobes/pw/enable" ]; then
++	tap 6 not "flip loop setup failed"
++else
++	fails=0
++	for i in $(seq 1 50); do
++		echo 1 > "$TR/events/uprobes/pw/enable" 2>/dev/null ||
++			fails=$((fails + 1))
++		"$BIN" >/dev/null 2>&1 || fails=$((fails + 1))
++		echo 0 > "$TR/events/uprobes/pw/enable" 2>/dev/null ||
++			fails=$((fails + 1))
++	done
++	if [ "$fails" -eq 0 ] && sites_match; then
++		tap 6 ok "enable/disable flip loop (50 flips, 0 failures, site restored)"
++	else
++		tap 6 not "flip loop ($fails failures)"
++	fi
++fi
++echo "-:pw" >> "$EV" 2>/dev/null
++
++# 7: a 4-arg paced probe at a site with a stack-local sentinel
++probe_run 7 $RZ_OFF "%di %si %dx %r8" \
++	"4-arg paced probe"
++
++# 8: %nopace attached to the offset remains accepted
++probe_run 8 "${PUN_OFF}%nopace" "%di %si" \
++	"%nopace offset suffix is accepted"
++
++# 9: %nopace as a separate option remains accepted
++probe_run 9 "$PUN_OFF" "%nopace %di %si" \
++	"%nopace separate option is accepted"
++
++# 10: unknown ptwrite options must be rejected by tracefs
++if echo "ptw:bad $BIN:${PUN_OFF}%unknown %di %si" >> "$EV" 2>/dev/null; then
++	echo "-:bad" >> "$EV" 2>/dev/null
++	tap 10 not "unknown ptwrite option accepted"
++else
++	tap 10 ok "unknown ptwrite option rejected"
++fi
++
++# 11: an unaligned 5x1-byte NOP run cannot use the atomic patch path
++if ! echo "ptw:pw $BIN:${UNOP_OFF}%multinop %di %si" >> "$EV" 2>/dev/null; then
++	tap 11 ok "unaligned NOP-composition site rejected at create"
++else
++	if echo 1 > "$TR/events/uprobes/pw/enable" 2>/dev/null; then
++		echo 0 > "$TR/events/uprobes/pw/enable" 2>/dev/null
++		tap 11 not "unaligned NOP-composition site enabled"
++	else
++		tap 11 ok "unaligned NOP-composition site rejected at enable"
++	fi
++	echo "-:pw" >> "$EV" 2>/dev/null
++fi
++
++# the kselftest runner uses only the exit code
++[ "$failures" -eq 0 ] || exit 1
 -- 
 2.54.0
 
