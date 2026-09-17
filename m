@@ -1,164 +1,277 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+Received: from CH5PR02CU005.outbound.protection.outlook.com (mail-northcentralusazon11022142.outbound.protection.outlook.com [40.107.200.142])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DFFD1448E0;
-	Thu, 17 Sep 2026 01:03:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789607005; cv=none; b=NSqvHV18upWnpObFGw0Ka3m9KK4vA0Z4ug1bkA2sRPgbTb8ZLHkBrVGTpt1xqqP6Nu2zvNy9NOXW1A97282/GH+I8+P85Uu93GOQXGT5E0+EScqKakAFNN648VA9UAFw9LitcsVsPragnGOShepr3ogmkvLWtI3t6Y9IHMD2Kb4=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789607005; c=relaxed/simple;
-	bh=inNyvSkcLBnS5k/OiUY6yUYECw1VW2i6mv/AgsAoLVg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=cf139ctWsFKvLz9HuG2SG1bosxemlvYEp0JYRBeQvy6puKCPR9rgMTgq6xf+b8ZI/K6XBdmmVEODbcsW7QGVpdC25QlXlm2TBj/jDDlaC7Rv3fL9YvM8/TCZe8LysLQp5ixBFuc3J7RlcBLPJhM14BJRQ9q3pBt2MP6M2cWgb40=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=P6xxV9o0; arc=none smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB4A22931D5
+	for <linux-perf-users@vger.kernel.org>; Thu, 17 Sep 2026 01:51:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.200.142
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1789609918; cv=fail; b=BQrB/kajGVHTPQO7ZSaEVc32oWFab77BdfaGhU6KXfrvubRjCwqxEdVEbfhFBJLGg5ktcVzcMz6qjw/rwf+nIBWafJM4D+P3ef1vpKnB/tEWdh0PGjq2yEArVaTKc0kwtQPibDvcfW2gUHDsxrJkT0CCs3NniAZsDGnvU0Ws5po=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1789609918; c=relaxed/simple;
+	bh=shK+m09wbWqPekZU+43ut9flQaHmWvVM0N+zXatxTEU=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 Content-Type:MIME-Version; b=WsEuMAd4LqpnEPzi9OuzuIXtA4ZM/r0b2vKpXYerpUGmh0SVuB/kpCCNJhjOux38yETkmynWhMMeYLjIntS9lnQ1vIydXLQFe6uI/pkIqAr4B4iVxQejKwLF1VaYA9w5cSjCASSZDCam8d2FHyzXBVcU6QWRixB8YKbfmAwcV0s=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=os.amperecomputing.com; spf=pass smtp.mailfrom=os.amperecomputing.com; dkim=pass (1024-bit key) header.d=os.amperecomputing.com header.i=@os.amperecomputing.com header.b=cipouyF0; arc=fail smtp.client-ip=40.107.200.142
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=os.amperecomputing.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=os.amperecomputing.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="P6xxV9o0"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1789607004; x=1821143004;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=inNyvSkcLBnS5k/OiUY6yUYECw1VW2i6mv/AgsAoLVg=;
-  b=P6xxV9o0klTEPoE76dicjPYzxq/IsV4dOU+xkHjTCid2GoxaQHBQWVvg
-   l4jglI9PIhdtin5QkCfGRcf8xR90H6NQhxHkBP73sAsULdFjvmONuLJTA
-   fNLHdCd4B8iQMmY7xVJVwxNuyn6C4o5mXk/KIx/kjDRyjPh3b7gZsunUH
-   6zUCPLDy2iwfMxs518a8mdbIuH7siOv+FNetXc3vIgBRE/chjmV9FKuJZ
-   VeZS4zWOZnD+Pp0e81e1UXdc7fRaoQpc/fP7lh/GOsBkaK41tlGFQ2PtV
-   3+wPvr4SV4npI8Mf1B7klZ3Yn436kS9oY8uHznkq4FxE2WiuGLKwOSul3
-   g==;
-X-CSE-ConnectionGUID: gJBmHJAiSZC8hGwfxVF+MA==
-X-CSE-MsgGUID: EfOfovyTTEu22jhAL/h6Yg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11905"; a="92500778"
-X-IronPort-AV: E=Sophos;i="6.27,103,1787036400"; 
-   d="scan'208";a="92500778"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Sep 2026 18:03:23 -0700
-X-CSE-ConnectionGUID: xTMPxkNlRLyAAUGaj09X5A==
-X-CSE-MsgGUID: 3VpWgHoIRHuSCFef8fYZ8w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.27,103,1787036400"; 
-   d="scan'208";a="277638019"
-Received: from unknown (HELO [10.238.2.103]) ([10.238.2.103])
-  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Sep 2026 18:03:20 -0700
-Message-ID: <169f9a48-425d-4e58-b05d-bed05c4c6971@linux.intel.com>
-Date: Thu, 17 Sep 2026 09:03:17 +0800
+	dkim=pass (1024-bit key) header.d=os.amperecomputing.com header.i=@os.amperecomputing.com header.b="cipouyF0"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=g912cKWwwhkulMvTj2PiFrlh1+lMMxOEcaz27dly7HjIMkX/2RNaY8n8WEaw/mooDwE6/wzXgWdIlYpatBfEL77NxSXu+fpmQcRwpnlzMLVvdU60AkAo/hppNtUN8h08Qrjfm3v3ZhIyMWL8R/dutq5B9jM1qArm8ibr2sly3234LqVIir89nQI6ZbSAE7Fc/BW3piXCc0u5q+pzz5Zaz7Po5l0Mj45QJQNj1PLdny6GRXh3Shdudwnn5Kky5U1Boke5mkdjo6nwyxWkAHKmXeaIfisRw/3XCQLmqhBW6/PBOborjgIG7D5tAPMSQU2G86OEsbYClnVg+KJzf8Ppmg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=ui/DZNuFV1lfTC8BArSoe/QZMWoES/IR9f3RK1Wh4NY=;
+ b=DzzXBmXmUhYs6426wj2HjRwFW8AlcwfIbFe346Ks1+Z3bHb3zTGm3rGwmu3XsSkH725Zvh9MCp3aKckgMqrdw755yN/IACFZltvsAMnqikK/XlUD1pFwsf+7YRodEerW760zDKpxwhN86on0hCJkE+o0eEkWWz246ENgbINKlKnv6jvnxdHj93ueVYUj4rzF6/7wQaWEtRSnTKRBrUXqOKfBGPtfnNOy+jGUCXeSiG+UarIE112/xnssHy8Py0vv9mKk1v1i0LJ6l/G52ft2MeHkwBfOHiszRsV04on0V9qyA+FPvA9oH6nRvj6k7ocnJn+SWZoYPkTlPP2H8pf3PA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=os.amperecomputing.com; dmarc=pass action=none
+ header.from=os.amperecomputing.com; dkim=pass
+ header.d=os.amperecomputing.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=os.amperecomputing.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ui/DZNuFV1lfTC8BArSoe/QZMWoES/IR9f3RK1Wh4NY=;
+ b=cipouyF0SjK1YdV85ULD9xVQQFQxJJttG1l5WbQJz5BEMLTQa8zzlIlCGkfbuWaJ7CE/yubBS600Hrtty7oOZAVtJpYW1HApEMT/y9e30sPSifWxzlieSVdDuPxNmjnBp/56U3WFG4pZZgVS9DUWfINs3TEs7DwRSIaSoERQRTU=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=os.amperecomputing.com;
+Received: from MN2PR01MB5615.prod.exchangelabs.com (2603:10b6:208:11c::29) by
+ SAWPR01MB994596.prod.exchangelabs.com (2603:10b6:806:4c2::24) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.21.406.9; Thu, 17 Sep 2026 01:51:54 +0000
+Received: from MN2PR01MB5615.prod.exchangelabs.com
+ ([fe80::996f:e4f2:dbd8:120e]) by MN2PR01MB5615.prod.exchangelabs.com
+ ([fe80::996f:e4f2:dbd8:120e%6]) with mapi id 15.21.0428.008; Thu, 17 Sep 2026
+ 01:51:54 +0000
+Date: Wed, 16 Sep 2026 18:51:49 -0700 (PDT)
+From: Ilkka Koskinen <ilkka@os.amperecomputing.com>
+To: Robin Murphy <robin.murphy@arm.com>
+cc: will@kernel.org, mark.rutland@arm.com, ilkka@os.amperecomputing.com, 
+    leo.yan@arm.com, linux-perf-users@vger.kernel.org, 
+    linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v2] perf/arm-cmn: Fix multi-filter encoding
+In-Reply-To: <ec590cd4cc61b54d6ad3b306b69777ad7729c9d6.1789475062.git.robin.murphy@arm.com>
+Message-ID: <614aa3c0-b9b1-815e-f9e3-d1844f4d2587@os.amperecomputing.com>
+References: <ec590cd4cc61b54d6ad3b306b69777ad7729c9d6.1789475062.git.robin.murphy@arm.com>
+Content-Type: text/plain; format=flowed; charset=US-ASCII
+X-ClientProxiedBy: MW4PR04CA0200.namprd04.prod.outlook.com
+ (2603:10b6:303:86::25) To MN2PR01MB5615.prod.exchangelabs.com
+ (2603:10b6:208:11c::29)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] perf: Add checks to prevent null ptr access
-To: "Belgaumkar, Vinay" <vinay.belgaumkar@intel.com>,
- Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Andi Kleen <ak@linux.intel.com>, Eranian Stephane <eranian@google.com>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-References: <20260904181625.1394082-1-vinay.belgaumkar@intel.com>
- <20260904181625.1394082-2-vinay.belgaumkar@intel.com>
- <f2b62bcb-b5a1-48e9-93c8-644ab3ac4439@linux.intel.com>
- <1d6c8cd5-76e9-421c-9e36-3de7c2816d27@intel.com>
-Content-Language: en-US
-From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-In-Reply-To: <1d6c8cd5-76e9-421c-9e36-3de7c2816d27@intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MN2PR01MB5615:EE_|SAWPR01MB994596:EE_
+X-MS-Office365-Filtering-Correlation-Id: 0ad0f582-9053-484f-3342-08df145e3f9c
+X-MS-Exchange-AtpMessageProperties: SA
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|23010399003|366016|1800799024|376014|10067099003|11063799006|56012099006|55112099003|22082099003|18002099003;
+X-Microsoft-Antispam-Message-Info:
+	q6i5C5eLkkzi37JVjLJIhVYwPaxOMflaDaZ8SkphTdtuVvoBsQvCcOty82ZOQwhDb1dC4UJBfYHtjJZQUhhu2UHZn5h8MjFnyq6ZhsKDRrF961V4bfGy9nb1NpADOrcCLy2Ty5zROAfFIlBGUTiSwb242C0Y/SA2ELUcZApUX36lxsgiM0dZLxurhqrDLs7N6tboNFmW8gbH3mR9gulAHbg+UxVryu4WcjJNzgP4s+3GD1O7xOUcXAbTjWPFTf9UkRggfcmfFunTDR5Wc5j2RCZgTfiaggevuOmncrhzN6mHTvWrbvLd7HCNtmV8uu3JUVWZvf1CmZOizT0fka9jj7F1J1NBZAKhWQsLF2Fx6gq1FPPCSwnxs+B/cL3yMXlw77YNGpvTy8pgXjSxp2wtVhPM55v/qRmQZSD7MF1rOYXcw4Ymd8cEZA3/GsaY+MCy7HsGX7UPOcB4ZXyrbmRVwglDL0FgSoi9DPeeUXv7gsM9xEYd3fjFBmgwYmQZ8WZvj0OKItnyPHFcDkhjfXaYen+Uu7naH6oBiK6qOnZKIDIe2dkWFE0SgHwwT3fJqQPdOHjW0kH9h49lfg5U20ADy6Fm6QfiL2tVTCH4AhfYtREa7Xby0tb5/tQJNsXmGWgl2IWYHI9/irWHPHL0vO0+z9w+hxdtA+wuJEOZqVFjjJs=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN2PR01MB5615.prod.exchangelabs.com;PTR:;CAT:NONE;SFS:(13230040)(23010399003)(366016)(1800799024)(376014)(10067099003)(11063799006)(56012099006)(55112099003)(22082099003)(18002099003);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?vLYcsmD1OPGtYue2DsBi9SzeRpmnVQ6nCSjj4GMgjwlBfmGLzaTJpcQkEYfw?=
+ =?us-ascii?Q?86c8pEq95KAvzNccCPGHclVuZvV3hjwt4T/nB3TGjsOJS1bh7meTwQ3EXLQa?=
+ =?us-ascii?Q?PtIpBQfpQU8lewgZbCwfQ5eGb+bfb19NV2+X91IifYz/tqNbKfCttcDjl9S/?=
+ =?us-ascii?Q?q/4G6wK+oNmsdpus+ufItxKqOlE+jOqyaal7tkoV6qqeziQ1TcsqzTzCK+Aa?=
+ =?us-ascii?Q?uVP3IrYOUia9rjU70DyPVwRQ9w3nl5qEAuJ59jz01QY/iB37VO9/Uv/OIHwU?=
+ =?us-ascii?Q?Cr8HxRABGbdH6KEykdwGWUlW3qQu6iwnmFjPmNjGRNshvlMOHXz/PvL54rZM?=
+ =?us-ascii?Q?I0z08D4rhnl/zYPySczlPvJjSwE1Qoo3l6TWNcDv/A1JB+7UndOSuXLcdcXr?=
+ =?us-ascii?Q?awMP17RbsGe59roHhJdPB1TYn7+amn4cAYjZJnk9RscXNWR9x6NZZZwDOZxD?=
+ =?us-ascii?Q?iXBvtAfJYXW/7Y2BlTF6kLxBreSSezrF/3dsX+PKcqxAUpDl6OCdAtfGKSUv?=
+ =?us-ascii?Q?nwJyADt3F6QSabiAfWtaLq51f+m2WOzmoJA8DjfmMLzmMrYHwy7qAw947M3y?=
+ =?us-ascii?Q?YnB5ntOQdn3/jS6z3DKsey8W1PeYjv5gixDPoQ7f7XE7x9VnW4XEMsZI3Tyu?=
+ =?us-ascii?Q?1KsfkKDVgG4mpxiIR/qbpul2hnST/fGl2hcTBbPd9AyAgy3/sw8Kn/2D+tgX?=
+ =?us-ascii?Q?6rtXFl1Dg9bvrGMo0GfYJu6Z0z3AUQcANfxQzmSWZ56dPQKJKeHlBsOxCyMp?=
+ =?us-ascii?Q?Ps4uWX74UQeQEibb1Gq0JWIAFvG+NYCAP1zTnGiJMNQwiDARmtG7842xQGds?=
+ =?us-ascii?Q?EeLOLz50odX5m0cUVFbJchfJHBwqByhNxfq7mzSxUnduv7V0IW6Kp40wkizq?=
+ =?us-ascii?Q?GSP88QsPX3o3iAwvJo6IsHOnSVlnOOV4ObUzL0E3Yb6PBkYEsiXUyujDwnQt?=
+ =?us-ascii?Q?mDqP+lVCsqUmUXWnGYKSQSdOzGJDr/8apdZydCytRqMAZjsZnxg5TvIlX+tA?=
+ =?us-ascii?Q?HNPn0V176GxL/eEqyIYM1HfX1otk2cLuODLMN6sV7tNQvQZrlHpquoMg1Hvs?=
+ =?us-ascii?Q?jo9fxwHiOVnwJLttV/TMkMUiVgVn09hB43eF+KPL8LGcvJPPnPxRYlPP2P7u?=
+ =?us-ascii?Q?2Y5xImHsd32I4gpZRZGywX47yAvqJxcRveqBP9s1Jew5g/fnYicJl3JxVCo9?=
+ =?us-ascii?Q?u6Aslt6wDL9lxgVYVE6Ehi5X1fZ/FsO5wTqxdGLPVUBjoRuVU/G5cI6h4wnq?=
+ =?us-ascii?Q?4W25zHraxdhGiwPm4Gx7kut+PW3IqBM3/XBIQpTLmVFzKgvPifQ6OFW0D5sR?=
+ =?us-ascii?Q?pnWFGYLW/5dup5TMsbsNT8ACY4S/+0a2S1ccz7bTshJl4GDB9tlFiBqSclLR?=
+ =?us-ascii?Q?gjRg7zppqItyaSRlQTYNl3aacEsKAPF2FNL3N+uZX9xtpBG6LZK2VOLr3lvb?=
+ =?us-ascii?Q?oqmRepGEH5HU7YJ9538o/dtjfvejO8xBj7JnYP14fl0uZzjX4fuDGngmDwhO?=
+ =?us-ascii?Q?2gHCvMNGP0VL8AHmRA/v1uigdQHsXNAZsrSNJEgGazLjSRie2IqzQpG68cAh?=
+ =?us-ascii?Q?65hUSidihu/DwljNoeF7ws5l5ALL/hAl9l3zLFR3LJ2dWyPRTE9wAgPLmUcX?=
+ =?us-ascii?Q?RDbQK9mb6764L9jHuVy/BfHneeq9LF0zis3krBEi2hWhwy0s55WDVK8fsQnr?=
+ =?us-ascii?Q?dw6n1vzPmqTD5XW2Eew8lJH03PDbcarKZpCopSK99u8wXsY7GBpHfZH/p9BI?=
+ =?us-ascii?Q?bPpB9yzMwyVWDedKrHMyhSXgZ7gzrgU=3D?=
+X-OriginatorOrg: os.amperecomputing.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0ad0f582-9053-484f-3342-08df145e3f9c
+X-MS-Exchange-CrossTenant-AuthSource: MN2PR01MB5615.prod.exchangelabs.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Sep 2026 01:51:53.8610
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3bc2b170-fd94-476d-b0ce-4229bdc904a7
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: uLgxH92JkJxkcVEpIi4WGbnAP4fBPCoE1PhMQx/8u61LOqdu3DC9+pIo+2Ie6f5DqGWhmWF1sM4PvuYx7UPD9JlTLFe7cYuLYhNEgl000WTMJLtc3gG3kIQdUIGzXwM2
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SAWPR01MB994596
 
 
-On 9/17/2026 5:48 AM, Belgaumkar, Vinay wrote:
-> On 9/15/2026 6:40 PM, Mi, Dapeng wrote:
->> On 9/5/2026 2:16 AM, Vinay Belgaumkar wrote:
->>> Sashiko recommended some additional checks to prevent null pointer
->>> access. Check for revoked states inside perf_event_read_local(), as
->>> the pmu event may have already been freed at this point. Add a null
->> Could you please show where perf_event_read_local() could be called after
->> the event is revoked?
-> perf_event_read_local() is only available to be called in the kernel 
-> context. So, BPF helpers can call it. This was the scenario outlined by 
-> Sashiko:
->
-> If CPU A calls perf_event_read_local(), disables interrupts, and locklessly
-> checks event->state, it can pass if the event state is
-> PERF_EVENT_STATE_INACTIVE.
->
-> Concurrently, if CPU B calls perf_pmu_unregister() which leads to
-> __pmu_detach_event(), it will not send an IPI to synchronize with CPU A
-> since the event is inactive. CPU B then sets event->state to
-> PERF_EVENT_STATE_REVOKED and clears event->pmu to NULL.
->
-> When CPU A continues and calls __perf_event_read_cpu(event, event->cpu),
-> if the event has PERF_EV_CAP_READ_SCOPE, it will dereference
-> event->pmu->scope, which was just set to NULL by CPU B, causing a panic.
 
-Ok, better add this into the change log, so the reviewers know why we need
-this change. Thanks.
+On Tue, 15 Sep 2026, Robin Murphy wrote:
+> The current special-case for EVICT_STATE_SEL filtering effectively
+> assigns the "filter" and "filter2" controls in the opposite order from
+> how the CMN S3 r2 TRM states "Filtering is programmed in pmu_hbt_lbt_sel
+> and pmu_evict_state_sel". On reflection, not only does this seem
+> unnecessarily non-obvious to users, but it's also likely to be a problem
+> for scaling to a full multi-filter abstraction in future. There is a
+> logical order to filters based on their bitfield positions in the
+> pmu_event_sel register, which the TRM descriptions allude to, and the
+> cmn_filter_select enum already (almost) follows, so let's fix the UABI
+> to follow suit while it's still unreleased.
+>
+> Fixes: 09178f536bb9 ("perf/arm-cmn: Plumb in new filter types")
+> Signed-off-by: Robin Murphy <robin.murphy@arm.com>
 
+Uh, I just realized I replied to v1 although I reviewed v2...
+Anyway, this patch looks good to me
 
+Reviewed-by: Ilkka Koskinen <ilkka@os.amperecomputing.com>
+
+> ---
 >
-> So, I think the scenario is- we have a regular perf session ongoing and 
-> a parallel session (through BPF) that tries to access the same counter.
+> v2: Also fix filter lookup order and missing return in set_event_filter
 >
->> BTW, the prefix should be "perf/core:" instead of "perf:" by following
->> current naming convention.
-> Sure.
+> drivers/perf/arm-cmn.c | 58 +++++++++++++++++++++++++-----------------
+> 1 file changed, 34 insertions(+), 24 deletions(-)
 >
-> Thanks,
+> diff --git a/drivers/perf/arm-cmn.c b/drivers/perf/arm-cmn.c
+> index b162de3d9d16..33e8a040c903 100644
+> --- a/drivers/perf/arm-cmn.c
+> +++ b/drivers/perf/arm-cmn.c
+> @@ -305,9 +305,9 @@ enum cmn_filter_select {
+> 	SEL_NONE,
+> 	SEL_OCCUP1_ID,
+> 	SEL_CLASS_OCCUP_ID,
+> -	SEL_CBUSY_SNTHROTTLE_SEL,
+> 	SEL_HBT_LBT_SEL,
+> 	SEL_SN_HOME_SEL,
+> +	SEL_CBUSY_SNTHROTTLE_SEL,
+> 	SEL_SNP_VC_SEL,
+> 	SEL_ENHANCED_HBT_LBT_SEL,
+> 	SEL_EVICT_STATE_SEL,
+> @@ -978,10 +978,14 @@ static umode_t arm_cmn_event_attr_is_visible(struct kobject *kobj,
+> 	_CMN_EVENT_HNS(_model, _name##_all, _event, _sel, 0),		\
+> 	_CMN_EVENT_HNS(_model, _name##_hbt, _event, _sel, 1),		\
+> 	_CMN_EVENT_HNS(_model, _name##_lbt, _event, _sel, 2)
+> -#define _CMN_EVENT_HNS_HBT2(_model, _name, _event, _fsel1, f1)		\
+> -	_CMN_EVENT_HNS(_model, _name##_all, _event, _fsel1, f1, SEL_HBT_LBT_SEL, 0), \
+> -	_CMN_EVENT_HNS(_model, _name##_hbt, _event, _fsel1, f1, SEL_HBT_LBT_SEL, 1), \
+> -	_CMN_EVENT_HNS(_model, _name##_lbt, _event, _fsel1, f1, SEL_HBT_LBT_SEL, 2)
+> +#define _CMN_EVENT_HNS_EVICT(_model, _name, _event, _fsel1, f1)			\
+> +	_CMN_EVENT_HNS(_model, _name##_all, _event, _fsel1, f1, SEL_EVICT_STATE_SEL, 0), \
+> +	_CMN_EVENT_HNS(_model, _name##_eu, _event, _fsel1, f1, SEL_EVICT_STATE_SEL, 1), \
+> +	_CMN_EVENT_HNS(_model, _name##_en, _event, _fsel1, f1, SEL_EVICT_STATE_SEL, 2), \
+> +	_CMN_EVENT_HNS(_model, _name##_su, _event, _fsel1, f1, SEL_EVICT_STATE_SEL, 3), \
+> +	_CMN_EVENT_HNS(_model, _name##_sn, _event, _fsel1, f1, SEL_EVICT_STATE_SEL, 4), \
+> +	_CMN_EVENT_HNS(_model, _name##_mu, _event, _fsel1, f1, SEL_EVICT_STATE_SEL, 5), \
+> +	_CMN_EVENT_HNS(_model, _name##_mn, _event, _fsel1, f1, SEL_EVICT_STATE_SEL, 6)
 >
-> Vinay.
+> #define CMN_EVENT_HNS_OCC(_model, _name, _event)			\
+> 	CMN_EVENT_HN_OCC(_model, hns_##_name, CMN_TYPE_HNS, _event),	\
+> @@ -1014,13 +1018,9 @@ static umode_t arm_cmn_event_attr_is_visible(struct kobject *kobj,
+> 	_CMN_EVENT_HNS(CMNS3R2, _name##_ccglcn, _event, SEL_ENHANCED_HBT_LBT_SEL, 5), \
+> 	_CMN_EVENT_HNS(CMNS3R2, _name##_ccgrn, _event, SEL_ENHANCED_HBT_LBT_SEL, 6)
+> #define CMN_EVENT_HNS_EVICT(_model, _name, _event)			\
+> -	_CMN_EVENT_HNS_HBT2(_model, _name##_all, _event, SEL_EVICT_STATE_SEL, 0), \
+> -	_CMN_EVENT_HNS_HBT2(_model, _name##_eu, _event, SEL_EVICT_STATE_SEL, 1), \
+> -	_CMN_EVENT_HNS_HBT2(_model, _name##_en, _event, SEL_EVICT_STATE_SEL, 2), \
+> -	_CMN_EVENT_HNS_HBT2(_model, _name##_su, _event, SEL_EVICT_STATE_SEL, 3), \
+> -	_CMN_EVENT_HNS_HBT2(_model, _name##_sn, _event, SEL_EVICT_STATE_SEL, 4), \
+> -	_CMN_EVENT_HNS_HBT2(_model, _name##_mu, _event, SEL_EVICT_STATE_SEL, 5), \
+> -	_CMN_EVENT_HNS_HBT2(_model, _name##_mn, _event, SEL_EVICT_STATE_SEL, 6)
+> +	_CMN_EVENT_HNS_EVICT(_model, _name##_all, _event, SEL_HBT_LBT_SEL, 0), \
+> +	_CMN_EVENT_HNS_EVICT(_model, _name##_hbt, _event, SEL_HBT_LBT_SEL, 1), \
+> +	_CMN_EVENT_HNS_EVICT(_model, _name##_lbt, _event, SEL_HBT_LBT_SEL, 2)
 >
->> Thanks.
->>
->>
->>> check inside __perf_event_read_cpu() as well before accessing the pmu
->>> ptr.
->>>
->>> Cc: Dapeng Mi <dapeng1.mi@linux.intel.com>
->>> Signed-off-by: Vinay Belgaumkar <vinay.belgaumkar@intel.com>
->>> ---
->>>   kernel/events/core.c | 12 +++++++++++-
->>>   1 file changed, 11 insertions(+), 1 deletion(-)
->>>
->>> diff --git a/kernel/events/core.c b/kernel/events/core.c
->>> index 7777e82aad5e..059f82f0cadd 100644
->>> --- a/kernel/events/core.c
->>> +++ b/kernel/events/core.c
->>> @@ -4788,14 +4788,19 @@ static inline const struct cpumask *perf_scope_cpu_topology_cpumask(unsigned int
->>>   
->>>   static int __perf_event_read_cpu(struct perf_event *event, int event_cpu)
->>>   {
->>> +	struct pmu *pmu = READ_ONCE(event->pmu);
->>>   	int local_cpu = smp_processor_id();
->>>   	u16 local_pkg, event_pkg;
->>>   
->>>   	if ((unsigned)event_cpu >= nr_cpu_ids)
->>>   		return event_cpu;
->>>   
->>> +	if (!pmu)
->>> +		return -ENODEV;
->>> +
->>>   	if (event->group_caps & PERF_EV_CAP_READ_SCOPE) {
->>> -		const struct cpumask *cpumask = perf_scope_cpu_topology_cpumask(event->pmu->scope, event_cpu);
->>> +		const struct cpumask *cpumask = perf_scope_cpu_topology_cpumask(pmu->scope,
->>> +										event_cpu);
->>>   
->>>   		if (cpumask && cpumask_test_cpu(local_cpu, cpumask))
->>>   			return local_cpu;
->>> @@ -4917,6 +4922,11 @@ int perf_event_read_local(struct perf_event *event, u64 *value,
->>>   		goto out;
->>>   	}
->>>   
->>> +	if (READ_ONCE(event->state) <= PERF_EVENT_STATE_REVOKED) {
->>> +		ret = -ENODEV;
->>> +		goto out;
->>> +	}
->>> +
->>>   	/*
->>>   	 * Get the event CPU numbers, and adjust them to local if the event is
->>>   	 * a per-package event that can be read locally
+> #define CMN_EVENT_HNSR0_HBT(_name, _event)				\
+> 	_CMN_EVENT_HNS_HBT(CMN700 | CMNS3R01, _name, _event, SEL_HBT_LBT_SEL)
+> @@ -1856,10 +1856,12 @@ static void arm_cmn_val_add_event(struct arm_cmn *cmn, struct arm_cmn_val *val,
+>
+> 		val->dtm_count[dtm]++;
+>
+> +		if (sel == SEL_EVICT_STATE_SEL) {
+> +			val->filter[dtm][sel] = CMN_EVENT_FILTER2(event) + 1;
+> +			sel = SEL_HBT_LBT_SEL;
+> +		}
+> 		if (sel)
+> 			val->filter[dtm][sel] = CMN_EVENT_FILTER(event) + 1;
+> -		if (sel == SEL_EVICT_STATE_SEL)
+> -			val->filter[dtm][SEL_HBT_LBT_SEL] = CMN_EVENT_FILTER2(event) + 1;
+>
+> 		if (type != CMN_TYPE_WP)
+> 			continue;
+> @@ -1910,14 +1912,17 @@ static int arm_cmn_validate_group(struct arm_cmn *cmn, struct perf_event *event)
+> 		if (val->dtm_count[dtm] == CMN_DTM_NUM_COUNTERS)
+> 			goto done;
+>
+> +		if (sel == SEL_EVICT_STATE_SEL) {
+> +			if (val->filter[dtm][sel] &&
+> +			    val->filter[dtm][sel] != CMN_EVENT_FILTER2(event) + 1)
+> +				goto done;
+> +			sel = SEL_HBT_LBT_SEL;
+> +		}
+> +
+> 		if (sel && val->filter[dtm][sel] &&
+> 		    val->filter[dtm][sel] != CMN_EVENT_FILTER(event) + 1)
+> 			goto done;
+>
+> -		if (sel == SEL_EVICT_STATE_SEL && val->filter[dtm][SEL_HBT_LBT_SEL] &&
+> -		    val->filter[dtm][SEL_HBT_LBT_SEL] != CMN_EVENT_FILTER2(event) + 1)
+> -			goto done;
+> -
+> 		if (type != CMN_TYPE_WP)
+> 			continue;
+>
+> @@ -1946,7 +1951,7 @@ static enum cmn_filter_select arm_cmn_event_filter(const struct arm_cmn *cmn,
+> 	for (int i = 0; i < ARRAY_SIZE(arm_cmn_event_attrs) - 1; i++) {
+> 		e = container_of(arm_cmn_event_attrs[i], typeof(*e), attr.attr);
+> 		if (e->model & model && e->type == type && e->eventid == eventid)
+> -			return e->filter[0].sel;
+> +			return e->filter[1].sel ?: e->filter[0].sel;
+> 	}
+> 	return SEL_NONE;
+> }
+> @@ -2077,16 +2082,21 @@ static void arm_cmn_event_clear(struct arm_cmn *cmn, struct perf_event *event,
+> static int arm_cmn_set_event_filter(struct arm_cmn_node *dn, struct perf_event *event)
+> {
+> 	enum cmn_filter_select fsel = to_cmn_hw(event)->filter_sel;
+> +	bool evict_state = fsel == SEL_EVICT_STATE_SEL;
+> 	int ret = 0;
+>
+> +	if (evict_state) {
+> +		ret = arm_cmn_set_event_sel_hi(dn, fsel, CMN_EVENT_FILTER2(event));
+> +		if (ret)
+> +			return ret;
+> +		fsel = SEL_HBT_LBT_SEL;
+> +	}
+> 	if (fsel)
+> 		ret = arm_cmn_set_event_sel_hi(dn, fsel, CMN_EVENT_FILTER(event));
+>
+> -	if (fsel == SEL_EVICT_STATE_SEL && !ret) {
+> -		ret = arm_cmn_set_event_sel_hi(dn, SEL_HBT_LBT_SEL, CMN_EVENT_FILTER2(event));
+> -		if (ret)
+> -			dn->filter[fsel].count--;
+> -	}
+> +	if (ret && evict_state)
+> +		dn->filter[SEL_EVICT_STATE_SEL].count--;
+> +
+> 	return ret;
+> }
+>
+> -- 
+> 2.54.0.dirty
+>
+>
