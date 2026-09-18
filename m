@@ -1,61 +1,63 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 064603D1707
-	for <linux-perf-users@vger.kernel.org>; Fri, 18 Sep 2026 06:38:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 810E23A5E84
+	for <linux-perf-users@vger.kernel.org>; Fri, 18 Sep 2026 06:41:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789713527; cv=none; b=PGfp/Uc+R0LadWwCwchkO4kYbzvyYpm5yAEkLqg34Y9fPlxl/FANH23k/C4m7OAc+V5D6i6s1hf3Ir9QbxpNFImAA5oxgtC5qBTkf3WPxGFokVz/Pjsv2MSVcgYP/IvvrB3BIIF1LOCF1Gsr+9Se8PDaa9UzsnHwNJJ9P+RAJdk=
+	t=1789713698; cv=none; b=C+dIDrH/NyjAwhOh96SRIK0ZtyVXp6qvO/S9Gln4VW1ayD5sXHP3xgtCRFNT12Rr1Ea8PkvSfkAy/XdC8vsYXeuYbtO9bYOdBMdY0UvAd2NbCfUmp0fwkvW5E82zy6ixlYjpDhdAIKNI2pmQ3fXYxROct7Yg9hh+2Q7uceibdyc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789713527; c=relaxed/simple;
-	bh=VRXnNbAEMslQx0rqOw1rOkxKBJxKL3yr/FQf+eXOJUY=;
+	s=arc-20240116; t=1789713698; c=relaxed/simple;
+	bh=P6b6HwTZbn/JW/L4irXsLOpWuDOEXnetQf+VtQZbsG8=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=RxhEknvOUohAdbEU+/uabzX/C7+UnfmlDz6veB5ESF0czGd2wPlTqcydMsQ1WV6Znjv7/wwAqpNJN+DSJ4m2I6A6AZkw/ptqT3FJ1jOxThAImuo3pfQKc2ILyIZQRZP9fEXGlGyYPvdN6vwL7ZpRR8B0Ce06o5A/L/R45jaSYuY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fOmSHs3+; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=lR2fSRKQCYU4NR6JIQvItm6gebnK7Go3UeE0QbdNeHsu7x9lNxUx4882QHD8WZfzgp1u7kE4ByHqnLc3OV48opJLgy0PZNTbm2AshE73VnJcNczj6hqfu/4TDXm/qndpMM1atDGkLcmFoSk6OYuwCScFxtE2ZvJmTJNKys5Emh4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jM2beib2; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fOmSHs3+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7A4BD1F000FF;
-	Fri, 18 Sep 2026 06:38:45 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jM2beib2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CC8E61F000FF;
+	Fri, 18 Sep 2026 06:41:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789713525;
-	bh=VRXnNbAEMslQx0rqOw1rOkxKBJxKL3yr/FQf+eXOJUY=;
+	s=k20260515; t=1789713697;
+	bh=P6b6HwTZbn/JW/L4irXsLOpWuDOEXnetQf+VtQZbsG8=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=fOmSHs3+qzVOSIuMZcXge7AhBpxZzDALZz5mKLssR9xM6x8ssomchZuQfM3C9qUEj
-	 O2Rn2BFAQZyoF7avoHi3wNra5buuKOiSq0AYI9LDZjyiOKk7EQlIgJrwCuPC7j1rRp
-	 5KcoyxpGWWOiQVMgQxwpMugyDAjQAMic9mxCp60R1qJWumAw9zFBpAYYWSpjADHOFG
-	 WlDBeGQtrYuP9n0Xc463roDPTQnfizxk8aCR0KGu2dVTJt9R5ti45tleG+SWiqH12S
-	 ax9SCiXa8qZjqVU0Mk/gIOkHJeBzrdyxf5Gyf+asN9JKs7nZ30J2uQ48YFlhcEIhaD
-	 Z7aSq5q2S6MBg==
+	b=jM2beib2Jk7vGACXY/Qh5n+PJenC0CMKiTpZe7UGN4CNhPuUpCfScB+ZGCvIUdps7
+	 EzdKPPGaw5+FqmAwkF79bTVOKvYrZkJhajcOzPpL+TliZjeL2CQRR5Q9LKEERgX80u
+	 t7WSHm7g7oSH+jnHHx5W4AUSs6L2Fy0Zmyf/rhHuWDxv+lF9wyGLgrPK+xWnro0iH8
+	 lDJ+o3+dYH3IAKvBseh/fxHR2gbpNLvH8EYKRuTAma14cZtcKXS/DbvXne5O6x6/Di
+	 90Y+VDdD74/TdSHPeIlkcffG7HqV0+rG6GJ/2ov7hI86SzFfrAqDH02gcb0hIDzO4H
+	 wyYwtrlSoRW6Q==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v1 2/5] perf trace-event: Reuse an already parsed
- tracepoint format
+Subject: Re: [PATCH v1 3/5] perf trace-event: Free the global trace_event
+ when a command ends
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Ian Rogers" <irogers@google.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260918063249.2172589-3-irogers@google.com>
+In-Reply-To: <20260918063249.2172589-4-irogers@google.com>
 References: <20260918063249.2172589-1-irogers@google.com>
- <20260918063249.2172589-3-irogers@google.com>
+ <20260918063249.2172589-4-irogers@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Fri, 18 Sep 2026 06:38:45 +0000
-Message-Id: <20260918063845.7A4BD1F000FF@smtp.kernel.org>
+Date: Fri, 18 Sep 2026 06:41:36 +0000
+Message-Id: <20260918064136.CC8E61F000FF@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-> tp_format() read and parsed the format file on every call. Each parse
-> registers another tep_event with the global tep handle, and
-> libtraceevent has no way to free an individual event, only the whole
-> handle, so a repeated lookup of the same tracepoint both redoes the
-> work of reading and parsing the file and leaves a duplicate behind for
-> the rest of the session.
+> The tep handle behind trace_event__tp_format() is a process wide cache
+> of the running kernel's tracepoint formats and nothing ever released
+> it, as the comment above it had noted since the code was added.
 >=20
-> Ask the handle for the event first with tep_find_event_by_name() and
-> only fall back to reading the format file when it has not been parsed
-> yet. The handle holds formats for the running kernel alone, so a name
-> that is found is the same format that would have been read.
+> Add trace_event__exit() and call it from run_builtin() next to the
+> existing perf_config__exit(). By then the builtin has returned, so the
+> tep_event pointers it handed out, such as the ones cached in
+> evsel->tp_format, are no longer reachable.
+>=20
+> Note that this does not silence every libtraceevent report under
+> leak sanitizer. Parsing a print fmt drops a token inside the library
+> itself, and as those allocations are not linked into the handle,
+> freeing the handle cannot reclaim them.
 >=20
 > Assisted-by: Antigravity:gemini-3.1-pro
 > Signed-off-by: Ian Rogers <irogers@google.com>
@@ -64,5 +66,5 @@ Sashiko has reviewed this patch and found no issues. It looks great!
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260918063249.2172=
-589-1-irogers@google.com?part=3D2
+589-1-irogers@google.com?part=3D3
 
