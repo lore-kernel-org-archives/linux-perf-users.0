@@ -1,171 +1,163 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm2-f13.google.com (mail-wm2-f13.google.com [74.125.225.141])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAC6F5111BB;
-	Fri, 18 Sep 2026 16:51:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19337471277
+	for <linux-perf-users@vger.kernel.org>; Fri, 18 Sep 2026 19:08:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.225.141
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789750267; cv=none; b=suFd3CoMd39FSGwE8Rc5Ia9M5jtH0vanyjUiw6oD3ROhBNA8DOjwhiKYv2LnDOQR0Yt8qqWNdwIaBueMTFJmItO/8miBz37PjaWhV0g96CQKyBllRn0foRq6GHQg7JVoKx/Bv+x54d30HPU+auIk/TwWfjsyWMqEJj4JhYW9Ku0=
+	t=1789758538; cv=none; b=MDH469tbU5z2rN3M5uifNwY3y4IJ2AqBWvXhz+lirUqEScp64dETqVB37TK90yNbQjq8zuXR9ELGF4qPmSrwWbH9gr63APSsr9gFEpOwmneZ4N4IeCrdnBlxt4h+28/KFZnaJUxLfOtk1j2pSFa12L/BskiVsrkv93B+5MlDw5o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789750267; c=relaxed/simple;
-	bh=+aBtXKzSCgPnEdYubG3WgG6cEqUjkWTqNA6T8x2z/JY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=gq4vhA7xPMLEPWrOIwWpKoUaeSWGIRBNs5UoPx8biQr3Xmpp4zk8Hd5uvPl+gSP0rbCk5MuYyCGOVwP+GerNr1aXQWg5MNJ0zLacfoJQ7I6MvTMvxNj0weuUr4W1n+/lhvlmsRv9x5f83qyM53zSwQ5HvJ7H7SptcGNxLaX+wbA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=e+wjVE5F; arc=none smtp.client-ip=192.198.163.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1789758538; c=relaxed/simple;
+	bh=vtzHYOZsL+DsQ6OU9w78rV8QDnNXXiUdKTEDMcuSfOU=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=oQA7yJJU9Sdb/lsCygtGB1XK1FjtBxn0N0k4iOIBCLT7+mBVOxyrH4JvrOZ6muI62bFsPF6gGZEFZ+TY5q2LxuNkH6E8c/BVa8RAwE+ewlsqNjKBHJeVlxpO9B8wjEPUcj0ybnaj6U06Yi/mpgsDXfcwguWbyNqnOkevERsw/SI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=tAO9a1HG; arc=none smtp.client-ip=74.125.225.141
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="e+wjVE5F"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1789750264; x=1821286264;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=+aBtXKzSCgPnEdYubG3WgG6cEqUjkWTqNA6T8x2z/JY=;
-  b=e+wjVE5FPxIuyTwQBGysRvM5roiDKVxb/D/dcEldzp7TZQaG8LrcPF0i
-   1cBzm0MoMtQW3FQfaBO7DHgz9s27z7I4avTL2GihzoT50nyfZckIClw5c
-   TXooWgvJNPpXmzi7uTCV8JU3iU3WS/G6uU4j1MOTDkG5ylhCUu3u+2wnk
-   IMogBAYKexRNUYhVk/VVNP9W/HgnOSDJJyLXASd3X37WSsqMm4/FpJwAe
-   /Wm3JIqjY+Si0HhqeUvhHEJbTL1XY6vG5bhiVoEuNYWvXIfPmIL8NhwoT
-   J9e0Q7s2C+c+LvFAtYaXJv/26h6pkVwwl44QOlsvs7s90H9xK/w7d2TMU
-   A==;
-X-CSE-ConnectionGUID: fAFeeeaIRaCgiOj25YnJUA==
-X-CSE-MsgGUID: QKcABtzrSSeIKZMHEs6OxQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11909"; a="90402578"
-X-IronPort-AV: E=Sophos;i="6.27,109,1787036400"; 
-   d="scan'208";a="90402578"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Sep 2026 09:51:01 -0700
-X-CSE-ConnectionGUID: HTONxJk7QjCAkIfhDbnncw==
-X-CSE-MsgGUID: vMQFgYDhSqqLfBfon8naFQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.27,109,1787036400"; 
-   d="scan'208";a="271161196"
-Received: from sghuge-mobl2.amr.corp.intel.com (HELO [10.125.109.117]) ([10.125.109.117])
-  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Sep 2026 09:50:57 -0700
-Message-ID: <f4fca2d4-97de-43ba-baab-24bb0225853d@intel.com>
-Date: Fri, 18 Sep 2026 09:50:56 -0700
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tAO9a1HG"
+Received: by mail-wm2-f13.google.com with SMTP id 5b1f17b1804b1-49e6b885ef8so6444895e9.1
+        for <linux-perf-users@vger.kernel.org>; Fri, 18 Sep 2026 12:08:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1789758530; x=1790363330; darn=vger.kernel.org;
+        h=content-disposition:content-type:mime-version:message-id:subject:cc
+         :to:from:date:sender:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=KlR8Li9AQguqMj6ZVMr+f+KkK5/jHymLg1fc6OgUNdE=;
+        b=tAO9a1HG7XGoxqkPakxi3HIQETvzhB6Mh5wmYoYTbJBS5K4++O6jVR8fhGXM2Z4YjE
+         ikpKBFsKE3QJ5FoCH/6wmgZCTlJduc6RNSzwjJd7+8G9HOuHgdyrF0oD4NC2gAyrbQS/
+         5Q63wh3DuniqtjfkcHorOr94t4no5mNREH21rK9ZUa/c2h8RWmAVerfc6eBYYzLK9HVm
+         oEAOkE8jvshinrKvF6vdYyc/hReFGrbFZ8oUW9uiQFLwDo76tlJ8X5Bzt8I9X5U9Qs2G
+         Nm+WuL/w0eXqXGSdcN56FJ526L9GQyKsXqRg0Oe2M9IJWZN5oJJeFBuD7gTtvXK03Wlg
+         NmYA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1789758530; x=1790363330;
+        h=content-disposition:content-type:mime-version:message-id:subject:cc
+         :to:from:date:sender:x-gm-gg:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=KlR8Li9AQguqMj6ZVMr+f+KkK5/jHymLg1fc6OgUNdE=;
+        b=oHfDOiKHFQ2pGWb6xzNxZTQ9H0MxQK8cSEoRqp/mUOLw2AUvrOFkiaiiUMhVc+C7+U
+         oAv8s4D6jlW+3uCEW1uEKnONehByIKWXMs4H8ehi3NloIgQgZUtiVWl+L3GjcoFkk1CB
+         GT0Gg6V5dP+M7MX9QeaLzGS84+vNX23x3StGgO/K3gIkV3sIATSdmUJuifsMGnFPMk+y
+         kfEip3GOfjp72Y5MOuygySqw3OIJANIpZMFI68wCguwipYJu0ZzjmZmFoj+Pquw8w/jZ
+         Y83fHekZrrI+OWUILMDyhh0U3taALcYiquZHYYN1BpRNgpMfcAeT8FXUfr1I07bpRRaj
+         8nPw==
+X-Gm-Message-State: AFuF++kxPF+xKRgoH8w++DPAsVEPK9n00DESlI3TEiko/9SWH5qlnm15
+	4VQjlkntOrv1UaSGiG5nbQJh/ejPBo9cZYY9vP+Dd6YoeirLlkQ1CNxwNkhzy1PU
+X-Gm-Gg: AYBFou3hzQRMOOt8ADJURLDH+smrK/LJ6SZciCJ7JO0trHbU2cAWzMOXGL1/810Vhhr
+	1IbK+Cm8a+hWpzhH8ov6uJScGKlwtGZV7u7z9n8ccqDre/fapbIp3F2hwZ1tDKQ2ZWpO00xBFyn
+	gCXfwcaawk52iS50F4ZZtjJOr74ZcRsbDdz7/LstCRFpen2aIY+CYvMtoIMvBRmcE8gxRHfoG1Q
+	NlMLYf450jF0vkyL4CiwyB4LXvSFHmx50scZD/SO8D3nFqBsgiA+FH05m5lPpq8N53eywIPI/yv
+	EWU6KhGuemPLBSXG2k/orop7sxEciIdNpfY/Ag1MOlTxREXU4nnpKulR0UlkwJiUUKaHf0F/lx3
+	FVq247KsTwO33OvkmQZzmKakfxIgvkROvjZcftjULUerhj6ypTMjNL6ZEQFY2HskA/EvKPgTywl
+	FVKnVpGpVf+NVwPad8gx63TVZIViM7IUbogMHNVPnV38dODggfToogKwD9pHLi5Ey1VQ0gDhHqq
+	4Nh+Pxi49Ii/BhcWzTc00cUnxCE8IaEDQQ=
+X-Received: by 2002:a05:600c:c1c8:10b0:49e:81a7:9fbc with SMTP id 5b1f17b1804b1-49fc574aacbmr35802825e9.24.1789758530233;
+        Fri, 18 Sep 2026 12:08:50 -0700 (PDT)
+Received: from eldamar.lan (c-82-192-247-196.customer.ggaweb.ch. [82.192.247.196])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-49fcd0874c3sm20217525e9.14.2026.09.18.12.08.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 18 Sep 2026 12:08:49 -0700 (PDT)
+Sender: Salvatore Bonaccorso <salvatore.bonaccorso@gmail.com>
+Received: by eldamar.lan (Postfix, from userid 1000)
+	id CE28FBE2EED; Fri, 18 Sep 2026 21:08:48 +0200 (CEST)
+Date: Fri, 18 Sep 2026 21:08:48 +0200
+From: Salvatore Bonaccorso <carnil@debian.org>
+To: stable <stable@vger.kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Sasha Levin <sashal@kernel.org>
+Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	James Clark <james.clark@linaro.org>,
+	Collin Funk <collin.funk1@gmail.com>,
+	Arnaldo Carvalho de Melo <acme@redhat.com>,
+	Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>
+Subject: Please backport subset of 2f5d370dec3f ("perf test: Change all
+ remaining #!/bin/sh to #!/bin/bash") for stat_bpf_counters.sh script to
+ v6.12.y and older
+Message-ID: <aq2MQLKmyrxkFd0Y@eldamar.lan>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RESEND PATCH v4 00/11] perf/cxlpmu: Misc sashiko raised issues
- fixes
-To: Ian Rogers <irogers@google.com>
-Cc: linux-cxl@vger.kernel.org, linux-perf-users@vger.kernel.org,
- jic23@kernel.org, will@kernel.org, mark.rutland@arm.com, dave@stgolabs.net,
- robin.murphy@arm.com, icheng@nvidia.com,
- Jonathan Cameron <jonathan.cameron@oss.qualcomm.com>
-References: <20260805155911.1304807-1-dave.jiang@intel.com>
- <CAP-5=fXoVf5dGua_TJ5CMWFMRwtegiO3v2S96X28vRCfqO+N8Q@mail.gmail.com>
-From: Dave Jiang <dave.jiang@intel.com>
-Content-Language: en-US
-In-Reply-To: <CAP-5=fXoVf5dGua_TJ5CMWFMRwtegiO3v2S96X28vRCfqO+N8Q@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
+Hi
 
+Recently for v5.15.221, v6.1.188, v6.6.157, v6.12.110, v6.18.52 and
+v7.2.6, the commit b02027776ac5 ("perf tests: Fix flakiness in BPF
+counters test on hybrid systems") was backported, but it introduced
+bash specific syntax.  For versions after 2f5d370dec3f ("perf test:
+Change all remaining #!/bin/sh to #!/bin/bash") aka before v6.17-rc1
+this is not a problem.
 
-On 9/15/26 3:43 PM, Ian Rogers wrote:
-> On Wed, Aug 5, 2026 at 9:02 AM Dave Jiang <dave.jiang@intel.com> wrote:
->>
->> [resend, mangled linux-cxl mailing addr]
->>
->> Teed off of Davidlohr's misc cxlpmu series [1]. I had Claude pick up all
->> the sashiko raised issues and then continued multiple internal review
->> iterations to pick up a number of fixes. I'm no CXL PMU or perf expert,
->> but the fixes look reasonable to me AFAICT.
->>
->> Since v3:
->> - 4/11 and 5/11 swapped, so the one-line MSI vector 0 fix comes before the
->>   info->msi_vec rename and backports on its own (Robin).
->> - 6/11: new patch, add the PMUs after configuring events.
->> - 7/11: no code change; the commit message no longer overstates what
->>   dropping IRQF_SHARED costs a device that shares a vector.
->> - 8/11: quote the spec sentence that makes the freeze sticky, and correct
->>   the claim about what the migration window leaves enabled (Richard,
->>   sashiko-bot).
->> - 10/11: split the probe-time overflow clear out, so this is back to the
->>   single hunk Jonathan acked.
->> - 11/11: new patch. Clear a counter's stale overflow status when starting
->>   an event, which is where the reuse case bites; the probe clear moved
->>   here from 10/11 (Richard).
->>
->> Since v2:
->> - 1/11: check event_idx alongside counter_idx (Jonathan).
->> - 2/11: use FIELD_MODIFY() rather than mask-then-OR (Jonathan).
->> - 3/11: rewrite the rationale, no code change (Jonathan).
->> - 5/11: new patch, split the MSI vector out of info->irq (Robin, Jonathan).
->> - 7/11: drop IRQF_SHARED as well as adding IRQF_NOBALANCING, and retitle
->>   (Jonathan, Robin).
->> - 8/11: don't unfreeze if the PMU has been disabled meanwhile (Robin,
->>   Jonathan).
->> - 10/11: retitle, and drop the cxl_pmu_offline_cpu() hunk since that
->>   dev_err() cannot be reached (Robin).
->> - Dropped the old 9/9 that guarded cpumask_show() against cpumask_of(-1).
->>   The init case was a false positive and neither reviewer liked the shape
->>   of it (Jonathan, Robin).
->>
->> Since v1:
->> - Updated 3/9 to address sashiko issue.
->> - No other changes as sashiko only raised issue with pre-existing.
->>
->> Three follow-ups this series does not attempt:
->>
->> cxl_pmu_read() relies on local64_t being same-CPU, which is the only reason
->> the interrupt has to be pinned at all. Moving prev_count and event->count
->> off local64_t would make the affinity question moot, and Robin may have a
->> view on whether that is worth doing.
->>
->> cxl_pmu_offline_cpu() still leaves on_cpu at -1 across a sleeping
->> perf_pmu_migrate_context(), and still has an unreachable no-target branch.
->> Both want removing, possibly on top of the generic PMU hotplug rework
->> Jonathan pointed at [2].
->>
->> Firmware can leave a counter enabled with Global Freeze on Overflow but not
->> Interrupt on Overflow, which stalls the whole CPMU with no interrupt to say
->> so. Quiescing the block at probe needs two writes per counter to stay
->> within the spec's rule about changing an enabled counter, so it belongs in
->> its own patch.
->>
->> [1]: https://lore.kernel.org/linux-cxl/20260715191454.459673-1-dave@stgolabs.net/
->> [2]: https://lore.kernel.org/linux-arm-kernel/cover.1784911757.git.robin.murphy@arm.com/
-> 
-> 
-> Thanks Dave, I notice that everything seems ready to land for this
-> series. Is there anything pending? Sashiko mentioned pre-existing
-> issues.
+The proposed patch is a stable series backports specific one, as one
+cannot simply backport 2f5d370dec3f ("perf test: Change all remaining
+#!/bin/sh to #!/bin/bash") without picking as well some other context
+related changes to make it possible. So I was proposing to only change
+shebang to #!/bin/bash in stable series were it is a problem, as in
+the stat_bpf_counters.sh script.
 
-Hi Ian. Nothing is pending. Don't plan to address the pre-existing issues in the current series. Will look at follow-ups once this series is picked up. Thanks!
+Regards,
+Salvatore
 
-> 
-> Thanks,
-> Ian
-> 
->> Dave Jiang (11):
->>   perf/cxl: Program the requested event group on configurable counters
->>   perf/cxl: Clear stale event fields before reprogramming a counter
->>   perf/cxl: Fix the counter overflow delta fixup
->>   perf/cxl: Accept an overflow interrupt on MSI message number 0
->>   perf/cxl: Split the MSI vector out of info->irq
->>   cxl/pci: Add the PMUs after configuring events
->>   perf/cxl: Don't share the overflow interrupt, and keep it pinned
->>   perf/cxl: Unfreeze counters after handling an overflow interrupt
->>   perf/cxl: Validate the hardware-reported counter width
->>   perf/cxl: Don't log through pmu.dev in the overflow interrupt handler
->>   perf/cxl: Clear stale overflow status before using a counter
->>
->>  drivers/cxl/pci.c      |  11 +++--
->>  drivers/perf/cxl_pmu.c | 107 ++++++++++++++++++++++++++++++++---------
->>  2 files changed, 90 insertions(+), 28 deletions(-)
->>
->>
->> base-commit: f5098b6bae761e346ebcd9da7f95622c04733cff
->> --
->> 2.54.0
->>
->>
+From 1e3d5b5f62047b147428d20bf2cb794bb0bb300d Mon Sep 17 00:00:00 2001
+From: Salvatore Bonaccorso <carnil@debian.org>
+Date: Fri, 18 Sep 2026 20:48:59 +0200
+Subject: [PATCH] perf tests: Change shebang for stat_bpf_counters.sh to
+ #!/bin/bash
+
+When commit b02027776ac5 ("perf tests: Fix flakiness in BPF counters
+test on hybrid systems") was backported to several stable series
+(v5.15.221, v6.1.188, v6.6.157, v6.12.110, v6.18.52, v7.2.6) it
+introduced specific bash syntax. For versions after 2f5d370dec3f ("perf
+test: Change all remaining #!/bin/sh to #!/bin/bash") in v6.17-rc1 this
+is not a problem as the shebang was already hanged to #!/bin/bash. For
+the older stable series this introduced invalid syntax if #!/bin/sh is
+not bash:
+
+	$ sh -n tools/perf/tests/shell/stat_bpf_counters.sh
+	tools/perf/tests/shell/stat_bpf_counters.sh: 12: Syntax error: "(" unexpected
+
+	$ checkbashism tools/perf/tests/shell/stat_bpf_counters.sh
+	possible bashism in tools/perf/tests/shell/stat_bpf_counters.sh line 52 (bash arrays, ${name[0|*|@]}):
+		base_instructions=$(perf stat --no-big-num -e instructions:u -- "${workload[@]}" 2>&1 | \
+					awk -v i=0 -v c=0 '/instructions/ { \
+						if ($1 != "<not") { i++; c += $1 } \
+					} END { if (i > 0) printf "%.0f", c; else print "<not" }')
+	possible bashism in tools/perf/tests/shell/stat_bpf_counters.sh line 57 (bash arrays, ${name[0|*|@]}):
+		bpf_instructions=$(perf stat --no-big-num --bpf-counters -e instructions:u \
+					-- "${workload[@]}"  2>&1 | \
+					awk -v i=0 -v c=0 '/instructions/ { \
+						if ($1 != "<not") { i++; c += $1 } \
+					} END { if (i > 0) printf "%.0f", c; else print "<not" }')
+	possible bashism in tools/perf/tests/shell/stat_bpf_counters.sh line 68 (bash arrays, ${name[0|*|@]}):
+		stat_output=$(perf stat --no-big-num \
+			-e instructions/name=base_instructions/u,instructions/name=bpf_instructions/bu \
+			-- "${workload[@]}" 2>&1)
+
+Change shebang for the stat_bpf_counters.sh script.
+
+No upstream commit exists for this change as for versions post 6.17-rc1
+the scripts were converted to #!/bin/bash already.
+
+Signed-off-by: Salvatore Bonaccorso <carnil@debian.org>
+---
+ tools/perf/tests/shell/stat_bpf_counters.sh | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/tools/perf/tests/shell/stat_bpf_counters.sh b/tools/perf/tests/shell/stat_bpf_counters.sh
+index 76d4a7f15a43..c4f71bfc0fc6 100755
+--- a/tools/perf/tests/shell/stat_bpf_counters.sh
++++ b/tools/perf/tests/shell/stat_bpf_counters.sh
+@@ -1,4 +1,4 @@
+-#!/bin/sh
++#!/bin/bash
+ # perf stat --bpf-counters test
+ # SPDX-License-Identifier: GPL-2.0
+ 
+-- 
+2.55.0
 
