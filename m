@@ -1,204 +1,257 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f198.google.com (mail-pl1-f198.google.com [209.85.214.198])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8801448D1B;
-	Fri, 18 Sep 2026 13:21:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8ADF236F901
+	for <linux-perf-users@vger.kernel.org>; Fri, 18 Sep 2026 14:07:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789737673; cv=none; b=C1Gkdqpnb04cnL0tJUSmFO+ZCT9gnl9xjewlFCxorB6KM7U/JN1l/2AWeBF5lwq0a77vHn9Fc7oqBn/bJ+/+ut25+8N8GNIFLStspC3+yZz7bO97msUWj4ez+FHcHRlPxhF2LvdlZR2AcnNY0+EewYYzyOwV6gT4UCzWQghqBC4=
+	t=1789740433; cv=none; b=QFDhaA/UxoCpqoROXVbOxWkm/Blf9YgGGLbOUOaW+K6HaM4d+Q9nvgFUellDZrHsbi2JWPnEvYBfZ233XypJ/flBFMMaFx594qAIMzX+H8VxZfMlj328nFgnhbtcgyL5EPGm4J67zPhOT6Elok0NW5F1z6HDeR4o/m7DVC50KyI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789737673; c=relaxed/simple;
-	bh=q9MlBAFpzeRNsgJB0XNvJREWaiaMY04cUxk1fBjFkvc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cKpxoJbRsUh5mGAFv60qahKypt2bThhDWziWgBddfqhbUNKGZJTE035X5wP2Pp8ejw5JSdbjdL/WRsWCZd4/0Cj4rlU3sqTxFngGSYCJul6x3WN2Rh1nVdJsJWMYVX19XpxcCREY8mXzulSsn7b0+0NxpLmbkHUTw0vQ5FbM7wA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TfzaMgjx; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1789740433; c=relaxed/simple;
+	bh=w5cWUGPVMJuQvQ/cGprtxg+JPLGX/F6iebYNWhoCWFQ=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=U7ZyLAdTRItqQ4zYkdBfcF+j0T8x9Sxv+ygcuk8WEx2KJ73qytqIIuxfZtYC4R/IBEe6c6UqXcO6AIPmYorh1NIkUHAOTPOhTDWWb+yWOkplmQQea/lD1LojV2SrO7wzTjTiKfdbROCPdsRVPMNhJlE3IKNTU/mqIjVYFmAHa1U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=INYF6CB1; arc=none smtp.client-ip=209.85.214.198
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TfzaMgjx"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 67ECF1F000FF;
-	Fri, 18 Sep 2026 13:20:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789737669;
-	bh=0xpULa2wThyMyC/xm34rNy2PVoRdKfkNjg/wDjNfAbA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=TfzaMgjxtuNYRSbgy2oM9VNvelBoHpssOxVnn3XSg1NBMWU+/jyuXP6IaWZPY1CyA
-	 HdBMtjIknOhPruLGftRV7i8l8p2FKFX9fh6wCnG6H7oIwP4PW1xdz9+MUzns7blyED
-	 /oRJYHsPVqdDxPAyuN2AzxSAiLvBhcP8CKPzAWi22BWwuNke+22ALcPYId6jeNIBML
-	 tQQNk+We4UYkN+CSHkOuucCPZKJx6kWkj+b3NHpOKoKa54bgQVSWJGafkpCLc8uAXu
-	 3AdyFrmOR8pMPgGGIaBQnhqN7aE1U/3MowHa1LPEb32ScKkPhZnAMxVtJ6HiM44AnV
-	 XbSuPP1rSj3rQ==
-Date: Fri, 18 Sep 2026 14:20:34 +0100
-From: "Lorenzo Stoakes (ARM)" <ljs@kernel.org>
-To: Breno Leitao <leitao@debian.org>
-Cc: Mike Rapoport <rppt@kernel.org>, 
-	Andrew Morton <akpm@linux-foundation.org>, "Liam R. Howlett" <liam@infradead.org>, 
-	Vlastimil Babka <vbabka@kernel.org>, Jann Horn <jannh@google.com>, Pedro Falcato <pfalcato@suse.de>, 
-	David Hildenbrand <david@kernel.org>, Suren Baghdasaryan <surenb@google.com>, 
-	Michal Hocko <mhocko@suse.com>, Jonathan Corbet <corbet@lwn.net>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>, 
-	Jason Gunthorpe <jgg@ziepe.ca>, Leon Romanovsky <leon@kernel.org>, 
-	Paul Moore <paul@paul-moore.com>, Stephen Smalley <stephen.smalley.work@gmail.com>, 
-	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
-	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
-	Andrii Nakryiko <andrii@kernel.org>, Eduard Zingerman <eddyz87@gmail.com>, 
-	Kumar Kartikeya Dwivedi <memxor@gmail.com>, Zi Yan <ziy@nvidia.com>, 
-	Baolin Wang <baolin.wang@linux.alibaba.com>, Nico Pache <nico.pache@linux.dev>, 
-	Ryan Roberts <ryan.roberts@arm.com>, Dev Jain <dev.jain@arm.com>, Barry Song <baohua@kernel.org>, 
-	Lance Yang <lance.yang@linux.dev>, Usama Arif <usama.arif@linux.dev>, 
-	Kiryl Shutsemau <kas@kernel.org>, Doug Gilbert <dgilbert@interlog.com>, 
-	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>, "Martin K. Petersen" <mkp@kernel.org>, 
-	Jaya Kumar <jayalk@intworks.biz>, Simona Vetter <simona@ffwll.ch>, Helge Deller <deller@gmx.de>, 
-	Sebastian Reichel <sre@kernel.org>, John Hubbard <jhubbard@nvidia.com>, Peter Xu <peterx@redhat.com>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Oleg Nesterov <oleg@redhat.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Thomas Gleixner <tglx@kernel.org>, 
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, Arnaldo Carvalho de Melo <acme@kernel.org>, 
-	Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Rik van Riel <riel@surriel.com>, Harry Yoo <harry@kernel.org>, Juri Lelli <juri.lelli@redhat.com>, 
-	Vincent Guittot <vincent.guittot@linaro.org>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
-	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
-	David Airlie <airlied@gmail.com>, Will Deacon <will@kernel.org>, 
-	"Aneesh Kumar K.V" <aneesh.kumar@kernel.org>, Nick Piggin <npiggin@gmail.com>, Arnd Bergmann <arnd@arndb.de>, 
-	Muchun Song <muchun.song@linux.dev>, Oscar Salvador <osalvador@suse.de>, 
-	"Matthew Wilcox (Oracle)" <willy@infradead.org>, Jan Kara <jack@suse.cz>, Marc Zyngier <maz@kernel.org>, 
-	Oliver Upton <oupton@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, 
-	Madhavan Srinivasan <maddy@linux.ibm.com>, Anup Patel <anup@brainfault.org>, Paul Walmsley <pjw@kernel.org>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
-	Christian Borntraeger <borntraeger@linux.ibm.com>, Janosch Frank <frankja@linux.ibm.com>, 
-	Claudio Imbrenda <imbrenda@linux.ibm.com>, Alexander Gordeev <agordeev@linux.ibm.com>, 
-	Gerald Schaefer <gerald.schaefer@linux.ibm.com>, Heiko Carstens <hca@linux.ibm.com>, 
-	Vasily Gorbik <gor@linux.ibm.com>, "David S. Miller" <davem@davemloft.net>, 
-	Andreas Larsson <andreas@gaisler.com>, Alexander Viro <viro@zeniv.linux.org.uk>, 
-	Christian Brauner <brauner@kernel.org>, Matthew Brost <matthew.brost@intel.com>, 
-	Joshua Hahn <joshua.hahnjy@gmail.com>, Rakie Kim <rakie.kim@sk.com>, Byungchul Park <byungchul@sk.com>, 
-	Gregory Price <gourry@gourry.net>, Ying Huang <ying.huang@linux.alibaba.com>, 
-	Alistair Popple <apopple@nvidia.com>, Chris Li <chrisl@kernel.org>, Kairui Song <kasong@tencent.com>, 
-	Kemeng Shi <shikemeng@huaweicloud.com>, Nhat Pham <nphamcs@gmail.com>, Baoquan He <baoquan.he@linux.dev>, 
-	Youngjun Park <youngjun.park@lge.com>, Johannes Weiner <hannes@cmpxchg.org>, 
-	Qi Zheng <qi.zheng@linux.dev>, Shakeel Butt <shakeel.butt@linux.dev>, 
-	Axel Rasmussen <axelrasmussen@google.com>, Yuanchu Xie <yuanchu@google.com>, Wei Xu <weixugc@google.com>, 
-	Chengming Zhou <chengming.zhou@linux.dev>, Michal Hocko <mhocko@kernel.org>, 
-	Miklos Szeredi <miklos@szeredi.hu>, Xu Xin <xu.xin@linux.dev>, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, linux-usb@vger.kernel.org, 
-	linux-rdma@vger.kernel.org, selinux@vger.kernel.org, linux-sound@vger.kernel.org, 
-	bpf@vger.kernel.org, linux-scsi@vger.kernel.org, linux-fbdev@vger.kernel.org, 
-	dri-devel@lists.freedesktop.org, linux-trace-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, linux-arch@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, linuxppc-dev@lists.ozlabs.org, 
-	kvm@vger.kernel.org, kvm-riscv@lists.infradead.org, linux-riscv@lists.infradead.org, 
-	linux-s390@vger.kernel.org, sparclinux@vger.kernel.org, fuse-devel@lists.linux.dev
-Subject: Re: [PATCH v2 01/40] mm/vma: fix mmap_prepare file handling, remove
- file_doesnt_need_get
-Message-ID: <aq06hcheI4OGi_3A@gremlin>
-References: <20260914-b4-mmap-prepare-vma-flag-sanify-v2-0-7d9781ed5361@kernel.org>
- <20260914-b4-mmap-prepare-vma-flag-sanify-v2-1-7d9781ed5361@kernel.org>
- <aquz9Z9JrK_H_E0g@kernel.org>
- <aq01JFp8hRReyY-O@gmail.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="INYF6CB1"
+Received: by mail-pl1-f198.google.com with SMTP id d9443c01a7336-2d9336581a2so15064125ad.3
+        for <linux-perf-users@vger.kernel.org>; Fri, 18 Sep 2026 07:07:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1789740431; x=1790345231; darn=vger.kernel.org;
+        h=content-type:cc:to:from:subject:message-id:references:mime-version
+         :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=Ir1/YgDnxXsqAYc9f8EvJKyGqMi5T/DFjD9aFKSS1hk=;
+        b=INYF6CB1hNlQt85zqOFtAULU+cbbbpAXweFQfCn0HgCe68/1J4vPWPvHEwUmLvi8yQ
+         avdtDe/WpOYaVELQxVdISVCwaaeQ7nlyPX3/yK6qcub9M9Q25DtexE3B7JqXQT840GpH
+         jjyOIA672nr9No1AzoXmPeF9U/uaj0W8WSE+9pMDQdceQNJcXuEUy4Q/zhSLyBdCR7ck
+         c7hibGxwQQbkWhN/h9x2iBss5KYme5Y1flFPAGvCDwcUhItpbKVlqxdFc5Ba4tWqb+AJ
+         s7rtR4ukSy0dnoCXoAgP8IsOKeotCLsWza4SWS1ueL0sbUViwkCz3LnzuJN27A5r7m18
+         X4wA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1789740431; x=1790345231;
+        h=content-type:cc:to:from:subject:message-id:references:mime-version
+         :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=Ir1/YgDnxXsqAYc9f8EvJKyGqMi5T/DFjD9aFKSS1hk=;
+        b=aCTkh7NAlX51O1f7PhOTlhUJSJ3oOmXbZgZFtpjj/Txf1FdodAOTQY48kvBo+503kN
+         dPsFNUZUr3TGUePB2BU3/0Yvgzg+e9lAnJcMuI4pKvuOuut5jGBERch8K9xDuPhKoJVM
+         3HS+zQRiJbt3E3/FYbFUv+J5FkJwArQdtTXMCVDGzZ5Nd3IZHI2eh8iMelYbxVTl4Ytm
+         N2z6slGnNBU0i0vpWfVHozs7PXOAiin7h1Z7uXl9b/PueY9eabckJslCdw3ADLByU2TL
+         bE+zlgrI91R/vtLMxyqM1R8NAmUFVcqA/HRj62LQ8Pg87UHXOxwlULm/2RHBCOpqMeAw
+         VyXg==
+X-Forwarded-Encrypted: i=1; AKwUvBwOTBRlAZUZkb6XA2WFUfhSZ+SY+1dHQlqPNG8DTu08N1K5hDHjWqiar1AuPPj6JmrgnECO8LbdA+GaSiDnWz8f@vger.kernel.org
+X-Gm-Message-State: AFuF++k12syzfDAIRaEvDfMmhzSrmjGqHSIohlbQgN1ulrmmKV3EGGU/
+	9dLhqQC5ywiDceR3x5GjK1uwLNhJ9oydD4b709KUkBy6o7NSZ0TDfzMqORlFi+EWCuyW1KEU6AU
+	nI8i3FvoNcA==
+X-Received: from dlbut1.prod.google.com ([2002:a05:7022:7e01:b0:144:ce33:3556])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90a:ac1:b0:39e:6a80:b79c
+ with SMTP id 98e67ed59e1d1-39e6a80b8bcmr35842a91.44.1789740430514; Fri, 18
+ Sep 2026 07:07:10 -0700 (PDT)
+Date: Fri, 18 Sep 2026 07:06:43 -0700
+In-Reply-To: <cover.1789662556.git.irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aq01JFp8hRReyY-O@gmail.com>
+Mime-Version: 1.0
+References: <cover.1789662556.git.irogers@google.com>
+X-Mailer: git-send-email 2.55.0.1082.g2b9226bbc0-goog
+Message-ID: <20260918140659.2501976-1-irogers@google.com>
+Subject: [PATCH v3 00/16] perf trace: Fix BPF filtering and make tracing tests non-exclusive
+From: Ian Rogers <irogers@google.com>
+To: irogers@google.com, acme@kernel.org, namhyung@kernel.org
+Cc: adrian.hunter@intel.com, james.clark@linaro.org, jolsa@kernel.org, 
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+	mingo@redhat.com, peterz@infradead.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Fri, Sep 18, 2026 at 05:57:51AM -0700, Breno Leitao wrote:
-> On Thu, Sep 17, 2026 at 12:33:41PM +0300, Mike Rapoport wrote:
-> > On Mon, Sep 14, 2026 at 03:57:21PM +0100, Lorenzo Stoakes (ARM) wrote:
-> > > The map->file_doesnt_need_get flag is confusing and the existing
-> > > implementation has holes.
-> > >
-> > > Drivers are permitted to change the owning file of a mapping. If they do
-> > > so, they are required to take a reference on that file.
-> > >
-> > > The mmap() operation which ultimately invokes __mmap_region() is guaranteed
-> > > to drop the refcount for the original file the mapping was made under, but
-> > > this is not true for the replaced file.
-> > >
-> > > This has been addressed so far by tracking map->file_doesnt_need_get, which
-> > > is rather poorly named and unfortunately fails to correctly track whether
-> > > or not an additional put were needed in a number of cases.
-> > >
-> > > Make life easier by removing this flag, and instead drop the reference for
-> > > both mmap_prepare and the deprecated mmap callback in a new function
-> > > put_map().
-> > >
-> > > Track whether this needs to be done by aligning mmap_state with
-> > > vm_area_desc and store the original file in the map->file field, keeping
-> > > the updated file in map->vm_file.
-> > >
-> > > In order to have the same behaviour for both types of hooks, only drop the
-> > > reference __mmap_new_file_vma() itself took in its error path, deferring
-> > > the replaced file's reference to put_map().
-> > >
-> > > To make this work correctly, map->vm_file has to be updated before any
-> > > error handling, so update __mmap_new_file_vma() and call_mmap_prepare() to
-> > > set this field first.
-> > >
-> > > Also when mmap_prepare() changes the file and is then merged, the reference
-> > > count also must be decremented, so update the logic to call put_map() in
-> > > this case too.
-> > >
-> > > Also update __compat_vma_mmap() to manually perform this step for stacked
-> > > file systems using the compatibility layer, and update
-> > > compat_set_vma_from_desc() to replace vma_set_file() with a correct
-> > > refcount/file update.
-> > >
-> > > No in-tree driver is impacted by the incorrect implementation of this
-> > > currently (no driver that does this is mergeable for one), so this does not
-> > > need to be a fix.
-> >
-> > But the patch iteslf needs to be fixed :)
-> >
-> > It seems to be the change that broke the CI.
-> >
-> > The rest is from LLM, take it with a grain of salt :)
-> >
-> > mm-ci mm-unstable red build - bisect analysis
-> > ==============================================
-> >
-> > Bad commit: 2a937a04babf1 "mm/vma: fix mmap_prepare file handling, remove
-> > file_doesnt_need_get" - first patch of Lorenzo Stoakes' 40-patch series
-> > "mm: make VMA flag semantics explicit, eliminate VM_SPECIAL" (v2).
-> > https://lore.kernel.org/all/20260914-b4-mmap-prepare-vma-flag-sanify-v2-0-7d9781ed5361@kernel.org
-> >
-> > Symptom: tools/testing/selftests/mm/pfnmap.c triggers
-> > "BUG: Bad page map in process pfnmap" during __zap_vma_range()/vm_normal_page(),
-> > seen on process exit/munmap. CI's run-mm-selftests.sh greps guest dmesg for
-> > BUG|WARNING and fails the job regardless of the test's own exit code.
->
-> I am seeing something similar here and stress-ng can reproduce it:
->
->       WARNING: mm/memory.c:3225 at do_remap_pfn_range+0x9b4/0x9f0, CPU#25: stress-ng-dev/354858
->       Call trace:
->        do_remap_pfn_range+0x9b4/0x9f0 (P)
->        remap_pfn_range_complete+0xac/0xd0
->        mmap_action_complete+0xcc/0x3d8
->        mmap_region+0xb54/0x1978
->        do_mmap+0x588/0xb18
->        vm_mmap_pgoff+0x1e4/0x320
->        ksys_mmap_pgoff+0x2d8/0x510
->        __arm64_sys_mmap+0x100/0x128
->
->       BUG: Bad page map in process stress-ng-dev  pte:0160000000000fcf
->       addr:0000ffe8d9080000 vm_flags:00000071 anon_vma:0000000000000000 mapping:ffff0000a0c4ea98 index:0 (file) ffe8d9080 (anon)
->       file:mem fault:0x0 mmap:0x0 mmap_prepare: mmap_mem_prepare read_folio:0x0
->       Call trace:
->        print_bad_page_map+0x63c/0x740
->        vm_normal_page+0x228/0x240
->        __zap_vma_range+0xbe0/0x34a0
->        unmap_vmas+0x240/0x318
->        unmap_region+0x12c/0x238
->        vms_complete_munmap_vmas+0x318/0x958
->        do_vmi_align_munmap+0x254/0x2f8
->        do_vmi_munmap+0xc4/0xf8
->        __vm_munmap+0x174/0x288
->        __arm64_sys_munmap+0x70/0x90
+perf trace's BPF augmentation attaches to raw_syscalls:sys_enter and
+raw_syscalls:sys_exit system wide, and used the program return value to
+decide whether a syscall was interesting. Returning 0 from a
+BPF_PROG_TYPE_TRACEPOINT program makes perf_trace_run_bpf_submit() drop
+the event for every listener on that tracepoint, not just for the perf
+trace that installed the program. Any concurrent perf trace, perf record
+or ftrace session watching raw_syscalls therefore lost events, which is
+one of the reasons so many of the perf trace and perf probe shell tests
+had to be marked (exclusive) and run on their own.
 
-Yup I already fixed it and respun the series :)
+Patches 1 and 2 are independent fixes to the files the rest of the
+series goes on to rework.
 
-https://lore.kernel.org/all/20260917-b4-mmap-prepare-vma-flag-sanify-v3-0-4583d8a23bca@kernel.org/
+Patches 3 to 8 fix perf trace. They stop the return value being used as
+a filter and do the filtering in BPF maps instead, fix argument handling
+for the __data_loc internal tracepoint fields that syscalls:sys_enter_*
+gained in 6.19, stop the sys_exit program array tail calling a sys_enter
+augmenter, and replace the userspace PERF_RECORD_FORK/PERF_RECORD_EXIT
+bookkeeping with BTF-typed raw tracepoint programs on
+sched_process_{fork,exit,exec}. A task is then registered before its
+first syscall and evicted in do_exit(), rather than whenever userspace
+next drains the ring buffer.
 
---
-Cheers, Lorenzo
+Patches 9 to 16 deal with the tests. Several collided with each other
+through global state rather than through perf trace: fixed probe names,
+clear_all_probes() disabling every tracepoint on the system, and perf
+trace's hardcoded "probe:vfs_getname*" wildcard pinning probes belonging
+to other tests. With those scoped to a pid they can drop (exclusive) and
+run in parallel again.
+
+Tested on x86_64. The trace and probe tests pass under 'perf test -r3',
+which runs the repeats concurrently. Every patch builds individually,
+and the series also builds with BUILD_BPF_SKEL=0.
+
+Changes since v2:
+- Rebased onto the current perf-tools-next.
+- Patch 1 also includes <assert.h>, for the assert() in
+  augmented_syscalls__create_bpf_output().
+- New patch 2 makes evsel__put_and_free_priv() free the whole
+  evsel_trace. It only zfree()d the struct, leaking the syscall_arg_fmt
+  array hanging off it. No caller can reach that today, but patch 6
+  adds one that discards a fully set up evsel.
+- Patch 6 identifies the evsel to drop from the evlist by comparing
+  against trace.syscalls.events.sys_enter instead of a strstr() for
+  "syscalls:sys_enter". That substring also matches the per syscall
+  syscalls:sys_enter_SYSCALL tracepoints, so a user asking for one of
+  those by name would have had it removed from the evlist, and
+  __augmented_syscalls__ described with its tracefs format rather than
+  the raw tracepoint's.
+- Patch 6 reports a failure to program the pid filters with the error
+  that caused it. trace__run() sent everything trace__set_filter_pids()
+  returned to out_error_mem, which prints "Not enough memory to run!".
+  That was already a guess, and a wrong one now the function writes BPF
+  maps too: the update fails with -E2BIG when the target has more
+  threads than pids_to_trace has room for.
+- Patch 6 reports a failure to program the syscall filters the same way.
+  The pr_err() in trace__set_ev_qualifier_filter() ran before trace__run()
+  printed "%m" at out_errno, and anything called in between could have
+  changed errno by then, so the two did not have to agree. The inner
+  report is now a pr_debug() and the caller prints the error it was
+  given, which leaves out_errno without a user.
+- Patch 7 moves the pid across in sched_process_exec() by deleting the
+  old key before inserting the new one. The move is only a rename, but
+  holding both keys at once needs a spare slot, and on a full map the
+  insert failed with -E2BIG while the delete still succeeded, losing
+  the task instead of moving it.
+- Patch 7 no longer claims that a task forked during the attach window
+  is still traced unaugmented. That was wrong: cmd_trace() removes the
+  sys_enter evsel once the bpf-output event exists, so
+  __augmented_syscalls__ is the only source of enter events and such a
+  task is not reported at all. Describe what is really lost, why the
+  tgid fallback is not kept as a safety net for it, note that only
+  'perf trace -p' is exposed, and that closing it needs the target's
+  descendants re-enumerated from /proc after the attach.
+- Patch 7 drops the parent tgid test from sched_process_fork(), so a
+  child inherits from the pid of the thread that called clone() and
+  from nothing else. The lookups only ever match a task's own pid, and
+  every thread of a -p target is enumerated from /proc/<pid>/task and
+  inserted in its own right, so the tgid added no reach. What it did
+  add was a child inheriting from a thread that is not traced itself,
+  such as a sibling of the thread 'perf trace -t' selected.
+- Patch 7 ends the session with the error that caused it when the BPF
+  programs cannot be attached, rather than printing a bare errno left
+  over from unwinding the attach. There is nothing to fall back to at
+  that point, cmd_trace() has already built the evlist around
+  __augmented_syscalls__ and dropped the sys_enter evsel, and the code
+  being replaced did not fall back either: it ignored the result of
+  augmented_raw_syscalls_bpf__attach() altogether.
+- New patch 8 reads the target out of /proc again once the BPF programs
+  are attached, so a task the target created while perf trace was
+  starting up is traced rather than missed for the whole session. This
+  is the gap patch 7 describes and left for later. It covers the
+  target's new threads and, through task->children, anything it or they
+  forked, to any depth. What is left is a task that made syscalls
+  between sys_enter going live and being added to the map, which is
+  momentary rather than lasting for the session.
+- Patch 9 bails out if mktemp fails rather than carrying on with an
+  empty $tmpdir. cd rejects the null directory, and the rmdir that was
+  meant to undo the mktemp then failed to remove '' instead. Its
+  cleanup() also no longer exits when it cannot cd out of the temporary
+  directory, which would have skipped removing it. The removal takes an
+  absolute path and does not need the cd to have succeeded.
+- Patch 10 now narrows the disable in clear_all_probes() to the probes
+  themselves rather than dropping it. Clearing kprobe_events or
+  uprobe_events is all or nothing: dyn_events_release_all() returns
+  -EBUSY without removing anything if it finds a probe that is still
+  enabled, so simply removing the write could leave stale probes behind
+  to collide with the next run. The set to disable is read from the
+  kprobe_events and uprobe_events listings rather than assumed to be
+  the groups perf uses, since a probe left enabled in another group,
+  such as the default kprobes group used when kprobe_events is written
+  directly, would abort the clear just the same.
+- Patch 11 deletes the probes from an exit trap as well as on the way
+  out. A pid scoped name is never seen again, so a run interrupted
+  before cleanup_probe_vfs_getname() left its probes behind for good,
+  a set per run, where the fixed name was at least found and reused by
+  the next run.
+- Patch 12 retries deleting the uprobe. Deletion writes uprobe_events
+  just as addition does and can lose the same race with a concurrent
+  test, and because the event name is now pid scoped a probe left
+  behind is never overwritten by a later run. It also bails out if
+  mktemp fails and quotes the path in the emptiness check, which
+  unquoted would have tested the string "-s" and reported success.
+- Patch 13 prints the tail of the output rather than the head. The
+  pattern it matches only appears in the summary, which is printed
+  after any trace output, so the head of the file is not the part that
+  failed to match.
+
+Changes since v1:
+- New patch 1 includes <sys/types.h> and <string.h> for the pid_t and
+  strcmp() uses that were relying on the include chain happening to
+  drag them in, which does not hold on libcs such as musl.
+- Patch 6 no longer returns success when the event qualifier filter
+  string fails to allocate. err now defaults to 0 because either
+  tracepoint may legitimately be absent, so the ENOMEM path has to set
+  the error itself rather than rely on that default. It also includes
+  <stdbool.h> for the bool parameters it adds to trace_augment.h.
+- Patch 9 removes the temporary directory if the cd into it fails.
+  That happens before the cleanup trap is installed, so the directory
+  would otherwise be left behind in /tmp.
+
+Ian Rogers (16):
+  perf trace: Include the headers declaring pid_t, strcmp and assert
+  perf trace: Free the whole evsel_trace in evsel__put_and_free_priv
+  perf trace: Start BPF summary before starting workload
+  perf trace: Skip internal tracepoint fields in formatting and beauty
+    map
+  perf trace: Do not set unaugmented BPF program on sys_exit map
+  perf trace: Filter events in BPF and avoid tracepoint vetoes
+  perf trace: Handle fork and exit directly in BPF filter maps
+  perf trace: Enumerate the target again once BPF is attached
+  perf test test_task_analyzer: Isolate in temporary directory and make
+    non-exclusive
+  perf test common: Only disable probes in clear_all_probes
+  perf test probe_vfs_getname: Scope probe name to PID and make
+    non-exclusive
+  perf test record+probe_libc_inet_pton: Scope event to PID, add
+    retries, and make non-exclusive
+  perf test trace_summary: Improve error diagnostics
+  perf test trace_btf_general: Drop --max-events=1 and make
+    non-exclusive
+  perf test trace_summary: Make non-exclusive
+  perf test uprobe_from_different_cu: Scope probe name to PID
+
+ tools/perf/Documentation/perf-trace.txt       |   5 +
+ tools/perf/builtin-trace.c                    | 637 +++++++++++++++---
+ tools/perf/tests/shell/common/init.sh         |  33 +-
+ .../perf/tests/shell/lib/probe_vfs_getname.sh |  51 +-
+ tools/perf/tests/shell/probe_vfs_getname.sh   |   3 +-
+ .../shell/record+probe_libc_inet_pton.sh      | 107 ++-
+ .../shell/record+script_probe_vfs_getname.sh  |  18 +-
+ tools/perf/tests/shell/test_task_analyzer.sh  |  20 +-
+ .../shell/test_uprobe_from_different_cu.sh    |  11 +-
+ .../tests/shell/trace+probe_vfs_getname.sh    |   9 +
+ tools/perf/tests/shell/trace_btf_general.sh   |   8 +-
+ tools/perf/tests/shell/trace_summary.sh       |  16 +-
+ .../bpf_skel/augmented_raw_syscalls.bpf.c     | 312 ++++++++-
+ tools/perf/util/bpf_trace_augment.c           | 175 ++++-
+ tools/perf/util/trace_augment.h               |  27 +-
+ 15 files changed, 1281 insertions(+), 151 deletions(-)
+
+
+base-commit: 86a27811675a415bd351efca1a194a1a94c082dd
+-- 
+2.55.0.1082.g2b9226bbc0-goog
+
