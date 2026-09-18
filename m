@@ -1,56 +1,56 @@
-Received: from mail-pj1-f71.google.com (mail-pj1-f71.google.com [209.85.216.71])
+Received: from mail-pg1-f197.google.com (mail-pg1-f197.google.com [209.85.215.197])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E24164F7CA4
-	for <linux-perf-users@vger.kernel.org>; Fri, 18 Sep 2026 14:07:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.71
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF0554F93B3
+	for <linux-perf-users@vger.kernel.org>; Fri, 18 Sep 2026 14:07:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789740437; cv=none; b=TmuEesa8F+i8EVwrh3rBkOHAZ6IsmDIDqI9baUjTsMKDtNRWeglV/tpRb9OcA2UqBYDFChFglMK4ClsciW7O7ptsWip3RZEgYicQY8sL1BWvNts+JDq8SB8T9vhKBZhpcG66F1eNkdiyd1ra/Ufw/EhketpCxiTp1OSLmiMMeKw=
+	t=1789740438; cv=none; b=Hi/H6eATkxFHFDM+Lfwuj4q5fvP3W6Jz7geKS5a4KfMFkNs5qnjSbDnm9NaxqfzZ9cnKlpjR0+GFJ8DoRpsWn76nVkNIfg5G1uOlOEY6jgrSTw5vDGuMBo2BsYcUMqufGrjxnqWRxfDSwHqtyftIv+jbyq1XFJKtO0V0MWtZd5E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789740437; c=relaxed/simple;
-	bh=GPdTrvCkiHU3/coaruf9IhbjFFcf1z7GDHB3eC+nIgM=;
+	s=arc-20240116; t=1789740438; c=relaxed/simple;
+	bh=9No6g42lrB6QKcCBOOEFSgMqI1po/ZrRv9DIdc2oFZ8=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=UUOlYuO8vxMFruascVMU3qUuq+hifn5XvGwtFWjWCbGI86DuiwmVDrnHk1B3OvD+cUJnpgtuvjMiJv/zLFj58CwlmKM8nzilw2BzIv3PW70QM+qBAchEyBK9SxrOagR4EyOitmQpnFCUL3zW/byRXY/b7Qq9/NV3AfKuRaNHTaU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=doEywkou; arc=none smtp.client-ip=209.85.216.71
+	 To:Cc:Content-Type; b=qdj9lNP0ETEcvf181I8RzzGCYGDPqDLTz5Q9nuyWSIBPJAOsGWs662aiBQT5m4Y5cxITAroRRi+4MT5jlyu120Tf0tHnIQ9dtsFWK9KccM9rIlWyQVxXIdZgPyZHaLo4J4QfAO2EfvystWtu+m9B5yCIfAjvBittmvtDSxF6cJQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=AiEaB5FV; arc=none smtp.client-ip=209.85.215.197
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="doEywkou"
-Received: by mail-pj1-f71.google.com with SMTP id 98e67ed59e1d1-39e3c10ac70so2090376a91.2
-        for <linux-perf-users@vger.kernel.org>; Fri, 18 Sep 2026 07:07:14 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="AiEaB5FV"
+Received: by mail-pg1-f197.google.com with SMTP id 41be03b00d2f7-cc4fc935a11so714399a12.0
+        for <linux-perf-users@vger.kernel.org>; Fri, 18 Sep 2026 07:07:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1789740434; x=1790345234; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1789740436; x=1790345236; darn=vger.kernel.org;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=Ajb49arDbZGSllkSDDxIszaTKHNJOa78okU0Ays49S8=;
-        b=doEywkouEu1g8XHlO8VK/KpeR8pf7PNeK4w6CeQzdjA37qDNa+9NV5WW8ZvcIE8Olv
-         fksiXOq5cWTMVh9LD+kaQ3Ix+zOuSfJhB93HTlivlK34zZ4pzrAXSG9zA1wRDSLUiPT9
-         WSDLIyCnMz+dEjW0DxsX8JyYBK9unl4waKQvmi7SbKVGKYUQmtxhbQT467PY3+MxSmzp
-         cbMvFUXE/5oQoY9N2bUVdgJuha+WiDy1SWxlFaQQHhhlq1iq8hAavR8g4dqKwmaR+Zca
-         Vr2I6NXoAE165eWk939oWebDH4KAINAPVfcAC3Bo8hTuLkLMlLUAh5xGoHZNB1VRuhB1
-         WI0A==
+        bh=dWUdAqwnRNViqY1JbSim/N3szd89pQRjSVQzSYadKOc=;
+        b=AiEaB5FV5mNMjP0j3x8wl55S9XOOz8LnhIpBBRjtMc8OfNSuDKl3FMyEJq6eUO8FeN
+         K8LaBvSmvTnG+i4ayzBsz6x38Z6zBQZaVbGOayTnR09SS2NtppsQCTknQK7bA+5RRvJa
+         0uMker55JkdBzxkIY4g7gTx54qTaWx9NRhJK7+GrV28CiUTQSEpygVw39KOqsJALyYLM
+         jd20psB0UM/jFN8QXTEj47eqrYEvJai/YfgFLX6N25yLvYE0LmzOrrp8BSBACI0rKYAl
+         8uOHSknWyPzo0YKCWJK0cdVEujFW6Rg+a3ew/ChLyuMUvx/Ak5wSbbVYqv2inFsswtQY
+         EweQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1789740434; x=1790345234;
+        d=1e100.net; s=20260707; t=1789740436; x=1790345236;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=Ajb49arDbZGSllkSDDxIszaTKHNJOa78okU0Ays49S8=;
-        b=KlkIrdL8Ux5iT4hk0PFSOotI7zXlDFzu9eIIxrQ0SRzYJSKgjxkS6RF7qeW5DIRFCa
-         yKk/BywgYYU+BV9Du8UvKvPNZ7z5FVmM76v4j42pj9zQ/i24t0Q9tZP0Nw0s+5BPG13v
-         n5q8Rb02i5BBJrr2AEn19yxPfOoknNiN25zgKYwJXKKOA6oB2ACx7T7621TPjJUa6xvh
-         YgL4j7C6lyQ+0Vv0+gB0LQEUGiLOeGB1W0CuWVa2arTPZ+YDK7aK6NDTK3Tmz22aSjv6
-         qFnoVWZ0tHS42D8uCYX007fyj0gqPU+2cvzzsxyWs2nqdOwjnTnKZ+LLePTGc4l2Mv6d
-         Sr4w==
-X-Forwarded-Encrypted: i=1; AKwUvBwsF6eptNKmbvwV1TSQPeM2Fvb7Rpix8KDSkEmoqw07go/NNrksTYwPpUnz/9kTh7YF0P02t6nLUXi/V1ThHptN@vger.kernel.org
-X-Gm-Message-State: AFuF++mICrhbYuR/hHNU70PSKWfDbepqzRTEeeG2ciaULoX1ZYAJ7MUv
-	qxVo4eHUCbQwuUi7viNFQ4gzU7Vp4yNSJ5LKpKsHLXKGprCstOm1k1UmSY+7ZqOMhW+/H/kV2/H
-	MLaE5WO9sjQ==
-X-Received: from dlbro10.prod.google.com ([2002:a05:7022:158a:b0:143:91fd:56cb])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:1cc8:b0:39e:1329:7816
- with SMTP id 98e67ed59e1d1-39e54d703dbmr6319757a91.15.1789740434094; Fri, 18
- Sep 2026 07:07:14 -0700 (PDT)
-Date: Fri, 18 Sep 2026 07:06:45 -0700
+        bh=dWUdAqwnRNViqY1JbSim/N3szd89pQRjSVQzSYadKOc=;
+        b=Qy4Vf0u2g5HQr2/2jQyhOLARmqOb+nIh1b6Hdxtct/VUI66MaeX0CR1kn2neHxciuQ
+         XODQJzWNLA67FKRey62KdU8PzDntWjxeI9XjqxQDmso8F4pj7K7Gr/PSp8V+QEHj8NN9
+         LFZPG+bvqn7OQ0cPPBK8JSN5dx4D9kqDYY+a1TF4krshsu0iqNdsrKxHvUxOIvA0ldm9
+         VlahxaFNAgVLP4GH/r6TRl2XZZgL7E3JYHSKb7Rsd/wwZtP8Dc/YUBYJKJMvv6MqzsKn
+         dKio7+n0X5U19uxjvt0zb6UNbzTYs1sqhuNB3j4LczczMylBOJPSKPsJD/txCCwJu6Ek
+         tusg==
+X-Forwarded-Encrypted: i=1; AKwUvBxu0c0EnzBerUErQ95rji60vNPBb20yI/5TRWb0r5GT9Z8hCXus4FyKG0tNh5cWgCd94DxlewdDaqR07wocRJoV@vger.kernel.org
+X-Gm-Message-State: AFuF++l9sykRFqQylOE0Yuq52TqI1HXp7mUKJ2x/zMEIEkXvfr5ti4Ut
+	3+C31Y7jJXaZjiZo5vlrFz80oHNGxVNWdjMSDyUu2uWnc/L7eEllqkSeI4+KumyPR21DLPuTonj
+	jYVcWCJMTow==
+X-Received: from dybfx26.prod.google.com ([2002:a05:7300:c39a:b0:33c:2bb7:a004])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:2784:b0:39e:6a80:dda4
+ with SMTP id 98e67ed59e1d1-39e6a810c81mr72789a91.43.1789740435877; Fri, 18
+ Sep 2026 07:07:15 -0700 (PDT)
+Date: Fri, 18 Sep 2026 07:06:46 -0700
 In-Reply-To: <20260918140659.2501976-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -60,8 +60,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <cover.1789662556.git.irogers@google.com> <20260918140659.2501976-1-irogers@google.com>
 X-Mailer: git-send-email 2.55.0.1082.g2b9226bbc0-goog
-Message-ID: <20260918140659.2501976-3-irogers@google.com>
-Subject: [PATCH v3 02/16] perf trace: Free the whole evsel_trace in evsel__put_and_free_priv
+Message-ID: <20260918140659.2501976-4-irogers@google.com>
+Subject: [PATCH v3 03/16] perf trace: Start BPF summary before starting workload
 From: Ian Rogers <irogers@google.com>
 To: irogers@google.com, acme@kernel.org, namhyung@kernel.org
 Cc: adrian.hunter@intel.com, james.clark@linaro.org, jolsa@kernel.org, 
@@ -69,47 +69,56 @@ Cc: adrian.hunter@intel.com, james.clark@linaro.org, jolsa@kernel.org,
 	mingo@redhat.com, peterz@infradead.org
 Content-Type: text/plain; charset="UTF-8"
 
-Every evsel->priv in builtin-trace.c is a struct evsel_trace, allocated
-by evsel_trace__new(). It holds a syscall_arg_fmt array in its fmt
-member, which evsel__syscall_arg_fmt() allocates on demand for the
-syscalls:sys_{enter,exit}_SYSCALL tracepoints and for every other
-tracepoint that gets its arguments pretty printed.
+When using --bpf-summary, trace_start_bpf_summary() sets
+skel->bss->enabled = 1. In trace__run(), trace_start_bpf_summary() was
+previously invoked after evlist__start_workload().
 
-evsel__put_and_free_priv() only did zfree(&evsel->priv), releasing the
-evsel_trace itself and leaking that array. Use evsel_trace__delete(),
-which frees fmt first, exactly as the out_delete path of
-evsel__syscall_arg_fmt() already does.
+Because evlist__start_workload() immediately unblocks the child process
+by writing to its go_pipe, short-lived workloads (such as `cat /dev/null`)
+can execute and complete their initial system calls before
+trace_start_bpf_summary() is reached by the parent process. Furthermore,
+under high system load, the child process may finish before the BPF
+summary tracking is enabled in the kernel at all, causing syscall
+summary tests to fail. Additionally, if initial_delay was configured,
+the workload was started before sleeping.
 
-The current callers are all error paths that run before fmt can have
-been allocated, so nothing leaks in practice today, but the helper is
-the obvious thing to reach for whenever an evsel is discarded and it
-should be safe for that.
+Move trace_start_bpf_summary() to be invoked before
+evlist__start_workload(), matching evlist__enable(), and ensure it
+respects target.initial_delay.
 
 Assisted-by: Antigravity:gemini-3.1-pro
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/builtin-trace.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ tools/perf/builtin-trace.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
 diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-index 20fffc24507b..f67557e7a254 100644
+index f67557e7a254..f90c6bb4d8b4 100644
 --- a/tools/perf/builtin-trace.c
 +++ b/tools/perf/builtin-trace.c
-@@ -464,7 +464,13 @@ static int evsel__init_tp_ptr_field(struct evsel *evsel, struct tp_field *field,
+@@ -4844,17 +4844,19 @@ static int trace__run(struct trace *trace, int argc, const char **argv)
+ 	if (!target__none(&trace->opts.target) && !trace->opts.target.initial_delay)
+ 		evlist__enable(evlist);
  
- static void evsel__put_and_free_priv(struct evsel *evsel)
- {
--	zfree(&evsel->priv);
-+	/*
-+	 * evsel->priv is always a struct evsel_trace here, so it has to go
-+	 * through evsel_trace__delete(): zfree() on its own would release the
-+	 * struct while leaking the syscall_arg_fmt array hanging off it.
-+	 */
-+	evsel_trace__delete(evsel->priv);
-+	evsel->priv = NULL;
- 	evsel__put(evsel);
- }
++	if (trace->summary_bpf && !trace->opts.target.initial_delay)
++		trace_start_bpf_summary();
++
+ 	if (forks)
+ 		evlist__start_workload(evlist);
  
+ 	if (trace->opts.target.initial_delay) {
+ 		usleep(trace->opts.target.initial_delay * 1000);
+ 		evlist__enable(evlist);
++		if (trace->summary_bpf)
++			trace_start_bpf_summary();
+ 	}
+ 
+-	if (trace->summary_bpf)
+-		trace_start_bpf_summary();
+-
+ 	trace->multiple_threads = perf_thread_map__pid(evlist__core(evlist)->threads, 0) == -1 ||
+ 		perf_thread_map__nr(evlist__core(evlist)->threads) > 1 ||
+ 		evlist__first(evlist)->core.attr.inherit;
 -- 
 2.55.0.1082.g2b9226bbc0-goog
 
