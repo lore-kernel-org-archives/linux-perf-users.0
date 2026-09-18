@@ -1,56 +1,56 @@
-Received: from mail-pj1-f71.google.com (mail-pj1-f71.google.com [209.85.216.71])
+Received: from mail-pg1-f198.google.com (mail-pg1-f198.google.com [209.85.215.198])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BD044FDE7E
-	for <linux-perf-users@vger.kernel.org>; Fri, 18 Sep 2026 14:07:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.71
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8380C5012B1
+	for <linux-perf-users@vger.kernel.org>; Fri, 18 Sep 2026 14:07:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789740452; cv=none; b=DPfO7Iq0KKgIaMkNxuAHVQpRgPovXPpNXMqXcTKzJ3UxdqbT5T1FUk9N0Ozpk8Mn+e5MS9Pj5Fpv7EeDsFQmux/HMjPBwfH6YCADU0QLu+QKs2NQS/d+Q6MWjsYXVTHF5x3SHZrtSj4IGkgwPDQAeTm4f5vW9/NBKTjtVm1El4Y=
+	t=1789740455; cv=none; b=d0XZppaZ5DZPw5Ny+AQN8JvMkcIw1oAMizf2YkOh1pRjeSG3oheX+oo2p0OaedF8/JIBbs4jToPO43Fvk2dcu453GllGHFShxqkmwhPxwj1G/B2UbubjYNkzwRSToKo1GeiiMawB9DdjH7ZfGSZCy/7bUrfQAu7GSWvZb1sFKMY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789740452; c=relaxed/simple;
-	bh=3qyDKSUHoAXJBVvMweoPwov6DmzqcY9odxEwkd1kTIY=;
+	s=arc-20240116; t=1789740455; c=relaxed/simple;
+	bh=js3MmCu39/cj46Xs9OQpjW7xXWJ5rM3UT+1/Hq5HO/4=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=nnTJyhfQfqi9RXtWoAb5gfBDM/0DpqMXdNRsHecIWHywH32Otm0zHXIWxIlfzZi7P3vHb5sZriccaZehvMvMA/jliAuG2tut6RMcbXQlx43N9AJUBEEHnNXyptKwrWlKkfYqlcFl4sZczZ9hqigDWwIR78lmYNq3Vnx8nUqr6Ps=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=D7WU5ROP; arc=none smtp.client-ip=209.85.216.71
+	 To:Cc:Content-Type; b=H3JmLxU0DsGjtY5uZcqBIZ8lQTV9bhK7Ax14vaKpb6odza4oA852TmrBADr4qcoQ9QgGYVcgDpSbUOPZqIKpPKppY4pTLr2C1GAAc55j8fw+dkI7lfqDW+dPcUVylgBbbUMpeVOL0ZivwqKyKb+10VfnWi75cEKRx6p0xZaHp54=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=TOlr30rk; arc=none smtp.client-ip=209.85.215.198
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="D7WU5ROP"
-Received: by mail-pj1-f71.google.com with SMTP id 98e67ed59e1d1-39512608fb1so1899742a91.1
-        for <linux-perf-users@vger.kernel.org>; Fri, 18 Sep 2026 07:07:30 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="TOlr30rk"
+Received: by mail-pg1-f198.google.com with SMTP id 41be03b00d2f7-c85798977dcso1050030a12.0
+        for <linux-perf-users@vger.kernel.org>; Fri, 18 Sep 2026 07:07:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1789740450; x=1790345250; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1789740452; x=1790345252; darn=vger.kernel.org;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=PdvT9XF5drvxnf/MfPum/Gi0QBj0faFgeFxRBLMV2Co=;
-        b=D7WU5ROPFGPm4qLpWKbljw9eTb2k+J39ay7cqI9AqBgMNDk9F2nHf4AL6XK2zaGVS+
-         Gr2J9Y5GYZk5lW6XhjAxtAFJrle8mNpAVMwuYVxds3p2yWHfuPuhUq0xq0PLtr+Y3dIo
-         YbzQv24f2hZqTeWqr4NYszZlkg5+C9C/Vex2sGkOByzngoMqHfFc8JixquLpyznRdM2b
-         8iInw70kpfY5NSmEHc9lf0E768IF/LL+ZPBVMeDV34jKSwMaWXL2AWlgjqvioVGYeCha
-         UC9gLgB8wpO9CReZaN5k1TMKFe2qIFrMnPWMSeIhZEH1hT9yEj3HWIFcpMm90vARqmWX
-         vbBg==
+        bh=p1wleqEAHJWzd5Fq3MOQlRkWIUYoY+UnMLT1UHUF+dc=;
+        b=TOlr30rkc0Od9arCKsJrPycIPsODIZ5II0taxLASscJs9tiyZL9KUlsx3BT8Smb/3p
+         ZFqfEfwjmALh4Cgs5ubp1d5rE0vMgcJvSjkBTr+jPz+GcOSezkXKk678WzVBQXdKLKRA
+         28TfBUZbJVk2+51Lf2h2SChKF2m8rG9f+8yuFaYdkZQr+5mA4yxtC2R5cDSKPk2V0kVb
+         gcpzUz4IAqa3xOVi6K5DrXHC68n48P/Mieg+hZEiTNmGm31INoY6qBcTdDLBUwIGmTKa
+         /5W6gjglCq4b10IisKvH+HvdLkhUO8qClZn/W6+ic7Tf8uDdSIK5JUnDzyb/UMIWD+YF
+         QTEA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1789740450; x=1790345250;
+        d=1e100.net; s=20260707; t=1789740452; x=1790345252;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=PdvT9XF5drvxnf/MfPum/Gi0QBj0faFgeFxRBLMV2Co=;
-        b=MKbM8sZrk0bu9QPP82YMssnvnvMPmzcFhb0cYFKVXiO8LMZJaXqhWS/E2RfVwEPdbg
-         YEmgD8SFT0b0WUfHzx+dWczx0QYOFg9zMs4KoUB/WEm4SLdfCWMprnI2AQzCcxU6sCFc
-         cuSqgLZNGjesit8g7Pq+frDOufrzSzQvMVhznUjxIWl8WjdWhdrplNPI68oUP/wMvmAL
-         OrLX06EF2u/kJyJ8/aWlAuI+dvstHqEgqnsJAA3wTI2WD9F1OEUmk++m9W+Xo5HlmLXZ
-         5jcQqKS4sEX5MMwIKUj1sHhQx7iPxwuwsky7KrWsSEWmw8omWe/nhh4QDlRXxEodGKVn
-         JmGA==
-X-Forwarded-Encrypted: i=1; AKwUvByiogzcDwKHR6WieTNEIczF5jiHIVCmuHQ3ITKYsKLLtAtgRNexnAdW48HAOm3T/vB2KeQUDTEuBTx4NDF+vSMT@vger.kernel.org
-X-Gm-Message-State: AFuF++kS/BcsLX0c4A4nSkIWcn+gol2pIDzFsr1DtWUU35cfqJmM2Yj1
-	XFNs2UKvLwjNd6oKD2amqQNrzXJDNz+qzRqKEyOhDYfFhQT1brHe9pEqdrQXxffzL5ve2W0sVt2
-	9bix6grUZWQ==
-X-Received: from dyu6.prod.google.com ([2002:a05:693c:8106:b0:32b:7182:c3b7])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:50cb:b0:39b:370e:c807
- with SMTP id 98e67ed59e1d1-39e54ea68e7mr6597683a91.17.1789740449376; Fri, 18
- Sep 2026 07:07:29 -0700 (PDT)
-Date: Fri, 18 Sep 2026 07:06:53 -0700
+        bh=p1wleqEAHJWzd5Fq3MOQlRkWIUYoY+UnMLT1UHUF+dc=;
+        b=2dtYRiLqqU4DIQjmeM8RjB0MJYfdH4N/gCuUpr8/ZYb9f1Yh+KlA6fPp5Oi1IXbaH+
+         sG4qaWKQ1YLHJMfsL0Guu+ot7nnukzwuW8GoLQths2AkAodjJ9mqQGvOOfCvD8hCBTxL
+         58f4FfrQwBXWJygymsLVhmTFXpxrVep9BwaY78CXTGvXKWHn9vMWDun6d9cy/LlwgMKl
+         IVlqy+ujrCM2XJflX1o/Vh+hAmS7dXam7xJ6yzHQm7+j0C2NKYfKTRJmZvmrXDBA+Uru
+         Ckatc3m8IQC9YcSrk35hpdTNwDDjBDuK3c9OVH3gnA0WxcxCXPlKJgu5iFuru/a6xiYG
+         4nrQ==
+X-Forwarded-Encrypted: i=1; AKwUvBx3wwQBzePSFV5LmlLX/yklRfR8Y4y1bxfz+c0xxmzxU05wmWbeeqH86M+kion/6ZYyM5KCy2QJt2KYE2t7QARE@vger.kernel.org
+X-Gm-Message-State: AFuF++kAekyM6Wrz0pdujbiHLdnz5hnU91pnExN3KLrUxWojlK/KAgRn
+	tYlTgZI/TVZZ6cRLprvKrpzv77DbrhRc+luiAoTqZGI/M53mk+zbtno2jWOZzeAMGghsx9cQyMQ
+	WumPNWWpfLA==
+X-Received: from dlea18-n1.prod.google.com ([2002:a05:701b:4212:10b0:143:9414:5d9])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:2784:b0:39e:6a81:5a93
+ with SMTP id 98e67ed59e1d1-39e6a815e65mr66845a91.39.1789740451537; Fri, 18
+ Sep 2026 07:07:31 -0700 (PDT)
+Date: Fri, 18 Sep 2026 07:06:54 -0700
 In-Reply-To: <20260918140659.2501976-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -60,8 +60,9 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <cover.1789662556.git.irogers@google.com> <20260918140659.2501976-1-irogers@google.com>
 X-Mailer: git-send-email 2.55.0.1082.g2b9226bbc0-goog
-Message-ID: <20260918140659.2501976-11-irogers@google.com>
-Subject: [PATCH v3 10/16] perf test common: Only disable probes in clear_all_probes
+Message-ID: <20260918140659.2501976-12-irogers@google.com>
+Subject: [PATCH v3 11/16] perf test probe_vfs_getname: Scope probe name to PID
+ and make non-exclusive
 From: Ian Rogers <irogers@google.com>
 To: irogers@google.com, acme@kernel.org, namhyung@kernel.org
 Cc: adrian.hunter@intel.com, james.clark@linaro.org, jolsa@kernel.org, 
@@ -69,79 +70,212 @@ Cc: adrian.hunter@intel.com, james.clark@linaro.org, jolsa@kernel.org,
 	mingo@redhat.com, peterz@infradead.org
 Content-Type: text/plain; charset="UTF-8"
 
-clear_all_probes() began by writing 0 to
-/sys/kernel/debug/tracing/events/enable, which disables every tracepoint
-on the system rather than just the probes the probe tests created. When
-tests run in parallel that also silences the events of any concurrent
-perf record, perf trace or ftrace session, so unrelated tests lose the
-events they are waiting for and fail.
+The probe name `vfs_getname` was hardcoded, causing collisions when
+tests ran concurrently. Furthermore, `cleanup_probe_vfs_getname()` used
+`perf probe -d probe:vfs_getname*`, deleting probes registered by other
+parallel tests.
 
-The write cannot simply be dropped. Clearing kprobe_events or
-uprobe_events is all or nothing: dyn_events_release_all() walks every
-probe of that type first and returns -EBUSY without removing any of them
-if it finds one that is still enabled, where enabled means TP_FLAG_TRACE
-from tracefs or TP_FLAG_PROFILE from a perf session. A probe left enabled
-through tracefs would therefore block the whole clear and leave stale
-probes behind to collide with the next run.
+Scope the probe name to the pid, and rename it to `getname_flags_$$` so
+that it no longer begins with "vfs_getname". perf trace calls
+evlist__add_vfs_getname(), which opens every event matching a hardcoded
+"probe:vfs_getname*" wildcard, so a perf trace run by any other test
+would otherwise pin this probe and make `perf probe -d` fail with
+-EBUSY. That also unblocks making the perf trace tests non-exclusive
+later in this series.
 
-Disable the probes and only the probes. The set to disable is taken from
-the kprobe_events and uprobe_events listings rather than from a guess at
-which groups perf uses, so it matches what dyn_events_release_all() is
-going to inspect: a probe an unrelated session left enabled in, say, the
-kprobes group would otherwise still abort the clear.
+Enumerate the probes to record and to delete from `perf probe -l`,
+matching `^probe:${vfs_getname}(_[[:digit:]]+)?$` exactly, rather than
+globbing on `${vfs_getname}*`. perf probe appends _1, _2, ... when
+getname_flags is inlined at more than one call site, so the variants do
+have to be matched, but since the name now ends in a pid a trailing
+wildcard would also match the probes of a test whose pid merely starts
+with this one's, e.g. 123 and 1234.
+
+Remove the `(exclusive)` tag from probe_vfs_getname.sh and
+record+script_probe_vfs_getname.sh so they run concurrently in pass 1.
+trace+probe_vfs_getname.sh has to stay exclusive: it is the one test
+that wants to be discovered by that wildcard, so it sets vfs_getname to
+a "vfs_getname_$$" name before sourcing the library, and would then pin
+its siblings' probes if it ran alongside them. A comment in the test
+records this.
+
+Delete the probes from an exit trap as well as on the way out. A pid
+scoped name is never seen again, so a run interrupted before
+cleanup_probe_vfs_getname() would leave its probes behind for good,
+accumulating a set per run. The fixed name at least meant the next run
+found, and went on to reuse, whatever the last one left.
 
 Assisted-by: Antigravity:gemini-3.1-pro
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/tests/shell/common/init.sh | 33 ++++++++++++++++++++++++++-
- 1 file changed, 32 insertions(+), 1 deletion(-)
+ .../perf/tests/shell/lib/probe_vfs_getname.sh | 51 +++++++++++++++++--
+ tools/perf/tests/shell/probe_vfs_getname.sh   |  3 +-
+ .../shell/record+script_probe_vfs_getname.sh  | 18 +++++--
+ .../tests/shell/trace+probe_vfs_getname.sh    |  9 ++++
+ 4 files changed, 71 insertions(+), 10 deletions(-)
 
-diff --git a/tools/perf/tests/shell/common/init.sh b/tools/perf/tests/shell/common/init.sh
-index cbfc78bec974..7c2ca74298ca 100644
---- a/tools/perf/tests/shell/common/init.sh
-+++ b/tools/perf/tests/shell/common/init.sh
-@@ -130,9 +130,40 @@ check_uprobes_available()
- 	test -e /sys/kernel/debug/tracing/uprobe_events
- }
+diff --git a/tools/perf/tests/shell/lib/probe_vfs_getname.sh b/tools/perf/tests/shell/lib/probe_vfs_getname.sh
+index 88cd0e26d5f6..4e915b6aefc8 100644
+--- a/tools/perf/tests/shell/lib/probe_vfs_getname.sh
++++ b/tools/perf/tests/shell/lib/probe_vfs_getname.sh
+@@ -1,15 +1,58 @@
+ #!/bin/bash
+ # Arnaldo Carvalho de Melo <acme@kernel.org>, 2017
  
-+# Disable every kprobe and uprobe event. The listings name each probe as
-+# "TYPE:GROUP/EVENT ARGS...", for instance "p:probe/vfs_read vfs_read", and
-+# events/GROUP/EVENT/enable is the switch for it.
-+disable_all_probes()
-+{
-+	PROBE_SPECS=`cat /sys/kernel/debug/tracing/kprobe_events \
-+		/sys/kernel/debug/tracing/uprobe_events 2> /dev/null |
-+		cut -d ' ' -f 1`
-+	for PROBE_SPEC in $PROBE_SPECS
-+	do
-+		case "$PROBE_SPEC" in
-+			*:*/*) ;;
-+			*) continue ;;
-+		esac
-+		PROBE_ENABLE="/sys/kernel/debug/tracing/events/${PROBE_SPEC#*:}/enable"
-+		test -e "$PROBE_ENABLE" && echo 0 > "$PROBE_ENABLE"
-+	done
+-perf probe -l 2>&1 | grep -q probe:vfs_getname
++# The name of the getname_flags probe added and removed below.
++#
++# It is scoped to the pid so that tests running in parallel do not collide,
++# and it deliberately does not start with "vfs_getname": perf trace calls
++# evlist__add_vfs_getname(), which opens everything matching the hardcoded
++# "probe:vfs_getname*" wildcard, so a perf trace running in another test would
++# otherwise pin this probe and make the 'perf probe -d' below fail with -EBUSY.
++#
++# trace+probe_vfs_getname.sh is the one test that does want to be found that
++# way, so it sets vfs_getname itself before sourcing this file, and is
++# (exclusive) as a result.
++: "${vfs_getname:=getname_flags_$$}"
++
++# Print the probes add_probe_vfs_getname() created. perf probe appends _1, _2,
++# ... when getname_flags is inlined at more than one call site, so there can be
++# several. Match them exactly rather than with a "${vfs_getname}*" glob: the
++# name ends in a pid, so such a glob would also match the probes of a test
++# whose pid merely starts with this one's, e.g. 123 and 1234.
++probes_vfs_getname() {
++	perf probe -l 2>/dev/null | awk '{print $1}' |
++		grep -E "^probe:${vfs_getname}(_[[:digit:]]+)?$"
 +}
 +
- clear_all_probes()
- {
--	echo 0 > /sys/kernel/debug/tracing/events/enable
-+	# Disable the probes before removing them. Writing to kprobe_events or
-+	# uprobe_events is all or nothing: dyn_events_release_all() walks every
-+	# probe of that type first and returns -EBUSY without removing any of
-+	# them if it finds one that is still enabled, which would leave stale
-+	# probes behind to collide with the next run. That covers probes this
-+	# test suite never created, so disable all of them and not just the
-+	# ones in the groups perf uses.
-+	#
-+	# Only probes are disabled. Writing to events/enable would also silence
-+	# the tracepoints of any perf record, perf trace or ftrace session
-+	# sharing the machine, which breaks those tests when they run in
-+	# parallel with this one.
-+	disable_all_probes
- 	check_kprobes_available && echo > /sys/kernel/debug/tracing/kprobe_events
- 	check_uprobes_available && echo > /sys/kernel/debug/tracing/uprobe_events
++[ -n "$(probes_vfs_getname)" ]
+ had_vfs_getname=$?
+ 
+ cleanup_probe_vfs_getname() {
+ 	if [ $had_vfs_getname -eq 1 ] ; then
+-		perf probe -q -d probe:vfs_getname*
++		local probe
++		for probe in $(probes_vfs_getname); do
++			perf probe -q -d "$probe"
++		done
+ 	fi
  }
+ 
++# Delete the probes however the test ends, not just when it runs to
++# completion. The name is scoped to the pid, so nothing that runs later
++# reuses or tidies up a probe an interrupted test left behind, and they
++# would accumulate one set per run. The fixed name used before was at least
++# picked up again by the next run.
++#
++# Tests may still call cleanup_probe_vfs_getname directly. Doing so leaves
++# nothing for probes_vfs_getname to find, so the trap below then does
++# nothing. A test needing cleanup of its own should call
++# cleanup_probe_vfs_getname from its own exit trap, since installing one
++# replaces this rather than adding to it.
++trap cleanup_probe_vfs_getname exit
++# Turn a signal into an ordinary exit so that the exit trap above runs. An
++# exit trap that returns leaves the exit status alone, so a test exiting 2
++# to skip still skips.
++trap 'exit 1' term int
++
+ add_probe_vfs_getname() {
+ 	add_probe_verbose=$1
+ 	if [ $had_vfs_getname -eq 1 ] ; then
+@@ -33,8 +76,8 @@ add_probe_vfs_getname() {
+ 			return 2
+ 		fi
+ 
+-		perf probe -q       "vfs_getname=getname_flags:${line} pathname=result->name:string" || \
+-		perf probe $add_probe_verbose "vfs_getname=getname_flags:${line} pathname=filename:ustring" || return 1
++		perf probe -q       "${vfs_getname}=getname_flags:${line} pathname=result->name:string" || \
++		perf probe $add_probe_verbose "${vfs_getname}=getname_flags:${line} pathname=filename:ustring" || return 1
+ 	fi
+ }
+ 
+diff --git a/tools/perf/tests/shell/probe_vfs_getname.sh b/tools/perf/tests/shell/probe_vfs_getname.sh
+index 5fe5682c28ce..05f1d50732b6 100755
+--- a/tools/perf/tests/shell/probe_vfs_getname.sh
++++ b/tools/perf/tests/shell/probe_vfs_getname.sh
+@@ -1,6 +1,5 @@
+ #!/bin/bash
+-# Add vfs_getname probe to get syscall args filenames (exclusive)
+-
++# Add vfs_getname probe to get syscall args filenames
+ # SPDX-License-Identifier: GPL-2.0
+ # Arnaldo Carvalho de Melo <acme@kernel.org>, 2017
+ 
+diff --git a/tools/perf/tests/shell/record+script_probe_vfs_getname.sh b/tools/perf/tests/shell/record+script_probe_vfs_getname.sh
+index 002f7037f182..1d4fb4a4fbfe 100755
+--- a/tools/perf/tests/shell/record+script_probe_vfs_getname.sh
++++ b/tools/perf/tests/shell/record+script_probe_vfs_getname.sh
+@@ -1,5 +1,5 @@
+ #!/bin/bash
+-# Use vfs_getname probe to get syscall args filenames (exclusive)
++# Use vfs_getname probe to get syscall args filenames
+ 
+ # Uses the 'perf test shell' library to add probe:vfs_getname to the system
+ # then use it with 'perf record' using 'touch' to write to a temp file, then
+@@ -17,22 +17,32 @@ skip_if_no_perf_probe || exit 2
+ 
+ # shellcheck source=lib/probe_vfs_getname.sh
+ . "$(dirname "$0")/lib/probe_vfs_getname.sh"
++# shellcheck disable=SC2154 # vfs_getname is assigned in lib/probe_vfs_getname.sh
+ 
+ record_open_file() {
+ 	echo "Recording open file:"
+ 	# Check presence of libtraceevent support to run perf record
+-	skip_no_probe_record_support "probe:vfs_getname*"
++	skip_no_probe_record_support
+ 	if [ $? -eq 2 ]; then
+ 		echo "WARN: Skipping test record_open_file. No libtraceevent support"
+ 		return 2
+ 	fi
+-	perf record -o ${perfdata} -e probe:vfs_getname\* touch $file
++	# Record every probe the inlining of getname_flags produced, naming
++	# them exactly rather than with a "${vfs_getname}*" glob, which would
++	# also match the probes of a test whose pid starts with this one's.
++	local events
++	events=$(probes_vfs_getname | paste -sd, -)
++	if [ -z "${events}" ] ; then
++		echo "FAIL: no ${vfs_getname} probe to record"
++		return 1
++	fi
++	perf record -o ${perfdata} -e "${events}" touch $file
+ }
+ 
+ perf_script_filenames() {
+ 	echo "Looking at perf.data file for vfs_getname records for the file we touched:"
+ 	perf script -i ${perfdata} | \
+-	grep -E " +touch +[0-9]+ +\[[0-9]+\] +[0-9]+\.[0-9]+: +probe:vfs_getname[_0-9]*: +\([[:xdigit:]]+\) +pathname=\"${file}\""
++	grep -E " +touch +[0-9]+ +\[[0-9]+\] +[0-9]+\.[0-9]+: +probe:${vfs_getname}(_[0-9]+)?: +\([[:xdigit:]]+\) +pathname=\"${file}\""
+ }
+ 
+ add_probe_vfs_getname
+diff --git a/tools/perf/tests/shell/trace+probe_vfs_getname.sh b/tools/perf/tests/shell/trace+probe_vfs_getname.sh
+index 7a0b1145d0cd..146305f4d549 100755
+--- a/tools/perf/tests/shell/trace+probe_vfs_getname.sh
++++ b/tools/perf/tests/shell/trace+probe_vfs_getname.sh
+@@ -10,6 +10,13 @@
+ # SPDX-License-Identifier: GPL-2.0
+ # Arnaldo Carvalho de Melo <acme@kernel.org>, 2017
+ 
++# This test must stay exclusive, and is the only one of the probe tests that
++# does: it does not name the event it uses. perf trace discovers it with the
++# hardcoded "probe:vfs_getname*" wildcard in evlist__add_vfs_getname(), so the
++# probe has to carry that prefix, and a parallel run of this test would then
++# also match, and pin, the probes of the other tests. The sibling tests avoid
++# all of this by using a name that the wildcard cannot reach.
++
+ # shellcheck source=lib/probe.sh
+ . "$(dirname $0)"/lib/probe.sh
+ 
+@@ -17,6 +24,8 @@ skip_if_no_perf_probe || exit 2
+ skip_if_no_perf_trace || exit 2
+ [ "$(id -u)" = 0 ] || exit 2
+ 
++# shellcheck disable=SC2034 # consumed by lib/probe_vfs_getname.sh
++vfs_getname="vfs_getname_$$"
+ . "$(dirname $0)"/lib/probe_vfs_getname.sh
+ 
+ trace_open_vfs_getname() {
 -- 
 2.55.0.1082.g2b9226bbc0-goog
 
