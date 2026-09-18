@@ -1,136 +1,171 @@
-Received: from mail-pl1-f198.google.com (mail-pl1-f198.google.com [209.85.214.198])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEBFE516149
-	for <linux-perf-users@vger.kernel.org>; Fri, 18 Sep 2026 16:30:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.198
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAC6F5111BB;
+	Fri, 18 Sep 2026 16:51:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789749012; cv=none; b=IJBthHXaBKvdI4RhbPJ8j41FlfEYrWStmRn6nfPAgHCZz8SQRibSKCGieJPyVzY9twmeknhyYJF/tL0nHaUbODhuiav+m1YXcRNss7/I0/Ki9e62KSEJbSC+rN0qYHhX3N4sLNqCdsWmZ4FwGt93nIDC0FGsrxx/Uh7XAY2oSzU=
+	t=1789750267; cv=none; b=suFd3CoMd39FSGwE8Rc5Ia9M5jtH0vanyjUiw6oD3ROhBNA8DOjwhiKYv2LnDOQR0Yt8qqWNdwIaBueMTFJmItO/8miBz37PjaWhV0g96CQKyBllRn0foRq6GHQg7JVoKx/Bv+x54d30HPU+auIk/TwWfjsyWMqEJj4JhYW9Ku0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789749012; c=relaxed/simple;
-	bh=O+UBJr3gFAX4TinUIRjZUyiXmreSVDUomUUj2Aj1ptQ=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=TdVLjO5OOlNGSqrqZQCOhy7M36NAKvc3QGmGrqBUZweFO8aYh5aWu4v+GUh5Mpj4q0UP0fHLrTXihAsMl0FCScKyuBpJFpONVZokP4jI3VkEja7ev1AfwBnTqBF/GbD/cwX7Mb++qcNxwhOJPoIlmmr1HDP4zKbqjet/rRlcmRo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=MOon/fPZ; arc=none smtp.client-ip=209.85.214.198
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1789750267; c=relaxed/simple;
+	bh=+aBtXKzSCgPnEdYubG3WgG6cEqUjkWTqNA6T8x2z/JY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=gq4vhA7xPMLEPWrOIwWpKoUaeSWGIRBNs5UoPx8biQr3Xmpp4zk8Hd5uvPl+gSP0rbCk5MuYyCGOVwP+GerNr1aXQWg5MNJ0zLacfoJQ7I6MvTMvxNj0weuUr4W1n+/lhvlmsRv9x5f83qyM53zSwQ5HvJ7H7SptcGNxLaX+wbA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=e+wjVE5F; arc=none smtp.client-ip=192.198.163.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="MOon/fPZ"
-Received: by mail-pl1-f198.google.com with SMTP id d9443c01a7336-2d94a158dc8so17215545ad.2
-        for <linux-perf-users@vger.kernel.org>; Fri, 18 Sep 2026 09:30:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1789749010; x=1790353810; darn=vger.kernel.org;
-        h=content-type:cc:to:from:subject:message-id:references:mime-version
-         :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=99erlflp2aCrSG4QDyPZLxsRtq+Uqca0X+Eqb36V21w=;
-        b=MOon/fPZWzbK/s3WHjXvAzIQ9LTqwWE80w3GUMp/X0GhYu2HpaX/fVRXrf6BFQC5zo
-         QJvQsMcLEysQByVbCfQbvBfcgVgSucfliU2rdKnYsifQSsYrbRPzF1W+e8jUbnY52JUo
-         I8AxZvXDCvmLSD6pW3cQy/GnXTOV6yRntFhBfHZgPY+3dppUWWZ4ga3GIO29dp9Xp+PB
-         deEDd6Lgl63SNJVuo3Jz7CLaejWRE7VyvDBYQg/FQKDCs6WmTjGxGAgORmWoK3lwPQHL
-         KtLHeKSDzfCeZ8rKoekDudFEfrzrh1zfZh+RHcfZfTbdjXpcfEyn1s8Fi0barWgZlHB1
-         FRNQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1789749010; x=1790353810;
-        h=content-type:cc:to:from:subject:message-id:references:mime-version
-         :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=99erlflp2aCrSG4QDyPZLxsRtq+Uqca0X+Eqb36V21w=;
-        b=Bz/0IbPiAlwlL+SjOua/BjMXNbyjEYHEiya+ZwFMoYKV2vXtsg0P8gI+sZ4kd4YBTQ
-         kYCHmyUA2X9o0qGojE77k54CR6KIcNcp1BjGl+Wj7jwtqk8LkE9Mp5CLzVLkjwuqlITV
-         y6Oq96Os7IWajXgQVzd+W/kPaigzlKgNFK7U0e27HN9YgpKDK3a6Pat50WY010ZKJ45p
-         SP8iAMJRuiKyiblWTkeqnhIDMP0FY8Htp1hdKm6vc2UNLrNT7zKBQ+7GroOp19gxX1EO
-         A+YLDN/FcYBf/MCX7hFFAEKm1G7t2BaUx6eLB5RYBPK8LEsyzEE1nSenAH55Ehaz9FM6
-         UCHA==
-X-Forwarded-Encrypted: i=1; AKwUvByeSgCvKaPkYHc9evuPMRjODfs4NeWyCl62zzb833gRjGi300wUKALP54eZ6y2VaDkkmfi3m2XQhKBn3UvHSUPq@vger.kernel.org
-X-Gm-Message-State: AFuF++kD5vV0eBbntBolmCFwmnVgEq3t0O2x6sf21cItOed93PGz+0ma
-	BDCm8e1Po8ig9NlD0ZoZlhbBRRA1+WUD6O5OYMObkMSCVYjgOgwuC/5kJWfoRuuqQEkBcds3lA+
-	7TXXS/Q==
-X-Received: from plw15.prod.google.com ([2002:a17:903:45cf:b0:2dd:b2b9:91a7])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:f792:b0:2dd:ad74:ac82
- with SMTP id d9443c01a7336-2ddb1bbff1emr67985325ad.29.1789749009925; Fri, 18
- Sep 2026 09:30:09 -0700 (PDT)
-Date: Fri, 18 Sep 2026 09:30:09 -0700
-In-Reply-To: <20260917102314.GI776954@noisy.programming.kicks-ass.net>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="e+wjVE5F"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1789750264; x=1821286264;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=+aBtXKzSCgPnEdYubG3WgG6cEqUjkWTqNA6T8x2z/JY=;
+  b=e+wjVE5FPxIuyTwQBGysRvM5roiDKVxb/D/dcEldzp7TZQaG8LrcPF0i
+   1cBzm0MoMtQW3FQfaBO7DHgz9s27z7I4avTL2GihzoT50nyfZckIClw5c
+   TXooWgvJNPpXmzi7uTCV8JU3iU3WS/G6uU4j1MOTDkG5ylhCUu3u+2wnk
+   IMogBAYKexRNUYhVk/VVNP9W/HgnOSDJJyLXASd3X37WSsqMm4/FpJwAe
+   /Wm3JIqjY+Si0HhqeUvhHEJbTL1XY6vG5bhiVoEuNYWvXIfPmIL8NhwoT
+   J9e0Q7s2C+c+LvFAtYaXJv/26h6pkVwwl44QOlsvs7s90H9xK/w7d2TMU
+   A==;
+X-CSE-ConnectionGUID: fAFeeeaIRaCgiOj25YnJUA==
+X-CSE-MsgGUID: QKcABtzrSSeIKZMHEs6OxQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11909"; a="90402578"
+X-IronPort-AV: E=Sophos;i="6.27,109,1787036400"; 
+   d="scan'208";a="90402578"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Sep 2026 09:51:01 -0700
+X-CSE-ConnectionGUID: HTONxJk7QjCAkIfhDbnncw==
+X-CSE-MsgGUID: vMQFgYDhSqqLfBfon8naFQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.27,109,1787036400"; 
+   d="scan'208";a="271161196"
+Received: from sghuge-mobl2.amr.corp.intel.com (HELO [10.125.109.117]) ([10.125.109.117])
+  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Sep 2026 09:50:57 -0700
+Message-ID: <f4fca2d4-97de-43ba-baab-24bb0225853d@intel.com>
+Date: Fri, 18 Sep 2026 09:50:56 -0700
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20260508231353.406465-1-seanjc@google.com> <anTB6ksbUs18FEf1@google.com>
- <aqLvXM5SPPlQePXs@google.com> <20260917102314.GI776954@noisy.programming.kicks-ass.net>
-Message-ID: <aq1nETs-EO0B7NLj@google.com>
-Subject: Re: [PATCH v3 0/9] perf/x86: Don't write PEBS_ENABLED on KVM transitions
-From: Sean Christopherson <seanjc@google.com>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, 
-	Namhyung Kim <namhyung@kernel.org>, Paolo Bonzini <pbonzini@redhat.com>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	James Clark <james.clark@linaro.org>, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, kvm@vger.kernel.org, 
-	Jim Mattson <jmattson@google.com>, Mingwei Zhang <mizhang@google.com>, 
-	Stephane Eranian <eranian@google.com>, Dapeng Mi <dapeng1.mi@linux.intel.com>
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RESEND PATCH v4 00/11] perf/cxlpmu: Misc sashiko raised issues
+ fixes
+To: Ian Rogers <irogers@google.com>
+Cc: linux-cxl@vger.kernel.org, linux-perf-users@vger.kernel.org,
+ jic23@kernel.org, will@kernel.org, mark.rutland@arm.com, dave@stgolabs.net,
+ robin.murphy@arm.com, icheng@nvidia.com,
+ Jonathan Cameron <jonathan.cameron@oss.qualcomm.com>
+References: <20260805155911.1304807-1-dave.jiang@intel.com>
+ <CAP-5=fXoVf5dGua_TJ5CMWFMRwtegiO3v2S96X28vRCfqO+N8Q@mail.gmail.com>
+From: Dave Jiang <dave.jiang@intel.com>
+Content-Language: en-US
+In-Reply-To: <CAP-5=fXoVf5dGua_TJ5CMWFMRwtegiO3v2S96X28vRCfqO+N8Q@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Thu, Sep 17, 2026, Peter Zijlstra wrote:
-> On Thu, Sep 10, 2026 at 10:56:44AM -0700, Sean Christopherson wrote:
-> > On Thu, Aug 06, 2026, Sean Christopherson wrote:
-> > > On Fri, May 08, 2026, Sean Christopherson wrote:
-> > > > Sean Christopherson (9):
-> > > >   perf/x86/intel: Ensure guest PEBS path doesn't set unwanted
-> > > >     PERF_GLOBAL_CTRL bits
-> > > >   perf/x86/intel: Don't write PEBS_ENABLED on host<=>guest xfers if CPU
-> > > >     has isolation
-> > > >   perf/x86/intel: Don't context switch DS_AREA (and PEBS config) if PEBS
-> > > >     is unused
-> > > >   perf/x86/intel: Make @data a mandatory param for
-> > > >     intel_guest_get_msrs()
-> > > >   perf/x86/intel: Invert names of intel_ctrl_{guest,host}_mask
-> > > >   perf/x86: KVM: Have perf define a dedicated struct for getting guest
-> > > >     PEBS data
-> > > >   perf/x86/intel: KVM: Handle cross-mapped PEBS PMCs entirely within KVM
-> > > >   KVM: VMX: Drop a redundant pmu->global_ctrl check when processing
-> > > >     pebs_enable
-> > > >   KVM: VMX: Only tell perf to enable PEBS counters for fully enabled
-> > > >     PMCs
-> > > > 
-> > > >  arch/x86/events/core.c            |  5 +-
-> > > >  arch/x86/events/intel/core.c      | 92 +++++++++++++++++++------------
-> > > >  arch/x86/events/intel/lbr.c       |  2 +-
-> > > >  arch/x86/events/perf_event.h      |  7 ++-
-> > > >  arch/x86/include/asm/kvm_host.h   |  9 ---
-> > > >  arch/x86/include/asm/perf_event.h | 11 +++-
-> > > >  arch/x86/kvm/vmx/pmu_intel.c      | 28 +++++++---
-> > > >  arch/x86/kvm/vmx/vmx.c            | 10 ++--
-> > > >  arch/x86/kvm/vmx/vmx.h            | 15 ++++-
-> > > >  9 files changed, 114 insertions(+), 65 deletions(-)
-> > > 
-> > > Ping.  This still applies on Linus' tree and against tip/master.
-> > 
-> > Ping again.  This fixes a real issue and IMO provides much-needed improvements
-> > for the KVM<=>perf APIs.
+
+
+On 9/15/26 3:43 PM, Ian Rogers wrote:
+> On Wed, Aug 5, 2026 at 9:02 AM Dave Jiang <dave.jiang@intel.com> wrote:
+>>
+>> [resend, mangled linux-cxl mailing addr]
+>>
+>> Teed off of Davidlohr's misc cxlpmu series [1]. I had Claude pick up all
+>> the sashiko raised issues and then continued multiple internal review
+>> iterations to pick up a number of fixes. I'm no CXL PMU or perf expert,
+>> but the fixes look reasonable to me AFAICT.
+>>
+>> Since v3:
+>> - 4/11 and 5/11 swapped, so the one-line MSI vector 0 fix comes before the
+>>   info->msi_vec rename and backports on its own (Robin).
+>> - 6/11: new patch, add the PMUs after configuring events.
+>> - 7/11: no code change; the commit message no longer overstates what
+>>   dropping IRQF_SHARED costs a device that shares a vector.
+>> - 8/11: quote the spec sentence that makes the freeze sticky, and correct
+>>   the claim about what the migration window leaves enabled (Richard,
+>>   sashiko-bot).
+>> - 10/11: split the probe-time overflow clear out, so this is back to the
+>>   single hunk Jonathan acked.
+>> - 11/11: new patch. Clear a counter's stale overflow status when starting
+>>   an event, which is where the reuse case bites; the probe clear moved
+>>   here from 10/11 (Richard).
+>>
+>> Since v2:
+>> - 1/11: check event_idx alongside counter_idx (Jonathan).
+>> - 2/11: use FIELD_MODIFY() rather than mask-then-OR (Jonathan).
+>> - 3/11: rewrite the rationale, no code change (Jonathan).
+>> - 5/11: new patch, split the MSI vector out of info->irq (Robin, Jonathan).
+>> - 7/11: drop IRQF_SHARED as well as adding IRQF_NOBALANCING, and retitle
+>>   (Jonathan, Robin).
+>> - 8/11: don't unfreeze if the PMU has been disabled meanwhile (Robin,
+>>   Jonathan).
+>> - 10/11: retitle, and drop the cxl_pmu_offline_cpu() hunk since that
+>>   dev_err() cannot be reached (Robin).
+>> - Dropped the old 9/9 that guarded cpumask_show() against cpumask_of(-1).
+>>   The init case was a false positive and neither reviewer liked the shape
+>>   of it (Jonathan, Robin).
+>>
+>> Since v1:
+>> - Updated 3/9 to address sashiko issue.
+>> - No other changes as sashiko only raised issue with pre-existing.
+>>
+>> Three follow-ups this series does not attempt:
+>>
+>> cxl_pmu_read() relies on local64_t being same-CPU, which is the only reason
+>> the interrupt has to be pinned at all. Moving prev_count and event->count
+>> off local64_t would make the affinity question moot, and Robin may have a
+>> view on whether that is worth doing.
+>>
+>> cxl_pmu_offline_cpu() still leaves on_cpu at -1 across a sleeping
+>> perf_pmu_migrate_context(), and still has an unreachable no-target branch.
+>> Both want removing, possibly on top of the generic PMU hotplug rework
+>> Jonathan pointed at [2].
+>>
+>> Firmware can leave a counter enabled with Global Freeze on Overflow but not
+>> Interrupt on Overflow, which stalls the whole CPMU with no interrupt to say
+>> so. Quiescing the block at probe needs two writes per counter to stay
+>> within the spec's rule about changing an enabled counter, so it belongs in
+>> its own patch.
+>>
+>> [1]: https://lore.kernel.org/linux-cxl/20260715191454.459673-1-dave@stgolabs.net/
+>> [2]: https://lore.kernel.org/linux-arm-kernel/cover.1784911757.git.robin.murphy@arm.com/
 > 
-> Right, finally got around to staring at them. How did you want them
-> merged?
 > 
-> AFAICT 2-4 have Fixes tags and should go in perf/urgent, while the rest
-> goes in perf/core?
+> Thanks Dave, I notice that everything seems ready to land for this
+> series. Is there anything pending? Sashiko mentioned pre-existing
+> issues.
 
-I was going to say "just put everything in perf/core", but given that 7.3 is the
-likely next LTS, I agree that we should patch 2 in particular into 7.3.  FWIW,
-after looking at this more, patch 1 is more of a fix than I realized (it too will
-have a Fixes tag on the next version).  It *should* be a glorified nop, but is a
-decent defense-in-depth change, so is probably worth putting into perf/urgent as
-well.  That would give a nice split of 1-4 to perf/urgent, and the rest to perf/core.
+Hi Ian. Nothing is pending. Don't plan to address the pre-existing issues in the current series. Will look at follow-ups once this series is picked up. Thanks!
 
-> /me tries and finds patch 5 doesn't apply.
+> 
+> Thanks,
+> Ian
+> 
+>> Dave Jiang (11):
+>>   perf/cxl: Program the requested event group on configurable counters
+>>   perf/cxl: Clear stale event fields before reprogramming a counter
+>>   perf/cxl: Fix the counter overflow delta fixup
+>>   perf/cxl: Accept an overflow interrupt on MSI message number 0
+>>   perf/cxl: Split the MSI vector out of info->irq
+>>   cxl/pci: Add the PMUs after configuring events
+>>   perf/cxl: Don't share the overflow interrupt, and keep it pinned
+>>   perf/cxl: Unfreeze counters after handling an overflow interrupt
+>>   perf/cxl: Validate the hardware-reported counter width
+>>   perf/cxl: Don't log through pmu.dev in the overflow interrupt handler
+>>   perf/cxl: Clear stale overflow status before using a counter
+>>
+>>  drivers/cxl/pci.c      |  11 +++--
+>>  drivers/perf/cxl_pmu.c | 107 ++++++++++++++++++++++++++++++++---------
+>>  2 files changed, 90 insertions(+), 28 deletions(-)
+>>
+>>
+>> base-commit: f5098b6bae761e346ebcd9da7f95622c04733cff
+>> --
+>> 2.54.0
+>>
+>>
 
-I'll send a v6.  After reading through all of this again, I agree with Dapeng[*]
-that it's worth fixing the flaw Sashiko pointed out (I'll tack on a patch).
-
-Thanks!
-
-[*] https://lore.kernel.org/all/a0fdbd96-3a4d-4a32-92ee-cf2b47db59db@linux.intel.com
