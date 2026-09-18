@@ -1,137 +1,101 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.6])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f195.google.com (mail-pl1-f195.google.com [209.85.214.195])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06C6433A6E2;
-	Fri, 18 Sep 2026 01:07:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.6
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4645E35B14E
+	for <linux-perf-users@vger.kernel.org>; Fri, 18 Sep 2026 03:24:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789693639; cv=none; b=P3L6f7gWD0nSmjpKOy6ZryyJg6xv5g3KwO7/qGTjIIJT6K8Yy17yFF9NNebUuV0SQykqBECGnHop/8HOkAXdKgfLCwShdUWoqg2HZ41xvXTWN41u/wcpWYl7Fc2QSMNwr8KVAu2IyvJckRXFhyo1jAyFpruNXHBdEilgHZGtQHk=
+	t=1789701842; cv=none; b=m43K9lJ61RNiyzMLC5zUXh0UeCgZF+CsADNmBaBPZgzWcu0wIUIIDVHLnXprLdRRi6Ex7lVzDqTxui9fNazmhOFFN2NG75bfbP1zTpliMWWI9wTAnSLCcICz/LgPrH++mo86pDViEHChAjcH74nMy4vK/wqA0haFuQ49m6SfcCs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789693639; c=relaxed/simple;
-	bh=jEy1qsPKGpZ3QCoInn+hoo5zhrDBOFfC/hMzI3kUBRo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=RQKPZssPx/omLgRl2wmg9+fyQL7Hzlhi1bAv3ViLtPeTgTZr+n3+/jE2qyVTj7HgVuwYVXx3G91C3t+loq1P5ftH39HhywjcsaOwP57GG3wLsocFPSDM8LMDJVyK2FgM6lcq5Ir3hjklgMQ4Rhquq8RN/y4pCw5SdJnNUoCu7rA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NG6/LZ0f; arc=none smtp.client-ip=192.198.163.6
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1789701842; c=relaxed/simple;
+	bh=LQ27SGnhSnnbMMToPntt2pVjSg4TacVokPJcFFAnBA8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=VrHf2vuxzIM9l7rMQooga4uQw+QGLGwqPtmM6q7uKIXnUgVobVWSlkX32TeHCUwz50anduOt8HY4FkkFw8U9ljnIdyWRO3ogB2ILYsHJv/mFYcXY2KbC3xmhp9ZZF7xEVgfJgR7dnsmi89BGP6Q9WNhIZunD7HTzrugTm59n4nU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Hw1pPjKJ; arc=none smtp.client-ip=209.85.214.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NG6/LZ0f"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1789693638; x=1821229638;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=jEy1qsPKGpZ3QCoInn+hoo5zhrDBOFfC/hMzI3kUBRo=;
-  b=NG6/LZ0f4iTd/8DTaXjRKKcsOgvtUVqgpApFkNC8cYPo8+21DdzBTS6/
-   6mwAdtVM67CSWb+AM847ZZ99Tyub27+8VQidywLoRTTUHQ9+KtYUSmlaZ
-   AHE2HFUNcsTbXL8xfCli8zZvns+PWpPm0OdU8ulRVMciFu6LEQZpRLxcK
-   /19tUMNNWFRAXD+R2hM+zZ5fY19BiykLeULopJBMH6rxE4yVICfN8Jf99
-   PTXB5O++AKlxw0WxpqPN94jefVRJFUdYBp+iMo8CjiSzqTN+g22Dlc6k7
-   cKoAXyttQs0Mgz7k0mDxKtGzFzwN1WUk6JZ1GIKXJicV61Z3s5J9lceF7
-   A==;
-X-CSE-ConnectionGUID: TK+sV2JVQzqDDH3VhIqslA==
-X-CSE-MsgGUID: wgdp4s/kR8qAFVgYQcD/YA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11905"; a="686641"
-X-IronPort-AV: E=Sophos;i="6.27,103,1787036400"; 
-   d="scan'208";a="686641"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by fmvoesa116.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Sep 2026 18:07:17 -0700
-X-CSE-ConnectionGUID: tDanl5A8QESGzcV9CZFbgw==
-X-CSE-MsgGUID: 1nE6uy8aR1agCFq2vQTZ/Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.27,103,1787036400"; 
-   d="scan'208";a="269834914"
-Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.241.239]) ([10.124.241.239])
-  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Sep 2026 18:07:13 -0700
-Message-ID: <f06759d7-3090-4dd5-a46d-32de96c7d95e@linux.intel.com>
-Date: Fri, 18 Sep 2026 09:07:11 +0800
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Hw1pPjKJ"
+Received: by mail-pl1-f195.google.com with SMTP id d9443c01a7336-2caced6038eso2273505ad.0
+        for <linux-perf-users@vger.kernel.org>; Thu, 17 Sep 2026 20:24:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1789701840; x=1790306640; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=I4VTKLFOwO7G28r5xSijwBkv4U4UCCM3cOPNTeBPbTY=;
+        b=Hw1pPjKJEVH2bA+EI/J8yI4S8oAS6kfHKZpZUYV3I5B9NRRPXN30IDLSEtM4uUcX3k
+         E5ScgLGkHQQ6D0i5SmaafP6dnWiddknn5SUhGe/9E+ps1ZlJ3WJ0+Zng84fIuzInPojo
+         uBrPJJUxDldbQb77cbxgxFNbeHX5SSsGeBBdpuAezltBRjnJCCy2y+OXdFTRUyIxSj+6
+         W8iaa/xn9WHVB2/427ElLimCpETEmGprYZQ+fszde0LxeTg+ciQWbopaDZMCEDeFOAXb
+         RrRcCKRkARwWyiXfpp5AswCECiUEkmjvumb0Ilr+wcgQcrkHSDUFiLqbl3aBMi81gzGH
+         DZGg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1789701840; x=1790306640;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=I4VTKLFOwO7G28r5xSijwBkv4U4UCCM3cOPNTeBPbTY=;
+        b=yV1Rhh4r/VAsBfFhpR/wg9nrKnCZIYSoqy33gxzDR43De+DrzHm+6M3keuXUbT5E0K
+         tLlMOtoFYJQu4BFi+tKNP9WJ2Mfpj+RWTdDXs5KhdbfCrKFzn+WVrQNgOKV/ld+RrF/N
+         ebqzZxBSo+f4nTcLw9CfFhBurJl3xBXaYjJBCeWj83Axsu695Yp0PTCv9GSbhpZdbU+f
+         4kkZOjkhgu837MSDUWV4JherslJBsFujor1oGBNbh1HfNN7/NF6QUIKGYNWG8SNc42Le
+         xoGD8qauCg9pJLCmA0aToZg4Qevf+W/kqxiVm5PMASCAV3bG8xtznRGsXQl/5KfpxIoy
+         lanw==
+X-Forwarded-Encrypted: i=1; AKwUvBwLVlj7cu4y4GEsiZCZ2jYqP5bd+J4FD+VRp4MieF7Kyeqjzo06qzU2qnIoYqQJiMxBkwdHE2/jMlV1JloNVit6@vger.kernel.org
+X-Gm-Message-State: AFuF++k23GCLayAXO0qWFiZC7GwqHrWjk/PDIy8dscR9U7d6ggQ7Nlij
+	FaRWP62YIIY6HXLuxdDqcEbF2vzR/gIWLHXIMHQsuF8AO9t+dnyg0xwu
+X-Gm-Gg: AYBFou2DxIfobn9+r6joeslvvr8wnoXntpxYRCW4YpJvfshokw3QxN5eUzK51MKgERK
+	TFiNwafJN5OJkx6JIH5kxbvxgJkUsvItnYH5A7Zhh/VTQwnYGkXpobA11xgZ7+IZB8vbpzVWu2m
+	j9yjpcQcYRpytsJAN2D0LHPYv6YogLSrupca8NZCeK3o36Y5xIsikIP7BC0tvY7MCAOMOvu+TLT
+	zbU8YESVbI7WD+ju6z1yx6owiOsN6aKPbJiivUASMnbav+aVwIgW3HCozqOvEigj35ygHB7GVi3
+	hinlrTu5mr8mjgDqNwKw8A7cAqaUZWbxgJjrJaG/HfCLXdsKZsMowEcQfeDo7vCEwk7/OzD6cAe
+	KyZV1FLRFGJYgy2JdZzPwc9T5UC4YqyoKaprOM/Uvm+NkR02jHyKgKp7+rKfsU7uMnHhhKYAseg
+	3RvO1u0+n5T6iNBpAJRQR2zG+hYwV/G00AVTNYXhHkd6v0GVqPquRNCoVbemQbM7jmn/D3SmqHG
+	Fna80yW6exa75pAXOziJ7iabgj8xO3LVZCrG/sDouZnxh9K9Gj2HdjFyHoA7wAD6jRI0HEQIsou
+	KuGyvC0IGbszE52yqW7P5XV/TWSjCw0gxyZLPEtdQ0juZHv3ClQCashG9DrTKj1o2g==
+X-Received: by 2002:a17:902:c410:b0:2dd:b442:ea48 with SMTP id d9443c01a7336-2ddb442ee33mr9125655ad.19.1789701840460;
+        Thu, 17 Sep 2026 20:24:00 -0700 (PDT)
+Received: from ethan-latitude5420.. (host-127-24.cafrjco.fresno.ca.us.clients.pavlovmedia.net. [68.180.127.24])
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-33c286d98e7sm591096eec.9.2026.09.17.20.23.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 17 Sep 2026 20:24:00 -0700 (PDT)
+From: Ethan Nelson-Moore <enelsonmoore@gmail.com>
+To: Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	James Clark <james.clark@linaro.org>,
+	linux-perf-users@vger.kernel.org
+Cc: Ethan Nelson-Moore <enelsonmoore@gmail.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>
+Subject: [PATCH] perf: remove unused empty help-unknown-cmd.h header
+Date: Thu, 17 Sep 2026 20:23:53 -0700
+Message-ID: <20260918032356.466938-1-enelsonmoore@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] perf: Fix null pointer access in
- is_include_guest_event()
-To: Vinay Belgaumkar <vinay.belgaumkar@intel.com>,
- Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Andi Kleen <ak@linux.intel.com>, Eranian Stephane <eranian@google.com>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
- Alexander Kanevskiy <alexander.kanevskiy@intel.com>
-References: <20260904181625.1394082-1-vinay.belgaumkar@intel.com>
-Content-Language: en-US
-From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-In-Reply-To: <20260904181625.1394082-1-vinay.belgaumkar@intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-Better update the prefix of short log to "perf/core:", other looks good to
-me. Thanks.
+tools/perf/util/help-unknown-cmd.h has been empty and unused ever since
+it was added to the kernel in commit 5feaac248a46 ("perf tools: Move
+help_unknown_cmd() to its own file"). Remove it.
 
-Reviewed-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
+Signed-off-by: Ethan Nelson-Moore <enelsonmoore@gmail.com>
+---
+ tools/perf/util/help-unknown-cmd.h | 0
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+ delete mode 100644 tools/perf/util/help-unknown-cmd.h
 
-On 9/5/2026 2:16 AM, Vinay Belgaumkar wrote:
-> A typical module unload occurring event when there is an active perf
-> connection leads to freeing of the pmu pointer. The call log is something
-> like:
->  ..
->  __pmu_detach_event
->  pmu_detach_event
->  pmu_detach_events
->  perf_pmu_unregister
->  ..
->
-> __pmu_detach_event() sets event->pmu to null. When the perf connection
-> finally is closed, the following stack trace is observed:
->
->  Oops: general protection fault, kernel NULL pointer dereference
->  ...
->  RIP: 0010:_free_event+0x3e/0x370
->  ...
->  Call Trace:
->  ...
->  perf_event_release_kernel+0x260/0x2d0
->  perf_release+0x12/0x20
->
-> A call to mediated_pmu_unaccount_event() inside _free_event() is the root
-> cause of this crash. Adding a check inside is_include_guest_event() ensures
-> we don't accidentally access a null pmu ptr. In addition to this, we will
-> now call mediated_pmu_unaccount_event() before clearing the pmu ptr so that
-> nr_include_guest_events counts are maintained correctly.
->
-> Fixes: eff95e170275 ("perf: Add APIs to create/release mediated guest vPMUs")
-> Cc: Alexander Kanevskiy <alexander.kanevskiy@intel.com>
-> Cc: Dapeng Mi <dapeng1.mi@linux.intel.com>
-> Assisted-by: Claude:Claude-Sonnet-5
-> Signed-off-by: Vinay Belgaumkar <vinay.belgaumkar@intel.com>
-> ---
->  kernel/events/core.c | 4 ++++
->  1 file changed, 4 insertions(+)
->
-> diff --git a/kernel/events/core.c b/kernel/events/core.c
-> index a6c8e38a3110..7777e82aad5e 100644
-> --- a/kernel/events/core.c
-> +++ b/kernel/events/core.c
-> @@ -6350,6 +6350,9 @@ static DEFINE_MUTEX(perf_mediated_pmu_mutex);
->  /* !exclude_guest event of PMU with PERF_PMU_CAP_MEDIATED_VPMU */
->  static inline bool is_include_guest_event(struct perf_event *event)
->  {
-> +	if (!event->pmu)
-> +		return false;
-> +
->  	if ((event->pmu->capabilities & PERF_PMU_CAP_MEDIATED_VPMU) &&
->  	    !event->attr.exclude_guest)
->  		return true;
-> @@ -13002,6 +13005,7 @@ static void __pmu_detach_event(struct pmu *pmu, struct perf_event *event,
->  	exclusive_event_destroy(event);
->  	module_put(pmu->module);
->  
-> +	mediated_pmu_unaccount_event(event);
->  	event->pmu = NULL; /* force fault instead of UAF */
->  }
->  
+diff --git a/tools/perf/util/help-unknown-cmd.h b/tools/perf/util/help-unknown-cmd.h
+deleted file mode 100644
+index e69de29bb2d1..000000000000
+-- 
+2.43.0
+
