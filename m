@@ -1,130 +1,157 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed2-f16.google.com (mail-ed2-f16.google.com [74.125.228.80])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A5932E5B02
-	for <linux-perf-users@vger.kernel.org>; Fri, 18 Sep 2026 07:32:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789716742; cv=none; b=uIyOjw9U8luyRNUkK5EiN3M/MZMGshTksg0zk1Vd0aq245luguQ9uHX2imAenMJ3W48EwvOYtL9kVogTkydfSNHVatR4NKYwdGxszU2YHaRYYMrMS3V5qSug92zS/wSEOqaMol4taWVRhY8DnPZDweM2JDuGQkuB/lkd5Yi8Rsk=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789716742; c=relaxed/simple;
-	bh=RyE9hSq5G/mQnRvr9/uieFfrjja4jVc60DhLDWsZpHw=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=SCs/BLZDWNPThEbQW7sRYWOvcXI48Y1RMVL4WM2eXvBg1WnuDzmOG1aT3o5/mIOFguEvJ9mM85/IdgoRt8UpnB1UkbRbUhTk/8VFssT5nLfeWHzg9HWSOFpj9xaUbsa4zQWAAkIrp42hWaZykpaWSyVZsUjRpe7CeNvh7onUg/I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VXBaUJhv; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B5303A7F4B
+	for <linux-perf-users@vger.kernel.org>; Fri, 18 Sep 2026 09:03:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.228.80
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1789722192; cv=pass; b=gOeDkZlYqOVQrEuAaiTKCvu/5BwURzHw71m6z1TDrYyZ6GV/fN72oilln5LJ9tPOTYhwofRrl+OO0WnkU6riTL03RnOLs8rTcqfszO/goOsbiVA79FXALTArRKnqVhiiFW0Dk69yaYZSSAZItm46eDzmDqhkQvVKe0fEy8Ku1MA=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1789722192; c=relaxed/simple;
+	bh=6TlD8wuSjPaN9GyN5XboLKvnCQX2Mh3eITva9cDh0w4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=mArdgXUYQSRfcb03G0xzJi4prVSXcbc+u8zKpsILp5dhlp0ozHqXA3g6RpTb9/zlL4mmwTGhOXDsKBucC8mpM3qkvJIH1YCV+Xl3RXpbmIjVBSmCWJw9IHbmDxWIxeRipsGCqfbKSkbz10e/2YUlI2hdhbvne3bDTmpijrja9Tw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ackwVSn4; arc=pass smtp.client-ip=74.125.228.80
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VXBaUJhv"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 999291F000FF;
-	Fri, 18 Sep 2026 07:32:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789716740;
-	bh=Fja9/04GiNT33YTJ5ZHFOs6EOKhcAL7Jpw6oZ+9mY5s=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=VXBaUJhvFPjt24bZEviE8zFprV+9XauqE3AuPbxvexWpxj4r2Cv+snaDIbhH/EcPo
-	 NXHq+M1BIGJoBaMRPBAqwkXPoWRY2oesBda/omuhmOsnZbvTRHo2r5eNsfnMR3GILC
-	 0TVOeXpmuLfuscYDp5mimwG9Q6reODEVMWANLpbX9zygiQoYwj5Q/wqE/9TJgU79VU
-	 bnHG+q5i+q00VamFlPDwMwcZuzUBR5ixk4JqF2/Ckhw48Ewa5AHbieW2ALZ0d9aLYd
-	 FYL99tCHQ9pz7lwPsH+1UJB4WxPLZSHJ2sgWgBUIXiJxOmf3olfB+1PRu6lrNdnq1l
-	 xq1xPcLLCP5qg==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v12 1/2] drivers/perf: riscv-iommu: add risc-v iommu pmu
- driver
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Zong Li" <zong.li@sifive.com>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260918072027.639239-2-zong.li@sifive.com>
-References: <20260918072027.639239-1-zong.li@sifive.com>
- <20260918072027.639239-2-zong.li@sifive.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Fri, 18 Sep 2026 07:32:20 +0000
-Message-Id: <20260918073220.999291F000FF@smtp.kernel.org>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ackwVSn4"
+Received: by mail-ed2-f16.google.com with SMTP id 4fb4d7f45d1cf-6a9984f9adcso799850a12.0
+        for <linux-perf-users@vger.kernel.org>; Fri, 18 Sep 2026 02:03:10 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1789722189; cv=none;
+        d=google.com; s=arc-20260327;
+        b=b1z+KBUhS/3yUCJ7SNG7XljCyZM74mXclhoLSz1aZLrdAP+5xtEyzAH4zgZWN1JdQ/
+         5e+OrwZSHvcG5UlUUTjzWwe0Y6REFj1POhNpSN3IafLAlhUuvQGzdhfuo0xCaLMAJgRZ
+         KIWNB8Bi+qlFWUwYxP7zOfcrjO0Z7OpcCu0hm5ql50WN8b/Oy6Sw4PtCiderOaoSe0H9
+         HrG4aSAKPuwf9iBLvKFIpGZq9HqYwCQqO2AwE7F7ZAb0No8p/D59h8XtZDV/wcdNUKnU
+         VXjn85KqymcrSKPqttYgDufF4T5TXzcraGsQDQFNV+SBUpqif5Jdo2m4PGLHN5d9kDwv
+         Y8WA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=ZjnOddhe/+6nZrX2o26xcB2cmch/7OUqQ9vJUDa25zA=;
+        fh=S86ddDpyNVItBIRnyXg6OqSz0rVeJ10ANhF9mUR+Bt0=;
+        b=UZn2kI4ATdvJ/rHyHm6/7GFcENz6YR/+BFZWPIdJ90n6DI2Tp01n6nDV8kh/GT1qiG
+         1s3xWc/ECoh4z2NSYCWO/9fApxEi+3VG+0lOP3xbFZBpI5/mvEwhZ5kuswE3MSzVSwsC
+         6Y56MYcL5DWrg32p2FVMf0EFB/1m0A/luMMiI4UJDXkfvm63kdpiP0xuqYjLVEkuOvoe
+         rdcQ1gq94CqtgW8e1mbq8X8Llo718RGde+FjD8Pi+uEFyFGUyT7jjoc60MlRtJwPebH/
+         KBRNRUsT4ImOEwZUK8rNmGs85pPw/T641kQG2R36RGU268Zlvmbn8OeZMflDFaFmjirW
+         XfoQ==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1789722189; x=1790326989; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=ZjnOddhe/+6nZrX2o26xcB2cmch/7OUqQ9vJUDa25zA=;
+        b=ackwVSn4WI8VtLcF8lb6kw/3eknAzvMlsGX8QlMCkh5ItgPC433rOEkyPO/tQmB2Gs
+         30PaneC2jERsDSLcheLSKZ1z/bg/5OgFTiJF85byv/UA9h4i2IOHcmO+KCQO5sEoNH39
+         5WdlsIsJBgxYJmDUHE6oKbRYWxI9RoKXJaVI0CuYJ4OgYdJhZuD2izy8QVvYy69yBcAj
+         r2K/O28kNQi9G9Ynrv3LIhRHefXhUL7mf/XhfruFxgd2MpqMG0UUfPVxg6RCI/Mo4wki
+         TuNothWQYZKYjA2l7vap2cXx7lyQQQiNbtqCztu4P9MbZkduKYa11C6jUhctNmBAuqXq
+         u1Tw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1789722189; x=1790326989;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=ZjnOddhe/+6nZrX2o26xcB2cmch/7OUqQ9vJUDa25zA=;
+        b=bFd6XWoS2MTYMg5MUnfqb5xMG2fGf/8aJJ4637C8w72KbRRt82HvK4FBynF6HU8ezl
+         jYnGkT6sJqocFi6nrwQtL9GHpcw2Bz3DR46j/gIengmpLIK58SFBKDE/h1Jr3VTsqET1
+         jHEsY7k3XvMhEg2hsu3pCBRbnQwq2M16VHW0AdbRpQytO7WCmykLTT2s43TPIzuIqOkA
+         NbONWwoG++Dw9g5vHYUrJUdUDlsZ6fCLXrpk2JwdtBjQejuInL/hRZYKGqNU6oa13bRG
+         qkZs/zu9mj3RIISz7d0CgJ0EKgx9Yq+bmDroK9j+/l4RPSUTt1ojY21mna4ar9znd+ST
+         0vFg==
+X-Forwarded-Encrypted: i=1; AKwUvBzznJZzJxcxxybTGyRaXg/RRe6mQo24A77GN47EBpSWIMPSMwIem9kxzw3TQIkuTySYrGDcRx82EcWeSaduyDg2@vger.kernel.org
+X-Gm-Message-State: AFuF++ktaKUFZslBM/xfK93DAlPXDwvX0bw8UZFGbsYW3SRpLm3nAp3O
+	64oPDivwHeOLoOVDawJ9NBPysiC70xa0edGQxg9AHPDStqqgyE5qsowFo5dugAeD4HChL0wVPFV
+	emdzidZnyeEeyTDrSiUcwVf7jlxb2XPkEDHYY8PTX
+X-Gm-Gg: AYBFou3A6J2lo+LhuzlRb8jPSkIxIkcqgp0UJCUKl+myvO+80FtD+KuFDq/v1zlE/KI
+	N63HqKwSQ61786A0tAVSt/zj78v/zlxq6yYYrvyJB0kZV/N8YKyQ4D8+o1rjH5CMi2MFMm7h4zn
+	E9uTOSSusigi0vQoCG2EJuLvZQbp1K/1JULjWOxtM2Yr+ESfW0sScakHQRXrMTmcH5drYIFPj+X
+	YsiV9L4EqnLQqezkmiGhf5cDmTI5rCPp+FKemVz+OV3xH+V3JqlwHlQz5eXTyPSqopLvqI0h2Nc
+	Wtrg1bgkGOOTZMIdciTGac5hRkcYZmJ+BWhI/dNEhLq9SjAlmkBFWuqA8cLg3uiff5PkIBDq9bZ
+	R3lIB+0GcvBuABgOLxUscsbC5WS0Q+I95tTlldjaR+mFF+hKMFbu/XiE=
+X-Received: by 2002:a17:907:9345:b0:c25:5a7:87f with SMTP id
+ a640c23a62f3a-c2a1547f75cmr189032966b.0.1789722187933; Fri, 18 Sep 2026
+ 02:03:07 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+References: <20260416033443.1492483-1-luogengkun2@huawei.com> <CAP-5=fW3yFPj2HuSZHntUNgze3UdY3eSsMditKMw4yWRCfg_CA@mail.gmail.com>
+In-Reply-To: <CAP-5=fW3yFPj2HuSZHntUNgze3UdY3eSsMditKMw4yWRCfg_CA@mail.gmail.com>
+From: Dmitry Vyukov <dvyukov@google.com>
+Date: Fri, 18 Sep 2026 11:02:56 +0200
+X-Gm-Features: AcwNN1Vl1kt_vkzCVFaTRtgcR8ATogeMjqtrHtAJDnxMsot94AuLZrOqOXFlq0M
+Message-ID: <CACT4Y+YXrH3_7Je2+8r9-VV-4Dc4WekRrz-9_Pe-Qj1tfFDtDg@mail.gmail.com>
+Subject: Re: [PATCH] perf/core: Fix race between perf_event_exit_task and perf_pending_task
+To: Ian Rogers <irogers@google.com>, elver@google.com
+Cc: Luo Gengkun <luogengkun2@huawei.com>, acme@kernel.org, namhyung@kernel.org, 
+	mark.rutland@arm.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org, 
+	adrian.hunter@intel.com, james.clark@linaro.org, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	peterz@infradead.org, mingo@redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
-s) to consider:
-- [High] perf: data corruption due to missing lock in pmu->read()
---
+On Tue, 15 Sept 2026 at 23:35, Ian Rogers <irogers@google.com> wrote:
+>
+> On Wed, Apr 15, 2026 at 8:08=E2=80=AFPM Luo Gengkun <luogengkun2@huawei.c=
+om> wrote:
+> >
+> > A race condition exists between perf_event_exit_task() and perf_pending=
+_task().
+> >
+> > During begin_new_exec(), perf_event_exit_task() may be called, and the
+> > PF_EXITING flag is not set on task. so perf_sigtrap() continues to exec=
+ute
+> > and triggers WARN_ON_ONCE(event->ctx->task !=3D current).
+> >
+> > To fix this problem, also check if the event->ctx->task is TASK_TOMBSTO=
+NE.
+> >
+> > Fixes: 97ba62b27867 ("perf: Add support for SIGTRAP on perf events")
+> > Signed-off-by: Luo Gengkun <luogengkun2@huawei.com>
+>
+> Dmitry, the description and patch look sensible. Could you take a look?
 
-commit 7fd0bb502a12a89e86b91b6b0afc0e10a1763701
-Author: Zong Li <zong.li@sifive.com>
+Marco, please take a look.
 
-drivers/perf: riscv-iommu: add risc-v iommu pmu driver
+I paged out all context long time ago... The code is too tricky to say
+if it's possible/not possible/fixed by the patch/not fixed by the
+patch looking at the diff.
+A test would be helpful. Will also prevent regression in the next release.
 
-This commit adds a new driver to support the RISC-V IOMMU PMU, an auxiliary
-device driver created by the parent RISC-V IOMMU driver. It implements
-hardware counter detection and separates the cycle counter from event
-counters. Raw spin locks are used to avoid CPU hotplug races and
-IRQCHIP_MOVE_DEFERRED issues.
 
-Link: https://lore.kernel.org/linux-riscv/20260618143634.7f3dd6c5@pumpkin/
 
-> diff --git a/drivers/perf/riscv_iommu_pmu.c b/drivers/perf/riscv_iommu_pm=
-u.c
-> new file mode 100644
-> index 0000000000000..ac4d225cca85f
-> --- /dev/null
-> +++ b/drivers/perf/riscv_iommu_pmu.c
-
-[ ... ]
-
-> +static void riscv_iommu_pmu_update(struct perf_event *event)
-> +{
-> +	struct hw_perf_event *hwc =3D &event->hw;
-> +	struct riscv_iommu_pmu *pmu =3D to_riscv_iommu_pmu(event->pmu);
-> +	u64 delta, prev, now;
-> +	u32 idx =3D hwc->idx;
-> +	u64 counter_mask =3D idx ? pmu->event_cntr_mask : pmu->cycle_cntr_mask;
-> +
-> +	/*
-> +	 * riscv_iommu_pmu_set_period() resets the hardware counter and
-> +	 * prev_count as two separate writes.
-> +	 * Pairing a "prev" read from before that reset with a "now" read from
-> +	 * after it would produce a nonsensical, possibly huge, delta.
-> +	 * Re-checking prev_count after the hardware read detects that torn
-> +	 * pairing and retries.
-> +	 */
-> +	do {
-> +		prev =3D local64_read(&hwc->prev_count);
-> +		now =3D riscv_iommu_pmu_get_counter(pmu, idx);
-> +	} while (prev !=3D local64_read(&hwc->prev_count) ||
-> +		 local64_cmpxchg(&hwc->prev_count, prev, now) !=3D prev);
-> +
-> +	delta =3D (now - prev) & counter_mask;
-> +	local64_add(delta, &event->count);
-> +}
-
-[ ... ]
-
-> +static void riscv_iommu_pmu_read(struct perf_event *event)
-> +{
-> +	riscv_iommu_pmu_update(event);
-
-[Severity: High]
-Does this missing pmu->lock expose the lockless update loop to a race with
-the IRQ handler?
-
-The commit message explicitly notes that due to PCI MSI/MSI-X on IMSIC
-setting IRQCHIP_MOVE_DEFERRED, the IRQ handler can run on a different CPU
-than the CPU the events are bound to.
-
-If the IRQ handler on CPU A calls riscv_iommu_pmu_set_period() concurrently,
-it writes the new hardware counter value and then updates prev_count. If an
-unprivileged user reads the perf event fd on CPU B, triggering this
-riscv_iommu_pmu_read() call without holding pmu->lock, the lockless loop in
-riscv_iommu_pmu_update() can read the old prev_count and the newly updated
-hardware counter.
-
-This would allow the cmpxchg to succeed before the IRQ handler updates
-prev_count, resulting in a massive bogus delta being calculated and added
-to the performance event count.
-
-> +}
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260918072027.6392=
-39-1-zong.li@sifive.com?part=3D1
+> Thanks,
+> Ian
+>
+> > ---
+> >  kernel/events/core.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > diff --git a/kernel/events/core.c b/kernel/events/core.c
+> > index 1f5699b339ec..3422900263fa 100644
+> > --- a/kernel/events/core.c
+> > +++ b/kernel/events/core.c
+> > @@ -7543,7 +7543,7 @@ static void perf_sigtrap(struct perf_event *event=
+)
+> >          * Both perf_pending_task() and perf_pending_irq() can race wit=
+h the
+> >          * task exiting.
+> >          */
+> > -       if (current->flags & PF_EXITING)
+> > +       if (current->flags & PF_EXITING || event->ctx->task =3D=3D TASK=
+_TOMBSTONE)
+> >                 return;
+> >
+> >         /*
+> > --
+> > 2.34.1
+> >
