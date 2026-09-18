@@ -1,83 +1,109 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f199.google.com (mail-pf1-f199.google.com [209.85.210.199])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E84649EC5E
-	for <linux-perf-users@vger.kernel.org>; Fri, 18 Sep 2026 21:35:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4EB452CCF8
+	for <linux-perf-users@vger.kernel.org>; Fri, 18 Sep 2026 21:39:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789767309; cv=none; b=hWqk38XrkLFDDzBviBuOXDqwzC0QQ9HYbLkB01morZ7KLs+dSXyN7/SzvXRx/JcmnEEb0xaaoZSRlbX/SwNiHlM+s8FmJdOKY0TmaM7BpXuAA5qwn4jiNrKZBNI+rIUBln7gvoivBrky17oXMeNrUKF+w+TDeGQr7AZX4/WYoTk=
+	t=1789767599; cv=none; b=LuXob1TOTTOTvzjbEA825sDrMfC+yXWHYhdmnzqT5cVmAmDzgtRGkWPyja5ZJZZV6hAF2vndxTb7Iu0UynPKe7jexFmS2h6VdpLCWMwx5HlGNXrPS7mo3sFymQ9cXboY32AhzlRQySFtQxS9fO2ndizTfdvLiNhWa6cAVvTDvf4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789767309; c=relaxed/simple;
-	bh=t0V4ayqde6mMvDnGDR/vCbypif1tErUeVBn0kAsFV+k=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=EnS6ZqVmgVubpIqrZ5qRLypIOejWEEYEzXdw42dfPdKYEm0PJZmSBQNRIy+6z+zSDkBSqQNVntPX6SKZ5zk9dr+sIFb6lQo6sePhWHBUt6AuvdL0zb61goQgTpRaAmiVeoLnuR7wk/3+zMdiQy6j8l3z/ahhrxRjRjgnJqddnC4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=h9HUjPlm; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1789767599; c=relaxed/simple;
+	bh=WDOpZXIVt9pQyPqTZpP0iCkjC1msyyjE54/nCw/Nx+Q=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=BWTXqWH5cVBk6lZlAdh3oMCyNunzAj/2Vh+ZbKFqfJ5TWy+vXNDjlR9k/daWzLgXkSkMlXSmUlo4KBdHdLCtlIVzP2j4gy9T9eQNVKGhzJ6Um+2OVkG9NWF9sxoHvXUvkE9Gwn3LA1dlTR0XDwPbfDqTj87TXj6ZZ+aC3fGC2D8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=J+5kGlVN; arc=none smtp.client-ip=209.85.210.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="h9HUjPlm"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DF9571F000FF;
-	Fri, 18 Sep 2026 21:35:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789767308;
-	bh=vS8Ze5bCybIK83xq+PWmll+y9h9/Ym5X8/og31y55NE=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=h9HUjPlmzcL/1Mp6L7V+lOxWTpxju2tivL7oa3osrnFcO0JEiBBZScmZSUwMcxgEz
-	 onKoo/f9zT1PJgDaM44h9EI4PWvpAP5dV0kwQ4pXl7xWSM5GaZ0rm+7wKtb/HNMkni
-	 7RwQgiGA8stHquXxIc7QB7H12JL1QWQ4OvpysXr8eKj+WORFElhHzp4fFrr1vhSrnT
-	 G0Ksu/bIXSlkKJhb1TY3+AZq/ykUBDMbcJdnIO5OgLY/ibYP50zEDBmQotSdUn8qhM
-	 F3iijx2jx3jEavFFKxPFdbf4688pRWCl3xY3KARhQI9uDI93dSLDVtemAb01dKZvR9
-	 kC6/sTalPR/EA==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v4 06/18] perf trace: Do not set unaugmented BPF program
- on sys_exit map
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Ian Rogers" <irogers@google.com>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260918211932.2966061-7-irogers@google.com>
-References: <20260918140659.2501976-1-irogers@google.com>
- <20260918211932.2966061-1-irogers@google.com>
- <20260918211932.2966061-7-irogers@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Fri, 18 Sep 2026 21:35:07 +0000
-Message-Id: <20260918213507.DF9571F000FF@smtp.kernel.org>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="J+5kGlVN"
+Received: by mail-pf1-f199.google.com with SMTP id d2e1a72fcca58-86a2639398cso2412055b3a.3
+        for <linux-perf-users@vger.kernel.org>; Fri, 18 Sep 2026 14:39:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1789767597; x=1790372397; darn=vger.kernel.org;
+        h=content-type:cc:to:from:subject:message-id:references:mime-version
+         :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=ZpQvTiCC5r8A/xyV/xvlxFgR0EjKycnB6uPqtIumT4U=;
+        b=J+5kGlVNnPw8UdeIxNUKqIKEEF+oj/ke5ZpZCJs8BFS4VUpDFq6AgovNTLK7dd86RP
+         OQhiKSi+0INL7w82hu1x7GEwNqnI6IWEJQt8Vm775MzZr33weiLTOHVbPJisma1vM/i1
+         4Bz/+V3YgENHpTK3JlRjRpPIgzXJy/0tH6C8iW4wKmX7DVv8/aTO6m/cIgrODGjWZuBf
+         jis+XLYyxJ+uGfxiRhyyi0C/9f3eULira0TzYbqbAgaIW/AJUs/i2NeW1HE90mkVOgOr
+         9wCGWSObeWtWkcan+NvUGWFCREQnuWSTjVY8rIJSTjH1fCQkrqE6ptbwQ7QOH3gohR4E
+         u0Pw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1789767597; x=1790372397;
+        h=content-type:cc:to:from:subject:message-id:references:mime-version
+         :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=ZpQvTiCC5r8A/xyV/xvlxFgR0EjKycnB6uPqtIumT4U=;
+        b=ERew432dwHd3upE7jyctVImGxxo0lRZyeG8PnvxHOpA6mDUKSBndZLnVVuNPYC464U
+         IdmO33AcVt/tv4dTQNydsJn3sr9gQV1OddMfFlR6ZD1Xth6L2S782QvVJ6w68PUjZUKs
+         iMN+E0/ncuZ9KBbmkSUkk2E7Pfc2YntALLxS8seO1ubr5q9QwoWInNcHiPUVaslXsjK1
+         ZGxQKWNasiCSt03LVfJEktDf1Wy002T0/dXpSliEyMsVkXrlkjgq/+++bxecKjG0NbmU
+         jDeLaQ38Ni5WJXvLPqsf7SlQjeDLPzkkPz6ci/TOGsymkTxDx2UbdnlKzWPqQjQsyq9u
+         8NeQ==
+X-Forwarded-Encrypted: i=1; AKwUvBxFOC1CVfxURIVGcnnmhGj7SpUUab5Etar9+VbZ33AKm0WhHXystg5Q6RPRdxdWqKhBzJd6nx0BLgJPNKUlki6B@vger.kernel.org
+X-Gm-Message-State: AFuF++mjRS1KH6tHyxQE99fwo5CLSI2/6BAsOyLAkntCLvTRhihni4eS
+	MBREnvwPv3XHP7rel5rmxHd7mu+Eqsv5KYSC37i96+1KRcBdMzx7cuzGuExoWOjPRaQKTZcFANT
+	QUAld+w==
+X-Received: from pfbgq53.prod.google.com ([2002:a05:6a00:3bf5:b0:862:f6b8:73f3])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:3e1a:b0:857:7337:5db4
+ with SMTP id d2e1a72fcca58-874dd9f1d44mr6950013b3a.18.1789767596925; Fri, 18
+ Sep 2026 14:39:56 -0700 (PDT)
+Date: Fri, 18 Sep 2026 14:39:56 -0700
+In-Reply-To: <aq2ZCFXMDnUWwCuY@dev-dsk-absandze-1c-663c31a8.eu-west-1.amazon.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+Mime-Version: 1.0
+References: <20260918160006.61816-1-absandze@amazon.de> <aq1j0aUKpr15AiqS@google.com>
+ <aq2ZCFXMDnUWwCuY@dev-dsk-absandze-1c-663c31a8.eu-west-1.amazon.com>
+Message-ID: <aq2vrDkgfPGeJ-wD@google.com>
+Subject: Re: [PATCH] KVM: x86/pmu: Don't retry a counter whose config was rejected
+From: Sean Christopherson <seanjc@google.com>
+To: Luka Absandze <absandze@amazon.de>
+Cc: "pbonzini@redhat.com" <pbonzini@redhat.com>, "sandipan.das@amd.com" <sandipan.das@amd.com>, 
+	"tglx@kernel.org" <tglx@kernel.org>, "mingo@redhat.com" <mingo@redhat.com>, "bp@alien8.de" <bp@alien8.de>, 
+	"dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>, "x86@kernel.org" <x86@kernel.org>, 
+	"hpa@zytor.com" <hpa@zytor.com>, "dwmw2@infradead.org" <dwmw2@infradead.org>, 
+	"kvm@vger.kernel.org" <kvm@vger.kernel.org>, 
+	"linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
 
-> In trace__init_syscalls_bpf_prog_array_maps(), the BPF program array map
-> for sys_exit (syscalls_sys_exit) was populated with the result of
-> trace__bpf_prog_sys_exit_fd().
->=20
-> When a syscall had no specific exit augmenter,
-> trace__find_syscall_bpf_prog() fell back to unaugmented_prog
-> (syscall_unaugmented). However, syscall_unaugmented is a sys_enter
-> program that outputs enter arguments to __augmented_syscalls__.
->=20
-> As a consequence, when an unaugmented syscall exited, sys_exit
-> tail-called syscall_unaugmented, which interpreted the exit arguments as
-> enter arguments and emitted a duplicate, corrupt sys_enter event into
-> __augmented_syscalls__ right as the syscall completed.
->=20
-> Fix this by:
-> 1. Returning NULL from trace__find_syscall_bpf_prog() when looking up exit
->    augmenters and none is found.
-> 2. Returning -1 from trace__bpf_prog_sys_exit_fd() when no exit program
->    is present.
-> 3. Only updating map_exit_fd when prog_fd >=3D 0.
-> 4. Clearing err =3D 0 when trace__bpf_sys_enter_beauty_map() returns
->    non-zero (indicating the syscall has no augmentable pointer arguments)
->    before continuing the loop, so a trailing run of such syscalls (e.g.
->    'perf trace -e close') does not leave err non-zero on return and abort
->    the session.
->=20
-> Assisted-by: Antigravity:gemini-3.1-pro
-> Signed-off-by: Ian Rogers <irogers@google.com>
+On Fri, Sep 18, 2026, Luka Absandze wrote:
+> On 2026-09-18 09:16, Sean Christopherson wrote:
+> > Hmm, would it instead make more sense to explicitly check for -EBUSY?  -EINVAL
+> > isn't the only fatal error code.
+> > 
+> > diff --git a/arch/x86/kvm/pmu.c b/arch/x86/kvm/pmu.c
+> > index a7d60c8785cd..5296ee8f32af 100644
+> > --- a/arch/x86/kvm/pmu.c
+> > +++ b/arch/x86/kvm/pmu.c
+> > @@ -681,7 +681,7 @@ void kvm_pmu_handle_event(struct kvm_vcpu *vcpu)
+> >                  * PMU refresh.  Don't make a new request as doing so can stall
+> >                  * the guest if reprogramming repeatedly fails.
+> >                  */
+> > -               if (reprogram_counter(pmc))
+> > +               if (reprogram_counter(pmc) == -EBUSY)
+> >                         set_bit(pmc->idx, pmu->reprogram_pmi);
+> >         }
+> > 
+> > Though I guess one could argue -ENOMEM is also transient?
+> 
+> I had contemplated this, but could not convince myself at a glance that
+> perf and KVM agreed on what constituted a transient error.
+> I have now concluded I was seeing ghosts :)
+> 
+> > E.g. this? (completely untested)
+> > [diff]
+> 
+> Tested against the fault described in the linked patch and selftests on
+> AMD Zen 3 (although I don't think there's much coverage in this regard).
+> 
+> If no other objections, would you be fine with taking the diff you
+> provided into the tree or would you prefer a v2?
 
-Sashiko has reviewed this patch and found no issues. It looks great!
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260918211932.2966=
-061-1-irogers@google.com?part=3D6
-
+Go ahead and send a v2, I want to see what Sashiko thinks.
