@@ -1,56 +1,56 @@
-Received: from mail-pj1-f70.google.com (mail-pj1-f70.google.com [209.85.216.70])
+Received: from mail-pj1-f69.google.com (mail-pj1-f69.google.com [209.85.216.69])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 477543E9F9E
-	for <linux-perf-users@vger.kernel.org>; Fri, 18 Sep 2026 06:32:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.70
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB57948F02E
+	for <linux-perf-users@vger.kernel.org>; Fri, 18 Sep 2026 06:33:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.69
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789713180; cv=none; b=pIr2gdT6h18CzEb0SNZ4PAMq+Qsw4HsUeD08imlHHtUxVK72UmZxNv2m5ipL+Dyf9lJTCKd23ZcYWxiZagSXKyV7hMrWoM1N4RwVH48D+C9Dru7Dr9DqFKpyNDvZsEFke+7gBGUa8RmvRiXurEGOlC4xpe6iUMOhrZev450sDIQ=
+	t=1789713182; cv=none; b=M7V3RWyYqi36QV8pRpGkXhTTM/GjDUp3ALG3HZM38Qd2auZgkfkRazTZhSeBiGOqcbSUZhyfRqgol0q+Oq9Nf5CcnEF3e3+P1kmlTfQG+h3PY3KKIVUG1s4lmVYiRxk6ZKQFNt2OtZv2y3nOKsNpSZ+MkT4q8bfsppSmzqi8ne8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789713180; c=relaxed/simple;
-	bh=6piizERCZzYOWq5jXV2XG9t3u22hRs7JWPhh6sg00Fc=;
+	s=arc-20240116; t=1789713182; c=relaxed/simple;
+	bh=TopP8I0l5bgoJ7wE/9/c2Q2h1c69lwUM5/uLGyU1urw=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=aFphQUjziNLRtSPJ4puS+bUnrMyuYyIzZVDLa3ZOSLPKrXbOpyMXE3tGszlT0qWo1GNlTEinQACamg97dx6g2V/lhajvJVlC47ShstJihkekxMDpgO+JLadtzG/eAurQWw4UHkO2M7PKwNtqwfX/IMo858cx1lZIG8hv9eBYQ+w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=EYsr0Jp9; arc=none smtp.client-ip=209.85.216.70
+	 To:Cc:Content-Type; b=tIS6rV17cQy7/j78lzSa/n65Y40/Rku+nBpW7VY0dSTjx7Up//QD/qcKos9GhXEPGgezcPTaj8jWuyLwWeAdCu/rm2Tk4C7zzQIuENEwhW5k3ud68iYdWVahzTq0ngdhpXW19NM86xmLbkub4mNdXCife7dcMb9WfTQnG95/Ifs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=nbOGpy6u; arc=none smtp.client-ip=209.85.216.69
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="EYsr0Jp9"
-Received: by mail-pj1-f70.google.com with SMTP id 98e67ed59e1d1-39deda201bcso918657a91.2
-        for <linux-perf-users@vger.kernel.org>; Thu, 17 Sep 2026 23:32:58 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="nbOGpy6u"
+Received: by mail-pj1-f69.google.com with SMTP id 98e67ed59e1d1-395543dc382so605559a91.0
+        for <linux-perf-users@vger.kernel.org>; Thu, 17 Sep 2026 23:33:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1789713178; x=1790317978; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1789713180; x=1790317980; darn=vger.kernel.org;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=4wzxGE12kx6/6XKkvEhnF8dFgypzNeSmABr+sADCRnA=;
-        b=EYsr0Jp9nt3XelH3o9nEh94Lruh9eZUsV3v3A6hY7EcWuwgGMcZdVZWN0WU/kiCPkr
-         qoBBwpE2P3hXRukbmTIqFxrUCAayE6cdSQ+VEebmUSCdOLTaMbLDYRB6JO8u5x/XkRRb
-         VbOqCGZv+RGiEC5CyjiPO9Jh0dADLZBluN8cufFsZqGYVigXqDQ2mDGJdyo+XzIuErZT
-         uWQdyUWDKnF9XL3LRAyNHeTSxvq7M4EOYpX21e6pohPxF6nxPwJh7rDtY/D4V+CNTZLq
-         d2SOqoBnC4ojs6LxNEoTf/QBz4Xud5rpeFTWH/saC7SGxbgA93HfXCQJd3gX+rco2a2j
-         /Uow==
+        bh=YrrBnDof9dzk7iz3soaxRSgz7WHkwxWpYdufXgugnk4=;
+        b=nbOGpy6uW8myzgPmuO/23ZW/xZBhgOpybuuxZY9xeJ7GmGYL5/MZkRuFSGkB4+8IO7
+         5v8/5wjuD/jRdWSzbn4INmeIW3rz8rKZdmcDu4+mpdKPNtzitoYObLuVk1SpjYzH6T3D
+         UyBAHht2Mb+YjqUHsf/xLzrAnL2mPSp6slui06JbQtceYaXZWLlQNHaCm/As73dNdX3P
+         ylQwTbytlfyPjMoZTw9o1VVnYKhYaY32cvuhW1GXk8Uzz1gbjxoMDr8v2LXxIwrbkQs6
+         iuIjK78YmuNCGI5YzZXO8qrabm25PWooFR6t+bkkpUq8Fe0BSWSaFOx8Nxp9uBU4ojxu
+         wZwA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1789713178; x=1790317978;
+        d=1e100.net; s=20260707; t=1789713180; x=1790317980;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=4wzxGE12kx6/6XKkvEhnF8dFgypzNeSmABr+sADCRnA=;
-        b=PMW2xHOOr7lj4lZUB9ahy/jhXQyzIH6ThnNqOB/iqCM0uiWoC92QZ9QZHzp0Is9Efu
-         VwOCQpbUfmDkTgymuVp+gU540ZPQMQTlYevdn9i4Iu6nZsjqc8bJ5/eWt30QLJYZIprq
-         JbkpwtHVQDHPIPlJYtLi6klV1gCe7FgXLtsvTCblrvm/5ze4A1dWoZpvjpzlHsFOpZQG
-         dGKOisNqFUntyIq9Wv7fMwr9xa3nw5uMUfpgSRl3/UeHdDqzGyL5XX36lLGqn9sZxkzZ
-         Rl3IOh/mXcLVG0q2JoBq4CWaXkhsaLykXYqsSE3/j5pgu/NYKsbDozcTkdBUoByJwaHD
-         bSyg==
-X-Forwarded-Encrypted: i=1; AKwUvBwTcIFHeXHCY0bxxDMJusppzLfBWZa48bfdpRlk7Kv9TznE6km5A/GypAxsiRIvmE9VqbFR0IEnQMhz7qfgGxgZ@vger.kernel.org
-X-Gm-Message-State: AFuF++l6eRAykXEF56SQnYc30R75EsJ+IT4OBIMHibq58FgMVmB6UQpe
-	UlHzqYEuU8ckr9bAjiFxdNb++szYDzT6uKsxXy/lAYlEEQfcW5rUU/D3Ah01PlP2SG2gKBBc3BI
-	s2qIuKmfjUA==
-X-Received: from dleb12-n2.prod.google.com ([2002:a05:701b:424c:20b0:13c:fe05:89a3])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:224c:b0:39b:61f1:8032
- with SMTP id 98e67ed59e1d1-39e54e7c18emr3356695a91.16.1789713178050; Thu, 17
- Sep 2026 23:32:58 -0700 (PDT)
-Date: Thu, 17 Sep 2026 23:32:47 -0700
+        bh=YrrBnDof9dzk7iz3soaxRSgz7WHkwxWpYdufXgugnk4=;
+        b=OLLDQORHjrRa29UskyxvbpZjwrVY7pDMES/mIiZvbBzgZwV69GqQPYkWp9j1cVDb/0
+         BRIregyhQjEe1DzS7r9e7sFHs4X06E345racr9wDvIELySs+ZgS3z32QZVbCdAN7by5H
+         6JKMYPxyZiFby0N1bSxVKnA/xbdFqVtJid6qblgLHFlSBrfEe0bDkx+YcPZCWzi0PKpq
+         XJTBScganzfgFHEEDJNtagns9xIDKTqWgvt57EUQvKhNdkC0+xKCK+AwXWADzjMx/mzP
+         jLHnc3wKAKa7Mx61dHPDR3frNH1xwHcJoG0oe7k8S3ilvFHyqPCdUVfC63UMl/jD0eqs
+         nnvQ==
+X-Forwarded-Encrypted: i=1; AKwUvBywJrczuottQUrLbuFGmHHHo0ZimaLSyvEiM1z4iVb/gBSbPht3EWrC1BRfbFveFj+a0hRsuHlhUavvquUEJmU8@vger.kernel.org
+X-Gm-Message-State: AFuF++kO5pWIREAFsYHlMp3167BgmMseu2x+ogt2XscAkgOBJOZngdxe
+	qxRzNr9ck2EBkazNxHqsGl8ozujYYTdkJG6w4q9xAk/s4atjKX5zP8RRfj4FUj5x3Go+852qC8J
+	Wya8X0XWToA==
+X-Received: from dlbpv7.prod.google.com ([2002:a05:7023:907:b0:144:bbd4:62e0])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:224c:b0:39d:f317:44cd
+ with SMTP id 98e67ed59e1d1-39e54eab3dbmr5464906a91.14.1789713180035; Thu, 17
+ Sep 2026 23:33:00 -0700 (PDT)
+Date: Thu, 17 Sep 2026 23:32:48 -0700
 In-Reply-To: <20260918063249.2172589-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -60,9 +60,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260918063249.2172589-1-irogers@google.com>
 X-Mailer: git-send-email 2.55.0.1082.g2b9226bbc0-goog
-Message-ID: <20260918063249.2172589-4-irogers@google.com>
-Subject: [PATCH v1 3/5] perf trace-event: Free the global trace_event when a
- command ends
+Message-ID: <20260918063249.2172589-5-irogers@google.com>
+Subject: [PATCH v1 4/5] perf trace: Free the host machine allocation
 From: Ian Rogers <irogers@google.com>
 To: Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Jiri Olsa <jolsa@kernel.org>, 
@@ -71,104 +70,45 @@ Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Jiri 
 	Ian Rogers <irogers@google.com>
 Content-Type: text/plain; charset="UTF-8"
 
-The tep handle behind trace_event__tp_format() is a process wide cache
-of the running kernel's tracepoint formats and nothing ever released
-it, as the comment above it had noted since the code was added.
+trace__symbols_init() creates the host machine with machine__new_host(),
+which allocates a struct machine, but trace__symbols__exit() released it
+with machine__exit(). That tears down the contents of the machine and
+leaves the allocation itself behind, so use machine__delete(), which
+does both. The replay path points trace->host at the machine embedded in
+the session and never reaches here, so nothing else is affected.
 
-Add trace_event__exit() and call it from run_builtin() next to the
-existing perf_config__exit(). By then the builtin has returned, so the
-tep_event pointers it handed out, such as the ones cached in
-evsel->tp_format, are no longer reachable.
+The leak was hidden from leak sanitizer because trace__symbols_init()
+passes the machine to trace_event__register_resolver(), which stores it
+as the private pointer of the global tep handle. The handle kept the
+machine reachable for as long as the process lived, so it was only once
+the handle started being freed that this was reported:
 
-Note that this does not silence every libtraceevent report under
-leak sanitizer. Parsing a print fmt drops a token inside the library
-itself, and as those allocations are not linked into the handle,
-freeing the handle cannot reclaim them.
+  Direct leak of 1256 byte(s) in 1 object(s) allocated from:
+      #1 __machine__new_host util/machine.c:135
+      #2 machine__new_host util/machine.c:155
+      #3 trace__symbols_init builtin-trace.c:2105
+      #4 trace__run builtin-trace.c:4759
+      #5 cmd_trace builtin-trace.c:6091
 
 Assisted-by: Antigravity:gemini-3.1-pro
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/perf.c             |  6 ++++++
- tools/perf/util/trace-event.c | 22 +++++++++++++++++-----
- tools/perf/util/trace-event.h |  1 +
- 3 files changed, 24 insertions(+), 5 deletions(-)
+ tools/perf/builtin-trace.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/perf/perf.c b/tools/perf/perf.c
-index 6c5baa285b13..d60bc929c257 100644
---- a/tools/perf/perf.c
-+++ b/tools/perf/perf.c
-@@ -32,6 +32,9 @@
- #include "util/build-id.h"
- #include "util/config.h"
- #include "util/debug.h"
-+#ifdef HAVE_LIBTRACEEVENT
-+#include "util/trace-event.h"
-+#endif
+diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
+index 5bd62b61287e..e1a4abf44673 100644
+--- a/tools/perf/builtin-trace.c
++++ b/tools/perf/builtin-trace.c
+@@ -2132,7 +2132,7 @@ static int trace__symbols_init(struct trace *trace, int argc, const char **argv,
  
- const char perf_usage_string[] =
- 	"perf [--version] [--help] [OPTIONS] COMMAND [ARGS]";
-@@ -379,6 +382,9 @@ static int run_builtin(const struct cmd_struct *p, int argc, const char **argv)
+ static void trace__symbols__exit(struct trace *trace)
+ {
+-	machine__exit(trace->host);
++	machine__delete(trace->host);
+ 	trace->host = NULL;
  
- 	status = p->fn(argc, argv);
- 	perf_config__exit();
-+#ifdef HAVE_LIBTRACEEVENT
-+	trace_event__exit();
-+#endif
- 	exit_browser(status);
- 
- 	if (status)
-diff --git a/tools/perf/util/trace-event.c b/tools/perf/util/trace-event.c
-index 826f75464171..819542a73f55 100644
---- a/tools/perf/util/trace-event.c
-+++ b/tools/perf/util/trace-event.c
-@@ -14,11 +14,9 @@
- #include "machine.h"
- 
- /*
-- * global trace_event object used by trace_event__tp_format
-- *
-- * TODO There's no cleanup call for this. Add some sort of
-- * __exit function support and call trace_event__cleanup
-- * there.
-+ * Global trace_event object used by trace_event__tp_format. It caches the
-+ * tracepoint formats of the running kernel for the lifetime of the command
-+ * and is released by trace_event__exit.
-  */
- static struct trace_event tevent;
- static bool tevent_initialized;
-@@ -75,6 +73,20 @@ void trace_event__cleanup(struct trace_event *t)
- 	t->plugin_list = NULL;
- }
- 
-+/*
-+ * Release the global trace_event. Called once the command is done, when the
-+ * tep_event pointers handed out by trace_event__tp_format are no longer in
-+ * use.
-+ */
-+void trace_event__exit(void)
-+{
-+	if (!tevent_initialized)
-+		return;
-+
-+	trace_event__cleanup(&tevent);
-+	tevent_initialized = false;
-+}
-+
- /*
-  * Returns NULL and sets errno on failure.
-  */
-diff --git a/tools/perf/util/trace-event.h b/tools/perf/util/trace-event.h
-index 720121c74f1d..1c342fce36bb 100644
---- a/tools/perf/util/trace-event.h
-+++ b/tools/perf/util/trace-event.h
-@@ -32,6 +32,7 @@ bool have_tracepoints(struct list_head *evlist);
- 
- int trace_event__init(struct trace_event *t);
- void trace_event__cleanup(struct trace_event *t);
-+void trace_event__exit(void);
- int trace_event__register_resolver(struct machine *machine,
- 				   tep_func_resolver_t *func);
- struct tep_event*
+ 	perf_env__exit(&trace->host_env);
 -- 
 2.55.0.1082.g2b9226bbc0-goog
 
