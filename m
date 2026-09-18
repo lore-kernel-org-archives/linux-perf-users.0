@@ -1,75 +1,87 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CE8D54705D
-	for <linux-perf-users@vger.kernel.org>; Fri, 18 Sep 2026 06:45:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D51249739B;
+	Fri, 18 Sep 2026 07:04:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789713946; cv=none; b=r9T/rKcIV1TvYbgLqZpFRTovmhnH1TA72PwqqBR94po6YUxRLzBAhvb4sVqDJQ2E8PhubaVDmZ67VkCksMW8u+oSknwIYsr7SkCgSTDoRAx1BFyunHcv7vUyud8qd3fhMqlr79fuNi43sb6eFi5c8wBKQJkfgfjSmT5tXyDDryw=
+	t=1789715068; cv=none; b=aJrcKYM93JwrYg89MLN14SJfmTGtAqtdagl7HQdL+ELv0jDp9WLmpWsWTPrUDhAUFmRN5lhfatRXfxK9M81Pz4o+5MT/04Ydij9P3XM2OEIK5gcrsddiwlHO/FUj2pPuuNzMAclKagUdkhunzEcNISAsh/HKW+17zsRo4IAGs5g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789713946; c=relaxed/simple;
-	bh=R8wBxpi/PInh0tcHx4DnPgwsvfjjx3LNdL5U9OCgzl0=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=trHfPAoQAw+VDlF2/KWXZlyMDnh1DoyF/o9BitIGR1h54hZGf3QPe/6pCvb7fbd2c5PrLW4WFs3k60Tmkf0Y7kS1VlEuEZB4VOjVsBKFysEkYjVPsej41/sAsPy770thUpneBjVJ27Ps9ZBkRTb/xNJ2dEAF/+8knTnOs9AIKcM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ItppT9qY; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1789715068; c=relaxed/simple;
+	bh=LjBulbBPS4HQ+2+ENfpTJJe7kppwctse0hq8ahYzkC0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=l1/PAnBDhBxN5PCTSVLL4qNBBpjGFiZngwOUewlZ5CtOn4dxeM1sQQJQgWbmnpn7RCs/7zHst63gzwywCee5GpfRLlztQWbiEm1LIRqJaXwSdmeRS+Ymq7rV+cMaeI+fBwyhZASBIH5mMOHhFRPmNrVG30o13S54gxG2hwzuJ9Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=P/LKqi2L; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ItppT9qY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8A4B31F000FF;
-	Fri, 18 Sep 2026 06:45:44 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="P/LKqi2L"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BDFB51F000FF;
+	Fri, 18 Sep 2026 07:04:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789713944;
-	bh=SESlCiovGynHUaPxAiAO1t3U9ZMiURn+9/5keSCOpQ8=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=ItppT9qY0AmzA2BfFSkmvtNE715bLIvCck6JTb7sb2eVdllLzsV04EDuKlAhsZmw0
-	 8TXOWYFN090FOybecleAtxuyGhFObRpkS5ObKn8r2OCa4UTskzhmeV+eyiXTHz1EqM
-	 UE+LAUM5GRtwHSTTbFgnzq1OeIweCrPkw2dEdCVn/5kAckPP17XFUkzB5wIdGpFXGP
-	 RH4l008yWd3t/wKwXyP1ZQ0hAbbuVdGuun1H5oMQMM8sCTLxMXZd7V+sgkPZPqxqeI
-	 81fiayesPnfT00+8/jrkhEWA9WOMkqTmzASQhoalQqSY957SXaMmkuKDtup7ExVHPo
-	 i8/hXLmNBlHDw==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v1 4/5] perf trace: Free the host machine allocation
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Ian Rogers" <irogers@google.com>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260918063249.2172589-5-irogers@google.com>
-References: <20260918063249.2172589-1-irogers@google.com>
- <20260918063249.2172589-5-irogers@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Fri, 18 Sep 2026 06:45:44 +0000
-Message-Id: <20260918064544.8A4B31F000FF@smtp.kernel.org>
+	s=k20260515; t=1789715066;
+	bh=h7MrO5kHfs9s9gpQkpstdAXZ31bb0e2lmCQcEqPnDlQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=P/LKqi2LqAKG2z2uozCnUWME8OGZ9RbIIELAHHwTXvdmqJNNhcB+P6+T4o1eQ8bff
+	 emGEtPWT0PNKHunU+e67JP0rY4/3Tgr8kyp6GDWN5FCOr2JHeXpqhM1RzrzJHkb9Ew
+	 brC89Jmwg9/AeYM1XEAol1WvLn6e+jB9Z2r8WtID8EVVzKhebhWUcARXEcnzhnt6y3
+	 r34S5YxuU4zLWiUFw7Zf3wQagohKhQK4vsCUZTFh3QOxASwCM3MANSEXJOLdQMuvVu
+	 1hUCQ3DHh2wB0WW/fnGCHvw1eL+/L2pnuOVar83DD1+R3aG+zlkAmPp42idM32aMKO
+	 /aI0Z7fDCQizQ==
+Date: Fri, 18 Sep 2026 00:04:24 -0700
+From: Namhyung Kim <namhyung@kernel.org>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: Harry Yoo <harry@kernel.org>,
+	Tim Menninger <tmenninger@everpuredata.com>, linux-mm@kvack.org,
+	Chuck Lever <cel@kernel.org>, linux-nfs@vger.kernel.org,
+	Jon Curley <jcurley@everpuredata.com>,
+	Eric Badger <ebadger@everpuredata.com>,
+	Vlastimil Babka <vbabka@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Hao Li <hao.li@linux.dev>, Christoph Lameter <cl@gentwo.org>,
+	David Rientjes <rientjes@google.com>,
+	Roman Gushchin <roman.gushchin@linux.dev>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	James Clark <james.clark@linaro.org>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [SLUB] nfs_page cmpxchg_double_fail and perf lock perturbation
+ on dual-socket NFS/RDMA
+Message-ID: <aqzieNW5GmhnU_EJ@z2>
+References: <20260916232227.4098143-1-tmenninger@everpuredata.com>
+ <aqvq8-6IJBDer90O@thinkstation>
+ <aqvy8NqRRRmUlxjR@thinkstation>
+ <20260917152959.GI4121339@noisy.programming.kicks-ass.net>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20260917152959.GI4121339@noisy.programming.kicks-ass.net>
 
-> trace__symbols_init() creates the host machine with machine__new_host(),
-> which allocates a struct machine, but trace__symbols__exit() released it
-> with machine__exit(). That tears down the contents of the machine and
-> leaves the allocation itself behind, so use machine__delete(), which
-> does both. The replay path points trace->host at the machine embedded in
-> the session and never reaches here, so nothing else is affected.
->=20
-> The leak was hidden from leak sanitizer because trace__symbols_init()
-> passes the machine to trace_event__register_resolver(), which stores it
-> as the private pointer of the global tep handle. The handle kept the
-> machine reachable for as long as the process lived, so it was only once
-> the handle started being freed that this was reported:
->=20
->   Direct leak of 1256 byte(s) in 1 object(s) allocated from:
->       #1 __machine__new_host util/machine.c:135
->       #2 machine__new_host util/machine.c:155
->       #3 trace__symbols_init builtin-trace.c:2105
->       #4 trace__run builtin-trace.c:4759
->       #5 cmd_trace builtin-trace.c:6091
->=20
-> Assisted-by: Antigravity:gemini-3.1-pro
-> Signed-off-by: Ian Rogers <irogers@google.com>
+Hello,
 
-Sashiko has reviewed this patch and found no issues. It looks great!
+On Thu, Sep 17, 2026 at 05:29:59PM +0200, Peter Zijlstra wrote:
+> On Thu, Sep 17, 2026 at 03:10:47PM +0100, Harry Yoo wrote:
+> > ... now I realize we need to add PERFORMANCE EVENTS SUBSYSTEM folks 
+> > as well ;-)
+> > 
+> > Hmm, sounds like perf lock is somehow triggering slab allocations
+> > and interfering the workload.
+> 
+> perf should not have runtime memory allocation, its build to run from
+> NMI context. It can allocate some memory on event creation and the like,
+> but once its on, there should be no more allocations happening.
 
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260918063249.2172=
-589-1-irogers@google.com?part=3D4
+Right, perf lock record command will save the event info to a ring
+buffer without allocation.  It may lose some events when the buffer is
+full though.
+
+Thanks,
+Namhyung
 
