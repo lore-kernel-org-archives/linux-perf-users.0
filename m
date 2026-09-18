@@ -1,56 +1,56 @@
-Received: from mail-pg1-f200.google.com (mail-pg1-f200.google.com [209.85.215.200])
+Received: from mail-pj1-f71.google.com (mail-pj1-f71.google.com [209.85.216.71])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8977552D2A2
-	for <linux-perf-users@vger.kernel.org>; Fri, 18 Sep 2026 21:20:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDF7152CCED
+	for <linux-perf-users@vger.kernel.org>; Fri, 18 Sep 2026 21:20:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.71
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789766420; cv=none; b=lT7DhwFQtdppIsL8/WwFdXBhs5tjo8ZDG8hQic7uxypfclBS33dAk0MdrLWDA0LEYqLT3qmDQshdx6MJyO/FAUJHN625NOsNpTGqitsfK25j7Q69npaj1TaL9/sbuFpfDkJM7MKGi1DzdCbcHTcEFkSsYNbv2GY5KyAM6po1AuU=
+	t=1789766426; cv=none; b=iag6Aj+NIT4NA7K+uNDHgODrfM2qhS4RNuRySVRbmOB/YZw9PE1CXCy8npquQ7wfFRvFRNgfkPuc1uxopUtrMkBKhNiErmKerOHfPVsoa9eWUXG34Hw57yXYY20kPigGAljgE4IV5FzdUqc0iwKHu26iCG/Vdy5r/VzeDeIab7s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789766420; c=relaxed/simple;
-	bh=3qyDKSUHoAXJBVvMweoPwov6DmzqcY9odxEwkd1kTIY=;
+	s=arc-20240116; t=1789766426; c=relaxed/simple;
+	bh=BsS5nsnN3cXmHtCEI7BqlglY2nFdt11YaoNoFK3pjrw=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=Ni6QmV5Ah+UK6fXG508D0YnFcbuSnjTXmLoGDPIeusYY4btlC4ZYrIQLaO9n/xv/R5Kdn0jl8xh2YExUOu+sBShWhIyz46l5qoSQcOcB3Nn0kWXoOLsbhOnVdVXBysRsipMewHA6JKSeOnJxRzV5va9bNx4I/6REiwYizUrgMd8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=bQXifnMc; arc=none smtp.client-ip=209.85.215.200
+	 To:Cc:Content-Type; b=SpxUOD+bslmxVMEdBLkGYUGG8vz6sWmlCT/gSF/nX0vgOmrcJ4yd3wM6JdAaKrhtrBhCCEPbiaC77OVhOF1KgasMaZY/QKuj6/uaKuRGsgxogIl1yD0Tz6HIc0qICVvZ59CxGuX23Tn1K6Op/1QModaBBFDp9t6Yc9LDVY9OkJI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=mr1XrMRW; arc=none smtp.client-ip=209.85.216.71
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="bQXifnMc"
-Received: by mail-pg1-f200.google.com with SMTP id 41be03b00d2f7-cc1eb205d31so1529795a12.2
-        for <linux-perf-users@vger.kernel.org>; Fri, 18 Sep 2026 14:20:18 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="mr1XrMRW"
+Received: by mail-pj1-f71.google.com with SMTP id 98e67ed59e1d1-396901263b6so2129209a91.2
+        for <linux-perf-users@vger.kernel.org>; Fri, 18 Sep 2026 14:20:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1789766418; x=1790371218; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1789766423; x=1790371223; darn=vger.kernel.org;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=PdvT9XF5drvxnf/MfPum/Gi0QBj0faFgeFxRBLMV2Co=;
-        b=bQXifnMcVTAEg4DOIqCxQNrZpSDmEZP2aWgIJ45KhcN3/GwCxBvBpH0BsYcxVHFyXu
-         Iv00W+S5UHB0a8Pn9r8yHDYg2CnD2kyGjNjud2KHgDWfLKTMEOwReiFZxu8626Kx6Zkb
-         5kx+1FPy/xDXNUqGuBmUj9mRwci9oCu1ejwW1rfZTOq8v16ezLYcS2YJuVlZtFjTL2OM
-         5YWTPt+UcvzZjtbeVuiLT7Qc3IZrWKcOb7Z4Y3+jfKmgffaADwFgeYKLJUz5kl/kQrfA
-         4D3ZBoOd0FWp5mb352rlylDF3U00jGRSndzreqvGC7Za7xph+EVEQDzE/PtrFJcjyobF
-         f3Zw==
+        bh=MEe9D2w+4Dyx7hV+twX4quw1LE1KttrX05zEETQXjKg=;
+        b=mr1XrMRWzNnz6REtqoTyADlBROCsnv5S1cqzeH4qhy2z/Xl/j3O03wLqmpzt3qKf1q
+         4WbOuUtmeZnBr56CdpT5LReFJpU3NAr1FwixOF+uNiVFo95Ea8A3ToaItb8UJpOMVfJ0
+         ryvZ+5np+z4mOkggzN5B7Ht/TIOAMeZMNmmosrxDUo/DZQF5JXy6rljAMSdOtNcLwDzD
+         mZHivr+1XgCPf/h9or/oupu+X57TL0sGFwSf3GMrJQx+cL6pz7hMP0WdRTz6cfZHig4v
+         kYMgNb50nzMumajcVe9sNaNk32qnrch1nM2UQwfsJ3S2y1iqNKmb/tW8yM6c2SXyDKaW
+         y5YQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1789766418; x=1790371218;
+        d=1e100.net; s=20260707; t=1789766423; x=1790371223;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=PdvT9XF5drvxnf/MfPum/Gi0QBj0faFgeFxRBLMV2Co=;
-        b=pXY9ICnW+WDl6QrpFNoSokvE2cFeSg6B+5RZ3UsSoW57Hw6eFtxa3iuXYBTtlZw+TB
-         BU8JXJl4BGlz/bLDR7HxvH/2j5YVi9wM0Uv3/4CONEdQdWlnI3nVjIbjRmZJ8zHU+Bje
-         2rCPZ2NznkaydXqXk2fhYcaCXhhAtzQV+TEw9ok26Qlixt9BvPI1i3N3Cd9xalnhphja
-         Ii0mTru6npGAV2K2tuLJc1vOexm4IJoyZ9BzHvzdFOLeBgaq+0HJDjCvxoaCB7LX/Z93
-         9Vh1jSvb/X5obDF3FYoJQxSnE0VRk5RCZBrQTDqRg63Tyl403cTWDsvh0MnFkYFTjXhc
-         ZKfQ==
-X-Forwarded-Encrypted: i=1; AKwUvBwKiOdHPZsWr/egsccO7tMbdB4Jx41KTp1rSj9zzl2PU6RzD04gtd2nCRKZlJQ/J2GMpgi76Sze5YXw82jvtx5j@vger.kernel.org
-X-Gm-Message-State: AFuF++nK4FNGMXIeDEwzSJwVCVUKBy1+nQPP683GvpaFCGnVdXPJcyrM
-	xM/pPuCsOTjmcwgeBynvq7Q9wP27XONXyuBdQ7p4rQ1qI+NrIR12caR3C4X6C7VRJ0yLLZwR4WH
-	XwmKdeFhDsA==
-X-Received: from dlec1-n1.prod.google.com ([2002:a05:701b:4281:10b0:144:cfa3:9a66])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:4c03:b0:39e:4c80:44ba
- with SMTP id 98e67ed59e1d1-39e54dcc3ccmr7595486a91.29.1789766417734; Fri, 18
- Sep 2026 14:20:17 -0700 (PDT)
-Date: Fri, 18 Sep 2026 14:19:26 -0700
+        bh=MEe9D2w+4Dyx7hV+twX4quw1LE1KttrX05zEETQXjKg=;
+        b=aFQ/gg5Z72VSgq+Hd381mV5h0a/hR+egxOIc0GGVs9INqgOyZBmtKSfftDnKIK4fRy
+         ICRUu+DvAiXfZ8g0oJbhn0THeJGOByODrvcgNEOYkru+J5AjgMNnKlLGMHPxyOepWStm
+         eF0YIG2XPHXO00XxBQIQOs5nRQpkFn5/qnb9V5wsM6byTiCjrVhpf3870B0YCs+tK9ww
+         eH9pmOqcNzgJOsk9Kb4iRTPc9IITI77X1ObSXFmgT/BoCUvmphPm1oA2qiuYgRxRNbQs
+         rO4ImV1yOKSVQDx4pCn7erFXpWnEylKgCm6raJC/V2RttKJOLe5f5Boxo4p3fAYExpwB
+         Rf0A==
+X-Forwarded-Encrypted: i=1; AKwUvBy8W2Odk+E1aA6ZTAddkOx6cV3P3nxn7ZoYz8CC7lNhuDS2m+Yvpy4jpbZIa+h3iP7pVi9ZCDUNHy3uRL9H0Scl@vger.kernel.org
+X-Gm-Message-State: AFuF++mcEtZ2Xgn4HszQBMaW8qqMp69TGZlIAwXrcasWRW3oWFRl93Zt
+	9ekSsHo29E7L5gaJp+Awx4C+Kj0eSz2ToTks9wXRyLvdlJkZ+zKR/+T9eROmQqqtMmEB0CL4dkL
+	PXs4KY6GuGA==
+X-Received: from dlbut1.prod.google.com ([2002:a05:7022:7e01:b0:144:ce33:3556])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:5251:b0:39e:6a7f:eeef
+ with SMTP id 98e67ed59e1d1-39e6a7ff09amr2805541a91.20.1789766422872; Fri, 18
+ Sep 2026 14:20:22 -0700 (PDT)
+Date: Fri, 18 Sep 2026 14:19:28 -0700
 In-Reply-To: <20260918211932.2966061-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -60,8 +60,9 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260918140659.2501976-1-irogers@google.com> <20260918211932.2966061-1-irogers@google.com>
 X-Mailer: git-send-email 2.55.0.1082.g2b9226bbc0-goog
-Message-ID: <20260918211932.2966061-13-irogers@google.com>
-Subject: [PATCH v4 12/18] perf test common: Only disable probes in clear_all_probes
+Message-ID: <20260918211932.2966061-15-irogers@google.com>
+Subject: [PATCH v4 14/18] perf test record+probe_libc_inet_pton: Scope event
+ to PID, add retries, and make non-exclusive
 From: Ian Rogers <irogers@google.com>
 To: irogers@google.com, acme@kernel.org, namhyung@kernel.org, 
 	Howard Chu <howardchu95@gmail.com>
@@ -70,79 +71,204 @@ Cc: adrian.hunter@intel.com, james.clark@linaro.org, jolsa@kernel.org,
 	mingo@redhat.com, peterz@infradead.org
 Content-Type: text/plain; charset="UTF-8"
 
-clear_all_probes() began by writing 0 to
-/sys/kernel/debug/tracing/events/enable, which disables every tracepoint
-on the system rather than just the probes the probe tests created. When
-tests run in parallel that also silences the events of any concurrent
-perf record, perf trace or ftrace session, so unrelated tests lose the
-events they are waiting for and fail.
+The uprobe name was not scoped to PID, and concurrent writes to
+`/sys/kernel/debug/tracing/uprobe_events` can occasionally return
+`-EBUSY` when another process holds the tracefs inode lock.
 
-The write cannot simply be dropped. Clearing kprobe_events or
-uprobe_events is all or nothing: dyn_events_release_all() walks every
-probe of that type first and returns -EBUSY without removing any of them
-if it finds one that is still enabled, where enabled means TP_FLAG_TRACE
-from tracefs or TP_FLAG_PROFILE from a perf session. A probe left enabled
-through tracefs would therefore block the whole clear and leave stale
-probes behind to collide with the next run.
+Scope the probe event name with `$$` (`inet_pton_$$=inet_pton`) and add
+a retry loop with backoff for uprobe addition. Drop the
+`(exclusive)` tag so the test can run in parallel during pass 1.
 
-Disable the probes and only the probes. The set to disable is taken from
-the kprobe_events and uprobe_events listings rather than from a guess at
-which groups perf uses, so it matches what dyn_events_release_all() is
-going to inspect: a probe an unrelated session left enabled in, say, the
-kprobes group would otherwise still abort the clear.
+A PID scoped probe is no longer cleaned up by any other test, so add an
+EXIT/TERM/INT trap to delete it, otherwise an interrupted run leaks the
+uprobe into the system. The trap is installed only after the root and
+IPv6 checks that `exit 2` to skip the test, as trap_cleanup() exits 1
+and would otherwise turn those skips into failures. Deletion enumerates
+the probes from `perf probe -l`, matching
+`^probe_libc:inet_pton_$$(_[[:digit:]]+)?$` exactly, rather than reading
+$event_name: a signal arriving after perf probe injected the uprobe but
+before the assignment completed would leave that variable empty and leak
+the probe, and an `inet_pton_$$*` glob would reach the probe of a test
+whose pid merely starts with this one's.
+
+While here use mktemp rather than mktemp -u for the temporary files:
+this test runs as root in a world writable /tmp, and predicting a name
+without creating it allows another user to win the race and plant a
+symlink. The perf.data check becomes -s rather than -e as mktemp now
+pre-creates an empty file.
+
+Pre-create the temporary files with mktemp rather than reserving names
+with mktemp -u, and bail out if mktemp fails. The emptiness check on
+the recorded data quotes its path for the same reason: unquoted, an
+empty value would leave [ ! -s ] testing the string "-s", which is
+true, so the negation would skip the failure path and the test would
+go on to pass without having recorded anything.
 
 Assisted-by: Antigravity:gemini-3.1-pro
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/tests/shell/common/init.sh | 33 ++++++++++++++++++++++++++-
- 1 file changed, 32 insertions(+), 1 deletion(-)
+ .../shell/record+probe_libc_inet_pton.sh      | 107 ++++++++++++++----
+ 1 file changed, 87 insertions(+), 20 deletions(-)
 
-diff --git a/tools/perf/tests/shell/common/init.sh b/tools/perf/tests/shell/common/init.sh
-index cbfc78bec974..7c2ca74298ca 100644
---- a/tools/perf/tests/shell/common/init.sh
-+++ b/tools/perf/tests/shell/common/init.sh
-@@ -130,9 +130,40 @@ check_uprobes_available()
- 	test -e /sys/kernel/debug/tracing/uprobe_events
+diff --git a/tools/perf/tests/shell/record+probe_libc_inet_pton.sh b/tools/perf/tests/shell/record+probe_libc_inet_pton.sh
+index eca629ee83f0..00367f26bfae 100755
+--- a/tools/perf/tests/shell/record+probe_libc_inet_pton.sh
++++ b/tools/perf/tests/shell/record+probe_libc_inet_pton.sh
+@@ -1,5 +1,5 @@
+ #!/bin/bash
+-# probe libc's inet_pton & backtrace it with ping (exclusive)
++# probe libc's inet_pton & backtrace it with ping
+ 
+ # Installs a probe on libc's inet_pton function, that will use uprobes,
+ # then use 'perf trace' on a ping to localhost asking for just one packet
+@@ -21,20 +21,30 @@ nm -Dg $libc 2>/dev/null | grep -F -q inet_pton || exit 254
+ event_pattern='probe_libc:inet_pton(_[[:digit:]]+)?'
+ 
+ add_libc_inet_pton_event() {
++	local attempts=0
++	while [ $attempts -lt 3 ]; do
++		event_name=$(perf probe -f -x $libc -a "inet_pton_$$=inet_pton" 2>&1 | \
++				awk -v ep="$event_pattern" -v l="$libc" '$0 ~ ep && $0 ~ \
++				("\\(on inet_pton in " l "\\)") {print $1}' | head -n 1)
++
++		if [ -n "$event_name" ]; then
++			return 0
++		fi
++		attempts=$((attempts + 1))
++		sleep 0.1
++	done
+ 
+-	event_name=$(perf probe -f -x $libc -a inet_pton 2>&1 | \
+-			awk -v ep="$event_pattern" -v l="$libc" '$0 ~ ep && $0 ~ \
+-			("\\(on inet_pton in " l "\\)") {print $1}' | head -n 1)
+-
+-	if [ $? -ne 0 ] || [ -z "$event_name" ] ; then
+-		printf "FAIL: could not add event\n"
+-		return 1
+-	fi
++	printf "FAIL: could not add event\n"
++	return 1
  }
  
-+# Disable every kprobe and uprobe event. The listings name each probe as
-+# "TYPE:GROUP/EVENT ARGS...", for instance "p:probe/vfs_read vfs_read", and
-+# events/GROUP/EVENT/enable is the switch for it.
-+disable_all_probes()
-+{
-+	PROBE_SPECS=`cat /sys/kernel/debug/tracing/kprobe_events \
-+		/sys/kernel/debug/tracing/uprobe_events 2> /dev/null |
-+		cut -d ' ' -f 1`
-+	for PROBE_SPEC in $PROBE_SPECS
-+	do
-+		case "$PROBE_SPEC" in
-+			*:*/*) ;;
-+			*) continue ;;
-+		esac
-+		PROBE_ENABLE="/sys/kernel/debug/tracing/events/${PROBE_SPEC#*:}/enable"
-+		test -e "$PROBE_ENABLE" && echo 0 > "$PROBE_ENABLE"
-+	done
+ trace_libc_inet_pton_backtrace() {
+ 
+-	expected=`mktemp -u /tmp/expected.XXX`
++	# Create the files rather than just reserving names with mktemp -u:
++	# this runs as root and /tmp is world writable, so a predictable name
++	# that is written to later can be pre-created as a symlink by an
++	# unprivileged user and used to clobber an arbitrary file.
++	expected=$(mktemp /tmp/expected.XXX) || return 1
+ 
+ 	echo "ping[][0-9 \.:]+$event_name: \([[:xdigit:]]+\)" > $expected
+ 	echo ".*inet_pton\+0x[[:xdigit:]]+[[:space:]]\($libc|inlined\)$" >> $expected
+@@ -50,8 +60,8 @@ trace_libc_inet_pton_backtrace() {
+ 		;;
+ 	esac
+ 
+-	perf_data=`mktemp -u /tmp/perf.data.XXX`
+-	perf_script=`mktemp -u /tmp/perf.script.XXX`
++	perf_data=$(mktemp /tmp/perf.data.XXX) || return 1
++	perf_script=$(mktemp /tmp/perf.script.XXX) || return 1
+ 
+ 	# Check presence of libtraceevent support to run perf record
+ 	skip_no_probe_record_support "$event_name/$eventattr/"
+@@ -61,9 +71,12 @@ trace_libc_inet_pton_backtrace() {
+ 	fi
+ 
+ 	perf record -e $event_name/$eventattr/ -o $perf_data ping -6 -c 1 ::1 > /dev/null 2>&1
+-	# check if perf data file got created in above step.
+-	if [ ! -e $perf_data ]; then
+-		printf "FAIL: perf record failed to create \"%s\" \n" "$perf_data"
++	# Check perf record actually wrote data. mktemp already created the
++	# file, so test that it is non-empty rather than that it exists. Quote
++	# the path: were it ever empty, [ ! -s ] would test the string "-s"
++	# instead and report success.
++	if [ ! -s "$perf_data" ]; then
++		printf "FAIL: perf record failed to write \"%s\" \n" "$perf_data"
+ 		return 1
+ 	fi
+ 	perf script -i $perf_data | tac | grep -m1 ^ping -B9 | tac > $perf_script
+@@ -97,21 +110,75 @@ trace_libc_inet_pton_backtrace() {
+ 	# even if the perf script output does not match.
+ }
+ 
++# Print the pid scoped uprobes this test may have created. perf probe appends
++# _1, _2, ... when the name is already taken, so match those too, but anchor
++# the match: an "inet_pton_$$*" glob would also match the probe of a test whose
++# pid merely starts with this one's, e.g. 123 and 1234.
++libc_inet_pton_events() {
++	perf probe -l 2>/dev/null | awk '{print $1}' |
++		grep -E "^probe_libc:inet_pton_$$(_[[:digit:]]+)?$"
 +}
 +
- clear_all_probes()
- {
--	echo 0 > /sys/kernel/debug/tracing/events/enable
-+	# Disable the probes before removing them. Writing to kprobe_events or
-+	# uprobe_events is all or nothing: dyn_events_release_all() walks every
-+	# probe of that type first and returns -EBUSY without removing any of
-+	# them if it finds one that is still enabled, which would leave stale
-+	# probes behind to collide with the next run. That covers probes this
-+	# test suite never created, so disable all of them and not just the
-+	# ones in the groups perf uses.
+ delete_libc_inet_pton_event() {
++	# Ask the kernel what is actually there rather than trusting
++	# $event_name: a signal arriving after perf probe injected the uprobe
++	# but before the assignment to event_name completed would otherwise
++	# leave the variable empty and leak the probe.
 +	#
-+	# Only probes are disabled. Writing to events/enable would also silence
-+	# the tracepoints of any perf record, perf trace or ftrace session
-+	# sharing the machine, which breaks those tests when they run in
-+	# parallel with this one.
-+	disable_all_probes
- 	check_kprobes_available && echo > /sys/kernel/debug/tracing/kprobe_events
- 	check_uprobes_available && echo > /sys/kernel/debug/tracing/uprobe_events
++	# Retry as the addition does. Deleting writes to uprobe_events just as
++	# adding does, so it can lose the same race with a concurrent test and
++	# fail with -EBUSY. Re-list rather than assume the delete worked, and
++	# only give up once the probes are really gone: the name is pid
++	# scoped, so one left behind here is never reused or overwritten by a
++	# later run and would sit in the kernel until reboot.
++	local attempts=0
++	local probe
++
++	while [ $attempts -lt 3 ]; do
++		for probe in $(libc_inet_pton_events); do
++			perf probe -q -d "$probe"
++		done
+ 
+-	if [ -n "$event_name" ] ; then
+-		perf probe -q -d $event_name
+-	fi
++		if [ -z "$(libc_inet_pton_events)" ]; then
++			return 0
++		fi
++
++		attempts=$((attempts + 1))
++		sleep 0.1
++	done
++
++	printf "WARN: could not delete event(s): %s\n" \
++		"$(libc_inet_pton_events | tr '\n' ' ')"
++	return 1
++}
++
++cleanup() {
++	rm -f ${perf_data} ${perf_script} ${expected}
++	delete_libc_inet_pton_event
++
++	trap - EXIT TERM INT
++}
++
++trap_cleanup() {
++	cleanup
++	exit 1
  }
+ 
+ # Check for IPv6 interface existence
+ ip a sh lo | grep -F -q inet6 || exit 2
+ [ "$(id -u)" = 0 ] || exit 2
+ 
++# Install the trap only now that the skips above are out of the way: it exits
++# 1, so arming it any earlier would turn an 'exit 2' skip into a failure.
++#
++# The event name is pid scoped, so unlike the old fixed name an orphan left
++# behind by an interrupted run is never overwritten by a later run: it would
++# stay in the kernel forever. Always clean up, including on a signal.
++trap trap_cleanup EXIT TERM INT
++
+ skip_if_no_perf_probe && \
+ add_libc_inet_pton_event && \
+ trace_libc_inet_pton_backtrace
+ err=$?
+-rm -f ${perf_data} ${perf_script} ${expected}
+-delete_libc_inet_pton_event
++cleanup
+ exit $err
 -- 
 2.55.0.1082.g2b9226bbc0-goog
 
