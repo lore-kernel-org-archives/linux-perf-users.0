@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53DA337C903;
-	Sat, 19 Sep 2026 06:37:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46EB43515DC;
+	Sat, 19 Sep 2026 06:37:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789799880; cv=none; b=FDHIlXQ84lopTSboo41iLMHa8d/skNRVFTIYIc+Tpv4tyPiAg23tp8aQ0KpAwi6boOpWqmhdaaKL9jnm765nAdNqBWvXVwke55kUpvJjVcTj/EQQ0m3YerN6MsHdngKiOu0jOzsX3GmukU4nMEHloiysR0T9RZ9VZQtY9HSpd8s=
+	t=1789799881; cv=none; b=JDNItco342oeot5h3R4IcSN/G6JLN4oXt0tduo+3vS8sGbATKAhPKQTzMtxKfZpUlkZt1l6tJGcqvkHjwMGB5M+qlE5lzpO7LLgIyiWNlWeFc12QjHzJ3ffO7MtCI9n7kX1vQIFOtNBrMLeFPkrVMLActl5GkwFf+Z8Ono58zPs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789799880; c=relaxed/simple;
-	bh=Hqk/Vspkt4I9EttbLbcBjp1rM/k7Q923m+aS37h9O6Y=;
+	s=arc-20240116; t=1789799881; c=relaxed/simple;
+	bh=c0oefu3ZRdD0J4clKz3RxVr35grHfxVn3NLlHA2WsM0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=UqXQGU5lllQSj7ZiP/2eR4bPPGNgTHDA2am7mS3Ysa9Yy58XwZRyPZYiTwANE7JVsaswayx2nDvfYG5sX/8qGMsccQTDUs7Rdk1xEdh1k5X+FjbxkdJdcttPblo7/vTNENF0ykhHVTpHLodo+3hoUpHwvKE2vrS4FSdv3KANvIs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UbHZ4xzN; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version; b=pe71sRT6o0jkz1KBPoGKUKYCZqkJfzAZWW3IZzeBlLoCVyqynj/t6cf67ckRYX/lPq2dD1pdeRMFgwS8amzH+jE0BQ0pTOOTaVMVrHDIjqgus+nywgLtXH0gGtDEbOL4PDO06GDbtUReWP0baRZBRiAXlpuzLVSfElc8ZZWMRtY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NtQ32Ve4; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UbHZ4xzN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 549C91F00899;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NtQ32Ve4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EB3471F0089A;
 	Sat, 19 Sep 2026 06:37:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789799874;
-	bh=O8MjfrwV8yk1Fc4uVimleJ3OeeIK7YwAhHdhnAUKz9Y=;
+	s=k20260515; t=1789799875;
+	bh=usnmYS7u84GLIEK0S3Ait9fvhPzlxHBW3emjiTs/iAE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=UbHZ4xzNQknoIQS2c96xgezlmaTGG4XhZ+gxedxVwgDYH+WXrHly2whiUspYTAf2R
-	 c2X8nJ4gHnxU8/vG7xI9TJQ6VgbNkpprfySGAeyrIGRaKMMgx+AG/6unogHtemMRG2
-	 8H2oZzjz3QEWFLlbglvg9Wqxp6SvSR7EbiS7PUcFFD5zAk8RPzWErMXd41+w67aj9p
-	 RspGr6RbfRAMiGgJ8H2SOVc8nTjh+ubmmAwxqxQaJJBRum4PTzGDSvX85Qjac3ZsKq
-	 QsE4K0urTYTOmFI1aHq3dzfcJ9sMyaQHoivve7MlQGgd/+y23Lt3ahmhAA3j98IT83
-	 UOkjjetndHQqQ==
+	b=NtQ32Ve4euPuPwXwGpowXS8fY4N53abcIpjUxE3+OpWbz281M4pI3EaVgJcPz2OVH
+	 qhcIJ9gDBCjtUPi4OwZw+jHLu/DQELzQ7hSaiDBiRYHxX121NTVSwui+NwkhWr4oZF
+	 FLZSL3cwNj+O5jDDjyIWK7UFkBra7j+7SiLLB+sKWnTkL5YNMP+TMGxL6ZA2yIweNE
+	 i7FV5yPbfERT/MCk+YFosUdU6cXSBPaUaACVEMC/Xxg/4in6dBDTKed9bZKva9YVGu
+	 DMXHfaVXXZXhX4i1ilR9yzXJdVxIKH0xBAIhUnOoDzmB6rWDgFLsMf/t8kukbSX72S
+	 HUgEGmtlXV0Bg==
 From: Namhyung Kim <namhyung@kernel.org>
 To: Arnaldo Carvalho de Melo <acme@kernel.org>
 Cc: Ian Rogers <irogers@google.com>,
@@ -40,9 +40,9 @@ Cc: Ian Rogers <irogers@google.com>,
 	Yanbo Zhao <yzhao62@ncsu.edu>,
 	Tengda Wu <wutengda@huaweicloud.com>,
 	Shuai Xue <xueshuai@linux.alibaba.com>
-Subject: [PATCH v5 3/4] perf annotate-data: Allow out-of-size access for flex-array types
-Date: Fri, 18 Sep 2026 23:37:44 -0700
-Message-ID: <20260919063745.48444-4-namhyung@kernel.org>
+Subject: [PATCH v5 4/4] perf annotate-data: Adjust type offset for flex-array
+Date: Fri, 18 Sep 2026 23:37:45 -0700
+Message-ID: <20260919063745.48444-5-namhyung@kernel.org>
 X-Mailer: git-send-email 2.55.0
 In-Reply-To: <20260919063745.48444-1-namhyung@kernel.org>
 References: <20260919063745.48444-1-namhyung@kernel.org>
@@ -54,179 +54,228 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Structs that have a flex array will have accesses beyond its original
-size as the array was declared as 0 sized.  For now, it just allow any
-offset bigger than the size.  It could be refined later.
+The flex array members are located beyond the original type size.  Also
+it needs to adjust the offset in an array to find a corresponding
+element using module operation.  Note that we focus on access to type and
+field, so array index is not important.
+
+Make sure to find a field name for flex arrays.
 
 Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 ---
- tools/perf/util/annotate-data.c | 63 ++++++++++++++++++---------------
- tools/perf/util/annotate-data.h |  2 ++
- 2 files changed, 36 insertions(+), 29 deletions(-)
+ tools/perf/util/annotate-data.c | 112 +++++++++++++++++++++++++++++---
+ tools/perf/util/annotate-data.h |   4 ++
+ 2 files changed, 107 insertions(+), 9 deletions(-)
 
 diff --git a/tools/perf/util/annotate-data.c b/tools/perf/util/annotate-data.c
-index 845a5d8c2b84b6a6..5dd6c6ec2d42451d 100644
+index 5dd6c6ec2d42451d..e9b58a3d587be45b 100644
 --- a/tools/perf/util/annotate-data.c
 +++ b/tools/perf/util/annotate-data.c
-@@ -7,6 +7,7 @@
- #include <errno.h>
- #include <stdio.h>
- #include <stdlib.h>
-+#include <string.h>
- #include <inttypes.h>
- #include <linux/zalloc.h>
- 
-@@ -249,8 +250,15 @@ static int __add_member_cb(Dwarf_Die *die, void *arg)
- 
- 	die_get_real_type(die, &die_mem);
- 
--	if (dwarf_aggregate_size(&die_mem, &size) < 0)
--		size = 0;
-+	if (dwarf_aggregate_size(&die_mem, &size) < 0 || size == 0) {
-+		if (dwarf_tag(&die_mem) == DW_TAG_array_type) { /* flex-array? */
-+			die_get_real_type(&die_mem, &die_mem);
-+			if (dwarf_aggregate_size(&die_mem, &size) < 0)
-+				size = 0;
-+		} else {
-+			size = 0;
-+		}
+@@ -226,7 +226,7 @@ static bool data_type_less(struct rb_node *node_a, const struct rb_node *node_b)
+ static int __add_member_cb(Dwarf_Die *die, void *arg)
+ {
+ 	struct annotated_member *parent = arg;
+-	struct annotated_member *member;
++	struct annotated_member *member, *prev;
+ 	Dwarf_Die die_mem;
+ 	Dwarf_Word size, loc, bit_size = 0;
+ 	Dwarf_Attribute attr;
+@@ -253,6 +253,7 @@ static int __add_member_cb(Dwarf_Die *die, void *arg)
+ 	if (dwarf_aggregate_size(&die_mem, &size) < 0 || size == 0) {
+ 		if (dwarf_tag(&die_mem) == DW_TAG_array_type) { /* flex-array? */
+ 			die_get_real_type(&die_mem, &die_mem);
++			member->is_flex_array = true;
+ 			if (dwarf_aggregate_size(&die_mem, &size) < 0)
+ 				size = 0;
+ 		} else {
+@@ -299,12 +300,19 @@ static int __add_member_cb(Dwarf_Die *die, void *arg)
+ 	member->size = size;
+ 	member->offset = loc + parent->offset;
+ 	INIT_LIST_HEAD(&member->children);
+-	list_add_tail(&member->node, &parent->children);
++
++	list_for_each_entry_reverse(prev, &parent->children, node) {
++		if (prev->offset <= member->offset)
++			break;
 +	}
++	list_add(&member->node, &prev->node);
  
- 	if (dwarf_attr_integrate(die, DW_AT_data_member_location, &attr)) {
- 		if (dwarf_formudata(&attr, &loc) != 0) {
-@@ -400,6 +408,7 @@ static struct annotated_data_type *dso__findnew_data_type(struct dso *dso,
- 	result->self.type_name = type_name;
- 	result->self.size = size;
- 	INIT_LIST_HEAD(&result->self.children);
-+	result->flex_array = die_has_flex_array(type_die);
- 
- 	if (symbol_conf.annotate_data_member)
- 		add_member_types(result, type_die);
-@@ -518,13 +527,30 @@ static bool is_better_type(Dwarf_Die *type_a, Dwarf_Die *type_b)
- 	return false;
+ 	tag = dwarf_tag(&die_mem);
+ 	switch (tag) {
+-	case DW_TAG_structure_type:
+ 	case DW_TAG_union_type:
++		member->is_union = true;
++		/* fall through */
++	case DW_TAG_structure_type:
+ 		die_find_child(&die_mem, __add_member_cb, member, &die_mem);
+ 		break;
+ 	default:
+@@ -333,20 +341,84 @@ static void delete_members(struct annotated_member *member)
+ 	}
  }
  
-+static enum type_match_result check_type_offset(Dwarf_Die *type_die, int offset)
++static struct annotated_member *find_flex_array(struct annotated_member *m)
 +{
-+	Dwarf_Word size;
++	struct annotated_member *child;
 +
-+	/* Get the size of the actual type */
-+	if (dwarf_aggregate_size(type_die, &size) < 0)
-+		return PERF_TMR_NO_SIZE;
++	if (list_empty(&m->children))
++		return NULL;
 +
-+	/* Minimal sanity check */
-+	if (offset < 0)
-+		return PERF_TMR_BAD_OFFSET;
++	if (m->is_union) {
++		list_for_each_entry(child, &m->children, node) {
++			if (child->is_flex_array)
++				return child;
++		}
++		list_for_each_entry(child, &m->children, node) {
++			struct annotated_member *grand_child;
 +
-+	if ((unsigned)offset >= size && !die_has_flex_array(type_die))
-+		return PERF_TMR_BAD_OFFSET;
++			grand_child = find_flex_array(child);
++			if (grand_child)
++				return grand_child;
++		}
++		return NULL;
++	}
 +
-+	return PERF_TMR_OK;
++	child = list_last_entry(&m->children, struct annotated_member, node);
++	if (child->is_flex_array)
++		return child;
++
++	return find_flex_array(child);
 +}
 +
- /* The type info will be saved in @type_die */
- static enum type_match_result check_variable(struct data_loc_info *dloc,
- 					     Dwarf_Die *var_die,
- 					     Dwarf_Die *type_die, int reg,
- 					     int offset, bool is_fbreg)
++static struct annotated_member *get_flex_array_member(struct annotated_data_type *adt)
++{
++	return find_flex_array(&adt->self);
++}
++
+ static int fill_member_name(char *buf, size_t sz, struct annotated_member *m,
+-			    int offset, bool first)
++			    int offset, bool first, bool has_flex_array)
  {
--	Dwarf_Word size;
- 	bool needs_pointer = true;
- 	Dwarf_Die sized_type;
+ 	struct annotated_member *child;
++	bool found = false;
++	int len;
  
-@@ -555,15 +581,7 @@ static enum type_match_result check_variable(struct data_loc_info *dloc,
- 	else
- 		sized_type = *type_die;
+ 	if (list_empty(&m->children))
+ 		return 0;
  
--	/* Get the size of the actual type */
--	if (dwarf_aggregate_size(&sized_type, &size) < 0)
--		return PERF_TMR_NO_SIZE;
+ 	list_for_each_entry(child, &m->children, node) {
+-		int len;
 -
--	/* Minimal sanity check */
--	if ((unsigned)offset >= size)
--		return PERF_TMR_BAD_OFFSET;
--
--	return PERF_TMR_OK;
-+	return check_type_offset(&sized_type, offset);
+ 		if (offset < child->offset || offset >= child->offset + child->size)
+ 			continue;
+ 
++		found = true;
++		break;
++	}
++
++	if (!found && has_flex_array) {
++		/*
++		 * It may have an intermediate struct that has another struct that
++		 * contains a flex array.  In that case, the outer struct itself is
++		 * has no array and the size is less than the offset so the above
++		 * logic won't find the outer struct at the offset.
++		 */
++		child = find_flex_array(m);
++		if (child == NULL || offset < child->offset)
++			return 0;
++
++		/* find the immediate child that includes a flex array */
++		if (m->is_union) {
++			list_for_each_entry(child, &m->children, node) {
++				if (child->is_flex_array || find_flex_array(child)) {
++					found = true;
++					break;
++				}
++			}
++		} else {
++			child = list_last_entry(&m->children, struct annotated_member, node);
++			found = true;
++		}
++	}
++
++	if (found) {
+ 		/* It can have anonymous struct/union members */
+ 		if (child->var_name) {
+ 			len = scnprintf(buf, sz, "%s%s",
+@@ -356,15 +428,18 @@ static int fill_member_name(char *buf, size_t sz, struct annotated_member *m,
+ 			len = 0;
+ 		}
+ 
+-		return fill_member_name(buf + len, sz - len, child, offset, first) + len;
++		return fill_member_name(buf + len, sz - len, child, offset, first,
++					has_flex_array) + len;
+ 	}
++
+ 	return 0;
  }
  
- struct type_state_stack *find_stack_state(struct type_state *state,
-@@ -1113,7 +1131,6 @@ static enum type_match_result check_matching_type(struct type_state *state,
- 						  struct disasm_line *dl,
- 						  Dwarf_Die *type_die)
+ int annotated_data_type__get_member_name(struct annotated_data_type *adt,
+ 					 char *buf, size_t sz, int member_offset)
  {
--	Dwarf_Word size;
- 	u32 insn_offset = dl->al.offset;
- 	int reg = dloc->op->reg1;
- 	int offset = dloc->op->offset;
-@@ -1167,12 +1184,7 @@ static enum type_match_result check_matching_type(struct type_state *state,
- 		else
- 			sized_type = *type_die;
+-	return fill_member_name(buf, sz, &adt->self, member_offset, /*first=*/true);
++	return fill_member_name(buf, sz, &adt->self, member_offset, /*first=*/true,
++				adt->flex_array);
+ }
  
--		/* Get the size of the actual type */
--		if (dwarf_aggregate_size(&sized_type, &size) < 0 ||
--		    (unsigned)dloc->type_offset >= size)
--			return PERF_TMR_BAD_OFFSET;
--
--		return PERF_TMR_OK;
-+		return check_type_offset(&sized_type, dloc->type_offset);
- 	}
+ static struct annotated_data_type *dso__findnew_data_type(struct dso *dso,
+@@ -1741,6 +1816,7 @@ struct annotated_data_type *find_data_type(struct data_loc_info *dloc)
+ {
+ 	struct dso *dso = map__dso(dloc->ms->map);
+ 	Dwarf_Die type_die;
++	struct annotated_data_type *result;
  
- 	if (state->regs[reg].kind == TSR_KIND_POINTER) {
-@@ -1191,12 +1203,7 @@ static enum type_match_result check_matching_type(struct type_state *state,
+ 	/*
+ 	 * The type offset is the same as instruction offset by default.
+@@ -1753,7 +1829,25 @@ struct annotated_data_type *find_data_type(struct data_loc_info *dloc)
+ 	if (find_data_type_die(dloc, &type_die) < 0)
+ 		return NULL;
  
- 		dloc->type_offset = dloc->op->offset + state->regs[reg].offset;
+-	return dso__findnew_data_type(dso, &type_die);
++	result = dso__findnew_data_type(dso, &type_die);
++	if (result == NULL)
++		return NULL;
++
++	if (result->flex_array && dloc->type_offset > result->self.size) {
++		struct annotated_member *flex_array = get_flex_array_member(result);
++
++		if (flex_array && flex_array->size > 0) {
++			int offset = dloc->type_offset;
++
++			/* adjust offset in the flex array */
++			offset -= flex_array->offset;
++			offset %= flex_array->size;
++			offset += flex_array->offset;
++
++			dloc->type_offset = offset;
++		}
++	}
++	return result;
+ }
  
--		/* Get the size of the actual type */
--		if (dwarf_aggregate_size(type_die, &size) < 0 ||
--		    (unsigned)dloc->type_offset >= size)
--			return PERF_TMR_BAD_OFFSET;
--
--		return PERF_TMR_OK;
-+		return check_type_offset(type_die, dloc->type_offset);
- 	}
- 
- 	if (state->regs[reg].kind == TSR_KIND_PERCPU_POINTER) {
-@@ -1210,9 +1217,7 @@ static enum type_match_result check_matching_type(struct type_state *state,
- 
- 		dloc->type_offset = dloc->op->offset;
- 
--		/* Get the size of the actual type */
--		if (dwarf_aggregate_size(type_die, &size) < 0 ||
--		    (unsigned)dloc->type_offset >= size)
-+		if (check_type_offset(type_die, dloc->type_offset) != PERF_TMR_OK)
- 			return PERF_TMR_BAIL_OUT;
- 
- 		return PERF_TMR_OK;
-@@ -1840,7 +1845,7 @@ int annotated_data_type__update_samples(struct annotated_data_type *adt,
- 			return -1;
- 	}
- 
--	if (offset < 0 || offset >= adt->self.size)
-+	if (offset < 0 || (offset >= adt->self.size && !adt->flex_array))
- 		return -1;
- 
- 	h = &adt->histograms[evsel->core.idx];
+ static size_t data_type_hash(long key, void *ctx __maybe_unused)
 diff --git a/tools/perf/util/annotate-data.h b/tools/perf/util/annotate-data.h
-index ca2096a9ee62cbfe..957726334907cc0e 100644
+index 957726334907cc0e..14b8113521a927cf 100644
 --- a/tools/perf/util/annotate-data.h
 +++ b/tools/perf/util/annotate-data.h
-@@ -85,6 +85,7 @@ struct type_hist {
-  * struct annotated_data_type - Data type to profile
-  * @node: RB-tree node for dso->type_tree
-  * @self: Actual type information
-+ * @flex_array: Whether it has a flex array
-  * @nr_histogram: Number of histogram entries
-  * @histograms: An array of histograms
+@@ -47,6 +47,8 @@ enum type_state_kind {
+  * @var_name: Name of the member variable
+  * @offset: Offset from the outer data type
+  * @size: Size of the member field
++ * @is_union: Whether it's an union type
++ * @is_flex_array: Whether it's a flex array
   *
-@@ -93,6 +94,7 @@ struct type_hist {
- struct annotated_data_type {
- 	struct rb_node node;
- 	struct annotated_member self;
-+	bool flex_array;
- 	int nr_histograms;
- 	struct type_hist *histograms;
+  * This represents a member type in a data type.
+  */
+@@ -57,6 +59,8 @@ struct annotated_member {
+ 	char *var_name;
+ 	int offset;
+ 	int size;
++	bool is_union;
++	bool is_flex_array;
  };
+ 
+ /**
 -- 
 2.55.0
 
