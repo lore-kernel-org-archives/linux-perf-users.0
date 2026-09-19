@@ -1,192 +1,231 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+Received: from LO3P265CU004.outbound.protection.outlook.com (mail-uksouthazon11020084.outbound.protection.outlook.com [52.101.196.84])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AFF5392825;
-	Fri, 18 Sep 2026 23:11:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789773122; cv=none; b=nu0jxcDTHYiTy+onkZlVOmOWA+nRtH/oXQvqHzKM5AbGyat3yQCHGqN/AqSLOJUesTNtgEgNYUSUji5NImiNNqq1fIt3L8N1jpK5pUgHZiUgckqwA4f/DgZwPuXMzISMLY0yA+bNt0KPpfOXY+KSlPsinsTXdui9SvyLxjb7TxA=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789773122; c=relaxed/simple;
-	bh=jNpv0Dc6jq+CH9Xd87NYoawvyDvLw/ftLVTNgnXN9os=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=P2GzL/vO5BpulK6Jjuq5xP2m3jHXhSW8b1XZ0im155fGwtgeZm/1FjeGezEaSUXV264vSwi9OIvHG04pSDWanUNJCXuaDtPA0rRxVxOXH4TKP2d2x5gTBcVBREaReuH5DOejSCK6CCKUsXqeV90R+vHbWZNvbG+E7fBDXaK+fV0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gPfWINkr; arc=none smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gPfWINkr"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1789773120; x=1821309120;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=jNpv0Dc6jq+CH9Xd87NYoawvyDvLw/ftLVTNgnXN9os=;
-  b=gPfWINkrAtjba9ls9tz26OgrrvwcxV3GTkyg3R5+UAQbH4KRRuOwg77z
-   L3BbkTJgASuTG/wHqFAiCIrGFPZzgY2c14KBJtywSpprixrBWGJDHoiPr
-   AWyB8nIHmARiaDwECsHTOA89XPXvSde4k5IJhTeKZNwCBPHTMRRGj617f
-   hIXNktEwSDbWiJ/oWi+kUL6b8FQJynAdEMwR7/x8ifWLoas+P2Z+w/rRM
-   HkEZuNpsFYFiN1ueU2J1ZugLHTLKJ1vO5yf6na96jPdXqJAheU2PejDSf
-   k0pLBLQEa+UxfVBFRlRGBp8gytCFpCH1W/8a4RbaegNIK14A7YUROmMJt
-   Q==;
-X-CSE-ConnectionGUID: V0wIm5FaQNuy/H2CjPv+Eg==
-X-CSE-MsgGUID: B4JutdvHTziyuSpMaZTJyw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11909"; a="92815199"
-X-IronPort-AV: E=Sophos;i="6.27,109,1787036400"; 
-   d="scan'208";a="92815199"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Sep 2026 16:11:59 -0700
-X-CSE-ConnectionGUID: 3Y7id3g6QGS/SuQ8snpaWw==
-X-CSE-MsgGUID: D+AYuOoRQJOp21duuj54XA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.27,109,1787036400"; 
-   d="scan'208";a="279831421"
-Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.241.239]) ([10.124.241.239])
-  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Sep 2026 16:11:56 -0700
-Message-ID: <03e0a2e6-b033-40c1-affc-baa4fe79febe@linux.intel.com>
-Date: Sat, 19 Sep 2026 07:11:48 +0800
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E1122E7373;
+	Sat, 19 Sep 2026 00:31:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.196.84
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1789777870; cv=fail; b=aBimibBOoqnN5oqapgkqCk8mJnzA1oSKdRyuJZDZQCweeWAgbvGcpGnhvlkniNMztPLIX8DzP09B3vTYnB9KKxSOYZ+fOT+MydueE14erAn4K7eK2HXxdCuToUTWM4tqOfE+uJT2KR6o7zXsCH8xZDz3rPCpy6tnghH/LqIf8PY=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1789777870; c=relaxed/simple;
+	bh=gX7R/YewjCb874kthU9Iqm5NatUG74z6YNEsmALZnyQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=NccYzoBoI+2UaSzJrxhHdKutoiwyUI/hGqpkjquH6f/gByovxJ7Q8aAP2Nx/wm/6uq44hxniDQxNZEpvh/ArMN4P3FidsPWBFIkrEcMOYLsWqE1RVFtokUPsmQ3X8BLYPScoojmrghtHg3s0vgJy5D/GnmupdfHkObQa1ix5UXg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=atomlin.com; spf=pass smtp.mailfrom=atomlin.com; arc=fail smtp.client-ip=52.101.196.84
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=atomlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=atomlin.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=iCVs2OoKxHwfyQe6OmphPaee/a8GMZBr1CCOMrpEPi59MrLwRjaTTzfF4zgFLRqeHzCGijR7XM8TnQxylKXaIIXL5Q6uqlkdiQ7/hjpvRsuHfPIzJIULkPohon10PaMWOPcsblAMuy+HSPnapIqv8r7g439sGHZfcEoBkjqKluDYt96AaY/JWmEIzDYTLnfawXGhcJL4saR6CvNRW7Uw/hEaCMVVpPDTWHQiHjmMyfxqLnKPRrV4dLwLGaAu6Kos9GwqQbHbzRIgd3v5GvR9+/rtTjQObOQ50RfiMYs8JnQWkaFPFqGsyyNeQLLLclY5MV5gewN95UBUhn3tu08GoA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001; h=From:Date:Subject:Message-ID:MIME-Version;
+ bh=URtYWL6WFSrpAsoKXxsNhNdXCiMRijS6IJRYH9Ep++c=;
+ b=LaSdD1H0+/AOingPI54XBJ68JbPl1YHO6s3B4MpVk/WR1fqULQ4+UmW/WVBxi7/CTmVV+Ua+WWOManA2gypNzCVxKv1R3fQ7B6giFrsVFus74Sfdsu0ZZrmxrh8PSIhsCvJqa9Q1uJgv/NQECcMGAvFv/lhvHHIh/WBm9Lq6Na7GVDsOneEiESfmZE9/U6dS2aqfjgZA7JNU4pgk/J+Lx8b73hPKJTdjgdaLZ90AmiaYP2s13xL430zt8O56BZXXcPFwITm9SY9T/js1amzUsZEdLDJ0eP8HH0Y+ISZA451wkIc2GWkHmjB687mP7IWnVMCQxk9PrFIn7gfVGQegtQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=atomlin.com; dmarc=pass action=none header.from=atomlin.com;
+ dkim=pass header.d=atomlin.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=atomlin.com;
+Received: from CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM (2603:10a6:400:183::5)
+ by LO6P123MB6598.GBRP123.PROD.OUTLOOK.COM (2603:10a6:600:2b5::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.428.15; Sat, 19 Sep
+ 2026 00:31:04 +0000
+Received: from CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM
+ ([fe80::cec4:77ab:262e:d230]) by CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM
+ ([fe80::cec4:77ab:262e:d230%4]) with mapi id 15.21.0428.011; Sat, 19 Sep 2026
+ 00:31:04 +0000
+Date: Fri, 18 Sep 2026 20:30:55 -0400
+From: Aaron Tomlin <atomlin@atomlin.com>
+To: peterz@infradead.org, mingo@redhat.com, acme@kernel.org, 
+	namhyung@kernel.org
+Cc: mark.rutland@arm.com, alexander.shishkin@linux.intel.com, 
+	jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com, 
+	james.clark@linaro.org, howardchu95@gmail.com, neelx@suse.com, chjohnst@mail.com, 
+	sean@ashe.io, steve@abita.co, rishil1999@outlook.com, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 perf-tools-next 0/6] perf trace: Validate payload
+ bounds across augmented argument beautifiers
+Message-ID: <ucvt4ef5oocjdvdsum4fpqonuxc4hkaqwlxs75c6pgktkqpale@7vgwczn5kce2>
+References: <20260907015140.363076-1-atomlin@atomlin.com>
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20260907015140.363076-1-atomlin@atomlin.com>
+X-ClientProxiedBy: CP4P284CA0017.BRAP284.PROD.OUTLOOK.COM
+ (2603:10d6:103:128::19) To CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM
+ (2603:10a6:400:183::5)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] perf topdown: Don't require config1==0 for a slots event
-To: Arnaldo Carvalho de Melo <acme@kernel.org>,
- Ian Rogers <irogers@google.com>
-Cc: Zide Chen <zide.chen@intel.com>, Namhyung Kim <namhyung@kernel.org>,
- Peter Zijlstra <peterz@infradead.org>,
- Adrian Hunter <adrian.hunter@intel.com>, Ingo Molnar <mingo@redhat.com>,
- Jiri Olsa <jolsa@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- James Clark <james.clark@linaro.org>, Andi Kleen <ak@linux.intel.com>,
- linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
- thomas.falcon@intel.com, xudong.hao@intel.com
-References: <20260916202740.257376-1-zide.chen@intel.com>
- <CAP-5=fV7mJEx27OQra2yaTegwRdzFUYohivFHFBvwD0cdb3=SQ@mail.gmail.com>
- <aq2bV6oH8OT5tk4d@x2>
-Content-Language: en-US
-From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-In-Reply-To: <aq2bV6oH8OT5tk4d@x2>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CWLP123MB6607:EE_|LO6P123MB6598:EE_
+X-MS-Office365-Filtering-Correlation-Id: ce7585f7-eb57-4267-03f5-08df15e54996
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|23010399003|1800799024|376014|7416014|366016|10067099003|56012099006|22082099003|18002099003|6133799003;
+X-Microsoft-Antispam-Message-Info:
+	7Xa3p/ptLMyR10p6zUSNYOA9m/atWrCr/lKLGWwIWns4CcgYKKFpA9S6YiPUPXEdS17Ir0JjYzob04swz4152UC9AykjahILQ/C7nlAO3XbU91BLbTdSWMo4h3JWrhyd4kmJL+BS1rrS8rUZQFPHPbzqe5lT0JgA4GD4u9Xa/egI3FHobBbCZ2nC4nGEMj/waHE+0hcfSZeQ1Q4rC/m51G2UgPvYTfzPd20vku1hzv3BWLfuk7wWnVjBX1Q4x1OINXCh7VBakbMH8jKBPtw8CN/Q543Ua/cyIX6PL6Mb/CkBole15cT45ISXNy8HV6BpjM2LlPPPzpmBJlK95aLia94b4alARSfLdZg242vXt5YixwtQpWjDKmce2RrDQyeREWoJXtjZyolUebrPCpGa+lTxthEdEvYUwuqLpypuDhvK1eI4A2V9QzfibPrDZGGgvJhEZu5EZLxO8L/HZ8NyYqrV08iFagwveZk726ge3jbKtb88ohJ701OMYQtJiTY9jB9mngReL4mVXBx8fsoabuU3xZsTw0RJbFHpFmM9ahmCswwycwNz+xOqlOrJeu1dXgOzUFBymKnZZ+BqT/FshUAK+C6IxvxfKdTMeF4QPvA=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(23010399003)(1800799024)(376014)(7416014)(366016)(10067099003)(56012099006)(22082099003)(18002099003)(6133799003);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?NVV5ZkMzdDNsN3NlT21wOER6LzhXdlZuSkYxMTVvWkhhMjJid1lnSnlrdGdt?=
+ =?utf-8?B?bTQwU2FWQitOdDkzTjdaTlh0amZ2YmdhMVFiaExYbDY3ejhDT2NIR3RSOXJl?=
+ =?utf-8?B?cW82TjFrVEI4RWVzZTFjb3E1WEZkSy9yRk9PTXc1a1hEc1plVWppdlh4cWo5?=
+ =?utf-8?B?VGh5VTRKSmdFbC9pVXFEa3R0ZmRoZnpoOFovV2xsd2cyTkdGODU5em1mWjZu?=
+ =?utf-8?B?VFQwUUhJS3NJaDM3N3hhVFZqZTUvUTVnTnpvTmNlZG5WVk10WHBhdzBzR3NT?=
+ =?utf-8?B?eTJYZUxuRGJ0dU5yaWEyZjF1NnFDTFlPdTc2RUU3V1dKelpxWThiR29PZzBB?=
+ =?utf-8?B?dEhHY00wWlBIUmNsZThMaFZLdUVRR1JqRWJVM3pJLzA4S1RyZ1B1OVRxRXlO?=
+ =?utf-8?B?Mm5FWnIwQ3ZCY1NsWHdtK2FEWDBFVlhNNUtVRndENFNPVHQ4eUdaTHJhZnQr?=
+ =?utf-8?B?clFQeXpHTXJzSk9ONFBQdy9JcU1IbFlxcmU4UFNKUW51c1V2QlRFTWF1OGcr?=
+ =?utf-8?B?dFhaREhMMzdUOC9wRnRSV2xkWlJ4bm4wdWpkTnV3b2lYQ043SEY0RWFETVBs?=
+ =?utf-8?B?cUU3Y3ZGS1hxdk1OQTZQZ1I2eVpENC9ZTUpleW1VcjRoTVI2MzFKRHFLTGpU?=
+ =?utf-8?B?MDVpbzdJM09sRWVicUh6Y2FybXlmeW9oV0xkaHJFUjhSWUZHcTV4R0dUNEw2?=
+ =?utf-8?B?OHVmRUo0K21zbSt0ZmY4Tzl3VWhUdlFyUXFFK1ZDYkdsdDRCY2QrbVEvcjBQ?=
+ =?utf-8?B?amM4OTNZbHZzN3pMZW9mWDRWTGN3cGwvS0I4bGZJM3BZUU9WRmx5aWNMRWRz?=
+ =?utf-8?B?K0NXN1JFMEt1TXNTUThRNTlOWURaVmhGcWFBKzMweWxnNzBDZWRPWVNSYWdU?=
+ =?utf-8?B?dHllY05XOEhlV05HVVA0c2MyQ0N3cTJMcG1OQ0FKSmN5cURUQTVGbG5jT3Rx?=
+ =?utf-8?B?VUhiVjlRUjZsdzltMjkzQWhwOXpaTDZrRTJCOFRuTlFQTlZIQmRHMkdoTnhC?=
+ =?utf-8?B?MlE0ZVR2UzlwWnBlNUhBVkoxbk04U3dkcWtTeEJXSWUxbURjTGwwb1d0aEdn?=
+ =?utf-8?B?UHRCK05teFIrWmZ6cldYUTZScngydE9rdVJNTHh0dWo0Sm0yN3NVd2tYdVNG?=
+ =?utf-8?B?NmRMeWc0ZE05dnI4em1VbEIwVEdBTmdJanlZblUwNDlCOG1wTW9zRHVFSGQ4?=
+ =?utf-8?B?NVRMSUhzUVRaVHVBYTFwM2NiR1VZN2xCa1BWY3gwbUl5Y1VURFNwbnFla2Jl?=
+ =?utf-8?B?Z2NVZkxRc1B0czdndTNxTlZLU3dFMVdnbmQwNzd5UjZLdm85ejl1cEtCQnpt?=
+ =?utf-8?B?RlFwRkJOdWt6U1ZlQSsxWFQ3WWdWSitYR3licUtzWFZkRmliaTdyUUoxejlh?=
+ =?utf-8?B?R2t3RkhpMm00QVV0aFR5KzJ6WjFnMS8yVE5DQmN1UnpVRWExUHMxL2gyWk41?=
+ =?utf-8?B?bEhJSnlNY0N6QnJtb3YwL25lMUYwTUpuTVc0ZGc2UFNNQnZScm4zVnFVdVhN?=
+ =?utf-8?B?bFVjNFd6QWtKTE9qQVJDeTZSeDg2aEY5S3A2eitjVUpwV3NHNVlhcWh5S2pm?=
+ =?utf-8?B?TVRnZkxMNXROODJ4azJIZGllNGgrWi9aekNoZ0lMckxKWUQ3UkRlTk53Y2k2?=
+ =?utf-8?B?SEwrWFl3bS9namkzZlMxV2tVNDJtdThVT0V4Q3dIUm94WHhORyt1WXRYb1J0?=
+ =?utf-8?B?L2dGb0NmTWYrcktwT3dIbW5SUno2WjJMcDlmWlc4cTF1MTAxMmIwdGkwVjFk?=
+ =?utf-8?B?QkxXdU5jakpOQUFGMkpycG4vZ1Z0WFRCMEZkd3FVeVRqMXNWUHRIN21ZOU81?=
+ =?utf-8?B?UmhHeUhVMEQ4TWlTUUttSUZjMno4RkloMDVOSitrM3NPSTBLNEVXZnl3QXBC?=
+ =?utf-8?B?N3dWYXhPRnlGUlZTeUxnUjBhZFI3R1BqUE5qcGJQMmpQYkFqbDU5a1Nkd1BS?=
+ =?utf-8?B?a3pUdzV3eXlvUXpnUi9jYjZZWnZkYnZrS0NJVTd5SGVPZk9SRGtKZm5zSk81?=
+ =?utf-8?B?ZGYxNThnWDNGMm9YZEs5TUFTSzZPU1lhcFBtbVJNZDljV0J0R2xIWmNRdzQ3?=
+ =?utf-8?B?bnN1RUdlbXFPU2I5b2lkYmN4KzROQjVRbldaSFpYUGlHdFdXbmFEQkRCOFd5?=
+ =?utf-8?B?bWptRFIyWHZnVWFOcXpjckxBMVNEMm5OTUNJUUsyczZ3d2NCYWs0U0pzUFpo?=
+ =?utf-8?B?T1pWQjNNUjFpcGZmQzRVczB3L2dlL1hydmdVZzhBenlXdk9ibCtJV2lnbWUz?=
+ =?utf-8?B?V3BCclZaaTNHUmFxR0EwWG5OMHZmRnBxelZmNzMvSnlyRzJWSG1LRmlCMXc5?=
+ =?utf-8?B?L1NOMm1EQ28rdzJsaHJjQWxqN21VZExLUWFnTTc1WGJ3Tmt6TkNPZz09?=
+X-OriginatorOrg: atomlin.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ce7585f7-eb57-4267-03f5-08df15e54996
+X-MS-Exchange-CrossTenant-AuthSource: CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Sep 2026 00:31:03.8822
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: e6a32402-7d7b-4830-9a2b-76945bbbcb57
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: y8Ll3fa6SwWJku9dJ9X9IjZVNE8WkAkNZUAV6+DabY7yqXJ/E/9Y1+uiakxZcFgC6UNHkCsCil0c9r9KRJsxkQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: LO6P123MB6598
 
+On Sun, Sep 06, 2026 at 09:51:34PM -0400, Aaron Tomlin wrote:
+> When pretty-printing augmented syscall arguments in perf trace, raw payload
+> data captured from BPF programs is passed to various argument formatters
+> via struct syscall_arg.
+> 
+> However, when processing malformed, truncated, or untrusted perf.data
+> records (e.g., truncated reads in BPF ringbuffers, cross-architecture
+> replays, or crafted sample records), the payload can be shorter than
+> expected or contain invalid size fields:
+>     1.  Dereferencing augmented_arg fields before validating that
+>         arg->augmented.size is at least sizeof(struct augmented_arg) can read
+>         past the available buffer.
+> 
+>     2.  Passing augmented_arg->size to formatters or loop counters without
+>         bounding it against the remaining buffer can cause out-of-bounds memory
+>         reads.
+> 
+>     3.  In multi-argument syscalls, calculating consumed bytes as:
+> 
+>             consumed = sizeof(*augmented_arg) + augmented_arg->size;
+> 
+>         without bounds checking can overflow signed integer bounds or cause
+>         arg->augmented.size to underflow. This advances arg->augmented.args
+>         out of bounds, corrupting parsing state for all subsequent
+>         arguments in the same syscall.
+> 
+>     4.  Type/family-specific beautifiers (i.e., BTF struct dump, sockaddr,
+>         timespec, perf_event_attr) can dereference structure fields without
+>         verifying that the payload contains sufficient bytes for the target
+>         type.
+> 
+> This series adds comprehensive upper-bound and payload-size checks across
+> all augmented argument beautifiers in perf trace. If validation fails in
+> any beautifier, it cleanly falls back to printing the raw pointer/hex
+> value.
+> 
+> To facilitate clean, conflict-free backports across active LTS kernels,
+> each formatter fix is isolated to its own commit.
+> 
+> Changes since v1:
+> 
+>  - Expanded the original single patch into a 6-patch series in response to
+>    reviewer feedback from sashiko-bot regarding similar bounds check
+>    omissions across other augmented formatters in perf trace
+> 
+>  - Added new patch validating payload bounds and consumed offset
+>    calculations in syscall_arg__scnprintf_augmented_string()
+> 
+>  - Added new patch validating payload bounds before byte traversal in
+>    syscall_arg__scnprintf_buf(), isolated to ensure an independent Fixes:
+>    tag for stable backports
+> 
+>  - Added new patch validating payload size against sizeof(struct timespec)
+>    in syscall_arg__scnprintf_augmented_timespec()
+> 
+>  - Added new patch validating payload bounds and family-specific lengths in
+>    syscall_arg__scnprintf_augmented_sockaddr()
+> 
+>  - Added new patch validating payload size against at least
+>    PERF_ATTR_SIZE_VER0 in
+>    syscall_arg__scnprintf_augmented_perf_event_attr()
+> 
+>  - Link to v1: https://lore.kernel.org/all/20260906011132.279321-1-atomlin@atomlin.com/
+> 
+> Aaron Tomlin (6):
+>   perf trace: Add upper bound checks for augmented BTF struct printing
+>   perf trace: Validate payload bounds in augmented string beautifier
+>   perf trace: Validate payload bounds in augmented buffer beautifier
+>   perf trace beauty: Validate payload size in augmented timespec
+>     beautifier
+>   perf trace beauty: Validate payload size in augmented sockaddr
+>     beautifier
+>   perf trace beauty: Validate payload size in augmented perf_event_open
+>     beautifier
+> 
+>  tools/perf/builtin-trace.c                | 36 +++++++++++++++++------
+>  tools/perf/trace/beauty/perf_event_open.c | 19 ++++++++++--
+>  tools/perf/trace/beauty/sockaddr.c        | 35 ++++++++++++++++++----
+>  tools/perf/trace/beauty/timespec.c        | 19 ++++++++++--
+>  4 files changed, 89 insertions(+), 20 deletions(-)
+> 
+> 
+> base-commit: 02f6847e1822714a4201b87e42f92b0d43e8549d
+> -- 
+> 2.55.0
+> 
 
-On 9/19/2026 4:13 AM, Arnaldo Carvalho de Melo wrote:
-> On Wed, Sep 16, 2026 at 02:22:45PM -0700, Ian Rogers wrote:
->> On Wed, Sep 16, 2026 at 1:37 PM Zide Chen <zide.chen@intel.com> wrote:
->>> arch_is_topdown_slots() requires config1 == 0, so it misidentified
->>> "cpu/slots,metrics_clear=1/" as not being the slots event, and an
->>> additional slots event gets inserted, which fails event scheduling
->>> since the group now needs two fixed counter 3.
->>>
->>>   $ perf stat -e "{cpu/slots,metrics_clear=1/,cpu/topdown-retiring/}" -- sleep 1
->>>   WARNING: events were regrouped to match PMUs
->>>        <not counted>      slots
->>>      <not supported>      cpu/slots,metrics_clear=1/
->>>        <not counted>      cpu/topdown-retiring/
->>>
->>> Drop the config1 == 0 check from arch_is_topdown_slots(). This is
->>> safe: config1 has no bearing on the event's identifying config value
->>> (TOPDOWN_SLOTS, 0x0400).
->>>
->>> The attr.type == PERF_TYPE_RAW check is what actually matters: only the
->>> core PMU is registered with PERF_TYPE_RAW, and on x86, 0x400 is
->>> guaranteed to be slots event on core CPU.
->>>
->>> arch_is_topdown_metrics() keeps its own config1 == 0 check, since
->>> genuine metrics events have no "metrics_clear" and config1 remains 0.
->>>
->>> Add a test verifying that an explicit "slots,metrics_clear=1" event in
->>> a group does not trigger an extra slots event injection.
->>>
->>> Fixes: 5b546de9cc17 ("perf topdown: Use attribute to see an event is a topdown metic or slots")
->>> Signed-off-by: Zide Chen <zide.chen@intel.com>
->> Reviewed-by: Ian Rogers <irogers@google.com>
->>
->> Note, there's a Sashiko warning about a potentially missing #include
->> for musl compatibility that maybe you or Arnaldo could address.
-> Merging, will look add address that comment,
+Kindly disregard this iteration, as per Sashiko [1].
 
-@Arnaldo, Zide posted the v2 patch to address the Sashiko comments.
-https://lore.kernel.org/all/20260917181016.381994-1-zide.chen@intel.com/
+The observations regarding uninitialised augmented_arg->size reads, arising
+from the fact that several eBPF probes in augmented_raw_syscalls.bpf.c omit
+populating this field from the reused per-CPU map, are indeed entirely
+valid.
 
-You may directly merge that patch. :) 
+Likewise, the points concerning dispatch extensibility and variable-length
+path handling in the sockaddr beautifier, alongside potential TOCTOU
+discrepancies in perf_event_open, have been taken on board. Additionally,
+regarding the suggested inclusion of <stdbool.h> and <stddef.h> in
+sockaddr.c, these have been intentionally omitted as the requisite types
+and macros (bool and offsetof()) are already provided unconditionally via
+trace/beauty/beauty.h.
 
-Thanks.
+[1]: https://sashiko.dev/#/patchset/20260907015140.363076-1-atomlin%40atomlin.com
 
-
->
-> Thanks,
->
-> - Arnaldo
->  
->> Thanks,
->> Ian
->>
->>> ---
->>>  tools/perf/arch/x86/tests/topdown.c | 28 ++++++++++++++++++++++++++++
->>>  tools/perf/arch/x86/util/topdown.c  |  3 +--
->>>  2 files changed, 29 insertions(+), 2 deletions(-)
->>>
->>> diff --git a/tools/perf/arch/x86/tests/topdown.c b/tools/perf/arch/x86/tests/topdown.c
->>> index 2b6f47ce4932..b1ce9f83db00 100644
->>> --- a/tools/perf/arch/x86/tests/topdown.c
->>> +++ b/tools/perf/arch/x86/tests/topdown.c
->>> @@ -229,10 +229,38 @@ static int test__x86_topdown_slots_injection(struct test_suite *test __maybe_unu
->>>         return TEST_OK;
->>>  }
->>>
->>> +/*
->>> + * An explicit "slots,metrics_clear=1" event is still the slots event and
->>> + * must not cause an extra slots event to be injected into the group.
->>> + */
->>> +static int test__x86_topdown_metrics_clear(struct test_suite *test __maybe_unused,
->>> +                                          int subtest __maybe_unused)
->>> +{
->>> +       struct perf_pmu *pmu;
->>> +       char event_str[128];
->>> +       int ret;
->>> +
->>> +       if (!topdown_sys_has_perf_metrics())
->>> +               return TEST_OK;
->>> +
->>> +       pmu = perf_pmus__find_by_type(PERF_TYPE_RAW);
->>> +       if (!pmu || !perf_pmu__has_format(pmu, "metrics_clear"))
->>> +               return TEST_OK;
->>> +
->>> +       snprintf(event_str, sizeof(event_str),
->>> +                "{%s/slots,metrics_clear=1/,%s/topdown-retiring/}",
->>> +                pmu->name, pmu->name);
->>> +       ret = test_sort(event_str, 2, 1);
->>> +       TEST_ASSERT_EQUAL("explicit metrics_clear slots event isn't duplicated", ret, TEST_OK);
->>> +
->>> +       return TEST_OK;
->>> +}
->>> +
->>>  static struct test_case x86_topdown_tests[] = {
->>>         TEST_CASE("topdown events", x86_topdown),
->>>         TEST_CASE("topdown sorting", x86_topdown_sorting),
->>>         TEST_CASE("topdown slots injection", x86_topdown_slots_injection),
->>> +       TEST_CASE("topdown metrics_clear no extra slots", x86_topdown_metrics_clear),
->>>         { .name = NULL, }
->>>  };
->>>
->>> diff --git a/tools/perf/arch/x86/util/topdown.c b/tools/perf/arch/x86/util/topdown.c
->>> index bafd285119d7..64bc64e335a2 100644
->>> --- a/tools/perf/arch/x86/util/topdown.c
->>> +++ b/tools/perf/arch/x86/util/topdown.c
->>> @@ -37,8 +37,7 @@ bool topdown_sys_has_perf_metrics(void)
->>>  bool arch_is_topdown_slots(const struct evsel *evsel)
->>>  {
->>>         return evsel->core.attr.type == PERF_TYPE_RAW &&
->>> -              evsel->core.attr.config == TOPDOWN_SLOTS &&
->>> -              evsel->core.attr.config1 == 0;
->>> +              evsel->core.attr.config == TOPDOWN_SLOTS;
->>>  }
->>>
->>>  bool arch_is_topdown_metrics(const struct evsel *evsel)
->>> --
->>> 2.55.0
->>>
+-- 
+Aaron Tomlin
