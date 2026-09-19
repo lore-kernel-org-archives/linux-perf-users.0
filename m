@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AECC371D15;
-	Sat, 19 Sep 2026 06:37:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52D8472621;
+	Sat, 19 Sep 2026 06:37:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789799877; cv=none; b=CctwqSbtKoCz3Jb7ppaEgSgW8y9D8iCRzFnO+bQUnrY9ZLkWUQmAcLZIrwX41obp7nFdbCes5aL7CFfLA0ZU6/Q9utlJXEYROqqSHZMMhdFPUDo1nmrXBS4yHCMDTOXRBrIcH25umuvh6pog2s8cE2nDYax7gsO3ovYtzdIKLvU=
+	t=1789799878; cv=none; b=RfUSSVH1ch1SBTcKYb57vzhW0I8ExMrYnqHmcy/xCiAm7FpKerpO7CWIU+QnXi5Vyk4eINYOTHQhPgi9pQP/HEEtzm6CKdkOIO//TGK419bL+Xd5MhTY0POL8sC6EPEnOXi+UE0WqAUw/WHw8l2KFnJrz6r7oTKqExzL3pHwR4I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789799877; c=relaxed/simple;
-	bh=UFRbCyPFOpIhiJkgvdA1N7r2subnEKtJZgFjm96tkgg=;
+	s=arc-20240116; t=1789799878; c=relaxed/simple;
+	bh=TQQtXJJjH04u/hnOnUZauq3jKLD5V0udNUkvLQRvtBs=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=tXt+X0LTUUU0Rj9AHnldc6UGbTACw9+cauBkaywIJLX70OLkM3U/iKF6Cw4lUJLBesbLl8IHb9panfeNZBEhVDGb7K8FnlZsEWgq0vtLBrLrrZbcLHMD71QDXD7qRdfLbIxRY/bLxHlkFc5KeGJezJNdIdlUFnn6KR9HRlgNvCw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DEZh4BL3; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version; b=dg119G2aZ6zqPbN58Tq2MoZ1MrhmTXaGdfnK9BKCa0zzfo2ZNfT95s6OP7fAzCOA5UYR/Ql9KIXWWMhkjOO82FEeCfI5k9DY+61HwVA7SvE3inqUFWH00WBWcAJG7bF6YwaEypjr/2cSn+Gu1HctJrT7puh2+2gsnRT1FoEvf3s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WCd0fNQ/; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DEZh4BL3"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 191561F0089B;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WCd0fNQ/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B3BAC1F00898;
 	Sat, 19 Sep 2026 06:37:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789799873;
-	bh=3r9HJ9ewao2icCySTmJJ7SlG5OXWYkY8ylhpaNhdIjI=;
+	s=k20260515; t=1789799874;
+	bh=LlAx1lSVoQCyKt9jZ16pnAFFWy81J3aKHgE6uB1i6CA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=DEZh4BL3ibaxsHt9v7b8iP8yLmKBxqp7t16Nlq/vRG9hQcHFkyJWiVirLtM3dJc5k
-	 oC/LdC+KEyTf2GqIsRC25qpjnB8yFS0rD1qavfMc/ycCIRcrVukz9MmIGpbHMY5fBU
-	 5S0DbQ/OJ70Gecd7GaeUFSEr3ynOi3X/tg1Zrgz+Ld0TNH4voUp1xqHDEObPKtNfdi
-	 uGk9DHoTl+ettOYDxnaCXTNQGvnXbYYHRlgkzVLAkBoBTmAlBTnzhmrOGotIyKFbee
-	 5heGnUGI2Zq7DXmwXrKUzMddXOTEcacN9RZ7a1dE5UMkmhTOzyHbOrFr+FoI5Ien5F
-	 9vPS9ZvC0JLyQ==
+	b=WCd0fNQ/1mB5wceqRd2xN/SJeIMiiMRMn+QdaPNeH36hU34tAncHFLAS9iyKeilAg
+	 uRUMzANQ7MeteDSbQQgig4vf6whoLLbCTdLBiLIVQGJOQBoPXVEPjaMkXPEspPL0vo
+	 y5ts1hv9dUT5dVN4bRxjUWuX8wFFL2VVb8hPfOK7NcnXMFTt/WfImFGYGofZUKmnCh
+	 KCtK/EZOfkFqrssETFauMdim4uOQdCdNECN1PhNf/Ug+xtK9focQnihQggC4s0f0sq
+	 uGhE6tvRiRAt92h/F77bLDB+N3ND3z6rDSb5onJY6Ax02M8q4LRbcPXpZc0LL+O16x
+	 izEa3T+bOPzlA==
 From: Namhyung Kim <namhyung@kernel.org>
 To: Arnaldo Carvalho de Melo <acme@kernel.org>
 Cc: Ian Rogers <irogers@google.com>,
@@ -39,11 +39,10 @@ Cc: Ian Rogers <irogers@google.com>,
 	Zecheng Li <zli94@ncsu.edu>,
 	Yanbo Zhao <yzhao62@ncsu.edu>,
 	Tengda Wu <wutengda@huaweicloud.com>,
-	Shuai Xue <xueshuai@linux.alibaba.com>,
-	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Subject: [PATCH v5 1/4] perf dwarf-aux: Add die_has_flex_array() helper
-Date: Fri, 18 Sep 2026 23:37:42 -0700
-Message-ID: <20260919063745.48444-2-namhyung@kernel.org>
+	Shuai Xue <xueshuai@linux.alibaba.com>
+Subject: [PATCH v5 2/4] perf annotate-data: A small cleanup in __add_member_cb()
+Date: Fri, 18 Sep 2026 23:37:43 -0700
+Message-ID: <20260919063745.48444-3-namhyung@kernel.org>
 X-Mailer: git-send-email 2.55.0
 In-Reply-To: <20260919063745.48444-1-namhyung@kernel.org>
 References: <20260919063745.48444-1-namhyung@kernel.org>
@@ -55,151 +54,53 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The die_has_flex_array() returns true when the given type is a compound
-type and contains an array at the end.  To prevent an infinite recursion
-add a depth field to the internal function.
+Check return value of strbuf_init() and die_get_typename() to make sure
+if typename of a member gets never NULL.
 
-Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Also remove the check for typedef by just using die_get_real_type().
+It can get rid of member_type variable as well.
+
 Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 ---
- tools/perf/util/dwarf-aux.c | 107 ++++++++++++++++++++++++++++++++++++
- tools/perf/util/dwarf-aux.h |   3 +
- 2 files changed, 110 insertions(+)
+ tools/perf/util/annotate-data.c | 17 +++++++++--------
+ 1 file changed, 9 insertions(+), 8 deletions(-)
 
-diff --git a/tools/perf/util/dwarf-aux.c b/tools/perf/util/dwarf-aux.c
-index d7160f87ac7d7ab3..1560e721479a1ac2 100644
---- a/tools/perf/util/dwarf-aux.c
-+++ b/tools/perf/util/dwarf-aux.c
-@@ -7,6 +7,7 @@
- #include <inttypes.h>
- #include <stdbool.h>
- #include <stdlib.h>
-+#include <string.h>
- #include "debug.h"
- #include "dwarf-aux.h"
- #include "dwarf-regs.h"
-@@ -2180,3 +2181,109 @@ Dwarf_Die *die_deref_ptr_type(Dwarf_Die *ptr_die, int offset,
+diff --git a/tools/perf/util/annotate-data.c b/tools/perf/util/annotate-data.c
+index aff60a630fd05b01..845a5d8c2b84b6a6 100644
+--- a/tools/perf/util/annotate-data.c
++++ b/tools/perf/util/annotate-data.c
+@@ -226,7 +226,7 @@ static int __add_member_cb(Dwarf_Die *die, void *arg)
+ {
+ 	struct annotated_member *parent = arg;
+ 	struct annotated_member *member;
+-	Dwarf_Die member_type, die_mem;
++	Dwarf_Die die_mem;
+ 	Dwarf_Word size, loc, bit_size = 0;
+ 	Dwarf_Attribute attr;
+ 	struct strbuf sb;
+@@ -239,14 +239,15 @@ static int __add_member_cb(Dwarf_Die *die, void *arg)
+ 	if (member == NULL)
+ 		return DIE_FIND_CB_END;
  
- 	return die_get_member_type(&type_die, offset, die_mem);
- }
-+
-+static bool is_flex_array_member(Dwarf_Die *mb_die)
-+{
-+	Dwarf_Die type_die;
-+	Dwarf_Word size;
-+
-+	/* get the type of the member */
-+	if (die_get_real_type(mb_die, &type_die) == NULL)
-+		return false;
-+
-+	if (dwarf_tag(&type_die) != DW_TAG_array_type)
-+		return false;
-+
-+	return dwarf_aggregate_size(&type_die, &size) < 0 || size == 0;
-+}
-+
-+#define MAX_FLEX_ARRAY_RECURSION  256  /* arbitrary */
-+
-+static bool die_has_flex_array_recurse(Dwarf_Die *parent_die, int depth)
-+{
-+	Dwarf_Die die_mem, last_mb;
-+	int tag = dwarf_tag(parent_die);
-+	bool found = false;
-+	Dwarf_Word loc, last_loc = 0;
-+
-+	if (tag != DW_TAG_structure_type && tag != DW_TAG_union_type)
-+		return false;
-+
-+	/* prevent infinite recursion */
-+	if (depth > MAX_FLEX_ARRAY_RECURSION)
-+		return false;
-+
-+	if (dwarf_child(parent_die, &die_mem))
-+		return false;
-+
-+	do {
-+		if (dwarf_tag(&die_mem) != DW_TAG_member)
-+			continue;
-+
-+		if (tag == DW_TAG_union_type) {
-+			if (is_flex_array_member(&die_mem))
-+				return true;
-+
-+			if (die_get_real_type(&die_mem, &last_mb) &&
-+			    die_has_flex_array_recurse(&last_mb, depth + 1))
-+				return true;
-+		}
-+
-+		if (tag == DW_TAG_structure_type) {
-+			if (die_get_data_member_location(&die_mem, &loc) < 0) {
-+				/* ignore bitfields */
-+				loc = 0;
-+			}
-+
-+			if (last_loc <= loc) {
-+				memcpy(&last_mb, &die_mem, sizeof(last_mb));
-+				last_loc = loc;
-+			}
-+		}
-+
-+		found = true;
-+	} while (dwarf_siblingof(&die_mem, &die_mem) == 0);
-+
-+	if (tag == DW_TAG_structure_type && found) {
-+		if (is_flex_array_member(&last_mb))
-+			return true;
-+
-+		if (die_get_real_type(&last_mb, &die_mem))
-+			return die_has_flex_array_recurse(&die_mem, depth + 1);
+-	strbuf_init(&sb, 32);
+-	die_get_typename(die, &sb);
++	if (strbuf_init(&sb, 32) < 0) {
++		free(member);
++		return DIE_FIND_CB_END;
 +	}
-+
-+	return false;
-+}
-+
-+/**
-+ * die_has_flex_array - Check if the given type has a flex-array at the end
-+ * @type_die: a pointer to type DIE
-+ *
-+ * This function returns %true iff @type_die is a struct or union type and has
-+ * an array at the end.  Note that the flex-array has no element, it should have
-+ * no size and the parent size doesn't include the flex-array.  So it should
-+ * locate at the offset of the parent size.
-+ *
-+ * For simplicity, it assumes the parent size of aligned with the flex-array.
-+ */
-+bool die_has_flex_array(Dwarf_Die *type_die)
-+{
-+	Dwarf_Die real_type;
-+
-+	switch (dwarf_tag(type_die)) {
-+	case DW_TAG_typedef:
-+	case DW_TAG_const_type:
-+	case DW_TAG_restrict_type:
-+	case DW_TAG_volatile_type:
-+	case DW_TAG_shared_type:
-+		if (die_get_real_type(type_die, &real_type) == NULL)
-+			return false;
-+
-+		type_die = &real_type;
-+		break;
-+	default:
-+		break;
-+	}
-+
-+	return die_has_flex_array_recurse(type_die, 0);
-+}
-diff --git a/tools/perf/util/dwarf-aux.h b/tools/perf/util/dwarf-aux.h
-index 161f0bf980b6ee6a..9b662db710220522 100644
---- a/tools/perf/util/dwarf-aux.h
-+++ b/tools/perf/util/dwarf-aux.h
-@@ -189,4 +189,7 @@ void die_collect_global_vars(Dwarf_Die *cu_die, struct die_var_type **var_types)
- /* Get the frame base information from CFA */
- int die_get_cfa(Dwarf *dwarf, u64 pc, int *preg, int *poffset);
  
-+/* Check whether given type has a flex array */
-+bool die_has_flex_array(Dwarf_Die *parent_die);
+-	__die_get_real_type(die, &member_type);
+-	if (dwarf_tag(&member_type) == DW_TAG_typedef)
+-		die_get_real_type(&member_type, &die_mem);
+-	else
+-		die_mem = member_type;
++	if (die_get_typename(die, &sb) < 0)
++		strbuf_add(&sb, "(unknown type)", 14);
 +
- #endif /* _DWARF_AUX_H */
++	die_get_real_type(die, &die_mem);
+ 
+ 	if (dwarf_aggregate_size(&die_mem, &size) < 0)
+ 		size = 0;
 -- 
 2.55.0
 
