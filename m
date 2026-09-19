@@ -1,57 +1,66 @@
-Received: from LO3P265CU004.outbound.protection.outlook.com (mail-uksouthazon11020084.outbound.protection.outlook.com [52.101.196.84])
+Received: from CWXP265CU010.outbound.protection.outlook.com (mail-ukwestazon11022136.outbound.protection.outlook.com [52.101.101.136])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E1122E7373;
-	Sat, 19 Sep 2026 00:31:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.196.84
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BAEC36B903;
+	Sat, 19 Sep 2026 00:55:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.101.136
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789777870; cv=fail; b=aBimibBOoqnN5oqapgkqCk8mJnzA1oSKdRyuJZDZQCweeWAgbvGcpGnhvlkniNMztPLIX8DzP09B3vTYnB9KKxSOYZ+fOT+MydueE14erAn4K7eK2HXxdCuToUTWM4tqOfE+uJT2KR6o7zXsCH8xZDz3rPCpy6tnghH/LqIf8PY=
+	t=1789779343; cv=fail; b=sTfUVUNUF9/xrbK2dhzDsBYsqcRZ9EpmKMHSz1QlhtML/0AquEIIMiTUuOZnpnvw1O2m3RbHMQijaHLAy/7orYoBkbV49L7m2STzc3GPIi277omCZ/eLEs8S9Y2Zb34a+jCu2IYNSv+TIkEbkGBHvzUup8jiENXYftzU2CYWGGI=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789777870; c=relaxed/simple;
-	bh=gX7R/YewjCb874kthU9Iqm5NatUG74z6YNEsmALZnyQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=NccYzoBoI+2UaSzJrxhHdKutoiwyUI/hGqpkjquH6f/gByovxJ7Q8aAP2Nx/wm/6uq44hxniDQxNZEpvh/ArMN4P3FidsPWBFIkrEcMOYLsWqE1RVFtokUPsmQ3X8BLYPScoojmrghtHg3s0vgJy5D/GnmupdfHkObQa1ix5UXg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=atomlin.com; spf=pass smtp.mailfrom=atomlin.com; arc=fail smtp.client-ip=52.101.196.84
+	s=arc-20240116; t=1789779343; c=relaxed/simple;
+	bh=nvuvKbC6hvuFRszpUpLg4Q9m3TULgaRe6OpZkDs83qA=;
+	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=OPpXNbUYmhF+pcWp+BlQr+HosBgO8UI9GoHFGu4J4B81HHljCmbuzsaoAmc26RgLPXUGWzIspZg/OFqfSTOrzKJHLrEz01dxJzZy2jiWFDv5URo24Xe/IUX0sgQaYd8PDwzEKrUk++6IcSLKjNqLgsEAVaZ83sgWtu/3ycyL0Us=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=atomlin.com; spf=pass smtp.mailfrom=atomlin.com; arc=fail smtp.client-ip=52.101.101.136
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=atomlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=atomlin.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=iCVs2OoKxHwfyQe6OmphPaee/a8GMZBr1CCOMrpEPi59MrLwRjaTTzfF4zgFLRqeHzCGijR7XM8TnQxylKXaIIXL5Q6uqlkdiQ7/hjpvRsuHfPIzJIULkPohon10PaMWOPcsblAMuy+HSPnapIqv8r7g439sGHZfcEoBkjqKluDYt96AaY/JWmEIzDYTLnfawXGhcJL4saR6CvNRW7Uw/hEaCMVVpPDTWHQiHjmMyfxqLnKPRrV4dLwLGaAu6Kos9GwqQbHbzRIgd3v5GvR9+/rtTjQObOQ50RfiMYs8JnQWkaFPFqGsyyNeQLLLclY5MV5gewN95UBUhn3tu08GoA==
+ b=ydITogpcVSGKdKzXW/gkIwVEAD4RY97mRnBuxPiOpwwXggepmeKGaZK4KF9ZKLnxKlDbNjr//uRDyHnz0ALId0gMuTgQ+fZfG2ucQuRjiFIFRMZXAF6M2sBZSNihX2W0Gd/iM5nsQTHuQNTBja/KspB9qH0b6eoRLo8B9mHGN3xEb6xn2nh5EqFQowZHtwg7d+c4aiBtHNI/9vIK7NuzpmXDqJZSzRK8lNBelx3M5l/g6/T+IlYyiq7AZn0A3AUXnpx0p4zsoCiHb+nmEM6bYGjw+hyaOCD9C4pUpljDuko3LiRdXkjCgW89yfdXOUEtfBHEJB+EfkksZOhecKNPVQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001; h=From:Date:Subject:Message-ID:MIME-Version;
- bh=URtYWL6WFSrpAsoKXxsNhNdXCiMRijS6IJRYH9Ep++c=;
- b=LaSdD1H0+/AOingPI54XBJ68JbPl1YHO6s3B4MpVk/WR1fqULQ4+UmW/WVBxi7/CTmVV+Ua+WWOManA2gypNzCVxKv1R3fQ7B6giFrsVFus74Sfdsu0ZZrmxrh8PSIhsCvJqa9Q1uJgv/NQECcMGAvFv/lhvHHIh/WBm9Lq6Na7GVDsOneEiESfmZE9/U6dS2aqfjgZA7JNU4pgk/J+Lx8b73hPKJTdjgdaLZ90AmiaYP2s13xL430zt8O56BZXXcPFwITm9SY9T/js1amzUsZEdLDJ0eP8HH0Y+ISZA451wkIc2GWkHmjB687mP7IWnVMCQxk9PrFIn7gfVGQegtQ==
+ bh=m3NbI/5MTV9d+uqPwulcxqVqRxlNT/EDaeBC63bdBqc=;
+ b=LXIie7S2BwkPejzsI9BLZLcp14Z/rKKPHG8AsskPKF4aRG1GiaoOic9V+Obpwjv2rRXV6lu2uVIooPaVuplWBWb8/A7Q4jwml2vAICCPHPn1ygZ5xpWPsLPbfnHmuupxz61VA3VsVR4qjcgFq5wJJ3jBpuQ5djOKlgL58qBvVIpVhyAG6W0he0zFSY+BPDfctUO5ZB3R5LQqKbRAGeLodVdz08qUjICFHK70uRKrMk8iNQoHfohLOlZ7Pysatu4bdCAMJs92ZFHTTV+R/sPlRVZeE81Lvr3ZuwAHPRuszhtbbn9/ydm8bTP9YGSzIRk7+FfL66uc/7Z8DX6ewSHeHA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=atomlin.com; dmarc=pass action=none header.from=atomlin.com;
  dkim=pass header.d=atomlin.com; arc=none
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=atomlin.com;
 Received: from CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM (2603:10a6:400:183::5)
- by LO6P123MB6598.GBRP123.PROD.OUTLOOK.COM (2603:10a6:600:2b5::14) with
+ by CWLP123MB2769.GBRP123.PROD.OUTLOOK.COM (2603:10a6:400:55::9) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.428.15; Sat, 19 Sep
- 2026 00:31:04 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.428.14; Sat, 19 Sep
+ 2026 00:55:34 +0000
 Received: from CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM
  ([fe80::cec4:77ab:262e:d230]) by CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM
  ([fe80::cec4:77ab:262e:d230%4]) with mapi id 15.21.0428.011; Sat, 19 Sep 2026
- 00:31:04 +0000
-Date: Fri, 18 Sep 2026 20:30:55 -0400
+ 00:55:33 +0000
 From: Aaron Tomlin <atomlin@atomlin.com>
-To: peterz@infradead.org, mingo@redhat.com, acme@kernel.org, 
+To: peterz@infradead.org,
+	mingo@redhat.com,
+	acme@kernel.org,
 	namhyung@kernel.org
-Cc: mark.rutland@arm.com, alexander.shishkin@linux.intel.com, 
-	jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com, 
-	james.clark@linaro.org, howardchu95@gmail.com, neelx@suse.com, chjohnst@mail.com, 
-	sean@ashe.io, steve@abita.co, rishil1999@outlook.com, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 perf-tools-next 0/6] perf trace: Validate payload
- bounds across augmented argument beautifiers
-Message-ID: <ucvt4ef5oocjdvdsum4fpqonuxc4hkaqwlxs75c6pgktkqpale@7vgwczn5kce2>
-References: <20260907015140.363076-1-atomlin@atomlin.com>
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20260907015140.363076-1-atomlin@atomlin.com>
-X-ClientProxiedBy: CP4P284CA0017.BRAP284.PROD.OUTLOOK.COM
- (2603:10d6:103:128::19) To CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM
+Cc: mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org,
+	irogers@google.com,
+	adrian.hunter@intel.com,
+	james.clark@linaro.org,
+	howardchu95@gmail.com,
+	atomlin@atomlin.com,
+	neelx@suse.com,
+	chjohnst@mail.com,
+	sean@ashe.io,
+	steve@abita.co,
+	rishil1999@outlook.com,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v3 perf-tools-next 0/7] perf trace: Validate payload bounds across augmented argument beautifiers
+Date: Fri, 18 Sep 2026 20:55:23 -0400
+Message-ID: <20260919005530.728615-1-atomlin@atomlin.com>
+X-Mailer: git-send-email 2.55.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: BN1PR12CA0028.namprd12.prod.outlook.com
+ (2603:10b6:408:e1::33) To CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM
  (2603:10a6:400:183::5)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -60,172 +69,183 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CWLP123MB6607:EE_|LO6P123MB6598:EE_
-X-MS-Office365-Filtering-Correlation-Id: ce7585f7-eb57-4267-03f5-08df15e54996
+X-MS-TrafficTypeDiagnostic: CWLP123MB6607:EE_|CWLP123MB2769:EE_
+X-MS-Office365-Filtering-Correlation-Id: 722052fb-eab3-473a-816c-08df15e8b5b7
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|23010399003|1800799024|376014|7416014|366016|10067099003|56012099006|22082099003|18002099003|6133799003;
+	BCL:0;ARA:13230040|376014|7416014|1800799024|23010399003|366016|10067099003|56012099006|6133799003|18002099003;
 X-Microsoft-Antispam-Message-Info:
-	7Xa3p/ptLMyR10p6zUSNYOA9m/atWrCr/lKLGWwIWns4CcgYKKFpA9S6YiPUPXEdS17Ir0JjYzob04swz4152UC9AykjahILQ/C7nlAO3XbU91BLbTdSWMo4h3JWrhyd4kmJL+BS1rrS8rUZQFPHPbzqe5lT0JgA4GD4u9Xa/egI3FHobBbCZ2nC4nGEMj/waHE+0hcfSZeQ1Q4rC/m51G2UgPvYTfzPd20vku1hzv3BWLfuk7wWnVjBX1Q4x1OINXCh7VBakbMH8jKBPtw8CN/Q543Ua/cyIX6PL6Mb/CkBole15cT45ISXNy8HV6BpjM2LlPPPzpmBJlK95aLia94b4alARSfLdZg242vXt5YixwtQpWjDKmce2RrDQyeREWoJXtjZyolUebrPCpGa+lTxthEdEvYUwuqLpypuDhvK1eI4A2V9QzfibPrDZGGgvJhEZu5EZLxO8L/HZ8NyYqrV08iFagwveZk726ge3jbKtb88ohJ701OMYQtJiTY9jB9mngReL4mVXBx8fsoabuU3xZsTw0RJbFHpFmM9ahmCswwycwNz+xOqlOrJeu1dXgOzUFBymKnZZ+BqT/FshUAK+C6IxvxfKdTMeF4QPvA=
+	N240bAetMXsUhGAf+SYGXqRVEruvaCn4G2Fda/fAYrm4I7H8dvxq7FscoI5Cx9zlkaXsXEpazqDuRC+pxfki64pdEcV13kQ0emGRLzfVPJaqCBPphGB3hujTf4GwyAVPMX0kLAsQC+oKLPN3cnS4KWWZBT7agjrzFywT2ciKiSwdpDCf0L9e79T2g1Kqs1+JWm5zI5uPyopmkEIQGwvTOOk24yxl4DcHQ5G/9mYxyI5urH/0ZUSBh/MjeOvqWMI0IUY0g/yfKqo86y2T4HtuY0HSglI2EnEJXh6YGPogHeFdOAIS0FI++He++qTcBKBRMTt1Xo4GWpbxpTFyJwADxsOyZio6nvKv5q6ixPgW0Ru0Ar/vzIw/nWwiClHcsEpC07l/uzcmMikKpyvSOSvNdwwq2HPoscarHyVxFyNNPCnI5K+/yFaGzewV6GlmJdUp5f661WCbcRL8xEXaJRXzfb8bosf7Hy5rnaIzLfdH7l9j2SZP7SfLML4Mdo0rPIV5Tvbwhia5GkwkHrReuKeCX2vvmt8AMvifEo8wJ4MQzTVFIHdTOpmnwJLqWcGfCbCEfRKjWs3DHbCAx9ESf4hSz+ptlAP9z8Ln3akIVSJ/DzL+fQKY5AphW2GI61UK7nu650MoAahFBf3M4rwUBHDOZnFoWc8hW9I1IOsEdWAYkYw=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(23010399003)(1800799024)(376014)(7416014)(366016)(10067099003)(56012099006)(22082099003)(18002099003)(6133799003);DIR:OUT;SFP:1102;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(1800799024)(23010399003)(366016)(10067099003)(56012099006)(6133799003)(18002099003);DIR:OUT;SFP:1102;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?NVV5ZkMzdDNsN3NlT21wOER6LzhXdlZuSkYxMTVvWkhhMjJid1lnSnlrdGdt?=
- =?utf-8?B?bTQwU2FWQitOdDkzTjdaTlh0amZ2YmdhMVFiaExYbDY3ejhDT2NIR3RSOXJl?=
- =?utf-8?B?cW82TjFrVEI4RWVzZTFjb3E1WEZkSy9yRk9PTXc1a1hEc1plVWppdlh4cWo5?=
- =?utf-8?B?VGh5VTRKSmdFbC9pVXFEa3R0ZmRoZnpoOFovV2xsd2cyTkdGODU5em1mWjZu?=
- =?utf-8?B?VFQwUUhJS3NJaDM3N3hhVFZqZTUvUTVnTnpvTmNlZG5WVk10WHBhdzBzR3NT?=
- =?utf-8?B?eTJYZUxuRGJ0dU5yaWEyZjF1NnFDTFlPdTc2RUU3V1dKelpxWThiR29PZzBB?=
- =?utf-8?B?dEhHY00wWlBIUmNsZThMaFZLdUVRR1JqRWJVM3pJLzA4S1RyZ1B1OVRxRXlO?=
- =?utf-8?B?Mm5FWnIwQ3ZCY1NsWHdtK2FEWDBFVlhNNUtVRndENFNPVHQ4eUdaTHJhZnQr?=
- =?utf-8?B?clFQeXpHTXJzSk9ONFBQdy9JcU1IbFlxcmU4UFNKUW51c1V2QlRFTWF1OGcr?=
- =?utf-8?B?dFhaREhMMzdUOC9wRnRSV2xkWlJ4bm4wdWpkTnV3b2lYQ043SEY0RWFETVBs?=
- =?utf-8?B?cUU3Y3ZGS1hxdk1OQTZQZ1I2eVpENC9ZTUpleW1VcjRoTVI2MzFKRHFLTGpU?=
- =?utf-8?B?MDVpbzdJM09sRWVicUh6Y2FybXlmeW9oV0xkaHJFUjhSWUZHcTV4R0dUNEw2?=
- =?utf-8?B?OHVmRUo0K21zbSt0ZmY4Tzl3VWhUdlFyUXFFK1ZDYkdsdDRCY2QrbVEvcjBQ?=
- =?utf-8?B?amM4OTNZbHZzN3pMZW9mWDRWTGN3cGwvS0I4bGZJM3BZUU9WRmx5aWNMRWRz?=
- =?utf-8?B?K0NXN1JFMEt1TXNTUThRNTlOWURaVmhGcWFBKzMweWxnNzBDZWRPWVNSYWdU?=
- =?utf-8?B?dHllY05XOEhlV05HVVA0c2MyQ0N3cTJMcG1OQ0FKSmN5cURUQTVGbG5jT3Rx?=
- =?utf-8?B?VUhiVjlRUjZsdzltMjkzQWhwOXpaTDZrRTJCOFRuTlFQTlZIQmRHMkdoTnhC?=
- =?utf-8?B?MlE0ZVR2UzlwWnBlNUhBVkoxbk04U3dkcWtTeEJXSWUxbURjTGwwb1d0aEdn?=
- =?utf-8?B?UHRCK05teFIrWmZ6cldYUTZScngydE9rdVJNTHh0dWo0Sm0yN3NVd2tYdVNG?=
- =?utf-8?B?NmRMeWc0ZE05dnI4em1VbEIwVEdBTmdJanlZblUwNDlCOG1wTW9zRHVFSGQ4?=
- =?utf-8?B?NVRMSUhzUVRaVHVBYTFwM2NiR1VZN2xCa1BWY3gwbUl5Y1VURFNwbnFla2Jl?=
- =?utf-8?B?Z2NVZkxRc1B0czdndTNxTlZLU3dFMVdnbmQwNzd5UjZLdm85ejl1cEtCQnpt?=
- =?utf-8?B?RlFwRkJOdWt6U1ZlQSsxWFQ3WWdWSitYR3licUtzWFZkRmliaTdyUUoxejlh?=
- =?utf-8?B?R2t3RkhpMm00QVV0aFR5KzJ6WjFnMS8yVE5DQmN1UnpVRWExUHMxL2gyWk41?=
- =?utf-8?B?bEhJSnlNY0N6QnJtb3YwL25lMUYwTUpuTVc0ZGc2UFNNQnZScm4zVnFVdVhN?=
- =?utf-8?B?bFVjNFd6QWtKTE9qQVJDeTZSeDg2aEY5S3A2eitjVUpwV3NHNVlhcWh5S2pm?=
- =?utf-8?B?TVRnZkxMNXROODJ4azJIZGllNGgrWi9aekNoZ0lMckxKWUQ3UkRlTk53Y2k2?=
- =?utf-8?B?SEwrWFl3bS9namkzZlMxV2tVNDJtdThVT0V4Q3dIUm94WHhORyt1WXRYb1J0?=
- =?utf-8?B?L2dGb0NmTWYrcktwT3dIbW5SUno2WjJMcDlmWlc4cTF1MTAxMmIwdGkwVjFk?=
- =?utf-8?B?QkxXdU5jakpOQUFGMkpycG4vZ1Z0WFRCMEZkd3FVeVRqMXNWUHRIN21ZOU81?=
- =?utf-8?B?UmhHeUhVMEQ4TWlTUUttSUZjMno4RkloMDVOSitrM3NPSTBLNEVXZnl3QXBC?=
- =?utf-8?B?N3dWYXhPRnlGUlZTeUxnUjBhZFI3R1BqUE5qcGJQMmpQYkFqbDU5a1Nkd1BS?=
- =?utf-8?B?a3pUdzV3eXlvUXpnUi9jYjZZWnZkYnZrS0NJVTd5SGVPZk9SRGtKZm5zSk81?=
- =?utf-8?B?ZGYxNThnWDNGMm9YZEs5TUFTSzZPU1lhcFBtbVJNZDljV0J0R2xIWmNRdzQ3?=
- =?utf-8?B?bnN1RUdlbXFPU2I5b2lkYmN4KzROQjVRbldaSFpYUGlHdFdXbmFEQkRCOFd5?=
- =?utf-8?B?bWptRFIyWHZnVWFOcXpjckxBMVNEMm5OTUNJUUsyczZ3d2NCYWs0U0pzUFpo?=
- =?utf-8?B?T1pWQjNNUjFpcGZmQzRVczB3L2dlL1hydmdVZzhBenlXdk9ibCtJV2lnbWUz?=
- =?utf-8?B?V3BCclZaaTNHUmFxR0EwWG5OMHZmRnBxelZmNzMvSnlyRzJWSG1LRmlCMXc5?=
- =?utf-8?B?L1NOMm1EQ28rdzJsaHJjQWxqN21VZExLUWFnTTc1WGJ3Tmt6TkNPZz09?=
+	=?us-ascii?Q?k9DLMRnf24KpAdq3GJlafQNrafh/WLFrxdsCsWzBEsmMw5QTULmNgIsbRo8X?=
+ =?us-ascii?Q?GWcao+jKNKE6sJXhhjFEYBogz9dR5ZRGQNZw/EZDWlpYva/Eh2Xvlfq7cmS1?=
+ =?us-ascii?Q?F/9tBULNzLbFJ1U3uYZWj6ghm9IF1z7UM4txSPtahivDddln/LmKBa2JfOFc?=
+ =?us-ascii?Q?GZQEpKdjTA5EVbARU0GMiR8jSWmC3acBbn9mQLuSwPczugJ2rNFXKLNfRPpV?=
+ =?us-ascii?Q?7iRCPOyLManL6oauIn/T0OsZ920ch5kOnKxSJksK+5wVgyLJlJVwAg779dxP?=
+ =?us-ascii?Q?YCJXc7f2tD0pgZN0TzJ316mrjlM3886lJqqBXcvMEm/HpPfE1/8LmX8S20NN?=
+ =?us-ascii?Q?yfDo3Te/ZbqsxYqTvnEYdYZIIrgnUyX9xxibCl8nPIImlPJCoqmKFl/CP5lW?=
+ =?us-ascii?Q?C8o34mO4wrrZv6UKwmRxrE4jchcpA/Cn+51WhU1FzBRTaPZB0+2spdzBwmCH?=
+ =?us-ascii?Q?JUCjOQ5vV5GCdzPWzW6va3NAB5BKsyQeG8LK2/dTGBPOuYetoCXp7MNZ9NnN?=
+ =?us-ascii?Q?XSVQEOT9izrNpZkaJhItQNgJJfLvz+i9zgkAkAyTg99bJyvWt2Hr1aFFTT70?=
+ =?us-ascii?Q?lqV+qCNE+RHGuaT0HpMCwADuLrWAdpElwjU7AYYSq71015nNi8pvks6kVxiU?=
+ =?us-ascii?Q?G1jsBx6nrrz22d7nXyP0OPyUu46vn+7gSMfK6VPudW0L6aP9ODTwERKv24mv?=
+ =?us-ascii?Q?bhoYONhmwpTou7MjGUavPaj7PeixZTXUk3ITe2KJNkYcKdpy0TPFveJ7eNFH?=
+ =?us-ascii?Q?Cd7AlmOWY9VWe2OqqM+1yzbtX19oUMtgkJFE+HS1br7P6HOKu8iyoJXY7MVD?=
+ =?us-ascii?Q?PwX1JX1XSpfwUeb4tuKLh9+D87Uu2k7V2KqBlAAkrYxal9t0zTiMiz7DohwJ?=
+ =?us-ascii?Q?0qjzDbx7GUdEF2//Gp6F5dkonDeUX5Tg8m5eE5uiWOk0VoSRd0dPmheMcjlt?=
+ =?us-ascii?Q?YT5E+mt/rIiTAh1qjjIN9UG2cuShxJKaL36UAt+TXI2/EThZYw1ssDDc1Gv9?=
+ =?us-ascii?Q?UTs1TFxkb7KaQXpIlLBZwPFlK2/jwoDih6SaZOzQBq8TXTvMjOk0nZ4SNbKR?=
+ =?us-ascii?Q?IO1nHT2s7j3ivLtaisZ7RhyxQDB1mOfC6bPCuA8+rfKLILQVyHi++4ZOUFxg?=
+ =?us-ascii?Q?fPku4IHV0abTxkVMXX9SnjVDWTOl8kThkShv/nFA9kUqZVKm+Mr3Z+V4Dxsg?=
+ =?us-ascii?Q?4o3wBo90y941rgQXzo8E3yBl4FdUyWV4SusQ7FUxqtxjfCsBEtbs9YNZlViB?=
+ =?us-ascii?Q?H5dGFFOdc6hj4L4IDx4ZfKrfhUlEFKnpetBh8T9luzKh9UOme1J6PmsG+Stt?=
+ =?us-ascii?Q?FmZXd39nZDjxOJrnlsHGxm0QvwRK3Bbm4hzS+RhDEsaBBSo3oFPRkiFY0he9?=
+ =?us-ascii?Q?7hUhuZ6TBdvVQ6JDe2fRDwXhf8ARDCrFfwhKv9pWnRt1EYo02fzz+LY/Dalh?=
+ =?us-ascii?Q?K50zCQ61ooPKMCmO5aJrj09eu7Andg1dJ9Egvf5want8SJ2CSRgg5EyErnZS?=
+ =?us-ascii?Q?16wEnbc5erlmvgH+k+NW/bO9TRk8ZUcV8nOQKzE7AB+sWG5vJ+ZlDzdtqwGl?=
+ =?us-ascii?Q?6ao5L4nGORriE85v9P2HioOqJoz8d/pSD5hFhaNOcKIF3rPx3gbKeupnY0JW?=
+ =?us-ascii?Q?dQKC99Q5NgdYNeZFdYdfAqS+VubGeAKTpcoqiEMdSqDuzd6zBGr1CAp1s5oe?=
+ =?us-ascii?Q?DINcmi9A+thsnlOiA9vX9/rSyAh1vR5Dcsas4loqKtzG8B7nWCDlxhOO1qBk?=
+ =?us-ascii?Q?5u+CiJBVig=3D=3D?=
 X-OriginatorOrg: atomlin.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ce7585f7-eb57-4267-03f5-08df15e54996
+X-MS-Exchange-CrossTenant-Network-Message-Id: 722052fb-eab3-473a-816c-08df15e8b5b7
 X-MS-Exchange-CrossTenant-AuthSource: CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Sep 2026 00:31:03.8822
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Sep 2026 00:55:33.7609
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: e6a32402-7d7b-4830-9a2b-76945bbbcb57
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: y8Ll3fa6SwWJku9dJ9X9IjZVNE8WkAkNZUAV6+DabY7yqXJ/E/9Y1+uiakxZcFgC6UNHkCsCil0c9r9KRJsxkQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: LO6P123MB6598
+X-MS-Exchange-CrossTenant-UserPrincipalName: YEW/ZliNLuPNg9zJDCwg8C/OwfGFmVO0fGpniBCzG8KP0QXSv9r2tsRjNF2PBZhJJjTk2gG+o+5Kf3SNBDlJkg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CWLP123MB2769
 
-On Sun, Sep 06, 2026 at 09:51:34PM -0400, Aaron Tomlin wrote:
-> When pretty-printing augmented syscall arguments in perf trace, raw payload
-> data captured from BPF programs is passed to various argument formatters
-> via struct syscall_arg.
-> 
-> However, when processing malformed, truncated, or untrusted perf.data
-> records (e.g., truncated reads in BPF ringbuffers, cross-architecture
-> replays, or crafted sample records), the payload can be shorter than
-> expected or contain invalid size fields:
->     1.  Dereferencing augmented_arg fields before validating that
->         arg->augmented.size is at least sizeof(struct augmented_arg) can read
->         past the available buffer.
-> 
->     2.  Passing augmented_arg->size to formatters or loop counters without
->         bounding it against the remaining buffer can cause out-of-bounds memory
->         reads.
-> 
->     3.  In multi-argument syscalls, calculating consumed bytes as:
-> 
->             consumed = sizeof(*augmented_arg) + augmented_arg->size;
-> 
->         without bounds checking can overflow signed integer bounds or cause
->         arg->augmented.size to underflow. This advances arg->augmented.args
->         out of bounds, corrupting parsing state for all subsequent
->         arguments in the same syscall.
-> 
->     4.  Type/family-specific beautifiers (i.e., BTF struct dump, sockaddr,
->         timespec, perf_event_attr) can dereference structure fields without
->         verifying that the payload contains sufficient bytes for the target
->         type.
-> 
-> This series adds comprehensive upper-bound and payload-size checks across
-> all augmented argument beautifiers in perf trace. If validation fails in
-> any beautifier, it cleanly falls back to printing the raw pointer/hex
-> value.
-> 
-> To facilitate clean, conflict-free backports across active LTS kernels,
-> each formatter fix is isolated to its own commit.
-> 
-> Changes since v1:
-> 
->  - Expanded the original single patch into a 6-patch series in response to
->    reviewer feedback from sashiko-bot regarding similar bounds check
->    omissions across other augmented formatters in perf trace
-> 
->  - Added new patch validating payload bounds and consumed offset
->    calculations in syscall_arg__scnprintf_augmented_string()
-> 
->  - Added new patch validating payload bounds before byte traversal in
->    syscall_arg__scnprintf_buf(), isolated to ensure an independent Fixes:
->    tag for stable backports
-> 
->  - Added new patch validating payload size against sizeof(struct timespec)
->    in syscall_arg__scnprintf_augmented_timespec()
-> 
->  - Added new patch validating payload bounds and family-specific lengths in
->    syscall_arg__scnprintf_augmented_sockaddr()
-> 
->  - Added new patch validating payload size against at least
->    PERF_ATTR_SIZE_VER0 in
->    syscall_arg__scnprintf_augmented_perf_event_attr()
-> 
->  - Link to v1: https://lore.kernel.org/all/20260906011132.279321-1-atomlin@atomlin.com/
-> 
-> Aaron Tomlin (6):
->   perf trace: Add upper bound checks for augmented BTF struct printing
->   perf trace: Validate payload bounds in augmented string beautifier
->   perf trace: Validate payload bounds in augmented buffer beautifier
->   perf trace beauty: Validate payload size in augmented timespec
->     beautifier
->   perf trace beauty: Validate payload size in augmented sockaddr
->     beautifier
->   perf trace beauty: Validate payload size in augmented perf_event_open
->     beautifier
-> 
->  tools/perf/builtin-trace.c                | 36 +++++++++++++++++------
->  tools/perf/trace/beauty/perf_event_open.c | 19 ++++++++++--
->  tools/perf/trace/beauty/sockaddr.c        | 35 ++++++++++++++++++----
->  tools/perf/trace/beauty/timespec.c        | 19 ++++++++++--
->  4 files changed, 89 insertions(+), 20 deletions(-)
-> 
-> 
-> base-commit: 02f6847e1822714a4201b87e42f92b0d43e8549d
-> -- 
-> 2.55.0
-> 
+When pretty-printing augmented syscall arguments in perf trace, raw payload
+data captured from BPF programs is passed to various argument formatters
+via struct syscall_arg.
 
-Kindly disregard this iteration, as per Sashiko [1].
+However, when processing malformed, truncated, or untrusted perf.data
+records (e.g. truncated reads in BPF ringbuffers, cross-architecture
+replays, or crafted sample records), the payload can be shorter than
+expected or contain invalid size fields:
+    1.  Dereferencing augmented_arg fields before validating that
+        arg->augmented.size is at least sizeof(struct augmented_arg) can read
+        past the available buffer.
 
-The observations regarding uninitialised augmented_arg->size reads, arising
-from the fact that several eBPF probes in augmented_raw_syscalls.bpf.c omit
-populating this field from the reused per-CPU map, are indeed entirely
-valid.
+    2.  Passing augmented_arg->size to formatters or loop counters without
+        bounding it against the remaining buffer can cause out-of-bounds memory
+        reads.
 
-Likewise, the points concerning dispatch extensibility and variable-length
-path handling in the sockaddr beautifier, alongside potential TOCTOU
-discrepancies in perf_event_open, have been taken on board. Additionally,
-regarding the suggested inclusion of <stdbool.h> and <stddef.h> in
-sockaddr.c, these have been intentionally omitted as the requisite types
-and macros (bool and offsetof()) are already provided unconditionally via
-trace/beauty/beauty.h.
+    3.  In multi-argument syscalls (e.g. rename*), calculating consumed bytes
+        without 64-bit alignment advances arg->augmented.args to unaligned
+        addresses. Furthermore, calculating consumed offsets without bounds
+        checking can overflow signed integer bounds or cause arg->augmented.size
+        to underflow, advancing arg->augmented.args out of bounds and
+        corrupting the parsing state for all subsequent arguments.
 
-[1]: https://sashiko.dev/#/patchset/20260907015140.363076-1-atomlin%40atomlin.com
+    4.  Type/family-specific beautifiers (i.e. BTF struct dump, sockaddr,
+        timespec, perf_event_attr) can dereference structure fields without
+        verifying that the payload contains sufficient bytes for the target
+        type, or trust embedded size fields (such as attr->size) that exceed
+        the actual captured buffer.
 
+This series adds comprehensive upper-bound and payload-size checks across
+all augmented argument beautifiers in perf trace, enforces 64-bit pointer
+alignment when consuming multi-argument payloads, and ensures extensible
+dispatching for address family formatters. If validation fails in any
+beautifier, it cleanly falls back to printing the raw pointer/hex value.
+
+To facilitate clean, conflict-free backports across active LTS kernels,
+each fix is isolated to its own commit.
+
+Changes since v2:
+
+ - Expanded the series from 6 to 7 patches by splitting the string
+   beautifier pointer advancement and 64-bit alignment logic into a
+   dedicated patch
+
+ - Added a new patch to round up consumed payload bytes to 64-bit
+   boundaries using PERF_ALIGN(), matching the alignment produced by the
+   BPF tracepoint probes (sys_enter_rename*) in
+   augmented_raw_syscalls.bpf.c
+
+ - Reset arg->augmented on buffer overrun to prevent corrupted parsing
+   state from reading out of bounds on subsequent arguments
+
+ - Validated payload size directly against arg->augmented.size instead of
+   reading augmented_arg->size, which is unpopulated by the BPF tracer
+   (sys_enter_{clock_,}nanosleep) and contains stale per-CPU map data
+
+ - Refactored af_scnprintfs into a dispatch table associating each
+   formatter with its minimum required payload size (.min_size), preserving
+   extensibility for future address families without hardcoded conditionals
+
+ - Used offsetof(struct sockaddr_un, sun_path) + 1 for AF_LOCAL rather than
+   sizeof(struct sockaddr_un) to correctly accommodate variable-length
+   domain socket paths
+
+ - Validated payload size against arg->augmented.size and payload_size
+   rather than reading uninitialized augmented_arg->size
+
+ - Validated payload size directly against arg->augmented.size instead of
+   reading uninitialized augmented_arg->size, which is unpopulated by
+   sys_enter_perf_event_open()
+
+ - Verified that when attr->size is specified, it is at least
+   PERF_ATTR_SIZE_VER0 and does not exceed payload_size, preventing
+   out-of-bounds reads in perf_event_attr__fprintf() caused by malformed
+   records or TOCTOU mutations during trace capture
+
+ - Link to v2: https://lore.kernel.org/lkml/20260907015140.363076-1-atomlin@atomlin.com/
+
+Changes since v1:
+
+ - Expanded the original single patch into a 6-patch series in response to
+   reviewer feedback from sashiko-bot regarding similar bounds check
+   omissions across other augmented formatters in perf trace
+
+ - Added new patch validating payload bounds and consumed offset
+   calculations in syscall_arg__scnprintf_augmented_string()
+
+ - Added new patch validating payload bounds before byte traversal in
+   syscall_arg__scnprintf_buf(), isolated to ensure an independent Fixes:
+   tag for stable backports
+
+ - Added new patch validating payload size against sizeof(struct timespec)
+   in syscall_arg__scnprintf_augmented_timespec()
+
+ - Added new patch validating payload bounds and family-specific lengths in
+   syscall_arg__scnprintf_augmented_sockaddr()
+
+ - Added new patch validating payload size against at least
+   PERF_ATTR_SIZE_VER0 in
+   syscall_arg__scnprintf_augmented_perf_event_attr()
+
+ - Link to v1: https://lore.kernel.org/all/20260906011132.279321-1-atomlin@atomlin.com/
+
+Aaron Tomlin (7):
+  perf trace: Add upper bound checks for augmented BTF struct printing
+  perf trace: Validate payload bounds in augmented string beautifier
+  perf trace: Align pointer advance in augmented string beautifier
+  perf trace: Validate payload bounds in augmented buffer beautifier
+  perf trace beauty: Validate payload size in augmented timespec
+    beautifier
+  perf trace beauty: Validate payload size in augmented sockaddr
+    beautifier
+  perf trace beauty: Validate payload size in augmented perf_event_open
+    beautifier
+
+ tools/perf/builtin-trace.c                | 45 +++++++++++++++++------
+ tools/perf/trace/beauty/perf_event_open.c | 23 ++++++++++--
+ tools/perf/trace/beauty/sockaddr.c        | 35 +++++++++++++-----
+ tools/perf/trace/beauty/timespec.c        | 15 ++++++--
+ 4 files changed, 91 insertions(+), 27 deletions(-)
+
+
+base-commit: 02f6847e1822714a4201b87e42f92b0d43e8549d
 -- 
-Aaron Tomlin
+2.55.0
+
