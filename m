@@ -1,52 +1,47 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF22E2C15A0;
-	Sat, 19 Sep 2026 17:41:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EF70369D66;
+	Sat, 19 Sep 2026 17:56:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789839711; cv=none; b=Ts81Bbt6KhzCc+4qY9gVxAQl8EpACbB1xldFZrdOJQMyIkZ5Xywu6l/6+4MML9/C50tHTf/P3VJNL/GiemU5pZhhCRDEFcFQfAp9pHUyJCiHTwIVxm0vvHrOmExijF4h/h1wViKrdOvqKvOX5UYoisD/A4+mzlWfiCi8rXvtFPI=
+	t=1789840597; cv=none; b=m8mMM15zbt1k8dYdmLcrgchRnTIXFQs5juBOJ0uqpXXJnrQQ13DJQxQjbg/BVloakzXlXqvomu6JRIEDnZByb3Q0MvnkqFbBveseQ3hmfSSOREwSyMssemxrVG/uNzTxduGjq00RkaZaAsHYuRPE35/PP2YEhG63E0einxonySE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789839711; c=relaxed/simple;
-	bh=/5CQfcQ/zVHloFdkLHFmPmEKp+spsSfOo7qRntDD58k=;
+	s=arc-20240116; t=1789840597; c=relaxed/simple;
+	bh=DMIEPAt5eOC5dwEi3Ho5pwdaUdehVtkjPRiYLRdEk7s=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Vti4yVZZhU5R6e7twOp6rpZ3yaIHV/d5DP4nHvCy3wpk3/5EMnozpRfSCiZ9FCucS8zyg1zaetO659lXESbmUfb/jJqAU8xsG/03N550Bx8ksc1U1n1F30K05LSBZhy230yRvLOn4UcATPn+EOKM4T5Se+sPgG75ZhGX6h/ydPM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RJ1oWJLG; arc=none smtp.client-ip=100.103.45.18
+	 Content-Type:Content-Disposition:In-Reply-To; b=djSnwSFZpkjG/wEqcqe4WtQtAWbApmgbQNeBXt9hVd5ti4kAsjdhE8smpdRFOw50gBALqPHEaIgx1q3xl0nwmc0+X5EefXkcQ2oidE95ZnB3k5qWqJqU2DU2H98Qy0vlz4/80tdMtvKUnkpcTt1fOWuSjth0V21wU3WNo9FkW8g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RnRxNjWB; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RJ1oWJLG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BA30A1F000FF;
-	Sat, 19 Sep 2026 17:41:49 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RnRxNjWB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 270991F000FF;
+	Sat, 19 Sep 2026 17:56:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789839710;
-	bh=rt1ngzsEC91Xl99ToiwedFB2NPixEdDOoeHFAj65WUA=;
+	s=k20260515; t=1789840592;
+	bh=eLXADnUaztTfvh4+xBPZKmE+zTftl10pApNl7PyU/lk=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=RJ1oWJLGL9wJeCPZnT6D8HEqDlzh/0ogLYDRqv3NsTE9KDD7ljYwThrefrM3nywZ6
-	 p42hh8Qw9Bdo55j8VlBgsgde3i5jXUtokv8+gHNzurkqTdIL+ji/jc9D6b1rXBBnhf
-	 8DyJanEY46793Q3rHo4eCTSOUWqfTDNdPJFvLOP1TGnEtqyM/la2KM9wH7mmbSMeyj
-	 9EhQyxWO0J3/eLwGz5iURUNoTBWe453QIUtIoPRRnDSDDReggJsE4xwvgD9SzmeksD
-	 txNVisUt/e8FTfUk73+JiOscXLzzNVCVEAw6LivAywEN0w+AJ6tYkXi6QWG08jN3Hm
-	 IZ6Dt+s9wbaww==
-Date: Sat, 19 Sep 2026 10:41:48 -0700
+	b=RnRxNjWBhqW/w/9YZGgq2hKuLXIX3jwOSc6gy7SdynNzolge1EJUVvXy8odbDjoIP
+	 0i5Ibuuky+qcZhcNT2jM7qRQsmjPFBA7zPK9ACBH4sFXGVx+Za5gcjXMcW+LKoWO/B
+	 qpjyT2cDDM3jTjcqicJXPUZhK4EfYLaO8AD7l3Lq9ESB+tuGcb+PK9MQ+tYlcqy1l2
+	 jICgkqiWqAv/1axrw9TNPtwQG5PpHy4FDGV7sBAyvs7X4UipcriLtQ3aHMEKctK3MP
+	 gqeOGT37huMYFaTSyIXqb1u7sgElzd/DfZmmk+23t/pUYoW4g2EezI6C7TBI+l5qiV
+	 ETu4VAJvrI/eA==
+Date: Sat, 19 Sep 2026 10:56:30 -0700
 From: Namhyung Kim <namhyung@kernel.org>
-To: Arnaldo Melo <arnaldo.melo@gmail.com>
-Cc: Tengda Wu <wutengda@huaweicloud.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>, james.clark@linaro.org,
-	xueshuai@linux.alibaba.com, Ian Rogers <irogers@google.com>,
+To: Ian Rogers <irogers@google.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Jiri Olsa <jolsa@kernel.org>,
 	Adrian Hunter <adrian.hunter@intel.com>,
-	Peter Zijlstra <peterz@infradead.org>, leo.yan@linux.dev,
-	Li Huafei <lihuafei1@huawei.com>,
-	Kim Phillips <kim.phillips@arm.com>,
-	Mark Rutland <mark.rutland@arm.com>, Ingo Molnar <mingo@redhat.com>,
-	Bill Wendling <morbo@google.com>,
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Zecheng Li <zli94@ncsu.edu>, linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org, llvm@lists.linux.dev
-Subject: Re: [PATCH v6 00/26] perf arm64: Support data type profiling
-Message-ID: <aq7JXGyhWM5M6ubi@z2>
-References: <cover.1789521520.git.wutengda@huaweicloud.com>
- <aq41dlDILyJlw-77@z2>
- <EC6E525E-387A-493A-B720-80E6FB38B05B@gmail.com>
+	James Clark <james.clark@linaro.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org, Zecheng Li <zli94@ncsu.edu>,
+	Yanbo Zhao <yzhao62@ncsu.edu>, Tengda Wu <wutengda@huaweicloud.com>,
+	Shuai Xue <xueshuai@linux.alibaba.com>
+Subject: Re: [PATCH v5 0/4] perf annotate-data: Support flexible array types
+Message-ID: <aq7MzpfPwQkv-oML@z2>
+References: <20260919063745.48444-1-namhyung@kernel.org>
+ <CAP-5=fUt43_08GcNV3bz-SFmRjBN+NoNZ7zEJyBDa+tZiN0vdA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -55,66 +50,48 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <EC6E525E-387A-493A-B720-80E6FB38B05B@gmail.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAP-5=fUt43_08GcNV3bz-SFmRjBN+NoNZ7zEJyBDa+tZiN0vdA@mail.gmail.com>
 
-On Sat, Sep 19, 2026 at 08:22:01AM -0300, Arnaldo Melo wrote:
-> 
-> 
-> On September 19, 2026 4:10:46 AM GMT-03:00, Namhyung Kim <namhyung@kernel.org> wrote:
-> >Hello,
+On Sat, Sep 19, 2026 at 09:18:55AM -0700, Ian Rogers wrote:
+> On Fri, Sep 18, 2026 at 11:37 PM Namhyung Kim <namhyung@kernel.org> wrote:
 > >
-> >On Wed, Sep 16, 2026 at 01:29:14AM +0000, Tengda Wu wrote:
-> >> This patch series implements data type profiling support for arm64,
-> >> enabling 'perf annotate --data-type' to resolve memory locations and
-> >> variable types on arm64 platforms.
-> >> 
-> >> The main changes since v5 include:
-> >> v5: https://lore.kernel.org/all/cover.1788872630.git.wutengda@huaweicloud.com/
-> >> 
-> >> * __get_dwarf_regnum_arm64 optimization: compute directly based on character
-> >>   judgment, avoiding strtol calls. (Ian Rogers)
-> >> 
-> >> * extract_op_location_arm64 issue fix: support parsing instructions such as
-> >>   'cmp x0, x1, lsl #3'.
-> >> 
-> >> * Instruction tracking part, fixing issues pointed out by Sashiko, including:
-> >>   - adding TSR_KIND_POINTER handling for ldr.
-> >>   - premature returns in add and ldr causing percpu handling to be skipped.
-> >>   - adding a reg != -1 check for stack type propagation, etc.
-> >> 
-> >> Patch organization
-> >> ==================
-> >> 
-> >> The series is organized as follows:
-> >> 
-> >> 1. Fix disassembly mismatches (Patches 01-02)
-> >>    Current perf annotate supports three disassembly backends: llvm,
-> >>    capstone, and objdump. On arm64, inconsistencies between the output
-> >>    of these backends (specifically llvm/capstone vs. objdump) often
-> >>    prevent the tracker from correctly identifying registers and offsets.
-> >>    These patches resolve these mismatches, ensuring consistent instruction
-> >>    parsing across all supported backends.
-> >> 
-> >> 2. Infrastructure for arm64 operand parsing (Patches 03-09)
-> >>    These patches establish the necessary infrastructure for arm64-specific
-> >>    operand handling. This includes implementing new callbacks and data
-> >>    structures to manage arm64's unique addressing modes and register sets.
-> >>    This foundation is essential for the subsequent type-tracking logic.
-> >> 
-> >> 3. ARM SPE event handling (Patches 10-11)
-> >>    Patch 10 automatically deduplicates overlapping ARM SPE events (e.g.,
-> >>    l1d-miss, tlb-access) in 'perf annotate' by retaining only the
-> >>    "instructions" event when data type profiling is enabled. Patch 11
-> >>    defaults  the synthesized event period to 1 for ARM SPE to fix zero
-> >>    'Percent' values in annotate output.
+> > Hello,
 > >
-> >Thanks for working on this!
+> > The flexible arrays are dynamically allocated with different size.  So checking
+> > with the original type size won't match and cannot find the type if the offset
+> > is bigger than the size.  This patch series detects those flex-arrays and allows
+> > accesses beyong the original size.
 > >
-> >I think it's ready to merge up to this point. 
+> > I'm not sure what's the best way to add test codes for data type profiling as it
+> > seems we need to add a lot more workloads for different cases.  Probably we may
+> > want to split the workloads as separate binaries.
 > 
-> You mean patches 1-11? 
+> We have tools/perf/tests/shell/data_type_profiling.sh, I wonder can we
+> not just have some workload with a:
+> ```
+> struct flex_array {
+>    int len;
+>    int vals[];
+> };
+> ```
+> then create a randomly sized flex array and access  it in a loop something like:
+> ```
+> struct flex_array *a = calloc(sizeof(*a) + random_number * sizeof(int));
+> a->len = random_number;
+> while (!done) { /* done is set by an alarm like with noploop */
+>    for (int i = 0; i < a->len; i++) {
+>        a[i]++; /* Expect blame on struct flex_array here */
+>    }
+> }
+> ```
+> ensuring the type profile blames the struct flex_array?
 
-Yes.
+Sure, I can add that.
+
+But I was afraid it'd need many small workloads to check data type
+profiling behavior for different aspects.  Maybe we can think about it
+later when we need more. :)
 
 Thanks,
 Namhyung
