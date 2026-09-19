@@ -1,44 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A45BE3AAF63
-	for <linux-perf-users@vger.kernel.org>; Sat, 19 Sep 2026 01:08:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64D093A7F6F
+	for <linux-perf-users@vger.kernel.org>; Sat, 19 Sep 2026 01:08:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789780119; cv=none; b=l2FtgRelzcVM6POtKD4GHlM2iyolG2lSlf2F6duQ0pmzUrKB3soYMIxKksOiu61AP7SgyK2zapDxQs8NlqYYo9hj+I6PnZJZLmO9krfwb0U678XUbG2LAg1hL2X2LYlAl/vdgkWPNlr4WVmoyWYWIB6S9bV6VsuMsBXMlhlqWVg=
+	t=1789780138; cv=none; b=mSO2UyChUpLG7WMEUQ7aamCdLOmoAUe8F8cNUCe3wJMORlCsFbXax+C3q+M3oUNk39R7QQg0MbZEyXnwjeD/8BWKF0TQrC+3/Kcdn0IEosnoa8O1VAUXw3cirYzgKpoSmDiVTCCnYHDgVdxCm+rhE3TW12Q6GeRGNActV5X5hqA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789780119; c=relaxed/simple;
-	bh=KuM9hSGC3TA54vioYK7Jwt7ez1Styowhlu5YCm5F8b0=;
+	s=arc-20240116; t=1789780138; c=relaxed/simple;
+	bh=Jvx9eKuoIHC6l0ve78mfr3HgtEaaGgY+sKlFx8UtMKY=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=b9zxBsPpbg32JEEPAIOlhiZzfDEEQoH8Xj3Fu/+X/X0zIP3vi5HWRqtB0ImxupRIWjVHVfPj6Hp1/WCgonyS6NLKpJj0swdP6QQa7QMehxAcuH44yvGlEcZh4KVEgM3NtAQK1ggyfGZMmpBp1Q5Ketg464laV++bejBdX9P+HMY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DZWkJWqt; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=ahEp1/HHQO3G0JR4/UAFGfLaLGYaDhhR4mT6I34CwZk1YYPkjmy/j8a5n3TgvNoQYIgm5lWus6UcwORV34azEmcae91CYrnIFyW9p/uNWZvx2yQP+gi/EEhBOcGH7Zsy0KHU+Wqj8+IKY68kTvrWIwFIcxrS4d6q0dBMmIDRWAQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WifuL0nY; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DZWkJWqt"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2F4CF1F000FF;
-	Sat, 19 Sep 2026 01:08:24 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WifuL0nY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A74071F000FF;
+	Sat, 19 Sep 2026 01:08:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789780104;
-	bh=girRsS0+GmNIoz20sEShnFopkDUnUutqAMy2aWVrlxw=;
+	s=k20260515; t=1789780130;
+	bh=59Gutw9hZs40EdAWASzJgxTyCW8eiqJu6KI3YWrEFjo=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=DZWkJWqtxggHRPpHxKavz1rgWIrnSEVcb2dbZgjB2gvCCLS5YVK4QQBQax5RWVFn/
-	 qyUyoj7qWp/gGUD1Bj31RIEKg/6QTPALukDNSP7GNnnzJ9aQTZo8d2HpebT4Oo9w19
-	 j7cF/PZwp7HYsfskMXjlM4FlgFIRZPODIjBn2EbRTsL/WCGPyJKeDfEtK3yF+SaZZb
-	 0V/5aZ10dwvn61d1uhlN3GtHftHDSyzxxjNNL7U9V4ATBjM/iDzqwB6H+aC276bQiy
-	 KMLjt9phtyhgT1nJLG0bJ+lbONR7F6V9tkVoSc3t3oCJpWOJ08ndW33aCiPUyMSI7I
-	 uy7BimXc5NKUw==
+	b=WifuL0nYW8/6E4/jmCsyOn3/BKWIY/mfYCQpoa57NuI/vyWsvZDBmdt8tgxy2ZyvB
+	 ikOcAIr46Jbx5XT0bv5HjLv2VcH2Ca3PAmox3xsz/fPBcv+NZgakUdM5ceUuYvKWwY
+	 pPb9TQHD7dqZSZikh5HY2MsawrzBDrlxRJ7+5JwHHRA6ziNTAJiYfSMt6mUoDbPQQ1
+	 PlbV6pC9bS1oXKBOuYVloTVL+n6gPtcKHUmIQEAN4IKCn4b/TNNP8oPvo33A3kbYzK
+	 omKRyfuamfUQjU/z6i2DXi9GlgPVxsx2A73LjRQCQHeYu1pw6HAGXqHpKDxBWpxzmx
+	 WYYy9Md7MzdHg==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v3 perf-tools-next 2/7] perf trace: Validate payload
- bounds in augmented string beautifier
+Subject: Re: [PATCH v3 perf-tools-next 3/7] perf trace: Align pointer
+ advance in augmented string beautifier
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Aaron Tomlin" <atomlin@atomlin.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260919005530.728615-3-atomlin@atomlin.com>
+In-Reply-To: <20260919005530.728615-4-atomlin@atomlin.com>
 References: <20260919005530.728615-1-atomlin@atomlin.com>
- <20260919005530.728615-3-atomlin@atomlin.com>
+ <20260919005530.728615-4-atomlin@atomlin.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Sat, 19 Sep 2026 01:08:23 +0000
-Message-Id: <20260919010824.2F4CF1F000FF@smtp.kernel.org>
+Date: Sat, 19 Sep 2026 01:08:50 +0000
+Message-Id: <20260919010850.A74071F000FF@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -47,74 +47,65 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
 Thank you for your contribution! Sashiko AI review found 1 potential issue(=
 s) to consider:
-- [Medium] perf: parser desynchronization on empty augmented string
+- [High] perf trace: unpadded augmented arguments corruption due to uncondi=
+tional PERF_ALIGN
 --
 
-commit c657a00bfdd12e1a3584bb0cd84d1c32e885c3a9
+commit edc9d58d23d30decc9c0076b0136df1e5ab01c70
 Author: Aaron Tomlin <atomlin@atomlin.com>
 
-perf trace: Validate payload bounds in augmented string beautifier
+perf trace: Align pointer advance in augmented string beautifier
 
-This commit adds bounds checking for augmented string sizes in perf trace
-to prevent out-of-bounds reads and integer overflows when parsing malformed
-perf.data records. If validation fails, it falls back to raw pointer printi=
-ng.
+This commit updates the augmented string beautifier in perf trace to
+round up the consumed payload bytes to an 8-byte boundary using PERF_ALIGN.
+It also adds bounds checking to prevent reading out of bounds if the aligned
+consumed offset exceeds the remaining buffer.
 
 > diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-> index 20fffc24507b5..91461ab927b63 100644
 > --- a/tools/perf/builtin-trace.c
 > +++ b/tools/perf/builtin-trace.c
-> @@ -1898,12 +1898,21 @@ static void thread__set_filename_pos(struct threa=
-d *thread, const char *bf,
->  static size_t syscall_arg__scnprintf_augmented_string(struct syscall_arg=
- *arg, char *bf, size_t size)
->  {
->  	struct augmented_arg *augmented_arg =3D arg->augmented.args;
-> -	size_t printed =3D scnprintf(bf, size, "\"%.*s\"", augmented_arg->size,=
- augmented_arg->value);
-> +	size_t printed;
-> +	int consumed;
-> +
-> +	if (arg->augmented.size < (int)sizeof(*augmented_arg))
-> +		return 0;
-> +
-> +	if (augmented_arg->size <=3D 0 || augmented_arg->size > arg->augmented.=
-size - (int)sizeof(*augmented_arg))
-> +		return 0;
-
-[Severity: Medium]
-When a BPF program pushes an empty augmented string record (e.g., size <=3D=
- 0
-due to a read failure like -EFAULT), does returning early here cause the
-payload parser to desynchronize?
-
-By returning 0 without consuming the header (sizeof(*augmented_arg)) and
-advancing the parsing pointer arg->augmented.args, it seems this might corr=
-upt
-the formatting of subsequent augmented arguments in multi-argument syscalls
-(like link), displaying them as raw pointers because the pointer is left at
-the wrong offset.
-
-Should the header be consumed even when the size is empty or invalid to
-maintain parser synchronization?
-
-> +
-> +	printed =3D scnprintf(bf, size, "\"%.*s\"", augmented_arg->size, augmen=
-ted_arg->value);
->  	/*
+> @@ -1912,10 +1912,15 @@ static size_t syscall_arg__scnprintf_augmented_st=
+ring(struct syscall_arg *arg, c
 >  	 * So that the next arg with a payload can consume its augmented arg, i=
 .e. for rename* syscalls
 >  	 * we would have two strings, each prefixed by its size.
 >  	 */
-> -	int consumed =3D sizeof(*augmented_arg) + augmented_arg->size;
-> +	consumed =3D sizeof(*augmented_arg) + augmented_arg->size;
+> -	consumed =3D sizeof(*augmented_arg) + augmented_arg->size;
+> +	consumed =3D sizeof(*augmented_arg) + PERF_ALIGN(augmented_arg->size, s=
+izeof(u64));
+
+[Severity: High]
+Does this unconditional alignment cause corruption when reading arguments=20
+produced by the generic BPF tracepoint?
+
+The generic BPF producer, specifically augment_arg() in=20
+tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c, emits unpadded,=20
+tightly-packed arguments. When tracing syscalls with multiple string or=20
+pointer arguments (such as linkat, symlinkat, or move_mount), the BPF=20
+program packs the strings consecutively.
+
+Since PERF_ALIGN skips non-existent padding bytes here, could this=20
+over-advance the pointer and misalign the reader for the second argument,=20
+causing it to read arbitrary payload bytes as the size and value fields?=20
+
+Additionally, might this affect backward compatibility when analyzing=20
+older, unpadded perf.data files where augmented string arguments are not=20
+aligned to an 8-byte boundary?
+
 > =20
->  	arg->augmented.args =3D ((void *)arg->augmented.args) + consumed;
->  	arg->augmented.size -=3D consumed;
+> -	arg->augmented.args =3D ((void *)arg->augmented.args) + consumed;
+> -	arg->augmented.size -=3D consumed;
+> +	if (consumed > arg->augmented.size) {
+> +		arg->augmented.args =3D NULL;
+> +		arg->augmented.size =3D 0;
+> +	} else {
+> +		arg->augmented.args =3D ((void *)arg->augmented.args) + consumed;
+> +		arg->augmented.size -=3D consumed;
+> +	}
 > =20
 >  	return printed;
 >  }
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260919005530.7286=
-15-1-atomlin@atomlin.com?part=3D2
+15-1-atomlin@atomlin.com?part=3D3
