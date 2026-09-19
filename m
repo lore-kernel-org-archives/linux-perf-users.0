@@ -1,55 +1,53 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90AB9547042
-	for <linux-perf-users@vger.kernel.org>; Sat, 19 Sep 2026 06:43:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECF3C1A6835
+	for <linux-perf-users@vger.kernel.org>; Sat, 19 Sep 2026 06:45:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789800202; cv=none; b=gAsPDLRLPHtvVzEOyjhwY3aIlfmaHq8jNMuM2Ljsfz1OWGxMSQjXcSVkIYR10i4SraojkSDhhAP2KKDT+pLA+O2Ebql87U7E5l+MmoZjt4VRELLgnAuwVY8c3piv5BXB0tlLT9L/oSqDb5j7/tx6jqQOv5a9Q6rcAB23atMy4AI=
+	t=1789800324; cv=none; b=pO3I1zQoWXwhkmtV6YkIHJU4HzT9VjvtUep9kg7GfXfNSKXx3FZH40/9BUyTWSr1evvz/veKXfpstjBcMFAxdZNwOqVHieSQ8mUULGpHnivU1Rv7O8kftK6IFJKCpN8ekhtETC1y7MPSEDpinA3yb7zqwAi7jMk84tvmNei+Bss=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789800202; c=relaxed/simple;
-	bh=UjKVZl1Nhcf/XY4p61o3SXx+Fh8F5N5WuxJQ4a5udnk=;
+	s=arc-20240116; t=1789800324; c=relaxed/simple;
+	bh=qylvvpkf6jhRb1UIU6r+YBRiUhl0RjB4okxZvK4PjVw=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=Lfe/JHMQWxUHQA2B7XCmvT2qlfKaLl0fthVxj6aZOUjE3DzqJA+UvjOh2tSC9PgopdjfTas78c12qK3oiQa8ouZqsriGaRtksvK5wIGERrHCtep8cew7jkPTVd7RfEA0xeig8Ci3CvpQxKBdo2vUa43fGd4Qiirf/YS0a3GvLQ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AjAcc6AO; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=rGb7/o001CffD5CeGvBrIYsKKgl0N4/eltYuskz6elf2PkKRAWysiOO8PvoywDUySkt1k980yUvC9zXy37aOVZWXxriQr1bFywhPCCvqEN/7Rir9BZurMB09glyMmklgpP22bk1GfmxVpFRRrkd65d6bmW8thcp3wFpjn55T5II=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iFXYiLVE; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AjAcc6AO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0FED01F000FF;
-	Sat, 19 Sep 2026 06:43:21 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iFXYiLVE"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 092941F000FF;
+	Sat, 19 Sep 2026 06:45:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789800201;
-	bh=UjKVZl1Nhcf/XY4p61o3SXx+Fh8F5N5WuxJQ4a5udnk=;
+	s=k20260515; t=1789800322;
+	bh=O6uveWxW20zV0ZI1bDNjzfw8eNXNn0ph4YM5bbIJbjQ=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=AjAcc6AOU3n5v9ETPcd9AGcS34ZWLmCB6JH42IqVtd83KR3X3v9N9eNQojOWiNYY0
-	 Y/72+0ditJ2v6423HpyRhWnhwT9yw3u2upFb5pymPfwMYvjmHxZtFRTPwyFAQVHRL9
-	 IM8iLPXPCz4+VlUOJa2AyJxn+7+s60xrJrOcCulZtPJeVtZ+VI4/qX0BXbqyfu754C
-	 6J279tgl4rwbZGtzAi92F9OmUvCf+yg+d2vWjdsrHXBmOEzUL229S1jwFuWo9SNO5K
-	 1iT3Cs2tSVE79Jvtv+RamuP4sqhRXOpZhh8uoV/vrogbqTJJpLNPzElLLxDH+J6FRV
-	 U5M+zFwYf04oA==
+	b=iFXYiLVE0eAdCeX2Rf2bqAVyos/J0EVhitd7QG1BxDcNh8Wxsp4GhqKRkVb/HsGOl
+	 0xENpp9G/ADo2Rfo0cEvbdaZjzTIQ8GP2b/7nJWT9e6o345LBJtpYK5w4z7WC6rQlI
+	 SpnhjqTOL+K8lPWfBNJLvjGKNVQKZJy7GeASilwxGdD4gXnGPTDtoAyPxIdqJnLlek
+	 xTxv4/AZJwxVM6qpR5hrKUZwpcsPMhp8dT/NImEBmtOs1bJ3i4n9gRuHGzZm6qirgD
+	 ihK4px4FXmBKE8qzuHsg22sUZE9gB4aahnVu8oc4Z3f2JBWM9SD9qjQ+iTqeSMXOSq
+	 v06kW4ukdqp7g==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v5 2/4] perf annotate-data: A small cleanup in
- __add_member_cb()
+Subject: Re: [PATCH v5 3/4] perf annotate-data: Allow out-of-size access for
+ flex-array types
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Namhyung Kim" <namhyung@kernel.org>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260919063745.48444-3-namhyung@kernel.org>
+In-Reply-To: <20260919063745.48444-4-namhyung@kernel.org>
 References: <20260919063745.48444-1-namhyung@kernel.org>
- <20260919063745.48444-3-namhyung@kernel.org>
+ <20260919063745.48444-4-namhyung@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Sat, 19 Sep 2026 06:43:20 +0000
-Message-Id: <20260919064321.0FED01F000FF@smtp.kernel.org>
+Date: Sat, 19 Sep 2026 06:45:21 +0000
+Message-Id: <20260919064522.092941F000FF@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-> Check return value of strbuf_init() and die_get_typename() to make sure
-> if typename of a member gets never NULL.
->=20
-> Also remove the check for typedef by just using die_get_real_type().
-> It can get rid of member_type variable as well.
+> Structs that have a flex array will have accesses beyond its original
+> size as the array was declared as 0 sized.  For now, it just allow any
+> offset bigger than the size.  It could be refined later.
 >=20
 > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 
@@ -57,5 +55,5 @@ Sashiko has reviewed this patch and found no issues. It looks great!
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260919063745.4844=
-4-1-namhyung@kernel.org?part=3D2
+4-1-namhyung@kernel.org?part=3D3
 
