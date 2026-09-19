@@ -1,79 +1,104 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B219838DC45
-	for <linux-perf-users@vger.kernel.org>; Sat, 19 Sep 2026 01:05:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 056C2353A99
+	for <linux-perf-users@vger.kernel.org>; Sat, 19 Sep 2026 01:05:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789779911; cv=none; b=Csx0omyMzh7e/5jlzy+y6UTB+/aF9FKZKOK6zC+s4xQmLKDp0XeStjCuQh7lTRbOe6Mjw+HrdUIhWusQ7LBoLX5CNj3ADSkRqcb/yXPMebgh6C8pZFhq//0DDYrOLkFdN/nTD682HoGe6Tr9vCCLt+KVUAeyGeC9OBVSqGNQ43E=
+	t=1789779924; cv=none; b=L41hEZV0C13UXGaZwm96NrwmnsnB5cOZNEA+la/MzKfgQtxTsSUqrri58Wa4VgV/IQSVAuVUfngPZvRvGFATTQlQ6Jqi/EmBKj7lnf1sMgwt3r3pUNUrmdbDr55MS3qRkq/jDzdaK0umUC3h7bePf5W+KwpAk+PAg76YmD2JO/M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789779911; c=relaxed/simple;
-	bh=hZzfsM/uZ7OneJBZYD2Oui02OLuDNQBLvrYub7qZ950=;
+	s=arc-20240116; t=1789779924; c=relaxed/simple;
+	bh=CK5giABOHwLTkDq9nVCHD0von64LPY8E/IKGc0gZvMI=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=AkAcsM+1+KustYsVgnyo6cE2SOLAyfJnjvHueHI8OBNohgMLnLE18KoJNQ3RP+B+rvC9ZsQUtI1QKYWBcdmcBVgXLQP2b8Yq1yTTEGfjuqSRYl1ZCgRiup1/DBLOvBTYlVSLenLx4xIpGA+lPvR5+m6EisoN2InhqOudILdUx18=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fAKkJ2LC; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=kaEBeUdk5a9Jtqxi/f/E2FwdJ3HEab6ydc61soIFpAgkSM3Iz5VeyRlqFhAaAcH9j69QAMb5lc1IAplcxJgN23xFigx+DcHs0A/KNkZQGJM2CclZKZTlj044mjlUmZvZLB7m0s5s6Ob/udjQuBj9OeYyllVwk9Iuq//s6r6YbU0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dm4HXahK; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fAKkJ2LC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2E9C91F000FF;
-	Sat, 19 Sep 2026 01:04:57 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dm4HXahK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BEEB51F00898;
+	Sat, 19 Sep 2026 01:05:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789779897;
-	bh=hZzfsM/uZ7OneJBZYD2Oui02OLuDNQBLvrYub7qZ950=;
+	s=k20260515; t=1789779907;
+	bh=XsP6njBu3DdD8IYZPdtBFo+ewUp840BCIsaKHov1dZs=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=fAKkJ2LC/BTlx2r/rc/Vwr9NBmBc9KzwGzMQ8eQ9QDGq+Abgn5IDW2gGoISEzoGOr
-	 IeCvvMU9nT1hhSIq2vUip6cNsdLe1gKo0If0QAFZlx3SVuKBpmcesMZnBb8vR97YSH
-	 Rf3cniuZ0LJclB/49/Q3COpqiyTte2cPcBv3zsEKvDRdGa4W34Ti938ztktXe2U148
-	 kknXSJuqEGW1UqKPwmZVkriWQhfsLoKywdhBqfpRsDpQTZhPVR9zXBU0lWkrtT3+zF
-	 FQKQ3CW2s2VR0iyXXy8FoosQapeCnV6/qDkPunhgplgbNVT6nn3c9R+RLXu5yX5ecN
-	 vbL7/xctmqvxg==
+	b=dm4HXahKkdtDO+hadh91GC54UA+AekckZ+vjO/O0kLfVpJMt76cHCiK0IGVEGlO98
+	 PtpKWpblHlbblc8mXvJw85IbMvwPy3fFYFeCrTnKu6uH8rjAxD/dEhKpCdxIna5yuY
+	 ZVGLxN0NEMyZ5ZV8id6SEaZTdGBfnFQWZdkcw/Y7h7WuqR3qGwBOYdbmGCVF+AVlea
+	 89No8BHJ340Yywg9dqCj71lfEG5Qswa1n6Hl/Qhxadgkox+cPy6VwByOLq07MDke9D
+	 IZAyIaGrCuk5L/ZwJpmgpJt1quQWFvb6D+53fHcqeogPjzSz+jv7uIsRoASJSSImY7
+	 skbvqw2xUPhvQ==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v3 perf-tools-next 7/7] perf trace beauty: Validate
- payload size in augmented perf_event_open beautifier
+Subject: Re: [PATCH v3 perf-tools-next 6/7] perf trace beauty: Validate
+ payload size in augmented sockaddr beautifier
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Aaron Tomlin" <atomlin@atomlin.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260919005530.728615-8-atomlin@atomlin.com>
+In-Reply-To: <20260919005530.728615-7-atomlin@atomlin.com>
 References: <20260919005530.728615-1-atomlin@atomlin.com>
- <20260919005530.728615-8-atomlin@atomlin.com>
+ <20260919005530.728615-7-atomlin@atomlin.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Sat, 19 Sep 2026 01:04:56 +0000
-Message-Id: <20260919010457.2E9C91F000FF@smtp.kernel.org>
+Date: Sat, 19 Sep 2026 01:05:07 +0000
+Message-Id: <20260919010507.BEEB51F00898@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-> When pretty-printing augmented perf_event_attr arguments via
-> syscall_arg__scnprintf_augmented_perf_event_attr(),
-> arg->augmented.args->value is cast to struct perf_event_attr and read
-> without verifying that the captured payload is large enough to contain
-> at least PERF_ATTR_SIZE_VER0 bytes.
->=20
-> If a malformed or truncated perf.data record provides an augmented
-> payload smaller than PERF_ATTR_SIZE_VER0, accessing attr->size or
-> executing memcpy(&local_attr, attr, PERF_ATTR_SIZE_VER0) reads memory
-> past the end of the available buffer. Furthermore, when attr->size is
-> specified, accessing fields up to attr->size without verifying that
-> the captured payload contains at least that many bytes risks out-of-bounds
-> reads.
->=20
-> Validate that arg->augmented.size is at least
-> sizeof(struct augmented_arg) + PERF_ATTR_SIZE_VER0. If attr->size is
-> non-zero, verify that it is at least PERF_ATTR_SIZE_VER0 and that the
-> captured payload contains sufficient bytes before proceeding with
-> pretty-printing. If validation fails, fall back to printing the raw
-> pointer value.
->=20
-> Fixes: a9cd6c676685 ("perf trace: Add BPF augmenter to perf_event_open()'=
-s 'struct perf_event_attr' arg")
-> Reported-by: sashiko-bot <sashiko-bot@kernel.org>
-> Signed-off-by: Aaron Tomlin <atomlin@atomlin.com>
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+s) to consider:
+- [Low] perf: missing stddef.h inclusion for offsetof() violating musl comp=
+atibility
+--
 
-Sashiko has reviewed this patch and found no issues. It looks great!
+commit 319d4746425928b01209fdee80a73a7983207fbb
+Author: Aaron Tomlin <atomlin@atomlin.com>
+
+perf trace beauty: Validate payload size in augmented sockaddr beautifier
+
+This commit adds payload size validation to the augmented sockaddr beautifi=
+er
+in perf trace. It prevents reading memory past the available buffer when
+parsing malformed or truncated records.
+
+> diff --git a/tools/perf/trace/beauty/sockaddr.c b/tools/perf/trace/beauty=
+/sockaddr.c
+> index a17a27ac2a6ff..98fdabc997812 100644
+> --- a/tools/perf/trace/beauty/sockaddr.c
+> +++ b/tools/perf/trace/beauty/sockaddr.c
+> @@ -39,31 +39,48 @@ static size_t af_local__scnprintf(struct sockaddr *sa=
+, char *bf, size_t size)
+>  	return scnprintf(bf, size, ", path: %s", sun->sun_path);
+>  }
+> =20
+> -static size_t (*af_scnprintfs[])(struct sockaddr *sa, char *bf, size_t s=
+ize) =3D {
+> -	[AF_LOCAL] =3D af_local__scnprintf,
+> -	[AF_INET]  =3D af_inet__scnprintf,
+> -	[AF_INET6] =3D af_inet6__scnprintf,
+> +static const struct af_scnprintf {
+> +	size_t (*scnprintf)(struct sockaddr *sa, char *bf, size_t size);
+> +	size_t min_size;
+> +} af_scnprintfs[] =3D {
+> +	[AF_LOCAL] =3D { af_local__scnprintf, offsetof(struct sockaddr_un, sun_=
+path) + 1 },
+
+[Severity: Low]
+Does this code need an explicit inclusion of stddef.h for the offsetof macr=
+o?
+
+When compiling perf tools against musl libc, relying on implicit includes c=
+an
+lead to compilation failures because musl does not include headers implicit=
+ly
+like glibc does. Should an explicit include for stddef.h be added to mainta=
+in
+compatibility with musl?
+
+> +	[AF_INET]  =3D { af_inet__scnprintf,  sizeof(struct sockaddr_in) },
+> +	[AF_INET6] =3D { af_inet6__scnprintf, sizeof(struct sockaddr_in6) },
+>  };
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260919005530.7286=
-15-1-atomlin@atomlin.com?part=3D7
-
+15-1-atomlin@atomlin.com?part=3D6
