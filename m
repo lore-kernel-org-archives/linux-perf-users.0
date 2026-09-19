@@ -1,163 +1,326 @@
-Received: from mail-qt1-f171.google.com (mail-qt1-f171.google.com [209.85.160.171])
+Received: from mail-yx2-f13.google.com (mail-yx2-f13.google.com [74.125.224.141])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 173DF366055
-	for <linux-perf-users@vger.kernel.org>; Sat, 19 Sep 2026 22:45:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.160.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA9713793D3
+	for <linux-perf-users@vger.kernel.org>; Sat, 19 Sep 2026 23:22:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.224.141
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789857912; cv=pass; b=X8EtokUTBrjK+97Lbyy9TNrKwHs/wyQxaEvSmA0/R9WrPFy0SKRrxkGdhrOqMKhCfpCV7CQ/LNkXEZu1v8SnXmcU5awZV9UBiY1F5gLZAvwUU1KAnNEB5Bm7Ge0t8qLBcO4/fNiNCQx+IAK5HWDjnWwWaPhy0iHObR0NU37I92E=
+	t=1789860142; cv=pass; b=NAHu8VsB+zOFmXAkGk0GyfdlEE4ok7tS8moLlrhytmz+XVZbSk7FYUAAv0hG1/eAoXAXRUWpkDV7ZiKl3TUaYkDFL7Hu4lUmBLZ0gdFccYlYPMQRaWDlraFP0dm/ojFKnEvEIPeHo5n9SZ356rM5b8vtGQrSb8dNxNxbkWG+v5M=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789857912; c=relaxed/simple;
-	bh=HZVbSt+G1qkLumJSMkh/JGQ3tJBwKTzI0kEEv2uT0J4=;
+	s=arc-20240116; t=1789860142; c=relaxed/simple;
+	bh=ZbfRrCsHGOMHU1C3c/VfEoUjlwG/5DvrvQk/2XrT2Gs=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=e8aw3WvJfwSXon+OZzZtUnPA+ODJKl6/pa7I6BIbRoO60+nLdzzoLeDY0Bkgqc5xBeuEtEC4OXAbGQanVzFsZpBr+K2XbrFPYL07weAe6MAQvMUBm57FQggP+yS+QjcY8Ec6JtCmh1/U25oe0obb6YLpRQk++Ys1eAYp7BkM8tA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Z7THQIOI; arc=pass smtp.client-ip=209.85.160.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	 To:Cc:Content-Type; b=ZJOhnzOZsbpUJjutq5c88XVtCfjWS2rwLe7GnzOli2/T4FipWH2IXp2be8eQ6ZnsZeGQp1Gw1BqScYojIfXrYBSlWKz76XLmS58hJuNNKbUPU8NtMuPu8LNA71JfLxTjLnmiVSSgGVF8KvVI/I76fKxkpHc+vPdFuWoZPKz374g=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=uber.com; spf=fail smtp.mailfrom=uber.com; dkim=pass (1024-bit key) header.d=uber.com header.i=@uber.com header.b=51uyvjG+; arc=pass smtp.client-ip=74.125.224.141
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=uber.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=uber.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Z7THQIOI"
-Received: by mail-qt1-f171.google.com with SMTP id d75a77b69052e-52faa58bff5so179071cf.0
-        for <linux-perf-users@vger.kernel.org>; Sat, 19 Sep 2026 15:45:10 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1789857910; cv=none;
+	dkim=pass (1024-bit key) header.d=uber.com header.i=@uber.com header.b="51uyvjG+"
+Received: by mail-yx2-f13.google.com with SMTP id 956f58d0204a3-66e4ab222dfso1747398d50.0
+        for <linux-perf-users@vger.kernel.org>; Sat, 19 Sep 2026 16:22:20 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1789860140; cv=none;
         d=google.com; s=arc-20260327;
-        b=CtaNTdBDs7UEImkQgPql1kQsU820jOXsTWDwQve9gQut3g4jOHtcw7J1jUNatX7od4
-         Nm7gZVQhdB7+EEaChrNymYStn6fo73oTgfaaOpUHWBAFAgfbMl4sMCezmJqeyHLI39wn
-         UDmXpFFX1yXrPEjt9300hmunTk3R7oo9f6B7Ox7E95mPuRzEiyDg9oOgh5GUC+OlwVGO
-         qE1dpt5cMhJ2cVWbN3TCPE38rYC20V+z6jMqg2CqDytGVA1SXrzpv3/SRgIbfGv+tKxH
-         rGcJBPqjK/pXM/Ka55KNKflRasbX1GBzTpKV6fPbvZ9ypH56d1zkPm4FpNQ6+k1XNykO
-         fYFg==
+        b=TJ9WgOlEX7yxAjUgBEncQHKxqWNURqF7uU4/0UQ+Ie7CEqrld2Qf/3ROFPuvEq2LtF
+         fN09GPlqLj0oTK4f0FdQ+Bp/AnPC50/WssN3nZM7fR8hX9kXw2RALP4dlZQloltehrUs
+         BhyKWIS+nM+zLv9P6QQZZmjJhBVpoaUZXh+rg/Pi4JyZLs3KDXjg74xM/X+vkUJ10SIj
+         PTvNuNko60rYGCvG59DnkKNFgjMG3t4PJS1aeSyxWdWCtYW2kfVxlzdCN67E46+sZ6QG
+         DivnxjZqTN2hVcyi1yw0QsuEyt7IotNFZ4n3+mPBVHCDnVDfXl4u42L4TzZ77ZbYPRPW
+         RFwQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=WE6+DziGd7WPL7pgBonc+8aoo5lx0v1SqrA6Ym4LWYs=;
-        fh=KVuE+GJGre1TzcKcswr5IEjOEcbUNqwGSYrPjKuwd5M=;
-        b=l7hqj01W3E2YOTsdh+zgcg3TxvkGwUJPf6gSGkkkploRCogWcIhraZj8wMg4u5KYWr
-         QwyF1o5NhP6MWBO20qWHoEiRVFu9fYIF4+XOXA5ykvDT/6TfXLhxEI1TId6H1PEGXNgT
-         +t7GZvGWNZbTgkpQdM01H3VFdf5Ar58w6KPrPjzOkGTshVjwtVsWPDtweT0xA2XPNvHY
-         qDO803rC6W6E3CJyT0jmRu6fN8WDaeHdHc3kuOucP8tOksWtAiHWkX/cxXnljVKcctRU
-         gPOzT4EhzuwfWU6uA/YjIclIcKOqSEdvJLSW3aA/qXUvU28JrmTiWWdy8nNnDgrQ9iNd
-         W7vg==;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:dkim-signature;
+        bh=U2yPeC8EwDJA7EfjJHpQpcfUJ0XSVbb7bMZgykMbs/Y=;
+        fh=mJs4/jPnRQnDS4Erj+6LeQ7piz0VigGuV7DDRJl6uJo=;
+        b=SeV1EvNJoSz3gPgPEh3MM1xZChfMTqnu0wSNfKY6XgkArreYRJ/TX6p3pUuXfIbjLA
+         0TbES7Fo4Zz4DjJRwTG081TiGEtQwtsEcbaaOGyEdOXs4GdyQrx7KnvmxEVYPoOfKa66
+         RxGMesCtcboQeWTfd6GwSZ70T1NWrAvs9E/ZU1hHC8e4a5+Aprq1GWisNRKiwnGQgmT2
+         gNRphT0FkjwSlcVUpVR9V4ApPsPH/9LCvlclVT3lh8ptHBKumf60/CAP0/oaqEk82FSM
+         68tzYZzxnigq5mZpx5oWyzGmJMQyqsEJbeFm8PRijy9B7XW48OW4verdqgH47rlb/ze+
+         6Bmw==;
         darn=vger.kernel.org
 ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1789857910; x=1790462710; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=WE6+DziGd7WPL7pgBonc+8aoo5lx0v1SqrA6Ym4LWYs=;
-        b=Z7THQIOI7OrBz8hWrx4x5uwWXnTNAKpkggfY5F0ixqxbgPLp6FaF/RqCcbRwyVvhLR
-         BKWGknJk3Jkc7zZyx0vcp1noHcdufqcPaWcCWFu22Xf283GDpTszF2j0/bW6sYs9FQ/p
-         NgApxEgjTSNDmr8GyODLpvJ833IX7b6iyfnLygRj+XFhdTIRjJ9PAooKgU9w4/QMlXaZ
-         3Az8P4G+YSZKEs9XFY7fk1BqEgj2BwSpe9S+oZ+DMMegYBl4E0mINJdTOyPKJ7ekglRX
-         Nh6QD1PRQTCCc3oWBkIPCJWn4rCIGfnXJEjfwvA6Fk40NANC7zYyxOQWc8XbfsKrdYsd
-         fwtQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1789857910; x=1790462710;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+        d=uber.com; s=google; t=1789860140; x=1790464940; darn=vger.kernel.org;
+        h=content-type:cc:to:subject:message-id:date:from:in-reply-to
+         :references:mime-version:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=WE6+DziGd7WPL7pgBonc+8aoo5lx0v1SqrA6Ym4LWYs=;
-        b=2zjeabUQpoonWJdzUkmVrW9K+yk0z8cUMirczzFC3SDqRDw1sqqAqBYHs6XWDv8RyD
-         g1ymWWlytbfzdsj2s7XaNAdN3kg6Jvjdm2jkT3N8O3HzigiXxkbbSUD1+a3iDuCwOCKh
-         yPuJFsNPN0tPSg2gAuFN72KdAIDiGa9U27OIhHoSGYqXVwtAff8ARXyw6Mygr8AWfW5C
-         HfUbpB/6FwPUbSoiPA0YuX14ivH4eqwFxAzb5IRRLX+gbtdDsBKjyZivYpFGckG7ac8S
-         3eMycZtBdviF5qERuLWjr09Dsp4p1uLmzDwL/g4AQxobxB97TOx0e6kF6cnhFPnl50h0
-         anrg==
-X-Forwarded-Encrypted: i=1; AKwUvBxjzPpq6s7t9SyXzZbDEF8DDSYC/S0dTsVwG7eShIDloUDIBh7WoU8yFURoGPBX35wS41PortYISHjLW3FIrnyP@vger.kernel.org
-X-Gm-Message-State: AFuF++mRFbfnXfqKGfitu9OXFyM+JnnA9YqP2LP+gelAlWIvkuehHSxX
-	HpbS12dnxRtpDdKtT4cau89ayycOdzQi8zoCV+dun+N7JHesKIftNER5wGrcWcFJ8iGmoFCEhLD
-	BosF1rwfkfAkbvqUluIOWiC5yVjqtMYjEvro4tvLh
-X-Gm-Gg: AYBFou0+ZlIOZEyDp6EBrh4xRbSKsQZv1FQ5hvnbL/n8fI6etsU+uF/ltEtop7RsBsW
-	cqQWwLpuPOlWckHw0WtEz5/xPfLHXvWsJvaVQlrCodvTeVYFHbBtwMoQrVDKvRtI9Ujo85/Cd4r
-	jGQR9qlVirKT5AK8bUMvoM+nipmop9gy6LTOKwfbk1gqoPIKEm1rB/Exw9UP2wGrdMMacjLwpW9
-	eO39vJK47hi9YrRU/r9fOPUX1OEdldqPaqUghfaft0H9nzOTfwVLWAp0t75wOPpmEUBMtOOofqJ
-	eHJKd/ayt/XIdPYHIH9VE+NpTJWikuyqYLaC0Ty9pLYdkV9/lfFIQDQ=
-X-Received: by 2002:ac8:7d15:0:b0:531:6de:6028 with SMTP id
- d75a77b69052e-532b747150amr5903181cf.13.1789857908994; Sat, 19 Sep 2026
- 15:45:08 -0700 (PDT)
+        bh=U2yPeC8EwDJA7EfjJHpQpcfUJ0XSVbb7bMZgykMbs/Y=;
+        b=51uyvjG+/BPU5LtN8mLPwiLHR13TGkpDR6pKryy2yN2O0LPZsuJCtYafpoAaJe88ic
+         7ampGuzn+OrLacxVFKbklWzdNZxAkBSwciGGip7+s8qMWmPkKPgdqcrIyhilRoDwt17P
+         DRWgMNSxoddEKcnL8VV941TrFd0IJchu3gTp8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1789860140; x=1790464940;
+        h=content-type:cc:to:subject:message-id:date:from:in-reply-to
+         :references:mime-version:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to:content-type;
+        bh=U2yPeC8EwDJA7EfjJHpQpcfUJ0XSVbb7bMZgykMbs/Y=;
+        b=RgHL9ZPLfOEHYqNYBHmR6kQyY3dR+kyW9rwvZnHYuChrbThyp1V+ix3+L98yc6vZAM
+         OrW5kd4l6um7xk2XHnL5mm7I/sJ+0DAZv2MfIMsTo3ZfgTWKBwrhBGTVrBaUVsSK0dEP
+         VYHnQJZt+/Dv51eJlOQspVMo2gTzoZ5RDmqmAz5QhydMm0aLVolI1VcgkD2R7rl/OhBh
+         tDduvT2VJ0hhIUeaOqprNclPusekFNYMDIi7dFM4f4IXyHAR1q1vX3G83wXOK9dwYpxz
+         FFp1oTJK9nJqEFWd3obwoeWAMbWlgIpDfkxD19ehZg3aYfLbjQEcYLinFVY89OHirqp3
+         rBUw==
+X-Forwarded-Encrypted: i=1; AKwUvBywHDunNG72ICRO6E3sUe/pKMbS9plWo9Eebi5KUdX2cTfHVAEid+RB5yGlEG4EDTxNm1p4v6WpYK1ohh0K/2Ir@vger.kernel.org
+X-Gm-Message-State: AFuF++khhEvAJ49t1qtBXsI1r2pb+txhtrH/2MLCUdHdVtnMs2JkUEqq
+	/OsN4/qAsj4YDDgFrC1SvLlhPGpXpJDr27cbtNZueQ6tMmN49YG0EWzKP27BjHhEFcIRpqVBODx
+	+QCC95z98Y0/7/z+/Cy1gDd+iiQ1ziCmRNnCzmWG/hw==
+X-Gm-Gg: AYBFou24xBw/6W89LaEoFrwLawz7mWuF4m//YBfjYooaK3xnhIMtQi2CrAD68iE+xjm
+	LAce0eQA7xLHB4ddto7iip2C8TT/F9LwIJmBWSpxazkLDUnxwQuWf/mnMiGOUKVY8AeIKDaxNda
+	/iaUZ+NCEu7TR2DlcNvQwRffm3xpSC4x2B+ejIejwS63VyvFzi2nruC9ZrZWTUzlSWeOL1n3HDv
+	9bXi6RohL/0csgdrlVuZEtF5FdWewGav+a93pJRn6+0NDawXRrrMCJ/yN+y64+DqxT7kjLSb0lW
+	KBHtaRskgfeBu0KYmQcAfNUdYK+emMu0kM25jyFcjNT8Bika2Y04BQiEm5xR1cPRQv0GZs/j6Xl
+	aUVZ6nys5ibtN92vem6sWR20=
+X-Received: by 2002:a05:690c:60c7:b0:873:5ddf:d85e with SMTP id
+ 00721157ae682-897346e1584mr19909387b3.41.1789860137805; Sat, 19 Sep 2026
+ 16:22:17 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260919063745.48444-1-namhyung@kernel.org> <CAP-5=fUt43_08GcNV3bz-SFmRjBN+NoNZ7zEJyBDa+tZiN0vdA@mail.gmail.com>
- <aq7MzpfPwQkv-oML@z2>
-In-Reply-To: <aq7MzpfPwQkv-oML@z2>
-From: Ian Rogers <irogers@google.com>
-Date: Sat, 19 Sep 2026 15:44:57 -0700
-X-Gm-Features: AcwNN1UkTyo4rhv2xHwiQqVdKIaEgOooiptAL0AD3AJn-lJ4unng47STfXUmDOA
-Message-ID: <CAP-5=fVPTZsV8UodhB3ASp-DvsvYwOZdNj1xdi8qGHEW=E6Png@mail.gmail.com>
-Subject: Re: [PATCH v5 0/4] perf annotate-data: Support flexible array types
+References: <20260915-perf-symbol-memory-send-v1-0-1d3360e21f07@uber.com>
+ <20260915-perf-symbol-memory-send-v1-3-1d3360e21f07@uber.com> <aquVqBiZbVYceOJ2@z2>
+In-Reply-To: <aquVqBiZbVYceOJ2@z2>
+From: Alireza Haghdoost <haghdoost@uber.com>
+Date: Sat, 19 Sep 2026 16:22:01 -0700
+X-Gm-Features: AcwNN1Ut7SMbdpqTrGq_PmTl19FYlXIq0kQESIIpkQ07ObhSYaW8zxaCDaAbWTg
+Message-ID: <CA+w=M=Toyobj0Q9UcWUtvW2cwaNoRFaF5KX0zshc+J2pcpHmpg@mail.gmail.com>
+Subject: Re: [PATCH 3/4] perf script: Add --lazy-load-symbols for lazy symbol loading
 To: Namhyung Kim <namhyung@kernel.org>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, James Clark <james.clark@linaro.org>, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, 
-	LKML <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org, 
-	Zecheng Li <zli94@ncsu.edu>, Yanbo Zhao <yzhao62@ncsu.edu>, Tengda Wu <wutengda@huaweicloud.com>, 
-	Shuai Xue <xueshuai@linux.alibaba.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	James Clark <james.clark@linaro.org>, Andrii Nakryiko <andriin@fb.com>, 
+	Alexei Starovoitov <ast@kernel.org>, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Sat, Sep 19, 2026 at 10:56=E2=80=AFAM Namhyung Kim <namhyung@kernel.org>=
- wrote:
+> > +static void dso__clip_ondemand_symbols_at(struct dso *dso, u64 addr)
+> > +{
+> > +     struct dso_ondemand *od = dso__ondemand(dso);
+> > +     struct sym_idx *sym;
+> > +     u32 lo = 0, hi, mid;
+> > +
+> > +     if (!od)
+> > +             return;
+> > +
+> > +     hi = od->nr_sorted;
+> > +     while (lo < hi) {
+> > +             mid = (lo + hi) / 2;
+> > +             if (od->sorted[mid].start < addr)
+> > +                     lo = mid + 1;
+> > +             else
+> > +                     hi = mid;
+> > +     }
 >
-> On Sat, Sep 19, 2026 at 09:18:55AM -0700, Ian Rogers wrote:
-> > On Fri, Sep 18, 2026 at 11:37=E2=80=AFPM Namhyung Kim <namhyung@kernel.=
-org> wrote:
-> > >
-> > > Hello,
-> > >
-> > > The flexible arrays are dynamically allocated with different size.  S=
-o checking
-> > > with the original type size won't match and cannot find the type if t=
-he offset
-> > > is bigger than the size.  This patch series detects those flex-arrays=
- and allows
-> > > accesses beyong the original size.
-> > >
-> > > I'm not sure what's the best way to add test codes for data type prof=
-iling as it
-> > > seems we need to add a lot more workloads for different cases.  Proba=
-bly we may
-> > > want to split the workloads as separate binaries.
+> Why not use bsearch()?
+>
+
+This search is a lower-bound (bisect_left) operation. I could not find
+an ISO C or glibc API that provides that operation.
+In patch series v2, I will refactor this search into a small
+sym_idx__lower_bound() helper. The clipping helper (symbol-elf.c:626)
+and the exact-start IRELATIVE lookup (symbol-elf.c:2176) will use it,
+while ordinary non-overlapping interval lookups will use bsearch().
+
+
+> >  int dso__synthesize_plt_symbols(struct dso *dso, struct symsrc *ss)
+> >  {
+> >       uint32_t idx;
+> > @@ -623,6 +650,8 @@ int dso__synthesize_plt_symbols(struct dso *dso, struct symsrc *ss)
+> >       if (!elf_section_by_name(elf, &ehdr, &shdr_plt, ".plt", NULL))
+> >               return 0;
 > >
-> > We have tools/perf/tests/shell/data_type_profiling.sh, I wonder can we
-> > not just have some workload with a:
-> > ```
-> > struct flex_array {
-> >    int len;
-> >    int vals[];
-> > };
-> > ```
-> > then create a randomly sized flex array and access  it in a loop someth=
-ing like:
-> > ```
-> > struct flex_array *a =3D calloc(sizeof(*a) + random_number * sizeof(int=
-));
-> > a->len =3D random_number;
-> > while (!done) { /* done is set by an alarm like with noploop */
-> >    for (int i =3D 0; i < a->len; i++) {
-> >        a[i]++; /* Expect blame on struct flex_array here */
-> >    }
-> > }
-> > ```
-> > ensuring the type profile blames the struct flex_array?
+> > +     dso__clip_ondemand_symbols_at(dso, shdr_plt.sh_offset);
 >
-> Sure, I can add that.
+> Why is this needed?
 >
-> But I was afraid it'd need many small workloads to check data type
-> profiling behavior for different aspects.  Maybe we can think about it
-> later when we need more. :)
 
-Agreed, there may be a way to automate that. For the specific bug
-where flex arrays fail to get type profiles we should be able to avoid
-reproducing it with a simple test.
+Lazy address lookup uses the index, not the rb-tree. Without clipping
+the index at .plt, a preceding fill-forward range can claim PLT IPs
+before dso__synthesize_plt_symbols() inserts the PLT symbols. This is
+the same truncation the eager path already does on the rb-tree
+(symbol-elf.c:680). I will add that explanation at the call site in
+v2.
 
-Thanks!
-Ian
-
-> Thanks,
-> Namhyung
+> > +
+> > +     /* Alias dedup: keep only the best symbol for each start address */
+> > +     if (!symbol_conf.allow_aliases) {
 >
+> Probably better to factor out the dedup logic into a function.
+>
+
+I will factor out the duplicate-selection policy into
+symbol__choose_best() and use it in both the eager and lazy paths. The
+surrounding dedup loops remain separate because the eager path uses
+rb-tree struct symbol objects while the lazy path uses compact index
+entries before materialization.
+
+> > +             u32 out = 0;
+> > +
+> > +             for (i = 0; i < count; i++) {
+> > +                     u32 best = i;
+> > +                     const char *na = NULL, *nb;
+> > +                     char *da = NULL, *db;
+> > +
+> > +                     /* name_off is the strtab index (st_name) */
+> > +                     na = elf_strptr(elf, shdr.sh_link,
+> > +                                     od->sorted[best].name_off);
+> > +                     if (na) {
+> > +                             da = dso__demangle_sym(dso, 0, na);
+> > +                             if (da)
+> > +                                     na = da;
+> > +                     }
+> > +
+> > +                     /* Find the best among all entries with this start */
+> > +                     for (j = i + 1; j < count &&
+> > +                          od->sorted[j].start == od->sorted[i].start; j++) {
+> > +                             nb = elf_strptr(elf, shdr.sh_link,
+> > +                                             od->sorted[j].name_off);
+> > +                             if (!na || !nb)
+> > +                                     continue;
+> > +
+> > +                             /* Demangle for comparison, matching eager path */
+> > +                             db = dso__demangle_sym(dso, 0, nb);
+> > +                             if (db)
+> > +                                     nb = db;
+> > +
+> > +                             /* od->sorted[].end holds st_size at this point */
+> > +                             if (choose_best_symbol_raw(
+> > +                                         od->sorted[best].end,
+> > +                                         od->sorted[best].type,
+> > +                                         od->sorted[best].binding, na,
+> > +                                         od->sorted[j].end,
+> > +                                         od->sorted[j].type,
+> > +                                         od->sorted[j].binding, nb) == SYMBOL_B) {
+> > +                                     best = j;
+> > +                                     free(da);
+> > +                                     da = db;
+> > +                                     na = nb;
+> > +                             } else {
+> > +                                     free(db);
+> > +                             }
+> > +                     }
+> > +
+> > +                     free(da);
+> > +                     od->sorted[out++] = od->sorted[best];
+> > +                     i = j - 1; /* skip past all aliases of this start */
+> > +             }
+> > +
+> > +             if (out < count) {
+> > +                     struct sym_idx *shrunk;
+> > +
+> > +                     shrunk = realloc(od->sorted, out * sizeof(*od->sorted));
+> > +                     if (shrunk) {
+> > +                             od->sorted = shrunk;
+> > +                             od->nr_alloc = out;
+> > +                     }
+> > +             }
+> > +             count = out;
+> > +     }
+> > +
+> > +     /* Convert st_size to end addresses */
+> > +     for (i = 0; i < count; i++) {
+> > +             u64 size = od->sorted[i].end; /* was st_size */
+> > +
+> > +             if (size > 0)
+> > +                     od->sorted[i].end = od->sorted[i].start + size;
+> > +             else if (i + 1 < count)
+> > +                     od->sorted[i].end = od->sorted[i + 1].start;
+> > +             else
+> > +                     /* Match symbols__fixup_end's last-symbol formula. */
+> > +                     od->sorted[i].end = roundup(od->sorted[i].start, 4096) + 4096;
+> > +     }
+> > +
+> > +     /*
+> > +      * Keep a private fd open for pread() of symbol names.  Dup with
+> > +      * O_CLOEXEC so children don't inherit it, and so that
+> > +      * symsrc__destroy() can close the original regardless of whether
+> > +      * it is a real file or a temporary debugdata extraction.
+> > +      *
+> > +      * If the dup fails (e.g. fd exhaustion), decline by returning 0
+> > +      * without setting the index: the caller falls back to the eager
+> > +      * loader so the DSO still gets symbols rather than going symbol-less.
+> > +      */
+> > +     od->fd = fcntl(syms_ss->fd, F_DUPFD_CLOEXEC, 0);
+> > +     if (od->fd < 0) {
+> > +             free(od->sorted);
+> > +             free(od);
+> > +             return 0;
+> > +     }
+> > +     od->strtab_offset = strtab_offset;
+> > +     od->strtab_size = strshdr.sh_size;
+> > +     od->nr_sorted = count;
+> > +
+> > +     symbol__account_bytes(od->nr_alloc * sizeof(*od->sorted));
+> > +
+> > +     dso__set_ondemand(dso, od);
+> > +
+> > +     pr_debug("%s: on-demand index: %u symbols\n",
+> > +              dso__long_name(dso), count);
+> > +
+> > +     return 1;
+> > +}
+> > +
+> > +/*
+> > + * Read a NUL-terminated symbol name from the file's string table at
+> > + * file offset @off.  The fast path uses a stack buffer; if the NUL is
+> > + * not found within it (names can exceed 1 KiB for template-heavy C++
+> > + * mangled names), grow a heap buffer geometrically from 4 KiB, doubling
+> > + * until the terminator is found or the strtab is exhausted.  This keeps
+> > + * a single long name cheap even when it sits near the start of a large
+> > + * (tens of MB) strtab, while bounding a corrupt/missing terminator by
+> > + * the remaining strtab size.
+> > + *
+> > + * Returns a pointer to the name (either @buf or a heap allocation) and
+> > + * sets *@to_free to the buffer that must be free()d (NULL for @buf).
+> > + * Returns NULL on read error or if no NUL terminator exists within the
+> > + * strtab bounds.
+> > + */
+>
+> We have dso-cache APIs to read file data (dso__data_read_offset) and it
+> manages file descriptors so you don't need to worry about FD exhaustion.
+>
+
+Thanks, I will use dso__data_read_offset() in v2 and remove the
+per-index retained fd. I will configure the data-cache reads with the
+same symbol-file path and namespace used to build the index, so
+split-debuginfo string-table offsets are not read from the runtime
+image.
+
+
+> > +struct symbol *dso__find_symbol_ondemand(struct dso *dso, u64 addr)
+> > +{
+> > +     struct dso_ondemand *od = dso__ondemand(dso);
+> > +     u32 lo, hi, mid;
+> > +     const char *name;
+> > +     char namebuf[1024];
+> > +     char *name_heap = NULL;
+> > +     char *demangled;
+> > +     struct symbol *s = NULL;
+> > +
+> > +     if (!od || !od->sorted || od->fd < 0)
+> > +             return NULL;
+> > +
+> > +     lo = 0;
+> > +     hi = od->nr_sorted;
+> > +     while (lo < hi) {
+> > +             mid = (lo + hi) / 2;
+> > +             if (addr < od->sorted[mid].start)
+> > +                     hi = mid;
+> > +             else if (addr >= od->sorted[mid].end)
+> > +                     lo = mid + 1;
+> > +             else
+> > +                     goto found;
+> > +     }
+>
+> bsearch()?
+>
+
+Yes. In v2, the default deduplicated index has non-overlapping ranges,
+so this lookup will use bsearch() with an interval comparator.
+With --allow-aliases, two symbols can cover the same address.
+bsearch() then cannot reliably choose which alias to return, so that
+uncommon case keeps the explicit search.
