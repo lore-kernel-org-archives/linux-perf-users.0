@@ -1,66 +1,54 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FA5B3CF045
-	for <linux-perf-users@vger.kernel.org>; Sun, 20 Sep 2026 05:32:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5F793D522C
+	for <linux-perf-users@vger.kernel.org>; Sun, 20 Sep 2026 05:32:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789882349; cv=none; b=VBAr9s1TUsoHfqF7IDcZnHv9SlUWH6lZNTbiRnJOwo+e08/u9/uxN99jhhkYSvvIzS3Qn79kTKMMyPCJcRzzz4RB2xaA2wlyF5t7JLsnZ5vxBvHClkOXgdiAf00sn3r1W8VgbQeKgbAKhAK80JIGPrZ6NpNQbQP2m7v538Ax/Ps=
+	t=1789882355; cv=none; b=UeIJlSZt0SqjNjuVpYQeYLNMlqShgPBg8a0TshlrkNMtPIOhDHaotmbkg92ZDjjBVccRLVimKobCFFcJ65ZcIWKjtlHCS1u+e484/7vlO/6xgWQbbDp0sk9UFmj01YqTnGMR65eMMM/5a2hFuoQ39BuyYlcgpsMAmi3PuAyj0Vo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789882349; c=relaxed/simple;
-	bh=ULv0UVIjpWLzyVZZmrFBpi2NAlC7/I8tVZhRuGP4I58=;
+	s=arc-20240116; t=1789882355; c=relaxed/simple;
+	bh=PlT9VnfvGLWMjSJqUDfJbsAH19b1pt7/n13pay4LNkE=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=ohic7mUymRSCbxoyS5sCOGalcD/XDDMg+gT7ar8pIqQwoImZtu3yrn6tddDzKhfc0NfY8b1pK7m1ZgNZaCt6MjgNAB2YfH7l7lNUK+yBlnPZjoUWXnbwI24iBNUapBRoDF/B9lYbaSaBn8ngRf3Z4Uzz2z++IO7q1spfxQKHYJM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dlcnBqRl; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=DbMhEo2ABpWh47cpYVNr6C36fBIDeFYar2T5ppvkvc35TZElAhQcLZZw2/opDXPpJIWhsD4DSV3qxXSnczm8Ep/eJjZzEr5xRAdJasv7onhXSdlDzBM80g/dLDz+r4WnWu+g19PareQk3xBGjPCmDy0px73Oc63J9RH9coVgQzw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nqOoeV0b; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dlcnBqRl"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D6B5C1F000FF;
-	Sun, 20 Sep 2026 05:32:25 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nqOoeV0b"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 87E141F000FF;
+	Sun, 20 Sep 2026 05:32:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789882346;
-	bh=ULv0UVIjpWLzyVZZmrFBpi2NAlC7/I8tVZhRuGP4I58=;
+	s=k20260515; t=1789882351;
+	bh=PlT9VnfvGLWMjSJqUDfJbsAH19b1pt7/n13pay4LNkE=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=dlcnBqRl9VjloCD4XgJZ5zuRJBRDOTYWjmZwa8Dxxr3oPQGmrrqfTUziBsAQMcPKw
-	 Xwb59LwUeSTtLnbnrkPXHSUdFGNhLMjNfX1Xj8HfwOSDiASpmZojmMWSckllUz+/I3
-	 8vGcGMP/cgmoX7Xak7XuHINCzNQDmtK1HiMAx/rOBLJcAvPUv0X/eqj16R102QKQZi
-	 2fGAaegStFOt1gFv1LhMTUaNzr3SUoFBr/BHXonJwnzYAV7VexkkZTz3OvC417OadN
-	 G8nZK/kzy5r1q9+GGe3/1JBtAaQRS7K2fzWw6OQpfcrXm1hfdJLCb9kLJm5I/TWIDV
-	 PO61+qmjBPVMQ==
+	b=nqOoeV0bcASTGwW/0HUbBIRaZm7+7EE5yDoLjQ/oL+0RgV1KzY+pdCUj5nZhg8QWG
+	 QojqRFBhnmLNZWjfafMNNisID2rQzq4ytpt6gRY0GM1iPV9bnFcbSUzLJhD7b0J735
+	 PV/Ud4adw1Znuwkw1zWzT7OgELbNdZCbS63Uv5p1kry47cmtvLpohC1sFEJiDfPAYZ
+	 0EFsUegeu2KSxcg9p8I2l7OEEd1BouypjApceynkWeGIyvPquaQTkt0s98lB72mQwm
+	 WcCHK6B/C/rVWVZBHtOrWFoHU6OqG0yHwff+2Tq1zXzhkp3r5HFO8lpqLsWInBJatS
+	 xZqUkw46uh/uw==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v1 14/49] perf build: Make pylint build test opt-out
- (NO_PYLINT=1)
+Subject: Re: [PATCH v1 15/49] perf Makefile: Install standalone Python
+ scripts during transition
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Ian Rogers" <irogers@google.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <faf4e4c1205cf70b39a39e784ed1d58300e938b6.1789880842.git.irogers@google.com>
+In-Reply-To: <f8600b666480094589f38b430cbbd0519d1d539f.1789880842.git.irogers@google.com>
 References: <cover.1789880842.git.irogers@google.com>
- <faf4e4c1205cf70b39a39e784ed1d58300e938b6.1789880842.git.irogers@google.com>
+ <f8600b666480094589f38b430cbbd0519d1d539f.1789880842.git.irogers@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Sun, 20 Sep 2026 05:32:25 +0000
-Message-Id: <20260920053225.D6B5C1F000FF@smtp.kernel.org>
+Date: Sun, 20 Sep 2026 05:32:31 +0000
+Message-Id: <20260920053231.87E141F000FF@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-> Commit 8a54784e708b ("perf build: Add pylint build tests") added a
-> compile-time pylint check for Python files in tools/perf, but left it
-> opt-in via PYLINT=3D1.
->=20
-> Now that pylint issues across tools/perf/python, tools/perf/pmu-events,
-> and tools/perf/tests/shell/lib have been cleaned up, enable the pylint
-> check by default when pylint is installed on the system, with an opt-out
-> via NO_PYLINT=3D1 (matching other perf build feature flags).
->=20
-> Configure PYTHONPATH in Makefile.perf so pylint resolves perf.pyi type
-> stubs and pmu-events modules, enable error and warning categories
-> (--disable=3Dall --enable=3DE,W --disable=3DW0123,W0311,W0511,W0603,W0622=
-,W0718)
-> appropriate for perf's standalone CLI and test scripts, and require
-> pylint >=3D 2.16.0 (skipping with a warning if an older version is
-> installed).
+> Install the newly ported standalone Python scripts from
+> tools/perf/python/ alongside the legacy scripts during the transition
+> phase so that newly ported scripts are available in the installation
+> directory before legacy support is removed.
 >=20
 > Assisted-by: Antigravity:gemini-3.1-pro
 > Signed-off-by: Ian Rogers <irogers@google.com>
@@ -69,5 +57,5 @@ Sashiko has reviewed this patch and found no issues. It looks great!
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/cover.1789880842.gi=
-t.irogers@google.com?part=3D14
+t.irogers@google.com?part=3D15
 
