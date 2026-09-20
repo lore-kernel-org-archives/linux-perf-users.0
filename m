@@ -1,54 +1,59 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5F793D522C
-	for <linux-perf-users@vger.kernel.org>; Sun, 20 Sep 2026 05:32:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8871356748
+	for <linux-perf-users@vger.kernel.org>; Sun, 20 Sep 2026 05:32:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789882355; cv=none; b=UeIJlSZt0SqjNjuVpYQeYLNMlqShgPBg8a0TshlrkNMtPIOhDHaotmbkg92ZDjjBVccRLVimKobCFFcJ65ZcIWKjtlHCS1u+e484/7vlO/6xgWQbbDp0sk9UFmj01YqTnGMR65eMMM/5a2hFuoQ39BuyYlcgpsMAmi3PuAyj0Vo=
+	t=1789882369; cv=none; b=rvR9YLUuMBDHToAkj6NIKswzGaGX+x6jnVrfdqhcvp68JJjD1Aj27H8BbDvr6kg8YOnNbVf1HU0hCf2Tsk12lqG4mqtgTqEHwFDTYA5IUmDwEMjTsUaE3RZzU39iSmRF8doX02KfVs3CU/51fSbt3nDY70V4G60vUFS+BisT1d4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789882355; c=relaxed/simple;
-	bh=PlT9VnfvGLWMjSJqUDfJbsAH19b1pt7/n13pay4LNkE=;
+	s=arc-20240116; t=1789882369; c=relaxed/simple;
+	bh=6wHMefcjERpZdyIWU8OUL75EY/cMRQFS2ORoiIeI4XM=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=DbMhEo2ABpWh47cpYVNr6C36fBIDeFYar2T5ppvkvc35TZElAhQcLZZw2/opDXPpJIWhsD4DSV3qxXSnczm8Ep/eJjZzEr5xRAdJasv7onhXSdlDzBM80g/dLDz+r4WnWu+g19PareQk3xBGjPCmDy0px73Oc63J9RH9coVgQzw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nqOoeV0b; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=brPFBIFQ59+ACvXMgWoYUm1gIMD0T1v1N5mwrj6oXuLzkzImHP95SvVzXH1jkt/f7qrMkTPEt/GX0cfAuMm2mpUO2KPrrnFzr7IN5wFQly8/SpORDWlBfYL2tMPgP9LRghCcXxxTMN0JduNTkvaQmF4Cx/p8O9XBx4UXwD6Ie14=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PHPHjvb4; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nqOoeV0b"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 87E141F000FF;
-	Sun, 20 Sep 2026 05:32:31 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PHPHjvb4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 43CF31F000FF;
+	Sun, 20 Sep 2026 05:32:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789882351;
-	bh=PlT9VnfvGLWMjSJqUDfJbsAH19b1pt7/n13pay4LNkE=;
+	s=k20260515; t=1789882367;
+	bh=K8ord6f2NiNRcrc/nW6FsBAu4hmUxk3lwDpJaewC5NY=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=nqOoeV0bcASTGwW/0HUbBIRaZm7+7EE5yDoLjQ/oL+0RgV1KzY+pdCUj5nZhg8QWG
-	 QojqRFBhnmLNZWjfafMNNisID2rQzq4ytpt6gRY0GM1iPV9bnFcbSUzLJhD7b0J735
-	 PV/Ud4adw1Znuwkw1zWzT7OgELbNdZCbS63Uv5p1kry47cmtvLpohC1sFEJiDfPAYZ
-	 0EFsUegeu2KSxcg9p8I2l7OEEd1BouypjApceynkWeGIyvPquaQTkt0s98lB72mQwm
-	 WcCHK6B/C/rVWVZBHtOrWFoHU6OqG0yHwff+2Tq1zXzhkp3r5HFO8lpqLsWInBJatS
-	 xZqUkw46uh/uw==
+	b=PHPHjvb4DVNwbaEZX/ixNG5rjkm+fVrp3GpzVqKR4iXV3rNIlj1aOT/bEbrN5THrm
+	 tEajDCxcmMXJFckSeg4JHbJrFNZurZnYEQWV6Tl167ThKjek+WX/G5WxHFCMy0mzm4
+	 fTPLLaNji0eFAWAa6P2+P7l8+cAHhkhFxVBRUTGVIhtcmiC4ocAOCTLvR+0JXilKso
+	 fSmMvjJ6cgtTU33GZWCbl1aZksH31adEXGDrxnW++8KU3gNUWcJ9vzpmwAgt5URIdo
+	 2h/iWWzSvkruWMFmi/cx7JkAU91ICVQqQIKhKQ0BBv8Qj2aq27cGlAJG2sG4rksSgE
+	 kUD+1qEuW9+xA==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v1 15/49] perf Makefile: Install standalone Python
- scripts during transition
+Subject: Re: [PATCH v1 04/49] perf python: Clean up pylint warnings in
+ treport.py
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Ian Rogers" <irogers@google.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <f8600b666480094589f38b430cbbd0519d1d539f.1789880842.git.irogers@google.com>
+In-Reply-To: <700d8e8c23a22098e4a7b142f4a488da577eac65.1789880842.git.irogers@google.com>
 References: <cover.1789880842.git.irogers@google.com>
- <f8600b666480094589f38b430cbbd0519d1d539f.1789880842.git.irogers@google.com>
+ <700d8e8c23a22098e4a7b142f4a488da577eac65.1789880842.git.irogers@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Sun, 20 Sep 2026 05:32:31 +0000
-Message-Id: <20260920053231.87E141F000FF@smtp.kernel.org>
+Date: Sun, 20 Sep 2026 05:32:46 +0000
+Message-Id: <20260920053247.43CF31F000FF@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-> Install the newly ported standalone Python scripts from
-> tools/perf/python/ alongside the legacy scripts during the transition
-> phase so that newly ported scripts are available in the installation
-> directory before legacy support is removed.
+> Clean up pylint warnings in treport.py so that it passes pylint without
+> warning suppression comments:
+> - Replace broad 'except Exception:' clauses (W0718:
+>   broad-exception-caught) with specific exception tuples.
+> - Pass both pid and sample_tid to session.find_thread() so guest and
+>   process threads are resolved accurately.
+> - Rename parameter 'args' to 'pos_args' in FlameGraph.__init__() to
+>   avoid shadowing the outer scope variable 'args' (W0621:
+>   redefined-outer-name).
 >=20
 > Assisted-by: Antigravity:gemini-3.1-pro
 > Signed-off-by: Ian Rogers <irogers@google.com>
@@ -57,5 +62,5 @@ Sashiko has reviewed this patch and found no issues. It looks great!
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/cover.1789880842.gi=
-t.irogers@google.com?part=3D15
+t.irogers@google.com?part=3D4
 
