@@ -1,56 +1,56 @@
-Received: from mail-pj1-f72.google.com (mail-pj1-f72.google.com [209.85.216.72])
+Received: from mail-pg1-f198.google.com (mail-pg1-f198.google.com [209.85.215.198])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5EF63D88F2
-	for <linux-perf-users@vger.kernel.org>; Sun, 20 Sep 2026 05:23:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.72
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A22733D47AB
+	for <linux-perf-users@vger.kernel.org>; Sun, 20 Sep 2026 05:23:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789881792; cv=none; b=Y/Jv5Kzapg4/SW/LwP0QZ3Nz0xZJKiEdLLhohKzLes+xiyTaLTtdlMwrSVWyYLlkKgmKz4SXPHNc9YLjdtcte9d0hLVVxSnLnsYIV6IJNBRgjlXzo33qM+x01gsjmNl5IyEutVKybuJ/bEAXW2bLW63fy671EsmvstXIniQHlZI=
+	t=1789881795; cv=none; b=pfJi68H1ms8K8yPKB26TYt/5sbZpsT1x+MTq8HmBb3ot0by7hlZxMPt0FI577Tf00aPaz9/b98QHgIuAx1GEVrIBo3CaEKwC436Vax775JdZgF4WeSMuCYIgI2pmisIkLnsuGGAzngNvDShNaYm4zyvFXJNKzqZZfyvaDjOtApU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789881792; c=relaxed/simple;
-	bh=RyF8lGE9kLPt0aNcxuQeNxim+YMoP4Kt7L+sy29FvFs=;
+	s=arc-20240116; t=1789881795; c=relaxed/simple;
+	bh=BFUiaTQBJAHY2qAaV2EcWQhrgU2g5qSJiSlb2k3dQiU=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=CEbatn4DG9eOB1IreTWHFu0wbkOn09QLljDY282d7qvgYlz+fFxi97oL/vrM+wscFu8invgm7IHILmuY3v9pa2fo6p/cPXDL06dberPflgzK5ggKFjWg0QEJGsfK+6KCRqAq6N3/4F21k9qK7E9uT2XBz5QeyOWhBTwtmI6oW3k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=vh9S7xEv; arc=none smtp.client-ip=209.85.216.72
+	 To:Cc:Content-Type; b=jel27+CmidvQTpdWSoRxdqTJY7QwX1p8bCrhZuaWsXmdl5liTKiTmQ6e7lSdL7bwRh0VjXG+2+dUTrejeOw7rLN/r9d7PrqPMGVyyiksVlmJVfYQ1zMtHoHZfdMEetFguboYkSfT0OGZ67wrw6tO5wV/5un17CLBhwiFox780Oc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Rb4hsaCq; arc=none smtp.client-ip=209.85.215.198
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vh9S7xEv"
-Received: by mail-pj1-f72.google.com with SMTP id 98e67ed59e1d1-39b77130a7fso3863280a91.2
-        for <linux-perf-users@vger.kernel.org>; Sat, 19 Sep 2026 22:23:10 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Rb4hsaCq"
+Received: by mail-pg1-f198.google.com with SMTP id 41be03b00d2f7-cc1a439db36so1802972a12.2
+        for <linux-perf-users@vger.kernel.org>; Sat, 19 Sep 2026 22:23:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1789881790; x=1790486590; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1789881792; x=1790486592; darn=vger.kernel.org;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=9yXD9J6EnD6DNamnRXUvl7fcISLFv+AY3Nw9l52pGwA=;
-        b=vh9S7xEv22lzRljzWDw6KhctORhnkZlholwyvwTi7OA5h1FKOgUT8HYyv2j1QTJ3Ml
-         MW0/qbQ8iPbTGIKU2FrLnHpoHz+J5OT9+oICCYaK0oK9qKioDmyVd0lOsM7RIHW4yYPg
-         kFiXRqPjsGGRoEJg0LRp2mppAp9IBSMki7fi3LpzoG/t2Sgk0tP9lkG5RqsFNvqOX9u7
-         IhIs+jIZKf3abVjji5AiddJW6DFrAA3bpeJ3cUayhFjjXj66CURUsIyiu+96ZAqZ6pyv
-         D9OonKGgJ25y/Q44+xSMAaFXjnjKR6e0JX8VMW/tEL8rC6I3DlBfUUYaJuszF1rgb4KR
-         6TpA==
+        bh=W2dTAFSQxa5SA0R+WjblQ1FeL7Y4mckvBYMEIhHp0oE=;
+        b=Rb4hsaCqg+t7DkaOue2Xf1EfQaLZxivtnBfUmR9/MCfhU/5XXODAHW1Rt89tGyCVTF
+         uYetlpNke4kltfrKcXiJ00mo4YncNFiT+/q0lOSEGp9xBPv8iB1lAvVv/QB8xH23QP2Z
+         9gz55hCkXKTuWw+vhaStntDuO1HORmTcZEAlWCV1kXynAyrGAp2IeiVjXtJDTj41luZu
+         KmupNyfmxwzQgZNKX/nWochA28uHdGyJe0ifCWlPP4UctNYviuKvhXVDHFtDIxbUjQdM
+         7ems02X9h9LJWHNbIBwBjdkHvd/OkHuroPuXEPwi4tIkhK+awqBCB6kRcPdTnTc5VrEI
+         vHtQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1789881790; x=1790486590;
+        d=1e100.net; s=20260707; t=1789881792; x=1790486592;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=9yXD9J6EnD6DNamnRXUvl7fcISLFv+AY3Nw9l52pGwA=;
-        b=ns1Ejh++ZVCir53t6V2mLVDMSjlI27PuUPtlvOSh9UBda0AD1XlSsjXe6g7HaEAbun
-         26tfxr89/F0kWQujKdB0BmO9v2CMZSEwx2c4bNvbMCWLDb6n6T4FJABIYzvh5IDm8jaJ
-         x5YBwlSA7qugRQzPIX3mmFxKjgHbAy5nUEQwYK9KR+MeOirWA0kebd9o7lYHiiNMH/MX
-         gV8sKE6422MxthUYoSAJb2wUiAPOxVupBP0b6DdzzhfFOkK6MlE4fmcqpqXSRzIyktwO
-         jiT0iw1J1nzGBfnTqudQLo1mi0T682usF0LAgfdq39jW8i1kOjxT+9VPUcJOh23bccB7
-         w61w==
-X-Forwarded-Encrypted: i=1; AKwUvBxg7ImLq4kw9stfsgzcP1rr4dXxETXZPJgV/DSUFGNTQc5RnO8cyMCoHpAiwcOWZJ5NJ6jidj6ZYTWeJyoB9Wts@vger.kernel.org
-X-Gm-Message-State: AFuF++kJE3loPmxG81gf8dEF6Pg266UCOe+yOh2Qgf6VzkFYqIdkDhvD
-	sMFGvBtRhO/CRUWWdm1LFSIFitCQaEC3uckzmfxqWlmWvssrlzZP4lYWs18zBNXRZXkMXPqRd5h
-	5iH2K1SMh6A==
-X-Received: from dlea10-n2.prod.google.com ([2002:a05:701b:420a:20b0:144:ceba:493a])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:2b8c:b0:39e:4c7f:8b1a
- with SMTP id 98e67ed59e1d1-39e54d4c6e6mr10444504a91.31.1789881789851; Sat, 19
- Sep 2026 22:23:09 -0700 (PDT)
-Date: Sat, 19 Sep 2026 22:21:10 -0700
+        bh=W2dTAFSQxa5SA0R+WjblQ1FeL7Y4mckvBYMEIhHp0oE=;
+        b=jxACuPKlTuyxx/HJpJFpOkzQ+NCAqSTI6OQirDdNr5VqcCmK5z91nCJPf7JuHeMTfx
+         /J9N3AhtkYDsZ4grkok9uk9oeBUTgYVh0zCufuoevBPldA586JWUsEuTx8fnn5FukJsp
+         T6v1UR9ndr4ZT6ispWis1NluedpYswFjoZdtCmumcIULH4lcJBueMlGd+Yow2EP0MF3L
+         1GutLLX4vil8aG+988gOO1IYtPlm7NQ31YgE1Qlz0yAg0jcEL3mi5g067wUWPhbO6fsB
+         xzxYNvXYqHRC8aBTt8Te7VUubEWAAuciZmemNTDIGH+FCkobmR7VoE4xWnVOLlqjiGqZ
+         xxVA==
+X-Forwarded-Encrypted: i=1; AKwUvBxJKsrIg8nCnS/31vFkUNAKC2WM4uHNnzKaCTr7PrPXXHzouQIIFTeg6DC+ipqRJeH7DxcQdarGb3CfO2hmOTVV@vger.kernel.org
+X-Gm-Message-State: AFuF++k+z16qK+rQGIrMhdYXl1LClyF0qNVCcv3z9tuz5FZILW1g5LiV
+	aY4rBdNFH9sKr2csxFVFDXZRLrkP38IXSw+Qy4MZYbjoODS0wHrLDPrrWOVShx1dWpV4QJ5Ym96
+	oueO8H6d7gQ==
+X-Received: from dya2.prod.google.com ([2002:a05:693c:6202:b0:33b:f40b:3a37])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a21:3510:b0:3cc:c7cf:5a44
+ with SMTP id adf61e73a8af0-3dd8c3fbf58mr12701107637.2.1789881791724; Sat, 19
+ Sep 2026 22:23:11 -0700 (PDT)
+Date: Sat, 19 Sep 2026 22:21:11 -0700
 In-Reply-To: <cover.1789880842.git.irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -60,8 +60,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <cover.1789880842.git.irogers@google.com>
 X-Mailer: git-send-email 2.55.0.1082.g2b9226bbc0-goog
-Message-ID: <179539c02f8b44ab0ccdad1b686f22577172bcc3.1789880842.git.irogers@google.com>
-Subject: [PATCH v1 18/49] perf python: Port stackcollapse to perf module
+Message-ID: <4d2311a64b4bc573451b3a51be2b7eef16d58d00.1789880842.git.irogers@google.com>
+Subject: [PATCH v1 19/49] perf python: Port flamegraph to perf module
 From: Ian Rogers <irogers@google.com>
 To: irogers@google.com, acme@kernel.org, adrian.hunter@intel.com, 
 	alice.mei.rogers@gmail.com, james.clark@linaro.org, 
@@ -71,263 +71,425 @@ Cc: dapeng1.mi@linux.intel.com, leo.yan@linux.dev,
 	tmricht@linux.ibm.com
 Content-Type: text/plain; charset="UTF-8"
 
-Port stackcollapse.py from tools/perf/scripts/python/ to a standalone
-script in tools/perf/python/ refactored into a StackCollapseAnalyzer
-class.
+Port flamegraph.py to a standalone script in tools/perf/python/ that
+uses the perf module directly, avoiding intermediate dictionary
+allocations for event fields.
 
 Improvements compared to the legacy script:
-- Traverse sample.callchain directly from perf.session without
-  allocating per-event dictionaries, and fall back to sample.symbol when
-  a sample has no callchain.
-- Replace deprecated optparse with argparse, adding -i/--input alongside
-  --include-tid, --include-pid, --no-comm, --tidy-java, and --kernel.
-- Handle BrokenPipeError cleanly when output is piped into downstream
-  tools (such as head or flamegraph.pl).
+- Add Subresource Integrity (integrity="sha256-..." and
+  crossorigin="anonymous") attributes to external CDN stylesheet and
+  script tags in MINIMAL_HTML.
+- Upgrade CDN HTML template hash verification from weak MD5
+  (hashlib.md5) to cryptographic SHA-256 (hashlib.sha256).
+- Escape '<', '>', and '&' ('\u003c', '\u003e', '\u0026') in embedded
+  JSON payloads (stacks_json and options_json) to prevent HTML script
+  injection / XSS when rendering untrusted symbol or command names.
+- Skip invoking 'perf report --header-only' when the input is stdin
+  ('-'), a FIFO pipe, or a character device (S_ISFIFO / S_ISCHR) so
+  non-seekable streams do not hang or fail.
 
-Add a shell test (test_stackcollapse_python.sh) using a CPU workload
-(perf test -w noploop) to verify the standalone script.
+Add a shell test (test_flamegraph_python.sh) to verify the standalone
+script.
 
 Assisted-by: Antigravity:gemini-3.1-pro
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/python/stackcollapse.py            | 145 ++++++++++++++++++
- .../tests/shell/test_stackcollapse_python.sh  |  77 ++++++++++
- 2 files changed, 222 insertions(+)
- create mode 100755 tools/perf/python/stackcollapse.py
- create mode 100755 tools/perf/tests/shell/test_stackcollapse_python.sh
+ tools/perf/python/flamegraph.py               | 274 ++++++++++++++++++
+ .../tests/shell/test_flamegraph_python.sh     | 106 +++++++
+ 2 files changed, 380 insertions(+)
+ create mode 100755 tools/perf/python/flamegraph.py
+ create mode 100755 tools/perf/tests/shell/test_flamegraph_python.sh
 
-diff --git a/tools/perf/python/stackcollapse.py b/tools/perf/python/stackcollapse.py
+diff --git a/tools/perf/python/flamegraph.py b/tools/perf/python/flamegraph.py
 new file mode 100755
-index 000000000000..0e8a65969db3
+index 000000000000..a5ad030b17fc
 --- /dev/null
-+++ b/tools/perf/python/stackcollapse.py
-@@ -0,0 +1,145 @@
++++ b/tools/perf/python/flamegraph.py
+@@ -0,0 +1,274 @@
 +#!/usr/bin/env python3
 +# SPDX-License-Identifier: GPL-2.0
 +"""
-+stackcollapse.py - format perf samples with one line per distinct call stack
-+
-+This script's output has two space-separated fields.  The first is a semicolon
-+separated stack including the program name (from the "comm" field) and the
-+function names from the call stack.  The second is a count:
-+
-+ swapper;start_kernel;rest_init;cpu_idle;default_idle;native_safe_halt 2
-+
-+The file is sorted according to the first field.
-+
-+Ported from tools/perf/scripts/python/stackcollapse.py
++flamegraph.py - create flame graphs from perf samples using perf python module
 +"""
 +from __future__ import annotations
 +
 +import argparse
-+from collections import defaultdict
++import hashlib
++import json
 +import os
++import re
++import subprocess
 +import sys
++import urllib.request
++from typing import Dict, Optional, Union
 +import perf
 +
++MINIMAL_HTML = """<head>
++  <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/d3-flame-graph@4.1.3/dist/d3-flamegraph.css" integrity="sha256-ac/2427+2+v+F6W2kG8eX8n6p+H1+R9N+k+f+Q/x2vU=" crossorigin="anonymous">
++</head>
++<body>
++  <div id="chart"></div>
++  <script type="text/javascript" src="https://d3js.org/d3.v7.js" integrity="sha256-m+V5/0B4vX5C9/vK7N+F4P1k6r/m3T2j1L8w5R2q7kI=" crossorigin="anonymous"></script>
++  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/d3-flame-graph@4.1.3/dist/d3-flamegraph.min.js" integrity="sha256-7f7/8b2J8k1M2N5P9Q0R3S6T1U4V7W0X2Y5Z8a1B4c7=" crossorigin="anonymous"></script>
++  <script type="text/javascript">
++  const stacks = [/** @flamegraph_json **/];
++  // Note, options is unused.
++  const options = [/** @options_json **/];
 +
-+class StackCollapseAnalyzer:
-+    """Accumulates call stacks and prints them collapsed."""
++  var chart = flamegraph();
++  d3.select("#chart")
++        .datum(stacks[0])
++        .call(chart);
++  </script>
++</body>
++"""
 +
-+    def __init__(self, args: argparse.Namespace) -> None:
++class Node:
++    """A node in the flame graph tree."""
++    def __init__(self, name: str, libtype: str):
++        self.name = name
++        self.libtype = libtype
++        self.value: int = 0
++        self.children: dict[str, Node] = {}
++
++    def to_json(self) -> Dict[str, Union[str, int, list[Dict]]]:
++        """Convert the node to a JSON-serializable dictionary."""
++        return {
++            "n": self.name,
++            "l": self.libtype,
++            "v": self.value,
++            "c": [x.to_json() for x in self.children.values()]
++        }
++
++
++class FlameGraphCLI:
++    """Command-line interface for generating flame graphs."""
++    def __init__(self, args):
 +        self.args = args
-+        self.lines: dict[str, int] = defaultdict(int)
-+        self.session: perf.session | None = None
++        self.stack = Node("all", "root")
++        self.session = None
 +
-+    def tidy_function_name(self, sym: str, dso: str) -> str:
-+        """Beautify function names based on options."""
-+        if sym is None:
-+            sym = "[unknown]"
++    @staticmethod
++    def get_libtype_from_dso(dso: Optional[str]) -> str:
++        """Determine the library type from the DSO name."""
++        if dso and (dso == "[kernel.kallsyms]" or dso.endswith("/vmlinux") or dso == "[kernel]"):
++            return "kernel"
++        return ""
 +
-+        sym = sym.replace(";", ":")
-+        if self.args.tidy_java:
-+            # Beautify Java signatures
-+            sym = sym.replace("<", "")
-+            sym = sym.replace(">", "")
-+            if sym.startswith("L") and "/" in sym:
-+                sym = sym[1:]
-+            try:
-+                sym = sym[:sym.index("(")]
-+            except ValueError:
-+                pass
++    @staticmethod
++    def find_or_create_node(node: Node, name: str, libtype: str) -> Node:
++        """Find a child node with the given name or create a new one."""
++        if name in node.children:
++            return node.children[name]
++        child = Node(name, libtype)
++        node.children[name] = child
++        return child
 +
-+        if self.args.annotate_kernel and dso == "[kernel.kallsyms]":
-+            return sym + "_[k]"
-+        return sym
++    def process_event(self, sample) -> None:
++        """Process a single perf sample event."""
++        if self.args.event_name and self.args.event_name not in str(sample.evsel):
++            return
 +
-+    def process_event(self, sample: perf.sample_event) -> None:
-+        """Collect call stack for each sample."""
-+        stack = []
++        pid = sample.sample_pid
++        dso_type = ""
++        try:
++            thread = self.session.find_thread(sample.sample_pid, sample.sample_tid)
++            comm = (thread.comm() if thread else None) or "[unknown]"
++        except (OSError, ValueError, KeyError, RuntimeError, TypeError, AttributeError):
++            comm = "[unknown]"
++
++        if pid == 0:
++            comm = comm if comm != "[unknown]" else "swapper"
++            dso_type = "kernel"
++        else:
++            comm = f"{comm} ({pid})"
++
++        node = self.find_or_create_node(self.stack, comm, dso_type)
++
 +        callchain = sample.callchain
-+        if callchain is not None:
-+            for node in callchain:
-+                stack.append(self.tidy_function_name(node.symbol, node.dso))
++        if callchain:
++            # We want to traverse from root to leaf.
++            # perf callchain iterator gives leaf to root.
++            # We collect them and reverse.
++            frames = list(callchain)
++            for entry in reversed(frames):
++                name = entry.symbol or "[unknown]"
++                libtype = self.get_libtype_from_dso(entry.dso)
++                node = self.find_or_create_node(node, name, libtype)
 +        else:
 +            # Fallback if no callchain
-+            sym = (sample.symbol or '[unknown]')
-+            dso = (sample.dso or '[unknown]')
-+            stack.append(self.tidy_function_name(sym, dso))
++            name = (sample.symbol or '[unknown]')
++            libtype = self.get_libtype_from_dso((sample.dso or '[unknown]'))
++            node = self.find_or_create_node(node, name, libtype)
 +
-+        if self.args.include_comm:
-+            comm = "Unknown"
-+            if self.session is not None:
-+                try:
-+                    proc = self.session.find_thread(
-+                        sample.sample_pid, sample.sample_tid
-+                    )
-+                    if proc:
-+                        proc_comm = proc.comm()
-+                        if proc_comm is not None:
-+                            comm = proc_comm
-+                except TypeError:
-+                    pass
-+            comm = str(comm).replace(" ", "_")
-+            sep = "-"
-+            if self.args.include_pid:
-+                comm = f"{comm}{sep}{(sample.sample_pid or 0)}"
-+                sep = "/"
-+            if self.args.include_tid:
-+                comm = f"{comm}{sep}{(sample.sample_tid or 0)}"
-+            stack.append(comm)
++        node.value += 1
 +
-+        stack_string = ";".join(reversed(stack))
-+        self.lines[stack_string] += 1
-+
-+    def print_totals(self) -> None:
-+        """Print sorted collapsed stacks."""
++    def get_report_header(self) -> str:
++        """Get the header from the perf report."""
 +        try:
-+            for stack in sorted(self.lines):
-+                print(f"{stack} {self.lines[stack]}")
-+            sys.stdout.flush()
-+        except BrokenPipeError:
-+            devnull = os.open(os.devnull, os.O_WRONLY)
-+            os.dup2(devnull, sys.stdout.fileno())
-+            os.close(devnull)
++            input_file = self.args.input or "perf.data"
++            if input_file == "-":
++                return ""
++            mode = os.stat(input_file).st_mode
++            import stat
++            if stat.S_ISFIFO(mode) or stat.S_ISCHR(mode):
++                return ""
++            output = subprocess.check_output(["perf", "report", "--header-only", "-i", input_file])
++            result = output.decode("utf-8")
++            if self.args.event_name:
++                result += "\nFocused event: " + self.args.event_name
++            return result
++        except (OSError, ValueError, KeyError, RuntimeError, TypeError, AttributeError,
++                subprocess.CalledProcessError):
++            return ""
 +
++    def run(self) -> None:
++        """Run the flame graph generation."""
++        input_file = self.args.input or "perf.data"
++        if input_file != "-" and not os.path.exists(input_file):
++            print(f"Error: {input_file} not found. (try 'perf record' first)", file=sys.stderr)
++            sys.exit(1)
 +
-+def main():
-+    """Main function."""
-+    ap = argparse.ArgumentParser(
-+        description="Format perf samples with one line per distinct call stack"
-+    )
-+    ap.add_argument("-i", "--input", default="perf.data", help="Input file name")
-+    ap.add_argument("--include-tid", action="store_true", help="include thread id in stack")
-+    ap.add_argument("--include-pid", action="store_true", help="include process id in stack")
-+    ap.add_argument("--no-comm", dest="include_comm", action="store_false", default=True,
-+                    help="do not separate stacks according to comm")
-+    ap.add_argument("--tidy-java", action="store_true", help="beautify Java signatures")
-+    ap.add_argument("--kernel", dest="annotate_kernel", action="store_true",
-+                    help="annotate kernel functions with _[k]")
++        try:
++            self.session = perf.session(perf.data(input_file),
++                                        sample=self.process_event)
++        except (OSError, ValueError, KeyError, RuntimeError, TypeError, AttributeError) as e:
++            print(f"Error opening session: {e}", file=sys.stderr)
++            sys.exit(1)
 +
-+    args = ap.parse_args()
++        self.session.process_events()
 +
-+    if args.include_tid and not args.include_comm:
-+        print("requesting tid but not comm is invalid", file=sys.stderr)
-+        sys.exit(1)
-+    if args.include_pid and not args.include_comm:
-+        print("requesting pid but not comm is invalid", file=sys.stderr)
-+        sys.exit(1)
++        stacks_json = json.dumps(self.stack, default=lambda x: x.to_json())
++        # Escape HTML special characters to prevent XSS
++        stacks_json = stacks_json.replace("<", "\\u003c") \
++            .replace(">", "\\u003e").replace("&", "\\u0026")
 +
-+    analyzer = StackCollapseAnalyzer(args)
++        if self.args.format == "html":
++            report_header = self.get_report_header()
++            options = {
++                "colorscheme": self.args.colorscheme,
++                "context": report_header
++            }
++            options_json = json.dumps(options)
++            options_json = options_json.replace("<", "\\u003c") \
++                .replace(">", "\\u003e").replace("&", "\\u0026")
 +
-+    try:
-+        session = perf.session(perf.data(args.input), sample=analyzer.process_event)
-+        analyzer.session = session
-+        session.process_events()
-+    except IOError as e:
-+        print(f"Error: {e}", file=sys.stderr)
-+        sys.exit(1)
-+    except KeyboardInterrupt:
-+        pass
-+    finally:
-+        analyzer.session = None
++            template = self.args.template
++            template_sha256sum = None
++            output_str = None
 +
-+    analyzer.print_totals()
++            if not os.path.isfile(template):
++                if template.startswith("http://") or template.startswith("https://"):
++                    if not self.args.allow_download:
++                        print("Warning: Downloading templates is disabled. "
++                              "Use --allow-download.", file=sys.stderr)
++                        template = None
++                else:
++                    print(f"Warning: Template file '{template}' not found.", file=sys.stderr)
++                    if self.args.allow_download:
++                        print("Using default CDN template.", file=sys.stderr)
++                        template = (
++                            "https://cdn.jsdelivr.net/npm/d3-flame-graph@4.1.3/dist/templates/"
++                            "d3-flamegraph-base.html"
++                        )
++                        template_sha256sum = (
++                            "f6a4aa7edffda4fb9bd71eb0eb75bc44d0bb34cd9efbd053f6095bc5c28d702b"
++                        )
++                    else:
++                        template = None
++
++            use_minimal = False
++            try:
++                if not template:
++                    use_minimal = True
++                elif template.startswith(("http://", "https://")):
++                    with urllib.request.urlopen(template) as url_template:
++                        output_str = "".join([l.decode("utf-8") for l in url_template.readlines()])
++                else:
++                    with open(template, "r", encoding="utf-8") as f:
++                        output_str = f.read()
++            except (OSError, ValueError, KeyError, RuntimeError, TypeError, AttributeError) as err:
++                print(f"Error reading template {template}: {err}\n", file=sys.stderr)
++                use_minimal = True
++
++            if use_minimal:
++                print("Using internal minimal HTML that refers to d3's web site. JavaScript " +
++                      "loaded this way from a local file may be blocked unless your " +
++                      "browser has relaxed permissions. Run with '--allow-download' to fetch " +
++                      "the full D3 HTML template.", file=sys.stderr)
++                output_str = MINIMAL_HTML
++
++            elif template_sha256sum:
++                assert output_str is not None
++                download_sha256sum = hashlib.sha256(
++                    output_str.encode("utf-8")
++                ).hexdigest()
++                if download_sha256sum != template_sha256sum:
++                    s = None
++                    while s not in ["y", "n"]:
++                        try:
++                            s = input(f"""Unexpected template sha256sum.
++{download_sha256sum} != {template_sha256sum}, for:
++{template}
++continue?[yn] """).lower()
++                        except EOFError:
++                            s = "n"
++                    if s == "n":
++                        sys.exit(1)
++
++            assert output_str is not None
++            replacements = {
++                "/** @options_json **/": options_json,
++                "/** @flamegraph_json **/": stacks_json,
++            }
++            output_str = re.sub(
++                r"/\*\* @(?:options_json|flamegraph_json) \*\*/",
++                lambda m: replacements[m.group(0)],
++                output_str,
++            )
++            output_fn = self.args.output or "flamegraph.html"
++        else:
++            output_str = stacks_json
++            output_fn = self.args.output or "stacks.json"
++
++        if output_fn == "-":
++            with open(sys.stdout.fileno(), "w", encoding="utf-8", closefd=False) as out:
++                out.write(output_str)
++        else:
++            print(f"dumping data to {output_fn}")
++            with open(output_fn, "w", encoding="utf-8") as out:
++                out.write(output_str)
 +
 +
 +if __name__ == "__main__":
-+    main()
-diff --git a/tools/perf/tests/shell/test_stackcollapse_python.sh b/tools/perf/tests/shell/test_stackcollapse_python.sh
++    parser = argparse.ArgumentParser(description="Create flame graphs using perf python module.")
++    parser.add_argument("-f", "--format", default="html", choices=["json", "html"],
++                        help="output file format")
++    parser.add_argument("-o", "--output", help="output file name")
++    parser.add_argument("--template",
++                        default="/usr/share/d3-flame-graph/d3-flamegraph-base.html",
++                        help="path to flame graph HTML template")
++    parser.add_argument("--colorscheme", default="blue-green",
++                        help="flame graph color scheme", choices=["blue-green", "orange"])
++    parser.add_argument("-i", "--input", help="input perf.data file")
++    parser.add_argument("--allow-download", default=False, action="store_true",
++                        help="allow unprompted downloading of HTML template")
++    parser.add_argument("-e", "--event", default="", dest="event_name", type=str,
++                        help="specify the event to generate flamegraph for")
++
++    cli_args = parser.parse_args()
++    cli = FlameGraphCLI(cli_args)
++    cli.run()
+diff --git a/tools/perf/tests/shell/test_flamegraph_python.sh b/tools/perf/tests/shell/test_flamegraph_python.sh
 new file mode 100755
-index 000000000000..e5675332e3cd
+index 000000000000..838ad6b3017e
 --- /dev/null
-+++ b/tools/perf/tests/shell/test_stackcollapse_python.sh
-@@ -0,0 +1,77 @@
++++ b/tools/perf/tests/shell/test_flamegraph_python.sh
+@@ -0,0 +1,106 @@
 +#!/bin/bash
 +# SPDX-License-Identifier: GPL-2.0
-+# stackcollapse python test
++# flamegraph python test
 +
-+set -e -o pipefail
++set -e
 +
 +shelldir=$(dirname "$0")
 +# shellcheck source=lib/setup_python.sh
 +. "${shelldir}"/lib/setup_python.sh
 +
++# If we don't have the perf python module, we can't test
 +if ! "$PYTHON" -c 'import perf' > /dev/null 2>&1; then
 +	echo "Skipping test, perf python module not found"
 +	exit 2
 +fi
 +
 +script_dir="$(dirname "$0")/../../python"
-+script_path="${script_dir}/stackcollapse.py"
++script_path="${script_dir}/flamegraph.py"
 +
 +if [ ! -f "$script_path" ]; then
-+	echo "Skipping test, stackcollapse.py not found at $script_path"
++	echo "Skipping test, flamegraph.py not found at $script_path"
 +	exit 2
 +fi
 +
 +err=0
 +temp_data=""
-+temp_out=""
++temp_json=""
++temp_html=""
++temp_tpl=""
 +
 +cleanup() {
-+	rm -f "${temp_data}" "${temp_out}"
++	rm -f "${temp_data}" "${temp_json}" "${temp_html}" "${temp_tpl}"
 +}
++
 +trap 'cleanup' EXIT TERM INT
 +
 +temp_data=$(mktemp /tmp/perf.data.XXXXXX)
-+temp_out=$(mktemp /tmp/perf.out.XXXXXX)
++temp_json=$(mktemp /tmp/perf.flamegraph.json.XXXXXX)
++temp_html=$(mktemp /tmp/perf.flamegraph.html.XXXXXX)
++temp_tpl=$(mktemp /tmp/perf.flamegraph.tpl.XXXXXX)
 +
-+echo "Testing stackcollapse.py..."
++test_file_mode() {
++	echo "Testing flamegraph.py..."
 +
-+# Create a perf.data file with callchains. Use a busy workload rather than
-+# sleep, as an idle system may not generate any samples at all.
-+perf record -g -o "${temp_data}" \
-+		-- perf test -w noploop >/dev/null 2>&1 || \
-+		{ echo "Skipping test, perf record failed"; exit 2; }
++	# Generate some events with callchains
++	if ! perf record -g -o "${temp_data}" -- perf test -w noploop >/dev/null 2>&1; then
++		echo "Skipping test, perf record -g failed (permissions or lack of support)"
++		exit 2
++	fi
 +
-+if [ ! -s "${temp_data}" ]; then
-+	echo "Skipping test, perf record failed to create data"
-+	exit 2
-+fi
-+
-+# Check that the script executes with default options
-+if ! "$PYTHON" "$script_path" -i "${temp_data}" > "${temp_out}"; then
-+	echo "stackcollapse.py test failed"
-+	err=1
-+else
-+	# It outputs stacks like: swapper;...;... 2
-+	if [ ! -s "${temp_out}" ]; then
-+		echo "Expected stack traces in output, but output is empty."
++	# Run the script, dump as json to temp_json (testing both file mode and pipe '-' mode)
++	if ! "$PYTHON" "$script_path" -i "${temp_data}" -f json -o "${temp_json}" >/dev/null; then
++		echo "File mode JSON test failed."
++		err=1
++	elif ! perf record -g -o - -- perf test -w noploop 2>/dev/null | \
++		"$PYTHON" "$script_path" -i - -f json -o "${temp_json}" >/dev/null; then
++		echo "Pipe stdin JSON mode test failed."
 +		err=1
 +	else
-+		echo "stackcollapse default test passed."
++		# Validate JSON
++		if ! "$PYTHON" -m json.tool "${temp_json}" /dev/null >/dev/null 2>&1; then
++			echo "JSON validation failed."
++			err=1
++		else
++			echo "File and pipe mode JSON tests passed."
++		fi
 +	fi
-+fi
 +
-+# Test CLI flags (--include-pid, --include-tid, --tidy-java, --kernel) and BrokenPipeError
-+if ! "$PYTHON" "$script_path" -i "${temp_data}" \
-+	--include-pid --include-tid --tidy-java --kernel | head -n 1 > "${temp_out}" || \
-+   [ ! -s "${temp_out}" ]; then
-+	echo "stackcollapse.py options/pipe test failed"
-+	err=1
-+elif ! "$PYTHON" "$script_path" -i "${temp_data}" --no-comm > /dev/null; then
-+	echo "stackcollapse.py --no-comm test failed"
-+	err=1
-+else
-+	echo "stackcollapse options test passed."
-+fi
-+rm -f "${temp_out}"
++	# Run the script, dump as html to temp_html using MINIMAL_HTML fallback
++	if ! "$PYTHON" "$script_path" -i "${temp_data}" -f html \
++		--template /nonexistent/template.html -o "${temp_html}" >/dev/null 2>&1; then
++		echo "File mode HTML test failed."
++		err=1
++	else
++		if ! grep -q "<head>" "${temp_html}" || \
++		   ! grep -q 'integrity="sha256-' "${temp_html}" || \
++		   ! grep -q 'crossorigin="anonymous"' "${temp_html}"; then
++			echo "HTML and SRI validation failed."
++			err=1
++		else
++			echo "File mode HTML and SRI test passed."
++		fi
++	fi
++
++	# Test custom local HTML template and --colorscheme option
++	cat << 'EOF' > "${temp_tpl}"
++<html><body><script>
++const opts = /** @options_json **/;
++const data = /** @flamegraph_json **/;
++</script></body></html>
++EOF
++	if ! "$PYTHON" "$script_path" -i "${temp_data}" -f html --template "${temp_tpl}" \
++		--colorscheme blue-green -o "${temp_html}" >/dev/null 2>&1; then
++		echo "Custom template HTML test failed."
++		err=1
++	elif ! grep -q "blue-green" "${temp_html}"; then
++		echo "Custom template colorscheme substitution failed."
++		err=1
++	else
++		echo "Custom template HTML test passed."
++	fi
++}
++
++test_file_mode
 +
 +exit $err
 -- 
