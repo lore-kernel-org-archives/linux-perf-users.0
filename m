@@ -1,56 +1,56 @@
-Received: from mail-pg1-f197.google.com (mail-pg1-f197.google.com [209.85.215.197])
+Received: from mail-pj1-f71.google.com (mail-pj1-f71.google.com [209.85.216.71])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 034CB3D903E
-	for <linux-perf-users@vger.kernel.org>; Sun, 20 Sep 2026 05:23:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.197
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DA823D952E
+	for <linux-perf-users@vger.kernel.org>; Sun, 20 Sep 2026 05:23:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.71
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789881820; cv=none; b=V6pkguaiomM3//Er7gPdiYMiNAroQkEcSb+S/jCyYTEQOMY2+WC4K22nVD8wZ1yTU+NwiTG3G4wUvVw8ylZb33oQRT3WKVXR1mqwoZdlNlhrM1uAr+hqw3Pig5Zzso71ghBj15uANoP2sTJOuJ46e02PUH2QiSqpKDjkuWR+YUo=
+	t=1789881822; cv=none; b=qYV5KMFeFb1eg0GncnP18FXqUmE+hDsJtveWer+IOHE9UVogMdbJFqaHCJal4JSWOnJezJDgyxdVBRaAwgEhkPH/Zug326sMB2aFUtJAwY/6GDifr58rbMN8Z5v98XKSyQJyzaRHkxdNzy2FjAgqax4v5oItRduTAS5SPm2seWM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789881820; c=relaxed/simple;
-	bh=tuuV7nbMUw6yRO98JshTVNSJS7+8lzcZk1WE2X/F1ZY=;
+	s=arc-20240116; t=1789881822; c=relaxed/simple;
+	bh=tZpVnMgu6Lx2kDzVNyUTHY4Qq+PP3iuDHRLcS0PBQK0=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=GiCO7xsmc8gTfVersHO5RMcdNA7ekzmA4q0Owry/AEchopn7rEYjOTtMvxpL2BsInb0WammQREcOd+kodqcxJ6WZGWyfYD6ONNhPFYBue5IPu7lYIDs7yY0dZW77K4IPwqlqGbt0c+d4AHI6M4FWS/FjDYvCexCCR4ppQmnRsoA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=avOTmHhj; arc=none smtp.client-ip=209.85.215.197
+	 To:Cc:Content-Type; b=E/yqh2EhQpTQbpi5v0LfvD+n3xi6sJEkonm7mgB3j6kKKpT0mk2QYO5dr2VaCUba6zLecZO2G435Ritgu/+TyqIVJau47AxsiDngDXfIIzz4g9YbGtLIOXsHBZlUIyrNy3xpKg2itqJTeBBMIP4sOKx2S1sOQM362O3s+cadsWk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=suUVU/nf; arc=none smtp.client-ip=209.85.216.71
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="avOTmHhj"
-Received: by mail-pg1-f197.google.com with SMTP id 41be03b00d2f7-cc4216aee8fso2702163a12.1
-        for <linux-perf-users@vger.kernel.org>; Sat, 19 Sep 2026 22:23:36 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="suUVU/nf"
+Received: by mail-pj1-f71.google.com with SMTP id 98e67ed59e1d1-39aee9b4cf2so3750616a91.0
+        for <linux-perf-users@vger.kernel.org>; Sat, 19 Sep 2026 22:23:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1789881816; x=1790486616; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1789881819; x=1790486619; darn=vger.kernel.org;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=Sp2SbXy4NblgzqmzthzVGTgo4M6+g83biwF7oIdehSk=;
-        b=avOTmHhjYgNfcDnK0GQn5m+QspjBEbrjv4ZFFMKsN7/baZDIsfF+pZQMGQmcQgQ2nH
-         jDx9ZfkxzVW1D2U1Xke+M2bDaYqLbw5YHtYAAp/VxNNQc6vwfRYxPDQKEbbkLuOPoe1/
-         xLS6qKtAX2npy9eTrSnfktFW8ErF+sXrGxg/vQh6Nh6HKL+KKidkZVUCieFweYIfiYb/
-         jVKa31mdglVI1RvlxMpYVMXjjY0j7Upk/K4BDV8CUVCY17fbn/EALOEiCt3OBxQLov/5
-         FxHr9Jjf6ZdXwzbX4Y7OhC1KwSMYyLbzMJ8G82LjpePAoBzERr1t9UL7MwGvnX1eBrjt
-         wfag==
+        bh=T1iECqO7ug3nMIoVu5+g1cS6NeZWyO6nDptzxPJ4dR8=;
+        b=suUVU/nfGmWnU+yQrLsC43UtV2G5OELKKYA/7s6Khy3XeYuPV1CATam6u73JOkap8L
+         zkKf6i23loG8KMpoOfi2Qwti9JTH2NwgU3SBiunGgNW3aphtmgLeu0OIFAT6k073kGq7
+         /X6rKBzkTxoeFk0yltG+0rNMNXgUGTFGlz6XAvOHKDpQ/v+OUqNSdKzLnNUveFyUkPZf
+         UAXv4rZ466qf15qHVdL62l8/exLvMG3aJZKkU3vZszIX0tpQYgTyxnU4/+FrmvfOMicJ
+         +ECaq15ottON9s4LwFqzCCx/K1/YgoLluTlNAP1V4Macoyq0IxrraRmMCNg3IaOGwzY3
+         vGCA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1789881816; x=1790486616;
+        d=1e100.net; s=20260707; t=1789881819; x=1790486619;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=Sp2SbXy4NblgzqmzthzVGTgo4M6+g83biwF7oIdehSk=;
-        b=IrRc9vJgX9CAPX27rxskTLM5Bx1EiXY4Xkvdiu/fW5c/5Wp+hIohYSDkTyVq66jkff
-         p9f5wq6EzIn9qjDOTDgazbEzKuxlUNqp4CUejaAtlP8NXCu2I56+mcvifoV2iVbL9sfd
-         Sr5udnLURKwKdAvpH5XsACbd+VqSbWL6wi+ZwsTQl3wV00vNJ3nrqO9YdNj9f2IB6hJi
-         ZLNAGSJw5+y8vR+f0UXejD5cRiZ2OW/4XpVOwdLV6jPdGcx6umynmeCa22rRYmzZBVdJ
-         2PsnqdS7no0WlkM4o3uiuIt26zLoq3UPTqQI5aIe1SU9I3cyXFI8HINQU+IL+qCZWPeJ
-         vXBA==
-X-Forwarded-Encrypted: i=1; AKwUvBxx5frb3r8JQMLq61uiLy3dLyY82xcyDhMiHol/V+/R3JJ3ukFsJNFtrzQtRwYYtc5izNvt1XCHXN0VF+57A7+X@vger.kernel.org
-X-Gm-Message-State: AFuF++naRKC4u2iU/Z3g/EzP3wpHAj0l49GhZJeOhMDxalPbYAEi7Sog
-	zSM9x5HIPjsttrrA0vJWe9GxoYtyWHYfKsTsj8SNzSdo1ORTQGZFdr7CtRN68YbW3LWqNNJ3DTd
-	o+Mi2TnNQww==
-X-Received: from dlbrj21.prod.google.com ([2002:a05:7022:f415:b0:144:bba4:7daa])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:4d91:b0:39e:6c68:c782
- with SMTP id 98e67ed59e1d1-39e6c68c9f1mr5867250a91.56.1789881815929; Sat, 19
- Sep 2026 22:23:35 -0700 (PDT)
-Date: Sat, 19 Sep 2026 22:21:24 -0700
+        bh=T1iECqO7ug3nMIoVu5+g1cS6NeZWyO6nDptzxPJ4dR8=;
+        b=lOKxvw15TP2izJgAs7b1Z5NSl1sV2G5Hi8hoT+00jsbxpx3D3wgpnbn91LIJEIqnpJ
+         ge+ty9SJ+xqUrW88zPqBko/Im5n2Va+ZXi1sbbR5QwVyzaG0ql+rr61F2NSghZX/L/8K
+         Fj+enXdRNYFCPojHmIkMu7uInVZI47p0MJBE0o58LYjHho4cLmfHoXbxZA/ipBeiR+g0
+         pBkTzwjz8WAwf4eMmmbT6Ma3gFNAVPMB52i72+9vE+V+ICwjetoL8rX+LPUXpuyatKBf
+         oPO8saRuoFMAe7hAYThmDIpbaMYP326ZkGUajPK2fNIeZEPt62bWRa7Y5TsxuY98X2Lt
+         d0Yw==
+X-Forwarded-Encrypted: i=1; AKwUvBzlxF6VvNrGFsAASH7+UrI2egsRibsn2032tfsYS5SodlXErq16EPcsJu8bjQKeJzUSaqt01YjvQEnVc1Eoicnm@vger.kernel.org
+X-Gm-Message-State: AFuF++m6ZClZlbc9yQm51CNKecThk3kYrIAkGMQrRNR5/2VIroaOzIOB
+	ulZAvbN266UlHkkSqoGk4g+aC5upJtzCfO1akdCkLaF1FM8YOp5zh8ItfnjrrssVnGHsovawZXJ
+	ehmx0m46fGA==
+X-Received: from dlan19-n2.prod.google.com ([2002:a05:7022:eb53:20b0:144:d1d0:a66])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:5824:b0:39e:6a7f:1dc8
+ with SMTP id 98e67ed59e1d1-39e6a7f21femr5695436a91.36.1789881819242; Sat, 19
+ Sep 2026 22:23:39 -0700 (PDT)
+Date: Sat, 19 Sep 2026 22:21:26 -0700
 In-Reply-To: <cover.1789880842.git.irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -60,9 +60,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <cover.1789880842.git.irogers@google.com>
 X-Mailer: git-send-email 2.55.0.1082.g2b9226bbc0-goog
-Message-ID: <3e492b07bf1597c5bc0fb26eb081b84b96c05790.1789880842.git.irogers@google.com>
-Subject: [PATCH v1 32/49] perf python: Port sched-migration and SchedGui to
- perf module
+Message-ID: <0577f22cc2dd147f8afdcdab789dfae835d3b187.1789880842.git.irogers@google.com>
+Subject: [PATCH v1 34/49] perf python: Port compaction-times to perf module
 From: Ian Rogers <irogers@google.com>
 To: irogers@google.com, acme@kernel.org, adrian.hunter@intel.com, 
 	alice.mei.rogers@gmail.com, james.clark@linaro.org, 
@@ -72,784 +71,395 @@ Cc: dapeng1.mi@linux.intel.com, leo.yan@linux.dev,
 	tmricht@linux.ibm.com
 Content-Type: text/plain; charset="UTF-8"
 
-Port sched-migration.py and SchedGui.py from tools/perf/scripts/python/
-to standalone modules in tools/perf/python/:
-- Refactor sched-migration.py into a SchedMigrationAnalyzer class using
-  perf.session for event processing and add argparse CLI support
-  (-i/--input, -v/--verbose, --gui, --no-gui).
-- Port SchedGui.py to tools/perf/python/ as a local module dependency.
-- Load wxPython dynamically via importlib only when GUI mode (--gui) is
-  requested so text-mode analysis, testing on headless systems, and
-  static analysis (mypy/pylint) succeed without wx installed.
-- Remove Python 2 compatibility code.
+Port compaction-times.py to a standalone script in tools/perf/python/
+using the perf module directly to analyze mm_compaction tracepoints.
 
-Add a shell test (test_sched_migration_python.sh) to verify the
+Improvements compared to the legacy script:
+- Replace Python 2 constructs (such as sys.maxint and raw integer
+  bitmasks) with Python 3 enum.IntEnum (Popt) and enum.IntFlag (Topt)
+  types.
+- Access tracepoint fields directly on perf.sample_event and add
+  -i/--input CLI option support via argparse.
+- Add full type annotations passing mypy and pylint without suppression
+  comments.
+
+Add a shell test (test_compaction_times_python.sh) to verify the
 standalone script.
 
 Assisted-by: Antigravity:gemini-3.1-pro
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/python/SchedGui.py                 | 246 +++++++++
- tools/perf/python/sched-migration.py          | 486 ++++++++++++++++++
- .../shell/test_sched_migration_python.sh      |  69 +++
- 3 files changed, 801 insertions(+)
- create mode 100755 tools/perf/python/SchedGui.py
- create mode 100755 tools/perf/python/sched-migration.py
- create mode 100755 tools/perf/tests/shell/test_sched_migration_python.sh
+ tools/perf/python/compaction-times.py         | 350 ++++++++++++++++++
+ .../shell/test_compaction_times_python.sh     |  81 ++++
+ 2 files changed, 431 insertions(+)
+ create mode 100755 tools/perf/python/compaction-times.py
+ create mode 100755 tools/perf/tests/shell/test_compaction_times_python.sh
 
-diff --git a/tools/perf/python/SchedGui.py b/tools/perf/python/SchedGui.py
+diff --git a/tools/perf/python/compaction-times.py b/tools/perf/python/compaction-times.py
 new file mode 100755
-index 000000000000..fa0d010fe528
+index 000000000000..d17cd51a320b
 --- /dev/null
-+++ b/tools/perf/python/SchedGui.py
-@@ -0,0 +1,246 @@
-+#!/usr/bin/env python3
-+# SPDX-License-Identifier: GPL-2.0
-+# SchedGui.py - Python extension for perf script, basic GUI code for
-+#		traces drawing and overview.
-+#
-+# Copyright (C) 2010 by Frederic Weisbecker <fweisbec@gmail.com>
-+#
-+# Ported to modern directory structure.
-+
-+"""SchedGui.py - Python extension for perf script, basic GUI code for traces drawing and overview."""
-+from __future__ import annotations
-+
-+import importlib
-+from typing import Any
-+
-+class _DummyWx:
-+    """Dummy wx module fallback when wxPython is not installed."""
-+    Frame = object
-+
-+
-+try:
-+    wx: Any = importlib.import_module("wx")
-+    WX_AVAILABLE = True
-+except ImportError:
-+    wx = _DummyWx
-+    WX_AVAILABLE = False
-+
-+
-+class RootFrame(wx.Frame):
-+    """Main window frame for scheduling trace visualization."""
-+    Y_OFFSET = 100
-+    RECT_HEIGHT = 100
-+    RECT_SPACE = 50
-+    EVENT_MARKING_WIDTH = 5
-+
-+    def __init__(self, sched_tracer, title, parent=None, win_id=-1):
-+        if not WX_AVAILABLE:
-+            raise ImportError("You need to install the wxpython lib for this script")
-+        wx.Frame.__init__(self, parent, win_id, title)
-+
-+        self.dc = None
-+        (self.screen_width, self.screen_height) = wx.GetDisplaySize()
-+        self.screen_width -= 10
-+        self.screen_height -= 10
-+        self.zoom = 0.5
-+        self.scroll_scale = 20
-+        self.sched_tracer = sched_tracer
-+        self.sched_tracer.set_root_win(self)
-+        (self.ts_start, self.ts_end) = sched_tracer.interval()
-+        self.update_width_virtual()
-+        self.nr_rects = sched_tracer.nr_rectangles() + 1
-+        self.height_virtual = RootFrame.Y_OFFSET + \
-+            (self.nr_rects * (RootFrame.RECT_HEIGHT + RootFrame.RECT_SPACE))
-+
-+        # whole window panel
-+        self.panel = wx.Panel(self, size=(self.screen_width, self.screen_height))
-+
-+        # scrollable container
-+        # Create SplitterWindow
-+        self.splitter = wx.SplitterWindow(self.panel, style=wx.SP_3D)
-+
-+        # scrollable container (Top)
-+        self.scroll = wx.ScrolledWindow(self.splitter)
-+        self.scroll.SetScrollbars(self.scroll_scale, self.scroll_scale,
-+                                  int(self.width_virtual // self.scroll_scale),
-+                                  int(self.height_virtual // self.scroll_scale))
-+        self.scroll.EnableScrolling(True, True)
-+        self.scroll.SetFocus()
-+
-+        # scrollable drawing area
-+        self.scroll_panel = wx.Panel(self.scroll,
-+                                     size=(self.screen_width - 15, self.screen_height // 2))
-+        self.scroll_panel.Bind(wx.EVT_PAINT, self.on_paint)
-+        self.scroll_panel.Bind(wx.EVT_KEY_DOWN, self.on_key_press)
-+        self.scroll_panel.Bind(wx.EVT_LEFT_DOWN, self.on_mouse_down)
-+        self.scroll.Bind(wx.EVT_KEY_DOWN, self.on_key_press)
-+        self.scroll.Bind(wx.EVT_LEFT_DOWN, self.on_mouse_down)
-+
-+        self.scroll_panel.SetSize(int(self.width_virtual), int(self.height_virtual))
-+
-+        # Create a separate panel for text (Bottom)
-+        self.text_panel = wx.Panel(self.splitter)
-+        self.text_sizer = wx.BoxSizer(wx.VERTICAL)
-+        self.txt = wx.TextCtrl(self.text_panel, -1, "Click a bar to see details",
-+                               style=wx.TE_MULTILINE)
-+        self.text_sizer.Add(self.txt, 1, wx.EXPAND | wx.ALL, 5)
-+        self.text_panel.SetSizer(self.text_sizer)
-+
-+        # Split the window
-+        self.splitter.SplitHorizontally(self.scroll, self.text_panel, (self.screen_height * 3) // 4)
-+
-+        # Main sizer to layout splitter
-+        self.main_sizer = wx.BoxSizer(wx.VERTICAL)
-+        self.main_sizer.Add(self.splitter, 1, wx.EXPAND)
-+        self.panel.SetSizer(self.main_sizer)
-+
-+        self.scroll.Fit()
-+        self.Fit()
-+
-+        self.Show(True)
-+
-+    def us_to_px(self, val):
-+        """Convert microseconds to pixels."""
-+        return val / (10 ** 3) * self.zoom
-+
-+    def px_to_us(self, val):
-+        """Convert pixels to microseconds."""
-+        return (val / self.zoom) * (10 ** 3)
-+
-+    def scroll_start(self):
-+        """Get scroll start position in pixels."""
-+        (x, y) = self.scroll.GetViewStart()
-+        return (x * self.scroll_scale, y * self.scroll_scale)
-+
-+    def scroll_start_us(self):
-+        """Get scroll start position in microseconds."""
-+        (x, _) = self.scroll_start()
-+        return self.px_to_us(x)
-+
-+    def paint_rectangle_zone(self, nr, color, top_color, start, end):
-+        """Draw a rectangle zone for a CPU."""
-+        offset_px = self.us_to_px(start - self.ts_start)
-+        width_px = self.us_to_px(end - start)
-+
-+        offset_py = RootFrame.Y_OFFSET + (nr * (RootFrame.RECT_HEIGHT + RootFrame.RECT_SPACE))
-+        width_py = RootFrame.RECT_HEIGHT
-+
-+        dc = self.dc
-+
-+        if top_color is not None:
-+            (r, g, b) = top_color
-+            top_color = wx.Colour(r, g, b)
-+            brush = wx.Brush(top_color, wx.SOLID)
-+            dc.SetBrush(brush)
-+            dc.DrawRectangle(int(offset_px), int(offset_py),
-+                             int(width_px), RootFrame.EVENT_MARKING_WIDTH)
-+            width_py -= RootFrame.EVENT_MARKING_WIDTH
-+            offset_py += RootFrame.EVENT_MARKING_WIDTH
-+
-+        (r, g, b) = color
-+        color = wx.Colour(r, g, b)
-+        brush = wx.Brush(color, wx.SOLID)
-+        dc.SetBrush(brush)
-+        dc.DrawRectangle(int(offset_px), int(offset_py), int(width_px), int(width_py))
-+
-+    def update_rectangles(self, start, end):
-+        """Update rectangles in the given time window."""
-+        start += self.ts_start
-+        end += self.ts_start
-+        self.sched_tracer.fill_zone(start, end)
-+
-+    def on_paint(self, event):
-+        """Handle paint event."""
-+        window = event.GetEventObject()
-+        dc = wx.PaintDC(window)
-+
-+        # Clear background to avoid ghosting
-+        dc.SetBackground(wx.Brush(window.GetBackgroundColour()))
-+        dc.Clear()
-+
-+        self.dc = dc
-+        try:
-+            width = min(self.width_virtual, self.screen_width)
-+            (x, _) = self.scroll_start()
-+            start = self.px_to_us(x)
-+            end = self.px_to_us(x + width)
-+            self.update_rectangles(start, end)
-+
-+            # Draw CPU labels at the left edge of the visible area
-+            (x_scroll, _) = self.scroll_start()
-+            for nr in range(self.nr_rects):
-+                offset_py = RootFrame.Y_OFFSET + (nr * (RootFrame.RECT_HEIGHT + RootFrame.RECT_SPACE))
-+                dc.DrawText(f"CPU {nr}", x_scroll + 10, offset_py + 10)
-+        finally:
-+            self.dc = None
-+
-+    def rect_from_ypixel(self, y):
-+        y -= RootFrame.Y_OFFSET
-+        rect = y // (RootFrame.RECT_HEIGHT + RootFrame.RECT_SPACE)
-+        height = y % (RootFrame.RECT_HEIGHT + RootFrame.RECT_SPACE)
-+
-+        if rect < 0 or rect > self.nr_rects - 1 or height > RootFrame.RECT_HEIGHT:
-+            return -1
-+
-+        return rect
-+
-+    def update_summary(self, txt):
-+        self.txt.SetValue(txt)
-+        self.text_panel.Layout()
-+        self.splitter.Layout()
-+        self.text_panel.Refresh()
-+
-+    def on_mouse_down(self, event):
-+        pos = event.GetPosition()
-+        x, y = pos.x, pos.y
-+        rect = self.rect_from_ypixel(y)
-+        if rect == -1:
-+            return
-+
-+        t = self.px_to_us(x) + self.ts_start
-+
-+        self.sched_tracer.mouse_down(rect, t)
-+
-+    def update_width_virtual(self):
-+        self.width_virtual = self.us_to_px(self.ts_end - self.ts_start)
-+
-+    def __zoom(self, x):
-+        self.update_width_virtual()
-+        (xpos, ypos) = self.scroll.GetViewStart()
-+        xpos = int(self.us_to_px(x) // self.scroll_scale)
-+        self.scroll_panel.SetSize((int(self.width_virtual), int(self.height_virtual)))
-+        self.scroll.SetScrollbars(self.scroll_scale, self.scroll_scale,
-+                                  int(self.width_virtual // self.scroll_scale),
-+                                  int(self.height_virtual // self.scroll_scale),
-+                                  xpos, ypos)
-+        self.Refresh()
-+
-+    def zoom_in(self):
-+        x = self.scroll_start_us()
-+        self.zoom *= 2
-+        self.__zoom(x)
-+
-+    def zoom_out(self):
-+        x = self.scroll_start_us()
-+        self.zoom /= 2
-+        self.__zoom(x)
-+
-+    def on_key_press(self, event):
-+        key = event.GetRawKeyCode()
-+        if key == ord("+"):
-+            self.zoom_in()
-+            return
-+        if key == ord("-"):
-+            self.zoom_out()
-+            return
-+
-+        key = event.GetKeyCode()
-+        (x, y) = self.scroll.GetViewStart()
-+        if key == wx.WXK_RIGHT:
-+            self.scroll.Scroll(x + 1, y)
-+        elif key == wx.WXK_LEFT:
-+            self.scroll.Scroll(x - 1, y)
-+        elif key == wx.WXK_DOWN:
-+            self.scroll.Scroll(x, y + 1)
-+        elif key == wx.WXK_UP:
-+            self.scroll.Scroll(x, y - 1)
-diff --git a/tools/perf/python/sched-migration.py b/tools/perf/python/sched-migration.py
-new file mode 100755
-index 000000000000..0684b2876ed7
---- /dev/null
-+++ b/tools/perf/python/sched-migration.py
-@@ -0,0 +1,486 @@
++++ b/tools/perf/python/compaction-times.py
+@@ -0,0 +1,350 @@
 +#!/usr/bin/env python3
 +# SPDX-License-Identifier: GPL-2.0
 +"""
-+Cpu task migration overview toy
++Report time spent in memory compaction.
 +
-+Copyright (C) 2010 Frederic Weisbecker <fweisbec@gmail.com>
-+Ported to modern directory structure and refactored to use class.
++Memory compaction is a feature in the Linux kernel that defragments memory
++by moving used pages to create larger contiguous blocks of free memory. This
++is particularly useful for allocating huge pages.
++
++This script processes trace events related to memory compaction and reports:
++- Total time spent in compaction (stall time).
++- Statistics for page migration (moved vs. failed).
++- Statistics for the free scanner (scanned vs. isolated pages).
++- Statistics for the migration scanner (scanned vs. isolated pages).
++
++Definitions:
++- **Compaction**: Defragmenting memory by moving allocated pages.
++- **Migration**: Moving pages from their current location to free pages found by the free scanner.
++- **Free Scanner**: Scans memory (typically from the end of a zone) to find free pages.
++- **Migration Scanner**: Scans memory (typically from the beginning of a zone)
++  to find pages to move.
++- **Isolated Pages**: Pages that have been temporarily removed from the buddy
++  system for migration or as migration targets.
++
++Ported from tools/perf/scripts/python/compaction-times.py to the modern perf Python module.
 +"""
 +from __future__ import annotations
 +
 +import argparse
-+from collections import defaultdict, UserList
-+import importlib
++import enum
++import re
 +import sys
-+from typing import Any
++from typing import Callable, Dict, List, Optional, Any
 +import perf
 +
-+
-+# Global threads dictionary
-+threads = defaultdict(lambda: "unknown")
-+threads[0] = "idle"
-+
-+
-+def thread_name(pid: int) -> str:
-+    """Return thread name formatted with pid."""
-+    return f"{threads[pid]}:{pid}"
-+
-+
-+def task_state(state: int) -> str:
-+    """Map task state integer to string."""
-+    states = {
-+        0: "R",
-+        1: "S",
-+        2: "D",
-+        64: "DEAD"
-+    }
-+    return states.get(state, "Unknown")
-+
-+
-+class RunqueueEventUnknown:
-+    """Unknown runqueue event."""
-+    @staticmethod
-+    def color():
-+        """Return color for event."""
-+        return None
-+
-+    def __repr__(self):
-+        return "unknown"
-+
-+
-+class RunqueueEventSleep:
-+    """Sleep runqueue event."""
-+    @staticmethod
-+    def color():
-+        """Return color for event."""
-+        return 0, 0, 0xff
-+
-+    def __init__(self, sleeper: int):
-+        self.sleeper = sleeper
-+
-+    def __repr__(self):
-+        return f"{thread_name(self.sleeper)} gone to sleep"
-+
-+
-+class RunqueueEventWakeup:
-+    """Wakeup runqueue event."""
-+    @staticmethod
-+    def color():
-+        """Return color for event."""
-+        return 0xff, 0xff, 0
-+
-+    def __init__(self, wakee: int):
-+        self.wakee = wakee
-+
-+    def __repr__(self):
-+        return f"{thread_name(self.wakee)} woke up"
-+
-+
-+class RunqueueEventFork:
-+    """Fork runqueue event."""
-+    @staticmethod
-+    def color():
-+        """Return color for event."""
-+        return 0, 0xff, 0
-+
-+    def __init__(self, child: int):
-+        self.child = child
-+
-+    def __repr__(self):
-+        return f"new forked task {thread_name(self.child)}"
-+
-+
-+class RunqueueMigrateIn:
-+    """Migrate in runqueue event."""
-+    @staticmethod
-+    def color():
-+        """Return color for event."""
-+        return 0, 0xf0, 0xff
-+
-+    def __init__(self, new: int):
-+        self.new = new
-+
-+    def __repr__(self):
-+        return f"task migrated in {thread_name(self.new)}"
-+
-+
-+class RunqueueMigrateOut:
-+    """Migrate out runqueue event."""
-+    @staticmethod
-+    def color():
-+        """Return color for event."""
-+        return 0xff, 0, 0xff
-+
-+    def __init__(self, old: int):
-+        self.old = old
-+
-+    def __repr__(self):
-+        return f"task migrated out {thread_name(self.old)}"
-+
-+
-+class RunqueueSnapshot:
-+    """Snapshot of runqueue state."""
-+
-+    def __init__(self, tasks=None, event=None):
-+        if tasks is None:
-+            tasks = (0,)
-+        if event is None:
-+            event = RunqueueEventUnknown()
-+        self.tasks = tuple(tasks)
-+        self.event = event
-+
-+    def sched_switch(self, prev: int, prev_state: int, next_pid: int):
-+        """Handle sched switch in snapshot."""
-+        if task_state(prev_state) == "R" and next_pid in self.tasks \
-+                and prev in self.tasks:
-+            return self
-+
-+        event = (
-+            RunqueueEventSleep(prev)
-+            if task_state(prev_state) != "R"
-+            else RunqueueEventUnknown()
-+        )
-+
-+        next_tasks = list(self.tasks[:])
-+        if prev in self.tasks:
-+            if task_state(prev_state) != "R":
-+                next_tasks.remove(prev)
-+        elif task_state(prev_state) == "R":
-+            next_tasks.append(prev)
-+
-+        if next_pid not in next_tasks:
-+            next_tasks.append(next_pid)
-+
-+        return RunqueueSnapshot(next_tasks, event)
-+
-+    def migrate_out(self, old: int):
-+        """Handle task migrate out in snapshot."""
-+        if old not in self.tasks:
-+            return self
-+        next_tasks = [task for task in self.tasks if task != old]
-+
-+        return RunqueueSnapshot(next_tasks, RunqueueMigrateOut(old))
-+
-+    def __migrate_in(self, new: int, event):
-+        if new in self.tasks:
-+            return RunqueueSnapshot(self.tasks, event)
-+        next_tasks = self.tasks + tuple([new])
-+
-+        return RunqueueSnapshot(next_tasks, event)
-+
-+    def migrate_in(self, new: int):
-+        """Handle task migrate in snapshot."""
-+        return self.__migrate_in(new, RunqueueMigrateIn(new))
-+
-+    def wake_up(self, new: int):
-+        """Handle task wakeup in snapshot."""
-+        return self.__migrate_in(new, RunqueueEventWakeup(new))
-+
-+    def wake_up_new(self, new: int):
-+        """Handle task fork in snapshot."""
-+        return self.__migrate_in(new, RunqueueEventFork(new))
-+
-+    def load(self) -> int:
-+        """Provide the number of tasks on the runqueue. Don't count idle"""
-+        return len(self.tasks) - 1
-+
-+    def __repr__(self):
-+        return self.tasks.__repr__()
-+
-+
-+class TimeSlice:
-+    """Represents a time slice of execution."""
-+
-+    def __init__(self, start: int, prev):
-+        self.start = start
-+        self.prev = prev
-+        self.end = start
-+        # cpus that triggered the event
-+        self.event_cpus: list[int] = []
-+        if prev is not None:
-+            self.total_load = prev.total_load
-+            self.rqs = prev.rqs.copy()
-+        else:
-+            self.rqs = defaultdict(RunqueueSnapshot)
-+            self.total_load = 0
-+
-+    def __update_total_load(self, old_rq: RunqueueSnapshot, new_rq: RunqueueSnapshot):
-+        diff = new_rq.load() - old_rq.load()
-+        self.total_load += diff
-+
-+    def sched_switch(self, ts_list, prev: int, prev_state: int, next_pid: int, cpu: int):
-+        """Process sched_switch in time slice."""
-+        old_rq = self.prev.rqs[cpu]
-+        new_rq = old_rq.sched_switch(prev, prev_state, next_pid)
-+
-+        if old_rq is new_rq:
-+            return
-+
-+        self.rqs[cpu] = new_rq
-+        self.__update_total_load(old_rq, new_rq)
-+        ts_list.append(self)
-+        self.event_cpus = [cpu]
-+
-+    def migrate(self, ts_list, new: int, old_cpu: int, new_cpu: int):
-+        """Process task migration in time slice."""
-+        if old_cpu == new_cpu:
-+            return
-+        old_rq = self.prev.rqs[old_cpu]
-+        out_rq = old_rq.migrate_out(new)
-+        self.rqs[old_cpu] = out_rq
-+        self.__update_total_load(old_rq, out_rq)
-+
-+        new_rq = self.prev.rqs[new_cpu]
-+        in_rq = new_rq.migrate_in(new)
-+        self.rqs[new_cpu] = in_rq
-+        self.__update_total_load(new_rq, in_rq)
-+
-+        ts_list.append(self)
-+
-+        if old_rq is not out_rq:
-+            self.event_cpus.append(old_cpu)
-+        self.event_cpus.append(new_cpu)
-+
-+    def wake_up(self, ts_list, pid: int, cpu: int, fork: bool):
-+        """Process wakeup in time slice."""
-+        old_rq = self.prev.rqs[cpu]
-+        if fork:
-+            new_rq = old_rq.wake_up_new(pid)
-+        else:
-+            new_rq = old_rq.wake_up(pid)
-+
-+        if new_rq is old_rq:
-+            return
-+        self.rqs[cpu] = new_rq
-+        self.__update_total_load(old_rq, new_rq)
-+        ts_list.append(self)
-+        self.event_cpus = [cpu]
-+
-+    def next(self, t: int):
-+        """Create next time slice."""
-+        self.end = t
-+        return TimeSlice(t, self)
-+
-+
-+class TimeSliceList(UserList):
-+    """List of time slices with search capabilities."""
-+
-+    def __init__(self, arg=None):
-+        super().__init__(arg if arg is not None else [])
-+        self.root_win = None
-+
-+    def get_time_slice(self, ts: int) -> TimeSlice:
-+        """Get or create time slice for timestamp."""
-+        if len(self.data) == 0:
-+            ts_slice = TimeSlice(ts, TimeSlice(-1, None))
-+        else:
-+            ts_slice = self.data[-1].next(ts)
-+        return ts_slice
-+
-+    def find_time_slice(self, ts: int) -> int:
-+        """Binary search for time slice containing timestamp."""
-+        if not self.data:
-+            return -1
-+        start = 0
-+        end = len(self.data)
-+        found = -1
-+        searching = True
-+        while searching:
-+            if start in (end, end - 1):
-+                searching = False
-+
-+            i = (end + start) // 2
-+            if self.data[i].start <= ts <= self.data[i].end:
-+                found = i
-+                break
-+
-+            if self.data[i].end < ts:
-+                start = i
-+            elif self.data[i].start > ts:
-+                end = i
-+
-+        return found
-+
-+    def set_root_win(self, win):
-+        """Set root window for GUI."""
-+        self.root_win = win
-+
-+    def mouse_down(self, cpu: int, t: int):
-+        """Handle mouse down event from GUI."""
-+        idx = self.find_time_slice(t)
-+        if idx == -1:
-+            return
-+
-+        ts = self[idx]
-+        rq = ts.rqs[cpu]
-+        raw = f"CPU: {cpu}\n"
-+        raw += f"Last event : {repr(rq.event)}\n"
-+        raw += f"Timestamp : {ts.start // (10 ** 9)}.{ts.start % (10 ** 9) // 1000:06d}\n"
-+        raw += f"Duration : {(ts.end - ts.start) // (10 ** 3):6d} us\n"
-+        raw += f"Load = {rq.load()}\n"
-+        for task in rq.tasks:
-+            raw += f"{thread_name(task)} \n"
-+
-+        if self.root_win:
-+            self.root_win.update_summary(raw)
-+
-+    def update_rectangle_cpu(self, slice_obj: TimeSlice, cpu: int):
-+        """Update rectangle for CPU in GUI."""
-+        rq = slice_obj.rqs[cpu]
-+
-+        if slice_obj.total_load != 0:
-+            load_rate = rq.load() / float(slice_obj.total_load)
-+        else:
-+            load_rate = 0
-+
-+        red_power = int(0xff - (0xff * load_rate))
-+        color = (0xff, red_power, red_power)
-+
-+        top_color = None
-+        if cpu in slice_obj.event_cpus:
-+            top_color = rq.event.color()
-+
-+        if self.root_win:
-+            self.root_win.paint_rectangle_zone(cpu, color, top_color,
-+                                               slice_obj.start, slice_obj.end)
-+
-+    def fill_zone(self, start: int, end: int):
-+        """Fill zone in GUI."""
-+        i = self.find_time_slice(start)
-+        if i == -1:
-+            return
-+
-+        for idx in range(i, len(self.data)):
-+            timeslice = self.data[idx]
-+            if timeslice.start > end:
-+                return
-+
-+            for cpu in timeslice.rqs:
-+                self.update_rectangle_cpu(timeslice, cpu)
-+
-+    def interval(self) -> tuple[int, int]:
-+        """Return start and end timestamps."""
-+        if len(self.data) == 0:
-+            return 0, 0
-+        return self.data[0].start, self.data[-1].end
-+
-+    def nr_rectangles(self) -> int:
-+        """Return maximum CPU number."""
-+        if not self.data:
-+            return 0
-+        last_ts = self.data[-1]
-+        max_cpu = 0
-+        for cpu in last_ts.rqs:
-+            max_cpu = max(max_cpu, cpu)
-+        return max_cpu
-+
-+
-+class SchedMigrationAnalyzer:
-+    """Analyzes task migrations and manages time slices."""
-+
-+    def __init__(self):
-+        self.current_tsk = defaultdict(lambda: -1)
-+        self.timeslices = TimeSliceList()
-+
-+    def sched_switch(self, time: int, cpu: int, prev_comm: str, prev_pid: int, prev_state: int,
-+                     next_comm: str, next_pid: int):
-+        """Handle sched_switch event."""
-+        on_cpu_task = self.current_tsk[cpu]
-+
-+        if on_cpu_task not in (-1, prev_pid):
-+            print(f"Sched switch event rejected ts: {time} cpu: {cpu} "
-+                  f"prev: {prev_comm}({prev_pid}) next: {next_comm}({next_pid})")
-+            threads[prev_pid] = prev_comm
-+            threads[next_pid] = next_comm
-+            self.current_tsk[cpu] = next_pid
-+            return
-+
-+        threads[prev_pid] = prev_comm
-+        threads[next_pid] = next_comm
-+        self.current_tsk[cpu] = next_pid
-+
-+        ts = self.timeslices.get_time_slice(time)
-+        ts.sched_switch(self.timeslices, prev_pid, prev_state, next_pid, cpu)
-+
-+    def migrate(self, time: int, pid: int, orig_cpu: int, dest_cpu: int):
-+        """Handle sched_migrate_task event."""
-+        ts = self.timeslices.get_time_slice(time)
-+        ts.migrate(self.timeslices, pid, orig_cpu, dest_cpu)
-+
-+    def wake_up(self, time: int, pid: int, success: int, target_cpu: int, fork: bool):
-+        """Handle wakeup event."""
-+        if success == 0:
-+            return
-+        ts = self.timeslices.get_time_slice(time)
-+        ts.wake_up(self.timeslices, pid, target_cpu, fork)
-+
-+    def process_event(self, sample: perf.sample_event) -> None:
-+        """Collect events and pass to analyzer."""
-+        name = str(sample.evsel)
-+        time = sample.sample_time
-+        cpu = sample.sample_cpu
-+        _pid = sample.sample_pid
-+        _comm = "Unknown"
-+
-+        if name == "evsel(sched:sched_switch)":
-+            prev_comm = getattr(sample, "prev_comm", "Unknown")
-+            prev_pid = getattr(sample, "prev_pid", -1)
-+            prev_state = getattr(sample, "prev_state", 0)
-+            next_comm = getattr(sample, "next_comm", "Unknown")
-+            next_pid = getattr(sample, "next_pid", -1)
-+            self.sched_switch(time, cpu, prev_comm, prev_pid, prev_state, next_comm, next_pid)
-+        elif name == "evsel(sched:sched_migrate_task)":
-+            task_pid = getattr(sample, "pid", -1)
-+            orig_cpu = getattr(sample, "orig_cpu", -1)
-+            dest_cpu = getattr(sample, "dest_cpu", -1)
-+            self.migrate(time, task_pid, orig_cpu, dest_cpu)
-+        elif name == "evsel(sched:sched_wakeup)":
-+            task_pid = getattr(sample, "pid", -1)
-+            success = getattr(sample, "success", 1)
-+            target_cpu = getattr(sample, "target_cpu", -1)
-+            self.wake_up(time, task_pid, success, target_cpu, False)
-+        elif name == "evsel(sched:sched_wakeup_new)":
-+            task_pid = getattr(sample, "pid", -1)
-+            success = getattr(sample, "success", 1)
-+            target_cpu = getattr(sample, "target_cpu", -1)
-+            self.wake_up(time, task_pid, success, target_cpu, True)
-+
-+    def run_gui(self):
-+        """Start wxPython GUI."""
++class Popt(enum.IntEnum):
++    """Process display options."""
++    DISP_DFL = 0
++    DISP_PROC = 1
++    DISP_PROC_VERBOSE = 2
++
++class Topt(enum.IntFlag):
++    """Trace display options."""
++    DISP_TIME = 0
++    DISP_MIG = 1
++    DISP_ISOLFREE = 2
++    DISP_ISOLMIG = 4
++    DISP_ALL = DISP_MIG | DISP_ISOLFREE | DISP_ISOLMIG
++
++# Globals to satisfy pylint when accessed in functions before assignment in main.
++OPT_NS = True
++opt_disp = Topt.DISP_ALL
++opt_proc = Popt.DISP_DFL
++session = None
++
++def get_comm_filter(regex: re.Pattern) -> Callable[[int, str], bool]:
++    """Returns a filter function based on command regex."""
++    def filter_func(_pid: int, comm: str) -> bool:
++        regex_match = regex.search(comm)
++        return regex_match is None or regex_match.group() == ""
++    return filter_func
++
++def get_pid_filter(low_str: str, high_str: str) -> Callable[[int, str], bool]:
++    """Returns a filter function based on PID range."""
++    low = 0 if low_str == "" else int(low_str)
++    high = None if high_str == "" else int(high_str)
++
++    def filter_func(pid: int, _comm: str) -> bool:
++        return not (pid >= low and (high is None or pid <= high))
++    return filter_func
++
++def ns_to_time(ns: int) -> str:
++    """Format nanoseconds to string based on options."""
++    return f"{ns}ns" if OPT_NS else f"{round(ns, -3) // 1000}us"
++
++class Pair:
++    """Represents a pair of related counters (e.g., scanned vs isolated, moved vs failed)."""
++    def __init__(self, aval: int, bval: int,
++                 alabel: Optional[str] = None, blabel: Optional[str] = None):
++        self.alabel = alabel
++        self.blabel = blabel
++        self.aval = aval
++        self.bval = bval
++
++    def __add__(self, rhs: 'Pair') -> 'Pair':
++        return Pair(self.aval + rhs.aval, self.bval + rhs.bval, self.alabel, self.blabel)
++
++    def __iadd__(self, rhs: 'Pair') -> 'Pair':
++        self.aval += rhs.aval
++        self.bval += rhs.bval
++        return self
++
++    def __str__(self) -> str:
++        return f"{self.alabel}={self.aval} {self.blabel}={self.bval}"
++
++class Cnode:
++    """Holds statistics for a single compaction event or an aggregated set of events."""
++    def __init__(self, ns: int):
++        self.ns = ns
++        self.migrated = Pair(0, 0, "moved", "failed")
++        self.fscan = Pair(0, 0, "scanned", "isolated")
++        self.mscan = Pair(0, 0, "scanned", "isolated")
++
++    def __add__(self, rhs: 'Cnode') -> 'Cnode':
++        res = Cnode(self.ns + rhs.ns)
++        res.migrated = self.migrated + rhs.migrated
++        res.fscan = self.fscan + rhs.fscan
++        res.mscan = self.mscan + rhs.mscan
++        return res
++
++    def __iadd__(self, rhs: 'Cnode') -> 'Cnode':
++        self.ns += rhs.ns
++        self.migrated += rhs.migrated
++        self.fscan += rhs.fscan
++        self.mscan += rhs.mscan
++        return self
++
++    def __str__(self) -> str:
++        prev = False
++        s = f"{ns_to_time(self.ns)} "
++        if opt_disp & Topt.DISP_MIG:
++            s += f"migration: {self.migrated}"
++            prev = True
++        if opt_disp & Topt.DISP_ISOLFREE:
++            s += f"{' ' if prev else ''}free_scanner: {self.fscan}"
++            prev = True
++        if opt_disp & Topt.DISP_ISOLMIG:
++            s += f"{' ' if prev else ''}migration_scanner: {self.mscan}"
++        return s
++
++    def complete(self, secs: int, nsecs: int) -> None:
++        """Complete the node with duration."""
++        self.ns = (secs * 1000000000 + nsecs) - self.ns
++
++    def increment(self, migrated: Optional[Pair], fscan: Optional[Pair],
++                  mscan: Optional[Pair]) -> None:
++        """Increment statistics."""
++        if migrated is not None:
++            self.migrated += migrated
++        if fscan is not None:
++            self.fscan += fscan
++        if mscan is not None:
++            self.mscan += mscan
++
++class Chead:
++    """Aggregates compaction statistics per process (PID) and maintains total statistics."""
++    heads: Dict[int, 'Chead'] = {}
++    val = Cnode(0)
++    fobj: Optional[Any] = None
++
++    @classmethod
++    def add_filter(cls, fobj: Any) -> None:
++        """Add a filter object."""
++        cls.fobj = fobj
++
++    @classmethod
++    def create_pending(cls, pid: int, comm: str, start_secs: int, start_nsecs: int) -> None:
++        """Create a pending node for a process."""
++        filtered = False
 +        try:
-+            wx_mod: Any = importlib.import_module("wx")
-+            sched_gui: Any = importlib.import_module("SchedGui")
-+        except ImportError:
-+            print("wxPython is not available. Cannot start GUI.")
-+            return
-+        app = wx_mod.App(False)
-+        _frame = sched_gui.RootFrame(self.timeslices, "Migration")
-+        app.MainLoop()
++            head = cls.heads[pid]
++            filtered = head.is_filtered()
++        except KeyError:
++            if cls.fobj is not None:
++                filtered = cls.fobj(pid, comm)
++            head = cls.heads[pid] = Chead(comm, pid, filtered)
 +
++        if not filtered:
++            head.mark_pending(start_secs, start_nsecs)
++
++    @classmethod
++    def increment_pending(cls, pid: int, migrated: Optional[Pair],
++                          fscan: Optional[Pair], mscan: Optional[Pair]) -> None:
++        """Increment pending stats for a process."""
++        if pid not in cls.heads:
++            return
++        head = cls.heads[pid]
++        if not head.is_filtered():
++            if head.is_pending():
++                head.do_increment(migrated, fscan, mscan)
++            else:
++                sys.stderr.write(f"missing start compaction event for pid {pid}\n")
++
++    @classmethod
++    def complete_pending(cls, pid: int, secs: int, nsecs: int) -> None:
++        """Complete pending stats for a process."""
++        if pid not in cls.heads:
++            return
++        head = cls.heads[pid]
++        if not head.is_filtered():
++            if head.is_pending():
++                head.make_complete(secs, nsecs)
++            else:
++                sys.stderr.write(f"missing start compaction event for pid {pid}\n")
++
++    @classmethod
++    def gen(cls):
++        """Generate heads for display."""
++        if opt_proc != Popt.DISP_DFL:
++            yield from cls.heads.values()
++
++    @classmethod
++    def get_total(cls) -> Cnode:
++        """Get total statistics."""
++        return cls.val
++
++    def __init__(self, comm: str, pid: int, filtered: bool):
++        self.comm = comm
++        self.pid = pid
++        self.val = Cnode(0)
++        self.pending: Optional[Cnode] = None
++        self.filtered = filtered
++        self.list: List[Cnode] = []
++
++    def mark_pending(self, secs: int, nsecs: int) -> None:
++        """Mark node as pending."""
++        self.pending = Cnode(secs * 1000000000 + nsecs)
++
++    def do_increment(self, migrated: Optional[Pair], fscan: Optional[Pair],
++                     mscan: Optional[Pair]) -> None:
++        """Increment pending stats."""
++        if self.pending is not None:
++            self.pending.increment(migrated, fscan, mscan)
++
++    def make_complete(self, secs: int, nsecs: int) -> None:
++        """Make pending stats complete."""
++        if self.pending is not None:
++            self.pending.complete(secs, nsecs)
++            Chead.val += self.pending
++
++            if opt_proc != Popt.DISP_DFL:
++                self.val += self.pending
++
++                if opt_proc == Popt.DISP_PROC_VERBOSE:
++                    self.list.append(self.pending)
++            self.pending = None
++
++    def enumerate(self) -> None:
++        """Enumerate verbose stats."""
++        if opt_proc == Popt.DISP_PROC_VERBOSE and not self.is_filtered():
++            for i, pelem in enumerate(self.list):
++                sys.stdout.write(f"{self.pid}[{self.comm}].{i+1}: {pelem}\n")
++
++    def is_pending(self) -> bool:
++        """Check if node is pending."""
++        return self.pending is not None
++
++    def is_filtered(self) -> bool:
++        """Check if node is filtered."""
++        return self.filtered
++
++    def display(self) -> None:
++        """Display stats."""
++        if not self.is_filtered():
++            sys.stdout.write(f"{self.pid}[{self.comm}]: {self.val}\n")
++
++def trace_end() -> None:
++    """Called at the end of trace processing."""
++    sys.stdout.write(f"total: {Chead.get_total()}\n")
++    for i in Chead.gen():
++        i.display()
++        i.enumerate()
++
++def process_event(sample: perf.sample_event) -> None:
++    """Callback for processing events."""
++    event_name = str(sample.evsel)
++    pid = sample.sample_tid
++    comm = "[unknown]"
++    try:
++        if session:
++            thread = session.find_thread(pid)
++            if thread:
++                comm = thread.comm() or "[unknown]"
++    except (TypeError, AttributeError):
++        pass
++    secs = sample.sample_time // 1000000000
++    nsecs = sample.sample_time % 1000000000
++
++    if "evsel(compaction:mm_compaction_begin)" in event_name:
++        Chead.create_pending(pid, comm, secs, nsecs)
++    elif "evsel(compaction:mm_compaction_end)" in event_name:
++        Chead.complete_pending(pid, secs, nsecs)
++    elif "evsel(compaction:mm_compaction_migratepages)" in event_name:
++        nr_migrated = getattr(sample, "nr_migrated", 0)
++        nr_failed = getattr(sample, "nr_failed", 0)
++        Chead.increment_pending(pid, Pair(nr_migrated, nr_failed), None, None)
++    elif "evsel(compaction:mm_compaction_isolate_freepages)" in event_name:
++        nr_scanned = getattr(sample, "nr_scanned", 0)
++        nr_taken = getattr(sample, "nr_taken", 0)
++        Chead.increment_pending(pid, None, Pair(nr_scanned, nr_taken), None)
++    elif "evsel(compaction:mm_compaction_isolate_migratepages)" in event_name:
++        nr_scanned = getattr(sample, "nr_scanned", 0)
++        nr_taken = getattr(sample, "nr_taken", 0)
++        Chead.increment_pending(pid, None, None, Pair(nr_scanned, nr_taken))
 +
 +if __name__ == "__main__":
-+    ap = argparse.ArgumentParser(description="Cpu task migration overview toy")
++    ap = argparse.ArgumentParser(description="Report time spent in compaction")
++    ap.add_argument("-p", action="store_true", help="display by process")
++    ap.add_argument("-pv", action="store_true", help="display by process (verbose)")
++    ap.add_argument("-u", action="store_true", help="display results in microseconds")
++    ap.add_argument("-t", action="store_true", help="display stall times only")
++    ap.add_argument("-m", action="store_true", help="display stats for migration")
++    ap.add_argument("-fs", action="store_true", help="display stats for free scanner")
++    ap.add_argument("-ms", action="store_true", help="display stats for migration scanner")
++    ap.add_argument("filter", nargs="?", help="pid|pid-range|comm-regex")
 +    ap.add_argument("-i", "--input", default="perf.data", help="Input file name")
-+    ap.add_argument("-v", "--verbose", action="store_true",
-+                    help="Print parsed migration summary")
-+    ap.add_argument("--gui", action="store_true", default=True,
-+                    help="Start the GUI (default)")
-+    ap.add_argument("--no-gui", action="store_true", help="Do not start the GUI")
 +    args = ap.parse_args()
 +
-+    analyzer = SchedMigrationAnalyzer()
++    opt_proc = Popt.DISP_DFL
++    if args.pv:
++        opt_proc = Popt.DISP_PROC_VERBOSE
++    elif args.p:
++        opt_proc = Popt.DISP_PROC
 +
-+    try:
-+        session = perf.session(perf.data(args.input), sample=analyzer.process_event)
-+        session.process_events()
-+        if args.verbose:
-+            start_ts, end_ts = analyzer.timeslices.interval()
-+            print(f"Timeslices: {len(analyzer.timeslices.data)} "
-+                  f"(interval: {start_ts}..{end_ts})")
-+        if args.gui and not args.no_gui:
-+            analyzer.run_gui()
-+    except KeyboardInterrupt:
-+        pass
-+    except OSError as e:
-+        print(f"Error processing events: {e}")
-+        sys.exit(1)
-diff --git a/tools/perf/tests/shell/test_sched_migration_python.sh b/tools/perf/tests/shell/test_sched_migration_python.sh
++    OPT_NS = not args.u
++
++    opt_disp = Topt.DISP_ALL
++    if args.t or args.m or args.fs or args.ms:
++        opt_disp = Topt(0)
++        if args.t:
++            opt_disp |= Topt.DISP_TIME
++        if args.m:
++            opt_disp |= Topt.DISP_MIG
++        if args.fs:
++            opt_disp |= Topt.DISP_ISOLFREE
++        if args.ms:
++            opt_disp |= Topt.DISP_ISOLMIG
++
++    if args.filter:
++        PID_PATTERN = r"^(\d*)-(\d*)$|^(\d*)$"
++        pid_re = re.compile(PID_PATTERN)
++        match = pid_re.search(args.filter)
++        filter_obj: Any = None
++        if match is not None and match.group() != "":
++            if match.group(3) is not None:
++                filter_obj = get_pid_filter(match.group(3), match.group(3))
++            else:
++                filter_obj = get_pid_filter(match.group(1), match.group(2))
++        else:
++            try:
++                comm_re = re.compile(args.filter)
++            except re.error:
++                sys.stderr.write(f"invalid regex '{args.filter}'\n")
++                sys.exit(1)
++            filter_obj = get_comm_filter(comm_re)
++        Chead.add_filter(filter_obj)
++
++    session = perf.session(perf.data(args.input), sample=process_event)
++    session.process_events()
++    trace_end()
+diff --git a/tools/perf/tests/shell/test_compaction_times_python.sh b/tools/perf/tests/shell/test_compaction_times_python.sh
 new file mode 100755
-index 000000000000..e5d0be5d626a
+index 000000000000..80df5adc5bf6
 --- /dev/null
-+++ b/tools/perf/tests/shell/test_sched_migration_python.sh
-@@ -0,0 +1,69 @@
++++ b/tools/perf/tests/shell/test_compaction_times_python.sh
+@@ -0,0 +1,81 @@
 +#!/bin/bash
 +# SPDX-License-Identifier: GPL-2.0
-+# sched-migration python test
++# compaction-times python test
 +
 +set -e
 +
@@ -857,63 +467,75 @@ index 000000000000..e5d0be5d626a
 +# shellcheck source=lib/setup_python.sh
 +. "${shelldir}"/lib/setup_python.sh
 +
++# If we don't have the perf python module, we can't test
 +if ! "$PYTHON" -c 'import perf' > /dev/null 2>&1; then
 +	echo "Skipping test, perf python module not found"
 +	exit 2
 +fi
 +
-+script_dir="$(dirname "$0")/../../python"
-+script_path="${script_dir}/sched-migration.py"
-+
-+if ! perf check feature -q libtraceevent > /dev/null 2>&1; then
-+	echo "Skipping test, libtraceevent is disabled"
++if ! perf check feature -q libtraceevent; then
++	echo "Skipping test, perf built without libtraceevent"
 +	exit 2
 +fi
 +
++script_dir="$(dirname "$0")/../../python"
++script_path="${script_dir}/compaction-times.py"
 +
 +if [ ! -f "$script_path" ]; then
-+	echo "Skipping test, sched-migration.py not found at $script_path"
++	echo "Skipping test, compaction-times.py not found at $script_path"
 +	exit 2
 +fi
 +
 +err=0
 +temp_data=""
-+temp_out=""
 +
 +cleanup() {
-+	rm -f "${temp_data}" "${temp_out}"
++	rm -f "${temp_data}"
 +}
++
 +trap 'cleanup' EXIT TERM INT
 +
 +temp_data=$(mktemp /tmp/perf.data.XXXXXX)
-+temp_out=$(mktemp /tmp/perf.out.XXXXXX)
 +
-+echo "Testing sched-migration.py..."
++test_file_mode() {
++	echo "Testing compaction-times.py..."
 +
-+# Create a perf.data file. Force dropping a packet if tracepoint is available!
-+ev="sched:sched_switch,sched:sched_migrate_task"
-+ev="${ev},sched:sched_wakeup_new,sched:sched_wakeup"
-+if ! perf record -e "$ev" -a -o "${temp_data}" \
-+	-- sleep 0.1 >/dev/null 2>&1; then
-+	perf record -e cycles -o "${temp_data}" \
-+		-- perf test -w noploop >/dev/null 2>&1 || \
-+		{ echo "Skipping test, perf record failed"; exit 2; }
-+fi
++	# Check for any compaction events to see if kernel supports it
++	if ! perf list | grep -q "compaction:mm_compaction_begin"; then
++		echo "Skipping test, compaction tracepoints not found"
++		exit 2
++	fi
 +
++	# Generate some events
++	# We might not naturally trigger compaction in 0.5s sleep, but the script
++	# should parse the empty or sparse file correctly without crashing.
++	if ! perf record -e "compaction:*" -a -o "${temp_data}" -- sleep 0.5 >/dev/null 2>&1; then
++		echo "Skipping test, perf record failed"
++		exit 2
++	fi
 +
-+if [ ! -s "${temp_data}" ]; then
-+	echo "Skipping test, perf record failed to create data"
-+	exit 2
-+fi
++	# Run the script with some filters to validate filtering logic
++	if ! "$PYTHON" "$script_path" -i "${temp_data}" >/dev/null; then
++		echo "File mode default test failed."
++		err=1
++	fi
 +
-+# Check that the script executes
-+if ! "$PYTHON" "$script_path" -v --no-gui -i "${temp_data}" > "${temp_out}"; then
-+	echo "sched-migration.py test failed"
-+	err=1
-+else
-+	echo "sched-migration test passed."
-+fi
-+rm -f "${temp_out}"
++	if ! "$PYTHON" "$script_path" -i "${temp_data}" "0-0" >/dev/null; then
++		echo "File mode strict PID filter test failed."
++		err=1
++	fi
++
++	if ! "$PYTHON" "$script_path" -i "${temp_data}" "sleep" >/dev/null; then
++		echo "File mode comm filter test failed."
++		err=1
++	fi
++
++	if [ $err -eq 0 ]; then
++		echo "File mode test passed."
++	fi
++}
++
++test_file_mode
 +
 +exit $err
 -- 
