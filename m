@@ -1,56 +1,56 @@
-Received: from mail-pj1-f69.google.com (mail-pj1-f69.google.com [209.85.216.69])
+Received: from mail-pg1-f200.google.com (mail-pg1-f200.google.com [209.85.215.200])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73A283D45C3
-	for <linux-perf-users@vger.kernel.org>; Sun, 20 Sep 2026 05:22:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.69
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D81693D47C3
+	for <linux-perf-users@vger.kernel.org>; Sun, 20 Sep 2026 05:22:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.200
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789881761; cv=none; b=oNm8BzNF/StPtvmhQR+jaD09gwinIg3Z1+lK0Kh/aBRAh2tcftAjco1IReGSnrEqMwtK997BURIHauwSjPs1vvr1dB6rf5tgBGS7TSUF8NJ7H7J67Ok1QhS4TNzIg1bYL/vGzqbrkUP8NENtAQTpuBH9C4rkyH4FCwxn2yvmvIM=
+	t=1789881763; cv=none; b=sEFOslZ/kOhOMMb44sGa+JkdnPZDfVTxaRMU15Rd4Gse5MBDXEt6owremh1uLP78zMnYswD0+NCwS/JLC7OfRp1RcA//0hiyKVFz8vIq+cj/UTmi4ALOdyOWDvEMGLIWZCHSoo7awyyGqDnTgUpV1dv+GnwU5ChzIfNOwyqmTyg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789881761; c=relaxed/simple;
-	bh=GkmdESfvVw6Bhi5+j9XdWNIprQz32gaz404QEYVpfn8=;
+	s=arc-20240116; t=1789881763; c=relaxed/simple;
+	bh=b6FTBE2cgcmTkzM7F+IvHRGwoCfgMp6KKaL4A+r9IGI=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=BzOut6V7KOhrnLwIJzKJ0DlXbBzX3BOtmovQGqtrWHb6KR7vAj1YRDiZ3qWMWJv4TOV35clnai1UcqgUznTgDoMFwkpmwuMxrDdQH6wMtTVFf6DUW3uskMcMUy88tAE6DP6C3ZLzRbb6qIjP7szmIBVGOxUjcJT77doV2sRTXlI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=acUdqwbJ; arc=none smtp.client-ip=209.85.216.69
+	 To:Cc:Content-Type; b=D21QCoYv40eFITgR560mFv77+TkDFxc1Bb9/Scrp+a0YQ9KxwfaOlKFnWBjnJwKMEjbxACZvQBoM5Plf9DjO+hKCen6U15TmPNpwiBnQ1zlsbgCiqLt4XQ2d4P+j0iV+lqt1gL+EUfUSy1YFdNNfYSgyXYmJBhT2wLB1MzFG8WU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=gozy75FV; arc=none smtp.client-ip=209.85.215.200
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="acUdqwbJ"
-Received: by mail-pj1-f69.google.com with SMTP id 98e67ed59e1d1-395543dc382so2583635a91.0
-        for <linux-perf-users@vger.kernel.org>; Sat, 19 Sep 2026 22:22:40 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="gozy75FV"
+Received: by mail-pg1-f200.google.com with SMTP id 41be03b00d2f7-cc4922b7c31so2012649a12.1
+        for <linux-perf-users@vger.kernel.org>; Sat, 19 Sep 2026 22:22:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1789881760; x=1790486560; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1789881761; x=1790486561; darn=vger.kernel.org;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=s1sYzCcuJgWy+91qkWtU7G0DCPhx+Hi9Vsjhecq4f4U=;
-        b=acUdqwbJ1IqBlDk/p7AJmUAVs6DlH3MYACyn/StMBKsfB5qB3oPSyfnwKQpTRFfOiw
-         AM9N/O+0yl1BMk7rYe0zbpnqh0sLrWKAYozy7vcyPneNwAFYlEOFOf/J+z5yYCNhnJRZ
-         tEEDXidcTwiz35WKUbvIyu5HyR3GV8KmEcEN1HjubvdbIAOclPWIyHCaA36fRbTPBr/w
-         FTui426JGeXkb4NTWuXxa3KCL+pe3yl2mekVO8x2nAmnNO4FB2SdaSmzCvdVOz2hZFsn
-         fZ65r9CKkeZFB1yXziM+JR0ScUA6oh7Wnmw1rwf76Nin1xTEbS0TTPHa17qFKPx09Aw4
-         PjIA==
+        bh=Xe997LNMBkLZ3Kgt92IC6PAaRQ4QWxrEwEsrkXtyTR0=;
+        b=gozy75FVzcLlD+RhN2zrH9VT/g+LBzLfNxKhUQ+eGjUhE8EHRWrD/sh93PTO2M7sQC
+         261d8Qlh5UJjIQGHCp8w5Ly0bFM+cRrLqWsL2tcrFk6lZ/dH+n0iO6q6QbAomZ6d1VtM
+         Xa1Q0HuXJIfebv1rqFCY5AWYbm0056lJZNj3FYbbZZA1dQy89pcaUZYeo5iIAgwtSESe
+         E0hZcHn8uFBlsnPv4tvBWKLdbg5CxhrWaQTkvtBeTPSr88jKhVDq5CzfpX4T06XU7G6U
+         Cs4iJvCU+G68H4VaD9bBOZEV9bSv1LonuBk0YfUViFuTzCWlokaBOMw6xDOhvocLcHBR
+         LNaA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1789881760; x=1790486560;
+        d=1e100.net; s=20260707; t=1789881761; x=1790486561;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=s1sYzCcuJgWy+91qkWtU7G0DCPhx+Hi9Vsjhecq4f4U=;
-        b=Y/wUtvbO/vfulVzGQzrI5TpktsRG6dzy1R3Y4K/Asek1CJM6wWcbDgvw2xSJaspxw7
-         /jGF+oa3JM0HD9cRA8FDAQIuPS856VCuZfBoYLvmhS86Ku23hoQzW0Me5v42i3yz4p+/
-         Jtn+V8IQTYHxSMuuzVjI8EuzjwNPn92YOtUhx3HjQ4sz4z8+yR/5wcmkWDVzapTYCdbz
-         XzV5ud5FijrwDy6B1M/op3aULdI6AxzgYtLMOEm3lUU0e0TkAJWmiVljO11+L136e5yf
-         LlJIA28/EANWa6sy8BLkxokkEiu+Qg7WIPAdpDjWy2C3P6R+mYxmlTjwgkCLLwnJ7hDw
-         8H1Q==
-X-Forwarded-Encrypted: i=1; AKwUvBwrF1i9JWtFwzPcaW8er6wQRVBwoFR+JgXHuHrPAewR8vsCeGtEB2HDwHLoRuqvjM6yT7YPvH+eO+mLCWjndBGA@vger.kernel.org
-X-Gm-Message-State: AFuF++nP+MzHOoHzSJSWxQn4/PiG91+OjL+g4Pl9xpzBUn/yDZSIIkZw
-	NqB+qbOmoR6ouYRRolKOIFSXNZgjRWwFv7jznuunsSN2aLS6A5MmlhuK37pdgdJi1hoYtVhGm5O
-	yhPIUeYDurA==
-X-Received: from dldyr17-n1.prod.google.com ([2002:a05:701b:4511:10b0:143:7976:20e7])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90a:917:b0:39e:6a81:c922
- with SMTP id 98e67ed59e1d1-39e6a81c9c9mr5032088a91.21.1789881759581; Sat, 19
- Sep 2026 22:22:39 -0700 (PDT)
-Date: Sat, 19 Sep 2026 22:20:53 -0700
+        bh=Xe997LNMBkLZ3Kgt92IC6PAaRQ4QWxrEwEsrkXtyTR0=;
+        b=H2YhEgPcdeCpycP9+eDsFoF/F98WynBziOV+1JKqpLUudNopO0hmIkBXYKkg4Pim1b
+         8AZhT9DMAhqsWnN9Dyn+3+v8fl6HaRLfnJx4l1YKIeyLvEku+qqHmUQxgiWy+oTgZRh/
+         aWUVpfmUKsmKQud8ZFtSLpjfcFNIh41d4XA+j+Hh7F/+73vXVbbiZJc+DRE85uSR9g39
+         wolEVGi6AM0yV3/+32qUAJdy9JFOfM8nhQtP85ne6FLBB70NUjzMY3LzlLHDLKaoVpqY
+         uK1VOqKEP4TALaJeLrqoTR+SFVDc5Shd2rBapil/DdE6wtmmCIcSQj7sMnwbqKx+2Gow
+         VwUA==
+X-Forwarded-Encrypted: i=1; AKwUvBx9COILc9NLWrTa7LdAPwJEf9v/pvpWhXNksQEEqJIzShsnmCYT0Zioq7M4lubM5VZ75YBVh4I2dOBq9E2NjvJJ@vger.kernel.org
+X-Gm-Message-State: AFuF++mnok4H5sq5L5UYJN1KoxSt8NyetlUTqmUJqFtekPOhlFH7mDxq
+	FAAoUwydZ5JxzaQkojJtcr+ShdAOgNUGJumoK618CTyOrSOf4DMpSRaUpbdJfnk2q2xgMRTXCfr
+	GBj2QWKJpgg==
+X-Received: from dyhx2.prod.google.com ([2002:a05:7300:6702:b0:33e:446f:2f4b])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a20:d70f:b0:3dd:85a8:cacc
+ with SMTP id adf61e73a8af0-3dd8c47d05fmr12714878637.35.1789881761250; Sat, 19
+ Sep 2026 22:22:41 -0700 (PDT)
+Date: Sat, 19 Sep 2026 22:20:54 -0700
 In-Reply-To: <cover.1789880842.git.irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -60,9 +60,9 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <cover.1789880842.git.irogers@google.com>
 X-Mailer: git-send-email 2.55.0.1082.g2b9226bbc0-goog
-Message-ID: <f64b7f59e863302bb81c14a3a13af2e116d38b8f.1789880842.git.irogers@google.com>
-Subject: [PATCH v1 01/49] perf python: Update syscall format string to
- optional positional
+Message-ID: <621ab9b3227a1845f5c2d8819ad84e4cf494f50a.1789880842.git.irogers@google.com>
+Subject: [PATCH v1 02/49] perf python: Update callchain stubs and session
+ thread lookup
 From: Ian Rogers <irogers@google.com>
 To: irogers@google.com, acme@kernel.org, adrian.hunter@intel.com, 
 	alice.mei.rogers@gmail.com, james.clark@linaro.org, 
@@ -72,66 +72,113 @@ Cc: dapeng1.mi@linux.intel.com, leo.yan@linux.dev,
 	tmricht@linux.ibm.com
 Content-Type: text/plain; charset="UTF-8"
 
-Update the PyArg_ParseTupleAndKeywords format string for
-pyrf__syscall_name() and pyrf__syscall_id() from "i|$i" to "i|i" (and
-"s|$i" to "s|i"), allowing elf_machine to be passed as an optional
-positional argument as well as a keyword argument.
+Update pyrf_session__find_thread() in util/python.c to accept an
+optional tid parameter (defaulting to pid) and return None instead of
+raising TypeError when a thread is not found in the session machines.
 
-Update syscall_id() and syscall_name() in perf.pyi to match, and set the
-return type of syscall_name() to Optional[str] as unknown syscall numbers
-return None.
+Update perf.pyi to match:
+- Set session.find_thread() signature to (pid: int, tid: int = -1) ->
+  Optional[thread].
+- Update callchain_node.symbol and callchain_node.dso to str (the C
+  getters return "[unknown]" fallback strings rather than None) and add
+  __iter__() to callchain.
+
+Also update treport.py to handle Optional[thread] returned by
+session.find_thread().
 
 Assisted-by: Antigravity:gemini-3.1-pro
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/python/perf.pyi | 4 ++--
- tools/perf/util/python.c   | 4 ++--
- 2 files changed, 4 insertions(+), 4 deletions(-)
+ tools/perf/python/perf.pyi   |  7 ++++---
+ tools/perf/python/treport.py |  2 +-
+ tools/perf/util/python.c     | 19 +++++++++++--------
+ 3 files changed, 16 insertions(+), 12 deletions(-)
 
 diff --git a/tools/perf/python/perf.pyi b/tools/perf/python/perf.pyi
-index 58b0b3ed819d..e737eb21567c 100644
+index e737eb21567c..e5259e9b61dd 100644
 --- a/tools/perf/python/perf.pyi
 +++ b/tools/perf/python/perf.pyi
-@@ -20,7 +20,7 @@ def metrics() -> List[Dict[str, Union[str, List[str]]]]:
-     """
-     ...
+@@ -320,13 +320,14 @@ class branch_stack:
+ class callchain_node:
+     """Represents a frame in the callchain."""
+     ip: int
+-    symbol: Optional[str]
+-    dso: Optional[str]
++    symbol: str
++    dso: str
  
--def syscall_name(id: int, *, elf_machine: Optional[int] = None) -> str:
-+def syscall_name(id: int, elf_machine: Optional[int] = None) -> Optional[str]:
-     """Convert a syscall number to its name.
+ class callchain:
+     """Sequence of callchain frames."""
+     def __len__(self) -> int: ...
+     def __getitem__(self, index: int) -> callchain_node: ...
++    def __iter__(self) -> Iterator[callchain_node]: ...
  
-     Args:
-@@ -32,7 +32,7 @@ def syscall_name(id: int, *, elf_machine: Optional[int] = None) -> str:
-     """
-     ...
+ class stat_event(_sample_members):
+     """Represents a stat event from perf."""
+@@ -441,7 +442,7 @@ class session:
+     def process_events(self) -> None:
+         """Process all events in the session."""
+         ...
+-    def find_thread(self, pid: int) -> thread:
++    def find_thread(self, pid: int, tid: int = -1) -> Optional[thread]:
+         """Returns the thread associated with a pid."""
+         ...
  
--def syscall_id(name: str, *, elf_machine: Optional[int] = None) -> int:
-+def syscall_id(name: str, elf_machine: Optional[int] = None) -> int:
-     """Convert a syscall name to its number.
+diff --git a/tools/perf/python/treport.py b/tools/perf/python/treport.py
+index 43542599a884..786b852f471c 100755
+--- a/tools/perf/python/treport.py
++++ b/tools/perf/python/treport.py
+@@ -92,7 +92,7 @@ class ProfileNode:
+         try:
+             assert session
+             thread = session.find_thread(sample.sample_tid)
+-            comm = thread.comm()
++            comm = (thread.comm() if thread else None) or f"unknown ({pid})"
+         except Exception:
+             comm = f"unknown ({pid})"
  
-     Args:
 diff --git a/tools/perf/util/python.c b/tools/perf/util/python.c
-index d8a842621cda..a3ffaf4d0850 100644
+index a3ffaf4d0850..fbfa71b1c4b6 100644
 --- a/tools/perf/util/python.c
 +++ b/tools/perf/util/python.c
-@@ -4111,7 +4111,7 @@ static PyObject *pyrf__syscall_name(PyObject *self, PyObject *args, PyObject *kw
- 	int elf_machine = EM_HOST;
- 	static char *kwlist[] = { "id", "elf_machine", NULL };
+@@ -3912,26 +3912,29 @@ static PyObject *pyrf_session__find_thread(struct pyrf_session *psession, PyObje
+ 	struct machine *machine;
+ 	struct thread *thread = NULL;
+ 	PyObject *result;
+-	int pid;
++	int pid, tid = -1;
  
--	if (!PyArg_ParseTupleAndKeywords(args, kwargs, "i|$i", kwlist, &id, &elf_machine))
-+	if (!PyArg_ParseTupleAndKeywords(args, kwargs, "i|i", kwlist, &id, &elf_machine))
+ 	CHECK_INITIALIZED(psession->session, "session");
+ 
+-	if (!PyArg_ParseTuple(args, "i", &pid))
++	if (!PyArg_ParseTuple(args, "i|i", &pid, &tid))
  		return NULL;
  
- 	name = syscalltbl__name(elf_machine, id);
-@@ -4127,7 +4127,7 @@ static PyObject *pyrf__syscall_id(PyObject *self, PyObject *args, PyObject *kwar
- 	int elf_machine = EM_HOST;
- 	static char *kwlist[] = { "name", "elf_machine", NULL };
++	if (tid == -1)
++		tid = pid;
++
++	/* Look up the thread in the host machine first, then fall back to guest machines. */
+ 	machine = &psession->session->machines.host;
+-	thread = machine__find_thread(machine, pid, pid);
++	thread = machine__find_thread(machine, pid, tid);
  
--	if (!PyArg_ParseTupleAndKeywords(args, kwargs, "s|$i", kwlist, &name, &elf_machine))
-+	if (!PyArg_ParseTupleAndKeywords(args, kwargs, "s|i", kwlist, &name, &elf_machine))
- 		return NULL;
+ 	if (!thread) {
+ 		machine = perf_session__find_machine(psession->session, pid);
+ 		if (machine)
+-			thread = machine__find_thread(machine, pid, pid);
++			thread = machine__find_thread(machine, pid, tid);
+ 	}
  
- 	id = syscalltbl__id(elf_machine, name);
+-	if (!thread) {
+-		PyErr_Format(PyExc_TypeError, "Failed to find thread %d", pid);
+-		return NULL;
+-	}
++	/* Return None rather than raising TypeError when a PID/TID is not known. */
++	if (!thread)
++		Py_RETURN_NONE;
+ 	result = pyrf_thread__from_thread(thread);
+ 	thread__put(thread);
+ 	return result;
 -- 
 2.55.0.1082.g2b9226bbc0-goog
 
