@@ -1,326 +1,176 @@
-Received: from mail-yx2-f13.google.com (mail-yx2-f13.google.com [74.125.224.141])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA9713793D3
-	for <linux-perf-users@vger.kernel.org>; Sat, 19 Sep 2026 23:22:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.224.141
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789860142; cv=pass; b=NAHu8VsB+zOFmXAkGk0GyfdlEE4ok7tS8moLlrhytmz+XVZbSk7FYUAAv0hG1/eAoXAXRUWpkDV7ZiKl3TUaYkDFL7Hu4lUmBLZ0gdFccYlYPMQRaWDlraFP0dm/ojFKnEvEIPeHo5n9SZ356rM5b8vtGQrSb8dNxNxbkWG+v5M=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789860142; c=relaxed/simple;
-	bh=ZbfRrCsHGOMHU1C3c/VfEoUjlwG/5DvrvQk/2XrT2Gs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ZJOhnzOZsbpUJjutq5c88XVtCfjWS2rwLe7GnzOli2/T4FipWH2IXp2be8eQ6ZnsZeGQp1Gw1BqScYojIfXrYBSlWKz76XLmS58hJuNNKbUPU8NtMuPu8LNA71JfLxTjLnmiVSSgGVF8KvVI/I76fKxkpHc+vPdFuWoZPKz374g=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=uber.com; spf=fail smtp.mailfrom=uber.com; dkim=pass (1024-bit key) header.d=uber.com header.i=@uber.com header.b=51uyvjG+; arc=pass smtp.client-ip=74.125.224.141
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=uber.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=uber.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=uber.com header.i=@uber.com header.b="51uyvjG+"
-Received: by mail-yx2-f13.google.com with SMTP id 956f58d0204a3-66e4ab222dfso1747398d50.0
-        for <linux-perf-users@vger.kernel.org>; Sat, 19 Sep 2026 16:22:20 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1789860140; cv=none;
-        d=google.com; s=arc-20260327;
-        b=TJ9WgOlEX7yxAjUgBEncQHKxqWNURqF7uU4/0UQ+Ie7CEqrld2Qf/3ROFPuvEq2LtF
-         fN09GPlqLj0oTK4f0FdQ+Bp/AnPC50/WssN3nZM7fR8hX9kXw2RALP4dlZQloltehrUs
-         BhyKWIS+nM+zLv9P6QQZZmjJhBVpoaUZXh+rg/Pi4JyZLs3KDXjg74xM/X+vkUJ10SIj
-         PTvNuNko60rYGCvG59DnkKNFgjMG3t4PJS1aeSyxWdWCtYW2kfVxlzdCN67E46+sZ6QG
-         DivnxjZqTN2hVcyi1yw0QsuEyt7IotNFZ4n3+mPBVHCDnVDfXl4u42L4TzZ77ZbYPRPW
-         RFwQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:dkim-signature;
-        bh=U2yPeC8EwDJA7EfjJHpQpcfUJ0XSVbb7bMZgykMbs/Y=;
-        fh=mJs4/jPnRQnDS4Erj+6LeQ7piz0VigGuV7DDRJl6uJo=;
-        b=SeV1EvNJoSz3gPgPEh3MM1xZChfMTqnu0wSNfKY6XgkArreYRJ/TX6p3pUuXfIbjLA
-         0TbES7Fo4Zz4DjJRwTG081TiGEtQwtsEcbaaOGyEdOXs4GdyQrx7KnvmxEVYPoOfKa66
-         RxGMesCtcboQeWTfd6GwSZ70T1NWrAvs9E/ZU1hHC8e4a5+Aprq1GWisNRKiwnGQgmT2
-         gNRphT0FkjwSlcVUpVR9V4ApPsPH/9LCvlclVT3lh8ptHBKumf60/CAP0/oaqEk82FSM
-         68tzYZzxnigq5mZpx5oWyzGmJMQyqsEJbeFm8PRijy9B7XW48OW4verdqgH47rlb/ze+
-         6Bmw==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=uber.com; s=google; t=1789860140; x=1790464940; darn=vger.kernel.org;
-        h=content-type:cc:to:subject:message-id:date:from:in-reply-to
-         :references:mime-version:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=U2yPeC8EwDJA7EfjJHpQpcfUJ0XSVbb7bMZgykMbs/Y=;
-        b=51uyvjG+/BPU5LtN8mLPwiLHR13TGkpDR6pKryy2yN2O0LPZsuJCtYafpoAaJe88ic
-         7ampGuzn+OrLacxVFKbklWzdNZxAkBSwciGGip7+s8qMWmPkKPgdqcrIyhilRoDwt17P
-         DRWgMNSxoddEKcnL8VV941TrFd0IJchu3gTp8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1789860140; x=1790464940;
-        h=content-type:cc:to:subject:message-id:date:from:in-reply-to
-         :references:mime-version:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to:content-type;
-        bh=U2yPeC8EwDJA7EfjJHpQpcfUJ0XSVbb7bMZgykMbs/Y=;
-        b=RgHL9ZPLfOEHYqNYBHmR6kQyY3dR+kyW9rwvZnHYuChrbThyp1V+ix3+L98yc6vZAM
-         OrW5kd4l6um7xk2XHnL5mm7I/sJ+0DAZv2MfIMsTo3ZfgTWKBwrhBGTVrBaUVsSK0dEP
-         VYHnQJZt+/Dv51eJlOQspVMo2gTzoZ5RDmqmAz5QhydMm0aLVolI1VcgkD2R7rl/OhBh
-         tDduvT2VJ0hhIUeaOqprNclPusekFNYMDIi7dFM4f4IXyHAR1q1vX3G83wXOK9dwYpxz
-         FFp1oTJK9nJqEFWd3obwoeWAMbWlgIpDfkxD19ehZg3aYfLbjQEcYLinFVY89OHirqp3
-         rBUw==
-X-Forwarded-Encrypted: i=1; AKwUvBywHDunNG72ICRO6E3sUe/pKMbS9plWo9Eebi5KUdX2cTfHVAEid+RB5yGlEG4EDTxNm1p4v6WpYK1ohh0K/2Ir@vger.kernel.org
-X-Gm-Message-State: AFuF++khhEvAJ49t1qtBXsI1r2pb+txhtrH/2MLCUdHdVtnMs2JkUEqq
-	/OsN4/qAsj4YDDgFrC1SvLlhPGpXpJDr27cbtNZueQ6tMmN49YG0EWzKP27BjHhEFcIRpqVBODx
-	+QCC95z98Y0/7/z+/Cy1gDd+iiQ1ziCmRNnCzmWG/hw==
-X-Gm-Gg: AYBFou24xBw/6W89LaEoFrwLawz7mWuF4m//YBfjYooaK3xnhIMtQi2CrAD68iE+xjm
-	LAce0eQA7xLHB4ddto7iip2C8TT/F9LwIJmBWSpxazkLDUnxwQuWf/mnMiGOUKVY8AeIKDaxNda
-	/iaUZ+NCEu7TR2DlcNvQwRffm3xpSC4x2B+ejIejwS63VyvFzi2nruC9ZrZWTUzlSWeOL1n3HDv
-	9bXi6RohL/0csgdrlVuZEtF5FdWewGav+a93pJRn6+0NDawXRrrMCJ/yN+y64+DqxT7kjLSb0lW
-	KBHtaRskgfeBu0KYmQcAfNUdYK+emMu0kM25jyFcjNT8Bika2Y04BQiEm5xR1cPRQv0GZs/j6Xl
-	aUVZ6nys5ibtN92vem6sWR20=
-X-Received: by 2002:a05:690c:60c7:b0:873:5ddf:d85e with SMTP id
- 00721157ae682-897346e1584mr19909387b3.41.1789860137805; Sat, 19 Sep 2026
- 16:22:17 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20ADF342C80
+	for <linux-perf-users@vger.kernel.org>; Sun, 20 Sep 2026 01:43:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1789868626; cv=none; b=TFSK59Q1tnAaK0/kV/w12Jwjif6vz6mnvXaj8EiDh3t0WxzA2Rfcp479j7W7aptczmyjNIoojHHE4bv/jLVAI9eleTv8AXAwb0X1Bc2PwLhq+da0bRp/BZE4B9DDmOhqKAgqqIhXJAbHVy8JCZm8Sj76qWus/8eEyoMcWYwk5+4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1789868626; c=relaxed/simple;
+	bh=JcLZFNI3VGRMF6PwrCtxFSiJyl1RlJD9oq+0wkj1+2M=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=u43OlcMqvslqKCjwAUZP7VhTdALxAwomCt0vAsyNcNrVRqKzAXFj7svFPG0tDO0LUqsWfb+IpVS32eJZMgj8mwu48YdfEE/sG4dobDvPsmaXedVpA9IGeVxsICOrxUR693o7fOhyNzdXtUjjcImCdU8BYUvlN5rNhLEgkJQVBNU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.170])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4hnTf22f9KzYQv6G
+	for <linux-perf-users@vger.kernel.org>; Sun, 20 Sep 2026 09:43:22 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.75])
+	by mail.maildlp.com (Postfix) with ESMTP id 642184056B
+	for <linux-perf-users@vger.kernel.org>; Sun, 20 Sep 2026 09:43:33 +0800 (CST)
+Received: from [10.67.110.36] (unknown [10.67.110.36])
+	by APP2 (Coremail) with UTF8SMTPA id Syh0CgD3KhJEOq9qRdrNAw--.56231S2;
+	Sun, 20 Sep 2026 09:43:33 +0800 (CST)
+Message-ID: <d63b72f8-0953-455a-b296-9eb599f00f25@huaweicloud.com>
+Date: Sun, 20 Sep 2026 09:43:32 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260915-perf-symbol-memory-send-v1-0-1d3360e21f07@uber.com>
- <20260915-perf-symbol-memory-send-v1-3-1d3360e21f07@uber.com> <aquVqBiZbVYceOJ2@z2>
-In-Reply-To: <aquVqBiZbVYceOJ2@z2>
-From: Alireza Haghdoost <haghdoost@uber.com>
-Date: Sat, 19 Sep 2026 16:22:01 -0700
-X-Gm-Features: AcwNN1Ut7SMbdpqTrGq_PmTl19FYlXIq0kQESIIpkQ07ObhSYaW8zxaCDaAbWTg
-Message-ID: <CA+w=M=Toyobj0Q9UcWUtvW2cwaNoRFaF5KX0zshc+J2pcpHmpg@mail.gmail.com>
-Subject: Re: [PATCH 3/4] perf script: Add --lazy-load-symbols for lazy symbol loading
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	James Clark <james.clark@linaro.org>, Andrii Nakryiko <andriin@fb.com>, 
-	Alexei Starovoitov <ast@kernel.org>, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-
-> > +static void dso__clip_ondemand_symbols_at(struct dso *dso, u64 addr)
-> > +{
-> > +     struct dso_ondemand *od = dso__ondemand(dso);
-> > +     struct sym_idx *sym;
-> > +     u32 lo = 0, hi, mid;
-> > +
-> > +     if (!od)
-> > +             return;
-> > +
-> > +     hi = od->nr_sorted;
-> > +     while (lo < hi) {
-> > +             mid = (lo + hi) / 2;
-> > +             if (od->sorted[mid].start < addr)
-> > +                     lo = mid + 1;
-> > +             else
-> > +                     hi = mid;
-> > +     }
->
-> Why not use bsearch()?
->
-
-This search is a lower-bound (bisect_left) operation. I could not find
-an ISO C or glibc API that provides that operation.
-In patch series v2, I will refactor this search into a small
-sym_idx__lower_bound() helper. The clipping helper (symbol-elf.c:626)
-and the exact-start IRELATIVE lookup (symbol-elf.c:2176) will use it,
-while ordinary non-overlapping interval lookups will use bsearch().
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 21/26] perf annotate-arm64: Support stack variable
+ tracking
+From: Tengda Wu <wutengda@huaweicloud.com>
+To: sashiko-reviews@lists.linux.dev
+Cc: linux-perf-users@vger.kernel.org
+References: <cover.1789521520.git.wutengda@huaweicloud.com>
+ <11bcde1a75d96b524cc5a7f6fa442025680e56a0.1789521520.git.wutengda@huaweicloud.com>
+ <20260916014905.D44C91F000FF@smtp.kernel.org>
+ <e1021204-6e4a-4767-889e-fd677409df1e@huaweicloud.com>
+Content-Language: en-US
+In-Reply-To: <e1021204-6e4a-4767-889e-fd677409df1e@huaweicloud.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:Syh0CgD3KhJEOq9qRdrNAw--.56231S2
+X-Coremail-Antispam: 1UD129KBjvJXoWxGr48Wr4kXFy5tF13Cw13twb_yoWrJw45pF
+	WDCa45Wrs7Jr109FnrXr4xXr98uw1xKF1S9r98Xan7tFnFyrnIka93Kayj9FWUGrWkCw12
+	yw4v9rs8XFZakaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUgmb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k2
+	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
+	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7Cj
+	xVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x
+	0267AKxVWxJr0_GcWle2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8C
+	rVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4
+	IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkE
+	bVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67
+	AF67kF1VAFwI0_Jrv_JF1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI
+	42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMI
+	IF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2
+	KfnxnUUI43ZEXa7IU1CPfJUUUUU==
+X-CM-SenderInfo: pzxwv0hjgdqx5xdzvxpfor3voofrz/
 
 
-> >  int dso__synthesize_plt_symbols(struct dso *dso, struct symsrc *ss)
-> >  {
-> >       uint32_t idx;
-> > @@ -623,6 +650,8 @@ int dso__synthesize_plt_symbols(struct dso *dso, struct symsrc *ss)
-> >       if (!elf_section_by_name(elf, &ehdr, &shdr_plt, ".plt", NULL))
-> >               return 0;
-> >
-> > +     dso__clip_ondemand_symbols_at(dso, shdr_plt.sh_offset);
->
-> Why is this needed?
->
 
-Lazy address lookup uses the index, not the rb-tree. Without clipping
-the index at .plt, a preceding fill-forward range can claim PLT IPs
-before dso__synthesize_plt_symbols() inserts the PLT symbols. This is
-the same truncation the eager path already does on the rb-tree
-(symbol-elf.c:680). I will add that explanation at the call site in
-v2.
+On 2026/9/16 19:55, Tengda Wu wrote:
+> 
+> 
+> On 2026/9/16 9:49, sashiko-bot@kernel.org wrote:
+>> Thank you for your contribution! Sashiko AI review found 1 potential issue(s) to consider:
+>> - [Medium] perf: stale stack state due to bypassed invalidation in update_store_insn_state
+>> --
+>>
+>> commit 2ddb0f384d44eeb70844d8c3adc06f8d55101f68
+>> Author: Tengda Wu <wutengda@huaweicloud.com>
+>>
+>> perf annotate-arm64: Support stack variable tracking
+>>
+>> Extend update_insn_state_arm64() to track data types stored on the stack. The
+>> implementation handles stack loads and stores to follow data types as they
+>> move between registers and memory.
+>>
+>>> diff --git a/tools/perf/util/annotate-arch/annotate-arm64.c b/tools/perf/util/annotate-arch/annotate-arm64.c
+>>> index a72c7703dd6b3..8339aab0d314f 100644
+>>> --- a/tools/perf/util/annotate-arch/annotate-arm64.c
+>>> +++ b/tools/perf/util/annotate-arch/annotate-arm64.c
+>> [ ... ]
+>>> +/*
+>>> + * For store insns: propagate type from @sreg to the memory location referenced
+>>> + * by @dst, applying @mem_spacing to account for multi-regs stores (e.g. stp).
+>>> + */
+>>> +static void propagate_store_reg_state(struct type_state *state,
+>>> +				      struct data_loc_info *dloc,
+>>> +				      struct disasm_line *dl, int sreg,
+>>> +				      struct annotated_op_loc *dst,
+>>> +				      int mem_spacing)
+>>> +{
+>> [ ... ]
+>>> +		if (!has_reg_type(state, sreg) || !state->regs[sreg].ok) {
+>>> +			stack = find_stack_state(state, offset);
+>>> +			/* Preserve compound states when only a member is overwritten. */
+>>> +			if (stack && !stack->compound)
+>>> +				delete_stack_state(state, offset);
+>>> +
+>>> +			return;
+>>> +		}
+>> [ ... ]
+>>> +static void update_store_insn_state(struct type_state *state,
+>>> +				    struct data_loc_info *dloc,
+>>> +				    struct disasm_line *dl,
+>>> +				    struct annotated_op_loc *src,
+>>> +				    struct annotated_op_loc *dst)
+>>> +{
+>>> +	int mem_spacing = 0;
+>>> +
+>>> +	if (!has_reg_type(state, dst->reg1))
+>>> +		return;
+>>> +
+>>> +	/* Handle the first source register */
+>>> +	if (has_reg_type(state, src->reg1))
+>>> +		propagate_store_reg_state(state, dloc, dl, src->reg1,
+>>> +					  dst, mem_spacing);
+>>> +
+>>> +	if (!src->multi_regs || !has_reg_type(state, src->reg2))
+>>> +		goto out_adjust;
+>>
+>> [Severity: Medium]
+>> Does the has_reg_type() guard here inadvertently skip the stack state
+>> invalidation logic?
+>>
+>> Looking at propagate_store_reg_state() above, there is logic to delete the
+>> stack state if the source register is untracked. However, because
+>> update_store_insn_state() completely bypasses the call to
+>> propagate_store_reg_state() when the source register is untracked, this
+>> cleanup is never reached.
+>>
+>> If an untracked register is stored into a stack slot previously used for a
+>> tracked variable, could this leave stale tracking state on the stack, causing
+>> subsequent loads from that slot to inherit the wrong type?
+>>
+> 
+> Agreed.
 
-> > +
-> > +     /* Alias dedup: keep only the best symbol for each start address */
-> > +     if (!symbol_conf.allow_aliases) {
->
-> Probably better to factor out the dedup logic into a function.
->
+I might change it to something like this:
 
-I will factor out the duplicate-selection policy into
-symbol__choose_best() and use it in both the eager and lazy paths. The
-surrounding dedup loops remain separate because the eager path uses
-rb-tree struct symbol objects while the lazy path uses compact index
-entries before materialization.
++static void update_store_insn_state(struct type_state *state,
++				    struct data_loc_info *dloc,
++				    struct disasm_line *dl,
++				    struct annotated_op_loc *src,
++				    struct annotated_op_loc *dst)
++{
++	int mem_spacing = 0;
++
++	if (!has_reg_type(state, dst->reg1))
++		return;
++
++	/* Handle the first source register */
++	propagate_store_reg_state(state, dloc, dl, src->reg1, dst, mem_spacing);
++
++	/* Handle the second source register (if any) */
++	if (src->multi_regs) {
++		mem_spacing = arm64__reg_size(dl->ops.source.raw);
++
++		if (mem_spacing >= 0)
++			propagate_store_reg_state(state, dloc, dl, src->reg2,
++						  dst, mem_spacing);
++	}
++
++	adjust_reg_index_state(state, dloc, dl, dst);
++}
 
-> > +             u32 out = 0;
-> > +
-> > +             for (i = 0; i < count; i++) {
-> > +                     u32 best = i;
-> > +                     const char *na = NULL, *nb;
-> > +                     char *da = NULL, *db;
-> > +
-> > +                     /* name_off is the strtab index (st_name) */
-> > +                     na = elf_strptr(elf, shdr.sh_link,
-> > +                                     od->sorted[best].name_off);
-> > +                     if (na) {
-> > +                             da = dso__demangle_sym(dso, 0, na);
-> > +                             if (da)
-> > +                                     na = da;
-> > +                     }
-> > +
-> > +                     /* Find the best among all entries with this start */
-> > +                     for (j = i + 1; j < count &&
-> > +                          od->sorted[j].start == od->sorted[i].start; j++) {
-> > +                             nb = elf_strptr(elf, shdr.sh_link,
-> > +                                             od->sorted[j].name_off);
-> > +                             if (!na || !nb)
-> > +                                     continue;
-> > +
-> > +                             /* Demangle for comparison, matching eager path */
-> > +                             db = dso__demangle_sym(dso, 0, nb);
-> > +                             if (db)
-> > +                                     nb = db;
-> > +
-> > +                             /* od->sorted[].end holds st_size at this point */
-> > +                             if (choose_best_symbol_raw(
-> > +                                         od->sorted[best].end,
-> > +                                         od->sorted[best].type,
-> > +                                         od->sorted[best].binding, na,
-> > +                                         od->sorted[j].end,
-> > +                                         od->sorted[j].type,
-> > +                                         od->sorted[j].binding, nb) == SYMBOL_B) {
-> > +                                     best = j;
-> > +                                     free(da);
-> > +                                     da = db;
-> > +                                     na = nb;
-> > +                             } else {
-> > +                                     free(db);
-> > +                             }
-> > +                     }
-> > +
-> > +                     free(da);
-> > +                     od->sorted[out++] = od->sorted[best];
-> > +                     i = j - 1; /* skip past all aliases of this start */
-> > +             }
-> > +
-> > +             if (out < count) {
-> > +                     struct sym_idx *shrunk;
-> > +
-> > +                     shrunk = realloc(od->sorted, out * sizeof(*od->sorted));
-> > +                     if (shrunk) {
-> > +                             od->sorted = shrunk;
-> > +                             od->nr_alloc = out;
-> > +                     }
-> > +             }
-> > +             count = out;
-> > +     }
-> > +
-> > +     /* Convert st_size to end addresses */
-> > +     for (i = 0; i < count; i++) {
-> > +             u64 size = od->sorted[i].end; /* was st_size */
-> > +
-> > +             if (size > 0)
-> > +                     od->sorted[i].end = od->sorted[i].start + size;
-> > +             else if (i + 1 < count)
-> > +                     od->sorted[i].end = od->sorted[i + 1].start;
-> > +             else
-> > +                     /* Match symbols__fixup_end's last-symbol formula. */
-> > +                     od->sorted[i].end = roundup(od->sorted[i].start, 4096) + 4096;
-> > +     }
-> > +
-> > +     /*
-> > +      * Keep a private fd open for pread() of symbol names.  Dup with
-> > +      * O_CLOEXEC so children don't inherit it, and so that
-> > +      * symsrc__destroy() can close the original regardless of whether
-> > +      * it is a real file or a temporary debugdata extraction.
-> > +      *
-> > +      * If the dup fails (e.g. fd exhaustion), decline by returning 0
-> > +      * without setting the index: the caller falls back to the eager
-> > +      * loader so the DSO still gets symbols rather than going symbol-less.
-> > +      */
-> > +     od->fd = fcntl(syms_ss->fd, F_DUPFD_CLOEXEC, 0);
-> > +     if (od->fd < 0) {
-> > +             free(od->sorted);
-> > +             free(od);
-> > +             return 0;
-> > +     }
-> > +     od->strtab_offset = strtab_offset;
-> > +     od->strtab_size = strshdr.sh_size;
-> > +     od->nr_sorted = count;
-> > +
-> > +     symbol__account_bytes(od->nr_alloc * sizeof(*od->sorted));
-> > +
-> > +     dso__set_ondemand(dso, od);
-> > +
-> > +     pr_debug("%s: on-demand index: %u symbols\n",
-> > +              dso__long_name(dso), count);
-> > +
-> > +     return 1;
-> > +}
-> > +
-> > +/*
-> > + * Read a NUL-terminated symbol name from the file's string table at
-> > + * file offset @off.  The fast path uses a stack buffer; if the NUL is
-> > + * not found within it (names can exceed 1 KiB for template-heavy C++
-> > + * mangled names), grow a heap buffer geometrically from 4 KiB, doubling
-> > + * until the terminator is found or the strtab is exhausted.  This keeps
-> > + * a single long name cheap even when it sits near the start of a large
-> > + * (tens of MB) strtab, while bounding a corrupt/missing terminator by
-> > + * the remaining strtab size.
-> > + *
-> > + * Returns a pointer to the name (either @buf or a heap allocation) and
-> > + * sets *@to_free to the buffer that must be free()d (NULL for @buf).
-> > + * Returns NULL on read error or if no NUL terminator exists within the
-> > + * strtab bounds.
-> > + */
->
-> We have dso-cache APIs to read file data (dso__data_read_offset) and it
-> manages file descriptors so you don't need to worry about FD exhaustion.
->
+Thanks,
+Tengda
 
-Thanks, I will use dso__data_read_offset() in v2 and remove the
-per-index retained fd. I will configure the data-cache reads with the
-same symbol-file path and namespace used to build the index, so
-split-debuginfo string-table offsets are not read from the runtime
-image.
-
-
-> > +struct symbol *dso__find_symbol_ondemand(struct dso *dso, u64 addr)
-> > +{
-> > +     struct dso_ondemand *od = dso__ondemand(dso);
-> > +     u32 lo, hi, mid;
-> > +     const char *name;
-> > +     char namebuf[1024];
-> > +     char *name_heap = NULL;
-> > +     char *demangled;
-> > +     struct symbol *s = NULL;
-> > +
-> > +     if (!od || !od->sorted || od->fd < 0)
-> > +             return NULL;
-> > +
-> > +     lo = 0;
-> > +     hi = od->nr_sorted;
-> > +     while (lo < hi) {
-> > +             mid = (lo + hi) / 2;
-> > +             if (addr < od->sorted[mid].start)
-> > +                     hi = mid;
-> > +             else if (addr >= od->sorted[mid].end)
-> > +                     lo = mid + 1;
-> > +             else
-> > +                     goto found;
-> > +     }
->
-> bsearch()?
->
-
-Yes. In v2, the default deduplicated index has non-overlapping ranges,
-so this lookup will use bsearch() with an interval comparator.
-With --allow-aliases, two symbols can cover the same address.
-bsearch() then cannot reliably choose which alias to return, so that
-uncommon case keeps the explicit search.
