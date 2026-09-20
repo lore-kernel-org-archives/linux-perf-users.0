@@ -1,37 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87DEE3C2BAF;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87C861D5CFE;
 	Sun, 20 Sep 2026 02:34:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789871673; cv=none; b=hHzKaL5pxoxqM273Lbf9jWgyL3Uz+d6zI9dy0ucl7oeD301QBNYXKuuNd9ObPQgjS48PJjZuDreDSO8VbwNQ+yksnAlEywR9W8XNIWeT4NKCo+0l9QzmM10x/dx+27OyX6mq0c7Ldu/spFn4OMFRqAtWxr+hQHfzV37+M/Tc2Oo=
+	t=1789871673; cv=none; b=CX83MbwOvdrVnd6/BGO9jEUfD2LDx19T6QTMFoDiY0qfLQ3143rZgadkLP+nOloaN/fvvThOz2mosICSOKs/ySiCBfd/NmVBuGQ/adBYeORtEvvI6YacVibu4NGzR8LstBG+lnH8s+9B/Obq6C8s0nO7/95pT8Y3zb808Bh+vKI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1789871673; c=relaxed/simple;
-	bh=4VCBXfJVofxyyT0RDxutQE8DtQhSmd5uEOtKwOdl87Y=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=gZkumcn0mOHmUTs5xAVlpj5qI9E8PGwJMKDIDJwS5mY8qKbfs/pTHj+MJ47CdY141V8QpSAMUoaQytV2qcuDaCYE9G9Q4RDb+FfY54fFffJYPJUg8n9CN3eVPgfPSWwP32fggcNRdsybKGQCK0YA7W4z96DYIVJtwh6eBoyiQSs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qeWmulbs; arc=none smtp.client-ip=10.30.226.201
+	bh=8R6TBAR7F78A55XcG8gJNCyOLkrXNYeRBGRE59YA2gw=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=KBN6VmPILBavVDAaXlIE179c8g286W1APiGY5/B+9aaOA3EjVZ32JM5jNfZjRWPB5N1WIxmzLuhB7TZ8iCWVwlgiWWJ8cQUlBCgIJpkq41MIUqBIAYEHpgGT7CWZYK/O1bI7WPWbt207uUPRAsa652115++eqQsUiUOCy1moBR8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LLZKHa4d; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qeWmulbs"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 203A8C2BCF5;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LLZKHa4d"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 3386CC2BCB9;
 	Sun, 20 Sep 2026 02:34:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1789871673;
-	bh=4VCBXfJVofxyyT0RDxutQE8DtQhSmd5uEOtKwOdl87Y=;
-	h=From:Subject:Date:To:Cc:Reply-To:From;
-	b=qeWmulbsbM5Pan6zMb1SNMO1D3wG2bdhdm9W9SZ2xWRpZTbljJYeoRNTn+1vKDZUH
-	 eQ2n3qLGV3hH99kHi0ObJuJp3CQeJElBjqBE1zfmYyk3tkc0u1CopWExkLh+OAUsXp
-	 IvM/RNLqsfU2czYWI+cqPfyXPNuEhPknKGh6zZKelolG3WSAiHsg/pzWePZ6lTSinm
-	 oPIU4bgETh39yGfgpqr9sa5IjYUkKBMLDY5oWByUrxW5fvFXsuorttxIjDBptmZiMd
-	 d8P+GB4d3ejvtMv5E8NhC8iLexxcAtWUsPlTRAiTju/Alf7t3lvAAW2kRqFfT62Dvc
-	 x8EPD7tFLZWkQ==
+	bh=8R6TBAR7F78A55XcG8gJNCyOLkrXNYeRBGRE59YA2gw=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
+	b=LLZKHa4dZb8/g6nzmrWFirDIPEJryYPk7iQv1cIb9LAiEKNNaYfAKY2Kx1kKNBFsw
+	 B2Zz0pDtZ8UvTex0QyOz59WoLz5onBKmdfAO1DPDJ9awAvlIUbg7f6UoTgwihx2SAR
+	 oryVKRcY5mlcb7yqV0SC+5JW0fOqjgaAuDrwtnlWDC4xDoO/1GumtrdVhHx5oCRaRH
+	 uwTXBxxBo/urgMZAp0Vxk1/4/RQNoQMKgN6A4sXId0MvYGKk4tDu3hHnUscR8f7nbB
+	 oOMwHeJiIYJ6D8PpvRZoN6r4VpLLEBgjH3eMdMCkNqCjELgi887ity7815I92R0BOG
+	 Ewi+jBnr1PPoQ==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFEB3C982E1;
-	Sun, 20 Sep 2026 02:34:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D02FC982DF;
+	Sun, 20 Sep 2026 02:34:33 +0000 (UTC)
 From: Alireza Haghdoost via B4 Relay <devnull+haghdoost.uber.com@kernel.org>
-Subject: [PATCH v2 0/4] perf script: Bounded and lazy symbol loading
-Date: Sat, 19 Sep 2026 19:33:55 -0700
-Message-Id: <20260919-perf-symbol-memory-send-v2-0-495b8f00ad7c@uber.com>
+Date: Sat, 19 Sep 2026 19:33:56 -0700
+Subject: [PATCH v2 1/4] perf symbols: Fix broken ELF_C_READ_MMAP fallback
+ guard
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -40,11 +41,9 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAAAAAAAC/4WNQQ6CMBBFr0Jm7Zi2RAiuvAdhAe1UaiwlHSASw
- t0teACXL/nvvw2YoiOGe7ZBpMWxC0MCdclA9+3wJHQmMSihClHJG44ULfLqu/BGTz7EFZkGg1R
- qq1vZ6txUkOwxknWf87lufsxz9yI9HXfHonc8Jf1ML/LY/a8sEgVKk+eFICWtKB9zR/Gqg4dm3
- /cvB1OQm88AAAA=
-X-Change-ID: 20260915-perf-symbol-memory-send-e7cfca1ac3d9
+Message-Id: <20260919-perf-symbol-memory-send-v2-1-495b8f00ad7c@uber.com>
+References: <20260919-perf-symbol-memory-send-v2-0-495b8f00ad7c@uber.com>
+In-Reply-To: <20260919-perf-symbol-memory-send-v2-0-495b8f00ad7c@uber.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
  Arnaldo Carvalho de Melo <acme@kernel.org>, 
  Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
@@ -56,21 +55,21 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
  Alireza Haghdoost <haghdoost@uber.com>
 X-Mailer: b4 0.15.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4316; i=haghdoost@uber.com;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1452; i=haghdoost@uber.com;
  h=from:subject:message-id;
- bh=4VCBXfJVofxyyT0RDxutQE8DtQhSmd5uEOtKwOdl87Y=;
- b=owEBiQJ2/ZANAwAIAVNlBDxl2ALYAcsmYgBqr0Y2Q9+6RUrJJinzBl358kmTMnP+Mu+455/Ye
- Iqx72Y1iRmJAk8EAAEIADkWIQS5+sFL3gX/8PrA0S1TZQQ8ZdgC2AUCaq9GNhsUgAAAAAAEAA5t
- YW51MiwyLjUrMS4xMiwwLDMACgkQU2UEPGXYAtjUOA/+MTMiVz2HbgFHwNRXgnlndYPSfcC4Dzb
- 9YEZu/BDN9qZyEMDy4tt4F/BazhhS2tlpIdjVwroeWEycB3q+9eoNCoJBY/IN/r1/8ADYjVtiWr
- JpS6V12/FWWsWtY72e8sfdp6uCQYrNL+aNprYof3DPOzFux9ELGW8pINDeAVc40U4Q8WyzELTBL
- X6c7hrisctaQydtIvMTS+7updRX/jSTIrMapVcJtQKhFL1C2ljuHC28ht6yGXS047IVa61LAyh+
- il72MkyORST+m/MllAHBk4Ki6Sn5N7XEjzMHAQV3AAd8YArbfcZDyAsBTRG8E0OV2N6/rvhPeR7
- j1wK9Bp8B5hEeITztXHBnObzo8ru5kMCKT/P5lby8Mq0ZOCLKr1VVh4yMQd6SNuoZdUZFvNUBx1
- 4Y0J38O/wu9IG89gQPdloXi8YK9aydhSnY1ItcmVBnU4aFq04JyCbphMw8ZRdHWBjCP6wlBFPx1
- v9FJsdImn7BqrBOq66d9GWzqYKKMEAXfR/7Y/AX59wy69UMfzjrtbNE36yXub3afVmI4XNnG5Dt
- YVNWToEcL4gXtPlg8YyYj7+XynNjiBFsMCrwzXrMp6CWp62dRJkLBWKLNS304C2lLGodKKztUnX
- Z4+jX34eFCoiwq99aY8SIyxRzGbkX9p18PT/iPugcfPwRSktbFm0=
+ bh=jwkKCZxWR8rzu5laHR8MpSUN65pL8rVjbdfQdF2AFOU=;
+ b=owEBiQJ2/ZANAwAIAVNlBDxl2ALYAcsmYgBqr0Y30TXneuFp2Nqnsn7P9GUk0jF1J+LJFPOvL
+ YZDQxyXx2+JAk8EAAEIADkWIQS5+sFL3gX/8PrA0S1TZQQ8ZdgC2AUCaq9GNxsUgAAAAAAEAA5t
+ YW51MiwyLjUrMS4xMiwwLDMACgkQU2UEPGXYAthhjA//fIXxYnl9RjKMgZTfBqkYrtJiatXJEfR
+ kCyv0E3yuhbBn671Hwa8dZiaep3w+eRj6FigzAH19N5Ybe1of1eRWHRr3pmQKlIn8ExpiWySV0C
+ f4Mb8VkKE3FIYJ01GyKREH6P2aVMex6UyOiU8wEeS6S1pV40bBhryDYXbG1ExejnbeB54BQmY2k
+ gceJP+C82QuujAYoAbqXVjwBeIIg11byip0t2toPJHN7I1U7KNEEKLYOZ/wGRTHKx8K+4ii5Op0
+ h3LLMNFiaNYySOIJjIBNDRDANg4RN2H6Gn+6++cYvUBGlSwzJ5H3h+iih4tYQ4BCah1Xh8cj8ln
+ cmNvSSPLJtkQJJ3Mwk7i+30UnClWJvO5C/lvVpUzt7OsUFUi/Hodf6TS/H94W6L2q5USwNLIhGy
+ l44UIqyaPXMI5OzCvCtNrIpS89xMv/Oi6SP/tIy6KD6Isf1l7oHAvIjxcQn3ayf40NGc9CSKiEt
+ KpPZmtpAppW3Ka6GUsgbjrdT8401eVq7tc7tP8Rwi1AIOasHmBhXmUUVXGY3VoxUoLPVjCgBWdA
+ Husc6fqGHji/HVX740iFsVbyoVbJoAYMrIyf5BTArlBU2yn3CP4Gs+RhIqz2SGEt7gKvm92Gr0H
+ lWtc0NgeTmyhfZTKIbHL3AmF9WxYm3fQUqdSsQoOJUd9wFI6bGOU=
 X-Developer-Key: i=haghdoost@uber.com; a=openpgp;
  fpr=B9FAC14BDE05FFF0FAC0D12D5365043C65D802D8
 X-Endpoint-Received: by B4 Relay for haghdoost@uber.com/default with
@@ -78,90 +77,47 @@ X-Endpoint-Received: by B4 Relay for haghdoost@uber.com/default with
 X-Original-From: Alireza Haghdoost <haghdoost@uber.com>
 Reply-To: haghdoost@uber.com
 
-perf script loads the entire ELF symbol table of every DSO that appears
-in a sample, allocating each symbol into an rb-tree held until process
-exit. Therefore, a large enough profile turns symbol loading into an
-OOM kill.
-This is not scalable for profiling a large cgroup with a lot of large
-binaries on a production system with limited free memory.
+From: Alireza Haghdoost <haghdoost@uber.com>
 
-This series adds two independent, opt-in mechanisms and a leading
-regression fix they build on:
+Commit 22dd1ac91a77 ("tools: Remove feature-libelf-mmap feature
+detection") replaced perf's compile-time feature test with an #ifdef on
+ELF_C_READ_MMAP. ELF_C_READ_MMAP is an Elf_Cmd enumerator rather than a
+preprocessor macro, so the condition is always false and perf silently
+uses ELF_C_READ.
 
-  [1/4] Fix a broken "#ifdef ELF_C_READ_MMAP" guard so perf actually
-        mmaps ELF files instead of malloc'ing section data. This is a
-        standalone regression fix that is introduced by 22dd1ac91a77.
+Perf already requires a sufficiently recent elfutils version that
+provides ELF_C_READ_MMAP. Use the enumerator directly instead of
+restoring a feature probe or retaining an unreachable fallback.
 
-  [2/4] --max-symbol-bytes <size>: a byte budget on struct symbol
-        allocations (and the lazy index) enforced at the ELF symbol
-        loader, degrading to [unknown] with a warning past the cap.
-        An unbounded profile doesn't just risk OOM-killing itself. It
-        also forces memory pressure on the whole host, pushing the kernel
-        to reclaim from co-located latency-sensitive processes. Capping
-        it lets the user bound that footprint up front and choose the
-        trade-off explicitly.
-
-  [3/4] --lazy-load-symbols: build a compact per-DSO sorted index and
-        resolve only the sampled addresses, reading names through the DSO
-        data cache at lookup time. On the production fixture, peak RssAnon
-        drops from 265 MiB to 39 MiB (6.8x) and wall time from 3.1 s to
-        1.85 s (1.7x). Memory optimizations usually cost time; this one
-        does not because lazy loading skips a lot of calloc and demangle
-        calls.
-
-  [4/4] Shell and unit tests for both options.
-
-Lazy loading handles the common userspace ELF symtab/dynsym path. Eager
-loading remains available for dense coverage and for PPC64 .opd and
-.gnu_debugdata.
-
-Changes in v2:
-
-- Replace direct pread() name reads with the exact symbol source's DSO data
-  cache, preserving split-debuginfo offsets and descriptor reopen behavior.
-- Drop the byte-identical-output claim and retain eager loading for PPC64
-  .opd and .gnu_debugdata.
-- Make the symbol budget atomic and strict, account complete name lengths,
-  accept a bare 0 as unlimited, and keep partial zero-sized ranges from
-  covering omitted symbols.
-- Align lazy lookup with eager duplicate and IFUNC selection, PLT clipping,
-  and name-sorted materialization.
-- Move option documentation into the feature patches. Add unit and shell
-  coverage for cache reopen, truncated names, budget truncation, and skip
-  handling.
-
-Link: https://lore.kernel.org/all/20260915-perf-symbol-memory-send-v1-0-1d3360e21f07@uber.com/
+Fixes: 22dd1ac91a77 ("tools: Remove feature-libelf-mmap feature detection")
+Signed-off-by: Alireza Haghdoost <haghdoost@uber.com>
 ---
-Alireza Haghdoost (4):
-      perf symbols: Fix broken ELF_C_READ_MMAP fallback guard
-      perf script: Add --max-symbol-bytes to bound ELF symbol memory
-      perf script: Add --lazy-load-symbols for lazy symbol loading
-      perf test: Test lazy symbol loading and symbol memory limits
+ tools/perf/util/symbol.h | 10 +---------
+ 1 file changed, 1 insertion(+), 9 deletions(-)
 
- tools/perf/Documentation/perf-script.txt           |  28 +
- tools/perf/arch/powerpc/util/sym-handling.c        |   5 +-
- tools/perf/builtin-script.c                        |  44 ++
- tools/perf/tests/Build                             |   1 +
- tools/perf/tests/builtin-test.c                    |   1 +
- tools/perf/tests/shell/script_lazy_load_symbols.sh | 278 ++++++++
- .../tests/shell/script_lazy_load_symbols_skip.sh   |  26 +
- tools/perf/tests/symbol-bytes.c                    | 340 ++++++++++
- tools/perf/tests/tests.h                           |   1 +
- tools/perf/util/dso.c                              |  63 +-
- tools/perf/util/dso.h                              |  49 ++
- tools/perf/util/map.c                              |  30 +-
- tools/perf/util/symbol-elf.c                       | 733 ++++++++++++++++++++-
- tools/perf/util/symbol-minimal.c                   |  17 +
- tools/perf/util/symbol.c                           | 140 +++-
- tools/perf/util/symbol.h                           |  24 +-
- tools/perf/util/symbol_conf.h                      |   2 +
- 17 files changed, 1723 insertions(+), 59 deletions(-)
----
-base-commit: aa18964dd64511305de0711fed912054da6f5d18
-change-id: 20260915-perf-symbol-memory-send-e7cfca1ac3d9
+diff --git a/tools/perf/util/symbol.h b/tools/perf/util/symbol.h
+index d0bac824c79c..46b1649c64fc 100644
+--- a/tools/perf/util/symbol.h
++++ b/tools/perf/util/symbol.h
+@@ -57,15 +57,7 @@ static inline bool is_livepatch_symbol(const char *str)
+ 	return strstarts(str, KLP_SYM_PREFIX);
+ }
+ 
+-/*
+- * libelf 0.8.x and earlier do not support ELF_C_READ_MMAP;
+- * for newer versions we can use mmap to reduce memory usage:
+- */
+-#ifdef ELF_C_READ_MMAP
+-# define PERF_ELF_C_READ_MMAP ELF_C_READ_MMAP
+-#else
+-# define PERF_ELF_C_READ_MMAP ELF_C_READ
+-#endif
++#define PERF_ELF_C_READ_MMAP ELF_C_READ_MMAP
+ 
+ #ifdef HAVE_LIBELF_SUPPORT
+ Elf_Scn *elf_section_by_name(Elf *elf, GElf_Ehdr *ep,
 
-Best regards,
---  
-Alireza Haghdoost <haghdoost@uber.com>
+-- 
+Git-157)
 
 
