@@ -1,56 +1,56 @@
-Received: from mail-pg1-f198.google.com (mail-pg1-f198.google.com [209.85.215.198])
+Received: from mail-pl1-f198.google.com (mail-pl1-f198.google.com [209.85.214.198])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D103D3D9691
-	for <linux-perf-users@vger.kernel.org>; Sun, 20 Sep 2026 05:23:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.198
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7045F3DA5AB
+	for <linux-perf-users@vger.kernel.org>; Sun, 20 Sep 2026 05:23:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789881800; cv=none; b=IopDdTKxPj+x9VKFYW4jD2ZYFqDEPFI8XVI7GRKkRAdxmWEnjOsUXL4qep1Y08v9oRApATfiTj6xQrme9PnUk1E8ZbwdJKmYv0iQVf2rsA60epd40eI3OWuXMRWGSbMFrKYHDh6UIfYlDlfMgPDaS52iBKbCYHoPLt5S+Z0Lkbk=
+	t=1789881804; cv=none; b=R0G9pAwcJap5dBkFBx7dzjCyySI4nVDMsZQcwIJFHqPzfai8kZzyIjQb04RMlfDZjiPlqHCBMKnFkr0oMKwRpqpWXVAbw1lAJ+k0JdK0CuakrfkyIYhm3004VtL5cF5+FX2rndFFqYXt8KRzdY8uj9ZzvxsbiH08wEkV9ZJxaMY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789881800; c=relaxed/simple;
-	bh=rhjcAI4sNt7OTGABpGcKH2OllPj9Wo6orRoDTaiDifA=;
+	s=arc-20240116; t=1789881804; c=relaxed/simple;
+	bh=LIbpegpgK9tXBWddCbG60HRMQoPJgrhRDz2SoXbfwM4=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=siQHU1AKDIA7yLLA4TQUPi/jgv+sSNnmx+Jah6mKA8gASIh5unzgmI9lPkpCtor2GYpEs6ufQ6xM6tEhZweAhhaQd0ckMWIU6BAzGSY/sjC8/be8yEJZL2VqNd2SXzuEFHZHPrX/n7ff14FxWv0GU08uajnPrSJKDBZmvSUxMR8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=dQjynUHG; arc=none smtp.client-ip=209.85.215.198
+	 To:Cc:Content-Type; b=JgxUKqphMGmFW3pXAfkYEpjHZbwuDXGQOOmba5DCaE/Dp6xJtkriM+tCVjNg/q/3Gh+5MyHpFEWAszvtxu28iMtKfifbxTnMN5bvTBQmu2VSBbbrdMl1VSxn7oJsm5LJbAU5kVLKnEgIEFn8VNDG+rg+O5KvpPS5cuY4t2Ayy2s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=kfpN4+TE; arc=none smtp.client-ip=209.85.214.198
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dQjynUHG"
-Received: by mail-pg1-f198.google.com with SMTP id 41be03b00d2f7-cc21bc2923fso1816655a12.2
-        for <linux-perf-users@vger.kernel.org>; Sat, 19 Sep 2026 22:23:17 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="kfpN4+TE"
+Received: by mail-pl1-f198.google.com with SMTP id d9443c01a7336-2d55d8cd938so36049355ad.1
+        for <linux-perf-users@vger.kernel.org>; Sat, 19 Sep 2026 22:23:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1789881797; x=1790486597; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1789881799; x=1790486599; darn=vger.kernel.org;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=vi/34YV50+6TfU5NCYi8lPB4wKuP/23lh2fEWQQ19Xo=;
-        b=dQjynUHG5EVVeDz8I++9IfE74W7p4XhxYu/OTCmkyU/oQB0VjwIT5x58vFSJBQtadk
-         wwL/v3EWTvkouEwiY+PoQSwwoOeNeERSyBe7FAtC2sZKjW//nrxSxAXgn953k2nVtuE0
-         dypea0FplEBFe41hF/YtSEmAX0euK7Qqt7UmYcReXMpGinm3XZifpc9nlJZm3bc0DBUZ
-         3Ee0kBz5oEVpLkktNecuLfzdLh9dzR4iRRjISjWVS8KkntyvbkYh/ePRorwcm/8LB8cy
-         CtAHapGvm6EOQIXv0sUkJI7Iq4IA5hnsnMLN1mVQY6CQ3WSgOntXX8YYR15oj2H3hQJ/
-         F8CQ==
+        bh=u3t/WaIyWiiJ9+DosDBhsw56u/o2aVtnBSQXi/PqXDI=;
+        b=kfpN4+TEPHgKEF1/oEtVV5MGLPrtKQwGXEKKzl1NJTsML86MXdMTSuozNAZc5a4VOz
+         VH2Xwrf8YeT6DqRJRp4KNRhwfESDmqCJ/Rz4Vo/9sgrbpdLSlKXMfEk6+iWySQDIIdk+
+         pXk56hVcNfIc4sc4tlDy9t1I7F3VzQZI+fArsA4js2nRKjwBdxyJqSPnVmKsM+BxnG2G
+         hOQypUIqVKetmizg+MvX+wqPf3Y0SoD9Jt3ftPuzuVgc19xPesPFf4MnomIN4pRbJRvF
+         cEiospnxgHUIW/hUDXtG/8pbML/L/jRBA1ndGT93jA0/ceoMx4s9z6+DMT3wRpH3DSUl
+         SrBg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1789881797; x=1790486597;
+        d=1e100.net; s=20260707; t=1789881799; x=1790486599;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=vi/34YV50+6TfU5NCYi8lPB4wKuP/23lh2fEWQQ19Xo=;
-        b=pYKeQ3qey8cR3Lv3AWRvY9kDe1x1ID+aOy9TP2bZGjKWe2Ewf4Rd6ybNefVIkqXMrK
-         0hHtsayzKQ2B6DQVZvxNvZCmDd7RTO2d3wq0AuiPYETnQ8x51eEHLDUrMmSdAYeALzX3
-         P+CG0iGSDjBijJD1nxngYRAxh2KkiSkLxcvJhEbkJ5U7QZBYhJ0RP4HAHEXaw8la5wuz
-         TXaBEcNy9IwfoYXkwK7iN2jkrHOw7Rn7rnZ8inWKPJf6S8KEwy+HCH722+fBdDzmdWCS
-         QnKf5MrVRC1dCtT0MqmtQ33K3AH2LEu6RIPUFiilp6SChOUyvI8jMkWMAdPnFyjLSo54
-         dAoQ==
-X-Forwarded-Encrypted: i=1; AKwUvBy1NzZp+ownwD6oTx64P5PdBH6/vOoRVvjr/5p2cX7Y1N7Jo9anApvJJ88dbRCiq2hVQ3Y5oN3PimaN/Zf6gIe2@vger.kernel.org
-X-Gm-Message-State: AFuF++mTzZUjNsNfPDqJMU5iyf8RSL0HhmiOjqFyNPLW6YMQCT6bv/1U
-	LZ7mQL9x7q6WS7MqguIsNvxcnL569MzSc42PZpdE+d8xeQ2rnTxWli2TBPdzwDOThAvtBe+u9IQ
-	sqbanW6QE8w==
-X-Received: from dybdx7.prod.google.com ([2002:a05:7300:b187:b0:33e:48b8:3a2b])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a21:151a:b0:3db:2c66:6638
- with SMTP id adf61e73a8af0-3dd8c40509emr11925844637.10.1789881796752; Sat, 19
- Sep 2026 22:23:16 -0700 (PDT)
-Date: Sat, 19 Sep 2026 22:21:14 -0700
+        bh=u3t/WaIyWiiJ9+DosDBhsw56u/o2aVtnBSQXi/PqXDI=;
+        b=ijnlVZowFDhB8nH46SOj1S1zowuIWMTq1t/TukFdCeHNO4LkR/bqoWw5PVdgHDfCW0
+         ibtsJe8mMoIT5OBvrNBm2W7BZP/rTF0+3wLIRe7P8C6JDV2YqUchiptwIzD6Lm6vAdK3
+         U2GgYrdqVW7j8Zs5yY9/4j1MZ0KxcQgpU0KHnXdF2HGNg6vuSulrsAGcuQ94grLKTPA5
+         XKJYdjx50lW/Kxcl2MB4SvJnGQ83y+G9JMwlLxsSRNO8mE5ZWUbIbxiz59zCUg/mWsUB
+         LJV1xqKB4LULHoJTgf1aaKsumfWZYVY3dpRpiWA+/xx0weIRsOW4hoSG/+CfQIkvL4na
+         x6Dg==
+X-Forwarded-Encrypted: i=1; AKwUvBzJowEOlusf+dTmEdbYNZCU/mLCYpIyjiRH03q2mr7ESuXUtWV4Oh4zopMoaQkm6f6wv8WDdm2JLlWQo0hruPDN@vger.kernel.org
+X-Gm-Message-State: AFuF++mxY1zceJ5iclWJBYt+jH3hDkHRFwkHcgo8ah3XNe0D5XlREhT7
+	5plh1a4yYV3AaXS8x+Z1Xg/qgJ2epUOqI5h9CwPFOv3BC9ncF+mOEq9/ohATQZCIyAn3VO7bYHI
+	eyB5y9cEu9A==
+X-Received: from dybpk15.prod.google.com ([2002:a05:7301:428f:b0:32b:9b32:ea2a])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:db06:b0:2dd:ad74:ac7f
+ with SMTP id d9443c01a7336-2ddb1bbf158mr123390515ad.26.1789881798692; Sat, 19
+ Sep 2026 22:23:18 -0700 (PDT)
+Date: Sat, 19 Sep 2026 22:21:15 -0700
 In-Reply-To: <cover.1789880842.git.irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -60,8 +60,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <cover.1789880842.git.irogers@google.com>
 X-Mailer: git-send-email 2.55.0.1082.g2b9226bbc0-goog
-Message-ID: <53614f9275f1b75f3ed26a36d36805bb2053001e.1789880842.git.irogers@google.com>
-Subject: [PATCH v1 22/49] perf python: Port syscall-counts to perf module
+Message-ID: <beae673fc7309dcb3d51dfd729cc1b78ec97d97a.1789880842.git.irogers@google.com>
+Subject: [PATCH v1 23/49] perf python: Port syscall-counts-by-pid to perf module
 From: Ian Rogers <irogers@google.com>
 To: irogers@google.com, acme@kernel.org, adrian.hunter@intel.com, 
 	alice.mei.rogers@gmail.com, james.clark@linaro.org, 
@@ -71,71 +71,69 @@ Cc: dapeng1.mi@linux.intel.com, leo.yan@linux.dev,
 	tmricht@linux.ibm.com
 Content-Type: text/plain; charset="UTF-8"
 
-Port tools/perf/scripts/python/syscall-counts.py to a standalone script
-in tools/perf/python/ using the perf module. Avoiding the embedded
-interpreter and per-event dictionary allocation overhead improves
-execution speed by ~4x:
+Port tools/perf/scripts/python/syscall-counts-by-pid.py to a standalone
+script in tools/perf/python/ using the perf module. Avoiding the
+embedded interpreter and per-event dictionary overhead improves
+execution speed by ~3.8x:
 
 ```
 $ perf record -e raw_syscalls:sys_enter -a sleep 1
 ...
-$ time perf script tools/perf/scripts/python/syscall-counts.py perf
+$ time perf script tools/perf/scripts/python/syscall-counts-by-pid.py perf
 ...
-real    0m3.887s
-user    0m3.578s
-sys     0m0.308s
-$ time python3 tools/perf/python/syscall-counts.py perf
+real    0m3.852s
+user    0m3.512s
+sys     0m0.336s
+$ time python3 tools/perf/python/syscall-counts-by-pid.py perf
 ...
-real    0m0.953s
-user    0m0.905s
+real    0m1.011s
+user    0m0.963s
 sys     0m0.048s
 ```
 
 Additional improvements compared to the legacy script:
-- Resolve syscall names using perf.syscall_name(id, session.e_machine)
-  instead of host python-audit / Util.py tables, enabling accurate
-  cross-architecture perf.data analysis without external dependencies.
-- Support both raw_syscalls:sys_enter (sample.id) and individual
-  syscalls:sys_enter_* tracepoints (sample.__syscall_nr / sample.nr),
-  filtering out invalid/corrupt (> 0xffff or negative) syscall numbers.
-- Add argparse CLI options (-i/--input and optional comm filter).
+- Resolve architecture-specific syscall names via
+  perf.syscall_name(id, session.e_machine) instead of host python-audit
+  tables.
+- Support both raw_syscalls:sys_enter and individual syscalls:sys_enter_*
+  tracepoints, and filter out invalid (> 0xffff or negative) syscall IDs.
+- Support filtering by numeric PID as well as command name (comm), and
+  resolve process command names via session.find_thread(pid).
 
-Add a shell test (test_syscall_counts_python.sh) to verify the
-standalone script. The legacy script and its bin wrapper are retained
-temporarily during the transition to maintain bisectability and are
-removed once all scripts are migrated.
+Add a shell test (test_syscall_counts_by_pid_python.sh) to verify the
+standalone script.
 
 Assisted-by: Antigravity:gemini-3.1-pro
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/python/syscall-counts.py           | 79 +++++++++++++++++++
- .../tests/shell/test_syscall_counts_python.sh | 74 +++++++++++++++++
- 2 files changed, 153 insertions(+)
- create mode 100755 tools/perf/python/syscall-counts.py
- create mode 100755 tools/perf/tests/shell/test_syscall_counts_python.sh
+ tools/perf/python/syscall-counts-by-pid.py    | 100 ++++++++++++++++++
+ .../test_syscall_counts_by_pid_python.sh      |  81 ++++++++++++++
+ 2 files changed, 181 insertions(+)
+ create mode 100755 tools/perf/python/syscall-counts-by-pid.py
+ create mode 100755 tools/perf/tests/shell/test_syscall_counts_by_pid_python.sh
 
-diff --git a/tools/perf/python/syscall-counts.py b/tools/perf/python/syscall-counts.py
+diff --git a/tools/perf/python/syscall-counts-by-pid.py b/tools/perf/python/syscall-counts-by-pid.py
 new file mode 100755
-index 000000000000..4b0733b1536d
+index 000000000000..6e340e8e71df
 --- /dev/null
-+++ b/tools/perf/python/syscall-counts.py
-@@ -0,0 +1,79 @@
++++ b/tools/perf/python/syscall-counts-by-pid.py
+@@ -0,0 +1,100 @@
 +#!/usr/bin/env python3
 +# SPDX-License-Identifier: GPL-2.0
 +"""
 +Displays system-wide system call totals, broken down by syscall.
-+
 +If a [comm] arg is specified, only syscalls called by [comm] are displayed.
 +"""
 +from __future__ import annotations
 +
 +import argparse
 +from collections import defaultdict
-+from typing import DefaultDict
++from typing import (Dict, Tuple)
 +import perf
 +
-+syscalls: DefaultDict[int, int] = defaultdict(int)
++syscalls: Dict[Tuple[str, int, int], int] = defaultdict(int)
 +for_comm = None
++for_pid = None
 +session = None
 +
 +
@@ -143,20 +141,26 @@ index 000000000000..4b0733b1536d
 +    """Print aggregated statistics."""
 +    if for_comm is not None:
 +        print(f"\nsyscall events for {for_comm}:\n")
++    elif for_pid is not None:
++        print(f"\nsyscall events for PID {for_pid}:\n")
 +    else:
 +        print("\nsyscall events:\n")
 +
-+    print(f"{'event':<40} {'count':>10}")
++    print(f"{'comm [pid]/syscalls':<40} {'count':>10}")
 +    print("---------------------------------------- -----------")
 +
-+    for sc_id, val in sorted(syscalls.items(),
-+                             key=lambda kv: (kv[1], kv[0]), reverse=True):
++    sorted_keys = sorted(syscalls.keys(), key=lambda k: (k[0], k[1], -syscalls[k], -k[2]))
++    current_comm_pid = None
++    for comm, pid, sc_id in sorted_keys:
++        if current_comm_pid != (comm, pid):
++            print(f"\n{comm} [{pid}]")
++            current_comm_pid = (comm, pid)
 +        e_machine = getattr(session, "e_machine", 0) or 0
 +        if e_machine:
 +            name = perf.syscall_name(sc_id, e_machine) or str(sc_id)
 +        else:
 +            name = perf.syscall_name(sc_id) or str(sc_id)
-+        print(f"{name:<40} {val:>10}")
++        print(f"  {name:<38} {syscalls[(comm, pid, sc_id)]:>10}")
 +
 +
 +def process_event(sample):
@@ -165,21 +169,30 @@ index 000000000000..4b0733b1536d
 +    if event_name.startswith("evsel(raw_syscalls:sys_enter"):
 +        sc_id = getattr(sample, "id", -1)
 +    elif event_name.startswith("evsel(syscalls:sys_enter"):
-+        sc_id = getattr(sample, "__syscall_nr", getattr(sample, "id", None))
++        sc_id = getattr(sample, "__syscall_nr", None)
 +        if sc_id is not None and (sc_id < 0 or sc_id > 0xffff):
 +            sc_id = None
 +        if sc_id is None:
-+            sc_id = getattr(sample, "nr", -1)
++            sc_id = getattr(sample, "nr", None)
++            if sc_id is not None and (sc_id < 0 or sc_id > 0xffff):
++                sc_id = None
++            if sc_id is None:
++                sc_id = getattr(sample, "id", -1)
 +    else:
 +        return
 +
 +    if sc_id < 0 or sc_id > 0xffff:
 +        return
 +
++    pid = sample.sample_pid
++
++    if for_pid is not None and pid != for_pid:
++        return
++
 +    comm = "unknown"
 +    try:
 +        if session:
-+            proc = session.find_thread(sample.sample_tid)
++            proc = session.find_thread(pid)
 +            if proc:
 +                comm = proc.comm() or "unknown"
 +    except (TypeError, AttributeError):
@@ -187,27 +200,33 @@ index 000000000000..4b0733b1536d
 +
 +    if for_comm and comm != for_comm:
 +        return
-+    syscalls[sc_id] += 1
++    syscalls[(comm, pid, sc_id)] += 1
 +
 +
 +if __name__ == "__main__":
 +    ap = argparse.ArgumentParser()
-+    ap.add_argument("comm", nargs="?", help="Only report syscalls for comm")
++    ap.add_argument("filter", nargs="?", help="COMM or PID to filter by")
 +    ap.add_argument("-i", "--input", default="perf.data", help="Input file name")
 +    args = ap.parse_args()
-+    for_comm = args.comm
++
++    if args.filter:
++        try:
++            for_pid = int(args.filter)
++        except ValueError:
++            for_comm = args.filter
++
 +    session = perf.session(perf.data(args.input), sample=process_event)
 +    session.process_events()
 +    print_syscall_totals()
-diff --git a/tools/perf/tests/shell/test_syscall_counts_python.sh b/tools/perf/tests/shell/test_syscall_counts_python.sh
+diff --git a/tools/perf/tests/shell/test_syscall_counts_by_pid_python.sh b/tools/perf/tests/shell/test_syscall_counts_by_pid_python.sh
 new file mode 100755
-index 000000000000..e1c6e2820cce
+index 000000000000..0c67e7d24a6c
 --- /dev/null
-+++ b/tools/perf/tests/shell/test_syscall_counts_python.sh
-@@ -0,0 +1,74 @@
++++ b/tools/perf/tests/shell/test_syscall_counts_by_pid_python.sh
+@@ -0,0 +1,81 @@
 +#!/bin/bash
 +# SPDX-License-Identifier: GPL-2.0
-+# syscall-counts python test
++# syscall-counts-by-pid python test
 +
 +set -e
 +
@@ -222,7 +241,7 @@ index 000000000000..e1c6e2820cce
 +fi
 +
 +script_dir="$(dirname "$0")/../../python"
-+script_path="${script_dir}/syscall-counts.py"
++script_path="${script_dir}/syscall-counts-by-pid.py"
 +
 +if ! perf check feature -q libtraceevent > /dev/null 2>&1; then
 +	echo "Skipping test, libtraceevent is disabled"
@@ -231,7 +250,7 @@ index 000000000000..e1c6e2820cce
 +
 +
 +if [ ! -f "$script_path" ]; then
-+	echo "Skipping test, syscall-counts.py not found at $script_path"
++	echo "Skipping test, syscall-counts-by-pid.py not found at $script_path"
 +	exit 2
 +fi
 +
@@ -247,18 +266,17 @@ index 000000000000..e1c6e2820cce
 +temp_data=$(mktemp /tmp/perf.data.XXXXXX)
 +
 +test_file_mode() {
-+	echo "Testing syscall-counts.py..."
-+	# Some systems might not have raw_syscalls:sys_enter (e.g. stripped kernels or permissions)
++	echo "Testing syscall-counts-by-pid.py..."
++	# Some systems might not have raw_syscalls:sys_enter
 +	if ! perf list | grep -q raw_syscalls:sys_enter; then
 +		echo "Skipping test, raw_syscalls:sys_enter not found"
 +		exit 2
 +	fi
 +
 +	# Generate some syscall events
-+	if ! perf record -e raw_syscalls:sys_enter -o "${temp_data}" -- sleep 0.5 2>/dev/null; then
-+		echo "perf record failed (permissions?), skipping file mode test."
-+		exit 2
-+	fi
++	perf record -e raw_syscalls:sys_enter -a -o "${temp_data}" \
++		-- sleep 0.5 >/dev/null 2>&1 || \
++		{ echo "Skipping test, perf record failed"; exit 2; }
 +
 +	if ! "$PYTHON" "$script_path" -i "${temp_data}" >/dev/null; then
 +		echo "File mode test failed."
@@ -273,6 +291,14 @@ index 000000000000..e1c6e2820cce
 +		err=1
 +	else
 +		echo "Comm filter test passed."
++	fi
++
++	# Test with a numeric PID filter argument
++	if ! "$PYTHON" "$script_path" -i "${temp_data}" "$$" >/dev/null; then
++		echo "PID filter test failed."
++		err=1
++	else
++		echo "PID filter test passed."
 +	fi
 +}
 +
