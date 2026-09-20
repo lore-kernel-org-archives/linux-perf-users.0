@@ -1,166 +1,129 @@
-Received: from mail-yx2-f12.google.com (mail-yx2-f12.google.com [74.125.224.140])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from pdx-out-010.esa.us-west-2.outbound.mail-perimeter.amazon.com (pdx-out-010.esa.us-west-2.outbound.mail-perimeter.amazon.com [52.12.53.23])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2802642E405
-	for <linux-perf-users@vger.kernel.org>; Sun, 20 Sep 2026 13:49:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.224.140
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789912165; cv=pass; b=gKm8RXoQnfWdjnawIC7YgAq4O59YiKjru5Vyj7hPbe4o5fAjvoNVd9o0Fa8le9XJco+3bjp5FUBn7TXLbYlWXbOlwFQn/dv/1R46CIRjDOzHJuRN3TXoeO3/t/m6M7S+n0CsazqnDPggDxsPjWS8WAnGK0Usqpzzx309LAMbeMg=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789912165; c=relaxed/simple;
-	bh=s3lTFp6lURx7MrRYn18AT3Pe7UpgcN21QfCy8Gku6t4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=GYpaAe27OHfaEBuMVdWI7/2+9wrk7EboYBitmDg+rHIuP4lSKzwYB2FvSWoRMHvssaBCB6Ql5it8Es2NQxyazmQZ0YhZYgN6M6D7/lXEtrpitEJWvRmp3RXHzzdfsfOi7d9/8CJkTxJ5C80JsB0tYiWM+qMUeSOTu77ouA11xVQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=uber.com; spf=fail smtp.mailfrom=uber.com; dkim=pass (1024-bit key) header.d=uber.com header.i=@uber.com header.b=KZtIPNYP; arc=pass smtp.client-ip=74.125.224.140
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=uber.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=uber.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9DEB26656D;
+	Sun, 20 Sep 2026 15:55:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.12.53.23
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1789919721; cv=none; b=XbkED7GpR7Hic6Iic2ZM+oRtcW8A6JQP/Rv++kbLgDcP6xzF052Y7W577dpDq+Dq6kPQHy9LEFGLzEkh2jtS1+GfetardGHCPvyyCi6aOKmf2Ow0oLgMjhF4P1dVmxaOzNYKjyfyOFUpUXkvoDWFu4TYdEwrqCdJQ7NlknLI8A4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1789919721; c=relaxed/simple;
+	bh=rLgv7qLwYF3dMOMdbJjYPHQL2tgAOi+0YYvwz2I+FOw=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=YzUYZQ41Pq5LYjqk7NqylmfGZTM0WfQhh9xcQK9kKbp1+8oBdfdKNIrFYRK1neNQGwLGsP80oGko112kWN8LkZxGia8vWLOs9y3KU7uk4ADr/m3aiZIgM1Nu9G+xJRBkjeJORtr5aq+GmwuN1YKcQQIYNtKk0aoWzD7+snBGsG4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.de; spf=pass smtp.mailfrom=amazon.de; dkim=pass (2048-bit key) header.d=amazon.de header.i=@amazon.de header.b=WHnKcvfA; arc=none smtp.client-ip=52.12.53.23
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=uber.com header.i=@uber.com header.b="KZtIPNYP"
-Received: by mail-yx2-f12.google.com with SMTP id 956f58d0204a3-66e4ab201f9so1754183d50.0
-        for <linux-perf-users@vger.kernel.org>; Sun, 20 Sep 2026 06:49:23 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1789912162; cv=none;
-        d=google.com; s=arc-20260327;
-        b=FM/SultAvixAB4gEWdSxUoE/w0ZtHX6Ok8QATSLjAqe8j2WfSCbeEt/OUIu20/pEYR
-         UzOiJuhCNENfHLj0CTcE2302nF9GBwVzH931qZGD3IuLpZaf3/TQ//BOKOSFrgzWaayJ
-         W02RluYGNakSfG+RpRTlaF8LTvXrb3auUAP8qB6QzrCzpw6bnrxplto7Ywz1fJ1n58sj
-         PPQNx3w89OxwldPZxY75OzD6qUg5ho64vOGC4i16MeUOi3PodfoXGSaNI8guHrqmBpOI
-         GERXVb0q4cLlfHv2cpNJIpIWbJ2l21LEOiMUj+nkjwta9HfSBMRuszhrYibKv/hexIhU
-         DhPA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=s3lTFp6lURx7MrRYn18AT3Pe7UpgcN21QfCy8Gku6t4=;
-        fh=0zVHGC//SC94CWFKHtFt4lnskmkXkJNNy7lE0FDd3Ck=;
-        b=FZzW2fYVA3ZK6N9D9I8L0Nkg+rtpd8thW/XukxOebWi/Q79jPDndMrwI3L7C6Cw0pl
-         d8pTejSWSbm6o8DXTPgZvq3jzmTYbWD71QbU5a5zrA8izMoWEyPVFxPJvAlxsDkupNz3
-         cmSka6XK6usoS1a4ULqwAuDvvRw027JADQczJw7nGTHaUo9yRWIyrjmOZm3WHUFXJeg8
-         yGBMyJoEOHd1sUExz9hMBaqslInHOZ6rbZUZ05vekX1H9EF3bIiwU68CusDC+rTPgtS2
-         q5zJo/vmIPDxG8gUxQd2bCC3GO3kc5F9Oc2VqSO7DSULp/hiMb4zcOuabYaJ5tIpHa5P
-         BPPw==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
+	dkim=pass (2048-bit key) header.d=amazon.de header.i=@amazon.de header.b="WHnKcvfA"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=uber.com; s=google; t=1789912162; x=1790516962; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=s3lTFp6lURx7MrRYn18AT3Pe7UpgcN21QfCy8Gku6t4=;
-        b=KZtIPNYP4WD9/vOOiJY3aLDwAPoMO0haticfyN6DM+BcxiNy/4E290MCSqCx6j7ZN7
-         dG0pVhPq9vEMUXTg0zCzE8cMii9e45ENz0obdlqOFZOoJAv/D4fTVXKBeWa3cppV+AK1
-         8TRyiefsD3mgBNZxojQxdAJ6DFlcpA7ShBzew=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1789912162; x=1790516962;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=s3lTFp6lURx7MrRYn18AT3Pe7UpgcN21QfCy8Gku6t4=;
-        b=BoQS6+E4VEsdJvLnV+F1ssFqBmXv0vSTpRu75BxWpgE51zwOchQoal+P9bSC87WfLc
-         qi2UgvSV/mLoZ8xC7E6d4TAhhcn35TdxtTrgqPoyHTPEEFiDyTvpZuzQxjf4FL+hNCDc
-         /8OYW2+HMo6KRvDk5fcejg2v6n/Lfp67HHi2AiaVOjJd1/ErAu+4VVtlAynCfP/fmcWA
-         Jb+Kgw0WswVLEhdWKKutLPtIiU1PztWt89RcFNdZcgWCkVLEU9l50youBGfC3iilsAn5
-         RtQUpI1ps66m+Mp22ocxE7/Fxlh1KslVaqqjwkMwscJG0H2/npMBhdmt6B8hHzcrTry1
-         m6ug==
-X-Gm-Message-State: AFuF++mxz0Rlig+RccUh7lRd9NkYf7N/y0Md040VE4XqZv7baQcTeDMc
-	Tk4BV4koT+zCc9IAX86zXJfLKk6+Y6L0kgv+i2e7RkodHNbICi/JThMKJY/Gw2w6boHdWnh7M1C
-	gXP+45maovsRlK5OuxuCOEKRDitrHb8XvjiX5nwsjiA6e6OiOqe8+0SnwOw==
-X-Gm-Gg: AYBFou1DYCH2hdoSURZqYJgc7nUvhINzJdOaXtZowk5JPUNRNxomsHNyosOHCzuQzug
-	OrrsoPfJyxyJXlhoo9XoCORH0Jby/2A3tqVuJUyboJPeLT3oZHgtUz8QWZ3lTKfiHa6Qkqwdnki
-	Ddc2IBdXHgvKMhsloBlPX2DZW9vuWKEWa2Y1yJpl2jI6E2Uxf+QtSd0Zkis9aIjEO9EYExfarKM
-	IUly2ZNU8VHkyfMfD+BviytTgl0r7TJ8Fv4tiZ278+JtQG8FYV4lPiaEbvliIQn6k3b5HTB55aj
-	tu8J156WhgMktZiV7T2ySqAYwr7+wgodl0Nft5Kcftsc7eBtgnYtTBAUT8sbmzOutWdXKZzRJZv
-	RqodW/jH1AKrK
-X-Received: by 2002:a05:690e:4393:b0:672:99e1:11f8 with SMTP id
- 956f58d0204a3-67299e1175emr912062d50.149.1789912161654; Sun, 20 Sep 2026
- 06:49:21 -0700 (PDT)
+  d=amazon.de; i=@amazon.de; q=dns/txt; s=amazoncorp2;
+  t=1789919719; x=1821455719;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=ufv8hTRDzIpkbawQnoy9gAIou0Vkaqlh5g4ks7UjcMk=;
+  b=WHnKcvfASrF3L7YlUFobNN+TvWJCzsysoGwy9Hwp2w1a0UXAncrK8qnm
+   q45uS2KcFJmknQQDQdoICzGT1mmTSFqVH79jA7kw3PBqj24nxCRaj8QEX
+   WkCE+tdFT5AuP/Ha9MLYfiNufXAdanvnvToQPY3E12hwBuN2sZg9fU7Ji
+   0pbf1VlUUm1QoUgZYEF94ArLd0toQDJW0+AgjK7PMscWTGnJkleEwAlEO
+   TUmEMCZIHmqiAnTPva7siIiEYcs7XC68WK4PYUJCVnbGBwD6e9pnFBkMJ
+   vUcRnGMNNo5B2iu16FQPAb3K5+vFIn9FsVDV8wMjH8ReVetisFBVan9mt
+   g==;
+X-CSE-ConnectionGUID: 5EdVn7vYTQW72Vhp7R0EbQ==
+X-CSE-MsgGUID: c7W7ESYMRwCFzSANolGQaw==
+X-IronPort-AV: E=Sophos;i="6.27,112,1787011200"; 
+   d="scan'208";a="29037785"
+Received: from ip-10-5-6-203.us-west-2.compute.internal (HELO smtpout.naws.us-west-2.prod.farcaster.email.amazon.dev) ([10.5.6.203])
+  by internal-pdx-out-010.esa.us-west-2.outbound.mail-perimeter.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Sep 2026 15:55:17 +0000
+Received: from EX19MTAUWC002.ant.amazon.com [205.251.233.51:18235]
+ by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.1.232:2525] with esmtp (Farcaster)
+ id 2d9365d5-3058-4889-a10a-9159270bf15a; Sun, 20 Sep 2026 15:55:17 +0000 (UTC)
+X-Farcaster-Flow-ID: 2d9365d5-3058-4889-a10a-9159270bf15a
+Received: from EX19D001UWA001.ant.amazon.com (10.13.138.214) by
+ EX19MTAUWC002.ant.amazon.com (10.250.64.143) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.2562.46;
+ Sun, 20 Sep 2026 15:55:16 +0000
+Received: from dev-dsk-absandze-1c-663c31a8.eu-west-1.amazon.com
+ (172.19.91.26) by EX19D001UWA001.ant.amazon.com (10.13.138.214) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.2562.49; Sun, 20 Sep 2026
+ 15:55:14 +0000
+From: Luka Absandze <absandze@amazon.de>
+To: <seanjc@google.com>, <pbonzini@redhat.com>
+CC: <sandipan.das@amd.com>, <tglx@kernel.org>, <mingo@redhat.com>,
+	<bp@alien8.de>, <dave.hansen@linux.intel.com>, <x86@kernel.org>,
+	<hpa@zytor.com>, <dwmw2@infradead.org>, <kvm@vger.kernel.org>,
+	<linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>, "Luka
+ Absandze" <absandze@amazon.de>
+Subject: [PATCH v2] KVM: x86/pmu: Don't retry a counter whose config was rejected
+Date: Sun, 20 Sep 2026 15:54:53 +0000
+Message-ID: <20260920155453.10836-1-absandze@amazon.de>
+X-Mailer: git-send-email 2.47.3
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260919-perf-symbol-memory-send-v2-0-495b8f00ad7c@uber.com>
- <20260919-perf-symbol-memory-send-v2-3-495b8f00ad7c@uber.com> <20260920024557.B51D81F000FF@smtp.kernel.org>
-In-Reply-To: <20260920024557.B51D81F000FF@smtp.kernel.org>
-From: Alireza Haghdoost <haghdoost@uber.com>
-Date: Sun, 20 Sep 2026 06:49:05 -0700
-X-Gm-Features: AcwNN1WGKpnrwDy-gIU_CCYFGPc2CgcA7grptGAj7xrJsG06HBe7wQg-Gy4arJc
-Message-ID: <CA+w=M=Qu-R22O3J1_g9HO-f6dv4Uey_vLZZJgNsH8mK53k2K5Q@mail.gmail.com>
-Subject: Re: [PATCH v2 3/4] perf script: Add --lazy-load-symbols for lazy
- symbol loading
-To: sashiko-reviews@lists.linux.dev
-Cc: linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: EX19D039UWB002.ant.amazon.com (10.13.138.79) To
+ EX19D001UWA001.ant.amazon.com (10.13.138.214)
 
->
-> [Severity: High]
-> Can this zfree() lead to a use-after-free during concurrent lookups?
->
-> If dso__materialize_symbols_ondemand() returns early due to max-symbol-by=
-tes
-> budget limits during a concurrent lookup by name in map__find_symbol_by_n=
-ame_idx(),
-> the dso__ondemand pointer is left non-NULL. The thread then calls dso__so=
-rt_by_name(),
-> constructing the dso->symbol_names array, and begins a lockless binary se=
-arch on it.
->
-> Concurrently, a lookup by address in another thread evaluates dso__ondema=
-nd,
-> takes the lock, calls dso__find_symbol_ondemand(), and successfully mater=
-ializes
-> a different symbol. This triggers dso__reset_symbol_names(), which immedi=
-ately frees
-> dso->symbol_names via zfree() while the first thread is actively reading =
-it.
->
+kvm_pmu_handle_event() re-arms the reprogram bit for every failed
+reprogram, on the assumption that the failure is transient and a later
+refresh will succeed.  That is true for contention, e.g. the -EBUSY from
+x86_reserve_hardware(), but not for a configuration the host PMU driver
+rejects outright.  A rejected config can never succeed on retry, so the
+counter is reprogrammed on every PMU refresh for as long as the guest
+leaves it enabled, and every attempt fails the same way.
 
-This is a valid bug. The budget-truncated path can leave the lazy
-index active while a later address lookup invalidates symbol_names
-during a lockless name lookup.
-I=E2=80=99ll synchronize name lookup with lazy materialization and add cove=
-rage in v3.
+Re-arm only for the errnos that indicate a transient condition, i.e.
+-EBUSY and -ENOMEM.
 
->
-> [Severity: Medium]
-> Does this missing release barrier risk exposing partially written rbtree =
-nodes?
->
-> A thread evaluating dso__ondemand locklessly in map__find_symbol() could
-> read the state as NULL, bypassing the dso__lock acquisition, and proceed =
-to
-> traverse the rbtree. Another thread executing dso__free_ondemand() stores=
- NULL
-> into dso->ondemand as a plain write.
->
-> Without smp_store_release() on the writer and smp_load_acquire() on the
-> reader, a weakly-ordered CPU can reorder the reader's loads such that it
-> reads the rbtree nodes before ondemand is loaded, observing stale memory.
->
+Suggested-by: Sean Christopherson <seanjc@google.com>
+Link: https://lore.kernel.org/all/20260916123315.89042-1-absandze@amazon.de/
+Signed-off-by: Luka Absandze <absandze@amazon.de>
+---
+v2:
+ - Use an allow-list of transient errnos (-EBUSY, -ENOMEM) rather than
+   excluding -EINVAL, and hoist 'r' out of the loop.  Diff taken from
+   Sean's suggestion verbatim. [Sean]
+ - Reword the comment to say "fails on a transient condition". [Sean]
+ - v1: https://lore.kernel.org/all/20260918160006.61816-1-absandze@amazon.de/
 
-I agree. The lockless `dso__ondemand()` test does not provide a
-happens-before relation for lazy rbtree updates.
-I=E2=80=99ll remove this split synchronization path and make lazy-state
-transitions and symbol lookup use the DSO lock consistently in v3.
+diff --git a/arch/x86/kvm/pmu.c b/arch/x86/kvm/pmu.c
+index a7d60c8785cd..03a470c49a74 100644
+--- a/arch/x86/kvm/pmu.c
++++ b/arch/x86/kvm/pmu.c
+@@ -662,7 +662,7 @@ void kvm_pmu_handle_event(struct kvm_vcpu *vcpu)
+ 	DECLARE_BITMAP(bitmap, X86_PMC_IDX_MAX);
+ 	struct kvm_pmu *pmu = vcpu_to_pmu(vcpu);
+ 	struct kvm_pmc *pmc;
+-	int bit;
++	int bit, r;
+ 
+ 	bitmap_copy(bitmap, pmu->reprogram_pmi, X86_PMC_IDX_MAX);
+ 
+@@ -676,12 +676,14 @@ void kvm_pmu_handle_event(struct kvm_vcpu *vcpu)
+ 
+ 	kvm_for_each_pmc(pmu, pmc, bit, bitmap) {
+ 		/*
+-		 * If reprogramming fails, e.g. due to contention, re-set the
+-		 * reprogram bit, i.e. opportunistically try again on the next
+-		 * PMU refresh.  Don't make a new request as doing so can stall
+-		 * the guest if reprogramming repeatedly fails.
++		 * If reprogramming fails on a transient condition, e.g. due to
++		 * contention, re-set the reprogram bit, i.e. opportunistically
++		 * try again on the next PMU refresh.  Don't make a new request
++		 * as doing so can stall the guest if reprogramming repeatedly
++		 * fails.
+ 		 */
+-		if (reprogram_counter(pmc))
++		r = reprogram_counter(pmc);
++		if (r == -EBUSY || r == -ENOMEM)
+ 			set_bit(pmc->idx, pmu->reprogram_pmi);
+ 	}
+ 
+-- 
+2.47.3
 
->
-> [Severity: Medium]
-> This is the lockless read mentioned above. Is an smp_load_acquire() neede=
-d
-> here to pair with a release barrier in dso__free_ondemand()?
->
-
-I agree. above solution would fix it.
-
->
-> [Severity: High]
-> This is the call to dso__reset_symbol_names() that triggers the use-after=
--free
-> if a concurrent thread is searching the array locklessly in
-> map__find_symbol_by_name_idx().
->
-
-I agree. This is on invalidation side of the same race. I=E2=80=99ll
-synchronize `symbol_names` invalidation with name lookup and lazy
-materialization in v3.
