@@ -1,57 +1,56 @@
-Received: from mail-pg1-f197.google.com (mail-pg1-f197.google.com [209.85.215.197])
+Received: from mail-pj1-f70.google.com (mail-pj1-f70.google.com [209.85.216.70])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89F093D9025
-	for <linux-perf-users@vger.kernel.org>; Sun, 20 Sep 2026 05:24:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.197
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E649D3D79FB
+	for <linux-perf-users@vger.kernel.org>; Sun, 20 Sep 2026 05:23:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.70
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789881859; cv=none; b=kW9uQG29ooNjr7A9A9f+/fCH5IDUDuZkqKWEoa1EM4SZ4JTyqhwFWqDXlQQge/7tMUFw4Tv/DfIlyLtkkfCxNtdjCUNzppsCvXXEGR+qFYuD71S/hV6wWTsBcjFNOhfnGgYxh9q1tuNjcGXKMo4FWOMMO1r/mZYdPVMrfOCWalU=
+	t=1789881863; cv=none; b=BRMH0vCUVjhn4m96+JaAnz8WoCx6b3XKjCogxwfRE2OmIOhvKOe0SKi+zNK/DUrtMoxsWP8wAChJgMh0L9I2OroMzmwAsLOzpJFykoiaKyjAcFUAwkCKoljKZYzsLOTKo2cjscrvSev6kENlESaZCqBFbXK0a8B1BICPxIS9s5Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789881859; c=relaxed/simple;
-	bh=5GQ2sFCmg2XLkG6D6url3VqS5gxpuDba28b8CrQHH6I=;
+	s=arc-20240116; t=1789881863; c=relaxed/simple;
+	bh=/65+rLzECWZa7bZuTdabxxC26VqHzMiAKx3n6b2qaBI=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=dOUfBXOu6Ro3sy8Ga2BOgHpjo/TFRjY7M48U3BAPW0MhBneiJI5GBH0Xvn6NrRO1kpD/AxJwAdpB1pG9D0lgImSrE8eeBA39oAcXsH1auI+9jNSazc7ptNs4BD58quFOdopNzR7EjpphfftWA4PTfZRbFgNusfswwVDdHo+fGMk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=DnUgaA7/; arc=none smtp.client-ip=209.85.215.197
+	 To:Cc:Content-Type; b=ieVjMWXiUGmXBZGKqPOEhAOFFWQYd9SIAXNbmm6o3pSC0BuHiWFjVJXeEwOmpIGhC37fye+zqqp7mRykJNHDxLd7Yd+sIk3I+k2EX1tvm8lAepliX9GQxQYnDGDrIdlP25VqntUdzF9QHV55xQ4TNiLYxYCni9WcAGTz3UL6Epg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ZdWzSAd3; arc=none smtp.client-ip=209.85.216.70
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="DnUgaA7/"
-Received: by mail-pg1-f197.google.com with SMTP id 41be03b00d2f7-cc4fc935a11so1718182a12.0
-        for <linux-perf-users@vger.kernel.org>; Sat, 19 Sep 2026 22:24:08 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ZdWzSAd3"
+Received: by mail-pj1-f70.google.com with SMTP id 98e67ed59e1d1-38e7ff7b375so2447694a91.1
+        for <linux-perf-users@vger.kernel.org>; Sat, 19 Sep 2026 22:23:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1789881848; x=1790486648; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:cc:to:from:subject
-         :message-id:references:mime-version:in-reply-to:date:from:to:cc
-         :subject:date:message-id:reply-to:content-type;
-        bh=Mi6A+Qkjfed8SjFR/Aqix0JxzU2dqP4hf/6nil8DarQ=;
-        b=DnUgaA7/4wwwE4L7foYpQgSK7Iagp4ri3ylbyBidKBxnEaqNv5i9mxa01hsHSMRq3/
-         cH1Yv9TcKVIhe7BSeYRHbqTkVMOWRi6JDpVa7dfPuL9U980UOFx9mtiCW3t1xYDdmKbD
-         fqxKIn30MYQX0D6hQSG1F66QkJ2mqZ9GkCNoQDhqZe2nmdLuk9tvLtEs2LtNemwAUXQt
-         lHzJ0ukAqHRXtfL/TyKHbNsx+++B9gNM872JVyRIdAB+WuFPKiJMJExKi9aGS/3PfFz3
-         owJ7RjNa2fhw+4hBHClLZ7Y4gSg6Ky2EALJdoY8jnLTOWiwwGBt42EmMmPqVbBLoKj/v
-         UNEQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1789881848; x=1790486648;
-        h=content-transfer-encoding:content-type:cc:to:from:subject
-         :message-id:references:mime-version:in-reply-to:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+        d=google.com; s=20251104; t=1789881839; x=1790486639; darn=vger.kernel.org;
+        h=content-type:cc:to:from:subject:message-id:references:mime-version
+         :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=Mi6A+Qkjfed8SjFR/Aqix0JxzU2dqP4hf/6nil8DarQ=;
-        b=IrqEYRs7A27cj3Xj267Xw1KB14TK46HJjp4UnmFnLlszYAe7NO+I1vsR+Mm5gk8nmt
-         JQkTuGmZCjgZ6xdQNzL09zsGGKRtEA4Ag+QIoGBHHDqV5Kw1Ag2xXajisvF0tQE5W6cE
-         yyTeld/8RGZqUUaJxOysy/8BIMGrvDrO0ieZCcH+yiUouFjNSZxUyREFLxAV/Vv6dQuo
-         38DFULvHcSpMB2u0SREC81EvG3IC2wl8wwIDwx2NQWZrzp8LXHe+E1ZIXEwOtjVOm73J
-         NNq5sZQyUzzHir4pMAaviu0ao1sgpH59z1Zmbt7Zd2YVD35E/6Nj9ps28tzcgg4OKo1I
-         sz2g==
-X-Forwarded-Encrypted: i=1; AKwUvBxL3tUWmOHJQhFovjR0+v+yKjc2VA3sERxMLNIlbaZ2wInYRKkUBx3ehbg3RKvjAnrrh6pU8lEIt+TGt6INXGG7@vger.kernel.org
-X-Gm-Message-State: AFuF++mvKjWxB5hk2eaO10W84Uw/v7j+GKShjtZDive8B1FDYNFe2SuU
-	R3ngo0t5lDUEg5tuwKwjT2tJEYDdwhdxjVxMPo1lgjcHgrD3jYwgDG61e2VfIndZrh44Gi7/Oqm
-	DG11qP5JSFw==
-X-Received: from dycao20.prod.google.com ([2002:a05:7301:7d14:b0:33b:ece2:d254])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a21:e58d:b0:3dd:85aa:d26a
- with SMTP id adf61e73a8af0-3dd8c57caf6mr12017257637.34.1789881846934; Sat, 19
- Sep 2026 22:24:06 -0700 (PDT)
-Date: Sat, 19 Sep 2026 22:21:40 -0700
+        bh=yCtjmwj041ddqhgw7Prtd7xiDMU05CoQ0hKY3X8H38I=;
+        b=ZdWzSAd3s6p2GHIFrfPUHzHi+SnOgXOJWTkjd9foXIuiZ8Ukf55PAkhW+FgFUfn6Ys
+         G4dWv/wgAJtYs93hoQEs2IKYHiPyIEDaHdUQT0g2tETHse4JQ6gGzZL+vxiAhJDHQ+yn
+         0ARNbo87unmF+H6GMR5DA14iT3KUJexRM10A7ZkiRdD6vO462J4rQgxkSXsu061tYAro
+         L7xtBW5VlFC75RZ1RQ6y6CzgCGKoxXtOYve/riSU7PhLmOGQssvd2uX6FKh3gOz3UpfT
+         BQlqi6PVEI4cEi4ilnWONepOd9vMo/sIapT3FooZFxsQYrU2ByYM7qJIWmtxIT9WaM+L
+         iV2w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1789881839; x=1790486639;
+        h=content-type:cc:to:from:subject:message-id:references:mime-version
+         :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=yCtjmwj041ddqhgw7Prtd7xiDMU05CoQ0hKY3X8H38I=;
+        b=e005EMO1p60du/pOVa/iLvYFQpg4QV5DoNKmw7EA17SG58P9lv8tRvLmPd3uj5I6An
+         Lhewvw6P2NwleOMvOJcSwmgMc5B0rClFIUdbP4OiVmDxf7gMy45+aAkszchjrjH/CgKp
+         UP00O8Ebcm0PjC3pWX7jJG9y7GncwfCg7qLdZOYdTY4arjJcnylv0hL9bd1qSDGnWj+s
+         BnrhI1eRtkg2sVPQacQPg1w5aLE+X0EnRFfvQQuG/6V/ykdWbDoCBXGcPwjNmYnbd9Rf
+         53XSg9SWU8Jb9BkmTDd72+cQ7unrlw6dlVUanMM+emV5il55o61v2W+vttUv+JZj8LM0
+         d4YQ==
+X-Forwarded-Encrypted: i=1; AKwUvBzoAHJFZ/bb1XM1A33JHEZLenDQ5ef8Cf4pVfRoRLSlST/j0U1OSbvFa27U/HW1QSClJgvA9zlukr/1It92EgLj@vger.kernel.org
+X-Gm-Message-State: AFuF++lEgk8xSwUmz3WCGO33QOYHm4UbHQrbRKfUbxWGMPn/tRcaQbtp
+	NFCph99R6OgpLw+UjA+flcSFEJLmKWGc3v/D2hFHeHDALH5eqlpGzKYI8ozf2E8nYyOcB+iUBO9
+	wM2mqBQKlZQ==
+X-Received: from dlbvt4.prod.google.com ([2002:a05:7022:3f84:b0:144:c68b:628d])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90a:da8c:b0:39e:1310:cb36
+ with SMTP id 98e67ed59e1d1-39e54d10409mr11263286a91.20.1789881838563; Sat, 19
+ Sep 2026 22:23:58 -0700 (PDT)
+Date: Sat, 19 Sep 2026 22:21:36 -0700
 In-Reply-To: <cover.1789880842.git.irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -61,9 +60,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <cover.1789880842.git.irogers@google.com>
 X-Mailer: git-send-email 2.55.0.1082.g2b9226bbc0-goog
-Message-ID: <5f68cc9d70610c56ffd66bdee04202a51e99aff3.1789880842.git.irogers@google.com>
-Subject: [PATCH v1 48/49] perf script: Support standalone scripts and remove
- embedded scripting
+Message-ID: <69e1b665af68d732ed70778bd46da7d366b49000.1789880842.git.irogers@google.com>
+Subject: [PATCH v1 44/49] perf python: Move and clean up exported-sql-viewer.py
 From: Ian Rogers <irogers@google.com>
 To: irogers@google.com, acme@kernel.org, adrian.hunter@intel.com, 
 	alice.mei.rogers@gmail.com, james.clark@linaro.org, 
@@ -72,4839 +70,10181 @@ Cc: dapeng1.mi@linux.intel.com, leo.yan@linux.dev,
 	linux-kernel@vger.kernel.org, mingo@redhat.com, peterz@infradead.org, 
 	tmricht@linux.ibm.com
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-Refactor 'perf script' to launch standalone scripts directly via fork()
-and execvp() and remove the legacy embedded Perl and Python scripting
-engines:
-- Remove the embedded Perl scripting engine
-  (util/scripting-engines/trace-event-perl.c), Perl scripts, bin
-  wrappers, and Trace-Util library
-  (scripts/perl/Perf-Trace-Util/), and script_perl.sh test.
-- Remove libperl feature checks from Makefile.config, Makefile.perf,
-  builtin-check.c, and Documentation/perf-check.txt.
-- Remove -g / --gen-script option and scripting_ops dispatch table from
-  builtin-script.c and trace-event-scripting.c.
-- Hide the legacy -s / --script option and update script discovery in
-  find_script() and list_available_scripts() to prioritize the system
-  'python' directory over bare filenames in the current directory.
+Move exported-sql-viewer.py from tools/perf/scripts/python/ to
+tools/perf/python/ as it is a standalone PySide/PyQt GUI application
+for viewing SQLite and PostgreSQL databases exported by perf script.
+
+Improvements and cleanups compared to the legacy script:
+- Add support for PySide6 (falling back to PySide2 and PySide) loaded
+  dynamically via importlib, and provide stub base classes (_QtBase,
+  _QtWidget) so static analysis (mypy and pylint) and --help-only
+  execution succeed when Qt bindings are not installed.
+- Fix a Python 3 NameError crash in HBoxLayout where expanded_mark and
+  not_expanded_mark called Python 2's removed unicode() builtin instead
+  of chr(0x25BC) and chr(0x25B6).
+- Replace instance-level method monkey-patching
+  (self.mousePressEvent = self.MousePressEvent) on SwitchGraphView with
+  proper class methods gated by self.rb_enabled so Qt virtual method
+  dispatch works cleanly across PySide2 and PySide6.
+- Remove Python 2 constructs (cPickle, xrange), wildcard imports, bare
+  'except:' clauses, and variable names shadowing Python builtins.
 
 Assisted-by: Antigravity:gemini-3.1-pro
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/build/Makefile.feature                  |   1 -
- tools/build/feature/Makefile                  |  20 -
- tools/build/feature/test-libperl.c            |  10 -
- tools/perf/Build                              |   1 -
- tools/perf/Documentation/perf-check.txt       |   1 -
- tools/perf/Makefile.config                    |   1 -
- tools/perf/Makefile.perf                      |  14 -
- tools/perf/builtin-check.c                    |   1 -
- tools/perf/builtin-script.c                   | 824 ++++++++----------
- tools/perf/scripts/Build                      |   3 -
- tools/perf/scripts/perl/Perf-Trace-Util/Build |   9 -
- .../scripts/perl/Perf-Trace-Util/Context.c    | 122 ---
- .../scripts/perl/Perf-Trace-Util/Context.xs   |  42 -
- .../scripts/perl/Perf-Trace-Util/Makefile.PL  |  18 -
- .../perf/scripts/perl/Perf-Trace-Util/README  |  59 --
- .../Perf-Trace-Util/lib/Perf/Trace/Context.pm |  55 --
- .../Perf-Trace-Util/lib/Perf/Trace/Core.pm    | 192 ----
- .../Perf-Trace-Util/lib/Perf/Trace/Util.pm    |  94 --
- .../perf/scripts/perl/Perf-Trace-Util/typemap |   1 -
- .../scripts/perl/bin/check-perf-trace-record  |   2 -
- .../scripts/perl/bin/failed-syscalls-record   |   3 -
- .../scripts/perl/bin/failed-syscalls-report   |  10 -
- tools/perf/scripts/perl/bin/rw-by-file-record |   3 -
- tools/perf/scripts/perl/bin/rw-by-file-report |  10 -
- tools/perf/scripts/perl/bin/rw-by-pid-record  |   2 -
- tools/perf/scripts/perl/bin/rw-by-pid-report  |   3 -
- tools/perf/scripts/perl/bin/rwtop-record      |   2 -
- tools/perf/scripts/perl/bin/rwtop-report      |  20 -
- .../scripts/perl/bin/wakeup-latency-record    |   6 -
- .../scripts/perl/bin/wakeup-latency-report    |   3 -
- tools/perf/scripts/perl/check-perf-trace.pl   | 106 ---
- tools/perf/scripts/perl/failed-syscalls.pl    |  47 -
- tools/perf/scripts/perl/rw-by-file.pl         | 106 ---
- tools/perf/scripts/perl/rw-by-pid.pl          | 184 ----
- tools/perf/scripts/perl/rwtop.pl              | 203 -----
- tools/perf/scripts/perl/wakeup-latency.pl     | 107 ---
- tools/perf/tests/make                         |   2 -
- tools/perf/tests/shell/script_perl.sh         | 102 ---
- tools/perf/ui/browsers/scripts.c              | 161 +---
- tools/perf/util/Build                         |   2 -
- tools/perf/util/scripting-engines/Build       |   5 -
- .../util/scripting-engines/trace-event-perl.c | 770 ----------------
- tools/perf/util/trace-event-parse.c           |  65 --
- tools/perf/util/trace-event-scripting.c       | 398 ---------
- tools/perf/util/trace-event.h                 |  72 +-
- 45 files changed, 355 insertions(+), 3507 deletions(-)
- delete mode 100644 tools/build/feature/test-libperl.c
- delete mode 100644 tools/perf/scripts/Build
- delete mode 100644 tools/perf/scripts/perl/Perf-Trace-Util/Build
- delete mode 100644 tools/perf/scripts/perl/Perf-Trace-Util/Context.c
- delete mode 100644 tools/perf/scripts/perl/Perf-Trace-Util/Context.xs
- delete mode 100644 tools/perf/scripts/perl/Perf-Trace-Util/Makefile.PL
- delete mode 100644 tools/perf/scripts/perl/Perf-Trace-Util/README
- delete mode 100644 tools/perf/scripts/perl/Perf-Trace-Util/lib/Perf/Trace/=
-Context.pm
- delete mode 100644 tools/perf/scripts/perl/Perf-Trace-Util/lib/Perf/Trace/=
-Core.pm
- delete mode 100644 tools/perf/scripts/perl/Perf-Trace-Util/lib/Perf/Trace/=
-Util.pm
- delete mode 100644 tools/perf/scripts/perl/Perf-Trace-Util/typemap
- delete mode 100644 tools/perf/scripts/perl/bin/check-perf-trace-record
- delete mode 100644 tools/perf/scripts/perl/bin/failed-syscalls-record
- delete mode 100644 tools/perf/scripts/perl/bin/failed-syscalls-report
- delete mode 100644 tools/perf/scripts/perl/bin/rw-by-file-record
- delete mode 100644 tools/perf/scripts/perl/bin/rw-by-file-report
- delete mode 100644 tools/perf/scripts/perl/bin/rw-by-pid-record
- delete mode 100644 tools/perf/scripts/perl/bin/rw-by-pid-report
- delete mode 100644 tools/perf/scripts/perl/bin/rwtop-record
- delete mode 100644 tools/perf/scripts/perl/bin/rwtop-report
- delete mode 100644 tools/perf/scripts/perl/bin/wakeup-latency-record
- delete mode 100644 tools/perf/scripts/perl/bin/wakeup-latency-report
- delete mode 100644 tools/perf/scripts/perl/check-perf-trace.pl
- delete mode 100644 tools/perf/scripts/perl/failed-syscalls.pl
- delete mode 100644 tools/perf/scripts/perl/rw-by-file.pl
- delete mode 100644 tools/perf/scripts/perl/rw-by-pid.pl
- delete mode 100644 tools/perf/scripts/perl/rwtop.pl
- delete mode 100644 tools/perf/scripts/perl/wakeup-latency.pl
- delete mode 100755 tools/perf/tests/shell/script_perl.sh
- delete mode 100644 tools/perf/util/scripting-engines/Build
- delete mode 100644 tools/perf/util/scripting-engines/trace-event-perl.c
- delete mode 100644 tools/perf/util/trace-event-scripting.c
+ tools/perf/python/exported-sql-viewer.py      | 5104 +++++++++++++++++
+ .../scripts/python/exported-sql-viewer.py     | 5030 ----------------
+ 2 files changed, 5104 insertions(+), 5030 deletions(-)
+ create mode 100755 tools/perf/python/exported-sql-viewer.py
+ delete mode 100755 tools/perf/scripts/python/exported-sql-viewer.py
 
-diff --git a/tools/build/Makefile.feature b/tools/build/Makefile.feature
-index 3ca7a4f5c7fd..dbef5b6c4e43 100644
---- a/tools/build/Makefile.feature
-+++ b/tools/build/Makefile.feature
-@@ -121,7 +121,6 @@ FEATURE_TESTS_EXTRA :=3D                  \
-          libbfd-liberty                 \
-          libbfd-liberty-z               \
-          libopencsd                     \
--         libperl                        \
-          llvm                           \
-          libbpf                         \
-          libpfm4                        \
-diff --git a/tools/build/feature/Makefile b/tools/build/feature/Makefile
-index 269af8e8f5cf..62f9cbf3dee9 100644
---- a/tools/build/feature/Makefile
-+++ b/tools/build/feature/Makefile
-@@ -31,7 +31,6 @@ FILES=3D                                          \
-          test-libdebuginfod.bin                 \
-          test-libnuma.bin                       \
-          test-numa_num_possible_cpus.bin        \
--         test-libperl.bin                       \
-          test-python-module.bin                 \
-          test-libslang.bin                      \
-          test-libtraceevent.bin                 \
-@@ -242,25 +241,6 @@ $(OUTPUT)test-libtracefs.bin:
- $(OUTPUT)test-gtk4.bin:
- 	$(BUILD) $(shell $(PKG_CONFIG) --libs --cflags gtk4 2>/dev/null)
-=20
--grep-libs  =3D $(filter -l%,$(1))
--strip-libs =3D $(filter-out -l%,$(1))
--
--PERL_EMBED_LDOPTS =3D $(shell perl -MExtUtils::Embed -e ldopts 2>/dev/null=
-)
--PERL_EMBED_LDFLAGS =3D $(call strip-libs,$(PERL_EMBED_LDOPTS))
--PERL_EMBED_LIBADD =3D $(call grep-libs,$(PERL_EMBED_LDOPTS))
--PERL_EMBED_CCOPTS =3D $(shell perl -MExtUtils::Embed -e ccopts 2>/dev/null=
-)
--FLAGS_PERL_EMBED=3D$(PERL_EMBED_CCOPTS) $(PERL_EMBED_LDOPTS)
--
--ifeq ($(CC_NO_CLANG), 0)
--  PERL_EMBED_LDOPTS :=3D $(filter-out -specs=3D%,$(PERL_EMBED_LDOPTS))
--  PERL_EMBED_CCOPTS :=3D $(filter-out -flto=3Dauto -ffat-lto-objects, $(PE=
-RL_EMBED_CCOPTS))
--  PERL_EMBED_CCOPTS :=3D $(filter-out -specs=3D%,$(PERL_EMBED_CCOPTS))
--  FLAGS_PERL_EMBED +=3D -Wno-compound-token-split-by-macro
--endif
--
--$(OUTPUT)test-libperl.bin:
--	$(BUILD) $(FLAGS_PERL_EMBED)
--
- $(OUTPUT)test-python-module.bin:
- 	$(BUILD) $(FLAGS_PYTHON_EMBED)
-=20
-diff --git a/tools/build/feature/test-libperl.c b/tools/build/feature/test-=
-libperl.c
-deleted file mode 100644
-index 0415f437eb31..000000000000
---- a/tools/build/feature/test-libperl.c
-+++ /dev/null
-@@ -1,10 +0,0 @@
--// SPDX-License-Identifier: GPL-2.0
--#include <EXTERN.h>
--#include <perl.h>
--
--int main(void)
--{
--	perl_alloc();
--
--	return 0;
--}
-diff --git a/tools/perf/Build b/tools/perf/Build
-index 5bd0e58d7cb0..8a0b5592a973 100644
---- a/tools/perf/Build
-+++ b/tools/perf/Build
-@@ -61,7 +61,6 @@ perf-util-y +=3D arch/
- perf-y +=3D arch/
- perf-test-y +=3D arch/
- perf-ui-y +=3D ui/
--perf-util-y +=3D scripts/
-=20
- gtk-y +=3D ui/gtk/
-=20
-diff --git a/tools/perf/Documentation/perf-check.txt b/tools/perf/Documenta=
-tion/perf-check.txt
-index a80913794eb6..1406a41c5d09 100644
---- a/tools/perf/Documentation/perf-check.txt
-+++ b/tools/perf/Documentation/perf-check.txt
-@@ -58,7 +58,6 @@ feature::
-                 libLLVM                 /  HAVE_LIBLLVM_SUPPORT
-                 libnuma                 /  HAVE_LIBNUMA_SUPPORT
-                 libopencsd              /  HAVE_CSTRACE_SUPPORT
--                libperl                 /  HAVE_LIBPERL_SUPPORT
-                 libpfm4                 /  HAVE_LIBPFM
-                 libslang                /  HAVE_SLANG_SUPPORT
-                 libtraceevent           /  HAVE_LIBTRACEEVENT
-diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
-index 7e05b7943b3b..5c404289780b 100644
---- a/tools/perf/Makefile.config
-+++ b/tools/perf/Makefile.config
-@@ -1275,7 +1275,6 @@ $(call detected_var,tipdir_SQ)
- $(call detected_var,srcdir_SQ)
- $(call detected_var,LIBDIR)
- $(call detected_var,GTK_CFLAGS)
--$(call detected_var,PERL_EMBED_CCOPTS)
- $(call detected_var,PYTHON_EMBED_CCOPTS)
- ifneq ($(BISON_FILE_PREFIX_MAP),)
- $(call detected_var,BISON_FILE_PREFIX_MAP)
-diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
-index 6bcea56f1f90..57e1a1a04e8a 100644
---- a/tools/perf/Makefile.perf
-+++ b/tools/perf/Makefile.perf
-@@ -17,7 +17,6 @@ include ../scripts/utilities.mak
- #
- # Define CROSS_COMPILE as prefix name of compiler if you want cross-builds=
-.
- #
--# Define LIBPERL to enable perl script extension.
- #
- # Define NO_PYTHON_MODULE to disable python script extension.
- #
-@@ -481,11 +480,6 @@ OTHER_PROGRAMS =3D $(OUTPUT)perf
- ifndef SHELL_PATH
-   SHELL_PATH =3D /bin/sh
- endif
--ifndef PERL_PATH
--  PERL_PATH =3D /usr/bin/perl
--endif
--
--export PERL_PATH
-=20
- LIBPERF_BENCH_IN :=3D $(OUTPUT)perf-bench-in.o
- LIBPERF_BENCH :=3D $(OUTPUT)libperf-bench.a
-@@ -890,14 +884,6 @@ endif
- 		$(INSTALL) $(OUTPUT)perf-archive -t '$(DESTDIR_SQ)$(perfexec_instdir_SQ)=
-'
- 	$(call QUIET_INSTALL, perf-iostat) \
- 		$(INSTALL) $(OUTPUT)perf-iostat -t '$(DESTDIR_SQ)$(perfexec_instdir_SQ)'
--ifdef LIBPERL
--	$(call QUIET_INSTALL, perl-scripts) \
--		$(INSTALL) -d -m 755 '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/scripts/perl/P=
-erf-Trace-Util/lib/Perf/Trace'; \
--		$(INSTALL) scripts/perl/Perf-Trace-Util/lib/Perf/Trace/* -m 644 -t '$(DE=
-STDIR_SQ)$(perfexec_instdir_SQ)/scripts/perl/Perf-Trace-Util/lib/Perf/Trace=
-'; \
--		$(INSTALL) scripts/perl/*.pl -m 644 -t '$(DESTDIR_SQ)$(perfexec_instdir_=
-SQ)/scripts/perl'; \
--		$(INSTALL) -d -m 755 '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/scripts/perl/b=
-in'; \
--		$(INSTALL) scripts/perl/bin/* -t '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/sc=
-ripts/perl/bin'
--endif
-=20
- ifndef NO_PYTHON_MODULE
- 	$(call QUIET_INSTALL, python-scripts) \
-diff --git a/tools/perf/builtin-check.c b/tools/perf/builtin-check.c
-index 06711362d37f..1e43e097e7a7 100644
---- a/tools/perf/builtin-check.c
-+++ b/tools/perf/builtin-check.c
-@@ -51,7 +51,6 @@ struct feature_status supported_features[] =3D {
- 	FEATURE_STATUS("libLLVM", HAVE_LIBLLVM_SUPPORT),
- 	FEATURE_STATUS("libnuma", HAVE_LIBNUMA_SUPPORT),
- 	FEATURE_STATUS("libopencsd", HAVE_CSTRACE_SUPPORT),
--	FEATURE_STATUS_TIP("libperl", HAVE_LIBPERL_SUPPORT, "Deprecated, use LIBP=
-ERL=3D1 and install perl-ExtUtils-Embed/libperl-dev to build with it"),
- 	FEATURE_STATUS("python-module", HAVE_PYTHON_MODULE_SUPPORT),
- 	FEATURE_STATUS("libpfm4", HAVE_LIBPFM),
- 	FEATURE_STATUS("libslang", HAVE_SLANG_SUPPORT),
-diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-index 0174489d1c0f..c9e1b5ac5c8f 100644
---- a/tools/perf/builtin-script.c
-+++ b/tools/perf/builtin-script.c
-@@ -3,6 +3,9 @@
- #include <inttypes.h>
- #include <signal.h>
- #include <stdio.h>
-+#include <stdlib.h>
-+#include <string.h>
-+#include <strings.h>
-=20
- #include <dirent.h>
- #include <fcntl.h>
-@@ -18,6 +21,7 @@
- #include <sys/param.h>
- #include <sys/stat.h>
- #include <sys/types.h>
-+#include <sys/wait.h>
- #include <sys/utsname.h>
- #include <unistd.h>
-=20
-@@ -78,7 +82,6 @@
- #endif
-=20
- static char const		*script_name;
--static char const		*generate_script_lang;
- static bool			reltime;
- static bool			deltatime;
- static u64			initial_time;
-@@ -88,7 +91,6 @@ static u64			last_timestamp;
- static u64			nr_unordered;
- static bool			no_callchain;
- static bool			latency_format;
--static bool			system_wide;
- static bool			print_flags;
- static const char		*cpu_list;
- static DECLARE_BITMAP(cpu_bitmap, MAX_NR_CPUS);
-@@ -96,6 +98,7 @@ static int			max_blocks;
- static struct dlfilter		*dlfilter;
- static int			dlargc;
- static char			**dlargv;
-+static unsigned int		scripting_max_stack =3D PERF_MAX_STACK_DEPTH;
-=20
- enum perf_output_field {
- 	PERF_OUTPUT_COMM            =3D 1ULL << 0,
-@@ -1810,6 +1813,144 @@ static int perf_sample__fprintf_bts(struct perf_sam=
-ple *sample,
- 	return printed;
- }
-=20
-+#define SAMPLE_FLAGS_BUF_SIZE 64
-+#define SAMPLE_FLAGS_STR_ALIGNED_SIZE	21
+diff --git a/tools/perf/python/exported-sql-viewer.py b/tools/perf/python/exported-sql-viewer.py
+new file mode 100755
+index 000000000000..bdd03c7fd5b6
+--- /dev/null
++++ b/tools/perf/python/exported-sql-viewer.py
+@@ -0,0 +1,5104 @@
++#!/usr/bin/env python
++# SPDX-License-Identifier: GPL-2.0
++"""exported-sql-viewer.py: view data from sql database."""
++# Copyright (c) 2014-2018, Intel Corporation.
 +
-+static int sample_flags_to_name(u32 flags, char *str, size_t size)
-+{
-+	static const struct {
-+		u32 flags;
-+		const char *name;
-+	} sample_flags[] =3D {
-+		{PERF_IP_FLAG_BRANCH | PERF_IP_FLAG_CALL, "call"},
-+		{PERF_IP_FLAG_BRANCH | PERF_IP_FLAG_RETURN, "return"},
-+		{PERF_IP_FLAG_BRANCH | PERF_IP_FLAG_CONDITIONAL, "jcc"},
-+		{PERF_IP_FLAG_BRANCH, "jmp"},
-+		{PERF_IP_FLAG_BRANCH | PERF_IP_FLAG_CALL | PERF_IP_FLAG_INTERRUPT, "int"=
-},
-+		{PERF_IP_FLAG_BRANCH | PERF_IP_FLAG_RETURN | PERF_IP_FLAG_INTERRUPT, "ir=
-et"},
-+		{PERF_IP_FLAG_BRANCH | PERF_IP_FLAG_CALL | PERF_IP_FLAG_SYSCALLRET, "sys=
-call"},
-+		{PERF_IP_FLAG_BRANCH | PERF_IP_FLAG_RETURN | PERF_IP_FLAG_SYSCALLRET, "s=
-ysret"},
-+		{PERF_IP_FLAG_BRANCH | PERF_IP_FLAG_ASYNC, "async"},
-+		{PERF_IP_FLAG_BRANCH | PERF_IP_FLAG_CALL |
-+		 PERF_IP_FLAG_ASYNC | PERF_IP_FLAG_INTERRUPT,
-+		 "hw int"},
-+		{PERF_IP_FLAG_BRANCH | PERF_IP_FLAG_TX_ABORT, "tx abrt"},
-+		{PERF_IP_FLAG_BRANCH | PERF_IP_FLAG_TRACE_BEGIN, "tr strt"},
-+		{PERF_IP_FLAG_BRANCH | PERF_IP_FLAG_TRACE_END, "tr end"},
-+		{PERF_IP_FLAG_BRANCH | PERF_IP_FLAG_CALL | PERF_IP_FLAG_VMENTRY, "vmentr=
-y"},
-+		{PERF_IP_FLAG_BRANCH | PERF_IP_FLAG_CALL | PERF_IP_FLAG_VMEXIT, "vmexit"=
-},
-+		{0, NULL}
-+	};
-+	static const struct {
-+		u32 flags;
-+		const char *name;
-+	} branch_events[] =3D {
-+		{PERF_IP_FLAG_BRANCH_MISS, "miss"},
-+		{PERF_IP_FLAG_NOT_TAKEN, "not_taken"},
-+		{0, NULL}
-+	};
-+	int i;
-+	const char *prefix;
-+	int pos =3D 0, ret, ev_idx =3D 0;
-+	u32 xf =3D flags & PERF_ADDITIONAL_STATE_MASK;
-+	u32 types, events;
-+	char xs[16] =3D { 0 };
++# To use this script you will need to have exported data using either the
++# export-to-sqlite.py or the export-to-postgresql.py script.  Refer to those
++# scripts for details.
++#
++# Following on from the example in the export scripts, a
++# call-graph can be displayed for the pt_example database like this:
++#
++#	python exported-sql-viewer.py pt_example
++#
++# Note that for PostgreSQL, this script supports connecting to remote databases
++# by setting hostname, port, username, password, and dbname e.g.
++#
++#	python exported-sql-viewer.py \
++#		"hostname=myhost username=myuser password=mypassword dbname=pt_example"
++#
++# The result is a GUI window with a tree representing a context-sensitive
++# call-graph.  Expanding a couple of levels of the tree and adjusting column
++# widths to suit will display something like:
++#
++#                                         Call Graph: pt_example
++# Call Path                          Object      Count   Time(ns)  Time(%)  Branch Count   Branch Count(%)
++# v- ls
++#     v- 2638:2638
++#         v- _start                  ld-2.19.so    1     10074071   100.0         211135            100.0
++#           |- unknown               unknown       1        13198     0.1              1              0.0
++#           >- _dl_start             ld-2.19.so    1      1400980    13.9          19637              9.3
++#           >- _d_linit_internal     ld-2.19.so    1       448152     4.4          11094              5.3
++#           v-__libc_start_main@plt  ls            1      8211741    81.5         180397             85.4
++#              >- _dl_fixup          ld-2.19.so    1         7607     0.1            108              0.1
++#              >- __cxa_atexit       libc-2.19.so  1        11737     0.1             10              0.0
++#              >- __libc_csu_init    ls            1        10354     0.1             10              0.0
++#              |- _setjmp            libc-2.19.so  1            0     0.0              4              0.0
++#              v- main               ls            1      8182043    99.6         180254             99.9
++#
++# Points to note:
++#	The top level is a command name (comm)
++#	The next level is a thread (pid:tid)
++#	Subsequent levels are functions
++#	'Count' is the number of calls
++#	'Time' is the elapsed time until the function returns
++#	Percentages are relative to the level above
++#	'Branch Count' is the total number of branches for that function and all
++#       functions that it calls
 +
-+	/* Clear additional state bits */
-+	flags &=3D ~PERF_ADDITIONAL_STATE_MASK;
++# There is also a "All branches" report, which displays branches and
++# possibly disassembly.  However, presently, the only supported disassembler is
++# Intel XED, and additionally the object code must be present in perf build ID
++# cache. To use Intel XED, libxed.so must be present. To build and install
++# libxed.so:
++#            git clone https://github.com/intelxed/mbuild.git mbuild
++#            git clone https://github.com/intelxed/xed
++#            cd xed
++#            ./mfile.py --share
++#            sudo ./mfile.py --prefix=/usr/local install
++#            sudo ldconfig
++#
++# Example report:
++#
++# Time           CPU  Command  PID    TID    Branch Type            In Tx  Branch
++# 8107675239590  2    ls       22011  22011  return from interrupt  No     ffffffff86a00a67 native_irq_return_iret ([kernel]) -> 7fab593ea260 _start (ld-2.19.so)
++#                                                                              7fab593ea260 48 89 e7                                        mov %rsp, %rdi
++# 8107675239899  2    ls       22011  22011  hardware interrupt     No         7fab593ea260 _start (ld-2.19.so) -> ffffffff86a012e0 page_fault ([kernel])
++# 8107675241900  2    ls       22011  22011  return from interrupt  No     ffffffff86a00a67 native_irq_return_iret ([kernel]) -> 7fab593ea260 _start (ld-2.19.so)
++#                                                                              7fab593ea260 48 89 e7                                        mov %rsp, %rdi
++#                                                                              7fab593ea263 e8 c8 06 00 00                                  callq  0x7fab593ea930
++# 8107675241900  2    ls       22011  22011  call                   No         7fab593ea263 _start+0x3 (ld-2.19.so) -> 7fab593ea930 _dl_start (ld-2.19.so)
++#                                                                              7fab593ea930 55                                              pushq  %rbp
++#                                                                              7fab593ea931 48 89 e5                                        mov %rsp, %rbp
++#                                                                              7fab593ea934 41 57                                           pushq  %r15
++#                                                                              7fab593ea936 41 56                                           pushq  %r14
++#                                                                              7fab593ea938 41 55                                           pushq  %r13
++#                                                                              7fab593ea93a 41 54                                           pushq  %r12
++#                                                                              7fab593ea93c 53                                              pushq  %rbx
++#                                                                              7fab593ea93d 48 89 fb                                        mov %rdi, %rbx
++#                                                                              7fab593ea940 48 83 ec 68                                     sub $0x68, %rsp
++#                                                                              7fab593ea944 0f 31                                           rdtsc
++#                                                                              7fab593ea946 48 c1 e2 20                                     shl $0x20, %rdx
++#                                                                              7fab593ea94a 89 c0                                           mov %eax, %eax
++#                                                                              7fab593ea94c 48 09 c2                                        or %rax, %rdx
++#                                                                              7fab593ea94f 48 8b 05 1a 15 22 00                            movq  0x22151a(%rip), %rax
++# 8107675242232  2    ls       22011  22011  hardware interrupt     No         7fab593ea94f _dl_start+0x1f (ld-2.19.so) -> ffffffff86a012e0 page_fault ([kernel])
++# 8107675242900  2    ls       22011  22011  return from interrupt  No     ffffffff86a00a67 native_irq_return_iret ([kernel]) -> 7fab593ea94f _dl_start+0x1f (ld-2.19.so)
++#                                                                              7fab593ea94f 48 8b 05 1a 15 22 00                            movq  0x22151a(%rip), %rax
++#                                                                              7fab593ea956 48 89 15 3b 13 22 00                            movq  %rdx, 0x22133b(%rip)
++# 8107675243232  2    ls       22011  22011  hardware interrupt     No         7fab593ea956 _dl_start+0x26 (ld-2.19.so) -> ffffffff86a012e0 page_fault ([kernel])
 +
-+	if (flags & PERF_IP_FLAG_TRACE_BEGIN)
-+		prefix =3D "tr strt ";
-+	else if (flags & PERF_IP_FLAG_TRACE_END)
-+		prefix =3D "tr end  ";
-+	else
-+		prefix =3D "";
++from __future__ import print_function
 +
-+	ret =3D snprintf(str + pos, size - pos, "%s", prefix);
-+	if (ret < 0)
-+		return ret;
-+	pos +=3D ret;
++import sys
++# Only change warnings if the python -W option was not used
++if not sys.warnoptions:
++    import warnings
++    # PySide2 causes deprecation warnings, ignore them.
++    warnings.filterwarnings("ignore", category=DeprecationWarning)
++import argparse
++import weakref
++import threading
++import pickle
++glb_nsz = 16
++import re
++import os
++import random
++import copy
++import math
++from libxed import LibXED
 +
-+	flags &=3D ~(PERF_IP_FLAG_TRACE_BEGIN | PERF_IP_FLAG_TRACE_END);
++import importlib
++from typing import Any
 +
-+	types =3D flags & ~PERF_IP_FLAG_BRANCH_EVENT_MASK;
-+	for (i =3D 0; sample_flags[i].name; i++) {
-+		if (sample_flags[i].flags !=3D types)
-+			continue;
++class _QtBase:
++    def __init__(self, *args: Any, **kwargs: Any) -> None:
++        pass
++    def __call__(self, *args: Any, **kwargs: Any) -> Any:
++        return self
++    def __getattr__(self, name: str) -> Any:
++        return _QtBase()
++    def mousePressEvent(self, event: Any) -> None:
++        pass
++    def mouseMoveEvent(self, event: Any) -> None:
++        pass
++    def mouseReleaseEvent(self, event: Any) -> None:
++        pass
++    def resizeEvent(self, event: Any) -> None:
++        pass
++    def changeEvent(self, event: Any) -> None:
++        pass
 +
-+		ret =3D snprintf(str + pos, size - pos, "%s", sample_flags[i].name);
-+		if (ret < 0)
-+			return ret;
-+		pos +=3D ret;
-+		break;
-+	}
++class _QtWidget(_QtBase):
++    pass
 +
-+	events =3D flags & PERF_IP_FLAG_BRANCH_EVENT_MASK;
-+	for (i =3D 0; branch_events[i].name; i++) {
-+		if (!(branch_events[i].flags & events))
-+			continue;
++class _QtMdiSubWindow(_QtWidget):
++    pass
 +
-+		ret =3D snprintf(str + pos, size - pos, !ev_idx ? "/%s" : ",%s",
-+			       branch_events[i].name);
-+		if (ret < 0)
-+			return ret;
-+		pos +=3D ret;
-+		ev_idx++;
-+	}
++QAbstractItemModel: Any = _QtBase
++QAbstractItemView: Any = _QtBase
++QAbstractTableModel: Any = _QtBase
++QAction: Any = _QtBase
++QApplication: Any = _QtBase
++QCheckBox: Any = _QtBase
++QColor: Any = _QtBase
++QComboBox: Any = _QtBase
++QDialog: Any = _QtWidget
++QEvent: Any = _QtBase
++QFont: Any = _QtBase
++QFontMetrics: Any = _QtBase
++QGraphicsItem: Any = _QtBase
++QGraphicsLineItem: Any = _QtBase
++QGraphicsScene: Any = _QtBase
++QGraphicsSimpleTextItem: Any = _QtBase
++QGraphicsView: Any = _QtBase
++QGridLayout: Any = _QtBase
++QHBoxLayout: Any = _QtBase
++QKeySequence: Any = _QtBase
++QLabel: Any = _QtBase
++QLineEdit: Any = _QtBase
++QMainWindow: Any = _QtWidget
++QMdiArea: Any = _QtBase
++QMdiSubWindow: Any = _QtMdiSubWindow
++QMenu: Any = _QtBase
++QMessageBox: Any = _QtBase
++QModelIndex: Any = _QtBase
++QObject: Any = _QtBase
++QPalette: Any = _QtBase
++QPoint: Any = _QtBase
++QPointF: Any = _QtBase
++QProgressBar: Any = _QtBase
++QPushButton: Any = _QtBase
++QRect: Any = _QtBase
++QRectF: Any = _QtBase
++QRubberBand: Any = _QtBase
++QSize: Any = _QtBase
++QSizePolicy: Any = _QtBase
++QSortFilterProxyModel: Any = _QtBase
++QSpinBox: Any = _QtBase
++QSplitter: Any = _QtWidget
++QSqlDatabase: Any = _QtBase
++QSqlQuery: Any = _QtBase
++QStyle: Any = _QtBase
++Qt: Any = _QtBase
++QTableView: Any = _QtWidget
++QTextBrowser: Any = _QtWidget
++QThread: Any = _QtBase
++QToolButton: Any = _QtBase
++QTreeView: Any = _QtWidget
++QVBoxLayout: Any = _QtBase
++qVersion: Any = _QtBase
++QWidget: Any = _QtWidget
++Signal: Any = _QtBase
 +
-+	/* Add an end character '/' for events */
-+	if (ev_idx) {
-+		ret =3D snprintf(str + pos, size - pos, "/");
-+		if (ret < 0)
-+			return ret;
-+		pos +=3D ret;
-+	}
++pyside_version_1 = False
++for _pkg in ("PySide6", "PySide2"):
++    try:
++        for _mod_name in ("QtCore", "QtGui", "QtSql", "QtWidgets"):
++            _mod = importlib.import_module(f"{_pkg}.{_mod_name}")
++            for _sym in dir(_mod):
++                if not _sym.startswith("_"):
++                    globals()[_sym] = getattr(_mod, _sym)
++        break
++    except ImportError:
++        pass
 +
-+	if (!xf)
-+		return pos;
 +
-+	snprintf(xs, sizeof(xs), "(%s%s%s)",
-+		 flags & PERF_IP_FLAG_IN_TX ? "x" : "",
-+		 flags & PERF_IP_FLAG_INTR_DISABLE ? "D" : "",
-+		 flags & PERF_IP_FLAG_INTR_TOGGLE ? "t" : "");
++from decimal import Decimal, ROUND_HALF_UP
++from ctypes import create_string_buffer, addressof, sizeof, \
++           c_void_p, c_bool, c_char, c_longlong
++from multiprocessing import Process, Array, Value, Event
 +
-+	/* Right align the string if its length is less than the limit */
-+	if ((pos + strlen(xs)) < SAMPLE_FLAGS_STR_ALIGNED_SIZE)
-+		ret =3D snprintf(str + pos, size - pos, "%*s",
-+			       (int)(SAMPLE_FLAGS_STR_ALIGNED_SIZE - ret), xs);
-+	else
-+		ret =3D snprintf(str + pos, size - pos, " %s", xs);
-+	if (ret < 0)
-+		return ret;
 +
-+	return pos + ret;
++
++def printerr(*args, **keyword_args):
++    print(*args, file=sys.stderr, **keyword_args)
++
++# Data formatting helpers
++
++def tohex(ip):
++    if ip < 0:
++        ip += 1 << 64
++    return "%x" % ip
++
++def offstr(offset):
++    if offset:
++        return "+0x%x" % offset
++    return ""
++
++def dsoname(name):
++    if name == "[kernel.kallsyms]":
++        return "[kernel]"
++    return name
++
++def findnth(s, sub, n, offs=0):
++    pos = s.find(sub)
++    if pos < 0:
++        return pos
++    if n <= 1:
++        return offs + pos
++    return findnth(s[pos + 1:], sub, n - 1, offs + pos + 1)
++
++# Percent to one decimal place
++
++def PercentToOneDP(n, d):
++    if not d:
++        return "0.0"
++    x = (n * Decimal(100)) / d
++    return str(x.quantize(Decimal(".1"), rounding=ROUND_HALF_UP))
++
++# Helper for queries that must not fail
++
++def QueryExec(query, stmt):
++    ret = query.exec_(stmt)
++    if not ret:
++        raise RuntimeError("Query failed: " + query.lastError().text())
++
++# Background thread
++
++class Thread(QThread):
++
++    done = Signal(object)
++
++    def __init__(self, task, param=None, parent=None):
++        super(Thread, self).__init__(parent)
++        self.task = task
++        self.param = param
++
++    def run(self):
++        while True:
++            if self.param is None:
++                done, result = self.task()
++            else:
++                done, result = self.task(self.param)
++            self.done.emit(result)
++            if done:
++                break
++
++# Tree data model
++
++class TreeModel(QAbstractItemModel):
++
++    def __init__(self, glb, params, parent=None):
++        super(TreeModel, self).__init__(parent)
++        self.glb = glb
++        self.params = params
++        self.root = self.GetRoot()
++        self.last_row_read = 0
++
++    def Item(self, parent):
++        if parent.isValid():
++            return parent.internalPointer()
++        else:
++            return self.root
++
++    def rowCount(self, parent):
++        result = self.Item(parent).childCount()
++        if result < 0:
++            result = 0
++            self.dataChanged.emit(parent, parent)
++        return result
++
++    def hasChildren(self, parent):
++        return self.Item(parent).hasChildren()
++
++    def headerData(self, section, orientation, role):
++        if role == Qt.TextAlignmentRole:
++            return self.columnAlignment(section)
++        if role != Qt.DisplayRole:
++            return None
++        if orientation != Qt.Horizontal:
++            return None
++        return self.columnHeader(section)
++
++    def parent(self, child):
++        child_item = child.internalPointer()
++        if child_item is self.root:
++            return QModelIndex()
++        parent_item = child_item.getParentItem()
++        return self.createIndex(parent_item.getRow(), 0, parent_item)
++
++    def index(self, row, column, parent):
++        child_item = self.Item(parent).getChildItem(row)
++        return self.createIndex(row, column, child_item)
++
++    def DisplayData(self, item, index):
++        return item.getData(index.column())
++
++    def FetchIfNeeded(self, row):
++        if row > self.last_row_read:
++            self.last_row_read = row
++            if row + 10 >= self.root.child_count:
++                self.fetcher.Fetch(glb_chunk_sz)
++
++    def columnAlignment(self, _column):
++        return Qt.AlignLeft
++
++    def columnFont(self, _column):
++        return None
++
++    def data(self, index, role):
++        if role == Qt.TextAlignmentRole:
++            return self.columnAlignment(index.column())
++        if role == Qt.FontRole:
++            return self.columnFont(index.column())
++        if role != Qt.DisplayRole:
++            return None
++        item = index.internalPointer()
++        return self.DisplayData(item, index)
++
++# Table data model
++
++class TableModel(QAbstractTableModel):
++
++    def __init__(self, parent=None):
++        super(TableModel, self).__init__(parent)
++        self.child_count = 0
++        self.child_items = []
++        self.last_row_read = 0
++
++    def Item(self, parent):
++        if parent.isValid():
++            return parent.internalPointer()
++        else:
++            return self
++
++    def rowCount(self, _parent):
++        return self.child_count
++
++    def headerData(self, section, orientation, role):
++        if role == Qt.TextAlignmentRole:
++            return self.columnAlignment(section)
++        if role != Qt.DisplayRole:
++            return None
++        if orientation != Qt.Horizontal:
++            return None
++        return self.columnHeader(section)
++
++    def index(self, row, column, _parent):
++        return self.createIndex(row, column, self.child_items[row])
++
++    def DisplayData(self, item, index):
++        return item.getData(index.column())
++
++    def FetchIfNeeded(self, row):
++        if row > self.last_row_read:
++            self.last_row_read = row
++            if row + 10 >= self.child_count:
++                self.fetcher.Fetch(glb_chunk_sz)
++
++    def columnAlignment(self, _column):
++        return Qt.AlignLeft
++
++    def columnFont(self, _column):
++        return None
++
++    def data(self, index, role):
++        if role == Qt.TextAlignmentRole:
++            return self.columnAlignment(index.column())
++        if role == Qt.FontRole:
++            return self.columnFont(index.column())
++        if role != Qt.DisplayRole:
++            return None
++        item = index.internalPointer()
++        return self.DisplayData(item, index)
++
++# Model cache
++
++model_cache: Any = weakref.WeakValueDictionary()
++model_cache_lock = threading.Lock()
++
++def LookupCreateModel(model_name, create_fn):
++    model_cache_lock.acquire()
++    try:
++        model = model_cache[model_name]
++    except KeyError:
++        model = None
++    if model is None:
++        model = create_fn()
++        model_cache[model_name] = model
++    model_cache_lock.release()
++    return model
++
++def LookupModel(model_name):
++    model_cache_lock.acquire()
++    try:
++        model = model_cache[model_name]
++    except KeyError:
++        model = None
++    model_cache_lock.release()
++    return model
++
++# Find bar
++
++class FindBar():
++
++    def __init__(self, parent, finder, is_reg_expr=False):
++        self.finder = finder
++        self.context = []
++        self.last_value = None
++        self.last_pattern = None
++
++        label = QLabel("Find:")
++        label.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
++
++        self.textbox = QComboBox()
++        self.textbox.setEditable(True)
++        self.textbox.currentIndexChanged.connect(self.ValueChanged)
++
++        self.progress = QProgressBar()
++        self.progress.setRange(0, 0)
++        self.progress.hide()
++
++        if is_reg_expr:
++            self.pattern = QCheckBox("Regular Expression")
++        else:
++            self.pattern = QCheckBox("Pattern")
++        self.pattern.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
++
++        self.next_button = QToolButton()
++        self.next_button.setIcon(parent.style().standardIcon(QStyle.SP_ArrowDown))
++        self.next_button.released.connect(lambda: self.NextPrev(1))
++
++        self.prev_button = QToolButton()
++        self.prev_button.setIcon(parent.style().standardIcon(QStyle.SP_ArrowUp))
++        self.prev_button.released.connect(lambda: self.NextPrev(-1))
++
++        self.close_button = QToolButton()
++        self.close_button.setIcon(parent.style().standardIcon(QStyle.SP_DockWidgetCloseButton))
++        self.close_button.released.connect(self.Deactivate)
++
++        self.hbox = QHBoxLayout()
++        self.hbox.setContentsMargins(0, 0, 0, 0)
++
++        self.hbox.addWidget(label)
++        self.hbox.addWidget(self.textbox)
++        self.hbox.addWidget(self.progress)
++        self.hbox.addWidget(self.pattern)
++        self.hbox.addWidget(self.next_button)
++        self.hbox.addWidget(self.prev_button)
++        self.hbox.addWidget(self.close_button)
++
++        self.bar = QWidget()
++        self.bar.setLayout(self.hbox)
++        self.bar.hide()
++
++    def Widget(self):
++        return self.bar
++
++    def Activate(self):
++        self.bar.show()
++        self.textbox.lineEdit().selectAll()
++        self.textbox.setFocus()
++
++    def Deactivate(self):
++        self.bar.hide()
++
++    def Busy(self):
++        self.textbox.setEnabled(False)
++        self.pattern.hide()
++        self.next_button.hide()
++        self.prev_button.hide()
++        self.progress.show()
++
++    def Idle(self):
++        self.textbox.setEnabled(True)
++        self.progress.hide()
++        self.pattern.show()
++        self.next_button.show()
++        self.prev_button.show()
++
++    def Find(self, direction):
++        value = self.textbox.currentText()
++        pattern = self.pattern.isChecked()
++        self.last_value = value
++        self.last_pattern = pattern
++        self.finder.Find(value, direction, pattern, self.context)
++
++    def ValueChanged(self):
++        _value = self.textbox.currentText()
++        pattern = self.pattern.isChecked()
++        index = self.textbox.currentIndex()
++        data = self.textbox.itemData(index)
++        # Store the pattern in the combo box to keep it with the text value
++        if data == None:
++            self.textbox.setItemData(index, pattern)
++        else:
++            self.pattern.setChecked(data)
++        self.Find(0)
++
++    def NextPrev(self, direction):
++        value = self.textbox.currentText()
++        pattern = self.pattern.isChecked()
++        if value != self.last_value:
++            index = self.textbox.findText(value)
++            # Allow for a button press before the value has been added to the combo box
++            if index < 0:
++                index = self.textbox.count()
++                self.textbox.addItem(value, pattern)
++                self.textbox.setCurrentIndex(index)
++                return
++            else:
++                self.textbox.setItemData(index, pattern)
++        elif pattern != self.last_pattern:
++            # Keep the pattern recorded in the combo box up to date
++            index = self.textbox.currentIndex()
++            self.textbox.setItemData(index, pattern)
++        self.Find(direction)
++
++    def NotFound(self):
++        QMessageBox.information(self.bar, "Find", "'" + self.textbox.currentText() + "' not found")
++
++# Context-sensitive call graph data model item base
++
++class CallGraphLevelItemBase(object):
++    def Select(self) -> None:
++        pass
++    def data(self, _column: int, _role: int) -> Any:
++        return None
++
++    def __init__(self, glb, params, row, parent_item):
++        self.glb = glb
++        self.params = params
++        self.row = row
++        self.parent_item = parent_item
++        self.query_done = False
++        self.child_count = 0
++        self.child_items = []
++        if parent_item:
++            self.level = parent_item.level + 1
++        else:
++            self.level = 0
++
++    def getChildItem(self, row):
++        return self.child_items[row]
++
++    def getParentItem(self):
++        return self.parent_item
++
++    def getRow(self):
++        return self.row
++
++    def childCount(self):
++        if not self.query_done:
++            self.Select()
++            if not self.child_count:
++                return -1
++        return self.child_count
++
++    def hasChildren(self):
++        if not self.query_done:
++            return True
++        return self.child_count > 0
++
++    def getData(self, column):
++        return self.data[column]
++
++# Context-sensitive call graph data model level 2+ item base
++
++class CallGraphLevelTwoPlusItemBase(CallGraphLevelItemBase):
++
++    def __init__(self, glb, params, row, comm_id, thread_id, call_path_id, time, insn_cnt, cyc_cnt, branch_count, parent_item):
++        super(CallGraphLevelTwoPlusItemBase, self).__init__(glb, params, row, parent_item)
++        self.comm_id = comm_id
++        self.thread_id = thread_id
++        self.call_path_id = call_path_id
++        self.insn_cnt = insn_cnt
++        self.cyc_cnt = cyc_cnt
++        self.branch_count = branch_count
++        self.time = time
++
++    def Select(self):
++        self.query_done = True
++        query = QSqlQuery(self.glb.db)
++        if self.params.have_ipc:
++            ipc_str = ", SUM(insn_count), SUM(cyc_count)"
++        else:
++            ipc_str = ""
++        QueryExec(query, "SELECT call_path_id, name, short_name, COUNT(calls.id), SUM(return_time - call_time)" + ipc_str + ", SUM(branch_count)"
++                    " FROM calls"
++                    " INNER JOIN call_paths ON calls.call_path_id = call_paths.id"
++                    " INNER JOIN symbols ON call_paths.symbol_id = symbols.id"
++                    " INNER JOIN dsos ON symbols.dso_id = dsos.id"
++                    " WHERE parent_call_path_id = " + str(self.call_path_id) +
++                    " AND comm_id = " + str(self.comm_id) +
++                    " AND thread_id = " + str(self.thread_id) +
++                    " GROUP BY call_path_id, name, short_name"
++                    " ORDER BY call_path_id")
++        while query.next():
++            if self.params.have_ipc:
++                insn_cnt = int(query.value(5))
++                cyc_cnt = int(query.value(6))
++                branch_count = int(query.value(7))
++            else:
++                insn_cnt = 0
++                cyc_cnt = 0
++                branch_count = int(query.value(5))
++            child_item = CallGraphLevelThreeItem(self.glb, self.params, self.child_count, self.comm_id, self.thread_id, query.value(0), query.value(1), query.value(2), query.value(3), int(query.value(4)), insn_cnt, cyc_cnt, branch_count, self)
++            self.child_items.append(child_item)
++            self.child_count += 1
++
++# Context-sensitive call graph data model level three item
++
++class CallGraphLevelThreeItem(CallGraphLevelTwoPlusItemBase):
++
++    def __init__(self, glb, params, row, comm_id, thread_id, call_path_id, name, dso, count, time, insn_cnt, cyc_cnt, branch_count, parent_item):
++        super(CallGraphLevelThreeItem, self).__init__(glb, params, row, comm_id, thread_id, call_path_id, time, insn_cnt, cyc_cnt, branch_count, parent_item)
++        dso = dsoname(dso)
++        if self.params.have_ipc:
++            insn_pcnt = PercentToOneDP(insn_cnt, parent_item.insn_cnt)
++            cyc_pcnt = PercentToOneDP(cyc_cnt, parent_item.cyc_cnt)
++            br_pcnt = PercentToOneDP(branch_count, parent_item.branch_count)
++            ipc = CalcIPC(cyc_cnt, insn_cnt)
++            self.data = [ name, dso, str(count), str(time), PercentToOneDP(time, parent_item.time), str(insn_cnt), insn_pcnt, str(cyc_cnt), cyc_pcnt, ipc, str(branch_count), br_pcnt ]
++        else:
++            self.data = [ name, dso, str(count), str(time), PercentToOneDP(time, parent_item.time), str(branch_count), PercentToOneDP(branch_count, parent_item.branch_count) ]
++        self.dbid = call_path_id
++
++# Context-sensitive call graph data model level two item
++
++class CallGraphLevelTwoItem(CallGraphLevelTwoPlusItemBase):
++
++    def __init__(self, glb, params, row, comm_id, thread_id, pid, tid, parent_item):
++        super(CallGraphLevelTwoItem, self).__init__(glb, params, row, comm_id, thread_id, 1, 0, 0, 0, 0, parent_item)
++        if self.params.have_ipc:
++            self.data = [str(pid) + ":" + str(tid), "", "", "", "", "", "", "", "", "", "", ""]
++        else:
++            self.data = [str(pid) + ":" + str(tid), "", "", "", "", "", ""]
++        self.dbid = thread_id
++
++    def Select(self):
++        super(CallGraphLevelTwoItem, self).Select()
++        for child_item in self.child_items:
++            self.time += child_item.time
++            self.insn_cnt += child_item.insn_cnt
++            self.cyc_cnt += child_item.cyc_cnt
++            self.branch_count += child_item.branch_count
++        for child_item in self.child_items:
++            child_item.data[4] = PercentToOneDP(child_item.time, self.time)
++            if self.params.have_ipc:
++                child_item.data[6] = PercentToOneDP(child_item.insn_cnt, self.insn_cnt)
++                child_item.data[8] = PercentToOneDP(child_item.cyc_cnt, self.cyc_cnt)
++                child_item.data[11] = PercentToOneDP(child_item.branch_count, self.branch_count)
++            else:
++                child_item.data[6] = PercentToOneDP(child_item.branch_count, self.branch_count)
++
++# Context-sensitive call graph data model level one item
++
++class CallGraphLevelOneItem(CallGraphLevelItemBase):
++
++    def __init__(self, glb, params, row, comm_id, comm, parent_item):
++        super(CallGraphLevelOneItem, self).__init__(glb, params, row, parent_item)
++        if self.params.have_ipc:
++            self.data = [comm, "", "", "", "", "", "", "", "", "", "", ""]
++        else:
++            self.data = [comm, "", "", "", "", "", ""]
++        self.dbid = comm_id
++
++    def Select(self):
++        self.query_done = True
++        query = QSqlQuery(self.glb.db)
++        QueryExec(query, "SELECT thread_id, pid, tid"
++                    " FROM comm_threads"
++                    " INNER JOIN threads ON thread_id = threads.id"
++                    " WHERE comm_id = " + str(self.dbid))
++        while query.next():
++            child_item = CallGraphLevelTwoItem(self.glb, self.params, self.child_count, self.dbid, query.value(0), query.value(1), query.value(2), self)
++            self.child_items.append(child_item)
++            self.child_count += 1
++
++# Context-sensitive call graph data model root item
++
++class CallGraphRootItem(CallGraphLevelItemBase):
++
++    def __init__(self, glb, params):
++        super(CallGraphRootItem, self).__init__(glb, params, 0, None)
++        self.dbid = 0
++        self.query_done = True
++        if_has_calls = ""
++        if IsSelectable(glb.db, "comms", columns = "has_calls"):
++            if_has_calls = " WHERE has_calls = " + glb.dbref.TRUE
++        query = QSqlQuery(glb.db)
++        QueryExec(query, "SELECT id, comm FROM comms" + if_has_calls)
++        while query.next():
++            if not query.value(0):
++                continue
++            child_item = CallGraphLevelOneItem(glb, params, self.child_count, query.value(0), query.value(1), self)
++            self.child_items.append(child_item)
++            self.child_count += 1
++
++# Call graph model parameters
++
++class CallGraphModelParams():
++
++    def __init__(self, glb, _parent=None):
++        self.have_ipc = IsSelectable(glb.db, "calls", columns = "insn_count, cyc_count")
++
++# Context-sensitive call graph data model base
++
++class CallGraphModelBase(TreeModel):
++
++    def __init__(self, glb, parent=None):
++        super(CallGraphModelBase, self).__init__(glb, CallGraphModelParams(glb), parent)
++
++    def FindSelect(self, value, pattern, query):
++        if pattern:
++            # postgresql and sqlite pattern patching differences:
++            #   postgresql LIKE is case sensitive but sqlite LIKE is not
++            #   postgresql LIKE allows % and _ to be escaped with \ but sqlite LIKE does not
++            #   postgresql supports ILIKE which is case insensitive
++            #   sqlite supports GLOB (text only) which uses * and ? and is case sensitive
++            if not self.glb.dbref.is_sqlite3:
++                # Escape % and _
++                s = value.replace("%", "\\%")
++                s = s.replace("_", "\\_")
++                # Translate * and ? into SQL LIKE pattern characters % and _
++                if sys.version_info[0] == 3:
++                    trans = str.maketrans("*?", "%_")
++                else:
++                    trans = bytes.maketrans("*?", "%_")
++                match = " LIKE '" + str(s).translate(trans) + "'"
++            else:
++                match = " GLOB '" + str(value) + "'"
++        else:
++            match = " = '" + str(value) + "'"
++        self.DoFindSelect(query, match)
++
++    def Found(self, query, found):
++        if found:
++            return self.FindPath(query)
++        return []
++
++    def FindValue(self, value, pattern, query, last_value, last_pattern):
++        if last_value == value and pattern == last_pattern:
++            found = query.first()
++        else:
++            self.FindSelect(value, pattern, query)
++            found = query.next()
++        return self.Found(query, found)
++
++    def FindNext(self, query):
++        found = query.next()
++        if not found:
++            found = query.first()
++        return self.Found(query, found)
++
++    def FindPrev(self, query):
++        found = query.previous()
++        if not found:
++            found = query.last()
++        return self.Found(query, found)
++
++    def FindThread(self, c):
++        if c.direction == 0 or c.value != c.last_value or c.pattern != c.last_pattern:
++            ids = self.FindValue(c.value, c.pattern, c.query, c.last_value, c.last_pattern)
++        elif c.direction > 0:
++            ids = self.FindNext(c.query)
++        else:
++            ids = self.FindPrev(c.query)
++        return (True, ids)
++
++    def Find(self, value, direction, pattern, context, callback):
++        class Context():
++            def __init__(self, *x):
++                self.value, self.direction, self.pattern, self.query, self.last_value, self.last_pattern = x
++            def Update(self, *x):
++                self.value, self.direction, self.pattern, self.last_value, self.last_pattern = x + (self.value, self.pattern)
++        if len(context):
++            context[0].Update(value, direction, pattern)
++        else:
++            context.append(Context(value, direction, pattern, QSqlQuery(self.glb.db), None, None))
++        # Use a thread so the UI is not blocked during the SELECT
++        thread = Thread(self.FindThread, context[0])
++        thread.done.connect(lambda ids, t=thread, c=callback: self.FindDone(t, c, ids), Qt.QueuedConnection)
++        thread.start()
++
++    def FindDone(self, _thread, callback, ids):
++        callback(ids)
++
++# Context-sensitive call graph data model
++
++class CallGraphModel(CallGraphModelBase):
++
++    def GetRoot(self):
++        return CallGraphRootItem(self.glb, self.params)
++
++    def columnCount(self, _parent=None):
++        if self.params.have_ipc:
++            return 12
++        else:
++            return 7
++
++    def columnHeader(self, column):
++        if self.params.have_ipc:
++            headers = ["Call Path", "Object", "Count ", "Time (ns) ", "Time (%) ", "Insn Cnt", "Insn Cnt (%)", "Cyc Cnt", "Cyc Cnt (%)", "IPC", "Branch Count ", "Branch Count (%) "]
++        else:
++            headers = ["Call Path", "Object", "Count ", "Time (ns) ", "Time (%) ", "Branch Count ", "Branch Count (%) "]
++        return headers[column]
++
++    def columnAlignment(self, column):
++        if self.params.have_ipc:
++            alignment = [ Qt.AlignLeft, Qt.AlignLeft, Qt.AlignRight, Qt.AlignRight, Qt.AlignRight, Qt.AlignRight, Qt.AlignRight, Qt.AlignRight, Qt.AlignRight, Qt.AlignRight, Qt.AlignRight, Qt.AlignRight ]
++        else:
++            alignment = [ Qt.AlignLeft, Qt.AlignLeft, Qt.AlignRight, Qt.AlignRight, Qt.AlignRight, Qt.AlignRight, Qt.AlignRight ]
++        return alignment[column]
++
++    def DoFindSelect(self, query, match):
++        QueryExec(query, "SELECT call_path_id, comm_id, thread_id"
++                        " FROM calls"
++                        " INNER JOIN call_paths ON calls.call_path_id = call_paths.id"
++                        " INNER JOIN symbols ON call_paths.symbol_id = symbols.id"
++                        " WHERE calls.id <> 0"
++                        " AND symbols.name" + match +
++                        " GROUP BY comm_id, thread_id, call_path_id"
++                        " ORDER BY comm_id, thread_id, call_path_id")
++
++    def FindPath(self, query):
++        # Turn the query result into a list of ids that the tree view can walk
++        # to open the tree at the right place.
++        ids = []
++        parent_id = query.value(0)
++        while parent_id:
++            ids.insert(0, parent_id)
++            q2 = QSqlQuery(self.glb.db)
++            QueryExec(q2, "SELECT parent_id"
++                    " FROM call_paths"
++                    " WHERE id = " + str(parent_id))
++            if not q2.next():
++                break
++            parent_id = q2.value(0)
++        # The call path root is not used
++        if ids[0] == 1:
++            del ids[0]
++        ids.insert(0, query.value(2))
++        ids.insert(0, query.value(1))
++        return ids
++
++# Call tree data model level 2+ item base
++
++class CallTreeLevelTwoPlusItemBase(CallGraphLevelItemBase):
++
++    def __init__(self, glb, params, row, comm_id, thread_id, calls_id, call_time, time, insn_cnt, cyc_cnt, branch_count, parent_item):
++        super(CallTreeLevelTwoPlusItemBase, self).__init__(glb, params, row, parent_item)
++        self.comm_id = comm_id
++        self.thread_id = thread_id
++        self.calls_id = calls_id
++        self.call_time = call_time
++        self.time = time
++        self.insn_cnt = insn_cnt
++        self.cyc_cnt = cyc_cnt
++        self.branch_count = branch_count
++
++    def Select(self):
++        self.query_done = True
++        if self.calls_id == 0:
++            comm_thread = " AND comm_id = " + str(self.comm_id) + " AND thread_id = " + str(self.thread_id)
++        else:
++            comm_thread = ""
++        if self.params.have_ipc:
++            ipc_str = ", insn_count, cyc_count"
++        else:
++            ipc_str = ""
++        query = QSqlQuery(self.glb.db)
++        QueryExec(query, "SELECT calls.id, name, short_name, call_time, return_time - call_time" + ipc_str + ", branch_count"
++                    " FROM calls"
++                    " INNER JOIN call_paths ON calls.call_path_id = call_paths.id"
++                    " INNER JOIN symbols ON call_paths.symbol_id = symbols.id"
++                    " INNER JOIN dsos ON symbols.dso_id = dsos.id"
++                    " WHERE calls.parent_id = " + str(self.calls_id) + comm_thread +
++                    " ORDER BY call_time, calls.id")
++        while query.next():
++            if self.params.have_ipc:
++                insn_cnt = int(query.value(5))
++                cyc_cnt = int(query.value(6))
++                branch_count = int(query.value(7))
++            else:
++                insn_cnt = 0
++                cyc_cnt = 0
++                branch_count = int(query.value(5))
++            child_item = CallTreeLevelThreeItem(self.glb, self.params, self.child_count, self.comm_id, self.thread_id, query.value(0), query.value(1), query.value(2), query.value(3), int(query.value(4)), insn_cnt, cyc_cnt, branch_count, self)
++            self.child_items.append(child_item)
++            self.child_count += 1
++
++# Call tree data model level three item
++
++class CallTreeLevelThreeItem(CallTreeLevelTwoPlusItemBase):
++
++    def __init__(self, glb, params, row, comm_id, thread_id, calls_id, name, dso, call_time, time, insn_cnt, cyc_cnt, branch_count, parent_item):
++        super(CallTreeLevelThreeItem, self).__init__(glb, params, row, comm_id, thread_id, calls_id, call_time, time, insn_cnt, cyc_cnt, branch_count, parent_item)
++        dso = dsoname(dso)
++        if self.params.have_ipc:
++            insn_pcnt = PercentToOneDP(insn_cnt, parent_item.insn_cnt)
++            cyc_pcnt = PercentToOneDP(cyc_cnt, parent_item.cyc_cnt)
++            br_pcnt = PercentToOneDP(branch_count, parent_item.branch_count)
++            ipc = CalcIPC(cyc_cnt, insn_cnt)
++            self.data = [ name, dso, str(call_time), str(time), PercentToOneDP(time, parent_item.time), str(insn_cnt), insn_pcnt, str(cyc_cnt), cyc_pcnt, ipc, str(branch_count), br_pcnt ]
++        else:
++            self.data = [ name, dso, str(call_time), str(time), PercentToOneDP(time, parent_item.time), str(branch_count), PercentToOneDP(branch_count, parent_item.branch_count) ]
++        self.dbid = calls_id
++
++# Call tree data model level two item
++
++class CallTreeLevelTwoItem(CallTreeLevelTwoPlusItemBase):
++
++    def __init__(self, glb, params, row, comm_id, thread_id, pid, tid, parent_item):
++        super(CallTreeLevelTwoItem, self).__init__(glb, params, row, comm_id, thread_id, 0, 0, 0, 0, 0, 0, parent_item)
++        if self.params.have_ipc:
++            self.data = [str(pid) + ":" + str(tid), "", "", "", "", "", "", "", "", "", "", ""]
++        else:
++            self.data = [str(pid) + ":" + str(tid), "", "", "", "", "", ""]
++        self.dbid = thread_id
++
++    def Select(self):
++        super(CallTreeLevelTwoItem, self).Select()
++        for child_item in self.child_items:
++            self.time += child_item.time
++            self.insn_cnt += child_item.insn_cnt
++            self.cyc_cnt += child_item.cyc_cnt
++            self.branch_count += child_item.branch_count
++        for child_item in self.child_items:
++            child_item.data[4] = PercentToOneDP(child_item.time, self.time)
++            if self.params.have_ipc:
++                child_item.data[6] = PercentToOneDP(child_item.insn_cnt, self.insn_cnt)
++                child_item.data[8] = PercentToOneDP(child_item.cyc_cnt, self.cyc_cnt)
++                child_item.data[11] = PercentToOneDP(child_item.branch_count, self.branch_count)
++            else:
++                child_item.data[6] = PercentToOneDP(child_item.branch_count, self.branch_count)
++
++# Call tree data model level one item
++
++class CallTreeLevelOneItem(CallGraphLevelItemBase):
++
++    def __init__(self, glb, params, row, comm_id, comm, parent_item):
++        super(CallTreeLevelOneItem, self).__init__(glb, params, row, parent_item)
++        if self.params.have_ipc:
++            self.data = [comm, "", "", "", "", "", "", "", "", "", "", ""]
++        else:
++            self.data = [comm, "", "", "", "", "", ""]
++        self.dbid = comm_id
++
++    def Select(self):
++        self.query_done = True
++        query = QSqlQuery(self.glb.db)
++        QueryExec(query, "SELECT thread_id, pid, tid"
++                    " FROM comm_threads"
++                    " INNER JOIN threads ON thread_id = threads.id"
++                    " WHERE comm_id = " + str(self.dbid))
++        while query.next():
++            child_item = CallTreeLevelTwoItem(self.glb, self.params, self.child_count, self.dbid, query.value(0), query.value(1), query.value(2), self)
++            self.child_items.append(child_item)
++            self.child_count += 1
++
++# Call tree data model root item
++
++class CallTreeRootItem(CallGraphLevelItemBase):
++
++    def __init__(self, glb, params):
++        super(CallTreeRootItem, self).__init__(glb, params, 0, None)
++        self.dbid = 0
++        self.query_done = True
++        if_has_calls = ""
++        if IsSelectable(glb.db, "comms", columns = "has_calls"):
++            if_has_calls = " WHERE has_calls = " + glb.dbref.TRUE
++        query = QSqlQuery(glb.db)
++        QueryExec(query, "SELECT id, comm FROM comms" + if_has_calls)
++        while query.next():
++            if not query.value(0):
++                continue
++            child_item = CallTreeLevelOneItem(glb, params, self.child_count, query.value(0), query.value(1), self)
++            self.child_items.append(child_item)
++            self.child_count += 1
++
++# Call Tree data model
++
++class CallTreeModel(CallGraphModelBase):
++
++    def GetRoot(self):
++        return CallTreeRootItem(self.glb, self.params)
++
++    def columnCount(self, _parent=None):
++        if self.params.have_ipc:
++            return 12
++        else:
++            return 7
++
++    def columnHeader(self, column):
++        if self.params.have_ipc:
++            headers = ["Call Path", "Object", "Call Time", "Time (ns) ", "Time (%) ", "Insn Cnt", "Insn Cnt (%)", "Cyc Cnt", "Cyc Cnt (%)", "IPC", "Branch Count ", "Branch Count (%) "]
++        else:
++            headers = ["Call Path", "Object", "Call Time", "Time (ns) ", "Time (%) ", "Branch Count ", "Branch Count (%) "]
++        return headers[column]
++
++    def columnAlignment(self, column):
++        if self.params.have_ipc:
++            alignment = [ Qt.AlignLeft, Qt.AlignLeft, Qt.AlignRight, Qt.AlignRight, Qt.AlignRight, Qt.AlignRight, Qt.AlignRight, Qt.AlignRight, Qt.AlignRight, Qt.AlignRight, Qt.AlignRight, Qt.AlignRight ]
++        else:
++            alignment = [ Qt.AlignLeft, Qt.AlignLeft, Qt.AlignRight, Qt.AlignRight, Qt.AlignRight, Qt.AlignRight, Qt.AlignRight ]
++        return alignment[column]
++
++    def DoFindSelect(self, query, match):
++        QueryExec(query, "SELECT calls.id, comm_id, thread_id"
++                        " FROM calls"
++                        " INNER JOIN call_paths ON calls.call_path_id = call_paths.id"
++                        " INNER JOIN symbols ON call_paths.symbol_id = symbols.id"
++                        " WHERE calls.id <> 0"
++                        " AND symbols.name" + match +
++                        " ORDER BY comm_id, thread_id, call_time, calls.id")
++
++    def FindPath(self, query):
++        # Turn the query result into a list of ids that the tree view can walk
++        # to open the tree at the right place.
++        ids = []
++        parent_id = query.value(0)
++        while parent_id:
++            ids.insert(0, parent_id)
++            q2 = QSqlQuery(self.glb.db)
++            QueryExec(q2, "SELECT parent_id"
++                    " FROM calls"
++                    " WHERE id = " + str(parent_id))
++            if not q2.next():
++                break
++            parent_id = q2.value(0)
++        ids.insert(0, query.value(2))
++        ids.insert(0, query.value(1))
++        return ids
++
++# Vertical layout
++
++class HBoxLayout(QHBoxLayout):
++
++    def __init__(self, *children):
++        super(HBoxLayout, self).__init__()
++
++        self.layout().setContentsMargins(0, 0, 0, 0)
++        for child in children:
++            if child.isWidgetType():
++                self.layout().addWidget(child)
++            else:
++                self.layout().addLayout(child)
++
++# Horizontal layout
++
++class VBoxLayout(QVBoxLayout):
++
++    def __init__(self, *children):
++        super(VBoxLayout, self).__init__()
++
++        self.layout().setContentsMargins(0, 0, 0, 0)
++        for child in children:
++            if child.isWidgetType():
++                self.layout().addWidget(child)
++            else:
++                self.layout().addLayout(child)
++
++# Vertical layout widget
++
++class VBox():
++
++    def __init__(self, *children):
++        self.vbox = QWidget()
++        self.vbox.setLayout(VBoxLayout(*children))
++
++    def Widget(self):
++        return self.vbox
++
++# Tree window base
++
++class TreeWindowBase(QMdiSubWindow):
++
++    def __init__(self, parent=None):
++        super(TreeWindowBase, self).__init__(parent)
++
++        self.model = None
++        self.find_bar = None
++
++        self.view = QTreeView()
++        self.view.setSelectionMode(QAbstractItemView.ContiguousSelection)
++        self.view.CopyCellsToClipboard = CopyTreeCellsToClipboard
++
++        self.context_menu = TreeContextMenu(self.view)
++
++    def DisplayFound(self, ids):
++        if not len(ids):
++            return False
++        parent = QModelIndex()
++        for dbid in ids:
++            found = False
++            n = self.model.rowCount(parent)
++            for row in range(n):
++                child = self.model.index(row, 0, parent)
++                if child.internalPointer().dbid == dbid:
++                    found = True
++                    self.view.setExpanded(parent, True)
++                    self.view.setCurrentIndex(child)
++                    parent = child
++                    break
++            if not found:
++                break
++        return found
++
++    def Find(self, value, direction, pattern, context):
++        self.view.setFocus()
++        self.find_bar.Busy()
++        self.model.Find(value, direction, pattern, context, self.FindDone)
++
++    def FindDone(self, ids):
++        found = True
++        if not self.DisplayFound(ids):
++            found = False
++        self.find_bar.Idle()
++        if not found:
++            self.find_bar.NotFound()
++
++
++# Context-sensitive call graph window
++
++class CallGraphWindow(TreeWindowBase):
++
++    def __init__(self, glb, parent=None):
++        super(CallGraphWindow, self).__init__(parent)
++
++        self.model = LookupCreateModel("Context-Sensitive Call Graph", lambda x=glb: CallGraphModel(x))
++
++        self.view.setModel(self.model)
++
++        for c, w in ((0, 250), (1, 100), (2, 60), (3, 70), (4, 70), (5, 100)):
++            self.view.setColumnWidth(c, w)
++
++        self.find_bar = FindBar(self, self)
++
++        self.vbox = VBox(self.view, self.find_bar.Widget())
++
++        self.setWidget(self.vbox.Widget())
++
++        AddSubWindow(glb.mainwindow.mdi_area, self, "Context-Sensitive Call Graph")
++
++# Call tree window
++
++class CallTreeWindow(TreeWindowBase):
++
++    def __init__(self, glb, parent=None, thread_at_time=None):
++        super(CallTreeWindow, self).__init__(parent)
++
++        self.model = LookupCreateModel("Call Tree", lambda x=glb: CallTreeModel(x))
++
++        self.view.setModel(self.model)
++
++        for c, w in ((0, 230), (1, 100), (2, 100), (3, 70), (4, 70), (5, 100)):
++            self.view.setColumnWidth(c, w)
++
++        self.find_bar = FindBar(self, self)
++
++        self.vbox = VBox(self.view, self.find_bar.Widget())
++
++        self.setWidget(self.vbox.Widget())
++
++        AddSubWindow(glb.mainwindow.mdi_area, self, "Call Tree")
++
++        if thread_at_time:
++            self.DisplayThreadAtTime(*thread_at_time)
++
++    def DisplayThreadAtTime(self, comm_id, thread_id, time):
++        parent = QModelIndex()
++        for dbid in (comm_id, thread_id):
++            found = False
++            n = self.model.rowCount(parent)
++            for row in range(n):
++                child = self.model.index(row, 0, parent)
++                if child.internalPointer().dbid == dbid:
++                    found = True
++                    self.view.setExpanded(parent, True)
++                    self.view.setCurrentIndex(child)
++                    parent = child
++                    break
++            if not found:
++                return
++        found = False
++        while True:
++            n = self.model.rowCount(parent)
++            if not n:
++                return
++            last_child = None
++            for row in range(n):
++                self.view.setExpanded(parent, True)
++                child = self.model.index(row, 0, parent)
++                child_call_time = child.internalPointer().call_time
++                if child_call_time < time:
++                    last_child = child
++                elif child_call_time == time:
++                    self.view.setCurrentIndex(child)
++                    return
++                elif child_call_time > time:
++                    break
++            if not last_child:
++                if not found:
++                    child = self.model.index(0, 0, parent)
++                    self.view.setExpanded(parent, True)
++                    self.view.setCurrentIndex(child)
++                return
++            found = True
++            self.view.setExpanded(parent, True)
++            self.view.setCurrentIndex(last_child)
++            parent = last_child
++
++# ExecComm() gets the comm_id of the command string that was set when the process exec'd i.e. the program name
++
++def ExecComm(db, thread_id, time):
++    query = QSqlQuery(db)
++    QueryExec(query, "SELECT comm_threads.comm_id, comms.c_time, comms.exec_flag"
++                " FROM comm_threads"
++                " INNER JOIN comms ON comms.id = comm_threads.comm_id"
++                " WHERE comm_threads.thread_id = " + str(thread_id) +
++                " ORDER BY comms.c_time, comms.id")
++    first = None
++    last = None
++    while query.next():
++        if first is None:
++            first = query.value(0)
++        if query.value(2) and Decimal(query.value(1)) <= Decimal(time):
++            last = query.value(0)
++    if not(last is None):
++        return last
++    return first
++
++# Container for (x, y) data
++
++class XY():
++    def __init__(self, x=0, y=0):
++        self.x = x
++        self.y = y
++
++    def __str__(self):
++        return "XY({}, {})".format(str(self.x), str(self.y))
++
++# Container for sub-range data
++
++class Subrange():
++    def __init__(self, lo=0, hi=0):
++        self.lo = lo
++        self.hi = hi
++
++    def __str__(self):
++        return "Subrange({}, {})".format(str(self.lo), str(self.hi))
++
++# Graph data region base class
++
++class GraphDataRegion(object):
++
++    def __init__(self, key, title = "", ordinal = ""):
++        self.key = key
++        self.title = title
++        self.ordinal = ordinal
++
++# Function to sort GraphDataRegion
++
++def GraphDataRegionOrdinal(data_region):
++    return data_region.ordinal
++
++# Attributes for a graph region
++
++class GraphRegionAttribute():
++
++    def __init__(self, colour):
++        self.colour = colour
++
++# Switch graph data region represents a task
++
++class SwitchGraphDataRegion(GraphDataRegion):
++
++    def __init__(self, key, exec_comm_id, pid, tid, comm, thread_id, comm_id):
++        super(SwitchGraphDataRegion, self).__init__(key)
++
++        self.title = str(pid) + " / " + str(tid) + " " + comm
++        # Order graph legend within exec comm by pid / tid / time
++        self.ordinal = str(pid).rjust(16) + str(exec_comm_id).rjust(8) + str(tid).rjust(16)
++        self.exec_comm_id = exec_comm_id
++        self.pid = pid
++        self.tid = tid
++        self.comm = comm
++        self.thread_id = thread_id
++        self.comm_id = comm_id
++
++# Graph data point
++
++class GraphDataPoint():
++
++    def __init__(self, data, index, x, y, altx=None, alty=None, hregion=None, vregion=None):
++        self.data = data
++        self.index = index
++        self.x = x
++        self.y = y
++        self.altx = altx
++        self.alty = alty
++        self.hregion = hregion
++        self.vregion = vregion
++
++# Graph data (single graph) base class
++
++class GraphData(object):
++
++    def __init__(self, collection, xbase=Decimal(0), ybase=Decimal(0)):
++        self.collection = collection
++        self.points = []
++        self.xbase = xbase
++        self.ybase = ybase
++        self.title = ""
++
++    def AddPoint(self, x, y, altx=None, alty=None, hregion=None, vregion=None):
++        index = len(self.points)
++
++        x = float(Decimal(x) - self.xbase)
++        y = float(Decimal(y) - self.ybase)
++
++        self.points.append(GraphDataPoint(self, index, x, y, altx, alty, hregion, vregion))
++
++    def XToData(self, x):
++        return Decimal(x) + self.xbase
++
++    def YToData(self, y):
++        return Decimal(y) + self.ybase
++
++# Switch graph data (for one CPU)
++
++class SwitchGraphData(GraphData):
++
++    def __init__(self, db, collection, cpu, xbase):
++        super(SwitchGraphData, self).__init__(collection, xbase)
++
++        self.cpu = cpu
++        self.title = "CPU " + str(cpu)
++        self.SelectSwitches(db)
++
++    def SelectComms(self, db, thread_id, last_comm_id, start_time, end_time):
++        query = QSqlQuery(db)
++        QueryExec(query, "SELECT id, c_time"
++                    " FROM comms"
++                    " WHERE c_thread_id = " + str(thread_id) +
++                    "   AND exec_flag = " + self.collection.glb.dbref.TRUE +
++                    "   AND c_time >= " + str(start_time) +
++                    "   AND c_time <= " + str(end_time) +
++                    " ORDER BY c_time, id")
++        while query.next():
++            comm_id = query.value(0)
++            if comm_id == last_comm_id:
++                continue
++            time = query.value(1)
++            hregion = self.HRegion(db, thread_id, comm_id, time)
++            self.AddPoint(time, 1000, None, None, hregion)
++
++    def SelectSwitches(self, db):
++        last_time = None
++        last_comm_id = None
++        last_thread_id = None
++        query = QSqlQuery(db)
++        QueryExec(query, "SELECT time, thread_out_id, thread_in_id, comm_out_id, comm_in_id, flags"
++                    " FROM context_switches"
++                    " WHERE machine_id = " + str(self.collection.machine_id) +
++                    "   AND cpu = " + str(self.cpu) +
++                    " ORDER BY time, id")
++        while query.next():
++            flags = int(query.value(5))
++            if flags & 1:
++                # Schedule-out: detect and add exec's
++                if last_thread_id == query.value(1) and last_comm_id is not None and last_comm_id != query.value(3):
++                    self.SelectComms(db, last_thread_id, last_comm_id, last_time, query.value(0))
++                continue
++            # Schedule-in: add data point
++            if len(self.points) == 0:
++                start_time = self.collection.glb.StartTime(self.collection.machine_id)
++                hregion = self.HRegion(db, query.value(1), query.value(3), start_time)
++                self.AddPoint(start_time, 1000, None, None, hregion)
++            time = query.value(0)
++            comm_id = query.value(4)
++            thread_id = query.value(2)
++            hregion = self.HRegion(db, thread_id, comm_id, time)
++            self.AddPoint(time, 1000, None, None, hregion)
++            last_time = time
++            last_comm_id = comm_id
++            last_thread_id = thread_id
++
++    def NewHRegion(self, db, key, thread_id, comm_id, time):
++        exec_comm_id = ExecComm(db, thread_id, time)
++        query = QSqlQuery(db)
++        QueryExec(query, "SELECT pid, tid FROM threads WHERE id = " + str(thread_id))
++        if query.next():
++            pid = query.value(0)
++            tid = query.value(1)
++        else:
++            pid = -1
++            tid = -1
++        query = QSqlQuery(db)
++        QueryExec(query, "SELECT comm FROM comms WHERE id = " + str(comm_id))
++        if query.next():
++            comm = query.value(0)
++        else:
++            comm = ""
++        return SwitchGraphDataRegion(key, exec_comm_id, pid, tid, comm, thread_id, comm_id)
++
++    def HRegion(self, db, thread_id, comm_id, time):
++        key = str(thread_id) + ":" + str(comm_id)
++        hregion = self.collection.LookupHRegion(key)
++        if hregion is None:
++            hregion = self.NewHRegion(db, key, thread_id, comm_id, time)
++            self.collection.AddHRegion(key, hregion)
++        return hregion
++
++# Graph data collection (multiple related graphs) base class
++
++class GraphDataCollection(object):
++
++    def __init__(self, glb):
++        self.glb = glb
++        self.data = []
++        self.hregions = {}
++        self.xrangelo = None
++        self.xrangehi = None
++        self.yrangelo = None
++        self.yrangehi = None
++        self.dp = XY(0, 0)
++
++    def AddGraphData(self, data):
++        self.data.append(data)
++
++    def LookupHRegion(self, key):
++        if key in self.hregions:
++            return self.hregions[key]
++        return None
++
++    def AddHRegion(self, key, hregion):
++        self.hregions[key] = hregion
++
++# Switch graph data collection (SwitchGraphData for each CPU)
++
++class SwitchGraphDataCollection(GraphDataCollection):
++
++    def __init__(self, glb, db, machine_id):
++        super(SwitchGraphDataCollection, self).__init__(glb)
++
++        self.machine_id = machine_id
++        self.cpus = self.SelectCPUs(db)
++
++        self.xrangelo = glb.StartTime(machine_id)
++        self.xrangehi = glb.FinishTime(machine_id)
++
++        self.yrangelo = Decimal(0)
++        self.yrangehi = Decimal(1000)
++
++        for cpu in self.cpus:
++            self.AddGraphData(SwitchGraphData(db, self, cpu, self.xrangelo))
++
++    def SelectCPUs(self, db):
++        cpus = []
++        query = QSqlQuery(db)
++        QueryExec(query, "SELECT DISTINCT cpu"
++                    " FROM context_switches"
++                    " WHERE machine_id = " + str(self.machine_id))
++        while query.next():
++            cpus.append(int(query.value(0)))
++        return sorted(cpus)
++
++# Switch graph data graphics item displays the graphed data
++
++class SwitchGraphDataGraphicsItem(QGraphicsItem):
++
++    def __init__(self, data, graph_width, graph_height, attrs, event_handler, parent=None):
++        super(SwitchGraphDataGraphicsItem, self).__init__(parent)
++
++        self.data = data
++        self.graph_width = graph_width
++        self.graph_height = graph_height
++        self.attrs = attrs
++        self.event_handler = event_handler
++        self.setAcceptHoverEvents(True)
++
++    def boundingRect(self):
++        return QRectF(0, 0, self.graph_width, self.graph_height)
++
++    def PaintPoint(self, painter, last, x):
++        if not(last is None or last.hregion.pid == 0 or x < self.attrs.subrange.x.lo):
++            if last.x < self.attrs.subrange.x.lo:
++                x0 = self.attrs.subrange.x.lo
++            else:
++                x0 = last.x
++            if x > self.attrs.subrange.x.hi:
++                x1 = self.attrs.subrange.x.hi
++            else:
++                x1 = x - 1
++            x0 = self.attrs.XToPixel(x0)
++            x1 = self.attrs.XToPixel(x1)
++
++            y0 = self.attrs.YToPixel(last.y)
++
++            colour = self.attrs.region_attributes[last.hregion.key].colour
++
++            width = x1 - x0 + 1
++            if width < 2:
++                painter.setPen(colour)
++                painter.drawLine(x0, self.graph_height - y0, x0, self.graph_height)
++            else:
++                painter.fillRect(x0, self.graph_height - y0, width, self.graph_height - 1, colour)
++
++    def paint(self, painter, _option, _widget):
++        last = None
++        for point in self.data.points:
++            self.PaintPoint(painter, last, point.x)
++            if point.x > self.attrs.subrange.x.hi:
++                break
++            last = point
++        self.PaintPoint(painter, last, self.attrs.subrange.x.hi + 1)
++
++    def BinarySearchPoint(self, target):
++        lower_pos = 0
++        higher_pos = len(self.data.points)
++        while True:
++            pos = int((lower_pos + higher_pos) / 2)
++            val = self.data.points[pos].x
++            if target >= val:
++                lower_pos = pos
++            else:
++                higher_pos = pos
++            if higher_pos <= lower_pos + 1:
++                return lower_pos
++
++    def XPixelToData(self, x):
++        x = self.attrs.PixelToX(x)
++        if x < self.data.points[0].x:
++            x = 0
++            pos = 0
++            low = True
++        else:
++            pos = self.BinarySearchPoint(x)
++            low = False
++        return (low, pos, self.data.XToData(x))
++
++    def EventToData(self, event):
++        no_data = (None,) * 4
++        if len(self.data.points) < 1:
++            return no_data
++        x = event.pos().x()
++        if x < 0:
++            return no_data
++        _low0, pos0, time_from = self.XPixelToData(x)
++        low1, pos1, time_to = self.XPixelToData(x + 1)
++        hregions = set()
++        hregion_times = []
++        if not low1:
++            for i in range(pos0, pos1 + 1):
++                hregion = self.data.points[i].hregion
++                hregions.add(hregion)
++                if i == pos0:
++                    time = time_from
++                else:
++                    time = self.data.XToData(self.data.points[i].x)
++                hregion_times.append((hregion, time))
++        return (time_from, time_to, hregions, hregion_times)
++
++    def hoverMoveEvent(self, event):
++        time_from, time_to, hregions, _hregion_times = self.EventToData(event)
++        if time_from is not None:
++            self.event_handler.PointEvent(self.data.cpu, time_from, time_to, hregions)
++
++    def hoverLeaveEvent(self, _event):
++        self.event_handler.NoPointEvent()
++
++    def mousePressEvent(self, event):
++        if event.button() != Qt.RightButton:
++            super(SwitchGraphDataGraphicsItem, self).mousePressEvent(event)
++            return
++        _time_from, _time_to, _hregions, hregion_times = self.EventToData(event)
++        if hregion_times:
++            self.event_handler.RightClickEvent(self.data.cpu, hregion_times, event.screenPos())
++
++# X-axis graphics item
++
++class XAxisGraphicsItem(QGraphicsItem):
++
++    def __init__(self, width, parent=None):
++        super(XAxisGraphicsItem, self).__init__(parent)
++
++        self.width = width
++        self.max_mark_sz = 4
++        self.height = self.max_mark_sz + 1
++
++    def boundingRect(self):
++        return QRectF(0, 0, self.width, self.height)
++
++    def Step(self):
++        attrs = self.parentItem().attrs
++        subrange = attrs.subrange.x
++        t = subrange.hi - subrange.lo
++        s = (3.0 * t) / self.width
++        n = 1.0
++        while s > n:
++            n = n * 10.0
++        return n
++
++    def PaintMarks(self, painter, at_y, lo, hi, step, i):
++        attrs = self.parentItem().attrs
++        x = lo
++        while x <= hi:
++            xp = attrs.XToPixel(x)
++            if i % 10:
++                if i % 5:
++                    sz = 1
++                else:
++                    sz = 2
++            else:
++                sz = self.max_mark_sz
++                i = 0
++            painter.drawLine(xp, at_y, xp, at_y + sz)
++            x += step
++            i += 1
++
++    def paint(self, painter, _option, _widget):
++        # Using QPainter::drawLine(int x1, int y1, int x2, int y2) so x2 = width -1
++        painter.drawLine(0, 0, self.width - 1, 0)
++        n = self.Step()
++        attrs = self.parentItem().attrs
++        subrange = attrs.subrange.x
++        if subrange.lo:
++            x_offset = n - (subrange.lo % n)
++        else:
++            x_offset = 0.0
++        x = subrange.lo + x_offset
++        i = (x / n) % 10
++        self.PaintMarks(painter, 0, x, subrange.hi, n, i)
++
++    def ScaleDimensions(self):
++        n = self.Step()
++        attrs = self.parentItem().attrs
++        lo = attrs.subrange.x.lo
++        hi = (n * 10.0) + lo
++        width = attrs.XToPixel(hi)
++        if width > 500:
++            width = 0
++        return (n, lo, hi, width)
++
++    def PaintScale(self, painter, at_x, at_y):
++        n, lo, hi, width = self.ScaleDimensions()
++        if not width:
++            return
++        painter.drawLine(at_x, at_y, at_x + width, at_y)
++        self.PaintMarks(painter, at_y, lo, hi, n, 0)
++
++    def ScaleWidth(self):
++        _n, _lo, _hi, width = self.ScaleDimensions()
++        return width
++
++    def ScaleHeight(self):
++        return self.height
++
++    def ScaleUnit(self):
++        return self.Step() * 10
++
++# Scale graphics item base class
++
++class ScaleGraphicsItem(QGraphicsItem):
++
++    def __init__(self, axis, parent=None):
++        super(ScaleGraphicsItem, self).__init__(parent)
++        self.axis = axis
++
++    def boundingRect(self):
++        scale_width = self.axis.ScaleWidth()
++        if not scale_width:
++            return QRectF()
++        return QRectF(0, 0, self.axis.ScaleWidth() + 100, self.axis.ScaleHeight())
++
++    def paint(self, painter, _option, _widget):
++        scale_width = self.axis.ScaleWidth()
++        if not scale_width:
++            return
++        self.axis.PaintScale(painter, 0, 5)
++        x = scale_width + 4
++        painter.drawText(QPointF(x, 10), self.Text())
++
++    def Unit(self):
++        return self.axis.ScaleUnit()
++
++    def Text(self):
++        return ""
++
++# Switch graph scale graphics item
++
++class SwitchScaleGraphicsItem(ScaleGraphicsItem):
++
++    def Text(self):
++        unit = self.Unit()
++        if unit >= 1000000000:
++            unit = int(unit / 1000000000)
++            us = "s"
++        elif unit >= 1000000:
++            unit = int(unit / 1000000)
++            us = "ms"
++        elif unit >= 1000:
++            unit = int(unit / 1000)
++            us = "us"
++        else:
++            unit = int(unit)
++            us = "ns"
++        return " = " + str(unit) + " " + us
++
++# Switch graph graphics item contains graph title, scale, x/y-axis, and the graphed data
++
++class SwitchGraphGraphicsItem(QGraphicsItem):
++
++    def __init__(self, collection, data, attrs, event_handler, first, parent=None):
++        super(SwitchGraphGraphicsItem, self).__init__(parent)
++        self.collection = collection
++        self.data = data
++        self.attrs = attrs
++        self.event_handler = event_handler
++
++        margin = 20
++        title_width = 50
++
++        self.title_graphics = QGraphicsSimpleTextItem(data.title, self)
++
++        self.title_graphics.setPos(margin, margin)
++        graph_width = attrs.XToPixel(attrs.subrange.x.hi) + 1
++        graph_height = attrs.YToPixel(attrs.subrange.y.hi) + 1
++
++        self.graph_origin_x = margin + title_width + margin
++        self.graph_origin_y = graph_height + margin
++
++        _x_axis_size = 1
++        y_axis_size = 1
++        self.yline = QGraphicsLineItem(0, 0, 0, graph_height, self)
++
++        self.x_axis = XAxisGraphicsItem(graph_width, self)
++        self.x_axis.setPos(self.graph_origin_x, self.graph_origin_y + 1)
++
++        if first:
++            self.scale_item = SwitchScaleGraphicsItem(self.x_axis, self)
++            self.scale_item.setPos(self.graph_origin_x, self.graph_origin_y + 10)
++
++        self.yline.setPos(self.graph_origin_x - y_axis_size, self.graph_origin_y - graph_height)
++
++        self.axis_point = QGraphicsLineItem(0, 0, 0, 0, self)
++        self.axis_point.setPos(self.graph_origin_x - 1, self.graph_origin_y +1)
++
++        self.width = self.graph_origin_x + graph_width + margin
++        self.height = self.graph_origin_y + margin
++
++        self.graph = SwitchGraphDataGraphicsItem(data, graph_width, graph_height, attrs, event_handler, self)
++        self.graph.setPos(self.graph_origin_x, self.graph_origin_y - graph_height)
++
++        if parent and 'EnableRubberBand' in dir(parent):
++            parent.EnableRubberBand(self.graph_origin_x, self.graph_origin_x + graph_width - 1, self)
++
++    def boundingRect(self):
++        return QRectF(0, 0, self.width, self.height)
++
++    def paint(self, painter, option, widget):
++        pass
++
++    def RBXToPixel(self, x):
++        return self.attrs.PixelToX(x - self.graph_origin_x)
++
++    def RBXRangeToPixel(self, x0, x1):
++        return (self.RBXToPixel(x0), self.RBXToPixel(x1 + 1))
++
++    def RBPixelToTime(self, x):
++        if x < self.data.points[0].x:
++            return self.data.XToData(0)
++        return self.data.XToData(x)
++
++    def RBEventTimes(self, x0, x1):
++        x0, x1 = self.RBXRangeToPixel(x0, x1)
++        time_from = self.RBPixelToTime(x0)
++        time_to = self.RBPixelToTime(x1)
++        return (time_from, time_to)
++
++    def RBEvent(self, x0, x1):
++        time_from, time_to = self.RBEventTimes(x0, x1)
++        self.event_handler.RangeEvent(time_from, time_to)
++
++    def RBMoveEvent(self, x0, x1):
++        if x1 < x0:
++            x0, x1 = x1, x0
++        self.RBEvent(x0, x1)
++
++    def RBReleaseEvent(self, x0, x1, selection_state):
++        if x1 < x0:
++            x0, x1 = x1, x0
++        x0, x1 = self.RBXRangeToPixel(x0, x1)
++        self.event_handler.SelectEvent(x0, x1, selection_state)
++
++# Graphics item to draw a vertical bracket (used to highlight "forward" sub-range)
++
++class VerticalBracketGraphicsItem(QGraphicsItem):
++
++    def __init__(self, parent=None):
++        super(VerticalBracketGraphicsItem, self).__init__(parent)
++
++        self.width = 0
++        self.height = 0
++        self.hide()
++
++    def SetSize(self, width, height):
++        self.width = width + 1
++        self.height = height + 1
++
++    def boundingRect(self):
++        return QRectF(0, 0, self.width, self.height)
++
++    def paint(self, painter, _option, _widget):
++        colour = QColor(255, 255, 0, 32)
++        painter.fillRect(0, 0, self.width, self.height, colour)
++        x1 = self.width - 1
++        y1 = self.height - 1
++        painter.drawLine(0, 0, x1, 0)
++        painter.drawLine(0, 0, 0, 3)
++        painter.drawLine(x1, 0, x1, 3)
++        painter.drawLine(0, y1, x1, y1)
++        painter.drawLine(0, y1, 0, y1 - 3)
++        painter.drawLine(x1, y1, x1, y1 - 3)
++
++# Graphics item to contain graphs arranged vertically
++
++class VertcalGraphSetGraphicsItem(QGraphicsItem):
++
++    def __init__(self, collection, attrs, event_handler, child_class, parent=None):
++        super(VertcalGraphSetGraphicsItem, self).__init__(parent)
++
++        self.collection = collection
++
++        self.top = 10
++
++        self.width = 0
++        self.height = self.top
++
++        self.rubber_band = None
++        self.rb_enabled = False
++        self.rb_in_view = False
++        self.rb_xlo = 0
++        self.rb_xhi = 0
++        self.rb_event_handler = None
++        self.rb_origin = None
++
++        first = True
++        for data in collection.data:
++            child = child_class(collection, data, attrs, event_handler, first, self)
++            child.setPos(0, self.height + 1)
++            rect = child.boundingRect()
++            if rect.right() > self.width:
++                self.width = rect.right()
++            self.height = self.height + rect.bottom() + 1
++            first = False
++
++        self.bracket = VerticalBracketGraphicsItem(self)
++
++    def EnableRubberBand(self, xlo, xhi, rb_event_handler):
++        if self.rb_enabled:
++            return
++        self.rb_enabled = True
++        self.rb_in_view = False
++        self.setAcceptedMouseButtons(Qt.LeftButton)
++        self.rb_xlo = xlo
++        self.rb_xhi = xhi
++        self.rb_event_handler = rb_event_handler
++
++    def mousePressEvent(self, event):
++        if self.rb_enabled:
++            self.MousePressEvent(event)
++
++    def mouseMoveEvent(self, event):
++        if self.rb_enabled:
++            self.MouseMoveEvent(event)
++
++    def mouseReleaseEvent(self, event):
++        if self.rb_enabled:
++            self.MouseReleaseEvent(event)
++
++    def boundingRect(self):
++        return QRectF(0, 0, self.width, self.height)
++
++    def paint(self, painter, option, widget):
++        pass
++
++    def RubberBandParent(self):
++        scene = self.scene()
++        view = scene.views()[0]
++        viewport = view.viewport()
++        return viewport
++
++    def RubberBandSetGeometry(self, rect):
++        scene_rectf = self.mapRectToScene(QRectF(rect))
++        scene = self.scene()
++        view = scene.views()[0]
++        poly = view.mapFromScene(scene_rectf)
++        self.rubber_band.setGeometry(poly.boundingRect())
++
++    def SetSelection(self, selection_state):
++        if self.rubber_band:
++            if selection_state:
++                self.RubberBandSetGeometry(selection_state)
++                self.rubber_band.show()
++            else:
++                self.rubber_band.hide()
++
++    def SetBracket(self, rect):
++        if rect:
++            x, y, width, height = rect.x(), rect.y(), rect.width(), rect.height()
++            self.bracket.setPos(x, y)
++            self.bracket.SetSize(width, height)
++            self.bracket.show()
++        else:
++            self.bracket.hide()
++
++    def RubberBandX(self, event):
++        x = event.pos().toPoint().x()
++        if x < self.rb_xlo:
++            x = self.rb_xlo
++        elif x > self.rb_xhi:
++            x = self.rb_xhi
++        else:
++            self.rb_in_view = True
++        return x
++
++    def RubberBandRect(self, x):
++        if self.rb_origin.x() <= x:
++            width = x - self.rb_origin.x()
++            rect = QRect(self.rb_origin, QSize(width, self.height))
++        else:
++            width = self.rb_origin.x() - x
++            top_left = QPoint(self.rb_origin.x() - width, self.rb_origin.y())
++            rect = QRect(top_left, QSize(width, self.height))
++        return rect
++
++    def MousePressEvent(self, event):
++        self.rb_in_view = False
++        x = self.RubberBandX(event)
++        self.rb_origin = QPoint(x, self.top)
++        if self.rubber_band is None:
++            self.rubber_band = QRubberBand(QRubberBand.Rectangle, self.RubberBandParent())
++        self.RubberBandSetGeometry(QRect(self.rb_origin, QSize(0, self.height)))
++        if self.rb_in_view:
++            self.rubber_band.show()
++            self.rb_event_handler.RBMoveEvent(x, x)
++        else:
++            self.rubber_band.hide()
++
++    def MouseMoveEvent(self, event):
++        x = self.RubberBandX(event)
++        rect = self.RubberBandRect(x)
++        self.RubberBandSetGeometry(rect)
++        if self.rb_in_view:
++            self.rubber_band.show()
++            self.rb_event_handler.RBMoveEvent(self.rb_origin.x(), x)
++
++    def MouseReleaseEvent(self, event):
++        x = self.RubberBandX(event)
++        if self.rb_in_view:
++            selection_state = self.RubberBandRect(x)
++        else:
++            selection_state = None
++        self.rb_event_handler.RBReleaseEvent(self.rb_origin.x(), x, selection_state)
++
++# Switch graph legend data model
++
++class SwitchGraphLegendModel(QAbstractTableModel):
++
++    def __init__(self, collection, region_attributes, parent=None):
++        super(SwitchGraphLegendModel, self).__init__(parent)
++
++        self.region_attributes = region_attributes
++
++        self.child_items = sorted(collection.hregions.values(), key=GraphDataRegionOrdinal)
++        self.child_count = len(self.child_items)
++
++        self.highlight_set = set()
++
++        self.column_headers = ("pid", "tid", "comm")
++
++    def rowCount(self, _parent):
++        return self.child_count
++
++    def headerData(self, section, orientation, role):
++        if role != Qt.DisplayRole:
++            return None
++        if orientation != Qt.Horizontal:
++            return None
++        return self.columnHeader(section)
++
++    def index(self, row, column, _parent):
++        return self.createIndex(row, column, self.child_items[row])
++
++    def columnCount(self, _parent=None):
++        return len(self.column_headers)
++
++    def columnHeader(self, column):
++        return self.column_headers[column]
++
++    def data(self, index, role):
++        if role == Qt.BackgroundRole:
++            child = self.child_items[index.row()]
++            if child in self.highlight_set:
++                return self.region_attributes[child.key].colour
++            return None
++        if role == Qt.ForegroundRole:
++            child = self.child_items[index.row()]
++            if child in self.highlight_set:
++                return QColor(255, 255, 255)
++            return self.region_attributes[child.key].colour
++        if role != Qt.DisplayRole:
++            return None
++        hregion = self.child_items[index.row()]
++        col = index.column()
++        if col == 0:
++            return hregion.pid
++        if col == 1:
++            return hregion.tid
++        if col == 2:
++            return hregion.comm
++        return None
++
++    def SetHighlight(self, row, _set_highlight):
++        child = self.child_items[row]
++        top_left = self.createIndex(row, 0, child)
++        bottom_right = self.createIndex(row, len(self.column_headers) - 1, child)
++        self.dataChanged.emit(top_left, bottom_right)
++
++    def Highlight(self, highlight_set):
++        for row in range(self.child_count):
++            child = self.child_items[row]
++            if child in self.highlight_set:
++                if child not in highlight_set:
++                    self.SetHighlight(row, False)
++            elif child in highlight_set:
++                self.SetHighlight(row, True)
++        self.highlight_set = highlight_set
++
++# Switch graph legend is a table
++
++class SwitchGraphLegend(QWidget):
++
++    def __init__(self, collection, region_attributes, parent=None):
++        super(SwitchGraphLegend, self).__init__(parent)
++
++        self.data_model = SwitchGraphLegendModel(collection, region_attributes)
++
++        self.model = QSortFilterProxyModel()
++        self.model.setSourceModel(self.data_model)
++
++        self.view = QTableView()
++        self.view.setModel(self.model)
++        self.view.setEditTriggers(QAbstractItemView.NoEditTriggers)
++        self.view.verticalHeader().setVisible(False)
++        self.view.sortByColumn(-1, Qt.AscendingOrder)
++        self.view.setSortingEnabled(True)
++        self.view.resizeColumnsToContents()
++        self.view.resizeRowsToContents()
++
++        self.vbox = VBoxLayout(self.view)
++        self.setLayout(self.vbox)
++
++        sz1 = self.view.columnWidth(0) + self.view.columnWidth(1) + self.view.columnWidth(2) + 2
++        sz1 = sz1 + self.view.verticalScrollBar().sizeHint().width()
++        self.saved_size = sz1
++
++    def resizeEvent(self, event):
++        self.saved_size = self.size().width()
++        super(SwitchGraphLegend, self).resizeEvent(event)
++
++    def Highlight(self, highlight_set):
++        self.data_model.Highlight(highlight_set)
++        self.update()
++
++    def changeEvent(self, event):
++        if event.type() == QEvent.FontChange:
++            self.view.resizeRowsToContents()
++            self.view.resizeColumnsToContents()
++            # Need to resize rows again after column resize
++            self.view.resizeRowsToContents()
++        super(SwitchGraphLegend, self).changeEvent(event)
++
++# Random colour generation
++
++def RGBColourTooLight(r, g, _b):
++    if g > 230:
++        return True
++    if g <= 160:
++        return False
++    if r <= 180 and g <= 180:
++        return False
++    if r < 60:
++        return False
++    return True
++
++def GenerateColours(x):
++    cs = [0]
++    for i in range(1, x):
++        cs.append(int((255.0 / i) + 0.5))
++    colours = []
++    for r in cs:
++        for g in cs:
++            for b in cs:
++                # Exclude black and colours that look too light against a white background
++                if (r, g, b) == (0, 0, 0) or RGBColourTooLight(r, g, b):
++                    continue
++                colours.append(QColor(r, g, b))
++    return colours
++
++def GenerateNColours(n):
++    for x in range(2, n + 2):
++        colours = GenerateColours(x)
++        if len(colours) >= n:
++            return colours
++    return []
++
++def GenerateNRandomColours(n, seed):
++    colours = GenerateNColours(n)
++    random.seed(seed)
++    random.shuffle(colours)
++    return colours
++
++# Graph attributes, in particular the scale and subrange that change when zooming
++
++class GraphAttributes():
++
++    def __init__(self, scale, subrange, region_attributes, dp):
++        self.scale = scale
++        self.subrange = subrange
++        self.region_attributes = region_attributes
++        # Rounding avoids errors due to finite floating point precision
++        self.dp = dp	# data decimal places
++        self.Update()
++
++    def XToPixel(self, x):
++        return int(round((x - self.subrange.x.lo) * self.scale.x, self.pdp.x))
++
++    def YToPixel(self, y):
++        return int(round((y - self.subrange.y.lo) * self.scale.y, self.pdp.y))
++
++    def PixelToXRounded(self, px):
++        return round((round(px, 0) / self.scale.x), self.dp.x) + self.subrange.x.lo
++
++    def PixelToYRounded(self, py):
++        return round((round(py, 0) / self.scale.y), self.dp.y) + self.subrange.y.lo
++
++    def PixelToX(self, px):
++        x = self.PixelToXRounded(px)
++        if self.pdp.x == 0:
++            rt = self.XToPixel(x)
++            if rt > px:
++                return x - 1
++        return x
++
++    def PixelToY(self, py):
++        y = self.PixelToYRounded(py)
++        if self.pdp.y == 0:
++            rt = self.YToPixel(y)
++            if rt > py:
++                return y - 1
++        return y
++
++    def ToPDP(self, dp, scale):
++        # Calculate pixel decimal places:
++        #    (10 ** dp) is the minimum delta in the data
++        #    scale it to get the minimum delta in pixels
++        #    log10 gives the number of decimals places negatively
++        #    subtrace 1 to divide by 10
++        #    round to the lower negative number
++        #    change the sign to get the number of decimals positively
++        x = math.log10((10 ** dp) * scale)
++        if x < 0:
++            x -= 1
++            x = -int(math.floor(x) - 0.1)
++        else:
++            x = 0
++        return x
++
++    def Update(self):
++        x = self.ToPDP(self.dp.x, self.scale.x)
++        y = self.ToPDP(self.dp.y, self.scale.y)
++        self.pdp = XY(x, y) # pixel decimal places
++
++# Switch graph splitter which divides the CPU graphs from the legend
++
++class SwitchGraphSplitter(QSplitter):
++
++    def __init__(self, parent=None):
++        super(SwitchGraphSplitter, self).__init__(parent)
++
++        self.first_time = False
++
++    def resizeEvent(self, event):
++        if self.first_time:
++            self.first_time = False
++            sz1 = self.widget(1).view.columnWidth(0) + self.widget(1).view.columnWidth(1) + self.widget(1).view.columnWidth(2) + 2
++            sz1 = sz1 + self.widget(1).view.verticalScrollBar().sizeHint().width()
++            sz0 = self.size().width() - self.handleWidth() - sz1
++            self.setSizes([sz0, sz1])
++        elif not(self.widget(1).saved_size is None):
++            sz1 = self.widget(1).saved_size
++            sz0 = self.size().width() - self.handleWidth() - sz1
++            self.setSizes([sz0, sz1])
++        super(SwitchGraphSplitter, self).resizeEvent(event)
++
++# Graph widget base class
++
++class GraphWidget(QWidget):
++
++    graph_title_changed = Signal(object)
++
++    def __init__(self, parent=None):
++        super(GraphWidget, self).__init__(parent)
++
++    def GraphTitleChanged(self, title):
++        self.graph_title_changed.emit(title)
++
++    def Title(self):
++        return ""
++
++# Display time in s, ms, us or ns
++
++def ToTimeStr(val):
++    val = Decimal(val)
++    if val >= 1000000000:
++        return "{} s".format((val / 1000000000).quantize(Decimal("0.000000001")))
++    if val >= 1000000:
++        return "{} ms".format((val / 1000000).quantize(Decimal("0.000001")))
++    if val >= 1000:
++        return "{} us".format((val / 1000).quantize(Decimal("0.001")))
++    return "{} ns".format(val.quantize(Decimal("1")))
++
++# Switch (i.e. context switch i.e. Time Chart by CPU) graph widget which contains the CPU graphs and the legend and control buttons
++
++class SwitchGraphWidget(GraphWidget):
++
++    def __init__(self, glb, collection, parent=None):
++        super(SwitchGraphWidget, self).__init__(parent)
++
++        self.glb = glb
++        self.collection = collection
++
++        self.back_state = []
++        self.forward_state = []
++        self.selection_state = (None, None)
++        self.fwd_rect = None
++        self.start_time = self.glb.StartTime(collection.machine_id)
++
++        i = 0
++        hregions = collection.hregions.values()
++        colours = GenerateNRandomColours(len(hregions), 1013)
++        region_attributes = {}
++        for hregion in hregions:
++            if hregion.pid == 0 and hregion.tid == 0:
++                region_attributes[hregion.key] = GraphRegionAttribute(QColor(0, 0, 0))
++            else:
++                region_attributes[hregion.key] = GraphRegionAttribute(colours[i])
++                i = i + 1
++
++        # Default to entire range
++        xsubrange = Subrange(0.0, float(collection.xrangehi - collection.xrangelo) + 1.0)
++        ysubrange = Subrange(0.0, float(collection.yrangehi - collection.yrangelo) + 1.0)
++        subrange = XY(xsubrange, ysubrange)
++
++        scale = self.GetScaleForRange(subrange)
++
++        self.attrs = GraphAttributes(scale, subrange, region_attributes, collection.dp)
++
++        self.item = VertcalGraphSetGraphicsItem(collection, self.attrs, self, SwitchGraphGraphicsItem)
++
++        self.scene = QGraphicsScene()
++        self.scene.addItem(self.item)
++
++        self.view = QGraphicsView(self.scene)
++        self.view.centerOn(0, 0)
++        self.view.setAlignment(Qt.AlignLeft | Qt.AlignTop)
++
++        self.legend = SwitchGraphLegend(collection, region_attributes)
++
++        self.splitter = SwitchGraphSplitter()
++        self.splitter.addWidget(self.view)
++        self.splitter.addWidget(self.legend)
++
++        self.point_label = QLabel("")
++        self.point_label.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Fixed)
++
++        self.back_button = QToolButton()
++        self.back_button.setIcon(self.style().standardIcon(QStyle.SP_ArrowLeft))
++        self.back_button.setDisabled(True)
++        self.back_button.released.connect(self.Back)
++
++        self.forward_button = QToolButton()
++        self.forward_button.setIcon(self.style().standardIcon(QStyle.SP_ArrowRight))
++        self.forward_button.setDisabled(True)
++        self.forward_button.released.connect(self.Forward)
++
++        self.zoom_button = QToolButton()
++        self.zoom_button.setText("Zoom")
++        self.zoom_button.setDisabled(True)
++        self.zoom_button.released.connect(self.Zoom)
++
++        self.hbox = HBoxLayout(self.back_button, self.forward_button, self.zoom_button, self.point_label)
++
++        self.vbox = VBoxLayout(self.splitter, self.hbox)
++
++        self.setLayout(self.vbox)
++
++    def GetScaleForRangeX(self, xsubrange):
++        # Default graph 1000 pixels wide
++        dflt = 1000.0
++        r = xsubrange.hi - xsubrange.lo
++        return dflt / r
++
++    def GetScaleForRangeY(self, ysubrange):
++        # Default graph 50 pixels high
++        dflt = 50.0
++        r = ysubrange.hi - ysubrange.lo
++        return dflt / r
++
++    def GetScaleForRange(self, subrange):
++        # Default graph 1000 pixels wide, 50 pixels high
++        xscale = self.GetScaleForRangeX(subrange.x)
++        yscale = self.GetScaleForRangeY(subrange.y)
++        return XY(xscale, yscale)
++
++    def PointEvent(self, cpu, time_from, _time_to, hregions):
++        text = "CPU: " + str(cpu)
++        time_from = time_from.quantize(Decimal(1))
++        rel_time_from = time_from - self.glb.StartTime(self.collection.machine_id)
++        text = text + " Time: " + str(time_from) + " (+" + ToTimeStr(rel_time_from) + ")"
++        self.point_label.setText(text)
++        self.legend.Highlight(hregions)
++
++    def RightClickEvent(self, _cpu, hregion_times, pos):
++        if not IsSelectable(self.glb.db, "calls", "WHERE parent_id >= 0"):
++            return
++        menu = QMenu(self.view)
++        for hregion, time in hregion_times:
++            thread_at_time = (hregion.exec_comm_id, hregion.thread_id, time)
++            menu_text = "Show Call Tree for {} {}:{} at {}".format(hregion.comm, hregion.pid, hregion.tid, time)
++            menu.addAction(CreateAction(menu_text, "Show Call Tree", lambda a=None, args=thread_at_time: self.RightClickSelect(args), self.view))
++        menu.exec_(pos)
++
++    def RightClickSelect(self, args):
++        CallTreeWindow(self.glb, self.glb.mainwindow, thread_at_time=args)
++
++    def NoPointEvent(self):
++        self.point_label.setText("")
++        self.legend.Highlight({})
++
++    def RangeEvent(self, time_from, time_to):
++        time_from = time_from.quantize(Decimal(1))
++        time_to = time_to.quantize(Decimal(1))
++        if time_to <= time_from:
++            self.point_label.setText("")
++            return
++        rel_time_from = time_from - self.start_time
++        rel_time_to = time_to - self.start_time
++        text = " Time: " + str(time_from) + " (+" + ToTimeStr(rel_time_from) + ") to: " + str(time_to) + " (+" + ToTimeStr(rel_time_to) + ")"
++        text = text + " duration: " + ToTimeStr(time_to - time_from)
++        self.point_label.setText(text)
++
++    def BackState(self):
++        return (self.attrs.subrange, self.attrs.scale, self.selection_state, self.fwd_rect)
++
++    def PushBackState(self):
++        state = copy.deepcopy(self.BackState())
++        self.back_state.append(state)
++        self.back_button.setEnabled(True)
++
++    def PopBackState(self):
++        self.attrs.subrange, self.attrs.scale, self.selection_state, self.fwd_rect = self.back_state.pop()
++        self.attrs.Update()
++        if not self.back_state:
++            self.back_button.setDisabled(True)
++
++    def PushForwardState(self):
++        state = copy.deepcopy(self.BackState())
++        self.forward_state.append(state)
++        self.forward_button.setEnabled(True)
++
++    def PopForwardState(self):
++        self.attrs.subrange, self.attrs.scale, self.selection_state, self.fwd_rect = self.forward_state.pop()
++        self.attrs.Update()
++        if not self.forward_state:
++            self.forward_button.setDisabled(True)
++
++    def Title(self):
++        time_from = self.collection.xrangelo + Decimal(self.attrs.subrange.x.lo)
++        time_to = self.collection.xrangelo + Decimal(self.attrs.subrange.x.hi)
++        rel_time_from = time_from - self.start_time
++        rel_time_to = time_to - self.start_time
++        title = "+" + ToTimeStr(rel_time_from) + " to +" + ToTimeStr(rel_time_to)
++        title = title + " (" + ToTimeStr(time_to - time_from) + ")"
++        return title
++
++    def Update(self):
++        selected_subrange, selection_state = self.selection_state
++        self.item.SetSelection(selection_state)
++        self.item.SetBracket(self.fwd_rect)
++        self.zoom_button.setDisabled(selected_subrange is None)
++        self.GraphTitleChanged(self.Title())
++        self.item.update(self.item.boundingRect())
++
++    def Back(self):
++        if not self.back_state:
++            return
++        self.PushForwardState()
++        self.PopBackState()
++        self.Update()
++
++    def Forward(self):
++        if not self.forward_state:
++            return
++        self.PushBackState()
++        self.PopForwardState()
++        self.Update()
++
++    def SelectEvent(self, x0, x1, selection_state):
++        if selection_state is None:
++            selected_subrange = None
++        else:
++            if x1 - x0 < 1.0:
++                x1 += 1.0
++            selected_subrange = Subrange(x0, x1)
++        self.selection_state = (selected_subrange, selection_state)
++        self.zoom_button.setDisabled(selected_subrange is None)
++
++    def Zoom(self):
++        selected_subrange, selection_state = self.selection_state
++        if selected_subrange is None:
++            return
++        self.fwd_rect = selection_state
++        self.item.SetSelection(None)
++        self.PushBackState()
++        self.attrs.subrange.x = selected_subrange
++        self.forward_state = []
++        self.forward_button.setDisabled(True)
++        self.selection_state = (None, None)
++        self.fwd_rect = None
++        self.attrs.scale.x = self.GetScaleForRangeX(self.attrs.subrange.x)
++        self.attrs.Update()
++        self.Update()
++
++# Slow initialization - perform non-GUI initialization in a separate thread and put up a modal message box while waiting
++
++class SlowInitClass():
++
++    def __init__(self, glb, title, init_fn):
++        self.init_fn = init_fn
++        self.done = False
++        self.result = None
++
++        self.msg_box = QMessageBox(glb.mainwindow)
++        self.msg_box.setText("Initializing " + title + ". Please wait.")
++        self.msg_box.setWindowTitle("Initializing " + title)
++        self.msg_box.setWindowIcon(glb.mainwindow.style().standardIcon(QStyle.SP_MessageBoxInformation))
++
++        self.init_thread = Thread(self.ThreadFn, glb)
++        self.init_thread.done.connect(self.Done, Qt.QueuedConnection)
++
++        self.init_thread.start()
++
++    def Done(self):
++        self.msg_box.done(0)
++
++    def ThreadFn(self, glb):
++        conn_name = "SlowInitClass" + str(os.getpid())
++        db, _dbname = glb.dbref.Open(conn_name)
++        self.result = self.init_fn(db)
++        self.done = True
++        return (True, 0)
++
++    def Result(self):
++        while not self.done:
++            self.msg_box.exec_()
++        self.init_thread.wait()
++        return self.result
++
++def SlowInit(glb, title, init_fn):
++    init = SlowInitClass(glb, title, init_fn)
++    return init.Result()
++
++# Time chart by CPU window
++
++class TimeChartByCPUWindow(QMdiSubWindow):
++
++    def __init__(self, glb, parent=None):
++        super(TimeChartByCPUWindow, self).__init__(parent)
++
++        self.glb = glb
++        self.machine_id = glb.HostMachineId()
++        self.collection_name = "SwitchGraphDataCollection " + str(self.machine_id)
++
++        collection = LookupModel(self.collection_name)
++        if collection is None:
++            collection = SlowInit(glb, "Time Chart", self.Init)
++
++        self.widget = SwitchGraphWidget(glb, collection, self)
++        self.view = self.widget
++
++        self.base_title = "Time Chart by CPU"
++        self.setWindowTitle(self.base_title + self.widget.Title())
++        self.widget.graph_title_changed.connect(self.GraphTitleChanged)
++
++        self.setWidget(self.widget)
++
++        AddSubWindow(glb.mainwindow.mdi_area, self, self.windowTitle())
++
++    def Init(self, db):
++        return LookupCreateModel(self.collection_name, lambda : SwitchGraphDataCollection(self.glb, db, self.machine_id))
++
++    def GraphTitleChanged(self, title):
++        self.setWindowTitle(self.base_title + " : " + title)
++
++# Child data item  finder
++
++class ChildDataItemFinder():
++
++    def __init__(self, root):
++        self.root = root
++        self.value, self.direction, self.pattern, self.last_value, self.last_pattern = (None,) * 5
++        self.rows = []
++        self.pos = 0
++
++    def FindSelect(self):
++        self.rows = []
++        if self.pattern:
++            pattern = re.compile(self.value)
++            for child in self.root.child_items:
++                for column_data in child.data:
++                    if re.search(pattern, str(column_data)) is not None:
++                        self.rows.append(child.row)
++                        break
++        else:
++            for child in self.root.child_items:
++                for column_data in child.data:
++                    if self.value in str(column_data):
++                        self.rows.append(child.row)
++                        break
++
++    def FindValue(self):
++        self.pos = 0
++        if self.last_value != self.value or self.pattern != self.last_pattern:
++            self.FindSelect()
++        if not len(self.rows):
++            return -1
++        return self.rows[self.pos]
++
++    def FindThread(self):
++        if self.direction == 0 or self.value != self.last_value or self.pattern != self.last_pattern:
++            row = self.FindValue()
++        elif len(self.rows):
++            if self.direction > 0:
++                self.pos += 1
++                if self.pos >= len(self.rows):
++                    self.pos = 0
++            else:
++                self.pos -= 1
++                if self.pos < 0:
++                    self.pos = len(self.rows) - 1
++            row = self.rows[self.pos]
++        else:
++            row = -1
++        return (True, row)
++
++    def Find(self, value, direction, pattern, _context, callback):
++        self.value, self.direction, self.pattern, self.last_value, self.last_pattern = (value, direction,pattern, self.value, self.pattern)
++        # Use a thread so the UI is not blocked
++        thread = Thread(self.FindThread)
++        thread.done.connect(lambda row, t=thread, c=callback: self.FindDone(t, c, row), Qt.QueuedConnection)
++        thread.start()
++
++    def FindDone(self, _thread, callback, row):
++        callback(row)
++
++# Number of database records to fetch in one go
++
++glb_chunk_sz = 10000
++
++# Background process for SQL data fetcher
++
++class SQLFetcherProcess():
++
++    def __init__(self, dbref, sql, buffer, head, tail, fetch_count, fetching_done, process_target, wait_event, fetched_event, prep):
++        # Need a unique connection name
++        conn_name = "SQLFetcher" + str(os.getpid())
++        self.db, _dbname = dbref.Open(conn_name)
++        self.sql = sql
++        self.buffer = buffer
++        self.head = head
++        self.tail = tail
++        self.fetch_count = fetch_count
++        self.fetching_done = fetching_done
++        self.process_target = process_target
++        self.wait_event = wait_event
++        self.fetched_event = fetched_event
++        self.prep = prep
++        self.query = QSqlQuery(self.db)
++        self.query_limit = 0 if "$$last_id$$" in sql else 2
++        self.last_id = -1
++        self.fetched = 0
++        self.more = True
++        self.local_head = self.head.value
++        self.local_tail = self.tail.value
++
++    def Select(self):
++        if self.query_limit:
++            if self.query_limit == 1:
++                return
++            self.query_limit -= 1
++        stmt = self.sql.replace("$$last_id$$", str(self.last_id))
++        QueryExec(self.query, stmt)
++
++    def Next(self):
++        if not self.query.next():
++            self.Select()
++            if not self.query.next():
++                return None
++        self.last_id = self.query.value(0)
++        return self.prep(self.query)
++
++    def WaitForTarget(self):
++        while True:
++            self.wait_event.clear()
++            target = self.process_target.value
++            if target > self.fetched or target < 0:
++                break
++            self.wait_event.wait()
++        return target
++
++    def HasSpace(self, sz):
++        if self.local_tail <= self.local_head:
++            space = len(self.buffer) - self.local_head
++            if space > sz:
++                return True
++            if space >= glb_nsz:
++                # Use 0 (or space < glb_nsz) to mean there is no more at the top of the buffer
++                nd = pickle.dumps(0, pickle.HIGHEST_PROTOCOL)
++                self.buffer[self.local_head : self.local_head + len(nd)] = nd
++            self.local_head = 0
++        if self.local_tail - self.local_head > sz:
++            return True
++        return False
++
++    def WaitForSpace(self, sz):
++        if self.HasSpace(sz):
++            return
++        while True:
++            self.wait_event.clear()
++            self.local_tail = self.tail.value
++            if self.HasSpace(sz):
++                return
++            self.wait_event.wait()
++
++    def AddToBuffer(self, obj):
++        d = pickle.dumps(obj, pickle.HIGHEST_PROTOCOL)
++        n = len(d)
++        nd = pickle.dumps(n, pickle.HIGHEST_PROTOCOL)
++        sz = n + glb_nsz
++        self.WaitForSpace(sz)
++        pos = self.local_head
++        self.buffer[pos : pos + len(nd)] = nd
++        self.buffer[pos + glb_nsz : pos + sz] = d
++        self.local_head += sz
++
++    def FetchBatch(self, batch_size):
++        fetched = 0
++        while batch_size > fetched:
++            obj = self.Next()
++            if obj is None:
++                self.more = False
++                break
++            self.AddToBuffer(obj)
++            fetched += 1
++        if fetched:
++            self.fetched += fetched
++            with self.fetch_count.get_lock():
++                self.fetch_count.value += fetched
++            self.head.value = self.local_head
++            self.fetched_event.set()
++
++    def Run(self):
++        while self.more:
++            target = self.WaitForTarget()
++            if target < 0:
++                break
++            batch_size = min(glb_chunk_sz, target - self.fetched)
++            self.FetchBatch(batch_size)
++        self.fetching_done.value = True
++        self.fetched_event.set()
++
++def SQLFetcherFn(*x):
++    process = SQLFetcherProcess(*x)
++    process.Run()
++
++# SQL data fetcher
++
++class SQLFetcher(QObject):
++
++    done = Signal(object)
++
++    def __init__(self, glb, sql, prep, process_data, parent=None):
++        super(SQLFetcher, self).__init__(parent)
++        self.process_data = process_data
++        self.more = True
++        self.target = 0
++        self.last_target = 0
++        self.fetched = 0
++        self.buffer_size = 16 * 1024 * 1024
++        self.buffer = Array(c_char, self.buffer_size, lock=False)
++        self.head = Value(c_longlong)
++        self.tail = Value(c_longlong)
++        self.local_tail = 0
++        self.fetch_count = Value(c_longlong)
++        self.fetching_done = Value(c_bool)
++        self.last_count = 0
++        self.process_target = Value(c_longlong)
++        self.wait_event = Event()
++        self.fetched_event = Event()
++        glb.AddInstanceToShutdownOnExit(self)
++        self.process = Process(target=SQLFetcherFn, args=(glb.dbref, sql, self.buffer, self.head, self.tail, self.fetch_count, self.fetching_done, self.process_target, self.wait_event, self.fetched_event, prep))
++        self.process.start()
++        self.thread = Thread(self.Thread)
++        self.thread.done.connect(self.ProcessData, Qt.QueuedConnection)
++        self.thread.start()
++
++    def Shutdown(self):
++        # Tell the thread and process to exit
++        self.process_target.value = -1
++        self.wait_event.set()
++        self.more = False
++        self.fetching_done.value = True
++        self.fetched_event.set()
++
++    def Thread(self):
++        if not self.more:
++            return True, 0
++        while True:
++            self.fetched_event.clear()
++            fetch_count = self.fetch_count.value
++            if fetch_count != self.last_count:
++                break
++            if self.fetching_done.value:
++                self.more = False
++                return True, 0
++            self.fetched_event.wait()
++        count = fetch_count - self.last_count
++        self.last_count = fetch_count
++        self.fetched += count
++        return False, count
++
++    def Fetch(self, nr):
++        if not self.more:
++            # -1 inidcates there are no more
++            return -1
++        result = self.fetched
++        extra = result + nr - self.target
++        if extra > 0:
++            self.target += extra
++            # process_target < 0 indicates shutting down
++            if self.process_target.value >= 0:
++                self.process_target.value = self.target
++            self.wait_event.set()
++        return result
++
++    def RemoveFromBuffer(self):
++        pos = self.local_tail
++        if len(self.buffer) - pos < glb_nsz:
++            pos = 0
++        n = pickle.loads(self.buffer[pos : pos + glb_nsz])
++        if n == 0:
++            pos = 0
++            n = pickle.loads(self.buffer[0 : glb_nsz])
++        pos += glb_nsz
++        obj = pickle.loads(self.buffer[pos : pos + n])
++        self.local_tail = pos + n
++        return obj
++
++    def ProcessData(self, count):
++        for _i in range(count):
++            obj = self.RemoveFromBuffer()
++            self.process_data(obj)
++        self.tail.value = self.local_tail
++        self.wait_event.set()
++        self.done.emit(count)
++
++# Fetch more records bar
++
++class FetchMoreRecordsBar():
++
++    def __init__(self, model, parent):
++        self.model = model
++
++        self.label = QLabel("Number of records (x " + "{:,}".format(glb_chunk_sz) + ") to fetch:")
++        self.label.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
++
++        self.fetch_count = QSpinBox()
++        self.fetch_count.setRange(1, 1000000)
++        self.fetch_count.setValue(10)
++        self.fetch_count.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
++
++        self.fetch = QPushButton("Go!")
++        self.fetch.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
++        self.fetch.released.connect(self.FetchMoreRecords)
++
++        self.progress = QProgressBar()
++        self.progress.setRange(0, 100)
++        self.progress.hide()
++
++        self.done_label = QLabel("All records fetched")
++        self.done_label.hide()
++
++        self.spacer = QLabel("")
++
++        self.close_button = QToolButton()
++        self.close_button.setIcon(parent.style().standardIcon(QStyle.SP_DockWidgetCloseButton))
++        self.close_button.released.connect(self.Deactivate)
++
++        self.hbox = QHBoxLayout()
++        self.hbox.setContentsMargins(0, 0, 0, 0)
++
++        self.hbox.addWidget(self.label)
++        self.hbox.addWidget(self.fetch_count)
++        self.hbox.addWidget(self.fetch)
++        self.hbox.addWidget(self.spacer)
++        self.hbox.addWidget(self.progress)
++        self.hbox.addWidget(self.done_label)
++        self.hbox.addWidget(self.close_button)
++
++        self.bar = QWidget()
++        self.bar.setLayout(self.hbox)
++        self.bar.show()
++
++        self.in_progress = False
++        self.start = 0
++        self.model.progress.connect(self.Progress)
++
++        self.done = False
++
++        if not model.HasMoreRecords():
++            self.Done()
++
++    def Widget(self):
++        return self.bar
++
++    def Activate(self):
++        self.bar.show()
++        self.fetch.setFocus()
++
++    def Deactivate(self):
++        self.bar.hide()
++
++    def Enable(self, enable):
++        self.fetch.setEnabled(enable)
++        self.fetch_count.setEnabled(enable)
++
++    def Busy(self):
++        self.Enable(False)
++        self.fetch.hide()
++        self.spacer.hide()
++        self.progress.show()
++
++    def Idle(self):
++        self.in_progress = False
++        self.Enable(True)
++        self.progress.hide()
++        self.fetch.show()
++        self.spacer.show()
++
++    def Target(self):
++        return self.fetch_count.value() * glb_chunk_sz
++
++    def Done(self):
++        self.done = True
++        self.Idle()
++        self.label.hide()
++        self.fetch_count.hide()
++        self.fetch.hide()
++        self.spacer.hide()
++        self.done_label.show()
++
++    def Progress(self, count):
++        if self.in_progress:
++            if count:
++                percent = ((count - self.start) * 100) / self.Target()
++                if percent >= 100:
++                    self.Idle()
++                else:
++                    self.progress.setValue(percent)
++        if not count:
++            # Count value of zero means no more records
++            self.Done()
++
++    def FetchMoreRecords(self):
++        if self.done:
++            return
++        self.progress.setValue(0)
++        self.Busy()
++        self.in_progress = True
++        self.start = self.model.FetchMoreRecords(self.Target())
++
++# Brance data model level two item
++
++class BranchLevelTwoItem():
++
++    def __init__(self, row, col, text, parent_item):
++        self.row = row
++        self.parent_item = parent_item
++        self.data = [""] * (col + 1)
++        self.data[col] = text
++        self.level = 2
++
++    def getParentItem(self):
++        return self.parent_item
++
++    def getRow(self):
++        return self.row
++
++    def childCount(self):
++        return 0
++
++    def hasChildren(self):
++        return False
++
++    def getData(self, column):
++        return self.data[column]
++
++# Brance data model level one item
++
++class BranchLevelOneItem():
++
++    def __init__(self, glb, row, data, parent_item):
++        self.glb = glb
++        self.row = row
++        self.parent_item = parent_item
++        self.child_count = 0
++        self.child_items = []
++        self.data = data[1:]
++        self.dbid = data[0]
++        self.level = 1
++        self.query_done = False
++        self.br_col = len(self.data) - 1
++
++    def getChildItem(self, row):
++        return self.child_items[row]
++
++    def getParentItem(self):
++        return self.parent_item
++
++    def getRow(self):
++        return self.row
++
++    def Select(self):
++        self.query_done = True
++
++        if not self.glb.have_disassembler:
++            return
++
++        query = QSqlQuery(self.glb.db)
++
++        QueryExec(query, "SELECT cpu, to_dso_id, to_symbol_id, to_sym_offset, short_name, long_name, build_id, sym_start, to_ip"
++                  " FROM samples"
++                  " INNER JOIN dsos ON samples.to_dso_id = dsos.id"
++                  " INNER JOIN symbols ON samples.to_symbol_id = symbols.id"
++                  " WHERE samples.id = " + str(self.dbid))
++        if not query.next():
++            return
++        cpu = query.value(0)
++        dso = query.value(1)
++        sym = query.value(2)
++        if dso == 0 or sym == 0:
++            return
++        off = query.value(3)
++        short_name = query.value(4)
++        long_name = query.value(5)
++        build_id = query.value(6)
++        sym_start = query.value(7)
++        ip = query.value(8)
++
++        QueryExec(query, "SELECT samples.dso_id, symbol_id, sym_offset, sym_start"
++                  " FROM samples"
++                  " INNER JOIN symbols ON samples.symbol_id = symbols.id"
++                  " WHERE samples.id > " + str(self.dbid) + " AND cpu = " + str(cpu) +
++                  " ORDER BY samples.id"
++                  " LIMIT 1")
++        if not query.next():
++            return
++        if query.value(0) != dso:
++            # Cannot disassemble from one dso to another
++            return
++        bsym = query.value(1)
++        boff = query.value(2)
++        bsym_start = query.value(3)
++        if bsym == 0:
++            return
++        tot = bsym_start + boff + 1 - sym_start - off
++        if tot <= 0 or tot > 16384:
++            return
++
++        inst = self.glb.disassembler.Instruction()
++        f = self.glb.FileFromNamesAndBuildId(short_name, long_name, build_id)
++        if not f:
++            return
++        mode = 0 if Is64Bit(f) else 1
++        self.glb.disassembler.SetMode(inst, mode)
++
++        buf_sz = tot + 16
++        buf = create_string_buffer(tot + 16)
++        f.seek(sym_start + off)
++        buf.value = f.read(buf_sz)
++        buf_ptr = addressof(buf)
++        i = 0
++        while tot > 0:
++            cnt, text = self.glb.disassembler.DisassembleOne(inst, buf_ptr, buf_sz, ip)
++            if cnt:
++                byte_str = tohex(ip).rjust(16)
++                for k in range(cnt):
++                    byte_str += " %02x" % ord(buf[i])
++                    i += 1
++                while k < 15:
++                    byte_str += "   "
++                    k += 1
++                self.child_items.append(BranchLevelTwoItem(0, self.br_col, byte_str + " " + text, self))
++                self.child_count += 1
++            else:
++                return
++            buf_ptr += cnt
++            tot -= cnt
++            buf_sz -= cnt
++            ip += cnt
++
++    def childCount(self):
++        if not self.query_done:
++            self.Select()
++            if not self.child_count:
++                return -1
++        return self.child_count
++
++    def hasChildren(self):
++        if not self.query_done:
++            return True
++        return self.child_count > 0
++
++    def getData(self, column):
++        return self.data[column]
++
++# Brance data model root item
++
++class BranchRootItem():
++
++    def __init__(self):
++        self.child_count = 0
++        self.child_items = []
++        self.level = 0
++
++    def getChildItem(self, row):
++        return self.child_items[row]
++
++    def getParentItem(self):
++        return None
++
++    def getRow(self):
++        return 0
++
++    def childCount(self):
++        return self.child_count
++
++    def hasChildren(self):
++        return self.child_count > 0
++
++    def getData(self, _column):
++        return ""
++
++# Calculate instructions per cycle
++
++def CalcIPC(cyc_cnt, insn_cnt):
++    if cyc_cnt and insn_cnt:
++        ipc = Decimal(float(insn_cnt) / cyc_cnt)
++        ipc = str(ipc.quantize(Decimal(".01"), rounding=ROUND_HALF_UP))
++    else:
++        ipc = "0"
++    return ipc
++
++# Branch data preparation
++
++def BranchDataPrepBr(query, data):
++    data.append(tohex(query.value(8)).rjust(16) + " " + query.value(9) + offstr(query.value(10)) +
++            " (" + dsoname(query.value(11)) + ")" + " -> " +
++            tohex(query.value(12)) + " " + query.value(13) + offstr(query.value(14)) +
++            " (" + dsoname(query.value(15)) + ")")
++
++def BranchDataPrepIPC(query, data):
++    insn_cnt = query.value(16)
++    cyc_cnt = query.value(17)
++    ipc = CalcIPC(cyc_cnt, insn_cnt)
++    data.append(insn_cnt)
++    data.append(cyc_cnt)
++    data.append(ipc)
++
++def BranchDataPrep(query):
++    data = []
++    for i in range(0, 8):
++        data.append(query.value(i))
++    BranchDataPrepBr(query, data)
++    return data
++
++def BranchDataPrepWA(query):
++    data = []
++    data.append(query.value(0))
++    # Workaround pyside failing to handle large integers (i.e. time) in python3 by converting to a string
++    data.append("{:>19}".format(query.value(1)))
++    for i in range(2, 8):
++        data.append(query.value(i))
++    BranchDataPrepBr(query, data)
++    return data
++
++def BranchDataWithIPCPrep(query):
++    data = []
++    for i in range(0, 8):
++        data.append(query.value(i))
++    BranchDataPrepIPC(query, data)
++    BranchDataPrepBr(query, data)
++    return data
++
++def BranchDataWithIPCPrepWA(query):
++    data = []
++    data.append(query.value(0))
++    # Workaround pyside failing to handle large integers (i.e. time) in python3 by converting to a string
++    data.append("{:>19}".format(query.value(1)))
++    for i in range(2, 8):
++        data.append(query.value(i))
++    BranchDataPrepIPC(query, data)
++    BranchDataPrepBr(query, data)
++    return data
++
++# Branch data model
++
++class BranchModel(TreeModel):
++
++    progress = Signal(object)
++
++    def __init__(self, glb, event_id, where_clause, parent=None):
++        super(BranchModel, self).__init__(glb, None, parent)
++        self.event_id = event_id
++        self.more = True
++        self.populated = 0
++        self.have_ipc = IsSelectable(glb.db, "samples", columns = "insn_count, cyc_count")
++        if self.have_ipc:
++            select_ipc = ", insn_count, cyc_count"
++            prep_fn = BranchDataWithIPCPrep
++            prep_wa_fn = BranchDataWithIPCPrepWA
++        else:
++            select_ipc = ""
++            prep_fn = BranchDataPrep
++            prep_wa_fn = BranchDataPrepWA
++        sql = ("SELECT samples.id, time, cpu, comm, pid, tid, branch_types.name,"
++            " CASE WHEN in_tx = '0' THEN 'No' ELSE 'Yes' END,"
++            " ip, symbols.name, sym_offset, dsos.short_name,"
++            " to_ip, to_symbols.name, to_sym_offset, to_dsos.short_name"
++            + select_ipc +
++            " FROM samples"
++            " INNER JOIN comms ON comm_id = comms.id"
++            " INNER JOIN threads ON thread_id = threads.id"
++            " INNER JOIN branch_types ON branch_type = branch_types.id"
++            " INNER JOIN symbols ON symbol_id = symbols.id"
++            " INNER JOIN symbols to_symbols ON to_symbol_id = to_symbols.id"
++            " INNER JOIN dsos ON samples.dso_id = dsos.id"
++            " INNER JOIN dsos AS to_dsos ON samples.to_dso_id = to_dsos.id"
++            " WHERE samples.id > $$last_id$$" + where_clause +
++            " AND evsel_id = " + str(self.event_id) +
++            " ORDER BY samples.id"
++            " LIMIT " + str(glb_chunk_sz))
++        if pyside_version_1 and sys.version_info[0] == 3:
++            prep = prep_fn
++        else:
++            prep = prep_wa_fn
++        self.fetcher = SQLFetcher(glb, sql, prep, self.AddSample)
++        self.fetcher.done.connect(self.Update)
++        self.fetcher.Fetch(glb_chunk_sz)
++
++    def GetRoot(self):
++        return BranchRootItem()
++
++    def columnCount(self, _parent=None):
++        if self.have_ipc:
++            return 11
++        else:
++            return 8
++
++    def columnHeader(self, column):
++        if self.have_ipc:
++            return ("Time", "CPU", "Command", "PID", "TID", "Branch Type", "In Tx", "Insn Cnt", "Cyc Cnt", "IPC", "Branch")[column]
++        else:
++            return ("Time", "CPU", "Command", "PID", "TID", "Branch Type", "In Tx", "Branch")[column]
++
++    def columnFont(self, column):
++        if self.have_ipc:
++            br_col = 10
++        else:
++            br_col = 7
++        if column != br_col:
++            return None
++        return QFont("Monospace")
++
++    def DisplayData(self, item, index):
++        if item.level == 1:
++            self.FetchIfNeeded(item.row)
++        return item.getData(index.column())
++
++    def AddSample(self, data):
++        child = BranchLevelOneItem(self.glb, self.populated, data, self.root)
++        self.root.child_items.append(child)
++        self.populated += 1
++
++    def Update(self, fetched):
++        if not fetched:
++            self.more = False
++            self.progress.emit(0)
++        child_count = self.root.child_count
++        count = self.populated - child_count
++        if count > 0:
++            parent = QModelIndex()
++            self.beginInsertRows(parent, child_count, child_count + count - 1)
++            self.insertRows(child_count, count, parent)
++            self.root.child_count += count
++            self.endInsertRows()
++            self.progress.emit(self.root.child_count)
++
++    def FetchMoreRecords(self, count):
++        current = self.root.child_count
++        if self.more:
++            self.fetcher.Fetch(count)
++        else:
++            self.progress.emit(0)
++        return current
++
++    def HasMoreRecords(self):
++        return self.more
++
++# Report Variables
++
++class ReportVars():
++
++    def __init__(self, name = "", where_clause = "", limit = ""):
++        self.name = name
++        self.where_clause = where_clause
++        self.limit = limit
++
++    def UniqueId(self):
++        return str(self.where_clause + ";" + self.limit)
++
++# Branch window
++
++class BranchWindow(QMdiSubWindow):
++
++    def __init__(self, glb, event_id, report_vars, parent=None):
++        super(BranchWindow, self).__init__(parent)
++
++        model_name = "Branch Events " + str(event_id) +  " " + report_vars.UniqueId()
++
++        self.model = LookupCreateModel(model_name, lambda: BranchModel(glb, event_id, report_vars.where_clause))
++
++        self.view = QTreeView()
++        self.view.setUniformRowHeights(True)
++        self.view.setSelectionMode(QAbstractItemView.ContiguousSelection)
++        self.view.CopyCellsToClipboard = CopyTreeCellsToClipboard
++        self.view.setModel(self.model)
++
++        self.ResizeColumnsToContents()
++
++        self.context_menu = TreeContextMenu(self.view)
++
++        self.find_bar = FindBar(self, self, True)
++
++        self.finder = ChildDataItemFinder(self.model.root)
++
++        self.fetch_bar = FetchMoreRecordsBar(self.model, self)
++
++        self.vbox = VBox(self.view, self.find_bar.Widget(), self.fetch_bar.Widget())
++
++        self.setWidget(self.vbox.Widget())
++
++        AddSubWindow(glb.mainwindow.mdi_area, self, report_vars.name + " Branch Events")
++
++    def ResizeColumnToContents(self, column, n):
++        # Using the view's resizeColumnToContents() here is extrememly slow
++        # so implement a crude alternative
++        mm = "MM" if column else "MMMM"
++        font = self.view.font()
++        metrics = QFontMetrics(font)
++        max_w = 0
++        for row in range(n):
++            val = self.model.root.child_items[row].data[column]
++            width = metrics.width(str(val) + mm)
++            max_w = width if width > max_w else max_w
++        val = self.model.columnHeader(column)
++        width = metrics.width(str(val) + mm)
++        max_w = width if width > max_w else max_w
++        self.view.setColumnWidth(column, max_w)
++
++    def ResizeColumnsToContents(self):
++        n = min(self.model.root.child_count, 100)
++        if n < 1:
++            # No data yet, so connect a signal to notify when there is
++            self.model.rowsInserted.connect(self.UpdateColumnWidths)
++            return
++        columns = self.model.columnCount()
++        for i in range(columns):
++            self.ResizeColumnToContents(i, n)
++
++    def UpdateColumnWidths(self, *_x):
++        # This only needs to be done once, so disconnect the signal now
++        self.model.rowsInserted.disconnect(self.UpdateColumnWidths)
++        self.ResizeColumnsToContents()
++
++    def Find(self, value, direction, pattern, context):
++        self.view.setFocus()
++        self.find_bar.Busy()
++        self.finder.Find(value, direction, pattern, context, self.FindDone)
++
++    def FindDone(self, row):
++        self.find_bar.Idle()
++        if row >= 0:
++            self.view.setCurrentIndex(self.model.index(row, 0, QModelIndex()))
++        else:
++            self.find_bar.NotFound()
++
++# Line edit data item
++
++class LineEditDataItem(object):
++
++    def __init__(self, glb, label, placeholder_text, parent, item_id = "", default = ""):
++        self.glb = glb
++        self.label = label
++        self.placeholder_text = placeholder_text
++        self.parent = parent
++        self.id = item_id
++
++        self.value = default
++
++        self.widget = QLineEdit(default)
++        self.widget.editingFinished.connect(self.Validate)
++        self.widget.textChanged.connect(self.Invalidate)
++        self.red = False
++        self.error = ""
++        self.validated = True
++
++        if placeholder_text:
++            self.widget.setPlaceholderText(placeholder_text)
++
++    def TurnTextRed(self):
++        if not self.red:
++            palette = QPalette()
++            palette.setColor(QPalette.Text,Qt.red)
++            self.widget.setPalette(palette)
++            self.red = True
++
++    def TurnTextNormal(self):
++        if self.red:
++            palette = QPalette()
++            self.widget.setPalette(palette)
++            self.red = False
++
++    def InvalidValue(self, value):
++        self.value = ""
++        self.TurnTextRed()
++        self.error = self.label + " invalid value '" + value + "'"
++        self.parent.ShowMessage(self.error)
++
++    def Invalidate(self):
++        self.validated = False
++
++    def DoValidate(self, input_string):
++        self.value = input_string.strip()
++
++    def Validate(self):
++        self.validated = True
++        self.error = ""
++        self.TurnTextNormal()
++        self.parent.ClearMessage()
++        input_string = self.widget.text()
++        if not len(input_string.strip()):
++            self.value = ""
++            return
++        self.DoValidate(input_string)
++
++    def IsValid(self):
++        if not self.validated:
++            self.Validate()
++        if len(self.error):
++            self.parent.ShowMessage(self.error)
++            return False
++        return True
++
++    def IsNumber(self, value):
++        try:
++            x = int(value)
++        except ValueError:
++            x = 0
++        return str(x) == value
++
++# Non-negative integer ranges dialog data item
++
++class NonNegativeIntegerRangesDataItem(LineEditDataItem):
++
++    def __init__(self, glb, label, placeholder_text, column_name, parent):
++        super(NonNegativeIntegerRangesDataItem, self).__init__(glb, label, placeholder_text, parent)
++
++        self.column_name = column_name
++
++    def DoValidate(self, input_string):
++        singles = []
++        ranges = []
++        for value in [x.strip() for x in input_string.split(",")]:
++            if "-" in value:
++                vrange = value.split("-")
++                if len(vrange) != 2 or not self.IsNumber(vrange[0]) or not self.IsNumber(vrange[1]):
++                    return self.InvalidValue(value)
++                ranges.append(vrange)
++            else:
++                if not self.IsNumber(value):
++                    return self.InvalidValue(value)
++                singles.append(value)
++        ranges = [("(" + self.column_name + " >= " + r[0] + " AND " + self.column_name + " <= " + r[1] + ")") for r in ranges]
++        if len(singles):
++            ranges.append(self.column_name + " IN (" + ",".join(singles) + ")")
++        self.value = " OR ".join(ranges)
++
++# Positive integer dialog data item
++
++class PositiveIntegerDataItem(LineEditDataItem):
++
++    def DoValidate(self, input_string):
++        if not self.IsNumber(input_string.strip()):
++            return self.InvalidValue(input_string)
++        value = int(input_string.strip())
++        if value <= 0:
++            return self.InvalidValue(input_string)
++        self.value = str(value)
++
++# Dialog data item converted and validated using a SQL table
++
++class SQLTableDataItem(LineEditDataItem):
++
++    def __init__(self, glb, label, placeholder_text, table_name, match_column, column_name1, column_name2, parent):
++        super(SQLTableDataItem, self).__init__(glb, label, placeholder_text, parent)
++
++        self.table_name = table_name
++        self.match_column = match_column
++        self.column_name1 = column_name1
++        self.column_name2 = column_name2
++
++    def ValueToIds(self, value):
++        ids = []
++        query = QSqlQuery(self.glb.db)
++        stmt = "SELECT id FROM " + self.table_name + " WHERE " + self.match_column + " = '" + value + "'"
++        ret = query.exec_(stmt)
++        if ret:
++            while query.next():
++                ids.append(str(query.value(0)))
++        return ids
++
++    def DoValidate(self, input_string):
++        all_ids = []
++        for value in [x.strip() for x in input_string.split(",")]:
++            ids = self.ValueToIds(value)
++            if len(ids):
++                all_ids.extend(ids)
++            else:
++                return self.InvalidValue(value)
++        self.value = self.column_name1 + " IN (" + ",".join(all_ids) + ")"
++        if self.column_name2:
++            self.value = "( " + self.value + " OR " + self.column_name2 + " IN (" + ",".join(all_ids) + ") )"
++
++# Sample time ranges dialog data item converted and validated using 'samples' SQL table
++
++class SampleTimeRangesDataItem(LineEditDataItem):
++
++    def __init__(self, glb, label, placeholder_text, column_name, parent):
++        self.column_name = column_name
++
++        self.last_id = 0
++        self.first_time = 0
++        self.last_time = 2 ** 64
++
++        query = QSqlQuery(glb.db)
++        QueryExec(query, "SELECT id, time FROM samples ORDER BY id DESC LIMIT 1")
++        if query.next():
++            self.last_id = int(query.value(0))
++        self.first_time = int(glb.HostStartTime())
++        self.last_time = int(glb.HostFinishTime())
++        if placeholder_text:
++            placeholder_text += ", between " + str(self.first_time) + " and " + str(self.last_time)
++
++        super(SampleTimeRangesDataItem, self).__init__(glb, label, placeholder_text, parent)
++
++    def IdBetween(self, query, lower_id, higher_id, order):
++        QueryExec(query, "SELECT id FROM samples WHERE id > " + str(lower_id) + " AND id < " + str(higher_id) + " ORDER BY id " + order + " LIMIT 1")
++        if query.next():
++            return True, int(query.value(0))
++        else:
++            return False, 0
++
++    def BinarySearchTime(self, lower_id, higher_id, target_time, get_floor):
++        query = QSqlQuery(self.glb.db)
++        while True:
++            next_id = int((lower_id + higher_id) / 2)
++            QueryExec(query, "SELECT time FROM samples WHERE id = " + str(next_id))
++            if not query.next():
++                ok, dbid = self.IdBetween(query, lower_id, next_id, "DESC")
++                if not ok:
++                    ok, dbid = self.IdBetween(query, next_id, higher_id, "")
++                    if not ok:
++                        return str(higher_id)
++                next_id = dbid
++                QueryExec(query, "SELECT time FROM samples WHERE id = " + str(next_id))
++            next_time = int(query.value(0))
++            if get_floor:
++                if target_time > next_time:
++                    lower_id = next_id
++                else:
++                    higher_id = next_id
++                if higher_id <= lower_id + 1:
++                    return str(higher_id)
++            else:
++                if target_time >= next_time:
++                    lower_id = next_id
++                else:
++                    higher_id = next_id
++                if higher_id <= lower_id + 1:
++                    return str(lower_id)
++
++    def ConvertRelativeTime(self, val):
++        mult = 1
++        suffix = val[-2:]
++        if suffix == "ms":
++            mult = 1000000
++        elif suffix == "us":
++            mult = 1000
++        elif suffix == "ns":
++            mult = 1
++        else:
++            return val
++        val = val[:-2].strip()
++        if not self.IsNumber(val):
++            return val
++        val = int(val) * mult
++        if val >= 0:
++            val += self.first_time
++        else:
++            val += self.last_time
++        return str(val)
++
++    def ConvertTimeRange(self, vrange):
++        if vrange[0] == "":
++            vrange[0] = str(self.first_time)
++        if vrange[1] == "":
++            vrange[1] = str(self.last_time)
++        vrange[0] = self.ConvertRelativeTime(vrange[0])
++        vrange[1] = self.ConvertRelativeTime(vrange[1])
++        if not self.IsNumber(vrange[0]) or not self.IsNumber(vrange[1]):
++            return False
++        beg_range = max(int(vrange[0]), self.first_time)
++        end_range = min(int(vrange[1]), self.last_time)
++        if beg_range > self.last_time or end_range < self.first_time:
++            return False
++        vrange[0] = self.BinarySearchTime(0, self.last_id, beg_range, True)
++        vrange[1] = self.BinarySearchTime(1, self.last_id + 1, end_range, False)
++        return True
++
++    def AddTimeRange(self, value, ranges):
++        n = value.count("-")
++        if n == 1:
++            pass
++        elif n == 2:
++            if value.split("-")[1].strip() == "":
++                n = 1
++        elif n == 3:
++            n = 2
++        else:
++            return False
++        pos = findnth(value, "-", n)
++        vrange = [value[:pos].strip() ,value[pos+1:].strip()]
++        if self.ConvertTimeRange(vrange):
++            ranges.append(vrange)
++            return True
++        return False
++
++    def DoValidate(self, input_string):
++        ranges = []
++        for value in [x.strip() for x in input_string.split(",")]:
++            if not self.AddTimeRange(value, ranges):
++                return self.InvalidValue(value)
++        ranges = [("(" + self.column_name + " >= " + r[0] + " AND " + self.column_name + " <= " + r[1] + ")") for r in ranges]
++        self.value = " OR ".join(ranges)
++
++# Report Dialog Base
++
++class ReportDialogBase(QDialog):
++
++    def __init__(self, glb, title, items, partial, parent=None):
++        super(ReportDialogBase, self).__init__(parent)
++
++        self.glb = glb
++
++        self.report_vars = ReportVars()
++
++        self.setWindowTitle(title)
++        self.setMinimumWidth(600)
++
++        self.data_items = [x(glb, self) for x in items]
++
++        self.partial = partial
++
++        self.grid = QGridLayout()
++
++        for row in range(len(self.data_items)):
++            self.grid.addWidget(QLabel(self.data_items[row].label), row, 0)
++            self.grid.addWidget(self.data_items[row].widget, row, 1)
++
++        self.status = QLabel()
++
++        self.ok_button = QPushButton("Ok", self)
++        self.ok_button.setDefault(True)
++        self.ok_button.released.connect(self.Ok)
++        self.ok_button.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
++
++        self.cancel_button = QPushButton("Cancel", self)
++        self.cancel_button.released.connect(self.reject)
++        self.cancel_button.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
++
++        self.hbox = QHBoxLayout()
++        #self.hbox.addStretch()
++        self.hbox.addWidget(self.status)
++        self.hbox.addWidget(self.ok_button)
++        self.hbox.addWidget(self.cancel_button)
++
++        self.vbox = QVBoxLayout()
++        self.vbox.addLayout(self.grid)
++        self.vbox.addLayout(self.hbox)
++
++        self.setLayout(self.vbox)
++
++    def Ok(self):
++        rep_vars = self.report_vars
++        for d in self.data_items:
++            if d.id == "REPORTNAME":
++                rep_vars.name = d.value
++        if not rep_vars.name:
++            self.ShowMessage("Report name is required")
++            return
++        for d in self.data_items:
++            if not d.IsValid():
++                return
++        for d in self.data_items[1:]:
++            if d.id == "LIMIT":
++                rep_vars.limit = d.value
++            elif len(d.value):
++                if len(rep_vars.where_clause):
++                    rep_vars.where_clause += " AND "
++                rep_vars.where_clause += d.value
++        if len(rep_vars.where_clause):
++            if self.partial:
++                rep_vars.where_clause = " AND ( " + rep_vars.where_clause + " ) "
++            else:
++                rep_vars.where_clause = " WHERE " + rep_vars.where_clause + " "
++        self.accept()
++
++    def ShowMessage(self, msg):
++        self.status.setText("<font color=#FF0000>" + msg)
++
++    def ClearMessage(self):
++        self.status.setText("")
++
++# Selected branch report creation dialog
++
++class SelectedBranchDialog(ReportDialogBase):
++
++    def __init__(self, glb, parent=None):
++        title = "Selected Branches"
++        items = (lambda g, p: LineEditDataItem(g, "Report name:", "Enter a name to appear in the window title bar", p, "REPORTNAME"),
++             lambda g, p: SampleTimeRangesDataItem(g, "Time ranges:", "Enter time ranges", "samples.id", p),
++             lambda g, p: NonNegativeIntegerRangesDataItem(g, "CPUs:", "Enter CPUs or ranges e.g. 0,5-6", "cpu", p),
++             lambda g, p: SQLTableDataItem(g, "Commands:", "Only branches with these commands will be included", "comms", "comm", "comm_id", "", p),
++             lambda g, p: SQLTableDataItem(g, "PIDs:", "Only branches with these process IDs will be included", "threads", "pid", "thread_id", "", p),
++             lambda g, p: SQLTableDataItem(g, "TIDs:", "Only branches with these thread IDs will be included", "threads", "tid", "thread_id", "", p),
++             lambda g, p: SQLTableDataItem(g, "DSOs:", "Only branches with these DSOs will be included", "dsos", "short_name", "samples.dso_id", "to_dso_id", p),
++             lambda g, p: SQLTableDataItem(g, "Symbols:", "Only branches with these symbols will be included", "symbols", "name", "symbol_id", "to_symbol_id", p),
++             lambda g, p: LineEditDataItem(g, "Raw SQL clause: ", "Enter a raw SQL WHERE clause", p))
++        super(SelectedBranchDialog, self).__init__(glb, title, items, True, parent)
++
++# Event list
++
++def GetEventList(db):
++    events = []
++    query = QSqlQuery(db)
++    QueryExec(query, "SELECT name FROM selected_events WHERE id > 0 ORDER BY id")
++    while query.next():
++        events.append(query.value(0))
++    return events
++
++# Is a table selectable
++
++def IsSelectable(db, table, sql = "", columns = "*"):
++    query = QSqlQuery(db)
++    try:
++        QueryExec(query, "SELECT " + columns + " FROM " + table + " " + sql + " LIMIT 1")
++    except RuntimeError:
++        return False
++    return True
++
++# SQL table data model item
++
++class SQLTableItem():
++
++    def __init__(self, row, data):
++        self.row = row
++        self.data = data
++
++    def getData(self, column):
++        return self.data[column]
++
++# SQL table data model
++
++class SQLTableModel(TableModel):
++
++    progress = Signal(object)
++
++    def __init__(self, glb, sql, column_headers, parent=None):
++        super(SQLTableModel, self).__init__(parent)
++        self.glb = glb
++        self.more = True
++        self.populated = 0
++        self.column_headers = column_headers
++        self.fetcher = SQLFetcher(glb, sql, lambda x, y=len(column_headers): self.SQLTableDataPrep(x, y), self.AddSample)
++        self.fetcher.done.connect(self.Update)
++        self.fetcher.Fetch(glb_chunk_sz)
++
++    def DisplayData(self, item, index):
++        self.FetchIfNeeded(item.row)
++        return item.getData(index.column())
++
++    def AddSample(self, data):
++        child = SQLTableItem(self.populated, data)
++        self.child_items.append(child)
++        self.populated += 1
++
++    def Update(self, fetched):
++        if not fetched:
++            self.more = False
++            self.progress.emit(0)
++        child_count = self.child_count
++        count = self.populated - child_count
++        if count > 0:
++            parent = QModelIndex()
++            self.beginInsertRows(parent, child_count, child_count + count - 1)
++            self.insertRows(child_count, count, parent)
++            self.child_count += count
++            self.endInsertRows()
++            self.progress.emit(self.child_count)
++
++    def FetchMoreRecords(self, count):
++        current = self.child_count
++        if self.more:
++            self.fetcher.Fetch(count)
++        else:
++            self.progress.emit(0)
++        return current
++
++    def HasMoreRecords(self):
++        return self.more
++
++    def columnCount(self, _parent=None):
++        return len(self.column_headers)
++
++    def columnHeader(self, column):
++        return self.column_headers[column]
++
++    def SQLTableDataPrep(self, query, count):
++        data = []
++        for i in range(count):
++            data.append(query.value(i))
++        return data
++
++# SQL automatic table data model
++
++class SQLAutoTableModel(SQLTableModel):
++
++    def __init__(self, glb, table_name, parent=None):
++        sql = "SELECT * FROM " + table_name + " WHERE id > $$last_id$$ ORDER BY id LIMIT " + str(glb_chunk_sz)
++        if table_name == "comm_threads_view":
++            # For now, comm_threads_view has no id column
++            sql = "SELECT * FROM " + table_name + " WHERE comm_id > $$last_id$$ ORDER BY comm_id LIMIT " + str(glb_chunk_sz)
++        column_headers = []
++        query = QSqlQuery(glb.db)
++        if glb.dbref.is_sqlite3:
++            QueryExec(query, "PRAGMA table_info(" + table_name + ")")
++            while query.next():
++                column_headers.append(query.value(1))
++            if table_name == "sqlite_master":
++                sql = "SELECT * FROM " + table_name
++        else:
++            if table_name[:19] == "information_schema.":
++                sql = "SELECT * FROM " + table_name
++                select_table_name = table_name[19:]
++                schema = "information_schema"
++            else:
++                select_table_name = table_name
++                schema = "public"
++            QueryExec(query, "SELECT column_name FROM information_schema.columns WHERE table_schema = '" + schema + "' and table_name = '" + select_table_name + "'")
++            while query.next():
++                column_headers.append(query.value(0))
++        if pyside_version_1 and sys.version_info[0] == 3:
++            if table_name == "samples_view":
++                self.SQLTableDataPrep = self.samples_view_DataPrep
++            if table_name == "samples":
++                self.SQLTableDataPrep = self.samples_DataPrep
++        super(SQLAutoTableModel, self).__init__(glb, sql, column_headers, parent)
++
++    def samples_view_DataPrep(self, query, count):
++        data = []
++        data.append(query.value(0))
++        # Workaround pyside failing to handle large integers (i.e. time) in python3 by converting to a string
++        data.append("{:>19}".format(query.value(1)))
++        for i in range(2, count):
++            data.append(query.value(i))
++        return data
++
++    def samples_DataPrep(self, query, count):
++        data = []
++        for i in range(9):
++            data.append(query.value(i))
++        # Workaround pyside failing to handle large integers (i.e. time) in python3 by converting to a string
++        data.append("{:>19}".format(query.value(9)))
++        for i in range(10, count):
++            data.append(query.value(i))
++        return data
++
++# Base class for custom ResizeColumnsToContents
++
++class ResizeColumnsToContentsBase(QObject):
++
++    def __init__(self, parent=None):
++        super(ResizeColumnsToContentsBase, self).__init__(parent)
++
++    def ResizeColumnToContents(self, column, n):
++        # Using the view's resizeColumnToContents() here is extrememly slow
++        # so implement a crude alternative
++        font = self.view.font()
++        metrics = QFontMetrics(font)
++        max_w = 0
++        for row in range(n):
++            val = self.data_model.child_items[row].data[column]
++            width = metrics.width(str(val) + "MM")
++            max_w = width if width > max_w else max_w
++        val = self.data_model.columnHeader(column)
++        width = metrics.width(str(val) + "MM")
++        max_w = width if width > max_w else max_w
++        self.view.setColumnWidth(column, max_w)
++
++    def ResizeColumnsToContents(self):
++        n = min(self.data_model.child_count, 100)
++        if n < 1:
++            # No data yet, so connect a signal to notify when there is
++            self.data_model.rowsInserted.connect(self.UpdateColumnWidths)
++            return
++        columns = self.data_model.columnCount()
++        for i in range(columns):
++            self.ResizeColumnToContents(i, n)
++
++    def UpdateColumnWidths(self, *_x):
++        # This only needs to be done once, so disconnect the signal now
++        self.data_model.rowsInserted.disconnect(self.UpdateColumnWidths)
++        self.ResizeColumnsToContents()
++
++# Convert value to CSV
++
++def ToCSValue(val):
++    if '"' in val:
++        val = val.replace('"', '""')
++    if "," in val or '"' in val:
++        val = '"' + val + '"'
++    return val
++
++# Key to sort table model indexes by row / column, assuming fewer than 1000 columns
++
++glb_max_cols = 1000
++
++def RowColumnKey(a):
++    return a.row() * glb_max_cols + a.column()
++
++# Copy selected table cells to clipboard
++
++def CopyTableCellsToClipboard(view, as_csv=False, with_hdr=False):
++    indexes = sorted(view.selectedIndexes(), key=RowColumnKey)
++    idx_cnt = len(indexes)
++    if not idx_cnt:
++        return
++    if idx_cnt == 1:
++        with_hdr=False
++    min_row = indexes[0].row()
++    max_row = indexes[0].row()
++    min_col = indexes[0].column()
++    max_col = indexes[0].column()
++    for i in indexes:
++        min_row = min(min_row, i.row())
++        max_row = max(max_row, i.row())
++        min_col = min(min_col, i.column())
++        max_col = max(max_col, i.column())
++    if max_col > glb_max_cols:
++        raise RuntimeError("glb_max_cols is too low")
++    max_width = [0] * (1 + max_col - min_col)
++    for i in indexes:
++        c = i.column() - min_col
++        max_width[c] = max(max_width[c], len(str(i.data())))
++    text = ""
++    pad = ""
++    sep = ""
++    if with_hdr:
++        model = indexes[0].model()
++        for col in range(min_col, max_col + 1):
++            val = model.headerData(col, Qt.Horizontal, Qt.DisplayRole)
++            if as_csv:
++                text += sep + ToCSValue(val)
++                sep = ","
++            else:
++                c = col - min_col
++                max_width[c] = max(max_width[c], len(val))
++                width = max_width[c]
++                align = model.headerData(col, Qt.Horizontal, Qt.TextAlignmentRole)
++                if align & Qt.AlignRight:
++                    val = val.rjust(width)
++                text += pad + sep + val
++                pad = " " * (width - len(val))
++                sep = "  "
++        text += "\n"
++        pad = ""
++        sep = ""
++    last_row = min_row
++    for i in indexes:
++        if i.row() > last_row:
++            last_row = i.row()
++            text += "\n"
++            pad = ""
++            sep = ""
++        if as_csv:
++            text += sep + ToCSValue(str(i.data()))
++            sep = ","
++        else:
++            width = max_width[i.column() - min_col]
++            if i.data(Qt.TextAlignmentRole) & Qt.AlignRight:
++                val = str(i.data()).rjust(width)
++            else:
++                val = str(i.data())
++            text += pad + sep + val
++            pad = " " * (width - len(val))
++            sep = "  "
++    QApplication.clipboard().setText(text)
++
++def CopyTreeCellsToClipboard(view, as_csv=False, with_hdr=False):
++    indexes = view.selectedIndexes()
++    if not len(indexes):
++        return
++
++    selection = view.selectionModel()
++
++    first = None
++    for i in indexes:
++        above = view.indexAbove(i)
++        if not selection.isSelected(above):
++            first = i
++            break
++
++    if first is None:
++        raise RuntimeError("CopyTreeCellsToClipboard internal error")
++
++    model = first.model()
++    row_cnt = 0
++    col_cnt = model.columnCount(first)
++    max_width = [0] * col_cnt
++
++    indent_sz = 2
++    indent_str = " " * indent_sz
++
++    expanded_mark_sz = 2
++    if sys.version_info[0] == 3:
++        expanded_mark = "\u25BC "
++        not_expanded_mark = "\u25B6 "
++    else:
++        expanded_mark = chr(0x25BC) + " "
++        not_expanded_mark = chr(0x25B6) + " "
++    leaf_mark = "  "
++
++    if not as_csv:
++        pos = first
++        while True:
++            row_cnt += 1
++            row = pos.row()
++            for c in range(col_cnt):
++                i = pos.sibling(row, c)
++                if c:
++                    n = len(str(i.data()))
++                else:
++                    n = len(str(i.data()).strip())
++                    n += (i.internalPointer().level - 1) * indent_sz
++                    n += expanded_mark_sz
++                max_width[c] = max(max_width[c], n)
++            pos = view.indexBelow(pos)
++            if not selection.isSelected(pos):
++                break
++
++    text = ""
++    pad = ""
++    sep = ""
++    if with_hdr:
++        for c in range(col_cnt):
++            val = model.headerData(c, Qt.Horizontal, Qt.DisplayRole).strip()
++            if as_csv:
++                text += sep + ToCSValue(val)
++                sep = ","
++            else:
++                max_width[c] = max(max_width[c], len(val))
++                width = max_width[c]
++                align = model.headerData(c, Qt.Horizontal, Qt.TextAlignmentRole)
++                if align & Qt.AlignRight:
++                    val = val.rjust(width)
++                text += pad + sep + val
++                pad = " " * (width - len(val))
++                sep = "   "
++        text += "\n"
++        pad = ""
++        sep = ""
++
++    pos = first
++    while True:
++        row = pos.row()
++        for c in range(col_cnt):
++            i = pos.sibling(row, c)
++            val = str(i.data())
++            if not c:
++                if model.hasChildren(i):
++                    if view.isExpanded(i):
++                        mark = expanded_mark
++                    else:
++                        mark = not_expanded_mark
++                else:
++                    mark = leaf_mark
++                val = indent_str * (i.internalPointer().level - 1) + mark + val.strip()
++            if as_csv:
++                text += sep + ToCSValue(val)
++                sep = ","
++            else:
++                width = max_width[c]
++                if c and i.data(Qt.TextAlignmentRole) & Qt.AlignRight:
++                    val = val.rjust(width)
++                text += pad + sep + val
++                pad = " " * (width - len(val))
++                sep = "   "
++        pos = view.indexBelow(pos)
++        if not selection.isSelected(pos):
++            break
++        text = text.rstrip() + "\n"
++        pad = ""
++        sep = ""
++
++    QApplication.clipboard().setText(text)
++
++def CopyCellsToClipboard(view, as_csv=False, with_hdr=False):
++    view.CopyCellsToClipboard(view, as_csv, with_hdr)
++
++def CopyCellsToClipboardHdr(view):
++    CopyCellsToClipboard(view, False, True)
++
++def CopyCellsToClipboardCSV(view):
++    CopyCellsToClipboard(view, True, True)
++
++# Context menu
++
++class ContextMenu(object):
++
++    def __init__(self, view):
++        self.view = view
++        self.view.setContextMenuPolicy(Qt.CustomContextMenu)
++        self.view.customContextMenuRequested.connect(self.ShowContextMenu)
++
++    def ShowContextMenu(self, pos):
++        menu = QMenu(self.view)
++        self.AddActions(menu)
++        menu.exec_(self.view.mapToGlobal(pos))
++
++    def AddCopy(self, menu):
++        menu.addAction(CreateAction("&Copy selection", "Copy to clipboard", lambda: CopyCellsToClipboardHdr(self.view), self.view))
++        menu.addAction(CreateAction("Copy selection as CS&V", "Copy to clipboard as CSV", lambda: CopyCellsToClipboardCSV(self.view), self.view))
++
++    def AddActions(self, menu):
++        self.AddCopy(menu)
++
++class TreeContextMenu(ContextMenu):
++
++    def AddActions(self, menu):
++        i = self.view.currentIndex()
++        text = str(i.data()).strip()
++        if len(text):
++            menu.addAction(CreateAction('Copy "' + text + '"', "Copy to clipboard", lambda: QApplication.clipboard().setText(text), self.view))
++        self.AddCopy(menu)
++
++# Table window
++
++class TableWindow(QMdiSubWindow, ResizeColumnsToContentsBase):
++
++    def __init__(self, glb, table_name, parent=None):
++        super(TableWindow, self).__init__(parent)
++
++        self.data_model = LookupCreateModel(table_name + " Table", lambda: SQLAutoTableModel(glb, table_name))
++
++        self.model = QSortFilterProxyModel()
++        self.model.setSourceModel(self.data_model)
++
++        self.view = QTableView()
++        self.view.setModel(self.model)
++        self.view.setEditTriggers(QAbstractItemView.NoEditTriggers)
++        self.view.verticalHeader().setVisible(False)
++        self.view.sortByColumn(-1, Qt.AscendingOrder)
++        self.view.setSortingEnabled(True)
++        self.view.setSelectionMode(QAbstractItemView.ContiguousSelection)
++        self.view.CopyCellsToClipboard = CopyTableCellsToClipboard
++
++        self.ResizeColumnsToContents()
++
++        self.context_menu = ContextMenu(self.view)
++
++        self.find_bar = FindBar(self, self, True)
++
++        self.finder = ChildDataItemFinder(self.data_model)
++
++        self.fetch_bar = FetchMoreRecordsBar(self.data_model, self)
++
++        self.vbox = VBox(self.view, self.find_bar.Widget(), self.fetch_bar.Widget())
++
++        self.setWidget(self.vbox.Widget())
++
++        AddSubWindow(glb.mainwindow.mdi_area, self, table_name + " Table")
++
++    def Find(self, value, direction, pattern, context):
++        self.view.setFocus()
++        self.find_bar.Busy()
++        self.finder.Find(value, direction, pattern, context, self.FindDone)
++
++    def FindDone(self, row):
++        self.find_bar.Idle()
++        if row >= 0:
++            self.view.setCurrentIndex(self.model.mapFromSource(self.data_model.index(row, 0, QModelIndex())))
++        else:
++            self.find_bar.NotFound()
++
++# Table list
++
++def GetTableList(glb):
++    tables = []
++    query = QSqlQuery(glb.db)
++    if glb.dbref.is_sqlite3:
++        QueryExec(query, "SELECT name FROM sqlite_master WHERE type IN ( 'table' , 'view' ) ORDER BY name")
++    else:
++        QueryExec(query, "SELECT table_name FROM information_schema.tables WHERE table_schema = 'public' AND table_type IN ( 'BASE TABLE' , 'VIEW' ) ORDER BY table_name")
++    while query.next():
++        tables.append(query.value(0))
++    if glb.dbref.is_sqlite3:
++        tables.append("sqlite_master")
++    else:
++        tables.append("information_schema.tables")
++        tables.append("information_schema.views")
++        tables.append("information_schema.columns")
++    return tables
++
++# Top Calls data model
++
++class TopCallsModel(SQLTableModel):
++
++    def __init__(self, glb, report_vars, parent=None):
++        text = ""
++        if not glb.dbref.is_sqlite3:
++            text = "::text"
++        limit = ""
++        if len(report_vars.limit):
++            limit = " LIMIT " + report_vars.limit
++        sql = ("SELECT comm, pid, tid, name,"
++            " CASE"
++            " WHEN (short_name = '[kernel.kallsyms]') THEN '[kernel]'" + text +
++            " ELSE short_name"
++            " END AS dso,"
++            " call_time, return_time, (return_time - call_time) AS elapsed_time, branch_count, "
++            " CASE"
++            " WHEN (calls.flags = 1) THEN 'no call'" + text +
++            " WHEN (calls.flags = 2) THEN 'no return'" + text +
++            " WHEN (calls.flags = 3) THEN 'no call/return'" + text +
++            " ELSE ''" + text +
++            " END AS flags"
++            " FROM calls"
++            " INNER JOIN call_paths ON calls.call_path_id = call_paths.id"
++            " INNER JOIN symbols ON call_paths.symbol_id = symbols.id"
++            " INNER JOIN dsos ON symbols.dso_id = dsos.id"
++            " INNER JOIN comms ON calls.comm_id = comms.id"
++            " INNER JOIN threads ON calls.thread_id = threads.id" +
++            report_vars.where_clause +
++            " ORDER BY elapsed_time DESC" +
++            limit
++            )
++        column_headers = ("Command", "PID", "TID", "Symbol", "Object", "Call Time", "Return Time", "Elapsed Time (ns)", "Branch Count", "Flags")
++        self.alignment = (Qt.AlignLeft, Qt.AlignLeft, Qt.AlignLeft, Qt.AlignLeft, Qt.AlignLeft, Qt.AlignLeft, Qt.AlignLeft, Qt.AlignRight, Qt.AlignRight, Qt.AlignLeft)
++        super(TopCallsModel, self).__init__(glb, sql, column_headers, parent)
++
++    def columnAlignment(self, column):
++        return self.alignment[column]
++
++# Top Calls report creation dialog
++
++class TopCallsDialog(ReportDialogBase):
++
++    def __init__(self, glb, parent=None):
++        title = "Top Calls by Elapsed Time"
++        items = (lambda g, p: LineEditDataItem(g, "Report name:", "Enter a name to appear in the window title bar", p, "REPORTNAME"),
++             lambda g, p: SQLTableDataItem(g, "Commands:", "Only calls with these commands will be included", "comms", "comm", "comm_id", "", p),
++             lambda g, p: SQLTableDataItem(g, "PIDs:", "Only calls with these process IDs will be included", "threads", "pid", "thread_id", "", p),
++             lambda g, p: SQLTableDataItem(g, "TIDs:", "Only calls with these thread IDs will be included", "threads", "tid", "thread_id", "", p),
++             lambda g, p: SQLTableDataItem(g, "DSOs:", "Only calls with these DSOs will be included", "dsos", "short_name", "dso_id", "", p),
++             lambda g, p: SQLTableDataItem(g, "Symbols:", "Only calls with these symbols will be included", "symbols", "name", "symbol_id", "", p),
++             lambda g, p: LineEditDataItem(g, "Raw SQL clause: ", "Enter a raw SQL WHERE clause", p),
++             lambda g, p: PositiveIntegerDataItem(g, "Record limit:", "Limit selection to this number of records", p, "LIMIT", "100"))
++        super(TopCallsDialog, self).__init__(glb, title, items, False, parent)
++
++# Top Calls window
++
++class TopCallsWindow(QMdiSubWindow, ResizeColumnsToContentsBase):
++
++    def __init__(self, glb, report_vars, parent=None):
++        super(TopCallsWindow, self).__init__(parent)
++
++        self.data_model = LookupCreateModel("Top Calls " + report_vars.UniqueId(), lambda: TopCallsModel(glb, report_vars))
++        self.model = self.data_model
++
++        self.view = QTableView()
++        self.view.setModel(self.model)
++        self.view.setEditTriggers(QAbstractItemView.NoEditTriggers)
++        self.view.verticalHeader().setVisible(False)
++        self.view.setSelectionMode(QAbstractItemView.ContiguousSelection)
++        self.view.CopyCellsToClipboard = CopyTableCellsToClipboard
++
++        self.context_menu = ContextMenu(self.view)
++
++        self.ResizeColumnsToContents()
++
++        self.find_bar = FindBar(self, self, True)
++
++        self.finder = ChildDataItemFinder(self.model)
++
++        self.fetch_bar = FetchMoreRecordsBar(self.data_model, self)
++
++        self.vbox = VBox(self.view, self.find_bar.Widget(), self.fetch_bar.Widget())
++
++        self.setWidget(self.vbox.Widget())
++
++        AddSubWindow(glb.mainwindow.mdi_area, self, report_vars.name)
++
++    def Find(self, value, direction, pattern, context):
++        self.view.setFocus()
++        self.find_bar.Busy()
++        self.finder.Find(value, direction, pattern, context, self.FindDone)
++
++    def FindDone(self, row):
++        self.find_bar.Idle()
++        if row >= 0:
++            self.view.setCurrentIndex(self.model.index(row, 0, QModelIndex()))
++        else:
++            self.find_bar.NotFound()
++
++# Action Definition
++
++def CreateAction(label, tip, callback, parent=None, shortcut=None):
++    action = QAction(label, parent)
++    if shortcut != None:
++        action.setShortcuts(shortcut)
++    action.setStatusTip(tip)
++    action.triggered.connect(callback)
++    return action
++
++# Typical application actions
++
++def CreateExitAction(app, parent=None):
++    return CreateAction("&Quit", "Exit the application", app.closeAllWindows, parent, QKeySequence.Quit)
++
++# Typical MDI actions
++
++def CreateCloseActiveWindowAction(mdi_area):
++    return CreateAction("Cl&ose", "Close the active window", mdi_area.closeActiveSubWindow, mdi_area)
++
++def CreateCloseAllWindowsAction(mdi_area):
++    return CreateAction("Close &All", "Close all the windows", mdi_area.closeAllSubWindows, mdi_area)
++
++def CreateTileWindowsAction(mdi_area):
++    return CreateAction("&Tile", "Tile the windows", mdi_area.tileSubWindows, mdi_area)
++
++def CreateCascadeWindowsAction(mdi_area):
++    return CreateAction("&Cascade", "Cascade the windows", mdi_area.cascadeSubWindows, mdi_area)
++
++def CreateNextWindowAction(mdi_area):
++    return CreateAction("Ne&xt", "Move the focus to the next window", mdi_area.activateNextSubWindow, mdi_area, QKeySequence.NextChild)
++
++def CreatePreviousWindowAction(mdi_area):
++    return CreateAction("Pre&vious", "Move the focus to the previous window", mdi_area.activatePreviousSubWindow, mdi_area, QKeySequence.PreviousChild)
++
++# Typical MDI window menu
++
++class WindowMenu():
++
++    def __init__(self, mdi_area, menu):
++        self.mdi_area = mdi_area
++        self.window_menu = menu.addMenu("&Windows")
++        self.close_active_window = CreateCloseActiveWindowAction(mdi_area)
++        self.close_all_windows = CreateCloseAllWindowsAction(mdi_area)
++        self.tile_windows = CreateTileWindowsAction(mdi_area)
++        self.cascade_windows = CreateCascadeWindowsAction(mdi_area)
++        self.next_window = CreateNextWindowAction(mdi_area)
++        self.previous_window = CreatePreviousWindowAction(mdi_area)
++        self.window_menu.aboutToShow.connect(self.Update)
++
++    def Update(self):
++        self.window_menu.clear()
++        sub_window_count = len(self.mdi_area.subWindowList())
++        have_sub_windows = sub_window_count != 0
++        self.close_active_window.setEnabled(have_sub_windows)
++        self.close_all_windows.setEnabled(have_sub_windows)
++        self.tile_windows.setEnabled(have_sub_windows)
++        self.cascade_windows.setEnabled(have_sub_windows)
++        self.next_window.setEnabled(have_sub_windows)
++        self.previous_window.setEnabled(have_sub_windows)
++        self.window_menu.addAction(self.close_active_window)
++        self.window_menu.addAction(self.close_all_windows)
++        self.window_menu.addSeparator()
++        self.window_menu.addAction(self.tile_windows)
++        self.window_menu.addAction(self.cascade_windows)
++        self.window_menu.addSeparator()
++        self.window_menu.addAction(self.next_window)
++        self.window_menu.addAction(self.previous_window)
++        if sub_window_count == 0:
++            return
++        self.window_menu.addSeparator()
++        nr = 1
++        for sub_window in self.mdi_area.subWindowList():
++            label = str(nr) + " " + sub_window.name
++            if nr < 10:
++                label = "&" + label
++            action = self.window_menu.addAction(label)
++            action.setCheckable(True)
++            action.setChecked(sub_window == self.mdi_area.activeSubWindow())
++            action.triggered.connect(lambda a=None,x=nr: self.setActiveSubWindow(x))
++            self.window_menu.addAction(action)
++            nr += 1
++
++    def setActiveSubWindow(self, nr):
++        self.mdi_area.setActiveSubWindow(self.mdi_area.subWindowList()[nr - 1])
++
++# Help text
++
++glb_help_text = """
++<h1>Contents</h1>
++<style>
++p.c1 {
++    text-indent: 40px;
 +}
-+
-+static int perf_sample__sprintf_flags(u32 flags, char *str, size_t sz)
-+{
-+	const char *chars =3D PERF_IP_FLAG_CHARS;
-+	const size_t n =3D strlen(PERF_IP_FLAG_CHARS);
-+	size_t i, pos =3D 0;
-+	int ret;
-+
-+	ret =3D sample_flags_to_name(flags, str, sz);
-+	if (ret > 0)
-+		return ret;
-+
-+	for (i =3D 0; i < n; i++, flags >>=3D 1) {
-+		if ((flags & 1) && pos < sz)
-+			str[pos++] =3D chars[i];
-+	}
-+	for (; i < 32; i++, flags >>=3D 1) {
-+		if ((flags & 1) && pos < sz)
-+			str[pos++] =3D '?';
-+	}
-+	if (pos < sz)
-+		str[pos] =3D 0;
-+
-+	return pos;
++p.c2 {
++    text-indent: 80px;
 +}
++}
++</style>
++<p class=c1><a href=#reports>1. Reports</a></p>
++<p class=c2><a href=#callgraph>1.1 Context-Sensitive Call Graph</a></p>
++<p class=c2><a href=#calltree>1.2 Call Tree</a></p>
++<p class=c2><a href=#allbranches>1.3 All branches</a></p>
++<p class=c2><a href=#selectedbranches>1.4 Selected branches</a></p>
++<p class=c2><a href=#topcallsbyelapsedtime>1.5 Top calls by elapsed time</a></p>
++<p class=c1><a href=#charts>2. Charts</a></p>
++<p class=c2><a href=#timechartbycpu>2.1 Time chart by CPU</a></p>
++<p class=c1><a href=#tables>3. Tables</a></p>
++<h1 id=reports>1. Reports</h1>
++<h2 id=callgraph>1.1 Context-Sensitive Call Graph</h2>
++The result is a GUI window with a tree representing a context-sensitive
++call-graph. Expanding a couple of levels of the tree and adjusting column
++widths to suit will display something like:
++<pre>
++                                         Call Graph: pt_example
++Call Path                          Object      Count   Time(ns)  Time(%)  Branch Count   Branch Count(%)
++v- ls
++    v- 2638:2638
++        v- _start                  ld-2.19.so    1     10074071   100.0         211135            100.0
++          |- unknown               unknown       1        13198     0.1              1              0.0
++          >- _dl_start             ld-2.19.so    1      1400980    13.9          19637              9.3
++          >- _d_linit_internal     ld-2.19.so    1       448152     4.4          11094              5.3
++          v-__libc_start_main@plt  ls            1      8211741    81.5         180397             85.4
++             >- _dl_fixup          ld-2.19.so    1         7607     0.1            108              0.1
++             >- __cxa_atexit       libc-2.19.so  1        11737     0.1             10              0.0
++             >- __libc_csu_init    ls            1        10354     0.1             10              0.0
++             |- _setjmp            libc-2.19.so  1            0     0.0              4              0.0
++             v- main               ls            1      8182043    99.6         180254             99.9
++</pre>
++<h3>Points to note:</h3>
++<ul>
++<li>The top level is a command name (comm)</li>
++<li>The next level is a thread (pid:tid)</li>
++<li>Subsequent levels are functions</li>
++<li>'Count' is the number of calls</li>
++<li>'Time' is the elapsed time until the function returns</li>
++<li>Percentages are relative to the level above</li>
++<li>'Branch Count' is the total number of branches for that function and all functions that it calls
++</ul>
++<h3>Find</h3>
++Ctrl-F displays a Find bar which finds function names by either an exact match or a pattern match.
++The pattern matching symbols are ? for any character and * for zero or more characters.
++<h2 id=calltree>1.2 Call Tree</h2>
++The Call Tree report is very similar to the Context-Sensitive Call Graph, but the data is not aggregated.
++Also the 'Count' column, which would be always 1, is replaced by the 'Call Time'.
++<h2 id=allbranches>1.3 All branches</h2>
++The All branches report displays all branches in chronological order.
++Not all data is fetched immediately. More records can be fetched using the Fetch bar provided.
++<h3>Disassembly</h3>
++Open a branch to display disassembly. This only works if:
++<ol>
++<li>The disassembler is available. Currently, only Intel XED is supported - see <a href=#xed>Intel XED Setup</a></li>
++<li>The object code is available. Currently, only the perf build ID cache is searched for object code.
++The default directory ~/.debug can be overridden by setting environment variable PERF_BUILDID_DIR.
++One exception is kcore where the DSO long name is used (refer dsos_view on the Tables menu),
++or alternatively, set environment variable PERF_KCORE to the kcore file name.</li>
++</ol>
++<h4 id=xed>Intel XED Setup</h4>
++To use Intel XED, libxed.so must be present.  To build and install libxed.so:
++<pre>
++git clone https://github.com/intelxed/mbuild.git mbuild
++git clone https://github.com/intelxed/xed
++cd xed
++./mfile.py --share
++sudo ./mfile.py --prefix=/usr/local install
++sudo ldconfig
++</pre>
++<h3>Instructions per Cycle (IPC)</h3>
++If available, IPC information is displayed in columns 'insn_cnt', 'cyc_cnt' and 'IPC'.
++<p><b>Intel PT note:</b> The information applies to the blocks of code ending with, and including, that branch.
++Due to the granularity of timing information, the number of cycles for some code blocks will not be known.
++In that case, 'insn_cnt', 'cyc_cnt' and 'IPC' are zero, but when 'IPC' is displayed it covers the period
++since the previous displayed 'IPC'.
++<h3>Find</h3>
++Ctrl-F displays a Find bar which finds substrings by either an exact match or a regular expression match.
++Refer to Python documentation for the regular expression syntax.
++All columns are searched, but only currently fetched rows are searched.
++<h2 id=selectedbranches>1.4 Selected branches</h2>
++This is the same as the <a href=#allbranches>All branches</a> report but with the data reduced
++by various selection criteria. A dialog box displays available criteria which are AND'ed together.
++<h3>1.4.1 Time ranges</h3>
++The time ranges hint text shows the total time range. Relative time ranges can also be entered in
++ms, us or ns. Also, negative values are relative to the end of trace.  Examples:
++<pre>
++    81073085947329-81073085958238	From 81073085947329 to 81073085958238
++    100us-200us		From 100us to 200us
++    10ms-			From 10ms to the end
++    -100ns			The first 100ns
++    -10ms-			The last 10ms
++</pre>
++N.B. Due to the granularity of timestamps, there could be no branches in any given time range.
++<h2 id=topcallsbyelapsedtime>1.5 Top calls by elapsed time</h2>
++The Top calls by elapsed time report displays calls in descending order of time elapsed between when the function was called and when it returned.
++The data is reduced by various selection criteria. A dialog box displays available criteria which are AND'ed together.
++If not all data is fetched, a Fetch bar is provided. Ctrl-F displays a Find bar.
++<h1 id=charts>2. Charts</h1>
++<h2 id=timechartbycpu>2.1 Time chart by CPU</h2>
++This chart displays context switch information when that data is available. Refer to context_switches_view on the Tables menu.
++<h3>Features</h3>
++<ol>
++<li>Mouse over to highight the task and show the time</li>
++<li>Drag the mouse to select a region and zoom by pushing the Zoom button</li>
++<li>Go back and forward by pressing the arrow buttons</li>
++<li>If call information is available, right-click to show a call tree opened to that task and time.
++Note, the call tree may take some time to appear, and there may not be call information for the task or time selected.
++</li>
++</ol>
++<h3>Important</h3>
++The graph can be misleading in the following respects:
++<ol>
++<li>The graph shows the first task on each CPU as running from the beginning of the time range.
++Because tracing might start on different CPUs at different times, that is not necessarily the case.
++Refer to context_switches_view on the Tables menu to understand what data the graph is based upon.</li>
++<li>Similarly, the last task on each CPU can be showing running longer than it really was.
++Again, refer to context_switches_view on the Tables menu to understand what data the graph is based upon.</li>
++<li>When the mouse is over a task, the highlighted task might not be visible on the legend without scrolling if the legend does not fit fully in the window</li>
++</ol>
++<h1 id=tables>3. Tables</h1>
++The Tables menu shows all tables and views in the database. Most tables have an associated view
++which displays the information in a more friendly way. Not all data for large tables is fetched
++immediately. More records can be fetched using the Fetch bar provided. Columns can be sorted,
++but that can be slow for large tables.
++<p>There are also tables of database meta-information.
++For SQLite3 databases, the sqlite_master table is included.
++For PostgreSQL databases, information_schema.tables/views/columns are included.
++<h3>Find</h3>
++Ctrl-F displays a Find bar which finds substrings by either an exact match or a regular expression match.
++Refer to Python documentation for the regular expression syntax.
++All columns are searched, but only currently fetched rows are searched.
++<p>N.B. Results are found in id order, so if the table is re-ordered, find-next and find-previous
++will go to the next/previous result in id order, instead of display order.
++"""
 +
- static int perf_sample__fprintf_flags(u32 flags, FILE *fp)
- {
- 	char str[SAMPLE_FLAGS_BUF_SIZE];
-@@ -2653,8 +2794,6 @@ static void process_event(struct perf_script *script,
- 		fflush(fp);
- }
-=20
--static struct scripting_ops	*scripting_ops;
--
- static void __process_stat(struct evsel *counter, u64 tstamp)
- {
- 	int nthreads =3D perf_thread_map__nr(counter->core.threads);
-@@ -2689,37 +2828,14 @@ static void __process_stat(struct evsel *counter, u=
-64 tstamp)
-=20
- static void process_stat(struct evsel *counter, u64 tstamp)
- {
--	if (scripting_ops && scripting_ops->process_stat)
--		scripting_ops->process_stat(&stat_config, counter, tstamp);
--	else
--		__process_stat(counter, tstamp);
--}
--
--static void process_stat_interval(u64 tstamp)
--{
--	if (scripting_ops && scripting_ops->process_stat_interval)
--		scripting_ops->process_stat_interval(tstamp);
--}
--
--static void setup_scripting(void)
--{
--#ifdef HAVE_LIBTRACEEVENT
--	setup_perl_scripting();
--#endif
--	setup_python_scripting();
-+	__process_stat(counter, tstamp);
- }
-=20
--static int flush_scripting(void)
-+static void process_stat_interval(u64 tstamp __maybe_unused)
- {
--	return scripting_ops ? scripting_ops->flush_script() : 0;
- }
-=20
--static int cleanup_scripting(void)
--{
--	pr_debug("\nperf script stopped\n");
-=20
--	return scripting_ops ? scripting_ops->stop_script() : 0;
--}
-=20
- static bool filter_cpu(struct perf_sample *sample)
- {
-@@ -2793,20 +2909,7 @@ static int process_sample_event(const struct perf_to=
-ol *tool,
- 		goto out_put;
- 	}
-=20
--	if (scripting_ops) {
--		struct addr_location *addr_al_ptr =3D NULL;
--
--		if ((evsel->core.attr.sample_type & PERF_SAMPLE_ADDR) &&
--		    sample_addr_correlates_sym(&evsel->core.attr)) {
--			if (!addr_al.thread)
--				thread__resolve(al.thread, &addr_al, sample);
--			addr_al_ptr =3D &addr_al;
--		}
--		scripting_ops->process_event(event, sample, &al, addr_al_ptr);
--	} else {
--		process_event(scr, sample, &al, &addr_al, machine);
--	}
--
-+	process_event(scr, sample, &al, &addr_al, machine);
- out_put:
- 	addr_location__exit(&addr_al);
- 	addr_location__exit(&al);
-@@ -3118,8 +3221,7 @@ static int process_switch_event(const struct perf_too=
-l *tool,
- 	if (perf_event__process_switch(tool, event, sample, machine) < 0)
- 		return -1;
-=20
--	if (scripting_ops && scripting_ops->process_switch && !filter_cpu(sample)=
-)
--		scripting_ops->process_switch(event, sample, machine);
++# Help window
 +
-=20
- 	if (!script->show_switch_events)
- 		return 0;
-@@ -3128,17 +3230,7 @@ static int process_switch_event(const struct perf_to=
-ol *tool,
- 			   sample->tid);
- }
-=20
--static int process_auxtrace_error(const struct perf_tool *tool,
--				  struct perf_session *session,
--				  union perf_event *event)
--{
--	if (scripting_ops && scripting_ops->process_auxtrace_error) {
--		scripting_ops->process_auxtrace_error(session, event);
--		return 0;
--	}
-=20
--	return perf_event__process_auxtrace_error(tool, session, event);
--}
-=20
- static int
- process_lost_event(const struct perf_tool *tool,
-@@ -3152,12 +3244,11 @@ process_lost_event(const struct perf_tool *tool,
-=20
- static int
- process_throttle_event(const struct perf_tool *tool __maybe_unused,
--		       union perf_event *event,
--		       struct perf_sample *sample,
--		       struct machine *machine)
-+		       union perf_event *event __maybe_unused,
-+		       struct perf_sample *sample __maybe_unused,
-+		       struct machine *machine __maybe_unused)
- {
--	if (scripting_ops && scripting_ops->process_throttle)
--		scripting_ops->process_throttle(event, sample, machine);
++class HelpWindow(QMdiSubWindow):
 +
- 	return 0;
- }
-=20
-@@ -3300,10 +3391,9 @@ static int __cmd_script(struct perf_script *script)
- 		script->tool.mmap =3D process_mmap_event;
- 		script->tool.mmap2 =3D process_mmap2_event;
- 	}
--	if (script->show_switch_events || (scripting_ops && scripting_ops->proces=
-s_switch))
-+	if (script->show_switch_events)
- 		script->tool.context_switch =3D process_switch_event;
--	if (scripting_ops && scripting_ops->process_auxtrace_error)
--		script->tool.auxtrace_error =3D process_auxtrace_error;
-+	script->tool.auxtrace_error =3D perf_event__process_auxtrace_error;
- 	if (script->show_namespace_events)
- 		script->tool.namespaces =3D process_namespaces_event;
- 	if (script->show_cgroup_events)
-@@ -3340,96 +3430,49 @@ static int __cmd_script(struct perf_script *script)
- 	return ret;
- }
-=20
--static int list_available_languages_cb(struct scripting_ops *ops, const ch=
-ar *spec)
--{
--	fprintf(stderr, "  %-42s [%s]\n", spec, ops->name);
--	return 0;
--}
-=20
--static void list_available_languages(void)
--{
--	fprintf(stderr, "\n");
--	fprintf(stderr, "Scripting language extensions (used in "
--		"perf script -s [spec:]script.[spec]):\n\n");
--	script_spec__for_each(&list_available_languages_cb);
--	fprintf(stderr, "\n");
--}
-=20
- /* Find script file relative to current directory or exec path */
- static char *find_script(const char *script)
- {
- 	char path[PATH_MAX];
-+	char *exec_path;
-=20
--	if (!scripting_ops) {
--		const char *ext =3D strrchr(script, '.');
-+	if (strchr(script, '/') && access(script, R_OK) =3D=3D 0)
-+		return strdup(script);
-=20
--		if (!ext)
--			return NULL;
-+	exec_path =3D get_argv_exec_path();
-+	if (exec_path) {
-+		snprintf(path, sizeof(path), "%s/python/%s", exec_path, script);
-+		if (access(path, R_OK) =3D=3D 0) {
-+			free(exec_path);
-+			return strdup(path);
-+		}
-=20
--		scripting_ops =3D script_spec__lookup(++ext);
--		if (!scripting_ops)
--			return NULL;
-+		snprintf(path, sizeof(path), "%s/python/%s.py", exec_path, script);
-+		free(exec_path);
-+		if (access(path, R_OK) =3D=3D 0)
-+			return strdup(path);
- 	}
-=20
--	if (access(script, R_OK)) {
--		char *exec_path =3D get_argv_exec_path();
--
--		if (!exec_path)
--			return NULL;
--		snprintf(path, sizeof(path), "%s/scripts/%s/%s",
--			 exec_path, scripting_ops->dirname, script);
--		free(exec_path);
--		script =3D path;
--		if (access(script, R_OK))
--			return NULL;
-+	if (access(script, R_OK) =3D=3D 0) {
-+		if (!strchr(script, '/')) {
-+			snprintf(path, sizeof(path), "./%s", script);
-+			return strdup(path);
-+		}
-+		return strdup(script);
- 	}
--	return strdup(script);
++    def __init__(self, glb, parent=None):
++        super(HelpWindow, self).__init__(parent)
 +
-+	/* Failure to find script. */
-+	return NULL;
- }
-=20
- static int parse_scriptname(const struct option *opt __maybe_unused,
- 			    const char *str, int unset __maybe_unused)
- {
--	char spec[PATH_MAX];
--	const char *script, *ext;
--	int len;
--
--	if (strcmp(str, "lang") =3D=3D 0) {
--		list_available_languages();
--		exit(0);
--	}
--
--	script =3D strchr(str, ':');
--	if (script) {
--		len =3D script - str;
--		if (len >=3D PATH_MAX) {
--			fprintf(stderr, "invalid language specifier");
--			return -1;
--		}
--		strncpy(spec, str, len);
--		spec[len] =3D '\0';
--		scripting_ops =3D script_spec__lookup(spec);
--		if (!scripting_ops) {
--			fprintf(stderr, "invalid language specifier");
--			return -1;
--		}
--		script++;
--	} else {
--		script =3D str;
--		ext =3D strrchr(script, '.');
--		if (!ext) {
--			fprintf(stderr, "invalid script extension");
--			return -1;
--		}
--		scripting_ops =3D script_spec__lookup(++ext);
--		if (!scripting_ops) {
--			fprintf(stderr, "invalid script extension");
--			return -1;
--		}
--	}
--
--	script_name =3D find_script(script);
-+	script_name =3D find_script(str);
- 	if (!script_name)
--		script_name =3D strdup(script);
-+		script_name =3D strdup(str);
-=20
- 	return 0;
- }
-@@ -3625,7 +3668,6 @@ struct script_desc {
- 	struct list_head	node;
- 	char			*name;
- 	char			*half_liner;
--	char			*args;
- };
-=20
- static LIST_HEAD(script_descs);
-@@ -3640,16 +3682,18 @@ static struct script_desc *script_desc__new(const c=
-har *name)
- 	return s;
- }
-=20
--static void script_desc__delete(struct script_desc *s)
--{
--	zfree(&s->name);
--	zfree(&s->half_liner);
--	zfree(&s->args);
--	free(s);
--}
++        self.text = QTextBrowser()
++        self.text.setHtml(glb_help_text)
++        self.text.setReadOnly(True)
++        self.text.setOpenExternalLinks(True)
 +
-=20
- static void script_desc__add(struct script_desc *s)
- {
-+	struct script_desc *pos;
++        self.setWidget(self.text)
 +
-+	list_for_each_entry(pos, &script_descs, node) {
-+		if (s->name && pos->name && strcasecmp(s->name, pos->name) < 0) {
-+			list_add_tail(&s->node, &pos->node);
-+			return;
-+		}
-+	}
- 	list_add_tail(&s->node, &script_descs);
- }
-=20
-@@ -3697,15 +3741,66 @@ static int read_script_info(struct script_desc *des=
-c, const char *filename)
- {
- 	char line[BUFSIZ], *p;
- 	FILE *fp;
-+	bool in_docstring =3D false;
-+	bool found_description =3D false;
-=20
- 	fp =3D fopen(filename, "r");
- 	if (!fp)
- 		return -1;
-=20
- 	while (fgets(line, sizeof(line), fp)) {
-+		static const char * const triple_quote_str[] =3D {
-+			"\"\"\"",
-+			"'''",
-+			"r\"\"\"",
-+		};
- 		p =3D skip_spaces(line);
- 		if (strlen(p) =3D=3D 0)
- 			continue;
++        AddSubWindow(glb.mainwindow.mdi_area, self, "Exported SQL Viewer Help")
 +
-+		if (in_docstring) {
-+			if (strlen(p) && p[strlen(p) - 1] =3D=3D '\n')
-+				p[strlen(p) - 1] =3D '\0';
-+			zfree(&desc->half_liner);
-+			desc->half_liner =3D strdup(skip_spaces(p));
-+			in_docstring =3D false;
-+			found_description =3D true;
-+			break;
-+		}
++# Main window that only displays the help text
 +
++class HelpOnlyWindow(QMainWindow):
 +
-+			for (size_t i =3D 0; i < ARRAY_SIZE(triple_quote_str); i++) {
-+				const char *quote =3D triple_quote_str[i];
-+				const char *close_quote =3D quote;
++    def __init__(self, parent=None):
++        super(HelpOnlyWindow, self).__init__(parent)
 +
-+				if (quote[0] =3D=3D 'r' || quote[0] =3D=3D 'R')
-+					close_quote++;
++        self.setMinimumSize(200, 100)
++        self.resize(800, 600)
++        self.setWindowTitle("Exported SQL Viewer Help")
++        self.setWindowIcon(self.style().standardIcon(QStyle.SP_MessageBoxInformation))
 +
-+				if (!strstarts(p, quote))
-+					continue;
++        self.text = QTextBrowser()
++        self.text.setHtml(glb_help_text)
++        self.text.setReadOnly(True)
++        self.text.setOpenExternalLinks(True)
 +
-+				p +=3D strlen(quote);
-+				p =3D skip_spaces(p);
-+				if (strlen(p) > 0) {
-+					if (p[strlen(p) - 1] =3D=3D '\n')
-+						p[strlen(p) - 1] =3D '\0';
-+					p =3D skip_spaces(p);
-+					if (str_ends_with(p, close_quote))
-+						p[strlen(p) - strlen(close_quote)] =3D '\0';
-+					zfree(&desc->half_liner);
-+					desc->half_liner =3D strdup(skip_spaces(p));
-+					found_description =3D true;
-+					break;
-+				}
-+				in_docstring =3D true;
-+				break;
-+		}
-+		if (found_description)
-+			break;
++        self.setCentralWidget(self.text)
 +
-+		if (in_docstring)
-+			continue;
++# PostqreSQL server version
 +
- 		if (*p !=3D '#')
- 			continue;
- 		p++;
-@@ -3718,14 +3813,17 @@ static int read_script_info(struct script_desc *des=
-c, const char *filename)
-=20
- 		if (!strncmp(p, "description:", strlen("description:"))) {
- 			p +=3D strlen("description:");
-+			zfree(&desc->half_liner);
- 			desc->half_liner =3D strdup(skip_spaces(p));
--			continue;
-+			found_description =3D true;
-+			break;
- 		}
-=20
--		if (!strncmp(p, "args:", strlen("args:"))) {
--			p +=3D strlen("args:");
--			desc->args =3D strdup(skip_spaces(p));
--			continue;
-+		if (!found_description && strlen(p) > 0 &&
-+		    strncmp(p, "SPDX-License-Identifier", 23)) {
-+			if (!desc->half_liner)
-+				desc->half_liner =3D strdup(p);
-+			// Don't set found_description, maybe we find a better "description:" l=
-ater!
- 		}
- 	}
-=20
-@@ -3756,23 +3854,21 @@ static int list_available_scripts(const struct opti=
-on *opt __maybe_unused,
- 				  const char *s __maybe_unused,
- 				  int unset __maybe_unused)
- {
--	struct dirent *script_dirent, *lang_dirent;
--	char *buf, *scripts_path, *script_path, *lang_path, *first_half;
--	DIR *scripts_dir, *lang_dir;
-+	struct dirent *script_dirent;
-+	char *buf, *scripts_path, *script_path;
-+	DIR *scripts_dir;
- 	struct script_desc *desc;
- 	char *script_root;
-=20
--	buf =3D malloc(3 * MAXPATHLEN + BUFSIZ);
-+	buf =3D malloc(2 * MAXPATHLEN + BUFSIZ);
- 	if (!buf) {
- 		pr_err("malloc failed\n");
- 		exit(-1);
- 	}
- 	scripts_path =3D buf;
- 	script_path =3D buf + MAXPATHLEN;
--	lang_path =3D buf + 2 * MAXPATHLEN;
--	first_half =3D buf + 3 * MAXPATHLEN;
-=20
--	snprintf(scripts_path, MAXPATHLEN, "%s/scripts", get_argv_exec_path());
-+	snprintf(scripts_path, MAXPATHLEN, "%s/python", get_argv_exec_path());
-=20
- 	scripts_dir =3D opendir(scripts_path);
- 	if (!scripts_dir) {
-@@ -3784,30 +3880,26 @@ static int list_available_scripts(const struct opti=
-on *opt __maybe_unused,
- 		exit(-1);
- 	}
-=20
--	for_each_lang(scripts_path, scripts_dir, lang_dirent) {
--		scnprintf(lang_path, MAXPATHLEN, "%s/%s/bin", scripts_path,
--			  lang_dirent->d_name);
--		lang_dir =3D opendir(lang_path);
--		if (!lang_dir)
--			continue;
-+	while ((script_dirent =3D readdir(scripts_dir)) !=3D NULL) {
-+		if (script_dirent->d_type !=3D DT_DIR &&
-+		    (script_dirent->d_type !=3D DT_UNKNOWN ||
-+		     !is_directory(scripts_path, script_dirent))) {
-=20
--		for_each_script(lang_path, lang_dir, script_dirent) {
--			script_root =3D get_script_root(script_dirent, REPORT_SUFFIX);
-+			script_root =3D get_script_root(script_dirent, ".py");
- 			if (script_root) {
- 				desc =3D script_desc__findnew(script_root);
- 				scnprintf(script_path, MAXPATHLEN, "%s/%s",
--					  lang_path, script_dirent->d_name);
-+					  scripts_path, script_dirent->d_name);
- 				read_script_info(desc, script_path);
- 				free(script_root);
- 			}
- 		}
- 	}
-+	closedir(scripts_dir);
-=20
--	fprintf(stdout, "List of available trace scripts:\n");
-+	fprintf(stdout, "List of available scripts:\n");
- 	list_for_each_entry(desc, &script_descs, node) {
--		sprintf(first_half, "%s %s", desc->name,
--			desc->args ? desc->args : "");
--		fprintf(stdout, "  %-36s %s\n", first_half,
-+		fprintf(stdout, "  %-36s %s\n", desc->name,
- 			desc->half_liner ? desc->half_liner : "");
- 	}
-=20
-@@ -3843,93 +3935,7 @@ static void free_dlarg(void)
- 	free(dlargv);
- }
-=20
--static char *get_script_path(const char *script_root, const char *suffix)
--{
--	struct dirent *script_dirent, *lang_dirent;
--	char scripts_path[MAXPATHLEN];
--	char script_path[MAXPATHLEN];
--	DIR *scripts_dir, *lang_dir;
--	char lang_path[MAXPATHLEN];
--	char *__script_root;
--
--	snprintf(scripts_path, MAXPATHLEN, "%s/scripts", get_argv_exec_path());
--
--	scripts_dir =3D opendir(scripts_path);
--	if (!scripts_dir)
--		return NULL;
--
--	for_each_lang(scripts_path, scripts_dir, lang_dirent) {
--		scnprintf(lang_path, MAXPATHLEN, "%s/%s/bin", scripts_path,
--			  lang_dirent->d_name);
--		lang_dir =3D opendir(lang_path);
--		if (!lang_dir)
--			continue;
--
--		for_each_script(lang_path, lang_dir, script_dirent) {
--			__script_root =3D get_script_root(script_dirent, suffix);
--			if (__script_root && !strcmp(script_root, __script_root)) {
--				free(__script_root);
--				closedir(scripts_dir);
--				scnprintf(script_path, MAXPATHLEN, "%s/%s",
--					  lang_path, script_dirent->d_name);
--				closedir(lang_dir);
--				return strdup(script_path);
--			}
--			free(__script_root);
--		}
--		closedir(lang_dir);
--	}
--	closedir(scripts_dir);
--
--	return NULL;
--}
--
--static bool is_top_script(const char *script_path)
--{
--	return ends_with(script_path, "top") !=3D NULL;
--}
-=20
--static int has_required_arg(char *script_path)
--{
--	struct script_desc *desc;
--	int n_args =3D 0;
--	char *p;
--
--	desc =3D script_desc__new(NULL);
--
--	if (read_script_info(desc, script_path))
--		goto out;
--
--	if (!desc->args)
--		goto out;
--
--	for (p =3D desc->args; *p; p++)
--		if (*p =3D=3D '<')
--			n_args++;
--out:
--	script_desc__delete(desc);
--
--	return n_args;
--}
--
--static int have_cmd(int argc, const char **argv)
--{
--	char **__argv =3D calloc(argc, sizeof(const char *));
--
--	if (!__argv) {
--		pr_err("malloc failed\n");
--		return -1;
--	}
--
--	memcpy(__argv, argv, sizeof(const char *) * argc);
--	argc =3D parse_options(argc, (const char **)__argv, record_options,
--			     NULL, PARSE_OPT_STOP_AT_NON_OPTION);
--	free(__argv);
--
--	system_wide =3D (argc =3D=3D 0);
--
--	return 0;
--}
-=20
- static void script__setup_sample_type(struct perf_script *script)
- {
-@@ -4115,17 +4121,13 @@ int cmd_script(int argc, const char **argv)
- 	bool show_full_info =3D false;
- 	bool header =3D false;
- 	bool header_only =3D false;
--	bool script_started =3D false;
- 	bool unsorted_dump =3D false;
- 	bool merge_deferred_callchains =3D true;
--	char *rec_script_path =3D NULL;
--	char *rep_script_path =3D NULL;
- 	struct perf_session *session;
- 	struct itrace_synth_opts itrace_synth_opts =3D {
- 		.set =3D false,
- 		.default_no_sample =3D true,
- 	};
--	char *script_path =3D NULL;
- 	const char *dlfilter_file =3D NULL;
- 	const char **__argv;
- 	int i, j, err =3D 0;
-@@ -4146,11 +4148,10 @@ int cmd_script(int argc, const char **argv)
- 			   list_available_scripts),
- 	OPT_CALLBACK_NOOPT(0, "list-dlfilters", NULL, NULL, "list available dlfil=
-ters",
- 			   list_available_dlfilters),
--	OPT_CALLBACK('s', "script", NULL, "name",
--		     "script file name (lang:script name, script name, or *)",
--		     parse_scriptname),
--	OPT_STRING('g', "gen-script", &generate_script_lang, "lang",
--		   "generate perf-script.xx script in specified language"),
-+	{ .type =3D OPTION_CALLBACK, .short_name =3D 's', .long_name =3D "script"=
-,
-+	  .value =3D NULL, .argh =3D "name",
-+	  .help =3D "script file name (lang:script name, script name, or *)",
-+	  .callback =3D parse_scriptname, .flags =3D PARSE_OPT_HIDDEN },
- 	OPT_STRING(0, "dlfilter", &dlfilter_file, "file", "filter .so file name")=
-,
- 	OPT_CALLBACK(0, "dlarg", NULL, "argument", "filter argument",
- 		     add_dlarg),
-@@ -4179,8 +4180,6 @@ int cmd_script(int argc, const char **argv)
- 		     "code_page_size,ins_lat,machine_pid,vcpu,cgroup,retire_lat,"
- 		     "brcntr",
- 		     parse_output_fields),
--	OPT_BOOLEAN('a', "all-cpus", &system_wide,
--		    "system-wide collection from all CPUs"),
- 	OPT_STRING(0, "dsos", &symbol_conf.dso_list_str, "dso[,dso...]",
- 		   "only consider symbols in these DSOs"),
- 	OPT_STRING('S', "symbols", &symbol_conf.sym_list_str, "symbol[,symbol...]=
-",
-@@ -4277,22 +4276,17 @@ int cmd_script(int argc, const char **argv)
- 	OPTS_EVSWITCH(&script.evswitch),
- 	OPT_END()
- 	};
--	const char * const script_subcommands[] =3D { "record", "report", NULL };
- 	const char *script_usage[] =3D {
- 		"perf script [<options>]",
--		"perf script [<options>] record <script> [<record-options>] <command>",
--		"perf script [<options>] report <script> [script-args]",
--		"perf script [<options>] <script> [<record-options>] <command>",
--		"perf script [<options>] <top-script> [script-args]",
-+		"perf script [<options>] <script> [script-args]",
- 		NULL
- 	};
- 	struct perf_env *env;
-=20
- 	perf_set_singlethreaded();
-=20
--	setup_scripting();
-=20
--	argc =3D parse_options_subcommand(argc, argv, options, script_subcommands=
-, script_usage,
-+	argc =3D parse_options_subcommand(argc, argv, options, NULL, script_usage=
-,
- 			     PARSE_OPT_STOP_AT_NON_OPTION);
-=20
- 	if (symbol_conf.guestmount ||
-@@ -4315,21 +4309,7 @@ int cmd_script(int argc, const char **argv)
- 	if (symbol__validate_sym_arguments())
- 		return -1;
-=20
--	if (argc > 1 && strlen(argv[0]) > 2 && strstarts("record", argv[0])) {
--		rec_script_path =3D get_script_path(argv[1], RECORD_SUFFIX);
--		if (!rec_script_path)
--			return cmd_record(argc, argv);
--	}
-=20
--	if (argc > 1 && strlen(argv[0]) > 2 && strstarts("report", argv[0])) {
--		rep_script_path =3D get_script_path(argv[1], REPORT_SUFFIX);
--		if (!rep_script_path) {
--			fprintf(stderr,
--				"Please specify a valid report script"
--				"(see 'perf script -l' for listing)\n");
--			return -1;
--		}
--	}
-=20
- 	if (reltime && deltatime) {
- 		fprintf(stderr,
-@@ -4345,149 +4325,107 @@ int cmd_script(int argc, const char **argv)
- 	/* make sure PERF_EXEC_PATH is set for scripts */
- 	set_argv_exec_path(get_argv_exec_path());
-=20
--	if (argc && !script_name && !rec_script_path && !rep_script_path) {
--		int live_pipe[2];
--		int rep_args;
--		pid_t pid;
--
--		rec_script_path =3D get_script_path(argv[0], RECORD_SUFFIX);
--		rep_script_path =3D get_script_path(argv[0], REPORT_SUFFIX);
--
--		if (!rec_script_path && !rep_script_path) {
--			script_name =3D find_script(argv[0]);
--			if (script_name) {
--				argc -=3D 1;
--				argv +=3D 1;
--				goto script_found;
--			}
--			usage_with_options_msg(script_usage, options,
--				"Couldn't find script `%s'\n\n See perf"
--				" script -l for available scripts.\n", argv[0]);
-+	if (argc && !script_name) {
-+		if (!strcmp(argv[0], "record") || !strcmp(argv[0], "report")) {
-+			fprintf(stderr,
-+				"The '%s' subcommand is no longer supported.\n",
-+				argv[0]);
-+			fprintf(stderr,
-+				"Run 'perf script <script> [args]' directly.\n");
-+			return -1;
- 		}
--
--		if (is_top_script(argv[0])) {
--			rep_args =3D argc - 1;
--		} else {
--			int rec_args;
--
--			rep_args =3D has_required_arg(rep_script_path);
--			rec_args =3D (argc - 1) - rep_args;
--			if (rec_args < 0) {
--				usage_with_options_msg(script_usage, options,
--					"`%s' script requires options."
--					"\n\n See perf script -l for available "
--					"scripts and options.\n", argv[0]);
--			}
-+		script_name =3D find_script(argv[0]);
-+		if (script_name) {
-+			argc -=3D 1;
-+			argv +=3D 1;
-+			goto script_found;
- 		}
-+		usage_with_options_msg(script_usage, options,
-+			"Couldn't find script `%s'\n\n"
-+			" See perf script -l for available scripts.\n", argv[0]);
-+	}
-+script_found:
-=20
--		if (pipe(live_pipe) < 0) {
--			perror("failed to create pipe");
--			return -1;
--		}
-=20
-+	if (script_name) {
-+		pid_t pid;
-+		bool is_python =3D script_name && str_ends_with(script_name, ".py");
++def PostqreSQLServerVersion(db):
++    query = QSqlQuery(db)
++    QueryExec(query, "SELECT VERSION()")
++    if query.next():
++        v_str = query.value(0)
++        v_list = v_str.strip().split(" ")
++        if v_list[0] == "PostgreSQL" and v_list[2] == "on":
++            return v_list[1]
++        return v_str
++    return "Unknown"
 +
-+		if (cpu_list || symbol_conf.pid_list_str || symbol_conf.tid_list_str ||
-+		    script.time_str || dlfilter_file || dlargc > 0) {
-+			pr_warning("Warning: Filtering options (-c, -p, -t, --time, --dlfilter,=
- --dlarg) are ignored for standalone scripts.\n");
-+		}
- 		pid =3D fork();
- 		if (pid < 0) {
--			perror("failed to fork");
--			return -1;
-+			err =3D -errno;
-+			pr_err("failed to fork\n");
-+			goto out;
- 		}
--
--		if (!pid) {
-+		if (pid =3D=3D 0) { /* child */
-+			__argv =3D calloc(argc + 6, sizeof(const char *));
- 			j =3D 0;
-+			if (!__argv)
-+				_exit(-ENOMEM);
-=20
--			dup2(live_pipe[1], 1);
--			close(live_pipe[0]);
-=20
--			if (is_top_script(argv[0])) {
--				system_wide =3D true;
--			} else if (!system_wide) {
--				if (have_cmd(argc - rep_args, &argv[rep_args]) !=3D 0) {
--					err =3D -1;
--					goto out;
--				}
--			}
-=20
--			__argv =3D calloc(argc + 6, sizeof(const char *));
--			if (!__argv) {
--				pr_err("malloc failed\n");
--				err =3D -ENOMEM;
--				goto out;
-+			if (is_python) {
-+				__argv[j++] =3D "python3";
-+				__argv[j++] =3D "--";
-+				__argv[j++] =3D script_name;
-+			} else {
-+				__argv[j++] =3D script_name;
- 			}
-+			if (input_name) {
-+				__argv[j++] =3D "-i";
-+				__argv[j++] =3D input_name;
-+			} else {
-+				struct stat st;
-=20
--			__argv[j++] =3D "/bin/sh";
--			__argv[j++] =3D rec_script_path;
--			if (system_wide)
--				__argv[j++] =3D "-a";
--			__argv[j++] =3D "-q";
--			__argv[j++] =3D "-o";
--			__argv[j++] =3D "-";
--			for (i =3D rep_args + 1; i < argc; i++)
-+				if (fstat(STDIN_FILENO, &st) =3D=3D 0 && S_ISFIFO(st.st_mode)) {
-+					__argv[j++] =3D "-i";
-+					__argv[j++] =3D "-";
-+				}
-+			}
-+			for (i =3D 0; i < argc; i++)
- 				__argv[j++] =3D argv[i];
- 			__argv[j++] =3D NULL;
-=20
--			execvp("/bin/sh", (char **)__argv);
--			free(__argv);
--			exit(-1);
--		}
--
--		dup2(live_pipe[0], 0);
--		close(live_pipe[1]);
-+			if (symbol_conf.vmlinux_name)
-+				setenv("PERF_SYMBOL_VMLINUX", symbol_conf.vmlinux_name, 1);
-+			if (symbol_conf.kallsyms_name)
-+				setenv("PERF_SYMBOL_KALLSYMS", symbol_conf.kallsyms_name, 1);
-+			if (symbol_conf.symfs && symbol_conf.symfs[0])
-+				setenv("PERF_SYMBOL_SYMFS", symbol_conf.symfs, 1);
-=20
--		__argv =3D calloc(argc + 4, sizeof(const char *));
--		if (!__argv) {
--			pr_err("malloc failed\n");
--			err =3D -ENOMEM;
--			goto out;
--		}
-+			if (is_python)
-+				execvp("python3", (char **)__argv);
-+			else
-+				execvp(script_name, (char **)__argv);
-+			{
-+				int err_code =3D errno;
-=20
--		j =3D 0;
--		__argv[j++] =3D "/bin/sh";
--		__argv[j++] =3D rep_script_path;
--		for (i =3D 1; i < rep_args + 1; i++)
--			__argv[j++] =3D argv[i];
--		__argv[j++] =3D "-i";
--		__argv[j++] =3D "-";
--		__argv[j++] =3D NULL;
--
--		execvp("/bin/sh", (char **)__argv);
--		free(__argv);
--		exit(-1);
--	}
--script_found:
--	if (rec_script_path)
--		script_path =3D rec_script_path;
--	if (rep_script_path)
--		script_path =3D rep_script_path;
--
--	if (script_path) {
--		j =3D 0;
--
--		if (!rec_script_path)
--			system_wide =3D false;
--		else if (!system_wide) {
--			if (have_cmd(argc - 1, &argv[1]) !=3D 0) {
--				err =3D -1;
-+				pr_err("failed to execute script '%s': %s\n",
-+				       script_name, strerror(err_code));
-+				_exit(err_code);
-+			}
-+		} else { /* parent */
-+			int status =3D 0;
++# SQLite version
 +
-+			while (waitpid(pid, &status, 0) !=3D pid) {
-+				if (errno =3D=3D EINTR)
-+					continue;
-+				pr_err("failed to wait for script '%s': %s\n",
-+				script_name, strerror(errno));
-+				err =3D -errno;
- 				goto out;
- 			}
--		}
--
--		__argv =3D calloc(argc + 2, sizeof(const char *));
--		if (!__argv) {
--			pr_err("malloc failed\n");
--			err =3D -ENOMEM;
-+			if (WIFEXITED(status))
-+				err =3D WEXITSTATUS(status);
-+			else
-+				err =3D -1;
- 			goto out;
- 		}
--
--		__argv[j++] =3D "/bin/sh";
--		__argv[j++] =3D script_path;
--		if (system_wide)
--			__argv[j++] =3D "-a";
--		for (i =3D 2; i < argc; i++)
--			__argv[j++] =3D argv[i];
--		__argv[j++] =3D NULL;
--
--		execvp("/bin/sh", (char **)__argv);
--		free(__argv);
--		exit(-1);
- 	}
-=20
- 	if (dlfilter_file) {
-@@ -4579,77 +4517,12 @@ int cmd_script(int argc, const char **argv)
- 		goto out_delete;
- 	}
- #endif
--	if (generate_script_lang) {
--		struct stat perf_stat;
--		int input;
--		char *filename =3D strdup("perf-script");
--
--		if (output_set_by_user()) {
--			fprintf(stderr,
--				"custom fields not supported for generated scripts");
--			err =3D -EINVAL;
--			goto out_delete;
--		}
--
--		input =3D open(data.path, O_RDONLY);	/* input_name */
--		if (input < 0) {
--			err =3D -errno;
--			perror("failed to open file");
--			goto out_delete;
--		}
--
--		err =3D fstat(input, &perf_stat);
--		if (err < 0) {
--			perror("failed to stat file");
--			goto out_delete;
--		}
--
--		if (!perf_stat.st_size) {
--			fprintf(stderr, "zero-sized file, nothing to do!\n");
--			goto out_delete;
--		}
--
--		scripting_ops =3D script_spec__lookup(generate_script_lang);
--		if (!scripting_ops && ends_with(generate_script_lang, ".py")) {
--			scripting_ops =3D script_spec__lookup("python");
--			free(filename);
--			filename =3D strdup(generate_script_lang);
--			filename[strlen(filename) - 3] =3D '\0';
--		} else if (!scripting_ops && ends_with(generate_script_lang, ".pl")) {
--			scripting_ops =3D script_spec__lookup("perl");
--			free(filename);
--			filename =3D strdup(generate_script_lang);
--			filename[strlen(filename) - 3] =3D '\0';
--		}
--		if (!scripting_ops) {
--			fprintf(stderr, "invalid language specifier '%s'\n", generate_script_la=
-ng);
--			err =3D -ENOENT;
--			goto out_delete;
--		}
--		if (!filename) {
--			err =3D -ENOMEM;
--			goto out_delete;
--		}
--#ifdef HAVE_LIBTRACEEVENT
--		err =3D scripting_ops->generate_script(session->tevent.pevent, filename)=
-;
--#else
--		err =3D scripting_ops->generate_script(NULL, filename);
--#endif
--		free(filename);
--		goto out_delete;
--	}
-=20
- 	err =3D dlfilter__start(dlfilter, session);
- 	if (err)
- 		goto out_delete;
-=20
--	if (script_name) {
--		err =3D scripting_ops->start_script(script_name, argc, argv, session);
--		if (err)
--			goto out_delete;
--		pr_debug("perf script started with script %s\n\n", script_name);
--		script_started =3D true;
--	}
++def SQLiteVersion(db):
++    query = QSqlQuery(db)
++    QueryExec(query, "SELECT sqlite_version()")
++    if query.next():
++        return query.value(0)
++    return "Unknown"
 +
-=20
-=20
- 	err =3D perf_session__check_output_opt(session);
-@@ -4679,7 +4552,6 @@ int cmd_script(int argc, const char **argv)
-=20
- 	err =3D __cmd_script(&script);
-=20
--	flush_scripting();
-=20
- 	if (verbose > 2 || debug_kmaps)
- 		perf_session__dump_kmaps(session);
-@@ -4695,10 +4567,8 @@ int cmd_script(int argc, const char **argv)
- 	perf_session__delete(session);
- 	perf_script__exit(&script);
-=20
--	if (script_started)
--		cleanup_scripting();
-+out:
- 	dlfilter__cleanup(dlfilter);
- 	free_dlarg();
--out:
- 	return err;
- }
-diff --git a/tools/perf/scripts/Build b/tools/perf/scripts/Build
-deleted file mode 100644
-index fbeab8fff88b..000000000000
---- a/tools/perf/scripts/Build
-+++ /dev/null
-@@ -1,3 +0,0 @@
--ifeq ($(CONFIG_LIBTRACEEVENT),y)
--  perf-util-$(CONFIG_LIBPERL)   +=3D perl/Perf-Trace-Util/
--endif
-diff --git a/tools/perf/scripts/perl/Perf-Trace-Util/Build b/tools/perf/scr=
-ipts/perl/Perf-Trace-Util/Build
-deleted file mode 100644
-index 01a1a0ed51ae..000000000000
---- a/tools/perf/scripts/perl/Perf-Trace-Util/Build
-+++ /dev/null
-@@ -1,9 +0,0 @@
--perf-util-y +=3D Context.o
--
--CFLAGS_Context.o +=3D $(PERL_EMBED_CCOPTS) -Wno-redundant-decls -Wno-stric=
-t-prototypes -Wno-bad-function-cast -Wno-declaration-after-statement -Wno-s=
-witch-enum
--CFLAGS_Context.o +=3D -Wno-unused-parameter -Wno-nested-externs -Wno-undef
--CFLAGS_Context.o +=3D -Wno-switch-default -Wno-shadow -Wno-thread-safety-a=
-nalysis
--
--ifeq ($(CC_NO_CLANG), 1)
--  CFLAGS_Context.o +=3D -Wno-unused-command-line-argument
--endif
-diff --git a/tools/perf/scripts/perl/Perf-Trace-Util/Context.c b/tools/perf=
-/scripts/perl/Perf-Trace-Util/Context.c
-deleted file mode 100644
-index 25c47d23a130..000000000000
---- a/tools/perf/scripts/perl/Perf-Trace-Util/Context.c
-+++ /dev/null
-@@ -1,122 +0,0 @@
--// SPDX-License-Identifier: GPL-2.0-or-later
--/*
-- * This file was generated automatically by ExtUtils::ParseXS version 2.18=
-_02 from the
-- * contents of Context.xs. Do not edit this file, edit Context.xs instead.
-- *
-- *	ANY CHANGES MADE HERE WILL BE LOST!=20
-- */
--#include <stdbool.h>
--#ifndef HAS_BOOL
--# define HAS_BOOL 1
--#endif
--#line 1 "Context.xs"
--/*
-- * Context.xs.  XS interfaces for perf script.
-- *
-- * Copyright (C) 2009 Tom Zanussi <tzanussi@gmail.com>
-- */
--
--#include "EXTERN.h"
--#include "perl.h"
--#include "XSUB.h"
--#include "../../../util/trace-event.h"
--
--#ifndef PERL_UNUSED_VAR
--#  define PERL_UNUSED_VAR(var) if (0) var =3D var
--#endif
--
--#line 42 "Context.c"
--
--XS(XS_Perf__Trace__Context_common_pc); /* prototype to pass -Wmissing-prot=
-otypes */
--XS(XS_Perf__Trace__Context_common_pc)
--{
--#ifdef dVAR
--    dVAR; dXSARGS;
--#else
--    dXSARGS;
--#endif
--    if (items !=3D 1)
--       Perl_croak(aTHX_ "Usage: %s(%s)", "Perf::Trace::Context::common_pc"=
-, "context");
--    PERL_UNUSED_VAR(cv); /* -W */
--    {
--	struct scripting_context *	context =3D INT2PTR(struct scripting_context *=
-,SvIV(ST(0)));
--	int	RETVAL;
--	dXSTARG;
--
--	RETVAL =3D common_pc(context);
--	XSprePUSH; PUSHi((IV)RETVAL);
--    }
--    XSRETURN(1);
--}
--
--
--XS(XS_Perf__Trace__Context_common_flags); /* prototype to pass -Wmissing-p=
-rototypes */
--XS(XS_Perf__Trace__Context_common_flags)
--{
--#ifdef dVAR
--    dVAR; dXSARGS;
--#else
--    dXSARGS;
--#endif
--    if (items !=3D 1)
--       Perl_croak(aTHX_ "Usage: %s(%s)", "Perf::Trace::Context::common_fla=
-gs", "context");
--    PERL_UNUSED_VAR(cv); /* -W */
--    {
--	struct scripting_context *	context =3D INT2PTR(struct scripting_context *=
-,SvIV(ST(0)));
--	int	RETVAL;
--	dXSTARG;
--
--	RETVAL =3D common_flags(context);
--	XSprePUSH; PUSHi((IV)RETVAL);
--    }
--    XSRETURN(1);
--}
--
--
--XS(XS_Perf__Trace__Context_common_lock_depth); /* prototype to pass -Wmiss=
-ing-prototypes */
--XS(XS_Perf__Trace__Context_common_lock_depth)
--{
--#ifdef dVAR
--    dVAR; dXSARGS;
--#else
--    dXSARGS;
--#endif
--    if (items !=3D 1)
--       Perl_croak(aTHX_ "Usage: %s(%s)", "Perf::Trace::Context::common_loc=
-k_depth", "context");
--    PERL_UNUSED_VAR(cv); /* -W */
--    {
--	struct scripting_context *	context =3D INT2PTR(struct scripting_context *=
-,SvIV(ST(0)));
--	int	RETVAL;
--	dXSTARG;
--
--	RETVAL =3D common_lock_depth(context);
--	XSprePUSH; PUSHi((IV)RETVAL);
--    }
--    XSRETURN(1);
--}
--
--#ifdef __cplusplus
--extern "C"
--#endif
--XS(boot_Perf__Trace__Context); /* prototype to pass -Wmissing-prototypes *=
-/
--XS(boot_Perf__Trace__Context)
--{
--#ifdef dVAR
--    dVAR; dXSARGS;
--#else
--    dXSARGS;
--#endif
--    const char* file =3D __FILE__;
--
--    PERL_UNUSED_VAR(cv); /* -W */
--    PERL_UNUSED_VAR(items); /* -W */
--    XS_VERSION_BOOTCHECK ;
--
--        newXSproto("Perf::Trace::Context::common_pc", XS_Perf__Trace__Cont=
-ext_common_pc, file, "$");
--        newXSproto("Perf::Trace::Context::common_flags", XS_Perf__Trace__C=
-ontext_common_flags, file, "$");
--        newXSproto("Perf::Trace::Context::common_lock_depth", XS_Perf__Tra=
-ce__Context_common_lock_depth, file, "$");
--    if (PL_unitcheckav)
--         call_list(PL_scopestack_ix, PL_unitcheckav);
--    XSRETURN_YES;
--}
--
-diff --git a/tools/perf/scripts/perl/Perf-Trace-Util/Context.xs b/tools/per=
-f/scripts/perl/Perf-Trace-Util/Context.xs
-deleted file mode 100644
-index 8c7ea42444d1..000000000000
---- a/tools/perf/scripts/perl/Perf-Trace-Util/Context.xs
-+++ /dev/null
-@@ -1,42 +0,0 @@
--/*
-- * Context.xs.  XS interfaces for perf script.
-- *
-- * Copyright (C) 2009 Tom Zanussi <tzanussi@gmail.com>
-- *
-- *  This program is free software; you can redistribute it and/or modify
-- *  it under the terms of the GNU General Public License as published by
-- *  the Free Software Foundation; either version 2 of the License, or
-- *  (at your option) any later version.
-- *
-- *  This program is distributed in the hope that it will be useful,
-- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
-- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-- *  GNU General Public License for more details.
-- *
-- *  You should have received a copy of the GNU General Public License
-- *  along with this program; if not, write to the Free Software
-- *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  =
-USA
-- *
-- */
--
--#include "EXTERN.h"
--#include "perl.h"
--#include "XSUB.h"
--#include "../../../perf.h"
--#include "../../../util/trace-event.h"
--
--MODULE =3D Perf::Trace::Context		PACKAGE =3D Perf::Trace::Context
--PROTOTYPES: ENABLE
--
--int
--common_pc(context)
--	struct scripting_context * context
--
--int
--common_flags(context)
--	struct scripting_context * context
--
--int
--common_lock_depth(context)
--	struct scripting_context * context
--
-diff --git a/tools/perf/scripts/perl/Perf-Trace-Util/Makefile.PL b/tools/pe=
-rf/scripts/perl/Perf-Trace-Util/Makefile.PL
-deleted file mode 100644
-index e8994332d7dc..000000000000
---- a/tools/perf/scripts/perl/Perf-Trace-Util/Makefile.PL
-+++ /dev/null
-@@ -1,18 +0,0 @@
--# SPDX-License-Identifier: GPL-2.0
--use 5.010000;
--use ExtUtils::MakeMaker;
--# See lib/ExtUtils/MakeMaker.pm for details of how to influence
--# the contents of the Makefile that is written.
--WriteMakefile(
--    NAME              =3D> 'Perf::Trace::Context',
--    VERSION_FROM      =3D> 'lib/Perf/Trace/Context.pm', # finds $VERSION
--    PREREQ_PM         =3D> {}, # e.g., Module::Name =3D> 1.1
--    ($] >=3D 5.005 ?     ## Add these new keywords supported since 5.005
--      (ABSTRACT_FROM  =3D> 'lib/Perf/Trace/Context.pm', # retrieve abstrac=
-t from module
--       AUTHOR         =3D> 'Tom Zanussi <tzanussi@gmail.com>') : ()),
--    LIBS              =3D> [''], # e.g., '-lm'
--    DEFINE            =3D> '-I ../..', # e.g., '-DHAVE_SOMETHING'
--    INC               =3D> '-I.', # e.g., '-I. -I/usr/include/other'
--	# Un-comment this if you add C files to link with later:
--    OBJECT            =3D> 'Context.o', # link all the C files too
--);
-diff --git a/tools/perf/scripts/perl/Perf-Trace-Util/README b/tools/perf/sc=
-ripts/perl/Perf-Trace-Util/README
-deleted file mode 100644
-index 2f0c7f3043ee..000000000000
---- a/tools/perf/scripts/perl/Perf-Trace-Util/README
-+++ /dev/null
-@@ -1,59 +0,0 @@
--Perf-Trace-Util version 0.01
--=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D
--
--This module contains utility functions for use with perf script.
--
--Core.pm and Util.pm are pure Perl modules; Core.pm contains routines
--that the core perf support for Perl calls on and should always be
--'used', while Util.pm contains useful but optional utility functions
--that scripts may want to use.  Context.pm contains the Perl->C
--interface that allows scripts to access data in the embedding perf
--executable; scripts wishing to do that should 'use Context.pm'.
--
--The Perl->C perf interface is completely driven by Context.xs.  If you
--want to add new Perl functions that end up accessing C data in the
--perf executable, you add desciptions of the new functions here.
--scripting_context is a pointer to the perf data in the perf executable
--that you want to access - it's passed as the second parameter,
--$context, to all handler functions.
--
--After you do that:
--
--  perl Makefile.PL   # to create a Makefile for the next step
--  make               # to create Context.c
--
--  edit Context.c to add const to the char* file =3D __FILE__ line in
--  XS(boot_Perf__Trace__Context) to silence a warning/error.
--
--  You can delete the Makefile, object files and anything else that was
--  generated e.g. blib and shared library, etc, except for of course
--  Context.c
--
--  You should then be able to run the normal perf make as usual.
--
--INSTALLATION
--
--Building perf with perf script Perl scripting should install this
--module in the right place.
--
--You should make sure libperl and ExtUtils/Embed.pm are installed first
--e.g. apt-get install libperl-dev or yum install perl-ExtUtils-Embed.
--
--DEPENDENCIES
--
--This module requires these other modules and libraries:
--
--  None
--
--COPYRIGHT AND LICENCE
--
--Copyright (C) 2009 by Tom Zanussi <tzanussi@gmail.com>
--
--This library is free software; you can redistribute it and/or modify
--it under the same terms as Perl itself, either Perl version 5.10.0 or,
--at your option, any later version of Perl 5 you may have available.
--
--Alternatively, this software may be distributed under the terms of the
--GNU General Public License ("GPL") version 2 as published by the Free
--Software Foundation.
--
-diff --git a/tools/perf/scripts/perl/Perf-Trace-Util/lib/Perf/Trace/Context=
-.pm b/tools/perf/scripts/perl/Perf-Trace-Util/lib/Perf/Trace/Context.pm
-deleted file mode 100644
-index 4e2f6039ac92..000000000000
---- a/tools/perf/scripts/perl/Perf-Trace-Util/lib/Perf/Trace/Context.pm
-+++ /dev/null
-@@ -1,55 +0,0 @@
--package Perf::Trace::Context;
--
--use 5.010000;
--use strict;
--use warnings;
--
--require Exporter;
--
--our @ISA =3D qw(Exporter);
--
--our %EXPORT_TAGS =3D ( 'all' =3D> [ qw(
--) ] );
--
--our @EXPORT_OK =3D ( @{ $EXPORT_TAGS{'all'} } );
--
--our @EXPORT =3D qw(
--	common_pc common_flags common_lock_depth
--);
--
--our $VERSION =3D '0.01';
--
--require XSLoader;
--XSLoader::load('Perf::Trace::Context', $VERSION);
--
--1;
--__END__
--=3Dhead1 NAME
--
--Perf::Trace::Context - Perl extension for accessing functions in perf.
--
--=3Dhead1 SYNOPSIS
--
--  use Perf::Trace::Context;
--
--=3Dhead1 SEE ALSO
--
--Perf (script) documentation
--
--=3Dhead1 AUTHOR
--
--Tom Zanussi, E<lt>tzanussi@gmail.com<gt>
--
--=3Dhead1 COPYRIGHT AND LICENSE
--
--Copyright (C) 2009 by Tom Zanussi
--
--This library is free software; you can redistribute it and/or modify
--it under the same terms as Perl itself, either Perl version 5.10.0 or,
--at your option, any later version of Perl 5 you may have available.
--
--Alternatively, this software may be distributed under the terms of the
--GNU General Public License ("GPL") version 2 as published by the Free
--Software Foundation.
--
--=3Dcut
-diff --git a/tools/perf/scripts/perl/Perf-Trace-Util/lib/Perf/Trace/Core.pm=
- b/tools/perf/scripts/perl/Perf-Trace-Util/lib/Perf/Trace/Core.pm
-deleted file mode 100644
-index 9158458d3eeb..000000000000
---- a/tools/perf/scripts/perl/Perf-Trace-Util/lib/Perf/Trace/Core.pm
-+++ /dev/null
-@@ -1,192 +0,0 @@
--package Perf::Trace::Core;
--
--use 5.010000;
--use strict;
--use warnings;
--
--require Exporter;
--
--our @ISA =3D qw(Exporter);
--
--our %EXPORT_TAGS =3D ( 'all' =3D> [ qw(
--) ] );
--
--our @EXPORT_OK =3D ( @{ $EXPORT_TAGS{'all'} } );
--
--our @EXPORT =3D qw(
--define_flag_field define_flag_value flag_str dump_flag_fields
--define_symbolic_field define_symbolic_value symbol_str dump_symbolic_field=
-s
--trace_flag_str
--);
--
--our $VERSION =3D '0.01';
--
--my %trace_flags =3D (0x00 =3D> "NONE",
--		   0x01 =3D> "IRQS_OFF",
--		   0x02 =3D> "IRQS_NOSUPPORT",
--		   0x04 =3D> "NEED_RESCHED",
--		   0x08 =3D> "HARDIRQ",
--		   0x10 =3D> "SOFTIRQ");
--
--sub trace_flag_str
--{
--    my ($value) =3D @_;
--
--    my $string;
--
--    my $print_delim =3D 0;
--
--    foreach my $idx (sort {$a <=3D> $b} keys %trace_flags) {
--	if (!$value && !$idx) {
--	    $string .=3D "NONE";
--	    last;
--	}
--
--	if ($idx && ($value & $idx) =3D=3D $idx) {
--	    if ($print_delim) {
--		$string .=3D " | ";
--	    }
--	    $string .=3D "$trace_flags{$idx}";
--	    $print_delim =3D 1;
--	    $value &=3D ~$idx;
--	}
--    }
--
--    return $string;
--}
--
--my %flag_fields;
--my %symbolic_fields;
--
--sub flag_str
--{
--    my ($event_name, $field_name, $value) =3D @_;
--
--    my $string;
--
--    if ($flag_fields{$event_name}{$field_name}) {
--	my $print_delim =3D 0;
--	foreach my $idx (sort {$a <=3D> $b} keys %{$flag_fields{$event_name}{$fie=
-ld_name}{"values"}}) {
--	    if (!$value && !$idx) {
--		$string .=3D "$flag_fields{$event_name}{$field_name}{'values'}{$idx}";
--		last;
--	    }
--	    if ($idx && ($value & $idx) =3D=3D $idx) {
--		if ($print_delim && $flag_fields{$event_name}{$field_name}{'delim'}) {
--		    $string .=3D " $flag_fields{$event_name}{$field_name}{'delim'} ";
--		}
--		$string .=3D "$flag_fields{$event_name}{$field_name}{'values'}{$idx}";
--		$print_delim =3D 1;
--		$value &=3D ~$idx;
--	    }
--	}
--    }
--
--    return $string;
--}
--
--sub define_flag_field
--{
--    my ($event_name, $field_name, $delim) =3D @_;
--
--    $flag_fields{$event_name}{$field_name}{"delim"} =3D $delim;
--}
--
--sub define_flag_value
--{
--    my ($event_name, $field_name, $value, $field_str) =3D @_;
--
--    $flag_fields{$event_name}{$field_name}{"values"}{$value} =3D $field_st=
-r;
--}
--
--sub dump_flag_fields
--{
--    for my $event (keys %flag_fields) {
--	print "event $event:\n";
--	for my $field (keys %{$flag_fields{$event}}) {
--	    print "    field: $field:\n";
--	    print "        delim: $flag_fields{$event}{$field}{'delim'}\n";
--	    foreach my $idx (sort {$a <=3D> $b} keys %{$flag_fields{$event}{$fiel=
-d}{"values"}}) {
--		print "        value $idx: $flag_fields{$event}{$field}{'values'}{$idx}\=
-n";
--	    }
--	}
--    }
--}
--
--sub symbol_str
--{
--    my ($event_name, $field_name, $value) =3D @_;
--
--    if ($symbolic_fields{$event_name}{$field_name}) {
--	foreach my $idx (sort {$a <=3D> $b} keys %{$symbolic_fields{$event_name}{=
-$field_name}{"values"}}) {
--	    if (!$value && !$idx) {
--		return "$symbolic_fields{$event_name}{$field_name}{'values'}{$idx}";
--		last;
--	    }
--	    if ($value =3D=3D $idx) {
--		return "$symbolic_fields{$event_name}{$field_name}{'values'}{$idx}";
--	    }
--	}
--    }
--
--    return undef;
--}
--
--sub define_symbolic_field
--{
--    my ($event_name, $field_name) =3D @_;
--
--    # nothing to do, really
--}
--
--sub define_symbolic_value
--{
--    my ($event_name, $field_name, $value, $field_str) =3D @_;
--
--    $symbolic_fields{$event_name}{$field_name}{"values"}{$value} =3D $fiel=
-d_str;
--}
--
--sub dump_symbolic_fields
--{
--    for my $event (keys %symbolic_fields) {
--	print "event $event:\n";
--	for my $field (keys %{$symbolic_fields{$event}}) {
--	    print "    field: $field:\n";
--	    foreach my $idx (sort {$a <=3D> $b} keys %{$symbolic_fields{$event}{$=
-field}{"values"}}) {
--		print "        value $idx: $symbolic_fields{$event}{$field}{'values'}{$i=
-dx}\n";
--	    }
--	}
--    }
--}
--
--1;
--__END__
--=3Dhead1 NAME
--
--Perf::Trace::Core - Perl extension for perf script
--
--=3Dhead1 SYNOPSIS
--
--  use Perf::Trace::Core
--
--=3Dhead1 SEE ALSO
--
--Perf (script) documentation
--
--=3Dhead1 AUTHOR
--
--Tom Zanussi, E<lt>tzanussi@gmail.com<gt>
--
--=3Dhead1 COPYRIGHT AND LICENSE
--
--Copyright (C) 2009 by Tom Zanussi
--
--This library is free software; you can redistribute it and/or modify
--it under the same terms as Perl itself, either Perl version 5.10.0 or,
--at your option, any later version of Perl 5 you may have available.
--
--Alternatively, this software may be distributed under the terms of the
--GNU General Public License ("GPL") version 2 as published by the Free
--Software Foundation.
--
--=3Dcut
-diff --git a/tools/perf/scripts/perl/Perf-Trace-Util/lib/Perf/Trace/Util.pm=
- b/tools/perf/scripts/perl/Perf-Trace-Util/lib/Perf/Trace/Util.pm
-deleted file mode 100644
-index 053500114625..000000000000
---- a/tools/perf/scripts/perl/Perf-Trace-Util/lib/Perf/Trace/Util.pm
-+++ /dev/null
-@@ -1,94 +0,0 @@
--package Perf::Trace::Util;
--
--use 5.010000;
--use strict;
--use warnings;
--
--require Exporter;
--
--our @ISA =3D qw(Exporter);
--
--our %EXPORT_TAGS =3D ( 'all' =3D> [ qw(
--) ] );
--
--our @EXPORT_OK =3D ( @{ $EXPORT_TAGS{'all'} } );
--
--our @EXPORT =3D qw(
--avg nsecs nsecs_secs nsecs_nsecs nsecs_usecs print_nsecs
--clear_term
--);
--
--our $VERSION =3D '0.01';
--
--sub avg
--{
--    my ($total, $n) =3D @_;
--
--    return $total / $n;
--}
--
--my $NSECS_PER_SEC    =3D 1000000000;
--
--sub nsecs
--{
--    my ($secs, $nsecs) =3D @_;
--
--    return $secs * $NSECS_PER_SEC + $nsecs;
--}
--
--sub nsecs_secs {
--    my ($nsecs) =3D @_;
--
--    return $nsecs / $NSECS_PER_SEC;
--}
--
--sub nsecs_nsecs {
--    my ($nsecs) =3D @_;
--
--    return $nsecs % $NSECS_PER_SEC;
--}
--
--sub nsecs_str {
--    my ($nsecs) =3D @_;
--
--    my $str =3D sprintf("%5u.%09u", nsecs_secs($nsecs), nsecs_nsecs($nsecs=
-));
--
--    return $str;
--}
--
--sub clear_term
--{
--    print "\x1b[H\x1b[2J";
--}
--
--1;
--__END__
--=3Dhead1 NAME
--
--Perf::Trace::Util - Perl extension for perf script
--
--=3Dhead1 SYNOPSIS
--
--  use Perf::Trace::Util;
--
--=3Dhead1 SEE ALSO
--
--Perf (script) documentation
--
--=3Dhead1 AUTHOR
--
--Tom Zanussi, E<lt>tzanussi@gmail.com<gt>
--
--=3Dhead1 COPYRIGHT AND LICENSE
--
--Copyright (C) 2009 by Tom Zanussi
--
--This library is free software; you can redistribute it and/or modify
--it under the same terms as Perl itself, either Perl version 5.10.0 or,
--at your option, any later version of Perl 5 you may have available.
--
--Alternatively, this software may be distributed under the terms of the
--GNU General Public License ("GPL") version 2 as published by the Free
--Software Foundation.
--
--=3Dcut
-diff --git a/tools/perf/scripts/perl/Perf-Trace-Util/typemap b/tools/perf/s=
-cripts/perl/Perf-Trace-Util/typemap
-deleted file mode 100644
-index 840836804aa7..000000000000
---- a/tools/perf/scripts/perl/Perf-Trace-Util/typemap
-+++ /dev/null
-@@ -1 +0,0 @@
--struct scripting_context * T_PTR
-diff --git a/tools/perf/scripts/perl/bin/check-perf-trace-record b/tools/pe=
-rf/scripts/perl/bin/check-perf-trace-record
-deleted file mode 100644
-index 423ad6aed056..000000000000
---- a/tools/perf/scripts/perl/bin/check-perf-trace-record
-+++ /dev/null
-@@ -1,2 +0,0 @@
--#!/bin/bash
--perf record -a -e kmem:kmalloc -e irq:softirq_entry -e kmem:kfree
-diff --git a/tools/perf/scripts/perl/bin/failed-syscalls-record b/tools/per=
-f/scripts/perl/bin/failed-syscalls-record
-deleted file mode 100644
-index 74685f318379..000000000000
---- a/tools/perf/scripts/perl/bin/failed-syscalls-record
-+++ /dev/null
-@@ -1,3 +0,0 @@
--#!/bin/bash
--(perf record -e raw_syscalls:sys_exit $@ || \
-- perf record -e syscalls:sys_exit $@) 2> /dev/null
-diff --git a/tools/perf/scripts/perl/bin/failed-syscalls-report b/tools/per=
-f/scripts/perl/bin/failed-syscalls-report
-deleted file mode 100644
-index 9f83cc1ad8ba..000000000000
---- a/tools/perf/scripts/perl/bin/failed-syscalls-report
-+++ /dev/null
-@@ -1,10 +0,0 @@
--#!/bin/bash
--# description: system-wide failed syscalls
--# args: [comm]
--if [ $# -gt 0 ] ; then
--    if ! expr match "$1" "-" > /dev/null ; then
--	comm=3D$1
--	shift
--    fi
--fi
--perf script $@ -s "$PERF_EXEC_PATH"/scripts/perl/failed-syscalls.pl $comm
-diff --git a/tools/perf/scripts/perl/bin/rw-by-file-record b/tools/perf/scr=
-ipts/perl/bin/rw-by-file-record
-deleted file mode 100644
-index 33efc8673aae..000000000000
---- a/tools/perf/scripts/perl/bin/rw-by-file-record
-+++ /dev/null
-@@ -1,3 +0,0 @@
--#!/bin/bash
--perf record -e syscalls:sys_enter_read -e syscalls:sys_enter_write $@
--
-diff --git a/tools/perf/scripts/perl/bin/rw-by-file-report b/tools/perf/scr=
-ipts/perl/bin/rw-by-file-report
-deleted file mode 100644
-index 77200b3f3100..000000000000
---- a/tools/perf/scripts/perl/bin/rw-by-file-report
-+++ /dev/null
-@@ -1,10 +0,0 @@
--#!/bin/bash
--# description: r/w activity for a program, by file
--# args: <comm>
--if [ $# -lt 1 ] ; then
--    echo "usage: rw-by-file <comm>"
--    exit
--fi
--comm=3D$1
--shift
--perf script $@ -s "$PERF_EXEC_PATH"/scripts/perl/rw-by-file.pl $comm
-diff --git a/tools/perf/scripts/perl/bin/rw-by-pid-record b/tools/perf/scri=
-pts/perl/bin/rw-by-pid-record
-deleted file mode 100644
-index 7cb9db230448..000000000000
---- a/tools/perf/scripts/perl/bin/rw-by-pid-record
-+++ /dev/null
-@@ -1,2 +0,0 @@
--#!/bin/bash
--perf record -e syscalls:sys_enter_read -e syscalls:sys_exit_read -e syscal=
-ls:sys_enter_write -e syscalls:sys_exit_write $@
-diff --git a/tools/perf/scripts/perl/bin/rw-by-pid-report b/tools/perf/scri=
-pts/perl/bin/rw-by-pid-report
-deleted file mode 100644
-index a27b9f311f95..000000000000
---- a/tools/perf/scripts/perl/bin/rw-by-pid-report
-+++ /dev/null
-@@ -1,3 +0,0 @@
--#!/bin/bash
--# description: system-wide r/w activity
--perf script $@ -s "$PERF_EXEC_PATH"/scripts/perl/rw-by-pid.pl
-diff --git a/tools/perf/scripts/perl/bin/rwtop-record b/tools/perf/scripts/=
-perl/bin/rwtop-record
-deleted file mode 100644
-index 7cb9db230448..000000000000
---- a/tools/perf/scripts/perl/bin/rwtop-record
-+++ /dev/null
-@@ -1,2 +0,0 @@
--#!/bin/bash
--perf record -e syscalls:sys_enter_read -e syscalls:sys_exit_read -e syscal=
-ls:sys_enter_write -e syscalls:sys_exit_write $@
-diff --git a/tools/perf/scripts/perl/bin/rwtop-report b/tools/perf/scripts/=
-perl/bin/rwtop-report
-deleted file mode 100644
-index 83e11ec2e190..000000000000
---- a/tools/perf/scripts/perl/bin/rwtop-report
-+++ /dev/null
-@@ -1,20 +0,0 @@
--#!/bin/bash
--# description: system-wide r/w top
--# args: [interval]
--n_args=3D0
--for i in "$@"
--do
--    if expr match "$i" "-" > /dev/null ; then
--	break
--    fi
--    n_args=3D$(( $n_args + 1 ))
--done
--if [ "$n_args" -gt 1 ] ; then
--    echo "usage: rwtop-report [interval]"
--    exit
--fi
--if [ "$n_args" -gt 0 ] ; then
--    interval=3D$1
--    shift
--fi
--perf script $@ -s "$PERF_EXEC_PATH"/scripts/perl/rwtop.pl $interval
-diff --git a/tools/perf/scripts/perl/bin/wakeup-latency-record b/tools/perf=
-/scripts/perl/bin/wakeup-latency-record
-deleted file mode 100644
-index 464251a1bd7e..000000000000
---- a/tools/perf/scripts/perl/bin/wakeup-latency-record
-+++ /dev/null
-@@ -1,6 +0,0 @@
--#!/bin/bash
--perf record -e sched:sched_switch -e sched:sched_wakeup $@
--
--
--
--
-diff --git a/tools/perf/scripts/perl/bin/wakeup-latency-report b/tools/perf=
-/scripts/perl/bin/wakeup-latency-report
-deleted file mode 100644
-index 889e8130cca5..000000000000
---- a/tools/perf/scripts/perl/bin/wakeup-latency-report
-+++ /dev/null
-@@ -1,3 +0,0 @@
--#!/bin/bash
--# description: system-wide min/max/avg wakeup latency
--perf script $@ -s "$PERF_EXEC_PATH"/scripts/perl/wakeup-latency.pl
-diff --git a/tools/perf/scripts/perl/check-perf-trace.pl b/tools/perf/scrip=
-ts/perl/check-perf-trace.pl
-deleted file mode 100644
-index d307ce8fd6ed..000000000000
---- a/tools/perf/scripts/perl/check-perf-trace.pl
-+++ /dev/null
-@@ -1,106 +0,0 @@
--# perf script event handlers, generated by perf script -g perl
--# (c) 2009, Tom Zanussi <tzanussi@gmail.com>
--# Licensed under the terms of the GNU GPL License version 2
--
--# This script tests basic functionality such as flag and symbol
--# strings, common_xxx() calls back into perf, begin, end, unhandled
--# events, etc.  Basically, if this script runs successfully and
--# displays expected results, perl scripting support should be ok.
--
--use lib "$ENV{'PERF_EXEC_PATH'}/scripts/perl/Perf-Trace-Util/lib";
--use lib "./Perf-Trace-Util/lib";
--use Perf::Trace::Core;
--use Perf::Trace::Context;
--use Perf::Trace::Util;
--
--sub trace_begin
--{
--    print "trace_begin\n";
--}
--
--sub trace_end
--{
--    print "trace_end\n";
--
--    print_unhandled();
--}
--
--sub irq::softirq_entry
--{
--	my ($event_name, $context, $common_cpu, $common_secs, $common_nsecs,
--	    $common_pid, $common_comm, $common_callchain,
--	    $vec) =3D @_;
--
--	print_header($event_name, $common_cpu, $common_secs, $common_nsecs,
--		     $common_pid, $common_comm);
--
--	print_uncommon($context);
--
--	printf("vec=3D%s\n",
--	       symbol_str("irq::softirq_entry", "vec", $vec));
--}
--
--sub kmem::kmalloc
--{
--	my ($event_name, $context, $common_cpu, $common_secs, $common_nsecs,
--	    $common_pid, $common_comm, $common_callchain,
--	    $call_site, $ptr, $bytes_req, $bytes_alloc,
--	    $gfp_flags) =3D @_;
--
--	print_header($event_name, $common_cpu, $common_secs, $common_nsecs,
--		     $common_pid, $common_comm);
--
--	print_uncommon($context);
--
--	printf("call_site=3D%p, ptr=3D%p, bytes_req=3D%u, bytes_alloc=3D%u, ".
--	       "gfp_flags=3D%s\n",
--	       $call_site, $ptr, $bytes_req, $bytes_alloc,
--
--	       flag_str("kmem::kmalloc", "gfp_flags", $gfp_flags));
--}
--
--# print trace fields not included in handler args
--sub print_uncommon
--{
--    my ($context) =3D @_;
--
--    printf("common_preempt_count=3D%d, common_flags=3D%s, common_lock_dept=
-h=3D%d, ",
--	   common_pc($context), trace_flag_str(common_flags($context)),
--	   common_lock_depth($context));
--
--}
--
--my %unhandled;
--
--sub print_unhandled
--{
--    if ((scalar keys %unhandled) =3D=3D 0) {
--	return;
--    }
--
--    print "\nunhandled events:\n\n";
--
--    printf("%-40s  %10s\n", "event", "count");
--    printf("%-40s  %10s\n", "----------------------------------------",
--	   "-----------");
--
--    foreach my $event_name (keys %unhandled) {
--	printf("%-40s  %10d\n", $event_name, $unhandled{$event_name});
--    }
--}
--
--sub trace_unhandled
--{
--    my ($event_name, $context, $common_cpu, $common_secs, $common_nsecs,
--	$common_pid, $common_comm, $common_callchain) =3D @_;
--
--    $unhandled{$event_name}++;
--}
--
--sub print_header
--{
--	my ($event_name, $cpu, $secs, $nsecs, $pid, $comm) =3D @_;
--
--	printf("%-20s %5u %05u.%09u %8u %-20s ",
--	       $event_name, $cpu, $secs, $nsecs, $pid, $comm);
--}
-diff --git a/tools/perf/scripts/perl/failed-syscalls.pl b/tools/perf/script=
-s/perl/failed-syscalls.pl
-deleted file mode 100644
-index 05954a8f363a..000000000000
---- a/tools/perf/scripts/perl/failed-syscalls.pl
-+++ /dev/null
-@@ -1,47 +0,0 @@
--# failed system call counts
--# (c) 2010, Tom Zanussi <tzanussi@gmail.com>
--# Licensed under the terms of the GNU GPL License version 2
--#
--# Displays system-wide failed system call totals
--# If a [comm] arg is specified, only syscalls called by [comm] are display=
-ed.
--
--use lib "$ENV{'PERF_EXEC_PATH'}/scripts/perl/Perf-Trace-Util/lib";
--use lib "./Perf-Trace-Util/lib";
--use Perf::Trace::Core;
--use Perf::Trace::Context;
--use Perf::Trace::Util;
--
--my $for_comm =3D shift;
--
--my %failed_syscalls;
--
--sub raw_syscalls::sys_exit
--{
--	my ($event_name, $context, $common_cpu, $common_secs, $common_nsecs,
--	    $common_pid, $common_comm, $common_callchain,
--	    $id, $ret) =3D @_;
--
--	if ($ret < 0) {
--	    $failed_syscalls{$common_comm}++;
--	}
--}
--
--sub syscalls::sys_exit
--{
--	raw_syscalls::sys_exit(@_)
--}
--
--sub trace_end
--{
--    printf("\nfailed syscalls by comm:\n\n");
--
--    printf("%-20s  %10s\n", "comm", "# errors");
--    printf("%-20s  %6s  %10s\n", "--------------------", "----------");
--
--    foreach my $comm (sort {$failed_syscalls{$b} <=3D> $failed_syscalls{$a=
-}}
--		      keys %failed_syscalls) {
--	next if ($for_comm && $comm ne $for_comm);
--
--	printf("%-20s  %10s\n", $comm, $failed_syscalls{$comm});
--    }
--}
-diff --git a/tools/perf/scripts/perl/rw-by-file.pl b/tools/perf/scripts/per=
-l/rw-by-file.pl
-deleted file mode 100644
-index 92a750b8552b..000000000000
---- a/tools/perf/scripts/perl/rw-by-file.pl
-+++ /dev/null
-@@ -1,106 +0,0 @@
--#!/usr/bin/perl -w
--# SPDX-License-Identifier: GPL-2.0-only
--# (c) 2009, Tom Zanussi <tzanussi@gmail.com>
--
--# Display r/w activity for files read/written to for a given program
--
--# The common_* event handler fields are the most useful fields common to
--# all events.  They don't necessarily correspond to the 'common_*' fields
--# in the status files.  Those fields not available as handler params can
--# be retrieved via script functions of the form get_common_*().
--
--use 5.010000;
--use strict;
--use warnings;
--
--use lib "$ENV{'PERF_EXEC_PATH'}/scripts/perl/Perf-Trace-Util/lib";
--use lib "./Perf-Trace-Util/lib";
--use Perf::Trace::Core;
--use Perf::Trace::Util;
--
--my $usage =3D "perf script -s rw-by-file.pl <comm>\n";
--
--my $for_comm =3D shift or die $usage;
--
--my %reads;
--my %writes;
--
--sub syscalls::sys_enter_read
--{
--    my ($event_name, $context, $common_cpu, $common_secs, $common_nsecs,
--	$common_pid, $common_comm, $common_callchain, $nr, $fd, $buf, $count) =3D=
- @_;
--
--    if ($common_comm eq $for_comm) {
--	$reads{$fd}{bytes_requested} +=3D $count;
--	$reads{$fd}{total_reads}++;
--    }
--}
--
--sub syscalls::sys_enter_write
--{
--    my ($event_name, $context, $common_cpu, $common_secs, $common_nsecs,
--	$common_pid, $common_comm, $common_callchain, $nr, $fd, $buf, $count) =3D=
- @_;
--
--    if ($common_comm eq $for_comm) {
--	$writes{$fd}{bytes_written} +=3D $count;
--	$writes{$fd}{total_writes}++;
--    }
--}
--
--sub trace_end
--{
--    printf("file read counts for $for_comm:\n\n");
--
--    printf("%6s  %10s  %10s\n", "fd", "# reads", "bytes_requested");
--    printf("%6s  %10s  %10s\n", "------", "----------", "-----------");
--
--    foreach my $fd (sort {$reads{$b}{bytes_requested} <=3D>
--			      $reads{$a}{bytes_requested}} keys %reads) {
--	my $total_reads =3D $reads{$fd}{total_reads};
--	my $bytes_requested =3D $reads{$fd}{bytes_requested};
--	printf("%6u  %10u  %10u\n", $fd, $total_reads, $bytes_requested);
--    }
--
--    printf("\nfile write counts for $for_comm:\n\n");
--
--    printf("%6s  %10s  %10s\n", "fd", "# writes", "bytes_written");
--    printf("%6s  %10s  %10s\n", "------", "----------", "-----------");
--
--    foreach my $fd (sort {$writes{$b}{bytes_written} <=3D>
--			      $writes{$a}{bytes_written}} keys %writes) {
--	my $total_writes =3D $writes{$fd}{total_writes};
--	my $bytes_written =3D $writes{$fd}{bytes_written};
--	printf("%6u  %10u  %10u\n", $fd, $total_writes, $bytes_written);
--    }
--
--    print_unhandled();
--}
--
--my %unhandled;
--
--sub print_unhandled
--{
--    if ((scalar keys %unhandled) =3D=3D 0) {
--	return;
--    }
--
--    print "\nunhandled events:\n\n";
--
--    printf("%-40s  %10s\n", "event", "count");
--    printf("%-40s  %10s\n", "----------------------------------------",
--	   "-----------");
--
--    foreach my $event_name (keys %unhandled) {
--	printf("%-40s  %10d\n", $event_name, $unhandled{$event_name});
--    }
--}
--
--sub trace_unhandled
--{
--    my ($event_name, $context, $common_cpu, $common_secs, $common_nsecs,
--	$common_pid, $common_comm, $common_callchain) =3D @_;
--
--    $unhandled{$event_name}++;
--}
--
--
-diff --git a/tools/perf/scripts/perl/rw-by-pid.pl b/tools/perf/scripts/perl=
-/rw-by-pid.pl
-deleted file mode 100644
-index d789fe39caab..000000000000
---- a/tools/perf/scripts/perl/rw-by-pid.pl
-+++ /dev/null
-@@ -1,184 +0,0 @@
--#!/usr/bin/perl -w
--# SPDX-License-Identifier: GPL-2.0-only
--# (c) 2009, Tom Zanussi <tzanussi@gmail.com>
--
--# Display r/w activity for all processes
--
--# The common_* event handler fields are the most useful fields common to
--# all events.  They don't necessarily correspond to the 'common_*' fields
--# in the status files.  Those fields not available as handler params can
--# be retrieved via script functions of the form get_common_*().
--
--use 5.010000;
--use strict;
--use warnings;
--
--use lib "$ENV{'PERF_EXEC_PATH'}/scripts/perl/Perf-Trace-Util/lib";
--use lib "./Perf-Trace-Util/lib";
--use Perf::Trace::Core;
--use Perf::Trace::Util;
--
--my %reads;
--my %writes;
--
--sub syscalls::sys_exit_read
--{
--    my ($event_name, $context, $common_cpu, $common_secs, $common_nsecs,
--	$common_pid, $common_comm, $common_callchain,
--	$nr, $ret) =3D @_;
--
--    if ($ret > 0) {
--	$reads{$common_pid}{bytes_read} +=3D $ret;
--    } else {
--	if (!defined ($reads{$common_pid}{bytes_read})) {
--	    $reads{$common_pid}{bytes_read} =3D 0;
--	}
--	$reads{$common_pid}{errors}{$ret}++;
--    }
--}
--
--sub syscalls::sys_enter_read
--{
--    my ($event_name, $context, $common_cpu, $common_secs, $common_nsecs,
--	$common_pid, $common_comm, $common_callchain,
--	$nr, $fd, $buf, $count) =3D @_;
--
--    $reads{$common_pid}{bytes_requested} +=3D $count;
--    $reads{$common_pid}{total_reads}++;
--    $reads{$common_pid}{comm} =3D $common_comm;
--}
--
--sub syscalls::sys_exit_write
--{
--    my ($event_name, $context, $common_cpu, $common_secs, $common_nsecs,
--	$common_pid, $common_comm, $common_callchain,
--	$nr, $ret) =3D @_;
--
--    if ($ret <=3D 0) {
--	$writes{$common_pid}{errors}{$ret}++;
--    }
--}
--
--sub syscalls::sys_enter_write
--{
--    my ($event_name, $context, $common_cpu, $common_secs, $common_nsecs,
--	$common_pid, $common_comm, $common_callchain,
--	$nr, $fd, $buf, $count) =3D @_;
--
--    $writes{$common_pid}{bytes_written} +=3D $count;
--    $writes{$common_pid}{total_writes}++;
--    $writes{$common_pid}{comm} =3D $common_comm;
--}
--
--sub trace_end
--{
--    printf("read counts by pid:\n\n");
--
--    printf("%6s  %20s  %10s  %10s  %10s\n", "pid", "comm",
--	   "# reads", "bytes_requested", "bytes_read");
--    printf("%6s  %-20s  %10s  %10s  %10s\n", "------", "------------------=
---",
--	   "-----------", "----------", "----------");
--
--    foreach my $pid (sort { ($reads{$b}{bytes_read} || 0) <=3D>
--				($reads{$a}{bytes_read} || 0) } keys %reads) {
--	my $comm =3D $reads{$pid}{comm} || "";
--	my $total_reads =3D $reads{$pid}{total_reads} || 0;
--	my $bytes_requested =3D $reads{$pid}{bytes_requested} || 0;
--	my $bytes_read =3D $reads{$pid}{bytes_read} || 0;
--
--	printf("%6s  %-20s  %10s  %10s  %10s\n", $pid, $comm,
--	       $total_reads, $bytes_requested, $bytes_read);
--    }
--
--    printf("\nfailed reads by pid:\n\n");
--
--    printf("%6s  %20s  %6s  %10s\n", "pid", "comm", "error #", "# errors")=
-;
--    printf("%6s  %20s  %6s  %10s\n", "------", "--------------------",
--	   "------", "----------");
--
--    my @errcounts =3D ();
--
--    foreach my $pid (keys %reads) {
--	foreach my $error (keys %{$reads{$pid}{errors}}) {
--	    my $comm =3D $reads{$pid}{comm} || "";
--	    my $errcount =3D $reads{$pid}{errors}{$error} || 0;
--	    push @errcounts, [$pid, $comm, $error, $errcount];
--	}
--    }
--
--    @errcounts =3D sort { $b->[3] <=3D> $a->[3] } @errcounts;
--
--    for my $i (0 .. $#errcounts) {
--	printf("%6d  %-20s  %6d  %10s\n", $errcounts[$i][0],
--	       $errcounts[$i][1], $errcounts[$i][2], $errcounts[$i][3]);
--    }
--
--    printf("\nwrite counts by pid:\n\n");
--
--    printf("%6s  %20s  %10s  %10s\n", "pid", "comm",
--	   "# writes", "bytes_written");
--    printf("%6s  %-20s  %10s  %10s\n", "------", "--------------------",
--	   "-----------", "----------");
--
--    foreach my $pid (sort { ($writes{$b}{bytes_written} || 0) <=3D>
--			($writes{$a}{bytes_written} || 0)} keys %writes) {
--	my $comm =3D $writes{$pid}{comm} || "";
--	my $total_writes =3D $writes{$pid}{total_writes} || 0;
--	my $bytes_written =3D $writes{$pid}{bytes_written} || 0;
--
--	printf("%6s  %-20s  %10s  %10s\n", $pid, $comm,
--	       $total_writes, $bytes_written);
--    }
--
--    printf("\nfailed writes by pid:\n\n");
--
--    printf("%6s  %20s  %6s  %10s\n", "pid", "comm", "error #", "# errors")=
-;
--    printf("%6s  %20s  %6s  %10s\n", "------", "--------------------",
--	   "------", "----------");
--
--    @errcounts =3D ();
--
--    foreach my $pid (keys %writes) {
--	foreach my $error (keys %{$writes{$pid}{errors}}) {
--	    my $comm =3D $writes{$pid}{comm} || "";
--	    my $errcount =3D $writes{$pid}{errors}{$error} || 0;
--	    push @errcounts, [$pid, $comm, $error, $errcount];
--	}
--    }
--
--    @errcounts =3D sort { $b->[3] <=3D> $a->[3] } @errcounts;
--
--    for my $i (0 .. $#errcounts) {
--	printf("%6d  %-20s  %6d  %10s\n", $errcounts[$i][0],
--	       $errcounts[$i][1], $errcounts[$i][2], $errcounts[$i][3]);
--    }
--
--    print_unhandled();
--}
--
--my %unhandled;
--
--sub print_unhandled
--{
--    if ((scalar keys %unhandled) =3D=3D 0) {
--	return;
--    }
--
--    print "\nunhandled events:\n\n";
--
--    printf("%-40s  %10s\n", "event", "count");
--    printf("%-40s  %10s\n", "----------------------------------------",
--	   "-----------");
--
--    foreach my $event_name (keys %unhandled) {
--	printf("%-40s  %10d\n", $event_name, $unhandled{$event_name});
--    }
--}
--
--sub trace_unhandled
--{
--    my ($event_name, $context, $common_cpu, $common_secs, $common_nsecs,
--	$common_pid, $common_comm, $common_callchain) =3D @_;
--
--    $unhandled{$event_name}++;
--}
-diff --git a/tools/perf/scripts/perl/rwtop.pl b/tools/perf/scripts/perl/rwt=
-op.pl
-deleted file mode 100644
-index eba4df67af6b..000000000000
---- a/tools/perf/scripts/perl/rwtop.pl
-+++ /dev/null
-@@ -1,203 +0,0 @@
--#!/usr/bin/perl -w
--# SPDX-License-Identifier: GPL-2.0-only
--# (c) 2010, Tom Zanussi <tzanussi@gmail.com>
--
--# read/write top
--#
--# Periodically displays system-wide r/w call activity, broken down by
--# pid.  If an [interval] arg is specified, the display will be
--# refreshed every [interval] seconds.  The default interval is 3
--# seconds.
--
--use 5.010000;
--use strict;
--use warnings;
--
--use lib "$ENV{'PERF_EXEC_PATH'}/scripts/perl/Perf-Trace-Util/lib";
--use lib "./Perf-Trace-Util/lib";
--use Perf::Trace::Core;
--use Perf::Trace::Util;
--use POSIX qw/SIGALRM SA_RESTART/;
--
--my $default_interval =3D 3;
--my $nlines =3D 20;
--my $print_thread;
--my $print_pending =3D 0;
--
--my %reads;
--my %writes;
--
--my $interval =3D shift;
--if (!$interval) {
--    $interval =3D $default_interval;
--}
--
--sub syscalls::sys_exit_read
--{
--    my ($event_name, $context, $common_cpu, $common_secs, $common_nsecs,
--	$common_pid, $common_comm, $common_callchain,
--	$nr, $ret) =3D @_;
--
--    print_check();
--
--    if ($ret > 0) {
--	$reads{$common_pid}{bytes_read} +=3D $ret;
--    } else {
--	if (!defined ($reads{$common_pid}{bytes_read})) {
--	    $reads{$common_pid}{bytes_read} =3D 0;
--	}
--	$reads{$common_pid}{errors}{$ret}++;
--    }
--}
--
--sub syscalls::sys_enter_read
--{
--    my ($event_name, $context, $common_cpu, $common_secs, $common_nsecs,
--	$common_pid, $common_comm, $common_callchain,
--	$nr, $fd, $buf, $count) =3D @_;
--
--    print_check();
--
--    $reads{$common_pid}{bytes_requested} +=3D $count;
--    $reads{$common_pid}{total_reads}++;
--    $reads{$common_pid}{comm} =3D $common_comm;
--}
--
--sub syscalls::sys_exit_write
--{
--    my ($event_name, $context, $common_cpu, $common_secs, $common_nsecs,
--	$common_pid, $common_comm, $common_callchain,
--	$nr, $ret) =3D @_;
--
--    print_check();
--
--    if ($ret <=3D 0) {
--	$writes{$common_pid}{errors}{$ret}++;
--    }
--}
--
--sub syscalls::sys_enter_write
--{
--    my ($event_name, $context, $common_cpu, $common_secs, $common_nsecs,
--	$common_pid, $common_comm, $common_callchain,
--	$nr, $fd, $buf, $count) =3D @_;
--
--    print_check();
--
--    $writes{$common_pid}{bytes_written} +=3D $count;
--    $writes{$common_pid}{total_writes}++;
--    $writes{$common_pid}{comm} =3D $common_comm;
--}
--
--sub trace_begin
--{
--    my $sa =3D POSIX::SigAction->new(\&set_print_pending);
--    $sa->flags(SA_RESTART);
--    $sa->safe(1);
--    POSIX::sigaction(SIGALRM, $sa) or die "Can't set SIGALRM handler: $!\n=
-";
--    alarm 1;
--}
--
--sub trace_end
--{
--    print_unhandled();
--    print_totals();
--}
--
--sub print_check()
--{
--    if ($print_pending =3D=3D 1) {
--	$print_pending =3D 0;
--	print_totals();
--    }
--}
--
--sub set_print_pending()
--{
--    $print_pending =3D 1;
--    alarm $interval;
--}
--
--sub print_totals
--{
--    my $count;
--
--    $count =3D 0;
--
--    clear_term();
--
--    printf("\nread counts by pid:\n\n");
--
--    printf("%6s  %20s  %10s  %10s  %10s\n", "pid", "comm",
--	   "# reads", "bytes_req", "bytes_read");
--    printf("%6s  %-20s  %10s  %10s  %10s\n", "------", "------------------=
---",
--	   "----------", "----------", "----------");
--
--    foreach my $pid (sort { ($reads{$b}{bytes_read} || 0) <=3D>
--			       ($reads{$a}{bytes_read} || 0) } keys %reads) {
--	my $comm =3D $reads{$pid}{comm} || "";
--	my $total_reads =3D $reads{$pid}{total_reads} || 0;
--	my $bytes_requested =3D $reads{$pid}{bytes_requested} || 0;
--	my $bytes_read =3D $reads{$pid}{bytes_read} || 0;
--
--	printf("%6s  %-20s  %10s  %10s  %10s\n", $pid, $comm,
--	       $total_reads, $bytes_requested, $bytes_read);
--
--	if (++$count =3D=3D $nlines) {
--	    last;
--	}
--    }
--
--    $count =3D 0;
--
--    printf("\nwrite counts by pid:\n\n");
--
--    printf("%6s  %20s  %10s  %13s\n", "pid", "comm",
--	   "# writes", "bytes_written");
--    printf("%6s  %-20s  %10s  %13s\n", "------", "--------------------",
--	   "----------", "-------------");
--
--    foreach my $pid (sort { ($writes{$b}{bytes_written} || 0) <=3D>
--			($writes{$a}{bytes_written} || 0)} keys %writes) {
--	my $comm =3D $writes{$pid}{comm} || "";
--	my $total_writes =3D $writes{$pid}{total_writes} || 0;
--	my $bytes_written =3D $writes{$pid}{bytes_written} || 0;
--
--	printf("%6s  %-20s  %10s  %13s\n", $pid, $comm,
--	       $total_writes, $bytes_written);
--
--	if (++$count =3D=3D $nlines) {
--	    last;
--	}
--    }
--
--    %reads =3D ();
--    %writes =3D ();
--}
--
--my %unhandled;
--
--sub print_unhandled
--{
--    if ((scalar keys %unhandled) =3D=3D 0) {
--	return;
--    }
--
--    print "\nunhandled events:\n\n";
--
--    printf("%-40s  %10s\n", "event", "count");
--    printf("%-40s  %10s\n", "----------------------------------------",
--	   "-----------");
--
--    foreach my $event_name (keys %unhandled) {
--	printf("%-40s  %10d\n", $event_name, $unhandled{$event_name});
--    }
--}
--
--sub trace_unhandled
--{
--    my ($event_name, $context, $common_cpu, $common_secs, $common_nsecs,
--	$common_pid, $common_comm, $common_callchain) =3D @_;
--
--    $unhandled{$event_name}++;
--}
-diff --git a/tools/perf/scripts/perl/wakeup-latency.pl b/tools/perf/scripts=
-/perl/wakeup-latency.pl
-deleted file mode 100644
-index 53444ff4ec7f..000000000000
---- a/tools/perf/scripts/perl/wakeup-latency.pl
-+++ /dev/null
-@@ -1,107 +0,0 @@
--#!/usr/bin/perl -w
--# SPDX-License-Identifier: GPL-2.0-only
--# (c) 2009, Tom Zanussi <tzanussi@gmail.com>
--
--# Display avg/min/max wakeup latency
--
--# The common_* event handler fields are the most useful fields common to
--# all events.  They don't necessarily correspond to the 'common_*' fields
--# in the status files.  Those fields not available as handler params can
--# be retrieved via script functions of the form get_common_*().
--
--use 5.010000;
--use strict;
--use warnings;
--
--use lib "$ENV{'PERF_EXEC_PATH'}/scripts/perl/Perf-Trace-Util/lib";
--use lib "./Perf-Trace-Util/lib";
--use Perf::Trace::Core;
--use Perf::Trace::Util;
--
--my %last_wakeup;
--
--my $max_wakeup_latency;
--my $min_wakeup_latency;
--my $total_wakeup_latency =3D 0;
--my $total_wakeups =3D 0;
--
--sub sched::sched_switch
--{
--    my ($event_name, $context, $common_cpu, $common_secs, $common_nsecs,
--	$common_pid, $common_comm, $common_callchain,
--	$prev_comm, $prev_pid, $prev_prio, $prev_state, $next_comm, $next_pid,
--	$next_prio) =3D @_;
--
--    my $wakeup_ts =3D $last_wakeup{$common_cpu}{ts};
--    if ($wakeup_ts) {
--	my $switch_ts =3D nsecs($common_secs, $common_nsecs);
--	my $wakeup_latency =3D $switch_ts - $wakeup_ts;
--	if ($wakeup_latency > $max_wakeup_latency) {
--	    $max_wakeup_latency =3D $wakeup_latency;
--	}
--	if ($wakeup_latency < $min_wakeup_latency) {
--	    $min_wakeup_latency =3D $wakeup_latency;
--	}
--	$total_wakeup_latency +=3D $wakeup_latency;
--	$total_wakeups++;
--    }
--    $last_wakeup{$common_cpu}{ts} =3D 0;
--}
--
--sub sched::sched_wakeup
--{
--    my ($event_name, $context, $common_cpu, $common_secs, $common_nsecs,
--	$common_pid, $common_comm, $common_callchain,
--	$comm, $pid, $prio, $success, $target_cpu) =3D @_;
--
--    $last_wakeup{$target_cpu}{ts} =3D nsecs($common_secs, $common_nsecs);
--}
--
--sub trace_begin
--{
--    $min_wakeup_latency =3D 1000000000;
--    $max_wakeup_latency =3D 0;
--}
--
--sub trace_end
--{
--    printf("wakeup_latency stats:\n\n");
--    print "total_wakeups: $total_wakeups\n";
--    if ($total_wakeups) {
--	printf("avg_wakeup_latency (ns): %u\n",
--	       avg($total_wakeup_latency, $total_wakeups));
--    } else {
--	printf("avg_wakeup_latency (ns): N/A\n");
--    }
--    printf("min_wakeup_latency (ns): %u\n", $min_wakeup_latency);
--    printf("max_wakeup_latency (ns): %u\n", $max_wakeup_latency);
--
--    print_unhandled();
--}
--
--my %unhandled;
--
--sub print_unhandled
--{
--    if ((scalar keys %unhandled) =3D=3D 0) {
--	return;
--    }
--
--    print "\nunhandled events:\n\n";
--
--    printf("%-40s  %10s\n", "event", "count");
--    printf("%-40s  %10s\n", "----------------------------------------",
--	   "-----------");
--
--    foreach my $event_name (keys %unhandled) {
--	printf("%-40s  %10d\n", $event_name, $unhandled{$event_name});
--    }
--}
--
--sub trace_unhandled
--{
--    my ($event_name, $context, $common_cpu, $common_secs, $common_nsecs,
--	$common_pid, $common_comm, $common_callchain) =3D @_;
--
--    $unhandled{$event_name}++;
--}
-diff --git a/tools/perf/tests/make b/tools/perf/tests/make
-index b5eaf326573c..8fa2c4d58b8b 100644
---- a/tools/perf/tests/make
-+++ b/tools/perf/tests/make
-@@ -76,7 +76,6 @@ make_no_jevents     :=3D NO_JEVENTS=3D1
- make_jevents_all    :=3D JEVENTS_ARCH=3Dall
- make_no_bpf_skel    :=3D BUILD_BPF_SKEL=3D0
- make_gen_vmlinux_h  :=3D GEN_VMLINUX_H=3D1
--make_libperl        :=3D LIBPERL=3D1
- make_no_python_module :=3D NO_PYTHON_MODULE=3D1
- make_no_scripts     :=3D NO_PYTHON_MODULE=3D1
- make_no_slang       :=3D NO_SLANG=3D1
-@@ -149,7 +148,6 @@ run +=3D make_no_jevents
- run +=3D make_jevents_all
- run +=3D make_no_bpf_skel
- run +=3D make_gen_vmlinux_h
--run +=3D make_libperl
- run +=3D make_no_python_module
- run +=3D make_no_scripts
- run +=3D make_no_slang
-diff --git a/tools/perf/tests/shell/script_perl.sh b/tools/perf/tests/shell=
-/script_perl.sh
++# About dialog
++
++class AboutDialog(QDialog):
++
++    def __init__(self, glb, parent=None):
++        super(AboutDialog, self).__init__(parent)
++
++        self.setWindowTitle("About Exported SQL Viewer")
++        self.setMinimumWidth(300)
++
++        pyside_version = "1" if pyside_version_1 else "2"
++
++        text = "<pre>"
++        text += "Python version:     " + sys.version.split(" ")[0] + "\n"
++        text += "PySide version:     " + pyside_version + "\n"
++        text += "Qt version:         " + qVersion() + "\n"
++        if glb.dbref.is_sqlite3:
++            text += "SQLite version:     " + SQLiteVersion(glb.db) + "\n"
++        else:
++            text += "PostqreSQL version: " + PostqreSQLServerVersion(glb.db) + "\n"
++        text += "</pre>"
++
++        self.text = QTextBrowser()
++        self.text.setHtml(text)
++        self.text.setReadOnly(True)
++        self.text.setOpenExternalLinks(True)
++
++        self.vbox = QVBoxLayout()
++        self.vbox.addWidget(self.text)
++
++        self.setLayout(self.vbox)
++
++# Font resize
++
++def ResizeFont(widget, diff):
++    font = widget.font()
++    sz = font.pointSize()
++    font.setPointSize(sz + diff)
++    widget.setFont(font)
++
++def ShrinkFont(widget):
++    ResizeFont(widget, -1)
++
++def EnlargeFont(widget):
++    ResizeFont(widget, 1)
++
++# Unique name for sub-windows
++
++def NumberedWindowName(name, nr):
++    if nr > 1:
++        name += " <" + str(nr) + ">"
++    return name
++
++def UniqueSubWindowName(mdi_area, name):
++    nr = 1
++    while True:
++        unique_name = NumberedWindowName(name, nr)
++        ok = True
++        for sub_window in mdi_area.subWindowList():
++            if sub_window.name == unique_name:
++                ok = False
++                break
++        if ok:
++            return unique_name
++        nr += 1
++
++# Add a sub-window
++
++def AddSubWindow(mdi_area, sub_window, name):
++    unique_name = UniqueSubWindowName(mdi_area, name)
++    sub_window.setMinimumSize(200, 100)
++    sub_window.resize(800, 600)
++    sub_window.setWindowTitle(unique_name)
++    sub_window.setAttribute(Qt.WA_DeleteOnClose)
++    sub_window.setWindowIcon(sub_window.style().standardIcon(QStyle.SP_FileIcon))
++    sub_window.name = unique_name
++    mdi_area.addSubWindow(sub_window)
++    sub_window.show()
++
++# Main window
++
++class MainWindow(QMainWindow):
++
++    def __init__(self, glb, parent=None):
++        super(MainWindow, self).__init__(parent)
++
++        self.glb = glb
++
++        self.setWindowTitle("Exported SQL Viewer: " + glb.dbname)
++        self.setWindowIcon(self.style().standardIcon(QStyle.SP_ComputerIcon))
++        self.setMinimumSize(200, 100)
++
++        self.mdi_area = QMdiArea()
++        self.mdi_area.setHorizontalScrollBarPolicy(Qt.ScrollBarAsNeeded)
++        self.mdi_area.setVerticalScrollBarPolicy(Qt.ScrollBarAsNeeded)
++
++        self.setCentralWidget(self.mdi_area)
++
++        menu = self.menuBar()
++
++        file_menu = menu.addMenu("&File")
++        file_menu.addAction(CreateExitAction(glb.app, self))
++
++        edit_menu = menu.addMenu("&Edit")
++        edit_menu.addAction(CreateAction("&Copy", "Copy to clipboard", self.CopyToClipboard, self, QKeySequence.Copy))
++        edit_menu.addAction(CreateAction("Copy as CS&V", "Copy to clipboard as CSV", self.CopyToClipboardCSV, self))
++        edit_menu.addAction(CreateAction("&Find...", "Find items", self.Find, self, QKeySequence.Find))
++        edit_menu.addAction(CreateAction("Fetch &more records...", "Fetch more records", self.FetchMoreRecords, self, [QKeySequence(Qt.Key_F8)]))
++        edit_menu.addAction(CreateAction("&Shrink Font", "Make text smaller", self.ShrinkFont, self, [QKeySequence("Ctrl+-")]))
++        edit_menu.addAction(CreateAction("&Enlarge Font", "Make text bigger", self.EnlargeFont, self, [QKeySequence("Ctrl++")]))
++
++        reports_menu = menu.addMenu("&Reports")
++        if IsSelectable(glb.db, "calls"):
++            reports_menu.addAction(CreateAction("Context-Sensitive Call &Graph", "Create a new window containing a context-sensitive call graph", self.NewCallGraph, self))
++
++        if IsSelectable(glb.db, "calls", "WHERE parent_id >= 0"):
++            reports_menu.addAction(CreateAction("Call &Tree", "Create a new window containing a call tree", self.NewCallTree, self))
++
++        self.EventMenu(GetEventList(glb.db), reports_menu)
++
++        if IsSelectable(glb.db, "calls"):
++            reports_menu.addAction(CreateAction("&Top calls by elapsed time", "Create a new window displaying top calls by elapsed time", self.NewTopCalls, self))
++
++        if IsSelectable(glb.db, "context_switches"):
++            charts_menu = menu.addMenu("&Charts")
++            charts_menu.addAction(CreateAction("&Time chart by CPU", "Create a new window displaying time charts by CPU", self.TimeChartByCPU, self))
++
++        self.TableMenu(GetTableList(glb), menu)
++
++        self.window_menu = WindowMenu(self.mdi_area, menu)
++
++        help_menu = menu.addMenu("&Help")
++        help_menu.addAction(CreateAction("&Exported SQL Viewer Help", "Helpful information", self.Help, self, QKeySequence.HelpContents))
++        help_menu.addAction(CreateAction("&About Exported SQL Viewer", "About this application", self.About, self))
++
++    def Try(self, fn):
++        win = self.mdi_area.activeSubWindow()
++        if win:
++            try:
++                fn(win.view)
++            except AttributeError:
++                pass
++
++    def CopyToClipboard(self):
++        self.Try(CopyCellsToClipboardHdr)
++
++    def CopyToClipboardCSV(self):
++        self.Try(CopyCellsToClipboardCSV)
++
++    def Find(self):
++        win = self.mdi_area.activeSubWindow()
++        if win:
++            try:
++                win.find_bar.Activate()
++            except AttributeError:
++                pass
++
++    def FetchMoreRecords(self):
++        win = self.mdi_area.activeSubWindow()
++        if win:
++            try:
++                win.fetch_bar.Activate()
++            except AttributeError:
++                pass
++
++    def ShrinkFont(self):
++        self.Try(ShrinkFont)
++
++    def EnlargeFont(self):
++        self.Try(EnlargeFont)
++
++    def EventMenu(self, events, reports_menu):
++        branches_events = 0
++        for event in events:
++            event = event.split(":")[0]
++            if event == "branches":
++                branches_events += 1
++        dbid = 0
++        for event in events:
++            dbid += 1
++            event = event.split(":")[0]
++            if event == "branches":
++                label = "All branches" if branches_events == 1 else "All branches " + "(id=" + dbid + ")"
++                reports_menu.addAction(CreateAction(label, "Create a new window displaying branch events", lambda a=None,x=dbid: self.NewBranchView(x), self))
++                label = "Selected branches" if branches_events == 1 else "Selected branches " + "(id=" + dbid + ")"
++                reports_menu.addAction(CreateAction(label, "Create a new window displaying branch events", lambda a=None,x=dbid: self.NewSelectedBranchView(x), self))
++
++    def TimeChartByCPU(self):
++        TimeChartByCPUWindow(self.glb, self)
++
++    def TableMenu(self, tables, menu):
++        table_menu = menu.addMenu("&Tables")
++        for table in tables:
++            table_menu.addAction(CreateAction(table, "Create a new window containing a table view", lambda a=None,t=table: self.NewTableView(t), self))
++
++    def NewCallGraph(self):
++        CallGraphWindow(self.glb, self)
++
++    def NewCallTree(self):
++        CallTreeWindow(self.glb, self)
++
++    def NewTopCalls(self):
++        dialog = TopCallsDialog(self.glb, self)
++        ret = dialog.exec_()
++        if ret:
++            TopCallsWindow(self.glb, dialog.report_vars, self)
++
++    def NewBranchView(self, event_id):
++        BranchWindow(self.glb, event_id, ReportVars(), self)
++
++    def NewSelectedBranchView(self, event_id):
++        dialog = SelectedBranchDialog(self.glb, self)
++        ret = dialog.exec_()
++        if ret:
++            BranchWindow(self.glb, event_id, dialog.report_vars, self)
++
++    def NewTableView(self, table_name):
++        TableWindow(self.glb, table_name, self)
++
++    def Help(self):
++        HelpWindow(self.glb, self)
++
++    def About(self):
++        dialog = AboutDialog(self.glb, self)
++        dialog.exec_()
++
++def TryOpen(file_name):
++    try:
++        return open(file_name, "rb")
++    except OSError:
++        return None
++
++def Is64Bit(f):
++    result = sizeof(c_void_p)
++    # ELF support only
++    pos = f.tell()
++    f.seek(0)
++    header = f.read(7)
++    f.seek(pos)
++    magic = header[0:4]
++    if sys.version_info[0] == 2:
++        eclass = ord(header[4])
++        encoding = ord(header[5])
++        version = ord(header[6])
++    else:
++        eclass = header[4]
++        encoding = header[5]
++        version = header[6]
++    if magic == chr(127) + "ELF" and eclass > 0 and eclass < 3 and encoding > 0 and encoding < 3 and version == 1:
++        result = True if eclass == 2 else False
++    return result
++
++# Global data
++
++class Glb():
++
++    def __init__(self, dbref, db, dbname):
++        self.dbref = dbref
++        self.db = db
++        self.dbname = dbname
++        self.home_dir = os.path.expanduser("~")
++        self.buildid_dir = os.getenv("PERF_BUILDID_DIR")
++        if self.buildid_dir:
++            self.buildid_dir += "/.build-id/"
++        else:
++            self.buildid_dir = self.home_dir + "/.debug/.build-id/"
++        self.app = None
++        self.mainwindow = None
++        self.instances_to_shutdown_on_exit = weakref.WeakSet()
++        try:
++            self.disassembler = LibXED()
++            self.have_disassembler = True
++        except (OSError, RuntimeError, AttributeError):
++            self.have_disassembler = False
++        self.host_machine_id = 0
++        self.host_start_time = 0
++        self.host_finish_time = 0
++
++    def FileFromBuildId(self, build_id):
++        file_name = self.buildid_dir + build_id[0:2] + "/" + build_id[2:] + "/elf"
++        return TryOpen(file_name)
++
++    def FileFromNamesAndBuildId(self, short_name, long_name, build_id):
++        # Assume current machine i.e. no support for virtualization
++        if short_name[0:7] == "[kernel" and os.path.basename(long_name) == "kcore":
++            file_name = os.getenv("PERF_KCORE")
++            f = TryOpen(file_name) if file_name else None
++            if f:
++                return f
++            # For now, no special handling if long_name is /proc/kcore
++            f = TryOpen(long_name)
++            if f:
++                return f
++        f = self.FileFromBuildId(build_id)
++        if f:
++            return f
++        return None
++
++    def AddInstanceToShutdownOnExit(self, instance):
++        self.instances_to_shutdown_on_exit.add(instance)
++
++    # Shutdown any background processes or threads
++    def ShutdownInstances(self):
++        for x in self.instances_to_shutdown_on_exit:
++            try:
++                x.Shutdown()
++            except AttributeError:
++                pass
++
++    def GetHostMachineId(self):
++        query = QSqlQuery(self.db)
++        QueryExec(query, "SELECT id FROM machines WHERE pid = -1")
++        if query.next():
++            self.host_machine_id = query.value(0)
++        else:
++            self.host_machine_id = 0
++        return self.host_machine_id
++
++    def HostMachineId(self):
++        if self.host_machine_id:
++            return self.host_machine_id
++        return self.GetHostMachineId()
++
++    def SelectValue(self, sql):
++        query = QSqlQuery(self.db)
++        try:
++            QueryExec(query, sql)
++        except RuntimeError:
++            return None
++        if query.next():
++            return Decimal(query.value(0))
++        return None
++
++    def SwitchesMinTime(self, machine_id):
++        return self.SelectValue("SELECT time"
++                    " FROM context_switches"
++                    " WHERE time != 0 AND machine_id = " + str(machine_id) +
++                    " ORDER BY id LIMIT 1")
++
++    def SwitchesMaxTime(self, machine_id):
++        return self.SelectValue("SELECT time"
++                    " FROM context_switches"
++                    " WHERE time != 0 AND machine_id = " + str(machine_id) +
++                    " ORDER BY id DESC LIMIT 1")
++
++    def SamplesMinTime(self, machine_id):
++        return self.SelectValue("SELECT time"
++                    " FROM samples"
++                    " WHERE time != 0 AND machine_id = " + str(machine_id) +
++                    " ORDER BY id LIMIT 1")
++
++    def SamplesMaxTime(self, machine_id):
++        return self.SelectValue("SELECT time"
++                    " FROM samples"
++                    " WHERE time != 0 AND machine_id = " + str(machine_id) +
++                    " ORDER BY id DESC LIMIT 1")
++
++    def CallsMinTime(self, machine_id):
++        return self.SelectValue("SELECT calls.call_time"
++                    " FROM calls"
++                    " INNER JOIN threads ON threads.thread_id = calls.thread_id"
++                    " WHERE calls.call_time != 0 AND threads.machine_id = " + str(machine_id) +
++                    " ORDER BY calls.id LIMIT 1")
++
++    def CallsMaxTime(self, machine_id):
++        return self.SelectValue("SELECT calls.return_time"
++                    " FROM calls"
++                    " INNER JOIN threads ON threads.thread_id = calls.thread_id"
++                    " WHERE calls.return_time != 0 AND threads.machine_id = " + str(machine_id) +
++                    " ORDER BY calls.return_time DESC LIMIT 1")
++
++    def GetStartTime(self, machine_id):
++        t0 = self.SwitchesMinTime(machine_id)
++        t1 = self.SamplesMinTime(machine_id)
++        t2 = self.CallsMinTime(machine_id)
++        if t0 is None or (not(t1 is None) and t1 < t0):
++            t0 = t1
++        if t0 is None or (not(t2 is None) and t2 < t0):
++            t0 = t2
++        return t0
++
++    def GetFinishTime(self, machine_id):
++        t0 = self.SwitchesMaxTime(machine_id)
++        t1 = self.SamplesMaxTime(machine_id)
++        t2 = self.CallsMaxTime(machine_id)
++        if t0 is None or (not(t1 is None) and t1 > t0):
++            t0 = t1
++        if t0 is None or (not(t2 is None) and t2 > t0):
++            t0 = t2
++        return t0
++
++    def HostStartTime(self):
++        if self.host_start_time:
++            return self.host_start_time
++        self.host_start_time = self.GetStartTime(self.HostMachineId())
++        return self.host_start_time
++
++    def HostFinishTime(self):
++        if self.host_finish_time:
++            return self.host_finish_time
++        self.host_finish_time = self.GetFinishTime(self.HostMachineId())
++        return self.host_finish_time
++
++    def StartTime(self, machine_id):
++        if machine_id == self.HostMachineId():
++            return self.HostStartTime()
++        return self.GetStartTime(machine_id)
++
++    def FinishTime(self, machine_id):
++        if machine_id == self.HostMachineId():
++            return self.HostFinishTime()
++        return self.GetFinishTime(machine_id)
++
++# Database reference
++
++class DBRef():
++
++    def __init__(self, is_sqlite3, dbname):
++        self.is_sqlite3 = is_sqlite3
++        self.dbname = dbname
++        self.TRUE = "TRUE"
++        self.FALSE = "FALSE"
++        # SQLite prior to version 3.23 does not support TRUE and FALSE
++        if self.is_sqlite3:
++            self.TRUE = "1"
++            self.FALSE = "0"
++
++    def Open(self, connection_name):
++        dbname = self.dbname
++        if self.is_sqlite3:
++            db = QSqlDatabase.addDatabase("QSQLITE", connection_name)
++        else:
++            db = QSqlDatabase.addDatabase("QPSQL", connection_name)
++            opts = dbname.split()
++            for opt in opts:
++                if "=" in opt:
++                    opt = opt.split("=")
++                    if opt[0] == "hostname":
++                        db.setHostName(opt[1])
++                    elif opt[0] == "port":
++                        db.setPort(int(opt[1]))
++                    elif opt[0] == "username":
++                        db.setUserName(opt[1])
++                    elif opt[0] == "password":
++                        db.setPassword(opt[1])
++                    elif opt[0] == "dbname":
++                        dbname = opt[1]
++                else:
++                    dbname = opt
++
++        db.setDatabaseName(dbname)
++        if not db.open():
++            raise RuntimeError("Failed to open database " + dbname + " error: " + db.lastError().text())
++        return db, dbname
++
++# Main
++
++def Main():
++    usage_str =	"exported-sql-viewer.py [--pyside-version-1] <database name>\n" \
++            "   or: exported-sql-viewer.py --help-only"
++    ap = argparse.ArgumentParser(usage = usage_str, add_help = False)
++    ap.add_argument("--pyside-version-1", action='store_true')
++    ap.add_argument("dbname", nargs="?")
++    ap.add_argument("--help-only", action='store_true')
++    args = ap.parse_args()
++
++    if args.help_only:
++        app = QApplication(sys.argv)
++        mainwindow = HelpOnlyWindow()
++        mainwindow.show()
++        err = app.exec_()
++        sys.exit(err)
++
++    dbname = args.dbname
++    if dbname is None:
++        ap.print_usage()
++        print("Too few arguments")
++        sys.exit(1)
++
++    is_sqlite3 = False
++    try:
++        f = open(dbname, "rb")
++        if f.read(15) == b'SQLite format 3':
++            is_sqlite3 = True
++        f.close()
++    except OSError:
++        pass
++
++    dbref = DBRef(is_sqlite3, dbname)
++    db, dbname = dbref.Open("main")
++    glb = Glb(dbref, db, dbname)
++    app = QApplication(sys.argv)
++    glb.app = app
++    mainwindow = MainWindow(glb)
++    glb.mainwindow = mainwindow
++    mainwindow.show()
++    err = app.exec_()
++    glb.ShutdownInstances()
++    db.close()
++    sys.exit(err)
++
++if __name__ == "__main__":
++    Main()
+diff --git a/tools/perf/scripts/python/exported-sql-viewer.py b/tools/perf/scripts/python/exported-sql-viewer.py
 deleted file mode 100755
-index b6d65b6fbda1..000000000000
---- a/tools/perf/tests/shell/script_perl.sh
+index e0b2e7268ef6..000000000000
+--- a/tools/perf/scripts/python/exported-sql-viewer.py
 +++ /dev/null
-@@ -1,102 +0,0 @@
--#!/bin/bash
--# perf script perl tests
+@@ -1,5030 +0,0 @@
+-#!/usr/bin/env python
 -# SPDX-License-Identifier: GPL-2.0
+-# exported-sql-viewer.py: view data from sql database
+-# Copyright (c) 2014-2018, Intel Corporation.
 -
--set -e
+-# To use this script you will need to have exported data using either the
+-# export-to-sqlite.py or the export-to-postgresql.py script.  Refer to those
+-# scripts for details.
+-#
+-# Following on from the example in the export scripts, a
+-# call-graph can be displayed for the pt_example database like this:
+-#
+-#	python tools/perf/scripts/python/exported-sql-viewer.py pt_example
+-#
+-# Note that for PostgreSQL, this script supports connecting to remote databases
+-# by setting hostname, port, username, password, and dbname e.g.
+-#
+-#	python tools/perf/scripts/python/exported-sql-viewer.py "hostname=myhost username=myuser password=mypassword dbname=pt_example"
+-#
+-# The result is a GUI window with a tree representing a context-sensitive
+-# call-graph.  Expanding a couple of levels of the tree and adjusting column
+-# widths to suit will display something like:
+-#
+-#                                         Call Graph: pt_example
+-# Call Path                          Object      Count   Time(ns)  Time(%)  Branch Count   Branch Count(%)
+-# v- ls
+-#     v- 2638:2638
+-#         v- _start                  ld-2.19.so    1     10074071   100.0         211135            100.0
+-#           |- unknown               unknown       1        13198     0.1              1              0.0
+-#           >- _dl_start             ld-2.19.so    1      1400980    13.9          19637              9.3
+-#           >- _d_linit_internal     ld-2.19.so    1       448152     4.4          11094              5.3
+-#           v-__libc_start_main@plt  ls            1      8211741    81.5         180397             85.4
+-#              >- _dl_fixup          ld-2.19.so    1         7607     0.1            108              0.1
+-#              >- __cxa_atexit       libc-2.19.so  1        11737     0.1             10              0.0
+-#              >- __libc_csu_init    ls            1        10354     0.1             10              0.0
+-#              |- _setjmp            libc-2.19.so  1            0     0.0              4              0.0
+-#              v- main               ls            1      8182043    99.6         180254             99.9
+-#
+-# Points to note:
+-#	The top level is a command name (comm)
+-#	The next level is a thread (pid:tid)
+-#	Subsequent levels are functions
+-#	'Count' is the number of calls
+-#	'Time' is the elapsed time until the function returns
+-#	Percentages are relative to the level above
+-#	'Branch Count' is the total number of branches for that function and all
+-#       functions that it calls
 -
--# set PERF_EXEC_PATH to find scripts in the source directory
--perfdir=3D$(dirname "$0")/../..
--if [ -e "$perfdir/scripts/perl/Perf-Trace-Util" ]; then
--  export PERF_EXEC_PATH=3D$perfdir
--fi
+-# There is also a "All branches" report, which displays branches and
+-# possibly disassembly.  However, presently, the only supported disassembler is
+-# Intel XED, and additionally the object code must be present in perf build ID
+-# cache. To use Intel XED, libxed.so must be present. To build and install
+-# libxed.so:
+-#            git clone https://github.com/intelxed/mbuild.git mbuild
+-#            git clone https://github.com/intelxed/xed
+-#            cd xed
+-#            ./mfile.py --share
+-#            sudo ./mfile.py --prefix=/usr/local install
+-#            sudo ldconfig
+-#
+-# Example report:
+-#
+-# Time           CPU  Command  PID    TID    Branch Type            In Tx  Branch
+-# 8107675239590  2    ls       22011  22011  return from interrupt  No     ffffffff86a00a67 native_irq_return_iret ([kernel]) -> 7fab593ea260 _start (ld-2.19.so)
+-#                                                                              7fab593ea260 48 89 e7                                        mov %rsp, %rdi
+-# 8107675239899  2    ls       22011  22011  hardware interrupt     No         7fab593ea260 _start (ld-2.19.so) -> ffffffff86a012e0 page_fault ([kernel])
+-# 8107675241900  2    ls       22011  22011  return from interrupt  No     ffffffff86a00a67 native_irq_return_iret ([kernel]) -> 7fab593ea260 _start (ld-2.19.so)
+-#                                                                              7fab593ea260 48 89 e7                                        mov %rsp, %rdi
+-#                                                                              7fab593ea263 e8 c8 06 00 00                                  callq  0x7fab593ea930
+-# 8107675241900  2    ls       22011  22011  call                   No         7fab593ea263 _start+0x3 (ld-2.19.so) -> 7fab593ea930 _dl_start (ld-2.19.so)
+-#                                                                              7fab593ea930 55                                              pushq  %rbp
+-#                                                                              7fab593ea931 48 89 e5                                        mov %rsp, %rbp
+-#                                                                              7fab593ea934 41 57                                           pushq  %r15
+-#                                                                              7fab593ea936 41 56                                           pushq  %r14
+-#                                                                              7fab593ea938 41 55                                           pushq  %r13
+-#                                                                              7fab593ea93a 41 54                                           pushq  %r12
+-#                                                                              7fab593ea93c 53                                              pushq  %rbx
+-#                                                                              7fab593ea93d 48 89 fb                                        mov %rdi, %rbx
+-#                                                                              7fab593ea940 48 83 ec 68                                     sub $0x68, %rsp
+-#                                                                              7fab593ea944 0f 31                                           rdtsc
+-#                                                                              7fab593ea946 48 c1 e2 20                                     shl $0x20, %rdx
+-#                                                                              7fab593ea94a 89 c0                                           mov %eax, %eax
+-#                                                                              7fab593ea94c 48 09 c2                                        or %rax, %rdx
+-#                                                                              7fab593ea94f 48 8b 05 1a 15 22 00                            movq  0x22151a(%rip), %rax
+-# 8107675242232  2    ls       22011  22011  hardware interrupt     No         7fab593ea94f _dl_start+0x1f (ld-2.19.so) -> ffffffff86a012e0 page_fault ([kernel])
+-# 8107675242900  2    ls       22011  22011  return from interrupt  No     ffffffff86a00a67 native_irq_return_iret ([kernel]) -> 7fab593ea94f _dl_start+0x1f (ld-2.19.so)
+-#                                                                              7fab593ea94f 48 8b 05 1a 15 22 00                            movq  0x22151a(%rip), %rax
+-#                                                                              7fab593ea956 48 89 15 3b 13 22 00                            movq  %rdx, 0x22133b(%rip)
+-# 8107675243232  2    ls       22011  22011  hardware interrupt     No         7fab593ea956 _dl_start+0x26 (ld-2.19.so) -> ffffffff86a012e0 page_fault ([kernel])
+-
+-from __future__ import print_function
+-
+-import sys
+-# Only change warnings if the python -W option was not used
+-if not sys.warnoptions:
+-	import warnings
+-	# PySide2 causes deprecation warnings, ignore them.
+-	warnings.filterwarnings("ignore", category=DeprecationWarning)
+-import argparse
+-import weakref
+-import threading
+-import string
+-try:
+-	# Python2
+-	import cPickle as pickle
+-	# size of pickled integer big enough for record size
+-	glb_nsz = 8
+-except ImportError:
+-	import pickle
+-	glb_nsz = 16
+-import re
+-import os
+-import random
+-import copy
+-import math
+-from libxed import LibXED
+-
+-pyside_version_1 = True
+-if not "--pyside-version-1" in sys.argv:
+-	try:
+-		from PySide2.QtCore import *
+-		from PySide2.QtGui import *
+-		from PySide2.QtSql import *
+-		from PySide2.QtWidgets import *
+-		pyside_version_1 = False
+-	except:
+-		pass
+-
+-if pyside_version_1:
+-	from PySide.QtCore import *
+-	from PySide.QtGui import *
+-	from PySide.QtSql import *
+-
+-from decimal import Decimal, ROUND_HALF_UP
+-from ctypes import CDLL, Structure, create_string_buffer, addressof, sizeof, \
+-		   c_void_p, c_bool, c_byte, c_char, c_int, c_uint, c_longlong, c_ulonglong
+-from multiprocessing import Process, Array, Value, Event
+-
+-# xrange is range in Python3
+-try:
+-	xrange
+-except NameError:
+-	xrange = range
+-
+-def printerr(*args, **keyword_args):
+-	print(*args, file=sys.stderr, **keyword_args)
+-
+-# Data formatting helpers
+-
+-def tohex(ip):
+-	if ip < 0:
+-		ip += 1 << 64
+-	return "%x" % ip
+-
+-def offstr(offset):
+-	if offset:
+-		return "+0x%x" % offset
+-	return ""
+-
+-def dsoname(name):
+-	if name == "[kernel.kallsyms]":
+-		return "[kernel]"
+-	return name
+-
+-def findnth(s, sub, n, offs=0):
+-	pos = s.find(sub)
+-	if pos < 0:
+-		return pos
+-	if n <= 1:
+-		return offs + pos
+-	return findnth(s[pos + 1:], sub, n - 1, offs + pos + 1)
+-
+-# Percent to one decimal place
+-
+-def PercentToOneDP(n, d):
+-	if not d:
+-		return "0.0"
+-	x = (n * Decimal(100)) / d
+-	return str(x.quantize(Decimal(".1"), rounding=ROUND_HALF_UP))
+-
+-# Helper for queries that must not fail
+-
+-def QueryExec(query, stmt):
+-	ret = query.exec_(stmt)
+-	if not ret:
+-		raise Exception("Query failed: " + query.lastError().text())
+-
+-# Background thread
+-
+-class Thread(QThread):
+-
+-	done = Signal(object)
+-
+-	def __init__(self, task, param=None, parent=None):
+-		super(Thread, self).__init__(parent)
+-		self.task = task
+-		self.param = param
+-
+-	def run(self):
+-		while True:
+-			if self.param is None:
+-				done, result = self.task()
+-			else:
+-				done, result = self.task(self.param)
+-			self.done.emit(result)
+-			if done:
+-				break
+-
+-# Tree data model
+-
+-class TreeModel(QAbstractItemModel):
+-
+-	def __init__(self, glb, params, parent=None):
+-		super(TreeModel, self).__init__(parent)
+-		self.glb = glb
+-		self.params = params
+-		self.root = self.GetRoot()
+-		self.last_row_read = 0
+-
+-	def Item(self, parent):
+-		if parent.isValid():
+-			return parent.internalPointer()
+-		else:
+-			return self.root
+-
+-	def rowCount(self, parent):
+-		result = self.Item(parent).childCount()
+-		if result < 0:
+-			result = 0
+-			self.dataChanged.emit(parent, parent)
+-		return result
+-
+-	def hasChildren(self, parent):
+-		return self.Item(parent).hasChildren()
+-
+-	def headerData(self, section, orientation, role):
+-		if role == Qt.TextAlignmentRole:
+-			return self.columnAlignment(section)
+-		if role != Qt.DisplayRole:
+-			return None
+-		if orientation != Qt.Horizontal:
+-			return None
+-		return self.columnHeader(section)
+-
+-	def parent(self, child):
+-		child_item = child.internalPointer()
+-		if child_item is self.root:
+-			return QModelIndex()
+-		parent_item = child_item.getParentItem()
+-		return self.createIndex(parent_item.getRow(), 0, parent_item)
+-
+-	def index(self, row, column, parent):
+-		child_item = self.Item(parent).getChildItem(row)
+-		return self.createIndex(row, column, child_item)
+-
+-	def DisplayData(self, item, index):
+-		return item.getData(index.column())
+-
+-	def FetchIfNeeded(self, row):
+-		if row > self.last_row_read:
+-			self.last_row_read = row
+-			if row + 10 >= self.root.child_count:
+-				self.fetcher.Fetch(glb_chunk_sz)
+-
+-	def columnAlignment(self, column):
+-		return Qt.AlignLeft
+-
+-	def columnFont(self, column):
+-		return None
+-
+-	def data(self, index, role):
+-		if role == Qt.TextAlignmentRole:
+-			return self.columnAlignment(index.column())
+-		if role == Qt.FontRole:
+-			return self.columnFont(index.column())
+-		if role != Qt.DisplayRole:
+-			return None
+-		item = index.internalPointer()
+-		return self.DisplayData(item, index)
+-
+-# Table data model
+-
+-class TableModel(QAbstractTableModel):
+-
+-	def __init__(self, parent=None):
+-		super(TableModel, self).__init__(parent)
+-		self.child_count = 0
+-		self.child_items = []
+-		self.last_row_read = 0
+-
+-	def Item(self, parent):
+-		if parent.isValid():
+-			return parent.internalPointer()
+-		else:
+-			return self
+-
+-	def rowCount(self, parent):
+-		return self.child_count
+-
+-	def headerData(self, section, orientation, role):
+-		if role == Qt.TextAlignmentRole:
+-			return self.columnAlignment(section)
+-		if role != Qt.DisplayRole:
+-			return None
+-		if orientation != Qt.Horizontal:
+-			return None
+-		return self.columnHeader(section)
+-
+-	def index(self, row, column, parent):
+-		return self.createIndex(row, column, self.child_items[row])
+-
+-	def DisplayData(self, item, index):
+-		return item.getData(index.column())
+-
+-	def FetchIfNeeded(self, row):
+-		if row > self.last_row_read:
+-			self.last_row_read = row
+-			if row + 10 >= self.child_count:
+-				self.fetcher.Fetch(glb_chunk_sz)
+-
+-	def columnAlignment(self, column):
+-		return Qt.AlignLeft
+-
+-	def columnFont(self, column):
+-		return None
+-
+-	def data(self, index, role):
+-		if role == Qt.TextAlignmentRole:
+-			return self.columnAlignment(index.column())
+-		if role == Qt.FontRole:
+-			return self.columnFont(index.column())
+-		if role != Qt.DisplayRole:
+-			return None
+-		item = index.internalPointer()
+-		return self.DisplayData(item, index)
+-
+-# Model cache
+-
+-model_cache = weakref.WeakValueDictionary()
+-model_cache_lock = threading.Lock()
+-
+-def LookupCreateModel(model_name, create_fn):
+-	model_cache_lock.acquire()
+-	try:
+-		model = model_cache[model_name]
+-	except:
+-		model = None
+-	if model is None:
+-		model = create_fn()
+-		model_cache[model_name] = model
+-	model_cache_lock.release()
+-	return model
+-
+-def LookupModel(model_name):
+-	model_cache_lock.acquire()
+-	try:
+-		model = model_cache[model_name]
+-	except:
+-		model = None
+-	model_cache_lock.release()
+-	return model
+-
+-# Find bar
+-
+-class FindBar():
+-
+-	def __init__(self, parent, finder, is_reg_expr=False):
+-		self.finder = finder
+-		self.context = []
+-		self.last_value = None
+-		self.last_pattern = None
+-
+-		label = QLabel("Find:")
+-		label.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
+-
+-		self.textbox = QComboBox()
+-		self.textbox.setEditable(True)
+-		self.textbox.currentIndexChanged.connect(self.ValueChanged)
+-
+-		self.progress = QProgressBar()
+-		self.progress.setRange(0, 0)
+-		self.progress.hide()
+-
+-		if is_reg_expr:
+-			self.pattern = QCheckBox("Regular Expression")
+-		else:
+-			self.pattern = QCheckBox("Pattern")
+-		self.pattern.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
+-
+-		self.next_button = QToolButton()
+-		self.next_button.setIcon(parent.style().standardIcon(QStyle.SP_ArrowDown))
+-		self.next_button.released.connect(lambda: self.NextPrev(1))
+-
+-		self.prev_button = QToolButton()
+-		self.prev_button.setIcon(parent.style().standardIcon(QStyle.SP_ArrowUp))
+-		self.prev_button.released.connect(lambda: self.NextPrev(-1))
+-
+-		self.close_button = QToolButton()
+-		self.close_button.setIcon(parent.style().standardIcon(QStyle.SP_DockWidgetCloseButton))
+-		self.close_button.released.connect(self.Deactivate)
+-
+-		self.hbox = QHBoxLayout()
+-		self.hbox.setContentsMargins(0, 0, 0, 0)
+-
+-		self.hbox.addWidget(label)
+-		self.hbox.addWidget(self.textbox)
+-		self.hbox.addWidget(self.progress)
+-		self.hbox.addWidget(self.pattern)
+-		self.hbox.addWidget(self.next_button)
+-		self.hbox.addWidget(self.prev_button)
+-		self.hbox.addWidget(self.close_button)
+-
+-		self.bar = QWidget()
+-		self.bar.setLayout(self.hbox)
+-		self.bar.hide()
+-
+-	def Widget(self):
+-		return self.bar
+-
+-	def Activate(self):
+-		self.bar.show()
+-		self.textbox.lineEdit().selectAll()
+-		self.textbox.setFocus()
+-
+-	def Deactivate(self):
+-		self.bar.hide()
+-
+-	def Busy(self):
+-		self.textbox.setEnabled(False)
+-		self.pattern.hide()
+-		self.next_button.hide()
+-		self.prev_button.hide()
+-		self.progress.show()
+-
+-	def Idle(self):
+-		self.textbox.setEnabled(True)
+-		self.progress.hide()
+-		self.pattern.show()
+-		self.next_button.show()
+-		self.prev_button.show()
+-
+-	def Find(self, direction):
+-		value = self.textbox.currentText()
+-		pattern = self.pattern.isChecked()
+-		self.last_value = value
+-		self.last_pattern = pattern
+-		self.finder.Find(value, direction, pattern, self.context)
+-
+-	def ValueChanged(self):
+-		value = self.textbox.currentText()
+-		pattern = self.pattern.isChecked()
+-		index = self.textbox.currentIndex()
+-		data = self.textbox.itemData(index)
+-		# Store the pattern in the combo box to keep it with the text value
+-		if data == None:
+-			self.textbox.setItemData(index, pattern)
+-		else:
+-			self.pattern.setChecked(data)
+-		self.Find(0)
+-
+-	def NextPrev(self, direction):
+-		value = self.textbox.currentText()
+-		pattern = self.pattern.isChecked()
+-		if value != self.last_value:
+-			index = self.textbox.findText(value)
+-			# Allow for a button press before the value has been added to the combo box
+-			if index < 0:
+-				index = self.textbox.count()
+-				self.textbox.addItem(value, pattern)
+-				self.textbox.setCurrentIndex(index)
+-				return
+-			else:
+-				self.textbox.setItemData(index, pattern)
+-		elif pattern != self.last_pattern:
+-			# Keep the pattern recorded in the combo box up to date
+-			index = self.textbox.currentIndex()
+-			self.textbox.setItemData(index, pattern)
+-		self.Find(direction)
+-
+-	def NotFound(self):
+-		QMessageBox.information(self.bar, "Find", "'" + self.textbox.currentText() + "' not found")
+-
+-# Context-sensitive call graph data model item base
+-
+-class CallGraphLevelItemBase(object):
+-
+-	def __init__(self, glb, params, row, parent_item):
+-		self.glb = glb
+-		self.params = params
+-		self.row = row
+-		self.parent_item = parent_item
+-		self.query_done = False
+-		self.child_count = 0
+-		self.child_items = []
+-		if parent_item:
+-			self.level = parent_item.level + 1
+-		else:
+-			self.level = 0
+-
+-	def getChildItem(self, row):
+-		return self.child_items[row]
+-
+-	def getParentItem(self):
+-		return self.parent_item
+-
+-	def getRow(self):
+-		return self.row
+-
+-	def childCount(self):
+-		if not self.query_done:
+-			self.Select()
+-			if not self.child_count:
+-				return -1
+-		return self.child_count
+-
+-	def hasChildren(self):
+-		if not self.query_done:
+-			return True
+-		return self.child_count > 0
+-
+-	def getData(self, column):
+-		return self.data[column]
+-
+-# Context-sensitive call graph data model level 2+ item base
+-
+-class CallGraphLevelTwoPlusItemBase(CallGraphLevelItemBase):
+-
+-	def __init__(self, glb, params, row, comm_id, thread_id, call_path_id, time, insn_cnt, cyc_cnt, branch_count, parent_item):
+-		super(CallGraphLevelTwoPlusItemBase, self).__init__(glb, params, row, parent_item)
+-		self.comm_id = comm_id
+-		self.thread_id = thread_id
+-		self.call_path_id = call_path_id
+-		self.insn_cnt = insn_cnt
+-		self.cyc_cnt = cyc_cnt
+-		self.branch_count = branch_count
+-		self.time = time
+-
+-	def Select(self):
+-		self.query_done = True
+-		query = QSqlQuery(self.glb.db)
+-		if self.params.have_ipc:
+-			ipc_str = ", SUM(insn_count), SUM(cyc_count)"
+-		else:
+-			ipc_str = ""
+-		QueryExec(query, "SELECT call_path_id, name, short_name, COUNT(calls.id), SUM(return_time - call_time)" + ipc_str + ", SUM(branch_count)"
+-					" FROM calls"
+-					" INNER JOIN call_paths ON calls.call_path_id = call_paths.id"
+-					" INNER JOIN symbols ON call_paths.symbol_id = symbols.id"
+-					" INNER JOIN dsos ON symbols.dso_id = dsos.id"
+-					" WHERE parent_call_path_id = " + str(self.call_path_id) +
+-					" AND comm_id = " + str(self.comm_id) +
+-					" AND thread_id = " + str(self.thread_id) +
+-					" GROUP BY call_path_id, name, short_name"
+-					" ORDER BY call_path_id")
+-		while query.next():
+-			if self.params.have_ipc:
+-				insn_cnt = int(query.value(5))
+-				cyc_cnt = int(query.value(6))
+-				branch_count = int(query.value(7))
+-			else:
+-				insn_cnt = 0
+-				cyc_cnt = 0
+-				branch_count = int(query.value(5))
+-			child_item = CallGraphLevelThreeItem(self.glb, self.params, self.child_count, self.comm_id, self.thread_id, query.value(0), query.value(1), query.value(2), query.value(3), int(query.value(4)), insn_cnt, cyc_cnt, branch_count, self)
+-			self.child_items.append(child_item)
+-			self.child_count += 1
+-
+-# Context-sensitive call graph data model level three item
+-
+-class CallGraphLevelThreeItem(CallGraphLevelTwoPlusItemBase):
+-
+-	def __init__(self, glb, params, row, comm_id, thread_id, call_path_id, name, dso, count, time, insn_cnt, cyc_cnt, branch_count, parent_item):
+-		super(CallGraphLevelThreeItem, self).__init__(glb, params, row, comm_id, thread_id, call_path_id, time, insn_cnt, cyc_cnt, branch_count, parent_item)
+-		dso = dsoname(dso)
+-		if self.params.have_ipc:
+-			insn_pcnt = PercentToOneDP(insn_cnt, parent_item.insn_cnt)
+-			cyc_pcnt = PercentToOneDP(cyc_cnt, parent_item.cyc_cnt)
+-			br_pcnt = PercentToOneDP(branch_count, parent_item.branch_count)
+-			ipc = CalcIPC(cyc_cnt, insn_cnt)
+-			self.data = [ name, dso, str(count), str(time), PercentToOneDP(time, parent_item.time), str(insn_cnt), insn_pcnt, str(cyc_cnt), cyc_pcnt, ipc, str(branch_count), br_pcnt ]
+-		else:
+-			self.data = [ name, dso, str(count), str(time), PercentToOneDP(time, parent_item.time), str(branch_count), PercentToOneDP(branch_count, parent_item.branch_count) ]
+-		self.dbid = call_path_id
+-
+-# Context-sensitive call graph data model level two item
+-
+-class CallGraphLevelTwoItem(CallGraphLevelTwoPlusItemBase):
+-
+-	def __init__(self, glb, params, row, comm_id, thread_id, pid, tid, parent_item):
+-		super(CallGraphLevelTwoItem, self).__init__(glb, params, row, comm_id, thread_id, 1, 0, 0, 0, 0, parent_item)
+-		if self.params.have_ipc:
+-			self.data = [str(pid) + ":" + str(tid), "", "", "", "", "", "", "", "", "", "", ""]
+-		else:
+-			self.data = [str(pid) + ":" + str(tid), "", "", "", "", "", ""]
+-		self.dbid = thread_id
+-
+-	def Select(self):
+-		super(CallGraphLevelTwoItem, self).Select()
+-		for child_item in self.child_items:
+-			self.time += child_item.time
+-			self.insn_cnt += child_item.insn_cnt
+-			self.cyc_cnt += child_item.cyc_cnt
+-			self.branch_count += child_item.branch_count
+-		for child_item in self.child_items:
+-			child_item.data[4] = PercentToOneDP(child_item.time, self.time)
+-			if self.params.have_ipc:
+-				child_item.data[6] = PercentToOneDP(child_item.insn_cnt, self.insn_cnt)
+-				child_item.data[8] = PercentToOneDP(child_item.cyc_cnt, self.cyc_cnt)
+-				child_item.data[11] = PercentToOneDP(child_item.branch_count, self.branch_count)
+-			else:
+-				child_item.data[6] = PercentToOneDP(child_item.branch_count, self.branch_count)
+-
+-# Context-sensitive call graph data model level one item
+-
+-class CallGraphLevelOneItem(CallGraphLevelItemBase):
+-
+-	def __init__(self, glb, params, row, comm_id, comm, parent_item):
+-		super(CallGraphLevelOneItem, self).__init__(glb, params, row, parent_item)
+-		if self.params.have_ipc:
+-			self.data = [comm, "", "", "", "", "", "", "", "", "", "", ""]
+-		else:
+-			self.data = [comm, "", "", "", "", "", ""]
+-		self.dbid = comm_id
+-
+-	def Select(self):
+-		self.query_done = True
+-		query = QSqlQuery(self.glb.db)
+-		QueryExec(query, "SELECT thread_id, pid, tid"
+-					" FROM comm_threads"
+-					" INNER JOIN threads ON thread_id = threads.id"
+-					" WHERE comm_id = " + str(self.dbid))
+-		while query.next():
+-			child_item = CallGraphLevelTwoItem(self.glb, self.params, self.child_count, self.dbid, query.value(0), query.value(1), query.value(2), self)
+-			self.child_items.append(child_item)
+-			self.child_count += 1
+-
+-# Context-sensitive call graph data model root item
+-
+-class CallGraphRootItem(CallGraphLevelItemBase):
+-
+-	def __init__(self, glb, params):
+-		super(CallGraphRootItem, self).__init__(glb, params, 0, None)
+-		self.dbid = 0
+-		self.query_done = True
+-		if_has_calls = ""
+-		if IsSelectable(glb.db, "comms", columns = "has_calls"):
+-			if_has_calls = " WHERE has_calls = " + glb.dbref.TRUE
+-		query = QSqlQuery(glb.db)
+-		QueryExec(query, "SELECT id, comm FROM comms" + if_has_calls)
+-		while query.next():
+-			if not query.value(0):
+-				continue
+-			child_item = CallGraphLevelOneItem(glb, params, self.child_count, query.value(0), query.value(1), self)
+-			self.child_items.append(child_item)
+-			self.child_count += 1
+-
+-# Call graph model parameters
+-
+-class CallGraphModelParams():
+-
+-	def __init__(self, glb, parent=None):
+-		self.have_ipc = IsSelectable(glb.db, "calls", columns = "insn_count, cyc_count")
+-
+-# Context-sensitive call graph data model base
+-
+-class CallGraphModelBase(TreeModel):
+-
+-	def __init__(self, glb, parent=None):
+-		super(CallGraphModelBase, self).__init__(glb, CallGraphModelParams(glb), parent)
+-
+-	def FindSelect(self, value, pattern, query):
+-		if pattern:
+-			# postgresql and sqlite pattern patching differences:
+-			#   postgresql LIKE is case sensitive but sqlite LIKE is not
+-			#   postgresql LIKE allows % and _ to be escaped with \ but sqlite LIKE does not
+-			#   postgresql supports ILIKE which is case insensitive
+-			#   sqlite supports GLOB (text only) which uses * and ? and is case sensitive
+-			if not self.glb.dbref.is_sqlite3:
+-				# Escape % and _
+-				s = value.replace("%", "\\%")
+-				s = s.replace("_", "\\_")
+-				# Translate * and ? into SQL LIKE pattern characters % and _
+-				if sys.version_info[0] == 3:
+-					trans = str.maketrans("*?", "%_")
+-				else:
+-					trans = string.maketrans("*?", "%_")
+-				match = " LIKE '" + str(s).translate(trans) + "'"
+-			else:
+-				match = " GLOB '" + str(value) + "'"
+-		else:
+-			match = " = '" + str(value) + "'"
+-		self.DoFindSelect(query, match)
+-
+-	def Found(self, query, found):
+-		if found:
+-			return self.FindPath(query)
+-		return []
+-
+-	def FindValue(self, value, pattern, query, last_value, last_pattern):
+-		if last_value == value and pattern == last_pattern:
+-			found = query.first()
+-		else:
+-			self.FindSelect(value, pattern, query)
+-			found = query.next()
+-		return self.Found(query, found)
+-
+-	def FindNext(self, query):
+-		found = query.next()
+-		if not found:
+-			found = query.first()
+-		return self.Found(query, found)
+-
+-	def FindPrev(self, query):
+-		found = query.previous()
+-		if not found:
+-			found = query.last()
+-		return self.Found(query, found)
+-
+-	def FindThread(self, c):
+-		if c.direction == 0 or c.value != c.last_value or c.pattern != c.last_pattern:
+-			ids = self.FindValue(c.value, c.pattern, c.query, c.last_value, c.last_pattern)
+-		elif c.direction > 0:
+-			ids = self.FindNext(c.query)
+-		else:
+-			ids = self.FindPrev(c.query)
+-		return (True, ids)
+-
+-	def Find(self, value, direction, pattern, context, callback):
+-		class Context():
+-			def __init__(self, *x):
+-				self.value, self.direction, self.pattern, self.query, self.last_value, self.last_pattern = x
+-			def Update(self, *x):
+-				self.value, self.direction, self.pattern, self.last_value, self.last_pattern = x + (self.value, self.pattern)
+-		if len(context):
+-			context[0].Update(value, direction, pattern)
+-		else:
+-			context.append(Context(value, direction, pattern, QSqlQuery(self.glb.db), None, None))
+-		# Use a thread so the UI is not blocked during the SELECT
+-		thread = Thread(self.FindThread, context[0])
+-		thread.done.connect(lambda ids, t=thread, c=callback: self.FindDone(t, c, ids), Qt.QueuedConnection)
+-		thread.start()
+-
+-	def FindDone(self, thread, callback, ids):
+-		callback(ids)
+-
+-# Context-sensitive call graph data model
+-
+-class CallGraphModel(CallGraphModelBase):
+-
+-	def __init__(self, glb, parent=None):
+-		super(CallGraphModel, self).__init__(glb, parent)
+-
+-	def GetRoot(self):
+-		return CallGraphRootItem(self.glb, self.params)
+-
+-	def columnCount(self, parent=None):
+-		if self.params.have_ipc:
+-			return 12
+-		else:
+-			return 7
+-
+-	def columnHeader(self, column):
+-		if self.params.have_ipc:
+-			headers = ["Call Path", "Object", "Count ", "Time (ns) ", "Time (%) ", "Insn Cnt", "Insn Cnt (%)", "Cyc Cnt", "Cyc Cnt (%)", "IPC", "Branch Count ", "Branch Count (%) "]
+-		else:
+-			headers = ["Call Path", "Object", "Count ", "Time (ns) ", "Time (%) ", "Branch Count ", "Branch Count (%) "]
+-		return headers[column]
+-
+-	def columnAlignment(self, column):
+-		if self.params.have_ipc:
+-			alignment = [ Qt.AlignLeft, Qt.AlignLeft, Qt.AlignRight, Qt.AlignRight, Qt.AlignRight, Qt.AlignRight, Qt.AlignRight, Qt.AlignRight, Qt.AlignRight, Qt.AlignRight, Qt.AlignRight, Qt.AlignRight ]
+-		else:
+-			alignment = [ Qt.AlignLeft, Qt.AlignLeft, Qt.AlignRight, Qt.AlignRight, Qt.AlignRight, Qt.AlignRight, Qt.AlignRight ]
+-		return alignment[column]
+-
+-	def DoFindSelect(self, query, match):
+-		QueryExec(query, "SELECT call_path_id, comm_id, thread_id"
+-						" FROM calls"
+-						" INNER JOIN call_paths ON calls.call_path_id = call_paths.id"
+-						" INNER JOIN symbols ON call_paths.symbol_id = symbols.id"
+-						" WHERE calls.id <> 0"
+-						" AND symbols.name" + match +
+-						" GROUP BY comm_id, thread_id, call_path_id"
+-						" ORDER BY comm_id, thread_id, call_path_id")
+-
+-	def FindPath(self, query):
+-		# Turn the query result into a list of ids that the tree view can walk
+-		# to open the tree at the right place.
+-		ids = []
+-		parent_id = query.value(0)
+-		while parent_id:
+-			ids.insert(0, parent_id)
+-			q2 = QSqlQuery(self.glb.db)
+-			QueryExec(q2, "SELECT parent_id"
+-					" FROM call_paths"
+-					" WHERE id = " + str(parent_id))
+-			if not q2.next():
+-				break
+-			parent_id = q2.value(0)
+-		# The call path root is not used
+-		if ids[0] == 1:
+-			del ids[0]
+-		ids.insert(0, query.value(2))
+-		ids.insert(0, query.value(1))
+-		return ids
+-
+-# Call tree data model level 2+ item base
+-
+-class CallTreeLevelTwoPlusItemBase(CallGraphLevelItemBase):
+-
+-	def __init__(self, glb, params, row, comm_id, thread_id, calls_id, call_time, time, insn_cnt, cyc_cnt, branch_count, parent_item):
+-		super(CallTreeLevelTwoPlusItemBase, self).__init__(glb, params, row, parent_item)
+-		self.comm_id = comm_id
+-		self.thread_id = thread_id
+-		self.calls_id = calls_id
+-		self.call_time = call_time
+-		self.time = time
+-		self.insn_cnt = insn_cnt
+-		self.cyc_cnt = cyc_cnt
+-		self.branch_count = branch_count
+-
+-	def Select(self):
+-		self.query_done = True
+-		if self.calls_id == 0:
+-			comm_thread = " AND comm_id = " + str(self.comm_id) + " AND thread_id = " + str(self.thread_id)
+-		else:
+-			comm_thread = ""
+-		if self.params.have_ipc:
+-			ipc_str = ", insn_count, cyc_count"
+-		else:
+-			ipc_str = ""
+-		query = QSqlQuery(self.glb.db)
+-		QueryExec(query, "SELECT calls.id, name, short_name, call_time, return_time - call_time" + ipc_str + ", branch_count"
+-					" FROM calls"
+-					" INNER JOIN call_paths ON calls.call_path_id = call_paths.id"
+-					" INNER JOIN symbols ON call_paths.symbol_id = symbols.id"
+-					" INNER JOIN dsos ON symbols.dso_id = dsos.id"
+-					" WHERE calls.parent_id = " + str(self.calls_id) + comm_thread +
+-					" ORDER BY call_time, calls.id")
+-		while query.next():
+-			if self.params.have_ipc:
+-				insn_cnt = int(query.value(5))
+-				cyc_cnt = int(query.value(6))
+-				branch_count = int(query.value(7))
+-			else:
+-				insn_cnt = 0
+-				cyc_cnt = 0
+-				branch_count = int(query.value(5))
+-			child_item = CallTreeLevelThreeItem(self.glb, self.params, self.child_count, self.comm_id, self.thread_id, query.value(0), query.value(1), query.value(2), query.value(3), int(query.value(4)), insn_cnt, cyc_cnt, branch_count, self)
+-			self.child_items.append(child_item)
+-			self.child_count += 1
+-
+-# Call tree data model level three item
+-
+-class CallTreeLevelThreeItem(CallTreeLevelTwoPlusItemBase):
+-
+-	def __init__(self, glb, params, row, comm_id, thread_id, calls_id, name, dso, call_time, time, insn_cnt, cyc_cnt, branch_count, parent_item):
+-		super(CallTreeLevelThreeItem, self).__init__(glb, params, row, comm_id, thread_id, calls_id, call_time, time, insn_cnt, cyc_cnt, branch_count, parent_item)
+-		dso = dsoname(dso)
+-		if self.params.have_ipc:
+-			insn_pcnt = PercentToOneDP(insn_cnt, parent_item.insn_cnt)
+-			cyc_pcnt = PercentToOneDP(cyc_cnt, parent_item.cyc_cnt)
+-			br_pcnt = PercentToOneDP(branch_count, parent_item.branch_count)
+-			ipc = CalcIPC(cyc_cnt, insn_cnt)
+-			self.data = [ name, dso, str(call_time), str(time), PercentToOneDP(time, parent_item.time), str(insn_cnt), insn_pcnt, str(cyc_cnt), cyc_pcnt, ipc, str(branch_count), br_pcnt ]
+-		else:
+-			self.data = [ name, dso, str(call_time), str(time), PercentToOneDP(time, parent_item.time), str(branch_count), PercentToOneDP(branch_count, parent_item.branch_count) ]
+-		self.dbid = calls_id
+-
+-# Call tree data model level two item
+-
+-class CallTreeLevelTwoItem(CallTreeLevelTwoPlusItemBase):
+-
+-	def __init__(self, glb, params, row, comm_id, thread_id, pid, tid, parent_item):
+-		super(CallTreeLevelTwoItem, self).__init__(glb, params, row, comm_id, thread_id, 0, 0, 0, 0, 0, 0, parent_item)
+-		if self.params.have_ipc:
+-			self.data = [str(pid) + ":" + str(tid), "", "", "", "", "", "", "", "", "", "", ""]
+-		else:
+-			self.data = [str(pid) + ":" + str(tid), "", "", "", "", "", ""]
+-		self.dbid = thread_id
+-
+-	def Select(self):
+-		super(CallTreeLevelTwoItem, self).Select()
+-		for child_item in self.child_items:
+-			self.time += child_item.time
+-			self.insn_cnt += child_item.insn_cnt
+-			self.cyc_cnt += child_item.cyc_cnt
+-			self.branch_count += child_item.branch_count
+-		for child_item in self.child_items:
+-			child_item.data[4] = PercentToOneDP(child_item.time, self.time)
+-			if self.params.have_ipc:
+-				child_item.data[6] = PercentToOneDP(child_item.insn_cnt, self.insn_cnt)
+-				child_item.data[8] = PercentToOneDP(child_item.cyc_cnt, self.cyc_cnt)
+-				child_item.data[11] = PercentToOneDP(child_item.branch_count, self.branch_count)
+-			else:
+-				child_item.data[6] = PercentToOneDP(child_item.branch_count, self.branch_count)
+-
+-# Call tree data model level one item
+-
+-class CallTreeLevelOneItem(CallGraphLevelItemBase):
+-
+-	def __init__(self, glb, params, row, comm_id, comm, parent_item):
+-		super(CallTreeLevelOneItem, self).__init__(glb, params, row, parent_item)
+-		if self.params.have_ipc:
+-			self.data = [comm, "", "", "", "", "", "", "", "", "", "", ""]
+-		else:
+-			self.data = [comm, "", "", "", "", "", ""]
+-		self.dbid = comm_id
+-
+-	def Select(self):
+-		self.query_done = True
+-		query = QSqlQuery(self.glb.db)
+-		QueryExec(query, "SELECT thread_id, pid, tid"
+-					" FROM comm_threads"
+-					" INNER JOIN threads ON thread_id = threads.id"
+-					" WHERE comm_id = " + str(self.dbid))
+-		while query.next():
+-			child_item = CallTreeLevelTwoItem(self.glb, self.params, self.child_count, self.dbid, query.value(0), query.value(1), query.value(2), self)
+-			self.child_items.append(child_item)
+-			self.child_count += 1
+-
+-# Call tree data model root item
+-
+-class CallTreeRootItem(CallGraphLevelItemBase):
+-
+-	def __init__(self, glb, params):
+-		super(CallTreeRootItem, self).__init__(glb, params, 0, None)
+-		self.dbid = 0
+-		self.query_done = True
+-		if_has_calls = ""
+-		if IsSelectable(glb.db, "comms", columns = "has_calls"):
+-			if_has_calls = " WHERE has_calls = " + glb.dbref.TRUE
+-		query = QSqlQuery(glb.db)
+-		QueryExec(query, "SELECT id, comm FROM comms" + if_has_calls)
+-		while query.next():
+-			if not query.value(0):
+-				continue
+-			child_item = CallTreeLevelOneItem(glb, params, self.child_count, query.value(0), query.value(1), self)
+-			self.child_items.append(child_item)
+-			self.child_count += 1
+-
+-# Call Tree data model
+-
+-class CallTreeModel(CallGraphModelBase):
+-
+-	def __init__(self, glb, parent=None):
+-		super(CallTreeModel, self).__init__(glb, parent)
+-
+-	def GetRoot(self):
+-		return CallTreeRootItem(self.glb, self.params)
+-
+-	def columnCount(self, parent=None):
+-		if self.params.have_ipc:
+-			return 12
+-		else:
+-			return 7
+-
+-	def columnHeader(self, column):
+-		if self.params.have_ipc:
+-			headers = ["Call Path", "Object", "Call Time", "Time (ns) ", "Time (%) ", "Insn Cnt", "Insn Cnt (%)", "Cyc Cnt", "Cyc Cnt (%)", "IPC", "Branch Count ", "Branch Count (%) "]
+-		else:
+-			headers = ["Call Path", "Object", "Call Time", "Time (ns) ", "Time (%) ", "Branch Count ", "Branch Count (%) "]
+-		return headers[column]
+-
+-	def columnAlignment(self, column):
+-		if self.params.have_ipc:
+-			alignment = [ Qt.AlignLeft, Qt.AlignLeft, Qt.AlignRight, Qt.AlignRight, Qt.AlignRight, Qt.AlignRight, Qt.AlignRight, Qt.AlignRight, Qt.AlignRight, Qt.AlignRight, Qt.AlignRight, Qt.AlignRight ]
+-		else:
+-			alignment = [ Qt.AlignLeft, Qt.AlignLeft, Qt.AlignRight, Qt.AlignRight, Qt.AlignRight, Qt.AlignRight, Qt.AlignRight ]
+-		return alignment[column]
+-
+-	def DoFindSelect(self, query, match):
+-		QueryExec(query, "SELECT calls.id, comm_id, thread_id"
+-						" FROM calls"
+-						" INNER JOIN call_paths ON calls.call_path_id = call_paths.id"
+-						" INNER JOIN symbols ON call_paths.symbol_id = symbols.id"
+-						" WHERE calls.id <> 0"
+-						" AND symbols.name" + match +
+-						" ORDER BY comm_id, thread_id, call_time, calls.id")
+-
+-	def FindPath(self, query):
+-		# Turn the query result into a list of ids that the tree view can walk
+-		# to open the tree at the right place.
+-		ids = []
+-		parent_id = query.value(0)
+-		while parent_id:
+-			ids.insert(0, parent_id)
+-			q2 = QSqlQuery(self.glb.db)
+-			QueryExec(q2, "SELECT parent_id"
+-					" FROM calls"
+-					" WHERE id = " + str(parent_id))
+-			if not q2.next():
+-				break
+-			parent_id = q2.value(0)
+-		ids.insert(0, query.value(2))
+-		ids.insert(0, query.value(1))
+-		return ids
+-
+-# Vertical layout
+-
+-class HBoxLayout(QHBoxLayout):
+-
+-	def __init__(self, *children):
+-		super(HBoxLayout, self).__init__()
+-
+-		self.layout().setContentsMargins(0, 0, 0, 0)
+-		for child in children:
+-			if child.isWidgetType():
+-				self.layout().addWidget(child)
+-			else:
+-				self.layout().addLayout(child)
+-
+-# Horizontal layout
+-
+-class VBoxLayout(QVBoxLayout):
+-
+-	def __init__(self, *children):
+-		super(VBoxLayout, self).__init__()
+-
+-		self.layout().setContentsMargins(0, 0, 0, 0)
+-		for child in children:
+-			if child.isWidgetType():
+-				self.layout().addWidget(child)
+-			else:
+-				self.layout().addLayout(child)
+-
+-# Vertical layout widget
+-
+-class VBox():
+-
+-	def __init__(self, *children):
+-		self.vbox = QWidget()
+-		self.vbox.setLayout(VBoxLayout(*children))
+-
+-	def Widget(self):
+-		return self.vbox
+-
+-# Tree window base
+-
+-class TreeWindowBase(QMdiSubWindow):
+-
+-	def __init__(self, parent=None):
+-		super(TreeWindowBase, self).__init__(parent)
+-
+-		self.model = None
+-		self.find_bar = None
+-
+-		self.view = QTreeView()
+-		self.view.setSelectionMode(QAbstractItemView.ContiguousSelection)
+-		self.view.CopyCellsToClipboard = CopyTreeCellsToClipboard
+-
+-		self.context_menu = TreeContextMenu(self.view)
+-
+-	def DisplayFound(self, ids):
+-		if not len(ids):
+-			return False
+-		parent = QModelIndex()
+-		for dbid in ids:
+-			found = False
+-			n = self.model.rowCount(parent)
+-			for row in xrange(n):
+-				child = self.model.index(row, 0, parent)
+-				if child.internalPointer().dbid == dbid:
+-					found = True
+-					self.view.setExpanded(parent, True)
+-					self.view.setCurrentIndex(child)
+-					parent = child
+-					break
+-			if not found:
+-				break
+-		return found
+-
+-	def Find(self, value, direction, pattern, context):
+-		self.view.setFocus()
+-		self.find_bar.Busy()
+-		self.model.Find(value, direction, pattern, context, self.FindDone)
+-
+-	def FindDone(self, ids):
+-		found = True
+-		if not self.DisplayFound(ids):
+-			found = False
+-		self.find_bar.Idle()
+-		if not found:
+-			self.find_bar.NotFound()
 -
 -
--perfdata=3D$(mktemp /tmp/__perf_test_script_perl.perf.data.XXXXX)
--generated_script=3D$(mktemp /tmp/__perf_test_script.XXXXX.pl)
+-# Context-sensitive call graph window
 -
--cleanup() {
--  rm -f "${perfdata}"
--  rm -f "${generated_script}"
--  trap - EXIT TERM INT
--}
+-class CallGraphWindow(TreeWindowBase):
 -
--trap_cleanup() {
--  echo "Unexpected signal in ${FUNCNAME[1]}"
--  cleanup
--  exit 1
--}
--trap trap_cleanup TERM INT
--trap cleanup EXIT
+-	def __init__(self, glb, parent=None):
+-		super(CallGraphWindow, self).__init__(parent)
 -
--check_perl_support() {
--	if perf check feature -q libperl; then
--		return 0
--	fi
--	echo "perf script perl test [Skipped: no libperl support]"
--	return 2
--}
+-		self.model = LookupCreateModel("Context-Sensitive Call Graph", lambda x=glb: CallGraphModel(x))
 -
--test_script() {
--	local event_name=3D$1
--	local expected_output=3D$2
--	local record_opts=3D$3
+-		self.view.setModel(self.model)
 -
--	echo "Testing event: $event_name"
+-		for c, w in ((0, 250), (1, 100), (2, 60), (3, 70), (4, 70), (5, 100)):
+-			self.view.setColumnWidth(c, w)
 -
--	# Try to record. If this fails, it might be permissions or lack of suppor=
-t.
--	# We return 2 to indicate "skip this event" rather than "fail test".
--	if ! perf record -o "${perfdata}" -e "$event_name" $record_opts -- perf t=
-est -w thloop > /dev/null 2>&1; then
--		echo "perf script perl test [Skipped: failed to record $event_name]"
--		return 2
--	fi
+-		self.find_bar = FindBar(self, self)
 -
--	echo "Generating perl script..."
--	if ! perf script -i "${perfdata}" -g "${generated_script}"; then
--		echo "perf script perl test [Failed: script generation for $event_name]"
--		return 1
--	fi
+-		self.vbox = VBox(self.view, self.find_bar.Widget())
 -
--	if [ ! -f "${generated_script}" ]; then
--		echo "perf script perl test [Failed: script not generated for $event_nam=
-e]"
--		return 1
--	fi
+-		self.setWidget(self.vbox.Widget())
 -
--	echo "Executing perl script..."
--	output=3D$(perf script -i "${perfdata}" -s "${generated_script}" 2>&1)
+-		AddSubWindow(glb.mainwindow.mdi_area, self, "Context-Sensitive Call Graph")
 -
--	if echo "$output" | grep -q "$expected_output"; then
--		echo "perf script perl test [Success: $event_name triggered $expected_ou=
-tput]"
--		return 0
--	else
--		echo "perf script perl test [Failed: $event_name did not trigger $expect=
-ed_output]"
--		echo "Output was:"
--		echo "$output" | head -n 20
--		return 1
--	fi
--}
+-# Call tree window
 -
--check_perl_support || exit 2
+-class CallTreeWindow(TreeWindowBase):
 -
--# Try tracepoint first
--test_script "sched:sched_switch" "sched::sched_switch" "-c 1" && res=3D0 |=
-| res=3D$?
+-	def __init__(self, glb, parent=None, thread_at_time=None):
+-		super(CallTreeWindow, self).__init__(parent)
 -
--if [ $res -eq 0 ]; then
--	exit 0
--elif [ $res -eq 1 ]; then
--	exit 1
--fi
+-		self.model = LookupCreateModel("Call Tree", lambda x=glb: CallTreeModel(x))
 -
--# If tracepoint skipped (res=3D2), try task-clock
--# For generic events like task-clock, the generated script uses process_ev=
-ent()
--# which dumps data using Data::Dumper. We check for "$VAR1" which is stand=
-ard Dumper output.
--test_script "task-clock" "\$VAR1" "-c 100" && res=3D0 || res=3D$?
+-		self.view.setModel(self.model)
 -
--if [ $res -eq 0 ]; then
--	exit 0
--elif [ $res -eq 1 ]; then
--	exit 1
--fi
+-		for c, w in ((0, 230), (1, 100), (2, 100), (3, 70), (4, 70), (5, 100)):
+-			self.view.setColumnWidth(c, w)
 -
--# If both skipped
--echo "perf script perl test [Skipped: Could not record tracepoint or task-=
-clock]"
--exit 2
-diff --git a/tools/perf/ui/browsers/scripts.c b/tools/perf/ui/browsers/scri=
-pts.c
-index 7bf967e6cd19..7f554d930319 100644
---- a/tools/perf/ui/browsers/scripts.c
-+++ b/tools/perf/ui/browsers/scripts.c
-@@ -86,75 +86,6 @@ static int scripts_config(const char *var, const char *v=
-alue, void *data)
- 	return 0;
- }
-=20
--/*
-- * Some scripts specify the required events in their "xxx-record" file,
-- * this function will check if the events in perf.data match those
-- * mentioned in the "xxx-record".
-- *
-- * Fixme: All existing "xxx-record" are all in good formats "-e event ",
-- * which is covered well now. And new parsing code should be added to
-- * cover the future complex formats like event groups etc.
-- */
--static int check_ev_match(int dir_fd, const char *scriptname, struct perf_=
-session *session)
--{
--	char line[BUFSIZ];
--	FILE *fp;
+-		self.find_bar = FindBar(self, self)
 -
--	{
--		char filename[NAME_MAX + 5];
--		int fd;
+-		self.vbox = VBox(self.view, self.find_bar.Widget())
 -
--		scnprintf(filename, sizeof(filename), "bin/%s-record", scriptname);
--		fd =3D openat(dir_fd, filename, O_RDONLY);
--		if (fd =3D=3D -1)
--			return -1;
--		fp =3D fdopen(fd, "r");
--		if (!fp)
--			return -1;
--	}
+-		self.setWidget(self.vbox.Widget())
 -
--	while (fgets(line, sizeof(line), fp)) {
--		char *p =3D skip_spaces(line);
+-		AddSubWindow(glb.mainwindow.mdi_area, self, "Call Tree")
 -
--		if (*p =3D=3D '#')
--			continue;
+-		if thread_at_time:
+-			self.DisplayThreadAtTime(*thread_at_time)
 -
--		while (strlen(p)) {
--			int match, len;
--			struct evsel *pos;
--			char evname[128];
+-	def DisplayThreadAtTime(self, comm_id, thread_id, time):
+-		parent = QModelIndex()
+-		for dbid in (comm_id, thread_id):
+-			found = False
+-			n = self.model.rowCount(parent)
+-			for row in xrange(n):
+-				child = self.model.index(row, 0, parent)
+-				if child.internalPointer().dbid == dbid:
+-					found = True
+-					self.view.setExpanded(parent, True)
+-					self.view.setCurrentIndex(child)
+-					parent = child
+-					break
+-			if not found:
+-				return
+-		found = False
+-		while True:
+-			n = self.model.rowCount(parent)
+-			if not n:
+-				return
+-			last_child = None
+-			for row in xrange(n):
+-				self.view.setExpanded(parent, True)
+-				child = self.model.index(row, 0, parent)
+-				child_call_time = child.internalPointer().call_time
+-				if child_call_time < time:
+-					last_child = child
+-				elif child_call_time == time:
+-					self.view.setCurrentIndex(child)
+-					return
+-				elif child_call_time > time:
+-					break
+-			if not last_child:
+-				if not found:
+-					child = self.model.index(0, 0, parent)
+-					self.view.setExpanded(parent, True)
+-					self.view.setCurrentIndex(child)
+-				return
+-			found = True
+-			self.view.setExpanded(parent, True)
+-			self.view.setCurrentIndex(last_child)
+-			parent = last_child
 -
--			p =3D strstr(p, "-e");
--			if (!p)
+-# ExecComm() gets the comm_id of the command string that was set when the process exec'd i.e. the program name
+-
+-def ExecComm(db, thread_id, time):
+-	query = QSqlQuery(db)
+-	QueryExec(query, "SELECT comm_threads.comm_id, comms.c_time, comms.exec_flag"
+-				" FROM comm_threads"
+-				" INNER JOIN comms ON comms.id = comm_threads.comm_id"
+-				" WHERE comm_threads.thread_id = " + str(thread_id) +
+-				" ORDER BY comms.c_time, comms.id")
+-	first = None
+-	last = None
+-	while query.next():
+-		if first is None:
+-			first = query.value(0)
+-		if query.value(2) and Decimal(query.value(1)) <= Decimal(time):
+-			last = query.value(0)
+-	if not(last is None):
+-		return last
+-	return first
+-
+-# Container for (x, y) data
+-
+-class XY():
+-	def __init__(self, x=0, y=0):
+-		self.x = x
+-		self.y = y
+-
+-	def __str__(self):
+-		return "XY({}, {})".format(str(self.x), str(self.y))
+-
+-# Container for sub-range data
+-
+-class Subrange():
+-	def __init__(self, lo=0, hi=0):
+-		self.lo = lo
+-		self.hi = hi
+-
+-	def __str__(self):
+-		return "Subrange({}, {})".format(str(self.lo), str(self.hi))
+-
+-# Graph data region base class
+-
+-class GraphDataRegion(object):
+-
+-	def __init__(self, key, title = "", ordinal = ""):
+-		self.key = key
+-		self.title = title
+-		self.ordinal = ordinal
+-
+-# Function to sort GraphDataRegion
+-
+-def GraphDataRegionOrdinal(data_region):
+-	return data_region.ordinal
+-
+-# Attributes for a graph region
+-
+-class GraphRegionAttribute():
+-
+-	def __init__(self, colour):
+-		self.colour = colour
+-
+-# Switch graph data region represents a task
+-
+-class SwitchGraphDataRegion(GraphDataRegion):
+-
+-	def __init__(self, key, exec_comm_id, pid, tid, comm, thread_id, comm_id):
+-		super(SwitchGraphDataRegion, self).__init__(key)
+-
+-		self.title = str(pid) + " / " + str(tid) + " " + comm
+-		# Order graph legend within exec comm by pid / tid / time
+-		self.ordinal = str(pid).rjust(16) + str(exec_comm_id).rjust(8) + str(tid).rjust(16)
+-		self.exec_comm_id = exec_comm_id
+-		self.pid = pid
+-		self.tid = tid
+-		self.comm = comm
+-		self.thread_id = thread_id
+-		self.comm_id = comm_id
+-
+-# Graph data point
+-
+-class GraphDataPoint():
+-
+-	def __init__(self, data, index, x, y, altx=None, alty=None, hregion=None, vregion=None):
+-		self.data = data
+-		self.index = index
+-		self.x = x
+-		self.y = y
+-		self.altx = altx
+-		self.alty = alty
+-		self.hregion = hregion
+-		self.vregion = vregion
+-
+-# Graph data (single graph) base class
+-
+-class GraphData(object):
+-
+-	def __init__(self, collection, xbase=Decimal(0), ybase=Decimal(0)):
+-		self.collection = collection
+-		self.points = []
+-		self.xbase = xbase
+-		self.ybase = ybase
+-		self.title = ""
+-
+-	def AddPoint(self, x, y, altx=None, alty=None, hregion=None, vregion=None):
+-		index = len(self.points)
+-
+-		x = float(Decimal(x) - self.xbase)
+-		y = float(Decimal(y) - self.ybase)
+-
+-		self.points.append(GraphDataPoint(self, index, x, y, altx, alty, hregion, vregion))
+-
+-	def XToData(self, x):
+-		return Decimal(x) + self.xbase
+-
+-	def YToData(self, y):
+-		return Decimal(y) + self.ybase
+-
+-# Switch graph data (for one CPU)
+-
+-class SwitchGraphData(GraphData):
+-
+-	def __init__(self, db, collection, cpu, xbase):
+-		super(SwitchGraphData, self).__init__(collection, xbase)
+-
+-		self.cpu = cpu
+-		self.title = "CPU " + str(cpu)
+-		self.SelectSwitches(db)
+-
+-	def SelectComms(self, db, thread_id, last_comm_id, start_time, end_time):
+-		query = QSqlQuery(db)
+-		QueryExec(query, "SELECT id, c_time"
+-					" FROM comms"
+-					" WHERE c_thread_id = " + str(thread_id) +
+-					"   AND exec_flag = " + self.collection.glb.dbref.TRUE +
+-					"   AND c_time >= " + str(start_time) +
+-					"   AND c_time <= " + str(end_time) +
+-					" ORDER BY c_time, id")
+-		while query.next():
+-			comm_id = query.value(0)
+-			if comm_id == last_comm_id:
+-				continue
+-			time = query.value(1)
+-			hregion = self.HRegion(db, thread_id, comm_id, time)
+-			self.AddPoint(time, 1000, None, None, hregion)
+-
+-	def SelectSwitches(self, db):
+-		last_time = None
+-		last_comm_id = None
+-		last_thread_id = None
+-		query = QSqlQuery(db)
+-		QueryExec(query, "SELECT time, thread_out_id, thread_in_id, comm_out_id, comm_in_id, flags"
+-					" FROM context_switches"
+-					" WHERE machine_id = " + str(self.collection.machine_id) +
+-					"   AND cpu = " + str(self.cpu) +
+-					" ORDER BY time, id")
+-		while query.next():
+-			flags = int(query.value(5))
+-			if flags & 1:
+-				# Schedule-out: detect and add exec's
+-				if last_thread_id == query.value(1) and last_comm_id is not None and last_comm_id != query.value(3):
+-					self.SelectComms(db, last_thread_id, last_comm_id, last_time, query.value(0))
+-				continue
+-			# Schedule-in: add data point
+-			if len(self.points) == 0:
+-				start_time = self.collection.glb.StartTime(self.collection.machine_id)
+-				hregion = self.HRegion(db, query.value(1), query.value(3), start_time)
+-				self.AddPoint(start_time, 1000, None, None, hregion)
+-			time = query.value(0)
+-			comm_id = query.value(4)
+-			thread_id = query.value(2)
+-			hregion = self.HRegion(db, thread_id, comm_id, time)
+-			self.AddPoint(time, 1000, None, None, hregion)
+-			last_time = time
+-			last_comm_id = comm_id
+-			last_thread_id = thread_id
+-
+-	def NewHRegion(self, db, key, thread_id, comm_id, time):
+-		exec_comm_id = ExecComm(db, thread_id, time)
+-		query = QSqlQuery(db)
+-		QueryExec(query, "SELECT pid, tid FROM threads WHERE id = " + str(thread_id))
+-		if query.next():
+-			pid = query.value(0)
+-			tid = query.value(1)
+-		else:
+-			pid = -1
+-			tid = -1
+-		query = QSqlQuery(db)
+-		QueryExec(query, "SELECT comm FROM comms WHERE id = " + str(comm_id))
+-		if query.next():
+-			comm = query.value(0)
+-		else:
+-			comm = ""
+-		return SwitchGraphDataRegion(key, exec_comm_id, pid, tid, comm, thread_id, comm_id)
+-
+-	def HRegion(self, db, thread_id, comm_id, time):
+-		key = str(thread_id) + ":" + str(comm_id)
+-		hregion = self.collection.LookupHRegion(key)
+-		if hregion is None:
+-			hregion = self.NewHRegion(db, key, thread_id, comm_id, time)
+-			self.collection.AddHRegion(key, hregion)
+-		return hregion
+-
+-# Graph data collection (multiple related graphs) base class
+-
+-class GraphDataCollection(object):
+-
+-	def __init__(self, glb):
+-		self.glb = glb
+-		self.data = []
+-		self.hregions = {}
+-		self.xrangelo = None
+-		self.xrangehi = None
+-		self.yrangelo = None
+-		self.yrangehi = None
+-		self.dp = XY(0, 0)
+-
+-	def AddGraphData(self, data):
+-		self.data.append(data)
+-
+-	def LookupHRegion(self, key):
+-		if key in self.hregions:
+-			return self.hregions[key]
+-		return None
+-
+-	def AddHRegion(self, key, hregion):
+-		self.hregions[key] = hregion
+-
+-# Switch graph data collection (SwitchGraphData for each CPU)
+-
+-class SwitchGraphDataCollection(GraphDataCollection):
+-
+-	def __init__(self, glb, db, machine_id):
+-		super(SwitchGraphDataCollection, self).__init__(glb)
+-
+-		self.machine_id = machine_id
+-		self.cpus = self.SelectCPUs(db)
+-
+-		self.xrangelo = glb.StartTime(machine_id)
+-		self.xrangehi = glb.FinishTime(machine_id)
+-
+-		self.yrangelo = Decimal(0)
+-		self.yrangehi = Decimal(1000)
+-
+-		for cpu in self.cpus:
+-			self.AddGraphData(SwitchGraphData(db, self, cpu, self.xrangelo))
+-
+-	def SelectCPUs(self, db):
+-		cpus = []
+-		query = QSqlQuery(db)
+-		QueryExec(query, "SELECT DISTINCT cpu"
+-					" FROM context_switches"
+-					" WHERE machine_id = " + str(self.machine_id))
+-		while query.next():
+-			cpus.append(int(query.value(0)))
+-		return sorted(cpus)
+-
+-# Switch graph data graphics item displays the graphed data
+-
+-class SwitchGraphDataGraphicsItem(QGraphicsItem):
+-
+-	def __init__(self, data, graph_width, graph_height, attrs, event_handler, parent=None):
+-		super(SwitchGraphDataGraphicsItem, self).__init__(parent)
+-
+-		self.data = data
+-		self.graph_width = graph_width
+-		self.graph_height = graph_height
+-		self.attrs = attrs
+-		self.event_handler = event_handler
+-		self.setAcceptHoverEvents(True)
+-
+-	def boundingRect(self):
+-		return QRectF(0, 0, self.graph_width, self.graph_height)
+-
+-	def PaintPoint(self, painter, last, x):
+-		if not(last is None or last.hregion.pid == 0 or x < self.attrs.subrange.x.lo):
+-			if last.x < self.attrs.subrange.x.lo:
+-				x0 = self.attrs.subrange.x.lo
+-			else:
+-				x0 = last.x
+-			if x > self.attrs.subrange.x.hi:
+-				x1 = self.attrs.subrange.x.hi
+-			else:
+-				x1 = x - 1
+-			x0 = self.attrs.XToPixel(x0)
+-			x1 = self.attrs.XToPixel(x1)
+-
+-			y0 = self.attrs.YToPixel(last.y)
+-
+-			colour = self.attrs.region_attributes[last.hregion.key].colour
+-
+-			width = x1 - x0 + 1
+-			if width < 2:
+-				painter.setPen(colour)
+-				painter.drawLine(x0, self.graph_height - y0, x0, self.graph_height)
+-			else:
+-				painter.fillRect(x0, self.graph_height - y0, width, self.graph_height - 1, colour)
+-
+-	def paint(self, painter, option, widget):
+-		last = None
+-		for point in self.data.points:
+-			self.PaintPoint(painter, last, point.x)
+-			if point.x > self.attrs.subrange.x.hi:
 -				break;
+-			last = point
+-		self.PaintPoint(painter, last, self.attrs.subrange.x.hi + 1)
 -
--			p +=3D 2;
--			p =3D skip_spaces(p);
--			len =3D strcspn(p, " \t");
--			if (!len)
--				break;
+-	def BinarySearchPoint(self, target):
+-		lower_pos = 0
+-		higher_pos = len(self.data.points)
+-		while True:
+-			pos = int((lower_pos + higher_pos) / 2)
+-			val = self.data.points[pos].x
+-			if target >= val:
+-				lower_pos = pos
+-			else:
+-				higher_pos = pos
+-			if higher_pos <= lower_pos + 1:
+-				return lower_pos
 -
--			snprintf(evname, sizeof(evname), "%.*s", (int)len, p);
+-	def XPixelToData(self, x):
+-		x = self.attrs.PixelToX(x)
+-		if x < self.data.points[0].x:
+-			x = 0
+-			pos = 0
+-			low = True
+-		else:
+-			pos = self.BinarySearchPoint(x)
+-			low = False
+-		return (low, pos, self.data.XToData(x))
 -
--			match =3D 0;
--			evlist__for_each_entry(session->evlist, pos) {
--				if (evsel__name_is(pos, evname)) {
--					match =3D 1;
--					break;
--				}
--			}
+-	def EventToData(self, event):
+-		no_data = (None,) * 4
+-		if len(self.data.points) < 1:
+-			return no_data
+-		x = event.pos().x()
+-		if x < 0:
+-			return no_data
+-		low0, pos0, time_from = self.XPixelToData(x)
+-		low1, pos1, time_to = self.XPixelToData(x + 1)
+-		hregions = set()
+-		hregion_times = []
+-		if not low1:
+-			for i in xrange(pos0, pos1 + 1):
+-				hregion = self.data.points[i].hregion
+-				hregions.add(hregion)
+-				if i == pos0:
+-					time = time_from
+-				else:
+-					time = self.data.XToData(self.data.points[i].x)
+-				hregion_times.append((hregion, time))
+-		return (time_from, time_to, hregions, hregion_times)
 -
--			if (!match) {
--				fclose(fp);
--				return -1;
--			}
--		}
--	}
+-	def hoverMoveEvent(self, event):
+-		time_from, time_to, hregions, hregion_times = self.EventToData(event)
+-		if time_from is not None:
+-			self.event_handler.PointEvent(self.data.cpu, time_from, time_to, hregions)
 -
--	fclose(fp);
--	return 0;
+-	def hoverLeaveEvent(self, event):
+-		self.event_handler.NoPointEvent()
+-
+-	def mousePressEvent(self, event):
+-		if event.button() != Qt.RightButton:
+-			super(SwitchGraphDataGraphicsItem, self).mousePressEvent(event)
+-			return
+-		time_from, time_to, hregions, hregion_times = self.EventToData(event)
+-		if hregion_times:
+-			self.event_handler.RightClickEvent(self.data.cpu, hregion_times, event.screenPos())
+-
+-# X-axis graphics item
+-
+-class XAxisGraphicsItem(QGraphicsItem):
+-
+-	def __init__(self, width, parent=None):
+-		super(XAxisGraphicsItem, self).__init__(parent)
+-
+-		self.width = width
+-		self.max_mark_sz = 4
+-		self.height = self.max_mark_sz + 1
+-
+-	def boundingRect(self):
+-		return QRectF(0, 0, self.width, self.height)
+-
+-	def Step(self):
+-		attrs = self.parentItem().attrs
+-		subrange = attrs.subrange.x
+-		t = subrange.hi - subrange.lo
+-		s = (3.0 * t) / self.width
+-		n = 1.0
+-		while s > n:
+-			n = n * 10.0
+-		return n
+-
+-	def PaintMarks(self, painter, at_y, lo, hi, step, i):
+-		attrs = self.parentItem().attrs
+-		x = lo
+-		while x <= hi:
+-			xp = attrs.XToPixel(x)
+-			if i % 10:
+-				if i % 5:
+-					sz = 1
+-				else:
+-					sz = 2
+-			else:
+-				sz = self.max_mark_sz
+-				i = 0
+-			painter.drawLine(xp, at_y, xp, at_y + sz)
+-			x += step
+-			i += 1
+-
+-	def paint(self, painter, option, widget):
+-		# Using QPainter::drawLine(int x1, int y1, int x2, int y2) so x2 = width -1
+-		painter.drawLine(0, 0, self.width - 1, 0)
+-		n = self.Step()
+-		attrs = self.parentItem().attrs
+-		subrange = attrs.subrange.x
+-		if subrange.lo:
+-			x_offset = n - (subrange.lo % n)
+-		else:
+-			x_offset = 0.0
+-		x = subrange.lo + x_offset
+-		i = (x / n) % 10
+-		self.PaintMarks(painter, 0, x, subrange.hi, n, i)
+-
+-	def ScaleDimensions(self):
+-		n = self.Step()
+-		attrs = self.parentItem().attrs
+-		lo = attrs.subrange.x.lo
+-		hi = (n * 10.0) + lo
+-		width = attrs.XToPixel(hi)
+-		if width > 500:
+-			width = 0
+-		return (n, lo, hi, width)
+-
+-	def PaintScale(self, painter, at_x, at_y):
+-		n, lo, hi, width = self.ScaleDimensions()
+-		if not width:
+-			return
+-		painter.drawLine(at_x, at_y, at_x + width, at_y)
+-		self.PaintMarks(painter, at_y, lo, hi, n, 0)
+-
+-	def ScaleWidth(self):
+-		n, lo, hi, width = self.ScaleDimensions()
+-		return width
+-
+-	def ScaleHeight(self):
+-		return self.height
+-
+-	def ScaleUnit(self):
+-		return self.Step() * 10
+-
+-# Scale graphics item base class
+-
+-class ScaleGraphicsItem(QGraphicsItem):
+-
+-	def __init__(self, axis, parent=None):
+-		super(ScaleGraphicsItem, self).__init__(parent)
+-		self.axis = axis
+-
+-	def boundingRect(self):
+-		scale_width = self.axis.ScaleWidth()
+-		if not scale_width:
+-			return QRectF()
+-		return QRectF(0, 0, self.axis.ScaleWidth() + 100, self.axis.ScaleHeight())
+-
+-	def paint(self, painter, option, widget):
+-		scale_width = self.axis.ScaleWidth()
+-		if not scale_width:
+-			return
+-		self.axis.PaintScale(painter, 0, 5)
+-		x = scale_width + 4
+-		painter.drawText(QPointF(x, 10), self.Text())
+-
+-	def Unit(self):
+-		return self.axis.ScaleUnit()
+-
+-	def Text(self):
+-		return ""
+-
+-# Switch graph scale graphics item
+-
+-class SwitchScaleGraphicsItem(ScaleGraphicsItem):
+-
+-	def __init__(self, axis, parent=None):
+-		super(SwitchScaleGraphicsItem, self).__init__(axis, parent)
+-
+-	def Text(self):
+-		unit = self.Unit()
+-		if unit >= 1000000000:
+-			unit = int(unit / 1000000000)
+-			us = "s"
+-		elif unit >= 1000000:
+-			unit = int(unit / 1000000)
+-			us = "ms"
+-		elif unit >= 1000:
+-			unit = int(unit / 1000)
+-			us = "us"
+-		else:
+-			unit = int(unit)
+-			us = "ns"
+-		return " = " + str(unit) + " " + us
+-
+-# Switch graph graphics item contains graph title, scale, x/y-axis, and the graphed data
+-
+-class SwitchGraphGraphicsItem(QGraphicsItem):
+-
+-	def __init__(self, collection, data, attrs, event_handler, first, parent=None):
+-		super(SwitchGraphGraphicsItem, self).__init__(parent)
+-		self.collection = collection
+-		self.data = data
+-		self.attrs = attrs
+-		self.event_handler = event_handler
+-
+-		margin = 20
+-		title_width = 50
+-
+-		self.title_graphics = QGraphicsSimpleTextItem(data.title, self)
+-
+-		self.title_graphics.setPos(margin, margin)
+-		graph_width = attrs.XToPixel(attrs.subrange.x.hi) + 1
+-		graph_height = attrs.YToPixel(attrs.subrange.y.hi) + 1
+-
+-		self.graph_origin_x = margin + title_width + margin
+-		self.graph_origin_y = graph_height + margin
+-
+-		x_axis_size = 1
+-		y_axis_size = 1
+-		self.yline = QGraphicsLineItem(0, 0, 0, graph_height, self)
+-
+-		self.x_axis = XAxisGraphicsItem(graph_width, self)
+-		self.x_axis.setPos(self.graph_origin_x, self.graph_origin_y + 1)
+-
+-		if first:
+-			self.scale_item = SwitchScaleGraphicsItem(self.x_axis, self)
+-			self.scale_item.setPos(self.graph_origin_x, self.graph_origin_y + 10)
+-
+-		self.yline.setPos(self.graph_origin_x - y_axis_size, self.graph_origin_y - graph_height)
+-
+-		self.axis_point = QGraphicsLineItem(0, 0, 0, 0, self)
+-		self.axis_point.setPos(self.graph_origin_x - 1, self.graph_origin_y +1)
+-
+-		self.width = self.graph_origin_x + graph_width + margin
+-		self.height = self.graph_origin_y + margin
+-
+-		self.graph = SwitchGraphDataGraphicsItem(data, graph_width, graph_height, attrs, event_handler, self)
+-		self.graph.setPos(self.graph_origin_x, self.graph_origin_y - graph_height)
+-
+-		if parent and 'EnableRubberBand' in dir(parent):
+-			parent.EnableRubberBand(self.graph_origin_x, self.graph_origin_x + graph_width - 1, self)
+-
+-	def boundingRect(self):
+-		return QRectF(0, 0, self.width, self.height)
+-
+-	def paint(self, painter, option, widget):
+-		pass
+-
+-	def RBXToPixel(self, x):
+-		return self.attrs.PixelToX(x - self.graph_origin_x)
+-
+-	def RBXRangeToPixel(self, x0, x1):
+-		return (self.RBXToPixel(x0), self.RBXToPixel(x1 + 1))
+-
+-	def RBPixelToTime(self, x):
+-		if x < self.data.points[0].x:
+-			return self.data.XToData(0)
+-		return self.data.XToData(x)
+-
+-	def RBEventTimes(self, x0, x1):
+-		x0, x1 = self.RBXRangeToPixel(x0, x1)
+-		time_from = self.RBPixelToTime(x0)
+-		time_to = self.RBPixelToTime(x1)
+-		return (time_from, time_to)
+-
+-	def RBEvent(self, x0, x1):
+-		time_from, time_to = self.RBEventTimes(x0, x1)
+-		self.event_handler.RangeEvent(time_from, time_to)
+-
+-	def RBMoveEvent(self, x0, x1):
+-		if x1 < x0:
+-			x0, x1 = x1, x0
+-		self.RBEvent(x0, x1)
+-
+-	def RBReleaseEvent(self, x0, x1, selection_state):
+-		if x1 < x0:
+-			x0, x1 = x1, x0
+-		x0, x1 = self.RBXRangeToPixel(x0, x1)
+-		self.event_handler.SelectEvent(x0, x1, selection_state)
+-
+-# Graphics item to draw a vertical bracket (used to highlight "forward" sub-range)
+-
+-class VerticalBracketGraphicsItem(QGraphicsItem):
+-
+-	def __init__(self, parent=None):
+-		super(VerticalBracketGraphicsItem, self).__init__(parent)
+-
+-		self.width = 0
+-		self.height = 0
+-		self.hide()
+-
+-	def SetSize(self, width, height):
+-		self.width = width + 1
+-		self.height = height + 1
+-
+-	def boundingRect(self):
+-		return QRectF(0, 0, self.width, self.height)
+-
+-	def paint(self, painter, option, widget):
+-		colour = QColor(255, 255, 0, 32)
+-		painter.fillRect(0, 0, self.width, self.height, colour)
+-		x1 = self.width - 1
+-		y1 = self.height - 1
+-		painter.drawLine(0, 0, x1, 0)
+-		painter.drawLine(0, 0, 0, 3)
+-		painter.drawLine(x1, 0, x1, 3)
+-		painter.drawLine(0, y1, x1, y1)
+-		painter.drawLine(0, y1, 0, y1 - 3)
+-		painter.drawLine(x1, y1, x1, y1 - 3)
+-
+-# Graphics item to contain graphs arranged vertically
+-
+-class VertcalGraphSetGraphicsItem(QGraphicsItem):
+-
+-	def __init__(self, collection, attrs, event_handler, child_class, parent=None):
+-		super(VertcalGraphSetGraphicsItem, self).__init__(parent)
+-
+-		self.collection = collection
+-
+-		self.top = 10
+-
+-		self.width = 0
+-		self.height = self.top
+-
+-		self.rubber_band = None
+-		self.rb_enabled = False
+-
+-		first = True
+-		for data in collection.data:
+-			child = child_class(collection, data, attrs, event_handler, first, self)
+-			child.setPos(0, self.height + 1)
+-			rect = child.boundingRect()
+-			if rect.right() > self.width:
+-				self.width = rect.right()
+-			self.height = self.height + rect.bottom() + 1
+-			first = False
+-
+-		self.bracket = VerticalBracketGraphicsItem(self)
+-
+-	def EnableRubberBand(self, xlo, xhi, rb_event_handler):
+-		if self.rb_enabled:
+-			return
+-		self.rb_enabled = True
+-		self.rb_in_view = False
+-		self.setAcceptedMouseButtons(Qt.LeftButton)
+-		self.rb_xlo = xlo
+-		self.rb_xhi = xhi
+-		self.rb_event_handler = rb_event_handler
+-		self.mousePressEvent = self.MousePressEvent
+-		self.mouseMoveEvent = self.MouseMoveEvent
+-		self.mouseReleaseEvent = self.MouseReleaseEvent
+-
+-	def boundingRect(self):
+-		return QRectF(0, 0, self.width, self.height)
+-
+-	def paint(self, painter, option, widget):
+-		pass
+-
+-	def RubberBandParent(self):
+-		scene = self.scene()
+-		view = scene.views()[0]
+-		viewport = view.viewport()
+-		return viewport
+-
+-	def RubberBandSetGeometry(self, rect):
+-		scene_rectf = self.mapRectToScene(QRectF(rect))
+-		scene = self.scene()
+-		view = scene.views()[0]
+-		poly = view.mapFromScene(scene_rectf)
+-		self.rubber_band.setGeometry(poly.boundingRect())
+-
+-	def SetSelection(self, selection_state):
+-		if self.rubber_band:
+-			if selection_state:
+-				self.RubberBandSetGeometry(selection_state)
+-				self.rubber_band.show()
+-			else:
+-				self.rubber_band.hide()
+-
+-	def SetBracket(self, rect):
+-		if rect:
+-			x, y, width, height = rect.x(), rect.y(), rect.width(), rect.height()
+-			self.bracket.setPos(x, y)
+-			self.bracket.SetSize(width, height)
+-			self.bracket.show()
+-		else:
+-			self.bracket.hide()
+-
+-	def RubberBandX(self, event):
+-		x = event.pos().toPoint().x()
+-		if x < self.rb_xlo:
+-			x = self.rb_xlo
+-		elif x > self.rb_xhi:
+-			x = self.rb_xhi
+-		else:
+-			self.rb_in_view = True
+-		return x
+-
+-	def RubberBandRect(self, x):
+-		if self.rb_origin.x() <= x:
+-			width = x - self.rb_origin.x()
+-			rect = QRect(self.rb_origin, QSize(width, self.height))
+-		else:
+-			width = self.rb_origin.x() - x
+-			top_left = QPoint(self.rb_origin.x() - width, self.rb_origin.y())
+-			rect = QRect(top_left, QSize(width, self.height))
+-		return rect
+-
+-	def MousePressEvent(self, event):
+-		self.rb_in_view = False
+-		x = self.RubberBandX(event)
+-		self.rb_origin = QPoint(x, self.top)
+-		if self.rubber_band is None:
+-			self.rubber_band = QRubberBand(QRubberBand.Rectangle, self.RubberBandParent())
+-		self.RubberBandSetGeometry(QRect(self.rb_origin, QSize(0, self.height)))
+-		if self.rb_in_view:
+-			self.rubber_band.show()
+-			self.rb_event_handler.RBMoveEvent(x, x)
+-		else:
+-			self.rubber_band.hide()
+-
+-	def MouseMoveEvent(self, event):
+-		x = self.RubberBandX(event)
+-		rect = self.RubberBandRect(x)
+-		self.RubberBandSetGeometry(rect)
+-		if self.rb_in_view:
+-			self.rubber_band.show()
+-			self.rb_event_handler.RBMoveEvent(self.rb_origin.x(), x)
+-
+-	def MouseReleaseEvent(self, event):
+-		x = self.RubberBandX(event)
+-		if self.rb_in_view:
+-			selection_state = self.RubberBandRect(x)
+-		else:
+-			selection_state = None
+-		self.rb_event_handler.RBReleaseEvent(self.rb_origin.x(), x, selection_state)
+-
+-# Switch graph legend data model
+-
+-class SwitchGraphLegendModel(QAbstractTableModel):
+-
+-	def __init__(self, collection, region_attributes, parent=None):
+-		super(SwitchGraphLegendModel, self).__init__(parent)
+-
+-		self.region_attributes = region_attributes
+-
+-		self.child_items = sorted(collection.hregions.values(), key=GraphDataRegionOrdinal)
+-		self.child_count = len(self.child_items)
+-
+-		self.highlight_set = set()
+-
+-		self.column_headers = ("pid", "tid", "comm")
+-
+-	def rowCount(self, parent):
+-		return self.child_count
+-
+-	def headerData(self, section, orientation, role):
+-		if role != Qt.DisplayRole:
+-			return None
+-		if orientation != Qt.Horizontal:
+-			return None
+-		return self.columnHeader(section)
+-
+-	def index(self, row, column, parent):
+-		return self.createIndex(row, column, self.child_items[row])
+-
+-	def columnCount(self, parent=None):
+-		return len(self.column_headers)
+-
+-	def columnHeader(self, column):
+-		return self.column_headers[column]
+-
+-	def data(self, index, role):
+-		if role == Qt.BackgroundRole:
+-			child = self.child_items[index.row()]
+-			if child in self.highlight_set:
+-				return self.region_attributes[child.key].colour
+-			return None
+-		if role == Qt.ForegroundRole:
+-			child = self.child_items[index.row()]
+-			if child in self.highlight_set:
+-				return QColor(255, 255, 255)
+-			return self.region_attributes[child.key].colour
+-		if role != Qt.DisplayRole:
+-			return None
+-		hregion = self.child_items[index.row()]
+-		col = index.column()
+-		if col == 0:
+-			return hregion.pid
+-		if col == 1:
+-			return hregion.tid
+-		if col == 2:
+-			return hregion.comm
+-		return None
+-
+-	def SetHighlight(self, row, set_highlight):
+-		child = self.child_items[row]
+-		top_left = self.createIndex(row, 0, child)
+-		bottom_right = self.createIndex(row, len(self.column_headers) - 1, child)
+-		self.dataChanged.emit(top_left, bottom_right)
+-
+-	def Highlight(self, highlight_set):
+-		for row in xrange(self.child_count):
+-			child = self.child_items[row]
+-			if child in self.highlight_set:
+-				if child not in highlight_set:
+-					self.SetHighlight(row, False)
+-			elif child in highlight_set:
+-				self.SetHighlight(row, True)
+-		self.highlight_set = highlight_set
+-
+-# Switch graph legend is a table
+-
+-class SwitchGraphLegend(QWidget):
+-
+-	def __init__(self, collection, region_attributes, parent=None):
+-		super(SwitchGraphLegend, self).__init__(parent)
+-
+-		self.data_model = SwitchGraphLegendModel(collection, region_attributes)
+-
+-		self.model = QSortFilterProxyModel()
+-		self.model.setSourceModel(self.data_model)
+-
+-		self.view = QTableView()
+-		self.view.setModel(self.model)
+-		self.view.setEditTriggers(QAbstractItemView.NoEditTriggers)
+-		self.view.verticalHeader().setVisible(False)
+-		self.view.sortByColumn(-1, Qt.AscendingOrder)
+-		self.view.setSortingEnabled(True)
+-		self.view.resizeColumnsToContents()
+-		self.view.resizeRowsToContents()
+-
+-		self.vbox = VBoxLayout(self.view)
+-		self.setLayout(self.vbox)
+-
+-		sz1 = self.view.columnWidth(0) + self.view.columnWidth(1) + self.view.columnWidth(2) + 2
+-		sz1 = sz1 + self.view.verticalScrollBar().sizeHint().width()
+-		self.saved_size = sz1
+-
+-	def resizeEvent(self, event):
+-		self.saved_size = self.size().width()
+-		super(SwitchGraphLegend, self).resizeEvent(event)
+-
+-	def Highlight(self, highlight_set):
+-		self.data_model.Highlight(highlight_set)
+-		self.update()
+-
+-	def changeEvent(self, event):
+-		if event.type() == QEvent.FontChange:
+-			self.view.resizeRowsToContents()
+-			self.view.resizeColumnsToContents()
+-			# Need to resize rows again after column resize
+-			self.view.resizeRowsToContents()
+-		super(SwitchGraphLegend, self).changeEvent(event)
+-
+-# Random colour generation
+-
+-def RGBColourTooLight(r, g, b):
+-	if g > 230:
+-		return True
+-	if g <= 160:
+-		return False
+-	if r <= 180 and g <= 180:
+-		return False
+-	if r < 60:
+-		return False
+-	return True
+-
+-def GenerateColours(x):
+-	cs = [0]
+-	for i in xrange(1, x):
+-		cs.append(int((255.0 / i) + 0.5))
+-	colours = []
+-	for r in cs:
+-		for g in cs:
+-			for b in cs:
+-				# Exclude black and colours that look too light against a white background
+-				if (r, g, b) == (0, 0, 0) or RGBColourTooLight(r, g, b):
+-					continue
+-				colours.append(QColor(r, g, b))
+-	return colours
+-
+-def GenerateNColours(n):
+-	for x in xrange(2, n + 2):
+-		colours = GenerateColours(x)
+-		if len(colours) >= n:
+-			return colours
+-	return []
+-
+-def GenerateNRandomColours(n, seed):
+-	colours = GenerateNColours(n)
+-	random.seed(seed)
+-	random.shuffle(colours)
+-	return colours
+-
+-# Graph attributes, in particular the scale and subrange that change when zooming
+-
+-class GraphAttributes():
+-
+-	def __init__(self, scale, subrange, region_attributes, dp):
+-		self.scale = scale
+-		self.subrange = subrange
+-		self.region_attributes = region_attributes
+-		# Rounding avoids errors due to finite floating point precision
+-		self.dp = dp	# data decimal places
+-		self.Update()
+-
+-	def XToPixel(self, x):
+-		return int(round((x - self.subrange.x.lo) * self.scale.x, self.pdp.x))
+-
+-	def YToPixel(self, y):
+-		return int(round((y - self.subrange.y.lo) * self.scale.y, self.pdp.y))
+-
+-	def PixelToXRounded(self, px):
+-		return round((round(px, 0) / self.scale.x), self.dp.x) + self.subrange.x.lo
+-
+-	def PixelToYRounded(self, py):
+-		return round((round(py, 0) / self.scale.y), self.dp.y) + self.subrange.y.lo
+-
+-	def PixelToX(self, px):
+-		x = self.PixelToXRounded(px)
+-		if self.pdp.x == 0:
+-			rt = self.XToPixel(x)
+-			if rt > px:
+-				return x - 1
+-		return x
+-
+-	def PixelToY(self, py):
+-		y = self.PixelToYRounded(py)
+-		if self.pdp.y == 0:
+-			rt = self.YToPixel(y)
+-			if rt > py:
+-				return y - 1
+-		return y
+-
+-	def ToPDP(self, dp, scale):
+-		# Calculate pixel decimal places:
+-		#    (10 ** dp) is the minimum delta in the data
+-		#    scale it to get the minimum delta in pixels
+-		#    log10 gives the number of decimals places negatively
+-		#    subtrace 1 to divide by 10
+-		#    round to the lower negative number
+-		#    change the sign to get the number of decimals positively
+-		x = math.log10((10 ** dp) * scale)
+-		if x < 0:
+-			x -= 1
+-			x = -int(math.floor(x) - 0.1)
+-		else:
+-			x = 0
+-		return x
+-
+-	def Update(self):
+-		x = self.ToPDP(self.dp.x, self.scale.x)
+-		y = self.ToPDP(self.dp.y, self.scale.y)
+-		self.pdp = XY(x, y) # pixel decimal places
+-
+-# Switch graph splitter which divides the CPU graphs from the legend
+-
+-class SwitchGraphSplitter(QSplitter):
+-
+-	def __init__(self, parent=None):
+-		super(SwitchGraphSplitter, self).__init__(parent)
+-
+-		self.first_time = False
+-
+-	def resizeEvent(self, ev):
+-		if self.first_time:
+-			self.first_time = False
+-			sz1 = self.widget(1).view.columnWidth(0) + self.widget(1).view.columnWidth(1) + self.widget(1).view.columnWidth(2) + 2
+-			sz1 = sz1 + self.widget(1).view.verticalScrollBar().sizeHint().width()
+-			sz0 = self.size().width() - self.handleWidth() - sz1
+-			self.setSizes([sz0, sz1])
+-		elif not(self.widget(1).saved_size is None):
+-			sz1 = self.widget(1).saved_size
+-			sz0 = self.size().width() - self.handleWidth() - sz1
+-			self.setSizes([sz0, sz1])
+-		super(SwitchGraphSplitter, self).resizeEvent(ev)
+-
+-# Graph widget base class
+-
+-class GraphWidget(QWidget):
+-
+-	graph_title_changed = Signal(object)
+-
+-	def __init__(self, parent=None):
+-		super(GraphWidget, self).__init__(parent)
+-
+-	def GraphTitleChanged(self, title):
+-		self.graph_title_changed.emit(title)
+-
+-	def Title(self):
+-		return ""
+-
+-# Display time in s, ms, us or ns
+-
+-def ToTimeStr(val):
+-	val = Decimal(val)
+-	if val >= 1000000000:
+-		return "{} s".format((val / 1000000000).quantize(Decimal("0.000000001")))
+-	if val >= 1000000:
+-		return "{} ms".format((val / 1000000).quantize(Decimal("0.000001")))
+-	if val >= 1000:
+-		return "{} us".format((val / 1000).quantize(Decimal("0.001")))
+-	return "{} ns".format(val.quantize(Decimal("1")))
+-
+-# Switch (i.e. context switch i.e. Time Chart by CPU) graph widget which contains the CPU graphs and the legend and control buttons
+-
+-class SwitchGraphWidget(GraphWidget):
+-
+-	def __init__(self, glb, collection, parent=None):
+-		super(SwitchGraphWidget, self).__init__(parent)
+-
+-		self.glb = glb
+-		self.collection = collection
+-
+-		self.back_state = []
+-		self.forward_state = []
+-		self.selection_state = (None, None)
+-		self.fwd_rect = None
+-		self.start_time = self.glb.StartTime(collection.machine_id)
+-
+-		i = 0
+-		hregions = collection.hregions.values()
+-		colours = GenerateNRandomColours(len(hregions), 1013)
+-		region_attributes = {}
+-		for hregion in hregions:
+-			if hregion.pid == 0 and hregion.tid == 0:
+-				region_attributes[hregion.key] = GraphRegionAttribute(QColor(0, 0, 0))
+-			else:
+-				region_attributes[hregion.key] = GraphRegionAttribute(colours[i])
+-				i = i + 1
+-
+-		# Default to entire range
+-		xsubrange = Subrange(0.0, float(collection.xrangehi - collection.xrangelo) + 1.0)
+-		ysubrange = Subrange(0.0, float(collection.yrangehi - collection.yrangelo) + 1.0)
+-		subrange = XY(xsubrange, ysubrange)
+-
+-		scale = self.GetScaleForRange(subrange)
+-
+-		self.attrs = GraphAttributes(scale, subrange, region_attributes, collection.dp)
+-
+-		self.item = VertcalGraphSetGraphicsItem(collection, self.attrs, self, SwitchGraphGraphicsItem)
+-
+-		self.scene = QGraphicsScene()
+-		self.scene.addItem(self.item)
+-
+-		self.view = QGraphicsView(self.scene)
+-		self.view.centerOn(0, 0)
+-		self.view.setAlignment(Qt.AlignLeft | Qt.AlignTop)
+-
+-		self.legend = SwitchGraphLegend(collection, region_attributes)
+-
+-		self.splitter = SwitchGraphSplitter()
+-		self.splitter.addWidget(self.view)
+-		self.splitter.addWidget(self.legend)
+-
+-		self.point_label = QLabel("")
+-		self.point_label.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Fixed)
+-
+-		self.back_button = QToolButton()
+-		self.back_button.setIcon(self.style().standardIcon(QStyle.SP_ArrowLeft))
+-		self.back_button.setDisabled(True)
+-		self.back_button.released.connect(lambda: self.Back())
+-
+-		self.forward_button = QToolButton()
+-		self.forward_button.setIcon(self.style().standardIcon(QStyle.SP_ArrowRight))
+-		self.forward_button.setDisabled(True)
+-		self.forward_button.released.connect(lambda: self.Forward())
+-
+-		self.zoom_button = QToolButton()
+-		self.zoom_button.setText("Zoom")
+-		self.zoom_button.setDisabled(True)
+-		self.zoom_button.released.connect(lambda: self.Zoom())
+-
+-		self.hbox = HBoxLayout(self.back_button, self.forward_button, self.zoom_button, self.point_label)
+-
+-		self.vbox = VBoxLayout(self.splitter, self.hbox)
+-
+-		self.setLayout(self.vbox)
+-
+-	def GetScaleForRangeX(self, xsubrange):
+-		# Default graph 1000 pixels wide
+-		dflt = 1000.0
+-		r = xsubrange.hi - xsubrange.lo
+-		return dflt / r
+-
+-	def GetScaleForRangeY(self, ysubrange):
+-		# Default graph 50 pixels high
+-		dflt = 50.0
+-		r = ysubrange.hi - ysubrange.lo
+-		return dflt / r
+-
+-	def GetScaleForRange(self, subrange):
+-		# Default graph 1000 pixels wide, 50 pixels high
+-		xscale = self.GetScaleForRangeX(subrange.x)
+-		yscale = self.GetScaleForRangeY(subrange.y)
+-		return XY(xscale, yscale)
+-
+-	def PointEvent(self, cpu, time_from, time_to, hregions):
+-		text = "CPU: " + str(cpu)
+-		time_from = time_from.quantize(Decimal(1))
+-		rel_time_from = time_from - self.glb.StartTime(self.collection.machine_id)
+-		text = text + " Time: " + str(time_from) + " (+" + ToTimeStr(rel_time_from) + ")"
+-		self.point_label.setText(text)
+-		self.legend.Highlight(hregions)
+-
+-	def RightClickEvent(self, cpu, hregion_times, pos):
+-		if not IsSelectable(self.glb.db, "calls", "WHERE parent_id >= 0"):
+-			return
+-		menu = QMenu(self.view)
+-		for hregion, time in hregion_times:
+-			thread_at_time = (hregion.exec_comm_id, hregion.thread_id, time)
+-			menu_text = "Show Call Tree for {} {}:{} at {}".format(hregion.comm, hregion.pid, hregion.tid, time)
+-			menu.addAction(CreateAction(menu_text, "Show Call Tree", lambda a=None, args=thread_at_time: self.RightClickSelect(args), self.view))
+-		menu.exec_(pos)
+-
+-	def RightClickSelect(self, args):
+-		CallTreeWindow(self.glb, self.glb.mainwindow, thread_at_time=args)
+-
+-	def NoPointEvent(self):
+-		self.point_label.setText("")
+-		self.legend.Highlight({})
+-
+-	def RangeEvent(self, time_from, time_to):
+-		time_from = time_from.quantize(Decimal(1))
+-		time_to = time_to.quantize(Decimal(1))
+-		if time_to <= time_from:
+-			self.point_label.setText("")
+-			return
+-		rel_time_from = time_from - self.start_time
+-		rel_time_to = time_to - self.start_time
+-		text = " Time: " + str(time_from) + " (+" + ToTimeStr(rel_time_from) + ") to: " + str(time_to) + " (+" + ToTimeStr(rel_time_to) + ")"
+-		text = text + " duration: " + ToTimeStr(time_to - time_from)
+-		self.point_label.setText(text)
+-
+-	def BackState(self):
+-		return (self.attrs.subrange, self.attrs.scale, self.selection_state, self.fwd_rect)
+-
+-	def PushBackState(self):
+-		state = copy.deepcopy(self.BackState())
+-		self.back_state.append(state)
+-		self.back_button.setEnabled(True)
+-
+-	def PopBackState(self):
+-		self.attrs.subrange, self.attrs.scale, self.selection_state, self.fwd_rect = self.back_state.pop()
+-		self.attrs.Update()
+-		if not self.back_state:
+-			self.back_button.setDisabled(True)
+-
+-	def PushForwardState(self):
+-		state = copy.deepcopy(self.BackState())
+-		self.forward_state.append(state)
+-		self.forward_button.setEnabled(True)
+-
+-	def PopForwardState(self):
+-		self.attrs.subrange, self.attrs.scale, self.selection_state, self.fwd_rect = self.forward_state.pop()
+-		self.attrs.Update()
+-		if not self.forward_state:
+-			self.forward_button.setDisabled(True)
+-
+-	def Title(self):
+-		time_from = self.collection.xrangelo + Decimal(self.attrs.subrange.x.lo)
+-		time_to = self.collection.xrangelo + Decimal(self.attrs.subrange.x.hi)
+-		rel_time_from = time_from - self.start_time
+-		rel_time_to = time_to - self.start_time
+-		title = "+" + ToTimeStr(rel_time_from) + " to +" + ToTimeStr(rel_time_to)
+-		title = title + " (" + ToTimeStr(time_to - time_from) + ")"
+-		return title
+-
+-	def Update(self):
+-		selected_subrange, selection_state = self.selection_state
+-		self.item.SetSelection(selection_state)
+-		self.item.SetBracket(self.fwd_rect)
+-		self.zoom_button.setDisabled(selected_subrange is None)
+-		self.GraphTitleChanged(self.Title())
+-		self.item.update(self.item.boundingRect())
+-
+-	def Back(self):
+-		if not self.back_state:
+-			return
+-		self.PushForwardState()
+-		self.PopBackState()
+-		self.Update()
+-
+-	def Forward(self):
+-		if not self.forward_state:
+-			return
+-		self.PushBackState()
+-		self.PopForwardState()
+-		self.Update()
+-
+-	def SelectEvent(self, x0, x1, selection_state):
+-		if selection_state is None:
+-			selected_subrange = None
+-		else:
+-			if x1 - x0 < 1.0:
+-				x1 += 1.0
+-			selected_subrange = Subrange(x0, x1)
+-		self.selection_state = (selected_subrange, selection_state)
+-		self.zoom_button.setDisabled(selected_subrange is None)
+-
+-	def Zoom(self):
+-		selected_subrange, selection_state = self.selection_state
+-		if selected_subrange is None:
+-			return
+-		self.fwd_rect = selection_state
+-		self.item.SetSelection(None)
+-		self.PushBackState()
+-		self.attrs.subrange.x = selected_subrange
+-		self.forward_state = []
+-		self.forward_button.setDisabled(True)
+-		self.selection_state = (None, None)
+-		self.fwd_rect = None
+-		self.attrs.scale.x = self.GetScaleForRangeX(self.attrs.subrange.x)
+-		self.attrs.Update()
+-		self.Update()
+-
+-# Slow initialization - perform non-GUI initialization in a separate thread and put up a modal message box while waiting
+-
+-class SlowInitClass():
+-
+-	def __init__(self, glb, title, init_fn):
+-		self.init_fn = init_fn
+-		self.done = False
+-		self.result = None
+-
+-		self.msg_box = QMessageBox(glb.mainwindow)
+-		self.msg_box.setText("Initializing " + title + ". Please wait.")
+-		self.msg_box.setWindowTitle("Initializing " + title)
+-		self.msg_box.setWindowIcon(glb.mainwindow.style().standardIcon(QStyle.SP_MessageBoxInformation))
+-
+-		self.init_thread = Thread(self.ThreadFn, glb)
+-		self.init_thread.done.connect(lambda: self.Done(), Qt.QueuedConnection)
+-
+-		self.init_thread.start()
+-
+-	def Done(self):
+-		self.msg_box.done(0)
+-
+-	def ThreadFn(self, glb):
+-		conn_name = "SlowInitClass" + str(os.getpid())
+-		db, dbname = glb.dbref.Open(conn_name)
+-		self.result = self.init_fn(db)
+-		self.done = True
+-		return (True, 0)
+-
+-	def Result(self):
+-		while not self.done:
+-			self.msg_box.exec_()
+-		self.init_thread.wait()
+-		return self.result
+-
+-def SlowInit(glb, title, init_fn):
+-	init = SlowInitClass(glb, title, init_fn)
+-	return init.Result()
+-
+-# Time chart by CPU window
+-
+-class TimeChartByCPUWindow(QMdiSubWindow):
+-
+-	def __init__(self, glb, parent=None):
+-		super(TimeChartByCPUWindow, self).__init__(parent)
+-
+-		self.glb = glb
+-		self.machine_id = glb.HostMachineId()
+-		self.collection_name = "SwitchGraphDataCollection " + str(self.machine_id)
+-
+-		collection = LookupModel(self.collection_name)
+-		if collection is None:
+-			collection = SlowInit(glb, "Time Chart", self.Init)
+-
+-		self.widget = SwitchGraphWidget(glb, collection, self)
+-		self.view = self.widget
+-
+-		self.base_title = "Time Chart by CPU"
+-		self.setWindowTitle(self.base_title + self.widget.Title())
+-		self.widget.graph_title_changed.connect(self.GraphTitleChanged)
+-
+-		self.setWidget(self.widget)
+-
+-		AddSubWindow(glb.mainwindow.mdi_area, self, self.windowTitle())
+-
+-	def Init(self, db):
+-		return LookupCreateModel(self.collection_name, lambda : SwitchGraphDataCollection(self.glb, db, self.machine_id))
+-
+-	def GraphTitleChanged(self, title):
+-		self.setWindowTitle(self.base_title + " : " + title)
+-
+-# Child data item  finder
+-
+-class ChildDataItemFinder():
+-
+-	def __init__(self, root):
+-		self.root = root
+-		self.value, self.direction, self.pattern, self.last_value, self.last_pattern = (None,) * 5
+-		self.rows = []
+-		self.pos = 0
+-
+-	def FindSelect(self):
+-		self.rows = []
+-		if self.pattern:
+-			pattern = re.compile(self.value)
+-			for child in self.root.child_items:
+-				for column_data in child.data:
+-					if re.search(pattern, str(column_data)) is not None:
+-						self.rows.append(child.row)
+-						break
+-		else:
+-			for child in self.root.child_items:
+-				for column_data in child.data:
+-					if self.value in str(column_data):
+-						self.rows.append(child.row)
+-						break
+-
+-	def FindValue(self):
+-		self.pos = 0
+-		if self.last_value != self.value or self.pattern != self.last_pattern:
+-			self.FindSelect()
+-		if not len(self.rows):
+-			return -1
+-		return self.rows[self.pos]
+-
+-	def FindThread(self):
+-		if self.direction == 0 or self.value != self.last_value or self.pattern != self.last_pattern:
+-			row = self.FindValue()
+-		elif len(self.rows):
+-			if self.direction > 0:
+-				self.pos += 1
+-				if self.pos >= len(self.rows):
+-					self.pos = 0
+-			else:
+-				self.pos -= 1
+-				if self.pos < 0:
+-					self.pos = len(self.rows) - 1
+-			row = self.rows[self.pos]
+-		else:
+-			row = -1
+-		return (True, row)
+-
+-	def Find(self, value, direction, pattern, context, callback):
+-		self.value, self.direction, self.pattern, self.last_value, self.last_pattern = (value, direction,pattern, self.value, self.pattern)
+-		# Use a thread so the UI is not blocked
+-		thread = Thread(self.FindThread)
+-		thread.done.connect(lambda row, t=thread, c=callback: self.FindDone(t, c, row), Qt.QueuedConnection)
+-		thread.start()
+-
+-	def FindDone(self, thread, callback, row):
+-		callback(row)
+-
+-# Number of database records to fetch in one go
+-
+-glb_chunk_sz = 10000
+-
+-# Background process for SQL data fetcher
+-
+-class SQLFetcherProcess():
+-
+-	def __init__(self, dbref, sql, buffer, head, tail, fetch_count, fetching_done, process_target, wait_event, fetched_event, prep):
+-		# Need a unique connection name
+-		conn_name = "SQLFetcher" + str(os.getpid())
+-		self.db, dbname = dbref.Open(conn_name)
+-		self.sql = sql
+-		self.buffer = buffer
+-		self.head = head
+-		self.tail = tail
+-		self.fetch_count = fetch_count
+-		self.fetching_done = fetching_done
+-		self.process_target = process_target
+-		self.wait_event = wait_event
+-		self.fetched_event = fetched_event
+-		self.prep = prep
+-		self.query = QSqlQuery(self.db)
+-		self.query_limit = 0 if "$$last_id$$" in sql else 2
+-		self.last_id = -1
+-		self.fetched = 0
+-		self.more = True
+-		self.local_head = self.head.value
+-		self.local_tail = self.tail.value
+-
+-	def Select(self):
+-		if self.query_limit:
+-			if self.query_limit == 1:
+-				return
+-			self.query_limit -= 1
+-		stmt = self.sql.replace("$$last_id$$", str(self.last_id))
+-		QueryExec(self.query, stmt)
+-
+-	def Next(self):
+-		if not self.query.next():
+-			self.Select()
+-			if not self.query.next():
+-				return None
+-		self.last_id = self.query.value(0)
+-		return self.prep(self.query)
+-
+-	def WaitForTarget(self):
+-		while True:
+-			self.wait_event.clear()
+-			target = self.process_target.value
+-			if target > self.fetched or target < 0:
+-				break
+-			self.wait_event.wait()
+-		return target
+-
+-	def HasSpace(self, sz):
+-		if self.local_tail <= self.local_head:
+-			space = len(self.buffer) - self.local_head
+-			if space > sz:
+-				return True
+-			if space >= glb_nsz:
+-				# Use 0 (or space < glb_nsz) to mean there is no more at the top of the buffer
+-				nd = pickle.dumps(0, pickle.HIGHEST_PROTOCOL)
+-				self.buffer[self.local_head : self.local_head + len(nd)] = nd
+-			self.local_head = 0
+-		if self.local_tail - self.local_head > sz:
+-			return True
+-		return False
+-
+-	def WaitForSpace(self, sz):
+-		if self.HasSpace(sz):
+-			return
+-		while True:
+-			self.wait_event.clear()
+-			self.local_tail = self.tail.value
+-			if self.HasSpace(sz):
+-				return
+-			self.wait_event.wait()
+-
+-	def AddToBuffer(self, obj):
+-		d = pickle.dumps(obj, pickle.HIGHEST_PROTOCOL)
+-		n = len(d)
+-		nd = pickle.dumps(n, pickle.HIGHEST_PROTOCOL)
+-		sz = n + glb_nsz
+-		self.WaitForSpace(sz)
+-		pos = self.local_head
+-		self.buffer[pos : pos + len(nd)] = nd
+-		self.buffer[pos + glb_nsz : pos + sz] = d
+-		self.local_head += sz
+-
+-	def FetchBatch(self, batch_size):
+-		fetched = 0
+-		while batch_size > fetched:
+-			obj = self.Next()
+-			if obj is None:
+-				self.more = False
+-				break
+-			self.AddToBuffer(obj)
+-			fetched += 1
+-		if fetched:
+-			self.fetched += fetched
+-			with self.fetch_count.get_lock():
+-				self.fetch_count.value += fetched
+-			self.head.value = self.local_head
+-			self.fetched_event.set()
+-
+-	def Run(self):
+-		while self.more:
+-			target = self.WaitForTarget()
+-			if target < 0:
+-				break
+-			batch_size = min(glb_chunk_sz, target - self.fetched)
+-			self.FetchBatch(batch_size)
+-		self.fetching_done.value = True
+-		self.fetched_event.set()
+-
+-def SQLFetcherFn(*x):
+-	process = SQLFetcherProcess(*x)
+-	process.Run()
+-
+-# SQL data fetcher
+-
+-class SQLFetcher(QObject):
+-
+-	done = Signal(object)
+-
+-	def __init__(self, glb, sql, prep, process_data, parent=None):
+-		super(SQLFetcher, self).__init__(parent)
+-		self.process_data = process_data
+-		self.more = True
+-		self.target = 0
+-		self.last_target = 0
+-		self.fetched = 0
+-		self.buffer_size = 16 * 1024 * 1024
+-		self.buffer = Array(c_char, self.buffer_size, lock=False)
+-		self.head = Value(c_longlong)
+-		self.tail = Value(c_longlong)
+-		self.local_tail = 0
+-		self.fetch_count = Value(c_longlong)
+-		self.fetching_done = Value(c_bool)
+-		self.last_count = 0
+-		self.process_target = Value(c_longlong)
+-		self.wait_event = Event()
+-		self.fetched_event = Event()
+-		glb.AddInstanceToShutdownOnExit(self)
+-		self.process = Process(target=SQLFetcherFn, args=(glb.dbref, sql, self.buffer, self.head, self.tail, self.fetch_count, self.fetching_done, self.process_target, self.wait_event, self.fetched_event, prep))
+-		self.process.start()
+-		self.thread = Thread(self.Thread)
+-		self.thread.done.connect(self.ProcessData, Qt.QueuedConnection)
+-		self.thread.start()
+-
+-	def Shutdown(self):
+-		# Tell the thread and process to exit
+-		self.process_target.value = -1
+-		self.wait_event.set()
+-		self.more = False
+-		self.fetching_done.value = True
+-		self.fetched_event.set()
+-
+-	def Thread(self):
+-		if not self.more:
+-			return True, 0
+-		while True:
+-			self.fetched_event.clear()
+-			fetch_count = self.fetch_count.value
+-			if fetch_count != self.last_count:
+-				break
+-			if self.fetching_done.value:
+-				self.more = False
+-				return True, 0
+-			self.fetched_event.wait()
+-		count = fetch_count - self.last_count
+-		self.last_count = fetch_count
+-		self.fetched += count
+-		return False, count
+-
+-	def Fetch(self, nr):
+-		if not self.more:
+-			# -1 inidcates there are no more
+-			return -1
+-		result = self.fetched
+-		extra = result + nr - self.target
+-		if extra > 0:
+-			self.target += extra
+-			# process_target < 0 indicates shutting down
+-			if self.process_target.value >= 0:
+-				self.process_target.value = self.target
+-			self.wait_event.set()
+-		return result
+-
+-	def RemoveFromBuffer(self):
+-		pos = self.local_tail
+-		if len(self.buffer) - pos < glb_nsz:
+-			pos = 0
+-		n = pickle.loads(self.buffer[pos : pos + glb_nsz])
+-		if n == 0:
+-			pos = 0
+-			n = pickle.loads(self.buffer[0 : glb_nsz])
+-		pos += glb_nsz
+-		obj = pickle.loads(self.buffer[pos : pos + n])
+-		self.local_tail = pos + n
+-		return obj
+-
+-	def ProcessData(self, count):
+-		for i in xrange(count):
+-			obj = self.RemoveFromBuffer()
+-			self.process_data(obj)
+-		self.tail.value = self.local_tail
+-		self.wait_event.set()
+-		self.done.emit(count)
+-
+-# Fetch more records bar
+-
+-class FetchMoreRecordsBar():
+-
+-	def __init__(self, model, parent):
+-		self.model = model
+-
+-		self.label = QLabel("Number of records (x " + "{:,}".format(glb_chunk_sz) + ") to fetch:")
+-		self.label.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
+-
+-		self.fetch_count = QSpinBox()
+-		self.fetch_count.setRange(1, 1000000)
+-		self.fetch_count.setValue(10)
+-		self.fetch_count.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
+-
+-		self.fetch = QPushButton("Go!")
+-		self.fetch.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
+-		self.fetch.released.connect(self.FetchMoreRecords)
+-
+-		self.progress = QProgressBar()
+-		self.progress.setRange(0, 100)
+-		self.progress.hide()
+-
+-		self.done_label = QLabel("All records fetched")
+-		self.done_label.hide()
+-
+-		self.spacer = QLabel("")
+-
+-		self.close_button = QToolButton()
+-		self.close_button.setIcon(parent.style().standardIcon(QStyle.SP_DockWidgetCloseButton))
+-		self.close_button.released.connect(self.Deactivate)
+-
+-		self.hbox = QHBoxLayout()
+-		self.hbox.setContentsMargins(0, 0, 0, 0)
+-
+-		self.hbox.addWidget(self.label)
+-		self.hbox.addWidget(self.fetch_count)
+-		self.hbox.addWidget(self.fetch)
+-		self.hbox.addWidget(self.spacer)
+-		self.hbox.addWidget(self.progress)
+-		self.hbox.addWidget(self.done_label)
+-		self.hbox.addWidget(self.close_button)
+-
+-		self.bar = QWidget()
+-		self.bar.setLayout(self.hbox)
+-		self.bar.show()
+-
+-		self.in_progress = False
+-		self.model.progress.connect(self.Progress)
+-
+-		self.done = False
+-
+-		if not model.HasMoreRecords():
+-			self.Done()
+-
+-	def Widget(self):
+-		return self.bar
+-
+-	def Activate(self):
+-		self.bar.show()
+-		self.fetch.setFocus()
+-
+-	def Deactivate(self):
+-		self.bar.hide()
+-
+-	def Enable(self, enable):
+-		self.fetch.setEnabled(enable)
+-		self.fetch_count.setEnabled(enable)
+-
+-	def Busy(self):
+-		self.Enable(False)
+-		self.fetch.hide()
+-		self.spacer.hide()
+-		self.progress.show()
+-
+-	def Idle(self):
+-		self.in_progress = False
+-		self.Enable(True)
+-		self.progress.hide()
+-		self.fetch.show()
+-		self.spacer.show()
+-
+-	def Target(self):
+-		return self.fetch_count.value() * glb_chunk_sz
+-
+-	def Done(self):
+-		self.done = True
+-		self.Idle()
+-		self.label.hide()
+-		self.fetch_count.hide()
+-		self.fetch.hide()
+-		self.spacer.hide()
+-		self.done_label.show()
+-
+-	def Progress(self, count):
+-		if self.in_progress:
+-			if count:
+-				percent = ((count - self.start) * 100) / self.Target()
+-				if percent >= 100:
+-					self.Idle()
+-				else:
+-					self.progress.setValue(percent)
+-		if not count:
+-			# Count value of zero means no more records
+-			self.Done()
+-
+-	def FetchMoreRecords(self):
+-		if self.done:
+-			return
+-		self.progress.setValue(0)
+-		self.Busy()
+-		self.in_progress = True
+-		self.start = self.model.FetchMoreRecords(self.Target())
+-
+-# Brance data model level two item
+-
+-class BranchLevelTwoItem():
+-
+-	def __init__(self, row, col, text, parent_item):
+-		self.row = row
+-		self.parent_item = parent_item
+-		self.data = [""] * (col + 1)
+-		self.data[col] = text
+-		self.level = 2
+-
+-	def getParentItem(self):
+-		return self.parent_item
+-
+-	def getRow(self):
+-		return self.row
+-
+-	def childCount(self):
+-		return 0
+-
+-	def hasChildren(self):
+-		return False
+-
+-	def getData(self, column):
+-		return self.data[column]
+-
+-# Brance data model level one item
+-
+-class BranchLevelOneItem():
+-
+-	def __init__(self, glb, row, data, parent_item):
+-		self.glb = glb
+-		self.row = row
+-		self.parent_item = parent_item
+-		self.child_count = 0
+-		self.child_items = []
+-		self.data = data[1:]
+-		self.dbid = data[0]
+-		self.level = 1
+-		self.query_done = False
+-		self.br_col = len(self.data) - 1
+-
+-	def getChildItem(self, row):
+-		return self.child_items[row]
+-
+-	def getParentItem(self):
+-		return self.parent_item
+-
+-	def getRow(self):
+-		return self.row
+-
+-	def Select(self):
+-		self.query_done = True
+-
+-		if not self.glb.have_disassembler:
+-			return
+-
+-		query = QSqlQuery(self.glb.db)
+-
+-		QueryExec(query, "SELECT cpu, to_dso_id, to_symbol_id, to_sym_offset, short_name, long_name, build_id, sym_start, to_ip"
+-				  " FROM samples"
+-				  " INNER JOIN dsos ON samples.to_dso_id = dsos.id"
+-				  " INNER JOIN symbols ON samples.to_symbol_id = symbols.id"
+-				  " WHERE samples.id = " + str(self.dbid))
+-		if not query.next():
+-			return
+-		cpu = query.value(0)
+-		dso = query.value(1)
+-		sym = query.value(2)
+-		if dso == 0 or sym == 0:
+-			return
+-		off = query.value(3)
+-		short_name = query.value(4)
+-		long_name = query.value(5)
+-		build_id = query.value(6)
+-		sym_start = query.value(7)
+-		ip = query.value(8)
+-
+-		QueryExec(query, "SELECT samples.dso_id, symbol_id, sym_offset, sym_start"
+-				  " FROM samples"
+-				  " INNER JOIN symbols ON samples.symbol_id = symbols.id"
+-				  " WHERE samples.id > " + str(self.dbid) + " AND cpu = " + str(cpu) +
+-				  " ORDER BY samples.id"
+-				  " LIMIT 1")
+-		if not query.next():
+-			return
+-		if query.value(0) != dso:
+-			# Cannot disassemble from one dso to another
+-			return
+-		bsym = query.value(1)
+-		boff = query.value(2)
+-		bsym_start = query.value(3)
+-		if bsym == 0:
+-			return
+-		tot = bsym_start + boff + 1 - sym_start - off
+-		if tot <= 0 or tot > 16384:
+-			return
+-
+-		inst = self.glb.disassembler.Instruction()
+-		f = self.glb.FileFromNamesAndBuildId(short_name, long_name, build_id)
+-		if not f:
+-			return
+-		mode = 0 if Is64Bit(f) else 1
+-		self.glb.disassembler.SetMode(inst, mode)
+-
+-		buf_sz = tot + 16
+-		buf = create_string_buffer(tot + 16)
+-		f.seek(sym_start + off)
+-		buf.value = f.read(buf_sz)
+-		buf_ptr = addressof(buf)
+-		i = 0
+-		while tot > 0:
+-			cnt, text = self.glb.disassembler.DisassembleOne(inst, buf_ptr, buf_sz, ip)
+-			if cnt:
+-				byte_str = tohex(ip).rjust(16)
+-				for k in xrange(cnt):
+-					byte_str += " %02x" % ord(buf[i])
+-					i += 1
+-				while k < 15:
+-					byte_str += "   "
+-					k += 1
+-				self.child_items.append(BranchLevelTwoItem(0, self.br_col, byte_str + " " + text, self))
+-				self.child_count += 1
+-			else:
+-				return
+-			buf_ptr += cnt
+-			tot -= cnt
+-			buf_sz -= cnt
+-			ip += cnt
+-
+-	def childCount(self):
+-		if not self.query_done:
+-			self.Select()
+-			if not self.child_count:
+-				return -1
+-		return self.child_count
+-
+-	def hasChildren(self):
+-		if not self.query_done:
+-			return True
+-		return self.child_count > 0
+-
+-	def getData(self, column):
+-		return self.data[column]
+-
+-# Brance data model root item
+-
+-class BranchRootItem():
+-
+-	def __init__(self):
+-		self.child_count = 0
+-		self.child_items = []
+-		self.level = 0
+-
+-	def getChildItem(self, row):
+-		return self.child_items[row]
+-
+-	def getParentItem(self):
+-		return None
+-
+-	def getRow(self):
+-		return 0
+-
+-	def childCount(self):
+-		return self.child_count
+-
+-	def hasChildren(self):
+-		return self.child_count > 0
+-
+-	def getData(self, column):
+-		return ""
+-
+-# Calculate instructions per cycle
+-
+-def CalcIPC(cyc_cnt, insn_cnt):
+-	if cyc_cnt and insn_cnt:
+-		ipc = Decimal(float(insn_cnt) / cyc_cnt)
+-		ipc = str(ipc.quantize(Decimal(".01"), rounding=ROUND_HALF_UP))
+-	else:
+-		ipc = "0"
+-	return ipc
+-
+-# Branch data preparation
+-
+-def BranchDataPrepBr(query, data):
+-	data.append(tohex(query.value(8)).rjust(16) + " " + query.value(9) + offstr(query.value(10)) +
+-			" (" + dsoname(query.value(11)) + ")" + " -> " +
+-			tohex(query.value(12)) + " " + query.value(13) + offstr(query.value(14)) +
+-			" (" + dsoname(query.value(15)) + ")")
+-
+-def BranchDataPrepIPC(query, data):
+-	insn_cnt = query.value(16)
+-	cyc_cnt = query.value(17)
+-	ipc = CalcIPC(cyc_cnt, insn_cnt)
+-	data.append(insn_cnt)
+-	data.append(cyc_cnt)
+-	data.append(ipc)
+-
+-def BranchDataPrep(query):
+-	data = []
+-	for i in xrange(0, 8):
+-		data.append(query.value(i))
+-	BranchDataPrepBr(query, data)
+-	return data
+-
+-def BranchDataPrepWA(query):
+-	data = []
+-	data.append(query.value(0))
+-	# Workaround pyside failing to handle large integers (i.e. time) in python3 by converting to a string
+-	data.append("{:>19}".format(query.value(1)))
+-	for i in xrange(2, 8):
+-		data.append(query.value(i))
+-	BranchDataPrepBr(query, data)
+-	return data
+-
+-def BranchDataWithIPCPrep(query):
+-	data = []
+-	for i in xrange(0, 8):
+-		data.append(query.value(i))
+-	BranchDataPrepIPC(query, data)
+-	BranchDataPrepBr(query, data)
+-	return data
+-
+-def BranchDataWithIPCPrepWA(query):
+-	data = []
+-	data.append(query.value(0))
+-	# Workaround pyside failing to handle large integers (i.e. time) in python3 by converting to a string
+-	data.append("{:>19}".format(query.value(1)))
+-	for i in xrange(2, 8):
+-		data.append(query.value(i))
+-	BranchDataPrepIPC(query, data)
+-	BranchDataPrepBr(query, data)
+-	return data
+-
+-# Branch data model
+-
+-class BranchModel(TreeModel):
+-
+-	progress = Signal(object)
+-
+-	def __init__(self, glb, event_id, where_clause, parent=None):
+-		super(BranchModel, self).__init__(glb, None, parent)
+-		self.event_id = event_id
+-		self.more = True
+-		self.populated = 0
+-		self.have_ipc = IsSelectable(glb.db, "samples", columns = "insn_count, cyc_count")
+-		if self.have_ipc:
+-			select_ipc = ", insn_count, cyc_count"
+-			prep_fn = BranchDataWithIPCPrep
+-			prep_wa_fn = BranchDataWithIPCPrepWA
+-		else:
+-			select_ipc = ""
+-			prep_fn = BranchDataPrep
+-			prep_wa_fn = BranchDataPrepWA
+-		sql = ("SELECT samples.id, time, cpu, comm, pid, tid, branch_types.name,"
+-			" CASE WHEN in_tx = '0' THEN 'No' ELSE 'Yes' END,"
+-			" ip, symbols.name, sym_offset, dsos.short_name,"
+-			" to_ip, to_symbols.name, to_sym_offset, to_dsos.short_name"
+-			+ select_ipc +
+-			" FROM samples"
+-			" INNER JOIN comms ON comm_id = comms.id"
+-			" INNER JOIN threads ON thread_id = threads.id"
+-			" INNER JOIN branch_types ON branch_type = branch_types.id"
+-			" INNER JOIN symbols ON symbol_id = symbols.id"
+-			" INNER JOIN symbols to_symbols ON to_symbol_id = to_symbols.id"
+-			" INNER JOIN dsos ON samples.dso_id = dsos.id"
+-			" INNER JOIN dsos AS to_dsos ON samples.to_dso_id = to_dsos.id"
+-			" WHERE samples.id > $$last_id$$" + where_clause +
+-			" AND evsel_id = " + str(self.event_id) +
+-			" ORDER BY samples.id"
+-			" LIMIT " + str(glb_chunk_sz))
+-		if pyside_version_1 and sys.version_info[0] == 3:
+-			prep = prep_fn
+-		else:
+-			prep = prep_wa_fn
+-		self.fetcher = SQLFetcher(glb, sql, prep, self.AddSample)
+-		self.fetcher.done.connect(self.Update)
+-		self.fetcher.Fetch(glb_chunk_sz)
+-
+-	def GetRoot(self):
+-		return BranchRootItem()
+-
+-	def columnCount(self, parent=None):
+-		if self.have_ipc:
+-			return 11
+-		else:
+-			return 8
+-
+-	def columnHeader(self, column):
+-		if self.have_ipc:
+-			return ("Time", "CPU", "Command", "PID", "TID", "Branch Type", "In Tx", "Insn Cnt", "Cyc Cnt", "IPC", "Branch")[column]
+-		else:
+-			return ("Time", "CPU", "Command", "PID", "TID", "Branch Type", "In Tx", "Branch")[column]
+-
+-	def columnFont(self, column):
+-		if self.have_ipc:
+-			br_col = 10
+-		else:
+-			br_col = 7
+-		if column != br_col:
+-			return None
+-		return QFont("Monospace")
+-
+-	def DisplayData(self, item, index):
+-		if item.level == 1:
+-			self.FetchIfNeeded(item.row)
+-		return item.getData(index.column())
+-
+-	def AddSample(self, data):
+-		child = BranchLevelOneItem(self.glb, self.populated, data, self.root)
+-		self.root.child_items.append(child)
+-		self.populated += 1
+-
+-	def Update(self, fetched):
+-		if not fetched:
+-			self.more = False
+-			self.progress.emit(0)
+-		child_count = self.root.child_count
+-		count = self.populated - child_count
+-		if count > 0:
+-			parent = QModelIndex()
+-			self.beginInsertRows(parent, child_count, child_count + count - 1)
+-			self.insertRows(child_count, count, parent)
+-			self.root.child_count += count
+-			self.endInsertRows()
+-			self.progress.emit(self.root.child_count)
+-
+-	def FetchMoreRecords(self, count):
+-		current = self.root.child_count
+-		if self.more:
+-			self.fetcher.Fetch(count)
+-		else:
+-			self.progress.emit(0)
+-		return current
+-
+-	def HasMoreRecords(self):
+-		return self.more
+-
+-# Report Variables
+-
+-class ReportVars():
+-
+-	def __init__(self, name = "", where_clause = "", limit = ""):
+-		self.name = name
+-		self.where_clause = where_clause
+-		self.limit = limit
+-
+-	def UniqueId(self):
+-		return str(self.where_clause + ";" + self.limit)
+-
+-# Branch window
+-
+-class BranchWindow(QMdiSubWindow):
+-
+-	def __init__(self, glb, event_id, report_vars, parent=None):
+-		super(BranchWindow, self).__init__(parent)
+-
+-		model_name = "Branch Events " + str(event_id) +  " " + report_vars.UniqueId()
+-
+-		self.model = LookupCreateModel(model_name, lambda: BranchModel(glb, event_id, report_vars.where_clause))
+-
+-		self.view = QTreeView()
+-		self.view.setUniformRowHeights(True)
+-		self.view.setSelectionMode(QAbstractItemView.ContiguousSelection)
+-		self.view.CopyCellsToClipboard = CopyTreeCellsToClipboard
+-		self.view.setModel(self.model)
+-
+-		self.ResizeColumnsToContents()
+-
+-		self.context_menu = TreeContextMenu(self.view)
+-
+-		self.find_bar = FindBar(self, self, True)
+-
+-		self.finder = ChildDataItemFinder(self.model.root)
+-
+-		self.fetch_bar = FetchMoreRecordsBar(self.model, self)
+-
+-		self.vbox = VBox(self.view, self.find_bar.Widget(), self.fetch_bar.Widget())
+-
+-		self.setWidget(self.vbox.Widget())
+-
+-		AddSubWindow(glb.mainwindow.mdi_area, self, report_vars.name + " Branch Events")
+-
+-	def ResizeColumnToContents(self, column, n):
+-		# Using the view's resizeColumnToContents() here is extrememly slow
+-		# so implement a crude alternative
+-		mm = "MM" if column else "MMMM"
+-		font = self.view.font()
+-		metrics = QFontMetrics(font)
+-		max = 0
+-		for row in xrange(n):
+-			val = self.model.root.child_items[row].data[column]
+-			len = metrics.width(str(val) + mm)
+-			max = len if len > max else max
+-		val = self.model.columnHeader(column)
+-		len = metrics.width(str(val) + mm)
+-		max = len if len > max else max
+-		self.view.setColumnWidth(column, max)
+-
+-	def ResizeColumnsToContents(self):
+-		n = min(self.model.root.child_count, 100)
+-		if n < 1:
+-			# No data yet, so connect a signal to notify when there is
+-			self.model.rowsInserted.connect(self.UpdateColumnWidths)
+-			return
+-		columns = self.model.columnCount()
+-		for i in xrange(columns):
+-			self.ResizeColumnToContents(i, n)
+-
+-	def UpdateColumnWidths(self, *x):
+-		# This only needs to be done once, so disconnect the signal now
+-		self.model.rowsInserted.disconnect(self.UpdateColumnWidths)
+-		self.ResizeColumnsToContents()
+-
+-	def Find(self, value, direction, pattern, context):
+-		self.view.setFocus()
+-		self.find_bar.Busy()
+-		self.finder.Find(value, direction, pattern, context, self.FindDone)
+-
+-	def FindDone(self, row):
+-		self.find_bar.Idle()
+-		if row >= 0:
+-			self.view.setCurrentIndex(self.model.index(row, 0, QModelIndex()))
+-		else:
+-			self.find_bar.NotFound()
+-
+-# Line edit data item
+-
+-class LineEditDataItem(object):
+-
+-	def __init__(self, glb, label, placeholder_text, parent, id = "", default = ""):
+-		self.glb = glb
+-		self.label = label
+-		self.placeholder_text = placeholder_text
+-		self.parent = parent
+-		self.id = id
+-
+-		self.value = default
+-
+-		self.widget = QLineEdit(default)
+-		self.widget.editingFinished.connect(self.Validate)
+-		self.widget.textChanged.connect(self.Invalidate)
+-		self.red = False
+-		self.error = ""
+-		self.validated = True
+-
+-		if placeholder_text:
+-			self.widget.setPlaceholderText(placeholder_text)
+-
+-	def TurnTextRed(self):
+-		if not self.red:
+-			palette = QPalette()
+-			palette.setColor(QPalette.Text,Qt.red)
+-			self.widget.setPalette(palette)
+-			self.red = True
+-
+-	def TurnTextNormal(self):
+-		if self.red:
+-			palette = QPalette()
+-			self.widget.setPalette(palette)
+-			self.red = False
+-
+-	def InvalidValue(self, value):
+-		self.value = ""
+-		self.TurnTextRed()
+-		self.error = self.label + " invalid value '" + value + "'"
+-		self.parent.ShowMessage(self.error)
+-
+-	def Invalidate(self):
+-		self.validated = False
+-
+-	def DoValidate(self, input_string):
+-		self.value = input_string.strip()
+-
+-	def Validate(self):
+-		self.validated = True
+-		self.error = ""
+-		self.TurnTextNormal()
+-		self.parent.ClearMessage()
+-		input_string = self.widget.text()
+-		if not len(input_string.strip()):
+-			self.value = ""
+-			return
+-		self.DoValidate(input_string)
+-
+-	def IsValid(self):
+-		if not self.validated:
+-			self.Validate()
+-		if len(self.error):
+-			self.parent.ShowMessage(self.error)
+-			return False
+-		return True
+-
+-	def IsNumber(self, value):
+-		try:
+-			x = int(value)
+-		except:
+-			x = 0
+-		return str(x) == value
+-
+-# Non-negative integer ranges dialog data item
+-
+-class NonNegativeIntegerRangesDataItem(LineEditDataItem):
+-
+-	def __init__(self, glb, label, placeholder_text, column_name, parent):
+-		super(NonNegativeIntegerRangesDataItem, self).__init__(glb, label, placeholder_text, parent)
+-
+-		self.column_name = column_name
+-
+-	def DoValidate(self, input_string):
+-		singles = []
+-		ranges = []
+-		for value in [x.strip() for x in input_string.split(",")]:
+-			if "-" in value:
+-				vrange = value.split("-")
+-				if len(vrange) != 2 or not self.IsNumber(vrange[0]) or not self.IsNumber(vrange[1]):
+-					return self.InvalidValue(value)
+-				ranges.append(vrange)
+-			else:
+-				if not self.IsNumber(value):
+-					return self.InvalidValue(value)
+-				singles.append(value)
+-		ranges = [("(" + self.column_name + " >= " + r[0] + " AND " + self.column_name + " <= " + r[1] + ")") for r in ranges]
+-		if len(singles):
+-			ranges.append(self.column_name + " IN (" + ",".join(singles) + ")")
+-		self.value = " OR ".join(ranges)
+-
+-# Positive integer dialog data item
+-
+-class PositiveIntegerDataItem(LineEditDataItem):
+-
+-	def __init__(self, glb, label, placeholder_text, parent, id = "", default = ""):
+-		super(PositiveIntegerDataItem, self).__init__(glb, label, placeholder_text, parent, id, default)
+-
+-	def DoValidate(self, input_string):
+-		if not self.IsNumber(input_string.strip()):
+-			return self.InvalidValue(input_string)
+-		value = int(input_string.strip())
+-		if value <= 0:
+-			return self.InvalidValue(input_string)
+-		self.value = str(value)
+-
+-# Dialog data item converted and validated using a SQL table
+-
+-class SQLTableDataItem(LineEditDataItem):
+-
+-	def __init__(self, glb, label, placeholder_text, table_name, match_column, column_name1, column_name2, parent):
+-		super(SQLTableDataItem, self).__init__(glb, label, placeholder_text, parent)
+-
+-		self.table_name = table_name
+-		self.match_column = match_column
+-		self.column_name1 = column_name1
+-		self.column_name2 = column_name2
+-
+-	def ValueToIds(self, value):
+-		ids = []
+-		query = QSqlQuery(self.glb.db)
+-		stmt = "SELECT id FROM " + self.table_name + " WHERE " + self.match_column + " = '" + value + "'"
+-		ret = query.exec_(stmt)
+-		if ret:
+-			while query.next():
+-				ids.append(str(query.value(0)))
+-		return ids
+-
+-	def DoValidate(self, input_string):
+-		all_ids = []
+-		for value in [x.strip() for x in input_string.split(",")]:
+-			ids = self.ValueToIds(value)
+-			if len(ids):
+-				all_ids.extend(ids)
+-			else:
+-				return self.InvalidValue(value)
+-		self.value = self.column_name1 + " IN (" + ",".join(all_ids) + ")"
+-		if self.column_name2:
+-			self.value = "( " + self.value + " OR " + self.column_name2 + " IN (" + ",".join(all_ids) + ") )"
+-
+-# Sample time ranges dialog data item converted and validated using 'samples' SQL table
+-
+-class SampleTimeRangesDataItem(LineEditDataItem):
+-
+-	def __init__(self, glb, label, placeholder_text, column_name, parent):
+-		self.column_name = column_name
+-
+-		self.last_id = 0
+-		self.first_time = 0
+-		self.last_time = 2 ** 64
+-
+-		query = QSqlQuery(glb.db)
+-		QueryExec(query, "SELECT id, time FROM samples ORDER BY id DESC LIMIT 1")
+-		if query.next():
+-			self.last_id = int(query.value(0))
+-		self.first_time = int(glb.HostStartTime())
+-		self.last_time = int(glb.HostFinishTime())
+-		if placeholder_text:
+-			placeholder_text += ", between " + str(self.first_time) + " and " + str(self.last_time)
+-
+-		super(SampleTimeRangesDataItem, self).__init__(glb, label, placeholder_text, parent)
+-
+-	def IdBetween(self, query, lower_id, higher_id, order):
+-		QueryExec(query, "SELECT id FROM samples WHERE id > " + str(lower_id) + " AND id < " + str(higher_id) + " ORDER BY id " + order + " LIMIT 1")
+-		if query.next():
+-			return True, int(query.value(0))
+-		else:
+-			return False, 0
+-
+-	def BinarySearchTime(self, lower_id, higher_id, target_time, get_floor):
+-		query = QSqlQuery(self.glb.db)
+-		while True:
+-			next_id = int((lower_id + higher_id) / 2)
+-			QueryExec(query, "SELECT time FROM samples WHERE id = " + str(next_id))
+-			if not query.next():
+-				ok, dbid = self.IdBetween(query, lower_id, next_id, "DESC")
+-				if not ok:
+-					ok, dbid = self.IdBetween(query, next_id, higher_id, "")
+-					if not ok:
+-						return str(higher_id)
+-				next_id = dbid
+-				QueryExec(query, "SELECT time FROM samples WHERE id = " + str(next_id))
+-			next_time = int(query.value(0))
+-			if get_floor:
+-				if target_time > next_time:
+-					lower_id = next_id
+-				else:
+-					higher_id = next_id
+-				if higher_id <= lower_id + 1:
+-					return str(higher_id)
+-			else:
+-				if target_time >= next_time:
+-					lower_id = next_id
+-				else:
+-					higher_id = next_id
+-				if higher_id <= lower_id + 1:
+-					return str(lower_id)
+-
+-	def ConvertRelativeTime(self, val):
+-		mult = 1
+-		suffix = val[-2:]
+-		if suffix == "ms":
+-			mult = 1000000
+-		elif suffix == "us":
+-			mult = 1000
+-		elif suffix == "ns":
+-			mult = 1
+-		else:
+-			return val
+-		val = val[:-2].strip()
+-		if not self.IsNumber(val):
+-			return val
+-		val = int(val) * mult
+-		if val >= 0:
+-			val += self.first_time
+-		else:
+-			val += self.last_time
+-		return str(val)
+-
+-	def ConvertTimeRange(self, vrange):
+-		if vrange[0] == "":
+-			vrange[0] = str(self.first_time)
+-		if vrange[1] == "":
+-			vrange[1] = str(self.last_time)
+-		vrange[0] = self.ConvertRelativeTime(vrange[0])
+-		vrange[1] = self.ConvertRelativeTime(vrange[1])
+-		if not self.IsNumber(vrange[0]) or not self.IsNumber(vrange[1]):
+-			return False
+-		beg_range = max(int(vrange[0]), self.first_time)
+-		end_range = min(int(vrange[1]), self.last_time)
+-		if beg_range > self.last_time or end_range < self.first_time:
+-			return False
+-		vrange[0] = self.BinarySearchTime(0, self.last_id, beg_range, True)
+-		vrange[1] = self.BinarySearchTime(1, self.last_id + 1, end_range, False)
+-		return True
+-
+-	def AddTimeRange(self, value, ranges):
+-		n = value.count("-")
+-		if n == 1:
+-			pass
+-		elif n == 2:
+-			if value.split("-")[1].strip() == "":
+-				n = 1
+-		elif n == 3:
+-			n = 2
+-		else:
+-			return False
+-		pos = findnth(value, "-", n)
+-		vrange = [value[:pos].strip() ,value[pos+1:].strip()]
+-		if self.ConvertTimeRange(vrange):
+-			ranges.append(vrange)
+-			return True
+-		return False
+-
+-	def DoValidate(self, input_string):
+-		ranges = []
+-		for value in [x.strip() for x in input_string.split(",")]:
+-			if not self.AddTimeRange(value, ranges):
+-				return self.InvalidValue(value)
+-		ranges = [("(" + self.column_name + " >= " + r[0] + " AND " + self.column_name + " <= " + r[1] + ")") for r in ranges]
+-		self.value = " OR ".join(ranges)
+-
+-# Report Dialog Base
+-
+-class ReportDialogBase(QDialog):
+-
+-	def __init__(self, glb, title, items, partial, parent=None):
+-		super(ReportDialogBase, self).__init__(parent)
+-
+-		self.glb = glb
+-
+-		self.report_vars = ReportVars()
+-
+-		self.setWindowTitle(title)
+-		self.setMinimumWidth(600)
+-
+-		self.data_items = [x(glb, self) for x in items]
+-
+-		self.partial = partial
+-
+-		self.grid = QGridLayout()
+-
+-		for row in xrange(len(self.data_items)):
+-			self.grid.addWidget(QLabel(self.data_items[row].label), row, 0)
+-			self.grid.addWidget(self.data_items[row].widget, row, 1)
+-
+-		self.status = QLabel()
+-
+-		self.ok_button = QPushButton("Ok", self)
+-		self.ok_button.setDefault(True)
+-		self.ok_button.released.connect(self.Ok)
+-		self.ok_button.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
+-
+-		self.cancel_button = QPushButton("Cancel", self)
+-		self.cancel_button.released.connect(self.reject)
+-		self.cancel_button.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
+-
+-		self.hbox = QHBoxLayout()
+-		#self.hbox.addStretch()
+-		self.hbox.addWidget(self.status)
+-		self.hbox.addWidget(self.ok_button)
+-		self.hbox.addWidget(self.cancel_button)
+-
+-		self.vbox = QVBoxLayout()
+-		self.vbox.addLayout(self.grid)
+-		self.vbox.addLayout(self.hbox)
+-
+-		self.setLayout(self.vbox)
+-
+-	def Ok(self):
+-		vars = self.report_vars
+-		for d in self.data_items:
+-			if d.id == "REPORTNAME":
+-				vars.name = d.value
+-		if not vars.name:
+-			self.ShowMessage("Report name is required")
+-			return
+-		for d in self.data_items:
+-			if not d.IsValid():
+-				return
+-		for d in self.data_items[1:]:
+-			if d.id == "LIMIT":
+-				vars.limit = d.value
+-			elif len(d.value):
+-				if len(vars.where_clause):
+-					vars.where_clause += " AND "
+-				vars.where_clause += d.value
+-		if len(vars.where_clause):
+-			if self.partial:
+-				vars.where_clause = " AND ( " + vars.where_clause + " ) "
+-			else:
+-				vars.where_clause = " WHERE " + vars.where_clause + " "
+-		self.accept()
+-
+-	def ShowMessage(self, msg):
+-		self.status.setText("<font color=#FF0000>" + msg)
+-
+-	def ClearMessage(self):
+-		self.status.setText("")
+-
+-# Selected branch report creation dialog
+-
+-class SelectedBranchDialog(ReportDialogBase):
+-
+-	def __init__(self, glb, parent=None):
+-		title = "Selected Branches"
+-		items = (lambda g, p: LineEditDataItem(g, "Report name:", "Enter a name to appear in the window title bar", p, "REPORTNAME"),
+-			 lambda g, p: SampleTimeRangesDataItem(g, "Time ranges:", "Enter time ranges", "samples.id", p),
+-			 lambda g, p: NonNegativeIntegerRangesDataItem(g, "CPUs:", "Enter CPUs or ranges e.g. 0,5-6", "cpu", p),
+-			 lambda g, p: SQLTableDataItem(g, "Commands:", "Only branches with these commands will be included", "comms", "comm", "comm_id", "", p),
+-			 lambda g, p: SQLTableDataItem(g, "PIDs:", "Only branches with these process IDs will be included", "threads", "pid", "thread_id", "", p),
+-			 lambda g, p: SQLTableDataItem(g, "TIDs:", "Only branches with these thread IDs will be included", "threads", "tid", "thread_id", "", p),
+-			 lambda g, p: SQLTableDataItem(g, "DSOs:", "Only branches with these DSOs will be included", "dsos", "short_name", "samples.dso_id", "to_dso_id", p),
+-			 lambda g, p: SQLTableDataItem(g, "Symbols:", "Only branches with these symbols will be included", "symbols", "name", "symbol_id", "to_symbol_id", p),
+-			 lambda g, p: LineEditDataItem(g, "Raw SQL clause: ", "Enter a raw SQL WHERE clause", p))
+-		super(SelectedBranchDialog, self).__init__(glb, title, items, True, parent)
+-
+-# Event list
+-
+-def GetEventList(db):
+-	events = []
+-	query = QSqlQuery(db)
+-	QueryExec(query, "SELECT name FROM selected_events WHERE id > 0 ORDER BY id")
+-	while query.next():
+-		events.append(query.value(0))
+-	return events
+-
+-# Is a table selectable
+-
+-def IsSelectable(db, table, sql = "", columns = "*"):
+-	query = QSqlQuery(db)
+-	try:
+-		QueryExec(query, "SELECT " + columns + " FROM " + table + " " + sql + " LIMIT 1")
+-	except:
+-		return False
+-	return True
+-
+-# SQL table data model item
+-
+-class SQLTableItem():
+-
+-	def __init__(self, row, data):
+-		self.row = row
+-		self.data = data
+-
+-	def getData(self, column):
+-		return self.data[column]
+-
+-# SQL table data model
+-
+-class SQLTableModel(TableModel):
+-
+-	progress = Signal(object)
+-
+-	def __init__(self, glb, sql, column_headers, parent=None):
+-		super(SQLTableModel, self).__init__(parent)
+-		self.glb = glb
+-		self.more = True
+-		self.populated = 0
+-		self.column_headers = column_headers
+-		self.fetcher = SQLFetcher(glb, sql, lambda x, y=len(column_headers): self.SQLTableDataPrep(x, y), self.AddSample)
+-		self.fetcher.done.connect(self.Update)
+-		self.fetcher.Fetch(glb_chunk_sz)
+-
+-	def DisplayData(self, item, index):
+-		self.FetchIfNeeded(item.row)
+-		return item.getData(index.column())
+-
+-	def AddSample(self, data):
+-		child = SQLTableItem(self.populated, data)
+-		self.child_items.append(child)
+-		self.populated += 1
+-
+-	def Update(self, fetched):
+-		if not fetched:
+-			self.more = False
+-			self.progress.emit(0)
+-		child_count = self.child_count
+-		count = self.populated - child_count
+-		if count > 0:
+-			parent = QModelIndex()
+-			self.beginInsertRows(parent, child_count, child_count + count - 1)
+-			self.insertRows(child_count, count, parent)
+-			self.child_count += count
+-			self.endInsertRows()
+-			self.progress.emit(self.child_count)
+-
+-	def FetchMoreRecords(self, count):
+-		current = self.child_count
+-		if self.more:
+-			self.fetcher.Fetch(count)
+-		else:
+-			self.progress.emit(0)
+-		return current
+-
+-	def HasMoreRecords(self):
+-		return self.more
+-
+-	def columnCount(self, parent=None):
+-		return len(self.column_headers)
+-
+-	def columnHeader(self, column):
+-		return self.column_headers[column]
+-
+-	def SQLTableDataPrep(self, query, count):
+-		data = []
+-		for i in xrange(count):
+-			data.append(query.value(i))
+-		return data
+-
+-# SQL automatic table data model
+-
+-class SQLAutoTableModel(SQLTableModel):
+-
+-	def __init__(self, glb, table_name, parent=None):
+-		sql = "SELECT * FROM " + table_name + " WHERE id > $$last_id$$ ORDER BY id LIMIT " + str(glb_chunk_sz)
+-		if table_name == "comm_threads_view":
+-			# For now, comm_threads_view has no id column
+-			sql = "SELECT * FROM " + table_name + " WHERE comm_id > $$last_id$$ ORDER BY comm_id LIMIT " + str(glb_chunk_sz)
+-		column_headers = []
+-		query = QSqlQuery(glb.db)
+-		if glb.dbref.is_sqlite3:
+-			QueryExec(query, "PRAGMA table_info(" + table_name + ")")
+-			while query.next():
+-				column_headers.append(query.value(1))
+-			if table_name == "sqlite_master":
+-				sql = "SELECT * FROM " + table_name
+-		else:
+-			if table_name[:19] == "information_schema.":
+-				sql = "SELECT * FROM " + table_name
+-				select_table_name = table_name[19:]
+-				schema = "information_schema"
+-			else:
+-				select_table_name = table_name
+-				schema = "public"
+-			QueryExec(query, "SELECT column_name FROM information_schema.columns WHERE table_schema = '" + schema + "' and table_name = '" + select_table_name + "'")
+-			while query.next():
+-				column_headers.append(query.value(0))
+-		if pyside_version_1 and sys.version_info[0] == 3:
+-			if table_name == "samples_view":
+-				self.SQLTableDataPrep = self.samples_view_DataPrep
+-			if table_name == "samples":
+-				self.SQLTableDataPrep = self.samples_DataPrep
+-		super(SQLAutoTableModel, self).__init__(glb, sql, column_headers, parent)
+-
+-	def samples_view_DataPrep(self, query, count):
+-		data = []
+-		data.append(query.value(0))
+-		# Workaround pyside failing to handle large integers (i.e. time) in python3 by converting to a string
+-		data.append("{:>19}".format(query.value(1)))
+-		for i in xrange(2, count):
+-			data.append(query.value(i))
+-		return data
+-
+-	def samples_DataPrep(self, query, count):
+-		data = []
+-		for i in xrange(9):
+-			data.append(query.value(i))
+-		# Workaround pyside failing to handle large integers (i.e. time) in python3 by converting to a string
+-		data.append("{:>19}".format(query.value(9)))
+-		for i in xrange(10, count):
+-			data.append(query.value(i))
+-		return data
+-
+-# Base class for custom ResizeColumnsToContents
+-
+-class ResizeColumnsToContentsBase(QObject):
+-
+-	def __init__(self, parent=None):
+-		super(ResizeColumnsToContentsBase, self).__init__(parent)
+-
+-	def ResizeColumnToContents(self, column, n):
+-		# Using the view's resizeColumnToContents() here is extrememly slow
+-		# so implement a crude alternative
+-		font = self.view.font()
+-		metrics = QFontMetrics(font)
+-		max = 0
+-		for row in xrange(n):
+-			val = self.data_model.child_items[row].data[column]
+-			len = metrics.width(str(val) + "MM")
+-			max = len if len > max else max
+-		val = self.data_model.columnHeader(column)
+-		len = metrics.width(str(val) + "MM")
+-		max = len if len > max else max
+-		self.view.setColumnWidth(column, max)
+-
+-	def ResizeColumnsToContents(self):
+-		n = min(self.data_model.child_count, 100)
+-		if n < 1:
+-			# No data yet, so connect a signal to notify when there is
+-			self.data_model.rowsInserted.connect(self.UpdateColumnWidths)
+-			return
+-		columns = self.data_model.columnCount()
+-		for i in xrange(columns):
+-			self.ResizeColumnToContents(i, n)
+-
+-	def UpdateColumnWidths(self, *x):
+-		# This only needs to be done once, so disconnect the signal now
+-		self.data_model.rowsInserted.disconnect(self.UpdateColumnWidths)
+-		self.ResizeColumnsToContents()
+-
+-# Convert value to CSV
+-
+-def ToCSValue(val):
+-	if '"' in val:
+-		val = val.replace('"', '""')
+-	if "," in val or '"' in val:
+-		val = '"' + val + '"'
+-	return val
+-
+-# Key to sort table model indexes by row / column, assuming fewer than 1000 columns
+-
+-glb_max_cols = 1000
+-
+-def RowColumnKey(a):
+-	return a.row() * glb_max_cols + a.column()
+-
+-# Copy selected table cells to clipboard
+-
+-def CopyTableCellsToClipboard(view, as_csv=False, with_hdr=False):
+-	indexes = sorted(view.selectedIndexes(), key=RowColumnKey)
+-	idx_cnt = len(indexes)
+-	if not idx_cnt:
+-		return
+-	if idx_cnt == 1:
+-		with_hdr=False
+-	min_row = indexes[0].row()
+-	max_row = indexes[0].row()
+-	min_col = indexes[0].column()
+-	max_col = indexes[0].column()
+-	for i in indexes:
+-		min_row = min(min_row, i.row())
+-		max_row = max(max_row, i.row())
+-		min_col = min(min_col, i.column())
+-		max_col = max(max_col, i.column())
+-	if max_col > glb_max_cols:
+-		raise RuntimeError("glb_max_cols is too low")
+-	max_width = [0] * (1 + max_col - min_col)
+-	for i in indexes:
+-		c = i.column() - min_col
+-		max_width[c] = max(max_width[c], len(str(i.data())))
+-	text = ""
+-	pad = ""
+-	sep = ""
+-	if with_hdr:
+-		model = indexes[0].model()
+-		for col in range(min_col, max_col + 1):
+-			val = model.headerData(col, Qt.Horizontal, Qt.DisplayRole)
+-			if as_csv:
+-				text += sep + ToCSValue(val)
+-				sep = ","
+-			else:
+-				c = col - min_col
+-				max_width[c] = max(max_width[c], len(val))
+-				width = max_width[c]
+-				align = model.headerData(col, Qt.Horizontal, Qt.TextAlignmentRole)
+-				if align & Qt.AlignRight:
+-					val = val.rjust(width)
+-				text += pad + sep + val
+-				pad = " " * (width - len(val))
+-				sep = "  "
+-		text += "\n"
+-		pad = ""
+-		sep = ""
+-	last_row = min_row
+-	for i in indexes:
+-		if i.row() > last_row:
+-			last_row = i.row()
+-			text += "\n"
+-			pad = ""
+-			sep = ""
+-		if as_csv:
+-			text += sep + ToCSValue(str(i.data()))
+-			sep = ","
+-		else:
+-			width = max_width[i.column() - min_col]
+-			if i.data(Qt.TextAlignmentRole) & Qt.AlignRight:
+-				val = str(i.data()).rjust(width)
+-			else:
+-				val = str(i.data())
+-			text += pad + sep + val
+-			pad = " " * (width - len(val))
+-			sep = "  "
+-	QApplication.clipboard().setText(text)
+-
+-def CopyTreeCellsToClipboard(view, as_csv=False, with_hdr=False):
+-	indexes = view.selectedIndexes()
+-	if not len(indexes):
+-		return
+-
+-	selection = view.selectionModel()
+-
+-	first = None
+-	for i in indexes:
+-		above = view.indexAbove(i)
+-		if not selection.isSelected(above):
+-			first = i
+-			break
+-
+-	if first is None:
+-		raise RuntimeError("CopyTreeCellsToClipboard internal error")
+-
+-	model = first.model()
+-	row_cnt = 0
+-	col_cnt = model.columnCount(first)
+-	max_width = [0] * col_cnt
+-
+-	indent_sz = 2
+-	indent_str = " " * indent_sz
+-
+-	expanded_mark_sz = 2
+-	if sys.version_info[0] == 3:
+-		expanded_mark = "\u25BC "
+-		not_expanded_mark = "\u25B6 "
+-	else:
+-		expanded_mark = unicode(chr(0xE2) + chr(0x96) + chr(0xBC) + " ", "utf-8")
+-		not_expanded_mark =  unicode(chr(0xE2) + chr(0x96) + chr(0xB6) + " ", "utf-8")
+-	leaf_mark = "  "
+-
+-	if not as_csv:
+-		pos = first
+-		while True:
+-			row_cnt += 1
+-			row = pos.row()
+-			for c in range(col_cnt):
+-				i = pos.sibling(row, c)
+-				if c:
+-					n = len(str(i.data()))
+-				else:
+-					n = len(str(i.data()).strip())
+-					n += (i.internalPointer().level - 1) * indent_sz
+-					n += expanded_mark_sz
+-				max_width[c] = max(max_width[c], n)
+-			pos = view.indexBelow(pos)
+-			if not selection.isSelected(pos):
+-				break
+-
+-	text = ""
+-	pad = ""
+-	sep = ""
+-	if with_hdr:
+-		for c in range(col_cnt):
+-			val = model.headerData(c, Qt.Horizontal, Qt.DisplayRole).strip()
+-			if as_csv:
+-				text += sep + ToCSValue(val)
+-				sep = ","
+-			else:
+-				max_width[c] = max(max_width[c], len(val))
+-				width = max_width[c]
+-				align = model.headerData(c, Qt.Horizontal, Qt.TextAlignmentRole)
+-				if align & Qt.AlignRight:
+-					val = val.rjust(width)
+-				text += pad + sep + val
+-				pad = " " * (width - len(val))
+-				sep = "   "
+-		text += "\n"
+-		pad = ""
+-		sep = ""
+-
+-	pos = first
+-	while True:
+-		row = pos.row()
+-		for c in range(col_cnt):
+-			i = pos.sibling(row, c)
+-			val = str(i.data())
+-			if not c:
+-				if model.hasChildren(i):
+-					if view.isExpanded(i):
+-						mark = expanded_mark
+-					else:
+-						mark = not_expanded_mark
+-				else:
+-					mark = leaf_mark
+-				val = indent_str * (i.internalPointer().level - 1) + mark + val.strip()
+-			if as_csv:
+-				text += sep + ToCSValue(val)
+-				sep = ","
+-			else:
+-				width = max_width[c]
+-				if c and i.data(Qt.TextAlignmentRole) & Qt.AlignRight:
+-					val = val.rjust(width)
+-				text += pad + sep + val
+-				pad = " " * (width - len(val))
+-				sep = "   "
+-		pos = view.indexBelow(pos)
+-		if not selection.isSelected(pos):
+-			break
+-		text = text.rstrip() + "\n"
+-		pad = ""
+-		sep = ""
+-
+-	QApplication.clipboard().setText(text)
+-
+-def CopyCellsToClipboard(view, as_csv=False, with_hdr=False):
+-	view.CopyCellsToClipboard(view, as_csv, with_hdr)
+-
+-def CopyCellsToClipboardHdr(view):
+-	CopyCellsToClipboard(view, False, True)
+-
+-def CopyCellsToClipboardCSV(view):
+-	CopyCellsToClipboard(view, True, True)
+-
+-# Context menu
+-
+-class ContextMenu(object):
+-
+-	def __init__(self, view):
+-		self.view = view
+-		self.view.setContextMenuPolicy(Qt.CustomContextMenu)
+-		self.view.customContextMenuRequested.connect(self.ShowContextMenu)
+-
+-	def ShowContextMenu(self, pos):
+-		menu = QMenu(self.view)
+-		self.AddActions(menu)
+-		menu.exec_(self.view.mapToGlobal(pos))
+-
+-	def AddCopy(self, menu):
+-		menu.addAction(CreateAction("&Copy selection", "Copy to clipboard", lambda: CopyCellsToClipboardHdr(self.view), self.view))
+-		menu.addAction(CreateAction("Copy selection as CS&V", "Copy to clipboard as CSV", lambda: CopyCellsToClipboardCSV(self.view), self.view))
+-
+-	def AddActions(self, menu):
+-		self.AddCopy(menu)
+-
+-class TreeContextMenu(ContextMenu):
+-
+-	def __init__(self, view):
+-		super(TreeContextMenu, self).__init__(view)
+-
+-	def AddActions(self, menu):
+-		i = self.view.currentIndex()
+-		text = str(i.data()).strip()
+-		if len(text):
+-			menu.addAction(CreateAction('Copy "' + text + '"', "Copy to clipboard", lambda: QApplication.clipboard().setText(text), self.view))
+-		self.AddCopy(menu)
+-
+-# Table window
+-
+-class TableWindow(QMdiSubWindow, ResizeColumnsToContentsBase):
+-
+-	def __init__(self, glb, table_name, parent=None):
+-		super(TableWindow, self).__init__(parent)
+-
+-		self.data_model = LookupCreateModel(table_name + " Table", lambda: SQLAutoTableModel(glb, table_name))
+-
+-		self.model = QSortFilterProxyModel()
+-		self.model.setSourceModel(self.data_model)
+-
+-		self.view = QTableView()
+-		self.view.setModel(self.model)
+-		self.view.setEditTriggers(QAbstractItemView.NoEditTriggers)
+-		self.view.verticalHeader().setVisible(False)
+-		self.view.sortByColumn(-1, Qt.AscendingOrder)
+-		self.view.setSortingEnabled(True)
+-		self.view.setSelectionMode(QAbstractItemView.ContiguousSelection)
+-		self.view.CopyCellsToClipboard = CopyTableCellsToClipboard
+-
+-		self.ResizeColumnsToContents()
+-
+-		self.context_menu = ContextMenu(self.view)
+-
+-		self.find_bar = FindBar(self, self, True)
+-
+-		self.finder = ChildDataItemFinder(self.data_model)
+-
+-		self.fetch_bar = FetchMoreRecordsBar(self.data_model, self)
+-
+-		self.vbox = VBox(self.view, self.find_bar.Widget(), self.fetch_bar.Widget())
+-
+-		self.setWidget(self.vbox.Widget())
+-
+-		AddSubWindow(glb.mainwindow.mdi_area, self, table_name + " Table")
+-
+-	def Find(self, value, direction, pattern, context):
+-		self.view.setFocus()
+-		self.find_bar.Busy()
+-		self.finder.Find(value, direction, pattern, context, self.FindDone)
+-
+-	def FindDone(self, row):
+-		self.find_bar.Idle()
+-		if row >= 0:
+-			self.view.setCurrentIndex(self.model.mapFromSource(self.data_model.index(row, 0, QModelIndex())))
+-		else:
+-			self.find_bar.NotFound()
+-
+-# Table list
+-
+-def GetTableList(glb):
+-	tables = []
+-	query = QSqlQuery(glb.db)
+-	if glb.dbref.is_sqlite3:
+-		QueryExec(query, "SELECT name FROM sqlite_master WHERE type IN ( 'table' , 'view' ) ORDER BY name")
+-	else:
+-		QueryExec(query, "SELECT table_name FROM information_schema.tables WHERE table_schema = 'public' AND table_type IN ( 'BASE TABLE' , 'VIEW' ) ORDER BY table_name")
+-	while query.next():
+-		tables.append(query.value(0))
+-	if glb.dbref.is_sqlite3:
+-		tables.append("sqlite_master")
+-	else:
+-		tables.append("information_schema.tables")
+-		tables.append("information_schema.views")
+-		tables.append("information_schema.columns")
+-	return tables
+-
+-# Top Calls data model
+-
+-class TopCallsModel(SQLTableModel):
+-
+-	def __init__(self, glb, report_vars, parent=None):
+-		text = ""
+-		if not glb.dbref.is_sqlite3:
+-			text = "::text"
+-		limit = ""
+-		if len(report_vars.limit):
+-			limit = " LIMIT " + report_vars.limit
+-		sql = ("SELECT comm, pid, tid, name,"
+-			" CASE"
+-			" WHEN (short_name = '[kernel.kallsyms]') THEN '[kernel]'" + text +
+-			" ELSE short_name"
+-			" END AS dso,"
+-			" call_time, return_time, (return_time - call_time) AS elapsed_time, branch_count, "
+-			" CASE"
+-			" WHEN (calls.flags = 1) THEN 'no call'" + text +
+-			" WHEN (calls.flags = 2) THEN 'no return'" + text +
+-			" WHEN (calls.flags = 3) THEN 'no call/return'" + text +
+-			" ELSE ''" + text +
+-			" END AS flags"
+-			" FROM calls"
+-			" INNER JOIN call_paths ON calls.call_path_id = call_paths.id"
+-			" INNER JOIN symbols ON call_paths.symbol_id = symbols.id"
+-			" INNER JOIN dsos ON symbols.dso_id = dsos.id"
+-			" INNER JOIN comms ON calls.comm_id = comms.id"
+-			" INNER JOIN threads ON calls.thread_id = threads.id" +
+-			report_vars.where_clause +
+-			" ORDER BY elapsed_time DESC" +
+-			limit
+-			)
+-		column_headers = ("Command", "PID", "TID", "Symbol", "Object", "Call Time", "Return Time", "Elapsed Time (ns)", "Branch Count", "Flags")
+-		self.alignment = (Qt.AlignLeft, Qt.AlignLeft, Qt.AlignLeft, Qt.AlignLeft, Qt.AlignLeft, Qt.AlignLeft, Qt.AlignLeft, Qt.AlignRight, Qt.AlignRight, Qt.AlignLeft)
+-		super(TopCallsModel, self).__init__(glb, sql, column_headers, parent)
+-
+-	def columnAlignment(self, column):
+-		return self.alignment[column]
+-
+-# Top Calls report creation dialog
+-
+-class TopCallsDialog(ReportDialogBase):
+-
+-	def __init__(self, glb, parent=None):
+-		title = "Top Calls by Elapsed Time"
+-		items = (lambda g, p: LineEditDataItem(g, "Report name:", "Enter a name to appear in the window title bar", p, "REPORTNAME"),
+-			 lambda g, p: SQLTableDataItem(g, "Commands:", "Only calls with these commands will be included", "comms", "comm", "comm_id", "", p),
+-			 lambda g, p: SQLTableDataItem(g, "PIDs:", "Only calls with these process IDs will be included", "threads", "pid", "thread_id", "", p),
+-			 lambda g, p: SQLTableDataItem(g, "TIDs:", "Only calls with these thread IDs will be included", "threads", "tid", "thread_id", "", p),
+-			 lambda g, p: SQLTableDataItem(g, "DSOs:", "Only calls with these DSOs will be included", "dsos", "short_name", "dso_id", "", p),
+-			 lambda g, p: SQLTableDataItem(g, "Symbols:", "Only calls with these symbols will be included", "symbols", "name", "symbol_id", "", p),
+-			 lambda g, p: LineEditDataItem(g, "Raw SQL clause: ", "Enter a raw SQL WHERE clause", p),
+-			 lambda g, p: PositiveIntegerDataItem(g, "Record limit:", "Limit selection to this number of records", p, "LIMIT", "100"))
+-		super(TopCallsDialog, self).__init__(glb, title, items, False, parent)
+-
+-# Top Calls window
+-
+-class TopCallsWindow(QMdiSubWindow, ResizeColumnsToContentsBase):
+-
+-	def __init__(self, glb, report_vars, parent=None):
+-		super(TopCallsWindow, self).__init__(parent)
+-
+-		self.data_model = LookupCreateModel("Top Calls " + report_vars.UniqueId(), lambda: TopCallsModel(glb, report_vars))
+-		self.model = self.data_model
+-
+-		self.view = QTableView()
+-		self.view.setModel(self.model)
+-		self.view.setEditTriggers(QAbstractItemView.NoEditTriggers)
+-		self.view.verticalHeader().setVisible(False)
+-		self.view.setSelectionMode(QAbstractItemView.ContiguousSelection)
+-		self.view.CopyCellsToClipboard = CopyTableCellsToClipboard
+-
+-		self.context_menu = ContextMenu(self.view)
+-
+-		self.ResizeColumnsToContents()
+-
+-		self.find_bar = FindBar(self, self, True)
+-
+-		self.finder = ChildDataItemFinder(self.model)
+-
+-		self.fetch_bar = FetchMoreRecordsBar(self.data_model, self)
+-
+-		self.vbox = VBox(self.view, self.find_bar.Widget(), self.fetch_bar.Widget())
+-
+-		self.setWidget(self.vbox.Widget())
+-
+-		AddSubWindow(glb.mainwindow.mdi_area, self, report_vars.name)
+-
+-	def Find(self, value, direction, pattern, context):
+-		self.view.setFocus()
+-		self.find_bar.Busy()
+-		self.finder.Find(value, direction, pattern, context, self.FindDone)
+-
+-	def FindDone(self, row):
+-		self.find_bar.Idle()
+-		if row >= 0:
+-			self.view.setCurrentIndex(self.model.index(row, 0, QModelIndex()))
+-		else:
+-			self.find_bar.NotFound()
+-
+-# Action Definition
+-
+-def CreateAction(label, tip, callback, parent=None, shortcut=None):
+-	action = QAction(label, parent)
+-	if shortcut != None:
+-		action.setShortcuts(shortcut)
+-	action.setStatusTip(tip)
+-	action.triggered.connect(callback)
+-	return action
+-
+-# Typical application actions
+-
+-def CreateExitAction(app, parent=None):
+-	return CreateAction("&Quit", "Exit the application", app.closeAllWindows, parent, QKeySequence.Quit)
+-
+-# Typical MDI actions
+-
+-def CreateCloseActiveWindowAction(mdi_area):
+-	return CreateAction("Cl&ose", "Close the active window", mdi_area.closeActiveSubWindow, mdi_area)
+-
+-def CreateCloseAllWindowsAction(mdi_area):
+-	return CreateAction("Close &All", "Close all the windows", mdi_area.closeAllSubWindows, mdi_area)
+-
+-def CreateTileWindowsAction(mdi_area):
+-	return CreateAction("&Tile", "Tile the windows", mdi_area.tileSubWindows, mdi_area)
+-
+-def CreateCascadeWindowsAction(mdi_area):
+-	return CreateAction("&Cascade", "Cascade the windows", mdi_area.cascadeSubWindows, mdi_area)
+-
+-def CreateNextWindowAction(mdi_area):
+-	return CreateAction("Ne&xt", "Move the focus to the next window", mdi_area.activateNextSubWindow, mdi_area, QKeySequence.NextChild)
+-
+-def CreatePreviousWindowAction(mdi_area):
+-	return CreateAction("Pre&vious", "Move the focus to the previous window", mdi_area.activatePreviousSubWindow, mdi_area, QKeySequence.PreviousChild)
+-
+-# Typical MDI window menu
+-
+-class WindowMenu():
+-
+-	def __init__(self, mdi_area, menu):
+-		self.mdi_area = mdi_area
+-		self.window_menu = menu.addMenu("&Windows")
+-		self.close_active_window = CreateCloseActiveWindowAction(mdi_area)
+-		self.close_all_windows = CreateCloseAllWindowsAction(mdi_area)
+-		self.tile_windows = CreateTileWindowsAction(mdi_area)
+-		self.cascade_windows = CreateCascadeWindowsAction(mdi_area)
+-		self.next_window = CreateNextWindowAction(mdi_area)
+-		self.previous_window = CreatePreviousWindowAction(mdi_area)
+-		self.window_menu.aboutToShow.connect(self.Update)
+-
+-	def Update(self):
+-		self.window_menu.clear()
+-		sub_window_count = len(self.mdi_area.subWindowList())
+-		have_sub_windows = sub_window_count != 0
+-		self.close_active_window.setEnabled(have_sub_windows)
+-		self.close_all_windows.setEnabled(have_sub_windows)
+-		self.tile_windows.setEnabled(have_sub_windows)
+-		self.cascade_windows.setEnabled(have_sub_windows)
+-		self.next_window.setEnabled(have_sub_windows)
+-		self.previous_window.setEnabled(have_sub_windows)
+-		self.window_menu.addAction(self.close_active_window)
+-		self.window_menu.addAction(self.close_all_windows)
+-		self.window_menu.addSeparator()
+-		self.window_menu.addAction(self.tile_windows)
+-		self.window_menu.addAction(self.cascade_windows)
+-		self.window_menu.addSeparator()
+-		self.window_menu.addAction(self.next_window)
+-		self.window_menu.addAction(self.previous_window)
+-		if sub_window_count == 0:
+-			return
+-		self.window_menu.addSeparator()
+-		nr = 1
+-		for sub_window in self.mdi_area.subWindowList():
+-			label = str(nr) + " " + sub_window.name
+-			if nr < 10:
+-				label = "&" + label
+-			action = self.window_menu.addAction(label)
+-			action.setCheckable(True)
+-			action.setChecked(sub_window == self.mdi_area.activeSubWindow())
+-			action.triggered.connect(lambda a=None,x=nr: self.setActiveSubWindow(x))
+-			self.window_menu.addAction(action)
+-			nr += 1
+-
+-	def setActiveSubWindow(self, nr):
+-		self.mdi_area.setActiveSubWindow(self.mdi_area.subWindowList()[nr - 1])
+-
+-# Help text
+-
+-glb_help_text = """
+-<h1>Contents</h1>
+-<style>
+-p.c1 {
+-    text-indent: 40px;
 -}
--
- /*
-  * Return -1 if none is found, otherwise the actual scripts number.
-  *
-@@ -162,95 +93,18 @@ static int check_ev_match(int dir_fd, const char *scri=
-ptname, struct perf_sessio
-  * will list all statically runnable scripts, select one, execute it and
-  * show the output in a perf browser.
-  */
--static int find_scripts(char **scripts_array, char **scripts_path_array, i=
-nt num,
--		 int pathlen)
-+static int find_scripts(char **scripts_array __maybe_unused,
-+		 char **scripts_path_array __maybe_unused, int num __maybe_unused,
-+		 int pathlen __maybe_unused)
- {
--	int namelen;
--	struct dirent *script_dirent, *lang_dirent;
--	int scripts_dir_fd, lang_dir_fd;
--	DIR *scripts_dir, *lang_dir;
--	struct perf_session *session;
--	struct perf_data data =3D {
--		.path =3D input_name,
--		.mode =3D PERF_DATA_MODE_READ,
--	};
--	char *temp;
- 	int i =3D 0;
--	const char *exec_path =3D get_argv_exec_path();
--
--	session =3D perf_session__new(&data, NULL);
--	if (IS_ERR(session))
--		return PTR_ERR(session);
--
--	{
--		char scripts_path[PATH_MAX];
--
--		snprintf(scripts_path, sizeof(scripts_path), "%s/scripts", exec_path);
--		scripts_dir_fd =3D open(scripts_path, O_DIRECTORY);
--	}
--	if (scripts_dir_fd !=3D -1) {
--		scripts_dir =3D fdopendir(scripts_dir_fd);
--		if (scripts_dir) {
--			while ((lang_dirent =3D readdir(scripts_dir)) !=3D NULL) {
--				if (lang_dirent->d_type !=3D DT_DIR &&
--				    (lang_dirent->d_type =3D=3D DT_UNKNOWN &&
--				     !is_directory_at(scripts_dir_fd, lang_dirent->d_name)))
--					continue;
--				if (!strcmp(lang_dirent->d_name, ".") ||
--				    !strcmp(lang_dirent->d_name, ".."))
--					continue;
--
--				if (strstr(lang_dirent->d_name, "python"))
--					continue;
--
--				lang_dir_fd =3D openat(scripts_dir_fd, lang_dirent->d_name,
--					     O_DIRECTORY);
--				if (lang_dir_fd =3D=3D -1)
--					continue;
--				lang_dir =3D fdopendir(lang_dir_fd);
--				if (!lang_dir) {
--					close(lang_dir_fd);
--					continue;
--				}
--				while ((script_dirent =3D readdir(lang_dir)) !=3D NULL) {
--					if (script_dirent->d_type =3D=3D DT_DIR)
--						continue;
--					if (script_dirent->d_type =3D=3D DT_UNKNOWN &&
--					    is_directory_at(lang_dir_fd, script_dirent->d_name))
--						continue;
--					/* Skip those real time scripts: xxxtop.p[yl] */
--					if (strstr(script_dirent->d_name, "top."))
--						continue;
--					if (i >=3D num)
--						break;
--					scnprintf(scripts_path_array[i], pathlen,
--						  "%s/scripts/%s/%s", exec_path,
--						  lang_dirent->d_name,
--						  script_dirent->d_name);
--					temp =3D strrchr(script_dirent->d_name, '.');
--					namelen =3D temp ? (int)(temp - script_dirent->d_name)
--							       : (int)strlen(script_dirent->d_name);
--
--					if (namelen >=3D SCRIPT_NAMELEN)
--						namelen =3D SCRIPT_NAMELEN - 1;
--					snprintf(scripts_array[i], namelen + 1, "%s",
--						 script_dirent->d_name);
--
--					if (check_ev_match(lang_dir_fd, scripts_array[i], session))
--						continue;
--
--					i++;
--				}
--				closedir(lang_dir);
--			}
--			closedir(scripts_dir);
--		} else {
--			close(scripts_dir_fd);
--		}
--	}
-=20
- #ifdef HAVE_PYTHON_MODULE_SUPPORT
- 	{
-+		int namelen;
-+		struct dirent *script_dirent;
-+		char *temp;
-+		const char *exec_path =3D get_argv_exec_path();
- 		char py_scripts_path[PATH_MAX];
- 		int py_scripts_dir_fd;
- 		DIR *py_scripts_dir;
-@@ -299,7 +153,6 @@ static int find_scripts(char **scripts_array, char **sc=
-ripts_path_array, int num
- 		}
- 	}
- #endif
--	perf_session__delete(session);
- 	return i;
- }
-=20
-diff --git a/tools/perf/util/Build b/tools/perf/util/Build
-index 3ea888f4210a..f3edc3bbaede 100644
---- a/tools/perf/util/Build
-+++ b/tools/perf/util/Build
-@@ -95,7 +95,6 @@ perf-util-y +=3D tool_pmu.o
- perf-util-y +=3D tp_pmu.o
- perf-util-y +=3D svghelper.o
- perf-util-y +=3D trace-event-info.o
--perf-util-y +=3D trace-event-scripting.o
- perf-util-$(CONFIG_LIBTRACEEVENT) +=3D trace-event.o
- perf-util-$(CONFIG_LIBTRACEEVENT) +=3D trace-event-parse.o
- perf-util-$(CONFIG_LIBTRACEEVENT) +=3D trace-event-read.o
-@@ -236,7 +235,6 @@ endif
-=20
- perf-util-y +=3D data-convert-json.o
-=20
--perf-util-y +=3D scripting-engines/
-=20
- perf-util-$(CONFIG_ZLIB) +=3D zlib.o
- perf-util-$(CONFIG_LZMA) +=3D lzma.o
-diff --git a/tools/perf/util/scripting-engines/Build b/tools/perf/util/scri=
-pting-engines/Build
-deleted file mode 100644
-index 3f1dc10526f8..000000000000
---- a/tools/perf/util/scripting-engines/Build
-+++ /dev/null
-@@ -1,5 +0,0 @@
--ifeq ($(CONFIG_LIBTRACEEVENT),y)
--  perf-util-$(CONFIG_LIBPERL)   +=3D trace-event-perl.o
--endif
--
--CFLAGS_trace-event-perl.o +=3D $(PERL_EMBED_CCOPTS) -Wno-redundant-decls -=
-Wno-strict-prototypes -Wno-unused-parameter -Wno-shadow -Wno-nested-externs=
- -Wno-undef -Wno-switch-default -Wno-bad-function-cast -Wno-declaration-aft=
-er-statement -Wno-switch-enum -Wno-thread-safety-analysis
-diff --git a/tools/perf/util/scripting-engines/trace-event-perl.c b/tools/p=
-erf/util/scripting-engines/trace-event-perl.c
-deleted file mode 100644
-index 410dc4cd0600..000000000000
---- a/tools/perf/util/scripting-engines/trace-event-perl.c
-+++ /dev/null
-@@ -1,770 +0,0 @@
--/*
-- * trace-event-perl.  Feed perf script events to an embedded Perl interpre=
-ter.
-- *
-- * Copyright (C) 2009 Tom Zanussi <tzanussi@gmail.com>
-- *
-- *  This program is free software; you can redistribute it and/or modify
-- *  it under the terms of the GNU General Public License as published by
-- *  the Free Software Foundation; either version 2 of the License, or
-- *  (at your option) any later version.
-- *
-- *  This program is distributed in the hope that it will be useful,
-- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
-- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-- *  GNU General Public License for more details.
-- *
-- *  You should have received a copy of the GNU General Public License
-- *  along with this program; if not, write to the Free Software
-- *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  =
-USA
-- *
-- */
--
--#include <inttypes.h>
--#include <stdio.h>
--#include <stdlib.h>
--#include <string.h>
--#include <ctype.h>
--#include <errno.h>
--#include <linux/bitmap.h>
--#include <linux/time64.h>
--#include <event-parse.h>
--
--#include <stdbool.h>
--/* perl needs the following define, right after including stdbool.h */
--#define HAS_BOOL
--#include <EXTERN.h>
--#include <perl.h>
--
--#include "../callchain.h"
--#include "../dso.h"
--#include "../machine.h"
--#include "../map.h"
--#include "../symbol.h"
--#include "../thread.h"
--#include "../event.h"
--#include "../trace-event.h"
--#include "../evsel.h"
--#include "../debug.h"
--
--void boot_Perf__Trace__Context(pTHX_ CV *cv);
--void boot_DynaLoader(pTHX_ CV *cv);
--typedef PerlInterpreter * INTERP;
--
--void xs_init(pTHX);
--
--void xs_init(pTHX)
--{
--	const char *file =3D __FILE__;
--	dXSUB_SYS;
--
--	newXS("Perf::Trace::Context::bootstrap", boot_Perf__Trace__Context,
--	      file);
--	newXS("DynaLoader::boot_DynaLoader", boot_DynaLoader, file);
+-p.c2 {
+-    text-indent: 80px;
 -}
--
--INTERP my_perl;
--
--#define TRACE_EVENT_TYPE_MAX				\
--	((1 << (sizeof(unsigned short) * 8)) - 1)
--
--extern struct scripting_context *scripting_context;
--
--static char *cur_field_name;
--static int zero_flag_atom;
--
--static void define_symbolic_value(const char *ev_name,
--				  const char *field_name,
--				  const char *field_value,
--				  const char *field_str)
--{
--	unsigned long long value;
--	dSP;
--
--	value =3D eval_flag(field_value);
--
--	ENTER;
--	SAVETMPS;
--	PUSHMARK(SP);
--
--	XPUSHs(sv_2mortal(newSVpv(ev_name, 0)));
--	XPUSHs(sv_2mortal(newSVpv(field_name, 0)));
--	XPUSHs(sv_2mortal(newSVuv(value)));
--	XPUSHs(sv_2mortal(newSVpv(field_str, 0)));
--
--	PUTBACK;
--	if (get_cv("main::define_symbolic_value", 0))
--		call_pv("main::define_symbolic_value", G_SCALAR);
--	SPAGAIN;
--	PUTBACK;
--	FREETMPS;
--	LEAVE;
 -}
--
--static void define_symbolic_values(struct tep_print_flag_sym *field,
--				   const char *ev_name,
--				   const char *field_name)
--{
--	define_symbolic_value(ev_name, field_name, field->value, field->str);
--	if (field->next)
--		define_symbolic_values(field->next, ev_name, field_name);
--}
--
--static void define_symbolic_field(const char *ev_name,
--				  const char *field_name)
--{
--	dSP;
--
--	ENTER;
--	SAVETMPS;
--	PUSHMARK(SP);
--
--	XPUSHs(sv_2mortal(newSVpv(ev_name, 0)));
--	XPUSHs(sv_2mortal(newSVpv(field_name, 0)));
--
--	PUTBACK;
--	if (get_cv("main::define_symbolic_field", 0))
--		call_pv("main::define_symbolic_field", G_SCALAR);
--	SPAGAIN;
--	PUTBACK;
--	FREETMPS;
--	LEAVE;
--}
--
--static void define_flag_value(const char *ev_name,
--			      const char *field_name,
--			      const char *field_value,
--			      const char *field_str)
--{
--	unsigned long long value;
--	dSP;
--
--	value =3D eval_flag(field_value);
--
--	ENTER;
--	SAVETMPS;
--	PUSHMARK(SP);
--
--	XPUSHs(sv_2mortal(newSVpv(ev_name, 0)));
--	XPUSHs(sv_2mortal(newSVpv(field_name, 0)));
--	XPUSHs(sv_2mortal(newSVuv(value)));
--	XPUSHs(sv_2mortal(newSVpv(field_str, 0)));
--
--	PUTBACK;
--	if (get_cv("main::define_flag_value", 0))
--		call_pv("main::define_flag_value", G_SCALAR);
--	SPAGAIN;
--	PUTBACK;
--	FREETMPS;
--	LEAVE;
--}
--
--static void define_flag_values(struct tep_print_flag_sym *field,
--			       const char *ev_name,
--			       const char *field_name)
--{
--	define_flag_value(ev_name, field_name, field->value, field->str);
--	if (field->next)
--		define_flag_values(field->next, ev_name, field_name);
--}
--
--static void define_flag_field(const char *ev_name,
--			      const char *field_name,
--			      const char *delim)
--{
--	dSP;
--
--	ENTER;
--	SAVETMPS;
--	PUSHMARK(SP);
--
--	XPUSHs(sv_2mortal(newSVpv(ev_name, 0)));
--	XPUSHs(sv_2mortal(newSVpv(field_name, 0)));
--	XPUSHs(sv_2mortal(newSVpv(delim, 0)));
--
--	PUTBACK;
--	if (get_cv("main::define_flag_field", 0))
--		call_pv("main::define_flag_field", G_SCALAR);
--	SPAGAIN;
--	PUTBACK;
--	FREETMPS;
--	LEAVE;
--}
--
--static void define_event_symbols(struct tep_event *event,
--				 const char *ev_name,
--				 struct tep_print_arg *args)
--{
--	if (args =3D=3D NULL)
--		return;
--
--	switch (args->type) {
--	case TEP_PRINT_NULL:
--		break;
--	case TEP_PRINT_ATOM:
--		define_flag_value(ev_name, cur_field_name, "0",
--				  args->atom.atom);
--		zero_flag_atom =3D 0;
--		break;
--	case TEP_PRINT_FIELD:
--		free(cur_field_name);
--		cur_field_name =3D strdup(args->field.name);
--		break;
--	case TEP_PRINT_FLAGS:
--		define_event_symbols(event, ev_name, args->flags.field);
--		define_flag_field(ev_name, cur_field_name, args->flags.delim);
--		define_flag_values(args->flags.flags, ev_name, cur_field_name);
--		break;
--	case TEP_PRINT_SYMBOL:
--		define_event_symbols(event, ev_name, args->symbol.field);
--		define_symbolic_field(ev_name, cur_field_name);
--		define_symbolic_values(args->symbol.symbols, ev_name,
--				       cur_field_name);
--		break;
--	case TEP_PRINT_HEX:
--	case TEP_PRINT_HEX_STR:
--		define_event_symbols(event, ev_name, args->hex.field);
--		define_event_symbols(event, ev_name, args->hex.size);
--		break;
--	case TEP_PRINT_INT_ARRAY:
--		define_event_symbols(event, ev_name, args->int_array.field);
--		define_event_symbols(event, ev_name, args->int_array.count);
--		define_event_symbols(event, ev_name, args->int_array.el_size);
--		break;
--	case TEP_PRINT_BSTRING:
--	case TEP_PRINT_DYNAMIC_ARRAY:
--	case TEP_PRINT_DYNAMIC_ARRAY_LEN:
--	case TEP_PRINT_STRING:
--	case TEP_PRINT_BITMASK:
--		break;
--	case TEP_PRINT_TYPE:
--		define_event_symbols(event, ev_name, args->typecast.item);
--		break;
--	case TEP_PRINT_OP:
--		if (strcmp(args->op.op, ":") =3D=3D 0)
--			zero_flag_atom =3D 1;
--		define_event_symbols(event, ev_name, args->op.left);
--		define_event_symbols(event, ev_name, args->op.right);
--		break;
--	case TEP_PRINT_FUNC:
--	default:
--		pr_err("Unsupported print arg type\n");
--		/* we should warn... */
--		return;
--	}
--
--	if (args->next)
--		define_event_symbols(event, ev_name, args->next);
--}
--
--static SV *perl_process_callchain(struct perf_sample *sample,
--				  struct addr_location *al)
--{
--	struct callchain_cursor *cursor;
--	AV *list;
--
--	list =3D newAV();
--	if (!list)
--		goto exit;
--
--	if (!symbol_conf.use_callchain || !sample->callchain)
--		goto exit;
--
--	cursor =3D get_tls_callchain_cursor();
--
--	if (thread__resolve_callchain(al->thread, cursor,
--				      sample, NULL, NULL, scripting_max_stack) !=3D 0) {
--		pr_err("Failed to resolve callchain. Skipping\n");
--		goto exit;
--	}
--	callchain_cursor_commit(cursor);
--
--
--	while (1) {
--		HV *elem;
--		struct callchain_cursor_node *node;
--		node =3D callchain_cursor_current(cursor);
--		if (!node)
--			break;
--
--		elem =3D newHV();
--		if (!elem)
--			goto exit;
--
--		if (!hv_stores(elem, "ip", newSVuv(node->ip))) {
--			hv_undef(elem);
--			goto exit;
--		}
--
--		if (node->ms.sym) {
--			HV *sym =3D newHV();
--			if (!sym) {
--				hv_undef(elem);
--				goto exit;
--			}
--			if (!hv_stores(sym, "start",   newSVuv(node->ms.sym->start)) ||
--			    !hv_stores(sym, "end",     newSVuv(node->ms.sym->end)) ||
--			    !hv_stores(sym, "binding", newSVuv(symbol__binding(node->ms.sym))) =
-||
--			    !hv_stores(sym, "name",    newSVpvn(node->ms.sym->name,
--								node->ms.sym->namelen)) ||
--			    !hv_stores(elem, "sym",    newRV_noinc((SV*)sym))) {
--				hv_undef(sym);
--				hv_undef(elem);
--				goto exit;
--			}
--		}
--
--		if (node->ms.map) {
--			struct map *map =3D node->ms.map;
--			struct dso *dso =3D map ? map__dso(map) : NULL;
--			const char *dsoname =3D "[unknown]";
--
--			if (dso) {
--				if (symbol_conf.show_kernel_path && dso__long_name(dso))
--					dsoname =3D dso__long_name(dso);
--				else
--					dsoname =3D dso__name(dso);
--			}
--			if (!hv_stores(elem, "dso", newSVpv(dsoname,0))) {
--				hv_undef(elem);
--				goto exit;
--			}
--		}
--
--		callchain_cursor_advance(cursor);
--		av_push(list, newRV_noinc((SV*)elem));
--	}
--
--exit:
--	return newRV_noinc((SV*)list);
--}
--
--static void perl_process_tracepoint(struct perf_sample *sample,
--				    struct addr_location *al)
--{
--	struct thread *thread =3D al->thread;
--	struct tep_event *event;
--	struct tep_format_field *field;
--	static char handler[256];
--	unsigned long long val;
--	unsigned long s, ns;
--	int pid;
--	int cpu =3D sample->cpu;
--	void *data =3D sample->raw_data;
--	unsigned long long nsecs =3D sample->time;
--	const char *comm =3D thread__comm_str(thread);
--	DECLARE_BITMAP(events_defined, TRACE_EVENT_TYPE_MAX);
--	struct evsel *evsel =3D sample->evsel;
--
--	bitmap_zero(events_defined, TRACE_EVENT_TYPE_MAX);
--	dSP;
--
--	if (evsel->core.attr.type !=3D PERF_TYPE_TRACEPOINT)
--		return;
--
--	event =3D evsel__tp_format(evsel);
--	if (!event) {
--		pr_debug("ug! no event found for type %" PRIu64, (u64)evsel->core.attr.c=
-onfig);
--		return;
--	}
--
--	pid =3D raw_field_value(event, "common_pid", data);
--
--	sprintf(handler, "%s::%s", event->system, event->name);
--
--	if (!__test_and_set_bit(event->id, events_defined))
--		define_event_symbols(event, handler, event->print_fmt.args);
--
--	s =3D nsecs / NSEC_PER_SEC;
--	ns =3D nsecs - s * NSEC_PER_SEC;
--
--	ENTER;
--	SAVETMPS;
--	PUSHMARK(SP);
--
--	XPUSHs(sv_2mortal(newSVpv(handler, 0)));
--	XPUSHs(sv_2mortal(newSViv(PTR2IV(scripting_context))));
--	XPUSHs(sv_2mortal(newSVuv(cpu)));
--	XPUSHs(sv_2mortal(newSVuv(s)));
--	XPUSHs(sv_2mortal(newSVuv(ns)));
--	XPUSHs(sv_2mortal(newSViv(pid)));
--	XPUSHs(sv_2mortal(newSVpv(comm, 0)));
--	XPUSHs(sv_2mortal(perl_process_callchain(sample, al)));
--
--	/* common fields other than pid can be accessed via xsub fns */
--
--	for (field =3D event->format.fields; field; field =3D field->next) {
--		if (field->flags & TEP_FIELD_IS_STRING) {
--			int offset;
--			if (field->flags & TEP_FIELD_IS_DYNAMIC) {
--				offset =3D *(int *)(data + field->offset);
--				offset &=3D 0xffff;
--				if (tep_field_is_relative(field->flags))
--					offset +=3D field->offset + field->size;
--			} else
--				offset =3D field->offset;
--			XPUSHs(sv_2mortal(newSVpv((char *)data + offset, 0)));
--		} else { /* FIELD_IS_NUMERIC */
--			val =3D read_size(event, data + field->offset,
--					field->size);
--			if (field->flags & TEP_FIELD_IS_SIGNED) {
--				XPUSHs(sv_2mortal(newSViv(val)));
--			} else {
--				XPUSHs(sv_2mortal(newSVuv(val)));
--			}
--		}
--	}
--
--	PUTBACK;
--
--	if (get_cv(handler, 0))
--		call_pv(handler, G_SCALAR);
--	else if (get_cv("main::trace_unhandled", 0)) {
--		XPUSHs(sv_2mortal(newSVpv(handler, 0)));
--		XPUSHs(sv_2mortal(newSViv(PTR2IV(scripting_context))));
--		XPUSHs(sv_2mortal(newSVuv(cpu)));
--		XPUSHs(sv_2mortal(newSVuv(nsecs)));
--		XPUSHs(sv_2mortal(newSViv(pid)));
--		XPUSHs(sv_2mortal(newSVpv(comm, 0)));
--		XPUSHs(sv_2mortal(perl_process_callchain(sample, al)));
--		call_pv("main::trace_unhandled", G_SCALAR);
--	}
--	SPAGAIN;
--	PUTBACK;
--	FREETMPS;
--	LEAVE;
--}
--
--static void perl_process_event_generic(union perf_event *event, struct per=
-f_sample *sample)
--{
--	dSP;
--
--	if (!get_cv("process_event", 0))
--		return;
--
--	ENTER;
--	SAVETMPS;
--	PUSHMARK(SP);
--	XPUSHs(sv_2mortal(newSVpvn((const char *)event, event->header.size)));
--	XPUSHs(sv_2mortal(newSVpvn((const char *)&sample->evsel->core.attr,
--				   sizeof(sample->evsel->core.attr))));
--	XPUSHs(sv_2mortal(newSVpvn((const char *)sample, sizeof(*sample))));
--	XPUSHs(sv_2mortal(newSVpvn((const char *)sample->raw_data, sample->raw_si=
-ze)));
--	PUTBACK;
--	call_pv("process_event", G_SCALAR);
--	SPAGAIN;
--	PUTBACK;
--	FREETMPS;
--	LEAVE;
--}
--
--static void perl_process_event(union perf_event *event,
--			       struct perf_sample *sample,
--			       struct addr_location *al,
--			       struct addr_location *addr_al)
--{
--	scripting_context__update(scripting_context, event, sample, al, addr_al);
--	perl_process_tracepoint(sample, al);
--	perl_process_event_generic(event, sample);
--}
--
--static void run_start_sub(void)
--{
--	dSP; /* access to Perl stack */
--	PUSHMARK(SP);
--
--	if (get_cv("main::trace_begin", 0))
--		call_pv("main::trace_begin", G_DISCARD | G_NOARGS);
--}
--
--/*
-- * Start trace script
-- */
--static int perl_start_script(const char *script, int argc, const char **ar=
-gv,
--			     struct perf_session *session)
--{
--	const char **command_line;
--	int i, err =3D 0;
--
--	scripting_context->session =3D session;
--
--	command_line =3D malloc((argc + 2) * sizeof(const char *));
--	if (!command_line)
--		return -ENOMEM;
--
--	command_line[0] =3D "";
--	command_line[1] =3D script;
--	for (i =3D 2; i < argc + 2; i++)
--		command_line[i] =3D argv[i - 2];
--
--	my_perl =3D perl_alloc();
--	perl_construct(my_perl);
--
--	if (perl_parse(my_perl, xs_init, argc + 2, (char **)command_line,
--		       (char **)NULL)) {
--		err =3D -1;
--		goto error;
--	}
--
--	if (perl_run(my_perl)) {
--		err =3D -1;
--		goto error;
--	}
--
--	if (SvTRUE(ERRSV)) {
--		err =3D -1;
--		goto error;
--	}
--
--	run_start_sub();
--
--	free(command_line);
--	return 0;
--error:
--	perl_free(my_perl);
--	free(command_line);
--
--	return err;
--}
--
--static int perl_flush_script(void)
--{
--	return 0;
--}
--
--/*
-- * Stop trace script
-- */
--static int perl_stop_script(void)
--{
--	dSP; /* access to Perl stack */
--	PUSHMARK(SP);
--
--	if (get_cv("main::trace_end", 0))
--		call_pv("main::trace_end", G_DISCARD | G_NOARGS);
--
--	perl_destruct(my_perl);
--	perl_free(my_perl);
--
--	return 0;
--}
--
--static int perl_generate_script(struct tep_handle *pevent, const char *out=
-file)
--{
--	int i, not_first, count, nr_events;
--	struct tep_event **all_events;
--	struct tep_event *event =3D NULL;
--	struct tep_format_field *f;
--	char fname[PATH_MAX];
--	FILE *ofp;
--
--	sprintf(fname, "%s.pl", outfile);
--	ofp =3D fopen(fname, "w");
--	if (ofp =3D=3D NULL) {
--		fprintf(stderr, "couldn't open %s\n", fname);
--		return -1;
--	}
--
--	fprintf(ofp, "# perf script event handlers, "
--		"generated by perf script -g perl\n");
--
--	fprintf(ofp, "# Licensed under the terms of the GNU GPL"
--		" License version 2\n\n");
--
--	fprintf(ofp, "# The common_* event handler fields are the most useful "
--		"fields common to\n");
--
--	fprintf(ofp, "# all events.  They don't necessarily correspond to "
--		"the 'common_*' fields\n");
--
--	fprintf(ofp, "# in the format files.  Those fields not available as "
--		"handler params can\n");
--
--	fprintf(ofp, "# be retrieved using Perl functions of the form "
--		"common_*($context).\n");
--
--	fprintf(ofp, "# See Context.pm for the list of available "
--		"functions.\n\n");
--
--	fprintf(ofp, "use lib \"$ENV{'PERF_EXEC_PATH'}/scripts/perl/"
--		"Perf-Trace-Util/lib\";\n");
--
--	fprintf(ofp, "use lib \"./Perf-Trace-Util/lib\";\n");
--	fprintf(ofp, "use Perf::Trace::Core;\n");
--	fprintf(ofp, "use Perf::Trace::Context;\n");
--	fprintf(ofp, "use Perf::Trace::Util;\n\n");
--
--	fprintf(ofp, "sub trace_begin\n{\n\t# optional\n}\n\n");
--	fprintf(ofp, "sub trace_end\n{\n\t# optional\n}\n");
--
--
--	fprintf(ofp, "\n\
--sub print_backtrace\n\
--{\n\
--	my $callchain =3D shift;\n\
--	for my $node (@$callchain)\n\
--	{\n\
--		if(exists $node->{sym})\n\
--		{\n\
--			printf( \"\\t[\\%%x] \\%%s\\n\", $node->{ip}, $node->{sym}{name});\n\
--		}\n\
--		else\n\
--		{\n\
--			printf( \"\\t[\\%%x]\\n\", $node{ip});\n\
--		}\n\
--	}\n\
--}\n\n\
--");
--
--	nr_events =3D tep_get_events_count(pevent);
--	all_events =3D tep_list_events(pevent, TEP_EVENT_SORT_ID);
--
--	for (i =3D 0; all_events && i < nr_events; i++) {
--		event =3D all_events[i];
--		fprintf(ofp, "sub %s::%s\n{\n", event->system, event->name);
--		fprintf(ofp, "\tmy (");
--
--		fprintf(ofp, "$event_name, ");
--		fprintf(ofp, "$context, ");
--		fprintf(ofp, "$common_cpu, ");
--		fprintf(ofp, "$common_secs, ");
--		fprintf(ofp, "$common_nsecs,\n");
--		fprintf(ofp, "\t    $common_pid, ");
--		fprintf(ofp, "$common_comm, ");
--		fprintf(ofp, "$common_callchain,\n\t    ");
--
--		not_first =3D 0;
--		count =3D 0;
--
--		for (f =3D event->format.fields; f; f =3D f->next) {
--			if (not_first++)
--				fprintf(ofp, ", ");
--			if (++count % 5 =3D=3D 0)
--				fprintf(ofp, "\n\t    ");
--
--			fprintf(ofp, "$%s", f->name);
--		}
--		fprintf(ofp, ") =3D @_;\n\n");
--
--		fprintf(ofp, "\tprint_header($event_name, $common_cpu, "
--			"$common_secs, $common_nsecs,\n\t             "
--			"$common_pid, $common_comm, $common_callchain);\n\n");
--
--		fprintf(ofp, "\tprintf(\"");
--
--		not_first =3D 0;
--		count =3D 0;
--
--		for (f =3D event->format.fields; f; f =3D f->next) {
--			if (not_first++)
--				fprintf(ofp, ", ");
--			if (count && count % 4 =3D=3D 0) {
--				fprintf(ofp, "\".\n\t       \"");
--			}
--			count++;
--
--			fprintf(ofp, "%s=3D", f->name);
--			if (f->flags & TEP_FIELD_IS_STRING ||
--			    f->flags & TEP_FIELD_IS_FLAG ||
--			    f->flags & TEP_FIELD_IS_SYMBOLIC)
--				fprintf(ofp, "%%s");
--			else if (f->flags & TEP_FIELD_IS_SIGNED)
--				fprintf(ofp, "%%d");
--			else
--				fprintf(ofp, "%%u");
--		}
--
--		fprintf(ofp, "\\n\",\n\t       ");
--
--		not_first =3D 0;
--		count =3D 0;
--
--		for (f =3D event->format.fields; f; f =3D f->next) {
--			if (not_first++)
--				fprintf(ofp, ", ");
--
--			if (++count % 5 =3D=3D 0)
--				fprintf(ofp, "\n\t       ");
--
--			if (f->flags & TEP_FIELD_IS_FLAG) {
--				if ((count - 1) % 5 !=3D 0) {
--					fprintf(ofp, "\n\t       ");
--					count =3D 4;
--				}
--				fprintf(ofp, "flag_str(\"");
--				fprintf(ofp, "%s::%s\", ", event->system,
--					event->name);
--				fprintf(ofp, "\"%s\", $%s)", f->name,
--					f->name);
--			} else if (f->flags & TEP_FIELD_IS_SYMBOLIC) {
--				if ((count - 1) % 5 !=3D 0) {
--					fprintf(ofp, "\n\t       ");
--					count =3D 4;
--				}
--				fprintf(ofp, "symbol_str(\"");
--				fprintf(ofp, "%s::%s\", ", event->system,
--					event->name);
--				fprintf(ofp, "\"%s\", $%s)", f->name,
--					f->name);
--			} else
--				fprintf(ofp, "$%s", f->name);
--		}
--
--		fprintf(ofp, ");\n\n");
--
--		fprintf(ofp, "\tprint_backtrace($common_callchain);\n");
--
--		fprintf(ofp, "}\n\n");
--	}
--
--	fprintf(ofp, "sub trace_unhandled\n{\n\tmy ($event_name, $context, "
--		"$common_cpu, $common_secs, $common_nsecs,\n\t    "
--		"$common_pid, $common_comm, $common_callchain) =3D @_;\n\n");
--
--	fprintf(ofp, "\tprint_header($event_name, $common_cpu, "
--		"$common_secs, $common_nsecs,\n\t             $common_pid, "
--		"$common_comm, $common_callchain);\n");
--	fprintf(ofp, "\tprint_backtrace($common_callchain);\n");
--	fprintf(ofp, "}\n\n");
--
--	fprintf(ofp, "sub print_header\n{\n"
--		"\tmy ($event_name, $cpu, $secs, $nsecs, $pid, $comm) =3D @_;\n\n"
--		"\tprintf(\"%%-20s %%5u %%05u.%%09u %%8u %%-20s \",\n\t       "
--		"$event_name, $cpu, $secs, $nsecs, $pid, $comm);\n}\n");
--
--	fprintf(ofp,
--		"\n# Packed byte string args of process_event():\n"
--		"#\n"
--		"# $event:\tunion perf_event\tutil/event.h\n"
--		"# $attr:\tstruct perf_event_attr\tlinux/perf_event.h\n"
--		"# $sample:\tstruct perf_sample\tutil/event.h\n"
--		"# $raw_data:\tperf_sample->raw_data\tutil/event.h\n"
--		"\n"
--		"sub process_event\n"
--		"{\n"
--		"\tmy ($event, $attr, $sample, $raw_data) =3D @_;\n"
--		"\n"
--		"\tmy @event\t=3D unpack(\"LSS\", $event);\n"
--		"\tmy @attr\t=3D unpack(\"LLQQQQQLLQQ\", $attr);\n"
--		"\tmy @sample\t=3D unpack(\"QLLQQQQQLL\", $sample);\n"
--		"\tmy @raw_data\t=3D unpack(\"C*\", $raw_data);\n"
--		"\n"
--		"\tuse Data::Dumper;\n"
--		"\tprint Dumper \\@event, \\@attr, \\@sample, \\@raw_data;\n"
--		"}\n");
--
--	fclose(ofp);
--
--	fprintf(stderr, "generated Perl script: %s\n", fname);
--
--	return 0;
--}
--
--struct scripting_ops perl_scripting_ops =3D {
--	.name =3D "Perl",
--	.dirname =3D "perl",
--	.start_script =3D perl_start_script,
--	.flush_script =3D perl_flush_script,
--	.stop_script =3D perl_stop_script,
--	.process_event =3D perl_process_event,
--	.generate_script =3D perl_generate_script,
--};
-diff --git a/tools/perf/util/trace-event-parse.c b/tools/perf/util/trace-ev=
-ent-parse.c
-index 9c015fc2bcfb..374cf82fd86e 100644
---- a/tools/perf/util/trace-event-parse.c
-+++ b/tools/perf/util/trace-event-parse.c
-@@ -14,71 +14,6 @@
- #include <linux/kernel.h>
- #include <event-parse.h>
-=20
--static int get_common_field(struct scripting_context *context,
--			    int *offset, int *size, const char *type)
--{
--	struct tep_handle *pevent =3D context->pevent;
--	struct tep_event *event;
--	struct tep_format_field *field;
--
--	if (!*size) {
--
--		event =3D tep_get_first_event(pevent);
--		if (!event)
--			return 0;
--
--		field =3D tep_find_common_field(event, type);
--		if (!field)
--			return 0;
--		*offset =3D field->offset;
--		*size =3D field->size;
--	}
--
--	return tep_read_number(pevent, context->event_data + *offset, *size);
--}
--
--int common_lock_depth(struct scripting_context *context)
--{
--	static int offset;
--	static int size;
--	int ret;
--
--	ret =3D get_common_field(context, &size, &offset,
--			       "common_lock_depth");
--	if (ret < 0)
--		return -1;
--
--	return ret;
--}
--
--int common_flags(struct scripting_context *context)
--{
--	static int offset;
--	static int size;
--	int ret;
--
--	ret =3D get_common_field(context, &size, &offset,
--			       "common_flags");
--	if (ret < 0)
--		return -1;
--
--	return ret;
--}
--
--int common_pc(struct scripting_context *context)
--{
--	static int offset;
--	static int size;
--	int ret;
--
--	ret =3D get_common_field(context, &size, &offset,
--			       "common_preempt_count");
--	if (ret < 0)
--		return -1;
--
--	return ret;
--}
--
- unsigned long long
- raw_field_value(struct tep_event *event, const char *name, void *data)
- {
-diff --git a/tools/perf/util/trace-event-scripting.c b/tools/perf/util/trac=
-e-event-scripting.c
-deleted file mode 100644
-index c78b317978dd..000000000000
---- a/tools/perf/util/trace-event-scripting.c
-+++ /dev/null
-@@ -1,398 +0,0 @@
--// SPDX-License-Identifier: GPL-2.0-or-later
--/*
-- * trace-event-scripting.  Scripting engine common and initialization code=
-.
-- *
-- * Copyright (C) 2009-2010 Tom Zanussi <tzanussi@gmail.com>
-- */
--
--#include <stdio.h>
--#include <stdlib.h>
--#include <string.h>
--#include <errno.h>
--#ifdef HAVE_LIBTRACEEVENT
--#include <event-parse.h>
--#endif
--
--#include "debug.h"
--#include "event.h"
--#include "trace-event.h"
--#include "evsel.h"
--#include <linux/perf_event.h>
--#include <linux/zalloc.h>
--#include "util/sample.h"
--
--unsigned int scripting_max_stack =3D PERF_MAX_STACK_DEPTH;
--
--struct scripting_context *scripting_context;
--
--struct script_spec {
--	struct list_head	node;
--	struct scripting_ops	*ops;
--	char			spec[];
--};
--
--static LIST_HEAD(script_specs);
--
--static struct script_spec *script_spec__new(const char *spec,
--					    struct scripting_ops *ops)
--{
--	struct script_spec *s =3D malloc(sizeof(*s) + strlen(spec) + 1);
--
--	if (s !=3D NULL) {
--		strcpy(s->spec, spec);
--		s->ops =3D ops;
--	}
--
--	return s;
--}
--
--static void script_spec__add(struct script_spec *s)
--{
--	list_add_tail(&s->node, &script_specs);
--}
--
--static struct script_spec *script_spec__find(const char *spec)
--{
--	struct script_spec *s;
--
--	list_for_each_entry(s, &script_specs, node)
--		if (strcasecmp(s->spec, spec) =3D=3D 0)
--			return s;
--	return NULL;
--}
--
--static int script_spec_register(const char *spec, struct scripting_ops *op=
-s)
--{
--	struct script_spec *s;
--
--	s =3D script_spec__find(spec);
--	if (s)
--		return -1;
--
--	s =3D script_spec__new(spec, ops);
--	if (!s)
--		return -1;
--
--	script_spec__add(s);
--	return 0;
--}
--
--struct scripting_ops *script_spec__lookup(const char *spec)
--{
--	struct script_spec *s =3D script_spec__find(spec);
--
--	if (!s)
--		return NULL;
--
--	return s->ops;
--}
--
--int script_spec__for_each(int (*cb)(struct scripting_ops *ops, const char =
-*spec))
--{
--	struct script_spec *s;
--	int ret =3D 0;
--
--	list_for_each_entry(s, &script_specs, node) {
--		ret =3D cb(s->ops, s->spec);
--		if (ret)
--			break;
--	}
--	return ret;
--}
--
--void scripting_context__update(struct scripting_context *c,
--			       union perf_event *event,
--			       struct perf_sample *sample,
--			       struct addr_location *al,
--			       struct addr_location *addr_al)
--{
--#ifdef HAVE_LIBTRACEEVENT
--	const struct tep_event *tp_format =3D evsel__tp_format(sample->evsel);
--
--	c->pevent =3D tp_format ? tp_format->tep : NULL;
--#else
--	c->pevent =3D NULL;
--#endif
--	c->event_data =3D sample->raw_data;
--	c->event =3D event;
--	c->sample =3D sample;
--	c->al =3D al;
--	c->addr_al =3D addr_al;
--}
--
--static int flush_script_unsupported(void)
--{
--	return 0;
--}
--
--static int stop_script_unsupported(void)
--{
--	return 0;
--}
--
--static void process_event_unsupported(union perf_event *event __maybe_unus=
-ed,
--				      struct perf_sample *sample __maybe_unused,
--				      struct addr_location *al __maybe_unused,
--				      struct addr_location *addr_al __maybe_unused)
--{
--}
--
--static void print_python_unsupported_msg(void)
--{
--	fprintf(stderr, "Python scripting not supported."
--		"  Install libpython and rebuild perf to enable it.\n"
--		"For example:\n  # apt-get install python-dev (ubuntu)"
--		"\n  # yum install python-devel (Fedora)"
--		"\n  etc.\n");
--}
--
--static int python_start_script_unsupported(const char *script __maybe_unus=
-ed,
--					   int argc __maybe_unused,
--					   const char **argv __maybe_unused,
--					   struct perf_session *session __maybe_unused)
--{
--	print_python_unsupported_msg();
--
--	return -1;
--}
--
--static int python_generate_script_unsupported(struct tep_handle *pevent
--					      __maybe_unused,
--					      const char *outfile
--					      __maybe_unused)
--{
--	print_python_unsupported_msg();
--
--	return -1;
--}
--
--struct scripting_ops python_scripting_unsupported_ops =3D {
--	.name =3D "Python",
--	.dirname =3D "python",
--	.start_script =3D python_start_script_unsupported,
--	.flush_script =3D flush_script_unsupported,
--	.stop_script =3D stop_script_unsupported,
--	.process_event =3D process_event_unsupported,
--	.generate_script =3D python_generate_script_unsupported,
--};
--
--static void register_python_scripting(struct scripting_ops *scripting_ops)
--{
--	if (scripting_context =3D=3D NULL)
--		scripting_context =3D malloc(sizeof(*scripting_context));
--
--       if (scripting_context =3D=3D NULL ||
--	   script_spec_register("Python", scripting_ops) ||
--	   script_spec_register("py", scripting_ops)) {
--		pr_err("Error registering Python script extension: disabling it\n");
--		zfree(&scripting_context);
--	}
--}
--
--void setup_python_scripting(void)
--{
--	register_python_scripting(&python_scripting_unsupported_ops);
--}
--
--#ifdef HAVE_LIBTRACEEVENT
--static void print_perl_unsupported_msg(void)
--{
--	fprintf(stderr, "Perl scripting not supported."
--		"  Install libperl and rebuild perf to enable it.\n"
--		"For example:\n  # apt-get install libperl-dev (ubuntu)"
--		"\n  # yum install 'perl(ExtUtils::Embed)' (Fedora)"
--		"\n  etc.\n");
--}
--
--static int perl_start_script_unsupported(const char *script __maybe_unused=
-,
--					 int argc __maybe_unused,
--					 const char **argv __maybe_unused,
--					 struct perf_session *session __maybe_unused)
--{
--	print_perl_unsupported_msg();
--
--	return -1;
--}
--
--static int perl_generate_script_unsupported(struct tep_handle *pevent
--					    __maybe_unused,
--					    const char *outfile __maybe_unused)
--{
--	print_perl_unsupported_msg();
--
--	return -1;
--}
--
--struct scripting_ops perl_scripting_unsupported_ops =3D {
--	.name =3D "Perl",
--	.dirname =3D "perl",
--	.start_script =3D perl_start_script_unsupported,
--	.flush_script =3D flush_script_unsupported,
--	.stop_script =3D stop_script_unsupported,
--	.process_event =3D process_event_unsupported,
--	.generate_script =3D perl_generate_script_unsupported,
--};
--
--static void register_perl_scripting(struct scripting_ops *scripting_ops)
--{
--	if (scripting_context =3D=3D NULL)
--		scripting_context =3D malloc(sizeof(*scripting_context));
--
--       if (scripting_context =3D=3D NULL ||
--	   script_spec_register("Perl", scripting_ops) ||
--	   script_spec_register("pl", scripting_ops)) {
--		pr_err("Error registering Perl script extension: disabling it\n");
--		zfree(&scripting_context);
--	}
--}
--
--#ifndef HAVE_LIBPERL_SUPPORT
--void setup_perl_scripting(void)
--{
--	register_perl_scripting(&perl_scripting_unsupported_ops);
--}
--#else
--extern struct scripting_ops perl_scripting_ops;
--
--void setup_perl_scripting(void)
--{
--	register_perl_scripting(&perl_scripting_ops);
--}
--#endif
--#endif
--
--static const struct {
--	u32 flags;
--	const char *name;
--} sample_flags[] =3D {
--	{PERF_IP_FLAG_BRANCH | PERF_IP_FLAG_CALL, "call"},
--	{PERF_IP_FLAG_BRANCH | PERF_IP_FLAG_RETURN, "return"},
--	{PERF_IP_FLAG_BRANCH | PERF_IP_FLAG_CONDITIONAL, "jcc"},
--	{PERF_IP_FLAG_BRANCH, "jmp"},
--	{PERF_IP_FLAG_BRANCH | PERF_IP_FLAG_CALL | PERF_IP_FLAG_INTERRUPT, "int"}=
-,
--	{PERF_IP_FLAG_BRANCH | PERF_IP_FLAG_RETURN | PERF_IP_FLAG_INTERRUPT, "ire=
-t"},
--	{PERF_IP_FLAG_BRANCH | PERF_IP_FLAG_CALL | PERF_IP_FLAG_SYSCALLRET, "sysc=
-all"},
--	{PERF_IP_FLAG_BRANCH | PERF_IP_FLAG_RETURN | PERF_IP_FLAG_SYSCALLRET, "sy=
-sret"},
--	{PERF_IP_FLAG_BRANCH | PERF_IP_FLAG_ASYNC, "async"},
--	{PERF_IP_FLAG_BRANCH | PERF_IP_FLAG_CALL | PERF_IP_FLAG_ASYNC |	PERF_IP_F=
-LAG_INTERRUPT,
--	 "hw int"},
--	{PERF_IP_FLAG_BRANCH | PERF_IP_FLAG_TX_ABORT, "tx abrt"},
--	{PERF_IP_FLAG_BRANCH | PERF_IP_FLAG_TRACE_BEGIN, "tr strt"},
--	{PERF_IP_FLAG_BRANCH | PERF_IP_FLAG_TRACE_END, "tr end"},
--	{PERF_IP_FLAG_BRANCH | PERF_IP_FLAG_CALL | PERF_IP_FLAG_VMENTRY, "vmentry=
-"},
--	{PERF_IP_FLAG_BRANCH | PERF_IP_FLAG_CALL | PERF_IP_FLAG_VMEXIT, "vmexit"}=
-,
--	{0, NULL}
--};
--
--static const struct {
--	u32 flags;
--	const char *name;
--} branch_events[] =3D {
--	{PERF_IP_FLAG_BRANCH_MISS, "miss"},
--	{PERF_IP_FLAG_NOT_TAKEN, "not_taken"},
--	{0, NULL}
--};
--
--static int sample_flags_to_name(u32 flags, char *str, size_t size)
--{
--	int i;
--	const char *prefix;
--	int pos =3D 0, ret, ev_idx =3D 0;
--	u32 xf =3D flags & PERF_ADDITIONAL_STATE_MASK;
--	u32 types, events;
--	char xs[16] =3D { 0 };
--
--	/* Clear additional state bits */
--	flags &=3D ~PERF_ADDITIONAL_STATE_MASK;
--
--	if (flags & PERF_IP_FLAG_TRACE_BEGIN)
--		prefix =3D "tr strt ";
--	else if (flags & PERF_IP_FLAG_TRACE_END)
--		prefix =3D "tr end  ";
--	else
--		prefix =3D "";
--
--	ret =3D snprintf(str + pos, size - pos, "%s", prefix);
--	if (ret < 0)
--		return ret;
--	pos +=3D ret;
--
--	flags &=3D ~(PERF_IP_FLAG_TRACE_BEGIN | PERF_IP_FLAG_TRACE_END);
--
--	types =3D flags & ~PERF_IP_FLAG_BRANCH_EVENT_MASK;
--	for (i =3D 0; sample_flags[i].name; i++) {
--		if (sample_flags[i].flags !=3D types)
--			continue;
--
--		ret =3D snprintf(str + pos, size - pos, "%s", sample_flags[i].name);
--		if (ret < 0)
--			return ret;
--		pos +=3D ret;
--		break;
--	}
--
--	events =3D flags & PERF_IP_FLAG_BRANCH_EVENT_MASK;
--	for (i =3D 0; branch_events[i].name; i++) {
--		if (!(branch_events[i].flags & events))
--			continue;
--
--		ret =3D snprintf(str + pos, size - pos, !ev_idx ? "/%s" : ",%s",
--			       branch_events[i].name);
--		if (ret < 0)
--			return ret;
--		pos +=3D ret;
--		ev_idx++;
--	}
--
--	/* Add an end character '/' for events */
--	if (ev_idx) {
--		ret =3D snprintf(str + pos, size - pos, "/");
--		if (ret < 0)
--			return ret;
--		pos +=3D ret;
--	}
--
--	if (!xf)
--		return pos;
--
--	snprintf(xs, sizeof(xs), "(%s%s%s)",
--		 flags & PERF_IP_FLAG_IN_TX ? "x" : "",
--		 flags & PERF_IP_FLAG_INTR_DISABLE ? "D" : "",
--		 flags & PERF_IP_FLAG_INTR_TOGGLE ? "t" : "");
--
--	/* Right align the string if its length is less than the limit */
--	if ((pos + strlen(xs)) < SAMPLE_FLAGS_STR_ALIGNED_SIZE)
--		ret =3D snprintf(str + pos, size - pos, "%*s",
--			       (int)(SAMPLE_FLAGS_STR_ALIGNED_SIZE - ret), xs);
--	else
--		ret =3D snprintf(str + pos, size - pos, " %s", xs);
--	if (ret < 0)
--		return ret;
--
--	return pos + ret;
--}
--
--int perf_sample__sprintf_flags(u32 flags, char *str, size_t sz)
--{
--	const char *chars =3D PERF_IP_FLAG_CHARS;
--	const size_t n =3D strlen(PERF_IP_FLAG_CHARS);
--	size_t i, pos =3D 0;
--	int ret;
--
--	ret =3D sample_flags_to_name(flags, str, sz);
--	if (ret > 0)
--		return ret;
--
--	for (i =3D 0; i < n; i++, flags >>=3D 1) {
--		if ((flags & 1) && pos < sz)
--			str[pos++] =3D chars[i];
--	}
--	for (; i < 32; i++, flags >>=3D 1) {
--		if ((flags & 1) && pos < sz)
--			str[pos++] =3D '?';
--	}
--	if (pos < sz)
--		str[pos] =3D 0;
--
--	return pos;
--}
-diff --git a/tools/perf/util/trace-event.h b/tools/perf/util/trace-event.h
-index 720121c74f1d..19f22ac1faf3 100644
---- a/tools/perf/util/trace-event.h
-+++ b/tools/perf/util/trace-event.h
-@@ -7,15 +7,9 @@
- #include <sys/types.h>
- #include <linux/types.h>
-=20
--struct evlist;
- struct machine;
--struct perf_sample;
--union perf_event;
--struct perf_tool;
--struct thread;
--struct tep_plugin_list;
--struct evsel;
- struct tep_format_field;
-+struct tep_plugin_list;
-=20
- struct trace_event {
- 	struct tep_handle	*pevent;
-@@ -79,70 +73,6 @@ struct tracing_data *tracing_data_get(struct list_head *=
-pattrs,
- 				      int fd, bool temp);
- int tracing_data_put(struct tracing_data *tdata);
-=20
--
--struct addr_location;
--
--struct perf_session;
--struct perf_stat_config;
--
--struct scripting_ops {
--	const char *name;
--	const char *dirname; /* For script path .../scripts/<dirname>/... */
--	int (*start_script)(const char *script, int argc, const char **argv,
--			    struct perf_session *session);
--	int (*flush_script) (void);
--	int (*stop_script) (void);
--	void (*process_event) (union perf_event *event,
--			       struct perf_sample *sample,
--			       struct addr_location *al,
--			       struct addr_location *addr_al);
--	void (*process_switch)(union perf_event *event,
--			       struct perf_sample *sample,
--			       struct machine *machine);
--	void (*process_auxtrace_error)(struct perf_session *session,
--				       union perf_event *event);
--	void (*process_stat)(struct perf_stat_config *config,
--			     struct evsel *evsel, u64 tstamp);
--	void (*process_stat_interval)(u64 tstamp);
--	void (*process_throttle)(union perf_event *event,
--				 struct perf_sample *sample,
--				 struct machine *machine);
--	int (*generate_script) (struct tep_handle *pevent, const char *outfile);
--};
--
--extern unsigned int scripting_max_stack;
--
--struct scripting_ops *script_spec__lookup(const char *spec);
--int script_spec__for_each(int (*cb)(struct scripting_ops *ops, const char =
-*spec));
--
--void setup_perl_scripting(void);
--void setup_python_scripting(void);
--
--struct scripting_context {
--	struct tep_handle *pevent;
--	void *event_data;
--	union perf_event *event;
--	struct perf_sample *sample;
--	struct addr_location *al;
--	struct addr_location *addr_al;
--	struct perf_session *session;
--};
--
--void scripting_context__update(struct scripting_context *scripting_context=
-,
--			       union perf_event *event,
--			       struct perf_sample *sample,
--			       struct addr_location *al,
--			       struct addr_location *addr_al);
--
--int common_pc(struct scripting_context *context);
--int common_flags(struct scripting_context *context);
--int common_lock_depth(struct scripting_context *context);
--
--#define SAMPLE_FLAGS_BUF_SIZE 64
--#define SAMPLE_FLAGS_STR_ALIGNED_SIZE	21
--
--int perf_sample__sprintf_flags(u32 flags, char *str, size_t sz);
--
- #if defined(LIBTRACEEVENT_VERSION) &&  LIBTRACEEVENT_VERSION >=3D MAKE_LIB=
-TRACEEVENT_VERSION(1, 5, 0)
- #include <event-parse.h>
-=20
---=20
+-</style>
+-<p class=c1><a href=#reports>1. Reports</a></p>
+-<p class=c2><a href=#callgraph>1.1 Context-Sensitive Call Graph</a></p>
+-<p class=c2><a href=#calltree>1.2 Call Tree</a></p>
+-<p class=c2><a href=#allbranches>1.3 All branches</a></p>
+-<p class=c2><a href=#selectedbranches>1.4 Selected branches</a></p>
+-<p class=c2><a href=#topcallsbyelapsedtime>1.5 Top calls by elapsed time</a></p>
+-<p class=c1><a href=#charts>2. Charts</a></p>
+-<p class=c2><a href=#timechartbycpu>2.1 Time chart by CPU</a></p>
+-<p class=c1><a href=#tables>3. Tables</a></p>
+-<h1 id=reports>1. Reports</h1>
+-<h2 id=callgraph>1.1 Context-Sensitive Call Graph</h2>
+-The result is a GUI window with a tree representing a context-sensitive
+-call-graph. Expanding a couple of levels of the tree and adjusting column
+-widths to suit will display something like:
+-<pre>
+-                                         Call Graph: pt_example
+-Call Path                          Object      Count   Time(ns)  Time(%)  Branch Count   Branch Count(%)
+-v- ls
+-    v- 2638:2638
+-        v- _start                  ld-2.19.so    1     10074071   100.0         211135            100.0
+-          |- unknown               unknown       1        13198     0.1              1              0.0
+-          >- _dl_start             ld-2.19.so    1      1400980    13.9          19637              9.3
+-          >- _d_linit_internal     ld-2.19.so    1       448152     4.4          11094              5.3
+-          v-__libc_start_main@plt  ls            1      8211741    81.5         180397             85.4
+-             >- _dl_fixup          ld-2.19.so    1         7607     0.1            108              0.1
+-             >- __cxa_atexit       libc-2.19.so  1        11737     0.1             10              0.0
+-             >- __libc_csu_init    ls            1        10354     0.1             10              0.0
+-             |- _setjmp            libc-2.19.so  1            0     0.0              4              0.0
+-             v- main               ls            1      8182043    99.6         180254             99.9
+-</pre>
+-<h3>Points to note:</h3>
+-<ul>
+-<li>The top level is a command name (comm)</li>
+-<li>The next level is a thread (pid:tid)</li>
+-<li>Subsequent levels are functions</li>
+-<li>'Count' is the number of calls</li>
+-<li>'Time' is the elapsed time until the function returns</li>
+-<li>Percentages are relative to the level above</li>
+-<li>'Branch Count' is the total number of branches for that function and all functions that it calls
+-</ul>
+-<h3>Find</h3>
+-Ctrl-F displays a Find bar which finds function names by either an exact match or a pattern match.
+-The pattern matching symbols are ? for any character and * for zero or more characters.
+-<h2 id=calltree>1.2 Call Tree</h2>
+-The Call Tree report is very similar to the Context-Sensitive Call Graph, but the data is not aggregated.
+-Also the 'Count' column, which would be always 1, is replaced by the 'Call Time'.
+-<h2 id=allbranches>1.3 All branches</h2>
+-The All branches report displays all branches in chronological order.
+-Not all data is fetched immediately. More records can be fetched using the Fetch bar provided.
+-<h3>Disassembly</h3>
+-Open a branch to display disassembly. This only works if:
+-<ol>
+-<li>The disassembler is available. Currently, only Intel XED is supported - see <a href=#xed>Intel XED Setup</a></li>
+-<li>The object code is available. Currently, only the perf build ID cache is searched for object code.
+-The default directory ~/.debug can be overridden by setting environment variable PERF_BUILDID_DIR.
+-One exception is kcore where the DSO long name is used (refer dsos_view on the Tables menu),
+-or alternatively, set environment variable PERF_KCORE to the kcore file name.</li>
+-</ol>
+-<h4 id=xed>Intel XED Setup</h4>
+-To use Intel XED, libxed.so must be present.  To build and install libxed.so:
+-<pre>
+-git clone https://github.com/intelxed/mbuild.git mbuild
+-git clone https://github.com/intelxed/xed
+-cd xed
+-./mfile.py --share
+-sudo ./mfile.py --prefix=/usr/local install
+-sudo ldconfig
+-</pre>
+-<h3>Instructions per Cycle (IPC)</h3>
+-If available, IPC information is displayed in columns 'insn_cnt', 'cyc_cnt' and 'IPC'.
+-<p><b>Intel PT note:</b> The information applies to the blocks of code ending with, and including, that branch.
+-Due to the granularity of timing information, the number of cycles for some code blocks will not be known.
+-In that case, 'insn_cnt', 'cyc_cnt' and 'IPC' are zero, but when 'IPC' is displayed it covers the period
+-since the previous displayed 'IPC'.
+-<h3>Find</h3>
+-Ctrl-F displays a Find bar which finds substrings by either an exact match or a regular expression match.
+-Refer to Python documentation for the regular expression syntax.
+-All columns are searched, but only currently fetched rows are searched.
+-<h2 id=selectedbranches>1.4 Selected branches</h2>
+-This is the same as the <a href=#allbranches>All branches</a> report but with the data reduced
+-by various selection criteria. A dialog box displays available criteria which are AND'ed together.
+-<h3>1.4.1 Time ranges</h3>
+-The time ranges hint text shows the total time range. Relative time ranges can also be entered in
+-ms, us or ns. Also, negative values are relative to the end of trace.  Examples:
+-<pre>
+-	81073085947329-81073085958238	From 81073085947329 to 81073085958238
+-	100us-200us		From 100us to 200us
+-	10ms-			From 10ms to the end
+-	-100ns			The first 100ns
+-	-10ms-			The last 10ms
+-</pre>
+-N.B. Due to the granularity of timestamps, there could be no branches in any given time range.
+-<h2 id=topcallsbyelapsedtime>1.5 Top calls by elapsed time</h2>
+-The Top calls by elapsed time report displays calls in descending order of time elapsed between when the function was called and when it returned.
+-The data is reduced by various selection criteria. A dialog box displays available criteria which are AND'ed together.
+-If not all data is fetched, a Fetch bar is provided. Ctrl-F displays a Find bar.
+-<h1 id=charts>2. Charts</h1>
+-<h2 id=timechartbycpu>2.1 Time chart by CPU</h2>
+-This chart displays context switch information when that data is available. Refer to context_switches_view on the Tables menu.
+-<h3>Features</h3>
+-<ol>
+-<li>Mouse over to highight the task and show the time</li>
+-<li>Drag the mouse to select a region and zoom by pushing the Zoom button</li>
+-<li>Go back and forward by pressing the arrow buttons</li>
+-<li>If call information is available, right-click to show a call tree opened to that task and time.
+-Note, the call tree may take some time to appear, and there may not be call information for the task or time selected.
+-</li>
+-</ol>
+-<h3>Important</h3>
+-The graph can be misleading in the following respects:
+-<ol>
+-<li>The graph shows the first task on each CPU as running from the beginning of the time range.
+-Because tracing might start on different CPUs at different times, that is not necessarily the case.
+-Refer to context_switches_view on the Tables menu to understand what data the graph is based upon.</li>
+-<li>Similarly, the last task on each CPU can be showing running longer than it really was.
+-Again, refer to context_switches_view on the Tables menu to understand what data the graph is based upon.</li>
+-<li>When the mouse is over a task, the highlighted task might not be visible on the legend without scrolling if the legend does not fit fully in the window</li>
+-</ol>
+-<h1 id=tables>3. Tables</h1>
+-The Tables menu shows all tables and views in the database. Most tables have an associated view
+-which displays the information in a more friendly way. Not all data for large tables is fetched
+-immediately. More records can be fetched using the Fetch bar provided. Columns can be sorted,
+-but that can be slow for large tables.
+-<p>There are also tables of database meta-information.
+-For SQLite3 databases, the sqlite_master table is included.
+-For PostgreSQL databases, information_schema.tables/views/columns are included.
+-<h3>Find</h3>
+-Ctrl-F displays a Find bar which finds substrings by either an exact match or a regular expression match.
+-Refer to Python documentation for the regular expression syntax.
+-All columns are searched, but only currently fetched rows are searched.
+-<p>N.B. Results are found in id order, so if the table is re-ordered, find-next and find-previous
+-will go to the next/previous result in id order, instead of display order.
+-"""
+-
+-# Help window
+-
+-class HelpWindow(QMdiSubWindow):
+-
+-	def __init__(self, glb, parent=None):
+-		super(HelpWindow, self).__init__(parent)
+-
+-		self.text = QTextBrowser()
+-		self.text.setHtml(glb_help_text)
+-		self.text.setReadOnly(True)
+-		self.text.setOpenExternalLinks(True)
+-
+-		self.setWidget(self.text)
+-
+-		AddSubWindow(glb.mainwindow.mdi_area, self, "Exported SQL Viewer Help")
+-
+-# Main window that only displays the help text
+-
+-class HelpOnlyWindow(QMainWindow):
+-
+-	def __init__(self, parent=None):
+-		super(HelpOnlyWindow, self).__init__(parent)
+-
+-		self.setMinimumSize(200, 100)
+-		self.resize(800, 600)
+-		self.setWindowTitle("Exported SQL Viewer Help")
+-		self.setWindowIcon(self.style().standardIcon(QStyle.SP_MessageBoxInformation))
+-
+-		self.text = QTextBrowser()
+-		self.text.setHtml(glb_help_text)
+-		self.text.setReadOnly(True)
+-		self.text.setOpenExternalLinks(True)
+-
+-		self.setCentralWidget(self.text)
+-
+-# PostqreSQL server version
+-
+-def PostqreSQLServerVersion(db):
+-	query = QSqlQuery(db)
+-	QueryExec(query, "SELECT VERSION()")
+-	if query.next():
+-		v_str = query.value(0)
+-		v_list = v_str.strip().split(" ")
+-		if v_list[0] == "PostgreSQL" and v_list[2] == "on":
+-			return v_list[1]
+-		return v_str
+-	return "Unknown"
+-
+-# SQLite version
+-
+-def SQLiteVersion(db):
+-	query = QSqlQuery(db)
+-	QueryExec(query, "SELECT sqlite_version()")
+-	if query.next():
+-		return query.value(0)
+-	return "Unknown"
+-
+-# About dialog
+-
+-class AboutDialog(QDialog):
+-
+-	def __init__(self, glb, parent=None):
+-		super(AboutDialog, self).__init__(parent)
+-
+-		self.setWindowTitle("About Exported SQL Viewer")
+-		self.setMinimumWidth(300)
+-
+-		pyside_version = "1" if pyside_version_1 else "2"
+-
+-		text = "<pre>"
+-		text += "Python version:     " + sys.version.split(" ")[0] + "\n"
+-		text += "PySide version:     " + pyside_version + "\n"
+-		text += "Qt version:         " + qVersion() + "\n"
+-		if glb.dbref.is_sqlite3:
+-			text += "SQLite version:     " + SQLiteVersion(glb.db) + "\n"
+-		else:
+-			text += "PostqreSQL version: " + PostqreSQLServerVersion(glb.db) + "\n"
+-		text += "</pre>"
+-
+-		self.text = QTextBrowser()
+-		self.text.setHtml(text)
+-		self.text.setReadOnly(True)
+-		self.text.setOpenExternalLinks(True)
+-
+-		self.vbox = QVBoxLayout()
+-		self.vbox.addWidget(self.text)
+-
+-		self.setLayout(self.vbox)
+-
+-# Font resize
+-
+-def ResizeFont(widget, diff):
+-	font = widget.font()
+-	sz = font.pointSize()
+-	font.setPointSize(sz + diff)
+-	widget.setFont(font)
+-
+-def ShrinkFont(widget):
+-	ResizeFont(widget, -1)
+-
+-def EnlargeFont(widget):
+-	ResizeFont(widget, 1)
+-
+-# Unique name for sub-windows
+-
+-def NumberedWindowName(name, nr):
+-	if nr > 1:
+-		name += " <" + str(nr) + ">"
+-	return name
+-
+-def UniqueSubWindowName(mdi_area, name):
+-	nr = 1
+-	while True:
+-		unique_name = NumberedWindowName(name, nr)
+-		ok = True
+-		for sub_window in mdi_area.subWindowList():
+-			if sub_window.name == unique_name:
+-				ok = False
+-				break
+-		if ok:
+-			return unique_name
+-		nr += 1
+-
+-# Add a sub-window
+-
+-def AddSubWindow(mdi_area, sub_window, name):
+-	unique_name = UniqueSubWindowName(mdi_area, name)
+-	sub_window.setMinimumSize(200, 100)
+-	sub_window.resize(800, 600)
+-	sub_window.setWindowTitle(unique_name)
+-	sub_window.setAttribute(Qt.WA_DeleteOnClose)
+-	sub_window.setWindowIcon(sub_window.style().standardIcon(QStyle.SP_FileIcon))
+-	sub_window.name = unique_name
+-	mdi_area.addSubWindow(sub_window)
+-	sub_window.show()
+-
+-# Main window
+-
+-class MainWindow(QMainWindow):
+-
+-	def __init__(self, glb, parent=None):
+-		super(MainWindow, self).__init__(parent)
+-
+-		self.glb = glb
+-
+-		self.setWindowTitle("Exported SQL Viewer: " + glb.dbname)
+-		self.setWindowIcon(self.style().standardIcon(QStyle.SP_ComputerIcon))
+-		self.setMinimumSize(200, 100)
+-
+-		self.mdi_area = QMdiArea()
+-		self.mdi_area.setHorizontalScrollBarPolicy(Qt.ScrollBarAsNeeded)
+-		self.mdi_area.setVerticalScrollBarPolicy(Qt.ScrollBarAsNeeded)
+-
+-		self.setCentralWidget(self.mdi_area)
+-
+-		menu = self.menuBar()
+-
+-		file_menu = menu.addMenu("&File")
+-		file_menu.addAction(CreateExitAction(glb.app, self))
+-
+-		edit_menu = menu.addMenu("&Edit")
+-		edit_menu.addAction(CreateAction("&Copy", "Copy to clipboard", self.CopyToClipboard, self, QKeySequence.Copy))
+-		edit_menu.addAction(CreateAction("Copy as CS&V", "Copy to clipboard as CSV", self.CopyToClipboardCSV, self))
+-		edit_menu.addAction(CreateAction("&Find...", "Find items", self.Find, self, QKeySequence.Find))
+-		edit_menu.addAction(CreateAction("Fetch &more records...", "Fetch more records", self.FetchMoreRecords, self, [QKeySequence(Qt.Key_F8)]))
+-		edit_menu.addAction(CreateAction("&Shrink Font", "Make text smaller", self.ShrinkFont, self, [QKeySequence("Ctrl+-")]))
+-		edit_menu.addAction(CreateAction("&Enlarge Font", "Make text bigger", self.EnlargeFont, self, [QKeySequence("Ctrl++")]))
+-
+-		reports_menu = menu.addMenu("&Reports")
+-		if IsSelectable(glb.db, "calls"):
+-			reports_menu.addAction(CreateAction("Context-Sensitive Call &Graph", "Create a new window containing a context-sensitive call graph", self.NewCallGraph, self))
+-
+-		if IsSelectable(glb.db, "calls", "WHERE parent_id >= 0"):
+-			reports_menu.addAction(CreateAction("Call &Tree", "Create a new window containing a call tree", self.NewCallTree, self))
+-
+-		self.EventMenu(GetEventList(glb.db), reports_menu)
+-
+-		if IsSelectable(glb.db, "calls"):
+-			reports_menu.addAction(CreateAction("&Top calls by elapsed time", "Create a new window displaying top calls by elapsed time", self.NewTopCalls, self))
+-
+-		if IsSelectable(glb.db, "context_switches"):
+-			charts_menu = menu.addMenu("&Charts")
+-			charts_menu.addAction(CreateAction("&Time chart by CPU", "Create a new window displaying time charts by CPU", self.TimeChartByCPU, self))
+-
+-		self.TableMenu(GetTableList(glb), menu)
+-
+-		self.window_menu = WindowMenu(self.mdi_area, menu)
+-
+-		help_menu = menu.addMenu("&Help")
+-		help_menu.addAction(CreateAction("&Exported SQL Viewer Help", "Helpful information", self.Help, self, QKeySequence.HelpContents))
+-		help_menu.addAction(CreateAction("&About Exported SQL Viewer", "About this application", self.About, self))
+-
+-	def Try(self, fn):
+-		win = self.mdi_area.activeSubWindow()
+-		if win:
+-			try:
+-				fn(win.view)
+-			except:
+-				pass
+-
+-	def CopyToClipboard(self):
+-		self.Try(CopyCellsToClipboardHdr)
+-
+-	def CopyToClipboardCSV(self):
+-		self.Try(CopyCellsToClipboardCSV)
+-
+-	def Find(self):
+-		win = self.mdi_area.activeSubWindow()
+-		if win:
+-			try:
+-				win.find_bar.Activate()
+-			except:
+-				pass
+-
+-	def FetchMoreRecords(self):
+-		win = self.mdi_area.activeSubWindow()
+-		if win:
+-			try:
+-				win.fetch_bar.Activate()
+-			except:
+-				pass
+-
+-	def ShrinkFont(self):
+-		self.Try(ShrinkFont)
+-
+-	def EnlargeFont(self):
+-		self.Try(EnlargeFont)
+-
+-	def EventMenu(self, events, reports_menu):
+-		branches_events = 0
+-		for event in events:
+-			event = event.split(":")[0]
+-			if event == "branches":
+-				branches_events += 1
+-		dbid = 0
+-		for event in events:
+-			dbid += 1
+-			event = event.split(":")[0]
+-			if event == "branches":
+-				label = "All branches" if branches_events == 1 else "All branches " + "(id=" + dbid + ")"
+-				reports_menu.addAction(CreateAction(label, "Create a new window displaying branch events", lambda a=None,x=dbid: self.NewBranchView(x), self))
+-				label = "Selected branches" if branches_events == 1 else "Selected branches " + "(id=" + dbid + ")"
+-				reports_menu.addAction(CreateAction(label, "Create a new window displaying branch events", lambda a=None,x=dbid: self.NewSelectedBranchView(x), self))
+-
+-	def TimeChartByCPU(self):
+-		TimeChartByCPUWindow(self.glb, self)
+-
+-	def TableMenu(self, tables, menu):
+-		table_menu = menu.addMenu("&Tables")
+-		for table in tables:
+-			table_menu.addAction(CreateAction(table, "Create a new window containing a table view", lambda a=None,t=table: self.NewTableView(t), self))
+-
+-	def NewCallGraph(self):
+-		CallGraphWindow(self.glb, self)
+-
+-	def NewCallTree(self):
+-		CallTreeWindow(self.glb, self)
+-
+-	def NewTopCalls(self):
+-		dialog = TopCallsDialog(self.glb, self)
+-		ret = dialog.exec_()
+-		if ret:
+-			TopCallsWindow(self.glb, dialog.report_vars, self)
+-
+-	def NewBranchView(self, event_id):
+-		BranchWindow(self.glb, event_id, ReportVars(), self)
+-
+-	def NewSelectedBranchView(self, event_id):
+-		dialog = SelectedBranchDialog(self.glb, self)
+-		ret = dialog.exec_()
+-		if ret:
+-			BranchWindow(self.glb, event_id, dialog.report_vars, self)
+-
+-	def NewTableView(self, table_name):
+-		TableWindow(self.glb, table_name, self)
+-
+-	def Help(self):
+-		HelpWindow(self.glb, self)
+-
+-	def About(self):
+-		dialog = AboutDialog(self.glb, self)
+-		dialog.exec_()
+-
+-def TryOpen(file_name):
+-	try:
+-		return open(file_name, "rb")
+-	except:
+-		return None
+-
+-def Is64Bit(f):
+-	result = sizeof(c_void_p)
+-	# ELF support only
+-	pos = f.tell()
+-	f.seek(0)
+-	header = f.read(7)
+-	f.seek(pos)
+-	magic = header[0:4]
+-	if sys.version_info[0] == 2:
+-		eclass = ord(header[4])
+-		encoding = ord(header[5])
+-		version = ord(header[6])
+-	else:
+-		eclass = header[4]
+-		encoding = header[5]
+-		version = header[6]
+-	if magic == chr(127) + "ELF" and eclass > 0 and eclass < 3 and encoding > 0 and encoding < 3 and version == 1:
+-		result = True if eclass == 2 else False
+-	return result
+-
+-# Global data
+-
+-class Glb():
+-
+-	def __init__(self, dbref, db, dbname):
+-		self.dbref = dbref
+-		self.db = db
+-		self.dbname = dbname
+-		self.home_dir = os.path.expanduser("~")
+-		self.buildid_dir = os.getenv("PERF_BUILDID_DIR")
+-		if self.buildid_dir:
+-			self.buildid_dir += "/.build-id/"
+-		else:
+-			self.buildid_dir = self.home_dir + "/.debug/.build-id/"
+-		self.app = None
+-		self.mainwindow = None
+-		self.instances_to_shutdown_on_exit = weakref.WeakSet()
+-		try:
+-			self.disassembler = LibXED()
+-			self.have_disassembler = True
+-		except:
+-			self.have_disassembler = False
+-		self.host_machine_id = 0
+-		self.host_start_time = 0
+-		self.host_finish_time = 0
+-
+-	def FileFromBuildId(self, build_id):
+-		file_name = self.buildid_dir + build_id[0:2] + "/" + build_id[2:] + "/elf"
+-		return TryOpen(file_name)
+-
+-	def FileFromNamesAndBuildId(self, short_name, long_name, build_id):
+-		# Assume current machine i.e. no support for virtualization
+-		if short_name[0:7] == "[kernel" and os.path.basename(long_name) == "kcore":
+-			file_name = os.getenv("PERF_KCORE")
+-			f = TryOpen(file_name) if file_name else None
+-			if f:
+-				return f
+-			# For now, no special handling if long_name is /proc/kcore
+-			f = TryOpen(long_name)
+-			if f:
+-				return f
+-		f = self.FileFromBuildId(build_id)
+-		if f:
+-			return f
+-		return None
+-
+-	def AddInstanceToShutdownOnExit(self, instance):
+-		self.instances_to_shutdown_on_exit.add(instance)
+-
+-	# Shutdown any background processes or threads
+-	def ShutdownInstances(self):
+-		for x in self.instances_to_shutdown_on_exit:
+-			try:
+-				x.Shutdown()
+-			except:
+-				pass
+-
+-	def GetHostMachineId(self):
+-		query = QSqlQuery(self.db)
+-		QueryExec(query, "SELECT id FROM machines WHERE pid = -1")
+-		if query.next():
+-			self.host_machine_id = query.value(0)
+-		else:
+-			self.host_machine_id = 0
+-		return self.host_machine_id
+-
+-	def HostMachineId(self):
+-		if self.host_machine_id:
+-			return self.host_machine_id
+-		return self.GetHostMachineId()
+-
+-	def SelectValue(self, sql):
+-		query = QSqlQuery(self.db)
+-		try:
+-			QueryExec(query, sql)
+-		except:
+-			return None
+-		if query.next():
+-			return Decimal(query.value(0))
+-		return None
+-
+-	def SwitchesMinTime(self, machine_id):
+-		return self.SelectValue("SELECT time"
+-					" FROM context_switches"
+-					" WHERE time != 0 AND machine_id = " + str(machine_id) +
+-					" ORDER BY id LIMIT 1")
+-
+-	def SwitchesMaxTime(self, machine_id):
+-		return self.SelectValue("SELECT time"
+-					" FROM context_switches"
+-					" WHERE time != 0 AND machine_id = " + str(machine_id) +
+-					" ORDER BY id DESC LIMIT 1")
+-
+-	def SamplesMinTime(self, machine_id):
+-		return self.SelectValue("SELECT time"
+-					" FROM samples"
+-					" WHERE time != 0 AND machine_id = " + str(machine_id) +
+-					" ORDER BY id LIMIT 1")
+-
+-	def SamplesMaxTime(self, machine_id):
+-		return self.SelectValue("SELECT time"
+-					" FROM samples"
+-					" WHERE time != 0 AND machine_id = " + str(machine_id) +
+-					" ORDER BY id DESC LIMIT 1")
+-
+-	def CallsMinTime(self, machine_id):
+-		return self.SelectValue("SELECT calls.call_time"
+-					" FROM calls"
+-					" INNER JOIN threads ON threads.thread_id = calls.thread_id"
+-					" WHERE calls.call_time != 0 AND threads.machine_id = " + str(machine_id) +
+-					" ORDER BY calls.id LIMIT 1")
+-
+-	def CallsMaxTime(self, machine_id):
+-		return self.SelectValue("SELECT calls.return_time"
+-					" FROM calls"
+-					" INNER JOIN threads ON threads.thread_id = calls.thread_id"
+-					" WHERE calls.return_time != 0 AND threads.machine_id = " + str(machine_id) +
+-					" ORDER BY calls.return_time DESC LIMIT 1")
+-
+-	def GetStartTime(self, machine_id):
+-		t0 = self.SwitchesMinTime(machine_id)
+-		t1 = self.SamplesMinTime(machine_id)
+-		t2 = self.CallsMinTime(machine_id)
+-		if t0 is None or (not(t1 is None) and t1 < t0):
+-			t0 = t1
+-		if t0 is None or (not(t2 is None) and t2 < t0):
+-			t0 = t2
+-		return t0
+-
+-	def GetFinishTime(self, machine_id):
+-		t0 = self.SwitchesMaxTime(machine_id)
+-		t1 = self.SamplesMaxTime(machine_id)
+-		t2 = self.CallsMaxTime(machine_id)
+-		if t0 is None or (not(t1 is None) and t1 > t0):
+-			t0 = t1
+-		if t0 is None or (not(t2 is None) and t2 > t0):
+-			t0 = t2
+-		return t0
+-
+-	def HostStartTime(self):
+-		if self.host_start_time:
+-			return self.host_start_time
+-		self.host_start_time = self.GetStartTime(self.HostMachineId())
+-		return self.host_start_time
+-
+-	def HostFinishTime(self):
+-		if self.host_finish_time:
+-			return self.host_finish_time
+-		self.host_finish_time = self.GetFinishTime(self.HostMachineId())
+-		return self.host_finish_time
+-
+-	def StartTime(self, machine_id):
+-		if machine_id == self.HostMachineId():
+-			return self.HostStartTime()
+-		return self.GetStartTime(machine_id)
+-
+-	def FinishTime(self, machine_id):
+-		if machine_id == self.HostMachineId():
+-			return self.HostFinishTime()
+-		return self.GetFinishTime(machine_id)
+-
+-# Database reference
+-
+-class DBRef():
+-
+-	def __init__(self, is_sqlite3, dbname):
+-		self.is_sqlite3 = is_sqlite3
+-		self.dbname = dbname
+-		self.TRUE = "TRUE"
+-		self.FALSE = "FALSE"
+-		# SQLite prior to version 3.23 does not support TRUE and FALSE
+-		if self.is_sqlite3:
+-			self.TRUE = "1"
+-			self.FALSE = "0"
+-
+-	def Open(self, connection_name):
+-		dbname = self.dbname
+-		if self.is_sqlite3:
+-			db = QSqlDatabase.addDatabase("QSQLITE", connection_name)
+-		else:
+-			db = QSqlDatabase.addDatabase("QPSQL", connection_name)
+-			opts = dbname.split()
+-			for opt in opts:
+-				if "=" in opt:
+-					opt = opt.split("=")
+-					if opt[0] == "hostname":
+-						db.setHostName(opt[1])
+-					elif opt[0] == "port":
+-						db.setPort(int(opt[1]))
+-					elif opt[0] == "username":
+-						db.setUserName(opt[1])
+-					elif opt[0] == "password":
+-						db.setPassword(opt[1])
+-					elif opt[0] == "dbname":
+-						dbname = opt[1]
+-				else:
+-					dbname = opt
+-
+-		db.setDatabaseName(dbname)
+-		if not db.open():
+-			raise Exception("Failed to open database " + dbname + " error: " + db.lastError().text())
+-		return db, dbname
+-
+-# Main
+-
+-def Main():
+-	usage_str =	"exported-sql-viewer.py [--pyside-version-1] <database name>\n" \
+-			"   or: exported-sql-viewer.py --help-only"
+-	ap = argparse.ArgumentParser(usage = usage_str, add_help = False)
+-	ap.add_argument("--pyside-version-1", action='store_true')
+-	ap.add_argument("dbname", nargs="?")
+-	ap.add_argument("--help-only", action='store_true')
+-	args = ap.parse_args()
+-
+-	if args.help_only:
+-		app = QApplication(sys.argv)
+-		mainwindow = HelpOnlyWindow()
+-		mainwindow.show()
+-		err = app.exec_()
+-		sys.exit(err)
+-
+-	dbname = args.dbname
+-	if dbname is None:
+-		ap.print_usage()
+-		print("Too few arguments")
+-		sys.exit(1)
+-
+-	is_sqlite3 = False
+-	try:
+-		f = open(dbname, "rb")
+-		if f.read(15) == b'SQLite format 3':
+-			is_sqlite3 = True
+-		f.close()
+-	except:
+-		pass
+-
+-	dbref = DBRef(is_sqlite3, dbname)
+-	db, dbname = dbref.Open("main")
+-	glb = Glb(dbref, db, dbname)
+-	app = QApplication(sys.argv)
+-	glb.app = app
+-	mainwindow = MainWindow(glb)
+-	glb.mainwindow = mainwindow
+-	mainwindow.show()
+-	err = app.exec_()
+-	glb.ShutdownInstances()
+-	db.close()
+-	sys.exit(err)
+-
+-if __name__ == "__main__":
+-	Main()
+-- 
 2.55.0.1082.g2b9226bbc0-goog
 
