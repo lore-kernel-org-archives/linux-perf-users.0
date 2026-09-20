@@ -1,56 +1,57 @@
-Received: from mail-pf1-f198.google.com (mail-pf1-f198.google.com [209.85.210.198])
+Received: from mail-pj1-f71.google.com (mail-pj1-f71.google.com [209.85.216.71])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 225A93DAADE
-	for <linux-perf-users@vger.kernel.org>; Sun, 20 Sep 2026 05:24:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.198
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAF9A3DB321
+	for <linux-perf-users@vger.kernel.org>; Sun, 20 Sep 2026 05:24:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.71
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789881849; cv=none; b=cK7Z7n4g+wvauMieqpe8Hms+vV27B5RJgYEIdbSTKPOev7iQADdAuWz3Zwu0D6T+AR4YSvVCxtdRCfEpMdhLKsl9QoRrhGBqCWWyiD2O33zLKLPCqJIWD536Xm0WFAfMnqob1Jq4sbD4ysZolbLFFOjwdrC0T8DGnYhCrkiXHgI=
+	t=1789881855; cv=none; b=mbWnJ7AP8qa4Dc5AoEo+Pt0hNgboKsv2Vuobim9yPTUdnrWIHlZ0QRjIT1Ut4zDp65KO/aNQck0ZRYsNhHY+KeSElRs6cQg6hBA6sxcD/DNVRL3TOBoW2Ma+SFNCyzvPzYi5Olkdc0ph8NkZJldo1DMNpCLGU3ruzBA+y5ZNnSk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789881849; c=relaxed/simple;
-	bh=19at6MA7CGdphkqirFpIfwNFoqm6rUzzdtrbUS5354o=;
+	s=arc-20240116; t=1789881855; c=relaxed/simple;
+	bh=PU4RaTRHPLqP0wk6I98m7sJdKWIWFUM2EAQttulAiLk=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=XTwQPVwBvcXLkkF/kwSeRyJ3+frQKEBChrkxNkp/yltrZor7e3FTEV6jQXswKMLbM2AEyk59YjLHh1N7laTJ6A525Nx+6FLB4Vp28YaJPXvhtqRGbi/ddJazlfr187hgbJ22VFCmCMtALFnEKIg3syY+IVRdx4QoL9dfuE/5vRk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=v7H6FvSu; arc=none smtp.client-ip=209.85.210.198
+	 To:Cc:Content-Type; b=FemcyOiCJ4loGyEpvsuqFeKMH8O8Smp/mAc1Qbe6Le6MiCV5zlMNVQgYzV6SoSLqEPLxpGCeeexnfkv4peoGUUskOT7yrDXI9ZSkdKO03HFXvVsAEl7/ut4ajfjCNNgYPkhqOapOFS62TgXXo6xZb41WJnU0pmfcewLORoHQ7Y0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Agd2kWDJ; arc=none smtp.client-ip=209.85.216.71
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="v7H6FvSu"
-Received: by mail-pf1-f198.google.com with SMTP id d2e1a72fcca58-86a2639398cso4291513b3a.3
-        for <linux-perf-users@vger.kernel.org>; Sat, 19 Sep 2026 22:24:05 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Agd2kWDJ"
+Received: by mail-pj1-f71.google.com with SMTP id 98e67ed59e1d1-38e8fee6af3so2812136a91.1
+        for <linux-perf-users@vger.kernel.org>; Sat, 19 Sep 2026 22:24:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1789881845; x=1790486645; darn=vger.kernel.org;
-        h=content-type:cc:to:from:subject:message-id:references:mime-version
-         :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=OMVcteY9Fmv+Q/2MLYGojwbzzwFz2O5SCFbgDg+uRn4=;
-        b=v7H6FvSuXJnlneQjCWMkWE9EtquxJOVOAfseODQj3ssl6Ep1M3lB6CzX82ery/wxP1
-         hCkVKrBNrwT9qXNuu5CqcsiSPGp0X2WEVSbXZm1K7/gjinDl1VT6tHLjJgtZD7oLPZBv
-         E5hS70oAdcBQMiktwhpKZKv4EEMv2L6EBC18fCK5+YBSx8GjBBctJfUePM3eIJanPT7l
-         JBjZUBB3ADkGuzIh0nvCd/vtAjjTbNatIX/tytDwP8m/wS1+hxPZVbjGIeOvM0scwte7
-         A9h9lKO3kBtU9ibwjimf0lqMLYa33KwmaizvnMPJmjyPRmFD0rxlsWp7Y4Qj43zjlUn7
-         qFkQ==
+        d=google.com; s=20251104; t=1789881849; x=1790486649; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:cc:to:from:subject
+         :message-id:references:mime-version:in-reply-to:date:from:to:cc
+         :subject:date:message-id:reply-to:content-type;
+        bh=iFtPtcjHhPoeQR3DR8+gNb9ntPI1kxI0CueH41/MCF4=;
+        b=Agd2kWDJOsL40YaizW7w8qO4cXihbYmqfSGBR7oilmukrZJCpNjXfbAEsu83ZAVtcY
+         GlkN1MlriKZYKHfGOzd8RMAbcxP9AVqcWEeKDLAyK/6S7bFhkoJJlxgzcuvfwwtr1QeH
+         r511odzDTwW/ynTjEuVjURQgALTvFhfhG54F7jVCE8OPY/gA/5aS1E7zfBFmQuSqzLdf
+         sCwu3H5oaJ5J1HqviT1n2yrBREJJk1DRsaOa+VBPdIuOtIdkW5uQ+da7AELE1aPl06e5
+         ZKD5eR/uJvvaNm+gT+jUc9bI83lDXB/LXH2+h/uqTDIsIEvdEM/xSR9LbGftrbcTmxh+
+         H4yA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1789881845; x=1790486645;
-        h=content-type:cc:to:from:subject:message-id:references:mime-version
-         :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=OMVcteY9Fmv+Q/2MLYGojwbzzwFz2O5SCFbgDg+uRn4=;
-        b=J/0DMu4+GdA9uQUOxf/jYx8kKDl8yJz/XJ1wZ5OQOIuFQryIzkeUu1Kbo7f5SQHlfZ
-         S77/X9tf1NOoXUi51IB+HXRf142KPqZSSR08WWtqmK5euS3Jg/y8S4yUQ46y94+42VqK
-         2lxHKq3CY47MJu00fz/f5ft+As1lFT/yDhbw9AAPG7Zq2uOWRat9Vl9gmnqeiJUcFLVO
-         LYenzLAGbU16XlVv60jal0tEpcjGhvuDXjthGO76t6H7ADkHWy0Y5LXxRRVhxB/v2XRX
-         MD2w2o79/XV5ciqSdwAORRum2nnEPcQ3QPAF92F6A5qYC6TwCwMKukFBMvXKF1B4fyFR
-         TL4g==
-X-Forwarded-Encrypted: i=1; AKwUvBwxlwIqjLSAt0H9cV94HqBzP9Xyf8ZfGm1k00uen3k02aaqRYIuuTpkVrCpVW9LbcFuUEVR6NPH9npVLIQDeKjg@vger.kernel.org
-X-Gm-Message-State: AFuF++kO2N1gheT+Cjd25BgLtJko3I/KoiK0nh13nFlhPTZpYYK6Lz4Q
-	GCK+CrwcOW/0r1dNXv1G2JfeWiqqDtIvjcmfknBjxkIiMNUXEfOnJb2fG8s2vPZJ59LQQWbWE8C
-	eZdRVZxEpJw==
-X-Received: from dli5-n1.prod.google.com ([2002:a05:7022:285:10b0:144:bebe:a64])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6300:618d:b0:3dd:a196:69e6
- with SMTP id adf61e73a8af0-3dda1967890mr6269395637.65.1789881845156; Sat, 19
- Sep 2026 22:24:05 -0700 (PDT)
-Date: Sat, 19 Sep 2026 22:21:39 -0700
+        d=1e100.net; s=20260707; t=1789881849; x=1790486649;
+        h=content-transfer-encoding:content-type:cc:to:from:subject
+         :message-id:references:mime-version:in-reply-to:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=iFtPtcjHhPoeQR3DR8+gNb9ntPI1kxI0CueH41/MCF4=;
+        b=WIyNmfrnO0yMvsnp5xJJIx/0c0nMHT/L/c+rCpT59hYIQ83YlUPSgFc1+JjO5mqvFA
+         IS5V/YUxdsfS+3y6X/hIZ6+7k+fW6CYsA06CNchZz3chXW5s/a1T2IPlY9tg6OwETy1A
+         UtLh+aG7SgOEiHh2qVhGXs0PF12875406o1nSsQkAvHdi6VEzWUlVCNXNUCuN0KMVsP8
+         qifF+Pt/oSnJFLSP6QoQSgtPkmtC3bl4sA7ji+DS1sw9piM4JzCV3PQcnEMChs0rUSus
+         cCgnyEC0o4+g/e7O5rB8hH5KsbxD6YERLvI5mEue0WDJv51kPwxJwoFW2/oZ7zphqCYw
+         5yKQ==
+X-Forwarded-Encrypted: i=1; AKwUvBws+Z6ZzsWUTqgikVht0WudUzNBuPec+jrkOt5zJrJrXV7D/kqWUbvRLdFrF4jh6rfo7eO8NpkSqb/ffFagQhkc@vger.kernel.org
+X-Gm-Message-State: AFuF++lfq55gtspBbxp0kzf5es20JyooAEnKj79j+88IOOP8Dl7cdpce
+	uWQq8FjGpyTXBqcS16ZOmPWAR1v6RJfHTaFYgYPQg119UpSZqs98N32ZMck36Ivff4G0WjtcTCg
+	zcs/HJeh5uQ==
+X-Received: from dybcr14.prod.google.com ([2002:a05:7300:ac8e:b0:314:7337:26d9])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:53c3:b0:39d:f130:8f13
+ with SMTP id 98e67ed59e1d1-39e54e3c624mr12710674a91.21.1789881848849; Sat, 19
+ Sep 2026 22:24:08 -0700 (PDT)
+Date: Sat, 19 Sep 2026 22:21:41 -0700
 In-Reply-To: <cover.1789880842.git.irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -60,8 +61,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <cover.1789880842.git.irogers@google.com>
 X-Mailer: git-send-email 2.55.0.1082.g2b9226bbc0-goog
-Message-ID: <4d04d53330f60bf25981a8c0fa8aa8e491ea6a2d.1789880842.git.irogers@google.com>
-Subject: [PATCH v1 47/49] perf Makefile: Update Python script installation path
+Message-ID: <406301449627f44bc9b38715677bfbaaa1172078.1789880842.git.irogers@google.com>
+Subject: [PATCH v1 49/49] perf Documentation: Update for standalone Python scripts
 From: Ian Rogers <irogers@google.com>
 To: irogers@google.com, acme@kernel.org, adrian.hunter@intel.com, 
 	alice.mei.rogers@gmail.com, james.clark@linaro.org, 
@@ -70,529 +71,1261 @@ Cc: dapeng1.mi@linux.intel.com, leo.yan@linux.dev,
 	linux-kernel@vger.kernel.org, mingo@redhat.com, peterz@infradead.org, 
 	tmricht@linux.ibm.com
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Replace the libpython feature test with a python-module feature test
-checking for Python C extension build capability, and update feature
-test references accordingly.
-
-Remove references to the legacy scripts/python directory and install
-standalone Python scripts directly under the python directory in
-libexec. Update the TUI script browser (ui/browsers/scripts.c) to
-discover standalone scripts from the updated installation path.
+Update perf-script documentation to reflect standalone Python script
+execution and the removal of embedded Python and Perl scripting:
+- Remove documentation for the removed -g and -s options and legacy
+  record/report script wrapper modes in perf-script.txt.
+- Remove references to perf-script-perl and delete obsolete
+  perf-script-perl.txt.
+- Rewrite perf-script-python.txt to document writing and running
+  standalone Python scripts using the perf module.
 
 Assisted-by: Antigravity:gemini-3.1-pro
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/build/Makefile.feature             |   4 +-
- tools/build/feature/Makefile             |   4 +-
- tools/build/feature/test-all.c           |   6 +-
- tools/build/feature/test-libpython.c     |  10 --
- tools/build/feature/test-python-module.c |  13 ++
- tools/perf/Documentation/perf-check.txt  |   1 +
- tools/perf/Makefile.config               |  15 +-
- tools/perf/Makefile.perf                 |   8 +-
- tools/perf/builtin-check.c               |   2 +-
- tools/perf/scripts/install-build-deps.sh |   4 +-
- tools/perf/tests/make                    |   8 +-
- tools/perf/ui/browsers/scripts.c         | 182 +++++++++++++++--------
- 12 files changed, 155 insertions(+), 102 deletions(-)
- delete mode 100644 tools/build/feature/test-libpython.c
- create mode 100644 tools/build/feature/test-python-module.c
+ tools/perf/Documentation/db-export.txt        |  16 +-
+ tools/perf/Documentation/perf-script-perl.txt | 216 ------
+ .../perf/Documentation/perf-script-python.txt | 718 +++---------------
+ tools/perf/Documentation/perf-script.txt      |  80 +-
+ tools/perf/Documentation/tips.txt             |   1 -
+ 5 files changed, 106 insertions(+), 925 deletions(-)
+ delete mode 100644 tools/perf/Documentation/perf-script-perl.txt
 
-diff --git a/tools/build/Makefile.feature b/tools/build/Makefile.feature
-index 331f5cdfc34b..3ca7a4f5c7fd 100644
---- a/tools/build/Makefile.feature
-+++ b/tools/build/Makefile.feature
-@@ -79,7 +79,7 @@ FEATURE_TESTS_BASIC :=                  \
-         libelf-zstd                     \
-         libnuma                         \
-         numa_num_possible_cpus          \
--        libpython                       \
-+        python-module                   \
-         libslang                        \
-         libtraceevent                   \
-         libcpupower                     \
-@@ -145,7 +145,7 @@ FEATURE_DISPLAY ?=              \
-          libelf                 \
-          libnuma                \
-          numa_num_possible_cpus \
--         libpython              \
-+         python-module          \
-          libcapstone            \
-          llvm-perf              \
-          zlib                   \
-diff --git a/tools/build/feature/Makefile b/tools/build/feature/Makefile
-index cdf89f132074..269af8e8f5cf 100644
---- a/tools/build/feature/Makefile
-+++ b/tools/build/feature/Makefile
-@@ -32,7 +32,7 @@ FILES=                                          \
-          test-libnuma.bin                       \
-          test-numa_num_possible_cpus.bin        \
-          test-libperl.bin                       \
--         test-libpython.bin                     \
-+         test-python-module.bin                 \
-          test-libslang.bin                      \
-          test-libtraceevent.bin                 \
-          test-libcpupower.bin                   \
-@@ -261,7 +261,7 @@ endif
- $(OUTPUT)test-libperl.bin:
- 	$(BUILD) $(FLAGS_PERL_EMBED)
- 
--$(OUTPUT)test-libpython.bin:
-+$(OUTPUT)test-python-module.bin:
- 	$(BUILD) $(FLAGS_PYTHON_EMBED)
- 
- $(OUTPUT)test-libbfd.bin:
-diff --git a/tools/build/feature/test-all.c b/tools/build/feature/test-all.c
-index 544563d62950..0ee16eccd9e0 100644
---- a/tools/build/feature/test-all.c
-+++ b/tools/build/feature/test-all.c
-@@ -10,8 +10,8 @@
-  * Quirk: Python headers cannot be in arbitrary places, so keep this testcase at
-  * the top:
-  */
--#define main main_test_libpython
--# include "test-libpython.c"
-+#define main main_test_python_module
-+# include "test-python-module.c"
- #undef main
- 
- #define main main_test_hello
-@@ -148,7 +148,7 @@
- 
- int main(int argc, char *argv[])
- {
--	main_test_libpython();
-+	main_test_python_module();
- 	main_test_hello();
- 	main_test_libelf();
- 	main_test_gettid();
-diff --git a/tools/build/feature/test-libpython.c b/tools/build/feature/test-libpython.c
+diff --git a/tools/perf/Documentation/db-export.txt b/tools/perf/Documentat=
+ion/db-export.txt
+index 20024e1f9164..a736be3b6e84 100644
+--- a/tools/perf/Documentation/db-export.txt
++++ b/tools/perf/Documentation/db-export.txt
+@@ -1,11 +1,11 @@
+ Database Export
+ =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+=20
+-perf tool's python scripting engine:
++perf tool's python module:
+=20
+-	tools/perf/util/scripting-engines/trace-event-python.c
++	tools/perf/util/python.c
+=20
+-supports scripts:
++supports standalone scripts:
+=20
+ 	tools/perf/python/export-to-sqlite.py
+ 	tools/perf/python/export-to-postgresql.py
+@@ -31,11 +31,5 @@ backward compatibility by testing for the presence of ne=
+w tables and columns
+ before using them. e.g. function IsSelectable() in exported-sql-viewer.py
+=20
+ 4. The export scripts themselves maintain forward compatibility (i.e. an e=
+xisting
+-script will continue to work with new versions of perf) by accepting a var=
+iable
+-number of arguments (e.g. def call_return_table(*x)) i.e. perf can pass mo=
+re
+-arguments which old scripts will ignore.
+-
+-5. The scripting engine tests for the existence of script handler function=
+s
+-before calling them.  The scripting engine can also test for the support o=
+f new
+-or optional features by checking for the existence and value of script glo=
+bal
+-variables.
++script will continue to work with new versions of perf) by querying event =
+and
++sample attributes dynamically from the perf Python module.
+diff --git a/tools/perf/Documentation/perf-script-perl.txt b/tools/perf/Doc=
+umentation/perf-script-perl.txt
 deleted file mode 100644
-index 371c9113e49d..000000000000
---- a/tools/build/feature/test-libpython.c
+index 5b479f5e62ff..000000000000
+--- a/tools/perf/Documentation/perf-script-perl.txt
 +++ /dev/null
-@@ -1,10 +0,0 @@
--// SPDX-License-Identifier: GPL-2.0
--#include <Python.h>
+@@ -1,216 +0,0 @@
+-perf-script-perl(1)
+-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
 -
--int main(void)
+-NAME
+-----
+-perf-script-perl - Process trace data with a Perl script
+-
+-SYNOPSIS
+---------
+-[verse]
+-'perf script' [-s [Perl]:script[.pl] ]
+-
+-DESCRIPTION
+------------
+-
+-This perf script option is used to process perf script data using perf's
+-built-in Perl interpreter.  It reads and processes the input file and
+-displays the results of the trace analysis implemented in the given
+-Perl script, if any.
+-
+-STARTER SCRIPTS
+----------------
+-
+-You can avoid reading the rest of this document by running 'perf script
+--g perl' in the same directory as an existing perf.data trace file.
+-That will generate a starter script containing a handler for each of
+-the event types in the trace file; it simply prints every available
+-field for each event in the trace file.
+-
+-You can also look at the existing scripts in
+-~/libexec/perf-core/scripts/perl for typical examples showing how to
+-do basic things like aggregate event data, print results, etc.  Also,
+-the check-perf-script.pl script, while not interesting for its results,
+-attempts to exercise all of the main scripting features.
+-
+-EVENT HANDLERS
+---------------
+-
+-When perf script is invoked using a trace script, a user-defined
+-'handler function' is called for each event in the trace.  If there's
+-no handler function defined for a given event type, the event is
+-ignored (or passed to a 'trace_unhandled' function, see below) and the
+-next event is processed.
+-
+-Most of the event's field values are passed as arguments to the
+-handler function; some of the less common ones aren't - those are
+-available as calls back into the perf executable (see below).
+-
+-As an example, the following perf record command can be used to record
+-all sched_wakeup events in the system:
+-
+- # perf record -a -e sched:sched_wakeup
+-
+-Traces meant to be processed using a script should be recorded with
+-the above option: -a to enable system-wide collection.
+-
+-The format file for the sched_wakeup event defines the following fields
+-(see /sys/kernel/tracing/events/sched/sched_wakeup/format):
+-
+-----
+- format:
+-        field:unsigned short common_type;
+-        field:unsigned char common_flags;
+-        field:unsigned char common_preempt_count;
+-        field:int common_pid;
+-
+-        field:char comm[TASK_COMM_LEN];
+-        field:pid_t pid;
+-        field:int prio;
+-        field:int success;
+-        field:int target_cpu;
+-----
+-
+-The handler function for this event would be defined as:
+-
+-----
+-sub sched::sched_wakeup
 -{
--	Py_Initialize();
--
--	return 0;
+-   my ($event_name, $context, $common_cpu, $common_secs,
+-       $common_nsecs, $common_pid, $common_comm,
+-       $comm, $pid, $prio, $success, $target_cpu) =3D @_;
 -}
--#undef _GNU_SOURCE
-diff --git a/tools/build/feature/test-python-module.c b/tools/build/feature/test-python-module.c
-new file mode 100644
-index 000000000000..50e9e5062feb
---- /dev/null
-+++ b/tools/build/feature/test-python-module.c
-@@ -0,0 +1,13 @@
-+// SPDX-License-Identifier: GPL-2.0
-+#include <Python.h>
-+
-+int main(void)
-+{
-+	static struct PyModuleDef moduledef = {
-+		PyModuleDef_HEAD_INIT,
-+		.m_name = "test",
-+	};
-+	PyObject *module = PyModule_Create(&moduledef);
-+
-+	return module ? 0 : -1;
-+}
-diff --git a/tools/perf/Documentation/perf-check.txt b/tools/perf/Documentation/perf-check.txt
-index 3d169e5bb372..a80913794eb6 100644
---- a/tools/perf/Documentation/perf-check.txt
-+++ b/tools/perf/Documentation/perf-check.txt
-@@ -65,6 +65,7 @@ feature::
-                 libunwind               /  HAVE_LIBUNWIND_SUPPORT
-                 lzma                    /  HAVE_LZMA_SUPPORT
-                 numa_num_possible_cpus  /  HAVE_LIBNUMA_SUPPORT
-+                python-module           /  HAVE_PYTHON_MODULE_SUPPORT
-                 zlib                    /  HAVE_ZLIB_SUPPORT
-                 zstd                    /  HAVE_ZSTD_SUPPORT
- 
-diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
-index 6e03d8f808b5..7e05b7943b3b 100644
---- a/tools/perf/Makefile.config
-+++ b/tools/perf/Makefile.config
-@@ -305,7 +305,7 @@ PYTHON_CONFIG_SQ := $(call shell-sq,$(PYTHON_CONFIG))
- 
- # Python 3.8 changed the output of `python-config --ldflags` to not include the
- # '-lpythonX.Y' flag unless '--embed' is also passed. The feature check for
--# libpython fails if that flag is not included in LDFLAGS
-+# python-module fails if that flag is not included in LDFLAGS
- ifeq ($(shell $(PYTHON_CONFIG_SQ) --ldflags --embed 2>&1 1>/dev/null; echo $$?), 0)
-   PYTHON_CONFIG_LDFLAGS := --ldflags --embed
- else
-@@ -328,8 +328,8 @@ ifdef PYTHON_CONFIG
-   endif
- endif
- 
--FEATURE_CHECK_CFLAGS-libpython := $(PYTHON_EMBED_CCOPTS)
--FEATURE_CHECK_LDFLAGS-libpython := $(PYTHON_EMBED_LDOPTS)
-+FEATURE_CHECK_CFLAGS-python-module := $(PYTHON_EMBED_CCOPTS)
-+FEATURE_CHECK_LDFLAGS-python-module := $(PYTHON_EMBED_LDOPTS)
- 
- FEATURE_CHECK_LDFLAGS-libaio = -lrt
- 
-@@ -803,13 +803,12 @@ endif
- 
- disable-python = $(eval $(disable-python_code))
- define disable-python_code
--  CFLAGS += -DNO_LIBPYTHON
-   $(warning $1)
--  NO_LIBPYTHON := 1
-+  NO_PYTHON_MODULE := 1
- endef
- 
- PYTHON_EXTENSION_SUFFIX := '.so'
--ifdef NO_LIBPYTHON
-+ifdef NO_PYTHON_MODULE
-   $(call disable-python,Python support disabled by user)
- else
- 
-@@ -822,10 +821,10 @@ else
-       $(call disable-python,No 'python-config' tool was found: disables Python support - please install python-devel/python-dev)
-     else
- 
--      ifneq ($(feature-libpython), 1)
-+      ifneq ($(feature-python-module), 1)
-         $(call disable-python,No 'Python.h' was found: disables Python support - please install python-devel/python-dev)
-       else
--         CFLAGS += -DHAVE_LIBPYTHON_SUPPORT
-+         CFLAGS += -DHAVE_PYTHON_MODULE_SUPPORT
-          PYTHON_SETUPTOOLS_INSTALLED := $(shell $(PYTHON) -c 'import setuptools;' 2> /dev/null && echo "yes" || echo "no")
-          ifeq ($(PYTHON_SETUPTOOLS_INSTALLED), yes)
-            PYTHON_EXTENSION_SUFFIX := $(shell $(PYTHON) -c 'from importlib import machinery; print(machinery.EXTENSION_SUFFIXES[0])')
-diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
-index 45e5a860d537..6bcea56f1f90 100644
---- a/tools/perf/Makefile.perf
-+++ b/tools/perf/Makefile.perf
-@@ -19,7 +19,7 @@ include ../scripts/utilities.mak
- #
- # Define LIBPERL to enable perl script extension.
- #
--# Define NO_LIBPYTHON to disable python script extension.
-+# Define NO_PYTHON_MODULE to disable python script extension.
- #
- # Define PYTHON to point to the python binary if the default
- # `python' is not correct; for example: PYTHON=python2
-@@ -898,11 +898,9 @@ ifdef LIBPERL
- 		$(INSTALL) -d -m 755 '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/scripts/perl/bin'; \
- 		$(INSTALL) scripts/perl/bin/* -t '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/scripts/perl/bin'
- endif
--ifndef NO_LIBPYTHON
-+
-+ifndef NO_PYTHON_MODULE
- 	$(call QUIET_INSTALL, python-scripts) \
--		$(INSTALL) -d -m 755 '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/scripts/python'; \
--		$(INSTALL) python/*.py -m 644 -t '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/scripts/python'
--	$(call QUIET_INSTALL, python-scripts-standalone) \
- 		$(INSTALL) -d -m 755 '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/python'; \
- 		$(INSTALL) python/*.py -m 755 -t '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/python'
- endif
-diff --git a/tools/perf/builtin-check.c b/tools/perf/builtin-check.c
-index 35272aaeb613..06711362d37f 100644
---- a/tools/perf/builtin-check.c
-+++ b/tools/perf/builtin-check.c
-@@ -52,7 +52,7 @@ struct feature_status supported_features[] = {
- 	FEATURE_STATUS("libnuma", HAVE_LIBNUMA_SUPPORT),
- 	FEATURE_STATUS("libopencsd", HAVE_CSTRACE_SUPPORT),
- 	FEATURE_STATUS_TIP("libperl", HAVE_LIBPERL_SUPPORT, "Deprecated, use LIBPERL=1 and install perl-ExtUtils-Embed/libperl-dev to build with it"),
--	FEATURE_STATUS("python-module", HAVE_LIBPYTHON_SUPPORT),
-+	FEATURE_STATUS("python-module", HAVE_PYTHON_MODULE_SUPPORT),
- 	FEATURE_STATUS("libpfm4", HAVE_LIBPFM),
- 	FEATURE_STATUS("libslang", HAVE_SLANG_SUPPORT),
- 	FEATURE_STATUS("libtraceevent", HAVE_LIBTRACEEVENT),
-diff --git a/tools/perf/scripts/install-build-deps.sh b/tools/perf/scripts/install-build-deps.sh
-index a601a5260c17..3e53c7bf0f85 100755
---- a/tools/perf/scripts/install-build-deps.sh
-+++ b/tools/perf/scripts/install-build-deps.sh
-@@ -155,7 +155,7 @@ fedora_pkg_for() {
- 	libcapstone)
- 		echo "capstone-devel"
- 		;;
--	libpython)
-+	python-module)
- 		echo "python3-devel"
- 		;;
- 	libtraceevent)
-@@ -314,7 +314,7 @@ debian_pkg_for() {
- 	libcapstone)
- 		echo "libcapstone-dev"
- 		;;
--	libpython)
-+	python-module)
- 		echo "python3-dev"
- 		;;
- 	libtraceevent)
-diff --git a/tools/perf/tests/make b/tools/perf/tests/make
-index f879f8109072..b5eaf326573c 100644
---- a/tools/perf/tests/make
-+++ b/tools/perf/tests/make
-@@ -77,8 +77,8 @@ make_jevents_all    := JEVENTS_ARCH=all
- make_no_bpf_skel    := BUILD_BPF_SKEL=0
- make_gen_vmlinux_h  := GEN_VMLINUX_H=1
- make_libperl        := LIBPERL=1
--make_no_libpython   := NO_LIBPYTHON=1
--make_no_scripts     := NO_LIBPYTHON=1
-+make_no_python_module := NO_PYTHON_MODULE=1
-+make_no_scripts     := NO_PYTHON_MODULE=1
- make_no_slang       := NO_SLANG=1
- make_no_demangle    := NO_DEMANGLE=1
- make_no_libelf      := NO_LIBELF=1
-@@ -118,7 +118,7 @@ make_install_prefix_slash := install prefix=/tmp/krava/
- make_static         := LDFLAGS=-static NO_PERF_READ_VDSO32=1 NO_PERF_READ_VDSOX32=1 NO_JVMTI=1 NO_LIBTRACEEVENT=1 NO_LIBELF=1
- 
- # all the NO_* variable combined
--make_minimal        := NO_LIBPYTHON=1
-+make_minimal        := NO_PYTHON_MODULE=1
- make_minimal        += NO_DEMANGLE=1 NO_LIBELF=1 NO_BACKTRACE=1
- make_minimal        += NO_LIBNUMA=1 NO_LIBBIONIC=1 NO_LIBDW=1
- make_minimal        += NO_LIBBPF=1
-@@ -150,7 +150,7 @@ run += make_jevents_all
- run += make_no_bpf_skel
- run += make_gen_vmlinux_h
- run += make_libperl
--run += make_no_libpython
-+run += make_no_python_module
- run += make_no_scripts
- run += make_no_slang
- run += make_no_demangle
-diff --git a/tools/perf/ui/browsers/scripts.c b/tools/perf/ui/browsers/scripts.c
-index 94cc1f427c96..7bf967e6cd19 100644
---- a/tools/perf/ui/browsers/scripts.c
-+++ b/tools/perf/ui/browsers/scripts.c
-@@ -1,4 +1,11 @@
- // SPDX-License-Identifier: GPL-2.0
-+#include <dirent.h>
-+#include <fcntl.h>
-+#include <limits.h>
-+#include <stdio.h>
-+#include <stdlib.h>
-+#include <string.h>
-+#include <unistd.h>
- #include "../../util/util.h" // perf_exe()
- #include "../util.h"
- #include "../../util/evlist.h"
-@@ -14,7 +21,6 @@
- #include <linux/string.h>
- #include <linux/zalloc.h>
- #include <subcmd/exec-cmd.h>
--#include <stdlib.h>
- 
- #define SCRIPT_NAMELEN	128
- #define SCRIPT_MAX_NO	64
-@@ -128,7 +134,7 @@ static int check_ev_match(int dir_fd, const char *scriptname, struct perf_sessio
- 			if (!len)
- 				break;
- 
--			snprintf(evname, len + 1, "%s", p);
-+			snprintf(evname, sizeof(evname), "%.*s", (int)len, p);
- 
- 			match = 0;
- 			evlist__for_each_entry(session->evlist, pos) {
-@@ -159,6 +165,7 @@ static int check_ev_match(int dir_fd, const char *scriptname, struct perf_sessio
- static int find_scripts(char **scripts_array, char **scripts_path_array, int num,
- 		 int pathlen)
- {
-+	int namelen;
- 	struct dirent *script_dirent, *lang_dirent;
- 	int scripts_dir_fd, lang_dir_fd;
- 	DIR *scripts_dir, *lang_dir;
-@@ -180,73 +187,118 @@ static int find_scripts(char **scripts_array, char **scripts_path_array, int num
- 
- 		snprintf(scripts_path, sizeof(scripts_path), "%s/scripts", exec_path);
- 		scripts_dir_fd = open(scripts_path, O_DIRECTORY);
--		pr_err("Failed to open directory '%s'", scripts_path);
--		if (scripts_dir_fd == -1) {
--			perf_session__delete(session);
--			return -1;
--		}
- 	}
--	scripts_dir = fdopendir(scripts_dir_fd);
--	if (!scripts_dir) {
--		close(scripts_dir_fd);
--		perf_session__delete(session);
--		return -1;
-+	if (scripts_dir_fd != -1) {
-+		scripts_dir = fdopendir(scripts_dir_fd);
-+		if (scripts_dir) {
-+			while ((lang_dirent = readdir(scripts_dir)) != NULL) {
-+				if (lang_dirent->d_type != DT_DIR &&
-+				    (lang_dirent->d_type == DT_UNKNOWN &&
-+				     !is_directory_at(scripts_dir_fd, lang_dirent->d_name)))
-+					continue;
-+				if (!strcmp(lang_dirent->d_name, ".") ||
-+				    !strcmp(lang_dirent->d_name, ".."))
-+					continue;
-+
-+				if (strstr(lang_dirent->d_name, "python"))
-+					continue;
-+
-+				lang_dir_fd = openat(scripts_dir_fd, lang_dirent->d_name,
-+					     O_DIRECTORY);
-+				if (lang_dir_fd == -1)
-+					continue;
-+				lang_dir = fdopendir(lang_dir_fd);
-+				if (!lang_dir) {
-+					close(lang_dir_fd);
-+					continue;
-+				}
-+				while ((script_dirent = readdir(lang_dir)) != NULL) {
-+					if (script_dirent->d_type == DT_DIR)
-+						continue;
-+					if (script_dirent->d_type == DT_UNKNOWN &&
-+					    is_directory_at(lang_dir_fd, script_dirent->d_name))
-+						continue;
-+					/* Skip those real time scripts: xxxtop.p[yl] */
-+					if (strstr(script_dirent->d_name, "top."))
-+						continue;
-+					if (i >= num)
-+						break;
-+					scnprintf(scripts_path_array[i], pathlen,
-+						  "%s/scripts/%s/%s", exec_path,
-+						  lang_dirent->d_name,
-+						  script_dirent->d_name);
-+					temp = strrchr(script_dirent->d_name, '.');
-+					namelen = temp ? (int)(temp - script_dirent->d_name)
-+							       : (int)strlen(script_dirent->d_name);
-+
-+					if (namelen >= SCRIPT_NAMELEN)
-+						namelen = SCRIPT_NAMELEN - 1;
-+					snprintf(scripts_array[i], namelen + 1, "%s",
-+						 script_dirent->d_name);
-+
-+					if (check_ev_match(lang_dir_fd, scripts_array[i], session))
-+						continue;
-+
-+					i++;
-+				}
-+				closedir(lang_dir);
-+			}
-+			closedir(scripts_dir);
-+		} else {
-+			close(scripts_dir_fd);
-+		}
- 	}
- 
--	while ((lang_dirent = readdir(scripts_dir)) != NULL) {
--		if (lang_dirent->d_type != DT_DIR &&
--		    (lang_dirent->d_type == DT_UNKNOWN &&
--		     !is_directory_at(scripts_dir_fd, lang_dirent->d_name)))
--			continue;
--		if (!strcmp(lang_dirent->d_name, ".") || !strcmp(lang_dirent->d_name, ".."))
--			continue;
+-----
 -
--#ifndef HAVE_LIBPERL_SUPPORT
--		if (strstr(lang_dirent->d_name, "perl"))
--			continue;
--#endif
--#ifndef HAVE_LIBPYTHON_SUPPORT
--		if (strstr(lang_dirent->d_name, "python"))
--			continue;
--#endif
+-The handler function takes the form subsystem::event_name.
 -
--		lang_dir_fd = openat(scripts_dir_fd, lang_dirent->d_name, O_DIRECTORY);
--		if (lang_dir_fd == -1)
--			continue;
--		lang_dir = fdopendir(lang_dir_fd);
--		if (!lang_dir) {
--			close(lang_dir_fd);
--			continue;
--		}
--		while ((script_dirent = readdir(lang_dir)) != NULL) {
--			if (script_dirent->d_type == DT_DIR)
--				continue;
--			if (script_dirent->d_type == DT_UNKNOWN &&
--			    is_directory_at(lang_dir_fd, script_dirent->d_name))
--				continue;
--			/* Skip those real time scripts: xxxtop.p[yl] */
--			if (strstr(script_dirent->d_name, "top."))
--				continue;
--			if (i >= num)
--				break;
--			scnprintf(scripts_path_array[i], pathlen, "%s/scripts/%s/%s",
--				exec_path,
--				lang_dirent->d_name,
--				script_dirent->d_name);
--			temp = strchr(script_dirent->d_name, '.');
--			snprintf(scripts_array[i],
--				(temp - script_dirent->d_name) + 1,
--				"%s", script_dirent->d_name);
+-The $common_* arguments in the handler's argument list are the set of
+-arguments passed to all event handlers; some of the fields correspond
+-to the common_* fields in the format file, but some are synthesized,
+-and some of the common_* fields aren't common enough to to be passed
+-to every event as arguments but are available as library functions.
 -
--			if (check_ev_match(lang_dir_fd, scripts_array[i], session))
--				continue;
+-Here's a brief description of each of the invariant event args:
 -
--			i++;
-+#ifdef HAVE_PYTHON_MODULE_SUPPORT
-+	{
-+		char py_scripts_path[PATH_MAX];
-+		int py_scripts_dir_fd;
-+		DIR *py_scripts_dir;
-+		int len;
-+
-+		snprintf(py_scripts_path, sizeof(py_scripts_path), "%s/python", exec_path);
-+		py_scripts_dir_fd = open(py_scripts_path, O_DIRECTORY);
-+		if (py_scripts_dir_fd != -1) {
-+			py_scripts_dir = fdopendir(py_scripts_dir_fd);
-+			if (py_scripts_dir) {
-+				while ((script_dirent = readdir(py_scripts_dir)) != NULL) {
-+					if (script_dirent->d_type == DT_DIR)
-+						continue;
-+					if (script_dirent->d_type == DT_UNKNOWN &&
-+					    is_directory_at(py_scripts_dir_fd,
-+						    script_dirent->d_name))
-+						continue;
-+					/* Skip those real time scripts: xxxtop.p[yl] */
-+					if (strstr(script_dirent->d_name, "top."))
-+						continue;
-+					if (i >= num)
-+						break;
-+					len = strlen(script_dirent->d_name);
-+					if (len <= 3 ||
-+					    strcmp(script_dirent->d_name + len - 3, ".py"))
-+						continue;
-+
-+					scnprintf(scripts_path_array[i], pathlen, "%s/python/%s",
-+						exec_path,
-+						script_dirent->d_name);
-+					temp = strrchr(script_dirent->d_name, '.');
-+					namelen = temp ? (int)(temp - script_dirent->d_name)
-+							       : (int)strlen(script_dirent->d_name);
-+
-+					if (namelen >= SCRIPT_NAMELEN)
-+						namelen = SCRIPT_NAMELEN - 1;
-+					snprintf(scripts_array[i], namelen + 1, "%s",
-+						 script_dirent->d_name);
-+
-+					i++;
-+				}
-+				closedir(py_scripts_dir);
-+			} else {
-+				close(py_scripts_dir_fd);
-+			}
- 		}
--		closedir(lang_dir);
- 	}
+- $event_name 	  	    the name of the event as text
+- $context		    an opaque 'cookie' used in calls back into perf
+- $common_cpu		    the cpu the event occurred on
+- $common_secs		    the secs portion of the event timestamp
+- $common_nsecs		    the nsecs portion of the event timestamp
+- $common_pid		    the pid of the current task
+- $common_comm		    the name of the current process
 -
--	closedir(scripts_dir);
-+#endif
- 	perf_session__delete(session);
- 	return i;
- }
-@@ -264,7 +316,7 @@ static int list_scripts(char *script_name, bool *custom,
- 	int ret = 0;
- 	int max_std, custom_perf;
- 	char pbuf[256];
--	const char *perf = perf_exe(pbuf, sizeof pbuf);
-+	const char *perf = perf_exe(pbuf, sizeof(pbuf));
- 	struct script_config scriptc = {
- 		.names = (const char **)names,
- 		.paths = paths,
--- 
+-All of the remaining fields in the event's format file have
+-counterparts as handler function arguments of the same name, as can be
+-seen in the example above.
+-
+-The above provides the basics needed to directly access every field of
+-every event in a trace, which covers 90% of what you need to know to
+-write a useful trace script.  The sections below cover the rest.
+-
+-SCRIPT LAYOUT
+--------------
+-
+-Every perf script Perl script should start by setting up a Perl module
+-search path and 'use'ing a few support modules (see module
+-descriptions below):
+-
+-----
+- use lib "$ENV{'PERF_EXEC_PATH'}/scripts/perl/Perf-Trace-Util/lib";
+- use lib "./Perf-Trace-Util/lib";
+- use Perf::Trace::Core;
+- use Perf::Trace::Context;
+- use Perf::Trace::Util;
+-----
+-
+-The rest of the script can contain handler functions and support
+-functions in any order.
+-
+-Aside from the event handler functions discussed above, every script
+-can implement a set of optional functions:
+-
+-*trace_begin*, if defined, is called before any event is processed and
+-gives scripts a chance to do setup tasks:
+-
+-----
+- sub trace_begin
+- {
+- }
+-----
+-
+-*trace_end*, if defined, is called after all events have been
+- processed and gives scripts a chance to do end-of-script tasks, such
+- as display results:
+-
+-----
+-sub trace_end
+-{
+-}
+-----
+-
+-*trace_unhandled*, if defined, is called after for any event that
+- doesn't have a handler explicitly defined for it.  The standard set
+- of common arguments are passed into it:
+-
+-----
+-sub trace_unhandled
+-{
+-    my ($event_name, $context, $common_cpu, $common_secs,
+-        $common_nsecs, $common_pid, $common_comm) =3D @_;
+-}
+-----
+-
+-The remaining sections provide descriptions of each of the available
+-built-in perf script Perl modules and their associated functions.
+-
+-AVAILABLE MODULES AND FUNCTIONS
+--------------------------------
+-
+-The following sections describe the functions and variables available
+-via the various Perf::Trace::* Perl modules.  To use the functions and
+-variables from the given module, add the corresponding 'use
+-Perf::Trace::XXX' line to your perf script script.
+-
+-Perf::Trace::Core Module
+-~~~~~~~~~~~~~~~~~~~~~~~~
+-
+-These functions provide some essential functions to user scripts.
+-
+-The *flag_str* and *symbol_str* functions provide human-readable
+-strings for flag and symbolic fields.  These correspond to the strings
+-and values parsed from the 'print fmt' fields of the event format
+-files:
+-
+-  flag_str($event_name, $field_name, $field_value) - returns the string re=
+presentation corresponding to $field_value for the flag field $field_name o=
+f event $event_name
+-  symbol_str($event_name, $field_name, $field_value) - returns the string =
+representation corresponding to $field_value for the symbolic field $field_=
+name of event $event_name
+-
+-Perf::Trace::Context Module
+-~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-
+-Some of the 'common' fields in the event format file aren't all that
+-common, but need to be made accessible to user scripts nonetheless.
+-
+-Perf::Trace::Context defines a set of functions that can be used to
+-access this data in the context of the current event.  Each of these
+-functions expects a $context variable, which is the same as the
+-$context variable passed into every event handler as the second
+-argument.
+-
+- common_pc($context) - returns common_preempt count for the current event
+- common_flags($context) - returns common_flags for the current event
+- common_lock_depth($context) - returns common_lock_depth for the current e=
+vent
+-
+-Perf::Trace::Util Module
+-~~~~~~~~~~~~~~~~~~~~~~~~
+-
+-Various utility functions for use with perf script:
+-
+-  nsecs($secs, $nsecs) - returns total nsecs given secs/nsecs pair
+-  nsecs_secs($nsecs) - returns whole secs portion given nsecs
+-  nsecs_nsecs($nsecs) - returns nsecs remainder given nsecs
+-  nsecs_str($nsecs) - returns printable string in the form secs.nsecs
+-  avg($total, $n) - returns average given a sum and a total number of valu=
+es
+-
+-SEE ALSO
+---------
+-linkperf:perf-script[1]
+diff --git a/tools/perf/Documentation/perf-script-python.txt b/tools/perf/D=
+ocumentation/perf-script-python.txt
+index 27a1cac6fe76..72003a82f3d4 100644
+--- a/tools/perf/Documentation/perf-script-python.txt
++++ b/tools/perf/Documentation/perf-script-python.txt
+@@ -3,676 +3,148 @@ perf-script-python(1)
+=20
+ NAME
+ ----
+-perf-script-python - Process trace data with a Python script
++perf-script-python - Process trace data with a Python script using perf mo=
+dule
+=20
+ SYNOPSIS
+ --------
+ [verse]
+-'perf script' [-s [Python]:script[.py] ]
++'perf script' <script>.py
+=20
+ DESCRIPTION
+ -----------
+=20
+-This perf script option is used to process perf script data using perf's
+-built-in Python interpreter.  It reads and processes the input file and
+-displays the results of the trace analysis implemented in the given
+-Python script, if any.
++This document describes how to use the `perf` Python module to process
++trace data recorded by `perf record`.
++
++With the removal of embedded Python interpreter from `perf`, scripts
++are now run as standalone Python programs that import the `perf`
++module to access trace data. Symbol configuration options (`--vmlinux`,
++`--kallsyms`, and `--symfs`) passed to `perf script` are forwarded via
++`PERF_SYMBOL_*` environment variables to `perf.session`, and can also
++be passed directly to `perf.session`. Trace filtering command-line
++options (such as `-c`, `-p`, `-t`, `--time`, and `--dlfilter`) passed
++to `perf script` are not applied to standalone scripts.
+=20
+ A QUICK EXAMPLE
+ ---------------
+=20
+-This section shows the process, start to finish, of creating a working
+-Python script that aggregates and extracts useful information from a
+-raw perf script stream.  You can avoid reading the rest of this
+-document if an example is enough for you; the rest of the document
+-provides more details on each step and lists the library functions
+-available to script writers.
+-
+-This example actually details the steps that were used to create the
+-'syscall-counts' script you see when you list the available perf script
+-scripts via 'perf script -l'.  As such, this script also shows how to
+-integrate your script into the list of general-purpose 'perf script'
+-scripts listed by that command.
+-
+-The syscall-counts script is a simple script, but demonstrates all the
+-basic ideas necessary to create a useful script.  Here's an example
+-of its output (syscall names are not yet supported, they will appear
+-as numbers):
+-
+-----
+-syscall events:
+-
+-event                                          count
+-----------------------------------------  -----------
+-sys_write                                     455067
+-sys_getdents                                    4072
+-sys_close                                       3037
+-sys_swapoff                                     1769
+-sys_read                                         923
+-sys_sched_setparam                               826
+-sys_open                                         331
+-sys_newfstat                                     326
+-sys_mmap                                         217
+-sys_munmap                                       216
+-sys_futex                                        141
+-sys_select                                       102
+-sys_poll                                          84
+-sys_setitimer                                     12
+-sys_writev                                         8
+-15                                                 8
+-sys_lseek                                          7
+-sys_rt_sigprocmask                                 6
+-sys_wait4                                          3
+-sys_ioctl                                          3
+-sys_set_robust_list                                1
+-sys_exit                                           1
+-56                                                 1
+-sys_access                                         1
+-----
+-
+-Basically our task is to keep a per-syscall tally that gets updated
+-every time a system call occurs in the system.  Our script will do
+-that, but first we need to record the data that will be processed by
+-that script.  Theoretically, there are a couple of ways we could do
+-that:
+-
+-- we could enable every event under the tracing/events/syscalls
+-  directory, but this is over 600 syscalls, well beyond the number
+-  allowable by perf.  These individual syscall events will however be
+-  useful if we want to later use the guidance we get from the
+-  general-purpose scripts to drill down and get more detail about
+-  individual syscalls of interest.
+-
+-- we can enable the sys_enter and/or sys_exit syscalls found under
+-  tracing/events/raw_syscalls.  These are called for all syscalls; the
+-  'id' field can be used to distinguish between individual syscall
+-  numbers.
+-
+-For this script, we only need to know that a syscall was entered; we
+-don't care how it exited, so we'll use 'perf record' to record only
+-the sys_enter events:
+-
+-----
+-# perf record -a -e raw_syscalls:sys_enter
+-
+-^C[ perf record: Woken up 1 times to write data ]
+-[ perf record: Captured and wrote 56.545 MB perf.data (~2470503 samples) ]
+-----
+-
+-The options basically say to collect data for every syscall event
+-system-wide and multiplex the per-cpu output into a single stream.
+-That single stream will be recorded in a file in the current directory
+-called perf.data.
+-
+-Once we have a perf.data file containing our data, we can use the -g
+-'perf script' option to generate a Python script that will contain a
+-callback handler for each event type found in the perf.data trace
+-stream (for more details, see the STARTER SCRIPTS section).
+-
+-----
+-# perf script -g python
+-generated Python script: perf-script.py
+-
+-The output file created also in the current directory is named
+-perf-script.py.  Here's the file in its entirety:
+-
+-# perf script event handlers, generated by perf script -g python
+-# Licensed under the terms of the GNU GPL License version 2
+-
+-# The common_* event handler fields are the most useful fields common to
+-# all events.  They don't necessarily correspond to the 'common_*' fields
+-# in the format files.  Those fields not available as handler params can
+-# be retrieved using Python functions of the form common_*(context).
+-# See the perf-script-python Documentation for the list of available funct=
+ions.
+-
+-import os
+-import sys
+-
+-sys.path.append(os.environ['PERF_EXEC_PATH'] + \
+-	'/scripts/python/Perf-Trace-Util/lib/Perf/Trace')
+-
+-from perf_trace_context import *
+-from Core import *
+-
+-def trace_begin():
+-	print "in trace_begin"
+-
+-def trace_end():
+-	print "in trace_end"
+-
+-def raw_syscalls__sys_enter(event_name, context, common_cpu,
+-	common_secs, common_nsecs, common_pid, common_comm,
+-	id, args):
+-		print_header(event_name, common_cpu, common_secs, common_nsecs,
+-			common_pid, common_comm)
+-
+-		print "id=3D%d, args=3D%s\n" % \
+-		(id, args),
+-
+-def trace_unhandled(event_name, context, event_fields_dict):
+-		print ' '.join(['%s=3D%s'%(k,str(v))for k,v in sorted(event_fields_dict.=
+items())])
+-
+-def print_header(event_name, cpu, secs, nsecs, pid, comm):
+-	print "%-20s %5u %05u.%09u %8u %-20s " % \
+-	(event_name, cpu, secs, nsecs, pid, comm),
+-----
+-
+-At the top is a comment block followed by some import statements and a
+-path append which every perf script script should include.
+-
+-Following that are a couple generated functions, trace_begin() and
+-trace_end(), which are called at the beginning and the end of the
+-script respectively (for more details, see the SCRIPT_LAYOUT section
+-below).
+-
+-Following those are the 'event handler' functions generated one for
+-every event in the 'perf record' output.  The handler functions take
+-the form subsystem\__event_name, and contain named parameters, one for
+-each field in the event; in this case, there's only one event,
+-raw_syscalls__sys_enter().  (see the EVENT HANDLERS section below for
+-more info on event handlers).
+-
+-The final couple of functions are, like the begin and end functions,
+-generated for every script.  The first, trace_unhandled(), is called
+-every time the script finds an event in the perf.data file that
+-doesn't correspond to any event handler in the script.  This could
+-mean either that the record step recorded event types that it wasn't
+-really interested in, or the script was run against a trace file that
+-doesn't correspond to the script.
+-
+-The script generated by -g option simply prints a line for each
+-event found in the trace stream i.e. it basically just dumps the event
+-and its parameter values to stdout.  The print_header() function is
+-simply a utility function used for that purpose.  Let's rename the
+-script and run it to see the default output:
+-
+-----
+-# mv perf-script.py syscall-counts.py
+-# perf script -s syscall-counts.py
+-
+-raw_syscalls__sys_enter     1 00840.847582083     7506 perf               =
+   id=3D1, args=3D
+-raw_syscalls__sys_enter     1 00840.847595764     7506 perf               =
+   id=3D1, args=3D
+-raw_syscalls__sys_enter     1 00840.847620860     7506 perf               =
+   id=3D1, args=3D
+-raw_syscalls__sys_enter     1 00840.847710478     6533 npviewer.bin       =
+   id=3D78, args=3D
+-raw_syscalls__sys_enter     1 00840.847719204     6533 npviewer.bin       =
+   id=3D142, args=3D
+-raw_syscalls__sys_enter     1 00840.847755445     6533 npviewer.bin       =
+   id=3D3, args=3D
+-raw_syscalls__sys_enter     1 00840.847775601     6533 npviewer.bin       =
+   id=3D3, args=3D
+-raw_syscalls__sys_enter     1 00840.847781820     6533 npviewer.bin       =
+   id=3D3, args=3D
+-.
+-.
+-.
+-----
+-
+-Of course, for this script, we're not interested in printing every
+-trace event, but rather aggregating it in a useful way.  So we'll get
+-rid of everything to do with printing as well as the trace_begin() and
+-trace_unhandled() functions, which we won't be using.  That leaves us
+-with this minimalistic skeleton:
+-
+-----
+-import os
+-import sys
+-
+-sys.path.append(os.environ['PERF_EXEC_PATH'] + \
+-	'/scripts/python/Perf-Trace-Util/lib/Perf/Trace')
+-
+-from perf_trace_context import *
+-from Core import *
+-
+-def trace_end():
+-	print "in trace_end"
+-
+-def raw_syscalls__sys_enter(event_name, context, common_cpu,
+-	common_secs, common_nsecs, common_pid, common_comm,
+-	id, args):
+-----
+-
+-In trace_end(), we'll simply print the results, but first we need to
+-generate some results to print.  To do that we need to have our
+-sys_enter() handler do the necessary tallying until all events have
+-been counted.  A hash table indexed by syscall id is a good way to
+-store that information; every time the sys_enter() handler is called,
+-we simply increment a count associated with that hash entry indexed by
+-that syscall id:
+-
+-----
+-  syscalls =3D autodict()
+-
+-  try:
+-    syscalls[id] +=3D 1
+-  except TypeError:
+-    syscalls[id] =3D 1
+-----
+-
+-The syscalls 'autodict' object is a special kind of Python dictionary
+-(implemented in Core.py) that implements Perl's 'autovivifying' hashes
+-in Python i.e. with autovivifying hashes, you can assign nested hash
+-values without having to go to the trouble of creating intermediate
+-levels if they don't exist e.g syscalls[comm][pid][id] =3D 1 will create
+-the intermediate hash levels and finally assign the value 1 to the
+-hash entry for 'id' (because the value being assigned isn't a hash
+-object itself, the initial value is assigned in the TypeError
+-exception.  Well, there may be a better way to do this in Python but
+-that's what works for now).
+-
+-Putting that code into the raw_syscalls__sys_enter() handler, we
+-effectively end up with a single-level dictionary keyed on syscall id
+-and having the counts we've tallied as values.
+-
+-The print_syscall_totals() function iterates over the entries in the
+-dictionary and displays a line for each entry containing the syscall
+-name (the dictionary keys contain the syscall ids, which are passed to
+-the Util function syscall_name(), which translates the raw syscall
+-numbers to the corresponding syscall name strings).  The output is
+-displayed after all the events in the trace have been processed, by
+-calling the print_syscall_totals() function from the trace_end()
+-handler called at the end of script processing.
+-
+-The final script producing the output shown above is shown in its
+-entirety below (syscall_name() helper is not yet available, you can
+-only deal with id's for now):
+-
+-----
+-import os
+-import sys
+-
+-sys.path.append(os.environ['PERF_EXEC_PATH'] + \
+-	'/scripts/python/Perf-Trace-Util/lib/Perf/Trace')
+-
+-from perf_trace_context import *
+-from Core import *
+-from Util import *
+-
+-syscalls =3D autodict()
+-
+-def trace_end():
+-	print_syscall_totals()
+-
+-def raw_syscalls__sys_enter(event_name, context, common_cpu,
+-	common_secs, common_nsecs, common_pid, common_comm,
+-	id, args):
+-	try:
+-		syscalls[id] +=3D 1
+-	except TypeError:
+-		syscalls[id] =3D 1
+-
+-def print_syscall_totals():
+-    if for_comm is not None:
+-	    print "\nsyscall events for %s:\n\n" % (for_comm),
+-    else:
+-	    print "\nsyscall events:\n\n",
+-
+-    print "%-40s  %10s\n" % ("event", "count"),
+-    print "%-40s  %10s\n" % ("----------------------------------------", \
+-                                 "-----------"),
+-
+-    for id, val in sorted(syscalls.iteritems(), key =3D lambda(k, v): (v, =
+k), \
+-				  reverse =3D True):
+-	    print "%-40s  %10d\n" % (syscall_name(id), val),
+-----
+-
+-The script can be run just as before:
+-
+-  # perf script -s syscall-counts.py
+-
+-So those are the essential steps in writing and running a script.  The
+-process can be generalized to any tracepoint or set of tracepoints
+-you're interested in - basically find the tracepoint(s) you're
+-interested in by looking at the list of available events shown by
+-'perf list' and/or look in /sys/kernel/tracing/events/ for
+-detailed event and field info, record the corresponding trace data
+-using 'perf record', passing it the list of interesting events,
+-generate a skeleton script using 'perf script -g python' and modify the
+-code to aggregate and display it for your particular needs.
+-
+-After you've done that you may end up with a general-purpose script
+-that you want to keep around and have available for future use.  By
+-writing a couple of very simple shell scripts and putting them in the
+-right place, you can have your script listed alongside the other
+-scripts listed by the 'perf script -l' command e.g.:
+-
+-----
+-# perf script -l
+-List of available trace scripts:
+-  wakeup-latency                       system-wide min/max/avg wakeup late=
+ncy
+-  rw-by-file <comm>                    r/w activity for a program, by file
+-  rw-by-pid                            system-wide r/w activity
+-----
+-
+-A nice side effect of doing this is that you also then capture the
+-probably lengthy 'perf record' command needed to record the events for
+-the script.
+-
+-To have the script appear as a 'built-in' script, you write two simple
+-scripts, one for recording and one for 'reporting'.
+-
+-The 'record' script is a shell script with the same base name as your
+-script, but with -record appended.  The shell script should be put
+-into the perf/scripts/python/bin directory in the kernel source tree.
+-In that script, you write the 'perf record' command-line needed for
+-your script:
+-
+-----
+-# cat kernel-source/tools/perf/scripts/python/bin/syscall-counts-record
+-
+-#!/bin/bash
+-perf record -a -e raw_syscalls:sys_enter
+-----
+-
+-The 'report' script is also a shell script with the same base name as
+-your script, but with -report appended.  It should also be located in
+-the perf/scripts/python/bin directory.  In that script, you write the
+-'perf script -s' command-line needed for running your script:
++This section shows how to create a simple Python script that reads a
++`perf.data` file and prints event information.
+=20
+-----
+-# cat kernel-source/tools/perf/scripts/python/bin/syscall-counts-report
++Create a file named `print_events.py` with the following content:
+=20
+-#!/bin/bash
+-# description: system-wide syscall counts
+-perf script -s ~/libexec/perf-core/scripts/python/syscall-counts.py
+-----
++    #!/usr/bin/env python3
++    import perf
+=20
+-Note that the location of the Python script given in the shell script
+-is in the libexec/perf-core/scripts/python directory - this is where
+-the script will be copied by 'make install' when you install perf.
+-For the installation to install your script there, your script needs
+-to be located in the perf/scripts/python directory in the kernel
+-source tree:
++    def process_event(sample):
++        print(f"Event: {sample.evsel} on CPU {sample.sample_cpu} at {sampl=
+e.sample_time}")
+=20
+-----
+-# ls -al kernel-source/tools/perf/scripts/python
+-total 32
+-drwxr-xr-x 4 trz trz 4096 2010-01-26 22:30 .
+-drwxr-xr-x 4 trz trz 4096 2010-01-26 22:29 ..
+-drwxr-xr-x 2 trz trz 4096 2010-01-26 22:29 bin
+--rw-r--r-- 1 trz trz 2548 2010-01-26 22:29 check-perf-script.py
+-drwxr-xr-x 3 trz trz 4096 2010-01-26 22:49 Perf-Trace-Util
+--rw-r--r-- 1 trz trz 1462 2010-01-26 22:30 syscall-counts.py
+-----
++    # Open the session with perf.data file
++    session =3D perf.session(perf.data("perf.data"), sample=3Dprocess_even=
+t)
+=20
+-Once you've done that (don't forget to do a new 'make install',
+-otherwise your script won't show up at run-time), 'perf script -l'
+-should show a new entry for your script:
++    # Process all events
++    session.process_events()
+=20
+-----
+-# perf script -l
+-List of available trace scripts:
+-  wakeup-latency                       system-wide min/max/avg wakeup late=
+ncy
+-  rw-by-file <comm>                    r/w activity for a program, by file
+-  rw-by-pid                            system-wide r/w activity
+-  syscall-counts                       system-wide syscall counts
+-----
++Make the script executable:
++    $ chmod +x print_events.py
+=20
+-You can now perform the record step via 'perf script record':
++Record some data:
++    $ perf record -a sleep 1
+=20
+-  # perf script record syscall-counts
++Run the script:
++    $ perf script print_events.py
+=20
+-and display the output using 'perf script report':
++Or run it directly with Python, ensuring `perf.so` is in your `PYTHONPATH`=
+:
++    $ PYTHONPATH=3D/path/to/perf/python python3 print_events.py
+=20
+-  # perf script report syscall-counts
+-
+-STARTER SCRIPTS
++THE PERF MODULE
+ ---------------
+=20
+-You can quickly get started writing a script for a particular set of
+-trace data by generating a skeleton script using 'perf script -g
+-python' in the same directory as an existing perf.data trace file.
+-That will generate a starter script containing a handler for each of
+-the event types in the trace file; it simply prints every available
+-field for each event in the trace file.
+-
+-You can also look at the existing scripts in
+-~/libexec/perf-core/scripts/python for typical examples showing how to
+-do basic things like aggregate event data, print results, etc.  Also,
+-the check-perf-script.py script, while not interesting for its results,
+-attempts to exercise all of the main scripting features.
+-
+-EVENT HANDLERS
+---------------
+-
+-When perf script is invoked using a trace script, a user-defined
+-'handler function' is called for each event in the trace.  If there's
+-no handler function defined for a given event type, the event is
+-ignored (or passed to a 'trace_unhandled' function, see below) and the
+-next event is processed.
+-
+-Most of the event's field values are passed as arguments to the
+-handler function; some of the less common ones aren't - those are
+-available as calls back into the perf executable (see below).
+-
+-As an example, the following perf record command can be used to record
+-all sched_wakeup events in the system:
+-
+- # perf record -a -e sched:sched_wakeup
+-
+-Traces meant to be processed using a script should be recorded with
+-the above option: -a to enable system-wide collection.
+-
+-The format file for the sched_wakeup event defines the following fields
+-(see /sys/kernel/tracing/events/sched/sched_wakeup/format):
+-
+-----
+- format:
+-        field:unsigned short common_type;
+-        field:unsigned char common_flags;
+-        field:unsigned char common_preempt_count;
+-        field:int common_pid;
+-
+-        field:char comm[TASK_COMM_LEN];
+-        field:pid_t pid;
+-        field:int prio;
+-        field:int success;
+-        field:int target_cpu;
+-----
+-
+-The handler function for this event would be defined as:
+-
+-----
+-def sched__sched_wakeup(event_name, context, common_cpu, common_secs,
+-       common_nsecs, common_pid, common_comm,
+-       comm, pid, prio, success, target_cpu):
+-       pass
+-----
+-
+-The handler function takes the form subsystem__event_name.
+-
+-The common_* arguments in the handler's argument list are the set of
+-arguments passed to all event handlers; some of the fields correspond
+-to the common_* fields in the format file, but some are synthesized,
+-and some of the common_* fields aren't common enough to to be passed
+-to every event as arguments but are available as library functions.
+-
+-Here's a brief description of each of the invariant event args:
+-
+- event_name 	  	    the name of the event as text
+- context		    an opaque 'cookie' used in calls back into perf
+- common_cpu		    the cpu the event occurred on
+- common_secs		    the secs portion of the event timestamp
+- common_nsecs		    the nsecs portion of the event timestamp
+- common_pid		    the pid of the current task
+- common_comm		    the name of the current process
+-
+-All of the remaining fields in the event's format file have
+-counterparts as handler function arguments of the same name, as can be
+-seen in the example above.
+-
+-The above provides the basics needed to directly access every field of
+-every event in a trace, which covers 90% of what you need to know to
+-write a useful trace script.  The sections below cover the rest.
+-
+-SCRIPT LAYOUT
+--------------
+-
+-Every perf script Python script should start by setting up a Python
+-module search path and 'import'ing a few support modules (see module
+-descriptions below):
+-
+-----
+- import os
+- import sys
+-
+- sys.path.append(os.environ['PERF_EXEC_PATH'] + \
+-	      '/scripts/python/Perf-Trace-Util/lib/Perf/Trace')
+-
+- from perf_trace_context import *
+- from Core import *
+-----
+-
+-The rest of the script can contain handler functions and support
+-functions in any order.
+-
+-Aside from the event handler functions discussed above, every script
+-can implement a set of optional functions:
+-
+-*trace_begin*, if defined, is called before any event is processed and
+-gives scripts a chance to do setup tasks:
+-
+-----
+-def trace_begin():
+-    pass
+-----
+-
+-*trace_end*, if defined, is called after all events have been
+- processed and gives scripts a chance to do end-of-script tasks, such
+- as display results:
+-
+-----
+-def trace_end():
+-    pass
+-----
+-
+-*trace_unhandled*, if defined, is called after for any event that
+- doesn't have a handler explicitly defined for it.  The standard set
+- of common arguments are passed into it:
+-
+-----
+-def trace_unhandled(event_name, context, event_fields_dict):
+-    pass
+-----
+-
+-*process_event*, if defined, is called for any non-tracepoint event
+-
+-----
+-def process_event(param_dict):
+-    pass
+-----
+-
+-*context_switch*, if defined, is called for any context switch
+-
+-----
+-def context_switch(ts, cpu, pid, tid, np_pid, np_tid, machine_pid, out, ou=
+t_preempt, *x):
+-    pass
+-----
+-
+-*auxtrace_error*, if defined, is called for any AUX area tracing error
+-
+-----
+-def auxtrace_error(typ, code, cpu, pid, tid, ip, ts, msg, cpumode, *x):
+-    pass
+-----
+-
+-The remaining sections provide descriptions of each of the available
+-built-in perf script Python modules and their associated functions.
+-
+-AVAILABLE MODULES AND FUNCTIONS
+--------------------------------
+-
+-The following sections describe the functions and variables available
+-via the various perf script Python modules.  To use the functions and
+-variables from the given module, add the corresponding 'from XXXX
+-import' line to your perf script script.
+-
+-Core.py Module
+-~~~~~~~~~~~~~~
++The `perf` module provides several classes and functions to interact
++with trace data.
+=20
+-These functions provide some essential functions to user scripts.
++### Module Functions
+=20
+-The *flag_str* and *symbol_str* functions provide human-readable
+-strings for flag and symbolic fields.  These correspond to the strings
+-and values parsed from the 'print fmt' fields of the event format
+-files:
++- `config_get(name)`: Get a perf config value.
++- `metrics()`: Returns a list of metrics represented as string values in d=
+ictionaries.
++- `tracepoint(subsystem, name)`: Get tracepoint config.
++- `parse_events(string)`: Parse a string of events and return an `evlist`.
++- `parse_metrics(string, pmu=3DNone)`: Parse a string of metrics or metric=
+ groups and return an `evlist`.
++- `pmus()`: Returns a sequence of PMUs.
++- `syscall_name(num, *, elf_machine=3DNone)`: Turns a syscall number to a =
+string.
++- `syscall_id(name, *, elf_machine=3DNone)`: Turns a syscall name to a num=
+ber.
+=20
+-  flag_str(event_name, field_name, field_value) - returns the string repre=
+sentation corresponding to field_value for the flag field field_name of eve=
+nt event_name
+-  symbol_str(event_name, field_name, field_value) - returns the string rep=
+resentation corresponding to field_value for the symbolic field field_name =
+of event event_name
++### `perf.pmu`
+=20
+-The *autodict* function returns a special kind of Python
+-dictionary that implements Perl's 'autovivifying' hashes in Python
+-i.e. with autovivifying hashes, you can assign nested hash values
+-without having to go to the trouble of creating intermediate levels if
+-they don't exist.
++Represents a Performance Monitoring Unit.
+=20
+-  autodict() - returns an autovivifying dictionary instance
++- `events()`: Returns a sequence of events encoded as dictionaries.
++- `name()`: Name of the PMU including suffixes.
+=20
++### `perf.evlist`
+=20
+-perf_trace_context Module
+-~~~~~~~~~~~~~~~~~~~~~~~~~
++Represents a list of event selectors.
+=20
+-Some of the 'common' fields in the event format file aren't all that
+-common, but need to be made accessible to user scripts nonetheless.
++- `all_cpus()`: CPU map union of all evsel CPU maps.
++- `metrics()`: List of metric names within the evlist.
++- `compute_metric(name, cpu, thread)`: Compute metric for given name, cpu =
+and thread.
++- `mmap()`: mmap the file descriptor table.
++- `open()`: open the file descriptors.
++- `close()`: close the file descriptors.
++- `poll()`: poll the file descriptor table.
++- `get_pollfd()`: get the poll file descriptor table.
++- `add(evsel)`: adds an event selector to the list.
++- `read_on_cpu(cpu)`: reads an event.
++- `config()`: Apply default record options to the evlist.
++- `disable()`: Disable the evsels in the evlist.
++- `enable()`: Enable the evsels in the evlist.
+=20
+-perf_trace_context defines a set of functions that can be used to
+-access this data in the context of the current event.  Each of these
+-functions expects a context variable, which is the same as the
+-context variable passed into every tracepoint event handler as the second
+-argument. For non-tracepoint events, the context variable is also present
+-as perf_trace_context.perf_script_context .
++### `perf.evsel`
+=20
+- common_pc(context) - returns common_preempt count for the current event
+- common_flags(context) - returns common_flags for the current event
+- common_lock_depth(context) - returns common_lock_depth for the current ev=
+ent
+- perf_sample_insn(context) - returns the machine code instruction
+- perf_set_itrace_options(context, itrace_options) - set --itrace options i=
+f they have not been set already
+- perf_sample_srcline(context) - returns source_file_name, line_number
+- perf_sample_srccode(context) - returns source_file_name, line_number, sou=
+rce_line
+- perf_config_get(config_name) - returns the value of the named config item=
+, or None if unset
++Represents an event selector.
+=20
+-Util.py Module
+-~~~~~~~~~~~~~~
++- `open()`: open the event selector file descriptor table.
++- `cpus()`: CPUs the event is to be used with.
++- `threads()`: threads the event is to be used with.
++- `read(cpu, thread)`: read counters. Returns a count object with `val`, `=
+ena`, and `run` attributes.
+=20
+-Various utility functions for use with perf script:
++### `perf.session`
+=20
+-  nsecs(secs, nsecs) - returns total nsecs given secs/nsecs pair
+-  nsecs_secs(nsecs) - returns whole secs portion given nsecs
+-  nsecs_nsecs(nsecs) - returns nsecs remainder given nsecs
+-  nsecs_str(nsecs) - returns printable string in the form secs.nsecs
+-  avg(total, n) - returns average given a sum and a total number of values
++Manages a trace session.
+=20
+-SUPPORTED FIELDS
+-----------------
++- `__init__(data, sample=3DNone, stat=3DNone, context_switch=3DNone, call_=
+return=3DNone, itrace=3DNone, vmlinux=3DNone, kallsyms=3DNone, symfs=3DNone=
+)`: Creates a new session. `data` is a `perf.data` object. `sample` is a ca=
+llback function called for each sample event. `vmlinux`, `kallsyms`, and `s=
+ymfs` configure symbol resolution paths.
++- `process_events()`: Reads the trace data and calls the sample callback f=
+or each event.
++- `find_thread(pid, tid=3D-1)`: Returns the thread associated with a PID/T=
+ID.
+=20
+-Currently supported fields:
++### `perf.data`
+=20
+-ev_name, comm, id, stream_id, pid, tid, cpu, ip, time, period, phys_addr,
+-addr, symbol, symoff, dso, time_enabled, time_running, values, callchain,
+-brstack, brstacksym, datasrc, datasrc_decode, iregs, uregs,
+-weight, transaction, raw_buf, attr, cpumode.
++Represents a trace file.
+=20
+-Fields that may also be present:
++- `__init__(path=3DNone, fd=3D-1)`: Opens a trace file.
+=20
+- flags - sample flags
+- flags_disp - sample flags display
+- insn_cnt - instruction count for determining instructions-per-cycle (IPC)
+- cyc_cnt - cycle count for determining IPC
+- addr_correlates_sym - addr can correlate to a symbol
+- addr_dso - addr dso
+- addr_symbol - addr symbol
+- addr_symoff - addr symbol offset
++### Sample Object
+=20
+-Some fields have sub items:
++Passed to the callback function in `perf.session`.
+=20
+-brstack:
+-    from, to, from_dsoname, to_dsoname, mispred,
+-    predicted, in_tx, abort, cycles.
++- `evsel`: The event selector (name of the event).
++- `sample_cpu`: The CPU on which the event occurred.
++- `sample_time`: The timestamp of the event.
++- `sample_pid`: The PID of the process.
++- `sample_tid`: The TID of the thread.
++- `raw_buf`: Raw buffer containing event specific data.
+=20
+-brstacksym:
+-    items: from, to, pred, in_tx, abort (converted string)
++COUNTER AND METRIC APIS
++-----------------------
+=20
+-For example,
+-We can use this code to print brstack "from", "to", "cycles".
++The following APIs are used in `tools/perf/python/ilist.py` for
++interactive listing and reading of counters and metrics:
+=20
+-if 'brstack' in dict:
+-	for entry in dict['brstack']:
+-		print "from %s, to %s, cycles %s" % (entry["from"], entry["to"], entry["=
+cycles"])
++- `perf.pmus()`: Used to get all available PMUs.
++- `pmu.events()`: Used to get all events for a specific PMU.
++- `perf.metrics()`: Used to get all available metrics.
++- `perf.parse_metrics(metric_name, pmu)`: Used to parse a metric and get a=
+n `evlist`.
++- `evlist.compute_metric(metric_name, cpu, thread)`: Used to compute a met=
+ric value for a specific CPU and thread.
++- `evsel.read(cpu, thread)`: Used to read raw counter values.
+=20
+ SEE ALSO
+ --------
+diff --git a/tools/perf/Documentation/perf-script.txt b/tools/perf/Document=
+ation/perf-script.txt
+index 200ea25891d8..59d9dc059723 100644
+--- a/tools/perf/Documentation/perf-script.txt
++++ b/tools/perf/Documentation/perf-script.txt
+@@ -9,10 +9,7 @@ SYNOPSIS
+ --------
+ [verse]
+ 'perf script' [<options>]
+-'perf script' [<options>] record <script> [<record-options>] <command>
+-'perf script' [<options>] report <script> [script-args]
+-'perf script' [<options>] <script> <required-script-args> [<record-options=
+>] <command>
+-'perf script' [<options>] <top-script> [script-args]
++'perf script' [<options>] <script> [script-args]
+=20
+ DESCRIPTION
+ -----------
+@@ -23,58 +20,12 @@ There are several variants of perf script:
+   'perf script' to see a detailed trace of the workload that was
+   recorded.
+=20
+-  You can also run a set of pre-canned scripts that aggregate and
+-  summarize the raw trace data in various ways (the list of scripts is
+-  available via 'perf script -l').  The following variants allow you to
+-  record and run those scripts:
+-
+-  'perf script record <script> <command>' to record the events required
+-  for 'perf script report'.  <script> is the name displayed in the
+-  output of 'perf script --list' i.e. the actual script name minus any
+-  language extension.  If <command> is not specified, the events are
+-  recorded using the -a (system-wide) 'perf record' option.
+-
+-  'perf script report <script> [args]' to run and display the results
+-  of <script>.  <script> is the name displayed in the output of 'perf
+-  script --list' i.e. the actual script name minus any language
+-  extension.  The perf.data output from a previous run of 'perf script
+-  record <script>' is used and should be present for this command to
+-  succeed.  [args] refers to the (mainly optional) args expected by
+-  the script.
+-
+-  'perf script <script> <required-script-args> <command>' to both
+-  record the events required for <script> and to run the <script>
+-  using 'live-mode' i.e. without writing anything to disk.  <script>
+-  is the name displayed in the output of 'perf script --list' i.e. the
+-  actual script name minus any language extension.  If <command> is
+-  not specified, the events are recorded using the -a (system-wide)
+-  'perf record' option.  If <script> has any required args, they
+-  should be specified before <command>.  This mode doesn't allow for
+-  optional script args to be specified; if optional script args are
+-  desired, they can be specified using separate 'perf script record'
+-  and 'perf script report' commands, with the stdout of the record step
+-  piped to the stdin of the report script, using the '-o -' and '-i -'
+-  options of the corresponding commands.
+-
+-  'perf script <top-script>' to both record the events required for
+-  <top-script> and to run the <top-script> using 'live-mode'
+-  i.e. without writing anything to disk.  <top-script> is the name
+-  displayed in the output of 'perf script --list' i.e. the actual
+-  script name minus any language extension; a <top-script> is defined
+-  as any script name ending with the string 'top'.
+-
+-  [<record-options>] can be passed to the record steps of 'perf script
+-  record' and 'live-mode' variants; this isn't possible however for
+-  <top-script> 'live-mode' or 'perf script report' variants.
+-
+-  See the 'SEE ALSO' section for links to language-specific
+-  information on how to write and run your own trace scripts.
++  You can also run standalone scripts that aggregate and summarize the
++  raw trace data in various ways (the list of scripts is available via
++  'perf script -l').
+=20
+ OPTIONS
+ -------
+-<command>...::
+-	Any command you can specify in a shell.
+-
+ -D::
+ --dump-raw-trace=3D::
+         Display verbose dump of the trace data.
+@@ -90,18 +41,7 @@ OPTIONS
+ --list=3D::
+         Display a list of available trace scripts.
+=20
+--s ['lang']::
+---script=3D::
+-        Process trace data with the given script ([lang]:script[.ext]).
+-	If the string 'lang' is specified in place of a script name, a
+-        list of supported languages will be displayed instead.
+=20
+--g::
+---gen-script=3D::
+-	Generate a starter script. If a language is given then the
+-        script is named perf-script.[ext] according to the
+-        language. If a file path is given then python is used for
+-        files ending '.py' and perl used for files ending '.pl'.
+=20
+ --dlfilter=3D<file>::
+ 	Filter sample events using the given shared object file.
+@@ -115,12 +55,6 @@ OPTIONS
+         Display a list of available dlfilters. Use with option -v (must co=
+me
+         before option --list-dlfilters) to show long descriptions.
+=20
+--a::
+-        Force system-wide collection.  Scripts run without a <command>
+-        normally use -a by default, while scripts run with a <command>
+-        normally don't - this option allows the latter to be run in
+-        system-wide mode.
+-
+ -i::
+ --input=3D::
+         Input file name. (default: perf.data unless stdin is a fifo)
+@@ -342,7 +276,6 @@ OPTIONS
+ 	Display extended information about the perf.data file. This adds
+ 	information which may be very large and thus may clutter the display.
+ 	It currently includes: cpu and numa topology of the host system.
+-	It can only be used with the perf script report mode.
+=20
+ --show-kernel-path::
+ 	Try to resolve the path of [kernel.kallsyms]
+@@ -543,6 +476,5 @@ include::guest-files.txt[]
+=20
+ SEE ALSO
+ --------
+-linkperf:perf-record[1], linkperf:perf-script-perl[1],
+-linkperf:perf-script-python[1], linkperf:perf-intel-pt[1],
+-linkperf:perf-dlfilter[1]
++linkperf:perf-record[1], linkperf:perf-script-python[1],
++linkperf:perf-intel-pt[1], linkperf:perf-dlfilter[1]
+diff --git a/tools/perf/Documentation/tips.txt b/tools/perf/Documentation/t=
+ips.txt
+index eb6d56d4d8ba..28953179f59d 100644
+--- a/tools/perf/Documentation/tips.txt
++++ b/tools/perf/Documentation/tips.txt
+@@ -4,7 +4,6 @@ Compare performance results with: perf diff [<old file> <ne=
+w file>]
+ Boolean options have negative forms, e.g.: perf report --no-children
+ To not accumulate CPU time of children symbols add --no-children
+ Customize output of perf script with: perf script -F event,ip,sym
+-Generate a script for your data: perf script -g <lang>
+ Save output of perf stat using: perf stat record <target workload>
+ Create an archive with symtabs to analyse on other machine: perf archive
+ Search options using a keyword: perf report -h <keyword>
+--=20
 2.55.0.1082.g2b9226bbc0-goog
 
