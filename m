@@ -1,56 +1,56 @@
-Received: from mail-pj1-f71.google.com (mail-pj1-f71.google.com [209.85.216.71])
+Received: from mail-pg1-f200.google.com (mail-pg1-f200.google.com [209.85.215.200])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 665A63D75BC
-	for <linux-perf-users@vger.kernel.org>; Sun, 20 Sep 2026 05:23:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.71
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9776D3DB625
+	for <linux-perf-users@vger.kernel.org>; Sun, 20 Sep 2026 05:23:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.200
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789881804; cv=none; b=kKyg1n/rOVbt5+mEVoSdyTVYj0pLA0VxwwARmAkEEjCqDsb6/rvnECwNlVwt+hRh1O8KVaqHb+PFyeaZJlJdtGLtCZ6efMPkNeEwe8FOFdNvR7kkFrIraGhpWYFQbc4XKOc3r2Qbt9lfkE4owSGjWGXe95ARThFTXJjccZUMw0k=
+	t=1789881805; cv=none; b=YGlUffUh9oa0jiaZKYF4a9sjtBvRHcWRqbj31HvUswsSNym1JTPXC9/PcTHPBS163K6OnAm5X5onOxKtPXhP8L65mRN0cc/bYZ+VMdKkH9oQWzxZXicUTpFpjxdGyT1iNq3sWxKHuU7RkHJmUmgtVUcesdAzNRbrtykeg3sO3no=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789881804; c=relaxed/simple;
-	bh=EuY0nGo0AsNrSePWr/pP/dbcTEVr/gBjekDZeFg5QRs=;
+	s=arc-20240116; t=1789881805; c=relaxed/simple;
+	bh=B/hM4tlZjvZDpu9nDX17Q51jeBATLZV3v0o5bAU0Z+c=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=VbJzYCh4Py2hgrV4GCmLhy/fe3nSlk/CgyUacLk3zPIqg//peqaSF+wjA4KWfZtjkVlpbGsze9ed7RsYtOpBcGJmnPuv/KqwnQ2q9MufUamuwOklq5qNem3ees5YwDEBRy8jE9rO0Z852AS854XwxOmO9WgWgJCQgjWlXu7FKjk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Z3jdVnFD; arc=none smtp.client-ip=209.85.216.71
+	 To:Cc:Content-Type; b=qJD2x6kAerRhe4EVFOV5u/I/P5J87+4GWrnIw9ectggpFMR05bibboXlPDTQqxZZe59dx4D0v/jvu0s4vIOmHpH2V++YNTsNcPonLT6IDPaT/BxS4e4E+PmhpHBwHHIqMML8SCw/fPtnLfwgEw/S4f3I06W52pmOhft+63GRhuM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=W8Gb9RIb; arc=none smtp.client-ip=209.85.215.200
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Z3jdVnFD"
-Received: by mail-pj1-f71.google.com with SMTP id 98e67ed59e1d1-395543dc382so2583951a91.0
-        for <linux-perf-users@vger.kernel.org>; Sat, 19 Sep 2026 22:23:21 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="W8Gb9RIb"
+Received: by mail-pg1-f200.google.com with SMTP id 41be03b00d2f7-cc7361c62b9so675527a12.3
+        for <linux-perf-users@vger.kernel.org>; Sat, 19 Sep 2026 22:23:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1789881801; x=1790486601; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1789881803; x=1790486603; darn=vger.kernel.org;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=qVd8SDndA/jFEqEh1FoOTRTdjch16nAFuYJRUVyZV54=;
-        b=Z3jdVnFDZjfXkINFLhYqVciQleQ5d7HyFaXrm7k9SxRYEjpM2Z+YmBSPxi41qEW7aY
-         G0fDZtytv2teN2K7Bn2uxmcIxqk5wrC2FTe+QaYPr1jV62z9V6lXCZhLOjcQX9yfU4Kq
-         oRL4VVRG7+X206G08ReqO6RGnmHGQlHawJMHPwoDxERZbmU+CFMOy2+leV0h3Z99OG0f
-         JMyRfRhPKxFrCYjbrEQlW9li1VY6/G00WuM0yYdD8DZVAt1KJarliA1ibJlkDFSiwckE
-         rwNPJwtYDZo2hEcgpokiOODg8ywLVPROKfTpVVS9PKO8n1anZxZUa2qx3LpRPbcRZinM
-         k6JQ==
+        bh=aTR/BtnRdgHInj0LcmAaMp6WD10lbn0vAW55yU/mp8g=;
+        b=W8Gb9RIbSBsgnxGI12xj8gVPwE92hZmLTVmUxSA/IgIkYBAweAkb7rjYNSb0YRx1iQ
+         BI+5FqhKtlZA8yObturmuB05ptLfh9fTqmV0mppy2j45vNvWbxJcozHohNYbmsh73Ge2
+         S1zNcXHTSBKwcfjy2UCu6/umsw8L+BSIenlwFRVNDLGrvoTrdDdKjoJn9orFajcbSZk5
+         9U+6YHzXAjTxzPxrhoSc7FUWE3Nc96Sh8iuAAlegrxtnQzB6L/zU0AHLrwruenyxyAia
+         D0GebTFn4NG3+QoiEhR3O+5ywsSS+FYN/TF0rodyrPrv+fRCbpOkQ+Sr1NzHOlEv5u8y
+         NHEg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1789881801; x=1790486601;
+        d=1e100.net; s=20260707; t=1789881803; x=1790486603;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=qVd8SDndA/jFEqEh1FoOTRTdjch16nAFuYJRUVyZV54=;
-        b=oGxFnnis+DQXjbaMxy2q0aYSms7Cq5Nk/VugMqimTfQON2Gs/bDRvfXoOTMiLBL68g
-         yCZG7fWhAYRRZdBuzaEpimuIBb5+m/X58rr30bCP2314E68UowN3rLoUXThyp9ldPqib
-         7hbTWCPFKTM8lcan8AvG0nKuKWUrj+4AlCkUJwKDdu5HS4oKq5cHjCqODcKLGNSYdpXS
-         p2qDUNd1hJyyDkClBY1dLCnzuiuJuOtY1eg8TUOWM+TXxANOPSy/w1nnDNxwvrS9mC3U
-         5CYQHNi+MGvdRFSr4c4cc8xXr4JatUP8yvD/ecqBJP2EpdFI2emGdwYPvxNsiTQCBtfs
-         3bpg==
-X-Forwarded-Encrypted: i=1; AKwUvBw4/GxEr3eCc8WRxxWNOMI6Nj2HssfnXYp+VunYFYZrqZGoGt/kc0ttc5CsRtSV6jq4wx+JvqIb19WzmWb8C9D+@vger.kernel.org
-X-Gm-Message-State: AFuF++llf+YRGctS9WKEDkWfKpNovaw0t8xjoFYs8IQg4NbtVZWoFO9A
-	v3l3F/JC+d+rhweoOMaW98RjDSyxuFYUjoS/RvW18skvuhrLRHfvSYm4tn6JOoFR+c1FSGJcp8K
-	DVQ6yoY1Lwg==
-X-Received: from dloo27-n1.prod.google.com ([2002:a05:7023:a5b:10b0:144:c29b:a213])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:1dc7:b0:39e:6c68:1553
- with SMTP id 98e67ed59e1d1-39e6c68331amr7504735a91.27.1789881800728; Sat, 19
- Sep 2026 22:23:20 -0700 (PDT)
-Date: Sat, 19 Sep 2026 22:21:16 -0700
+        bh=aTR/BtnRdgHInj0LcmAaMp6WD10lbn0vAW55yU/mp8g=;
+        b=mpblyPo1jSLRJN/8CxfYZGthCYo/vxVc9yV+7KTnyBhdEOKUfKzP+GYWIei2Q0mhlS
+         3Ys76PGONlo4hEVPmNmH1ln+2gbnUf7GbI2c0Z6CvniTjeTLWDnK2nmaRHMjdV+/JVHJ
+         jL72uXkb8+soWeaiUclcuUjpCRFoLmyh8XJG6gonJ+L1Q9W6lswMSUJxznF5OOLkW2ay
+         TO3JXPeUvKeEL2G7LkhTHPOCs0AEoJYn2nWePxruvqReIF7tGZM+lqa7Gj/9QUzIx3QP
+         A2dgXYEWkPdVHyBJMJNuZ164E22VQmGwHkwB8VnbCW0yxj3xW7fgWn08X5V8yKJ4MbnR
+         8V6A==
+X-Forwarded-Encrypted: i=1; AKwUvBw84IFd4z0/oPUvFlm5jina3YtVLnYZ70ZIeU8REncP0yxCLRGMUCcBC2pg0KIpHWAlar2uIIvEZGWDYOZ3BgMC@vger.kernel.org
+X-Gm-Message-State: AFuF++nMxdFkEr4e6pSg1ZxcpEylzhQuE3UiS9VCCk5QDNh/4P988dXK
+	OFbDo5ekH1TiVjJCQys7N+mrz2yLcl0AbtUMMpovP/GCA75JJIA1X6YBmxAeF8cZNGRfiML1z7P
+	F6uII94gl5A==
+X-Received: from dlbek20.prod.google.com ([2002:a05:7022:c94:b0:143:7b2d:7e10])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a20:cf86:b0:3dd:a006:ed97
+ with SMTP id adf61e73a8af0-3dda006edd9mr6500085637.45.1789881802544; Sat, 19
+ Sep 2026 22:23:22 -0700 (PDT)
+Date: Sat, 19 Sep 2026 22:21:17 -0700
 In-Reply-To: <cover.1789880842.git.irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -60,8 +60,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <cover.1789880842.git.irogers@google.com>
 X-Mailer: git-send-email 2.55.0.1082.g2b9226bbc0-goog
-Message-ID: <5259e3b062f459b38e8ced684c13f838227579d9.1789880842.git.irogers@google.com>
-Subject: [PATCH v1 24/49] perf python: Port failed-syscalls-by-pid to perf module
+Message-ID: <5bf86935636daa6939a43ceeca772ec8f053381a.1789880842.git.irogers@google.com>
+Subject: [PATCH v1 25/49] perf python: Port failed-syscalls from Perl to perf module
 From: Ian Rogers <irogers@google.com>
 To: irogers@google.com, acme@kernel.org, adrian.hunter@intel.com, 
 	alice.mei.rogers@gmail.com, james.clark@linaro.org, 
@@ -71,221 +71,136 @@ Cc: dapeng1.mi@linux.intel.com, leo.yan@linux.dev,
 	tmricht@linux.ibm.com
 Content-Type: text/plain; charset="UTF-8"
 
-Port failed-syscalls-by-pid.py to a standalone script in
-tools/perf/python/ using the perf module:
-- Resolve architecture-aware syscall names using
-  perf.syscall_name(id, session.e_machine) instead of host python-audit
-  tables, supporting cross-architecture perf.data files without external
-  dependencies.
-- Translate negative syscall return values into symbolic E* error names
-  using errno.errorcode and architecture-specific session.e_machine
-  overrides.
-- Encapsulate aggregation in a SyscallAnalyzer class using
-  collections.defaultdict and add argparse filtering by comm, PID, and
-  -i/--input.
+Replace the legacy Perl script failed-syscalls.pl with a standalone
+Python script in tools/perf/python/failed-syscalls.py using the perf
+Python module.
 
-Add a shell test (test_failed_syscalls_by_pid_python.sh) to verify the
-standalone script.
+Improvements compared to the legacy Perl script:
+- Remove the dependency on libperl and Perf::Trace::Util.
+- Support both syscalls:sys_exit_* and raw_syscalls:sys_exit events (the
+  legacy script only handled raw_syscalls::sys_exit).
+- Use session.is_64_bit to distinguish 32-bit vs 64-bit unsigned error
+  return ranges (0xfffff000..0xffffffff vs >= 0xfffffffffffff000) so
+  valid 64-bit syscalls returning ~4GB values are not misclassified as
+  32-bit negative errors.
+- Add argparse CLI support (-i/--input and optional comm filter) and
+  full type annotations.
+
+Add a shell test
+(test_failed_syscalls_python.sh) to verify the standalone script.
 
 Assisted-by: Antigravity:gemini-3.1-pro
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/python/failed-syscalls-by-pid.py   | 175 ++++++++++++++++++
- .../test_failed_syscalls_by_pid_python.sh     |  92 +++++++++
- 2 files changed, 267 insertions(+)
- create mode 100755 tools/perf/python/failed-syscalls-by-pid.py
- create mode 100755 tools/perf/tests/shell/test_failed_syscalls_by_pid_python.sh
+ tools/perf/python/failed-syscalls.py          | 88 +++++++++++++++++++
+ .../shell/test_failed_syscalls_python.sh      | 81 +++++++++++++++++
+ 2 files changed, 169 insertions(+)
+ create mode 100755 tools/perf/python/failed-syscalls.py
+ create mode 100755 tools/perf/tests/shell/test_failed_syscalls_python.sh
 
-diff --git a/tools/perf/python/failed-syscalls-by-pid.py b/tools/perf/python/failed-syscalls-by-pid.py
+diff --git a/tools/perf/python/failed-syscalls.py b/tools/perf/python/failed-syscalls.py
 new file mode 100755
-index 000000000000..91a5309e3658
+index 000000000000..99c3432b2e31
 --- /dev/null
-+++ b/tools/perf/python/failed-syscalls-by-pid.py
-@@ -0,0 +1,175 @@
++++ b/tools/perf/python/failed-syscalls.py
+@@ -0,0 +1,88 @@
 +#!/usr/bin/env python3
 +# SPDX-License-Identifier: GPL-2.0
-+"""
-+Displays system-wide failed system call totals, broken down by pid.
-+If a [comm] or [pid] arg is specified, only syscalls called by it are displayed.
-+
-+Ported from tools/perf/scripts/python/failed-syscalls-by-pid.py
-+"""
++"""Failed system call counts."""
 +from __future__ import annotations
 +
 +import argparse
 +from collections import defaultdict
-+import errno
-+import os
 +import sys
 +from typing import Optional
 +import perf
 +
-+
-+_GENERIC_ERRNO_OVERRIDES: dict[int, str] = {
-+    11: "EAGAIN", 35: "EDEADLK", 36: "ENAMETOOLONG", 37: "ENOLCK",
-+    38: "ENOSYS", 39: "ENOTEMPTY", 40: "ELOOP", 42: "ENOMSG",
-+    45: "EOPNOTSUPP", 60: "ENOSTR", 61: "ENODATA", 78: "EREMCHG",
-+    87: "EUSERS", 89: "EDESTADDRREQ", 90: "EMSGSIZE", 110: "ETIMEDOUT",
-+    111: "ECONNREFUSED", 122: "EDQUOT",
-+}
-+
-+_ARCH_ERRNO_TABLES: dict[int, dict[int, str]] = {
-+    2: {35: "EAGAIN", 36: "EINPROGRESS", 37: "EALREADY", 78: "EDEADLK", 87: "ENOMSG"},
-+    8: {35: "ENOMSG", 45: "EDEADLK", 89: "ENOSYS", 90: "ELOOP", 122: "EDQUOT"},
-+    15: {35: "ENOMSG", 45: "EDEADLK", 246: "EAGAIN", 251: "ENOSYS"},
-+    43: {35: "EAGAIN", 36: "EINPROGRESS", 37: "EALREADY", 78: "EDEADLK", 87: "ENOMSG"},
-+    0x9026: {35: "EAGAIN", 11: "EDEADLK", 60: "ETIMEDOUT", 61: "ECONNREFUSED"},
-+}
-+
-+
-+def strerror(nr: int, e_machine: int = 0) -> str:
-+    """Return error string for a given errno, accounting for target e_machine."""
-+    err_num = abs(nr)
-+    if e_machine in _ARCH_ERRNO_TABLES and err_num in _ARCH_ERRNO_TABLES[e_machine]:
-+        return _ARCH_ERRNO_TABLES[e_machine][err_num]
-+    if e_machine != 0 and err_num in _GENERIC_ERRNO_OVERRIDES:
-+        return _GENERIC_ERRNO_OVERRIDES[err_num]
-+    try:
-+        return errno.errorcode[err_num]
-+    except KeyError:
-+        return f"Unknown {nr} errno"
-+
-+
-+class SyscallAnalyzer:
-+    """Analyzes failed syscalls and aggregates counts."""
-+
-+    def __init__(self, for_comm: Optional[str] = None, for_pid: Optional[int] = None):
-+        self.for_comm = for_comm
-+        self.for_pid = for_pid
++class FailedSyscalls:
++    """Tracks and displays failed system call totals."""
++    def __init__(self, comm: Optional[str] = None) -> None:
++        self.failed_syscalls: dict[str, int] = defaultdict(int)
++        self.for_comm = comm
 +        self.session: Optional[perf.session] = None
-+        self.syscalls: dict[tuple[str, int, int, int], int] = defaultdict(int)
-+        machine = os.uname().machine
-+        self.host_64_bit = ("64" in machine or machine in ("s390x", "alpha")
-+                            or sys.maxsize > 0xffffffff)
 +
 +    def process_event(self, sample: perf.sample_event) -> None:
-+        """Process raw_syscalls:sys_exit and syscalls:sys_exit events."""
++        """Process sys_exit events."""
 +        event_name = str(sample.evsel)
-+        if "raw_syscalls:sys_exit" not in event_name and "syscalls:sys_exit" not in event_name:
++        if not event_name.startswith("evsel(syscalls:sys_exit") and \
++           not event_name.startswith("evsel(raw_syscalls:sys_exit"):
 +            return
 +
-+        pid = sample.sample_tid
-+        comm = "Unknown"
-+        if hasattr(self, 'session') and self.session:
-+            try:
-+                thread = self.session.find_thread(sample.sample_pid, pid)
-+                if thread:
-+                    comm = thread.comm() or "Unknown"
-+            except (OSError, ValueError, KeyError, RuntimeError, TypeError, AttributeError):
-+                pass
++        try:
++            ret = sample.ret
++        except AttributeError:
++            print("ERROR: tracepoint fields missed", file=sys.stderr)
++            sys.exit(1)
 +
-+        if self.for_comm is not None and comm != self.for_comm:
-+            return
-+        if self.for_pid is not None and pid != self.for_pid:
-+            return
-+
-+        ret = getattr(sample, "ret", 0)
-+        is_64_bit = (getattr(self.session, "is_64_bit", self.host_64_bit)
-+                     if self.session else self.host_64_bit)
 +        if ret > 0:
-+            if not is_64_bit and 0xfffff000 <= ret <= 0xffffffff:
-+                ret -= 0x100000000
-+            elif ret >= 0xfffffffffffff000:
++            if ret >= 0xfffffffffffff000:  # 64-bit negative errors
 +                ret -= 0x10000000000000000
++            elif 0xfffff000 <= ret <= 0xffffffff:  # 32-bit negative errors
++                assert self.session is not None
++                if not self.session.is_64_bit:
++                    ret -= 0x100000000
 +
-+        if -4095 <= ret < 0:
-+            syscall_id = getattr(sample, "__syscall_nr", -1)
-+            if syscall_id < 0 or syscall_id > 0xffff:
-+                syscall_id = getattr(sample, "nr", -1)
-+            if syscall_id < 0 or syscall_id > 0xffff:
-+                syscall_id = getattr(sample, "sys_id", -1)
-+            if syscall_id < 0 or syscall_id > 0xffff:
-+                syscall_id = getattr(sample, "id", -1)
++        if ret >= 0:
++            return
 +
-+            if 0 <= syscall_id <= 0xffff:
-+                self.syscalls[(comm, pid, syscall_id, ret)] += 1
++        tid = sample.sample_tid
++        assert self.session is not None
++        try:
++            thread = self.session.find_thread(tid)
++            comm = (thread.comm() if thread else None) or "unknown"
++        except (TypeError, AttributeError):
++            # find_thread returns None when the thread isn't known.
++            comm = "unknown"
 +
-+    def print_summary(self) -> None:
-+        """Print aggregated statistics."""
-+        if self.for_comm is not None:
-+            print(f"\nsyscall errors for {self.for_comm}:\n")
-+        elif self.for_pid is not None:
-+            print(f"\nsyscall errors for PID {self.for_pid}:\n")
-+        else:
-+            print("\nsyscall errors:\n")
++        if self.for_comm and comm != self.for_comm:
++            return
 +
-+        print(f"{'comm [pid]':<30}  {'count':>10}")
-+        print(f"{'-' * 30:<30}  {'-' * 10:>10}")
++        self.failed_syscalls[comm] += 1
 +
-+        sorted_keys = sorted(
-+            self.syscalls.keys(),
-+            key=lambda k: (k[0], k[1], k[2], -self.syscalls[k])
-+        )
-+        current_comm_pid = None
-+        current_syscall = None
-+        emach = getattr(self.session, "e_machine", 0) or 0
-+        for comm, pid, syscall_id, ret in sorted_keys:
-+            if current_comm_pid != (comm, pid):
-+                print(f"\n{comm} [{pid}]")
-+                current_comm_pid = (comm, pid)
-+                current_syscall = None
-+            if current_syscall != syscall_id:
-+                try:
-+                    if emach:
-+                        name = perf.syscall_name(syscall_id, emach) or str(syscall_id)
-+                    else:
-+                        name = perf.syscall_name(syscall_id) or str(syscall_id)
-+                except AttributeError:
-+                    name = str(syscall_id)
-+                print(f"  syscall: {name:<16}")
-+                current_syscall = syscall_id
-+            err_str = strerror(ret, emach)
-+            count = self.syscalls[(comm, pid, syscall_id, ret)]
-+            print(f"    err = {err_str:<20}  {count:10d}")
++    def print_totals(self) -> None:
++        """Print summary table."""
++        print("\nfailed syscalls by comm:\n")
++        print(f"{'comm':<20s}  {'# errors':>10s}")
++        print(f"{'-'*20}  {'-'*10}")
 +
++        for comm, val in sorted(self.failed_syscalls.items(),
++                                key=lambda kv: (kv[1], kv[0]), reverse=True):
++            print(f"{comm:<20s}  {val:10d}")
++
++    def run(self, input_file: str) -> None:
++        """Run the session."""
++        self.session = perf.session(perf.data(input_file), sample=self.process_event)
++        self.session.process_events()
++        self.print_totals()
++
++def main() -> None:
++    """Main function."""
++    parser = argparse.ArgumentParser(description="Trace failed syscalls")
++    parser.add_argument("comm", nargs="?", help="Filter by command name")
++    parser.add_argument("-i", "--input", default="perf.data", help="Input file")
++    args = parser.parse_args()
++
++    analyzer = FailedSyscalls(args.comm)
++    try:
++        analyzer.run(args.input)
++    except IOError as e:
++        print(e, file=sys.stderr)
++        sys.exit(1)
 +
 +if __name__ == "__main__":
-+    ap = argparse.ArgumentParser(
-+        description="Displays system-wide failed system call totals, "
-+                    "broken down by pid.")
-+    ap.add_argument("-i", "--input", default="perf.data",
-+                    help="Input file name")
-+    ap.add_argument("filter", nargs="?", help="COMM or PID to filter by")
-+    args = ap.parse_args()
-+
-+    F_COMM = None
-+    F_PID = None
-+
-+    if args.filter:
-+        try:
-+            F_PID = int(args.filter)
-+        except ValueError:
-+            F_COMM = args.filter
-+
-+    analyzer = SyscallAnalyzer(F_COMM, F_PID)
-+
-+    try:
-+        print("Press control+C to stop and show the summary")
-+        session = perf.session(perf.data(args.input), sample=analyzer.process_event)
-+        analyzer.session = session
-+        session.process_events()
-+        analyzer.print_summary()
-+    except KeyboardInterrupt:
-+        analyzer.print_summary()
-+    except (OSError, ValueError, KeyError, RuntimeError, TypeError, AttributeError) as e:
-+        print(f"Error processing events: {e}")
-+        sys.exit(1)
-+    finally:
-+        analyzer.session = None
-diff --git a/tools/perf/tests/shell/test_failed_syscalls_by_pid_python.sh b/tools/perf/tests/shell/test_failed_syscalls_by_pid_python.sh
++    main()
+diff --git a/tools/perf/tests/shell/test_failed_syscalls_python.sh b/tools/perf/tests/shell/test_failed_syscalls_python.sh
 new file mode 100755
-index 000000000000..d5fab922b8a9
+index 000000000000..7ab1f50b4260
 --- /dev/null
-+++ b/tools/perf/tests/shell/test_failed_syscalls_by_pid_python.sh
-@@ -0,0 +1,92 @@
++++ b/tools/perf/tests/shell/test_failed_syscalls_python.sh
+@@ -0,0 +1,81 @@
 +#!/bin/bash
 +# SPDX-License-Identifier: GPL-2.0
-+# failed-syscalls-by-pid python test
++# failed-syscalls python test
 +
 +set -e
 +
@@ -299,7 +214,7 @@ index 000000000000..d5fab922b8a9
 +fi
 +
 +script_dir="$(dirname "$0")/../../python"
-+script_path="${script_dir}/failed-syscalls-by-pid.py"
++script_path="${script_dir}/failed-syscalls.py"
 +
 +if ! perf check feature -q libtraceevent > /dev/null 2>&1; then
 +	echo "Skipping test, libtraceevent is disabled"
@@ -308,7 +223,7 @@ index 000000000000..d5fab922b8a9
 +
 +
 +if [ ! -f "$script_path" ]; then
-+	echo "Skipping test, failed-syscalls-by-pid.py not found at $script_path"
++	echo "Skipping test, failed-syscalls.py not found at $script_path"
 +	exit 2
 +fi
 +
@@ -319,60 +234,49 @@ index 000000000000..d5fab922b8a9
 +cleanup() {
 +	rm -f "${temp_data}" "${temp_out}"
 +}
-+
 +trap 'cleanup' EXIT TERM INT
 +
 +temp_data=$(mktemp /tmp/perf.data.XXXXXX)
 +temp_out=$(mktemp /tmp/perf.out.XXXXXX)
 +
-+test_file_mode() {
-+	echo "Testing failed-syscalls-by-pid.py..."
++echo "Testing failed-syscalls.py..."
 +
-+	# Check if syscalls:sys_exit is supported/readable
++# Check if sys_exit event can be recorded
++if ! perf record -e raw_syscalls:sys_exit -o /dev/null -- true >/dev/null 2>&1; then
 +	if ! perf record -e syscalls:sys_exit -o /dev/null -- true >/dev/null 2>&1; then
-+		if ! perf record -e raw_syscalls:sys_exit -o /dev/null -- true >/dev/null 2>&1; then
-+			echo "Skipping test, no syscalls:sys_exit or raw_syscalls:sys_exit event"
-+			exit 2
-+		else
-+			EVENT="raw_syscalls:sys_exit"
-+		fi
++		echo "Skipping test, no permission or support for sys_exit event"
++		exit 2
 +	else
 +		EVENT="syscalls:sys_exit"
 +	fi
++else
++	EVENT="raw_syscalls:sys_exit"
++fi
 +
-+	# Generate some events by running a command that should fail at least some syscall
-+	# (e.g. failing stat on non-existent file).
-+	# Using '|| true' because 'perf record' returns the exit code of 'ls',
-+	# which fails with ENOENT
-+	perf record -e "${EVENT}" -o "${temp_data}" -- ls /does_not_exist >/dev/null 2>&1 || true
-+	if [ ! -s "${temp_data}" ]; then
-+		echo "Skipping test, perf record failed to create data"
-+		exit 2
-+	fi
++# Run perf record with a command that fails a syscall (ls non-existent file).
++# ls exits with non-zero, so perf record returns non-zero exit code of the workload.
++perf record -e "${EVENT}" -o "${temp_data}" \
++	-- ls /nonexistent_file_for_test >/dev/null 2>&1 || true
 +
-+	# Run the script and check output
-+	if ! "$PYTHON" "$script_path" -i "${temp_data}" > "${temp_out}"; then
-+		echo "failed-syscalls-by-pid test failed."
-+		err=1
-+	elif ! "$PYTHON" "$script_path" -i "${temp_data}" "ls" >/dev/null; then
-+		echo "failed-syscalls-by-pid comm filter test failed."
-+		err=1
-+	elif ! "$PYTHON" "$script_path" -i "${temp_data}" "$$" >/dev/null; then
-+		echo "failed-syscalls-by-pid PID filter test failed."
++if [ ! -s "${temp_data}" ]; then
++	echo "Skipping test, perf record failed to create data"
++	exit 2
++fi
++
++# Check that the script executes
++if ! "$PYTHON" "$script_path" -i "${temp_data}" > "${temp_out}"; then
++	echo "failed-syscalls.py test failed"
++	err=1
++else
++	if ! grep -q "failed syscalls by comm" "${temp_out}" || \
++		! grep -q "ls" "${temp_out}"; then
++		echo "Failed to find the metrics table header or expected error"
 +		err=1
 +	else
-+		if ! grep -n -q "err = ENOENT" "${temp_out}"; then
-+			echo "Failed to find expected failed syscalls"
-+			cat "${temp_out}"
-+			err=1
-+		else
-+			echo "failed-syscalls-by-pid test passed."
-+		fi
++		echo "failed-syscalls test passed."
 +	fi
-+	rm -f "${temp_out}"
-+}
-+
-+test_file_mode
++fi
++rm -f "${temp_out}"
 +
 +exit $err
 -- 
