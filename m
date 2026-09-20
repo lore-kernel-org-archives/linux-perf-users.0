@@ -1,55 +1,60 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D39B3C81B5
-	for <linux-perf-users@vger.kernel.org>; Sun, 20 Sep 2026 05:31:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2A7F3C4565
+	for <linux-perf-users@vger.kernel.org>; Sun, 20 Sep 2026 05:31:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789882305; cv=none; b=ajUds8uPPo8DIkB+FCv3d2LCNthfpbEtklRIc4VNmfGq1CibeIUV3p+PJ0g+v1OAbVlGc8pnierq2xWfMYjTB4JET17o5F16H9EOEYWxgV+/v5eFkaO50GxNLbYlj64MYrmb7MLkrmWz1TRN346FRjbb16kSMe+pKEjKKiTGAlo=
+	t=1789882316; cv=none; b=LUqQfTjVQ9cgRGCodZE0EhH6YMOk6bIvcx/SXVtrpz0GKylYsMSGQr//k0SVkt9ZjYwHb0100IFLG113hcLL5rcFmljE/3Qg/xyzGYnjc5kIKN2wAyCpK5bu8v34OWS5xVdu9A+Io3rSuzOD5dEuDHaGnUO6uhSJ2VbDowHZVTo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789882305; c=relaxed/simple;
-	bh=t9OPSkGltzXFkdks1uM+aeTCF+jgRZOrvJ5Dy9I+G/I=;
+	s=arc-20240116; t=1789882316; c=relaxed/simple;
+	bh=nW+QknNdHTC7Ocvt/mRMFN/nbHs90TKf0tFgjLFuc1o=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=pMzAM+FEkQ5XnZgq+hzGVUOwH8qfr9i07L0BgA6HndnypwsATLdqCoZ/wUeFzxqe7m/bC472fHlTDh3EU0wLb16hD9mYhoCJ7j/0QTaKR60Dya1X7mPmu11aacS6vyQjgH8oDTzf63JnPxRFoUI7zFb+XTv+Omz4cmG35Bb4OPk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nrpP61Ve; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=cGFUFMtwZwO+0rAFyqWPL8Nn4I4RMNqhx171DLtjjhKC6HDUFmLyiRFxHwWG6Lqz0+Di9W8+TnbzCMwGcm5o+xGcg+7l3zXDvSdSXZdtj9KC33PgxW4ZemLUecsLGNrmCLtmXo0QARJYuQAdVQKWioq8KvGBospxLFDW9pcflhQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=h39JBqDo; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nrpP61Ve"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1A5051F000FF;
-	Sun, 20 Sep 2026 05:31:44 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="h39JBqDo"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B2F611F000FF;
+	Sun, 20 Sep 2026 05:31:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789882304;
-	bh=t9OPSkGltzXFkdks1uM+aeTCF+jgRZOrvJ5Dy9I+G/I=;
+	s=k20260515; t=1789882314;
+	bh=nW+QknNdHTC7Ocvt/mRMFN/nbHs90TKf0tFgjLFuc1o=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=nrpP61Venm1l84XEM+2WmFGIKjdiFtL5zDREi1uV770meB7NqBcKMKPoTuEzgyxdJ
-	 QPZDOcIy/NnGLqlbbLNgJTdSU6OyNJ01Lp355v6L3X7HPIVt0aWghKHHSyBmObng3m
-	 TeutgswLn6CaZVcjHQA4XQDUpaR0uhkJ/waDQcIWthtf3xrxhw1QvFCtaXq8f7C+7+
-	 ah2DS1Q1/yI/3FW3l8+J9S43Yl2XhMKAON+JG0V3Y0QQ//fvDWuheTpuwvnAkgjaA6
-	 +6R3G/qX4AA3XcO5gCvpuIxpYiY/6mjJaqkD4fwA9sdCovaQxcc9gxPrlsDsgnIEQo
-	 KoSqeMrcElNQg==
+	b=h39JBqDodAIDRRzyzvhH+dNY/UuLvMfo2PUrv+V7jBfvvdkcp9NF7PIcplm0Tk8Tx
+	 WStF4DUm3rmSHDXi4nJaE0AuO1s9HGD5F4+bp6nlzE4vkxahOKCNnL+I//OxYsvD8D
+	 6nDImZ36Nwpx7QBXuyapk5bP5m3w1gBi3WPNZ6mBXrNy6vN31x5GBHvVxTnTtznJmu
+	 ikOISkkGz5s/n1j87QCPCCRAfDhST6rzZrPKqaOCjKGeheZ6cQM7eeLf5GX1BDQnRe
+	 GqUyLFutU0M6R0ZjAN4bHYJCAMP8fF77Dj1TS0GdfgQF5g0xL8io0IlSujjhVg/I2N
+	 LeG3E2gYiHxiQ==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v1 03/49] perf python: Clean up pylint warnings in
- ilist.py
+Subject: Re: [PATCH v1 13/49] perf build: Make mypy build test opt-out
+ (NO_MYPY=1)
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Ian Rogers" <irogers@google.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <b65be68e3d163b8ff889ce2d16e4d726d8e6cd74.1789880842.git.irogers@google.com>
+In-Reply-To: <ce0228594dc98299f205bbba86e1cb8220e78a34.1789880842.git.irogers@google.com>
 References: <cover.1789880842.git.irogers@google.com>
- <b65be68e3d163b8ff889ce2d16e4d726d8e6cd74.1789880842.git.irogers@google.com>
+ <ce0228594dc98299f205bbba86e1cb8220e78a34.1789880842.git.irogers@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Sun, 20 Sep 2026 05:31:43 +0000
-Message-Id: <20260920053144.1A5051F000FF@smtp.kernel.org>
+Date: Sun, 20 Sep 2026 05:31:54 +0000
+Message-Id: <20260920053154.B2F611F000FF@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-> Replace bare 'except:' clauses (pylint W0702: bare-except) in ilist.py
-> with specific exception tuples (OSError, ValueError, RuntimeError,
-> TypeError, KeyError) and use a safe '.get("name", "")' sort key in
-> IListApp.compose() so that ilist.py passes pylint without warning
-> suppression comments and handles unnamed PMU events gracefully.
+> Commit 168910d0f937 ("perf build: Add mypy build tests") added mypy as an
+> opt-in compile-time check (MYPY=3D1) because of existing mypy errors acro=
+ss
+> perf Python scripts.
+>=20
+> Now that all Python scripts in tools/perf have been cleaned up and pass
+> mypy without errors, make the mypy build test opt-out (default on when
+> mypy is installed, disabled with NO_MYPY=3D1), matching NO_SHELLCHECK=3D1.
+> Set MYPYPATH to tools/perf/python so local imports resolve during type
+> checking, and clean *.mypy_log files in 'make clean'.
 >=20
 > Assisted-by: Antigravity:gemini-3.1-pro
 > Signed-off-by: Ian Rogers <irogers@google.com>
@@ -58,5 +63,5 @@ Sashiko has reviewed this patch and found no issues. It looks great!
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/cover.1789880842.gi=
-t.irogers@google.com?part=3D3
+t.irogers@google.com?part=3D13
 
