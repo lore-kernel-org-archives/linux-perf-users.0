@@ -1,56 +1,56 @@
-Received: from mail-pf1-f200.google.com (mail-pf1-f200.google.com [209.85.210.200])
+Received: from mail-pj1-f71.google.com (mail-pj1-f71.google.com [209.85.216.71])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3BB33546D9
-	for <linux-perf-users@vger.kernel.org>; Mon, 21 Sep 2026 05:07:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C9A9358368
+	for <linux-perf-users@vger.kernel.org>; Mon, 21 Sep 2026 05:07:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.71
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789967248; cv=none; b=HSEwNcOfZj46zZROsYNZ9fMZPWeVFzpLh8tsGoljlh4OlHqWncha8qeyN3UKR2LUhU0I7pkBtX109b714UY685tBv9qD2iDSry/6LaPjYKi+muHhP6OBb5nNemcAvvwrer02X/tz3cTgatFZImJBU3NY7cMfagWYnSzEVf5xHVs=
+	t=1789967249; cv=none; b=lNtV/9XNdbzxGWU2DE8UOqxd7fdGld/1I0j6wOy5FmIpspvpeNnQyWHTvp6YuM2upWXrmjR6mh1m01H2icjRDyGPgDitkj9JjZkYQs5yZA2Ljz64OLXWdQ+5a4NhcDcQDx1db23l53vei6EA99RzVTYbmPmpp4eF3aM0I6/qn+U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789967248; c=relaxed/simple;
-	bh=QT6fW/wDaOYv9Maxsz1S+C+qWFVIOpIYFzEV0IH0erg=;
+	s=arc-20240116; t=1789967249; c=relaxed/simple;
+	bh=Qw4ZWkFWJPRmZ5O2wvrL8xQ8BuWvK+mBZlcas52Oe64=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=UYeVQE7Ua4O8ejLjBjNnjwfl2CBJab8384hxpbObV7/+of7pEPkf8WWfG2eWKLdWT7y3ugi6L+vie0WEVZQUgxUWrNH7SvJlZ9aa7IaYHZizEwBOD6uUlteXfs8s7hQaGj4ViNQtiBzw7aJb96E943vXEpex5nhCwrmM2kSwHwg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=SrFHQt1Y; arc=none smtp.client-ip=209.85.210.200
+	 To:Cc:Content-Type; b=IKLZtXKsnPAocjuYhR9uwKQq72boC8RhAjsvhxXYrWF1qkKkX8nw54p+QAVZ+QFJqHbM0P/WDfXHhRuLP5SWgRZxwGbkG4NVrdmh6ixP9FEWmd2E8GZt1mg2t4i/Ptum6Px8zX87xNIMXW7a2KBv+1yt3EuXu0293gSP2K3Jq9M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ArW5a8IE; arc=none smtp.client-ip=209.85.216.71
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="SrFHQt1Y"
-Received: by mail-pf1-f200.google.com with SMTP id d2e1a72fcca58-855f662439aso5689584b3a.1
-        for <linux-perf-users@vger.kernel.org>; Sun, 20 Sep 2026 22:07:26 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ArW5a8IE"
+Received: by mail-pj1-f71.google.com with SMTP id 98e67ed59e1d1-39de4a68f7cso4760600a91.1
+        for <linux-perf-users@vger.kernel.org>; Sun, 20 Sep 2026 22:07:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1789967246; x=1790572046; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1789967248; x=1790572048; darn=vger.kernel.org;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=xMCBfAwcSuA+J1+T19JFxyf0Xdh50xgh0ZHEsvwdFzA=;
-        b=SrFHQt1YLV0yc2j7pJfKRl7+eUlcdqoXB9g0UwreqwHagHAjiYZ32QEY/7l4Y3CSnl
-         r31ishvc38DMZV+Dbz5e5Z+DnDuultvJSTnY95ZKEzjskS7T6Iq42yrBq5/WKy96oCPB
-         w4Cf9A1n4MxBrPVBj6HnQ61H2xClCVJTR169z8Tj3KpMdUok915/30pMMtJ82kLSSGUy
-         BpjbRwTDAhggL0dwcZ+cOC+GYCb1g0j7oFOKB0ZYkpc6nwIvJ+4qQH4vmTal85UGrTZM
-         YbQN1A+Zk97/fR2+GaYiCVIPLW35Jeu6rlgsQds91f+kw3vzp67pHDF21uTbMwPWbw0n
-         a2fw==
+        bh=wHMamU+PAKgDS7CB8H6YoOm/eLHF8p5TEtQXCGtGAPs=;
+        b=ArW5a8IEyazflP1EL4eg9+F+6/Fm5fKB5Y6ZdDBJAjyuc2bMdgfcQCteC5kQqI5r0R
+         fhQhYfx0Wz7Eum5OVmjR7ocWG12GjZ++LbmcsMEYXyLKL/OYfrz3+xeWYEYtJpg4wSLM
+         01CDAyv6xXjuzJsYc/rzJkPIRx44gc1s2M7zjZqLx54uG4OhL/g17w2na/fccx12QGMP
+         h39yGv2vw373ne8HIntQqJpYYROKvZiuKipCuoZFcI0x0wl2M/I47zl+NztkwfeX1zwQ
+         mnWX7EogmY0BL6eRpOpy9LWpPuiEvGsNs6wg5B2ZlKyThaTWGR8ePJ5Do+A3M8TUZUtd
+         sdzA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1789967246; x=1790572046;
+        d=1e100.net; s=20260707; t=1789967248; x=1790572048;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=xMCBfAwcSuA+J1+T19JFxyf0Xdh50xgh0ZHEsvwdFzA=;
-        b=xI+c7hZmCJBsbE0ggFS1xzr00I0md04pbpb0c9+tUrO3vlIxeNZXjSfTbIOlranfzQ
-         KS13CVRMV5RmWdfzMVQyBr1ffLjGn8Lc1C2g2Yw/XITHuDcrHZbNyW4/BJbHQCdZKr10
-         x+95K15TEmT4zIE4UhrcXobZIWQ0r08Rnod26nx0xfXxQw+uC8+p3okoLgPwKdgad9zW
-         yTX+iUD3K88QNJDIhfPRG6Td5L8W1WY09xhZLlvEtR9EJHglIgUs+zAnfM2YDRNgJ1Yr
-         oC2VA8BFq6AlogrkCVKctx12Er0BfedBmoqNLY6GLGkRgYhZYDvpOlfN+JImyj8R/rw2
-         unQA==
-X-Forwarded-Encrypted: i=1; AKwUvBz3G/b22CMEDN/VYT4rAXzJxsVw87ECvjC2Z9UZnc6jE+pLZuVHSE7E+UhCAhUhEDemw6dsKT/yRJxE9XcCipFt@vger.kernel.org
-X-Gm-Message-State: AFuF++lZ2OuExZktQlV6SUrQgVg/sr3dwF6WHtkKwVLJrRQ/O+zOM34h
-	WlBvKkwi8jJWnSuJFzD0v0h+XVC6m1rBDdeI97XO673piSRFZdPonsbEphLxNfarTx7t07cLI+y
-	Tcq9yR+GvPg==
-X-Received: from dlbts11-n2.prod.google.com ([2002:a05:7022:b04b:20b0:144:cecc:dd20])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a20:244e:b0:3dd:a197:edec
- with SMTP id adf61e73a8af0-3dda197f7a3mr9069460637.59.1789967246040; Sun, 20
- Sep 2026 22:07:26 -0700 (PDT)
-Date: Sun, 20 Sep 2026 22:06:21 -0700
+        bh=wHMamU+PAKgDS7CB8H6YoOm/eLHF8p5TEtQXCGtGAPs=;
+        b=Xsna7RYUGY9qlDrPncwBZDe5xr+BdpjgYEvQbXrDjtyZhicOLimj1DvrJ5Z1Tr+X6/
+         7GF8099L3tH9rnxaaT+kr5Mz9lMjxRfu83vitFeXpjYW+70EQS4Ptzz3i4UZsWHYrOcu
+         c/66CThFoXf1RvrWmKFCfVOLdKrZ1eWwwupX0b0JXwFB31T1bRmcb/tdTGLCz67Mjd61
+         Xt8Y0S82lyxOcTWIMLlGz8t4F3/lwrNbxVxmoqag/52iRT5vUWUMPj20f0V4KoF+pZYf
+         qp4Ofd9Kc5w+5FGi4LCl1LPG5PH0iZ8UgpY6wEfWZg76AVI00CXRd1BfdnWYDRoJRfcw
+         yFeA==
+X-Forwarded-Encrypted: i=1; AKwUvBxGRqWlV8iNn69+SLqJpADpfRUrRDk/GGxfpv8om715h3hsflFxvgXhm7LzQukKI60XAkBtQEfi60kzNyN8436y@vger.kernel.org
+X-Gm-Message-State: AFuF++nu3rvHjRiw2I9+z+O6pEwsEnyMuw4vcIjEUKBHQKDR1JHPQYJn
+	xflknsxA9qTqudo3posZRBZgjtVGsOxIc4eluHEtF2+o6SqJ0tnyjw2ZBeHKKDrOZHYDmsaxiuY
+	xix6DbkKOZA==
+X-Received: from dlak8.prod.google.com ([2002:a05:701b:2908:b0:144:cfcb:6cb5])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:1c03:b0:3a0:4384:ada7
+ with SMTP id 98e67ed59e1d1-3a04393f338mr2788149a91.0.1789967247535; Sun, 20
+ Sep 2026 22:07:27 -0700 (PDT)
+Date: Sun, 20 Sep 2026 22:06:22 -0700
 In-Reply-To: <cover.1789966896.git.irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -60,8 +60,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <cover.1789966896.git.irogers@google.com>
 X-Mailer: git-send-email 2.55.0.1082.g2b9226bbc0-goog
-Message-ID: <1f3c3ace550e42f8bd3a5d14dfcada5c72d28d91.1789966896.git.irogers@google.com>
-Subject: [PATCH v2 03/49] perf python: Clean up pylint warnings in ilist.py
+Message-ID: <2b4c064f5416148998951cf2cfa95867d8f4ae0f.1789966896.git.irogers@google.com>
+Subject: [PATCH v2 04/49] perf python: Clean up pylint warnings in treport.py
 From: Ian Rogers <irogers@google.com>
 To: irogers@google.com, acme@kernel.org, alice.mei.rogers@gmail.com, 
 	linux-perf-users@vger.kernel.org, namhyung@kernel.org
@@ -70,58 +70,59 @@ Cc: adrian.hunter@intel.com, dapeng1.mi@linux.intel.com,
 	mingo@redhat.com, peterz@infradead.org, tmricht@linux.ibm.com
 Content-Type: text/plain; charset="UTF-8"
 
-Replace bare 'except:' clauses (pylint W0702: bare-except) in ilist.py
-with specific exception tuples (OSError, ValueError, RuntimeError,
-TypeError, KeyError) and use a safe '.get("name", "")' sort key in
-IListApp.compose() so that ilist.py passes pylint without warning
-suppression comments and handles unnamed PMU events gracefully.
+Clean up pylint warnings in treport.py so that it passes pylint without
+warning suppression comments:
+- Replace broad 'except Exception:' clauses (W0718:
+  broad-exception-caught) with specific exception tuples.
+- Pass both pid and sample_tid to session.find_thread() so guest and
+  process threads are resolved accurately.
+- Rename parameter 'args' to 'pos_args' in FlameGraph.__init__() to
+  avoid shadowing the outer scope variable 'args' (W0621:
+  redefined-outer-name).
 
 Assisted-by: Antigravity:gemini-3.1-pro
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/python/ilist.py | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ tools/perf/python/treport.py | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/tools/perf/python/ilist.py b/tools/perf/python/ilist.py
-index ebff0a843b7a..86bd65452e6e 100755
---- a/tools/perf/python/ilist.py
-+++ b/tools/perf/python/ilist.py
-@@ -82,7 +82,7 @@ class Metric(TreeValue):
+diff --git a/tools/perf/python/treport.py b/tools/perf/python/treport.py
+index 786b852f471c..082f5ca4a7da 100755
+--- a/tools/perf/python/treport.py
++++ b/tools/perf/python/treport.py
+@@ -91,9 +91,9 @@ class ProfileNode:
+         pid = sample.sample_pid
          try:
-             val = evlist.compute_metric(self.metric_name, cpu, thread)
-             return 0 if math.isnan(val) else val
--        except:
-+        except (OSError, ValueError, RuntimeError, TypeError):
-             # Be tolerant of failures to compute metrics on particular CPUs/threads.
-             return 0
+             assert session
+-            thread = session.find_thread(sample.sample_tid)
++            thread = session.find_thread(pid, sample.sample_tid)
+             comm = (thread.comm() if thread else None) or f"unknown ({pid})"
+-        except Exception:
++        except (OSError, ValueError, KeyError, RuntimeError, TypeError, AttributeError):
+             comm = f"unknown ({pid})"
  
-@@ -419,7 +419,7 @@ class IListApp(App):
-             if self.evlist:
-                 self.evlist.open()
-                 self.evlist.enable()
--        except:
-+        except (OSError, ValueError, RuntimeError):
-             self.evlist = None
+         period = sample.sample_period
+@@ -412,9 +412,9 @@ class FlameGraph(ScrollView):
+     }
+     """
  
-         if not self.evlist:
-@@ -450,7 +450,7 @@ class IListApp(App):
-                 pmu_name = pmu.name().lower()
-                 pmu_node = pmus.add(pmu_name)
-                 try:
--                    for event in sorted(pmu.events(), key=lambda x: x["name"]):
-+                    for event in sorted(pmu.events(), key=lambda x: x.get("name", "")):
-                         if "deprecated" in event:
-                             continue
-                         if "name" in event:
-@@ -460,7 +460,7 @@ class IListApp(App):
-                                                   data=PmuEvent(pmu_name, e))
-                             else:
-                                 pmu_node.add_leaf(e, data=PmuEvent(pmu_name, e))
--                except:
-+                except (OSError, ValueError, RuntimeError, KeyError, TypeError):
-                     # Reading events may fail with EPERM, ignore.
-                     pass
-             metrics = tree.root.add("Metrics")
+-    def __init__(self, root: ProfileNode, *args, **kwargs):
++    def __init__(self, root: ProfileNode, *pos_args, **kwargs):
+         """Initialize the FlameGraph widget."""
+-        super().__init__(*args, **kwargs)
++        super().__init__(*pos_args, **kwargs)
+         self.root = root
+         self.cursor = root
+         self.selected = root
+@@ -549,7 +549,7 @@ if __name__ == "__main__":
+     profile = ProfileBuilder()
+     try:
+         session = perf.session(perf.data(input_file), sample=profile.process_event)
+-    except Exception as e:
++    except (OSError, ValueError, RuntimeError) as e:
+         print(f"Error opening session: {e}", file=sys.stderr)
+         sys.exit(1)
+ 
 -- 
 2.55.0.1082.g2b9226bbc0-goog
 
