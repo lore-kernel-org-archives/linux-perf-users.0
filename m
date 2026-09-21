@@ -1,123 +1,116 @@
-Received: from mta0.migadu.com (out-184.mta0.migadu.com [91.218.175.184])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 079904B44B8
-	for <linux-perf-users@vger.kernel.org>; Mon, 21 Sep 2026 15:31:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.184
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C643A4BB28E;
+	Mon, 21 Sep 2026 15:31:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790004689; cv=none; b=lema6VQU9BKjz+2l7/yCSCN6TfXgPoCjXVKwRnyH/gEapZ35Gl1uYx/CnZ6rt0Gp/tkswR3Nr+Adw/bk+sMAdM3eSUDb7AxYUZOSjx4JWTZqZNgSD3KE1gzCuSCSbJDLcmL+wJo8sN8PVcXBQMjzyWMmBK4lu5uT174NyYV4/28=
+	t=1790004717; cv=none; b=Q434pHUWcgvbixnQ/Zstb8DeyWnQDJOe8W0QWguuxWFBefwdvN1188SsoIklsZJsQ0UruYGF3wpdD6XlDxEfuYm9O3CtpADxypGuMPcm5X45KA1BRDO0e9Co+5yBNwqvTVYNOTNK53SK5Ju5Cb4+WKuakHkdDDLpMC8PZCspNu4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790004689; c=relaxed/simple;
-	bh=5pSiFWfn9FtXDtB9haqe35AB3erEahgV97vrj2RiLjY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=RtScIihZjkqoutUcZn8ZUeAumK5o+VjzAQgjtfW3nbqJBdNlGoX+l2u/YdRMLzh5ajbADqh5LLc5vESybQsgwDLBtB7ehV0B0j9azexKODm2h7ulaytJN5C057z7H1p8fgns0kH2IvAakNclashZA3mxybFIHmGgGRtNOD8vNFg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=BeOVreaK; arc=none smtp.client-ip=91.218.175.184
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1790004717; c=relaxed/simple;
+	bh=Zhun9bmg0CRQi5K4hjUQKXMbPDPpc1D1fATRLPF5MqQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qEY/QoV3dgJQqEnMAx0t+nMJD+T/OvXaCqlgeWtQ/ws110t4Qq4jAi72UwmnSglonPzo7s+lCQehMbdrCrBDcF7TUNQqZLZhexQ7hI0gEvtpYq7neOMYM5aglFiz5E+4+ekOIKUecnj5kLBVxBr01+laMdUkex2QNG2IN9VKfzg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BpWnWfx2; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="BeOVreaK"
-X-Envelope-To: linux-perf-users@vger.kernel.org
-DKIM-Signature: a=rsa-sha256; bh=5pSiFWfn9FtXDtB9haqe35AB3erEahgV97vrj2RiLjY=;
- c=simple/simple; d=linux.dev;
- h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
- t=1790004684; v=1; x=1790609484;
- b=BeOVreaKPadkAVN7RH84avDUx80HmFDc4+Zs9R2IgHFG0Q7+fuxEsfqIih08e9U8DWpJlg3I
- gSZwgCh0Nk8Zt0G1xIQLi9t/sg4SL7aezRR7k5wIsX5bYb9rzmJgBtupozCni8BY+eNdFTkGQao
- YuqOgq8w6LDBD6yBGS6YGwg0=
-X-Envelope-To: linux-perf-users@vger.kernel.org
-Received: by mta11.migadu.com with ESMTPS id 7878989e305dc767;
-	Mon, 21 Sep 2026 15:31:24 +0000
-X-Mizu-Trace-ID: 7878989e305dc767
-X-Migadu-Flow: FLOW_OUT
-From: Usama Arif <usama.arif@linux.dev>
-To: acme@kernel.org,
-	adrian.hunter@intel.com,
-	alexander.shishkin@linux.intel.com,
-	bp@alien8.de,
-	dave.hansen@linux.intel.com,
-	hpa@zytor.com,
-	irogers@google.com,
-	james.clark@linaro.org,
-	jolsa@kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	mark.rutland@arm.com,
-	mingo@redhat.com,
-	namhyung@kernel.org,
-	peterz@infradead.org,
-	tglx@kernel.org,
-	x86@kernel.org
-Cc: hannes@cmpxchg.org,
-	riel@surriel.com,
-	shakeel.butt@linux.dev,
-	kernel-team@meta.com,
-	Usama Arif <usama.arif@linux.dev>,
-	Sandipan Das <sandipan.das@amd.com>
-Subject: [PATCH 2/2] perf/x86/amd/uncore: Free counter slot by index
-Date: Mon, 21 Sep 2026 08:30:15 -0700
-Message-ID: <20260921153108.2713179-3-usama.arif@linux.dev>
-X-Mailer: git-send-email 2.53.0
-In-Reply-To: <20260921153108.2713179-1-usama.arif@linux.dev>
-References: <20260921153108.2713179-1-usama.arif@linux.dev>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BpWnWfx2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A0C741F00898;
+	Mon, 21 Sep 2026 15:31:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1790004716;
+	bh=FuUrqWc9bTGN2ILuKnc9hMdv0vV4JMwCLib1Eff7GPo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=BpWnWfx2ds3Fe0emxSeG9TZPaU0fjs6BNTQP9KkoI+3KJtqZ/c53fPAcFTUWz4E1b
+	 23fgyM9QIldp/Ud7j2JcDXbZR7MY3ffMBZMYTMjb7RHPDAQdV9oFWu/rPLi9x75GdW
+	 wqLix0oxA7ZjiuZuAA5szff+krYbGlVAY60Gh+q5/5mdR9xpLfCA1oHMoqB6akI1o5
+	 xPtXZ8W9vQG4uA61wqDz1XOlOPTV8POlHsKzV5yG8b+GNPUIXpVntti06qvivtGb+H
+	 4qVvcrlSiYCVXujkEwaEmTL5GzWaUz1EzJqeRGnEicy8fFZx6Er5LvVSJrxOpJSCqA
+	 krGUh0imuKFzA==
+Date: Mon, 21 Sep 2026 16:31:53 +0100
+From: Harry Yoo <harry@kernel.org>
+To: "Vlastimil Babka (SUSE)" <vbabka@kernel.org>
+Cc: Tim Menninger <tmenninger@everpuredata.com>, linux-mm@kvack.org, 
+	Chuck Lever <cel@kernel.org>, linux-nfs@vger.kernel.org, Jon Curley <jcurley@everpuredata.com>, 
+	Eric Badger <ebadger@everpuredata.com>, Andrew Morton <akpm@linux-foundation.org>, 
+	Hao Li <hao.li@linux.dev>, Christoph Lameter <cl@gentwo.org>, 
+	David Rientjes <rientjes@google.com>, Roman Gushchin <roman.gushchin@linux.dev>, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
+	Adrian Hunter <adrian.hunter@intel.com>, James Clark <james.clark@linaro.org>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [SLUB] nfs_page cmpxchg_double_fail and perf lock perturbation
+ on dual-socket NFS/RDMA
+Message-ID: <arFNKeseUHBvdRCA@thinkstation>
+References: <aqvy8NqRRRmUlxjR@thinkstation>
+ <20260917162533.600472-1-tmenninger@everpuredata.com>
+ <8705aa4f-5e02-45e7-ad45-0baa982a8c02@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <8705aa4f-5e02-45e7-ad45-0baa982a8c02@kernel.org>
 
-amd_uncore_del() scans ctx->events[] from slot zero and attempts a
-compare-exchange until it finds the event.
+On Fri, Sep 18, 2026 at 09:08:37AM +0200, Vlastimil Babka (SUSE) wrote:
+> On 9/17/26 18:25, Tim Menninger wrote:
+> > It reproduces with slab_nomerge.
+> > 
+> > I booted the same kernel with:
+> > 
+> >     $ cat /proc/cmdline
+> >     ... slab_nomerge ...
+> > 
+> > Uninstrumented throughput remains in the high-45 to low-46 GB/s
+> > range, as before. During perf lock it was around 30 GB/s in these
+> > runs, versus roughly 25 GB/s previously.
+> > 
+> > The dominant lock measurements are essentially unchanged:
+> > 
+> >                          default             slab_nomerge
+> >     unpinned/node0
+> >       contentions        4,782,839             4,858,759
+> >       total wait          14.39 min             14.26 min
+> >       average wait       180.47 us             176.13 us
+> > 
+> >     node0/node0
+> >       contentions        4,582,012             4,686,729
+> >       total wait          14.13 min             14.34 min
+> >       average wait       185.05 us             183.53 us
+> > 
+> >     unpinned/balanced
+> >       contentions        4,572,196             4,544,677
+> >       total wait          12.81 min             12.56 min
+> >       average wait       168.14 us             165.84 us
+> > 
+> > The uninstrumented cmpxchg_double_fail deltas were:
+> > 
+> >                          default     slab_nomerge
+> >     unpinned/node0          7,471          8,892
+> >     node0/node0               713            457
+> >     unpinned/balanced       1,503          1,504
+> > 
+> > The CPU-utilization change while perf lock is active also remains.
+> > System-wide %idle for uninstrumented/instrumented windows was:
+> > 
+> >                            default                  slab_nomerge
+> >                        uninstr.   instr.         uninstr.   instr.
+> >     unpinned/node0      31.46%    3.60%           23.02%    2.15%
+> >     node0/node0         84.26%   12.07%           84.62%   11.85%
+> >     unpinned/balanced   66.86%   14.83%           66.58%   14.78%
+> 
+> I believe the weirdest part in the original report was how slub stat
+> counters such as free_fastpath etc got order of magnitude higher with
+> instrumented vs non-instrumented.
+> Did any of that change with slab_nomerge?
 
-amd_uncore_add() records the slot it claimed in event->hw.idx. Perf
-calls ->del() only after a successful ->add(), and the driver never
-moves an installed event between slots. The index therefore remains
-valid until deletion.
+If it didn't change, that'd be very surprising.
+... unless perf lock was writing data to an NFS filesystem?
 
-Use the recorded index directly and retain the compare-exchange
-ownership check. Warn if it fails, as that means the driver lost track
-of the slot.
-
-Deleting all events from a full PMU with N counters now requires N
-compare-exchanges instead of N * (N + 1) / 2.
-
-On a host running a production workload in the Meta fleet, amd_uncore_del()
-was called 56,575 times per second from mux rotation.
-
-Cc: Sandipan Das <sandipan.das@amd.com>
-Signed-off-by: Usama Arif <usama.arif@linux.dev>
----
- arch/x86/events/amd/uncore.c | 10 +++-------
- 1 file changed, 3 insertions(+), 7 deletions(-)
-
-diff --git a/arch/x86/events/amd/uncore.c b/arch/x86/events/amd/uncore.c
-index 53be8efaedc5d..39287640bf1ea 100644
---- a/arch/x86/events/amd/uncore.c
-+++ b/arch/x86/events/amd/uncore.c
-@@ -246,19 +246,15 @@ static int amd_uncore_add(struct perf_event *event, int flags)
- 
- static void amd_uncore_del(struct perf_event *event, int flags)
- {
--	int i;
- 	struct amd_uncore_pmu *pmu = event_to_amd_uncore_pmu(event);
- 	struct amd_uncore_ctx *ctx = *per_cpu_ptr(pmu->ctx, event->cpu);
- 	struct hw_perf_event *hwc = &event->hw;
-+	struct perf_event *old = event;
- 
- 	event->pmu->stop(event, PERF_EF_UPDATE);
- 
--	for (i = 0; i < pmu->num_counters; i++) {
--		struct perf_event *tmp = event;
--
--		if (try_cmpxchg(&ctx->events[i], &tmp, NULL))
--			break;
--	}
-+	/* ->del() follows a successful ->add(), so hwc->idx owns this slot. */
-+	WARN_ON_ONCE(!try_cmpxchg(&ctx->events[hwc->idx], &old, NULL));
- 
- 	hwc->idx = -1;
- }
 -- 
-2.53.0-Meta
-
+Cheers,
+Harry / Hyeonggon
