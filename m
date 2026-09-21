@@ -1,173 +1,163 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DF92361DA6;
-	Mon, 21 Sep 2026 06:22:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70FF237205D;
+	Mon, 21 Sep 2026 06:42:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789971736; cv=none; b=s7STxaNScDW1FJfLbWUChQGfcnAWU5ZZ3Tq1IX7hUQ7gXiCrKavHTNMOSGgYdkR6R7LYRoN2w8izpdLCJYWgUTO7YF+MQttcDYQNdE+zU9m72hk06y0hflROA3IMEzDpvY2BRdsLohfpmCfLx83y1z0HQDPtABS4c7F94o8kxt0=
+	t=1789972959; cv=none; b=gl5wfO+fcru/qwwSlcfMoCmabJh6E7MtzMI2b8U+60t9OWPCgr4UG9nge5qfZ0fNEXf30CqpCY0h8v4BJGi+8t7yGJx0IUaHoHEZcBmX6odf5RUY6H5wZ04lmtxzSfLwE5EPv/CUKfF4W74CaZzg+vcWBL+pMr2Yz+Yzr4X86mk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789971736; c=relaxed/simple;
-	bh=z4aAwBgqIqyloe3Ukq3nEoAvkilgAieGKqiScaNkon0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZDng8Kg+o+CzaVoZbV6GnTqHCYfYfYn+IfbJdtsDUsIm1a9l8rrc+sx+HwdXIKpNY9a4MviSgeI1lVxH3kOOaxXZKI+RrfMIu15DiSefbDYJggT1qhE+bL7cUhpCNTozbBPdjZ4lEkdt9SVxw+6gtl90/r4VmmY4QNwhDjIn1Lk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YUnUaSif; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1789972959; c=relaxed/simple;
+	bh=miUmxWQklUiHOs7CsGOCY/6HHEzzMWEgrUBNCkciLNw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=tITMrf2/L8ZbKX+INBkHBK56M99pc7nkaAOMzZTQA08jffbII7NlAIF/MBOBusfsbW0LghknujueIwTC33lrsCD3U0C+42OeO5DXwNOdAfWZoWXua1id4khZrgPnDte10mcZ59K7TIvmkCxbSeDOwaZa0HzDCCGArNt+5qjIFSo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=n3nTytDy; arc=none smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YUnUaSif"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2199C1F000FF;
-	Mon, 21 Sep 2026 06:22:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789971735;
-	bh=uZdMkJDAp6rJM26htnZk7E9JkWCMMA4T82aVyiUlmqU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=YUnUaSifIgxamcrokCMOKJ6nQqnda7HcYwNosNqYbj649Wcsu9+4sdghAmf6eOjOg
-	 n2KbKE246kifwadd0SRpes9i/Sm6tBknVV8hgjFVqbiFACYLxnKHzT/uWQ1jrRSo0S
-	 5q2sh7oe6rbw5JfdGZnb71Z4WWWsWbMErdkgpPlwMp1JDO/+31qdv4sOopB0e5K+Hb
-	 Y+RIuEfQ7/aoAcZL9aUKZ/56sZBr66S+Xiz6Zl9VSZVMNpsYgjYOGp4/TkSEjq24QY
-	 P7uyIsbdLZPBDcHnSHrxfluNxa5nM3t2JXR7vcC5U+cRbXmHDm3sZAS3FC6KDMShsf
-	 bqtO5csm8cyFQ==
-Date: Sun, 20 Sep 2026 23:22:13 -0700
-From: Namhyung Kim <namhyung@kernel.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
-	James Clark <james.clark@linaro.org>, Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: Re: [PATCH 4/7] perf annotate-data: Bound the member nesting
- recursion
-Message-ID: <arDNFYI5PvIF40GF@z2>
-References: <20260919204027.8504-1-acme@kernel.org>
- <20260919204027.8504-5-acme@kernel.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="n3nTytDy"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1789972957; x=1821508957;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=miUmxWQklUiHOs7CsGOCY/6HHEzzMWEgrUBNCkciLNw=;
+  b=n3nTytDyi4+IgWhs5bW7fq8r36jdrL7owc8v5FGi2J4RQBbLiYBzNu+Y
+   u0x3hmGU2AD6Z+CwGBEmeqWBFcKEQcCmQhmStf0r2FsJvXhAYiS5sKIzu
+   iOwAwHaBjmyydN7uD2PLJGSRswG6dftibhK9Yia5KzcpchiSXqY3KbEDq
+   C5CspLzuY6l8jsYnfMs1BmfM51vbgvF5J96dhJu4Z+xg0fuJ8VSroJxF9
+   YGcitq4BIyNmH25RvCTToWJ+Wqz7zmlsUq0hCvHdGpXoARNHIXnukR2fM
+   TQ3M1gYInov+xP9c0Mqk9vvSyOHkB+BuUt0rw8rfQwsslZpzhez369gox
+   A==;
+X-CSE-ConnectionGUID: HoVP95RkTJWgGnNBPfldCQ==
+X-CSE-MsgGUID: dCX5RNCBQyCFqPRtT+XVaQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11911"; a="115994983"
+X-IronPort-AV: E=Sophos;i="6.27,114,1787036400"; 
+   d="scan'208";a="115994983"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Sep 2026 23:42:35 -0700
+X-CSE-ConnectionGUID: Rfd4HpQqR8CCQPq3Ik35mg==
+X-CSE-MsgGUID: trtZ2uZIRQqIOnQit5+YKw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.27,114,1787036400"; 
+   d="scan'208";a="271991207"
+Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.241.239]) ([10.124.241.239])
+  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Sep 2026 23:42:31 -0700
+Message-ID: <024fd251-a4ba-443f-8aff-f5b1cdb062a3@linux.intel.com>
+Date: Mon, 21 Sep 2026 14:42:28 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20260919204027.8504-5-acme@kernel.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/2] perf alsr: Add missing SIMD handling in
+ aslr_tool__process_sample()
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Zide Chen <zide.chen@intel.com>, Falcon Thomas <thomas.falcon@intel.com>,
+ Dapeng Mi <dapeng1.mi@intel.com>, Xudong Hao <xudong.hao@intel.com>
+References: <20260915091112.333308-1-dapeng1.mi@linux.intel.com>
+Content-Language: en-US
+From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
+In-Reply-To: <20260915091112.333308-1-dapeng1.mi@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Sat, Sep 19, 2026 at 05:40:24PM -0300, Arnaldo Carvalho de Melo wrote:
-> From: Arnaldo Carvalho de Melo <acme@redhat.com>
-> 
-> Members are added recursively, and the same kind of broken DIE can make
-> a member's type point back at one of its own ancestors, recursing until
-> the stack is gone; nothing usable comes out of nesting members 8 deep
-> anyway, so stop there, marking the member as truncated (reported by the
-> JSON exporter added in a later series) and giving up on member types
-> that don't resolve.
+Kindly ping ...
 
-I think 8 is too restrictive.  It should be common to have 3 or 4 depth
-if you have nested struct or union members.
+@Arnaldo, @Namhyung, @Ian, not sure if you have bandwidth to review this
+small patchset which fixes the Sashiko found minor issues for the "Perf
+tools: Support eGPRs/SSP/SIMD registers sampling" patchset?
 
-And some kernel primitives like spinlock also have nested members like
+If possible, it's better to be queued in this cycle, then we don't need
+extra backporting. Thanks.
 
-  raw_spinlock_t
-    arch_spinlock_t
-      union
-        atomic_t
-	  int
 
-So it'd be easy to hit the limit when the nested members contain a
-spinlock.
-
-Thanks,
-Namhyung
-
-> 
-> Assisted-by: LLM
-> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+On 9/15/2026 5:11 PM, Dapeng Mi wrote:
+> Currently the SIMD register sampling is supported, but the corresponding
+> handling is missed in aslr_tool__process_sample(). This can break parsing
+> of the sample record.
+>
+> Add the missing SIMD register handling in aslr_tool__process_sample().
+>
+> Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
 > ---
->  tools/perf/util/annotate-data.c | 32 ++++++++++++++++++++++++++------
->  tools/perf/util/annotate-data.h |  3 +++
->  2 files changed, 29 insertions(+), 6 deletions(-)
-> 
-> diff --git a/tools/perf/util/annotate-data.c b/tools/perf/util/annotate-data.c
-> index 2ad6d012e069c522..c67bb6005e23c516 100644
-> --- a/tools/perf/util/annotate-data.c
-> +++ b/tools/perf/util/annotate-data.c
-> @@ -221,6 +221,13 @@ static bool data_type_less(struct rb_node *node_a, const struct rb_node *node_b)
->  	return strcmp(a->self.type_name, b->self.type_name) < 0;
->  }
->  
-> +/*
-> + * Members are added recursively; bound the nesting so that a broken
-> + * type that points back at one of its own ancestors doesn't recurse
-> + * until the stack is gone.
-> + */
-> +#define MAX_MEMBER_DEPTH 8
-> +
->  /* Recursively add new members for struct/union */
->  static int __add_member_cb(Dwarf_Die *die, void *arg)
->  {
-> @@ -235,6 +242,16 @@ static int __add_member_cb(Dwarf_Die *die, void *arg)
->  	if (dwarf_tag(die) != DW_TAG_member)
->  		return DIE_FIND_CB_SIBLING;
->  
-> +	if (__die_get_real_type(die, &member_type) == NULL)
-> +		return DIE_FIND_CB_SIBLING;
-> +
-> +	if (dwarf_tag(&member_type) == DW_TAG_typedef) {
-> +		if (die_get_real_type(&member_type, &die_mem) == NULL)
-> +			return DIE_FIND_CB_SIBLING;
-> +	} else {
-> +		die_mem = member_type;
-> +	}
-> +
->  	member = zalloc(sizeof(*member));
->  	if (member == NULL)
->  		return DIE_FIND_CB_END;
-> @@ -242,12 +259,6 @@ static int __add_member_cb(Dwarf_Die *die, void *arg)
->  	strbuf_init(&sb, 32);
->  	die_get_typename(die, &sb);
->  
-> -	__die_get_real_type(die, &member_type);
-> -	if (dwarf_tag(&member_type) == DW_TAG_typedef)
-> -		die_get_real_type(&member_type, &die_mem);
-> -	else
-> -		die_mem = member_type;
-> -
->  	if (dwarf_aggregate_size(&die_mem, &size) < 0)
->  		size = 0;
->  
-> @@ -289,10 +300,19 @@ static int __add_member_cb(Dwarf_Die *die, void *arg)
+>
+> These two patches fix Sashiko reported defects for the patchset:
+> "Perf tools: Support eGPRs/SSP/SIMD registers sampling"
+> https://lore.kernel.org/all/20260914014049.2061519-1-dapeng1.mi@linux.intel.com/
+>
+>  tools/perf/util/aslr.c | 31 +++++++++++++++++++++++++++++++
+>  1 file changed, 31 insertions(+)
+>
+> diff --git a/tools/perf/util/aslr.c b/tools/perf/util/aslr.c
+> index 027695d96779..a097084201a0 100644
+> --- a/tools/perf/util/aslr.c
+> +++ b/tools/perf/util/aslr.c
+> @@ -19,6 +19,7 @@
+>  #include <internal/lib.h>  /* page_size */
+>  #include <linux/compiler.h>
+>  #include <linux/zalloc.h>
+> +#include <linux/overflow.h>
+>  #include <errno.h>
+>  #include <inttypes.h>
+>  #include <unistd.h>
+> @@ -992,6 +993,34 @@ static int aslr_tool__process_sample(const struct perf_tool *tool,
+>  				COPY_U64();
+>  		}
 >  	}
->  	member->size = size;
->  	member->offset = loc + parent->offset;
-> +	member->depth = parent->depth + 1;
->  	INIT_LIST_HEAD(&member->children);
->  	list_add_tail(&member->node, &parent->children);
->  
->  	tag = dwarf_tag(&die_mem);
-> +	if (member->depth >= MAX_MEMBER_DEPTH) {
-> +		/* Reported by the JSON exporter so consumers can tell a truncated tree. */
-> +		member->truncated = true;
-> +		pr_debug_dtp("member nesting limit reached at %s\n",
-> +			     member->type_name ?: "(unknown type)");
-> +		return DIE_FIND_CB_SIBLING;
-> +	}
 > +
->  	switch (tag) {
->  	case DW_TAG_structure_type:
->  	case DW_TAG_union_type:
-> diff --git a/tools/perf/util/annotate-data.h b/tools/perf/util/annotate-data.h
-> index ca2096a9ee62cbfe..cc576232f55b5fb0 100644
-> --- a/tools/perf/util/annotate-data.h
-> +++ b/tools/perf/util/annotate-data.h
-> @@ -57,6 +57,9 @@ struct annotated_member {
->  	char *var_name;
->  	int offset;
->  	int size;
-> +	unsigned int depth;
-> +	/* Children not expanded because the nesting limit was reached */
-> +	bool truncated;
->  };
+> +#define CHECK_SIMD() \
+> +	do { \
+> +		if (abi & PERF_SAMPLE_REGS_ABI_SIMD) { \
+> +			u64 nr_vector, vec_qwords; \
+> +			u64 nr_pred, pred_qwords; \
+> +			u64 header_len, vec_len, pred_len, simd_len; \
+> +			if (CHECK_BOUNDS(nr + 4, nr + 4)) { \
+> +				ret = -EFAULT; \
+> +				goto out_put; \
+> +			} \
+> +			header_len = 4;	\
+> +			nr_vector = in_array[i + nr]; \
+> +			vec_qwords = in_array[i + nr + 1]; \
+> +			nr_pred = in_array[i + nr + 2]; \
+> +			pred_qwords = in_array[i + nr + 3]; \
+> +			if (check_mul_overflow(nr_vector, vec_qwords, &vec_len) || \
+> +			    check_mul_overflow(nr_pred, pred_qwords, &pred_len) || \
+> +			    check_add_overflow(vec_len, pred_len, &simd_len) || \
+> +			    check_add_overflow(header_len, simd_len, &simd_len) || \
+> +			    check_add_overflow(nr, simd_len, &nr) || \
+> +			    nr > max_i - i) { \
+> +				ret = -EFAULT; \
+> +				goto out_put; \
+> +			} \
+> +		} \
+> +	} while (0)
+> +
+>  	if (orig_sample_type & PERF_SAMPLE_REGS_USER) {
+>  		u64 abi;
 >  
->  /**
-> -- 
-> 2.53.0
-> 
+> @@ -1007,6 +1036,7 @@ static int aslr_tool__process_sample(const struct perf_tool *tool,
+>  				ret = -EFAULT;
+>  				goto out_put;
+>  			}
+> +			CHECK_SIMD();
+>  			i += nr;
+>  		}
+>  	}
+> @@ -1061,6 +1091,7 @@ static int aslr_tool__process_sample(const struct perf_tool *tool,
+>  				ret = -EFAULT;
+>  				goto out_put;
+>  			}
+> +			CHECK_SIMD();
+>  			i += nr;
+>  		}
+>  	}
+>
+> base-commit: 91b0782fc9e9d2f0a40b5256146e014802fdbb36
