@@ -1,116 +1,77 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C643A4BB28E;
-	Mon, 21 Sep 2026 15:31:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4D3A4BE450
+	for <linux-perf-users@vger.kernel.org>; Mon, 21 Sep 2026 15:36:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790004717; cv=none; b=Q434pHUWcgvbixnQ/Zstb8DeyWnQDJOe8W0QWguuxWFBefwdvN1188SsoIklsZJsQ0UruYGF3wpdD6XlDxEfuYm9O3CtpADxypGuMPcm5X45KA1BRDO0e9Co+5yBNwqvTVYNOTNK53SK5Ju5Cb4+WKuakHkdDDLpMC8PZCspNu4=
+	t=1790005010; cv=none; b=pV5V6/kzS3hzVF4Ur1NTRNQ5ctEOZOfFUbq33v3gz4XFbvu81K0piRzDfVgzhVyUFFoGGuSJI41HZ8zwh6kpIBEwjyoVaFfO7un24zwA1SHulrYotSXBPoyqfyXUa92OVmk8RVhE33nZLUMtM87Sp87x6F3tZvVeoqpEb20R9OU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790004717; c=relaxed/simple;
-	bh=Zhun9bmg0CRQi5K4hjUQKXMbPDPpc1D1fATRLPF5MqQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qEY/QoV3dgJQqEnMAx0t+nMJD+T/OvXaCqlgeWtQ/ws110t4Qq4jAi72UwmnSglonPzo7s+lCQehMbdrCrBDcF7TUNQqZLZhexQ7hI0gEvtpYq7neOMYM5aglFiz5E+4+ekOIKUecnj5kLBVxBr01+laMdUkex2QNG2IN9VKfzg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BpWnWfx2; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1790005010; c=relaxed/simple;
+	bh=swIeYYkZUxVO1xWB1xnWxNUAZy2+iXtTrl4YY+3hR7E=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=kKSSfhLG6n+wRoMBi3hm1qovxl0hFrk9kAnwaD4e+z7snYNxqdJn7Ae+DH3izPLtv71/tl0iGCK0Ji8HFJ48SWMZ5R9+IPKQS0g3wev1OqGwvxrhIqUrn0pYLNE4cGTsQxiFFUtGnFVRHn8Esix3DKIhZL7r7mijdBLz14lKiW4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=g5ywKl4s; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BpWnWfx2"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A0C741F00898;
-	Mon, 21 Sep 2026 15:31:55 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="g5ywKl4s"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D18101F008A7;
+	Mon, 21 Sep 2026 15:36:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1790004716;
-	bh=FuUrqWc9bTGN2ILuKnc9hMdv0vV4JMwCLib1Eff7GPo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=BpWnWfx2ds3Fe0emxSeG9TZPaU0fjs6BNTQP9KkoI+3KJtqZ/c53fPAcFTUWz4E1b
-	 23fgyM9QIldp/Ud7j2JcDXbZR7MY3ffMBZMYTMjb7RHPDAQdV9oFWu/rPLi9x75GdW
-	 wqLix0oxA7ZjiuZuAA5szff+krYbGlVAY60Gh+q5/5mdR9xpLfCA1oHMoqB6akI1o5
-	 xPtXZ8W9vQG4uA61wqDz1XOlOPTV8POlHsKzV5yG8b+GNPUIXpVntti06qvivtGb+H
-	 4qVvcrlSiYCVXujkEwaEmTL5GzWaUz1EzJqeRGnEicy8fFZx6Er5LvVSJrxOpJSCqA
-	 krGUh0imuKFzA==
-Date: Mon, 21 Sep 2026 16:31:53 +0100
-From: Harry Yoo <harry@kernel.org>
-To: "Vlastimil Babka (SUSE)" <vbabka@kernel.org>
-Cc: Tim Menninger <tmenninger@everpuredata.com>, linux-mm@kvack.org, 
-	Chuck Lever <cel@kernel.org>, linux-nfs@vger.kernel.org, Jon Curley <jcurley@everpuredata.com>, 
-	Eric Badger <ebadger@everpuredata.com>, Andrew Morton <akpm@linux-foundation.org>, 
-	Hao Li <hao.li@linux.dev>, Christoph Lameter <cl@gentwo.org>, 
-	David Rientjes <rientjes@google.com>, Roman Gushchin <roman.gushchin@linux.dev>, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
-	Adrian Hunter <adrian.hunter@intel.com>, James Clark <james.clark@linaro.org>, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [SLUB] nfs_page cmpxchg_double_fail and perf lock perturbation
- on dual-socket NFS/RDMA
-Message-ID: <arFNKeseUHBvdRCA@thinkstation>
-References: <aqvy8NqRRRmUlxjR@thinkstation>
- <20260917162533.600472-1-tmenninger@everpuredata.com>
- <8705aa4f-5e02-45e7-ad45-0baa982a8c02@kernel.org>
+	s=k20260515; t=1790005007;
+	bh=swIeYYkZUxVO1xWB1xnWxNUAZy2+iXtTrl4YY+3hR7E=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=g5ywKl4sKuI4rqqaVHhVCMCP7WLPptQ5iCAJZWrBqY91i4xDTnizrV6iUQqoInTyI
+	 gDBOVA5YaoPRLqiZ7dtlvbwhTEDM0wGnkvKTc7Au51x0IUH8l4UYk0DKYbNrD9gdRI
+	 Wp452G42qxbLWweku7rxv0tM6B6eDhLliWU87Z+gBEtnTZwcvyyOCoOA2U0RpMgABu
+	 V1ivd2GOZl4jfJRbXcSpXnbwPHv5vEpWA2voHdZrj9EBLp5+HmMGUYMkrq/1voKymD
+	 DyAln2MRv4ljIXrmwpbG9lUyzRuvLoeVNsh0tM04DeZrYI8WeorTaTayGy2LMoooEY
+	 dDTcso5DgJLbw==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH 1/2] perf/x86/amd/uncore: Remove redundant event slot
+ scan
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Usama Arif" <usama.arif@linux.dev>
+Cc: linux-perf-users@vger.kernel.org
+In-Reply-To: <20260921153108.2713179-2-usama.arif@linux.dev>
+References: <20260921153108.2713179-1-usama.arif@linux.dev>
+ <20260921153108.2713179-2-usama.arif@linux.dev>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Mon, 21 Sep 2026 15:36:46 +0000
+Message-Id: <20260921153646.D18101F008A7@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <8705aa4f-5e02-45e7-ad45-0baa982a8c02@kernel.org>
 
-On Fri, Sep 18, 2026 at 09:08:37AM +0200, Vlastimil Babka (SUSE) wrote:
-> On 9/17/26 18:25, Tim Menninger wrote:
-> > It reproduces with slab_nomerge.
-> > 
-> > I booted the same kernel with:
-> > 
-> >     $ cat /proc/cmdline
-> >     ... slab_nomerge ...
-> > 
-> > Uninstrumented throughput remains in the high-45 to low-46 GB/s
-> > range, as before. During perf lock it was around 30 GB/s in these
-> > runs, versus roughly 25 GB/s previously.
-> > 
-> > The dominant lock measurements are essentially unchanged:
-> > 
-> >                          default             slab_nomerge
-> >     unpinned/node0
-> >       contentions        4,782,839             4,858,759
-> >       total wait          14.39 min             14.26 min
-> >       average wait       180.47 us             176.13 us
-> > 
-> >     node0/node0
-> >       contentions        4,582,012             4,686,729
-> >       total wait          14.13 min             14.34 min
-> >       average wait       185.05 us             183.53 us
-> > 
-> >     unpinned/balanced
-> >       contentions        4,572,196             4,544,677
-> >       total wait          12.81 min             12.56 min
-> >       average wait       168.14 us             165.84 us
-> > 
-> > The uninstrumented cmpxchg_double_fail deltas were:
-> > 
-> >                          default     slab_nomerge
-> >     unpinned/node0          7,471          8,892
-> >     node0/node0               713            457
-> >     unpinned/balanced       1,503          1,504
-> > 
-> > The CPU-utilization change while perf lock is active also remains.
-> > System-wide %idle for uninstrumented/instrumented windows was:
-> > 
-> >                            default                  slab_nomerge
-> >                        uninstr.   instr.         uninstr.   instr.
-> >     unpinned/node0      31.46%    3.60%           23.02%    2.15%
-> >     node0/node0         84.26%   12.07%           84.62%   11.85%
-> >     unpinned/balanced   66.86%   14.83%           66.58%   14.78%
-> 
-> I believe the weirdest part in the original report was how slub stat
-> counters such as free_fastpath etc got order of magnitude higher with
-> instrumented vs non-instrumented.
-> Did any of that change with slab_nomerge?
+> amd_uncore_add() first checks the slot recorded in event->hw.idx. If
+> that misses, it scans ctx->events[] for the event before looking for a
+> free slot.
+>=20
+> Perf serializes ->add() and ->del() for an event. Initialization sets
+> idx to -1. A successful ->add() claims a slot and records its index
+> before returning, while ->del() clears the slot before resetting idx.
+> CPU context migration follows the same delete/add sequence.
+>=20
+> Thus an installed event can only reside at the recorded index. If the
+> direct check misses, the event is not present in ctx->events[].
+>=20
+> Remove the redundant scan. This avoids walking all counters before each
+> new slot search after multiplexing has scheduled an event out.
+>=20
+> On a host running a production workload in the Meta fleet, amd_uncore_add=
+()
+> was called 56,575 times per second from mux rotation. Its 16-counter DF P=
+MU
+> makes each failed search scan 16 pointers across two cache lines.
+>=20
+> Cc: Sandipan Das <sandipan.das@amd.com>
+> Signed-off-by: Usama Arif <usama.arif@linux.dev>
 
-If it didn't change, that'd be very surprising.
-... unless perf lock was writing data to an NFS filesystem?
+Sashiko has reviewed this patch and found no issues. It looks great!
 
--- 
-Cheers,
-Harry / Hyeonggon
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260921153108.2713=
+179-1-usama.arif@linux.dev?part=3D1
+
