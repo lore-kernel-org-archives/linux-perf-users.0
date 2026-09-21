@@ -1,155 +1,136 @@
-Received: from mail-yx2-f16.google.com (mail-yx2-f16.google.com [74.125.224.144])
+Received: from mail-pj1-f71.google.com (mail-pj1-f71.google.com [209.85.216.71])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70B9EEADC
-	for <linux-perf-users@vger.kernel.org>; Mon, 21 Sep 2026 04:45:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.224.144
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789965927; cv=pass; b=gjnxUmCYOujyMO/C68YU+/0O9AUZttrcQkdYs4zTyHU9RmuG8xNkvMnoSZ6uv+nRYqxD5+nL98y+t4+0bYLopWQi/f8ttdXE0A7czkOWQOEP6/nqnQKdmQyBmImaJlTZGPPuUXlHDKU8NNan0HPQF24uh0wB+9RO690AXwUoNR4=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789965927; c=relaxed/simple;
-	bh=3HIETohqPRiYfSTVCCWaaA/j95DFfsx7y+xQJdoYbzY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=m3SjSLMtEQRLYTXqtLg+znXRUWuwGvIDaaqqc/O3N+diyzSXZcx48CFpSQpw3+b7qPJrqRJVPOai777tLCJeidlKrAyCbpj+nADgcvsKWI+1chrSrOW7YCuL6yL6amHQrAA5mUyJch2IiGJDKw3qOYuwYEfDbpY03bOdNV9gBGg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=uber.com; spf=fail smtp.mailfrom=uber.com; dkim=pass (1024-bit key) header.d=uber.com header.i=@uber.com header.b=3lY+SgFF; arc=pass smtp.client-ip=74.125.224.144
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=uber.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=uber.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B63033A9E8
+	for <linux-perf-users@vger.kernel.org>; Mon, 21 Sep 2026 05:07:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.71
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1789967244; cv=none; b=F/0CkyLILTJX3+GXigKyQtDs3UILfv/yNNxD1z/dnK0e26lUPFQNi+d8By/TxluE1pBnsl2iyEJauDFwuZiRASu1HJw1L3/GRxh2XFd/QXP/zp6wyP8My7pm2Ect3L8kZ8enCmirah7iHtOljvO17loK7Zj8AlJaioO/FXp+I90=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1789967244; c=relaxed/simple;
+	bh=GkmdESfvVw6Bhi5+j9XdWNIprQz32gaz404QEYVpfn8=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=CnV/7H8mAlSJvedWIkvUO2UiKIAHnBJRZ8yJTwufVDR2gX7NB5+cQp9GFavkTCjZ32/UXwS9WjmHYebFLT7lbQJ8rtBhgUxGxj5zzQ2r0V7n0W/WhYh9cYZw7GofMCMAXjpQ+noXP2yY/UpEgF8Y2SuRYAavb+lkMKCkfvqvxZg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Leii7JsG; arc=none smtp.client-ip=209.85.216.71
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=uber.com header.i=@uber.com header.b="3lY+SgFF"
-Received: by mail-yx2-f16.google.com with SMTP id 956f58d0204a3-66e56a1fe83so2086990d50.2
-        for <linux-perf-users@vger.kernel.org>; Sun, 20 Sep 2026 21:45:26 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1789965925; cv=none;
-        d=google.com; s=arc-20260327;
-        b=nQrABLDLaRb/aGqnV2lxhZsyUruua4+zVK/Q7G64vE/b+XA3Fn3lT9UzN3Ew9ysytx
-         ZPKnisYVl/6kFOxNblOyNIhucEYGm0JExdVfAtl/p0sHBMW+jkbsNNaIW0atoIABmsX4
-         4B7Fvm1wpt8JlfsynEpQKPDBHB7D3KrhEGKFhQvpEZR58Gm+AI9FsnHVeSs/pNJooOXH
-         ViU5KrO+G0ioJ6bRwB0mYrAVJ1UvfNU1CNWLR6cnM0A1ue43z/i6sJ3yMkfW/9/lHGss
-         5/k8DNnk7Akh1IP6lOPbKJmeA3Z3S11ZKujARnKqZlzv0yyzR/g5Xhr6eKO1d0Iq677J
-         Sq+g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=BI5PV8JEsmgNBkZ9uF5itWDVqgLrnZZn4wXuURr5w1k=;
-        fh=WXVsy1DAMNIfr1wcv3GasqemD1GMT+HB/18hiWY8AP0=;
-        b=emYuGmgnKq9Oz/coUAy2a1CM/0qp914WX+Bh/sWA97a7Ytt/8+ldx7tG7tojkcwqwu
-         v9yqSSoY4tBd6xNYJZSiLXzIZ9pb0Gyej8+pgoVFvHL7dLXxK5rJDJ8iSVMM16NdhoE/
-         8XB1VlF+H66NhdwcvyYXLFlX2hAF0DwtthvlcuLt29uUI74OtbBCaRRJdbZaPSE9CQsU
-         L9cTtn9IWfNiDDwK1u+WITGSYkg8Q4Zs1xvnHzpTKctQ10fPE6lqmDfqUHSeJ+4hCPUh
-         h5zg8XuEjw9QVKnx+97UXjEF7XhyMNkCJqoTjJ+M+BdW//pgQFOOFcQmsGCrvKzrej+f
-         Urzw==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Leii7JsG"
+Received: by mail-pj1-f71.google.com with SMTP id 98e67ed59e1d1-38f57e31b6eso2495547a91.1
+        for <linux-perf-users@vger.kernel.org>; Sun, 20 Sep 2026 22:07:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=uber.com; s=google; t=1789965925; x=1790570725; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=BI5PV8JEsmgNBkZ9uF5itWDVqgLrnZZn4wXuURr5w1k=;
-        b=3lY+SgFFQBwsvGrfy8CaWjC7ilWULy1BDuOPv1rEK2ho9plmgQOumNOHBiIIJieF9Q
-         vx30netqkxm/DebN2WnRLLCYaPK3bjwJKsVZhD+f39WRgLe4sj5bQU6G8DWRNrqENiQi
-         muZDpormgflcF1kNGUgwShoKt6nr0qjXyoW94=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1789965925; x=1790570725;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+        d=google.com; s=20251104; t=1789967243; x=1790572043; darn=vger.kernel.org;
+        h=content-type:cc:to:from:subject:message-id:references:mime-version
+         :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=BI5PV8JEsmgNBkZ9uF5itWDVqgLrnZZn4wXuURr5w1k=;
-        b=v8R4Emv6IgxyAxjTWvAtDqmpuRCPs05dOuQnCYfpPHjaZhQPivnrPi0QTTfQSbiOuH
-         IRz7SlPn/XdTNJR1SVrLn/zEfR1m5ibxpeSRiGcZMPrC81G9IEjnv3iTcT+/yf8o5sFv
-         +X37Qt8yQIIZr0HXw9xRlpfHZ+6WplPHgLSxh96FMtuI5Bii7Cq/4yPyea988ij/3MeE
-         IpllJPCT59mYDSCXBA0FKp6kCw4+Zp2tXG7P3Aa3OTWYZd7WXbouS4wrYkeKNgHsC1WI
-         iFuoVrf1kXpPsVQ+WpjalCrlh0LubYqxTRrIeGefZaVGUHogQm/kRw4qxIjj83jQVLje
-         o9aw==
-X-Forwarded-Encrypted: i=1; AKwUvByyHnY7HpPCei/od8/TNXLWz93Fb+/JxBQB5R1JW5RO8x1uRIm/ua/YD/e1a0rwvLf5D25UCxmYDMmdhidS5vlN@vger.kernel.org
-X-Gm-Message-State: AFuF++nAyK5GC9cWthDPGYJPDJZBjBZgaI3yyrQ/Yue6o0x0Pt8bSHNC
-	p4KYXf32srRds09moIvLt1dnFxb7MpM8bCpLLZp7ipEshsInCWeeNLYiSL9wMyclPFODNGkeB+q
-	GqJgrb0FRogapaDab5b4TaCOt0zV6yia2lmwBYsWopA==
-X-Gm-Gg: AYBFou13cJQLVvUqpm/RssP9qRY0MLIIl8dVhnswioLWB4HSxY/OrzBN/GOZ4tWNWm7
-	ei7p8lXYf52ZCSWRxJQXgCqg7x2u8kopeuekoqOrvLJy+rkAzYP7Q7atfAeuEvAOBIgyZJUjwXB
-	EKOHBvbSBGcd+2q0QX+UOnlmpFr/cOVgnDS9kJJK47YN06GXWwVZy8P1nmYvnE+uFxejD9UcW9r
-	yHvFcMbsw16ktHe1itCBhuSfQyqxBQe2GPxBfULuCfRBdIpZPwgwSNgI+reuF4gX+vPm2mKAwoJ
-	JQWKE+FtBlcsKzzVcX8L6fGfRAC4hGm3TA/f0irpd15EVo2f6CDMFtFGXstuvoTNk5cyd2sY05a
-	YpFT7dy8S0dsk
-X-Received: by 2002:a05:690e:806:20b0:671:631:785c with SMTP id
- 956f58d0204a3-6717fd9b0d7mr1841359d50.57.1789965923516; Sun, 20 Sep 2026
- 21:45:23 -0700 (PDT)
+        bh=s1sYzCcuJgWy+91qkWtU7G0DCPhx+Hi9Vsjhecq4f4U=;
+        b=Leii7JsGB+5B5vsNYSutBh9CsIZQJNW+mnTyoIbdckHa1mhFCzZLyG59gJL1bANaYy
+         s9Sfe49b4ULOyJSBK4l5NHRrS92hQ8+MxlbILtgJ0kdUxklLTauPXFb2tvjqmAE7BaJY
+         XcEuNL0QwfcOYjB+Ifx+yTot3c/q+BckD9MFuNavDbJskGFH8RFSWpSewEqeFq3T5MPK
+         WzApZ/fjTgaVFwqxA9FT+Cy1DfZyxfnzyCJis0eCBkNGmHHNusN5NtnHG1kosxFD4O9n
+         T9o+/eHXC7Nu+fm94iC+9n9x7c2aSe3DwgEDNl8omjJSma3F1kOx5bd7i+xcbnkmxoLE
+         dUmw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1789967243; x=1790572043;
+        h=content-type:cc:to:from:subject:message-id:references:mime-version
+         :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=s1sYzCcuJgWy+91qkWtU7G0DCPhx+Hi9Vsjhecq4f4U=;
+        b=NSQfVWl58vhQjc6OC9XZD0YC6TBpkM5C0l4oLcIBcSG9kwcONc/VZp0G/0T4mPOW0r
+         m51NeKILahmbU/EeFcejbxQ7d4zVJEO7YxSmc3ryHqF7Sjlomy990muOycGrRh4+MqJW
+         a+zpXaK4/w9z7otYhb2OK0c+hjekfu9v1mdBbJAHcou0FHiquUX/KrNsdFvyff7O+UKR
+         wtxE/aCMwLwgb3JiJOxofY5ZElZ86F97Mq+hX8kaa5kHhIDHa0OsSLyx/XsUT4Vzdlsv
+         BcTVhLvF31efXfyV/pjOXjXDKN2S+6NcgE6F8/ELeRJD0rY2VbFsFgysGdMyXBt/iKyi
+         TqlQ==
+X-Forwarded-Encrypted: i=1; AKwUvBzasBDO3y/xTqA9xnjAJwjFDux23pudnqDHRg0lXVR5wgSxqqcJ9CqJa3egGoHxXYE0BC3vhAv95xo+qkOCcVMG@vger.kernel.org
+X-Gm-Message-State: AFuF++kJC7CHON3W+VxEpAhrrKkI4x2d8fFGL8qlFUlr+EPS04JcW/F3
+	4IASHi2scTsvULy3n5VXS1VutmHyNKZFiot/1y09P3fNQe2g6xYRtM4n3mp83DG4brYxd8gee1D
+	UrVuEqMC2mA==
+X-Received: from dldyr17-n1.prod.google.com ([2002:a05:701b:4511:10b0:143:7976:20e7])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:54c4:b0:39e:4c7f:7308
+ with SMTP id 98e67ed59e1d1-39e55071981mr14570736a91.31.1789967242503; Sun, 20
+ Sep 2026 22:07:22 -0700 (PDT)
+Date: Sun, 20 Sep 2026 22:06:19 -0700
+In-Reply-To: <cover.1789966896.git.irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20260919-perf-symbol-memory-send-v2-0-495b8f00ad7c@uber.com>
- <20260919-perf-symbol-memory-send-v2-3-495b8f00ad7c@uber.com> <arB4G744iWiSPAnV@z2>
-In-Reply-To: <arB4G744iWiSPAnV@z2>
-From: Alireza Haghdoost <haghdoost@uber.com>
-Date: Sun, 20 Sep 2026 21:45:07 -0700
-X-Gm-Features: AcwNN1VO_qCFY9m4mP87ZE5UPrksR7jfkJOOvczZnZ-njyecDFIgbzlRdTw4DNI
-Message-ID: <CA+w=M=R-i1+8p7SDLueMHV8Fv5yupXR+ongVCbeAKGyq8UjsQA@mail.gmail.com>
-Subject: Re: [PATCH v2 3/4] perf script: Add --lazy-load-symbols for lazy
- symbol loading
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	James Clark <james.clark@linaro.org>, Alexei Starovoitov <ast@kernel.org>, 
-	Andrii Nakryiko <andriin@fb.com>, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
+Mime-Version: 1.0
+References: <cover.1789966896.git.irogers@google.com>
+X-Mailer: git-send-email 2.55.0.1082.g2b9226bbc0-goog
+Message-ID: <f64b7f59e863302bb81c14a3a13af2e116d38b8f.1789966896.git.irogers@google.com>
+Subject: [PATCH v2 01/49] perf python: Update syscall format string to
+ optional positional
+From: Ian Rogers <irogers@google.com>
+To: irogers@google.com, acme@kernel.org, alice.mei.rogers@gmail.com, 
+	linux-perf-users@vger.kernel.org, namhyung@kernel.org
+Cc: adrian.hunter@intel.com, dapeng1.mi@linux.intel.com, 
+	james.clark@linaro.org, leo.yan@linux.dev, linux-kernel@vger.kernel.org, 
+	mingo@redhat.com, peterz@infradead.org, tmricht@linux.ibm.com
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-> > +
-> > +     if (!symbol_conf.allow_aliases) {
-> > +             u32 out =3D 0;
->
-> I think we agreed to factor out this block of code.
->
+Update the PyArg_ParseTupleAndKeywords format string for
+pyrf__syscall_name() and pyrf__syscall_id() from "i|$i" to "i|i" (and
+"s|$i" to "s|i"), allowing elf_machine to be passed as an optional
+positional argument as well as a keyword argument.
 
-You=E2=80=99re right. I interpreted the earlier request too narrowly and on=
-ly
-factored out the pairwise selection policy into symbol__choose_best().
-I=E2=80=99ll factor out the complete block in v3.
+Update syscall_id() and syscall_name() in perf.pyi to match, and set the
+return type of syscall_name() to Optional[str] as unknown syscall numbers
+return None.
 
+Assisted-by: Antigravity:gemini-3.1-pro
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ tools/perf/python/perf.pyi | 4 ++--
+ tools/perf/util/python.c   | 4 ++--
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
-> > +
-> > +     /*
-> > +      * Keep an exact-path data DSO for the symbol source.  This may d=
-iffer
-> > +      * from the runtime image (for example, split debuginfo), so usin=
-g the
-> > +      * primary DSO's data cache could read an unrelated string-table =
-offset.
-> > +      * The standard DSO data cache manages descriptor eviction and re=
-opening.
-> > +      */
->
-> Yes, it's a known problem and I hope to address it soon.  Can you please
-> make the path handling a separate commit?  I think it's an independent
-> fix for split debuginfo.
->
+diff --git a/tools/perf/python/perf.pyi b/tools/perf/python/perf.pyi
+index 58b0b3ed819d..e737eb21567c 100644
+--- a/tools/perf/python/perf.pyi
++++ b/tools/perf/python/perf.pyi
+@@ -20,7 +20,7 @@ def metrics() -> List[Dict[str, Union[str, List[str]]]]:
+     """
+     ...
+ 
+-def syscall_name(id: int, *, elf_machine: Optional[int] = None) -> str:
++def syscall_name(id: int, elf_machine: Optional[int] = None) -> Optional[str]:
+     """Convert a syscall number to its name.
+ 
+     Args:
+@@ -32,7 +32,7 @@ def syscall_name(id: int, *, elf_machine: Optional[int] = None) -> str:
+     """
+     ...
+ 
+-def syscall_id(name: str, *, elf_machine: Optional[int] = None) -> int:
++def syscall_id(name: str, elf_machine: Optional[int] = None) -> int:
+     """Convert a syscall name to its number.
+ 
+     Args:
+diff --git a/tools/perf/util/python.c b/tools/perf/util/python.c
+index d8a842621cda..a3ffaf4d0850 100644
+--- a/tools/perf/util/python.c
++++ b/tools/perf/util/python.c
+@@ -4111,7 +4111,7 @@ static PyObject *pyrf__syscall_name(PyObject *self, PyObject *args, PyObject *kw
+ 	int elf_machine = EM_HOST;
+ 	static char *kwlist[] = { "id", "elf_machine", NULL };
+ 
+-	if (!PyArg_ParseTupleAndKeywords(args, kwargs, "i|$i", kwlist, &id, &elf_machine))
++	if (!PyArg_ParseTupleAndKeywords(args, kwargs, "i|i", kwlist, &id, &elf_machine))
+ 		return NULL;
+ 
+ 	name = syscalltbl__name(elf_machine, id);
+@@ -4127,7 +4127,7 @@ static PyObject *pyrf__syscall_id(PyObject *self, PyObject *args, PyObject *kwar
+ 	int elf_machine = EM_HOST;
+ 	static char *kwlist[] = { "name", "elf_machine", NULL };
+ 
+-	if (!PyArg_ParseTupleAndKeywords(args, kwargs, "s|$i", kwlist, &name, &elf_machine))
++	if (!PyArg_ParseTupleAndKeywords(args, kwargs, "s|i", kwlist, &name, &elf_machine))
+ 		return NULL;
+ 
+ 	id = syscalltbl__id(elf_machine, name);
+-- 
+2.55.0.1082.g2b9226bbc0-goog
 
-Ack. I=E2=80=99ll split the exact-path DSO data-cache support into a separa=
-te
-split-debuginfo fix and have the lazy-loading patch build on top
-of it in v3.
-
-> > +static int choose_best_symbol(struct symbol *syma, struct symbol *symb=
-)
-> > +{
-> > +     return symbol__choose_best(syma->end - syma->start,
-> > +                                symbol__type(syma), symbol__binding(sy=
-ma), syma->name,
-> > +                                symb->end - symb->start,
-> > +                                symbol__type(symb), symbol__binding(sy=
-mb), symb->name);
-> >  }
->
-> To reduce the size of the patch, I think it's better to split this as a
-> separate commit.  Please consider minimize the patch size in general to
-> help reviewers. :)
->
-
-Ack. I=E2=80=99ll move the shared duplicate-selection refactoring into a
-separate preparatory commit to keep the lazy-loading patch smaller in v3.
