@@ -1,107 +1,164 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A20648F011
-	for <linux-perf-users@vger.kernel.org>; Mon, 21 Sep 2026 11:30:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A7AE48F00D
+	for <linux-perf-users@vger.kernel.org>; Mon, 21 Sep 2026 11:31:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789990233; cv=none; b=alcM4mLBgUvmkYL2MKltQhbzQS18qh5UzBy8yAATPAFXKzaknjgoHul7Cu2KslixIO18VRpQUhIJwN01bhex31/eLSLz83GHCJcpbw2bZ0PV3rOZ7dSf5ZGAQ1XvhGTmp0IkZXp3G7eqOCh434WorKBA+t/NohDrULMessh7MxM=
+	t=1789990306; cv=none; b=K7qVTvTozuXRnVxtjV3Lr2dOCSevGTVm6lM6qS2LelpEe/Ac6/cgi7agJC1eOpU1lgeZivz+n4pKnDUo1kJbkE/Nw9cu/+lT6JgAVd5hPznlHXbXl1/4YQV36ve+Rh7uLpr2RVcI27p/LXU1neOJZkptMBDioU5BzmAYNiTchpo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789990233; c=relaxed/simple;
-	bh=4J5rjnl8PkZ9amKW0A52ExlpuzubR4eRR/iLnqcaagw=;
+	s=arc-20240116; t=1789990306; c=relaxed/simple;
+	bh=TH7Z7vBNwQ2jbpODWf+E7p8b+/ah+iXdY07etHC9TQk=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=WQd2ti7LeZVHQpvD82emfyYYaLHbNoDd6tnRG+7ALv54FSQLUinNWE7Oys8SeqAXXUH5RMX6cVj9HnCYaupRvBUdbpHQ389QjWf5cwKGrues7KnLiwjv3ojbBRQUXRdK1Q68E03abuZlNBFAtfrCgolUGwZshzMY+Y1jeyqnYMc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Yg6gIT12; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=f+z6pSDYvsV46t0NRe0drhQftz55FYwxvx9d7+hsJbipfXLNnGtOPWMg9HxPjG4bjOFeOq1l3I65l75DymcEAiA4BTekgPAUH6CY8mwpfO6dUI4tUZYDaJB534tiyNmKO+Pw8bGFq1U+EXNnkuQ9x1pECRQ9kRYHsydxblz0Dko=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eN9iN+FE; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Yg6gIT12"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0100D1F00898;
-	Mon, 21 Sep 2026 11:30:31 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eN9iN+FE"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6F0191F000FF;
+	Mon, 21 Sep 2026 11:31:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789990232;
-	bh=0jpN4bVx8CoHbzbiOPF2jkI44QXzaz2kCq4WCRL6Ej4=;
+	s=k20260515; t=1789990303;
+	bh=UtoRvdNkzm8LNYc9+fEfBzrinoDMap47pz49Bb5yxDY=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=Yg6gIT12lw2olMEHmPfu2WwxsmEu0BihO9wodlQkq2Ll/2XZylTMevF8t9vy/Aci8
-	 eHFtj3acJXgjJU/XDEkLqM+FGFmiymMT3X54tdzzsOSh6nJH2bKCPMKNJT392/p53x
-	 hirCS/6d5Rh17Nmmpt2ioJfISyoggUla953G4Gt9cOTF7xD+LWEFLaje9W9m4QxOjO
-	 tOrLSYdDudJzjEfnk0A625TgTP0ody/xAWtal5rgeZNQ5rihvHbUpQQwhIRvIulUVQ
-	 QiCpcObg+hUyaAGrH1Gh01Pt9tQcAHJiVRWJgP73yXx9gEBqUFsACi8oXLTC/RTDwQ
-	 Zf0b9obZPfuXg==
+	b=eN9iN+FEPWG/EzqLzfy1wHnll6g2D633dd++ieMyJuFtAWxnR2D14uXKud4CZV9Rd
+	 qQ62NmxhlY+3HpVQqIv8G+hpOzugFtGGn0FWOw8Cgtknmvj5E/GH6BNff00LClBOLU
+	 fbvWVCTRW5oZqdSl53+eaLvRCaWK0MRVJuap2KYDub4c3AENthgy6LFfmLYNl/CCmM
+	 FfBz3n6Df38Uz3OCad4qASfp1dgJJpRE+mUbT/yoFa10sgnrzRVdtpgxl8NhxoMTAH
+	 K4ww/bvRExEMtpJLZ1ABLnaAmxGR1kH3nzeVuxh6zZyaYdN5y03Dnj2Isv9Yf9WDYX
+	 fXzLyxpRH05mg==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v10 RESEND 3/9] riscv: sse: mask events during shutdown
- and kexec
+Subject: Re: [PATCH v10 RESEND 2/9] riscv: add support for SBI Supervisor
+ Software Events extension
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Zhanpeng Zhang" <zhangzhanpeng.jasper@bytedance.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <03472b45125793a768f3e5bbc168f167e673d4cc.1789974241.git.zhangzhanpeng.jasper@bytedance.com>
+In-Reply-To: <d067d9d2a8f33d480ebdcce276328a336aa26073.1789974241.git.zhangzhanpeng.jasper@bytedance.com>
 References: <cover.1789974241.git.zhangzhanpeng.jasper@bytedance.com>
- <03472b45125793a768f3e5bbc168f167e673d4cc.1789974241.git.zhangzhanpeng.jasper@bytedance.com>
+ <d067d9d2a8f33d480ebdcce276328a336aa26073.1789974241.git.zhangzhanpeng.jasper@bytedance.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Mon, 21 Sep 2026 11:30:31 +0000
-Message-Id: <20260921113032.0100D1F00898@smtp.kernel.org>
+Date: Mon, 21 Sep 2026 11:31:43 +0000
+Message-Id: <20260921113143.6F0191F000FF@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+Thank you for your contribution! Sashiko AI review found 2 potential issue(=
 s) to consider:
-- [Low] riscv: dead code in UP panic_smp_self_stop() misses early SSE mask
+- [Critical] riscv: premature restoration of CSR_SSTATUS re-enables interru=
+pts leading to privilege escalation
+- [High] riscv: truncation of 64-bit physical addresses on RV32 during SBI =
+ecall
 --
 
-commit 7602c0f047088ef36df958ced3408ede048d0ce9
-Author: Zhanpeng Zhang <zhangzhanpeng.jasper@bytedance.com>
+commit 491bc3336b6e02d6ec5b41c80039d8746df8e36e
+Author: Cl=C3=A9ment L=C3=A9ger <cleger@rivosinc.com>
 
-riscv: sse: mask events during shutdown and kexec
+riscv: add support for SBI Supervisor Software Events extension
 
-This commit masks SSE events on the local hart before panic stop, CPU stop,
-restart, poweroff, and crash shutdown paths to prevent firmware from enteri=
-ng
-a Linux-owned handler state after the CPU or kernel context becomes invalid.
-It also rejects normal kexec from a crash kernel to avoid transferring unkn=
-own
-firmware state to the new kernel.
+This commit introduces support for the SBI Supervisor Software Events
+extension, allowing firmware to notify supervisor software of independent
+events. It implements event registration, handler contexts with dedicated
+stacks, and restoration of the interrupted supervisor state.
 
-> diff --git a/arch/riscv/kernel/reset.c b/arch/riscv/kernel/reset.c
-> index 14eb08a6db855..fdab37e7ae52d 100644
-> --- a/arch/riscv/kernel/reset.c
-> +++ b/arch/riscv/kernel/reset.c
-> @@ -6,6 +6,20 @@
->  #include <linux/efi.h>
->  #include <linux/reboot.h>
->  #include <linux/pm.h>
-> +#include <linux/smp.h>
-> +
-> +#include <asm/sse.h>
-> +
-> +#ifndef CONFIG_SMP
-> +void __noreturn panic_smp_self_stop(void)
+diff --git a/arch/riscv/kernel/sbi_sse.c b/arch/riscv/kernel/sbi_sse.c
+new file mode 100644
+index 0000000000000..7dd496e2bdb0e
+--- /dev/null
++++ b/arch/riscv/kernel/sbi_sse.c
+@@ -0,0 +1,246 @@
+[ ... ]
+> +void noinstr do_sse(struct sse_event_arch_data *arch_evt,
+> +		    struct pt_regs *regs, unsigned long hstatus)
 > +{
-> +	riscv_sse_mask_current_hart();
-> +	local_irq_disable();
+[ ... ]
+> +	/* Retrieve missing GPRs from SBI */
+> +	sret =3D sbi_ecall(SBI_EXT_SSE, SBI_SSE_EVENT_ATTR_READ, arch_evt->evt_=
+id,
+> +			 SBI_SSE_ATTR_INTERRUPTED_A6,
+> +			 (SBI_SSE_ATTR_INTERRUPTED_A7 -
+> +			  SBI_SSE_ATTR_INTERRUPTED_A6) + 1,
+> +			 (unsigned long)arch_evt->interrupted_phys, 0, 0);
+
+[Severity: High]
+Does this cast to unsigned long truncate the upper 32 bits of the physical=
+=20
+address on RV32 systems?
+
+On RV32 systems with 34-bit physical addressing (Sv32), phys_addr_t is=20
+64-bit. If the event data is allocated in memory residing above the 4GB=20
+boundary, this truncation could cause the firmware to write the interrupted=
+=20
+registers to the wrong physical address in the lower 4GB, resulting in=20
+memory corruption.
+
+> +	if (sret.error) {
+[ ... ]
+> +	if (memcmp(&regs->a6, arch_evt->interrupted,
+> +		   sizeof(*arch_evt->interrupted))) {
+> +		memcpy(arch_evt->interrupted, &regs->a6,
+> +		       sizeof(*arch_evt->interrupted));
+> +		sret =3D sbi_ecall(SBI_EXT_SSE, SBI_SSE_EVENT_ATTR_WRITE,
+> +				 arch_evt->evt_id, SBI_SSE_ATTR_INTERRUPTED_A6,
+> +				 (SBI_SSE_ATTR_INTERRUPTED_A7 -
+> +				  SBI_SSE_ATTR_INTERRUPTED_A6) + 1,
+> +				 (unsigned long)arch_evt->interrupted_phys, 0, 0);
+
+[Severity: High]
+Similarly, does this truncation happen identically on the writeback path?
+
+> +		/*
+> +		 * If writeback fails, COMPLETE resumes with firmware's original
+> +		 * a6/a7 rather than treating the shared buffer as committed.
+> +		 */
+[ ... ]
+
+diff --git a/arch/riscv/kernel/sbi_sse_entry.S b/arch/riscv/kernel/sbi_sse_=
+entry.S
+new file mode 100644
+index 0000000000000..e0e8efba12ddb
+--- /dev/null
++++ b/arch/riscv/kernel/sbi_sse_entry.S
+@@ -0,0 +1,226 @@
+[ ... ]
+> +	csrw CSR_SSCRATCH, s4
+> +	ALTERNATIVE("nop", "csrw hstatus, s5", 0, RISCV_ISA_EXT_H, 1)
+> +	csrw CSR_STVEC, s3
 > +
-> +	for (;;)
-> +		cpu_relax();
-> +}
-> +#endif
+> +	REG_L a0, PT_STATUS(sp)
+> +	REG_L a1, PT_EPC(sp)
+> +	REG_L a2, PT_BADADDR(sp)
+> +	REG_L a3, PT_CAUSE(sp)
+> +	csrw CSR_SSTATUS, a0
+> +	csrw CSR_EPC, a1
+> +	csrw CSR_STVAL, a2
+> +	csrw CSR_SCAUSE, a3
 
-[Severity: Low]
-Is this panic_smp_self_stop() function reachable on UP systems?
+[Severity: Critical]
+Does restoring the interrupted context's sstatus here prematurely re-enable=
+=20
+interrupts before the handler completes natively via the SBI firmware?
 
-When a kernel panic occurs on a UP system, the single CPU will always win t=
-he
-panic_try_start() race and proceed as the primary panicking CPU. The primary
-panicking CPU never calls panic_smp_self_stop().
+If the interrupted context had interrupts enabled (SR_SIE bit set), writing=
+=20
+it back immediately re-enables interrupts while still executing on the kern=
+el's
+SSE stack.=20
 
-Additionally, on UP systems, the smp_send_stop() and crash_smp_send_stop()
-functions are inline no-ops, so the primary CPU does not mask its own SSE
-early in the panic path. Although a follow-up patch (Patch 4) adds a panic
-notifier that eventually masks the SSE before the final infinite loop, the =
-UP
-CPU remains unmasked during the early panic stages (such as stack trace
-dumping), and this added UP code appears to be entirely dead.
+If a pending interrupt fires during the window before the ecall,=20
+handle_exception reads the previously restored sscratch. If sscratch contai=
+ns
+a user task pointer, handle_exception could incorrectly swap the user's=20
+TASK_TI_USER_SP with the kernel SSE stack pointer, leaking the kernel stack
+to userspace.
+
+> +
+> +	REG_L ra, PT_RA(sp)
+> +	REG_L s0, PT_S0(sp)
+[ ... ]
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/cover.1789974241.gi=
-t.zhangzhanpeng.jasper@bytedance.com?part=3D3
+t.zhangzhanpeng.jasper@bytedance.com?part=3D2
