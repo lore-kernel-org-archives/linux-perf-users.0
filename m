@@ -1,79 +1,259 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from SN4PR0501CU005.outbound.protection.outlook.com (mail-southcentralusazon11011015.outbound.protection.outlook.com [40.93.194.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 524041B808
-	for <linux-perf-users@vger.kernel.org>; Mon, 21 Sep 2026 00:41:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789951268; cv=none; b=NM97Q2OzEWUOA6Xkx0riLZ73YW4aUBJ2uKgQEgM0Ii9JNsxxSMiRfkv9/ZeMjHFSV14DO88QkTdALPmupCij7H9iZNTbfdMDBQDyCkh6McdcsJcqZT/9bBgy2zgAvEvULocOJlp+h2fl2pX+QOe1KIPtFCTSAXWabYRw1YTgQ58=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789951268; c=relaxed/simple;
-	bh=pgxNYYmdBzGWJibl614dAuddbSSEH6qA7H5j4ewuivI=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=EE617VvP/Pr4dFUvPgKaOdWsds4Bu+sVeOB96rsIJlC3qyamFklzSuBMQBl6bi2l1eb/Tk2mrQVwQUWH3i1/okBDalS+xJ555DYQ8Ow0N+VuqmvClU2HmmIMoa1d5LSKq1/HZ8ymJEBhIlIkURzGslCKtA4f+Gd5NdFAenPio08=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DDQtd6Fx; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AF6E3033DF;
+	Mon, 21 Sep 2026 02:28:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.194.15
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1789957710; cv=fail; b=MxKfTHbIuOyWF/HlBKNIjgNZmjNRjKj1Wq8RyXOXjZmtO/1SRhQVJMdfeWMRKEfg5/zfckBgh09qz07kX+ZkUwS/iJEmP6ZEHNDPyGmEGjB7RwqQXkLsrvFnnxBqsNC/6lBUyZxStdB9QkhTb1vNytomm6PhrDFV1fBKfgZ0X9w=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1789957710; c=relaxed/simple;
+	bh=LA7ZnXqPsAszfR1Ql4sikyCXEX9QkFYqkT6HbKr3v84=;
+	h=From:Date:Subject:Content-Type:Message-Id:References:In-Reply-To:
+	 To:Cc:MIME-Version; b=FUgDj8r+6YHREnJXKbN9BgFZ1hfjZ/QD4wAyy4JhKbDfCv5cRzUcEzieJUM+cjXgP54Rl/Wtyf13pGRE4G5TFusMAC5qKTv1uO21RSp5McDQG8SwEFVNqLurx1hQmCmdTHbWtdqu0bsisCgDRlnpVd/P4K3hexFwC4fPB1RQFIQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=GFrTE7qk; arc=fail smtp.client-ip=40.93.194.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DDQtd6Fx"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D194A1F000FF;
-	Mon, 21 Sep 2026 00:41:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789951265;
-	bh=pgxNYYmdBzGWJibl614dAuddbSSEH6qA7H5j4ewuivI=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=DDQtd6Fx/rDg2rTKZ5+neivzrzfA1/7oi27nCwwSneXsryBwNtZOpAx5DRIZTv6qh
-	 rcvmPIy8D7sxaOZiPS3QUVlleQwV+9QAQS0IGNxsX61cNjsCR+GF8YBTOdTpC1MFQm
-	 Ynl6yoeg7jAaQCC3EtebrFetsn+zzBn5KL6M7v8VWjiFZ0OCtZkwDJz/cURoABG+e6
-	 NnkeGjqUgdek0UgcQowXqobxRzGxdf2IKbXTtP0YIk3ylXtanEs58/tAttoxcO6104
-	 mOUVUNGuWIec6ZgbPKWB+5NwAUCnyOJtmuq20x7pCYo1gRmGdqHcHFnDyeopozooGc
-	 GeT88S7UGvrXw==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v2] perf/core: fix user->locked_vm leak on secondary
- mmap()
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Hui Peng" <benquike@gmail.com>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260921003306.426050-1-benquike@gmail.com>
-References: <20260919221728.3707189-1-benquike@gmail.com>
- <20260921003306.426050-1-benquike@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Mon, 21 Sep 2026 00:41:04 +0000
-Message-Id: <20260921004104.D194A1F000FF@smtp.kernel.org>
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="GFrTE7qk"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=ggs2EDfCGpVTrZsdLn6IJVsIs64rGg9TugBMz/gMx1ucU8ZC6QUYAhL0iJ7sRtlaUERIbyPEd6P0tl/739QONWJQbvisra+42J4mr5wq+TeVwL8zF8n6gld4u2DKEAO4+xuXt1oodci+fMhxjn8ef6KT9f9mrFeH3OU0/ujqTS3B4TqTrjj9sEM6IrxVCTuJnmX46cRWTTRymuBwl0KECR+QzN78BGLwIZfOeLec9KaVzTtDR2DTHHkEQZNGpylW0OjTCze60NTuZaOxK5/FsCHCrwKrtLvRTjn9ESi15JrjBQCLZuiDISiSPFWQwSd8hH3CzK06ooi8bYhWis0xhQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=gpnw9Gpg4JeqTBKlcim2Ze+bj98VqYRU3sYXsAgbZDY=;
+ b=vBIw5oGpHbF58ghKcykBM3/NH1T6rnXX8dEE6w9tvxdqrgEHCp6zI60Al000hszhS35BihqWxPlFzvhSttYp1jIT5aQg4v2RoMyf1OuUd2rR0EDlN7VMNmf9QTD2NXIA+5BzjYYx8ZomzMmrQXxi8qEB05CUvzSv9DCiDjbT5fUR70GpYNHxg++x5lkw0owhW+IPmHJGcAxbj/MRoM7tcBAvSDcECfvKf0LdFLaO5n5EHaQF7tTr/kPIrXEdyEIV8rt1O0B1SIhplDed4YjiK/+JcpP+0mQFXf3hDkZ38ABPWUZc9nNFibTV80hqD0hjFcX23jc8XbBfYncndEhP1g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=gpnw9Gpg4JeqTBKlcim2Ze+bj98VqYRU3sYXsAgbZDY=;
+ b=GFrTE7qkTeg76thzaKrcjPgcwWdwX/besl7dVcHkKyqlcpbaK7kmo9ChyI1NqCs95sCJOkUUBehzWMa28sI//6jwPMlXTIwJvxur3GC+lvsZnSuFPwpJVDTCBAW+6jpf3KH6qQGXksKTVimbATuyLGUHK3Y/dAphhMH04Elwe8eR1kjYNSWmcc7OrcDmtvloDgm76l0eFXgq2D+ETukTZwJ2RgIha4zXTcE+SirTChMOC3mcmucnnVlBy2JwvvHnFvZFPp0p+zCeP5COJ+ZJSJvw05NLfUgq/FovESfbdXBsN9+0QZE3TTmDNoFQf4fn41V1dMHDpAcgI3Hm4grdOg==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from IA0PR12MB8374.namprd12.prod.outlook.com (2603:10b6:208:40e::7)
+ by DM4PR12MB7719.namprd12.prod.outlook.com (2603:10b6:8:101::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.428.16; Mon, 21 Sep
+ 2026 02:28:21 +0000
+Received: from IA0PR12MB8374.namprd12.prod.outlook.com
+ ([fe80::d85f:4c87:ae84:3f16]) by IA0PR12MB8374.namprd12.prod.outlook.com
+ ([fe80::d85f:4c87:ae84:3f16%6]) with mapi id 15.21.0428.014; Mon, 21 Sep 2026
+ 02:28:21 +0000
+From: Zi Yan <ziy@nvidia.com>
+Date: Sun, 20 Sep 2026 22:27:58 -0400
+Subject: [PATCH v5 02/17] perf/ring_buffer: stop using PG_private as AUX
+ page high-order marker
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20260920-remove-pg_private-v5-2-bb68b6a21869@nvidia.com>
+References: <20260920-remove-pg_private-v5-0-bb68b6a21869@nvidia.com>
+In-Reply-To: <20260920-remove-pg_private-v5-0-bb68b6a21869@nvidia.com>
+To: David Hildenbrand <david@kernel.org>, 
+ "Matthew Wilcox (Oracle)" <willy@infradead.org>, 
+ Andrew Morton <akpm@linux-foundation.org>, 
+ Muchun Song <muchun.song@linux.dev>, Lorenzo Stoakes <ljs@kernel.org>, 
+ "Liam R. Howlett" <liam@infradead.org>, Vlastimil Babka <vbabka@kernel.org>, 
+ Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, 
+ Michal Hocko <mhocko@suse.com>, Baolin Wang <baolin.wang@linux.alibaba.com>, 
+ Nico Pache <nico.pache@linux.dev>, Ryan Roberts <ryan.roberts@arm.com>, 
+ Dev Jain <dev.jain@arm.com>, Barry Song <baohua@kernel.org>, 
+ Lance Yang <lance.yang@linux.dev>, Usama Arif <usama.arif@linux.dev>, 
+ Gregory Price <gourry@gourry.net>, 
+ Ying Huang <ying.huang@linux.alibaba.com>, 
+ Alistair Popple <apopple@nvidia.com>, Johannes Weiner <hannes@cmpxchg.org>, 
+ Qi Zheng <qi.zheng@linux.dev>, Shakeel Butt <shakeel.butt@linux.dev>, 
+ Kairui Song <kasong@tencent.com>
+Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
+ Zi Yan <ziy@nvidia.com>, Peter Zijlstra <peterz@infradead.org>, 
+ Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, 
+ Namhyung Kim <namhyung@kernel.org>, Thomas Gleixner <tglx@kernel.org>, 
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, 
+ x86@kernel.org, Mark Rutland <mark.rutland@arm.com>, 
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
+ Adrian Hunter <adrian.hunter@intel.com>, 
+ James Clark <james.clark@linaro.org>, "H. Peter Anvin" <hpa@zytor.com>, 
+ linux-perf-users@vger.kernel.org
+X-Mailer: b4 0.16.0
+X-ClientProxiedBy: MN0PR03CA0013.namprd03.prod.outlook.com
+ (2603:10b6:208:52f::24) To IA0PR12MB8374.namprd12.prod.outlook.com
+ (2603:10b6:208:40e::7)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: IA0PR12MB8374:EE_|DM4PR12MB7719:EE_
+X-MS-Office365-Filtering-Correlation-Id: 2ff938b0-761c-4f8a-10d8-08df17880173
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|376014|7416014|23010399003|366016|921020|3023799007|10067099003|56012099006|11063799006|22082099003|18002099003;
+X-Microsoft-Antispam-Message-Info:
+	x7haXqulnn0NrzXWHeD894/aas2dxmbwspaDtEpZOSwnzj0omSZBKNLD2pLxhN0geqDumfs2A1Z+dRtqHerSene4txUwQbOrQXrNVklJrba740bAnolu5Yuo7RtdU4aiSouyawpGO4rZfcjwOGYeVK30jzLLODYhE7SAiQdmSItoxmPEQiHDjWuNPHd3UK7rgV1NpC8qkS86tHbW+qJvLmgVfFF2R2ogTVJ6nEntCI8KAs7eaeBOsS2dIoa8Thak2bfDY+wHBKBkSP976mOmj8CPP2c906GSpvr4YoBoddxQXKYgS3mKoBwJMTSVp2e4wwLzgpOVsuQW3RwE8ZjoCqbN56oy5BlZ69HcfXrDilvhAxrYKQZTw/aQ4t6BBMA2JzWcGLZKorG/oc+UX+Jg4AlaNKaWYbqtziymqiBoYDTnK0CIxo+0hsocDRcCx+oW6hBw7Rk39rhWVgVzOchu8dSZCFgpM9/ZBUw8dMLnlO1O0wMiOElQCcWnli+6ZhpAQIXCtz5E7YPPoFuS2Bfe4ixaZwnEy/Kkc8/MzCZdPx6WKVtcW0aheRZZf6cnH0lIe10ZCrWT8IaED7ka9Rdpi1LVsKbJZItLj4RCvmmq43ByJwRsjmT38K17oRocJRrrIyp5JU/MNFro3A5hjKLWIywSpR2iCJ/lqgN2dMgWYIwagJABlStSF9/TEdZQwmFjn0aMkpolFTdaQ1ZghNvDLw==
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:IA0PR12MB8374.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(7416014)(23010399003)(366016)(921020)(3023799007)(10067099003)(56012099006)(11063799006)(22082099003)(18002099003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?eWV5U0JySlp3THhaNHJBWDVNcnQ0WW84dFRWMlZVU1llZlJRU2tSbUdSK2RO?=
+ =?utf-8?B?b2U2aFNSVlRNaG8rek5GQzBhV25hamREVzJxUlZOTVk0WGJoUUozbmg1eUNj?=
+ =?utf-8?B?SVJTTnFHNDJINHNuWGNMUDRTOFAyZ2xCVFB3NU15OEVCSmIrVDBGam9kZlRK?=
+ =?utf-8?B?aUFuZ0JlZHNRU1hTVUczYmRpL1crVGpXbnA4V01CWENqejB4R3ZBT05VN1hC?=
+ =?utf-8?B?YUI5elNRODMrTGJmK0h4aEQrbmNhMmxCZm9Ma3NNZVJUR2JyOTdsbXJ3blZw?=
+ =?utf-8?B?amFCTEd3cFBRa1IxcWw0ZGpwY2pOUjFoK0R3ZWxNdnNtSGJaa1ZxWTB3dFls?=
+ =?utf-8?B?emFKWm9lMjZEeVdodHA0SnhIQ1YzMTFab1ArdXBUVlF4Wm5LMjBFL2cxYzMy?=
+ =?utf-8?B?WEgySkFZV2ZDQ2x3TDVPVlR1TDZCbDhVekFnZVRsTWhSbFJnWGVFQkROcG4y?=
+ =?utf-8?B?WUxtc2VBdDhtM1NVWEtGd1c1R1hVYkExTjdxem5LaCsvcUdwYVNYMG8yT3BC?=
+ =?utf-8?B?VXJobXhzb09lT2NnQzRVODRVaFZLem9zNmJWRkpmL1BnRUdTMUpDa3ZreTRS?=
+ =?utf-8?B?MlJYbmpuQlZHR3RscHo4VTVBRy80dVFRMDBmcVRxWWtIYU9tV1RnOWt1c0xU?=
+ =?utf-8?B?czlkQzU3QnhvQm9IRHl0MGg3NStUMGc5bXJXSWcwV2VjTzB4ZTZCR3owOVpj?=
+ =?utf-8?B?a1F4ZXppNjRVMEthM3B4VDRSYzhoL0tqNkJXOXBXYzJLbVgwUUVsaU8wcDE0?=
+ =?utf-8?B?UTdYdTdiSkdZTFNQUTRPVFJ1WFhQN0xUQ3VnQXV2NXdrYS8ySlZzL2RNc1Rn?=
+ =?utf-8?B?QnRPcTlQUUcwbEoveGtyTnIxbkZoV1JpUFNCN0dJQTdheE1hR1FvWjQwdkxj?=
+ =?utf-8?B?ejM3bldJbG9QbzZBaG1wTWVZN0hTbFlhQXp5ZGliRTlueEFqS242SFZBcnh0?=
+ =?utf-8?B?WTNsKzY2a3VlTjV6Z2JZSlpWL3VXb25NbmxKaUdwTS91bm10WG5NRHBPYWpL?=
+ =?utf-8?B?Y0d2cEFsNjQrY01LOXV6QWhLanlhd09iQmYrUG9SZnNEUU5JMHh3NGVKQ2Fy?=
+ =?utf-8?B?Tzk1QXZFaFpJbVR5VEdUd1E2KzlJTHBzQnNFdVRFWEljSVZ6VitIRTdENTRr?=
+ =?utf-8?B?bEF0Q3lMTzVWRnpyUDRqU0ZjNlUzUVVrYkphclZLNjBqRzk2bW1WbFVwSXZx?=
+ =?utf-8?B?RFJ2QkhxRDJlRGtuYTJ2WkxSQmlvcFNKY29TZ0dPMXBhTXh4U2xmbmJVRmJ0?=
+ =?utf-8?B?MnZuaGE0WitQQ2hIZWdjajBhU1BoNC9icjZGcHM2bTI5WGNuUjRQa21pMGFz?=
+ =?utf-8?B?V3VpTFV1K3U3bVdFL0F1S2hLN0hpZG13Um81RFYwUGt4Q0pDZFpQZGlFVjF5?=
+ =?utf-8?B?U0VpNVA3SG1JcjFCUXBYM0Q5SFV5OUd2bWRpM1VsamxwZHQySFFiVFVZKzUy?=
+ =?utf-8?B?bm1LMmVReXd4U3VoQjRaWnA1N3VMWW9SdTJPMnFua1JreTkzNjI5UU81NENV?=
+ =?utf-8?B?T3MxOXBYeFdIMnZsOHBNQ0N3YXRNZnRmV01CNlByZkFOMUtaY1l1NmlzVmtC?=
+ =?utf-8?B?SzAvVVI0emRCQ3hDUE1mL1l4RVZLRGFmYkhrKzdXVEl1OHlGRnhReEkxNDlV?=
+ =?utf-8?B?c2lOOHlzWmVmWk1rdHdId1ArbUhsd1dzeW9MWElPT3hkdnM1QjBIZytxa0Ft?=
+ =?utf-8?B?Ui9FdmUvRlZ5bmErYld5K3BZbHh5MThJeElKaktiZVg5d0VTbmlsMmVTK1lF?=
+ =?utf-8?B?dUdIMlVsR1pxM1pLNGF6enhqSURsZkNkVW1NcUhrcGE3S0IyT1RvUXliRXFE?=
+ =?utf-8?B?K2RTOERadldtdnF3bU1mOW13YXpxM2tROFFzcThYbXQ4Qjc3SDBuYkNQVnMv?=
+ =?utf-8?B?KzM2NzdDSXY0NjJvTmVnc0dhMml6emtKcjVvandINHJ0N2hGQzVPRzRnYmVM?=
+ =?utf-8?B?V0pyN0RFc3hRTzNDQVhVZ2szd2tsa2h2V0dqaXc3N1RwUkNMSCtKZ3M0dVZY?=
+ =?utf-8?B?STl6R0xPR0kyb0gyWG5oVmpqNnRmS0NEU2RiOGtkOTZJTG5zeDRjNDlQWDZD?=
+ =?utf-8?B?bTVmVXNXNXBtVjhqRkNEcXMyT2FjbGpvMDl0c3d5OFRBNjBNbjBvS0JTT0lz?=
+ =?utf-8?B?a2QvWFMwdy95K3lLeGlmWmdzMXdtNTZXOCtNQ3VRdlV6UE82SVhJTGF3bU9z?=
+ =?utf-8?B?bWNaQVJLUHNENjI1THVVeWpyRzRvdGVkTXdyZm52eHd5OHZ2ZTZ0Rlhsd1Rz?=
+ =?utf-8?B?TXBkUVZJTHVWS21tb3lWaFVOcXBhaDBLT0h0UVM2bmE2T3BzbjNMV1N2T1RS?=
+ =?utf-8?Q?WwPQIdP4wlBNC+Z0ZS?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2ff938b0-761c-4f8a-10d8-08df17880173
+X-MS-Exchange-CrossTenant-AuthSource: IA0PR12MB8374.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Sep 2026 02:28:21.7946
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: RsMroYURnNclzEm3mUc0sBDZ5NZbOh0xs7kzioKBtIcFj7b+BStuV+h9uD1y4fRj
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB7719
 
-> Commit 0c8a4e4139ad ("perf/core: Further simplify perf_mmap()") hoisted
-> `user_extra =3D nr_pages` ahead of the existing-buffer checks (`if
-> (event->rb)` and `if (rb_has_aux(rb))`), and subsequently
-> commit 5d299897f1e3 ("perf: Split out the RB allocation") and
-> commit 2aee37682391 ("perf: Split out the AUX buffer allocation")
-> carried `long extra =3D 0, user_extra =3D nr_pages` into perf_mmap_rb() a=
-nd
-> perf_mmap_aux().
->=20
-> As a result, when an already-allocated ring buffer (`event->rb`) or AUX
-> buffer (`rb_has_aux(rb)`) is mapped again via mmap(), perf_mmap_account()
-> is called with `user_extra =3D nr_pages` instead of `0`, charging `nr_pag=
-es`
-> to `current_user()->locked_vm` on every additional mapping. However,
-> perf_mmap_unaccount() and perf_mmap_close() only subtract the ring buffer=
-'s
-> and AUX buffer's pages once when the final `rb->mmap_count` /
-> `rb->aux_mmap_count` reference drops to zero. Consequently, every seconda=
-ry
-> [ ... ]
->=20
-> Fixes: 0c8a4e4139ad ("perf/core: Further simplify perf_mmap()")
-> Cc: stable@vger.kernel.org
-> Assisted-by: LLM
-> Signed-off-by: Hui Peng <benquike@gmail.com>
+A high-order AUX page sets PG_private on its first page and stores the
+order in first_page->private. Stop using PG_private and check
+first_page->private for AUX page order only in the ring buffer and its
+users. This is fine because page->private is 0 for order-0 AUX pages,
+matching the page order.
 
-Sashiko has reviewed this patch and found no issues. It looks great!
+It prepares for a future commit that remove PG_private.
 
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260921003306.4260=
-50-1-benquike@gmail.com?part=3D1
+No functional change intended.
+
+Assisted-by: LLM
+To: Peter Zijlstra <peterz@infradead.org>
+To: Ingo Molnar <mingo@redhat.com>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Namhyung Kim <namhyung@kernel.org>
+To: Thomas Gleixner <tglx@kernel.org>
+To: Borislav Petkov <bp@alien8.de>
+To: Dave Hansen <dave.hansen@linux.intel.com>
+To: x86@kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Ian Rogers <irogers@google.com>
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: James Clark <james.clark@linaro.org>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: linux-perf-users@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Acked-by: Usama Arif <usama.arif@linux.dev>
+Acked-by: David Hildenbrand (Arm) <david@kernel.org>
+Signed-off-by: Zi Yan <ziy@nvidia.com>
+---
+ arch/x86/events/intel/bts.c | 3 ---
+ arch/x86/events/intel/pt.c  | 6 ++----
+ kernel/events/ring_buffer.c | 7 +++----
+ 3 files changed, 5 insertions(+), 11 deletions(-)
+
+diff --git a/arch/x86/events/intel/bts.c b/arch/x86/events/intel/bts.c
+index cbac54cb3a9ec..5849392cf26d5 100644
+--- a/arch/x86/events/intel/bts.c
++++ b/arch/x86/events/intel/bts.c
+@@ -66,9 +66,6 @@ static struct pmu bts_pmu;
+ 
+ static int buf_nr_pages(struct page *page)
+ {
+-	if (!PagePrivate(page))
+-		return 1;
+-
+ 	return 1 << page_private(page);
+ }
+ 
+diff --git a/arch/x86/events/intel/pt.c b/arch/x86/events/intel/pt.c
+index 5754cd4055628..49349afee6119 100644
+--- a/arch/x86/events/intel/pt.c
++++ b/arch/x86/events/intel/pt.c
+@@ -781,8 +781,7 @@ static int topa_insert_pages(struct pt_buffer *buf, int cpu, gfp_t gfp)
+ 	struct page *p;
+ 
+ 	p = virt_to_page(buf->data_pages[buf->nr_pages]);
+-	if (PagePrivate(p))
+-		order = page_private(p);
++	order = page_private(p);
+ 
+ 	if (topa_table_full(topa)) {
+ 		topa = topa_alloc(cpu, gfp);
+@@ -1296,8 +1295,7 @@ static int pt_buffer_try_single(struct pt_buffer *buf, int nr_pages)
+ 	if (!intel_pt_validate_hw_cap(PT_CAP_single_range_output))
+ 		goto out;
+ 
+-	if (PagePrivate(p))
+-		order = page_private(p);
++	order = page_private(p);
+ 
+ 	if (1 << order != nr_pages)
+ 		goto out;
+diff --git a/kernel/events/ring_buffer.c b/kernel/events/ring_buffer.c
+index 9fe92161715e0..061b5cb222266 100644
+--- a/kernel/events/ring_buffer.c
++++ b/kernel/events/ring_buffer.c
+@@ -630,11 +630,10 @@ static struct page *rb_alloc_aux_page(int node, int order)
+ 		/*
+ 		 * Communicate the allocation size to the driver:
+ 		 * if we managed to secure a high-order allocation,
+-		 * set its first page's private to this order;
+-		 * !PagePrivate(page) means it's just a normal page.
++		 * set its first page's private to this order, otherwise page's
++		 * private remains zero.
+ 		 */
+ 		split_page(page, order);
+-		SetPagePrivate(page);
+ 		set_page_private(page, order);
+ 	}
+ 
+@@ -645,7 +644,7 @@ static void rb_free_aux_page(struct perf_buffer *rb, int idx)
+ {
+ 	struct page *page = virt_to_page(rb->aux_pages[idx]);
+ 
+-	ClearPagePrivate(page);
++	set_page_private(page, 0);
+ 	__free_page(page);
+ }
+ 
+
+-- 
+2.53.0
 
