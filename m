@@ -1,115 +1,173 @@
-Received: from mta0.migadu.com (out-159.mta0.migadu.com [91.218.175.159])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3E6A368964
-	for <linux-perf-users@vger.kernel.org>; Mon, 21 Sep 2026 06:20:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.159
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DF92361DA6;
+	Mon, 21 Sep 2026 06:22:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789971622; cv=none; b=qus4uY41whCcuxVUiaXRGnvrYkC5TmTSOt9t9/d23y98gx4/07KIds+bdOBw9zMBVo0PoM62d3oxaqzgKY1rdJmZhb+ntZ0KzOpcbEbbnlnMqds3Ige7rxFckuGcTV8gVRU1uz1Eg5P/1F7Ef13e/M2ntO9Me/jR2kB9EsgxWnQ=
+	t=1789971736; cv=none; b=s7STxaNScDW1FJfLbWUChQGfcnAWU5ZZ3Tq1IX7hUQ7gXiCrKavHTNMOSGgYdkR6R7LYRoN2w8izpdLCJYWgUTO7YF+MQttcDYQNdE+zU9m72hk06y0hflROA3IMEzDpvY2BRdsLohfpmCfLx83y1z0HQDPtABS4c7F94o8kxt0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789971622; c=relaxed/simple;
-	bh=n/AdnmXxXRbpGFInqaTSJTt65XZiIYjARrVazbI6Wb0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ltQOSLWhIK7H8DUoWDJgy5YOgoXRI9hDy/b7rBOa5/DoErmypwNxp/RcGZXa7I4MPmgxVwWSjHnrNZzLg8h5TGUgzLraADPQ9uNlD7UiVxq3a+O5290cElMhd0GCSmkGsqCS7GD/BwggktTEpld6mxZhMLSTFcU5MfvkSfDnhF8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=WM4tumaP; arc=none smtp.client-ip=91.218.175.159
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1789971736; c=relaxed/simple;
+	bh=z4aAwBgqIqyloe3Ukq3nEoAvkilgAieGKqiScaNkon0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZDng8Kg+o+CzaVoZbV6GnTqHCYfYfYn+IfbJdtsDUsIm1a9l8rrc+sx+HwdXIKpNY9a4MviSgeI1lVxH3kOOaxXZKI+RrfMIu15DiSefbDYJggT1qhE+bL7cUhpCNTozbBPdjZ4lEkdt9SVxw+6gtl90/r4VmmY4QNwhDjIn1Lk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YUnUaSif; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="WM4tumaP"
-X-Envelope-To: linux-perf-users@vger.kernel.org
-DKIM-Signature: a=rsa-sha256; bh=n/AdnmXxXRbpGFInqaTSJTt65XZiIYjARrVazbI6Wb0=;
- c=simple/simple; d=linux.dev;
- h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
- t=1789971617; v=1; x=1790576417;
- b=WM4tumaPUMfSkp2/LhSaz0bfqlBPUiGV4paOgePn6ocrt2vV1GqT5T660mj1aSQ4tG7SXUpn
- oUBa5L6yv+db9pePHr4Zgl7QpdzOMDO6OX6zyMSI1hNv1jDl8OkTPSLdvKANRJf+Rd2nk8KboAc
- ieKZi6SvU5Pl1XufUEyEgVpc=
-X-Envelope-To: linux-perf-users@vger.kernel.org
-Received: by smtp.migadu.com with ESMTPS id f802e06ae86065bd;
-	Mon, 21 Sep 2026 06:20:17 +0000
-X-Mizu-Trace-ID: f802e06ae86065bd
-X-Migadu-Flow: FLOW_OUT
-Message-ID: <32b465d4-0881-425e-a199-f40af05f48fa@linux.dev>
-Date: Mon, 21 Sep 2026 14:19:56 +0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YUnUaSif"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2199C1F000FF;
+	Mon, 21 Sep 2026 06:22:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1789971735;
+	bh=uZdMkJDAp6rJM26htnZk7E9JkWCMMA4T82aVyiUlmqU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=YUnUaSifIgxamcrokCMOKJ6nQqnda7HcYwNosNqYbj649Wcsu9+4sdghAmf6eOjOg
+	 n2KbKE246kifwadd0SRpes9i/Sm6tBknVV8hgjFVqbiFACYLxnKHzT/uWQ1jrRSo0S
+	 5q2sh7oe6rbw5JfdGZnb71Z4WWWsWbMErdkgpPlwMp1JDO/+31qdv4sOopB0e5K+Hb
+	 Y+RIuEfQ7/aoAcZL9aUKZ/56sZBr66S+Xiz6Zl9VSZVMNpsYgjYOGp4/TkSEjq24QY
+	 P7uyIsbdLZPBDcHnSHrxfluNxa5nM3t2JXR7vcC5U+cRbXmHDm3sZAS3FC6KDMShsf
+	 bqtO5csm8cyFQ==
+Date: Sun, 20 Sep 2026 23:22:13 -0700
+From: Namhyung Kim <namhyung@kernel.org>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
+	James Clark <james.clark@linaro.org>, Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: Re: [PATCH 4/7] perf annotate-data: Bound the member nesting
+ recursion
+Message-ID: <arDNFYI5PvIF40GF@z2>
+References: <20260919204027.8504-1-acme@kernel.org>
+ <20260919204027.8504-5-acme@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 02/17] perf/ring_buffer: stop using PG_private as AUX
- page high-order marker
-Content-Language: en-US
-To: Zi Yan <ziy@nvidia.com>
-Cc: linux-mm@kvack.org, Suren Baghdasaryan <surenb@google.com>,
- linux-kernel@vger.kernel.org, Ryan Roberts <ryan.roberts@arm.com>,
- Johannes Weiner <hannes@cmpxchg.org>, David Hildenbrand <david@kernel.org>,
- Nico Pache <nico.pache@linux.dev>, Peter Zijlstra <peterz@infradead.org>,
- Lorenzo Stoakes <ljs@kernel.org>, Mike Rapoport <rppt@kernel.org>,
- "Matthew Wilcox (Oracle)" <willy@infradead.org>,
- Usama Arif <usama.arif@linux.dev>, Barry Song <baohua@kernel.org>,
- Dev Jain <dev.jain@arm.com>, Ingo Molnar <mingo@redhat.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- Alistair Popple <apopple@nvidia.com>, Qi Zheng <qi.zheng@linux.dev>,
- "Liam R. Howlett" <liam@infradead.org>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Thomas Gleixner <tglx@kernel.org>,
- Borislav Petkov <bp@alien8.de>, Kairui Song <kasong@tencent.com>,
- Shakeel Butt <shakeel.butt@linux.dev>,
- Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
- Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>, James Clark
- <james.clark@linaro.org>, "H. Peter Anvin" <hpa@zytor.com>,
- linux-perf-users@vger.kernel.org, Gregory Price <gourry@gourry.net>,
- Ying Huang <ying.huang@linux.alibaba.com>,
- Baolin Wang <baolin.wang@linux.alibaba.com>, Michal Hocko <mhocko@suse.com>,
- Vlastimil Babka <vbabka@kernel.org>, Muchun Song <muchun.song@linux.dev>
-References: <20260920-remove-pg_private-v5-0-bb68b6a21869@nvidia.com>
- <20260920-remove-pg_private-v5-2-bb68b6a21869@nvidia.com>
-From: Lance Yang <lance.yang@linux.dev>
-In-Reply-To: <20260920-remove-pg_private-v5-2-bb68b6a21869@nvidia.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20260919204027.8504-5-acme@kernel.org>
 
-
-
-On 2026/9/21 10:27, Zi Yan wrote:
-> A high-order AUX page sets PG_private on its first page and stores the
-> order in first_page->private. Stop using PG_private and check
-> first_page->private for AUX page order only in the ring buffer and its
-> users. This is fine because page->private is 0 for order-0 AUX pages,
-> matching the page order.
+On Sat, Sep 19, 2026 at 05:40:24PM -0300, Arnaldo Carvalho de Melo wrote:
+> From: Arnaldo Carvalho de Melo <acme@redhat.com>
 > 
-> It prepares for a future commit that remove PG_private.
-> 
-> No functional change intended.
+> Members are added recursively, and the same kind of broken DIE can make
+> a member's type point back at one of its own ancestors, recursing until
+> the stack is gone; nothing usable comes out of nesting members 8 deep
+> anyway, so stop there, marking the member as truncated (reported by the
+> JSON exporter added in a later series) and giving up on member types
+> that don't resolve.
+
+I think 8 is too restrictive.  It should be common to have 3 or 4 depth
+if you have nested struct or union members.
+
+And some kernel primitives like spinlock also have nested members like
+
+  raw_spinlock_t
+    arch_spinlock_t
+      union
+        atomic_t
+	  int
+
+So it'd be easy to hit the limit when the nested members contain a
+spinlock.
+
+Thanks,
+Namhyung
+
 > 
 > Assisted-by: LLM
-> To: Peter Zijlstra <peterz@infradead.org>
-> To: Ingo Molnar <mingo@redhat.com>
-> To: Arnaldo Carvalho de Melo <acme@kernel.org>
-> To: Namhyung Kim <namhyung@kernel.org>
-> To: Thomas Gleixner <tglx@kernel.org>
-> To: Borislav Petkov <bp@alien8.de>
-> To: Dave Hansen <dave.hansen@linux.intel.com>
-> To: x86@kernel.org
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-> Cc: Jiri Olsa <jolsa@kernel.org>
-> Cc: Ian Rogers <irogers@google.com>
-> Cc: Adrian Hunter <adrian.hunter@intel.com>
-> Cc: James Clark <james.clark@linaro.org>
-> Cc: "H. Peter Anvin" <hpa@zytor.com>
-> Cc: linux-perf-users@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> Acked-by: Usama Arif <usama.arif@linux.dev>
-> Acked-by: David Hildenbrand (Arm) <david@kernel.org>
-> Signed-off-by: Zi Yan <ziy@nvidia.com>
+> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 > ---
-
-Nice cleanup! Feel free to add:
-
-Reviewed-by: Lance Yang <lance.yang@linux.dev>
+>  tools/perf/util/annotate-data.c | 32 ++++++++++++++++++++++++++------
+>  tools/perf/util/annotate-data.h |  3 +++
+>  2 files changed, 29 insertions(+), 6 deletions(-)
+> 
+> diff --git a/tools/perf/util/annotate-data.c b/tools/perf/util/annotate-data.c
+> index 2ad6d012e069c522..c67bb6005e23c516 100644
+> --- a/tools/perf/util/annotate-data.c
+> +++ b/tools/perf/util/annotate-data.c
+> @@ -221,6 +221,13 @@ static bool data_type_less(struct rb_node *node_a, const struct rb_node *node_b)
+>  	return strcmp(a->self.type_name, b->self.type_name) < 0;
+>  }
+>  
+> +/*
+> + * Members are added recursively; bound the nesting so that a broken
+> + * type that points back at one of its own ancestors doesn't recurse
+> + * until the stack is gone.
+> + */
+> +#define MAX_MEMBER_DEPTH 8
+> +
+>  /* Recursively add new members for struct/union */
+>  static int __add_member_cb(Dwarf_Die *die, void *arg)
+>  {
+> @@ -235,6 +242,16 @@ static int __add_member_cb(Dwarf_Die *die, void *arg)
+>  	if (dwarf_tag(die) != DW_TAG_member)
+>  		return DIE_FIND_CB_SIBLING;
+>  
+> +	if (__die_get_real_type(die, &member_type) == NULL)
+> +		return DIE_FIND_CB_SIBLING;
+> +
+> +	if (dwarf_tag(&member_type) == DW_TAG_typedef) {
+> +		if (die_get_real_type(&member_type, &die_mem) == NULL)
+> +			return DIE_FIND_CB_SIBLING;
+> +	} else {
+> +		die_mem = member_type;
+> +	}
+> +
+>  	member = zalloc(sizeof(*member));
+>  	if (member == NULL)
+>  		return DIE_FIND_CB_END;
+> @@ -242,12 +259,6 @@ static int __add_member_cb(Dwarf_Die *die, void *arg)
+>  	strbuf_init(&sb, 32);
+>  	die_get_typename(die, &sb);
+>  
+> -	__die_get_real_type(die, &member_type);
+> -	if (dwarf_tag(&member_type) == DW_TAG_typedef)
+> -		die_get_real_type(&member_type, &die_mem);
+> -	else
+> -		die_mem = member_type;
+> -
+>  	if (dwarf_aggregate_size(&die_mem, &size) < 0)
+>  		size = 0;
+>  
+> @@ -289,10 +300,19 @@ static int __add_member_cb(Dwarf_Die *die, void *arg)
+>  	}
+>  	member->size = size;
+>  	member->offset = loc + parent->offset;
+> +	member->depth = parent->depth + 1;
+>  	INIT_LIST_HEAD(&member->children);
+>  	list_add_tail(&member->node, &parent->children);
+>  
+>  	tag = dwarf_tag(&die_mem);
+> +	if (member->depth >= MAX_MEMBER_DEPTH) {
+> +		/* Reported by the JSON exporter so consumers can tell a truncated tree. */
+> +		member->truncated = true;
+> +		pr_debug_dtp("member nesting limit reached at %s\n",
+> +			     member->type_name ?: "(unknown type)");
+> +		return DIE_FIND_CB_SIBLING;
+> +	}
+> +
+>  	switch (tag) {
+>  	case DW_TAG_structure_type:
+>  	case DW_TAG_union_type:
+> diff --git a/tools/perf/util/annotate-data.h b/tools/perf/util/annotate-data.h
+> index ca2096a9ee62cbfe..cc576232f55b5fb0 100644
+> --- a/tools/perf/util/annotate-data.h
+> +++ b/tools/perf/util/annotate-data.h
+> @@ -57,6 +57,9 @@ struct annotated_member {
+>  	char *var_name;
+>  	int offset;
+>  	int size;
+> +	unsigned int depth;
+> +	/* Children not expanded because the nesting limit was reached */
+> +	bool truncated;
+>  };
+>  
+>  /**
+> -- 
+> 2.53.0
+> 
