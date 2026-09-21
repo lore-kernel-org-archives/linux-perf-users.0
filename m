@@ -1,32 +1,33 @@
-Received: from mta0.migadu.com (out-172.mta0.migadu.com [91.218.175.172])
+Received: from mta0.migadu.com (out-179.mta0.migadu.com [91.218.175.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C14D3033EC
-	for <linux-perf-users@vger.kernel.org>; Mon, 21 Sep 2026 15:31:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CC684A49AD
+	for <linux-perf-users@vger.kernel.org>; Mon, 21 Sep 2026 15:31:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790004680; cv=none; b=PJA3FZzYhh+7kG5Nb8+VEAKu7GaTLKxgFjoeSt/LWAaaGNB8Rza9n+qIvw0IB5Ab7zUdGdqiI1+DqN/rnjB+1nv1BtUdXZquFFSCuRD+VgwSx/aaRh0enNnm9vo2u8wgPNdHNHwYho3gyjfcZDDA142H5sjcnjMkJV3vJNt6Kr0=
+	t=1790004686; cv=none; b=cRHIcWCyYKooKNFgqBhT01yiR4yXKK8zuOY/8yzcGCTQsSQJErHCy5c9c/+1FVvOlFf3pThyXRcTd0SoU0u4OhTJfskxvRXjjPcV2yj7/ZOijEfsJEDYHsw1ExVzK5ciLNM+TwwxXFnjPGtonCu4t2vB7Qr/ZZ7xzxGC9lo2ibM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790004680; c=relaxed/simple;
-	bh=Cldqk0T4bqBsY7t9dyJshqCFFkgUH6dgBPVkheiwoqM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Git4CsCWAuWMsnNyj7fen5QUWReUWAonFD2fKmRi/FUQ6lCGqlwELsJ18M5LeQBdFUSJPZkdzTT0zhXIqqNeonlDc/moAoeUu/mQIdpyeizuiF2syh4YtmF8s32eaBa3WOmfgHoP+ALP9g7NvDMrB0UgKBvs9zCOWpRH/PWlSJg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=aOQAfDjB; arc=none smtp.client-ip=91.218.175.172
+	s=arc-20240116; t=1790004686; c=relaxed/simple;
+	bh=2SOs8h75Ol8U202CYfr5Ayb6GstSTbHVIntm0QQVLJ0=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=jcoV5wJbJKNcHc1VoEmgxO2W1G31d5ngczwMpYepfCzU7hWRwiPfPa9LIBoPxWdfls/IL7eKBDFjs9dCiMufZHtuT+WovPCsq4yFhbI2OyIaAhJyrMhsKhF3hLX1ySCCN2b8wnBwQRmkpS9agysQt4lAdsA2ZTNTWBVFuJjXHU4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=BC/+Pk4n; arc=none smtp.client-ip=91.218.175.179
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="aOQAfDjB"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="BC/+Pk4n"
 X-Envelope-To: linux-perf-users@vger.kernel.org
-DKIM-Signature: a=rsa-sha256; bh=Cldqk0T4bqBsY7t9dyJshqCFFkgUH6dgBPVkheiwoqM=;
+DKIM-Signature: a=rsa-sha256; bh=2SOs8h75Ol8U202CYfr5Ayb6GstSTbHVIntm0QQVLJ0=;
  c=simple/simple; d=linux.dev;
  h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
- t=1790004676; v=1; x=1790609476;
- b=aOQAfDjBX/uHJDk6TrAksHRE69buKV2hcMUw+8ZAdZZzJBdR+p2xucLokSMr3MOANgTpxhY4
- c2dSYGsCEvMsiEDlzvtCMus+sgZgGTp8l23A5PD20pA4qMMcfMWTkE1u1csVktJi/KQw3OlVdQT
- dfN9XnGZum5ujyyDHmok/YiU=
+ t=1790004682; v=1; x=1790609482;
+ b=BC/+Pk4nZP0sZnmfGgnNKkhDxfuhKNJ+XDCy2yUuLJRYART0vsZ7Ybwc/aiyN4k6KFRscrO2
+ TdTyS1ZqtcxK/vg9PB1XbXwIqAoI/PL+TrqASjgQ1EDufXKJVA9TMnQMuJgllu08hGkSbSSiSHA
+ t8ErDXoyOhNcyHjYD2ttbHJs=
 X-Envelope-To: linux-perf-users@vger.kernel.org
-Received: by mta10.migadu.com with ESMTPS id 6ebe27a16f4fd00e;
-	Mon, 21 Sep 2026 15:31:15 +0000
-X-Mizu-Trace-ID: 6ebe27a16f4fd00e
+Received: by mta10.migadu.com with ESMTPS id 530f19e0bc60f4b3;
+	Mon, 21 Sep 2026 15:31:21 +0000
+X-Mizu-Trace-ID: 530f19e0bc60f4b3
 X-Migadu-Flow: FLOW_OUT
 From: Usama Arif <usama.arif@linux.dev>
 To: acme@kernel.org,
@@ -50,11 +51,14 @@ Cc: hannes@cmpxchg.org,
 	riel@surriel.com,
 	shakeel.butt@linux.dev,
 	kernel-team@meta.com,
-	Usama Arif <usama.arif@linux.dev>
-Subject: [PATCH 0/2] perf/x86/amd/uncore: Drop redundant counter slot searches
-Date: Mon, 21 Sep 2026 08:30:13 -0700
-Message-ID: <20260921153108.2713179-1-usama.arif@linux.dev>
+	Usama Arif <usama.arif@linux.dev>,
+	Sandipan Das <sandipan.das@amd.com>
+Subject: [PATCH 1/2] perf/x86/amd/uncore: Remove redundant event slot scan
+Date: Mon, 21 Sep 2026 08:30:14 -0700
+Message-ID: <20260921153108.2713179-2-usama.arif@linux.dev>
 X-Mailer: git-send-email 2.53.0
+In-Reply-To: <20260921153108.2713179-1-usama.arif@linux.dev>
+References: <20260921153108.2713179-1-usama.arif@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -63,41 +67,59 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Both amd_uncore_add() and amd_uncore_del() search ctx->events[] for an
-event whose counter slot is already recorded in event->hw.idx.
+amd_uncore_add() first checks the slot recorded in event->hw.idx. If
+that misses, it scans ctx->events[] for the event before looking for a
+free slot.
 
-Perf serializes ->add() and ->del() for an event, and the driver never
-moves an installed event between slots, so an installed event can only
-be at the recorded index. Both searches are redundant.
+Perf serializes ->add() and ->del() for an event. Initialization sets
+idx to -1. A successful ->add() claims a slot and records its index
+before returning, while ->del() clears the slot before resetting idx.
+CPU context migration follows the same delete/add sequence.
 
-Neither callback is normally hot. That changes once more events target
-a PMU than it has counters. Perf then multiplexes them: every mux tick
-deschedules the resident set and schedules the next one, so both callbacks
-run for each rotated event on every tick.
+Thus an installed event can only reside at the recorded index. If the
+direct check misses, the event is not present in ctx->events[].
 
-Meta's fleet-wide profiles attribute 1.1% of kernel CPU time, excluding
-do_idle(), to amd_uncore_add() and amd_uncore_del() combined. On the
-host that exposed this, a workload holding 15,782 perf event file
-descriptors drove 56,575 calls per second into each callback from mux
-rotation, against a 16-counter DF PMU.
+Remove the redundant scan. This avoids walking all counters before each
+new slot search after multiplexing has scheduled an event out.
 
-Patch 1 removes the scan in amd_uncore_add(). It walks every counter
-before the free slot search, which is the common case once multiplexing
-has scheduled the event out.
+On a host running a production workload in the Meta fleet, amd_uncore_add()
+was called 56,575 times per second from mux rotation. Its 16-counter DF PMU
+makes each failed search scan 16 pointers across two cache lines.
 
-Patch 2 makes amd_uncore_del() free the recorded slot directly instead
-of rescanning from slot zero. Deleting all events from a full PMU with
-N counters drops from N * (N + 1) / 2 compare-exchanges to N.
+Cc: Sandipan Das <sandipan.das@amd.com>
+Signed-off-by: Usama Arif <usama.arif@linux.dev>
+---
+ arch/x86/events/amd/uncore.c | 14 ++++++--------
+ 1 file changed, 6 insertions(+), 8 deletions(-)
 
-No functional change intended.
-
-Usama Arif (2):
-  perf/x86/amd/uncore: Remove redundant event slot scan
-  perf/x86/amd/uncore: Free counter slot by index
-
- arch/x86/events/amd/uncore.c | 24 +++++++++---------------
- 1 file changed, 9 insertions(+), 15 deletions(-)
-
+diff --git a/arch/x86/events/amd/uncore.c b/arch/x86/events/amd/uncore.c
+index 7181973b5b127..53be8efaedc5d 100644
+--- a/arch/x86/events/amd/uncore.c
++++ b/arch/x86/events/amd/uncore.c
+@@ -206,17 +206,15 @@ static int amd_uncore_add(struct perf_event *event, int flags)
+ 	struct amd_uncore_ctx *ctx = *per_cpu_ptr(pmu->ctx, event->cpu);
+ 	struct hw_perf_event *hwc = &event->hw;
+ 
+-	/* are we already assigned? */
++	/*
++	 * Perf serializes ->add() and ->del() for an event. A successful
++	 * ->add() records the claimed slot in hwc->idx before returning, and
++	 * ->del() clears that slot before resetting hwc->idx. Therefore, an
++	 * existing assignment must be at hwc->idx.
++	 */
+ 	if (hwc->idx != -1 && ctx->events[hwc->idx] == event)
+ 		goto out;
+ 
+-	for (i = 0; i < pmu->num_counters; i++) {
+-		if (ctx->events[i] == event) {
+-			hwc->idx = i;
+-			goto out;
+-		}
+-	}
+-
+ 	/* if not, take the first available counter */
+ 	hwc->idx = -1;
+ 	for (i = 0; i < pmu->num_counters; i++) {
 -- 
 2.53.0-Meta
 
