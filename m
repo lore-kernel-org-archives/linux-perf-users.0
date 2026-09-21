@@ -1,263 +1,115 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mta0.migadu.com (out-159.mta0.migadu.com [91.218.175.159])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FEE5342510;
-	Mon, 21 Sep 2026 06:14:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3E6A368964
+	for <linux-perf-users@vger.kernel.org>; Mon, 21 Sep 2026 06:20:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.159
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789971295; cv=none; b=Bd0aEow9R8t39bP1M3NluRbtykaFr0XEj/VvbmGb9wkUVHbIG5naqd+BUx429RuZ9e1lDp1rfH3p0Hp/HKoCSgiStGFXScX6f2jQR4RXwmqZlf6YGg0Kb8x9p4DK8zLWYfj1M0K9P29jb3GNTiKuwrjoVSGbpbCV+qltKbv/BYE=
+	t=1789971622; cv=none; b=qus4uY41whCcuxVUiaXRGnvrYkC5TmTSOt9t9/d23y98gx4/07KIds+bdOBw9zMBVo0PoM62d3oxaqzgKY1rdJmZhb+ntZ0KzOpcbEbbnlnMqds3Ige7rxFckuGcTV8gVRU1uz1Eg5P/1F7Ef13e/M2ntO9Me/jR2kB9EsgxWnQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789971295; c=relaxed/simple;
-	bh=zOyxF+1hk66rKAJGQAzFrvPZu+zRtvpZYooaNQRegZ4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FaCPdAHDLMTcgAJ/ZCuvnQqAAnytl/Fwl+WT4SBfSbHZ1iXveId9ZdIqxxgFyiozg+THiZ7Yzl7Sve728BBNjt2KVmAuRdrwp1BxVcTDzgl3H0CQTf9gKkjWT0XPBEkm+C5cBcSwkKz5gJE1t475NF7R/s63JQ/+c4Lql1bd/54=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kLENm7CE; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1789971622; c=relaxed/simple;
+	bh=n/AdnmXxXRbpGFInqaTSJTt65XZiIYjARrVazbI6Wb0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ltQOSLWhIK7H8DUoWDJgy5YOgoXRI9hDy/b7rBOa5/DoErmypwNxp/RcGZXa7I4MPmgxVwWSjHnrNZzLg8h5TGUgzLraADPQ9uNlD7UiVxq3a+O5290cElMhd0GCSmkGsqCS7GD/BwggktTEpld6mxZhMLSTFcU5MfvkSfDnhF8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=WM4tumaP; arc=none smtp.client-ip=91.218.175.159
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kLENm7CE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C4EDC1F000FF;
-	Mon, 21 Sep 2026 06:14:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789971294;
-	bh=MoL+BdwkTASRRJmhmbQMt2aU1tXNMx56eteYlxyyjNk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=kLENm7CEqAqCDNWf+DMGmeTWbJTAaO1BUkICywZN55OTvFOUNGCvSi40ghLdG7uxC
-	 lvlUtuv2x6oqu2cCV5+p3MWnvicQR4M97WHbuyxB0e1dHFV91HyOGmLrexXsKlMKuP
-	 kotvsjCz2hSjWzfZ92UF9zyAt0i6yru2iDU0jXbZYXdvnKePLq40TB28NgwJ2BSzmf
-	 SCtPgKS6kCiHFZdluOB+GdeBTHdTPLu6xtf1dDzykWRfOiy9cJiuyyT80uZSCByTfZ
-	 z0/0igImC0ncdNp7j7vX/MZeiCsd1zXOJQQ/kgQ7qzZ0ycvdK2w4gq8KR4t1P3Mj64
-	 C8rjC3dep39Cw==
-Date: Sun, 20 Sep 2026 23:14:52 -0700
-From: Namhyung Kim <namhyung@kernel.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
-	James Clark <james.clark@linaro.org>, Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	Arnaldo Carvalho de Melo <acme@redhat.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>
-Subject: Re: [PATCH 2/7] perf dwarf-aux: Add die_same_file() and
- die_get_type_die()
-Message-ID: <arDLXEmaFaC64I8I@z2>
-References: <20260919204027.8504-1-acme@kernel.org>
- <20260919204027.8504-3-acme@kernel.org>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="WM4tumaP"
+X-Envelope-To: linux-perf-users@vger.kernel.org
+DKIM-Signature: a=rsa-sha256; bh=n/AdnmXxXRbpGFInqaTSJTt65XZiIYjARrVazbI6Wb0=;
+ c=simple/simple; d=linux.dev;
+ h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
+ t=1789971617; v=1; x=1790576417;
+ b=WM4tumaPUMfSkp2/LhSaz0bfqlBPUiGV4paOgePn6ocrt2vV1GqT5T660mj1aSQ4tG7SXUpn
+ oUBa5L6yv+db9pePHr4Zgl7QpdzOMDO6OX6zyMSI1hNv1jDl8OkTPSLdvKANRJf+Rd2nk8KboAc
+ ieKZi6SvU5Pl1XufUEyEgVpc=
+X-Envelope-To: linux-perf-users@vger.kernel.org
+Received: by smtp.migadu.com with ESMTPS id f802e06ae86065bd;
+	Mon, 21 Sep 2026 06:20:17 +0000
+X-Mizu-Trace-ID: f802e06ae86065bd
+X-Migadu-Flow: FLOW_OUT
+Message-ID: <32b465d4-0881-425e-a199-f40af05f48fa@linux.dev>
+Date: Mon, 21 Sep 2026 14:19:56 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20260919204027.8504-3-acme@kernel.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 02/17] perf/ring_buffer: stop using PG_private as AUX
+ page high-order marker
+Content-Language: en-US
+To: Zi Yan <ziy@nvidia.com>
+Cc: linux-mm@kvack.org, Suren Baghdasaryan <surenb@google.com>,
+ linux-kernel@vger.kernel.org, Ryan Roberts <ryan.roberts@arm.com>,
+ Johannes Weiner <hannes@cmpxchg.org>, David Hildenbrand <david@kernel.org>,
+ Nico Pache <nico.pache@linux.dev>, Peter Zijlstra <peterz@infradead.org>,
+ Lorenzo Stoakes <ljs@kernel.org>, Mike Rapoport <rppt@kernel.org>,
+ "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+ Usama Arif <usama.arif@linux.dev>, Barry Song <baohua@kernel.org>,
+ Dev Jain <dev.jain@arm.com>, Ingo Molnar <mingo@redhat.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Alistair Popple <apopple@nvidia.com>, Qi Zheng <qi.zheng@linux.dev>,
+ "Liam R. Howlett" <liam@infradead.org>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Thomas Gleixner <tglx@kernel.org>,
+ Borislav Petkov <bp@alien8.de>, Kairui Song <kasong@tencent.com>,
+ Shakeel Butt <shakeel.butt@linux.dev>,
+ Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+ Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>, James Clark
+ <james.clark@linaro.org>, "H. Peter Anvin" <hpa@zytor.com>,
+ linux-perf-users@vger.kernel.org, Gregory Price <gourry@gourry.net>,
+ Ying Huang <ying.huang@linux.alibaba.com>,
+ Baolin Wang <baolin.wang@linux.alibaba.com>, Michal Hocko <mhocko@suse.com>,
+ Vlastimil Babka <vbabka@kernel.org>, Muchun Song <muchun.song@linux.dev>
+References: <20260920-remove-pg_private-v5-0-bb68b6a21869@nvidia.com>
+ <20260920-remove-pg_private-v5-2-bb68b6a21869@nvidia.com>
+From: Lance Yang <lance.yang@linux.dev>
+In-Reply-To: <20260920-remove-pg_private-v5-2-bb68b6a21869@nvidia.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-+Cc Masami
 
-On Sat, Sep 19, 2026 at 05:40:22PM -0300, Arnaldo Carvalho de Melo wrote:
-> From: Arnaldo Carvalho de Melo <acme@redhat.com>
+
+On 2026/9/21 10:27, Zi Yan wrote:
+> A high-order AUX page sets PG_private on its first page and stores the
+> order in first_page->private. Stop using PG_private and check
+> first_page->private for AUX page order only in the ring buffer and its
+> users. This is fine because page->private is 0 for order-0 AUX pages,
+> matching the page order.
 > 
-> dwarf_dieoffset() is relative to the file the DIE is in, so an offset
-> saved by die_collect_vars()/die_collect_global_vars() is only
-> meaningful in that file: add die_same_file(), comparing the Dwarf each
-> DIE's CU belongs to, to record which file that is, and
-> die_get_type_die() to resolve the offset in it, with the saved tag as a
-> sanity check.  Resolving the offset in the main file instead parses
-> whatever is at it when it came from the dwz common file.
+> It prepares for a future commit that remove PG_private.
 > 
-> dwarf_cu_getdwarf() is new in elfutils 0.160, so the libdw feature test
-> probes for it and Makefile.config says 0.160.
+> No functional change intended.
 > 
 > Assisted-by: LLM
-> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+> To: Peter Zijlstra <peterz@infradead.org>
+> To: Ingo Molnar <mingo@redhat.com>
+> To: Arnaldo Carvalho de Melo <acme@kernel.org>
+> To: Namhyung Kim <namhyung@kernel.org>
+> To: Thomas Gleixner <tglx@kernel.org>
+> To: Borislav Petkov <bp@alien8.de>
+> To: Dave Hansen <dave.hansen@linux.intel.com>
+> To: x86@kernel.org
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+> Cc: Jiri Olsa <jolsa@kernel.org>
+> Cc: Ian Rogers <irogers@google.com>
+> Cc: Adrian Hunter <adrian.hunter@intel.com>
+> Cc: James Clark <james.clark@linaro.org>
+> Cc: "H. Peter Anvin" <hpa@zytor.com>
+> Cc: linux-perf-users@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> Acked-by: Usama Arif <usama.arif@linux.dev>
+> Acked-by: David Hildenbrand (Arm) <david@kernel.org>
+> Signed-off-by: Zi Yan <ziy@nvidia.com>
 > ---
->  tools/build/feature/test-libdw.c | 13 ++++++-
->  tools/perf/Makefile.config       |  2 +-
->  tools/perf/util/dwarf-aux.c      | 62 ++++++++++++++++++++++++++++++--
->  tools/perf/util/dwarf-aux.h      | 17 +++++++++
->  4 files changed, 90 insertions(+), 4 deletions(-)
-> 
-> diff --git a/tools/build/feature/test-libdw.c b/tools/build/feature/test-libdw.c
-> index aabd63ca76b4d7e6..0ebe7bb4adf9d0bc 100644
-> --- a/tools/build/feature/test-libdw.c
-> +++ b/tools/build/feature/test-libdw.c
-> @@ -49,8 +49,19 @@ int test_elfutils(void)
->  	return 0;
->  }
->  
-> +/*
-> + * dwarf_cu_getdwarf() needs elfutils 0.160: take its address only, so
-> + * that older versions fail the probe instead of the link.
-> + */
-> +int test_libdw_cu_getdwarf(void)
-> +{
-> +	void *sym = (void *)dwarf_cu_getdwarf;
-> +
-> +	return sym == NULL;
-> +}
-> +
->  int main(void)
->  {
->  	return test_libdw() + test_libdw_unwind() + test_libdw_getlocations() +
-> -	       test_libdw_getcfi() + test_elfutils();
-> +	       test_libdw_getcfi() + test_libdw_cu_getdwarf() + test_elfutils();
->  }
-> diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
-> index 4ee7393a39f91d85..0585d71e3182c6dd 100644
-> --- a/tools/perf/Makefile.config
-> +++ b/tools/perf/Makefile.config
-> @@ -470,7 +470,7 @@ else
->    else
->      ifneq ($(feature-libdw), 1)
->        ifndef NO_LIBDW
-> -        $(warning No libdw.h found or old libdw.h found or elfutils is older than 0.157, disables dwarf support. Please install new elfutils-devel/libdw-dev)
-> +        $(warning No libdw.h found or old libdw.h found or elfutils is older than 0.160, disables dwarf support. Please install new elfutils-devel/libdw-dev)
->          NO_LIBDW := 1
->        endif
->      endif # Dwarf support
-> diff --git a/tools/perf/util/dwarf-aux.c b/tools/perf/util/dwarf-aux.c
-> index b5ffeea54446408d..de14d18a9d2f87d8 100644
-> --- a/tools/perf/util/dwarf-aux.c
-> +++ b/tools/perf/util/dwarf-aux.c
-> @@ -1680,6 +1680,16 @@ Dwarf_Die *die_find_variable_by_addr(Dwarf_Die *sc_die, Dwarf_Addr addr,
->  	return result;
->  }
->  
-> +/*
-> + * Whether two DIEs live in the same debug file, i.e. whether their
-> + * offsets have to be resolved in the same file: dwarf_dieoffset() is
-> + * relative to the file the DIE is in.
-> + */
-> +bool die_same_file(Dwarf_Die *die_a, Dwarf_Die *die_b)
-> +{
-> +	return dwarf_cu_getdwarf(die_a->cu) == dwarf_cu_getdwarf(die_b->cu);
-> +}
-> +
->  static int __die_collect_vars_cb(Dwarf_Die *die_mem, void *arg)
->  {
->  	struct die_var_type **var_types = arg;
-> @@ -1724,6 +1734,8 @@ static int __die_collect_vars_cb(Dwarf_Die *die_mem, void *arg)
->  			vt->is_reg_var_addr = true;
->  
->  		vt->die_off = dwarf_dieoffset(&type_die);
-> +		vt->die_tag = dwarf_tag(&type_die);
-> +		vt->from_alt = !die_same_file(die_mem, &type_die);
->  		vt->addr = start;
->  		vt->end = end;
->  		vt->has_range = (end != 0 || start != 0);
-> @@ -1743,7 +1755,8 @@ static int __die_collect_vars_cb(Dwarf_Die *die_mem, void *arg)
->   *
->   * Save all variables and parameters in the @sc_die and save them to @var_types.
->   * The @var_types is a singly-linked list containing type and location info.
-> - * Actual type can be retrieved using dwarf_offdie() with 'die_off' later.
-> + * Actual type can be retrieved using die_get_type_die() with 'die_off',
-> + * 'die_tag' and 'from_alt' later.
->   *
->   * Callers should free @var_types.
->   */
-> @@ -1789,6 +1802,8 @@ static int __die_collect_global_vars_cb(Dwarf_Die *die_mem, void *arg)
->  		return DIE_FIND_CB_END;
->  
->  	vt->die_off = dwarf_dieoffset(&type_die);
-> +	vt->die_tag = dwarf_tag(&type_die);
-> +	vt->from_alt = !die_same_file(die_mem, &type_die);
->  	vt->addr = ops->number;
->  	vt->end = 0;
->  	vt->has_range = false;
-> @@ -1800,6 +1815,48 @@ static int __die_collect_global_vars_cb(Dwarf_Die *die_mem, void *arg)
->  	return DIE_FIND_CB_SIBLING;
->  }
->  
-> +/**
-> + * die_get_type_die - Get a type DIE saved by die_collect_vars()
-> + * @dbg: the main debug info
-> + * @die_off: offset of the type DIE, from dwarf_dieoffset()
-> + * @die_tag: tag that DIE had when the offset was saved
-> + * @from_alt: whether the type DIE is in the dwz alt file
-> + * @die_mem: where to store the resulting DIE
-> + *
-> + * Resolve @die_off in the file it was recorded as belonging to: the
-> + * offset is only meaningful there, and there is deliberately no
-> + * fallback, as resolving an alt file offset in the main file parses
-> + * whatever is at it.  @die_tag is a sanity check.
-> + */
-> +Dwarf_Die *die_get_type_die(Dwarf *dbg, u64 die_off, int die_tag, bool from_alt,
-> +			    Dwarf_Die *die_mem)
-> +{
-> +	Dwarf *target = dbg;
-> +	Dwarf_Die die;
-> +
-> +	if (from_alt) {
-> +		/*
-> +		 * No fallback to the main file: resolving an alt file offset in it
-> +		 * does not fail, it parses whatever is there as a DIE.
-> +		 */
-> +		target = dwarf_getalt(dbg);
-> +		if (target == NULL) {
-> +			pr_debug("DWARF: no alt (dwz) debug file to resolve the type DIE at offset 0x%lx in\n",
-> +				 (unsigned long)die_off);
-> +			return NULL;
-> +		}
-> +	}
-> +
-> +	if (dwarf_offdie(target, die_off, &die) && dwarf_tag(&die) == die_tag) {
-> +		*die_mem = die;
-> +		return die_mem;
-> +	}
-> +
-> +	pr_debug("DWARF: no DIE with tag %d at offset 0x%lx in the %s debug file\n",
-> +		 die_tag, (unsigned long)die_off, from_alt ? "alt" : "main");
-> +	return NULL;
-> +}
-> +
->  /**
->   * die_collect_global_vars - Save all global variables
->   * @cu_die: a CU DIE
-> @@ -1807,7 +1864,8 @@ static int __die_collect_global_vars_cb(Dwarf_Die *die_mem, void *arg)
->   *
->   * Save all global variables in the @cu_die and save them to @var_types.
->   * The @var_types is a singly-linked list containing type and location info.
-> - * Actual type can be retrieved using dwarf_offdie() with 'die_off' later.
-> + * Actual type can be retrieved using die_get_type_die() with 'die_off',
-> + * 'die_tag' and 'from_alt' later.
->   *
->   * Callers should free @var_types.
->   */
-> diff --git a/tools/perf/util/dwarf-aux.h b/tools/perf/util/dwarf-aux.h
-> index 161f0bf980b6ee6a..299ffddab0358baa 100644
-> --- a/tools/perf/util/dwarf-aux.h
-> +++ b/tools/perf/util/dwarf-aux.h
-> @@ -152,6 +152,8 @@ int die_get_scopes(Dwarf_Die *cu_die, Dwarf_Addr pc, Dwarf_Die **scopes);
->  struct die_var_type {
->  	struct die_var_type *next;
->  	u64 die_off;
-> +	int die_tag;
-> +	bool from_alt;	/* die_off is relative to the alt (dwz) file */
->  	u64 addr;
->  	u64 end;        /* end address of location range */
->  	int reg;
-> @@ -183,6 +185,21 @@ Dwarf_Die *die_find_variable_by_addr(Dwarf_Die *sc_die, Dwarf_Addr addr,
->  /* Save all variables and parameters in this scope */
->  void die_collect_vars(Dwarf_Die *sc_die, struct die_var_type **var_types);
->  
-> +/*
-> + * Get the type DIE saved by die_collect_vars()/die_collect_global_vars().
-> + *
-> + * Those save the dwarf_dieoffset() of the type DIE, which is relative
-> + * to the file it lives in, so @from_alt, recorded when the offset was
-> + * saved, says which file to resolve it in; @die_tag is a sanity check.
-> + * Resolving an alt file offset in the main file parses whatever is at
-> + * it, which is what hung 'perf report -s type'.
-> + */
-> +Dwarf_Die *die_get_type_die(Dwarf *dbg, u64 die_off, int die_tag, bool from_alt,
-> +			    Dwarf_Die *die_mem);
-> +
-> +/* Whether two DIEs live in the same debug file */
-> +bool die_same_file(Dwarf_Die *die_a, Dwarf_Die *die_b);
-> +
->  /* Save all global variables in this CU */
->  void die_collect_global_vars(Dwarf_Die *cu_die, struct die_var_type **var_types);
->  
-> -- 
-> 2.53.0
-> 
+
+Nice cleanup! Feel free to add:
+
+Reviewed-by: Lance Yang <lance.yang@linux.dev>
