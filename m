@@ -1,74 +1,113 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 278A9349CEF
-	for <linux-perf-users@vger.kernel.org>; Mon, 21 Sep 2026 05:34:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BBA1353A8E
+	for <linux-perf-users@vger.kernel.org>; Mon, 21 Sep 2026 05:34:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789968873; cv=none; b=DxRPsWtJY4CpAyzygnFKPVBBuqNFK5YWTI9hoGkQaFIDNlFFuJIaa2ajpZ/W5uyfUZnh3SesnA/mYzkGeMywml26r9tpCe99sXTaZOh7Hd4zrKWLFYJr9a2ktvxMiScZ8QVDmKqWqNIIhapVU3ZA9Od+j/i8uhlTk7smeo64FCU=
+	t=1789968890; cv=none; b=uHzLUKREjjlp0JVszlXisO/UmOtgbdsV6RV9rn/EdP6/PngCDmD1DhJ0DejP7xE/lAVcjyCKhWKQQqjixEdw5P47nZpLlLXKnVWjd6lc3VyUTv+9hC0oONE8EtcJ17nD8tNtuUIzVzGEb3J6xscNaq+lQBTHPm1HHn3AzfZVO0c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789968873; c=relaxed/simple;
-	bh=058VwLe8mY6XAw0cIo60amgNrPwMhcTbFpAoPOfskLw=;
+	s=arc-20240116; t=1789968890; c=relaxed/simple;
+	bh=50XA+/AfalE9fA3579KYftMjBTfYmWJ4FR3OknR5P80=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=rjkmAeFmjWliBT5Xeb/bOlsqoqa61rzwqN/bCXpuqKErhCFd2G+IQHFn7+kXual+tdq+Bl2llma4/FJh0EcH9dWyWE+rp2YHMip3T6LNnhPXhOwTLKPGd5ItI+X35pwGflTKdqnGyZwLkEI9MgTS+kxVx6EpPOhKtQSQa4qAKDE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SklJxMWo; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=VsNHF+sReAtjxVQ7VGtNL5H88JZapWO8s2MM8LWIY5RQQyil+L1+wIquq4p5wGWd9E1dhlE3SZgt1sjj96Uhkq6eS2em4dLlURyOgeirZ/t8PMqUQRilkaOKz89LtRXdqYCBp0aFqiB0icj4Od8p9rLp+w4hJQ1e2/CoP81Ej6E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oeF0hKMj; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SklJxMWo"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E1AA81F000FF;
-	Mon, 21 Sep 2026 05:34:31 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oeF0hKMj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 58E1D1F000FF;
+	Mon, 21 Sep 2026 05:34:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789968872;
-	bh=EBL2v/gS1YU7niC8PSDpkfIcxab+Vg7Up6VqMheo+ps=;
+	s=k20260515; t=1789968888;
+	bh=pl1wHmj9znMfk3KhCocuyjqyD/bfe5itlieorGtFa7w=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=SklJxMWoNTdVlqY0bhDHXDVWnVQjfPErvsJu13ihPsbREtzUFeeW3s4dNvtOEPdqw
-	 75Sz8/W8WtGPc3b5tDuMYR8tdMN5DYGoc760qdQFYdJR533S2Jr5U56WsJJkTMXVg2
-	 snnN/XdSYSPG/7WblzsWVwlkpnLhYiudN+PFLvvgMroZVJPbv6k3Bq9J5YeqH/boyc
-	 16EdAViKg1Kue57kSO/g+SJTfk+aw0Du8DdMcfkFVGno0L7sucT0R1X6apsKfN1Td2
-	 cAODiTmCTfOH6sTt6Ky7IPahky0iquRA4mlk0LLQtMVYlxZP5PreoArGjHQ2xOa7NO
-	 O27BQ0KPqCknA==
+	b=oeF0hKMjckf9t1a9kviWx/ZYnvk4URzfVZnCbmG1tigxpnRZJr3L2QWfF6Idke0V9
+	 iNoRRe46DNjRqn2qdGj3+0ystzXMcdsHrwxZdImo27PpvnRMmEp8JH6R9m1iKmAqkB
+	 dgxtCVUU6Sc+sls0/kgD5QOHhA4BXinESGaMM+wbkwODrZhgnMhstTg0zRekt9aucD
+	 JstxBM/hq/caIevqWzcEfQ+cjNEDRm1pqUDpn9UJdgELyKESOTo2JKPpwOSdQb+fy9
+	 fNtvNR7A3bLnun4WLf3FYEC9yLs/hLwCtLEcfLDVnwtr8pNRg48bwHDMIUHPd3qXHi
+	 sAnwIs4G9WhRw==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v2 20/49] perf python: Port gecko to perf module
+Subject: Re: [PATCH v2 08/49] perf python: Expose addr location,
+ transaction, and context_switch
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Ian Rogers" <irogers@google.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <8af8c6b81a2fccae0cfb2fbf359e3ef65d8647ed.1789966896.git.irogers@google.com>
+In-Reply-To: <5116186e1258404cbbc7e15d145d463ab71e2491.1789966896.git.irogers@google.com>
 References: <cover.1789966896.git.irogers@google.com>
- <8af8c6b81a2fccae0cfb2fbf359e3ef65d8647ed.1789966896.git.irogers@google.com>
+ <5116186e1258404cbbc7e15d145d463ab71e2491.1789966896.git.irogers@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Mon, 21 Sep 2026 05:34:31 +0000
-Message-Id: <20260921053431.E1AA81F000FF@smtp.kernel.org>
+Date: Mon, 21 Sep 2026 05:34:47 +0000
+Message-Id: <20260921053448.58E1D1F000FF@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-> Port gecko.py to a standalone script in tools/perf/python/ that uses
-> the perf module directly to convert perf.data profiles into Firefox
-> Gecko profile format.
->=20
-> Improvements compared to the legacy script:
-> - Encapsulate profiler state in GeckoCLI and CategoryData classes with
->   full type annotations, removing global variables.
-> - Harden the local HTTP server in _write_and_launch(): write the
->   temporary profile to an isolated tempfile.TemporaryDirectory() with a
->   randomized UUID filename instead of the current working directory,
->   bind HTTPServer exclusively to 127.0.0.1 on an OS-assigned ephemeral
->   port (0), restrict CORS Access-Control-Allow-Origin to
->   'https://profiler.firefox.com' instead of '*', and restrict HTTP GET
->   requests exclusively to the randomized profile filename (returning
->   HTTP 403 for directory listings and any other path).
-> - Add -i/--input and -e/--event CLI options via argparse.
->=20
-> Add a shell test (test_gecko_python.sh) to verify the standalone script.
->=20
-> Assisted-by: Antigravity:gemini-3.1-pro
-> Signed-off-by: Ian Rogers <irogers@google.com>
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+s) to consider:
+- [Medium] perf python: default guest samples resolved against host symbols
+--
 
-Sashiko has reviewed this patch and found no issues. It looks great!
+commit 7820cd6d68d2c391ed1e11785faec0799b2925fe
+Author: Ian Rogers <irogers@google.com>
+
+perf python: Expose addr location, transaction, and context_switch
+
+This commit exposes various destination address location components, branch
+metrics, and other fields directly to the Python extension. It also adds
+support for fetching sym_offset and populates sample machine_pid and vcpu
+from the evlist when perf_guest is enabled.
+
+> diff --git a/tools/perf/util/python.c b/tools/perf/util/python.c
+> index fbfa71b1c4b6c..49f37198f4b34 100644
+> --- a/tools/perf/util/python.c
+> +++ b/tools/perf/util/python.c
+[ ... ]
+> @@ -679,6 +683,7 @@ static int pyrf_sample_event__resolve_al(struct pyrf_=
+event *pevent)
+>  	struct evsel *evsel =3D pevent->sample.evsel;
+>  	struct evlist *evlist =3D evsel ? evsel->evlist : NULL;
+>  	struct perf_session *session =3D evlist ? evlist__session(evlist) : NUL=
+L;
+> +	struct machine *machine;
+> =20
+>  	if (pevent->al_resolved)
+>  		return 0;
+> @@ -686,8 +691,14 @@ static int pyrf_sample_event__resolve_al(struct pyrf=
+_event *pevent)
+>  	if (!session)
+>  		return -1;
+> =20
+> +	machine =3D pevent->sample.machine_pid ?
+> +		machines__find(&session->machines, pevent->sample.machine_pid) :
+> +		&session->machines.host;
+
+[Severity: Medium]
+Will this ternary operation incorrectly redirect default guest samples to t=
+he
+host machine?
+
+When pevent->sample.machine_pid evaluates to 0, which represents
+DEFAULT_GUEST_KERNEL_ID, it seems this bypasses necessary cpumode and guest
+fallbacks. This could cause KVM guest trace events that lack an explicit
+machine_pid to unconditionally fall back to host symbols instead of the gue=
+st
+machine, yielding incorrect symbol mappings for guest events in Python scri=
+pts.
+
+> +	if (!machine)
+> +		machine =3D &session->machines.host;
+> +
+>  	addr_location__init(&pevent->al);
+> -	if (machine__resolve(&session->machines.host, &pevent->al, &pevent->sam=
+ple) < 0) {
+> +	if (machine__resolve(machine, &pevent->al, &pevent->sample) < 0) {
+>  		addr_location__exit(&pevent->al);
+>  		return -1;
+>  	}
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/cover.1789966896.gi=
-t.irogers@google.com?part=3D20
-
+t.irogers@google.com?part=3D8
