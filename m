@@ -1,56 +1,56 @@
-Received: from mail-pj1-f71.google.com (mail-pj1-f71.google.com [209.85.216.71])
+Received: from mail-pg1-f199.google.com (mail-pg1-f199.google.com [209.85.215.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C9A9358368
-	for <linux-perf-users@vger.kernel.org>; Mon, 21 Sep 2026 05:07:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.71
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 268703515E8
+	for <linux-perf-users@vger.kernel.org>; Mon, 21 Sep 2026 05:07:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789967249; cv=none; b=lNtV/9XNdbzxGWU2DE8UOqxd7fdGld/1I0j6wOy5FmIpspvpeNnQyWHTvp6YuM2upWXrmjR6mh1m01H2icjRDyGPgDitkj9JjZkYQs5yZA2Ljz64OLXWdQ+5a4NhcDcQDx1db23l53vei6EA99RzVTYbmPmpp4eF3aM0I6/qn+U=
+	t=1789967251; cv=none; b=l1bBzmNb3ec4ZLCUqaGlCtoRAkjU2JuUl+USmIxijzgN47xiUZpINE0aAiE5DMrVA8+ylGPJfKcXyzCL7XfM0QsefC/vQDDHdLG14Hj2KQfSRpWs1zJQ+ar2SliJfHLkhajPieCWBrzKJWhnFDqwMcdIQHfIfYuTXvuHkU1QgX8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789967249; c=relaxed/simple;
-	bh=Qw4ZWkFWJPRmZ5O2wvrL8xQ8BuWvK+mBZlcas52Oe64=;
+	s=arc-20240116; t=1789967251; c=relaxed/simple;
+	bh=9CG5+TIVVVhdILbf2bNJOX9PamwB0I16qey/intpr9s=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=IKLZtXKsnPAocjuYhR9uwKQq72boC8RhAjsvhxXYrWF1qkKkX8nw54p+QAVZ+QFJqHbM0P/WDfXHhRuLP5SWgRZxwGbkG4NVrdmh6ixP9FEWmd2E8GZt1mg2t4i/Ptum6Px8zX87xNIMXW7a2KBv+1yt3EuXu0293gSP2K3Jq9M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ArW5a8IE; arc=none smtp.client-ip=209.85.216.71
+	 To:Cc:Content-Type; b=kd11nYgk2TQjoBPe8tQPzRnzXC7eicXPWZ2CULVwPCFbK0J97/A2DweYY9Z8b6VR5WvbVj2mRSYxDJVj4qB+WQ8QFXydz1rJLckaPfsajLjeHbHR0RKiJayvGbCsImgEnjRDNB75sKT83oA2xGGJlpOUhjdoArdyrCDXry1v9+Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Xp+ehLiw; arc=none smtp.client-ip=209.85.215.199
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ArW5a8IE"
-Received: by mail-pj1-f71.google.com with SMTP id 98e67ed59e1d1-39de4a68f7cso4760600a91.1
-        for <linux-perf-users@vger.kernel.org>; Sun, 20 Sep 2026 22:07:28 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Xp+ehLiw"
+Received: by mail-pg1-f199.google.com with SMTP id 41be03b00d2f7-cc489e7a701so3948255a12.2
+        for <linux-perf-users@vger.kernel.org>; Sun, 20 Sep 2026 22:07:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1789967248; x=1790572048; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1789967249; x=1790572049; darn=vger.kernel.org;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=wHMamU+PAKgDS7CB8H6YoOm/eLHF8p5TEtQXCGtGAPs=;
-        b=ArW5a8IEyazflP1EL4eg9+F+6/Fm5fKB5Y6ZdDBJAjyuc2bMdgfcQCteC5kQqI5r0R
-         fhQhYfx0Wz7Eum5OVmjR7ocWG12GjZ++LbmcsMEYXyLKL/OYfrz3+xeWYEYtJpg4wSLM
-         01CDAyv6xXjuzJsYc/rzJkPIRx44gc1s2M7zjZqLx54uG4OhL/g17w2na/fccx12QGMP
-         h39yGv2vw373ne8HIntQqJpYYROKvZiuKipCuoZFcI0x0wl2M/I47zl+NztkwfeX1zwQ
-         mnWX7EogmY0BL6eRpOpy9LWpPuiEvGsNs6wg5B2ZlKyThaTWGR8ePJ5Do+A3M8TUZUtd
-         sdzA==
+        bh=SXQ1t7M/ttKG1gpCPiapMoUFSHKPI4WUjvFCcDFwkq8=;
+        b=Xp+ehLiwzScPa8GKyn6kVsZc6Lijw4hb5PioDrVaspph1rcew0/5VMdEHPa/VWnZkQ
+         tydcRWxZROAAwOHLra0nckFKpsQ252EtIGCdTSBb8184YoNt3Cq8PetaSDH4MsKyMD0v
+         5qaZuSFSGtVpWGmHQB04+wOu8SvLlvYa1csyLsTAsnAqGgSWJWJXZyAZX+L79Y+0AQzi
+         zK/QyiioeCOTMeu7TKTMaBaRNAi6vMZaf6rdixb+NC0csmr4Xxztwfuc5BBv/BAm8AuX
+         Gzkts++mAmlPeGyyjV+ncJs2iWpqbKuNU+01Ax0NdKnezFStvkkk+XUQyn3koCGOBFmY
+         nOZw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1789967248; x=1790572048;
+        d=1e100.net; s=20260707; t=1789967249; x=1790572049;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=wHMamU+PAKgDS7CB8H6YoOm/eLHF8p5TEtQXCGtGAPs=;
-        b=Xsna7RYUGY9qlDrPncwBZDe5xr+BdpjgYEvQbXrDjtyZhicOLimj1DvrJ5Z1Tr+X6/
-         7GF8099L3tH9rnxaaT+kr5Mz9lMjxRfu83vitFeXpjYW+70EQS4Ptzz3i4UZsWHYrOcu
-         c/66CThFoXf1RvrWmKFCfVOLdKrZ1eWwwupX0b0JXwFB31T1bRmcb/tdTGLCz67Mjd61
-         Xt8Y0S82lyxOcTWIMLlGz8t4F3/lwrNbxVxmoqag/52iRT5vUWUMPj20f0V4KoF+pZYf
-         qp4Ofd9Kc5w+5FGi4LCl1LPG5PH0iZ8UgpY6wEfWZg76AVI00CXRd1BfdnWYDRoJRfcw
-         yFeA==
-X-Forwarded-Encrypted: i=1; AKwUvBxGRqWlV8iNn69+SLqJpADpfRUrRDk/GGxfpv8om715h3hsflFxvgXhm7LzQukKI60XAkBtQEfi60kzNyN8436y@vger.kernel.org
-X-Gm-Message-State: AFuF++nu3rvHjRiw2I9+z+O6pEwsEnyMuw4vcIjEUKBHQKDR1JHPQYJn
-	xflknsxA9qTqudo3posZRBZgjtVGsOxIc4eluHEtF2+o6SqJ0tnyjw2ZBeHKKDrOZHYDmsaxiuY
-	xix6DbkKOZA==
-X-Received: from dlak8.prod.google.com ([2002:a05:701b:2908:b0:144:cfcb:6cb5])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:1c03:b0:3a0:4384:ada7
- with SMTP id 98e67ed59e1d1-3a04393f338mr2788149a91.0.1789967247535; Sun, 20
- Sep 2026 22:07:27 -0700 (PDT)
-Date: Sun, 20 Sep 2026 22:06:22 -0700
+        bh=SXQ1t7M/ttKG1gpCPiapMoUFSHKPI4WUjvFCcDFwkq8=;
+        b=Iu4ItFoE94HYrbp+eLnpnLFifP6RwKOithd1Z4Tx6/JCmUtrwivHbCFRKnesJzvnxi
+         hb5WPde/9aDUCVDui6hhlWZl5cz5Qqw2TG1IZG5bBO60fAHQL77xJbLm8Hwrc5EruShS
+         my/ErTL7MLeisamFhFd6I8Iaz+xe0ihHOkTd4TJg3+qrKg11jsoOuhpntjsp5OSFcPXb
+         Gta6LbVD+ET+QAlPuMD+vZlA9zI0rLabI9ExHuz2aZ/MFfbJ2QOcyEZTrTonFL2wQDRH
+         h1o/l+6ARh6Gzeba76B69u+Kp0x6e6vgsJF4tMhN2hK8IpE/GbwMn5MX/IHdqkV4mCyp
+         DoIg==
+X-Forwarded-Encrypted: i=1; AKwUvBxZIZWXDIfZLNau/Ex4TtCmzcm4YG2koKCO5JmSTdNhi4IsOfqIb0UkoA8zmKiCt+svLeeAeJQIJi0o10pyF+94@vger.kernel.org
+X-Gm-Message-State: AFuF++lK+WPV4+kn+mWpvWjWESXyAB+MoGnlaDu5v2HshIUykUwboRCs
+	mpe39RQtPWGsjXTXgrnXVwNvfOK7SFoKxcsLIyqv+FoyuPeHi+BUbVIQJxHlp7KeQklBI8xgpIa
+	vfwcCxjfd4Q==
+X-Received: from dlbou20.prod.google.com ([2002:a05:7022:1114:b0:144:d82d:aebb])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a21:a08:b0:3dd:a006:5598
+ with SMTP id adf61e73a8af0-3dda00655e9mr8559353637.38.1789967249392; Sun, 20
+ Sep 2026 22:07:29 -0700 (PDT)
+Date: Sun, 20 Sep 2026 22:06:23 -0700
 In-Reply-To: <cover.1789966896.git.irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -60,8 +60,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <cover.1789966896.git.irogers@google.com>
 X-Mailer: git-send-email 2.55.0.1082.g2b9226bbc0-goog
-Message-ID: <2b4c064f5416148998951cf2cfa95867d8f4ae0f.1789966896.git.irogers@google.com>
-Subject: [PATCH v2 04/49] perf python: Clean up pylint warnings in treport.py
+Message-ID: <503b656ff0cef2a2d6126b74e7cb4f3c2c7f823f.1789966896.git.irogers@google.com>
+Subject: [PATCH v2 05/49] perf python: Clean up pylint warnings in tracepoint.py
 From: Ian Rogers <irogers@google.com>
 To: irogers@google.com, acme@kernel.org, alice.mei.rogers@gmail.com, 
 	linux-perf-users@vger.kernel.org, namhyung@kernel.org
@@ -70,59 +70,41 @@ Cc: adrian.hunter@intel.com, dapeng1.mi@linux.intel.com,
 	mingo@redhat.com, peterz@infradead.org, tmricht@linux.ibm.com
 Content-Type: text/plain; charset="UTF-8"
 
-Clean up pylint warnings in treport.py so that it passes pylint without
-warning suppression comments:
-- Replace broad 'except Exception:' clauses (W0718:
-  broad-exception-caught) with specific exception tuples.
-- Pass both pid and sample_tid to session.find_thread() so guest and
-  process threads are resolved accurately.
-- Rename parameter 'args' to 'pos_args' in FlameGraph.__init__() to
-  avoid shadowing the outer scope variable 'args' (W0621:
-  redefined-outer-name).
+Clean up pylint warnings in tracepoint.py so that it passes pylint
+without warning suppression comments:
+- Catch ImportError instead of bare 'except:' (W0702: bare-except) when
+  importing setproctitle.
+- Remove unnecessary trailing semicolon (W0301: unnecessary-semicolon)
+  after evlist.enable().
 
 Assisted-by: Antigravity:gemini-3.1-pro
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/python/treport.py | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ tools/perf/python/tracepoint.py | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/python/treport.py b/tools/perf/python/treport.py
-index 786b852f471c..082f5ca4a7da 100755
---- a/tools/perf/python/treport.py
-+++ b/tools/perf/python/treport.py
-@@ -91,9 +91,9 @@ class ProfileNode:
-         pid = sample.sample_pid
-         try:
-             assert session
--            thread = session.find_thread(sample.sample_tid)
-+            thread = session.find_thread(pid, sample.sample_tid)
-             comm = (thread.comm() if thread else None) or f"unknown ({pid})"
--        except Exception:
-+        except (OSError, ValueError, KeyError, RuntimeError, TypeError, AttributeError):
-             comm = f"unknown ({pid})"
- 
-         period = sample.sample_period
-@@ -412,9 +412,9 @@ class FlameGraph(ScrollView):
-     }
-     """
- 
--    def __init__(self, root: ProfileNode, *args, **kwargs):
-+    def __init__(self, root: ProfileNode, *pos_args, **kwargs):
-         """Initialize the FlameGraph widget."""
--        super().__init__(*args, **kwargs)
-+        super().__init__(*pos_args, **kwargs)
-         self.root = root
-         self.cursor = root
-         self.selected = root
-@@ -549,7 +549,7 @@ if __name__ == "__main__":
-     profile = ProfileBuilder()
+diff --git a/tools/perf/python/tracepoint.py b/tools/perf/python/tracepoint.py
+index 15b0c8268996..9d49a25b3b1e 100755
+--- a/tools/perf/python/tracepoint.py
++++ b/tools/perf/python/tracepoint.py
+@@ -9,7 +9,7 @@ def change_proctitle():
      try:
-         session = perf.session(perf.data(input_file), sample=profile.process_event)
--    except Exception as e:
-+    except (OSError, ValueError, RuntimeError) as e:
-         print(f"Error opening session: {e}", file=sys.stderr)
-         sys.exit(1)
+         import setproctitle
+         setproctitle.setproctitle("tracepoint.py")
+-    except:
++    except ImportError:
+         print("Install the setproctitle python package to help with top and friends")
  
+ def main():
+@@ -29,7 +29,7 @@ def main():
+ 
+     evlist.open()
+     evlist.mmap()
+-    evlist.enable();
++    evlist.enable()
+ 
+     while True:
+         evlist.poll(timeout = -1)
 -- 
 2.55.0.1082.g2b9226bbc0-goog
 
