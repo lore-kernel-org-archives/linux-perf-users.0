@@ -1,97 +1,96 @@
-Received: from mail-qt1-f169.google.com (mail-qt1-f169.google.com [209.85.160.169])
+Received: from mail-qt1-f181.google.com (mail-qt1-f181.google.com [209.85.160.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FD1549B47F
-	for <linux-perf-users@vger.kernel.org>; Mon, 21 Sep 2026 16:22:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.160.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C77644CE691
+	for <linux-perf-users@vger.kernel.org>; Mon, 21 Sep 2026 16:23:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.160.181
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790007746; cv=pass; b=jypiL9wqPlWy17mhZ+Xvrd+UArsV+SmfpmMUxCN6SJfHOh/EVjyp7SujTC5DitRbIuefEk1QCxkKfiCeNEbPZk4vp8xGafQrEsWC6GCDIbpewaLhNRclx/AgpqYIVWogv9m4rflrKHTquqxhZbv0k7VU9kr1Hl3fO61etb2u6Bg=
+	t=1790007843; cv=pass; b=o/T6sSPc+CPUjQ3dn7Nf3I9GTRawIug3lUvjv4Osl6JOBLJ2rKs6yDCaGTo/eOFLItUDDBSzCvQTcjXsxORM28krzFnIubfG2PiXzoerWKrpcMZp76j1nGhqTC/Qb+NWcoofWwEGptmthTCQ25ru+BUJTDIQtODVKTxb0yVkhng=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790007746; c=relaxed/simple;
-	bh=I8g37qieZ19XHGCL3u3wjTE9kaftquawx7wgmkhVHZY=;
+	s=arc-20240116; t=1790007843; c=relaxed/simple;
+	bh=2eJZABd1KhDaqH5R5RatQY64qEhnstOQkvcGNYCrxaI=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=tME9dNoxp4jNQD+SvzlZvvm/EsYlMqSyeROrlgOHBTvaPS0c6072P+P820ebGmTAsrO4DB8aVdYXL9zVCHqkFa735yI4JpfHHEU1YI4rt+1B/SuERaJDc4XTzRspjTfzGhUO5jzstKpSFPwaLhogHHu7KTr3cbb+4PpbAW1P7MU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=p2yFtEbG; arc=pass smtp.client-ip=209.85.160.169
+	 To:Cc:Content-Type; b=Gm2jyWICLbX/Be3LdhpTw1wOWG/eymnovHxAAR9eTKBvb9u+DEIVt06mbe4ud4HH+Rg0nnidpy9g8UsEWtqd1sPmHO4pv2W3HfzBn+23vfFnzovaN8ySHaWXenhB15w5hynTveg3Z8TlTszjylGTZAXZpKE1joTsvWfyQxVb+2E=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=I7MCrCT6; arc=pass smtp.client-ip=209.85.160.181
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="p2yFtEbG"
-Received: by mail-qt1-f169.google.com with SMTP id d75a77b69052e-53113d72966so502771cf.1
-        for <linux-perf-users@vger.kernel.org>; Mon, 21 Sep 2026 09:22:24 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1790007744; cv=none;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="I7MCrCT6"
+Received: by mail-qt1-f181.google.com with SMTP id d75a77b69052e-530f6bcc301so398561cf.0
+        for <linux-perf-users@vger.kernel.org>; Mon, 21 Sep 2026 09:23:59 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1790007838; cv=none;
         d=google.com; s=arc-20260327;
-        b=iMSuu9Gfp6XxRlrPQXxV0uTVxeBKE4c8akaHKWX292FC7E1dr8VT3cr/gszszlkXAp
-         RxjtDIIrPWA5aKejXlY9GUQzcqUT3IuZewJ6DDV8q+A4ij423+kS5/Gec9GkusHKwCHo
-         rb1JLCYnwlxYN1k/0Onrl4E/eM4y+OE/J2OCelA7jIWGiHth85c7yTqvQzz13JPKyiSx
-         IaHH+hlXgKQ1APdeNwXvdNW8JBf7apH4/Hl07Cd3yEO//4+ZRcjx6bHFK8VorQj6Tapc
-         iLN6zJqQMkdWjyzDDICdBy/RFTuAFlTkaAoKME3hnqCMsPNf0srLDLr27ntg36abQ7YJ
-         F8JA==
+        b=AjqYwsmvg3aH+NQsCioP0rq8Ke09/e4Zx4Z66wLYh0ZoTleNSwN85/Y/oZ8joUBYKx
+         tb6MqP3izAtZ4say4McECnL7leYc3kQ7uQzDRGFO0iE2NIrO090ItznW1aZcO1FtDw7D
+         C3JSBv5ygj6GUUOsgQcfXxRuToU13t49NN1YvrGvLJg3jO/5jPtXe4aZKgtCVwFBC3eU
+         ETjq86/blBATh8xvZfCAI8Nb3/hFIjgcSmLpGw+fvQkVQvknYVTtvqghZe+XSwiU6ObA
+         iUML9QD1t6BBiCUT66tUXuwqp8e3Z6z6AgSnOIOMOrb4ZoP0zeNJHOrGd0YfBkgrYMxx
+         Cuuw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:dkim-signature;
-        bh=owC2fjf5Qwa/LkbReUgINQZxkD7C+riZrL1KRkW5XzI=;
-        fh=kReVi/n5dXWBjMUp7RM4nYy34hT2qhygCSlzz+vitpA=;
-        b=CJd/b6CZJ4gxYHLLaW/0XkS3LRcn6Ra5l++4GRHO0OFIMAMxfn7vTS3ttJzcUU5hT5
-         82UxusNOnF5N7qEBF360xsBDIZxJKGWXseFN6I5ojr3b1DXO/cyZ65DVO/ZPABU+ISGW
-         aVAhZQuZ1GWLUJybwrUy9D6ugwWF67Cd36tuzAqg+LEgRSt5IYMz0l/dGWScxja2LGmJ
-         Mb21DaD8vG42Snj13NlWGRNecpOL5qkjsaYOX3eGdwUOtXRUrZt5bAUqh1YDTIG/v6AJ
-         sKqWaqizVO8X9SNIgPYcZGpJpBj3xCAk2HP0xQKiY20kkCUDzWlQYDpyt3p9AzSMOayc
-         rOQQ==;
+        bh=DIxL0kqk4j8Y34L+nTA86vhyKtqo4LqqAJTpMKBQ+Y8=;
+        fh=MZL8NFkN6gnOMg19nkWdUUb8QopZ04CIKQbLaq1dA00=;
+        b=KpWj/qgVA8MNod39OFJGQOvEsEPfDgIH88VnhMB37Xcvc8R4hGku+mdDNwWzHuuw4s
+         4/ir9tEUrXBsNUH2RVAsPFkOIyBdsBTrBfw+Y0G5umqzL0HaRMR6bXIFS568hXffjogl
+         xx8JUGp25RQhM3nWqeR2mEQFPh2SZv4PheBVgr7GQCGZ/0IgZNc9+AhtaM64Uteq7lo6
+         deuGd0BrxEQRnvgrGh4mSdxh+nZL9XMgTacupB3/v/NfJ35a4C6ODSINaFBXdyqbG0CM
+         qu24k/PfywRE+7R3D+DZYytCBcOfSbUWyF9xGxpzECs1I+OBlT7eMK2spou0h5rKVkEE
+         izvA==;
         darn=vger.kernel.org
 ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1790007744; x=1790612544; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1790007838; x=1790612638; darn=vger.kernel.org;
         h=content-transfer-encoding:content-type:cc:to:subject:message-id
          :date:from:in-reply-to:references:mime-version:from:to:cc:subject
          :date:message-id:reply-to:content-type;
-        bh=owC2fjf5Qwa/LkbReUgINQZxkD7C+riZrL1KRkW5XzI=;
-        b=p2yFtEbGvVNsD16rapoTOWIPy7P0ffQGuhtuOcDFPLZXiQqL8T+73ik/eVJ7Xb0fIp
-         r3G7BIeNf3MXubwao105Dk0wRsYCGwPmo5MDLrt8RWdWCK5hmlkgOT3U5CK9XKcLi3UM
-         9mFPIPud0Zs/WjRo4KlXlbgCN2c/bWuuOt70hhYjMlLSifR7gBLBUKN6/BBXLfD+ZTEk
-         yX4NcTNcDlq4X2WsQ4007GnPqpGibyqcaH12sZ2YywI9oWnix5sgca2y5PTdwfDxeNlw
-         QtiHvOvGQwdIM3wCw39TG0n3tqGftuVbMzpMdkx0F9WU9CISHDehAudIIYXxfN/bCJWe
-         K6cg==
+        bh=DIxL0kqk4j8Y34L+nTA86vhyKtqo4LqqAJTpMKBQ+Y8=;
+        b=I7MCrCT6OseDgQKd8mf7YbSjRo5m4cCXiBPr5vFYUB08yJRmYXV/xSpzZSvdljAqfM
+         85xoo0aX9ac9BeblfjFOSZO/ruStgHEdTgOO6aHDUWijHx6RZIVignfVzMXDDplCOK0o
+         LhZGtuS5j1Wb/kMSA+bJZQHUDqgY/gp38Na8HhaCA560EnuJC2TjLlheRnruOjK7QZw1
+         KcUOkD7xr3W01eZtv1G/3r6gknfeWFyaoce5xrY6CKfed//Y7h+a+96cMb1iXUN4Y8rB
+         zMEmJmfrY4dtHnPTTkK3+N1SZWb8ov7NKKw3PEbnErAX9+H7j4Ze1YUkpE6VnRmqiGdQ
+         l07A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1790007744; x=1790612544;
+        d=1e100.net; s=20260707; t=1790007838; x=1790612638;
         h=content-transfer-encoding:content-type:cc:to:subject:message-id
          :date:from:in-reply-to:references:mime-version:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=owC2fjf5Qwa/LkbReUgINQZxkD7C+riZrL1KRkW5XzI=;
-        b=Wsl/rr5ZPtNofEJ9FFcnQBsZ8sYau07q2dp5+Fjmc6V5JYw04mPzGvc7pACrOyLmje
-         NCRB/JZv0NqYRKiwTltKE7b5v4S2+ZWCKPkFezdERmv2+pFoIUOAJKSWTIKepSd4KtcO
-         d45S0fFnxlm8BoeuwNy8CunaxJwzecYAD4vSt7W/Yv9HjxXAcOivvjbZMRjjy0t2Sf7n
-         UiuFKx8n/muN9YT1BN4iFcN06GUo98r74azNorCX9GMj3pShKHyTPozXBphB/qd/R+Tw
-         GYehxfMOZsKY0VPigfC1bkf+MCuAFAMtfJWB4ZsLOzdAQuMIgONimVZ2VyK0+kQ2uDLV
-         mWeA==
-X-Forwarded-Encrypted: i=1; AKwUvBwEEHBOnilzNAH5MNHxpNsk/ju/uYYBABAve8jPqxf7fyGBpE3mMQBjOtz2Q/IRc3mXfFcOTt5cBfy0H6F9mkhD@vger.kernel.org
-X-Gm-Message-State: AFuF++ngHaAzobDz0BCkh5UfqTxTw4+FWatu5+xkkE2Wm0mmKgYmD0AH
-	cOae48hJT+dGgNIv9QVJTSup03v620Ws0R818e02rlIGPkgyWzjiiSdufsRUboFUqwMGWqay866
-	BgYROEXaVp4m4cSE8PcHLSXY5M6gFpNkSi0F+bAQd
-X-Gm-Gg: AYBFou1RORnsGSk4PvSE9Qf/41Jnm7Q9AHJuxtnTMgvXgSR+yZrmTtIbZRnewwzvSPL
-	tLSJs0YNPZlLDJ2Zn6oooo0DEtHW/+62nkDTh6cPZFnyYrEYR72nigWNfS7Rdg5A7qUdluyA1Lc
-	3cu6iND5EWPF3ZlB9rkHow5HBKS3qGjWJIwYEki/fZzXa1Mrl8jsSVLDRM06DEBk6B1Tj4twwrl
-	IBEAKznyL/SMNjveiMVDTgTwFIJQu9rAv6UlEqVr3p7iV36be7rvHqFs910mCge1I4U8rw7DQ9E
-	4SrwAPKg7+YDkH9iy+cjO9a0oP2rVAXPWbqvD4CaT09bIVTKgqMH1W73fBYZA0mB6p/i/26Vi4u
-	Jqop99ECH
-X-Received: by 2002:a05:622a:4a8b:b0:531:d8:e437 with SMTP id
- d75a77b69052e-532d8d9b2c5mr4968831cf.7.1790007743302; Mon, 21 Sep 2026
- 09:22:23 -0700 (PDT)
+        bh=DIxL0kqk4j8Y34L+nTA86vhyKtqo4LqqAJTpMKBQ+Y8=;
+        b=W8uVSP9doZxVzARof31zuXj+oRXyeeXIPf3gIdnM60QFRYcFaVEssVYYwl74tZ3krV
+         /Gre598AGfJ0MfKVyy1ARc9XxIydR8J/dqkjYuJF6c6HojIeur3Cib4ITv+vPkEHG9H0
+         z3w6vTO7SmPEDUFlZJtp0XbQ/f2/9/QbwBTQECt8ncQn7swwOcIHbu/dYAFVBZNTrLLk
+         5jkTHiRUp7GdHzy8LLy9iI65a6zXhwoFFUjcVsre3gp19Na1v655eA3tKzVoKiMpi8l+
+         8bAxD6QL952OOCLVSsOvOxYB0J1nuM0TSNuHRgA3RW6ijypF9bH0B8vEr5ucmlrrUW0s
+         QWGQ==
+X-Forwarded-Encrypted: i=1; AKwUvBxh4aAiXyt7uahta72D4je6OOjSZGuNECaxdKv9Q9HvYUUYdyE9dhyjPgcdwP/FsEjFtDgsSiFS8XhRiNMu0yfn@vger.kernel.org
+X-Gm-Message-State: AFuF++nUppuTtfL0qzwEouMtRkgq4/G+1GgwASOyiz7EEIZ83W+EjHvX
+	7WLSqeTtFYMjWvrvCn1W9ZVb1FIZGcnMbHjcBJUpCdW9jWlw15wvY4JDU5VXEkKgm9Jx1V96m2c
+	3oYFArkyZjgA9b3USrmm+TJSdD84ksWyF7gGl7yYw
+X-Gm-Gg: AYBFou0E6i3TSQls4NDMRB7WHAnrdSYMZjmfU8elL6z7AJxtJri8SAn6g9rf/eAwU9b
+	3b+B1SnP1W0KrxHMu28nfxS/CDBlZuB6H9rPOhgLDRuPhqe8VYXZy1WEBHSPL+YJIO0pY3XjhW2
+	pfjpkPjI88ahGWyhBTrMprTg/5Q14PrN8P8yRqHnxMAaMvLUYTrSEhEzjRMTNct9d9HR2MsH/1S
+	dA2yzVthV+qo95ArBIfHUMSGK4TJhSagxsUe6JQc1bAxqRxeYL8e4dvpFPJrS87zZ3poaM5kOgG
+	ONga27EjegwN4V9im0IwAJ6Pw4ehvhg1I4+wI6nSMg/8yALn6pGF1SVZCUnQIgRRxdsxzZjuFZW
+	xH/1ibqrU3scLX+lQxPU=
+X-Received: by 2002:a05:622a:1cc5:b0:532:9003:35b1 with SMTP id
+ d75a77b69052e-532d8d2fd53mr4769851cf.2.1790007837072; Mon, 21 Sep 2026
+ 09:23:57 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260915091112.333308-1-dapeng1.mi@linux.intel.com>
- <024fd251-a4ba-443f-8aff-f5b1cdb062a3@linux.intel.com> <CAP-5=fUc_WOHAe4EkLVYuBgvQmxk7_XY4N+v8yJKNJQpCSObHg@mail.gmail.com>
-In-Reply-To: <CAP-5=fUc_WOHAe4EkLVYuBgvQmxk7_XY4N+v8yJKNJQpCSObHg@mail.gmail.com>
+References: <20260915091112.333308-1-dapeng1.mi@linux.intel.com> <20260915091112.333308-2-dapeng1.mi@linux.intel.com>
+In-Reply-To: <20260915091112.333308-2-dapeng1.mi@linux.intel.com>
 From: Ian Rogers <irogers@google.com>
-Date: Mon, 21 Sep 2026 09:22:11 -0700
-X-Gm-Features: AcwNN1W35saVFW-Tr6vgI2VGiSi9ld-QxMQISoA61xD8c6KOSqtdbQ3LIDan_lM
-Message-ID: <CAP-5=fWTRPmPTkzd98hCEfh6LUTrRTNHZ2dS4nUDyQBuU8oSzg@mail.gmail.com>
-Subject: Re: [PATCH 1/2] perf alsr: Add missing SIMD handling in aslr_tool__process_sample()
-To: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
+Date: Mon, 21 Sep 2026 09:23:45 -0700
+X-Gm-Features: AcwNN1WkLBXtXxpdp75rpfIZxFhFJUV8npdtSPEEAM6R2JsKlD9iC8Gb9DOXIjg
+Message-ID: <CAP-5=fXQ3dRsg5erJM2YaQ2A1s+YBXSK9vScio__SQWnZyssPQ@mail.gmail.com>
+Subject: Re: [PATCH 2/2] perf util: Explicitly include required headers
+To: Dapeng Mi <dapeng1.mi@linux.intel.com>
 Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
 	Adrian Hunter <adrian.hunter@intel.com>, 
@@ -102,127 +101,70 @@ Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Sep 21, 2026 at 9:21=E2=80=AFAM Ian Rogers <irogers@google.com> wro=
-te:
+On Tue, Sep 15, 2026 at 2:18=E2=80=AFAM Dapeng Mi <dapeng1.mi@linux.intel.c=
+om> wrote:
 >
-> On Sun, Sep 20, 2026 at 11:42=E2=80=AFPM Mi, Dapeng <dapeng1.mi@linux.int=
-el.com> wrote:
-> >
-> > Kindly ping ...
-> >
-> > @Arnaldo, @Namhyung, @Ian, not sure if you have bandwidth to review thi=
-s
-> > small patchset which fixes the Sashiko found minor issues for the "Perf
-> > tools: Support eGPRs/SSP/SIMD registers sampling" patchset?
-> >
-> > If possible, it's better to be queued in this cycle, then we don't need
-> > extra backporting. Thanks.
+> Sashiko complains "the perf tool can be compiled with musl libc, which
+> enforces strict POSIX namespace separation and does not implicitly
+> include headers. Relying on implicit header inclusion can cause build
+> failures under musl."
 >
-> Reviewed-by: Ian Rogers <irogers@google.com>
+> Include the required headers explicitly to avoid such failures.
+>
+> Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
 
-Oh, another nit: there's a typo in the commit message subject: s/alsr/aslr/=
-g.
+Reviewed-by: Ian Rogers <irogers@google.com>
 
 Thanks,
 Ian
 
-> > On 9/15/2026 5:11 PM, Dapeng Mi wrote:
-> > > Currently the SIMD register sampling is supported, but the correspond=
-ing
-> > > handling is missed in aslr_tool__process_sample(). This can break par=
-sing
-> > > of the sample record.
-> > >
-> > > Add the missing SIMD register handling in aslr_tool__process_sample()=
-.
-> > >
-> > > Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
-> > > ---
-> > >
-> > > These two patches fix Sashiko reported defects for the patchset:
-> > > "Perf tools: Support eGPRs/SSP/SIMD registers sampling"
-> > > https://lore.kernel.org/all/20260914014049.2061519-1-dapeng1.mi@linux=
-.intel.com/
-> > >
-> > >  tools/perf/util/aslr.c | 31 +++++++++++++++++++++++++++++++
-> > >  1 file changed, 31 insertions(+)
-> > >
-> > > diff --git a/tools/perf/util/aslr.c b/tools/perf/util/aslr.c
-> > > index 027695d96779..a097084201a0 100644
-> > > --- a/tools/perf/util/aslr.c
-> > > +++ b/tools/perf/util/aslr.c
-> > > @@ -19,6 +19,7 @@
-> > >  #include <internal/lib.h>  /* page_size */
-> > >  #include <linux/compiler.h>
-> > >  #include <linux/zalloc.h>
-> > > +#include <linux/overflow.h>
-> > >  #include <errno.h>
-> > >  #include <inttypes.h>
-> > >  #include <unistd.h>
-> > > @@ -992,6 +993,34 @@ static int aslr_tool__process_sample(const struc=
-t perf_tool *tool,
-> > >                               COPY_U64();
-> > >               }
-> > >       }
-> > > +
-> > > +#define CHECK_SIMD() \
-> > > +     do { \
-> > > +             if (abi & PERF_SAMPLE_REGS_ABI_SIMD) { \
-> > > +                     u64 nr_vector, vec_qwords; \
-> > > +                     u64 nr_pred, pred_qwords; \
-> > > +                     u64 header_len, vec_len, pred_len, simd_len; \
-> > > +                     if (CHECK_BOUNDS(nr + 4, nr + 4)) { \
-> > > +                             ret =3D -EFAULT; \
-> > > +                             goto out_put; \
-> > > +                     } \
-> > > +                     header_len =3D 4; \
-> > > +                     nr_vector =3D in_array[i + nr]; \
-> > > +                     vec_qwords =3D in_array[i + nr + 1]; \
-> > > +                     nr_pred =3D in_array[i + nr + 2]; \
-> > > +                     pred_qwords =3D in_array[i + nr + 3]; \
-> > > +                     if (check_mul_overflow(nr_vector, vec_qwords, &=
-vec_len) || \
-> > > +                         check_mul_overflow(nr_pred, pred_qwords, &p=
-red_len) || \
-> > > +                         check_add_overflow(vec_len, pred_len, &simd=
-_len) || \
-> > > +                         check_add_overflow(header_len, simd_len, &s=
-imd_len) || \
-> > > +                         check_add_overflow(nr, simd_len, &nr) || \
-> > > +                         nr > max_i - i) { \
-> > > +                             ret =3D -EFAULT; \
-> > > +                             goto out_put; \
-> > > +                     } \
-> > > +             } \
-> > > +     } while (0)
-> > > +
-> > >       if (orig_sample_type & PERF_SAMPLE_REGS_USER) {
-> > >               u64 abi;
-> > >
-> > > @@ -1007,6 +1036,7 @@ static int aslr_tool__process_sample(const stru=
-ct perf_tool *tool,
-> > >                               ret =3D -EFAULT;
-> > >                               goto out_put;
-> > >                       }
-> > > +                     CHECK_SIMD();
-> > >                       i +=3D nr;
-> > >               }
-> > >       }
-> > > @@ -1061,6 +1091,7 @@ static int aslr_tool__process_sample(const stru=
-ct perf_tool *tool,
-> > >                               ret =3D -EFAULT;
-> > >                               goto out_put;
-> > >                       }
-> > > +                     CHECK_SIMD();
+> ---
+>  tools/perf/util/parse-regs-options.c           | 1 +
+>  tools/perf/util/perf-regs-arch/perf_regs_x86.c | 2 ++
+>  tools/perf/util/session.c                      | 5 +++++
+>  3 files changed, 8 insertions(+)
 >
-> nit: at the end of the function you could #undef CHECK_SIMD to make it
-> more explicit that the macro only makes sense within the function.
+> diff --git a/tools/perf/util/parse-regs-options.c b/tools/perf/util/parse=
+-regs-options.c
+> index 709fcfb077a2..e70393388fae 100644
+> --- a/tools/perf/util/parse-regs-options.c
+> +++ b/tools/perf/util/parse-regs-options.c
+> @@ -3,6 +3,7 @@
+>  #include <stdlib.h>
+>  #include <stdint.h>
+>  #include <string.h>
+> +#include <strings.h>
+>  #include <stdio.h>
+>  #include "util/debug.h"
+>  #include <dwarf-regs.h>
+> diff --git a/tools/perf/util/perf-regs-arch/perf_regs_x86.c b/tools/perf/=
+util/perf-regs-arch/perf_regs_x86.c
+> index fb6cf34f42f2..ea1d402b0893 100644
+> --- a/tools/perf/util/perf-regs-arch/perf_regs_x86.c
+> +++ b/tools/perf/util/perf-regs-arch/perf_regs_x86.c
+> @@ -3,6 +3,8 @@
+>  #include <errno.h>
+>  #include <string.h>
+>  #include <regex.h>
+> +#include <unistd.h>
+> +#include <stdbool.h>
+>  #include <linux/kernel.h>
+>  #include <linux/zalloc.h>
 >
-> Thanks,
-> Ian
+> diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
+> index a5b596cd14be..04fba6fb02e8 100644
+> --- a/tools/perf/util/session.c
+> +++ b/tools/perf/util/session.c
+> @@ -1,4 +1,9 @@
+>  // SPDX-License-Identifier: GPL-2.0
+> +#include <stdio.h>
+> +#include <stdlib.h>
+> +#include <stdbool.h>
+> +#include <string.h>
+> +#include <assert.h>
+>  #include <errno.h>
+>  #include <signal.h>
+>  #include <inttypes.h>
+> --
+> 2.34.1
 >
-> > >                       i +=3D nr;
-> > >               }
-> > >       }
-> > >
-> > > base-commit: 91b0782fc9e9d2f0a40b5256146e014802fdbb36
