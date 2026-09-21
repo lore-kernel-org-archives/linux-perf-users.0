@@ -1,79 +1,79 @@
-Received: from mail-yx2-f13.google.com (mail-yx2-f13.google.com [74.125.224.141])
+Received: from mail-yx2-f16.google.com (mail-yx2-f16.google.com [74.125.224.144])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 884CC33D505
-	for <linux-perf-users@vger.kernel.org>; Mon, 21 Sep 2026 04:27:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.224.141
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70B9EEADC
+	for <linux-perf-users@vger.kernel.org>; Mon, 21 Sep 2026 04:45:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.224.144
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789964861; cv=pass; b=aNjF5MlG4PkoKgmtHhYpjoa6TX5SadyElHXGkVZ3B++WyKg9Ja1vvAfwTFS0XOj64Sjm0xSDnVdk2IkWhDqLsvXgckwgVnBxWe0ud0Q4Kl7FVfAlVaSFEro58a3z91/l5XWdB2baPcAkq6zK+SGS0KuOsbVhs75GNxnVxhbwIbc=
+	t=1789965927; cv=pass; b=gjnxUmCYOujyMO/C68YU+/0O9AUZttrcQkdYs4zTyHU9RmuG8xNkvMnoSZ6uv+nRYqxD5+nL98y+t4+0bYLopWQi/f8ttdXE0A7czkOWQOEP6/nqnQKdmQyBmImaJlTZGPPuUXlHDKU8NNan0HPQF24uh0wB+9RO690AXwUoNR4=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789964861; c=relaxed/simple;
-	bh=OXHlmbHqYZPoffpzb4G+f1JwyrrSRzIC2VXrKgbZDkU=;
+	s=arc-20240116; t=1789965927; c=relaxed/simple;
+	bh=3HIETohqPRiYfSTVCCWaaA/j95DFfsx7y+xQJdoYbzY=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Oqzv22YCrLI8+SZvE4ghgc34S5CafWwfxATxKCLVHhV4yvdm1Q6bm50lOCWMnOzrwcxV7AtMSfy+TZ3g+1bC6ZkLLlnxeXE2AhyLnXgQNtFOmj/Xh0LqtrNK66eXwMAOMeGQxF1CJ4TB2WG/wLQsQazlm5xZfimD4zI4y5+Yz+g=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=uber.com; spf=fail smtp.mailfrom=uber.com; dkim=pass (1024-bit key) header.d=uber.com header.i=@uber.com header.b=VRWMS9G1; arc=pass smtp.client-ip=74.125.224.141
+	 To:Cc:Content-Type; b=m3SjSLMtEQRLYTXqtLg+znXRUWuwGvIDaaqqc/O3N+diyzSXZcx48CFpSQpw3+b7qPJrqRJVPOai777tLCJeidlKrAyCbpj+nADgcvsKWI+1chrSrOW7YCuL6yL6amHQrAA5mUyJch2IiGJDKw3qOYuwYEfDbpY03bOdNV9gBGg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=uber.com; spf=fail smtp.mailfrom=uber.com; dkim=pass (1024-bit key) header.d=uber.com header.i=@uber.com header.b=3lY+SgFF; arc=pass smtp.client-ip=74.125.224.144
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=uber.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=uber.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=uber.com header.i=@uber.com header.b="VRWMS9G1"
-Received: by mail-yx2-f13.google.com with SMTP id 956f58d0204a3-66e4ab201f9so2028297d50.0
-        for <linux-perf-users@vger.kernel.org>; Sun, 20 Sep 2026 21:27:40 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1789964859; cv=none;
+	dkim=pass (1024-bit key) header.d=uber.com header.i=@uber.com header.b="3lY+SgFF"
+Received: by mail-yx2-f16.google.com with SMTP id 956f58d0204a3-66e56a1fe83so2086990d50.2
+        for <linux-perf-users@vger.kernel.org>; Sun, 20 Sep 2026 21:45:26 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1789965925; cv=none;
         d=google.com; s=arc-20260327;
-        b=miZ5y7y8/OyZ1DpYUyw97kVSO15mfIdZYnHkY4KG88LXuDQVIuQBpmGQEfIbBCeOKK
-         iqy4pA+kDJP/9TRFNh9Il45nrAkNc2VDslMs3QGGmcfKRfiFX70sv6e7/eP+F6siRn/q
-         p4/mjkjulh3F/q1c79u3WLwOcJyN3MUBfl38bADmWMH/Z6uDYMyNf8UWu36QS3/PthoR
-         twNQT82i95/EV4XWd7NhD2V4r44Bij+sNGRfwOa7JLozx09zwUnBV0vaDcFNTdt6qG+k
-         VDyVeZHMe4ilMigFkHyIVkEM/XzriLxC5ohiXcfisWPRTmTCEEooOHfd4ny96LdEyHF7
-         39OQ==
+        b=nQrABLDLaRb/aGqnV2lxhZsyUruua4+zVK/Q7G64vE/b+XA3Fn3lT9UzN3Ew9ysytx
+         ZPKnisYVl/6kFOxNblOyNIhucEYGm0JExdVfAtl/p0sHBMW+jkbsNNaIW0atoIABmsX4
+         4B7Fvm1wpt8JlfsynEpQKPDBHB7D3KrhEGKFhQvpEZR58Gm+AI9FsnHVeSs/pNJooOXH
+         ViU5KrO+G0ioJ6bRwB0mYrAVJ1UvfNU1CNWLR6cnM0A1ue43z/i6sJ3yMkfW/9/lHGss
+         5/k8DNnk7Akh1IP6lOPbKJmeA3Z3S11ZKujARnKqZlzv0yyzR/g5Xhr6eKO1d0Iq677J
+         Sq+g==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:dkim-signature;
-        bh=vHXcPbrTNAxtI04gX/24blX4z6iN9+N0kM3fkVzoCUc=;
-        fh=aXAifW81mKEAgFxqCQZtT3F+8RwTkdri1EgXiBu/3kM=;
-        b=DaCQhCc5lukjnzxzRqdZSoyqc87rUG35j2R9D6Iag/4q/fvIwftYdwLYvV/ITGaO5m
-         sYtcRhtFUOrkEmgHdjmdEBCMzD1I5M/ysemsQ6j/wCy5Q/8H+/RHZtz+9/OP0LVolIxi
-         Aby9bGLYlx/qJLfO7orHyTdQhtNhkC1gcpprW97lllcTJ8LSAP9ZVd5sOX38h+cD/Mvs
-         xgL9CL96GV/isun/QkPWLBiAJRV5CvEnPEu/ww2jv8yyNEI15IVJKatUc1Bsz+Cj/TLa
-         0GoL+VYFRMxXvXrEbXWQ+A+SJjAsQPBJ5BBTLTj9fYt3ITo4v/c+KYNmLnn1AMzSlrc5
-         +zgA==;
+        bh=BI5PV8JEsmgNBkZ9uF5itWDVqgLrnZZn4wXuURr5w1k=;
+        fh=WXVsy1DAMNIfr1wcv3GasqemD1GMT+HB/18hiWY8AP0=;
+        b=emYuGmgnKq9Oz/coUAy2a1CM/0qp914WX+Bh/sWA97a7Ytt/8+ldx7tG7tojkcwqwu
+         v9yqSSoY4tBd6xNYJZSiLXzIZ9pb0Gyej8+pgoVFvHL7dLXxK5rJDJ8iSVMM16NdhoE/
+         8XB1VlF+H66NhdwcvyYXLFlX2hAF0DwtthvlcuLt29uUI74OtbBCaRRJdbZaPSE9CQsU
+         L9cTtn9IWfNiDDwK1u+WITGSYkg8Q4Zs1xvnHzpTKctQ10fPE6lqmDfqUHSeJ+4hCPUh
+         h5zg8XuEjw9QVKnx+97UXjEF7XhyMNkCJqoTjJ+M+BdW//pgQFOOFcQmsGCrvKzrej+f
+         Urzw==;
         darn=vger.kernel.org
 ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=uber.com; s=google; t=1789964859; x=1790569659; darn=vger.kernel.org;
+        d=uber.com; s=google; t=1789965925; x=1790570725; darn=vger.kernel.org;
         h=content-transfer-encoding:content-type:cc:to:subject:message-id
          :date:from:in-reply-to:references:mime-version:from:to:cc:subject
          :date:message-id:reply-to:content-type;
-        bh=vHXcPbrTNAxtI04gX/24blX4z6iN9+N0kM3fkVzoCUc=;
-        b=VRWMS9G1Cq1IpDDpM99kgry6sBiqFNEKa2J8Nen3ORd4d+LcJmugpiEvns6O9Sg0yr
-         JyGqbov2q8/Ld4KSbFQla5BCLvbNYr/HCbBL4Tn0tbXap20YmEqxn2UlUCenS5P/XUCR
-         uAW2VVwT8Rk1hM3u/WWaQpl+uMp6XeC79basU=
+        bh=BI5PV8JEsmgNBkZ9uF5itWDVqgLrnZZn4wXuURr5w1k=;
+        b=3lY+SgFFQBwsvGrfy8CaWjC7ilWULy1BDuOPv1rEK2ho9plmgQOumNOHBiIIJieF9Q
+         vx30netqkxm/DebN2WnRLLCYaPK3bjwJKsVZhD+f39WRgLe4sj5bQU6G8DWRNrqENiQi
+         muZDpormgflcF1kNGUgwShoKt6nr0qjXyoW94=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1789964859; x=1790569659;
+        d=1e100.net; s=20260707; t=1789965925; x=1790570725;
         h=content-transfer-encoding:content-type:cc:to:subject:message-id
          :date:from:in-reply-to:references:mime-version:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=vHXcPbrTNAxtI04gX/24blX4z6iN9+N0kM3fkVzoCUc=;
-        b=ekG9CAoVHB6KvMC61FC2smbEJ2IzDKspph0JZFJ4+u5FvNqPg1oHFe1Krzp7fiH9dq
-         NZ9rA+bam0vEU9yh0R7Pixf6+20Yb2622FagveCPFMB3dNhxrys9lO8OVfEpFzTuZ8P9
-         IyP1zMWJwbGPgO3YrwaOJRHqO1LBMoEGg9R3yPQOYcR1fknSnUwahE/ID/qslO/kjKnK
-         CPg/ALAyGr74BO2za3u4gkmARjMRAy0m/Ti1mm6wcXPDdBtq0XV3dVuI5A1wJojNowla
-         znUzPpnc+O+nEoVqHrNr9VTbf4OyT2kC2aooQwduQeJb8U+JJV979ms6AYufq5tsjfBL
-         q0ww==
-X-Forwarded-Encrypted: i=1; AKwUvBwdLCrh+v4h8fwGKUGPUvEVD0+X+BSiGXwiLusXeZHgMLmLQMrqun3bEvwLxTnLi7u2NbCanBGcGOZZZJ8FYGyh@vger.kernel.org
-X-Gm-Message-State: AFuF++mdgzwtEtToPX1hpSB7U1WG+UAFDzlMfyz2kaDuJFCgcihchtez
-	BoUPNbH7xAmy1c6BJkydVWmiGv3b+qiZ5+cJR/PRUVRiunCoDxTL/2uH4ICtgL7j4nnD5dW6U1g
-	lLdiGawiihXIoA4OTW8axke6Xh1Ybmk4Ccmtnr9aWGg==
-X-Gm-Gg: AYBFou19joNFq9OcO0inXjJJQG6b5bUIYnWd2Sn72Ml80+sEECHArsrOXT/LdB/gcID
-	TkkRWBtMtgIdojkolfIPgbMI2nRPJBp3TtM9ovdW7mjWV8/LegOiTUbvjxUBwBaIiPuNf9MNBQ/
-	uMuTurzmBDBv2EZad0Vj0kdfVlt3wbt7F8m/Lf6o2zQT/VPBMad02+QjDBNNa32oNsPe29O7Bia
-	KwYzmGi9bS9MUctZkVUdPE5nJPwVDFqcPuPiTyHBaFY2e/YSfAYv/+bwhwfdY7p/U9AGrLnBpVR
-	f9KIi5VgMLfnTmz7HnmzWQFUEcDEx5BcsCWXJtAGDg26xB0N1lXq4jMshQ3Z9aiALFboIDl9bps
-	nI+q/+p1sGTA=
-X-Received: by 2002:a05:690e:11c9:b0:66f:b1e4:f158 with SMTP id
- 956f58d0204a3-6717fdab5b1mr2698964d50.46.1789964858081; Sun, 20 Sep 2026
- 21:27:38 -0700 (PDT)
+        bh=BI5PV8JEsmgNBkZ9uF5itWDVqgLrnZZn4wXuURr5w1k=;
+        b=v8R4Emv6IgxyAxjTWvAtDqmpuRCPs05dOuQnCYfpPHjaZhQPivnrPi0QTTfQSbiOuH
+         IRz7SlPn/XdTNJR1SVrLn/zEfR1m5ibxpeSRiGcZMPrC81G9IEjnv3iTcT+/yf8o5sFv
+         +X37Qt8yQIIZr0HXw9xRlpfHZ+6WplPHgLSxh96FMtuI5Bii7Cq/4yPyea988ij/3MeE
+         IpllJPCT59mYDSCXBA0FKp6kCw4+Zp2tXG7P3Aa3OTWYZd7WXbouS4wrYkeKNgHsC1WI
+         iFuoVrf1kXpPsVQ+WpjalCrlh0LubYqxTRrIeGefZaVGUHogQm/kRw4qxIjj83jQVLje
+         o9aw==
+X-Forwarded-Encrypted: i=1; AKwUvByyHnY7HpPCei/od8/TNXLWz93Fb+/JxBQB5R1JW5RO8x1uRIm/ua/YD/e1a0rwvLf5D25UCxmYDMmdhidS5vlN@vger.kernel.org
+X-Gm-Message-State: AFuF++nAyK5GC9cWthDPGYJPDJZBjBZgaI3yyrQ/Yue6o0x0Pt8bSHNC
+	p4KYXf32srRds09moIvLt1dnFxb7MpM8bCpLLZp7ipEshsInCWeeNLYiSL9wMyclPFODNGkeB+q
+	GqJgrb0FRogapaDab5b4TaCOt0zV6yia2lmwBYsWopA==
+X-Gm-Gg: AYBFou13cJQLVvUqpm/RssP9qRY0MLIIl8dVhnswioLWB4HSxY/OrzBN/GOZ4tWNWm7
+	ei7p8lXYf52ZCSWRxJQXgCqg7x2u8kopeuekoqOrvLJy+rkAzYP7Q7atfAeuEvAOBIgyZJUjwXB
+	EKOHBvbSBGcd+2q0QX+UOnlmpFr/cOVgnDS9kJJK47YN06GXWwVZy8P1nmYvnE+uFxejD9UcW9r
+	yHvFcMbsw16ktHe1itCBhuSfQyqxBQe2GPxBfULuCfRBdIpZPwgwSNgI+reuF4gX+vPm2mKAwoJ
+	JQWKE+FtBlcsKzzVcX8L6fGfRAC4hGm3TA/f0irpd15EVo2f6CDMFtFGXstuvoTNk5cyd2sY05a
+	YpFT7dy8S0dsk
+X-Received: by 2002:a05:690e:806:20b0:671:631:785c with SMTP id
+ 956f58d0204a3-6717fd9b0d7mr1841359d50.57.1789965923516; Sun, 20 Sep 2026
+ 21:45:23 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -81,14 +81,14 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 References: <20260919-perf-symbol-memory-send-v2-0-495b8f00ad7c@uber.com>
- <20260919-perf-symbol-memory-send-v2-2-495b8f00ad7c@uber.com> <arB0RCpi9szb5d_R@z2>
-In-Reply-To: <arB0RCpi9szb5d_R@z2>
+ <20260919-perf-symbol-memory-send-v2-3-495b8f00ad7c@uber.com> <arB4G744iWiSPAnV@z2>
+In-Reply-To: <arB4G744iWiSPAnV@z2>
 From: Alireza Haghdoost <haghdoost@uber.com>
-Date: Sun, 20 Sep 2026 21:27:22 -0700
-X-Gm-Features: AcwNN1XQbDYRv7d1MBZTRlnAPAQksPbSbaIYVIK2RGcLdF2_Normr9MWW17F3cE
-Message-ID: <CA+w=M=Te46a3918scFJrZ=KB5O5idGRFZL6LXH24srqPM2xC+w@mail.gmail.com>
-Subject: Re: [PATCH v2 2/4] perf script: Add --max-symbol-bytes to bound ELF
- symbol memory
+Date: Sun, 20 Sep 2026 21:45:07 -0700
+X-Gm-Features: AcwNN1VO_qCFY9m4mP87ZE5UPrksR7jfkJOOvczZnZ-njyecDFIgbzlRdTw4DNI
+Message-ID: <CA+w=M=R-i1+8p7SDLueMHV8Fv5yupXR+ongVCbeAKGyq8UjsQA@mail.gmail.com>
+Subject: Re: [PATCH v2 3/4] perf script: Add --lazy-load-symbols for lazy
+ symbol loading
 To: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
@@ -100,17 +100,56 @@ Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-> > @@ -90,7 +90,7 @@ struct symbol {
-> >       u64             start;
-> >       u64             end;
-> >       /** Length of the string name. */
-> > -     u16             namelen;
-> > +     u32             namelen;
+> > +
+> > +     if (!symbol_conf.allow_aliases) {
+> > +             u32 out =3D 0;
 >
-> Why is this needed?  Do you have symbols with a really long name?
-> Anyway, it should be a separate change then.
+> I think we agreed to factor out this block of code.
 >
 
-I will drop this change in the v3.  This is a theoretical edge case
-and I don=E2=80=99t have a real workload
-that hits it.
+You=E2=80=99re right. I interpreted the earlier request too narrowly and on=
+ly
+factored out the pairwise selection policy into symbol__choose_best().
+I=E2=80=99ll factor out the complete block in v3.
+
+
+> > +
+> > +     /*
+> > +      * Keep an exact-path data DSO for the symbol source.  This may d=
+iffer
+> > +      * from the runtime image (for example, split debuginfo), so usin=
+g the
+> > +      * primary DSO's data cache could read an unrelated string-table =
+offset.
+> > +      * The standard DSO data cache manages descriptor eviction and re=
+opening.
+> > +      */
+>
+> Yes, it's a known problem and I hope to address it soon.  Can you please
+> make the path handling a separate commit?  I think it's an independent
+> fix for split debuginfo.
+>
+
+Ack. I=E2=80=99ll split the exact-path DSO data-cache support into a separa=
+te
+split-debuginfo fix and have the lazy-loading patch build on top
+of it in v3.
+
+> > +static int choose_best_symbol(struct symbol *syma, struct symbol *symb=
+)
+> > +{
+> > +     return symbol__choose_best(syma->end - syma->start,
+> > +                                symbol__type(syma), symbol__binding(sy=
+ma), syma->name,
+> > +                                symb->end - symb->start,
+> > +                                symbol__type(symb), symbol__binding(sy=
+mb), symb->name);
+> >  }
+>
+> To reduce the size of the patch, I think it's better to split this as a
+> separate commit.  Please consider minimize the patch size in general to
+> help reviewers. :)
+>
+
+Ack. I=E2=80=99ll move the shared duplicate-selection refactoring into a
+separate preparatory commit to keep the lazy-loading patch smaller in v3.
