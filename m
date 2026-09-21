@@ -1,57 +1,57 @@
-Received: from mail-pl1-f200.google.com (mail-pl1-f200.google.com [209.85.214.200])
+Received: from mail-pf1-f199.google.com (mail-pf1-f199.google.com [209.85.210.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0ADC651476A
-	for <linux-perf-users@vger.kernel.org>; Mon, 21 Sep 2026 19:14:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B823511E6E
+	for <linux-perf-users@vger.kernel.org>; Mon, 21 Sep 2026 19:14:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790018068; cv=none; b=kmiwqoxvjdFSly99+m8W0vqxlaLA4OetloVCNUJHCQ19IEzQKmF9uLIpjY2C0ZEEVVEEnDO1aNde3ZezLIdDPEb5OBr82VWYVL7MfjfOIznsEDX3xYoWrgdpNTicLs1x1nUoUuVuGDRVl8eQsfz+avCToBPIqDJJ4FeE4uesE4g=
+	t=1790018070; cv=none; b=Fp2SKu07aJQt7dPFatz8VoRGwNvLuOG/Y5EYeWvVz0bv7DsxA90/JEJP2slMy4tP/YYX+l/A6cYWWOdtTsXCa6wNro0mnGvN1Zx+dTUvLTdYsVoKYzKuWLfFCJk89wL3LEdXhVmEIL8aPbjo5P1s7ossxyOQaoP5lGJ2CXc70yM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790018068; c=relaxed/simple;
-	bh=hU/XPiRf5TR8e6mSa8j7gps2i6m8O9JzB2visVEuryM=;
+	s=arc-20240116; t=1790018070; c=relaxed/simple;
+	bh=ncoF0AVlXK+3iude8CPxQjaZi5GdYEtcRxqS+Pzv5U8=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=P/vV4R0kcZiOSahXi39lShHYKIjxO3iWPDBps1l9Z77nPMALKCP44SGYAuGcxOmRUc2sfls0dIhpfPrLYTmSc3WG590WGe0FtWX2fkwpYl9wDe/U+FAH9OPIc7hM7a6CRmj+dzYF3I3aerA30U37MhIi8c039JkHLwuq3Xjv+gs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=tMJSo0/0; arc=none smtp.client-ip=209.85.214.200
+	 To:Cc:Content-Type; b=XMjJvrzasuBATsQBkummZhhJmEuyHtUr/dRB2fGBfuMSBBe/X7nQFx9JmDLtN5jq9W0b29B84aNSLoSu0FAEGLp7NUX8bLZga7AYwcTEdFXdTRLqSUw9Kf8nKFA2siWW/akuOhUefh53toOC3Kz4ssm5Dp1by2SIqhtVJHJMyFw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=egqINwtP; arc=none smtp.client-ip=209.85.210.199
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="tMJSo0/0"
-Received: by mail-pl1-f200.google.com with SMTP id d9443c01a7336-2dd667770efso2037795ad.0
-        for <linux-perf-users@vger.kernel.org>; Mon, 21 Sep 2026 12:14:24 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="egqINwtP"
+Received: by mail-pf1-f199.google.com with SMTP id d2e1a72fcca58-868db1b2c64so5738233b3a.3
+        for <linux-perf-users@vger.kernel.org>; Mon, 21 Sep 2026 12:14:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1790018064; x=1790622864; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1790018067; x=1790622867; darn=vger.kernel.org;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:reply-to:from:to:cc:subject:date:message-id
          :reply-to:content-type;
-        bh=MkQGxc0VixaN79XNFVHmkgaPjE4FLOsATYzndUXUH5M=;
-        b=tMJSo0/0UIiVVtnxani6Vjz+GEXS0HZfj87cK2KsxPwrUduhNahpSgc4SiWfVrIo6x
-         MxpMDAoCm4XBwJaqD1gIqXhqRrG5AVbSZGoTrHpnyQAQb83qigl3lWnN/ged0kpDMaKk
-         LnkRldJF9oCbo07HUGiFp8KvaoXblXDfHgfhff0/j24wZQDwbnKeZMxFwJPQC8t2ffvS
-         2G8The1Xo6gJieK040EDC39IteNSyWTZll/SoWPDiANWO+hMNPfk2e8ZHlZIuwMyEt0V
-         2KLbLMZkqBMJOOudpdpzHLggTkNi3uIGC/cJfNIIXsE5dvDEBFRba+p/ms7abvRTD1Ry
-         7TAw==
+        bh=7RbJsXVhnh/ZoIjL3bVMfLEoE54gbAhQWsF1SSmQUH0=;
+        b=egqINwtPCdO1pOVXj4q4OIojDT1ogQcRiwYqACeLum4AXOh3ZA88FJs9Z1DwVYOaZJ
+         mKbhlpVJmcL+hNTE1GqrRS4MLUeC1d5cZZCwwFn5r0m7tPiHbb8GHolBUmpKNHjS9znc
+         y1utIGcVUqiBEI9vE7hS8SuJpAG9A9YDvzYqSpGaIsAyTxaX3sfUyEGnzPM+p8eWdi8+
+         Lz+NJhkVG7Issri5hyZKe4J0ah5w8TOblZXm+lhgSO87Q/eZpC97/cOvOUYLhaLT37n7
+         kuc5C3Orf4IClC6X1QLI7TQEmQK4JjzWhsc7BJspRDqx1OkBYQyyYW480islZv/njFbz
+         AqJA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1790018064; x=1790622864;
+        d=1e100.net; s=20260707; t=1790018067; x=1790622867;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:reply-to:x-gm-message-state:from:to:cc:subject
          :date:message-id:reply-to:content-type;
-        bh=MkQGxc0VixaN79XNFVHmkgaPjE4FLOsATYzndUXUH5M=;
-        b=rBgz5BfArTK8MR4XbY6Lh1DdXbL17B0HLOdlQpImufXpeJi4cLU5ZyOJnMCgrrLnQ8
-         Ra1UNtovd7pk+7CXib6lyjc+BxruiTu1/k1R2eJZ0oXMZMuY7wCAuMnTOQ1jw7WzpRA+
-         7OB3vWMDscwcZC+vhfPvyDMoPzVqvfscYDriAaz4wILtPfRzI5styvo5jruupy+IJH4Y
-         SgUHE0PrNtr6oGQLPW/Stka9DwmAeMaXxcMdaBVQcdhCRzC+5nCyu6MWzK7KEwzz01e3
-         Gkz+VwhfsXf+XVr2d5L8rc/1q64jJ7gNu5/BNiRM/yjgQBCxFjOwW3s0RV9SuV+1QDRC
-         C40A==
-X-Forwarded-Encrypted: i=1; AKwUvByCDS96y7kiW0AIUepd7rPrI/Xynf2GBoUsDgL7+kEiGQKxWPqVtqLjd7mbxJOAYMF6TuDUazIpXZyOE6SBbCJO@vger.kernel.org
-X-Gm-Message-State: AFuF++kzMvitpsUWWPXvsFL1uUEEBQlF5hBwBMkprW2Yq45PGT7LtIEW
-	/NxSyMdUgctrf2ULQ/lC/RORHJNFa5GOmVuRsZcdcElubpEOXzWjRFeIjwsuj7aKGauFDarVrql
-	GPaetHg==
-X-Received: from pjbbd16.prod.google.com ([2002:a17:90b:b90:b0:3a0:5e07:c6cb])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:57c8:b0:39e:6c68:fd8e
- with SMTP id 98e67ed59e1d1-3a066b6c58bmr365265a91.35.1790018063773; Mon, 21
- Sep 2026 12:14:23 -0700 (PDT)
+        bh=7RbJsXVhnh/ZoIjL3bVMfLEoE54gbAhQWsF1SSmQUH0=;
+        b=Ez1qs+jKZVBFJ/+Sx6G+zj2ZqU91Y49qA2sU6N3JGTirQsHTflAwDXuXnDjwj12JxY
+         0B4NKJpPGsP9+7Y3em31vB5eC2jxuxC/tBsDy9Gbn8rWngKEo10VnEWqS9SzVHN2eSaw
+         b56ielRWNIAwoq9bHqOevwRGT+KcEY6aE9TPe2h+07Lq/RZbl8mC2J8nBPBUDIxb3lOp
+         i8D11GoCEDxsBzxCrlstArgH/zwwWZWtUa/GJ6q9Gym2L4zrPc4WR9aBH/1w3N5ZtOtW
+         Kj4lz5dpYZwJtx1wsSS84NydjD2vXkQI/bXo104JMC/YDdC7JBOq4LTiScutSBTo02Y3
+         Kmtg==
+X-Forwarded-Encrypted: i=1; AKwUvBwmlGrVtlz7X4q7Ctxck1I3p8/5H4KeKmVflOWxeSCJw3NaqT2hB0FTltfPZ31KRCI58dx1XHUlVHbKkZqIwtkG@vger.kernel.org
+X-Gm-Message-State: AFuF++lKLuBc8ZAJdizvbkGaFPwKJCGrfFS8nUiTtplZz647j+UAC4Fp
+	CAby6xtzwazk30CZSzCr+4/PGv5kc39rvMx78wlQGnoW2+F9i2oZpMbQrF+4AbSiCJAAVU3TJLh
+	hiS3Agg==
+X-Received: from pgdj29.prod.google.com ([2002:a05:6a02:521d:b0:cc4:b575:5b04])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:ad08:b0:874:705d:f652
+ with SMTP id d2e1a72fcca58-874dea02e76mr15115482b3a.32.1790018066169; Mon, 21
+ Sep 2026 12:14:26 -0700 (PDT)
 Reply-To: Sean Christopherson <seanjc@google.com>
-Date: Mon, 21 Sep 2026 12:14:11 -0700
+Date: Mon, 21 Sep 2026 12:14:13 -0700
 In-Reply-To: <20260921191418.950933-1-seanjc@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -61,9 +61,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260921191418.950933-1-seanjc@google.com>
 X-Mailer: git-send-email 2.55.0.1082.g2b9226bbc0-goog
-Message-ID: <20260921191418.950933-4-seanjc@google.com>
-Subject: [PATCH v4 03/10] perf/x86/intel: Don't context switch DS_AREA (and
- PEBS config) if PEBS is unused
+Message-ID: <20260921191418.950933-6-seanjc@google.com>
+Subject: [PATCH v4 05/10] perf/x86/intel: Invert names of intel_ctrl_{guest,host}_mask
 From: Sean Christopherson <seanjc@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -78,88 +77,131 @@ Cc: Mark Rutland <mark.rutland@arm.com>,
 	Sashiko Bot <sashiko-bot@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 
-When filling the list of MSRs to be loaded by KVM on VM-Enter and VM-Exit,
-load the guest values for DS_AREA and (conditionally) MSR_PEBS_DATA_CFG if
-and only if PEBS will be active in the guest, i.e. only if a PEBS record
-may be generated while running the guest.  As shown by the !pebs_ept path,
-it's perfectly safe to run with the host's DS_AREA, so long as PEBS-enabled
-counters are disabled via PERF_GLOBAL_CTRL.
+Rename intel_ctrl_{guest,host}_mask to intel_ctrl_exclude_{host,guest}_mask
+to more accurately capture what they actually track.  Specifically, an
+event that is excluded from the guest is NOT guaranteed to count in the
+host, and vice versa, as it legal (albeit bizarre) to configure an event to
+exclude both the host and the guest, i.e. to not count at all.
 
-Omitting DS_AREA and MSR_PEBS_DATA_CFG when PEBS is unused saves two MSR
-writes per MSR on each VMX transition, i.e. eliminates two/four pointless
-MSR writes on each VMX roundtrip when PEBS isn't being used by the guest.
+Subjectively (though anyone who disagrees is wrong), aligning with
+perf_event_attr.exclude_{guest,host} also makes all related code much
+easier to follow.
 
-Fixes: c59a1f106f5c ("KVM: x86/pmu: Add IA32_PEBS_ENABLE MSR emulation for extended PEBS")
-Cc: Jim Mattson <jmattson@google.com>
-Cc: Mingwei Zhang <mizhang@google.com>
-Cc: Stephane Eranian <eranian@google.com>
-Reviewed-by: Jim Mattson <jmattson@google.com>
+No functional change intended.
+
+Suggested-by: Jim Mattson <jmattson@google.com>
 Reviewed-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
 Signed-off-by: Sean Christopherson <seanjc@google.com>
 ---
- arch/x86/events/intel/core.c | 39 +++++++++++++++++++++++-------------
- 1 file changed, 25 insertions(+), 14 deletions(-)
+ arch/x86/events/intel/core.c | 22 +++++++++++-----------
+ arch/x86/events/intel/lbr.c  |  2 +-
+ arch/x86/events/perf_event.h |  4 ++--
+ 3 files changed, 14 insertions(+), 14 deletions(-)
 
 diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
-index 3f8d4d037b4e..4905296d99a4 100644
+index 0db55d90c3ca..859aba923a6a 100644
 --- a/arch/x86/events/intel/core.c
 +++ b/arch/x86/events/intel/core.c
-@@ -5363,23 +5363,14 @@ static struct perf_guest_switch_msr *intel_guest_get_msrs(int *nr, void *data)
- 		return arr;
+@@ -2787,7 +2787,7 @@ static void __intel_pmu_enable_all(int added, bool pmi)
  	}
  
-+	/*
-+	 * If the guest won't use PEBS or the CPU doesn't support PEBS in the
-+	 * guest, then there's nothing more to do as disabling PMCs via
-+	 * PERF_GLOBAL_CTRL is sufficient on CPUs with guest/host isolation.
-+	 */
- 	if (!kvm_pmu || !x86_pmu.pebs_ept)
- 		return arr;
+ 	wrmsrq(MSR_CORE_PERF_GLOBAL_CTRL,
+-	       intel_ctrl & ~cpuc->intel_ctrl_guest_mask);
++	       intel_ctrl & ~cpuc->intel_ctrl_exclude_host_mask);
  
--	arr[(*nr)++] = (struct perf_guest_switch_msr){
--		.msr = MSR_IA32_DS_AREA,
--		.host = (unsigned long)cpuc->ds,
--		.guest = kvm_pmu->ds_area,
--	};
--
--	if (x86_pmu.intel_cap.pebs_baseline) {
--		arr[(*nr)++] = (struct perf_guest_switch_msr){
--			.msr = MSR_PEBS_DATA_CFG,
--			.host = cpuc->active_pebs_data_cfg,
--			.guest = kvm_pmu->pebs_data_cfg,
--		};
--	}
--
+ 	if (test_bit(INTEL_PMC_IDX_FIXED_BTS, cpuc->active_mask)) {
+ 		struct perf_event *event =
+@@ -2985,9 +2985,9 @@ static inline void intel_set_masks(struct perf_event *event, int idx)
+ 	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
+ 
+ 	if (event->attr.exclude_host)
+-		__set_bit(idx, (unsigned long *)&cpuc->intel_ctrl_guest_mask);
++		__set_bit(idx, (unsigned long *)&cpuc->intel_ctrl_exclude_host_mask);
+ 	if (event->attr.exclude_guest)
+-		__set_bit(idx, (unsigned long *)&cpuc->intel_ctrl_host_mask);
++		__set_bit(idx, (unsigned long *)&cpuc->intel_ctrl_exclude_guest_mask);
+ 	if (event_is_checkpointed(event))
+ 		__set_bit(idx, (unsigned long *)&cpuc->intel_cp_status);
+ }
+@@ -2996,8 +2996,8 @@ static inline void intel_clear_masks(struct perf_event *event, int idx)
+ {
+ 	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
+ 
+-	__clear_bit(idx, (unsigned long *)&cpuc->intel_ctrl_guest_mask);
+-	__clear_bit(idx, (unsigned long *)&cpuc->intel_ctrl_host_mask);
++	__clear_bit(idx, (unsigned long *)&cpuc->intel_ctrl_exclude_host_mask);
++	__clear_bit(idx, (unsigned long *)&cpuc->intel_ctrl_exclude_guest_mask);
+ 	__clear_bit(idx, (unsigned long *)&cpuc->intel_cp_status);
+ }
+ 
+@@ -3779,7 +3779,7 @@ static int x86_pmu_handle_guest_pebs(struct pt_regs *regs,
+ 				     struct perf_sample_data *data)
+ {
+ 	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
+-	u64 guest_pebs_idxs = cpuc->pebs_enabled & ~cpuc->intel_ctrl_host_mask;
++	u64 guest_pebs_idxs = cpuc->pebs_enabled & ~cpuc->intel_ctrl_exclude_guest_mask;
+ 	struct perf_event *event = NULL;
+ 	int bit;
+ 
+@@ -5339,8 +5339,8 @@ static struct perf_guest_switch_msr *intel_guest_get_msrs(int *nr, void *data)
+ 	global_ctrl = (*nr)++;
+ 	arr[global_ctrl] = (struct perf_guest_switch_msr){
+ 		.msr = MSR_CORE_PERF_GLOBAL_CTRL,
+-		.host = intel_ctrl & ~cpuc->intel_ctrl_guest_mask,
+-		.guest = intel_ctrl & ~cpuc->intel_ctrl_host_mask & ~pebs_mask,
++		.host = intel_ctrl & ~cpuc->intel_ctrl_exclude_host_mask,
++		.guest = intel_ctrl & ~cpuc->intel_ctrl_exclude_guest_mask & ~pebs_mask,
+ 	};
+ 
+ 	if (!x86_pmu.ds_pebs)
+@@ -5377,8 +5377,8 @@ static struct perf_guest_switch_msr *intel_guest_get_msrs(int *nr, void *data)
+ 	 * in the guest, and (d) _are_ excluded from counting in the host.
+ 	 */
+ 	guest_pebs_mask = pebs_mask & intel_ctrl & kvm_pmu->pebs_enable &
+-			  ~cpuc->intel_ctrl_host_mask &
+-			  cpuc->intel_ctrl_guest_mask;
++			  ~cpuc->intel_ctrl_exclude_guest_mask &
++			  cpuc->intel_ctrl_exclude_host_mask;
+ 
  	/*
- 	 * Restrict guest PEBS events to counters that (a) perf supports, (b)
- 	 * the guest wants to use for PEBS, (c) are not excluded from counting
-@@ -5406,6 +5397,26 @@ static struct perf_guest_switch_msr *intel_guest_get_msrs(int *nr, void *data)
- 	if (pebs_mask & ~cpuc->intel_ctrl_guest_mask)
+ 	 * Disable counters where the guest PMC is different than the host PMC
+@@ -5394,7 +5394,7 @@ static struct perf_guest_switch_msr *intel_guest_get_msrs(int *nr, void *data)
+ 	 *        What exactly goes wrong if guest and host are using PEBS is
+ 	 *        unknown.
+ 	 */
+-	if (pebs_mask & ~cpuc->intel_ctrl_guest_mask)
++	if (pebs_mask & ~cpuc->intel_ctrl_exclude_host_mask)
  		guest_pebs_mask = 0;
  
-+	/*
-+	 * Context switch DS_AREA and PEBS_DATA_CFG if and only if PEBS will be
-+	 * active in the guest; if no records will be generated while the guest
-+	 * is running, then simply keep the host values resident in hardware.
-+	 */
-+	arr[(*nr)++] = (struct perf_guest_switch_msr){
-+		.msr = MSR_IA32_DS_AREA,
-+		.host = (unsigned long)cpuc->ds,
-+		.guest = guest_pebs_mask ? kvm_pmu->ds_area : (unsigned long)cpuc->ds,
-+	};
-+
-+	if (x86_pmu.intel_cap.pebs_baseline) {
-+		arr[(*nr)++] = (struct perf_guest_switch_msr){
-+			.msr = MSR_PEBS_DATA_CFG,
-+			.host = cpuc->active_pebs_data_cfg,
-+			.guest = guest_pebs_mask ? kvm_pmu->pebs_data_cfg :
-+						   cpuc->active_pebs_data_cfg,
-+		};
-+	}
-+
  	/*
- 	 * Do NOT mess with PEBS_ENABLED.  As above, disabling counters via
- 	 * PERF_GLOBAL_CTRL is sufficient, and loading a stale PEBS_ENABLED,
+diff --git a/arch/x86/events/intel/lbr.c b/arch/x86/events/intel/lbr.c
+index cbe5c762008d..710292cf3f9b 100644
+--- a/arch/x86/events/intel/lbr.c
++++ b/arch/x86/events/intel/lbr.c
+@@ -714,7 +714,7 @@ static inline bool vlbr_exclude_host(void)
+ 	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
+ 
+ 	return test_bit(INTEL_PMC_IDX_FIXED_VLBR,
+-		(unsigned long *)&cpuc->intel_ctrl_guest_mask);
++		(unsigned long *)&cpuc->intel_ctrl_exclude_host_mask);
+ }
+ 
+ void intel_pmu_lbr_enable_all(bool pmi)
+diff --git a/arch/x86/events/perf_event.h b/arch/x86/events/perf_event.h
+index 0bc2fe486070..87733dd52846 100644
+--- a/arch/x86/events/perf_event.h
++++ b/arch/x86/events/perf_event.h
+@@ -540,8 +540,8 @@ struct cpu_hw_events {
+ 	/*
+ 	 * Intel host/guest exclude bits
+ 	 */
+-	u64				intel_ctrl_guest_mask;
+-	u64				intel_ctrl_host_mask;
++	u64				intel_ctrl_exclude_host_mask;
++	u64				intel_ctrl_exclude_guest_mask;
+ 	struct perf_guest_switch_msr	guest_switch_msrs[X86_PMC_IDX_MAX];
+ 
+ 	/*
 -- 
 2.55.0.1082.g2b9226bbc0-goog
 
