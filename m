@@ -1,61 +1,63 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6759356771
-	for <linux-perf-users@vger.kernel.org>; Mon, 21 Sep 2026 05:41:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 436B078F3A
+	for <linux-perf-users@vger.kernel.org>; Mon, 21 Sep 2026 05:41:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789969300; cv=none; b=EiQYvUTfapvJ6TqdIiY/cJBMhl04z1fyly1QAuay14cWGfOkAJop5tLd43xOw+OLyIrAyGsTPJ2hfXf+fJkGgisBBMVPOk20E+q3dPiED6+D7yMuiwk7kil0o/iLNjFZikedlDy+q7BDZFZx/SdLE41lMgTiAxsFd8gidxTYs/M=
+	t=1789969306; cv=none; b=bzEPPdoMFPPkEo7CxT6BPWX9lKWsPLmgKBsQqtoq45m+Q2SICAqx4cKnl9od68lsnn3ZxFCDfL22uuzuMMR9xqBJAxZa3ut1HpLLbTpdyKUj3i9MPYrQWjS750I5yXOfCV5ktQjx9PtyHlEVkuprvy8P5Q3AHdiXDWrPn/Y2/Mc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789969300; c=relaxed/simple;
-	bh=0DSO5Pe+C6UYgjyc0FMM+Ui0YTsjyVlbD/1elfLZuIs=;
+	s=arc-20240116; t=1789969306; c=relaxed/simple;
+	bh=OWyBCse120iohgCN2SN9NjzvRSHSc4gTSDvRFAdd8B0=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=NfLOuEeTrrcOv3eJsHLfHHFeDABjpPU9TB6T6YC/U7yZ5QT02dPva0mAJMQLqctI6IeqztSodpuwwhTeEh/8e1og+LHtoWLsbHjZAstoYQmEhod3MR5SJgr0lGEkOu6lQ6DinLMzUBgV1oJI9PwdxByKsy955qM0D/cLdvn6How=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S7AHLdCB; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=qSJwOSx/wH+I8faMIgxBPJuPySXXIcOQYlXGE+gE1artPBdO2EqMbFlXFCg579vWhXAjTVz0y2tqVT6KrjeYqcAJIKNY8g1sc3ncXHq8+dKroERhl/MMoq/KyxbJWaHTYzh4hGmeLobud90hIcEYUqlMrgHaEn7Xy4Jd5NFQkbI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RDfK+8hQ; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S7AHLdCB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 43C661F000FF;
-	Mon, 21 Sep 2026 05:41:39 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RDfK+8hQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 139201F000FF;
+	Mon, 21 Sep 2026 05:41:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789969299;
-	bh=P5WQATRhBL8/8GEYc4dQz76AGQZ52JGjWdIduB8YgjI=;
+	s=k20260515; t=1789969305;
+	bh=3Ntb9yxhWK1NFANVR5ZTnf0qu8OXv6KXq4o/Yies3ao=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=S7AHLdCBF7fAtdGCLXtap0Jpp0iNGPE+WlPNDWdP2EpOUmWEbsGqm0Sy0d+y9Eq1l
-	 qlcTkMg3r8L3FfURXbtMruPmnnWQ9SA34wnaGMdho871iZnkIT+wHsnp/3V30TkbcM
-	 u3P5J6O9qKwg2ZTLmxHR4QWCCFxhf9UCfMxPXiSLRYk6gIrxULvDbmh0T1g9SDnex6
-	 xAOfArRdK2sQgSb7r6bKGzX37NevWbIWPWeuKoZkeoPWSTXWV45FyNeTqwAg08t2XP
-	 58zYeIzrxvt49oNljwlvqi4brauBm/FDX9HRFuuCdYj7kcn6MuhGN8eWXSvhY1AqGl
-	 CVAvjJwUno9Yw==
+	b=RDfK+8hQWYhJliJyx4C9j4ck2069fJ+yFb07+uv/8wbl/UtNhYzWbxni12OiWDk62
+	 lWR6VFI1udEhNrBvlbtXw8pVtIFhKASwXN8amMpoxKjS+fCuYk02DLQkrQ86GYIbe6
+	 xmZFj2c3Fpsk6Mpr506N617BV7Lp9+8q+LDeeaxRzeHN/S05/cG/6KGTU9WyIWGLAr
+	 n7NHdTwEtr5s6vY03DzdRwSch1eCaHr2Auhnp3dbIKG3+AycC4bxNOi7JojcGS+yam
+	 o4/ezIHbxmJ7FFyhQ4UhyXGe6f6vb2zWTEneuQ34EX/acwCXmLJMYj6TRTdFEf5cgC
+	 lJh4VA2veuSRQ==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v2 39/49] perf python: Port powerpc-hcalls to perf
+Subject: Re: [PATCH v2 34/49] perf python: Port compaction-times to perf
  module
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Ian Rogers" <irogers@google.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <50af27df3c43bc14dea870adbac3aafadfa008a1.1789966896.git.irogers@google.com>
+In-Reply-To: <f0f213baa26426d26a0254497c140546d81542c8.1789966896.git.irogers@google.com>
 References: <cover.1789966896.git.irogers@google.com>
- <50af27df3c43bc14dea870adbac3aafadfa008a1.1789966896.git.irogers@google.com>
+ <f0f213baa26426d26a0254497c140546d81542c8.1789966896.git.irogers@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Mon, 21 Sep 2026 05:41:38 +0000
-Message-Id: <20260921054139.43C661F000FF@smtp.kernel.org>
+Date: Mon, 21 Sep 2026 05:41:44 +0000
+Message-Id: <20260921054145.139201F000FF@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-> Port powerpc-hcalls.py from tools/perf/scripts/python/ to a standalone
-> script in tools/perf/python/:
-> - Refactor the script into an HCallAnalyzer class with full type
->   annotations to encapsulate per-CPU hypervisor call entry/exit state.
-> - Use perf.session for event processing to track hypervisor call entry
->   and exit timestamps and aggregate min/max/average duration statistics
->   against HCALL_TABLE.
-> - Add argparse CLI support (-i/--input) and remove Python 2
->   compatibility code.
+> Port compaction-times.py to a standalone script in tools/perf/python/
+> using the perf module directly to analyze mm_compaction tracepoints.
 >=20
-> Add a shell test (test_powerpc_hcalls_python.sh) to verify the
+> Improvements compared to the legacy script:
+> - Replace Python 2 constructs (such as sys.maxint and raw integer
+>   bitmasks) with Python 3 enum.IntEnum (Popt) and enum.IntFlag (Topt)
+>   types.
+> - Access tracepoint fields directly on perf.sample_event and add
+>   -i/--input CLI option support via argparse.
+> - Add full type annotations passing mypy and pylint without suppression
+>   comments.
+>=20
+> Add a shell test (test_compaction_times_python.sh) to verify the
 > standalone script.
 >=20
 > Assisted-by: Antigravity:gemini-3.1-pro
@@ -65,5 +67,5 @@ Sashiko has reviewed this patch and found no issues. It looks great!
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/cover.1789966896.gi=
-t.irogers@google.com?part=3D39
+t.irogers@google.com?part=3D34
 
