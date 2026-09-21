@@ -1,56 +1,56 @@
-Received: from mail-pj1-f69.google.com (mail-pj1-f69.google.com [209.85.216.69])
+Received: from mail-pg1-f200.google.com (mail-pg1-f200.google.com [209.85.215.200])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B588A383999
-	for <linux-perf-users@vger.kernel.org>; Mon, 21 Sep 2026 05:08:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.69
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 292D7386443
+	for <linux-perf-users@vger.kernel.org>; Mon, 21 Sep 2026 05:08:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.200
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789967319; cv=none; b=aOZoqcxCSHzGTHQCD+tgiebN43DMCHZmPDPvZNJ+a66c8QAnLQxrQLR//HlWK2YivlmZexJVzNHxuxs4UHG4nFIHsX2EZ62WAcwVWQVGW8PpLZQvIiZRXzb7HLrUEsP9ZX2J0ojOmJGLTCiGjs76HILvdr1o9NcxRq5AumjVtTY=
+	t=1789967324; cv=none; b=sXTjjpEw+LbxmtWhnGfOYNp8zkoaDa3jpSkPUV+843rCrrp1fPbIZF7v4nxey/OfAVPK/TpyWVNzo6jDhTOC/60JTaWfYZHz7AZe5r/7HmdxZEhh9YKk8KP+zWtdOrjwAZfrY/PxEGZaPWpxcwo1kjBGDeBoTev5/BP4I24n/mE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789967319; c=relaxed/simple;
-	bh=zwM1q1YUzZunL1x1lMbSfSDg6zmfdHldNS3fF7NQPj0=;
+	s=arc-20240116; t=1789967324; c=relaxed/simple;
+	bh=JSKES8684bXtetxoIJkpve3oyh2Q7Gj4gwf0zF4Goq0=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=L6K9htuvpHCZ2SuP6dDa5OdO+rf8WABMqheD9xNlRMw4uHyBt0jTS034t5GQkDXWCewiY3FO92uVM1xB6f0mm6OePtFH7mPKLMGdE2+hObFsdMr9QbRH14ERNHlsAg8ekdTE64zi2NsgqzxBlRNYHslWSuaA0vZQNRKC4co/hnA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ozpgm5Ay; arc=none smtp.client-ip=209.85.216.69
+	 To:Cc:Content-Type; b=hbKEN3cBb5T/tj90uL8W+FGBYxv2rNlo9W+ckiPYcHIneTg2NblP2Mfvm3Z1bKzJ9yJ5OxvK2DG/mTbs5RfhgZ+mM9bgMATKbsTGc1iz7f4625i6+whqDuIinHA1s1xf5mLi37LcRzqrTK+gJMlxSrh2UL5gDokLqk+roLe3Fs0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=r8iW/Y1V; arc=none smtp.client-ip=209.85.215.200
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ozpgm5Ay"
-Received: by mail-pj1-f69.google.com with SMTP id 98e67ed59e1d1-38f57e31b6eso2496083a91.1
-        for <linux-perf-users@vger.kernel.org>; Sun, 20 Sep 2026 22:08:36 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="r8iW/Y1V"
+Received: by mail-pg1-f200.google.com with SMTP id 41be03b00d2f7-cc4216aee8fso3583600a12.1
+        for <linux-perf-users@vger.kernel.org>; Sun, 20 Sep 2026 22:08:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1789967316; x=1790572116; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1789967318; x=1790572118; darn=vger.kernel.org;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=0HHfRcO9ZuBTSYkylxeBWu1seR4mW7jH0oHiQdS/3lo=;
-        b=ozpgm5AyvqiSCq0OFRrrfnWVx+681lnS2nFdmzhMOgo5VLauP2hhxR91a4AqrVRsfj
-         Ofq9ZCAECn30c1WRfc1O9b4Iy1kApRGsALbXEiTn6FTfxcT5h+z7Pmgc8CiRekBB1Qdx
-         Y2FuG9ZQQ9XyScqJN5NoPJnNpCPe9XGPnQj15wpzCJ13lvaxU2RIuysoNX5Uvvhuw6Sy
-         wSDbBY3IHzK42oFCIPD/mtLs4i1OwsVhxINk3IuTFzPXYFFdsD04fCb/8r1vhckgBJ9t
-         F7t/Z6g5pl0aauV1paQokx1yO0qUcUWTck7NfhUf3ShlasNXQRzhKrm1yPhcIuTMkw2+
-         ir+w==
+        bh=i+R/N8HSkYEUivbnaOvbxN5AZrIMgDGlVTo+8I5t/Uc=;
+        b=r8iW/Y1V2grszStx/tvy1KFlyWkNspN9oI65K/jssreZIpR0Lx/TRf0pQnN0H0DXva
+         zC3j7VXHEWlvLucb+5t9QIAIhh1lqQe31gqnhY5744C2OfwAoVdbdodSgN86rJS41mu4
+         JNhycfBMHGsExKpp1diwzxGidj1LLlv1b3M9CdHCwQ20f4nNMIiwA7NzypGATyzupSP8
+         HmZWkQ5psQv+q7iFL8BVFDR+jnYN+m07rcMJSeTsAw0950Sp2GQ8kH5M0Dfsi8Y3vGqT
+         SDMSEHNw9eGaRfLusne9P9EoXayLc/uboGKudbt3ibP9/pNI/lQuuWCAxy5/4R6naB7E
+         5Msw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1789967316; x=1790572116;
+        d=1e100.net; s=20260707; t=1789967318; x=1790572118;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=0HHfRcO9ZuBTSYkylxeBWu1seR4mW7jH0oHiQdS/3lo=;
-        b=P1sGQQewwuZAN1ZpolkiGrw5++sTrpBkkyscdc6r+ubBiDOn6uptMOcPlpL6/0N+cy
-         PEdvptwhApzqz4egvWLAhF+quW/VTkJW8H9WAI9HeMZHl5gx67rMTXPEo/wNK70wMWH3
-         hbgBr2WcOxfDUSXE3zmh/YJ0CPuvMirL9Ob1SqAr9kPfOnf7zI+zV5qqXEvNWLr8S0/L
-         LyS++lSY0VFduZXJCFoRHJ52WC0MJEiRzOVNymG40wQFTHQUSAl1CYsoJEUsj77X3IGK
-         rQJpUxON9X862gdKcZn3ZdAfiS6A9gdk6oE1I7ioLqaH9nQkLCpgsJqc24h2roHYQ4qN
-         MarA==
-X-Forwarded-Encrypted: i=1; AKwUvBy8xr2fSZeS2gGrj7ozIOC+0jAMp1bhGaANCNs5SNnWq10QcTAeeNbpJBaQBXsI1QIG97lFpSE98RSsEQU/4Tx1@vger.kernel.org
-X-Gm-Message-State: AFuF++nqCN9DACK5Po/0dAFxYg8dPpsvzWZltQbgv8Sj1JctRRLFhbVB
-	O2vcd37bduy/Gn29v3F1YZWKljoES46NfVG75sxUSMzHe1yEUbeQ12V1PI8foPWguTUVYe6TI36
-	M3dacn0HfKw==
-X-Received: from dlbqc6.prod.google.com ([2002:a05:7023:a86:b0:143:7a1a:167d])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:2d84:b0:39e:6a7e:ee1b
- with SMTP id 98e67ed59e1d1-39e6a7eef16mr8490339a91.39.1789967316042; Sun, 20
- Sep 2026 22:08:36 -0700 (PDT)
-Date: Sun, 20 Sep 2026 22:06:59 -0700
+        bh=i+R/N8HSkYEUivbnaOvbxN5AZrIMgDGlVTo+8I5t/Uc=;
+        b=NWj4ieMf4JQky1Ega0XUX/4PXO7oW94+Lp/vqv5R/efdECKFZQTZ0N9vLzprO89ztJ
+         f18blo3UycFGO8P1aKy+SX88p6oKKEtJ/+VjuxmZJp35E2GjRikhLK0QZ84u/vQmT49H
+         nPeeufiVMwUNdBol3kOVfKvedmlNA1l4MzPOfSDRDcJG3AW2VNEOiuVeo0zaVla6DJDP
+         VVeajDfQtVDjYh5xoMTxIpRzlYs7D07EzvzQSeRDZFnMFYN6M8SB9o3RrYr1PqDKsMOm
+         sqLbERi0Kr9qEgzfPqbTuN01MyFWGiFsF1NehWeNrKt43aF4V9wGH6jVFdG2wvPGVNrk
+         nO2A==
+X-Forwarded-Encrypted: i=1; AKwUvBz1HRFWUUvLOVz5rgRi6gEhekJwuho1pLAuSuDdKw1GTL4IS7eBP3G6oOK5WpPjte5k6q6e1h7Xz4zIdl7+1d0M@vger.kernel.org
+X-Gm-Message-State: AFuF++nOKQHYnMtgnbntKs3Yth2HQHTJMk6FerYlR7hauJhN6WpbNi55
+	mggxQcY8oDuJzCn5q1k07MJjEPPP7oJFc6EpmBomWR7hezonrvkinkLVwiSZIn7+v9ca0S4KXX3
+	WfO+lYngcBg==
+X-Received: from dlea7-n1.prod.google.com ([2002:a05:701b:4207:10b0:144:e5a6:137a])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a20:1605:b0:3cc:2552:ddd7
+ with SMTP id adf61e73a8af0-3dd8c2ddcb5mr17579541637.5.1789967318117; Sun, 20
+ Sep 2026 22:08:38 -0700 (PDT)
+Date: Sun, 20 Sep 2026 22:07:00 -0700
 In-Reply-To: <cover.1789966896.git.irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -60,9 +60,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <cover.1789966896.git.irogers@google.com>
 X-Mailer: git-send-email 2.55.0.1082.g2b9226bbc0-goog
-Message-ID: <1caa73a4802b459f83ef8d4b93893c32d392192e.1789966896.git.irogers@google.com>
-Subject: [PATCH v2 41/49] perf test: Migrate Intel PT virtual LBR test to
- Python API
+Message-ID: <4f2c5cca88d7da4b79232763285710fdd8ccb8ea.1789966896.git.irogers@google.com>
+Subject: [PATCH v2 42/49] perf python: Port export-to-sqlite to perf module
 From: Ian Rogers <irogers@google.com>
 To: irogers@google.com, acme@kernel.org, alice.mei.rogers@gmail.com, 
 	linux-perf-users@vger.kernel.org, namhyung@kernel.org
@@ -71,133 +70,1105 @@ Cc: adrian.hunter@intel.com, dapeng1.mi@linux.intel.com,
 	mingo@redhat.com, peterz@infradead.org, tmricht@linux.ibm.com
 Content-Type: text/plain; charset="UTF-8"
 
-Migrate the Intel PT virtual LBR test from generating an inline legacy
-perf script callback to using a standalone Python script
-(perf_brstack_max.py) with the brstack iterator API in the perf Python
-module.
+Port export-to-sqlite.py to a standalone script in tools/perf/python/
+using the perf module and Python's standard library sqlite3 module.
+
+Improvements compared to the legacy script:
+- Remove the dependency on PySide/QtSql by using Python's built-in
+  sqlite3 module in DatabaseExporter, allowing SQLite export on headless
+  and minimal systems without Qt installed.
+- Support Intel PT and hardware instruction trace export via
+  perf.session(itrace=...) and perf.call_return callbacks, reconstructing
+  relational call_paths and calls tables and decoding synthesized PT
+  payloads (ptwrite, cbr, mwait, pwre, exstop, pwrx).
+- Export context_switches via perf.session's context_switch callback
+  and map thread and comm IDs to their relational database keys.
+- Manage temporary staging files inside an isolated tempfile.mkdtemp()
+  directory with guaranteed cleanup in a finally block.
+
+Update Documentation/db-export.txt and add a shell test
+(test_export_to_sqlite_python.sh) to verify the standalone exporter.
 
 Assisted-by: Antigravity:gemini-3.1-pro
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- .../perf/tests/shell/lib/perf_brstack_max.py  | 37 +++++++++++++++++
- tools/perf/tests/shell/test_intel_pt.sh       | 41 ++++++++-----------
- 2 files changed, 54 insertions(+), 24 deletions(-)
- create mode 100644 tools/perf/tests/shell/lib/perf_brstack_max.py
+ tools/perf/Documentation/db-export.txt        |   2 +-
+ tools/perf/python/export-to-sqlite.py         | 937 ++++++++++++++++++
+ .../shell/test_export_to_sqlite_python.sh     | 108 ++
+ 3 files changed, 1046 insertions(+), 1 deletion(-)
+ create mode 100755 tools/perf/python/export-to-sqlite.py
+ create mode 100755 tools/perf/tests/shell/test_export_to_sqlite_python.sh
 
-diff --git a/tools/perf/tests/shell/lib/perf_brstack_max.py b/tools/perf/tests/shell/lib/perf_brstack_max.py
-new file mode 100644
-index 000000000000..e2f5362de5e6
+diff --git a/tools/perf/Documentation/db-export.txt b/tools/perf/Documentation/db-export.txt
+index 52ffccb02d55..b43f12b96973 100644
+--- a/tools/perf/Documentation/db-export.txt
++++ b/tools/perf/Documentation/db-export.txt
+@@ -7,7 +7,7 @@ perf tool's python scripting engine:
+ 
+ supports scripts:
+ 
+-	tools/perf/scripts/python/export-to-sqlite.py
++	tools/perf/python/export-to-sqlite.py
+ 	tools/perf/scripts/python/export-to-postgresql.py
+ 
+ which export data to a SQLite3 or PostgreSQL database.
+diff --git a/tools/perf/python/export-to-sqlite.py b/tools/perf/python/export-to-sqlite.py
+new file mode 100755
+index 000000000000..9f9f10458f30
 --- /dev/null
-+++ b/tools/perf/tests/shell/lib/perf_brstack_max.py
-@@ -0,0 +1,37 @@
-+#!/usr/bin/python
++++ b/tools/perf/python/export-to-sqlite.py
+@@ -0,0 +1,937 @@
++#!/usr/bin/env python3
 +# SPDX-License-Identifier: GPL-2.0
-+# Determine the maximum size of branch stacks in a perf.data file.
++"""
++Export perf data to a sqlite3 database.
 +
++This script has been ported to use the modern perf Python module and the
++standard library sqlite3 module. It no longer requires PySide2 or QtSql
++for exporting.
++
++Examples of using this script with Intel PT:
++
++	$ perf record -e intel_pt//u ls
++	$ python export-to-sqlite.py -i perf.data -o pt_example
++
++To browse the database, sqlite3 can be used e.g.
++
++	$ sqlite3 pt_example
++	sqlite> .header on
++	sqlite> select * from samples_view where id < 10;
++	sqlite> .mode column
++	sqlite> select * from samples_view where id < 10;
++	sqlite> .tables
++	sqlite> .schema samples_view
++	sqlite> .quit
++
++An example of using the database is provided by the script
++exported-sql-viewer.py. Refer to that script for details.
++
++Ported from tools/perf/scripts/python/export-to-sqlite.py
++"""
++
++from __future__ import annotations
++import typing
 +import argparse
++import os
++import shutil
++import sqlite3
++import struct
 +import sys
-+
++import tempfile
++from typing import Dict, Optional
 +import perf
 +
-+def main():
-+    ap = argparse.ArgumentParser()
-+    ap.add_argument("-i", "--input", default="perf.data", help="Input file name")
-+    args = ap.parse_args()
 +
-+    bmax = 0
++PERF_IP_FLAG_BRANCH = 1 << 0
++PERF_IP_FLAG_CALL = 1 << 1
++PERF_IP_FLAG_RETURN = 1 << 2
++PERF_IP_FLAG_CONDITIONAL = 1 << 3
++PERF_IP_FLAG_SYSCALLRET = 1 << 4
++PERF_IP_FLAG_ASYNC = 1 << 5
++PERF_IP_FLAG_INTERRUPT = 1 << 6
++PERF_IP_FLAG_TX_ABORT = 1 << 7
++PERF_IP_FLAG_TRACE_BEGIN = 1 << 8
++PERF_IP_FLAG_TRACE_END = 1 << 9
++PERF_IP_FLAG_IN_TX = 1 << 10
++PERF_IP_FLAG_VMENTRY = 1 << 11
++PERF_IP_FLAG_VMEXIT = 1 << 12
 +
-+    def process_event(sample):
-+        nonlocal bmax
++BRANCH_TYPES = [
++    (0, "no branch"),
++    (PERF_IP_FLAG_BRANCH | PERF_IP_FLAG_CALL, "call"),
++    (PERF_IP_FLAG_BRANCH | PERF_IP_FLAG_RETURN, "return"),
++    (PERF_IP_FLAG_BRANCH | PERF_IP_FLAG_CONDITIONAL, "conditional jump"),
++    (PERF_IP_FLAG_BRANCH, "unconditional jump"),
++    (PERF_IP_FLAG_BRANCH | PERF_IP_FLAG_CALL | PERF_IP_FLAG_INTERRUPT, "software interrupt"),
++    (PERF_IP_FLAG_BRANCH | PERF_IP_FLAG_RETURN | PERF_IP_FLAG_INTERRUPT, "return from interrupt"),
++    (PERF_IP_FLAG_BRANCH | PERF_IP_FLAG_CALL | PERF_IP_FLAG_SYSCALLRET, "system call"),
++    (PERF_IP_FLAG_BRANCH | PERF_IP_FLAG_RETURN | PERF_IP_FLAG_SYSCALLRET,
++     "return from system call"),
++    (PERF_IP_FLAG_BRANCH | PERF_IP_FLAG_ASYNC, "asynchronous branch"),
++    (PERF_IP_FLAG_BRANCH | PERF_IP_FLAG_CALL | PERF_IP_FLAG_ASYNC | PERF_IP_FLAG_INTERRUPT,
++     "hardware interrupt"),
++    (PERF_IP_FLAG_BRANCH | PERF_IP_FLAG_TX_ABORT, "transaction abort"),
++    (PERF_IP_FLAG_BRANCH | PERF_IP_FLAG_TRACE_BEGIN, "trace begin"),
++    (PERF_IP_FLAG_BRANCH | PERF_IP_FLAG_TRACE_END, "trace end"),
++    (PERF_IP_FLAG_BRANCH | PERF_IP_FLAG_CALL | PERF_IP_FLAG_VMENTRY, "vm entry"),
++    (PERF_IP_FLAG_BRANCH | PERF_IP_FLAG_CALL | PERF_IP_FLAG_VMEXIT, "vm exit"),
++]
++for _b_type, _b_name in list(BRANCH_TYPES):
++    if (_b_type == PERF_IP_FLAG_BRANCH or
++            (_b_type & (PERF_IP_FLAG_TRACE_BEGIN | PERF_IP_FLAG_TRACE_END))):
++        continue
++    BRANCH_TYPES.append((_b_type | PERF_IP_FLAG_TRACE_BEGIN, f"trace begin / {_b_name}"))
++    BRANCH_TYPES.append((_b_type | PERF_IP_FLAG_TRACE_END, f"{_b_name} / trace end"))
++
++
++class DatabaseExporter:
++    """Handles database connection and exporting of perf events."""
++
++    def __init__(self, db_path: str):
++        self.con = sqlite3.connect(db_path)
++        self.con.execute("PRAGMA journal_mode = MEMORY")
++        self.session: Optional[perf.session] = None
++        self.sample_count = 0
++
++        # Caches and counters grouped to reduce instance attributes
++        self.caches: Dict[str, dict] = {
++            'machines': {},
++            'threads': {},
++            'comms': {},
++            'dsos': {},
++            'symbols': {},
++            'events': {},
++            'branch_types': {},
++            'call_paths': {}
++        }
++
++        self.next_id = {
++            'machine': 1,
++            'thread': 1,
++            'comm': 1,
++            'dso': 1,
++            'symbol': 1,
++            'event': 1,
++            'branch_type': 1,
++            'call_path': 1
++        }
++
++        self.create_tables()
++
++    def create_tables(self) -> None:
++        """Create database tables."""
++        self.con.execute("""
++            CREATE TABLE IF NOT EXISTS selected_events (
++                    id      INTEGER         NOT NULL        PRIMARY KEY,
++                    name    VARCHAR(80))
++        """)
++        self.con.execute("""
++            CREATE TABLE IF NOT EXISTS machines (
++                    id      INTEGER         NOT NULL        PRIMARY KEY,
++                    pid     INTEGER,
++                    root_dir VARCHAR(4096))
++        """)
++        self.con.execute("""
++            CREATE TABLE IF NOT EXISTS threads (
++                    id      INTEGER         NOT NULL        PRIMARY KEY,
++                    machine_id BIGINT,
++                    process_id BIGINT,
++                    pid     INTEGER,
++                    tid     INTEGER)
++        """)
++        self.con.execute("""
++            CREATE TABLE IF NOT EXISTS comms (
++                    id      INTEGER         NOT NULL        PRIMARY KEY,
++                    comm    VARCHAR(16),
++                    c_thread_id BIGINT,
++                    c_time  BIGINT,
++                    exec_flag BOOLEAN)
++        """)
++        self.con.execute("""
++            CREATE TABLE IF NOT EXISTS comm_threads (
++                    id      INTEGER         NOT NULL        PRIMARY KEY,
++                    comm_id BIGINT,
++                    thread_id BIGINT)
++        """)
++        self.con.execute("""
++            CREATE TABLE IF NOT EXISTS dsos (
++                    id      INTEGER         NOT NULL        PRIMARY KEY,
++                    machine_id BIGINT,
++                    short_name VARCHAR(256),
++                    long_name VARCHAR(4096),
++                    build_id VARCHAR(64))
++        """)
++        self.con.execute("""
++            CREATE TABLE IF NOT EXISTS symbols (
++                    id      INTEGER         NOT NULL        PRIMARY KEY,
++                    dso_id  BIGINT,
++                    sym_start BIGINT,
++                    sym_end BIGINT,
++                    binding INTEGER,
++                    name    VARCHAR(2048))
++        """)
++        self.con.execute("""
++            CREATE TABLE IF NOT EXISTS branch_types (
++                    id      INTEGER         NOT NULL        PRIMARY KEY,
++                    name    VARCHAR(80))
++        """)
++        self.con.execute("""
++            CREATE TABLE IF NOT EXISTS samples (
++                    id              INTEGER         NOT NULL        PRIMARY KEY,
++                    evsel_id        BIGINT,
++                    machine_id      BIGINT,
++                    thread_id       BIGINT,
++                    comm_id         BIGINT,
++                    dso_id          BIGINT,
++                    symbol_id       BIGINT,
++                    sym_offset      BIGINT,
++                    ip              BIGINT,
++                    time            BIGINT,
++                    cpu             INTEGER,
++                    to_dso_id       BIGINT,
++                    to_symbol_id    BIGINT,
++                    to_sym_offset   BIGINT,
++                    to_ip           BIGINT,
++                    period          BIGINT,
++                    weight          BIGINT,
++                    transaction_    BIGINT,
++                    data_src        BIGINT,
++                    branch_type     INTEGER,
++                    in_tx           BOOLEAN,
++                    call_path_id    BIGINT,
++                    insn_count      BIGINT,
++                    cyc_count       BIGINT,
++                    flags           INTEGER)
++        """)
++        self.con.execute('''
++            CREATE TABLE IF NOT EXISTS calls (
++                id          INTEGER     NOT NULL    PRIMARY KEY,
++                thread_id   BIGINT,
++                comm_id     BIGINT,
++                call_path_id BIGINT,
++                call_time   BIGINT,
++                return_time BIGINT,
++                branch_count BIGINT,
++                call_id     BIGINT,
++                return_id   BIGINT,
++                parent_call_path_id BIGINT,
++                flags       INTEGER,
++                parent_id   BIGINT,
++                insn_count  BIGINT,
++                cyc_count   BIGINT
++            )
++        ''')
++        self.con.execute('''
++            CREATE TABLE IF NOT EXISTS call_paths (
++                id          INTEGER     NOT NULL    PRIMARY KEY,
++                parent_id   BIGINT,
++                symbol_id   BIGINT,
++                ip          BIGINT
++            )
++        ''')
++
++        self.con.execute('''
++            CREATE TABLE IF NOT EXISTS cbr (
++                id integer primary key,
++                cbr integer,
++                mhz integer,
++                percent integer
++            )
++        ''')
++        self.con.execute('''
++            CREATE TABLE IF NOT EXISTS mwait (
++                id integer primary key,
++                hints integer,
++                extensions integer
++            )
++        ''')
++
++
++
++        self.con.execute('''
++            CREATE TABLE IF NOT EXISTS context_switches (
++                id integer primary key,
++                machine_id bigint,
++                time bigint,
++                cpu integer,
++                thread_out_id bigint,
++                comm_out_id bigint,
++                thread_in_id bigint,
++                comm_in_id bigint,
++                flags integer
++            )
++        ''')
++        self.con.execute(
++            "CREATE TABLE IF NOT EXISTS ptwrite ("
++            "id integer primary key, payload integer, exact_ip integer"
++            ")"
++        )
++        self.con.execute(
++            "CREATE TABLE IF NOT EXISTS pwre ("
++            "id integer primary key, hw integer, cstate integer, subcstate integer, "
++            "hw_name text, cstate_name text"
++            ")"
++        )
++        self.con.execute(
++            "CREATE TABLE IF NOT EXISTS exstop ("
++            "id integer primary key, exact_ip integer"
++            ")"
++        )
++        self.con.execute(
++            "CREATE TABLE IF NOT EXISTS pwrx ("
++            "id integer primary key, deepest_cstate integer, last_cstate integer, "
++            "wake_reason integer"
++            ")"
++        )
++
++        self.con.execute(
++            "CREATE VIEW IF NOT EXISTS machines_view AS "
++            "SELECT id, pid, root_dir, "
++            "CASE WHEN id=0 THEN 'unknown' WHEN pid=-1 THEN 'host' ELSE 'guest' END "
++            "AS host_or_guest FROM machines"
++        )
++        self.con.execute(
++            "CREATE VIEW IF NOT EXISTS dsos_view AS "
++            "SELECT id, machine_id, "
++            "(SELECT host_or_guest FROM machines_view WHERE id = machine_id) AS host_or_guest, "
++            "short_name, long_name, build_id FROM dsos"
++        )
++        self.con.execute(
++            "CREATE VIEW IF NOT EXISTS symbols_view AS "
++            "SELECT id, name, (SELECT short_name FROM dsos WHERE id=dso_id) AS dso, "
++            "dso_id, sym_start, sym_end, "
++            "CASE WHEN binding=0 THEN 'local' WHEN binding=1 THEN 'global' ELSE 'weak' END "
++            "AS binding FROM symbols"
++        )
++        self.con.execute(
++            "CREATE VIEW IF NOT EXISTS threads_view AS "
++            "SELECT id, machine_id, "
++            "(SELECT host_or_guest FROM machines_view WHERE id = machine_id) AS host_or_guest, "
++            "process_id, pid, tid FROM threads"
++        )
++        self.con.execute(
++            "CREATE VIEW IF NOT EXISTS comm_threads_view AS "
++            "SELECT comm_id, (SELECT comm FROM comms WHERE id = comm_id) AS command, "
++            "thread_id, (SELECT pid FROM threads WHERE id = thread_id) AS pid, "
++            "(SELECT tid FROM threads WHERE id = thread_id) AS tid FROM comm_threads"
++        )
++        self.con.execute(
++            "CREATE VIEW IF NOT EXISTS call_paths_view AS "
++            "SELECT c.id, printf('%x', c.ip) AS ip, c.symbol_id, "
++            "(SELECT name FROM symbols WHERE id = c.symbol_id) AS symbol, "
++            "(SELECT dso_id FROM symbols WHERE id = c.symbol_id) AS dso_id, "
++            "(SELECT dso FROM symbols_view WHERE id = c.symbol_id) AS dso_short_name, "
++            "c.parent_id, printf('%x', p.ip) AS parent_ip, p.symbol_id AS parent_symbol_id, "
++            "(SELECT name FROM symbols WHERE id = p.symbol_id) AS parent_symbol, "
++            "(SELECT dso_id FROM symbols WHERE id = p.symbol_id) AS parent_dso_id, "
++            "(SELECT dso FROM symbols_view WHERE id = p.symbol_id) AS parent_dso_short_name "
++            "FROM call_paths c LEFT JOIN call_paths p ON p.id = c.parent_id"
++        )
++        self.con.execute(
++            "CREATE VIEW IF NOT EXISTS calls_view AS "
++            "SELECT calls.id, thread_id, "
++            "(SELECT pid FROM threads WHERE id = thread_id) AS pid, "
++            "(SELECT tid FROM threads WHERE id = thread_id) AS tid, "
++            "(SELECT comm FROM comms WHERE id = comm_id) AS command, "
++            "call_path_id, printf('%x', ip) AS ip, symbol_id, "
++            "(SELECT name FROM symbols WHERE id = symbol_id) AS symbol, "
++            "call_time, return_time, return_time - call_time AS elapsed_time, "
++            "branch_count, insn_count, cyc_count, "
++            "CASE WHEN cyc_count=0 THEN CAST(0 AS FLOAT) "
++            "ELSE CAST(insn_count AS FLOAT) / cyc_count END AS IPC, "
++            "call_id, return_id, "
++            "CASE WHEN flags=0 THEN '' WHEN flags=1 THEN 'no call' "
++            "WHEN flags=2 THEN 'no return' WHEN flags=3 THEN 'no call/return' "
++            "WHEN flags=6 THEN 'jmp' ELSE flags END AS flags, "
++            "parent_call_path_id, calls.parent_id "
++            "FROM calls INNER JOIN call_paths ON call_paths.id = call_path_id"
++        )
++        self.con.execute(
++            "CREATE VIEW IF NOT EXISTS samples_view AS "
++            "SELECT id, time, cpu, "
++            "(SELECT pid FROM threads WHERE id = thread_id) AS pid, "
++            "(SELECT tid FROM threads WHERE id = thread_id) AS tid, "
++            "(SELECT comm FROM comms WHERE id = comm_id) AS command, "
++            "(SELECT name FROM selected_events WHERE id = evsel_id) AS event, "
++            "printf('%x', ip) AS ip_hex, "
++            "(SELECT name FROM symbols WHERE id = symbol_id) AS symbol, sym_offset, "
++            "(SELECT short_name FROM dsos WHERE id = dso_id) AS dso_short_name, "
++            "printf('%x', to_ip) AS to_ip_hex, "
++            "(SELECT name FROM symbols WHERE id = to_symbol_id) AS to_symbol, to_sym_offset, "
++            "(SELECT short_name FROM dsos WHERE id = to_dso_id) AS to_dso_short_name, "
++            "(SELECT name FROM branch_types WHERE id = branch_type) AS branch_type_name, "
++            "in_tx, call_path_id, insn_count, cyc_count, "
++            "CASE WHEN cyc_count=0 THEN CAST(0 AS FLOAT) "
++            "ELSE CAST(insn_count AS FLOAT) / cyc_count END AS IPC, flags FROM samples"
++        )
++        self.con.execute(
++            "CREATE VIEW IF NOT EXISTS ptwrite_view AS "
++            "SELECT ptwrite.id, time, cpu, printf('%x', payload) AS payload_hex, "
++            "CASE WHEN exact_ip=0 THEN 'False' ELSE 'True' END AS exact_ip "
++            "FROM ptwrite INNER JOIN samples ON samples.id = ptwrite.id"
++        )
++        self.con.execute(
++            "CREATE VIEW IF NOT EXISTS cbr_view AS "
++            "SELECT cbr.id, time, cpu, cbr, mhz, percent "
++            "FROM cbr INNER JOIN samples ON samples.id = cbr.id"
++        )
++        self.con.execute(
++            "CREATE VIEW IF NOT EXISTS mwait_view AS "
++            "SELECT mwait.id, time, cpu, printf('%x', hints) AS hints_hex, "
++            "printf('%x', extensions) AS extensions_hex "
++            "FROM mwait INNER JOIN samples ON samples.id = mwait.id"
++        )
++        self.con.execute(
++            "CREATE VIEW IF NOT EXISTS pwre_view AS "
++            "SELECT pwre.id, time, cpu, cstate, subcstate, "
++            "CASE WHEN hw=0 THEN 'False' ELSE 'True' END AS hw "
++            "FROM pwre INNER JOIN samples ON samples.id = pwre.id"
++        )
++        self.con.execute(
++            "CREATE VIEW IF NOT EXISTS exstop_view AS "
++            "SELECT exstop.id, time, cpu, "
++            "CASE WHEN exact_ip=0 THEN 'False' ELSE 'True' END AS exact_ip "
++            "FROM exstop INNER JOIN samples ON samples.id = exstop.id"
++        )
++        self.con.execute(
++            "CREATE VIEW IF NOT EXISTS pwrx_view AS "
++            "SELECT pwrx.id, time, cpu, deepest_cstate, last_cstate, "
++            "CASE WHEN wake_reason=1 THEN 'Interrupt' "
++            "WHEN wake_reason=2 THEN 'Timer Deadline' "
++            "WHEN wake_reason=4 THEN 'Monitored Address' "
++            "WHEN wake_reason=8 THEN 'HW' WHEN wake_reason=16 THEN 'Other' "
++            "ELSE wake_reason END AS wake_reason "
++            "FROM pwrx INNER JOIN samples ON samples.id = pwrx.id"
++        )
++        self.con.execute(
++            "CREATE VIEW IF NOT EXISTS power_events_view AS "
++            "SELECT samples.id, time, cpu, selected_events.name AS event, "
++            "CASE WHEN selected_events.name='cbr' THEN "
++            "(SELECT cbr FROM cbr WHERE cbr.id = samples.id) ELSE \"\" END AS cbr, "
++            "CASE WHEN selected_events.name='cbr' THEN "
++            "(SELECT mhz FROM cbr WHERE cbr.id = samples.id) ELSE \"\" END AS mhz, "
++            "CASE WHEN selected_events.name='cbr' THEN "
++            "(SELECT percent FROM cbr WHERE cbr.id = samples.id) ELSE \"\" END AS percent, "
++            "CASE WHEN selected_events.name='mwait' THEN "
++            "(SELECT printf('%x', hints) FROM mwait WHERE mwait.id = samples.id) "
++            "ELSE \"\" END AS hints_hex, "
++            "CASE WHEN selected_events.name='mwait' THEN "
++            "(SELECT printf('%x', extensions) FROM mwait WHERE mwait.id = samples.id) "
++            "ELSE \"\" END AS extensions_hex, "
++            "CASE WHEN selected_events.name='pwre' THEN "
++            "(SELECT cstate FROM pwre WHERE pwre.id = samples.id) ELSE \"\" END AS cstate, "
++            "CASE WHEN selected_events.name='pwre' THEN "
++            "(SELECT subcstate FROM pwre WHERE pwre.id = samples.id) ELSE \"\" END AS subcstate, "
++            "CASE WHEN selected_events.name='pwre' THEN "
++            "(SELECT hw FROM pwre WHERE pwre.id = samples.id) ELSE \"\" END AS hw, "
++            "CASE WHEN selected_events.name='exstop' THEN "
++            "(SELECT exact_ip FROM exstop WHERE exstop.id = samples.id) "
++            "ELSE \"\" END AS exact_ip, "
++            "CASE WHEN selected_events.name='pwrx' THEN "
++            "(SELECT deepest_cstate FROM pwrx WHERE pwrx.id = samples.id) "
++            "ELSE \"\" END AS deepest_cstate, "
++            "CASE WHEN selected_events.name='pwrx' THEN "
++            "(SELECT last_cstate FROM pwrx WHERE pwrx.id = samples.id) "
++            "ELSE \"\" END AS last_cstate, "
++            "CASE WHEN selected_events.name='pwrx' THEN "
++            "(SELECT wake_reason FROM pwrx WHERE pwrx.id = samples.id) "
++            "ELSE \"\" END AS wake_reason "
++            "FROM samples INNER JOIN selected_events ON selected_events.id = evsel_id "
++            "WHERE selected_events.name IN ('cbr','mwait','pwre','exstop','pwrx')"
++        )
++        self.con.execute(
++            "CREATE VIEW IF NOT EXISTS context_switches_view AS "
++            "SELECT context_switches.id, context_switches.machine_id, "
++            "context_switches.time, context_switches.cpu, "
++            "th_out.pid AS pid_out, th_out.tid AS tid_out, comm_out.comm AS comm_out, "
++            "th_in.pid AS pid_in, th_in.tid AS tid_in, comm_in.comm AS comm_in, "
++            "CASE WHEN flags=0 THEN 'in' WHEN flags=1 THEN 'out' "
++            "WHEN flags=3 THEN 'out preempt' ELSE flags END AS flags "
++            "FROM context_switches "
++            "INNER JOIN threads AS th_out ON th_out.id = context_switches.thread_out_id "
++            "INNER JOIN threads AS th_in  ON th_in.id  = context_switches.thread_in_id "
++            "INNER JOIN comms AS comm_out ON comm_out.id = context_switches.comm_out_id "
++            "INNER JOIN comms AS comm_in  ON comm_in.id  = context_switches.comm_in_id"
++        )
++
++        # id == 0 means unknown. It is easier to create records for them than
++        # replace the zeroes with NULLs
++        self.con.execute("INSERT OR IGNORE INTO selected_events VALUES (0, 'unknown')")
++        self.con.execute("INSERT OR IGNORE INTO machines VALUES (0, 0, 'unknown')")
++        self.con.execute("INSERT OR IGNORE INTO threads VALUES (0, 0, 0, -1, -1)")
++        self.con.execute("INSERT OR IGNORE INTO comms VALUES (0, 'unknown', 0, 0, 0)")
++        self.con.execute("INSERT OR IGNORE INTO dsos VALUES (0, 0, 'unknown', 'unknown', '')")
++        self.con.execute("INSERT OR IGNORE INTO call_paths VALUES (0, 0, 0, 0)")
++        self.con.execute("INSERT OR IGNORE INTO symbols VALUES (0, 0, 0, 0, 0, 'unknown')")
++        for b_type, b_name in BRANCH_TYPES:
++            self.con.execute("INSERT OR IGNORE INTO branch_types VALUES (?, ?)", (b_type, b_name))
++            self.caches['branch_types'][b_type] = b_name
++
++        self.caches['events']['unknown'] = 0
++        self.caches['threads'][(0, -1, -1)] = 0
++        self.caches['threads'][(0, 0, 0)] = 0
++        self.caches['comms'][('unknown', 0)] = 0
++        self.caches['dsos'][(0, 'unknown', 'unknown', '')] = 0
++        self.caches['symbols'][(0, 'unknown', 0, 0)] = 0
++        # Initialize comm_threads mapping
++        self.comm_threads_cache: set[tuple[int, int]] = set()
++        self.next_comm_thread_id = 1
++
++    def _exec(self, sql: str, params: tuple[typing.Any, ...] = ()) -> sqlite3.Cursor:
++        """Execute SQL statement converting unsigned 64-bit ints to signed 64-bit."""
++        conv_params = tuple(
++            p - 0x10000000000000000 if isinstance(p, int) and p >= 0x8000000000000000 else p
++            for p in params
++        )
++        return self.con.execute(sql, conv_params)
++
++    def get_machine_id(self, machine_pid: Optional[int]) -> int:
++        """Get or create machine ID."""
++        if machine_pid is None or machine_pid <= 0 or machine_pid > 0x7fffffff:
++            machine_pid = -1
++        if machine_pid in self.caches['machines']:
++            return self.caches['machines'][machine_pid]
++        machine_id = self.next_id['machine']
++        self.next_id['machine'] += 1
++        self._exec("INSERT INTO machines VALUES (?, ?, ?)",
++                   (machine_id, machine_pid, ""))
++        self.caches['machines'][machine_pid] = machine_id
++        return machine_id
++
++    def get_event_id(self, name: str) -> int:
++        """Get or create event ID."""
++        if name in self.caches['events']:
++            return self.caches['events'][name]
++        event_id = self.next_id['event']
++        self._exec("INSERT INTO selected_events VALUES (?, ?)",
++                   (event_id, name))
++        self.caches['events'][name] = event_id
++        self.next_id['event'] += 1
++        return event_id
++
++    def get_thread_id(self, machine_id: int, pid: Optional[int], tid: Optional[int]) -> int:
++        """Get or create thread ID."""
++        if pid is None:
++            pid = -1
++        elif pid > 0x7fffffff:
++            pid -= 0x100000000
++        if tid is None:
++            tid = -1
++        elif tid > 0x7fffffff:
++            tid -= 0x100000000
++        key = (machine_id, pid, tid)
++        if key in self.caches['threads']:
++            return self.caches['threads'][key]
++        thread_id = self.next_id['thread']
++        self.next_id['thread'] += 1
++        self.caches['threads'][key] = thread_id
++        process_id = thread_id if pid == tid else self.get_thread_id(machine_id, pid, pid)
++        self._exec("INSERT INTO threads VALUES (?, ?, ?, ?, ?)",
++                   (thread_id, machine_id, process_id, pid, tid))
++        return thread_id
++
++    def get_comm_id(self, comm: str, thread_id: int) -> int:
++        """Get or create comm ID."""
++        key = (comm, thread_id)
++        if key not in self.caches['comms']:
++            comm_id = self.next_id['comm']
++            self._exec("INSERT INTO comms VALUES (?, ?, ?, ?, ?)",
++                       (comm_id, comm, thread_id, 0, 0))
++            self.caches['comms'][key] = comm_id
++            self.next_id['comm'] += 1
++        comm_id = self.caches['comms'][key]
++        mapping_key = (comm_id, thread_id)
++        if mapping_key not in self.comm_threads_cache:
++            comm_thread_id = self.next_comm_thread_id
++            self._exec("INSERT INTO comm_threads VALUES (?, ?, ?)",
++                       (comm_thread_id, comm_id, thread_id))
++            self.comm_threads_cache.add(mapping_key)
++            self.next_comm_thread_id += 1
++        return comm_id
++
++    def get_dso_id(self, short_name: str, long_name: str,
++                   build_id: str, machine_id: int = 0) -> int:
++        """Get or create DSO ID."""
++        key = (machine_id, short_name, long_name, build_id)
++        if key in self.caches['dsos']:
++            return self.caches['dsos'][key]
++        short_key = (machine_id, short_name)
++        if not build_id and short_key in self.caches['dsos']:
++            return self.caches['dsos'][short_key]
++        dso_id = self.next_id['dso']
++        self._exec("INSERT INTO dsos VALUES (?, ?, ?, ?, ?)",
++                   (dso_id, machine_id, short_name, long_name, build_id))
++        self.caches['dsos'][key] = dso_id
++        self.caches['dsos'][short_key] = dso_id
++        self.next_id['dso'] += 1
++        return dso_id
++
++    def get_symbol_id(self, dso_id: int, name: str, start: int,
++                      end: int) -> int:
++        """Get or create symbol ID."""
++        key = (dso_id, name, start, end)
++        if key in self.caches['symbols']:
++            return self.caches['symbols'][key]
++        short_key = (dso_id, name)
++        if start == 0 and end == 0 and short_key in self.caches['symbols']:
++            return self.caches['symbols'][short_key]
++        symbol_id = self.next_id['symbol']
++        self._exec("INSERT INTO symbols VALUES (?, ?, ?, ?, ?, ?)",
++                   (symbol_id, dso_id, start, end, 0, name))
++        self.caches['symbols'][key] = symbol_id
++        self.caches['symbols'][short_key] = symbol_id
++        self.next_id['symbol'] += 1
++        return symbol_id
++
++    def get_call_path_id(self, parent_id: int, symbol_id: int,
++                         ip: int) -> int:
++        """Get or create call path ID."""
++        key = (parent_id, symbol_id, ip)
++        if key in self.caches['call_paths']:
++            return self.caches['call_paths'][key]
++        call_path_id = self.next_id['call_path']
++        self._exec("INSERT INTO call_paths VALUES (?, ?, ?, ?)",
++                   (call_path_id, parent_id, symbol_id, ip))
++        self.caches['call_paths'][key] = call_path_id
++        self.next_id['call_path'] += 1
++        return call_path_id
++
++    def process_event(self, sample: perf.sample_event) -> None:
++        """Callback for processing events."""
++
++        machine_pid = getattr(sample, 'machine_pid', 0)
++        machine_id = self.get_machine_id(machine_pid)
++        thread_id = self.get_thread_id(machine_id, sample.sample_pid, sample.sample_tid)
++
++        comm = "Unknown_comm"
 +        try:
-+            brstack = sample.brstack
-+            if brstack:
-+                n = len(list(brstack))
-+                if n > bmax:
-+                    bmax = n
-+        except AttributeError:
++            if self.session is not None:
++                proc = self.session.find_thread(sample.sample_pid, sample.sample_tid)
++                if proc:
++                    comm_name = proc.comm()
++                    if comm_name:
++                        comm = comm_name
++        except TypeError:
 +            pass
++        comm_id = self.get_comm_id(comm, thread_id)
 +
-+    try:
-+        session = perf.session(perf.data(args.input), sample=process_event)
-+        session.process_events()
-+        print("max brstack", bmax)
-+    except Exception as e:
-+        print(f"Error processing events: {e}", file=sys.stderr)
-+        sys.exit(1)
++        dso_bid = (sample.dso_bid.decode('utf-8')
++                   if isinstance(sample.dso_bid, bytes) else str(sample.dso_bid or ""))
++        dso_id = self.get_dso_id(
++            sample.dso or "Unknown_dso",
++            sample.dso_long_name or "Unknown_dso_long",
++            dso_bid,
++            machine_id
++        )
++
++        symbol_id = self.get_symbol_id(
++            dso_id,
++            sample.symbol or "Unknown_symbol",
++            sample.sym_start or 0,
++            sample.sym_end or 0
++        )
++
++        # Handle callchain
++        call_path_id = 0
++        if hasattr(sample, 'callchain') and sample.callchain:
++            parent_id = 0
++            for node in reversed(sample.callchain):
++                dso_name = node.dso or "Unknown_dso"
++                symbol_name = node.symbol or "Unknown_symbol"
++
++                node_dso_id = self.get_dso_id(dso_name, dso_name, "", machine_id)
++                node_symbol_id = self.get_symbol_id(node_dso_id, symbol_name, 0, 0)
++
++                parent_id = self.get_call_path_id(parent_id, node_symbol_id, node.ip)
++            call_path_id = parent_id
++        else:
++            call_path_id = 0
++
++        # Insert sample
++        event_name_str = str(sample.evsel)
++        if event_name_str.startswith("evsel(") and event_name_str.endswith(")"):
++            event_name_str = event_name_str[6:-1]
++        cursor = self._exec("""
++            INSERT INTO samples VALUES (
++                NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
++            )
++        """, (
++            self.get_event_id(event_name_str),
++            machine_id, thread_id, comm_id,
++            dso_id, symbol_id,
++            (getattr(sample, 'sym_offset') if getattr(sample, 'sym_offset', None) is not None
++             else (sample.sample_ip - (getattr(sample, 'sym_start', None) or 0))),
++            sample.sample_ip, sample.sample_time, sample.sample_cpu,
++            self.get_dso_id(sample.addr_dso or "Unknown_dso",
++                            sample.addr_dso or "Unknown_dso_long", "", machine_id),
++            self.get_symbol_id(
++                self.get_dso_id(sample.addr_dso or "Unknown_dso",
++                                sample.addr_dso or "Unknown_dso_long", "", machine_id),
++                sample.addr_symbol or "Unknown_symbol", 0, 0
++            ),
++            sample.addr_sym_offset or 0,
++            sample.sample_addr or 0,
++            sample.sample_period or 0,
++            sample.sample_weight or 0,
++            sample.transaction or 0,
++            sample.sample_data_src,
++            sample.branch_type or 0,
++            sample.in_tx or 0,
++            call_path_id,
++            sample.sample_insn_count,
++            sample.sample_cyc_count,
++            getattr(sample, "flags", 0)  # flags
++        ))
++        sample_id = cursor.lastrowid
++
++
++
++        # Handle Intel PT specific raw payloads mathematically equivalent to
++        # legacy synth_data unpacking
++
++        if event_name_str == "ptwrite" and hasattr(sample, "raw_buf"):
++            try:
++                flags, payload = struct.unpack_from("<IQ", sample.raw_buf)
++                self._exec("INSERT INTO ptwrite VALUES (?, ?, ?)",
++                           (sample_id, payload, flags & 1))
++            except struct.error:
++                pass
++
++        elif event_name_str == "cbr" and hasattr(sample, "raw_buf"):
++            try:
++                data = struct.unpack_from("<BBBBII", sample.raw_buf)
++                cbr_val, freq, max_freq = data[0], data[2], data[4]
++                MHz = (max_freq + 500) // 1000
++                percent = ((cbr_val * 1000 // freq) + 5) // 10 if freq else 0
++                self._exec("INSERT INTO cbr VALUES (?, ?, ?, ?)",
++                           (sample_id, cbr_val, MHz, percent))
++            except struct.error:
++                pass
++
++        elif event_name_str == "mwait" and hasattr(sample, "raw_buf"):
++            try:
++                flags, payload = struct.unpack_from("<IQ", sample.raw_buf)
++                hints = payload & 0xff
++                extensions = (payload >> 32) & 0x3
++                self._exec("INSERT INTO mwait VALUES (?, ?, ?)",
++                           (sample_id, hints, extensions))
++            except struct.error:
++                pass
++
++        elif event_name_str == "pwre" and hasattr(sample, "raw_buf"):
++            try:
++                flags, payload = struct.unpack_from("<IQ", sample.raw_buf)
++                hw = (payload >> 7) & 1
++                cstate = (payload >> 12) & 0xf
++                subcstate = (payload >> 8) & 0xf
++                self._exec("INSERT INTO pwre (id, cstate, subcstate, hw) VALUES (?, ?, ?, ?)",
++                           (sample_id, cstate, subcstate, hw))
++            except struct.error:
++                pass
++
++        elif event_name_str == "exstop" and hasattr(sample, "raw_buf"):
++            try:
++                flags = struct.unpack_from("<I", sample.raw_buf)[0]
++                self._exec("INSERT INTO exstop VALUES (?, ?)",
++                           (sample_id, flags & 1))
++            except struct.error:
++                pass
++
++        elif event_name_str == "pwrx" and hasattr(sample, "raw_buf"):
++            try:
++                flags, payload = struct.unpack_from("<IQ", sample.raw_buf)
++                deepest_cstate = payload & 0xf
++                last_cstate = (payload >> 4) & 0xf
++                wake_reason = (payload >> 8) & 0xf
++                self._exec("INSERT INTO pwrx VALUES (?, ?, ?, ?)",
++                           (sample_id, deepest_cstate, last_cstate, wake_reason))
++            except struct.error:
++                pass
++
++        self.sample_count += 1
++        if self.sample_count % 10000 == 0:
++            self.commit()
++
++
++
++    def get_call_path_ids(self, call_path: typing.Any, machine_id: int = 0) -> tuple[int, int]:
++        """Add a perf.callchain as call_paths rows, return its id and parent's."""
++        parent_id = 0
++        call_path_id = 0
++        for node in call_path:
++            dso_name = node.dso or "Unknown_dso"
++            symbol_name = node.symbol or "Unknown_symbol"
++            dso_id = self.get_dso_id(dso_name, dso_name, "", machine_id)
++            symbol_id = self.get_symbol_id(dso_id, symbol_name, 0, 0)
++            parent_id = call_path_id
++            call_path_id = self.get_call_path_id(parent_id, symbol_id, node.ip)
++        return call_path_id, parent_id
++
++    def process_call_return(self, cr: perf.call_return) -> None:
++        """Callback for processing call_return events."""
++        machine_id = self.get_machine_id(getattr(cr, "machine_pid", None))
++        thread_id = self.get_thread_id(machine_id, cr.pid, cr.tid)
++        comm_id = self.get_comm_id(cr.comm or "Unknown_comm", thread_id)
++        call_path_id, parent_call_path_id = self.get_call_path_ids(cr.call_path or [], machine_id)
++        # calls.id and calls.parent_id use the db_id of the perf module, as a
++        # call is given an id before it returns its parent cannot be numbered
++        # here.
++        self._exec(
++            "INSERT INTO calls VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
++            (cr.db_id, thread_id, comm_id, call_path_id,
++             cr.call_time, cr.return_time,
++             cr.branch_count, cr.call_ref,
++             cr.return_ref, parent_call_path_id,
++             cr.flags, cr.parent_id,
++             cr.insn_count, cr.cyc_count)
++        )
++
++
++    def process_context_switch(self, event: typing.Any) -> None:
++        """Callback for processing context switch events."""
++        misc = getattr(event, 'misc', 0)
++        out = bool(misc & (1 << 13)) # PERF_RECORD_MISC_SWITCH_OUT
++        out_preempt = bool(misc & (1 << 14)) # PERF_RECORD_MISC_SWITCH_OUT_PREEMPT
++        flags = (1 if out else 0) | ((1 if out_preempt else 0) << 1)
++        machine_pid = getattr(event, 'machine_pid', None)
++        machine_id = self.get_machine_id(machine_pid)
++
++        sample_pid = getattr(event, 'sample_pid', None)
++        if sample_pid is None:
++            sample_pid = -1
++        elif sample_pid > 0x7fffffff:
++            sample_pid -= 0x100000000
++        sample_tid = getattr(event, 'sample_tid', None)
++        if sample_tid is None:
++            sample_tid = -1
++        elif sample_tid > 0x7fffffff:
++            sample_tid -= 0x100000000
++        next_prev_pid = getattr(event, 'next_prev_pid', None)
++        if next_prev_pid is None:
++            next_prev_pid = -1
++        elif next_prev_pid > 0x7fffffff:
++            next_prev_pid -= 0x100000000
++        next_prev_tid = getattr(event, 'next_prev_tid', None)
++        if next_prev_tid is None:
++            next_prev_tid = -1
++        elif next_prev_tid > 0x7fffffff:
++            next_prev_tid -= 0x100000000
++
++        th_a_id = self.get_thread_id(machine_id, sample_pid, sample_tid)
++        comm_a = "Unknown_comm"
++        if self.session:
++            try:
++                proc = self.session.find_thread(sample_pid, sample_tid)
++                if proc:
++                    comm_a_name = proc.comm()
++                    if comm_a_name:
++                        comm_a = comm_a_name
++            except TypeError:
++                pass
++        comm_a_id = self.get_comm_id(comm_a, th_a_id)
++
++        th_b_id = self.get_thread_id(machine_id, next_prev_pid, next_prev_tid)
++        comm_b = "Unknown_comm"
++        if self.session:
++            try:
++                proc = self.session.find_thread(next_prev_pid, next_prev_tid)
++                if proc:
++                    comm_b_name = proc.comm()
++                    if comm_b_name:
++                        comm_b = comm_b_name
++            except TypeError:
++                pass
++        comm_b_id = self.get_comm_id(comm_b, th_b_id)
++
++        if out:
++            th_out_id = th_a_id
++            comm_out_id = comm_a_id
++            th_in_id = th_b_id
++            comm_in_id = comm_b_id
++        else:
++            th_out_id = th_b_id
++            comm_out_id = comm_b_id
++            th_in_id = th_a_id
++            comm_in_id = comm_a_id
++
++        self._exec(
++            "INSERT INTO context_switches VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?)",
++            (machine_id, getattr(event, 'sample_time', 0), getattr(event, 'sample_cpu', 0) or 0,
++             th_out_id, comm_out_id, th_in_id, comm_in_id, flags)
++        )
++
++    def finish(self) -> None:
++        """Create indexes and update summary metadata after processing events."""
++        self.con.execute("CREATE INDEX IF NOT EXISTS pcpid_idx ON calls (parent_call_path_id)")
++        self.con.execute("CREATE INDEX IF NOT EXISTS pid_idx ON calls (parent_id)")
++        self.con.execute("ALTER TABLE comms ADD has_calls boolean")
++        self.con.execute("UPDATE comms SET has_calls = 1 WHERE comms.id IN "
++                         "(SELECT DISTINCT comm_id FROM calls)")
++
++    def commit(self) -> None:
++        """Commit transaction."""
++        self.con.commit()
++
++    def close(self) -> None:
++        """Close connection."""
++        self.con.close()
++
 +
 +if __name__ == "__main__":
-+    main()
-diff --git a/tools/perf/tests/shell/test_intel_pt.sh b/tools/perf/tests/shell/test_intel_pt.sh
-index 26243ff760ec..e512d0c88dd0 100755
---- a/tools/perf/tests/shell/test_intel_pt.sh
-+++ b/tools/perf/tests/shell/test_intel_pt.sh
-@@ -1,6 +1,6 @@
- #!/bin/bash
--# Miscellaneous Intel PT testing (exclusive)
- # SPDX-License-Identifier: GPL-2.0
-+# Miscellaneous Intel PT testing (exclusive)
- 
- set -e
- 
-@@ -22,7 +22,7 @@ perfdatafile="${temp_dir}/test-perf.data"
- outfile="${temp_dir}/test-out.txt"
- errfile="${temp_dir}/test-err.txt"
- awkscript="${temp_dir}/awkscript"
--maxbrstack="${temp_dir}/maxbrstack.py"
++    ap = argparse.ArgumentParser(
++        description="Export perf data to a sqlite3 database")
++    ap.add_argument("-i", "--input", default="perf.data",
++                    help="Input file name")
++    ap.add_argument("-o", "--output", default="perf.db",
++                    help="Output database name")
++    ap.add_argument("--itrace", help="Instruction Tracing options (e.g. crpt)")
++    args = ap.parse_args()
 +
- 
- cleanup()
- {
-@@ -376,34 +376,27 @@ test_kernel_trace()
- test_virtual_lbr()
- {
- 	echo "--- Test virtual LBR ---"
--	# Check if python script is supported
--	libpython=$(perf version --build-options | grep python | grep -cv OFF)
--	if [ "${libpython}" != "1" ] ; then
--		echo "SKIP: python scripting is not supported"
-+	# Check if python is available
-+	if ! command -v python3 >/dev/null 2>&1 && ! command -v python >/dev/null 2>&1; then
-+		echo "SKIP: python not found"
- 		return 2
- 	fi
- 
--	# Python script to determine the maximum size of branch stacks
--	cat << "_end_of_file_" > "${maxbrstack}"
--from __future__ import print_function
--
--bmax = 0
-+	# shellcheck source=lib/setup_python.sh
-+	. "$(dirname "$0")"/lib/setup_python.sh
- 
--def process_event(param_dict):
--	if "brstack" in param_dict:
--		brstack = param_dict["brstack"]
--		n = len(brstack)
--		global bmax
--		if n > bmax:
--			bmax = n
--
--def trace_end():
--	print("max brstack", bmax)
--_end_of_file_
-+	if ! $PYTHON -c 'import perf' > /dev/null 2>&1; then
-+		echo "SKIP: Python perf module not found"
-+		return 2
++    try:
++        fd = os.open(args.output, os.O_CREAT | os.O_EXCL | os.O_WRONLY, 0o600)
++    except FileExistsError:
++        print(f"Error: {args.output} already exists")
++        sys.exit(1)
++
++    tmp_dir = None
++    exporter = None
++    succeeded = False
++    try:
++        tmp_dir = tempfile.mkdtemp(prefix="perf-export-sqlite-")
++        tmp_db = os.path.join(tmp_dir, "perf.db")
++        exporter = DatabaseExporter(tmp_db)
++        session = perf.session(perf.data(args.input),
++                               sample=exporter.process_event,
++                               context_switch=exporter.process_context_switch,
++                               call_return=exporter.process_call_return,
++                               itrace=args.itrace)
++        exporter.session = session
++        try:
++            session.process_events()
++        finally:
++            exporter.session = None
++        exporter.finish()
++        exporter.commit()
++        exporter.close()
++        exporter = None
++        with open(tmp_db, "rb") as src, os.fdopen(fd, "wb", closefd=False) as dst:
++            shutil.copyfileobj(src, dst)
++        succeeded = True
++        print(f"Successfully exported to {args.output}")
++    except (OSError, RuntimeError, ValueError, sqlite3.Error):
++        import traceback
++        traceback.print_exc()
++    finally:
++        if exporter is not None:
++            exporter.session = None
++            exporter.close()
++        os.close(fd)
++        if tmp_dir is not None:
++            shutil.rmtree(tmp_dir, ignore_errors=True)
++        if not succeeded:
++            try:
++                os.remove(args.output)
++            except OSError:
++                pass
++    if not succeeded:
++        sys.exit(1)
+diff --git a/tools/perf/tests/shell/test_export_to_sqlite_python.sh b/tools/perf/tests/shell/test_export_to_sqlite_python.sh
+new file mode 100755
+index 000000000000..342e1734af8f
+--- /dev/null
++++ b/tools/perf/tests/shell/test_export_to_sqlite_python.sh
+@@ -0,0 +1,108 @@
++#!/bin/bash
++# SPDX-License-Identifier: GPL-2.0
++# export-to-sqlite python test (exclusive)
++
++set -e
++
++shelldir=$(dirname "$0")
++# shellcheck source=lib/setup_python.sh
++. "${shelldir}"/lib/setup_python.sh
++
++if ! "$PYTHON" -c 'import perf' > /dev/null 2>&1; then
++	echo "Skipping test, perf python module not found"
++	exit 2
++fi
++
++# If we don't have sqlite3, we can't test
++if ! "$PYTHON" -c 'import sqlite3' > /dev/null 2>&1; then
++	echo "Skipping test, sqlite3 module not found"
++	exit 2
++fi
++
++script_dir="$(dirname "$0")/../../python"
++script_path="${script_dir}/export-to-sqlite.py"
++
++if [ ! -f "$script_path" ]; then
++	echo "Skipping test, export-to-sqlite.py not found at $script_path"
++	exit 2
++fi
++
++err=0
++temp_dir=""
++temp_data=""
++temp_db=""
++
++cleanup() {
++	[ -n "${temp_dir}" ] && rm -rf "${temp_dir}"
++}
++
++trap 'cleanup' EXIT
++trap 'cleanup; exit 1' TERM INT
++
++temp_dir=$(mktemp -d /tmp/perf.sqlite.XXXXXX)
++temp_data="${temp_dir}/perf.data"
++temp_db="${temp_dir}/perf.export.db"
++
++test_file_mode() {
++	echo "Testing export-to-sqlite.py..."
++
++	# Generate events with callchains and context switches if supported
++	if ! perf record -g --switch-events -o "${temp_data}" \
++	     -- perf test -w noploop >/dev/null 2>&1 && \
++	   ! perf record -g -o "${temp_data}" -- perf test -w noploop >/dev/null 2>&1; then
++		echo "Skipping test, perf record failed"
++		exit 2
 +	fi
- 
- 	# Check if virtual lbr is working
--	perf_record_no_bpf -o "${perfdatafile}" --aux-sample -e '{intel_pt//,cycles}:u' uname
--	times_val=$(perf script -i "${perfdatafile}" --itrace=L -s "${maxbrstack}" 2>/dev/null | grep "max brstack " | cut -d " " -f 3)
-+	perf_record_no_bpf -o "${tmpfile}" --aux-sample \
-+		-e '{intel_pt//,cycles}:u' perf test -w brstack
-+	perf inject --itrace=L -i "${tmpfile}" -o "${perfdatafile}"
-+	output=$($PYTHON "$(dirname "$0")"/lib/perf_brstack_max.py -i "${perfdatafile}")
-+	echo "Debug: perf_brstack_max.py output: $output"
-+	times_val=$(echo "$output" | grep "max brstack " | cut -d " " -f 3)
- 	case "${times_val}" in
- 		[0-9]*)	;;
- 		*)	times_val=0;;
++
++	# Run the script
++	if ! "$PYTHON" "$script_path" -i "${temp_data}" -o "${temp_db}" >/dev/null; then
++		echo "File mode test failed."
++		err=1
++	else
++		# Check DB tables (samples, call_paths, threads, comms)
++		query="import sqlite3; c = sqlite3.connect('${temp_db}'); "
++		query="${query}s = c.execute('SELECT COUNT(*) FROM samples').fetchone()[0]; "
++		query="${query}cp = c.execute('SELECT COUNT(*) FROM call_paths').fetchone()[0]; "
++		query="${query}exit(0 if s > 0 and cp > 0 else 1)"
++		if ! "$PYTHON" -c "$query" >/dev/null 2>&1; then
++			echo "SQLite validation failed."
++			err=1
++		else
++			echo "File mode test passed."
++		fi
++	fi
++}
++
++test_intel_pt() {
++	echo "Testing export-to-sqlite.py with intel_pt..."
++
++	rm -f "${temp_db}" "${temp_data}"
++	# Generate some intel_pt events; use a subshell that waits for uname
++	if ! perf record -B -N --no-bpf-event -e intel_pt//u -o "${temp_data}" \
++		-- sh -c "uname; true" >/dev/null 2>&1; then
++		echo "Skipping intel_pt test, intel_pt not available."
++		return 0
++	fi
++
++	# Run the script with --itrace cr to synthesize call_returns
++	if ! "$PYTHON" "$script_path" -i "${temp_data}" -o "${temp_db}" --itrace cr; then
++		echo "intel_pt file mode test failed."
++		err=1
++	else
++		# Check DB for calls
++		query="import sqlite3; c = sqlite3.connect('${temp_db}'); "
++		query="${query}r = c.execute('SELECT COUNT(*) FROM calls').fetchone()[0]; "
++		query="${query}exit(1 if r == 0 else 0)"
++		if ! "$PYTHON" -c "$query" >/dev/null 2>&1; then
++			echo "SQLite intel_pt validation failed (no calls found)."
++			err=1
++		else
++			echo "intel_pt test passed (cr validated)."
++		fi
++	fi
++}
++
++test_file_mode
++test_intel_pt
++
++exit $err
 -- 
 2.55.0.1082.g2b9226bbc0-goog
 
