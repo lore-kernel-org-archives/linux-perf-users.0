@@ -1,77 +1,79 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.3])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E9054E9C36
-	for <linux-perf-users@vger.kernel.org>; Mon, 21 Sep 2026 16:58:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 759EE4C9E06;
+	Mon, 21 Sep 2026 17:42:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.3
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790009892; cv=none; b=hE8gMGdK2QFp42s220pqAyGjPJJIx2+pI27LXXZP2Cx5s/S5X0dfV9q8mobw4dpfAuYrP7D94LdJBYChAPZVhf/FCXUAeyckCUk6pv8H2zK/QhA66oaIb5blkDECGVqkFCcsriM4WjTIxll9N8i/DdsqoktYV97UCH0wFCkJ9t4=
+	t=1790012583; cv=none; b=fuYIAZE0a+PpLxS0hHUpLOeFLXUyybgZ0ea2pAAywOz9xpqIv3DoaLabw58KeRJ9lPA3vvG5pWJZledG5UTk1mq5eLn/1iDDF69OztPvtpUPoEzpPm2L9XOezRLFJhY0Q9pBkmVUiPclcBAPju3EcOWuxvL2UlDvmBsoqrtxdHw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790009892; c=relaxed/simple;
-	bh=fs8mRn113K3UbgaQ0BJ28abV+/P4kSYWXHQLl6CaB9s=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=Vnzg2WJMNBRxJ9Be/roUx9aHXyX/HDwFoEFU77UzluLwkq9Eekq6/sLxCMfdFYtmKPwqa8WaYO9VJHzZwrp7bgBBvIkvWz6cUs8lGdTz0TkhuP2u2TDHDe3yLtauElIRMkgw1e8ScHBp8YxlEPCk6F6IJH0W9RKBhh31nduf5AY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=onerwL1n; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1790012583; c=relaxed/simple;
+	bh=fLjjd0pHkuQCnW3OLCGZryvEL0neR89MXXbRO9+7hvE=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References; b=uOEs5xTAuSbZhCl0Wb2eDRvX2u1a0T66qu66E83nRKduiMbVLqctp4LSVIg+TWtC23xVuBgSEkFoaSRFInRla34EQzojm4a02BpfgFug7mBo70ZDJNc9DyPOscO74veVPKvGMTQ7vY6HuAgmbeEP/LbpHnDEkK5jqZH3Af7AcSM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=IIx3VxVu; arc=none smtp.client-ip=220.197.31.3
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="onerwL1n"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DB3001F000FF;
-	Mon, 21 Sep 2026 16:58:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1790009891;
-	bh=2rSd4384UOyZxR8QZFBk+05FBsYT5gaBgSFUXFVP6kM=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=onerwL1n44RQG7YiHjCgCjTFb9tkspnfZwvjinL6Ganuwg+7FT/lLrGfZsVdhfizD
-	 rgXggctqU2IMgKXR9lMoyom+hZd+qys4VqrUk1Mma/DjlhdtHOlHLmb0xjCwbEZRTd
-	 vS7ojYWG+oOoW1buFAMC/LmwQ7Flc8fH/oS9tTq72Z266F5pbjuuEwUwDTiflYPxIW
-	 rSmJ9EmQvzGXIYEDW8s7j7q2hDXZh+htO0i1ZIE0+h5diNwyC1wKfrnGlFM4cU8Igj
-	 Yq9BXkA6V80uvCcROMwobb0n1lw/xPDq7c3cOk3k8RUz/38a6jXzc/3dssWRYU6f0g
-	 7X9cxJjHinobw==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 7/7] perf mem record: Use the IBS swfilt filter when
- available
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Arnaldo Carvalho de Melo" <acme@kernel.org>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260921164813.6727-8-acme@kernel.org>
-References: <20260921164813.6727-1-acme@kernel.org>
- <20260921164813.6727-8-acme@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Mon, 21 Sep 2026 16:58:10 +0000
-Message-Id: <20260921165810.DB3001F000FF@smtp.kernel.org>
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="IIx3VxVu"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=Date:Message-ID:From:To:Subject; bh=fLjjd0pHkuQCnW3
+	OLCGZryvEL0neR89MXXbRO9+7hvE=; b=IIx3VxVu4mLLTAFEUOUjMPZGh2V5N1H
+	t/xGZ5j7zJR8k2DkWAzZ0Vn1Gm5mov390x3BXF6mCOIsaBA1jwrH1THRUuDJIAsY
+	EAU9yQdf515EAOLCbP7o7OgTPtI8orcCQfw6sNZCKGaD8wBdsp052cpEqmkfh18g
+	XF3gbf2flY8o=
+Received: from localhost (unknown [])
+	by gzga-smtp-mtada-g0-2 (Coremail) with SMTP id _____wD3LyF2bLFq3G9fCA--.13578S2;
+	Tue, 22 Sep 2026 01:42:15 +0800 (CST)
+Date: Tue, 22 Sep 2026 02:42:14 +0900
+Message-ID: <45a1bcb861cbe6fbdf3c04831dca53ad.sh_def@163.com>
+From: Hui Su <sh_def@163.com>
+To: Ian Rogers <irogers@google.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	James Clark <james.clark@linaro.org>,
+	Jiri Olsa <jolsa@kernel.org>,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] perf thread_map: Deduplicate numerically equivalent
+	PID and TID strings
+In-Reply-To: <CAP-5=fUxHz=mp=GOkZsAoXYuayYS60TKBgafTBpRjkMJU5goBg@mail.gmail.com>
+References: <20260912031112.1814574-2-sh_def@163.com>
+	<20260912051747.2215776-1-sh_def@163.com>
+	<CAP-5=fUxHz=mp=GOkZsAoXYuayYS60TKBgafTBpRjkMJU5goBg@mail.gmail.com>
+X-CM-TRANSID:_____wD3LyF2bLFq3G9fCA--.13578S2
+X-Coremail-Antispam: 1Uf129KBjvdXoW7Wr48uw1kKr43Wr4rZr4fKrg_yoWfKFb_Wr
+	yDKwn8Ka1Ivrs3JrnIkr4Fqr4kCr43Wr1vva92qwsxKFn8Ww43WF9Ykr1xGF1xZw4Yyr90
+	qrs5AryIgw12kjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUvcSsGvfC2KfnxnUUI43ZEXa7xRifOzDUUUUU==
+X-CM-SenderInfo: xvkbvvri6rljoofrz/xtbC6hc-nmqxbHc4XAAA34
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-> From: Arnaldo Carvalho de Melo <acme@redhat.com>
->=20
-> IBS events with exclude_{user,kernel} bits, as used for per-thread
-> recording when kernel samples are not allowed, are rejected by the
-> kernel on hardware without the privilege filter, so per-thread 'perf mem
-> record' fails on AMD:
->=20
->   $ perf mem record -o /dev/null -- true
->   Error:
->   Failure to open event 'ibs_op/ldlat=3D0/u' on PMU 'ibs_op' which will b=
-e removed.
->   Invalid event (ibs_op/ldlat=3D0/u) in per-thread mode, enable system wi=
-de with '-a'.
->=20
-> Kernel v6.14 added swfilt, a software privilege filter exposed as the
-> 'swfilt' format term, making those events usable per-thread:
->=20
-> [ ... ]
->=20
-> Suggested-by: Namhyung Kim <namhyung@kernel.org>
-> Suggested-by: Ravi Bangoria <ravi.bangoria@amd.com>
-> Assisted-by: LLM
-> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+> Why not parse the pid_str into the intlist and then remove duplicates?
 
-Sashiko has reviewed this patch and found no issues. It looks great!
+Good point. I initially kept the strlist and used a separate intlist as a
+seen-set to minimize the change.
 
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260921164813.6727=
--1-acme@kernel.org?part=3D7
+One wrinkle is that intlist__new(pid_str) currently treats duplicate numeric
+values as an error: intlist__parse_list() propagates -EEXIST from
+intlist__add(). Thus, "123,0123" currently makes intlist__new() fail instead
+of deduplicating the values.
+
+I think the cleaner solution is to make intlist parsing fold duplicate values,
+for example by using intlist__findnew(), and then iterate the intlist directly
+in the PID/TID paths. That removes both the extra strlist and the separate
+seen-set.
+
+I'll check whether any existing intlist__new() users rely on duplicates being
+rejected, and whether any thread_map callers rely on the current lexicographic
+ordering from strlist, since intlist iteration is numeric.
+
+I'll rework it that way for v3.
+
+Thanks,
+Hui
 
