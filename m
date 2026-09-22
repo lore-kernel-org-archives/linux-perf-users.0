@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E27A3B19BA;
-	Tue, 22 Sep 2026 04:25:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F6253B840F;
+	Tue, 22 Sep 2026 04:25:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790051115; cv=none; b=TT6bR866dEPx2SoxhvLYuQY10d30TTplSQe/KyX6l+HUNjtnGbwB8em/34/ipocMDMLq3si+j4Lz7A2L9Ei20K7DAgPAUEJFii5nyINVuFxzwnHKeaxlkAI81FUolMHCooZtqz/qOfbw46L7LHSrRHJp6JdXd9sxaNx2X1GEHE8=
+	t=1790051127; cv=none; b=LGZDaa/timMO7TeAz8MHoJjyCY7bJVRHxgP62ZigISZ7/UIanHb588JSKsA8gA/RkxMpjqmaAWl1gb+uWJKSRRNwBYu5JdVw+rc0YuVDN2W94pas5mJw0Szdq8iWEqGioarRnunvd/GPSvpFYXpwWVDlfkFeOnUKVPsdrpTBrHI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790051115; c=relaxed/simple;
-	bh=ea9qxXx9kg89UWY0dCkt4q7OHjwdGM8gcXLohsiMyBI=;
+	s=arc-20240116; t=1790051127; c=relaxed/simple;
+	bh=9JzVLEdLEEgWBEjCDGr5PSYNOat8277b7qjrVAt6sOs=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=MDos36bG5QlQ/i+8xoPyGCp28Ccujzu0yCqs1c28MyelxmoO65oEbe6KjpeP1Y7oEVmOR60D8x5188c0iJnujv8+0oHoXz1oQT2V9RWTx6AZGa6nCjw6XeXovXHLU/0szkP3pVKrbygYqCRhaeyLs5RAsRsjMfCdHAAtl4I2sag=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TkV2NN5i; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version:Content-Type; b=bArRPxeH7CdIJrvm/34kg3S5N4vQtXlq+MIy/Z+L4FGAE0CJD45kl0TJeJQzvp45clX5QIQMLVWCBYQ+uc4BqYdmg2Rpeu2XsX7k47EapUZzpLfQRein5CAF9lB/qwr6IK8Oej6pPG4G1WOPJ48BxnsFKwtXHN+IxIkp59O/Nqo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XAnWuUKb; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TkV2NN5i"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BE4251F000FF;
-	Tue, 22 Sep 2026 04:25:09 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XAnWuUKb"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C94281F000FF;
+	Tue, 22 Sep 2026 04:25:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1790051114;
-	bh=dsQx+QviCP8DSIGNuzmfZuXg5PLuR8qG1Ne4KObCFng=;
+	s=k20260515; t=1790051125;
+	bh=46fcdwTGcPcabI+Q1n5enE0f4J6WoNtorEV47gXLU54=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=TkV2NN5ivtgtiw5IZBPl4swOC1Jc4gMRkcQZEuBmjd5PK+DdEnRdfudQi8DPMzj52
-	 YfE2eScGGtJMD/z580IaumAmyBR0ElA1BxkALJ8k95F1GW+Vw5V0mZblJWdPQzcddA
-	 3iUVkGy7klIoLWslBgUC228Vuhny6P/Tj0E+7ULgOb2/yHJQYOWpg8j33cArW12qIb
-	 FYnrHml9SwXjWGo7+eS8hnsy3WUd3fvi/Ua/KRaIsOZh0u3RKjehqkY7HKCIdw1IfN
-	 uudUKELd46HHwn4VTthZiJ3tNVvDo6SEOcu/ifEQDwcxBnSA0yXwhwT7RWfjN6oS+1
-	 8K4IRudzRPTUA==
+	b=XAnWuUKbU+iEtDu5kFLbii6kyT+iQcdII9KuIMfMwDh2ZwakHm3I+MUtaklmJWLPE
+	 Dd92zN8vt10KWvJ2aRulGp+j0Igpr6E//cMp+WuTglhzV48lEuKlXlsS5LZ/Vq77Yt
+	 pXtBTGRq2kGd8gotwlgIO8jcV3OdTS1srmASBt5Ib6hve57O1kvu1FvZYoykFoq9wh
+	 3XhpC87AKmUx3BQKEJY/VCFbvcqnKaPLt2zUMpxbtwvA9m529kV714gG7Gnrw9hVnA
+	 +132vGF+sxumYNZ0XiJdkqsZH1RVo52AyzbISvDdJIMD6+zeyP+6Rri/0wIm+loJDB
+	 4qVDYyIpLnVQA==
 From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
 To: Steven Rostedt <rostedt@goodmis.org>,
 	Peter Zijlstra <peterz@infradead.org>,
@@ -47,9 +47,9 @@ Cc: Jinchao Wang <wangjinchao600@gmail.com>,
 	x86@kernel.org,
 	Paolo Bonzini <pbonzini@redhat.com>,
 	kvm@vger.kernel.org
-Subject: [PATCH v17 02/13] perf/x86, KVM: Prevent host debug register leak into guest OS on NMI
-Date: Tue, 22 Sep 2026 13:25:07 +0900
-Message-ID: <179005110742.388919.1509641807739909065.stgit@devnote2>
+Subject: [PATCH v17 03/13] x86/hw_breakpoints: Make DR7 updates NMI safe
+Date: Tue, 22 Sep 2026 13:25:19 +0900
+Message-ID: <179005111951.388919.3131603399440492416.stgit@devnote2>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <179005108298.388919.4535333252892590932.stgit@devnote2>
 References: <179005108298.388919.4535333252892590932.stgit@devnote2>
@@ -63,157 +63,437 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+From: Jinchao Wang <wangjinchao600@gmail.com>
 
-When KVM enters a guest OS, host hardware breakpoints are disabled
-before running the guest. However, an NMI can occur while executing
-in guest mode or during guest transition, where
-arch_install_hw_breakpoint() can be invoked from NMI context.
+Hardware breakpoint installation and removal run with IRQs disabled, but
+an NMI can still enter the same code through KGDB. The interrupted
+operation and the NMI can consequently claim the same slot or overwrite
+each other's DR7 state.
 
-If arch_install_hw_breakpoint() is executed while the CPU is in guest
-mode or during the VM entry transition window, hardware debug registers
-can be modified with host breakpoint settings, leaking host breakpoints
-into the guest OS or clobbering the guest's debug registers.
+Claim and release per-CPU slots with cmpxchg. Update cpu_dr7 with
+single-instruction per-CPU operations, and preserve hardware-first
+disable and hardware-last enable ordering. Add a per-CPU sequence number
+so interrupted DR7 writers and restore paths detect an NMI update and
+retry from the latest shadow state.
 
-To prevent this without introducing ad-hoc per-CPU flags, introduce an
-.in_guest callback to struct perf_guest_info_callbacks and an inline
-helper perf_guest_in_guest(). In KVM, implement .in_guest by checking
-whether the current vCPU is in IN_GUEST_MODE or EXITING_GUEST_MODE.
-In arch_install_hw_breakpoint(), check perf_guest_in_guest() and return
--EBUSY if the CPU is running or transitioning to/from a guest.
+Link: https://lore.kernel.org/all/4ee0a2efc9e8387af83286b8495b7d490247e165.1785067572.git.wangjinchao600@gmail.com/
 
-Fixes: f85d40160691 ("KVM: X86: Disable hardware breakpoints unconditionally before kvm_x86->run()")
 Assisted-by: Antigravity:gemini-3.8-flash
+Signed-off-by: Jinchao Wang <wangjinchao600@gmail.com>
 Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 ---
 Changes in v17:
- - Drop changes to local_db_save() and local_db_restore().
- - Drop cpu_dr_in_guest per-CPU flag.
- - Introduce .in_guest callback in perf_guest_info_callbacks and
-   perf_guest_in_guest() helper to query vcpu->mode.
-   (avoid breaking perf_guest_state() users)
- - In arch_install_hw_breakpoint(), check perf_guest_in_guest()
+ - Drop cpu_dr_in_guest checks in local_db_save(), local_db_restore(),
+   and within_cpu_entry().
 Changes in v16:
- - Newly added.
+ - In local_db_save(), remove the hypervisor check so all paths go
+   through the sequence retry loop, preventing an intervening NMI from
+   bypassing the sequence check on return.
+ - In local_db_save(), check cpu_dr7_seq before clearing hardware DR7
+   and load from shadow cpu_dr7 on sequence retry to prevent
+   destructively clobbering hardware DR7 state installed by an NMI.
+ - In local_db_restore(), restore from shadow cpu_dr7 whenever
+   cpu_dr7_seq changed instead of evaluating dr7 ? cpu_dr7 : 0,
+   ensuring breakpoints installed by an NMI are preserved when dr7
+   was initially 0.
+Changes in v15:
+ - Always preserve DR7_FIXED_1 in arch_install_hw_breakpoint(),
+   arch_uninstall_hw_breakpoint(), and hw_breakpoint_restore() to comply
+   with the x86 architectural specification.
+ - Wrap local_db_save() in a cpu_dr7_seq loop to detect NMI breakpoint
+   updates and ensure DR7 is disabled before entry.
+ - In local_db_restore(), if dr7 is 0 and an NMI modified breakpoints,
+   restore DR7_FIXED_1 to undo the NMI's overwrite and preserve KVM
+   guest isolation.
+ - Always write "val | DR7_FIXED_1" to hardware DR7 in local_db_restore()
+   to ensure architectural compliance.
+ - Avoid modifying the saved dr7 argument in-place across retry loops.
+Changes in v14:
+ - In local_db_restore(), return immediately if saved dr7 is 0 to avoid
+   overwriting intentionally cleared hardware DR7 state (e.g. KVM guest
+   entry) with cpu_dr7 when an NMI increments cpu_dr7_seq.
+Changes in v13:
+ - Add compiler barriers (barrier()) before checking cpu_dr7_seq to
+   prevent the compiler from hoisting the sequence check before debug
+   register updates or shadow state modifications.
+Changes in v12:
+ - Use stack variables dr7 and dr7_seq directly in exc_nmi() and remove
+   unnecessary per-CPU nmi_dr7 and nmi_dr7_seq variables.
 ---
- arch/x86/kernel/hw_breakpoint.c |    3 +++
- include/linux/perf_event.h      |    9 ++++++++-
- kernel/events/core.c            |    5 +++++
- virt/kvm/kvm_main.c             |   12 ++++++++++++
- 4 files changed, 28 insertions(+), 1 deletion(-)
+ arch/x86/include/asm/debugreg.h |   68 +++++++++++++++++++--------
+ arch/x86/kernel/cpu/mce/core.c  |   10 ++--
+ arch/x86/kernel/hw_breakpoint.c |  100 ++++++++++++++++++++-------------------
+ arch/x86/kernel/nmi.c           |    7 ++-
+ arch/x86/kernel/traps.c         |   10 +++-
+ 5 files changed, 116 insertions(+), 79 deletions(-)
 
+diff --git a/arch/x86/include/asm/debugreg.h b/arch/x86/include/asm/debugreg.h
+index 854d82b88ff4..515d2d313d0c 100644
+--- a/arch/x86/include/asm/debugreg.h
++++ b/arch/x86/include/asm/debugreg.h
+@@ -18,6 +18,7 @@
+ #define DR7_FIXED_1	0x00000400
+ 
+ DECLARE_PER_CPU(unsigned long, cpu_dr7);
++DECLARE_PER_CPU(unsigned int, cpu_dr7_seq);
+ 
+ #ifndef CONFIG_PARAVIRT_XXL
+ /*
+@@ -125,40 +126,69 @@ static __always_inline bool hw_breakpoint_active(void)
+ 
+ extern void hw_breakpoint_restore(void);
+ 
+-static __always_inline unsigned long local_db_save(void)
++static __always_inline void local_db_save(unsigned long *dr7,
++					  unsigned int *dr7_seq)
+ {
+-	unsigned long dr7;
++	bool retrying = false;
+ 
+-	if (cpu_feature_enabled(X86_FEATURE_HYPERVISOR) && !hw_breakpoint_active())
+-		return 0;
++	do {
++		/* Inner loop: get DR7 with checking cpu_dr7_seq. */
++		*dr7_seq = this_cpu_read(cpu_dr7_seq);
+ 
+-	get_debugreg(dr7, 7);
++		if (unlikely(retrying)) {
++			*dr7 = this_cpu_read(cpu_dr7);
++		} else {
++			get_debugreg(*dr7, 7);
+ 
+-	/* Architecturally set bit */
+-	dr7 &= ~DR7_FIXED_1;
+-	if (dr7)
+-		set_debugreg(DR7_FIXED_1, 7);
++			/* Architecturally set bit */
++			*dr7 &= ~DR7_FIXED_1;
++		}
+ 
+-	/*
+-	 * Ensure the compiler doesn't lower the above statements into
+-	 * the critical section; disabling breakpoints late would not
+-	 * be good.
+-	 */
+-	barrier();
++		barrier();
++		if (unlikely(*dr7_seq != this_cpu_read(cpu_dr7_seq))) {
++			retrying = true;
++			continue;
++		}
++
++		/* Outer loop: clear DR7 and retry if sequence number is updated. */
++		if (*dr7)
++			set_debugreg(DR7_FIXED_1, 7);
+ 
+-	return dr7;
++		/*
++		 * Ensure the compiler doesn't lower the above statements into
++		 * the critical section; disabling breakpoints late would not
++		 * be good.
++		 */
++		barrier();
++		retrying = true;
++	} while (unlikely(*dr7_seq != this_cpu_read(cpu_dr7_seq)));
+ }
+ 
+-static __always_inline void local_db_restore(unsigned long dr7)
++static __always_inline void local_db_restore(unsigned long dr7,
++					     unsigned int dr7_seq)
+ {
++	unsigned long val;
++	unsigned int seq;
++
+ 	/*
+ 	 * Ensure the compiler doesn't raise this statement into
+ 	 * the critical section; enabling breakpoints early would
+ 	 * not be good.
+ 	 */
+ 	barrier();
+-	if (dr7)
+-		set_debugreg(dr7, 7);
++	do {
++		seq = this_cpu_read(cpu_dr7_seq);
++		if (seq == dr7_seq) {
++			if (!dr7)
++				return;
++			val = dr7;
++		} else {
++			val = this_cpu_read(cpu_dr7);
++		}
++
++		set_debugreg(val | DR7_FIXED_1, 7);
++		barrier();
++	} while (unlikely(seq != this_cpu_read(cpu_dr7_seq)));
+ }
+ 
+ #ifdef CONFIG_CPU_SUP_AMD
+diff --git a/arch/x86/kernel/cpu/mce/core.c b/arch/x86/kernel/cpu/mce/core.c
+index 39f238952e14..b3669d6f88d4 100644
+--- a/arch/x86/kernel/cpu/mce/core.c
++++ b/arch/x86/kernel/cpu/mce/core.c
+@@ -2109,8 +2109,9 @@ static __always_inline void exc_machine_check_kernel(struct pt_regs *regs)
+ {
+ 	irqentry_state_t irq_state;
+ 	unsigned long dr7;
++	unsigned int dr7_seq;
+ 
+-	dr7 = local_db_save();
++	local_db_save(&dr7, &dr7_seq);
+ 
+ 	WARN_ON_ONCE(user_mode(regs));
+ 
+@@ -2127,18 +2128,19 @@ static __always_inline void exc_machine_check_kernel(struct pt_regs *regs)
+ 
+ 	irqentry_nmi_exit(regs, irq_state);
+ out:
+-	local_db_restore(dr7);
++	local_db_restore(dr7, dr7_seq);
+ }
+ 
+ static __always_inline void exc_machine_check_user(struct pt_regs *regs)
+ {
+ 	unsigned long dr7;
++	unsigned int dr7_seq;
+ 
+ 	irqentry_enter_from_user_mode(regs);
+ 
+-	dr7 = local_db_save();
++	local_db_save(&dr7, &dr7_seq);
+ 	do_machine_check(regs);
+-	local_db_restore(dr7);
++	local_db_restore(dr7, dr7_seq);
+ 
+ 	irqentry_exit_to_user_mode(regs);
+ }
 diff --git a/arch/x86/kernel/hw_breakpoint.c b/arch/x86/kernel/hw_breakpoint.c
-index f846c15f21ca..0473a5c95856 100644
+index 0473a5c95856..901323ae7d6a 100644
 --- a/arch/x86/kernel/hw_breakpoint.c
 +++ b/arch/x86/kernel/hw_breakpoint.c
-@@ -102,6 +102,9 @@ int arch_install_hw_breakpoint(struct perf_event *bp)
+@@ -40,6 +40,8 @@
+ DEFINE_PER_CPU(unsigned long, cpu_dr7);
+ EXPORT_PER_CPU_SYMBOL(cpu_dr7);
+ 
++/* Sequence number of the per-CPU DR7 state. */
++DEFINE_PER_CPU(unsigned int, cpu_dr7_seq);
+ /* Per cpu debug address registers values */
+ static DEFINE_PER_CPU(unsigned long, cpu_debugreg[HBP_NUM]);
+ 
+@@ -97,7 +99,7 @@ int decode_dr7(unsigned long dr7, int bpnum, unsigned *len, unsigned *type)
+ int arch_install_hw_breakpoint(struct perf_event *bp)
+ {
+ 	struct arch_hw_breakpoint *info = counter_arch_bp(bp);
+-	unsigned long *dr7;
++	unsigned int seq;
+ 	int i;
+ 
+ 	lockdep_assert_irqs_disabled();
+@@ -106,32 +108,25 @@ int arch_install_hw_breakpoint(struct perf_event *bp)
+ 		return -EBUSY;
+ 
+ 	for (i = 0; i < HBP_NUM; i++) {
+-		struct perf_event **slot = this_cpu_ptr(&bp_per_reg[i]);
+-
+-		if (!*slot) {
+-			*slot = bp;
++		if (!this_cpu_cmpxchg(bp_per_reg[i], NULL, bp))
+ 			break;
+-		}
+ 	}
+ 
+ 	if (WARN_ONCE(i == HBP_NUM, "Can't find any breakpoint slot"))
+ 		return -EBUSY;
+ 
+-	set_debugreg(info->address, i);
+-	__this_cpu_write(cpu_debugreg[i], info->address);
+-
+-	dr7 = this_cpu_ptr(&cpu_dr7);
+-	*dr7 |= encode_dr7(i, info->len, info->type);
+-
+-	/*
+-	 * Ensure we first write cpu_dr7 before we set the DR7 register.
+-	 * This ensures an NMI never see cpu_dr7 0 when DR7 is not.
+-	 */
+-	barrier();
+-
+-	set_debugreg(*dr7, 7);
+-	if (info->mask)
+-		amd_set_dr_addr_mask(info->mask, i);
++	do {
++		seq = this_cpu_inc_return(cpu_dr7_seq);
++		this_cpu_write(cpu_debugreg[i], info->address);
++		barrier();
++		set_debugreg(info->address, i);
++		if (info->mask)
++			amd_set_dr_addr_mask(info->mask, i);
++		this_cpu_or(cpu_dr7, encode_dr7(i, info->len, info->type));
++		barrier();
++		set_debugreg(this_cpu_read(cpu_dr7) | DR7_FIXED_1, 7);
++		barrier();
++	} while (seq != this_cpu_read(cpu_dr7_seq));
+ 
+ 	return 0;
+ }
+@@ -149,36 +144,34 @@ void arch_uninstall_hw_breakpoint(struct perf_event *bp)
+ {
+ 	struct arch_hw_breakpoint *info = counter_arch_bp(bp);
+ 	unsigned long dr7;
++	unsigned int seq;
+ 	int i;
  
  	lockdep_assert_irqs_disabled();
  
-+	if (perf_guest_in_guest())
-+		return -EBUSY;
-+
  	for (i = 0; i < HBP_NUM; i++) {
- 		struct perf_event **slot = this_cpu_ptr(&bp_per_reg[i]);
- 
-diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
-index 5842552294c1..194e69270460 100644
---- a/include/linux/perf_event.h
-+++ b/include/linux/perf_event.h
-@@ -1677,8 +1677,8 @@ struct perf_guest_info_callbacks {
- 	unsigned int			(*state)(void);
- 	unsigned long			(*get_ip)(void);
- 	unsigned int			(*handle_intel_pt_intr)(void);
+-		struct perf_event **slot = this_cpu_ptr(&bp_per_reg[i]);
 -
- 	void				(*handle_mediated_pmi)(void);
-+	bool				(*in_guest)(void);
- };
+-		if (*slot == bp) {
+-			*slot = NULL;
++		if (this_cpu_read(bp_per_reg[i]) == bp)
+ 			break;
+-		}
+ 	}
  
- #ifdef CONFIG_GUEST_PERF_EVENTS
-@@ -1689,6 +1689,7 @@ DECLARE_STATIC_CALL(__perf_guest_state, *perf_guest_cbs->state);
- DECLARE_STATIC_CALL(__perf_guest_get_ip, *perf_guest_cbs->get_ip);
- DECLARE_STATIC_CALL(__perf_guest_handle_intel_pt_intr, *perf_guest_cbs->handle_intel_pt_intr);
- DECLARE_STATIC_CALL(__perf_guest_handle_mediated_pmi, *perf_guest_cbs->handle_mediated_pmi);
-+DECLARE_STATIC_CALL(__perf_guest_in_guest, *perf_guest_cbs->in_guest);
+ 	if (WARN_ONCE(i == HBP_NUM, "Can't find any breakpoint slot"))
+ 		return;
  
- static inline unsigned int perf_guest_state(void)
+-	dr7 = this_cpu_read(cpu_dr7);
+-	dr7 &= ~__encode_dr7(i, info->len, info->type);
+-
+-	set_debugreg(dr7, 7);
+-	if (info->mask)
+-		amd_set_dr_addr_mask(0, i);
+-
+-	/*
+-	 * Ensure the write to cpu_dr7 is after we've set the DR7 register.
+-	 * This ensures an NMI never see cpu_dr7 0 when DR7 is not.
+-	 */
+-	barrier();
+-
+-	this_cpu_write(cpu_dr7, dr7);
++	do {
++		seq = this_cpu_inc_return(cpu_dr7_seq);
++		dr7 = this_cpu_read(cpu_dr7);
++		dr7 &= ~__encode_dr7(i, info->len, info->type);
++		set_debugreg(dr7 | DR7_FIXED_1, 7);
++		if (info->mask)
++			amd_set_dr_addr_mask(0, i);
++		barrier();
++		this_cpu_and(cpu_dr7,
++			     ~__encode_dr7(i, info->len, info->type));
++		barrier();
++	} while (seq != this_cpu_read(cpu_dr7_seq));
++
++	WARN_ONCE(this_cpu_cmpxchg(bp_per_reg[i], bp, NULL) != bp,
++		  "Can't release breakpoint slot");
+ }
+ 
+ static int arch_bp_generic_len(int x86_len)
+@@ -312,13 +305,14 @@ static inline bool within_cpu_entry(unsigned long addr, unsigned long end)
+ 				sizeof(struct tlb_state)))
+ 			return true;
+ 
+-		/*
+-		 * When in guest (X86_FEATURE_HYPERVISOR), local_db_save()
+-		 * will read per-cpu cpu_dr7 before clear dr7 register.
+-		 */
++		/* local_db_save() reads this state before clearing DR7. */
+ 		if (within_area(addr, end, (unsigned long)&per_cpu(cpu_dr7, cpu),
+ 				sizeof(cpu_dr7)))
+ 			return true;
++		if (within_area(addr, end,
++				(unsigned long)&per_cpu(cpu_dr7_seq, cpu),
++				sizeof(cpu_dr7_seq)))
++			return true;
+ 	}
+ 
+ 	return false;
+@@ -486,12 +480,18 @@ void flush_ptrace_hw_breakpoint(struct task_struct *tsk)
+ 
+ void hw_breakpoint_restore(void)
  {
-@@ -1710,6 +1711,11 @@ static inline void perf_guest_handle_mediated_pmi(void)
- 	static_call(__perf_guest_handle_mediated_pmi)();
+-	set_debugreg(__this_cpu_read(cpu_debugreg[0]), 0);
+-	set_debugreg(__this_cpu_read(cpu_debugreg[1]), 1);
+-	set_debugreg(__this_cpu_read(cpu_debugreg[2]), 2);
+-	set_debugreg(__this_cpu_read(cpu_debugreg[3]), 3);
+-	set_debugreg(DR6_RESERVED, 6);
+-	set_debugreg(__this_cpu_read(cpu_dr7), 7);
++	unsigned int seq;
++
++	do {
++		seq = this_cpu_inc_return(cpu_dr7_seq);
++		set_debugreg(this_cpu_read(cpu_debugreg[0]), 0);
++		set_debugreg(this_cpu_read(cpu_debugreg[1]), 1);
++		set_debugreg(this_cpu_read(cpu_debugreg[2]), 2);
++		set_debugreg(this_cpu_read(cpu_debugreg[3]), 3);
++		set_debugreg(DR6_RESERVED, 6);
++		set_debugreg(this_cpu_read(cpu_dr7) | DR7_FIXED_1, 7);
++		barrier();
++	} while (seq != this_cpu_read(cpu_dr7_seq));
  }
+ EXPORT_SYMBOL_FOR_KVM(hw_breakpoint_restore);
  
-+static inline bool perf_guest_in_guest(void)
-+{
-+	return static_call(__perf_guest_in_guest)();
-+}
-+
- extern void perf_register_guest_info_callbacks(struct perf_guest_info_callbacks *cbs);
- extern void perf_unregister_guest_info_callbacks(struct perf_guest_info_callbacks *cbs);
- 
-@@ -1718,6 +1724,7 @@ extern void perf_unregister_guest_info_callbacks(struct perf_guest_info_callback
- static inline unsigned int perf_guest_state(void)		 { return 0; }
- static inline unsigned long perf_guest_get_ip(void)		 { return 0; }
- static inline unsigned int perf_guest_handle_intel_pt_intr(void) { return 0; }
-+static inline bool perf_guest_in_guest(void)			 { return false; }
- 
- #endif /* !CONFIG_GUEST_PERF_EVENTS */
- 
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index a6c8e38a3110..c5dead7c5f71 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -7749,6 +7749,7 @@ DEFINE_STATIC_CALL_RET0(__perf_guest_state, *perf_guest_cbs->state);
- DEFINE_STATIC_CALL_RET0(__perf_guest_get_ip, *perf_guest_cbs->get_ip);
- DEFINE_STATIC_CALL_RET0(__perf_guest_handle_intel_pt_intr, *perf_guest_cbs->handle_intel_pt_intr);
- DEFINE_STATIC_CALL_RET0(__perf_guest_handle_mediated_pmi, *perf_guest_cbs->handle_mediated_pmi);
-+DEFINE_STATIC_CALL_RET0(__perf_guest_in_guest, *perf_guest_cbs->in_guest);
- 
- void perf_register_guest_info_callbacks(struct perf_guest_info_callbacks *cbs)
- {
-@@ -7767,6 +7768,9 @@ void perf_register_guest_info_callbacks(struct perf_guest_info_callbacks *cbs)
- 	if (cbs->handle_mediated_pmi)
- 		static_call_update(__perf_guest_handle_mediated_pmi,
- 				   cbs->handle_mediated_pmi);
-+
-+	if (cbs->in_guest)
-+		static_call_update(__perf_guest_in_guest, cbs->in_guest);
- }
- EXPORT_SYMBOL_GPL(perf_register_guest_info_callbacks);
- 
-@@ -7780,6 +7784,7 @@ void perf_unregister_guest_info_callbacks(struct perf_guest_info_callbacks *cbs)
- 	static_call_update(__perf_guest_get_ip, (void *)&__static_call_return0);
- 	static_call_update(__perf_guest_handle_intel_pt_intr, (void *)&__static_call_return0);
- 	static_call_update(__perf_guest_handle_mediated_pmi, (void *)&__static_call_return0);
-+	static_call_update(__perf_guest_in_guest, (void *)&__static_call_return0);
- 	synchronize_rcu();
- }
- EXPORT_SYMBOL_GPL(perf_unregister_guest_info_callbacks);
-diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
-index 65eb26a0520d..7779d500fe77 100644
---- a/virt/kvm/kvm_main.c
-+++ b/virt/kvm/kvm_main.c
-@@ -6476,11 +6476,23 @@ static unsigned long kvm_guest_get_ip(void)
- 	return kvm_arch_vcpu_get_ip(vcpu);
- }
- 
-+static bool kvm_guest_in_guest(void)
-+{
-+	struct kvm_vcpu *vcpu = kvm_get_running_vcpu();
-+
-+	if (!vcpu)
-+		return false;
-+
-+	return READ_ONCE(vcpu->mode) == IN_GUEST_MODE ||
-+	       READ_ONCE(vcpu->mode) == EXITING_GUEST_MODE;
-+}
-+
- static struct perf_guest_info_callbacks kvm_guest_cbs = {
- 	.state			= kvm_guest_state,
- 	.get_ip			= kvm_guest_get_ip,
- 	.handle_intel_pt_intr	= NULL,
- 	.handle_mediated_pmi	= NULL,
-+	.in_guest		= kvm_guest_in_guest,
+diff --git a/arch/x86/kernel/nmi.c b/arch/x86/kernel/nmi.c
+index 3c9f60d6ca5a..c3806f7bd3e8 100644
+--- a/arch/x86/kernel/nmi.c
++++ b/arch/x86/kernel/nmi.c
+@@ -531,11 +531,12 @@ enum nmi_states {
  };
+ static DEFINE_PER_CPU(enum nmi_states, nmi_state);
+ static DEFINE_PER_CPU(unsigned long, nmi_cr2);
+-static DEFINE_PER_CPU(unsigned long, nmi_dr7);
  
- void __kvm_register_perf_callbacks(unsigned int (*pt_intr_handler)(void),
+ DEFINE_IDTENTRY_RAW(exc_nmi)
+ {
+ 	irqentry_state_t irq_state;
++	unsigned long dr7;
++	unsigned int dr7_seq;
+ 	struct nmi_stats *nsp = this_cpu_ptr(&nmi_stats);
+ 
+ 	/*
+@@ -572,7 +573,7 @@ DEFINE_IDTENTRY_RAW(exc_nmi)
+ 	 */
+ 	sev_es_ist_enter(regs);
+ 
+-	this_cpu_write(nmi_dr7, local_db_save());
++	local_db_save(&dr7, &dr7_seq);
+ 
+ 	irq_state = irqentry_nmi_enter(regs);
+ 
+@@ -594,7 +595,7 @@ DEFINE_IDTENTRY_RAW(exc_nmi)
+ 
+ 	irqentry_nmi_exit(regs, irq_state);
+ 
+-	local_db_restore(this_cpu_read(nmi_dr7));
++	local_db_restore(dr7, dr7_seq);
+ 
+ 	sev_es_ist_exit();
+ 
+diff --git a/arch/x86/kernel/traps.c b/arch/x86/kernel/traps.c
+index 30aa8369957e..018abe736285 100644
+--- a/arch/x86/kernel/traps.c
++++ b/arch/x86/kernel/traps.c
+@@ -1231,8 +1231,12 @@ static noinstr void exc_debug_kernel(struct pt_regs *regs, unsigned long dr6)
+ 	 * it results in an endless recursion and stack overflow. Thus we stay
+ 	 * with the IDT approach, i.e., save DR7 and disable #DB.
+ 	 */
+-	unsigned long dr7 = local_db_save();
+-	irqentry_state_t irq_state = irqentry_nmi_enter(regs);
++	unsigned long dr7;
++	unsigned int dr7_seq;
++	irqentry_state_t irq_state;
++
++	local_db_save(&dr7, &dr7_seq);
++	irq_state = irqentry_nmi_enter(regs);
+ 	instrumentation_begin();
+ 
+ 	/*
+@@ -1289,7 +1293,7 @@ static noinstr void exc_debug_kernel(struct pt_regs *regs, unsigned long dr6)
+ 	instrumentation_end();
+ 	irqentry_nmi_exit(regs, irq_state);
+ 
+-	local_db_restore(dr7);
++	local_db_restore(dr7, dr7_seq);
+ }
+ 
+ static noinstr void exc_debug_user(struct pt_regs *regs, unsigned long dr6)
 
