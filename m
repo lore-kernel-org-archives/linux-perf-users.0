@@ -1,170 +1,197 @@
-Received: from mail-qt1-f174.google.com (mail-qt1-f174.google.com [209.85.160.174])
+Received: from mail-ej2-f12.google.com (mail-ej2-f12.google.com [74.125.228.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 661F6345CCE
-	for <linux-perf-users@vger.kernel.org>; Tue, 22 Sep 2026 17:00:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.160.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A26003B7B7F
+	for <linux-perf-users@vger.kernel.org>; Tue, 22 Sep 2026 17:04:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.228.140
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790096416; cv=pass; b=Xx/ZNZ/0uCSCG+ui3bhnx1LY1XJE9XPOIv9PxIu6goCX+/CARHp4CMsSlSNDJikkoIhHMStUFxWJ3AKPAQDctjJ7Dk7kV9BFZSbURna5l0/Bgq+7P84BiGaV1HFXII/mujnkeZdgWImh+BmACT4Uhjpufk9EvCCOB4UnLz4HDis=
+	t=1790096658; cv=pass; b=AHy7xDd0sfPfs9nGNxikS2iubZaRFaLa9F2Kjbl9B/L84Sw05cy62S5B7ljMblvZvw+BJs4U+8324x7GRsyNqmTQZR2rSa0Q0yH/L3Lr3rzG2ozfZeLvAQasmtdzctrAu+UhsyUdVJrOO8xt4UHeyynsftFoOZ3JDrtIn31v0yI=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790096416; c=relaxed/simple;
-	bh=Nh11KCvv29s1wzVo2hjgCVz2jvRdnaGOg1wLpMrLhVU=;
+	s=arc-20240116; t=1790096658; c=relaxed/simple;
+	bh=N+17ejK9dvQysXp+TSqhs1pxARNJ/m/mz+8XCJSK0qw=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Ef/xgMaOfqaS6N1NeCctlzSkGXRb8yEEP4JsNsIMql3hyk60VvjLxTUhek+//JxzgIUMik9thVE+Q61PMFvfl0HYBNgSY7JWftUmYwoSOGSRPHrOevnq7JFgmpmt5GFV7jCggi1v4awT5a8oZsvQoJ+SJskrmv8m7Cf1yh5duxk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=qhc3Pn4G; arc=pass smtp.client-ip=209.85.160.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	 To:Cc:Content-Type; b=iGXHwIR30GgpQJpAowNXLvm6Ma6luBrTtHJQU03TQj61HGDjWfEmm9azW5oQ1L8I7mndzu2cVIYV8MGBF8rdLfM4GOtnyHVTTQUU2EM+Ibprs/yWKuWMtrpAh2UJ8fCtz0kFYidMyc/gv4Gh9jkSHfzE9ftX4HgyT7+LRx2v+Dk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=sM16Gjb1; arc=pass smtp.client-ip=74.125.228.140
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qhc3Pn4G"
-Received: by mail-qt1-f174.google.com with SMTP id d75a77b69052e-53113d72966so2431cf.1
-        for <linux-perf-users@vger.kernel.org>; Tue, 22 Sep 2026 10:00:14 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1790096413; cv=none;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sM16Gjb1"
+Received: by mail-ej2-f12.google.com with SMTP id a640c23a62f3a-c254f55eff0so3918966b.0
+        for <linux-perf-users@vger.kernel.org>; Tue, 22 Sep 2026 10:04:16 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1790096655; cv=none;
         d=google.com; s=arc-20260327;
-        b=h57q4BK5v5qbi2fU6oS+qg55AnV9lGIF3kz03LjaJYgCx6vDLX4Rdvp2O8AYRuEPQV
-         JGfF6FVKc4GhwnxVAi737YD9AHaPp3qwlZi10AFFc56yNJt+qT7PybJK1tneOZoPravr
-         6vwe0wv8gihd806oYb/AHTFNQkCQxXC7xc6FpPm/yt6o5uy7u6vOHgH89W4oXjlD8KC8
-         m25W6hXB02yiqJDdXAzm4IBXbVxC7AtKuDj5U5ZLiIoC5DNh1Qp7pxjnrf0nwISZEQIO
-         MJ86BzQczWNZZs+8rnvEXYhniR6KhGPrpGZu6Au5CLLpyLPaZ6Qsf1GVpQssmolrOpkW
-         PPXQ==
+        b=bIonpFBtFDinJrSttwc2J580NtsS85+W58DvYorUnV//6fVsHGHMIM53PKGimouN24
+         JRZim/bvCo8vp0mUR0mW7c7RD76Ct23LPOLgvtFiAZIzc0DkD4nRUSM4vOFlGZg7ky1V
+         XDiKX6NCJ1umn96QNO5SaaL09fhpCFxEhKwqchrrPaVN05GRibIQiY9RqbvcK2aS1WFQ
+         GYRsuX8cSCYPKsq4/ahu2WjKc3OIFRDx6obL86TF/3Byq4XtSxT6ExEla6ceH0nOHMQH
+         L4XA6yhKnI8BLAJJENsejsDH4+JO3F+F1HqO4LlqJ8xjOthx4isgcHHXoEz2YZpsyJe7
+         wtsg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:dkim-signature;
-        bh=HhXuMRWtj4EoahoIpvu3m5yJyJGMHZPq0qdJI+IBC5I=;
-        fh=Sl1i+60YrkRhjpLaJ1Se3cJPuxZ33GJzuho0m3FAOUs=;
-        b=mu2xZGNDOfwgxOr826gJEU5ySLXVjKsyQnEvPDeUgqJ8/bXsqqzqBg7JPttcOWZP2v
-         EZefx9LzbJprLkQkKkEAVjKLHbyVAC+r7EE5nt+jvyZ3cCH6eJ3DFPWyexCcgQjo6F0M
-         RY1fGBJwi1+zPxSeb+vGZVn6BD0hEva6bxzUkdKFy1HwJKmlLpwuYk1kpRXHrsWdCgw6
-         iYAQ5GB4zUsbaMrB8sqVBmZPOpuoEwqxDF55DsisDBSveW4qwcy56GOyCM5ZLmkwYr6Q
-         /w+wTZRs0/fkNs6GmrG2ZNftB+i3LioFrA+zvjkghFCCZQXJmrTZY8ZkLHgq7hMdQEpF
-         jfiQ==;
+        bh=oGbbuTvPUpYX589X/WoOVAkQ+2julwkRlp6p5cd8Vfk=;
+        fh=OOYVqcZxxq3HRPsMOuJfDfDawwt6jagmaX39g7SQEEs=;
+        b=IRT3A2RzykzfGodVhpBz3wlFr6oVvd+ysVCNmZ+ib4DM3fXN1HobGZv8QLCdfIEcyg
+         kUp7N37HQjwxXO3Nfw0CaIuOc5Ui7s3No3mIaFBNyG02LBOg2KqChtYLTuyM6RIi+urs
+         /DW9Wcws5xJ33Lps+JX2mo03MEhH1vtK1Pj3B2Fn/nk5sR85LomODR2dbkRX4hZ9tYav
+         2ilt1avzwTHFdfN4GbTwrMj/ADFRX/4fhzTZ1rq2h/CcYi4nuGnI8qBZf9X8kt3c07Kr
+         DdiMBwkCX6gQdgLmLCriyIckT8YafqvGlHPPfrmzIVjPH3HC4uXQFF2+j7frfBf1GCz+
+         Tmcw==;
         darn=vger.kernel.org
 ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1790096413; x=1790701213; darn=vger.kernel.org;
+        d=gmail.com; s=20251104; t=1790096655; x=1790701455; darn=vger.kernel.org;
         h=content-transfer-encoding:content-type:cc:to:subject:message-id
          :date:from:in-reply-to:references:mime-version:from:to:cc:subject
          :date:message-id:reply-to:content-type;
-        bh=HhXuMRWtj4EoahoIpvu3m5yJyJGMHZPq0qdJI+IBC5I=;
-        b=qhc3Pn4G1bov55QzP9fmVML/eJ+6EFqXCpolstAt26yFMS10M2Ku6NIPUVhlN2r4PY
-         JfiVU13R0OdQIyzPGe4kcojq7qD2U9eSq5A1wIoqRkGD6JnwmLRf+dRnYHY6FCRAXQPa
-         CCsdHnV8o0MOB4//Bs37393j3/Xar2yKwsfyiKUx/WhJ/AAJZ8zGR1ikmmISEij7oAxq
-         oAFpTqEDZ87zbuTkf0zoMPDt1sifh76g+you7Qw/4bh655LypXmDjZEkHU6JS0iPqbsL
-         jogjnSpv8czqWn1ejPYBVVBj5lLDis3tlW6ii4LgDKuVhLBoRQG/DmWDf58QN0FKekNZ
-         iPiw==
+        bh=oGbbuTvPUpYX589X/WoOVAkQ+2julwkRlp6p5cd8Vfk=;
+        b=sM16Gjb1e3nmHp7IskfEOeODGbUR+Y6v2azrZjXY3HMTjbSEHTnuVb07SRdy26HsPl
+         z7cOZY2AMug14Eizx0fuIqNShMdQwcQ4pYXLSSq5zk9OoSSRBdRfSxUqsWxn8yycBA/5
+         iwyxeFny7aSP/QrvsaFy6twfOzyQBxHSA7FM2tkwam3Dv8PxA01gGCuUL+wN1LI1ydD6
+         d2/6BlXCjIczjckzDB7qF8Pr8sy9m1udCiYLp3bli7IoXsqUyYI3ytiBitRR8u4VNEPv
+         Za+rKg/csx1ewWQ+UwZgnhVvq54wMrhF3Bnrp6RmRYeQKSsccZJXyjbqzXFH3eRC1uDd
+         J6UA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1790096413; x=1790701213;
+        d=1e100.net; s=20260707; t=1790096655; x=1790701455;
         h=content-transfer-encoding:content-type:cc:to:subject:message-id
          :date:from:in-reply-to:references:mime-version:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=HhXuMRWtj4EoahoIpvu3m5yJyJGMHZPq0qdJI+IBC5I=;
-        b=AFIdHZUD2yolu7zB3SNIqr5T14JkWygdYk8NyUPlVtm0JVMSqxHVo3DzJlY+pyFtgU
-         pBq9wl01n0pJh/exlN0SrwcNZiatZa30U4FZE9Yu8e9Lx2QBLuAeT1G2+xjcAvoi8tmT
-         TAN5Pck3Gv31lo0C0Nw6FAuL9hng4A81+dmOcbrL3xbvEWMv12VE4CyEDIeieQ/4WXgJ
-         p+cesGQjK9YUtg2SIql1KAq2Ljf49aerzVQzDTbbPbodamMi4Fc3FEtk8Nz4kCgrnWtd
-         4TDQGjE6QBd/JDLb9ncvtgQ/aLgb74dY3iEP27H2MXexq02nGlfrmbfO+/WiBuiCX0VH
-         SFGA==
-X-Forwarded-Encrypted: i=1; AKwUvBxICF5FnXUipJZDb0kJueHKlXhw6oL6/W2ev+83yyr1R6oa/gKamKZJpIjnD/I+SPyE6rJfBVAlUDSs9mxOVRFH@vger.kernel.org
-X-Gm-Message-State: AFuF++mfFlIQXY4fT+ydyoQCNF3CEPH1UZA6dGczfiT8vjQfPcc79xhg
-	x3LP4LFVcMTfLCAFWyEi33ONI2hiIW4eCLEEl+E+a7t7qMoLD/aOUzG9lrb03pOmyS3tPEYbc8x
-	bR5Gk08NjN5PaSysXbdVS6sGUj8cuUuEyERsBkcK6
-X-Gm-Gg: AYBFou3M6Y3mswGIDdwcND3jVAu7+XQYdd6MmpkNp4JFaLBtonjhJ/VX6QaDaogyOi3
-	LOeDalwlNucON9VohUwLI1t5NKi3gBQk432sbtJ/9jzOIuJDTTMmcaWx9FtPvRb4Z85mwzVvXm1
-	qRufUB/Ej9JUeIVQ/Y1FXrFgnegE9nOfMqJj0+MmLEAth9eCAmQ2VqZvWXnI9T2mFa/Xjv2hYSV
-	rS/e947zlqv7xzWU6Fg/v1JoDi7Tx7WJcTcquISX39fj5P7p5P//M1TZmnQt35yqwMxZYfkQdq7
-	1Yp2blvxqP3CFQt6C/r6v7eCGrJ7VAUIa7DZIo+eNq9ZLINd9AybkLeJv4eCP6/Pf9PXLVBR+H4
-	k9QkmMG/mR/2SWZzG3Q==
-X-Received: by 2002:a05:622a:4d09:b0:531:34b9:2532 with SMTP id
- d75a77b69052e-532ebb77793mr114661cf.4.1790096412307; Tue, 22 Sep 2026
- 10:00:12 -0700 (PDT)
+        bh=oGbbuTvPUpYX589X/WoOVAkQ+2julwkRlp6p5cd8Vfk=;
+        b=YafpOshoZgXlMAar9C7YsbKqNknukW8pQO4sGAGwvghFuUV9tLkfoW25s726W1hYj/
+         HmN7LPyFtyGFT/D1A6cg7z4Kv3W9izC3/y96VAck1hO02wgKn3Sum0Zz9O4oIhDqoHhv
+         a+b3MJs321dh4HYgwG4vT7IOCBuuPQHU5EAUE7L0Ew3ucGb6SE+RZtD5l9T///BmXymk
+         nakgqoK+Od5udPLMk6mR/bzzv/LF15ViOVYsqAypF6io85jtsmg+c27DzXG2lHWUPkiF
+         Rs83nl1vopH7cQ7+zewltblLfj9zIHp/I6V08/0/OL+3417ispFvbfLXc4W26vUlsS2o
+         b/hw==
+X-Forwarded-Encrypted: i=1; AKwUvBy/9JFa3w+BxxD4cm1wQZZLh4yPdx0GjN4qL4x0hiP/gGVxHwa7FJtoUEUykF5Qu34XUetnSZ1n9l/KKWp1oCSc@vger.kernel.org
+X-Gm-Message-State: AFuF++nmfCnqskGJGsD/l+xjzE4V9DKtqiKvqMv8iYNCQL++Qo1dk2b6
+	+kCGGX2ukD1q0MkfFSjydG4R067ecgbmOE7nuWOqXE8SPHDxe4X15s8UZsizM+qrDKH1XM9MK4L
+	HuZHVWlKcI2JXzM+MXdtC5ST0r19q3/Q=
+X-Gm-Gg: AYBFou2ZQ+v1INZL478cDr+tRKAKiSL1aQb9ZlPP/aVffkrCvZodFYFfFB3E2iBZpjB
+	Vx/i34NbBzyhouui6ldSLafX+TJsLc90CXT/Ir0b3ys7kAB7O9c3XJm6u4oByP6F7FsfcR0r0Pw
+	zaSR32ErpcmzdWGyijNBSDuZCpZOlvk1KMqeWIdz5OAkAiJhY0tMF5lLELo0MR050UY9f8aampJ
+	rx3V9/i30+vRjsZLbT1k2ck9fYmAktL9Gv0btcD8cUxhb/H2y6VSgMFMlqkRWuw2XQmufs7rjoe
+	k5ivFqczUFFc7JPelMu1UsPsN7SPzXQbIJ1mOaTApEuTTxFLUdOozRSC7OWyIghKSt+X6HGFXGr
+	CUA96p8hTwFX1VVDEhm+MkVV5ERxul37+0ugKrRr+
+X-Received: by 2002:a17:906:794f:b0:c24:87e3:b8b8 with SMTP id
+ a640c23a62f3a-c2a1569a558mr1259266366b.17.1790096653404; Tue, 22 Sep 2026
+ 10:04:13 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1789966896.git.irogers@google.com> <b1d417e1f28afa565fa01b4997e3c31140e4772d.1789966896.git.irogers@google.com>
- <8e3ed898-5134-40df-84b0-b7cdaa777731@linaro.org>
-In-Reply-To: <8e3ed898-5134-40df-84b0-b7cdaa777731@linaro.org>
-From: Ian Rogers <irogers@google.com>
-Date: Tue, 22 Sep 2026 10:00:00 -0700
-X-Gm-Features: AcwNN1UI-VG5bkPxC40nmqZB4RtDB35hxd84ZBx_ZtNi24VFwq2lDUI0HWTpv5E
-Message-ID: <CAP-5=fUxfMNAaScod0YBXf3ThZ1rbwA1AEhhvBVFFqDR6H6Ang@mail.gmail.com>
-Subject: Re: [PATCH v2 09/49] perf python: Add Intel PT call_return and itrace capability
-To: James Clark <james.clark@linaro.org>
-Cc: adrian.hunter@intel.com, dapeng1.mi@linux.intel.com, leo.yan@linux.dev, 
-	linux-kernel@vger.kernel.org, mingo@redhat.com, peterz@infradead.org, 
-	tmricht@linux.ibm.com, acme@kernel.org, alice.mei.rogers@gmail.com, 
-	linux-perf-users@vger.kernel.org, namhyung@kernel.org
+References: <20260922135653.1622301-1-stian@itx.no>
+In-Reply-To: <20260922135653.1622301-1-stian@itx.no>
+From: Magnus Lindholm <linmag7@gmail.com>
+Date: Tue, 22 Sep 2026 19:04:01 +0200
+X-Gm-Features: AclHuK_CUEgpakuA9mXaxlN0HtfMc5v_kwsh8oph45ybTZCltYVIkWHGrzXcUdc
+Message-ID: <CA+=Fv5RnsBXnxb2JHfZ2kXkYB7fz3KLS3+oHtx==z9W93WRANA@mail.gmail.com>
+Subject: Re: [RFC PATCH 0/2] perf: user stack dump on sparc64 needs an arch hook
+To: Stian Halseth <stian@itx.no>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Andreas Larsson <andreas@gaisler.com>, "David S. Miller" <davem@davemloft.net>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	James Clark <james.clark@linaro.org>, linux-perf-users@vger.kernel.org, 
+	sparclinux@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Sep 22, 2026 at 6:11=E2=80=AFAM James Clark <james.clark@linaro.org=
-> wrote:
->
->
->
-> On 21/09/2026 06:06, Ian Rogers wrote:
-> > Add support for Intel PT call_return events and itrace options to the
-> > perf Python extension so standalone Python scripts can decode and
-> > inspect low-level instruction traces.
-> >
-> > Specifically:
-> > - Add a call_return callback parameter and itrace option string to
-> >    perf.session, treating explicit None (Py_None) callbacks as omitted.
-> > - Expose the perf.call_return object with db_id, parent_id, insn_count,
-> >    cyc_count, comm, pid, tid, call_time, return_time, branch_count,
-> >    call_ref, return_ref, flags, and call_path (resolved as a
-> >    perf.callchain ordered from outermost caller to callee).
-> > - Export perf.CALL_RETURN_NO_CALL, perf.CALL_RETURN_NO_RETURN, and
-> >    perf.CALL_RETURN_NON_CALL flag constants.
-> > - Expose session.e_machine and session.is_64_bit properties, preferring
-> >    recorded thread ELF machines (perf_session__e_machine) over perf_env
-> >    so pipe-mode traces do not prematurely cache host bitness.
-> > - Support optional vmlinux, kallsyms, and symfs symbol configuration
-> >    parameters (and PERF_SYMBOL_VMLINUX, PERF_SYMBOL_KALLSYMS,
-> >    PERF_SYMBOL_SYMFS environment fallbacks) in perf.session, resetting
-> >      symbol_conf pointers and freeing vm_tm_corr_args, cpu_bitmap, and
-> >    ptime_range in
-> >    pyrf_session__delete().
-> >
-> > Signed-off-by: Ian Rogers <irogers@google.com>
-> > ---
-> >   tools/perf/python/perf.pyi |  35 +++
-> >   tools/perf/util/python.c   | 624 +++++++++++++++++++++++++++++++++++-=
--
-> >   2 files changed, 632 insertions(+), 27 deletions(-)
-> >
-> [...]
-> > @@ -4161,23 +4585,40 @@ static PyObject *pyrf_session__new(PyTypeObject=
- *type, PyObject *args, PyObject
-> >   {
-> >       struct pyrf_data *pdata;
-> >       PyObject *sample =3D NULL, *stat =3D NULL, *context_switch =3D NU=
-LL;
-> > -     static char * const kwlist[] =3D { "data", "sample", "stat", "con=
-text_switch", NULL };
-> > +     PyObject *call_return =3D NULL;
-> > +     char *itrace_str =3D NULL;
-> > +     char *vmlinux_str =3D NULL, *kallsyms_str =3D NULL, *symfs_str =
-=3D NULL;
-> > +     static char * const kwlist[] =3D { "data", "sample", "stat", "con=
-text_switch",
->
-> Hi Ian,
->
-> This needs to be "static char *kwlist[]" to support older Python versions=
-:
->
->    Changed in version 3.13: The keywords parameter has now type char
->    *const* in C and const char *const* in C++, instead of char**
+Hi Stian,
 
-Thanks! Fixing in v3.
+On Tue, Sep 22, 2026 at 4:38=E2=80=AFPM Stian Halseth <stian@itx.no> wrote:
+>
+> I am adding HAVE_PERF_REGS and HAVE_PERF_USER_STACK_DUMP to sparc64, so
+> that perf record --call-graph dwarf and elfutils' eu-stackprof work
+> there. The sparc side (patch 2) is straightforward and follows parisc.
+> One thing does not fit in arch code, and I would like to get the shape
+> of that agreed before sending the rest.
+>
+> The user stack dump copies the stack as it is in memory and assumes the
+> call chain is there. On sparc it may not be: the sampled register
+> window's %l/%i registers, which hold the frame pointer and return
+> address the unwinder starts from (the CFI after `save` defines the CFA
+> in terms of %i6), stay in the register file until a window spills. The
+> kernel already deals with this wherever it exposes user stack memory:
+> perf_callchain_user() on sparc calls flushw_user() before walking the
+> chain, and ptrace does the same. The stack dump has no arch entry
+> point where that could happen.
+>
+> I looked for a sparc-only way and did not find a correct one:
+>
+> - flushing in the sparc PMU interrupt handler misses software events
+>   (cpu-clock, tracepoints), which reach perf_event_overflow() without
+>   passing through it;
+> - perf_user_stack_pointer() is private to kernel/events/internal.h, so
+>   the arch cannot override it;
+> - perf_reg_abi() is called at the right time but is a query, and a
+>   flush as a side effect of it would be wrong.
+>
+> So patch 1 adds a no-op hook in the style of perf_arch_misc_flags():
+> perf_arch_prepare_ustack(), called from perf_prepare_sample() when
+> PERF_SAMPLE_STACK_USER is requested and user regs exist. Patch 2 is the
+> sparc64 implementation and its user. Happy to take a different name or
+> placement.
+>
+> Tested on an UltraSPARC T4-1 on 7.3-rc4 with a perf tool taught the
+> sparc registers (that patch, and the matching elfutils backend, follow
+> once the hook is settled): register values check out against known
+> contents, and --call-graph dwarf unwinds correctly for both cycles and
+> cpu-clock. perf stat/record/record -g are unchanged.
+>
+> Link: https://github.com/sparclinux/issues/issues/99
+>
+> Stian Halseth (2):
+>   perf/core: Let an arch prepare the user stack before it is dumped
+>   sparc64: Support PERF_SAMPLE_REGS_USER and PERF_SAMPLE_STACK_USER
+>
+>  arch/sparc/Kconfig                      |  2 +
+>  arch/sparc/include/asm/perf_event.h     |  3 ++
+>  arch/sparc/include/uapi/asm/perf_regs.h | 33 +++++++++++++
+>  arch/sparc/kernel/Makefile              |  2 +-
+>  arch/sparc/kernel/perf_regs.c           | 65 +++++++++++++++++++++++++
+>  include/linux/perf_event.h              |  7 +++
+>  kernel/events/core.c                    |  2 +
+>  7 files changed, 113 insertions(+), 1 deletion(-)
+>  create mode 100644 arch/sparc/include/uapi/asm/perf_regs.h
+>  create mode 100644 arch/sparc/kernel/perf_regs.c
+>
+> --
+> 2.55.0
+>
 
-Ian
 
-> > +                           "call_return", "itrace", "vmlinux", "kallsy=
-ms",
-> > +                           "symfs", NULL };
-> >       struct pyrf_session *psession;
-> >       struct perf_session *session;
+Very nice series, thanks for working on this!
+
+I built and booted the series on a sparc64 box and haven't
+noticed any regressions so far.
+
+I also smoke-tested the new interfaces from 64-bit userspace with a
+small standalone C program using perf_event_open() and software
+cpu-clock events. The register-only, stack-only, and combined
+register/stack tests all passed. The test does not use tools/perf or
+request PERF_SAMPLE_CALLCHAIN. I haven't tested end-to-end DWARF
+unwinding yet.
+
+I see that you plan to post the userspace changes once the hook is
+settled. Could you include the tools/perf support in the next revision,
+or post it as a follow-up or linked companion series? Having that
+available, along with a link to the matching elfutils changes, would
+make testing easier and let us exercise the intended DWARF unwinding
+use case directly.
+
+Also, could you update the sparc entries from TODO to ok in:
+
+  Documentation/features/perf/perf-regs/arch-support.txt
+  Documentation/features/perf/perf-stackdump/arch-support.txt
+
+Those updates would fit naturally in patch 2 alongside the
+HAVE_PERF_REGS and HAVE_PERF_USER_STACK_DUMP selections.
+
+Thanks,
+Magnus
