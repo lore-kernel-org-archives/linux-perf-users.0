@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA4E739CD19;
-	Tue, 22 Sep 2026 12:27:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3CAE541E6D;
+	Tue, 22 Sep 2026 12:27:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790080036; cv=none; b=oa0V4AQxtZbMRsaS3wzgr5flBlkYJ8COg7DWdvtZIu1DnltUin85TB6Z3D5ntwZdSVto2I/CLARqgDzHGgTfWtyOrPIvLh2IdNsapsK5GtztLuJXXgthlYmLADpX0B9dsAyRDhkPtRBr+kAQJv3CvKzWDc8A2CrKfQGZ2TcE6cE=
+	t=1790080044; cv=none; b=myPwOXXJk2r3ApiUn1GvKWXXVeZQ6zd6kgoPuNruRYugFcMGJpAj4cpfAQpO9abP7H4AbCnPn03/zykM0wWJsCDw8M+9LwfKTg5n8Hdb1M1vvdaWvSW6LC+tJJG6AMU6OWW93q/s03hr9nZp/N9nW2SvpxQJ/zoifIWbxIf1H3Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790080036; c=relaxed/simple;
-	bh=ry7RvaQvCyx8PVDPMx2T4Ot5MGZBNJR47tiXNPK6jPM=;
+	s=arc-20240116; t=1790080044; c=relaxed/simple;
+	bh=DNopuPVnqP+asREDoo6vMJtkbDlJq9GpboXsXm1flyo=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=bzhKFmTEaYXMuqrPUmNwBqIKFFTUoIG8BB87cjIKZHP5g9E2KwDWQf+2Q6Sh4CeCLM3b58Bicm3n20SRuJgqrFM4pb7xB9xme5zEsqA+EGKpsMlWPTaxDf54jyGzGxnOCcdWwKpha9pnHtLMCNiLyo01ADIoWNAabKCocu1axf0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Dvwq4sAO; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version; b=rkB7+eRLeIo0Oqp47+QbhY8ejTrx26v12rO8pKDI1DZAmMIkWpAo9C9DMdYNk9oDCKhm7NV0Y4EUlWERH4xUfTt1BB88lTbq5q+z32HeeBv1LAT4QSoei2dUSw4A0UVpp9A0uk4BdU1vtKNFSJEReN1RSIqAR2gARriG6etgA3c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WjHQB2Qj; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Dvwq4sAO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3C51F1F000FF;
-	Tue, 22 Sep 2026 12:27:06 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WjHQB2Qj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8563B1F00899;
+	Tue, 22 Sep 2026 12:27:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1790080034;
-	bh=0ksv4bkAAggNOsXlCZ2OGQbl1L2IBrjnYABIaalGLao=;
+	s=k20260515; t=1790080042;
+	bh=ZLhEWeFQugaxDSS3tO5Vf31pY8c4lSsBqp2RGaQInkk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=Dvwq4sAODIXdho5Fszli8Do4UrhQ5SXPSbGIpuGsjGla+/KPwJDXOBu+KkfoqTdPo
-	 1FwPeOL8NvvxtHYyhT/koPf7ockXybPQC4YifAFK/ue0xaBUYjCxCKoJW0N4ryYo4e
-	 3GpOl1qMG/zBYaNQJJivVIFbmiQgxQeAqdPY5bOgFV/2piT38ZJVbPB3k8gbGNs4ar
-	 +QPeN53ruVRMUMmjrg5l7vDcgWketD+IfVVp33qMjD3I65Zd7jcpdO5zzEERItblJn
-	 Gh8jDkDOv8v+2vrpwkwHxQ9AAVf5NkXOVRQJttHbV0tZx3+0aDrbgX2nDkD9yNhAhP
-	 zxM24sVwLnKrw==
+	b=WjHQB2Qj0hUzdB65DZFWBlTFvbqtcd//cyKHDQ+SVayHGAG7iRsOYa0gZ8eO79wVD
+	 oT/O3k5bUZfLjd0q0jxHPsplv+Xog5oLRi28xf/8nmNPa6cXng90fCXtxyn797HXNF
+	 FopTdEhF+Rzi4L1ZzLKoDq/lKWeIgJUI8z0AxEA1DSRijMF1Ed9i5TRB920+IgGH6M
+	 fTYm8AJFw0LIHmYD0iOjffzYan4s4Tr8ptwrafD7Xh4G/iKcGxmfC9JRNr/GeqHQGz
+	 iJXzZ1Gqmgta0xoeDW27Kki67wN7ZhacUB8NlzoDCRyE3aAlrtIhtC23ovss3vpt0E
+	 eTplttHLqmgKg==
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Namhyung Kim <namhyung@kernel.org>
 Cc: Ingo Molnar <mingo@kernel.org>,
@@ -38,9 +38,9 @@ Cc: Ingo Molnar <mingo@kernel.org>,
 	linux-kernel@vger.kernel.org,
 	linux-perf-users@vger.kernel.org,
 	Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH v3 4/7] perf annotate-data: Bound the member nesting recursion
-Date: Tue, 22 Sep 2026 14:26:20 +0200
-Message-ID: <20260922122623.1029132-5-acme@kernel.org>
+Subject: [PATCH v3 5/7] perf annotate-data: Show the sample count in the data-type browser
+Date: Tue, 22 Sep 2026 14:26:21 +0200
+Message-ID: <20260922122623.1029132-6-acme@kernel.org>
 X-Mailer: git-send-email 2.55.0
 In-Reply-To: <20260922122623.1029132-1-acme@kernel.org>
 References: <20260922122623.1029132-1-acme@kernel.org>
@@ -54,114 +54,33 @@ Content-Transfer-Encoding: 8bit
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-Members are added recursively, and the same kind of broken DIE can make
-a member's type point back at one of its own ancestors, recursing until
-the stack is gone; nothing usable comes out of nesting members 32 deep
-anyway, so stop there, marking the member as truncated (reported by the
-JSON exporter added in a later series) and giving up on member types
-that don't resolve.
+The samples view (-n, annotate.show_nr_samples) prints a local
+nr_samples variable that is initialized to zero and never updated, so
+every member is listed as having no samples while the period and percent
+columns for the same entry are filled in.  Print the histogram entry's
+own count instead.
 
-The limit is checked where the children of an aggregate would be
-expanded, so only struct/union members get marked as truncated: a
-primitive member that merely lands on the limit has no children to
-expand and is reported as complete.
-
+Fixes: d001c7a7f4736743 ("perf annotate-data: Add hist_entry__annotate_data_tui()")
+Acked-by: Namhyung Kim <namhyung@kernel.org>
 Assisted-by: LLM
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/annotate-data.c | 36 +++++++++++++++++++++++++++------
- tools/perf/util/annotate-data.h |  3 +++
- 2 files changed, 33 insertions(+), 6 deletions(-)
+ tools/perf/ui/browsers/annotate-data.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/perf/util/annotate-data.c b/tools/perf/util/annotate-data.c
-index 2ad6d012e069c522..a0f63a91d45614cb 100644
---- a/tools/perf/util/annotate-data.c
-+++ b/tools/perf/util/annotate-data.c
-@@ -221,6 +221,13 @@ static bool data_type_less(struct rb_node *node_a, const struct rb_node *node_b)
- 	return strcmp(a->self.type_name, b->self.type_name) < 0;
- }
+diff --git a/tools/perf/ui/browsers/annotate-data.c b/tools/perf/ui/browsers/annotate-data.c
+index c6e07a9b64089ab5..a15608f6ee53335f 100644
+--- a/tools/perf/ui/browsers/annotate-data.c
++++ b/tools/perf/ui/browsers/annotate-data.c
+@@ -374,7 +374,7 @@ static void browser__write_overhead(struct ui_browser *uib,
+ 	u64 period = hist->period;
+ 	double percent = total->period ? (100.0 * period / total->period) : 0;
+ 	bool current = ui_browser__is_current_entry(uib, row);
+-	int nr_samples = 0;
++	int nr_samples = hist->nr_samples;
  
-+/*
-+ * Members are added recursively; bound the nesting so that a broken
-+ * type that points back at one of its own ancestors doesn't recurse
-+ * until the stack is gone.
-+ */
-+#define MAX_MEMBER_DEPTH 32
-+
- /* Recursively add new members for struct/union */
- static int __add_member_cb(Dwarf_Die *die, void *arg)
- {
-@@ -235,6 +242,16 @@ static int __add_member_cb(Dwarf_Die *die, void *arg)
- 	if (dwarf_tag(die) != DW_TAG_member)
- 		return DIE_FIND_CB_SIBLING;
+ 	ui_browser__set_percent_color(uib, percent, current);
  
-+	if (__die_get_real_type(die, &member_type) == NULL)
-+		return DIE_FIND_CB_SIBLING;
-+
-+	if (dwarf_tag(&member_type) == DW_TAG_typedef) {
-+		if (die_get_real_type(&member_type, &die_mem) == NULL)
-+			return DIE_FIND_CB_SIBLING;
-+	} else {
-+		die_mem = member_type;
-+	}
-+
- 	member = zalloc(sizeof(*member));
- 	if (member == NULL)
- 		return DIE_FIND_CB_END;
-@@ -242,12 +259,6 @@ static int __add_member_cb(Dwarf_Die *die, void *arg)
- 	strbuf_init(&sb, 32);
- 	die_get_typename(die, &sb);
- 
--	__die_get_real_type(die, &member_type);
--	if (dwarf_tag(&member_type) == DW_TAG_typedef)
--		die_get_real_type(&member_type, &die_mem);
--	else
--		die_mem = member_type;
--
- 	if (dwarf_aggregate_size(&die_mem, &size) < 0)
- 		size = 0;
- 
-@@ -289,6 +300,7 @@ static int __add_member_cb(Dwarf_Die *die, void *arg)
- 	}
- 	member->size = size;
- 	member->offset = loc + parent->offset;
-+	member->depth = parent->depth + 1;
- 	INIT_LIST_HEAD(&member->children);
- 	list_add_tail(&member->node, &parent->children);
- 
-@@ -296,6 +308,18 @@ static int __add_member_cb(Dwarf_Die *die, void *arg)
- 	switch (tag) {
- 	case DW_TAG_structure_type:
- 	case DW_TAG_union_type:
-+		/*
-+		 * Only aggregates have children to expand: a primitive
-+		 * member that happens to land on the limit is complete,
-+		 * not truncated.
-+		 */
-+		if (member->depth >= MAX_MEMBER_DEPTH) {
-+			/* Reported by the JSON exporter so consumers can tell a truncated tree. */
-+			member->truncated = true;
-+			pr_debug_dtp("member nesting limit reached at %s\n",
-+				     member->type_name ?: "(unknown type)");
-+			break;
-+		}
- 		die_find_child(&die_mem, __add_member_cb, member, &die_mem);
- 		break;
- 	default:
-diff --git a/tools/perf/util/annotate-data.h b/tools/perf/util/annotate-data.h
-index ca2096a9ee62cbfe..cc576232f55b5fb0 100644
---- a/tools/perf/util/annotate-data.h
-+++ b/tools/perf/util/annotate-data.h
-@@ -57,6 +57,9 @@ struct annotated_member {
- 	char *var_name;
- 	int offset;
- 	int size;
-+	unsigned int depth;
-+	/* Children not expanded because the nesting limit was reached */
-+	bool truncated;
- };
- 
- /**
 -- 
 2.55.0
 
