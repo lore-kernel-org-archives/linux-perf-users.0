@@ -1,114 +1,94 @@
-Received: from mx.itxnorge.no (itx-kvm-14.itxnorge.no [91.189.121.228])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr2-f28.google.com (mail-wr2-f28.google.com [74.125.225.92])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A5C8548573
-	for <linux-perf-users@vger.kernel.org>; Tue, 22 Sep 2026 21:48:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.189.121.228
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D25D7488D97
+	for <linux-perf-users@vger.kernel.org>; Tue, 22 Sep 2026 21:56:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.225.92
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790113735; cv=none; b=LvoCY8CFf7LEF3vMgM95zS05fCGEUBxHLZWaWXEXZj0EVxak3zfBXR/rR7HB2QM5PAhvoqQqveg9nWOLU4y6TpUwE28VLZh8pKV8gZkuDjsLGY3AkdLjlw2Bndc5m2B9CYx+elARaH5+D8P6hRhDVC+ibCxQ/1ytgrV1Kmj56s4=
+	t=1790114170; cv=none; b=j2cGY2W0QNrlNUcRwVrXokcIDTsn5kHITo4W+Z8ZTkFNv0FkJjwlZgI9t6xo+GdXzy22eZf4Iki8tE2Ncun5+Y+yu6G4UpddPZ2sHfMjFFk7s9pLnSVx0s38wrFfHJSvlLLT5cqy/xq/1jPGIt75XUS17naWfcCgoH8RrR5GB/0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790113735; c=relaxed/simple;
-	bh=K2q/IiVeToklBnO8gewJGyEpByPIx8NJWeRyRhudUns=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=oXClmpWF9iY0yhou/YjdGC0VMIqnhh1+Zjbgk6nzLKspA48HdvjvhrxcNaZiGxSECugb+hlPVwWG/jkP5fRfAIcT7SQZ0duS+Q89VZzMw1hbmvlHsWEer7z56kIogUMg0IhXEl4GtZZ5xAccXfLJ+uMnpbWNpVfHf91N6NEil5E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=itx.no; spf=pass smtp.mailfrom=itx.no; dkim=pass (1024-bit key) header.d=itx.no header.i=@itx.no header.b=L9hylgpP; arc=none smtp.client-ip=91.189.121.228
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=itx.no
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=itx.no
+	s=arc-20240116; t=1790114170; c=relaxed/simple;
+	bh=/zbhuXWE1WlTQdG3ZgKrd6QNK2ykNmsb80+FJXV8oak=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=c0kqP+KWxKDbvHHtYDLfWFBM2zQ1esxjHPlX3GisJUrwGbWD/dXpiB0wu5Mre40CqZLBPkSL43NfYABbNC7GieHkRXQQZmuWBuodO0nl69NtOTXktFqy+cJsp35UZxKdfYVjfnwDjfRlVBps/3VUYY3NIsNZQkVGVB+Pm4DggUg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QVXE6NpH; arc=none smtp.client-ip=74.125.225.92
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=itx.no header.i=@itx.no header.b="L9hylgpP"
-Message-ID: <66a27d3ccb61f716b158582b0c59beca2a4546ea.camel@itx.no>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=itx.no; s=mx.itx.no;
-	t=1790113725;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=K2q/IiVeToklBnO8gewJGyEpByPIx8NJWeRyRhudUns=;
-	b=L9hylgpPqHSCFvgqmKGozQpYM3wBwvrXXOZskZhjkOu5bKq5LrHfRHWezNjTNXk+T7q1VH
-	FQwFy4l0N9YJQ1Xli5TJ70pOiu1fZRuuXL3MVsGsBhGd7iqGOXjn8LnqVaq6knl1s6ue5i
-	EO2Uu6LnW80zmOY5tWMZidHygoZHgUQ=
-Subject: Re: [RFC PATCH v2 2/3] sparc64: Support PERF_SAMPLE_REGS_USER and
- PERF_SAMPLE_STACK_USER
-From: Stian Halseth <stian@itx.no>
-To: sashiko-reviews@lists.linux.dev
-Cc: linux-perf-users@vger.kernel.org
-Date: Tue, 22 Sep 2026 23:48:45 +0200
-In-Reply-To: <60dfd32837f9d1752fb96a35d8ce1d08c89e5d5d.camel@itx.no>
-References: <20260922201507.1719668-1-stian@itx.no>
-	 <20260922201507.1719668-3-stian@itx.no>
-	 <20260922203330.F2EEF1F000FF@smtp.kernel.org>
-	 <60dfd32837f9d1752fb96a35d8ce1d08c89e5d5d.camel@itx.no>
-Content-Type: multipart/signed; micalg="pgp-sha512";
-	protocol="application/pgp-signature"; boundary="=-1IGfxrB9S1M0tN8YfY7N"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QVXE6NpH"
+Received: by mail-wr2-f28.google.com with SMTP id ffacd0b85a97d-485b1d2874aso291277f8f.1
+        for <linux-perf-users@vger.kernel.org>; Tue, 22 Sep 2026 14:56:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1790114159; x=1790718959; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=/zbhuXWE1WlTQdG3ZgKrd6QNK2ykNmsb80+FJXV8oak=;
+        b=QVXE6NpHVHu85g79U5z1Sb8a9IIPJ+t8+LFNQn74fcA5yjmSDap19VXtzpze6BSuRJ
+         TR5aUUn89AxLueiUNa99kR+wmQ7vttvJBuA+dvLlwn/erWkWfb44K9VFy1xTQtdybcjG
+         3HE7jgAgdGv+KYygybDbTfI6eNSl+fL5Kwj3bAG/P9u+nO+ssQtQdH2JhpdHgeuH3fnF
+         B5DsAlf5l2X0mGNtTEA431lYuciTEOJ3j5I4NsNEaxemWdA2iPXS9NjB1PEDLmmLBnGN
+         uHQeAFWxt8rvoAKvZOjr5WnY8loEfFOUKEskGPNKU4lwYFx4GarIZp32Zqb1kLY5P+mV
+         wraA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1790114159; x=1790718959;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=/zbhuXWE1WlTQdG3ZgKrd6QNK2ykNmsb80+FJXV8oak=;
+        b=1mf9EogQowEpwQiClYflfSHHAyQHo/lRW/Wt/uAVCOwLhV0YKFxjlwDE1+lhmtQgh+
+         iHqCUPMNtsxc+YYoUsiesUFZe4Tj0CMoR/q3Ux0w5uyNP240ph0tjth1v6KhNauq2hbw
+         74t4ekdGvsWm7Z0ZJfbckIIWC0gI/6d6IxmfxqCJ9t4DzWLlITkEVsWROUhHejAHDhMU
+         2FdChEWkkvaq89VBwJYY5ZKPLasyOKRGUAZwDFInaASpIq5lNHTFC4EoUgK9Hh04NTKB
+         DIMzN9LPpnEn1wIZyBnsrBqH3kqdWZDi0DchinEdeUhNX/FO/FKQiJjAYnscUbVr4sGE
+         g5dg==
+X-Forwarded-Encrypted: i=1; AKwUvBwpnlcQKWG9dIOxIuaBnYDU6TKDg69AmJSmIts2y3eIgjhS6CtdaYw/e6Tq4AAVDsvDgImh7t1A/lIFV3UFsIZs@vger.kernel.org
+X-Gm-Message-State: AFuF++lNekGvK3idH7hb3qgQLuuEd1WPTVkKqpW3F/Ecohad/XCmLcej
+	jq6j3m84+rDGI8JayyUM/feh0dmBO686Y61qV0s/9BzcQydk7Tq12AZ9RwmO87GYiGY=
+X-Gm-Gg: AYBFou1e/Cy2+q3sz+PcP+EynvhqGNwFr6RJZtPpYUDA++aJtJqIuWmTUxUqOxrcKll
+	iPnb60lsuoz4LC2i1SRMPaY7bHzEMHBoJE2qLlHddBisK317zbZbaFSNafJ8ox9KyMzim+5BrSS
+	UZKwtufsgZ4fRmh0QrPRb66rpaNnwzWSqT8msJFAb6xbxTI7q7q8T0HV2t4kF9hSdZEdJzvEjsc
+	A50DfXZ8KmldyQkAo2LHDKIpDfdu9kDqjG9OZdv7rVVDF8pHpmFYTFyXxbVQLY76RtGWWf9tCWm
+	69YscuHtaaWWkL+raViawSi2Spv4X3fPa10ThtM62dJ8y8qhuOU1m4If1xsEjKZbcSWPEVMpB1h
+	j3zB5edR27HVRN2Oj08u2lUn8Y/4mDDgq4ye2nAbI+JvfdltPpUX2BJfFc4+Jh/JJQzQkYKXxm2
+	5dSoyyXTAiBZ+P+9nIZ634Xl747zO/XQ7sPLrSFJX2xCADjOBDOh+bNIyp0T35a0sy25gUpUyFr
+	/hzmvBOQsKzdqV/HlBKcN+gsXzt59jDoUF7daZk
+X-Received: by 2002:a05:6000:2dc9:b0:487:27f9:832 with SMTP id ffacd0b85a97d-48867095903mr1279068f8f.39.1790114159022;
+        Tue, 22 Sep 2026 14:55:59 -0700 (PDT)
+Received: from christian-ThinkPad-T470.. ([2a03:4460:170d:5700:7168:5af1:a975:cf85])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-488682668e7sm1789647f8f.4.2026.09.22.14.55.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 22 Sep 2026 14:55:58 -0700 (PDT)
+From: Christian Melendez <chrismelnu@gmail.com>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Namhyung Kim <namhyung@kernel.org>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: perf stat: worth documenting task-clock/cpu-clock in perf-stat.txt?
+Date: Tue, 22 Sep 2026 23:55:48 +0200
+Message-Id: <20260922215548.398541-1-chrismelnu@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
+Hello Arnaldo,
 
---=-1IGfxrB9S1M0tN8YfY7N
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: quoted-printable
+I'm learning performance engineering and ran into this while playing
+around with perf stat. perf-stat.txt's TIMINGS section explains "time
+elapsed" and "user"/"sys", but I couldn't find task-clock itself
+documented anywhere, even though it appears in the first command
+example, as the very first metric shown.
 
-Hi, correcting a typo in my previous reply.
+This apparently came up unanswered on this list before, in 2013 and
+2015 (2015: https://www.spinics.net/lists/linux-perf-users/msg02405.html),
+where users asked about cpu-clock too, without anything ever being
+added to the docs. Would it be worth documenting task-clock/cpu-clock
+there? Happy to send a patch if so.
 
-On Tue, 2026-09-22 at 23:42 +0200, Stian Halseth wrote:
-> > [Severity: Medium]
-> > For PERF_REG_SPARC_O6 (%sp), returning the raw register means the
-> > stack
-> > pointer remains biased by 2047 bytes on SPARC64.
-> >=20
-> > While the commit message notes this biased address is expected by
-> > consumers, when perf_output_sample_ustack() attempts to copy the
-> > stack, it
-> > will start 2047 bytes below the actual mapped stack frame.
-> >=20
-> > Could this high probability (~25% for 8KB pages) of starting in an
-> > unmapped
-> > page cause __copy_from_user_inatomic() to immediately fault and
-> > abort
-> > the
-> > copy? Would this result in a 0-byte dynamic stack dump even for
-> > perfectly
-> > valid stack frames, breaking userspace DWARF unwinding and
-> > profiling
-> > tools?
->=20
-> I was thinking about setting up some real world tests to see if this
-> is
-> valid/producable, but I think I will instead go back on my first
-> statement in v1, and start the dump at the stack's actual address:
-> %o0
-> + 2047 for a 64-bit stack.=A0
-Typo: %o0 + 2047 should be %o6 + 2047
-
-Getting late, good night ;-)
->=20
-> Unless I'm missing something, that should clear this concern.
->=20
-> Then the tools and elfutils patches take their dump base from there.
-> There aren't really any other consumers anyway, so changing this now,
-> rather than later, is probably a good idea.
->=20
-> I will wait for some more feedback, and starting preparing a v3
-> tomorrow.
->=20
-
---=20
-Best regards
-Stian Halseth
-
---=-1IGfxrB9S1M0tN8YfY7N
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQTK1ph9OaYoND1R57zoeAEuJe36VgUCarL3vQAKCRDoeAEuJe36
-VjWHAP9KYb5fVFovIEpUddZZgoyoWxwJOfw79OZkjU9gneaRWgD/YwvlEkQZBjnL
-mDI74J5Y0k9R4eqKHhrADn851qUq9gM=
-=GHv8
------END PGP SIGNATURE-----
-
---=-1IGfxrB9S1M0tN8YfY7N--
+Best regards,
+Christian
