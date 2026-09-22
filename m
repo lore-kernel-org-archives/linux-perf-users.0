@@ -1,44 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4B0D5437F1
-	for <linux-perf-users@vger.kernel.org>; Tue, 22 Sep 2026 12:37:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0783954146A
+	for <linux-perf-users@vger.kernel.org>; Tue, 22 Sep 2026 12:38:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790080648; cv=none; b=mgYnsL3fn8wk0Q7c2p4JYYzNlI7xpDAS4dSkk9vlXUhZ23fLMsoA0+rv4EOYHcSHptsSXBUICPiT8UhArjK8bdjTGwFuUVuC88sjNTlEFbfqK4qdHJTR0tG+P9i8Ze/sqRGAv0kIyZP+U0ZXWS9FZgwrYdg3pgXTiTZwq0C/oJE=
+	t=1790080691; cv=none; b=M78MtlfMDzt7P9bBGk53cdcDktANe3xiBKvr6S2XOYLLvgZFPiXlvaoHKRJW9zpFwDtrdykPDygr89xu6dfIu7OpZ6gQUTtN51k826vfVacl8V4j56HsOsQVX/Uf9goOvoP9RDpkYhYI/a9R7m035VTyFqDg64/vfIdxfGPOdCI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790080648; c=relaxed/simple;
-	bh=7X3g9ELTyPSiCB8AEAniYOX04CjOBuZPBUKhD3vI/gU=;
+	s=arc-20240116; t=1790080691; c=relaxed/simple;
+	bh=6CqxSAyZ4tPsjHtVe5duxjJQS5UhzZ2OpyeH9Nq38jc=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=NpjtnRiUAomvdrn0UTSUhyPcDgq7eiSpFQ14q3vYEgTaHStY7UI3/pgQVriiZaOjfs8W/3pbBn5TiF9DU+K+6cKO1fPXiuenQYdKNXKwQ69ctNYzbucyfFDY9P6iV1qorFCz84xvF7cobOa1U1gAgAMpEPVH4BtFVR++j5+dGvg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YO7aSKM7; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=nvJ9wOq09P4y1e3kbRqaRkNMCcfZrerkMfndGe3UNmaeOBZA+xvgwov1YHe1Rxv/H1I+TUp11AguTEwlsvesnnZEMzmRIsrzZ5DxkNoc+MzpKEYmk89O1kRI41PV0k0zwFrvKBU/eTEDRjrO542hLrUv+aA/rQh11teN7Cag+Ok=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ofDEg8qx; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YO7aSKM7"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 93C7A1F000FF;
-	Tue, 22 Sep 2026 12:37:23 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ofDEg8qx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7943A1F000FF;
+	Tue, 22 Sep 2026 12:38:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1790080643;
-	bh=7X3g9ELTyPSiCB8AEAniYOX04CjOBuZPBUKhD3vI/gU=;
+	s=k20260515; t=1790080689;
+	bh=mv5nmCs3nHlKO0m5zm8yMiUE1q79vgFG0RdwFlVWfO4=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=YO7aSKM7lvfIc5FysMPIbg3qI4BS4CnQ/jRYLrj0Dlr/gYcLyxtDPjQWS1asiDvVb
-	 Jbdhyy1tzBumH8VSh3TDFTFPD3gtwHWpwdsDuuCDJMtOtugesQ1+wpvKVq5x4IOmfn
-	 Ydl3BUhntZYHOzvpkwUoWADMXThwYCX7zNSO1Hp8Y4y74iEvr2JaKXDRMC7SrCp5OL
-	 AVlPd82QYmM3Vq/6CGnK1kzn5oWN/Qbi8wZ4qX6pPDU92o8aS1SAEx5BOYWWb8qM+w
-	 pHPhgvbuu965I/TgZuPumOHjP9OT/Mek2d4bVyJfkB5k0j12L26diWOTzBtPjZ6k2X
-	 ERsG6cmwTsvmQ==
+	b=ofDEg8qxmc42FA1ETlJD6orjKBH8v/TCmTp82XeDEyxqmAmHGe/uQK2xPTZLhKbE2
+	 oCZe5oDaMm62/Cx34o7SrVjaVMkgNcloDkG2ZlcqRgzz/Oac/C5GxiZq0as7L/fT09
+	 XoQUjFlDaIrwe06ObGptgtXCTcJ4V4Z42KrjdZdnr1O9IAf/YvQEXYcQojgb+WIbOL
+	 O75z30LbiOXjzC/vGKqEfhJvrpVfnzJQI+nw5CKF99E6pF7FxEXVhHxrvbQ5/W1KjK
+	 tq3qz0WXT/fSTBgIseWtzONYDFg4Cx6ajfavfdr/lDXiOb/Q2mIA9FRBZuVilJ/RJM
+	 XTlmFgYJfmaXQ==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v3 1/7] perf dwarf-aux: Bound the type chases for broken
- debug info
+Subject: Re: [PATCH v3 7/7] perf mem record: Use the IBS swfilt filter when
+ available
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Arnaldo Carvalho de Melo" <acme@kernel.org>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260922122623.1029132-2-acme@kernel.org>
+In-Reply-To: <20260922122623.1029132-8-acme@kernel.org>
 References: <20260922122623.1029132-1-acme@kernel.org>
- <20260922122623.1029132-2-acme@kernel.org>
+ <20260922122623.1029132-8-acme@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Tue, 22 Sep 2026 12:37:23 +0000
-Message-Id: <20260922123723.93C7A1F000FF@smtp.kernel.org>
+Date: Tue, 22 Sep 2026 12:38:09 +0000
+Message-Id: <20260922123809.7943A1F000FF@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -47,16 +47,25 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
 > From: Arnaldo Carvalho de Melo <acme@redhat.com>
 >=20
-> A DIE that is not what it looks like, e.g. one parsed at an offset that
-> is not the start of a DIE, can have a DW_AT_type that refers back to
-> itself, making the typedef/qualifier chases in die_get_real_type() and
-> die_get_pointer_type() spin forever, and the same for the type name
-> recursion in die_get_typename_from_type(); 'perf report -s type' did
-> exactly that on the dwz compressed debug info of zlib-ng (libz.so.1).
+> IBS events with exclude_{user,kernel} bits, as used for per-thread
+> recording when kernel samples are not allowed, are rejected by the
+> kernel on hardware without the privilege filter, so per-thread 'perf mem
+> record' fails on AMD:
 >=20
-> No sane chain of typedefs and qualifiers is 32 DIEs long, so give up on
-> the type with a pr_debug instead of hanging.
+>   $ perf mem record -o /dev/null -- true
+>   Error:
+>   Failure to open event 'ibs_op/ldlat=3D0/u' on PMU 'ibs_op' which will b=
+e removed.
+>   Invalid event (ibs_op/ldlat=3D0/u) in per-thread mode, enable system wi=
+de with '-a'.
 >=20
+> Kernel v6.14 added swfilt, a software privilege filter exposed as the
+> 'swfilt' format term, making those events usable per-thread:
+>=20
+> [ ... ]
+>=20
+> Suggested-by: Namhyung Kim <namhyung@kernel.org>
+> Suggested-by: Ravi Bangoria <ravi.bangoria@amd.com>
 > Assisted-by: LLM
 > Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 
@@ -64,5 +73,5 @@ Sashiko has reviewed this patch and found no issues. It looks great!
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260922122623.1029=
-132-1-acme@kernel.org?part=3D1
+132-1-acme@kernel.org?part=3D7
 
