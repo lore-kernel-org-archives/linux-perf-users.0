@@ -1,96 +1,96 @@
-Received: from mail-qt1-f173.google.com (mail-qt1-f173.google.com [209.85.160.173])
+Received: from mail-qt1-f174.google.com (mail-qt1-f174.google.com [209.85.160.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76958569F22
-	for <linux-perf-users@vger.kernel.org>; Tue, 22 Sep 2026 16:59:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.160.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 661F6345CCE
+	for <linux-perf-users@vger.kernel.org>; Tue, 22 Sep 2026 17:00:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.160.174
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790096383; cv=pass; b=EoRvGDUbdv7qLQguQu78UBC+tdOyuzy78XBBG3D4+eD5c/lIOkqZ2wF/6Dk+U4+rCbSzDqcxi2Jgj0zRaUTvNbJaiPwC+yHiC/IXncJxU7H3kvJ5bNu5he6QBgOuBB0KtFMdpdJkJoEBKbt6Q/C3SoSC9IHtfOQsYHNRVtKdsTo=
+	t=1790096416; cv=pass; b=Xx/ZNZ/0uCSCG+ui3bhnx1LY1XJE9XPOIv9PxIu6goCX+/CARHp4CMsSlSNDJikkoIhHMStUFxWJ3AKPAQDctjJ7Dk7kV9BFZSbURna5l0/Bgq+7P84BiGaV1HFXII/mujnkeZdgWImh+BmACT4Uhjpufk9EvCCOB4UnLz4HDis=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790096383; c=relaxed/simple;
-	bh=LRn3GFzuUdLoBRg+/HP+f5teFv/89kmI0cipOvvuRfI=;
+	s=arc-20240116; t=1790096416; c=relaxed/simple;
+	bh=Nh11KCvv29s1wzVo2hjgCVz2jvRdnaGOg1wLpMrLhVU=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=UAFG/WTRrpq6DpI/0a7+p9AFjIwVYGZxZ6J/cdgqeXEj/CEOHT7SwppWsDkQ38l2TpFlQBB0M6hkNdJLNH4Jgs5WXw9asrCQmtLupHWHlCaE+UD3et/YV0ZYPP56WFWaZAOZRSlKHtN83A0Zes4EscBrClW9WOcd5kJ898uP/84=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=rGoBhlVO; arc=pass smtp.client-ip=209.85.160.173
+	 To:Cc:Content-Type; b=Ef/xgMaOfqaS6N1NeCctlzSkGXRb8yEEP4JsNsIMql3hyk60VvjLxTUhek+//JxzgIUMik9thVE+Q61PMFvfl0HYBNgSY7JWftUmYwoSOGSRPHrOevnq7JFgmpmt5GFV7jCggi1v4awT5a8oZsvQoJ+SJskrmv8m7Cf1yh5duxk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=qhc3Pn4G; arc=pass smtp.client-ip=209.85.160.174
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rGoBhlVO"
-Received: by mail-qt1-f173.google.com with SMTP id d75a77b69052e-52faa58bff5so4271cf.0
-        for <linux-perf-users@vger.kernel.org>; Tue, 22 Sep 2026 09:59:41 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1790096380; cv=none;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qhc3Pn4G"
+Received: by mail-qt1-f174.google.com with SMTP id d75a77b69052e-53113d72966so2431cf.1
+        for <linux-perf-users@vger.kernel.org>; Tue, 22 Sep 2026 10:00:14 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1790096413; cv=none;
         d=google.com; s=arc-20260327;
-        b=ZXHz5NRv0fLiCCO4Ny5X6U43zYDpengBFBB06i1SzRJHJxCIZpRis9lQCaejsju3zG
-         rIKdBuT8vYJzkZer7mt+TXAagBCX5js8mshrCefutQ/69SqxO4jbHgzhmoxR6uoSTQJS
-         A64jlJ7RMZF6oRV/f5pAqiFhgaH3+qZO/IV4ty7jP7HbZpSIZlXNzlBXf88d8E9H0EtV
-         bvoJBZ97Eb6DbqyqvC9Z5sRFpUFlXqLt8A7aIW5yZD8VOcs7TurjRW5bsRdMD9eYqR9W
-         158C98mben3wAa5+9AEbIiSamBxziS5lZFOU78nKFjgMCXLCjuh4zuCiHXGw83+IC4oO
-         hogw==
+        b=h57q4BK5v5qbi2fU6oS+qg55AnV9lGIF3kz03LjaJYgCx6vDLX4Rdvp2O8AYRuEPQV
+         JGfF6FVKc4GhwnxVAi737YD9AHaPp3qwlZi10AFFc56yNJt+qT7PybJK1tneOZoPravr
+         6vwe0wv8gihd806oYb/AHTFNQkCQxXC7xc6FpPm/yt6o5uy7u6vOHgH89W4oXjlD8KC8
+         m25W6hXB02yiqJDdXAzm4IBXbVxC7AtKuDj5U5ZLiIoC5DNh1Qp7pxjnrf0nwISZEQIO
+         MJ86BzQczWNZZs+8rnvEXYhniR6KhGPrpGZu6Au5CLLpyLPaZ6Qsf1GVpQssmolrOpkW
+         PPXQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:dkim-signature;
-        bh=HsqDw8925+XtaD9Vzbpc0jDahGyyPw4OUMTbUv1Lnh8=;
-        fh=qvBkKDEHZuPFGeX1Mhs/LFu42MszVCtT81lRR9WHyx8=;
-        b=atNok3YxyPM4HbDfu+idw31AQ1f95YbOsWdPRkRbggzugmJzPng0CNXuZkiYdoQXzS
-         qrNEUM+QFxqPAo6f0CmdEYGe40Jtng2QBKef386gpiDAljD45yw5q0BjQuEolYcWfemk
-         NGbX9HWnmweIvxf3Cd/C90Eyc2vfTf+TdvmQREaO5vgZyBsE6eZ1lCoxjG8OG0O4WEYP
-         6vbu/cyK+bINjdK207YR+aJxCcZ1kbNb5gGiTqQuO0Kfc9NGXmnUrbKAu5XyB81RFSMy
-         xkerB7ojZK+9lYhzTKLB5p3jOhYIROTTDvVvmOwemSicPXc/c/cOw9gjDst5BlIqLaV0
-         ucyQ==;
+        bh=HhXuMRWtj4EoahoIpvu3m5yJyJGMHZPq0qdJI+IBC5I=;
+        fh=Sl1i+60YrkRhjpLaJ1Se3cJPuxZ33GJzuho0m3FAOUs=;
+        b=mu2xZGNDOfwgxOr826gJEU5ySLXVjKsyQnEvPDeUgqJ8/bXsqqzqBg7JPttcOWZP2v
+         EZefx9LzbJprLkQkKkEAVjKLHbyVAC+r7EE5nt+jvyZ3cCH6eJ3DFPWyexCcgQjo6F0M
+         RY1fGBJwi1+zPxSeb+vGZVn6BD0hEva6bxzUkdKFy1HwJKmlLpwuYk1kpRXHrsWdCgw6
+         iYAQ5GB4zUsbaMrB8sqVBmZPOpuoEwqxDF55DsisDBSveW4qwcy56GOyCM5ZLmkwYr6Q
+         /w+wTZRs0/fkNs6GmrG2ZNftB+i3LioFrA+zvjkghFCCZQXJmrTZY8ZkLHgq7hMdQEpF
+         jfiQ==;
         darn=vger.kernel.org
 ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1790096380; x=1790701180; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1790096413; x=1790701213; darn=vger.kernel.org;
         h=content-transfer-encoding:content-type:cc:to:subject:message-id
          :date:from:in-reply-to:references:mime-version:from:to:cc:subject
          :date:message-id:reply-to:content-type;
-        bh=HsqDw8925+XtaD9Vzbpc0jDahGyyPw4OUMTbUv1Lnh8=;
-        b=rGoBhlVO0Jd3iktSiyOPyJu5xmKomRHa97tUnuj1unnjBd2bkchOh3UqkZx58TX/Vd
-         O3XWqKK6qjdmcvH7ghod6BEV7d7ejB0RywJwzCJs+OlGPw6nXTXChxgUlKROB5P3NVsu
-         UkxIGuQrkj0SF+++8MQ2uZjSbxMnfPF1IllaqeYRhPLXzHXTZslFie9d+bJmZsPkZUEf
-         pRNIqIVh/sh21AfD/QU8JlvYA3mpst9IHY2zcPsnHr2rcsvkLE79uwwqs0urYw5DYavS
-         MoDeV26vPSxxM6fhQ4lnpncU1yhX9y6CWxYlJWbIDSgGHnRdOZdIaVHE+O+TbAxjNLI2
-         YSEw==
+        bh=HhXuMRWtj4EoahoIpvu3m5yJyJGMHZPq0qdJI+IBC5I=;
+        b=qhc3Pn4G1bov55QzP9fmVML/eJ+6EFqXCpolstAt26yFMS10M2Ku6NIPUVhlN2r4PY
+         JfiVU13R0OdQIyzPGe4kcojq7qD2U9eSq5A1wIoqRkGD6JnwmLRf+dRnYHY6FCRAXQPa
+         CCsdHnV8o0MOB4//Bs37393j3/Xar2yKwsfyiKUx/WhJ/AAJZ8zGR1ikmmISEij7oAxq
+         oAFpTqEDZ87zbuTkf0zoMPDt1sifh76g+you7Qw/4bh655LypXmDjZEkHU6JS0iPqbsL
+         jogjnSpv8czqWn1ejPYBVVBj5lLDis3tlW6ii4LgDKuVhLBoRQG/DmWDf58QN0FKekNZ
+         iPiw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1790096380; x=1790701180;
+        d=1e100.net; s=20260707; t=1790096413; x=1790701213;
         h=content-transfer-encoding:content-type:cc:to:subject:message-id
          :date:from:in-reply-to:references:mime-version:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=HsqDw8925+XtaD9Vzbpc0jDahGyyPw4OUMTbUv1Lnh8=;
-        b=a7/vuAre05SMic6x/gsWhGrLTEK4e5l+YUQ8voAnUvQ0p5EArPH6E/yS/lnUEj459a
-         nBb68wUxcHNfr2vPtEKkQT0kJZPKYw73Hk4+fiJORzrYZqU6aJSY/xmYOjQs7jOEpB2Z
-         2gEqTvJhto/DMLs1zMOVMqGck7BBtcvF412bGw3b3Pi8XWZcmm7nRLsio/VPINTKPmzT
-         ulIUGp++ww4t+f+PqwgfzlLYg0rg+Y2zuzpTpNzgE321N68yRE6PhljtgEe288UT1x5p
-         XjPHUxl31Kd8wiqd3y86Aqz2FL3sc431oYwYq3VOCMub5A8zcVp5VczDXtRTZNmEL3zc
-         79xw==
-X-Forwarded-Encrypted: i=1; AKwUvBzzAjBfh5RM05EUb2UgGiHiROJWsp00AwPaPjzZ4zr/N9RYOS9/RE6uACfJVXDD9WUhiDsmHnQ4ltlyhRRCIfiO@vger.kernel.org
-X-Gm-Message-State: AFuF++lURvMtUWWg/uMLTkzmw2uv6CMPsOgLhBmF9sqtRdGpjog+WVJa
-	U3WTJZKguoN/K5a7hvtFwKM6rgrdpZ+6XvDyWBvJVyYstVLNnqDw0qJJ3vJ/+HgJpmA02krp0FV
-	IdrX5odP3Pf/jPmxZiF0acTUUC35G/tDd7aIXRBIT
-X-Gm-Gg: AYBFou2BJQZv+LK4JRnugQ7CsAUPeruGyo/Y63APnhigtObeduQNjxq/yYBaLKM343O
-	K/ylrndLj0S8fxlUM/2Bnc666jAPIW+u9EANg/NI8wEM8THKkcezCLIVmvJSAR3eCytdVPGc2nC
-	YuJ6O9/E83sTvXco74bjJdPOUxCGTkAGNz0h3VPIvo5hXt00NCyBmOeN/7qrp6uA7nXGN4pu7qK
-	JRT1Yo4Ca9mEclocVbnlbV1b11ClJP3DhCCiRSXLEqwNI6wU920Z4wysmsZMY5wyuOQ4c/Jatqh
-	xOqzqCMFlpLScVA+66HuVspUwDCOjfqUq4KGwp+TS9Xac2dxaeKkX5kp33d+u0R8EHYbiEOhXV3
-	vb5FbOSY=
-X-Received: by 2002:ac8:58ca:0:b0:52f:9ed4:8d76 with SMTP id
- d75a77b69052e-532e8669213mr4171531cf.14.1790096379504; Tue, 22 Sep 2026
- 09:59:39 -0700 (PDT)
+        bh=HhXuMRWtj4EoahoIpvu3m5yJyJGMHZPq0qdJI+IBC5I=;
+        b=AFIdHZUD2yolu7zB3SNIqr5T14JkWygdYk8NyUPlVtm0JVMSqxHVo3DzJlY+pyFtgU
+         pBq9wl01n0pJh/exlN0SrwcNZiatZa30U4FZE9Yu8e9Lx2QBLuAeT1G2+xjcAvoi8tmT
+         TAN5Pck3Gv31lo0C0Nw6FAuL9hng4A81+dmOcbrL3xbvEWMv12VE4CyEDIeieQ/4WXgJ
+         p+cesGQjK9YUtg2SIql1KAq2Ljf49aerzVQzDTbbPbodamMi4Fc3FEtk8Nz4kCgrnWtd
+         4TDQGjE6QBd/JDLb9ncvtgQ/aLgb74dY3iEP27H2MXexq02nGlfrmbfO+/WiBuiCX0VH
+         SFGA==
+X-Forwarded-Encrypted: i=1; AKwUvBxICF5FnXUipJZDb0kJueHKlXhw6oL6/W2ev+83yyr1R6oa/gKamKZJpIjnD/I+SPyE6rJfBVAlUDSs9mxOVRFH@vger.kernel.org
+X-Gm-Message-State: AFuF++mfFlIQXY4fT+ydyoQCNF3CEPH1UZA6dGczfiT8vjQfPcc79xhg
+	x3LP4LFVcMTfLCAFWyEi33ONI2hiIW4eCLEEl+E+a7t7qMoLD/aOUzG9lrb03pOmyS3tPEYbc8x
+	bR5Gk08NjN5PaSysXbdVS6sGUj8cuUuEyERsBkcK6
+X-Gm-Gg: AYBFou3M6Y3mswGIDdwcND3jVAu7+XQYdd6MmpkNp4JFaLBtonjhJ/VX6QaDaogyOi3
+	LOeDalwlNucON9VohUwLI1t5NKi3gBQk432sbtJ/9jzOIuJDTTMmcaWx9FtPvRb4Z85mwzVvXm1
+	qRufUB/Ej9JUeIVQ/Y1FXrFgnegE9nOfMqJj0+MmLEAth9eCAmQ2VqZvWXnI9T2mFa/Xjv2hYSV
+	rS/e947zlqv7xzWU6Fg/v1JoDi7Tx7WJcTcquISX39fj5P7p5P//M1TZmnQt35yqwMxZYfkQdq7
+	1Yp2blvxqP3CFQt6C/r6v7eCGrJ7VAUIa7DZIo+eNq9ZLINd9AybkLeJv4eCP6/Pf9PXLVBR+H4
+	k9QkmMG/mR/2SWZzG3Q==
+X-Received: by 2002:a05:622a:4d09:b0:531:34b9:2532 with SMTP id
+ d75a77b69052e-532ebb77793mr114661cf.4.1790096412307; Tue, 22 Sep 2026
+ 10:00:12 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1789966896.git.irogers@google.com> <7c56d15d6e61fabe8b94f5a98713305f15bf0848.1789966896.git.irogers@google.com>
- <56ea4b35-f73f-4e6e-95e4-f255eb089c5c@linaro.org>
-In-Reply-To: <56ea4b35-f73f-4e6e-95e4-f255eb089c5c@linaro.org>
+References: <cover.1789966896.git.irogers@google.com> <b1d417e1f28afa565fa01b4997e3c31140e4772d.1789966896.git.irogers@google.com>
+ <8e3ed898-5134-40df-84b0-b7cdaa777731@linaro.org>
+In-Reply-To: <8e3ed898-5134-40df-84b0-b7cdaa777731@linaro.org>
 From: Ian Rogers <irogers@google.com>
-Date: Tue, 22 Sep 2026 09:59:27 -0700
-X-Gm-Features: AcwNN1Wxe4iKMPSdX4ghjuoW7LHjABByJQUuMgDPKi-P4xHVkR2Yf5ncUcs5YLY
-Message-ID: <CAP-5=fXF=7AHVm2wKqvtFcQ1byc=-4kKvLb_1dQkge4tcQjX1Q@mail.gmail.com>
-Subject: Re: [PATCH v2 13/49] perf build: Make mypy build test opt-out (NO_MYPY=1)
+Date: Tue, 22 Sep 2026 10:00:00 -0700
+X-Gm-Features: AcwNN1UI-VG5bkPxC40nmqZB4RtDB35hxd84ZBx_ZtNi24VFwq2lDUI0HWTpv5E
+Message-ID: <CAP-5=fUxfMNAaScod0YBXf3ThZ1rbwA1AEhhvBVFFqDR6H6Ang@mail.gmail.com>
+Subject: Re: [PATCH v2 09/49] perf python: Add Intel PT call_return and itrace capability
 To: James Clark <james.clark@linaro.org>
 Cc: adrian.hunter@intel.com, dapeng1.mi@linux.intel.com, leo.yan@linux.dev, 
 	linux-kernel@vger.kernel.org, mingo@redhat.com, peterz@infradead.org, 
@@ -102,98 +102,69 @@ Content-Transfer-Encoding: quoted-printable
 On Tue, Sep 22, 2026 at 6:11=E2=80=AFAM James Clark <james.clark@linaro.org=
 > wrote:
 >
+>
+>
 > On 21/09/2026 06:06, Ian Rogers wrote:
-> > Commit 168910d0f937 ("perf build: Add mypy build tests") added mypy as =
-an
-> > opt-in compile-time check (MYPY=3D1) because of existing mypy errors ac=
-ross
-> > perf Python scripts.
+> > Add support for Intel PT call_return events and itrace options to the
+> > perf Python extension so standalone Python scripts can decode and
+> > inspect low-level instruction traces.
 > >
-> > Now that all Python scripts in tools/perf have been cleaned up and pass
-> > mypy without errors, make the mypy build test opt-out (default on when
-> > mypy is installed, disabled with NO_MYPY=3D1), matching NO_SHELLCHECK=
-=3D1.
-> > Set MYPYPATH to tools/perf/python so local imports resolve during type
-> > checking, and clean *.mypy_log files in 'make clean'.
+> > Specifically:
+> > - Add a call_return callback parameter and itrace option string to
+> >    perf.session, treating explicit None (Py_None) callbacks as omitted.
+> > - Expose the perf.call_return object with db_id, parent_id, insn_count,
+> >    cyc_count, comm, pid, tid, call_time, return_time, branch_count,
+> >    call_ref, return_ref, flags, and call_path (resolved as a
+> >    perf.callchain ordered from outermost caller to callee).
+> > - Export perf.CALL_RETURN_NO_CALL, perf.CALL_RETURN_NO_RETURN, and
+> >    perf.CALL_RETURN_NON_CALL flag constants.
+> > - Expose session.e_machine and session.is_64_bit properties, preferring
+> >    recorded thread ELF machines (perf_session__e_machine) over perf_env
+> >    so pipe-mode traces do not prematurely cache host bitness.
+> > - Support optional vmlinux, kallsyms, and symfs symbol configuration
+> >    parameters (and PERF_SYMBOL_VMLINUX, PERF_SYMBOL_KALLSYMS,
+> >    PERF_SYMBOL_SYMFS environment fallbacks) in perf.session, resetting
+> >      symbol_conf pointers and freeing vm_tm_corr_args, cpu_bitmap, and
+> >    ptime_range in
+> >    pyrf_session__delete().
 > >
-> > Assisted-by: Antigravity:gemini-3.1-pro
 > > Signed-off-by: Ian Rogers <irogers@google.com>
+> > ---
+> >   tools/perf/python/perf.pyi |  35 +++
+> >   tools/perf/util/python.c   | 624 +++++++++++++++++++++++++++++++++++-=
+-
+> >   2 files changed, 632 insertions(+), 27 deletions(-)
+> >
+> [...]
+> > @@ -4161,23 +4585,40 @@ static PyObject *pyrf_session__new(PyTypeObject=
+ *type, PyObject *args, PyObject
+> >   {
+> >       struct pyrf_data *pdata;
+> >       PyObject *sample =3D NULL, *stat =3D NULL, *context_switch =3D NU=
+LL;
+> > -     static char * const kwlist[] =3D { "data", "sample", "stat", "con=
+text_switch", NULL };
+> > +     PyObject *call_return =3D NULL;
+> > +     char *itrace_str =3D NULL;
+> > +     char *vmlinux_str =3D NULL, *kallsyms_str =3D NULL, *symfs_str =
+=3D NULL;
+> > +     static char * const kwlist[] =3D { "data", "sample", "stat", "con=
+text_switch",
 >
-> Is there some minimum version or other setup requirement? I get this:
+> Hi Ian,
 >
+> This needs to be "static char *kwlist[]" to support older Python versions=
+:
 >
-> pmu-events/amd_metrics.py:181: error: Unsupported operand types for +
-> ("Event" and "object")  [operator]
-> pmu-events/amd_metrics.py:182: error: Unsupported operand types for +
-> ("Event" and "object")  [operator]
-> pmu-events/amd_metrics.py:230: error: Argument 1 to "d_ratio" has
-> incompatible type "object"; expected "int | float | Expression"  [arg-typ=
-e]
-> pmu-events/amd_metrics.py:231: error: Unsupported left operand type for
-> + ("object")  [operator]
-> pmu-events/amd_metrics.py:236: error: Argument 1 to "d_ratio" has
-> incompatible type "object"; expected "int | float | Expression"  [arg-typ=
-e]
-> pmu-events/amd_metrics.py:236: error: Unsupported left operand type for
-> + ("object")  [operator]
-> Found 6 errors in 1 file (checked 1 source file)
-> make[3]: *** [pmu-events/Build:192:
-> /home/james/workspace/linux/build/local/pmu-events/amd_metrics.py.mypy_lo=
-g]
-> Error 1
-> make[2]: *** [Makefile.perf:562:
-> /home/james/workspace/linux/build/local/pmu-events/pmu-events-in.o] Error=
- 2
-> make[2]: *** Waiting for unfinished jobs....
-> python/ilist.py:13: error: Cannot find implementation or library stub
-> for module named "textual"  [import-not-found]
-> python/ilist.py:14: error: Cannot find implementation or library stub
-> for module named "textual.app"  [import-not-found]
-> python/ilist.py:15: error: Cannot find implementation or library stub
-> for module named "textual.binding"  [import-not-found]
-> python/ilist.py:16: error: Cannot find implementation or library stub
-> for module named "textual.containers"  [import-not-found]
-> python/ilist.py:17: error: Cannot find implementation or library stub
-> for module named "textual.css.query"  [import-not-found]
-> python/ilist.py:17: note: See
-> https://mypy.readthedocs.io/en/stable/running_mypy.html#missing-imports
-> python/ilist.py:18: error: Cannot find implementation or library stub
-> for module named "textual.command"  [import-not-found]
-> python/ilist.py:19: error: Cannot find implementation or library stub
-> for module named "textual.screen"  [import-not-found]
-> python/ilist.py:20: error: Cannot find implementation or library stub
-> for module named "textual.widgets"  [import-not-found]
-> python/ilist.py:21: error: Cannot find implementation or library stub
-> for module named "textual.widgets.tree"  [import-not-found]
-> Found 9 errors in 1 file (checked 1 source file)
-> make[3]: *** [Build:91:
-> /home/james/workspace/linux/build/local/python/ilist.py.mypy_log] Error 1
-> make[3]: *** Waiting for unfinished jobs....
-> python/treport.py:12: error: Cannot find implementation or library stub
-> for module named "textual"  [import-not-found]
-> python/treport.py:13: error: Cannot find implementation or library stub
-> for module named "textual.app"  [import-not-found]
-> python/treport.py:14: error: Cannot find implementation or library stub
-> for module named "textual.binding"  [import-not-found]
-> python/treport.py:15: error: Cannot find implementation or library stub
-> for module named "textual.color"  [import-not-found]
-> python/treport.py:16: error: Cannot find implementation or library stub
-> for module named "textual.scroll_view"  [import-not-found]
-> python/treport.py:17: error: Cannot find implementation or library stub
-> for module named "textual.strip"  [import-not-found]
-> python/treport.py:18: error: Cannot find implementation or library stub
-> for module named "textual.widgets"  [import-not-found]
-> python/treport.py:19: error: Cannot find implementation or library stub
-> for module named "textual.widgets.tree"  [import-not-found]
-> python/treport.py:19: note: See
-> https://mypy.readthedocs.io/en/stable/running_mypy.html#missing-imports
-> Found 8 errors in 1 file (checked 1 source file)
+>    Changed in version 3.13: The keywords parameter has now type char
+>    *const* in C and const char *const* in C++, instead of char**
 
-Thanks James! So there are 2 issues, and I'll fix the code in v3. The
-first issue is that in older mypys the join the plus operator isn't
-computed correctly and this can be fixed with a type annotation. The
-textual issue is resolvable by running mypy with
---ignore-missing-imports.
+Thanks! Fixing in v3.
 
-Thanks,
 Ian
+
+> > +                           "call_return", "itrace", "vmlinux", "kallsy=
+ms",
+> > +                           "symfs", NULL };
+> >       struct pyrf_session *psession;
+> >       struct perf_session *session;
