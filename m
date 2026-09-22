@@ -1,169 +1,128 @@
-Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44ECB548558
-	for <linux-perf-users@vger.kernel.org>; Tue, 22 Sep 2026 13:11:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 444A3284B37;
+	Tue, 22 Sep 2026 13:11:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790082683; cv=none; b=PJwYp879cGcoFkl2RhSkwPXZmENUHDv2kpQsgGJbRg5de9LRyKWWySr+Qrb19c8qJIytLJnbZPsV08FZqgviMRvJadPp50oYOiJqG3admB9eJp2XuhOTTjCNsEFVnX2WriFxNSh52OWJUvgNcWbbWbHBq/OOzUtGhvU7lk0vCSA=
+	t=1790082704; cv=none; b=OVO8jTmrKqbl3jmXZDG4RlFHmSadFvyqxI8uuXiT0avshVwwWyLaDk+2T4bDTI/80RDRhutW0bNzUxqxTQTZM2o2zIX41Ta9aXr7sGWgGZnSeGRYqqKQ1YecoETuLfouBEHcMe1WSuCzMI3DsQnFxE4tFQVuZMZPqyJVMAqq8ro=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790082683; c=relaxed/simple;
-	bh=cSnNPwiN6yk+EOVHl73RfPUomrZtynv9ccjwZPx+lAU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Qo8w5igcGihLQsEgLcJ+2RVKkS4ovFgvxHygohSpwhIXVG1UOK1lioVH89MHJ6GqGLX0nL8gzAKjZwNNaJyQaJG0rq0Nl8DsJ+4Os+BktqoPED1QvT9HYSt/Vx9q5Y4U8MulaKq4hFxGGTK8nUhpuDdMVz6EBCu6mnt6yFcu2So=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=dDPHeOGA; arc=none smtp.client-ip=209.85.218.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1790082704; c=relaxed/simple;
+	bh=33PaNkpNF+y6IDTenB5ywEdxcx1urTTt1YCa/jDXvjY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZIfeQtKpjIchubTYX5/FEvcmOja8huOd8zsgFlhbWw5SD4fF3tbO44i78wgosup5JddxqbP7h+CZbUofBeiPaIfvsmxbvIhixgZl1oWSNfbiBSQjYCnN/ZEtKxEZX2Tqj53/H59rscj3FU36yi7qN96QNLg7bfNMGkOFbIM3Igo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iChIax6B; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dDPHeOGA"
-Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-c2946aa0d5aso122599766b.0
-        for <linux-perf-users@vger.kernel.org>; Tue, 22 Sep 2026 06:11:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1790082679; x=1790687479; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:in-reply-to:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=jo/W8WDh2FRjK2u86q2opD/F5j1sC7K9OlH5rFnj7t8=;
-        b=dDPHeOGAky6GNlctH/fSRLrNObUbNCY+VxtoJeYO8iPfQNX1NjJ8mqXsgnHc/Yzxcs
-         zVKub8Hzaw4D/ATtgv8AmqIbrT4134Zz/pHwjKRojhDzp5j7Ya7cG1tcik0vcyiPHUSL
-         1nQdUVqj26qGNOfWZelGktqoFRtw7yZuWN+BWzuVnz9Q9GZaIxSK09eLVMyTky3We8Vs
-         ElpZ/QDy+D5rOakjC5amYD8KWTVKADjiG3HZFFrDhxaHUifs8lys9+wszgkR9oishDIz
-         TZI3phcM+cPBRHl1b+d5bBuvXYvt5aBOESvbAh9lGbBki2SL80712ptzAEBmaimafaPv
-         stwg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1790082679; x=1790687479;
-        h=content-transfer-encoding:content-type:in-reply-to:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=jo/W8WDh2FRjK2u86q2opD/F5j1sC7K9OlH5rFnj7t8=;
-        b=abEBXkwPitxsjJbb4CZPaHtCLAMOW6pw7gx9F+eSnX9tQzjGK6P28/cOY6MGtZmTOH
-         CRVsmdxR7QzkxBLSj0uIpberoh23gOCUu2KHRyuBivFvrtNv2I0ES5CF3ZphxV0s2FBC
-         U7miCJ0Oc5sHjMVJN7JHoK/ED1dV7cV7YaayH0BytjAMTaKVuBIjcWfkjrA/W34x2Hoy
-         5M6EL/XN+QbHzx9FuHagxEBSjBSW5KYK1gjMuplDGIED8M/KCPdyhayKX9jDfeNF+RWt
-         i7Atn5W7fE877v0Pbzmw00GxLo7ql0WNNO0AfsjXmMDXTKXZnoVkg6/l4OsLb0RWeLWQ
-         wiDw==
-X-Forwarded-Encrypted: i=1; AKwUvBxs6evK+tAXX2e2k2eJACi0MfliLzmH35g6gpGOaCxlTxIpc0P+9NkLHFoIE/GIa7e1PjCNRCX9keDJzBfwYHQB@vger.kernel.org
-X-Gm-Message-State: AFuF++koxz5voImboKnUCmbNDljp2tJ6njnUY8eRihASn54W3RDeUCv4
-	3U4bsTf9ERbz2g3qAgNZvtT3rhujkGTzqVVDJz8xmX+oKVtHlox48nmn5finyZWIqC0=
-X-Gm-Gg: AYBFou1RTicKQxFI0C/P+39SUTx6EkGIesxNaI2dM7XAO7DYhywN3mnWQo+19ZIQnl1
-	EUNZEHZ+jDuXla4Cbn0yErlUHngbyb3M4ivb7LkqiZmv5r/CFC3Xq3xxYTFUOsMb/Ucu0to9aqc
-	x8l0WOUTgVPZYj8dfF/ZYWJn0wypY3xsLsybPc3bitKghMNvuFKkVeb9c15tAtjhjHyGI7OiQjc
-	NmwJWCuqh0NxpkdN97kdu9brA4GLnkh60wH8WVTIzWX5/HDMdIuRCcIEqA/RVLDvO1uMNaDrBB5
-	web73JqhA7g3/V7qQjyV011wq+SxKq+xguLiODaX5Eag5x5VjmaWpFUQnU60IAUKlYPHMrL0ADE
-	ymvApsuZfzbpHSC5xsgW+97Jc03lOqntb6vPObuk6lCPT6Zgpsk8+J7zTau0xX+c8PiSguNoJTS
-	sicGCwr8IKhTd3tmt8dIYC2SX+xQ7NJ3piBp224VRox00L3+UDgvj4U/hOAUM19/MqypKvRuU1Y
-	4M=
-X-Received: by 2002:a17:907:db02:b0:c26:1f8f:ed53 with SMTP id a640c23a62f3a-c2a8d522b8dmr222772266b.12.1790082679216;
-        Tue, 22 Sep 2026 06:11:19 -0700 (PDT)
-Received: from [192.168.1.3] ([37.18.141.193])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-c2a9c5832fesm84591366b.30.2026.09.22.06.11.18
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 22 Sep 2026 06:11:18 -0700 (PDT)
-Message-ID: <56ea4b35-f73f-4e6e-95e4-f255eb089c5c@linaro.org>
-Date: Tue, 22 Sep 2026 14:11:17 +0100
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iChIax6B"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C89EA1F000FF;
+	Tue, 22 Sep 2026 13:11:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1790082702;
+	bh=Pspu0np4+Tp4LALlXTnBNqD2HczdvX92B+DMqOpzuL0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=iChIax6BJaMqFLD9Mr/zW9vF3tcDK+Hn/dGSlsZedV9ZQBZz5XjnySedfCXY3/4Xk
+	 iYHHnzXLcQuIJIkuTNqx6mG3Aywga8zHwRnhmypowAUFnpPOO7s4LfNWq6eGRyqhp+
+	 onJhaZO0TEfnC3FJklsocv7eAKMDHD0i1hMqHy7sGwLZw/xv5CyiRyBBPpSVqK1sUB
+	 LRXUTsHRprJZ2zDe7BhIeJ8jJ4zQBXVLaTOqk/MJE9w0oQmeXLzKT/0NHHNPpYXqfF
+	 XIPf/yBgs9vtpRjiC9Tcdc1tCfwRQCqTA37U303C07SFQVQ9P2cU1UQgupGZ0eApoJ
+	 jtlFk1A93d5DA==
+Date: Tue, 22 Sep 2026 15:11:30 +0200
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Ian Rogers <irogers@google.com>
+Cc: namhyung@kernel.org, Howard Chu <howardchu95@gmail.com>,
+	adrian.hunter@intel.com, james.clark@linaro.org, jolsa@kernel.org,
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+	mingo@redhat.com, peterz@infradead.org
+Subject: Re: [PATCH v4 00/18] perf trace: Fix BPF filtering and make tracing
+ tests non-exclusive
+Message-ID: <arJ-gpzqOHk-gF8T@x2>
+References: <20260918140659.2501976-1-irogers@google.com>
+ <20260918211932.2966061-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 13/49] perf build: Make mypy build test opt-out
- (NO_MYPY=1)
-To: Ian Rogers <irogers@google.com>
-Cc: adrian.hunter@intel.com, dapeng1.mi@linux.intel.com, leo.yan@linux.dev,
- linux-kernel@vger.kernel.org, mingo@redhat.com, peterz@infradead.org,
- tmricht@linux.ibm.com, acme@kernel.org, alice.mei.rogers@gmail.com,
- linux-perf-users@vger.kernel.org, namhyung@kernel.org
-References: <cover.1789966896.git.irogers@google.com>
- <7c56d15d6e61fabe8b94f5a98713305f15bf0848.1789966896.git.irogers@google.com>
-Content-Language: en-US
-From: James Clark <james.clark@linaro.org>
-In-Reply-To: <7c56d15d6e61fabe8b94f5a98713305f15bf0848.1789966896.git.irogers@google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260918211932.2966061-1-irogers@google.com>
 
-
-
-On 21/09/2026 06:06, Ian Rogers wrote:
-> Commit 168910d0f937 ("perf build: Add mypy build tests") added mypy as an
-> opt-in compile-time check (MYPY=1) because of existing mypy errors across
-> perf Python scripts.
+On Fri, Sep 18, 2026 at 02:19:14PM -0700, Ian Rogers wrote:
+> perf trace's BPF augmentation attaches to raw_syscalls:sys_enter and
+> raw_syscalls:sys_exit system wide, and used the program return value to
+> decide whether a syscall was interesting. Returning 0 from a
+> BPF_PROG_TYPE_TRACEPOINT program makes perf_trace_run_bpf_submit() drop
+> the event for every listener on that tracepoint, not just for the perf
+> trace that installed the program. Any concurrent perf trace, perf record
+> or ftrace session watching raw_syscalls therefore lost events, which is
+> one of the reasons so many of the perf trace and perf probe shell tests
+> had to be marked (exclusive) and run on their own.
 > 
-> Now that all Python scripts in tools/perf have been cleaned up and pass
-> mypy without errors, make the mypy build test opt-out (default on when
-> mypy is installed, disabled with NO_MYPY=1), matching NO_SHELLCHECK=1.
-> Set MYPYPATH to tools/perf/python so local imports resolve during type
-> checking, and clean *.mypy_log files in 'make clean'.
+> Patches 1 to 3 are independent fixes to the code the rest of the series
+> goes on to rework or to rely on.
 > 
-> Assisted-by: Antigravity:gemini-3.1-pro
-> Signed-off-by: Ian Rogers <irogers@google.com>
+> Patches 4 to 10 fix perf trace. They stop the return value being used as
+> a filter and do the filtering in BPF maps instead, fix argument handling
+> for the __data_loc internal tracepoint fields that syscalls:sys_enter_*
+> gained in 6.19, stop the sys_exit program array tail calling a sys_enter
+> augmenter, and replace the userspace PERF_RECORD_FORK/PERF_RECORD_EXIT
+> bookkeeping with BTF-typed raw tracepoint programs on
+> sched_process_{fork,exit,exec}. A task is then registered before its
+> first syscall and evicted in do_exit(), rather than whenever userspace
+> next drains the ring buffer.
+> 
+> Patches 11 to 18 deal with the tests. Several collided with each other
+> through global state rather than through perf trace: fixed probe names,
+> clear_all_probes() disabling every tracepoint on the system, and perf
+> trace's hardcoded "probe:vfs_getname*" wildcard pinning probes belonging
+> to other tests. With those scoped to a pid they can drop (exclusive) and
+> run in parallel again.
+> 
+> Tested on x86_64. The trace and probe tests pass under 'perf test -r3',
+> which runs the repeats concurrently. Every patch builds individually,
+> and the series also builds with BUILD_BPF_SKEL=0.
 
-Is there some minimum version or other setup requirement? I get this:
+Lots of changes, from a quick look all look sensible, I'll test it some
+more, as in one case it segfaulted:
 
+root@x2:~# strace -e perf_event_open perf trace -a sleep 1
+<SNIP>
+  262.297 ( 0.002 ms): ptyxis/30654 write(fd: 4<anon_inode:[eventfd]>, buf: \1\0\0\0\0\0\0\0, count: 8)   = 8
+   262.304 ( 0.011 ms): ptyxis/30654 ppoll(ufds: 0x55dfa7a62f10, nfds: 11, tsp: 0x7ffc0701eed0, sigsetsize: 8) = 2
+   262.318 ( 0.002 ms): ptyxis/30654 read(fd: 4<anon_inode:[eventfd]>, buf: 0x7ffc0701ee10, count: 8)      = 8
+   262.324 ( 0.002 ms): ptyxis/30654 write(fd: 4<anon_inode:[eventfd]>, buf: \1\0\0\0\0\0\0\0, count: 8)   = 8
+   262.328 ( 0.002 ms): ptyxis/30654 read(fd: 31</dev/ptmx>, buf: 0x55dfa8a54f19, count: 5751)             = 8
+   262.332 ( 0.002 ms): ptyxis/30654 read(fd: 31</dev/ptmx>, buf: 0x55dfa8a54f20, count: 5744)             = -1 (unknown) (Resource temporarily unavailable)
+LOST 70 events!
+--- SIGSEGV {si_signo=SIGSEGV, si_code=SEGV_MAPERR, si_addr=0x117f000} ---
+perf: Segmentation fault
+    #0 0x73104f in dump_stack debug.c:366
+    #1 0x7310c5 in sighandler_dump_stack debug.c:378
+    #2 0x7f749ea66fb0 in __restore_rt libc.so.6[19fb0]
+    #3 0x4c0fa0 in syscall_arg__scnprintf_buf builtin-trace.c:1955
+    #4 0x4c2f3d in syscall_arg_fmt__scnprintf_val builtin-trace.c:2632
+    #5 0x4c33ae in syscall__scnprintf_args builtin-trace.c:2722
+    #6 0x4c43d3 in trace__sys_enter builtin-trace.c:3094
+    #7 0x4c7865 in trace__handle_event builtin-trace.c:4013
+    #8 0x4c9ab4 in __trace__deliver_event builtin-trace.c:4962
+    #9 0x4c9c06 in trace__deliver_event builtin-trace.c:4988
+    #10 0x4caed8 in trace__run builtin-trace.c:5397
+    #11 0x4cf530 in cmd_trace builtin-trace.c:6681
+    #12 0x4da43c in run_builtin perf.c:380
+    #13 0x4da68e in handle_internal_command perf.c:430
+    #14 0x4da7ea in run_argv perf.c:477
+    #15 0x4daabe in main perf.c:577
+    #16 0x7f749ea50681 in __libc_start_call_main libc.so.6[3681]
+    #17 0x7f749ea50798 in __libc_start_main@@GLIBC_2.34 libc.so.6[3798]
+    #18 0x409f25 in _start perf[409f25]
+--- SIGSEGV {si_signo=SIGSEGV, si_code=SI_TKILL, si_pid=1097958, si_uid=0} ---
++++ killed by SIGSEGV (core dumped) +++
+Segmentation fault         (core dumped) strace -e perf_event_open perf trace -a sleep 1
+root@x2:~#
 
-pmu-events/amd_metrics.py:181: error: Unsupported operand types for + 
-("Event" and "object")  [operator]
-pmu-events/amd_metrics.py:182: error: Unsupported operand types for + 
-("Event" and "object")  [operator]
-pmu-events/amd_metrics.py:230: error: Argument 1 to "d_ratio" has 
-incompatible type "object"; expected "int | float | Expression"  [arg-type]
-pmu-events/amd_metrics.py:231: error: Unsupported left operand type for 
-+ ("object")  [operator]
-pmu-events/amd_metrics.py:236: error: Argument 1 to "d_ratio" has 
-incompatible type "object"; expected "int | float | Expression"  [arg-type]
-pmu-events/amd_metrics.py:236: error: Unsupported left operand type for 
-+ ("object")  [operator]
-Found 6 errors in 1 file (checked 1 source file)
-make[3]: *** [pmu-events/Build:192: 
-/home/james/workspace/linux/build/local/pmu-events/amd_metrics.py.mypy_log] 
-Error 1
-make[2]: *** [Makefile.perf:562: 
-/home/james/workspace/linux/build/local/pmu-events/pmu-events-in.o] Error 2
-make[2]: *** Waiting for unfinished jobs....
-python/ilist.py:13: error: Cannot find implementation or library stub 
-for module named "textual"  [import-not-found]
-python/ilist.py:14: error: Cannot find implementation or library stub 
-for module named "textual.app"  [import-not-found]
-python/ilist.py:15: error: Cannot find implementation or library stub 
-for module named "textual.binding"  [import-not-found]
-python/ilist.py:16: error: Cannot find implementation or library stub 
-for module named "textual.containers"  [import-not-found]
-python/ilist.py:17: error: Cannot find implementation or library stub 
-for module named "textual.css.query"  [import-not-found]
-python/ilist.py:17: note: See 
-https://mypy.readthedocs.io/en/stable/running_mypy.html#missing-imports
-python/ilist.py:18: error: Cannot find implementation or library stub 
-for module named "textual.command"  [import-not-found]
-python/ilist.py:19: error: Cannot find implementation or library stub 
-for module named "textual.screen"  [import-not-found]
-python/ilist.py:20: error: Cannot find implementation or library stub 
-for module named "textual.widgets"  [import-not-found]
-python/ilist.py:21: error: Cannot find implementation or library stub 
-for module named "textual.widgets.tree"  [import-not-found]
-Found 9 errors in 1 file (checked 1 source file)
-make[3]: *** [Build:91: 
-/home/james/workspace/linux/build/local/python/ilist.py.mypy_log] Error 1
-make[3]: *** Waiting for unfinished jobs....
-python/treport.py:12: error: Cannot find implementation or library stub 
-for module named "textual"  [import-not-found]
-python/treport.py:13: error: Cannot find implementation or library stub 
-for module named "textual.app"  [import-not-found]
-python/treport.py:14: error: Cannot find implementation or library stub 
-for module named "textual.binding"  [import-not-found]
-python/treport.py:15: error: Cannot find implementation or library stub 
-for module named "textual.color"  [import-not-found]
-python/treport.py:16: error: Cannot find implementation or library stub 
-for module named "textual.scroll_view"  [import-not-found]
-python/treport.py:17: error: Cannot find implementation or library stub 
-for module named "textual.strip"  [import-not-found]
-python/treport.py:18: error: Cannot find implementation or library stub 
-for module named "textual.widgets"  [import-not-found]
-python/treport.py:19: error: Cannot find implementation or library stub 
-for module named "textual.widgets.tree"  [import-not-found]
-python/treport.py:19: note: See 
-https://mypy.readthedocs.io/en/stable/running_mypy.html#missing-imports
-Found 8 errors in 1 file (checked 1 source file)
+root@x2:~# uname -a
+Linux x2 7.2.5-200.fc44.x86_64 #1 SMP PREEMPT_DYNAMIC Fri Sep 11 15:11:05 UTC 2026 x86_64 GNU/Linux
+root@x2:~#
 
+- Arnaldo
