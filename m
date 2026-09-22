@@ -1,100 +1,69 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DF4D5437D4;
-	Tue, 22 Sep 2026 12:35:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82A0E541453
+	for <linux-perf-users@vger.kernel.org>; Tue, 22 Sep 2026 12:35:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790080522; cv=none; b=ga6dDiMBhGCPNLD1ogjbfQiRR4iIQF7ygu/F7bgB0ptF18k1QgHprGpoPjgbib2MQaS+NMTxDsqGZkho3Qk7LGnqiqMi/Jd7bhoHMwj4ll6LLpESJbrh3clzn8KxsTkXDKvH+yvOPfRVkTzH562MWaJRHQLGIEh7WRtJii5kt/g=
+	t=1790080548; cv=none; b=e1yq3tBHKCMkURK0cmU3dl7Aru8lJDKOTCqyV/P76rjC6Yiolm8fJrB+UsC0kmRNW7DHFkrt3PPWIm6iutrx8J7ksZFTK81Jc2/IcfImLDxm3It1md2GKQd+LSxyZ9WDmexnoV7StSisQaZTgx03No1mRlG77RJLswPxdkdJ5m4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790080522; c=relaxed/simple;
-	bh=Ao6s2CkR1TE3SQ0MxHTgkKaLTjQnlV8MjuPDy3XMsrE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=n04qYi/eGlvsw8EQr6GeXvA3o1qpx0uGkkn505i5rzJtu7vZyEDnY95SN4ysnJYb7F3IA5WiW2tO3pAyDZy+e8fY8RA52rYMqYrY0oQhVeeuAR1HP2MU3Gc4t+nLP+33I3Azw48YSxTce/TUXVpuezxjga2XaC9lhHIfUqPgqvw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CdfKOusM; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1790080548; c=relaxed/simple;
+	bh=u7LAD1ITKRqwLJjEt33ICJwq7fBJ8eZWlav8ArFGFB8=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=pBtcYCu3+UT0d0QW1iS6D26lmx0eGXq9z9bY0pciHWm1TtIekZuPrXRDmgEVzivrUE0WIrvo4j4RecJlqXO5NGu4un+3GLpbcDVU5Y2rNUUh7YR6rPH9tkcBG6hxRRUgTxTBExFoBRvudfRCGRXaODAqbWSdrTm4zX5SFiqtJxQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VroHYaqD; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CdfKOusM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 79F231F000FF;
-	Tue, 22 Sep 2026 12:35:18 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VroHYaqD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 006731F00893;
+	Tue, 22 Sep 2026 12:35:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1790080521;
-	bh=K6wXMk5iO4CMgQ1MTeOGYNdTXzMpi/FA7ua0zXMYVVU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=CdfKOusMEG/bWa3Dj/z7luEGbUWWZoJmPjXDYZXTDiZrL3UUaPGwXGqVtq91snfER
-	 MEykg1JiiSR8tcyYL0mbOEE4ivmVYEfKfMOmc+5Ipj6bJjoZvtuDDauzU5WCVW78Dr
-	 /NRqVMcZebzHT9/C8l3D2RCitEIj8Bx0OZZ05WSsEvqus+WdMdiXVPUm5GLPwPixTf
-	 o5WGCdm3qLinRxPIr0x6hbebQoMPaaH4tr8J/RmysKcSa9iljiiA4PfRUdGmkk/Osz
-	 hi7gT6kQqMc3m37Zz/4VWfL4kjxhl6HVx7Y3gY/bHqxInoIdp4WTt6+8QtFQKZkTZG
-	 tBgV2U8xLNa7w==
-Date: Tue, 22 Sep 2026 14:35:12 +0200
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Namhyung Kim <namhyung@kernel.org>, Hui Su <sh_def@163.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	James Clark <james.clark@linaro.org>, Jiri Olsa <jolsa@kernel.org>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] perf evsel: Restrict incremental open error unwind
-Message-ID: <arJ2AHXSkPcwnq7e@x2>
-References: <20260912031112.1814574-1-sh_def@163.com>
- <aqdLFApaxDgj1mtZ@google.com>
- <CAP-5=fUWC6F+_HCqW7eFuaw5StZpdcpb+pXPdHbXE+auNdMdTw@mail.gmail.com>
+	s=k20260515; t=1790080547;
+	bh=XwA34wpdkTfNLOhRw3WbRz7aSd2iLy8wOe9Q5ZywEiw=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=VroHYaqDD/O6BmfD+pZl5E9FJdPJqOprLPzSdvGQlosLRBRxAqx7Ey+rptk4Axuti
+	 YpTHQAqg4ety42d8ykF+eVUlI7UpJK2AfUkAPsu0Oe+iT3fAKXQw0KB9+xqV1dpxPc
+	 56bhwGDnMxhqYJusTwmpvTPgMX1X+DYmMzuzmqbPuNj2wltBSSqOuP0+Hmje7AXjI3
+	 GIq8qrZ+JmKyC/o7mI8VJ5Dee1mv4Io+9LXSXymuu7CD9wSqUnrd5BWLwZH5eHa8gK
+	 kGLu14HpxufUSP9vZtjPuq1hGY5341dNbBVsCxdN5SgY4r2KCjoP4mSLskB9I5G/fn
+	 q4p3wNH7VBgAg==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v3 2/7] perf dwarf-aux: Add die_same_file() and
+ die_get_type_die()
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Arnaldo Carvalho de Melo" <acme@kernel.org>
+Cc: linux-perf-users@vger.kernel.org
+In-Reply-To: <20260922122623.1029132-3-acme@kernel.org>
+References: <20260922122623.1029132-1-acme@kernel.org>
+ <20260922122623.1029132-3-acme@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Tue, 22 Sep 2026 12:35:46 +0000
+Message-Id: <20260922123547.006731F00893@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fUWC6F+_HCqW7eFuaw5StZpdcpb+pXPdHbXE+auNdMdTw@mail.gmail.com>
 
-On Mon, Sep 21, 2026 at 09:00:43AM -0700, Ian Rogers wrote:
-> On Sun, Sep 13, 2026 at 6:17 PM Namhyung Kim <namhyung@kernel.org> wrote:
-> >
-> > On Sat, Sep 12, 2026 at 12:11:10PM +0900, Hui Su wrote:
-> > > evsel__open_cpu(), evsel__tool_pmu_open() and
-> > > evsel__hwmon_pmu_open() support opening a subrange of a CPU map, bounded
-> > > by [start_cpu_map_idx, end_cpu_map_idx).
-> > >
-> > > Their error paths, however, unwind using "while (--idx >= 0)" all the way
-> > > back to CPU index 0 regardless of start_cpu_map_idx. If lower CPU indices
-> > > were opened by an earlier invocation, a later incremental open failure
-> > > therefore closes those existing file descriptors and overwrites their
-> > > slots with -1.
-> > >
-> > > Before this fix, running the new incremental open test demonstrates this
-> > > corruption:
-> > >
-> > >   $ perf test -v "Tool PMU"
-> > >    12: Tool PMU:
-> > >    12.1: Tool PMU                                                      : Ok
-> > >    12.2: Tool PMU leader                                               : Ok
-> > >    12.3: Incremental open error unwind boundary:
-> > >      FAILED: CPU 0 FD overwritten: FD(evsel, 0, 0)=-1, expected 4
-> > >   FAILED!
-> > >
-> > > Stop the unwind at start_cpu_map_idx so that only file descriptors
-> > > opened by the current invocation are rolled back.
-> > >
-> > > After this fix:
-> > >
-> > >   $ perf test -v "Tool PMU"
-> > >    12: Tool PMU:
-> > >    12.1: Tool PMU                                                      : Ok
-> > >    12.2: Tool PMU leader                                               : Ok
-> > >    12.3: Incremental open error unwind boundary                        : Ok
-> > >
-> > > Fixes: 4804e0111662 ("perf stat: Use affinity for opening events")
-> > > Fixes: 240505b2d0ad ("perf tool_pmu: Factor tool events into their own PMU")
-> > > Fixes: 53cc0b351ec9 ("perf hwmon_pmu: Add a tool PMU exposing events from hwmon in sysfs")
-> >
-> > Maybe we just need to last one?
-> >
-> > Acked-by: Namhyung Kim <namhyung@kernel.org>
-> 
-> Reviewed-by: Ian Rogers <irogers@google.com>
+> From: Arnaldo Carvalho de Melo <acme@redhat.com>
+>=20
+> dwarf_dieoffset() is relative to the file the DIE is in, so an offset
+> saved by die_collect_vars()/die_collect_global_vars() is only
+> meaningful in that file: add die_same_file(), comparing the Dwarf each
+> DIE's CU belongs to, to record which file that is, and
+> die_get_type_die() to resolve the offset in it, with the saved tag as a
+> sanity check.  Resolving the offset in the main file instead parses
+> whatever is at it when it came from the dwz common file.
+>=20
+> dwarf_cu_getdwarf() is new in elfutils 0.160, so the libdw feature test
+> probes for it and Makefile.config says 0.160.
+>=20
+> Assisted-by: LLM
+> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-Thanks, applied to perf-tools-next, for v7.4.
+Sashiko has reviewed this patch and found no issues. It looks great!
 
-- Arnaldo
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260922122623.1029=
+132-1-acme@kernel.org?part=3D2
+
