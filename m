@@ -1,76 +1,76 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BBF033F59A
-	for <linux-perf-users@vger.kernel.org>; Tue, 22 Sep 2026 12:36:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FFB43B71A3;
+	Tue, 22 Sep 2026 12:36:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790080609; cv=none; b=TpHZfH2+zyfTrOzu6sU1X6rbPQ6F6FBxzlN1iMX/Odp202Vh6L1L4R9CHHl1k42IZQhl4OUpLp+w2xSFjij8/nQEfbT0N7YhuLHneDkRE7rqcZW28u6O5nvcBBF6gsKmuEt74UoxHjqzaMocUd+lmvmSS2cRH7R1LPoMKF+LXZc=
+	t=1790080609; cv=none; b=C7WuhT9Wk0/8i4c0ibiL9Zk5p1qT+oxnLHdIZGw2RWgbLXskmR4HqzpdZbXZ6/Xs+KlxONGe/jUpnpKWe50ziq3atLST+ZfzK1geTvG5uVUWad298/RihwQdWessJvMPUap0o2GbHWUNopfYg6cTB1E6RaP9uxLR/bIuyk8GfyM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1790080609; c=relaxed/simple;
-	bh=wPsK1fGhwxNd5VCY8SZ83anSZT09/E7R9iP/jb5nd+8=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=jlb4DGtIVpBt/L8VWCLSTm99GwKmfhH1ZWEKZGaA0BrWXke4LwOsnbs8ZpEARnVuQp1g/QjTac60r9U9DQcDazyh51YVUc0niem1ncnzVoYM0RoUHQKRCAZs59csrYYRceGv4SMKKazoEjK+Cgo+zTl/AXKCvukgsSrfvBAbQGY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gen1dxsi; arc=none smtp.client-ip=100.103.45.18
+	bh=ExLBZViTpuU9dnt0XoWwD/qM1jLDhFU/A+9KurkkuDI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dEJYVhSU+IJGNlZ9kcs14GvBaz2FS6+OYRU7oOUz8ISZ4Jv5Si8Nx/tjNRIYo5Ycha+0NvAS1YXhBZ1YKbbClN0zfPI71qM0lP37UA/UUn2+R0k9n+q84WDaYdwqKGdy8SIr8iGIq6XmSSm8lGXwPyQ0OJAgrsZM5O8Q3XiNW/I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YOVlX6nV; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gen1dxsi"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C04471F00893;
-	Tue, 22 Sep 2026 12:36:47 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YOVlX6nV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6D8321F000FF;
+	Tue, 22 Sep 2026 12:36:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1790080607;
-	bh=wPsK1fGhwxNd5VCY8SZ83anSZT09/E7R9iP/jb5nd+8=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=gen1dxsiamNeSw8WhxR2bsvXAbnECMzMNknKwynfbtpviYdjzHO2lra2YjRmucE8P
-	 vuikMGrtT/qCKaPBsz1rubQMAqE5dKG4GVYGNSRbKqkSCAfmGbHKPDaQJ8vPsi3Dx4
-	 3RPtgCPEPm9nK5/0/Xi6Ve3G++KsSgwFFR9LP19+Ao4ccXM1qmeu2KVrNezr957WHd
-	 NvrAcnOxThdfV0teSmuFZcKR6CPoV1/AU1JBxJCksTu3FY60sdp9sQem6wCozFLKLU
-	 EBV3FHlZmxjb+RjwYSt03j51BC8+dKcfaPzYEJEBmHnotGtzDtnJBlepnEBL3efQgZ
-	 1PQgnqgr2lO8w==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v3 3/7] perf annotate-data: Resolve type DIEs in the
- debug file they came from
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Arnaldo Carvalho de Melo" <acme@kernel.org>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260922122623.1029132-4-acme@kernel.org>
-References: <20260922122623.1029132-1-acme@kernel.org>
- <20260922122623.1029132-4-acme@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Tue, 22 Sep 2026 12:36:47 +0000
-Message-Id: <20260922123647.C04471F00893@smtp.kernel.org>
+	s=k20260515; t=1790080608;
+	bh=u+ngg0GV6tuDyNJVD/QZTEerhV7QTGxQCJgCV02nNyQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=YOVlX6nVd1SklbpfpfKwu4l/SP7rd6J3+wM9fXnHfk9/Xk0IMCDxB1iCHPPWmBUD5
+	 KgEDVOUo/xOlB36uSHDh0m166VzK9H4uDraeLwavhYH9LiscsCi1HyJkt5UDzZHUzN
+	 /ybZWOjM13dzsMSdTUkjJLX+7XzPcnXoAbtXDOdZuOEYF4RhcVpQaII+VxqZrQD5Xo
+	 BvJOonASr2W1HwqHsGqK8ACLRzfntIyAPBbomC8gWmfepz7m6GOohiMbRSfJMCEP/H
+	 5VtcFk5hF4zTjSc9ECSS45YsjwRq0Osbn40lmbJsJJnys9VAjJsuGobZFQU+rcMYKp
+	 L83ZJsqZj6pHw==
+Date: Tue, 22 Sep 2026 14:36:40 +0200
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Ian Rogers <irogers@google.com>
+Cc: Hui Su <sh_def@163.com>, Namhyung Kim <namhyung@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	James Clark <james.clark@linaro.org>, Jiri Olsa <jolsa@kernel.org>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] perf synthetic-events: Fix schedstat event lifetime
+ handling
+Message-ID: <arJ2WB3wUc8Jn7XY@x2>
+References: <20260912055619.2284443-1-sh_def@163.com>
+ <CAP-5=fUCDeC+mAi_cVpNr+WoUXvpMG8948GVnb8OQV95PhVQ6A@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAP-5=fUCDeC+mAi_cVpNr+WoUXvpMG8948GVnb8OQV95PhVQ6A@mail.gmail.com>
 
-> From: Arnaldo Carvalho de Melo <acme@redhat.com>
->=20
-> 'perf report -s type' hangs, burning all of a CPU with no output, when
-> resolving a hist entry on the dwz compressed debug info of libz.so.1
-> (zlib-ng): die_collect_vars() saves the dwarf_dieoffset() of the type
-> DIE, which is relative to the file it lives in - the dwz alt file for
-> the types shared by more than one CU - and update_var_state() resolves
-> that offset in the main debug file, where it parses whatever is at that
-> offset, here a typedef whose DW_AT_type refers to itself, making the
-> type chase spin forever.
->=20
-> Record whether the type DIE came from the alt file and resolve the
-> offset with die_get_type_die() in that file, with no fallback:
-> resolving an alt file offset in the main file is exactly the misparse
-> above.
->=20
-> Fixes: 06b2ce75386df04b ("perf annotate-data: Maintain variable type info=
-")
-> Fixes: 55ee3d005d62279d ("perf annotate-data: Add a cache for global vari=
-able types")
-> Assisted-by: LLM
-> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+On Tue, Sep 15, 2026 at 12:41:03PM -0700, Ian Rogers wrote:
+> On Fri, Sep 11, 2026 at 10:56 PM Hui Su <sh_def@163.com> wrote:
+> >
+> > perf_event__synthesize_schedstat() has two event lifetime issues.
+> >
+> > After a successful iteration, event is freed but retains its value. If
+> > the next iteration starts with an unrecognized schedstat record type,
+> > neither synthesizer assigns a new value. The stale pointer then passes
+> > the NULL check, may be passed to process(), and is freed again.
+> >
+> > In addition, when user_requested_cpus filters out a synthesized event,
+> > the continue path skips free(event), leaking the event.
+> >
+> > Make event local to each loop iteration so it always starts as NULL.
+> > Also avoid the filter continue and unconditionally free each synthesized
+> > event at the end of the iteration.
+> >
+> > Fixes: c3030995f23b ("perf sched stats: Add record and rawdump support")
+> > Signed-off-by: Hui Su <sh_def@163.com>
+> 
+> Reviewed-by: Ian Rogers <irogers@google.com>
 
-Sashiko has reviewed this patch and found no issues. It looks great!
+Thanks, applied to perf-tools-next, for v7.4.
 
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260922122623.1029=
-132-1-acme@kernel.org?part=3D3
-
+- Arnaldo
