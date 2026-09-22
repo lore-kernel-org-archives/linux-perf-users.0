@@ -1,30 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 795B25349C3;
-	Tue, 22 Sep 2026 12:26:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AF54541E5C;
+	Tue, 22 Sep 2026 12:26:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790080003; cv=none; b=uy8Vk8WILBbr4D9b4561QC+mC75aPmQG4Qa8khPB1+/6GrzE+HtCKGY2Gv8ihD5pmIvDP6s+7CDa5umohYfPXOczOzGPdoFcwNZZVh3n3PS/fIfy5QJW3GPu5GHkD23cQwURIBDXhD7yztrq22NXuxgVLTMXkp9oEuCDdSpEmqs=
+	t=1790080011; cv=none; b=gBG3djLPgAO1nR+4nv7kwf24XJzPO+x+ofCwrUrk2yLm6+cqSGCSPupJ2djj+27WKql6g4QAuHnk02upETg34aoJKRJ++Lk931HzEW6lxAJ1kG73NwzbW+mCjcK7RTEvnQ09mMVmFy0vvJbmVoV/ieEZqATnAEndS6Nn+Q1Z1wo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790080003; c=relaxed/simple;
-	bh=2XPwPe4cw32/4YFixNJKbYmWKlgmTK1A/+2SS1gaX/M=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=RvjRDle+sA86gZ5O1AMrsX0eTOqd45/hrEGBR0t6qn+NhmJKyHG0GXVtwkALuXiQbDKvpgpeIGgRsgsvcJpfL705YPeEVV+WwPq3iaZiOC9y74awtSODYahq2rDEDrza0sEY+ieMDmJygF/yoqgpHBkataYkOoSun7ELlMAPGvs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Bk9qOqY5; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1790080011; c=relaxed/simple;
+	bh=Rfu25ECYoXI+/kV6W/6MswO7S3WKPtf1KRF1KE0xcMM=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=U0ZNEuZBuTC6OjhfEDtroURfNjFwQ7TBaBFIw7JvQ9PGoz3S8M4eeZoAD0a+G5trFGhg+0h3HfH1o7VlvJboDgtan2Gwh7zqxnWKtNYbcO3V70TCfabASAR+iolKXEO85P0boY32JqzYu9uJrqIJlUwdVFz+Ef/J8meoLR4ZIzQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=k0oVngKQ; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Bk9qOqY5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8B62A1F000FF;
-	Tue, 22 Sep 2026 12:26:34 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="k0oVngKQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 169801F00893;
+	Tue, 22 Sep 2026 12:26:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1790080002;
-	bh=KXC8xF4chSF6dXf8Ums+XRHgQjzAkjXWJCYI/jadOeM=;
-	h=From:To:Cc:Subject:Date;
-	b=Bk9qOqY5Ry484GfkePSFr7n09hc+IDaLJPAwdRwV+OqbZT8gktKEnMbO64ICajWWA
-	 CYXXKJ/CG6m8FrWt4OT1KTQRFtGwfmJHzvtoIYgFKZXGxc1c0gmZGVECsbYed59cwK
-	 AYbvEZanOrq8En2HJAE/izgUwkFoaRx2APCP1Q11KSrmLAnVtTRWD1dgsYpIGVA83J
-	 /GwKDkb/2CuJqC1zhDuxr6pqBVPpk+NgL6XQTUHh2SpHENRuZ/+o2Tp+oJGSDLUnyN
-	 H99vrNHfG3YLz6sniiN6p9muoCGH7cyw8CMIk8Oa1EhibaMPeaXXTMkxrq1J136Wkx
-	 88LvZyaQC4VIw==
+	s=k20260515; t=1790080009;
+	bh=/o0j4IyBit4x0M7siaLpgTimP2fXGHf326McwkQdspI=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=k0oVngKQr0aG+xAvigp9v8+hZAx5z6jiv8b4E4zb2QwvZsdj7+E2xLLDa7id1s352
+	 BxjTR93iDaheVPLE8WFb6OPcwxXwAR2wd9yu5OZLQYb0jlPO7WUad6srsvFznwwgq6
+	 7g7DaVif5RiMrMgSiEAPQ6/69ykgnHOUaMHRpIxBwsiLc0ysprIQWAbO9px2PWq5UL
+	 pLx6bDhN0aX1L/vrbTYapVQMZWhqlSEM/EBTdUFRHpsr0K6yNGhwcD0BVLBIQqz8qA
+	 FI68DC0os4TjkuJfdCmV0rIC7q5s3T7Ow7Oj59ZID+R9EmEp6PL5oSYMAlx5SVM4BN
+	 RXLaC9vMzeAjQ==
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Namhyung Kim <namhyung@kernel.org>
 Cc: Ingo Molnar <mingo@kernel.org>,
@@ -36,13 +37,13 @@ Cc: Ingo Molnar <mingo@kernel.org>,
 	Clark Williams <williams@redhat.com>,
 	linux-kernel@vger.kernel.org,
 	linux-perf-users@vger.kernel.org,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Ravi Bangoria <ravi.bangoria@amd.com>,
 	Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH v3 0/7] perf annotate-data: Fix hangs on broken debug info, data type browser sample count, AMD mem record
-Date: Tue, 22 Sep 2026 14:26:16 +0200
-Message-ID: <20260922122623.1029132-1-acme@kernel.org>
+Subject: [PATCH v3 1/7] perf dwarf-aux: Bound the type chases for broken debug info
+Date: Tue, 22 Sep 2026 14:26:17 +0200
+Message-ID: <20260922122623.1029132-2-acme@kernel.org>
 X-Mailer: git-send-email 2.55.0
+In-Reply-To: <20260922122623.1029132-1-acme@kernel.org>
+References: <20260922122623.1029132-1-acme@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -51,84 +52,183 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Hi,
+From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-This originated in another patch series, 'perf tools: Annotate fixes,
-stdio progress indication, debuginfo-client in more places', and is
-being split off so that these fixes can be reviewed right away; the
-debuginfod download feature work from it will come later, separately,
-based on this series.
+A DIE that is not what it looks like, e.g. one parsed at an offset that
+is not the start of a DIE, can have a DW_AT_type that refers back to
+itself, making the typedef/qualifier chases in die_get_real_type() and
+die_get_pointer_type() spin forever, and the same for the type name
+recursion in die_get_typename_from_type(); 'perf report -s type' did
+exactly that on the dwz compressed debug info of zlib-ng (libz.so.1).
 
-  - 'perf report -s type' spins forever on the dwz compressed debug info of
-    zlib-ng (libz.so.1): die_collect_vars() saves a type DIE offset that is
-    relative to the file the DIE lives in, the dwz alt file for types shared
-    by several CUs, and resolving it in the main file parses whatever is at
-    that offset, here a typedef whose DW_AT_type refers to itself, making the
-    typedef/qualifier chase spin (patch 3), with the chases bounded so that
-    other kinds of broken debug info don't hang perf either (patches 1, 2
-    and 4);
+No sane chain of typedefs and qualifiers is 32 DIEs long, so give up on
+the type with a pr_debug instead of hanging.
 
-  - the data type browser's samples view (-n) prints a local count that is
-    initialized to zero and never updated, so every member has no samples
-    (patch 5);
+Assisted-by: LLM
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+---
+ tools/perf/util/dwarf-aux.c | 88 ++++++++++++++++++++++++++++---------
+ 1 file changed, 68 insertions(+), 20 deletions(-)
 
-  - 'perf mem record' requests PERF_SAMPLE_CPU (patch 6) and uses the IBS
-    swfilt filter when the kernel exposes it (patch 7), with the tables
-    carrying the term kept in the arch/x86 code, where the knowledge that
-    IBS needs it stays, as Ravi Bangoria suggested reviewing Namhyung
-    Kim's v6 review remark on this patch
-    (<4349c387-5b8a-4e8d-932a-5175a7598e1e@amd.com>, replying to
-    <aqsRVABj23jaaiSq@google.com>).
-
-About PATCH 6, answering Namhyung Kim's v6 review question
-(<aqsPKGVUkWk6wvYA@google.com>) about the --sample-cpu default: the
-data source field is about the memory hierarchy level of the access,
-it has no record of which CPU issued it, and while the TID is in
-every sample and in the CTF stream, a thread time-sliced on one CPU
-or moved between SMT siblings is not told apart by it from cross-core
-contention, so it is the CPU id that keys it, and it is what the
-false-sharing detector in pahole needs.  The TID is recorded as well.
-
-Requires elfutils 0.160 for dwarf_cu_getdwarf(), so the libdw feature test
-probes for it and Makefile.config says 0.160: older versions now disable
-dwarf support with that message instead of failing to link.
-
-Best regards,
-
-- Arnaldo
-
-
-What changed from v2:
-
-Only aggregate (struct/union) members are marked as truncated when the
-MAX_MEMBER_DEPTH limit is reached in the member nesting recursion (patch
-4), addressing a sashiko [Medium] review finding
-(<20260921165704.38DBD1F000FF@smtp.kernel.org>): the v2 check was made
-before looking at the member's type, so a primitive field that merely
-landed on the limit, e.g. an int in a struct nested 31 deep, was marked
-as truncated and logged even though it has no children to expand.  The
-limit still bounds the recursion, as only aggregates are expanded.
-
-What changed from v1:
-
-Bump MAX_MEMBER_DEPTH from 8 to 32, addressing a review comment from Namhyung.
-
- tools/build/feature/test-libdw.c           |  13 +-
- tools/perf/Documentation/perf-mem.txt      |   4 +
- tools/perf/Makefile.config                 |   2 +-
- tools/perf/arch/x86/util/mem-events.c      |  24 ++++
- tools/perf/arch/x86/util/mem-events.h      |   2 +
- tools/perf/arch/x86/util/pmu.c             |  10 +-
- tools/perf/builtin-mem.c                   |  11 +-
- tools/perf/tests/shell/test_data_symbol.sh |   6 +-
- tools/perf/ui/browsers/annotate-data.c     |   2 +-
- tools/perf/util/annotate-data.c            |  57 ++++++--
- tools/perf/util/annotate-data.h            |   3 +
- tools/perf/util/dwarf-aux.c                | 150 ++++++++++++++++++---
- tools/perf/util/dwarf-aux.h                |  17 +++
- tools/perf/util/mem-events.c               |  11 +-
- 14 files changed, 265 insertions(+), 47 deletions(-)
-
-v2-head: accb5b700197ce2a
-base-commit: 29f320d221c1c4c082c7eafb2251fedf8a4868ec
+diff --git a/tools/perf/util/dwarf-aux.c b/tools/perf/util/dwarf-aux.c
+index d7160f87ac7d7ab3..b5ffeea54446408d 100644
+--- a/tools/perf/util/dwarf-aux.c
++++ b/tools/perf/util/dwarf-aux.c
+@@ -266,16 +266,29 @@ Dwarf_Die *die_get_type(Dwarf_Die *vr_die, Dwarf_Die *die_mem)
+ 		return NULL;
+ }
+ 
++/*
++ * A DIE that is not what it looks like, e.g. one parsed at an offset
++ * that is not the start of a DIE, can have a DW_AT_type that refers
++ * back to itself, making these chases spin forever: bound them and
++ * report, instead of hanging.
++ */
++#define MAX_TYPE_CHASE 32
++
+ /* Get a type die, but skip qualifiers */
+ Dwarf_Die *__die_get_real_type(Dwarf_Die *vr_die, Dwarf_Die *die_mem)
+ {
+-	int tag;
++	int tag, chase = 0;
+ 
+ 	do {
+ 		vr_die = die_get_type(vr_die, die_mem);
+ 		if (!vr_die)
+-			break;
++			return NULL;
+ 		tag = dwarf_tag(vr_die);
++		if (++chase > MAX_TYPE_CHASE) {
++			pr_debug("DWARF: qualifier chase limit reached at DIE 0x%lx\n",
++				 (unsigned long)dwarf_dieoffset(vr_die));
++			return NULL;
++		}
+ 	} while (tag == DW_TAG_const_type ||
+ 		 tag == DW_TAG_restrict_type ||
+ 		 tag == DW_TAG_volatile_type ||
+@@ -296,8 +309,15 @@ Dwarf_Die *__die_get_real_type(Dwarf_Die *vr_die, Dwarf_Die *die_mem)
+  */
+ Dwarf_Die *die_get_real_type(Dwarf_Die *vr_die, Dwarf_Die *die_mem)
+ {
++	int chase = 0;
++
+ 	do {
+ 		vr_die = __die_get_real_type(vr_die, die_mem);
++		if (++chase > MAX_TYPE_CHASE) {
++			pr_debug("DWARF: typedef chase limit reached at DIE 0x%lx\n",
++				 vr_die ? (unsigned long)dwarf_dieoffset(vr_die) : 0);
++			return NULL;
++		}
+ 	} while (vr_die && dwarf_tag(vr_die) == DW_TAG_typedef);
+ 
+ 	return vr_die;
+@@ -314,7 +334,7 @@ Dwarf_Die *die_get_real_type(Dwarf_Die *vr_die, Dwarf_Die *die_mem)
+  */
+ Dwarf_Die *die_get_pointer_type(Dwarf_Die *type_die, Dwarf_Die *die_mem)
+ {
+-	int tag;
++	int tag, chase = 0;
+ 
+ 	do {
+ 		tag = dwarf_tag(type_die);
+@@ -324,6 +344,11 @@ Dwarf_Die *die_get_pointer_type(Dwarf_Die *type_die, Dwarf_Die *die_mem)
+ 		    tag != DW_TAG_restrict_type && tag != DW_TAG_volatile_type &&
+ 		    tag != DW_TAG_shared_type)
+ 			return NULL;
++		if (++chase > MAX_TYPE_CHASE) {
++			pr_debug("DWARF: pointer type chase limit reached at DIE 0x%lx\n",
++				 (unsigned long)dwarf_dieoffset(type_die));
++			return NULL;
++		}
+ 		type_die = die_get_type(type_die, die_mem);
+ 	} while (type_die);
+ 
+@@ -1118,17 +1143,25 @@ Dwarf_Die *die_find_member(Dwarf_Die *st_die, const char *name,
+ 			      die_mem);
+ }
+ 
+-/**
+- * die_get_typename_from_type - Get the name of given type DIE
+- * @type_die: a type DIE
+- * @buf: a strbuf for result type name
+- *
+- * Get the name of @type_die and stores it to @buf. Return 0 if succeeded.
+- * and Return -ENOENT if failed to find type name.
+- * Note that the result will stores typedef name if possible, and stores
+- * "*(function_type)" if the type is a function pointer.
++/*
++ * The name follows DW_AT_type, so a self-referring DIE makes this
++ * recurse forever: bound it like the chases above.
+  */
+-int die_get_typename_from_type(Dwarf_Die *type_die, struct strbuf *buf)
++static int __die_get_typename_from_type(Dwarf_Die *type_die, struct strbuf *buf,
++					int depth);
++
++static int __die_get_typename(Dwarf_Die *vr_die, struct strbuf *buf, int depth)
++{
++	Dwarf_Die type;
++
++	if (__die_get_real_type(vr_die, &type) == NULL)
++		return -ENOENT;
++
++	return __die_get_typename_from_type(&type, buf, depth);
++}
++
++static int __die_get_typename_from_type(Dwarf_Die *type_die, struct strbuf *buf,
++					int depth)
+ {
+ 	int tag, ret;
+ 	const char *tmp = "";
+@@ -1155,7 +1188,12 @@ int die_get_typename_from_type(Dwarf_Die *type_die, struct strbuf *buf)
+ 		/* Write a base name */
+ 		return strbuf_addf(buf, "%s%s", tmp, name ?: "");
+ 	}
+-	ret = die_get_typename(type_die, buf);
++	if (depth >= MAX_TYPE_CHASE) {
++		pr_debug("DWARF: type name recursion limit reached at DIE 0x%lx\n",
++			 (unsigned long)dwarf_dieoffset(type_die));
++		return -ENOENT;
++	}
++	ret = __die_get_typename(type_die, buf, depth + 1);
+ 	if (ret < 0) {
+ 		/* void pointer has no type attribute */
+ 		if (tag == DW_TAG_pointer_type && ret == -ENOENT)
+@@ -1166,6 +1204,21 @@ int die_get_typename_from_type(Dwarf_Die *type_die, struct strbuf *buf)
+ 	return strbuf_addstr(buf, tmp);
+ }
+ 
++/**
++ * die_get_typename_from_type - Get the name of given type DIE
++ * @type_die: a type DIE
++ * @buf: a strbuf for result type name
++ *
++ * Get the name of @type_die and stores it to @buf. Return 0 if succeeded.
++ * and Return -ENOENT if failed to find type name.
++ * Note that the result will stores typedef name if possible, and stores
++ * "*(function_type)" if the type is a function pointer.
++ */
++int die_get_typename_from_type(Dwarf_Die *type_die, struct strbuf *buf)
++{
++	return __die_get_typename_from_type(type_die, buf, 0);
++}
++
+ /**
+  * die_get_typename - Get the name of given variable DIE
+  * @vr_die: a variable DIE
+@@ -1178,12 +1231,7 @@ int die_get_typename_from_type(Dwarf_Die *type_die, struct strbuf *buf)
+  */
+ int die_get_typename(Dwarf_Die *vr_die, struct strbuf *buf)
+ {
+-	Dwarf_Die type;
+-
+-	if (__die_get_real_type(vr_die, &type) == NULL)
+-		return -ENOENT;
+-
+-	return die_get_typename_from_type(&type, buf);
++	return __die_get_typename(vr_die, buf, 0);
+ }
+ 
+ /**
 -- 
+2.55.0
+
