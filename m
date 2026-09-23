@@ -1,56 +1,56 @@
-Received: from mail-dl1-f69.google.com (mail-dl1-f69.google.com [74.125.82.69])
+Received: from mail-dl1-f70.google.com (mail-dl1-f70.google.com [74.125.82.70])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11B515678E1
-	for <linux-perf-users@vger.kernel.org>; Wed, 23 Sep 2026 18:15:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.69
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEFE7440A0D
+	for <linux-perf-users@vger.kernel.org>; Wed, 23 Sep 2026 18:14:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.70
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790187313; cv=none; b=KWk33FlaZkmXhHn5ogCPCTCTpR28xAOz0vDaBh3ZTjmwqJ9VQQWgr1i2F4qkemo/h1I2UTBkfDjY5WRbzT8eYmTCxT/AxR7YPu4ZZ2veEYEOE6psHlFB5IwnMGL0vVgHH077cnpNEY1N6bybKjnCxY7bOCYDYPdPr/uG6kbyb/M=
+	t=1790187310; cv=none; b=lDnQ8pJB+7A3fg76baIfGM/e7Gu7uP3f4a0riXPIqDmy9FUX5AxwpexsZdMfM7IN0tIg8LyH3nq95WgO6o2vVH5Pec7cCA3oFlu8HeMLq96aD/c8lRlfK2PYuZaM6QxYwpQhn9G5E8xvU2mi8iOcRKLbDITAY+1ReA6d4QtSPFw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790187313; c=relaxed/simple;
-	bh=ZVS2OBL0/F79lG2SC8qBMoZhblLJXN3XXT69JctEN8A=;
+	s=arc-20240116; t=1790187310; c=relaxed/simple;
+	bh=pUVknrzV1Zt6LM5wd0/6spCjNo2+nFF5fiUa+2u4a7Q=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=RAdMUFzmKmVtwKf5/TkXZiNSJHNg+jqtqdYgQEO5Vfr/tznETtS7VBKuxO8gjaivjoac2exD1Xnd93iA+f95bjCf2x8bxQuU99aZBNMqXZ0VE75z1vqImKV9kwPjiIF3Z6+pHa7fXzRwYeDYRAtD7sT0NIXo54W2Z2M7W97oSP0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=G1FPiW/R; arc=none smtp.client-ip=74.125.82.69
+	 To:Cc:Content-Type; b=M3FAHDWChyCAVVnIdRjVhzGH5IhBGhcEUJWh4xHzdZ1JU1RuKCQqWBCDWEESHrpg+0pmv21B6LDmJICD/jJK85+HKNhSeEPxowlbUJ1n2VEIMiHm4c5HVvbW8mcKPk/ZZfwCCn8/uXFzH4q6KupqJy/73s3yZru+1u7o8y1GHnw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=b8kKdNh9; arc=none smtp.client-ip=74.125.82.70
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="G1FPiW/R"
-Received: by mail-dl1-f69.google.com with SMTP id a92af1059eb24-1384427c3efso2027140c88.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 23 Sep 2026 11:15:06 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="b8kKdNh9"
+Received: by mail-dl1-f70.google.com with SMTP id a92af1059eb24-143580417b3so4353969c88.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 23 Sep 2026 11:14:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1790187303; x=1790792103; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1790187296; x=1790792096; darn=vger.kernel.org;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=tgFhLX2mC2bh46uwobCwGbnZwMj5lNibLT49PunVicw=;
-        b=G1FPiW/R66vHTFJXJc6rF79o3VbNbupPWObLsw5siSr7WH/j06blKpPZ9vY258/D2Y
-         XeHFn+hVD9unBP9mNZC3Ir4+Ug+Nl5SKe9gBeDJHzxBH76NdYFjDhDwStZzCvGmOJbUy
-         YChSS1UJ3dl7mZpRGQ219WfnXqVmICWmTmjdem1T5GiO9YYI1a4QDJqFpWblSTUMnArL
-         1eBH5n4UX1rU4OrzoGkBZvKXYQ58LlUgyRao+opBmwNWvn+9ap3nm52PDgsgBKjqf2pJ
-         7FN4IJF2CCG07oRFfenGnb6ar0acVgaeqJB9GjareqI14ykk2KIyZEd6K/G9YejwomYO
-         FRvA==
+        bh=ryNNbnywJo/i1hmDLVze7m71s6BrKikjpEExddeRm90=;
+        b=b8kKdNh9cdCFf5nBHH8Dk0xpDBZBX5LATpaIBC2quwaEHo7UP7KaS3Nd++DB9Vwiyj
+         KIFINc7covv3wIWIvDCen9KXHWWQ3VL5lKmX+acLrEAznmqyqnAJ+fy8fRY5sFOIlJ9O
+         aM3PE7OpfGduh23GbMndwHz82G5Cl4D6l++EXrOCGbK3aoG1zPlwdywfe9ZqNWnlBXER
+         lxnOqfHMCLRiwDW42E770cXiZY1VbAOsr6E6BQFokRVlyCAhDdfyRJTGiOq6WhW6O3FH
+         l1lFsntaA0d4y5rKI/6WZP+tMKrDcNL5dzw9bFQCqKOkYecvVmFLpMTTdF+s3gdmF8Wb
+         Gsuw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1790187303; x=1790792103;
+        d=1e100.net; s=20260707; t=1790187296; x=1790792096;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=tgFhLX2mC2bh46uwobCwGbnZwMj5lNibLT49PunVicw=;
-        b=zTvCIUabt+xFB1bQfJ1g1QtSx45MrmzBum0R8WZWN8Z3M5HAVXwAHXEXcSytnSsMy/
-         /u1TQldTburEXv+PHE6B1VaI029tm8VtWFnJkNny3BE0kO//k35u4voPjHbk0fwutez8
-         u7cToqshMwyFAdxH8FaAbCbADzrc+gATOEE0ZykgGpczt3H3w5MRBh2+TqXMgpynXxvj
-         OdpVL0SBtf9l7+FagATySvsYl3meN0U2kkFNWpVtavjslD/R1aArlewavgCSXniOyQPq
-         7WJNerqct3P9VGFQpBI9arhP9F7Sed23I0ATski3rO6bDMvPTP69cvmgQICwm/smHew8
-         LWfg==
-X-Forwarded-Encrypted: i=1; AKwUvBxWWYLXVtcjtRLQzpN+NBm7XO6l/yIJ90A4tY6UFdHCjOhh+Aw4IpHFD25p1L2CV1OUNAHAVrJouKe9HuUPN4f6@vger.kernel.org
-X-Gm-Message-State: AFuF++nTGdtWiykZ7lsQW6/bY85lZ/qcnpxwwMTzSILIHd75xK/jCsQm
-	yA4JJTs5m3jhjFnM6wXQbzDaXIoaMfOOWyDYa5BPalkpv/waa71grhLkQfXCCzZa4qr6k+eW+x9
-	eOmwqE4GeAA==
-X-Received: from dlep20-n2.prod.google.com ([2002:a05:701b:4594:20b0:144:d392:fefb])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:701b:2714:b0:143:50a0:56c7
- with SMTP id a92af1059eb24-14503f06784mr1898c88.3.1790187302182; Wed, 23 Sep
- 2026 11:15:02 -0700 (PDT)
-Date: Wed, 23 Sep 2026 11:12:02 -0700
+        bh=ryNNbnywJo/i1hmDLVze7m71s6BrKikjpEExddeRm90=;
+        b=BT8BI+WDdGlOJW7bywSExUd/slRS6Cs8I1w+Hz7wRShCIv3tuZvZB3HmNQ3GuytjtS
+         t2LynTnVNMvpwwEZ39DJwvUYGIpST/KASgQ1WaZHFSpiFlt9uoNZzlhu0+uQZk5LR0Mn
+         ZzAgJ0s4qknxW+MnlTJuHj2aL0aSbZ1dzySAagsooCKm9xTEYSNZHtuiZx43oTkh4foR
+         xTfbiDAabMv4xnQL+Qyeaucz3mzoSkSvCJ3H4PyNv3FaIq7OOZe++smZj5cFaRU5qO4g
+         omEv/2S4razvojvQuQP+/5Kdrauu8MJDHb5EL7rT5WVbFWjn/cua0i3kUVMEE9lohDWd
+         rGZA==
+X-Forwarded-Encrypted: i=1; AKwUvBzGLsvFwWg1dhuwNhjr/zR9aFIUOjO08FmToCzgy+8nI2oZRbBcPKyrSumHkj+9Qi32Xug6ff+giqrqmW56hoFr@vger.kernel.org
+X-Gm-Message-State: AFuF++mquOIiypTvGG6NtTjveuZ1i2c6c4wbv/WrM3I3NZTjtvC8w5DQ
+	NLL/tjH/2Ryle+ZreegiWyknW9/auTqx+NSVEP5zIwKss2183Osg8qyqymJz5xq0tl/M7vbx2id
+	bSIDgvBYKew==
+X-Received: from dlec11-n1.prod.google.com ([2002:a05:701b:428b:10b0:144:e316:2636])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:701b:4192:10b0:144:ed18:47ab
+ with SMTP id a92af1059eb24-144f918635amr3819573c88.13.1790187295524; Wed, 23
+ Sep 2026 11:14:55 -0700 (PDT)
+Date: Wed, 23 Sep 2026 11:12:00 -0700
 In-Reply-To: <20260923181213.3032038-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -60,8 +60,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <cover.1789966896.git.irogers@google.com> <20260923181213.3032038-1-irogers@google.com>
 X-Mailer: git-send-email 2.56.0.rc1.310.g51773c2048-goog
-Message-ID: <20260923181213.3032038-40-irogers@google.com>
-Subject: [PATCH v3 39/49] perf python: Port powerpc-hcalls to perf module
+Message-ID: <20260923181213.3032038-38-irogers@google.com>
+Subject: [PATCH v3 37/49] perf python: Port check-perf-trace to perf module
 From: Ian Rogers <irogers@google.com>
 To: irogers@google.com, acme@kernel.org, alice.mei.rogers@gmail.com, 
 	namhyung@kernel.org
@@ -71,377 +71,267 @@ Cc: adrian.hunter@intel.com, dapeng1.mi@linux.intel.com,
 	tmricht@linux.ibm.com
 Content-Type: text/plain; charset="UTF-8"
 
-Port powerpc-hcalls.py from tools/perf/scripts/python/ to a standalone
-script in tools/perf/python/:
-- Refactor the script into an HCallAnalyzer class with full type
-  annotations to encapsulate per-CPU hypervisor call entry/exit state.
-- Use perf.session for event processing to track hypervisor call entry
-  and exit timestamps and aggregate min/max/average duration statistics
-  against HCALL_TABLE.
-- Add argparse CLI support (-i/--input) and remove Python 2
-  compatibility code.
+Port check-perf-trace.py to a standalone script in tools/perf/python/
+using the perf module directly.
 
-Add a shell test (test_powerpc_hcalls_python.sh) to verify the
+Improvements compared to the legacy script:
+- Access tracepoint fields directly as attributes on perf.sample_event
+  instead of per-event dictionaries and legacy Perf-Trace-Util helpers.
+- Decode symbolic flag and enum masks for irq:softirq_entry and
+  kmem:kmalloc directly in Python and add -i/--input CLI support via
+  argparse.
+- Add full type annotations and clean up Python 2 idioms.
+
+Add a shell test (test_check_perf_trace_python.sh) to verify the
 standalone script.
 
 Assisted-by: Antigravity:gemini-3.1-pro
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/python/powerpc-hcalls.py           | 334 ++++++++++++++++++
- .../tests/shell/test_powerpc_hcalls_python.sh |  95 +++++
- 2 files changed, 429 insertions(+)
- create mode 100755 tools/perf/python/powerpc-hcalls.py
- create mode 100755 tools/perf/tests/shell/test_powerpc_hcalls_python.sh
+ tools/perf/python/check-perf-trace.py         | 223 ++++++++++++++++++
+ .../shell/test_check_perf_trace_python.sh     |  85 +++++++
+ 2 files changed, 308 insertions(+)
+ create mode 100755 tools/perf/python/check-perf-trace.py
+ create mode 100755 tools/perf/tests/shell/test_check_perf_trace_python.sh
 
-diff --git a/tools/perf/python/powerpc-hcalls.py b/tools/perf/python/powerpc-hcalls.py
+diff --git a/tools/perf/python/check-perf-trace.py b/tools/perf/python/check-perf-trace.py
 new file mode 100755
-index 000000000000..ab5867c05d3e
+index 000000000000..a7679a897cc7
 --- /dev/null
-+++ b/tools/perf/python/powerpc-hcalls.py
-@@ -0,0 +1,334 @@
++++ b/tools/perf/python/check-perf-trace.py
+@@ -0,0 +1,223 @@
 +#!/usr/bin/env python3
-+# SPDX-License-Identifier: GPL-2.0+
++# SPDX-License-Identifier: GPL-2.0
 +"""
-+Hypervisor call statistics
-+
-+Copyright (C) 2018 Ravi Bangoria, IBM Corporation
-+Ported from tools/perf/scripts/python/powerpc-hcalls.py
++Basic test of Python scripting support for perf.
++Ported from tools/perf/scripts/python/check-perf-trace.py
 +"""
 +from __future__ import annotations
 +
 +import argparse
-+from collections import defaultdict
-+import sys
++import collections
 +import perf
 +
-+# Hypervisor call table
-+HCALL_TABLE = {
-+	4: 'H_REMOVE',
-+	8: 'H_ENTER',
-+	12: 'H_READ',
-+	16: 'H_CLEAR_MOD',
-+	20: 'H_CLEAR_REF',
-+	24: 'H_PROTECT',
-+	28: 'H_GET_TCE',
-+	32: 'H_PUT_TCE',
-+	36: 'H_SET_SPRG0',
-+	40: 'H_SET_DABR',
-+	44: 'H_PAGE_INIT',
-+	48: 'H_SET_ASR',
-+	52: 'H_ASR_ON',
-+	56: 'H_ASR_OFF',
-+	60: 'H_LOGICAL_CI_LOAD',
-+	64: 'H_LOGICAL_CI_STORE',
-+	68: 'H_LOGICAL_CACHE_LOAD',
-+	72: 'H_LOGICAL_CACHE_STORE',
-+	76: 'H_LOGICAL_ICBI',
-+	80: 'H_LOGICAL_DCBF',
-+	84: 'H_GET_TERM_CHAR',
-+	88: 'H_PUT_TERM_CHAR',
-+	92: 'H_REAL_TO_LOGICAL',
-+	96: 'H_HYPERVISOR_DATA',
-+	100: 'H_EOI',
-+	104: 'H_CPPR',
-+	108: 'H_IPI',
-+	112: 'H_IPOLL',
-+	116: 'H_XIRR',
-+	120: 'H_MIGRATE_DMA',
-+	124: 'H_PERFMON',
-+	220: 'H_REGISTER_VPA',
-+	224: 'H_CEDE',
-+	228: 'H_CONFER',
-+	232: 'H_PROD',
-+	236: 'H_GET_PPP',
-+	240: 'H_SET_PPP',
-+	244: 'H_PURR',
-+	248: 'H_PIC',
-+	252: 'H_REG_CRQ',
-+	256: 'H_FREE_CRQ',
-+	260: 'H_VIO_SIGNAL',
-+	264: 'H_SEND_CRQ',
-+	272: 'H_COPY_RDMA',
-+	276: 'H_REGISTER_LOGICAL_LAN',
-+	280: 'H_FREE_LOGICAL_LAN',
-+	284: 'H_ADD_LOGICAL_LAN_BUFFER',
-+	288: 'H_SEND_LOGICAL_LAN',
-+	292: 'H_BULK_REMOVE',
-+	304: 'H_MULTICAST_CTRL',
-+	308: 'H_SET_XDABR',
-+	312: 'H_STUFF_TCE',
-+	316: 'H_PUT_TCE_INDIRECT',
-+	332: 'H_CHANGE_LOGICAL_LAN_MAC',
-+	336: 'H_VTERM_PARTNER_INFO',
-+	340: 'H_REGISTER_VTERM',
-+	344: 'H_FREE_VTERM',
-+	348: 'H_RESET_EVENTS',
-+	352: 'H_ALLOC_RESOURCE',
-+	356: 'H_FREE_RESOURCE',
-+	360: 'H_MODIFY_QP',
-+	364: 'H_QUERY_QP',
-+	368: 'H_REREGISTER_PMR',
-+	372: 'H_REGISTER_SMR',
-+	376: 'H_QUERY_MR',
-+	380: 'H_QUERY_MW',
-+	384: 'H_QUERY_HCA',
-+	388: 'H_QUERY_PORT',
-+	392: 'H_MODIFY_PORT',
-+	396: 'H_DEFINE_AQP1',
-+	400: 'H_GET_TRACE_BUFFER',
-+	404: 'H_DEFINE_AQP0',
-+	408: 'H_RESIZE_MR',
-+	412: 'H_ATTACH_MCQP',
-+	416: 'H_DETACH_MCQP',
-+	420: 'H_CREATE_RPT',
-+	424: 'H_REMOVE_RPT',
-+	428: 'H_REGISTER_RPAGES',
-+	432: 'H_DISABLE_AND_GET',
-+	436: 'H_ERROR_DATA',
-+	440: 'H_GET_HCA_INFO',
-+	444: 'H_GET_PERF_COUNT',
-+	448: 'H_MANAGE_TRACE',
-+	456: 'H_GET_CPU_CHARACTERISTICS',
-+	468: 'H_FREE_LOGICAL_LAN_BUFFER',
-+	472: 'H_POLL_PENDING',
-+	484: 'H_QUERY_INT_STATE',
-+	580: 'H_ILLAN_ATTRIBUTES',
-+	584: 'H_ADD_LOGICAL_LAN_BUFFERS',
-+	592: 'H_MODIFY_HEA_QP',
-+	596: 'H_QUERY_HEA_QP',
-+	600: 'H_QUERY_HEA',
-+	604: 'H_QUERY_HEA_PORT',
-+	608: 'H_MODIFY_HEA_PORT',
-+	612: 'H_REG_BCMC',
-+	616: 'H_DEREG_BCMC',
-+	620: 'H_REGISTER_HEA_RPAGES',
-+	624: 'H_DISABLE_AND_GET_HEA',
-+	628: 'H_GET_HEA_INFO',
-+	632: 'H_ALLOC_HEA_RESOURCE',
-+	644: 'H_ADD_CONN',
-+	648: 'H_DEL_CONN',
-+	664: 'H_JOIN',
-+	672: 'H_VASI_SIGNAL',
-+	676: 'H_VASI_STATE',
-+	680: 'H_VIOCTL',
-+	688: 'H_ENABLE_CRQ',
-+	696: 'H_GET_EM_PARMS',
-+	720: 'H_SET_MPP',
-+	724: 'H_GET_MPP',
-+	732: 'H_REG_SUB_CRQ',
-+	736: 'H_FREE_SUB_CRQ',
-+	740: 'H_SEND_SUB_CRQ',
-+	744: 'H_SEND_SUB_CRQ_INDIRECT',
-+	748: 'H_HOME_NODE_ASSOCIATIVITY',
-+	756: 'H_BEST_ENERGY',
-+	764: 'H_XIRR_X',
-+	768: 'H_RANDOM',
-+	772: 'H_COP',
-+	788: 'H_GET_MPP_X',
-+	796: 'H_SET_MODE',
-+	808: 'H_BLOCK_REMOVE',
-+	856: 'H_CLEAR_HPT',
-+	864: 'H_REQUEST_VMC',
-+	876: 'H_RESIZE_HPT_PREPARE',
-+	880: 'H_RESIZE_HPT_COMMIT',
-+	892: 'H_REGISTER_PROC_TBL',
-+	896: 'H_SIGNAL_SYS_RESET',
-+	904: 'H_ALLOCATE_VAS_WINDOW',
-+	908: 'H_MODIFY_VAS_WINDOW',
-+	912: 'H_DEALLOCATE_VAS_WINDOW',
-+	916: 'H_QUERY_VAS_WINDOW',
-+	920: 'H_QUERY_VAS_CAPABILITIES',
-+	924: 'H_QUERY_NX_CAPABILITIES',
-+	928: 'H_GET_NX_FAULT',
-+	936: 'H_INT_GET_SOURCE_INFO',
-+	940: 'H_INT_SET_SOURCE_CONFIG',
-+	944: 'H_INT_GET_SOURCE_CONFIG',
-+	948: 'H_INT_GET_QUEUE_INFO',
-+	952: 'H_INT_SET_QUEUE_CONFIG',
-+	956: 'H_INT_GET_QUEUE_CONFIG',
-+	960: 'H_INT_SET_OS_REPORTING_LINE',
-+	964: 'H_INT_GET_OS_REPORTING_LINE',
-+	968: 'H_INT_ESB',
-+	972: 'H_INT_SYNC',
-+	976: 'H_INT_RESET',
-+	996: 'H_SCM_READ_METADATA',
-+	1000: 'H_SCM_WRITE_METADATA',
-+	1004: 'H_SCM_BIND_MEM',
-+	1008: 'H_SCM_UNBIND_MEM',
-+	1012: 'H_SCM_QUERY_BLOCK_MEM_BINDING',
-+	1016: 'H_SCM_QUERY_LOGICAL_MEM_BINDING',
-+	1020: 'H_SCM_UNBIND_ALL',
-+	1024: 'H_SCM_HEALTH',
-+	1048: 'H_SCM_PERFORMANCE_STATS',
-+	1052: 'H_PKS_GET_CONFIG',
-+	1056: 'H_PKS_SET_PASSWORD',
-+	1060: 'H_PKS_GEN_PASSWORD',
-+	1068: 'H_PKS_WRITE_OBJECT',
-+	1072: 'H_PKS_GEN_KEY',
-+	1076: 'H_PKS_READ_OBJECT',
-+	1080: 'H_PKS_REMOVE_OBJECT',
-+	1084: 'H_PKS_CONFIRM_OBJECT_FLUSHED',
-+	1096: 'H_RPT_INVALIDATE',
-+	1100: 'H_SCM_FLUSH',
-+	1104: 'H_GET_ENERGY_SCALE_INFO',
-+	1108: 'H_PKS_SIGNED_UPDATE',
-+	1112: 'H_HTM',
-+	1116: 'H_WATCHDOG',
-+	# Platform specific hcalls used by KVM on PowerVM
-+	1120: 'H_GUEST_GET_CAPABILITIES',
-+	1124: 'H_GUEST_SET_CAPABILITIES',
-+	1136: 'H_GUEST_CREATE',
-+	1140: 'H_GUEST_CREATE_VCPU',
-+	1144: 'H_GUEST_GET_STATE',
-+	1148: 'H_GUEST_SET_STATE',
-+	1152: 'H_GUEST_RUN_VCPU',
-+	1156: 'H_GUEST_COPY_MEMORY',
-+	1160: 'H_GUEST_DELETE',
-+	# Key wrapping hcalls
-+	1168: 'H_PKS_WRAP_OBJECT',
-+	1172: 'H_PKS_UNWRAP_OBJECT',
-+	# Platform-specific hcalls used by the Ultravisor
-+	61184: 'H_SVM_PAGE_IN',
-+	61188: 'H_SVM_PAGE_OUT',
-+	61192: 'H_SVM_INIT_START',
-+	61196: 'H_SVM_INIT_DONE',
-+	61204: 'H_SVM_INIT_ABORT',
-+	# Platform specific hcalls used by KVM
-+	61440: 'H_RTAS',
-+	# Platform specific hcalls used by QEMU/SLOF
-+	61441: 'H_LOGICAL_MEMOP',
-+	61442: 'H_CAS',
-+	61443: 'H_UPDATE_DT',
-+	# Platform specific hcalls provided by PHYP
-+	61560: 'H_GET_24X7_CATALOG_PAGE',
-+	61564: 'H_GET_24X7_DATA',
-+	61568: 'H_GET_PERF_COUNTER_INFO',
-+	# Platform-specific hcalls used for nested HV KVM
-+	63488: 'H_SET_PARTITION_TABLE',
-+	63492: 'H_ENTER_NESTED',
-+	63496: 'H_TLB_INVALIDATE',
-+	63500: 'H_COPY_TOFROM_GUEST',
++unhandled: collections.defaultdict[str, int] = collections.defaultdict(int)
++session = None
++
++softirq_vecs = {
++    0: "HI_SOFTIRQ",
++    1: "TIMER_SOFTIRQ",
++    2: "NET_TX_SOFTIRQ",
++    3: "NET_RX_SOFTIRQ",
++    4: "BLOCK_SOFTIRQ",
++    5: "IRQ_POLL_SOFTIRQ",
++    6: "TASKLET_SOFTIRQ",
++    7: "SCHED_SOFTIRQ",
++    8: "HRTIMER_SOFTIRQ",
++    9: "RCU_SOFTIRQ",
 +}
 +
++_GFP_DMA = 1 << 0
++_GFP_HIGHMEM = 1 << 1
++_GFP_DMA32 = 1 << 2
++_GFP_MOVABLE = 1 << 3
++_GFP_RECLAIMABLE = 1 << 4
++_GFP_HIGH = 1 << 5
++_GFP_IO = 1 << 6
++_GFP_FS = 1 << 7
++_GFP_ZERO = 1 << 8
++_GFP_DIRECT_RECLAIM = 1 << 10
++_GFP_KSWAPD_RECLAIM = 1 << 11
++_GFP_WRITE = 1 << 12
++_GFP_NOWARN = 1 << 13
++_GFP_RETRY_MAYFAIL = 1 << 14
++_GFP_NOFAIL = 1 << 15
++_GFP_NORETRY = 1 << 16
++_GFP_MEMALLOC = 1 << 17
++_GFP_COMP = 1 << 18
++_GFP_NOMEMALLOC = 1 << 19
++_GFP_HARDWALL = 1 << 20
++_GFP_THISNODE = 1 << 21
++_GFP_ACCOUNT = 1 << 22
++_GFP_ZEROTAGS = 1 << 23
 +
-+class HCallAnalyzer:
-+    """Analyzes hypervisor calls and aggregates statistics."""
++_GFP_RECLAIM = _GFP_DIRECT_RECLAIM | _GFP_KSWAPD_RECLAIM
++_GFP_KERNEL = _GFP_RECLAIM | _GFP_IO | _GFP_FS
++_GFP_USER = _GFP_KERNEL | _GFP_HARDWALL
++_GFP_HIGHUSER = _GFP_USER | _GFP_HIGHMEM
++_GFP_HIGHUSER_MOVABLE = _GFP_HIGHUSER | _GFP_MOVABLE
++_GFP_TRANSHUGE_LIGHT = (
++    _GFP_HIGHUSER_MOVABLE | _GFP_COMP | _GFP_NOMEMALLOC | _GFP_NOWARN
++) & ~_GFP_RECLAIM
++_GFP_TRANSHUGE = _GFP_TRANSHUGE_LIGHT | _GFP_DIRECT_RECLAIM
 +
-+    def __init__(self, cmd_args) -> None:
-+        self.args = cmd_args
-+        # output: {opcode: {'min': min, 'max': max, 'time': time, 'cnt': cnt}}
-+        self.output: dict[int, dict[str, 'int | float']] = \
-+            defaultdict(lambda: {'time': 0, 'cnt': 0, 'min': float('inf'), 'max': 0})
-+        # d_enter: {cpu: {opcode: nsec}}
-+        self.d_enter: dict[int, dict[int, int]] = {}
-+        self.print_ptrn = '%-28s%10s%10s%10s%10s'
++GFP_FLAG_NAMES = [
++    (_GFP_TRANSHUGE, "GFP_TRANSHUGE"),
++    (_GFP_TRANSHUGE_LIGHT, "GFP_TRANSHUGE_LIGHT"),
++    (_GFP_HIGHUSER_MOVABLE, "GFP_HIGHUSER_MOVABLE"),
++    (_GFP_HIGHUSER, "GFP_HIGHUSER"),
++    (_GFP_USER, "GFP_USER"),
++    (_GFP_KERNEL | _GFP_ACCOUNT, "GFP_KERNEL_ACCOUNT"),
++    (_GFP_KERNEL, "GFP_KERNEL"),
++    (_GFP_RECLAIM | _GFP_IO, "GFP_NOFS"),
++    (_GFP_HIGH | _GFP_KSWAPD_RECLAIM, "GFP_ATOMIC"),
++    (_GFP_RECLAIM, "GFP_NOIO"),
++    (_GFP_KSWAPD_RECLAIM | _GFP_NOWARN, "GFP_NOWAIT"),
++    (_GFP_DMA, "GFP_DMA"),
++    (_GFP_DMA32, "GFP_DMA32"),
++    (_GFP_RECLAIM, "__GFP_RECLAIM"),
++    (_GFP_DMA, "__GFP_DMA"),
++    (_GFP_HIGHMEM, "__GFP_HIGHMEM"),
++    (_GFP_DMA32, "__GFP_DMA32"),
++    (_GFP_MOVABLE, "__GFP_MOVABLE"),
++    (_GFP_RECLAIMABLE, "__GFP_RECLAIMABLE"),
++    (_GFP_HIGH, "__GFP_HIGH"),
++    (_GFP_IO, "__GFP_IO"),
++    (_GFP_FS, "__GFP_FS"),
++    (_GFP_ZERO, "__GFP_ZERO"),
++    (_GFP_DIRECT_RECLAIM, "__GFP_DIRECT_RECLAIM"),
++    (_GFP_KSWAPD_RECLAIM, "__GFP_KSWAPD_RECLAIM"),
++    (_GFP_WRITE, "__GFP_WRITE"),
++    (_GFP_NOWARN, "__GFP_NOWARN"),
++    (_GFP_RETRY_MAYFAIL, "__GFP_RETRY_MAYFAIL"),
++    (_GFP_NOFAIL, "__GFP_NOFAIL"),
++    (_GFP_NORETRY, "__GFP_NORETRY"),
++    (_GFP_MEMALLOC, "__GFP_MEMALLOC"),
++    (_GFP_COMP, "__GFP_COMP"),
++    (_GFP_NOMEMALLOC, "__GFP_NOMEMALLOC"),
++    (_GFP_HARDWALL, "__GFP_HARDWALL"),
++    (_GFP_THISNODE, "__GFP_THISNODE"),
++    (_GFP_ACCOUNT, "__GFP_ACCOUNT"),
++    (_GFP_ZEROTAGS, "__GFP_ZEROTAGS"),
++]
 +
-+    def hcall_table_lookup(self, opcode: int) -> str:
-+        """Lookup hcall name by opcode."""
-+        return HCALL_TABLE.get(opcode, str(opcode))
 +
-+    def process_event(self, sample: perf.sample_event) -> None:
-+        """Process a single sample event."""
-+        name = str(sample.evsel)
-+        if name not in ("evsel(powerpc:hcall_entry)", "evsel(powerpc:hcall_exit)"):
-+            return
++def trace_begin() -> None:
++    """Called at the start of trace processing."""
++    print("in trace_begin")
 +
-+        try:
-+            cpu = sample.sample_cpu
-+            opcode = sample.opcode
-+        except AttributeError:
-+            print("ERROR: tracepoint fields missed (is libtraceevent enabled?)",
-+                  file=sys.stderr)
-+            sys.exit(1)
++def trace_end() -> None:
++    """Called at the end of trace processing."""
++    print_unhandled()
++    print("in trace_end")
 +
-+        # sample.sample_time represents the nsecs
-+        time = sample.sample_time
++def symbol_str(event_name: str, field_name: str, value: int) -> str:
++    """Resolves symbol values to strings."""
++    # Note: The standalone Python API currently lacks dynamic libtraceevent
++    # formatting (equivalent to _perf_trace_context.symbol_str())
++    if event_name == "irq__softirq_entry" and field_name == "vec":
++        return softirq_vecs.get(value, str(value))
++    return str(value)
 +
-+        if opcode < 0 or cpu < 0:
-+            return
++def flag_str(event_name: str, field_name: str, value: int) -> str:
++    """Resolves flag values to strings."""
++    # Note: The standalone Python API currently lacks dynamic libtraceevent
++    # formatting (equivalent to _perf_trace_context.flag_str())
++    if event_name == "kmem__kmalloc" and field_name == "gfp_flags":
++        if value == 0:
++            return "none"
++        names = []
++        rem = value
++        for mask, name in GFP_FLAG_NAMES:
++            if (rem & mask) == mask:
++                names.append(name)
++                rem &= ~mask
++        if rem:
++            names.append(f"0x{rem:x}")
++        return "|".join(names)
++    return str(value)
 +
-+        if name == "evsel(powerpc:hcall_entry)":
-+            if cpu not in self.d_enter:
-+                self.d_enter[cpu] = {}
-+            self.d_enter[cpu][opcode] = time
-+        elif name == "evsel(powerpc:hcall_exit)":
-+            if cpu in self.d_enter and opcode in self.d_enter[cpu]:
-+                time_entry = self.d_enter[cpu][opcode]
-+                diff = time - time_entry
-+                del self.d_enter[cpu][opcode]
++def print_header(event_name: str, sample: perf.sample_event) -> None:
++    """Prints common header for events."""
++    secs = sample.sample_time // 1000000000
++    nsecs = sample.sample_time % 1000000000
++    comm = "[unknown]"
++    try:
++        if session:
++            thread = session.find_thread(sample.sample_pid, sample.sample_tid)
++            if thread:
++                comm = thread.comm() or "[unknown]"
++    except (TypeError, AttributeError):
++        pass
++    print(f"{event_name:<20} {sample.sample_cpu:5} {secs:05}.{nsecs:09} "
++          f"{sample.sample_tid:8} {comm:<20} ", end=' ')
 +
-+                stats = self.output[opcode]
-+                stats['time'] += diff
-+                stats['cnt'] += 1
-+                if diff < stats['min']:
-+                    stats['min'] = diff
-+                if diff > stats['max']:
-+                    stats['max'] = diff
++def print_uncommon(sample: perf.sample_event) -> None:
++    """Prints uncommon fields for tracepoints."""
++    # Fallback to 0 if field not found (e.g. on older kernels or if not tracepoint)
++    pc = getattr(sample, 'common_preempt_count', 0)
++    flags = getattr(sample, 'common_flags', 0)
++    lock_depth = getattr(sample, 'common_lock_depth', 0)
 +
-+    def print_summary(self) -> None:
-+        """Print aggregated statistics."""
-+        print(self.print_ptrn % ('hcall', 'count', 'min(ns)', 'max(ns)', 'avg(ns)'))
-+        print('-' * 68)
++    print(f"common_preempt_count={pc}, common_flags={flags}, "
++          f"common_lock_depth={lock_depth}, ", end='')
 +
-+        def sort_output(opcode):
-+            stats = self.output[opcode]
-+            sort_by = getattr(self.args, 'sort', None)
-+            if sort_by == 'min':
-+                return stats['min']
-+            if sort_by == 'max':
-+                return stats['max']
-+            if sort_by == 'avg':
-+                return stats['time'] // stats['cnt']
-+            return stats['cnt']
++def irq__softirq_entry(sample: perf.sample_event) -> None:
++    """Handles irq:softirq_entry events."""
++    print_header("irq__softirq_entry", sample)
++    print_uncommon(sample)
++    print(f"vec={symbol_str('irq__softirq_entry', 'vec', getattr(sample, 'vec', 0))}")
 +
-+        for opcode in sorted(self.output.keys(), key=sort_output, reverse=True):
-+            h_name = self.hcall_table_lookup(opcode)
-+            stats = self.output[opcode]
-+            time = stats['time']
-+            cnt = stats['cnt']
-+            min_t = stats['min']
-+            max_t = stats['max']
++def kmem__kmalloc(sample: perf.sample_event) -> None:
++    """Handles kmem:kmalloc events."""
++    print_header("kmem__kmalloc", sample)
++    print_uncommon(sample)
 +
-+            # Avoid float representation for large integers if possible,
-+            # or use formatted strings. Legacy used time//cnt.
-+            avg_t = time // cnt if cnt > 0 else 0
++    print(f"call_site={getattr(sample, 'call_site', 0):#x}, "
++          f"ptr={getattr(sample, 'ptr', 0):#x}, "
++          f"bytes_req={getattr(sample, 'bytes_req', 0):d}, "
++          f"bytes_alloc={getattr(sample, 'bytes_alloc', 0):d}, "
++          f"gfp_flags={flag_str('kmem__kmalloc', 'gfp_flags', getattr(sample, 'gfp_flags', 0))}")
 +
-+            # If min was not updated, it remains inf, but cnt should be > 0 if in output
-+            if min_t == float('inf'):
-+                min_t = 0
++def trace_unhandled(event_name: str) -> None:
++    """Tracks unhandled events."""
++    unhandled[event_name] += 1
 +
-+            print(self.print_ptrn % (h_name, cnt, int(min_t), int(max_t), avg_t))
++def print_unhandled() -> None:
++    """Prints summary of unhandled events."""
++    if not unhandled:
++        return
++    print("\nunhandled events:\n")
++    print(f"{'event':<40} {'count':>10}")
++    print("---------------------------------------- -----------")
++    for event_name, count in unhandled.items():
++        print(f"{event_name:<40} {count:10}")
 +
++def process_event(sample: perf.sample_event) -> None:
++    """Callback for processing events."""
++    event_name = str(sample.evsel)
++    if event_name.startswith("evsel(") and event_name.endswith(")"):
++        event_name = event_name[6:-1]
++    if event_name.startswith("irq:softirq_entry"):
++        irq__softirq_entry(sample)
++    elif event_name.startswith("kmem:kmalloc"):
++        kmem__kmalloc(sample)
++    else:
++        trace_unhandled(event_name)
 +
 +if __name__ == "__main__":
-+    ap = argparse.ArgumentParser(description="Hypervisor call statistics")
++    ap = argparse.ArgumentParser()
 +    ap.add_argument("-i", "--input", default="perf.data", help="Input file name")
-+    ap.add_argument("-s", "--sort", default="count",
-+                    choices=["count", "min", "max", "avg"], help="Sort key")
 +    args = ap.parse_args()
 +
-+    analyzer = HCallAnalyzer(args)
-+
-+    session = None
++    trace_begin()
 +    try:
-+        session = perf.session(perf.data(args.input), sample=analyzer.process_event)
-+        session.process_events()
-+        analyzer.print_summary()
-+    except KeyboardInterrupt:
-+        analyzer.print_summary()
-+    except (OSError, ValueError, KeyError, RuntimeError, TypeError, AttributeError) as e:
-+        print(f"Error processing events: {e}")
-+        sys.exit(1)
++        session = perf.session(perf.data(args.input), sample=process_event)
++        try:
++            session.process_events()
++        except KeyboardInterrupt:
++            pass
++        trace_end()
 +    finally:
-+        # Break the reference cycle between perf.session and analyzer.process_event.
++        # Break the reference cycle between the global session and the
++        # process_event callback so the C perf.session object is freed.
 +        session = None
-diff --git a/tools/perf/tests/shell/test_powerpc_hcalls_python.sh b/tools/perf/tests/shell/test_powerpc_hcalls_python.sh
+diff --git a/tools/perf/tests/shell/test_check_perf_trace_python.sh b/tools/perf/tests/shell/test_check_perf_trace_python.sh
 new file mode 100755
-index 000000000000..5316c28f243f
+index 000000000000..a346e45eb18c
 --- /dev/null
-+++ b/tools/perf/tests/shell/test_powerpc_hcalls_python.sh
-@@ -0,0 +1,95 @@
++++ b/tools/perf/tests/shell/test_check_perf_trace_python.sh
+@@ -0,0 +1,85 @@
 +#!/bin/bash
 +# SPDX-License-Identifier: GPL-2.0
-+# powerpc-hcalls python test
++# check-perf-trace python test
 +
 +set -e
 +
@@ -449,89 +339,79 @@ index 000000000000..5316c28f243f
 +# shellcheck source=lib/setup_python.sh
 +. "${shelldir}"/lib/setup_python.sh
 +
++# If we don't have the perf python module, we can't test
 +if ! "$PYTHON" -c 'import perf' > /dev/null 2>&1; then
 +	echo "Skipping test, perf python module not found"
 +	exit 2
 +fi
 +
-+script_dir="$(dirname "$0")/../../python"
-+script_path="${script_dir}/powerpc-hcalls.py"
-+
-+if ! perf check feature -q libtraceevent > /dev/null 2>&1; then
-+	echo "Skipping test, libtraceevent is disabled"
++if ! perf check feature -q libtraceevent; then
++	echo "Skipping test, perf built without libtraceevent"
 +	exit 2
 +fi
 +
++script_dir="$(dirname "$0")/../../python"
++script_path="${script_dir}/check-perf-trace.py"
++
 +if [ ! -f "$script_path" ]; then
-+	echo "Skipping test, powerpc-hcalls.py not found at $script_path"
++	echo "Skipping test, check-perf-trace.py not found at $script_path"
 +	exit 2
 +fi
 +
 +err=0
++temp_data=""
++temp_out=""
++
 +cleanup() {
 +	rm -f "${temp_data}" "${temp_out}"
 +}
-+trap 'cleanup' EXIT TERM INT
++
++trap 'cleanup' EXIT
++trap 'cleanup; exit 1' TERM INT
 +
 +temp_data=$(mktemp /tmp/perf.data.XXXXXX)
 +temp_out=$(mktemp /tmp/perf.out.XXXXXX)
 +
-+echo "Testing powerpc-hcalls.py..."
++test_file_mode() {
++	echo "Testing check-perf-trace.py..."
 +
-+# Verify HCallAnalyzer aggregation logic on synthetic hcall_entry/hcall_exit samples
-+if ! "$PYTHON" - "$script_path" > "${temp_out}" <<'EOF'
-+import argparse
-+import importlib.util
-+import sys
-+from types import SimpleNamespace
++	events=""
++	if perf list | grep -q "irq:softirq_entry"; then
++		events="irq:softirq_entry"
++	fi
++	if perf list | grep -q "kmem:kmalloc"; then
++		if [ -n "$events" ]; then
++			events="$events,kmem:kmalloc,kmem:kfree"
++		else
++			events="kmem:kmalloc,kmem:kfree"
++		fi
++	fi
 +
-+spec = importlib.util.spec_from_file_location("powerpc_hcalls", sys.argv[1])
-+assert spec and spec.loader
-+mod = importlib.util.module_from_spec(spec)
-+spec.loader.exec_module(mod)
++	if [ -z "$events" ]; then
++		echo "Skipping test, no required tracepoints found"
++		exit 2
++	fi
 +
-+analyzer = mod.HCallAnalyzer(argparse.Namespace(sort='count'))
-+analyzer.process_event(SimpleNamespace(
-+    evsel="evsel(powerpc:hcall_entry)", sample_cpu=0, sample_time=1000, opcode=4))
-+analyzer.process_event(SimpleNamespace(
-+    evsel="evsel(powerpc:hcall_exit)", sample_cpu=0, sample_time=2500, opcode=4))
-+analyzer.print_summary()
-+EOF
-+then
-+	echo "powerpc-hcalls.py synthetic aggregation test failed"
-+	exit 1
-+fi
++	# Generate events
++	if ! perf record -e "$events" -a -o "${temp_data}" -- sleep 0.5 >/dev/null 2>&1; then
++		echo "Skipping test, perf record failed"
++		exit 2
++	fi
 +
-+if ! grep -q "H_REMOVE.*1.*1500.*1500.*1500" "${temp_out}"; then
-+	echo "Failed to find aggregated H_REMOVE metrics in output"
-+	exit 1
-+fi
-+
-+# Create a perf.data file if powerpc hcall tracepoints are available on this host.
-+if ! perf record -e powerpc:hcall_entry,powerpc:hcall_exit -a -o "${temp_data}" \
-+	-- perf test -w noploop >/dev/null 2>&1; then
-+	echo "Skipping live record test, powerpc hcall tracepoints not available"
-+	exit 0
-+fi
-+
-+if [ ! -s "${temp_data}" ]; then
-+	echo "Skipping live record test, perf record failed to create data"
-+	exit 0
-+fi
-+
-+# Check that the script executes on recorded perf.data
-+if ! "$PYTHON" "$script_path" -i "${temp_data}" > "${temp_out}"; then
-+	echo "powerpc-hcalls.py test failed"
-+	err=1
-+else
-+	if ! grep -q "hcall.*count.*min.*max.*avg" "${temp_out}"; then
-+		echo "Failed to find the metrics table header"
++	# Run the script
++	if ! "$PYTHON" "$script_path" -i "${temp_data}" > "${temp_out}"; then
++		echo "File mode test failed."
++		err=1
++	elif ! grep -q "in trace_begin" "${temp_out}" || \
++	     ! grep -q "in trace_end" "${temp_out}"; then
++		echo "File mode test missing trace_begin/trace_end markers."
 +		err=1
 +	else
-+		echo "powerpc-hcalls test passed."
++		echo "File mode test passed."
 +	fi
-+fi
-+rm -f "${temp_out}"
++}
++
++test_file_mode
 +
 +exit $err
 -- 
