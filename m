@@ -1,124 +1,231 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f180.google.com (mail-qt1-f180.google.com [209.85.160.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFA3A3C65FD
-	for <linux-perf-users@vger.kernel.org>; Wed, 23 Sep 2026 16:36:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790181373; cv=none; b=iOox5flPda5+yO1kdEc0XGbXCoaK046GLwiPQQAdZsAtu6lC5MyPYH1hSC7Y5Kx3NcYpDaqUgm56LCg+nug9cDvu8zzuvJUJ6QTg6XvPaaNYyGhj6hnI+PIpjkNU1eClted/dQVIuoGmKKC6JCIJWdDPQQF+VNPQDgTsQASS2z4=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790181373; c=relaxed/simple;
-	bh=+fyNIB/gYv0EvAEnkv3ZVM5zlE/q5WWlZIh5Ef4Yuvs=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=qlwW5P2Nz1yYqHjHDN6Zh7wyGbQRWJwT6D1Z5eTSNj4RE6kXZW0S9PMWRS+GpccQbhvneAcRbhCTIIGwmWaGT2zaXMPmqdnUj7mWzue+kpLDtblaCW8dBBkwrKK7unQ6c+Z4vQZn8eW5n6XGgTD0ybc1cGKp7VJ7D8JDeFQnmkk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=G+Dei9Fk; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99C5D5581EC
+	for <linux-perf-users@vger.kernel.org>; Wed, 23 Sep 2026 16:38:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.160.180
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1790181491; cv=pass; b=N2FTWbEq0xIwAzM+6RLPqPS1Fybjde4tDlJ2rmRQlKQ51GA8epCaEdDXC0IBagI0rPPKjA71q0leU8NYqURGLFPvdngOB8xuhNnAbs3NODwCYI8O8ElidLx9fmhRxR9q+TAlhaL/FqbgypwAroGXM0KxHJ+I31KsZDiOAjB4sTY=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1790181491; c=relaxed/simple;
+	bh=Ki68AWhOtCntsoI0OFIKHyKcKBjhFUq6rGGkI3eKt94=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=sJEi4r01QmbHWCfI0nlqoLB246y/qAmHhZvK0Mf55AtJqK6MryIPnRBqSQCrO4AbAqQ+/tdT8QhCgnJZlBg8p3sC51mJOQGvqvRoPSxjF5v5+ET5XCGei3jNH+Isf8HSxNC2iZgDKqWhjMUbWWKqdxhVdLBOY+En7nXMg6QEBmI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=jThPTznR; arc=pass smtp.client-ip=209.85.160.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="G+Dei9Fk"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3962C1F000FF;
-	Wed, 23 Sep 2026 16:36:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1790181365;
-	bh=EyUFsfwa2c4xnlLGEHtpHcvWpLGcgQKXAWmbyOpVd+c=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=G+Dei9FkbH8d1r+a+YZSQJaLiYZzLHKVVQBVsiwpyYecEvTTBK7u67MFU9jmld2e1
-	 OdtVsyFg6qD4NSZ2boZwXn2qEqMrTeUs2H6kRsS3/jb2oyjeJV4FL4lPPW/xfDNL09
-	 1mxbUvUe1MDGmWpfwDY0ryFWuh3Fblq8XceFfOHDNNhtYs5rxrba2caUx0NH7wqZh1
-	 /PSd32ztHxE6xcM+mucqjciHBTp9P0T3i4BamQjy8fJ2QHSBVLaHNfqDJZDLxCg2+z
-	 RTx4iBHeuIbALF3AJszP+27sm4ISE4wymjv3RZfgJvzmT22ObVf/RwEplABbrQqN1o
-	 5a1qvfzDNxb3w==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v2 10/14] perf cs-etm: Synthesize exception entries
- separately from branches
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Leo Yan" <leo.yan@arm.com>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260923-perf_cs_etm_fix_non_taken-v2-10-6ab8c07a5455@arm.com>
-References: <20260923-perf_cs_etm_fix_non_taken-v2-0-6ab8c07a5455@arm.com>
- <20260923-perf_cs_etm_fix_non_taken-v2-10-6ab8c07a5455@arm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Wed, 23 Sep 2026 16:36:04 +0000
-Message-Id: <20260923163605.3962C1F000FF@smtp.kernel.org>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jThPTznR"
+Received: by mail-qt1-f180.google.com with SMTP id d75a77b69052e-52faa58bff5so287681cf.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 23 Sep 2026 09:37:58 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1790181477; cv=none;
+        d=google.com; s=arc-20260327;
+        b=TBYk2NXqYFqo9vQgWV38UQtlc3TSHC+v/eWyRCrOLRQCIkNffaK/Mwuu2Y/Ru5Pgnc
+         JXAHsetXPOnfO7BcKPUqnqu3acq+UFM5ukCYcCM7+kgkaAB/j1NhIOktJh1KwY2fgDIa
+         tilpPKLCHCN44Yyc+cIUnwyXDs1o2cy3sbXkf/su8loAq0bbDfefkOb+mJEZhZvnq65K
+         XXhJ6fKdv2tLk6LKNAbZfmwuEPHKhgwjWcugGK12vmaU4+8dk1Fj7oLVwmEEFE9Rk7Un
+         9vGvy1EXR8Y/wijQaLAZbTCzeerfypFc1QLgocOc0DCSZSgjNz9RWCOR07qJ7cBnhzaX
+         WguQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=j+invQ9QY+xGc1wJGh+eSpEPO8pFIqJwIrCsCZ77yWs=;
+        fh=g8t3i2l5s6FVddQmrH6FowtZc2tLdddic2qrDRMFOY8=;
+        b=XqkoemNUq4JbwAV7nz5YqWqdMAW/YyzBn1RFngKMUeGziWz7J2UwqZ2CPt/6CfIrb1
+         c8fY5oB3BkW8MI53yGl0lEWd5EhZ1n4EA8FHRL4WEXD3vegUmGCF0EujPPIJ+zB6qR4A
+         gAiie3DJq8yzhSRFVIH3kSdH2i2Clw+CBzy7nGOAy58eVNxr6b7Gwt7g8b2BKtTGvLyM
+         5bG18cxBb2PXmEJ8u7nVVyzVKim9PRmBD2JusSvjxiAGCK4GuTA306Sf/Vr6KSa5nvuO
+         3y+dBPHvmY64GJTwoDm9EmMfWpHC4l/1/tXU3DJ2Ke5fehNxe+4Mtd32vfTdiDNWNHj2
+         RO0g==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1790181477; x=1790786277; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=j+invQ9QY+xGc1wJGh+eSpEPO8pFIqJwIrCsCZ77yWs=;
+        b=jThPTznR670ycgCbH7qizm1s+5zC15cNHS9nP2YzsFKa99rlkiwHOfs0twMbnFxSNo
+         ECKfSxVrJaXI2Tof5xtvy9IySgvjd+BwRvKVzluHdUfORli8b1LmUn2UW1yFp5vMVTrK
+         TFD2Coe4xl/zahes46jdA0Fd1QLA8ZjLMui2/amkhJOtTTDhkGvpzTl1Yrz/J4diREqI
+         audXPwrPEwiejgxhY2R/ea3RLYWTs5lc8OvOhyDBzavz857Su+uBfPE9ldBMtMyVXKo7
+         x7fzP/mHJZbvFz909gDVkJK2I2GWfDNVl/5jIhg8wY0NCvpRGLeiCagqn0nTA0Ut7Pqd
+         sqGA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1790181477; x=1790786277;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=j+invQ9QY+xGc1wJGh+eSpEPO8pFIqJwIrCsCZ77yWs=;
+        b=cKnl11M75t85m03iiQZRk2wWlFkDLSuj9jJr42QfUYjBuxYEG6miOup8UPm2uA2sHX
+         UZYn7ysahir3S3oz+lfubxgsHss9uOSZ4Kj+iLuNaTSWDkl+w2t4Ju3uedISeOGPsdF0
+         mvI1HaYnwceMTKY4GUmNACuv2oWmC/OKTMRuLmisNoEGN0xfvfK0ZRrZELz6meJKjD8J
+         TKdyCIuiNqGu5m1iuSKCfL3QPe9Mqy8wysAnxWePPCGdO2CShPJRtsepzBTucsVShmaJ
+         qNuUPcsZ9YwUkQNyIAInKBZSJHrkc7ElTU49UEqvdxtjwi+8viG4AaaXJvM4i0fh273C
+         uF9A==
+X-Forwarded-Encrypted: i=1; AKwUvBzcFarHGQRk7cXNW/eHtydY/eAbdJr8uHqYJZeumAK8HIve40qUk8bUcFhZAANuZRr/E/J39A7elLhdgjbTK5F+@vger.kernel.org
+X-Gm-Message-State: AFuF++n+P9mK25oy0MprhvH4aV4MchTYHgIWv/kpN4bMOXtSjc1eOLPY
+	u0UEPj185s/a2tHOAAR5RLMau98rofUOTs4W3t70RtppoF7hHzFJL7QxIDEpARUm77q9pWrw9TL
+	oRci8FBytmsJA9zmBllHWbzlWcwN/oSqyz8BlpcI3
+X-Gm-Gg: AYBFou3304TyRp6XrAX1iAlSIHgAmEsemjqiaZL84Z2Jlu8iIVhHd0tZLIzIRhBESIi
+	wdbBV9gcxYa+Z920KXoXL7fxw/wmnlYd+kQFKVPK65hoUM4kdkDoxJtpQLKEuf9+OeaRWZLjL3o
+	cwjhpTcu321FrPHe6GxsKzbJCPlS/S3gIufVFaPuEOQG0W8c8knZ6h67MYqv4ofp40qiDvRSet+
+	nlwphZiNtFKwQdoW2vOpBHN0CzBP9DF9UGbrxbWnoRbiSAwC0PWhoarP+6qlKfBMIjU2L+A5S3f
+	uRLEI85ISz1gccenJmlca9ZhB38j45F5FnSeCxqTMXljRextmV4ItMB96p4S7gHeGiuiCcHgKED
+	Pa4BuMEqWoQ==
+X-Received: by 2002:a05:622a:580f:b0:531:a85:69c1 with SMTP id
+ d75a77b69052e-532f9c84160mr802371cf.5.1790181476065; Wed, 23 Sep 2026
+ 09:37:56 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+References: <20260922144300.1217524-1-jremus@linux.ibm.com>
+In-Reply-To: <20260922144300.1217524-1-jremus@linux.ibm.com>
+From: Ian Rogers <irogers@google.com>
+Date: Wed, 23 Sep 2026 09:37:43 -0700
+X-Gm-Features: AclHuK-tTzR7flHC1FUf-5xqss-YgaqJiwuxrG28Gk18QOopJdckSUgFKtvajV0
+Message-ID: <CAP-5=fUM6gb9MY9Sm=QhC+Tc4AFt2=fdLbr4tES++AMQcxryUQ@mail.gmail.com>
+Subject: Re: [PATCH] perf evsel: Improve callchain warning for s390
+To: Jens Remus <jremus@linux.ibm.com>, Thomas Richter <tmricht@linux.ibm.com>
+Cc: Jan Polensky <japo@linux.ibm.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, 
+	Namhyung Kim <namhyung@kernel.org>, Heiko Carstens <hca@linux.ibm.com>, 
+	Vasily Gorbik <gor@linux.ibm.com>, Alexander Gordeev <agordeev@linux.ibm.com>, 
+	Ilya Leoshkevich <iii@linux.ibm.com>, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, linux-s390@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
-s) to consider:
-- [Medium] perf: miscalculation of ETMv3 SVC/HYP source addresses
---
+On Tue, Sep 22, 2026 at 7:43=E2=80=AFAM Jens Remus <jremus@linux.ibm.com> w=
+rote:
+>
+> On s390 the kernel uses s390 back chain instead of frame pointers for
+> stack tracing of user space since v6.7 commit aa44433ac4ee ("s390: add
+> USER_STACKTRACE support").  This is because frame pointers on s390
+> cannot be used for stack tracing. [1]
+>
+> This requires user space to maintain a s390 back chain.  For instance
+> user space to be built with compiler option '-mbackchain' (instead of
+> '-fno-omit-frame-pointer' used on other architectures, which should
+> better not be used on s390 [1]).  Only few distributions and users build
+> user space with '-mbackchain'.  Therefore '--call-graph fp' may in
+> practice not produce the expected results.
+>
+> Commit ca76fb67ebdd ("perf evlist: Improve default event for s390")
+> changed the default '-g' option to 'dwarf' on s390 and added a warning
+> for s390 that wrongly claimed that "Framepointer unwinding lacks kernel
+> support".  This warning resulted from a misinterpretation of comments
+> in s390 cpumsf_pmu_event_init().
+>
+> The restriction in cpumsf_pmu_event_init() applies to callchain sampling
+> with the s390 CPU Measurement Sampling Facility (CPUMSF) hardware PMU.
+> CPUMSF events, such as 'cycles', do not support callchain sampling.
+> This is independent of whether perf uses the 'fp' or 'dwarf' call-graph
+> mode.  The CPUMSF PMU provides samples collected asynchronously, making
+> it impossible to associate a callchain to the historic IPs.  Therefore
+> callchains can only be used with software events on s390.
+>
+> Remove the incorrect warning.  The kernel supports the 'fp' call-graph
+> mode on s390 by walking the back chain.  Do not replace it with a
+> hint to use 'dwarf' when the resulting callchain is incomplete.  Such a
+> suggestion could imply that 'fp' is inherently inferior.  The same
+> general limitation exists on other architectures when user space is not
+> built with frame pointers (i.e. '-fno-omit-frame-pointers').
+>
+> Instead, warn on s390 when callchain sampling is requested with an event
+> provided by the CPUMCF or CPUMSF hardware PMUs, because that combination
+> is not supported.
+>
+> Update the perf record documentation to state that 'dwarf' is the
+> default call-graph mode on s390 and that 'fp' uses back chain instead
+> of frame pointers on s390.
+>
+> Note that '--call-graph fp' may also be useful for other applications,
+> such as OpenJDK maintaining a s390 back chain (does not require JVM
+> option '-XX:+PreserveFramePointer' on s390):
+>
+>   $ perf record --call-graph fp ... -- \
+>     java -XX:+UnlockDiagnosticVMOptions -XX:+DumpPerfMapAtExit ...
+>
+> [1]: s390: Stack tracing using Frame Pointer, Back Chain, and SFrame,
+>      https://conf.gnu-tools-cauldron.org/opo25/talk/Y3CVHY/
+>
+> Fixes: ca76fb67ebdd ("perf evlist: Improve default event for s390")
+> Signed-off-by: Jens Remus <jremus@linux.ibm.com>
 
-commit 29b742481ea9116881bdfbed14f1f45c6d6ded76
-Author: Leo Yan <leo.yan@arm.com>
+Acked-by: Ian Rogers <irogers@google.com>
 
-perf cs-etm: Synthesize exception entries separately from branches
+Thanks,
+Ian
 
-This commit modifies the handling of ARM CoreSight ETM trace exception
-entries, synthesizing them separately from branches. It derives exception
-source PCs from the preferred return address rather than attributing the
-exception to the last completed instruction.
-
-> diff --git a/tools/perf/util/cs-etm-decoder/cs-etm-decoder.c b/tools/perf=
-/util/cs-etm-decoder/cs-etm-decoder.c
-> index 48e8c355a3e49..83a851bdd87bf 100644
-> --- a/tools/perf/util/cs-etm-decoder/cs-etm-decoder.c
-> +++ b/tools/perf/util/cs-etm-decoder/cs-etm-decoder.c
-
-[ ... ]
-
-> @@ -524,8 +525,34 @@ cs_etm_decoder__buffer_exception(struct cs_etm_queue=
- *etmq,
->  	packet->exception_number =3D elem->exception_number;
->  	if (elem->context.el_valid)
->  		packet->el =3D elem->context.exception_level;
-> -	if (elem->excep_ret_addr)
-> -		packet->end_addr =3D elem->en_addr;
+> ---
+>
+> Notes (jremus):
+>     Changes in v3:
+>     - Updated warning message.
+>     - Rebased on v7.3-rc4.
+>
+>  tools/perf/Documentation/perf-record.txt | 7 ++++++-
+>  tools/perf/util/evsel.c                  | 6 +++---
+>  2 files changed, 9 insertions(+), 4 deletions(-)
+>
+> diff --git a/tools/perf/Documentation/perf-record.txt b/tools/perf/Docume=
+ntation/perf-record.txt
+> index 178f483140ed..dc72606cb25d 100644
+> --- a/tools/perf/Documentation/perf-record.txt
+> +++ b/tools/perf/Documentation/perf-record.txt
+> @@ -293,7 +293,7 @@ OPTIONS
+>
+>  --call-graph::
+>         Setup and enable call-graph (stack chain/backtrace) recording,
+> -       implies -g.  Default is "fp" (for user space).
+> +       implies -g.  Default is "fp" for user space (s390 uses "dwarf").
+>
+>         The unwinding method used for kernel space is dependent on the
+>         unwinder used by the active kernel configuration, i.e
+> @@ -329,6 +329,11 @@ OPTIONS
+>         enable deferred user callchain which will collect user-space call=
+chains
+>         when the thread returns to the user space.
+>
+> +       On s390, the "fp" method uses back chain instead of frame pointer=
+s,
+> +       which requires user space to maintain a back chain (e.g. compiler
+> +       option -mbackchain).  Without a maintained back chain this produc=
+es
+> +       bogus call graphs.  In that case use "dwarf" instead.
 > +
-> +	/* RESET has no defined preferred return address. */
-> +	if (!elem->excep_ret_addr ||
-> +	    packet->exception_number =3D=3D CS_ETMV4_EXC_RESET)
-> +		return ret;
-> +
-> +	packet->end_addr =3D elem->en_addr;
-> +
-> +	/*
-> +	 * T32 calls can be two or four bytes, requiring an instruction read
-> +	 * before end_addr to determine their size. Keep end_addr for the
-> +	 * frontend's SVC check and leave start_addr unknown for its fallback.
-> +	 */
-> +	if (packet->isa !=3D CS_ETM_ISA_A32 && packet->isa !=3D CS_ETM_ISA_A64)
-> +		return ret;
-> +
-> +	/*
-> +	 * For A32 and A64, exception calls execute a four-byte SVC, HVC or
-> +	 * SMC and save the following PC. Other exceptions use the interrupted
-> +	 * or faulting PC, including traps on those instructions.
-> +	 *
-> +	 * With a shared branch target, no instruction has completed
-> +	 * at the target, so last_instr_size remains zero.
-> +	 */
-> +	if (elem->exception_number =3D=3D CS_ETMV4_EXC_CALL)
-
-[Severity: Medium]
-Does cs_etm_decoder__buffer_exception() miscalculate the instruction size f=
-or
-ETMv3 SVC and HYP call exceptions here?
-
-By only checking against CS_ETMV4_EXC_CALL, it appears to miss the
-corresponding ETMv3 call exception values (CS_ETMV3_EXC_SVC=3D10,
-CS_ETMV3_EXC_HYP=3D3). When tracing ETMv3 with an SVC or HYP exception that
-provides an excep_ret_addr, this would result in a 0-byte instruction size
-and a misattributed source address in the trace output.
-
-> +		last_instr_size =3D 4;
-> +	packet->start_addr =3D packet->end_addr - last_instr_size;
-> +	packet->last_instr_size =3D last_instr_size;
-> =20
->  	return ret;
->  }
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260923-perf_cs_et=
-m_fix_non_taken-v2-0-6ab8c07a5455@arm.com?part=3D10
+>  -q::
+>  --quiet::
+>         Don't print any warnings or messages, useful for scripting.
+> diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+> index d4cb455f4a7d..55297b8dab37 100644
+> --- a/tools/perf/util/evsel.c
+> +++ b/tools/perf/util/evsel.c
+> @@ -1092,9 +1092,9 @@ static void __evsel__config_callchain(struct evsel =
+*evsel, const struct record_o
+>         bool function =3D evsel__is_function_event(evsel);
+>         struct perf_event_attr *attr =3D &evsel->core.attr;
+>
+> -       if (EM_HOST =3D=3D EM_S390 && param->record_mode =3D=3D CALLCHAIN=
+_FP) {
+> -               pr_warning_once(
+> -                       "Framepointer unwinding lacks kernel support. Use=
+ '--call-graph dwarf'\n");
+> +       if (EM_HOST =3D=3D EM_S390 && evsel->pmu && !perf_pmu__is_softwar=
+e(evsel->pmu)) {
+> +               pr_warning_once("Cannot use hardware PMU 'cpum_cf' / 'cpu=
+m_sf' event with callchain. "
+> +                               "Use a software 'cpu-clock' / 'task-clock=
+' event.\n");
+>         }
+>
+>         evsel__set_sample_bit(evsel, CALLCHAIN);
+>
+> base-commit: 93f51579e7df248780214094418f205253383cc5
+> --
+> 2.53.0
+>
