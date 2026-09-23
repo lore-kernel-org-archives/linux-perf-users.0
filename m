@@ -1,56 +1,56 @@
-Received: from mail-dy1-f199.google.com (mail-dy1-f199.google.com [74.125.82.199])
+Received: from mail-dl1-f71.google.com (mail-dl1-f71.google.com [74.125.82.71])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B462D44A40E
-	for <linux-perf-users@vger.kernel.org>; Wed, 23 Sep 2026 07:14:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5B44455602
+	for <linux-perf-users@vger.kernel.org>; Wed, 23 Sep 2026 07:14:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.71
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790147666; cv=none; b=iXgiyHZkpsltdPzELj2cdBMc9l7xa5JOtkabugVn3n3bCN/LI3KjLKZ77ZkP2E2bXA9U5SSWdWckAu1ZT+OC78gLiy/RfH096fiJ3HOVsxEXIHjlXPQG8sf+0wvOPF/HCpPTVBvFOZFKTBxEvO7NKwVeS+KJTCgxYwOvIu5wA2M=
+	t=1790147667; cv=none; b=Ysds5YHna47GAmXCaPNzI+4Rj4rdaNvzgB5mkknG743kdHPk+D2ILdLp2+vcwvNIXNkFkk9okHGUvblnuaUw7udJbeojBe3gg+Az8CbfzMH8YZ6BpNF6ZfHiuGqUjgGNAlmqsw6/KpTslVgYtCwnizeKSZBBR2nGWMBlZfypvhc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790147666; c=relaxed/simple;
-	bh=NG61hDMAN/8MqjNmPkTpk+d48KbTt9ihnQruMIE3O58=;
+	s=arc-20240116; t=1790147667; c=relaxed/simple;
+	bh=ZFu28bTIZtHoVVmRm8bIPfJIFnqmIuxAuxjddZbdwck=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=KlJD8LOaCpwdNF62icLNiEcee2D3+lZbP3pc5+EdFWPF3uW7qVTNWYW5Xwqx1vHiIeo0IzjOdytM/SfHn6UkEbu7rdJJKkPrey3cPTMHQLkLXHV5Q7v/CyapRigcu2au/tvoiq4IPsQNgNHjgti7B6YNTZoU3KvE9ZDpVNajms8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=WSB9c9YV; arc=none smtp.client-ip=74.125.82.199
+	 To:Cc:Content-Type; b=BGO9rjW9+VFEXUpjuLRaYMWvOaszQQlg8nhnoknYUUDL0Wa50C/qM6/B7kryTECkG2wJ3gJ9ZDEejLK3kyAp30wKYJJjSAYlzmYkhkv9Wx0N2B3daLETVX+HSusFD92UbAINhzLRusGcIn6JlxwaKp5Lhd4D4BfcwjVKVs9QhxQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Cuq4fRJ+; arc=none smtp.client-ip=74.125.82.71
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="WSB9c9YV"
-Received: by mail-dy1-f199.google.com with SMTP id 5a478bee46e88-33c35f5ca6cso917979eec.1
-        for <linux-perf-users@vger.kernel.org>; Wed, 23 Sep 2026 00:14:23 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Cuq4fRJ+"
+Received: by mail-dl1-f71.google.com with SMTP id a92af1059eb24-14371f7ba1eso942391c88.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 23 Sep 2026 00:14:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1790147662; x=1790752462; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1790147665; x=1790752465; darn=vger.kernel.org;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=EXZwHe62caikgyPiwv6l+s4W+ytiH/MmGz+IbCWr/dc=;
-        b=WSB9c9YVtZfV8l/P2utQYC+VThTXYxnlOsJDpae1yifMDe4bDeNY5Gk/zFHQbaTfcY
-         zzh+T3xDyZc7PukBbE35InGlE7YgImyiNoiqunDBAlKAySvsv/AM1/e2t08WZsQ1WKAh
-         8tVplClvGUyG1iETPlfTYO2Tq7/FBt5rlCE87S2yG78Eg9SP2/l+IQIoMQLxpm6ZTeT0
-         iOMXuft/DyG96pdYUkhrkm0i0qd1Q8qvvGvcyUyBOwbeI12elHnKaLB+LSzYZ1BPDw+k
-         0ObnYUJ/Cer0M5COYSMTBtE9KcPqLI0nxm7iiZiUrLr08PzAHniY9Fs6w/b+QucwjMzc
-         Gq6w==
+        bh=9AtiWY+mIovc0ii7uMQ428LIkWxsAI+yH5okNrkOa1c=;
+        b=Cuq4fRJ+wrr22Se61VE0RWjHB17vY+CvOZU/LQEk24Djm9WfdhQXhyoxa/qCfP5V0X
+         W6qsYxjnXd3qpF5uNSOM664Fe/ywTALqxbrSEc+dABwWYvaigCGxfdXcZl2gXBVKekGv
+         1XlyZaS+XnYGcbvbcLI1l3n0XgLlrukwWLjUirBHUZHwdRyiOcd7Jb/wmoV++y6GNd7d
+         NPtePQcwbt8DGmP20IcC9E4jemlGsydrzI1RbIPssmHNVVJn6mGDCgUpvV0CTN/jSs9T
+         ly0LF7WLR17AQ1arVEP3BQQnsvNq88IMljrELaR2YE4pFnMZKIrdiot7K0yqnyU7az3v
+         WrtA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1790147662; x=1790752462;
+        d=1e100.net; s=20260707; t=1790147665; x=1790752465;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=EXZwHe62caikgyPiwv6l+s4W+ytiH/MmGz+IbCWr/dc=;
-        b=RFAEzyv5Td18QK6xX1ktEm3Mmugf/buSfsIZFx+KAQNFclf1diOq/AxIJioktfroFS
-         v71H+6rFxlkYaR2siGWB3zSgVSWhfoWw+KKrqeGWP9SLYBmU5H9Yr6hWbNKtWoLLfYf4
-         YdtMCx8Ey2mTRW4fKbkeOFVmCJecvS8Dj6kEHXtpiD6etyc3VG8rWYoc7wMM7ZkZ5g/x
-         JX6I6g2yZQ1qt40xH38Uuc4QCMZT9+ir2nqcGnPZCgCgiXtDWgg+bfENwOkWDhkAxwBI
-         01SynMjRP8G+1413Larflw2X6k/A+0pWjMv1tyMlyxp/EOiFrYkhH2Cef36ku19WFLbd
-         OGdA==
-X-Forwarded-Encrypted: i=1; AKwUvBy4eSGg9TE/1Q5q9R4WK/0HP6rQOvqkWKBd11+xzA0BpyuBuRhWJo89R4IGNbe1l1yIAcQbrbR8bS7p0TPuETi3@vger.kernel.org
-X-Gm-Message-State: AFuF++mEbUgEVp7Yw0X7VtN8l3wMEVgcAKT2HyQk8AeslS+DPe4OL3kh
-	5sa3/nvcopdBdK3tD0AFDgPontcev0dZau+HKGwyEUqQkZSf8fdv52UqZtIgUgTA/CmjuvzPvTy
-	TuT6iWq0Riw==
-X-Received: from dybvu25.prod.google.com ([2002:a05:7300:f819:b0:33e:54b9:7324])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:693c:88c8:20b0:33b:e3c8:aef4
- with SMTP id 5a478bee46e88-33e95f69048mr1489523eec.0.1790147662251; Wed, 23
- Sep 2026 00:14:22 -0700 (PDT)
-Date: Wed, 23 Sep 2026 00:13:45 -0700
+        bh=9AtiWY+mIovc0ii7uMQ428LIkWxsAI+yH5okNrkOa1c=;
+        b=o74PcLfqghVk78Iyv8X98srwfCclD9u9OxTPgc8fzLz0ev7WVOkHOBTCBS4VoQNE5N
+         qMISgVYKZyiQMy3cS+BLw/BWh/om/iwFE1lI0jWhYHnDYr6prtsye66VRkgRnaeQBU8D
+         Mngp2ps+3GL3VmcueS+9KSh9+VA97ZMQN0e6a7UtRvh6ICFD26NF93wLk+wqqn3FQ5qB
+         aJq8Srm8xLi8n+pwHi+UdeYTDPs2Epsb+AYDPHerbkxAAplT9vhGYvHgW5I+cHoVVdQS
+         QW5N2HM4oAbIw/sSuIegevp9kcnWv2jXMtPSWLJuVwRgAJVFADrt3Ynq2mj543M6DVGI
+         v17w==
+X-Forwarded-Encrypted: i=1; AKwUvBxthXtDBw1MW0HB0QrpvUxCQjg9yktIziezsSNbSKZvGfQnRd8Bm5EYrDpOvpQSmR7G7T89qnCQccu0nHVLm3fc@vger.kernel.org
+X-Gm-Message-State: AFuF++kPhtHvG9ixIY78bBsKR4gtJSR4gP+/s8TK3f2CKExiS7vbDgzu
+	tmVWwLBKA5Udu+ZYPQhpxBwQJvBJ1097fjz1MAAgCIb8JwgPSmlesdk10Rl6/rC2+L3fFcVDYop
+	IvrEjMjbWUw==
+X-Received: from dlae4.prod.google.com ([2002:a05:701b:2304:b0:144:db76:3e5f])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:6298:b0:144:f096:4dda
+ with SMTP id a92af1059eb24-144f916f00cmr3314921c88.43.1790147664407; Wed, 23
+ Sep 2026 00:14:24 -0700 (PDT)
+Date: Wed, 23 Sep 2026 00:13:46 -0700
 In-Reply-To: <cover.1790145937.git.irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -60,98 +60,66 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <cover.1790145937.git.irogers@google.com>
 X-Mailer: git-send-email 2.56.0.rc1.315.gc6ed9934b7-goog
-Message-ID: <89815a65029985761ed8356f8a648ab128fdebbc.1790145937.git.irogers@google.com>
-Subject: [PATCH v5 05/23] perf evsel: Report an allocation failure as ENOMEM
- when setting filters
+Message-ID: <5289bf094c7e9d37990d2d36fdf2deb025478c1f.1790145937.git.irogers@google.com>
+Subject: [PATCH v5 06/23] perf trace: Start BPF summary before starting workload
 From: Ian Rogers <irogers@google.com>
 To: irogers@google.com, acme@kernel.org, howardchu95@gmail.com, 
 	namhyung@kernel.org
 Cc: adrian.hunter@intel.com, james.clark@linaro.org, jolsa@kernel.org, 
 	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
-	mingo@redhat.com, peterz@infradead.org, 
-	Arnaldo Carvalho de Melo <acme@redhat.com>
+	mingo@redhat.com, peterz@infradead.org
 Content-Type: text/plain; charset="UTF-8"
 
-evsel__set_filter() and evsel__append_filter() return -1 when the strdup()
-or asprintf() that builds the new filter string fails, and
-evlist__set_tp_filter() and evlist__append_tp_filter() do the same when
-handed the NULL that asprintf__tp_filter_pids() returns for the same
-reason. In every case the only thing that can have gone wrong is an
-allocation.
+When using --bpf-summary, trace_start_bpf_summary() sets
+skel->bss->enabled = 1. In trace__run(), trace_start_bpf_summary() was
+previously invoked after evlist__start_workload().
 
-Callers all test the result with "< 0" or for being non-zero, so -1 has
-been as good as any other error so far, but it is not an errno and so
-cannot be printed as one. A caller that does, such as
+Because evlist__start_workload() immediately unblocks the child process
+by writing to its go_pipe, short-lived workloads (such as `cat /dev/null`)
+can execute and complete their initial system calls before
+trace_start_bpf_summary() is reached by the parent process. Furthermore,
+under high system load, the child process may finish before the BPF
+summary tracking is enabled in the kernel at all, causing syscall
+summary tests to fail. Additionally, if initial_delay was configured,
+the workload was started before sleeping.
 
-	str_error_r(-err, errbuf, sizeof(errbuf))
-
-turns it into EPERM and reports a failure to allocate as "Operation not
-permitted", which is no help to anyone trying to work out what happened.
-
-Return -ENOMEM instead, which is what these failures are.
+Move trace_start_bpf_summary() to be invoked before
+evlist__start_workload(), matching evlist__enable(), and ensure it
+respects target.initial_delay.
 
 Assisted-by: Antigravity:gemini-3.1-pro
 Signed-off-by: Ian Rogers <irogers@google.com>
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/evlist.c | 12 ++++++++++--
- tools/perf/util/evsel.c  |  4 ++--
- 2 files changed, 12 insertions(+), 4 deletions(-)
+ tools/perf/builtin-trace.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
-index 22eb01116992..9392d912d254 100644
---- a/tools/perf/util/evlist.c
-+++ b/tools/perf/util/evlist.c
-@@ -1432,8 +1432,12 @@ int evlist__set_tp_filter(struct evlist *evlist, const char *filter)
- 	struct evsel *evsel;
- 	int err = 0;
+diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
+index f67557e7a254..f90c6bb4d8b4 100644
+--- a/tools/perf/builtin-trace.c
++++ b/tools/perf/builtin-trace.c
+@@ -4844,17 +4844,19 @@ static int trace__run(struct trace *trace, int argc, const char **argv)
+ 	if (!target__none(&trace->opts.target) && !trace->opts.target.initial_delay)
+ 		evlist__enable(evlist);
  
-+	/*
-+	 * The only caller that passes NULL is evlist__set_tp_filter_pids(),
-+	 * where it means asprintf__tp_filter_pids() failed to allocate.
-+	 */
- 	if (filter == NULL)
--		return -1;
-+		return -ENOMEM;
++	if (trace->summary_bpf && !trace->opts.target.initial_delay)
++		trace_start_bpf_summary();
++
+ 	if (forks)
+ 		evlist__start_workload(evlist);
  
- 	evlist__for_each_entry(evlist, evsel) {
- 		if (evsel->core.attr.type != PERF_TYPE_TRACEPOINT)
-@@ -1452,8 +1456,12 @@ int evlist__append_tp_filter(struct evlist *evlist, const char *filter)
- 	struct evsel *evsel;
- 	int err = 0;
- 
-+	/*
-+	 * As above, a NULL filter is asprintf__tp_filter_pids() having failed
-+	 * to allocate in evlist__append_tp_filter_pids().
-+	 */
- 	if (filter == NULL)
--		return -1;
-+		return -ENOMEM;
- 
- 	evlist__for_each_entry(evlist, evsel) {
- 		if (evsel->core.attr.type != PERF_TYPE_TRACEPOINT)
-diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index 0d0b2804d238..dd468716f424 100644
---- a/tools/perf/util/evsel.c
-+++ b/tools/perf/util/evsel.c
-@@ -1872,7 +1872,7 @@ int evsel__set_filter(struct evsel *evsel, const char *filter)
- 		return 0;
+ 	if (trace->opts.target.initial_delay) {
+ 		usleep(trace->opts.target.initial_delay * 1000);
+ 		evlist__enable(evlist);
++		if (trace->summary_bpf)
++			trace_start_bpf_summary();
  	}
  
--	return -1;
-+	return -ENOMEM;
- }
- 
- static int evsel__append_filter(struct evsel *evsel, const char *fmt, const char *filter)
-@@ -1888,7 +1888,7 @@ static int evsel__append_filter(struct evsel *evsel, const char *fmt, const char
- 		return 0;
- 	}
- 
--	return -1;
-+	return -ENOMEM;
- }
- 
- int evsel__append_tp_filter(struct evsel *evsel, const char *filter)
+-	if (trace->summary_bpf)
+-		trace_start_bpf_summary();
+-
+ 	trace->multiple_threads = perf_thread_map__pid(evlist__core(evlist)->threads, 0) == -1 ||
+ 		perf_thread_map__nr(evlist__core(evlist)->threads) > 1 ||
+ 		evlist__first(evlist)->core.attr.inherit;
 -- 
 2.56.0.rc1.315.gc6ed9934b7-goog
 
