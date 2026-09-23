@@ -1,206 +1,153 @@
 Received: from mx.itxnorge.no (itx-kvm-14.itxnorge.no [91.189.121.228])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52FC356B869;
-	Wed, 23 Sep 2026 19:34:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFCB556B873
+	for <linux-perf-users@vger.kernel.org>; Wed, 23 Sep 2026 19:36:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.189.121.228
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790192098; cv=none; b=fo4HmHr94eyZSgEIueG2kzu8fwuYJhbjCeEwssWf46CNhewjBfhuE+m3gRUAL9oe+pb3dCb8fK5Qcc0yGZIEQne5OqcoXnt3DmgpuKuQrpR8wzwucbuUwfbWTWoX9k4VNqsCWvud8boYzPzD1Mj0BdyWNDpvBWhPMY0efNPYMBw=
+	t=1790192180; cv=none; b=SQi/OaI3jVOZusFnxonDj4Sta+1hcGMY8U+KE2vPxoGNk6bwMx2Urfng6MzP7e5qgz1v9Pm+1onq1AmahRuAcHV8AQkpZScMMwpuatNq+NnvFdaY4y7rwtFNwK4WrL/vtRKYZtA5L9tF9zXg1WVNHtheBSsQdlRTCrzNN/AuB+o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790192098; c=relaxed/simple;
-	bh=wrGL0wwVyGK9nHh96veEfJ4JJ5Jk4X09XOinQDnsvTg=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=O+pWKq5dk0sZqQ5GEmrWODCkoMW8H3Oom5KpbrpgKfNPPfGQv/LQ2ADpnspOKpz6SZ6zWdm7Ubs21OEfGn8uVrBH9vuQs0uJzzD1Yje6r2pn6QJ7FKojHBkx8FdNf1IaC/9H6KJPNgPsQeYEILll5jD7M2lezQCVQ+7/fkFGBho=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=itx.no; spf=pass smtp.mailfrom=itx.no; dkim=pass (1024-bit key) header.d=itx.no header.i=@itx.no header.b=hTYmp3hk; arc=none smtp.client-ip=91.189.121.228
+	s=arc-20240116; t=1790192180; c=relaxed/simple;
+	bh=cHrpNAISABJiUCH8EvUKAt4XudYbTcgKkug47K6boSg=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=C7xCroM2+zUcH526Nx1dkVB0gqkUr3akMJ0TOW19xKq9z5Gz3KJwQMdXEiJ8SgKm9Sd0cygKfix6YaAy3rsbwd7Xvdf9lCoZyqwdnR1yIDW7LZ295nCIeMfX5QizXTuRqLAt4RK6dF7CMcvr93716M+Ov9/p+n6isu7we1Ve154=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=itx.no; spf=pass smtp.mailfrom=itx.no; dkim=pass (1024-bit key) header.d=itx.no header.i=@itx.no header.b=fahVbuhC; arc=none smtp.client-ip=91.189.121.228
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=itx.no
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=itx.no
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=itx.no header.i=@itx.no header.b="hTYmp3hk"
-From: Stian Halseth <stian@itx.no>
+	dkim=pass (1024-bit key) header.d=itx.no header.i=@itx.no header.b="fahVbuhC"
+Message-ID: <8ae003e9352750a5c8c197fb3ce68f99a999d76c.camel@itx.no>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=itx.no; s=mx.itx.no;
-	t=1790192082;
+	t=1790192175;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=+hb5O2E4A9GdhWtVdSbQkcDJZ9Y5yRBtqWH3lfgyqQs=;
-	b=hTYmp3hkvPTw25eOYyoYrAVeYWxidds5iwf4RXBCq5499p+fW1vRMItJT7GuqjULYwt6Fr
-	vltj6NUyvPGMcEtAhNhqLCPikk9Rrrh7+p/GqoM37vmhRp5o3QKlIvEoKcSC2nXSeBgRzA
-	DrC5C+65AxNJ6GuDBs7VRDBpnqNDmmg=
-To: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>
-Cc: Ian Rogers <irogers@google.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	James Clark <james.clark@linaro.org>,
-	linux-perf-users@vger.kernel.org,
-	sparclinux@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Stian Halseth <stian@itx.no>
-Subject: [PATCH] perf unwind-libdw: Fix reading the stack of a 32-bit task
-Date: Wed, 23 Sep 2026 21:34:32 +0200
-Message-ID: <20260923193432.2489729-1-stian@itx.no>
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=cHrpNAISABJiUCH8EvUKAt4XudYbTcgKkug47K6boSg=;
+	b=fahVbuhC3+p4C+jBcelLbr37T5AbHB8U2j1D9wwhh06vMKwJ4ph1FoyVOlRinpjX+7Q4xu
+	pwqQvC9TWQ7xAZPddh81ivkJYnQ2QIN7Q7uezMLBzc52uow8eZoPXCwMvYTWEGWh0tJbWZ
+	h3shjP64AaIRtu2L4mTR99DgbKHW+7c=
+Subject: Re: [RFC PATCH v3 3/3] perf tools: Support sparc user register
+ samples and dwarf unwinding
+From: Stian Halseth <stian@itx.no>
+To: Ian Rogers <irogers@google.com>
+Cc: sashiko-reviews@lists.linux.dev, linux-perf-users@vger.kernel.org
+Date: Wed, 23 Sep 2026 21:36:14 +0200
+In-Reply-To: <CAP-5=fUuRm3dWra4a-6eNF3F=tafcHvvDipqmDEXN5+ti-sW0A@mail.gmail.com>
+References: <20260923090429.2026529-1-stian@itx.no>
+	 <20260923090429.2026529-4-stian@itx.no>
+	 <20260923091443.2C7971F000FF@smtp.kernel.org>
+	 <32d5f620550bab0cffdeac83147ca0a28c9834ed.camel@itx.no>
+	 <CAP-5=fUuRm3dWra4a-6eNF3F=tafcHvvDipqmDEXN5+ti-sW0A@mail.gmail.com>
+Content-Type: multipart/signed; micalg="pgp-sha512";
+	protocol="application/pgp-signature"; boundary="=-7qxWQ+EbtXocVbEaPnYF"
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-memory_read() hands libdw 8 bytes whatever the sampled task's ABI. For a
-32-bit task libdw keeps the low 32 bits (__libdwfl_frame_reg_set()), so
-on a big-endian machine each word read from the stack or a DSO is the
-one at addr + 4, and unwinding stops at the first frame restored from
-the stack. On sparc the 8-byte load from a stack address that is only
-4-byte aligned even traps, and perf dies with SIGBUS. Read 4 bytes for a
-PERF_SAMPLE_REGS_ABI_32 sample.
 
-A recording of the other byte order has each sample swapped in 8-byte
-units when it is read (perf_event__all64_swap()), which leaves the
-4-byte words of a 32-bit stack dump reversed and paired up wrongly.
-Undo the swap of the unit holding the word and swap the word itself, as
-__evsel__parse_sample() does for PERF_SAMPLE_CPU.
+--=-7qxWQ+EbtXocVbEaPnYF
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: quoted-printable
 
-Suggested-by: Ian Rogers <irogers@google.com>
-Signed-off-by: Stian Halseth <stian@itx.no>
----
-Ian raised the cross-endian case in review of the sparc64 perf_regs
-series:
-https://lore.kernel.org/all/CAP-5=fUuRm3dWra4a-6eNF3F=tafcHvvDipqmDEXN5+ti-sW0A@mail.gmail.com/
+Hi Ian,
 
-Tested with 32-bit sparc programs (static, dynamic and multithreaded) on
-top of that series, with a local change so perf recognises sparc32plus
-binaries: natively on sparc64 perf died with SIGBUS before and unwinds
-complete chains after; cross-endian on x86 no call chain was complete
-before and all are after. 64-bit unwinding is unchanged in both.
+On Wed, 2026-09-23 at 09:02 -0700, Ian Rogers wrote:
+>=20
+>=20
+> This is a low priority item we're trying to keep cleaned up, so no
+> action is necessary. The issue is that musl libc doesn't transitively
+> include what glibc does and we frequently break the musl build. Let's
+> try to catch it at review time. It is also nice not to have
+> transitive
+> dependencies. But yeah, there's nothing wrong with what you've done
+> and following the surrounding convention is the right thing to do.
 
-Words read from a DSO rather than the stack dump are still not swapped
-for a recording of the other byte order, whatever the word size, as
-before this change.
+Thanks for the explanation, makes sense.
 
- tools/perf/util/unwind-libdw.c | 46 ++++++++++++++++++++++++++++------
- 1 file changed, 39 insertions(+), 7 deletions(-)
+> >=20
+> >=20
+> > No.
+> >=20
+> > Checked by analyzing a sparc64 perf.data on x86 with this series.
+> >=20
+> > unwinds leaf -> mid2 -> mid1 -> main -> __libc_start_main ->
+> > _start,
+> > the same as on the SPARC T4.
+> >=20
+> > The dump of a 64-bit sparc stack starts at %sp + 2047. It's 16-byte
+> > aligned, so each saved register is one swap unit and is already in
+> > host
+> > order.
+>=20
+> Thanks for testing! In session.c the functions like
+> perf_session__process_event will swap all 64-bit values by calling
+> event_swap, for a sample every 64-bit value is swapped by
+> perf_event__all64_swap:
+> https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.=
+git/tree/tools/perf/util/session.c?h=3Dperf-tools-next#n1202
+>=20
+> In libdw__get_entries the registers and then stack will find the
+> 64-bit values swapped. I'm wondering if the case of 32-bit needs some
+> fix up like with PERF_SAMPLE_CPU in __evsel__parse_sample:
+> https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.=
+git/tree/tools/perf/util/evsel.c?h=3Dperf-tools-next#n3527
+>=20
+> The PERF_SAMPLE_REGS_USER always samples a 64-bit value, so I think
+> they are okay with a 64-bit bswap. For the PERF_SAMPLE_STACK_USER
+> accessed in memory_read in unwind-libdw.c, I wonder the byte swap 64
+> done in perf_event__all64_swap means we're off by 4 bytes with the
+> value being loaded from the stack. I wonder about the code:
 
-diff --git a/tools/perf/util/unwind-libdw.c b/tools/perf/util/unwind-libdw.c
-index 4ccfcc7c2dfc..d49901b1571e 100644
---- a/tools/perf/util/unwind-libdw.c
-+++ b/tools/perf/util/unwind-libdw.c
-@@ -4,6 +4,7 @@
- #include <elfutils/libdw.h>
- #include <elfutils/libdwfl.h>
- #include <inttypes.h>
-+#include <byteswap.h>
- #include <errno.h>
- #include "debug.h"
- #include "dso.h"
-@@ -17,6 +18,8 @@
- #include <linux/types.h>
- #include <linux/zalloc.h>
- #include "event.h"
-+#include "evsel.h"
-+#include "memswap.h"
- #include "perf_regs.h"
- #include "callchain.h"
- #include "util/env.h"
-@@ -203,9 +206,10 @@ static bool get_thread(Dwfl *dwfl __maybe_unused, pid_t tid, void *arg,
- }
- 
- static int access_dso_mem(struct unwind_info *ui, Dwarf_Addr addr,
--			  Dwarf_Word *data)
-+			  Dwarf_Word *data, size_t len)
- {
- 	struct addr_location al;
-+	union u64_swap u;
- 	ssize_t size;
- 	struct dso *dso;
- 
-@@ -218,15 +222,38 @@ static int access_dso_mem(struct unwind_info *ui, Dwarf_Addr addr,
- 	if (!dso)
- 		goto out_fail;
- 
--	size = dso__data_read_addr(dso, al.map, ui->machine, addr, (u8 *) data, sizeof(*data));
-+	size = dso__data_read_addr(dso, al.map, ui->machine, addr, (u8 *)&u, len);
- 
- 	addr_location__exit(&al);
--	return !(size == sizeof(*data));
-+	if (size != (ssize_t)len)
-+		return 1;
-+	*data = len == sizeof(u32) ? u.val32[0] : u.val64;
-+	return 0;
- out_fail:
- 	addr_location__exit(&al);
- 	return -1;
- }
- 
-+/*
-+ * libdw expects a 32-bit task's words zero-extended.  A recording of the
-+ * other byte order was swapped in 8-byte units when it was read (see
-+ * perf_event__all64_swap()), so a 4-byte word is picked out of its unit with
-+ * that swap undone, as for PERF_SAMPLE_CPU in __evsel__parse_sample().
-+ */
-+static Dwarf_Word stack_word(struct stack_dump *stack, int offset, size_t len,
-+			     bool swapped)
-+{
-+	union u64_swap u;
-+
-+	if (len == sizeof(u64))
-+		return *(Dwarf_Word *)&stack->data[offset];
-+	if (!swapped)
-+		return *(u32 *)&stack->data[offset];
-+
-+	u.val64 = bswap_64(*(u64 *)&stack->data[offset & ~7]);
-+	return bswap_32(u.val32[(offset & 4) / 4]);
-+}
-+
- static bool memory_read(Dwfl *dwfl __maybe_unused, Dwarf_Addr addr, Dwarf_Word *result,
- 			void *arg)
- {
-@@ -234,11 +261,16 @@ static bool memory_read(Dwfl *dwfl __maybe_unused, Dwarf_Addr addr, Dwarf_Word *
- 	struct unwind_info *ui = dwfl_ui_ti->ui;
- 	struct stack_dump *stack = &ui->sample->user_stack;
- 	u64 start, end;
-+	bool swapped;
-+	size_t len;
- 	int offset;
- 	int ret;
- 
- 	if (!ui->sample->user_regs)
- 		return false;
-+	len = ui->sample->user_regs->abi == PERF_SAMPLE_REGS_ABI_32 ?
-+	      sizeof(u32) : sizeof(u64);
-+	swapped = ui->sample->evsel && ui->sample->evsel->needs_swap;
- 
- 	ret = perf_reg_value(&start, ui->sample->user_regs,
- 			     perf_arch_reg_sp(ui->e_machine));
-@@ -248,11 +280,11 @@ static bool memory_read(Dwfl *dwfl __maybe_unused, Dwarf_Addr addr, Dwarf_Word *
- 	end = start + stack->size;
- 
- 	/* Check overflow. */
--	if (addr + sizeof(Dwarf_Word) < addr)
-+	if (addr + len < addr)
- 		return false;
- 
--	if (addr < start || addr + sizeof(Dwarf_Word) > end) {
--		ret = access_dso_mem(ui, addr, result);
-+	if (addr < start || addr + len > end) {
-+		ret = access_dso_mem(ui, addr, result, len);
- 		if (ret) {
- 			pr_debug("unwind: access_mem 0x%" PRIx64 " not inside range"
- 				 " 0x%" PRIx64 "-0x%" PRIx64 "\n",
-@@ -263,7 +295,7 @@ static bool memory_read(Dwfl *dwfl __maybe_unused, Dwarf_Addr addr, Dwarf_Word *
- 	}
- 
- 	offset  = addr - start;
--	*result = *(Dwarf_Word *)&stack->data[offset];
-+	*result = stack_word(stack, offset, len, swapped);
- 	pr_debug("unwind: access_mem addr 0x%" PRIx64 ", val %lx, offset %d\n",
- 		 addr, (unsigned long)*result, offset);
- 	return true;
+Yes, this is a real finding, and I ran into a related issue while doing
+some 32-bit testing in a chroot on sparc64 earlier, even without a byte
+swap.
 
-base-commit: edd8a9fe2eca009599e013a29c421c7a6b5ad1b9
--- 
-2.55.0
+memory_read() gives libdw 8 bytes, libdw keeps the low 32 bits for an
+ELFCLASS32 target, and on big-endian that is the word at addr + 4.=A0
 
+The chain stops at the first frame restored from the stack (and on
+sparc an 8-byte load from an address that is only 4-byte aligned
+traps).
+
+I had parked the fix for that when I decided to focus on sparc64 only,
+as there were already quite a few bits and pieces I wasn't sure about,
+and I wanted some feedback before adding more.
+
+But since you bring this up, I now have a patch for memory_read() that
+handles both the native case and the cross-endian one, with the un-swap
+you describe, picking the half that holds addr.=A0
+
+It's tested with 32-bit sparc programs, natively on sparc64 and cross-
+endian on x86.=A0
+
+I sent it as a separate patch, since it's a generic fix, and would
+appreciate it if you have time for a look:
+[PATCH] perf unwind-libdw: Fix reading the stack of a 32-bit task
+https://lore.kernel.org/all/20260923193432.2489729-1-stian@itx.no/
+
+I did several tests on this series + the separate patch. Test details
+in the patch.
+
+No pending changes to v3 so far, everything in the separate patch.
+
+Thanks for the review!
+
+Best regards
+Stian
+
+--=-7qxWQ+EbtXocVbEaPnYF
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQTK1ph9OaYoND1R57zoeAEuJe36VgUCarQqLgAKCRDoeAEuJe36
+VpPOAQC+ouZ7W+/xGFkg5dOMQYwUHqvBNiZroJFqZ41FMIKXKQD/UpwypZD4mtVf
+oJVxP2lhS/qY5SBqgdLXIPu4VLX0cw8=
+=fb0m
+-----END PGP SIGNATURE-----
+
+--=-7qxWQ+EbtXocVbEaPnYF--
