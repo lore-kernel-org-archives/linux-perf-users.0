@@ -1,175 +1,238 @@
-Received: from CH5PR02CU005.outbound.protection.outlook.com (mail-northcentralusazon11012070.outbound.protection.outlook.com [40.107.200.70])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79B65490C17;
-	Wed, 23 Sep 2026 10:39:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.200.70
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790159950; cv=fail; b=jgwoda7OBcxif/lWnVtZQFLTBzv2Tq1FW5GQZNUeeWzJw7sGOwKQvkTfXE03VueIsLVPcYUeFx2V6XCARYiJ21evkHHd+UMdtJ6JZ0U/T9JkfJV/P7tY8lVtvWTEIbTNHmNqPCl4y1FF9c1cUkwmn2frmElKpjeFT5jwz6x38lQ=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790159950; c=relaxed/simple;
-	bh=0ejEbG6UZBZEP/AieImcsAKolB0WnPw0kGSDLDrWPVQ=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=lIBHx2FMXTm3rI/St+szy0qXJWwR8HjGInaLTo5gOoqXSm1B9tyJv0QMesQoMvT2R55L6KrSdrO57ciVCmOvr/3gNyvQkQ94cc0ASNHVn75+80scTfCqea1wv89lPGg99PYrzuRdaJRhnWzADliAe95olFg5KcpOrZ4qf9xw82M=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=YqpMQ+cU; arc=fail smtp.client-ip=40.107.200.70
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D2F9372B2F;
+	Wed, 23 Sep 2026 11:54:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1790164508; cv=none; b=VBO4FmjGLEP9sPu/qmVZjwsuzOWJED505ZQ10vSxzDzCSk10ULs9N6kPpb39X/XamhtS7vaDZpktQEDt/uhIK07p+tD+dZ8efsxW/UmobwZsdK08YzRG/DL1yYMFi0Qq67uTWhp0gCXwZWOhmJYnOKjNdyYznhbmAUzIpFvbGjc=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1790164508; c=relaxed/simple;
+	bh=22/faKz6Gnw+zUvKjx8BiXp6H9FKIGfro4Ro+BBqUHM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jSB8wA5KKpTioV2dXqQSOo9vhlYlaeLqQ4lMBH02HT13B9dmyS9iZcEH5reukc2/bYH/zYCW25Ie4fR3LbBiEvID4LqGvoe04hVafR//5jqh+tjpqdZjbZX+dSgVq10XQ+NC//SkPEEfv1dhJ8M6Bts8cKjYhtUBdv13avk7JCo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=Ip/9PsmL; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="YqpMQ+cU"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=bue1FZY+X3XrC/5j9LYhh6T4ywsUeq23tQuXvCeRCpjr/cqGsV2sWLndYsfaXWUYuQeajYIa2GW2oqvwCXX5KyIbjYMS9uvuGC/fpk83UJ23Yj2KduRZQSjafmis4zVLSxXPcJhoTsaZfgSZY3yFyhPkgATydxWXvQaUsLwZN8VAOwn9XMKosZfQRUUxxW+gXB58MtibuD/RiGUMNOjVgLOjs2fKrbMiQfaw4eFrwJ1p4Gt1v/9M0vaL8hptqTqLGpvdLhkrOyGVQ4DSxZjKCUxKSk/3NOL6ZsS0ErSu2fPjPSO20p5uldLGEXjWZ2ztHpS2LvwlWvHoz6bYyPXbUg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Ic568VS9EkTC0WHr97FSlRC9RL6yxLq54rKSumyzz8k=;
- b=mDEtxjU39GrIiI/sKqQ+SRY/Fxpbi27XuDoYRmeKbFDBQy/+6sQb3XVhzkLFypFu6iymtaVqYsxba8r3aARqODGLKhmH7tUY09T4FeN65zhuW2nlnq9e16Aqrq4qX91OrOm8ITHl932PH42vrBuX1zFrs48w3722unI6nHZ56jJUBDdEbykkax3Ss4+LkPDxtzjM2O0ob9FCd+9rRBv3Glmlu7DBemX04m590uWs/JxgB8BSoTQeCjSvcC61qEXgDOSn80d0dOrt8wbBY3nO4Enq7D/y6xmrl3DkAfHZjmhvGN/0VHy2ozgyiPABtlqOFwNsunMPke1TCxyPmbUWSw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Ic568VS9EkTC0WHr97FSlRC9RL6yxLq54rKSumyzz8k=;
- b=YqpMQ+cUwMoS+5aLpa0Zc7F87P6hldc2YCxjLq8JJQEut07LwxMgWsZukh3XPOaQ+Dq7na9tUNbpyaZGlbj97OGtETMJVjMjp51V9TDB9VEe7aXgvZUrtU+7W4WAjNLklHsLICRd08V5SaZ//B5hXaXk7QRUUS2KG2VmmC/tvAA=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from PH7PR12MB5712.namprd12.prod.outlook.com (2603:10b6:510:1e3::13)
- by IA1PR12MB8519.namprd12.prod.outlook.com (2603:10b6:208:44c::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.451.13; Wed, 23 Sep
- 2026 10:38:55 +0000
-Received: from PH7PR12MB5712.namprd12.prod.outlook.com
- ([fe80::afe1:7dd0:ea71:b7e7]) by PH7PR12MB5712.namprd12.prod.outlook.com
- ([fe80::afe1:7dd0:ea71:b7e7%4]) with mapi id 15.21.0451.014; Wed, 23 Sep 2026
- 10:38:55 +0000
-Message-ID: <1486211b-1182-4277-b273-bdc84f6d23d7@amd.com>
-Date: Wed, 23 Sep 2026 16:08:45 +0530
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/2] perf/x86/amd/uncore: Drop redundant counter slot
- searches
-To: Usama Arif <usama.arif@linux.dev>, acme@kernel.org,
- adrian.hunter@intel.com, alexander.shishkin@linux.intel.com, bp@alien8.de,
- dave.hansen@linux.intel.com, hpa@zytor.com, irogers@google.com,
- james.clark@linaro.org, jolsa@kernel.org, linux-kernel@vger.kernel.org,
- linux-perf-users@vger.kernel.org, mark.rutland@arm.com, mingo@redhat.com,
- namhyung@kernel.org, peterz@infradead.org, tglx@kernel.org, x86@kernel.org
-Cc: hannes@cmpxchg.org, riel@surriel.com, shakeel.butt@linux.dev,
- kernel-team@meta.com
-References: <20260921153108.2713179-1-usama.arif@linux.dev>
-Content-Language: en-US
-From: Sandipan Das <sandipan.das@amd.com>
-In-Reply-To: <20260921153108.2713179-1-usama.arif@linux.dev>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: MA5PR01CA0252.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:a01:223::7) To PH7PR12MB5712.namprd12.prod.outlook.com
- (2603:10b6:510:1e3::13)
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="Ip/9PsmL"
+Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 68N8ZaCq2742039;
+	Wed, 23 Sep 2026 11:52:49 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=pp1; bh=DZPR253R3+bl6LyBiXW5gQAtjY6DOY
+	80tr7PJYJoSn0=; b=Ip/9PsmLLpYTUEIiqqN7PEUCjt/tbos3gbllDcLV+dKinE
+	DxM4vzFM1FgDLuHauy7zkOFHkE+8QgTu4v3UOwe3wRUssGJANSTjHJOqGP138G+T
+	Nhqd4UMt93hU/7hAzMP4DnDStV7v3lAJgOZvyhZ0P+hcH1+UYg4pIU0KHQpm5t+5
+	XYQiGLs519bydF3F3Ly2mUsQkpmeIheUS2Amsu7SuvxdJgo6dsqyP4V/N6M8uPwo
+	Yuml8Vro5Oj2/R/nPk2G/xRZFMnqki/FTHYZUvTsblhV4A+Kj49Gi5gWyBTzSy/p
+	hvCA8ghvjVyo99no8eYyGLGNv+3L5xoksFaAmS9Q==
+Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4gske1jk3y-1
+	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
+	Wed, 23 Sep 2026 11:52:49 +0000 (GMT)
+Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma13.dal12v.mail.ibm.com (8.18.1.11/8.18.1.11) with ESMTP id 68N8ILmd2892101;
+	Wed, 23 Sep 2026 11:52:48 GMT
+Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
+	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 4gu5bkgqma-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 23 Sep 2026 11:52:48 +0000 (GMT)
+Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
+	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 68NBqkcL49086914
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 23 Sep 2026 11:52:46 GMT
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 4C3D920043;
+	Wed, 23 Sep 2026 11:52:46 +0000 (GMT)
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 8F30620040;
+	Wed, 23 Sep 2026 11:52:45 +0000 (GMT)
+Received: from li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com (unknown [9.224.92.206])
+	by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Wed, 23 Sep 2026 11:52:45 +0000 (GMT)
+Date: Wed, 23 Sep 2026 13:52:44 +0200
+From: Alexander Gordeev <agordeev@linux.ibm.com>
+To: Muhammad Usama Anjum <usama.anjum@arm.com>
+Cc: Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        Tvrtko Ursulin <tursulin@ursulin.net>,
+        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+        Dimitri Sivanich <dimitri.sivanich@hpe.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
+        Helge Deller <deller@gmx.de>, Juergen Gross <jgross@suse.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Muchun Song <muchun.song@linux.dev>,
+        Oscar Salvador <osalvador@suse.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Liam R. Howlett" <liam@infradead.org>,
+        Lorenzo Stoakes <ljs@kernel.org>, Will Deacon <will@kernel.org>,
+        "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>,
+        Nick Piggin <npiggin@gmail.com>, Peter Zijlstra <peterz@infradead.org>,
+        Andrey Ryabinin <ryabinin.a.a@gmail.com>,
+        David Hildenbrand <david@kernel.org>,
+        Pasha Tatashin <pasha.tatashin@soleen.com>,
+        Chris Li <chrisl@kernel.org>, Kairui Song <kasong@tencent.com>,
+        Uladzislau Rezki <urezki@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        Eduard Zingerman <eddyz87@gmail.com>,
+        Kumar Kartikeya Dwivedi <memxor@gmail.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>, SJ Park <sj@kernel.org>,
+        "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+        Jan Kara <jack@suse.cz>, Jason Gunthorpe <jgg@ziepe.ca>,
+        Leon Romanovsky <leon@kernel.org>, Miaohe Lin <linmiaohe@huawei.com>,
+        Dennis Zhou <dennis@kernel.org>, Tejun Heo <tj@kernel.org>,
+        Christoph Lameter <cl@gentwo.org>, Mike Rapoport <rppt@kernel.org>,
+        Johannes Weiner <hannes@cmpxchg.org>, ziy@nvidia.com, pfalcato@suse.de,
+        ryan.roberts@arm.com, linux-kernel@vger.kernel.org,
+        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-parisc@vger.kernel.org, xen-devel@lists.xenproject.org,
+        linux-mm@kvack.org, linux-fsdevel@vger.kernel.org,
+        linux-arch@vger.kernel.org, kasan-dev@googlegroups.com,
+        linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, damon@lists.linux.dev
+Subject: Re: [PATCH v2 1/8] mm: introduce hw_pte_t for PTE table storage
+Message-ID: <4fb9f42e-73c3-46db-ac10-351a90901b7c-agordeev@linux.ibm.com>
+References: <20260903103002.1091859-1-usama.anjum@arm.com>
+ <20260903103002.1091859-2-usama.anjum@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH7PR12MB5712:EE_|IA1PR12MB8519:EE_
-X-MS-Office365-Filtering-Correlation-Id: 9a889506-9c4e-4051-edf1-08df195eddda
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|7416014|376014|23010399003|366016|1800799024|921020|56012099006|11063799006|10067099003|22082099003|18002099003|6133799003;
-X-Microsoft-Antispam-Message-Info:
-	pbVSjDe18pBSjCXsIx1EQ7E/7rWiiPku/IgBb5RZXTYrsr3azErpdxhgB2OlO9H7vIjLQ+sNl2XaOQ5YRKYz83bDFvaWTkq7sy7Y17L2o6djP5HxRIdUCdHZVeLSxKKmVu1UfxECzzgz6sybaKU3HyGjjsJIsHd2HnJPJX4FWk/pFL2kfS+KkwZarsJqN1SkKd8T82BoUnQoKJ22senKcg/PdEQSGi/N/KnWIXpae63jlWyiWJwBGCJ3ashuebRznTHJFLpgnseaaYW9XaJO4/o208lTS5Ol5XS2hfewTgKW+LZCbHxyPvcuSLQNv9PofdBRT8QPQg7193dLuOF8MJTTL11dTkpIOGywTHcukr33WH6HUa8wSY/mfdaPQ9n+9bfo6PXB6UKvgPIT6J0+H7elWIVO4XIjcL52jN1HaHEUMRMaiCjwfnnQw2w8tlrgFonE5p1BjKR31cDImguMeVXWJfgKPWQp2fQqTcCTuEDuNyK7HyS3z1v85Hqe5BjjwRbPg+meXfIUS0M8xfIazTpztt2OFMK5aCRXrEVVGPQnMIGr94qzdKMXz91U7OTxbmx2Jz92n2zN1iMi+Gz/A4f9ky5IHlKyGNag/EQ0sOqEdkCy82oE3VDogWzdzyT2n0yRoj0ZYwtdtOhZsvFsYMGzpG7a422FendkyhCEnkY6Mf87xSkCo+pPytN2ROyD63uVWGbKHXmSgSsvB5KnyQ==
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB5712.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(23010399003)(366016)(1800799024)(921020)(56012099006)(11063799006)(10067099003)(22082099003)(18002099003)(6133799003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?S1I5TTd5OStPRHBQVHNRUWFEdXhJaWtwbTVjS01VZ2dYRlBUaVdaUTRVU0JU?=
- =?utf-8?B?djk5L0x6NWsyUXdsYVo0MnI1aWRtYUtWcVpqNzdyaUk1YS9aYXJnd1k1K2Zp?=
- =?utf-8?B?RmZkbWJBbXhualBpWkNPaUtLODY5S2xiWVQxVDc0ZnIwc2YyY2lGM1FOSVdm?=
- =?utf-8?B?Z2l0WVdSenByQkZyVVRxcWViVlNoT1p5aHlPZUd3SUdnK2NZa0RuRnVkS2hL?=
- =?utf-8?B?YmdMWmV4RUJMMHlWSUkxSmVheFF5M09HRTFIVER1WHhDZWlBTnJWVGJjWFBE?=
- =?utf-8?B?VFRPSDczU3ZVNkhUK1h2aXBJdUJBNnNNR0E0NSt4dHNaMlFNZlZuLzI1cktI?=
- =?utf-8?B?SW56ZEVzNzVTRkp0YjRsWGhwQTFBWnc0WVp3RFJjZW9BbWhIVFdndmp0c2V3?=
- =?utf-8?B?S1NSaEF0Ynh2Wk9zODJ4emNKUlVzc2NZT1oyYVpMTGs4ZVFDY3QwMWgxa0J6?=
- =?utf-8?B?bEhnL2xraHZHTlRBanE2bm8yWnBtdFB0WFB3NTNkSVhkRnV6UU5obitTaWxE?=
- =?utf-8?B?QVpwcVlyT0VYRE9oYklTeEZBTW5LaG4zZFZhckVXWkwvT3JVMHN3OTVtUGxZ?=
- =?utf-8?B?U2ZaMGVrNll4UzVJWHdWNG4xeU5NQXZyaC9WaHp2bkgzYnBEeTNBTkpPaERB?=
- =?utf-8?B?WWlYQ1YrVWpOZ29oQUFnQnpldUIrc0hLSGtpbUpEYk1sUW1RTTd3RnpBQk5p?=
- =?utf-8?B?OGRGVUJlcExTR1RNcGFuWFpYbFo4ZytLRXRGNmFtTU8yaU5GTlhVVHBzQThj?=
- =?utf-8?B?MHJKbzJIWm42RzNHbzFmRWxPajV0NE9ZdmNrc1BLQkxMT0dnWDZBVUZjRk9T?=
- =?utf-8?B?UmFmdDJJbVRPb1pLNHAxTnBnc1ZXNGlTZGNVRDd4M3JySHdhM1RMMmhaK2Ux?=
- =?utf-8?B?aFNTU0J4bThnSTJ6ZTNRSSthdnNaMllGY05NQkRxcVN6eWNBaGRxdURpMmZY?=
- =?utf-8?B?SkliaW5sY0NmSmo1MW5tMUk0aldyU25uaGZ1aXBCTFo3bU1zMzJvbDFEQXMx?=
- =?utf-8?B?ZTQyZWRxWkxJbnJkY1M4dy84OTNhdEw5T1NUZCtpdUt4K2FPVFFSa3BGNllI?=
- =?utf-8?B?alE5SjBFNk9tRTBERnZuKzVic2ZHZnljQTlrREhlRGlNRUF2YmtNWEU2b2sr?=
- =?utf-8?B?Vk9XcjJ3R3RaUVdHamxhWTFNVlhvMjFsNEVka2lFOXdzN1FwN1AxSTA3TFJB?=
- =?utf-8?B?dkhtbnNwVXRxaE1peHhyZU1hWVB0TDRJRVZZU3JpNUNGYzlRSG1uaExwUUNo?=
- =?utf-8?B?K1hnaUg4MkthbmdGSEJ0eDh4Ti94SllIM0swcnpYNEQwdWNYNy9EZXN4RnZH?=
- =?utf-8?B?aEh1NHVRQy8vQXMxTmZaa3puNjZQWVpiZlg0YW1KUWVwQ2RJRllVaUxReDA2?=
- =?utf-8?B?bVJXR1FzT2N5bGU1Ulg2ZUJKejd4K3lRMU00OEFiemNtREFXcUUwUEhEWWty?=
- =?utf-8?B?TlVTdG9nd3ppbkI5dFBXcjE3TS9ZWlE1TXRZT09ITUU4Yis0ZTJLd0RFYWl1?=
- =?utf-8?B?Tit4UjJ5QzUrTjlhTGY2V3ZrUW00Ukl4UjJxZ0hQM3oyTXpRL3FvK2gxT0RF?=
- =?utf-8?B?NFJoQlI5WmlVcm9ycUhsVndIcHdseG5KL0d0dUk0QU4wR21kNmVLN1FrdnZG?=
- =?utf-8?B?OWFHcDE5ZVlwbm91bFZSd25OSHVqeGF2T0J1MXVxNDUxWklvdTBXVUlvQUJD?=
- =?utf-8?B?bEtDL2RmcFgwSVB5UlhZSjdheUs0UGJoUmhyS2RDYmFLZVN3OFFjRGpaS3BH?=
- =?utf-8?B?YzU4aFFPa0xMWGRCcjhPdGVFZHhxOE10S2hKMUZ2QjM4dmZiUTVvLytNN3ht?=
- =?utf-8?B?dXY3S0w4NW9UaE1POWhvQU5pQnN0TjdNaVhHcDhhbkhyT25mSm1UMHQwVDBp?=
- =?utf-8?B?cU5LRGxuWFROUWhVYmhOZGR4TnkzSGZQem9aN0drTVZGeDRmVy82eGN6d240?=
- =?utf-8?B?cHBaOTA5YW5yK0ZiczM3K1NXRmVNQkJlMW1HTmpzRnZaY3NtTjZlekRsVGdj?=
- =?utf-8?B?ZHV3VDl3VXh0RDVETXFQbkRFcGcydEZPME4vaGhEZms1TlY2UmZIZVB5K2Z6?=
- =?utf-8?B?UnNsR2V2R0JCb2tiVDBPREFpRDRTc0RRaEpWNjlyN1FZdW1teWIxWDcyKzNB?=
- =?utf-8?B?S290Mk5PQ1EyeWZhaEhCUVZkSzF6ejJ1dzRGd2xBUkpTeThYTmlyeTRmODNw?=
- =?utf-8?B?NXhQL2lyQzUxSFduYlFrZlJKRy9aN2RJOWpRcU16VjBTOUIxc1FFMU9BWC93?=
- =?utf-8?B?cE04eUpWTVpkZnlpUG1nSk9KWE1aaGU5SmsrMnBucXRFZmJyZjVHR0tZWFgy?=
- =?utf-8?Q?0/8zGYg8pXPDzotQgK?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9a889506-9c4e-4051-edf1-08df195eddda
-X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB5712.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Sep 2026 10:38:55.1464
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: h1bRT7QPDLNGmAg9sqsnIsgIpiK+t5HkTITMB7ghsitaODDHTnLG8dt++O/t5SIoDm8fIUi+L5pgimcTkZe87A==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB8519
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260903103002.1091859-2-usama.anjum@arm.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: zkg8Yjm8buhyt1eRNhnorvj4h8bfMg31
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwOTIzMDA0NiBTYWx0ZWRfX6bMVOEi2qN4e
+ SEAEWElqPuFcMqb6XxMSAKgTBU7nj/dCzT7pboAwFXABTdsicPgdnhSpodFJ6O+u2hg509qHfDk
+ z9HbX8YO6UJxXAtAPBr1SXV/yRHUshBZqtP38jfDABopi2Q8TlICK2s09kBGBV4exDZexYbukEp
+ Oxg7zWWj4bwJEOGzokpvAGkgwx6mOV9Hci2samlSyJVgEXMEqtoph/gVCurHxiAAqf0TauaVInd
+ IvHSuwss6TAgfLNFvMkfvgEfm/lWIxq4QqGWZb1wZGJTR0i8Aqwb5xGBOLcMv/lOTIYdxzI8o3R
+ oPxWzTJkmoTyuCze3ranpvgoRtO0j9Fwo13juJtO4WWD8YTP1C0PjcAbhZUntKNvoYTNnIcU/mO
+ iX0G+Pezy0wbnkBvSeLA9ii/P51EkQzABCycAD2yGmiU5zm9dKM8qjIMLGZaPS8vA+24yUC1vPk
+ rGMSqvFG6FK+7tXalcw==
+X-Authority-Analysis: v=2.4 cv=O/KsLx9W c=1 sm=1 tr=0 ts=6ab3bd91 cx=c_pps
+ a=AfN7/Ok6k8XGzOShvHwTGQ==:117 a=AfN7/Ok6k8XGzOShvHwTGQ==:17
+ a=kj9zAlcOel0A:10 a=VdqzKS8jKosA:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=RnoormkPH1_aCDwRdu11:22 a=Y2IxJ9c9Rs8Kov3niI8_:22 a=7CQSdrXTAAAA:8
+ a=WBsaCDucxrlOMaPtzzAA:9 a=CjuIK1q_8ugA:10 a=a-qgeE7W1pNrGK8U0ZQC:22
+X-Proofpoint-Spam-Info: AW1haW4tMjYwOTIzMDA0NiBTYWx0ZWRfX/Y5nhDG4vyXY
+ k03GeTaIqKwMRq4AUpoHFMiSiGlDWAE+orQ24P6M5Bz7btA5rwd/KAwZVyCP0QeAkoFRkdQm8Rw
+ gOzyts+JEL8Z8Grz2VhIOfiIo2KdxD0=
+X-Proofpoint-GUID: zkg8Yjm8buhyt1eRNhnorvj4h8bfMg31
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1176,Hydra:6.1.134,FMLib:17.12.100.49
+ definitions=2026-09-23_04,2026-09-21_02,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ clxscore=1015 malwarescore=0 phishscore=0 impostorscore=0 suspectscore=0
+ bulkscore=0 priorityscore=1501 lowpriorityscore=0 adultscore=0 spamscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2609040000 definitions=main-2609230046
 
-On 21-09-2026 21:00, Usama Arif wrote:
-> Both amd_uncore_add() and amd_uncore_del() search ctx->events[] for an
-> event whose counter slot is already recorded in event->hw.idx.
+On Thu, Sep 03, 2026 at 11:29:53AM +0100, Muhammad Usama Anjum wrote:
+> pte_t is used both for software PTE values and for entries stored in a PTE
+> table, so pte_t * does not distinguish a pointer to a software PTE
+> value from a pointer to table storage.
 > 
-> Perf serializes ->add() and ->del() for an event, and the driver never
-> moves an installed event between slots, so an installed event can only
-> be at the recorded index. Both searches are redundant.
+> Introduce hw_pte_t as the generic name for a PTE table element. Define it
+> as a macro alias of pte_t by default. When an architecture selects
+> ARCH_HAS_HW_PTE_T, define it as a structure containing a pte_t instead.
+> This preserves the representation while allowing converted architectures
+> to enforce the distinction at compile time.
 > 
-> Neither callback is normally hot. That changes once more events target
-> a PMU than it has counters. Perf then multiplexes them: every mux tick
-> deschedules the resident set and schedules the next one, so both callbacks
-> run for each rotated event on every tick.
+> Name the generic wrapper structure __hw_pte_t so architectures can
+> forward-declare it when pgtable_t must be defined before the generic
+> hw_pte_t typedef is visible. This avoids header-order dependencies.
 > 
-> Meta's fleet-wide profiles attribute 1.1% of kernel CPU time, excluding
-> do_idle(), to amd_uncore_add() and amd_uncore_del() combined. On the
-> host that exposed this, a workload holding 15,782 perf event file
-> descriptors drove 56,575 calls per second into each callback from mux
-> rotation, against a 16-counter DF PMU.
+> Keep the C type definitions behind an __ASSEMBLY__ check because
+> architecture assembly sources can include this header indirectly. Include
+> asm/page.h so consumers such as linux/vmalloc.h retain the page definitions
+> they previously obtained from that header.
 > 
-> Patch 1 removes the scan in amd_uncore_add(). It walks every counter
-> before the free slot search, which is the common case once multiplexing
-> has scheduled the event out.
+> Signed-off-by: Muhammad Usama Anjum <usama.anjum@arm.com>
+> ---
+> Changes since v1:
+> - Name the generic wrapper structure __hw_pte_t so architectures can
+>   forward-declare it, and explain why this is required.
+> - Use software PTE value terminology.
 > 
-> Patch 2 makes amd_uncore_del() free the recorded slot directly instead
-> of rescanning from slot zero. Deleting all events from a full PMU with
-> N counters drops from N * (N + 1) / 2 compare-exchanges to N.
+> Changes since RFC v1:
+> - Add the ARCH_HAS_HW_PTE_T opt-in and generic wrapper definition.
+> - Exclude the C type definitions from assembly sources.
+> - Update the description for the new opt-in model.
+> ---
+>  MAINTAINERS                   |  1 +
+>  include/linux/pgtable_types.h | 17 +++++++++++++++++
+>  mm/Kconfig                    |  3 +++
+>  3 files changed, 21 insertions(+)
+>  create mode 100644 include/linux/pgtable_types.h
 > 
-> No functional change intended.
-> 
-> Usama Arif (2):
->   perf/x86/amd/uncore: Remove redundant event slot scan
->   perf/x86/amd/uncore: Free counter slot by index
-> 
->  arch/x86/events/amd/uncore.c | 24 +++++++++---------------
->  1 file changed, 9 insertions(+), 15 deletions(-)
-> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 2133aec4a2004..da60a8bdcddb5 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -17140,6 +17140,7 @@ F:	include/linux/mmu_notifier.h
+>  F:	include/linux/pagewalk.h
+>  F:	include/linux/pgalloc.h
+>  F:	include/linux/pgtable.h
+> +F:	include/linux/pgtable_types.h
+>  F:	include/linux/ptdump.h
+>  F:	include/linux/vmpressure.h
+>  F:	include/linux/vmstat.h
+> diff --git a/include/linux/pgtable_types.h b/include/linux/pgtable_types.h
+> new file mode 100644
+> index 0000000000000..07da05d375c2c
+> --- /dev/null
+> +++ b/include/linux/pgtable_types.h
+> @@ -0,0 +1,17 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +#ifndef _LINUX_PGTABLE_TYPES_H
+> +#define _LINUX_PGTABLE_TYPES_H
+> +
+> +#include <asm/page.h>
+> +
+> +#ifndef __ASSEMBLY__
+> +
+> +#ifdef CONFIG_ARCH_HAS_HW_PTE_T
+> +typedef struct __hw_pte_t { pte_t __pte; } hw_pte_t;
+> +#else
+> +#define hw_pte_t pte_t
+> +#endif
 
-For the series
+I would suggest to provide __hw_pte() in this series - it is needed
+by architectures along with __pte_from_hw() right away (as opposed
+to when lands in arm64).
 
-Reviewed-by: Sandipan Das <sandipan.das@amd.com>
+> +#endif /* !__ASSEMBLY__ */
+> +
+> +#endif /* _LINUX_PGTABLE_TYPES_H */
+> diff --git a/mm/Kconfig b/mm/Kconfig
+> index c1ddf59c0d71a..5f462ec6fa5e5 100644
+> --- a/mm/Kconfig
+> +++ b/mm/Kconfig
+> @@ -1312,6 +1312,9 @@ comment "GUP_TEST needs to have DEBUG_FS enabled"
+>  config GUP_GET_PXX_LOW_HIGH
+>  	bool
+>  
+> +config ARCH_HAS_HW_PTE_T
+> +	bool
+> +
+>  config DMAPOOL_TEST
+>  	tristate "Enable a module to run time tests on dma_pool"
+>  	depends on HAS_DMA
+> -- 
+> 2.47.3
+> 
