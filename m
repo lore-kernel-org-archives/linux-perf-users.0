@@ -1,57 +1,57 @@
-Received: from mail-dl1-f72.google.com (mail-dl1-f72.google.com [74.125.82.72])
+Received: from mail-dy1-f199.google.com (mail-dy1-f199.google.com [74.125.82.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF94442122E
-	for <linux-perf-users@vger.kernel.org>; Wed, 23 Sep 2026 18:15:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.72
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D2AC542812
+	for <linux-perf-users@vger.kernel.org>; Wed, 23 Sep 2026 18:15:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790187365; cv=none; b=o5OEB9U9fkgQuuk3kp9WQk/9GMPc9yginynwT6ZSI+yTyv7x1l8xPojpko1hFq3ya3OfY2jUoCAi0r9MXZL1yeZPIJa/9ZxOKde2MKWiEMIi/UI+PfeyJGaNrLN8ys2J2q9/jK9ZzTtyII5fYAqzsb4hRNUnCKEuuYFQ5U6a28U=
+	t=1790187368; cv=none; b=CWg0fYS//izLLX/ttuuq6bOb5FiwoCMisO9UTzrEY2R9RLM4yxg5f3/+GRv1u8Y8rZ1UzSlnGu4XzM8omha4WnH8Q4LT7w7zD9+2oWAIZ2ygTzNnaX8VD1XsPJl9bqIhZZOcW27g2pSyVeuChBX+GvTFafkT0nPxyTW0OWPiFOk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790187365; c=relaxed/simple;
-	bh=4Ve56TaFlf4REdqw08b9nK4Po+K3xxqKcdzPWgwNk/E=;
+	s=arc-20240116; t=1790187368; c=relaxed/simple;
+	bh=NOH9DXJKe+fIoMuUCl3gXilPtkgTEt7G1QN/niuu2QA=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=NDUxU6QZsRN8mQwgfc7s5XGi4l6rcGJzppB2mnpFBrTRyEKSFrPEx/YRQ/qn6Ac2Fp9ZD+TLHAj5SHGxm57wLln6MiTnsdS8HVcSz5X868Njb+CCk0WWI/YyR7a2Xm7ym9XaPOcOIGtagXZZCbgZqZBAMH0PL5dmQIn2Qn1S9aw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=l5Nmq+0R; arc=none smtp.client-ip=74.125.82.72
+	 To:Cc:Content-Type; b=sQ20mZQNcmd2XlZoWijpxypi9n+KESu8QXSc0FrJX8GVcJhL22IxvkZjFDSxrvgNpjYRhE2318YsyCnbtscodKKfvWoOFEUtpvIXSbnUAJXIu1WVsumX94KzqCtswqqwoE70V6+Jv9N+AJzkSD1v6z8SuWAHob+SoSh5CfXUynA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Ey1g93qa; arc=none smtp.client-ip=74.125.82.199
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="l5Nmq+0R"
-Received: by mail-dl1-f72.google.com with SMTP id a92af1059eb24-1438492fb40so1874363c88.1
-        for <linux-perf-users@vger.kernel.org>; Wed, 23 Sep 2026 11:15:52 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Ey1g93qa"
+Received: by mail-dy1-f199.google.com with SMTP id 5a478bee46e88-30f1b904861so1613726eec.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 23 Sep 2026 11:15:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1790187349; x=1790792149; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1790187344; x=1790792144; darn=vger.kernel.org;
         h=content-transfer-encoding:content-type:cc:to:from:subject
          :message-id:references:mime-version:in-reply-to:date:from:to:cc
          :subject:date:message-id:reply-to:content-type;
-        bh=19YL//2Bkf0fMj94KZ0aw0fSFEZLxJJzRQeGTwp1WB8=;
-        b=l5Nmq+0Rjuo/tlaidrN/Ld6wwukZccQVA8X3m+VPwHoeEx0GlL28hjgDVt6ZfUf8Be
-         Qlacu+5pfHbGVqRSbFneol9Dn48QJTRHratUiBKTvAvfcgrL/OYlYCPKXkubhU7/TE1Q
-         y0/rg10fQMtmgmvQ6ac3Jy8PHPC6x4VlB2fY/fo77BpWwKHI93t4GcpGi4eH6xqhYLDM
-         dd87e6/Jt/Mqfms9Tf0p+xgyWutvmWNGvzp++CL27y8j80wL4j3mr1BwfsIch6SYTOap
-         N+rdRMDNf/CobUBUPehstk/y+Os3hOyNIRJMf5dgApEG5Ez1xIwKMSzc5Zp5JplminYU
-         qBOQ==
+        bh=yw1ygkkf+zQE3hfIAjuen6pqVByC1FNDHLJ+wc1OQZg=;
+        b=Ey1g93qaa/eP00emI718OMHjRlJVHM3t4YAQZFukCUa+VXJzlZYDhoohdlhUfH0GLx
+         2EPbW3Ufp3WFG/V92hXSrsRvXe+JYG7cQwjdfclgb+PGaDPpdpQSAsg90SVr81L5msV/
+         2/sF3u+PwxEVnVw8+RR+pUP7gyg7fTZizrX2iTWjD8ySDDJrbMUIPzlbs05dM1Ri8iSx
+         byzMjFl5NRtaTho0C1FJVD78ijAdw/JFnAd6HnB8vGkjqZrE1xEq6F1luUR9/9FMF0v6
+         BqbWRhxZQVGDBJARfKHJhd69JY4Rq8EBpjpubxdFiDfPOP12qhM004ochDtZq5qZH1rd
+         A1Ww==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1790187349; x=1790792149;
+        d=1e100.net; s=20260707; t=1790187344; x=1790792144;
         h=content-transfer-encoding:content-type:cc:to:from:subject
          :message-id:references:mime-version:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=19YL//2Bkf0fMj94KZ0aw0fSFEZLxJJzRQeGTwp1WB8=;
-        b=yFh4tAO3HFO1IeqRVqQksF5yT+xR01d7bmAJOgjfLFZvkx1aGcdWpajzCgLsbtMUe7
-         eW9DGb7Jz6Ip2Mc+7eXKYAgidD2QXn65QyGPzCmHTQxyec4j8k3sxfH87rz5ybozHR0j
-         uCW1p72OOPEcr9KWHmOO+jQAg3uxQ2JflSAftyzK+F4TSy7sUljoC43/slUSXWfh0ptN
-         5o7Zi10YdOlS1z6Hxd17a9kHXhdjym99MfiJgLKcPdauRLbpnVOSVHXykS5N0rgG8emZ
-         AM4S43UEgUCkPcNdi11YPEobMB3HjgaIbikkYKBP/Au72O+fCD/13z5P47rxQkUNfACl
-         EjXQ==
-X-Forwarded-Encrypted: i=1; AKwUvBxbGV1Ii5GHVpFidNZ4oEmgeUfmYFMUP+EOANEGrTzsvvqjrL/isKhfJLzIHSx4zSMqQXe0gA+lmHUgKltuaUCA@vger.kernel.org
-X-Gm-Message-State: AFuF++lpxlYOU5X1VGsNNITSU7seCXd8v6CbgQHwmO+ViEaRmyMi9A3z
-	4apnKLhSUTq7O+uRkm6dXEupsSHv6m9+++8VSHOPnpyBPmt5idjE71WPS/etxl6o2aE3rNJgg9Z
-	it4K3u17/vg==
-X-Received: from dldyq18-n2.prod.google.com ([2002:a05:701b:4552:20b0:144:cdc4:f2cb])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:b882:b0:144:de98:ef10
- with SMTP id a92af1059eb24-144f91214famr3290039c88.21.1790187348161; Wed, 23
- Sep 2026 11:15:48 -0700 (PDT)
-Date: Wed, 23 Sep 2026 11:12:12 -0700
+        bh=yw1ygkkf+zQE3hfIAjuen6pqVByC1FNDHLJ+wc1OQZg=;
+        b=JlNYl0x7Tkjw3P/5vAEKINFYzNPFKnpB2ufsnoYHuHbZT9neBapsnWdAyEa3k8BIVV
+         GsGjgy4+U+6Q3ZDjwKISgs9mYnh3+lBqxmf7QiTVyZDqw/l7yEHkURkdxJXA1l+xmm4a
+         ixlZoP6pLWZi18MumoaRnRsYW+DV2S3GBKaf9tYv+PQFA+C/C80xqocDvQEeVNtvIu8X
+         zRgDrmU84iQOhxcUw/exfjvWKF/UZJWQQtS2u41SvCPE18kKurxsf05Oc+R6MGAc1a5w
+         xeuXT83mi9GNvCp9ytGQ+sbznH6NMrcmMKRJtLwIndiVQKMGAOTzdpArljHgqPy40IMM
+         M85w==
+X-Forwarded-Encrypted: i=1; AKwUvBwDFuzjphgPH3OWGTsHMQoEX7Uy5u5W1mwxMuwg6K4CxWDdbeok2FZ98vZEb3ZBFLpVayHU2qOy/Ye8wHu+1nf9@vger.kernel.org
+X-Gm-Message-State: AFuF++kMxWMruvNbeYCukhHbqEp/kIoRt4K2xmoYyrdmWVUCdQ51r2D5
+	Y9GMp1rZ0H/xcxgMgABca5KBq8KnlFtmBecUcqgASF9tZ+/Ta2xMtWb4mt5gLYDcG8JS0XRbfA7
+	WY1ves1oCgQ==
+X-Received: from dlec3-n2.prod.google.com ([2002:a05:701b:4283:20b0:144:dcec:b12a])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:701b:4251:10b0:138:3613:dc6
+ with SMTP id a92af1059eb24-144f90a7081mr3632182c88.14.1790187342863; Wed, 23
+ Sep 2026 11:15:42 -0700 (PDT)
+Date: Wed, 23 Sep 2026 11:12:11 -0700
 In-Reply-To: <20260923181213.3032038-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -61,8 +61,9 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <cover.1789966896.git.irogers@google.com> <20260923181213.3032038-1-irogers@google.com>
 X-Mailer: git-send-email 2.56.0.rc1.310.g51773c2048-goog
-Message-ID: <20260923181213.3032038-50-irogers@google.com>
-Subject: [PATCH v3 49/49] perf Documentation: Update for standalone Python scripts
+Message-ID: <20260923181213.3032038-49-irogers@google.com>
+Subject: [PATCH v3 48/49] perf script: Support standalone scripts and remove
+ embedded scripting
 From: Ian Rogers <irogers@google.com>
 To: irogers@google.com, acme@kernel.org, alice.mei.rogers@gmail.com, 
 	namhyung@kernel.org
@@ -73,1332 +74,5817 @@ Cc: adrian.hunter@intel.com, dapeng1.mi@linux.intel.com,
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Update perf-script documentation to reflect standalone Python script
-execution and the removal of embedded Python and Perl scripting:
-- Remove documentation for the removed -g and -s options and legacy
-  record/report script wrapper modes in perf-script.txt.
-- Remove references to perf-script-perl and delete obsolete
-  perf-script-perl.txt.
-- Rewrite perf-script-python.txt to document writing and running
-  standalone Python scripts using the perf module.
+Refactor 'perf script' to launch standalone scripts directly via fork()
+and execvp() and remove the legacy embedded Perl and Python scripting
+engines:
+- Remove the embedded Perl scripting engine
+  (util/scripting-engines/trace-event-perl.c), Perl scripts, bin
+  wrappers, and Trace-Util library
+  (scripts/perl/Perf-Trace-Util/), and script_perl.sh test.
+- Remove libperl feature checks from Makefile.config, Makefile.perf,
+  builtin-check.c, and Documentation/perf-check.txt.
+- Remove -g / --gen-script option and scripting_ops dispatch table from
+  builtin-script.c and trace-event-scripting.c.
+- Hide the legacy -s / --script option and update script discovery in
+  find_script() and list_available_scripts() to prioritize the system
+  'python' directory over bare filenames in the current directory.
+- Update the Python script shell tests (test_arm_coresight_disasm.sh,
+  test_task_analyzer.sh, and test_*_python.sh) to invoke scripts via
+  'perf script <script>' rather than running the Python interpreter
+  directly on the script file path.
 
 Assisted-by: Antigravity:gemini-3.1-pro
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/Documentation/db-export.txt        |  16 +-
- tools/perf/Documentation/perf-script-perl.txt | 216 -----
- .../perf/Documentation/perf-script-python.txt | 797 ++++--------------
- tools/perf/Documentation/perf-script.txt      |  82 +-
- tools/perf/Documentation/tips.txt             |   1 -
- 5 files changed, 162 insertions(+), 950 deletions(-)
- delete mode 100644 tools/perf/Documentation/perf-script-perl.txt
+ tools/build/Makefile.feature                  |   1 -
+ tools/build/feature/Makefile                  |  20 -
+ tools/build/feature/test-libperl.c            |  10 -
+ tools/perf/Build                              |   1 -
+ tools/perf/Documentation/perf-check.txt       |   1 -
+ tools/perf/Makefile.config                    |   1 -
+ tools/perf/Makefile.perf                      |  14 -
+ tools/perf/builtin-check.c                    |   1 -
+ tools/perf/builtin-script.c                   | 986 +++++++++---------
+ tools/perf/scripts/Build                      |   3 -
+ tools/perf/scripts/perl/Perf-Trace-Util/Build |   9 -
+ .../scripts/perl/Perf-Trace-Util/Context.c    | 122 ---
+ .../scripts/perl/Perf-Trace-Util/Context.xs   |  42 -
+ .../scripts/perl/Perf-Trace-Util/Makefile.PL  |  18 -
+ .../perf/scripts/perl/Perf-Trace-Util/README  |  59 --
+ .../Perf-Trace-Util/lib/Perf/Trace/Context.pm |  55 -
+ .../Perf-Trace-Util/lib/Perf/Trace/Core.pm    | 192 ----
+ .../Perf-Trace-Util/lib/Perf/Trace/Util.pm    |  94 --
+ .../perf/scripts/perl/Perf-Trace-Util/typemap |   1 -
+ .../scripts/perl/bin/check-perf-trace-record  |   2 -
+ .../scripts/perl/bin/failed-syscalls-record   |   3 -
+ .../scripts/perl/bin/failed-syscalls-report   |  10 -
+ tools/perf/scripts/perl/bin/rw-by-file-record |   3 -
+ tools/perf/scripts/perl/bin/rw-by-file-report |  10 -
+ tools/perf/scripts/perl/bin/rw-by-pid-record  |   2 -
+ tools/perf/scripts/perl/bin/rw-by-pid-report  |   3 -
+ tools/perf/scripts/perl/bin/rwtop-record      |   2 -
+ tools/perf/scripts/perl/bin/rwtop-report      |  20 -
+ .../scripts/perl/bin/wakeup-latency-record    |   6 -
+ .../scripts/perl/bin/wakeup-latency-report    |   3 -
+ tools/perf/scripts/perl/check-perf-trace.pl   | 106 --
+ tools/perf/scripts/perl/failed-syscalls.pl    |  47 -
+ tools/perf/scripts/perl/rw-by-file.pl         | 106 --
+ tools/perf/scripts/perl/rw-by-pid.pl          | 184 ----
+ tools/perf/scripts/perl/rwtop.pl              | 203 ----
+ tools/perf/scripts/perl/wakeup-latency.pl     | 107 --
+ tools/perf/tests/make                         |   2 -
+ .../coresight/test_arm_coresight_disasm.sh    |  14 +-
+ tools/perf/tests/shell/script_perl.sh         | 102 --
+ .../shell/test_check_perf_trace_python.sh     |   2 +-
+ .../shell/test_compaction_times_python.sh     |   6 +-
+ .../test_event_analyzing_sample_python.sh     |   3 +-
+ .../shell/test_export_to_postgresql_python.sh |   8 +-
+ .../shell/test_export_to_sqlite_python.sh     |   4 +-
+ .../test_failed_syscalls_by_pid_python.sh     |   7 +-
+ .../shell/test_failed_syscalls_python.sh      |   2 +-
+ .../tests/shell/test_flamegraph_python.sh     |   8 +-
+ .../shell/test_futex_contention_python.sh     |   2 +-
+ tools/perf/tests/shell/test_gecko_python.sh   |   2 +-
+ .../shell/test_intel_pt_events_python.sh      |   2 +-
+ .../tests/shell/test_mem_phys_addr_python.sh  |   3 +-
+ .../shell/test_net_dropmonitor_python.sh      |   2 +-
+ .../tests/shell/test_netdev_times_python.sh   |   2 +-
+ .../tests/shell/test_powerpc_hcalls_python.sh |   2 +-
+ .../tests/shell/test_rw_by_file_python.sh     |   2 +-
+ .../perf/tests/shell/test_rw_by_pid_python.sh |   2 +-
+ tools/perf/tests/shell/test_rwtop_python.sh   |   2 +-
+ .../shell/test_sched_migration_python.sh      |   2 +-
+ tools/perf/tests/shell/test_sctop_python.sh   |   4 +-
+ .../tests/shell/test_stackcollapse_python.sh  |   6 +-
+ .../perf/tests/shell/test_stat_cpi_python.sh  |   4 +-
+ .../test_syscall_counts_by_pid_python.sh      |   7 +-
+ .../tests/shell/test_syscall_counts_python.sh |   4 +-
+ tools/perf/tests/shell/test_task_analyzer.sh  |  58 +-
+ .../tests/shell/test_wakeup_latency_python.sh |   4 +-
+ tools/perf/ui/browsers/scripts.c              | 161 +--
+ tools/perf/util/Build                         |   3 -
+ tools/perf/util/scripting-engines/Build       |   5 -
+ .../util/scripting-engines/trace-event-perl.c | 770 --------------
+ tools/perf/util/trace-event-parse.c           |  65 --
+ tools/perf/util/trace-event-scripting.c       | 398 -------
+ tools/perf/util/trace-event.h                 |  72 +-
+ 72 files changed, 579 insertions(+), 3610 deletions(-)
+ delete mode 100644 tools/build/feature/test-libperl.c
+ delete mode 100644 tools/perf/scripts/Build
+ delete mode 100644 tools/perf/scripts/perl/Perf-Trace-Util/Build
+ delete mode 100644 tools/perf/scripts/perl/Perf-Trace-Util/Context.c
+ delete mode 100644 tools/perf/scripts/perl/Perf-Trace-Util/Context.xs
+ delete mode 100644 tools/perf/scripts/perl/Perf-Trace-Util/Makefile.PL
+ delete mode 100644 tools/perf/scripts/perl/Perf-Trace-Util/README
+ delete mode 100644 tools/perf/scripts/perl/Perf-Trace-Util/lib/Perf/Trace/=
+Context.pm
+ delete mode 100644 tools/perf/scripts/perl/Perf-Trace-Util/lib/Perf/Trace/=
+Core.pm
+ delete mode 100644 tools/perf/scripts/perl/Perf-Trace-Util/lib/Perf/Trace/=
+Util.pm
+ delete mode 100644 tools/perf/scripts/perl/Perf-Trace-Util/typemap
+ delete mode 100644 tools/perf/scripts/perl/bin/check-perf-trace-record
+ delete mode 100644 tools/perf/scripts/perl/bin/failed-syscalls-record
+ delete mode 100644 tools/perf/scripts/perl/bin/failed-syscalls-report
+ delete mode 100644 tools/perf/scripts/perl/bin/rw-by-file-record
+ delete mode 100644 tools/perf/scripts/perl/bin/rw-by-file-report
+ delete mode 100644 tools/perf/scripts/perl/bin/rw-by-pid-record
+ delete mode 100644 tools/perf/scripts/perl/bin/rw-by-pid-report
+ delete mode 100644 tools/perf/scripts/perl/bin/rwtop-record
+ delete mode 100644 tools/perf/scripts/perl/bin/rwtop-report
+ delete mode 100644 tools/perf/scripts/perl/bin/wakeup-latency-record
+ delete mode 100644 tools/perf/scripts/perl/bin/wakeup-latency-report
+ delete mode 100644 tools/perf/scripts/perl/check-perf-trace.pl
+ delete mode 100644 tools/perf/scripts/perl/failed-syscalls.pl
+ delete mode 100644 tools/perf/scripts/perl/rw-by-file.pl
+ delete mode 100644 tools/perf/scripts/perl/rw-by-pid.pl
+ delete mode 100644 tools/perf/scripts/perl/rwtop.pl
+ delete mode 100644 tools/perf/scripts/perl/wakeup-latency.pl
+ delete mode 100755 tools/perf/tests/shell/script_perl.sh
+ delete mode 100644 tools/perf/util/scripting-engines/Build
+ delete mode 100644 tools/perf/util/scripting-engines/trace-event-perl.c
+ delete mode 100644 tools/perf/util/trace-event-scripting.c
 
-diff --git a/tools/perf/Documentation/db-export.txt b/tools/perf/Documentat=
-ion/db-export.txt
-index 20024e1f9164..a736be3b6e84 100644
---- a/tools/perf/Documentation/db-export.txt
-+++ b/tools/perf/Documentation/db-export.txt
-@@ -1,11 +1,11 @@
- Database Export
- =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+diff --git a/tools/build/Makefile.feature b/tools/build/Makefile.feature
+index 3ca7a4f5c7fd..dbef5b6c4e43 100644
+--- a/tools/build/Makefile.feature
++++ b/tools/build/Makefile.feature
+@@ -121,7 +121,6 @@ FEATURE_TESTS_EXTRA :=3D                  \
+          libbfd-liberty                 \
+          libbfd-liberty-z               \
+          libopencsd                     \
+-         libperl                        \
+          llvm                           \
+          libbpf                         \
+          libpfm4                        \
+diff --git a/tools/build/feature/Makefile b/tools/build/feature/Makefile
+index 269af8e8f5cf..62f9cbf3dee9 100644
+--- a/tools/build/feature/Makefile
++++ b/tools/build/feature/Makefile
+@@ -31,7 +31,6 @@ FILES=3D                                          \
+          test-libdebuginfod.bin                 \
+          test-libnuma.bin                       \
+          test-numa_num_possible_cpus.bin        \
+-         test-libperl.bin                       \
+          test-python-module.bin                 \
+          test-libslang.bin                      \
+          test-libtraceevent.bin                 \
+@@ -242,25 +241,6 @@ $(OUTPUT)test-libtracefs.bin:
+ $(OUTPUT)test-gtk4.bin:
+ 	$(BUILD) $(shell $(PKG_CONFIG) --libs --cflags gtk4 2>/dev/null)
 =20
--perf tool's python scripting engine:
-+perf tool's python module:
-=20
--	tools/perf/util/scripting-engines/trace-event-python.c
-+	tools/perf/util/python.c
-=20
--supports scripts:
-+supports standalone scripts:
-=20
- 	tools/perf/python/export-to-sqlite.py
- 	tools/perf/python/export-to-postgresql.py
-@@ -31,11 +31,5 @@ backward compatibility by testing for the presence of ne=
-w tables and columns
- before using them. e.g. function IsSelectable() in exported-sql-viewer.py
-=20
- 4. The export scripts themselves maintain forward compatibility (i.e. an e=
-xisting
--script will continue to work with new versions of perf) by accepting a var=
-iable
--number of arguments (e.g. def call_return_table(*x)) i.e. perf can pass mo=
-re
--arguments which old scripts will ignore.
+-grep-libs  =3D $(filter -l%,$(1))
+-strip-libs =3D $(filter-out -l%,$(1))
 -
--5. The scripting engine tests for the existence of script handler function=
-s
--before calling them.  The scripting engine can also test for the support o=
-f new
--or optional features by checking for the existence and value of script glo=
-bal
--variables.
-+script will continue to work with new versions of perf) by querying event =
-and
-+sample attributes dynamically from the perf Python module.
-diff --git a/tools/perf/Documentation/perf-script-perl.txt b/tools/perf/Doc=
-umentation/perf-script-perl.txt
+-PERL_EMBED_LDOPTS =3D $(shell perl -MExtUtils::Embed -e ldopts 2>/dev/null=
+)
+-PERL_EMBED_LDFLAGS =3D $(call strip-libs,$(PERL_EMBED_LDOPTS))
+-PERL_EMBED_LIBADD =3D $(call grep-libs,$(PERL_EMBED_LDOPTS))
+-PERL_EMBED_CCOPTS =3D $(shell perl -MExtUtils::Embed -e ccopts 2>/dev/null=
+)
+-FLAGS_PERL_EMBED=3D$(PERL_EMBED_CCOPTS) $(PERL_EMBED_LDOPTS)
+-
+-ifeq ($(CC_NO_CLANG), 0)
+-  PERL_EMBED_LDOPTS :=3D $(filter-out -specs=3D%,$(PERL_EMBED_LDOPTS))
+-  PERL_EMBED_CCOPTS :=3D $(filter-out -flto=3Dauto -ffat-lto-objects, $(PE=
+RL_EMBED_CCOPTS))
+-  PERL_EMBED_CCOPTS :=3D $(filter-out -specs=3D%,$(PERL_EMBED_CCOPTS))
+-  FLAGS_PERL_EMBED +=3D -Wno-compound-token-split-by-macro
+-endif
+-
+-$(OUTPUT)test-libperl.bin:
+-	$(BUILD) $(FLAGS_PERL_EMBED)
+-
+ $(OUTPUT)test-python-module.bin:
+ 	$(BUILD) $(FLAGS_PYTHON_EMBED)
+=20
+diff --git a/tools/build/feature/test-libperl.c b/tools/build/feature/test-=
+libperl.c
 deleted file mode 100644
-index 5b479f5e62ff..000000000000
---- a/tools/perf/Documentation/perf-script-perl.txt
+index 0415f437eb31..000000000000
+--- a/tools/build/feature/test-libperl.c
 +++ /dev/null
-@@ -1,216 +0,0 @@
--perf-script-perl(1)
--=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+@@ -1,10 +0,0 @@
+-// SPDX-License-Identifier: GPL-2.0
+-#include <EXTERN.h>
+-#include <perl.h>
 -
--NAME
------
--perf-script-perl - Process trace data with a Perl script
--
--SYNOPSIS
----------
--[verse]
--'perf script' [-s [Perl]:script[.pl] ]
--
--DESCRIPTION
-------------
--
--This perf script option is used to process perf script data using perf's
--built-in Perl interpreter.  It reads and processes the input file and
--displays the results of the trace analysis implemented in the given
--Perl script, if any.
--
--STARTER SCRIPTS
-----------------
--
--You can avoid reading the rest of this document by running 'perf script
---g perl' in the same directory as an existing perf.data trace file.
--That will generate a starter script containing a handler for each of
--the event types in the trace file; it simply prints every available
--field for each event in the trace file.
--
--You can also look at the existing scripts in
--~/libexec/perf-core/scripts/perl for typical examples showing how to
--do basic things like aggregate event data, print results, etc.  Also,
--the check-perf-script.pl script, while not interesting for its results,
--attempts to exercise all of the main scripting features.
--
--EVENT HANDLERS
----------------
--
--When perf script is invoked using a trace script, a user-defined
--'handler function' is called for each event in the trace.  If there's
--no handler function defined for a given event type, the event is
--ignored (or passed to a 'trace_unhandled' function, see below) and the
--next event is processed.
--
--Most of the event's field values are passed as arguments to the
--handler function; some of the less common ones aren't - those are
--available as calls back into the perf executable (see below).
--
--As an example, the following perf record command can be used to record
--all sched_wakeup events in the system:
--
-- # perf record -a -e sched:sched_wakeup
--
--Traces meant to be processed using a script should be recorded with
--the above option: -a to enable system-wide collection.
--
--The format file for the sched_wakeup event defines the following fields
--(see /sys/kernel/tracing/events/sched/sched_wakeup/format):
--
------
-- format:
--        field:unsigned short common_type;
--        field:unsigned char common_flags;
--        field:unsigned char common_preempt_count;
--        field:int common_pid;
--
--        field:char comm[TASK_COMM_LEN];
--        field:pid_t pid;
--        field:int prio;
--        field:int success;
--        field:int target_cpu;
------
--
--The handler function for this event would be defined as:
--
------
--sub sched::sched_wakeup
+-int main(void)
 -{
--   my ($event_name, $context, $common_cpu, $common_secs,
--       $common_nsecs, $common_pid, $common_comm,
--       $comm, $pid, $prio, $success, $target_cpu) =3D @_;
+-	perl_alloc();
+-
+-	return 0;
 -}
------
+diff --git a/tools/perf/Build b/tools/perf/Build
+index 5bd0e58d7cb0..8a0b5592a973 100644
+--- a/tools/perf/Build
++++ b/tools/perf/Build
+@@ -61,7 +61,6 @@ perf-util-y +=3D arch/
+ perf-y +=3D arch/
+ perf-test-y +=3D arch/
+ perf-ui-y +=3D ui/
+-perf-util-y +=3D scripts/
+=20
+ gtk-y +=3D ui/gtk/
+=20
+diff --git a/tools/perf/Documentation/perf-check.txt b/tools/perf/Documenta=
+tion/perf-check.txt
+index a80913794eb6..1406a41c5d09 100644
+--- a/tools/perf/Documentation/perf-check.txt
++++ b/tools/perf/Documentation/perf-check.txt
+@@ -58,7 +58,6 @@ feature::
+                 libLLVM                 /  HAVE_LIBLLVM_SUPPORT
+                 libnuma                 /  HAVE_LIBNUMA_SUPPORT
+                 libopencsd              /  HAVE_CSTRACE_SUPPORT
+-                libperl                 /  HAVE_LIBPERL_SUPPORT
+                 libpfm4                 /  HAVE_LIBPFM
+                 libslang                /  HAVE_SLANG_SUPPORT
+                 libtraceevent           /  HAVE_LIBTRACEEVENT
+diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
+index e469c5ee5424..fa1d984772aa 100644
+--- a/tools/perf/Makefile.config
++++ b/tools/perf/Makefile.config
+@@ -1273,7 +1273,6 @@ $(call detected_var,tipdir_SQ)
+ $(call detected_var,srcdir_SQ)
+ $(call detected_var,LIBDIR)
+ $(call detected_var,GTK_CFLAGS)
+-$(call detected_var,PERL_EMBED_CCOPTS)
+ $(call detected_var,PYTHON_EMBED_CCOPTS)
+ ifneq ($(BISON_FILE_PREFIX_MAP),)
+ $(call detected_var,BISON_FILE_PREFIX_MAP)
+diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
+index 0daac2f9e349..52f8247e01a0 100644
+--- a/tools/perf/Makefile.perf
++++ b/tools/perf/Makefile.perf
+@@ -17,7 +17,6 @@ include ../scripts/utilities.mak
+ #
+ # Define CROSS_COMPILE as prefix name of compiler if you want cross-builds=
+.
+ #
+-# Define LIBPERL to enable perl script extension.
+ #
+ # Define NO_PYTHON_MODULE to disable python script extension.
+ #
+@@ -486,11 +485,6 @@ OTHER_PROGRAMS =3D $(OUTPUT)perf
+ ifndef SHELL_PATH
+   SHELL_PATH =3D /bin/sh
+ endif
+-ifndef PERL_PATH
+-  PERL_PATH =3D /usr/bin/perl
+-endif
 -
--The handler function takes the form subsystem::event_name.
+-export PERL_PATH
+=20
+ LIBPERF_BENCH_IN :=3D $(OUTPUT)perf-bench-in.o
+ LIBPERF_BENCH :=3D $(OUTPUT)libperf-bench.a
+@@ -895,14 +889,6 @@ endif
+ 		$(INSTALL) $(OUTPUT)perf-archive -t '$(DESTDIR_SQ)$(perfexec_instdir_SQ)=
+'
+ 	$(call QUIET_INSTALL, perf-iostat) \
+ 		$(INSTALL) $(OUTPUT)perf-iostat -t '$(DESTDIR_SQ)$(perfexec_instdir_SQ)'
+-ifdef LIBPERL
+-	$(call QUIET_INSTALL, perl-scripts) \
+-		$(INSTALL) -d -m 755 '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/scripts/perl/P=
+erf-Trace-Util/lib/Perf/Trace'; \
+-		$(INSTALL) scripts/perl/Perf-Trace-Util/lib/Perf/Trace/* -m 644 -t '$(DE=
+STDIR_SQ)$(perfexec_instdir_SQ)/scripts/perl/Perf-Trace-Util/lib/Perf/Trace=
+'; \
+-		$(INSTALL) scripts/perl/*.pl -m 644 -t '$(DESTDIR_SQ)$(perfexec_instdir_=
+SQ)/scripts/perl'; \
+-		$(INSTALL) -d -m 755 '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/scripts/perl/b=
+in'; \
+-		$(INSTALL) scripts/perl/bin/* -t '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/sc=
+ripts/perl/bin'
+-endif
+=20
+ ifndef NO_PYTHON_MODULE
+ 	$(call QUIET_INSTALL, python-scripts) \
+diff --git a/tools/perf/builtin-check.c b/tools/perf/builtin-check.c
+index 06711362d37f..1e43e097e7a7 100644
+--- a/tools/perf/builtin-check.c
++++ b/tools/perf/builtin-check.c
+@@ -51,7 +51,6 @@ struct feature_status supported_features[] =3D {
+ 	FEATURE_STATUS("libLLVM", HAVE_LIBLLVM_SUPPORT),
+ 	FEATURE_STATUS("libnuma", HAVE_LIBNUMA_SUPPORT),
+ 	FEATURE_STATUS("libopencsd", HAVE_CSTRACE_SUPPORT),
+-	FEATURE_STATUS_TIP("libperl", HAVE_LIBPERL_SUPPORT, "Deprecated, use LIBP=
+ERL=3D1 and install perl-ExtUtils-Embed/libperl-dev to build with it"),
+ 	FEATURE_STATUS("python-module", HAVE_PYTHON_MODULE_SUPPORT),
+ 	FEATURE_STATUS("libpfm4", HAVE_LIBPFM),
+ 	FEATURE_STATUS("libslang", HAVE_SLANG_SUPPORT),
+diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
+index 0174489d1c0f..cd2846ce03ce 100644
+--- a/tools/perf/builtin-script.c
++++ b/tools/perf/builtin-script.c
+@@ -1,8 +1,12 @@
+ // SPDX-License-Identifier: GPL-2.0
+ #include <errno.h>
+ #include <inttypes.h>
++#include <limits.h>
+ #include <signal.h>
+ #include <stdio.h>
++#include <stdlib.h>
++#include <string.h>
++#include <strings.h>
+=20
+ #include <dirent.h>
+ #include <fcntl.h>
+@@ -18,6 +22,7 @@
+ #include <sys/param.h>
+ #include <sys/stat.h>
+ #include <sys/types.h>
++#include <sys/wait.h>
+ #include <sys/utsname.h>
+ #include <unistd.h>
+=20
+@@ -77,8 +82,7 @@
+ #include <event-parse.h>
+ #endif
+=20
+-static char const		*script_name;
+-static char const		*generate_script_lang;
++static char			*script_name;
+ static bool			reltime;
+ static bool			deltatime;
+ static u64			initial_time;
+@@ -88,7 +92,6 @@ static u64			last_timestamp;
+ static u64			nr_unordered;
+ static bool			no_callchain;
+ static bool			latency_format;
+-static bool			system_wide;
+ static bool			print_flags;
+ static const char		*cpu_list;
+ static DECLARE_BITMAP(cpu_bitmap, MAX_NR_CPUS);
+@@ -96,6 +99,7 @@ static int			max_blocks;
+ static struct dlfilter		*dlfilter;
+ static int			dlargc;
+ static char			**dlargv;
++static unsigned int		scripting_max_stack =3D PERF_MAX_STACK_DEPTH;
+=20
+ enum perf_output_field {
+ 	PERF_OUTPUT_COMM            =3D 1ULL << 0,
+@@ -1810,6 +1814,144 @@ static int perf_sample__fprintf_bts(struct perf_sam=
+ple *sample,
+ 	return printed;
+ }
+=20
++#define SAMPLE_FLAGS_BUF_SIZE 64
++#define SAMPLE_FLAGS_STR_ALIGNED_SIZE	21
++
++static int sample_flags_to_name(u32 flags, char *str, size_t size)
++{
++	static const struct {
++		u32 flags;
++		const char *name;
++	} sample_flags[] =3D {
++		{PERF_IP_FLAG_BRANCH | PERF_IP_FLAG_CALL, "call"},
++		{PERF_IP_FLAG_BRANCH | PERF_IP_FLAG_RETURN, "return"},
++		{PERF_IP_FLAG_BRANCH | PERF_IP_FLAG_CONDITIONAL, "jcc"},
++		{PERF_IP_FLAG_BRANCH, "jmp"},
++		{PERF_IP_FLAG_BRANCH | PERF_IP_FLAG_CALL | PERF_IP_FLAG_INTERRUPT, "int"=
+},
++		{PERF_IP_FLAG_BRANCH | PERF_IP_FLAG_RETURN | PERF_IP_FLAG_INTERRUPT, "ir=
+et"},
++		{PERF_IP_FLAG_BRANCH | PERF_IP_FLAG_CALL | PERF_IP_FLAG_SYSCALLRET, "sys=
+call"},
++		{PERF_IP_FLAG_BRANCH | PERF_IP_FLAG_RETURN | PERF_IP_FLAG_SYSCALLRET, "s=
+ysret"},
++		{PERF_IP_FLAG_BRANCH | PERF_IP_FLAG_ASYNC, "async"},
++		{PERF_IP_FLAG_BRANCH | PERF_IP_FLAG_CALL |
++		 PERF_IP_FLAG_ASYNC | PERF_IP_FLAG_INTERRUPT,
++		 "hw int"},
++		{PERF_IP_FLAG_BRANCH | PERF_IP_FLAG_TX_ABORT, "tx abrt"},
++		{PERF_IP_FLAG_BRANCH | PERF_IP_FLAG_TRACE_BEGIN, "tr strt"},
++		{PERF_IP_FLAG_BRANCH | PERF_IP_FLAG_TRACE_END, "tr end"},
++		{PERF_IP_FLAG_BRANCH | PERF_IP_FLAG_CALL | PERF_IP_FLAG_VMENTRY, "vmentr=
+y"},
++		{PERF_IP_FLAG_BRANCH | PERF_IP_FLAG_CALL | PERF_IP_FLAG_VMEXIT, "vmexit"=
+},
++		{0, NULL}
++	};
++	static const struct {
++		u32 flags;
++		const char *name;
++	} branch_events[] =3D {
++		{PERF_IP_FLAG_BRANCH_MISS, "miss"},
++		{PERF_IP_FLAG_NOT_TAKEN, "not_taken"},
++		{0, NULL}
++	};
++	int i;
++	const char *prefix;
++	int pos =3D 0, ret, ev_idx =3D 0;
++	u32 xf =3D flags & PERF_ADDITIONAL_STATE_MASK;
++	u32 types, events;
++	char xs[16] =3D { 0 };
++
++	/* Clear additional state bits */
++	flags &=3D ~PERF_ADDITIONAL_STATE_MASK;
++
++	if (flags & PERF_IP_FLAG_TRACE_BEGIN)
++		prefix =3D "tr strt ";
++	else if (flags & PERF_IP_FLAG_TRACE_END)
++		prefix =3D "tr end  ";
++	else
++		prefix =3D "";
++
++	ret =3D snprintf(str + pos, size - pos, "%s", prefix);
++	if (ret < 0)
++		return ret;
++	pos +=3D ret;
++
++	flags &=3D ~(PERF_IP_FLAG_TRACE_BEGIN | PERF_IP_FLAG_TRACE_END);
++
++	types =3D flags & ~PERF_IP_FLAG_BRANCH_EVENT_MASK;
++	for (i =3D 0; sample_flags[i].name; i++) {
++		if (sample_flags[i].flags !=3D types)
++			continue;
++
++		ret =3D snprintf(str + pos, size - pos, "%s", sample_flags[i].name);
++		if (ret < 0)
++			return ret;
++		pos +=3D ret;
++		break;
++	}
++
++	events =3D flags & PERF_IP_FLAG_BRANCH_EVENT_MASK;
++	for (i =3D 0; branch_events[i].name; i++) {
++		if (!(branch_events[i].flags & events))
++			continue;
++
++		ret =3D snprintf(str + pos, size - pos, !ev_idx ? "/%s" : ",%s",
++			       branch_events[i].name);
++		if (ret < 0)
++			return ret;
++		pos +=3D ret;
++		ev_idx++;
++	}
++
++	/* Add an end character '/' for events */
++	if (ev_idx) {
++		ret =3D snprintf(str + pos, size - pos, "/");
++		if (ret < 0)
++			return ret;
++		pos +=3D ret;
++	}
++
++	if (!xf)
++		return pos;
++
++	snprintf(xs, sizeof(xs), "(%s%s%s)",
++		 flags & PERF_IP_FLAG_IN_TX ? "x" : "",
++		 flags & PERF_IP_FLAG_INTR_DISABLE ? "D" : "",
++		 flags & PERF_IP_FLAG_INTR_TOGGLE ? "t" : "");
++
++	/* Right align the string if its length is less than the limit */
++	if ((pos + strlen(xs)) < SAMPLE_FLAGS_STR_ALIGNED_SIZE)
++		ret =3D snprintf(str + pos, size - pos, "%*s",
++			       (int)(SAMPLE_FLAGS_STR_ALIGNED_SIZE - ret), xs);
++	else
++		ret =3D snprintf(str + pos, size - pos, " %s", xs);
++	if (ret < 0)
++		return ret;
++
++	return pos + ret;
++}
++
++static int perf_sample__sprintf_flags(u32 flags, char *str, size_t sz)
++{
++	const char *chars =3D PERF_IP_FLAG_CHARS;
++	const size_t n =3D strlen(PERF_IP_FLAG_CHARS);
++	size_t i, pos =3D 0;
++	int ret;
++
++	ret =3D sample_flags_to_name(flags, str, sz);
++	if (ret > 0)
++		return ret;
++
++	for (i =3D 0; i < n; i++, flags >>=3D 1) {
++		if ((flags & 1) && pos < sz)
++			str[pos++] =3D chars[i];
++	}
++	for (; i < 32; i++, flags >>=3D 1) {
++		if ((flags & 1) && pos < sz)
++			str[pos++] =3D '?';
++	}
++	if (pos < sz)
++		str[pos] =3D 0;
++
++	return pos;
++}
++
+ static int perf_sample__fprintf_flags(u32 flags, FILE *fp)
+ {
+ 	char str[SAMPLE_FLAGS_BUF_SIZE];
+@@ -2653,8 +2795,6 @@ static void process_event(struct perf_script *script,
+ 		fflush(fp);
+ }
+=20
+-static struct scripting_ops	*scripting_ops;
 -
--The $common_* arguments in the handler's argument list are the set of
--arguments passed to all event handlers; some of the fields correspond
--to the common_* fields in the format file, but some are synthesized,
--and some of the common_* fields aren't common enough to to be passed
--to every event as arguments but are available as library functions.
+ static void __process_stat(struct evsel *counter, u64 tstamp)
+ {
+ 	int nthreads =3D perf_thread_map__nr(counter->core.threads);
+@@ -2689,36 +2829,11 @@ static void __process_stat(struct evsel *counter, u=
+64 tstamp)
+=20
+ static void process_stat(struct evsel *counter, u64 tstamp)
+ {
+-	if (scripting_ops && scripting_ops->process_stat)
+-		scripting_ops->process_stat(&stat_config, counter, tstamp);
+-	else
+-		__process_stat(counter, tstamp);
+-}
 -
--Here's a brief description of each of the invariant event args:
+-static void process_stat_interval(u64 tstamp)
+-{
+-	if (scripting_ops && scripting_ops->process_stat_interval)
+-		scripting_ops->process_stat_interval(tstamp);
+-}
 -
-- $event_name 	  	    the name of the event as text
-- $context		    an opaque 'cookie' used in calls back into perf
-- $common_cpu		    the cpu the event occurred on
-- $common_secs		    the secs portion of the event timestamp
-- $common_nsecs		    the nsecs portion of the event timestamp
-- $common_pid		    the pid of the current task
-- $common_comm		    the name of the current process
+-static void setup_scripting(void)
+-{
+-#ifdef HAVE_LIBTRACEEVENT
+-	setup_perl_scripting();
+-#endif
+-	setup_python_scripting();
++	__process_stat(counter, tstamp);
+ }
+=20
+-static int flush_scripting(void)
++static void process_stat_interval(u64 tstamp __maybe_unused)
+ {
+-	return scripting_ops ? scripting_ops->flush_script() : 0;
+-}
 -
--All of the remaining fields in the event's format file have
--counterparts as handler function arguments of the same name, as can be
--seen in the example above.
+-static int cleanup_scripting(void)
+-{
+-	pr_debug("\nperf script stopped\n");
 -
--The above provides the basics needed to directly access every field of
--every event in a trace, which covers 90% of what you need to know to
--write a useful trace script.  The sections below cover the rest.
+-	return scripting_ops ? scripting_ops->stop_script() : 0;
+ }
+=20
+ static bool filter_cpu(struct perf_sample *sample)
+@@ -2793,20 +2908,7 @@ static int process_sample_event(const struct perf_to=
+ol *tool,
+ 		goto out_put;
+ 	}
+=20
+-	if (scripting_ops) {
+-		struct addr_location *addr_al_ptr =3D NULL;
 -
--SCRIPT LAYOUT
---------------
+-		if ((evsel->core.attr.sample_type & PERF_SAMPLE_ADDR) &&
+-		    sample_addr_correlates_sym(&evsel->core.attr)) {
+-			if (!addr_al.thread)
+-				thread__resolve(al.thread, &addr_al, sample);
+-			addr_al_ptr =3D &addr_al;
+-		}
+-		scripting_ops->process_event(event, sample, &al, addr_al_ptr);
+-	} else {
+-		process_event(scr, sample, &al, &addr_al, machine);
+-	}
 -
--Every perf script Perl script should start by setting up a Perl module
--search path and 'use'ing a few support modules (see module
--descriptions below):
++	process_event(scr, sample, &al, &addr_al, machine);
+ out_put:
+ 	addr_location__exit(&addr_al);
+ 	addr_location__exit(&al);
+@@ -3118,9 +3220,6 @@ static int process_switch_event(const struct perf_too=
+l *tool,
+ 	if (perf_event__process_switch(tool, event, sample, machine) < 0)
+ 		return -1;
+=20
+-	if (scripting_ops && scripting_ops->process_switch && !filter_cpu(sample)=
+)
+-		scripting_ops->process_switch(event, sample, machine);
 -
------
-- use lib "$ENV{'PERF_EXEC_PATH'}/scripts/perl/Perf-Trace-Util/lib";
-- use lib "./Perf-Trace-Util/lib";
-- use Perf::Trace::Core;
-- use Perf::Trace::Context;
-- use Perf::Trace::Util;
------
+ 	if (!script->show_switch_events)
+ 		return 0;
+=20
+@@ -3128,18 +3227,6 @@ static int process_switch_event(const struct perf_to=
+ol *tool,
+ 			   sample->tid);
+ }
+=20
+-static int process_auxtrace_error(const struct perf_tool *tool,
+-				  struct perf_session *session,
+-				  union perf_event *event)
+-{
+-	if (scripting_ops && scripting_ops->process_auxtrace_error) {
+-		scripting_ops->process_auxtrace_error(session, event);
+-		return 0;
+-	}
 -
--The rest of the script can contain handler functions and support
--functions in any order.
+-	return perf_event__process_auxtrace_error(tool, session, event);
+-}
 -
--Aside from the event handler functions discussed above, every script
--can implement a set of optional functions:
+ static int
+ process_lost_event(const struct perf_tool *tool,
+ 		   union perf_event *event,
+@@ -3152,12 +3239,11 @@ process_lost_event(const struct perf_tool *tool,
+=20
+ static int
+ process_throttle_event(const struct perf_tool *tool __maybe_unused,
+-		       union perf_event *event,
+-		       struct perf_sample *sample,
+-		       struct machine *machine)
++		       union perf_event *event __maybe_unused,
++		       struct perf_sample *sample __maybe_unused,
++		       struct machine *machine __maybe_unused)
+ {
+-	if (scripting_ops && scripting_ops->process_throttle)
+-		scripting_ops->process_throttle(event, sample, machine);
++
+ 	return 0;
+ }
+=20
+@@ -3300,10 +3386,9 @@ static int __cmd_script(struct perf_script *script)
+ 		script->tool.mmap =3D process_mmap_event;
+ 		script->tool.mmap2 =3D process_mmap2_event;
+ 	}
+-	if (script->show_switch_events || (scripting_ops && scripting_ops->proces=
+s_switch))
++	if (script->show_switch_events)
+ 		script->tool.context_switch =3D process_switch_event;
+-	if (scripting_ops && scripting_ops->process_auxtrace_error)
+-		script->tool.auxtrace_error =3D process_auxtrace_error;
++	script->tool.auxtrace_error =3D perf_event__process_auxtrace_error;
+ 	if (script->show_namespace_events)
+ 		script->tool.namespaces =3D process_namespaces_event;
+ 	if (script->show_cgroup_events)
+@@ -3340,96 +3425,48 @@ static int __cmd_script(struct perf_script *script)
+ 	return ret;
+ }
+=20
+-static int list_available_languages_cb(struct scripting_ops *ops, const ch=
+ar *spec)
+-{
+-	fprintf(stderr, "  %-42s [%s]\n", spec, ops->name);
+-	return 0;
+-}
 -
--*trace_begin*, if defined, is called before any event is processed and
--gives scripts a chance to do setup tasks:
+-static void list_available_languages(void)
+-{
+-	fprintf(stderr, "\n");
+-	fprintf(stderr, "Scripting language extensions (used in "
+-		"perf script -s [spec:]script.[spec]):\n\n");
+-	script_spec__for_each(&list_available_languages_cb);
+-	fprintf(stderr, "\n");
+-}
 -
------
-- sub trace_begin
-- {
-- }
------
+ /* Find script file relative to current directory or exec path */
+ static char *find_script(const char *script)
+ {
+ 	char path[PATH_MAX];
++	char *exec_path;
+=20
+-	if (!scripting_ops) {
+-		const char *ext =3D strrchr(script, '.');
++	if (strchr(script, '/') && access(script, R_OK) =3D=3D 0)
++		return strdup(script);
+=20
+-		if (!ext)
+-			return NULL;
++	exec_path =3D get_argv_exec_path();
++	if (exec_path) {
++		snprintf(path, sizeof(path), "%s/python/%s", exec_path, script);
++		if (access(path, R_OK) =3D=3D 0) {
++			free(exec_path);
++			return strdup(path);
++		}
+=20
+-		scripting_ops =3D script_spec__lookup(++ext);
+-		if (!scripting_ops)
+-			return NULL;
++		snprintf(path, sizeof(path), "%s/python/%s.py", exec_path, script);
++		free(exec_path);
++		if (access(path, R_OK) =3D=3D 0)
++			return strdup(path);
+ 	}
+=20
+-	if (access(script, R_OK)) {
+-		char *exec_path =3D get_argv_exec_path();
 -
--*trace_end*, if defined, is called after all events have been
-- processed and gives scripts a chance to do end-of-script tasks, such
-- as display results:
+-		if (!exec_path)
+-			return NULL;
+-		snprintf(path, sizeof(path), "%s/scripts/%s/%s",
+-			 exec_path, scripting_ops->dirname, script);
+-		free(exec_path);
+-		script =3D path;
+-		if (access(script, R_OK))
+-			return NULL;
++	if (access(script, R_OK) =3D=3D 0) {
++		if (!strchr(script, '/')) {
++			snprintf(path, sizeof(path), "./%s", script);
++			return strdup(path);
++		}
++		return strdup(script);
+ 	}
+-	return strdup(script);
++
++	/* Failure to find script. */
++	return NULL;
+ }
+=20
+ static int parse_scriptname(const struct option *opt __maybe_unused,
+ 			    const char *str, int unset __maybe_unused)
+ {
+-	char spec[PATH_MAX];
+-	const char *script, *ext;
+-	int len;
 -
------
+-	if (strcmp(str, "lang") =3D=3D 0) {
+-		list_available_languages();
+-		exit(0);
+-	}
+-
+-	script =3D strchr(str, ':');
+-	if (script) {
+-		len =3D script - str;
+-		if (len >=3D PATH_MAX) {
+-			fprintf(stderr, "invalid language specifier");
+-			return -1;
+-		}
+-		strncpy(spec, str, len);
+-		spec[len] =3D '\0';
+-		scripting_ops =3D script_spec__lookup(spec);
+-		if (!scripting_ops) {
+-			fprintf(stderr, "invalid language specifier");
+-			return -1;
+-		}
+-		script++;
+-	} else {
+-		script =3D str;
+-		ext =3D strrchr(script, '.');
+-		if (!ext) {
+-			fprintf(stderr, "invalid script extension");
+-			return -1;
+-		}
+-		scripting_ops =3D script_spec__lookup(++ext);
+-		if (!scripting_ops) {
+-			fprintf(stderr, "invalid script extension");
+-			return -1;
+-		}
+-	}
+-
+-	script_name =3D find_script(script);
++	zfree(&script_name);
++	script_name =3D find_script(str);
+ 	if (!script_name)
+-		script_name =3D strdup(script);
++		script_name =3D strdup(str);
+=20
+ 	return 0;
+ }
+@@ -3617,7 +3654,6 @@ static int parse_output_fields(const struct option *o=
+pt __maybe_unused,
+ 		    (script_dirent->d_type !=3D DT_UNKNOWN ||		\
+ 		     !is_directory(lang_path, script_dirent)))
+=20
+-
+ #define RECORD_SUFFIX			"-record"
+ #define REPORT_SUFFIX			"-report"
+=20
+@@ -3625,7 +3661,6 @@ struct script_desc {
+ 	struct list_head	node;
+ 	char			*name;
+ 	char			*half_liner;
+-	char			*args;
+ };
+=20
+ static LIST_HEAD(script_descs);
+@@ -3640,16 +3675,16 @@ static struct script_desc *script_desc__new(const c=
+har *name)
+ 	return s;
+ }
+=20
+-static void script_desc__delete(struct script_desc *s)
+-{
+-	zfree(&s->name);
+-	zfree(&s->half_liner);
+-	zfree(&s->args);
+-	free(s);
+-}
+-
+ static void script_desc__add(struct script_desc *s)
+ {
++	struct script_desc *pos;
++
++	list_for_each_entry(pos, &script_descs, node) {
++		if (s->name && pos->name && strcasecmp(s->name, pos->name) < 0) {
++			list_add_tail(&s->node, &pos->node);
++			return;
++		}
++	}
+ 	list_add_tail(&s->node, &script_descs);
+ }
+=20
+@@ -3697,15 +3732,65 @@ static int read_script_info(struct script_desc *des=
+c, const char *filename)
+ {
+ 	char line[BUFSIZ], *p;
+ 	FILE *fp;
++	bool in_docstring =3D false;
++	bool found_description =3D false;
+=20
+ 	fp =3D fopen(filename, "r");
+ 	if (!fp)
+ 		return -1;
+=20
+ 	while (fgets(line, sizeof(line), fp)) {
++		static const char * const triple_quote_str[] =3D {
++			"\"\"\"",
++			"'''",
++			"r\"\"\"",
++		};
+ 		p =3D skip_spaces(line);
+ 		if (strlen(p) =3D=3D 0)
+ 			continue;
++
++		if (in_docstring) {
++			if (strlen(p) && p[strlen(p) - 1] =3D=3D '\n')
++				p[strlen(p) - 1] =3D '\0';
++			zfree(&desc->half_liner);
++			desc->half_liner =3D strdup(skip_spaces(p));
++			in_docstring =3D false;
++			found_description =3D true;
++			break;
++		}
++
++			for (size_t i =3D 0; i < ARRAY_SIZE(triple_quote_str); i++) {
++				const char *quote =3D triple_quote_str[i];
++				const char *close_quote =3D quote;
++
++				if (quote[0] =3D=3D 'r' || quote[0] =3D=3D 'R')
++					close_quote++;
++
++				if (!strstarts(p, quote))
++					continue;
++
++				p +=3D strlen(quote);
++				p =3D skip_spaces(p);
++				if (strlen(p) > 0) {
++					if (p[strlen(p) - 1] =3D=3D '\n')
++						p[strlen(p) - 1] =3D '\0';
++					p =3D skip_spaces(p);
++					if (str_ends_with(p, close_quote))
++						p[strlen(p) - strlen(close_quote)] =3D '\0';
++					zfree(&desc->half_liner);
++					desc->half_liner =3D strdup(skip_spaces(p));
++					found_description =3D true;
++					break;
++				}
++				in_docstring =3D true;
++				break;
++		}
++		if (found_description)
++			break;
++
++		if (in_docstring)
++			continue;
++
+ 		if (*p !=3D '#')
+ 			continue;
+ 		p++;
+@@ -3718,14 +3803,17 @@ static int read_script_info(struct script_desc *des=
+c, const char *filename)
+=20
+ 		if (!strncmp(p, "description:", strlen("description:"))) {
+ 			p +=3D strlen("description:");
++			zfree(&desc->half_liner);
+ 			desc->half_liner =3D strdup(skip_spaces(p));
+-			continue;
++			found_description =3D true;
++			break;
+ 		}
+=20
+-		if (!strncmp(p, "args:", strlen("args:"))) {
+-			p +=3D strlen("args:");
+-			desc->args =3D strdup(skip_spaces(p));
+-			continue;
++		if (!found_description && strlen(p) > 0 &&
++		    strncmp(p, "SPDX-License-Identifier", 23)) {
++			if (!desc->half_liner)
++				desc->half_liner =3D strdup(p);
++			// Don't set found_description, maybe we find a better "description:" l=
+ater!
+ 		}
+ 	}
+=20
+@@ -3756,23 +3844,21 @@ static int list_available_scripts(const struct opti=
+on *opt __maybe_unused,
+ 				  const char *s __maybe_unused,
+ 				  int unset __maybe_unused)
+ {
+-	struct dirent *script_dirent, *lang_dirent;
+-	char *buf, *scripts_path, *script_path, *lang_path, *first_half;
+-	DIR *scripts_dir, *lang_dir;
++	struct dirent *script_dirent;
++	char *buf, *scripts_path, *script_path;
++	DIR *scripts_dir;
+ 	struct script_desc *desc;
+ 	char *script_root;
+=20
+-	buf =3D malloc(3 * MAXPATHLEN + BUFSIZ);
++	buf =3D malloc(2 * MAXPATHLEN + BUFSIZ);
+ 	if (!buf) {
+ 		pr_err("malloc failed\n");
+ 		exit(-1);
+ 	}
+ 	scripts_path =3D buf;
+ 	script_path =3D buf + MAXPATHLEN;
+-	lang_path =3D buf + 2 * MAXPATHLEN;
+-	first_half =3D buf + 3 * MAXPATHLEN;
+=20
+-	snprintf(scripts_path, MAXPATHLEN, "%s/scripts", get_argv_exec_path());
++	snprintf(scripts_path, MAXPATHLEN, "%s/python", get_argv_exec_path());
+=20
+ 	scripts_dir =3D opendir(scripts_path);
+ 	if (!scripts_dir) {
+@@ -3784,30 +3870,26 @@ static int list_available_scripts(const struct opti=
+on *opt __maybe_unused,
+ 		exit(-1);
+ 	}
+=20
+-	for_each_lang(scripts_path, scripts_dir, lang_dirent) {
+-		scnprintf(lang_path, MAXPATHLEN, "%s/%s/bin", scripts_path,
+-			  lang_dirent->d_name);
+-		lang_dir =3D opendir(lang_path);
+-		if (!lang_dir)
+-			continue;
++	while ((script_dirent =3D readdir(scripts_dir)) !=3D NULL) {
++		if (script_dirent->d_type !=3D DT_DIR &&
++		    (script_dirent->d_type !=3D DT_UNKNOWN ||
++		     !is_directory(scripts_path, script_dirent))) {
+=20
+-		for_each_script(lang_path, lang_dir, script_dirent) {
+-			script_root =3D get_script_root(script_dirent, REPORT_SUFFIX);
++			script_root =3D get_script_root(script_dirent, ".py");
+ 			if (script_root) {
+ 				desc =3D script_desc__findnew(script_root);
+ 				scnprintf(script_path, MAXPATHLEN, "%s/%s",
+-					  lang_path, script_dirent->d_name);
++					  scripts_path, script_dirent->d_name);
+ 				read_script_info(desc, script_path);
+ 				free(script_root);
+ 			}
+ 		}
+ 	}
++	closedir(scripts_dir);
+=20
+-	fprintf(stdout, "List of available trace scripts:\n");
++	fprintf(stdout, "List of available scripts:\n");
+ 	list_for_each_entry(desc, &script_descs, node) {
+-		sprintf(first_half, "%s %s", desc->name,
+-			desc->args ? desc->args : "");
+-		fprintf(stdout, "  %-36s %s\n", first_half,
++		fprintf(stdout, "  %-36s %s\n", desc->name,
+ 			desc->half_liner ? desc->half_liner : "");
+ 	}
+=20
+@@ -3843,94 +3925,6 @@ static void free_dlarg(void)
+ 	free(dlargv);
+ }
+=20
+-static char *get_script_path(const char *script_root, const char *suffix)
+-{
+-	struct dirent *script_dirent, *lang_dirent;
+-	char scripts_path[MAXPATHLEN];
+-	char script_path[MAXPATHLEN];
+-	DIR *scripts_dir, *lang_dir;
+-	char lang_path[MAXPATHLEN];
+-	char *__script_root;
+-
+-	snprintf(scripts_path, MAXPATHLEN, "%s/scripts", get_argv_exec_path());
+-
+-	scripts_dir =3D opendir(scripts_path);
+-	if (!scripts_dir)
+-		return NULL;
+-
+-	for_each_lang(scripts_path, scripts_dir, lang_dirent) {
+-		scnprintf(lang_path, MAXPATHLEN, "%s/%s/bin", scripts_path,
+-			  lang_dirent->d_name);
+-		lang_dir =3D opendir(lang_path);
+-		if (!lang_dir)
+-			continue;
+-
+-		for_each_script(lang_path, lang_dir, script_dirent) {
+-			__script_root =3D get_script_root(script_dirent, suffix);
+-			if (__script_root && !strcmp(script_root, __script_root)) {
+-				free(__script_root);
+-				closedir(scripts_dir);
+-				scnprintf(script_path, MAXPATHLEN, "%s/%s",
+-					  lang_path, script_dirent->d_name);
+-				closedir(lang_dir);
+-				return strdup(script_path);
+-			}
+-			free(__script_root);
+-		}
+-		closedir(lang_dir);
+-	}
+-	closedir(scripts_dir);
+-
+-	return NULL;
+-}
+-
+-static bool is_top_script(const char *script_path)
+-{
+-	return ends_with(script_path, "top") !=3D NULL;
+-}
+-
+-static int has_required_arg(char *script_path)
+-{
+-	struct script_desc *desc;
+-	int n_args =3D 0;
+-	char *p;
+-
+-	desc =3D script_desc__new(NULL);
+-
+-	if (read_script_info(desc, script_path))
+-		goto out;
+-
+-	if (!desc->args)
+-		goto out;
+-
+-	for (p =3D desc->args; *p; p++)
+-		if (*p =3D=3D '<')
+-			n_args++;
+-out:
+-	script_desc__delete(desc);
+-
+-	return n_args;
+-}
+-
+-static int have_cmd(int argc, const char **argv)
+-{
+-	char **__argv =3D calloc(argc, sizeof(const char *));
+-
+-	if (!__argv) {
+-		pr_err("malloc failed\n");
+-		return -1;
+-	}
+-
+-	memcpy(__argv, argv, sizeof(const char *) * argc);
+-	argc =3D parse_options(argc, (const char **)__argv, record_options,
+-			     NULL, PARSE_OPT_STOP_AT_NON_OPTION);
+-	free(__argv);
+-
+-	system_wide =3D (argc =3D=3D 0);
+-
+-	return 0;
+-}
+-
+ static void script__setup_sample_type(struct perf_script *script)
+ {
+ 	struct perf_session *session =3D script->session;
+@@ -4110,22 +4104,96 @@ static int parse_callret_trace(const struct option =
+*opt __maybe_unused,
+ 	return 0;
+ }
+=20
++/*
++ * Detect scripts written for the removed legacy embedded Python scripting=
+ API.
++ *
++ * Without an embedded interpreter invoking trace_begin()/process_event()/=
+trace_end(),
++ * executing a callback-only legacy script directly under `python3` would =
+simply
++ * define top-level functions and silently exit with status 0 without proc=
+essing
++ * any events.
++ *
++ * Note on ordering and heuristics:
++ * 1) "perf_trace_context" and "Perf-Trace-Util" must be checked BEFORE
++ *    "import perf", because "import perf" is a substring prefix of
++ *    "import perf_trace_context".
++ * 2) Defining `def process_event(`, `def trace_begin(`, or `def trace_end=
+(`
++ *    is only flagged as legacy when `!has_perf_import`, because standalon=
+e
++ *    `import perf` scripts commonly define a helper named `def process_ev=
+ent(sample):`
++ *    to pass as the `sample=3D` callback to `perf.session(...)`.
++ */
++static bool is_legacy_python_script(const char *path)
++{
++	struct stat st;
++	int fd;
++	FILE *fp;
++	char line[1024];
++	bool has_legacy_cb =3D false;
++	bool has_perf_import =3D false;
++
++	fd =3D open(path, O_RDONLY | O_NONBLOCK);
++	if (fd < 0)
++		return false;
++
++	if (fstat(fd, &st) < 0 || !S_ISREG(st.st_mode)) {
++		close(fd);
++		return false;
++	}
++
++	fp =3D fdopen(fd, "r");
++	if (!fp) {
++		close(fd);
++		return false;
++	}
++
++	while (fgets(line, sizeof(line), fp)) {
++		const char *p =3D skip_spaces(line);
++
++		if (*p =3D=3D '#')
++			continue;
++		if ((strstr(p, "import perf") && !strstr(p, "import perf_trace_context")=
+) ||
++		    strstr(p, "from perf ") ||
++		    strstr(p, "__main__"))
++			has_perf_import =3D true;
++		if (strstr(p, "perf_trace_context") ||
++		    strstr(p, "Perf-Trace-Util") ||
++		    strstr(p, "def process_event(") ||
++		    strstr(p, "def trace_begin(") ||
++		    strstr(p, "def trace_end("))
++			has_legacy_cb =3D true;
++	}
++	fclose(fp);
++	return has_legacy_cb && !has_perf_import;
++}
++
++static volatile sig_atomic_t script_child_pid;
++
++static void forward_script_sig(int sig, siginfo_t *info, void *ucontext __=
+maybe_unused)
++{
++	/*
++	 * Terminal-generated signals (Ctrl-C / Ctrl-\) have si_code > 0
++	 * (SI_KERNEL) and are already delivered by the TTY driver to the
++	 * entire foreground process group, including the child script.
++	 * Signals sent directly to the perf process via kill(2) / sigqueue(3)
++	 * have si_code <=3D 0 (SI_USER, SI_QUEUE, etc.) and must be forwarded
++	 * to the child script so it can catch KeyboardInterrupt / SIGTERM
++	 * and flush its output before exiting.
++	 */
++	if (script_child_pid > 0 && (sig =3D=3D SIGTERM || !info || info->si_code=
+ <=3D 0))
++		kill(script_child_pid, sig);
++}
++
+ int cmd_script(int argc, const char **argv)
+ {
+ 	bool show_full_info =3D false;
+ 	bool header =3D false;
+ 	bool header_only =3D false;
+-	bool script_started =3D false;
+ 	bool unsorted_dump =3D false;
+ 	bool merge_deferred_callchains =3D true;
+-	char *rec_script_path =3D NULL;
+-	char *rep_script_path =3D NULL;
+ 	struct perf_session *session;
+ 	struct itrace_synth_opts itrace_synth_opts =3D {
+ 		.set =3D false,
+ 		.default_no_sample =3D true,
+ 	};
+-	char *script_path =3D NULL;
+ 	const char *dlfilter_file =3D NULL;
+ 	const char **__argv;
+ 	int i, j, err =3D 0;
+@@ -4146,11 +4214,10 @@ int cmd_script(int argc, const char **argv)
+ 			   list_available_scripts),
+ 	OPT_CALLBACK_NOOPT(0, "list-dlfilters", NULL, NULL, "list available dlfil=
+ters",
+ 			   list_available_dlfilters),
+-	OPT_CALLBACK('s', "script", NULL, "name",
+-		     "script file name (lang:script name, script name, or *)",
+-		     parse_scriptname),
+-	OPT_STRING('g', "gen-script", &generate_script_lang, "lang",
+-		   "generate perf-script.xx script in specified language"),
++	{ .type =3D OPTION_CALLBACK, .short_name =3D 's', .long_name =3D "script"=
+,
++	  .value =3D NULL, .argh =3D "name",
++	  .help =3D "script file name (lang:script name, script name, or *)",
++	  .callback =3D parse_scriptname, .flags =3D PARSE_OPT_HIDDEN },
+ 	OPT_STRING(0, "dlfilter", &dlfilter_file, "file", "filter .so file name")=
+,
+ 	OPT_CALLBACK(0, "dlarg", NULL, "argument", "filter argument",
+ 		     add_dlarg),
+@@ -4179,8 +4246,6 @@ int cmd_script(int argc, const char **argv)
+ 		     "code_page_size,ins_lat,machine_pid,vcpu,cgroup,retire_lat,"
+ 		     "brcntr",
+ 		     parse_output_fields),
+-	OPT_BOOLEAN('a', "all-cpus", &system_wide,
+-		    "system-wide collection from all CPUs"),
+ 	OPT_STRING(0, "dsos", &symbol_conf.dso_list_str, "dso[,dso...]",
+ 		   "only consider symbols in these DSOs"),
+ 	OPT_STRING('S', "symbols", &symbol_conf.sym_list_str, "symbol[,symbol...]=
+",
+@@ -4277,22 +4342,16 @@ int cmd_script(int argc, const char **argv)
+ 	OPTS_EVSWITCH(&script.evswitch),
+ 	OPT_END()
+ 	};
+-	const char * const script_subcommands[] =3D { "record", "report", NULL };
+ 	const char *script_usage[] =3D {
+ 		"perf script [<options>]",
+-		"perf script [<options>] record <script> [<record-options>] <command>",
+-		"perf script [<options>] report <script> [script-args]",
+-		"perf script [<options>] <script> [<record-options>] <command>",
+-		"perf script [<options>] <top-script> [script-args]",
++		"perf script [<options>] <script> [script-args]",
+ 		NULL
+ 	};
+ 	struct perf_env *env;
+=20
+ 	perf_set_singlethreaded();
+=20
+-	setup_scripting();
+-
+-	argc =3D parse_options_subcommand(argc, argv, options, script_subcommands=
+, script_usage,
++	argc =3D parse_options_subcommand(argc, argv, options, NULL, script_usage=
+,
+ 			     PARSE_OPT_STOP_AT_NON_OPTION);
+=20
+ 	if (symbol_conf.guestmount ||
+@@ -4315,22 +4374,6 @@ int cmd_script(int argc, const char **argv)
+ 	if (symbol__validate_sym_arguments())
+ 		return -1;
+=20
+-	if (argc > 1 && strlen(argv[0]) > 2 && strstarts("record", argv[0])) {
+-		rec_script_path =3D get_script_path(argv[1], RECORD_SUFFIX);
+-		if (!rec_script_path)
+-			return cmd_record(argc, argv);
+-	}
+-
+-	if (argc > 1 && strlen(argv[0]) > 2 && strstarts("report", argv[0])) {
+-		rep_script_path =3D get_script_path(argv[1], REPORT_SUFFIX);
+-		if (!rep_script_path) {
+-			fprintf(stderr,
+-				"Please specify a valid report script"
+-				"(see 'perf script -l' for listing)\n");
+-			return -1;
+-		}
+-	}
+-
+ 	if (reltime && deltatime) {
+ 		fprintf(stderr,
+ 			"reltime and deltatime - the two don't get along well. "
+@@ -4345,149 +4388,179 @@ int cmd_script(int argc, const char **argv)
+ 	/* make sure PERF_EXEC_PATH is set for scripts */
+ 	set_argv_exec_path(get_argv_exec_path());
+=20
+-	if (argc && !script_name && !rec_script_path && !rep_script_path) {
+-		int live_pipe[2];
+-		int rep_args;
+-		pid_t pid;
+-
+-		rec_script_path =3D get_script_path(argv[0], RECORD_SUFFIX);
+-		rep_script_path =3D get_script_path(argv[0], REPORT_SUFFIX);
+-
+-		if (!rec_script_path && !rep_script_path) {
+-			script_name =3D find_script(argv[0]);
+-			if (script_name) {
++	if (argc && !script_name) {
++		if (!strcmp(argv[0], "record") || !strcmp(argv[0], "report")) {
++			fprintf(stderr,
++				"The '%s' subcommand is no longer supported.\n",
++				argv[0]);
++			fprintf(stderr,
++				"Run 'perf script <script> [args]' directly.\n");
++			err =3D -1;
++			goto out;
++		}
++		script_name =3D find_script(argv[0]);
++		if (script_name) {
++			argc -=3D 1;
++			argv +=3D 1;
++			if (argc && !strcmp(argv[0], "--")) {
+ 				argc -=3D 1;
+ 				argv +=3D 1;
+-				goto script_found;
+ 			}
+-			usage_with_options_msg(script_usage, options,
+-				"Couldn't find script `%s'\n\n See perf"
+-				" script -l for available scripts.\n", argv[0]);
++			goto script_found;
+ 		}
++		usage_with_options_msg(script_usage, options,
++			"Couldn't find script `%s'\n\n"
++			" See perf script -l for available scripts.\n", argv[0]);
++	}
++script_found:
+=20
+-		if (is_top_script(argv[0])) {
+-			rep_args =3D argc - 1;
+-		} else {
+-			int rec_args;
+-
+-			rep_args =3D has_required_arg(rep_script_path);
+-			rec_args =3D (argc - 1) - rep_args;
+-			if (rec_args < 0) {
+-				usage_with_options_msg(script_usage, options,
+-					"`%s' script requires options."
+-					"\n\n See perf script -l for available "
+-					"scripts and options.\n", argv[0]);
+-			}
+-		}
++	if (script_name) {
++		pid_t pid;
++		bool is_python =3D str_ends_with(script_name, ".py");
++		struct sigaction forward_sa =3D {
++			.sa_sigaction =3D forward_script_sig,
++			.sa_flags =3D SA_SIGINFO,
++		};
++		struct sigaction old_int, old_quit, old_term;
++		sigset_t block_mask, old_mask;
+=20
+-		if (pipe(live_pipe) < 0) {
+-			perror("failed to create pipe");
+-			return -1;
++		if (is_python && is_legacy_python_script(script_name)) {
++			pr_err("Error: '%s' uses the removed legacy embedded Python scripting A=
+PI.\n"
++			       "Please port it to a standalone script using 'import perf' (see =
+'man perf-script-python').\n",
++			       script_name);
++			err =3D -EINVAL;
++			goto out;
+ 		}
+=20
++		if (cpu_list || symbol_conf.comm_list_str ||
++		    symbol_conf.pid_list_str || symbol_conf.tid_list_str ||
++		    script.time_str || dlfilter_file || dlargc > 0) {
++			pr_warning("Warning: Filtering options (-C, -c, --pid, --tid, --time, -=
+-dlfilter, --dlarg) are ignored for standalone scripts.\n");
++		}
++		/*
++		 * Install forward_script_sig for SIGINT, SIGQUIT, and SIGTERM
++		 * in the parent `perf` process while waiting for the child
++		 * script, and restore the original handlers and signal mask in
++		 * the child before execvp(). When the user presses Ctrl-C
++		 * during a live trace, the terminal delivers SIGINT (SI_KERNEL)
++		 * to the entire foreground process group; ignoring SI_KERNEL in
++		 * the parent prevents `perf` from terminating immediately and
++		 * allows the child Python script to catch KeyboardInterrupt,
++		 * print its summary/report, and finish cleanup before exiting.
++		 * When a signal is sent directly to `perf` via kill(2) (e.g.
++		 * from a backgrounded job in a non-interactive shell), si_code
++		 * is <=3D 0 (SI_USER) and forward_script_sig forwards it to the
++		 * child script.
++		 */
++		sigemptyset(&forward_sa.sa_mask);
++		sigemptyset(&block_mask);
++		sigaddset(&block_mask, SIGINT);
++		sigaddset(&block_mask, SIGQUIT);
++		sigaddset(&block_mask, SIGTERM);
++		sigprocmask(SIG_BLOCK, &block_mask, &old_mask);
++		sigaction(SIGINT, &forward_sa, &old_int);
++		sigaction(SIGQUIT, &forward_sa, &old_quit);
++		sigaction(SIGTERM, &forward_sa, &old_term);
+ 		pid =3D fork();
+ 		if (pid < 0) {
+-			perror("failed to fork");
+-			return -1;
++			err =3D -errno;
++			sigaction(SIGINT, &old_int, NULL);
++			sigaction(SIGQUIT, &old_quit, NULL);
++			sigaction(SIGTERM, &old_term, NULL);
++			sigprocmask(SIG_SETMASK, &old_mask, NULL);
++			pr_err("failed to fork\n");
++			goto out;
+ 		}
+-
+-		if (!pid) {
++		if (pid =3D=3D 0) { /* child */
++			sigaction(SIGINT, &old_int, NULL);
++			sigaction(SIGQUIT, &old_quit, NULL);
++			sigaction(SIGTERM, &old_term, NULL);
++			sigprocmask(SIG_SETMASK, &old_mask, NULL);
++			__argv =3D calloc(argc + 6, sizeof(const char *));
+ 			j =3D 0;
++			if (!__argv)
++				_exit(127);
+=20
+-			dup2(live_pipe[1], 1);
+-			close(live_pipe[0]);
++			if (is_python) {
++				const char *python =3D getenv("PYTHON");
+=20
+-			if (is_top_script(argv[0])) {
+-				system_wide =3D true;
+-			} else if (!system_wide) {
+-				if (have_cmd(argc - rep_args, &argv[rep_args]) !=3D 0) {
+-					err =3D -1;
+-					goto out;
+-				}
++				if (!python || !*python)
++					python =3D "python3";
++				__argv[j++] =3D python;
++				__argv[j++] =3D "--";
++				__argv[j++] =3D script_name;
++			} else {
++				__argv[j++] =3D script_name;
+ 			}
+-
+-			__argv =3D calloc(argc + 6, sizeof(const char *));
+-			if (!__argv) {
+-				pr_err("malloc failed\n");
+-				err =3D -ENOMEM;
+-				goto out;
++			if (input_name) {
++				__argv[j++] =3D "-i";
++				__argv[j++] =3D input_name;
++			} else {
++				struct stat st;
++				bool has_input_arg =3D false;
++
++				for (i =3D 0; i < argc; i++) {
++					if (!strcmp(argv[i], "-i") ||
++					    strstarts(argv[i], "--input")) {
++						has_input_arg =3D true;
++						break;
++					}
++				}
++				if (!has_input_arg &&
++				    fstat(STDIN_FILENO, &st) =3D=3D 0 &&
++				    S_ISFIFO(st.st_mode)) {
++					__argv[j++] =3D "-i";
++					__argv[j++] =3D "-";
++				}
+ 			}
+-
+-			__argv[j++] =3D "/bin/sh";
+-			__argv[j++] =3D rec_script_path;
+-			if (system_wide)
+-				__argv[j++] =3D "-a";
+-			__argv[j++] =3D "-q";
+-			__argv[j++] =3D "-o";
+-			__argv[j++] =3D "-";
+-			for (i =3D rep_args + 1; i < argc; i++)
++			for (i =3D 0; i < argc; i++)
+ 				__argv[j++] =3D argv[i];
+ 			__argv[j++] =3D NULL;
+=20
+-			execvp("/bin/sh", (char **)__argv);
+-			free(__argv);
+-			exit(-1);
+-		}
++			if (symbol_conf.vmlinux_name)
++				setenv("PERF_SYMBOL_VMLINUX", symbol_conf.vmlinux_name, 1);
++			if (symbol_conf.kallsyms_name)
++				setenv("PERF_SYMBOL_KALLSYMS", symbol_conf.kallsyms_name, 1);
++			if (symbol_conf.symfs && symbol_conf.symfs[0])
++				setenv("PERF_SYMBOL_SYMFS", symbol_conf.symfs, 1);
+=20
+-		dup2(live_pipe[0], 0);
+-		close(live_pipe[1]);
++			execvp(__argv[0], (char **)__argv);
++			{
++				int err_code =3D errno;
+=20
+-		__argv =3D calloc(argc + 4, sizeof(const char *));
+-		if (!__argv) {
+-			pr_err("malloc failed\n");
+-			err =3D -ENOMEM;
+-			goto out;
+-		}
+-
+-		j =3D 0;
+-		__argv[j++] =3D "/bin/sh";
+-		__argv[j++] =3D rep_script_path;
+-		for (i =3D 1; i < rep_args + 1; i++)
+-			__argv[j++] =3D argv[i];
+-		__argv[j++] =3D "-i";
+-		__argv[j++] =3D "-";
+-		__argv[j++] =3D NULL;
+-
+-		execvp("/bin/sh", (char **)__argv);
+-		free(__argv);
+-		exit(-1);
+-	}
+-script_found:
+-	if (rec_script_path)
+-		script_path =3D rec_script_path;
+-	if (rep_script_path)
+-		script_path =3D rep_script_path;
+-
+-	if (script_path) {
+-		j =3D 0;
+-
+-		if (!rec_script_path)
+-			system_wide =3D false;
+-		else if (!system_wide) {
+-			if (have_cmd(argc - 1, &argv[1]) !=3D 0) {
+-				err =3D -1;
++				pr_err("failed to execute script '%s': %s\n",
++				       script_name, strerror(err_code));
++				_exit(err_code);
++			}
++		} else { /* parent */
++			int status =3D 0;
++
++			script_child_pid =3D pid;
++			sigprocmask(SIG_SETMASK, &old_mask, NULL);
++			while (waitpid(pid, &status, 0) !=3D pid) {
++				if (errno =3D=3D EINTR)
++					continue;
++				pr_err("failed to wait for script '%s': %s\n",
++				       script_name, strerror(errno));
++				err =3D -errno;
++				script_child_pid =3D 0;
++				sigaction(SIGINT, &old_int, NULL);
++				sigaction(SIGQUIT, &old_quit, NULL);
++				sigaction(SIGTERM, &old_term, NULL);
+ 				goto out;
+ 			}
+-		}
+-
+-		__argv =3D calloc(argc + 2, sizeof(const char *));
+-		if (!__argv) {
+-			pr_err("malloc failed\n");
+-			err =3D -ENOMEM;
++			script_child_pid =3D 0;
++			sigaction(SIGINT, &old_int, NULL);
++			sigaction(SIGQUIT, &old_quit, NULL);
++			sigaction(SIGTERM, &old_term, NULL);
++			if (WIFEXITED(status))
++				err =3D WEXITSTATUS(status);
++			else if (WIFSIGNALED(status))
++				err =3D 128 + WTERMSIG(status);
++			else
++				err =3D -1;
+ 			goto out;
+ 		}
+-
+-		__argv[j++] =3D "/bin/sh";
+-		__argv[j++] =3D script_path;
+-		if (system_wide)
+-			__argv[j++] =3D "-a";
+-		for (i =3D 2; i < argc; i++)
+-			__argv[j++] =3D argv[i];
+-		__argv[j++] =3D NULL;
+-
+-		execvp("/bin/sh", (char **)__argv);
+-		free(__argv);
+-		exit(-1);
+ 	}
+=20
+ 	if (dlfilter_file) {
+@@ -4579,79 +4652,11 @@ int cmd_script(int argc, const char **argv)
+ 		goto out_delete;
+ 	}
+ #endif
+-	if (generate_script_lang) {
+-		struct stat perf_stat;
+-		int input;
+-		char *filename =3D strdup("perf-script");
+-
+-		if (output_set_by_user()) {
+-			fprintf(stderr,
+-				"custom fields not supported for generated scripts");
+-			err =3D -EINVAL;
+-			goto out_delete;
+-		}
+-
+-		input =3D open(data.path, O_RDONLY);	/* input_name */
+-		if (input < 0) {
+-			err =3D -errno;
+-			perror("failed to open file");
+-			goto out_delete;
+-		}
+-
+-		err =3D fstat(input, &perf_stat);
+-		if (err < 0) {
+-			perror("failed to stat file");
+-			goto out_delete;
+-		}
+-
+-		if (!perf_stat.st_size) {
+-			fprintf(stderr, "zero-sized file, nothing to do!\n");
+-			goto out_delete;
+-		}
+-
+-		scripting_ops =3D script_spec__lookup(generate_script_lang);
+-		if (!scripting_ops && ends_with(generate_script_lang, ".py")) {
+-			scripting_ops =3D script_spec__lookup("python");
+-			free(filename);
+-			filename =3D strdup(generate_script_lang);
+-			filename[strlen(filename) - 3] =3D '\0';
+-		} else if (!scripting_ops && ends_with(generate_script_lang, ".pl")) {
+-			scripting_ops =3D script_spec__lookup("perl");
+-			free(filename);
+-			filename =3D strdup(generate_script_lang);
+-			filename[strlen(filename) - 3] =3D '\0';
+-		}
+-		if (!scripting_ops) {
+-			fprintf(stderr, "invalid language specifier '%s'\n", generate_script_la=
+ng);
+-			err =3D -ENOENT;
+-			goto out_delete;
+-		}
+-		if (!filename) {
+-			err =3D -ENOMEM;
+-			goto out_delete;
+-		}
+-#ifdef HAVE_LIBTRACEEVENT
+-		err =3D scripting_ops->generate_script(session->tevent.pevent, filename)=
+;
+-#else
+-		err =3D scripting_ops->generate_script(NULL, filename);
+-#endif
+-		free(filename);
+-		goto out_delete;
+-	}
+=20
+ 	err =3D dlfilter__start(dlfilter, session);
+ 	if (err)
+ 		goto out_delete;
+=20
+-	if (script_name) {
+-		err =3D scripting_ops->start_script(script_name, argc, argv, session);
+-		if (err)
+-			goto out_delete;
+-		pr_debug("perf script started with script %s\n\n", script_name);
+-		script_started =3D true;
+-	}
+-
+-
+ 	err =3D perf_session__check_output_opt(session);
+ 	if (err < 0)
+ 		goto out_delete;
+@@ -4679,8 +4684,6 @@ int cmd_script(int argc, const char **argv)
+=20
+ 	err =3D __cmd_script(&script);
+=20
+-	flush_scripting();
+-
+ 	if (verbose > 2 || debug_kmaps)
+ 		perf_session__dump_kmaps(session);
+=20
+@@ -4695,10 +4698,9 @@ int cmd_script(int argc, const char **argv)
+ 	perf_session__delete(session);
+ 	perf_script__exit(&script);
+=20
+-	if (script_started)
+-		cleanup_scripting();
++out:
++	zfree(&script_name);
+ 	dlfilter__cleanup(dlfilter);
+ 	free_dlarg();
+-out:
+ 	return err;
+ }
+diff --git a/tools/perf/scripts/Build b/tools/perf/scripts/Build
+deleted file mode 100644
+index fbeab8fff88b..000000000000
+--- a/tools/perf/scripts/Build
++++ /dev/null
+@@ -1,3 +0,0 @@
+-ifeq ($(CONFIG_LIBTRACEEVENT),y)
+-  perf-util-$(CONFIG_LIBPERL)   +=3D perl/Perf-Trace-Util/
+-endif
+diff --git a/tools/perf/scripts/perl/Perf-Trace-Util/Build b/tools/perf/scr=
+ipts/perl/Perf-Trace-Util/Build
+deleted file mode 100644
+index 01a1a0ed51ae..000000000000
+--- a/tools/perf/scripts/perl/Perf-Trace-Util/Build
++++ /dev/null
+@@ -1,9 +0,0 @@
+-perf-util-y +=3D Context.o
+-
+-CFLAGS_Context.o +=3D $(PERL_EMBED_CCOPTS) -Wno-redundant-decls -Wno-stric=
+t-prototypes -Wno-bad-function-cast -Wno-declaration-after-statement -Wno-s=
+witch-enum
+-CFLAGS_Context.o +=3D -Wno-unused-parameter -Wno-nested-externs -Wno-undef
+-CFLAGS_Context.o +=3D -Wno-switch-default -Wno-shadow -Wno-thread-safety-a=
+nalysis
+-
+-ifeq ($(CC_NO_CLANG), 1)
+-  CFLAGS_Context.o +=3D -Wno-unused-command-line-argument
+-endif
+diff --git a/tools/perf/scripts/perl/Perf-Trace-Util/Context.c b/tools/perf=
+/scripts/perl/Perf-Trace-Util/Context.c
+deleted file mode 100644
+index 25c47d23a130..000000000000
+--- a/tools/perf/scripts/perl/Perf-Trace-Util/Context.c
++++ /dev/null
+@@ -1,122 +0,0 @@
+-// SPDX-License-Identifier: GPL-2.0-or-later
+-/*
+- * This file was generated automatically by ExtUtils::ParseXS version 2.18=
+_02 from the
+- * contents of Context.xs. Do not edit this file, edit Context.xs instead.
+- *
+- *	ANY CHANGES MADE HERE WILL BE LOST!=20
+- */
+-#include <stdbool.h>
+-#ifndef HAS_BOOL
+-# define HAS_BOOL 1
+-#endif
+-#line 1 "Context.xs"
+-/*
+- * Context.xs.  XS interfaces for perf script.
+- *
+- * Copyright (C) 2009 Tom Zanussi <tzanussi@gmail.com>
+- */
+-
+-#include "EXTERN.h"
+-#include "perl.h"
+-#include "XSUB.h"
+-#include "../../../util/trace-event.h"
+-
+-#ifndef PERL_UNUSED_VAR
+-#  define PERL_UNUSED_VAR(var) if (0) var =3D var
+-#endif
+-
+-#line 42 "Context.c"
+-
+-XS(XS_Perf__Trace__Context_common_pc); /* prototype to pass -Wmissing-prot=
+otypes */
+-XS(XS_Perf__Trace__Context_common_pc)
+-{
+-#ifdef dVAR
+-    dVAR; dXSARGS;
+-#else
+-    dXSARGS;
+-#endif
+-    if (items !=3D 1)
+-       Perl_croak(aTHX_ "Usage: %s(%s)", "Perf::Trace::Context::common_pc"=
+, "context");
+-    PERL_UNUSED_VAR(cv); /* -W */
+-    {
+-	struct scripting_context *	context =3D INT2PTR(struct scripting_context *=
+,SvIV(ST(0)));
+-	int	RETVAL;
+-	dXSTARG;
+-
+-	RETVAL =3D common_pc(context);
+-	XSprePUSH; PUSHi((IV)RETVAL);
+-    }
+-    XSRETURN(1);
+-}
+-
+-
+-XS(XS_Perf__Trace__Context_common_flags); /* prototype to pass -Wmissing-p=
+rototypes */
+-XS(XS_Perf__Trace__Context_common_flags)
+-{
+-#ifdef dVAR
+-    dVAR; dXSARGS;
+-#else
+-    dXSARGS;
+-#endif
+-    if (items !=3D 1)
+-       Perl_croak(aTHX_ "Usage: %s(%s)", "Perf::Trace::Context::common_fla=
+gs", "context");
+-    PERL_UNUSED_VAR(cv); /* -W */
+-    {
+-	struct scripting_context *	context =3D INT2PTR(struct scripting_context *=
+,SvIV(ST(0)));
+-	int	RETVAL;
+-	dXSTARG;
+-
+-	RETVAL =3D common_flags(context);
+-	XSprePUSH; PUSHi((IV)RETVAL);
+-    }
+-    XSRETURN(1);
+-}
+-
+-
+-XS(XS_Perf__Trace__Context_common_lock_depth); /* prototype to pass -Wmiss=
+ing-prototypes */
+-XS(XS_Perf__Trace__Context_common_lock_depth)
+-{
+-#ifdef dVAR
+-    dVAR; dXSARGS;
+-#else
+-    dXSARGS;
+-#endif
+-    if (items !=3D 1)
+-       Perl_croak(aTHX_ "Usage: %s(%s)", "Perf::Trace::Context::common_loc=
+k_depth", "context");
+-    PERL_UNUSED_VAR(cv); /* -W */
+-    {
+-	struct scripting_context *	context =3D INT2PTR(struct scripting_context *=
+,SvIV(ST(0)));
+-	int	RETVAL;
+-	dXSTARG;
+-
+-	RETVAL =3D common_lock_depth(context);
+-	XSprePUSH; PUSHi((IV)RETVAL);
+-    }
+-    XSRETURN(1);
+-}
+-
+-#ifdef __cplusplus
+-extern "C"
+-#endif
+-XS(boot_Perf__Trace__Context); /* prototype to pass -Wmissing-prototypes *=
+/
+-XS(boot_Perf__Trace__Context)
+-{
+-#ifdef dVAR
+-    dVAR; dXSARGS;
+-#else
+-    dXSARGS;
+-#endif
+-    const char* file =3D __FILE__;
+-
+-    PERL_UNUSED_VAR(cv); /* -W */
+-    PERL_UNUSED_VAR(items); /* -W */
+-    XS_VERSION_BOOTCHECK ;
+-
+-        newXSproto("Perf::Trace::Context::common_pc", XS_Perf__Trace__Cont=
+ext_common_pc, file, "$");
+-        newXSproto("Perf::Trace::Context::common_flags", XS_Perf__Trace__C=
+ontext_common_flags, file, "$");
+-        newXSproto("Perf::Trace::Context::common_lock_depth", XS_Perf__Tra=
+ce__Context_common_lock_depth, file, "$");
+-    if (PL_unitcheckav)
+-         call_list(PL_scopestack_ix, PL_unitcheckav);
+-    XSRETURN_YES;
+-}
+-
+diff --git a/tools/perf/scripts/perl/Perf-Trace-Util/Context.xs b/tools/per=
+f/scripts/perl/Perf-Trace-Util/Context.xs
+deleted file mode 100644
+index 8c7ea42444d1..000000000000
+--- a/tools/perf/scripts/perl/Perf-Trace-Util/Context.xs
++++ /dev/null
+@@ -1,42 +0,0 @@
+-/*
+- * Context.xs.  XS interfaces for perf script.
+- *
+- * Copyright (C) 2009 Tom Zanussi <tzanussi@gmail.com>
+- *
+- *  This program is free software; you can redistribute it and/or modify
+- *  it under the terms of the GNU General Public License as published by
+- *  the Free Software Foundation; either version 2 of the License, or
+- *  (at your option) any later version.
+- *
+- *  This program is distributed in the hope that it will be useful,
+- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- *  GNU General Public License for more details.
+- *
+- *  You should have received a copy of the GNU General Public License
+- *  along with this program; if not, write to the Free Software
+- *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  =
+USA
+- *
+- */
+-
+-#include "EXTERN.h"
+-#include "perl.h"
+-#include "XSUB.h"
+-#include "../../../perf.h"
+-#include "../../../util/trace-event.h"
+-
+-MODULE =3D Perf::Trace::Context		PACKAGE =3D Perf::Trace::Context
+-PROTOTYPES: ENABLE
+-
+-int
+-common_pc(context)
+-	struct scripting_context * context
+-
+-int
+-common_flags(context)
+-	struct scripting_context * context
+-
+-int
+-common_lock_depth(context)
+-	struct scripting_context * context
+-
+diff --git a/tools/perf/scripts/perl/Perf-Trace-Util/Makefile.PL b/tools/pe=
+rf/scripts/perl/Perf-Trace-Util/Makefile.PL
+deleted file mode 100644
+index e8994332d7dc..000000000000
+--- a/tools/perf/scripts/perl/Perf-Trace-Util/Makefile.PL
++++ /dev/null
+@@ -1,18 +0,0 @@
+-# SPDX-License-Identifier: GPL-2.0
+-use 5.010000;
+-use ExtUtils::MakeMaker;
+-# See lib/ExtUtils/MakeMaker.pm for details of how to influence
+-# the contents of the Makefile that is written.
+-WriteMakefile(
+-    NAME              =3D> 'Perf::Trace::Context',
+-    VERSION_FROM      =3D> 'lib/Perf/Trace/Context.pm', # finds $VERSION
+-    PREREQ_PM         =3D> {}, # e.g., Module::Name =3D> 1.1
+-    ($] >=3D 5.005 ?     ## Add these new keywords supported since 5.005
+-      (ABSTRACT_FROM  =3D> 'lib/Perf/Trace/Context.pm', # retrieve abstrac=
+t from module
+-       AUTHOR         =3D> 'Tom Zanussi <tzanussi@gmail.com>') : ()),
+-    LIBS              =3D> [''], # e.g., '-lm'
+-    DEFINE            =3D> '-I ../..', # e.g., '-DHAVE_SOMETHING'
+-    INC               =3D> '-I.', # e.g., '-I. -I/usr/include/other'
+-	# Un-comment this if you add C files to link with later:
+-    OBJECT            =3D> 'Context.o', # link all the C files too
+-);
+diff --git a/tools/perf/scripts/perl/Perf-Trace-Util/README b/tools/perf/sc=
+ripts/perl/Perf-Trace-Util/README
+deleted file mode 100644
+index 2f0c7f3043ee..000000000000
+--- a/tools/perf/scripts/perl/Perf-Trace-Util/README
++++ /dev/null
+@@ -1,59 +0,0 @@
+-Perf-Trace-Util version 0.01
+-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D
+-
+-This module contains utility functions for use with perf script.
+-
+-Core.pm and Util.pm are pure Perl modules; Core.pm contains routines
+-that the core perf support for Perl calls on and should always be
+-'used', while Util.pm contains useful but optional utility functions
+-that scripts may want to use.  Context.pm contains the Perl->C
+-interface that allows scripts to access data in the embedding perf
+-executable; scripts wishing to do that should 'use Context.pm'.
+-
+-The Perl->C perf interface is completely driven by Context.xs.  If you
+-want to add new Perl functions that end up accessing C data in the
+-perf executable, you add desciptions of the new functions here.
+-scripting_context is a pointer to the perf data in the perf executable
+-that you want to access - it's passed as the second parameter,
+-$context, to all handler functions.
+-
+-After you do that:
+-
+-  perl Makefile.PL   # to create a Makefile for the next step
+-  make               # to create Context.c
+-
+-  edit Context.c to add const to the char* file =3D __FILE__ line in
+-  XS(boot_Perf__Trace__Context) to silence a warning/error.
+-
+-  You can delete the Makefile, object files and anything else that was
+-  generated e.g. blib and shared library, etc, except for of course
+-  Context.c
+-
+-  You should then be able to run the normal perf make as usual.
+-
+-INSTALLATION
+-
+-Building perf with perf script Perl scripting should install this
+-module in the right place.
+-
+-You should make sure libperl and ExtUtils/Embed.pm are installed first
+-e.g. apt-get install libperl-dev or yum install perl-ExtUtils-Embed.
+-
+-DEPENDENCIES
+-
+-This module requires these other modules and libraries:
+-
+-  None
+-
+-COPYRIGHT AND LICENCE
+-
+-Copyright (C) 2009 by Tom Zanussi <tzanussi@gmail.com>
+-
+-This library is free software; you can redistribute it and/or modify
+-it under the same terms as Perl itself, either Perl version 5.10.0 or,
+-at your option, any later version of Perl 5 you may have available.
+-
+-Alternatively, this software may be distributed under the terms of the
+-GNU General Public License ("GPL") version 2 as published by the Free
+-Software Foundation.
+-
+diff --git a/tools/perf/scripts/perl/Perf-Trace-Util/lib/Perf/Trace/Context=
+.pm b/tools/perf/scripts/perl/Perf-Trace-Util/lib/Perf/Trace/Context.pm
+deleted file mode 100644
+index 4e2f6039ac92..000000000000
+--- a/tools/perf/scripts/perl/Perf-Trace-Util/lib/Perf/Trace/Context.pm
++++ /dev/null
+@@ -1,55 +0,0 @@
+-package Perf::Trace::Context;
+-
+-use 5.010000;
+-use strict;
+-use warnings;
+-
+-require Exporter;
+-
+-our @ISA =3D qw(Exporter);
+-
+-our %EXPORT_TAGS =3D ( 'all' =3D> [ qw(
+-) ] );
+-
+-our @EXPORT_OK =3D ( @{ $EXPORT_TAGS{'all'} } );
+-
+-our @EXPORT =3D qw(
+-	common_pc common_flags common_lock_depth
+-);
+-
+-our $VERSION =3D '0.01';
+-
+-require XSLoader;
+-XSLoader::load('Perf::Trace::Context', $VERSION);
+-
+-1;
+-__END__
+-=3Dhead1 NAME
+-
+-Perf::Trace::Context - Perl extension for accessing functions in perf.
+-
+-=3Dhead1 SYNOPSIS
+-
+-  use Perf::Trace::Context;
+-
+-=3Dhead1 SEE ALSO
+-
+-Perf (script) documentation
+-
+-=3Dhead1 AUTHOR
+-
+-Tom Zanussi, E<lt>tzanussi@gmail.com<gt>
+-
+-=3Dhead1 COPYRIGHT AND LICENSE
+-
+-Copyright (C) 2009 by Tom Zanussi
+-
+-This library is free software; you can redistribute it and/or modify
+-it under the same terms as Perl itself, either Perl version 5.10.0 or,
+-at your option, any later version of Perl 5 you may have available.
+-
+-Alternatively, this software may be distributed under the terms of the
+-GNU General Public License ("GPL") version 2 as published by the Free
+-Software Foundation.
+-
+-=3Dcut
+diff --git a/tools/perf/scripts/perl/Perf-Trace-Util/lib/Perf/Trace/Core.pm=
+ b/tools/perf/scripts/perl/Perf-Trace-Util/lib/Perf/Trace/Core.pm
+deleted file mode 100644
+index 9158458d3eeb..000000000000
+--- a/tools/perf/scripts/perl/Perf-Trace-Util/lib/Perf/Trace/Core.pm
++++ /dev/null
+@@ -1,192 +0,0 @@
+-package Perf::Trace::Core;
+-
+-use 5.010000;
+-use strict;
+-use warnings;
+-
+-require Exporter;
+-
+-our @ISA =3D qw(Exporter);
+-
+-our %EXPORT_TAGS =3D ( 'all' =3D> [ qw(
+-) ] );
+-
+-our @EXPORT_OK =3D ( @{ $EXPORT_TAGS{'all'} } );
+-
+-our @EXPORT =3D qw(
+-define_flag_field define_flag_value flag_str dump_flag_fields
+-define_symbolic_field define_symbolic_value symbol_str dump_symbolic_field=
+s
+-trace_flag_str
+-);
+-
+-our $VERSION =3D '0.01';
+-
+-my %trace_flags =3D (0x00 =3D> "NONE",
+-		   0x01 =3D> "IRQS_OFF",
+-		   0x02 =3D> "IRQS_NOSUPPORT",
+-		   0x04 =3D> "NEED_RESCHED",
+-		   0x08 =3D> "HARDIRQ",
+-		   0x10 =3D> "SOFTIRQ");
+-
+-sub trace_flag_str
+-{
+-    my ($value) =3D @_;
+-
+-    my $string;
+-
+-    my $print_delim =3D 0;
+-
+-    foreach my $idx (sort {$a <=3D> $b} keys %trace_flags) {
+-	if (!$value && !$idx) {
+-	    $string .=3D "NONE";
+-	    last;
+-	}
+-
+-	if ($idx && ($value & $idx) =3D=3D $idx) {
+-	    if ($print_delim) {
+-		$string .=3D " | ";
+-	    }
+-	    $string .=3D "$trace_flags{$idx}";
+-	    $print_delim =3D 1;
+-	    $value &=3D ~$idx;
+-	}
+-    }
+-
+-    return $string;
+-}
+-
+-my %flag_fields;
+-my %symbolic_fields;
+-
+-sub flag_str
+-{
+-    my ($event_name, $field_name, $value) =3D @_;
+-
+-    my $string;
+-
+-    if ($flag_fields{$event_name}{$field_name}) {
+-	my $print_delim =3D 0;
+-	foreach my $idx (sort {$a <=3D> $b} keys %{$flag_fields{$event_name}{$fie=
+ld_name}{"values"}}) {
+-	    if (!$value && !$idx) {
+-		$string .=3D "$flag_fields{$event_name}{$field_name}{'values'}{$idx}";
+-		last;
+-	    }
+-	    if ($idx && ($value & $idx) =3D=3D $idx) {
+-		if ($print_delim && $flag_fields{$event_name}{$field_name}{'delim'}) {
+-		    $string .=3D " $flag_fields{$event_name}{$field_name}{'delim'} ";
+-		}
+-		$string .=3D "$flag_fields{$event_name}{$field_name}{'values'}{$idx}";
+-		$print_delim =3D 1;
+-		$value &=3D ~$idx;
+-	    }
+-	}
+-    }
+-
+-    return $string;
+-}
+-
+-sub define_flag_field
+-{
+-    my ($event_name, $field_name, $delim) =3D @_;
+-
+-    $flag_fields{$event_name}{$field_name}{"delim"} =3D $delim;
+-}
+-
+-sub define_flag_value
+-{
+-    my ($event_name, $field_name, $value, $field_str) =3D @_;
+-
+-    $flag_fields{$event_name}{$field_name}{"values"}{$value} =3D $field_st=
+r;
+-}
+-
+-sub dump_flag_fields
+-{
+-    for my $event (keys %flag_fields) {
+-	print "event $event:\n";
+-	for my $field (keys %{$flag_fields{$event}}) {
+-	    print "    field: $field:\n";
+-	    print "        delim: $flag_fields{$event}{$field}{'delim'}\n";
+-	    foreach my $idx (sort {$a <=3D> $b} keys %{$flag_fields{$event}{$fiel=
+d}{"values"}}) {
+-		print "        value $idx: $flag_fields{$event}{$field}{'values'}{$idx}\=
+n";
+-	    }
+-	}
+-    }
+-}
+-
+-sub symbol_str
+-{
+-    my ($event_name, $field_name, $value) =3D @_;
+-
+-    if ($symbolic_fields{$event_name}{$field_name}) {
+-	foreach my $idx (sort {$a <=3D> $b} keys %{$symbolic_fields{$event_name}{=
+$field_name}{"values"}}) {
+-	    if (!$value && !$idx) {
+-		return "$symbolic_fields{$event_name}{$field_name}{'values'}{$idx}";
+-		last;
+-	    }
+-	    if ($value =3D=3D $idx) {
+-		return "$symbolic_fields{$event_name}{$field_name}{'values'}{$idx}";
+-	    }
+-	}
+-    }
+-
+-    return undef;
+-}
+-
+-sub define_symbolic_field
+-{
+-    my ($event_name, $field_name) =3D @_;
+-
+-    # nothing to do, really
+-}
+-
+-sub define_symbolic_value
+-{
+-    my ($event_name, $field_name, $value, $field_str) =3D @_;
+-
+-    $symbolic_fields{$event_name}{$field_name}{"values"}{$value} =3D $fiel=
+d_str;
+-}
+-
+-sub dump_symbolic_fields
+-{
+-    for my $event (keys %symbolic_fields) {
+-	print "event $event:\n";
+-	for my $field (keys %{$symbolic_fields{$event}}) {
+-	    print "    field: $field:\n";
+-	    foreach my $idx (sort {$a <=3D> $b} keys %{$symbolic_fields{$event}{$=
+field}{"values"}}) {
+-		print "        value $idx: $symbolic_fields{$event}{$field}{'values'}{$i=
+dx}\n";
+-	    }
+-	}
+-    }
+-}
+-
+-1;
+-__END__
+-=3Dhead1 NAME
+-
+-Perf::Trace::Core - Perl extension for perf script
+-
+-=3Dhead1 SYNOPSIS
+-
+-  use Perf::Trace::Core
+-
+-=3Dhead1 SEE ALSO
+-
+-Perf (script) documentation
+-
+-=3Dhead1 AUTHOR
+-
+-Tom Zanussi, E<lt>tzanussi@gmail.com<gt>
+-
+-=3Dhead1 COPYRIGHT AND LICENSE
+-
+-Copyright (C) 2009 by Tom Zanussi
+-
+-This library is free software; you can redistribute it and/or modify
+-it under the same terms as Perl itself, either Perl version 5.10.0 or,
+-at your option, any later version of Perl 5 you may have available.
+-
+-Alternatively, this software may be distributed under the terms of the
+-GNU General Public License ("GPL") version 2 as published by the Free
+-Software Foundation.
+-
+-=3Dcut
+diff --git a/tools/perf/scripts/perl/Perf-Trace-Util/lib/Perf/Trace/Util.pm=
+ b/tools/perf/scripts/perl/Perf-Trace-Util/lib/Perf/Trace/Util.pm
+deleted file mode 100644
+index 053500114625..000000000000
+--- a/tools/perf/scripts/perl/Perf-Trace-Util/lib/Perf/Trace/Util.pm
++++ /dev/null
+@@ -1,94 +0,0 @@
+-package Perf::Trace::Util;
+-
+-use 5.010000;
+-use strict;
+-use warnings;
+-
+-require Exporter;
+-
+-our @ISA =3D qw(Exporter);
+-
+-our %EXPORT_TAGS =3D ( 'all' =3D> [ qw(
+-) ] );
+-
+-our @EXPORT_OK =3D ( @{ $EXPORT_TAGS{'all'} } );
+-
+-our @EXPORT =3D qw(
+-avg nsecs nsecs_secs nsecs_nsecs nsecs_usecs print_nsecs
+-clear_term
+-);
+-
+-our $VERSION =3D '0.01';
+-
+-sub avg
+-{
+-    my ($total, $n) =3D @_;
+-
+-    return $total / $n;
+-}
+-
+-my $NSECS_PER_SEC    =3D 1000000000;
+-
+-sub nsecs
+-{
+-    my ($secs, $nsecs) =3D @_;
+-
+-    return $secs * $NSECS_PER_SEC + $nsecs;
+-}
+-
+-sub nsecs_secs {
+-    my ($nsecs) =3D @_;
+-
+-    return $nsecs / $NSECS_PER_SEC;
+-}
+-
+-sub nsecs_nsecs {
+-    my ($nsecs) =3D @_;
+-
+-    return $nsecs % $NSECS_PER_SEC;
+-}
+-
+-sub nsecs_str {
+-    my ($nsecs) =3D @_;
+-
+-    my $str =3D sprintf("%5u.%09u", nsecs_secs($nsecs), nsecs_nsecs($nsecs=
+));
+-
+-    return $str;
+-}
+-
+-sub clear_term
+-{
+-    print "\x1b[H\x1b[2J";
+-}
+-
+-1;
+-__END__
+-=3Dhead1 NAME
+-
+-Perf::Trace::Util - Perl extension for perf script
+-
+-=3Dhead1 SYNOPSIS
+-
+-  use Perf::Trace::Util;
+-
+-=3Dhead1 SEE ALSO
+-
+-Perf (script) documentation
+-
+-=3Dhead1 AUTHOR
+-
+-Tom Zanussi, E<lt>tzanussi@gmail.com<gt>
+-
+-=3Dhead1 COPYRIGHT AND LICENSE
+-
+-Copyright (C) 2009 by Tom Zanussi
+-
+-This library is free software; you can redistribute it and/or modify
+-it under the same terms as Perl itself, either Perl version 5.10.0 or,
+-at your option, any later version of Perl 5 you may have available.
+-
+-Alternatively, this software may be distributed under the terms of the
+-GNU General Public License ("GPL") version 2 as published by the Free
+-Software Foundation.
+-
+-=3Dcut
+diff --git a/tools/perf/scripts/perl/Perf-Trace-Util/typemap b/tools/perf/s=
+cripts/perl/Perf-Trace-Util/typemap
+deleted file mode 100644
+index 840836804aa7..000000000000
+--- a/tools/perf/scripts/perl/Perf-Trace-Util/typemap
++++ /dev/null
+@@ -1 +0,0 @@
+-struct scripting_context * T_PTR
+diff --git a/tools/perf/scripts/perl/bin/check-perf-trace-record b/tools/pe=
+rf/scripts/perl/bin/check-perf-trace-record
+deleted file mode 100644
+index 423ad6aed056..000000000000
+--- a/tools/perf/scripts/perl/bin/check-perf-trace-record
++++ /dev/null
+@@ -1,2 +0,0 @@
+-#!/bin/bash
+-perf record -a -e kmem:kmalloc -e irq:softirq_entry -e kmem:kfree
+diff --git a/tools/perf/scripts/perl/bin/failed-syscalls-record b/tools/per=
+f/scripts/perl/bin/failed-syscalls-record
+deleted file mode 100644
+index 74685f318379..000000000000
+--- a/tools/perf/scripts/perl/bin/failed-syscalls-record
++++ /dev/null
+@@ -1,3 +0,0 @@
+-#!/bin/bash
+-(perf record -e raw_syscalls:sys_exit $@ || \
+- perf record -e syscalls:sys_exit $@) 2> /dev/null
+diff --git a/tools/perf/scripts/perl/bin/failed-syscalls-report b/tools/per=
+f/scripts/perl/bin/failed-syscalls-report
+deleted file mode 100644
+index 9f83cc1ad8ba..000000000000
+--- a/tools/perf/scripts/perl/bin/failed-syscalls-report
++++ /dev/null
+@@ -1,10 +0,0 @@
+-#!/bin/bash
+-# description: system-wide failed syscalls
+-# args: [comm]
+-if [ $# -gt 0 ] ; then
+-    if ! expr match "$1" "-" > /dev/null ; then
+-	comm=3D$1
+-	shift
+-    fi
+-fi
+-perf script $@ -s "$PERF_EXEC_PATH"/scripts/perl/failed-syscalls.pl $comm
+diff --git a/tools/perf/scripts/perl/bin/rw-by-file-record b/tools/perf/scr=
+ipts/perl/bin/rw-by-file-record
+deleted file mode 100644
+index 33efc8673aae..000000000000
+--- a/tools/perf/scripts/perl/bin/rw-by-file-record
++++ /dev/null
+@@ -1,3 +0,0 @@
+-#!/bin/bash
+-perf record -e syscalls:sys_enter_read -e syscalls:sys_enter_write $@
+-
+diff --git a/tools/perf/scripts/perl/bin/rw-by-file-report b/tools/perf/scr=
+ipts/perl/bin/rw-by-file-report
+deleted file mode 100644
+index 77200b3f3100..000000000000
+--- a/tools/perf/scripts/perl/bin/rw-by-file-report
++++ /dev/null
+@@ -1,10 +0,0 @@
+-#!/bin/bash
+-# description: r/w activity for a program, by file
+-# args: <comm>
+-if [ $# -lt 1 ] ; then
+-    echo "usage: rw-by-file <comm>"
+-    exit
+-fi
+-comm=3D$1
+-shift
+-perf script $@ -s "$PERF_EXEC_PATH"/scripts/perl/rw-by-file.pl $comm
+diff --git a/tools/perf/scripts/perl/bin/rw-by-pid-record b/tools/perf/scri=
+pts/perl/bin/rw-by-pid-record
+deleted file mode 100644
+index 7cb9db230448..000000000000
+--- a/tools/perf/scripts/perl/bin/rw-by-pid-record
++++ /dev/null
+@@ -1,2 +0,0 @@
+-#!/bin/bash
+-perf record -e syscalls:sys_enter_read -e syscalls:sys_exit_read -e syscal=
+ls:sys_enter_write -e syscalls:sys_exit_write $@
+diff --git a/tools/perf/scripts/perl/bin/rw-by-pid-report b/tools/perf/scri=
+pts/perl/bin/rw-by-pid-report
+deleted file mode 100644
+index a27b9f311f95..000000000000
+--- a/tools/perf/scripts/perl/bin/rw-by-pid-report
++++ /dev/null
+@@ -1,3 +0,0 @@
+-#!/bin/bash
+-# description: system-wide r/w activity
+-perf script $@ -s "$PERF_EXEC_PATH"/scripts/perl/rw-by-pid.pl
+diff --git a/tools/perf/scripts/perl/bin/rwtop-record b/tools/perf/scripts/=
+perl/bin/rwtop-record
+deleted file mode 100644
+index 7cb9db230448..000000000000
+--- a/tools/perf/scripts/perl/bin/rwtop-record
++++ /dev/null
+@@ -1,2 +0,0 @@
+-#!/bin/bash
+-perf record -e syscalls:sys_enter_read -e syscalls:sys_exit_read -e syscal=
+ls:sys_enter_write -e syscalls:sys_exit_write $@
+diff --git a/tools/perf/scripts/perl/bin/rwtop-report b/tools/perf/scripts/=
+perl/bin/rwtop-report
+deleted file mode 100644
+index 83e11ec2e190..000000000000
+--- a/tools/perf/scripts/perl/bin/rwtop-report
++++ /dev/null
+@@ -1,20 +0,0 @@
+-#!/bin/bash
+-# description: system-wide r/w top
+-# args: [interval]
+-n_args=3D0
+-for i in "$@"
+-do
+-    if expr match "$i" "-" > /dev/null ; then
+-	break
+-    fi
+-    n_args=3D$(( $n_args + 1 ))
+-done
+-if [ "$n_args" -gt 1 ] ; then
+-    echo "usage: rwtop-report [interval]"
+-    exit
+-fi
+-if [ "$n_args" -gt 0 ] ; then
+-    interval=3D$1
+-    shift
+-fi
+-perf script $@ -s "$PERF_EXEC_PATH"/scripts/perl/rwtop.pl $interval
+diff --git a/tools/perf/scripts/perl/bin/wakeup-latency-record b/tools/perf=
+/scripts/perl/bin/wakeup-latency-record
+deleted file mode 100644
+index 464251a1bd7e..000000000000
+--- a/tools/perf/scripts/perl/bin/wakeup-latency-record
++++ /dev/null
+@@ -1,6 +0,0 @@
+-#!/bin/bash
+-perf record -e sched:sched_switch -e sched:sched_wakeup $@
+-
+-
+-
+-
+diff --git a/tools/perf/scripts/perl/bin/wakeup-latency-report b/tools/perf=
+/scripts/perl/bin/wakeup-latency-report
+deleted file mode 100644
+index 889e8130cca5..000000000000
+--- a/tools/perf/scripts/perl/bin/wakeup-latency-report
++++ /dev/null
+@@ -1,3 +0,0 @@
+-#!/bin/bash
+-# description: system-wide min/max/avg wakeup latency
+-perf script $@ -s "$PERF_EXEC_PATH"/scripts/perl/wakeup-latency.pl
+diff --git a/tools/perf/scripts/perl/check-perf-trace.pl b/tools/perf/scrip=
+ts/perl/check-perf-trace.pl
+deleted file mode 100644
+index d307ce8fd6ed..000000000000
+--- a/tools/perf/scripts/perl/check-perf-trace.pl
++++ /dev/null
+@@ -1,106 +0,0 @@
+-# perf script event handlers, generated by perf script -g perl
+-# (c) 2009, Tom Zanussi <tzanussi@gmail.com>
+-# Licensed under the terms of the GNU GPL License version 2
+-
+-# This script tests basic functionality such as flag and symbol
+-# strings, common_xxx() calls back into perf, begin, end, unhandled
+-# events, etc.  Basically, if this script runs successfully and
+-# displays expected results, perl scripting support should be ok.
+-
+-use lib "$ENV{'PERF_EXEC_PATH'}/scripts/perl/Perf-Trace-Util/lib";
+-use lib "./Perf-Trace-Util/lib";
+-use Perf::Trace::Core;
+-use Perf::Trace::Context;
+-use Perf::Trace::Util;
+-
+-sub trace_begin
+-{
+-    print "trace_begin\n";
+-}
+-
 -sub trace_end
 -{
+-    print "trace_end\n";
+-
+-    print_unhandled();
 -}
------
 -
--*trace_unhandled*, if defined, is called after for any event that
-- doesn't have a handler explicitly defined for it.  The standard set
-- of common arguments are passed into it:
+-sub irq::softirq_entry
+-{
+-	my ($event_name, $context, $common_cpu, $common_secs, $common_nsecs,
+-	    $common_pid, $common_comm, $common_callchain,
+-	    $vec) =3D @_;
 -
------
+-	print_header($event_name, $common_cpu, $common_secs, $common_nsecs,
+-		     $common_pid, $common_comm);
+-
+-	print_uncommon($context);
+-
+-	printf("vec=3D%s\n",
+-	       symbol_str("irq::softirq_entry", "vec", $vec));
+-}
+-
+-sub kmem::kmalloc
+-{
+-	my ($event_name, $context, $common_cpu, $common_secs, $common_nsecs,
+-	    $common_pid, $common_comm, $common_callchain,
+-	    $call_site, $ptr, $bytes_req, $bytes_alloc,
+-	    $gfp_flags) =3D @_;
+-
+-	print_header($event_name, $common_cpu, $common_secs, $common_nsecs,
+-		     $common_pid, $common_comm);
+-
+-	print_uncommon($context);
+-
+-	printf("call_site=3D%p, ptr=3D%p, bytes_req=3D%u, bytes_alloc=3D%u, ".
+-	       "gfp_flags=3D%s\n",
+-	       $call_site, $ptr, $bytes_req, $bytes_alloc,
+-
+-	       flag_str("kmem::kmalloc", "gfp_flags", $gfp_flags));
+-}
+-
+-# print trace fields not included in handler args
+-sub print_uncommon
+-{
+-    my ($context) =3D @_;
+-
+-    printf("common_preempt_count=3D%d, common_flags=3D%s, common_lock_dept=
+h=3D%d, ",
+-	   common_pc($context), trace_flag_str(common_flags($context)),
+-	   common_lock_depth($context));
+-
+-}
+-
+-my %unhandled;
+-
+-sub print_unhandled
+-{
+-    if ((scalar keys %unhandled) =3D=3D 0) {
+-	return;
+-    }
+-
+-    print "\nunhandled events:\n\n";
+-
+-    printf("%-40s  %10s\n", "event", "count");
+-    printf("%-40s  %10s\n", "----------------------------------------",
+-	   "-----------");
+-
+-    foreach my $event_name (keys %unhandled) {
+-	printf("%-40s  %10d\n", $event_name, $unhandled{$event_name});
+-    }
+-}
+-
 -sub trace_unhandled
 -{
--    my ($event_name, $context, $common_cpu, $common_secs,
--        $common_nsecs, $common_pid, $common_comm) =3D @_;
+-    my ($event_name, $context, $common_cpu, $common_secs, $common_nsecs,
+-	$common_pid, $common_comm, $common_callchain) =3D @_;
+-
+-    $unhandled{$event_name}++;
 -}
------
 -
--The remaining sections provide descriptions of each of the available
--built-in perf script Perl modules and their associated functions.
+-sub print_header
+-{
+-	my ($event_name, $cpu, $secs, $nsecs, $pid, $comm) =3D @_;
 -
--AVAILABLE MODULES AND FUNCTIONS
---------------------------------
--
--The following sections describe the functions and variables available
--via the various Perf::Trace::* Perl modules.  To use the functions and
--variables from the given module, add the corresponding 'use
--Perf::Trace::XXX' line to your perf script script.
--
--Perf::Trace::Core Module
--~~~~~~~~~~~~~~~~~~~~~~~~
--
--These functions provide some essential functions to user scripts.
--
--The *flag_str* and *symbol_str* functions provide human-readable
--strings for flag and symbolic fields.  These correspond to the strings
--and values parsed from the 'print fmt' fields of the event format
--files:
--
--  flag_str($event_name, $field_name, $field_value) - returns the string re=
-presentation corresponding to $field_value for the flag field $field_name o=
-f event $event_name
--  symbol_str($event_name, $field_name, $field_value) - returns the string =
-representation corresponding to $field_value for the symbolic field $field_=
-name of event $event_name
--
--Perf::Trace::Context Module
--~~~~~~~~~~~~~~~~~~~~~~~~~~~
--
--Some of the 'common' fields in the event format file aren't all that
--common, but need to be made accessible to user scripts nonetheless.
--
--Perf::Trace::Context defines a set of functions that can be used to
--access this data in the context of the current event.  Each of these
--functions expects a $context variable, which is the same as the
--$context variable passed into every event handler as the second
--argument.
--
-- common_pc($context) - returns common_preempt count for the current event
-- common_flags($context) - returns common_flags for the current event
-- common_lock_depth($context) - returns common_lock_depth for the current e=
-vent
--
--Perf::Trace::Util Module
--~~~~~~~~~~~~~~~~~~~~~~~~
--
--Various utility functions for use with perf script:
--
--  nsecs($secs, $nsecs) - returns total nsecs given secs/nsecs pair
--  nsecs_secs($nsecs) - returns whole secs portion given nsecs
--  nsecs_nsecs($nsecs) - returns nsecs remainder given nsecs
--  nsecs_str($nsecs) - returns printable string in the form secs.nsecs
--  avg($total, $n) - returns average given a sum and a total number of valu=
-es
--
--SEE ALSO
----------
--linkperf:perf-script[1]
-diff --git a/tools/perf/Documentation/perf-script-python.txt b/tools/perf/D=
-ocumentation/perf-script-python.txt
-index 27a1cac6fe76..bd1809b07543 100644
---- a/tools/perf/Documentation/perf-script-python.txt
-+++ b/tools/perf/Documentation/perf-script-python.txt
-@@ -3,676 +3,181 @@ perf-script-python(1)
-=20
- NAME
- ----
--perf-script-python - Process trace data with a Python script
-+perf-script-python - Process trace data with a Python script using perf mo=
-dule
-=20
- SYNOPSIS
- --------
- [verse]
--'perf script' [-s [Python]:script[.py] ]
-+'perf script' <script>.py
-=20
- DESCRIPTION
- -----------
-=20
--This perf script option is used to process perf script data using perf's
--built-in Python interpreter.  It reads and processes the input file and
--displays the results of the trace analysis implemented in the given
--Python script, if any.
-+This document describes how to use the `perf` Python module to process
-+trace data recorded by `perf record`.
-+
-+With the removal of embedded Python interpreter from `perf`, scripts
-+are now run as standalone Python programs that import the `perf`
-+module to access trace data. Symbol configuration options (`--vmlinux`,
-+`--kallsyms`, and `--symfs`) passed to `perf script` are forwarded via
-+`PERF_SYMBOL_*` environment variables to `perf.session`, and can also
-+be passed directly to `perf.session`. Trace filtering command-line
-+options (`-C`, `-c`, `--pid`, `--tid`, `--time`, `--dlfilter`, `--dlarg`) =
-passed
-+to `perf script` are not applied to standalone scripts.
-=20
- A QUICK EXAMPLE
- ---------------
-=20
--This section shows the process, start to finish, of creating a working
--Python script that aggregates and extracts useful information from a
--raw perf script stream.  You can avoid reading the rest of this
--document if an example is enough for you; the rest of the document
--provides more details on each step and lists the library functions
--available to script writers.
--
--This example actually details the steps that were used to create the
--'syscall-counts' script you see when you list the available perf script
--scripts via 'perf script -l'.  As such, this script also shows how to
--integrate your script into the list of general-purpose 'perf script'
--scripts listed by that command.
--
--The syscall-counts script is a simple script, but demonstrates all the
--basic ideas necessary to create a useful script.  Here's an example
--of its output (syscall names are not yet supported, they will appear
--as numbers):
--
------
--syscall events:
--
--event                                          count
------------------------------------------  -----------
--sys_write                                     455067
--sys_getdents                                    4072
--sys_close                                       3037
--sys_swapoff                                     1769
--sys_read                                         923
--sys_sched_setparam                               826
--sys_open                                         331
--sys_newfstat                                     326
--sys_mmap                                         217
--sys_munmap                                       216
--sys_futex                                        141
--sys_select                                       102
--sys_poll                                          84
--sys_setitimer                                     12
--sys_writev                                         8
--15                                                 8
--sys_lseek                                          7
--sys_rt_sigprocmask                                 6
--sys_wait4                                          3
--sys_ioctl                                          3
--sys_set_robust_list                                1
--sys_exit                                           1
--56                                                 1
--sys_access                                         1
------
--
--Basically our task is to keep a per-syscall tally that gets updated
--every time a system call occurs in the system.  Our script will do
--that, but first we need to record the data that will be processed by
--that script.  Theoretically, there are a couple of ways we could do
--that:
--
--- we could enable every event under the tracing/events/syscalls
--  directory, but this is over 600 syscalls, well beyond the number
--  allowable by perf.  These individual syscall events will however be
--  useful if we want to later use the guidance we get from the
--  general-purpose scripts to drill down and get more detail about
--  individual syscalls of interest.
--
--- we can enable the sys_enter and/or sys_exit syscalls found under
--  tracing/events/raw_syscalls.  These are called for all syscalls; the
--  'id' field can be used to distinguish between individual syscall
--  numbers.
--
--For this script, we only need to know that a syscall was entered; we
--don't care how it exited, so we'll use 'perf record' to record only
--the sys_enter events:
--
------
--# perf record -a -e raw_syscalls:sys_enter
--
--^C[ perf record: Woken up 1 times to write data ]
--[ perf record: Captured and wrote 56.545 MB perf.data (~2470503 samples) ]
------
--
--The options basically say to collect data for every syscall event
--system-wide and multiplex the per-cpu output into a single stream.
--That single stream will be recorded in a file in the current directory
--called perf.data.
--
--Once we have a perf.data file containing our data, we can use the -g
--'perf script' option to generate a Python script that will contain a
--callback handler for each event type found in the perf.data trace
--stream (for more details, see the STARTER SCRIPTS section).
--
------
--# perf script -g python
--generated Python script: perf-script.py
--
--The output file created also in the current directory is named
--perf-script.py.  Here's the file in its entirety:
--
--# perf script event handlers, generated by perf script -g python
+-	printf("%-20s %5u %05u.%09u %8u %-20s ",
+-	       $event_name, $cpu, $secs, $nsecs, $pid, $comm);
+-}
+diff --git a/tools/perf/scripts/perl/failed-syscalls.pl b/tools/perf/script=
+s/perl/failed-syscalls.pl
+deleted file mode 100644
+index 05954a8f363a..000000000000
+--- a/tools/perf/scripts/perl/failed-syscalls.pl
++++ /dev/null
+@@ -1,47 +0,0 @@
+-# failed system call counts
+-# (c) 2010, Tom Zanussi <tzanussi@gmail.com>
 -# Licensed under the terms of the GNU GPL License version 2
+-#
+-# Displays system-wide failed system call totals
+-# If a [comm] arg is specified, only syscalls called by [comm] are display=
+ed.
+-
+-use lib "$ENV{'PERF_EXEC_PATH'}/scripts/perl/Perf-Trace-Util/lib";
+-use lib "./Perf-Trace-Util/lib";
+-use Perf::Trace::Core;
+-use Perf::Trace::Context;
+-use Perf::Trace::Util;
+-
+-my $for_comm =3D shift;
+-
+-my %failed_syscalls;
+-
+-sub raw_syscalls::sys_exit
+-{
+-	my ($event_name, $context, $common_cpu, $common_secs, $common_nsecs,
+-	    $common_pid, $common_comm, $common_callchain,
+-	    $id, $ret) =3D @_;
+-
+-	if ($ret < 0) {
+-	    $failed_syscalls{$common_comm}++;
+-	}
+-}
+-
+-sub syscalls::sys_exit
+-{
+-	raw_syscalls::sys_exit(@_)
+-}
+-
+-sub trace_end
+-{
+-    printf("\nfailed syscalls by comm:\n\n");
+-
+-    printf("%-20s  %10s\n", "comm", "# errors");
+-    printf("%-20s  %6s  %10s\n", "--------------------", "----------");
+-
+-    foreach my $comm (sort {$failed_syscalls{$b} <=3D> $failed_syscalls{$a=
+}}
+-		      keys %failed_syscalls) {
+-	next if ($for_comm && $comm ne $for_comm);
+-
+-	printf("%-20s  %10s\n", $comm, $failed_syscalls{$comm});
+-    }
+-}
+diff --git a/tools/perf/scripts/perl/rw-by-file.pl b/tools/perf/scripts/per=
+l/rw-by-file.pl
+deleted file mode 100644
+index 92a750b8552b..000000000000
+--- a/tools/perf/scripts/perl/rw-by-file.pl
++++ /dev/null
+@@ -1,106 +0,0 @@
+-#!/usr/bin/perl -w
+-# SPDX-License-Identifier: GPL-2.0-only
+-# (c) 2009, Tom Zanussi <tzanussi@gmail.com>
+-
+-# Display r/w activity for files read/written to for a given program
 -
 -# The common_* event handler fields are the most useful fields common to
 -# all events.  They don't necessarily correspond to the 'common_*' fields
--# in the format files.  Those fields not available as handler params can
--# be retrieved using Python functions of the form common_*(context).
--# See the perf-script-python Documentation for the list of available funct=
-ions.
+-# in the status files.  Those fields not available as handler params can
+-# be retrieved via script functions of the form get_common_*().
 -
--import os
--import sys
+-use 5.010000;
+-use strict;
+-use warnings;
 -
--sys.path.append(os.environ['PERF_EXEC_PATH'] + \
--	'/scripts/python/Perf-Trace-Util/lib/Perf/Trace')
+-use lib "$ENV{'PERF_EXEC_PATH'}/scripts/perl/Perf-Trace-Util/lib";
+-use lib "./Perf-Trace-Util/lib";
+-use Perf::Trace::Core;
+-use Perf::Trace::Util;
 -
--from perf_trace_context import *
--from Core import *
+-my $usage =3D "perf script -s rw-by-file.pl <comm>\n";
 -
--def trace_begin():
--	print "in trace_begin"
+-my $for_comm =3D shift or die $usage;
 -
--def trace_end():
--	print "in trace_end"
+-my %reads;
+-my %writes;
 -
--def raw_syscalls__sys_enter(event_name, context, common_cpu,
--	common_secs, common_nsecs, common_pid, common_comm,
--	id, args):
--		print_header(event_name, common_cpu, common_secs, common_nsecs,
--			common_pid, common_comm)
+-sub syscalls::sys_enter_read
+-{
+-    my ($event_name, $context, $common_cpu, $common_secs, $common_nsecs,
+-	$common_pid, $common_comm, $common_callchain, $nr, $fd, $buf, $count) =3D=
+ @_;
 -
--		print "id=3D%d, args=3D%s\n" % \
--		(id, args),
+-    if ($common_comm eq $for_comm) {
+-	$reads{$fd}{bytes_requested} +=3D $count;
+-	$reads{$fd}{total_reads}++;
+-    }
+-}
 -
--def trace_unhandled(event_name, context, event_fields_dict):
--		print ' '.join(['%s=3D%s'%(k,str(v))for k,v in sorted(event_fields_dict.=
-items())])
+-sub syscalls::sys_enter_write
+-{
+-    my ($event_name, $context, $common_cpu, $common_secs, $common_nsecs,
+-	$common_pid, $common_comm, $common_callchain, $nr, $fd, $buf, $count) =3D=
+ @_;
 -
--def print_header(event_name, cpu, secs, nsecs, pid, comm):
--	print "%-20s %5u %05u.%09u %8u %-20s " % \
--	(event_name, cpu, secs, nsecs, pid, comm),
------
+-    if ($common_comm eq $for_comm) {
+-	$writes{$fd}{bytes_written} +=3D $count;
+-	$writes{$fd}{total_writes}++;
+-    }
+-}
 -
--At the top is a comment block followed by some import statements and a
--path append which every perf script script should include.
+-sub trace_end
+-{
+-    printf("file read counts for $for_comm:\n\n");
 -
--Following that are a couple generated functions, trace_begin() and
--trace_end(), which are called at the beginning and the end of the
--script respectively (for more details, see the SCRIPT_LAYOUT section
--below).
+-    printf("%6s  %10s  %10s\n", "fd", "# reads", "bytes_requested");
+-    printf("%6s  %10s  %10s\n", "------", "----------", "-----------");
 -
--Following those are the 'event handler' functions generated one for
--every event in the 'perf record' output.  The handler functions take
--the form subsystem\__event_name, and contain named parameters, one for
--each field in the event; in this case, there's only one event,
--raw_syscalls__sys_enter().  (see the EVENT HANDLERS section below for
--more info on event handlers).
+-    foreach my $fd (sort {$reads{$b}{bytes_requested} <=3D>
+-			      $reads{$a}{bytes_requested}} keys %reads) {
+-	my $total_reads =3D $reads{$fd}{total_reads};
+-	my $bytes_requested =3D $reads{$fd}{bytes_requested};
+-	printf("%6u  %10u  %10u\n", $fd, $total_reads, $bytes_requested);
+-    }
 -
--The final couple of functions are, like the begin and end functions,
--generated for every script.  The first, trace_unhandled(), is called
--every time the script finds an event in the perf.data file that
--doesn't correspond to any event handler in the script.  This could
--mean either that the record step recorded event types that it wasn't
--really interested in, or the script was run against a trace file that
--doesn't correspond to the script.
+-    printf("\nfile write counts for $for_comm:\n\n");
 -
--The script generated by -g option simply prints a line for each
--event found in the trace stream i.e. it basically just dumps the event
--and its parameter values to stdout.  The print_header() function is
--simply a utility function used for that purpose.  Let's rename the
--script and run it to see the default output:
+-    printf("%6s  %10s  %10s\n", "fd", "# writes", "bytes_written");
+-    printf("%6s  %10s  %10s\n", "------", "----------", "-----------");
 -
------
--# mv perf-script.py syscall-counts.py
--# perf script -s syscall-counts.py
+-    foreach my $fd (sort {$writes{$b}{bytes_written} <=3D>
+-			      $writes{$a}{bytes_written}} keys %writes) {
+-	my $total_writes =3D $writes{$fd}{total_writes};
+-	my $bytes_written =3D $writes{$fd}{bytes_written};
+-	printf("%6u  %10u  %10u\n", $fd, $total_writes, $bytes_written);
+-    }
 -
--raw_syscalls__sys_enter     1 00840.847582083     7506 perf               =
-   id=3D1, args=3D
--raw_syscalls__sys_enter     1 00840.847595764     7506 perf               =
-   id=3D1, args=3D
--raw_syscalls__sys_enter     1 00840.847620860     7506 perf               =
-   id=3D1, args=3D
--raw_syscalls__sys_enter     1 00840.847710478     6533 npviewer.bin       =
-   id=3D78, args=3D
--raw_syscalls__sys_enter     1 00840.847719204     6533 npviewer.bin       =
-   id=3D142, args=3D
--raw_syscalls__sys_enter     1 00840.847755445     6533 npviewer.bin       =
-   id=3D3, args=3D
--raw_syscalls__sys_enter     1 00840.847775601     6533 npviewer.bin       =
-   id=3D3, args=3D
--raw_syscalls__sys_enter     1 00840.847781820     6533 npviewer.bin       =
-   id=3D3, args=3D
--.
--.
--.
------
+-    print_unhandled();
+-}
 -
--Of course, for this script, we're not interested in printing every
--trace event, but rather aggregating it in a useful way.  So we'll get
--rid of everything to do with printing as well as the trace_begin() and
--trace_unhandled() functions, which we won't be using.  That leaves us
--with this minimalistic skeleton:
+-my %unhandled;
 -
------
--import os
--import sys
+-sub print_unhandled
+-{
+-    if ((scalar keys %unhandled) =3D=3D 0) {
+-	return;
+-    }
 -
--sys.path.append(os.environ['PERF_EXEC_PATH'] + \
--	'/scripts/python/Perf-Trace-Util/lib/Perf/Trace')
-+This section shows how to create a simple Python script that reads a
-+`perf.data` file and prints event information.
+-    print "\nunhandled events:\n\n";
+-
+-    printf("%-40s  %10s\n", "event", "count");
+-    printf("%-40s  %10s\n", "----------------------------------------",
+-	   "-----------");
+-
+-    foreach my $event_name (keys %unhandled) {
+-	printf("%-40s  %10d\n", $event_name, $unhandled{$event_name});
+-    }
+-}
+-
+-sub trace_unhandled
+-{
+-    my ($event_name, $context, $common_cpu, $common_secs, $common_nsecs,
+-	$common_pid, $common_comm, $common_callchain) =3D @_;
+-
+-    $unhandled{$event_name}++;
+-}
+-
+-
+diff --git a/tools/perf/scripts/perl/rw-by-pid.pl b/tools/perf/scripts/perl=
+/rw-by-pid.pl
+deleted file mode 100644
+index d789fe39caab..000000000000
+--- a/tools/perf/scripts/perl/rw-by-pid.pl
++++ /dev/null
+@@ -1,184 +0,0 @@
+-#!/usr/bin/perl -w
+-# SPDX-License-Identifier: GPL-2.0-only
+-# (c) 2009, Tom Zanussi <tzanussi@gmail.com>
+-
+-# Display r/w activity for all processes
+-
+-# The common_* event handler fields are the most useful fields common to
+-# all events.  They don't necessarily correspond to the 'common_*' fields
+-# in the status files.  Those fields not available as handler params can
+-# be retrieved via script functions of the form get_common_*().
+-
+-use 5.010000;
+-use strict;
+-use warnings;
+-
+-use lib "$ENV{'PERF_EXEC_PATH'}/scripts/perl/Perf-Trace-Util/lib";
+-use lib "./Perf-Trace-Util/lib";
+-use Perf::Trace::Core;
+-use Perf::Trace::Util;
+-
+-my %reads;
+-my %writes;
+-
+-sub syscalls::sys_exit_read
+-{
+-    my ($event_name, $context, $common_cpu, $common_secs, $common_nsecs,
+-	$common_pid, $common_comm, $common_callchain,
+-	$nr, $ret) =3D @_;
+-
+-    if ($ret > 0) {
+-	$reads{$common_pid}{bytes_read} +=3D $ret;
+-    } else {
+-	if (!defined ($reads{$common_pid}{bytes_read})) {
+-	    $reads{$common_pid}{bytes_read} =3D 0;
+-	}
+-	$reads{$common_pid}{errors}{$ret}++;
+-    }
+-}
+-
+-sub syscalls::sys_enter_read
+-{
+-    my ($event_name, $context, $common_cpu, $common_secs, $common_nsecs,
+-	$common_pid, $common_comm, $common_callchain,
+-	$nr, $fd, $buf, $count) =3D @_;
+-
+-    $reads{$common_pid}{bytes_requested} +=3D $count;
+-    $reads{$common_pid}{total_reads}++;
+-    $reads{$common_pid}{comm} =3D $common_comm;
+-}
+-
+-sub syscalls::sys_exit_write
+-{
+-    my ($event_name, $context, $common_cpu, $common_secs, $common_nsecs,
+-	$common_pid, $common_comm, $common_callchain,
+-	$nr, $ret) =3D @_;
+-
+-    if ($ret <=3D 0) {
+-	$writes{$common_pid}{errors}{$ret}++;
+-    }
+-}
+-
+-sub syscalls::sys_enter_write
+-{
+-    my ($event_name, $context, $common_cpu, $common_secs, $common_nsecs,
+-	$common_pid, $common_comm, $common_callchain,
+-	$nr, $fd, $buf, $count) =3D @_;
+-
+-    $writes{$common_pid}{bytes_written} +=3D $count;
+-    $writes{$common_pid}{total_writes}++;
+-    $writes{$common_pid}{comm} =3D $common_comm;
+-}
+-
+-sub trace_end
+-{
+-    printf("read counts by pid:\n\n");
+-
+-    printf("%6s  %20s  %10s  %10s  %10s\n", "pid", "comm",
+-	   "# reads", "bytes_requested", "bytes_read");
+-    printf("%6s  %-20s  %10s  %10s  %10s\n", "------", "------------------=
+--",
+-	   "-----------", "----------", "----------");
+-
+-    foreach my $pid (sort { ($reads{$b}{bytes_read} || 0) <=3D>
+-				($reads{$a}{bytes_read} || 0) } keys %reads) {
+-	my $comm =3D $reads{$pid}{comm} || "";
+-	my $total_reads =3D $reads{$pid}{total_reads} || 0;
+-	my $bytes_requested =3D $reads{$pid}{bytes_requested} || 0;
+-	my $bytes_read =3D $reads{$pid}{bytes_read} || 0;
+-
+-	printf("%6s  %-20s  %10s  %10s  %10s\n", $pid, $comm,
+-	       $total_reads, $bytes_requested, $bytes_read);
+-    }
+-
+-    printf("\nfailed reads by pid:\n\n");
+-
+-    printf("%6s  %20s  %6s  %10s\n", "pid", "comm", "error #", "# errors")=
+;
+-    printf("%6s  %20s  %6s  %10s\n", "------", "--------------------",
+-	   "------", "----------");
+-
+-    my @errcounts =3D ();
+-
+-    foreach my $pid (keys %reads) {
+-	foreach my $error (keys %{$reads{$pid}{errors}}) {
+-	    my $comm =3D $reads{$pid}{comm} || "";
+-	    my $errcount =3D $reads{$pid}{errors}{$error} || 0;
+-	    push @errcounts, [$pid, $comm, $error, $errcount];
+-	}
+-    }
+-
+-    @errcounts =3D sort { $b->[3] <=3D> $a->[3] } @errcounts;
+-
+-    for my $i (0 .. $#errcounts) {
+-	printf("%6d  %-20s  %6d  %10s\n", $errcounts[$i][0],
+-	       $errcounts[$i][1], $errcounts[$i][2], $errcounts[$i][3]);
+-    }
+-
+-    printf("\nwrite counts by pid:\n\n");
+-
+-    printf("%6s  %20s  %10s  %10s\n", "pid", "comm",
+-	   "# writes", "bytes_written");
+-    printf("%6s  %-20s  %10s  %10s\n", "------", "--------------------",
+-	   "-----------", "----------");
+-
+-    foreach my $pid (sort { ($writes{$b}{bytes_written} || 0) <=3D>
+-			($writes{$a}{bytes_written} || 0)} keys %writes) {
+-	my $comm =3D $writes{$pid}{comm} || "";
+-	my $total_writes =3D $writes{$pid}{total_writes} || 0;
+-	my $bytes_written =3D $writes{$pid}{bytes_written} || 0;
+-
+-	printf("%6s  %-20s  %10s  %10s\n", $pid, $comm,
+-	       $total_writes, $bytes_written);
+-    }
+-
+-    printf("\nfailed writes by pid:\n\n");
+-
+-    printf("%6s  %20s  %6s  %10s\n", "pid", "comm", "error #", "# errors")=
+;
+-    printf("%6s  %20s  %6s  %10s\n", "------", "--------------------",
+-	   "------", "----------");
+-
+-    @errcounts =3D ();
+-
+-    foreach my $pid (keys %writes) {
+-	foreach my $error (keys %{$writes{$pid}{errors}}) {
+-	    my $comm =3D $writes{$pid}{comm} || "";
+-	    my $errcount =3D $writes{$pid}{errors}{$error} || 0;
+-	    push @errcounts, [$pid, $comm, $error, $errcount];
+-	}
+-    }
+-
+-    @errcounts =3D sort { $b->[3] <=3D> $a->[3] } @errcounts;
+-
+-    for my $i (0 .. $#errcounts) {
+-	printf("%6d  %-20s  %6d  %10s\n", $errcounts[$i][0],
+-	       $errcounts[$i][1], $errcounts[$i][2], $errcounts[$i][3]);
+-    }
+-
+-    print_unhandled();
+-}
+-
+-my %unhandled;
+-
+-sub print_unhandled
+-{
+-    if ((scalar keys %unhandled) =3D=3D 0) {
+-	return;
+-    }
+-
+-    print "\nunhandled events:\n\n";
+-
+-    printf("%-40s  %10s\n", "event", "count");
+-    printf("%-40s  %10s\n", "----------------------------------------",
+-	   "-----------");
+-
+-    foreach my $event_name (keys %unhandled) {
+-	printf("%-40s  %10d\n", $event_name, $unhandled{$event_name});
+-    }
+-}
+-
+-sub trace_unhandled
+-{
+-    my ($event_name, $context, $common_cpu, $common_secs, $common_nsecs,
+-	$common_pid, $common_comm, $common_callchain) =3D @_;
+-
+-    $unhandled{$event_name}++;
+-}
+diff --git a/tools/perf/scripts/perl/rwtop.pl b/tools/perf/scripts/perl/rwt=
+op.pl
+deleted file mode 100644
+index eba4df67af6b..000000000000
+--- a/tools/perf/scripts/perl/rwtop.pl
++++ /dev/null
+@@ -1,203 +0,0 @@
+-#!/usr/bin/perl -w
+-# SPDX-License-Identifier: GPL-2.0-only
+-# (c) 2010, Tom Zanussi <tzanussi@gmail.com>
+-
+-# read/write top
+-#
+-# Periodically displays system-wide r/w call activity, broken down by
+-# pid.  If an [interval] arg is specified, the display will be
+-# refreshed every [interval] seconds.  The default interval is 3
+-# seconds.
+-
+-use 5.010000;
+-use strict;
+-use warnings;
+-
+-use lib "$ENV{'PERF_EXEC_PATH'}/scripts/perl/Perf-Trace-Util/lib";
+-use lib "./Perf-Trace-Util/lib";
+-use Perf::Trace::Core;
+-use Perf::Trace::Util;
+-use POSIX qw/SIGALRM SA_RESTART/;
+-
+-my $default_interval =3D 3;
+-my $nlines =3D 20;
+-my $print_thread;
+-my $print_pending =3D 0;
+-
+-my %reads;
+-my %writes;
+-
+-my $interval =3D shift;
+-if (!$interval) {
+-    $interval =3D $default_interval;
+-}
+-
+-sub syscalls::sys_exit_read
+-{
+-    my ($event_name, $context, $common_cpu, $common_secs, $common_nsecs,
+-	$common_pid, $common_comm, $common_callchain,
+-	$nr, $ret) =3D @_;
+-
+-    print_check();
+-
+-    if ($ret > 0) {
+-	$reads{$common_pid}{bytes_read} +=3D $ret;
+-    } else {
+-	if (!defined ($reads{$common_pid}{bytes_read})) {
+-	    $reads{$common_pid}{bytes_read} =3D 0;
+-	}
+-	$reads{$common_pid}{errors}{$ret}++;
+-    }
+-}
+-
+-sub syscalls::sys_enter_read
+-{
+-    my ($event_name, $context, $common_cpu, $common_secs, $common_nsecs,
+-	$common_pid, $common_comm, $common_callchain,
+-	$nr, $fd, $buf, $count) =3D @_;
+-
+-    print_check();
+-
+-    $reads{$common_pid}{bytes_requested} +=3D $count;
+-    $reads{$common_pid}{total_reads}++;
+-    $reads{$common_pid}{comm} =3D $common_comm;
+-}
+-
+-sub syscalls::sys_exit_write
+-{
+-    my ($event_name, $context, $common_cpu, $common_secs, $common_nsecs,
+-	$common_pid, $common_comm, $common_callchain,
+-	$nr, $ret) =3D @_;
+-
+-    print_check();
+-
+-    if ($ret <=3D 0) {
+-	$writes{$common_pid}{errors}{$ret}++;
+-    }
+-}
+-
+-sub syscalls::sys_enter_write
+-{
+-    my ($event_name, $context, $common_cpu, $common_secs, $common_nsecs,
+-	$common_pid, $common_comm, $common_callchain,
+-	$nr, $fd, $buf, $count) =3D @_;
+-
+-    print_check();
+-
+-    $writes{$common_pid}{bytes_written} +=3D $count;
+-    $writes{$common_pid}{total_writes}++;
+-    $writes{$common_pid}{comm} =3D $common_comm;
+-}
+-
+-sub trace_begin
+-{
+-    my $sa =3D POSIX::SigAction->new(\&set_print_pending);
+-    $sa->flags(SA_RESTART);
+-    $sa->safe(1);
+-    POSIX::sigaction(SIGALRM, $sa) or die "Can't set SIGALRM handler: $!\n=
+";
+-    alarm 1;
+-}
+-
+-sub trace_end
+-{
+-    print_unhandled();
+-    print_totals();
+-}
+-
+-sub print_check()
+-{
+-    if ($print_pending =3D=3D 1) {
+-	$print_pending =3D 0;
+-	print_totals();
+-    }
+-}
+-
+-sub set_print_pending()
+-{
+-    $print_pending =3D 1;
+-    alarm $interval;
+-}
+-
+-sub print_totals
+-{
+-    my $count;
+-
+-    $count =3D 0;
+-
+-    clear_term();
+-
+-    printf("\nread counts by pid:\n\n");
+-
+-    printf("%6s  %20s  %10s  %10s  %10s\n", "pid", "comm",
+-	   "# reads", "bytes_req", "bytes_read");
+-    printf("%6s  %-20s  %10s  %10s  %10s\n", "------", "------------------=
+--",
+-	   "----------", "----------", "----------");
+-
+-    foreach my $pid (sort { ($reads{$b}{bytes_read} || 0) <=3D>
+-			       ($reads{$a}{bytes_read} || 0) } keys %reads) {
+-	my $comm =3D $reads{$pid}{comm} || "";
+-	my $total_reads =3D $reads{$pid}{total_reads} || 0;
+-	my $bytes_requested =3D $reads{$pid}{bytes_requested} || 0;
+-	my $bytes_read =3D $reads{$pid}{bytes_read} || 0;
+-
+-	printf("%6s  %-20s  %10s  %10s  %10s\n", $pid, $comm,
+-	       $total_reads, $bytes_requested, $bytes_read);
+-
+-	if (++$count =3D=3D $nlines) {
+-	    last;
+-	}
+-    }
+-
+-    $count =3D 0;
+-
+-    printf("\nwrite counts by pid:\n\n");
+-
+-    printf("%6s  %20s  %10s  %13s\n", "pid", "comm",
+-	   "# writes", "bytes_written");
+-    printf("%6s  %-20s  %10s  %13s\n", "------", "--------------------",
+-	   "----------", "-------------");
+-
+-    foreach my $pid (sort { ($writes{$b}{bytes_written} || 0) <=3D>
+-			($writes{$a}{bytes_written} || 0)} keys %writes) {
+-	my $comm =3D $writes{$pid}{comm} || "";
+-	my $total_writes =3D $writes{$pid}{total_writes} || 0;
+-	my $bytes_written =3D $writes{$pid}{bytes_written} || 0;
+-
+-	printf("%6s  %-20s  %10s  %13s\n", $pid, $comm,
+-	       $total_writes, $bytes_written);
+-
+-	if (++$count =3D=3D $nlines) {
+-	    last;
+-	}
+-    }
+-
+-    %reads =3D ();
+-    %writes =3D ();
+-}
+-
+-my %unhandled;
+-
+-sub print_unhandled
+-{
+-    if ((scalar keys %unhandled) =3D=3D 0) {
+-	return;
+-    }
+-
+-    print "\nunhandled events:\n\n";
+-
+-    printf("%-40s  %10s\n", "event", "count");
+-    printf("%-40s  %10s\n", "----------------------------------------",
+-	   "-----------");
+-
+-    foreach my $event_name (keys %unhandled) {
+-	printf("%-40s  %10d\n", $event_name, $unhandled{$event_name});
+-    }
+-}
+-
+-sub trace_unhandled
+-{
+-    my ($event_name, $context, $common_cpu, $common_secs, $common_nsecs,
+-	$common_pid, $common_comm, $common_callchain) =3D @_;
+-
+-    $unhandled{$event_name}++;
+-}
+diff --git a/tools/perf/scripts/perl/wakeup-latency.pl b/tools/perf/scripts=
+/perl/wakeup-latency.pl
+deleted file mode 100644
+index 53444ff4ec7f..000000000000
+--- a/tools/perf/scripts/perl/wakeup-latency.pl
++++ /dev/null
+@@ -1,107 +0,0 @@
+-#!/usr/bin/perl -w
+-# SPDX-License-Identifier: GPL-2.0-only
+-# (c) 2009, Tom Zanussi <tzanussi@gmail.com>
+-
+-# Display avg/min/max wakeup latency
+-
+-# The common_* event handler fields are the most useful fields common to
+-# all events.  They don't necessarily correspond to the 'common_*' fields
+-# in the status files.  Those fields not available as handler params can
+-# be retrieved via script functions of the form get_common_*().
+-
+-use 5.010000;
+-use strict;
+-use warnings;
+-
+-use lib "$ENV{'PERF_EXEC_PATH'}/scripts/perl/Perf-Trace-Util/lib";
+-use lib "./Perf-Trace-Util/lib";
+-use Perf::Trace::Core;
+-use Perf::Trace::Util;
+-
+-my %last_wakeup;
+-
+-my $max_wakeup_latency;
+-my $min_wakeup_latency;
+-my $total_wakeup_latency =3D 0;
+-my $total_wakeups =3D 0;
+-
+-sub sched::sched_switch
+-{
+-    my ($event_name, $context, $common_cpu, $common_secs, $common_nsecs,
+-	$common_pid, $common_comm, $common_callchain,
+-	$prev_comm, $prev_pid, $prev_prio, $prev_state, $next_comm, $next_pid,
+-	$next_prio) =3D @_;
+-
+-    my $wakeup_ts =3D $last_wakeup{$common_cpu}{ts};
+-    if ($wakeup_ts) {
+-	my $switch_ts =3D nsecs($common_secs, $common_nsecs);
+-	my $wakeup_latency =3D $switch_ts - $wakeup_ts;
+-	if ($wakeup_latency > $max_wakeup_latency) {
+-	    $max_wakeup_latency =3D $wakeup_latency;
+-	}
+-	if ($wakeup_latency < $min_wakeup_latency) {
+-	    $min_wakeup_latency =3D $wakeup_latency;
+-	}
+-	$total_wakeup_latency +=3D $wakeup_latency;
+-	$total_wakeups++;
+-    }
+-    $last_wakeup{$common_cpu}{ts} =3D 0;
+-}
+-
+-sub sched::sched_wakeup
+-{
+-    my ($event_name, $context, $common_cpu, $common_secs, $common_nsecs,
+-	$common_pid, $common_comm, $common_callchain,
+-	$comm, $pid, $prio, $success, $target_cpu) =3D @_;
+-
+-    $last_wakeup{$target_cpu}{ts} =3D nsecs($common_secs, $common_nsecs);
+-}
+-
+-sub trace_begin
+-{
+-    $min_wakeup_latency =3D 1000000000;
+-    $max_wakeup_latency =3D 0;
+-}
+-
+-sub trace_end
+-{
+-    printf("wakeup_latency stats:\n\n");
+-    print "total_wakeups: $total_wakeups\n";
+-    if ($total_wakeups) {
+-	printf("avg_wakeup_latency (ns): %u\n",
+-	       avg($total_wakeup_latency, $total_wakeups));
+-    } else {
+-	printf("avg_wakeup_latency (ns): N/A\n");
+-    }
+-    printf("min_wakeup_latency (ns): %u\n", $min_wakeup_latency);
+-    printf("max_wakeup_latency (ns): %u\n", $max_wakeup_latency);
+-
+-    print_unhandled();
+-}
+-
+-my %unhandled;
+-
+-sub print_unhandled
+-{
+-    if ((scalar keys %unhandled) =3D=3D 0) {
+-	return;
+-    }
+-
+-    print "\nunhandled events:\n\n";
+-
+-    printf("%-40s  %10s\n", "event", "count");
+-    printf("%-40s  %10s\n", "----------------------------------------",
+-	   "-----------");
+-
+-    foreach my $event_name (keys %unhandled) {
+-	printf("%-40s  %10d\n", $event_name, $unhandled{$event_name});
+-    }
+-}
+-
+-sub trace_unhandled
+-{
+-    my ($event_name, $context, $common_cpu, $common_secs, $common_nsecs,
+-	$common_pid, $common_comm, $common_callchain) =3D @_;
+-
+-    $unhandled{$event_name}++;
+-}
+diff --git a/tools/perf/tests/make b/tools/perf/tests/make
+index b5eaf326573c..8fa2c4d58b8b 100644
+--- a/tools/perf/tests/make
++++ b/tools/perf/tests/make
+@@ -76,7 +76,6 @@ make_no_jevents     :=3D NO_JEVENTS=3D1
+ make_jevents_all    :=3D JEVENTS_ARCH=3Dall
+ make_no_bpf_skel    :=3D BUILD_BPF_SKEL=3D0
+ make_gen_vmlinux_h  :=3D GEN_VMLINUX_H=3D1
+-make_libperl        :=3D LIBPERL=3D1
+ make_no_python_module :=3D NO_PYTHON_MODULE=3D1
+ make_no_scripts     :=3D NO_PYTHON_MODULE=3D1
+ make_no_slang       :=3D NO_SLANG=3D1
+@@ -149,7 +148,6 @@ run +=3D make_no_jevents
+ run +=3D make_jevents_all
+ run +=3D make_no_bpf_skel
+ run +=3D make_gen_vmlinux_h
+-run +=3D make_libperl
+ run +=3D make_no_python_module
+ run +=3D make_no_scripts
+ run +=3D make_no_slang
+diff --git a/tools/perf/tests/shell/coresight/test_arm_coresight_disasm.sh =
+b/tools/perf/tests/shell/coresight/test_arm_coresight_disasm.sh
+index 2c04249a3496..d298b18154b2 100755
+--- a/tools/perf/tests/shell/coresight/test_arm_coresight_disasm.sh
++++ b/tools/perf/tests/shell/coresight/test_arm_coresight_disasm.sh
+@@ -20,13 +20,6 @@ skip_if_no_cs_etm_event || exit 2
+ set -e
+ glb_err=3D1
 =20
--from perf_trace_context import *
--from Core import *
-+Create a file named `print_events.py` with the following content:
+-# Relative path works whether it's installed or running from repo
+-if [ -n "$PERF_EXEC_PATH" ] && [ -e "$PERF_EXEC_PATH/python/arm-cs-trace-d=
+isasm.py" ]; then
+-	script_path=3D"$PERF_EXEC_PATH/python/arm-cs-trace-disasm.py"
+-else
+-	script_path=3D$(dirname "$0")/../../../python/arm-cs-trace-disasm.py
+-fi
+-
+ # shellcheck source=3Dlib/setup_python.sh
+ . "$(dirname "$0")"/../lib/setup_python.sh
+ $PYTHON -c "import perf" 2>/dev/null || {
+@@ -56,8 +49,8 @@ branch_search=3D'[[:space:]](bl|b(\.(eq|ne|cs|cc|mi|pl|vs=
+|vc|hi|ls|ge|lt|gt|le|al)
+ if [ "$(id -u)" =3D=3D 0 ] && [ -e /proc/kcore ]; then
+ 	echo "Testing kernel disassembly"
+ 	perf record -o ${perfdata} -e cs_etm//k --kcore -Se -m,64K -- touch $file=
+ > /dev/null 2>&1
+-	$PYTHON ${script_path} -i ${perfdata} --itrace=3Db -d --stop-sample=3D2 \
+-		-k ${perfdata}/kcore_dir/kcore 2> /dev/null > ${file}
++	perf script -i ${perfdata} arm-cs-trace-disasm -- \
++		-d --stop-sample=3D2 -k ${perfdata}/kcore_dir/kcore 2> /dev/null > ${fil=
+e}
+ 	grep -q -E ${branch_search} ${file}
+ 	echo "Found kernel branches"
+ else
+@@ -68,7 +61,8 @@ fi
+ ## Test user ##
+ echo "Testing userspace disassembly"
+ perf record -o ${perfdata} -e cs_etm//u -Se -m,64K -- touch $file > /dev/n=
+ull 2>&1
+-$PYTHON ${script_path} -i ${perfdata} -d --stop-sample=3D2 2> /dev/null > =
+${file}
++perf script -i ${perfdata} arm-cs-trace-disasm -- \
++	-d --stop-sample=3D2 2> /dev/null > ${file}
+ grep -q -E ${branch_search} ${file}
+ echo "Found userspace branches"
 =20
--def trace_end():
--	print "in trace_end"
-+    #!/usr/bin/env python3
-+    import perf
-=20
--def raw_syscalls__sys_enter(event_name, context, common_cpu,
--	common_secs, common_nsecs, common_pid, common_comm,
--	id, args):
------
--
--In trace_end(), we'll simply print the results, but first we need to
--generate some results to print.  To do that we need to have our
--sys_enter() handler do the necessary tallying until all events have
--been counted.  A hash table indexed by syscall id is a good way to
--store that information; every time the sys_enter() handler is called,
--we simply increment a count associated with that hash entry indexed by
--that syscall id:
--
------
--  syscalls =3D autodict()
--
--  try:
--    syscalls[id] +=3D 1
--  except TypeError:
--    syscalls[id] =3D 1
------
--
--The syscalls 'autodict' object is a special kind of Python dictionary
--(implemented in Core.py) that implements Perl's 'autovivifying' hashes
--in Python i.e. with autovivifying hashes, you can assign nested hash
--values without having to go to the trouble of creating intermediate
--levels if they don't exist e.g syscalls[comm][pid][id] =3D 1 will create
--the intermediate hash levels and finally assign the value 1 to the
--hash entry for 'id' (because the value being assigned isn't a hash
--object itself, the initial value is assigned in the TypeError
--exception.  Well, there may be a better way to do this in Python but
--that's what works for now).
--
--Putting that code into the raw_syscalls__sys_enter() handler, we
--effectively end up with a single-level dictionary keyed on syscall id
--and having the counts we've tallied as values.
--
--The print_syscall_totals() function iterates over the entries in the
--dictionary and displays a line for each entry containing the syscall
--name (the dictionary keys contain the syscall ids, which are passed to
--the Util function syscall_name(), which translates the raw syscall
--numbers to the corresponding syscall name strings).  The output is
--displayed after all the events in the trace have been processed, by
--calling the print_syscall_totals() function from the trace_end()
--handler called at the end of script processing.
--
--The final script producing the output shown above is shown in its
--entirety below (syscall_name() helper is not yet available, you can
--only deal with id's for now):
--
------
--import os
--import sys
--
--sys.path.append(os.environ['PERF_EXEC_PATH'] + \
--	'/scripts/python/Perf-Trace-Util/lib/Perf/Trace')
--
--from perf_trace_context import *
--from Core import *
--from Util import *
--
--syscalls =3D autodict()
--
--def trace_end():
--	print_syscall_totals()
--
--def raw_syscalls__sys_enter(event_name, context, common_cpu,
--	common_secs, common_nsecs, common_pid, common_comm,
--	id, args):
--	try:
--		syscalls[id] +=3D 1
--	except TypeError:
--		syscalls[id] =3D 1
--
--def print_syscall_totals():
--    if for_comm is not None:
--	    print "\nsyscall events for %s:\n\n" % (for_comm),
--    else:
--	    print "\nsyscall events:\n\n",
--
--    print "%-40s  %10s\n" % ("event", "count"),
--    print "%-40s  %10s\n" % ("----------------------------------------", \
--                                 "-----------"),
--
--    for id, val in sorted(syscalls.iteritems(), key =3D lambda(k, v): (v, =
-k), \
--				  reverse =3D True):
--	    print "%-40s  %10d\n" % (syscall_name(id), val),
------
-+    def process_event(sample):
-+        print(f"Event: {sample.evsel} on CPU {sample.sample_cpu} at {sampl=
-e.sample_time}")
-=20
--The script can be run just as before:
-+    # Open the session with perf.data file
-+    session =3D perf.session(perf.data("perf.data"), sample=3Dprocess_even=
-t)
-=20
--  # perf script -s syscall-counts.py
-+    # Process all events
-+    session.process_events()
-=20
--So those are the essential steps in writing and running a script.  The
--process can be generalized to any tracepoint or set of tracepoints
--you're interested in - basically find the tracepoint(s) you're
--interested in by looking at the list of available events shown by
--'perf list' and/or look in /sys/kernel/tracing/events/ for
--detailed event and field info, record the corresponding trace data
--using 'perf record', passing it the list of interesting events,
--generate a skeleton script using 'perf script -g python' and modify the
--code to aggregate and display it for your particular needs.
-+Make the script executable:
-+    $ chmod +x print_events.py
-=20
--After you've done that you may end up with a general-purpose script
--that you want to keep around and have available for future use.  By
--writing a couple of very simple shell scripts and putting them in the
--right place, you can have your script listed alongside the other
--scripts listed by the 'perf script -l' command e.g.:
-+Record some data:
-+    $ perf record -a sleep 1
-=20
------
--# perf script -l
--List of available trace scripts:
--  wakeup-latency                       system-wide min/max/avg wakeup late=
-ncy
--  rw-by-file <comm>                    r/w activity for a program, by file
--  rw-by-pid                            system-wide r/w activity
------
--
--A nice side effect of doing this is that you also then capture the
--probably lengthy 'perf record' command needed to record the events for
--the script.
--
--To have the script appear as a 'built-in' script, you write two simple
--scripts, one for recording and one for 'reporting'.
--
--The 'record' script is a shell script with the same base name as your
--script, but with -record appended.  The shell script should be put
--into the perf/scripts/python/bin directory in the kernel source tree.
--In that script, you write the 'perf record' command-line needed for
--your script:
-+Run the script:
-+    $ perf script print_events.py
-=20
------
--# cat kernel-source/tools/perf/scripts/python/bin/syscall-counts-record
--
+diff --git a/tools/perf/tests/shell/script_perl.sh b/tools/perf/tests/shell=
+/script_perl.sh
+deleted file mode 100755
+index b6d65b6fbda1..000000000000
+--- a/tools/perf/tests/shell/script_perl.sh
++++ /dev/null
+@@ -1,102 +0,0 @@
 -#!/bin/bash
--perf record -a -e raw_syscalls:sys_enter
------
-+Or run it directly with Python, ensuring `perf.so` is in your `PYTHONPATH`=
-:
-+    $ PYTHONPATH=3D/path/to/perf/python python3 print_events.py
+-# perf script perl tests
+-# SPDX-License-Identifier: GPL-2.0
+-
+-set -e
+-
+-# set PERF_EXEC_PATH to find scripts in the source directory
+-perfdir=3D$(dirname "$0")/../..
+-if [ -e "$perfdir/scripts/perl/Perf-Trace-Util" ]; then
+-  export PERF_EXEC_PATH=3D$perfdir
+-fi
+-
+-
+-perfdata=3D$(mktemp /tmp/__perf_test_script_perl.perf.data.XXXXX)
+-generated_script=3D$(mktemp /tmp/__perf_test_script.XXXXX.pl)
+-
+-cleanup() {
+-  rm -f "${perfdata}"
+-  rm -f "${generated_script}"
+-  trap - EXIT TERM INT
+-}
+-
+-trap_cleanup() {
+-  echo "Unexpected signal in ${FUNCNAME[1]}"
+-  cleanup
+-  exit 1
+-}
+-trap trap_cleanup TERM INT
+-trap cleanup EXIT
+-
+-check_perl_support() {
+-	if perf check feature -q libperl; then
+-		return 0
+-	fi
+-	echo "perf script perl test [Skipped: no libperl support]"
+-	return 2
+-}
+-
+-test_script() {
+-	local event_name=3D$1
+-	local expected_output=3D$2
+-	local record_opts=3D$3
+-
+-	echo "Testing event: $event_name"
+-
+-	# Try to record. If this fails, it might be permissions or lack of suppor=
+t.
+-	# We return 2 to indicate "skip this event" rather than "fail test".
+-	if ! perf record -o "${perfdata}" -e "$event_name" $record_opts -- perf t=
+est -w thloop > /dev/null 2>&1; then
+-		echo "perf script perl test [Skipped: failed to record $event_name]"
+-		return 2
+-	fi
+-
+-	echo "Generating perl script..."
+-	if ! perf script -i "${perfdata}" -g "${generated_script}"; then
+-		echo "perf script perl test [Failed: script generation for $event_name]"
+-		return 1
+-	fi
+-
+-	if [ ! -f "${generated_script}" ]; then
+-		echo "perf script perl test [Failed: script not generated for $event_nam=
+e]"
+-		return 1
+-	fi
+-
+-	echo "Executing perl script..."
+-	output=3D$(perf script -i "${perfdata}" -s "${generated_script}" 2>&1)
+-
+-	if echo "$output" | grep -q "$expected_output"; then
+-		echo "perf script perl test [Success: $event_name triggered $expected_ou=
+tput]"
+-		return 0
+-	else
+-		echo "perf script perl test [Failed: $event_name did not trigger $expect=
+ed_output]"
+-		echo "Output was:"
+-		echo "$output" | head -n 20
+-		return 1
+-	fi
+-}
+-
+-check_perl_support || exit 2
+-
+-# Try tracepoint first
+-test_script "sched:sched_switch" "sched::sched_switch" "-c 1" && res=3D0 |=
+| res=3D$?
+-
+-if [ $res -eq 0 ]; then
+-	exit 0
+-elif [ $res -eq 1 ]; then
+-	exit 1
+-fi
+-
+-# If tracepoint skipped (res=3D2), try task-clock
+-# For generic events like task-clock, the generated script uses process_ev=
+ent()
+-# which dumps data using Data::Dumper. We check for "$VAR1" which is stand=
+ard Dumper output.
+-test_script "task-clock" "\$VAR1" "-c 100" && res=3D0 || res=3D$?
+-
+-if [ $res -eq 0 ]; then
+-	exit 0
+-elif [ $res -eq 1 ]; then
+-	exit 1
+-fi
+-
+-# If both skipped
+-echo "perf script perl test [Skipped: Could not record tracepoint or task-=
+clock]"
+-exit 2
+diff --git a/tools/perf/tests/shell/test_check_perf_trace_python.sh b/tools=
+/perf/tests/shell/test_check_perf_trace_python.sh
+index a346e45eb18c..92cc7b1f0033 100755
+--- a/tools/perf/tests/shell/test_check_perf_trace_python.sh
++++ b/tools/perf/tests/shell/test_check_perf_trace_python.sh
+@@ -68,7 +68,7 @@ test_file_mode() {
+ 	fi
 =20
--The 'report' script is also a shell script with the same base name as
--your script, but with -report appended.  It should also be located in
--the perf/scripts/python/bin directory.  In that script, you write the
--'perf script -s' command-line needed for running your script:
--
------
--# cat kernel-source/tools/perf/scripts/python/bin/syscall-counts-report
--
--#!/bin/bash
--# description: system-wide syscall counts
--perf script -s ~/libexec/perf-core/scripts/python/syscall-counts.py
------
--
--Note that the location of the Python script given in the shell script
--is in the libexec/perf-core/scripts/python directory - this is where
--the script will be copied by 'make install' when you install perf.
--For the installation to install your script there, your script needs
--to be located in the perf/scripts/python directory in the kernel
--source tree:
--
------
--# ls -al kernel-source/tools/perf/scripts/python
--total 32
--drwxr-xr-x 4 trz trz 4096 2010-01-26 22:30 .
--drwxr-xr-x 4 trz trz 4096 2010-01-26 22:29 ..
--drwxr-xr-x 2 trz trz 4096 2010-01-26 22:29 bin
---rw-r--r-- 1 trz trz 2548 2010-01-26 22:29 check-perf-script.py
--drwxr-xr-x 3 trz trz 4096 2010-01-26 22:49 Perf-Trace-Util
---rw-r--r-- 1 trz trz 1462 2010-01-26 22:30 syscall-counts.py
------
--
--Once you've done that (don't forget to do a new 'make install',
--otherwise your script won't show up at run-time), 'perf script -l'
--should show a new entry for your script:
--
------
--# perf script -l
--List of available trace scripts:
--  wakeup-latency                       system-wide min/max/avg wakeup late=
-ncy
--  rw-by-file <comm>                    r/w activity for a program, by file
--  rw-by-pid                            system-wide r/w activity
--  syscall-counts                       system-wide syscall counts
------
--
--You can now perform the record step via 'perf script record':
--
--  # perf script record syscall-counts
--
--and display the output using 'perf script report':
--
--  # perf script report syscall-counts
--
--STARTER SCRIPTS
-+THE PERF MODULE
- ---------------
+ 	# Run the script
+-	if ! "$PYTHON" "$script_path" -i "${temp_data}" > "${temp_out}"; then
++	if ! perf script check-perf-trace -i "${temp_data}" > "${temp_out}"; then
+ 		echo "File mode test failed."
+ 		err=3D1
+ 	elif ! grep -q "in trace_begin" "${temp_out}" || \
+diff --git a/tools/perf/tests/shell/test_compaction_times_python.sh b/tools=
+/perf/tests/shell/test_compaction_times_python.sh
+index ad950f3602b5..50397afaafed 100755
+--- a/tools/perf/tests/shell/test_compaction_times_python.sh
++++ b/tools/perf/tests/shell/test_compaction_times_python.sh
+@@ -58,7 +58,7 @@ test_file_mode() {
+ 	fi
 =20
--You can quickly get started writing a script for a particular set of
--trace data by generating a skeleton script using 'perf script -g
--python' in the same directory as an existing perf.data trace file.
--That will generate a starter script containing a handler for each of
--the event types in the trace file; it simply prints every available
--field for each event in the trace file.
--
--You can also look at the existing scripts in
--~/libexec/perf-core/scripts/python for typical examples showing how to
--do basic things like aggregate event data, print results, etc.  Also,
--the check-perf-script.py script, while not interesting for its results,
--attempts to exercise all of the main scripting features.
--
--EVENT HANDLERS
----------------
--
--When perf script is invoked using a trace script, a user-defined
--'handler function' is called for each event in the trace.  If there's
--no handler function defined for a given event type, the event is
--ignored (or passed to a 'trace_unhandled' function, see below) and the
--next event is processed.
--
--Most of the event's field values are passed as arguments to the
--handler function; some of the less common ones aren't - those are
--available as calls back into the perf executable (see below).
--
--As an example, the following perf record command can be used to record
--all sched_wakeup events in the system:
--
-- # perf record -a -e sched:sched_wakeup
--
--Traces meant to be processed using a script should be recorded with
--the above option: -a to enable system-wide collection.
--
--The format file for the sched_wakeup event defines the following fields
--(see /sys/kernel/tracing/events/sched/sched_wakeup/format):
--
------
-- format:
--        field:unsigned short common_type;
--        field:unsigned char common_flags;
--        field:unsigned char common_preempt_count;
--        field:int common_pid;
--
--        field:char comm[TASK_COMM_LEN];
--        field:pid_t pid;
--        field:int prio;
--        field:int success;
--        field:int target_cpu;
------
--
--The handler function for this event would be defined as:
--
------
--def sched__sched_wakeup(event_name, context, common_cpu, common_secs,
--       common_nsecs, common_pid, common_comm,
--       comm, pid, prio, success, target_cpu):
--       pass
------
--
--The handler function takes the form subsystem__event_name.
--
--The common_* arguments in the handler's argument list are the set of
--arguments passed to all event handlers; some of the fields correspond
--to the common_* fields in the format file, but some are synthesized,
--and some of the common_* fields aren't common enough to to be passed
--to every event as arguments but are available as library functions.
--
--Here's a brief description of each of the invariant event args:
--
-- event_name 	  	    the name of the event as text
-- context		    an opaque 'cookie' used in calls back into perf
-- common_cpu		    the cpu the event occurred on
-- common_secs		    the secs portion of the event timestamp
-- common_nsecs		    the nsecs portion of the event timestamp
-- common_pid		    the pid of the current task
-- common_comm		    the name of the current process
--
--All of the remaining fields in the event's format file have
--counterparts as handler function arguments of the same name, as can be
--seen in the example above.
--
--The above provides the basics needed to directly access every field of
--every event in a trace, which covers 90% of what you need to know to
--write a useful trace script.  The sections below cover the rest.
--
--SCRIPT LAYOUT
---------------
--
--Every perf script Python script should start by setting up a Python
--module search path and 'import'ing a few support modules (see module
--descriptions below):
--
------
-- import os
-- import sys
--
-- sys.path.append(os.environ['PERF_EXEC_PATH'] + \
--	      '/scripts/python/Perf-Trace-Util/lib/Perf/Trace')
--
-- from perf_trace_context import *
-- from Core import *
------
--
--The rest of the script can contain handler functions and support
--functions in any order.
--
--Aside from the event handler functions discussed above, every script
--can implement a set of optional functions:
--
--*trace_begin*, if defined, is called before any event is processed and
--gives scripts a chance to do setup tasks:
--
------
--def trace_begin():
--    pass
------
--
--*trace_end*, if defined, is called after all events have been
-- processed and gives scripts a chance to do end-of-script tasks, such
-- as display results:
--
------
--def trace_end():
--    pass
------
--
--*trace_unhandled*, if defined, is called after for any event that
-- doesn't have a handler explicitly defined for it.  The standard set
-- of common arguments are passed into it:
--
------
--def trace_unhandled(event_name, context, event_fields_dict):
--    pass
------
--
--*process_event*, if defined, is called for any non-tracepoint event
--
------
--def process_event(param_dict):
--    pass
------
--
--*context_switch*, if defined, is called for any context switch
--
------
--def context_switch(ts, cpu, pid, tid, np_pid, np_tid, machine_pid, out, ou=
-t_preempt, *x):
--    pass
------
--
--*auxtrace_error*, if defined, is called for any AUX area tracing error
--
------
--def auxtrace_error(typ, code, cpu, pid, tid, ip, ts, msg, cpumode, *x):
--    pass
------
--
--The remaining sections provide descriptions of each of the available
--built-in perf script Python modules and their associated functions.
--
--AVAILABLE MODULES AND FUNCTIONS
---------------------------------
--
--The following sections describe the functions and variables available
--via the various perf script Python modules.  To use the functions and
--variables from the given module, add the corresponding 'from XXXX
--import' line to your perf script script.
--
--Core.py Module
--~~~~~~~~~~~~~~
--
--These functions provide some essential functions to user scripts.
--
--The *flag_str* and *symbol_str* functions provide human-readable
--strings for flag and symbolic fields.  These correspond to the strings
--and values parsed from the 'print fmt' fields of the event format
--files:
--
--  flag_str(event_name, field_name, field_value) - returns the string repre=
-sentation corresponding to field_value for the flag field field_name of eve=
-nt event_name
--  symbol_str(event_name, field_name, field_value) - returns the string rep=
-resentation corresponding to field_value for the symbolic field field_name =
-of event event_name
--
--The *autodict* function returns a special kind of Python
--dictionary that implements Perl's 'autovivifying' hashes in Python
--i.e. with autovivifying hashes, you can assign nested hash values
--without having to go to the trouble of creating intermediate levels if
--they don't exist.
--
--  autodict() - returns an autovivifying dictionary instance
--
--
--perf_trace_context Module
--~~~~~~~~~~~~~~~~~~~~~~~~~
--
--Some of the 'common' fields in the event format file aren't all that
--common, but need to be made accessible to user scripts nonetheless.
--
--perf_trace_context defines a set of functions that can be used to
--access this data in the context of the current event.  Each of these
--functions expects a context variable, which is the same as the
--context variable passed into every tracepoint event handler as the second
--argument. For non-tracepoint events, the context variable is also present
--as perf_trace_context.perf_script_context .
--
-- common_pc(context) - returns common_preempt count for the current event
-- common_flags(context) - returns common_flags for the current event
-- common_lock_depth(context) - returns common_lock_depth for the current ev=
-ent
-- perf_sample_insn(context) - returns the machine code instruction
-- perf_set_itrace_options(context, itrace_options) - set --itrace options i=
-f they have not been set already
-- perf_sample_srcline(context) - returns source_file_name, line_number
-- perf_sample_srccode(context) - returns source_file_name, line_number, sou=
-rce_line
-- perf_config_get(config_name) - returns the value of the named config item=
-, or None if unset
--
--Util.py Module
--~~~~~~~~~~~~~~
--
--Various utility functions for use with perf script:
--
--  nsecs(secs, nsecs) - returns total nsecs given secs/nsecs pair
--  nsecs_secs(nsecs) - returns whole secs portion given nsecs
--  nsecs_nsecs(nsecs) - returns nsecs remainder given nsecs
--  nsecs_str(nsecs) - returns printable string in the form secs.nsecs
--  avg(total, n) - returns average given a sum and a total number of values
--
--SUPPORTED FIELDS
------------------
--
--Currently supported fields:
--
--ev_name, comm, id, stream_id, pid, tid, cpu, ip, time, period, phys_addr,
--addr, symbol, symoff, dso, time_enabled, time_running, values, callchain,
--brstack, brstacksym, datasrc, datasrc_decode, iregs, uregs,
--weight, transaction, raw_buf, attr, cpumode.
--
--Fields that may also be present:
--
-- flags - sample flags
-- flags_disp - sample flags display
-- insn_cnt - instruction count for determining instructions-per-cycle (IPC)
-- cyc_cnt - cycle count for determining IPC
-- addr_correlates_sym - addr can correlate to a symbol
-- addr_dso - addr dso
-- addr_symbol - addr symbol
-- addr_symoff - addr symbol offset
--
--Some fields have sub items:
--
--brstack:
--    from, to, from_dsoname, to_dsoname, mispred,
--    predicted, in_tx, abort, cycles.
--
--brstacksym:
--    items: from, to, pred, in_tx, abort (converted string)
--
--For example,
--We can use this code to print brstack "from", "to", "cycles".
--
--if 'brstack' in dict:
--	for entry in dict['brstack']:
--		print "from %s, to %s, cycles %s" % (entry["from"], entry["to"], entry["=
-cycles"])
-+The `perf` module provides several classes and functions to interact
-+with trace data.
-+
-+Module Functions
-+~~~~~~~~~~~~~~~~
-+
-+- `config_get(name)`: Get a perf config value.
-+- `metrics()`: Returns a list of metrics represented as string values in d=
-ictionaries.
-+- `tracepoint(sys, name)`: Get the tracepoint ID for a given subsystem and=
- event name.
-+- `parse_events(evlist_str, cpus=3DNone, threads=3DNone)`: Parse a string =
-of events and return an `evlist`.
-+- `parse_metrics(metrics_str, pmu=3DNone, cpus=3DNone, threads=3DNone)`: P=
-arse a string of metrics or metric groups and return an `evlist`.
-+- `pmus()`: Returns a sequence of PMUs.
-+- `syscall_name(id, elf_machine=3D0)`: Convert a syscall number to its nam=
-e.
-+- `syscall_id(name, elf_machine=3D0)`: Convert a syscall name to its numbe=
-r.
-+
-+perf.pmu
-+~~~~~~~~
-+
-+Represents a Performance Monitoring Unit.
-+
-+- `events()`: Returns a sequence of events encoded as dictionaries.
-+- `name()`: Name of the PMU including suffixes.
-+
-+perf.evlist
-+~~~~~~~~~~~
-+
-+Represents a list of event selectors.
-+
-+- `all_cpus()`: CPU map union of all evsel CPU maps.
-+- `metrics()`: List of metric names within the evlist.
-+- `compute_metric(name, cpu, thread)`: Compute metric for given name, cpu =
-and thread.
-+- `mmap(pages=3D128, overwrite=3DFalse)`: mmap the file descriptor table.
-+- `open()`: open the file descriptors.
-+- `close()`: close the file descriptors.
-+- `poll(timeout=3D-1)`: poll the file descriptor table.
-+- `get_pollfd()`: get the poll file descriptor table.
-+- `add(evsel)`: adds an event selector to the list.
-+- `read_on_cpu(cpu, sample_id_all=3DTrue)`: reads an event from the specif=
-ied CPU ring buffer.
-+- `config()`: Apply default record options to the evlist.
-+- `disable()`: Disable the evsels in the evlist.
-+- `enable()`: Enable the evsels in the evlist.
-+
-+perf.evsel
-+~~~~~~~~~~
-+
-+Represents an event selector.
-+
-+- `open()`: open the event selector file descriptor table.
-+- `cpus()`: CPUs the event is to be used with.
-+- `threads()`: threads the event is to be used with.
-+- `read(cpu, thread)`: read counters. Returns a count object with `val`, `=
-ena`, and `run` attributes.
-+
-+perf.session
-+~~~~~~~~~~~~
-+
-+Manages a trace session.
-+
-+- `__init__(data, sample=3DNone, stat=3DNone, context_switch=3DNone, call_=
-return=3DNone, itrace=3DNone, vmlinux=3DNone, kallsyms=3DNone, symfs=3DNone=
-)`: Creates a new session. `data` is a `perf.data` object. `sample` is a ca=
-llback function called for each sample event. `vmlinux`, `kallsyms`, and `s=
-ymfs` configure symbol resolution paths.
-+- `process_events()`: Reads the trace data and calls the sample callback f=
-or each event.
-+- `find_thread(pid, tid=3D-1)`: Returns the thread associated with a PID/T=
-ID.
-+- `e_machine`: ELF machine architecture ID (`EM_*`) of the session.
-+- `is_64_bit`: Boolean indicating whether the traced session is 64-bit.
-+
-+perf.data
-+~~~~~~~~~
-+
-+Represents a trace file.
-+
-+- `__init__(path=3DNone, fd=3D-1)`: Opens a trace file.
-+
-+Sample Object
-+~~~~~~~~~~~~~
-+
-+Passed to the `sample` callback function in `perf.session` (or returned by=
- `evlist.read_on_cpu()`).
-+
-+- `evsel`: The event selector (`perf.evsel` object; `str(sample.evsel)` gi=
-ves the event name).
-+- `sample_cpu`: The CPU on which the event occurred.
-+- `sample_time`: The timestamp of the event in nanoseconds.
-+- `sample_pid`: The PID of the process.
-+- `sample_tid`: The TID of the thread.
-+- `sample_ip`: The sampled instruction pointer.
-+- `sample_addr`: The sampled target/data address.
-+- `sample_period`: The sample period.
-+- `machine_pid`: The guest VM machine PID (`0` for host).
-+- `vcpu`: The virtual CPU number for guest events.
-+- `raw_buf`: Raw buffer (`bytes`) containing event-specific data.
-+- `dso`: Short name of the resolved DSO for `sample_ip`.
-+- `dso_long_name`: Full path/long name of the resolved DSO for `sample_ip`=
+ 	# Run the script with some filters to validate filtering logic
+-	if ! "$PYTHON" "$script_path" -i "${temp_data}" > "${temp_out}"; then
++	if ! perf script compaction-times -i "${temp_data}" > "${temp_out}"; then
+ 		echo "File mode default test failed."
+ 		err=3D1
+ 	elif ! grep -q "total:" "${temp_out}"; then
+@@ -66,7 +66,7 @@ test_file_mode() {
+ 		err=3D1
+ 	fi
+=20
+-	if ! "$PYTHON" "$script_path" -i "${temp_data}" "0-0" > "${temp_out}"; th=
+en
++	if ! perf script compaction-times -i "${temp_data}" "0-0" > "${temp_out}"=
+; then
+ 		echo "File mode strict PID filter test failed."
+ 		err=3D1
+ 	elif ! grep -q "total:" "${temp_out}"; then
+@@ -74,7 +74,7 @@ test_file_mode() {
+ 		err=3D1
+ 	fi
+=20
+-	if ! "$PYTHON" "$script_path" -i "${temp_data}" "sleep" > "${temp_out}"; =
+then
++	if ! perf script compaction-times -i "${temp_data}" "sleep" > "${temp_out=
+}"; then
+ 		echo "File mode comm filter test failed."
+ 		err=3D1
+ 	elif ! grep -q "total:" "${temp_out}"; then
+diff --git a/tools/perf/tests/shell/test_event_analyzing_sample_python.sh b=
+/tools/perf/tests/shell/test_event_analyzing_sample_python.sh
+index 4678edfd9e5b..a7a8ded003db 100755
+--- a/tools/perf/tests/shell/test_event_analyzing_sample_python.sh
++++ b/tools/perf/tests/shell/test_event_analyzing_sample_python.sh
+@@ -45,7 +45,8 @@ test_file_mode() {
+ 	fi
+=20
+ 	# Run the script
+-	if ! "$PYTHON" "$script_path" -i "${temp_data}" -d "${temp_db}" > "${temp=
+_dir}/perf.out" 2>&1; then
++	if ! perf script event_analyzing_sample -i "${temp_data}" \
++		-d "${temp_db}" > "${temp_dir}/perf.out" 2>&1; then
+ 		echo "File mode test failed."
+ 		err=3D1
+ 	elif ! grep -q "Statistics about the general events" "${temp_dir}/perf.ou=
+t" || \
+diff --git a/tools/perf/tests/shell/test_export_to_postgresql_python.sh b/t=
+ools/perf/tests/shell/test_export_to_postgresql_python.sh
+index ce13a1aa7cd7..350813466700 100755
+--- a/tools/perf/tests/shell/test_export_to_postgresql_python.sh
++++ b/tools/perf/tests/shell/test_export_to_postgresql_python.sh
+@@ -54,7 +54,8 @@ test_file_mode() {
+ 	echo "Testing export-to-postgresql.py..."
+=20
+ 	# Verify that invalid URI / key-value database names are rejected
+-	if "$PYTHON" "$script_path" -i /dev/null -o "dbname=3Dfoo host=3Devil" >/=
+dev/null 2>&1; then
++	if perf script export-to-postgresql -i /dev/null \
++		-o "dbname=3Dfoo host=3Devil" >/dev/null 2>&1; then
+ 		echo "Connection parameter injection check failed."
+ 		err=3D1
+ 	fi
+@@ -71,7 +72,7 @@ test_file_mode() {
+ 	psql -c "DROP DATABASE IF EXISTS ${temp_db}" postgres >/dev/null 2>&1 || =
+true
+=20
+ 	# Run the script
+-	if ! "$PYTHON" "$script_path" -i "${temp_data}" -o "${temp_db}" >/dev/nul=
+l; then
++	if ! perf script export-to-postgresql -i "${temp_data}" -o "${temp_db}" >=
+/dev/null; then
+ 		echo "File mode test failed."
+ 		err=3D1
+ 	else
+@@ -101,7 +102,8 @@ test_intel_pt() {
+ 	fi
+=20
+ 	# Run the script with --itrace cr to synthesize call_returns
+-	if ! "$PYTHON" "$script_path" -i "${temp_data}" -o "${temp_db}" --itrace =
+cr >/dev/null; then
++	if ! perf script export-to-postgresql -i "${temp_data}" \
++		-o "${temp_db}" --itrace cr >/dev/null; then
+ 		echo "intel_pt file mode test failed."
+ 		err=3D1
+ 	else
+diff --git a/tools/perf/tests/shell/test_export_to_sqlite_python.sh b/tools=
+/perf/tests/shell/test_export_to_sqlite_python.sh
+index 59280d372399..d3c5e22a0754 100755
+--- a/tools/perf/tests/shell/test_export_to_sqlite_python.sh
++++ b/tools/perf/tests/shell/test_export_to_sqlite_python.sh
+@@ -55,7 +55,7 @@ test_file_mode() {
+ 	fi
+=20
+ 	# Run the script
+-	if ! "$PYTHON" "$script_path" -i "${temp_data}" -o "${temp_db}" >/dev/nul=
+l; then
++	if ! perf script export-to-sqlite -i "${temp_data}" -o "${temp_db}" >/dev=
+/null; then
+ 		echo "File mode test failed."
+ 		err=3D1
+ 	else
+@@ -86,7 +86,7 @@ test_intel_pt() {
+ 	fi
+=20
+ 	# Run the script with --itrace cr to synthesize call_returns
+-	if ! "$PYTHON" "$script_path" -i "${temp_data}" -o "${temp_db}" --itrace =
+cr; then
++	if ! perf script export-to-sqlite -i "${temp_data}" -o "${temp_db}" --itr=
+ace cr; then
+ 		echo "intel_pt file mode test failed."
+ 		err=3D1
+ 	else
+diff --git a/tools/perf/tests/shell/test_failed_syscalls_by_pid_python.sh b=
+/tools/perf/tests/shell/test_failed_syscalls_by_pid_python.sh
+index 5bbd1a0adb1e..215372d4e1c5 100755
+--- a/tools/perf/tests/shell/test_failed_syscalls_by_pid_python.sh
++++ b/tools/perf/tests/shell/test_failed_syscalls_by_pid_python.sh
+@@ -63,14 +63,14 @@ test_file_mode() {
+ 	fi
+=20
+ 	# Run the script and check output
+-	if ! "$PYTHON" "$script_path" -i "${temp_data}" > "${temp_out}"; then
++	if ! perf script failed-syscalls-by-pid -i "${temp_data}" > "${temp_out}"=
+; then
+ 		echo "failed-syscalls-by-pid test failed."
+ 		err=3D1
+ 	elif ! grep -n -q "err =3D ENOENT" "${temp_out}"; then
+ 		echo "Failed to find expected failed syscalls"
+ 		cat "${temp_out}"
+ 		err=3D1
+-	elif ! "$PYTHON" "$script_path" -i "${temp_data}" "ls" > "${temp_out}.com=
+m" || \
++	elif ! perf script failed-syscalls-by-pid -i "${temp_data}" "ls" > "${tem=
+p_out}.comm" || \
+ 	     ! grep -q "err =3D ENOENT" "${temp_out}.comm"; then
+ 		echo "failed-syscalls-by-pid comm filter test failed."
+ 		cat "${temp_out}.comm"
+@@ -78,7 +78,8 @@ test_file_mode() {
+ 	else
+ 		ls_pid=3D$(sed -n 's/^ls \[\([0-9][0-9]*\)\].*/\1/p' "${temp_out}.comm" =
+| head -n 1)
+ 		if [ -z "${ls_pid}" ] || \
+-		   ! "$PYTHON" "$script_path" -i "${temp_data}" "${ls_pid}" > "${temp_ou=
+t}.pid" || \
++		   ! perf script failed-syscalls-by-pid -i "${temp_data}" \
++			"${ls_pid}" > "${temp_out}.pid" || \
+ 		   ! grep -q "err =3D ENOENT" "${temp_out}.pid"; then
+ 			echo "failed-syscalls-by-pid PID filter test failed."
+ 			cat "${temp_out}.pid" 2>/dev/null || true
+diff --git a/tools/perf/tests/shell/test_failed_syscalls_python.sh b/tools/=
+perf/tests/shell/test_failed_syscalls_python.sh
+index 0cabb127d7e9..861c2ba71c0a 100755
+--- a/tools/perf/tests/shell/test_failed_syscalls_python.sh
++++ b/tools/perf/tests/shell/test_failed_syscalls_python.sh
+@@ -63,7 +63,7 @@ if [ ! -s "${temp_data}" ]; then
+ fi
+=20
+ # Check that the script executes
+-if ! "$PYTHON" "$script_path" -i "${temp_data}" > "${temp_out}"; then
++if ! perf script failed-syscalls -i "${temp_data}" > "${temp_out}"; then
+ 	echo "failed-syscalls.py test failed"
+ 	err=3D1
+ else
+diff --git a/tools/perf/tests/shell/test_flamegraph_python.sh b/tools/perf/=
+tests/shell/test_flamegraph_python.sh
+index 3733d53b916b..08f4f6598ed3 100755
+--- a/tools/perf/tests/shell/test_flamegraph_python.sh
++++ b/tools/perf/tests/shell/test_flamegraph_python.sh
+@@ -49,11 +49,11 @@ test_file_mode() {
+ 	fi
+=20
+ 	# Run the script, dump as json to temp_json (testing both file mode and p=
+ipe '-' mode)
+-	if ! "$PYTHON" "$script_path" -i "${temp_data}" -f json -o "${temp_json}"=
+ >/dev/null; then
++	if ! perf script flamegraph -i "${temp_data}" -f json -o "${temp_json}" >=
+/dev/null; then
+ 		echo "File mode JSON test failed."
+ 		err=3D1
+ 	elif ! perf record -g -o - -- perf test -w noploop 2>/dev/null | \
+-		"$PYTHON" "$script_path" -i - -f json -o "${temp_json}" >/dev/null; then
++		perf script flamegraph -i - -f json -o "${temp_json}" >/dev/null; then
+ 		echo "Pipe stdin JSON mode test failed."
+ 		err=3D1
+ 	else
+@@ -72,7 +72,7 @@ assert d.get('v', 0) > 0 or len(d.get('c', [])) > 0" "${t=
+emp_json}" >/dev/null 2
+ 	fi
+=20
+ 	# Run the script, dump as html to temp_html using MINIMAL_HTML fallback
+-	if ! "$PYTHON" "$script_path" -i "${temp_data}" -f html \
++	if ! perf script flamegraph -i "${temp_data}" -f html \
+ 		--template /nonexistent/template.html -o "${temp_html}" >/dev/null 2>&1;=
+ then
+ 		echo "File mode HTML test failed."
+ 		err=3D1
+@@ -93,7 +93,7 @@ const opts =3D /** @options_json **/;
+ const data =3D /** @flamegraph_json **/;
+ </script></body></html>
+ EOF
+-	if ! "$PYTHON" "$script_path" -i "${temp_data}" -f html --template "${tem=
+p_tpl}" \
++	if ! perf script flamegraph -i "${temp_data}" -f html --template "${temp_=
+tpl}" \
+ 		--colorscheme blue-green -o "${temp_html}" >/dev/null 2>&1; then
+ 		echo "Custom template HTML test failed."
+ 		err=3D1
+diff --git a/tools/perf/tests/shell/test_futex_contention_python.sh b/tools=
+/perf/tests/shell/test_futex_contention_python.sh
+index 26b13d263d20..a8846ed68ac2 100755
+--- a/tools/perf/tests/shell/test_futex_contention_python.sh
++++ b/tools/perf/tests/shell/test_futex_contention_python.sh
+@@ -101,7 +101,7 @@ test_file_mode() {
+ 		return
+ 	fi
+=20
+-	if ! "$PYTHON" "$script_path" -i "${temp_data}" > "${temp_out}"; then
++	if ! perf script futex-contention -i "${temp_data}" > "${temp_out}"; then
+ 		echo "File mode test failed."
+ 		err=3D1
+ 	else
+diff --git a/tools/perf/tests/shell/test_gecko_python.sh b/tools/perf/tests=
+/shell/test_gecko_python.sh
+index eac9b2f8e3c7..de1d7fcf88b7 100755
+--- a/tools/perf/tests/shell/test_gecko_python.sh
++++ b/tools/perf/tests/shell/test_gecko_python.sh
+@@ -45,7 +45,7 @@ test_file_mode() {
+ 	fi
+=20
+ 	# Run the script in save-only mode with custom product and category color=
+s
+-	if ! "$PYTHON" "$script_path" -i "${temp_data}" \
++	if ! perf script gecko -i "${temp_data}" \
+ 		--product "perf-test-product" --user-color blue --kernel-color red \
+ 		--save-only "${temp_json}" >/dev/null; then
+ 		echo "File mode test failed."
+diff --git a/tools/perf/tests/shell/test_intel_pt_events_python.sh b/tools/=
+perf/tests/shell/test_intel_pt_events_python.sh
+index 0d397792ced8..b5c3173fa2db 100755
+--- a/tools/perf/tests/shell/test_intel_pt_events_python.sh
++++ b/tools/perf/tests/shell/test_intel_pt_events_python.sh
+@@ -49,7 +49,7 @@ test_intel_pt() {
+ 	fi
+=20
+ 	# Run the script and check output
+-	if ! "$PYTHON" "$script_path" -i "${temp_data}" > "${temp_out}"; then
++	if ! perf script intel-pt-events -i "${temp_data}" > "${temp_out}"; then
+ 		echo "intel-pt-events.py test failed."
+ 		err=3D1
+ 	else
+diff --git a/tools/perf/tests/shell/test_mem_phys_addr_python.sh b/tools/pe=
+rf/tests/shell/test_mem_phys_addr_python.sh
+index d094a0611a24..451692d5e089 100755
+--- a/tools/perf/tests/shell/test_mem_phys_addr_python.sh
++++ b/tools/perf/tests/shell/test_mem_phys_addr_python.sh
+@@ -87,7 +87,8 @@ test_file_mode() {
+ 	fi
+=20
+ 	# Run the script with custom --iomem
+-	if ! "$PYTHON" "$script_path" -i "${temp_data}" --iomem "${temp_iomem}" >=
+ "${temp_out}" || \
++	if ! perf script mem-phys-addr -i "${temp_data}" \
++		--iomem "${temp_iomem}" > "${temp_out}" || \
+ 	   [ ! -s "${temp_out}" ]; then
+ 		echo "File mode test failed."
+ 		err=3D1
+diff --git a/tools/perf/tests/shell/test_net_dropmonitor_python.sh b/tools/=
+perf/tests/shell/test_net_dropmonitor_python.sh
+index d00be255d259..05056a897bc9 100755
+--- a/tools/perf/tests/shell/test_net_dropmonitor_python.sh
++++ b/tools/perf/tests/shell/test_net_dropmonitor_python.sh
+@@ -59,7 +59,7 @@ if [ ! -s "${temp_data}" ]; then
+ fi
+=20
+ # Check that the script executes and outputs table header
+-if ! "$PYTHON" "$script_path" -i "${temp_data}" > "${temp_out}"; then
++if ! perf script net_dropmonitor -i "${temp_data}" > "${temp_out}"; then
+ 	echo "net_dropmonitor.py test failed"
+ 	err=3D1
+ else
+diff --git a/tools/perf/tests/shell/test_netdev_times_python.sh b/tools/per=
+f/tests/shell/test_netdev_times_python.sh
+index bb0f8c30207f..393bf446efb2 100755
+--- a/tools/perf/tests/shell/test_netdev_times_python.sh
++++ b/tools/perf/tests/shell/test_netdev_times_python.sh
+@@ -93,7 +93,7 @@ if ! perf record -e skb:kfree_skb -a -o "${temp_data}" \
+ fi
+=20
+ # Check that the script executes
+-if ! "$PYTHON" "$script_path" -i "${temp_data}" > "${temp_out}"; then
++if ! perf script netdev-times -i "${temp_data}" > "${temp_out}"; then
+ 	echo "netdev-times.py test failed"
+ 	err=3D1
+ else
+diff --git a/tools/perf/tests/shell/test_powerpc_hcalls_python.sh b/tools/p=
+erf/tests/shell/test_powerpc_hcalls_python.sh
+index 5316c28f243f..19569c6d3613 100755
+--- a/tools/perf/tests/shell/test_powerpc_hcalls_python.sh
++++ b/tools/perf/tests/shell/test_powerpc_hcalls_python.sh
+@@ -79,7 +79,7 @@ if [ ! -s "${temp_data}" ]; then
+ fi
+=20
+ # Check that the script executes on recorded perf.data
+-if ! "$PYTHON" "$script_path" -i "${temp_data}" > "${temp_out}"; then
++if ! perf script powerpc-hcalls -i "${temp_data}" > "${temp_out}"; then
+ 	echo "powerpc-hcalls.py test failed"
+ 	err=3D1
+ else
+diff --git a/tools/perf/tests/shell/test_rw_by_file_python.sh b/tools/perf/=
+tests/shell/test_rw_by_file_python.sh
+index 98218bf8a39e..f121597f418f 100755
+--- a/tools/perf/tests/shell/test_rw_by_file_python.sh
++++ b/tools/perf/tests/shell/test_rw_by_file_python.sh
+@@ -52,7 +52,7 @@ if [ ! -s "${temp_data}" ]; then
+ fi
+=20
+ # Check that the script executes - filtering for "dd" since that's what we=
+ ran
+-if ! "$PYTHON" "$script_path" -i "${temp_data}" "dd" > "${temp_out}"; then
++if ! perf script rw-by-file -i "${temp_data}" "dd" > "${temp_out}"; then
+ 	echo "rw-by-file.py test failed"
+ 	err=3D1
+ else
+diff --git a/tools/perf/tests/shell/test_rw_by_pid_python.sh b/tools/perf/t=
+ests/shell/test_rw_by_pid_python.sh
+index da8b065d43de..41eaa29097a2 100755
+--- a/tools/perf/tests/shell/test_rw_by_pid_python.sh
++++ b/tools/perf/tests/shell/test_rw_by_pid_python.sh
+@@ -58,7 +58,7 @@ if [ ! -s "${temp_data}" ]; then
+ fi
+=20
+ # Check that the script executes
+-if ! "$PYTHON" "$script_path" -i "${temp_data}" > "${temp_out}"; then
++if ! perf script rw-by-pid -i "${temp_data}" > "${temp_out}"; then
+ 	echo "rw-by-pid.py test failed"
+ 	err=3D1
+ else
+diff --git a/tools/perf/tests/shell/test_rwtop_python.sh b/tools/perf/tests=
+/shell/test_rwtop_python.sh
+index 062fca2dad14..05897e384702 100755
+--- a/tools/perf/tests/shell/test_rwtop_python.sh
++++ b/tools/perf/tests/shell/test_rwtop_python.sh
+@@ -58,7 +58,7 @@ if [ ! -s "${temp_data}" ]; then
+ fi
+=20
+ # Check that the script executes
+-if ! "$PYTHON" "$script_path" -i "${temp_data}" > "${temp_out}"; then
++if ! perf script rwtop -i "${temp_data}" > "${temp_out}"; then
+ 	echo "rwtop.py test failed"
+ 	err=3D1
+ else
+diff --git a/tools/perf/tests/shell/test_sched_migration_python.sh b/tools/=
+perf/tests/shell/test_sched_migration_python.sh
+index f243e86c6700..75465bcd3791 100755
+--- a/tools/perf/tests/shell/test_sched_migration_python.sh
++++ b/tools/perf/tests/shell/test_sched_migration_python.sh
+@@ -58,7 +58,7 @@ if [ ! -s "${temp_data}" ]; then
+ fi
+=20
+ # Check that the script executes
+-if ! "$PYTHON" "$script_path" -v --no-gui -i "${temp_data}" > "${temp_out}=
+"; then
++if ! perf script sched-migration -v --no-gui -i "${temp_data}" > "${temp_o=
+ut}"; then
+ 	echo "sched-migration.py test failed"
+ 	err=3D1
+ elif [ "$has_sched" -eq 1 ] && ! grep -q "Timeslices:" "${temp_out}"; then
+diff --git a/tools/perf/tests/shell/test_sctop_python.sh b/tools/perf/tests=
+/shell/test_sctop_python.sh
+index cd38cdd4794c..007f2584cce6 100755
+--- a/tools/perf/tests/shell/test_sctop_python.sh
++++ b/tools/perf/tests/shell/test_sctop_python.sh
+@@ -56,13 +56,13 @@ if [ ! -s "${temp_data}" ]; then
+ fi
+=20
+ # Check that the script executes
+-if ! "$PYTHON" "$script_path" -i "${temp_data}" > "${temp_out}"; then
++if ! perf script sctop -i "${temp_data}" > "${temp_out}"; then
+ 	echo "sctop.py test failed"
+ 	err=3D1
+ elif ! grep -E -q "[0-9]+$" "${temp_out}"; then
+ 	echo "Failed to find metric data rows in default run"
+ 	err=3D1
+-elif ! "$PYTHON" "$script_path" -i "${temp_data}" sleep 1 > "${temp_out}";=
+ then
++elif ! perf script sctop -i "${temp_data}" sleep 1 > "${temp_out}"; then
+ 	echo "sctop.py comm+interval test failed"
+ 	err=3D1
+ else
+diff --git a/tools/perf/tests/shell/test_stackcollapse_python.sh b/tools/pe=
+rf/tests/shell/test_stackcollapse_python.sh
+index a3b6c917e842..ce0f80407eec 100755
+--- a/tools/perf/tests/shell/test_stackcollapse_python.sh
++++ b/tools/perf/tests/shell/test_stackcollapse_python.sh
+@@ -47,7 +47,7 @@ if [ ! -s "${temp_data}" ]; then
+ fi
+=20
+ # Check that the script executes with default options
+-if ! "$PYTHON" "$script_path" -i "${temp_data}" > "${temp_out}"; then
++if ! perf script stackcollapse -i "${temp_data}" > "${temp_out}"; then
+ 	echo "stackcollapse.py test failed"
+ 	err=3D1
+ else
+@@ -61,12 +61,12 @@ else
+ fi
+=20
+ # Test CLI flags (--include-pid, --include-tid, --tidy-java, --kernel) and=
+ BrokenPipeError
+-if ! "$PYTHON" "$script_path" -i "${temp_data}" \
++if ! perf script stackcollapse -i "${temp_data}" \
+ 	--include-pid --include-tid --tidy-java --kernel | head -n 1 > "${temp_ou=
+t}" || \
+    [ ! -s "${temp_out}" ]; then
+ 	echo "stackcollapse.py options/pipe test failed"
+ 	err=3D1
+-elif ! "$PYTHON" "$script_path" -i "${temp_data}" --no-comm > "${temp_out}=
+" || \
++elif ! perf script stackcollapse -i "${temp_data}" --no-comm > "${temp_out=
+}" || \
+      [ ! -s "${temp_out}" ]; then
+ 	echo "stackcollapse.py --no-comm test failed"
+ 	err=3D1
+diff --git a/tools/perf/tests/shell/test_stat_cpi_python.sh b/tools/perf/te=
+sts/shell/test_stat_cpi_python.sh
+index 0960afa4c797..fe7562307634 100755
+--- a/tools/perf/tests/shell/test_stat_cpi_python.sh
++++ b/tools/perf/tests/shell/test_stat_cpi_python.sh
+@@ -62,7 +62,7 @@ test_live_mode() {
+ 	ran=3D1
+=20
+ 	# Run live mode for 1 interval in the background, give it a tiny sleep, t=
+hen interrupt
+-	"$PYTHON" "$script_path" -I 0.1 -p "$workload_pid" > "${temp_out}" &
++	perf script stat-cpi -I 0.1 -p "$workload_pid" > "${temp_out}" &
+ 	pid=3D$!
+ 	sleep 0.5
+ 	kill -INT "$pid" 2>/dev/null || true
+@@ -96,7 +96,7 @@ test_file_mode() {
+ 	fi
+ 	ran=3D1
+=20
+-	out=3D$("$PYTHON" "$script_path" -i "${temp_data}")
++	out=3D$(perf script stat-cpi -i "${temp_data}")
+ 	if ! echo "$out" | grep -q "cpi"; then
+ 		echo "File mode test failed."
+ 		err=3D1
+diff --git a/tools/perf/tests/shell/test_syscall_counts_by_pid_python.sh b/=
+tools/perf/tests/shell/test_syscall_counts_by_pid_python.sh
+index 9f2ad27751a2..45bbdc554c8f 100755
+--- a/tools/perf/tests/shell/test_syscall_counts_by_pid_python.sh
++++ b/tools/perf/tests/shell/test_syscall_counts_by_pid_python.sh
+@@ -53,7 +53,7 @@ test_file_mode() {
+ 		-- sleep 0.5 >/dev/null 2>&1 || \
+ 		{ echo "Skipping test, perf record failed"; exit 2; }
+=20
+-	if ! "$PYTHON" "$script_path" -i "${temp_data}" > "${temp_out}"; then
++	if ! perf script syscall-counts-by-pid -i "${temp_data}" > "${temp_out}";=
+ then
+ 		echo "File mode test failed."
+ 		err=3D1
+ 	elif ! grep -E -q "^  [a-zA-Z0-9_]+ +[0-9]+$" "${temp_out}"; then
+@@ -64,7 +64,7 @@ test_file_mode() {
+ 	fi
+=20
+ 	# Test with a comm argument
+-	if ! "$PYTHON" "$script_path" -i "${temp_data}" "sleep" > "${temp_out}"; =
+then
++	if ! perf script syscall-counts-by-pid -i "${temp_data}" "sleep" > "${tem=
+p_out}"; then
+ 		echo "Comm filter test failed."
+ 		err=3D1
+ 	elif ! grep -E -q "^  [a-zA-Z0-9_]+ +[0-9]+$" "${temp_out}"; then
+@@ -76,7 +76,8 @@ test_file_mode() {
+=20
+ 	# Extract sleep PID from "sleep [<pid>]" header and test with a numeric P=
+ID filter argument
+ 	sleep_pid=3D$(sed -n 's/^sleep \[\([0-9]\+\)\]$/\1/p' "${temp_out}" | hea=
+d -n 1)
+-	if [ -z "${sleep_pid}" ] || ! "$PYTHON" "$script_path" -i "${temp_data}" =
+"${sleep_pid}" > "${temp_out}"; then
++	if [ -z "${sleep_pid}" ] || \
++	   ! perf script syscall-counts-by-pid -i "${temp_data}" "${sleep_pid}" >=
+ "${temp_out}"; then
+ 		echo "PID filter test failed."
+ 		err=3D1
+ 	elif ! grep -E -q "^  [a-zA-Z0-9_]+ +[0-9]+$" "${temp_out}"; then
+diff --git a/tools/perf/tests/shell/test_syscall_counts_python.sh b/tools/p=
+erf/tests/shell/test_syscall_counts_python.sh
+index 0c4b75499209..310e05d399f9 100755
+--- a/tools/perf/tests/shell/test_syscall_counts_python.sh
++++ b/tools/perf/tests/shell/test_syscall_counts_python.sh
+@@ -54,7 +54,7 @@ test_file_mode() {
+ 		exit 2
+ 	fi
+=20
+-	if ! "$PYTHON" "$script_path" -i "${temp_data}" > "${temp_out}"; then
++	if ! perf script syscall-counts -i "${temp_data}" > "${temp_out}"; then
+ 		echo "File mode test failed."
+ 		err=3D1
+ 	elif ! grep -E -q "^[a-zA-Z0-9_]+ +[0-9]+$" "${temp_out}"; then
+@@ -65,7 +65,7 @@ test_file_mode() {
+ 	fi
+=20
+ 	# Test with a comm argument
+-	if ! "$PYTHON" "$script_path" -i "${temp_data}" "sleep" > "${temp_out}"; =
+then
++	if ! perf script syscall-counts -i "${temp_data}" "sleep" > "${temp_out}"=
+; then
+ 		echo "Comm filter test failed."
+ 		err=3D1
+ 	elif ! grep -E -q "^[a-zA-Z0-9_]+ +[0-9]+$" "${temp_out}"; then
+diff --git a/tools/perf/tests/shell/test_task_analyzer.sh b/tools/perf/test=
+s/shell/test_task_analyzer.sh
+index 3a97d58eec74..f99a637a6099 100755
+--- a/tools/perf/tests/shell/test_task_analyzer.sh
++++ b/tools/perf/tests/shell/test_task_analyzer.sh
+@@ -11,16 +11,6 @@ csv=3D"$tmpdir/csv"
+ csvsummary=3D"$tmpdir/csvsummary"
+ err=3D0
+=20
+-# Set up perfdir and PERF_EXEC_PATH
+-if [ "x$PERF_EXEC_PATH" =3D "x" ]; then
+-  perfdir=3D"$(dirname "$0")/../.."
+-  if [ -f "$perfdir/python/task-analyzer.py" ]; then
+-    export PERF_EXEC_PATH=3D"$perfdir"
+-  fi
+-else
+-  perfdir=3D"$PERF_EXEC_PATH"
+-fi
+-
+ # Disable lsan to avoid warnings about python memory leaks.
+ export ASAN_OPTIONS=3Ddetect_leaks=3D0
+=20
+@@ -81,17 +71,17 @@ prepare_perf_data() {
+ # check standard inkvokation with no arguments
+ test_basic() {
+ 	out=3D"$tmpdir/perf.out"
+-	$PYTHON $perfdir/python/task-analyzer.py -i "${perfdata}" > "$out"
+-	check_exec_0 "$PYTHON $perfdir/python/task-analyzer.py -i ${perfdata}"
++	perf script -i "${perfdata}" task-analyzer > "$out"
++	check_exec_0 "perf script -i ${perfdata} task-analyzer"
+ 	find_str_or_fail "Comm" "$out" "${FUNCNAME[0]}"
+ }
+=20
+ test_ns_rename(){
+ 	out=3D"$tmpdir/perf.out"
+-	$PYTHON $perfdir/python/task-analyzer.py -i "${perfdata}" \
++	perf script -i "${perfdata}" task-analyzer \
+ 		--ns \
+ 		--rename-comms-by-tids 0:random > "$out"
+-	check_exec_0 "$PYTHON $perfdir/python/task-analyzer.py -i ${perfdata} \
++	check_exec_0 "perf script -i ${perfdata} task-analyzer \
+ 		--ns \
+ 		--rename-comms-by-tids 0:random"
+ 	find_str_or_fail "Comm" "$out" "${FUNCNAME[0]}"
+@@ -99,20 +89,20 @@ test_ns_rename(){
+=20
+ test_ms_filtertasks_highlight(){
+ 	out=3D"$tmpdir/perf.out"
+-	$PYTHON $perfdir/python/task-analyzer.py -i "${perfdata}" \
++	perf script -i "${perfdata}" task-analyzer \
+ 		--ms --filter-tasks perf --highlight-tasks perf \
+ 	> "$out"
+-	check_exec_0 "$PYTHON $perfdir/python/task-analyzer.py -i ${perfdata} \
++	check_exec_0 "perf script -i ${perfdata} task-analyzer \
+ 		--ms --filter-tasks perf --highlight-tasks perf"
+ 	find_str_or_fail "Comm" "$out" "${FUNCNAME[0]}"
+ }
+=20
+ test_extended_times_timelimit_limittasks() {
+ 	out=3D"$tmpdir/perf.out"
+-	$PYTHON $perfdir/python/task-analyzer.py -i "${perfdata}" --extended-time=
+s \
++	perf script -i "${perfdata}" task-analyzer --extended-times \
+ 		--time-limit :99999 \
+ 	--limit-to-tasks perf > "$out"
+-	check_exec_0 "$PYTHON $perfdir/python/task-analyzer.py -i ${perfdata} \
++	check_exec_0 "perf script -i ${perfdata} task-analyzer \
+ 		--extended-times \
+ 		--time-limit :99999 --limit-to-tasks perf"
+ 	find_str_or_fail "Out-Out" "$out" "${FUNCNAME[0]}"
+@@ -120,30 +110,30 @@ test_extended_times_timelimit_limittasks() {
+=20
+ test_summary() {
+ 	out=3D"$tmpdir/perf.out"
+-	$PYTHON $perfdir/python/task-analyzer.py -i "${perfdata}" --summary > "$o=
+ut"
+-	check_exec_0 "$PYTHON $perfdir/python/task-analyzer.py -i ${perfdata} --s=
+ummary"
++	perf script -i "${perfdata}" task-analyzer --summary > "$out"
++	check_exec_0 "perf script -i ${perfdata} task-analyzer --summary"
+ 	find_str_or_fail "Summary" "$out" "${FUNCNAME[0]}"
+ }
+=20
+ test_summaryextended() {
+ 	out=3D"$tmpdir/perf.out"
+-	$PYTHON $perfdir/python/task-analyzer.py -i "${perfdata}" --summary-exten=
+ded > "$out"
+-	check_exec_0 "$PYTHON $perfdir/python/task-analyzer.py -i ${perfdata} --s=
+ummary-extended"
++	perf script -i "${perfdata}" task-analyzer --summary-extended > "$out"
++	check_exec_0 "perf script -i ${perfdata} task-analyzer --summary-extended=
+"
+ 	find_str_or_fail "Inter Task Times" "$out" "${FUNCNAME[0]}"
+ }
+=20
+ test_summaryonly() {
+ 	out=3D"$tmpdir/perf.out"
+-	$PYTHON $perfdir/python/task-analyzer.py -i "${perfdata}" --summary-only =
+> "$out"
+-	check_exec_0 "$PYTHON $perfdir/python/task-analyzer.py -i ${perfdata} --s=
+ummary-only"
++	perf script -i "${perfdata}" task-analyzer --summary-only > "$out"
++	check_exec_0 "perf script -i ${perfdata} task-analyzer --summary-only"
+ 	find_str_or_fail "Summary" "$out" "${FUNCNAME[0]}"
+ }
+=20
+ test_extended_times_summary_ns() {
+ 	out=3D"$tmpdir/perf.out"
+-	$PYTHON $perfdir/python/task-analyzer.py -i "${perfdata}" --extended-time=
+s \
++	perf script -i "${perfdata}" task-analyzer --extended-times \
+ 		--summary --ns > "$out"
+-	check_exec_0 "$PYTHON $perfdir/python/task-analyzer.py -i ${perfdata} \
++	check_exec_0 "perf script -i ${perfdata} task-analyzer \
+ 		--extended-times \
+ 		--summary \
+ 		--ns"
+@@ -152,34 +142,34 @@ test_extended_times_summary_ns() {
+ }
+=20
+ test_csv() {
+-	$PYTHON $perfdir/python/task-analyzer.py -i "${perfdata}" --csv "${csv}" =
+> /dev/null
+-	check_exec_0 "$PYTHON $perfdir/python/task-analyzer.py -i ${perfdata} --c=
+sv ${csv}"
++	perf script -i "${perfdata}" task-analyzer --csv "${csv}" > /dev/null
++	check_exec_0 "perf script -i ${perfdata} task-analyzer --csv ${csv}"
+ 	find_str_or_fail "Comm;" "${csv}" "${FUNCNAME[0]}"
+ }
+=20
+ test_csv_extended_times() {
+-	$PYTHON $perfdir/python/task-analyzer.py -i "${perfdata}" \
++	perf script -i "${perfdata}" task-analyzer \
+ 		--csv "${csv}" \
+ 		--extended-times > /dev/null
+-	check_exec_0 "$PYTHON $perfdir/python/task-analyzer.py -i ${perfdata} \
++	check_exec_0 "perf script -i ${perfdata} task-analyzer \
+ 		--csv ${csv} \
+ 		--extended-times"
+ 	find_str_or_fail "Out-Out;" "${csv}" "${FUNCNAME[0]}"
+ }
+=20
+ test_csvsummary() {
+-	$PYTHON $perfdir/python/task-analyzer.py -i "${perfdata}" \
++	perf script -i "${perfdata}" task-analyzer \
+ 		--csv-summary "${csvsummary}" > /dev/null
+-	check_exec_0 "$PYTHON $perfdir/python/task-analyzer.py -i ${perfdata} \
++	check_exec_0 "perf script -i ${perfdata} task-analyzer \
+ 		--csv-summary ${csvsummary}"
+ 	find_str_or_fail "Comm;" "${csvsummary}" "${FUNCNAME[0]}"
+ }
+=20
+ test_csvsummary_extended() {
+-	$PYTHON $perfdir/python/task-analyzer.py -i "${perfdata}" \
++	perf script -i "${perfdata}" task-analyzer \
+ 		--csv-summary "${csvsummary}" --summary-extended \
+ 	>/dev/null
+-	check_exec_0 "$PYTHON $perfdir/python/task-analyzer.py -i ${perfdata} \
++	check_exec_0 "perf script -i ${perfdata} task-analyzer \
+ 		--csv-summary ${csvsummary} --summary-extended"
+ 	find_str_or_fail "Out-Out;" "${csvsummary}" "${FUNCNAME[0]}"
+ }
+diff --git a/tools/perf/tests/shell/test_wakeup_latency_python.sh b/tools/p=
+erf/tests/shell/test_wakeup_latency_python.sh
+index fc39ac117609..cb2571449168 100755
+--- a/tools/perf/tests/shell/test_wakeup_latency_python.sh
++++ b/tools/perf/tests/shell/test_wakeup_latency_python.sh
+@@ -57,7 +57,7 @@ if [ ! -s "${temp_data}" ]; then
+ fi
+=20
+ # Check that the script executes
+-if ! "$PYTHON" "$script_path" -i "${temp_data}" > "${temp_out}"; then
++if ! perf script wakeup-latency -i "${temp_data}" > "${temp_out}"; then
+ 	echo "wakeup-latency.py test failed"
+ 	err=3D1
+ else
+@@ -71,7 +71,7 @@ fi
+=20
+ # Also test zero-wakeups / unhandled events path to verify division-by-zer=
+o protection
+ if perf record -e cycles -o "${temp_data}" -- perf test -w noploop >/dev/n=
+ull 2>&1; then
+-	if ! "$PYTHON" "$script_path" -i "${temp_data}" > "${temp_out}" || \
++	if ! perf script wakeup-latency -i "${temp_data}" > "${temp_out}" || \
+ 	   ! grep -q "avg_wakeup_latency (ns): N/A" "${temp_out}"; then
+ 		echo "wakeup-latency zero-wakeups guard test failed"
+ 		err=3D1
+diff --git a/tools/perf/ui/browsers/scripts.c b/tools/perf/ui/browsers/scri=
+pts.c
+index b8a3383ec02a..d6d09b4a348c 100644
+--- a/tools/perf/ui/browsers/scripts.c
++++ b/tools/perf/ui/browsers/scripts.c
+@@ -86,75 +86,6 @@ static int scripts_config(const char *var, const char *v=
+alue, void *data)
+ 	return 0;
+ }
+=20
+-/*
+- * Some scripts specify the required events in their "xxx-record" file,
+- * this function will check if the events in perf.data match those
+- * mentioned in the "xxx-record".
+- *
+- * Fixme: All existing "xxx-record" are all in good formats "-e event ",
+- * which is covered well now. And new parsing code should be added to
+- * cover the future complex formats like event groups etc.
+- */
+-static int check_ev_match(int dir_fd, const char *scriptname, struct perf_=
+session *session)
+-{
+-	char line[BUFSIZ];
+-	FILE *fp;
+-
+-	{
+-		char filename[NAME_MAX + 5];
+-		int fd;
+-
+-		scnprintf(filename, sizeof(filename), "bin/%s-record", scriptname);
+-		fd =3D openat(dir_fd, filename, O_RDONLY);
+-		if (fd =3D=3D -1)
+-			return -1;
+-		fp =3D fdopen(fd, "r");
+-		if (!fp)
+-			return -1;
+-	}
+-
+-	while (fgets(line, sizeof(line), fp)) {
+-		char *p =3D skip_spaces(line);
+-
+-		if (*p =3D=3D '#')
+-			continue;
+-
+-		while (strlen(p)) {
+-			int match, len;
+-			struct evsel *pos;
+-			char evname[128];
+-
+-			p =3D strstr(p, "-e");
+-			if (!p)
+-				break;
+-
+-			p +=3D 2;
+-			p =3D skip_spaces(p);
+-			len =3D strcspn(p, " \t");
+-			if (!len)
+-				break;
+-
+-			snprintf(evname, sizeof(evname), "%.*s", (int)len, p);
+-
+-			match =3D 0;
+-			evlist__for_each_entry(session->evlist, pos) {
+-				if (evsel__name_is(pos, evname)) {
+-					match =3D 1;
+-					break;
+-				}
+-			}
+-
+-			if (!match) {
+-				fclose(fp);
+-				return -1;
+-			}
+-		}
+-	}
+-
+-	fclose(fp);
+-	return 0;
+-}
+-
+ /*
+  * Return -1 if none is found, otherwise the actual scripts number.
+  *
+@@ -162,95 +93,18 @@ static int check_ev_match(int dir_fd, const char *scri=
+ptname, struct perf_sessio
+  * will list all statically runnable scripts, select one, execute it and
+  * show the output in a perf browser.
+  */
+-static int find_scripts(char **scripts_array, char **scripts_path_array, i=
+nt num,
+-		 int pathlen)
++static int find_scripts(char **scripts_array __maybe_unused,
++		 char **scripts_path_array __maybe_unused, int num __maybe_unused,
++		 int pathlen __maybe_unused)
+ {
+-	int namelen;
+-	struct dirent *script_dirent, *lang_dirent;
+-	int scripts_dir_fd, lang_dir_fd;
+-	DIR *scripts_dir, *lang_dir;
+-	struct perf_session *session;
+-	struct perf_data data =3D {
+-		.path =3D input_name,
+-		.mode =3D PERF_DATA_MODE_READ,
+-	};
+-	char *temp;
+ 	int i =3D 0;
+-	const char *exec_path =3D get_argv_exec_path();
+-
+-	session =3D perf_session__new(&data, NULL);
+-	if (IS_ERR(session))
+-		return PTR_ERR(session);
+-
+-	{
+-		char scripts_path[PATH_MAX];
+-
+-		snprintf(scripts_path, sizeof(scripts_path), "%s/scripts", exec_path);
+-		scripts_dir_fd =3D open(scripts_path, O_DIRECTORY);
+-	}
+-	if (scripts_dir_fd !=3D -1) {
+-		scripts_dir =3D fdopendir(scripts_dir_fd);
+-		if (scripts_dir) {
+-			while ((lang_dirent =3D readdir(scripts_dir)) !=3D NULL) {
+-				if (lang_dirent->d_type !=3D DT_DIR &&
+-				    (lang_dirent->d_type =3D=3D DT_UNKNOWN &&
+-				     !is_directory_at(scripts_dir_fd, lang_dirent->d_name)))
+-					continue;
+-				if (!strcmp(lang_dirent->d_name, ".") ||
+-				    !strcmp(lang_dirent->d_name, ".."))
+-					continue;
+-
+-				if (strstr(lang_dirent->d_name, "python"))
+-					continue;
+-
+-				lang_dir_fd =3D openat(scripts_dir_fd, lang_dirent->d_name,
+-					     O_DIRECTORY);
+-				if (lang_dir_fd =3D=3D -1)
+-					continue;
+-				lang_dir =3D fdopendir(lang_dir_fd);
+-				if (!lang_dir) {
+-					close(lang_dir_fd);
+-					continue;
+-				}
+-				while ((script_dirent =3D readdir(lang_dir)) !=3D NULL) {
+-					if (script_dirent->d_type =3D=3D DT_DIR)
+-						continue;
+-					if (script_dirent->d_type =3D=3D DT_UNKNOWN &&
+-					    is_directory_at(lang_dir_fd, script_dirent->d_name))
+-						continue;
+-					/* Skip those real time scripts: xxxtop.p[yl] */
+-					if (strstr(script_dirent->d_name, "top."))
+-						continue;
+-					if (i >=3D num)
+-						break;
+-					scnprintf(scripts_path_array[i], pathlen,
+-						  "%s/scripts/%s/%s", exec_path,
+-						  lang_dirent->d_name,
+-						  script_dirent->d_name);
+-					temp =3D strrchr(script_dirent->d_name, '.');
+-					namelen =3D temp ? (int)(temp - script_dirent->d_name)
+-							       : (int)strlen(script_dirent->d_name);
+-
+-					if (namelen >=3D SCRIPT_NAMELEN)
+-						namelen =3D SCRIPT_NAMELEN - 1;
+-					snprintf(scripts_array[i], namelen + 1, "%s",
+-						 script_dirent->d_name);
+-
+-					if (check_ev_match(lang_dir_fd, scripts_array[i], session))
+-						continue;
+-
+-					i++;
+-				}
+-				closedir(lang_dir);
+-			}
+-			closedir(scripts_dir);
+-		} else {
+-			close(scripts_dir_fd);
+-		}
+-	}
+=20
+ #ifdef HAVE_PYTHON_MODULE_SUPPORT
+ 	{
++		int namelen;
++		struct dirent *script_dirent;
++		char *temp;
++		const char *exec_path =3D get_argv_exec_path();
+ 		char py_scripts_path[PATH_MAX];
+ 		int py_scripts_dir_fd;
+ 		DIR *py_scripts_dir;
+@@ -299,7 +153,6 @@ static int find_scripts(char **scripts_array, char **sc=
+ripts_path_array, int num
+ 		}
+ 	}
+ #endif
+-	perf_session__delete(session);
+ 	return i;
+ }
+=20
+diff --git a/tools/perf/util/Build b/tools/perf/util/Build
+index 3ea888f4210a..1d63751af4f2 100644
+--- a/tools/perf/util/Build
++++ b/tools/perf/util/Build
+@@ -95,7 +95,6 @@ perf-util-y +=3D tool_pmu.o
+ perf-util-y +=3D tp_pmu.o
+ perf-util-y +=3D svghelper.o
+ perf-util-y +=3D trace-event-info.o
+-perf-util-y +=3D trace-event-scripting.o
+ perf-util-$(CONFIG_LIBTRACEEVENT) +=3D trace-event.o
+ perf-util-$(CONFIG_LIBTRACEEVENT) +=3D trace-event-parse.o
+ perf-util-$(CONFIG_LIBTRACEEVENT) +=3D trace-event-read.o
+@@ -236,8 +235,6 @@ endif
+=20
+ perf-util-y +=3D data-convert-json.o
+=20
+-perf-util-y +=3D scripting-engines/
+-
+ perf-util-$(CONFIG_ZLIB) +=3D zlib.o
+ perf-util-$(CONFIG_LZMA) +=3D lzma.o
+ perf-util-$(CONFIG_ZSTD) +=3D zstd.o
+diff --git a/tools/perf/util/scripting-engines/Build b/tools/perf/util/scri=
+pting-engines/Build
+deleted file mode 100644
+index 3f1dc10526f8..000000000000
+--- a/tools/perf/util/scripting-engines/Build
++++ /dev/null
+@@ -1,5 +0,0 @@
+-ifeq ($(CONFIG_LIBTRACEEVENT),y)
+-  perf-util-$(CONFIG_LIBPERL)   +=3D trace-event-perl.o
+-endif
+-
+-CFLAGS_trace-event-perl.o +=3D $(PERL_EMBED_CCOPTS) -Wno-redundant-decls -=
+Wno-strict-prototypes -Wno-unused-parameter -Wno-shadow -Wno-nested-externs=
+ -Wno-undef -Wno-switch-default -Wno-bad-function-cast -Wno-declaration-aft=
+er-statement -Wno-switch-enum -Wno-thread-safety-analysis
+diff --git a/tools/perf/util/scripting-engines/trace-event-perl.c b/tools/p=
+erf/util/scripting-engines/trace-event-perl.c
+deleted file mode 100644
+index 410dc4cd0600..000000000000
+--- a/tools/perf/util/scripting-engines/trace-event-perl.c
++++ /dev/null
+@@ -1,770 +0,0 @@
+-/*
+- * trace-event-perl.  Feed perf script events to an embedded Perl interpre=
+ter.
+- *
+- * Copyright (C) 2009 Tom Zanussi <tzanussi@gmail.com>
+- *
+- *  This program is free software; you can redistribute it and/or modify
+- *  it under the terms of the GNU General Public License as published by
+- *  the Free Software Foundation; either version 2 of the License, or
+- *  (at your option) any later version.
+- *
+- *  This program is distributed in the hope that it will be useful,
+- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- *  GNU General Public License for more details.
+- *
+- *  You should have received a copy of the GNU General Public License
+- *  along with this program; if not, write to the Free Software
+- *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  =
+USA
+- *
+- */
+-
+-#include <inttypes.h>
+-#include <stdio.h>
+-#include <stdlib.h>
+-#include <string.h>
+-#include <ctype.h>
+-#include <errno.h>
+-#include <linux/bitmap.h>
+-#include <linux/time64.h>
+-#include <event-parse.h>
+-
+-#include <stdbool.h>
+-/* perl needs the following define, right after including stdbool.h */
+-#define HAS_BOOL
+-#include <EXTERN.h>
+-#include <perl.h>
+-
+-#include "../callchain.h"
+-#include "../dso.h"
+-#include "../machine.h"
+-#include "../map.h"
+-#include "../symbol.h"
+-#include "../thread.h"
+-#include "../event.h"
+-#include "../trace-event.h"
+-#include "../evsel.h"
+-#include "../debug.h"
+-
+-void boot_Perf__Trace__Context(pTHX_ CV *cv);
+-void boot_DynaLoader(pTHX_ CV *cv);
+-typedef PerlInterpreter * INTERP;
+-
+-void xs_init(pTHX);
+-
+-void xs_init(pTHX)
+-{
+-	const char *file =3D __FILE__;
+-	dXSUB_SYS;
+-
+-	newXS("Perf::Trace::Context::bootstrap", boot_Perf__Trace__Context,
+-	      file);
+-	newXS("DynaLoader::boot_DynaLoader", boot_DynaLoader, file);
+-}
+-
+-INTERP my_perl;
+-
+-#define TRACE_EVENT_TYPE_MAX				\
+-	((1 << (sizeof(unsigned short) * 8)) - 1)
+-
+-extern struct scripting_context *scripting_context;
+-
+-static char *cur_field_name;
+-static int zero_flag_atom;
+-
+-static void define_symbolic_value(const char *ev_name,
+-				  const char *field_name,
+-				  const char *field_value,
+-				  const char *field_str)
+-{
+-	unsigned long long value;
+-	dSP;
+-
+-	value =3D eval_flag(field_value);
+-
+-	ENTER;
+-	SAVETMPS;
+-	PUSHMARK(SP);
+-
+-	XPUSHs(sv_2mortal(newSVpv(ev_name, 0)));
+-	XPUSHs(sv_2mortal(newSVpv(field_name, 0)));
+-	XPUSHs(sv_2mortal(newSVuv(value)));
+-	XPUSHs(sv_2mortal(newSVpv(field_str, 0)));
+-
+-	PUTBACK;
+-	if (get_cv("main::define_symbolic_value", 0))
+-		call_pv("main::define_symbolic_value", G_SCALAR);
+-	SPAGAIN;
+-	PUTBACK;
+-	FREETMPS;
+-	LEAVE;
+-}
+-
+-static void define_symbolic_values(struct tep_print_flag_sym *field,
+-				   const char *ev_name,
+-				   const char *field_name)
+-{
+-	define_symbolic_value(ev_name, field_name, field->value, field->str);
+-	if (field->next)
+-		define_symbolic_values(field->next, ev_name, field_name);
+-}
+-
+-static void define_symbolic_field(const char *ev_name,
+-				  const char *field_name)
+-{
+-	dSP;
+-
+-	ENTER;
+-	SAVETMPS;
+-	PUSHMARK(SP);
+-
+-	XPUSHs(sv_2mortal(newSVpv(ev_name, 0)));
+-	XPUSHs(sv_2mortal(newSVpv(field_name, 0)));
+-
+-	PUTBACK;
+-	if (get_cv("main::define_symbolic_field", 0))
+-		call_pv("main::define_symbolic_field", G_SCALAR);
+-	SPAGAIN;
+-	PUTBACK;
+-	FREETMPS;
+-	LEAVE;
+-}
+-
+-static void define_flag_value(const char *ev_name,
+-			      const char *field_name,
+-			      const char *field_value,
+-			      const char *field_str)
+-{
+-	unsigned long long value;
+-	dSP;
+-
+-	value =3D eval_flag(field_value);
+-
+-	ENTER;
+-	SAVETMPS;
+-	PUSHMARK(SP);
+-
+-	XPUSHs(sv_2mortal(newSVpv(ev_name, 0)));
+-	XPUSHs(sv_2mortal(newSVpv(field_name, 0)));
+-	XPUSHs(sv_2mortal(newSVuv(value)));
+-	XPUSHs(sv_2mortal(newSVpv(field_str, 0)));
+-
+-	PUTBACK;
+-	if (get_cv("main::define_flag_value", 0))
+-		call_pv("main::define_flag_value", G_SCALAR);
+-	SPAGAIN;
+-	PUTBACK;
+-	FREETMPS;
+-	LEAVE;
+-}
+-
+-static void define_flag_values(struct tep_print_flag_sym *field,
+-			       const char *ev_name,
+-			       const char *field_name)
+-{
+-	define_flag_value(ev_name, field_name, field->value, field->str);
+-	if (field->next)
+-		define_flag_values(field->next, ev_name, field_name);
+-}
+-
+-static void define_flag_field(const char *ev_name,
+-			      const char *field_name,
+-			      const char *delim)
+-{
+-	dSP;
+-
+-	ENTER;
+-	SAVETMPS;
+-	PUSHMARK(SP);
+-
+-	XPUSHs(sv_2mortal(newSVpv(ev_name, 0)));
+-	XPUSHs(sv_2mortal(newSVpv(field_name, 0)));
+-	XPUSHs(sv_2mortal(newSVpv(delim, 0)));
+-
+-	PUTBACK;
+-	if (get_cv("main::define_flag_field", 0))
+-		call_pv("main::define_flag_field", G_SCALAR);
+-	SPAGAIN;
+-	PUTBACK;
+-	FREETMPS;
+-	LEAVE;
+-}
+-
+-static void define_event_symbols(struct tep_event *event,
+-				 const char *ev_name,
+-				 struct tep_print_arg *args)
+-{
+-	if (args =3D=3D NULL)
+-		return;
+-
+-	switch (args->type) {
+-	case TEP_PRINT_NULL:
+-		break;
+-	case TEP_PRINT_ATOM:
+-		define_flag_value(ev_name, cur_field_name, "0",
+-				  args->atom.atom);
+-		zero_flag_atom =3D 0;
+-		break;
+-	case TEP_PRINT_FIELD:
+-		free(cur_field_name);
+-		cur_field_name =3D strdup(args->field.name);
+-		break;
+-	case TEP_PRINT_FLAGS:
+-		define_event_symbols(event, ev_name, args->flags.field);
+-		define_flag_field(ev_name, cur_field_name, args->flags.delim);
+-		define_flag_values(args->flags.flags, ev_name, cur_field_name);
+-		break;
+-	case TEP_PRINT_SYMBOL:
+-		define_event_symbols(event, ev_name, args->symbol.field);
+-		define_symbolic_field(ev_name, cur_field_name);
+-		define_symbolic_values(args->symbol.symbols, ev_name,
+-				       cur_field_name);
+-		break;
+-	case TEP_PRINT_HEX:
+-	case TEP_PRINT_HEX_STR:
+-		define_event_symbols(event, ev_name, args->hex.field);
+-		define_event_symbols(event, ev_name, args->hex.size);
+-		break;
+-	case TEP_PRINT_INT_ARRAY:
+-		define_event_symbols(event, ev_name, args->int_array.field);
+-		define_event_symbols(event, ev_name, args->int_array.count);
+-		define_event_symbols(event, ev_name, args->int_array.el_size);
+-		break;
+-	case TEP_PRINT_BSTRING:
+-	case TEP_PRINT_DYNAMIC_ARRAY:
+-	case TEP_PRINT_DYNAMIC_ARRAY_LEN:
+-	case TEP_PRINT_STRING:
+-	case TEP_PRINT_BITMASK:
+-		break;
+-	case TEP_PRINT_TYPE:
+-		define_event_symbols(event, ev_name, args->typecast.item);
+-		break;
+-	case TEP_PRINT_OP:
+-		if (strcmp(args->op.op, ":") =3D=3D 0)
+-			zero_flag_atom =3D 1;
+-		define_event_symbols(event, ev_name, args->op.left);
+-		define_event_symbols(event, ev_name, args->op.right);
+-		break;
+-	case TEP_PRINT_FUNC:
+-	default:
+-		pr_err("Unsupported print arg type\n");
+-		/* we should warn... */
+-		return;
+-	}
+-
+-	if (args->next)
+-		define_event_symbols(event, ev_name, args->next);
+-}
+-
+-static SV *perl_process_callchain(struct perf_sample *sample,
+-				  struct addr_location *al)
+-{
+-	struct callchain_cursor *cursor;
+-	AV *list;
+-
+-	list =3D newAV();
+-	if (!list)
+-		goto exit;
+-
+-	if (!symbol_conf.use_callchain || !sample->callchain)
+-		goto exit;
+-
+-	cursor =3D get_tls_callchain_cursor();
+-
+-	if (thread__resolve_callchain(al->thread, cursor,
+-				      sample, NULL, NULL, scripting_max_stack) !=3D 0) {
+-		pr_err("Failed to resolve callchain. Skipping\n");
+-		goto exit;
+-	}
+-	callchain_cursor_commit(cursor);
+-
+-
+-	while (1) {
+-		HV *elem;
+-		struct callchain_cursor_node *node;
+-		node =3D callchain_cursor_current(cursor);
+-		if (!node)
+-			break;
+-
+-		elem =3D newHV();
+-		if (!elem)
+-			goto exit;
+-
+-		if (!hv_stores(elem, "ip", newSVuv(node->ip))) {
+-			hv_undef(elem);
+-			goto exit;
+-		}
+-
+-		if (node->ms.sym) {
+-			HV *sym =3D newHV();
+-			if (!sym) {
+-				hv_undef(elem);
+-				goto exit;
+-			}
+-			if (!hv_stores(sym, "start",   newSVuv(node->ms.sym->start)) ||
+-			    !hv_stores(sym, "end",     newSVuv(node->ms.sym->end)) ||
+-			    !hv_stores(sym, "binding", newSVuv(symbol__binding(node->ms.sym))) =
+||
+-			    !hv_stores(sym, "name",    newSVpvn(node->ms.sym->name,
+-								node->ms.sym->namelen)) ||
+-			    !hv_stores(elem, "sym",    newRV_noinc((SV*)sym))) {
+-				hv_undef(sym);
+-				hv_undef(elem);
+-				goto exit;
+-			}
+-		}
+-
+-		if (node->ms.map) {
+-			struct map *map =3D node->ms.map;
+-			struct dso *dso =3D map ? map__dso(map) : NULL;
+-			const char *dsoname =3D "[unknown]";
+-
+-			if (dso) {
+-				if (symbol_conf.show_kernel_path && dso__long_name(dso))
+-					dsoname =3D dso__long_name(dso);
+-				else
+-					dsoname =3D dso__name(dso);
+-			}
+-			if (!hv_stores(elem, "dso", newSVpv(dsoname,0))) {
+-				hv_undef(elem);
+-				goto exit;
+-			}
+-		}
+-
+-		callchain_cursor_advance(cursor);
+-		av_push(list, newRV_noinc((SV*)elem));
+-	}
+-
+-exit:
+-	return newRV_noinc((SV*)list);
+-}
+-
+-static void perl_process_tracepoint(struct perf_sample *sample,
+-				    struct addr_location *al)
+-{
+-	struct thread *thread =3D al->thread;
+-	struct tep_event *event;
+-	struct tep_format_field *field;
+-	static char handler[256];
+-	unsigned long long val;
+-	unsigned long s, ns;
+-	int pid;
+-	int cpu =3D sample->cpu;
+-	void *data =3D sample->raw_data;
+-	unsigned long long nsecs =3D sample->time;
+-	const char *comm =3D thread__comm_str(thread);
+-	DECLARE_BITMAP(events_defined, TRACE_EVENT_TYPE_MAX);
+-	struct evsel *evsel =3D sample->evsel;
+-
+-	bitmap_zero(events_defined, TRACE_EVENT_TYPE_MAX);
+-	dSP;
+-
+-	if (evsel->core.attr.type !=3D PERF_TYPE_TRACEPOINT)
+-		return;
+-
+-	event =3D evsel__tp_format(evsel);
+-	if (!event) {
+-		pr_debug("ug! no event found for type %" PRIu64, (u64)evsel->core.attr.c=
+onfig);
+-		return;
+-	}
+-
+-	pid =3D raw_field_value(event, "common_pid", data);
+-
+-	sprintf(handler, "%s::%s", event->system, event->name);
+-
+-	if (!__test_and_set_bit(event->id, events_defined))
+-		define_event_symbols(event, handler, event->print_fmt.args);
+-
+-	s =3D nsecs / NSEC_PER_SEC;
+-	ns =3D nsecs - s * NSEC_PER_SEC;
+-
+-	ENTER;
+-	SAVETMPS;
+-	PUSHMARK(SP);
+-
+-	XPUSHs(sv_2mortal(newSVpv(handler, 0)));
+-	XPUSHs(sv_2mortal(newSViv(PTR2IV(scripting_context))));
+-	XPUSHs(sv_2mortal(newSVuv(cpu)));
+-	XPUSHs(sv_2mortal(newSVuv(s)));
+-	XPUSHs(sv_2mortal(newSVuv(ns)));
+-	XPUSHs(sv_2mortal(newSViv(pid)));
+-	XPUSHs(sv_2mortal(newSVpv(comm, 0)));
+-	XPUSHs(sv_2mortal(perl_process_callchain(sample, al)));
+-
+-	/* common fields other than pid can be accessed via xsub fns */
+-
+-	for (field =3D event->format.fields; field; field =3D field->next) {
+-		if (field->flags & TEP_FIELD_IS_STRING) {
+-			int offset;
+-			if (field->flags & TEP_FIELD_IS_DYNAMIC) {
+-				offset =3D *(int *)(data + field->offset);
+-				offset &=3D 0xffff;
+-				if (tep_field_is_relative(field->flags))
+-					offset +=3D field->offset + field->size;
+-			} else
+-				offset =3D field->offset;
+-			XPUSHs(sv_2mortal(newSVpv((char *)data + offset, 0)));
+-		} else { /* FIELD_IS_NUMERIC */
+-			val =3D read_size(event, data + field->offset,
+-					field->size);
+-			if (field->flags & TEP_FIELD_IS_SIGNED) {
+-				XPUSHs(sv_2mortal(newSViv(val)));
+-			} else {
+-				XPUSHs(sv_2mortal(newSVuv(val)));
+-			}
+-		}
+-	}
+-
+-	PUTBACK;
+-
+-	if (get_cv(handler, 0))
+-		call_pv(handler, G_SCALAR);
+-	else if (get_cv("main::trace_unhandled", 0)) {
+-		XPUSHs(sv_2mortal(newSVpv(handler, 0)));
+-		XPUSHs(sv_2mortal(newSViv(PTR2IV(scripting_context))));
+-		XPUSHs(sv_2mortal(newSVuv(cpu)));
+-		XPUSHs(sv_2mortal(newSVuv(nsecs)));
+-		XPUSHs(sv_2mortal(newSViv(pid)));
+-		XPUSHs(sv_2mortal(newSVpv(comm, 0)));
+-		XPUSHs(sv_2mortal(perl_process_callchain(sample, al)));
+-		call_pv("main::trace_unhandled", G_SCALAR);
+-	}
+-	SPAGAIN;
+-	PUTBACK;
+-	FREETMPS;
+-	LEAVE;
+-}
+-
+-static void perl_process_event_generic(union perf_event *event, struct per=
+f_sample *sample)
+-{
+-	dSP;
+-
+-	if (!get_cv("process_event", 0))
+-		return;
+-
+-	ENTER;
+-	SAVETMPS;
+-	PUSHMARK(SP);
+-	XPUSHs(sv_2mortal(newSVpvn((const char *)event, event->header.size)));
+-	XPUSHs(sv_2mortal(newSVpvn((const char *)&sample->evsel->core.attr,
+-				   sizeof(sample->evsel->core.attr))));
+-	XPUSHs(sv_2mortal(newSVpvn((const char *)sample, sizeof(*sample))));
+-	XPUSHs(sv_2mortal(newSVpvn((const char *)sample->raw_data, sample->raw_si=
+ze)));
+-	PUTBACK;
+-	call_pv("process_event", G_SCALAR);
+-	SPAGAIN;
+-	PUTBACK;
+-	FREETMPS;
+-	LEAVE;
+-}
+-
+-static void perl_process_event(union perf_event *event,
+-			       struct perf_sample *sample,
+-			       struct addr_location *al,
+-			       struct addr_location *addr_al)
+-{
+-	scripting_context__update(scripting_context, event, sample, al, addr_al);
+-	perl_process_tracepoint(sample, al);
+-	perl_process_event_generic(event, sample);
+-}
+-
+-static void run_start_sub(void)
+-{
+-	dSP; /* access to Perl stack */
+-	PUSHMARK(SP);
+-
+-	if (get_cv("main::trace_begin", 0))
+-		call_pv("main::trace_begin", G_DISCARD | G_NOARGS);
+-}
+-
+-/*
+- * Start trace script
+- */
+-static int perl_start_script(const char *script, int argc, const char **ar=
+gv,
+-			     struct perf_session *session)
+-{
+-	const char **command_line;
+-	int i, err =3D 0;
+-
+-	scripting_context->session =3D session;
+-
+-	command_line =3D malloc((argc + 2) * sizeof(const char *));
+-	if (!command_line)
+-		return -ENOMEM;
+-
+-	command_line[0] =3D "";
+-	command_line[1] =3D script;
+-	for (i =3D 2; i < argc + 2; i++)
+-		command_line[i] =3D argv[i - 2];
+-
+-	my_perl =3D perl_alloc();
+-	perl_construct(my_perl);
+-
+-	if (perl_parse(my_perl, xs_init, argc + 2, (char **)command_line,
+-		       (char **)NULL)) {
+-		err =3D -1;
+-		goto error;
+-	}
+-
+-	if (perl_run(my_perl)) {
+-		err =3D -1;
+-		goto error;
+-	}
+-
+-	if (SvTRUE(ERRSV)) {
+-		err =3D -1;
+-		goto error;
+-	}
+-
+-	run_start_sub();
+-
+-	free(command_line);
+-	return 0;
+-error:
+-	perl_free(my_perl);
+-	free(command_line);
+-
+-	return err;
+-}
+-
+-static int perl_flush_script(void)
+-{
+-	return 0;
+-}
+-
+-/*
+- * Stop trace script
+- */
+-static int perl_stop_script(void)
+-{
+-	dSP; /* access to Perl stack */
+-	PUSHMARK(SP);
+-
+-	if (get_cv("main::trace_end", 0))
+-		call_pv("main::trace_end", G_DISCARD | G_NOARGS);
+-
+-	perl_destruct(my_perl);
+-	perl_free(my_perl);
+-
+-	return 0;
+-}
+-
+-static int perl_generate_script(struct tep_handle *pevent, const char *out=
+file)
+-{
+-	int i, not_first, count, nr_events;
+-	struct tep_event **all_events;
+-	struct tep_event *event =3D NULL;
+-	struct tep_format_field *f;
+-	char fname[PATH_MAX];
+-	FILE *ofp;
+-
+-	sprintf(fname, "%s.pl", outfile);
+-	ofp =3D fopen(fname, "w");
+-	if (ofp =3D=3D NULL) {
+-		fprintf(stderr, "couldn't open %s\n", fname);
+-		return -1;
+-	}
+-
+-	fprintf(ofp, "# perf script event handlers, "
+-		"generated by perf script -g perl\n");
+-
+-	fprintf(ofp, "# Licensed under the terms of the GNU GPL"
+-		" License version 2\n\n");
+-
+-	fprintf(ofp, "# The common_* event handler fields are the most useful "
+-		"fields common to\n");
+-
+-	fprintf(ofp, "# all events.  They don't necessarily correspond to "
+-		"the 'common_*' fields\n");
+-
+-	fprintf(ofp, "# in the format files.  Those fields not available as "
+-		"handler params can\n");
+-
+-	fprintf(ofp, "# be retrieved using Perl functions of the form "
+-		"common_*($context).\n");
+-
+-	fprintf(ofp, "# See Context.pm for the list of available "
+-		"functions.\n\n");
+-
+-	fprintf(ofp, "use lib \"$ENV{'PERF_EXEC_PATH'}/scripts/perl/"
+-		"Perf-Trace-Util/lib\";\n");
+-
+-	fprintf(ofp, "use lib \"./Perf-Trace-Util/lib\";\n");
+-	fprintf(ofp, "use Perf::Trace::Core;\n");
+-	fprintf(ofp, "use Perf::Trace::Context;\n");
+-	fprintf(ofp, "use Perf::Trace::Util;\n\n");
+-
+-	fprintf(ofp, "sub trace_begin\n{\n\t# optional\n}\n\n");
+-	fprintf(ofp, "sub trace_end\n{\n\t# optional\n}\n");
+-
+-
+-	fprintf(ofp, "\n\
+-sub print_backtrace\n\
+-{\n\
+-	my $callchain =3D shift;\n\
+-	for my $node (@$callchain)\n\
+-	{\n\
+-		if(exists $node->{sym})\n\
+-		{\n\
+-			printf( \"\\t[\\%%x] \\%%s\\n\", $node->{ip}, $node->{sym}{name});\n\
+-		}\n\
+-		else\n\
+-		{\n\
+-			printf( \"\\t[\\%%x]\\n\", $node{ip});\n\
+-		}\n\
+-	}\n\
+-}\n\n\
+-");
+-
+-	nr_events =3D tep_get_events_count(pevent);
+-	all_events =3D tep_list_events(pevent, TEP_EVENT_SORT_ID);
+-
+-	for (i =3D 0; all_events && i < nr_events; i++) {
+-		event =3D all_events[i];
+-		fprintf(ofp, "sub %s::%s\n{\n", event->system, event->name);
+-		fprintf(ofp, "\tmy (");
+-
+-		fprintf(ofp, "$event_name, ");
+-		fprintf(ofp, "$context, ");
+-		fprintf(ofp, "$common_cpu, ");
+-		fprintf(ofp, "$common_secs, ");
+-		fprintf(ofp, "$common_nsecs,\n");
+-		fprintf(ofp, "\t    $common_pid, ");
+-		fprintf(ofp, "$common_comm, ");
+-		fprintf(ofp, "$common_callchain,\n\t    ");
+-
+-		not_first =3D 0;
+-		count =3D 0;
+-
+-		for (f =3D event->format.fields; f; f =3D f->next) {
+-			if (not_first++)
+-				fprintf(ofp, ", ");
+-			if (++count % 5 =3D=3D 0)
+-				fprintf(ofp, "\n\t    ");
+-
+-			fprintf(ofp, "$%s", f->name);
+-		}
+-		fprintf(ofp, ") =3D @_;\n\n");
+-
+-		fprintf(ofp, "\tprint_header($event_name, $common_cpu, "
+-			"$common_secs, $common_nsecs,\n\t             "
+-			"$common_pid, $common_comm, $common_callchain);\n\n");
+-
+-		fprintf(ofp, "\tprintf(\"");
+-
+-		not_first =3D 0;
+-		count =3D 0;
+-
+-		for (f =3D event->format.fields; f; f =3D f->next) {
+-			if (not_first++)
+-				fprintf(ofp, ", ");
+-			if (count && count % 4 =3D=3D 0) {
+-				fprintf(ofp, "\".\n\t       \"");
+-			}
+-			count++;
+-
+-			fprintf(ofp, "%s=3D", f->name);
+-			if (f->flags & TEP_FIELD_IS_STRING ||
+-			    f->flags & TEP_FIELD_IS_FLAG ||
+-			    f->flags & TEP_FIELD_IS_SYMBOLIC)
+-				fprintf(ofp, "%%s");
+-			else if (f->flags & TEP_FIELD_IS_SIGNED)
+-				fprintf(ofp, "%%d");
+-			else
+-				fprintf(ofp, "%%u");
+-		}
+-
+-		fprintf(ofp, "\\n\",\n\t       ");
+-
+-		not_first =3D 0;
+-		count =3D 0;
+-
+-		for (f =3D event->format.fields; f; f =3D f->next) {
+-			if (not_first++)
+-				fprintf(ofp, ", ");
+-
+-			if (++count % 5 =3D=3D 0)
+-				fprintf(ofp, "\n\t       ");
+-
+-			if (f->flags & TEP_FIELD_IS_FLAG) {
+-				if ((count - 1) % 5 !=3D 0) {
+-					fprintf(ofp, "\n\t       ");
+-					count =3D 4;
+-				}
+-				fprintf(ofp, "flag_str(\"");
+-				fprintf(ofp, "%s::%s\", ", event->system,
+-					event->name);
+-				fprintf(ofp, "\"%s\", $%s)", f->name,
+-					f->name);
+-			} else if (f->flags & TEP_FIELD_IS_SYMBOLIC) {
+-				if ((count - 1) % 5 !=3D 0) {
+-					fprintf(ofp, "\n\t       ");
+-					count =3D 4;
+-				}
+-				fprintf(ofp, "symbol_str(\"");
+-				fprintf(ofp, "%s::%s\", ", event->system,
+-					event->name);
+-				fprintf(ofp, "\"%s\", $%s)", f->name,
+-					f->name);
+-			} else
+-				fprintf(ofp, "$%s", f->name);
+-		}
+-
+-		fprintf(ofp, ");\n\n");
+-
+-		fprintf(ofp, "\tprint_backtrace($common_callchain);\n");
+-
+-		fprintf(ofp, "}\n\n");
+-	}
+-
+-	fprintf(ofp, "sub trace_unhandled\n{\n\tmy ($event_name, $context, "
+-		"$common_cpu, $common_secs, $common_nsecs,\n\t    "
+-		"$common_pid, $common_comm, $common_callchain) =3D @_;\n\n");
+-
+-	fprintf(ofp, "\tprint_header($event_name, $common_cpu, "
+-		"$common_secs, $common_nsecs,\n\t             $common_pid, "
+-		"$common_comm, $common_callchain);\n");
+-	fprintf(ofp, "\tprint_backtrace($common_callchain);\n");
+-	fprintf(ofp, "}\n\n");
+-
+-	fprintf(ofp, "sub print_header\n{\n"
+-		"\tmy ($event_name, $cpu, $secs, $nsecs, $pid, $comm) =3D @_;\n\n"
+-		"\tprintf(\"%%-20s %%5u %%05u.%%09u %%8u %%-20s \",\n\t       "
+-		"$event_name, $cpu, $secs, $nsecs, $pid, $comm);\n}\n");
+-
+-	fprintf(ofp,
+-		"\n# Packed byte string args of process_event():\n"
+-		"#\n"
+-		"# $event:\tunion perf_event\tutil/event.h\n"
+-		"# $attr:\tstruct perf_event_attr\tlinux/perf_event.h\n"
+-		"# $sample:\tstruct perf_sample\tutil/event.h\n"
+-		"# $raw_data:\tperf_sample->raw_data\tutil/event.h\n"
+-		"\n"
+-		"sub process_event\n"
+-		"{\n"
+-		"\tmy ($event, $attr, $sample, $raw_data) =3D @_;\n"
+-		"\n"
+-		"\tmy @event\t=3D unpack(\"LSS\", $event);\n"
+-		"\tmy @attr\t=3D unpack(\"LLQQQQQLLQQ\", $attr);\n"
+-		"\tmy @sample\t=3D unpack(\"QLLQQQQQLL\", $sample);\n"
+-		"\tmy @raw_data\t=3D unpack(\"C*\", $raw_data);\n"
+-		"\n"
+-		"\tuse Data::Dumper;\n"
+-		"\tprint Dumper \\@event, \\@attr, \\@sample, \\@raw_data;\n"
+-		"}\n");
+-
+-	fclose(ofp);
+-
+-	fprintf(stderr, "generated Perl script: %s\n", fname);
+-
+-	return 0;
+-}
+-
+-struct scripting_ops perl_scripting_ops =3D {
+-	.name =3D "Perl",
+-	.dirname =3D "perl",
+-	.start_script =3D perl_start_script,
+-	.flush_script =3D perl_flush_script,
+-	.stop_script =3D perl_stop_script,
+-	.process_event =3D perl_process_event,
+-	.generate_script =3D perl_generate_script,
+-};
+diff --git a/tools/perf/util/trace-event-parse.c b/tools/perf/util/trace-ev=
+ent-parse.c
+index 9c015fc2bcfb..374cf82fd86e 100644
+--- a/tools/perf/util/trace-event-parse.c
++++ b/tools/perf/util/trace-event-parse.c
+@@ -14,71 +14,6 @@
+ #include <linux/kernel.h>
+ #include <event-parse.h>
+=20
+-static int get_common_field(struct scripting_context *context,
+-			    int *offset, int *size, const char *type)
+-{
+-	struct tep_handle *pevent =3D context->pevent;
+-	struct tep_event *event;
+-	struct tep_format_field *field;
+-
+-	if (!*size) {
+-
+-		event =3D tep_get_first_event(pevent);
+-		if (!event)
+-			return 0;
+-
+-		field =3D tep_find_common_field(event, type);
+-		if (!field)
+-			return 0;
+-		*offset =3D field->offset;
+-		*size =3D field->size;
+-	}
+-
+-	return tep_read_number(pevent, context->event_data + *offset, *size);
+-}
+-
+-int common_lock_depth(struct scripting_context *context)
+-{
+-	static int offset;
+-	static int size;
+-	int ret;
+-
+-	ret =3D get_common_field(context, &size, &offset,
+-			       "common_lock_depth");
+-	if (ret < 0)
+-		return -1;
+-
+-	return ret;
+-}
+-
+-int common_flags(struct scripting_context *context)
+-{
+-	static int offset;
+-	static int size;
+-	int ret;
+-
+-	ret =3D get_common_field(context, &size, &offset,
+-			       "common_flags");
+-	if (ret < 0)
+-		return -1;
+-
+-	return ret;
+-}
+-
+-int common_pc(struct scripting_context *context)
+-{
+-	static int offset;
+-	static int size;
+-	int ret;
+-
+-	ret =3D get_common_field(context, &size, &offset,
+-			       "common_preempt_count");
+-	if (ret < 0)
+-		return -1;
+-
+-	return ret;
+-}
+-
+ unsigned long long
+ raw_field_value(struct tep_event *event, const char *name, void *data)
+ {
+diff --git a/tools/perf/util/trace-event-scripting.c b/tools/perf/util/trac=
+e-event-scripting.c
+deleted file mode 100644
+index c78b317978dd..000000000000
+--- a/tools/perf/util/trace-event-scripting.c
++++ /dev/null
+@@ -1,398 +0,0 @@
+-// SPDX-License-Identifier: GPL-2.0-or-later
+-/*
+- * trace-event-scripting.  Scripting engine common and initialization code=
 .
-+- `dso_bid`: Build ID of the resolved DSO.
-+- `symbol`: Resolved symbol name for `sample_ip`.
-+- `sym_start`: Start address of the resolved symbol.
-+- `sym_end`: End address of the resolved symbol.
-+- `sym_offset`: Offset of `sample_ip` within the resolved symbol (or `None=
-` if unresolved).
-+- `addr_dso`: Resolved DSO name for `sample_addr` (or `None`).
-+- `addr_symbol`: Resolved symbol name for `sample_addr` (or `None`).
-+- `addr_sym_offset`: Offset of `sample_addr` within `addr_symbol` (or `Non=
-e`).
-+- `branch_type`: Branch type flags (`PERF_IP_FLAG_*` masked with `PERF_BRA=
-NCH_MASK`).
-+- `in_tx`: `1` if the sample occurred inside a hardware transaction, else =
-`0`.
-+- `flags`: Raw sample flags (`PERF_IP_FLAG_*`).
-+- `transaction`: Transaction abort/status code.
-+- `brstack`: Sequence of branch stack entries (`from_ip`, `to_ip`, `mispre=
-d`, `predicted`, `in_tx`, `abort`, `cycles`, `type`), or `None`.
-+- `callchain`: Sequence of callchain nodes (`ip`, `symbol`, `dso`), or `No=
-ne`.
-+- `srccode(addr=3Dsample_ip)`: Returns a `(filename, line_number, srcline)=
-` tuple for `addr` (defaults to `sample_ip`), or `None`.
-+- `insn()`: Returns the raw instruction `bytes` for the sample, or `None`.
-+- Dynamic tracepoint fields: For tracepoint events (`PERF_TYPE_TRACEPOINT`=
-), tracepoint format fields can be accessed directly as attributes on the s=
-ample object (e.g. `sample.prev_pid`, `sample.id`, `sample.common_flags`).
-+
-+COUNTER AND METRIC APIS
-+-----------------------
-+
-+The following APIs are used in `tools/perf/python/ilist.py` for
-+interactive listing and reading of counters and metrics:
-+
-+- `perf.pmus()`: Used to get all available PMUs.
-+- `pmu.events()`: Used to get all events for a specific PMU.
-+- `perf.metrics()`: Used to get all available metrics.
-+- `perf.parse_metrics(metric_name, pmu)`: Used to parse a metric and get a=
-n `evlist`.
-+- `evlist.compute_metric(metric_name, cpu, thread)`: Used to compute a met=
-ric value for a specific CPU and thread.
-+- `evsel.read(cpu, thread)`: Used to read raw counter values.
+- *
+- * Copyright (C) 2009-2010 Tom Zanussi <tzanussi@gmail.com>
+- */
+-
+-#include <stdio.h>
+-#include <stdlib.h>
+-#include <string.h>
+-#include <errno.h>
+-#ifdef HAVE_LIBTRACEEVENT
+-#include <event-parse.h>
+-#endif
+-
+-#include "debug.h"
+-#include "event.h"
+-#include "trace-event.h"
+-#include "evsel.h"
+-#include <linux/perf_event.h>
+-#include <linux/zalloc.h>
+-#include "util/sample.h"
+-
+-unsigned int scripting_max_stack =3D PERF_MAX_STACK_DEPTH;
+-
+-struct scripting_context *scripting_context;
+-
+-struct script_spec {
+-	struct list_head	node;
+-	struct scripting_ops	*ops;
+-	char			spec[];
+-};
+-
+-static LIST_HEAD(script_specs);
+-
+-static struct script_spec *script_spec__new(const char *spec,
+-					    struct scripting_ops *ops)
+-{
+-	struct script_spec *s =3D malloc(sizeof(*s) + strlen(spec) + 1);
+-
+-	if (s !=3D NULL) {
+-		strcpy(s->spec, spec);
+-		s->ops =3D ops;
+-	}
+-
+-	return s;
+-}
+-
+-static void script_spec__add(struct script_spec *s)
+-{
+-	list_add_tail(&s->node, &script_specs);
+-}
+-
+-static struct script_spec *script_spec__find(const char *spec)
+-{
+-	struct script_spec *s;
+-
+-	list_for_each_entry(s, &script_specs, node)
+-		if (strcasecmp(s->spec, spec) =3D=3D 0)
+-			return s;
+-	return NULL;
+-}
+-
+-static int script_spec_register(const char *spec, struct scripting_ops *op=
+s)
+-{
+-	struct script_spec *s;
+-
+-	s =3D script_spec__find(spec);
+-	if (s)
+-		return -1;
+-
+-	s =3D script_spec__new(spec, ops);
+-	if (!s)
+-		return -1;
+-
+-	script_spec__add(s);
+-	return 0;
+-}
+-
+-struct scripting_ops *script_spec__lookup(const char *spec)
+-{
+-	struct script_spec *s =3D script_spec__find(spec);
+-
+-	if (!s)
+-		return NULL;
+-
+-	return s->ops;
+-}
+-
+-int script_spec__for_each(int (*cb)(struct scripting_ops *ops, const char =
+*spec))
+-{
+-	struct script_spec *s;
+-	int ret =3D 0;
+-
+-	list_for_each_entry(s, &script_specs, node) {
+-		ret =3D cb(s->ops, s->spec);
+-		if (ret)
+-			break;
+-	}
+-	return ret;
+-}
+-
+-void scripting_context__update(struct scripting_context *c,
+-			       union perf_event *event,
+-			       struct perf_sample *sample,
+-			       struct addr_location *al,
+-			       struct addr_location *addr_al)
+-{
+-#ifdef HAVE_LIBTRACEEVENT
+-	const struct tep_event *tp_format =3D evsel__tp_format(sample->evsel);
+-
+-	c->pevent =3D tp_format ? tp_format->tep : NULL;
+-#else
+-	c->pevent =3D NULL;
+-#endif
+-	c->event_data =3D sample->raw_data;
+-	c->event =3D event;
+-	c->sample =3D sample;
+-	c->al =3D al;
+-	c->addr_al =3D addr_al;
+-}
+-
+-static int flush_script_unsupported(void)
+-{
+-	return 0;
+-}
+-
+-static int stop_script_unsupported(void)
+-{
+-	return 0;
+-}
+-
+-static void process_event_unsupported(union perf_event *event __maybe_unus=
+ed,
+-				      struct perf_sample *sample __maybe_unused,
+-				      struct addr_location *al __maybe_unused,
+-				      struct addr_location *addr_al __maybe_unused)
+-{
+-}
+-
+-static void print_python_unsupported_msg(void)
+-{
+-	fprintf(stderr, "Python scripting not supported."
+-		"  Install libpython and rebuild perf to enable it.\n"
+-		"For example:\n  # apt-get install python-dev (ubuntu)"
+-		"\n  # yum install python-devel (Fedora)"
+-		"\n  etc.\n");
+-}
+-
+-static int python_start_script_unsupported(const char *script __maybe_unus=
+ed,
+-					   int argc __maybe_unused,
+-					   const char **argv __maybe_unused,
+-					   struct perf_session *session __maybe_unused)
+-{
+-	print_python_unsupported_msg();
+-
+-	return -1;
+-}
+-
+-static int python_generate_script_unsupported(struct tep_handle *pevent
+-					      __maybe_unused,
+-					      const char *outfile
+-					      __maybe_unused)
+-{
+-	print_python_unsupported_msg();
+-
+-	return -1;
+-}
+-
+-struct scripting_ops python_scripting_unsupported_ops =3D {
+-	.name =3D "Python",
+-	.dirname =3D "python",
+-	.start_script =3D python_start_script_unsupported,
+-	.flush_script =3D flush_script_unsupported,
+-	.stop_script =3D stop_script_unsupported,
+-	.process_event =3D process_event_unsupported,
+-	.generate_script =3D python_generate_script_unsupported,
+-};
+-
+-static void register_python_scripting(struct scripting_ops *scripting_ops)
+-{
+-	if (scripting_context =3D=3D NULL)
+-		scripting_context =3D malloc(sizeof(*scripting_context));
+-
+-       if (scripting_context =3D=3D NULL ||
+-	   script_spec_register("Python", scripting_ops) ||
+-	   script_spec_register("py", scripting_ops)) {
+-		pr_err("Error registering Python script extension: disabling it\n");
+-		zfree(&scripting_context);
+-	}
+-}
+-
+-void setup_python_scripting(void)
+-{
+-	register_python_scripting(&python_scripting_unsupported_ops);
+-}
+-
+-#ifdef HAVE_LIBTRACEEVENT
+-static void print_perl_unsupported_msg(void)
+-{
+-	fprintf(stderr, "Perl scripting not supported."
+-		"  Install libperl and rebuild perf to enable it.\n"
+-		"For example:\n  # apt-get install libperl-dev (ubuntu)"
+-		"\n  # yum install 'perl(ExtUtils::Embed)' (Fedora)"
+-		"\n  etc.\n");
+-}
+-
+-static int perl_start_script_unsupported(const char *script __maybe_unused=
+,
+-					 int argc __maybe_unused,
+-					 const char **argv __maybe_unused,
+-					 struct perf_session *session __maybe_unused)
+-{
+-	print_perl_unsupported_msg();
+-
+-	return -1;
+-}
+-
+-static int perl_generate_script_unsupported(struct tep_handle *pevent
+-					    __maybe_unused,
+-					    const char *outfile __maybe_unused)
+-{
+-	print_perl_unsupported_msg();
+-
+-	return -1;
+-}
+-
+-struct scripting_ops perl_scripting_unsupported_ops =3D {
+-	.name =3D "Perl",
+-	.dirname =3D "perl",
+-	.start_script =3D perl_start_script_unsupported,
+-	.flush_script =3D flush_script_unsupported,
+-	.stop_script =3D stop_script_unsupported,
+-	.process_event =3D process_event_unsupported,
+-	.generate_script =3D perl_generate_script_unsupported,
+-};
+-
+-static void register_perl_scripting(struct scripting_ops *scripting_ops)
+-{
+-	if (scripting_context =3D=3D NULL)
+-		scripting_context =3D malloc(sizeof(*scripting_context));
+-
+-       if (scripting_context =3D=3D NULL ||
+-	   script_spec_register("Perl", scripting_ops) ||
+-	   script_spec_register("pl", scripting_ops)) {
+-		pr_err("Error registering Perl script extension: disabling it\n");
+-		zfree(&scripting_context);
+-	}
+-}
+-
+-#ifndef HAVE_LIBPERL_SUPPORT
+-void setup_perl_scripting(void)
+-{
+-	register_perl_scripting(&perl_scripting_unsupported_ops);
+-}
+-#else
+-extern struct scripting_ops perl_scripting_ops;
+-
+-void setup_perl_scripting(void)
+-{
+-	register_perl_scripting(&perl_scripting_ops);
+-}
+-#endif
+-#endif
+-
+-static const struct {
+-	u32 flags;
+-	const char *name;
+-} sample_flags[] =3D {
+-	{PERF_IP_FLAG_BRANCH | PERF_IP_FLAG_CALL, "call"},
+-	{PERF_IP_FLAG_BRANCH | PERF_IP_FLAG_RETURN, "return"},
+-	{PERF_IP_FLAG_BRANCH | PERF_IP_FLAG_CONDITIONAL, "jcc"},
+-	{PERF_IP_FLAG_BRANCH, "jmp"},
+-	{PERF_IP_FLAG_BRANCH | PERF_IP_FLAG_CALL | PERF_IP_FLAG_INTERRUPT, "int"}=
+,
+-	{PERF_IP_FLAG_BRANCH | PERF_IP_FLAG_RETURN | PERF_IP_FLAG_INTERRUPT, "ire=
+t"},
+-	{PERF_IP_FLAG_BRANCH | PERF_IP_FLAG_CALL | PERF_IP_FLAG_SYSCALLRET, "sysc=
+all"},
+-	{PERF_IP_FLAG_BRANCH | PERF_IP_FLAG_RETURN | PERF_IP_FLAG_SYSCALLRET, "sy=
+sret"},
+-	{PERF_IP_FLAG_BRANCH | PERF_IP_FLAG_ASYNC, "async"},
+-	{PERF_IP_FLAG_BRANCH | PERF_IP_FLAG_CALL | PERF_IP_FLAG_ASYNC |	PERF_IP_F=
+LAG_INTERRUPT,
+-	 "hw int"},
+-	{PERF_IP_FLAG_BRANCH | PERF_IP_FLAG_TX_ABORT, "tx abrt"},
+-	{PERF_IP_FLAG_BRANCH | PERF_IP_FLAG_TRACE_BEGIN, "tr strt"},
+-	{PERF_IP_FLAG_BRANCH | PERF_IP_FLAG_TRACE_END, "tr end"},
+-	{PERF_IP_FLAG_BRANCH | PERF_IP_FLAG_CALL | PERF_IP_FLAG_VMENTRY, "vmentry=
+"},
+-	{PERF_IP_FLAG_BRANCH | PERF_IP_FLAG_CALL | PERF_IP_FLAG_VMEXIT, "vmexit"}=
+,
+-	{0, NULL}
+-};
+-
+-static const struct {
+-	u32 flags;
+-	const char *name;
+-} branch_events[] =3D {
+-	{PERF_IP_FLAG_BRANCH_MISS, "miss"},
+-	{PERF_IP_FLAG_NOT_TAKEN, "not_taken"},
+-	{0, NULL}
+-};
+-
+-static int sample_flags_to_name(u32 flags, char *str, size_t size)
+-{
+-	int i;
+-	const char *prefix;
+-	int pos =3D 0, ret, ev_idx =3D 0;
+-	u32 xf =3D flags & PERF_ADDITIONAL_STATE_MASK;
+-	u32 types, events;
+-	char xs[16] =3D { 0 };
+-
+-	/* Clear additional state bits */
+-	flags &=3D ~PERF_ADDITIONAL_STATE_MASK;
+-
+-	if (flags & PERF_IP_FLAG_TRACE_BEGIN)
+-		prefix =3D "tr strt ";
+-	else if (flags & PERF_IP_FLAG_TRACE_END)
+-		prefix =3D "tr end  ";
+-	else
+-		prefix =3D "";
+-
+-	ret =3D snprintf(str + pos, size - pos, "%s", prefix);
+-	if (ret < 0)
+-		return ret;
+-	pos +=3D ret;
+-
+-	flags &=3D ~(PERF_IP_FLAG_TRACE_BEGIN | PERF_IP_FLAG_TRACE_END);
+-
+-	types =3D flags & ~PERF_IP_FLAG_BRANCH_EVENT_MASK;
+-	for (i =3D 0; sample_flags[i].name; i++) {
+-		if (sample_flags[i].flags !=3D types)
+-			continue;
+-
+-		ret =3D snprintf(str + pos, size - pos, "%s", sample_flags[i].name);
+-		if (ret < 0)
+-			return ret;
+-		pos +=3D ret;
+-		break;
+-	}
+-
+-	events =3D flags & PERF_IP_FLAG_BRANCH_EVENT_MASK;
+-	for (i =3D 0; branch_events[i].name; i++) {
+-		if (!(branch_events[i].flags & events))
+-			continue;
+-
+-		ret =3D snprintf(str + pos, size - pos, !ev_idx ? "/%s" : ",%s",
+-			       branch_events[i].name);
+-		if (ret < 0)
+-			return ret;
+-		pos +=3D ret;
+-		ev_idx++;
+-	}
+-
+-	/* Add an end character '/' for events */
+-	if (ev_idx) {
+-		ret =3D snprintf(str + pos, size - pos, "/");
+-		if (ret < 0)
+-			return ret;
+-		pos +=3D ret;
+-	}
+-
+-	if (!xf)
+-		return pos;
+-
+-	snprintf(xs, sizeof(xs), "(%s%s%s)",
+-		 flags & PERF_IP_FLAG_IN_TX ? "x" : "",
+-		 flags & PERF_IP_FLAG_INTR_DISABLE ? "D" : "",
+-		 flags & PERF_IP_FLAG_INTR_TOGGLE ? "t" : "");
+-
+-	/* Right align the string if its length is less than the limit */
+-	if ((pos + strlen(xs)) < SAMPLE_FLAGS_STR_ALIGNED_SIZE)
+-		ret =3D snprintf(str + pos, size - pos, "%*s",
+-			       (int)(SAMPLE_FLAGS_STR_ALIGNED_SIZE - ret), xs);
+-	else
+-		ret =3D snprintf(str + pos, size - pos, " %s", xs);
+-	if (ret < 0)
+-		return ret;
+-
+-	return pos + ret;
+-}
+-
+-int perf_sample__sprintf_flags(u32 flags, char *str, size_t sz)
+-{
+-	const char *chars =3D PERF_IP_FLAG_CHARS;
+-	const size_t n =3D strlen(PERF_IP_FLAG_CHARS);
+-	size_t i, pos =3D 0;
+-	int ret;
+-
+-	ret =3D sample_flags_to_name(flags, str, sz);
+-	if (ret > 0)
+-		return ret;
+-
+-	for (i =3D 0; i < n; i++, flags >>=3D 1) {
+-		if ((flags & 1) && pos < sz)
+-			str[pos++] =3D chars[i];
+-	}
+-	for (; i < 32; i++, flags >>=3D 1) {
+-		if ((flags & 1) && pos < sz)
+-			str[pos++] =3D '?';
+-	}
+-	if (pos < sz)
+-		str[pos] =3D 0;
+-
+-	return pos;
+-}
+diff --git a/tools/perf/util/trace-event.h b/tools/perf/util/trace-event.h
+index 720121c74f1d..19f22ac1faf3 100644
+--- a/tools/perf/util/trace-event.h
++++ b/tools/perf/util/trace-event.h
+@@ -7,15 +7,9 @@
+ #include <sys/types.h>
+ #include <linux/types.h>
 =20
- SEE ALSO
- --------
-diff --git a/tools/perf/Documentation/perf-script.txt b/tools/perf/Document=
-ation/perf-script.txt
-index 200ea25891d8..f0228e784ced 100644
---- a/tools/perf/Documentation/perf-script.txt
-+++ b/tools/perf/Documentation/perf-script.txt
-@@ -9,10 +9,7 @@ SYNOPSIS
- --------
- [verse]
- 'perf script' [<options>]
--'perf script' [<options>] record <script> [<record-options>] <command>
--'perf script' [<options>] report <script> [script-args]
--'perf script' [<options>] <script> <required-script-args> [<record-options=
->] <command>
--'perf script' [<options>] <top-script> [script-args]
-+'perf script' [<options>] <script> [script-args]
+-struct evlist;
+ struct machine;
+-struct perf_sample;
+-union perf_event;
+-struct perf_tool;
+-struct thread;
+-struct tep_plugin_list;
+-struct evsel;
+ struct tep_format_field;
++struct tep_plugin_list;
 =20
- DESCRIPTION
- -----------
-@@ -23,58 +20,12 @@ There are several variants of perf script:
-   'perf script' to see a detailed trace of the workload that was
-   recorded.
+ struct trace_event {
+ 	struct tep_handle	*pevent;
+@@ -79,70 +73,6 @@ struct tracing_data *tracing_data_get(struct list_head *=
+pattrs,
+ 				      int fd, bool temp);
+ int tracing_data_put(struct tracing_data *tdata);
 =20
--  You can also run a set of pre-canned scripts that aggregate and
--  summarize the raw trace data in various ways (the list of scripts is
--  available via 'perf script -l').  The following variants allow you to
--  record and run those scripts:
 -
--  'perf script record <script> <command>' to record the events required
--  for 'perf script report'.  <script> is the name displayed in the
--  output of 'perf script --list' i.e. the actual script name minus any
--  language extension.  If <command> is not specified, the events are
--  recorded using the -a (system-wide) 'perf record' option.
+-struct addr_location;
 -
--  'perf script report <script> [args]' to run and display the results
--  of <script>.  <script> is the name displayed in the output of 'perf
--  script --list' i.e. the actual script name minus any language
--  extension.  The perf.data output from a previous run of 'perf script
--  record <script>' is used and should be present for this command to
--  succeed.  [args] refers to the (mainly optional) args expected by
--  the script.
+-struct perf_session;
+-struct perf_stat_config;
 -
--  'perf script <script> <required-script-args> <command>' to both
--  record the events required for <script> and to run the <script>
--  using 'live-mode' i.e. without writing anything to disk.  <script>
--  is the name displayed in the output of 'perf script --list' i.e. the
--  actual script name minus any language extension.  If <command> is
--  not specified, the events are recorded using the -a (system-wide)
--  'perf record' option.  If <script> has any required args, they
--  should be specified before <command>.  This mode doesn't allow for
--  optional script args to be specified; if optional script args are
--  desired, they can be specified using separate 'perf script record'
--  and 'perf script report' commands, with the stdout of the record step
--  piped to the stdin of the report script, using the '-o -' and '-i -'
--  options of the corresponding commands.
+-struct scripting_ops {
+-	const char *name;
+-	const char *dirname; /* For script path .../scripts/<dirname>/... */
+-	int (*start_script)(const char *script, int argc, const char **argv,
+-			    struct perf_session *session);
+-	int (*flush_script) (void);
+-	int (*stop_script) (void);
+-	void (*process_event) (union perf_event *event,
+-			       struct perf_sample *sample,
+-			       struct addr_location *al,
+-			       struct addr_location *addr_al);
+-	void (*process_switch)(union perf_event *event,
+-			       struct perf_sample *sample,
+-			       struct machine *machine);
+-	void (*process_auxtrace_error)(struct perf_session *session,
+-				       union perf_event *event);
+-	void (*process_stat)(struct perf_stat_config *config,
+-			     struct evsel *evsel, u64 tstamp);
+-	void (*process_stat_interval)(u64 tstamp);
+-	void (*process_throttle)(union perf_event *event,
+-				 struct perf_sample *sample,
+-				 struct machine *machine);
+-	int (*generate_script) (struct tep_handle *pevent, const char *outfile);
+-};
 -
--  'perf script <top-script>' to both record the events required for
--  <top-script> and to run the <top-script> using 'live-mode'
--  i.e. without writing anything to disk.  <top-script> is the name
--  displayed in the output of 'perf script --list' i.e. the actual
--  script name minus any language extension; a <top-script> is defined
--  as any script name ending with the string 'top'.
+-extern unsigned int scripting_max_stack;
 -
--  [<record-options>] can be passed to the record steps of 'perf script
--  record' and 'live-mode' variants; this isn't possible however for
--  <top-script> 'live-mode' or 'perf script report' variants.
+-struct scripting_ops *script_spec__lookup(const char *spec);
+-int script_spec__for_each(int (*cb)(struct scripting_ops *ops, const char =
+*spec));
 -
--  See the 'SEE ALSO' section for links to language-specific
--  information on how to write and run your own trace scripts.
-+  You can also run standalone scripts that aggregate and summarize the
-+  raw trace data in various ways (the list of scripts is available via
-+  'perf script -l').
+-void setup_perl_scripting(void);
+-void setup_python_scripting(void);
+-
+-struct scripting_context {
+-	struct tep_handle *pevent;
+-	void *event_data;
+-	union perf_event *event;
+-	struct perf_sample *sample;
+-	struct addr_location *al;
+-	struct addr_location *addr_al;
+-	struct perf_session *session;
+-};
+-
+-void scripting_context__update(struct scripting_context *scripting_context=
+,
+-			       union perf_event *event,
+-			       struct perf_sample *sample,
+-			       struct addr_location *al,
+-			       struct addr_location *addr_al);
+-
+-int common_pc(struct scripting_context *context);
+-int common_flags(struct scripting_context *context);
+-int common_lock_depth(struct scripting_context *context);
+-
+-#define SAMPLE_FLAGS_BUF_SIZE 64
+-#define SAMPLE_FLAGS_STR_ALIGNED_SIZE	21
+-
+-int perf_sample__sprintf_flags(u32 flags, char *str, size_t sz);
+-
+ #if defined(LIBTRACEEVENT_VERSION) &&  LIBTRACEEVENT_VERSION >=3D MAKE_LIB=
+TRACEEVENT_VERSION(1, 5, 0)
+ #include <event-parse.h>
 =20
- OPTIONS
- -------
--<command>...::
--	Any command you can specify in a shell.
--
- -D::
- --dump-raw-trace=3D::
-         Display verbose dump of the trace data.
-@@ -90,19 +41,6 @@ OPTIONS
- --list=3D::
-         Display a list of available trace scripts.
-=20
---s ['lang']::
----script=3D::
--        Process trace data with the given script ([lang]:script[.ext]).
--	If the string 'lang' is specified in place of a script name, a
--        list of supported languages will be displayed instead.
--
---g::
----gen-script=3D::
--	Generate a starter script. If a language is given then the
--        script is named perf-script.[ext] according to the
--        language. If a file path is given then python is used for
--        files ending '.py' and perl used for files ending '.pl'.
--
- --dlfilter=3D<file>::
- 	Filter sample events using the given shared object file.
- 	Refer linkperf:perf-dlfilter[1]
-@@ -115,12 +53,6 @@ OPTIONS
-         Display a list of available dlfilters. Use with option -v (must co=
-me
-         before option --list-dlfilters) to show long descriptions.
-=20
---a::
--        Force system-wide collection.  Scripts run without a <command>
--        normally use -a by default, while scripts run with a <command>
--        normally don't - this option allows the latter to be run in
--        system-wide mode.
--
- -i::
- --input=3D::
-         Input file name. (default: perf.data unless stdin is a fifo)
-@@ -342,7 +274,6 @@ OPTIONS
- 	Display extended information about the perf.data file. This adds
- 	information which may be very large and thus may clutter the display.
- 	It currently includes: cpu and numa topology of the host system.
--	It can only be used with the perf script report mode.
-=20
- --show-kernel-path::
- 	Try to resolve the path of [kernel.kallsyms]
-@@ -543,6 +474,5 @@ include::guest-files.txt[]
-=20
- SEE ALSO
- --------
--linkperf:perf-record[1], linkperf:perf-script-perl[1],
--linkperf:perf-script-python[1], linkperf:perf-intel-pt[1],
--linkperf:perf-dlfilter[1]
-+linkperf:perf-record[1], linkperf:perf-script-python[1],
-+linkperf:perf-intel-pt[1], linkperf:perf-dlfilter[1]
-diff --git a/tools/perf/Documentation/tips.txt b/tools/perf/Documentation/t=
-ips.txt
-index eb6d56d4d8ba..28953179f59d 100644
---- a/tools/perf/Documentation/tips.txt
-+++ b/tools/perf/Documentation/tips.txt
-@@ -4,7 +4,6 @@ Compare performance results with: perf diff [<old file> <ne=
-w file>]
- Boolean options have negative forms, e.g.: perf report --no-children
- To not accumulate CPU time of children symbols add --no-children
- Customize output of perf script with: perf script -F event,ip,sym
--Generate a script for your data: perf script -g <lang>
- Save output of perf stat using: perf stat record <target workload>
- Create an archive with symtabs to analyse on other machine: perf archive
- Search options using a keyword: perf report -h <keyword>
 --=20
 2.56.0.rc1.310.g51773c2048-goog
 
