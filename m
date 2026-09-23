@@ -1,198 +1,295 @@
-Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from GVXPR05CU001.outbound.protection.outlook.com (mail-swedencentralazon11013028.outbound.protection.outlook.com [52.101.83.28])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB91C334C3B
-	for <linux-perf-users@vger.kernel.org>; Wed, 23 Sep 2026 13:41:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.180
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790170874; cv=pass; b=q4lhfTDIpVf7WjOkJnb0J/U/uNt5Bcs9ldMUeSjGjJaFsiINuFWIOl8QpGIVViE9fuzaLueCpbZmpJLQlSsUhZ45h1bStrPblkMsnkXqcTMna+9DVUmfNGRszKXXrlw038L6boVebjPX0I2kn7MfvPCOMSeE4creS/OdV0+AhGA=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790170874; c=relaxed/simple;
-	bh=+mQ6Ar0lpDm09otDuf5yoTENE4+4/qXpNbLM4z6dqIg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=iWuwZz7/19U9i0C/t3K2OyW/4GhL7yStiGPvZvxJgx0mTrvyd8Uzwivyaw97K5a+iTW/B/TgzT1ZBSN7djyqMjjRicUEalSLByErAkxH/t/wHTYOX5zpNV09zb0f300DXUagfYzDXgwA8O0V4ijkkXGHx/Lt96oSTAjzxSCselY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=gKdGC85o; arc=pass smtp.client-ip=209.85.214.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4DCC534473;
+	Wed, 23 Sep 2026 13:45:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.83.28
+ARC-Seal:i=3; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1790171139; cv=fail; b=Vow2s9ri3heBoKh5AEPROZ0ojikDWSTxvhuQ8g9MyJ2OncZydgCW6l96YQhfnv2kIDTFPSuaXxvOC4fy8EBA0Oni0gJZxlIk1Lac4R9hPczDFSMT/job4mr3eKowYhpTVjDwUseOBc7fcMJwj2NemRtdTzZEq6l3qqz1fR+FJ8I=
+ARC-Message-Signature:i=3; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1790171139; c=relaxed/simple;
+	bh=3t0QxU66plPfO6d3K7ERDjf5o7q4vJroPmQNdWp4rTk=;
+	h=Message-ID:Date:Cc:Subject:To:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=osxmoeftuYuXlFk2/WY4rykIleyPCwBzSC50ph/JFA4pcDcuyr0ySIHUxn2ioFgGVuvGKw/rZELpk02y57x+mDkRbNFhrH1SmVMYSpq0rYF9RXRc9u7nsb4ZNOqJYXz7RRrcAdtSt+QiSg9HEp7aIKpXUon1lgO0AO2VJLMI62o=
+ARC-Authentication-Results:i=3; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=NImLnI7m; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=NImLnI7m; arc=fail smtp.client-ip=52.101.83.28
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="gKdGC85o"
-Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-2d8facae850so71125ad.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 23 Sep 2026 06:41:12 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1790170871; cv=none;
-        d=google.com; s=arc-20260327;
-        b=pt2U9nnfWyk/z9/jgHlslC6dTKk6KcJUceo6n6ZFLVobpdsbQ97/beih8aHtwZxItr
-         k1uTIPNOXKUU/lr8hSRWuDLUPjpzJgGozr5Bvq7iKZrC0cypFyeoIdM3/hQZh8oV1SsF
-         isHXLB8YI0A9byBgu3ziRoU/AoYOPNEczlUKyvjlp8zP+GjpUrFvGGu5kBgc6iwJQgci
-         fCyO0vYKiBrcSam7CeTpiykJ29w/Tx4e2l+Uywygg29+Dy4x2Qwq16GSZp/eAB+AHtog
-         wCxK0XUTtz61iWsH51MwYe4g4pZCxfqOvhWCnHLhr+gdnqFIg5Ntb+MY/9mTP+m4APwW
-         eqSg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=VMA6nrkSU3W0ATD5ypT/W2DVX30FCfF4aQzSCkrPd8I=;
-        fh=tlQlL/h4B04Eo04s6kAOw3/iFHn7/ht+2Wb3LqOFPtM=;
-        b=jX+G4casW/2l1cLWcZjIFkaozIdEx+6XgoWnii9GPDFglJ0LJcyLhv+bv/G8JvzrRA
-         AvdvYPQjN2UTxG+UsGT0AQxIsMSxb/Rfb3VJ4WM+CaV0kPxzq3yjldt5SooPaCw4jTUT
-         sK99c12OpUYVzXoJKcSjawW/x4KcI3qYxggbp1cZZb9rYdhHrPr5Qd0ty9XmwhqhSRIb
-         3zfYwB5ks21APVHo1/2YsW4bGoSyp9Fm3wkOB/0xvH/cP6MrtVsJ3xaQRD2v88XtYWyi
-         MfFmH1sOeVkUFgG42jZhBFXguKTPSFUIYvRrigCkHxfYkEGHtwiKaD5gAjU9XKOZo254
-         uwRw==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1790170871; x=1790775671; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=VMA6nrkSU3W0ATD5ypT/W2DVX30FCfF4aQzSCkrPd8I=;
-        b=gKdGC85oe3qi/c5bTVtVroUeFXQ5jutC204ZQ2g/mYFkVPghCS6RNjhcoSQ59k5rgf
-         IftOu7ifkp2Q1wpXWOS8Gn3MwzUJPaBFuCxZSoI9i2H3bsXqCs7Im+dxX6cpyTlYFA9T
-         iWqy9awvMLfQCNscHAbYNkYl1VLjCIMX7HyJcx2dyYlp6ZA74xy5oZtMMrKkqXBmYhvF
-         ZcrWE2YZL4J2Hz21rqm8L9xF4V1DoP+LXhyr+QWGVs2lnWRUcKgsASScyvfPup8geNS6
-         y31pWEnvDDJAhf97gOxf3sXA5BJG31kM9fBgx5ZMUp7bdSMYpw8WxCm5NV3N7rj1fl4u
-         D4Pw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1790170871; x=1790775671;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=VMA6nrkSU3W0ATD5ypT/W2DVX30FCfF4aQzSCkrPd8I=;
-        b=14/ecMJRtJMX4DG7mqRL85nFRT5LpwFrZ5pHNLAypWx4vS3Kqm169eEiVioJIgMGEx
-         t1HIhDnybsxRhalFD7bL0FDayc5xTiKx2WyHG4ND88y7HmAr/e1KR5f98pAIA0nxHDgR
-         KF4j8AYwb0jSkMB7vdtPY/sUKFcEeIwo+/fiI6lJeBFVBkm/Wek6zz0hxmu8oGxxanhS
-         Q+EkddP5pq4jxSeQ5NiIzBC/EQPfR4EfkQj7ZUsXxAg1Z7yKdrljPBQ7vQjrJAsk8g9O
-         Q2UWqdLHPQHFFIuHaiBzY2uGWPG5WBztMYgiUXfoUd1HVlgarDhXz8xLVaeCkrh+Frzp
-         8glg==
-X-Forwarded-Encrypted: i=1; AKwUvBzi8RN5eteNR6a5Sj4o3WqyINvix/Fm4RRAHgipQUfSW4Sl2MBC0g8NpA4/5EwXipXaXME90m1F6rEMLGJDOblA@vger.kernel.org
-X-Gm-Message-State: AFuF++ntyRtsiUu6Ohepa4FKVSqaUveXo4fyd8VP86NkUPOY00W63lPN
-	RqsP4Huei0KXzQDHRpmINBWGY5dp4QXRyc5TTOXGUSIA3jJxgipHwp5NlOqvMrb2Nx5VBTpghaV
-	MQyn55AoDSXpRIjvxug9Y8U0BzLH9dbJUyL129hLC
-X-Gm-Gg: AYBFou11S9dqzZ0cgQ4/01/Lc0GEii4eowGf/1xhpP95iYpAGVegzIvYtw9DhqM0mZq
-	yefzFnzPg5NG4AR0Iuvuir2/xE2Z+k8EECKvOqzdWFHwfaWMNLIWVzSX/89KCamqLV2sHkwa0fl
-	Tjwg24ljl/OZkoKaJeDnMEHFqVnwm0CJyWKKra48tAANWcuriffJbV3RbHJT2TY3dJk6ynG/4TW
-	VlMf6w2Y34IDXJo+54l5oKRnnRcuN+A8uc68AwSF3SGz6C5tn4rvmJnnbdHqFC5UZ0c1N6zk3dF
-	pKSajkbJ+WR2Oi4PhzKDuSFh7RWHjFBDoZXE/vNz0V5UJnd3b3vuUOs=
-X-Received: by 2002:a17:902:ce04:b0:2c9:d89f:fd98 with SMTP id
- d9443c01a7336-2df6b4a0651mr3820415ad.1.1790170870598; Wed, 23 Sep 2026
- 06:41:10 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="NImLnI7m";
+	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="NImLnI7m"
+ARC-Seal: i=2; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=pass;
+ b=kzgdyTvKhhlePou3DYFmQlpI5GOSzMn/Xu8SPWCfg9vBVRFGQxid03K7ciG8NmY8+tUz+MYLtzcfk5D18Id9hqehjMiEPKwRi4yLASAy966ElR1Zy2BQTOv+P4ZfMLm7a4UNEEtyLxYIrvnY9JnInoJT3zNAQF/0ZX0/FENlReHD7C8IHtljH4UnDa/2wMFm4DtvRNOu1Huanv7AjveJ7HD6wiyyCSbgNXj8vMwIvhCbdg9WZax2rBTaYZ2W9P0HG3ng8IkuPfEWDOhgMf5PvD7LJLigPrtdTViHZ72d2ePWYWvN/I7DQ1EUaMes1fCFrQNJqJohqP70YjAhJrNXnQ==
+ARC-Message-Signature: i=2; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=DNv2PlrEALCBnLQsldXodP/zMuSTmALFTUFz//S+1bg=;
+ b=xk35mhgC24gyWrvj5H9IV/yYQucGtvPOamJCQUxofy/lghRCucN0uyKWjgXhxzCvxeAiUfAwgZrxla+lXyF6mhN+QPNOvV9R6IMBTvqw0cq7bTdEtUYQv67/843h+eTNrvFASsfK2viClttBuM4exPxf80ou0h7U0s50rbYn1gUKO9HcNY01KvJilmQbsKXEMyVr+T1x279vfYHXlX9aMpGCGTNr6dTFuvbaPwpqFTZuFKXYs6WBy+bRxZAAJfIyZCJt/Cw6QIAucFlvJ1lqorhM6x7DMbi80kgyGT9ZA9qYEwhk8DRm/p+0e0bX28b4K056BkMg3Kj9IGiL7UGmpw==
+ARC-Authentication-Results: i=2; mx.microsoft.com 1; spf=pass (sender ip is
+ 4.158.2.129) smtp.rcpttodomain=linux.ibm.com smtp.mailfrom=arm.com;
+ dmarc=pass (p=none sp=none pct=100) action=none header.from=arm.com;
+ dkim=pass (signature was verified) header.d=arm.com; arc=pass (0 oda=1 ltdi=1
+ spf=[1,1,smtp.mailfrom=arm.com] dkim=[1,1,header.d=arm.com]
+ dmarc=[1,1,header.from=arm.com])
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arm.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=DNv2PlrEALCBnLQsldXodP/zMuSTmALFTUFz//S+1bg=;
+ b=NImLnI7mPzOCS5h75myRD6dJrhYj/Y8pb61WWlfOk08FUtxHCscx3oDJn5egO5woT658xGiB2tOEbTMVbcbi6ph3mDDYiA2qjvSuNRYRzRqdfIE9qlC+/cqGsnimcLLVDcNeCm5QDg8C8Ok0X4+2H9Cqc6asgus/twsBLTaTJfY=
+Received: from WA2PEPF000008A3.POLP291.PROD.OUTLOOK.COM (2603:10a6:1d8::654)
+ by DBBPR08MB10531.eurprd08.prod.outlook.com (2603:10a6:10:53d::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.472.4; Wed, 23 Sep
+ 2026 13:45:24 +0000
+Received: from WA1PEPF00009B3A.eurprd05.prod.outlook.com (2603:10a6:1d8::118)
+ by WA2PEPF000008A3.outlook.office365.com (2603:10a6:1d8::654) with Microsoft
+ SMTP Server (version=TLS1_3, cipher=TLS_AES_256_GCM_SHA384) id 15.21.382.12
+ via Frontend Transport; Wed, 23 Sep 2026 13:45:24 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 4.158.2.129)
+ smtp.mailfrom=arm.com; dkim=pass (signature was verified)
+ header.d=arm.com;dmarc=pass action=none header.from=arm.com;
+Received-SPF: Pass (protection.outlook.com: domain of arm.com designates
+ 4.158.2.129 as permitted sender) receiver=protection.outlook.com;
+ client-ip=4.158.2.129; helo=outbound-uk1.az.dlp.m.darktrace.com; pr=C
+Received: from outbound-uk1.az.dlp.m.darktrace.com (4.158.2.129) by
+ WA1PEPF00009B3A.mail.protection.outlook.com (10.167.242.40) with Microsoft
+ SMTP Server (version=TLS1_3, cipher=TLS_AES_256_GCM_SHA384) id 15.21.451.8
+ via Frontend Transport; Wed, 23 Sep 2026 13:45:24 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=CFc6tbN+DqR9bAcOpUhd5U6M7Q7RUV9BGGK3m1uDUl3G88awk3wbZkIUMEtEVoD5b+mpJyuYo4ThkzM/O18vTTB2yH05diNCUoxnCR6PzAd6zAe6sjujqVwqzbLfZSpBRmlaX7XN01mX1sFF/PCDrFtVgNxTVhkksyzKFJAoKXVc2dLQz68cI5czXADet2kHxLdB0RwAG8A4JIKNQ22vh7cJvtgaTzMm9J2BDX0LuHqFJpDmHmOlRw4vxjbTQQ8HW+FeNjRs/2kTIFFnnNEkCK8JjpAY43grjKB/1vVBkqsJP82tRXL+D3n54rr3SLW5UcaLzAtBE6p5ZI1m7B8buw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=DNv2PlrEALCBnLQsldXodP/zMuSTmALFTUFz//S+1bg=;
+ b=jNWSZAnXa1NBr9IVjgjsys9yhz7wZLeNTqADBkYdUvhNe6TsU0eG2px/iArkOYQ21o00f5SprqHsrUhgh/eG476Y9d73VAjX9Arqk7Sn1xVij1xQIbJ9Gc/isTRqDMBmtJxYT/h52ecJqhaIJw5lUqsBdyVWKgz0zfTPa7ceo+tOcwIduGe+GNYblhw83oko/QCqSMDHxhyH78pUhd4+GtCloSsUbMkr1b030fIdCDunGTloje1Oy+t7fof+sPsDg8ytEukVESEYbEFtLBJlJuy3TZ0ZNZ6xZmtA0RvwzY4tiXzWwf7DQElW80W7heL7Qh7OVrmv7FY8lQQa5CFUjA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
+ header.d=arm.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arm.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=DNv2PlrEALCBnLQsldXodP/zMuSTmALFTUFz//S+1bg=;
+ b=NImLnI7mPzOCS5h75myRD6dJrhYj/Y8pb61WWlfOk08FUtxHCscx3oDJn5egO5woT658xGiB2tOEbTMVbcbi6ph3mDDYiA2qjvSuNRYRzRqdfIE9qlC+/cqGsnimcLLVDcNeCm5QDg8C8Ok0X4+2H9Cqc6asgus/twsBLTaTJfY=
+Authentication-Results-Original: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=arm.com;
+Received: from VI1PR08MB3421.eurprd08.prod.outlook.com (2603:10a6:803:80::16)
+ by DBBPR08MB5993.eurprd08.prod.outlook.com (2603:10a6:10:1f4::23) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.451.13; Wed, 23 Sep
+ 2026 13:44:47 +0000
+Received: from VI1PR08MB3421.eurprd08.prod.outlook.com
+ ([fe80::e079:6bd:fbe0:89b4]) by VI1PR08MB3421.eurprd08.prod.outlook.com
+ ([fe80::e079:6bd:fbe0:89b4%3]) with mapi id 15.21.0451.012; Wed, 23 Sep 2026
+ 13:44:45 +0000
+Message-ID: <b9054539-2f3c-4fee-aad5-c6e725c6ea1c@arm.com>
+Date: Wed, 23 Sep 2026 14:44:40 +0100
+User-Agent: Mozilla Thunderbird
+Cc: usama.anjum@arm.com, Jani Nikula <jani.nikula@linux.intel.com>,
+ Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+ Rodrigo Vivi <rodrigo.vivi@intel.com>, Tvrtko Ursulin
+ <tursulin@ursulin.net>, David Airlie <airlied@gmail.com>,
+ Simona Vetter <simona@ffwll.ch>, Dimitri Sivanich
+ <dimitri.sivanich@hpe.com>, Arnd Bergmann <arnd@arndb.de>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
+ Helge Deller <deller@gmx.de>, Juergen Gross <jgross@suse.com>,
+ Stefano Stabellini <sstabellini@kernel.org>,
+ Muchun Song <muchun.song@linux.dev>, Oscar Salvador <osalvador@suse.de>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ "Liam R. Howlett" <liam@infradead.org>, Lorenzo Stoakes <ljs@kernel.org>,
+ Will Deacon <will@kernel.org>, "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>,
+ Nick Piggin <npiggin@gmail.com>, Peter Zijlstra <peterz@infradead.org>,
+ Andrey Ryabinin <ryabinin.a.a@gmail.com>,
+ David Hildenbrand <david@kernel.org>,
+ Pasha Tatashin <pasha.tatashin@soleen.com>, Chris Li <chrisl@kernel.org>,
+ Kairui Song <kasong@tencent.com>, Uladzislau Rezki <urezki@gmail.com>,
+ Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Alexei Starovoitov <ast@kernel.org>,
+ Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>,
+ Eduard Zingerman <eddyz87@gmail.com>,
+ Kumar Kartikeya Dwivedi <memxor@gmail.com>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, SJ Park <sj@kernel.org>,
+ "Matthew Wilcox (Oracle)" <willy@infradead.org>, Jan Kara <jack@suse.cz>,
+ Jason Gunthorpe <jgg@ziepe.ca>, Leon Romanovsky <leon@kernel.org>,
+ Miaohe Lin <linmiaohe@huawei.com>, Dennis Zhou <dennis@kernel.org>,
+ Tejun Heo <tj@kernel.org>, Christoph Lameter <cl@gentwo.org>,
+ Mike Rapoport <rppt@kernel.org>, Johannes Weiner <hannes@cmpxchg.org>,
+ ziy@nvidia.com, pfalcato@suse.de, ryan.roberts@arm.com,
+ linux-kernel@vger.kernel.org, intel-gfx@lists.freedesktop.org,
+ dri-devel@lists.freedesktop.org, linux-parisc@vger.kernel.org,
+ xen-devel@lists.xenproject.org, linux-mm@kvack.org,
+ linux-fsdevel@vger.kernel.org, linux-arch@vger.kernel.org,
+ kasan-dev@googlegroups.com, linux-trace-kernel@vger.kernel.org,
+ bpf@vger.kernel.org, linux-perf-users@vger.kernel.org, damon@lists.linux.dev
+Subject: Re: [PATCH v2 1/8] mm: introduce hw_pte_t for PTE table storage
+To: Alexander Gordeev <agordeev@linux.ibm.com>
+References: <20260903103002.1091859-1-usama.anjum@arm.com>
+ <20260903103002.1091859-2-usama.anjum@arm.com>
+ <4fb9f42e-73c3-46db-ac10-351a90901b7c-agordeev@linux.ibm.com>
+From: Muhammad Usama Anjum <usama.anjum@arm.com>
+Content-Language: en-US
+In-Reply-To: <4fb9f42e-73c3-46db-ac10-351a90901b7c-agordeev@linux.ibm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: LO4P123CA0270.GBRP123.PROD.OUTLOOK.COM
+ (2603:10a6:600:194::23) To VI1PR08MB3421.eurprd08.prod.outlook.com
+ (2603:10a6:803:80::16)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1789966896.git.irogers@google.com> <f724b653476e2733c18b02268c57baaaa54870ba.1789966896.git.irogers@google.com>
- <20260923090007.GJ200420@e132581.arm.com>
-In-Reply-To: <20260923090007.GJ200420@e132581.arm.com>
-From: Ian Rogers <irogers@google.com>
-Date: Wed, 23 Sep 2026 06:40:57 -0700
-X-Gm-Features: AcwNN1Vn_Eha65P1YeIcOKooc5cy7M3LqKbx_9UBvcBjjqFG-5HYHBrAAP1_5Cs
-Message-ID: <CAP-5=fUn8hafFn_RJs0vgaZKmeGEvWqRwtC4arYrCgogETXUJQ@mail.gmail.com>
-Subject: Re: [PATCH v2 38/49] perf python: Port arm-cs-trace-disasm to perf module
-To: Leo Yan <leo.yan@arm.com>
-Cc: acme@kernel.org, alice.mei.rogers@gmail.com, 
-	linux-perf-users@vger.kernel.org, namhyung@kernel.org, 
-	adrian.hunter@intel.com, dapeng1.mi@linux.intel.com, james.clark@linaro.org, 
-	leo.yan@linux.dev, linux-kernel@vger.kernel.org, mingo@redhat.com, 
-	peterz@infradead.org, tmricht@linux.ibm.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-TrafficTypeDiagnostic:
+	VI1PR08MB3421:EE_|DBBPR08MB5993:EE_|WA1PEPF00009B3A:EE_|DBBPR08MB10531:EE_
+X-MS-Office365-Filtering-Correlation-Id: 93df322b-b665-4342-eb1a-08df1978eb26
+x-checkrecipientrouted: true
+NoDisclaimer: true
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam-Untrusted:
+ BCL:0;ARA:13230040|23010399003|7416014|1800799024|376014|366016|10067099003|11063799006|6133799003|10063799003|18002099003|22082099003|56012099006|4143699003;
+X-Microsoft-Antispam-Message-Info-Original:
+ 4g1AO8kRUEFNWgcQXjh2wHWdD79yQHdGiF1pC7allufgdnec5hNaE7+LNiSCIW8Cf/LtPMWAWu+HPPgzv/h/86VenR7OgyMEAnQxSLhc6S1YXd3KbGcVG8FY+/uRwl2ul7KHXmCO3LuzTQ0SFj2AvY+ekUeNm5xr/L4a17cqmOqLpE0hAIi44FxnIq9dA3Nm+SVA/TEFMUynwqzMMF1o0R5llCURQxKQkTE1GpeGyi36kiNV9ODPLh1EN0sfuFhInnhFcKJqY+xYUmLPvsySIeInXeNZ1Z93zJhvtB2mq6Y8l5seuDc2vh5RF/SHYMEdPWXSnE5OZxSiaYpuFsg+dDvBTPyMsN0r+h+n2YCPn1GFt6ITTvfq46WkRfqb3MSjQnVdYP/zv/x0HEy6K4khd2PMP8H+vDJwOYKRmIG3Mi519jEvwQz40tAckyFi0mO4vK+baOniNWbTxmwhe8ESybU9GLHKpvs/R6GFtfYcJZB3Kt6GXZUOf1Qb2V5lvYAJGrzFdVA2+GGsUXSScGpCDpUR+Y30VQ+1KOjQc8IDrXUQVwlCBTIaYDWiZ95e9D8+FO8tuwdnNTTTyOYXynEdIkSbx1nbyf2tebLLP7inAORYQY8UD1Uaw/iqwaxO1xbT
+X-Forefront-Antispam-Report-Untrusted:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR08MB3421.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(23010399003)(7416014)(1800799024)(376014)(366016)(10067099003)(11063799006)(6133799003)(10063799003)(18002099003)(22082099003)(56012099006)(4143699003);DIR:OUT;SFP:1101;
+X-Exchange-RoutingPolicyChecked:
+ TXHaA0zYu16+wIC41/vqvbEGWbtUM6A/QEi4hfjhAZPwB7e/jDm13rcDMw/aO8Z2W08mfc3hKtaOOacLo68A26n5EL4dlA6LeleYhiC9nkQ6kXhDTJjvxh6CcSAyRIuUgCt1DIK2sXz505JdtvnA2ICEk4rkuGPM4P8kWlgrKMZpUO0UV9+9Uo3fIActyOJ5+5cyFkF9VXAiNALcv8XPHc2fVWH9PI099oOHbtbpKWEwWIu1KS07lEVj6r5JRJFjGKZlCzAiG9RixrQvT6D0eOwJ1RBKOXbzd2ZDFxeC0Qw/pt63RPvGVNaks9ZgZxO5NDYB/k+xBxN6WVE1V46ZaQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DBBPR08MB5993
+X-EOPAttributedMessage: 0
+X-MS-Exchange-Transport-CrossTenantHeadersStripped:
+ WA1PEPF00009B3A.eurprd05.prod.outlook.com
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id-Prvs:
+	40b0c1cc-e4c7-4cb9-e70f-08df1978d2e2
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|14060799003|36860700016|82310400026|35042699022|7416014|376014|23010399003|11063799006|56012099006|10067099003|6133799003|10063799003|22082099003|18002099003|4143699003|13003099007;
+X-Microsoft-Antispam-Message-Info:
+	xOdlt9gWQb5AmSldLIWwF39tLodl3UEFxjRIlrJ59NOw1kDi74+MXR9xlaG6aaiwXOY4cd5Jr3/wVt3bn36vacHTUeK/0KkfDzfrq2g5Yg2Iq99iBlX+SLENnYyMQSMqVsEr5bmOG7rtrTXyX6GSBc/bDOo1IUtMeKgG3vo/wz5NiZSEi8voynSqFqdUS6viavUwo+Jx+JPKABcrwcVtgmVefWaxTfeyvVpXR6O8KwclhNDzbHfqq32FrEXU0oRTy7L7iSGI0XmH1BSjsT19TjgwGIfyWko4QvIXLRZ7R7aDkpnyOK1icXyArFqJ7sd1bhVUct+dsjWy2kDp4uqvcldeRBBLL858DI2MxESGcLlE7x0xIed6CPotyGxiZLixIEAQVj3xqWHFrekI8GCaF9oIgFJHptna+7v0Ltr9p6UUGpFAa/tqPIxoqsjPoSsY74WZ92uGJZQb/psZOb9k/BWPCpKRlG8ZogiOzuXyGNPyg8rTK4JwxRX2ipiwBXMPMvMfyYc+JG1BqLhRkmKvkwhywKX+Y7UXAVJzMtiV2XcTyIBK+JU0kCtEQwjNebJv6yulaHQFyARfAftW3HoMDE5ANHaQuYWy1WSkZwCxFxTNGuCfIV+dTdbLy5dwvccbsVoESTRJOsivk1l65Y0+HbGp9ST/sv8PNzZMjjVcmVU=
+X-Forefront-Antispam-Report:
+	CIP:4.158.2.129;CTRY:GB;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:outbound-uk1.az.dlp.m.darktrace.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(14060799003)(36860700016)(82310400026)(35042699022)(7416014)(376014)(23010399003)(11063799006)(56012099006)(10067099003)(6133799003)(10063799003)(22082099003)(18002099003)(4143699003)(13003099007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	x678kAqGeH74dlpP5SlpeeqVF/B8Jqjj7yszzQQL7Qxoeef1ZC7qYaLfodPtRt1nBDXEY1KPq1agkS4ZsvRzqw24ACv31K8NxW9wr/5QZWeG+tOpRjBinx10ZZDpZXODjAJGdgImBc2OeaCXeldNt2c0helMZ1fadIpCpL8Qj24u1s64LdFc+u3JU6c+h2SM+Ywr5biNXalC/1kXFJPUWnkX4Q0D/03BN4zFe3OZUBkyYeW43OCfJ3yir3ileqzDhBvPe1LwPl4XAEoAx2nUPBaK4IVYMJVlvdT0YSyYQU5JyZAKOx4mb47W6+TRkp4Z2nBY7tIxsfapRMxxHIlkcCh4SUi40x5LoZc74sT0G1qox30Vs2XcCQluY5Fc5+cDtApJeOw8RizKDiyv4S3QI+goVGza5E7sXuQN5CIegAOHN6TogHTWIcUMWNyFiDMg
+X-OriginatorOrg: arm.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Sep 2026 13:45:24.0046
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 93df322b-b665-4342-eb1a-08df1978eb26
+X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[4.158.2.129];Helo=[outbound-uk1.az.dlp.m.darktrace.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	WA1PEPF00009B3A.eurprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DBBPR08MB10531
 
-On Wed, Sep 23, 2026 at 2:00=E2=80=AFAM Leo Yan <leo.yan@arm.com> wrote:
->
-> On Sun, Sep 20, 2026 at 10:06:56PM -0700, Ian Rogers wrote:
->
-> [...]
->
-> > ---
-> >  tools/perf/python/arm-cs-trace-disasm.py      | 356 ++++++++++++++++++
->
-> A new script is added under tools/perf/python/, but I don't see the
-> legacy script under tools/perf/scripts/python/ being removed.
->
-> Should we maintain two copies of the script for the same purpose?
->
-> > --- a/tools/perf/tests/shell/coresight/test_arm_coresight_disasm.sh
-> > +++ b/tools/perf/tests/shell/coresight/test_arm_coresight_disasm.sh
->
-> > @@ -44,8 +56,8 @@ branch_search=3D'[[:space:]](bl|b(\.(eq|ne|cs|cc|mi|p=
-l|vs|vc|hi|ls|ge|lt|gt|le|al)
-> >  if [ "$(id -u)" =3D=3D 0 ] && [ -e /proc/kcore ]; then
-> >       echo "Testing kernel disassembly"
-> >       perf record -o ${perfdata} -e cs_etm//k --kcore -Se -m,64K -- tou=
-ch $file > /dev/null 2>&1
-> > -     perf script -i ${perfdata} --itrace=3Db -s python:${script_path} =
--- \
-> > -             -d --stop-sample=3D2 -k ${perfdata}/kcore_dir/kcore 2> /d=
-ev/null > ${file}
-> > +     $PYTHON ${script_path} -i ${perfdata} --itrace=3Db -d --stop-samp=
-le=3D2 \
-> > +             -k ${perfdata}/kcore_dir/kcore 2> /dev/null > ${file}
-> >       grep -q -E ${branch_search} ${file}
-> >       echo "Found kernel branches"
-> >  else
-> > @@ -56,8 +68,8 @@ fi
-> >  ## Test user ##
-> >  echo "Testing userspace disassembly"
-> >  perf record -o ${perfdata} -e cs_etm//u -Se -m,64K -- touch $file > /d=
-ev/null 2>&1
-> > -perf script -i ${perfdata} --itrace=3Db -s python:${script_path} -- \
-> > -     -d --stop-sample=3D2 2> /dev/null > ${file}
-> > +perf inject --itrace=3Db -i ${perfdata} -o ${perfdata2}
-> > +$PYTHON ${script_path} -i ${perfdata2} -d --stop-sample=3D2 2> /dev/nu=
-ll > ${file}
->
-> The perf script command is replaced with perf inject and a Python
-> command. I learned from the above that we can pass the itrace option to
-> the Python script.
->
-> This is fine with me. I'm just curious why we don't use a single Python
-> command here.
+On 23/09/2026 12:52 pm, Alexander Gordeev wrote:
+> On Thu, Sep 03, 2026 at 11:29:53AM +0100, Muhammad Usama Anjum wrote:
+>> pte_t is used both for software PTE values and for entries stored in a PTE
+>> table, so pte_t * does not distinguish a pointer to a software PTE
+>> value from a pointer to table storage.
+>>
+>> Introduce hw_pte_t as the generic name for a PTE table element. Define it
+>> as a macro alias of pte_t by default. When an architecture selects
+>> ARCH_HAS_HW_PTE_T, define it as a structure containing a pte_t instead.
+>> This preserves the representation while allowing converted architectures
+>> to enforce the distinction at compile time.
+>>
+>> Name the generic wrapper structure __hw_pte_t so architectures can
+>> forward-declare it when pgtable_t must be defined before the generic
+>> hw_pte_t typedef is visible. This avoids header-order dependencies.
+>>
+>> Keep the C type definitions behind an __ASSEMBLY__ check because
+>> architecture assembly sources can include this header indirectly. Include
+>> asm/page.h so consumers such as linux/vmalloc.h retain the page definitions
+>> they previously obtained from that header.
+>>
+>> Signed-off-by: Muhammad Usama Anjum <usama.anjum@arm.com>
+>> ---
+>> Changes since v1:
+>> - Name the generic wrapper structure __hw_pte_t so architectures can
+>>   forward-declare it, and explain why this is required.
+>> - Use software PTE value terminology.
+>>
+>> Changes since RFC v1:
+>> - Add the ARCH_HAS_HW_PTE_T opt-in and generic wrapper definition.
+>> - Exclude the C type definitions from assembly sources.
+>> - Update the description for the new opt-in model.
+>> ---
+>>  MAINTAINERS                   |  1 +
+>>  include/linux/pgtable_types.h | 17 +++++++++++++++++
+>>  mm/Kconfig                    |  3 +++
+>>  3 files changed, 21 insertions(+)
+>>  create mode 100644 include/linux/pgtable_types.h
+>>
+>> diff --git a/MAINTAINERS b/MAINTAINERS
+>> index 2133aec4a2004..da60a8bdcddb5 100644
+>> --- a/MAINTAINERS
+>> +++ b/MAINTAINERS
+>> @@ -17140,6 +17140,7 @@ F:	include/linux/mmu_notifier.h
+>>  F:	include/linux/pagewalk.h
+>>  F:	include/linux/pgalloc.h
+>>  F:	include/linux/pgtable.h
+>> +F:	include/linux/pgtable_types.h
+>>  F:	include/linux/ptdump.h
+>>  F:	include/linux/vmpressure.h
+>>  F:	include/linux/vmstat.h
+>> diff --git a/include/linux/pgtable_types.h b/include/linux/pgtable_types.h
+>> new file mode 100644
+>> index 0000000000000..07da05d375c2c
+>> --- /dev/null
+>> +++ b/include/linux/pgtable_types.h
+>> @@ -0,0 +1,17 @@
+>> +/* SPDX-License-Identifier: GPL-2.0 */
+>> +#ifndef _LINUX_PGTABLE_TYPES_H
+>> +#define _LINUX_PGTABLE_TYPES_H
+>> +
+>> +#include <asm/page.h>
+>> +
+>> +#ifndef __ASSEMBLY__
+>> +
+>> +#ifdef CONFIG_ARCH_HAS_HW_PTE_T
+>> +typedef struct __hw_pte_t { pte_t __pte; } hw_pte_t;
+>> +#else
+>> +#define hw_pte_t pte_t
+>> +#endif
+> 
+> I would suggest to provide __hw_pte() in this series - it is needed
+> by architectures along with __pte_from_hw() right away (as opposed
+> to when lands in arm64).
 
-A single Python command that would handle both the itrace and file
-processing? We could. Having the script command also perform an
-inject-like rewrite of the data seemed less obvious to me than just
-having perf inject do the work and then running the script. It does
-mean a change for people using the script, and two commands could be
-less convenient than one. We could expand the Python module "session"
-code to include the ability to rewrite itrace data specifically for
-this script. I'm hoping that we can have more composable perf_tools in
-the code, similar to the ASLR code. It would be nice to add itrace
-support to the Python code with composing tools in mind. I was just
-putting off worrying about this for now.
+* __pte_from_hw() is added by 4th patch in this series.
+* __hw_pte() was added in arm64 specific series. But it has been dropped
+  because of [1] in v2 of arm64 series [2]. There is no user of it in my both series.
+  Please feel free to add it if s390 needs it.
+* hw_pte_val() was in arm64 specific series. It has since been moved to generic
+series in v3 [3].
 
-One effect of not using the inject command with itrace was that it had
-accidentally broken for intel-pt over time as we lacked testing
-coverage.
+[1] https://lore.kernel.org/all/86d4aea6-4272-427e-9229-295489e068d7@arm.com
+[2] arm64 v2: https://lore.kernel.org/all/20260922-pte0_arm-v2-0-a3f1ddff0a8a@arm.com 
+[3] genric v3: https://lore.kernel.org/all/20260922-pte0-v3-0-5670b8cb9059@arm.com 
+
+> 
+>> +#endif /* !__ASSEMBLY__ */
+>> +
+>> +#endif /* _LINUX_PGTABLE_TYPES_H */
+>> diff --git a/mm/Kconfig b/mm/Kconfig
+>> index c1ddf59c0d71a..5f462ec6fa5e5 100644
+>> --- a/mm/Kconfig
+>> +++ b/mm/Kconfig
+>> @@ -1312,6 +1312,9 @@ comment "GUP_TEST needs to have DEBUG_FS enabled"
+>>  config GUP_GET_PXX_LOW_HIGH
+>>  	bool
+>>  
+>> +config ARCH_HAS_HW_PTE_T
+>> +	bool
+>> +
+>>  config DMAPOOL_TEST
+>>  	tristate "Enable a module to run time tests on dma_pool"
+>>  	depends on HAS_DMA
+>> -- 
+>> 2.47.3
+>>
 
 
-> >  grep -q -E ${branch_search} ${file}
-> >  echo "Found userspace branches"
-> >
-> > diff --git a/tools/perf/tests/shell/lib/setup_python.sh b/tools/perf/te=
-sts/shell/lib/setup_python.sh
-> > index 2173215a0517..220d9663f81a 100644
-> > --- a/tools/perf/tests/shell/lib/setup_python.sh
-> > +++ b/tools/perf/tests/shell/lib/setup_python.sh
-> > @@ -18,6 +18,10 @@ fi
-> >  # Set PYTHONPATH to find the in-tree built perf.so first, avoiding sys=
-tem-wide perf.so
-> >  if [ -n "$PERF_EXEC_PATH" ] && [ -d "$PERF_EXEC_PATH/python" ]; then
-> >    PYTHONPATH_DIR=3D"$PERF_EXEC_PATH/python"
-> > +elif [ -n "${BASH_SOURCE[0]}" ] && [ -d "$(dirname "${BASH_SOURCE[0]}"=
-)/../../../python" ]; then
-> > +  PYTHONPATH_DIR=3D"$(dirname "${BASH_SOURCE[0]}")/../../../python"
-> > +elif [ -d "$(dirname "$0")/../../../python" ]; then
-> > +  PYTHONPATH_DIR=3D"$(dirname "$0")/../../../python"
->
-> Not sure if this is specific to arm-cs-trace-disasm.py. Would this be a
-> common change?
-
-Agreed. Will fix in v3.
-
+-- 
 Thanks,
-Ian
-
-> Thanks,
-> Leo
+Usama
