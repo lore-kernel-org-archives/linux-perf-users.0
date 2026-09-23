@@ -1,68 +1,73 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F12913BED5F
-	for <linux-perf-users@vger.kernel.org>; Wed, 23 Sep 2026 07:20:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AD8B238C16
+	for <linux-perf-users@vger.kernel.org>; Wed, 23 Sep 2026 07:21:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790148006; cv=none; b=SCS06rapRNOxQRdhTd/4xTsXp2wUNkBHg234sJlWT+EXI7bGyWfMDH+2q0pEOZpLdNBFb9koCCul56c4vh3GA7wpTYk9yqDm6s+y3k6sR2NbOtcBOIa7rMgqVunOxcXoZU+ryg4uJXF7aWHQ0bbf/CKF8MbXx2z77MnA5MM2kXM=
+	t=1790148089; cv=none; b=EG91r40dZ1sh+mmSmrHBnSDdRzDQbH50QnCjCAvaCM4yqEVSzA7uYHd6UOTjOK2WPP+I/Rz2ImvjnPdZIugn2muyrpsCP1T7OOA81BMLe22h/HvqtIRKrBDdHrfK4MeY2JJqIvy8JPE9ANemaIevoYM4CrBNo8WTTLj+KbaqOpE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790148006; c=relaxed/simple;
-	bh=1fZc34nK/raKwcDOVYaPd2f1kYpEBceyYag/7gLqJ+Q=;
+	s=arc-20240116; t=1790148089; c=relaxed/simple;
+	bh=XXG0JLPqdZH5FiHAJ/A1T6KXTgx3Rk1ArFA1lmhBl/A=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=QfB7YB+PUTE39oQfxkk+U/qQPpiextt7JISdVVPXlzAKNKYT4fhAlu+VfyX3jNNtd5yz5Yljw+IvEjL2i9gvx8Uxr+JIAYKfSDyOjBIS+WjaoZpmptuSMtNG8kB/xqg22hn0iT/tJfqkU7OqAESNYiA59UzAHATECnz1OgHjdCo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AALEVGXH; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=HFfVIFQ71Fc+wPElp47hqRVuI4ZO6XCW9fnyFihMYDQTmgKUCib9hhsfNHdL4iGp8Lkt+7eLFCpYKEAOXlxuXsGPFqEG+YtQsw3+vkzDxEAK2xxbWTXlsuPXHn1v10rmfgpAxU9QEm7+mQsP49mMDgw1OIT42nHk6ch5X2S6mFM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CGnAMYoZ; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AALEVGXH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6B92E1F0089B;
-	Wed, 23 Sep 2026 07:20:01 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CGnAMYoZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1E22C1F000FF;
+	Wed, 23 Sep 2026 07:21:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1790148001;
-	bh=1fZc34nK/raKwcDOVYaPd2f1kYpEBceyYag/7gLqJ+Q=;
+	s=k20260515; t=1790148088;
+	bh=XXG0JLPqdZH5FiHAJ/A1T6KXTgx3Rk1ArFA1lmhBl/A=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=AALEVGXHTObUKSf5nusa6PJfJAf5zX9OM6GZbCrwFWk3ULcCc4UqqxdxmT9ElM12F
-	 aFDxKjv4IJM8DWCpNHA4vvDKLmbc6L611SGon1U7fihVl7End/wrJzmJQYc79XAccm
-	 Xx5qEe7dqah3/Ap6SrO50C4g0QuechlMkHlBqasxErmwfsyVjmcUYwTfJozvNVpN7R
-	 nf2otaUFxwUIcSk/9joUYL575Jsw+NJXhZ71BnBC+5WZl0Ql9QPPR1rqJ8CgR3fPWF
-	 NcbUIvVtMgZLt54Wvd1sD6vMURKLn8SKxNBFcEG2O3WrK46SvpBo5IhhP+4wHOIyhz
-	 zKm38GzkcMPAQ==
+	b=CGnAMYoZNCX6/UUmFTlrrCbTrhE12JpNKx3VqPaAtC3cc/P8KnAQenrV2tpO39263
+	 8qj4aNcQDR49LVTFpaUn7xTTQ5Aa5BU8RKP6jzVFPRlIGtQhN+43OYLeOGaL6WdQKD
+	 Xmb/N3acLbYAhKrkqNe/nZjLtlDlOkicFx50Vn2PYnqxLtF0HXCPXAiW6DsKlUBGAl
+	 Q3dkczKPhCfoyWQJT29Sd77JGSaisoC3vtCXm6jhd5NfaONLaSVFigHRs3djm1934i
+	 WTCwstDFVmmf4MMeRK207IgJyH9Nk6hdKeeajpHMq6q87fqZ4UmAv5++Na+k+E727B
+	 qcyKa94A0+fuQ==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v5 03/23] perf trace: Include the headers declaring
- pid_t, strcmp and assert
+Subject: Re: [PATCH v5 06/23] perf trace: Start BPF summary before starting
+ workload
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Ian Rogers" <irogers@google.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <4add8796a95e7cabee2a8094d6babdb39290bfe8.1790145937.git.irogers@google.com>
+In-Reply-To: <5289bf094c7e9d37990d2d36fdf2deb025478c1f.1790145937.git.irogers@google.com>
 References: <cover.1790145937.git.irogers@google.com>
- <4add8796a95e7cabee2a8094d6babdb39290bfe8.1790145937.git.irogers@google.com>
+ <5289bf094c7e9d37990d2d36fdf2deb025478c1f.1790145937.git.irogers@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Wed, 23 Sep 2026 07:20:00 +0000
-Message-Id: <20260923072001.6B92E1F0089B@smtp.kernel.org>
+Date: Wed, 23 Sep 2026 07:21:26 +0000
+Message-Id: <20260923072128.1E22C1F000FF@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-> trace_augment.h uses pid_t in the augmented_syscalls__set_filter_pids()
-> prototype and in the !HAVE_BPF_SKEL stub. bpf_trace_augment.c calls
-> strcmp() in augmented_syscalls__find_by_title() and assert() in
-> augmented_syscalls__create_bpf_output(), but neither pulls in the header
-> that declares what it uses. Both happen to build today only because
-> something else in the include chain drags <sys/types.h>, <string.h> and
-> <assert.h> in first, which is not guaranteed and does not hold on libcs
-> such as musl that keep the POSIX namespaces strictly separated.
+> When using --bpf-summary, trace_start_bpf_summary() sets
+> skel->bss->enabled =3D 1. In trace__run(), trace_start_bpf_summary() was
+> previously invoked after evlist__start_workload().
 >=20
-> Include <sys/types.h>, <string.h> and <assert.h> explicitly.
+> Because evlist__start_workload() immediately unblocks the child process
+> by writing to its go_pipe, short-lived workloads (such as `cat /dev/null`)
+> can execute and complete their initial system calls before
+> trace_start_bpf_summary() is reached by the parent process. Furthermore,
+> under high system load, the child process may finish before the BPF
+> summary tracking is enabled in the kernel at all, causing syscall
+> summary tests to fail. Additionally, if initial_delay was configured,
+> the workload was started before sleeping.
+>=20
+> Move trace_start_bpf_summary() to be invoked before
+> evlist__start_workload(), matching evlist__enable(), and ensure it
+> respects target.initial_delay.
 >=20
 > Assisted-by: Antigravity:gemini-3.1-pro
 > Signed-off-by: Ian Rogers <irogers@google.com>
-> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 
 Sashiko has reviewed this patch and found no issues. It looks great!
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/cover.1790145937.gi=
-t.irogers@google.com?part=3D3
+t.irogers@google.com?part=3D6
 
