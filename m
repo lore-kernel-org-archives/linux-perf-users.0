@@ -1,137 +1,109 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EB842E0914;
-	Wed, 23 Sep 2026 00:28:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B223220F49;
+	Wed, 23 Sep 2026 02:02:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790123297; cv=none; b=NbRsDLdzZAFNRa7rObyHNh0yc8uZ+7DSt9rwWybpvJgjjFmvZ1/gSB82oKSubZo/hKir1oUXk0YQEo/KpfqvoGILLJZM2hTu5pIb/7guZ6Z/bUovENXpnVl4ZLrlEVcaKW9MJdfnihl2rq1VyJeEuZW04j0jAwsZ0/X45rtX6RQ=
+	t=1790128934; cv=none; b=P9OdNvNUbFkw87z4RTYJXf7eZudvLpFlF1mect0+SLWSp7H8Ly/WN+Krm7ljhTpERdlKfh6B93sEqvCod5aGQQaifUzEmSu3LMV1OzOV41UmyImtyzhRNv5hOe6MpURNdl3nTDaOwGWTush1i/x/6svRroUFTdUakNbBbhRiDPA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790123297; c=relaxed/simple;
-	bh=e/8AUG/U+Kxf1s5zTCI9RybjwZNolay9RX9f+zXPy9E=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jjuxpugz0WrccF7ORp6VEPbU/PlinQ1ULMn3LGo9wGab8cUmrB5MPx1ywLUhJ+mWRwYkJfH+jVaEc3fgXSfREOzWHMc4obSwjOu34iwwXAvkHUtMFDvnQqmPI9bsdmV8m88A5sdzIZwTtWY8TCCsPJ3n0BjcZ6PnR+JOWe+eklE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=MQK7JvYj; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	s=arc-20240116; t=1790128934; c=relaxed/simple;
+	bh=bio4YOFhc2GECIi47z621ruaYq9Ev41Dg88V9sDgF6A=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=OTJFUR13LXc6TOej/3sYNIWWgwBJbIJVEtggjagSEeNYZafTgiZeA7b4PU+zxSkQh6ftwyp4qQiglS0Chv8//YF9bqGG686PRcuOLl7P2Ym6XAv969DAHSjLE75xoTIr5/ZryJa0tjMIa0ktPyDqo1vgFTjFl9PT1Qsgd6sW8mA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nclFIl8q; arc=none smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="MQK7JvYj"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 1C0D840E0173;
-	Wed, 23 Sep 2026 00:28:13 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id 2CL9VprPB2RT; Wed, 23 Sep 2026 00:28:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1790123283; bh=Aei0PnNzOTQ4gUUS/HiOefLQYuJlYg4D48KXdNRhLDU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=MQK7JvYj3uTqo4iUnmytE6B5PDXhZoHcJ3o/w4h4dEhyK+MtCeOiu2G2pxo22Ydds
-	 yO56SIIGgm6XzZST5WFFu7gOeB2fZb4DaznqdN/85dtnA3jMfdSGUEQk8tYxkF64Fq
-	 NHBYNCotYo8eIEZQUf5UzDDXoD3QF8mgGHCS93ThPVcvnwfhQ0uEouyTgzvRoharKx
-	 OA+cwI9oy6qb0rPVAeBL5BRc7UqrsdMDSkUa9QHk8IR6ko52rdlKBS50K1iUnoYVN5
-	 +/XdhL/TckndyuB0WZQB4kTLRrYI9BlpVfqrcmabOl0brkPsDg66U8M+9oO0R/Smr4
-	 O7aGjmfiaVkDXLA1HSeHnFL2qmYHq4PTKFcNvrzLYFEbD2wtKhP3ACspeF4u3IEvOZ
-	 xjyBPOHI+H6jjKDnV0Ycem0FnkLcXVFm8QNb0d6/s7cR5TM6p5oBOgFqnrO9hKbYNf
-	 lFazQltkWOpOC1fIm6wy65dG53wFcrdj6pzDsF6btEHJflW+2afwzSA5pEsNU8IPop
-	 EtyaOCkvwj3n0x8BBaaJNjd7kMNzXbSfM6GuLA5A6nsF+BlBAPisVt/d1Lp4qapRGo
-	 3O5FPuJ6QMqrav1S8AFqxhESdv+FRYQ73VtM3vK3dc9DSrw6gLg8Z3POwVCvg452Ao
-	 gF0g9uZVEPi69dLu4GxxvA2Q=
-Received: from stx.tnic (unknown [IPv6:2600:1700:38ca:c00::a])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 6899640E015D;
-	Wed, 23 Sep 2026 00:27:43 +0000 (UTC)
-Date: Tue, 22 Sep 2026 17:27:40 -0700
-From: Borislav Petkov <bp@alien8.de>
-To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>, Ingo Molnar <mingo@kernel.org>,
-	Sean Christopherson <seanjc@google.com>,
-	Jinchao Wang <wangjinchao600@gmail.com>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H . Peter Anvin" <hpa@zytor.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Ian Rogers <irogers@google.com>, linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-	linux-perf-users@vger.kernel.org, x86@kernel.org,
-	Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org
-Subject: Re: [PATCH v17 01/13] x86/mce: Fix hardware debug register
- corruption on task migration
-Message-ID: <20260923002740.GAarMc_PJBsgo8Z-G9@fat_crate.local>
-References: <179005108298.388919.4535333252892590932.stgit@devnote2>
- <179005109564.388919.3937970081044095776.stgit@devnote2>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nclFIl8q"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1790128933; x=1821664933;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=bio4YOFhc2GECIi47z621ruaYq9Ev41Dg88V9sDgF6A=;
+  b=nclFIl8qRAvuubagrWtPyp1gKT7Mp5OzT9YyKxCMCXKVhMfn4VlBsFZP
+   SwqPuNi6vI4+BDqyLgRnSd1/iwbmi1D66eb1RRK3ZQq8+wgaX5hTs6eQg
+   S50GeVY+RykO8L7BpWmnlUFPH7CApNdwyf3Ly6NlJI2WTiEIANkKwZ/0U
+   SdJN5OlcZPOcFmk+mdwpgOuvgIWks6SvKz5qBzrrbrGidLCZjox/XDgWu
+   SwbzUI4/7XQW0Dg5l5jVnohiTg4IzYoLh6nS9k0WPkXjacwX3nC41LydW
+   S2zC8BMMini4ssRN2bgTZ+9RMb8ruSsW2lu0uLRpy0NfVBpwsWcgTw0ep
+   A==;
+X-CSE-ConnectionGUID: e2d5KnsoRg+Pmzyq1/9acQ==
+X-CSE-MsgGUID: l66mRNC9RwSloSyCcadZTw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11913"; a="93285546"
+X-IronPort-AV: E=Sophos;i="6.27,117,1787036400"; 
+   d="scan'208";a="93285546"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Sep 2026 19:02:12 -0700
+X-CSE-ConnectionGUID: 8u2wUIypSdiRHdyqYpZsPA==
+X-CSE-MsgGUID: xohlvFzlROGQ5CflPUqzlg==
+X-ExtLoop1: 1
+Received: from spr.sh.intel.com ([10.112.229.196])
+  by fmviesa003.fm.intel.com with ESMTP; 22 Sep 2026 19:02:08 -0700
+From: Dapeng Mi <dapeng1.mi@linux.intel.com>
+To: Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Zide Chen <zide.chen@intel.com>,
+	Falcon Thomas <thomas.falcon@intel.com>,
+	Dapeng Mi <dapeng1.mi@intel.com>,
+	Xudong Hao <xudong.hao@intel.com>,
+	Dapeng Mi <dapeng1.mi@linux.intel.com>
+Subject: [PATCH] perf jevents: Rename OMR offcore_rsp attribute to offmodule_rsp
+Date: Wed, 23 Sep 2026 09:55:17 +0800
+Message-Id: <20260923015517.2665398-1-dapeng1.mi@linux.intel.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <179005109564.388919.3937970081044095776.stgit@devnote2>
+Content-Transfer-Encoding: 8bit
 
-On Tue, Sep 22, 2026 at 01:24:55PM +0900, Masami Hiramatsu (Google) wrote:
-> From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> 
-> In exc_machine_check_user(), local_db_save() and local_db_restore() are
-> invoked in the outer entry stubs (DEFINE_IDTENTRY_MCE_USER,
-> DEFINE_FREDENTRY_MCE, and DEFINE_IDTENTRY_RAW), surrounding
-> exc_machine_check_user().
-> 
-> However, exc_machine_check_user() calls irqentry_exit_to_user_mode(),
-> which handles pending thread work and may schedule() if TIF_NEED_RESCHED
-> is set. If the task migrates to another CPU during schedule(),
-> local_db_restore() runs on the new CPU with the dr7 state saved from the
-> old CPU. This corrupts the new CPU's DR7 hardware debug register and
-> leaves the old CPU's DR7 disabled.
-> In short, local_db_save() and local_db_restore() pair must be run
-> on the same CPU.
-> 
-> To fix this, move local_db_save() and local_db_restore() inside
-> exc_machine_check_user() and exc_machine_check_kernel(). In
-> exc_machine_check_user(), DR7 is saved and restored strictly around
-> do_machine_check() to avoid schedule() during migration. In
-> exc_machine_check_kernel(), local_db_save() is called at the entry point
-> to prevent early memory accesses from triggering nested #DB exceptions,
-> and restored on all exits.
-> 
-> Fixes: cd840e424f27 ("x86/entry, mce: Disallow #DB during #MC")
-> Assisted-by: Antigravity:gemini-3.8-flash
+The kernel renamed the OMR data attribute from offcore_rsp to
+offmodule_rsp to avoid confusion and keep the naming consistent.
 
-verify_tags: WARNING: Zapping LLM ads tag: ['Antigravity:gemini-3.8-flash'].
+So update the perf jevents msrmap accordingly.
 
-Needs to be:
+Link: https://lore.kernel.org/all/20260917015234.981153-12-dapeng1.mi@linux.intel.com/
+Link: https://lore.kernel.org/all/20260917015234.981153-13-dapeng1.mi@linux.intel.com/
+Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
+---
 
-Assisted-by: LLM
+Note: The dependent kernel patches have been queued into tip/perf/urgent
+tree.
 
-Please fix all your patches.
+ tools/perf/pmu-events/jevents.py | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-> Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> ---
-> Changes in v15:
->  - Move local_db_save() to the entry of exc_machine_check_kernel() and
->    restore it on early return from mce_check_crashing_cpu() to prevent
->    nested #DB on watched variables.
-> Changes in v14:
->  - Newly added.
-> ---
->  arch/x86/kernel/cpu/mce/core.c |   27 ++++++++++-----------------
->  1 file changed, 10 insertions(+), 17 deletions(-)
+diff --git a/tools/perf/pmu-events/jevents.py b/tools/perf/pmu-events/jevents.py
+index 860027bb71b2..93cf04fa8ca4 100755
+--- a/tools/perf/pmu-events/jevents.py
++++ b/tools/perf/pmu-events/jevents.py
+@@ -249,10 +249,10 @@ class JsonEvent:
+           0x3F6: 'ldlat=',
+           0x1A6: 'offcore_rsp=',
+           0x1A7: 'offcore_rsp=',
+-          0x3E0: 'offcore_rsp=',
+-          0x3E1: 'offcore_rsp=',
+-          0x3E2: 'offcore_rsp=',
+-          0x3E3: 'offcore_rsp=',
++          0x3E0: 'offmodule_rsp=',
++          0x3E1: 'offmodule_rsp=',
++          0x3E2: 'offmodule_rsp=',
++          0x3E3: 'offmodule_rsp=',
+           0x3F7: 'frontend=',
+       }
+       return msrmap[int(num.split(',', 1)[0], 0)]
 
-Yah, makes sense.
-
-I'm thinking this needs to be CC:stable and I should take it in now.
-
-Peter?
-
+base-commit: edd8a9fe2eca009599e013a29c421c7a6b5ad1b9
 -- 
-Regards/Gruss,
-    Boris.
+2.34.1
 
-https://people.kernel.org/tglx/notes-about-netiquette
