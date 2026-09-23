@@ -1,216 +1,205 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D9804E73C5;
-	Wed, 23 Sep 2026 17:07:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63AD63ACF16;
+	Wed, 23 Sep 2026 17:09:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790183262; cv=none; b=SOwvH2oE3tovfm/f8JEsL/awomwhyiF+QQs3fYAVBrTQxq+zLubAJX99peLQ+NGTqniYri8lwzQOp6zwOpo+A20VisY2vJqn0EJqJVuzfHOchxXHNFE+CsUXql8uvRz2QS0z2BF3K73deKudOhHOYcNPnt5XU8POgAAEnWcwblY=
+	t=1790183359; cv=none; b=NMT7WC/YB/3yzgmeVc7ATkkmvLAxY2ksn4asEqFG3Piz6HdDh0RYnVo4vXg4uqhNeprYS4c4/1sBovdIletYmfzeHsQJHjCLnK9iYagIYBg6qz9eAchvtbxry5/creT7ZPjxfkdRC74VJX1shF4cuo18lu3E+XJfCJPVwe4sKM0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790183262; c=relaxed/simple;
-	bh=dY5VEKC+MHSoJK6lwGGGvjwFMDTn23WTI6Yxn6zXOoA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ql7lUO1RySwXq0AAwVruFx/wOT5lkzo+sXn5RMPhFhxgTz5qNQm1hdZchA8XiLfjaRqQmQMgSRgGRIeKnoQzui/otgKHBbVAhyds0l3zum+SN+xxlwVPL+yNCqvJ0KXEcISstCqwKlxc65DgG6eNxlSFkp/49OuV465XzfAf+sY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=i12XGUT+; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1790183359; c=relaxed/simple;
+	bh=mW7xBUhoTz5V+devkPFupumYjAMLPtG98dkVqYNuNwk=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=BJVdb5Vn+0xkiPk/qF/MTiujuHsBfQx3/vSSv/FX+vFeVtDSwlB3OdFPwQhyjMc1pjkU0g/pHFTSGF4oAx45dIvJDQqO7YzcRUtQsZbrUsM0KE+B38UazK/0gDmilPDmguhySX5Axyxg7ENpV8JOms5zsuAjfFYo8fnOnWo98LI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UPeMOr0z; arc=none smtp.client-ip=192.198.163.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="i12XGUT+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 370A61F000FF;
-	Wed, 23 Sep 2026 17:07:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1790183260;
-	bh=DPNB6bW0x8y7Uu11BgHcG7CSR1tZ//UGOmZllbw9Ljw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=i12XGUT+ELGTRJSrycRVzqTit3D2pyM9ZR0ZSTlIa0mojim7gB9yUZwmIu+wgWYZK
-	 Ybyv+CV/Yh7wSmglW9QNbCpnx18TWoVPczcRHqo0Q/mnJsqjZQ3eFn2cP25qIt7fM9
-	 +POE/rp3vRI+Oxpo8QK9N4EfOTJ5jI0dLtJ432mM7IKfaNA3MKzBEomsWln5bFOqPN
-	 PxFbALYbyklQCFhfUINibcEvNCNrhcGgRwqd9F7gXGPywV48eYeWHkrJqezKwBbst0
-	 GSXVIWXaPeEYe4X28qZjKKxCsy9Q0ESN1tzaw+iT6CqBpO8zm4Si1SUtWVa2wxKSZ8
-	 vegFjunsRBTBA==
-Date: Wed, 23 Sep 2026 18:07:07 +0100
-From: "Lorenzo Stoakes (ARM)" <ljs@kernel.org>
-To: Suren Baghdasaryan <surenb@google.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, 
-	"Liam R. Howlett" <liam@infradead.org>, Vlastimil Babka <vbabka@kernel.org>, 
-	Jann Horn <jannh@google.com>, Pedro Falcato <pfalcato@suse.de>, 
-	David Hildenbrand <david@kernel.org>, Mike Rapoport <rppt@kernel.org>, Michal Hocko <mhocko@suse.com>, 
-	Jonathan Corbet <corbet@lwn.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>, Jason Gunthorpe <jgg@ziepe.ca>, 
-	Leon Romanovsky <leon@kernel.org>, Paul Moore <paul@paul-moore.com>, 
-	Stephen Smalley <stephen.smalley.work@gmail.com>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
-	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
-	Andrii Nakryiko <andrii@kernel.org>, Eduard Zingerman <eddyz87@gmail.com>, 
-	Kumar Kartikeya Dwivedi <memxor@gmail.com>, Zi Yan <ziy@nvidia.com>, 
-	Baolin Wang <baolin.wang@linux.alibaba.com>, Nico Pache <nico.pache@linux.dev>, 
-	Ryan Roberts <ryan.roberts@arm.com>, Dev Jain <dev.jain@arm.com>, Barry Song <baohua@kernel.org>, 
-	Lance Yang <lance.yang@linux.dev>, Usama Arif <usama.arif@linux.dev>, 
-	Kiryl Shutsemau <kas@kernel.org>, Doug Gilbert <dgilbert@interlog.com>, 
-	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>, "Martin K. Petersen" <mkp@kernel.org>, 
-	Jaya Kumar <jayalk@intworks.biz>, Simona Vetter <simona@ffwll.ch>, Helge Deller <deller@gmx.de>, 
-	Sebastian Reichel <sre@kernel.org>, John Hubbard <jhubbard@nvidia.com>, Peter Xu <peterx@redhat.com>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Oleg Nesterov <oleg@redhat.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Thomas Gleixner <tglx@kernel.org>, 
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, Arnaldo Carvalho de Melo <acme@kernel.org>, 
-	Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Rik van Riel <riel@surriel.com>, Harry Yoo <harry@kernel.org>, Juri Lelli <juri.lelli@redhat.com>, 
-	Vincent Guittot <vincent.guittot@linaro.org>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
-	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
-	David Airlie <airlied@gmail.com>, Will Deacon <will@kernel.org>, 
-	"Aneesh Kumar K.V" <aneesh.kumar@kernel.org>, Nick Piggin <npiggin@gmail.com>, Arnd Bergmann <arnd@arndb.de>, 
-	Muchun Song <muchun.song@linux.dev>, Oscar Salvador <osalvador@suse.de>, 
-	"Matthew Wilcox (Oracle)" <willy@infradead.org>, Jan Kara <jack@suse.cz>, Marc Zyngier <maz@kernel.org>, 
-	Oliver Upton <oupton@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, 
-	Madhavan Srinivasan <maddy@linux.ibm.com>, Anup Patel <anup@brainfault.org>, Paul Walmsley <pjw@kernel.org>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
-	Christian Borntraeger <borntraeger@linux.ibm.com>, Janosch Frank <frankja@linux.ibm.com>, 
-	Claudio Imbrenda <imbrenda@linux.ibm.com>, Alexander Gordeev <agordeev@linux.ibm.com>, 
-	Gerald Schaefer <gerald.schaefer@linux.ibm.com>, Heiko Carstens <hca@linux.ibm.com>, 
-	Vasily Gorbik <gor@linux.ibm.com>, "David S. Miller" <davem@davemloft.net>, 
-	Andreas Larsson <andreas@gaisler.com>, Alexander Viro <viro@zeniv.linux.org.uk>, 
-	Christian Brauner <brauner@kernel.org>, Matthew Brost <matthew.brost@intel.com>, 
-	Joshua Hahn <joshua.hahnjy@gmail.com>, Rakie Kim <rakie.kim@sk.com>, Byungchul Park <byungchul@sk.com>, 
-	Gregory Price <gourry@gourry.net>, Ying Huang <ying.huang@linux.alibaba.com>, 
-	Alistair Popple <apopple@nvidia.com>, Chris Li <chrisl@kernel.org>, Kairui Song <kasong@tencent.com>, 
-	Kemeng Shi <shikemeng@huaweicloud.com>, Nhat Pham <nphamcs@gmail.com>, Baoquan He <baoquan.he@linux.dev>, 
-	Youngjun Park <youngjun.park@lge.com>, Johannes Weiner <hannes@cmpxchg.org>, 
-	Qi Zheng <qi.zheng@linux.dev>, Shakeel Butt <shakeel.butt@linux.dev>, 
-	Axel Rasmussen <axelrasmussen@google.com>, Yuanchu Xie <yuanchu@google.com>, Wei Xu <weixugc@google.com>, 
-	Chengming Zhou <chengming.zhou@linux.dev>, Michal Hocko <mhocko@kernel.org>, 
-	Miklos Szeredi <miklos@szeredi.hu>, Xu Xin <xu.xin@linux.dev>, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, linux-usb@vger.kernel.org, 
-	linux-rdma@vger.kernel.org, selinux@vger.kernel.org, linux-sound@vger.kernel.org, 
-	bpf@vger.kernel.org, linux-scsi@vger.kernel.org, linux-fbdev@vger.kernel.org, 
-	dri-devel@lists.freedesktop.org, linux-trace-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, linux-arch@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, linuxppc-dev@lists.ozlabs.org, 
-	kvm@vger.kernel.org, kvm-riscv@lists.infradead.org, linux-riscv@lists.infradead.org, 
-	linux-s390@vger.kernel.org, sparclinux@vger.kernel.org, fuse-devel@lists.linux.dev
-Subject: Re: [PATCH v3 02/40] mm/vma: predicate setting mmap_prepare VMA
- fields on new vma alloc
-Message-ID: <arQCCzmMARX81-3y@gremlin>
-References: <20260917-b4-mmap-prepare-vma-flag-sanify-v3-0-4583d8a23bca@kernel.org>
- <20260917-b4-mmap-prepare-vma-flag-sanify-v3-2-4583d8a23bca@kernel.org>
- <CAJuCfpEa8tUmYJBjx-cRdAE8y-jcKY0C81kAOa1QZS7F6tKdfQ@mail.gmail.com>
- <arP0oJgrgZlgtrb6@gremlin>
- <CAJuCfpFPPGaK-grNx9qiQOhzAXbxU+SO+95Fht1571TGREx2oQ@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UPeMOr0z"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1790183356; x=1821719356;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=mW7xBUhoTz5V+devkPFupumYjAMLPtG98dkVqYNuNwk=;
+  b=UPeMOr0zLYptkZOgR69xSWtT5S7mjM5saA39oNe7+wPdbVb2a+5ns9kM
+   RcK7BGAEDT57AF8AtKLDx7GcqJVhLGSkoEhEUb7PTYw2flR0QkgoQxdoe
+   EH9k8yQP3ItDC0oRc3HO92le9qii6oiYdhSwJ6ml4VBX+xrOxQkHATH3V
+   +n05lB3T/FspRdasYePXFkMOq1EaHqK9/DJx5GWRNGb4DCNHlU3kQOg5Z
+   Kpo/eiRLX9+Umw2KxRoKFTCmO87aVX3XsFLDo7Zj492890azT6g+JveD6
+   fw5Y9q7DMFqZdeHpfiX9ioVq9n/AzKZld8dd6KPwVsMeqxJGpoUulxGrX
+   A==;
+X-CSE-ConnectionGUID: e6rODGN7Q5ehhrcrwrP91A==
+X-CSE-MsgGUID: JjOkPq93QWKe97fxXoQ3lA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11914"; a="89820249"
+X-IronPort-AV: E=Sophos;i="6.27,118,1787036400"; 
+   d="scan'208";a="89820249"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Sep 2026 10:09:15 -0700
+X-CSE-ConnectionGUID: RMayaSSsRdiOhBJ8as65+g==
+X-CSE-MsgGUID: lzXgNTwYQQ6Io11Xk2eofg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.27,118,1787036400"; 
+   d="scan'208";a="301631607"
+Received: from rosenzwe-mobl1.amr.corp.intel.com (HELO tfalcon-desk.attlocal.net) ([10.124.221.119])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Sep 2026 10:09:14 -0700
+From: Thomas Falcon <thomas.falcon@intel.com>
+To: sashiko-bot@kernel.org
+Cc: linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	James Clark <james.clark@linaro.org>,
+	Dapeng Mi <dapeng1.mi@linux.intel.com>
+Subject: [PATCH v12 0/6] perf: Add support for memory region/range reporting
+Date: Wed, 23 Sep 2026 12:08:57 -0500
+Message-ID: <20260923170903.48388-1-thomas.falcon@intel.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20260923161043.95C171F000FF@smtp.kernel.org>
+References: <20260923161043.95C171F000FF@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAJuCfpFPPGaK-grNx9qiQOhzAXbxU+SO+95Fht1571TGREx2oQ@mail.gmail.com>
 
-On Wed, Sep 23, 2026 at 09:09:38AM -0700, Suren Baghdasaryan wrote:
-> On Wed, Sep 23, 2026 at 8:54 AM Lorenzo Stoakes (ARM) <ljs@kernel.org> wrote:
-> >
-> > On Wed, Sep 23, 2026 at 08:32:43AM -0700, Suren Baghdasaryan wrote:
-> > > On Thu, Sep 17, 2026 at 9:24 AM Lorenzo Stoakes (ARM) <ljs@kernel.org> wrote:
-> > > >
-> > > > It only makes sense to manipulate VMA fields if we allocated a new VMA,
-> > > > rather than merged it.
-> > > >
-> > > > VMA merging does not compare vm_ops or vm_private_data, so a merged VMA
-> > > > keeps its own, which is also what the legacy f_op->mmap path does since it
-> > > > never touches an existing VMA. Previously set_vma_user_defined_fields()
-> > > > overwrote the merged VMA's fields with those set for the new mapping. In
-> > > > practice these are the same values, with rare exceptions such as shmem
-> > > > selecting vm_ops based on whether the file has been unlinked, so no
-> > > > user-visible change is expected.
-> > > >
-> > > > Make this dependency explicit, and additionally constify have_mmap_prepare
-> > > > while we're here.
-> > >
-> > > The fact that we might be overriding attributes of an existing VMA
-> > > that we merged with is technically a bug even if we never hit it,
-> > > right? If so, should we have:
-> > >
-> > > Fixes: c84bf6dd2b83 ("mm: introduce new .mmap_prepare() file callback")
-> >
-> > It's not a bug, it is an in-built assumption that the state used to assess
-> > mergeability implies the same properties.
->
-> Hmm. What prevents two VMAs with different vm_private_data members to
-> be merged? IIUC is_mergeable_vma() does not check vm_private_data. In
-> such a case set_vma_user_defined_fields() would override
-> vm_private_data of an existing VMA, no?
+Add support for two memory-related reporting features in the perf tool:
 
-I think you're right that it should be a fix patch, I'll put it out of the
-series and send it as one.
+1. Memory region reporting in perf-c2c and perf-script subcommands.
+2. Memory range data in perf.data file header and perf-c2c subcommand.
 
-The issue here is more so vm_private_data than vm_ops. And really it's that
-vm_ops->mapped() wasn't called so you could have a refcount go to zero and
-stay at zero when it shouldn't have been, for instance.
+Memory region reporting was introduced as part of support for the
+Off-module Response facility (OMR) [1], which provides a new data
+source encoding supporting "up to 8 fine-grained memory regions in
+addition to the cache region, offering more detailed insights into
+memory access regions."
 
-But in general though if you remove mmap_prepare and ask the same question:
+Memory Range support was introduced with the addition of the ACPI Memory
+Range and Region Mapping (MRRM) [2] table. It provides a base address plus
+a length value for each memory range, as well as NUMA node and local and
+remote "region ID's" so that "platform firmware can indicate the type of
+memory for each range."[3]
 
-What prevents a merge of 2 existing VMAs that were mapped using the
-traditional mmap hook which somehow have entirely distinct vm_private_data
-and vm_ops but the same file?
+Include a change allowing PERF_MEM_LVLNUM_L0 to be printed in
+perf-mem output as well.
 
-The answer is nothing prevents that, but there's an underlying assumption
-that this state is fungible for a VMA over a given range given the same
-file.
+[1]: https://lore.kernel.org/all/20260114011750.350569-1-dapeng1.mi@linux.intel.com/
+[2]: https://lore.kernel.org/lkml/20250505173819.419271-1-tony.luck@intel.com/
+[3]: MRRM definition allow for future expansion for the OS to assign
+these region IDs.
 
-In that case, for anything where an allocation or e.g. refcount change
-occurred, then vm_ops->close() will handle the decrement, and the original
-VMA's state should suffice.
+v12: 
+-- Fixed typo in bounds checking for max supported memory ranges when
+   reading header data
 
-But here it's a problem because you overwrite it + don't call
-vm_ops->mapped()...
+v11:
+-- perf-c2c: revert to only recording a real memory region for a
+   cacheline (Dapeng Mi)
 
->
-> >
-> > And if it was, it'd need fixing a different way (check the field for instance)
-> > and would apply to the legacy mmap hook also.
-> >
-> > This change is needed for the series though.
-> >
-> > >
-> > > >
-> > > > Signed-off-by: Lorenzo Stoakes (ARM) <ljs@kernel.org>
-> > >
-> > > Reviewed-by: Suren Baghdasaryan <surenb@google.com>
-> >
-> > Thanks!
-> >
-> > >
-> > > > ---
-> > > >  mm/vma.c | 4 ++--
-> > > >  1 file changed, 2 insertions(+), 2 deletions(-)
-> > > >
-> > > > diff --git a/mm/vma.c b/mm/vma.c
-> > > > index fa784f069da4..4b74b48c29b7 100644
-> > > > --- a/mm/vma.c
-> > > > +++ b/mm/vma.c
-> > > > @@ -2894,7 +2894,7 @@ static unsigned long __mmap_region(struct file *file, unsigned long addr,
-> > > >  {
-> > > >         struct mm_struct *mm = current->mm;
-> > > >         struct vm_area_struct *vma = NULL;
-> > > > -       bool have_mmap_prepare = file && file->f_op->mmap_prepare;
-> > > > +       const bool have_mmap_prepare = file && file->f_op->mmap_prepare;
-> > > >         VMA_ITERATOR(vmi, mm, addr);
-> > > >         const pgoff_t anon_pgoff = addr >> PAGE_SHIFT;
-> > > >         MMAP_STATE(map, mm, &vmi, addr, len, pgoff, anon_pgoff, vma_flags, file);
-> > > > @@ -2937,7 +2937,7 @@ static unsigned long __mmap_region(struct file *file, unsigned long addr,
-> > > >                 allocated_new = true;
-> > > >         }
-> > > >
-> > > > -       if (have_mmap_prepare && !map_is_anon(&map))
-> > > > +       if (have_mmap_prepare && allocated_new && !map_is_anon(&map))
-> > > >                 set_vma_user_defined_fields(vma, &map);
-> > > >
-> > > >         __mmap_complete(&map, vma);
-> > > >
-> > > > --
-> > > > 2.55.0
-> > > >
-> >
-> > --
-> > Cheers, Lorenzo
+v10:
+-- perf-c2c: only update a cacheline's mem_region for real cache/memory
+   regions, so region-less samples (N/A) no longer overwrite a valid
+   region recorded by an earlier sample on the same cacheline (Sashiko)
+-- perf-script: replace #include "session.h" in mem-events.h with a
+   forward declaration of struct perf_session, and add direct session.h
+   includes to the .c files that use it (Sashiko)
+-- perf header: add missing #include <fcntl.h> for open()/openat()/
+   O_DIRECTORY to avoid build failures under strict libc such as musl
+   (Sashiko)
+-- perf-c2c: add missing #include <stdio.h> for asprintf() (Sashiko)
+-- Fix some whitespace and comment formatting issues
 
---
-Cheers, Lorenzo
+v9:
+-- Fixed incorrect developer tags and updated perf-c2c to include cache
+   region reporting (Dapeng Mi)
+
+v8:
+-- Updated developer tags and commit messages with real example output
+   from perf script and perf c2c (Dapeng Mi)
+
+v7:
+-- perf-c2c: fix output_str allocation error handling that introduces a
+   memory leak (Sashiko)
+
+v6: 
+-- Rebase on 7.3-rc1
+
+v5:
+-- perf-c2c: make the cacheline header span and ui_quirks() width
+   fixup depend on memory-region availability (Namhyung Kim)
+
+v4:
+-- perf-script: gate the Region field on the HEADER_MEMORY_RANGES feature
+   bit via perf_session instead of a global flag, with a pipe-mode fallback
+-- perf-c2c: fix output_str allocation error handling
+-- perf header: Fix typo in region id bounds checking which made region 255
+   invalid
+
+v3:
+-- included missing ff-size check in process_memory_ranges
+-- make memory region reporting in perf c2c-and perf-script conditional
+   on feature bit, requiring some patch reordering (Namhyung Kim)
+-- used open/openat to read memory range sysfs files in memory_range__read()
+   (Namhyung Kim)
+-- Removed path name and file name buffers in memory_range__read(),
+   instead pass path name from as a parameter from memory_range__parse()
+   (Namhyung Kim)
+-- use calloc instead of zalloc in memory_range__parse() and
+   process_memory_ranges() (Namhyung Kim)
+-- Removed redundant check for existence of memory range directory in
+   memory_range__read() (Namhyung Kim)
+-- Included output examples of memory ranges in perf header and perf-c2c
+   in commit message (Namhyung Kim)
+
+v2:
+-- Added missing newline in WARN_ONCE message in c2c_he__set_mem_region()
+-- increased buffers passed to perf_script__meminfo_scnprintf() from 150
+   to 200 bytes to avoid silent truncation
+-- Added check for NULL return of sysfs__mountpoint() when parsing
+   memory ranges in sysfs
+-- increased MAX_MEMORY_RANGES sanity check from 64 to 256 based on
+   ACPI MRRM table implementation in Linux kernel
+-- added comment for MAX_MEMORY_RANGES to clarify that it is a sanity check
+   for malformed perf.data files
+-- cleaned up some removed code that was added back by this patch series
+   due to a bad rebase
+
+Dapeng Mi (3):
+  perf mem: Add support for printing PERF_MEM_LVLNUM_L0
+  perf tools: Show memory region in perf-c2c subcommand
+  perf tools: Show memory region in perf-script subcommand
+
+Thomas Falcon (3):
+  perf mem: Fix size tracking for mem_lvl's in
+    perf_script__meminfo_scnprintf()
+  perf header: Support memory ranges
+  perf c2c: print memory region data with stdio output
+
+ tools/perf/Documentation/perf-record.txt      |   2 +-
+ .../Documentation/perf.data-file-format.txt   |  13 ++
+ tools/perf/builtin-c2c.c                      | 143 +++++++++++-
+ tools/perf/builtin-inject.c                   |   1 +
+ tools/perf/builtin-script.c                   |  13 +-
+ tools/perf/util/bpf-filter.l                  |   1 +
+ tools/perf/util/c2c.h                         |   1 +
+ tools/perf/util/env.c                         |   1 +
+ tools/perf/util/env.h                         |  10 +
+ tools/perf/util/header.c                      | 205 ++++++++++++++++++
+ tools/perf/util/header.h                      |   1 +
+ tools/perf/util/mem-events.c                  |  94 +++++++-
+ tools/perf/util/mem-events.h                  |   5 +-
+ .../scripting-engines/trace-event-python.c    |   6 +-
+ 14 files changed, 473 insertions(+), 23 deletions(-)
+
+-- 
+2.43.0
+
