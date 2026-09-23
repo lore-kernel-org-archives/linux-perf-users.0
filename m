@@ -1,158 +1,135 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed2-f27.google.com (mail-ed2-f27.google.com [74.125.228.91])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B41E347605C
-	for <linux-perf-users@vger.kernel.org>; Wed, 23 Sep 2026 09:14:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4E5B439913
+	for <linux-perf-users@vger.kernel.org>; Wed, 23 Sep 2026 09:15:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.228.91
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790154884; cv=none; b=Vj48STNM0NtlhGOnEaR3nHdLPSYO9WW/dYTqiItkziqT6rqPPZys0XfdtiZAr8ntWWyDqriIX2LytK+R8ffLTxGxpzJcTIJrb+TC03d4iusj29szni2ft+rQatqyMmukezF9S090SvgNoeKHnwja0nlRVgJII9qYvkPQYpAbSrQ=
+	t=1790154919; cv=none; b=KfIk76dldsgO/b6ad31UXj2uo6ewCsOSPZfNUp7x/TTAEjtZ43wzekRgpWE0AtIPq8NvIeQrS1o9vxFrgF5laQx9/eqYDV3XgtteFOnwrJo07XfTkHmz5WXe3ExkbB7GwGkOuuCQkaoSgGTUhgZ/IaRY5TIl05czkzswUnTFIaI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790154884; c=relaxed/simple;
-	bh=dPaPzVLzOshsvSjCEMzu9Ycx5z115TJDN2osnGLg4Kw=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=Tg5yuKZuuWYkuBy3vjK7ZxD8nzrBkBQO1ssUMI+EJpT7xY3yJV2NkxscjqsPM8ym3bcKQsMDWliK9gUhd2Q7HEvF4CJ/XCTbaYCHMw/YoXASQEK1BvTOdIFftcEHzrbv9aFRxsBY6J1RXEpDSdr5vLIe3xZJISwI3a3/TW3wCm0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DAKDXxTo; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1790154919; c=relaxed/simple;
+	bh=6D/QwhHbhAw48PLOUD1e/RlhNasr0vbYm/dASxiUKII=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=gMCph3wysFHf2FZp5M0nTZB1y1tL64G2wEBo/7sb0Y0XN8R7yOPd67tA/bf6gH8pzMFq59HvjuTH+jsO9ZxjmX/8hLddBr99BIXrem5fj2Uq6KD88wy7k70XIZeEq+TdLcTusf+YTts8q2SqDi9BXdVqY7Gv9W5simuBbPInA50=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=BlkRxNGo; arc=none smtp.client-ip=74.125.228.91
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DAKDXxTo"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2C7971F000FF;
-	Wed, 23 Sep 2026 09:14:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1790154883;
-	bh=hf3RiSX4k5LC5QXIZIxPb49coAlE/kzDPp1eyjRLdSQ=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=DAKDXxTo8TMZ0vkJoLSsa7qZ6OdTRspFKDStbp1ocbnKsxgBj96eZ0lbpID97/8/T
-	 dD6NO3zTBDM2lmmftvdaZmPTsRh/Jok97qlmc5fRpOG4QvLPh4DypKEDZpR5/0bAto
-	 Xvbdf22PABrD2fteNKsVYwXUV1EIzH4Jn3DCY95O6iX7ICCir0kY5kr54iaDryZUm7
-	 0x2KXLs1G6bnneouzgLiQOlWwUf+FscZTYX1+J5SPptK5ERtiYOyeQ29Joe/YbLI5i
-	 xBAO+chkuqF5ZKga6+sAjLu9x2i2Y5+dInoi5j4BQAiktppsgCc3XpV7wbWyV1WBJ2
-	 Qqg42u3SlVj1w==
-From: sashiko-bot@kernel.org
-Subject: Re: [RFC PATCH v3 3/3] perf tools: Support sparc user register
- samples and dwarf unwinding
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Stian Halseth" <stian@itx.no>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260923090429.2026529-4-stian@itx.no>
-References: <20260923090429.2026529-1-stian@itx.no>
- <20260923090429.2026529-4-stian@itx.no>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Wed, 23 Sep 2026 09:14:42 +0000
-Message-Id: <20260923091443.2C7971F000FF@smtp.kernel.org>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="BlkRxNGo"
+Received: by mail-ed2-f27.google.com with SMTP id 4fb4d7f45d1cf-6aa135d6e97so1099492a12.2
+        for <linux-perf-users@vger.kernel.org>; Wed, 23 Sep 2026 02:15:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1790154916; x=1790759716; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:in-reply-to:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=eWPNdBRci+ilO56uoSaBVlNcIj5sRExNLvAX8TWjSSA=;
+        b=BlkRxNGocPuvqXvgYW7acyFfDofjkraqMVpNErOzSs2TfPF8qig9oDgqx9aB94vQjP
+         tdzZCIcHLGz1GGSzAPoj4MveHwe7REKAJ9YAn47eek+GbWwjNkF6q4oIkj/vGYpe9Kuz
+         98xxjcsw0JyHWAZhWzipkTggBCy/BsdaSfewmYPwlYodyku6l9FpNWdk/YyYcoXvGYTQ
+         PfuMq8R0AtqLpfm3WSb/F7fCUvA+YHjV9mNXRsNdbBcJnlTePfRCALY468vpd+Cv85w8
+         xlj41NCld/QeV9EaPFsdquhL77Z1Y9TKDj7o63+EmgolHWvAHwR7qyf2WDEYOAyk+GO1
+         KVHg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1790154916; x=1790759716;
+        h=content-transfer-encoding:content-type:in-reply-to:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=eWPNdBRci+ilO56uoSaBVlNcIj5sRExNLvAX8TWjSSA=;
+        b=BZXklZJHcMGVnFAmA7Ewtd/WPiwYm1Rv/ciPHnSD6v04UEo95J+yHNWH0QfQ3JTJhm
+         3aLReoQMjfbVOxRtGxeUni5nt4PRemdFNF7Z8F7FfM9NTp9Okvh6SqZJF3yeS3srQv1Q
+         8A3ALFBthyKHgtXHhjClNgqZi6Yy72tTflK3F5cx6aiiLxXJ8ZBddbrVEmMFbZ5bVYy7
+         qIc9bFu1Swfe/nFaDC/qqaXijLPDHkpAOr3iIHg3rbj6smirPhq80baR1UoXOAsE7IOy
+         XvD1N3K0Z0BURHc4SKAEJmOS6bjFNPtHooXrZF/WA8xjKEQtYiWXxOwikvHOZk2eoSIC
+         ISXw==
+X-Forwarded-Encrypted: i=1; AKwUvBwPph3VhKraiNVXdsrqYwaF32Aln7SXk+cTrBpGr1/yt9K1gYDybZgZd638a/kUumw6p7DJQZL0XeoxRBJDUf03@vger.kernel.org
+X-Gm-Message-State: AFuF++l6EPRbJL5aplicYdR0RjsAuVSw9d0LjYjo27SDdrMxAFmfGRi6
+	Ucvz36luTx689TZViTZ1cE831qJmreFbHamTz1FPDUwv1vza9etJowT9JTwvYLqNL6o=
+X-Gm-Gg: AYBFou2x1QM+gaGANWCXi9F19MF4+t67SNL1sXsxaRMe4nFkSVwtvXn+jNFgNiMIro4
+	38zSqScuHxoZGYRZo+H5I4DGHJ7r0Y+W0nkaoXmA8+Eizf2AYal5KQVZ3bFUOt/ygPQtg8SOaDt
+	nLvY4JJ9IQ+to1FaRvq8KGz35dHL1UR3NxNo94wTMUwTXb8dPKgku6Am+h2pjYJDJp5bR+r6PGE
+	0vhapl8D7w0saqLR4jiQqY2vwURTceYohh2zKu0kQM3MTdjCbr53+Tobg+wvdMRtnO9ODqISn8l
+	3kmkdUX/iva5XQN2byJL/dsZQdSBkC+gnDFN3+qSAKyqUlDa8ZNUk49gsrmslM6kXDcb0S7jzl5
+	Al78nJgHmud9zEFRm/T/FWWy+m29adYm+x9HffmiZCsnQZ8ye7V/V+3nY2yZnxavtJodfc9OFSY
+	IUDGJTCWsSREyXIjzyR3e0L9+GHizV2ywW+rUfGaJz2l2GUv3wluvNRh6hazZn7qoOTpaDCEDf6
+	KI=
+X-Received: by 2002:a05:6402:4516:b0:6aa:734a:a082 with SMTP id 4fb4d7f45d1cf-6aab3b98705mr1736439a12.25.1790154916043;
+        Wed, 23 Sep 2026 02:15:16 -0700 (PDT)
+Received: from [192.168.1.3] ([37.18.141.193])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-6aab37478c9sm1181333a12.0.2026.09.23.02.15.14
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 23 Sep 2026 02:15:15 -0700 (PDT)
+Message-ID: <dfa8362e-0dad-4f23-9d2e-dde03cb5facc@linaro.org>
+Date: Wed, 23 Sep 2026 10:15:13 +0100
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 0/3] arm64: Add BRBE support for
+ bpf_get_branch_snapshot()
+To: Andrii Nakryiko <andrii.nakryiko@gmail.com>,
+ Mark Rutland <mark.rutland@arm.com>, Will Deacon <will@kernel.org>,
+ Puranjay Mohan <puranjay12@gmail.com>
+Cc: bpf@vger.kernel.org, Anshuman Khandual <anshuman.khandual@arm.com>,
+ Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
+ John Fastabend <john.fastabend@gmail.com>,
+ Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau
+ <martin.lau@linux.dev>, Eduard Zingerman <eddyz87@gmail.com>,
+ Song Liu <song@kernel.org>, Yonghong Song <yonghong.song@linux.dev>,
+ Leo Yan <leo.yan@arm.com>, Rob Herring <robh@kernel.org>,
+ Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>, Shuah Khan <shuah@kernel.org>,
+ Breno Leitao <leitao@debian.org>, Ravi Bangoria <ravi.bangoria@amd.com>,
+ Stephane Eranian <eranian@google.com>,
+ Kumar Kartikeya Dwivedi <memxor@gmail.com>, Usama Arif
+ <usama.arif@linux.dev>, linux-arm-kernel@lists.infradead.org,
+ linux-perf-users@vger.kernel.org, linux-kselftest@vger.kernel.org,
+ linux-kernel@vger.kernel.org, kernel-team@meta.com
+References: <20260810164622.1829843-1-puranjay@kernel.org>
+ <CANk7y0ixo5a3Vfzj_HVhVHRNce2Rsit4pP27GCtXd4jHHzmiKg@mail.gmail.com>
+ <CAEf4BzapC=7YM2QLMyKKfyOWGgBTfEJmPPN8e9Jf5xT9SutBTQ@mail.gmail.com>
+Content-Language: en-US
+From: James Clark <james.clark@linaro.org>
+In-Reply-To: <CAEf4BzapC=7YM2QLMyKKfyOWGgBTfEJmPPN8e9Jf5xT9SutBTQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Thank you for your contribution! Sashiko AI review found 2 potential issue(=
-s) to consider:
-- [Medium] perf/unwind: missing endian swap for sparc window registers
-- [Low] perf/sparc: missing explicit stddef.h inclusion for NULL
---
 
-commit 58ddb5306f26894ea36bdfc46ec5335a5abbcee6
-Author: Stian Halseth <stian@itx.no>
 
-perf tools: Support sparc user register samples and dwarf unwinding
+On 22/09/2026 21:40, Andrii Nakryiko wrote:
+> On Tue, Sep 1, 2026 at 6:45 AM Puranjay Mohan <puranjay12@gmail.com> wrote:
+>>
+>> Hi James,
+>>
+>> Can you review this version of the patchset? It is implementing what
+>> we discussed in the thread on the last version.
+>>
+> 
+> James, do you mind reviewing the patches again, seems like Puranjay
+> went with the implementation you suggested, would be nice to review
+> and ack, if it looks good to you.
+> 
+> Mark, Will, you guys seems to be designated as maintainers for
+> drivers/perf/arm_brbe.c, can you please take a look and give your
+> feedback as well? This is important and useful feature for newer arm64
+> CPUs, it would be great to get access to this functionality that we
+> had on x86-64 side for a long while now. Please help get this upstream
+> or, if it's not in the right shape, guide Puranjay towards a better
+> implementation. Thank you!
+> 
 
-Add the sparc perf_regs tables and the EM_SPARC/EM_SPARCV9 dispatch for
-register names, masks, ip/sp and the perf-to-DWARF register mapping,
-plus the uapi header copy.
+LGTM, and the Sashiko review is good too. It does conflict with the 
+FEAT_NMI patches on the list, and you'd have to disable NMIs but as it 
+stands right now it's ok.
 
-> diff --git a/tools/perf/util/perf-regs-arch/perf_regs_sparc.c b/tools/per=
-f/util/perf-regs-arch/perf_regs_sparc.c
-> new file mode 100644
-> index 0000000000000..9ee8e496ab8cc
-> --- /dev/null
-> +++ b/tools/perf/util/perf-regs-arch/perf_regs_sparc.c
-> @@ -0,0 +1,67 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +
-> +#include "../perf_regs.h"
-> +#include "../../arch/sparc/include/perf_regs.h"
-> +
-> +uint64_t __perf_reg_mask_sparc(bool intr __maybe_unused)
-> +{
-> +	return PERF_REGS_MASK;
-> +}
-> +
-> +const char *__perf_reg_name_sparc(int id)
-> +{
-> +	switch (id) {
+Reviewed-by: James Clark <james.clark@linaro.org>
 
-[ ... ]
 
-> +	case PERF_REG_SPARC_Y:
-> +		return "y";
-> +	default:
-> +		return NULL;
-> +	}
-> +
-> +	return NULL;
 
-[Severity: Low]
-Does this rely on implicit header inclusion for NULL?
-
-The NULL macro is used here, but neither <stddef.h> nor <stdlib.h> is
-explicitly included in this file. It appears to rely on the implicit inclus=
-ion
-of <stdlib.h> via the ../../arch/sparc/include/perf_regs.h header.
-
-Should this explicitly include <stddef.h> or <stdlib.h>?
-
-> +}
-
-[ ... ]
-
-> diff --git a/tools/perf/util/unwind-libdw.c b/tools/perf/util/unwind-libd=
-w.c
-> index 63a5c2253174f..d2adf7f2d8bb3 100644
-> --- a/tools/perf/util/unwind-libdw.c
-> +++ b/tools/perf/util/unwind-libdw.c
-
-[ ... ]
-
-> +/*
-> + * The sampled window's %l and %i registers (DWARF 16-31) are not in the
-> + * sample; the kernel flushed them to the register save area at the start
-> + * of the dumped stack.
-> + */
-> +static void libdw_set_sparc_window_registers(struct unwind_info *ui,
-> +					     struct regs_dump *user_regs,
-> +					     Dwarf_Word *dwarf_regs)
-> +{
-> +	struct stack_dump *stack =3D &ui->sample->user_stack;
-> +	u64 sp;
-> +
-> +	if (perf_reg_value(&sp, user_regs, perf_arch_reg_sp(ui->e_machine)))
-> +		return;
-> +	if (!(sp & 1) || 16 * sizeof(u64) > stack->size)
-> +		return;
-> +
-> +	memcpy(&dwarf_regs[16], stack->data, 16 * sizeof(u64));
-
-[Severity: Medium]
-When analyzing a SPARC perf.data file on a little-endian host, will this
-memcpy() write raw big-endian bytes into the little-endian host variables?
-
-The dwarf_regs array is composed of Dwarf_Word (uint64_t) elements and expe=
-cts
-values in host endianness, while the stack dump (stack->data) retains the
-target's original memory layout and endianness (SPARC is strictly big-endia=
-n).
-
-This can cause the 64-bit integer values read by libdw to be byte-swapped,
-breaking cross-architecture DWARF unwinding for SPARC as the stack unwinder
-relies on %i6 and %i7 (DWARF registers 30 and 31) to find the caller's fram=
-e.
-
-Should this code perform conditional byte-swapping when copying from the st=
-ack
-dump?
-
-> +}
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260923090429.2026=
-529-1-stian@itx.no?part=3D3
