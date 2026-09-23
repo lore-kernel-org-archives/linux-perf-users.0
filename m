@@ -1,56 +1,56 @@
-Received: from mail-dl1-f71.google.com (mail-dl1-f71.google.com [74.125.82.71])
+Received: from mail-dy1-f199.google.com (mail-dy1-f199.google.com [74.125.82.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09A8F44BC82
-	for <linux-perf-users@vger.kernel.org>; Wed, 23 Sep 2026 07:14:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.71
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 983A346AA73
+	for <linux-perf-users@vger.kernel.org>; Wed, 23 Sep 2026 07:14:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790147683; cv=none; b=ZoqE/6v2dPQi4joXd8rWMsQkQw8f4piU1KjYA1vxhi0NFn7LKWh15tyOoLkQW6M9zJM/SoK0HaVzvaLwtBB8dJjKaIf/fmjhJLjXNmzYYJ2TWvLqoh4qr+/24jHnTrzdWnvg8bL3IyKOLY0XbLKO/aqWbVXoBmbHsLXLvWE79SM=
+	t=1790147686; cv=none; b=dc1rck+/CondkfnoktiOYaJRvADOOLq9afK0Nj2E1PoXSWy4T7+1FXMGOloeJlq/yJwYD6jukSkDFAllm/itslUV37tuFO4RLlmFz+oM0a8jq334pu0Yk/Q2dZzmVPJ7Fbr/UOtYzm7AiFqKCXilw+0S1WN89rvll6grosEzvyI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790147683; c=relaxed/simple;
-	bh=UErZqQ9j7me1oIkuO6eMwTA87T5PP3xzy/8bq1xnvww=;
+	s=arc-20240116; t=1790147686; c=relaxed/simple;
+	bh=+xrSY7I9b4Gac4p3+5CfHpDGtn48eilsfL60mTFY8b0=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=qVJsGUjA0xly1YrDFp58vms2gX4ysl4XT+c671vTMP0BaIliRMFvlWDCkhaYsXccK1xwD5+E8lhS6+ylcnpLGvae20q1vo8LbfayTohoV2xKfI1bHjOU+rKooza9Vl9u5NFt3W6ysITY99ruQVhLk3YXmytCcFsM7gctDW3qIrI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=PfU0OzhT; arc=none smtp.client-ip=74.125.82.71
+	 To:Cc:Content-Type; b=V8pXuqyLHkyY6e7p96PEmlP5aKQKlvdKDG/gi0QFd0CmbXkYVFFvvkYYKt2tSxLJdB0kzKRusu+xRIuVHZ8hVd1foCwcNTpLsaiBtOpvpfwucPV4KDr3rzq0egKWVoA2yCHQPWSj1QwSAbM6VPylnqCbbkoshs3nOUAE0/hLGGk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=vPzt754l; arc=none smtp.client-ip=74.125.82.199
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="PfU0OzhT"
-Received: by mail-dl1-f71.google.com with SMTP id a92af1059eb24-142f4306744so1622175c88.1
-        for <linux-perf-users@vger.kernel.org>; Wed, 23 Sep 2026 00:14:40 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vPzt754l"
+Received: by mail-dy1-f199.google.com with SMTP id 5a478bee46e88-32b8c2b30c4so897597eec.1
+        for <linux-perf-users@vger.kernel.org>; Wed, 23 Sep 2026 00:14:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1790147680; x=1790752480; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1790147682; x=1790752482; darn=vger.kernel.org;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=VaRcn4A7qfrwm2ef7PgU8V/13ksisQ//6IQWqAFGfM8=;
-        b=PfU0OzhTbzDcd/+rkXXT7FywFyL5DI9RZjmaz3EQtlGaczW4PsLYEdVekVz5ZR6m0B
-         SAmJocBQv7rH91qnRRL5OKQaGEva0Xzw8KFoOoCFASmYU22zIfWy+m/3roRtzZPHmOzG
-         G0CeRX+vVy57awdTnPmCgySWh8artHaZ1t7YoE9jIzZlxoVvR7NvIRQusefxwkAszmXv
-         fnb1vtRXseBVMksP1UvEQ5yfm3JB5sooaJr6iAUcld7mvO94VXrhVkuiR3BX3XPHvV9m
-         fqBoLw18eABfZ/9evnl4inoKDvcwtuqb3K8YcAp/EDPyhwzChOvdS75cw3AllFFjGnXy
-         QALA==
+        bh=VYyndSuCACAlZ1/aQblNPpqm/b+goCKk68wk6q62PbI=;
+        b=vPzt754lBXCHT4qY+khnXN0pP3Vo9WCnKLfX2W2TmZg8xLix5m4ENAgglqux73A/XM
+         oqOt/+vbvl4wfPlGLoLI9ze48lrDT7nJaLmm1JmGR8moQ2GYh2dckdxd9wncvJseZtcP
+         iF1RskbhWNEPCllIdmB0zufkjC8dGI3oseojHiyg3amj3yTq8/+fVdYqcxgJ1z75QlUR
+         WLezGcA4wSz5i3//tT7Fs0lk9HaqXqvndHvhC0naJfHwJa1CG+DC7MHHkP5vyepiThjl
+         K6ziIlhviQHWeHih0cpdc0d0yZm/CwlmhXmpMeYpN34TpZxRADCKYdj//nnp1iFys1WX
+         vfjA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1790147680; x=1790752480;
+        d=1e100.net; s=20260707; t=1790147682; x=1790752482;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=VaRcn4A7qfrwm2ef7PgU8V/13ksisQ//6IQWqAFGfM8=;
-        b=tlvljMJ1b9zQcMjXJuhuMAO1t/qse/QxMxFQTaYb4iyurMqOErRHdnBiBtdT5bsIlK
-         4nvqZ1MHP6fJBDnNhcacACgr9wvTz4cp6fXqN2vfuzElKpimFuPis8a1XVR+KLhqludF
-         QlNdFCGfmR2Amg3lxSSGEYtAmd2cX27V17YEeebCB3J5UFNQiGdKqvNDEyw9NIcoB+mM
-         ypJ83yY+E3/SsLNAExEJu9HwDbacEVENKTbMBH+X/XKjB3NFiTSpvwACkNsoRJ2sC+W1
-         8hh1aPfKdyEFhe78LzvpdgGYdfX9vCIHNGXV5g+Q8PEoU71cGf6vw+pvhTh8T8kkSIb9
-         tvhQ==
-X-Forwarded-Encrypted: i=1; AKwUvByr1wApPELEleT+rhk4hUq1f+Ovb/Fzg+/T6SNlhXnhPcbI+KHGewJ6LZugkohOPbWGGAFhYmSZfkn8uqm6SZC/@vger.kernel.org
-X-Gm-Message-State: AFuF++m/0OWv6k7XMdo9weikr3oDuBTHapEAoAjvy5PmJqO8PDQLBbOV
-	xNS7/O45nOKWkxCRcIKjarmefpF4I4dqnEEC66Bse/fgQOZG3YxEszqqazUR/FgtbMEgs13svkw
-	2Uvx801N1bA==
-X-Received: from dlai24.prod.google.com ([2002:a05:701b:2718:b0:144:c124:514e])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:701b:42cb:20b0:143:298f:33ba
- with SMTP id a92af1059eb24-144f931c06emr2030634c88.46.1790147679699; Wed, 23
- Sep 2026 00:14:39 -0700 (PDT)
-Date: Wed, 23 Sep 2026 00:13:54 -0700
+        bh=VYyndSuCACAlZ1/aQblNPpqm/b+goCKk68wk6q62PbI=;
+        b=lLqz9jc8XBURLvmHx6zkzKhEhyxwnAvxwIBxIL4wT02rkeIfJz0TYD+CTWvY4qHazM
+         bEzGoqFpE/We3uDZ5sM7rZgd1nDyjqEFQWLfDl/MHpyums+eeZGavT6anbCfLULAHcPF
+         ElmBV/VrJHgP8PI/yIAFGyaDa0Epa/tAYfvwmtkjzoeKWVV7c5fe41HJuEDUDb6UF9Rw
+         pICu7J7nc0BxGEmM66d0u+2567O34Z+4q1sX6HF2vOdRvZ944zU/MtK5vO4+y9rp+s0c
+         bl5J9zwEeN3G4u30sAEsZtPo/zkG9SqsJoI74pBIF5IfJdIwrusmq6cLK3avddTbPOmo
+         BDpw==
+X-Forwarded-Encrypted: i=1; AKwUvBxYdILE3VK+yG/nOJMnRSmKBegJXPBzax+PhrzfX3ZWDTb1CYsk9nqCq4rvRRVwqYbF2ROlHUMX3cmRHGir9Wys@vger.kernel.org
+X-Gm-Message-State: AFuF++mnrDdivnoH63E2vWQcKydWgYyLl0YP6blZLXtYqT93QXDy9gXN
+	gP3yo74ntRuXJwg4/hlcEnhHx1PjXQN5hs0ES43oiRf5l+DnxMYp5ZIeL9Fmqc8eUauuyZEhmQE
+	9jjUvJgHGcw==
+X-Received: from dybun8.prod.google.com ([2002:a05:7300:f3c8:b0:32d:1a84:9293])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7301:6197:10b0:33c:13a1:84ea
+ with SMTP id 5a478bee46e88-33e8e3ae194mr1731651eec.39.1790147682058; Wed, 23
+ Sep 2026 00:14:42 -0700 (PDT)
+Date: Wed, 23 Sep 2026 00:13:55 -0700
 In-Reply-To: <cover.1790145937.git.irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -60,8 +60,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <cover.1790145937.git.irogers@google.com>
 X-Mailer: git-send-email 2.56.0.rc1.315.gc6ed9934b7-goog
-Message-ID: <f5bac55bce2ca58eec592de327907d7bd3aa61e6.1790145937.git.irogers@google.com>
-Subject: [PATCH v5 14/23] perf trace: Enumerate the target again once BPF is attached
+Message-ID: <b6d5596ad04aef749be8f57951d70f7e6bee4765.1790145937.git.irogers@google.com>
+Subject: [PATCH v5 15/23] perf trace: Drop targets that died before they were filtered
 From: Ian Rogers <irogers@google.com>
 To: irogers@google.com, acme@kernel.org, howardchu95@gmail.com, 
 	namhyung@kernel.org
@@ -70,368 +70,296 @@ Cc: adrian.hunter@intel.com, james.clark@linaro.org, jolsa@kernel.org,
 	mingo@redhat.com, peterz@infradead.org
 Content-Type: text/plain; charset="UTF-8"
 
-evlist__create_maps() reads the target out of /proc, and the BPF
-sched_process_fork() program only sees what is cloned once it is
-attached. A task the target creates between the two is in neither, and
-since cmd_trace() drops the sys_enter evsel in favour of
-__augmented_syscalls__ there is no other source of enter events. Such a
-task, and in turn everything it forks, goes unreported for the rest of
-the session.
+sched_process_exit() takes a task out of pids_to_trace and pids_filtered
+as it dies, which keeps the maps holding live tasks rather than growing
+for the length of the session. It only finds a task there if userspace
+put it there first, and userspace writes a pid some time after reading
+it:
 
-Read the target out of /proc once more, after the attach. Whatever
-existed before the programs went live is there to be found, and whatever
-is created after it is sched_process_fork()'s to add, so between them
-nothing is left out. Doing this before the attach instead would only
-move the window rather than close it.
+ - trace__set_filter_pids() writes the thread map and the --filter-pids
+   list before the programs are attached, so for those there is nothing
+   watching them die at all.
+ - trace__set_startup_pids() writes what it enumerated after the attach,
+   which is a much smaller gap but still a gap.
 
-The enumeration follows the same rule as the BPF programs, which is that
-the maps name individual tasks:
+A task that dies inside one of those windows is never evicted, because
+the delete that would have done it ran while the map had nothing to
+delete. Its pid then sits in the map for the rest of the session: it
+holds one of a fixed number of entries, and pids are reused, so the
+unrelated task that eventually receives it is treated as the target, or
+as a task the user asked to leave out and is then silently not reported.
 
- - -p names a process, so its thread group is read from
-   /proc/<pid>/task.
- - -t names a thread, which is taken on its own. Expanding it to its
-   thread group would trace the siblings it asked to leave out.
- - Descendants come from task->children, read through
-   /proc/<pid>/task/<tid>/children. A forked task leads a thread group
-   of its own, so each one found is walked in turn and a tree of any
-   depth is covered. New threads are not listed there, copy_process()
-   gives a CLONE_THREAD child the real_parent of its creator rather than
-   the creator itself, but the thread group walk above has them.
+Walk both maps once the last write to them is done and remove the tasks
+that are not alive. Sweeping the maps rather than the lists that were
+written to them covers every way a pid can get in, including the pid of
+perf itself and of the terminal it was started from, which
+trace__set_filter_loop_pids() adds without recording anywhere. A task
+found alive here and dying later is one sched_process_exit() can see and
+evict, so a single pass is enough, and the tasks the BPF programs add
+for themselves need nothing: sched_process_fork() inserts a task before
+it has run, so it cannot have died beforehand.
 
-The other two ways of choosing what to trace need nothing, for the same
-reasons the window never affected them: 'perf trace -a' does not filter
-on pid at all, and evlist__prepare_workload() keeps a workload blocked
-on a pipe until evlist__start_workload(), well after the attach.
+Deleting the key the walk is standing on leaves bpf_map__get_next_key()
+to resume from a key that is no longer there, which
+htab_map_get_next_key() answers with the first key of the whole map,
+starting the walk over. The walk therefore only ever stands on a key it
+has found alive, which is one it has just decided to keep, so nothing it
+deletes is ever the key it would go on to ask from. A key deleted while
+the walk stands on nothing is not a problem either: the next request is
+for the first key of the map, and the deleted one is no longer it.
 
-A target that exits during startup is not an error. Reading /proc for a
-task that has gone fails with ENOENT, and a task directory that is read
-but has nothing in it sets nothing at all, so errno is cleared before the
-enumeration and only an allocation failure is passed back. Anything else
-leaves the tasks that evlist__create_maps() already found in the map,
-which sched_process_exit() takes out again as they die, and the session
-runs on rather than being ended over a target that was going to stop
-producing events anyway.
+sched_process_exit() deletes keys while this runs and can take out the
+key the walk is standing on, which there is no way to prevent or to
+notice. The walk is bounded at max_entries steps so that it ends however
+often that happens: the map holds no more than that many keys, so a walk
+that has taken as many steps has either seen them all or been restarted,
+and the bound is what stops a walk that keeps being restarted from going
+round for ever. Ending on the bound can leave a dead task behind, which
+costs one entry of a great many until the session ends, where not ending
+would cost the session itself.
 
-What is left is smaller and no longer lasts. A task found here may have
-made syscalls between sys_enter going live and it being added to the
-map, and those are not reported, but it is traced from that point on. On
-a kernel built without CONFIG_PROC_CHILDREN the children files are
-absent and descendants cannot be named, leaving the threads of the
-target, which are still picked up.
+A task is taken to be gone when its /proc entry is not there, and also
+when /proc reports it as Z or X. Both mean it is in or past do_exit(),
+which is where sched_process_exit() runs, so waiting for a zombie to be
+reaped before dropping it would only keep a dead task in the map for
+longer.
 
-pid_t, PATH_MAX, FILE and the directory reading are all used directly by
-the new code, so <sys/types.h>, <limits.h>, <stdio.h> and <dirent.h> are
-included rather than relied upon to arrive through another header.
+Everything else, including not being able to tell, leaves the task in
+the map. The two mistakes are not equal: a dead task left there holds an
+entry nothing needs, while a live one taken out stops being traced for
+the rest of the session, so a read that fails for perf's own reasons,
+being out of file descriptors or of memory, is not read as the task
+having exited.
 
-Nothing is read out of /proc twice. A pid is in the collection only
-because the task directory holding it was read, and that directory holds
-the whole thread group, so both the directory and the children files of
-everything in it have been read already. 'perf trace -p' needs this: the
-thread map names every thread of the target, each of them is queued as
-something to expand, and they all stand for the same directory, so a
-target of N threads was read N times over and a children file was opened
-N squared times. On a 64 thread target that is 4097 of them, against 65
-once the ones already read are left alone.
+Reading that state means finding the end of the command name, which
+do_task_stat() writes out unescaped, unlike /proc/<pid>/status: it holds
+whatever the task called itself, ')' and newlines included. The whole of
+/proc/<pid>/stat is read rather than a line of it, because a line stops
+at the first embedded newline, short of the name's closing ')', and the
+last ')' in the file is taken as that one, since no field after the name
+has parentheses in it.
 
 Assisted-by: Antigravity:gemini-3.1-pro
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/builtin-trace.c | 256 +++++++++++++++++++++++++++++++++++++
- 1 file changed, 256 insertions(+)
+ tools/perf/builtin-trace.c          | 76 ++++++++++++++++++++++++---
+ tools/perf/util/bpf_trace_augment.c | 79 +++++++++++++++++++++++++++++
+ tools/perf/util/trace_augment.h     |  6 +++
+ 3 files changed, 153 insertions(+), 8 deletions(-)
 
 diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-index ddbe1c8ec1dd..6b52f0d408dd 100644
+index 6b52f0d408dd..b318623486e2 100644
 --- a/tools/perf/builtin-trace.c
 +++ b/tools/perf/builtin-trace.c
-@@ -15,6 +15,7 @@
-  */
- 
- #include "util/record.h"
-+#include <api/fs/fs.h>
- #include <api/fs/tracing_path.h>
- #ifdef HAVE_LIBBPF_SUPPORT
- #include <bpf/bpf.h>
-@@ -65,11 +66,15 @@
- #include "trace_augment.h"
- #include "dwarf-regs.h"
- 
-+#include <dirent.h>
- #include <errno.h>
- #include <sys/stat.h>
-+#include <sys/types.h>
- #include <inttypes.h>
-+#include <limits.h>
- #include <poll.h>
- #include <signal.h>
-+#include <stdio.h>
- #include <stdlib.h>
- #include <string.h>
- #include <linux/err.h>
-@@ -4691,6 +4696,247 @@ static int trace__set_filter_pids(struct trace *trace)
+@@ -4897,6 +4897,59 @@ static int trace__collect_target_pids(struct trace *trace, struct pid_list *pids
  	return err;
  }
  
-+/* A list of pids that grows as it is added to, holding each pid once. */
-+struct pid_list {
-+	pid_t	*entries;
-+	size_t	nr;
-+	size_t	allocated;
-+};
-+
-+static bool pid_list__has(const struct pid_list *list, pid_t pid)
++/*
++ * Is the task still running?
++ *
++ * A pid with no /proc entry is gone, and one reported as Z (zombie) or X (dead)
++ * is in or past do_exit(), which is where sched_process_exit() runs. Either way
++ * the BPF programs will never hear about it again.
++ *
++ * Anything that is not one of those, including being unable to tell, is taken
++ * as alive. The two mistakes are not equal: a dead task left in the map holds
++ * an entry that nothing needs, while a live one taken out of it stops being
++ * traced for the rest of the session.
++ */
++static bool trace__task_is_alive(pid_t pid)
 +{
-+	for (size_t i = 0; i < list->nr; i++) {
-+		if (list->entries[i] == pid)
-+			return true;
++	char path[PATH_MAX];
++	const char *state;
++	char *stat = NULL;
++	bool alive = true;
++	size_t len;
++	int err;
++
++	scnprintf(path, sizeof(path), "%s/%d/stat", procfs__mountpoint(), pid);
++	err = filename__read_str(path, &stat, &len);
++	if (err) {
++		/*
++		 * ENOENT and ESRCH are the task being gone, which is what this
++		 * is looking for. Any other error is perf's own, running out
++		 * of file descriptors or of memory, and says nothing about the
++		 * task.
++		 */
++		return err != -ENOENT && err != -ESRCH;
 +	}
-+	return false;
++
++	/*
++	 * The state is the field after the command name. do_task_stat() writes
++	 * that name out as it is, so it can hold anything a task cares to call
++	 * itself, ')' and newlines included. Nothing after it has parentheses,
++	 * so the last ')' in the file is the one that closes it; the whole file
++	 * is read rather than a line of it because a line stops at the first of
++	 * those newlines, short of the ')' that is being looked for.
++	 *
++	 * A read that returns something the state cannot be read out of, such
++	 * as the empty result of the task exiting midway through it, leaves the
++	 * task alive by the rule above.
++	 */
++	state = strrchr(stat, ')');
++	if (state != NULL && state[1] == ' ')
++		alive = state[2] != 'Z' && state[2] != 'X';
++
++	free(stat);
++	return alive;
 +}
 +
-+/* Append pid, unless it is already there. */
-+static int pid_list__add(struct pid_list *list, pid_t pid)
+ /*
+  * Trace the tasks that appeared while perf trace was starting up.
+  *
+@@ -4919,19 +4972,26 @@ static int trace__collect_target_pids(struct trace *trace, struct pid_list *pids
+ static int trace__set_startup_pids(struct trace *trace)
+ {
+ 	struct pid_list pids = {};
+-	int err;
++	int err = 0;
+ 
+ 	/*
+-	 * Nothing to do without a target: 'perf trace -a' does not filter on
+-	 * pid at all, and evlist__prepare_workload() keeps a workload blocked
+-	 * on a pipe until evlist__start_workload(), well after the attach.
++	 * Only a target is enumerated: 'perf trace -a' does not filter on pid
++	 * at all, and evlist__prepare_workload() keeps a workload blocked on a
++	 * pipe until evlist__start_workload(), well after the attach.
+ 	 */
+-	if (!target__has_task(&trace->opts.target))
+-		return 0;
++	if (target__has_task(&trace->opts.target)) {
++		err = trace__collect_target_pids(trace, &pids);
++		if (!err)
++			err = augmented_syscalls__set_target_pids(pids.nr, pids.entries);
++	}
+ 
+-	err = trace__collect_target_pids(trace, &pids);
++	/*
++	 * Every session gets the sweep, target or not: --filter-pids names
++	 * tasks to leave out with no target of its own, and those are written
++	 * to a map of their own, before the attach and with the same race.
++	 */
+ 	if (!err)
+-		err = augmented_syscalls__set_target_pids(pids.nr, pids.entries);
++		err = augmented_syscalls__prune_dead_pids(trace__task_is_alive);
+ 
+ 	pid_list__exit(&pids);
+ 	return err;
+diff --git a/tools/perf/util/bpf_trace_augment.c b/tools/perf/util/bpf_trace_augment.c
+index 44f30dba5469..4f93f5c062c1 100644
+--- a/tools/perf/util/bpf_trace_augment.c
++++ b/tools/perf/util/bpf_trace_augment.c
+@@ -255,6 +255,85 @@ int augmented_syscalls__set_target_pids(unsigned int nr, pid_t *pids)
+ 	return 0;
+ }
+ 
++/*
++ * Remove from a pid keyed map every task that is no longer alive.
++ *
++ * Deleting the key the walk is standing on leaves bpf_map__get_next_key() to
++ * resume from a key that is no longer there, which htab_map_get_next_key()
++ * answers with the first key of the whole map, starting the walk over. The
++ * cursor is therefore only ever moved onto a key that has been found alive,
++ * which is a key this function has just decided to keep, so nothing it does
++ * can send itself back to the beginning.
++ *
++ * sched_process_exit() deletes keys while this runs and can take out the
++ * cursor, which there is no way to prevent or to notice. The walk is bounded
++ * at max_entries steps so that it ends however often that happens: the map
++ * holds no more than that many keys, so a walk that has taken as many steps
++ * has either seen them all or been restarted, and the bound is what stops a
++ * repeatedly restarted walk from going round for ever. Stopping there can
++ * leave a dead task behind, which costs one entry of a great many until the
++ * session ends, where not stopping would cost the session itself.
++ */
++static int prune_dead_map_pids(struct bpf_map *map, bool (*is_alive)(pid_t pid))
 +{
-+	if (pid_list__has(list, pid))
-+		return 0;
++	size_t max_entries = bpf_map__max_entries(map);
++	pid_t cursor, key;
++	bool have_cursor = false;
 +
-+	if (list->nr == list->allocated) {
-+		size_t allocated = list->allocated ? list->allocated * 2 : 32;
-+		pid_t *entries = realloc(list->entries, allocated * sizeof(*entries));
++	for (size_t step = 0; step < max_entries; step++) {
++		int err;
 +
-+		if (entries == NULL)
-+			return -ENOMEM;
++		/* Anything other than success means there is no next key. */
++		if (bpf_map__get_next_key(map, have_cursor ? &cursor : NULL,
++					  &key, sizeof(key)) != 0)
++			break;
 +
-+		list->entries = entries;
-+		list->allocated = allocated;
++		if (is_alive(key)) {
++			cursor = key;
++			have_cursor = true;
++			continue;
++		}
++
++		err = bpf_map__delete_elem(map, &key, sizeof(key), /*flags=*/0);
++		/*
++		 * ENOENT means the key went away while this was running, which
++		 * is sched_process_exit() doing the same job.
++		 */
++		if (err && err != -ENOENT)
++			return err;
++
++		/*
++		 * The cursor stays where it was, which is either a key that is
++		 * still in the map or unset. Unset asks the next step for the
++		 * first key of the map, and the one just deleted is no longer
++		 * it, so the walk moves on either way.
++		 */
 +	}
 +
-+	list->entries[list->nr++] = pid;
 +	return 0;
 +}
 +
-+static void pid_list__exit(struct pid_list *list)
-+{
-+	zfree(&list->entries);
-+	list->nr = 0;
-+	list->allocated = 0;
-+}
-+
 +/*
-+ * Append the tasks tid has forked to tgids.
++ * Remove the tasks that are no longer alive from both pid maps.
 + *
-+ * task->children holds what a task forked, and a forked task leads a thread
-+ * group of its own, so each is something to expand in turn. New threads are
-+ * not listed: copy_process() gives a CLONE_THREAD child the real_parent of
-+ * its creator rather than the creator itself, so a thread is a sibling of the
-+ * task that created it. Those are enumerated from the task directory instead.
++ * has_pids_to_trace and has_pids_filtered are left alone. They say that the
++ * maps are in use rather than that they have anything in them, and clearing
++ * the first would turn a targeted session into a system wide one.
 + */
-+static int pid_list__add_children(struct pid_list *tgids, pid_t tid)
++int augmented_syscalls__prune_dead_pids(bool (*is_alive)(pid_t pid))
 +{
-+	char path[PATH_MAX];
-+	pid_t child;
-+	FILE *fp;
-+	int err = 0;
-+
-+	scnprintf(path, sizeof(path), "%s/%d/task/%d/children",
-+		  procfs__mountpoint(), tid, tid);
-+	fp = fopen(path, "r");
-+	/*
-+	 * Absent if the task exited, and on a kernel built without
-+	 * CONFIG_PROC_CHILDREN. Neither is worth failing for: what is missed
-+	 * is a task that has gone away, or descendants the kernel will not
-+	 * name.
-+	 */
-+	if (fp == NULL)
-+		return 0;
-+
-+	while (fscanf(fp, "%d", &child) == 1) {
-+		err = pid_list__add(tgids, child);
-+		if (err)
-+			break;
-+	}
-+
-+	fclose(fp);
-+	return err;
-+}
-+
-+/*
-+ * Collect the tasks to trace: the target, its threads, and everything they
-+ * have forked.
-+ *
-+ * tgids is the queue of thread groups still to expand. It is walked as it
-+ * grows, so a child found here has its own children picked up in a later
-+ * pass and the depth of the tree does not matter. The walk terminates
-+ * because a task cannot be its own ancestor and pid_list__add() ignores a
-+ * pid that is already listed.
-+ */
-+static int trace__collect_target_pids(struct trace *trace, struct pid_list *pids)
-+{
-+	struct target *target = &trace->opts.target;
-+	/*
-+	 * -p names processes, so the whole thread group is a target. -t names
-+	 * threads, and expanding one to its group would trace the siblings
-+	 * that were deliberately left out.
-+	 *
-+	 * A thread the target started during the window is left out with them.
-+	 * copy_process() makes a CLONE_THREAD child a sibling of its creator
-+	 * rather than a child, so it is not in children, and /proc does not
-+	 * record which task in a group created which, leaving it
-+	 * indistinguishable from a sibling that was never a target.
-+	 * sched_process_fork() does pick it up once BPF is attached, as it is
-+	 * told the creator rather than having to infer it.
-+	 */
-+	bool whole_group = target->pid != NULL;
-+	struct perf_thread_map *threads;
-+	struct pid_list tgids = {};
-+	int err = 0;
-+
-+	/* Enumerate the target as evlist__create_maps() did, but now. */
-+	errno = 0;
-+	threads = thread_map__new_str(target->pid, target->tid, target->per_thread);
-+	if (threads == NULL) {
-+		char bf[128];
-+
-+		/*
-+		 * A target that exited while perf trace was starting up shows
-+		 * up here as a failure to read /proc/<pid>/task, with scandir()
-+		 * setting ENOENT, or as a task directory that is read but has
-+		 * nothing in it, which sets nothing at all and is why errno is
-+		 * cleared above. Neither is worth ending the session for: the
-+		 * tasks the target had are already in the map from
-+		 * evlist__create_maps() and sched_process_exit() takes them out
-+		 * again as they die. Carry on with what is known and let only
-+		 * an allocation failure through, matching how the pid_list
-+		 * additions below are treated.
-+		 */
-+		if (errno == ENOMEM)
-+			return -ENOMEM;
-+
-+		pr_debug("Couldn't enumerate the target again (%s), tracing the tasks already known\n",
-+			 errno == 0 ? "it exited" : str_error_r(errno, bf, sizeof(bf)));
-+		return 0;
-+	}
-+
-+	for (int i = 0; i < perf_thread_map__nr(threads); i++) {
-+		pid_t pid = perf_thread_map__pid(threads, i);
-+
-+		err = pid_list__add(whole_group ? &tgids : pids, pid);
-+		/* A thread named by -t is not expanded, but its children are. */
-+		if (!err && !whole_group)
-+			err = pid_list__add_children(&tgids, pid);
-+		if (err)
-+			goto out;
-+	}
-+
-+	for (size_t i = 0; i < tgids.nr; i++) {
-+		pid_t tgid = tgids.entries[i];
-+		char path[PATH_MAX];
-+		struct dirent *dent;
-+		DIR *tasks;
-+
-+		/*
-+		 * A pid is in pids only because the task directory holding it
-+		 * was read, and that directory holds the whole thread group,
-+		 * so this one has been read already. 'perf trace -p' relies on
-+		 * this: the thread map names every thread of the target, each
-+		 * of them is queued here, and they all stand for the same
-+		 * directory, which would otherwise be read once per thread.
-+		 */
-+		if (pid_list__has(pids, tgid))
-+			continue;
-+
-+		scnprintf(path, sizeof(path), "%s/%d/task", procfs__mountpoint(), tgid);
-+		tasks = opendir(path);
-+		if (tasks == NULL)
-+			continue;	/* Exited between being named and being read. */
-+
-+		while ((dent = readdir(tasks)) != NULL) {
-+			char *end;
-+			pid_t tid = strtol(dent->d_name, &end, 10);
-+
-+			/* Skip "." and "..". */
-+			if (*end != '\0')
-+				continue;
-+
-+			/* Seen before, so its children have been read too. */
-+			if (pid_list__has(pids, tid))
-+				continue;
-+
-+			err = pid_list__add(pids, tid);
-+			if (!err)
-+				err = pid_list__add_children(&tgids, tid);
-+			if (err)
-+				break;
-+		}
-+
-+		closedir(tasks);
-+		if (err)
-+			goto out;
-+	}
-+out:
-+	perf_thread_map__put(threads);
-+	pid_list__exit(&tgids);
-+	return err;
-+}
-+
-+/*
-+ * Trace the tasks that appeared while perf trace was starting up.
-+ *
-+ * evlist__create_maps() enumerated the target from /proc, and
-+ * sched_process_fork() only sees what is cloned once it is attached. A task
-+ * created in between is in neither, and since cmd_trace() drops the sys_enter
-+ * evsel in favour of __augmented_syscalls__ it would go unreported for the
-+ * whole session.
-+ *
-+ * Read the target out of /proc again now that the programs are attached.
-+ * Whatever came before the attach is in /proc to be found, and whatever comes
-+ * after it is sched_process_fork()'s to add, so between them nothing is left
-+ * out.
-+ *
-+ * Doing this after the attach rather than before it is what makes that true;
-+ * before it would only move the window. The cost is that a task found here
-+ * may have made syscalls between sys_enter going live and it being added
-+ * below, and those are not reported. It is traced from that point on.
-+ */
-+static int trace__set_startup_pids(struct trace *trace)
-+{
-+	struct pid_list pids = {};
 +	int err;
 +
-+	/*
-+	 * Nothing to do without a target: 'perf trace -a' does not filter on
-+	 * pid at all, and evlist__prepare_workload() keeps a workload blocked
-+	 * on a pipe until evlist__start_workload(), well after the attach.
-+	 */
-+	if (!target__has_task(&trace->opts.target))
++	if (skel == NULL)
 +		return 0;
 +
-+	err = trace__collect_target_pids(trace, &pids);
++	err = prune_dead_map_pids(skel->maps.pids_to_trace, is_alive);
 +	if (!err)
-+		err = augmented_syscalls__set_target_pids(pids.nr, pids.entries);
++		err = prune_dead_map_pids(skel->maps.pids_filtered, is_alive);
 +
-+	pid_list__exit(&pids);
 +	return err;
 +}
 +
- static int __trace__deliver_event(struct trace *trace, union perf_event *event)
- {
- 	struct evlist *evlist = trace->evlist;
-@@ -5057,6 +5303,16 @@ static int trace__run(struct trace *trace, int argc, const char **argv)
- 	if (err < 0)
- 		goto out_error_attach;
+ /*
+  * Populate syscalls in the BPF syscalls_to_trace map:
+  * - not_syscalls: true if '!' prefix was specified (blacklist mode: trace
+diff --git a/tools/perf/util/trace_augment.h b/tools/perf/util/trace_augment.h
+index ad992f5fa726..87dbf8c46c1e 100644
+--- a/tools/perf/util/trace_augment.h
++++ b/tools/perf/util/trace_augment.h
+@@ -16,6 +16,7 @@ int augmented_syscalls__create_bpf_output(struct evlist *evlist);
+ void augmented_syscalls__setup_bpf_output(void);
+ int augmented_syscalls__set_filter_pids(unsigned int nr, pid_t *pids);
+ int augmented_syscalls__set_target_pids(unsigned int nr, pid_t *pids);
++int augmented_syscalls__prune_dead_pids(bool (*is_alive)(pid_t pid));
+ int augmented_syscalls__set_target_syscalls(unsigned int nr, int *syscall_ids, bool not_syscalls);
+ int augmented_syscalls__get_map_fds(int *enter_fd, int *exit_fd, int *beauty_fd);
+ struct bpf_program *augmented_syscalls__find_by_title(const char *name);
+@@ -55,6 +56,11 @@ static inline int augmented_syscalls__set_target_pids(unsigned int nr __maybe_un
+ 	return 0;
+ }
  
-+	/*
-+	 * With the programs live, anything the target created while they were
-+	 * being set up is now sched_process_fork()'s to keep track of, but it
-+	 * was not there to see it appear. Enumerate the target once more to
-+	 * pick those up.
-+	 */
-+	err = trace__set_startup_pids(trace);
-+	if (err < 0)
-+		goto out_error_filter_pids;
++static inline int augmented_syscalls__prune_dead_pids(bool (*is_alive)(pid_t pid) __maybe_unused)
++{
++	return 0;
++}
 +
- 	/*
- 	 * If the "close" syscall is not traced, then we will not have the
- 	 * opportunity to, in syscall_arg__scnprintf_close_fd() invalidate the
+ static inline int augmented_syscalls__set_target_syscalls(unsigned int nr __maybe_unused,
+ 							  int *syscall_ids __maybe_unused,
+ 							  bool not_syscalls __maybe_unused)
 -- 
 2.56.0.rc1.315.gc6ed9934b7-goog
 
