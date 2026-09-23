@@ -1,68 +1,68 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15391442B06
-	for <linux-perf-users@vger.kernel.org>; Wed, 23 Sep 2026 07:27:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 323233F4DD2
+	for <linux-perf-users@vger.kernel.org>; Wed, 23 Sep 2026 07:27:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790148462; cv=none; b=AZrVsJogeTWYDsbGppllL/zV2ZJmxuDdlXS27HsN7RE7Xg01uNLdLtNBIfyLW40gvMChRhp/x9knooDZn3suaYzp3wRL71g/bJ5Kac9Jh59iYhY90L7iV0+vvdpQZMo3IeCPNFXHk0skKie0yXhFN62KV7BIys6XdZjfJZnYbE8=
+	t=1790148473; cv=none; b=e7xWiKWceP8lCbYfmwekwraZCLCKwLlCO14CMFzEqcWEeGtmaFbXc6D+phgHtSP66w02hurarbhFJbYJIP+Md1+YH0pMmHqQcUv89o9bwkrp+Rw7hgtpGo+qoKVkgQoM9WxFNupD/47bJmuJUxJkdTLUJZlWK9BMYmf9Kmc5qW0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790148462; c=relaxed/simple;
-	bh=tO1siduWqOY4SNY2AcO/1xhowHnrWHMga6GGTLJxXjE=;
+	s=arc-20240116; t=1790148473; c=relaxed/simple;
+	bh=YPZMjK5DhpvwAdLPdWZWagSECE4jghOWsXpWT4zMgYs=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=bk2sEePNDhnLCXF8jA+Ez4JOHDQJPRU7YT6LYmphIKmgHvveFyw4yFsFL46eLIuHdxaKwyDY9bHJN5wLuWRi3kt21zlhlBVbr255Y8mhsWXYQOmUONQAxvXjn4OJemqoOcA8paYIzEJVZgsYDyyZRWIafglPt/ccb2cesSDrn08=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=l4juxx7J; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=Q5UEmzTQHSZrnazUH/+crjy2po1rhqyuBhHLnSCE55Hj8ufeda4N6VhP1uMuyoAhOCncjNFJTPSh8AWJT/s8A8KvqaHt2Rl8TXpuDvSMH8YICaVOkpefFxQmjhh5sGOByGFnzkkmTSmg/JtEw6dbmW3DVJ9t9S/esiZT7N2bydI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GcrJ06Y7; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="l4juxx7J"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 979011F000FF;
-	Wed, 23 Sep 2026 07:27:40 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GcrJ06Y7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ACF3E1F000FF;
+	Wed, 23 Sep 2026 07:27:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1790148460;
-	bh=tO1siduWqOY4SNY2AcO/1xhowHnrWHMga6GGTLJxXjE=;
+	s=k20260515; t=1790148471;
+	bh=f+nJPSMBuRHjFJvf7YDXjiP4+sQ1ymN37ULxbktVkjk=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=l4juxx7JUAJY8aBTjOTmX+NBdXYrs+5wlBuNl7eQ+strorMzh3prTSTMfjKGhy2vF
-	 hB6kGM8kahzOd122xvj5Zgt3DCeRKoeAqjYMB5+XqBSPAQkE+oqTnLk8kqxonC2TYB
-	 WVL5cTRo6sT27v9BZLn/DuWB7eT5gS6YQjQg3kc93HHwlxHoZsHR2+8OgUj5UtMJIp
-	 cMdSyhlL0W5qqSaudzluUYPvYBf8zdRU8NvBT01yMv+6vTFGklyWfsxF6alESXsRvr
-	 neZgxiZ+u9SIhKoxdC3XkCwhf+u3oY/38+NZGuNCS9zxjywpgZuI3o4DP6QU2lEWcz
-	 Ex2kpnyUrkAiA==
+	b=GcrJ06Y72M/Rz176/YMrIdsN/h2xUf8GrSWf+oPbeHn85OTt24M4mZcdTo/2E4xZh
+	 BlogGetPc7pyMGkLZ54gNFyP2DPVfM2OPJZ9Hvat/kRQJXOa4GZQ9JwJZMcMNs4CtJ
+	 Kl+z7sQPPz4/upJolcfLtwEwwvN+r/GTj5cHR/8WrAxA1JmIsNm87sgEmpf9XksCqg
+	 UNSyOHEz3SntgT+HEfnMmYuxEtw/q+MmSCwm0mRs7BPb2MpSX0MlaybzNhNRcpFK6Y
+	 beaqG/De+XebD4XQrPWik3b6UV5yET7n4g0uzIQ99rMGO/jZlko1JgK3vvv6j5rfbF
+	 bc9Ktj8fO01ow==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v5 12/23] perf trace: Filter events in BPF and avoid
- tracepoint vetoes
+Subject: Re: [PATCH v5 15/23] perf trace: Drop targets that died before they
+ were filtered
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Ian Rogers" <irogers@google.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <b77523973d8012f1cdc36eca15021b204a42aaac.1790145937.git.irogers@google.com>
+In-Reply-To: <b6d5596ad04aef749be8f57951d70f7e6bee4765.1790145937.git.irogers@google.com>
 References: <cover.1790145937.git.irogers@google.com>
- <b77523973d8012f1cdc36eca15021b204a42aaac.1790145937.git.irogers@google.com>
+ <b6d5596ad04aef749be8f57951d70f7e6bee4765.1790145937.git.irogers@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Wed, 23 Sep 2026 07:27:40 +0000
-Message-Id: <20260923072740.979011F000FF@smtp.kernel.org>
+Date: Wed, 23 Sep 2026 07:27:51 +0000
+Message-Id: <20260923072751.ACF3E1F000FF@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-> The BPF augmented_raw_syscalls sys_enter and sys_exit programs returned
-> 0 for syscalls that were not of interest. Returning 0 from a tracepoint
-> BPF program vetoes the event for the whole system, so an unrelated
-> concurrent perf trace, perf record or ftrace session listening to
-> raw_syscalls would silently lose events. This is a cross-session side
-> effect and shows up as flaky failures when perf tests run in parallel.
+> sched_process_exit() takes a task out of pids_to_trace and pids_filtered
+> as it dies, which keeps the maps holding live tasks rather than growing
+> for the length of the session. It only finds a task there if userspace
+> put it there first, and userspace writes a pid some time after reading
+> it:
 >=20
-> Furthermore, syscall_unaugmented previously returned 1 without writing
-> anything to the __augmented_syscalls__ ring buffer. This forced
-> userspace perf trace to listen to both raw_syscalls:sys_enter and
-> __augmented_syscalls__ in its evlist, requiring userspace event
-> deduplication.
+>  - trace__set_filter_pids() writes the thread map and the --filter-pids
+>    list before the programs are attached, so for those there is nothing
+>    watching them die at all.
+>  - trace__set_startup_pids() writes what it enumerated after the attach,
+>    which is a much smaller gap but still a gap.
 >=20
-> Address these issues:
-> 1. In augmented_raw_syscalls.bpf.c, never return 0 from tracepoint
+> A task that dies inside one of those windows is never evicted, because
+> the delete that would have done it ran while the map had nothing to
+> delete. Its pid then sits in the map for the rest of the session: it
 > [ ... ]
-> The inner report becomes a pr_debug() and the caller prints the error
-> it was given, which leaves out_errno without a user and it is removed.
+> last ')' in the file is taken as that one, since no field after the name
+> has parentheses in it.
 >=20
 > Assisted-by: Antigravity:gemini-3.1-pro
 > Signed-off-by: Ian Rogers <irogers@google.com>
@@ -71,5 +71,5 @@ Sashiko has reviewed this patch and found no issues. It looks great!
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/cover.1790145937.gi=
-t.irogers@google.com?part=3D12
+t.irogers@google.com?part=3D15
 
