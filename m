@@ -1,644 +1,386 @@
-Received: from mail-qt1-f171.google.com (mail-qt1-f171.google.com [209.85.160.171])
+Received: from mail-dy1-f197.google.com (mail-dy1-f197.google.com [74.125.82.197])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CA3D39FCBF
-	for <linux-perf-users@vger.kernel.org>; Wed, 23 Sep 2026 05:23:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.160.171
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790141032; cv=pass; b=rb8DmiHUykzCiee1uxu7enXRdTzB4teRTj+P6pGRObYP6f+uAtft4BaR6w899UQhLyaBQX08DOLbKGpVfCSneCxfAiq+zg9ePh/sBV0muI0f+chKWljnocRdsdkFeMvkeEkfgQfYAgjlhypeTK7VyBUra9aQpr91zTJszotU7Nk=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790141032; c=relaxed/simple;
-	bh=z2XmUurrdaFn9IJL5P6rDgEK1R9WYZnkPljTKi9bUJ0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=aiQ+3gg03LR97zVkcmFxfIg0WIsqo7Q9YrYkSf5uE4pcAkUcrXtXtIVqQTtd79cyq9oqMtqwgJAn6oDWjf9TFBt/7VRcQp6zvNjEhfNK+TB8Ej2mfZQhLUh/PZ9rJD5lpwEf34WcnhUytC5PnugBCsomQPCwD8hK79Cb2rqU4oQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=b9k0ipyq; arc=pass smtp.client-ip=209.85.160.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8586C3AE704
+	for <linux-perf-users@vger.kernel.org>; Wed, 23 Sep 2026 07:14:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.197
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1790147656; cv=none; b=cVYMaJnZQ/UDfCQWed6+GZBuY4aEjmeYcUOuRhSAs1Xd4QnLQURP2yIZcJqJzolD7jHK7XY2H8G0rsCr4y5kPDg5yva5vDbDpOvhO3p5WQOQyie6mm8proyxYSoRld6p8gh63CyPFSKo7f74d2rt5+XwQ3uUdcZhZ7ZelfQeeXw=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1790147656; c=relaxed/simple;
+	bh=NChn8Sp73xLuUBTlnYLW1h9FjFeCa4f7kEfVgTbqyGA=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=FjKYtCS1SZwP9HC+1CZPVy09qDlooJsqUasAo5+thqp8SvqhI5jS5Psozyd8NBR5UMXFeDHTZjwI1SNcG/5ZTKsx0WXyWH28KLC3FXfDg9JIizBRpJSu5t0bK9kuMCHT1FHRCb62w5J1YaLRet3iVaGC19i0zpmuTAV5Sz1VZKM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=WveI/MyO; arc=none smtp.client-ip=74.125.82.197
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="b9k0ipyq"
-Received: by mail-qt1-f171.google.com with SMTP id d75a77b69052e-53113d72966so108301cf.1
-        for <linux-perf-users@vger.kernel.org>; Tue, 22 Sep 2026 22:23:50 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1790141029; cv=none;
-        d=google.com; s=arc-20260327;
-        b=Cr4Tjb10Lx82TWrfePE+hbUTm6+qAnP8wXmaicsWgH4wYYt8a0ZHB73rMtzlYy9qBm
-         LhZksrxKh0FV+9L2w5+Zti5zExWXip1rVUMrm4zFQGWj5Jcl2lILPIuVs93kJnGPXzxc
-         JYgackgtTJUJoFKpV1ICZbXUHEbP/wp+IkSLXaVENnE6wgix/4hbR4cfsEmWnzokkGWE
-         270teLbdadrMqAtaF/9MtMfotBipVmDqIOa/cXVV12TO9E6V6+9t/uitw1vfMC5DOwvS
-         soNS0v0cuO/aFjx4lI/Q/1NROPXR25FIwuX+SjysYD3abRSfrKPgkVchHQSj6dCyfUD4
-         Ylbw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=DJ8tFHSPqqN6XSKLF22vu/A2mJhFTCet2bEk0JY5vC8=;
-        fh=pQxpBkfxj4Z33QgatTvIZE5cEFAPLKdM7dY7cvfjSUA=;
-        b=cxfWyuEX38NLpLkJLKGA0dE1qh9Nl/3W15ElNNF5Kghck4hNSdMACwkDESlimw435I
-         XANnppHO880ioamhkmk5RrT4ec3FDITYWzWm7gy9Beqic7O5tCFOjC6ji7ffffY+bAZu
-         CpxNr7fo+Om7sKya9v4Pjd2pOro3uPP8VJIfpm3uc64OKt7gKnnq1Oux14WsK7xN+ZQW
-         2/HCfsb/CbuYPur6gAgI0YF4q2VYMoMwvhcttGCXPN6fjqa9/dJQGMGxHlFNimps2j1i
-         SMQz2tW1eJt4h+OujYTl0FM8mK5m9puHDqPoGh8JLWFVHYZWr1axNDVfFP2E9nL8rlpY
-         jJFA==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="WveI/MyO"
+Received: by mail-dy1-f197.google.com with SMTP id 5a478bee46e88-30c0d568830so1057884eec.1
+        for <linux-perf-users@vger.kernel.org>; Wed, 23 Sep 2026 00:14:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1790141029; x=1790745829; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=DJ8tFHSPqqN6XSKLF22vu/A2mJhFTCet2bEk0JY5vC8=;
-        b=b9k0ipyqFz06VuClUbRuo2f0zKamjD1q+v+tJHXrGxtt4iXEJsTFLzHsumvFOohPHJ
-         KDNHgPG4KEx9adk8fZy2Rw955/ESt2mW/LM09f7/UqB+So5A8E+ZxV5xn2idDpyuf4KS
-         5tVcDioPHJhOUlnWYs6lLaEIoQIlWduQq8njdMuQrcuiadv4BNDUAAJlOG6y80jPV5vB
-         t73Dar2hHJg2F3Oqz3dTClQ22gooTdC7DYJYoLV0/KlccFwkM9daMuBc1g8cwAWUmcQQ
-         2JwhsBcyisDU8bBwxv/Fw++E8DyM0cs+pcyUTfneJzuCz3a4V+m6MPzavoEQ+h5KpijE
-         duPA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1790141029; x=1790745829;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+        d=google.com; s=20251104; t=1790147654; x=1790752454; darn=vger.kernel.org;
+        h=content-type:cc:to:from:subject:message-id:references:mime-version
+         :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=DJ8tFHSPqqN6XSKLF22vu/A2mJhFTCet2bEk0JY5vC8=;
-        b=SpXwcteHM3WxtLD7EsaycIa/yWvshrkAU7ZCzdFpUkNANLhYKEeXsU5LtnJs7TdgR3
-         yev7xbsKSJ4gZ5PvR6Ngrj0/QzSfLGPNV31aDr0LoyttIsO3KL8SLCpQ4z8RFUpI0Tqy
-         vUdUKUUNu3t9On6SangpmN3yoGK5Jt4a2Cfw2IYKa44Up+GSb29azXUOKJYg0OD4EMn5
-         hFmEJpxwlnWLeoPfLBPuEiQpbJunOZ4z5oi+48hJgmKzo7ccYA1ZxZaV6imIuLv689Q2
-         qYxVxvzJ1Z32xr4UESUjTIqsdD0b8GrUu6u8LVEn/QtdY1HpJxIsupIndlI/SYaB1wbh
-         96ww==
-X-Forwarded-Encrypted: i=1; AKwUvBxdrwAQJu6C7eamw8L5DUh8HJjKT5n2L+PmrqzpNgvelvuEVGXGhfRJ/wVCCbdK3ARRCtFu+pVbaBtubjU5jzRf@vger.kernel.org
-X-Gm-Message-State: AFuF++k6xDibIFnpJ6r8uyEz6A/hO2oFsh8jcxAZSsAQrmA2s3IGS/82
-	8qKwXn/3VXCbq+Ze6JuQMnu4I8jMMg0G1LroP18P/g7RcMRsQVBlL6WODOYyDxBzIb4fIy18U6D
-	glbSkWlb92aErp6FDgDKW+ai87k7zBgfnnoXfFfiW
-X-Gm-Gg: AYBFou1dwFsmLn1QqUEIv/VwierCi6TqYwUKeDIHs7X803JfpBN5Ci1ATwPEJZqn2b7
-	xWWN7xln+WsoCf6aIVk9s3KwlJHS/g7vaGVXN2GHw2hi9auY/Fp+ajw3Ek+RXgjCE/m5qERRCEP
-	+4qgZ0BPyso08q5du9aqdGXqwnzjJqGIhYT4YMTRCh372XARsyyjaEB5g85sF9xYtU0DweP2Ec0
-	zpIFaQkMfzbTJmxHYpQ/0cMs4Z8BcWNUmIdNKp1tl2g4Asa1pjf9kDwLVC1rsHMkLHJbSdXSjxF
-	Sn4K9y19VcDuacKqIu/9AoA97ZhWxjjEMSN2irI3JOKEUQr3EtDVq8VAnf2a1dG/yg==
-X-Received: by 2002:a05:622a:4d4:b0:532:8a04:af52 with SMTP id
- d75a77b69052e-532edf4fe9emr6554391cf.9.1790141028672; Tue, 22 Sep 2026
- 22:23:48 -0700 (PDT)
+        bh=+REZfVJIdFLUPFnULFCfuCCZWXUbQ8BBuateaaGRoug=;
+        b=WveI/MyOxsKuRhphng2cYFWvP14YxxPzivrTC1PEQNbzcZ1tAozYJOZJ0clLWEzTAy
+         JXN0PtMxZh6JT4grn+k6r2tBHk3r5H/7G1o/BYCWa/5KMUamaSDbfYyEWD74J1DK9uy4
+         CG4sk3pPY84KpedPaRY8G2sJ0UtFebYOFYhZl4O8waooNXUeQhSsdkq0H0uM+HBi3YLb
+         2Z/XgwAk9Xbq12VXbPj4totYqaADzIb4Ly2uPIN2wf+JTp2TWsYqr0YO1pkqCLIsQmd/
+         CAU08KXidQc3fODSVKxHtigQJagyN3UuVQ1ULqv9kX090kTFqWfxScE8785GvJbY1mE1
+         809Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1790147654; x=1790752454;
+        h=content-type:cc:to:from:subject:message-id:references:mime-version
+         :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=+REZfVJIdFLUPFnULFCfuCCZWXUbQ8BBuateaaGRoug=;
+        b=oe7rHSXh3vouhn1VLAcc4IdRmkBrExl0jhFMTIPpXsfe0vOol+V5N6M5HYmJDgfn3E
+         zhwGTiF7uObgs3zznVFX69Hzaok4bGmH1ZIcOE00zbyqIfk/R0CiRrrOUVTW7oiB/Dbr
+         vXqWlq7zqWug/DQDqKCrAVSGbp0AjU6PJmZcoZcZFlupZ8rOS5wzELxnYIo2VgY6qBrd
+         37amWi35MU91JHqF0ANailkYvZbUWbJDT57eSrKhECARWySNjGuUzIBdqJVYsd8YKMwU
+         anSzwT0fAofn3SMP3q/nIvS3auVqsLWsheKtkM5rAf+mZxbhgMJECs0d+ybVoB10cuVz
+         BdXQ==
+X-Forwarded-Encrypted: i=1; AKwUvBw9LKJh2BkTqwRgEsyj2lItAATcW/eRrVFuD+b4j/kScEHrdVknMrqDgGHCI4Xn+1I8oxyOofl/lBWZ5P4Hcnjm@vger.kernel.org
+X-Gm-Message-State: AFuF++nMWCbNjVmy3Ld0b3VGLzGwA3Pk+sZ9lqmKNyWEM8TO7A8edWYs
+	bvggT5aECTv48SlQGBhkkf5pym5doPd9faTVV0xCvdUR0cigsIr5lfguJHCnSl383fBIzgfkopJ
+	3L6ic/zyuJg==
+X-Received: from dybpk15.prod.google.com ([2002:a05:7301:428f:b0:32b:9b32:ea2a])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7301:6183:10b0:33c:e74:4625
+ with SMTP id 5a478bee46e88-33e8ddc40a2mr1772514eec.28.1790147653226; Wed, 23
+ Sep 2026 00:14:13 -0700 (PDT)
+Date: Wed, 23 Sep 2026 00:13:40 -0700
+In-Reply-To: <20260918211932.2966061-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <cover.1789966896.git.irogers@google.com> <f724b653476e2733c18b02268c57baaaa54870ba.1789966896.git.irogers@google.com>
- <967f2941-2f7c-464e-8a8e-eb0a78f586d6@linaro.org>
-In-Reply-To: <967f2941-2f7c-464e-8a8e-eb0a78f586d6@linaro.org>
+Mime-Version: 1.0
+References: <20260918211932.2966061-1-irogers@google.com>
+X-Mailer: git-send-email 2.56.0.rc1.315.gc6ed9934b7-goog
+Message-ID: <cover.1790145937.git.irogers@google.com>
+Subject: [PATCH v5 00/23] perf trace: Fix BPF filtering and make tracing tests non-exclusive
 From: Ian Rogers <irogers@google.com>
-Date: Tue, 22 Sep 2026 22:23:36 -0700
-X-Gm-Features: AcwNN1XSTB27P0c1GTbe9FvUK3O9Ii5iu8NEPwyQXcEdjeGxjaYPFbwOB0_uK_I
-Message-ID: <CAP-5=fXz5S-Va1BdvQjvDqcKovToyoODC-T1gVV46pLPEbiVvQ@mail.gmail.com>
-Subject: Re: [PATCH v2 38/49] perf python: Port arm-cs-trace-disasm to perf module
-To: James Clark <james.clark@linaro.org>
-Cc: adrian.hunter@intel.com, dapeng1.mi@linux.intel.com, leo.yan@linux.dev, 
-	linux-kernel@vger.kernel.org, mingo@redhat.com, peterz@infradead.org, 
-	tmricht@linux.ibm.com, acme@kernel.org, alice.mei.rogers@gmail.com, 
-	linux-perf-users@vger.kernel.org, namhyung@kernel.org
+To: irogers@google.com, acme@kernel.org, howardchu95@gmail.com, 
+	namhyung@kernel.org
+Cc: adrian.hunter@intel.com, james.clark@linaro.org, jolsa@kernel.org, 
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+	mingo@redhat.com, peterz@infradead.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Tue, Sep 22, 2026 at 6:12=E2=80=AFAM James Clark <james.clark@linaro.org=
-> wrote:
->
->
->
-> On 21/09/2026 06:06, Ian Rogers wrote:
-> > Port arm-cs-trace-disasm.py to a standalone script in tools/perf/python=
-/
-> > using the perf module directly.
-> >
-> > Improvements compared to the legacy script:
-> > - Encapsulate trace disassembly state in a TraceDisasm class
-> > - Automatically search standard kernel debug paths (find_vmlinux())
-> >    when -k/--vmlinux is not specified, and query
-> >    perf.config_get("annotate.objdump") for the default objdump binary.
-> > - Bound DISASM_CACHE memory consumption by evicting the cache at 1024
-> >    entries and skipping caching of oversized (> 512 lines) objdump
-> >    outputs.
-> > - Use sample.srccode() from the perf extension module to annotate
-> >    disassembly output with source filenames, line numbers, and source
-> >    lines.
-> >
-> > Update the ARM CoreSight disassembly shell test
-> > (test_arm_coresight_disasm.sh) to invoke the standalone script.
-> >
-> > Assisted-by: Antigravity:gemini-3.1-pro
-> > Signed-off-by: Ian Rogers <irogers@google.com>
-> > ---
-> >   tools/perf/python/arm-cs-trace-disasm.py      | 356 +++++++++++++++++=
-+
-> >   .../coresight/test_arm_coresight_disasm.sh    |  24 +-
-> >   tools/perf/tests/shell/lib/setup_python.sh    |   4 +
-> >   3 files changed, 378 insertions(+), 6 deletions(-)
-> >   create mode 100755 tools/perf/python/arm-cs-trace-disasm.py
-> >
-> > diff --git a/tools/perf/python/arm-cs-trace-disasm.py b/tools/perf/pyth=
-on/arm-cs-trace-disasm.py
-> > new file mode 100755
-> > index 000000000000..1a9d9a01d1e4
-> > --- /dev/null
-> > +++ b/tools/perf/python/arm-cs-trace-disasm.py
-> > @@ -0,0 +1,356 @@
-> > +#!/usr/bin/env python3
-> > +# SPDX-License-Identifier: GPL-2.0
-> > +"""
-> > +arm-cs-trace-disasm.py: ARM CoreSight Trace Dump With Disassember usin=
-g perf python module
-> > +"""
-> > +from __future__ import annotations
-> > +
-> > +import os
-> > +from os import path
-> > +import re
-> > +from subprocess import CalledProcessError, check_output
-> > +import argparse
-> > +import platform
-> > +import sys
-> > +from typing import Dict, List, Optional
-> > +
-> > +import perf
-> > +
-> > +# Initialize global dicts and regular expression
-> > +DISASM_CACHE: Dict[str, List[str]] =3D {}
-> > +CPU_DATA: Dict[str, int] =3D {}
-> > +DISASM_RE =3D re.compile(r"^\s*([0-9a-fA-F]+):")
-> > +DISASM_FUNC_RE =3D re.compile(r"^\s*([0-9a-fA-F]+)\s.*:")
-> > +CACHE_SIZE =3D 1024
-> > +class _State:
-> > +    sample_idx: int =3D -1
-> > +    source_file_name: Optional[str] =3D None
-> > +    line_number: Optional[int] =3D None
-> > +    dso: Optional[str] =3D None
-> > +
-> > +_STATE =3D _State()
-> > +
-> > +KVER =3D platform.release()
-> > +VMLINUX_PATHS =3D [
-> > +    f"/usr/lib/debug/boot/vmlinux-{KVER}.debug",
-> > +    f"/usr/lib/debug/lib/modules/{KVER}/vmlinux",
-> > +    f"/lib/modules/{KVER}/build/vmlinux",
-> > +    f"/usr/lib/debug/boot/vmlinux-{KVER}",
-> > +    f"/boot/vmlinux-{KVER}",
-> > +    "/boot/vmlinux",
-> > +    "vmlinux"
-> > +]
-> > +
-> > +def default_objdump() -> str:
-> > +    """Return the default objdump path from perf config or 'objdump'."=
-""
-> > +    try:
-> > +        config =3D perf.config_get("annotate.objdump")
-> > +        return str(config) if config else "objdump"
-> > +    except (AttributeError, TypeError):
-> > +        return "objdump"
-> > +
-> > +def find_vmlinux() -> Optional[str]:
-> > +    """Find the vmlinux file in standard paths."""
-> > +    if hasattr(find_vmlinux, "path"):
-> > +        return getattr(find_vmlinux, "path")
-> > +
-> > +    for v in VMLINUX_PATHS:
-> > +        if os.access(v, os.R_OK):
-> > +            setattr(find_vmlinux, "path", v)
-> > +            return v
-> > +    setattr(find_vmlinux, "path", None)
-> > +    return None
-> > +
-> > +def get_dso_file_path(dso_name: str, dso_build_id: str, vmlinux: Optio=
-nal[str]) -> str:
-> > +    """Return the path to the DSO file."""
-> > +    buildid_dir =3D os.environ.get('PERF_BUILDID_DIR')
-> > +    if not buildid_dir:
-> > +        buildid_dir =3D os.path.join(os.environ.get('HOME', ''), '.deb=
-ug')
-> > +
-> > +    if dso_name in ("[kernel.kallsyms]", "vmlinux"):
-> > +        if vmlinux:
-> > +            return vmlinux
-> > +        if dso_build_id:
-> > +            for kname in (dso_name, "vmlinux", "[kernel.kallsyms]"):
-> > +                candidate =3D os.path.join(buildid_dir, kname, dso_bui=
-ld_id, "elf")
-> > +                if os.access(candidate, os.R_OK):
-> > +                    return candidate
-> > +        return find_vmlinux() or dso_name
-> > +
-> > +    if dso_name =3D=3D "[vdso]":
-> > +        append =3D "/vdso"
-> > +    else:
-> > +        append =3D "/elf"
-> > +
-> > +    dso_path =3D buildid_dir + "/" + dso_name + "/" + dso_build_id + a=
-ppend
-> > +    # Replace duplicate slash chars to single slash char
-> > +    dso_path =3D dso_path.replace('//', '/', 1)
-> > +    return dso_path
-> > +
-> > +def read_disam(dso_fname: str, dso_start: int, start_addr: int,
-> > +               stop_addr: int, objdump: str) -> List[str]:
-> > +    """Read disassembly from a DSO file using objdump."""
-> > +    addr_range =3D f"{start_addr}:{stop_addr}:{dso_start}:{dso_fname}"
-> > +
-> > +    # Don't let the cache get too big, clear it when it hits max size
-> > +    if len(DISASM_CACHE) > CACHE_SIZE:
-> > +        DISASM_CACHE.clear()
-> > +
-> > +    if addr_range in DISASM_CACHE:
-> > +        disasm_output =3D DISASM_CACHE[addr_range]
-> > +    else:
-> > +        start_addr =3D start_addr - dso_start
-> > +        stop_addr =3D stop_addr - dso_start
-> > +        disasm =3D [objdump, "-d", "-z",
-> > +                  f"--start-address=3D{start_addr:#x}",
-> > +                  f"--stop-address=3D{stop_addr:#x}"]
-> > +        disasm +=3D [dso_fname]
-> > +        try:
-> > +            disasm_output =3D check_output(disasm).decode('utf-8', err=
-ors=3D'replace').split('\n')
-> > +        except (CalledProcessError, OSError):
-> > +            return []
-> > +        if len(disasm_output) <=3D 512:
-> > +            DISASM_CACHE[addr_range] =3D disasm_output
-> > +
-> > +    return disasm_output
-> > +
-> > +def print_disam(dso_fname: str, dso_start: int, start_addr: int,
-> > +                stop_addr: int, objdump: str) -> None:
-> > +    """Print disassembly for a given address range."""
-> > +    for line in read_disam(dso_fname, dso_start, start_addr, stop_addr=
-, objdump):
-> > +        m =3D DISASM_FUNC_RE.search(line)
-> > +        if m is None:
-> > +            m =3D DISASM_RE.search(line)
-> > +            if m is None:
-> > +                continue
-> > +        print(f"\t{line}")
-> > +
-> > +def print_sample(sample: perf.sample_event) -> None:
-> > +    """Print sample details."""
-> > +    print(f"Sample =3D {{ cpu: {sample.sample_cpu:04d} addr: {sample.s=
-ample_addr:016x} "
-> > +          f"phys_addr: {sample.sample_phys_addr:016x} ip: {sample.samp=
-le_ip:016x} "
-> > +          f"pid: {sample.sample_pid} tid: {sample.sample_tid} period: =
-{sample.sample_period} "
-> > +          f"time: {sample.sample_time} index: {_STATE.sample_idx}}}")
-> > +
-> > +def common_start_str(comm: str, sample: perf.sample_event) -> str:
-> > +    """Return common start string for sample output."""
-> > +    sec =3D int(sample.sample_time / 1000000000)
-> > +    ns =3D sample.sample_time % 1000000000
-> > +    cpu =3D sample.sample_cpu
-> > +    pid =3D sample.sample_pid
-> > +    tid =3D sample.sample_tid
-> > +    return f"{comm:>16s} {pid:5d}/{tid:<5d} [{cpu:04d}] {sec:9d}.{ns:0=
-9d}  "
-> > +
-> > +def print_srccode(comm: str, sample: perf.sample_event, symbol: str, d=
-so: str) -> None:
-> > +    """Print source code and symbols for a sample."""
-> > +    ip =3D sample.sample_ip
-> > +    if symbol =3D=3D "[unknown]":
-> > +        start_str =3D common_start_str(comm, sample) + f"{ip:x}".rjust=
-(16).ljust(40)
-> > +    else:
-> > +        symoff =3D 0
-> > +        symoff =3D getattr(sample, 'sym_offset', 0) or 0
-> > +        offs =3D f"+{symoff:#x}" if symoff !=3D 0 else ""
-> > +        start_str =3D common_start_str(comm, sample) + (symbol + offs)=
-.ljust(40)
-> > +
-> > +    source_file_name, line_number, source_line =3D sample.srccode() or=
- (None, 0, None)
-> > +    if source_file_name:
-> > +        if _STATE.line_number =3D=3D line_number and _STATE.source_fil=
-e_name =3D=3D source_file_name:
-> > +            src_str =3D ""
-> > +        else:
-> > +            if len(source_file_name) > 40:
-> > +                src_file =3D f"...{source_file_name[-37:]} "
-> > +            else:
-> > +                src_file =3D source_file_name.ljust(41)
-> > +
-> > +            if source_line is None:
-> > +                src_str =3D f"{src_file}{line_number:>4d} <source not =
-found>"
-> > +            else:
-> > +                src_str =3D f"{src_file}{line_number:>4d} {source_line=
-}"
-> > +        _STATE.dso =3D None
-> > +    elif dso =3D=3D _STATE.dso:
-> > +        src_str =3D ""
-> > +    else:
-> > +        src_str =3D dso
-> > +        _STATE.dso =3D dso
-> > +
-> > +    _STATE.line_number =3D line_number
-> > +    _STATE.source_file_name =3D source_file_name
-> > +
-> > +    print(start_str, src_str)
-> > +
-> > +class TraceDisasm:
-> > +    """Class to handle trace disassembly."""
-> > +    def __init__(self, cli_options: argparse.Namespace):
-> > +        self.options =3D cli_options
-> > +        self.sample_idx =3D -1
-> > +        self.session: Optional[perf.session] =3D None
-> > +
-> > +    def process_event(self, sample: perf.sample_event) -> None:
-> > +        """Process a single perf event."""
-> > +        self.sample_idx +=3D 1
-> > +        _STATE.sample_idx =3D self.sample_idx
-> > +
-> > +        if self.options.start_time is not None and sample.sample_time =
-< self.options.start_time:
-> > +            return
-> > +        if self.options.stop_time is not None and sample.sample_time >=
- self.options.stop_time:
-> > +            sys.exit(0)
-> > +        if self.options.start_sample is not None and self.sample_idx <=
- self.options.start_sample:
-> > +            return
-> > +        if self.options.stop_sample is not None and self.sample_idx > =
-self.options.stop_sample:
-> > +            sys.exit(0)
-> > +
-> > +        ev_name =3D str(sample.evsel)
-> > +        if self.options.verbose:
-> > +            print(f"Event type: {ev_name}")
-> > +            print_sample(sample)
-> > +
-> > +        dso =3D sample.dso or '[unknown]'
-> > +        symbol =3D sample.symbol or '[unknown]'
-> > +        dso_bid =3D (sample.dso_bid.decode('utf-8')
-> > +                   if isinstance(sample.dso_bid, bytes)
-> > +                   else str(sample.dso_bid or '[unknown]'))
-> > +        dso_start =3D sample.map_start
-> > +        dso_end =3D sample.map_end
-> > +        map_pgoff =3D sample.map_pgoff or 0
-> > +
-> > +        comm =3D "[unknown]"
-> > +        try:
-> > +            if self.session:
-> > +                thread_info =3D self.session.find_thread(sample.sample=
-_tid)
-> > +                if thread_info:
-> > +                    comm =3D thread_info.comm() or "[unknown]"
-> > +        except (TypeError, AttributeError):
-> > +            pass
-> > +
-> > +        if dso =3D=3D '[unknown]':
-> > +            return
-> > +
-> > +        if dso_start is None or dso_end is None:
-> > +            print(f"Failed to find valid dso map for dso {dso}")
-> > +            return
-> > +
-> > +        if "instructions" in ev_name:
-> > +            print_srccode(comm, sample, symbol, dso)
-> > +            return
-> > +
-> > +        if "branches" not in ev_name:
-> > +            return
-> > +
-> > +        self._process_branch(sample, comm, symbol, dso, dso_bid, dso_s=
-tart, dso_end, map_pgoff)
-> > +
-> > +    def _process_branch(self, sample: perf.sample_event, comm: str, sy=
-mbol: str, dso: str,
-> > +                        dso_bid: str, dso_start: int, dso_end: int, ma=
-p_pgoff: int) -> None:
-> > +        """Helper to process branch events."""
-> > +        cpu =3D sample.sample_cpu
-> > +        ip =3D sample.sample_ip
-> > +        addr =3D sample.sample_addr
-> > +
-> > +        if CPU_DATA.get(str(cpu) + 'addr') is None:
-> > +            CPU_DATA[str(cpu) + 'addr'] =3D addr
-> > +            return
-> > +
-> > +        start_addr =3D CPU_DATA[str(cpu) + 'addr']
-> > +        stop_addr  =3D ip + 4
-> > +
-> > +        # Record for previous sample packet
-> > +        CPU_DATA[str(cpu) + 'addr'] =3D addr
-> > +
-> > +        # Filter out zero start_address. Optionally identify CS_ETM_TR=
-ACE_ON packet
-> > +        if start_addr =3D=3D 0:
-> > +            if stop_addr =3D=3D 4 and self.options.verbose:
-> > +                print(f"CPU{cpu}: CS_ETM_TRACE_ON packet is inserted")
-> > +            return
-> > +
-> > +        if start_addr < dso_start or start_addr > dso_end:
-> > +            print(f"Start address {start_addr:#x} is out of range [ {d=
-so_start:#x} .. "
-> > +                  f"{dso_end:#x} ] for dso {dso}")
-> > +            return
-> > +
-> > +        if stop_addr < dso_start or stop_addr > dso_end:
-> > +            print(f"Stop address {stop_addr:#x} is out of range [ {dso=
-_start:#x} .. "
-> > +                  f"{dso_end:#x} ] for dso {dso}")
-> > +            return
-> > +
-> > +        if self.options.objdump is not None:
-> > +            if dso =3D=3D "[kernel.kallsyms]":
-> > +                dso_vm_start =3D 0
-> > +                map_pgoff_local =3D 0
-> > +            elif dso_start =3D=3D 0x400000:
-> > +                dso_vm_start =3D 0
-> > +                map_pgoff_local =3D 0
-> > +            else:
-> > +                dso_vm_start =3D dso_start
-> > +                map_pgoff_local =3D map_pgoff
-> > +
-> > +            dso_fname =3D get_dso_file_path(dso, dso_bid, self.options=
-.vmlinux)
-> > +            if path.exists(dso_fname):
-> > +                print_disam(dso_fname, dso_vm_start, start_addr + map_=
-pgoff_local,
-> > +                            stop_addr + map_pgoff_local, self.options.=
-objdump)
-> > +            else:
-> > +                print(f"Failed to find dso {dso} for address range [ "
-> > +                      f"{start_addr + map_pgoff_local:#x} .. {stop_add=
-r + map_pgoff_local:#x} ]")
-> > +
-> > +        print_srccode(comm, sample, symbol, dso)
-> > +
-> > +    def run(self) -> None:
-> > +        """Run the trace disassembly session."""
-> > +        input_file =3D self.options.input or "perf.data"
-> > +        if input_file !=3D "-" and not os.path.exists(input_file):
-> > +            print(f"Error: {input_file} not found.", file=3Dsys.stderr=
-)
-> > +            sys.exit(1)
-> > +
-> > +        print('ARM CoreSight Trace Data Assembler Dump')
-> > +        try:
-> > +            self.session =3D perf.session(
-> > +                perf.data(input_file),
-> > +                sample=3Dself.process_event,
-> > +                itrace=3Dself.options.itrace
-> > +            )
-> > +        except (OSError, ValueError, KeyError, RuntimeError, TypeError=
-, AttributeError) as e:
-> > +            print(f"Error opening session: {e}", file=3Dsys.stderr)
-> > +            sys.exit(1)
-> > +
-> > +        try:
-> > +            self.session.process_events()
-> > +        finally:
-> > +            self.session =3D None
-> > +        print('End')
-> > +
-> > +if __name__ =3D=3D "__main__":
-> > +    def int_arg(v: str) -> int:
-> > +        """Helper for integer command line arguments."""
-> > +        val =3D int(v)
-> > +        if val < 0:
-> > +            raise argparse.ArgumentTypeError("Argument must be a posit=
-ive integer")
-> > +        return val
-> > +
-> > +    arg_parser =3D argparse.ArgumentParser(description=3D"ARM CoreSigh=
-t Trace Dump With Disassembler")
-> > +    arg_parser.add_argument("-i", "--input", help=3D"input perf.data f=
-ile")
-> > +    arg_parser.add_argument("-k", "--vmlinux",
-> > +                            help=3D"Set path to vmlinux file. Omit to =
-autodetect")
-> > +    arg_parser.add_argument("-d", "--objdump", nargs=3D"?", const=3Dde=
-fault_objdump(),
-> > +                            help=3D"Show disassembly. Can also be used=
- to change the objdump path")
-> > +    arg_parser.add_argument("-v", "--verbose", action=3D"store_true", =
-help=3D"Enable debugging log")
-> > +    arg_parser.add_argument("--start-time", type=3Dint_arg,
-> > +                            help=3D"Monotonic clock time of sample to =
-start from.")
-> > +    arg_parser.add_argument("--stop-time", type=3Dint_arg,
-> > +                            help=3D"Monotonic clock time of sample to =
-stop at.")
-> > +    arg_parser.add_argument("--itrace", default=3D"b",
-> > +                            help=3D"Instruction tracing options.")
-> > +    arg_parser.add_argument("--start-sample", type=3Dint_arg,
-> > +                            help=3D"Index of sample to start from.")
-> > +    arg_parser.add_argument("--stop-sample", type=3Dint_arg,
-> > +                            help=3D"Index of sample to stop at.")
-> > +
-> > +    parsed_options =3D arg_parser.parse_args()
-> > +    if (parsed_options.start_time is not None and parsed_options.stop_=
-time is not None and
-> > +            parsed_options.start_time >=3D parsed_options.stop_time):
-> > +        print("--start-time must less than --stop-time")
-> > +        sys.exit(2)
-> > +    if (parsed_options.start_sample is not None and parsed_options.sto=
-p_sample is not None and
-> > +            parsed_options.start_sample >=3D parsed_options.stop_sampl=
-e):
-> > +        print("--start-sample must less than --stop-sample")
-> > +        sys.exit(2)
-> > +
-> > +    td =3D TraceDisasm(parsed_options)
-> > +    td.run()
-> > diff --git a/tools/perf/tests/shell/coresight/test_arm_coresight_disasm=
-.sh b/tools/perf/tests/shell/coresight/test_arm_coresight_disasm.sh
-> > index f3ebad596378..51bcbd78f460 100755
-> > --- a/tools/perf/tests/shell/coresight/test_arm_coresight_disasm.sh
-> > +++ b/tools/perf/tests/shell/coresight/test_arm_coresight_disasm.sh
-> > @@ -1,6 +1,6 @@
-> >   #!/bin/bash
-> > -# Check Arm CoreSight disassembly script completes without errors (exc=
-lusive)
-> >   # SPDX-License-Identifier: GPL-2.0
-> > +# Check Arm CoreSight disassembly script completes without errors (exc=
-lusive)
-> >
-> >   # The disassembly script reconstructs ranges of instructions and give=
-s these to objdump to
-> >   # decode. objdump doesn't like ranges that go backwards, but these ar=
-e a good indication
-> > @@ -22,9 +22,21 @@ glb_err=3D1
-> >
-> >   perfdata_dir=3D$(mktemp -d /tmp/__perf_test.perf.data.XXXXX)
-> >   perfdata=3D${perfdata_dir}/perf.data
-> > +perfdata2=3D${perfdata_dir}/perf2.data
-> >   file=3D$(mktemp /tmp/temporary_file.XXXXX)
-> >   # Relative path works whether it's installed or running from repo
-> > -script_path=3D$(dirname "$0")/../../../scripts/python/arm-cs-trace-dis=
-asm.py
-> > +if [ -n "$PERF_EXEC_PATH" ] && [ -e "$PERF_EXEC_PATH/python/arm-cs-tra=
-ce-disasm.py" ]; then
-> > +     script_path=3D"$PERF_EXEC_PATH/python/arm-cs-trace-disasm.py"
-> > +else
-> > +     script_path=3D$(dirname "$0")/../../../python/arm-cs-trace-disasm=
-.py
-> > +fi
-> > +
-> > +# shellcheck source=3Dlib/setup_python.sh
-> > +. "$(dirname "$0")"/../lib/setup_python.sh
-> > +$PYTHON -c "import perf" 2>/dev/null || {
-> > +     echo "Skipping test, perf python module not found"
-> > +     exit 2
-> > +}
-> >
-> >   cleanup_files()
-> >   {
-> > @@ -44,8 +56,8 @@ branch_search=3D'[[:space:]](bl|b(\.(eq|ne|cs|cc|mi|p=
-l|vs|vc|hi|ls|ge|lt|gt|le|al)
-> >   if [ "$(id -u)" =3D=3D 0 ] && [ -e /proc/kcore ]; then
-> >       echo "Testing kernel disassembly"
-> >       perf record -o ${perfdata} -e cs_etm//k --kcore -Se -m,64K -- tou=
-ch $file > /dev/null 2>&1
-> > -     perf script -i ${perfdata} --itrace=3Db -s python:${script_path} =
--- \
-> > -             -d --stop-sample=3D2 -k ${perfdata}/kcore_dir/kcore 2> /d=
-ev/null > ${file}
-> > +     $PYTHON ${script_path} -i ${perfdata} --itrace=3Db -d --stop-samp=
-le=3D2 \
-> > +             -k ${perfdata}/kcore_dir/kcore 2> /dev/null > ${file}
-> >       grep -q -E ${branch_search} ${file}
-> >       echo "Found kernel branches"
-> >   else
-> > @@ -56,8 +68,8 @@ fi
-> >   ## Test user ##
-> >   echo "Testing userspace disassembly"
-> >   perf record -o ${perfdata} -e cs_etm//u -Se -m,64K -- touch $file > /=
-dev/null 2>&1
-> > -perf script -i ${perfdata} --itrace=3Db -s python:${script_path} -- \
-> > -     -d --stop-sample=3D2 2> /dev/null > ${file}
-> > +perf inject --itrace=3Db -i ${perfdata} -o ${perfdata2}
-> > +$PYTHON ${script_path} -i ${perfdata2} -d --stop-sample=3D2 2> /dev/nu=
-ll > ${file}
-> >   grep -q -E ${branch_search} ${file}
-> >   echo "Found userspace branches"
-> >
-> > diff --git a/tools/perf/tests/shell/lib/setup_python.sh b/tools/perf/te=
-sts/shell/lib/setup_python.sh
-> > index 2173215a0517..220d9663f81a 100644
-> > --- a/tools/perf/tests/shell/lib/setup_python.sh
-> > +++ b/tools/perf/tests/shell/lib/setup_python.sh
-> > @@ -18,6 +18,10 @@ fi
-> >   # Set PYTHONPATH to find the in-tree built perf.so first, avoiding sy=
-stem-wide perf.so
-> >   if [ -n "$PERF_EXEC_PATH" ] && [ -d "$PERF_EXEC_PATH/python" ]; then
-> >     PYTHONPATH_DIR=3D"$PERF_EXEC_PATH/python"
-> > +elif [ -n "${BASH_SOURCE[0]}" ] && [ -d "$(dirname "${BASH_SOURCE[0]}"=
-)/../../../python" ]; then
-> > +  PYTHONPATH_DIR=3D"$(dirname "${BASH_SOURCE[0]}")/../../../python"
-> > +elif [ -d "$(dirname "$0")/../../../python" ]; then
-> > +  PYTHONPATH_DIR=3D"$(dirname "$0")/../../../python"
-> >   elif [ -d "$(dirname "$0")/../../python" ]; then
-> >     PYTHONPATH_DIR=3D"$(dirname "$0")/../../python"
-> >   elif [ -d "$(dirname "$0")/../python" ]; then
->
-> Reviewed-by: James Clark <james.clark@linaro.org>
+perf trace's BPF augmentation attaches to raw_syscalls:sys_enter and
+raw_syscalls:sys_exit system wide, and used the program return value to
+decide whether a syscall was interesting. Returning 0 from a
+BPF_PROG_TYPE_TRACEPOINT program makes perf_trace_run_bpf_submit() drop
+the event for every listener on that tracepoint, not just for the perf
+trace that installed the program. Any concurrent perf trace, perf record
+or ftrace session watching raw_syscalls therefore lost events, which is
+one of the reasons so many of the perf trace and perf probe shell tests
+had to be marked (exclusive) and run on their own.
 
-Thanks! v3 has some Sashiko related nits cleaned up in this code, but
-I'll keep the reviewed-by tag. I hope that's okay.
+Patches 1 to 6 are independent fixes to the code the rest of the series
+goes on to rework or to rely on.
 
-Thanks,
-Ian
+Patches 7 to 10 fix how an augmented argument is read back. They skip
+the __data_loc internal tracepoint fields that syscalls:sys_enter_*
+gained in 6.19 for syscalls only, bounds check every read of an
+augmented payload, and stop the ring buffer padding at the end of a
+sample being offered to the beautifiers as one. Patch 8 fixes the
+SIGSEGV Arnaldo hit testing v4.
+
+Patches 11 to 15 fix perf trace's filtering. They stop the return value
+being used as a filter and do the filtering in BPF maps instead, stop
+the sys_exit program array tail calling a sys_enter augmenter, and
+replace the userspace PERF_RECORD_FORK/PERF_RECORD_EXIT bookkeeping with
+BTF-typed raw tracepoint programs on sched_process_{fork,exit,exec}. A
+task is then registered before its first syscall and evicted in
+do_exit(), rather than whenever userspace next drains the ring buffer.
+
+Patches 16 to 23 deal with the tests. Several collided with each other
+through global state rather than through perf trace: fixed probe names,
+clear_all_probes() disabling every tracepoint on the system, and perf
+trace's hardcoded "probe:vfs_getname*" wildcard pinning probes belonging
+to other tests. With those scoped to a pid they can drop (exclusive) and
+run in parallel again.
+
+Patches 1 and 2 fix pre-existing bugs that stand on their own and can be
+applied ahead of the rest. Only patch 9 depends on them.
+
+Tested on x86_64. The trace and probe tests pass under 'perf test -r3',
+which runs the repeats concurrently. Every patch builds individually,
+and the series also builds with BUILD_BPF_SKEL=0.
+
+Changes since v4:
+- New patch 1 fills in the size in the augmented argument header in the
+  four augmenters that left it unset: sendto, perf_event_open,
+  nanosleep and clock_nanosleep. They all build a payload for a fixed
+  size type, and the beautifiers cast it directly rather than reading
+  the length, so nothing has needed it so far. Patch 9 starts checking
+  it. While there, report a failed bpf_probe_read_user() rather than
+  claiming success for it: the payload length is set to zero and the
+  error recorded in the header, so userspace falls back to printing the
+  raw pointer instead of whatever the per-CPU scratch buffer last held.
+- New patch 2 includes the augmented argument header in nanosleep's
+  payload length. It used sizeof(augmented_args->args) where its three
+  siblings use sizeof(u64) + sizeof(augmented_args->args), so the
+  record was eight bytes short of the struct timespec it carries and
+  tv_nsec was printed half from the ring buffer.
+- Patch 7 only skips the internal tracepoint fields when it is setting
+  up a syscall. syscall_arg_fmt__init_array() is also called for an
+  ordinary tracepoint by evsel__init_tp_arg_scnprintf(), and
+  trace__fprintf_tp_fields() walks that array in lockstep with the
+  field list, so packing the entries shifted every formatter along by
+  one from the field it belongs to. 'perf trace -e
+  sched:sched_process_exec' printed its filename with the pid
+  beautifier. The syscall path indexes the array packed and is
+  unaffected, so the two callers now ask for what each of them needs.
+- New patch 8 bounds checks an augmented argument before reading it.
+  This is the SIGSEGV Arnaldo reported on v4. The check
+  btf_struct_scnprintf() already had is lifted into a shared
+  syscall_arg__augmented_args_valid() in beauty.h and used at every
+  site that reads an augmented payload, in particular
+  syscall_arg__scnprintf_buf(), which looped to a length taken from the
+  payload with nothing bounding it and walked off the end of the 8K
+  argbuf in bss.
+- New patch 9 bounds the beautifiers that read a fixed size type out of
+  a payload that may be shorter than it. perf_event_attr__fprintf()
+  always reads a whole struct perf_event_attr, so the payload is copied
+  into a zero padded local rather than read in place, and the AF_LOCAL
+  socket address is printed with a length from the payload rather than
+  as a string it need not be. Split out from patch 8 so the crash fix
+  stays minimal.
+- New patch 10 recognises the padding at the end of a sample for what
+  it is. perf_sample_save_raw_data() rounds the raw size up to eight
+  bytes and __output_skip() advances over the padding rather than
+  zeroing it, so a 64 byte struct syscall_enter_args comes back as 68
+  bytes and userspace took the four stale bytes for an augmented
+  argument. A trailing run shorter than a struct augmented_arg cannot
+  be one.
+- Patch 13 notes that a descendant added to pids_filtered by
+  sched_process_fork() can still have a sys_exit printed without a
+  matching enter. The raw_syscalls:sys_exit evsel is still in the
+  evlist and its tracepoint filter is set once, so it never learns of
+  the descendants, and a tracepoint program can only suppress an event
+  by vetoing it, which is what this series removes. It needs
+  --filter-pids naming a process that then forks. Routing sys_exit
+  through __augmented_syscalls__ the way sys_enter now is would close
+  it.
+- Patch 14 notes that a thread the target creates during the attach
+  window is still missed by 'perf trace -t'. The re-enumeration reads
+  /proc/<tid>/task/<tid>/children, which lists forked processes, and
+  copy_process() makes a CLONE_THREAD child a sibling of its creator
+  rather than a child of it. /proc does not record which task in a
+  group created which, so such a sibling cannot be told apart from one
+  -t was deliberately pointed away from.
+
+Changes since v3:
+- New patch 3 returns -ENOMEM rather than -1 from evsel__set_filter(),
+  evsel__append_filter(), evlist__set_tp_filter() and
+  evlist__append_tp_filter(). An allocation is the only thing that can
+  fail in any of them, and patch 7 goes on to print what they return,
+  where -1 negated is EPERM and a failure to allocate would have been
+  reported as "Operation not permitted".
+- Patch 5 sets sc->args only once the arg_fmt array that is indexed
+  alongside it has been allocated. Publishing the field first left a
+  syscall with args set and arg_fmt NULL, and since sc->name is already
+  set by then a later syscall__read_info() returns success without
+  retrying the allocation, leaving syscall_arg_fmt__mask_val() to
+  dereference NULL.
+- Patch 7 adds the raw_syscalls tracepoints in trace__run() only if
+  they are not in the evlist already, and stops ignoring the result of
+  trace__add_syscall_newtp(). cmd_trace() adds them before it creates
+  the bpf-output event, and on the paths where that creation fails they
+  were added a second time, giving the session two enter and two exit
+  evsels for the same pair of tracepoints.
+- Patch 7 no longer abandons the session when a target does not fit in
+  the pid map. bpf_map__update_elem() answers -E2BIG once max_entries
+  keys are present, so a target with more threads than the map has room
+  for took perf trace down with it, on exactly the large workloads
+  where there is least else to reach for. The tasks that fit are added
+  and a warning says how many did not.
+- Patch 9 includes <sys/types.h> for the pid_t it uses rather than
+  relying on the include chain to drag it in.
+- Patch 9 no longer ends the session when the target has already
+  exited. thread_map__new_by_pid() fails with ENOENT once
+  /proc/<pid>/task is gone, which is the ordinary outcome of
+  'perf trace -p' on a short lived process, so only ENOMEM is now
+  propagated and everything else is logged and stepped over.
+- Patch 9 reads /proc once per thread group instead of once per thread.
+  'perf trace -p' names every thread of the target in the thread map
+  and /proc/<tid>/task lists the whole group whichever thread it is
+  asked through, so the enumeration was quadratic in the number of
+  threads. On a 64 thread target it went from 65 directory reads and
+  4097 entries to 2 and 65, for the same set of pids.
+- New patch 10 removes from the BPF maps the tasks that died before
+  userspace got round to writing them there. sched_process_exit() can
+  only delete a pid that is already in the map, so a target that exits
+  during startup leaves an entry behind for the rest of the session,
+  and since pids are reused an unrelated task then gets traced, or
+  silently filtered out, in its place. The map is walked with the
+  cursor left on a task found alive, which is one the walk has decided
+  to keep, so its own deletions can never leave the cursor on a key
+  that htab_map_get_next_key() will answer by starting the walk over.
+
+Changes since v2:
+- Rebased onto the current perf-tools-next.
+- Patch 1 also includes <assert.h>, for the assert() in
+  augmented_syscalls__create_bpf_output().
+- New patch 2 makes evsel__put_and_free_priv() free the whole
+  evsel_trace. It only zfree()d the struct, leaking the syscall_arg_fmt
+  array hanging off it. No caller can reach that today, but patch 6
+  adds one that discards a fully set up evsel.
+- Patch 6 identifies the evsel to drop from the evlist by comparing
+  against trace.syscalls.events.sys_enter instead of a strstr() for
+  "syscalls:sys_enter". That substring also matches the per syscall
+  syscalls:sys_enter_SYSCALL tracepoints, so a user asking for one of
+  those by name would have had it removed from the evlist, and
+  __augmented_syscalls__ described with its tracefs format rather than
+  the raw tracepoint's.
+- Patch 6 reports a failure to program the pid filters with the error
+  that caused it. trace__run() sent everything trace__set_filter_pids()
+  returned to out_error_mem, which prints "Not enough memory to run!".
+  That was already a guess, and a wrong one now the function writes BPF
+  maps too.
+- Patch 7 moves the pid across in sched_process_exec() by deleting the
+  old key before inserting the new one. The move is only a rename, but
+  holding both keys at once needs a spare slot, and on a full map the
+  insert failed with -E2BIG while the delete still succeeded, losing
+  the task instead of moving it.
+- Patch 7 no longer claims that a task forked during the attach window
+  is still traced unaugmented. That was wrong: cmd_trace() removes the
+  sys_enter evsel once the bpf-output event exists, so
+  __augmented_syscalls__ is the only source of enter events and such a
+  task is not reported at all. Describe what is really lost, why the
+  tgid fallback is not kept as a safety net for it, note that only
+  'perf trace -p' is exposed, and that closing it needs the target's
+  descendants re-enumerated from /proc after the attach.
+- Patch 7 drops the parent tgid test from sched_process_fork(), so a
+  child inherits from the pid of the thread that called clone() and
+  from nothing else. The lookups only ever match a task's own pid, and
+  every thread of a -p target is enumerated from /proc/<pid>/task and
+  inserted in its own right, so the tgid added no reach. What it did
+  add was a child inheriting from a thread that is not traced itself,
+  such as a sibling of the thread 'perf trace -t' selected.
+- Patch 7 ends the session with the error that caused it when the BPF
+  programs cannot be attached, rather than printing a bare errno left
+  over from unwinding the attach. There is nothing to fall back to at
+  that point, cmd_trace() has already built the evlist around
+  __augmented_syscalls__ and dropped the sys_enter evsel, and the code
+  being replaced did not fall back either: it ignored the result of
+  augmented_raw_syscalls_bpf__attach() altogether.
+- New patch 8 reads the target out of /proc again once the BPF programs
+  are attached, so a task the target created while perf trace was
+  starting up is traced rather than missed for the whole session. This
+  is the gap patch 7 describes and left for later. It covers the
+  target's new threads and, through task->children, anything it or they
+  forked, to any depth. What is left is a task that made syscalls
+  between sys_enter going live and being added to the map, which is
+  momentary rather than lasting for the session.
+- Patch 9 bails out if mktemp fails rather than carrying on with an
+  empty $tmpdir. cd rejects the null directory, and the rmdir that was
+  meant to undo the mktemp then failed to remove '' instead. Its
+  cleanup() also no longer exits when it cannot cd out of the temporary
+  directory, which would have skipped removing it. The removal takes an
+  absolute path and does not need the cd to have succeeded.
+- Patch 10 now narrows the disable in clear_all_probes() to the probes
+  themselves rather than dropping it. Clearing kprobe_events or
+  uprobe_events is all or nothing: dyn_events_release_all() returns
+  -EBUSY without removing anything if it finds a probe that is still
+  enabled, so simply removing the write could leave stale probes behind
+  to collide with the next run. The set to disable is read from the
+  kprobe_events and uprobe_events listings rather than assumed to be
+  the groups perf uses, since a probe left enabled in another group,
+  such as the default kprobes group used when kprobe_events is written
+  directly, would abort the clear just the same.
+- Patch 11 deletes the probes from an exit trap as well as on the way
+  out. A pid scoped name is never seen again, so a run interrupted
+  before cleanup_probe_vfs_getname() left its probes behind for good,
+  a set per run, where the fixed name was at least found and reused by
+  the next run.
+- Patch 12 retries deleting the uprobe. Deletion writes uprobe_events
+  just as addition does and can lose the same race with a concurrent
+  test, and because the event name is now pid scoped a probe left
+  behind is never overwritten by a later run. It also bails out if
+  mktemp fails and quotes the path in the emptiness check, which
+  unquoted would have tested the string "-s" and reported success.
+- Patch 13 prints the tail of the output rather than the head. The
+  pattern it matches only appears in the summary, which is printed
+  after any trace output, so the head of the file is not the part that
+  failed to match.
+
+Changes since v1:
+- New patch 1 includes <sys/types.h> and <string.h> for the pid_t and
+  strcmp() uses that were relying on the include chain happening to
+  drag them in, which does not hold on libcs such as musl.
+- Patch 6 no longer returns success when the event qualifier filter
+  string fails to allocate. err now defaults to 0 because either
+  tracepoint may legitimately be absent, so the ENOMEM path has to set
+  the error itself rather than rely on that default. It also includes
+  <stdbool.h> for the bool parameters it adds to trace_augment.h.
+- Patch 9 removes the temporary directory if the cd into it fails.
+  That happens before the cleanup trap is installed, so the directory
+  would otherwise be left behind in /tmp.
+
+Ian Rogers (23):
+  perf trace: Set the augmented arg header in the augmenters that omit
+    it
+  perf trace: Include the augmented arg header in nanosleep's payload
+    length
+  perf trace: Include the headers declaring pid_t, strcmp and assert
+  perf trace: Free the whole evsel_trace in evsel__put_and_free_priv
+  perf evsel: Report an allocation failure as ENOMEM when setting
+    filters
+  perf trace: Start BPF summary before starting workload
+  perf trace: Skip internal tracepoint fields in formatting and beauty
+    map
+  perf trace: Bounds check augmented arguments before reading them
+  perf trace: Bound the fixed size augmented argument beautifiers
+  perf trace: Do not read sample padding as an augmented argument
+  perf trace: Do not set unaugmented BPF program on sys_exit map
+  perf trace: Filter events in BPF and avoid tracepoint vetoes
+  perf trace: Handle fork and exit directly in BPF filter maps
+  perf trace: Enumerate the target again once BPF is attached
+  perf trace: Drop targets that died before they were filtered
+  perf test test_task_analyzer: Isolate in temporary directory and make
+    non-exclusive
+  perf test common: Only disable probes in clear_all_probes
+  perf test probe_vfs_getname: Scope probe name to PID and make
+    non-exclusive
+  perf test record+probe_libc_inet_pton: Scope event to PID, add
+    retries, and make non-exclusive
+  perf test trace_summary: Improve error diagnostics
+  perf test trace_btf_general: Drop --max-events=1 and make
+    non-exclusive
+  perf test trace_summary: Make non-exclusive
+  perf test uprobe_from_different_cu: Scope probe name to PID
+
+ tools/perf/Documentation/perf-trace.txt       |   5 +
+ tools/perf/builtin-trace.c                    | 863 +++++++++++++++---
+ tools/perf/tests/shell/common/init.sh         |  33 +-
+ .../perf/tests/shell/lib/probe_vfs_getname.sh |  51 +-
+ tools/perf/tests/shell/probe_vfs_getname.sh   |   3 +-
+ .../shell/record+probe_libc_inet_pton.sh      | 107 ++-
+ .../shell/record+script_probe_vfs_getname.sh  |  18 +-
+ tools/perf/tests/shell/test_task_analyzer.sh  |  20 +-
+ .../shell/test_uprobe_from_different_cu.sh    |  11 +-
+ .../tests/shell/trace+probe_vfs_getname.sh    |   9 +
+ tools/perf/tests/shell/trace_btf_general.sh   |   8 +-
+ tools/perf/tests/shell/trace_summary.sh       |  16 +-
+ tools/perf/trace/beauty/beauty.h              |  43 +
+ tools/perf/trace/beauty/perf_event_open.c     |  38 +-
+ tools/perf/trace/beauty/sockaddr.c            |  55 +-
+ tools/perf/trace/beauty/timespec.c            |   2 +-
+ .../bpf_skel/augmented_raw_syscalls.bpf.c     | 407 ++++++++-
+ tools/perf/util/bpf_trace_augment.c           | 288 +++++-
+ tools/perf/util/evlist.c                      |  12 +-
+ tools/perf/util/evsel.c                       |   4 +-
+ tools/perf/util/trace_augment.h               |  33 +-
+ 21 files changed, 1801 insertions(+), 225 deletions(-)
+
+
+base-commit: 9db4e9d6cc7c7d318fb6d6bb73abe3fed27385a8
+-- 
+2.56.0.rc1.315.gc6ed9934b7-goog
+
