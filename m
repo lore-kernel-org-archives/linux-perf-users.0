@@ -1,48 +1,48 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E58953A89D;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59ADD519DE7;
 	Wed, 23 Sep 2026 15:57:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790179038; cv=none; b=rROsxPkZCcW1Y/kZDL2gSmz7zvbxo9XAhIRC5y4ME7kWMKrZp61XiYEM30d3XEFTZtu+lTVWAFVJ+GSm8kzoMt6r6iWyJZwsGCUmSjnlK3Bzqgc9yG8xmR9rC9KpWIFaMT5fGVGkcJZcg2sZI98yVJiY2FiYBYFShRgJon//4Go=
+	t=1790179038; cv=none; b=CuJC6Q97bO30Jyzuus3Q/72kZWqugiF/aOqNpAwZN00wQ6tQRBkkTrjSQEx5qxrJg+YLfkUG/OAUQgo1y9gbGXA/YlBAQdzvlE145/eHgAkwu7GGQxYhrW/ZJ/WC9cMbrk2M63G/ns8gWxdcfPMhm3wSrlGYYdcQ9esawUFeH2A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1790179038; c=relaxed/simple;
-	bh=iZdDlLmSP1xQyThCvFt2E8EEhM7YwNXqb2G0ddHAE2Y=;
+	bh=w8TbIiOpQ7bE19y47kGM0xVJA3lsoPU/laYEfHXkYCw=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=mecW0jgGi/cGjzyMLYudUkKQBRil1rHvBt07XwEbb3BEvFErzy88wPoRU2VFaVX4qF2wkWFaqfwiUBGHIBKYybBygg8LLYfFrVqCJiXK4F0vgKsJ/ZBI7K91NXF7+Bt/pG8frXW29Ml1x2Pl4XLvw2eMgy6hJZrk+yLzu44TqbY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BIfQP9ME; arc=none smtp.client-ip=192.198.163.16
+	 MIME-Version; b=qp9sZ8E4OqWWnqZreXdBQxlSVzZ8NI5iL1ISiZ2OcNtsnJ5xIcoykfjVoLNhgNdr/kSTO4B+goutYuxabLs3Ydk9JIx32dt+1slw+OQJHz5As3r93MqeGvuPVUyUxAnLALefPVZqgnmi//9/kW14azWSY7nTlB+Jz1gpA/rZs5g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mQyQmZxi; arc=none smtp.client-ip=192.198.163.16
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BIfQP9ME"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mQyQmZxi"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
   t=1790179034; x=1821715034;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=iZdDlLmSP1xQyThCvFt2E8EEhM7YwNXqb2G0ddHAE2Y=;
-  b=BIfQP9ME5AQXkP4Sr/8puxwuMfF3PKZWAQf6N4MM8hcRLwGGW1AhbeXI
-   eZRHZDS5JEZZaMwAXRLVHZinXMBK9qkn8ibW5sZf2OgF2XBfAOjuBMD53
-   KOt6YvxVsnWzU50Wu/gPlJK/slTJemfj0uJMEDVGp1K8/fIOK1TXC7XZJ
-   HmFwNPIRjp+7D79fVjeKHctIBBRQZu2VXXr2JdopEtZGHvfAFUKCJ7lhw
-   4eUwaXV94tzbbdPLH1tVvSUGsxyJQ562MUCc0nI0PIX0f7HB2X2WG9UFQ
-   LM9/SRmdRkZ7aLhNRY+c+fC+tJbAuCn+fzF1wH6hass2tDp2HCdrROjLi
+  bh=w8TbIiOpQ7bE19y47kGM0xVJA3lsoPU/laYEfHXkYCw=;
+  b=mQyQmZxiUxr/uSLEUpEYSaoYZcdvtTc7Va4h6AFpCeWXxrFj/LWpS9Ig
+   Ybe/NS35hfDPsFwRePMXWNDWd7Cusywsh0ex3ZQL/VpVKeKwiWQzzRfzS
+   n/EcYEltP1+wIcDKnYGxW7cmDA7iXrS7oIxMGD7aWquMoWMpN63C8r3EK
+   R/rZ/AYwqq00vbkw0gkmbF5IxPKaB9KcDWpreqKsg75F3oMd7SSRLvLgL
+   a8UWoSuISy5QGLiNqgnZ+tkQF+2WvIWnjlHf2JtmOgUfSs2pRNqIck14o
+   VGLcWB6qP9Vo/WHuLWOojP/xcwVwNu+mKYlraRk75vKyMXG89iENZttuS
    g==;
-X-CSE-ConnectionGUID: Ul1Jd+krQui6HH3dorgfmQ==
-X-CSE-MsgGUID: +GPcWDZ/Q/2zfzZ1G7IiHA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11914"; a="78445945"
+X-CSE-ConnectionGUID: 032twSy+Q+Cwj0Yi1e3UzQ==
+X-CSE-MsgGUID: sDOqhqbbSaSvs6YgBFdtog==
+X-IronPort-AV: E=McAfee;i="6800,10657,11914"; a="78445954"
 X-IronPort-AV: E=Sophos;i="6.27,118,1787036400"; 
-   d="scan'208";a="78445945"
+   d="scan'208";a="78445954"
 Received: from fmviesa013.fm.intel.com ([10.60.135.153])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Sep 2026 08:57:12 -0700
-X-CSE-ConnectionGUID: qsM8CERTSvyx1+KPH4Blcw==
-X-CSE-MsgGUID: 6GpsAIpmQ3iFx+c/6PoDBQ==
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Sep 2026 08:57:13 -0700
+X-CSE-ConnectionGUID: O5ZFs3UvR5KsiuLK0tu5Gg==
+X-CSE-MsgGUID: 5epTutgBQS++SDUak7zeAg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.27,118,1787036400"; 
-   d="scan'208";a="4935324"
+   d="scan'208";a="4935333"
 Received: from rosenzwe-mobl1.amr.corp.intel.com (HELO tfalcon-desk.attlocal.net) ([10.124.221.119])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Sep 2026 08:57:11 -0700
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Sep 2026 08:57:12 -0700
 From: Thomas Falcon <thomas.falcon@intel.com>
 To: Dapeng Mi <dapeng1.mi@linux.intel.com>
 Cc: linux-perf-users@vger.kernel.org,
@@ -57,9 +57,9 @@ Cc: linux-perf-users@vger.kernel.org,
 	Ian Rogers <irogers@google.com>,
 	Adrian Hunter <adrian.hunter@intel.com>,
 	James Clark <james.clark@linaro.org>
-Subject: [PATCH v11 3/6] perf header: Support memory ranges
-Date: Wed, 23 Sep 2026 10:57:00 -0500
-Message-ID: <20260923155703.34814-4-thomas.falcon@intel.com>
+Subject: [PATCH v11 4/6] perf tools: Show memory region in perf-c2c subcommand
+Date: Wed, 23 Sep 2026 10:57:01 -0500
+Message-ID: <20260923155703.34814-5-thomas.falcon@intel.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20260923155703.34814-1-thomas.falcon@intel.com>
 References: <20260923155703.34814-1-thomas.falcon@intel.com>
@@ -71,425 +71,318 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Memory ranges were created to track different types of memory,
-such as persistent, high bandwidth, or CXL-attached, that may
-be present on a system for performance monitoring and resource
-control purposes.
+From: Dapeng Mi <dapeng1.mi@linux.intel.com>
 
-Memory range data are parsed from the ACPI MRRM table and exposed
-to userspace tools via sysfs [1]. Memory range data is read from:
+Add memory region field to the cacheline list view to help users
+identify the memory region to which the cacheline belongs. The memory
+region field was included with the introduction of support for the
+Off-module Response facility (OMR) [1] in Intel's Diamond Rapids and
+Nova Lake architectures.
 
-	/sys/firmware/acpi/memory_ranges/rangeX
+An example of the new perf c2c output including the memory region
+field is shown below:
 
-With the following attributes:
+# Index             Address  Region  Node  PA cnt     Hitm    Total  LclHitm  RmtHitm  records    Loads
+# .....  ..................  ......  ....  ......  .......  .......  .......  .......  .......  .......
+#
+      0  0xffffffff84eb0040     N/A     0    1205   23.25%      544      544        0     1677     1677
+      1  0xffffffff84f03a80     N/A     0       1   18.12%      424      424        0      585      585
+[...]
+     19  0xffffffff845bc840   Mem-0     0      13    0.30%        7        7        0       31       31
+     20  0xff3bbba284520a00     N/A     0      10    0.26%        6        6        0       11       11
+     21  0xff3bbbe0bc833500     N/A     0      24    0.26%        6        6        0       30       30
 
-	u64 base;
-	u64 length;
-	int node;
-	u8  local_region_id;
-	u8  remote_region_id;
-
-Read memory range data from sysfs if present and save it in
-the header of the perf data file under a new feature bit,
-HEADER_MEMORY_RANGES (35). Memory range data can be viewed with the
---header or --header-only options of perf-report and perf-script.
-
-Example output:
- # memory ranges (nr 5):
- # range0: [0x0000000000000000-0x00000000bfffffff], node = 0, local_region_id = 0, remote_region_id = 255
- # range1: [0x0000000100000000-0x000000203fffffff], node = 0, local_region_id = 0, remote_region_id = 255
- # range2: [0x0000008000000000-0x0000027fffffffff], node = -2, local_region_id = 1, remote_region_id = 255
- # range3: [0x0000028000000000-0x0000047fffffffff], node = -2, local_region_id = 1, remote_region_id = 255
- # range4: [0x0000048000000000-0x000004ffffffffff], node = -2, local_region_id = 1, remote_region_id = 255
-
-[1]: https://lore.kernel.org/lkml/20250505173819.419271-1-tony.luck@intel.com/
+[1]: https://lore.kernel.org/all/20260114011750.350569-1-dapeng1.mi@linux.intel.com/
 
 Assisted-by: Sashiko:gemini-3.1-pro-preview
 Assisted-by: GitHub-Copilot:claude-opus-4-8
 Reviewed-by: Ian Rogers <irogers@google.com>
 Reviewed-by: Namhyung Kim <namhyung@kernel.org>
+Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
+Co-developed-by: Thomas Falcon <thomas.falcon@intel.com>
 Signed-off-by: Thomas Falcon <thomas.falcon@intel.com>
 ---
-v10:
--- Add missing #include <fcntl.h> for open/openat/O_DIRECTORY (Sashiko)
--- Fix up incorrectly formatted comment in process_memory_ranges()
-v4:
--- Fixed bounds checking for local and remote region IDs in
-   memory_range__read(), which made region "255" invalid
-v3:
--- Added missing ff->size check in process_memory_ranges()
--- used open/openat to read memory range sysfs files in memory_range__read()
--- Removed path name and file name buffers in memory_range__read(),
-   instead pass path name from as a parameter from memory_range__parse()
--- use calloc instead of zalloc in memory_range__parse() and
-   process_memory_ranges()
--- Removed redundant check for existance of memory range directory in
-   memory_range__read()
--- Included examples of memory range output in commit message
-v2:
--- Added check for NULL return of sysfs__mountpoint() when parsing
-   memory ranges in sysfs
--- increased MAX_MEMORY_RANGES sanity check from 64 to 256 based on
-   ACPI MRRM table implementation in Linux kernel
--- added comment for MAX_MEMORY_RANGES to clarify that it is a sanity check
-   for malformed perf.data files
--- removed a line of code was removed from util/env.h but was added back in
-   v1 due to bad rebase
+v11: perf-c2c: revert to only recording a real memory region for a
+     cacheline
+v10: only update mem_region for real cache/memory regions so N/A samples
+     don't overwrite a valid region; add #include <stdio.h> for asprintf
+     (Sashiko)
+v9: Update perf-c2c to include cache region reporting (Dapeng Mi)
+v8: Update developer tags and commit message with real example
+    output (Dapeng Mi)
+v7: fix output_str allocation error handling which introduced
+    a memory leak (Sashiko)
+v6: rebased onto 7.3-rc1
+v5: make the cacheline header span and ui_quirks() width
+    fixup depend on memory-region availability (Namhyung Kim)
+v4: correctly handle output_str memory allocation failure
+v3: make memory region reporting conditional on feature bit
 ---
- .../Documentation/perf.data-file-format.txt   |  13 ++
- tools/perf/builtin-inject.c                   |   1 +
- tools/perf/util/env.c                         |   1 +
- tools/perf/util/env.h                         |  10 +
- tools/perf/util/header.c                      | 205 ++++++++++++++++++
- tools/perf/util/header.h                      |   1 +
- 6 files changed, 231 insertions(+)
+ tools/perf/builtin-c2c.c | 114 +++++++++++++++++++++++++++++++++++----
+ tools/perf/util/c2c.h    |   1 +
+ 2 files changed, 104 insertions(+), 11 deletions(-)
 
-diff --git a/tools/perf/Documentation/perf.data-file-format.txt b/tools/perf/Documentation/perf.data-file-format.txt
-index b90cba9168f8..1f8e7d8e9ae2 100644
---- a/tools/perf/Documentation/perf.data-file-format.txt
-+++ b/tools/perf/Documentation/perf.data-file-format.txt
-@@ -478,6 +478,19 @@ The size of the cacheline in bytes. Format:
- 
- 	unsigned int cln_size;
- 
-+	HEADER_MEMORY_RANGES = 35,
-+
-+List of memory ranges. The format of the data is as below.
-+
-+u32 nr_memory_ranges;
-+struct memory_range {
-+	u64 base;
-+	u64 length;
-+	int node;
-+	u8 local_region_id;
-+	u8 remote_region_id;
-+}; [nr_memory_ranges]
-+
- 	other bits are reserved and should be ignored for now
- 	HEADER_FEAT_BITS	= 256,
- 
-diff --git a/tools/perf/builtin-inject.c b/tools/perf/builtin-inject.c
-index 70bbfad5653e..169617a884d3 100644
---- a/tools/perf/builtin-inject.c
-+++ b/tools/perf/builtin-inject.c
-@@ -2306,6 +2306,7 @@ static bool keep_feat(struct perf_inject *inject, int feat)
- 	case HEADER_PMU_CAPS:
- 	case HEADER_CPU_DOMAIN_INFO:
- 	case HEADER_CLN_SIZE:
-+	case HEADER_MEMORY_RANGES:
- 		return true;
- 	/* Information that can be updated */
- 	case HEADER_BUILD_ID:
-diff --git a/tools/perf/util/env.c b/tools/perf/util/env.c
-index c0e2b9d5f0b2..50993b0dedc5 100644
---- a/tools/perf/util/env.c
-+++ b/tools/perf/util/env.c
-@@ -297,6 +297,7 @@ void perf_env__exit(struct perf_env *env)
- 		zfree(&env->pmu_caps[i].pmu_name);
- 	}
- 	zfree(&env->pmu_caps);
-+	zfree(&env->memory_ranges);
- 	free_cpu_domain_info(env->cpu_domain, env->schedstat_version, env->nr_cpus_avail);
- }
- 
-diff --git a/tools/perf/util/env.h b/tools/perf/util/env.h
-index 7acca39b42ff..23d35425efe3 100644
---- a/tools/perf/util/env.h
-+++ b/tools/perf/util/env.h
-@@ -68,6 +68,14 @@ struct cpu_domain_map {
- 	struct domain_info	**domains;
- };
- 
-+struct memory_range {
-+	u64 base;
-+	u64 length;
-+	int node;
-+	u8 local_region_id;
-+	u8 remote_region_id;
-+};
-+
- struct perf_env {
- 	char			*hostname;
- 	char			*os_release;
-@@ -100,6 +108,7 @@ struct perf_env {
- 	int			nr_cpu_pmu_caps;
- 	int			nr_hybrid_nodes;
- 	int			nr_pmus_with_caps;
-+	int			nr_memory_ranges;
- 	char			*cmdline;
- 	const char		**cmdline_argv;
- 	char			*sibling_cores;
-@@ -122,6 +131,7 @@ struct perf_env {
- 	unsigned long long	 memory_bsize;
- 	struct hybrid_node	*hybrid_nodes;
- 	struct pmu_caps		*pmu_caps;
-+	struct memory_range	*memory_ranges;
- #ifdef HAVE_LIBBPF_SUPPORT
- 	/*
- 	 * bpf_info_lock protects bpf rbtrees. This is needed because the
-diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
-index ec2935c0ed04..38f2da9de5f0 100644
---- a/tools/perf/util/header.c
-+++ b/tools/perf/util/header.c
-@@ -7,6 +7,7 @@
- #include <stdio.h>
+diff --git a/tools/perf/builtin-c2c.c b/tools/perf/builtin-c2c.c
+index 6b64c0d6b24f..a42423ca990d 100644
+--- a/tools/perf/builtin-c2c.c
++++ b/tools/perf/builtin-c2c.c
+@@ -14,6 +14,7 @@
+ #include <inttypes.h>
  #include <stdlib.h>
  #include <string.h>
-+#include <fcntl.h>
++#include <stdio.h>
  
- #include <byteswap.h>
- #include <dirent.h>
-@@ -95,6 +96,7 @@
- #define MAX_PMU_CAPS		512
- #define MAX_PMU_MAPPINGS	4096
- #define MAX_SCHED_DOMAINS	64
-+#define MAX_MEMORY_RANGES	256
+ #include <asm/bug.h>
+ #include <linux/compiler.h>
+@@ -72,6 +73,7 @@ struct perf_c2c {
  
- /*
-  * magic2 = "PERFILE2"
-@@ -1914,6 +1916,132 @@ static int write_cpu_domain_info(struct feat_fd *ff,
- 	return ret;
- }
- 
-+static int memory_range__read(struct memory_range *range, const char *path)
-+{
-+	char buf[32];
-+	ssize_t n;
-+	int dfd, fd, tmp, ret = -1;
-+
-+	dfd = open(path, O_RDONLY | O_DIRECTORY);
-+	if (dfd < 0)
-+		return -1;
-+
-+#define _R(name, dst, conv)			\
-+	fd = openat(dfd, name, O_RDONLY);	\
-+	if (fd < 0)				\
-+		goto out;			\
-+	n = read(fd, buf, sizeof(buf) - 1);	\
-+	close(fd);				\
-+	if (n <= 0)				\
-+		goto out;			\
-+	buf[n] = '\0';				\
-+	dst = conv(buf, NULL, 0);
-+
-+	_R("base", range->base, strtoull);
-+	_R("length", range->length, strtoull);
-+	_R("node", range->node, strtol);
-+	_R("local_region_id", tmp, strtol);
-+	if (tmp < 0 || tmp > UINT8_MAX)
-+		goto out;
-+	range->local_region_id = tmp;
-+	_R("remote_region_id", tmp, strtol);
-+	if (tmp < 0 || tmp > UINT8_MAX)
-+		goto out;
-+	range->remote_region_id = tmp;
-+#undef _R
-+
-+	ret = 0;
-+out:
-+	close(dfd);
-+	return ret;
-+}
-+
-+static int memory_range__parse(struct memory_range **ranges)
-+{
-+	const char *sysfs = sysfs__mountpoint();
-+	int i, err, nr_memory_ranges = 0;
-+	char path[PATH_MAX];
-+	struct stat st;
-+
-+	if (!sysfs)
-+		return 0;
-+
-+	scnprintf(path, PATH_MAX, "%s/firmware/acpi/memory_ranges", sysfs);
-+	if (stat(path, &st))
-+		return 0;
-+
-+	while (1) {
-+		scnprintf(path, PATH_MAX,
-+			  "%s/firmware/acpi/memory_ranges/range%d",
-+			  sysfs, nr_memory_ranges);
-+		if (stat(path, &st))
-+			break;
-+
-+		nr_memory_ranges++;
-+	}
-+
-+	if (nr_memory_ranges == 0)
-+		return 0;
-+
-+	*ranges = calloc(nr_memory_ranges, sizeof(struct memory_range));
-+	if (!(*ranges))
-+		return -ENOMEM;
-+
-+	for (i = 0; i < nr_memory_ranges; i++) {
-+		struct memory_range range;
-+
-+		scnprintf(path, PATH_MAX,
-+			  "%s/firmware/acpi/memory_ranges/range%d", sysfs, i);
-+		err = memory_range__read(&range, path);
-+		if (err < 0)
-+			goto out_error;
-+
-+		(*ranges)[i] = range;
-+	}
-+
-+	return nr_memory_ranges;
-+
-+out_error:
-+	zfree(ranges);
-+	return -1;
-+}
-+
-+static int write_memory_ranges(struct feat_fd *ff,
-+			 struct evlist *evlist __maybe_unused)
-+{
-+	struct memory_range *ranges = NULL;
-+	int nr_memory_ranges = 0, ret;
-+
-+	nr_memory_ranges = memory_range__parse(&ranges);
-+	if (nr_memory_ranges < 0)
-+		return nr_memory_ranges;
-+
-+	ret = do_write(ff, &nr_memory_ranges, sizeof(nr_memory_ranges));
-+	if (ret < 0)
-+		goto out;
-+
-+	for (int i = 0; i < nr_memory_ranges; i++) {
-+		ret = do_write(ff, &ranges[i].base, sizeof(u64));
-+		if (ret < 0)
-+			goto out;
-+		ret = do_write(ff, &ranges[i].length, sizeof(u64));
-+		if (ret < 0)
-+			goto out;
-+		ret = do_write(ff, &ranges[i].node, sizeof(u32));
-+		if (ret < 0)
-+			goto out;
-+		ret = do_write(ff, &ranges[i].local_region_id, sizeof(u8));
-+		if (ret < 0)
-+			goto out;
-+		ret = do_write(ff, &ranges[i].remote_region_id, sizeof(u8));
-+		if (ret < 0)
-+			goto out;
-+	}
-+out:
-+	zfree(&ranges);
-+	return ret;
-+}
-+
- static void print_hostname(struct feat_fd *ff, FILE *fp)
- {
- 	fprintf(fp, "# hostname : %s\n", ff->ph->env.hostname);
-@@ -2652,6 +2780,23 @@ static void print_cpu_domain_info(struct feat_fd *ff, FILE *fp)
+ 	bool			 show_src;
+ 	bool			 show_all;
++	bool			 show_mem_region;
+ 	bool			 use_stdio;
+ 	bool			 stats_only;
+ 	bool			 symbol_full;
+@@ -248,6 +250,18 @@ static void c2c_he__set_node(struct c2c_hist_entry *c2c_he,
  	}
  }
  
-+static void print_memory_ranges(struct feat_fd *ff, FILE *fp)
++static void c2c_he__set_mem_region(struct c2c_hist_entry *c2c_he,
++				   unsigned int mem_region)
 +{
-+	struct memory_range *ranges = ff->ph->env.memory_ranges;
-+	int nr_memory_ranges = ff->ph->env.nr_memory_ranges;
-+	int i;
++	if (WARN_ONCE(mem_region > PERF_MEM_REGION_MEM7,
++		      "WARNING: invalid memory region ID\n"))
++		return;
 +
-+	fprintf(fp, "# memory ranges (nr %d):\n", nr_memory_ranges);
-+
-+	for (i = 0; i < nr_memory_ranges; i++) {
-+		fprintf(fp, "# range%u: [0x%016" PRIx64 "-0x%016" PRIx64,
-+			i, ranges[i].base, ranges[i].base + ranges[i].length - 1);
-+		fprintf(fp, "], node = %d, local_region_id = %d, remote_region_id = %d\n",
-+			ranges[i].node, ranges[i].local_region_id,
-+			ranges[i].remote_region_id);
-+	}
++	/* Update mem_region only if it really accesses memory */
++	if (mem_region >= PERF_MEM_REGION_MMIO)
++		c2c_he->mem_region = mem_region;
 +}
 +
- static int __event_process_build_id(struct perf_record_header_build_id *bev,
- 				    char *filename,
- 				    struct perf_session *session)
-@@ -4227,6 +4372,65 @@ static int process_cpu_domain_info(struct feat_fd *ff, void *data __maybe_unused
- 	return ret;
+ static void compute_stats(struct c2c_hist_entry *c2c_he,
+ 			  struct c2c_stats *stats,
+ 			  u64 weight)
+@@ -306,6 +320,7 @@ static int process_sample_event(const struct perf_tool *tool __maybe_unused,
+ 	struct addr_location al;
+ 	struct mem_info *mi = NULL;
+ 	struct callchain_cursor *cursor;
++	unsigned int mem_region;
+ 	int ret;
+ 
+ 	addr_location__init(&al);
+@@ -333,6 +348,7 @@ static int process_sample_event(const struct perf_tool *tool __maybe_unused,
+ 	}
+ 
+ 	c2c_decode_stats(&stats, mi);
++	mem_region = mem_info__data_src(mi)->mem_region;
+ 
+ 	he = hists__add_entry_ops(&c2c_hists->hists, &c2c_entry_ops,
+ 				  &al, NULL, NULL, mi, NULL,
+@@ -349,6 +365,7 @@ static int process_sample_event(const struct perf_tool *tool __maybe_unused,
+ 	c2c_he__set_cpu(c2c_he, sample);
+ 	c2c_he__set_node(c2c_he, sample);
+ 	c2c_he__set_evsel(c2c_he, evsel);
++	c2c_he__set_mem_region(c2c_he, mem_region);
+ 
+ 	hists__inc_nr_samples(&c2c_hists->hists, he->filtered);
+ 
+@@ -402,6 +419,7 @@ static int process_sample_event(const struct perf_tool *tool __maybe_unused,
+ 		c2c_he__set_cpu(c2c_he, sample);
+ 		c2c_he__set_node(c2c_he, sample);
+ 		c2c_he__set_evsel(c2c_he, evsel);
++		c2c_he__set_mem_region(c2c_he, mem_region);
+ 
+ 		hists__inc_nr_samples(&c2c_hists->hists, he->filtered);
+ 		ret = hist_entry__append_callchain(he, sample);
+@@ -540,6 +558,45 @@ dcacheline_node_count(struct perf_hpp_fmt *fmt, struct perf_hpp *hpp,
+ 	return scnprintf(hpp->buf, hpp->size, "%*lu", width, c2c_he->paddr_cnt);
  }
  
-+static int process_memory_ranges(struct feat_fd *ff, void *data __maybe_unused)
++static int
++dcacheline_node_mem_region(struct perf_hpp_fmt *fmt, struct perf_hpp *hpp,
++			   struct hist_entry *he)
 +{
-+	struct perf_env *env = &ff->ph->env;
-+	struct memory_range *ranges, *r;
-+	u32 nr_memory_ranges, i;
++	int width = c2c_width(fmt, hpp, he->hists);
++	struct c2c_hist_entry *c2c_he;
++	unsigned int mem_region;
++	char buf[20];
 +
-+	if (do_read_u32(ff, &nr_memory_ranges))
-+		return -1;
++	c2c_he = container_of(he, struct c2c_hist_entry, he);
++	mem_region = c2c_he->mem_region;
 +
-+	if (!nr_memory_ranges) {
-+		pr_debug("memory ranges not available\n");
-+		return 0;
++	switch (mem_region) {
++	case PERF_MEM_REGION_NA:
++	case PERF_MEM_REGION_RSVD:
++		scnprintf(buf, sizeof(buf), "N/A");
++		break;
++	case PERF_MEM_REGION_MMIO:
++		scnprintf(buf, sizeof(buf), "MMIO");
++		break;
++	case PERF_MEM_REGION_MEM0:
++	case PERF_MEM_REGION_MEM1:
++	case PERF_MEM_REGION_MEM2:
++	case PERF_MEM_REGION_MEM3:
++	case PERF_MEM_REGION_MEM4:
++	case PERF_MEM_REGION_MEM5:
++	case PERF_MEM_REGION_MEM6:
++	case PERF_MEM_REGION_MEM7:
++		scnprintf(buf, sizeof(buf), "Mem-%d",
++			  mem_region - PERF_MEM_REGION_MEM0);
++		break;
++	default:
++		scnprintf(buf, sizeof(buf), "N/A");
++		break;
 +	}
 +
-+	/*
-+	 * According to version 1.1 of the ACPI MRRM table, the maximum
-+	 * number of memory regions can be at most 255. Do a sanity check
-+	 * here to guard against a malformed perf.data file.
-+	 */
-+	if (nr_memory_ranges >= MAX_MEMORY_RANGES) {
-+		pr_err("Invalid memory_ranges: nr_memory_ranges (%u) > %u\n",
-+		       nr_memory_ranges, MAX_MEMORY_RANGES);
-+		return -1;
-+	}
-+
-+	if (ff->size < sizeof(u32) + nr_memory_ranges * (2 * sizeof(u64) + sizeof(u32) + 2 * sizeof(u8))) {
-+		pr_err("Invalid HEADER_MEMORY_RANGES: section too small (%zu) for %u range entries\n",
-+		       ff->size, nr_memory_ranges);
-+		return -1;
-+	}
-+
-+	ranges = calloc(nr_memory_ranges, sizeof(*ranges));
-+	if (!ranges)
-+		return -1;
-+
-+	for (i = 0; i < nr_memory_ranges; i++) {
-+		r = &ranges[i];
-+
-+		if (do_read_u64(ff, &r->base))
-+			goto error;
-+		if (do_read_u64(ff, &r->length))
-+			goto error;
-+		if (do_read_u32(ff, (u32 *) &r->node))
-+			goto error;
-+		if (__do_read(ff, &r->local_region_id, sizeof(u8)))
-+			goto error;
-+		if (__do_read(ff, &r->remote_region_id, sizeof(u8)))
-+			goto error;
-+	}
-+
-+	env->memory_ranges = ranges;
-+	env->nr_memory_ranges = nr_memory_ranges;
-+
-+	return 0;
-+error:
-+	zfree(&ranges);
-+	return -1;
++	return scnprintf(hpp->buf, hpp->size, "%*s", width, buf);
 +}
 +
- #define FEAT_OPR(n, func, __full_only) \
- 	[HEADER_##n] = {					\
- 		.name	    = __stringify(n),			\
-@@ -4291,6 +4495,7 @@ const struct perf_header_feature_ops feat_ops[HEADER_LAST_FEATURE] = {
- 	FEAT_OPR(CPU_DOMAIN_INFO,	cpu_domain_info,	true),
- 	FEAT_OPR(E_MACHINE,	e_machine,	false),
- 	FEAT_OPR(CLN_SIZE,	cln_size,	false),
-+	FEAT_OPR(MEMORY_RANGES,	memory_ranges,	false),
+ static int offset_entry(struct perf_hpp_fmt *fmt, struct perf_hpp *hpp,
+ 			struct hist_entry *he)
+ {
+@@ -1360,6 +1417,14 @@ static struct c2c_dimension dim_dcacheline_node = {
+ 	.width		= 4,
  };
  
- struct header_print_data {
-diff --git a/tools/perf/util/header.h b/tools/perf/util/header.h
-index 5e03f884b7cc..765037762758 100644
---- a/tools/perf/util/header.h
-+++ b/tools/perf/util/header.h
-@@ -56,6 +56,7 @@ enum {
- 	HEADER_CPU_DOMAIN_INFO,
- 	HEADER_E_MACHINE,
- 	HEADER_CLN_SIZE,
-+	HEADER_MEMORY_RANGES,
- 	HEADER_LAST_FEATURE,
- 	HEADER_FEAT_BITS	= 256,
- };
++static struct c2c_dimension dim_dcacheline_mem_region = {
++	.header		= HEADER_LOW("Region"),
++	.name		= "dcacheline_mem_region",
++	.cmp		= empty_cmp,
++	.entry		= dcacheline_node_mem_region,
++	.width		= 6,
++};
++
+ static struct c2c_dimension dim_dcacheline_count = {
+ 	.header		= HEADER_LOW("PA cnt"),
+ 	.name		= "dcacheline_count",
+@@ -1791,6 +1856,7 @@ static struct c2c_dimension dim_dcacheline_num_empty = {
+ 
+ static struct c2c_dimension *dimensions[] = {
+ 	&dim_dcacheline,
++	&dim_dcacheline_mem_region,
+ 	&dim_dcacheline_node,
+ 	&dim_dcacheline_count,
+ 	&dim_offset,
+@@ -2854,8 +2920,11 @@ static int ui_quirks(void)
+ 	/* Fix the zero line for dcacheline column. */
+ 	buf = fill_line(chk_double_cl ? "Double-Cacheline" : "Cacheline",
+ 				dim_dcacheline.width +
++				(c2c.show_mem_region ?
++					dim_dcacheline_mem_region.width : 0) +
+ 				dim_dcacheline_node.width +
+-				dim_dcacheline_count.width + 4);
++				dim_dcacheline_count.width +
++				(c2c.show_mem_region ? 6 : 4));
+ 	if (!buf)
+ 		return -ENOMEM;
+ 
+@@ -3107,7 +3176,8 @@ static int perf_c2c__report(int argc, const char **argv)
+ 	OPT_END()
+ 	};
+ 	int err = 0;
+-	const char *output_str, *sort_str = NULL;
++	const char *sort_str = NULL;
++	char *output_str = NULL;
+ 	struct perf_env *env;
+ 
+ 	annotation_options__init();
+@@ -3272,9 +3342,16 @@ static int perf_c2c__report(int argc, const char **argv)
+ 		goto out_mem2node;
+ 	}
+ 
+-	if (c2c.display != DISPLAY_SNP_PEER)
+-		output_str = "cl_idx,"
++	c2c.show_mem_region = perf_header__has_feat(&session->header,
++						HEADER_MEMORY_RANGES);
++	if (c2c.show_mem_region)
++		dim_dcacheline.header.line[0].span = 3;
++
++	if (c2c.display != DISPLAY_SNP_PEER) {
++		if (asprintf(&output_str,
++			     "cl_idx,"
+ 			     "dcacheline,"
++			     "%s"
+ 			     "dcacheline_node,"
+ 			     "dcacheline_count,"
+ 			     "percent_costly_snoop,"
+@@ -3286,10 +3363,17 @@ static int perf_c2c__report(int argc, const char **argv)
+ 			     "ld_fbhit,ld_l1hit,ld_l2hit,"
+ 			     "ld_lclhit,lcl_hitm,"
+ 			     "ld_rmthit,rmt_hitm,"
+-			     "dram_lcl,dram_rmt";
+-	else
+-		output_str = "cl_idx,"
++			     "dram_lcl,dram_rmt",
++			     c2c.show_mem_region ?
++			     "dcacheline_mem_region," : "") < 0) {
++			err = -ENOMEM;
++			goto out_mem2node;
++		}
++	} else {
++		if (asprintf(&output_str,
++			     "cl_idx,"
+ 			     "dcacheline,"
++			     "%s"
+ 			     "dcacheline_node,"
+ 			     "dcacheline_count,"
+ 			     "percent_costly_snoop,"
+@@ -3301,7 +3385,13 @@ static int perf_c2c__report(int argc, const char **argv)
+ 			     "ld_fbhit,ld_l1hit,ld_l2hit,"
+ 			     "ld_lclhit,lcl_hitm,"
+ 			     "ld_rmthit,rmt_hitm,"
+-			     "dram_lcl,dram_rmt";
++			     "dram_lcl,dram_rmt",
++			     c2c.show_mem_region ?
++			     "dcacheline_mem_region," : "") < 0) {
++			err = -ENOMEM;
++			goto out_mem2node;
++		}
++	}
+ 
+ 	if (c2c.display == DISPLAY_TOT_HITM)
+ 		sort_str = "tot_hitm";
+@@ -3315,7 +3405,7 @@ static int perf_c2c__report(int argc, const char **argv)
+ 	err = c2c_hists__reinit(&c2c.hists, output_str, sort_str, perf_session__env(session));
+ 	if (err) {
+ 		pr_err("Failed to reinitialize hists\n");
+-		goto out_mem2node;
++		goto out_str;
+ 	}
+ 
+ 	ui_progress__init(&prog, c2c.hists.hists.nr_entries, "Sorting...");
+@@ -3324,17 +3414,19 @@ static int perf_c2c__report(int argc, const char **argv)
+ 	hists__output_resort_cb(&c2c.hists.hists, &prog, resort_shared_cl_cb);
+ 	err = hists__iterate_cb(&c2c.hists.hists, resort_cl_cb, perf_session__env(session));
+ 	if (err)
+-		goto out_mem2node;
++		goto out_str;
+ 
+ 	ui_progress__finish();
+ 
+ 	if (ui_quirks()) {
+ 		pr_err("failed to setup UI\n");
+-		goto out_mem2node;
++		goto out_str;
+ 	}
+ 
+ 	perf_c2c_display(session);
+ 
++out_str:
++	free(output_str);
+ out_mem2node:
+ 	mem2node__exit(&c2c.mem2node);
+ out_session:
+diff --git a/tools/perf/util/c2c.h b/tools/perf/util/c2c.h
+index 53f024e25d99..f04e78e1a2e3 100644
+--- a/tools/perf/util/c2c.h
++++ b/tools/perf/util/c2c.h
+@@ -33,6 +33,7 @@ struct c2c_hist_entry {
+ 	unsigned long		*nodeset;
+ 	struct c2c_stats	*node_stats;
+ 	unsigned int		 cacheline_idx;
++	unsigned int		 mem_region;
+ 
+ 	struct compute_stats	 cstats;
+ 
 -- 
 2.43.0
 
