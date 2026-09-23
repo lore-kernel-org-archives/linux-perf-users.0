@@ -1,65 +1,124 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96B053B27FB
-	for <linux-perf-users@vger.kernel.org>; Wed, 23 Sep 2026 16:24:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFA3A3C65FD
+	for <linux-perf-users@vger.kernel.org>; Wed, 23 Sep 2026 16:36:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790180686; cv=none; b=nM4brOP2ez5d8NmoBxz7tvQ2rqcJXKNgEiwdTonGjEFcrVP7v/Oo4m4lbmkxRwN0dXrpsm0iWZajIQCdS0LhnM8QjQJMndEpU1T41Vt++slI961+Kas+bCBZZTSfI5lxEV72J/p+9usiu/ndYQMQ/gQCMIaNThEui9IiBHEmj9Q=
+	t=1790181373; cv=none; b=iOox5flPda5+yO1kdEc0XGbXCoaK046GLwiPQQAdZsAtu6lC5MyPYH1hSC7Y5Kx3NcYpDaqUgm56LCg+nug9cDvu8zzuvJUJ6QTg6XvPaaNYyGhj6hnI+PIpjkNU1eClted/dQVIuoGmKKC6JCIJWdDPQQF+VNPQDgTsQASS2z4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790180686; c=relaxed/simple;
-	bh=ShLOO0HF1JUUX3dSkKujkffrkh/N86oPMbKTgo1ZJF8=;
+	s=arc-20240116; t=1790181373; c=relaxed/simple;
+	bh=+fyNIB/gYv0EvAEnkv3ZVM5zlE/q5WWlZIh5Ef4Yuvs=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=sJm6YQk09gtPT3EoYJVtczdrf0XFHijWLrpvKtO98GqMYo1yqHwd/Z1nu34+OPvACzSTzWyi06utCvT1uQLdsDDtZ2Zz3RTmEzykaWatuK2wiIN46ATHaH7qoE/YpCLvonjCTzDlqnGIAuxTtPbnAZA1piFVui511IaCkX1SlUk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ASFXMe0R; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=qlwW5P2Nz1yYqHjHDN6Zh7wyGbQRWJwT6D1Z5eTSNj4RE6kXZW0S9PMWRS+GpccQbhvneAcRbhCTIIGwmWaGT2zaXMPmqdnUj7mWzue+kpLDtblaCW8dBBkwrKK7unQ6c+Z4vQZn8eW5n6XGgTD0ybc1cGKp7VJ7D8JDeFQnmkk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=G+Dei9Fk; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ASFXMe0R"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D6D9C1F000FF;
-	Wed, 23 Sep 2026 16:24:43 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="G+Dei9Fk"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3962C1F000FF;
+	Wed, 23 Sep 2026 16:36:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1790180684;
-	bh=ShLOO0HF1JUUX3dSkKujkffrkh/N86oPMbKTgo1ZJF8=;
+	s=k20260515; t=1790181365;
+	bh=EyUFsfwa2c4xnlLGEHtpHcvWpLGcgQKXAWmbyOpVd+c=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=ASFXMe0RB0jTvyj1XoRD+AqD8NHlXJOwWbZoH8vkRlyodGZtTOVeaQ3FBzT4+c9cX
-	 mr4xg9+oPnjdWpz7TBGW+vWyKy1Dc1BqJ7w1X7QxwVdSM2v55pyiQhXrYFNs4I+xul
-	 vUmtaKalOGqBqLVs5YApbWLScZgkiFKQYKAT75kYAcpww1RDVwW7zp1heDFTciA/18
-	 XaPIK2E1TuL/XhF3C1nBuyiwHssxl3YvAl9tDRO5WHjhNRd0aceegIXF1umFiwViKc
-	 KKPlYg0t2KDImalHdleG3BdxzifzlcWRpnBXMsUW8X+4bkC8wwseC5mGm/EWeLKqY2
-	 ZN4HUHdwNOrIA==
+	b=G+Dei9FkbH8d1r+a+YZSQJaLiYZzLHKVVQBVsiwpyYecEvTTBK7u67MFU9jmld2e1
+	 OdtVsyFg6qD4NSZ2boZwXn2qEqMrTeUs2H6kRsS3/jb2oyjeJV4FL4lPPW/xfDNL09
+	 1mxbUvUe1MDGmWpfwDY0ryFWuh3Fblq8XceFfOHDNNhtYs5rxrba2caUx0NH7wqZh1
+	 /PSd32ztHxE6xcM+mucqjciHBTp9P0T3i4BamQjy8fJ2QHSBVLaHNfqDJZDLxCg2+z
+	 RTx4iBHeuIbALF3AJszP+27sm4ISE4wymjv3RZfgJvzmT22ObVf/RwEplABbrQqN1o
+	 5a1qvfzDNxb3w==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v2 09/14] perf cs-etm: Classify exception calls using
- the exception packet
+Subject: Re: [PATCH v2 10/14] perf cs-etm: Synthesize exception entries
+ separately from branches
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Leo Yan" <leo.yan@arm.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260923-perf_cs_etm_fix_non_taken-v2-9-6ab8c07a5455@arm.com>
+In-Reply-To: <20260923-perf_cs_etm_fix_non_taken-v2-10-6ab8c07a5455@arm.com>
 References: <20260923-perf_cs_etm_fix_non_taken-v2-0-6ab8c07a5455@arm.com>
- <20260923-perf_cs_etm_fix_non_taken-v2-9-6ab8c07a5455@arm.com>
+ <20260923-perf_cs_etm_fix_non_taken-v2-10-6ab8c07a5455@arm.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Wed, 23 Sep 2026 16:24:43 +0000
-Message-Id: <20260923162443.D6D9C1F000FF@smtp.kernel.org>
+Date: Wed, 23 Sep 2026 16:36:04 +0000
+Message-Id: <20260923163605.3962C1F000FF@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-> ETMv4 and ETE use the same exception number for SVC, HVC and SMC.
-> Identify SVC by inspecting the instruction before the preferred return
-> address in the exception packet.
->=20
-> Preserve the exception level and preferred return address from OpenCSD,
-> and use them with the packet's ISA in cs_etm__is_syscall() and
-> cs_etm__is_sync_exception(). This makes exception call classification
-> independent of the preceding instruction range.
->=20
-> Assisted-by: Codex:gpt-6
-> Signed-off-by: Leo Yan <leo.yan@arm.com>
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+s) to consider:
+- [Medium] perf: miscalculation of ETMv3 SVC/HYP source addresses
+--
 
-Sashiko has reviewed this patch and found no issues. It looks great!
+commit 29b742481ea9116881bdfbed14f1f45c6d6ded76
+Author: Leo Yan <leo.yan@arm.com>
+
+perf cs-etm: Synthesize exception entries separately from branches
+
+This commit modifies the handling of ARM CoreSight ETM trace exception
+entries, synthesizing them separately from branches. It derives exception
+source PCs from the preferred return address rather than attributing the
+exception to the last completed instruction.
+
+> diff --git a/tools/perf/util/cs-etm-decoder/cs-etm-decoder.c b/tools/perf=
+/util/cs-etm-decoder/cs-etm-decoder.c
+> index 48e8c355a3e49..83a851bdd87bf 100644
+> --- a/tools/perf/util/cs-etm-decoder/cs-etm-decoder.c
+> +++ b/tools/perf/util/cs-etm-decoder/cs-etm-decoder.c
+
+[ ... ]
+
+> @@ -524,8 +525,34 @@ cs_etm_decoder__buffer_exception(struct cs_etm_queue=
+ *etmq,
+>  	packet->exception_number =3D elem->exception_number;
+>  	if (elem->context.el_valid)
+>  		packet->el =3D elem->context.exception_level;
+> -	if (elem->excep_ret_addr)
+> -		packet->end_addr =3D elem->en_addr;
+> +
+> +	/* RESET has no defined preferred return address. */
+> +	if (!elem->excep_ret_addr ||
+> +	    packet->exception_number =3D=3D CS_ETMV4_EXC_RESET)
+> +		return ret;
+> +
+> +	packet->end_addr =3D elem->en_addr;
+> +
+> +	/*
+> +	 * T32 calls can be two or four bytes, requiring an instruction read
+> +	 * before end_addr to determine their size. Keep end_addr for the
+> +	 * frontend's SVC check and leave start_addr unknown for its fallback.
+> +	 */
+> +	if (packet->isa !=3D CS_ETM_ISA_A32 && packet->isa !=3D CS_ETM_ISA_A64)
+> +		return ret;
+> +
+> +	/*
+> +	 * For A32 and A64, exception calls execute a four-byte SVC, HVC or
+> +	 * SMC and save the following PC. Other exceptions use the interrupted
+> +	 * or faulting PC, including traps on those instructions.
+> +	 *
+> +	 * With a shared branch target, no instruction has completed
+> +	 * at the target, so last_instr_size remains zero.
+> +	 */
+> +	if (elem->exception_number =3D=3D CS_ETMV4_EXC_CALL)
+
+[Severity: Medium]
+Does cs_etm_decoder__buffer_exception() miscalculate the instruction size f=
+or
+ETMv3 SVC and HYP call exceptions here?
+
+By only checking against CS_ETMV4_EXC_CALL, it appears to miss the
+corresponding ETMv3 call exception values (CS_ETMV3_EXC_SVC=3D10,
+CS_ETMV3_EXC_HYP=3D3). When tracing ETMv3 with an SVC or HYP exception that
+provides an excep_ret_addr, this would result in a 0-byte instruction size
+and a misattributed source address in the trace output.
+
+> +		last_instr_size =3D 4;
+> +	packet->start_addr =3D packet->end_addr - last_instr_size;
+> +	packet->last_instr_size =3D last_instr_size;
+> =20
+>  	return ret;
+>  }
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260923-perf_cs_et=
-m_fix_non_taken-v2-0-6ab8c07a5455@arm.com?part=3D9
-
+m_fix_non_taken-v2-0-6ab8c07a5455@arm.com?part=3D10
