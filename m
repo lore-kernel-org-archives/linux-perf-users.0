@@ -1,56 +1,56 @@
-Received: from mail-dy1-f200.google.com (mail-dy1-f200.google.com [74.125.82.200])
+Received: from mail-dl1-f69.google.com (mail-dl1-f69.google.com [74.125.82.69])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 605B74399F2
-	for <linux-perf-users@vger.kernel.org>; Wed, 23 Sep 2026 18:15:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11B515678E1
+	for <linux-perf-users@vger.kernel.org>; Wed, 23 Sep 2026 18:15:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.69
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790187310; cv=none; b=iYUFG/q0m5TB1TaUFOD6qOT1t51aocb34Dvm+bXuz53X81ui2D5zb+BrfH2YfiT4sZHJOAHKdSwRi9h5lea9Y7c+9u9lwX2LXLGKUi5KmBThkrpXDYHr660NT8EkuSKCTn2kZ5+OkGhQMU+DC32DjCkldbDqP32Kijx+YwiPric=
+	t=1790187313; cv=none; b=KWk33FlaZkmXhHn5ogCPCTCTpR28xAOz0vDaBh3ZTjmwqJ9VQQWgr1i2F4qkemo/h1I2UTBkfDjY5WRbzT8eYmTCxT/AxR7YPu4ZZ2veEYEOE6psHlFB5IwnMGL0vVgHH077cnpNEY1N6bybKjnCxY7bOCYDYPdPr/uG6kbyb/M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790187310; c=relaxed/simple;
-	bh=MbBp/oYb6i0abfuiUj6lJ5H8Q/A0P74CDCKrOns9fTo=;
+	s=arc-20240116; t=1790187313; c=relaxed/simple;
+	bh=ZVS2OBL0/F79lG2SC8qBMoZhblLJXN3XXT69JctEN8A=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=hznDouCuHLzd3eFGiNqG2j/zPURekoWvzrYhy/pfPveBLnn47Tom5atRm7JQkqSNd/WgW9F5boIYXeNiB0Qw5YM0SeBpIGGL0sMkQhXQSnXJOt59fTginkSYfkbcecv474GNNWcgSTJyVEHyTrWjT0jbBuhEz7E7rdi7PyzDnLI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=H4E4o+wd; arc=none smtp.client-ip=74.125.82.200
+	 To:Cc:Content-Type; b=RAdMUFzmKmVtwKf5/TkXZiNSJHNg+jqtqdYgQEO5Vfr/tznETtS7VBKuxO8gjaivjoac2exD1Xnd93iA+f95bjCf2x8bxQuU99aZBNMqXZ0VE75z1vqImKV9kwPjiIF3Z6+pHa7fXzRwYeDYRAtD7sT0NIXo54W2Z2M7W97oSP0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=G1FPiW/R; arc=none smtp.client-ip=74.125.82.69
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="H4E4o+wd"
-Received: by mail-dy1-f200.google.com with SMTP id 5a478bee46e88-30bcb065bfdso1742244eec.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 23 Sep 2026 11:15:01 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="G1FPiW/R"
+Received: by mail-dl1-f69.google.com with SMTP id a92af1059eb24-1384427c3efso2027140c88.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 23 Sep 2026 11:15:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1790187298; x=1790792098; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1790187303; x=1790792103; darn=vger.kernel.org;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=b+vlEIQL+fePrPO2NIgSLLycWAHjFZ7eHFEmjdF//SM=;
-        b=H4E4o+wdtuYwiyURB7ER6ApRWCJr464TAMtStWf3U3QwiL1bWdT1RMU6dQiVJzNtrF
-         DDn3mPz6FbJlxBicONzWByToIZFSsRFBdmycwcWEIWrLxPh/HJjKUJmcgFDwBGjmDpzY
-         3LWHRvZK/tRwta3+bBBW9jcsdzkSIUhwXxDzZjIVAtfR+/3dD92cvIpBlNMUSVkSfB/L
-         zdR3auSCbrZ/7OzmpeVtPKoMXbjkKjD4cA7i7pbnK0QFeGiM6M9jgpp9Zx4r1Tn/liZT
-         oM5R99gfgHJiyazH/pWf0p+dPfd+cxK5Edc/R9lIC75lMuZR/Y3ADVtOnstxknztUC46
-         4T8w==
+        bh=tgFhLX2mC2bh46uwobCwGbnZwMj5lNibLT49PunVicw=;
+        b=G1FPiW/R66vHTFJXJc6rF79o3VbNbupPWObLsw5siSr7WH/j06blKpPZ9vY258/D2Y
+         XeHFn+hVD9unBP9mNZC3Ir4+Ug+Nl5SKe9gBeDJHzxBH76NdYFjDhDwStZzCvGmOJbUy
+         YChSS1UJ3dl7mZpRGQ219WfnXqVmICWmTmjdem1T5GiO9YYI1a4QDJqFpWblSTUMnArL
+         1eBH5n4UX1rU4OrzoGkBZvKXYQ58LlUgyRao+opBmwNWvn+9ap3nm52PDgsgBKjqf2pJ
+         7FN4IJF2CCG07oRFfenGnb6ar0acVgaeqJB9GjareqI14ykk2KIyZEd6K/G9YejwomYO
+         FRvA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1790187298; x=1790792098;
+        d=1e100.net; s=20260707; t=1790187303; x=1790792103;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=b+vlEIQL+fePrPO2NIgSLLycWAHjFZ7eHFEmjdF//SM=;
-        b=cELZ4mikiRrs2AemaYP/KCIDR1VXnvTGHpuyKV2cXINkpog6D5ZvfSH2+e/Y6ZdRWZ
-         EgGI4ZBbC6bdgXLx5uW8+UBYqU5mQ/3dff7uFlQzvUZkzoHN13Ub6QgehYqIgiZfxRN5
-         Xqzlc1LZAGAIw/a648lcHnlc4Wly/rLqH+pcZbjeMnyFzZkNNRLys2R/TEnXJgC51IWp
-         B2wnYs9AN8Nd3GasUxV3JOUGRVmzxaxUfD+onWfLSjjc+1OhRnODsmoawiIrIrwxUX1g
-         teM8V4Ng6OF3PBkx1JwxL+P3uT94DbTGAyDLcF30ZM3Wqw6bozQeucpAJPuHYkgoxRaR
-         9dVQ==
-X-Forwarded-Encrypted: i=1; AKwUvBzeqDAJOM5pNQDPccC3pZ0AhKARspPnjW9kiUsSBQXEJcu+t/gNF+h4omTixtvmc59yRI/AO6oFC+4PoTBqtGUA@vger.kernel.org
-X-Gm-Message-State: AFuF++k2ICeEfoLb7sXFpNVBhJJSQmjS4n28DOcjwZGKkk+gJlAcbt9E
-	GZc5vlMaWz3SJ9XWpjAMBPNGQd3RwPEgj/mQ/qEijyilbQbo+ailRuY0/n9W/74XUd/qBK6MKIr
-	Yn6lu8nT42Q==
-X-Received: from dlbsj1.prod.google.com ([2002:a05:7022:f901:b0:144:f49f:4928])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:701b:2088:10b0:144:fa64:dada
- with SMTP id a92af1059eb24-144fa64dcfemr3026487c88.15.1790187297609; Wed, 23
- Sep 2026 11:14:57 -0700 (PDT)
-Date: Wed, 23 Sep 2026 11:12:01 -0700
+        bh=tgFhLX2mC2bh46uwobCwGbnZwMj5lNibLT49PunVicw=;
+        b=zTvCIUabt+xFB1bQfJ1g1QtSx45MrmzBum0R8WZWN8Z3M5HAVXwAHXEXcSytnSsMy/
+         /u1TQldTburEXv+PHE6B1VaI029tm8VtWFnJkNny3BE0kO//k35u4voPjHbk0fwutez8
+         u7cToqshMwyFAdxH8FaAbCbADzrc+gATOEE0ZykgGpczt3H3w5MRBh2+TqXMgpynXxvj
+         OdpVL0SBtf9l7+FagATySvsYl3meN0U2kkFNWpVtavjslD/R1aArlewavgCSXniOyQPq
+         7WJNerqct3P9VGFQpBI9arhP9F7Sed23I0ATski3rO6bDMvPTP69cvmgQICwm/smHew8
+         LWfg==
+X-Forwarded-Encrypted: i=1; AKwUvBxWWYLXVtcjtRLQzpN+NBm7XO6l/yIJ90A4tY6UFdHCjOhh+Aw4IpHFD25p1L2CV1OUNAHAVrJouKe9HuUPN4f6@vger.kernel.org
+X-Gm-Message-State: AFuF++nTGdtWiykZ7lsQW6/bY85lZ/qcnpxwwMTzSILIHd75xK/jCsQm
+	yA4JJTs5m3jhjFnM6wXQbzDaXIoaMfOOWyDYa5BPalkpv/waa71grhLkQfXCCzZa4qr6k+eW+x9
+	eOmwqE4GeAA==
+X-Received: from dlep20-n2.prod.google.com ([2002:a05:701b:4594:20b0:144:d392:fefb])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:701b:2714:b0:143:50a0:56c7
+ with SMTP id a92af1059eb24-14503f06784mr1898c88.3.1790187302182; Wed, 23 Sep
+ 2026 11:15:02 -0700 (PDT)
+Date: Wed, 23 Sep 2026 11:12:02 -0700
 In-Reply-To: <20260923181213.3032038-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -60,8 +60,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <cover.1789966896.git.irogers@google.com> <20260923181213.3032038-1-irogers@google.com>
 X-Mailer: git-send-email 2.56.0.rc1.310.g51773c2048-goog
-Message-ID: <20260923181213.3032038-39-irogers@google.com>
-Subject: [PATCH v3 38/49] perf python: Port arm-cs-trace-disasm to perf module
+Message-ID: <20260923181213.3032038-40-irogers@google.com>
+Subject: [PATCH v3 39/49] perf python: Port powerpc-hcalls to perf module
 From: Ian Rogers <irogers@google.com>
 To: irogers@google.com, acme@kernel.org, alice.mei.rogers@gmail.com, 
 	namhyung@kernel.org
@@ -71,487 +71,469 @@ Cc: adrian.hunter@intel.com, dapeng1.mi@linux.intel.com,
 	tmricht@linux.ibm.com
 Content-Type: text/plain; charset="UTF-8"
 
-Port arm-cs-trace-disasm.py to a standalone script in tools/perf/python/
-using the perf module directly.
+Port powerpc-hcalls.py from tools/perf/scripts/python/ to a standalone
+script in tools/perf/python/:
+- Refactor the script into an HCallAnalyzer class with full type
+  annotations to encapsulate per-CPU hypervisor call entry/exit state.
+- Use perf.session for event processing to track hypervisor call entry
+  and exit timestamps and aggregate min/max/average duration statistics
+  against HCALL_TABLE.
+- Add argparse CLI support (-i/--input) and remove Python 2
+  compatibility code.
 
-Improvements compared to the legacy script:
-- Encapsulate trace disassembly state in a TraceDisasm class
-- Automatically search standard kernel debug paths (find_vmlinux())
-  when -k/--vmlinux is not specified, and query
-  perf.config_get("annotate.objdump") for the default objdump binary.
-- Bound DISASM_CACHE memory consumption by evicting the cache at 1024
-  entries and skipping caching of oversized (> 512 lines) objdump
-  outputs.
-- Use sample.srccode() from the perf extension module to annotate
-  disassembly output with source filenames, line numbers, and source
-  lines.
-
-Update the ARM CoreSight disassembly shell test
-(test_arm_coresight_disasm.sh) to invoke the standalone script.
+Add a shell test (test_powerpc_hcalls_python.sh) to verify the
+standalone script.
 
 Assisted-by: Antigravity:gemini-3.1-pro
-Reviewed-by: James Clark <james.clark@linaro.org>
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/python/arm-cs-trace-disasm.py      | 389 ++++++++++++++++++
- .../coresight/test_arm_coresight_disasm.sh    |  25 +-
- 2 files changed, 407 insertions(+), 7 deletions(-)
- create mode 100755 tools/perf/python/arm-cs-trace-disasm.py
+ tools/perf/python/powerpc-hcalls.py           | 334 ++++++++++++++++++
+ .../tests/shell/test_powerpc_hcalls_python.sh |  95 +++++
+ 2 files changed, 429 insertions(+)
+ create mode 100755 tools/perf/python/powerpc-hcalls.py
+ create mode 100755 tools/perf/tests/shell/test_powerpc_hcalls_python.sh
 
-diff --git a/tools/perf/python/arm-cs-trace-disasm.py b/tools/perf/python/arm-cs-trace-disasm.py
+diff --git a/tools/perf/python/powerpc-hcalls.py b/tools/perf/python/powerpc-hcalls.py
 new file mode 100755
-index 000000000000..0d95ef3604eb
+index 000000000000..ab5867c05d3e
 --- /dev/null
-+++ b/tools/perf/python/arm-cs-trace-disasm.py
-@@ -0,0 +1,389 @@
++++ b/tools/perf/python/powerpc-hcalls.py
+@@ -0,0 +1,334 @@
 +#!/usr/bin/env python3
-+# SPDX-License-Identifier: GPL-2.0
++# SPDX-License-Identifier: GPL-2.0+
 +"""
-+arm-cs-trace-disasm.py: ARM CoreSight Trace Dump With Disassember using perf python module
++Hypervisor call statistics
++
++Copyright (C) 2018 Ravi Bangoria, IBM Corporation
++Ported from tools/perf/scripts/python/powerpc-hcalls.py
 +"""
 +from __future__ import annotations
 +
-+import os
-+from os import path
-+import re
-+from subprocess import CalledProcessError, check_output
 +import argparse
-+import platform
++from collections import defaultdict
 +import sys
-+from typing import Dict, List, Optional
-+
 +import perf
 +
-+# Initialize global dicts and regular expression
-+DISASM_CACHE: Dict[str, List[str]] = {}
-+DISASM_RE = re.compile(r"^\s*([0-9a-fA-F]+):")
-+DISASM_FUNC_RE = re.compile(r"^\s*([0-9a-fA-F]+)\s.*:")
-+CACHE_SIZE = 1024
-+class _State:
-+    sample_idx: int = -1
-+    source_file_name: Optional[str] = None
-+    line_number: Optional[int] = None
-+    dso: Optional[str] = None
-+
-+_STATE = _State()
-+
-+KVER = platform.release()
-+VMLINUX_PATHS = [
-+    f"/usr/lib/debug/boot/vmlinux-{KVER}.debug",
-+    f"/usr/lib/debug/lib/modules/{KVER}/vmlinux",
-+    f"/lib/modules/{KVER}/build/vmlinux",
-+    f"/usr/lib/debug/boot/vmlinux-{KVER}",
-+    f"/boot/vmlinux-{KVER}",
-+    "/boot/vmlinux",
-+    "vmlinux",
-+]
-+
-+def default_objdump() -> str:
-+    """Return the default objdump path from perf config or 'objdump'."""
-+    try:
-+        config = perf.config_get("annotate.objdump")
-+        return str(config) if config else "objdump"
-+    except (AttributeError, TypeError):
-+        return "objdump"
-+
-+def find_vmlinux() -> Optional[str]:
-+    """Find the vmlinux file in standard paths."""
-+    if hasattr(find_vmlinux, "path"):
-+        return getattr(find_vmlinux, "path")
-+
-+    for v in VMLINUX_PATHS:
-+        if os.access(v, os.R_OK):
-+            setattr(find_vmlinux, "path", v)
-+            return v
-+    setattr(find_vmlinux, "path", None)
-+    return None
-+
-+def get_dso_file_path(dso_name: str, dso_build_id: str, vmlinux: Optional[str]) -> str:
-+    """Return the path to the DSO file."""
-+    # Locate DSO binaries in the perf build-id cache (~/.debug or PERF_BUILDID_DIR).
-+    # Perf stores cached binaries under both <buildid_dir>/<dso_long_name>/<build_id>/elf
-+    # and the canonical symlink/file layout <buildid_dir>/.build-id/<bid[:2]>/<bid[2:]>/elf.
-+    buildid_dir = os.environ.get('PERF_BUILDID_DIR')
-+    if not buildid_dir:
-+        buildid_dir = os.path.join(os.environ.get('HOME', ''), '.debug')
-+
-+    if (dso_name in ("[kernel.kallsyms]", "vmlinux", "kcore")
-+            or dso_name.endswith("/vmlinux") or dso_name.endswith("/kcore")):
-+        if vmlinux:
-+            return vmlinux
-+        if dso_build_id and dso_build_id != "[unknown]" and len(dso_build_id) > 2:
-+            bid_candidate = os.path.join(
-+                buildid_dir, ".build-id", dso_build_id[:2], dso_build_id[2:], "elf"
-+            )
-+            if os.access(bid_candidate, os.R_OK):
-+                return bid_candidate
-+            for kname in (dso_name, "vmlinux", "[kernel.kallsyms]"):
-+                candidate = os.path.join(buildid_dir, kname.lstrip("/"), dso_build_id, "elf")
-+                if os.access(candidate, os.R_OK):
-+                    return candidate
-+        return find_vmlinux() or dso_name
-+
-+    if dso_name == "[vdso]":
-+        append = "/vdso"
-+    else:
-+        append = "/elf"
-+
-+    if dso_build_id and dso_build_id != "[unknown]" and len(dso_build_id) > 2:
-+        bid_path = (buildid_dir + "/.build-id/" + dso_build_id[:2] + "/"
-+                    + dso_build_id[2:] + append).replace('//', '/')
-+        if os.access(bid_path, os.R_OK):
-+            return bid_path
-+
-+    dso_path = buildid_dir + "/" + dso_name + "/" + dso_build_id + append
-+    # Replace duplicate slash chars to single slash char
-+    dso_path = dso_path.replace('//', '/')
-+    return dso_path
-+
-+def read_disam(dso_fname: str, dso_start: int, start_addr: int,
-+               stop_addr: int, objdump: str) -> List[str]:
-+    """Read disassembly from a DSO file using objdump."""
-+    if stop_addr <= start_addr or (stop_addr - start_addr) > 0x100000:
-+        return []
-+    addr_range = f"{start_addr}:{stop_addr}:{dso_start}:{dso_fname}"
-+
-+    # Don't let the cache get too big, clear it when it hits max size
-+    if len(DISASM_CACHE) > CACHE_SIZE:
-+        DISASM_CACHE.clear()
-+
-+    if addr_range in DISASM_CACHE:
-+        disasm_output = DISASM_CACHE[addr_range]
-+    else:
-+        start_addr = start_addr - dso_start
-+        stop_addr = stop_addr - dso_start
-+        disasm = [objdump, "-d", "-z",
-+                  f"--start-address={start_addr:#x}",
-+                  f"--stop-address={stop_addr:#x}"]
-+        disasm += [dso_fname]
-+        try:
-+            disasm_output = check_output(disasm).decode('utf-8', errors='replace').split('\n')
-+        except (CalledProcessError, OSError):
-+            return []
-+        if len(disasm_output) <= 512:
-+            DISASM_CACHE[addr_range] = disasm_output
-+
-+    return disasm_output
-+
-+def print_disam(dso_fname: str, dso_start: int, start_addr: int,
-+                stop_addr: int, objdump: str) -> None:
-+    """Print disassembly for a given address range."""
-+    for line in read_disam(dso_fname, dso_start, start_addr, stop_addr, objdump):
-+        m = DISASM_FUNC_RE.search(line)
-+        if m is None:
-+            m = DISASM_RE.search(line)
-+            if m is None:
-+                continue
-+        print(f"\t{line}")
-+
-+def print_sample(sample: perf.sample_event) -> None:
-+    """Print sample details."""
-+    print(f"Sample = {{ cpu: {sample.sample_cpu:04d} addr: {sample.sample_addr:016x} "
-+          f"phys_addr: {sample.sample_phys_addr:016x} ip: {sample.sample_ip:016x} "
-+          f"pid: {sample.sample_pid} tid: {sample.sample_tid} period: {sample.sample_period} "
-+          f"time: {sample.sample_time} index: {_STATE.sample_idx}}}")
-+
-+def common_start_str(comm: str, sample: perf.sample_event) -> str:
-+    """Return common start string for sample output."""
-+    sec = int(sample.sample_time / 1000000000)
-+    ns = sample.sample_time % 1000000000
-+    cpu = sample.sample_cpu
-+    pid = sample.sample_pid
-+    tid = sample.sample_tid
-+    return f"{comm:>16s} {pid:5d}/{tid:<5d} [{cpu:04d}] {sec:9d}.{ns:09d}  "
-+
-+def print_srccode(comm: str, sample: perf.sample_event, symbol: str, dso: str) -> None:
-+    """Print source code and symbols for a sample."""
-+    ip = sample.sample_ip
-+    if symbol == "[unknown]":
-+        start_str = common_start_str(comm, sample) + f"{ip:x}".rjust(16).ljust(40)
-+    else:
-+        symoff = 0
-+        symoff = getattr(sample, 'sym_offset', 0) or 0
-+        offs = f"+{symoff:#x}" if symoff != 0 else ""
-+        start_str = common_start_str(comm, sample) + (symbol + offs).ljust(40)
-+
-+    source_file_name, line_number, source_line = sample.srccode() or (None, 0, None)
-+    if source_file_name:
-+        if _STATE.line_number == line_number and _STATE.source_file_name == source_file_name:
-+            src_str = ""
-+        else:
-+            if len(source_file_name) > 40:
-+                src_file = f"...{source_file_name[-37:]} "
-+            else:
-+                src_file = source_file_name.ljust(41)
-+
-+            if source_line is None:
-+                src_str = f"{src_file}{line_number:>4d} <source not found>"
-+            else:
-+                src_str = f"{src_file}{line_number:>4d} {source_line}"
-+        _STATE.dso = None
-+    elif dso == _STATE.dso:
-+        src_str = ""
-+    else:
-+        src_str = dso
-+        _STATE.dso = dso
-+
-+    _STATE.line_number = line_number
-+    _STATE.source_file_name = source_file_name
-+
-+    print(start_str, src_str)
-+
-+class TraceDisasm:
-+    """Class to handle trace disassembly."""
-+    def __init__(self, cli_options: argparse.Namespace):
-+        self.options = cli_options
-+        self.sample_idx = -1
-+        self.cpu_data: Dict[str, int] = {}
-+        self.session: Optional[perf.session] = None
-+
-+    def process_event(self, sample: perf.sample_event) -> None:
-+        """Process a single perf event."""
-+        self.sample_idx += 1
-+        _STATE.sample_idx = self.sample_idx
-+
-+        if self.options.start_time is not None and sample.sample_time < self.options.start_time:
-+            return
-+        if self.options.stop_time is not None and sample.sample_time > self.options.stop_time:
-+            sys.exit(0)
-+        if self.options.start_sample is not None and self.sample_idx < self.options.start_sample:
-+            return
-+        if self.options.stop_sample is not None and self.sample_idx > self.options.stop_sample:
-+            sys.exit(0)
-+
-+        ev_name = str(sample.evsel)
-+        if self.options.verbose:
-+            print(f"Event type: {ev_name}")
-+            print_sample(sample)
-+
-+        dso = getattr(sample, 'dso_long_name', None) or sample.dso or '[unknown]'
-+        symbol = sample.symbol or '[unknown]'
-+        dso_bid = (sample.dso_bid.decode('utf-8')
-+                   if isinstance(sample.dso_bid, bytes)
-+                   else str(sample.dso_bid or '[unknown]'))
-+        dso_start = sample.map_start
-+        dso_end = sample.map_end
-+        map_pgoff = sample.map_pgoff or 0
-+
-+        comm = "[unknown]"
-+        try:
-+            if self.session:
-+                thread_info = self.session.find_thread(sample.sample_pid, sample.sample_tid)
-+                if thread_info:
-+                    comm = thread_info.comm() or "[unknown]"
-+        except (TypeError, AttributeError):
-+            pass
-+
-+        if dso == '[unknown]':
-+            return
-+
-+        if dso_start is None or dso_end is None:
-+            print(f"Failed to find valid dso map for dso {dso}")
-+            return
-+
-+        if "instructions" in ev_name:
-+            print_srccode(comm, sample, symbol, dso)
-+            return
-+
-+        if "branches" not in ev_name:
-+            return
-+
-+        self._process_branch(sample, comm, symbol, dso, dso_bid, dso_start, dso_end, map_pgoff)
-+
-+    def _process_branch(self, sample: perf.sample_event, comm: str, symbol: str, dso: str,
-+                        dso_bid: str, dso_start: int, dso_end: int, map_pgoff: int) -> None:
-+        """Helper to process branch events."""
-+        cpu = sample.sample_cpu
-+        ip = sample.sample_ip
-+        addr = sample.sample_addr
-+
-+        if self.cpu_data.get(str(cpu) + 'addr') is None:
-+            self.cpu_data[str(cpu) + 'addr'] = addr
-+            return
-+
-+        start_addr = self.cpu_data[str(cpu) + 'addr']
-+        stop_addr  = ip + 4
-+
-+        # Record for previous sample packet
-+        self.cpu_data[str(cpu) + 'addr'] = addr
-+
-+        # Filter out zero start_address. Optionally identify CS_ETM_TRACE_ON packet
-+        if start_addr == 0:
-+            if stop_addr == 4 and self.options.verbose:
-+                print(f"CPU{cpu}: CS_ETM_TRACE_ON packet is inserted")
-+            return
-+
-+        if start_addr < dso_start or start_addr > dso_end:
-+            print(f"Start address {start_addr:#x} is out of range [ {dso_start:#x} .. "
-+                  f"{dso_end:#x} ] for dso {dso}")
-+            return
-+
-+        if stop_addr < dso_start or stop_addr > dso_end:
-+            print(f"Stop address {stop_addr:#x} is out of range [ {dso_start:#x} .. "
-+                  f"{dso_end:#x} ] for dso {dso}")
-+            return
-+
-+        if self.options.objdump is not None:
-+            # Kernel images (vmlinux / kcore) and non-PIE executables linked at
-+            # the default 0x400000 base already have their virtual load addresses
-+            # baked into the ELF symbol/section headers read by objdump, so
-+            # dso_vm_start and map_pgoff_local must be 0 to avoid subtracting
-+            # map_start from virtual sample addresses.
-+            if (dso in ("[kernel.kallsyms]", "vmlinux", "kcore")
-+                    or dso.endswith("/vmlinux") or dso.endswith("/kcore")):
-+                dso_vm_start = 0
-+                map_pgoff_local = 0
-+            elif dso_start == 0x400000:
-+                dso_vm_start = 0
-+                map_pgoff_local = 0
-+            else:
-+                dso_vm_start = dso_start
-+                map_pgoff_local = map_pgoff
-+
-+            dso_fname = get_dso_file_path(dso, dso_bid, self.options.vmlinux)
-+            if path.exists(dso_fname):
-+                print_disam(dso_fname, dso_vm_start, start_addr + map_pgoff_local,
-+                            stop_addr + map_pgoff_local, self.options.objdump)
-+            else:
-+                print(f"Failed to find dso {dso} for address range [ "
-+                      f"{start_addr + map_pgoff_local:#x} .. {stop_addr + map_pgoff_local:#x} ]")
-+
-+        print_srccode(comm, sample, symbol, dso)
-+
-+    def run(self) -> None:
-+        """Run the trace disassembly session."""
-+        input_file = self.options.input or "perf.data"
-+        if input_file != "-" and not os.path.exists(input_file):
-+            print(f"Error: {input_file} not found.", file=sys.stderr)
-+            sys.exit(1)
-+
-+        print('ARM CoreSight Trace Data Assembler Dump')
-+        try:
-+            session_kwargs = {
-+                "sample": self.process_event,
-+                "itrace": self.options.itrace,
-+            }
-+            if self.options.vmlinux:
-+                session_kwargs["vmlinux"] = self.options.vmlinux
-+            try:
-+                self.session = perf.session(perf.data(input_file), **session_kwargs)
-+            except TypeError:
-+                session_kwargs.pop("vmlinux", None)
-+                self.session = perf.session(perf.data(input_file), **session_kwargs)
-+        except (OSError, ValueError, KeyError, RuntimeError, TypeError, AttributeError) as e:
-+            print(f"Error opening session: {e}", file=sys.stderr)
-+            sys.exit(1)
-+
-+        try:
-+            self.session.process_events()
-+        except (KeyboardInterrupt, SystemExit):
-+            pass
-+        finally:
-+            # Break the reference cycle between self.session and the bound
-+            # self.process_event callback so the C perf.session object is freed.
-+            self.session = None
-+        print('End')
-+
-+if __name__ == "__main__":
-+    def int_arg(v: str) -> int:
-+        """Helper for integer command line arguments."""
-+        val = int(v)
-+        if val < 0:
-+            raise argparse.ArgumentTypeError("Argument must be a positive integer")
-+        return val
-+
-+    arg_parser = argparse.ArgumentParser(description="ARM CoreSight Trace Dump With Disassembler")
-+    arg_parser.add_argument("-i", "--input", help="input perf.data file")
-+    arg_parser.add_argument("-k", "--vmlinux", default=os.environ.get("PERF_SYMBOL_VMLINUX"),
-+                            help="Set path to vmlinux file. Omit to autodetect")
-+    arg_parser.add_argument("-d", "--objdump", nargs="?", const=default_objdump(),
-+                            help="Show disassembly. Can also be used to change the objdump path")
-+    arg_parser.add_argument("-v", "--verbose", action="store_true", help="Enable debugging log")
-+    arg_parser.add_argument("--start-time", type=int_arg,
-+                            help="Monotonic clock time of sample to start from.")
-+    arg_parser.add_argument("--stop-time", type=int_arg,
-+                            help="Monotonic clock time of sample to stop at.")
-+    arg_parser.add_argument("--itrace", default="b",
-+                            help="Instruction tracing options.")
-+    arg_parser.add_argument("--start-sample", type=int_arg,
-+                            help="Index of sample to start from.")
-+    arg_parser.add_argument("--stop-sample", type=int_arg,
-+                            help="Index of sample to stop at.")
-+
-+    parsed_options = arg_parser.parse_args()
-+    if (parsed_options.start_time is not None and parsed_options.stop_time is not None and
-+            parsed_options.start_time >= parsed_options.stop_time):
-+        print("--start-time must less than --stop-time")
-+        sys.exit(2)
-+    if (parsed_options.start_sample is not None and parsed_options.stop_sample is not None and
-+            parsed_options.start_sample >= parsed_options.stop_sample):
-+        print("--start-sample must less than --stop-sample")
-+        sys.exit(2)
-+
-+    td = TraceDisasm(parsed_options)
-+    td.run()
-diff --git a/tools/perf/tests/shell/coresight/test_arm_coresight_disasm.sh b/tools/perf/tests/shell/coresight/test_arm_coresight_disasm.sh
-index f3ebad596378..2c04249a3496 100755
---- a/tools/perf/tests/shell/coresight/test_arm_coresight_disasm.sh
-+++ b/tools/perf/tests/shell/coresight/test_arm_coresight_disasm.sh
-@@ -1,6 +1,6 @@
- #!/bin/bash
--# Check Arm CoreSight disassembly script completes without errors (exclusive)
- # SPDX-License-Identifier: GPL-2.0
-+# Check Arm CoreSight disassembly script completes without errors (exclusive)
- 
- # The disassembly script reconstructs ranges of instructions and gives these to objdump to
- # decode. objdump doesn't like ranges that go backwards, but these are a good indication
-@@ -20,11 +20,23 @@ skip_if_no_cs_etm_event || exit 2
- set -e
- glb_err=1
- 
-+# Relative path works whether it's installed or running from repo
-+if [ -n "$PERF_EXEC_PATH" ] && [ -e "$PERF_EXEC_PATH/python/arm-cs-trace-disasm.py" ]; then
-+	script_path="$PERF_EXEC_PATH/python/arm-cs-trace-disasm.py"
-+else
-+	script_path=$(dirname "$0")/../../../python/arm-cs-trace-disasm.py
-+fi
-+
-+# shellcheck source=lib/setup_python.sh
-+. "$(dirname "$0")"/../lib/setup_python.sh
-+$PYTHON -c "import perf" 2>/dev/null || {
-+	echo "Skipping test, perf python module not found"
-+	exit 2
++# Hypervisor call table
++HCALL_TABLE = {
++	4: 'H_REMOVE',
++	8: 'H_ENTER',
++	12: 'H_READ',
++	16: 'H_CLEAR_MOD',
++	20: 'H_CLEAR_REF',
++	24: 'H_PROTECT',
++	28: 'H_GET_TCE',
++	32: 'H_PUT_TCE',
++	36: 'H_SET_SPRG0',
++	40: 'H_SET_DABR',
++	44: 'H_PAGE_INIT',
++	48: 'H_SET_ASR',
++	52: 'H_ASR_ON',
++	56: 'H_ASR_OFF',
++	60: 'H_LOGICAL_CI_LOAD',
++	64: 'H_LOGICAL_CI_STORE',
++	68: 'H_LOGICAL_CACHE_LOAD',
++	72: 'H_LOGICAL_CACHE_STORE',
++	76: 'H_LOGICAL_ICBI',
++	80: 'H_LOGICAL_DCBF',
++	84: 'H_GET_TERM_CHAR',
++	88: 'H_PUT_TERM_CHAR',
++	92: 'H_REAL_TO_LOGICAL',
++	96: 'H_HYPERVISOR_DATA',
++	100: 'H_EOI',
++	104: 'H_CPPR',
++	108: 'H_IPI',
++	112: 'H_IPOLL',
++	116: 'H_XIRR',
++	120: 'H_MIGRATE_DMA',
++	124: 'H_PERFMON',
++	220: 'H_REGISTER_VPA',
++	224: 'H_CEDE',
++	228: 'H_CONFER',
++	232: 'H_PROD',
++	236: 'H_GET_PPP',
++	240: 'H_SET_PPP',
++	244: 'H_PURR',
++	248: 'H_PIC',
++	252: 'H_REG_CRQ',
++	256: 'H_FREE_CRQ',
++	260: 'H_VIO_SIGNAL',
++	264: 'H_SEND_CRQ',
++	272: 'H_COPY_RDMA',
++	276: 'H_REGISTER_LOGICAL_LAN',
++	280: 'H_FREE_LOGICAL_LAN',
++	284: 'H_ADD_LOGICAL_LAN_BUFFER',
++	288: 'H_SEND_LOGICAL_LAN',
++	292: 'H_BULK_REMOVE',
++	304: 'H_MULTICAST_CTRL',
++	308: 'H_SET_XDABR',
++	312: 'H_STUFF_TCE',
++	316: 'H_PUT_TCE_INDIRECT',
++	332: 'H_CHANGE_LOGICAL_LAN_MAC',
++	336: 'H_VTERM_PARTNER_INFO',
++	340: 'H_REGISTER_VTERM',
++	344: 'H_FREE_VTERM',
++	348: 'H_RESET_EVENTS',
++	352: 'H_ALLOC_RESOURCE',
++	356: 'H_FREE_RESOURCE',
++	360: 'H_MODIFY_QP',
++	364: 'H_QUERY_QP',
++	368: 'H_REREGISTER_PMR',
++	372: 'H_REGISTER_SMR',
++	376: 'H_QUERY_MR',
++	380: 'H_QUERY_MW',
++	384: 'H_QUERY_HCA',
++	388: 'H_QUERY_PORT',
++	392: 'H_MODIFY_PORT',
++	396: 'H_DEFINE_AQP1',
++	400: 'H_GET_TRACE_BUFFER',
++	404: 'H_DEFINE_AQP0',
++	408: 'H_RESIZE_MR',
++	412: 'H_ATTACH_MCQP',
++	416: 'H_DETACH_MCQP',
++	420: 'H_CREATE_RPT',
++	424: 'H_REMOVE_RPT',
++	428: 'H_REGISTER_RPAGES',
++	432: 'H_DISABLE_AND_GET',
++	436: 'H_ERROR_DATA',
++	440: 'H_GET_HCA_INFO',
++	444: 'H_GET_PERF_COUNT',
++	448: 'H_MANAGE_TRACE',
++	456: 'H_GET_CPU_CHARACTERISTICS',
++	468: 'H_FREE_LOGICAL_LAN_BUFFER',
++	472: 'H_POLL_PENDING',
++	484: 'H_QUERY_INT_STATE',
++	580: 'H_ILLAN_ATTRIBUTES',
++	584: 'H_ADD_LOGICAL_LAN_BUFFERS',
++	592: 'H_MODIFY_HEA_QP',
++	596: 'H_QUERY_HEA_QP',
++	600: 'H_QUERY_HEA',
++	604: 'H_QUERY_HEA_PORT',
++	608: 'H_MODIFY_HEA_PORT',
++	612: 'H_REG_BCMC',
++	616: 'H_DEREG_BCMC',
++	620: 'H_REGISTER_HEA_RPAGES',
++	624: 'H_DISABLE_AND_GET_HEA',
++	628: 'H_GET_HEA_INFO',
++	632: 'H_ALLOC_HEA_RESOURCE',
++	644: 'H_ADD_CONN',
++	648: 'H_DEL_CONN',
++	664: 'H_JOIN',
++	672: 'H_VASI_SIGNAL',
++	676: 'H_VASI_STATE',
++	680: 'H_VIOCTL',
++	688: 'H_ENABLE_CRQ',
++	696: 'H_GET_EM_PARMS',
++	720: 'H_SET_MPP',
++	724: 'H_GET_MPP',
++	732: 'H_REG_SUB_CRQ',
++	736: 'H_FREE_SUB_CRQ',
++	740: 'H_SEND_SUB_CRQ',
++	744: 'H_SEND_SUB_CRQ_INDIRECT',
++	748: 'H_HOME_NODE_ASSOCIATIVITY',
++	756: 'H_BEST_ENERGY',
++	764: 'H_XIRR_X',
++	768: 'H_RANDOM',
++	772: 'H_COP',
++	788: 'H_GET_MPP_X',
++	796: 'H_SET_MODE',
++	808: 'H_BLOCK_REMOVE',
++	856: 'H_CLEAR_HPT',
++	864: 'H_REQUEST_VMC',
++	876: 'H_RESIZE_HPT_PREPARE',
++	880: 'H_RESIZE_HPT_COMMIT',
++	892: 'H_REGISTER_PROC_TBL',
++	896: 'H_SIGNAL_SYS_RESET',
++	904: 'H_ALLOCATE_VAS_WINDOW',
++	908: 'H_MODIFY_VAS_WINDOW',
++	912: 'H_DEALLOCATE_VAS_WINDOW',
++	916: 'H_QUERY_VAS_WINDOW',
++	920: 'H_QUERY_VAS_CAPABILITIES',
++	924: 'H_QUERY_NX_CAPABILITIES',
++	928: 'H_GET_NX_FAULT',
++	936: 'H_INT_GET_SOURCE_INFO',
++	940: 'H_INT_SET_SOURCE_CONFIG',
++	944: 'H_INT_GET_SOURCE_CONFIG',
++	948: 'H_INT_GET_QUEUE_INFO',
++	952: 'H_INT_SET_QUEUE_CONFIG',
++	956: 'H_INT_GET_QUEUE_CONFIG',
++	960: 'H_INT_SET_OS_REPORTING_LINE',
++	964: 'H_INT_GET_OS_REPORTING_LINE',
++	968: 'H_INT_ESB',
++	972: 'H_INT_SYNC',
++	976: 'H_INT_RESET',
++	996: 'H_SCM_READ_METADATA',
++	1000: 'H_SCM_WRITE_METADATA',
++	1004: 'H_SCM_BIND_MEM',
++	1008: 'H_SCM_UNBIND_MEM',
++	1012: 'H_SCM_QUERY_BLOCK_MEM_BINDING',
++	1016: 'H_SCM_QUERY_LOGICAL_MEM_BINDING',
++	1020: 'H_SCM_UNBIND_ALL',
++	1024: 'H_SCM_HEALTH',
++	1048: 'H_SCM_PERFORMANCE_STATS',
++	1052: 'H_PKS_GET_CONFIG',
++	1056: 'H_PKS_SET_PASSWORD',
++	1060: 'H_PKS_GEN_PASSWORD',
++	1068: 'H_PKS_WRITE_OBJECT',
++	1072: 'H_PKS_GEN_KEY',
++	1076: 'H_PKS_READ_OBJECT',
++	1080: 'H_PKS_REMOVE_OBJECT',
++	1084: 'H_PKS_CONFIRM_OBJECT_FLUSHED',
++	1096: 'H_RPT_INVALIDATE',
++	1100: 'H_SCM_FLUSH',
++	1104: 'H_GET_ENERGY_SCALE_INFO',
++	1108: 'H_PKS_SIGNED_UPDATE',
++	1112: 'H_HTM',
++	1116: 'H_WATCHDOG',
++	# Platform specific hcalls used by KVM on PowerVM
++	1120: 'H_GUEST_GET_CAPABILITIES',
++	1124: 'H_GUEST_SET_CAPABILITIES',
++	1136: 'H_GUEST_CREATE',
++	1140: 'H_GUEST_CREATE_VCPU',
++	1144: 'H_GUEST_GET_STATE',
++	1148: 'H_GUEST_SET_STATE',
++	1152: 'H_GUEST_RUN_VCPU',
++	1156: 'H_GUEST_COPY_MEMORY',
++	1160: 'H_GUEST_DELETE',
++	# Key wrapping hcalls
++	1168: 'H_PKS_WRAP_OBJECT',
++	1172: 'H_PKS_UNWRAP_OBJECT',
++	# Platform-specific hcalls used by the Ultravisor
++	61184: 'H_SVM_PAGE_IN',
++	61188: 'H_SVM_PAGE_OUT',
++	61192: 'H_SVM_INIT_START',
++	61196: 'H_SVM_INIT_DONE',
++	61204: 'H_SVM_INIT_ABORT',
++	# Platform specific hcalls used by KVM
++	61440: 'H_RTAS',
++	# Platform specific hcalls used by QEMU/SLOF
++	61441: 'H_LOGICAL_MEMOP',
++	61442: 'H_CAS',
++	61443: 'H_UPDATE_DT',
++	# Platform specific hcalls provided by PHYP
++	61560: 'H_GET_24X7_CATALOG_PAGE',
++	61564: 'H_GET_24X7_DATA',
++	61568: 'H_GET_PERF_COUNTER_INFO',
++	# Platform-specific hcalls used for nested HV KVM
++	63488: 'H_SET_PARTITION_TABLE',
++	63492: 'H_ENTER_NESTED',
++	63496: 'H_TLB_INVALIDATE',
++	63500: 'H_COPY_TOFROM_GUEST',
 +}
 +
- perfdata_dir=$(mktemp -d /tmp/__perf_test.perf.data.XXXXX)
- perfdata=${perfdata_dir}/perf.data
- file=$(mktemp /tmp/temporary_file.XXXXX)
--# Relative path works whether it's installed or running from repo
--script_path=$(dirname "$0")/../../../scripts/python/arm-cs-trace-disasm.py
- 
- cleanup_files()
- {
-@@ -44,8 +56,8 @@ branch_search='[[:space:]](bl|b(\.(eq|ne|cs|cc|mi|pl|vs|vc|hi|ls|ge|lt|gt|le|al)
- if [ "$(id -u)" == 0 ] && [ -e /proc/kcore ]; then
- 	echo "Testing kernel disassembly"
- 	perf record -o ${perfdata} -e cs_etm//k --kcore -Se -m,64K -- touch $file > /dev/null 2>&1
--	perf script -i ${perfdata} --itrace=b -s python:${script_path} -- \
--		-d --stop-sample=2 -k ${perfdata}/kcore_dir/kcore 2> /dev/null > ${file}
-+	$PYTHON ${script_path} -i ${perfdata} --itrace=b -d --stop-sample=2 \
-+		-k ${perfdata}/kcore_dir/kcore 2> /dev/null > ${file}
- 	grep -q -E ${branch_search} ${file}
- 	echo "Found kernel branches"
- else
-@@ -56,8 +68,7 @@ fi
- ## Test user ##
- echo "Testing userspace disassembly"
- perf record -o ${perfdata} -e cs_etm//u -Se -m,64K -- touch $file > /dev/null 2>&1
--perf script -i ${perfdata} --itrace=b -s python:${script_path} -- \
--	-d --stop-sample=2 2> /dev/null > ${file}
-+$PYTHON ${script_path} -i ${perfdata} -d --stop-sample=2 2> /dev/null > ${file}
- grep -q -E ${branch_search} ${file}
- echo "Found userspace branches"
- 
++
++class HCallAnalyzer:
++    """Analyzes hypervisor calls and aggregates statistics."""
++
++    def __init__(self, cmd_args) -> None:
++        self.args = cmd_args
++        # output: {opcode: {'min': min, 'max': max, 'time': time, 'cnt': cnt}}
++        self.output: dict[int, dict[str, 'int | float']] = \
++            defaultdict(lambda: {'time': 0, 'cnt': 0, 'min': float('inf'), 'max': 0})
++        # d_enter: {cpu: {opcode: nsec}}
++        self.d_enter: dict[int, dict[int, int]] = {}
++        self.print_ptrn = '%-28s%10s%10s%10s%10s'
++
++    def hcall_table_lookup(self, opcode: int) -> str:
++        """Lookup hcall name by opcode."""
++        return HCALL_TABLE.get(opcode, str(opcode))
++
++    def process_event(self, sample: perf.sample_event) -> None:
++        """Process a single sample event."""
++        name = str(sample.evsel)
++        if name not in ("evsel(powerpc:hcall_entry)", "evsel(powerpc:hcall_exit)"):
++            return
++
++        try:
++            cpu = sample.sample_cpu
++            opcode = sample.opcode
++        except AttributeError:
++            print("ERROR: tracepoint fields missed (is libtraceevent enabled?)",
++                  file=sys.stderr)
++            sys.exit(1)
++
++        # sample.sample_time represents the nsecs
++        time = sample.sample_time
++
++        if opcode < 0 or cpu < 0:
++            return
++
++        if name == "evsel(powerpc:hcall_entry)":
++            if cpu not in self.d_enter:
++                self.d_enter[cpu] = {}
++            self.d_enter[cpu][opcode] = time
++        elif name == "evsel(powerpc:hcall_exit)":
++            if cpu in self.d_enter and opcode in self.d_enter[cpu]:
++                time_entry = self.d_enter[cpu][opcode]
++                diff = time - time_entry
++                del self.d_enter[cpu][opcode]
++
++                stats = self.output[opcode]
++                stats['time'] += diff
++                stats['cnt'] += 1
++                if diff < stats['min']:
++                    stats['min'] = diff
++                if diff > stats['max']:
++                    stats['max'] = diff
++
++    def print_summary(self) -> None:
++        """Print aggregated statistics."""
++        print(self.print_ptrn % ('hcall', 'count', 'min(ns)', 'max(ns)', 'avg(ns)'))
++        print('-' * 68)
++
++        def sort_output(opcode):
++            stats = self.output[opcode]
++            sort_by = getattr(self.args, 'sort', None)
++            if sort_by == 'min':
++                return stats['min']
++            if sort_by == 'max':
++                return stats['max']
++            if sort_by == 'avg':
++                return stats['time'] // stats['cnt']
++            return stats['cnt']
++
++        for opcode in sorted(self.output.keys(), key=sort_output, reverse=True):
++            h_name = self.hcall_table_lookup(opcode)
++            stats = self.output[opcode]
++            time = stats['time']
++            cnt = stats['cnt']
++            min_t = stats['min']
++            max_t = stats['max']
++
++            # Avoid float representation for large integers if possible,
++            # or use formatted strings. Legacy used time//cnt.
++            avg_t = time // cnt if cnt > 0 else 0
++
++            # If min was not updated, it remains inf, but cnt should be > 0 if in output
++            if min_t == float('inf'):
++                min_t = 0
++
++            print(self.print_ptrn % (h_name, cnt, int(min_t), int(max_t), avg_t))
++
++
++if __name__ == "__main__":
++    ap = argparse.ArgumentParser(description="Hypervisor call statistics")
++    ap.add_argument("-i", "--input", default="perf.data", help="Input file name")
++    ap.add_argument("-s", "--sort", default="count",
++                    choices=["count", "min", "max", "avg"], help="Sort key")
++    args = ap.parse_args()
++
++    analyzer = HCallAnalyzer(args)
++
++    session = None
++    try:
++        session = perf.session(perf.data(args.input), sample=analyzer.process_event)
++        session.process_events()
++        analyzer.print_summary()
++    except KeyboardInterrupt:
++        analyzer.print_summary()
++    except (OSError, ValueError, KeyError, RuntimeError, TypeError, AttributeError) as e:
++        print(f"Error processing events: {e}")
++        sys.exit(1)
++    finally:
++        # Break the reference cycle between perf.session and analyzer.process_event.
++        session = None
+diff --git a/tools/perf/tests/shell/test_powerpc_hcalls_python.sh b/tools/perf/tests/shell/test_powerpc_hcalls_python.sh
+new file mode 100755
+index 000000000000..5316c28f243f
+--- /dev/null
++++ b/tools/perf/tests/shell/test_powerpc_hcalls_python.sh
+@@ -0,0 +1,95 @@
++#!/bin/bash
++# SPDX-License-Identifier: GPL-2.0
++# powerpc-hcalls python test
++
++set -e
++
++shelldir=$(dirname "$0")
++# shellcheck source=lib/setup_python.sh
++. "${shelldir}"/lib/setup_python.sh
++
++if ! "$PYTHON" -c 'import perf' > /dev/null 2>&1; then
++	echo "Skipping test, perf python module not found"
++	exit 2
++fi
++
++script_dir="$(dirname "$0")/../../python"
++script_path="${script_dir}/powerpc-hcalls.py"
++
++if ! perf check feature -q libtraceevent > /dev/null 2>&1; then
++	echo "Skipping test, libtraceevent is disabled"
++	exit 2
++fi
++
++if [ ! -f "$script_path" ]; then
++	echo "Skipping test, powerpc-hcalls.py not found at $script_path"
++	exit 2
++fi
++
++err=0
++cleanup() {
++	rm -f "${temp_data}" "${temp_out}"
++}
++trap 'cleanup' EXIT TERM INT
++
++temp_data=$(mktemp /tmp/perf.data.XXXXXX)
++temp_out=$(mktemp /tmp/perf.out.XXXXXX)
++
++echo "Testing powerpc-hcalls.py..."
++
++# Verify HCallAnalyzer aggregation logic on synthetic hcall_entry/hcall_exit samples
++if ! "$PYTHON" - "$script_path" > "${temp_out}" <<'EOF'
++import argparse
++import importlib.util
++import sys
++from types import SimpleNamespace
++
++spec = importlib.util.spec_from_file_location("powerpc_hcalls", sys.argv[1])
++assert spec and spec.loader
++mod = importlib.util.module_from_spec(spec)
++spec.loader.exec_module(mod)
++
++analyzer = mod.HCallAnalyzer(argparse.Namespace(sort='count'))
++analyzer.process_event(SimpleNamespace(
++    evsel="evsel(powerpc:hcall_entry)", sample_cpu=0, sample_time=1000, opcode=4))
++analyzer.process_event(SimpleNamespace(
++    evsel="evsel(powerpc:hcall_exit)", sample_cpu=0, sample_time=2500, opcode=4))
++analyzer.print_summary()
++EOF
++then
++	echo "powerpc-hcalls.py synthetic aggregation test failed"
++	exit 1
++fi
++
++if ! grep -q "H_REMOVE.*1.*1500.*1500.*1500" "${temp_out}"; then
++	echo "Failed to find aggregated H_REMOVE metrics in output"
++	exit 1
++fi
++
++# Create a perf.data file if powerpc hcall tracepoints are available on this host.
++if ! perf record -e powerpc:hcall_entry,powerpc:hcall_exit -a -o "${temp_data}" \
++	-- perf test -w noploop >/dev/null 2>&1; then
++	echo "Skipping live record test, powerpc hcall tracepoints not available"
++	exit 0
++fi
++
++if [ ! -s "${temp_data}" ]; then
++	echo "Skipping live record test, perf record failed to create data"
++	exit 0
++fi
++
++# Check that the script executes on recorded perf.data
++if ! "$PYTHON" "$script_path" -i "${temp_data}" > "${temp_out}"; then
++	echo "powerpc-hcalls.py test failed"
++	err=1
++else
++	if ! grep -q "hcall.*count.*min.*max.*avg" "${temp_out}"; then
++		echo "Failed to find the metrics table header"
++		err=1
++	else
++		echo "powerpc-hcalls test passed."
++	fi
++fi
++rm -f "${temp_out}"
++
++exit $err
 -- 
 2.56.0.rc1.310.g51773c2048-goog
 
