@@ -1,56 +1,56 @@
-Received: from mail-dy1-f198.google.com (mail-dy1-f198.google.com [74.125.82.198])
+Received: from mail-dy1-f200.google.com (mail-dy1-f200.google.com [74.125.82.200])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16B0B48AE36
-	for <linux-perf-users@vger.kernel.org>; Wed, 23 Sep 2026 18:13:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.198
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A4F54334AA
+	for <linux-perf-users@vger.kernel.org>; Wed, 23 Sep 2026 18:13:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.200
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790187226; cv=none; b=EMpe0kzHHoRmMuZ86WDKUr7lJwkdgDX+wxEauRBPG1HHaRsiUo94CFrLbRr/9GDwFRdvsqt78uWlNpXTEACX+nWIRxN5aa44WG74GKClAKYs4NwdJ2Ad2O2uLgF6nJyk2qqU6jmVL/utzS8ofhO1Er2TjnrRD7Y08IgLMpQxRVs=
+	t=1790187232; cv=none; b=ajqSnJ7c72pVvLvD6JM24F79h4gnnevCYJytkE9Hg8tsNUn/3LuM/MZhvzeyBnkGOQhQZjQNLMjMFgKmFjO27n4ZJPRdpC9bAseHPetWkujZud10ZppJfi8qUp6D8ucOvwQj5dQlzcIWYqpLBbHLZ4AnfkOa1keWwW0IEhlpNLo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790187226; c=relaxed/simple;
-	bh=4b0imgbFdYz+4JCKfONwFUgxUK4QQzPGLp4FygSrSe8=;
+	s=arc-20240116; t=1790187232; c=relaxed/simple;
+	bh=g12EZvZekt6R/6wyFoyXy44IWH+l5NQMFBBy3pRxGyc=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=U/Clp+Ur/Ldofi+CiBNHYPtIfk/9R3fhp816WW5k54T5oTVI6U8pHZ/5lWPt9v/8PM61tZGS4nQupz+tEOEUBXTEfR9PZjzDeETsMLZcGTWFgFv36vt6b+DkJhfANKi06gRkRgUkIJVPqTepOhoecrJF/H5kTIDC7V4jwh2la6c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=RfxdQZHz; arc=none smtp.client-ip=74.125.82.198
+	 To:Cc:Content-Type; b=o+DTM6PwzV3bJfkVK/qEzD3AI3ubr4l2Yiv2aozHp9EdM3f8pJAPLNDy6jVNfIYwxmztFH2wCtcQR3lUrcDmdBzYmuTi5wD4WehCYG/lb/w9Gsc0EaTaPyXRlMxSOaqBKpZsz5woCCXCv+R0bTaUJbotWu17x+rpPHegGxGGwZA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=vf3tPsXP; arc=none smtp.client-ip=74.125.82.200
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="RfxdQZHz"
-Received: by mail-dy1-f198.google.com with SMTP id 5a478bee46e88-33c35f5ca6cso1937920eec.1
-        for <linux-perf-users@vger.kernel.org>; Wed, 23 Sep 2026 11:13:38 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vf3tPsXP"
+Received: by mail-dy1-f200.google.com with SMTP id 5a478bee46e88-30bcb065bfdso1740923eec.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 23 Sep 2026 11:13:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1790187215; x=1790792015; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1790187222; x=1790792022; darn=vger.kernel.org;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=GdUrPLeidZ9sUt9zVmAl34CruFIaflRaMNzsOxLYKi0=;
-        b=RfxdQZHzQ1EvGo8XN1W4m13aUKIy6EDyE3xVcAbnvR+LHp9IZJsEIICA4v8k7yf8vc
-         omlR1r45Oc/AW6xqcjFsw1ztm7YMf+AeiiXEybUQ0lteuVO+yawawOkKDGoDe2efIutj
-         h6+m9cePi1krG9JQTGbFGfMazBwDZo5EfNXhPp9JmGnvYkTFvnGjq1VavULFxiSVXUu7
-         +P1t3Kke2Pm+/l1SaT66MbcflDpT8s52DgyJZqsIIDjrVBA03VITfY5qgOasC5JDvuNc
-         3P+JkMqi41y5gNVLa2ROjIC6JOIIPvQB6AsPpw7oQ1HkqPiMcVIMl7vSOPQgkTznhu3m
-         i3NQ==
+        bh=WKre0Si3CV+o1WG/2WLKOz8R0ZGc2BI5qcqtES/NRKo=;
+        b=vf3tPsXPSniWsRyBBhDE+I2RPnc0SfdOpXqCDdbXAIRvdpNiIXMGbijU3Y2HO/qw51
+         /qe01YQvidWeC/tZ3Lm9S/52FSJmk4uLo3xbWu9rZcyHsv6s8ylSJsgUfHeqq3e+mqcB
+         XtFfMUK3YGAkRVRIdD3gZINHkF6mynpTXuu9UexpE1kv5yODyA/WIcG4U3dTET/GWrT6
+         a9sUKcTj0H8ryCr0GcXwK3TUQHofkp9WHNTtsr25QPOd90Blow7zANshWelIQi6o11xP
+         wafUYEqoZwgDPbYsbS/8AYi4tl3DGIKn/KvLppmHffZvjQfU5XUptU1eg9MnuZLfnujP
+         HKuQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1790187215; x=1790792015;
+        d=1e100.net; s=20260707; t=1790187222; x=1790792022;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=GdUrPLeidZ9sUt9zVmAl34CruFIaflRaMNzsOxLYKi0=;
-        b=V+hh4BxPFCh9QB74DO90QD9AhljG4Md02vXpuRocnNhw1FAdZZqJZ+FTdehbAtoyPH
-         GbYdmTNdZx7VSaLfQJ7scw8PR3m0zMTO7LHYm293ALr42FW0PzoTI4tglsUQyOmQHi/X
-         ZAh5cbppfMY/vJPrku5Oz25YLdIfn9Q5/LqHat0e1VQF2gAvqSyQxUS+M/wTXgNRLzjI
-         71usefx+p1bCyWQOe1uWH8XjMdBOA2whUL/eXZkobjJzsDT9tgaavTZde7Q9dY3CBzm8
-         QRxVzBP8/SG5WxkNes2LwZybtyWNrhmYJC0+sVZQ02IdX0EzX+xHBH6o8uRXqosVS7J1
-         MKig==
-X-Forwarded-Encrypted: i=1; AKwUvBz5lJH2/UdTkNihnb6tM0ofvK3Hapo2Dnf3Z5zAZk31QNgxzY8Q6oKBCGxapJfhGm9ZAfiug0zBDcrREV5MwhJv@vger.kernel.org
-X-Gm-Message-State: AFuF++nFCfUwxRgswX3vMufnuPr927V/Q+6ana1ovpWansNtyg3DERO7
-	3A6y63HeerPTi1yTArHLpA9GjBTFwugtzj06ZjgS+iyKb58tqevOhpkCQ79uFyHiXBNy9hrBefL
-	DRozs4kQiQg==
-X-Received: from dldnz10.prod.google.com ([2002:a05:701a:ca0a:b0:144:dc81:9760])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:ea30:b0:143:271a:308
- with SMTP id a92af1059eb24-144f91b5db4mr5035124c88.46.1790187213775; Wed, 23
- Sep 2026 11:13:33 -0700 (PDT)
-Date: Wed, 23 Sep 2026 11:11:39 -0700
+        bh=WKre0Si3CV+o1WG/2WLKOz8R0ZGc2BI5qcqtES/NRKo=;
+        b=ZRcpuTmfbuJSujCe2AJpqf8IGDeOf6gi7l0ROSeHmqAJxFj7YkxFk6bRHByRdWPsrD
+         G3CxxdDaFyoiHvKW7MpOvsTMjSCEzScSv3qApoG/vNlXR1XPOv53LfO3p8SC3SKBRFbr
+         V6bSjhQ6JjxCqmU8u5bmIgKTQStE2cSOHBBB6DRv4T1Spm8mvog8MAC2D3bJnE9tpTko
+         ec3ueLavf1lCI56rmUN0fUJYM6o+wQ2AJbZ2a6PyUnHfThoQVovt1jGcD5r2lsMPyppu
+         hXYIrcky825ji9jAQ++ObVFguJHPaVi++rcChE+WQDH8GolAa2lvRhSX3+o0pS0P1HTU
+         JS+Q==
+X-Forwarded-Encrypted: i=1; AKwUvBzZW/nRPSvJqa5lNgaRUZ+n7ECNlfOzGyzzGw3xroczAqld8cnPrNJ4+F+HvQoVLBNrobB+nMapEyw3Nkmy6bb2@vger.kernel.org
+X-Gm-Message-State: AFuF++l5anDDJ45+xtYDyAQ9gtHbcyRkY63XOGYNISFy3/4oJXVvUd39
+	NifQugl7amZqeg+jZDKl517Uac6khQxFxzTgyIYvHGyDpOhoSmBxAq4gpXXPfZwuFNe1lmciBhj
+	8TW8pRrEYSA==
+X-Received: from dlbts8-n2.prod.google.com ([2002:a05:7022:b048:20b0:144:d7ab:e21b])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:1402:b0:143:2719:566c
+ with SMTP id a92af1059eb24-144f9198b49mr3512891c88.40.1790187221594; Wed, 23
+ Sep 2026 11:13:41 -0700 (PDT)
+Date: Wed, 23 Sep 2026 11:11:41 -0700
 In-Reply-To: <20260923181213.3032038-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -60,8 +60,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <cover.1789966896.git.irogers@google.com> <20260923181213.3032038-1-irogers@google.com>
 X-Mailer: git-send-email 2.56.0.rc1.310.g51773c2048-goog
-Message-ID: <20260923181213.3032038-17-irogers@google.com>
-Subject: [PATCH v3 16/49] perf python: Port stat-cpi to perf module
+Message-ID: <20260923181213.3032038-19-irogers@google.com>
+Subject: [PATCH v3 18/49] perf python: Port stackcollapse to perf module
 From: Ian Rogers <irogers@google.com>
 To: irogers@google.com, acme@kernel.org, alice.mei.rogers@gmail.com, 
 	namhyung@kernel.org
@@ -71,374 +71,265 @@ Cc: adrian.hunter@intel.com, dapeng1.mi@linux.intel.com,
 	tmricht@linux.ibm.com
 Content-Type: text/plain; charset="UTF-8"
 
-Port stat-cpi.py from the legacy embedded scripting framework to a
-standalone Python script in tools/perf/python/ to calculate Cycles Per
-Instruction (CPI) per interval per CPU or thread.
+Port stackcollapse.py from tools/perf/scripts/python/ to a standalone
+script in tools/perf/python/ refactored into a StackCollapseAnalyzer
+class.
 
 Improvements compared to the legacy script:
-- Support both perf.data file mode (via perf.session stat callbacks)
-  and live counter collection mode (using perf.parse_events,
-  evlist.open, and evsel.read across intervals), with automatic fallback
-  to user-space (:u) and self-process monitoring when perf_event_paranoid
-  restricts system-wide events (EACCES).
-- Compute per-interval counter deltas (val, ena, run) keyed by raw event
-  name so cumulative PERF_RECORD_STAT snapshots and hybrid PMU events
-  (e.g. cpu_core/cycles/, cpu_atom/cycles/) are accumulated accurately,
-  and scale counts by time_enabled / time_running when multiplexed.
-- Replace hard-coded CPU ([0, 1]) and thread ([0]) arrays with dynamic
-  CPU and thread discovery so arbitrary system topologies work
-  automatically.
-- Add CLI option handling (-i, -I, -p) via argparse and type annotations
-  passing mypy and pylint.
+- Traverse sample.callchain directly from perf.session without
+  allocating per-event dictionaries, and fall back to sample.symbol when
+  a sample has no callchain.
+- Replace deprecated optparse with argparse, adding -i/--input alongside
+  --include-tid, --include-pid, --no-comm, --tidy-java, and --kernel.
+- Handle BrokenPipeError cleanly when output is piped into downstream
+  tools (such as head or flamegraph.pl).
 
-Add a shell test (test_stat_cpi_python.sh) to verify the standalone
-script.
+Add a shell test (test_stackcollapse_python.sh) using a CPU workload
+(perf test -w noploop) to verify the standalone script.
 
 Assisted-by: Antigravity:gemini-3.1-pro
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/python/stat-cpi.py                 | 210 ++++++++++++++++++
- .../perf/tests/shell/test_stat_cpi_python.sh  | 115 ++++++++++
- 2 files changed, 325 insertions(+)
- create mode 100755 tools/perf/python/stat-cpi.py
- create mode 100755 tools/perf/tests/shell/test_stat_cpi_python.sh
+ tools/perf/python/stackcollapse.py            | 145 ++++++++++++++++++
+ .../tests/shell/test_stackcollapse_python.sh  |  78 ++++++++++
+ 2 files changed, 223 insertions(+)
+ create mode 100755 tools/perf/python/stackcollapse.py
+ create mode 100755 tools/perf/tests/shell/test_stackcollapse_python.sh
 
-diff --git a/tools/perf/python/stat-cpi.py b/tools/perf/python/stat-cpi.py
+diff --git a/tools/perf/python/stackcollapse.py b/tools/perf/python/stackcollapse.py
 new file mode 100755
-index 000000000000..58ffa0b4e274
+index 000000000000..0e8a65969db3
 --- /dev/null
-+++ b/tools/perf/python/stat-cpi.py
-@@ -0,0 +1,210 @@
++++ b/tools/perf/python/stackcollapse.py
+@@ -0,0 +1,145 @@
 +#!/usr/bin/env python3
 +# SPDX-License-Identifier: GPL-2.0
-+"""Calculate CPI from perf stat data or live."""
++"""
++stackcollapse.py - format perf samples with one line per distinct call stack
++
++This script's output has two space-separated fields.  The first is a semicolon
++separated stack including the program name (from the "comm" field) and the
++function names from the call stack.  The second is a count:
++
++ swapper;start_kernel;rest_init;cpu_idle;default_idle;native_safe_halt 2
++
++The file is sorted according to the first field.
++
++Ported from tools/perf/scripts/python/stackcollapse.py
++"""
 +from __future__ import annotations
 +
 +import argparse
++from collections import defaultdict
 +import os
-+import signal
 +import sys
-+import time
-+from typing import Any, Optional
 +import perf
 +
-+class StatCpiAnalyzer:
-+    """Accumulates cycles and instructions and calculates CPI."""
++
++class StackCollapseAnalyzer:
++    """Accumulates call stacks and prints them collapsed."""
 +
 +    def __init__(self, args: argparse.Namespace) -> None:
 +        self.args = args
-+        self.data: dict[str, float] = {}
-+        self.prev_data: dict[str, tuple[int, int, int]] = {}
-+        self.recorded_pairs: set[tuple[int, int]] = set()
++        self.lines: dict[str, int] = defaultdict(int)
++        self.session: perf.session | None = None
 +
-+    def get_key(self, event: str, cpu: int, thread: int) -> str:
-+        """Get key for data dictionary."""
-+        return f"{event}-{cpu}-{thread}"
++    def tidy_function_name(self, sym: str, dso: str) -> str:
++        """Beautify function names based on options."""
++        if sym is None:
++            sym = "[unknown]"
 +
-+    def store_key(self, cpu: int, thread: int) -> None:
-+        """Store CPU and thread IDs."""
-+        self.recorded_pairs.add((cpu, thread))
-+
-+    def store(self, event: str, cpu: int, thread: int,
-+              counts: tuple[int, int, int], is_delta: bool = False,
-+              raw_name: Optional[str] = None) -> None:
-+        """Store counter values, computing difference from previous
-+        absolute values if not already deltas."""
-+        self.store_key(cpu, thread)
-+        key = self.get_key(event, cpu, thread)
-+        prev_key = self.get_key(raw_name or event, cpu, thread)
-+
-+        val, ena, run = counts
-+        if is_delta:
-+            # counts are already deltas
-+            cur_val = val
-+            cur_ena = ena
-+            cur_run = run
-+        else:
-+            if prev_key in self.prev_data:
-+                prev_val, prev_ena, prev_run = self.prev_data[prev_key]
-+                cur_val = val - prev_val
-+                cur_ena = ena - prev_ena
-+                cur_run = run - prev_run
-+            else:
-+                cur_val = val
-+                cur_ena = ena
-+                cur_run = run
-+            self.prev_data[prev_key] = counts  # Store absolute value for next time
-+
-+        # Scale each raw event's delta by its own multiplexing ratio before
-+        # summing across PMUs (e.g. cpu_core and cpu_atom on hybrid systems) so
-+        # enabled time from an idle PMU does not inflate the multiplier of an
-+        # active PMU.
-+        scaled_val = cur_val * (cur_ena / float(cur_run)) if cur_run > 0 else float(cur_val)
-+        self.data[key] = self.data.get(key, 0.0) + scaled_val
-+
-+    def get(self, event: str, cpu: int, thread: int) -> float:
-+        """Get scaled counter value."""
-+        key = self.get_key(event, cpu, thread)
-+        return self.data.get(key, 0.0)
-+
-+    def process_stat_event(self, event: Any, name: Optional[str] = None) -> None:
-+        """Process PERF_RECORD_STAT and PERF_RECORD_STAT_ROUND events."""
-+        if event.type == perf.RECORD_STAT:
-+            if name:
-+                if "cycles" in name:
-+                    event_name = "cycles"
-+                elif "instructions" in name:
-+                    event_name = "instructions"
-+                else:
-+                    return
-+                self.store(event_name, event.cpu, event.thread,
-+                           (event.val, event.ena, event.run), raw_name=name)
-+        elif event.type == perf.RECORD_STAT_ROUND:
-+            timestamp = getattr(event, "time", 0)
-+            self.print_interval(timestamp)
-+            self.data.clear()
-+            self.recorded_pairs.clear()
-+
-+    def print_interval(self, timestamp: int) -> None:
-+        """Print CPI for the current interval."""
-+        for cpu, thread in sorted(self.recorded_pairs):
-+            cyc = self.get("cycles", cpu, thread)
-+            ins = self.get("instructions", cpu, thread)
-+            cpi = 0.0
-+            if ins != 0:
-+                cpi = cyc / float(ins)
-+            t_sec = timestamp / 1000000000.0
-+            print(f"{t_sec:15f}: cpu {cpu}, thread {thread} -> cpi {cpi:f} ({cyc:.0f}/{ins:.0f})")
-+
-+    def read_counters(self, evlist: Any) -> None:
-+        """Read counters live."""
-+        for evsel in evlist:
-+            name = str(evsel)
-+            if "cycles" in name:
-+                event_name = "cycles"
-+            elif "instructions" in name:
-+                event_name = "instructions"
-+            else:
-+                continue
-+
-+            for cpu in evsel.cpus():
-+                for thread in evsel.threads():
-+                    try:
-+                        counts = evsel.read(cpu, thread)
-+                        self.store(event_name, cpu, thread,
-+                                   (counts.val, counts.ena, counts.run),
-+                                   is_delta=True, raw_name=name)
-+                    except OSError:
-+                        pass
-+
-+    def run_file(self) -> None:
-+        """Process events from file."""
-+        session: Optional[perf.session] = perf.session(
-+            perf.data(self.args.input), stat=self.process_stat_event
-+        )
-+        try:
-+            assert session is not None
-+            session.process_events()
-+        finally:
-+            session = None
-+
-+    def _open_live_evlist(self) -> Any:
-+        """Open evlist for live mode, falling back to user-space or process scope on EACCES."""
-+        threads = perf.thread_map(self.args.pid) if self.args.pid else None
-+        candidates = [
-+            ("cycles,instructions", threads),
-+            ("cycles:u,instructions:u", threads),
-+        ]
-+        if threads is None:
-+            self_threads = perf.thread_map(os.getpid())
-+            candidates.append(("cycles,instructions", self_threads))
-+            candidates.append(("cycles:u,instructions:u", self_threads))
-+
-+        last_err: Optional[OSError] = None
-+        for events, tmap in candidates:
++        sym = sym.replace(";", ":")
++        if self.args.tidy_java:
++            # Beautify Java signatures
++            sym = sym.replace("<", "")
++            sym = sym.replace(">", "")
++            if sym.startswith("L") and "/" in sym:
++                sym = sym[1:]
 +            try:
-+                evlist = perf.parse_events(events, None, tmap)
-+                for evsel in evlist:
-+                    evsel.read_format |= (
-+                        perf.FORMAT_TOTAL_TIME_ENABLED | perf.FORMAT_TOTAL_TIME_RUNNING
++                sym = sym[:sym.index("(")]
++            except ValueError:
++                pass
++
++        if self.args.annotate_kernel and dso == "[kernel.kallsyms]":
++            return sym + "_[k]"
++        return sym
++
++    def process_event(self, sample: perf.sample_event) -> None:
++        """Collect call stack for each sample."""
++        stack = []
++        callchain = sample.callchain
++        if callchain is not None:
++            for node in callchain:
++                stack.append(self.tidy_function_name(node.symbol, node.dso))
++        else:
++            # Fallback if no callchain
++            sym = (sample.symbol or '[unknown]')
++            dso = (sample.dso or '[unknown]')
++            stack.append(self.tidy_function_name(sym, dso))
++
++        if self.args.include_comm:
++            comm = "Unknown"
++            if self.session is not None:
++                try:
++                    proc = self.session.find_thread(
++                        sample.sample_pid, sample.sample_tid
 +                    )
-+                evlist.open()
-+                evlist.enable()
-+                return evlist
-+            except PermissionError as e:
-+                last_err = e
-+            except OSError as e:
-+                if e.errno == 13:
-+                    last_err = e
-+                else:
-+                    raise
-+        if last_err is not None:
-+            raise last_err
-+        raise RuntimeError("Failed to open events")
++                    if proc:
++                        proc_comm = proc.comm()
++                        if proc_comm is not None:
++                            comm = proc_comm
++                except TypeError:
++                    pass
++            comm = str(comm).replace(" ", "_")
++            sep = "-"
++            if self.args.include_pid:
++                comm = f"{comm}{sep}{(sample.sample_pid or 0)}"
++                sep = "/"
++            if self.args.include_tid:
++                comm = f"{comm}{sep}{(sample.sample_tid or 0)}"
++            stack.append(comm)
 +
-+    def run_live(self) -> None:
-+        """Read counters live."""
++        stack_string = ";".join(reversed(stack))
++        self.lines[stack_string] += 1
++
++    def print_totals(self) -> None:
++        """Print sorted collapsed stacks."""
 +        try:
-+            evlist = self._open_live_evlist()
-+        except OSError as e:
-+            print(f"Failed to open events: {e}", file=sys.stderr)
-+            sys.exit(1)
++            for stack in sorted(self.lines):
++                print(f"{stack} {self.lines[stack]}")
++            sys.stdout.flush()
++        except BrokenPipeError:
++            devnull = os.open(os.devnull, os.O_WRONLY)
++            os.dup2(devnull, sys.stdout.fileno())
++            os.close(devnull)
 +
-+        def handle_signal(_signum: int, _frame: Any) -> None:
-+            raise KeyboardInterrupt
 +
-+        signal.signal(signal.SIGINT, signal.default_int_handler)
-+        signal.signal(signal.SIGTERM, handle_signal)
-+
-+        print("Live mode started. Press Ctrl+C to stop.")
-+        try:
-+            while True:
-+                time.sleep(self.args.interval)
-+                timestamp = time.time_ns()
-+                self.read_counters(evlist)
-+                self.print_interval(timestamp)
-+                self.data.clear()
-+                self.recorded_pairs.clear()
-+        except KeyboardInterrupt:
-+            print("\nStopped.")
-+        finally:
-+            evlist.close()
-+
-+def main() -> None:
++def main():
 +    """Main function."""
-+    ap = argparse.ArgumentParser(description="Calculate CPI from perf stat data or live")
-+    ap.add_argument("-i", "--input", help="Input file name (enables file mode)")
-+    ap.add_argument("-I", "--interval", type=float, default=1.0,
-+                    help="Interval in seconds for live mode")
-+    ap.add_argument("-p", "--pid", type=int,
-+                    help="Monitor specific process ID in live mode")
++    ap = argparse.ArgumentParser(
++        description="Format perf samples with one line per distinct call stack"
++    )
++    ap.add_argument("-i", "--input", default="perf.data", help="Input file name")
++    ap.add_argument("--include-tid", action="store_true", help="include thread id in stack")
++    ap.add_argument("--include-pid", action="store_true", help="include process id in stack")
++    ap.add_argument("--no-comm", dest="include_comm", action="store_false", default=True,
++                    help="do not separate stacks according to comm")
++    ap.add_argument("--tidy-java", action="store_true", help="beautify Java signatures")
++    ap.add_argument("--kernel", dest="annotate_kernel", action="store_true",
++                    help="annotate kernel functions with _[k]")
++
 +    args = ap.parse_args()
 +
-+    analyzer = StatCpiAnalyzer(args)
-+    if args.input:
-+        analyzer.run_file()
-+    else:
-+        analyzer.run_live()
++    if args.include_tid and not args.include_comm:
++        print("requesting tid but not comm is invalid", file=sys.stderr)
++        sys.exit(1)
++    if args.include_pid and not args.include_comm:
++        print("requesting pid but not comm is invalid", file=sys.stderr)
++        sys.exit(1)
++
++    analyzer = StackCollapseAnalyzer(args)
++
++    try:
++        session = perf.session(perf.data(args.input), sample=analyzer.process_event)
++        analyzer.session = session
++        session.process_events()
++    except IOError as e:
++        print(f"Error: {e}", file=sys.stderr)
++        sys.exit(1)
++    except KeyboardInterrupt:
++        pass
++    finally:
++        analyzer.session = None
++
++    analyzer.print_totals()
++
 +
 +if __name__ == "__main__":
 +    main()
-diff --git a/tools/perf/tests/shell/test_stat_cpi_python.sh b/tools/perf/tests/shell/test_stat_cpi_python.sh
+diff --git a/tools/perf/tests/shell/test_stackcollapse_python.sh b/tools/perf/tests/shell/test_stackcollapse_python.sh
 new file mode 100755
-index 000000000000..0960afa4c797
+index 000000000000..a3b6c917e842
 --- /dev/null
-+++ b/tools/perf/tests/shell/test_stat_cpi_python.sh
-@@ -0,0 +1,115 @@
++++ b/tools/perf/tests/shell/test_stackcollapse_python.sh
+@@ -0,0 +1,78 @@
 +#!/bin/bash
 +# SPDX-License-Identifier: GPL-2.0
-+# stat-cpi python test
++# stackcollapse python test
 +
-+set -e
++set -e -o pipefail
 +
 +shelldir=$(dirname "$0")
 +# shellcheck source=lib/setup_python.sh
 +. "${shelldir}"/lib/setup_python.sh
 +
-+# If we don't have the perf python module, we can't test
 +if ! "$PYTHON" -c 'import perf' > /dev/null 2>&1; then
 +	echo "Skipping test, perf python module not found"
-+	return 2 2>/dev/null || exit 2
++	exit 2
 +fi
 +
 +script_dir="$(dirname "$0")/../../python"
-+script_path="${script_dir}/stat-cpi.py"
++script_path="${script_dir}/stackcollapse.py"
 +
 +if [ ! -f "$script_path" ]; then
-+	echo "Skipping test, stat-cpi.py not found at $script_path"
-+	return 2 2>/dev/null || exit 2
++	echo "Skipping test, stackcollapse.py not found at $script_path"
++	exit 2
 +fi
 +
 +err=0
-+ran=0
 +temp_data=""
 +temp_out=""
 +
 +cleanup() {
-+	[ -n "${pid}" ] && kill "$pid" 2>/dev/null || true
-+	[ -n "${workload_pid}" ] && kill "$workload_pid" 2>/dev/null || true
 +	rm -f "${temp_data}" "${temp_out}"
-+	trap - exit term int
 +}
-+
-+trap_cleanup() {
-+	cleanup
-+	exit 1
-+}
-+trap trap_cleanup exit term int
++trap 'cleanup' EXIT TERM INT
 +
 +temp_data=$(mktemp /tmp/perf.data.XXXXXX)
 +temp_out=$(mktemp /tmp/perf.out.XXXXXX)
 +
-+test_live_mode() {
-+	echo "Testing stat-cpi.py live mode..."
-+	if ! perf stat -e cycles,instructions -- sleep 0.1 2>/dev/null && \
-+	   ! perf stat -e cycles:u,instructions:u -- sleep 0.1 2>/dev/null; then
-+		echo "perf stat failed (permissions?), skipping live mode test."
-+		return 0
-+	fi
-+	perf test -w noploop &
-+	workload_pid=$!
-+	if ! perf stat -e cycles,instructions -p "$workload_pid" -- sleep 0.05 2>/dev/null && \
-+	   ! perf stat -e cycles:u,instructions:u -p "$workload_pid" -- sleep 0.05 2>/dev/null; then
-+		kill "$workload_pid" 2>/dev/null || true
-+		workload_pid=""
-+		echo "perf stat -p failed (ptrace_scope?), skipping live mode test."
-+		return 0
-+	fi
-+	ran=1
++echo "Testing stackcollapse.py..."
 +
-+	# Run live mode for 1 interval in the background, give it a tiny sleep, then interrupt
-+	"$PYTHON" "$script_path" -I 0.1 -p "$workload_pid" > "${temp_out}" &
-+	pid=$!
-+	sleep 0.5
-+	kill -INT "$pid" 2>/dev/null || true
-+	set +e
-+	wait "$pid"
-+	res=$?
-+	set -e
-+	pid=""
-+	kill "$workload_pid" 2>/dev/null || true
-+	workload_pid=""
-+	if [ $res -ne 0 ] && [ $res -ne 130 ] && [ $res -ne 143 ]; then
-+		echo "Live mode failed or crashed"
-+		err=1
-+	elif ! grep -q "cpi" "${temp_out}"; then
-+		echo "Live mode produced no cpi output"
-+		err=1
-+	else
-+		echo "Live mode test passed."
-+	fi
-+}
++# Create a perf.data file with callchains. Use a busy workload rather than
++# sleep, as an idle system may not generate any samples at all.
++perf record -g -o "${temp_data}" \
++		-- perf test -w noploop >/dev/null 2>&1 || \
++		{ echo "Skipping test, perf record failed"; exit 2; }
 +
-+test_file_mode() {
-+	echo "Testing stat-cpi.py file mode..."
-+	# Generate some stat events - perf stat -I represents interval reporting
-+	if ! perf stat -e cycles,instructions -I 100 record -o "${temp_data}" \
-+		-- sleep 0.5 2>/dev/null && \
-+	   ! perf stat -e cycles:u,instructions:u -I 100 record -o "${temp_data}" \
-+		-- sleep 0.5 2>/dev/null; then
-+		echo "perf stat failed (permissions?), skipping file mode test."
-+		return
-+	fi
-+	ran=1
-+
-+	out=$("$PYTHON" "$script_path" -i "${temp_data}")
-+	if ! echo "$out" | grep -q "cpi"; then
-+		echo "File mode test failed."
-+		err=1
-+	else
-+		echo "File mode test passed."
-+	fi
-+}
-+
-+test_live_mode
-+test_file_mode
-+
-+cleanup
-+if [ $ran -eq 0 ]; then
++if [ ! -s "${temp_data}" ]; then
++	echo "Skipping test, perf record failed to create data"
 +	exit 2
 +fi
++
++# Check that the script executes with default options
++if ! "$PYTHON" "$script_path" -i "${temp_data}" > "${temp_out}"; then
++	echo "stackcollapse.py test failed"
++	err=1
++else
++	# It outputs stacks like: swapper;...;... 2
++	if [ ! -s "${temp_out}" ]; then
++		echo "Expected stack traces in output, but output is empty."
++		err=1
++	else
++		echo "stackcollapse default test passed."
++	fi
++fi
++
++# Test CLI flags (--include-pid, --include-tid, --tidy-java, --kernel) and BrokenPipeError
++if ! "$PYTHON" "$script_path" -i "${temp_data}" \
++	--include-pid --include-tid --tidy-java --kernel | head -n 1 > "${temp_out}" || \
++   [ ! -s "${temp_out}" ]; then
++	echo "stackcollapse.py options/pipe test failed"
++	err=1
++elif ! "$PYTHON" "$script_path" -i "${temp_data}" --no-comm > "${temp_out}" || \
++     [ ! -s "${temp_out}" ]; then
++	echo "stackcollapse.py --no-comm test failed"
++	err=1
++else
++	echo "stackcollapse options test passed."
++fi
++rm -f "${temp_out}"
++
 +exit $err
 -- 
 2.56.0.rc1.310.g51773c2048-goog
