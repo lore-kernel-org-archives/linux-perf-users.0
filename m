@@ -1,209 +1,82 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D16FE477E37;
-	Wed, 23 Sep 2026 09:13:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43DB747012D
+	for <linux-perf-users@vger.kernel.org>; Wed, 23 Sep 2026 09:14:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790154815; cv=none; b=FTdx4vN1mdkc/qJCC916+FtaqlUDpOApWIvDeAZ5uvcSz8pcZ5qdzem/noxyGlwcuY0jh21qtSLLU/HvRAK4pcvTeNUOg3qQ2fdeDVQ8btEVjHjLiMSeJWmokW6GOX1v3v2lC+D03TAlmPe8bP2ctupn/WW7uNw+Qd/baobE9SM=
+	t=1790154848; cv=none; b=Mi1N/+LtYcBOpZZD5cXj8vvGwkxOrgmVOJim3+cUedIwEqC+bDY8Hy1jqkJsnxQhY9scTof+hzRBW5JJvVGFHf7WWg0/8gaOxWsWW3xpJOrZkLYMx1GWB+RscJzeL5TOR5D/xzts9IlW8FM1zL2mhTE052bB5tMtwtyAW4OszDc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790154815; c=relaxed/simple;
-	bh=TsIuNm5jFryvz4LLPwlBrr1EE8osp13D6JiRN6bqtQ8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BnNsAdK/ZU3WT7oIrDffEHcEG6pWxLvpOlASLf6i4lbWDFZcfd6kC93xT6pafs7W426TMX/S7zi0LdgpdZBrA37LxjPmQkVFKem7O1oIYzXPxs+O2wzsN1HzTvAm/wEhCDMBWrX+0kWNDUs5xP1ivXDVMwTwXttKB5AFTyh27O0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=pass smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=hkPlCmYJ; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1790154848; c=relaxed/simple;
+	bh=jCM+NsaiFC8DYzZWX5wARc4nw2uioaC4o0IFp1a/9EU=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=Gt9pr51yUiTP4aFWnzHidYxr91+hCWjeFVxCCxVbx19TJlmUX3BOUoTwUZCddOQJBmi2dYSf7arHLsJ07rdnPMf+PMB9EwIcU9mcp1jJhwM7kMiaLomhH80QI/vUHqBnZIdwTmdDI29NVghI94v40ZiciQWxhBRmHkx3+JrBwUQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Aq9FsqzK; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="hkPlCmYJ"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=JUBiUwkLuqf7ZmJwTiYj7Qrw6wUl0OXzxMNYxraTk/E=; b=hkPlCmYJFsdy/YK0RkiVRAqWXB
-	GzN0N/P1H7rVpbCKkSBKwCjJL9JoNKKJY176lqHON8IhJSZxww3F65ZRpxJQE24HF6Te/2Tz+4yL2
-	M9k7nLlCyGisi29RVxoORbnQc+uFsG1ZaxHxALW0vpiaw1HKkxiGTDVC5iJ36nz4TXWbZP4FsJ99B
-	q/Lnw50Z+ezeL8gfcCvTOs6oZC4ucrrS2TAD2PqpYvdS9D5f6TDYy9J2r5jOpMKTnouGZspPxaJvV
-	tHNZTq5BE7DsXbs/kdAAgWVxjyFyA9diGfIgFOu4s17B3zCYLaFCC5XQDgQkJiwRSS+SF5rvygQhl
-	tCTrfxgw==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x9J2X-0000000CW22-0qbV;
-	Wed, 23 Sep 2026 09:13:21 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 362833006DD; Wed, 23 Sep 2026 11:13:20 +0200 (CEST)
-Date: Wed, 23 Sep 2026 11:13:20 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>, Ingo Molnar <mingo@kernel.org>,
-	Sean Christopherson <seanjc@google.com>,
-	Jinchao Wang <wangjinchao600@gmail.com>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H . Peter Anvin" <hpa@zytor.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Ian Rogers <irogers@google.com>, linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-	linux-perf-users@vger.kernel.org, x86@kernel.org,
-	Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org
-Subject: Re: [PATCH v17 03/13] x86/hw_breakpoints: Make DR7 updates NMI safe
-Message-ID: <20260923091320.GW776954@noisy.programming.kicks-ass.net>
-References: <179005108298.388919.4535333252892590932.stgit@devnote2>
- <179005111951.388919.3131603399440492416.stgit@devnote2>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Aq9FsqzK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C7FD81F00893;
+	Wed, 23 Sep 2026 09:14:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1790154846;
+	bh=jCM+NsaiFC8DYzZWX5wARc4nw2uioaC4o0IFp1a/9EU=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=Aq9FsqzKd1nARFsiP+Mp63LvA7un9XD4FDuz9l8EZTnmEFR75PEnvLz8FjBmryyNf
+	 6OegQTLNMgn1WqAD4333NXzg8IqMX0iwNTrheFcFlkMMWA5o9ONzn9gaknfk6cziRn
+	 yj5uYNdQj/9QuZaiJlEYh2ZWeq+JMEN+g5iccVsghAHQNyq8trKeA0nq52NmB9n1Um
+	 QbPMNcqSPLH4gAVnffSkQ4rudaLEGxIhN7I86xb05XEDCs1ZhEEE8wlM71Tfz6XsSJ
+	 WC6gZTIhI0k7hlMUQsFLvveEaS90LFzv7sCM1QNtopIQES21XpIkQ09gFNmb07R8Iw
+	 VWNkDCK4SPtww==
+From: sashiko-bot@kernel.org
+Subject: Re: [RFC PATCH v3 2/3] sparc64: Support PERF_SAMPLE_REGS_USER and
+ PERF_SAMPLE_STACK_USER
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Stian Halseth" <stian@itx.no>
+Cc: linux-perf-users@vger.kernel.org
+In-Reply-To: <20260923090429.2026529-3-stian@itx.no>
+References: <20260923090429.2026529-1-stian@itx.no>
+ <20260923090429.2026529-3-stian@itx.no>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Wed, 23 Sep 2026 09:14:06 +0000
+Message-Id: <20260923091406.C7FD81F00893@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <179005111951.388919.3131603399440492416.stgit@devnote2>
 
-On Tue, Sep 22, 2026 at 01:25:19PM +0900, Masami Hiramatsu (Google) wrote:
-> From: Jinchao Wang <wangjinchao600@gmail.com>
-> 
-> Hardware breakpoint installation and removal run with IRQs disabled, but
-> an NMI can still enter the same code through KGDB. The interrupted
-> operation and the NMI can consequently claim the same slot or overwrite
-> each other's DR7 state.
-> 
-> Claim and release per-CPU slots with cmpxchg. Update cpu_dr7 with
-> single-instruction per-CPU operations, and preserve hardware-first
-> disable and hardware-last enable ordering. Add a per-CPU sequence number
-> so interrupted DR7 writers and restore paths detect an NMI update and
-> retry from the latest shadow state.
+> Select HAVE_PERF_REGS and HAVE_PERF_USER_STACK_DUMP and add the
+> perf_regs implementation. The exposed registers mirror struct pt_regs:
+> %g1-%g7, %o0-%o7 (named from the user's point of view; pt_regs calls
+> them UREG_I*), %tstate, NPC and %y, with the PC in the slot of %g0, as
+> mips and loongarch do for their hardwired-zero register. Trap entry
+> does not save %g0, so its pt_regs slot holds stale stack contents for
+> a trap taken in the kernel and must not be exposed.
+>=20
+> %o6 is reported as held in the register, i.e. with the 2047 stack bias
+> for a 64-bit stack, the same as ptrace and user_stack_pointer(). The
+> stack dump starts at the stack's actual address instead, %o6 + 2047
+> when test_thread_64bit_stack() says so, so that it begins at the
+> sampled frame; the uapi header documents this for consumers.
+>=20
+> User-mode values of a 32-bit task are truncated to 32 bits as
+> genregs32_get() does, since the hardware does not zero-extend them.
+> Kernel-mode registers, as seen by PERF_SAMPLE_REGS_INTR, are left
+> alone.
+>=20
+> perf_arch_prepare_ustack() flushes the user register windows so the
+> sampled window's %l and %i registers are in the dumped stack, where a
+> DWARF unwinder needs them: the CFI of a function after `save` defines
+> the CFA in terms of %i6.
+>=20
+> This makes perf record --call-graph dwarf and eu-stackprof usable on
+> sparc64.
+>=20
+> Signed-off-by: Stian Halseth <stian@itx.no>
 
-Bah, KGDB.. Aren't there far more problems with that thing? 
+Sashiko has reviewed this patch and found no issues. It looks great!
 
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260923090429.2026=
+529-1-stian@itx.no?part=3D2
 
-> diff --git a/arch/x86/include/asm/debugreg.h b/arch/x86/include/asm/debugreg.h
-> index 854d82b88ff4..515d2d313d0c 100644
-> --- a/arch/x86/include/asm/debugreg.h
-> +++ b/arch/x86/include/asm/debugreg.h
-> @@ -18,6 +18,7 @@
->  #define DR7_FIXED_1	0x00000400
->  
->  DECLARE_PER_CPU(unsigned long, cpu_dr7);
-> +DECLARE_PER_CPU(unsigned int, cpu_dr7_seq);
-
-Would it make sense to:
-
-typedef struct {
-	unsigned long dr7;
-	unsigned int  seq;
-} dr7_save_t;
-
-
->  #ifndef CONFIG_PARAVIRT_XXL
->  /*
-> @@ -125,40 +126,69 @@ static __always_inline bool hw_breakpoint_active(void)
->  
->  extern void hw_breakpoint_restore(void);
->  
-> -static __always_inline unsigned long local_db_save(void)
-> +static __always_inline void local_db_save(unsigned long *dr7,
-> +					  unsigned int *dr7_seq)
-
-static __always_inline dr7_save_t local_db_save(void)
-
->  {
-
->  }
->  
-> -static __always_inline void local_db_restore(unsigned long dr7)
-> +static __always_inline void local_db_restore(unsigned long dr7,
-> +					     unsigned int dr7_seq)
-
-static __always_inline void local_db_restore(dr7_save_t dr7)
-
->  {
-
->  }
->  
->  #ifdef CONFIG_CPU_SUP_AMD
-
-> diff --git a/arch/x86/kernel/hw_breakpoint.c b/arch/x86/kernel/hw_breakpoint.c
-> index 0473a5c95856..901323ae7d6a 100644
-> --- a/arch/x86/kernel/hw_breakpoint.c
-> +++ b/arch/x86/kernel/hw_breakpoint.c
-
-> @@ -106,32 +108,25 @@ int arch_install_hw_breakpoint(struct perf_event *bp)
-
-> +	do {
-> +		seq = this_cpu_inc_return(cpu_dr7_seq);
-> +		this_cpu_write(cpu_debugreg[i], info->address);
-> +		barrier();
-> +		set_debugreg(info->address, i);
-> +		if (info->mask)
-> +			amd_set_dr_addr_mask(info->mask, i);
-> +		this_cpu_or(cpu_dr7, encode_dr7(i, info->len, info->type));
-> +		barrier();
-> +		set_debugreg(this_cpu_read(cpu_dr7) | DR7_FIXED_1, 7);
-> +		barrier();
-> +	} while (seq != this_cpu_read(cpu_dr7_seq));
->  
->  	return 0;
->  }
-> @@ -149,36 +144,34 @@ void arch_uninstall_hw_breakpoint(struct perf_event *bp)
-
-> +	do {
-> +		seq = this_cpu_inc_return(cpu_dr7_seq);
-> +		dr7 = this_cpu_read(cpu_dr7);
-
-You're inconsistent with the leading barrier(). 
-
-> +		dr7 &= ~__encode_dr7(i, info->len, info->type);
-> +		set_debugreg(dr7 | DR7_FIXED_1, 7);
-> +		if (info->mask)
-> +			amd_set_dr_addr_mask(0, i);
-> +		barrier();
-> +		this_cpu_and(cpu_dr7,
-> +			     ~__encode_dr7(i, info->len, info->type));
-> +		barrier();
-> +	} while (seq != this_cpu_read(cpu_dr7_seq));
-> +
-> +	WARN_ONCE(this_cpu_cmpxchg(bp_per_reg[i], bp, NULL) != bp,
-> +		  "Can't release breakpoint slot");
->  }
-
-These loops should be far more similar. Note how the top one does:
-
-	this_cpu_or(cpu_dr7, encode_dr7(...));
-	set_debugreg(this_cpu_read(cpu_dr7) | ..., 7);
-
-while the bottom one does:
-
-	dr7 &= ~encode_dr7(...)
-	set_debugreg(dr7 | ...);
-	this_cpu_and(cpu_dr7, ~encode_dr7(...));
-
-Why can't they both have the same shape and only one encode_dr7()
-instance?
-
-
-> @@ -486,12 +480,18 @@ void flush_ptrace_hw_breakpoint(struct task_struct *tsk)
->  
->  void hw_breakpoint_restore(void)
->  {
-> +	unsigned int seq;
-> +
-> +	do {
-> +		seq = this_cpu_inc_return(cpu_dr7_seq);
-
-no barrier().
-
-> +		set_debugreg(this_cpu_read(cpu_debugreg[0]), 0);
-> +		set_debugreg(this_cpu_read(cpu_debugreg[1]), 1);
-> +		set_debugreg(this_cpu_read(cpu_debugreg[2]), 2);
-> +		set_debugreg(this_cpu_read(cpu_debugreg[3]), 3);
-> +		set_debugreg(DR6_RESERVED, 6);
-> +		set_debugreg(this_cpu_read(cpu_dr7) | DR7_FIXED_1, 7);
-> +		barrier();
-> +	} while (seq != this_cpu_read(cpu_dr7_seq));
->  }
->  EXPORT_SYMBOL_FOR_KVM(hw_breakpoint_restore);
-
-I really can't say I'm a fan of this. Is KGDB really a thing?
