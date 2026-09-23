@@ -1,119 +1,67 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2791D57F746;
-	Wed, 23 Sep 2026 15:22:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AD9153E31C
+	for <linux-perf-users@vger.kernel.org>; Wed, 23 Sep 2026 15:29:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790176953; cv=none; b=fLQcWPAgK33PakVvVtsCG6O/xFNkWKeU3AgucBIpIuHdHa0Ol9+3cgMXPjwb1sOmfOEs4JRAnb4HDPZprfSLmnCCUtYFkgPtLMFTCRgWMrI7yondCy/1yV/Cni+oLog6w0XQ0LlcogIJECj/MsE2KojD0kI7TZAajPXLoNIuhik=
+	t=1790177385; cv=none; b=m5KisPIoLXsoR5WtzkJ7ay07YCEOy0cKt0z2ktfnE+ZuJ9hjA6excTDX1iFoGAY+4Dr4lfXTfgC36xTsla+gKOJBNzT/13ohl090QtEmsxLPlEzGmzeKpo9+w8FA7jwbe6Bjt1HjacE4g6lFFLuyErw8XJSGMrufQWNvhUeRNFA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790176953; c=relaxed/simple;
-	bh=EMuhC/0lDACH65JGvd017LcTWkEHVrNEuDe6Eoq9Hq4=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=E2PlL+fkrHQvKNRzN28ft7WSuksByDJNEERbW/e3qAVgbBylv1UezC4VUDI+xx1veKvmjCYB/KLPzwpWq3TK95tUo/tWBk5/nR4CiKZqiuwqZqe7ddqSCHJxXvmHpysitfTNWjDS5YJ0adUpEqBhFbHc+LDdZFJBngnmMn6mle4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=O2PVX6RG; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+	s=arc-20240116; t=1790177385; c=relaxed/simple;
+	bh=+OIRgDVpW0ACOI1fZ4eAxxEwqA2z/0SNnHsauZToZLQ=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=JPPrIC7NxsgwGBSRGVIEtlRaOpCUBy6eRRSwaIkNkYBJE/4vhCLTl8i+oGBSPB26wh8y2DpLrBzSwwS9M7CCV2F1/nCMVtP/ntU1PshhfrvIiQay3epo+RYyY3e8K2v958mRn4AgXDVbLhizC5xKJDS7WrRwVYD2PWBgDJntRXU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=W/qhXSN6; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="O2PVX6RG"
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2F5631E5E;
-	Wed, 23 Sep 2026 08:22:28 -0700 (PDT)
-Received: from e132581.arm.com (unknown [10.2.196.114])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7118C3F86F;
-	Wed, 23 Sep 2026 08:22:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
-	t=1790176951; bh=EMuhC/0lDACH65JGvd017LcTWkEHVrNEuDe6Eoq9Hq4=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=O2PVX6RGsaXYTOIazTUZVn/nRmiznh3pNplutIBqkaPrRzuQXa6IJbwydmzbIYDzf
-	 +i0Jol3K7CKipeq07gZDIPAedBkgPm0V0f4JBw+DkV5ssSbVA52LZBjyc7/VLt63DC
-	 Z5jxy5wkACxDL/57lXv8azPCS2gCLHAZop+TRofI=
-From: Leo Yan <leo.yan@arm.com>
-Date: Wed, 23 Sep 2026 16:21:54 +0100
-Subject: [PATCH v2 14/14] perf tests: Check CoreSight emulated instruction
- entry and exit
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="W/qhXSN6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 840A11F000FF;
+	Wed, 23 Sep 2026 15:29:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1790177377;
+	bh=+OIRgDVpW0ACOI1fZ4eAxxEwqA2z/0SNnHsauZToZLQ=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=W/qhXSN6VIpxcl505JCjh08APx3gd93dPOK2rVoJ8gFz3hVArBPZdJMHDNyLPwuul
+	 gzBDUAcbky4YV/uuU5EJTXBHYS54keO1pNCS4gFYQFhwGTcYcsdJUc0b4z1Ioqy9Xf
+	 CZHlKTObz7ilG7l1+A5XDpy6shfgGnkf5wVJfvc4sZ8jUIjGp8d83S/yPslRl9+E0h
+	 Am9OaWTrUKiNV6C+eCm3v2CZTbqDS2d5QI6AGZoj6g/odvoAYAcXy/BN9+G42rIZJ2
+	 Yz/Zi+kUB2IF4e8sg5z0kcwbA+I8DG5Dz49tuOj9aEdzbk6sY1Dwx1Rn0L+FV8OUhf
+	 BJ6aBWpJu8IBg==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v2 01/14] perf sample: Allow decoders to supply branch
+ return addresses
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Leo Yan" <leo.yan@arm.com>
+Cc: linux-perf-users@vger.kernel.org
+In-Reply-To: <20260923-perf_cs_etm_fix_non_taken-v2-1-6ab8c07a5455@arm.com>
+References: <20260923-perf_cs_etm_fix_non_taken-v2-0-6ab8c07a5455@arm.com>
+ <20260923-perf_cs_etm_fix_non_taken-v2-1-6ab8c07a5455@arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Wed, 23 Sep 2026 15:29:37 +0000
+Message-Id: <20260923152937.840A11F000FF@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20260923-perf_cs_etm_fix_non_taken-v2-14-6ab8c07a5455@arm.com>
-References: <20260923-perf_cs_etm_fix_non_taken-v2-0-6ab8c07a5455@arm.com>
-In-Reply-To: <20260923-perf_cs_etm_fix_non_taken-v2-0-6ab8c07a5455@arm.com>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>, 
- Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
- Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
- James Clark <james.clark@linaro.org>, Mike Leach <mike.leach@arm.com>, 
- Suzuki K Poulose <suzuki.poulose@arm.com>, Suyash Mahar <smahar@meta.com>, 
- Amir Ayupov <aaupov@fb.com>
-Cc: Arnaldo Carvalho de Melo <acme@redhat.com>, coresight@lists.linaro.org, 
- linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Leo Yan <leo.yan@arm.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1790176913; l=2055;
- i=leo.yan@arm.com; s=20250604; h=from:subject:message-id;
- bh=EMuhC/0lDACH65JGvd017LcTWkEHVrNEuDe6Eoq9Hq4=;
- b=y9kz+vj19LRt/+Lorv7jNh5I5cKJ52fcNPewi0j7HJGoPERH3qYF+Ur/mKSEv5FlvsNgycUWe
- COq2yyIsyXVCaBboOiqTIVziJ8f3J63kVe8fhHgS7jTWpxDrg4TbUf/
-X-Developer-Key: i=leo.yan@arm.com; a=ed25519;
- pk=k4BaDbvkCXzBFA7Nw184KHGP5thju8lKqJYIrOWxDhI=
 
-Use traploop's EL0 read of ID_AA64ISAR0_EL1 to check an emulated
-instruction. The kernel emulates MRS and advances the return PC by four
-bytes.
+> The thread stack derives return addresses from IP + insn_len. For an
+> interrupt or fault, the return address can instead be the sample IP even
+> when instruction bytes at that address are available.
+>=20
+> Add ret_addr to perf_sample and prefer it in thread_stack__trace_end()
+> and thread_stack__process() when supplied. Initialize it to zero so other
+> samples retain the IP + insn_len calculation.
+>=20
+> Add a regression test for explicit exception return addresses and the
+> ordinary call fallback when the return address is zero.
+>=20
+> Assisted-by: Codex:gpt-6
+> Signed-off-by: Leo Yan <leo.yan@arm.com>
 
-Select MRS entries by instruction encoding because page faults also
-appear as int/iret pairs but return to the same PC. Reuse the common FIFO
-recorder and pair checker.
+Sashiko has reviewed this patch and found no issues. It looks great!
 
-For example, an expected int/iret pair is:
-
-  int            5cc808 => ffff800080010c00 insn: 00 06 38 d5
-  ...
-  iret ffff800080012284 =>           5cc80c insn: e0 03 9f d6
-
-The entry instruction is MRS X0, ID_AA64ISAR0_EL1. After emulating the
-read at 0x5cc808, the kernel returns via ERET to the next instruction at
-0x5cc80c.
-
-Assisted-by: Codex:gpt-6
-Signed-off-by: Leo Yan <leo.yan@arm.com>
----
- .../perf/tests/shell/coresight/trap_entry_exit.sh  | 24 ++++++++++++++++++++++
- 1 file changed, 24 insertions(+)
-
-diff --git a/tools/perf/tests/shell/coresight/trap_entry_exit.sh b/tools/perf/tests/shell/coresight/trap_entry_exit.sh
-new file mode 100755
-index 0000000000000000000000000000000000000000..3ebd4033b247a1a43e0139868972afd41ba905ba
---- /dev/null
-+++ b/tools/perf/tests/shell/coresight/trap_entry_exit.sh
-@@ -0,0 +1,24 @@
-+#!/bin/bash
-+# SPDX-License-Identifier: GPL-2.0
-+# CoreSight emulated instruction entry and exit (exclusive)
-+
-+# shellcheck source=../lib/coresight_exception.sh
-+. "$(dirname "$0")/../lib/coresight_exception.sh"
-+
-+test_trap_entry_exit()
-+{
-+	# traploop reads ID_AA64ISAR0_EL1 from EL0. The kernel emulates MRS and
-+	# advances the saved PC, so IRET must resume four bytes after the trap.
-+	if ! record_trace traploop 256; then
-+		cat "$tmpdir/record.log"
-+		echo "Failed to record the traploop workload"
-+		return 1
-+	fi
-+	decode_trace || return 1
-+	# Page faults also appear as "int", but retry the same PC. Select MRS
-+	# Xt, ID_AA64ISAR0_EL1 by its encoding; the low five bits select Xt.
-+	check_exception_pairs "int.*insn: [01][[:xdigit:]] 06 38 d5" "iret" 4 || return 1
-+}
-+
-+setup_exception_test || exit $?
-+test_trap_entry_exit
-
--- 
-2.34.1
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260923-perf_cs_et=
+m_fix_non_taken-v2-0-6ab8c07a5455@arm.com?part=3D1
 
