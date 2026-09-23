@@ -1,166 +1,126 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f175.google.com (mail-qt1-f175.google.com [209.85.160.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAEFA40DB20;
-	Wed, 23 Sep 2026 12:27:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790166428; cv=none; b=qxEKpc56vGvw0uoBmcj7CwFuvjePrFcyMF/6AoNUKggMtbmIP7LI7GKZ80n3KUeXdilvVjLo3Plo2i0wZDnbzBKnz780L+9YzLChKCyE2VAiBNVW8IP99l0X6JGNPo0Bq8Db86d9eXHHaDk3FZ8zQJVxbaFG9mn6l0bxR6G+nHQ=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790166428; c=relaxed/simple;
-	bh=G5pLTY5y5LED+aMKXjMwPNRlGqafxWZLRXYkcSCDyEE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OrYqne+unj+qGsjS1+PT3tgNkDHWQAqdZwp4Z7gwzNa30MCrGbD5oc12syb+zfOUtp9AMGGqm7lssnXgtdrt2loH4OWqgXnMGPSHz0vftqtqpGzcEeEdG5eHwL12uh/89pX4vcXen7DLabwKv5tUPhIT4TcJlEvCjOHfyGNtbHM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=DymJK7xH; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E46951DDE3
+	for <linux-perf-users@vger.kernel.org>; Wed, 23 Sep 2026 13:16:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.160.175
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1790169375; cv=pass; b=c32vBkugne/kqA4eyvBq+Ql9sX3PQDl2SKOdBp1pQSx1Yg1SLrJa5xId53VC9it28K9o5oIB8suB7KngxCzhkZ+lD1QiCL8uoE8rTr5rzRv6GnhTagMMX77i+Sx3CofDF4ptzt+oaKBGnHsBMcmi35oi9C8XSRSZY4gZbSSAsLo=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1790169375; c=relaxed/simple;
+	bh=snwoyxNXVlKFB5fKcSd0aMGn3NuWTS5ye6M7p/9D7X4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=kWsN/mIEvD27HR+BYYwsrm6j2+/PoTEhdIpHExMlXCd7AQYvMnLKv6bhc5sIX4Tf2uHj8s3PUhDc0mnCfJrAG+MT55sErjV0N5yqEuPBhvHAJ2A8kht0oWUrutotJaGcyBcCW27Xt4ip31E3dl8+GsBS5e41sML3+M09zCTPOFc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=bkOxoVFI; arc=pass smtp.client-ip=209.85.160.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="DymJK7xH"
-Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 68N8ZPkk2906895;
-	Wed, 23 Sep 2026 12:25:42 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=pp1; bh=v0X+Rs8szhHkgnuPcIWhAyZce3EkTz
-	TtRBKQqHEj2SY=; b=DymJK7xH6KCGN1aWSDi8yE3JeZCCm0hQdInjvaYZRKitNb
-	sl2yDuJWYD4cPHPK0u4r0N9hStfA3omtniXxpaEHynRZ9NUZdggQ7y4v9nOzT7U9
-	XpO+PxL7oe/Fbh6/+YhooIKtXBG55sR4NiT2ToMHAWFRENr3oHFXFkwslZyhFWbI
-	1B334HuWzXx4hpfNYekKa9xlmXk6cYQIBC2BCsfeLJ0OBkoaCBbxWf7H/z4Lv2mB
-	P/Lqle8a9fS6YnXCc6Y1u7OGYFyusCvin01zNALgGbVb6TQ9tmxXkOZ3MjLGdEdC
-	M/ha62xE0Fq3/RrtNVNmohrqAIQ4+aJYTAup8uSA==
-Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4gskgsb5ap-1
-	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
-	Wed, 23 Sep 2026 12:25:42 +0000 (GMT)
-Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma22.wdc07v.mail.ibm.com (8.18.1.11/8.18.1.11) with ESMTP id 68N95f8S005144;
-	Wed, 23 Sep 2026 12:25:41 GMT
-Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
-	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4gvbu8rrf7-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 23 Sep 2026 12:25:41 +0000 (GMT)
-Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
-	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 68NCPd4t38732190
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 23 Sep 2026 12:25:39 GMT
-Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id EC5CD20065;
-	Wed, 23 Sep 2026 12:25:38 +0000 (GMT)
-Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 3B95620043;
-	Wed, 23 Sep 2026 12:25:38 +0000 (GMT)
-Received: from li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com (unknown [9.224.92.206])
-	by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Wed, 23 Sep 2026 12:25:38 +0000 (GMT)
-Date: Wed, 23 Sep 2026 14:25:37 +0200
-From: Alexander Gordeev <agordeev@linux.ibm.com>
-To: Muhammad Usama Anjum <usama.anjum@arm.com>
-Cc: Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        Tvrtko Ursulin <tursulin@ursulin.net>,
-        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-        Dimitri Sivanich <dimitri.sivanich@hpe.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
-        Helge Deller <deller@gmx.de>, Juergen Gross <jgross@suse.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Muchun Song <muchun.song@linux.dev>,
-        Oscar Salvador <osalvador@suse.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Liam R. Howlett" <liam@infradead.org>,
-        Lorenzo Stoakes <ljs@kernel.org>, Will Deacon <will@kernel.org>,
-        "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>,
-        Nick Piggin <npiggin@gmail.com>, Peter Zijlstra <peterz@infradead.org>,
-        Andrey Ryabinin <ryabinin.a.a@gmail.com>,
-        David Hildenbrand <david@kernel.org>,
-        Pasha Tatashin <pasha.tatashin@soleen.com>,
-        Chris Li <chrisl@kernel.org>, Kairui Song <kasong@tencent.com>,
-        Uladzislau Rezki <urezki@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        Eduard Zingerman <eddyz87@gmail.com>,
-        Kumar Kartikeya Dwivedi <memxor@gmail.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>, SJ Park <sj@kernel.org>,
-        "Matthew Wilcox (Oracle)" <willy@infradead.org>,
-        Jan Kara <jack@suse.cz>, Jason Gunthorpe <jgg@ziepe.ca>,
-        Leon Romanovsky <leon@kernel.org>, Miaohe Lin <linmiaohe@huawei.com>,
-        Dennis Zhou <dennis@kernel.org>, Tejun Heo <tj@kernel.org>,
-        Christoph Lameter <cl@gentwo.org>, Mike Rapoport <rppt@kernel.org>,
-        Johannes Weiner <hannes@cmpxchg.org>, ziy@nvidia.com, pfalcato@suse.de,
-        ryan.roberts@arm.com, linux-kernel@vger.kernel.org,
-        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-parisc@vger.kernel.org, xen-devel@lists.xenproject.org,
-        linux-mm@kvack.org, linux-fsdevel@vger.kernel.org,
-        linux-arch@vger.kernel.org, kasan-dev@googlegroups.com,
-        linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, damon@lists.linux.dev
-Subject: Re: [PATCH v2 0/8] mm: distinguish PTE table storage from PTE values
-Message-ID: <1401e907-04ff-4ee5-ad03-00d88531a091-agordeev@linux.ibm.com>
-References: <20260903103002.1091859-1-usama.anjum@arm.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="bkOxoVFI"
+Received: by mail-qt1-f175.google.com with SMTP id d75a77b69052e-52faa58bff5so214891cf.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 23 Sep 2026 06:16:13 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1790169373; cv=none;
+        d=google.com; s=arc-20260327;
+        b=EfKF6NDjDr7/m0v7g7iIHo6daQof9iR7abn+iMSJmKfLbNI8OEoEiwX7WwOGJi3YgS
+         7D2YkbwM7Swn9NOYKphA+8KooSgV0I+mEXFFAwa60iteGHbRr8d7a4F0iQtp7UQA2eQL
+         SNcXiZ4nJ0KMseyTB9rLpo40S7dj3aRgMneFjYC1LloL1Zow4uPH8clnq+s7feJ6zKfd
+         1Hnz/fb9sk/ed448r7Zi/TSOGTh/kOQ882nsXR6tj+A84K/kyRdr9rAgwlg8DQy3phBU
+         AEHKifzy44tBJ9M6K0W3K0+CCTEKdlMZyyd1+pXiHAmNx8a1B9LrmvBLtQswi+wNsV98
+         9gUQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=7BLTiqeV7YYD2gkGj5l6aVp8svLGEPXSs9wDu0RTUH8=;
+        fh=P0PGRuPP9S/7jcOr02+taDMFHP3s0VmklHjdBdysYhQ=;
+        b=XpQVs0vY1QsoP7iHZdf9+kLQXts4gNOc5zzwYx3mcZyxVmYiEA6wZ8fxcdItOX5YKC
+         QEf6eZ29O294kcayz41QEwak7tE3ShNgFY11IT5fhwXMEG+4BAkR1DEOul6BCzQhSH5Y
+         Bq6luZhyQ477koDtKwDW/VOtlcBICo4kF+bLbfh1OKeiidkDOyUlCNMSvxi8klCho/OF
+         JuA2sDLllkrmAKP13ck9Zcni9Kjqvyo/C1S2pdhxRJzvIn7YkVqVtq3IqIUUIKkFhUlo
+         /xigTiMee0rFkgmfhmEFcSPikq97UqoR7ZhE4OPiAVEGnZPUrO8Q2rodouqGV+9/rkf3
+         00wQ==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1790169373; x=1790774173; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=7BLTiqeV7YYD2gkGj5l6aVp8svLGEPXSs9wDu0RTUH8=;
+        b=bkOxoVFIRHWLTHkspr4JHS+l/SXFQI/3k8O9ewnZbtD24Ke7g6q0trZS9CrbT9V3+y
+         iMTI3xBIBkY+3C1Yn+vi0ujyfJtEV0AMJdhxaDhOuybn4K8Ma3G375AJi+uZAZmlu/w4
+         +6LV2H++klIB9y0t/4sNR/UHty041wgldrxUOUXPX+R5ysdGR2ZNC8LykxHcPswK+fhb
+         CtjLP//kGuCyfgfNvTOaQ+/wcNQ90TDdLVjkwm8Gi8qSaDWqcSc7yG8qO1HDFiCNOAPG
+         GT0p/Qk28kRZrAFpeTLbbksE9RokDlDNeo0VJLmg8M+8B4Tc44Ng1a6T77+X7461KEEX
+         GRXg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1790169373; x=1790774173;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=7BLTiqeV7YYD2gkGj5l6aVp8svLGEPXSs9wDu0RTUH8=;
+        b=pzA5+AptKWTAyk25OvUv0fPLWvvqgUT2outEDFU2HOycL3OHXDh2OC12HheUKBayNT
+         TJ8G3zA2cdmloI3zMFpxt0fJn9yA5uzODEWoFxzNKh90ty85hkddvVhqfq+yWOKkbFPP
+         aoXOrEkK0LMBzH+R0TCvmYpNvfcLqrC1FOi16he/AjcDGdrimgR9R3SVHV4KqDKi2i8H
+         oOV4xFW4gfGoSTjCg7SHbA5rhQKFtnn4NOsScG3Pmy1MLeFbGKqgXvJbQtT5VLvrfnKT
+         FNnCf/3A17eQYpvkqMViU2BXqI79IP7ttLkVg+nh0D5CTzOTa578iwh2C3OP+e0f+vNh
+         OhOQ==
+X-Forwarded-Encrypted: i=1; AKwUvBwOAbPkL30QKVHayHKpJEWCzAnMCmTJlneT6qg3bu4V5xZOq9obdssukApck0ntfhvj18KnMFGEz6CCUDdTbKUh@vger.kernel.org
+X-Gm-Message-State: AFuF++liubqtqIKI9/n8oLjv9Tr+2c4n5kRIzMzE8y5kpP7qkMgv7tGk
+	3n+Gwcti6/4n4cEzBO0iuqvy65QHIFzITtuCuuZLTHBTlyUPehvRDSkTszARXA1eFf1IM/vwm0a
+	pEf9TPBw+BmL3y6HGjSupaicNCq7QMgB9ag0PHuH7
+X-Gm-Gg: AYBFou1J9+HJTwSRphcpLrVRU4DjvLLDg0Pe4QMpXHmP1hZrPnE+mR4FBrYg4WKAvXm
+	lBy8JcM8lDJ6TJxuqjFt5GbavmLL9ediF10fqcW6wlcfxkTV2CE+O7KSVAlXTrTojpRcXmg+m8j
+	3adN1ZYkUkgm6i4/6/LaDWw9riPyYlrfVmL35+jrgdPlgKrVRgintVv1oaiKuLkpQ04c7ESAsfr
+	wPxblg9jb4mU7md2dUgngruhm6IDR99S+HG8BKPVTvsqX7vlJJfX4KsT3+7W8U2Qmu8LQHXLbSB
+	ydT4acPejrJ6fybOeloUEBEBb32oeVpibi7ePD6gP0xBkpfiniXbO8Y=
+X-Received: by 2002:a05:622a:2b0f:b0:530:e335:4ef with SMTP id
+ d75a77b69052e-532eed6c6b0mr13407931cf.2.1790169372006; Wed, 23 Sep 2026
+ 06:16:12 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260903103002.1091859-1-usama.anjum@arm.com>
-X-TM-AS-GCONF: 00
-X-Authority-Analysis: v=2.4 cv=V/XoQuni c=1 sm=1 tr=0 ts=6ab3c546 cx=c_pps
- a=5BHTudwdYE3Te8bg5FgnPg==:117 a=5BHTudwdYE3Te8bg5FgnPg==:17
- a=kj9zAlcOel0A:10 a=VdqzKS8jKosA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=RnoormkPH1_aCDwRdu11:22 a=U7nrCbtTmkRpXpFmAIza:22 a=VwQbUJbxAAAA:8
- a=7CQSdrXTAAAA:8 a=vUGUDSKChvK0ha46Ui4A:9 a=CjuIK1q_8ugA:10
- a=a-qgeE7W1pNrGK8U0ZQC:22
-X-Proofpoint-ORIG-GUID: ev-_JLyQr-pwEqNhXTXIZA7T8jABJbLj
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwOTIzMDA0OCBTYWx0ZWRfX3jBRFLFxLXRH
- 41gkMIIRJm9VbqiK2YtOcXDOIZwYjrCdxtSZOW/HeORsfhOxpmJhhPEWSN2wE9YBL2VRhW6O7D2
- Qr3To+xxPwlTw7GeQ2a8zIO36T51bHxKzdyp7yFXdKF3rEFGszcZBbYQEl+zv+QLSQa5BvzpNIK
- C5R4wcWrvwWHRZRXWHAwBTIUpPG8PzVJkpsQifRmwR8LgilnDa74f2xP/hyPClmLnKPerI1e3/s
- fJyE7zMlic6Rx/76z/RtAMNkCr6xtVVE5VeRNLbRnsmDb4KohBKbvJQ4ax0IiGSsSTYf9dF9DDW
- Go51ekYyr1d3O9vLChpz5abCQojIKm+DNY8HzWZzpMyAQ8VmaL5ufL6oddQ5mv/Q189e6iBxqs6
- q8d6mtePYNjZn9b5/f57l92H+6h3S1U9nREt1LclL5Eqc+yXvnOU5Bwtr8lGfdC+FyC20VRDqr5
- yvBcPkksv7DCdMzUVog==
-X-Proofpoint-Spam-Info: AW1haW4tMjYwOTIzMDA0OCBTYWx0ZWRfX46m1QpM8dmIH
- lg16GCvD6ONwEeOosozSD2m/9N5Zt+i3zavCwk/jFQmzNEO3Hlv1PgshihWpld67QkuM0YD1grS
- xDTdsyKVkLQulaYB1Dcv4/OHkUvJzFM=
-X-Proofpoint-GUID: ev-_JLyQr-pwEqNhXTXIZA7T8jABJbLj
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1176,Hydra:6.1.134,FMLib:17.12.100.49
- definitions=2026-09-23_04,2026-09-21_02,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- priorityscore=1501 spamscore=0 malwarescore=0 clxscore=1015 phishscore=0
- bulkscore=0 adultscore=0 lowpriorityscore=0 impostorscore=0 suspectscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2609040000 definitions=main-2609230048
+References: <cover.1789966896.git.irogers@google.com> <f724b653476e2733c18b02268c57baaaa54870ba.1789966896.git.irogers@google.com>
+ <20260923090007.GJ200420@e132581.arm.com> <b823478c-5799-4b23-9e63-774a02082dfc@arm.com>
+In-Reply-To: <b823478c-5799-4b23-9e63-774a02082dfc@arm.com>
+From: Ian Rogers <irogers@google.com>
+Date: Wed, 23 Sep 2026 06:16:00 -0700
+X-Gm-Features: AclHuK_0nK_1gDVkKAoq-aIsf_LXlLKzX0Zrz-YCgQaae8BcfD5fBc3Hpm0oAVQ
+Message-ID: <CAP-5=fV1_HfvFHjZdtscCAoYCHc_BBKmNP6Z+kehKHzbfSZ3JQ@mail.gmail.com>
+Subject: Re: [PATCH v2 38/49] perf python: Port arm-cs-trace-disasm to perf module
+To: Leo Yan <leo.yan@arm.com>
+Cc: acme@kernel.org, alice.mei.rogers@gmail.com, 
+	linux-perf-users@vger.kernel.org, namhyung@kernel.org, 
+	adrian.hunter@intel.com, dapeng1.mi@linux.intel.com, james.clark@linaro.org, 
+	leo.yan@linux.dev, linux-kernel@vger.kernel.org, mingo@redhat.com, 
+	peterz@infradead.org, tmricht@linux.ibm.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Sep 03, 2026 at 11:29:52AM +0100, Muhammad Usama Anjum wrote:
+On Wed, Sep 23, 2026 at 2:08=E2=80=AFAM Leo Yan <leo.yan@arm.com> wrote:
+>
+> On 9/23/26 10:00, Leo Yan wrote:
+> > On Sun, Sep 20, 2026 at 10:06:56PM -0700, Ian Rogers wrote:
+> >
+> > [...]
+> >
+> >> ---
+> >>  tools/perf/python/arm-cs-trace-disasm.py      | 356 +++++++++++++++++=
++
+> >
+> > A new script is added under tools/perf/python/, but I don't see the
+> > legacy script under tools/perf/scripts/python/ being removed.
+> >
+> > Should we maintain two copies of the script for the same purpose?
+>
+> Please ignore this question. I saw the patch 46 removes all legacy script=
+s.
 
-Hi Muhammad,
+Thanks, Leo. Yes, this is intentional so that if needed, we can land
+the ported scripts without removing the previous scripts. We could
+always add and remove them together; I was trying to think of ways to
+reduce friction for some or all of these changes to land.
 
-> I've the patches here [3] for arm64 conversion which I used to find
-> usages in generic code which I missed during development. These would be
-> sent separately.
-> 
-> [1] https://lore.kernel.org/all/6110202c-057b-4701-8c04-1a76ee7bb9ab@arm.com/
-> [2] https://lore.kernel.org/all/a063f6c5-2785-4a9f-8079-25edb3e54cef@arm.com
-> [3] https://gitlab.arm.com/linux-arm/linux-us/-/commits/pte0_arm
-
-I checked [3] with s390 and also against our lazy mmu implementation and it
-looks okay.
-
-However, is there a particular reason this series is against mm-new?
-Should it be against the master, it would be easier for me to try it in our CI.
-
-> Thanks,
-> Usama
-
-Thanks!
+Ian
