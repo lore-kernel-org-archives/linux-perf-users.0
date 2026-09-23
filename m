@@ -1,56 +1,56 @@
-Received: from mail-dy1-f198.google.com (mail-dy1-f198.google.com [74.125.82.198])
+Received: from mail-dl1-f72.google.com (mail-dl1-f72.google.com [74.125.82.72])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 646B44EFFAF
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C51664F30D5
 	for <linux-perf-users@vger.kernel.org>; Wed, 23 Sep 2026 18:13:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.198
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790187244; cv=none; b=JcEuQHlv7xO6LgRiAJavaTgcjzVB+vLE9/6AWBYrYtWjUv7dHmKlrTT0SDcNpAHeWTWRh32gqZwfFmvP9vWggGPAEyCu9HV6uDDb2auKAsQNPOb4vAjsV2JS5oZFP1T/H/qVlKiQfV3EGHKB8rKL8PD5RIzj7AhgTeqKJq6BcpY=
+	t=1790187248; cv=none; b=hWPM8KtRguCFe76fVYznhO3hdKDQNUysLrJmJYXFsF7K7kDTNXFkyeHOwYAyn6jqlad8k9GYJ9l8tOniR25prcJhYhUI9P4tf2JQv7cpSHvPL9zLrv90epa9baMsylw+4nIMnwMQ3RYK+4lNMejz/uPwFP3edlLA4Eh7ItLB9TU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790187244; c=relaxed/simple;
-	bh=ee2kJT8GquMMdGQtvdAGiy8A/d5ae4lzGaQMYz7Zzcw=;
+	s=arc-20240116; t=1790187248; c=relaxed/simple;
+	bh=GYtWOGFJKuRfOu3KqWGDgB3Gm1zGpLCl72ZCAP2q3+0=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=ZK4lScaWGRq95/EtdU5SAVYdj4WaHFeGXB84tBTGi0GYrWOGwPCAGoiqsYX0IvSPd41ykUYmY/7M/3+hdAkST94niHULTZ2j5tOrkLLlnzcTNzO3WZEofNoNS5i5x0w4uHkqdVozM8LkWng6ARGHn8flfuvlizUE/FfAJNA8OE8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=mXoMSx40; arc=none smtp.client-ip=74.125.82.198
+	 To:Cc:Content-Type; b=rxcAqdKHpUWXNS2RNEkxqsQjewn20jLFFWdlx8Uo+bse157ylAiQaPaNqMqYa1tfK0LNI6r6Pp0ED3RYA5DPK5gCLe8iGr0TP7/VLEG3J10rT2C9s4QNwfN1TDD7UyN9WhP+YTMBWDqkK7x31CJtrsceKx8Ovwwg72tE0h3SMbM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=CpMZmo59; arc=none smtp.client-ip=74.125.82.72
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="mXoMSx40"
-Received: by mail-dy1-f198.google.com with SMTP id 5a478bee46e88-338c2e27430so1005254eec.0
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="CpMZmo59"
+Received: by mail-dl1-f72.google.com with SMTP id a92af1059eb24-143826c4a13so1169693c88.1
         for <linux-perf-users@vger.kernel.org>; Wed, 23 Sep 2026 11:13:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1790187231; x=1790792031; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1790187234; x=1790792034; darn=vger.kernel.org;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=hNDUERV1AoKVdvNnb21lNRA6FnoSyxnPHWLQUjfm44A=;
-        b=mXoMSx40xZKdVIZ8l+6Qpvs0zKD1w0HlTPxcYvu7Iwuekd1cPyeM/9w4ZstWzR0Rrt
-         Om5f47VhBdkuNLNBxX6Z1YgRb526M+Xp2NMxCYruUc9wEp2EUrfoa2zFbJS+WEpQs+TQ
-         Z2f7mmErY9FvG8ABaOvmaF3WwBHweBN+APHLTEElhJE+3haZQF36rYuFqJmBz0/fRBiB
-         ERFzSzaD0NhLiYCLJHuay0RCQ7gzxFunWKtX3rMDpsLryuJoz1rhvsF7RmCST0LMKOy9
-         L601FE9vx5Q4ImatkTSq1OZq0QizWwgA9vguGTBvZlzIOIjMFouK/eD5Ldeg43aN1UeH
-         fp1A==
+        bh=CdWkqq5Py2/RE6rujplXydj2oxrlfwYzt8yfdoQJKEk=;
+        b=CpMZmo59UROvOeg1hIO/ZYq3V9U7uG7tPyYpufwy4UMhzqk55vhjiNIRhyI0Bc8MzB
+         GQXv/qK1Dwj0vAojRTnkwy11VY5CQCBjkx5jc8OfxnJPMaOQjdet5+D7kB1kzVY70G4U
+         E/UsZo2NEvlkUn2d0Gc5efLF7X7nFPqKik9ys7fJ0CLFNTg384W3Ib8bjNjS8iZ+/F4M
+         p5T3j7/is5Qbme6lBYF0k7V2fZ6YMDIs+eyv2nbYbsZV9Cf13oCJzhH1noGDoOFatleW
+         QIL5EDpXxorC4AFn3+gpgQnep9v2KiBXMuFDyjT4bDtqhhHEpMnfq8ZM8MpUvd6HXMSI
+         v/eg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1790187231; x=1790792031;
+        d=1e100.net; s=20260707; t=1790187234; x=1790792034;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=hNDUERV1AoKVdvNnb21lNRA6FnoSyxnPHWLQUjfm44A=;
-        b=XYcI+XULb0IWnzPllkEOLr9T23HwqCZIDfFY8KbBMKVhz4ul5oC3IhfE5erwSK5NyA
-         LVenenvJuwqpNVYiJr6w5UE/7ZKtTI10Qm/2J+veNCuusRvvZtXYLu2uCHU7rk3o5AE6
-         DDAtbBqhCiDqqE6P8O/inGf8uibRlrLOsc0NV1vNRlepoZUDDRn8P3DDm34ri8zxKmzM
-         vTubK70eHZaJQG/2D/yhJLSfjoRNUbVnq+It7mjcC5Zje4ZU+9uX/Mjrdu6+kGS+pcof
-         vRcSJGYynl7kxSii0ksXHWQPt/7d/f9SZ9uKyPFIf9eeXaXxjTMeST0XwJyIXc2/Y2Xd
-         4NVw==
-X-Forwarded-Encrypted: i=1; AKwUvBwa68g/GfBhzp7LndpijZSEyTGBOMBVoQJNAfWyPYNy9/+lj8dRLVohuhTdRbM6FzwJfkxi1hKs1dZVjz0yAMC1@vger.kernel.org
-X-Gm-Message-State: AFuF++ms20m+V0bnxDGjNx3fMVzsfr5CKcTnuIhB4Szg442bygzR+El7
-	4t8X/3G6AeWLhPSkzbIqOUgWzs9Mo8TMP3kNTrXYQTWFSgLRCeslEoYBSEbbOAFaAk000vlOLcf
-	RV7NnV5IHIw==
-X-Received: from dldnz10.prod.google.com ([2002:a05:701a:ca0a:b0:144:dc81:9760])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:3a08:b0:143:298f:33b6
- with SMTP id a92af1059eb24-144f91721e4mr4578832c88.46.1790187230792; Wed, 23
- Sep 2026 11:13:50 -0700 (PDT)
-Date: Wed, 23 Sep 2026 11:11:44 -0700
+        bh=CdWkqq5Py2/RE6rujplXydj2oxrlfwYzt8yfdoQJKEk=;
+        b=yL6LnXHOf5MJ5CAKQs377VT+mVK/tqlC48Ove+Z1VaAlxqY/1LoC3uM0u6NiTQtcXs
+         eq+v0Kwo1YMCBWZL6Y+4zA3l84g73bFvuuw6+mjaPdy0UW26vBoIgv4t/Ptp3nyfzcI3
+         LlSo+jfay2xEp+M5/JE0mXo56txQk0GkhkHbjl+2dbam9NFY6npaoNjeH+Qa3DnEW5Ac
+         n3QUBGWw3dNQyN5zOzsfNprmVDDf615somGYXNaE4m3QPkOSjHV2KyZ7nYa/YzegSp/s
+         t05ZFiWJCjjp0twrNKncKZCkeRX8w5LXQGAqc5KuihA4PaKJm2jfCF48vhAcwAlQRwlW
+         aIWA==
+X-Forwarded-Encrypted: i=1; AKwUvByRVXJrGsMb1rHlGhtJLby7hR9FcQ5bIR+XWTQyk+43SDC+vdQnQay7r3F4/N0xadEmgVtwXNvqkQROysMG29gl@vger.kernel.org
+X-Gm-Message-State: AFuF++mKSNr/BJx6MbWNiI3ezeh2fR4ErWkPxWvqpTUlzOmwRTi0d9VP
+	hFs3/g4UKlKzHolFLM+xRnGvw2wBBFRaPfnfJqSySWOAWdROjbRY1IWMX3XBdvPyKViQpVTgUXq
+	SmuWPk5IiUg==
+X-Received: from dlbsn12.prod.google.com ([2002:a05:7022:b90c:b0:144:c2f8:c025])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:3c16:b0:144:c11c:858e
+ with SMTP id a92af1059eb24-144f91ba1fbmr3521801c88.31.1790187233161; Wed, 23
+ Sep 2026 11:13:53 -0700 (PDT)
+Date: Wed, 23 Sep 2026 11:11:45 -0700
 In-Reply-To: <20260923181213.3032038-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -60,8 +60,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <cover.1789966896.git.irogers@google.com> <20260923181213.3032038-1-irogers@google.com>
 X-Mailer: git-send-email 2.56.0.rc1.310.g51773c2048-goog
-Message-ID: <20260923181213.3032038-22-irogers@google.com>
-Subject: [PATCH v3 21/49] perf python: Port event_analyzing_sample to perf module
+Message-ID: <20260923181213.3032038-23-irogers@google.com>
+Subject: [PATCH v3 22/49] perf python: Port syscall-counts to perf module
 From: Ian Rogers <irogers@google.com>
 To: irogers@google.com, acme@kernel.org, alice.mei.rogers@gmail.com, 
 	namhyung@kernel.org
@@ -71,378 +71,155 @@ Cc: adrian.hunter@intel.com, dapeng1.mi@linux.intel.com,
 	tmricht@linux.ibm.com
 Content-Type: text/plain; charset="UTF-8"
 
-Port event_analyzing_sample.py to a standalone script in
-tools/perf/python/ using the perf module and standard library sqlite3
-module.
+Port tools/perf/scripts/python/syscall-counts.py to a standalone script
+in tools/perf/python/ using the perf module. Avoiding the embedded
+interpreter and per-event dictionary allocation overhead improves
+execution speed by ~4x:
 
-Improvements compared to the legacy script:
-- Encapsulate database state in a _DB container instead of mutating
-  module-level globals, and ensure temporary SQLite database files are
-  cleaned up on exit.
-- Add argparse CLI options (-i/--input and -d/--db) while preserving
-  PerfEvent, PebsEvent, and PebsNHM binary raw_buf unpacking and
-  symbol/DSO histogram reporting.
-- Remove Python 2 compatibility code and add type annotations.
+```
+$ perf record -e raw_syscalls:sys_enter -a sleep 1
+...
+$ time perf script tools/perf/scripts/python/syscall-counts.py perf
+...
+real    0m3.887s
+user    0m3.578s
+sys     0m0.308s
+$ time python3 tools/perf/python/syscall-counts.py perf
+...
+real    0m0.953s
+user    0m0.905s
+sys     0m0.048s
+```
 
-Add a shell test (test_event_analyzing_sample_python.sh) to verify the
-standalone script.
+Additional improvements compared to the legacy script:
+- Resolve syscall names using perf.syscall_name(id, session.e_machine)
+  instead of host python-audit / Util.py tables, enabling accurate
+  cross-architecture perf.data analysis without external dependencies.
+- Support both raw_syscalls:sys_enter (sample.id) and individual
+  syscalls:sys_enter_* tracepoints (sample.__syscall_nr / sample.nr),
+  filtering out invalid/corrupt (> 0xffff or negative) syscall numbers.
+- Add argparse CLI options (-i/--input and optional comm filter).
+
+Add a shell test (test_syscall_counts_python.sh) to verify the
+standalone script. The legacy script and its bin wrapper are retained
+temporarily during the transition to maintain bisectability and are
+removed once all scripts are migrated.
 
 Assisted-by: Antigravity:gemini-3.1-pro
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/python/event_analyzing_sample.py   | 332 ++++++++++++++++++
- .../test_event_analyzing_sample_python.sh     |  62 ++++
- 2 files changed, 394 insertions(+)
- create mode 100755 tools/perf/python/event_analyzing_sample.py
- create mode 100755 tools/perf/tests/shell/test_event_analyzing_sample_python.sh
+ tools/perf/python/syscall-counts.py           | 91 +++++++++++++++++++
+ .../tests/shell/test_syscall_counts_python.sh | 81 +++++++++++++++++
+ 2 files changed, 172 insertions(+)
+ create mode 100755 tools/perf/python/syscall-counts.py
+ create mode 100755 tools/perf/tests/shell/test_syscall_counts_python.sh
 
-diff --git a/tools/perf/python/event_analyzing_sample.py b/tools/perf/python/event_analyzing_sample.py
+diff --git a/tools/perf/python/syscall-counts.py b/tools/perf/python/syscall-counts.py
 new file mode 100755
-index 000000000000..15b47cff9fa3
+index 000000000000..005916542c26
 --- /dev/null
-+++ b/tools/perf/python/event_analyzing_sample.py
-@@ -0,0 +1,332 @@
++++ b/tools/perf/python/syscall-counts.py
+@@ -0,0 +1,91 @@
 +#!/usr/bin/env python3
 +# SPDX-License-Identifier: GPL-2.0
 +"""
-+General event handler in Python, using SQLite to analyze events.
++Displays system-wide system call totals, broken down by syscall.
 +
-+The 2 database related functions in this script just show how to gather
-+the basic information, and users can modify and write their own functions
-+according to their specific requirement.
-+
-+The first function "show_general_events" just does a basic grouping for all
-+generic events with the help of sqlite, and the 2nd one "show_pebs_ll" is
-+for a x86 HW PMU event: PEBS with load latency data.
-+
-+Ported from tools/perf/scripts/python/event_analyzing_sample.py
++If a [comm] arg is specified, only syscalls called by [comm] are displayed.
 +"""
 +from __future__ import annotations
 +
 +import argparse
-+import math
-+import os
-+import sqlite3
-+import struct
-+import tempfile
-+from typing import Any
++from collections import defaultdict
++from typing import DefaultDict
 +import perf
 +
-+# Event types, user could add more here
-+EVTYPE_GENERIC  = 0
-+EVTYPE_PEBS     = 1     # Basic PEBS event
-+EVTYPE_PEBS_LL  = 2     # PEBS event with load latency info
-+EVTYPE_IBS      = 3
++syscalls: DefaultDict[int, int] = defaultdict(int)
++for_comm = None
++session = None
 +
-+#
-+# Currently we don't have good way to tell the event type, but by
-+# the size of raw buffer, raw PEBS event with load latency data's
-+# size is 176 bytes, while the pure PEBS event's size is 144 bytes.
-+#
-+def create_event(name, comm, dso, symbol, raw_buf):
-+    """Create an event object based on raw buffer size."""
-+    if len(raw_buf) == 144:
-+        event = PebsEvent(name, comm, dso, symbol, raw_buf)
-+    elif len(raw_buf) == 176:
-+        event = PebsNHM(name, comm, dso, symbol, raw_buf)
++
++def print_syscall_totals():
++    """Print aggregated statistics."""
++    if for_comm is not None:
++        print(f"\nsyscall events for {for_comm}:\n")
 +    else:
-+        event = PerfEvent(name, comm, dso, symbol, raw_buf)
++        print("\nsyscall events:\n")
 +
-+    return event
++    print(f"{'event':<40} {'count':>10}")
++    print("---------------------------------------- -----------")
 +
-+class PerfEvent:
-+    """Base class for all perf event samples."""
-+    event_num = 0
-+    def __init__(self, name, comm, dso, symbol, raw_buf, ev_type=EVTYPE_GENERIC):
-+        self.name       = name
-+        self.comm       = comm
-+        self.dso        = dso
-+        self.symbol     = symbol
-+        self.raw_buf    = raw_buf
-+        self.ev_type    = ev_type
-+        PerfEvent.event_num += 1
++    for sc_id, val in sorted(syscalls.items(),
++                             key=lambda kv: (-kv[1], kv[0])):
++        e_machine = getattr(session, "e_machine", 0) or 0
++        # Mask out the x86_64 x32 ABI bit (__X32_SYSCALL_BIT = 0x40000000) before
++        # resolving the syscall number in the architecture's syscall table.
++        raw_sc_id = sc_id & ~0x40000000
++        if e_machine:
++            name = perf.syscall_name(raw_sc_id, e_machine) or str(sc_id)
++        else:
++            name = perf.syscall_name(raw_sc_id) or str(sc_id)
++        print(f"{name:<40} {val:>10}")
 +
-+    def show(self):
-+        """Display PMU event info."""
-+        print(f"PMU event: name={self.name:12s}, symbol={self.symbol:24s}, "
-+              f"comm={self.comm:8s}, dso={self.dso:12s}")
 +
-+#
-+# Basic Intel PEBS (Precise Event-based Sampling) event, whose raw buffer
-+# contains the context info when that event happened: the EFLAGS and
-+# linear IP info, as well as all the registers.
-+#
-+class PebsEvent(PerfEvent):
-+    """Intel PEBS event."""
-+    pebs_num = 0
-+    def __init__(self, name, comm, dso, symbol, raw_buf, ev_type=EVTYPE_PEBS):
-+        tmp_buf = raw_buf[0:80]
-+        flags, ip, ax, bx, cx, dx, si, di, bp, sp = struct.unpack('<QQQQQQQQQQ', tmp_buf)
-+        self.flags = flags
-+        self.ip    = ip
-+        self.ax    = ax
-+        self.bx    = bx
-+        self.cx    = cx
-+        self.dx    = dx
-+        self.si    = si
-+        self.di    = di
-+        self.bp    = bp
-+        self.sp    = sp
++def process_event(sample):
++    """Process a single sample event."""
++    event_name = str(sample.evsel)
++    # raw_syscalls:sys_enter exposes the syscall number as 'id', whereas
++    # per-syscall syscalls:sys_enter_* tracepoints expose '__syscall_nr' (or 'nr')
++    # and may have an unrelated syscall argument named 'id' (e.g. sys_enter_clock_gettime).
++    if event_name.startswith("evsel(raw_syscalls:sys_enter"):
++        sc_id = getattr(sample, "id", -1)
++    elif event_name.startswith("evsel(syscalls:sys_enter"):
++        sc_id = getattr(sample, "__syscall_nr", None)
++        if sc_id is not None and not (0 <= (sc_id & ~0x40000000) <= 0xffff):
++            sc_id = None
++        if sc_id is None:
++            sc_id = getattr(sample, "nr", -1)
++    else:
++        return
 +
-+        super().__init__(name, comm, dso, symbol, raw_buf, ev_type)
-+        PebsEvent.pebs_num += 1
-+        del tmp_buf
++    # Mask out __X32_SYSCALL_BIT (0x40000000) when validating the syscall ID range.
++    if not (0 <= (sc_id & ~0x40000000) <= 0xffff):
++        return
 +
-+#
-+# Intel Nehalem and Westmere support PEBS plus Load Latency info which lie
-+# in the four 64 bit words write after the PEBS data:
-+#       Status: records the IA32_PERF_GLOBAL_STATUS register value
-+#       DLA:    Data Linear Address (EIP)
-+#       DSE:    Data Source Encoding, where the latency happens, hit or miss
-+#               in L1/L2/L3 or IO operations
-+#       LAT:    the actual latency in cycles
-+#
-+class PebsNHM(PebsEvent):
-+    """Intel Nehalem/Westmere PEBS event with load latency."""
-+    pebs_nhm_num = 0
-+    def __init__(self, name, comm, dso, symbol, raw_buf, ev_type=EVTYPE_PEBS_LL):
-+        tmp_buf = raw_buf[144:176]
-+        status, dla, dse, lat = struct.unpack('<QQQQ', tmp_buf)
-+        self.status = status
-+        self.dla = dla
-+        self.dse = dse
-+        self.lat = lat
-+
-+        super().__init__(name, comm, dso, symbol, raw_buf, ev_type)
-+        PebsNHM.pebs_nhm_num += 1
-+        del tmp_buf
-+
-+session: Any = None
-+
-+class _DB:
-+    con: sqlite3.Connection | None = None
-+    temp_path: str | None = None
-+
-+def trace_begin(db_path: str | None = None) -> None:
-+    """Initialize database tables."""
-+    print("In trace_begin:\n")
-+    if not db_path:
-+        fd, db_path = tempfile.mkstemp(prefix="perf_events_", suffix=".db")
-+        os.close(fd)
-+        _DB.temp_path = db_path
-+    con = sqlite3.connect(db_path)
++    comm = "unknown"
 +    try:
-+        # Drop any pre-existing tables so repeated runs do not accumulate duplicate events.
-+        con.execute("drop table if exists gen_events;")
-+        con.execute("drop table if exists pebs_ll;")
-+
-+        # Will create several tables at the start, pebs_ll is for PEBS data with
-+        # load latency info, while gen_events is for general event.
-+        con.execute("""
-+            create table if not exists gen_events (
-+                    name text,
-+                    symbol text,
-+                    comm text,
-+                    dso text
-+            );""")
-+        con.execute("""
-+            create table if not exists pebs_ll (
-+                    name text,
-+                    symbol text,
-+                    comm text,
-+                    dso text,
-+                    flags integer,
-+                    ip integer,
-+                    status integer,
-+                    dse integer,
-+                    dla integer,
-+                    lat integer
-+            );""")
-+    except BaseException:
-+        con.close()
-+        raise
-+    _DB.con = con
-+
-+def insert_db(event: Any) -> None:
-+    """Insert event into database."""
-+    con = _DB.con
-+    assert con is not None
-+    if event.ev_type == EVTYPE_GENERIC:
-+        con.execute("insert into gen_events values(?, ?, ?, ?)",
-+                    (event.name, event.symbol, event.comm, event.dso))
-+    elif event.ev_type == EVTYPE_PEBS_LL:
-+        # Python's sqlite3 module only accepts signed 64-bit integers (-2^63 to 2^63 - 1)
-+        # and raises OverflowError for unsigned 64-bit kernel pointers (> 0x7fffffffffffffff).
-+        # Convert unsigned 64-bit addresses to signed 64-bit two's-complement integers.
-+        ip = event.ip - 0x10000000000000000 if event.ip > 0x7fffffffffffffff else event.ip
-+        status = (event.status - 0x10000000000000000
-+                  if event.status > 0x7fffffffffffffff else event.status)
-+        dla = event.dla - 0x10000000000000000 if event.dla > 0x7fffffffffffffff else event.dla
-+        con.execute("insert into pebs_ll values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-+                    (event.name, event.symbol, event.comm, event.dso, event.flags,
-+                     ip, status, event.dse, dla, event.lat))
-+
-+def process_event(sample: perf.sample_event) -> None:
-+    """Callback for processing events."""
-+    # Create and insert event object to a database so that user could
-+    # do more analysis with simple database commands.
-+
-+    # Resolve comm, symbol, dso
-+    comm = "Unknown_comm"
-+    try:
-+        if session is not None:
++        if session:
 +            proc = session.find_thread(sample.sample_pid, sample.sample_tid)
 +            if proc:
-+                comm = proc.comm() or "Unknown_comm"
-+    except TypeError:
++                comm = proc.comm() or "unknown"
++    except (TypeError, AttributeError):
 +        pass
 +
-+    # Symbol and dso info are not always resolved
-+    dso = sample.dso if hasattr(sample, 'dso') and sample.dso else "Unknown_dso"
-+    symbol = sample.symbol if hasattr(sample, 'symbol') and sample.symbol else "Unknown_symbol"
-+    name = str(sample.evsel)
-+    if name.startswith("evsel("):
-+        name = name[6:-1]
++    if for_comm and comm != for_comm:
++        return
++    syscalls[sc_id] += 1
 +
-+    # Create the event object and insert it to the right table in database
-+    try:
-+        event = create_event(name, comm, dso, symbol, sample.raw_buf)
-+        insert_db(event)
-+    except (sqlite3.Error, ValueError, TypeError, OverflowError) as e:
-+        print(f"Error creating/inserting event: {e}")
-+
-+def num2sym(num: int) -> str:
-+    """Convert number to a histogram symbol (log2)."""
-+    # As the event number may be very big, so we can't use linear way
-+    # to show the histogram in real number, but use a log2 algorithm.
-+    if num <= 0:
-+        return ""
-+    snum = '#' * (int(math.log(num, 2)) + 1)
-+    return snum
-+
-+def show_general_events() -> None:
-+    """Display statistics for general events."""
-+    con = _DB.con
-+    assert con is not None
-+    count = con.execute("select count(*) from gen_events")
-+    for t in count:
-+        print(f"There is {t[0]} records in gen_events table")
-+        if t[0] == 0:
-+            return
-+
-+    print("Statistics about the general events grouped by thread/symbol/dso: \n")
-+
-+    # Group by thread
-+    commq = con.execute("""
-+        select comm, count(comm) from gen_events
-+        group by comm order by -count(comm)
-+    """)
-+    print(f"\n{ 'comm':>16} {'number':>8} {'histogram':>16}\n{'='*42}")
-+    for row in commq:
-+        print(f"{row[0]:>16} {row[1]:>8}     {num2sym(row[1])}")
-+
-+    # Group by symbol
-+    print(f"\n{'symbol':>32} {'number':>8} {'histogram':>16}\n{'='*58}")
-+    symbolq = con.execute("""
-+        select symbol, count(symbol) from gen_events
-+        group by symbol order by -count(symbol)
-+    """)
-+    for row in symbolq:
-+        print(f"{row[0]:>32} {row[1]:>8}     {num2sym(row[1])}")
-+
-+    # Group by dso
-+    print(f"\n{'dso':>40} {'number':>8} {'histogram':>16}\n{'='*74}")
-+    dsoq = con.execute("select dso, count(dso) from gen_events group by dso order by -count(dso)")
-+    for row in dsoq:
-+        print(f"{row[0]:>40} {row[1]:>8}     {num2sym(row[1])}")
-+
-+def show_pebs_ll() -> None:
-+    """Display statistics for PEBS load latency events."""
-+    con = _DB.con
-+    assert con is not None
-+    # This function just shows the basic info, and we could do more with the
-+    # data in the tables, like checking the function parameters when some
-+    # big latency events happen.
-+    count = con.execute("select count(*) from pebs_ll")
-+    for t in count:
-+        print(f"There is {t[0]} records in pebs_ll table")
-+        if t[0] == 0:
-+            return
-+
-+    print("Statistics about the PEBS Load Latency events grouped by thread/symbol/dse/latency: \n")
-+
-+    # Group by thread
-+    commq = con.execute("select comm, count(comm) from pebs_ll group by comm order by -count(comm)")
-+    print(f"\n{'comm':>16} {'number':>8} {'histogram':>16}\n{'='*42}")
-+    for row in commq:
-+        print(f"{row[0]:>16} {row[1]:>8}     {num2sym(row[1])}")
-+
-+    # Group by symbol
-+    print(f"\n{'symbol':>32} {'number':>8} {'histogram':>16}\n{'='*58}")
-+    symbolq = con.execute("""
-+        select symbol, count(symbol) from pebs_ll
-+        group by symbol order by -count(symbol)
-+    """)
-+    for row in symbolq:
-+        print(f"{row[0]:>32} {row[1]:>8}     {num2sym(row[1])}")
-+
-+    # Group by dse
-+    dseq = con.execute("select dse, count(dse) from pebs_ll group by dse order by -count(dse)")
-+    print(f"\n{'dse':>32} {'number':>8} {'histogram':>16}\n{'='*58}")
-+    for row in dseq:
-+        print(f"{row[0]:>32} {row[1]:>8}     {num2sym(row[1])}")
-+
-+    # Group by latency
-+    latq = con.execute("select lat, count(lat) from pebs_ll group by lat order by lat")
-+    print(f"\n{'latency':>32} {'number':>8} {'histogram':>16}\n{'='*58}")
-+    for row in latq:
-+        print(f"{str(row[0]):>32} {row[1]:>8}     {num2sym(row[1])}")
-+
-+def trace_end() -> None:
-+    """Called at the end of trace processing."""
-+    print("In trace_end:\n")
-+    try:
-+        if _DB.con:
-+            try:
-+                _DB.con.commit()
-+                show_general_events()
-+                show_pebs_ll()
-+            finally:
-+                _DB.con.close()
-+                _DB.con = None
-+    finally:
-+        if _DB.temp_path and os.path.exists(_DB.temp_path):
-+            try:
-+                os.remove(_DB.temp_path)
-+            except OSError:
-+                pass
-+            _DB.temp_path = None
 +
 +if __name__ == "__main__":
-+    ap = argparse.ArgumentParser(description="Analyze events with SQLite")
++    ap = argparse.ArgumentParser()
++    ap.add_argument("comm", nargs="?", help="Only report syscalls for comm")
 +    ap.add_argument("-i", "--input", default="perf.data", help="Input file name")
-+    ap.add_argument("-d", "--db", "--database", dest="database", default=None,
-+                    help="Database file name (defaults to a temporary file cleaned up on exit)")
 +    args = ap.parse_args()
-+
++    for_comm = args.comm
 +    try:
-+        trace_begin(args.database)
 +        session = perf.session(perf.data(args.input), sample=process_event)
 +        session.process_events()
++        print_syscall_totals()
 +    finally:
 +        # Break the reference cycle between session and process_event (whose module
-+        # globals reference session) so the C session object is deterministically freed.
++        # globals reference session) since perf.session lacks cyclic GC (tp_traverse).
 +        session = None
-+        trace_end()
-diff --git a/tools/perf/tests/shell/test_event_analyzing_sample_python.sh b/tools/perf/tests/shell/test_event_analyzing_sample_python.sh
+diff --git a/tools/perf/tests/shell/test_syscall_counts_python.sh b/tools/perf/tests/shell/test_syscall_counts_python.sh
 new file mode 100755
-index 000000000000..4678edfd9e5b
+index 000000000000..0c4b75499209
 --- /dev/null
-+++ b/tools/perf/tests/shell/test_event_analyzing_sample_python.sh
-@@ -0,0 +1,62 @@
++++ b/tools/perf/tests/shell/test_syscall_counts_python.sh
+@@ -0,0 +1,81 @@
 +#!/bin/bash
 +# SPDX-License-Identifier: GPL-2.0
-+# event_analyzing_sample python test
++# syscall-counts python test
 +
 +set -e
 +
@@ -457,45 +234,64 @@ index 000000000000..4678edfd9e5b
 +fi
 +
 +script_dir="$(dirname "$0")/../../python"
-+script_path="${script_dir}/event_analyzing_sample.py"
++script_path="${script_dir}/syscall-counts.py"
++
++if ! perf check feature -q libtraceevent > /dev/null 2>&1; then
++	echo "Skipping test, libtraceevent is disabled"
++	exit 2
++fi
 +
 +if [ ! -f "$script_path" ]; then
-+	echo "Skipping test, event_analyzing_sample.py not found at $script_path"
++	echo "Skipping test, syscall-counts.py not found at $script_path"
 +	exit 2
 +fi
 +
 +err=0
-+temp_dir=""
++temp_data=""
++temp_out=""
 +
 +cleanup() {
-+	rm -rf "${temp_dir}"
++	rm -f "${temp_data}" "${temp_out}"
 +}
 +
 +trap 'cleanup' EXIT TERM INT
 +
-+temp_dir=$(mktemp -d /tmp/perf.event_analyzing.XXXXXX)
-+temp_data="${temp_dir}/perf.data"
-+temp_db="${temp_dir}/perf.db"
++temp_data=$(mktemp /tmp/perf.data.XXXXXX)
++temp_out=$(mktemp /tmp/perf.out.XXXXXX)
 +
 +test_file_mode() {
-+	echo "Testing event_analyzing_sample.py..."
-+
-+	# Generate some events
-+	if ! perf record -o "${temp_data}" -- perf test -w noploop >/dev/null 2>&1; then
-+		echo "Skipping test, perf record failed"
++	echo "Testing syscall-counts.py..."
++	# Some systems might not have raw_syscalls:sys_enter (e.g. stripped kernels or permissions)
++	if ! perf list | grep -q raw_syscalls:sys_enter; then
++		echo "Skipping test, raw_syscalls:sys_enter not found"
 +		exit 2
 +	fi
 +
-+	# Run the script
-+	if ! "$PYTHON" "$script_path" -i "${temp_data}" -d "${temp_db}" > "${temp_dir}/perf.out" 2>&1; then
++	# Generate some syscall events
++	if ! perf record -e raw_syscalls:sys_enter -o "${temp_data}" -- sleep 0.5 2>/dev/null; then
++		echo "perf record failed (permissions?), skipping file mode test."
++		exit 2
++	fi
++
++	if ! "$PYTHON" "$script_path" -i "${temp_data}" > "${temp_out}"; then
 +		echo "File mode test failed."
 +		err=1
-+	elif ! grep -q "Statistics about the general events" "${temp_dir}/perf.out" || \
-+	     grep -q "Error creating/inserting event" "${temp_dir}/perf.out"; then
-+		echo "Event analysis output validation failed."
++	elif ! grep -E -q "^[a-zA-Z0-9_]+ +[0-9]+$" "${temp_out}"; then
++		echo "File mode output validation failed."
 +		err=1
 +	else
 +		echo "File mode test passed."
++	fi
++
++	# Test with a comm argument
++	if ! "$PYTHON" "$script_path" -i "${temp_data}" "sleep" > "${temp_out}"; then
++		echo "Comm filter test failed."
++		err=1
++	elif ! grep -E -q "^[a-zA-Z0-9_]+ +[0-9]+$" "${temp_out}"; then
++		echo "Comm filter output validation failed."
++		err=1
++	else
++		echo "Comm filter test passed."
 +	fi
 +}
 +
