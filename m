@@ -1,56 +1,56 @@
-Received: from mail-dl1-f70.google.com (mail-dl1-f70.google.com [74.125.82.70])
+Received: from mail-dy1-f200.google.com (mail-dy1-f200.google.com [74.125.82.200])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EC884F391B
-	for <linux-perf-users@vger.kernel.org>; Wed, 23 Sep 2026 18:14:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.70
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D5AE52F274
+	for <linux-perf-users@vger.kernel.org>; Wed, 23 Sep 2026 18:14:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.200
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790187260; cv=none; b=DRQqOOWoJlMjP1bVx09Z1BSsAtBBjEISWa+fZt6ZqJ2lCOyNKu5sgiQka5bBO2LcCvdwXEsLlZ1Pgwq2+pD92aEyyiXRRMlOVpccQIS37NFXNO3uO3c0t67V2vTUwAAmf2mnBUq7BzpiSLtyzxZTVBgpxxXu0GH/8M6cfRedC0Y=
+	t=1790187266; cv=none; b=sd71sKDrQfYFPsefBm2CEdJ1BDgwcT1wufiA1PHTUE/IuGc/doOOdrIM7ZSa+ndge4YNKsTomF6jJPT475xGXn/tbKR0FvsVxaJV/HXjYJOewLuYwwhoZHx45bHF7XI9h4LOkjZNwgRN9LhU6pNBtuOAPbbsPsYB7zN4TXoB7WE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790187260; c=relaxed/simple;
-	bh=oDM5cfnPgZny7nNxsiE7/LxgP1gBLBrmCv98idra3p8=;
+	s=arc-20240116; t=1790187266; c=relaxed/simple;
+	bh=/BxuMm0UcVb0A145X/jIhYElf1ayahADT/dRWCXXP4w=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=rV3MQGT3KlyGXLuSbY8JpXgrsvhpfFZ6E5HbFruO1UbOb3cVIBTVDGrXkuBFHjVUxkmOlgeSaLWT8g1dlEhl72fz6ZfgKrTfI1uUIGr+axPb0Zpc/xvF5JZK3YqML3Ghsr3iwNF9WsvtN7YDGGUEwo1tOAYYayXCLeu3rQrmAbU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=EzElHMwG; arc=none smtp.client-ip=74.125.82.70
+	 To:Cc:Content-Type; b=mUZsHqaV4AcJe4JQhEo6a3Wautqguzl29FvG7u3A+OM5uNL0gAn6m7PABIYJDkRdL4HA6trYWqxECHa6T5JhYaFBvn2m0yqTEQceiHoSKyRlajYZGZjKpy+DHNlV4YW/AWAXuS4MPf1aNlEJefTDDayk5cprOTBzkoID/0mRUpQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Dir45VQ4; arc=none smtp.client-ip=74.125.82.200
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="EzElHMwG"
-Received: by mail-dl1-f70.google.com with SMTP id a92af1059eb24-1384427c3efso2025726c88.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 23 Sep 2026 11:14:10 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Dir45VQ4"
+Received: by mail-dy1-f200.google.com with SMTP id 5a478bee46e88-313d1015161so256329eec.1
+        for <linux-perf-users@vger.kernel.org>; Wed, 23 Sep 2026 11:14:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1790187249; x=1790792049; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1790187254; x=1790792054; darn=vger.kernel.org;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=VZAujvjsstHiHvA4EnFR19jevpQtdRujzfJuyCR5gBY=;
-        b=EzElHMwG46InhAulcuItO6jVRQEuz3g1lPtFp9mPN49i/hfO2Rd1o7xj8cTf1ZJJmj
-         dBL50QU5dRXz8q2qGAy+++eyfVeuFotLQYYuU25lMbpGNtbum0Noc4T6FSVa8yKHJY6A
-         CE5Q8NNIJlQPupW9zOxYMzDML7nvSzrPPBnj5PVCc41Kt0iKt/MZLjRw+SEx9RM7nzV0
-         0ndGdGeLRF29einlLe2PnzJ4rSZRK3ePqTY8MJgYUe5HLlQcfe7glu7wxGFEwSiclURQ
-         49dA5nG6LbNR9SoIXvtTP4hKP2g5aYCLfmk6HM4OiyY9mmkWJpD8ppfsDyZI3YGzQGHj
-         Neng==
+        bh=Plv4qE5jtOJTQdkdOSuzOHoGPbuzUrB67J3w3vGM39Y=;
+        b=Dir45VQ4ghwTokiB5sEqNL6g9cymseF20JG3icnbpwWG4aSleQClOzbG0kDnad4LrP
+         PVSjge67z9c1/mTYEJXNd1Cj6/Wt5qkM9IsFR3hmdZl9nBy8KJMY6CYIpkew5Qtc7Nnk
+         Ij7fSX6z3JnGO5hDH2qybDO14/e6wKhCHrfgeyDQkFOPNIiRnyGb7SbBxwSaRmrPnN3h
+         AlseDmrxwSTffU5cAAC8K92B8xNnoYdv/JUGOP1a5ibTFQHL35ccWBdCc4vUYE+vNfzB
+         D1SQgGxDeVHjFwiUJKQmx6XB42UA6VderFdRph0BJW8sLtw9de39YkjGzLZlQB3kpdve
+         yAAQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1790187249; x=1790792049;
+        d=1e100.net; s=20260707; t=1790187254; x=1790792054;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=VZAujvjsstHiHvA4EnFR19jevpQtdRujzfJuyCR5gBY=;
-        b=hMH9mqnCcXEUVewQrSTm4mWZApnCstpcNR+rUGykiNaqzZH1erZ9Mscwy6d5L/iXlE
-         JMgunVp3BR/Eq1lEOuFQUGuqJ/vKjfPKiF4bCjMx/IkeD8zRQ9jz2OkXGxfS0WNQZWCH
-         +BBw/u6KLx3sH/4HUTCj6U4VZJiSbVoZU7j2+FDJHxw0bs3uKFRF59u7Evps12+MGRvK
-         xdLUzmDpvGDDpqerhK66SCO3N3SUc7bkYkFKy69ygT7m0sXkHEENGr92utHHmTVRu7KV
-         BM6psRWXWtXwBJZReBEiAC32rFvwev7eDY9xFMH1Mx8Sxm9nJOmuh0A5QvXguz1jguB0
-         WUhQ==
-X-Forwarded-Encrypted: i=1; AKwUvBwTdgn7b34mlQvnBDnwoSdupw5v8J1p+20b1li+gGiEzRxYZpN/E+NXleg4TD7V631gMN3Yz8wI6cDwBdwK2Nli@vger.kernel.org
-X-Gm-Message-State: AFuF++mBgJgjAc9UkjIOVNu5tJNOuwuhSNA/CWrKiL7SojYfqt5AjCJw
-	/k4VCpcF95sA4zbSvLclwCjTQ5IW7kCOe9LJhETdUwLbYh2IP6TshTDRO29fE98HL69xlk3C34h
-	KouwTvK+rNg==
-X-Received: from dlea7-n1.prod.google.com ([2002:a05:701b:4207:10b0:144:e5a6:137a])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:701b:42d3:20b0:128:d4be:7428
- with SMTP id a92af1059eb24-144f9147d75mr3575101c88.19.1790187248314; Wed, 23
- Sep 2026 11:14:08 -0700 (PDT)
-Date: Wed, 23 Sep 2026 11:11:49 -0700
+        bh=Plv4qE5jtOJTQdkdOSuzOHoGPbuzUrB67J3w3vGM39Y=;
+        b=Vo/6rgOaKn2PxCBdDZ2k61P3D+PXmRar5VI+2jfPMpDxwXolTZhbawy0fFQgcQPx4v
+         Va3YJCEe9xmnykG99QEi6rB/Ub/o+DUy6YroFVXET92YML7O713ePyZDte6aGNXaCN3J
+         UNAxJPTpWYLGXfNpI3Ctt9XyAV12DzIekDbBaAZDbjO8hzjxrsspFtQEEAgm6jWbeKhQ
+         e/errGRJ6kUQhFwoyGj/EJcDqSzZUt91/rxyh80aByca5LZuX0zUx3505nDIm5Uykdso
+         /T/rVEPbik5tHEwGkR0lE02CN8mwYIU0vd3KKVJ/4htU6pdwgAVUhfUiIJ/8b2kYgsom
+         ASOw==
+X-Forwarded-Encrypted: i=1; AKwUvBxJim7frTeZqBAKh45CuX2hhtcCcKgGvf3Rp5Lz6SGs+if2i/pQTkG7mnh486DbipS8s6vHQvOu2MBG8dNmdy3R@vger.kernel.org
+X-Gm-Message-State: AFuF++k2DtK2P4Dq+eTusHZ2al2rjP+N+5o0mWBwJLExNhsXD0vkm54V
+	sfbzFFuQW59T8bnN7ZqMOZataXgeA/42kyfGvO2fZq63DnPSr9HfO1sI/4C3QvJv4HJzclI3UOT
+	2brJsbA/luw==
+X-Received: from dlag14.prod.google.com ([2002:a05:701b:250e:b0:143:77d0:b6d4])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:701b:205b:10b0:143:7330:7fbc
+ with SMTP id a92af1059eb24-144f90e8af0mr3344012c88.21.1790187253821; Wed, 23
+ Sep 2026 11:14:13 -0700 (PDT)
+Date: Wed, 23 Sep 2026 11:11:50 -0700
 In-Reply-To: <20260923181213.3032038-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -60,8 +60,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <cover.1789966896.git.irogers@google.com> <20260923181213.3032038-1-irogers@google.com>
 X-Mailer: git-send-email 2.56.0.rc1.310.g51773c2048-goog
-Message-ID: <20260923181213.3032038-27-irogers@google.com>
-Subject: [PATCH v3 26/49] perf python: Port sctop to perf module
+Message-ID: <20260923181213.3032038-28-irogers@google.com>
+Subject: [PATCH v3 27/49] perf python: Port rw-by-file from Perl to perf module
 From: Ian Rogers <irogers@google.com>
 To: irogers@google.com, acme@kernel.org, alice.mei.rogers@gmail.com, 
 	namhyung@kernel.org
@@ -71,293 +71,157 @@ Cc: adrian.hunter@intel.com, dapeng1.mi@linux.intel.com,
 	tmricht@linux.ibm.com
 Content-Type: text/plain; charset="UTF-8"
 
-Port sctop.py from tools/perf/scripts/python/ to a standalone script in
-tools/perf/python/ using an SCTopAnalyzer class structure.
+Replace the legacy Perl script rw-by-file.pl with a standalone Python
+script in tools/perf/python/rw-by-file.py using the perf Python module.
 
-Improvements compared to the legacy script:
-- Support both offline perf.data analysis (via perf.session, advancing
-  display intervals deterministically using event timestamps) and live
-  monitoring (via LiveSession with automatic tracepoint fallback from
-  raw_syscalls:sys_enter to syscalls:sys_enter_*).
-- Resolve architecture-aware syscall names via
-  perf.syscall_name(id, session.e_machine) without requiring
-  python-audit.
-- Replace unsafe signal.SIGALRM dictionary mutation and os.popen("clear")
-  subshell spawning with a synchronized threading.Lock / threading.Event
-  timer and direct ANSI terminal escape sequences ('\x1b[2J\x1b[H').
+Improvements compared to the legacy Perl script:
+- Remove the dependency on libperl and Perf::Trace::Util.
+- Encapsulate per-file-descriptor read/write byte and call count
+  aggregation in an RwByFile class using perf.session and resolve thread
+  command names via session.find_thread(pid, sample_tid).
+- Add argparse CLI support (-i/--input and target program filter) and
+  full type annotations.
 
-Add a shell test (test_sctop_python.sh) to verify the standalone script.
+Add a shell test
+(test_rw_by_file_python.sh) to verify the standalone script.
 
 Assisted-by: Antigravity:gemini-3.1-pro
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/python/sctop.py                  | 246 ++++++++++++++++++++
- tools/perf/tests/shell/test_sctop_python.sh |  78 +++++++
- 2 files changed, 324 insertions(+)
- create mode 100755 tools/perf/python/sctop.py
- create mode 100755 tools/perf/tests/shell/test_sctop_python.sh
+ tools/perf/python/rw-by-file.py               | 113 ++++++++++++++++++
+ .../tests/shell/test_rw_by_file_python.sh     |  68 +++++++++++
+ 2 files changed, 181 insertions(+)
+ create mode 100755 tools/perf/python/rw-by-file.py
+ create mode 100755 tools/perf/tests/shell/test_rw_by_file_python.sh
 
-diff --git a/tools/perf/python/sctop.py b/tools/perf/python/sctop.py
+diff --git a/tools/perf/python/rw-by-file.py b/tools/perf/python/rw-by-file.py
 new file mode 100755
-index 000000000000..fb709206993a
+index 000000000000..b33330261606
 --- /dev/null
-+++ b/tools/perf/python/sctop.py
-@@ -0,0 +1,246 @@
++++ b/tools/perf/python/rw-by-file.py
+@@ -0,0 +1,113 @@
 +#!/usr/bin/env python3
-+# SPDX-License-Identifier: GPL-2.0
-+"""
-+System call top
-+
-+Periodically displays system-wide system call totals, broken down by
-+syscall.  If a [comm] arg is specified, only syscalls called by
-+[comm] are displayed. If an [interval] arg is specified, the display
-+will be refreshed every [interval] seconds.  The default interval is
-+3 seconds.
-+
-+Ported from tools/perf/scripts/python/sctop.py
-+"""
++# SPDX-License-Identifier: GPL-2.0-only
++"""Display r/w activity for files read/written to for a given program."""
 +from __future__ import annotations
 +
 +import argparse
 +from collections import defaultdict
-+import os
 +import sys
-+import threading
-+from typing import Optional
++from typing import Optional, Dict
 +import perf
-+from perf_live import LiveSession
 +
-+
-+class SCTopAnalyzer:
-+    """Periodically displays system-wide system call totals."""
-+
-+    def __init__(self, for_comm: Optional[str], interval: int, offline: bool = False):
-+        self.for_comm = for_comm
-+        self.interval = interval
-+        self.syscalls: dict[int, int] = defaultdict(int)
-+        self.comm_cache: dict[int, str] = {}
-+        self.lock = threading.Lock()
-+        self.stop_event = threading.Event()
-+        self.thread = threading.Thread(target=self.print_syscall_totals)
-+        self.offline = offline
-+        self.own_pid = os.getpid()
-+        self.last_print_time: Optional[int] = None
++class RwByFile:
++    """Tracks and displays read/write activity by file descriptor."""
++    def __init__(self, comm: str) -> None:
++        self.for_comm = comm
++        self.reads: Dict[int, Dict[str, int]] = defaultdict(
++            lambda: {"bytes_requested": 0, "total_reads": 0}
++        )
++        self.writes: Dict[int, Dict[str, int]] = defaultdict(
++            lambda: {"bytes_written": 0, "total_writes": 0}
++        )
++        self.unhandled: Dict[str, int] = defaultdict(int)
 +        self.session: Optional[perf.session] = None
-+        self.e_machine: Optional[int] = None
-+
-+    def syscall_name(self, syscall_id: int) -> str:
-+        """Lookup syscall name by ID."""
-+        # Mask out the x86_64 x32 ABI bit (__X32_SYSCALL_BIT = 0x40000000) before
-+        # resolving the syscall number in the architecture's syscall table.
-+        raw_sc_id = syscall_id & ~0x40000000
-+        try:
-+            e_machine = getattr(self.session, "e_machine", self.e_machine)
-+            if e_machine is not None:
-+                name = perf.syscall_name(raw_sc_id, e_machine)
-+            else:
-+                name = perf.syscall_name(raw_sc_id)
-+            if name is not None:
-+                return name
-+        except (TypeError, OverflowError):
-+            pass
-+        return str(syscall_id)
 +
 +    def process_event(self, sample: perf.sample_event) -> None:
-+        """Collect syscall events."""
-+        if not self.offline and sample.sample_pid == self.own_pid:
++        """Process events."""
++        event_name = str(sample.evsel)
++        if event_name.startswith("evsel(") and event_name.endswith(")"):
++            event_name = event_name[6:-1]
++        event_name = "".join(c if c.isprintable() else "?" for c in event_name)
++
++        pid = sample.sample_pid
++        assert self.session is not None
++        try:
++            thread = self.session.find_thread(pid, sample.sample_tid)
++            comm = (thread.comm() if thread else None) or "unknown"
++        except (TypeError, AttributeError):
++            comm = "unknown"
++
++        if comm != self.for_comm:
 +            return
 +
-+        name = str(sample.evsel)
-+        # raw_syscalls:sys_enter exposes the syscall number as 'id', whereas
-+        # per-syscall syscalls:sys_enter_* tracepoints expose '__syscall_nr' (or 'nr')
-+        # and may have an unrelated syscall argument named 'id'.
-+        if name.startswith("evsel(raw_syscalls:sys_enter"):
-+            syscall_id = getattr(sample, "id", -1)
-+        elif name.startswith("evsel(syscalls:sys_enter"):
-+            syscall_id = getattr(sample, "__syscall_nr", -1)
-+            if not (0 <= (syscall_id & ~0x40000000) <= 0xffff):
-+                syscall_id = getattr(sample, "nr", -1)
-+        else:
-+            syscall_id = -1
-+
-+        skip = False
-+        with self.lock:
-+            if self.for_comm is not None:
-+                is_execve = (0 <= (syscall_id & ~0x40000000) <= 0xffff and
-+                             self.syscall_name(syscall_id) in ("execve", "execveat"))
-+                if is_execve:
-+                    self.comm_cache.pop(sample.sample_pid, None)
-+
-+                comm = "Unknown"
-+                if hasattr(self, 'session') and self.session:
-+                    # In offline perf.data mode, query session.find_thread() directly
-+                    # so PERF_RECORD_COMM updates after execve (e.g. perf -> sleep)
-+                    # are reflected immediately rather than returning a stale cached comm.
-+                    try:
-+                        proc = self.session.find_thread(sample.sample_pid, sample.sample_tid)
-+                        if proc:
-+                            comm = proc.comm() or "Unknown"
-+                    except TypeError:
-+                        pass
-+                    if comm != "Unknown" and not is_execve:
-+                        self.comm_cache[sample.sample_pid] = comm
-+                    elif sample.sample_pid in self.comm_cache:
-+                        comm = self.comm_cache[sample.sample_pid]
-+                elif sample.sample_pid in self.comm_cache:
-+                    comm = self.comm_cache[sample.sample_pid]
-+                else:
-+                    try:
-+                        with open(f"/proc/{sample.sample_pid}/comm", "r",
-+                                  encoding="utf-8", errors="replace") as f:
-+                            comm = f.read().strip()
-+                    except OSError:
-+                        comm = "Unknown"
-+                    # Cache both matching and non-matching comms (including "Unknown"
-+                    # when a PID has exited or is inaccessible) so live system-wide
-+                    # tracing does not re-open /proc/<pid>/comm on every syscall.
-+                    # Do not cache during sys_enter(execve/execveat) since /proc/<pid>/comm
-+                    # still holds the pre-exec command name until the syscall completes.
-+                    if not is_execve:
-+                        self.comm_cache[sample.sample_pid] = comm
-+
-+                if comm != self.for_comm:
-+                    skip = True
-+
-+            is_enter = (name.startswith("evsel(raw_syscalls:sys_enter") or
-+                        name.startswith("evsel(syscalls:sys_enter"))
-+            if not skip and is_enter and 0 <= (syscall_id & ~0x40000000) <= 0xffff:
-+                self.syscalls[syscall_id] += 1
-+
-+        if self.offline and hasattr(sample, "sample_time"):
-+            interval_ns = self.interval * (10 ** 9)
-+            if self.last_print_time is None:
-+                self.last_print_time = sample.sample_time
-+            elif sample.sample_time - self.last_print_time >= interval_ns:
-+                self.print_current_totals()
-+                self.last_print_time = sample.sample_time
-+
-+    def print_current_totals(self):
-+        """Print current syscall totals."""
-+        # Clear terminal
-+        if not self.offline:
-+            print("\x1b[2J\x1b[H", end="")
-+        else:
-+            print()
-+
-+        with self.lock:
-+            for_comm = self.for_comm
-+        if for_comm is not None:
-+            print(f"\nsyscall events for {for_comm}:\n")
-+        else:
-+            print("\nsyscall events:\n")
-+
-+        print(f"{'event':40s}  {'count':10s}")
-+        print(f"{'-' * 40:40s}  {'-' * 10:10s}")
-+
-+        with self.lock:
-+            current_syscalls = list(self.syscalls.items())
-+            self.syscalls.clear()
-+            self.comm_cache.clear()
-+
-+        current_syscalls.sort(key=lambda kv: (-kv[1], kv[0]))
-+
-+        for syscall_id, val in current_syscalls:
-+            print(f"{self.syscall_name(syscall_id):<40s}  {val:10d}")
-+
-+    def print_syscall_totals(self):
-+        """Periodically print syscall totals."""
-+        while not self.stop_event.is_set():
-+            self.print_current_totals()
-+            self.stop_event.wait(self.interval)
-+        # Print final batch
-+        self.print_current_totals()
-+
-+    def start(self):
-+        """Start the background thread."""
-+        self.thread.start()
-+
-+    def stop(self):
-+        """Stop the background thread."""
-+        self.stop_event.set()
-+        self.thread.join()
-+
-+
-+def main():
-+    """Main function."""
-+    ap = argparse.ArgumentParser(description="System call top")
-+    ap.add_argument("args", nargs="*", help="[comm] [interval] or [interval]")
-+    ap.add_argument("-i", "--input", help="Input file name")
-+    args = ap.parse_args()
-+
-+    for_comm = None
-+    default_interval = 3
-+    interval = default_interval
-+
-+    if len(args.args) > 2:
-+        print("Usage: python sctop.py [comm] [interval]")
-+        sys.exit(1)
-+
-+    if len(args.args) > 1:
-+        for_comm = args.args[0]
-+        try:
-+            interval = int(args.args[1])
-+        except ValueError:
-+            print(f"Invalid interval: {args.args[1]}")
-+            sys.exit(1)
-+    elif len(args.args) > 0:
-+        try:
-+            interval = int(args.args[0])
-+        except ValueError:
-+            for_comm = args.args[0]
-+            interval = default_interval
-+
-+    analyzer = SCTopAnalyzer(for_comm, interval, offline=bool(args.input))
-+    session = None
-+
-+    try:
-+        if args.input:
-+            session = perf.session(perf.data(args.input), sample=analyzer.process_event)
-+            analyzer.session = session
-+            session.process_events()
-+            analyzer.e_machine = getattr(session, "e_machine", None)
-+        else:
++        if event_name == "syscalls:sys_enter_read":
 +            try:
-+                live_session = LiveSession(
-+                    "raw_syscalls:sys_enter", sample_callback=analyzer.process_event
-+                )
-+            except OSError:
-+                live_session = LiveSession(
-+                    "syscalls:sys_enter_*", sample_callback=analyzer.process_event
-+                )
-+            analyzer.start()
-+            live_session.run()
-+    except KeyboardInterrupt:
-+        pass
-+    except (OSError, IOError) as e:
-+        print(f"Error: {e}", file=sys.stderr)
-+        sys.exit(1)
-+    finally:
-+        if args.input:
-+            analyzer.print_current_totals()
-+            # Break the reference cycle between perf.session and analyzer.process_event
-+            # because perf.session lacks cyclic GC support (tp_traverse).
-+            analyzer.session = None
-+            session = None
-+        elif analyzer.thread.is_alive():
-+            analyzer.stop()
++                fd = sample.fd
++                count = sample.count
++                self.reads[fd]["bytes_requested"] += count
++                self.reads[fd]["total_reads"] += 1
++            except AttributeError:
++                self.unhandled[event_name] += 1
++        elif event_name == "syscalls:sys_enter_write":
++            try:
++                fd = sample.fd
++                count = sample.count
++                self.writes[fd]["bytes_written"] += count
++                self.writes[fd]["total_writes"] += 1
++            except AttributeError:
++                self.unhandled[event_name] += 1
++        else:
++            self.unhandled[event_name] += 1
 +
++    def print_totals(self) -> None:
++        """Print summary tables."""
++        print(f"file read counts for {self.for_comm}:\n")
++        print(f"{'fd':>6s}  {'# reads':>10s}  {'bytes_requested':>15s}")
++        print(f"{'-'*6}  {'-'*10}  {'-'*15}")
++
++        for fd, data in sorted(self.reads.items(),
++                               key=lambda kv: kv[1]["bytes_requested"], reverse=True):
++            print(f"{fd:6d}  {data['total_reads']:10d}  {data['bytes_requested']:15d}")
++
++        print(f"\nfile write counts for {self.for_comm}:\n")
++        print(f"{'fd':>6s}  {'# writes':>10s}  {'bytes_written':>15s}")
++        print(f"{'-'*6}  {'-'*10}  {'-'*15}")
++
++        for fd, data in sorted(self.writes.items(),
++                               key=lambda kv: kv[1]["bytes_written"], reverse=True):
++            print(f"{fd:6d}  {data['total_writes']:10d}  {data['bytes_written']:15d}")
++
++        if self.unhandled:
++            print("\nunhandled events:\n")
++            print(f"{'event':<40s}  {'count':>10s}")
++            print(f"{'-'*40}  {'-'*10}")
++            for event_name, count in self.unhandled.items():
++                print(f"{event_name:<40s}  {count:10d}")
++
++    def run(self, input_file: str) -> None:
++        """Run the session."""
++        self.session = perf.session(perf.data(input_file), sample=self.process_event)
++        try:
++            self.session.process_events()
++        finally:
++            # Break the reference cycle between perf.session and self.process_event
++            # because perf.session lacks cyclic GC support (tp_traverse).
++            self.session = None
++        self.print_totals()
++
++def main() -> None:
++    """Main function."""
++    parser = argparse.ArgumentParser(description="Trace r/w activity by file")
++    parser.add_argument("comm", help="Filter by command name")
++    parser.add_argument("-i", "--input", default="perf.data", help="Input file")
++    args = parser.parse_args()
++
++    analyzer = RwByFile(args.comm)
++    try:
++        analyzer.run(args.input)
++    except IOError as e:
++        print(e, file=sys.stderr)
++        sys.exit(1)
 +
 +if __name__ == "__main__":
 +    main()
-diff --git a/tools/perf/tests/shell/test_sctop_python.sh b/tools/perf/tests/shell/test_sctop_python.sh
+diff --git a/tools/perf/tests/shell/test_rw_by_file_python.sh b/tools/perf/tests/shell/test_rw_by_file_python.sh
 new file mode 100755
-index 000000000000..cd38cdd4794c
+index 000000000000..98218bf8a39e
 --- /dev/null
-+++ b/tools/perf/tests/shell/test_sctop_python.sh
-@@ -0,0 +1,78 @@
++++ b/tools/perf/tests/shell/test_rw_by_file_python.sh
+@@ -0,0 +1,68 @@
 +#!/bin/bash
 +# SPDX-License-Identifier: GPL-2.0
-+# sctop python test
++# rw-by-file python test
 +
 +set -e
 +
@@ -371,7 +235,7 @@ index 000000000000..cd38cdd4794c
 +fi
 +
 +script_dir="$(dirname "$0")/../../python"
-+script_path="${script_dir}/sctop.py"
++script_path="${script_dir}/rw-by-file.py"
 +
 +if ! perf check feature -q libtraceevent > /dev/null 2>&1; then
 +	echo "Skipping test, libtraceevent is disabled"
@@ -379,31 +243,27 @@ index 000000000000..cd38cdd4794c
 +fi
 +
 +if [ ! -f "$script_path" ]; then
-+	echo "Skipping test, sctop.py not found at $script_path"
++	echo "Skipping test, rw-by-file.py not found at $script_path"
 +	exit 2
 +fi
 +
 +err=0
-+temp_data=""
-+temp_out=""
-+
 +cleanup() {
 +	rm -f "${temp_data}" "${temp_out}"
 +}
 +trap 'cleanup' EXIT TERM INT
-+
 +temp_data=$(mktemp /tmp/perf.data.XXXXXX)
 +temp_out=$(mktemp /tmp/perf.out.XXXXXX)
 +
-+echo "Testing sctop.py..."
++echo "Testing rw-by-file.py..."
 +
-+# Create a perf.data file.
-+if perf list | grep -q "raw_syscalls:sys_enter"; then
-+	perf record -e raw_syscalls:sys_enter -a -o "${temp_data}" \
-+		-- sleep 0.1 >/dev/null 2>&1 || \
++# Create a perf.data file. Try to get tracepoint data.
++if perf list | grep -q "syscalls:sys_enter_read"; then
++	perf record -e syscalls:sys_enter_read,syscalls:sys_enter_write -a -o "${temp_data}" \
++		-- dd if=/dev/urandom of=/dev/null bs=1M count=10 >/dev/null 2>&1 || \
 +		{ echo "Skipping test, perf record failed"; exit 2; }
 +else
-+	echo "Skipping test, no raw_syscalls:sys_enter event"
++	echo "Skipping test, no syscalls:sys_enter_read event"
 +	exit 2
 +fi
 +
@@ -412,22 +272,16 @@ index 000000000000..cd38cdd4794c
 +	exit 2
 +fi
 +
-+# Check that the script executes
-+if ! "$PYTHON" "$script_path" -i "${temp_data}" > "${temp_out}"; then
-+	echo "sctop.py test failed"
-+	err=1
-+elif ! grep -E -q "[0-9]+$" "${temp_out}"; then
-+	echo "Failed to find metric data rows in default run"
-+	err=1
-+elif ! "$PYTHON" "$script_path" -i "${temp_data}" sleep 1 > "${temp_out}"; then
-+	echo "sctop.py comm+interval test failed"
++# Check that the script executes - filtering for "dd" since that's what we ran
++if ! "$PYTHON" "$script_path" -i "${temp_data}" "dd" > "${temp_out}"; then
++	echo "rw-by-file.py test failed"
 +	err=1
 +else
-+	if ! grep -E -q "[0-9]+$" "${temp_out}"; then
++	if ! grep -E -q "^ *[0-9]+" "${temp_out}"; then
 +		echo "Failed to find metric data rows"
 +		err=1
 +	else
-+		echo "sctop test passed."
++		echo "rw-by-file test passed."
 +	fi
 +fi
 +rm -f "${temp_out}"
