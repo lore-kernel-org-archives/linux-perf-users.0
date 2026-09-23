@@ -1,82 +1,158 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43DB747012D
-	for <linux-perf-users@vger.kernel.org>; Wed, 23 Sep 2026 09:14:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B41E347605C
+	for <linux-perf-users@vger.kernel.org>; Wed, 23 Sep 2026 09:14:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790154848; cv=none; b=Mi1N/+LtYcBOpZZD5cXj8vvGwkxOrgmVOJim3+cUedIwEqC+bDY8Hy1jqkJsnxQhY9scTof+hzRBW5JJvVGFHf7WWg0/8gaOxWsWW3xpJOrZkLYMx1GWB+RscJzeL5TOR5D/xzts9IlW8FM1zL2mhTE052bB5tMtwtyAW4OszDc=
+	t=1790154884; cv=none; b=Vj48STNM0NtlhGOnEaR3nHdLPSYO9WW/dYTqiItkziqT6rqPPZys0XfdtiZAr8ntWWyDqriIX2LytK+R8ffLTxGxpzJcTIJrb+TC03d4iusj29szni2ft+rQatqyMmukezF9S090SvgNoeKHnwja0nlRVgJII9qYvkPQYpAbSrQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790154848; c=relaxed/simple;
-	bh=jCM+NsaiFC8DYzZWX5wARc4nw2uioaC4o0IFp1a/9EU=;
+	s=arc-20240116; t=1790154884; c=relaxed/simple;
+	bh=dPaPzVLzOshsvSjCEMzu9Ycx5z115TJDN2osnGLg4Kw=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=Gt9pr51yUiTP4aFWnzHidYxr91+hCWjeFVxCCxVbx19TJlmUX3BOUoTwUZCddOQJBmi2dYSf7arHLsJ07rdnPMf+PMB9EwIcU9mcp1jJhwM7kMiaLomhH80QI/vUHqBnZIdwTmdDI29NVghI94v40ZiciQWxhBRmHkx3+JrBwUQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Aq9FsqzK; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=Tg5yuKZuuWYkuBy3vjK7ZxD8nzrBkBQO1ssUMI+EJpT7xY3yJV2NkxscjqsPM8ym3bcKQsMDWliK9gUhd2Q7HEvF4CJ/XCTbaYCHMw/YoXASQEK1BvTOdIFftcEHzrbv9aFRxsBY6J1RXEpDSdr5vLIe3xZJISwI3a3/TW3wCm0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DAKDXxTo; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Aq9FsqzK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C7FD81F00893;
-	Wed, 23 Sep 2026 09:14:06 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DAKDXxTo"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2C7971F000FF;
+	Wed, 23 Sep 2026 09:14:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1790154846;
-	bh=jCM+NsaiFC8DYzZWX5wARc4nw2uioaC4o0IFp1a/9EU=;
+	s=k20260515; t=1790154883;
+	bh=hf3RiSX4k5LC5QXIZIxPb49coAlE/kzDPp1eyjRLdSQ=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=Aq9FsqzKd1nARFsiP+Mp63LvA7un9XD4FDuz9l8EZTnmEFR75PEnvLz8FjBmryyNf
-	 6OegQTLNMgn1WqAD4333NXzg8IqMX0iwNTrheFcFlkMMWA5o9ONzn9gaknfk6cziRn
-	 yj5uYNdQj/9QuZaiJlEYh2ZWeq+JMEN+g5iccVsghAHQNyq8trKeA0nq52NmB9n1Um
-	 QbPMNcqSPLH4gAVnffSkQ4rudaLEGxIhN7I86xb05XEDCs1ZhEEE8wlM71Tfz6XsSJ
-	 WC6gZTIhI0k7hlMUQsFLvveEaS90LFzv7sCM1QNtopIQES21XpIkQ09gFNmb07R8Iw
-	 VWNkDCK4SPtww==
+	b=DAKDXxTo8TMZ0vkJoLSsa7qZ6OdTRspFKDStbp1ocbnKsxgBj96eZ0lbpID97/8/T
+	 dD6NO3zTBDM2lmmftvdaZmPTsRh/Jok97qlmc5fRpOG4QvLPh4DypKEDZpR5/0bAto
+	 Xvbdf22PABrD2fteNKsVYwXUV1EIzH4Jn3DCY95O6iX7ICCir0kY5kr54iaDryZUm7
+	 0x2KXLs1G6bnneouzgLiQOlWwUf+FscZTYX1+J5SPptK5ERtiYOyeQ29Joe/YbLI5i
+	 xBAO+chkuqF5ZKga6+sAjLu9x2i2Y5+dInoi5j4BQAiktppsgCc3XpV7wbWyV1WBJ2
+	 Qqg42u3SlVj1w==
 From: sashiko-bot@kernel.org
-Subject: Re: [RFC PATCH v3 2/3] sparc64: Support PERF_SAMPLE_REGS_USER and
- PERF_SAMPLE_STACK_USER
+Subject: Re: [RFC PATCH v3 3/3] perf tools: Support sparc user register
+ samples and dwarf unwinding
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Stian Halseth" <stian@itx.no>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260923090429.2026529-3-stian@itx.no>
+In-Reply-To: <20260923090429.2026529-4-stian@itx.no>
 References: <20260923090429.2026529-1-stian@itx.no>
- <20260923090429.2026529-3-stian@itx.no>
+ <20260923090429.2026529-4-stian@itx.no>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Wed, 23 Sep 2026 09:14:06 +0000
-Message-Id: <20260923091406.C7FD81F00893@smtp.kernel.org>
+Date: Wed, 23 Sep 2026 09:14:42 +0000
+Message-Id: <20260923091443.2C7971F000FF@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-> Select HAVE_PERF_REGS and HAVE_PERF_USER_STACK_DUMP and add the
-> perf_regs implementation. The exposed registers mirror struct pt_regs:
-> %g1-%g7, %o0-%o7 (named from the user's point of view; pt_regs calls
-> them UREG_I*), %tstate, NPC and %y, with the PC in the slot of %g0, as
-> mips and loongarch do for their hardwired-zero register. Trap entry
-> does not save %g0, so its pt_regs slot holds stale stack contents for
-> a trap taken in the kernel and must not be exposed.
->=20
-> %o6 is reported as held in the register, i.e. with the 2047 stack bias
-> for a 64-bit stack, the same as ptrace and user_stack_pointer(). The
-> stack dump starts at the stack's actual address instead, %o6 + 2047
-> when test_thread_64bit_stack() says so, so that it begins at the
-> sampled frame; the uapi header documents this for consumers.
->=20
-> User-mode values of a 32-bit task are truncated to 32 bits as
-> genregs32_get() does, since the hardware does not zero-extend them.
-> Kernel-mode registers, as seen by PERF_SAMPLE_REGS_INTR, are left
-> alone.
->=20
-> perf_arch_prepare_ustack() flushes the user register windows so the
-> sampled window's %l and %i registers are in the dumped stack, where a
-> DWARF unwinder needs them: the CFI of a function after `save` defines
-> the CFA in terms of %i6.
->=20
-> This makes perf record --call-graph dwarf and eu-stackprof usable on
-> sparc64.
->=20
-> Signed-off-by: Stian Halseth <stian@itx.no>
+Thank you for your contribution! Sashiko AI review found 2 potential issue(=
+s) to consider:
+- [Medium] perf/unwind: missing endian swap for sparc window registers
+- [Low] perf/sparc: missing explicit stddef.h inclusion for NULL
+--
 
-Sashiko has reviewed this patch and found no issues. It looks great!
+commit 58ddb5306f26894ea36bdfc46ec5335a5abbcee6
+Author: Stian Halseth <stian@itx.no>
+
+perf tools: Support sparc user register samples and dwarf unwinding
+
+Add the sparc perf_regs tables and the EM_SPARC/EM_SPARCV9 dispatch for
+register names, masks, ip/sp and the perf-to-DWARF register mapping,
+plus the uapi header copy.
+
+> diff --git a/tools/perf/util/perf-regs-arch/perf_regs_sparc.c b/tools/per=
+f/util/perf-regs-arch/perf_regs_sparc.c
+> new file mode 100644
+> index 0000000000000..9ee8e496ab8cc
+> --- /dev/null
+> +++ b/tools/perf/util/perf-regs-arch/perf_regs_sparc.c
+> @@ -0,0 +1,67 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +
+> +#include "../perf_regs.h"
+> +#include "../../arch/sparc/include/perf_regs.h"
+> +
+> +uint64_t __perf_reg_mask_sparc(bool intr __maybe_unused)
+> +{
+> +	return PERF_REGS_MASK;
+> +}
+> +
+> +const char *__perf_reg_name_sparc(int id)
+> +{
+> +	switch (id) {
+
+[ ... ]
+
+> +	case PERF_REG_SPARC_Y:
+> +		return "y";
+> +	default:
+> +		return NULL;
+> +	}
+> +
+> +	return NULL;
+
+[Severity: Low]
+Does this rely on implicit header inclusion for NULL?
+
+The NULL macro is used here, but neither <stddef.h> nor <stdlib.h> is
+explicitly included in this file. It appears to rely on the implicit inclus=
+ion
+of <stdlib.h> via the ../../arch/sparc/include/perf_regs.h header.
+
+Should this explicitly include <stddef.h> or <stdlib.h>?
+
+> +}
+
+[ ... ]
+
+> diff --git a/tools/perf/util/unwind-libdw.c b/tools/perf/util/unwind-libd=
+w.c
+> index 63a5c2253174f..d2adf7f2d8bb3 100644
+> --- a/tools/perf/util/unwind-libdw.c
+> +++ b/tools/perf/util/unwind-libdw.c
+
+[ ... ]
+
+> +/*
+> + * The sampled window's %l and %i registers (DWARF 16-31) are not in the
+> + * sample; the kernel flushed them to the register save area at the start
+> + * of the dumped stack.
+> + */
+> +static void libdw_set_sparc_window_registers(struct unwind_info *ui,
+> +					     struct regs_dump *user_regs,
+> +					     Dwarf_Word *dwarf_regs)
+> +{
+> +	struct stack_dump *stack =3D &ui->sample->user_stack;
+> +	u64 sp;
+> +
+> +	if (perf_reg_value(&sp, user_regs, perf_arch_reg_sp(ui->e_machine)))
+> +		return;
+> +	if (!(sp & 1) || 16 * sizeof(u64) > stack->size)
+> +		return;
+> +
+> +	memcpy(&dwarf_regs[16], stack->data, 16 * sizeof(u64));
+
+[Severity: Medium]
+When analyzing a SPARC perf.data file on a little-endian host, will this
+memcpy() write raw big-endian bytes into the little-endian host variables?
+
+The dwarf_regs array is composed of Dwarf_Word (uint64_t) elements and expe=
+cts
+values in host endianness, while the stack dump (stack->data) retains the
+target's original memory layout and endianness (SPARC is strictly big-endia=
+n).
+
+This can cause the 64-bit integer values read by libdw to be byte-swapped,
+breaking cross-architecture DWARF unwinding for SPARC as the stack unwinder
+relies on %i6 and %i7 (DWARF registers 30 and 31) to find the caller's fram=
+e.
+
+Should this code perform conditional byte-swapping when copying from the st=
+ack
+dump?
+
+> +}
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260923090429.2026=
-529-1-stian@itx.no?part=3D2
-
+529-1-stian@itx.no?part=3D3
