@@ -1,222 +1,206 @@
-Received: from mail-qt1-f179.google.com (mail-qt1-f179.google.com [209.85.160.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx.itxnorge.no (itx-kvm-14.itxnorge.no [91.189.121.228])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D7B0560AB3
-	for <linux-perf-users@vger.kernel.org>; Wed, 23 Sep 2026 19:11:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.160.179
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790190700; cv=pass; b=aJUA/wMm1IcczoewiycoHWWlbz44G5BVu2DaLyHYzJ891MjUzKq/SRky/+pkxapOHQvkJ9ktzpBwwwZWZ65ME/DRAlBioBiIneBYXjP15eXWIglKGIa3yL6kg5cb1uuKiUVHxaAXYpZqH2pevDcyKvwYApJe+nrY/jf/dq39XXw=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790190700; c=relaxed/simple;
-	bh=WyM9Ze+Bhx7ApLDVxVGXqmReVBsZfd8IwGWW1NUKLuI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=s2Zi//e/yX4LFwo/zz5Er84JAfZHCoPDNq46CO3je0qdjreJRmAh1tkkLMh8LZP+2x5Q6ZMRfrmhmPNtPEL4CAzlH/O7mGI+nSdQJaaux+gXG0FsJxBKqS5CquIdIW8TYaFLAmmaCwybmMx3OjXZVWjHY2FEH8ZzU2qe8iF0ZSo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=I3vdn73R; arc=pass smtp.client-ip=209.85.160.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52FC356B869;
+	Wed, 23 Sep 2026 19:34:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.189.121.228
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1790192098; cv=none; b=fo4HmHr94eyZSgEIueG2kzu8fwuYJhbjCeEwssWf46CNhewjBfhuE+m3gRUAL9oe+pb3dCb8fK5Qcc0yGZIEQne5OqcoXnt3DmgpuKuQrpR8wzwucbuUwfbWTWoX9k4VNqsCWvud8boYzPzD1Mj0BdyWNDpvBWhPMY0efNPYMBw=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1790192098; c=relaxed/simple;
+	bh=wrGL0wwVyGK9nHh96veEfJ4JJ5Jk4X09XOinQDnsvTg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=O+pWKq5dk0sZqQ5GEmrWODCkoMW8H3Oom5KpbrpgKfNPPfGQv/LQ2ADpnspOKpz6SZ6zWdm7Ubs21OEfGn8uVrBH9vuQs0uJzzD1Yje6r2pn6QJ7FKojHBkx8FdNf1IaC/9H6KJPNgPsQeYEILll5jD7M2lezQCVQ+7/fkFGBho=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=itx.no; spf=pass smtp.mailfrom=itx.no; dkim=pass (1024-bit key) header.d=itx.no header.i=@itx.no header.b=hTYmp3hk; arc=none smtp.client-ip=91.189.121.228
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=itx.no
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=itx.no
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="I3vdn73R"
-Received: by mail-qt1-f179.google.com with SMTP id d75a77b69052e-530e8c6fb80so40081cf.1
-        for <linux-perf-users@vger.kernel.org>; Wed, 23 Sep 2026 12:11:38 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1790190697; cv=none;
-        d=google.com; s=arc-20260327;
-        b=VYX40+pHCPiLd2rGSjcF7+cAoCb0YC5IqnBW2ryOjZIaQEtuYZm+CeunwPjC4fBFmw
-         cUSA9oeGIFRgG+p0RzlcLSzO2Is1BhFzG7gY7/4lBVJkMW5Bf3HmaqCPV/xJLrcKp14Y
-         NazGpZumcvh44eMbK+K2FNrq1CVqK5Gse6eyqbDLeTB77pOAxBjJYaFYCcLujzq2H53/
-         nptog+vDv2xm9LUWImSRTGrfvp84E8wpXxdlmKqJIhBqUmhpccrW6dGBEr6z3K6RaUUb
-         wZCcbrpA6YSRKN7SVdlPAoSZnkH7ADJXIclPMS8FGp8X+5SnoAzZJk+42Ep9blQnczgj
-         NgQQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=2NQxLZICGnHK2h/s6KW/Zky2T9XW9w9CFC0y7KybVt0=;
-        fh=0zVHGC//SC94CWFKHtFt4lnskmkXkJNNy7lE0FDd3Ck=;
-        b=H7fpnT9wXmBFM3Cr+Sg9ATkTNwdXdaQnDlvC9l+C+tKSrkhYDa6diSRICHTr6fRPJT
-         fCypDi6+yljTx5fKeFRpSYehiq6MADrf1uZClQaLeA9yU5GZY+DpamfEWMzdID46oTK4
-         7vIF06+/kyLj8U5qlmgjZ9hKJ21uAU1nGQg9tq2/mQeBFshfU5NpRK0chRExPa5SM8Sd
-         y2aDWugmoImDjvsnED7a9DBVWLQaiqyBlXVFyjPFXZykdK+Nh9tT+m4wf2bHJNSFsIa7
-         GhdsHDrjflGiNg9MmmCI5gzw/6bm//BKzpUk9LV0z5gtfDGtGQ1t5rLewN4/y/9Tdqfy
-         Va0A==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1790190697; x=1790795497; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=2NQxLZICGnHK2h/s6KW/Zky2T9XW9w9CFC0y7KybVt0=;
-        b=I3vdn73RYDmRHJOxe8k0K29MxogtHP+IBA+g3KK4LE1Ak5aN8EqtGma1tMknaqZXuU
-         mSlnzfLw/1tATHaEbmlSvLn3vQ/bvbCuiMpDWdh57hXVwSgUSEkku/LR5uLYVEPfR86R
-         57/w9GujJODvR9ps3tectNnGu/yC/zcZcv06ApoSMlpdT/qfvGuG80RAlEOXwNYfn9V5
-         rk4YV3kmwMCo5u3MJVzjUMcZn46ZEYqF4CNBWCrwTiFhM0eiUv2nJ/HDoU8EbJ6iDEgS
-         +B/R7rrr5CPL9LT6qYPrXqNzke+I2AHPxzXwRHMcQ+mj+NbqhjtPgkhl1KKvBLcqhM+A
-         g6vw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1790190697; x=1790795497;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=2NQxLZICGnHK2h/s6KW/Zky2T9XW9w9CFC0y7KybVt0=;
-        b=1YS2bkKQQZiOrCDwg0UOeAJBxP88dR/aNI+pxy/UZCC1Bbu0Hf3cs045m3lkX+TBi9
-         mQOvSWZsOPbVbCeNR+YQtxxiIWKJ1pdXxd/jyxc07WKSu0NeHZK3yFdtDl46puwJ2k1n
-         Tly42fqS95baBnz7g2xUtSj9gYFkOqLuLvdxTlD0PdR1HtwvR0wYrd9a1v0ZkcnP3ndA
-         XOhyzryoyhgVoXJIuniiXAhE7+V2TmRtnYBcgUPeorzLBIcTjcsLMbC8uuR7TJhUSnPD
-         GisFefEE9IaoohEBl4VCqONiJgjYuK1HXwxZUNt4Ya7AGGwl7HZB2o4U54wM3BuH0XLq
-         LbeA==
-X-Gm-Message-State: AFuF++lGIDveyw/8Y3EwM6YOjHU3HICdobUR1EYWrvwPtxrkNJnttCsL
-	6XiQF8KIw7dD0xzwbCJ0Agx9Kko7+0eP5Ob96ST6yP0QimupOj78RQZtuFpq5HZ6fwut6+x/4pW
-	1IIc+ZJ/rwWJCl/ojCdwa/MAutQKWF9QpE9gEOqQzMNdBMon6AZVapDrfgKs=
-X-Gm-Gg: AYBFou2qsNpIe+Kwhha9gpHtrrSfeH5gvNuQpyoebOu7W1rKlx93EczfPC+76S+Qx0g
-	lWwT6AVq/cIN1JM/Rq7MxTluoX24qWxi15EvgUg37Z7Rr0EiCZiUH/5oYbn9PA1a4wORRR9GI+Q
-	LWlcZVMfi5e+JA8iET5K9EYjCDGEdXd+iY7lVs3b6jsK2UnnN/K2p3UJ/HKFsnYAgnH2QFyEU5N
-	qJ+C9nzsXv7axMTxoJzqaJkoDrUvvW/cQLq0uLleirbY0lnRzKftbv9Pgp/Uc0BggBIPCBSPh9W
-	Tj5uRMvL0b+GXkR5XP5rDwkhId+/sxccFI566ba33mEIIY1A3yIZtkAUgYEDVjsM+Fu2Zm/FtS4
-	IN/J2vQ8W2ZJsYFG3Y1ax
-X-Received: by 2002:a05:622a:4d0a:b0:530:e335:4ef with SMTP id
- d75a77b69052e-532f8cb1cb6mr4180531cf.2.1790190696663; Wed, 23 Sep 2026
- 12:11:36 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=itx.no header.i=@itx.no header.b="hTYmp3hk"
+From: Stian Halseth <stian@itx.no>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=itx.no; s=mx.itx.no;
+	t=1790192082;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=+hb5O2E4A9GdhWtVdSbQkcDJZ9Y5yRBtqWH3lfgyqQs=;
+	b=hTYmp3hkvPTw25eOYyoYrAVeYWxidds5iwf4RXBCq5499p+fW1vRMItJT7GuqjULYwt6Fr
+	vltj6NUyvPGMcEtAhNhqLCPikk9Rrrh7+p/GqoM37vmhRp5o3QKlIvEoKcSC2nXSeBgRzA
+	DrC5C+65AxNJ6GuDBs7VRDBpnqNDmmg=
+To: Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>
+Cc: Ian Rogers <irogers@google.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	James Clark <james.clark@linaro.org>,
+	linux-perf-users@vger.kernel.org,
+	sparclinux@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Stian Halseth <stian@itx.no>
+Subject: [PATCH] perf unwind-libdw: Fix reading the stack of a 32-bit task
+Date: Wed, 23 Sep 2026 21:34:32 +0200
+Message-ID: <20260923193432.2489729-1-stian@itx.no>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1789966896.git.irogers@google.com> <20260923181213.3032038-1-irogers@google.com>
- <20260923181213.3032038-49-irogers@google.com> <20260923184942.B756E1F000FF@smtp.kernel.org>
-In-Reply-To: <20260923184942.B756E1F000FF@smtp.kernel.org>
-From: Ian Rogers <irogers@google.com>
-Date: Wed, 23 Sep 2026 12:11:24 -0700
-X-Gm-Features: AclHuK9RhfE2VRdiaxPx6w1lQZEg5scq8EUYUuFYW_ImBNRcBFC_bSKcTzZfwJA
-Message-ID: <CAP-5=fVakad4+OJSMa2G0ArVXShJ9oi2jKsoNNsL6UvG5NfTxQ@mail.gmail.com>
-Subject: Re: [PATCH v3 48/49] perf script: Support standalone scripts and
- remove embedded scripting
-To: sashiko-reviews@lists.linux.dev
-Cc: linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Wed, Sep 23, 2026 at 11:49=E2=80=AFAM <sashiko-bot@kernel.org> wrote:
->
-> Thank you for your contribution! Sashiko AI review found 1 potential issu=
-e(s) to consider:
-> - [Medium] perf script: TOCTOU race condition in signal handler allows se=
-nding signals to recycled PIDs
-> --
->
-> commit 1ed2e4983f9ede9efdfc6d59669cdd2e466dc05b
-> Author: Ian Rogers <irogers@google.com>
-> Subject: perf script: Support standalone scripts and remove embedded scri=
-pting
->
-> This commit refactors perf script to launch standalone scripts directly v=
-ia
-> fork and execvp, while removing the legacy embedded Perl and Python scrip=
-ting
-> engines. It updates script discovery to prioritize the system python dire=
-ctory
-> and updates shell tests to use the new invocation style.
->
-> > diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-> > --- a/tools/perf/builtin-script.c
-> > +++ b/tools/perf/builtin-script.c
->
-> [ ... ]
->
-> > +static volatile sig_atomic_t script_child_pid;
-> > +
-> > +static void forward_script_sig(int sig, siginfo_t *info, void *ucontex=
-t __maybe_unused)
-> > +{
-> > +     /*
-> > +      * Terminal-generated signals (Ctrl-C / Ctrl-\) have si_code > 0
-> > +      * (SI_KERNEL) and are already delivered by the TTY driver to the
-> > +      * entire foreground process group, including the child script.
-> > +      * Signals sent directly to the perf process via kill(2) / sigque=
-ue(3)
-> > +      * have si_code <=3D 0 (SI_USER, SI_QUEUE, etc.) and must be forw=
-arded
-> > +      * to the child script so it can catch KeyboardInterrupt / SIGTER=
-M
-> > +      * and flush its output before exiting.
-> > +      */
-> > +     if (script_child_pid > 0 && (sig =3D=3D SIGTERM || !info || info-=
->si_code <=3D 0))
-> > +             kill(script_child_pid, sig);
->
-> [Severity: Medium]
-> Does this signal handler risk targeting a reused PID?
->
-> The script_child_pid variable is not updated atomically with the waitpid(=
-)
-> call reaping the process, which creates a race window.
->
-> If the parent is preempted right after waitpid() returns but before
-> script_child_pid is cleared, the system could recycle the PID. This handl=
-er
-> might then trigger a kill() on an unrelated, newly created process.
+memory_read() hands libdw 8 bytes whatever the sampled task's ABI. For a
+32-bit task libdw keeps the low 32 bits (__libdwfl_frame_reg_set()), so
+on a big-endian machine each word read from the stack or a DSO is the
+one at addr + 4, and unwinding stops at the first frame restored from
+the stack. On sparc the 8-byte load from a stack address that is only
+4-byte aligned even traps, and perf dies with SIGBUS. Read 4 bytes for a
+PERF_SAMPLE_REGS_ABI_32 sample.
 
-In practice this window is small (O(a single instruction)) right
-before perf script exits, and it would require both PID
-wrap-around/reuse and an external kill() directed at perf's PID during
-that boundary.
+A recording of the other byte order has each sample swapped in 8-byte
+units when it is read (perf_event__all64_swap()), which leaves the
+4-byte words of a 32-bit stack dump reversed and paired up wrongly.
+Undo the swap of the unit holding the word and swap the word itself, as
+__evsel__parse_sample() does for PERF_SAMPLE_CPU.
 
-However, we can eliminate the window completely by waiting with
-waitid(P_PID, pid, &info, WEXITED | WNOWAIT) so the child PID remains
-unreaped while we clear script_child_pid =3D 0 and restore sigaction,
-and then calling waitpid(pid, &status, 0) to reap the zombie. I'm
-happy to include that if there is a v4 or as a follow-up cleanup.
+Suggested-by: Ian Rogers <irogers@google.com>
+Signed-off-by: Stian Halseth <stian@itx.no>
+---
+Ian raised the cross-endian case in review of the sparc64 perf_regs
+series:
+https://lore.kernel.org/all/CAP-5=fUuRm3dWra4a-6eNF3F=tafcHvvDipqmDEXN5+ti-sW0A@mail.gmail.com/
 
-Thanks,
-Ian
+Tested with 32-bit sparc programs (static, dynamic and multithreaded) on
+top of that series, with a local change so perf recognises sparc32plus
+binaries: natively on sparc64 perf died with SIGBUS before and unwinds
+complete chains after; cross-endian on x86 no call chain was complete
+before and all are after. 64-bit unwinding is unchanged in both.
 
-> > +}
->
-> [ ... ]
->
-> > +             } else { /* parent */
-> > +                     int status =3D 0;
-> > +
-> > +                     script_child_pid =3D pid;
-> > +                     sigprocmask(SIG_SETMASK, &old_mask, NULL);
-> > +                     while (waitpid(pid, &status, 0) !=3D pid) {
-> > +                             if (errno =3D=3D EINTR)
-> > +                                     continue;
-> > +                             pr_err("failed to wait for script '%s': %=
-s\n",
-> > +                                    script_name, strerror(errno));
-> > +                             err =3D -errno;
-> > +                             script_child_pid =3D 0;
-> > +                             sigaction(SIGINT, &old_int, NULL);
-> > +                             sigaction(SIGQUIT, &old_quit, NULL);
-> > +                             sigaction(SIGTERM, &old_term, NULL);
-> > +                             goto out;
-> > +                     }
-> > +                     script_child_pid =3D 0;
->
-> [Severity: Medium]
-> Is there a way to safely synchronize the clearing of script_child_pid wit=
-h the
-> reaping of the child process?
->
-> The child process is fully reaped as soon as waitpid() successfully retur=
-ns
-> here in cmd_script().
->
-> If the thread is suspended or preempted exactly at this point, script_chi=
-ld_pid
-> remains set to the old PID while the system is free to reassign that PID.
->
-> If a signal like SIGTERM arrives during this window, forward_script_sig()=
- will
-> read the stale script_child_pid and send it to the new process holding th=
-at PID.
->
-> > +                     sigaction(SIGINT, &old_int, NULL);
-> > +                     sigaction(SIGQUIT, &old_quit, NULL);
-> > +                     sigaction(SIGTERM, &old_term, NULL);
-> > +                     if (WIFEXITED(status))
->
-> --
-> Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260923181213.30=
-32038-1-irogers@google.com?part=3D48
+Words read from a DSO rather than the stack dump are still not swapped
+for a recording of the other byte order, whatever the word size, as
+before this change.
+
+ tools/perf/util/unwind-libdw.c | 46 ++++++++++++++++++++++++++++------
+ 1 file changed, 39 insertions(+), 7 deletions(-)
+
+diff --git a/tools/perf/util/unwind-libdw.c b/tools/perf/util/unwind-libdw.c
+index 4ccfcc7c2dfc..d49901b1571e 100644
+--- a/tools/perf/util/unwind-libdw.c
++++ b/tools/perf/util/unwind-libdw.c
+@@ -4,6 +4,7 @@
+ #include <elfutils/libdw.h>
+ #include <elfutils/libdwfl.h>
+ #include <inttypes.h>
++#include <byteswap.h>
+ #include <errno.h>
+ #include "debug.h"
+ #include "dso.h"
+@@ -17,6 +18,8 @@
+ #include <linux/types.h>
+ #include <linux/zalloc.h>
+ #include "event.h"
++#include "evsel.h"
++#include "memswap.h"
+ #include "perf_regs.h"
+ #include "callchain.h"
+ #include "util/env.h"
+@@ -203,9 +206,10 @@ static bool get_thread(Dwfl *dwfl __maybe_unused, pid_t tid, void *arg,
+ }
+ 
+ static int access_dso_mem(struct unwind_info *ui, Dwarf_Addr addr,
+-			  Dwarf_Word *data)
++			  Dwarf_Word *data, size_t len)
+ {
+ 	struct addr_location al;
++	union u64_swap u;
+ 	ssize_t size;
+ 	struct dso *dso;
+ 
+@@ -218,15 +222,38 @@ static int access_dso_mem(struct unwind_info *ui, Dwarf_Addr addr,
+ 	if (!dso)
+ 		goto out_fail;
+ 
+-	size = dso__data_read_addr(dso, al.map, ui->machine, addr, (u8 *) data, sizeof(*data));
++	size = dso__data_read_addr(dso, al.map, ui->machine, addr, (u8 *)&u, len);
+ 
+ 	addr_location__exit(&al);
+-	return !(size == sizeof(*data));
++	if (size != (ssize_t)len)
++		return 1;
++	*data = len == sizeof(u32) ? u.val32[0] : u.val64;
++	return 0;
+ out_fail:
+ 	addr_location__exit(&al);
+ 	return -1;
+ }
+ 
++/*
++ * libdw expects a 32-bit task's words zero-extended.  A recording of the
++ * other byte order was swapped in 8-byte units when it was read (see
++ * perf_event__all64_swap()), so a 4-byte word is picked out of its unit with
++ * that swap undone, as for PERF_SAMPLE_CPU in __evsel__parse_sample().
++ */
++static Dwarf_Word stack_word(struct stack_dump *stack, int offset, size_t len,
++			     bool swapped)
++{
++	union u64_swap u;
++
++	if (len == sizeof(u64))
++		return *(Dwarf_Word *)&stack->data[offset];
++	if (!swapped)
++		return *(u32 *)&stack->data[offset];
++
++	u.val64 = bswap_64(*(u64 *)&stack->data[offset & ~7]);
++	return bswap_32(u.val32[(offset & 4) / 4]);
++}
++
+ static bool memory_read(Dwfl *dwfl __maybe_unused, Dwarf_Addr addr, Dwarf_Word *result,
+ 			void *arg)
+ {
+@@ -234,11 +261,16 @@ static bool memory_read(Dwfl *dwfl __maybe_unused, Dwarf_Addr addr, Dwarf_Word *
+ 	struct unwind_info *ui = dwfl_ui_ti->ui;
+ 	struct stack_dump *stack = &ui->sample->user_stack;
+ 	u64 start, end;
++	bool swapped;
++	size_t len;
+ 	int offset;
+ 	int ret;
+ 
+ 	if (!ui->sample->user_regs)
+ 		return false;
++	len = ui->sample->user_regs->abi == PERF_SAMPLE_REGS_ABI_32 ?
++	      sizeof(u32) : sizeof(u64);
++	swapped = ui->sample->evsel && ui->sample->evsel->needs_swap;
+ 
+ 	ret = perf_reg_value(&start, ui->sample->user_regs,
+ 			     perf_arch_reg_sp(ui->e_machine));
+@@ -248,11 +280,11 @@ static bool memory_read(Dwfl *dwfl __maybe_unused, Dwarf_Addr addr, Dwarf_Word *
+ 	end = start + stack->size;
+ 
+ 	/* Check overflow. */
+-	if (addr + sizeof(Dwarf_Word) < addr)
++	if (addr + len < addr)
+ 		return false;
+ 
+-	if (addr < start || addr + sizeof(Dwarf_Word) > end) {
+-		ret = access_dso_mem(ui, addr, result);
++	if (addr < start || addr + len > end) {
++		ret = access_dso_mem(ui, addr, result, len);
+ 		if (ret) {
+ 			pr_debug("unwind: access_mem 0x%" PRIx64 " not inside range"
+ 				 " 0x%" PRIx64 "-0x%" PRIx64 "\n",
+@@ -263,7 +295,7 @@ static bool memory_read(Dwfl *dwfl __maybe_unused, Dwarf_Addr addr, Dwarf_Word *
+ 	}
+ 
+ 	offset  = addr - start;
+-	*result = *(Dwarf_Word *)&stack->data[offset];
++	*result = stack_word(stack, offset, len, swapped);
+ 	pr_debug("unwind: access_mem addr 0x%" PRIx64 ", val %lx, offset %d\n",
+ 		 addr, (unsigned long)*result, offset);
+ 	return true;
+
+base-commit: edd8a9fe2eca009599e013a29c421c7a6b5ad1b9
+-- 
+2.55.0
+
