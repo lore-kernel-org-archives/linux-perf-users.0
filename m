@@ -1,145 +1,141 @@
-Received: from mailgw1.hygon.cn (unknown [101.204.27.37])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CD7423BBFD6;
-	Wed, 23 Sep 2026 09:01:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=101.204.27.37
+Received: from mx.itxnorge.no (itx-kvm-14.itxnorge.no [91.189.121.228])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C31347AF4D;
+	Wed, 23 Sep 2026 09:04:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.189.121.228
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790154084; cv=none; b=RCxuUsAXLFgPBckT9K20oyt4qDURSBYILfZ14JnR4W8/0drZ4KL39Z/VlHdRRtlydc2wcK5hrqkK3M0JLwPVUwZBnLcV4QMeBnfSZ6xAozRFBD4se+Rfm9G2lqF2X02CuVc0jLfl2JTG/TOlgNJWuN90SBqCik8M6OEWsPiNp34=
+	t=1790154291; cv=none; b=UECOBq1bPJ5V4bE6o4En1oVpF3aARCQ1nQ7T33Mr9+YWVqF1NuHxhJchiXFKq6ZQiqpPq2c9Igq5op/z31upeNDOETMGlUBWJ30jogKLKXbQgGBbbUAJQzdlBS+625aVi419IoJnhAEumObPe8QcRiwMa9fFV+VZmvyIE7JKUJo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790154084; c=relaxed/simple;
-	bh=eaDRSMhxRUUCK8R+oUyIpxydo2lKh37HrMtX6/5Mmbg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=eHa7nZ/9DGIh2rATEmS4a/hjP0ZlOehcwjx6th3zJsvTrkGzvJUtX2a5K3LYTIwugrmjXjuh0oG6gqhqtbvtyRwPA98YZe9rTALy7Ai/MraoPJUosfd6H364LYGRVtMVAMY8P7rH+KC0rToHWGc5WzgZVO/AztaVYv81MGhNn+U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hygon.cn; spf=pass smtp.mailfrom=hygon.cn; arc=none smtp.client-ip=101.204.27.37
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hygon.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hygon.cn
-Received: from maildlp2.hygon.cn (unknown [127.0.0.1])
-	by mailgw1.hygon.cn (Postfix) with ESMTP id 4hqWCP5wfczTSdw;
-	Wed, 23 Sep 2026 17:00:49 +0800 (CST)
-Received: from maildlp2.hygon.cn (unknown [172.23.18.61])
-	by mailgw1.hygon.cn (Postfix) with ESMTP id 4hqWCM1QqJzTSds;
-	Wed, 23 Sep 2026 17:00:47 +0800 (CST)
-Received: from cncheex04.Hygon.cn (unknown [172.23.18.114])
-	by maildlp2.hygon.cn (Postfix) with ESMTPS id 499A63027FF0;
-	Wed, 23 Sep 2026 16:56:16 +0800 (CST)
-Received: from [127.0.0.1] (10.0.235.124) by cncheex04.Hygon.cn
- (172.23.18.114) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.36; Wed, 23 Sep
- 2026 17:00:36 +0800
-Message-ID: <78aec2a6-e1e8-4260-806d-cbe90e0faaa1@hygon.cn>
-Date: Wed, 23 Sep 2026 17:00:35 +0800
+	s=arc-20240116; t=1790154291; c=relaxed/simple;
+	bh=BoKdU6V4qS1XlHWnqOcsmrIYtIAntN8UxmKVo12ZFkE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=o2WzH2N5xRW1MGy0t7MqsSyd1efkR0YfXXuBa3VVpd0r4/8BnQDZUHraZRkSUslcPk/GYroN69b0LwiR47VFIBAf+Jvl0QswfQi55dr4VUSm2cFNbGqqgXjYNaK/CUUX5nigFpOv2OIQOdfnl/LUQNzbE9pvRQzSp9/U8Qy4d/4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=itx.no; spf=pass smtp.mailfrom=itx.no; dkim=pass (1024-bit key) header.d=itx.no header.i=@itx.no header.b=Ox/iyk8F; arc=none smtp.client-ip=91.189.121.228
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=itx.no
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=itx.no
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=itx.no header.i=@itx.no header.b="Ox/iyk8F"
+From: Stian Halseth <stian@itx.no>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=itx.no; s=mx.itx.no;
+	t=1790154287;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=Rz03Q3LYDjGNSXr9NJduP1jiMxDggB9Dj53CnCIRM7Q=;
+	b=Ox/iyk8F9mxpglGbhQx5tk3txQv8TiC7afGUqJxyol8/3sqn9hL3kU7AERsjQHUU87+Hrf
+	eHHzT/Pz+Bc08y4di5+10jrHgOm51Ib/TIOquMOmkkCmeonc6xOM3M2U4MVB7NumaXWGFz
+	YHj/PiT/HII/FSURrdO+DFdJ8jS5TVE=
+To: Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Andreas Larsson <andreas@gaisler.com>,
+	"David S. Miller" <davem@davemloft.net>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	James Clark <james.clark@linaro.org>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Shuah Khan <skhan@linuxfoundation.org>,
+	Randy Dunlap <rdunlap@infradead.org>,
+	Magnus Lindholm <linmag7@gmail.com>,
+	linux-perf-users@vger.kernel.org,
+	sparclinux@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Stian Halseth <stian@itx.no>
+Subject: [RFC PATCH v3 0/3] perf: sparc64 user regs and stack dump, with arch hooks
+Date: Wed, 23 Sep 2026 11:04:25 +0200
+Message-ID: <20260923090429.2026529-1-stian@itx.no>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 2/2] perf vendor events hygon: Add Hygon Data Fabric
- PMU events and metrics
-To: Sandipan Das <sandipan.das@amd.com>, <peterz@infradead.org>,
-	<mingo@redhat.com>, <namhyung@kernel.org>,
-	<alexander.shishkin@linux.intel.com>, <jolsa@kernel.org>,
-	<ravi.bangoria@amd.com>, <irogers@google.com>, <x86@kernel.org>
-CC: <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<lijing@hygon.cn>
-References: <20260818100118.12944-1-liuqi@hygon.cn>
- <20260818100118.12944-3-liuqi@hygon.cn>
- <79ff1562-d910-418c-b5b5-92d217cdc568@amd.com>
-Content-Language: en-US
-From: Qi Liu <liuqi@hygon.cn>
-In-Reply-To: <79ff1562-d910-418c-b5b5-92d217cdc568@amd.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: cncheex06.Hygon.cn (172.23.18.116) To cncheex04.Hygon.cn
- (172.23.18.114)
+Content-Transfer-Encoding: 8bit
 
-Hi Sandipan,
+This adds HAVE_PERF_REGS and HAVE_PERF_USER_STACK_DUMP to sparc64, so
+that perf record --call-graph dwarf and elfutils' eu-stackprof work
+there.
 
-Sorry for the delayed reply.
+Two things about the user stack dump do not fit in arch code. The
+sampled register window's %l/%i registers, which hold the frame pointer
+and return address the unwinder starts from, stay in the register file
+until a window spills. The kernel already flushes them wherever it
+exposes user stack memory (perf_callchain_user(), ptrace), but the stack
+dump has no arch entry point where that could happen. And a 64-bit
+sparc stack pointer is biased by 2047, so a dump that starts at the
+register value begins 2047 bytes below the frame, and is empty when that
+page has never been touched.
 
-On 8/19/2026 1:11 PM, Sandipan Das wrote:
-> On 18-08-2026 15:31, Qi Liu wrote:
->> Add perf JSON event definitions and metrics for the Hygon Data Fabric (DF)
->> uncore PMU.
->>
->> Signed-off-by: Qi Liu <liuqi@hygon.cn>
->> ---
->>   tools/perf/pmu-events/Build                   |   2 +-
->>   .../arch/x86/hygonm1/data-fabric.json         |  95 ++++++++++
->>   .../arch/x86/hygonm4/data-fabric.json         | 134 ++++++++++++++
->>   .../arch/x86/hygonm6/data-fabric.json         | 170 ++++++++++++++++++
->>   tools/perf/pmu-events/arch/x86/mapfile.csv    |   3 +
->>   tools/perf/pmu-events/jevents.py              |   2 +
->>   6 files changed, 405 insertions(+), 1 deletion(-)
->>   create mode 100644 tools/perf/pmu-events/arch/x86/hygonm1/data-fabric.json
->>   create mode 100644 tools/perf/pmu-events/arch/x86/hygonm4/data-fabric.json
->>   create mode 100644 tools/perf/pmu-events/arch/x86/hygonm6/data-fabric.json
->>
->> diff --git a/tools/perf/pmu-events/Build b/tools/perf/pmu-events/Build
->> index 372773b998e4..79a9b4cad202 100644
->> --- a/tools/perf/pmu-events/Build
->> +++ b/tools/perf/pmu-events/Build
->> @@ -95,7 +95,7 @@ endif
->>   
->>   ifeq ($(JEVENTS_ARCH),$(filter $(JEVENTS_ARCH),x86 all))
->>   # Generate Intel Json
->> -INTELS := $(shell ls -d pmu-events/arch/x86/*|grep -v amdzen|grep -v mapfile.csv)
->> +INTELS := $(shell ls -d pmu-events/arch/x86/*|grep -v amdzen|grep -v hygon|grep -v mapfile.csv)
->>   INTEL_METRICS = $(foreach x,$(INTELS),$(OUTPUT)$(x)/extra-metrics.json)
->>   INTEL_METRICGROUPS = $(foreach x,$(INTELS),$(OUTPUT)$(x)/extra-metricgroups.json)
->>   GEN_JSON += $(INTEL_METRICS) $(INTEL_METRICGROUPS)
->> diff --git a/tools/perf/pmu-events/arch/x86/hygonm1/data-fabric.json b/tools/perf/pmu-events/arch/x86/hygonm1/data-fabric.json
->> new file mode 100644
->> index 000000000000..8c6a8e9ba9a5
->> --- /dev/null
->> +++ b/tools/perf/pmu-events/arch/x86/hygonm1/data-fabric.json
->> @@ -0,0 +1,95 @@
->> +[
->> +  {
->> +    "EventName": "cpu_read_requests_cs_0",
->> +    "BriefDescription": "Number of CPU read requests to memory in 64-byte units for Coherent Subordinate 0 (CS0).",
-> 
-> Coherent Station is the correct term, if you go by the terminology in AMD
-> PPRs. Since CSes are the interfaces between the data fabric and the memory
-> controllers (UMCs), it may be better to rephrase the descriptions as read
-> or write requests to DRAM channel 0..N which are backed by UMC 0..N and
-> CS 0..N.
+Patch 1 therefore adds two hooks in the style of perf_arch_misc_flags(),
+both no-ops by default. Patch 2 is the sparc64 implementation and their
+user. Patch 3 teaches tools/perf the sparc registers and DWARF unwinding
+from the dump. The matching elfutils changes are attached to the
+tracking issue:
 
-Thanks,I will update "Coherent Subordinate" to "Coherent Station".
+  https://github.com/sparclinux/issues/issues/99
 
-Yes, CSes provide the interface between the data fabric and UMCs. Since the 
-UMC-to-DRAM-channel topology may vary across platforms, would it be reasonable 
-to avoid referring to DRAM channels in the event descriptions?
+Tested on an UltraSPARC T4-1 on 7.3-rc4: register values check out
+against known contents, --call-graph dwarf unwinds correctly for both
+cycles and cpu-clock, as does eu-stackprof, and perf stat/record/record
+-g are unchanged. Starting the dump at the stack's actual address
+matters in practice: with the dump at the biased register value, 94% of
+the user samples of xz -T4 had an empty stack dump; with this series,
+none do.
 
-I was thinking of wording the description as follows:
-   "Number of CPU read requests associated with Coherent Station 0 (CS0) and the 
-UMC."
+Changes since v2:
+- Patch 1: add perf_arch_user_stack_pointer(), so an arch can start the
+  dump at the stack's actual address (sashiko review).
+- Patch 2: drop %g0 from the uapi, as trap entry does not save it; the
+  PC takes its slot, as on mips and loongarch (sashiko review).
+- Patch 2: start the dump at %sp + 2047 for a 64-bit stack (sashiko
+  review).
+- Patch 3: follow both, and comment the max_dwarf_reg adjustment (Ian).
+  Drop the memcpy() change to memory_read(), which the unbiased dump
+  start makes unnecessary.
 
-> 
->> +    "EventCode": "0x2",
->> +    "UMask": "0x07",
->> +    "CompId": "0x0",
->> +    "Unit": "HYGON_DF",
->> +    "ScaleUnit": "64Bytes"
-> 
-> As the naming suggests, my understanding is that these events count the
-> number of requests and each request carries a 64-byte payload. Perhaps
-> the ScaleUnit needs to be factored into the bandwidth metrics instead of
-> the individual events.
-> 
+v2: https://lore.kernel.org/all/20260922201507.1719668-1-stian@itx.no/
+v1: https://lore.kernel.org/all/20260922135653.1622301-1-stian@itx.no/
 
-Thanks,I will remove the "64Bytes" ScaleUnit from the individual request
-events in v6.
+Stian Halseth (3):
+  perf/core: Let an arch prepare and locate the user stack dump
+  sparc64: Support PERF_SAMPLE_REGS_USER and PERF_SAMPLE_STACK_USER
+  perf tools: Support sparc user register samples and dwarf unwinding
 
-The bandwidth MetricExprs already apply the payload size: * 64 for the
-CPU bandwidth and I/O upper-bound metrics, and * 32 for the I/O
-lower-bound metric. I plan to retain those conversions in the metrics.
+ .../features/perf/perf-regs/arch-support.txt  |  2 +-
+ .../perf/perf-stackdump/arch-support.txt      |  2 +-
+ arch/sparc/Kconfig                            |  2 +
+ arch/sparc/include/asm/perf_event.h           |  5 ++
+ arch/sparc/include/uapi/asm/perf_regs.h       | 34 +++++++++
+ arch/sparc/kernel/Makefile                    |  2 +-
+ arch/sparc/kernel/perf_regs.c                 | 74 +++++++++++++++++++
+ include/linux/perf_event.h                    | 11 +++
+ kernel/events/core.c                          |  2 +
+ kernel/events/internal.h                      |  2 +-
+ tools/arch/sparc/include/uapi/asm/perf_regs.h | 34 +++++++++
+ tools/perf/arch/sparc/include/perf_regs.h     | 18 +++++
+ tools/perf/check-headers.sh                   |  1 +
+ tools/perf/util/dwarf-regs-arch/Build         |  1 +
+ .../util/dwarf-regs-arch/dwarf-regs-sparc.c   | 12 +++
+ tools/perf/util/dwarf-regs.c                  |  4 +
+ tools/perf/util/include/dwarf-regs.h          |  1 +
+ tools/perf/util/perf-regs-arch/Build          |  1 +
+ .../util/perf-regs-arch/perf_regs_sparc.c     | 67 +++++++++++++++++
+ tools/perf/util/perf_regs.c                   | 18 +++++
+ tools/perf/util/perf_regs.h                   |  5 ++
+ tools/perf/util/unwind-libdw.c                | 37 ++++++++++
+ 22 files changed, 331 insertions(+), 4 deletions(-)
+ create mode 100644 arch/sparc/include/uapi/asm/perf_regs.h
+ create mode 100644 arch/sparc/kernel/perf_regs.c
+ create mode 100644 tools/arch/sparc/include/uapi/asm/perf_regs.h
+ create mode 100644 tools/perf/arch/sparc/include/perf_regs.h
+ create mode 100644 tools/perf/util/dwarf-regs-arch/dwarf-regs-sparc.c
+ create mode 100644 tools/perf/util/perf-regs-arch/perf_regs_sparc.c
 
-Does that match your suggestion?
-
-Thanks,
-Qi
-
-
-
+-- 
+2.55.0
 
