@@ -1,76 +1,75 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3EBA4BE445;
-	Thu, 24 Sep 2026 17:52:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92D324BEE5E;
+	Thu, 24 Sep 2026 17:52:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790272360; cv=none; b=Ge7ZeZh/iItA8Ml5fxYy0FXmvKtgjltsdpWRUxDwYs1U4Z1zoCzhHJMeOpBCl1EexM6izpyhGelK1W6QpwEirvuqEn2Vf/drOX/umz3h6XFm1zQoqb+pDp8Z7jSzyzdmlxhiHyghIegN7h2BmVSQNqIeIiGlY27GlpZ/916UY1I=
+	t=1790272363; cv=none; b=oxemcJOy2U8nVu2ePg5CSmPICHWqyMGXaY2vhNaMZQ2YXCD69Xb0P3I/lqh23BN+lAmfzRbbDNK+Qh2+xtETQAF9bNgNpoHYAJhxQZXRD0euMohU3ZqeGjEnHPH2AnVXe4UJC+cbxRcKZv3Io56DP3QTOM7LWUCo2dwHHDyDobY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790272360; c=relaxed/simple;
-	bh=i79k6U+L9XmNQXwPW5KS9Z6Gcg7+vpVg8bBwYfD4V3I=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kq43BWg08oJp9XfcxWiPgCE94PlR/VJ5nT+vmyNhoePUvVfy2R45u544sPRZTkbD2uL+B9ldir+CvIgC36HztD80BGsGfiaDAo06YEFDRbnj1RyO6PIbhZToJ15QAS2VOFzMC5F2hsghYU3Q63ic3W1pYP+RlaSZdmPE059IJQY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fdeJWJra; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1790272363; c=relaxed/simple;
+	bh=hziZAaE+V5xDAQSScAc0eAj/3VxlC53isvRBrxFNM/4=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=V9oML7JXbOC7RTjC0OZ0tcSQOuNlSLl+VQ1j2NbdrqSgWJCzb0ti3DvwgSuekfTxFzTAS10SIq7c62HOHJkwoX+/q0rgCJWWT1gxfXxv0LkpptTWjOGJu2/goL0tmuIa9aGRNJyDB0QIrxuEmHY+MXE30P72uhoinYMw+4hOB9g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=L1/4Sp/B; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fdeJWJra"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B21411F000FF;
-	Thu, 24 Sep 2026 17:52:38 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="L1/4Sp/B"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ED3F21F000FF;
+	Thu, 24 Sep 2026 17:52:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1790272359;
-	bh=OkINFXz6xU9yuLQmb4zwHMO7aBPdxp0jx9EEkqHt9EU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=fdeJWJraazo3+tmMym7ePO7SizkG/sOfxnWmtT8TjIt/bkM76s0R9z9vaZ3Aq6jfY
-	 +r69vLk04mNwATu/OP4nQLS8lbf+eVCQWZrkSz0nhcJIhwB8B0ToLfquWj6nGkNRQW
-	 gpQwJQ3uuWOkKQKcjDecJSWg8MAcYPG2cyFpHH9idKSc4KnUu2QFBaNjZFzKgh2QTK
-	 /e8/6jHkcF8dBMSO9mxqYop+N4iah5xUCcX6pFqoQ5xo04D/rmkcUvxAhXIa1nIEgd
-	 r9BMBGdIg6/sg+7zqTKxjzxiKEJh4mZ/+ylL1FG8IA12QRMRl6llO1gx1Zmt7H/3rq
-	 z3XwVAik2cPLQ==
-Date: Thu, 24 Sep 2026 19:52:36 +0200
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: WANG Rui <wangrui@loongson.cn>, Jianping Liu <frankljpliu@gmail.com>,
-	peterz@infradead.org, mingo@redhat.com, namhyung@kernel.org,
-	wangming01@loongson.cn, linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Jianping Liu <frankjpliu@tencent.com>
-Subject: Re: [PATCH v2] perf annotate: Fix NULL pointer dereference in
- loongarch_call__parse
-Message-ID: <arVjZFD8-amR8qFm@x2>
-References: <20260423103530.3938202-1-frankljpliu@gmail.com>
- <CAHirt9hJ5tTnWhYFZM6TvaTyDxGcRa=zeta8iv0DqqxgfKUQFA@mail.gmail.com>
- <CAP-5=fX37WjSviuitD8vintyY+EERwB-GMPpitarBqPFk49A3Q@mail.gmail.com>
+	s=k20260515; t=1790272362;
+	bh=hziZAaE+V5xDAQSScAc0eAj/3VxlC53isvRBrxFNM/4=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=L1/4Sp/B0UhnZsLFMLRWfcTmPJTrFmzJe2eBov53jTVq8CoLd2WEHUGkXjqfEfrnZ
+	 vqZrnBgpoXygGnpvZvWreQKGJQkkrQXygZvPMNDHLJj9lMQsmdrrqRLuZUCnOB7zth
+	 rfronG6gRtCInPy1RaLRk8mmgBMRP6V8Y99HeXhFvH3UMbgIsRb3glT0n43lnvSf8b
+	 PJMfKJXh02EJnRor/0SSBVJLz5Vv3RLaZW/pt9IZmGlgDkLIs1Joyurl9A2jXfLpqz
+	 +96KqWwN1sdAgq8RhTbWnRGucjqtZq1mc57aeFQLBaBxMzr04KZOcxTXBl2hPBEK8L
+	 AcZS2H6Dy6x+w==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v9 09/22] KVM: arm64: Set up FGT for Partitioned PMU
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Colton Lewis" <coltonlewis@google.com>
+Cc: "Oliver Upton" <oupton@kernel.org>, linux-perf-users@vger.kernel.org, "Marc
+ Zyngier" <maz@kernel.org>, kvmarm@lists.linux.dev, kvm@vger.kernel.org
+In-Reply-To: <20260924172928.2110956-10-coltonlewis@google.com>
+References: <20260924172928.2110956-1-coltonlewis@google.com>
+ <20260924172928.2110956-10-coltonlewis@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Thu, 24 Sep 2026 17:52:41 +0000
+Message-Id: <20260924175241.ED3F21F000FF@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fX37WjSviuitD8vintyY+EERwB-GMPpitarBqPFk49A3Q@mail.gmail.com>
 
-On Tue, Sep 15, 2026 at 03:47:38PM -0700, Ian Rogers wrote:
-> On Mon, Apr 27, 2026 at 8:53 PM WANG Rui <wangrui@loongson.cn> wrote:
-> > On Thu, Apr 23, 2026 at 6:35 PM Jianping Liu <frankljpliu@gmail.com> wrote:
-> > > Rather than aborting parse with -1 (which would clear dl->ins.ops and
-> > > lose the is_call attribute, preventing the TUI from drawing branch
-> > > arrows and navigating the call), follow the same pattern as the generic
-> > > call__parse() in util/disasm.c: when the symbol name is absent, jump to
-> > > the address-based symbol lookup so that ops->target.sym can still be
-> > > resolved via maps__find_ams() using the already-parsed target address.
-> > > This preserves is_call semantics and keeps TUI navigation working.
+> In order to gain the best performance benefit from partitioning the
+> PMU, utilize fine grain traps (FEAT_FGT and FEAT_FGT2) to avoid
+> trapping common PMU register accesses by the guest to remove that
+> overhead.
+>=20
+> Untrapped:
+> - PMCR_EL0
+> - PMUSERENR_EL0
+> - PMSELR_EL0
+> - PMCCNTR_EL0
+> - PMCNTEN_EL0
+> - PMINTEN_EL1
+> - PMEVCNTRn_EL0
+>=20
+> These are safe to untrap because writing MDCR_EL2.HPMN as this series
+> [ ... ]
+>=20
+> PMCEIDn and PMMIR remain trapped because they can leak information
+> specific to the host hardware implementation.
+>=20
+> Signed-off-by: Colton Lewis <coltonlewis@google.com>
 
-> > > - Link to v1: https://lore.kernel.org/all/20260423053102.3717015-1-frankljpliu@gmail.com/
+Sashiko has reviewed this patch and found no issues. It looks great!
 
-> > > Fixes: 4ca0d340ce20 ("perf annotate: Fix instruction association and parsing for LoongArch")
-> > > Signed-off-by: Jianping Liu <frankjpliu@tencent.com>
-> > > Reviewed-by: Ming Wang <wangming01@loongson.cn>
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260924172928.2110=
+956-1-coltonlewis@google.com?part=3D9
 
-> > Tested-by: WANG Rui <wangrui@loongson.cn>
- 
-> Acked-by: Ian Rogers <irogers@google.com>
-
-Thanks, applied to perf-tools-next, for v7.4.
-
-- Arnaldo
