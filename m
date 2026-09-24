@@ -1,73 +1,91 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54D1840B38C;
-	Thu, 24 Sep 2026 17:48:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF014414437;
+	Thu, 24 Sep 2026 17:49:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790272115; cv=none; b=WdYVAxjpott1ViudOxsylSesN+cqFk2DILHad7rce7MgajSN4xm6jhcOXIQNFgqBakLDCjqhX9WOvrdSxLswaQ8SDk+gK0dlaOyXuMVPZBhfcB035OLM4udFGKNzqQRTHJ4DMXA8wkiQjCvD7oTcGmirW6+72vhluIKTyCU/Yaw=
+	t=1790272152; cv=none; b=LMykVZyQKnH0+D9V96yo5n8U+bg7iEAEjsAekrNtFijegD+B+Ydk1lSyXGClzNQ/xDknVQzreeJS4X/CbXE3UjUHa+YjLZ1KjT/RGIPUNmFSoqSGOwxsYrOW/rI6sJNGJRCBVtlmifB2UISTid5XBPC7OGamrZ48H3FghjKi/Fo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790272115; c=relaxed/simple;
-	bh=3/lyKLPDSE2eQxgDC9pSfTOBUZsoGj3+L7XyB5koOCE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=i8XjxKOMd7/EVnDbAixPnszijY4LL+mnseNrQVuOz+UATEO7eydSKzDc7YprcBCIsXedBQFz+fffXlSe3CcbeSgrlQy8xlQ+KKrCTO4ZTh67c5ZJfgpMKwXAZJSBFamK2cxL8VOL2jnZIfqwcSezeXPWls283Ot/lGEr5ZzPXFE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bpvKI9Pj; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1790272152; c=relaxed/simple;
+	bh=RUGKJkpvGNOw3D5W12r3yu8YHb2YTtJ+Va6FrA7Uklc=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=uDZykYPJAqWbZ1a1h1qI63JhAJcwnIfi+lTqVX0w/gNn3jaq7WUCLCgr+futzqUf7KalmUZCcB5A89Ap13qXmph9O1mFztMLWiQ7qafDlGLxx5pJVCAkFBwWq5OvrR+cVex6HEiMy7XDspe1nUs56fJkZGj3RR8NlEA8EYni7Io=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=L8HentsL; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bpvKI9Pj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 50E981F000FF;
-	Thu, 24 Sep 2026 17:48:33 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="L8HentsL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E0B3D1F00898;
+	Thu, 24 Sep 2026 17:49:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1790272114;
-	bh=33TD4iM28M3pUJ7zrgxZXuOmHs6RVQ1v9+gjv7l0qZQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=bpvKI9PjTJSuDkk2uyOJG4DfCpSHKTZaasRjt1Y49V7A6VPZ4OQ9ENHFeQ90nl/N2
-	 iv2cUGVZHk3pbKYTLaocr0RxJaeLylz7qDpRgoX/D/lb5cddX8tTTyiaNp0FyG19WN
-	 Emb3c7EwpAV0chWQ2+QtYCg2CxJRdBkuGsMBpF1j59hGXZPD7JB9RHAMFxQBty8qXY
-	 Xykfpr0DzLNzuLcnxCR48KW7Rizl8usTZVvf4WZpJ4JTTZU4gNTuVRriT5/qJi6Gm1
-	 9mGd1ycywFnY9aGHTzL5Fss9g/3qt3VUXua6YXmhHJtwIc3keepj1O4aPMPW+L4OLg
-	 Rz4DjJucFqBaA==
-Date: Thu, 24 Sep 2026 19:48:30 +0200
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Dapeng Mi <dapeng1.mi@linux.intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Zide Chen <zide.chen@intel.com>,
-	Falcon Thomas <thomas.falcon@intel.com>,
-	Dapeng Mi <dapeng1.mi@intel.com>, Xudong Hao <xudong.hao@intel.com>
-Subject: Re: [PATCH] perf jevents: Rename OMR offcore_rsp attribute to
- offmodule_rsp
-Message-ID: <arVibiOued95_li4@x2>
-References: <20260923015517.2665398-1-dapeng1.mi@linux.intel.com>
- <CAP-5=fXaB9vvDGkT05kKtHfY3K-2sa5BzpZbKK5htVVtXBeTqQ@mail.gmail.com>
+	s=k20260515; t=1790272151;
+	bh=Afh7CKlBfr6yRc5hBa6fV0pLtIgFU+C2KyxzkcSDOKk=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=L8HentsLssZFv4ouM3Hnt0KjfLLS0pDJ+soBoooSZ0s8FuhPwosqzCXyNCJqV+vmH
+	 vsJz1m3961QdQMoWyYGRSmODTOFSB3zV5mEf8K9MJ1f69UJeQJ33qM2e8yh518nER4
+	 W1HW/FGUZFzlsGN52DsKk9pugWYZsKMrExLxYcYbEk8gEVDftDClYICmfZ0AnluUOh
+	 EEeKyOCZVqYg5lztJAbqTAcp73YINEzBmbc7UxGJAxltp/aMEJ0gjK1hj4GbRdTVhG
+	 ozvuxsYXLH6AdlM+i4KXjyxNqKzmeEezIVGEww+kmtu9iuLYXHzNoF0RZrEW6l/ur3
+	 K/bsDv8Ov5dFw==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v9 03/22] KVM: arm64: Reorganize PMU functions
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Colton Lewis" <coltonlewis@google.com>
+Cc: "Marc Zyngier" <maz@kernel.org>, kvmarm@lists.linux.dev, linux-perf-users@vger.kernel.org, "Oliver
+ Upton" <oupton@kernel.org>, kvm@vger.kernel.org
+In-Reply-To: <20260924172928.2110956-4-coltonlewis@google.com>
+References: <20260924172928.2110956-1-coltonlewis@google.com>
+ <20260924172928.2110956-4-coltonlewis@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Thu, 24 Sep 2026 17:49:10 +0000
+Message-Id: <20260924174910.E0B3D1F00898@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fXaB9vvDGkT05kKtHfY3K-2sa5BzpZbKK5htVVtXBeTqQ@mail.gmail.com>
 
-On Tue, Sep 22, 2026 at 10:21:58PM -0700, Ian Rogers wrote:
-> On Tue, Sep 22, 2026 at 7:02 PM Dapeng Mi <dapeng1.mi@linux.intel.com> wrote:
-> >
-> > The kernel renamed the OMR data attribute from offcore_rsp to
-> > offmodule_rsp to avoid confusion and keep the naming consistent.
-> >
-> > So update the perf jevents msrmap accordingly.
-> >
-> > Link: https://lore.kernel.org/all/20260917015234.981153-12-dapeng1.mi@linux.intel.com/
-> > Link: https://lore.kernel.org/all/20260917015234.981153-13-dapeng1.mi@linux.intel.com/
-> > Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
-> 
-> Reviewed-by: Ian Rogers <irogers@google.com>
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+s) to consider:
+- [Low] kvm: arm_pmu.h relies on VGIC_NR_SGIS without including arm_vgic.h
+--
 
-Thanks, applied to perf-tools-next, for v7.4.
+commit 11313a8fb957f8fbf17d341d98c082ca4fdb6a91
+Author: Colton Lewis <coltonlewis@google.com>
+KVM: arm64: Reorganize PMU functions
 
-- Arnaldo
+This commit moves several functions that aren't specific to the emulated PMU
+implementation out of pmu-emul.c and relocates them to the more appropriate
+pmu.c file where shared PMU functions live.
+
+[ ... ]
+
+> diff --git a/include/kvm/arm_pmu.h b/include/kvm/arm_pmu.h
+> index 93f41ac77c25f..e1bf29de0b6dd 100644
+> --- a/include/kvm/arm_pmu.h
+> +++ b/include/kvm/arm_pmu.h
+> @@ -50,18 +50,21 @@ struct arm_pmu_entry {
+>  };
+> =20
+>  bool kvm_supports_guest_pmuv3(void);
+> -#define kvm_arm_pmu_irq_initialized(v)	((v)->arch.pmu.irq_num !=3D 0)
+> +#define kvm_arm_pmu_irq_initialized(v)	((v)->arch.pmu.irq_num >=3D VGIC_=
+NR_SGIS)
+
+[Severity: Low]
+Does this make the include/kvm/arm_pmu.h header no longer self-contained?
+
+The updated kvm_arm_pmu_irq_initialized() macro relies on VGIC_NR_SGIS, but=
+=20
+the header doesn't appear to include <kvm/arm_vgic.h>. Any future C file th=
+at
+includes this header and expands this macro without also including the VGIC=
+=20
+header will likely fail to compile.=20
+
+Should we add the missing include to ensure the header remains self-contain=
+ed?
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260924172928.2110=
+956-1-coltonlewis@google.com?part=3D3
