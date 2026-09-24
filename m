@@ -1,222 +1,391 @@
-Received: from mail-ed2-f12.google.com (mail-ed2-f12.google.com [74.125.228.76])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24CBA481666
-	for <linux-perf-users@vger.kernel.org>; Wed, 23 Sep 2026 23:10:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.228.76
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790205021; cv=pass; b=eE7xOTQ2mi2VC9odcKktcrkzxH9Nr9Jprhcta9g8cds9Uw101ytQ1g+R6weKebDuK9TRYMaqWS3vhyhEbOKDd3Zqzl1wyVkN/A2SUAJEAYqxsWEFalOsJ8jAvObarF/du4Modq4UTorE958XKMjV9bvLgHKwQTlGCAeJ+Xv4o0o=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790205021; c=relaxed/simple;
-	bh=pA02lskqEBJ7xcsCEpir2dIlgRb+8WSAXZpU/r56rPI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=UN3H924Vry3Vy7VjpoJKhT5aUTzksqERRu3GlZ82FyuorjJGBZHvHfK/QvI20Wt4O80o5oz79HSwv/1TZchRIn+xqjLGBjTKUanjg70HI7jlfH+sdgso4Db6oJULHFehm1d/nA3DJEwaaD9yMOZY5sZqR4ySXE2fb/+xvHwNzHc=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QORHoqjV; arc=pass smtp.client-ip=74.125.228.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16CD217A586;
+	Thu, 24 Sep 2026 00:23:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1790209431; cv=none; b=QEGqcqm9kodjOpX3FBSvJvpwMjOhAq14dYz6iEJM6icGJvBueJmOUq5RS6wqsbTtuO+AzrCw4GE6WSput7ijxDC054hS6ZP8hIi8B+FLeVwdg51VCuaPy6lIJu06FgI0GZv0sNJ2ibWjvS2XM7ikh0a9qBwdEzJ8mvCy8/iYC0g=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1790209431; c=relaxed/simple;
+	bh=VUuKfYfe5NqXSCU7iRvFUVCkXKdrX9Qr/m7Edw1j4rQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=sF6sZUnP3x0z/ezF+n2LTVq4jKrv42FzVdHR38Zz3MbFY4Sefy3GdF/vc01Qu1Zx2dF/6ptPiz60cVl/6Uv3kdw9U0VkCUARBqCE1IaIZrRTB1lciHAyGTeAQme8KTZcxJMTFLcx3qMqu2Tq018nJu2CuG0xApx+MGn0nfZy3N0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jQTH6OF3; arc=none smtp.client-ip=192.198.163.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QORHoqjV"
-Received: by mail-ed2-f12.google.com with SMTP id 4fb4d7f45d1cf-6a985fba28bso2030311a12.3
-        for <linux-perf-users@vger.kernel.org>; Wed, 23 Sep 2026 16:10:18 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1790205017; cv=none;
-        d=google.com; s=arc-20260327;
-        b=jJtWLTp7zjssZWf+zn+LCvcoowIJfV8lMqxYeH/p9AypapRy1BT/hQS9OdAxdkrgov
-         IHWZzgYo0rCGlswXRvclzWgafcQ32ciM1bX8E19lULoWP2MzSakr4ujWpI92DMKlFzt4
-         KdsocCkN9dWD2KwR1cHhQFbNU4i1fxGMQfVRA3LewPoPkXpa7JGTIh0/YH3AMHFCbg2M
-         /M/iTemxfbhM1dGA6i4udWze0KxkUKhuzOFkk7M0NyeUVO3JggYrzTgUXfq/ZDJKyHNu
-         5ddkQ4EIPzxRiyCygdSKzNTTkaOpHA9VEUQqk/WiYxKlr6Ot1TTLrgGy4X1K8ZY6VkiO
-         fbiw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=v8CDt3YaPNv1qQdHjAb4WFBPEg/nrTUGnlyKUfZeYLw=;
-        fh=VgbemVjoCAw+JsQTyQVzbA6FPowSY3uj0tZDJpK/Cmc=;
-        b=he65NlcWG7WL+ZI6yPd2cE5dlmeFGVDmK++aMp/XABKmL72p2/K1ZamQ5/UiELdlA2
-         LDxEjwjzwsPb58eipa1f7zxVlGnk73UrL4fJut6GLGTEPeB2U3Ttjyef2C8vDtb/O1dn
-         43itNpQR7PzChRuykvBSPhzRW1JCuLCdEkat6P+Ws9UrtPr5kKJpYQOFCgxJxHyA2OcJ
-         SsG5XfCkf6Bc1VV6skg/99ZilUcr4Omh11W0BfiB8vMorPNg0EpJ417mO1HkM11rIl01
-         Kznc0pqT67MX7Qv6Botccb+fFBSq2JRh2cYbT7qmcQCZVi+wpz5gHj3C1tCAADpf2S6i
-         jORg==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1790205017; x=1790809817; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=v8CDt3YaPNv1qQdHjAb4WFBPEg/nrTUGnlyKUfZeYLw=;
-        b=QORHoqjVPTTcJfyGc1AeBOqQ3nh3x5JsvFUo29nuD8Kf1uqSsim/YDnrBtP0mf6/nJ
-         j9A2so7EEBaDxmCZ3rTCx3yA1GMY7TkRdYBYrPHc7Gba3YRWt2aSowYqxZIDWtBa/JNz
-         e7KKwG5p09dXcUTtJKoMtqDvLLEBXn2qtIhUZrB1zBfb7XcS7lv3MtZY08StClB3UyU2
-         ty7BZcOEuzIP3C+R6LF1fzgpdLXqrxgMfpS5Lendu9G+oh8+e5ostj05fIbWGgzanlQW
-         uBNwn9arzBfgD7cVdDLKRlvGlX4iIgu6O7rZCLZ5hqqXM7JTFBZeuHwHJYrCize1Z33R
-         NMQQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1790205017; x=1790809817;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=v8CDt3YaPNv1qQdHjAb4WFBPEg/nrTUGnlyKUfZeYLw=;
-        b=djd0izCE3+DUM8Zdz615C2bRgbv5YvyBxO6WKVpBiyaHoseGVCLNDF6z93DFZrPG3E
-         918yWCTZpPPl2sJnqo6iw1J+NvzNWvr5GPUHrdS7/dYw1sso2LWVI7IUsbI6ObSy67ZN
-         eiLcaODdcZgb2GouuCUsv7UZo5Yn6W7T41uvMPY4Zgv2DPrTRjZ+upZeCwt3vpnLrB6u
-         Tmt6jxoEAMhDeSOxy/X5PTou50MJ9tIxnyHbmsQJEmiXpO1exUlH2I7uXdX+G7F0nEo7
-         By+oxE+YbKs5q1/Hf5/68ITx3kuR8BXfB90LPRgIJrky42BIJJwDphA99Rxu9AK9Ni63
-         X5DQ==
-X-Forwarded-Encrypted: i=1; AKwUvByMvc5U9kf8+blCkSKm1/8bQmhv3xBQz/U2dSk509nV5vlEBQ8GWF0hm2nk0PsGIJTKk6FoaG6iAoMPMjEAVvzG@vger.kernel.org
-X-Gm-Message-State: AFuF++mFslcKcmMp49R5VZOTWc430DSLu6JszjvX5Ernf4onKrsunq1S
-	RY5RbT7qcsEiGIthqBdAIupT/2lGpNQCs5ttJlEezCSqq1qW58xO0tPhBttxCJkjJDpMIMKv3NS
-	h2EcY1f2H97BVYr6MQHuN3QDFxImkLhPa7lhmIw8=
-X-Gm-Gg: AYBFou2CAg1YK/bY3ipjXnrO1Ej7QSnYEEYS91YvW7zExa54yLlXNvVchFp/1A4XCho
-	lHPkdrbSwzCIu7W/cC6lZbusx7cAt5s+9B/yAtGxqHBHqJYMTe4wD83XnkfK6PhELrtxxAG+Kge
-	ftf+ElurKclfaAtToCfk3hxDCCtHTy8dz9E/oScIdtM9JWjgfYlLvcCr65pEc66XFXRl9qbGN0I
-	6Q7OVCHy7A3UTV0ecZH+bDzluoHWiNrpOG9AFobfB57QsijLxeFTj2G9A2LI1uPNW4YQVEVytRA
-	UMoIzZ046GcsnCDluzn+ppyK4PxCgTvZExrpIWHjvmFwgoUxANFNHC4kRZWUndjVC6EGvxFYNu2
-	mplt+HIKlTM/qXfiQQD0d4iQA3aSYARMeMVcKjsa6a3B+8eSMuOg=
-X-Received: by 2002:a05:6402:51d0:b0:6a9:adea:42e2 with SMTP id
- 4fb4d7f45d1cf-6aac90b61ecmr489913a12.39.1790205016790; Wed, 23 Sep 2026
- 16:10:16 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jQTH6OF3"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1790209429; x=1821745429;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=VUuKfYfe5NqXSCU7iRvFUVCkXKdrX9Qr/m7Edw1j4rQ=;
+  b=jQTH6OF34FP/BMSf5Od/6P5MGOXHa50eRoIAgWugbNETtPoLdORlmAiL
+   +LSY5lpEE8MTtTteHlIXYo1emjkiQB74gIApm4D9K/0RCQXJUdt55O61/
+   dCs+PJ0SH/L+iVEMDgxfpSHyoNAKbc0TZcD9j+HbG+EJLbI2Kyuj4+XZ9
+   UTJX14++DwU6Dbjy4kHk/u23Yw6Emoq1/Nvk4MtF3dkXTLwTow93aBOEE
+   MWZ7AcYlFu6Cy46KUiVN/h/VfSuwuD5D6jBZevZRiLmU7SoSunsQ7nMwB
+   phB3bRMXc5y4iZWb3eJt7Ns8IMA98e8S3YLtNOe3fk+7WakqyE5Ww4YPA
+   Q==;
+X-CSE-ConnectionGUID: S2NHXGhGQnWCl+lF38+yag==
+X-CSE-MsgGUID: lZXPnpujSnS2Hf4VJUN29g==
+X-IronPort-AV: E=McAfee;i="6800,10657,11914"; a="89870805"
+X-IronPort-AV: E=Sophos;i="6.27,119,1787036400"; 
+   d="scan'208";a="89870805"
+Received: from fmviesa013.fm.intel.com ([10.60.135.153])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Sep 2026 17:23:48 -0700
+X-CSE-ConnectionGUID: D9Fawb1PTLy/0+5wbKVfXQ==
+X-CSE-MsgGUID: R0bxgo/tR1CxX/IKhlHQgQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.27,119,1787036400"; 
+   d="scan'208";a="5097909"
+Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.241.239]) ([10.124.241.239])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Sep 2026 17:23:45 -0700
+Message-ID: <a2f2063b-b491-4f65-9e42-1c3dfa1902c7@linux.intel.com>
+Date: Thu, 24 Sep 2026 08:23:42 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260923090429.2026529-1-stian@itx.no>
-In-Reply-To: <20260923090429.2026529-1-stian@itx.no>
-From: Magnus Lindholm <linmag7@gmail.com>
-Date: Thu, 24 Sep 2026 01:10:04 +0200
-X-Gm-Features: AclHuK-KybeTuS6nn3jFipLShTCPHEka3TcKpFAC6yT0fDrbo9S-DWDh19_uFiI
-Message-ID: <CA+=Fv5QKMaMGaLO3gKymSv7FVhHMMYxM8ux0S5dTKB26nQeAQw@mail.gmail.com>
-Subject: Re: [RFC PATCH v3 0/3] perf: sparc64 user regs and stack dump, with
- arch hooks
-To: Stian Halseth <stian@itx.no>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Andreas Larsson <andreas@gaisler.com>, "David S. Miller" <davem@davemloft.net>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	James Clark <james.clark@linaro.org>, Jonathan Corbet <corbet@lwn.net>, 
-	Shuah Khan <skhan@linuxfoundation.org>, Randy Dunlap <rdunlap@infradead.org>, 
-	linux-perf-users@vger.kernel.org, sparclinux@vger.kernel.org, 
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v12 4/6] perf tools: Show memory region in perf-c2c
+ subcommand
+To: Thomas Falcon <thomas.falcon@intel.com>, sashiko-bot@kernel.org
+Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>, James Clark <james.clark@linaro.org>
+References: <20260923161043.95C171F000FF@smtp.kernel.org>
+ <20260923170903.48388-1-thomas.falcon@intel.com>
+ <20260923170903.48388-5-thomas.falcon@intel.com>
+Content-Language: en-US
+From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
+In-Reply-To: <20260923170903.48388-5-thomas.falcon@intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi Stian,
+Reviewed-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
 
-On Wed, Sep 23, 2026 at 11:04=E2=80=AFAM Stian Halseth <stian@itx.no> wrote=
-:
+Thanks.
+
+
+On 9/24/2026 1:09 AM, Thomas Falcon wrote:
+> From: Dapeng Mi <dapeng1.mi@linux.intel.com>
 >
-> This adds HAVE_PERF_REGS and HAVE_PERF_USER_STACK_DUMP to sparc64, so
-> that perf record --call-graph dwarf and elfutils' eu-stackprof work
-> there.
+> Add memory region field to the cacheline list view to help users
+> identify the memory region to which the cacheline belongs. The memory
+> region field was included with the introduction of support for the
+> Off-module Response facility (OMR) [1] in Intel's Diamond Rapids and
+> Nova Lake architectures.
 >
-> Two things about the user stack dump do not fit in arch code. The
-> sampled register window's %l/%i registers, which hold the frame pointer
-> and return address the unwinder starts from, stay in the register file
-> until a window spills. The kernel already flushes them wherever it
-> exposes user stack memory (perf_callchain_user(), ptrace), but the stack
-> dump has no arch entry point where that could happen. And a 64-bit
-> sparc stack pointer is biased by 2047, so a dump that starts at the
-> register value begins 2047 bytes below the frame, and is empty when that
-> page has never been touched.
+> An example of the new perf c2c output including the memory region
+> field is shown below:
 >
-> Patch 1 therefore adds two hooks in the style of perf_arch_misc_flags(),
-> both no-ops by default. Patch 2 is the sparc64 implementation and their
-> user. Patch 3 teaches tools/perf the sparc registers and DWARF unwinding
-> from the dump. The matching elfutils changes are attached to the
-> tracking issue:
+> # Index             Address  Region  Node  PA cnt     Hitm    Total  LclHitm  RmtHitm  records    Loads
+> # .....  ..................  ......  ....  ......  .......  .......  .......  .......  .......  .......
+> #
+>       0  0xffffffff84eb0040     N/A     0    1205   23.25%      544      544        0     1677     1677
+>       1  0xffffffff84f03a80     N/A     0       1   18.12%      424      424        0      585      585
+> [...]
+>      19  0xffffffff845bc840   Mem-0     0      13    0.30%        7        7        0       31       31
+>      20  0xff3bbba284520a00     N/A     0      10    0.26%        6        6        0       11       11
+>      21  0xff3bbbe0bc833500     N/A     0      24    0.26%        6        6        0       30       30
 >
->   https://github.com/sparclinux/issues/issues/99
+> [1]: https://lore.kernel.org/all/20260114011750.350569-1-dapeng1.mi@linux.intel.com/
 >
-> Tested on an UltraSPARC T4-1 on 7.3-rc4: register values check out
-> against known contents, --call-graph dwarf unwinds correctly for both
-> cycles and cpu-clock, as does eu-stackprof, and perf stat/record/record
-> -g are unchanged. Starting the dump at the stack's actual address
-> matters in practice: with the dump at the biased register value, 94% of
-> the user samples of xz -T4 had an empty stack dump; with this series,
-> none do.
+> Assisted-by: Sashiko:gemini-3.1-pro-preview
+> Assisted-by: GitHub-Copilot:claude-opus-4-8
+> Reviewed-by: Ian Rogers <irogers@google.com>
+> Reviewed-by: Namhyung Kim <namhyung@kernel.org>
+> Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
+> Co-developed-by: Thomas Falcon <thomas.falcon@intel.com>
+> Signed-off-by: Thomas Falcon <thomas.falcon@intel.com>
+> ---
+> v11: perf-c2c: revert to only recording a real memory region for a
+>      cacheline
+> v10: only update mem_region for real cache/memory regions so N/A samples
+>      don't overwrite a valid region; add #include <stdio.h> for asprintf
+>      (Sashiko)
+> v9: Update perf-c2c to include cache region reporting (Dapeng Mi)
+> v8: Update developer tags and commit message with real example
+>     output (Dapeng Mi)
+> v7: fix output_str allocation error handling which introduced
+>     a memory leak (Sashiko)
+> v6: rebased onto 7.3-rc1
+> v5: make the cacheline header span and ui_quirks() width
+>     fixup depend on memory-region availability (Namhyung Kim)
+> v4: correctly handle output_str memory allocation failure
+> v3: make memory region reporting conditional on feature bit
+> ---
+>  tools/perf/builtin-c2c.c | 114 +++++++++++++++++++++++++++++++++++----
+>  tools/perf/util/c2c.h    |   1 +
+>  2 files changed, 104 insertions(+), 11 deletions(-)
 >
-> Changes since v2:
-> - Patch 1: add perf_arch_user_stack_pointer(), so an arch can start the
->   dump at the stack's actual address (sashiko review).
-> - Patch 2: drop %g0 from the uapi, as trap entry does not save it; the
->   PC takes its slot, as on mips and loongarch (sashiko review).
-> - Patch 2: start the dump at %sp + 2047 for a 64-bit stack (sashiko
->   review).
-> - Patch 3: follow both, and comment the max_dwarf_reg adjustment (Ian).
->   Drop the memcpy() change to memory_read(), which the unbiased dump
->   start makes unnecessary.
->
-> v2: https://lore.kernel.org/all/20260922201507.1719668-1-stian@itx.no/
-> v1: https://lore.kernel.org/all/20260922135653.1622301-1-stian@itx.no/
->
-> Stian Halseth (3):
->   perf/core: Let an arch prepare and locate the user stack dump
->   sparc64: Support PERF_SAMPLE_REGS_USER and PERF_SAMPLE_STACK_USER
->   perf tools: Support sparc user register samples and dwarf unwinding
->
->  .../features/perf/perf-regs/arch-support.txt  |  2 +-
->  .../perf/perf-stackdump/arch-support.txt      |  2 +-
->  arch/sparc/Kconfig                            |  2 +
->  arch/sparc/include/asm/perf_event.h           |  5 ++
->  arch/sparc/include/uapi/asm/perf_regs.h       | 34 +++++++++
->  arch/sparc/kernel/Makefile                    |  2 +-
->  arch/sparc/kernel/perf_regs.c                 | 74 +++++++++++++++++++
->  include/linux/perf_event.h                    | 11 +++
->  kernel/events/core.c                          |  2 +
->  kernel/events/internal.h                      |  2 +-
->  tools/arch/sparc/include/uapi/asm/perf_regs.h | 34 +++++++++
->  tools/perf/arch/sparc/include/perf_regs.h     | 18 +++++
->  tools/perf/check-headers.sh                   |  1 +
->  tools/perf/util/dwarf-regs-arch/Build         |  1 +
->  .../util/dwarf-regs-arch/dwarf-regs-sparc.c   | 12 +++
->  tools/perf/util/dwarf-regs.c                  |  4 +
->  tools/perf/util/include/dwarf-regs.h          |  1 +
->  tools/perf/util/perf-regs-arch/Build          |  1 +
->  .../util/perf-regs-arch/perf_regs_sparc.c     | 67 +++++++++++++++++
->  tools/perf/util/perf_regs.c                   | 18 +++++
->  tools/perf/util/perf_regs.h                   |  5 ++
->  tools/perf/util/unwind-libdw.c                | 37 ++++++++++
->  22 files changed, 331 insertions(+), 4 deletions(-)
->  create mode 100644 arch/sparc/include/uapi/asm/perf_regs.h
->  create mode 100644 arch/sparc/kernel/perf_regs.c
->  create mode 100644 tools/arch/sparc/include/uapi/asm/perf_regs.h
->  create mode 100644 tools/perf/arch/sparc/include/perf_regs.h
->  create mode 100644 tools/perf/util/dwarf-regs-arch/dwarf-regs-sparc.c
->  create mode 100644 tools/perf/util/perf-regs-arch/perf_regs_sparc.c
->
-> --
-> 2.55.0
->
-
-Hi Stian,
-
-I tested v3 on real hardware. I haven't noticed any regressions.
-I built tools/perf from this series and tested the new functionality
-with software cpu-clock events.
-
-Basic perf stat/record and the existing frame-pointer callchain mode
-worked normally.
-
-PERF_SAMPLE_REGS_USER also worked, with perf successfully recording
-and decoding the SPARC register set.
-
-I then tested:
-
-  perf record -e '1:0:u' -F 99 --call-graph dwarf,8192 ...
-
-This recorded 443 samples with PERF_SAMPLE_REGS_USER and
-PERF_SAMPLE_STACK_USER, using the full 0x7ffff register mask and an
-8192-byte stack dump. perf script and perf report were both able to
-unwind the resulting callchains, and no samples were reported lost.
-
-I haven't tested 32-bit compat tasks or hardware-cycle sampling.
-
-Tested-by: Magnus Lindholm <linmag7@gmail.com>
-
-Thanks,
-Magnus
+> diff --git a/tools/perf/builtin-c2c.c b/tools/perf/builtin-c2c.c
+> index 6b64c0d6b24f..a42423ca990d 100644
+> --- a/tools/perf/builtin-c2c.c
+> +++ b/tools/perf/builtin-c2c.c
+> @@ -14,6 +14,7 @@
+>  #include <inttypes.h>
+>  #include <stdlib.h>
+>  #include <string.h>
+> +#include <stdio.h>
+>  
+>  #include <asm/bug.h>
+>  #include <linux/compiler.h>
+> @@ -72,6 +73,7 @@ struct perf_c2c {
+>  
+>  	bool			 show_src;
+>  	bool			 show_all;
+> +	bool			 show_mem_region;
+>  	bool			 use_stdio;
+>  	bool			 stats_only;
+>  	bool			 symbol_full;
+> @@ -248,6 +250,18 @@ static void c2c_he__set_node(struct c2c_hist_entry *c2c_he,
+>  	}
+>  }
+>  
+> +static void c2c_he__set_mem_region(struct c2c_hist_entry *c2c_he,
+> +				   unsigned int mem_region)
+> +{
+> +	if (WARN_ONCE(mem_region > PERF_MEM_REGION_MEM7,
+> +		      "WARNING: invalid memory region ID\n"))
+> +		return;
+> +
+> +	/* Update mem_region only if it really accesses memory */
+> +	if (mem_region >= PERF_MEM_REGION_MMIO)
+> +		c2c_he->mem_region = mem_region;
+> +}
+> +
+>  static void compute_stats(struct c2c_hist_entry *c2c_he,
+>  			  struct c2c_stats *stats,
+>  			  u64 weight)
+> @@ -306,6 +320,7 @@ static int process_sample_event(const struct perf_tool *tool __maybe_unused,
+>  	struct addr_location al;
+>  	struct mem_info *mi = NULL;
+>  	struct callchain_cursor *cursor;
+> +	unsigned int mem_region;
+>  	int ret;
+>  
+>  	addr_location__init(&al);
+> @@ -333,6 +348,7 @@ static int process_sample_event(const struct perf_tool *tool __maybe_unused,
+>  	}
+>  
+>  	c2c_decode_stats(&stats, mi);
+> +	mem_region = mem_info__data_src(mi)->mem_region;
+>  
+>  	he = hists__add_entry_ops(&c2c_hists->hists, &c2c_entry_ops,
+>  				  &al, NULL, NULL, mi, NULL,
+> @@ -349,6 +365,7 @@ static int process_sample_event(const struct perf_tool *tool __maybe_unused,
+>  	c2c_he__set_cpu(c2c_he, sample);
+>  	c2c_he__set_node(c2c_he, sample);
+>  	c2c_he__set_evsel(c2c_he, evsel);
+> +	c2c_he__set_mem_region(c2c_he, mem_region);
+>  
+>  	hists__inc_nr_samples(&c2c_hists->hists, he->filtered);
+>  
+> @@ -402,6 +419,7 @@ static int process_sample_event(const struct perf_tool *tool __maybe_unused,
+>  		c2c_he__set_cpu(c2c_he, sample);
+>  		c2c_he__set_node(c2c_he, sample);
+>  		c2c_he__set_evsel(c2c_he, evsel);
+> +		c2c_he__set_mem_region(c2c_he, mem_region);
+>  
+>  		hists__inc_nr_samples(&c2c_hists->hists, he->filtered);
+>  		ret = hist_entry__append_callchain(he, sample);
+> @@ -540,6 +558,45 @@ dcacheline_node_count(struct perf_hpp_fmt *fmt, struct perf_hpp *hpp,
+>  	return scnprintf(hpp->buf, hpp->size, "%*lu", width, c2c_he->paddr_cnt);
+>  }
+>  
+> +static int
+> +dcacheline_node_mem_region(struct perf_hpp_fmt *fmt, struct perf_hpp *hpp,
+> +			   struct hist_entry *he)
+> +{
+> +	int width = c2c_width(fmt, hpp, he->hists);
+> +	struct c2c_hist_entry *c2c_he;
+> +	unsigned int mem_region;
+> +	char buf[20];
+> +
+> +	c2c_he = container_of(he, struct c2c_hist_entry, he);
+> +	mem_region = c2c_he->mem_region;
+> +
+> +	switch (mem_region) {
+> +	case PERF_MEM_REGION_NA:
+> +	case PERF_MEM_REGION_RSVD:
+> +		scnprintf(buf, sizeof(buf), "N/A");
+> +		break;
+> +	case PERF_MEM_REGION_MMIO:
+> +		scnprintf(buf, sizeof(buf), "MMIO");
+> +		break;
+> +	case PERF_MEM_REGION_MEM0:
+> +	case PERF_MEM_REGION_MEM1:
+> +	case PERF_MEM_REGION_MEM2:
+> +	case PERF_MEM_REGION_MEM3:
+> +	case PERF_MEM_REGION_MEM4:
+> +	case PERF_MEM_REGION_MEM5:
+> +	case PERF_MEM_REGION_MEM6:
+> +	case PERF_MEM_REGION_MEM7:
+> +		scnprintf(buf, sizeof(buf), "Mem-%d",
+> +			  mem_region - PERF_MEM_REGION_MEM0);
+> +		break;
+> +	default:
+> +		scnprintf(buf, sizeof(buf), "N/A");
+> +		break;
+> +	}
+> +
+> +	return scnprintf(hpp->buf, hpp->size, "%*s", width, buf);
+> +}
+> +
+>  static int offset_entry(struct perf_hpp_fmt *fmt, struct perf_hpp *hpp,
+>  			struct hist_entry *he)
+>  {
+> @@ -1360,6 +1417,14 @@ static struct c2c_dimension dim_dcacheline_node = {
+>  	.width		= 4,
+>  };
+>  
+> +static struct c2c_dimension dim_dcacheline_mem_region = {
+> +	.header		= HEADER_LOW("Region"),
+> +	.name		= "dcacheline_mem_region",
+> +	.cmp		= empty_cmp,
+> +	.entry		= dcacheline_node_mem_region,
+> +	.width		= 6,
+> +};
+> +
+>  static struct c2c_dimension dim_dcacheline_count = {
+>  	.header		= HEADER_LOW("PA cnt"),
+>  	.name		= "dcacheline_count",
+> @@ -1791,6 +1856,7 @@ static struct c2c_dimension dim_dcacheline_num_empty = {
+>  
+>  static struct c2c_dimension *dimensions[] = {
+>  	&dim_dcacheline,
+> +	&dim_dcacheline_mem_region,
+>  	&dim_dcacheline_node,
+>  	&dim_dcacheline_count,
+>  	&dim_offset,
+> @@ -2854,8 +2920,11 @@ static int ui_quirks(void)
+>  	/* Fix the zero line for dcacheline column. */
+>  	buf = fill_line(chk_double_cl ? "Double-Cacheline" : "Cacheline",
+>  				dim_dcacheline.width +
+> +				(c2c.show_mem_region ?
+> +					dim_dcacheline_mem_region.width : 0) +
+>  				dim_dcacheline_node.width +
+> -				dim_dcacheline_count.width + 4);
+> +				dim_dcacheline_count.width +
+> +				(c2c.show_mem_region ? 6 : 4));
+>  	if (!buf)
+>  		return -ENOMEM;
+>  
+> @@ -3107,7 +3176,8 @@ static int perf_c2c__report(int argc, const char **argv)
+>  	OPT_END()
+>  	};
+>  	int err = 0;
+> -	const char *output_str, *sort_str = NULL;
+> +	const char *sort_str = NULL;
+> +	char *output_str = NULL;
+>  	struct perf_env *env;
+>  
+>  	annotation_options__init();
+> @@ -3272,9 +3342,16 @@ static int perf_c2c__report(int argc, const char **argv)
+>  		goto out_mem2node;
+>  	}
+>  
+> -	if (c2c.display != DISPLAY_SNP_PEER)
+> -		output_str = "cl_idx,"
+> +	c2c.show_mem_region = perf_header__has_feat(&session->header,
+> +						HEADER_MEMORY_RANGES);
+> +	if (c2c.show_mem_region)
+> +		dim_dcacheline.header.line[0].span = 3;
+> +
+> +	if (c2c.display != DISPLAY_SNP_PEER) {
+> +		if (asprintf(&output_str,
+> +			     "cl_idx,"
+>  			     "dcacheline,"
+> +			     "%s"
+>  			     "dcacheline_node,"
+>  			     "dcacheline_count,"
+>  			     "percent_costly_snoop,"
+> @@ -3286,10 +3363,17 @@ static int perf_c2c__report(int argc, const char **argv)
+>  			     "ld_fbhit,ld_l1hit,ld_l2hit,"
+>  			     "ld_lclhit,lcl_hitm,"
+>  			     "ld_rmthit,rmt_hitm,"
+> -			     "dram_lcl,dram_rmt";
+> -	else
+> -		output_str = "cl_idx,"
+> +			     "dram_lcl,dram_rmt",
+> +			     c2c.show_mem_region ?
+> +			     "dcacheline_mem_region," : "") < 0) {
+> +			err = -ENOMEM;
+> +			goto out_mem2node;
+> +		}
+> +	} else {
+> +		if (asprintf(&output_str,
+> +			     "cl_idx,"
+>  			     "dcacheline,"
+> +			     "%s"
+>  			     "dcacheline_node,"
+>  			     "dcacheline_count,"
+>  			     "percent_costly_snoop,"
+> @@ -3301,7 +3385,13 @@ static int perf_c2c__report(int argc, const char **argv)
+>  			     "ld_fbhit,ld_l1hit,ld_l2hit,"
+>  			     "ld_lclhit,lcl_hitm,"
+>  			     "ld_rmthit,rmt_hitm,"
+> -			     "dram_lcl,dram_rmt";
+> +			     "dram_lcl,dram_rmt",
+> +			     c2c.show_mem_region ?
+> +			     "dcacheline_mem_region," : "") < 0) {
+> +			err = -ENOMEM;
+> +			goto out_mem2node;
+> +		}
+> +	}
+>  
+>  	if (c2c.display == DISPLAY_TOT_HITM)
+>  		sort_str = "tot_hitm";
+> @@ -3315,7 +3405,7 @@ static int perf_c2c__report(int argc, const char **argv)
+>  	err = c2c_hists__reinit(&c2c.hists, output_str, sort_str, perf_session__env(session));
+>  	if (err) {
+>  		pr_err("Failed to reinitialize hists\n");
+> -		goto out_mem2node;
+> +		goto out_str;
+>  	}
+>  
+>  	ui_progress__init(&prog, c2c.hists.hists.nr_entries, "Sorting...");
+> @@ -3324,17 +3414,19 @@ static int perf_c2c__report(int argc, const char **argv)
+>  	hists__output_resort_cb(&c2c.hists.hists, &prog, resort_shared_cl_cb);
+>  	err = hists__iterate_cb(&c2c.hists.hists, resort_cl_cb, perf_session__env(session));
+>  	if (err)
+> -		goto out_mem2node;
+> +		goto out_str;
+>  
+>  	ui_progress__finish();
+>  
+>  	if (ui_quirks()) {
+>  		pr_err("failed to setup UI\n");
+> -		goto out_mem2node;
+> +		goto out_str;
+>  	}
+>  
+>  	perf_c2c_display(session);
+>  
+> +out_str:
+> +	free(output_str);
+>  out_mem2node:
+>  	mem2node__exit(&c2c.mem2node);
+>  out_session:
+> diff --git a/tools/perf/util/c2c.h b/tools/perf/util/c2c.h
+> index 53f024e25d99..f04e78e1a2e3 100644
+> --- a/tools/perf/util/c2c.h
+> +++ b/tools/perf/util/c2c.h
+> @@ -33,6 +33,7 @@ struct c2c_hist_entry {
+>  	unsigned long		*nodeset;
+>  	struct c2c_stats	*node_stats;
+>  	unsigned int		 cacheline_idx;
+> +	unsigned int		 mem_region;
+>  
+>  	struct compute_stats	 cstats;
+>  
