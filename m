@@ -1,56 +1,56 @@
-Received: from mail-oi1-f198.google.com (mail-oi1-f198.google.com [209.85.167.198])
+Received: from mail-oi1-f200.google.com (mail-oi1-f200.google.com [209.85.167.200])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 859964C14E9
-	for <linux-perf-users@vger.kernel.org>; Thu, 24 Sep 2026 17:30:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.198
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E0B64BE448
+	for <linux-perf-users@vger.kernel.org>; Thu, 24 Sep 2026 17:30:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.200
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790271008; cv=none; b=aJcUBrQuNYMgFTjlgTLm/Z7dPzFsR/q674/NrSdYQEOoIqXAZHjqgGwAGfqoqwhJ/bCozWa7+zezClarkavYqNlQOyJMlquInWyeRu0E32DNNF6TqR0cvDeCWAqJiXURfOKgj9vTiv1oRdNrdtvzYU6jMGDOkEjUmKBXRkVp1C0=
+	t=1790271012; cv=none; b=ag+H297YFGengX3qGn8NLw8NK6lBDAuCWmFFoo8hFrAY+S7CgLzGnlOZUVl3BlZchIATIbmpQ6l8MnjAV1DFI6T+uYME1pCgtNgASR+j5agl4+TsEDHBrfmhb7yTTO0swBFfriJmXuUUvSYwku/X+fNZ5OeWkyoIU0zB1OlACgw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790271008; c=relaxed/simple;
-	bh=+LJ57dwDKb/GvJ9BnpXeZyHIJZfWTg4yKipkpz7XVL8=;
+	s=arc-20240116; t=1790271012; c=relaxed/simple;
+	bh=KLtC1oI3NzGrURS0nY2zD3hDSDHmbXuCtQI4kY4XTQI=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=pip0vn0CcCfvfSS84+EXtJkwx0zkKFbx0IfLPElBRpSeFZ2q4wYk1lLEXLkfVaQfhWND6jbjHYrXpBQhZXXULAktrLNCiB/dudJNB7MMWB3LAhkYa2X9kEG+/Hu1++oiLaaA3qaS6LBAfIXCfFLfjti0vX1BksP83Wx5NDsRNRY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--coltonlewis.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=eXwQWg5p; arc=none smtp.client-ip=209.85.167.198
+	 To:Cc:Content-Type; b=jOq/3DwNVGlK8HYO/9yePK8iZQIn6hMniP9SO5S8qmkrUM+kRTW78ZLuhLLpyWYcr/h7Z5Wsb2pwwbl/jXB0TlXfZXX0ipwd7Wa3hVzSiDO0IbdsMr09ggS1oEshCt9k3uuuvWSOBQ5NXJXATFdPB8uNKWCONfUzNEh8wVc/Jf4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--coltonlewis.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=SKH2rkkr; arc=none smtp.client-ip=209.85.167.200
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--coltonlewis.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="eXwQWg5p"
-Received: by mail-oi1-f198.google.com with SMTP id 5614622812f47-4a7de733fa9so217831b6e.3
-        for <linux-perf-users@vger.kernel.org>; Thu, 24 Sep 2026 10:30:02 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="SKH2rkkr"
+Received: by mail-oi1-f200.google.com with SMTP id 5614622812f47-4b28deb7ee3so204416b6e.0
+        for <linux-perf-users@vger.kernel.org>; Thu, 24 Sep 2026 10:30:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1790270999; x=1790875799; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1790271003; x=1790875803; darn=vger.kernel.org;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=rwsk9te7VPUHzegWpxO9JFCtI5Vc22J8AiaBQE2VWD8=;
-        b=eXwQWg5pwKw29VKyff0YrVXdnE780LE3SeHonQcrebMB+asR9sdoBEjWqHGtksEpT1
-         N//uHbvZKSEX4nh0dbO4GLYVoZTSPS63hyyYexcpSpKLM9M081QiOFUPjIJAfjZTVuwG
-         1BhJxSH3mrB28fnoE6VqwAhwYwL9cSigdAyHymwqw0Y2lieMikx19OWTcegzoHtCNgmn
-         mNA/95/oBtyADzKEPOMhP1NeJF0rVVy2Eozw/8El5bALENjBm7QbnHQS35BLTV7scco1
-         8WybiuAd7dswzoNtmi4ard9RMm+eFyaq1TvFYdrAQXyUys0yaL83/XD9kfAMrJfdI44m
-         yeHA==
+        bh=rWHVRrGfPke0mqexZS51GQxGuegr0moQYbkFD6OXnu0=;
+        b=SKH2rkkr0yncs0SuBpGLYJn05e8omgUoGu1BpLtEuVMwUDyWJZQxh+yIwu6wLYfYZy
+         iI8emj/wd+/Kk7tKTmWk6s+vtHkL6Z5nKTyCyBJlSkMj8lLJ6DdB7EN1vilEGAKjRlet
+         zopViIzgg9c+8uLBCS/b9GZfq0tqT7PoQMyGLToL+e9qkPnpEoWu0MXtKPPhcM5hwiE4
+         RleRh+pDng1pINape11ygS/ywotHqGcqhp4B/rDwS/hr7KLn2uRmhVpRFUideP1fHRdn
+         7Nk/2ufpx74w0NA/VGtKUnbE5FcGVGXF9KtLwVwjQaAXQAA951BDasT4ZwqZs9Gvaff6
+         dd3w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1790270999; x=1790875799;
+        d=1e100.net; s=20260707; t=1790271003; x=1790875803;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=rwsk9te7VPUHzegWpxO9JFCtI5Vc22J8AiaBQE2VWD8=;
-        b=bxZO1PgLT+GMVUdFOZmH+MroD167QQjB1WFPg3lA9+Q+1i8Y4CORR6wVgH6HCAQjdu
-         hvGv/IeJ564VMO4W13fF+U76346y2cnNXR1C6AGHPRAIv36goDuLrpXspWv6JcpZSjOC
-         6eL3HtVZBCKBDTMR0QeMyL/RUcDmgjoozREUAM+du89bNqHH3+5Dfp+4lMsF71/SWYuO
-         SiyGR6/24lvTtFtPTxKYoLpEm1D7UYKXyG7gutIzqF/5zsXR935RF/+mqb8Myi6PtJBf
-         qEbdIwif/g3ehUwkYFtaEYEUkNblPz6FPOoqabD5LGTOfrcDF4djEcs58g9RJFPa0+Ao
-         Fu3w==
-X-Forwarded-Encrypted: i=1; AKwUvByq1wQIgXibpasGmtJt2p+NQkuEYNDR9uZyGZQkwt/yEhCK33zd7lh9GKTjGomvMvGoTrysEY5SJcb9F2KP672d@vger.kernel.org
-X-Gm-Message-State: AFuF++no7dObgDHubdrM9eZLMTzBQb99uyHL+QnwTGpsq7ME144vJ1dh
-	y7x7J+lTMPfSB1jjdsH/x27N3oEHs967nyOmPGUxHe9WSbaDXAClmM9fFeDzx1tbEX+gykrl2Rg
-	rgIUe3KsWLAnyD2FjedZBrNEaTw==
-X-Received: from jabel8.prod.google.com ([2002:a05:6638:4d88:b0:5f3:c301:1e33])
+        bh=rWHVRrGfPke0mqexZS51GQxGuegr0moQYbkFD6OXnu0=;
+        b=V37c8DIpsuF0C8KSm+5RTRRTTVBWdupEiYKk3PRCBHK9+mbwQY/EcsOJLrF/PRJNDO
+         jXjX4Sud6fl3FeRK5fGJcmDfb9kRuBNbCvgeqGGK9XNvQwNGGVM3biO9JQjJAN7vAd13
+         6G4UXN1y2uhHDY7jvV0RymA/jhT4ZIDgZeJKXOknMVeb8BwfJLRetRk0qW3lj0yR0bDy
+         /mOP57R0sB56AxUil3U23+q1jNGCukpSbVTQ8C/RUtvQivw92GBrd0Pt/rkwPwMlpbcX
+         lNo4j2e6EWePWlHgsb1V0G9RCmJKOWXjL2Ndv/v/8Teob6120sl7eP19fMF12U4HtBAa
+         corQ==
+X-Forwarded-Encrypted: i=1; AKwUvBwL31Cpz86o1vpFFnj+YMDucmytKsgQPtdN+3Bk8+nwXl/mlpeSnlYBpcav5qFeeXQV8GYhx3JsBJ7x/dRUu7uq@vger.kernel.org
+X-Gm-Message-State: AFuF++kl5G2gsXIIpUwzsqVbnZ7Y2+dulfIYNeZXm3PMGYdUWE/FeaDl
+	7+6m6kQIlDqCW4tQBDiZbXMXn6H9FJL6LbGZMzm4VmyQduDjFwqhFomkShGdOgP0N9uDoJXbiRZ
+	ACurVGumwQ25UKj2L6gXNiYKg7Q==
+X-Received: from jaj22.prod.google.com ([2002:a05:6638:b116:b0:5f1:46fc:47de])
  (user=coltonlewis job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:6808:3a1b:b0:4d6:9252:4645 with SMTP id 5614622812f47-4d72ea62a98mr3099601b6e.57.1790270998742;
- Thu, 24 Sep 2026 10:29:58 -0700 (PDT)
-Date: Thu, 24 Sep 2026 17:29:25 +0000
+ 2002:a05:6808:448f:b0:4b9:a8ac:479 with SMTP id 5614622812f47-4d72c73e50cmr3041718b6e.23.1790271002398;
+ Thu, 24 Sep 2026 10:30:02 -0700 (PDT)
+Date: Thu, 24 Sep 2026 17:29:28 +0000
 In-Reply-To: <20260924172928.2110956-1-coltonlewis@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -60,8 +60,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260924172928.2110956-1-coltonlewis@google.com>
 X-Mailer: git-send-email 2.56.0.rc1.315.gc6ed9934b7-goog
-Message-ID: <20260924172928.2110956-20-coltonlewis@google.com>
-Subject: [PATCH v9 19/22] KVM: arm64: Detect overflows for the Partitioned PMU
+Message-ID: <20260924172928.2110956-23-coltonlewis@google.com>
+Subject: [PATCH v9 22/22] KVM: arm64: selftests: Add test case for Partitioned PMU
 From: Colton Lewis <coltonlewis@google.com>
 To: kvm@vger.kernel.org, kvmarm@lists.linux.dev, 
 	linux-arm-kernel@lists.infradead.org
@@ -81,161 +81,290 @@ Cc: Marc Zyngier <maz@kernel.org>, Oliver Upton <oupton@kernel.org>,
 	Colton Lewis <coltonlewis@google.com>
 Content-Type: text/plain; charset="UTF-8"
 
-When re-entering the VM or synchronizing PMU state after a guest counter
-overflow interrupt, evaluate whether any enabled and unmasked guest
-counter has overflowed ((PMOVSSET_EL0 & PMINTENSET_EL1 & PMCNTENSET_EL0)
-with PMCR_EL0.E set) and update the virtual PMU interrupt level in the
-vGIC accordingly.
+Extend arm64/vpmu_counter_access to run all PMU counter access,
+PMCR.N validation, and overflow interrupt tests against both the
+emulated vPMU and the Partitioned PMU.
+
+Introduce enum vpmu_impl (EMULATED_VPMU vs. PARTITIONED_VPMU) and thread
+it through the test setup helpers to configure
+KVM_ARM_VCPU_PMU_V3_ENABLE_PARTITION and
+KVM_ARM_VCPU_PMU_V3_SET_NR_COUNTERS when testing the Partitioned PMU.
+
+Skip out-of-bounds counter access exception tests when the PMU is
+partitioned, as hardware does not guarantee an UNDEFINED exception on
+accesses to unimplemented counters.
 
 Signed-off-by: Colton Lewis <coltonlewis@google.com>
 ---
- arch/arm64/kvm/pmu-direct.c | 55 +++++++++++++++++++++++++++++++++++++
- arch/arm64/kvm/pmu-emul.c   | 12 ++++++--
- arch/arm64/kvm/pmu.c        |  8 +++++-
- include/kvm/arm_pmu.h       |  2 ++
- 4 files changed, 73 insertions(+), 4 deletions(-)
+ .../selftests/kvm/arm64/vpmu_counter_access.c | 129 ++++++++++++++----
+ 1 file changed, 99 insertions(+), 30 deletions(-)
 
-diff --git a/arch/arm64/kvm/pmu-direct.c b/arch/arm64/kvm/pmu-direct.c
-index 95b5a64052762..ec821aa54688f 100644
---- a/arch/arm64/kvm/pmu-direct.c
-+++ b/arch/arm64/kvm/pmu-direct.c
-@@ -534,6 +534,61 @@ void kvm_pmu_handle_guest_irq(u64 pmovsr)
+diff --git a/tools/testing/selftests/kvm/arm64/vpmu_counter_access.c b/tools/testing/selftests/kvm/arm64/vpmu_counter_access.c
+index 22223395969e0..811f8156cea3c 100644
+--- a/tools/testing/selftests/kvm/arm64/vpmu_counter_access.c
++++ b/tools/testing/selftests/kvm/arm64/vpmu_counter_access.c
+@@ -25,12 +25,27 @@
+ /* The cycle counter bit position that's common among the PMU registers */
+ #define ARMV8_PMU_CYCLE_IDX		31
  
- 	for_each_set_bit(i, (unsigned long *)&govf, 64)
- 		set_bit(i, (unsigned long *)__ctxt_sys_reg(&vcpu->arch.ctxt, PMOVSSET_EL0));
++enum pmu_impl {
++	EMULATED,
++	PARTITIONED
++};
 +
-+	if (kvm_pmu_part_overflow_status(vcpu)) {
-+		kvm_make_request(KVM_REQ_IRQ_PENDING, vcpu);
++const char *pmu_impl_str[] = {
++	"Emulated",
++	"Partitioned"
++};
 +
-+		if (!in_nmi())
-+			kvm_vcpu_kick(vcpu);
-+		else
-+			irq_work_queue(&vcpu->arch.pmu.overflow_work);
+ struct vpmu_vm {
+ 	struct kvm_vm *vm;
+ 	struct kvm_vcpu *vcpu;
+ };
+ 
++struct guest_context {
++	bool pmu_partitioned;
++};
++
+ static struct vpmu_vm vpmu_vm;
++static struct guest_context guest_context;
+ 
+ struct pmreg_sets {
+ 	u64 set_reg_id;
+@@ -331,11 +346,16 @@ static void test_access_invalid_pmc_regs(struct pmc_accessor *acc, int pmc_idx)
+ 	/*
+ 	 * Reading/writing the event count/type registers should cause
+ 	 * an UNDEFINED exception.
++	 *
++	 * If the pmu is partitioned, we can't guarantee it because
++	 * hardware doesn't.
+ 	 */
+-	TEST_EXCEPTION(ESR_ELx_EC_UNKNOWN, acc->read_cntr(pmc_idx));
+-	TEST_EXCEPTION(ESR_ELx_EC_UNKNOWN, acc->write_cntr(pmc_idx, 0));
+-	TEST_EXCEPTION(ESR_ELx_EC_UNKNOWN, acc->read_typer(pmc_idx));
+-	TEST_EXCEPTION(ESR_ELx_EC_UNKNOWN, acc->write_typer(pmc_idx, 0));
++	if (!guest_context.pmu_partitioned) {
++		TEST_EXCEPTION(ESR_ELx_EC_UNKNOWN, acc->read_cntr(pmc_idx));
++		TEST_EXCEPTION(ESR_ELx_EC_UNKNOWN, acc->write_cntr(pmc_idx, 0));
++		TEST_EXCEPTION(ESR_ELx_EC_UNKNOWN, acc->read_typer(pmc_idx));
++		TEST_EXCEPTION(ESR_ELx_EC_UNKNOWN, acc->write_typer(pmc_idx, 0));
 +	}
-+}
-+
-+/**
-+ * kvm_pmu_part_overflow_status() - Determine if any guest counters have overflowed
-+ * @vcpu: Pointer to struct kvm_vcpu
-+ *
-+ * Determine if any guest counters have overflowed and therefore an
-+ * IRQ needs to be injected into the guest. If an overflow is detected
-+ * while access is VCPU_PMU_ACCESS_FREE (for example, after state
-+ * restoration via KVM_SET_ONE_REG), transition the vCPU to
-+ * VCPU_PMU_ACCESS_GUEST_OWNED.
-+ *
-+ * Return: True if there was an overflow, false otherwise
-+ */
-+bool kvm_pmu_part_overflow_status(struct kvm_vcpu *vcpu)
-+{
-+	u64 mask = kvm_vcpu_pmu_guest_counter_mask(vcpu);
-+	u64 pmovs, pmint, pmcr;
-+	unsigned long flags;
-+	bool overflow;
-+
-+	local_irq_save(flags);
-+	if (vcpu->arch.pmu.loaded_on_cpu &&
-+	    vcpu == kvm_get_running_vcpu()) {
-+		u64 hw_ovf = read_sysreg(pmovsset_el0) & mask;
-+
-+		if (hw_ovf) {
-+			__vcpu_rmw_sys_reg(vcpu, PMOVSSET_EL0, |=, hw_ovf);
-+			write_sysreg(hw_ovf, pmovsclr_el0);
-+		}
-+		pmint = read_pmintenset();
-+		pmcr = read_pmcr();
-+	} else {
-+		pmint = __vcpu_sys_reg(vcpu, PMINTENSET_EL1);
-+		pmcr = __vcpu_sys_reg(vcpu, PMCR_EL0);
-+	}
-+
-+	pmovs = __vcpu_sys_reg(vcpu, PMOVSSET_EL0);
-+	local_irq_restore(flags);
-+
-+	overflow = (pmcr & ARMV8_PMU_PMCR_E) && (mask & pmovs & pmint);
-+
-+	if (overflow && kvm_pmu_get_access(vcpu) == VCPU_PMU_ACCESS_FREE)
-+		kvm_pmu_set_guest_owned(vcpu);
-+
-+	return overflow;
+ 	/*
+ 	 * The bit corresponding to the (unimplemented) counter in
+ 	 * {PMCNTEN,PMINTEN,PMOVS}{SET,CLR} registers should be RAZ.
+@@ -399,7 +419,7 @@ static void guest_code(u64 expected_pmcr_n)
  }
  
- /**
-diff --git a/arch/arm64/kvm/pmu-emul.c b/arch/arm64/kvm/pmu-emul.c
-index e8195984b0373..21e2c96abfdb1 100644
---- a/arch/arm64/kvm/pmu-emul.c
-+++ b/arch/arm64/kvm/pmu-emul.c
-@@ -268,7 +268,7 @@ void kvm_pmu_reprogram_counter_mask(struct kvm_vcpu *vcpu, u64 val)
-  * counter where the values of the global enable control, PMOVSSET_EL0[n], and
-  * PMINTENSET_EL1[n] are all 1.
-  */
--bool kvm_pmu_overflow_status(struct kvm_vcpu *vcpu)
-+bool kvm_pmu_emul_overflow_status(struct kvm_vcpu *vcpu)
+ /* Create a VM that has one vCPU with PMUv3 configured. */
+-static void create_vpmu_vm(void *guest_code)
++static void create_vpmu_vm(void *guest_code, enum pmu_impl impl)
  {
- 	u64 reg = __vcpu_sys_reg(vcpu, PMOVSSET_EL0);
+ 	struct kvm_vcpu_init init;
+ 	u8 pmuver, ec;
+@@ -409,6 +429,13 @@ static void create_vpmu_vm(void *guest_code)
+ 		.attr = KVM_ARM_VCPU_PMU_V3_IRQ,
+ 		.addr = (u64)&irq,
+ 	};
++	u32 partition = (impl == PARTITIONED);
++	struct kvm_device_attr part_attr = {
++		.group = KVM_ARM_VCPU_PMU_V3_CTRL,
++		.attr = KVM_ARM_VCPU_PMU_V3_ENABLE_PARTITION,
++		.addr = (uint64_t)&partition
++	};
++	int ret;
  
-@@ -296,8 +296,14 @@ bool kvm_pmu_should_notify_user(struct kvm_vcpu *vcpu)
- {
- 	struct kvm_sync_regs *sregs = &vcpu->run->s.regs;
- 	bool run_level = sregs->device_irq_level & KVM_ARM_DEV_PMU;
-+	bool overflow;
+ 	/* The test creates the vpmu_vm multiple times. Ensure a clean state */
+ 	memset(&vpmu_vm, 0, sizeof(vpmu_vm));
+@@ -436,6 +463,15 @@ static void create_vpmu_vm(void *guest_code)
+ 		    "Unexpected PMUVER (0x%x) on the vCPU with PMUv3", pmuver);
  
--	return kvm_pmu_overflow_status(vcpu) != run_level;
-+	if (kvm_pmu_is_partitioned(vcpu->kvm))
-+		overflow = kvm_pmu_part_overflow_status(vcpu);
-+	else
-+		overflow = kvm_pmu_emul_overflow_status(vcpu);
+ 	vcpu_ioctl(vpmu_vm.vcpu, KVM_SET_DEVICE_ATTR, &irq_attr);
 +
-+	return overflow != run_level;
++	ret = __vcpu_has_device_attr(
++		vpmu_vm.vcpu, KVM_ARM_VCPU_PMU_V3_CTRL, KVM_ARM_VCPU_PMU_V3_ENABLE_PARTITION);
++	if (!ret) {
++		vcpu_ioctl(vpmu_vm.vcpu, KVM_SET_DEVICE_ATTR, &part_attr);
++		guest_context.pmu_partitioned = partition;
++		pr_debug("Set PMU partitioning: %d\n", partition);
++	}
++
+ }
+ 
+ static void destroy_vpmu_vm(void)
+@@ -461,13 +497,14 @@ static void run_vcpu(struct kvm_vcpu *vcpu, u64 pmcr_n)
+ 	}
+ }
+ 
+-static void test_create_vpmu_vm_with_nr_counters(unsigned int nr_counters, bool expect_fail)
++static void test_create_vpmu_vm_with_nr_counters(
++	unsigned int nr_counters, enum pmu_impl impl, bool expect_fail)
+ {
+ 	struct kvm_vcpu *vcpu;
+ 	unsigned int prev;
+ 	int ret;
+ 
+-	create_vpmu_vm(guest_code);
++	create_vpmu_vm(guest_code, impl);
+ 	vcpu = vpmu_vm.vcpu;
+ 
+ 	prev = get_pmcr_n(vcpu_get_reg(vcpu, KVM_ARM64_SYS_REG(SYS_PMCR_EL0)));
+@@ -475,21 +512,24 @@ static void test_create_vpmu_vm_with_nr_counters(unsigned int nr_counters, bool
+ 	ret = __vcpu_device_attr_set(vcpu, KVM_ARM_VCPU_PMU_V3_CTRL,
+ 				     KVM_ARM_VCPU_PMU_V3_SET_NR_COUNTERS, &nr_counters);
+ 
+-	if (expect_fail)
++	if (expect_fail) {
+ 		TEST_ASSERT(ret && errno == EINVAL,
+ 			    "Setting more PMU counters (%u) than available (%u) unexpectedly succeeded",
+ 			    nr_counters, prev);
+-	else
+-		TEST_ASSERT(!ret, KVM_IOCTL_ERROR(KVM_SET_DEVICE_ATTR, ret));
++		return;
++	}
++
++	TEST_ASSERT(!ret, KVM_IOCTL_ERROR(KVM_SET_DEVICE_ATTR, ret));
+ 
+ 	vcpu_device_attr_set(vcpu, KVM_ARM_VCPU_PMU_V3_CTRL, KVM_ARM_VCPU_PMU_V3_INIT, NULL);
++	sync_global_to_guest(vpmu_vm.vm, guest_context);
  }
  
  /*
-@@ -400,7 +406,7 @@ static void kvm_pmu_perf_overflow(struct perf_event *perf_event,
- 		kvm_pmu_counter_increment(vcpu, BIT(idx + 1),
- 					  ARMV8_PMUV3_PERFCTR_CHAIN);
- 
--	if (kvm_pmu_overflow_status(vcpu)) {
-+	if (kvm_pmu_emul_overflow_status(vcpu)) {
- 		kvm_make_request(KVM_REQ_IRQ_PENDING, vcpu);
- 
- 		if (!in_nmi())
-diff --git a/arch/arm64/kvm/pmu.c b/arch/arm64/kvm/pmu.c
-index a8214ab52fcb5..4a3c6600b2678 100644
---- a/arch/arm64/kvm/pmu.c
-+++ b/arch/arm64/kvm/pmu.c
-@@ -409,12 +409,18 @@ u64 kvm_pmu_evtyper_mask(struct kvm *kvm)
- static void kvm_pmu_update_state(struct kvm_vcpu *vcpu)
+  * Create a guest with one vCPU, set the PMCR_EL0.N for the vCPU to @pmcr_n,
+  * and run the test.
+  */
+-static void run_access_test(u64 pmcr_n)
++static void run_access_test(u64 pmcr_n, enum pmu_impl impl)
  {
- 	struct kvm_pmu *pmu = &vcpu->arch.pmu;
-+	bool overflow;
+ 	u64 sp;
+ 	struct kvm_vcpu *vcpu;
+@@ -497,7 +537,7 @@ static void run_access_test(u64 pmcr_n)
  
- 	if (unlikely(!irqchip_in_kernel(vcpu->kvm)))
- 		return;
+ 	pr_debug("Test with pmcr_n %lu\n", pmcr_n);
  
-+	if (kvm_pmu_is_partitioned(vcpu->kvm))
-+		overflow = kvm_pmu_part_overflow_status(vcpu);
-+	else
-+		overflow = kvm_pmu_emul_overflow_status(vcpu);
-+
- 	WARN_ON(kvm_vgic_inject_irq(vcpu->kvm, vcpu, pmu->irq_num,
--				    kvm_pmu_overflow_status(vcpu), pmu));
-+				    overflow, pmu));
+-	test_create_vpmu_vm_with_nr_counters(pmcr_n, false);
++	test_create_vpmu_vm_with_nr_counters(pmcr_n, impl, false);
+ 	vcpu = vpmu_vm.vcpu;
+ 
+ 	/* Save the initial sp to restore them later to run the guest again */
+@@ -531,14 +571,14 @@ static struct pmreg_sets validity_check_reg_sets[] = {
+  * Create a VM, and check if KVM handles the userspace accesses of
+  * the PMU register sets in @validity_check_reg_sets[] correctly.
+  */
+-static void run_pmregs_validity_test(u64 pmcr_n)
++static void run_pmregs_validity_test(u64 pmcr_n, enum pmu_impl impl)
+ {
+ 	int i;
+ 	struct kvm_vcpu *vcpu;
+ 	u64 set_reg_id, clr_reg_id, reg_val;
+ 	u64 valid_counters_mask, max_counters_mask;
+ 
+-	test_create_vpmu_vm_with_nr_counters(pmcr_n, false);
++	test_create_vpmu_vm_with_nr_counters(pmcr_n, impl, false);
+ 	vcpu = vpmu_vm.vcpu;
+ 
+ 	valid_counters_mask = get_counters_mask(pmcr_n);
+@@ -588,11 +628,11 @@ static void run_pmregs_validity_test(u64 pmcr_n)
+  * the vCPU to @pmcr_n, which is larger than the host value.
+  * The attempt should fail as @pmcr_n is too big to set for the vCPU.
+  */
+-static void run_error_test(u64 pmcr_n)
++static void run_error_test(u64 pmcr_n, enum pmu_impl impl)
+ {
+-	pr_debug("Error test with pmcr_n %lu (larger than the host)\n", pmcr_n);
++	pr_debug("Error test with pmcr_n %lu (larger than the host allows)\n", pmcr_n);
+ 
+-	test_create_vpmu_vm_with_nr_counters(pmcr_n, true);
++	test_create_vpmu_vm_with_nr_counters(pmcr_n, impl, true);
+ 	destroy_vpmu_vm();
  }
  
- /**
-diff --git a/include/kvm/arm_pmu.h b/include/kvm/arm_pmu.h
-index 955f142a41b94..428a609eaf1a7 100644
---- a/include/kvm/arm_pmu.h
-+++ b/include/kvm/arm_pmu.h
-@@ -91,6 +91,8 @@ bool kvm_set_pmuserenr(u64 val);
- void kvm_vcpu_pmu_restore_guest(struct kvm_vcpu *vcpu);
- void kvm_vcpu_pmu_restore_host(struct kvm_vcpu *vcpu);
- void kvm_vcpu_pmu_resync_el0(void);
-+bool kvm_pmu_emul_overflow_status(struct kvm_vcpu *vcpu);
-+bool kvm_pmu_part_overflow_status(struct kvm_vcpu *vcpu);
+@@ -600,21 +640,26 @@ static void run_error_test(u64 pmcr_n)
+  * Return the default number of implemented PMU event counters excluding
+  * the cycle counter (i.e. PMCR_EL0.N value) for the guest.
+  */
+-static u64 get_pmcr_n_limit(void)
++static u64 get_pmcr_n_limit(enum pmu_impl impl)
+ {
+-	u64 pmcr;
++	u64 pmcr, n;
  
- #define kvm_vcpu_has_pmu(vcpu)					\
- 	(vcpu_has_feature(vcpu, KVM_ARM_VCPU_PMU_V3))
+-	create_vpmu_vm(guest_code);
++	create_vpmu_vm(guest_code, impl);
+ 	pmcr = vcpu_get_reg(vpmu_vm.vcpu, KVM_ARM64_SYS_REG(SYS_PMCR_EL0));
+ 	destroy_vpmu_vm();
+-	return get_pmcr_n(pmcr);
++
++	n = get_pmcr_n(pmcr);
++	if (impl == PARTITIONED && n > 0)
++		return n - 1;
++
++	return n;
+ }
+ 
+ static bool kvm_supports_nr_counters_attr(void)
+ {
+ 	bool supported;
+ 
+-	create_vpmu_vm(NULL);
++	create_vpmu_vm(NULL, EMULATED);
+ 	supported = !__vcpu_has_device_attr(vpmu_vm.vcpu, KVM_ARM_VCPU_PMU_V3_CTRL,
+ 					    KVM_ARM_VCPU_PMU_V3_SET_NR_COUNTERS);
+ 	destroy_vpmu_vm();
+@@ -622,22 +667,46 @@ static bool kvm_supports_nr_counters_attr(void)
+ 	return supported;
+ }
+ 
+-int main(void)
++static bool kvm_supports_partition_attr(void)
++{
++	bool supported;
++
++	create_vpmu_vm(NULL, EMULATED);
++	supported = !__vcpu_has_device_attr(vpmu_vm.vcpu, KVM_ARM_VCPU_PMU_V3_CTRL,
++					    KVM_ARM_VCPU_PMU_V3_ENABLE_PARTITION);
++	destroy_vpmu_vm();
++
++	return supported;
++}
++
++void test_pmu(enum pmu_impl impl)
+ {
+ 	u64 i, pmcr_n;
+ 
+-	TEST_REQUIRE(kvm_has_cap(KVM_CAP_ARM_PMU_V3));
+-	TEST_REQUIRE(kvm_supports_vgic_v3());
+-	TEST_REQUIRE(kvm_supports_nr_counters_attr());
++	pr_info("Testing PMU: Implementation = %s\n", pmu_impl_str[impl]);
++
++	pmcr_n = get_pmcr_n_limit(impl);
++	pr_debug("PMCR_EL0.N: Limit = %lu\n", pmcr_n);
+ 
+-	pmcr_n = get_pmcr_n_limit();
+ 	for (i = 0; i <= pmcr_n; i++) {
+-		run_access_test(i);
+-		run_pmregs_validity_test(i);
++		run_access_test(i, impl);
++		run_pmregs_validity_test(i, impl);
+ 	}
+ 
+ 	for (i = pmcr_n + 1; i < ARMV8_PMU_MAX_COUNTERS; i++)
+-		run_error_test(i);
++		run_error_test(i, impl);
++}
++
++int main(void)
++{
++	TEST_REQUIRE(kvm_has_cap(KVM_CAP_ARM_PMU_V3));
++	TEST_REQUIRE(kvm_supports_vgic_v3());
++	TEST_REQUIRE(kvm_supports_nr_counters_attr());
++
++	test_pmu(EMULATED);
++
++	if (kvm_supports_partition_attr() && get_pmcr_n_limit(EMULATED) > 0)
++		test_pmu(PARTITIONED);
+ 
+ 	return 0;
+ }
 -- 
 2.56.0.rc1.310.g51773c2048-goog
 
