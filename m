@@ -1,244 +1,167 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13A211A8F7B
-	for <linux-perf-users@vger.kernel.org>; Thu, 24 Sep 2026 05:49:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC2F5184A
+	for <linux-perf-users@vger.kernel.org>; Thu, 24 Sep 2026 05:49:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790228942; cv=none; b=ggULvTdd4jC9L3XCA2wZYiWCurMFX3Y5aWne4H9XL4amXlvYNXxc0eyQOwUKxLTLnoB3bjMxhGunF8Dxg6M/HlVXfU1OC5MV38mY2c89iPETdM7q8BrNL/W/zFlLqoJAvA9lyEjzfYxlkT7zqIBBaOj/Tb3MDlT5TrL9K5jn0Ss=
+	t=1790228948; cv=none; b=OiUwBnImS8hdfTPDzO/DxnIryAkPMYssQ3chA4nVuGHILg/qBHymDiW0gqfKe3RVuz/C8VsqPBSllnaMmkc0KYjcTUnmjJc2fTyaiBGZ400TR2paxCrbfBb/zynkBITllIWwIgr0cQFUrrIdBjk1apiI5N1L0EC/8Zo0fVsA/co=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790228942; c=relaxed/simple;
-	bh=LS7UYlszUohSZch/TUKVyk8BONZD4yHVO/NhyswaCIg=;
+	s=arc-20240116; t=1790228948; c=relaxed/simple;
+	bh=dZHbXeTfuzvGt3PLcZqcV2fZCkuXX4yVPG73fdzzojE=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=B2KqOrPN32xnznmNSzFyq3fPE3QAMPj84Scl58+pXwVIr8mtZIVOBqqgTEN6I7OzrTj0wgZYNhD8O3VtZdAL+hHatsSVGyqRHLM5fFIXKwWYpls/c2ksKz9+7uqHHfHtHNZJHNAC13aLlhQw60o3m3SYYVysoXkteD8eSPj2m6M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Pe49oFUa; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=IcM/psDxG8D5HFSTpCvhrWD4kU+SVauotDC3c6NvCx6MFjWyQfk/1oQ1A417iR2JgPzWH/zS5fB8myhXhpxceD5YI3sZHASVsQGDDF/M0tf0fb1E4je8SHe03Bl+neWrfXUx2BMgBhOocJn2I9hwqDb3rSB+eL9w2s1R20R0tkI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TR1zZM9e; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Pe49oFUa"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 959F61F000FF;
-	Thu, 24 Sep 2026 05:49:00 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TR1zZM9e"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 404961F000FF;
+	Thu, 24 Sep 2026 05:49:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1790228940;
-	bh=8Jw9zfxRXLbLxDxXjOeFQpMnDbwbAPrAGE7Wn4PQ/v4=;
+	s=k20260515; t=1790228946;
+	bh=kunBZljpQsZ+TdGy+3veCSiNZdeiCQSeCcHO+R29A6Q=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=Pe49oFUaaDpEIG/X7e7XyfVgfGVzNfjuQNCVZQ7c6/eSI4OFOeL/Mv/aPURYvcOeR
-	 RyLIxteUi8gVz3jmY6NGW0l/H2K3cyiq8acRNFBH8RSeUoF4VjHDAI+1wa8/ZvVlOU
-	 xf6eGJWcn8RlU+Hfra2QIuUERgEmIFm8MXdXiM8OhuldI9PVHZhd2jcYEdrYyz8p88
-	 w0hNVE8Hiqx6ZDEb0t4Nv5p9F07lgsL4nmsBHU5moG3nPMWKQiWN4PHWQ0/u7vh9Fz
-	 iemID0RoKpGwZw1nGHoTSKuYle97cuC1A3N3YdEjl0HJxujci9oNNSOFcRj/gHj2wc
-	 1v4oU8kzWEgqw==
+	b=TR1zZM9e6iUd1eVw9Np+iYalFcSPB1a7oACPhNzpIgynjNrpub+sitOOTHwg3SAN4
+	 QXjL14Ki22njmUYd+FQHcHDBRMIRCYS7pkdq+UtW70KE2SRtqM17wLQSie+lB6kVye
+	 sZk3e2A/EVF2CBv8HHe0YkxReOqB8ihcikOQMeLNg5l5usVnHDMLVxf37g8f2OLa/y
+	 MmKrVyEhtGC9QnCMAYOHju4Q0TpYbLQXfBM63gVSyQWUPxBYvOhtWNUTrlogxFlx+D
+	 4/Yg5iZin89PMJkzDvxOuQj9sEqgTCGcXstoluVP/G3XLxulPxpVaLZFqyqjp1OGaT
+	 +pjOnF3/yThKw==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v1 04/21] perf vendor events intel: Update broadwell
- metrics to TMA 5.2
+Subject: Re: [PATCH v1 15/21] perf vendor events intel: Update novalake
+ events from 1.00 to 1.04
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Ian Rogers" <irogers@google.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260924053645.3555041-5-irogers@google.com>
+In-Reply-To: <20260924053645.3555041-16-irogers@google.com>
 References: <20260924053645.3555041-1-irogers@google.com>
- <20260924053645.3555041-5-irogers@google.com>
+ <20260924053645.3555041-16-irogers@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Thu, 24 Sep 2026 05:49:00 +0000
-Message-Id: <20260924054900.959F61F000FF@smtp.kernel.org>
+Date: Thu, 24 Sep 2026 05:49:05 +0000
+Message-Id: <20260924054906.404961F000FF@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 2 potential issue(=
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
 s) to consider:
-- [Low] perf: invalid event references in broadwell TMA metrics
-- [Low] perf: dangling metric references in broadwell 'Related metrics'
+- [Medium] perf: UMask omission in novalake events causes EventCode aliasing
 --
 
-commit c0c2967e366a8baed1a9336ee9569a4da8ff973c
+commit 1470a977cdc98c6d093466522a50ce1b48974108
 Author: Ian Rogers <irogers@google.com>
 
-perf vendor events intel: Update broadwell metrics to TMA 5.2
-   =20
-This commit updates the TMA metrics for Broadwell architectures to version =
-5.2
-based on the intel/perfmon repository.
+perf vendor events intel: Update novalake events from 1.00 to 1.04
 
-> diff --git a/tools/perf/pmu-events/arch/x86/broadwell/bdw-metrics.json b/=
-tools/perf/pmu-events/arch/x86/broadwell/bdw-metrics.json
-> index 1d8e910f59613..cd59e4a666b21 100644
-> --- a/tools/perf/pmu-events/arch/x86/broadwell/bdw-metrics.json
-> +++ b/tools/perf/pmu-events/arch/x86/broadwell/bdw-metrics.json
-> @@ -160,7 +160,7 @@
->          "MetricGroup": "BvMS;DataSharing;LockCont;Offcore;Snoop;TopdownL=
-4;tma_L4_group;tma_issueSyncxn;tma_l3_bound_group",
->          "MetricName": "tma_contested_accesses",
->          "MetricThreshold": "tma_contested_accesses > 0.05 & (tma_l3_boun=
-d > 0.05 & (tma_memory_bound > 0.2 & tma_backend_bound > 0.2))",
-> -        "PublicDescription": "This metric estimates fraction of cycles w=
-hile the memory subsystem was handling synchronizations due to contested ac=
-cesses. Contested accesses occur when data written by one Logical Processor=
- are read by another Logical Processor on a different Physical Core. Exampl=
-es of contested accesses include synchronizations such as locks; true data =
-sharing such as modified locked variables; and false sharing. Sample with: =
-MEM_LOAD_L3_HIT_RETIRED.XSNP_HITM_PS;MEM_LOAD_L3_HIT_RETIRED.XSNP_MISS_PS. =
-Related metrics: tma_data_sharing, tma_false_sharing, tma_machine_clears, t=
-ma_remote_cache",
-> +        "PublicDescription": "This metric estimates fraction of cycles w=
-hile the memory subsystem was handling synchronizations due to contested ac=
-cesses. Contested accesses occur when data written by one Logical Processor=
- are read by another Logical Processor on a different Physical Core. Exampl=
-es of contested accesses include synchronizations such as locks; true data =
-sharing such as modified locked variables; and false sharing. Sample with: =
-MEM_LOAD_L3_HIT_RETIRED.XSNP_FWD;MEM_LOAD_L3_HIT_RETIRED.XSNP_MISS. Related=
- metrics: tma_data_sharing, tma_false_sharing, tma_machine_clears, tma_remo=
-te_cache",
+This commit updates the novalake PMU events from version 1.00 to 1.04.
+It synchronizes the event lists with the latest intel perfmon updates
+and updates the format encoding for the off module response MSRs.
 
-[Severity: Low]
-Does the MEM_LOAD_L3_HIT_RETIRED event support the XSNP_FWD modifier on
-Broadwell?
+Link: https://github.com/intel/perfmon/commit/50afd00f84fb8c7bfa26a993a9689=
+82c1573e6d1
+Link: https://github.com/intel/perfmon/commit/b576c542b68d377fa00ef4674715e=
+a87a37c309c
+Link: https://lore.kernel.org/linux-perf-users/20260923015517.2665398-1-dap=
+eng1.mi@linux.intel.com/
 
-If users follow the "Sample with:" recommendation and try to use these even=
+> diff --git a/tools/perf/pmu-events/arch/x86/novalake/floating-point.json =
+b/tools/perf/pmu-events/arch/x86/novalake/floating-point.json
+> index 471a90f3670c4..2dda2225d0043 100644
+> --- a/tools/perf/pmu-events/arch/x86/novalake/floating-point.json
+> +++ b/tools/perf/pmu-events/arch/x86/novalake/floating-point.json
+
+[ ... ]
+
+> @@ -181,6 +181,22 @@
+>          "UMask": "0x1",
+>          "Unit": "cpu_core"
+>      },
+> +    {
+> +        "BriefDescription": "FP_ARITH_INST_RETIRED.SCALAR_HALF",
+> +        "Counter": "0,1,2,3,4,5,6,7",
+> +        "EventCode": "0xc8",
+> +        "EventName": "FP_ARITH_INST_RETIRED.SCALAR_HALF",
+> +        "SampleAfterValue": "100003",
+> +        "Unit": "cpu_core"
+> +    },
+> +    {
+> +        "BriefDescription": "Number of all Scalar Half-Precision FP arit=
+hmetic instructions(1) retired - regular and complex.",
+> +        "Counter": "0,1,2,3,4,5,6,7",
+> +        "EventCode": "0xc8",
+> +        "EventName": "FP_ARITH_INST_RETIRED.SCALAR_HALF_WCOMPLEX",
+> +        "SampleAfterValue": "100003",
+> +        "Unit": "cpu_core"
+> +    },
+
+[Severity: Medium]
+Is the UMask intentionally omitted for FP_ARITH_INST_RETIRED.SCALAR_HALF_WC=
+OMPLEX?
+
+When the UMask is omitted, the perf tool JSON converter defaults to UMask 0=
+x00.
+Because FP_ARITH_INST_RETIRED.SCALAR_HALF also shares EventCode 0xc8 and
+lacks a UMask, these become indistinguishable aliases for mutually exclusive
+events.
+
+Could this cause incorrect PMU programming and inaccurate measurements?
+
+[ ... ]
+
+> +    {
+> +        "BriefDescription": "Counts the number of retired packed 128 bit=
+ or 256 bit double precision floating point arithmetic operations.",
+> +        "Counter": "0,1,2,3,4,5,6,7",
+> +        "EventCode": "0xc8",
+> +        "EventName": "FP_ARITH_RETIRED.PACKED_DP",
+> +        "SampleAfterValue": "1000003",
+> +        "Unit": "cpu_atom"
+> +    },
+
+[Severity: Medium]
+Similarly, FP_ARITH_RETIRED.PACKED_DP shares EventCode 0xc8 without a UMask.
+
+This defaults to UMask 0x00, which will alias with PACKED_SP and other even=
 ts
-with perf record, won't it fail with an 'invalid event' error?
+that share this EventCode.
+
+Does this need a distinct UMask to prevent profiling collisions?
+
+> diff --git a/tools/perf/pmu-events/arch/x86/novalake/pipeline.json b/tool=
+s/perf/pmu-events/arch/x86/novalake/pipeline.json
+> index 998dd4cbc66a7..65a8a3058f81d 100644
+> --- a/tools/perf/pmu-events/arch/x86/novalake/pipeline.json
+> +++ b/tools/perf/pmu-events/arch/x86/novalake/pipeline.json
 
 [ ... ]
 
-> @@ -255,7 +245,7 @@
->          "MetricGroup": "BvMB;MemoryBW;TopdownL4;tma_L4_group;tma_issueBW=
-;tma_issueSL;tma_issueSmSt;tma_l1_bound_group",
->          "MetricName": "tma_fb_full",
->          "MetricThreshold": "tma_fb_full > 0.3",
-> -        "PublicDescription": "This metric does a *rough estimation* of h=
-ow often L1D Fill Buffer unavailability limited additional L1D miss memory =
-access requests to proceed. The higher the metric value; the deeper the mem=
-ory hierarchy level the misses are satisfied from (metric values >1 are val=
-id). Often it hints on approaching bandwidth limits (to L2 cache; L3 cache =
-or external memory). Related metrics: tma_info_system_dram_bw_use, tma_mem_=
-bandwidth, tma_sq_full, tma_store_latency, tma_streaming_stores",
-> +        "PublicDescription": "This metric does a *rough estimation* of h=
-ow often L1D Fill Buffer unavailability limited additional L1D miss memory =
-access requests to proceed. The higher the metric value; the deeper the mem=
-ory hierarchy level the misses are satisfied from (metric values >1 are val=
-id). Often it hints on approaching bandwidth limits (to L2 cache; L3 cache =
-or external memory). Related metrics: tma_info_system_dram_bw_use, tma_mem_=
-bandwidth, tma_sq_full, tma_store_latency, tma_streaming_stores, tma_uc_bou=
-nd",
+> @@ -146,6 +196,15 @@
+>          "UMask": "0x2",
+>          "Unit": "cpu_core"
+>      },
+> +    {
+> +        "BriefDescription": "Counts the number of far branch instruction=
+s retired, includes far jump, far call and return, and interrupt call and r=
+eturn.",
+> +        "Counter": "0,1,2,3,4,5,6,7",
+> +        "EventCode": "0xc4",
+> +        "EventName": "BR_INST_RETIRED.FAR_BRANCH",
+> +        "PublicDescription": "Counts the number of far branch instructio=
+ns retired, includes far jump, far call and return, and interrupt call and =
+return. Available PDIST counters: 0,1",
+> +        "SampleAfterValue": "1000003",
+> +        "Unit": "cpu_atom"
+> +    },
 
-[Severity: Low]
-Is the tma_uc_bound metric actually defined for Broadwell architectures?
+[Severity: Medium]
+Does BR_INST_RETIRED.FAR_BRANCH require a specific UMask?
 
-Referencing a missing metric in "Related metrics" creates a dead documentat=
-ion
-link for users inspecting metrics via perf list.
-
-[ ... ]
-
-> @@ -941,7 +940,7 @@
->          "MetricGroup": "FetchLat;MicroSeq;TopdownL3;tma_L3_group;tma_fet=
-ch_latency_group;tma_issueMC;tma_issueMS;tma_issueMV;tma_issueSO",
->          "MetricName": "tma_ms_switches",
->          "MetricThreshold": "tma_ms_switches > 0.05 & (tma_fetch_latency =
-> 0.1 & tma_frontend_bound > 0.15)",
-> -        "PublicDescription": "This metric estimates the fraction of cycl=
-es when the CPU was stalled due to switches of uop delivery to the Microcod=
-e Sequencer (MS). Commonly used instructions are optimized for delivery by =
-the DSB (decoded i-cache) or MITE (legacy instruction decode) pipelines. Ce=
-rtain operations cannot be handled natively by the execution pipeline; and =
-must be performed by microcode (small programs injected into the execution =
-stream). Switching to the MS too often can negatively impact performance. T=
-he MS is designated to deliver long uop flows required by CISC instructions=
- like CPUID; or uncommon conditions like Floating Point Assists when dealin=
-g with Denormals. Sample with: IDQ.MS_SWITCHES. Related metrics: tma_clears=
-_resteers, tma_l1_bound, tma_machine_clears, tma_microcode_sequencer, tma_m=
-ixing_vectors, tma_serializing_operation",
-> +        "PublicDescription": "This metric estimates the fraction of cycl=
-es when the CPU was stalled due to switches of uop delivery to the Microcod=
-e Sequencer (MS). Commonly used instructions are optimized for delivery by =
-the DSB (decoded i-cache) or MITE (legacy instruction decode) pipelines. Ce=
-rtain operations cannot be handled natively by the execution pipeline; and =
-must be performed by microcode (small programs injected into the execution =
-stream). Switching to the MS too often can negatively impact performance. T=
-he MS is designated to deliver long uop flows required by CISC instructions=
- like CPUID; or uncommon conditions like Floating Point Assists when dealin=
-g with Denormals. Sample with: IDQ.MS_SWITCHES. Related metrics: tma_clears=
-_resteers, tma_info_inst_mix_vectormixpki, tma_l1_bound, tma_machine_clears=
-, tma_microcode_sequencer, tma_mixing_vectors, tma_serializing_operation",
-
-[Severity: Low]
-Does the tma_info_inst_mix_vectormixpki metric exist for Broadwell?
-
-Similar to tma_uc_bound above, referencing it here results in a dangling
-documentation link if it is undefined.
-
-[ ... ]
-
-> diff --git a/tools/perf/pmu-events/arch/x86/broadwellde/bdwde-metrics.jso=
-n b/tools/perf/pmu-events/arch/x86/broadwellde/bdwde-metrics.json
-> index a5e408ca46a7e..a3e6835f4f847 100644
-> --- a/tools/perf/pmu-events/arch/x86/broadwellde/bdwde-metrics.json
-> +++ b/tools/perf/pmu-events/arch/x86/broadwellde/bdwde-metrics.json
-> @@ -160,7 +160,7 @@
->          "MetricGroup": "BvMS;DataSharing;LockCont;Offcore;Snoop;TopdownL=
-4;tma_L4_group;tma_issueSyncxn;tma_l3_bound_group",
->          "MetricName": "tma_contested_accesses",
->          "MetricThreshold": "tma_contested_accesses > 0.05 & (tma_l3_boun=
-d > 0.05 & (tma_memory_bound > 0.2 & tma_backend_bound > 0.2))",
-> -        "PublicDescription": "This metric estimates fraction of cycles w=
-hile the memory subsystem was handling synchronizations due to contested ac=
-cesses. Contested accesses occur when data written by one Logical Processor=
- are read by another Logical Processor on a different Physical Core. Exampl=
-es of contested accesses include synchronizations such as locks; true data =
-sharing such as modified locked variables; and false sharing. Sample with: =
-MEM_LOAD_L3_HIT_RETIRED.XSNP_FWD;MEM_LOAD_L3_HIT_RETIRED.XSNP_MISS. Related=
- metrics: tma_data_sharing, tma_false_sharing, tma_machine_clears, tma_remo=
-te_cache",
-> +        "PublicDescription": "This metric estimates fraction of cycles w=
-hile the memory subsystem was handling synchronizations due to contested ac=
-cesses. Contested accesses occur when data written by one Logical Processor=
- are read by another Logical Processor on a different Physical Core. Exampl=
-es of contested accesses include synchronizations such as locks; true data =
-sharing such as modified locked variables; and false sharing. Sample with: =
-MEM_LOAD_L2_MISS_RETIRED.L3.SAME_CBB.HIT_ESF.SNP_MISS;MEM_LOAD_L2_MISS_RETI=
-RED.OTHER_MODULE_L2.SAME_CBB.HIT_M.SNP_FWD. Related metrics: tma_data_shari=
-ng, tma_false_sharing, tma_machine_clears, tma_remote_cache",
-
-[Severity: Low]
-Are these MEM_LOAD_L2_MISS_RETIRED events valid for Broadwell-DE?
-
-It appears these specific events might belong to newer architectures (like
-Novalake or Arrowlake). Recommending them here could cause perf record to
-fail with an 'invalid event' error.
-
-[ ... ]
-
-> diff --git a/tools/perf/pmu-events/arch/x86/broadwellx/bdx-metrics.json b=
-/tools/perf/pmu-events/arch/x86/broadwellx/bdx-metrics.json
-> index 5b83b040060c3..6b914b29bff95 100644
-> --- a/tools/perf/pmu-events/arch/x86/broadwellx/bdx-metrics.json
-> +++ b/tools/perf/pmu-events/arch/x86/broadwellx/bdx-metrics.json
-> @@ -447,7 +437,7 @@
->          "MetricGroup": "BvMS;DataSharing;LockCont;Offcore;Snoop;TopdownL=
-4;tma_L4_group;tma_issueSyncxn;tma_store_bound_group",
->          "MetricName": "tma_false_sharing",
->          "MetricThreshold": "tma_false_sharing > 0.05 & (tma_store_bound =
-> 0.2 & (tma_memory_bound > 0.2 & tma_backend_bound > 0.2))",
-> -        "PublicDescription": "This metric roughly estimates how often CP=
-U was handling synchronizations due to False Sharing. False Sharing is a mu=
-ltithreading hiccup; where multiple Logical Processors contend on different=
- data-elements mapped into the same cache line. Sample with: MEM_LOAD_L3_HI=
-T_RETIRED.XSNP_HITM_PS;OFFCORE_RESPONSE.DEMAND_RFO.L3_HIT.SNOOP_HITM. Relat=
-ed metrics: tma_contested_accesses, tma_data_sharing, tma_machine_clears, t=
-ma_remote_cache",
-> +        "PublicDescription": "This metric roughly estimates how often CP=
-U was handling synchronizations due to False Sharing. False Sharing is a mu=
-ltithreading hiccup; where multiple Logical Processors contend on different=
- data-elements mapped into the same cache line. Sample with: OCR.DEMAND_RFO=
-.L3_HIT.SNOOP_HITM. Related metrics: tma_contested_accesses, tma_data_shari=
-ng, tma_machine_clears, tma_remote_cache",
-
-[Severity: Low]
-Does Broadwell-X use the 'OCR' prefix?
-
-It seems 'OFFCORE_RESPONSE' is the expected prefix for this architecture,
-meaning the suggested 'OCR' event might not be recognized by perf.
+It currently lacks one, defaulting to UMask 0x00 for cpu_atom. This will
+collide with the preexisting ALL_BRANCHES event that also defaults to
+UMask 0x00, leading to inaccurate performance measurements.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260924053645.3555=
-041-1-irogers@google.com?part=3D4
+041-1-irogers@google.com?part=3D15
