@@ -1,145 +1,72 @@
-Received: from mail-qt1-f177.google.com (mail-qt1-f177.google.com [209.85.160.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66FA03D9661
-	for <linux-perf-users@vger.kernel.org>; Thu, 24 Sep 2026 18:00:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0ED7F355055;
+	Thu, 24 Sep 2026 18:03:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790272827; cv=none; b=WgP6Vb8md7dHUniFFgGGLdFB7k6ELrgDae7ENgLyoORIQIYbI+3EGOBa2JqL+QgNE2tPqWsliUz/EfNH7H0497kHYNF2CdX4eWDI0lvrcUbfvgmSjLVGRpPpHyAZhDy41ORyixK8Bt2IG3fo+XUn9HFF4F7DD+sAHcdSz27upNQ=
+	t=1790273020; cv=none; b=o+v1o6OM8nD0rbRp/uPUYDQdR6EMIHIZAQfiFvNfY5WF+RDm++nNaSUIQPgmIqeQB5gsq6tiz2aPFNGilWb8ZscsRti92qbOZyLn/zBfXu3Qm1igF3fzQvGDI7weTm/F/uFMmwXM6GqKxptEYzkvqKvoLx6lLnaOyZkR9SGQWzU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790272827; c=relaxed/simple;
-	bh=dIEo2BWot8KMA7bFyxIXMBMINiO703u3CNAgbTnUo2E=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Jm7e4sPpr8fg+S75g8VA03Sb/RcoDO+CYUcF3eRqfdKriX6XhUSEcalCxhuMDpVY1FWn2TrOgRG6LVmmzDGQJ4SC2LUHiEjKcRbx8qPh9XeERjwvrdywWeHZiTNeErJ1jRZNc0B2epQsm/J3+cpA91HjeeWVXHD5azm46j6P4Qk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=qNcW8nj0; arc=none smtp.client-ip=209.85.160.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
+	s=arc-20240116; t=1790273020; c=relaxed/simple;
+	bh=71px8qpq71xNX9a+eRwyGbRICfaSUVHKXe3pTEwOTuo=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=Ek6XfzHKw9zNfgt6Z668eCrKsszEP6Ph7UWE2IdPnNPi23GV6qDszYwwRNzY8Bg7/4u8IbZm76eQz9RZWUBNyWQKcVFgRqcmsYksAbyo5grTbW3exERjAcEpcIEsEcdftsEyEkN7bHn6HFX1+ORBQYjZ8wo/6JurbR5FyELJerU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jEPI82TS; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="qNcW8nj0"
-Received: by mail-qt1-f177.google.com with SMTP id d75a77b69052e-52f9fc510e1so8275571cf.0
-        for <linux-perf-users@vger.kernel.org>; Thu, 24 Sep 2026 11:00:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1790272822; x=1790877622; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=yIrEACM/1hk8RvSSdnwytl7iIy1+VcppA4PP9Tt2BDk=;
-        b=qNcW8nj0/pDdjrHX+ELCleXyhNSH46+yVTvIwKXf0KEsO2lrNq/+t7BLtAJv/5kwUi
-         2AQLV5DG6nqODb54KYJ2Hhy8HyGJBZMXduXpgQLzeebEeIcn11k5EsbWxNYcGPXBaT1+
-         /qweihLG7noAHfK+Zx5EEGn0ruWcXq/Gj/S2WSYYG/9cAsBnCCVbDo0GQ6tr6T6jIO6M
-         OeOdtj4ZPY+H89quivLjIZrF0JngYycSDR0/nPJVKUYp/eeTnJbocj21+VpbAezcSeJb
-         3sQPtmZy9+wwtqCXvsR5dE5N64+9dWM26DJ4nK/0tsdNaizI0KONqxKZScMTirDGCpdM
-         wpaQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1790272822; x=1790877622;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=yIrEACM/1hk8RvSSdnwytl7iIy1+VcppA4PP9Tt2BDk=;
-        b=E37ISBzSi0ziPMZWsEnSH/dCGwpHYV6O5XJa3G3+90uoizz7c3rFD1KLpfG2wkFFHe
-         8wlXodNX5pAqFF0L4HVZJIsmo5I2BwVrg4zct92C43fyWWOAdsCCTJlzEavgGTMbOayS
-         bgZfBPiqm+m3fOdNOqOBvnkJ6L5AK901YP6oOv3FFbHDF8SMD5f/q8aDMTGP/4EQjOlB
-         NbtEwYJ89p2ATITmJmyCM4TW4DWYB2WIQsr7aH/UUQEJFYcrneA7FtrPUfGhaPw6EbT5
-         tD8B3DLvapusLB2WY494g7H2RbSxgababDA+gAcA8tb+cK3AbS0OTbHSIOfKoAPQyLYX
-         Z9kA==
-X-Forwarded-Encrypted: i=1; AKwUvByrKJYVn65XrMbX3iu8xlPM60Zuwi66EI4RnXU4ObOB6c7WN1XzUw4A0nJSietVn5mGzZ/RDn1KmRiGxl8s96mL@vger.kernel.org
-X-Gm-Message-State: AFuF++lh72HV62lZeU/2Yz/2y69krbV18JZWwWuQhQ3c6oRzMozaGgnJ
-	BVQmaL2Q5/XklMqSJqnn6MPhLQtVp6aHcotTbQrfQwIIenqIPZ8CQAisr5m3T7/QOcyaXKzwg1I
-	8ZBSoA0E=
-X-Gm-Gg: AYBFou2UWMObp71LHYsKDFXKetL/46PshId3Mbtw6fq7/Mc/gBQ3uOyDqueIDdunwba
-	iOFy6crOzb4mXGJaK83VKOOS53fiO0E486GxQQCfToLE+tbBXV4oi7ble1sjW3uofaaFxwENV4J
-	mGcIVq08K/InbHM/AOu1ZSPOhlxrS6BYgATKCNz/Zrf6CSBygMAGe7rlhUNWgqOPvT85keYFdX6
-	QBtCD/ooaczKSnRF1IKVrNZYTNsmXox11T4QnNOS08HJDEkxIvqAe92zrE/KECZ19FEUdndgOay
-	tGr84nXiXkQAJ52p1ZTU0b4KDNnyMjyihsmjO+cOZ6PsAJUBaBABqzkzycWp+z1Z7rgxhACVKtf
-	KI3/Ei5chHt6wg57/enAmud34ZJS66fZbtLGO+mf5wV0j0UOxBwlun3/n1DYqxwefomjLhfmNzY
-	6FJt0hC6GJ+JhLSdX7B1jmsBDX33EvcGRX6dh2EvtNrqEzRwZI9hRLKUS3WPfGhqHsDIJQmynMb
-	ueohyECyhPd1hy/hXAj1Uj1Gy9fojktXU3l3pyr88PCcIha0eD1BBM=
-X-Received: by 2002:ac8:5a46:0:b0:530:e682:87c with SMTP id d75a77b69052e-5330b6df434mr78501cf.33.1790272821894;
-        Thu, 24 Sep 2026 11:00:21 -0700 (PDT)
-Received: from gourry-fedora-PF4VCD3F (pool-173-79-60-52.washdc.fios.verizon.net. [173.79.60.52])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-532eb38d347sm47450101cf.25.2026.09.24.11.00.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 24 Sep 2026 11:00:21 -0700 (PDT)
-Date: Thu, 24 Sep 2026 14:00:18 -0400
-From: Gregory Price <gourry@gourry.net>
-To: "Lorenzo Stoakes (ARM)" <ljs@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>, 
-	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, linux-usb@vger.kernel.org, 
-	linux-rdma@vger.kernel.org, selinux@vger.kernel.org, linux-sound@vger.kernel.org, 
-	bpf@vger.kernel.org, linux-scsi@vger.kernel.org, linux-fbdev@vger.kernel.org, 
-	dri-devel@lists.freedesktop.org, linux-trace-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, linux-arch@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, linuxppc-dev@lists.ozlabs.org, 
-	kvm@vger.kernel.org, kvm-riscv@lists.infradead.org, linux-riscv@lists.infradead.org, 
-	linux-s390@vger.kernel.org, sparclinux@vger.kernel.org, fuse-devel@lists.linux.dev
-Subject: Re: [PATCH v3 05/40] mm/vma: ensure mmap_prepare doesn't set actions
- on a mergeable vma
-Message-ID: <arVkwC_wNoTLjRYf@gourry-fedora-PF4VCD3F>
-References: <20260917-b4-mmap-prepare-vma-flag-sanify-v3-0-4583d8a23bca@kernel.org>
- <20260917-b4-mmap-prepare-vma-flag-sanify-v3-5-4583d8a23bca@kernel.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jEPI82TS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 621381F000FF;
+	Thu, 24 Sep 2026 18:03:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1790273018;
+	bh=71px8qpq71xNX9a+eRwyGbRICfaSUVHKXe3pTEwOTuo=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=jEPI82TST6TfKkt+os+JmZrkPleg68Fabps7GGpTpENY8It9JFa9BAHBIqSZaoFTp
+	 YUFVmODrO+/5/ZQdAGyduT8dN8D5qhnhXA+CZcxI6MSHN/91CO/lmZnagdbvk/kwc6
+	 TblgJSoo196ME4xA6l0ro56UL0trzc6KN4ddpzrYiZ+SruCdrd6Pb/fn7jTCs4DFq8
+	 tH18FlI5zLyREJm7S6tHfnu7iveqUEZ8oMgtwXchSyVuBY0IWc5eXhkp1dySK32uKf
+	 9mlKeAqUmaZKN/uvceUUYb2kwB34ON3NKNyjvtK28neZSqYME1W9yRO0HblPs3ZoJa
+	 BwLHRbypR1cLA==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v9 18/22] perf: arm_pmuv3: Handle IRQs for Partitioned
+ PMU guest counters
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Colton Lewis" <coltonlewis@google.com>
+Cc: kvmarm@lists.linux.dev, linux-perf-users@vger.kernel.org, kvm@vger.kernel.org, "Oliver
+ Upton" <oupton@kernel.org>, "Marc Zyngier" <maz@kernel.org>
+In-Reply-To: <20260924172928.2110956-19-coltonlewis@google.com>
+References: <20260924172928.2110956-1-coltonlewis@google.com>
+ <20260924172928.2110956-19-coltonlewis@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Thu, 24 Sep 2026 18:03:37 +0000
+Message-Id: <20260924180338.621381F000FF@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260917-b4-mmap-prepare-vma-flag-sanify-v3-5-4583d8a23bca@kernel.org>
 
-On Thu, Sep 17, 2026 at 05:22:14PM +0100, Lorenzo Stoakes (ARM) wrote:
-> When a user requests an mmap_action be performed in mmap_prepare, this
-> involves populating the VMA range with data.
-> 
-> However, if the VMA is mergeable, it might then mistakenly be merged with
-> another VMA without having populated the range.
-> 
-> Every mmap action currently available sets VMA flags such that the VMA
-> cannot be merged.
-> 
-> However, to ensure that no future mmap action falls foul of this, assert
-> that this is the case upon mmap_prepare validation.
-> 
-> Signed-off-by: Lorenzo Stoakes (ARM) <ljs@kernel.org>
-> ---
->  mm/vma.c | 9 +++++++++
->  1 file changed, 9 insertions(+)
-> 
-> diff --git a/mm/vma.c b/mm/vma.c
-> index d6ed10cefc8f..62f2ce1ad5a1 100644
-> --- a/mm/vma.c
-> +++ b/mm/vma.c
-> @@ -2809,6 +2809,15 @@ static int mmap_validate(unsigned long prev_start, unsigned long prev_end,
->  int mmap_prepare_validate(const struct vm_area_desc *prev_desc,
->  			  const struct vm_area_desc *desc)
->  {
-> +	/*
-> +	 * It is not valid to execute mmap actions for VMAs which can be merged,
-> +	 * as any such merge would leave portions of the mapping incorrectly
-> +	 * unmapped.
-> +	 */
-> +	if (vma_flags_can_merge(&desc->vma_flags) &&
-> +	    WARN_ON_ONCE(desc->action.type != MMAP_NOTHING))
-> +		return -EINVAL;
-> +
+> Because ARM hardware is not yet capable of direct PPI injection into
+> guests, guest counters trigger physical PMU interrupts that must be
+> handled by the host PMU interrupt handler.
+>=20
+> In armv8pmu_handle_irq(), clear the overflow flags in hardware for host
+> counters, restrict host perf event handling to bits in cpuc->cntr_mask,
+> and pass the overflow flags to kvm_pmu_handle_guest_irq(). The KVM hook
+> clears the guest counter overflow flags in hardware and records them in
+> the running vCPU's virtual PMOVSSET_EL0 register for subsequent guest
+> interrupt injection.
+>=20
+> Additionally, provide kvm_pmu_host_start() and kvm_pmu_host_stop() so
+> that armv8pmu_start() and armv8pmu_stop() toggle MDCR_EL2.HPME rather
+> than PMCR_EL0.E when a partitioned guest's PMU state is loaded on the
+> CPU.
+>=20
+> Signed-off-by: Colton Lewis <coltonlewis@google.com>
 
-If you wanted to make this unit-testable, you could pull it out into a
-separate function:
+Sashiko has reviewed this patch and found no issues. It looks great!
 
-static bool mmap_action_is_valid(const struct vm_area_desc *desc)
-{
-	return desc->action.type == MMAP_NOTHING ||
-		!vma_flags_can_merge(&desc->vma_flags);
-}
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260924172928.2110=
+956-1-coltonlewis@google.com?part=3D18
 
-then write:
-
-if (WARN_ON_ONCE(!mmap_action_is_valid(desc)))
-	return -EINVAL;
-
-And you can write a unit test directly against mmap_action_is_valid
-
-otherwise
-
-Reviewed-by: Gregory Price (Meta) <gourry@gourry.net>
