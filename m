@@ -1,95 +1,98 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40FDF3242BD;
-	Thu, 24 Sep 2026 01:31:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 90DA2332EB1;
+	Thu, 24 Sep 2026 02:18:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790213508; cv=none; b=pNxUm9Zqs+Tc84LXNBJsNilNrRGwPYYb2AnJb2cV+/bROyM1QaRiKzPfIPKMm1uAPCPqzxhJpApiVuUD+zny0Y0eWRR2MnfvrvF7TD2m/IJIqEij2aVib+HkJ3wxHC5gZX1xOZzSBQ3YJAKMHdIXpf9QsKpzqS3U0srwt+/asNI=
+	t=1790216288; cv=none; b=Afnoa3WTi3CkbCWZps3BLt2VDiQmWnucdsrm+EMYrNHniw8V2fD15pWTpDVvMGtLUYRV3V/nBpXMVT2MBO4kmzhMGG0244l4PcX5NQK2bE8BhH/D7IaXc3W0G1LMC5zkKgraM/0sDnrjUhpXmAU+RCRHCvKpDMGCBpR6b6XINn8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790213508; c=relaxed/simple;
-	bh=AfbUml1zJZuQ7JQDHXkKhPCakS6f3z7l1oMwGfmQH8w=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=CwDghJxuCRqqHtlL8oaxydnHvommFG5ZAyZ3f9nBXJngqJ2k8hMTIYzdefvlz3Ujsj3y8IJz+8/ZwiEBvUjS53FBQTxxI2RfxbR3uJokKoONP+Vb3bKLTuCTd55WNTDoLMC/y/zy+faMlkSYRPjL60VbWdFzCMWArNsS/+fRUFU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CgtzvATJ; arc=none smtp.client-ip=100.103.45.18
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CgtzvATJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C9E9F1F000FF;
-	Thu, 24 Sep 2026 01:31:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1790213506;
-	bh=VuGY/Y4MYw5Lk44aMfqov/6Tvy5hvDKuLf8QBS3Ct+E=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References;
-	b=CgtzvATJ8hrijhakctAOEKQonRdEqfGNIX4T10dnY0tszwSl7UtIb3O90PE1k3h9+
-	 vpIxzLi0tlhs632g8SGvZe7MTRl5MHgEVYwmT9qjrPnIx3OEziMQngAfZsR9+iscEx
-	 KilQmaZxjVBCNJiQrTNUzkalNR3kZMVBRavdIksd7xZqvZT4IPaiM+GmZ1aQCK1vr8
-	 xu/0mBkSfGgcZR3b02udLurUOwa3SpvZNn3/hy+XtBLego51MSNVNQuUWxsDjRWMZ/
-	 DImLrOAVfaOoIA0HjrjG7m2iB2VeVERW5rZSQXdA3IUJUerm2mO7cpjcz2y2HDwJwr
-	 BZ7d2NmoFfJog==
-Date: Thu, 24 Sep 2026 10:31:40 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Sean Christopherson <seanjc@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, "Masami Hiramatsu (Google)"
- <mhiramat@kernel.org>, Steven Rostedt <rostedt@goodmis.org>, Ingo Molnar
- <mingo@kernel.org>, Jinchao Wang <wangjinchao600@gmail.com>, Mathieu
- Desnoyers <mathieu.desnoyers@efficios.com>, Thomas Gleixner
- <tglx@linutronix.de>, Borislav Petkov <bp@alien8.de>, Dave Hansen
- <dave.hansen@linux.intel.com>, "H . Peter Anvin" <hpa@zytor.com>, Alexander
- Shishkin <alexander.shishkin@linux.intel.com>, Ian Rogers
- <irogers@google.com>, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-perf-users@vger.kernel.org, x86@kernel.org, Paolo Bonzini
- <pbonzini@redhat.com>, kvm@vger.kernel.org
-Subject: Re: [PATCH v17 02/13] perf/x86, KVM: Prevent host debug register
- leak into guest OS on NMI
-Message-Id: <20260924103140.0a40bb18812cbb913be5e662@kernel.org>
-In-Reply-To: <arPjK1-PVp_UqAsQ@google.com>
-References: <179005108298.388919.4535333252892590932.stgit@devnote2>
-	<179005110742.388919.1509641807739909065.stgit@devnote2>
-	<20260923085139.GV776954@noisy.programming.kicks-ass.net>
-	<arPjK1-PVp_UqAsQ@google.com>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1790216288; c=relaxed/simple;
+	bh=LR0Lznm2V+DejXrByG4ku78oGOi+EM4DXA1XZt0mE2o=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=KmzBYJITSVc7wUmrvmd2TTHHEgp/FGW0IS+5lLxBRXELTfIf+kGg6nOKsNWwYX7aX/Qu6pLFqMyeh587qrgwfwh9273p0MvhNr7PMZMLSvX2xyg04xl7WZXcpDuCLW/HbDfKUykZoAvPnxwc5nBb0hykOBdpRYNSnwOwa32tbqg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [123.138.236.242])
+	by gateway (Coremail) with SMTP id _____8BxLNJWiLRqkEsPAA--.44825S3;
+	Thu, 24 Sep 2026 10:17:58 +0800 (CST)
+Received: from linux.localdomain (unknown [123.138.236.242])
+	by front1 (Coremail) with SMTP id qMiowJDxTs9ViLRqY4AkAA--.12023S2;
+	Thu, 24 Sep 2026 10:17:57 +0800 (CST)
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
+To: Huacai Chen <chenhuacai@kernel.org>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>
+Cc: loongarch@lists.linux.dev,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v1] perf loongarch: Fix discarded const qualifier in _get_field()
+Date: Thu, 24 Sep 2026 10:17:56 +0800
+Message-ID: <20260924021756.22433-1-yangtiezhu@loongson.cn>
+X-Mailer: git-send-email 2.42.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowJDxTs9ViLRqY4AkAA--.12023S2
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBj93XoW7ZFWxCry8XF1UKryfAw1kJFc_yoW8XFWUpa
+	9xCwsrt3y8Wr1fGw1UZryIgFW5WrWxGa4Sva12yFWjyan8W343XFWFq3sxKFy2gw1UJrsY
+	vr15Ww1vqF48AwcCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUkjb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+	Gr0_Gr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx1l5I
+	8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r106r15McIj6I8E87Iv67AK
+	xVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2Ij64
+	vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8G
+	jcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE2I
+	x0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK
+	8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I
+	0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07jUsqXUUUUU=
 
-On Wed, 23 Sep 2026 07:33:15 -0700
-Sean Christopherson <seanjc@google.com> wrote:
+When building perf on LoongArch, the following compilation errors occur:
 
-> On Wed, Sep 23, 2026, Peter Zijlstra wrote:
-> > On Tue, Sep 22, 2026 at 01:25:07PM +0900, Masami Hiramatsu (Google) wrote:
-> > > From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> > > 
-> > > When KVM enters a guest OS, host hardware breakpoints are disabled
-> > > before running the guest. However, an NMI can occur while executing
-> > > in guest mode or during guest transition, where
-> > > arch_install_hw_breakpoint() can be invoked from NMI context.
-> > 
-> > How? AFAICT perf doesn't do that. arch_install_hw_breakpoint() is called
-> > through pmu::add() which is strictly IPI context.
-> 
-> I assume it's:
-> 
->   kgdb_nmi_handler()
->   |
->   -> kgdb_nmicallin()
->      |
->      -> kgdb_cpu_enter()
->         |
->         -> arch_kgdb_ops.correct_hw_break()
->            |
->            -> kgdb_correct_hw_break()
->               |
->               -> arch_install_hw_breakpoint()
+  CC      arch/loongarch/util/header.o
+arch/loongarch/util/header.c: In function '_get_field':
+arch/loongarch/util/header.c:31:15: error: assignment discards 'const' qualifier from pointer target type [-Werror=discarded-qualifiers]
+   31 |         line2 = strrchr(line, ' ');
+      |               ^
+arch/loongarch/util/header.c:36:12: error: assignment discards 'const' qualifier from pointer target type [-Werror=discarded-qualifiers]
+   36 |         nl = strrchr(line, '\n');
+      |            ^
+cc1: all warnings being treated as errors
 
-Yes, it is done by KGDB. perf has no problem with it.
+Declare 'line2' and 'nl' as const char * to ensure type safety. In modern
+glibc versions, strrchr() returns a 'const char *' if the input string is
+const.
 
-Thank you,
+This is similar to commit 7378b6656aa4 ("perf riscv: Fix discarded const
+qualifier in _get_field()").
 
+Fixes: 492ac37fa38f ("perf kvm: Add kvm-stat for loongarch64")
+Cc: stable@vger.kernel.org
+Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+---
+ tools/perf/arch/loongarch/util/header.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/tools/perf/arch/loongarch/util/header.c b/tools/perf/arch/loongarch/util/header.c
+index 0c6d823334a2..46f53a74f71e 100644
+--- a/tools/perf/arch/loongarch/util/header.c
++++ b/tools/perf/arch/loongarch/util/header.c
+@@ -26,7 +26,7 @@
+ 
+ static char *_get_field(const char *line)
+ {
+-	char *line2, *nl;
++	const char *line2, *nl;
+ 
+ 	line2 = strrchr(line, ' ');
+ 	if (!line2)
 -- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+2.42.0
+
