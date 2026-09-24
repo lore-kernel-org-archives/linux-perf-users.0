@@ -1,69 +1,108 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1FFA4028E8
-	for <linux-perf-users@vger.kernel.org>; Thu, 24 Sep 2026 21:37:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB3273E3C4D;
+	Thu, 24 Sep 2026 22:23:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790285856; cv=none; b=VasHcvVxYj9g9gfJ+SfmYghqQQrUg1bRlhamzqIWUiPRhrQHMR9fhDTFJ0091yPcYhQynYSBynHpTghZY+xBi2uCZjRI34HCeSoYvQu5H+Z5AorRfaxykZe2jgQb+D8AbR0o+6+mUXBL4TBuGEI7+LAEzuYum9Ec5wMaSipyLv8=
+	t=1790288639; cv=none; b=lUCqgM6p24nYJKyLqzBf85DXGPaIk2yLoVs+Lgpurwm9831wa1y5uxZiAzEryM5C/RfYL5KwmRvffpfTXUEMc06IZRR3lFjTC4Un0j0HrOTmmGOfUDTBHWsmqspQkKtW4Tci18so+IuFn3+k2u8dzkrLBiopZ5Zwdir5UjArPso=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790285856; c=relaxed/simple;
-	bh=BHIT508pD7hlFr1l2FD+ijR/jhc1tg9U0ZFE5XFdqkk=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=h/YHTlANAdoB8P+KE0/njFXHt1620p0dK2WeDEKZeNquiaheyPUuA9HoxraXEzaos7EHaKESK8OfLzcnHE242r0hLrbqnObWCCUu5VLMRzN/Qv1Eznai4FVaiIcZZ4kpA6l5Wc8Gt8Vpn1idgWN1Rnm2VHVlENhcQdhLepTU2MU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eF2V+8Iy; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1790288639; c=relaxed/simple;
+	bh=GvXJcrx5hEkH522u9IqRx1VeyoDbbrISSaRKA1saxlY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=cUw6gLPEgIE6+3HVkQ9JjUVDt93iu4frpMafU6T4hCmRKyKY0/lgrGQ3liCr23+NcmIJi4Ut0PPDZn/pUSbGhBdCeirVulEHy2SvPA40bDdof9NZRrEDE3PQ3jcxR+kfjFVvW0Hjin3FMCuD4/dLwxNMsBXLld+yMmI1SnSlnpA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YcuIf8tI; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eF2V+8Iy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 12FC01F000FF;
-	Thu, 24 Sep 2026 21:37:35 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YcuIf8tI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7E74A1F000FF;
+	Thu, 24 Sep 2026 22:23:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1790285855;
-	bh=LNXiw6bXPFwt7n7BbeJABVyIU/YcH6pcdKEQZywHnOk=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=eF2V+8Iyz0ifgD6eAjpnzr4OBi9R8vF1XDe4asprmmSrPZbnL3IbefqH9LXh8N7Hn
-	 4gyQRpMMLFLl8UcuETYtNY0FX0inUowV8o9yGtSXmg8Ja0kzpigNAfXz0ql8Ee/HXK
-	 L9urEkv2azZDFaewT+UyGd8hlU5D72a3YOkYu1uohAo48qszcAgG/0QePXIIrKk2b8
-	 DF408ribDI1bBR3dQ7uSZ60+R3bZBRf27UNbZCP3ysYzOPBbD7u9Jwm1F25dirOIkW
-	 AN/uxuVleI588DqOof1dZAlRY4qFNVI2w7Iy4D/AZn5EV+8KPQS6hD4b/+G4JT3frm
-	 FwuzuEQ+jSogA==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v4 5/6] perf mem record: Request PERF_SAMPLE_CPU by
- default
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Arnaldo Carvalho de Melo" <acme@kernel.org>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260924212809.1733663-6-acme@kernel.org>
-References: <20260924212809.1733663-1-acme@kernel.org>
- <20260924212809.1733663-6-acme@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Thu, 24 Sep 2026 21:37:34 +0000
-Message-Id: <20260924213735.12FC01F000FF@smtp.kernel.org>
+	s=k20260515; t=1790288638;
+	bh=7qJWCS5Hq9un6OGBq9ROfEsRpqya9OZTfQ/7XPK3XXs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=YcuIf8tIoU7Vsd3QHBLc7+M5r+ITmg5uX5N0WaC7q4NHbLUfGejNR1yAejZnIdToG
+	 9dP0jeChAV75MMRHOVpwO+Gi/Q2Hlk1k4zEOWvJB79Y1AlsV7fJdNIGw9McYsjyZXG
+	 6HpQ4e59HFq2UxnYXuA1Gjc+H1zMY+ITB42Ivob0cvOfCPROChY23RfvqZjiG4o29a
+	 EMvMBKg+XdBR/b1P8Ls+ajOKjwpQsnccVmcx1EtBsvw/WpNz5nKNqVONB0XCjnJoJO
+	 fkBAGnZO/gTuwLeghob17txLlmyQ1ubTFziVSwII75fXt15WI5ZKKIpnV4UxXxhNU1
+	 X0aegOyVlXcsg==
+Date: Thu, 24 Sep 2026 15:23:57 -0700
+From: Namhyung Kim <namhyung@kernel.org>
+To: Christian Melendez <chrismelnu@gmail.com>
+Cc: acme@kernel.org, irogers@google.com, jolsa@kernel.org,
+	peterz@infradead.org, linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] perf stat: document task-clock/cpu-clock in TIMINGS
+Message-ID: <arWi_dY4y15J2rqh@google.com>
+References: <CAP-5=fV0-yvc68BUSKoSajHjHY_A6COgbEJYiFxRg+G-8LeJhQ@mail.gmail.com>
+ <20260923135140.386033-1-chrismelnu@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20260923135140.386033-1-chrismelnu@gmail.com>
 
-> From: Arnaldo Carvalho de Melo <acme@redhat.com>
->=20
-> The data type profiling per-sample stream keys cross-CPU contention on
-> sample->cpu, which without PERF_SAMPLE_CPU is the "no CPU info"
-> sentinel, making same-instance accesses from different cores
-> indistinguishable from same-CPU traffic.  'perf mem record' already
-> passes -d and -W to the record parser, add --sample-cpu and document it
-> in perf-mem(1).
->=20
-> Also grow rec_argv: the new entry overflows it on PMUs with separate
-> load and store events, as the space for the fixed arguments was not
-> reserved.
->=20
-> Assisted-by: LLM
-> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Hello,
 
-Sashiko has reviewed this patch and found no issues. It looks great!
+On Wed, Sep 23, 2026 at 03:51:40PM +0200, Christian Melendez wrote:
+> task-clock/cpu-clock appear in perf stat's own example output but
+> were never explained in perf-stat.txt, unlike time elapsed/user/sys.
+> This came up unanswered on the list in 2013 and 2015 without docs
+> ever being added.
+> 
+> Link: https://patch.msgid.link/CAP-5=fV0-yvc68BUSKoSajHjHY_A6COgbEJYiFxRg+G-8LeJhQ@mail.gmail.com
+> Signed-off-by: Christian Melendez <chrismelnu@gmail.com>
+> ---
+>  tools/perf/Documentation/perf-stat.txt | 12 +++++++++++-
+>  1 file changed, 11 insertions(+), 1 deletion(-)
+> 
+> diff --git a/tools/perf/Documentation/perf-stat.txt b/tools/perf/Documentation/perf-stat.txt
+> index f334aabdc809..c0d6c344f9eb 100644
+> --- a/tools/perf/Documentation/perf-stat.txt
+> +++ b/tools/perf/Documentation/perf-stat.txt
+> @@ -621,6 +621,16 @@ user/system lands:
+>  
+>  Those times are the very same as displayed by the 'time' tool.
+>  
+> +We also display a clock-based timing metric that depends on the
+> +target being monitored:
+> +
+> +        83723.452481      task-clock:u (msec)       #    1.004 CPUs utilized
 
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260924212809.1733=
-663-1-acme@kernel.org?part=3D5
+I'm afraid task-clock and any other software events don't support
+privilege filters or modifiers.  So task-clock:u would be same as
+task-clock, but it can give a wrong idea that it only measured time
+in userspace.
 
+Maybe the kernel can reject ones with modifiers but then it would have
+a compatibility issue. :(
+
+So I think it's better to remove the ":u" modifier in the example
+output.  Probably we need to change the perf not to add it to the
+software events.
+
+Thanks,
+Namhyung
+
+> +
+> +For a single task, task-clock reports a clock count specific to that
+> +task. When the target is a CPU or the whole system (-a or -C),
+> +cpu-clock is reported instead. cpu-clock is a high-resolution per-CPU
+> +timer. See perf_event_open(2) for more details.
+> +
+>  CSV FORMAT
+>  ----------
+>  
+> @@ -671,4 +681,4 @@ that can be used for parsing.
+>  
+>  SEE ALSO
+>  --------
+> -linkperf:perf-top[1], linkperf:perf-list[1]
+> +linkperf:perf-top[1], linkperf:perf-list[1], perf_event_open(2)
+> -- 
+> 2.34.1
+> 
