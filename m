@@ -1,67 +1,69 @@
-Received: from mail-dy1-f199.google.com (mail-dy1-f199.google.com [74.125.82.199])
+Received: from mail-dl1-f72.google.com (mail-dl1-f72.google.com [74.125.82.72])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68D6E37EFE2
-	for <linux-perf-users@vger.kernel.org>; Thu, 24 Sep 2026 17:03:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E65D3C1412
+	for <linux-perf-users@vger.kernel.org>; Thu, 24 Sep 2026 17:04:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790269441; cv=none; b=N4vb+gpX0CHzRT4wlqytmOToeXFiSFVKn9GAKScTxJMKDfkUBCzpj00s/XZiOFFnMNOGn/YiAmFSYwGfGB0UKzMMQy1Ei1cFMkxsEUtLb4z1hfman7AKyMHpst2uYQ5oU2Kk7rG5K47DC1zuXlG/Figs0/dACqmtxe8AkX01x8I=
+	t=1790269443; cv=none; b=Qb/k/KtHLtg9/xi5mu32mCf0AOcr64A/TT8qd0jIEVocMYZAdzmAFNRtYr19jJ6t+c8Cy9s9C0rOqCfkfHvRQstPFoqQ3DlZoN5yUvf0h24FHJmBuVlLGZpXe17QKUjJYsMiD6YBptGV72hnfB2kgf75QR9/EUssK0/yVtgViFs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790269441; c=relaxed/simple;
-	bh=4SoFhzVw/94tqvtflu+Tj1a78SUgPAk/QO2ub5Qe2cw=;
+	s=arc-20240116; t=1790269443; c=relaxed/simple;
+	bh=fASlFs88RC50PCMAvHNVJ+6yau7XJ1K/7bEmTYvI9ZE=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=WESPtt+QJQ7uKGhvPyCRsWliHCybPAeLFLy0ritl1zH7ao7K2uhBSIJwcdvW1S6OKgG7tesVZQsEamp/y9BCxGSDMkgTqlh3Azn/qX3GZ2D9O/T18hgB8bx0BdJAT9ZeWDFswvnbpNY4bHXV0DIA/5gl/a6RL68dxYyqak4nuFc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=f5PzefRV; arc=none smtp.client-ip=74.125.82.199
+	 To:Cc:Content-Type; b=gbNIf2o3m5WzoVk3sHHl/J4U83M4MAWvOcNRJLYQX2sqIv2PcOidAbKi+BROtxNIgvUhLfsFzVUV6hdy2ZVNM9lltp1ryITf3Xy+/NE6Y2gtUbq9MlXaZgcYtBMQQSEDI6OyzyGUcl8km+uvh09tUwpjvRA0yZit0/YTWgKAMYA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=UkokQ2Qv; arc=none smtp.client-ip=74.125.82.72
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="f5PzefRV"
-Received: by mail-dy1-f199.google.com with SMTP id 5a478bee46e88-33310847fcaso4088965eec.1
-        for <linux-perf-users@vger.kernel.org>; Thu, 24 Sep 2026 10:03:59 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="UkokQ2Qv"
+Received: by mail-dl1-f72.google.com with SMTP id a92af1059eb24-144f706e063so1028460c88.0
+        for <linux-perf-users@vger.kernel.org>; Thu, 24 Sep 2026 10:04:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1790269438; x=1790874238; darn=vger.kernel.org;
-        h=content-type:cc:to:from:subject:message-id:references:mime-version
-         :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=cyXAOukuVR4PO1yjp7Vd0Zlf5j4zZeUYttuhWOvgjiE=;
-        b=f5PzefRVcfcYBHgaMMbp9bgFk3SVqtuPZLAzUimB7ZhGOxIr8MEdfNUREtJTJ09URo
-         eMBRbXD2coICtVwQ3JLDCKdGrGh4Hn560aCxdpgx8qttN+FzX2v9TfQaWkTrfVeR9Jkq
-         nlqSSjHl2U8JFlRxQX2lCKPN295Y54u3ZHTJCfjxlDNHImPn9FyouWrbfrJiD5SrtUWm
-         dBpGJ3ORqpUpHgJAl7YCU+xX1OynICkbhICgpL1Ce/2RnPe+2n4YGsnHUiVBlenP1gef
-         lFHYU6YWJKS//jqp4UQjuBdyGGZwzkgGebl+NA0N5x85ztUaS5SO1NfwcoyoEh0B8l3E
-         Y4Dg==
+        d=google.com; s=20251104; t=1790269440; x=1790874240; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:cc:to:from:subject
+         :message-id:references:mime-version:in-reply-to:date:from:to:cc
+         :subject:date:message-id:reply-to:content-type;
+        bh=kcfc/gG72nL4NrMskhYTxVcUTH3LHf0qieM/kAC6wno=;
+        b=UkokQ2QvOE50OzDWHq/huAg0UkHQZShPBaEuKzg1WVrC+q0//n+iwEEqGL7Vt/YpB4
+         l/XXr260YeVf+uhx83GMnmVhYQy8/7VBDocFBT16CGeTh0Dd/1QXFkrCHbtFjVpD1MAI
+         a4oI1BjdZL5bWxvO2BPqo6jMI3AHrq4nzTVpMSNc4zwD+2GnzITfxsd29LivJnBDGbby
+         5YTo9wW1ruG6OZJm20PcIBnNJ+hgMmFnurXJl2IShQtUFPKrhFFM/tGN+yFjS1mDiNpO
+         wMEus3S2iNdadYaWVe/91vaMRMqD/5cyqaGWvMYdo9Tyfc9OGZnkbRMpEdub0KCk9iLA
+         o7KQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1790269438; x=1790874238;
-        h=content-type:cc:to:from:subject:message-id:references:mime-version
-         :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=cyXAOukuVR4PO1yjp7Vd0Zlf5j4zZeUYttuhWOvgjiE=;
-        b=X1T//GWgdbglnN3SqwjkFw+5mHOqLq87jlSzc7t2WJrZKOhBv9mPjTdE0bBQxk1b5E
-         uZgqiVd4lZgYSabSj0xxB3p81rpzvhuIcU5nA+dRdzFjyOlhIXt2cadUqG1Q2AIsr5w1
-         OyZZ81byCA1+q8c2/caXyVsfhB2hFBAm1fqe12BBykffLFYlYiuimdSxk8LEaeM7QEUa
-         ohi4kN4SYEemDGde60y3gULEiwPqav91mrodJHR6/RBNCxdLuPE52SLKxfxDzCCPhyip
-         KaZfqNsB4JUA7Ff/r3OG9PSeuk0NukzDVsYdC++VONs5O75rVHnNyb1HTM5J7l7cv2c2
-         Nu+w==
-X-Forwarded-Encrypted: i=1; AKwUvByuUyjT1earlzUOE90aGmQaXghaD/TI445u6CmXdyBYWTuDUWGcrv/SaiV1ofvstXWl8chMQmhrsxc0PcmZtTDo@vger.kernel.org
-X-Gm-Message-State: AFuF++nabpksIpnd2vRwluQnDkP7PPnsT5WLzeQXFqmn/KmQ98yOhOxH
-	AHo1RON2VHNhhQePAsVfqBm2HpTiXb7mQmyUcmJY46y5dJ/BlEJgsbiYfbBijak3z4YYc78YgpZ
-	3V4ve94yGEQ==
-X-Received: from dlj31.prod.google.com ([2002:a05:7022:51f:b0:144:fbc3:1059])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:98f:b0:143:298e:459e
- with SMTP id a92af1059eb24-14503fd98bfmr3578370c88.41.1790269437794; Thu, 24
- Sep 2026 10:03:57 -0700 (PDT)
-Date: Thu, 24 Sep 2026 10:03:20 -0700
-In-Reply-To: <20260924053645.3555041-1-irogers@google.com>
+        d=1e100.net; s=20260707; t=1790269440; x=1790874240;
+        h=content-transfer-encoding:content-type:cc:to:from:subject
+         :message-id:references:mime-version:in-reply-to:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=kcfc/gG72nL4NrMskhYTxVcUTH3LHf0qieM/kAC6wno=;
+        b=ISktBqhGMhPmAPkxd0ypnQv/VDjnKkpIvNOCoPp9mDa3fcwUAf8F5tMX3B4IoH2CkN
+         tTWEfzORSz5dWc/+aRyGfhIHzvRSPjLtupHMf3EPsdSS0Bx1MyOo9KkXB7zZEkt2Ss3i
+         izFinuoHRzxh94oMzxyPTu0Zji4RsKa48NbPyqLI4/L4bECdsNeW7mqYRj/G2cdlebwX
+         VD3APWLQxuhQPbkoQ7TMpLnFQxE7W148iYPSgAzyUTTaBGKH/+P0aMU58W462IsElHKl
+         MD7dUHL1FY8t+lsFIGRPQtKvbHsnYQ6eFoPMBX5y4bNbtQricACbTYFRSxbN4jE55bIK
+         SlJQ==
+X-Forwarded-Encrypted: i=1; AKwUvBwIWJlqNZ2Y1nFIEd8mGlas8GBo2DcC8ZdvJTEJ1T4PkV/OFxBXDqhIS3ckHsSKD0+UfapDYnTie8KIMMK8mYe9@vger.kernel.org
+X-Gm-Message-State: AFuF++mvSvYVndWxwIIWGf3wmwt8Kv5tuq7kbhkppaW4u6Y7w+htRV/y
+	43amiyCypBOnQb6ZOzrnDFaNe44c5Twyz0W14HlitXSlBgYO+Dr7MtoNu27tgUGlz20N1k7gz2l
+	A6vZOiAhnXg==
+X-Received: from dlev1.prod.google.com ([2002:a05:701b:4641:b0:143:9538:71e7])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:701b:4211:20b0:143:3769:c680
+ with SMTP id a92af1059eb24-145040c4349mr2457855c88.25.1790269440047; Thu, 24
+ Sep 2026 10:04:00 -0700 (PDT)
+Date: Thu, 24 Sep 2026 10:03:21 -0700
+In-Reply-To: <20260924170346.3872848-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-References: <20260924053645.3555041-1-irogers@google.com>
+References: <20260924053645.3555041-1-irogers@google.com> <20260924170346.3872848-1-irogers@google.com>
 X-Mailer: git-send-email 2.56.0.rc1.315.gc6ed9934b7-goog
-Message-ID: <20260924170346.3872848-1-irogers@google.com>
-Subject: [PATCH v2 00/26] perf vendor events intel: update
+Message-ID: <20260924170346.3872848-2-irogers@google.com>
+Subject: [PATCH v2 01/26] perf vendor events intel: Update alderlake events
+ from 1.40 to 1.41
 From: Ian Rogers <irogers@google.com>
 To: irogers@google.com, acme@kernel.org, dapeng1.mi@linux.intel.com, 
 	namhyung@kernel.org, edward.baker@intel.com, perry.taylor@intel.com, 
@@ -71,154 +73,191 @@ Cc: adrian.hunter@intel.com, afaerber@suse.de, ctshao@google.com,
 	linux-perf-users@vger.kernel.org, mani@kernel.org, mingo@redhat.com, 
 	peterz@infradead.org
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Sync the Linux kernel perf PMU event json with the latest upstream
-Intel perfmon repository. The updates were created by running:
-https://github.com/intel/perfmon/blob/main/scripts/create_perf_json.py
+The updated events were published in:
 
-v2 adds fixes for a number of umask encodings a bug caught by Sashiko
-in v1. The fix to the perfmon converter script is in:
-ttps://github.com/intel/perfmon/pull/388
+  https://github.com/intel/perfmon/commit/5d7b37d5671a49c72abf735dc81d147c7=
+776119c
 
-v1:
-https://lore.kernel.org/linux-perf-users/20260924053645.3555041-1-irogers@google.com/
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ tools/perf/pmu-events/arch/x86/alderlake/cache.json |  4 ++--
+ .../perf/pmu-events/arch/x86/alderlake/memory.json  | 13 +++++++++++++
+ tools/perf/pmu-events/arch/x86/alderlake/other.json | 10 ++++++++++
+ .../pmu-events/arch/x86/alderlake/pipeline.json     |  6 +++---
+ tools/perf/pmu-events/arch/x86/mapfile.csv          |  2 +-
+ 5 files changed, 29 insertions(+), 6 deletions(-)
 
-Ian Rogers (26):
-  perf vendor events intel: Update alderlake events from 1.40 to 1.41
-  perf vendor events intel: Update alderlaken events from 1.40 to 1.41
-  perf vendor events intel: Update arrowlake events from 1.20 to 1.21
-  perf vendor events intel: Update broadwell metrics to TMA 5.2
-  perf vendor events intel: Update cascadelakex metrics to TMA 5.2
-  perf vendor events intel: Update emeraldrapids events from 1.24 to
-    1.25
-  perf vendor events intel: Update graniterapids events from 1.20 to
-    1.21
-  perf vendor events intel: Update haswell metrics to TMA 5.2
-  perf vendor events intel: Update icelake events to 1.25 and TMA
-    metrics to 5.2
-  perf vendor events intel: Update icelakex events to 1.31 and TMA
-    metrics to 5.2
-  perf vendor events intel: Update ivybridge metrics to TMA 5.2
-  perf vendor events intel: Update ivytown metrics to TMA 5.2
-  perf vendor events intel: Update jaketown metrics to TMA 5.2
-  perf vendor events intel: Update meteorlake events from 1.22 to 1.23
-  perf vendor events intel: Update novalake events from 1.00 to 1.04
-  perf vendor events intel: Update pantherlake events from 1.07 to 1.08
-  perf vendor events intel: Update rocketlake events from 1.04 to 1.06
-  perf vendor events intel: Update sandybridge metrics to TMA 5.2
-  perf vendor events intel: Update sapphirerapids events from 1.39 to
-    1.40
-  perf vendor events intel: Update skylake metrics to TMA 5.2
-  perf vendor events intel: Update tigerlake events to 1.20 and TMA
-    metrics to 5.2
-  perf vendor events intel: Fix clearwaterforest umask encoding.
-  perf vendor events intel: Fix lunarlake umask encoding.
-  perf vendor events intel: Fix sierraforest umask encoding.
-  perf vendor events intel: Fix skylakex umask encoding.
-  perf vendor events intel: Fix snowridgex umask encoding.
-
- .../pmu-events/arch/x86/alderlake/cache.json  |   4 +-
- .../pmu-events/arch/x86/alderlake/memory.json |  13 +
- .../pmu-events/arch/x86/alderlake/other.json  |  10 +
- .../arch/x86/alderlake/pipeline.json          |   6 +-
- .../pmu-events/arch/x86/alderlaken/cache.json |   4 +-
- .../pmu-events/arch/x86/arrowlake/cache.json  |   1 +
- .../pmu-events/arch/x86/arrowlake/other.json  |  19 +
- .../arch/x86/arrowlake/pipeline.json          |  10 +-
- .../arch/x86/broadwell/bdw-metrics.json       |  51 +-
- .../arch/x86/broadwell/metricgroups.json      |   3 +-
- .../arch/x86/broadwellde/bdwde-metrics.json   |  49 +-
- .../arch/x86/broadwellde/metricgroups.json    |   3 +-
- .../arch/x86/broadwellx/bdx-metrics.json      |  63 +--
- .../arch/x86/broadwellx/metricgroups.json     |   3 +-
- .../arch/x86/cascadelakex/clx-metrics.json    |  94 ++--
- .../arch/x86/cascadelakex/metricgroups.json   |   3 +-
- .../x86/cascadelakex/uncore-interconnect.json |   6 +
- .../arch/x86/clearwaterforest/pipeline.json   |   3 +-
- .../x86/clearwaterforest/uncore-cache.json    |   5 +
- .../clearwaterforest/uncore-interconnect.json |   2 +
- .../arch/x86/emeraldrapids/cache.json         |   2 +-
- .../arch/x86/emeraldrapids/memory.json        |  35 ++
- .../arch/x86/emeraldrapids/other.json         |   9 +
- .../arch/x86/emeraldrapids/pipeline.json      |  10 +-
- .../arch/x86/emeraldrapids/uncore-cache.json  |  42 ++
- .../emeraldrapids/uncore-interconnect.json    |  12 +
- .../arch/x86/emeraldrapids/uncore-io.json     |  54 +-
- .../arch/x86/emeraldrapids/uncore-memory.json |  10 +
- .../arch/x86/graniterapids/other.json         |   9 +
- .../arch/x86/graniterapids/pipeline.json      |   6 +-
- .../arch/x86/graniterapids/uncore-cache.json  |  15 +
- .../graniterapids/uncore-interconnect.json    |   2 +
- .../arch/x86/graniterapids/uncore-io.json     |  12 +
- .../arch/x86/haswell/hsw-metrics.json         |  49 +-
- .../arch/x86/haswell/metricgroups.json        |   3 +-
- .../arch/x86/haswellx/hsx-metrics.json        |  61 +--
- .../arch/x86/haswellx/metricgroups.json       |   3 +-
- .../arch/x86/icelake/icl-metrics.json         |  84 ++-
- .../pmu-events/arch/x86/icelake/memory.json   |  24 +
- .../arch/x86/icelake/metricgroups.json        |   2 +-
- .../pmu-events/arch/x86/icelake/other.json    |   9 +
- .../pmu-events/arch/x86/icelake/pipeline.json |   9 +-
- .../arch/x86/icelakex/icx-metrics.json        | 101 ++--
- .../pmu-events/arch/x86/icelakex/memory.json  |  24 +
- .../arch/x86/icelakex/metricgroups.json       |   2 +-
- .../pmu-events/arch/x86/icelakex/other.json   |   9 +
- .../arch/x86/icelakex/pipeline.json           |   7 +-
- .../arch/x86/icelakex/uncore-cache.json       |  79 +++
- .../x86/icelakex/uncore-interconnect.json     |  22 +
- .../arch/x86/ivybridge/ivb-metrics.json       |  51 +-
- .../arch/x86/ivybridge/metricgroups.json      |   3 +-
- .../arch/x86/ivytown/ivt-metrics.json         |  63 +--
- .../arch/x86/ivytown/metricgroups.json        |   3 +-
- .../arch/x86/jaketown/jkt-metrics.json        |  41 +-
- .../arch/x86/jaketown/metricgroups.json       |   3 +-
- .../pmu-events/arch/x86/lunarlake/cache.json  |   3 +
- .../arch/x86/lunarlake/pipeline.json          |   2 +
- tools/perf/pmu-events/arch/x86/mapfile.csv    |  26 +-
- .../pmu-events/arch/x86/meteorlake/other.json |  10 +
- .../arch/x86/meteorlake/pipeline.json         |   6 +-
- .../pmu-events/arch/x86/novalake/cache.json   | 500 ++++++++++++++++-
- .../arch/x86/novalake/floating-point.json     | 423 +++++++++++++++
- .../arch/x86/novalake/frontend.json           | 147 ++++-
- .../pmu-events/arch/x86/novalake/memory.json  |  24 +
- .../pmu-events/arch/x86/novalake/other.json   | 213 ++++++++
- .../arch/x86/novalake/pipeline.json           | 508 +++++++++++++++++-
- .../arch/x86/novalake/virtual-memory.json     | 173 ++++++
- .../arch/x86/pantherlake/cache.json           |   3 +
- .../arch/x86/pantherlake/other.json           |  10 +
- .../arch/x86/pantherlake/pipeline.json        |  10 +-
- .../arch/x86/rocketlake/memory.json           |  24 +
- .../arch/x86/rocketlake/metricgroups.json     |   2 +-
- .../pmu-events/arch/x86/rocketlake/other.json |   9 +
- .../arch/x86/rocketlake/pipeline.json         |   9 +-
- .../arch/x86/rocketlake/rkl-metrics.json      |  84 ++-
- .../arch/x86/sandybridge/metricgroups.json    |   3 +-
- .../arch/x86/sandybridge/snb-metrics.json     |  35 +-
- .../arch/x86/sapphirerapids/cache.json        |   2 +-
- .../arch/x86/sapphirerapids/memory.json       |  35 ++
- .../arch/x86/sapphirerapids/metricgroups.json |   2 +-
- .../arch/x86/sapphirerapids/other.json        |   9 +
- .../arch/x86/sapphirerapids/pipeline.json     |  10 +-
- .../arch/x86/sapphirerapids/spr-metrics.json  |  93 ++--
- .../arch/x86/sapphirerapids/uncore-cache.json |  42 ++
- .../sapphirerapids/uncore-interconnect.json   |  12 +
- .../arch/x86/sapphirerapids/uncore-io.json    |  54 +-
- .../x86/sapphirerapids/uncore-memory.json     |  10 +
- .../arch/x86/sierraforest/uncore-cache.json   |   5 +
- .../x86/sierraforest/uncore-interconnect.json |   2 +
- .../arch/x86/skylake/metricgroups.json        |   3 +-
- .../arch/x86/skylake/skl-metrics.json         |  59 +-
- .../arch/x86/skylakex/metricgroups.json       |   3 +-
- .../arch/x86/skylakex/skx-metrics.json        |  94 ++--
- .../x86/skylakex/uncore-interconnect.json     |   6 +
- .../arch/x86/snowridgex/uncore-cache.json     |  68 +++
- .../x86/snowridgex/uncore-interconnect.json   |  10 +
- .../arch/x86/tigerlake/metricgroups.json      |   2 +-
- .../pmu-events/arch/x86/tigerlake/other.json  |   9 +
- .../arch/x86/tigerlake/pipeline.json          |   7 +-
- .../arch/x86/tigerlake/tgl-metrics.json       |  82 +--
- 100 files changed, 3279 insertions(+), 786 deletions(-)
-
--- 
+diff --git a/tools/perf/pmu-events/arch/x86/alderlake/cache.json b/tools/pe=
+rf/pmu-events/arch/x86/alderlake/cache.json
+index 6c09da7b69e8..b804fe0a4156 100644
+--- a/tools/perf/pmu-events/arch/x86/alderlake/cache.json
++++ b/tools/perf/pmu-events/arch/x86/alderlake/cache.json
+@@ -4,7 +4,7 @@
+         "Counter": "0,1,2,3,4,5",
+         "EventCode": "0x31",
+         "EventName": "CORE_REJECT_L2Q.ANY",
+-        "PublicDescription": "Counts the number of (demand and L1 prefetch=
+ers) core requests rejected by the L2 queue (L2Q) due to a full or nearly f=
+ull condition, which likely indicates back pressure from L2Q.  It also coun=
+ts requests that would have gone directly to the External Queue (XQ), but a=
+re rejected due to a full or nearly full condition, indicating back pressur=
+e from the IDI link.  The L2Q may also reject transactions  from a core to =
+ensure fairness between cores, or to delay a cores dirty eviction when the =
+address conflicts incoming external snoops.  (Note that L2 prefetcher reque=
+sts that are dropped are not counted by this event).  Counts on a per core =
+basis.",
++        "PublicDescription": "Counts the number of core requests (demand a=
+nd L1 prefetchers) rejected by the L2 queue (L2Q) due to a full or nearly f=
+ull condition, which likely indicates back pressure from L2Q. It also count=
+s requests that would have gone directly to the External Queue (XQ) but are=
+ rejected due to a full or nearly full condition, indicating back pressure =
+from the IDI link. The L2Q may also reject transactions from a core to ensu=
+re fairness between cores, or to delay a cores dirty eviction when the addr=
+ess conflicts with incoming external snoops. (Note that L2 prefetcher reque=
+sts that are dropped are not counted by this event). Counts on a per core b=
+asis.",
+         "SampleAfterValue": "200003",
+         "Unit": "cpu_atom"
+     },
+@@ -135,7 +135,7 @@
+         "Counter": "0,1,2,3,4,5",
+         "EventCode": "0x30",
+         "EventName": "L2_REJECT_XQ.ANY",
+-        "PublicDescription": "Counts the number of demand and prefetch tra=
+nsactions that the External Queue (XQ) rejects due to a full or near full c=
+ondition which likely indicates back pressure from the IDI link.  The XQ ma=
+y reject transactions from the L2Q (non-cacheable requests), BBL (L2 misses=
+) and WOB (L2 write-back victims).",
++        "PublicDescription": "Counts the number of demand and prefetch tra=
+nsactions that the External Queue (XQ) rejects due to a full or near full c=
+ondition, which likely indicates back pressure from the IDI link. The XQ ma=
+y reject transactions from the L2Q (non-cacheable requests), BBL (L2 misses=
+) and WOB (L2 write-back victims).",
+         "SampleAfterValue": "200003",
+         "Unit": "cpu_atom"
+     },
+diff --git a/tools/perf/pmu-events/arch/x86/alderlake/memory.json b/tools/p=
+erf/pmu-events/arch/x86/alderlake/memory.json
+index f482c06ac728..70e3c9a1f740 100644
+--- a/tools/perf/pmu-events/arch/x86/alderlake/memory.json
++++ b/tools/perf/pmu-events/arch/x86/alderlake/memory.json
+@@ -228,6 +228,19 @@
+         "UMask": "0x1",
+         "Unit": "cpu_core"
+     },
++    {
++        "BriefDescription": "Counts randomly selected loads when the laten=
+cy from first dispatch to completion is greater than 2048 cycles.",
++        "Counter": "1,2,3,4,5,6,7",
++        "Data_LA": "1",
++        "EventCode": "0xcd",
++        "EventName": "MEM_TRANS_RETIRED.LOAD_LATENCY_GT_2048",
++        "MSRIndex": "0x3F6",
++        "MSRValue": "0x800",
++        "PublicDescription": "Counts randomly selected loads when the late=
+ncy from first dispatch to completion is greater than 2048 cycles.  Reporte=
+d latency may be longer than just the memory latency.",
++        "SampleAfterValue": "23",
++        "UMask": "0x1",
++        "Unit": "cpu_core"
++    },
+     {
+         "BriefDescription": "Counts randomly selected loads when the laten=
+cy from first dispatch to completion is greater than 256 cycles.",
+         "Counter": "1,2,3,4,5,6,7",
+diff --git a/tools/perf/pmu-events/arch/x86/alderlake/other.json b/tools/pe=
+rf/pmu-events/arch/x86/alderlake/other.json
+index af46cde26b54..c530f05e09d6 100644
+--- a/tools/perf/pmu-events/arch/x86/alderlake/other.json
++++ b/tools/perf/pmu-events/arch/x86/alderlake/other.json
+@@ -55,6 +55,16 @@
+         "UMask": "0x1",
+         "Unit": "cpu_atom"
+     },
++    {
++        "BriefDescription": "Increments whenever there is an update to the=
+ LBR array. [This event is alias to MISC_RETIRED.LBR_INSERTS]",
++        "Counter": "0,1,2,3,4,5,6,7",
++        "EventCode": "0xcc",
++        "EventName": "LBR_INSERTS.ANY",
++        "PublicDescription": "Increments when an entry is added to the Las=
+t Branch Record (LBR) array (or removed from the array in case of RETURNs i=
+n call stack mode). The event requires LBR enable via IA32_DEBUGCTL MSR and=
+ branch type selection via MSR_LBR_SELECT. [This event is alias to MISC_RET=
+IRED.LBR_INSERTS]",
++        "SampleAfterValue": "100003",
++        "UMask": "0x20",
++        "Unit": "cpu_core"
++    },
+     {
+         "BriefDescription": "Counts streaming stores which modify a full 6=
+4 byte cacheline that have any type of response.",
+         "Counter": "0,1,2,3,4,5",
+diff --git a/tools/perf/pmu-events/arch/x86/alderlake/pipeline.json b/tools=
+/perf/pmu-events/arch/x86/alderlake/pipeline.json
+index eb840066a5a7..1b9482b02bc5 100644
+--- a/tools/perf/pmu-events/arch/x86/alderlake/pipeline.json
++++ b/tools/perf/pmu-events/arch/x86/alderlake/pipeline.json
+@@ -988,7 +988,7 @@
+         "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0xc0",
+         "EventName": "INST_RETIRED.REP_ITERATION",
+-        "PublicDescription": "Number of iterations of Repeat (REP) string =
+retired instructions such as MOVS, CMPS, and SCAS. Each has a byte, word, a=
+nd doubleword version and string instructions can be repeated using a repet=
+ition prefix, REP, that allows their architectural execution to be repeated=
+ a number of times as specified by the RCX register. Note: Since the number=
+ of iterations within a REP instruction can be significantly affected by fa=
+st strings, this event may vary run to run and not match the architectural =
+number of iterations (specified by RCX)",
++        "PublicDescription": "Number of iterations of Repeat (REP) string =
+retired instructions such as MOVS, CMPS, and SCAS. Each has a byte, word, a=
+nd doubleword version and string instructions can be repeated using a repet=
+ition prefix, REP, that allows their architectural execution to be repeated=
+ a number of times as specified by the RCX register. Note: Since the number=
+ of iterations within a REP instruction can be significantly affected by fa=
+st strings, this event may vary from run to run and not match the architect=
+ural number of iterations (specified by RCX).",
+         "SampleAfterValue": "2000003",
+         "UMask": "0x8",
+         "Unit": "cpu_core"
+@@ -1327,11 +1327,11 @@
+         "Unit": "cpu_atom"
+     },
+     {
+-        "BriefDescription": "Increments whenever there is an update to the=
+ LBR array.",
++        "BriefDescription": "Increments whenever there is an update to the=
+ LBR array. [This event is alias to LBR_INSERTS.ANY]",
+         "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0xcc",
+         "EventName": "MISC_RETIRED.LBR_INSERTS",
+-        "PublicDescription": "Increments when an entry is added to the Las=
+t Branch Record (LBR) array (or removed from the array in case of RETURNs i=
+n call stack mode). The event requires LBR enable via IA32_DEBUGCTL MSR and=
+ branch type selection via MSR_LBR_SELECT.",
++        "PublicDescription": "Increments when an entry is added to the Las=
+t Branch Record (LBR) array (or removed from the array in case of RETURNs i=
+n call stack mode). The event requires LBR enable via IA32_DEBUGCTL MSR and=
+ branch type selection via MSR_LBR_SELECT. [This event is alias to LBR_INSE=
+RTS.ANY]",
+         "SampleAfterValue": "100003",
+         "UMask": "0x20",
+         "Unit": "cpu_core"
+diff --git a/tools/perf/pmu-events/arch/x86/mapfile.csv b/tools/perf/pmu-ev=
+ents/arch/x86/mapfile.csv
+index e5d90825041b..866b5fba7124 100644
+--- a/tools/perf/pmu-events/arch/x86/mapfile.csv
++++ b/tools/perf/pmu-events/arch/x86/mapfile.csv
+@@ -1,5 +1,5 @@
+ Family-model,Version,Filename,EventType
+-GenuineIntel-6-(97|9A|B7|BA|BF),v1.40,alderlake,core
++GenuineIntel-6-(97|9A|B7|BA|BF),v1.41,alderlake,core
+ GenuineIntel-6-BE,v1.40,alderlaken,core
+ GenuineIntel-6-C[56],v1.20,arrowlake,core
+ GenuineIntel-6-(1C|26|27|35|36),v5,bonnell,core
+--=20
 2.56.0.rc1.315.gc6ed9934b7-goog
 
