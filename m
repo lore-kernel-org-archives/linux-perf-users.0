@@ -1,391 +1,167 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16CD217A586;
-	Thu, 24 Sep 2026 00:23:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEECF29B795;
+	Thu, 24 Sep 2026 00:56:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790209431; cv=none; b=QEGqcqm9kodjOpX3FBSvJvpwMjOhAq14dYz6iEJM6icGJvBueJmOUq5RS6wqsbTtuO+AzrCw4GE6WSput7ijxDC054hS6ZP8hIi8B+FLeVwdg51VCuaPy6lIJu06FgI0GZv0sNJ2ibWjvS2XM7ikh0a9qBwdEzJ8mvCy8/iYC0g=
+	t=1790211392; cv=none; b=W5gLdvWp4+3dFw6PsMgMR9BN5S6p7UuHXqM6PoC2cZ+56jfvzOU0s4brRAGkA+Ngs6V50tX3F1Bys3nNHSvataV5dYIyZq23x8Q5OHPpsMXgc7UenUqthxoZ/tvEFaRKMkEM9RrINP2pv28IQuAzf4tYbDJnqycJqxt1Yfk9tyY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790209431; c=relaxed/simple;
-	bh=VUuKfYfe5NqXSCU7iRvFUVCkXKdrX9Qr/m7Edw1j4rQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=sF6sZUnP3x0z/ezF+n2LTVq4jKrv42FzVdHR38Zz3MbFY4Sefy3GdF/vc01Qu1Zx2dF/6ptPiz60cVl/6Uv3kdw9U0VkCUARBqCE1IaIZrRTB1lciHAyGTeAQme8KTZcxJMTFLcx3qMqu2Tq018nJu2CuG0xApx+MGn0nfZy3N0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jQTH6OF3; arc=none smtp.client-ip=192.198.163.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1790211392; c=relaxed/simple;
+	bh=jdXlTLlf3jUa4RrM2D3BUMVLd7xgVV710VYzNJz/Wog=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=bpzmA1Ak8xTVj+lil/giKGHELUzK5lVz1Dh3TP7Ty/GXb8B9RQ7XkrJ6AGiFAXDj/gxKaAuVpvhaf9Goy1gJOWqWTDRkrkodPMFt0owhoWPt6X9Jb170IcSVkV5SIk2xn1pR5RfyFqN/Tw4WD8Hy1A+IVmXCtibqkYC8e3Jd/oQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mppRpFV4; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jQTH6OF3"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1790209429; x=1821745429;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=VUuKfYfe5NqXSCU7iRvFUVCkXKdrX9Qr/m7Edw1j4rQ=;
-  b=jQTH6OF34FP/BMSf5Od/6P5MGOXHa50eRoIAgWugbNETtPoLdORlmAiL
-   +LSY5lpEE8MTtTteHlIXYo1emjkiQB74gIApm4D9K/0RCQXJUdt55O61/
-   dCs+PJ0SH/L+iVEMDgxfpSHyoNAKbc0TZcD9j+HbG+EJLbI2Kyuj4+XZ9
-   UTJX14++DwU6Dbjy4kHk/u23Yw6Emoq1/Nvk4MtF3dkXTLwTow93aBOEE
-   MWZ7AcYlFu6Cy46KUiVN/h/VfSuwuD5D6jBZevZRiLmU7SoSunsQ7nMwB
-   phB3bRMXc5y4iZWb3eJt7Ns8IMA98e8S3YLtNOe3fk+7WakqyE5Ww4YPA
-   Q==;
-X-CSE-ConnectionGUID: S2NHXGhGQnWCl+lF38+yag==
-X-CSE-MsgGUID: lZXPnpujSnS2Hf4VJUN29g==
-X-IronPort-AV: E=McAfee;i="6800,10657,11914"; a="89870805"
-X-IronPort-AV: E=Sophos;i="6.27,119,1787036400"; 
-   d="scan'208";a="89870805"
-Received: from fmviesa013.fm.intel.com ([10.60.135.153])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Sep 2026 17:23:48 -0700
-X-CSE-ConnectionGUID: D9Fawb1PTLy/0+5wbKVfXQ==
-X-CSE-MsgGUID: R0bxgo/tR1CxX/IKhlHQgQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.27,119,1787036400"; 
-   d="scan'208";a="5097909"
-Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.241.239]) ([10.124.241.239])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Sep 2026 17:23:45 -0700
-Message-ID: <a2f2063b-b491-4f65-9e42-1c3dfa1902c7@linux.intel.com>
-Date: Thu, 24 Sep 2026 08:23:42 +0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mppRpFV4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 639731F000FF;
+	Thu, 24 Sep 2026 00:56:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1790211390;
+	bh=WoXa/iDV2HbrHjZ10qYpEVqoIC06vqPR1blppfOnTQ8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References;
+	b=mppRpFV4LdabrXVBTFLP+RFdG191JPBsakD697PStifVFP2iTUSoZVhATEvbkWa/d
+	 5qtCrwC3zblD+2DXxI+BQz6vTxr3ptzPStQpiQpPkEBVhS3tRhl3AuLlG8vPkD0YKC
+	 QmWgtqm8yf22rN4Skj7F+JgoidaQ042cZtTfqWg3cpXbA6D0MVEqqWyen/Lf1Qax1b
+	 firJhOlLSJnJtCeU2qIe2X/IyWpKaaFHMBpmwUA5ZlGpHXt4nBMb6og9Z3v+9+jSHq
+	 PO/EH9R2HP+KZWSiwdUJKzeQgknj1WrLYqlz5vnFcFZxEE75LE74gSeiksQCsQFWvB
+	 U10sVNTDl7L8A==
+Date: Thu, 24 Sep 2026 09:56:24 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Sean Christopherson <seanjc@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, "Masami Hiramatsu (Google)"
+ <mhiramat@kernel.org>, Steven Rostedt <rostedt@goodmis.org>, Ingo Molnar
+ <mingo@kernel.org>, Jinchao Wang <wangjinchao600@gmail.com>, Mathieu
+ Desnoyers <mathieu.desnoyers@efficios.com>, Thomas Gleixner
+ <tglx@linutronix.de>, Borislav Petkov <bp@alien8.de>, Dave Hansen
+ <dave.hansen@linux.intel.com>, "H . Peter Anvin" <hpa@zytor.com>, Alexander
+ Shishkin <alexander.shishkin@linux.intel.com>, Ian Rogers
+ <irogers@google.com>, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+ linux-perf-users@vger.kernel.org, x86@kernel.org, Paolo Bonzini
+ <pbonzini@redhat.com>, kvm@vger.kernel.org
+Subject: Re: [PATCH v17 02/13] perf/x86, KVM: Prevent host debug register
+ leak into guest OS on NMI
+Message-Id: <20260924095624.dfb77a8a1dd95a957b45f12c@kernel.org>
+In-Reply-To: <arPw-N3HF3ehNGTQ@google.com>
+References: <179005108298.388919.4535333252892590932.stgit@devnote2>
+	<179005110742.388919.1509641807739909065.stgit@devnote2>
+	<20260923091555.GX776954@noisy.programming.kicks-ass.net>
+	<arPw-N3HF3ehNGTQ@google.com>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v12 4/6] perf tools: Show memory region in perf-c2c
- subcommand
-To: Thomas Falcon <thomas.falcon@intel.com>, sashiko-bot@kernel.org
-Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
- Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>, James Clark <james.clark@linaro.org>
-References: <20260923161043.95C171F000FF@smtp.kernel.org>
- <20260923170903.48388-1-thomas.falcon@intel.com>
- <20260923170903.48388-5-thomas.falcon@intel.com>
-Content-Language: en-US
-From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-In-Reply-To: <20260923170903.48388-5-thomas.falcon@intel.com>
-Content-Type: text/plain; charset=UTF-8
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-Reviewed-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
+On Wed, 23 Sep 2026 08:32:08 -0700
+Sean Christopherson <seanjc@google.com> wrote:
 
-Thanks.
+> On Wed, Sep 23, 2026, Peter Zijlstra wrote:
+> > On Tue, Sep 22, 2026 at 01:25:07PM +0900, Masami Hiramatsu (Google) wrote:
+> > > diff --git a/arch/x86/kernel/hw_breakpoint.c b/arch/x86/kernel/hw_breakpoint.c
+> > > index f846c15f21ca..0473a5c95856 100644
+> > > --- a/arch/x86/kernel/hw_breakpoint.c
+> > > +++ b/arch/x86/kernel/hw_breakpoint.c
+> > > @@ -102,6 +102,9 @@ int arch_install_hw_breakpoint(struct perf_event *bp)
+> > >  
+> > >  	lockdep_assert_irqs_disabled();
+> > >  
+> > > +	if (perf_guest_in_guest())
+> > 
+> > That naming is hilariously bad :-)
 
+Agreed.
 
-On 9/24/2026 1:09 AM, Thomas Falcon wrote:
-> From: Dapeng Mi <dapeng1.mi@linux.intel.com>
->
-> Add memory region field to the cacheline list view to help users
-> identify the memory region to which the cacheline belongs. The memory
-> region field was included with the introduction of support for the
-> Off-module Response facility (OMR) [1] in Intel's Diamond Rapids and
-> Nova Lake architectures.
->
-> An example of the new perf c2c output including the memory region
-> field is shown below:
->
-> # Index             Address  Region  Node  PA cnt     Hitm    Total  LclHitm  RmtHitm  records    Loads
-> # .....  ..................  ......  ....  ......  .......  .......  .......  .......  .......  .......
-> #
->       0  0xffffffff84eb0040     N/A     0    1205   23.25%      544      544        0     1677     1677
->       1  0xffffffff84f03a80     N/A     0       1   18.12%      424      424        0      585      585
-> [...]
->      19  0xffffffff845bc840   Mem-0     0      13    0.30%        7        7        0       31       31
->      20  0xff3bbba284520a00     N/A     0      10    0.26%        6        6        0       11       11
->      21  0xff3bbbe0bc833500     N/A     0      24    0.26%        6        6        0       30       30
->
-> [1]: https://lore.kernel.org/all/20260114011750.350569-1-dapeng1.mi@linux.intel.com/
->
-> Assisted-by: Sashiko:gemini-3.1-pro-preview
-> Assisted-by: GitHub-Copilot:claude-opus-4-8
-> Reviewed-by: Ian Rogers <irogers@google.com>
-> Reviewed-by: Namhyung Kim <namhyung@kernel.org>
-> Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
-> Co-developed-by: Thomas Falcon <thomas.falcon@intel.com>
-> Signed-off-by: Thomas Falcon <thomas.falcon@intel.com>
-> ---
-> v11: perf-c2c: revert to only recording a real memory region for a
->      cacheline
-> v10: only update mem_region for real cache/memory regions so N/A samples
->      don't overwrite a valid region; add #include <stdio.h> for asprintf
->      (Sashiko)
-> v9: Update perf-c2c to include cache region reporting (Dapeng Mi)
-> v8: Update developer tags and commit message with real example
->     output (Dapeng Mi)
-> v7: fix output_str allocation error handling which introduced
->     a memory leak (Sashiko)
-> v6: rebased onto 7.3-rc1
-> v5: make the cacheline header span and ui_quirks() width
->     fixup depend on memory-region availability (Namhyung Kim)
-> v4: correctly handle output_str memory allocation failure
-> v3: make memory region reporting conditional on feature bit
-> ---
->  tools/perf/builtin-c2c.c | 114 +++++++++++++++++++++++++++++++++++----
->  tools/perf/util/c2c.h    |   1 +
->  2 files changed, 104 insertions(+), 11 deletions(-)
->
-> diff --git a/tools/perf/builtin-c2c.c b/tools/perf/builtin-c2c.c
-> index 6b64c0d6b24f..a42423ca990d 100644
-> --- a/tools/perf/builtin-c2c.c
-> +++ b/tools/perf/builtin-c2c.c
-> @@ -14,6 +14,7 @@
->  #include <inttypes.h>
->  #include <stdlib.h>
->  #include <string.h>
-> +#include <stdio.h>
+> 
+> Indeed.  It's also misleading and confusing, because it's really checking for
+> "in KVM's core run loop", whereas the goal of perf_guest_state() returns a
+> non-zero value if and only if the IRQ/NMI really did occur while the guest was
+> active (I say "the goal" because it's imperfect due to architectural limitations,
+> but the goal is purely to detect guest PMIs).
+
+Yeah, I see.
+
+> 
+> Ugh, and routing this through perf was my suggestion[*]:
+> 
+>   : If we decide this is how to fix arch_install_hw_breakpoint() clobbering DRs from
+>   : NMI context, I would rather have more generic flag to tell perf that KVM is about
+>   : to enter the guest, e.g. so that we don't have to separately solve the same problem
+>   : for other perf events:
+> 
+> After seeing the code, that feels like a pretty stupid suggestion.  Though in my
+> defense, I was thinking of a per-CPU flag as opposed to a new callback.  Anyways,
+> I don't think we should key off IN_GUEST_MODE and EXITING_GUEST_MODE because they
+> are very much an arch-specific, KVM-internal concept.
+
+OK.
+
+> 
+> What I was trying to say by "more generic flag" is that I would prefer not to have
+> a super specific cpu_dr_in_guest.  I'm not opposed to have a dedicated flag (though
+> if we can avoid one, that would be lovely).  The biggest problem I see with adding
+> a generic flag is how to make it precise enough to be useful, without end up with a
+> confusing name.  E.g. "guest_state_loaded" is terrible because KVM keeps some guest
+> state loaded even when the task is scheduled out.
+
+Something like "cpu_in_guest_transition"?
+
+> 
+> And to Peter's point below, is arch_install_hw_breakpoint() even the right place
+> to handle this?  It seems like KGDB itself should be handling this, at which point
+> maybe we just do something like this?  Then we can provide nop stubs when KGDB
+> support is disabled.
+
+Hmm, so instead of kgdb specific flag, add a per-cpu flag for entering/exiting
+guest, and use it for kgdb and other users like wprobe? (it may work similar to
+in_nmi() check.)
+
+> 
+> diff --git arch/x86/kvm/x86.c arch/x86/kvm/x86.c
+> index 1705e7be46ec..42fa4dc44cbc 100644
+> --- arch/x86/kvm/x86.c
+> +++ arch/x86/kvm/x86.c
+> @@ -8273,6 +8273,8 @@ static int vcpu_enter_guest(struct kvm_vcpu *vcpu)
 >  
->  #include <asm/bug.h>
->  #include <linux/compiler.h>
-> @@ -72,6 +73,7 @@ struct perf_c2c {
+>         kvm_load_xfeatures(vcpu, true);
 >  
->  	bool			 show_src;
->  	bool			 show_all;
-> +	bool			 show_mem_region;
->  	bool			 use_stdio;
->  	bool			 stats_only;
->  	bool			 symbol_full;
-> @@ -248,6 +250,18 @@ static void c2c_he__set_node(struct c2c_hist_entry *c2c_he,
->  	}
->  }
->  
-> +static void c2c_he__set_mem_region(struct c2c_hist_entry *c2c_he,
-> +				   unsigned int mem_region)
-> +{
-> +	if (WARN_ONCE(mem_region > PERF_MEM_REGION_MEM7,
-> +		      "WARNING: invalid memory region ID\n"))
-> +		return;
+> +       kgdb_arch_enter_guest();
 > +
-> +	/* Update mem_region only if it really accesses memory */
-> +	if (mem_region >= PERF_MEM_REGION_MMIO)
-> +		c2c_he->mem_region = mem_region;
-> +}
+>         if (unlikely(vcpu->arch.switch_db_regs &&
+>                      !(vcpu->arch.switch_db_regs & KVM_DEBUGREG_AUTO_SWITCH))) {
+>                 set_debugreg(DR7_FIXED_1, 7);
+> @@ -8365,6 +8367,8 @@ static int vcpu_enter_guest(struct kvm_vcpu *vcpu)
+>         if (hw_breakpoint_active())
+>                 hw_breakpoint_restore();
+>  
+> +       kgdb_arch_exit_guest();
 > +
->  static void compute_stats(struct c2c_hist_entry *c2c_he,
->  			  struct c2c_stats *stats,
->  			  u64 weight)
-> @@ -306,6 +320,7 @@ static int process_sample_event(const struct perf_tool *tool __maybe_unused,
->  	struct addr_location al;
->  	struct mem_info *mi = NULL;
->  	struct callchain_cursor *cursor;
-> +	unsigned int mem_region;
->  	int ret;
+>         vcpu->arch.last_vmentry_cpu = vcpu->cpu;
+>         vcpu->arch.last_guest_tsc = kvm_read_l1_tsc(vcpu, rdtsc());
 >  
->  	addr_location__init(&al);
-> @@ -333,6 +348,7 @@ static int process_sample_event(const struct perf_tool *tool __maybe_unused,
->  	}
->  
->  	c2c_decode_stats(&stats, mi);
-> +	mem_region = mem_info__data_src(mi)->mem_region;
->  
->  	he = hists__add_entry_ops(&c2c_hists->hists, &c2c_entry_ops,
->  				  &al, NULL, NULL, mi, NULL,
-> @@ -349,6 +365,7 @@ static int process_sample_event(const struct perf_tool *tool __maybe_unused,
->  	c2c_he__set_cpu(c2c_he, sample);
->  	c2c_he__set_node(c2c_he, sample);
->  	c2c_he__set_evsel(c2c_he, evsel);
-> +	c2c_he__set_mem_region(c2c_he, mem_region);
->  
->  	hists__inc_nr_samples(&c2c_hists->hists, he->filtered);
->  
-> @@ -402,6 +419,7 @@ static int process_sample_event(const struct perf_tool *tool __maybe_unused,
->  		c2c_he__set_cpu(c2c_he, sample);
->  		c2c_he__set_node(c2c_he, sample);
->  		c2c_he__set_evsel(c2c_he, evsel);
-> +		c2c_he__set_mem_region(c2c_he, mem_region);
->  
->  		hists__inc_nr_samples(&c2c_hists->hists, he->filtered);
->  		ret = hist_entry__append_callchain(he, sample);
-> @@ -540,6 +558,45 @@ dcacheline_node_count(struct perf_hpp_fmt *fmt, struct perf_hpp *hpp,
->  	return scnprintf(hpp->buf, hpp->size, "%*lu", width, c2c_he->paddr_cnt);
->  }
->  
-> +static int
-> +dcacheline_node_mem_region(struct perf_hpp_fmt *fmt, struct perf_hpp *hpp,
-> +			   struct hist_entry *he)
-> +{
-> +	int width = c2c_width(fmt, hpp, he->hists);
-> +	struct c2c_hist_entry *c2c_he;
-> +	unsigned int mem_region;
-> +	char buf[20];
-> +
-> +	c2c_he = container_of(he, struct c2c_hist_entry, he);
-> +	mem_region = c2c_he->mem_region;
-> +
-> +	switch (mem_region) {
-> +	case PERF_MEM_REGION_NA:
-> +	case PERF_MEM_REGION_RSVD:
-> +		scnprintf(buf, sizeof(buf), "N/A");
-> +		break;
-> +	case PERF_MEM_REGION_MMIO:
-> +		scnprintf(buf, sizeof(buf), "MMIO");
-> +		break;
-> +	case PERF_MEM_REGION_MEM0:
-> +	case PERF_MEM_REGION_MEM1:
-> +	case PERF_MEM_REGION_MEM2:
-> +	case PERF_MEM_REGION_MEM3:
-> +	case PERF_MEM_REGION_MEM4:
-> +	case PERF_MEM_REGION_MEM5:
-> +	case PERF_MEM_REGION_MEM6:
-> +	case PERF_MEM_REGION_MEM7:
-> +		scnprintf(buf, sizeof(buf), "Mem-%d",
-> +			  mem_region - PERF_MEM_REGION_MEM0);
-> +		break;
-> +	default:
-> +		scnprintf(buf, sizeof(buf), "N/A");
-> +		break;
-> +	}
-> +
-> +	return scnprintf(hpp->buf, hpp->size, "%*s", width, buf);
-> +}
-> +
->  static int offset_entry(struct perf_hpp_fmt *fmt, struct perf_hpp *hpp,
->  			struct hist_entry *he)
->  {
-> @@ -1360,6 +1417,14 @@ static struct c2c_dimension dim_dcacheline_node = {
->  	.width		= 4,
->  };
->  
-> +static struct c2c_dimension dim_dcacheline_mem_region = {
-> +	.header		= HEADER_LOW("Region"),
-> +	.name		= "dcacheline_mem_region",
-> +	.cmp		= empty_cmp,
-> +	.entry		= dcacheline_node_mem_region,
-> +	.width		= 6,
-> +};
-> +
->  static struct c2c_dimension dim_dcacheline_count = {
->  	.header		= HEADER_LOW("PA cnt"),
->  	.name		= "dcacheline_count",
-> @@ -1791,6 +1856,7 @@ static struct c2c_dimension dim_dcacheline_num_empty = {
->  
->  static struct c2c_dimension *dimensions[] = {
->  	&dim_dcacheline,
-> +	&dim_dcacheline_mem_region,
->  	&dim_dcacheline_node,
->  	&dim_dcacheline_count,
->  	&dim_offset,
-> @@ -2854,8 +2920,11 @@ static int ui_quirks(void)
->  	/* Fix the zero line for dcacheline column. */
->  	buf = fill_line(chk_double_cl ? "Double-Cacheline" : "Cacheline",
->  				dim_dcacheline.width +
-> +				(c2c.show_mem_region ?
-> +					dim_dcacheline_mem_region.width : 0) +
->  				dim_dcacheline_node.width +
-> -				dim_dcacheline_count.width + 4);
-> +				dim_dcacheline_count.width +
-> +				(c2c.show_mem_region ? 6 : 4));
->  	if (!buf)
->  		return -ENOMEM;
->  
-> @@ -3107,7 +3176,8 @@ static int perf_c2c__report(int argc, const char **argv)
->  	OPT_END()
->  	};
->  	int err = 0;
-> -	const char *output_str, *sort_str = NULL;
-> +	const char *sort_str = NULL;
-> +	char *output_str = NULL;
->  	struct perf_env *env;
->  
->  	annotation_options__init();
-> @@ -3272,9 +3342,16 @@ static int perf_c2c__report(int argc, const char **argv)
->  		goto out_mem2node;
->  	}
->  
-> -	if (c2c.display != DISPLAY_SNP_PEER)
-> -		output_str = "cl_idx,"
-> +	c2c.show_mem_region = perf_header__has_feat(&session->header,
-> +						HEADER_MEMORY_RANGES);
-> +	if (c2c.show_mem_region)
-> +		dim_dcacheline.header.line[0].span = 3;
-> +
-> +	if (c2c.display != DISPLAY_SNP_PEER) {
-> +		if (asprintf(&output_str,
-> +			     "cl_idx,"
->  			     "dcacheline,"
-> +			     "%s"
->  			     "dcacheline_node,"
->  			     "dcacheline_count,"
->  			     "percent_costly_snoop,"
-> @@ -3286,10 +3363,17 @@ static int perf_c2c__report(int argc, const char **argv)
->  			     "ld_fbhit,ld_l1hit,ld_l2hit,"
->  			     "ld_lclhit,lcl_hitm,"
->  			     "ld_rmthit,rmt_hitm,"
-> -			     "dram_lcl,dram_rmt";
-> -	else
-> -		output_str = "cl_idx,"
-> +			     "dram_lcl,dram_rmt",
-> +			     c2c.show_mem_region ?
-> +			     "dcacheline_mem_region," : "") < 0) {
-> +			err = -ENOMEM;
-> +			goto out_mem2node;
-> +		}
-> +	} else {
-> +		if (asprintf(&output_str,
-> +			     "cl_idx,"
->  			     "dcacheline,"
-> +			     "%s"
->  			     "dcacheline_node,"
->  			     "dcacheline_count,"
->  			     "percent_costly_snoop,"
-> @@ -3301,7 +3385,13 @@ static int perf_c2c__report(int argc, const char **argv)
->  			     "ld_fbhit,ld_l1hit,ld_l2hit,"
->  			     "ld_lclhit,lcl_hitm,"
->  			     "ld_rmthit,rmt_hitm,"
-> -			     "dram_lcl,dram_rmt";
-> +			     "dram_lcl,dram_rmt",
-> +			     c2c.show_mem_region ?
-> +			     "dcacheline_mem_region," : "") < 0) {
-> +			err = -ENOMEM;
-> +			goto out_mem2node;
-> +		}
-> +	}
->  
->  	if (c2c.display == DISPLAY_TOT_HITM)
->  		sort_str = "tot_hitm";
-> @@ -3315,7 +3405,7 @@ static int perf_c2c__report(int argc, const char **argv)
->  	err = c2c_hists__reinit(&c2c.hists, output_str, sort_str, perf_session__env(session));
->  	if (err) {
->  		pr_err("Failed to reinitialize hists\n");
-> -		goto out_mem2node;
-> +		goto out_str;
->  	}
->  
->  	ui_progress__init(&prog, c2c.hists.hists.nr_entries, "Sorting...");
-> @@ -3324,17 +3414,19 @@ static int perf_c2c__report(int argc, const char **argv)
->  	hists__output_resort_cb(&c2c.hists.hists, &prog, resort_shared_cl_cb);
->  	err = hists__iterate_cb(&c2c.hists.hists, resort_cl_cb, perf_session__env(session));
->  	if (err)
-> -		goto out_mem2node;
-> +		goto out_str;
->  
->  	ui_progress__finish();
->  
->  	if (ui_quirks()) {
->  		pr_err("failed to setup UI\n");
-> -		goto out_mem2node;
-> +		goto out_str;
->  	}
->  
->  	perf_c2c_display(session);
->  
-> +out_str:
-> +	free(output_str);
->  out_mem2node:
->  	mem2node__exit(&c2c.mem2node);
->  out_session:
-> diff --git a/tools/perf/util/c2c.h b/tools/perf/util/c2c.h
-> index 53f024e25d99..f04e78e1a2e3 100644
-> --- a/tools/perf/util/c2c.h
-> +++ b/tools/perf/util/c2c.h
-> @@ -33,6 +33,7 @@ struct c2c_hist_entry {
->  	unsigned long		*nodeset;
->  	struct c2c_stats	*node_stats;
->  	unsigned int		 cacheline_idx;
-> +	unsigned int		 mem_region;
->  
->  	struct compute_stats	 cstats;
->  
+> [*] https://lore.kernel.org/all/aqgGRKOE138ePqmX@google.com
+> 
+> > > +		return -EBUSY;
+> > > +
+> > >  	for (i = 0; i < HBP_NUM; i++) {
+> > >  		struct perf_event **slot = this_cpu_ptr(&bp_per_reg[i]);
+> > >  
+> > 
+> > Note how the other -EBUSY return is a WARN. Why is silently not doing
+> > anything not a WARN in this case?
+> 
+> Probably because the WARN would trigger anytime KGDB's NMI craziness happens to
+> hit a vCPU, i.e. isn't a kernel bug.
+
+Yeah, this may confuse the caller. OK, let me change it to check
+the state flag in caller side.
+
+Thank you,
+
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
