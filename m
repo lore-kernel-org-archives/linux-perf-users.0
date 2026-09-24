@@ -1,104 +1,60 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A57633DD537;
-	Thu, 24 Sep 2026 05:45:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6516A3B2D1D
+	for <linux-perf-users@vger.kernel.org>; Thu, 24 Sep 2026 05:46:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790228701; cv=none; b=c0JGsM3vA4yPH4lbkInCsq94+hvPmzijU7LyKrUAbxT4S/wjh0wxShlXL+WjHHmnEkmmxel+rDYS+IVc6Wm3Xli0j0bkNskmLgtGNErk39aAj7Y4oyVkvH3EySR2kRBex9LvJcLb5j+bZZgFstpI6CyFLJUs3FGY+TnHyJFZ45U=
+	t=1790228789; cv=none; b=qH5E04LPpkDhdG7j0YK/+alq1lBdBW4XWKmIfOBrdmg/+oL6taazd58PQsnNJOrxtZm/jt00ED37w//hngq6ofhpM/NnmZJOh3noecSERM4fw7lqRt/KrfnEEZTcyetnmOHfcmVLsIvfwR4KBir6ZfNqs2xAW/SsDgjmymQxG8w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790228701; c=relaxed/simple;
-	bh=fRQi32n67faLJ6Uq3zm0/V6fZL4OQsawfES3NU31W3U=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ulVvF3SxD0dTuWcEofRN56ssW4SAmTtf6TbXWnKBHTAYnWJVQ1pba5omsiXipZW2yajbDE6QE1oks9cyRsorlzS0M0UgGd0z4XTBHkLc+kfAAZSC63Z9cvX42X0wyRJ0avnjGh+WcBFaHLCcv5xGsXelUdH6JjBxkD3hMAvZ9w4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TiagoTRd; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1790228789; c=relaxed/simple;
+	bh=w6M36psbgc6t1Zk03x4MJVYjz0lfkhq0eXyJtaWp6hU=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=tPQ9ISUuoMMFvbcPsXAPbLaenzgsHAjQci9mm9avZv8KP1E59/3CntoR6ydsOzvPAZPMG4hjIxH2I+mGnCAEikMefyrBFct2LynKBqfdTwL9nBTjMF8tq//q4zd8Cbebtilu+69nNFsV7Q4zZQMa1G5GSYjy6mv69H5M4VymV00=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UgY6drWn; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TiagoTRd"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C77601F000FF;
-	Thu, 24 Sep 2026 05:44:59 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UgY6drWn"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 86E691F00893;
+	Thu, 24 Sep 2026 05:46:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1790228700;
-	bh=hsnElaicdx1h21WvvHJKOBOOJn8qo41VE9TVkFOoJuY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=TiagoTRdt90rIN3Ff1lo20WqPoqy8SUFhd0Ga0UiXw/+Yyrs9EriQCwVULEivoEze
-	 0Qxr90ZEhMg+AWpJbYG+eKR3mai/UtNmJLLJhF0Ufge9ZOurWM1axtNlFvsXKwBl/B
-	 vD382puMqjABXCd+VhqM4v7Vo8VlFweid7auDm3MaOrJtdVBqgns40LlAot95/bjlK
-	 xHQr7T1s9RocuK/RcPpAXShGEnhL6whdd38WSudMz7MsgC2AyFEKdH1oMoIhxVMz9H
-	 wZbC0urNUlLSQxz+/pPfp5HunBk9fuNwQiQ9dlIxkOM4I8RmiV9cFnaqbDYq1xT9ZS
-	 4eUfLfkM/xbzA==
-Date: Wed, 23 Sep 2026 22:44:58 -0700
-From: Namhyung Kim <namhyung@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: acme@kernel.org, howardchu95@gmail.com, adrian.hunter@intel.com,
-	james.clark@linaro.org, jolsa@kernel.org,
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-	mingo@redhat.com, peterz@infradead.org,
-	Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: Re: [PATCH v5 03/23] perf trace: Include the headers declaring
- pid_t, strcmp and assert
-Message-ID: <arS42kj5cES7OZyn@z2>
-References: <cover.1790145937.git.irogers@google.com>
- <4add8796a95e7cabee2a8094d6babdb39290bfe8.1790145937.git.irogers@google.com>
+	s=k20260515; t=1790228786;
+	bh=sPdrC80PyL6dMZgLkflfqr+dAWQeKWl/QSm0Er7YzsE=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=UgY6drWn20+3+/y+nQ8NTGBk2xpV/e43rfzpHzO9n1+HyZFkZgQWYpJ0waFouulxU
+	 G9jBzUemMua/sE91yi7Zbs9jOB3XvVW4RQv+DRWDEnbDx3+Q638ARy1bje9N60XqNc
+	 6f7hbcy2ZktSwnO+P0YCi0Hwq2RKsYf6uwst2T4TNfTXHdktTyhjkZRi+dtl2fWvJZ
+	 UELyPW7Bl4r0C4+RDkue7iuhHK7yZYdYRT2TOoRxX3VbXSfrPsNrCQUFeVsF8V/Wn8
+	 TtEDEf4GoBrEf0M2HbHfENwAhpNgi4gr1lK/WaRV8FNmtcgLKpegSSceX4eOD0eBPr
+	 9cR14vSbPbadg==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v1 20/21] perf vendor events intel: Update skylake
+ metrics to TMA 5.2
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Ian Rogers" <irogers@google.com>
+Cc: linux-perf-users@vger.kernel.org
+In-Reply-To: <20260924053645.3555041-21-irogers@google.com>
+References: <20260924053645.3555041-1-irogers@google.com>
+ <20260924053645.3555041-21-irogers@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Thu, 24 Sep 2026 05:46:26 +0000
+Message-Id: <20260924054626.86E691F00893@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <4add8796a95e7cabee2a8094d6babdb39290bfe8.1790145937.git.irogers@google.com>
 
-On Wed, Sep 23, 2026 at 12:13:43AM -0700, Ian Rogers wrote:
-> trace_augment.h uses pid_t in the augmented_syscalls__set_filter_pids()
-> prototype and in the !HAVE_BPF_SKEL stub. bpf_trace_augment.c calls
-> strcmp() in augmented_syscalls__find_by_title() and assert() in
-> augmented_syscalls__create_bpf_output(), but neither pulls in the header
-> that declares what it uses. Both happen to build today only because
-> something else in the include chain drags <sys/types.h>, <string.h> and
-> <assert.h> in first, which is not guaranteed and does not hold on libcs
-> such as musl that keep the POSIX namespaces strictly separated.
-> 
-> Include <sys/types.h>, <string.h> and <assert.h> explicitly.
-> 
-> Assisted-by: Antigravity:gemini-3.1-pro
+> The updated TMA metrics were published in:
+>=20
+>   https://github.com/intel/perfmon/commit/f9358e8da04bec945d8023e3f9b20a8=
+87ad46c45
+>=20
 > Signed-off-by: Ian Rogers <irogers@google.com>
-> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-I'm not sure why it has Arnaldo's Sign-off..
+Sashiko has reviewed this patch and found no issues. It looks great!
 
-Thanks,
-Namhyung
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260924053645.3555=
+041-1-irogers@google.com?part=3D20
 
-> ---
->  tools/perf/util/bpf_trace_augment.c | 2 ++
->  tools/perf/util/trace_augment.h     | 1 +
->  2 files changed, 3 insertions(+)
-> 
-> diff --git a/tools/perf/util/bpf_trace_augment.c b/tools/perf/util/bpf_trace_augment.c
-> index a9cf2a77ded1..ebb26225fb04 100644
-> --- a/tools/perf/util/bpf_trace_augment.c
-> +++ b/tools/perf/util/bpf_trace_augment.c
-> @@ -1,5 +1,7 @@
-> +#include <assert.h>
->  #include <bpf/libbpf.h>
->  #include <internal/xyarray.h>
-> +#include <string.h>
->  
->  #include "bpf_skel/augmented_raw_syscalls.skel.h"
->  #include "debug.h"
-> diff --git a/tools/perf/util/trace_augment.h b/tools/perf/util/trace_augment.h
-> index 4f729bc67753..a1cd9a5e0213 100644
-> --- a/tools/perf/util/trace_augment.h
-> +++ b/tools/perf/util/trace_augment.h
-> @@ -2,6 +2,7 @@
->  #define TRACE_AUGMENT_H
->  
->  #include <linux/compiler.h>
-> +#include <sys/types.h>
->  
->  struct bpf_program;
->  struct evlist;
-> -- 
-> 2.56.0.rc1.315.gc6ed9934b7-goog
-> 
