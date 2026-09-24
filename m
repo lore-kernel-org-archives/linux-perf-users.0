@@ -1,129 +1,71 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9174148D879;
-	Thu, 24 Sep 2026 17:50:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0F9E3BB13F;
+	Thu, 24 Sep 2026 17:50:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790272229; cv=none; b=A6YFi8pq1raXqxTdg+FNtiSBEgiYKCgRQglAr5o/mqwXb4aOXnwt/wBGTm5T9tG9LaPij+I0cXL897oXKtaDQ/KqaVKxMgUzjkXjMM5MGzD6+mruBD3QvPhkaY6/MZVYcHgdTPqrcKX8a7GPWhC+Qc5u/x475s4VAwU4pSVrncc=
+	t=1790272246; cv=none; b=p+uR38rPVYFil4F1bZPT89pszmPLnos3vzZLDtNGfCvEtt75798y+moPX07OhJ8y64WSDmJJwfRBnZTeDO4HsNKrHnAjesTj1Qg6OBxeCAf+5Rxxa462Fb5+j1A/PZbQrnU/iWJ1bJr/zfHJbTN7cV2w+593T9MeYMrkvY5izg4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790272229; c=relaxed/simple;
-	bh=1WetD8ckHl9HqQYytxZYZrLirzwggAh1zd07SHC5w8s=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=DCV2Puj3cuMIyqp0vLdmDFxUv3hjNEkNnj58YPXIHBbFqgUtXv8AcU2jR7uhm7QeWbnJOAwkZWNHKBEY+ttTSSt5i/j52SM7dq4JPH/4kGyERQfdaDO3+RRLMfXdRD+AWSkuDJypBTlyK4gWHNh9hrXRLte25ri/k3Z9r9x2S2k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VTC34l5F; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1790272246; c=relaxed/simple;
+	bh=yXTnajMiA2cnyDs0Z+K86mraKjJ/BpC2FWacLv2TybY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=SsIEUIdQFaYOIPdpVop4okhp9EhMvC4IgHma2S4C8GdzT2YI/UAiOaz8OTDQOhTToTWISHbEKaobNMu/eKMIYBt0mRH76BC+kJUaIR1SZwEfFmCynICHNCG03lYFnInPZRVO3ienmKC8kZlc9yY3FHsKeOHVmDsBSyUxxWBT/N0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Hcax6uEb; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VTC34l5F"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E8FFC1F000FF;
-	Thu, 24 Sep 2026 17:50:27 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Hcax6uEb"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C807A1F000FF;
+	Thu, 24 Sep 2026 17:50:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1790272228;
-	bh=j5FxsE/C23/XEsftmnQSYxqVyCh6eEhXIOQ41WAf7CE=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=VTC34l5FCigunXBF7cWvTvwtFFap2aA496jHo31R3LkLrlE3TUwVImMHuj0PfuCPH
-	 1A3FiQYuDBnYRBuLZpznWXZcE78i6ElDXmSiPqI+s9OIzTOa0440LZfFKkh4HOxVC3
-	 EJUX9yNK7/t4wzdib7dQKxMOo+D02Tb4baAz9LOm+wCmvQmW3ICkAah+btV8enQq8G
-	 g2vpWmwHjhLbkmFKeimbvvJ/qJewQ+9Z+7shz6ljVg334hmTVxG/SkFiBKocyBkJJO
-	 3Zeanp9pVXtPTSep/sIBvM5QBoWlNlbflvvfsY73txsOa4hEfgmb7yLfHduqa+dRsx
-	 Q6lqXh2vFJWmg==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v9 10/22] KVM: arm64: Add Partitioned PMU register trap
- handlers
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Colton Lewis" <coltonlewis@google.com>
-Cc: "Oliver Upton" <oupton@kernel.org>, linux-perf-users@vger.kernel.org, kvm@vger.kernel.org, "Marc
- Zyngier" <maz@kernel.org>, kvmarm@lists.linux.dev
-In-Reply-To: <20260924172928.2110956-11-coltonlewis@google.com>
-References: <20260924172928.2110956-1-coltonlewis@google.com>
- <20260924172928.2110956-11-coltonlewis@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Thu, 24 Sep 2026 17:50:27 +0000
-Message-Id: <20260924175027.E8FFC1F000FF@smtp.kernel.org>
+	s=k20260515; t=1790272245;
+	bh=xvAW5wenuOCDifc3lYRejWUr7WTYlRvWSV6In7YPAVc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=Hcax6uEbKsFzMtGyjIJYWqWWkyW/3BmZRWxc+8ZA+LELUxvKMxRGhM+oI9cvLai/T
+	 JU3mVFEfPtSDjRJNr7wM5F+Z3PnpAvaWCjn5Q7Er4NvD3lvS+LNxIxRxd6YKGMF37R
+	 WHeOGS0Bf0m/F6FsvV/GPOGPZJBlN13XY8pqSCK9LmNyT79CYMiQrQI5q/dQA0RL1p
+	 YP8BOlzEgoepG5eWSY8qi5PfG+O4ZrwOrzKpm2XsCeYYaiSMXB4lr33t4gF+JWv9gW
+	 tt+8fyzi8YXrNSypTpltLgbhIcIR3MuQ+hLyxEsLQieioTEfcXSrXS2j62RaizW3FO
+	 JxnQ3EoCOhzow==
+Date: Thu, 24 Sep 2026 19:50:42 +0200
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: James Clark <james.clark@linaro.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/2] perf test: Improve shellcheck source directives
+Message-ID: <arVi8iy821vO44tO@x2>
+References: <20260921-james-perf-shellcheck-source-v1-0-adcfc107c997@linaro.org>
+ <arGXoU4idVCKb2cC@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <arGXoU4idVCKb2cC@google.com>
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
-s) to consider:
-- [Low] arm64: range-check over enum vcpu_sysreg
---
+On Mon, Sep 21, 2026 at 01:46:25PM -0700, Namhyung Kim wrote:
+> On Mon, Sep 21, 2026 at 04:47:27PM +0100, James Clark wrote:
+> > Confusingly two things turned out to be relevant to this. One is that -a
+> > doesn't make shellcheck follow "external" paths, which these are treated
+> > as. You need -x for that. Secondly, the source= directives don't cause
+> > it to follow the path either, they just suppress a warning message about
+> > dynamic paths in versions of shellcheck before 0.7.2. This warning can
+> > be silenced with "source=/dev/null" and doesn't require any particular
+> > path to be provided if -x isn't used.
 
-commit 35ffc169e71bb4303b4d3e6f955bbc06a22fd20d
-Author: Colton Lewis <coltonlewis@google.com>
+> > James Clark (2):
+> >       perf test: Remove redundant shellcheck source paths
+> >       perf build: Follow sourced files when running shellcheck
+ 
+> Acked-by: Namhyung Kim <namhyung@kernel.org>
 
-KVM: arm64: Add Partitioned PMU register trap handlers
+Thanks, applied to perf-tools-next, for v7.4.
 
-This commit adds handling for partitioned PMU register accesses that are=20
-trapped when FEAT_FGT is unavailable. It passes through or filters accesses=
-=20
-to registers like PMCR_EL0, PMEVCNTR, and PMCCFILTR based on the partitioni=
-ng=20
-configuration.
-
-> diff --git a/arch/arm64/kvm/sys_regs.c b/arch/arm64/kvm/sys_regs.c
-> index f7f750b7a91c4..c8210a8b10389 100644
-> --- a/arch/arm64/kvm/sys_regs.c
-> +++ b/arch/arm64/kvm/sys_regs.c
-[ ... ]
-> @@ -1092,9 +1092,204 @@ static u64 reset_pmcr(struct kvm_vcpu *vcpu, cons=
-t struct sys_reg_desc *r)
->  	return __vcpu_sys_reg(vcpu, r->reg);
->  }
-> =20
-> +/**
-> + * pmu_reg_write() - Register writes for Partitioned PMU
-[ ... ]
-> +static void pmu_reg_write(struct kvm_vcpu *vcpu, enum vcpu_sysreg reg, u=
-64 val, bool set)
-> +{
-[ ... ]
-> +	switch (reg) {
-[ ... ]
-> +	case PMEVCNTR0_EL0 ... PMCCNTR_EL0:
-> +		idx =3D reg - PMEVCNTR0_EL0;
-
-[Severity: Low]
-Is it safe to use a numeric range and arithmetic over enum vcpu_sysreg valu=
-es
-here in pmu_reg_write()? Since the enum indexes sparse VNCR-mapped registers
-by byte offset rather than declaration order, range checks and arithmetic
-can cover unintended registers. Should this use an explicit per-register
-allowlist instead?
-
-> +
-> +		if (kvm_pmu_is_partitioned(vcpu->kvm)) {
-[ ... ]
-> +	case PMEVTYPER0_EL0 ... PMCCFILTR_EL0:
-> +		idx =3D reg - PMEVTYPER0_EL0;
-
-[Severity: Low]
-Does this range check and subtraction also rely on contiguous enum values?
-Like the previous case, should this be converted to an explicit per-register
-match to avoid issues with the sparse enum numbering?
-
-[ ... ]
-> @@ -1276,18 +1471,21 @@ static bool access_pmu_evcntr(struct kvm_vcpu *vc=
-pu,
->  			      struct sys_reg_params *p,
->  			      const struct sys_reg_desc *r)
->  {
-[ ... ]
->  	if (!pmu_counter_idx_valid(vcpu, idx))
->  		return false;
-> =20
-> +	reg =3D PMEVCNTR0_EL0 + idx;
-> +
-
-[Severity: Low]
-Does this arithmetic over the enum value in access_pmu_evcntr() assume a
-contiguous layout? Using addition on enum vcpu_sysreg values might point to=
-=20
-an unintended register due to the sparse byte-offset mapping. Should this=20
-be explicitly mapped instead?
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260924172928.2110=
-956-1-coltonlewis@google.com?part=3D10
+- Arnaldo
