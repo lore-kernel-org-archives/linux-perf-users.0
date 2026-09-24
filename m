@@ -1,45 +1,45 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5BA64AD4CF
-	for <linux-perf-users@vger.kernel.org>; Thu, 24 Sep 2026 17:10:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F63F4AA575
+	for <linux-perf-users@vger.kernel.org>; Thu, 24 Sep 2026 17:11:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790269843; cv=none; b=QB5swPttKtmMkkKJEUvBEY0Boayfh7JPsUNiO+wuJARe5iEamL1mcB0puhNVpmgHfdGabAxp20CrJ2+xk03ssphuvm4UkYP+RcUxNTqud577AKGAhz2ukwovNddG3naazNMLwn/jzCyv152kumb5zaSgGj/rhSvdPEt9b157cNY=
+	t=1790269868; cv=none; b=rqHFOcbbFNc699gCYA+UgVi/mxVF44aCiFtoWmCn+2v7mS4DEaIVo8pYFGVslYidXw58SCBZXqRr1gRfU12kuS4k9PLQ7a9q4eBArz0fpSTDPJCrKIjUbUs0AZPBzRa1PZY6hD6QKpvN0Lw3I3A6wpOxGolFTYQsBKDGfXKHz/I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790269843; c=relaxed/simple;
-	bh=JV32EJjuLe7PDqGwcI8gWVnRXi5g9ETY5kOFiOLHHsc=;
+	s=arc-20240116; t=1790269868; c=relaxed/simple;
+	bh=zt6GyvHUxBgfvd6kzuK7NcchIHmJy5MjVph3va1Smgw=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=uNKXWMPmoPpFErO6Mz0WhoEAnNwYSlCt2ssZ/w7lgBBEabp2JbGjGI036MEIdB2ZTnego5hwWgAJes90Ui6cpLLMKgUTxFQXBSl1OPmzVT6MJ6tMOhCE++3Y+V7ptZVPYvZ3z48bSAavyJfybT6XwtahjErFfhRwQbCLDoem2m0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cbwZaL+M; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=hWiO6U9XPdEBnPt+zXuGHWFot3arwiNOEnohxddxpE1hOxB03kYqHlh9ZagD2k9aGaRZFTjau6ZuNl5szmluGP6BOYDvpxqhy6/AkLMEj1FLdJw7g1AYoWqu7jtFUwhwmP+HeaIVW+M760bpFriWfIvNVsRXq6QdXDZG1SzxZ7U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AA/K7Acj; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cbwZaL+M"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 61A741F00898;
-	Thu, 24 Sep 2026 17:10:41 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AA/K7Acj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2ABDE1F000FF;
+	Thu, 24 Sep 2026 17:11:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1790269841;
-	bh=sGyFJevvvvb7CIyZvB4w1SwyZTpF1igzUoTsJfx2bj8=;
+	s=k20260515; t=1790269867;
+	bh=7cVFQK6BwQNz577VV/z5u3yeHYQ06bNHmqm5aZD54xc=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=cbwZaL+MP8eMm5A4tMU+AIGuA2hP+evYLMINRJIKHTxdGhlNA4dkrsRUc76yZx6i0
-	 GZ4LX9UxTb4lhePi9zcz+/y52lLheqT0tZyRUvq2TP4D3bXAvtggdMqDJnUaaeESiF
-	 Si9PbO4yBQqzSMCuUBH39gunVzYK6RNbQ/OG46RX30fQiEUhBvoJ/qC/cSch6jYZVi
-	 VWy/lpv89cz17dc7nYKTotf1NJVHUSWD+KQWIR6uQCLecbIyLjsCuG+g/L2inyLEAp
-	 +JLT4ZIE5tyXnFpji6AP6D1UgNQtbxvTTdQvnQaTQ5GFU5hTB8bz8Db8Lbf7aVZOnO
-	 1RV4faLjidRbA==
+	b=AA/K7Acjt30ec0iEW4oYoepzTnI9+zxaDGd34Ac8YLySdJXXEk767YlDMtCgGk+Xe
+	 Xu7+AgOeBEDreZL2fgKnONp+UcDlOBPk48qtKkyNayLmctlItIPDNBUMkrdb7lQTVG
+	 oiarjj3GQf3gc4hueoJB85IKAo25IAvYgB1ZSRgg7szR5ySeiY5nAW0WBxYQgbySVi
+	 IS1WlCpUbUO9rtzhD8kNcXh5VlXYbc535Hw/CxLTXvZqom/R4V7dFlwTwqKwHCRCm7
+	 s6MEI9Z+LMnIAwcLc6mOfCnX8XzVIFZ98T5JtEls+2weyMTJ5NQv2QYuat9E2RAC4d
+	 anteoOwNX7cHg==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v2 19/26] perf vendor events intel: Update
- sapphirerapids events from 1.39 to 1.40
+Subject: Re: [PATCH v2 21/26] perf vendor events intel: Update tigerlake
+ events to 1.20 and TMA metrics to 5.2
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Ian Rogers" <irogers@google.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260924170346.3872848-20-irogers@google.com>
+In-Reply-To: <20260924170346.3872848-22-irogers@google.com>
 References: <20260924053645.3555041-1-irogers@google.com>
  <20260924170346.3872848-1-irogers@google.com>
- <20260924170346.3872848-20-irogers@google.com>
+ <20260924170346.3872848-22-irogers@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Thu, 24 Sep 2026 17:10:41 +0000
-Message-Id: <20260924171041.61A741F00898@smtp.kernel.org>
+Date: Thu, 24 Sep 2026 17:11:06 +0000
+Message-Id: <20260924171107.2ABDE1F000FF@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -48,18 +48,19 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
 > The updated events were published in:
 >=20
->   https://github.com/intel/perfmon/commit/2ba60f607169b97dcfa0d28f7e3a613=
-28627cf0c
+>   https://github.com/intel/perfmon/commit/228a83d851e8908aa09fac00a96a694=
+04f2d3107
 >=20
-> Fix umask encodings when there is a UMaskExt.
+> The updated TMA 5.2 metrics were published in:
 >=20
-> Fixes: 54f5de6f2998 ("perf vendor events intel: Update sapphirerapids to =
-v1.12")
+>   https://github.com/intel/perfmon/commit/f9358e8da04bec945d8023e3f9b20a8=
+87ad46c45
+>=20
 > Signed-off-by: Ian Rogers <irogers@google.com>
 
 Sashiko has reviewed this patch and found no issues. It looks great!
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260924170346.3872=
-848-1-irogers@google.com?part=3D19
+848-1-irogers@google.com?part=3D21
 
