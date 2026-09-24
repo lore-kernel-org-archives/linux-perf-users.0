@@ -1,56 +1,56 @@
-Received: from mail-dy1-f200.google.com (mail-dy1-f200.google.com [74.125.82.200])
+Received: from mail-dy1-f197.google.com (mail-dy1-f197.google.com [74.125.82.197])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA47F4AFE0F
-	for <linux-perf-users@vger.kernel.org>; Thu, 24 Sep 2026 17:04:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FE7B419303
+	for <linux-perf-users@vger.kernel.org>; Thu, 24 Sep 2026 17:04:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790269497; cv=none; b=fZ5be5W3fSeN442nJ5ZJB3loWfGsSo9Ipv67PbkBIgwmAwXSQ0v52ZBXNPWkHrxyXGJTtPh6ujZhm9WIOkVriMMinPyYW+PfwwLNyLlAZt+GWPOMWW4p7CCQ7lDIIpyRZ8+0bUcJbVASp3+/ggVO4vFpkNOjg/O3OT3JmtGzEuw=
+	t=1790269500; cv=none; b=XQ47j9OOsSzTLQhg9P6pyS+INqpO7FwQB5LkxhPziNy7EbKQS3SNxanNlY+2B7dAN8kp6upTopVydlOIfLQ/1muCfyGZfi1S0A8TOXmI9Xy/hV42kykj5p67HbxMZnwV843yJi5g75sToJzeN/6eJv+nZuU1kI65werNlfj3k7Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790269497; c=relaxed/simple;
-	bh=00O/XGUo+gBY8Wrh3lceAcc3am3kVkGIFmp1zBrc5ks=;
+	s=arc-20240116; t=1790269500; c=relaxed/simple;
+	bh=R2PQewC67Nn1pInDYGIqgz6Apae9K6+NcvBSU0jDvas=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=mYx3eKCUNFt76xSiZv5Xj0Kg4KDdUMx6kErGu1ytFEI1ifoOF2/IAnzqkq3VpdhFkps+oiGoSxwvChPTDwyZt2Cva7TfxgShKeONN60g4ZRWG4rnW2MUdnnzQxtFIDBA+OPQIuJlO9SXWn0vQYPH3P4KnLftTQu+Z4lfwcoCEaA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=R8v8a+vZ; arc=none smtp.client-ip=74.125.82.200
+	 To:Cc:Content-Type; b=tro6x0baiHa5H+yKyfEVFCb8OjmnX4aZD8Ou5ZeXUGNQb3djCUWVtn2sS28Ijmeg7VTFAwAuQN0yvm7XC22MfAo4xGBPlzkP5nc2R5FZoawiHwVr+4+rXEaAmq6c/zy7Hu6i9gxAa0zh0B0SpnSP/D/lApsVKihsGfdHE1/wTEA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=bqUAAZpw; arc=none smtp.client-ip=74.125.82.197
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="R8v8a+vZ"
-Received: by mail-dy1-f200.google.com with SMTP id 5a478bee46e88-33310847fcaso4090648eec.1
-        for <linux-perf-users@vger.kernel.org>; Thu, 24 Sep 2026 10:04:55 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="bqUAAZpw"
+Received: by mail-dy1-f197.google.com with SMTP id 5a478bee46e88-32850005b6bso3056101eec.0
+        for <linux-perf-users@vger.kernel.org>; Thu, 24 Sep 2026 10:04:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1790269495; x=1790874295; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1790269498; x=1790874298; darn=vger.kernel.org;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=/c9r9PHvMsmrjg/Wx3rSzk0iudZgpbLaOYADILi2T0o=;
-        b=R8v8a+vZNQ3MmS1B6GSSLezDGq36Q5ugQbGjch4JkIJrf/LbAzuYirWRVh3PS6Yk+s
-         gM0da00RxwinKbYPkq3wKHSz1GUsxzg6YF+B8C70OolasX8HITvdpgnTZ9i4XjnwJrL7
-         IGUUVCI+DZA24hgllTnkS0V1SzmPcyCUqUN6vhHgCWaBbwSb46ZW/Hm8BCYhsKaC6hFR
-         c4F9dz2xfbt3/0RlJvN0GrC/4HXIn5Q9YNI0OiqHRRUW7Za8EbuAiVO4f8vQUxDkK2pv
-         /sJX31HfDqGljSzt5VuSbzj3kUz88BNPPRMPVUtNO49KklWDXAhkarJMsFBK+U2JO06h
-         naNw==
+        bh=ihmdLIAt286E6JAM4/tetDqKb55HYHxbGw2OdyaQPKg=;
+        b=bqUAAZpw4Btt1TmJkwdnYY3T57NkXd+88yge5imO9cS+t53A/qm5A3ArrKZt91o3SY
+         z5+vhnTL6Srb8eWvXiKUgjYRJEWc7KUXwlkFK7AV18cpYx9m497DVPepJ38iQMGQulob
+         cZBylDgGLrad2jBKj/6okMriMRuLrGGHIuysBr+eIiXPEmsJJzXfCuFKqwFqUrGQx73f
+         2dNuk+Cir9J7y/cIW7oQucIB0KHxeU6vvq/j8JUs3973Ov7T0pOB/u6rvpylAVGjsaAj
+         Ryk0IYbzGxHTQQMp6O2V48F56x+XsIFdwjRTbiyqOqgHhwNeZMBvifeYwq8dEZqqqyIX
+         pCAA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1790269495; x=1790874295;
+        d=1e100.net; s=20260707; t=1790269498; x=1790874298;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=/c9r9PHvMsmrjg/Wx3rSzk0iudZgpbLaOYADILi2T0o=;
-        b=s2xtVtEpEkP3oROALQly46LP+gPfHyf4y3OEA7TUbsOPU25gIuYGYW4/mKu0sj05dQ
-         bSK+DghFiC+tSwdKV4qJcbPAC1PqnGzqpr01cwWQtuVJ/7ceGudbmTak/kvaf7oHeBuc
-         tB/i/80RPuu6T/JDw554Elduh6pMdp4fmmM47DGDmxbx5aSKEfeYfTeSrNm5fM8JYGVH
-         aSx9fRZHdvz/DWtiDojDazajzyLKUSX6PgpVif99JTTHXJXefz2b7yGo94YB8AEzRWKU
-         VmcSy65Z5PgHUcHrCbzF/E5fQkglz9o03gHTEWA81w3RtToh864wYTp4hjIUYOlYvTIT
-         wsLg==
-X-Forwarded-Encrypted: i=1; AKwUvBwnY5CD7cmh7jPMgKHtExnj5kRElJSB//L+TkViHjbZwFwxJ/PZhfvlNfSGoVdgsA7QCC1PggJMNsyJXlu7f+Wm@vger.kernel.org
-X-Gm-Message-State: AFuF++m5IcQsa5HggM+CIRiIVwrGpCq1aedUBvHeuKLrp21e7wD3NErH
-	ugJ/CTUwq4hkLxWXIXxCuENFMI9CEjGA4iHux+MvPveAjxpQvnsRDLkIoPnFIDxj3fJqfg62tLp
-	cnUY302gPQw==
-X-Received: from dlx9.prod.google.com ([2002:a05:7022:89:b0:144:dc13:586b])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:701b:428e:20b0:143:2973:c08d
- with SMTP id a92af1059eb24-14503fb6d74mr2514161c88.28.1790269494414; Thu, 24
- Sep 2026 10:04:54 -0700 (PDT)
-Date: Thu, 24 Sep 2026 10:03:44 -0700
+        bh=ihmdLIAt286E6JAM4/tetDqKb55HYHxbGw2OdyaQPKg=;
+        b=IBzcFQk1aQ9QsPpE14RnIXT/0rZ0Vxzm5DRNM/N6aMk6WbKvuWLXGM4HF42psjWYVy
+         fU313PhPY2MAN2gwzO2ldusUXerBqQ43lZBSCZmF7F1J9u6iQdb6Amwswe7tU6OLU3zo
+         rn98zd7+Eysv0HLVudpjflmHD/ldXKm2SGlzuFDM0r1tJ8Jhu4AhgCMMfh+bJ3ghnyok
+         QTduZFM5qg8zOxRn5RqXfwpwGpNV6GNE5FjAxgEBzBvxqIJtlq8tv/PWIoo39aKhpvD4
+         uIiJsW7q0LhKE8K5+cckn1qHhwHHcbfE5WwKTRj//v/hpkLivyPB9DGw+0zUS2FVy1Bp
+         aufQ==
+X-Forwarded-Encrypted: i=1; AKwUvBwqFEo+4MdOVf1gELW/aZENwDHUUEhSODAG7vChAsQpl+wtIYc10LpoMvx18UNCSU/0pWq2SAMZTxsvge8Q/QTa@vger.kernel.org
+X-Gm-Message-State: AFuF++mUhKTSPoVcuBhhfIPQVfPkwS0f4nSE/G1RWGVRq7ZQT3rSx4Kw
+	CjTb5axf+Jsa9Y/3s+xuzV5tOARbjowZX4GMYqMXgjnc+UuN5/9sIAT2c6Z2EX/36CiCA1PPdT7
+	fQ8a6wBREOg==
+X-Received: from dyvo5-n1.prod.google.com ([2002:a05:693c:41c5:10b0:33e:6278:a7ac])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:701b:4286:10b0:143:2968:564d
+ with SMTP id a92af1059eb24-14503fde4dcmr2586802c88.27.1790269497169; Thu, 24
+ Sep 2026 10:04:57 -0700 (PDT)
+Date: Thu, 24 Sep 2026 10:03:45 -0700
 In-Reply-To: <20260924170346.3872848-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -60,8 +60,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260924053645.3555041-1-irogers@google.com> <20260924170346.3872848-1-irogers@google.com>
 X-Mailer: git-send-email 2.56.0.rc1.315.gc6ed9934b7-goog
-Message-ID: <20260924170346.3872848-25-irogers@google.com>
-Subject: [PATCH v2 24/26] perf vendor events intel: Fix sierraforest umask encoding.
+Message-ID: <20260924170346.3872848-26-irogers@google.com>
+Subject: [PATCH v2 25/26] perf vendor events intel: Fix skylakex umask encoding.
 From: Ian Rogers <irogers@google.com>
 To: irogers@google.com, acme@kernel.org, dapeng1.mi@linux.intel.com, 
 	namhyung@kernel.org, edward.baker@intel.com, perry.taylor@intel.com, 
@@ -74,75 +74,62 @@ Content-Type: text/plain; charset="UTF-8"
 
 Fix UMaskExt that was wrongly encoded when the UMask was 0.
 
-Fixes: 9626368d429a ("perf vendor events intel: Update sierraforst events to v1.01")
+Fixes: 748d5cf71948 ("perf vendor events intel: Fix uncore topics for skylakex")
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- .../perf/pmu-events/arch/x86/sierraforest/uncore-cache.json  | 5 +++++
- .../arch/x86/sierraforest/uncore-interconnect.json           | 2 ++
- 2 files changed, 7 insertions(+)
+ .../pmu-events/arch/x86/skylakex/uncore-interconnect.json   | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/tools/perf/pmu-events/arch/x86/sierraforest/uncore-cache.json b/tools/perf/pmu-events/arch/x86/sierraforest/uncore-cache.json
-index 35b1763b0020..0b95faa5e469 100644
---- a/tools/perf/pmu-events/arch/x86/sierraforest/uncore-cache.json
-+++ b/tools/perf/pmu-events/arch/x86/sierraforest/uncore-cache.json
-@@ -701,6 +701,7 @@
-         "EventName": "UNC_CHA_REMOTE_SF.DIRBACKED_ONLY",
+diff --git a/tools/perf/pmu-events/arch/x86/skylakex/uncore-interconnect.json b/tools/perf/pmu-events/arch/x86/skylakex/uncore-interconnect.json
+index eef801c68bd2..08311bdb2b20 100644
+--- a/tools/perf/pmu-events/arch/x86/skylakex/uncore-interconnect.json
++++ b/tools/perf/pmu-events/arch/x86/skylakex/uncore-interconnect.json
+@@ -13462,6 +13462,7 @@
+         "EventName": "UNC_UPI_TxL_HDR_MATCH.DATA_HDR",
          "Experimental": "1",
          "PerPkg": "1",
-+        "UMask": "0x4000",
-         "Unit": "CHA"
++        "UMask": "0x800",
+         "Unit": "UPI"
      },
      {
-@@ -730,6 +731,7 @@
-         "EventName": "UNC_CHA_REMOTE_SF.INCLUSIVE_ONLY",
+@@ -13472,6 +13473,7 @@
+         "EventName": "UNC_UPI_TxL_HDR_MATCH.DUAL_SLOT_HDR",
          "Experimental": "1",
          "PerPkg": "1",
 +        "UMask": "0x2000",
-         "Unit": "CHA"
+         "Unit": "UPI"
      },
      {
-@@ -748,6 +750,7 @@
-         "EventName": "UNC_CHA_REMOTE_SF.UPDATE_EXCLUSIVE",
-         "Experimental": "1",
-         "PerPkg": "1",
-+        "UMask": "0x100",
-         "Unit": "CHA"
-     },
-     {
-@@ -767,6 +770,7 @@
-         "EventName": "UNC_CHA_REMOTE_SF.VICTIM_EXCLUSIVE",
-         "Experimental": "1",
-         "PerPkg": "1",
-+        "UMask": "0x400",
-         "Unit": "CHA"
-     },
-     {
-@@ -776,6 +780,7 @@
-         "EventName": "UNC_CHA_REMOTE_SF.VICTIM_SHARED",
+@@ -13482,6 +13484,7 @@
+         "EventName": "UNC_UPI_TxL_HDR_MATCH.LOC",
          "Experimental": "1",
          "PerPkg": "1",
 +        "UMask": "0x200",
-         "Unit": "CHA"
+         "Unit": "UPI"
      },
      {
-diff --git a/tools/perf/pmu-events/arch/x86/sierraforest/uncore-interconnect.json b/tools/perf/pmu-events/arch/x86/sierraforest/uncore-interconnect.json
-index 1f6e0970141a..7fa6def25379 100644
---- a/tools/perf/pmu-events/arch/x86/sierraforest/uncore-interconnect.json
-+++ b/tools/perf/pmu-events/arch/x86/sierraforest/uncore-interconnect.json
-@@ -515,6 +515,7 @@
-         "EventName": "UNC_B2CMI_IMC_WRITES.NI",
+@@ -13514,6 +13517,7 @@
+         "EventName": "UNC_UPI_TxL_HDR_MATCH.NON_DATA_HDR",
          "Experimental": "1",
          "PerPkg": "1",
-+        "UMask": "0x300",
-         "Unit": "B2CMI"
++        "UMask": "0x1000",
+         "Unit": "UPI"
      },
      {
-@@ -524,6 +525,7 @@
-         "EventName": "UNC_B2CMI_IMC_WRITES.NI_MISS",
+@@ -13524,6 +13528,7 @@
+         "EventName": "UNC_UPI_TxL_HDR_MATCH.REM",
          "Experimental": "1",
          "PerPkg": "1",
-+        "UMask": "0x500",
-         "Unit": "B2CMI"
++        "UMask": "0x400",
+         "Unit": "UPI"
+     },
+     {
+@@ -13567,6 +13572,7 @@
+         "EventName": "UNC_UPI_TxL_HDR_MATCH.SGL_SLOT_HDR",
+         "Experimental": "1",
+         "PerPkg": "1",
++        "UMask": "0x4000",
+         "Unit": "UPI"
      },
      {
 -- 
