@@ -1,76 +1,73 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4B5E4AB1D4;
-	Thu, 24 Sep 2026 17:38:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96D503254B8;
+	Thu, 24 Sep 2026 17:41:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790271535; cv=none; b=fIHtvAK6PAFN+iNTAPkH3mon7t91tMjcF92IIMwF1TxgE4HgGDWgbrMk0JzXEHqVUcCSuevgCZQwqResAI+fhM9ZD7XUzCSkuJymSg8UBFcDjX92zttt7KtkHP/hzXiJCTJvS8zyVE9yJTP06RiMrvEPgm6/BtUYyHLIpBS7vYY=
+	t=1790271667; cv=none; b=BQvomBsH9VRyBgRVgOn0mMjwdjmt9+1YJKRcDa1e3xfvgoMLL8DKeVR1Ry71NPN0p93C5zgPEDniUE0KBZ3haF1Bas3o/LhPa0A9Oup9Qz9yGPD1M4aMRTJVsnmsUQcPqxrkhhgpP8cKJHpHXMHWaFHBhk2RX95thvpp4BUwGk0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790271535; c=relaxed/simple;
-	bh=AJ1IM46fShG3a5boN7K9E/3Z1mO8MbqGWQ+JAsu+Pgs=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=SEBIMkhXL4qsPNaE0Bemrnb+25xwAZYuQDV1pfcnGVhnxQRD+iHLmYfmlJqx2VqWYd4gqMDdV/ytMirm8etXup9ZjP3iUva9aSLdSIdNwxhj0k1cIujsV/aBKhl6b20PwlO6D+u3cmxW+z/bdkTRtoSF7Y8tyC8S8ErfDGmR5uM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jMzY4XbD; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1790271667; c=relaxed/simple;
+	bh=/P1NKi3khGcefSBIlWc4XAPrIBjMtR0WNL5+c6Wlq4Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=DGqoUhGbgE5JmzPzvavOCxh2pi5sjCDqw7nirWm16e22DPcVCyhFU7rB8xJvgOB72RXVT7Qv6uFmqzU7KuaA7cMCEDGmrOOUrxDzUP1grt3mxx4prPCt4+VMtT388161o8FSwtKD1gTWm4HJ+pqPr/Czw/plrIn6zzbxcylxfKQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VnsY865b; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jMzY4XbD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3D2F81F000FF;
-	Thu, 24 Sep 2026 17:38:53 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VnsY865b"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 887921F000FF;
+	Thu, 24 Sep 2026 17:41:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1790271533;
-	bh=lAVL74Np4Z7h8Tk0g5UAfg8fbQXBKZVTqq7AWxhuyyM=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=jMzY4XbD2VKZBoQ6aOons7R0FnNADC0VzGZE1aCos+XqD7jVetoeKKHdStNX2oNjZ
-	 vqtkCt01VbjuLC/APQDKCKlQ2cHgoVLJCMvXRk3ucLHPMmRMlYS1llbTaWcCUPVprA
-	 HehKfDoQbzt2LsWpbDAtwjSV/NdLArI7mhHEulExUGr5g8QGTfvXzbsZZ5wyZbFrY3
-	 HJCh47ZGfuU0V604QW/S23mNLCTO/Pdsgw/v+hL6lua/cd68+2Q55WNp9xgj4osVwC
-	 9+dVKMcPhqtaGIvMKICO8naLwoa+KLC8Ii1N+6Mk7a50J3W5siL1KPHBIXzN5ZqO6R
-	 S1w/NrZlSp6Xg==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v9 02/22] KVM: arm64: Reorganize PMU includes
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Colton Lewis" <coltonlewis@google.com>
-Cc: "Marc Zyngier" <maz@kernel.org>, "Oliver Upton" <oupton@kernel.org>, kvm@vger.kernel.org, linux-perf-users@vger.kernel.org, kvmarm@lists.linux.dev
-In-Reply-To: <20260924172928.2110956-3-coltonlewis@google.com>
-References: <20260924172928.2110956-1-coltonlewis@google.com>
- <20260924172928.2110956-3-coltonlewis@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Thu, 24 Sep 2026 17:38:52 +0000
-Message-Id: <20260924173853.3D2F81F000FF@smtp.kernel.org>
+	s=k20260515; t=1790271666;
+	bh=EYCIvHg8/lq0ByXIuBmYv9z2jqhplm90klgKW5c2/nE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=VnsY865bvqw/GV3PViUQTw/bjan1HvNlnREu6ByyJ/9uJGNbz8vJYuV4GBx125iVE
+	 PMz5rVQRhMmoSVXUNpwRVBuQon2DllTW8nxO4wzeIxh/QICI1whg2AycGcrvM6a00p
+	 rJ99a/9llyBOpc4TljUYTYdhRYuHiB+fzIx34TeKn0uq4c8yJBKEzYKJbPm2yKqXJh
+	 tuLuy4AyqPL3T1rER8y/aE1zoA6vpFesr6DPXfga5qZHyq32jy2lFvateoQRi6+ci4
+	 lBK5oNGxf8jL7Zj8s+eFhKCK1JpxfHm4kBCnKGK9IBtsk7o7LdBearnz736oQYXG2M
+	 nynM//727O9Fw==
+Date: Thu, 24 Sep 2026 19:41:03 +0200
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Thomas Richter <tmricht@linux.ibm.com>
+Cc: Ian Rogers <irogers@google.com>, Jens Remus <jremus@linux.ibm.com>,
+	Jan Polensky <japo@linux.ibm.com>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	Ilya Leoshkevich <iii@linux.ibm.com>, linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org, linux-s390@vger.kernel.org
+Subject: Re: [PATCH] perf evsel: Improve callchain warning for s390
+Message-ID: <arVgr9ex8aBRcy0-@x2>
+References: <20260922144300.1217524-1-jremus@linux.ibm.com>
+ <CAP-5=fUM6gb9MY9Sm=QhC+Tc4AFt2=fdLbr4tES++AMQcxryUQ@mail.gmail.com>
+ <a79daeb6-394c-434a-8896-a1bd48337f8d@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <a79daeb6-394c-434a-8896-a1bd48337f8d@linux.ibm.com>
 
-> From: Marc Zyngier <maz@kernel.org>
->=20
-> Including *all* of asm/kvm_host.h in asm/arm_pmuv3.h is a bad idea
-> because that is much more than arm_pmuv3.h logically needs and creates
-> a circular dependency that makes it easy to introduce compiler errors
-> when editing this code.
->=20
-> asm/kvm_host.h includes kvm/arm_pmu.h includes perf/arm_pmuv3.h
-> includes asm/arm_pmuv3.h includes asm/kvm_host.h
->=20
-> Reorganize the PMU includes to be more sane. In particular:
->=20
-> - Remove the circular dependency by removing the kvm_host.h include
->   from asm/arm_pmuv3.h since 99% of it isn't needed.
->=20
-> - Move the remaining tiny bit of KVM/PMU interface from kvm_host.h
->   into arm_pmu.h
->=20
-> - Conditionally on ARM64, include the more targeted arm_pmu.h directly
->   in the arm_pmuv3.c driver.
->=20
-> Signed-off-by: Marc Zyngier <maz@kernel.org>
-> Signed-off-by: Colton Lewis <coltonlewis@google.com>
+On Thu, Sep 24, 2026 at 11:40:11AM +0200, Thomas Richter wrote:
+> On 9/23/26 18:37, Ian Rogers wrote:
+> > On Tue, Sep 22, 2026 at 7:43 AM Jens Remus <jremus@linux.ibm.com> wrote:
+> >> On s390 the kernel uses s390 back chain instead of frame pointers for
+> >> stack tracing of user space since v6.7 commit aa44433ac4ee ("s390: add
+> >> USER_STACKTRACE support").  This is because frame pointers on s390
+> >> cannot be used for stack tracing. [1]
+<SNIP>
+> >> Fixes: ca76fb67ebdd ("perf evlist: Improve default event for s390")
+> >> Signed-off-by: Jens Remus <jremus@linux.ibm.com>
 
-Sashiko has reviewed this patch and found no issues. It looks great!
+> > Acked-by: Ian Rogers <irogers@google.com>
 
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260924172928.2110=
-956-1-coltonlewis@google.com?part=3D2
+> Reviewed-by: Thomas Richter <tmricht@linux.ibm.com>
 
+Thanks, applied to perf-tools-next, for v7.4.
+
+- Arnaldo
