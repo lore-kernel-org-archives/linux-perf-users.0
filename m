@@ -1,383 +1,257 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oi1-f199.google.com (mail-oi1-f199.google.com [209.85.167.199])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E11E46AA9E;
-	Thu, 24 Sep 2026 17:29:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B14341D21F
+	for <linux-perf-users@vger.kernel.org>; Thu, 24 Sep 2026 17:29:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790270956; cv=none; b=pP9kpj2N15XFvbaWlQ0fpNPqjIOPNuMrKQ1gpZWC4d4+ulGcXDv6NaovNq2oc23XQYpVJiVXKBYkiFUjkqQM5lzyhhI+hHzU8Pgj6xmQjc3+XfEx61jmlqoZOxD7kfh4BX76Hot6V+7L+yXxNiUKpeO7Uddq08Grd3WjCEjmdNU=
+	t=1790270974; cv=none; b=WiaZvXfQ8gBrxdGgf6lkn/YmaPA8Hujw0ySJOF9bC8wPSSlTGHs8Bb1yldJ5plAfiLFeKnuUp6ISioOAyGEnaUALmp4QrtPQbWMW/N6N9E79dsAFE87g/73XvjsVY3bXF4UOBn+kJWzYaaja5I46LU2oUW1TguY8mQeiuqG0TnU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790270956; c=relaxed/simple;
-	bh=IHU9w772yCTiVPJjSs681edq+Dwh8xdTHldYAmzImnM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JHduTrnBYxcXMzAIe86290UR5brxyildE4jA3ntaioSkhw9uQ+kLn3vWVpmbpgRfftIMP7DeFpMj1I+HQDvXszYTLRORnatpz0Z6zJ1tent6BNTVnXUpgpbBTw9YzqeRJ+mDdi5NI0SVJSOhoqSqiuu33nSVXIozzvJhfC66Z7U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=b+Ww1Ali; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1790270974; c=relaxed/simple;
+	bh=Th/gdb82q0l15jjXh7OyXa5eh1Parw2GpJ00iFt/BI8=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=ECHrLTcxCg5UC19D7B95vn99JxWDQRPyyAaBpvJ/FlEnD0TIVj08k4n4Z+XuDVsuFgc4Y0tgjP7Q3ALql0MyUG0zdBk17kxUQitVVA5oU+7wiOvCl/SbAe7de7EkJfe0GidFWmerSliFY9gkYM2anxhW1I1bk795/uHcsBA8EkQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--coltonlewis.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Cn6CQMfU; arc=none smtp.client-ip=209.85.167.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--coltonlewis.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="b+Ww1Ali"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9F0D21F00893;
-	Thu, 24 Sep 2026 17:29:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1790270953;
-	bh=5sP4lyHpb+OJAHofWxdv09rRmJtIwDdpvt2+tnBSymk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=b+Ww1AlimJaKgstNc9Wf8tB0ALSNd7OVnPf7vpGHkuhVUmrNw+hNyc7r9XvrccEXH
-	 2CQ669/ZJa9v3h/RBClGHaPhnI+okHB4nTb1zSIq19vns7BhkNNECZQIpEKCISsliR
-	 9OsgzL8gMfwra9deN10NhMpI5Pi+wmFwz3ejZTY+qx+1zIAihxy+OvHk4nKr5WG153
-	 uFF65kgW5PFEMI95D45TElnQ2uBVgSWKpn87pHvJWdbt4R9R1Nt2rHLVEngWOcFL1U
-	 s5qOlJ16fkfRqXUzv3hzEtnEIJN2GsxVbL33UY7nR9pk+l3DXoqrcjzS+TT9ndGwYz
-	 mNku3Qd02BdWw==
-Date: Thu, 24 Sep 2026 19:29:10 +0200
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-Cc: Thomas Falcon <thomas.falcon@intel.com>, sashiko-bot@kernel.org,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	James Clark <james.clark@linaro.org>
-Subject: Re: [PATCH v12 4/6] perf tools: Show memory region in perf-c2c
- subcommand
-Message-ID: <arVd5uRfZWRzpaaE@x2>
-References: <20260923161043.95C171F000FF@smtp.kernel.org>
- <20260923170903.48388-1-thomas.falcon@intel.com>
- <20260923170903.48388-5-thomas.falcon@intel.com>
- <a2f2063b-b491-4f65-9e42-1c3dfa1902c7@linux.intel.com>
- <arVdq-jyFVdX5QNa@x2>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Cn6CQMfU"
+Received: by mail-oi1-f199.google.com with SMTP id 5614622812f47-4c55ba309c2so191228b6e.1
+        for <linux-perf-users@vger.kernel.org>; Thu, 24 Sep 2026 10:29:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1790270970; x=1790875770; darn=vger.kernel.org;
+        h=content-type:cc:to:from:subject:message-id:mime-version:date:from
+         :to:cc:subject:date:message-id:reply-to:content-type;
+        bh=5+HVoWUpl0qaj6LVCbO//92JCksvBDFuswRRe0vTxAA=;
+        b=Cn6CQMfUNTktTCxS+F/RAdatKLjrNqsH0XKA28W3mVaYN/ZKqW8nZPCUeNUjRvLhmJ
+         zpYbWRPU/21L6VhB/59UzGUWrx0XrI6gg7Pl4Q1pG/TBFoJUeEUX6iccoxE+24ha/2z6
+         Rg8+c7D1xQzlDXtquW8OOI4CCZY3SAK5zNrJHTE+jWUfWZzXjiTPwNgL22BGiyMow81V
+         fOeMWZuqYAa8CfAnAyHrY4F9ht+k8oqDqjGl5NKDf9wlOx1CiDXcLH/VhHNnne2jjTWR
+         Gq0jfc054Q0E1sfxFZHnSAcDwc9iFMHBb/nAWw+RKrnxZBz6LOf336gRBAoi8XRWXNW4
+         AT3g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1790270970; x=1790875770;
+        h=content-type:cc:to:from:subject:message-id:mime-version:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=5+HVoWUpl0qaj6LVCbO//92JCksvBDFuswRRe0vTxAA=;
+        b=rCTBrC3T6XtbswHG7GLPb8i0gvWvc9CmTTyWKgmerRXet1IZ4AJ00CLSOysJm2AG30
+         h6L+4g2fb9OD8FqbCc7cuATITrs32ZyZJ/La5JQQl+EdW+I72sZs4l859iZo1i7WIajN
+         Yd3OGcOVhKxIWsIjF4f967PKOuIQRtckeAS+ImY5Kiceyg5fxX8n7cf5QgMeQvHz27hT
+         15SScKoC55LKlDN/byQJgFoxQn6b/+W/fdBylzVDVDM6ZYDYbwFISPA4unMyVXZUMSmD
+         x/i7TNusbIFwNr7vNbAvIxx5G/obXyUi9KVlxmCel2R/4x8tWf2rdBH9dk/Kzi2SukLd
+         qisQ==
+X-Forwarded-Encrypted: i=1; AKwUvBwJeMp6DIlfzZOJCjf2N4Eph9rSdNUOLOCTj/yj92CW4V06HOASiQmeb7HcGWypIBqSyCYNG/MVJs6JfvL7RK3P@vger.kernel.org
+X-Gm-Message-State: AFuF++ln1QFI/1PSRedVmlPCHKiDitYg74nEJ/9iOs2txm7YZLSdirok
+	QG1UWU5zuVJkn6wDSIoE4vvRqhgBpIRUCHz2B5FMI6AhWpWsEHOmnY5loyy8HCZevs/qClOQtPX
+	prnk7Zvxqmoe8aE3Fp1vI5EOO3Q==
+X-Received: from ilbdr2.prod.google.com ([2002:a05:6e02:3f02:b0:509:22e1:470c])
+ (user=coltonlewis job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:6808:17aa:b0:4bc:2295:1687 with SMTP id 5614622812f47-4d72df6ccaamr3402135b6e.40.1790270969819;
+ Thu, 24 Sep 2026 10:29:29 -0700 (PDT)
+Date: Thu, 24 Sep 2026 17:29:06 +0000
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <arVdq-jyFVdX5QNa@x2>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.56.0.rc1.315.gc6ed9934b7-goog
+Message-ID: <20260924172928.2110956-1-coltonlewis@google.com>
+Subject: [PATCH v9 00/22] ARM64 PMU Partitioning
+From: Colton Lewis <coltonlewis@google.com>
+To: kvm@vger.kernel.org, kvmarm@lists.linux.dev, 
+	linux-arm-kernel@lists.infradead.org
+Cc: Marc Zyngier <maz@kernel.org>, Oliver Upton <oupton@kernel.org>, 
+	Oliver Upton <oliver.upton@linux.dev>, Joey Gouly <joey.gouly@arm.com>, 
+	Suzuki K Poulose <suzuki.poulose@arm.com>, Zenghui Yu <yuzenghui@huawei.com>, 
+	Fuad Tabba <fuad.tabba@linux.dev>, Catalin Marinas <catalin.marinas@arm.com>, 
+	Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Paolo Bonzini <pbonzini@redhat.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	James Clark <james.clark@linaro.org>, Robin Murphy <robin.murphy@arm.com>, 
+	Zide Chen <zide.chen@intel.com>, Alexandru Elisei <alexandru.elisei@arm.com>, 
+	Ganapatrao Kulkarni <gankulkarni@os.amperecomputing.com>, Mingwei Zhang <mizhang@google.com>, 
+	Jonathan Corbet <corbet@lwn.net>, Russell King <linux@armlinux.org.uk>, Shuah Khan <shuah@kernel.org>, 
+	linux-perf-users@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Colton Lewis <coltonlewis@google.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On Thu, Sep 24, 2026 at 07:28:13PM +0200, Arnaldo Carvalho de Melo wrote:
-> On Thu, Sep 24, 2026 at 08:23:42AM +0800, Mi, Dapeng wrote:
-> > Reviewed-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
-> 
-> Is this needed since you're the author of the patch? I'm keeping just
-> the Signed-off-by,
+This series creates a new PMU scheme on ARM, a partitioned PMU that
+allows reserving a subset of counters for more direct guest access,
+significantly reducing overhead. More details, including performance
+benchmarks, can be read in the v1 cover letter linked below.
 
-I'll keep it since I saw a Co-developed-by tag, meaning maybe there were
-changes after you initially created this patch...
+There is no longer a kernel command line parameter
+(`arm_pmuv3.reserved_host_counters`); PMU partitioning is now completely
+controlled via the KVM API using `KVM_ARM_VCPU_PMU_V3_ENABLE_PARTITION`
+and `KVM_ARM_VCPU_PMU_V3_SET_NR_COUNTERS` vCPU device attributes. When
+partitioning is enabled for a VM, userspace must explicitly configure a
+guest event counter count strictly less than the maximum general-purpose
+counters implemented by the PMU (leaving at least one general-purpose
+counter for the host) prior to calling `KVM_ARM_VCPU_PMU_V3_INIT`. A QEMU
+patch demonstrating how to use the uAPI is sent separately.
 
-- Arnaldo
-> > 
-> > On 9/24/2026 1:09 AM, Thomas Falcon wrote:
-> > > From: Dapeng Mi <dapeng1.mi@linux.intel.com>
-> > >
-> > > Add memory region field to the cacheline list view to help users
-> > > identify the memory region to which the cacheline belongs. The memory
-> > > region field was included with the introduction of support for the
-> > > Off-module Response facility (OMR) [1] in Intel's Diamond Rapids and
-> > > Nova Lake architectures.
-> > >
-> > > An example of the new perf c2c output including the memory region
-> > > field is shown below:
-> > >
-> > > # Index             Address  Region  Node  PA cnt     Hitm    Total  LclHitm  RmtHitm  records    Loads
-> > > # .....  ..................  ......  ....  ......  .......  .......  .......  .......  .......  .......
-> > > #
-> > >       0  0xffffffff84eb0040     N/A     0    1205   23.25%      544      544        0     1677     1677
-> > >       1  0xffffffff84f03a80     N/A     0       1   18.12%      424      424        0      585      585
-> > > [...]
-> > >      19  0xffffffff845bc840   Mem-0     0      13    0.30%        7        7        0       31       31
-> > >      20  0xff3bbba284520a00     N/A     0      10    0.26%        6        6        0       11       11
-> > >      21  0xff3bbbe0bc833500     N/A     0      24    0.26%        6        6        0       30       30
-> > >
-> > > [1]: https://lore.kernel.org/all/20260114011750.350569-1-dapeng1.mi@linux.intel.com/
-> > >
-> > > Assisted-by: Sashiko:gemini-3.1-pro-preview
-> > > Assisted-by: GitHub-Copilot:claude-opus-4-8
-> > > Reviewed-by: Ian Rogers <irogers@google.com>
-> > > Reviewed-by: Namhyung Kim <namhyung@kernel.org>
-> > > Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
-> > > Co-developed-by: Thomas Falcon <thomas.falcon@intel.com>
-> > > Signed-off-by: Thomas Falcon <thomas.falcon@intel.com>
-> > > ---
-> > > v11: perf-c2c: revert to only recording a real memory region for a
-> > >      cacheline
-> > > v10: only update mem_region for real cache/memory regions so N/A samples
-> > >      don't overwrite a valid region; add #include <stdio.h> for asprintf
-> > >      (Sashiko)
-> > > v9: Update perf-c2c to include cache region reporting (Dapeng Mi)
-> > > v8: Update developer tags and commit message with real example
-> > >     output (Dapeng Mi)
-> > > v7: fix output_str allocation error handling which introduced
-> > >     a memory leak (Sashiko)
-> > > v6: rebased onto 7.3-rc1
-> > > v5: make the cacheline header span and ui_quirks() width
-> > >     fixup depend on memory-region availability (Namhyung Kim)
-> > > v4: correctly handle output_str memory allocation failure
-> > > v3: make memory region reporting conditional on feature bit
-> > > ---
-> > >  tools/perf/builtin-c2c.c | 114 +++++++++++++++++++++++++++++++++++----
-> > >  tools/perf/util/c2c.h    |   1 +
-> > >  2 files changed, 104 insertions(+), 11 deletions(-)
-> > >
-> > > diff --git a/tools/perf/builtin-c2c.c b/tools/perf/builtin-c2c.c
-> > > index 6b64c0d6b24f..a42423ca990d 100644
-> > > --- a/tools/perf/builtin-c2c.c
-> > > +++ b/tools/perf/builtin-c2c.c
-> > > @@ -14,6 +14,7 @@
-> > >  #include <inttypes.h>
-> > >  #include <stdlib.h>
-> > >  #include <string.h>
-> > > +#include <stdio.h>
-> > >  
-> > >  #include <asm/bug.h>
-> > >  #include <linux/compiler.h>
-> > > @@ -72,6 +73,7 @@ struct perf_c2c {
-> > >  
-> > >  	bool			 show_src;
-> > >  	bool			 show_all;
-> > > +	bool			 show_mem_region;
-> > >  	bool			 use_stdio;
-> > >  	bool			 stats_only;
-> > >  	bool			 symbol_full;
-> > > @@ -248,6 +250,18 @@ static void c2c_he__set_node(struct c2c_hist_entry *c2c_he,
-> > >  	}
-> > >  }
-> > >  
-> > > +static void c2c_he__set_mem_region(struct c2c_hist_entry *c2c_he,
-> > > +				   unsigned int mem_region)
-> > > +{
-> > > +	if (WARN_ONCE(mem_region > PERF_MEM_REGION_MEM7,
-> > > +		      "WARNING: invalid memory region ID\n"))
-> > > +		return;
-> > > +
-> > > +	/* Update mem_region only if it really accesses memory */
-> > > +	if (mem_region >= PERF_MEM_REGION_MMIO)
-> > > +		c2c_he->mem_region = mem_region;
-> > > +}
-> > > +
-> > >  static void compute_stats(struct c2c_hist_entry *c2c_he,
-> > >  			  struct c2c_stats *stats,
-> > >  			  u64 weight)
-> > > @@ -306,6 +320,7 @@ static int process_sample_event(const struct perf_tool *tool __maybe_unused,
-> > >  	struct addr_location al;
-> > >  	struct mem_info *mi = NULL;
-> > >  	struct callchain_cursor *cursor;
-> > > +	unsigned int mem_region;
-> > >  	int ret;
-> > >  
-> > >  	addr_location__init(&al);
-> > > @@ -333,6 +348,7 @@ static int process_sample_event(const struct perf_tool *tool __maybe_unused,
-> > >  	}
-> > >  
-> > >  	c2c_decode_stats(&stats, mi);
-> > > +	mem_region = mem_info__data_src(mi)->mem_region;
-> > >  
-> > >  	he = hists__add_entry_ops(&c2c_hists->hists, &c2c_entry_ops,
-> > >  				  &al, NULL, NULL, mi, NULL,
-> > > @@ -349,6 +365,7 @@ static int process_sample_event(const struct perf_tool *tool __maybe_unused,
-> > >  	c2c_he__set_cpu(c2c_he, sample);
-> > >  	c2c_he__set_node(c2c_he, sample);
-> > >  	c2c_he__set_evsel(c2c_he, evsel);
-> > > +	c2c_he__set_mem_region(c2c_he, mem_region);
-> > >  
-> > >  	hists__inc_nr_samples(&c2c_hists->hists, he->filtered);
-> > >  
-> > > @@ -402,6 +419,7 @@ static int process_sample_event(const struct perf_tool *tool __maybe_unused,
-> > >  		c2c_he__set_cpu(c2c_he, sample);
-> > >  		c2c_he__set_node(c2c_he, sample);
-> > >  		c2c_he__set_evsel(c2c_he, evsel);
-> > > +		c2c_he__set_mem_region(c2c_he, mem_region);
-> > >  
-> > >  		hists__inc_nr_samples(&c2c_hists->hists, he->filtered);
-> > >  		ret = hist_entry__append_callchain(he, sample);
-> > > @@ -540,6 +558,45 @@ dcacheline_node_count(struct perf_hpp_fmt *fmt, struct perf_hpp *hpp,
-> > >  	return scnprintf(hpp->buf, hpp->size, "%*lu", width, c2c_he->paddr_cnt);
-> > >  }
-> > >  
-> > > +static int
-> > > +dcacheline_node_mem_region(struct perf_hpp_fmt *fmt, struct perf_hpp *hpp,
-> > > +			   struct hist_entry *he)
-> > > +{
-> > > +	int width = c2c_width(fmt, hpp, he->hists);
-> > > +	struct c2c_hist_entry *c2c_he;
-> > > +	unsigned int mem_region;
-> > > +	char buf[20];
-> > > +
-> > > +	c2c_he = container_of(he, struct c2c_hist_entry, he);
-> > > +	mem_region = c2c_he->mem_region;
-> > > +
-> > > +	switch (mem_region) {
-> > > +	case PERF_MEM_REGION_NA:
-> > > +	case PERF_MEM_REGION_RSVD:
-> > > +		scnprintf(buf, sizeof(buf), "N/A");
-> > > +		break;
-> > > +	case PERF_MEM_REGION_MMIO:
-> > > +		scnprintf(buf, sizeof(buf), "MMIO");
-> > > +		break;
-> > > +	case PERF_MEM_REGION_MEM0:
-> > > +	case PERF_MEM_REGION_MEM1:
-> > > +	case PERF_MEM_REGION_MEM2:
-> > > +	case PERF_MEM_REGION_MEM3:
-> > > +	case PERF_MEM_REGION_MEM4:
-> > > +	case PERF_MEM_REGION_MEM5:
-> > > +	case PERF_MEM_REGION_MEM6:
-> > > +	case PERF_MEM_REGION_MEM7:
-> > > +		scnprintf(buf, sizeof(buf), "Mem-%d",
-> > > +			  mem_region - PERF_MEM_REGION_MEM0);
-> > > +		break;
-> > > +	default:
-> > > +		scnprintf(buf, sizeof(buf), "N/A");
-> > > +		break;
-> > > +	}
-> > > +
-> > > +	return scnprintf(hpp->buf, hpp->size, "%*s", width, buf);
-> > > +}
-> > > +
-> > >  static int offset_entry(struct perf_hpp_fmt *fmt, struct perf_hpp *hpp,
-> > >  			struct hist_entry *he)
-> > >  {
-> > > @@ -1360,6 +1417,14 @@ static struct c2c_dimension dim_dcacheline_node = {
-> > >  	.width		= 4,
-> > >  };
-> > >  
-> > > +static struct c2c_dimension dim_dcacheline_mem_region = {
-> > > +	.header		= HEADER_LOW("Region"),
-> > > +	.name		= "dcacheline_mem_region",
-> > > +	.cmp		= empty_cmp,
-> > > +	.entry		= dcacheline_node_mem_region,
-> > > +	.width		= 6,
-> > > +};
-> > > +
-> > >  static struct c2c_dimension dim_dcacheline_count = {
-> > >  	.header		= HEADER_LOW("PA cnt"),
-> > >  	.name		= "dcacheline_count",
-> > > @@ -1791,6 +1856,7 @@ static struct c2c_dimension dim_dcacheline_num_empty = {
-> > >  
-> > >  static struct c2c_dimension *dimensions[] = {
-> > >  	&dim_dcacheline,
-> > > +	&dim_dcacheline_mem_region,
-> > >  	&dim_dcacheline_node,
-> > >  	&dim_dcacheline_count,
-> > >  	&dim_offset,
-> > > @@ -2854,8 +2920,11 @@ static int ui_quirks(void)
-> > >  	/* Fix the zero line for dcacheline column. */
-> > >  	buf = fill_line(chk_double_cl ? "Double-Cacheline" : "Cacheline",
-> > >  				dim_dcacheline.width +
-> > > +				(c2c.show_mem_region ?
-> > > +					dim_dcacheline_mem_region.width : 0) +
-> > >  				dim_dcacheline_node.width +
-> > > -				dim_dcacheline_count.width + 4);
-> > > +				dim_dcacheline_count.width +
-> > > +				(c2c.show_mem_region ? 6 : 4));
-> > >  	if (!buf)
-> > >  		return -ENOMEM;
-> > >  
-> > > @@ -3107,7 +3176,8 @@ static int perf_c2c__report(int argc, const char **argv)
-> > >  	OPT_END()
-> > >  	};
-> > >  	int err = 0;
-> > > -	const char *output_str, *sort_str = NULL;
-> > > +	const char *sort_str = NULL;
-> > > +	char *output_str = NULL;
-> > >  	struct perf_env *env;
-> > >  
-> > >  	annotation_options__init();
-> > > @@ -3272,9 +3342,16 @@ static int perf_c2c__report(int argc, const char **argv)
-> > >  		goto out_mem2node;
-> > >  	}
-> > >  
-> > > -	if (c2c.display != DISPLAY_SNP_PEER)
-> > > -		output_str = "cl_idx,"
-> > > +	c2c.show_mem_region = perf_header__has_feat(&session->header,
-> > > +						HEADER_MEMORY_RANGES);
-> > > +	if (c2c.show_mem_region)
-> > > +		dim_dcacheline.header.line[0].span = 3;
-> > > +
-> > > +	if (c2c.display != DISPLAY_SNP_PEER) {
-> > > +		if (asprintf(&output_str,
-> > > +			     "cl_idx,"
-> > >  			     "dcacheline,"
-> > > +			     "%s"
-> > >  			     "dcacheline_node,"
-> > >  			     "dcacheline_count,"
-> > >  			     "percent_costly_snoop,"
-> > > @@ -3286,10 +3363,17 @@ static int perf_c2c__report(int argc, const char **argv)
-> > >  			     "ld_fbhit,ld_l1hit,ld_l2hit,"
-> > >  			     "ld_lclhit,lcl_hitm,"
-> > >  			     "ld_rmthit,rmt_hitm,"
-> > > -			     "dram_lcl,dram_rmt";
-> > > -	else
-> > > -		output_str = "cl_idx,"
-> > > +			     "dram_lcl,dram_rmt",
-> > > +			     c2c.show_mem_region ?
-> > > +			     "dcacheline_mem_region," : "") < 0) {
-> > > +			err = -ENOMEM;
-> > > +			goto out_mem2node;
-> > > +		}
-> > > +	} else {
-> > > +		if (asprintf(&output_str,
-> > > +			     "cl_idx,"
-> > >  			     "dcacheline,"
-> > > +			     "%s"
-> > >  			     "dcacheline_node,"
-> > >  			     "dcacheline_count,"
-> > >  			     "percent_costly_snoop,"
-> > > @@ -3301,7 +3385,13 @@ static int perf_c2c__report(int argc, const char **argv)
-> > >  			     "ld_fbhit,ld_l1hit,ld_l2hit,"
-> > >  			     "ld_lclhit,lcl_hitm,"
-> > >  			     "ld_rmthit,rmt_hitm,"
-> > > -			     "dram_lcl,dram_rmt";
-> > > +			     "dram_lcl,dram_rmt",
-> > > +			     c2c.show_mem_region ?
-> > > +			     "dcacheline_mem_region," : "") < 0) {
-> > > +			err = -ENOMEM;
-> > > +			goto out_mem2node;
-> > > +		}
-> > > +	}
-> > >  
-> > >  	if (c2c.display == DISPLAY_TOT_HITM)
-> > >  		sort_str = "tot_hitm";
-> > > @@ -3315,7 +3405,7 @@ static int perf_c2c__report(int argc, const char **argv)
-> > >  	err = c2c_hists__reinit(&c2c.hists, output_str, sort_str, perf_session__env(session));
-> > >  	if (err) {
-> > >  		pr_err("Failed to reinitialize hists\n");
-> > > -		goto out_mem2node;
-> > > +		goto out_str;
-> > >  	}
-> > >  
-> > >  	ui_progress__init(&prog, c2c.hists.hists.nr_entries, "Sorting...");
-> > > @@ -3324,17 +3414,19 @@ static int perf_c2c__report(int argc, const char **argv)
-> > >  	hists__output_resort_cb(&c2c.hists.hists, &prog, resort_shared_cl_cb);
-> > >  	err = hists__iterate_cb(&c2c.hists.hists, resort_cl_cb, perf_session__env(session));
-> > >  	if (err)
-> > > -		goto out_mem2node;
-> > > +		goto out_str;
-> > >  
-> > >  	ui_progress__finish();
-> > >  
-> > >  	if (ui_quirks()) {
-> > >  		pr_err("failed to setup UI\n");
-> > > -		goto out_mem2node;
-> > > +		goto out_str;
-> > >  	}
-> > >  
-> > >  	perf_c2c_display(session);
-> > >  
-> > > +out_str:
-> > > +	free(output_str);
-> > >  out_mem2node:
-> > >  	mem2node__exit(&c2c.mem2node);
-> > >  out_session:
-> > > diff --git a/tools/perf/util/c2c.h b/tools/perf/util/c2c.h
-> > > index 53f024e25d99..f04e78e1a2e3 100644
-> > > --- a/tools/perf/util/c2c.h
-> > > +++ b/tools/perf/util/c2c.h
-> > > @@ -33,6 +33,7 @@ struct c2c_hist_entry {
-> > >  	unsigned long		*nodeset;
-> > >  	struct c2c_stats	*node_stats;
-> > >  	unsigned int		 cacheline_idx;
-> > > +	unsigned int		 mem_region;
-> > >  
-> > >  	struct compute_stats	 cstats;
-> > >  
+An overview of what this series accomplishes was presented at KVM
+Forum 2025. Slides [1] and video [2] are linked below.
+
+v9:
+
+* Rebase on top of v7.3-rc4.
+
+* Drop the `arm_pmuv3.reserved_host_counters` module parameter so
+  partitioning is completely controlled via the KVM vCPU device
+  attribute uAPI (`KVM_ARM_VCPU_PMU_V3_ENABLE_PARTITION` and
+  `KVM_ARM_VCPU_PMU_V3_SET_NR_COUNTERS`), and document the new
+  attribute and counter allocation rules in
+  `Documentation/virt/kvm/devices/vcpu.rst` (James Clark).
+
+* Move the dynamic counter allocation mask (`cntr_mask`) from global
+  `struct arm_pmu` to per-CPU `struct pmu_hw_events` (`cpuc->cntr_mask`)
+  in a dedicated `drivers/perf` patch, fixing multi-pCPU counter
+  reservation clobbering on vCPU migration and eliminating the
+  `cpu_pm_pmu_setup()` cpuidle `WARN_ON_ONCE` (Zide Chen, James Clark).
+
+* Synchronously propagate trapped guest writes to `PMEVTYPER<n>_EL0`
+  and `PMCCFILTR_EL0` to hardware via `kvm_pmu_apply_single_event_filter()`
+  when guest-owned, fixing in-guest `perf stat` event count skew across
+  runs (James Clark, Sashiko AI Review).
+
+* Refactor `armv8pmu_can_use_pmccntr()` and `armv8pmu_get_event_idx()`
+  to check `cntr_mask` inside `armv8pmu_can_use_pmccntr()` and un-nest
+  the 64-bit user-access check so cycle events fall back cleanly to
+  general-purpose counters when `PMCCNTR_EL0` is reserved by a guest
+  (Robin Murphy).
+
+* Restrict the lazy transition to `VCPU_PMU_ACCESS_GUEST_OWNED` to when
+  the guest actively enables counting (`PMCR_EL0.E = 1` or setting guest
+  counter bits in `PMCNTENSET_EL0` / `PMINTENSET_EL1`), preventing guest
+  boot-time PMU probing from prematurely claiming hardware counters and
+  triggering spurious host counter preemption warnings (James Clark).
+
+* Fix patch dependency ordering and series bisectability across all
+  commits, removing intermediate `max_guest_counters` / `hw_cntr_impl`
+  churn and squashing the selftest exception relaxation into the
+  Partitioned PMU selftest patch (James Clark).
+
+* Fix compiler warning for `struct arm_pmu` declaration in
+  `include/kvm/arm_pmu.h` (kernel test robot) and guard
+  `kvm_pmu_host_counter_mask()` when KVM is compiled in but not active
+  (wuyifan).
+
+* Track physical CPU PMU residency in `vcpu->arch.pmu.loaded_on_cpu`
+  separately from `VCPU_PMU_ACCESS_GUEST_OWNED`, and toggle
+  `MDCR_EL2.HPME` via `kvm_pmu_host_start()` / `kvm_pmu_host_stop()`
+  instead of `PMCR_EL0.E` when starting/stopping host perf events while
+  a partitioned guest is loaded.
+
+* Allow `kvm_vcpu_pmu_resync_el0()` to resynchronize VHE EL0 event
+  filters (`PMEVTYPER<n>_EL0.U`) in process context and order
+  `kvm_pmu_put()` before `kvm_vcpu_pmu_restore_host()` in
+  `kvm_arch_vcpu_put()`.
+
+* Address additional Sashiko AI Review findings:
+  - Check `idx - 1` against `cpuc->cntr_mask` in `armv8pmu_get_chain_idx()`
+    to prevent 64-bit chained host events from crossing an odd `HPMN`
+    partition boundary, and use `cpuc->cntr_mask` in
+    `armv8pmu_enable_user_access()`.
+  - Latch live hardware `PMOVSSET_EL0` overflow bits for guest counters
+    with IRQs disabled (`local_irq_save()`) in `kvm_pmu_part_overflow_status()`
+    and during trapped guest accesses to `PMOVS{SET,CLR}_EL0`.
+  - Add mandatory `isb()` barriers after control-plane system register
+    writes (`mdcr_el2`, `pmcntenclr_el0`, `pmintenclr_el1`), preserve
+    guest `PMSELR_EL0` / `PMUSERENR_EL0` when `MDCR_EL2.TPM == 0`, and
+    restore host `PMCR_EL0` control flags on `kvm_pmu_put()`.
+
+v8:
+https://lore.kernel.org/kvmarm/20260612192909.1153907-1-coltonlewis@google.com/
+
+v7:
+https://lore.kernel.org/kvmarm/20260504211813.1804997-1-coltonlewis@google.com/
+
+v6:
+https://lore.kernel.org/kvmarm/20260209221414.2169465-1-coltonlewis@google.com/
+
+v5:
+https://lore.kernel.org/kvmarm/20251209205121.1871534-1-coltonlewis@google.com/
+
+v4:
+https://lore.kernel.org/kvmarm/20250714225917.1396543-1-coltonlewis@google.com/
+
+v3:
+https://lore.kernel.org/kvm/20250626200459.1153955-1-coltonlewis@google.com/
+
+v2:
+https://lore.kernel.org/kvm/20250620221326.1261128-1-coltonlewis@google.com/
+
+v1:
+https://lore.kernel.org/kvm/20250602192702.2125115-1-coltonlewis@google.com/
+
+[1] https://gitlab.com/qemu-project/kvm-forum/-/raw/main/_attachments/2025/Optimizing__itvHkhc.pdf
+[2] https://www.youtube.com/watch?v=YRzZ8jMIA6M&list=PLW3ep1uCIRfxwmllXTOA2txfDWN6vUOHp&index=9
+
+Colton Lewis (21):
+  arm64: cpufeature: Add cpucap for HPMN0
+  KVM: arm64: Reorganize PMU functions
+  perf: arm_pmuv3: Generalize counter bitmasks
+  perf: arm_pmuv3: Move counter allocation mask to per-CPU struct
+    pmu_hw_events
+  perf: arm_pmuv3: Check cntr_mask before using pmccntr
+  perf: arm_pmuv3: Allocate counter indices from high to low
+  KVM: arm64: Add initial scaffolding for Partitioned PMU
+  KVM: arm64: Set up FGT for Partitioned PMU
+  KVM: arm64: Add Partitioned PMU register trap handlers
+  KVM: arm64: Set up MDCR_EL2 to handle a Partitioned PMU
+  KVM: arm64: Context swap Partitioned PMU guest registers
+  KVM: arm64: Enforce PMU event filter at vcpu_load()
+  perf: Add perf_pmu_resched_update()
+  KVM: arm64: Allow kvm_vcpu_pmu_resync_el0() to resync filters in
+    process context
+  KVM: arm64: Apply dynamic guest counter reservations
+  KVM: arm64: Implement lazy PMU context swaps
+  perf: arm_pmuv3: Handle IRQs for Partitioned PMU guest counters
+  KVM: arm64: Detect overflows for the Partitioned PMU
+  KVM: arm64: Add vCPU device attr to partition the PMU
+  KVM: selftests: Add find_bit to KVM library
+  KVM: arm64: selftests: Add test case for Partitioned PMU
+
+Marc Zyngier (1):
+  KVM: arm64: Reorganize PMU includes
+
+ Documentation/virt/kvm/devices/vcpu.rst       |  42 +-
+ arch/arm/include/asm/arm_pmuv3.h              |  16 +
+ arch/arm64/include/asm/arm_pmuv3.h            |   7 +-
+ arch/arm64/include/asm/kvm_host.h             |  18 +-
+ arch/arm64/include/asm/kvm_types.h            |   6 +-
+ arch/arm64/include/uapi/asm/kvm.h             |   2 +
+ arch/arm64/kernel/cpufeature.c                |  10 +-
+ arch/arm64/kvm/Makefile                       |   2 +-
+ arch/arm64/kvm/arm.c                          |   4 +-
+ arch/arm64/kvm/config.c                       |  49 +-
+ arch/arm64/kvm/debug.c                        |  41 +-
+ arch/arm64/kvm/pmu-direct.c                   | 636 ++++++++++++++
+ arch/arm64/kvm/pmu-emul.c                     | 718 +---------------
+ arch/arm64/kvm/pmu.c                          | 787 +++++++++++++++++-
+ arch/arm64/kvm/sys_regs.c                     | 334 ++++++--
+ arch/arm64/tools/cpucaps                      |   1 +
+ arch/arm64/tools/sysreg                       |   6 +-
+ drivers/perf/arm_pmu.c                        |   7 +-
+ drivers/perf/arm_pmuv3.c                      |  97 ++-
+ include/kvm/arm_pmu.h                         |  93 ++-
+ include/linux/perf/arm_pmu.h                  |   2 +
+ include/linux/perf/arm_pmuv3.h                |  14 +-
+ include/linux/perf_event.h                    |   3 +
+ kernel/events/core.c                          |  31 +-
+ tools/include/perf/arm_pmuv3.h                |  12 +-
+ tools/testing/selftests/kvm/Makefile.kvm      |   1 +
+ .../selftests/kvm/arm64/vpmu_counter_access.c | 129 ++-
+ tools/testing/selftests/kvm/lib/find_bit.c    |   2 +
+ 28 files changed, 2200 insertions(+), 870 deletions(-)
+ create mode 100644 arch/arm64/kvm/pmu-direct.c
+ create mode 100644 tools/testing/selftests/kvm/lib/find_bit.c
+
+
+base-commit: 93f51579e7df248780214094418f205253383cc5
+-- 
+2.56.0.rc1.310.g51773c2048-goog
+
