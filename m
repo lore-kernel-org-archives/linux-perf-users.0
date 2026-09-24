@@ -1,82 +1,65 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 486044B4894;
-	Thu, 24 Sep 2026 17:42:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D530A4BEE4F;
+	Thu, 24 Sep 2026 17:44:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790271772; cv=none; b=QfMiwHIqwr6iT5uMe9Yi3OlknCJXqVDS+f5lP6sP2GlY7XyYxsu2eh/act7An+dZeMbQqrgFgX+ryGgzEvc4kbgrMgnu0MySf1MHjh1G7VrCjSN4trCfdECCSnmLEq0rjohJx43rwROSGhYONIQnI0Dv2kOGpWdnU8lIWnxKtD0=
+	t=1790271845; cv=none; b=jCP1FxomrVcUhSnVcRY8gLkBo77zUjR07+J9wMLALDqNnLwwaKKH37k74o8zddUGuWQMsT7B0iB93rN84JmyHi0oWgszSXztx1f4RybYZRiIbOaNv7cwMD83J7D+GSXOTWId/nbhSdWTWdj6tX3+2rpkAJPmWglXQrDWpCD4hRc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790271772; c=relaxed/simple;
-	bh=vcJtfxpVsSBGnXSKyblhxsUK5ZZS2KwzT8XmWhThEZg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=m4CbFIul8DP0A0gvzzB9YAVWLqVDupUYE3JSkeLhPBuNAObSPGLG1//V2733Q++eUqif52FRTxoD1Y9kYNVBa1JBi8JZqLA+zUACLf4MUxZddaFnx+Fp9fz2a0gYKvy6Wh4UIRYhGuEDEpF4YifYEmlrGhKVoB8FeaoU0MbMBA0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lf+zN5Ru; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1790271845; c=relaxed/simple;
+	bh=2wTxbc3MUo0XmiLTF3/ZsX7N++K0wak+rwlTgp/XG2U=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=a7hcl81gkmuUcUlX5LTGQAkg8Ag1/hCfRTlcpmba6IGZmyO25knxySTInxDP6Du5UQWrjwL2csRs/62Fx2AbFkqrP6HbYH94Ux/HokUbCnoXt4iYq8sj/oHrUzrwYapXX6zBz31svDcJh18TdCjQkmsTNHSCyREltWQwUEFjZN4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=H1t56tH0; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lf+zN5Ru"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 60FEA1F000FF;
-	Thu, 24 Sep 2026 17:42:50 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="H1t56tH0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 22BF11F00893;
+	Thu, 24 Sep 2026 17:44:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1790271770;
-	bh=IERi4gcSzZ5mhy2o5C8Pq4RKsSIgaWdUICIYtzdLXkc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=lf+zN5Ruc9WiwU1wgCsaPEN6tGmC4zijuHQS0p0QaO2Ur4q/vNT/whgM6yO8oUHI+
-	 B8UzChcKfcmZoH7zD/7Tfl8Y+leQCeODdG9+RrGfzlH4aWagnTlVBRpRua4Ljl39ka
-	 JnbOpk0qL0e/tvGZM+P7W21lo8TH6/06X8Fxq5LoEElTsCVJY+uVA+KlWwLM6fI8BZ
-	 B9z33voCZVcuLWfS+2IscYHcKJn5k9XVS56vC/MoagSVYt9tNNAS2fRH6/5XjpopT7
-	 JBW1GxY70MaPmOFkS2SzXfy6D5xRKNw9B4hM5KAs4W1IPw2CIEg0rsOPPpl+ih5bcm
-	 sySTHj0OegZ5Q==
-Date: Thu, 24 Sep 2026 19:42:48 +0200
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: James Clark <james.clark@linaro.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] perf buildid-list: Fix empty output for AUX data
-Message-ID: <arVhGILpes7fRK0b@x2>
-References: <20260922-james-perf-aux-archive-v1-1-0ede8ed764ff@linaro.org>
- <CAP-5=fWUZrANh69W=aADmSwhg-8ogFBheL+chOHAWbRuhijEew@mail.gmail.com>
+	s=k20260515; t=1790271843;
+	bh=s6EOAkWe93zXBDvJVeWSfnv+/pS4btqTvKm/M6xpAZk=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=H1t56tH0bHP2ENW3WC8MTfeFwGWAJD8Iu3offXPB4Ir/pJWQCapDrG3KrDg3D0bgj
+	 9jPhKAD5sKh6x9XGrgp5hMNyLWhtViIzUs9fqk5WXogfSFPH/G8VdiI7LdBIlijoW8
+	 4KQVMi7c2H1T6SUGYPyN2GU1SY0JfNtsQrB0FtB6ODVtAL/zdQoFX+g35f8L6fE2QP
+	 /yendT6sR044Wm3Colw6n1CZAj+qsNfhsNUgKjt8tbCIL6JCCwBPK8dQbsTtoX9NDP
+	 9KXSR1lZYlYIGi1JZNKGFSXOy+HzXCDSlQM2yzd9Slf1vEiECoM3HOL9V0YC8C//nJ
+	 Q31A+VNQL0uog==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v9 08/22] KVM: arm64: Add initial scaffolding for
+ Partitioned PMU
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Colton Lewis" <coltonlewis@google.com>
+Cc: "Oliver Upton" <oupton@kernel.org>, "Marc Zyngier" <maz@kernel.org>, linux-perf-users@vger.kernel.org, kvm@vger.kernel.org, kvmarm@lists.linux.dev
+In-Reply-To: <20260924172928.2110956-9-coltonlewis@google.com>
+References: <20260924172928.2110956-1-coltonlewis@google.com>
+ <20260924172928.2110956-9-coltonlewis@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Thu, 24 Sep 2026 17:44:02 +0000
+Message-Id: <20260924174403.22BF11F00893@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fWUZrANh69W=aADmSwhg-8ogFBheL+chOHAWbRuhijEew@mail.gmail.com>
 
-On Tue, Sep 22, 2026 at 10:21:25PM -0700, Ian Rogers wrote:
-> On Tue, Sep 22, 2026 at 7:47 AM James Clark <james.clark@linaro.org> wrote:
-> >
-> > perf record enables buildid_all for AUX trace because buildid-list does
-> > not decode AUX data to identify hit DSOs. Historically those build IDs
-> > were available in HEADER_BUILD_ID, and buildid-list disabled hit
-> > filtering when HEADER_AUXTRACE was present.
-> >
-> > Build IDs are now carried by MMAP2 records by default and the build-ID
-> > header is omitted. perf_session__list_build_ids() forces with_hits when
-> > the header is absent so that it processes the event stream. That also
-> > filters the result to DSOs referenced by ordinary samples. AUX data has
-> > no such samples unless the trace is decoded, so every DSO is dropped and
-> > perf archive reports that no build IDs were found.
-> >
-> > Process the event stream whenever the build-ID header is absent,
-> > allowing MMAP2 build IDs to be read, but do not enable hit filtering for
-> > AUX data, this ensures that all build-IDs are included for AUX data.
-> >
-> > Fixes: 6bd89ae7d147 ("perf record: Make sure to update build-ID cache")
-> > Assisted-by: Codex:GPT-5.6-Sol
-> > Signed-off-by: James Clark <james.clark@linaro.org>
-> 
-> Reviewed-by: Ian Rogers <irogers@google.com>
+> Add the foundational helpers for Partitioned PMU support in
+> arch/arm64/kvm/pmu-direct.c:
+> - has_host_pmu_partition_support() and has_kvm_pmu_partition_support()
+>   to check VHE and PMUv3 availability.
+> - kvm_pmu_partition_enable() and kvm_pmu_is_partitioned() to track per-VM
+>   partitioning state via KVM_ARCH_FLAG_PARTITION_PMU_ENABLED.
+> - kvm_pmu_host_counter_mask() and kvm_pmu_guest_counter_mask() to
+>   compute the bitmasks of host-reserved (HPMN..N-1) and guest-reserved
+>   (0..HPMN-1 and PMCCNTR_EL0) hardware counters.
+>=20
+> Signed-off-by: Colton Lewis <coltonlewis@google.com>
 
-Thanks, applied to perf-tools-next, for v7.4.
+Sashiko has reviewed this patch and found no issues. It looks great!
 
-- Arnaldo
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260924172928.2110=
+956-1-coltonlewis@google.com?part=3D8
+
