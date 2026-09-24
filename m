@@ -1,298 +1,147 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk2-f12.google.com (mail-qk2-f12.google.com [74.125.230.204])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E820D374E7F
-	for <linux-perf-users@vger.kernel.org>; Thu, 24 Sep 2026 17:14:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC380374E7F
+	for <linux-perf-users@vger.kernel.org>; Thu, 24 Sep 2026 17:17:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.230.204
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790270099; cv=none; b=IuY/DF2NDEiLUb5OqM+Xuv8XBw+yfk0/1xh2locB2jxa5x3xZWno2+8xg4E9p7tThr7JcBE3waCPU9Bo0iCrmsIsExew8f6TO2jrizEWf4zkayVUg/i+/GtPJ2NTpPIu4ddGD9gSbf+olO2tIgfdT5pKX7Nh2MFzchmJ3D66qU0=
+	t=1790270254; cv=none; b=B3CV1vkTDff8A+v5sgU2a1Me1ysc2Km8m0EDaF3VZXoAWwX+Jpj9qbytWgNylGsimYVcm2Nkqvgm323GzqEgKJJ8QMfE39GN0tA7Wa25a80Xi4U0G3ucxfi6g5CET3XqH4tN28Cl5xsPe3sXE+V0UP6lc3mwHgA7MnF4jkSzx6M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790270099; c=relaxed/simple;
-	bh=4OEb0OsotkwzpbkEOjckQavExbaw78MN/W8dHwFqBG8=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=NeLYGxMlAi20fcGNKjShqRvhqlMylqOdi8HFjoOVSEU881sV5dYRu+oViRBZYiv153yg5YHWP+TECgjByDjD6/2bfNXx2Cba4h9BQAzWG9WArHK/Ej3yYe3ZXG7MbBydi056IQwAMny58JtazUIP1qlzSkM4d7+flzofu3a/ppQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HAfDHFmt; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1790270254; c=relaxed/simple;
+	bh=N9G2xDWLJkhjpVHjPudlC9eB56JQvy0Q3UFpvQ70GnM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=kW/jTB9MLNEwbYTxidsqZaovFyr0CwnL61kvTRWs/q/JuVy+jMjaJs68XS+F2qOvos5GasjlhGMtnpfQDH0QJNFQfXTRM3CTKzR5AEnMB9d0D/kr5vsJDF6B6t8ucX2WR+OXdlmNOOLkss1Hf/EvaeKwWItBn+CFKRb+Dxdny5c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=tprV5yBU; arc=none smtp.client-ip=74.125.230.204
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HAfDHFmt"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7626C1F00893;
-	Thu, 24 Sep 2026 17:14:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1790270097;
-	bh=O6dg0CSKpIjDXkmFt28k+yiZts/Tb8pMupc69o4Z9Vs=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=HAfDHFmtHh6SO+orEbAChBMVJaqsBkfVyAocJgjMO7oFVXo4ELGOpvAhY9Im4jgZK
-	 9RFahc01uwNvppRtVBvZ0XyfEqkamBZcMr5Rz+dYPZdx0KGNvR1R/XmDQTUVnEO3Tm
-	 HuttgaHBIhNR4RjefpcMfHgx4H1oCFO7Ww71WKJLkn/hB9UbL0oxJzuRoSdWnFpTEk
-	 BiI2NNHB7+mWOTeZB3vBAn7cu1CI7rKC1b4SeGjX1u2J/NGLTdIqyySB2jLSd+JDqD
-	 h6TjRtgIGZ8GIoD0Oytt1u3UzeJajB1LCcUZDBlc4ZRAwwM32HrDxmMHmiVJP7Cu2G
-	 bUKbSUmVkUHYQ==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v2 04/26] perf vendor events intel: Update broadwell
- metrics to TMA 5.2
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Ian Rogers" <irogers@google.com>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260924170346.3872848-5-irogers@google.com>
-References: <20260924053645.3555041-1-irogers@google.com>
- <20260924170346.3872848-1-irogers@google.com>
- <20260924170346.3872848-5-irogers@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Thu, 24 Sep 2026 17:14:57 +0000
-Message-Id: <20260924171457.7626C1F00893@smtp.kernel.org>
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="tprV5yBU"
+Received: by mail-qk2-f12.google.com with SMTP id d75a77b69052e-530e28a62abso911241cf.1
+        for <linux-perf-users@vger.kernel.org>; Thu, 24 Sep 2026 10:17:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gourry.net; s=google; t=1790270251; x=1790875051; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:from:date:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=feTLx7y3sxZ57LB+c+M8YbdddVhljMzyHzPRAu6TpA4=;
+        b=tprV5yBUII/qRzLyqKPdJDICtcHMIXdxXt3R1PhRppTAqbBmNEs7Uqtgc/IauT7bas
+         6q+btZ6riiYDfPxMNxJ9LlKIzVy4E/rMZS8FF2kWFWhC/RTZ0m/dLDIeIJEc6DmgUeKW
+         rRe5l+D4Gb5EgFoh0bNUVpRhgcRfueygz54BCmywUEAofeJDIrYo8R8bOOlnVVhbm8Xx
+         8y1PvkD+okpXc2BYxVcdIyuBwaEwabsdPE+xSDWc5coaNizNqVaWAFRlWZ+CHrBLXEHc
+         +ibea7n8Gc0GPrQRe/RTIUKy7LATsQy5mAZvm52IfaGHNyUnZEVBqjo1InS2m+tWjzj5
+         xc4Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1790270251; x=1790875051;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:from:date:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=feTLx7y3sxZ57LB+c+M8YbdddVhljMzyHzPRAu6TpA4=;
+        b=EDZRPrl7yLriBGPS0jz7lxrWHqIWoPu8l+8PGytNzMBVjMW0fXs9kiuL3VEU9kjlEQ
+         II+JABdHRHhIunddzjvbUH5xFLNWdBu2jGr4mL/DFaz4ViGgKAVfIfH4OhTx8poCdAA5
+         pn10khi8lGB5vIl5KAPYCCMZiiZE/sqpaJK2Y58LUdhRpIkhrM182awgqnc9kQZVEJfN
+         eHyedOvbJ3bnNNtKq51TltwhOUqrW5pAHJKoPvw7bW1VezIcqGAX0Al3xPDnUuZms/r9
+         3JiEuyvZ9jx+uLh99OfDRuRuZ8CMErDwm283SqFRoMJCicFoGIIodev1UQAb6F8vWXvn
+         tp4A==
+X-Forwarded-Encrypted: i=1; AKwUvBzgUSmVUg8UFi6ncAVGvZiCSgMaycuWsQt0FKlglnZRIG5WESYBcQo/ZQDDLKXT6EOzq8qMbK5a3g8LFQWqXSMs@vger.kernel.org
+X-Gm-Message-State: AFuF++meEbo/JGpfgIEIlkN203qkwnKgdEuTc4Qe+5NETLvwjkuvHDR7
+	WPE+3U9xh8U+JSm/WudsJNDYofgBSuVXq2akKR9QkAB4L7kOMJFrbKXAc61B5QUg60w=
+X-Gm-Gg: AYBFou2sKtPHtnyvqZ5FSrq4b315cV3Q7Mptuq5SKem9AoL0f2bFfcYejrnFiY0M6LN
+	rLyOYnGSdCK9suzKEuJDMISPtJwYmp50RQuBDh+n2hLg5KuhAfqRvxrBVRgacZwUJ9zGznSHE8y
+	N4sJjB4eGNVGM1Udbinkp6PegKWRSz2aynhmXbCVXVWHmX0tullyaUN7bi5wJ8RgVc4wTouSU7e
+	EXxnY2/1EXR3pho6wxzdPPP1oEc4dl3tX4FQuwNv8OtZsDe72EiMBAZEetb+T3O1P5x8jIGUDId
+	7HzD/jtKkkc5XfWgoLRiHtbRAVaxGV+1gLbIPOG0TpYN0sejO8fXDahPdW2A0kDuOs4XxcR+Mn6
+	Ef7y7L9irEIUOf5wqWyOiycNYSpuluAUqG4sl1aY+EuygMCdgF4kH1tYSwh/bZeEXx4ahGzDOor
+	IPZWFIHTOTknFCgTF1YqO0kPYqe5zcZP00yqxWFeqe9/39dGBKpy7pGl0FWIA8P0cGruWe1JtJB
+	p1t2KyG2+IXrrothaS60aqe80hrM1qz8yBBjiib/1GlFMHxQL6DC7s=
+X-Received: by 2002:a05:622a:2b05:b0:530:42e4:f001 with SMTP id d75a77b69052e-532feb3025amr31555731cf.46.1790270250746;
+        Thu, 24 Sep 2026 10:17:30 -0700 (PDT)
+Received: from gourry-fedora-PF4VCD3F (pool-173-79-60-52.washdc.fios.verizon.net. [173.79.60.52])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-532f8b7174asm25743881cf.14.2026.09.24.10.17.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 24 Sep 2026 10:17:30 -0700 (PDT)
+Date: Thu, 24 Sep 2026 13:17:28 -0400
+From: Gregory Price <gourry@gourry.net>
+To: "Lorenzo Stoakes (ARM)" <ljs@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>, 
+	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, linux-usb@vger.kernel.org, 
+	linux-rdma@vger.kernel.org, selinux@vger.kernel.org, linux-sound@vger.kernel.org, 
+	bpf@vger.kernel.org, linux-scsi@vger.kernel.org, linux-fbdev@vger.kernel.org, 
+	dri-devel@lists.freedesktop.org, linux-trace-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, linux-arch@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, linuxppc-dev@lists.ozlabs.org, 
+	kvm@vger.kernel.org, kvm-riscv@lists.infradead.org, linux-riscv@lists.infradead.org, 
+	linux-s390@vger.kernel.org, sparclinux@vger.kernel.org, fuse-devel@lists.linux.dev
+Subject: Re: [PATCH v3 04/40] mm: consistently validate VMA state after
+ mmap[_prepare] hooks
+Message-ID: <arVW5i8pvySq6Co2@gourry-fedora-PF4VCD3F>
+References: <20260917-b4-mmap-prepare-vma-flag-sanify-v3-0-4583d8a23bca@kernel.org>
+ <20260917-b4-mmap-prepare-vma-flag-sanify-v3-4-4583d8a23bca@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260917-b4-mmap-prepare-vma-flag-sanify-v3-4-4583d8a23bca@kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 2 potential issue(=
-s) to consider:
-- [Medium] perf: missing NO_GROUP_EVENTS_SMT constraint for tma_l3_miss_bou=
-nd
-- [Low] perf: invalid event and metric references in broadwell TMA descript=
-ions
---
+On Thu, Sep 17, 2026 at 05:22:13PM +0100, Lorenzo Stoakes (ARM) wrote:
+>  static inline int mmap_file(struct file *file, struct vm_area_struct *vma)
+>  {
+...
+> +	err = mmap_hook_validate(prev_start, prev_end, &prev_flags, vma);
+> +	if (unlikely(err)) {
+> +		vma->vm_start = prev_start;
+> +		vma->vm_end = prev_end;
+> +		vma_close(vma);
+>  	}
+> +
+> +	return err;
+>  }
+>  
 
-commit 9dd8d107153bd9a839dac0461130818443958cb7
-Author: Ian Rogers <irogers@google.com>
+I indepdeantly validated the sashiko report on this chunk.  Seems like
+close() should be deferred until after __map_new_file_vma() calls
+unmap_region().
 
-perf vendor events intel: Update broadwell metrics to TMA 5.2
+suggested fix is to drop vma_close() from mmap_file()  and update the
+cleanup in __mmap_new_file_vma() 
 
-This commit updates the Telemetry Metric Architecture (TMA) metrics for
-Intel Broadwell platforms to version 5.2.
+if (error) {
+	UNMAP_STATE(unmap, vmi, vma, vma->vm_start, vma->vm_end,
+		    map->prev, map->next);
+	vma_iter_set(vmi, vma->vm_end);
+	unmap_region(&unmap);
 
-> diff --git a/tools/perf/pmu-events/arch/x86/broadwell/bdw-metrics.json b/=
-tools/perf/pmu-events/arch/x86/broadwell/bdw-metrics.json
-> index 1d8e910f59613..cd59e4a666b21 100644
-> --- a/tools/perf/pmu-events/arch/x86/broadwell/bdw-metrics.json
-> +++ b/tools/perf/pmu-events/arch/x86/broadwell/bdw-metrics.json
-[ ... ]
-> @@ -175,13 +175,13 @@
->          "ScaleUnit": "100%"
->      },
->      {
-> -        "BriefDescription": "This metric estimates fraction of cycles wh=
-ile the memory subsystem was handling synchronizations due to data-sharing =
-accesses",
-> +        "BriefDescription": "This metric estimates fraction of cycles wh=
-ile the memory subsystem was handling synchronizations due to L3 data-shari=
-ng accesses",
->          "MetricConstraint": "NO_GROUP_EVENTS",
->          "MetricExpr": "43 * (MEM_LOAD_UOPS_L3_HIT_RETIRED.XSNP_HIT * (1 =
-+ MEM_LOAD_UOPS_RETIRED.HIT_LFB / (MEM_LOAD_UOPS_RETIRED.L2_HIT + MEM_LOAD_=
-UOPS_RETIRED.L3_HIT + MEM_LOAD_UOPS_L3_HIT_RETIRED.XSNP_HIT + MEM_LOAD_UOPS=
-_L3_HIT_RETIRED.XSNP_HITM + MEM_LOAD_UOPS_L3_HIT_RETIRED.XSNP_MISS + MEM_LO=
-AD_UOPS_RETIRED.L3_MISS))) / tma_info_thread_clks",
->          "MetricGroup": "BvMS;Offcore;Snoop;TopdownL4;tma_L4_group;tma_is=
-sueSyncxn;tma_l3_bound_group",
->          "MetricName": "tma_data_sharing",
->          "MetricThreshold": "tma_data_sharing > 0.05 & (tma_l3_bound > 0.=
-05 & (tma_memory_bound > 0.2 & tma_backend_bound > 0.2))",
-> -        "PublicDescription": "This metric estimates fraction of cycles w=
-hile the memory subsystem was handling synchronizations due to data-sharing=
- accesses. Data shared by multiple Logical Processors (even just read share=
-d) may cause increased access latency due to cache coherency. Excessive dat=
-a sharing can drastically harm multithreaded performance. Sample with: MEM_=
-LOAD_L3_HIT_RETIRED.XSNP_HIT_PS. Related metrics: tma_contested_accesses, t=
-ma_false_sharing, tma_machine_clears, tma_remote_cache",
-> +        "PublicDescription": "This metric estimates fraction of cycles w=
-hile the memory subsystem was handling synchronizations due to L3 data-shar=
-ing accesses. Data shared by multiple Logical Processors (even just read sh=
-ared) may cause increased access latency due to cache coherency. Excessive =
-data sharing can drastically harm multithreaded performance. Sample with: M=
-EM_LOAD_L3_HIT_RETIRED.XSNP_NO_FWD. Related metrics: tma_contested_accesses=
-, tma_false_sharing, tma_machine_clears, tma_remote_cache",
+	/* Release driver state only after its mappings are gone. */
+	vma_close(vma);
 
-[Severity: Low]
-Is this sample event correct? The updated description suggests sampling with
-MEM_LOAD_L3_HIT_RETIRED.XSNP_NO_FWD, but this event does not exist on
-Broadwell processors. Should this be XSNP_HIT instead?
+	if (map_same_file(map))
+		fput(map->vm_file);
+	vma->vm_file = NULL;
 
-[ ... ]
-> @@ -827,7 +817,16 @@
->          "MetricGroup": "BvML;MemoryLat;TopdownL4;tma_L4_group;tma_issueL=
-at;tma_l3_bound_group",
->          "MetricName": "tma_l3_hit_latency",
->          "MetricThreshold": "tma_l3_hit_latency > 0.1 & (tma_l3_bound > 0=
-.05 & (tma_memory_bound > 0.2 & tma_backend_bound > 0.2))",
-> -        "PublicDescription": "This metric estimates fraction of cycles w=
-ith demand load accesses that hit the L3 cache under unloaded scenarios (po=
-ssibly L3 latency limited).  Avoiding private cache misses (i.e. L2 misses/=
-L3 hits) will improve the latency; reduce contention with sibling physical =
-cores and increase performance.  Note the value of this node may overlap wi=
-th its siblings. Sample with: MEM_LOAD_UOPS_RETIRED.L3_HIT_PS. Related metr=
-ics: tma_mem_latency",
-> +        "PublicDescription": "This metric estimates fraction of cycles w=
-ith demand load accesses that hit the L3 cache under unloaded scenarios (po=
-ssibly L3 latency limited).  Avoiding private cache misses (i.e. L2 misses/=
-L3 hits) will improve the latency; reduce contention with sibling physical =
-cores and increase performance.  Note the value of this node may overlap wi=
-th its siblings. Sample with: MEM_LOAD_RETIRED.L3_HIT_PS. Related metrics: =
-tma_mem_latency",
-> +        "ScaleUnit": "100%"
-> +    },
-> +    {
-> +        "BriefDescription": "This metric estimates how often the CPU was=
- stalled on accesses to external memory (DRAM) by loads",
-> +        "MetricExpr": "(1 - MEM_LOAD_UOPS_RETIRED.L3_HIT / (MEM_LOAD_UOP=
-S_RETIRED.L3_HIT + 7 * MEM_LOAD_UOPS_RETIRED.L3_MISS)) * CYCLE_ACTIVITY.STA=
-LLS_L2_MISS / tma_info_thread_clks",
-> +        "MetricGroup": "MemoryBound;Offcore;TmaL3mem;TopdownL3;tma_L3_gr=
-oup;tma_memory_bound_group",
-> +        "MetricName": "tma_l3_miss_bound",
+	return error;
+}
 
-[Severity: Medium]
-Does this metric need the NO_GROUP_EVENTS_SMT constraint like the old
-tma_dram_bound metric it replaces?
+Example race:
 
-The expression uses CYCLE_ACTIVITY.STALLS_L2_MISS which has multiplexing
-limitations when SMT is enabled on older architectures like Broadwell.
-Without this constraint, hardware PMU events might fail to schedule or yield
-invalid results when SMT is enabled.
+  Thread A                              Thread B
 
-> +        "MetricThreshold": "tma_l3_miss_bound > 0.1 & (tma_memory_bound =
-> 0.2 & tma_backend_bound > 0.2)",
-> +        "PublicDescription": "This metric estimates how often the CPU wa=
-s stalled on accesses to external memory (DRAM) by loads. Better caching ca=
-n improve the latency and increase performance. Sample with: MEM_LOAD_RETIR=
-ED.L3_MISS",
+  mmap(MAP_FIXED, address A)
+    driver remap_pfn_range(A, page P)
+                                         load/store at known address A
+                                         hardware finds the new present PTE
+    validation fails
+    ->close() frees page P
+                                         UAF
+    unmap_region()
+    TLB shootdown
 
-[Severity: Low]
-Is this sample event correct? The new tma_l3_miss_bound metric suggests
-MEM_LOAD_RETIRED.L3_MISS, but this event doesn't exist on Broadwell. Should
-this be MEM_LOAD_UOPS_RETIRED.L3_MISS_PS?
+With that fix
 
-> +        "ScaleUnit": "100%"
->      },
->      {
-> @@ -882,18 +881,18 @@
->      {
->          "BriefDescription": "This metric estimates fraction of cycles wh=
-ere the core's performance was likely hurt due to approaching bandwidth lim=
-its of external memory - DRAM ([SPR-HBM] and/or HBM)",
->          "MetricExpr": "min(CPU_CLK_UNHALTED.THREAD, cpu@OFFCORE_REQUESTS=
-_OUTSTANDING.ALL_DATA_RD\\,cmask\\=3D4@) / tma_info_thread_clks",
-> -        "MetricGroup": "BvMB;MemoryBW;Offcore;TopdownL4;tma_L4_group;tma=
-_dram_bound_group;tma_issueBW",
-> +        "MetricGroup": "BvMB;MemoryBW;Offcore;TopdownL4;tma_L4_group;tma=
-_issueBW;tma_l3_miss_bound_group",
->          "MetricName": "tma_mem_bandwidth",
-> -        "MetricThreshold": "tma_mem_bandwidth > 0.2 & (tma_dram_bound > =
-0.1 & (tma_memory_bound > 0.2 & tma_backend_bound > 0.2))",
-> -        "PublicDescription": "This metric estimates fraction of cycles w=
-here the core's performance was likely hurt due to approaching bandwidth li=
-mits of external memory - DRAM ([SPR-HBM] and/or HBM).  The underlying heur=
-istic assumes that a similar off-core traffic is generated by all IA cores.=
- This metric does not aggregate non-data-read requests by this logical proc=
-essor; requests from other IA Logical Processors/Physical Cores/sockets; or=
- other non-IA devices like GPU; hence the maximum external memory bandwidth=
- limits may or may not be approached when this metric is flagged (see Uncor=
-e counters for that). Related metrics: tma_fb_full, tma_info_system_dram_bw=
-_use, tma_sq_full",
-> +        "MetricThreshold": "tma_mem_bandwidth > 0.2 & (tma_l3_miss_bound=
- > 0.1 & (tma_memory_bound > 0.2 & tma_backend_bound > 0.2))",
-> +        "PublicDescription": "This metric estimates fraction of cycles w=
-here the core's performance was likely hurt due to approaching bandwidth li=
-mits of external memory - DRAM ([SPR-HBM] and/or HBM).  The underlying heur=
-istic assumes that a similar off-core traffic is generated by all IA cores.=
- This metric does not aggregate non-data-read requests by this logical proc=
-essor; requests from other IA Logical Processors/Physical Cores/sockets; or=
- other non-IA devices like GPU; hence the maximum external memory bandwidth=
- limits may or may not be approached when this metric is flagged (see Uncor=
-e counters for that). Related metrics: tma_fb_full, tma_info_system_dram_bw=
-_use, tma_sq_full, tma_uc_bound",
+Reviewed-by: Gregory Price (Meta) <gourry@gourry.net>
 
-[Severity: Low]
-Does this description reference an undefined metric? The related metrics li=
-st
-adds tma_uc_bound, but that metric isn't defined in the Broadwell events.
+~Gregory
 
-> diff --git a/tools/perf/pmu-events/arch/x86/broadwellde/bdwde-metrics.jso=
-n b/tools/perf/pmu-events/arch/x86/broadwellde/bdwde-metrics.json
-> index a5e408ca46a7e..a3e6835f4f847 100644
-> --- a/tools/perf/pmu-events/arch/x86/broadwellde/bdwde-metrics.json
-> +++ b/tools/perf/pmu-events/arch/x86/broadwellde/bdwde-metrics.json
-[ ... ]
-> @@ -819,7 +809,16 @@
->          "MetricGroup": "BvML;MemoryLat;TopdownL4;tma_L4_group;tma_issueL=
-at;tma_l3_bound_group",
->          "MetricName": "tma_l3_hit_latency",
->          "MetricThreshold": "tma_l3_hit_latency > 0.1 & (tma_l3_bound > 0=
-.05 & (tma_memory_bound > 0.2 & tma_backend_bound > 0.2))",
-> -        "PublicDescription": "This metric estimates fraction of cycles w=
-ith demand load accesses that hit the L3 cache under unloaded scenarios (po=
-ssibly L3 latency limited).  Avoiding private cache misses (i.e. L2 misses/=
-L3 hits) will improve the latency; reduce contention with sibling physical =
-cores and increase performance.  Note the value of this node may overlap wi=
-th its siblings. Sample with: MEM_LOAD_RETIRED.L3_HIT_PS. Related metrics: =
-tma_mem_latency",
-> +        "PublicDescription": "This metric estimates fraction of cycles w=
-ith demand load accesses that hit the L3 cache under unloaded scenarios (po=
-ssibly L3 latency limited).  Avoiding private cache misses (i.e. L2 misses/=
-L3 hits) will improve the latency; reduce contention with sibling physical =
-cores and increase performance.  Note the value of this node may overlap wi=
-th its siblings. Sample with: MEM_LOAD_L2_MISS_RETIRED.L3_HIT_SAME_CBB. Rel=
-ated metrics: tma_mem_latency",
-> +        "ScaleUnit": "100%"
-> +    },
-> +    {
-> +        "BriefDescription": "This metric estimates how often the CPU was=
- stalled on accesses to external memory (DRAM) by loads",
-> +        "MetricExpr": "(1 - MEM_LOAD_UOPS_RETIRED.L3_HIT / (MEM_LOAD_UOP=
-S_RETIRED.L3_HIT + 7 * MEM_LOAD_UOPS_RETIRED.L3_MISS)) * CYCLE_ACTIVITY.STA=
-LLS_L2_MISS / tma_info_thread_clks",
-> +        "MetricGroup": "MemoryBound;Offcore;TmaL3mem;TopdownL3;tma_L3_gr=
-oup;tma_memory_bound_group",
-> +        "MetricName": "tma_l3_miss_bound",
-
-[Severity: Medium]
-Just like the Broadwell metric above, should this also include the
-NO_GROUP_EVENTS_SMT constraint to prevent SMT scheduling failures for
-CYCLE_ACTIVITY.STALLS_L2_MISS?
-
-> diff --git a/tools/perf/pmu-events/arch/x86/broadwellx/bdx-metrics.json b=
-/tools/perf/pmu-events/arch/x86/broadwellx/bdx-metrics.json
-> index 5b83b040060c3..6b914b29bff95 100644
-> --- a/tools/perf/pmu-events/arch/x86/broadwellx/bdx-metrics.json
-> +++ b/tools/perf/pmu-events/arch/x86/broadwellx/bdx-metrics.json
-[ ... ]
-> @@ -1050,7 +1034,16 @@
->          "MetricGroup": "BvML;MemoryLat;TopdownL4;tma_L4_group;tma_issueL=
-at;tma_l3_bound_group",
->          "MetricName": "tma_l3_hit_latency",
->          "MetricThreshold": "tma_l3_hit_latency > 0.1 & (tma_l3_bound > 0=
-.05 & (tma_memory_bound > 0.2 & tma_backend_bound > 0.2))",
-> -        "PublicDescription": "This metric estimates fraction of cycles w=
-ith demand load accesses that hit the L3 cache under unloaded scenarios (po=
-ssibly L3 latency limited).  Avoiding private cache misses (i.e. L2 misses/=
-L3 hits) will improve the latency; reduce contention with sibling physical =
-cores and increase performance.  Note the value of this node may overlap wi=
-th its siblings. Sample with: MEM_LOAD_UOPS_RETIRED.L3_HIT_PS. Related metr=
-ics: tma_mem_latency",
-> +        "PublicDescription": "This metric estimates fraction of cycles w=
-ith demand load accesses that hit the L3 cache under unloaded scenarios (po=
-ssibly L3 latency limited).  Avoiding private cache misses (i.e. L2 misses/=
-L3 hits) will improve the latency; reduce contention with sibling physical =
-cores and increase performance.  Note the value of this node may overlap wi=
-th its siblings. Sample with: MEM_LOAD_RETIRED.L3_HIT_PS. Related metrics: =
-tma_mem_latency",
-> +        "ScaleUnit": "100%"
-> +    },
-> +    {
-> +        "BriefDescription": "This metric estimates how often the CPU was=
- stalled on accesses to external memory (DRAM) by loads",
-> +        "MetricExpr": "(1 - MEM_LOAD_UOPS_RETIRED.L3_HIT / (MEM_LOAD_UOP=
-S_RETIRED.L3_HIT + 7 * MEM_LOAD_UOPS_RETIRED.L3_MISS)) * CYCLE_ACTIVITY.STA=
-LLS_L2_MISS / tma_info_thread_clks",
-> +        "MetricGroup": "MemoryBound;Offcore;TmaL3mem;TopdownL3;tma_L3_gr=
-oup;tma_memory_bound_group",
-> +        "MetricName": "tma_l3_miss_bound",
-
-[Severity: Medium]
-This appears to be missing the NO_GROUP_EVENTS_SMT constraint here as well
-for the broadwellx architecture.
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260924170346.3872=
-848-1-irogers@google.com?part=3D4
