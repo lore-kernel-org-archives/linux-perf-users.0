@@ -1,67 +1,67 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD1F84825AE;
-	Thu, 24 Sep 2026 13:00:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2713348642C;
+	Thu, 24 Sep 2026 13:00:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.17
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790254852; cv=fail; b=iZ4RX8kmd58prZyX0WXUopZ20zVD69X6pySABTCYsBr9cq6nS/MpjDI5bX9gBzEluI7+4A9lY4Bo/6XVoEHrtIy8E/aY2l7P8oF2b6OH9bcnY3dIOYmkE24r1t6ZjQO/2Es6u2EHJedybg4TPSPMJlnh7ynGxVD1m0Udi6oZsZ8=
+	t=1790254857; cv=fail; b=tbRWJfUu0tRoBUHwq6yHcvLQAE0S1LUq9tmGycoaPkmSMHIUhT+6i7/6B2T4DnFdJsPomGjRZs8TFlxTogqmYPTVVANnH0GTkfhFxmOUH8E8foKCN2vitmf0IZJbe1GEquym8N2lCvGuRPqcEfFfj5JEMA+gTiSt4d1I7Ws68L0=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790254852; c=relaxed/simple;
-	bh=R2wsCzTYITTdXZW2yVDZCokU0UVJIl15ii0OP63ZV/A=;
+	s=arc-20240116; t=1790254857; c=relaxed/simple;
+	bh=BPvdwAZkAaDvRHl/+/Ja9QCU+FTNJIQ3vMZMQTS7FCM=;
 	h=Message-ID:Date:Subject:To:CC:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=KjRGa0PtdtaHmgWEKa+RUTCtJ9YzW8WI952tDKVAMlt7NCJNAnqjJWfLIXh8iIi/Qtnmmmtuiyqd5ZkaXMoQ6pOBqN0wKvL4Mhvs16boGlLg5iwxHoN54y63xX2Fui+ai4nHf9vGjfb5Ohi3kEEW8BhyDLlFECJcW1+dsKQ5gKw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=iQvy76Tl; arc=fail smtp.client-ip=198.175.65.12
+	 Content-Type:MIME-Version; b=IKoYhD9F/rT5NbYF4mBg3CW4qEVDvu76htsdrdPddAvgMo3L+DbbQ2xhmmncenpaVbAS1Htt7i+f5QpW+132OVyzD48MI6U9B3o6cVLRm05i5YFWpF0Vv/2TkTRsxfZ4WtefUc0Rbsg1dXUEGTsAPpxQnv7DSyA39+eN2VGihus=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mv3q1jTI; arc=fail smtp.client-ip=192.198.163.17
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="iQvy76Tl"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mv3q1jTI"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1790254851; x=1821790851;
+  t=1790254856; x=1821790856;
   h=message-id:date:subject:to:cc:references:from:
    in-reply-to:content-transfer-encoding:mime-version;
-  bh=R2wsCzTYITTdXZW2yVDZCokU0UVJIl15ii0OP63ZV/A=;
-  b=iQvy76TljRrYyc6U5E56ifXJdysH6butel431Aw25alZdNoZPMH8Uho1
-   JvwZV/hbfD0sGptiuRIo0xMecqj9iQ03IYOcW6ycGrBCJ+fnP/JLFUlGM
-   JIE0geqPVLUhse3R87oxY4oefz/Xujleqg25Gc9V9qGzAU18sOveuz4dj
-   xTySUdKubPhbDehqRWp18uGl1DzXwbPmIPl9zBI1LpLW7KCCBVJRhfZt7
-   x+/O2hoY9ikdoROcoMnIQ238xsWoMBJXA9dKWPQGiUySsg7VgvGPG8GJS
-   mICtqngB+xhzOGbVT2lNwJNWglp6BDajn3Subj6qnnHph0RpQfpj/o5pw
-   g==;
-X-CSE-ConnectionGUID: gwFjz1IcSKyC4EEc/GlaaQ==
-X-CSE-MsgGUID: 7y79oyQMQ8+XQgWH4ToqBg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11914"; a="101554511"
+  bh=BPvdwAZkAaDvRHl/+/Ja9QCU+FTNJIQ3vMZMQTS7FCM=;
+  b=mv3q1jTI5cUkWzNaV/WMzXTr/Jle4C9Q4N5/Ho7dqoTglOrjdbC1U4eH
+   7vK1AX2V9AAlckvT7LseCHaRJrQsZS1JLZK5qpHqfHBvETJwoDh7eUK/S
+   yA5yLN30UrjM2dpv1cyV7SCpKh7A4ssfx8TBqQur0qVmxVKVE+GeEHMIz
+   A/WnEEaJLvCe434jtt4lBGbkxjjndXgZq4TW8oxnOsoTgfF0KoQRp54aE
+   a/0CQTwy+bqOZQVlHrWMLKbDOVH1OCDaQzExPeKF+tRQD+0W4dNvjVCiB
+   nBNiKGoEqJdxhjq4SiDkJ8EEZQHoyM8hm+YzxVsW9ivtcG3jW3O3Agu/v
+   A==;
+X-CSE-ConnectionGUID: JsUQHKO8TIO54oLvJxc0Xg==
+X-CSE-MsgGUID: uGhdBKTuTuW19d2jt2dh1Q==
+X-IronPort-AV: E=McAfee;i="6800,10657,11914"; a="90888206"
 X-IronPort-AV: E=Sophos;i="6.27,120,1787036400"; 
-   d="scan'208";a="101554511"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Sep 2026 06:00:50 -0700
-X-CSE-ConnectionGUID: QWYoo6e1RbOMAr0Hkz+fWw==
-X-CSE-MsgGUID: dxbJcGl0Qk6pzeT+g6tWXQ==
+   d="scan'208";a="90888206"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Sep 2026 06:00:55 -0700
+X-CSE-ConnectionGUID: 8wO/CSotQTunqswMeJZ7jg==
+X-CSE-MsgGUID: Lmdbip9MQiWIAu5xmaitvA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.27,120,1787036400"; 
-   d="scan'208";a="272607524"
-Received: from orsmsx901.amr.corp.intel.com ([10.22.229.23])
-  by fmviesa006.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Sep 2026 06:00:49 -0700
-Received: from ORSMSX903.amr.corp.intel.com (10.22.229.25) by
+   d="scan'208";a="274223710"
+Received: from orsmsx902.amr.corp.intel.com ([10.22.229.24])
+  by fmviesa008.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Sep 2026 06:00:55 -0700
+Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.46; Thu, 24 Sep 2026 06:00:54 -0700
+Received: from ORSEDG902.ED.cps.intel.com (10.7.248.12) by
  ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.46; Thu, 24 Sep 2026 06:00:49 -0700
-Received: from ORSEDG902.ED.cps.intel.com (10.7.248.12) by
- ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.46 via Frontend Transport; Thu, 24 Sep 2026 06:00:49 -0700
-Received: from BL2PR02CU003.outbound.protection.outlook.com (52.101.52.41) by
+ 15.2.2562.46 via Frontend Transport; Thu, 24 Sep 2026 06:00:54 -0700
+Received: from BL2PR02CU003.outbound.protection.outlook.com (52.101.52.27) by
  edgegateway.intel.com (134.134.137.112) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.46; Thu, 24 Sep 2026 06:00:48 -0700
+ 15.2.2562.46; Thu, 24 Sep 2026 06:00:54 -0700
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=JwGIQSKKMBsl0okmW1xCVlSfXUKhLcKSJIT4rX+ZXqSyqgJDtWhq00aWfmTR/ufIy5u8yJI2Q68nEab/eZqm0h0RKhrrUtdL8XkAnp3bnw749cOGsH5l9Qag1BTFG+/vVqgh+c3v5krRv5uP2wcQ+PRe5andypzU5lsaHtZKylWcMVBsZ2wDIvJqFMnWkLPu2Z4OeSWkTTkUuq6eVNGxZnZTYv9Eb7RoRjGpNcDRRMjduqKjalY39X13zMG5NnxT2qRHNvVjE3GYAjs6K+rM8hpBd2Cmv6PcZfgU1ub4jJZg/Fj5/uSofXEq+RX49xYC4Yz1+z/ZXqtV7a/jE5dWCQ==
+ b=iH7RMZK8ZJyx3LLlyEupuuCGyGOylQFh8uUSHXhL9NVepVYa8aoAcdbrfSQmbputeylIThErb2TzR1DPjIT7Inkuha8SMTy0U0sluCgL1E5Gah7Zcv6BN5UJM18w5WBkjS5EZGjlpMxGcEtpZXaHw7A5JHyDwoZo7cYNQ1oYBC/rzvzs+JnrVe23dzFtzFmVejLzq9e+c/xF4CJfiv5VeSZh+KdLExc0iqTreiWDYhhnOXIcIqDEMffKHTtmTYzwByJ2/utm8+Z97TsKlPAnaLXk/bEB2G/2g3W5gwnraSONEL9PNpU4ZKRqMnOw3a5IH5HH5zXPH93ZzCsgrqeyaQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Xy6plm/pFB0arnMc4X9zldXpdYPvSal8eCyDTydq9JE=;
- b=zKgMgivY42ymjnzTyEc+3YnwQR+M8E2+RGmaC53W/TtLBNranezTEu5/uCdiS1pRrDnDVCs61fbh4zkw1LwqeQNGBXtwGgREqA7+ylFmAMsPETB+/mjvKaZIiCGdnAM2MZP9//3ytw7zJyltn0IFQMx72XwPEADob7l5F5ms/63bSb5I355yvGYhKZVU/P+juqrSeP8UiDHvTkebGFDFBluQwZQ5+pgZuGyuhSefZ8E6KFi3Gv210QqzHEFO9jjshCGuCDa3TfO4bOKN4cCngYje5dhsyphj61TbuDcAHISXYoNz0Edg9C3Xo6g6JqSgHVZaUxCqHPt/jP9GqDqXWQ==
+ bh=tKETBD/cclMd7k1jBS+dkatAvt5KNaJL6N/B5pztgJI=;
+ b=odV+sW2CwO4qX8njL+hDdpKPwMEUCRaw4a8FuRA26Ceho9OV1OcaxwcxliknnOmEm7/W+GfgmC+P3xh1aiSiNucd/qRRHHAlOlI4u3m67njLtjIlpIYR70Bte6ac/UtSmfb9sLz4N8oh4BtK32a52cDkXebFH/Of94lxC2titkW+nQgWv74dDz9pVTyOCLZNsOEQs5nWyRTQA/Tg3EzWyUUt/PWaTFGv0co6VhNoRYKEIxzfNrihSbblgRmdIOIQdbpVwy5fN69gp7ZGT2Azg644+n+9VhVkmoQj77Lyl5JQszve62EeErSDRVu1ZQqEMheTFpLpUVqFqPE3VV0d1g==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
  dkim=pass header.d=intel.com; arc=none
@@ -71,16 +71,16 @@ Received: from IA1PR11MB7198.namprd11.prod.outlook.com (2603:10b6:208:419::15)
  by CH8PR11MB407363.namprd11.prod.outlook.com (2603:10b6:610:32d::23) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.451.18; Thu, 24 Sep
- 2026 13:00:46 +0000
+ 2026 13:00:52 +0000
 Received: from IA1PR11MB7198.namprd11.prod.outlook.com
  ([fe80::2c4e:e92a:4fa:a456]) by IA1PR11MB7198.namprd11.prod.outlook.com
  ([fe80::2c4e:e92a:4fa:a456%3]) with mapi id 15.21.0451.014; Thu, 24 Sep 2026
- 13:00:45 +0000
-Message-ID: <7f046a93-1739-49b0-abe9-c742866e9df3@intel.com>
-Date: Thu, 24 Sep 2026 16:00:39 +0300
+ 13:00:52 +0000
+Message-ID: <109758bf-56d5-4d10-a16e-f4888bb20d60@intel.com>
+Date: Thu, 24 Sep 2026 16:00:49 +0300
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 01/14] perf sample: Allow decoders to supply branch
- return addresses
+Subject: Re: [PATCH v2 02/14] perf intel-pt: Preserve return addresses for
+ asynchronous branches
 To: Leo Yan <leo.yan@arm.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
 	Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>, Ian Rogers
 	<irogers@google.com>, James Clark <james.clark@linaro.org>, Mike Leach
@@ -90,13 +90,13 @@ CC: Arnaldo Carvalho de Melo <acme@redhat.com>, <coresight@lists.linaro.org>,
 	<linux-arm-kernel@lists.infradead.org>, <linux-perf-users@vger.kernel.org>,
 	<linux-kernel@vger.kernel.org>
 References: <20260923-perf_cs_etm_fix_non_taken-v2-0-6ab8c07a5455@arm.com>
- <20260923-perf_cs_etm_fix_non_taken-v2-1-6ab8c07a5455@arm.com>
+ <20260923-perf_cs_etm_fix_non_taken-v2-2-6ab8c07a5455@arm.com>
 Content-Language: en-US
 From: Adrian Hunter <adrian.hunter@intel.com>
 Organization: Intel Finland Oy, Registered Address: c/o Alberga Business Park,
  6 krs, Bertel Jungin Aukio 5, 02600 Espoo, Business Identity Code: 0357606 -
  4, Domiciled in Helsinki
-In-Reply-To: <20260923-perf_cs_etm_fix_non_taken-v2-1-6ab8c07a5455@arm.com>
+In-Reply-To: <20260923-perf_cs_etm_fix_non_taken-v2-2-6ab8c07a5455@arm.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 X-ClientProxiedBy: DUZPR01CA0011.eurprd01.prod.exchangelabs.com
@@ -110,78 +110,76 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
 X-MS-TrafficTypeDiagnostic: IA1PR11MB7198:EE_|CH8PR11MB407363:EE_
-X-MS-Office365-Filtering-Correlation-Id: b6335a2d-7e71-40bf-a0fb-08df1a3bd8ee
+X-MS-Office365-Filtering-Correlation-Id: 359e2ef0-154a-4204-5666-08df1a3bdcc0
 X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|376014|7416014|23010399003|10067099003|56012099006|6133799003|3023799007|18002099003|22082099003|4143699003|11063799006|921020;
-X-Microsoft-Antispam-Message-Info: dbCP5e18AUBGIDc4hdvVJpLI36xJhDiWWOAZpqCDlMxhgxKkw1Z42sZiX7wWl1gM/AjrYrGopGYAb7rHLKtYrPTQY+B25W2DR8P7UJGCjZqSurB+MMubDiKhATBJbwkLiNxp13xDFJy/MVOraa8Q6If46V8Z2xZTCalw+SBw7I7KqccQEKJ4VssbhDRHghOK0BrbGXK/OrIFp9cHJnfcyIntUL1TG3QZdndpxZkybWguLYMJlMcZbxAEztqSIjNIJ/RxeCfCNcCtjHjAiImCHCMyo0cGLQvjfDfqPvJsqUCBf/MrQC2jqp282UO2pZ8X3VOBn5/U4JafXTmOQswRvkp3iMzKJEDUGMGqY0xWfMM7MY+TU4ReTvutVZ5lyrhr8TZuXUeHHfU14Z6Q6yUvhtr5AY85BB4OBoi+GVv8XHk5oi2A4zKv5ojZ0Gyp6htw2vzffhDRzSYyQaA+UmXAFEJYaFUYZOokwZ9U1D+D+bWbDvcXhdrcTN3DKtpsacbit2VL+WtmBa58Ij+4WsjOvqf0ntgfCyfTAn7HrZnxNr1Ke3akdfRJpbmx1G9yX4o/mxHSEEYD8wkSAewDFECCr/UwXQyZq2bdpQ5hqKFyoE2kOL0FRJkV+sWS0OswSziuV/H9epId6mcEZnIU2XXQzLZ8XOX58Q6eoINrNLGF9ViTPMw4BWbq08ZehXndfcMCdQF6H8nJynFwD2TepUCX/A==
+X-Microsoft-Antispam-Message-Info: ySFvIYDeRW5oIy6oRdA3YzZfP+55fedOvAm/82iGpoQddkwxoxMP1hT9eGlYGBgo+QdbcGAIWjbXfxFHlwkGCL5UewAWCBUF3b0dE94GNaSoyYWaaSRfmygxI1/deD/9xFJSUYBv10FCg0MuxL01axe1xnw0SVcT8x6HCB0ZsEPxDV8XQbp0lgAjkBibAMCFElhXJs3RBbEstILtsiygDdFVaKPqCvXHC6X7fiNXeL4DU1QkbkQTqYm6yAFJx8iVfEEQ6NtvxkPMKOEqgtHwiq7hlOFLkyJRX8S2urv3p29Naq+rmmJDRlOy1hZ6HSuRuKHCw+pum2IN/8JGVLgkIDLZB2GNdgk2VsMHG/jSNGIKQozeX3dRvBaoxLcJIzd6lpBDCxTXQzxNttlQ2PmwBEtGFUPTWl1+nsAhGwND6FzblafRcuS9m2o+ynqwCW2OH0QTxUyJ5O0upbWE5CaLWyic0JGTHsqccI5hWaZSOkN6DYYAeTIwfmfRlrI5Fl09oLd31CP4akVJtK/6ESYsXuO52RSDuodMbHMaI3uWv/Db3uJ+QVlXkUOGwD2/BwrTtSxuCcsRHl1H2drXJOceUMFHDovxi1dOzKVPmk9Gd+bcyEzECrHns0nnjzfHHC18c1E4lNVGKexIJW+3Gryyr4nTWZp5l2CFtgnt9HQtV8+DM+SICVEZq86MkANplIH0hr5VT0GoENip7NTBZ06HWg==
 X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:IA1PR11MB7198.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(7416014)(23010399003)(10067099003)(56012099006)(6133799003)(3023799007)(18002099003)(22082099003)(4143699003)(11063799006)(921020);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?aXpQUllGbHlnK1F4SkZIV0tHbEpkRG0veS9NZkpJUU5ha2dMTGZ5ZHJXY1BX?=
- =?utf-8?B?RThZZDVjWmp0YTgwc2l4QXNmNVlZbytNRVVMZUVtTStqWEF0K25VYmtQRTVQ?=
- =?utf-8?B?dlJUZ2R0MXFlNkQ4WlZRYU5qUlFqVUxUOVR2clRiZ2o1cDQyWTNoMTBGOWp4?=
- =?utf-8?B?UFV1TkpVWnV4T0wvTktrMkQ5ZW9iOWlPZyttNHdQTmx6b3FyRzFxN2VEcjlT?=
- =?utf-8?B?SXBtNzJmOG9DenpySmFMMk1vZ3UzRmVQZVQxbTBrWFpkSTk2WEI4OUJuekxC?=
- =?utf-8?B?dVA0Vk1CeldNc1lHbktnNktpOVFLa2pwR1EwTC9yZjk0d2psU2tEd1FFRGJP?=
- =?utf-8?B?cjhZQjVYWHE5Q0VRdzhibUVnNjJnNEMyZ0Y4MWxia0RMam1OYnM4cnJuZXd5?=
- =?utf-8?B?bjdRY2VhYkV2Z1BkSm4vWUdwOCtLSVppYkl6bDVPcStSVWdRaG40WE1HRnox?=
- =?utf-8?B?cDY5QjN6ZExEeFVjTW1Db0RpY0NRTGdaRTlDbnh4amRoUXdwbUJYek5lQTY1?=
- =?utf-8?B?Z0lLdCt0TUtTa3ArbEp6V3VSNUZrZEc0U2MweS8yWEJFdWVYckdNK2xvNm5C?=
- =?utf-8?B?Y3pEcXhmczVHelh0WW5zSk1zeDl5UThheHhwQVM5UFpHbFZHQ0lzUTVJY2M2?=
- =?utf-8?B?Vk5lY3pEL3RjazYvcy9lVHhacXJDcEx2NGVQNTZMNFZrbXZmRFc0RnlJVjZ6?=
- =?utf-8?B?R3ZlTmVob1R4LzM3QVA2dkRlZ2pOMVdZTTRuSlFEbEFTOS9GWCt2d1NvVTVy?=
- =?utf-8?B?dktUMFpycUNEZnpLZTlQWEI5cGdnNjRXTlFpU256aDF3Rk41cXA2czlJaFY3?=
- =?utf-8?B?dGc0d3Y2ODJhcjM5RjR0cHlIaVZ3bVYwNzdCTHFRL0EwL29FbmlDVnRVL05r?=
- =?utf-8?B?dnI3OVlsa2ppemp2T25BQ2R4VDllVFlWcnMrQ3VLWmRJUG85TjgzTjhKRzZB?=
- =?utf-8?B?ZUxrSjdBZjdMUTNCQ1d1SWQ5clZLMWVjZ2pxZFMzT3p6c3dKbU1IMUZJNDZK?=
- =?utf-8?B?eGJLRHdNaHNraU8ybHEyU2hraTdEZ05tS1Z5aktWU2dDbEZnWFZEek1rNXhu?=
- =?utf-8?B?aVltTUdFNEZrTENhUjBuOFJnYkpMVFk0UGQ1dVZ3VHA5WExCQjdQdS9oZVBo?=
- =?utf-8?B?Q1ZxNVk1NmhaSGFoTzZTLzV2alRFbzE1UTFQK01lUzI0S1ZHZWRQWXdiRWpC?=
- =?utf-8?B?cEFILy9HaTlpQnY3NStvYzlhaDY3bDRsZGg0MXFhVjhNRVJlQks4TTVvQjFJ?=
- =?utf-8?B?Ym4zMjE1V3grNmZIeGFwRDhmSlRRRnZpQUdrdy9NZFRYWWRtMUYvd0pMZ0Fx?=
- =?utf-8?B?WmVWMlJNY2NOaUJ5cnN4ZWh1dnNmTGEyTkRaL0NvYVFiNm5HZHNYQ0RFcTlz?=
- =?utf-8?B?d1NwZ0FScnBnOEV4UFl1L2hqYWZGVnEwYUJoV1Zuck5aZjRQTldJeUZHNlFy?=
- =?utf-8?B?S3NxOHVFL2NHeEhlbUhBMzROVGFGQVRSQkNxZXUxL2dMdXBLbkwyTFBwNi9X?=
- =?utf-8?B?aThuZVB1SnI5ZlZXRDZ5cGltT0tjU2ZudG5EZld0aWd5RHdLckkwcDJrWkp5?=
- =?utf-8?B?RFdxZk93UjRYMEF4S05vUmw5RTAveFZpRktPTlNGWElEZW1takxlYVBaenMx?=
- =?utf-8?B?R2dMTDRGcVZoUzZlTmpUM1NzWFJZTmJTNFNGMXJidEFiNkl0d2E5M1k3L3ZI?=
- =?utf-8?B?akYwaGxESERkQ3FwYTNDdmVjT0ZONDFzSWVVeG9xRWZkYXppaEJETVg0YXZP?=
- =?utf-8?B?NFY1SmVmVkJMOFVucndmN3kzNWZNdFVWVHg3VTUvOTJRVXFiM1k3dStNS2RE?=
- =?utf-8?B?Vmc3cmxaZW4xZU9PR2lETlByaDljZmF6VGI2UENBaTYyUTJ3WldTSDVSMnBl?=
- =?utf-8?B?SVZSdnRxNFNRd2w3cWh4U0piYTJaNVhxL3UxckdmL2Z6SFptS1R2bU1hSmxv?=
- =?utf-8?B?Q3R4QWFoa0ZpZm9FbEdLSnBYT1dmUjJDYlBJbVdHQTJwWVRoa1B2MW8zRHNl?=
- =?utf-8?B?WnArMDdldzdsU1BQSHRGakRxU3ZvNUdKd3VUUXV4VFBKZnVKWExkQ09OaGZL?=
- =?utf-8?B?TG5jYnd3RSs3bGpxMlR4WENJWEp4L0ZyT2V3c1d5VlY2cC9iQ1RXa1N6VXVM?=
- =?utf-8?B?aUJsTHhVWWNocUtNSDBRRUVJdjVFaHhiK25RMEZvUTNGck9pWk1EOWROMHE1?=
- =?utf-8?B?MWNBRE55dW9XOEJ6WHM5WVkzbG1XVk9QY3h4YjRxenNSUEJKWWhGTUFlN1lR?=
- =?utf-8?B?WmpsK0lGdHNtUU5Hc0c5cytSNjhBU2NEaGpXOEJmRjcwcmlocjdDN2VqdHkr?=
- =?utf-8?B?cFkrM0ozclRhUmY1NDhmYkZoTm4yemxBbjJSSmpZL0FFaS81RERNV3BUT2pS?=
- =?utf-8?Q?ct+ycISBFdEgWXbA=3D?=
-X-Exchange-RoutingPolicyChecked: xxjM9n7SjGchGETUpTJDpSHWdIbNe9/qw+G934hQWnTGoh/Dlr8br095J9189icnEVco8EQDsEZcsf5wCdIvWAaB6d3Dt8n1m5sieKtsWnNBOJixd9Io66Z/Vmv4a4mWEtihSdGrI27fmqLJBK5Lookt3oUkUKh43Wzjp4FgTMyll1q4pjOxok0Zkbn5zianbjYtl1KXCplbEvyt+Bayh9j174bSupvNhoBy9Ow/7320j6oQne8PMa1Jeb2GL0rVGpaA6yHjLrdD9E13sHRGoJtKxL9+dN9WLjQlvCVlTmfIoeXziVIeY5p8GK/cmDi0D35CWYz5n6DrpKb79ge0JQ==
-X-MS-Exchange-CrossTenant-Network-Message-Id: b6335a2d-7e71-40bf-a0fb-08df1a3bd8ee
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?WFVIeVovN2l6NFkzSzhQRGl5UE80ZXYra29Od0pPOU1mbEJlK3pxL1phYWF6?=
+ =?utf-8?B?TFY1WEZpY09CLytKZUpoY1R4WXpEd0ZNTko0eEhRbWN6RWFWTzY1aXVKQWtr?=
+ =?utf-8?B?ejNvNFY3R3d5eStPbXlHZFA4MUVKS2Y3dDhpVzZoQk9ubS9wNWZqWTFQYXZU?=
+ =?utf-8?B?MEhpeE5CM0xqSmlzaVpIdmVlY1hmbVhlbDlFY2xkUTlvSVdVeGR2bmd2ZzVV?=
+ =?utf-8?B?TU5NM1ZmQXE3L3A0STVvNStwMXFzQTJmOFhzK2VOQWxDSkdYUW9yalp6TXAr?=
+ =?utf-8?B?c1dtQUQxRmt2bVRNQkNkMHRTTlQyTjRYeElPZEs0bnZTSm5WdVlmQTk3NitG?=
+ =?utf-8?B?MW9DR0pkU0xuWWtUaS9hbEMxMjhPM3p6dmxqR25hYlIvRGlWMW15ZWxCbDBv?=
+ =?utf-8?B?QXFxQVNhUldjaTdnYmJBMW5sKytOaHRtTXpCTDNkUXJTeXdMMStKSGxSamxi?=
+ =?utf-8?B?MGxNQSsxd2FCRkhsSy9lREtrcHZicXhoNEFjVXkrYlpEUjhRWE4wR01aWDF3?=
+ =?utf-8?B?WmRSUkhCUGo0KzFZOWhTbUkwMnk0bmEyaVRwL1NGVmdOUFppaThkSGlkUFh6?=
+ =?utf-8?B?WHl6cmFJeEF0WkVLVWlkQ25ianF1MmNKMk5wMG9aZEV4TENQdEJ3UkpHcnQ2?=
+ =?utf-8?B?d3FmTmladXg5TEU1QitsVXZLUG1nVW9SKzRKNC91NGw2QU85N0tzenFRQnZS?=
+ =?utf-8?B?RGVweDVYOWNrMkdZaEZzeEQyclBobGxmQ0RubVQyVGt4MUpxNjF4Z0R1aWJT?=
+ =?utf-8?B?RzhyNDRVT0FKNlJCV3FUREVucG8xZnkwYnBvbjBRMFNkK01rNmNxWmV4MDlS?=
+ =?utf-8?B?cnNuWjRxWm5VUXVkKy9CVXc0RlNUVDgyVWlkemo4ZzZSMURmYWtSeE9Ea0o4?=
+ =?utf-8?B?TE40ejU5TVI0NVZGVHIyWWdzeW45ZXdDbnExK1laK3MzeDduTW1OVjYxR2I0?=
+ =?utf-8?B?TWNXOFptWWdFdkIvVVdKWCsramhsTllVYXdRSEVBWGFLNUh6QkNKR1NCU2VF?=
+ =?utf-8?B?QzFsWVBSR0ZERXg1anhzVUpQMVFVZVJ2SXN6enEzMm9TWGlxUHlUSWZmaWw3?=
+ =?utf-8?B?U21kK1h6NHFNT0k1eG51MnFSQjJXMDRjclBORWljUTdHako2Q3R5bDF2Qmxy?=
+ =?utf-8?B?S25rMTI3Zm51dHIrSk5jWld4V2NhZm5ScEF4bEpFQzJ2VUR4Y1liaWFBalN2?=
+ =?utf-8?B?R0xIR1FnaHlTU213UW9VckpFY2VTRzhCMklMM3FoWDZoZmJrTkJ6YXYxVEla?=
+ =?utf-8?B?c0J1RU5pbmdFcXRVV1U0T2RlQ0lWTjFnT0JKcDBWMnJqQjBSQ1l2QzVtNkxs?=
+ =?utf-8?B?Y0RYY2N5ZEkyOVZaZGh1Nk96S0VWcjJ5UXorYXZURHg3cjZGWEtheXVINEZz?=
+ =?utf-8?B?VHh6Vk9EUlpQYkFpVGdOak4yalJwOC9WR2wxTjYxSGVhQlltNE5ETkxmNzhj?=
+ =?utf-8?B?ZXErQ3N1UnhFYTVBZlZtY1QzQnBrRUlMZE1iZnRXS3p0UHNmejJwbE9VUkZt?=
+ =?utf-8?B?MUlsbC94YUdZbWswNFVuR0ppeC9FY2E2d2xNTnVydVZpOStpNzNyeDBxeW9Y?=
+ =?utf-8?B?SnFxeWl0TmE4TVhPTDJpbjdHQzBmMXE2K1NqMHgxdm1DakJaU2JUckN4UEdw?=
+ =?utf-8?B?U2tKWTdQZk1LRVZ5bENLVklmK04vR0JpUlpYUWFDdkxpWkRuQ05UcDU0L2Y4?=
+ =?utf-8?B?OXVYMjd1elF4RUZlSnpCejFFelRycWhBcDJ3WHg0czRlQU9nVms1L1RUWVJw?=
+ =?utf-8?B?OWxid3RXb3h2VTg2OTN3WDVWelRndG9xa2Y1cDJ1dHBmeCsyb3g0bUtuUFd2?=
+ =?utf-8?B?TCtJMFhlTUhOenRzM3c0UkQvQmxXRkVpVy9WRnA5NEFZZW84aUtUUWs4dDlG?=
+ =?utf-8?B?Y21pOUhWSFcwOVYxRGdrY3RYRUZxbFkyL1VHdXhYd3B2alZRdjh5bFI3K2Qv?=
+ =?utf-8?B?blBRUE1TUHY2YWJBL0dmVmxrNURtZlNMem85VklyV0t0SjFzWWpxaFlOMUo5?=
+ =?utf-8?B?QmQwaEpoRzE2Y3FTb1RlWHQ4djV0TDNUUUNhQW5wUXhTUDJqbUNYS28ydTdT?=
+ =?utf-8?B?Z3c5UFczcjZqbENlclF4VWt5ZS82S3AwdXYxU0l3RXA2aEdCYmo2VG4vb3BB?=
+ =?utf-8?B?c01SYzV2cmtEdk9tZzJ6NzB3UFlSN1pubFRYQkJDZVdtckV6TWcxQ3FLL0dm?=
+ =?utf-8?B?SHI3Zmd3UE5PK1FhejBLYzI1ZTVJM3pkdTVVa1pXWkVIaVZDbTZXOUE4YzZm?=
+ =?utf-8?B?WGdWMkc0T2RUQ0ZxZmR6djhyblFvQnEvczloZTZvL1lkaU9VVHFRYUhBOUdX?=
+ =?utf-8?B?RFE1SmEzNTFERndhczN4ZW5jdzQwcXB2VjlydnQ1R2c5eS9KN3Y4YXh5QmJO?=
+ =?utf-8?Q?J9iiii4JRmr2PQUo=3D?=
+X-Exchange-RoutingPolicyChecked: iC4bi/LP+Zc9+2UKysHZvL6urxqIobj33IW5WEImLc4CwmaFBvevE2KhtJ5qC+KgWOOwUKzIHZcsQlBmlab78JNmu+75cj+Ls9httyOjmMqpKaOUI6bglKiLQG2dwGEoWPQjLL7K/IgM+/nAoQytpjunkc35QTITrnFt/xhTAJAoTLqsYu1njU+3gqOcoFxkhubklDDS085XQ0IjzSK9z8E4TAirAYOUClI4NR0efw0U7rluk66AvARLe+2sDVdo+OEhPM9/wN9t7nduDk5GzzH6pcb0Du9wLBUuRSypboo0nuOIgDs334wg7IFbS53pu9+bKndD+Hb69AT4lLAQmg==
+X-MS-Exchange-CrossTenant-Network-Message-Id: 359e2ef0-154a-4204-5666-08df1a3bdcc0
 X-MS-Exchange-CrossTenant-AuthSource: IA1PR11MB7198.namprd11.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Sep 2026 13:00:45.7939
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Sep 2026 13:00:52.0554
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: uQ7D9iCQvwZP7V2cEie+C6JK7hQdlk2n2bReHmBNk0GTDPh6JjXZ0mEJ7YoY3EuIzj5QglrJ/BZh+YypfnDkuw==
+X-MS-Exchange-CrossTenant-UserPrincipalName: qYs3LlXhiDql1yKyuIXbqcJ8I0l0AyGfCcY/4c18bVDafYnYwwv9g23QcHPFSqjjhxfZ3W5Uy9QeSutih/l6qA==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH8PR11MB407363
 X-OriginatorOrg: intel.com
 
 On 23/09/2026 18:21, Leo Yan wrote:
-> The thread stack derives return addresses from IP + insn_len. For an
-> interrupt or fault, the return address can instead be the sample IP even
-> when instruction bytes at that address are available.
+> Intel PT uses a zero instruction length for asynchronous branches so
+> the thread stack resumes at the source IP. A dlfilter can fetch the
+> instruction before call/return processing and replace that zero with
+> its opcode length, advancing the saved return address.
 > 
-> Add ret_addr to perf_sample and prefer it in thread_stack__trace_end()
-> and thread_stack__process() when supplied. Initialize it to zero so other
-> samples retain the IP + insn_len calculation.
-> 
-> Add a regression test for explicit exception return addresses and the
-> ordinary call fallback when the return address is zero.
+> Set sample.ret_addr to sample.ip for asynchronous branch samples so
+> instruction fetching cannot change the return address. This also
+> covers asynchronous trace-end samples and VM exits.
 > 
 > Assisted-by: Codex:gpt-6
 > Signed-off-by: Leo Yan <leo.yan@arm.com>
@@ -189,213 +187,26 @@ On 23/09/2026 18:21, Leo Yan wrote:
 Reviewed-by: Adrian Hunter <adrian.hunter@intel.com>
 
 > ---
->  tools/perf/tests/Build          |   1 +
->  tools/perf/tests/builtin-test.c |   1 +
->  tools/perf/tests/tests.h        |   1 +
->  tools/perf/tests/thread-stack.c | 106 ++++++++++++++++++++++++++++++++++++++++
->  tools/perf/util/sample.c        |   1 +
->  tools/perf/util/sample.h        |   5 ++
->  tools/perf/util/thread-stack.c  |   5 +-
->  7 files changed, 118 insertions(+), 2 deletions(-)
+>  tools/perf/util/intel-pt.c | 7 +++++++
+>  1 file changed, 7 insertions(+)
 > 
-> diff --git a/tools/perf/tests/Build b/tools/perf/tests/Build
-> index 81c311b131b72715f11b6501511a18dce2af07df..d03ae938dd0ad92f78f8de6900ce7161f39fc3bc 100644
-> --- a/tools/perf/tests/Build
-> +++ b/tools/perf/tests/Build
-> @@ -29,6 +29,7 @@ perf-test-y += task-exit.o
->  perf-test-y += sw-clock.o
->  perf-test-y += mmap-thread-lookup.o
->  perf-test-y += thread-maps-share.o
-> +perf-test-y += thread-stack.o
->  perf-test-$(CONFIG_LIBTRACEEVENT) += switch-tracking.o
->  perf-test-y += keep-tracking.o
->  perf-test-y += code-reading.o
-> diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-test.c
-> index d2f594921e25bda9fc662e7ba82464bfef1b752b..6259ed805c5f75799d52ac742b77cf278f98bd9d 100644
-> --- a/tools/perf/tests/builtin-test.c
-> +++ b/tools/perf/tests/builtin-test.c
-> @@ -112,6 +112,7 @@ static struct test_suite *generic_tests[] = {
->  	&suite__hists_filter,
->  	&suite__mmap_thread_lookup,
->  	&suite__thread_maps_share,
-> +	&suite__thread_stack,
->  	&suite__hists_output,
->  	&suite__hists_cumulate,
->  #ifdef HAVE_LIBTRACEEVENT
-> diff --git a/tools/perf/tests/tests.h b/tools/perf/tests/tests.h
-> index 9c96f33483d1435644da6068c3802f7a914a9de0..b2520a564417b61718f1dcb23da1f8cc0f601906 100644
-> --- a/tools/perf/tests/tests.h
-> +++ b/tools/perf/tests/tests.h
-> @@ -138,6 +138,7 @@ DECLARE_SUITE(expr);
->  DECLARE_SUITE(hists_filter);
->  DECLARE_SUITE(mmap_thread_lookup);
->  DECLARE_SUITE(thread_maps_share);
-> +DECLARE_SUITE(thread_stack);
->  DECLARE_SUITE(hists_output);
->  DECLARE_SUITE(hists_cumulate);
->  DECLARE_SUITE(switch_tracking);
-> diff --git a/tools/perf/tests/thread-stack.c b/tools/perf/tests/thread-stack.c
-> new file mode 100644
-> index 0000000000000000000000000000000000000000..0239e3bee34faf8fd4ddc7b723cf479609760064
-> --- /dev/null
-> +++ b/tools/perf/tests/thread-stack.c
-> @@ -0,0 +1,106 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +#include <linux/kernel.h>
-> +#include <unistd.h>
-> +#include "tests.h"
-> +#include "util/addr_location.h"
-> +#include "util/event.h"
-> +#include "util/sample.h"
-> +#include "util/thread.h"
-> +#include "util/thread-stack.h"
-> +
-> +#define CALL_REF		1234UL
-> +#define RET_REF			5678UL
-> +
-> +struct return_check {
-> +	unsigned int matched;
-> +	unsigned int unmatched;
-> +};
-> +
-> +static int check_call_return(struct call_return *cr,
-> +			     u64 *parent_db_id __maybe_unused, void *data)
-> +{
-> +	struct return_check *check = data;
-> +
-> +	if (cr->call_ref == CALL_REF && cr->return_ref == RET_REF && !cr->flags)
-> +		check->matched++;
-> +	else
-> +		check->unmatched++;
-> +
-> +	return 0;
-> +}
-> +
-> +/* A zero expected_ret_addr asks the stack to use ip + insn_len. */
-> +static int check_return_address(u64 expected_ret_addr, u64 actual_ret_addr,
-> +				u32 flags)
-> +{
-> +	struct call_return_processor *crp;
-> +	struct return_check check = { };
-> +	struct thread *thread;
-> +	struct addr_location from = { }, to = { };
-> +	struct perf_sample sample = { };
-> +	int ret = TEST_FAIL;
-> +
-> +	thread = thread__new(getpid(), getpid());
-> +	if (!thread)
-> +		return TEST_FAIL;
-> +
-> +	crp = call_return_processor__new(check_call_return, &check);
-> +	if (!crp)
-> +		goto out;
-> +
-> +	sample.ip = 0x1000;		/* Call or exception source addr */
-> +	sample.addr = 0x2000;		/* Callee or exception handler addr */
-> +	sample.ret_addr = expected_ret_addr;
-> +	sample.flags = PERF_IP_FLAG_BRANCH | PERF_IP_FLAG_CALL | flags;
-> +	sample.time = 1;
-> +	/* Model the opcode length after an instruction fetch. */
-> +	sample.insn_len = 4;
-> +	if (thread_stack__process(thread, thread__comm(thread), &sample,
-> +				  &from, &to, CALL_REF, crp))
-> +		goto out;
-> +
-> +	sample.ip = 0x2000;		/* Return instruction addr */
-> +	sample.addr = actual_ret_addr;	/* Return branch target addr */
-> +	sample.ret_addr = 0;
-> +	sample.flags = PERF_IP_FLAG_BRANCH | PERF_IP_FLAG_RETURN |
-> +		       (flags & (PERF_IP_FLAG_INTERRUPT | PERF_IP_FLAG_SYSCALLRET));
-> +	sample.time = 2;
-> +	if (thread_stack__process(thread, thread__comm(thread), &sample,
-> +				  &to, &from, RET_REF, crp))
-> +		goto out;
-> +
-> +	if (check.matched == 1 && !check.unmatched)
-> +		ret = TEST_OK;
-> +
-> +out:
-> +	thread__put(thread);
-> +	call_return_processor__free(crp);
-> +	return ret;
-> +}
-> +
-> +static int test__thread_stack(struct test_suite *test __maybe_unused,
-> +			      int subtest __maybe_unused)
-> +{
-> +	static const struct {
-> +		const char *name;
-> +		u64 expected_ret_addr;
-> +		u64 actual_ret_addr;
-> +		u32 flags;
-> +	} cases[] = {
-> +		{ "ordinary call", 0, 0x1004, 0 },
-> +		{ "interrupt", 0x1000, 0x1000, PERF_IP_FLAG_ASYNC | PERF_IP_FLAG_INTERRUPT },
-> +		{ "fault or trap", 0x1000, 0x1000, PERF_IP_FLAG_INTERRUPT },
-> +		{ "SVC", 0x1004, 0x1004, PERF_IP_FLAG_SYSCALLRET },
-> +	};
-> +
-> +	for (size_t i = 0; i < ARRAY_SIZE(cases); i++) {
-> +		if (check_return_address(cases[i].expected_ret_addr,
-> +					 cases[i].actual_ret_addr, cases[i].flags)) {
-> +			pr_debug("Incorrect return address for %s\n", cases[i].name);
-> +			return TEST_FAIL;
-> +		}
-> +	}
-> +	return TEST_OK;
-> +}
-> +
-> +DEFINE_SUITE("Thread stack return addresses after instruction fetching", thread_stack);
-> diff --git a/tools/perf/util/sample.c b/tools/perf/util/sample.c
-> index bccc19e2aaf25118a8ecde88473aa6cb16fa561a..4abb689132bc27d0f2318eeafca20f7e57621837 100644
-> --- a/tools/perf/util/sample.c
-> +++ b/tools/perf/util/sample.c
-> @@ -29,6 +29,7 @@ void perf_sample__init(struct perf_sample *sample, bool all)
->  		sample->intr_regs = NULL;
->  		sample->merged_callchain = false;
->  		sample->callchain = NULL;
-> +		sample->ret_addr = 0;
->  	}
->  }
+> diff --git a/tools/perf/util/intel-pt.c b/tools/perf/util/intel-pt.c
+> index 8c21c9f52d572d2dd4e15b3b5c341b253ccea1b5..e8b9c8a67b0a0635e0110eda4b6ccb2511132fc7 100644
+> --- a/tools/perf/util/intel-pt.c
+> +++ b/tools/perf/util/intel-pt.c
+> @@ -1803,6 +1803,13 @@ static int intel_pt_synth_branch_sample(struct intel_pt_queue *ptq)
+>  	perf_sample__init(&sample, /*all=*/true);
+>  	intel_pt_prep_b_sample(pt, ptq, event, &sample);
 >  
-> diff --git a/tools/perf/util/sample.h b/tools/perf/util/sample.h
-> index cb4b16654876e9a5c3bfd66be3e0235ac15795e0..865ed18200f1339f5949ef3f185ed57a34aace72 100644
-> --- a/tools/perf/util/sample.h
-> +++ b/tools/perf/util/sample.h
-> @@ -131,6 +131,11 @@ struct perf_sample {
->  	u64 time;
->  	/** @addr: The sample event PERF_SAMPLE_ADDR value. */
->  	u64 addr;
-> +	/**
-> +	 * @ret_addr: Return address supplied by the decoder for a branch sample.
-> +	 *            Zero means use ip + insn_len.
+> +	/*
+> +	 * For asynchronous branches, use the sample IP as the return address
+> +	 * instead of advancing it during instruction decoding.
 > +	 */
-> +	u64 ret_addr;
->  	/** @id: The sample event PERF_SAMPLE_ID or PERF_SAMPLE_IDENTIFIER value. */
->  	u64 id;
->  	/** @stream_id: The sample event PERF_SAMPLE_STREAM_ID value. */
-> diff --git a/tools/perf/util/thread-stack.c b/tools/perf/util/thread-stack.c
-> index 1360f44421ef8bb80fe5cfdba59be7e6029b0240..d452d1a7eabb16f040ca3dada23e6fdec8fb1088 100644
-> --- a/tools/perf/util/thread-stack.c
-> +++ b/tools/perf/util/thread-stack.c
-> @@ -1030,7 +1030,7 @@ static int thread_stack__trace_end(struct thread_stack *ts,
->  	cp = call_path__findnew(cpr, ts->stack[ts->cnt - 1].cp, NULL, 0,
->  				ts->kernel_start);
->  
-> -	ret_addr = sample->ip + sample->insn_len;
-> +	ret_addr = sample->ret_addr ? sample->ret_addr : sample->ip + sample->insn_len;
->  
->  	return thread_stack__push_cp(ts, ret_addr, sample->time, ref, cp,
->  				     false, true);
-> @@ -1154,7 +1154,8 @@ int thread_stack__process(struct thread *thread, struct comm *comm,
->  		if (!sample->ip || !sample->addr)
->  			return 0;
->  
-> -		ret_addr = sample->ip + sample->insn_len;
-> +		/* Opcode fetching must not change a decoder-supplied return address. */
-> +		ret_addr = sample->ret_addr ? sample->ret_addr : sample->ip + sample->insn_len;
->  		if (ret_addr == sample->addr)
->  			return 0; /* Zero-length calls are excluded */
+> +	if (sample.flags & PERF_IP_FLAG_ASYNC)
+> +		sample.ret_addr = sample.ip;
+> +
+>  	sample.id = ptq->pt->branches_id;
+>  	sample.stream_id = ptq->pt->branches_id;
 >  
 > 
 
