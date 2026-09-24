@@ -1,60 +1,104 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E562A3B993B
-	for <linux-perf-users@vger.kernel.org>; Thu, 24 Sep 2026 05:44:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A57633DD537;
+	Thu, 24 Sep 2026 05:45:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790228696; cv=none; b=gxujOiaSLrExnRmw7WgR9eenQ48MubXTABQhFoGmporI1RzHt4IMgm3YZILuZ7BoysFtHxcMBRsl9X6jCihAiofsHd1PbGKr9kG3gstGNgzfBUj4j9n2qIHnQVepNDqAweJKbmFQ95H9tNczy9XSZY4GxP3Z9WpZz0Hi3J+svGI=
+	t=1790228701; cv=none; b=c0JGsM3vA4yPH4lbkInCsq94+hvPmzijU7LyKrUAbxT4S/wjh0wxShlXL+WjHHmnEkmmxel+rDYS+IVc6Wm3Xli0j0bkNskmLgtGNErk39aAj7Y4oyVkvH3EySR2kRBex9LvJcLb5j+bZZgFstpI6CyFLJUs3FGY+TnHyJFZ45U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790228696; c=relaxed/simple;
-	bh=+LlKc1n51+UCMOssO6999N1PfPaLkhjWLDGCSyS9ISg=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=IIsBDQ7cB8vAhJmWkYhlpSRoQuN3Me8HWlVWGARKi5hWK2iFqpC2laMr7NME6/M2fzehrambuj80EuYrFGwbiw9sFg/OAsOeNkeyrgLMXO3jXiI28Qgu5qy4VUvLogb3X7Ou0Hbf+jMbqM9VB0PuI71YCa4lLJ8t+O5rX0EJAlo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=W93DAOgt; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1790228701; c=relaxed/simple;
+	bh=fRQi32n67faLJ6Uq3zm0/V6fZL4OQsawfES3NU31W3U=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ulVvF3SxD0dTuWcEofRN56ssW4SAmTtf6TbXWnKBHTAYnWJVQ1pba5omsiXipZW2yajbDE6QE1oks9cyRsorlzS0M0UgGd0z4XTBHkLc+kfAAZSC63Z9cvX42X0wyRJ0avnjGh+WcBFaHLCcv5xGsXelUdH6JjBxkD3hMAvZ9w4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TiagoTRd; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="W93DAOgt"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 98A331F000FF;
-	Thu, 24 Sep 2026 05:44:54 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TiagoTRd"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C77601F000FF;
+	Thu, 24 Sep 2026 05:44:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1790228694;
-	bh=+opxwJWSveW9okQODDqKqtL+vgWV0TDWMU0MDC848b0=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=W93DAOgtrj4bh6aKXwo2i4DRBIsCibWSCtTAeTCVmWnFzqXGVwR3CU6E6lmjMaYf9
-	 KAL+52rj/9f+PPRtIigsDsYi9RgbiJgOZyRsYCa7mGzuRQ/D8PgUreMmf7Jr12PvWs
-	 +DrbMHpwkEiHvphfAHGu977e6SUpy77zb1Re97ielVpSK1EpXH8iEF38lJC9C3Oj1e
-	 OMvtDbnuLp9/LRq5km7XOG8MchgeQEw/kSemYLlbe9Xyt6fdxznvemisBtY6UNa7gL
-	 Qm0JYeOuL5g7It5wdAilRuyCgidHAvJ3zuhx4JPtqYzNYvA/ZFec/eTfIfo0Zj2VYG
-	 gPClwOAhNJRWg==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v1 19/21] perf vendor events intel: Update
- sapphirerapids events from 1.39 to 1.40
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Ian Rogers" <irogers@google.com>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260924053645.3555041-20-irogers@google.com>
-References: <20260924053645.3555041-1-irogers@google.com>
- <20260924053645.3555041-20-irogers@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Thu, 24 Sep 2026 05:44:54 +0000
-Message-Id: <20260924054454.98A331F000FF@smtp.kernel.org>
+	s=k20260515; t=1790228700;
+	bh=hsnElaicdx1h21WvvHJKOBOOJn8qo41VE9TVkFOoJuY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=TiagoTRdt90rIN3Ff1lo20WqPoqy8SUFhd0Ga0UiXw/+Yyrs9EriQCwVULEivoEze
+	 0Qxr90ZEhMg+AWpJbYG+eKR3mai/UtNmJLLJhF0Ufge9ZOurWM1axtNlFvsXKwBl/B
+	 vD382puMqjABXCd+VhqM4v7Vo8VlFweid7auDm3MaOrJtdVBqgns40LlAot95/bjlK
+	 xHQr7T1s9RocuK/RcPpAXShGEnhL6whdd38WSudMz7MsgC2AyFEKdH1oMoIhxVMz9H
+	 wZbC0urNUlLSQxz+/pPfp5HunBk9fuNwQiQ9dlIxkOM4I8RmiV9cFnaqbDYq1xT9ZS
+	 4eUfLfkM/xbzA==
+Date: Wed, 23 Sep 2026 22:44:58 -0700
+From: Namhyung Kim <namhyung@kernel.org>
+To: Ian Rogers <irogers@google.com>
+Cc: acme@kernel.org, howardchu95@gmail.com, adrian.hunter@intel.com,
+	james.clark@linaro.org, jolsa@kernel.org,
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+	mingo@redhat.com, peterz@infradead.org,
+	Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: Re: [PATCH v5 03/23] perf trace: Include the headers declaring
+ pid_t, strcmp and assert
+Message-ID: <arS42kj5cES7OZyn@z2>
+References: <cover.1790145937.git.irogers@google.com>
+ <4add8796a95e7cabee2a8094d6babdb39290bfe8.1790145937.git.irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <4add8796a95e7cabee2a8094d6babdb39290bfe8.1790145937.git.irogers@google.com>
 
-> The updated events were published in:
->=20
->   https://github.com/intel/perfmon/commit/2ba60f607169b97dcfa0d28f7e3a613=
-28627cf0c
->=20
+On Wed, Sep 23, 2026 at 12:13:43AM -0700, Ian Rogers wrote:
+> trace_augment.h uses pid_t in the augmented_syscalls__set_filter_pids()
+> prototype and in the !HAVE_BPF_SKEL stub. bpf_trace_augment.c calls
+> strcmp() in augmented_syscalls__find_by_title() and assert() in
+> augmented_syscalls__create_bpf_output(), but neither pulls in the header
+> that declares what it uses. Both happen to build today only because
+> something else in the include chain drags <sys/types.h>, <string.h> and
+> <assert.h> in first, which is not guaranteed and does not hold on libcs
+> such as musl that keep the POSIX namespaces strictly separated.
+> 
+> Include <sys/types.h>, <string.h> and <assert.h> explicitly.
+> 
+> Assisted-by: Antigravity:gemini-3.1-pro
 > Signed-off-by: Ian Rogers <irogers@google.com>
+> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-Sashiko has reviewed this patch and found no issues. It looks great!
+I'm not sure why it has Arnaldo's Sign-off..
 
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260924053645.3555=
-041-1-irogers@google.com?part=3D19
+Thanks,
+Namhyung
 
+> ---
+>  tools/perf/util/bpf_trace_augment.c | 2 ++
+>  tools/perf/util/trace_augment.h     | 1 +
+>  2 files changed, 3 insertions(+)
+> 
+> diff --git a/tools/perf/util/bpf_trace_augment.c b/tools/perf/util/bpf_trace_augment.c
+> index a9cf2a77ded1..ebb26225fb04 100644
+> --- a/tools/perf/util/bpf_trace_augment.c
+> +++ b/tools/perf/util/bpf_trace_augment.c
+> @@ -1,5 +1,7 @@
+> +#include <assert.h>
+>  #include <bpf/libbpf.h>
+>  #include <internal/xyarray.h>
+> +#include <string.h>
+>  
+>  #include "bpf_skel/augmented_raw_syscalls.skel.h"
+>  #include "debug.h"
+> diff --git a/tools/perf/util/trace_augment.h b/tools/perf/util/trace_augment.h
+> index 4f729bc67753..a1cd9a5e0213 100644
+> --- a/tools/perf/util/trace_augment.h
+> +++ b/tools/perf/util/trace_augment.h
+> @@ -2,6 +2,7 @@
+>  #define TRACE_AUGMENT_H
+>  
+>  #include <linux/compiler.h>
+> +#include <sys/types.h>
+>  
+>  struct bpf_program;
+>  struct evlist;
+> -- 
+> 2.56.0.rc1.315.gc6ed9934b7-goog
+> 
