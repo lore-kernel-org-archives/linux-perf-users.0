@@ -1,136 +1,256 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E21FA40B110
-	for <linux-perf-users@vger.kernel.org>; Thu, 24 Sep 2026 22:30:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24C9C33EB17;
+	Thu, 24 Sep 2026 22:30:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790289040; cv=none; b=fw0+wE2i4ts8n0f68uNHJk2vXH/4BLYoGsaWn8ZHLKtwmKCTc6Rn7U1jDl0xviQQz8Fe9Az6egNASttJN7hLye8Pqii7fgRSYD3+5huwXlvex2GFeU7E6SIynxO4+rq8XTIb3EQIi6ENfAGaS5ZUufuyj7xvjot2eDD3vojEdrk=
+	t=1790289051; cv=none; b=QNCZXWQsPS1MQX/gEyJRsmydjIpCX1eW8YYfBWZlEDqMmytTdZiOFSSA+xtnR14xkrTvNC8iEecb6ykpMBLqbtmNMPmHol84YkHJGep8Uh6Yo0jbrSZW7vO5ZdeS/8qqNeW6JV8/eU7JcuFWnChLxCLUTxS2SKB2uW4eQGtFBHE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790289040; c=relaxed/simple;
-	bh=9omshHpKkNoUwGjOTOpoy5QCsEF0VbdWRTdNS/MkbZs=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Wi8MSG+ahpfy0wWGvRFthXnuwWDc2jjIbzKhqapJemsaHY35y5mff+s+yK9mFJKpbySA2+gjFY+/ZaJrYJ/xKQzp9QL00wjMS+7rTGaaaBSHzhox+R9xH/EIvks6n1a6ABiy4MfGX8iHWDv9YVsiLz4YCU3d7d04UKVQMRuT5As=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=YF9w0vwv; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1790289051; c=relaxed/simple;
+	bh=cpPJRa1lXkq0wJljIvXhRZLEL9o4KXxDl6/ZTG63+UU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=iuXgtYASc3IlBblzzTJXDLfcMl6HZS30vjGzKwl9JspB3g5z8d3PKcF7uHU+QooW+wTl4FJM9248JD5GhiHOTw3puD5kmx6ZS7tEgyHBiJ3dZJrQ29KBwxYifhMTkHgp6e7y6I1VVB0rS0AfjuxIXst4Kt53uyLbhNJo0UcC9oo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fTcbJpTm; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YF9w0vwv"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1790289037;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=oMTh9/PlsM4qvp9H7i00Q7Rmik4yWXHZqaCN5rbOE7Q=;
-	b=YF9w0vwvsGXQibQHNoN1Z8Mv81XEyCkhRAB9OSqyUEO8iWB3vrEwYe741Yt5rzDCEzio8L
-	oDO86y19Gkc47TTUwdvCtk8gmlHb2Mo+ABmQ11tWKVjgwYmHqdcelCE6Rn+wOo6epHPE4i
-	cRDhepfGVfuR0vSSRgdKU1f6oIKiLdU=
-Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-679-IKfuAVzsPbiROTNkZaAEZQ-1; Thu,
- 24 Sep 2026 18:30:34 -0400
-X-MC-Unique: IKfuAVzsPbiROTNkZaAEZQ-1
-X-Mimecast-MFC-AGG-ID: IKfuAVzsPbiROTNkZaAEZQ_1790289033
-Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 91E1A1945CAC;
-	Thu, 24 Sep 2026 22:30:33 +0000 (UTC)
-Received: from Carbon.redhat.corp (headnet04.pony-001.prod.iad2.dc.redhat.com [10.2.32.116])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 251A11800370;
-	Thu, 24 Sep 2026 22:30:31 +0000 (UTC)
-From: Michael Petlan <mpetlan@redhat.com>
-To: linux-perf-users@vger.kernel.org,
-	irogers@google.com,
-	namhyung@kernel.org
-Cc: acme@redhat.com
-Subject: [PATCH 2/2] perf test attr: Fix wrong size expectation for events
-Date: Fri, 25 Sep 2026 00:30:27 +0200
-Message-ID: <20260924223027.799654-3-mpetlan@redhat.com>
-In-Reply-To: <20260924223027.799654-1-mpetlan@redhat.com>
-References: <20260924223027.799654-1-mpetlan@redhat.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fTcbJpTm"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 92E611F000FF;
+	Thu, 24 Sep 2026 22:30:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1790289050;
+	bh=rW61pGXNeD2X1UJL+FWGfDEslXamE4AP8axw+i1v+Bg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=fTcbJpTm2Y0iEhEzbqrctw0zYtKjhAzc00Zlahjw/eLJ8rrJVKLC2EhjAyzBx2HVU
+	 but05vlzRQ3S7gTrKXMxSH8Wp7ezdMmvW2rzgF/0FIEvrWxtOXFq39ZBwgnmv70WDO
+	 +qszbai5jxFZ2rRhBiyZ2iYM1HwCMHBjcKnM2bAFV4Yq8pclZN+JOb3T26vxRwmTf3
+	 OuF0Mv99VzdF3qY3EGXqi3S7L0GBlVR2hqePSg+OMwKCOKTS/0hXExJiMauz1zoYgK
+	 K1unjfD343+h0srZJ7M7WPU/UorMwhH9F21ZFu7gdoGQeLacYHzwXHB+8jdqqe/Ghq
+	 4ywRMid8SPWQg==
+Date: Thu, 24 Sep 2026 15:30:48 -0700
+From: Namhyung Kim <namhyung@kernel.org>
+To: Zhan Xusheng <zhanxusheng1024@gmail.com>
+Cc: irogers@google.com, acme@kernel.org, changbin.du@huawei.com,
+	adrian.hunter@intel.com, jolsa@kernel.org, mingo@redhat.com,
+	peterz@infradead.org, linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org, zhanxusheng@xiaomi.com
+Subject: Re: [PATCH v3] perf symbols: Apply the symfs flat layout to the
+ composed filename
+Message-ID: <arWkmNKRbzF2FhoA@google.com>
+References: <20260922131952.2922816-1-zhanxusheng@xiaomi.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20260922131952.2922816-1-zhanxusheng@xiaomi.com>
 
-Although config4 has been added into struct perf_event_attr, the size
-expectation for the struct hasn't been adjusted. This hasn't been
-noticed, since the testcase's return value has been ignored after
-rewriting the testcase to python until previous commit.
+Hello,
 
-Fix that.
+On Tue, Sep 22, 2026 at 09:19:52PM +0800, Zhan Xusheng wrote:
+> --symfs=<dir>,flat documents itself as matching only the base name, so a
+> debuginfo lookup for /usr/lib/x86_64-linux-gnu/libc.so.6 should land on
+> <dir>/libc.so.6.debug.  It lands on
+> <dir>/debug/usr/lib/x86_64-linux-gnu/libc.so.6.debug instead, because the
+> layout is applied to a fixed prefix and the file name arrives afterwards:
+> 
+> 	len = __symbol__join_symfs(filename, size, "/usr/lib/debug");
+> 	snprintf(filename + len, size - len, "%s.debug", dso__long_name(dso));
+> 
+> perf_basename() only ever sees "/usr/lib/debug", so neither layout comes
+> out of it.
+> 
+> Compose the path as it would appear on the profiled system and join it
+> once, which puts the layout on the whole name.  That covers
+> FEDORA_DEBUGINFO, UBUNTU_DEBUGINFO, MIXEDUP_UBUNTU_DEBUGINFO,
+> OPENEMBEDDED_DEBUGINFO and BUILDID_DEBUGINFO, plus the same composition in
+> build_id_cache__find_debug().
+> 
+> BUILDID_DEBUGINFO needs one more step: the build id cache splits the first
+> two characters of the build id off into a directory name, so the basename
+> of the hierarchy path is only part of the build id.  Name the flat file
+> after the whole build id.
+> 
+> dso__disassemble_filename() passes a path from perf's own build id cache
+> rather than one on the profiled system, and every entry there is named
+> "elf" or "debug".  Use path__join() so the layout does not apply.
+> 
+> With --symfs /s,flat the lookups are now /s/libc.so.6, /s/libc.so.6.debug,
+> /s/sleep and /s/<build id>.debug.  hierarchy is unchanged.
+> 
+> Signed-off-by: Zhan Xusheng <zhanxusheng@xiaomi.com>
 
-Fixes: 80cdf208117a36de82a30d210b3b8df0f193e75b ("tools headers UAPI: Sync linux/perf_event.h with the kernel sources")
-Fixes: cbbfba4847b8a5299d36e002bf864b21bb83295d ("perf: Add perf_event_attr::config4")
+Reviewed-by: Namhyung Kim <namhyung@kernel.org>
 
-Signed-off-by: Michael Petlan <mpetlan@redhat.com>
----
- tools/perf/tests/shell/attr/base-record          | 2 +-
- tools/perf/tests/shell/attr/base-stat            | 2 +-
- tools/perf/tests/shell/attr/system-wide-dummy    | 2 +-
- tools/perf/tests/shell/attr/test-record-dummy-C0 | 2 +-
- 4 files changed, 4 insertions(+), 4 deletions(-)
+Thanks,
+Namhyung
 
-diff --git a/tools/perf/tests/shell/attr/base-record b/tools/perf/tests/shell/attr/base-record
-index b44e4e6e4443..dd76fbdb628f 100644
---- a/tools/perf/tests/shell/attr/base-record
-+++ b/tools/perf/tests/shell/attr/base-record
-@@ -5,7 +5,7 @@ group_fd=-1
- flags=0|8
- cpu=*
- type=0|1
--size=136
-+size=144
- config=0|1
- sample_period=*
- sample_type=263
-diff --git a/tools/perf/tests/shell/attr/base-stat b/tools/perf/tests/shell/attr/base-stat
-index fccd8ec4d1b0..d769e69bb4f5 100644
---- a/tools/perf/tests/shell/attr/base-stat
-+++ b/tools/perf/tests/shell/attr/base-stat
-@@ -5,7 +5,7 @@ group_fd=-1
- flags=0|8
- cpu=*
- type=0
--size=136
-+size=144
- config=0
- sample_period=0
- sample_type=65536
-diff --git a/tools/perf/tests/shell/attr/system-wide-dummy b/tools/perf/tests/shell/attr/system-wide-dummy
-index a1e1d6a263bf..9806de3d9c9e 100644
---- a/tools/perf/tests/shell/attr/system-wide-dummy
-+++ b/tools/perf/tests/shell/attr/system-wide-dummy
-@@ -7,7 +7,7 @@ cpu=*
- pid=-1
- flags=8
- type=1
--size=136
-+size=144
- config=9
- sample_period=1
- # PERF_SAMPLE_IP | PERF_SAMPLE_TID | PERF_SAMPLE_TIME |
-diff --git a/tools/perf/tests/shell/attr/test-record-dummy-C0 b/tools/perf/tests/shell/attr/test-record-dummy-C0
-index 91499405fff4..23e00e7f8ace 100644
---- a/tools/perf/tests/shell/attr/test-record-dummy-C0
-+++ b/tools/perf/tests/shell/attr/test-record-dummy-C0
-@@ -10,7 +10,7 @@ cpu=0
- pid=-1
- flags=8
- type=1
--size=136
-+size=144
- config=9
- sample_period=4000
- # PERF_SAMPLE_IP | PERF_SAMPLE_TID | PERF_SAMPLE_TIME |
--- 
-2.52.0
-
+> ---
+> v2->v3: different approach.  v1 and v2 took the four sites out of the
+> layout; Namhyung asked for the layout to be made to work instead, so v3
+> composes the filename first and joins once.
+> 
+> v2: https://lore.kernel.org/r/20260819094621.844115-1-zhanxusheng@xiaomi.com
+> 
+> Traced openat()/newfstatat() under --symfs /s,flat and /s,hierarchy with
+> perf record -- sleep 0.3 before and after: flat goes from 21 paths to 15,
+> hierarchy is identical at 21.
+>  tools/perf/util/build-id.c | 12 +++++++----
+>  tools/perf/util/disasm.c   |  8 ++++++-
+>  tools/perf/util/dso.c      | 43 +++++++++++++++++++++++++-------------
+>  3 files changed, 44 insertions(+), 19 deletions(-)
+> 
+> diff --git a/tools/perf/util/build-id.c b/tools/perf/util/build-id.c
+> index eb95ab90f974..02233ef0eaff 100644
+> --- a/tools/perf/util/build-id.c
+> +++ b/tools/perf/util/build-id.c
+> @@ -586,9 +586,9 @@ static char *build_id_cache__find_debug(const char *sbuild_id,
+>  	const char *dirname = "/usr/lib/debug/.build-id/";
+>  	char *realname = NULL;
+>  	char dirbuf[PATH_MAX];
+> +	char pathbuf[PATH_MAX];
+>  	char *debugfile;
+>  	struct nscookie nsc;
+> -	size_t len = 0;
+>  
+>  	debugfile = calloc(1, PATH_MAX);
+>  	if (!debugfile)
+> @@ -599,9 +599,13 @@ static char *build_id_cache__find_debug(const char *sbuild_id,
+>  		dirname = dirbuf;
+>  	}
+>  
+> -	len = __symbol__join_symfs(debugfile, PATH_MAX, dirname);
+> -	snprintf(debugfile + len, PATH_MAX - len, "%.2s/%s.debug", sbuild_id,
+> -		 sbuild_id + 2);
+> +	/* See the build id note in dso__read_binary_type_filename(). */
+> +	if (symbol_conf.symfs_layout_flat)
+> +		scnprintf(pathbuf, PATH_MAX, "/%s.debug", sbuild_id);
+> +	else
+> +		scnprintf(pathbuf, PATH_MAX, "%s%.2s/%s.debug", dirname,
+> +			  sbuild_id, sbuild_id + 2);
+> +	__symbol__join_symfs(debugfile, PATH_MAX, pathbuf);
+>  
+>  	nsinfo__mountns_enter(nsi, &nsc);
+>  	realname = realpath(debugfile, NULL);
+> diff --git a/tools/perf/util/disasm.c b/tools/perf/util/disasm.c
+> index 6cfdbabbb8c7..1148dde6c975 100644
+> --- a/tools/perf/util/disasm.c
+> +++ b/tools/perf/util/disasm.c
+> @@ -31,6 +31,7 @@
+>  #include "map.h"
+>  #include "maps.h"
+>  #include "namespaces.h"
+> +#include "path.h"
+>  #include "srcline.h"
+>  #include "symbol.h"
+>  #include "thread.h"
+> @@ -1173,7 +1174,12 @@ static int dso__disassemble_filename(struct dso *dso, char *filename, size_t fil
+>  
+>  	build_id_filename = dso__build_id_filename(dso, NULL, 0, false);
+>  	if (build_id_filename) {
+> -		__symbol__join_symfs(filename, filename_size, build_id_filename);
+> +		/*
+> +		 * This is a path in perf's own build id cache, not a path on
+> +		 * the profiled system, so the symfs layout does not apply.
+> +		 */
+> +		path__join(filename, filename_size, symbol_conf.symfs,
+> +			   build_id_filename);
+>  		free(build_id_filename);
+>  	} else {
+>  		if (dso__has_build_id(dso))
+> diff --git a/tools/perf/util/dso.c b/tools/perf/util/dso.c
+> index 42bfe30a3b51..e52de7cc1bc6 100644
+> --- a/tools/perf/util/dso.c
+> +++ b/tools/perf/util/dso.c
+> @@ -115,6 +115,7 @@ int dso__read_binary_type_filename(const struct dso *dso,
+>  				   const char *root_dir, char *filename, size_t size)
+>  {
+>  	char build_id_hex[SBUILD_ID_SIZE];
+> +	char relative[PATH_MAX];
+>  	int ret = 0;
+>  	size_t len;
+>  
+> @@ -167,13 +168,15 @@ int dso__read_binary_type_filename(const struct dso *dso,
+>  		break;
+>  
+>  	case DSO_BINARY_TYPE__FEDORA_DEBUGINFO:
+> -		len = __symbol__join_symfs(filename, size, "/usr/lib/debug");
+> -		snprintf(filename + len, size - len, "%s.debug", dso__long_name(dso));
+> +		snprintf(relative, sizeof(relative), "/usr/lib/debug%s.debug",
+> +			 dso__long_name(dso));
+> +		__symbol__join_symfs(filename, size, relative);
+>  		break;
+>  
+>  	case DSO_BINARY_TYPE__UBUNTU_DEBUGINFO:
+> -		len = __symbol__join_symfs(filename, size, "/usr/lib/debug");
+> -		snprintf(filename + len, size - len, "%s", dso__long_name(dso));
+> +		snprintf(relative, sizeof(relative), "/usr/lib/debug%s",
+> +			 dso__long_name(dso));
+> +		__symbol__join_symfs(filename, size, relative);
+>  		break;
+>  
+>  	case DSO_BINARY_TYPE__MIXEDUP_UBUNTU_DEBUGINFO:
+> @@ -187,8 +190,9 @@ int dso__read_binary_type_filename(const struct dso *dso,
+>  			ret = -1;
+>  			break;
+>  		}
+> -		len = __symbol__join_symfs(filename, size, "/usr/lib/debug");
+> -		snprintf(filename + len, size - len, "%s", dso__long_name(dso) + 4);
+> +		snprintf(relative, sizeof(relative), "/usr/lib/debug%s",
+> +			 dso__long_name(dso) + 4);
+> +		__symbol__join_symfs(filename, size, relative);
+>  		break;
+>  
+>  	case DSO_BINARY_TYPE__OPENEMBEDDED_DEBUGINFO:
+> @@ -200,15 +204,15 @@ int dso__read_binary_type_filename(const struct dso *dso,
+>  		while (last_slash != dso__long_name(dso) && *last_slash != '/')
+>  			last_slash--;
+>  
+> -		len = __symbol__join_symfs(filename, size, "");
+>  		dir_size = last_slash - dso__long_name(dso) + 2;
+> -		if (dir_size > (size - len)) {
+> +		if (dir_size > sizeof(relative)) {
+>  			ret = -1;
+>  			break;
+>  		}
+> -		len += scnprintf(filename + len, dir_size, "%s",  dso__long_name(dso));
+> -		len += scnprintf(filename + len , size - len, ".debug%s",
+> -								last_slash);
+> +		len = scnprintf(relative, dir_size, "%s", dso__long_name(dso));
+> +		scnprintf(relative + len, sizeof(relative) - len, ".debug%s",
+> +			  last_slash);
+> +		__symbol__join_symfs(filename, size, relative);
+>  		break;
+>  	}
+>  
+> @@ -219,9 +223,20 @@ int dso__read_binary_type_filename(const struct dso *dso,
+>  		}
+>  
+>  		build_id__snprintf(dso__bid(dso), build_id_hex, sizeof(build_id_hex));
+> -		len = __symbol__join_symfs(filename, size, "/usr/lib/debug/.build-id/");
+> -		snprintf(filename + len, size - len, "%.2s/%s.debug",
+> -			 build_id_hex, build_id_hex + 2);
+> +		/*
+> +		 * The build id cache layout splits the first two characters off
+> +		 * into a directory name, so the basename of the hierarchy path
+> +		 * is only part of the build id. Name the flat file after the
+> +		 * whole build id instead.
+> +		 */
+> +		if (symbol_conf.symfs_layout_flat)
+> +			snprintf(relative, sizeof(relative), "/%s.debug",
+> +				 build_id_hex);
+> +		else
+> +			snprintf(relative, sizeof(relative),
+> +				 "/usr/lib/debug/.build-id/%.2s/%s.debug",
+> +				 build_id_hex, build_id_hex + 2);
+> +		__symbol__join_symfs(filename, size, relative);
+>  		break;
+>  
+>  	case DSO_BINARY_TYPE__VMLINUX:
+> 
+> base-commit: f0100363d8c374bd8e9ea7c9ba02744f0b802ca4
+> -- 
+> 2.43.0
+> 
