@@ -1,63 +1,66 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBB73377AB2;
-	Thu, 24 Sep 2026 17:38:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C968BBA34;
+	Thu, 24 Sep 2026 17:38:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790271497; cv=none; b=umnc1lABrn6gLVXfzn53uz8VDhvBOwSq+7yQWvLthnaYDnNbMT4UvuPE9v7ORaapkgtDaIsugVbJph0SF0xZ1wFTzNDEskTqMtoB9X3ECoKavfNQ0uRzw5lr17qFUGHj3Mhjdbp/3S9Ef1gwC6Kdfii1p+H/VvLcZ1I84MEir0U=
+	t=1790271533; cv=none; b=UGDbbEe+xhj8WEye1Hybi2FZeQzH6g/+4RtV/kwNG088Bo3uMB3z6OxMR+ioTngRmO1T65rykQQwxkbrPjCQXLezt8xIpYmGEiZTJptRa9uPsUioQJuqYgxPTMRe1DnFNe8YnYRNV42d8Jf5ehHx53gHoi1YmTw3HeZ2bMaRcYo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790271497; c=relaxed/simple;
-	bh=hvJfNWQg2GSQkjWgcv4bo24mpWxcpMsvHly/toHv+i4=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=ca28ww+jXNtxa04ABwdLAmBfAQhdYI+d4De5H3iVjbL/w88Haacj0KMUJULYJ+PckRAx1KthoVd6BWWRJj4x95r/wbKWdnpWN4RAu8Ynb6G1mptHvtX+HsE/Etwtdlzhy+HFhX8LiMnxPt3W5nlfYIW/VN7wQQN4NzwNozPej90=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bfeZsmRN; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1790271533; c=relaxed/simple;
+	bh=kBdfCMbhqBUgKgsL6tmY2Qg7Kej8fo5oBpY5/dOJNNQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QG2cp/8Xm9G3xFy0b0YylBmY8Qw+BkX5ap0P3cORQkLX669Mk64jnOBPFUD1P7ndtb0uQvyj7TBg4z0ntBOznC0jbzPoj7wOP3ke+KQ/oBYK7lpIvb4Lzo04PEcx+N7nXPWKJtTSvgeT5PKf2vzLiHKR4JDVUsH1bZuiF6MQ+Z4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=os85GjL2; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bfeZsmRN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 68EB71F000FF;
-	Thu, 24 Sep 2026 17:38:16 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="os85GjL2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B3BC91F000FF;
+	Thu, 24 Sep 2026 17:38:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1790271496;
-	bh=hvJfNWQg2GSQkjWgcv4bo24mpWxcpMsvHly/toHv+i4=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=bfeZsmRNelVd487/PBLG4Zg8MbtoVimXCPeY4KxmAq3+1stwAnI6FP1RT6e3XZLc4
-	 leItYf+CUO5SMdf0QjKUYviX8p5UhdhXpZMkplIgcjftiLBf1zU/FN53OnQs+G1yI8
-	 sa806Alk+NQJ0JBbjTqu0is3T67gMbjKqNs3q2oXBogu9YdLYTFlNycSt6CRucbsiy
-	 Aj1g3UvMlOosQW13R1UUhkDheDrW73CUNduI7WsBt10VstOB4ZRmOaAepDOztVkXwI
-	 jArxMWuYkbJmH8OpAK45Uffdgv7IFsXN24O6HcmnjDtzOwqzXyWSqYmApgsPhbLxM5
-	 A08jl0Az7aQnQ==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v9 06/22] perf: arm_pmuv3: Check cntr_mask before using
- pmccntr
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Colton Lewis" <coltonlewis@google.com>
-Cc: "Marc Zyngier" <maz@kernel.org>, kvm@vger.kernel.org, kvmarm@lists.linux.dev, linux-perf-users@vger.kernel.org, "Oliver
- Upton" <oupton@kernel.org>
-In-Reply-To: <20260924172928.2110956-7-coltonlewis@google.com>
-References: <20260924172928.2110956-1-coltonlewis@google.com>
- <20260924172928.2110956-7-coltonlewis@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Thu, 24 Sep 2026 17:38:15 +0000
-Message-Id: <20260924173816.68EB71F000FF@smtp.kernel.org>
+	s=k20260515; t=1790271531;
+	bh=gaDMnY09PB18FPHraAkmxxFVSs3vEWSrI+whk9nZC6c=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=os85GjL2NhGiS7HO1BwuhKhHxnPqRkMa69apFY5sy/yFu3wYWcrXsK+8PjcEMUpjn
+	 xDqzd/bH/+0+pd7fqimpwaHGeNmJWkikJoWB/IH7Qo6pbOR858EougKZZ2Sw5Ny98K
+	 HSGtxZFokT5HYjnQTb3KtjwPmBtECj6cziYDbRGZnD4xbk08R+Ag8TpDmjJjUDSJln
+	 KveJi5Y26zT9R27cxV3P37zBGNArRkhcC2UAeGnyojSxUPSbLJ1KGXSZBLaI7WQNA+
+	 WpXvQnPxfvwg+vrntaJMjE2Cc8TKCIP/VaprJ+9Aiqwh3tZu+jTDix42JI4Bm0UtcA
+	 z9NzfvTpiFuLw==
+Date: Thu, 24 Sep 2026 19:38:48 +0200
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Ian Rogers <irogers@google.com>
+Cc: Christian Melendez <chrismelnu@gmail.com>, namhyung@kernel.org,
+	jolsa@kernel.org, peterz@infradead.org,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] perf stat: document task-clock/cpu-clock in TIMINGS
+Message-ID: <arVgKKaTOIGN4Xwr@x2>
+References: <CAP-5=fV0-yvc68BUSKoSajHjHY_A6COgbEJYiFxRg+G-8LeJhQ@mail.gmail.com>
+ <20260923135140.386033-1-chrismelnu@gmail.com>
+ <CAP-5=fV2O4bV99bOicODQxXc8frtUu23=3o7JBhoOtf4VzuyKA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAP-5=fV2O4bV99bOicODQxXc8frtUu23=3o7JBhoOtf4VzuyKA@mail.gmail.com>
 
-> When the PMU is partitioned, PMCCNTR_EL0 is reserved for the guest and
-> removed from cpuc->cntr_mask. Move the PMCCNTR_EL0 availability checks
-> (cpuc->cntr_mask and cpuc->used_mask) into armv8pmu_can_use_pmccntr()
-> and un-nest the 64-bit user-access fallback check in
-> armv8pmu_get_event_idx() so host CPU_CYCLES events fall back to
-> general-purpose event counters when PMCCNTR_EL0 is unavailable.
->=20
-> Signed-off-by: Colton Lewis <coltonlewis@google.com>
+On Wed, Sep 23, 2026 at 08:14:09AM -0700, Ian Rogers wrote:
+> On Wed, Sep 23, 2026 at 6:52 AM Christian Melendez <chrismelnu@gmail.com> wrote:
+> >
+> > task-clock/cpu-clock appear in perf stat's own example output but
+> > were never explained in perf-stat.txt, unlike time elapsed/user/sys.
+> > This came up unanswered on the list in 2013 and 2015 without docs
+> > ever being added.
+> >
+> > Link: https://patch.msgid.link/CAP-5=fV0-yvc68BUSKoSajHjHY_A6COgbEJYiFxRg+G-8LeJhQ@mail.gmail.com
+> > Signed-off-by: Christian Melendez <chrismelnu@gmail.com>
+> 
+> Reviewed-by: Ian Rogers <irogers@google.com>
 
-Sashiko has reviewed this patch and found no issues. It looks great!
+Thanks, applied to perf-tools-next, for v7.4.
 
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260924172928.2110=
-956-1-coltonlewis@google.com?part=3D6
-
+- Arnaldo
