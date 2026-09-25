@@ -1,201 +1,209 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yx2-f37.google.com (mail-yx2-f37.google.com [74.125.224.165])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3DB83CB91E
-	for <linux-perf-users@vger.kernel.org>; Fri, 25 Sep 2026 21:14:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790370888; cv=none; b=Uo64ttkMnSD46mjyPLmQ0xSyN6e8EnuJvMvrcbuHEz7sTHUUyIgpvHiNgz9fpul8gQbyW250Xoc+iVGdQhPMXoNxvdTmFLarj5AVHOY+Mkk5xHfB8CuUikukBRXs9+PvrbJ5jIVRar+8kfLxsZhv8i9rSSfj/zvOcS5oYVXctIs=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790370888; c=relaxed/simple;
-	bh=rtSIIumyjUP9U1vSaMEW8UJ3chSJ74vjPnzpREPbf2I=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WVYWqtZ5wuoCh7o1eV21J7tL1yAlqAdkxAEnbQICxNiY1sxIe2o7fBC7tDgQ86F2tvUo3TfkuNWrp+cvvdVyHSq5iPPCuL+UHx3hf4mP5vCABjEpM3aLDiXxLmVDt5lyPilyAqyVBQCJZqLQRavG7eDUDEByq+kYq6icH1ZeCSU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jdGWXsqT; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9162044B693
+	for <linux-perf-users@vger.kernel.org>; Fri, 25 Sep 2026 21:28:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.224.165
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1790371700; cv=pass; b=EPVb+zzrkqhD4WLFuApC9BsQE/SqsfpT7uc1LOEVhy1Rzt/JtTjeegjoFsZXloAE5HSk58MTrG/0GkVjdQY6RL1AickLgVNcBlnlO7KvpMa7cW36RMbK6s/HkGBJbqn6MuyGp98yCNvTY08TDfG2QmpF9eDXP0+Htc2c2Oso/8c=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1790371700; c=relaxed/simple;
+	bh=q/kC3y8E1zYwJ50finFJIRT21d9Qmu6GMfu3QpGeEkM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=jZaWoVpTq2BqlV+QiEYBYWpKwIcSgaNRRAj1Tw6xNjAuZNwe9yWi3mQI3aI2qr6XxwFOmTSvDrY6QsfR+IZu5etynzkI4hi9slOK48EBDFmFMwWeAuZodSb/ncpULJDUxiDqxFEeazDlHezDHrtPAgtykDLqT13gGZ3yhOnMl3E=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=uber.com; spf=fail smtp.mailfrom=uber.com; dkim=pass (1024-bit key) header.d=uber.com header.i=@uber.com header.b=BWDpsJA1; arc=pass smtp.client-ip=74.125.224.165
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=uber.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=uber.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jdGWXsqT"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C373F1F000FF;
-	Fri, 25 Sep 2026 21:14:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1790370886;
-	bh=DzcQ2jZ6NwsxFKJ7kmsjXlhBJeGGKbbcoWb/CXT0sds=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=jdGWXsqTeTNPWp9teMbJ2vQMlKWatPqxIa2bysZx4KkUfRL/yBMPHoagHkg05WuZL
-	 +YqkXhoGZcKl7PTmThZHqNRjRoiJZ5xZAn76We5fBLA6JeEnTLN2532kIzF7yg5HiH
-	 7Jrd5+PhidziRsVTcw5j9F3OX38m6o+w9bsX/k8puB0eJaZ+lk5pSSmK1soqNRuvaI
-	 VA5jF/5NOs4XZHveFJYFFcCpaxS3eCo8AMqf53g1maX+8t7iP/Wc7noogaN3FDKI+X
-	 aWQTOFQp2AFKHTsmT2HtiEd2FGG8YEFL0TrB1I1fa/5Q65BDa4hUiPANJ4nUjlWdG6
-	 vKdTZTTBprG5g==
-Date: Fri, 25 Sep 2026 23:14:43 +0200
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Adrian Hunter <adrian.hunter@intel.com>,
-	James Clark <james.clark@linaro.org>, Jiri Olsa <jolsa@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH 1/1] perf: Fix Python 3.6 build breakage in jevents.py
- and util/setup.py
-Message-ID: <arbkQymeBZ0ja6sc@x2>
-References: <arbd4TJm4s9MVjN-@x2>
- <CAP-5=fVXxUEYSfWb=AExGQoZ7w7FqGhD8Ga1+hjwF3gTZfsbpA@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=uber.com header.i=@uber.com header.b="BWDpsJA1"
+Received: by mail-yx2-f37.google.com with SMTP id 00721157ae682-8a8288165fbso13194787b3.0
+        for <linux-perf-users@vger.kernel.org>; Fri, 25 Sep 2026 14:28:18 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1790371697; cv=none;
+        d=google.com; s=arc-20260327;
+        b=mwC42OrT5JWUB0uUIJ4U4w7yLeBEsTiVGFA+YH02OMmzF2K0f4Fpcgt6V4TBeale4C
+         ooXBZ0glO+RC5VRXnve39nLF2piGotx2chQH64pl4+qLg9kDz8YrtAoNPBgzk+w1OkN7
+         vrxVzLV22diYrh/HlxincbZgv0Rb+E1PjzpzOT3AIFf/EvIXyS0yK2fVa8dLw8pZ2/4F
+         5zkMLOKIvi0Vevxy3V0SwULq7mE2tI10uE3fhk40q73aVbcflhPJlmJdBNnYkDZBOVtU
+         VdHFPt3ZpQi2CGbNlyEQsha5PfYiYLFla+bYFyiS9BRfS0AAEgOdtkEzzj/3WtLZcjse
+         qbPw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:dkim-signature;
+        bh=oj3r8DH2eKkyi1knjVplt4A0mO965qEUvYlauOebMtw=;
+        fh=CXdV3Pa2ul9DU6MoJPAav9sr/x7qNqucfX5ZZS36IYs=;
+        b=nLnginhR5y7TG11ZHqwZ5AV56DOiEe2VbKloyBhazwsxzyo2zTotPdPWkEb0vCqem0
+         i6SHPHUYXPFLPiKQyDUrEoAfdxKPvIbi4Srgfwkqixd1gp0Y9+McvpqdI81ezae6+Yi3
+         eB0RqsUuZNeQEc76Cbu4qsUc8DqEdVUkKA1DlZA9Y3qFotaL+nutnFWuOqf2jl2n9qFw
+         LNwCyblX/u9ChFKHfU9u8HdTr9GS1YeleoubRay1+P3tE9C2TnQjsVlq3XHhIh+wCT4w
+         UdaXLtUKmvT4Wr795Spgta23M9XCJkbSXN4Kmapcj52n4/dWr4OLgSpF750+/X7euK+A
+         ckig==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=uber.com; s=google; t=1790371697; x=1790976497; darn=vger.kernel.org;
+        h=content-type:cc:to:subject:message-id:date:from:in-reply-to
+         :references:mime-version:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=oj3r8DH2eKkyi1knjVplt4A0mO965qEUvYlauOebMtw=;
+        b=BWDpsJA1yegJMX0aeJhfH7ki8oyha8g/89cq7ob/SM/5UWPqUqHnAJkCUBYk6HVNWG
+         Y/ZWWZnhTAfL8TAmOHt+vdS66H6H7rRuXgWn1PPog0GmYjlf8Wp4OAhNjTQ8p58tIB20
+         8uRM9Y7sCIGAn2ij34Yxef0u7zt4O6lp/8T4g=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1790371697; x=1790976497;
+        h=content-type:cc:to:subject:message-id:date:from:in-reply-to
+         :references:mime-version:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to:content-type;
+        bh=oj3r8DH2eKkyi1knjVplt4A0mO965qEUvYlauOebMtw=;
+        b=bjMMtRtPAMGtTp2NUt01Ibx/gIXVTzlSMUIvMgdLAt1PShKd2zJn8ZlEAJOV/Z61OD
+         8ynazIlZkPjrJjWAbhL51I9DwnTISSWTeQVgTh0+XklYgeeM6iuX3+TyhLJojRyHK3e+
+         84mi/I7mVt+0ix6gTlQS52/nC2/sEIuMzkiP/qVeFiKcp0IwTwNQ/wdLsAmFHaLrKhbb
+         eu7obIc7TDHJT1L6H7EjLISAO4zNouFyc0l2Rc0ZW0BK0cnTRD/U8FKvoPvNvviCygL3
+         T191PSBJ9yxaAZzyOVBA/qGnSwQpucms6ZBQ+J0n0KzZ+GX8xy5c4tC5UslwFHU83LK3
+         dr2g==
+X-Forwarded-Encrypted: i=1; AKwUvBzZThBL79bKAyadAPsdl7Attru7NrZKCa1raxLlU5zffJobt5HAOnfyGuwaTDeaGEy4rKQulXTmk0vWUoqr742J@vger.kernel.org
+X-Gm-Message-State: AFuF++nmM+n2Q79zdqX7aRF6m+fy+F8x0A/iqhYTrvgpPW0DBcMfyBT+
+	+aqi6WTJaZIL00fOp/V6MoNIAfTF8vE3BJa6BtblxzFyV6t+u7Qh3Rqhxa9Q7I4ugaRrD4KX2aw
+	66wRVc6qtCsWrZQenIGjTjO9GdmmFOwswFQFNPK3zZA==
+X-Gm-Gg: AYBFou1ETo2QKQAd7D2wC99IXTtoVs58tmPTtK8kaUxMWlooFJCsYJ+bLllu6ISoZU7
+	257rf9zcyxv2PWBK4K1aGsqrjShu4l3S2iw9IhccL4w3voT/fSwgyNQkcWkVU0tQiBVljUyNE9g
+	1pAUJHbaRC7iQB/w6ZVRvNXOBsHvOZBMoZEcyuoEF0YTDakO5pkA4QtACtxWjK7yIGRJ9nUbDjl
+	w0jVYddHF1eQxejwqRXLcgZT92FoK43onhaQhueHkfGsiLXCTR+7n1FXNdYNuq4ELdzAruyRFhq
+	KtRq4krMndZqUuyKt0dBBcI2VMonzQe//LWHEGU6EPjPT7h47nrasH5NWvxXF6yIJspjFuKap5L
+	CzVRDBfKSPpA=
+X-Received: by 2002:a05:690c:6607:b0:80c:8d09:3880 with SMTP id
+ 00721157ae682-8a648ec365fmr39922527b3.15.1790371696911; Fri, 25 Sep 2026
+ 14:28:16 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fVXxUEYSfWb=AExGQoZ7w7FqGhD8Ga1+hjwF3gTZfsbpA@mail.gmail.com>
+References: <20260925-perf-symbol-memory-send-v3-0-3e4e234c363b@uber.com> <CAP-5=fWLp5c9HYZ6oTsfPhWprz3uMTT=mt3M-OVu8GEjzSpEww@mail.gmail.com>
+In-Reply-To: <CAP-5=fWLp5c9HYZ6oTsfPhWprz3uMTT=mt3M-OVu8GEjzSpEww@mail.gmail.com>
+From: Alireza Haghdoost <haghdoost@uber.com>
+Date: Fri, 25 Sep 2026 14:28:00 -0700
+X-Gm-Features: AclHuK9QQSqxXxMT6Ew2X1pK7ZOp1V4KrRXvz_ZPn5vMbxzFhEjJdLYW8P0I6Ec
+Message-ID: <CA+w=M=Tdyt=s9FTvDH_4ozk_1MM09J6xTdLrsq-WNhQ1S+ACXQ@mail.gmail.com>
+Subject: Re: [PATCH v3 0/6] perf script: Bounded and lazy symbol loading
+To: Ian Rogers <irogers@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, James Clark <james.clark@linaro.org>, 
+	Alexei Starovoitov <ast@kernel.org>, Andrii Nakryiko <andriin@fb.com>, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Fri, Sep 25, 2026 at 01:57:06PM -0700, Ian Rogers wrote:
-> On Fri, Sep 25, 2026 at 1:47 PM Arnaldo Carvalho de Melo
-> <acme@kernel.org> wrote:
-> >
-> > perf's build still accepts Python 3.6: Makefile.config only rejects
-> > interpreters older than 3.6 and jevents.py keeps its own removesuffix()
-> > shim for it, but two recently added constructs are evaluated when the
-> > module or the function is defined and only work on newer interpreters.
-> 
-> Could we remove the shim and bump the minimum Python version to 3.9 to
-> be in line with the rest of the kernel build?
-> https://github.com/torvalds/linux/blob/master/Documentation/process/changes.rst
+> So currently we have a symbol as:
+> ```
+> /**
+>  * A symtab entry. When allocated this may be preceded by an annotation (see
+>  * symbol__annotation) and/or a browser_index (see symbol__browser_index).
+>  */
+> struct symbol {
+>         struct rb_node  rb_node;
+>         /** Range of symbol [start, end). */
+>         u64             start;
+>         u64             end;
+>         /** Length of the string name. */
+>         u16             namelen;
+>         _Atomic uint16_t flags;
+>         /** Architecture specific. Unused except on PPC where it holds
+> st_other. */
+>         u8              arch_sym;
+>         /** The name of length namelen associated with the symbol. */
+>         char            name[];
+> };
+> ```
+> and the struct rb_node is a significant size cost:
+> ```
+> struct rb_node {
+>         unsigned long  __rb_parent_color;
+>         struct rb_node *rb_right;
+>         struct rb_node *rb_left;
+> } __attribute__((aligned(sizeof(long))));
+> ```
+>
+> A sorted array of symbols would only require 1 pointer per entry,
+> saving 2 words. The array could reside in the "symbols" variable
+> passed around something like this:
+> ```
+> struct symbols {
+>         struct rw_semaphore lock;
+>         struct symbol **symbols;
+>         unsigned int cnt;
+>         unsigned int allocated;
+>         bool sorted;
+> };
+> ```
+> This is basically what we do with struct dso and dsos. With a struct
+> symbols we can add a lock and ensure operations are appropriately
+> synchronized. On top of this we can build lazy symbol resolution.
+>
 
-Since RHEL8 based systems will still be in use for a long time and new
-perf versions can be useful in solving problems in such systems, maybe
-we should keep the support on 3.6 as is now :-\
+I agree that a sorted struct symbols array with its own lock would be
+a cleaner container than the rb-tree. However, it would not save much
+memory on its own. On a sample fixture, perf script materializes about
+765k symbols and peaks at 265 MiB RssAnon. Replacing the rb_node with
+one pointer per symbol saves 16 bytes each, about 12 MiB in total.
+Most of the memory goes to materializing symbols that are never
+sampled. Lazy loading avoids that work and brings the peak down to
+39 MiB. Lazily materialized symbols are inserted one at a time between
+lookups, which suits a tree better than a sorted array.
 
-This patch is not that big and fixes the only cases where python 3.6 was
-breaking, so maybe this is not unreasonable to do.
+If the maintainers prefer the sorted array, I'm open to it, but I'd
+like to be clear about the cost. The symbol rb-tree is used at around
+100 call sites in 18 files under tools/perf, so the conversion would
+be a separate series that has to land first. It should also cover both
+eager and lazy loading, so there is one container for materialized
+symbols rather than a tree in one mode and an array in the other.
 
-- Arnaldo
- 
-> Thanks,
-> Ian
-> 
-> > PEP 585's list[...] became subscriptable in Python 3.9, so the module
-> > level annotations in jevents.py make Kbuild die at import time:
-> >
-> >   TypeError: 'type' object is not subscriptable
-> >   make[3]: *** [pmu-events/Build:176: .../test-empty-pmu-events.c] Error 1
-> >
-> > as seen on almalinux:8 with its python3.6.8, and the list[str]
-> > parameters of util/setup.py's functions fail the same way when the
-> > python binding is built.
-> >
-> > ProcessPoolExecutor(initializer=, initargs=) was added in Python 3.7,
-> > so generating pmu-events.c dies when the pool is created.
-> >
-> > Use the typing generics that exist on every supported interpreter and
-> > only pass initializer/initargs when the interpreter has them: on 3.6
-> > the default fork start method already leaves the worker processes with
-> > the parent's _arch_std_events, which is what _init_worker() sets up
-> > for spawn semantics.
-> >
-> > Tested with Python 3.6.15: make -C tools/perf completes, generating
-> > pmu-events.c and the python binding.
-> >
-> > Fixes: cda907c2c3f99 ("perf jevents: Add python type annotations")
-> > Fixes: 1fa8d81be1eb ("perf python: Clean up and restructure setup.py")
-> > Fixes: eaab2eb09dc2 ("perf pmu-events: Parallelize JSON and metric pre-computation in jevents.py")
-> > Assisted-by: LLM
-> > Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-> > ---
-> >  tools/perf/pmu-events/jevents.py | 24 +++++++++++++++---------
-> >  tools/perf/util/setup.py         |  5 +++--
-> >  2 files changed, 18 insertions(+), 11 deletions(-)
-> >
-> > diff --git a/tools/perf/pmu-events/jevents.py b/tools/perf/pmu-events/jevents.py
-> > index 074daae5308b110b..bdc89ec197680c1b 100755
-> > --- a/tools/perf/pmu-events/jevents.py
-> > +++ b/tools/perf/pmu-events/jevents.py
-> > @@ -8,19 +8,19 @@ import json
-> >  import metric
-> >  import os
-> >  import sys
-> > -from typing import (Callable, Dict, Optional, Sequence, Set, Tuple)
-> > +from typing import (Any, Callable, Dict, List, Optional, Sequence, Set, Tuple)
-> >  import collections
-> >
-> >  # Global command line arguments.
-> >  _args = None
-> >  # List of regular event tables.
-> > -_event_tables: list[str] = []
-> > +_event_tables: List[str] = []
-> >  # List of event tables generated from "/sys" directories.
-> > -_sys_event_tables: list[str] = []
-> > +_sys_event_tables: List[str] = []
-> >  # List of regular metric tables.
-> > -_metric_tables: list[str] = []
-> > +_metric_tables: List[str] = []
-> >  # List of metric tables generated from "/sys" directories.
-> > -_sys_metric_tables: list[str] = []
-> > +_sys_metric_tables: List[str] = []
-> >  # Mapping between sys event table names and sys metric table names.
-> >  _sys_event_table_to_metric_table_mapping = {}
-> >  # Map from an event name to an architecture standard
-> > @@ -28,11 +28,11 @@ _sys_event_table_to_metric_table_mapping = {}
-> >  # f'{_args.starting_dir}/{_args.arch}' directory.
-> >  _arch_std_events: Dict[str, "JsonEvent"] = {}
-> >  # Events to write out when the table is closed
-> > -_pending_events: list["JsonEvent"] = []
-> > +_pending_events: List["JsonEvent"] = []
-> >  # Name of events table to be written out
-> >  _pending_events_tblname: Optional[str] = None
-> >  # Metrics to write out when the table is closed
-> > -_pending_metrics: list["JsonEvent"] = []
-> > +_pending_metrics: List["JsonEvent"] = []
-> >  # Name of metrics table to be written out
-> >  _pending_metrics_tblname: Optional[str] = None
-> >  # Global BigCString shared by all structures.
-> > @@ -1556,9 +1556,15 @@ struct pmu_table_entry {
-> >      preprocess_arch_std_files(arch_path)
-> >      ftw(arch_path, [], collect_json)
-> >
-> > +  # ProcessPoolExecutor's initializer/initargs need Python 3.7, on 3.6 the
-> > +  # fork start method already leaves the workers with the parent's
-> > +  # _arch_std_events, i.e. what _init_worker would set up.
-> > +  executor_kwargs: Dict[str, Any] = {}
-> > +  if sys.version_info >= (3, 7):
-> > +    executor_kwargs = dict(initializer=_init_worker,
-> > +                           initargs=(_arch_std_events,))
-> >    with concurrent.futures.ProcessPoolExecutor(max_workers=_parallel_worker_count(len(tasks)),
-> > -                                              initializer=_init_worker,
-> > -                                              initargs=(_arch_std_events,)) as executor:
-> > +                                              **executor_kwargs) as executor:
-> >      for path, topic, events in executor.map(_parallel_read_json_events, tasks):
-> >        _json_cache[(path, topic)] = events
-> >
-> > diff --git a/tools/perf/util/setup.py b/tools/perf/util/setup.py
-> > index 8380980ade4c486f..ad904b374ec6eaba 100644
-> > --- a/tools/perf/util/setup.py
-> > +++ b/tools/perf/util/setup.py
-> > @@ -11,13 +11,14 @@ import shlex
-> >  import shutil
-> >  import subprocess
-> >  import sysconfig
-> > +from typing import List
-> >
-> >  from setuptools import setup, Extension
-> >  from setuptools.command.build_ext import build_ext as _build_ext
-> >  from setuptools.command.install_lib import install_lib as _install_lib
-> >
-> >
-> > -def clang_has_option(cc: str, cc_args: list[str], src_feature_tests: str, option: str) -> bool:
-> > +def clang_has_option(cc: str, cc_args: List[str], src_feature_tests: str, option: str) -> bool:
-> >      """Check if clang supports a specific option.
-> >
-> >      Args:
-> > @@ -47,7 +48,7 @@ def clang_has_option(cc: str, cc_args: list[str], src_feature_tests: str, option
-> >      return not any(any(error in line for error in error_substrings) for line in cc_output)
-> >
-> >
-> > -def filter_clang_options(cc: str, cc_args: list[str], src_feature_tests: str) -> None:
-> > +def filter_clang_options(cc: str, cc_args: List[str], src_feature_tests: str) -> None:
-> >      """Filter out unsupported clang options from sysconfig CFLAGS and OPT.
-> >
-> >      Args:
-> > --
-> > 2.55.0
-> >
+> ...For
+> the bounded memory size, I'd prefer something like a reference count
+> in every symbol (which uses one word we previously saved). We can
+> periodically scan the symbols array for symbols with a reference count
+> of 1 and then lower that count, knowing it is safe to release the
+> symbol's memory because no other thread is referencing it. This would
+> avoid having symbols appear as "[unknown]". We should really have a
+> similar scan of the dsos to free up their memory.
+>
+
+Eviction would bound the steady state, but it doesn't bound the peak
+on its own. Eager loading materializes the whole symtab when the DSO
+is loaded, before anything can be evicted, and this series does not
+add lazy loading for every loader (PPC64 .opd, .gnu_debugdata, the
+kernel and modules still load eagerly). --max-symbol-bytes covers
+those paths too. It is opt-in and off by default, and is meant for
+hosts where perf shares memory with latency-sensitive services and the
+operator needs a guaranteed upper bound. Like perf record --max-size,
+what happens past the cap is deterministic: perf warns and reports
+[unknown].
+
+>
+> I think the patches 4 and 5 do the core work, but they introduce some
+> warts that I wish didn't have to exist. How do you feel about
+> reference counting? To avoid reference count leaks we adding a
+> checking framework that is documented here:
+> https://perfwiki.github.io/main/reference-count-checking/
+
+Reference counting would be useful for symbol lifetime and for the
+annotation and browser_index cleanup, and freeing unreferenced symbols
+would reduce steady-state memory. As above, I see it as a complement
+to the cap rather than a replacement, since it can't guarantee an
+upper bound.
+
+Refcounting struct symbol touches every holder of a symbol pointer,
+so I'd suggest doing it as a separate series using the refcount
+checking framework rather than in this series.
+
+If there are specific parts of patches 4 and 5 you see as warts,
+please point me at them and I'll address them in v4.
+
+For v4 I currently plan to bound the second pass of
+dso__build_ondemand_index() by the allocated count, as reported by
+Sashiko.
+
+Thanks,
+Alireza
