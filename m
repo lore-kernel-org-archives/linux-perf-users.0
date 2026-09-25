@@ -1,153 +1,163 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0688C4C9DEA;
-	Fri, 25 Sep 2026 15:43:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E9D138AC68;
+	Fri, 25 Sep 2026 15:46:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790351027; cv=none; b=QJQ5FPjU2QIGcQWLROmQsg5N8g5ghUIDdRiAWoXRJ1bx7w5Sb4qAIWO3zTozLTxPbfVLEpkWJC429/NpoMlkZrLiS9IbF0VH5bnaywonCjcMPfLqSHIDS8C6rlChsN9QLisJ3TuwothZcXP/nX0+ytgTHum/+JbF+i3EPNAJJCg=
+	t=1790351169; cv=none; b=D8V2W5rNZt5dMoYlM+H63/NksWzbjkFeUEBwLVZMACwdb6jG2IXq9G7ipXnyZ6aosjkgUM8uYF0LnoohBAhiknPs66cBymVSSKJkZieSmS7yimj7Nw7DNWs4fbqKXbmfTrK/pvhJpQi3aoas0Xwl0tszGb4w1aVHvqqe2THFrUo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790351027; c=relaxed/simple;
-	bh=5oe2QGNOT1SZJM/onWvy+8P74Er/QG8sH5vVzyYwEIQ=;
+	s=arc-20240116; t=1790351169; c=relaxed/simple;
+	bh=yYhF0T0r2ejlFAcIDQOqW/jCyY0rZUE+7Keg1M1WgAQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BlkASgaJM4q4yIW2yl8hJpH72Ep2OmylxMmmeSEHcN10eDrwO8QzH3Gsn973WpxjC4vIAJZchDCyYKLrZXmp5DnXtdOfIWhYCa+TkjbeBFvKtWajxqNynDWCbGBbZKsZ8u2h8a+I533UsdrjrzMWDtMJ/cB7AHULXAsPR9hE1SE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HGPbV8st; arc=none smtp.client-ip=100.103.45.18
+	 Content-Type:Content-Disposition:In-Reply-To; b=sJ63YnGEPJOUc6SxtuwcaChhsUAABl2PRMWJkQG+uYlp7l3NvMNkWDsqkBPSksta5VnoLuIXJIUnyZn9lCeO0fTKlXGEAHKOsXmZZgvy59X0y6uYXketg9fRzh6Lv5Y7uXyJbK9f7a7P8FEvCL2tF9VDDWVwxbmWjNyFI5A+8BQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PwMaMO+Z; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HGPbV8st"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 28A4A1F000FF;
-	Fri, 25 Sep 2026 15:43:44 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PwMaMO+Z"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 83DF11F000FF;
+	Fri, 25 Sep 2026 15:46:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1790351025;
-	bh=QUXfTyWUTM9FobYcOKtmOfn0gLv+cIRAfYiSGm6DoFQ=;
+	s=k20260515; t=1790351167;
+	bh=f2EOEeTaYY/03hTFnzqTJySuidDAmR79fMzTSBUU+GA=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=HGPbV8stlmLSJLE/Qm+GQFl7WpYkF6LL+c6OS85TG0BUq9RnfZBicmYuYAvYSiztG
-	 +8INM/2FcD0tbUBOpOSQtgIE+4p3Kxf1EC5CdTtG+g9/W1izd3LJ7cNghm7ur0lWmv
-	 ZmHWfHMhfWc0XIfeUPZT0mUB8iQWmEvYLP/lOy8s9bqMOgKYKl7kwNvfetIs29Q6b6
-	 VuX1NV5B32yB3But3dDxXROQrfhEJa05NMXQY7Op3O5NbANPekyDR1z6OcOh8yeOcp
-	 rLFcnTJXPqoeh9XMeaE+N6UMKa9YHTA+ZdkypkTM64e4CTxa/P7MHAXDZAk64Xl0Yu
-	 fD3d55/mgb9xA==
-Date: Fri, 25 Sep 2026 17:43:43 +0200
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Namhyung Kim <namhyung@kernel.org>
+	b=PwMaMO+Zw2A33zQHJyJASlVaM+/HexwofPzX0Dah3j2jLoSISP03rj10KjCP4LQ/D
+	 Q2D81EQnr12zAmIPWWtSr8VRgnJGWqeNr+FTg1HZVYcRuHzfD49DdQX3ivVs7htncN
+	 lLFWQKU6yAbx0eoq3DBc44Ywjn7PU12/fz8nw+jL6v5eUVMd51OjtgrISRPdEMVQyd
+	 wCfAplFxiOCDtsLFONDSmnGe/i8zaAOVDV2kjVL7Nkc7bmCf0dpPQiWo2NecTRLkQX
+	 qjjoOpoPnNAusyB+NeNAYTP2+2bZHWMuGyhqIEnxEXfbwodZqBAt2cjP+qVFunPFaD
+	 Rf+Ut5Dyrk6gg==
+Date: Fri, 25 Sep 2026 08:46:05 -0700
+From: Namhyung Kim <namhyung@kernel.org>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
 Cc: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
 	James Clark <james.clark@linaro.org>, Jiri Olsa <jolsa@kernel.org>,
 	Ian Rogers <irogers@google.com>,
 	Adrian Hunter <adrian.hunter@intel.com>,
 	Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org,
 	linux-perf-users@vger.kernel.org,
-	Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: Re: [PATCH 4/6] perf annotate-data: Bound the member nesting
- recursion
-Message-ID: <araWryMoGYJ99LC1@x2>
+	Masami Hiramatsu <mhiramat@kernel.org>
+Subject: Re: [PATCH v5 0/6] perf annotate-data: Fix hangs on broken debug
+ info, AMD mem record
+Message-ID: <araXPQChZ9HHNFzY@z2>
 References: <20260925150657.1826942-1-acme@kernel.org>
- <20260925150657.1826942-5-acme@kernel.org>
- <araVqTiVF9DpkSmh@z2>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <araVqTiVF9DpkSmh@z2>
+In-Reply-To: <20260925150657.1826942-1-acme@kernel.org>
 
-On Fri, Sep 25, 2026 at 08:39:21AM -0700, Namhyung Kim wrote:
-> On Fri, Sep 25, 2026 at 05:06:55PM +0200, Arnaldo Carvalho de Melo wrote:
-> > From: Arnaldo Carvalho de Melo <acme@redhat.com>
-> > 
-> > Members are added recursively, and a broken DIE can make a member's
-> > type point back at one of its own ancestors, recursing until the stack
-> > is gone; nothing usable comes out of nesting members 32 deep anyway, so
-> > stop there, marking the member as truncated and giving up on member
-> > types that don't resolve.
-> > 
-> > The check is where the children of an aggregate would be expanded, so
-> > only struct/union members are marked as truncated.
-> > 
-> > Assisted-by: LLM
-> > Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-> > ---
-> >  tools/perf/util/annotate-data.c | 20 ++++++++++++++++++--
-> >  tools/perf/util/annotate-data.h |  3 +++
-> >  2 files changed, 21 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/tools/perf/util/annotate-data.c b/tools/perf/util/annotate-data.c
-> > index bc9698abc6a9e055..19a6ecd67f28719d 100644
-> > --- a/tools/perf/util/annotate-data.c
-> > +++ b/tools/perf/util/annotate-data.c
-> > @@ -222,6 +222,12 @@ static bool data_type_less(struct rb_node *node_a, const struct rb_node *node_b)
-> >  	return strcmp(a->self.type_name, b->self.type_name) < 0;
-> >  }
-> >  
-> > +/*
-> > + * A broken type can point back at one of its own ancestors: bound the
-> > + * nesting so it doesn't recurse until the stack is gone.
-> > + */
-> > +#define MAX_MEMBER_DEPTH 32
-> > +
-> >  /* Recursively add new members for struct/union */
-> >  static int __add_member_cb(Dwarf_Die *die, void *arg)
-> >  {
-> > @@ -236,6 +242,9 @@ static int __add_member_cb(Dwarf_Die *die, void *arg)
-> >  	if (dwarf_tag(die) != DW_TAG_member)
-> >  		return DIE_FIND_CB_SIBLING;
-> >  
-> > +	if (die_get_real_type(die, &die_mem) == NULL)
-> > +		return DIE_FIND_CB_SIBLING;
-> > +
-> >  	member = zalloc(sizeof(*member));
-> >  	if (member == NULL)
-> >  		return DIE_FIND_CB_END;
-> > @@ -248,8 +257,6 @@ static int __add_member_cb(Dwarf_Die *die, void *arg)
-> >  	if (die_get_typename(die, &sb) < 0)
-> >  		strbuf_add(&sb, "(unknown type)", 14);
-> >  
-> > -	die_get_real_type(die, &die_mem);
-> > -
-> >  	if (dwarf_aggregate_size(&die_mem, &size) < 0 || size == 0) {
-> >  		if (dwarf_tag(&die_mem) == DW_TAG_array_type) { /* flex-array? */
-> >  			die_get_real_type(&die_mem, &die_mem);
-> > @@ -299,6 +306,7 @@ static int __add_member_cb(Dwarf_Die *die, void *arg)
-> >  	}
-> >  	member->size = size;
-> >  	member->offset = loc + parent->offset;
-> > +	member->depth = parent->depth + 1;
-> >  	INIT_LIST_HEAD(&member->children);
-> >  
-> >  	list_for_each_entry_reverse(prev, &parent->children, node) {
-> > @@ -313,6 +321,14 @@ static int __add_member_cb(Dwarf_Die *die, void *arg)
-> >  		member->is_union = true;
-> >  		/* fall through */
-> >  	case DW_TAG_structure_type:
-> > +		/* Only aggregates have children to expand, so only they get truncated. */
-> > +		if (member->depth >= MAX_MEMBER_DEPTH) {
-> > +			/* Consumed by the JSON exporter added in a later series. */
-> > +			member->truncated = true;
-> > +			pr_debug_dtp("member nesting limit reached at %s\n",
-> > +				     member->type_name ?: "(unknown type)");
-> > +			break;
-> > +		}
-> >  		die_find_child(&die_mem, __add_member_cb, member, &die_mem);
-> >  		break;
-> >  	default:
-> > diff --git a/tools/perf/util/annotate-data.h b/tools/perf/util/annotate-data.h
-> > index 14b8113521a927cf..ca0abfb2a036d229 100644
-> > --- a/tools/perf/util/annotate-data.h
-> > +++ b/tools/perf/util/annotate-data.h
-> > @@ -61,6 +61,9 @@ struct annotated_member {
-> >  	int size;
-> >  	bool is_union;
-> >  	bool is_flex_array;
-> > +	unsigned int depth;
-> > +	/* Children not expanded because the nesting limit was reached */
-> > +	bool truncated;
+On Fri, Sep 25, 2026 at 05:06:51PM +0200, Arnaldo Carvalho de Melo wrote:
+> Hi,
 > 
-> Nit: it'd be better to switch the order of the last two fields to reduce
-> the padding.
+> This originated in another patch series, 'perf tools: Annotate fixes,
+> stdio progress indication, debuginfo-client in more places', and is
+> being split off so that these fixes can be reviewed right away; the
+> debuginfod download feature work from it will come later, separately,
+> based on this series.
+> 
+>   - 'perf report -s type' spins forever on the dwz compressed debug info of
+>     zlib-ng (libz.so.1): die_collect_vars() saves a type DIE offset that is
+>     relative to the file the DIE lives in, the dwz alt file for types shared
+>     by several CUs, and resolving it in the main file parses whatever is at
+>     that offset, here a typedef whose DW_AT_type refers to itself, making the
+>     typedef/qualifier chase spin (patch 3), with the chases bounded so that
+>     other kinds of broken debug info don't hang perf either (patches 1, 2
+>     and 4);
+> 
+>   - 'perf mem record' requests PERF_SAMPLE_CPU (patch 5) and uses the IBS
+>     swfilt filter when the kernel exposes it (patch 6), with the tables
+>     carrying the term kept in the arch/x86 code, where the knowledge that
+>     IBS needs it stays, as Ravi Bangoria suggested reviewing Namhyung
+>     Kim's v6 review remark on this patch
+>     (<4349c387-5b8a-4e8d-932a-5175a7598e1e@amd.com>, replying to
+>     <aqsRVABj23jaaiSq@google.com>).
+> 
+> About PATCH 5, answering Namhyung Kim's v6 review question
+> (<aqsPKGVUkWk6wvYA@google.com>) about the --sample-cpu default: the
+> data source field is about the memory hierarchy level of the access,
+> it has no record of which CPU issued it, and while the TID is in
+> every sample and in the CTF stream, a thread time-sliced on one CPU
+> or moved between SMT siblings is not told apart by it from cross-core
+> contention, so it is the CPU id that keys it, and it is what the
+> false-sharing detector in pahole needs.  The TID is recorded as well.
+> 
+> Requires elfutils 0.160 for dwarf_cu_getdwarf(), so the libdw feature test
+> probes for it and Makefile.config says 0.160: older versions now disable
+> dwarf support with that message instead of failing to link.
 
-I should have used pahole... 8-)
+I have a nitpick on the patch 4, but otherwise looks good to me.
 
-Will fix, thanks!
+Reviewed-by: Namhyung Kim <namhyung@kernel.org>
 
-- Arnaldo
+Thanks,
+Namhyung
+
+> 
+> Best regards,
+> 
+> - Arnaldo
+> 
+> What changed from v4:
+> 
+> - Added Ravi Bangoria's Reviewed-by (<76ef085b-e8e3-41a5-b029-2cd0489aa430@amd.com>),
+>   given together with his rationale for keeping the IBS swfilt selection
+>   explicit: 'perf record' fails rather than transparently retrying with
+>   /swfilt=1/, so that the user is aware software filtering is being used
+>   and that it is not overhead free.
+> - Trimmed the comment on the AMD mem event tables in
+>   tools/perf/arch/x86/util/mem-events.c per that review, dropping its
+>   last sentence about how 'perf record' handles exclude bits on open
+>   failure; the code is unchanged.
+> - Patch 4: reworded the comment on the truncated flag; the JSON exporter
+>   that reads it is added in a later series.
+> - Patch 6: dropped a leftover no-op hunk from tools/perf/util/mem-events.c;
+>   the swfilt selection is all in the arch/x86 code.
+>   Command to see this delta: git diff eb568956a7129c91..HEAD
+> 
+> What changed from v3:
+> 
+> - Dropped patch 5/7, "perf annotate-data: Show the sample count in the
+>   data-type browser": it is already in perf-tools-next as commit
+>   9db4e9d6cc7c, so the series is now 6 patches and the subject no longer
+>   mentions it.
+> - Rebased onto current perf-tools-next (base-commit below; v3 was based on
+>   29f320d221c1), patch 4 adapted to the upstream __add_member_cb() cleanup
+>   that dropped the member_type local, no behavior change.
+> 
+> What changed from v2:
+> 
+> Only aggregate (struct/union) members are marked as truncated when the
+> MAX_MEMBER_DEPTH limit is reached in the member nesting recursion (patch
+> 4), addressing a sashiko [Medium] review finding
+> (<20260921165704.38DBD1F000FF@smtp.kernel.org>): the v2 check was made
+> before looking at the member's type, so a primitive field that merely
+> landed on the limit, e.g. an int in a struct nested 31 deep, was marked
+> as truncated and logged even though it has no children to expand.  The
+> limit still bounds the recursion, as only aggregates are expanded.
+> 
+> What changed from v1:
+> 
+> Bump MAX_MEMBER_DEPTH from 8 to 32, addressing a review comment from Namhyung.
+> 
+>  tools/build/feature/test-libdw.c           |  10 ++-
+>  tools/perf/Documentation/perf-mem.txt      |   4 +
+>  tools/perf/Makefile.config                 |   2 +-
+>  tools/perf/arch/x86/util/mem-events.c      |  17 ++++
+>  tools/perf/arch/x86/util/mem-events.h      |   2 +
+>  tools/perf/arch/x86/util/pmu.c             |  10 ++-
+>  tools/perf/builtin-mem.c                   |   7 +-
+>  tools/perf/tests/shell/test_data_symbol.sh |   6 +-
+>  tools/perf/util/annotate-data.c            |  41 +++++++--
+>  tools/perf/util/annotate-data.h            |   3 +
+>  tools/perf/util/dwarf-aux.c                | 140 ++++++++++++++++++++++++-----
+>  tools/perf/util/dwarf-aux.h                |  13 +++
+>  12 files changed, 217 insertions(+), 38 deletions(-)
+> 
+> v4-head: eb568956a7129c91a8c0ccebb5979440a046c7ef
+> v3-head: e2504280f5c4086e9851a758ed1bae8df7ef269e
+> base-commit: edd8a9fe2eca009599e013a29c421c7a6b5ad1b9
+> --
