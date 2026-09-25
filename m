@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C2084A4EE7;
-	Fri, 25 Sep 2026 15:07:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8294A4BFE79;
+	Fri, 25 Sep 2026 15:07:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790348841; cv=none; b=CQ7duIcVCmbMOGHCW1mOZxF+PisuCH8jQ7PeN2QdHr2DWZkhDIyRRINCip++FrGdsTumf8Ize2hHCJ29zYgy9MOjBHEy2fHcMs2s8xrOCG8GsRA3P6QPH7JLE6mjUpPC+BSssfkMECUHh072X40krvLuCA/p24vB6IOzZWfgImk=
+	t=1790348841; cv=none; b=UpC8AReCpqq35j5O6sacmqSh21c21JMiEv9UmC+mTgedyuNN3UvmYRBydWM2rOZSG4uqXJ4oXPq9kTNteznzQHd6ygsUUYGshQRxYZQ0Va6gvbnAkUBUvQ8oGtXt0Xwne/4YuhkmUGBr07I+6hXKoOdmWfPYApdo/Yn+8HrbP9c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1790348841; c=relaxed/simple;
-	bh=1+OAEN1iD585KnyomuruZmJJCBpym4RT99/vewzgSLk=;
+	bh=KxO5qPXM9FbaoNLo69cUV8NlgPxhAP8aMZcEyjOeLE4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=IKOKmXt7oByH2PRzOq7NEG63+IJpox4EYYR4ywGSiAHVqM8KXLzab4J0f74hZhVf3l/FSEUgNmOSYdx3COYwhK1ENGmOPqhCRY55S0nAR2eF/7pBA1QrB5/zOYjmscwo6eFUyvk2oL7JGkss6WQx8v/0QB1c0E7oe8efU8VVEeA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NQv1Uv2H; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version; b=PKobZGu5ED8C4XaQDxGEsdeUf6k6XH4ZkEGCG4JRyVpzzHFpnWg0OweKtX+0ql1goi2H85SH4nwptnwh5+pTwM+dP32tXUPxPkJLF/Cpt5vltcWjW0M28DYBfYbDvJK49SemCaYt243Y0EsC56vaigiO1mbCjC/LWCbIjFByHZ8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=F/wHK48C; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NQv1Uv2H"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 77DE71F00899;
-	Fri, 25 Sep 2026 15:07:06 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="F/wHK48C"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E4F481F0089A;
+	Fri, 25 Sep 2026 15:07:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1790348828;
-	bh=J3X/f4wDloyblPcy8w8AIIlzFd7xJGB00/1yHA3GFB0=;
+	s=k20260515; t=1790348834;
+	bh=M1NMKBmM7/1YWvdOM75XN9nOUA4bkPfX1aS6i02DlFk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=NQv1Uv2HztuMVbtsQhFqQWayk9jHVgQgeZ3zxr/yt9wMXkpJjq4zlWzLuaSMF/hDJ
-	 1aYZMNb6+U8a2OzPszOec6IIPBdQve0gcuvtewxzxDxGMmbwROVe2N5nsnLnfMauy5
-	 V5WZKibqpkCiqMfpnEx/oejitZ4LQI7EnsFmfBBwTCJidj4T3qcb3ZNDxyjA1doi7A
-	 hld+hO+PcwER9uIN9a8vwNH3MjHKXVW44fwTqiU38cJbH+vFdRsLdAX90EEjltPhB5
-	 FXAHJvU2jUV9jxBhNd0g8BEmO6txf2Xl48yJnEgyBjhNVmt1SfjuOkkloSSHODf6tB
-	 Mg3nmO1EVAO1A==
+	b=F/wHK48CihNX6/QGFA3EhJMw8cRIfxz7+BfC6HNM6km5pJSlVew0gcrR024Bnp/UF
+	 JRNJKB/ibCVDL57ewOwuScf1f4shbTqqcG9glOGqJMsPMDSbwBVNiS54ZCDo5upuNM
+	 1jlh2qDi9kPRPazwaGmBUgVj0BlW5uGU6/8UhYSg88spsmvh5rnx6MVpX4pGekJuIS
+	 MDrmqcN5kyfEaKdu1dUCBRbaoLETcH8qcPzpS1wMwdfaeEnIic/t7xbU3RG3ZFgaNn
+	 nS7qlj8kzIuu8X+zShP/Qdcka5+kKMbEnx3CWM2FGdK1vUOvG5Kkfqr9/y6O/EtLHP
+	 +9kjdquG5Db3A==
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Namhyung Kim <namhyung@kernel.org>
 Cc: Ingo Molnar <mingo@kernel.org>,
@@ -37,11 +37,10 @@ Cc: Ingo Molnar <mingo@kernel.org>,
 	Clark Williams <williams@redhat.com>,
 	linux-kernel@vger.kernel.org,
 	linux-perf-users@vger.kernel.org,
-	Arnaldo Carvalho de Melo <acme@redhat.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>
-Subject: [PATCH 2/6] perf dwarf-aux: Add die_same_file() and die_get_type_die()
-Date: Fri, 25 Sep 2026 17:06:53 +0200
-Message-ID: <20260925150657.1826942-3-acme@kernel.org>
+	Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: [PATCH 4/6] perf annotate-data: Bound the member nesting recursion
+Date: Fri, 25 Sep 2026 17:06:55 +0200
+Message-ID: <20260925150657.1826942-5-acme@kernel.org>
 X-Mailer: git-send-email 2.55.0
 In-Reply-To: <20260925150657.1826942-1-acme@kernel.org>
 References: <20260925150657.1826942-1-acme@kernel.org>
@@ -55,195 +54,95 @@ Content-Transfer-Encoding: 8bit
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-dwarf_dieoffset() is relative to the file the DIE is in, so an offset
-saved by die_collect_vars()/die_collect_global_vars() is only
-meaningful in that file: add die_same_file(), comparing the Dwarf each
-DIE's CU belongs to, and die_get_type_die(), resolving the offset in it
-with the saved tag as a sanity check.  Resolving the offset in the main
-file instead parses whatever is at it when it came from the dwz common
-file.
+Members are added recursively, and a broken DIE can make a member's
+type point back at one of its own ancestors, recursing until the stack
+is gone; nothing usable comes out of nesting members 32 deep anyway, so
+stop there, marking the member as truncated and giving up on member
+types that don't resolve.
 
-dwarf_cu_getdwarf() is new in elfutils 0.160, so the libdw feature test
-probes for it and Makefile.config says 0.160.
+The check is where the children of an aggregate would be expanded, so
+only struct/union members are marked as truncated.
 
-Cc: Masami Hiramatsu <mhiramat@kernel.org>
 Assisted-by: LLM
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/build/feature/test-libdw.c | 10 +++++-
- tools/perf/Makefile.config       |  2 +-
- tools/perf/util/dwarf-aux.c      | 56 ++++++++++++++++++++++++++++++--
- tools/perf/util/dwarf-aux.h      | 13 ++++++++
- 4 files changed, 77 insertions(+), 4 deletions(-)
+ tools/perf/util/annotate-data.c | 20 ++++++++++++++++++--
+ tools/perf/util/annotate-data.h |  3 +++
+ 2 files changed, 21 insertions(+), 2 deletions(-)
 
-diff --git a/tools/build/feature/test-libdw.c b/tools/build/feature/test-libdw.c
-index aabd63ca76b4d7e6..46f75cde59471079 100644
---- a/tools/build/feature/test-libdw.c
-+++ b/tools/build/feature/test-libdw.c
-@@ -49,8 +49,16 @@ int test_elfutils(void)
- 	return 0;
- }
- 
-+/* Needs elfutils 0.160: taking its address fails the probe, not the link. */
-+int test_libdw_cu_getdwarf(void)
-+{
-+	void *sym = (void *)dwarf_cu_getdwarf;
-+
-+	return sym == NULL;
-+}
-+
- int main(void)
- {
- 	return test_libdw() + test_libdw_unwind() + test_libdw_getlocations() +
--	       test_libdw_getcfi() + test_elfutils();
-+	       test_libdw_getcfi() + test_libdw_cu_getdwarf() + test_elfutils();
- }
-diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
-index dca62e155fb5570a..b288ae0191acf7ef 100644
---- a/tools/perf/Makefile.config
-+++ b/tools/perf/Makefile.config
-@@ -477,7 +477,7 @@ else
-   else
-     ifneq ($(feature-libdw), 1)
-       ifndef NO_LIBDW
--        $(warning No libdw.h found or old libdw.h found or elfutils is older than 0.157, disables dwarf support. Please install new elfutils-devel/libdw-dev)
-+        $(warning No libdw.h found or old libdw.h found or elfutils is older than 0.160, disables dwarf support. Please install new elfutils-devel/libdw-dev)
-         NO_LIBDW := 1
-       endif
-     endif # Dwarf support
-diff --git a/tools/perf/util/dwarf-aux.c b/tools/perf/util/dwarf-aux.c
-index 2c135ebb1551fca4..54f8b5ec74a2fe70 100644
---- a/tools/perf/util/dwarf-aux.c
-+++ b/tools/perf/util/dwarf-aux.c
-@@ -1677,6 +1677,15 @@ Dwarf_Die *die_find_variable_by_addr(Dwarf_Die *sc_die, Dwarf_Addr addr,
- 	return result;
+diff --git a/tools/perf/util/annotate-data.c b/tools/perf/util/annotate-data.c
+index bc9698abc6a9e055..19a6ecd67f28719d 100644
+--- a/tools/perf/util/annotate-data.c
++++ b/tools/perf/util/annotate-data.c
+@@ -222,6 +222,12 @@ static bool data_type_less(struct rb_node *node_a, const struct rb_node *node_b)
+ 	return strcmp(a->self.type_name, b->self.type_name) < 0;
  }
  
 +/*
-+ * Whether two DIEs live in the same debug file: dwarf_dieoffset() is
-+ * relative to the file the DIE is in.
++ * A broken type can point back at one of its own ancestors: bound the
++ * nesting so it doesn't recurse until the stack is gone.
 + */
-+bool die_same_file(Dwarf_Die *die_a, Dwarf_Die *die_b)
-+{
-+	return dwarf_cu_getdwarf(die_a->cu) == dwarf_cu_getdwarf(die_b->cu);
-+}
++#define MAX_MEMBER_DEPTH 32
 +
- static int __die_collect_vars_cb(Dwarf_Die *die_mem, void *arg)
+ /* Recursively add new members for struct/union */
+ static int __add_member_cb(Dwarf_Die *die, void *arg)
  {
- 	struct die_var_type **var_types = arg;
-@@ -1721,6 +1730,8 @@ static int __die_collect_vars_cb(Dwarf_Die *die_mem, void *arg)
- 			vt->is_reg_var_addr = true;
+@@ -236,6 +242,9 @@ static int __add_member_cb(Dwarf_Die *die, void *arg)
+ 	if (dwarf_tag(die) != DW_TAG_member)
+ 		return DIE_FIND_CB_SIBLING;
  
- 		vt->die_off = dwarf_dieoffset(&type_die);
-+		vt->die_tag = dwarf_tag(&type_die);
-+		vt->from_alt = !die_same_file(die_mem, &type_die);
- 		vt->addr = start;
- 		vt->end = end;
- 		vt->has_range = (end != 0 || start != 0);
-@@ -1740,7 +1751,8 @@ static int __die_collect_vars_cb(Dwarf_Die *die_mem, void *arg)
-  *
-  * Save all variables and parameters in the @sc_die and save them to @var_types.
-  * The @var_types is a singly-linked list containing type and location info.
-- * Actual type can be retrieved using dwarf_offdie() with 'die_off' later.
-+ * Actual type can be retrieved using die_get_type_die() with 'die_off',
-+ * 'die_tag' and 'from_alt' later.
-  *
-  * Callers should free @var_types.
-  */
-@@ -1786,6 +1798,8 @@ static int __die_collect_global_vars_cb(Dwarf_Die *die_mem, void *arg)
++	if (die_get_real_type(die, &die_mem) == NULL)
++		return DIE_FIND_CB_SIBLING;
++
+ 	member = zalloc(sizeof(*member));
+ 	if (member == NULL)
  		return DIE_FIND_CB_END;
+@@ -248,8 +257,6 @@ static int __add_member_cb(Dwarf_Die *die, void *arg)
+ 	if (die_get_typename(die, &sb) < 0)
+ 		strbuf_add(&sb, "(unknown type)", 14);
  
- 	vt->die_off = dwarf_dieoffset(&type_die);
-+	vt->die_tag = dwarf_tag(&type_die);
-+	vt->from_alt = !die_same_file(die_mem, &type_die);
- 	vt->addr = ops->number;
- 	vt->end = 0;
- 	vt->has_range = false;
-@@ -1797,6 +1811,43 @@ static int __die_collect_global_vars_cb(Dwarf_Die *die_mem, void *arg)
- 	return DIE_FIND_CB_SIBLING;
- }
+-	die_get_real_type(die, &die_mem);
+-
+ 	if (dwarf_aggregate_size(&die_mem, &size) < 0 || size == 0) {
+ 		if (dwarf_tag(&die_mem) == DW_TAG_array_type) { /* flex-array? */
+ 			die_get_real_type(&die_mem, &die_mem);
+@@ -299,6 +306,7 @@ static int __add_member_cb(Dwarf_Die *die, void *arg)
+ 	}
+ 	member->size = size;
+ 	member->offset = loc + parent->offset;
++	member->depth = parent->depth + 1;
+ 	INIT_LIST_HEAD(&member->children);
  
-+/**
-+ * die_get_type_die - Get a type DIE saved by die_collect_vars()
-+ * @dbg: the main debug info
-+ * @die_off: offset of the type DIE, from dwarf_dieoffset()
-+ * @die_tag: tag that DIE had when the offset was saved
-+ * @from_alt: whether the type DIE is in the dwz alt file
-+ * @die_mem: where to store the resulting DIE
-+ *
-+ * Resolve @die_off in the file it was recorded as belonging to, with no
-+ * fallback; @die_tag is a sanity check.
-+ */
-+Dwarf_Die *die_get_type_die(Dwarf *dbg, u64 die_off, int die_tag, bool from_alt,
-+			    Dwarf_Die *die_mem)
-+{
-+	Dwarf *target = dbg;
-+	Dwarf_Die die;
-+
-+	if (from_alt) {
-+		/* No fallback: an alt offset here parses whatever is at it. */
-+		target = dwarf_getalt(dbg);
-+		if (target == NULL) {
-+			pr_debug("DWARF: no alt (dwz) debug file to resolve the type DIE at offset 0x%lx in\n",
-+				 (unsigned long)die_off);
-+			return NULL;
+ 	list_for_each_entry_reverse(prev, &parent->children, node) {
+@@ -313,6 +321,14 @@ static int __add_member_cb(Dwarf_Die *die, void *arg)
+ 		member->is_union = true;
+ 		/* fall through */
+ 	case DW_TAG_structure_type:
++		/* Only aggregates have children to expand, so only they get truncated. */
++		if (member->depth >= MAX_MEMBER_DEPTH) {
++			/* Consumed by the JSON exporter added in a later series. */
++			member->truncated = true;
++			pr_debug_dtp("member nesting limit reached at %s\n",
++				     member->type_name ?: "(unknown type)");
++			break;
 +		}
-+	}
-+
-+	if (dwarf_offdie(target, die_off, &die) && dwarf_tag(&die) == die_tag) {
-+		*die_mem = die;
-+		return die_mem;
-+	}
-+
-+	pr_debug("DWARF: no DIE with tag %d at offset 0x%lx in the %s debug file\n",
-+		 die_tag, (unsigned long)die_off, from_alt ? "alt" : "main");
-+	return NULL;
-+}
-+
+ 		die_find_child(&die_mem, __add_member_cb, member, &die_mem);
+ 		break;
+ 	default:
+diff --git a/tools/perf/util/annotate-data.h b/tools/perf/util/annotate-data.h
+index 14b8113521a927cf..ca0abfb2a036d229 100644
+--- a/tools/perf/util/annotate-data.h
++++ b/tools/perf/util/annotate-data.h
+@@ -61,6 +61,9 @@ struct annotated_member {
+ 	int size;
+ 	bool is_union;
+ 	bool is_flex_array;
++	unsigned int depth;
++	/* Children not expanded because the nesting limit was reached */
++	bool truncated;
+ };
+ 
  /**
-  * die_collect_global_vars - Save all global variables
-  * @cu_die: a CU DIE
-@@ -1804,7 +1855,8 @@ static int __die_collect_global_vars_cb(Dwarf_Die *die_mem, void *arg)
-  *
-  * Save all global variables in the @cu_die and save them to @var_types.
-  * The @var_types is a singly-linked list containing type and location info.
-- * Actual type can be retrieved using dwarf_offdie() with 'die_off' later.
-+ * Actual type can be retrieved using die_get_type_die() with 'die_off',
-+ * 'die_tag' and 'from_alt' later.
-  *
-  * Callers should free @var_types.
-  */
-diff --git a/tools/perf/util/dwarf-aux.h b/tools/perf/util/dwarf-aux.h
-index 9b662db710220522..6f9145510adcb841 100644
---- a/tools/perf/util/dwarf-aux.h
-+++ b/tools/perf/util/dwarf-aux.h
-@@ -152,6 +152,8 @@ int die_get_scopes(Dwarf_Die *cu_die, Dwarf_Addr pc, Dwarf_Die **scopes);
- struct die_var_type {
- 	struct die_var_type *next;
- 	u64 die_off;
-+	int die_tag;
-+	bool from_alt;	/* die_off is relative to the alt (dwz) file */
- 	u64 addr;
- 	u64 end;        /* end address of location range */
- 	int reg;
-@@ -183,6 +185,17 @@ Dwarf_Die *die_find_variable_by_addr(Dwarf_Die *sc_die, Dwarf_Addr addr,
- /* Save all variables and parameters in this scope */
- void die_collect_vars(Dwarf_Die *sc_die, struct die_var_type **var_types);
- 
-+/*
-+ * Get the type DIE saved by die_collect_vars()/die_collect_global_vars():
-+ * @from_alt says which file the offset must be resolved in, @die_tag is
-+ * a sanity check.
-+ */
-+Dwarf_Die *die_get_type_die(Dwarf *dbg, u64 die_off, int die_tag, bool from_alt,
-+			    Dwarf_Die *die_mem);
-+
-+/* Whether two DIEs live in the same debug file */
-+bool die_same_file(Dwarf_Die *die_a, Dwarf_Die *die_b);
-+
- /* Save all global variables in this CU */
- void die_collect_global_vars(Dwarf_Die *cu_die, struct die_var_type **var_types);
- 
 -- 
 2.53.0
 
