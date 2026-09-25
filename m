@@ -1,70 +1,70 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52D0E49BD96;
-	Fri, 25 Sep 2026 13:13:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC6582E03E4;
+	Fri, 25 Sep 2026 13:27:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790341993; cv=none; b=IjyBTOD/tHJ+kA+3SjRYkwBIhKB6tX7GB2wZ7NpnOBm5p2FpuOiBkhygyC+RrrVL2gP1AJ0kHiCqWrJJ3d9RPdJx3sG3pt9Yq5EmAuDP1ZLXpgKngYcwGYzRjQk/wVb4LdDgd3qP59rVa6RYqqwzFN7oS+6i/f9dnPG0YIFhNmE=
+	t=1790342872; cv=none; b=ZkmX4/INoPIxOk54lqmrTXt5+do8gOM+Ctev8aZb+sW3+y6fQNrWmheWnoKBTrMTyzgMFrjbMY4foRBIH/CsuY/hVyzCb+xhAGocEUAuipwU1FiHsHSvs0A0moBNta1xtCFiYHiqRzV8HVtdOxwTbhEsbbxkPcv3cm9SlnqPk/o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790341993; c=relaxed/simple;
-	bh=V1dQRoMhO9xO6x00STIoGR+4LjhtdOE7CWxtjPaxYfk=;
+	s=arc-20240116; t=1790342872; c=relaxed/simple;
+	bh=PIzAaC9JkZJowMrQb3gm2CiCOEJ2YXtuPoK4R3OParI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=D+y98VH7tlSfEISxaon1FLbC9iieShqcWxNUQrH9m6fRr7+6aEGDohwVK/yBwXhcmciiC7U+43s5NoKk/ZwDo1Asw1eEk/SzrRIK8Y+JhwXJ6Lwv30opGQp7/prHYjC9MNb+a6SQZS5O4itbTKouGuOF6A9jC1XVwZ/dYXKWQfA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GrQ4JTYS; arc=none smtp.client-ip=100.103.45.18
+	 Content-Type:Content-Disposition:In-Reply-To; b=KT/zL7b9UJs+S33daA+ieFUhyuSmU+w4Fvc4z1hn7uQU6TtI/cGcBk/TUEe661q8HUqemNlAcnLI6fBfJaiBrBjXTL5DxQTkhr2aDcOHO6tM7G/86rgWq5WTT56CH/djYDyP2xHvM3g+5+FBzZc1ZHqqAQvju3Ei/O+ePwr66L0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GEjlwu5Q; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GrQ4JTYS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 17B7D1F00893;
-	Fri, 25 Sep 2026 13:13:05 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GEjlwu5Q"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CF1A41F000FF;
+	Fri, 25 Sep 2026 13:27:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1790341986;
-	bh=tdWUX2hM5T3JVmLjlMc1Ccb5YiNrhwJMCS1hCelEhI4=;
+	s=k20260515; t=1790342870;
+	bh=Xsdg93i9heFX8fuBndTH1OVgKayNCX99LVf/8O28y00=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=GrQ4JTYSIg72ssOfZSLJF30qWw63w5BWtOUGWVtJ3tQLNgHdiHFx76a4YOrfQnrDF
-	 p2FiZRfoqbStYbdwhpC1ldWQTviJaGChB4hRlxBiFdMpFGtvFKqZXmec/qGV1gDEeK
-	 e8eUHDyFpUlcC3CN85HSth+wdgwv8cMsz/mikRZN4NIgo7oo6HPXMtkz1PznwyxBEd
-	 TFD3ecKTChYfdZXtBLt7Dd7B5AAAhiR4zHnaa/UxB6GTx3nBSZacIzbMWFU1OVaVQC
-	 yV+UKFIft8VCeiiWln/XS0wA7wlYINiUJpoOLeERVdjUzWBbnhctgTl7CZ1vhXp85/
-	 PENc5z1XxOBeg==
-Date: Fri, 25 Sep 2026 15:13:03 +0200
+	b=GEjlwu5QC9FHvcqiPBLQLmVC5KtQ7DwKqcc9oFAZMcU8xUXCkIPAfkr0D53YNkxOi
+	 svxXxiEWba8oGuU4ZhPt4lB3EviP3SgEo1WRRV+/iWKE5dBD19RYca12OMVOpuwaim
+	 5QKNPqF0xdSuDO2dzfmUK8cdE8kg9kDJHsi3f1/cMEKqmYPLYmkNpjDtKiEBeP8YZi
+	 0utbp2q+d1DEDeWPgi22i6a+d6tPDp8XZ8R25VOolpekgsQ2YG6tCvswEdnWMizhu6
+	 f8odDV45QApJUVJPfNMuWOjlA1xU+lT1zRJAvcuT7MJ5F+DXF81smvfzfX/LgZON3g
+	 rrjFPxJsAygXA==
+Date: Fri, 25 Sep 2026 15:27:47 +0200
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: nanshuaibo <nanshuaibo811@163.com>, linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	James Clark <james.clark@linaro.org>
-Subject: Re: [PATCH] perf sched: Make output_name variable static
-Message-ID: <arZzX4h6995j1yHz@x2>
-References: <20260903112835.1694260-1-nanshuaibo811@163.com>
- <CAP-5=fVBi=VSnGQ_uNAb5+Y=mVi5mBz+Zazgw-kS173hR5vDrQ@mail.gmail.com>
+To: Jiebin Sun <jiebin.sun@intel.com>
+Cc: sashiko-reviews@lists.linux.dev, linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH 4/4] perf tests c2c: Add function view stdio coverage
+Message-ID: <arZ200WZAtBYy5bb@x2>
+References: <cover.1787283281.git.jiebin.sun@intel.com>
+ <9bd7a313c9c1d71058e857c320c6d5c30cf4cbfa.1787283281.git.jiebin.sun@intel.com>
+ <20260821055803.74B191F00A3A@smtp.kernel.org>
+ <aqB8eNXwAvKoiMMR@x2>
+ <20260909030156.1771188-1-jiebin.sun@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fVBi=VSnGQ_uNAb5+Y=mVi5mBz+Zazgw-kS173hR5vDrQ@mail.gmail.com>
+In-Reply-To: <20260909030156.1771188-1-jiebin.sun@intel.com>
 
-On Tue, Sep 15, 2026 at 12:43:59PM -0700, Ian Rogers wrote:
-> On Thu, Sep 3, 2026 at 4:28 AM nanshuaibo <nanshuaibo811@163.com> wrote:
-> >
-> > The output_name variable is only used within builtin-sched.c for the
-> > stats subcommand, so declare it static. This fixes a sparse warning:
-> >
-> >   builtin-sched.c:4140:12: warning: symbol 'output_name' was not
-> >   declared. Should it be static?
-> >
-> > Signed-off-by: nanshuaibo <nanshuaibo811@163.com>
+On Wed, Sep 09, 2026 at 11:01:52AM +0800, Jiebin Sun wrote:
+> Hi Arnaldo,
 > 
-> Reviewed-by: Ian Rogers <irogers@google.com>
+> Thanks for checking this.
+> 
+> Patch 2/4 covers this case:
+> 
+>   perf tests c2c: Report skip when the workload fails
+> 
+> It sets err=2 before returning when the workload fails, while patch 4 calls
+> test_c2c_function_report() only when err remains 0.
+> 
+> I also verified this by forcing the workload command to fail. The script
+> printed the skip message, did not run the function test, and exited with
+> status 2, which the perf test harness treats as a skip.
+> 
+> So I don't think any change is needed here.
 
-Thanks, applied to perf-tools-next, for v7.4.
+Thanks for checking, applied to perf-tools-next, for v7.4.
 
 - Arnaldo
