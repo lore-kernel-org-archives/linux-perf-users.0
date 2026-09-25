@@ -1,106 +1,153 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8951D4D5980
-	for <linux-perf-users@vger.kernel.org>; Fri, 25 Sep 2026 15:41:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0688C4C9DEA;
+	Fri, 25 Sep 2026 15:43:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790350889; cv=none; b=nHHxBTxAqA57A20gK55h9+nkECW037WsCXg6QlxYdDW5ZGRm6EgPv1+HSbuWIadPJNIt4tyyrcLxfjVelSzAUA8nzqWbPGy43xJYhtVD0Hr9ig3VvX5Bseg/OJRidMfR+XazHbtggiWOG21iDWcqZ0xTFfXjcw8UmCPXgKCo/vM=
+	t=1790351027; cv=none; b=QJQ5FPjU2QIGcQWLROmQsg5N8g5ghUIDdRiAWoXRJ1bx7w5Sb4qAIWO3zTozLTxPbfVLEpkWJC429/NpoMlkZrLiS9IbF0VH5bnaywonCjcMPfLqSHIDS8C6rlChsN9QLisJ3TuwothZcXP/nX0+ytgTHum/+JbF+i3EPNAJJCg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790350889; c=relaxed/simple;
-	bh=f9V7nvRuDDXA+9B+o+2ItSTKcrIbEbqDtEAXahAyMpo=;
+	s=arc-20240116; t=1790351027; c=relaxed/simple;
+	bh=5oe2QGNOT1SZJM/onWvy+8P74Er/QG8sH5vVzyYwEIQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ily9T1+ILzhTd1ELryPQh8o8iWUSx6DGmU7M2njtC561n6aT4LehfymaxP0h7oL/I8TaBcarkaoP1WlblXC3TPa4rAwb0mgQPW0G5hPtJIKmTBzPywpxaIDOL13ZkiPwoXwvEqJP2GczSVmLJ42aN/NrhNiQnkaZIZIUX4//MzQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EFqeBTdd; arc=none smtp.client-ip=100.103.45.18
+	 Content-Type:Content-Disposition:In-Reply-To; b=BlkASgaJM4q4yIW2yl8hJpH72Ep2OmylxMmmeSEHcN10eDrwO8QzH3Gsn973WpxjC4vIAJZchDCyYKLrZXmp5DnXtdOfIWhYCa+TkjbeBFvKtWajxqNynDWCbGBbZKsZ8u2h8a+I533UsdrjrzMWDtMJ/cB7AHULXAsPR9hE1SE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HGPbV8st; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EFqeBTdd"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3E9CA1F000FF;
-	Fri, 25 Sep 2026 15:41:24 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HGPbV8st"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 28A4A1F000FF;
+	Fri, 25 Sep 2026 15:43:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1790350884;
-	bh=VXeqvXIuJ4yai0BSO6NRfIL/HZGbDnuDGZ0q1cfO7Ys=;
+	s=k20260515; t=1790351025;
+	bh=QUXfTyWUTM9FobYcOKtmOfn0gLv+cIRAfYiSGm6DoFQ=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=EFqeBTdd810On/zYjJsHdC1GuZAx91oCcaOQWyMzRh6rT7BsHktZ2r48fJGVeieR+
-	 74kHo/McwG8BS/wqXqSy7Wb2hUv7t4AgC5E6Cx5zROYtuPoRduVGpLl/zvwMBOXk5e
-	 H3JrknhoeHKQCl7huXsn2uH3jCjGAnJCa6jGC/QGeE5EPSTu/424W3SlAOTQXFEk2l
-	 YLwJDueAdgCUAG+jfYFXMt9tJe4l4pJrBjeCUkTHg6UWqRh/EqlqHNqGJYQohaAIdY
-	 s2kLCT0rDPdf/RSh5NCOdXuiI+4vnLYmgUbF9JrFwvylqs58rY5aG8rz/ujk10ZFux
-	 FadEXZixiv1Sg==
-Date: Fri, 25 Sep 2026 08:41:22 -0700
-From: Namhyung Kim <namhyung@kernel.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: linux-perf-users@vger.kernel.org,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Ian Rogers <irogers@google.com>,
+	b=HGPbV8stlmLSJLE/Qm+GQFl7WpYkF6LL+c6OS85TG0BUq9RnfZBicmYuYAvYSiztG
+	 +8INM/2FcD0tbUBOpOSQtgIE+4p3Kxf1EC5CdTtG+g9/W1izd3LJ7cNghm7ur0lWmv
+	 ZmHWfHMhfWc0XIfeUPZT0mUB8iQWmEvYLP/lOy8s9bqMOgKYKl7kwNvfetIs29Q6b6
+	 VuX1NV5B32yB3But3dDxXROQrfhEJa05NMXQY7Op3O5NbANPekyDR1z6OcOh8yeOcp
+	 rLFcnTJXPqoeh9XMeaE+N6UMKa9YHTA+ZdkypkTM64e4CTxa/P7MHAXDZAk64Xl0Yu
+	 fD3d55/mgb9xA==
+Date: Fri, 25 Sep 2026 17:43:43 +0200
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
 	James Clark <james.clark@linaro.org>, Jiri Olsa <jolsa@kernel.org>,
-	Dmitrii Dolgov <9erthalion6@gmail.com>
-Subject: Re: [PATCH 1/1] perf test workload: Use unsigned int in
- code_with_type instead of uint
-Message-ID: <araWImOoVxsvDGrz@z2>
-References: <araUAt-S6YM_bbAf@x2>
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: Re: [PATCH 4/6] perf annotate-data: Bound the member nesting
+ recursion
+Message-ID: <araWryMoGYJ99LC1@x2>
+References: <20260925150657.1826942-1-acme@kernel.org>
+ <20260925150657.1826942-5-acme@kernel.org>
+ <araVqTiVF9DpkSmh@z2>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <araUAt-S6YM_bbAf@x2>
+In-Reply-To: <araVqTiVF9DpkSmh@z2>
 
-On Fri, Sep 25, 2026 at 05:32:18PM +0200, Arnaldo Carvalho de Melo wrote:
-> The declaration of the Rust helper test_rs() uses "uint", a BSD-ism
-> that lives in <sys/types.h>, so on glibc it is only visible by
-> accident: glibc's <stdlib.h> includes <sys/types.h>, where uint is
-> exposed under __USE_MISC, which is on by default.
+On Fri, Sep 25, 2026 at 08:39:21AM -0700, Namhyung Kim wrote:
+> On Fri, Sep 25, 2026 at 05:06:55PM +0200, Arnaldo Carvalho de Melo wrote:
+> > From: Arnaldo Carvalho de Melo <acme@redhat.com>
+> > 
+> > Members are added recursively, and a broken DIE can make a member's
+> > type point back at one of its own ancestors, recursing until the stack
+> > is gone; nothing usable comes out of nesting members 32 deep anyway, so
+> > stop there, marking the member as truncated and giving up on member
+> > types that don't resolve.
+> > 
+> > The check is where the children of an aggregate would be expanded, so
+> > only struct/union members are marked as truncated.
+> > 
+> > Assisted-by: LLM
+> > Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+> > ---
+> >  tools/perf/util/annotate-data.c | 20 ++++++++++++++++++--
+> >  tools/perf/util/annotate-data.h |  3 +++
+> >  2 files changed, 21 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/tools/perf/util/annotate-data.c b/tools/perf/util/annotate-data.c
+> > index bc9698abc6a9e055..19a6ecd67f28719d 100644
+> > --- a/tools/perf/util/annotate-data.c
+> > +++ b/tools/perf/util/annotate-data.c
+> > @@ -222,6 +222,12 @@ static bool data_type_less(struct rb_node *node_a, const struct rb_node *node_b)
+> >  	return strcmp(a->self.type_name, b->self.type_name) < 0;
+> >  }
+> >  
+> > +/*
+> > + * A broken type can point back at one of its own ancestors: bound the
+> > + * nesting so it doesn't recurse until the stack is gone.
+> > + */
+> > +#define MAX_MEMBER_DEPTH 32
+> > +
+> >  /* Recursively add new members for struct/union */
+> >  static int __add_member_cb(Dwarf_Die *die, void *arg)
+> >  {
+> > @@ -236,6 +242,9 @@ static int __add_member_cb(Dwarf_Die *die, void *arg)
+> >  	if (dwarf_tag(die) != DW_TAG_member)
+> >  		return DIE_FIND_CB_SIBLING;
+> >  
+> > +	if (die_get_real_type(die, &die_mem) == NULL)
+> > +		return DIE_FIND_CB_SIBLING;
+> > +
+> >  	member = zalloc(sizeof(*member));
+> >  	if (member == NULL)
+> >  		return DIE_FIND_CB_END;
+> > @@ -248,8 +257,6 @@ static int __add_member_cb(Dwarf_Die *die, void *arg)
+> >  	if (die_get_typename(die, &sb) < 0)
+> >  		strbuf_add(&sb, "(unknown type)", 14);
+> >  
+> > -	die_get_real_type(die, &die_mem);
+> > -
+> >  	if (dwarf_aggregate_size(&die_mem, &size) < 0 || size == 0) {
+> >  		if (dwarf_tag(&die_mem) == DW_TAG_array_type) { /* flex-array? */
+> >  			die_get_real_type(&die_mem, &die_mem);
+> > @@ -299,6 +306,7 @@ static int __add_member_cb(Dwarf_Die *die, void *arg)
+> >  	}
+> >  	member->size = size;
+> >  	member->offset = loc + parent->offset;
+> > +	member->depth = parent->depth + 1;
+> >  	INIT_LIST_HEAD(&member->children);
+> >  
+> >  	list_for_each_entry_reverse(prev, &parent->children, node) {
+> > @@ -313,6 +321,14 @@ static int __add_member_cb(Dwarf_Die *die, void *arg)
+> >  		member->is_union = true;
+> >  		/* fall through */
+> >  	case DW_TAG_structure_type:
+> > +		/* Only aggregates have children to expand, so only they get truncated. */
+> > +		if (member->depth >= MAX_MEMBER_DEPTH) {
+> > +			/* Consumed by the JSON exporter added in a later series. */
+> > +			member->truncated = true;
+> > +			pr_debug_dtp("member nesting limit reached at %s\n",
+> > +				     member->type_name ?: "(unknown type)");
+> > +			break;
+> > +		}
+> >  		die_find_child(&die_mem, __add_member_cb, member, &die_mem);
+> >  		break;
+> >  	default:
+> > diff --git a/tools/perf/util/annotate-data.h b/tools/perf/util/annotate-data.h
+> > index 14b8113521a927cf..ca0abfb2a036d229 100644
+> > --- a/tools/perf/util/annotate-data.h
+> > +++ b/tools/perf/util/annotate-data.h
+> > @@ -61,6 +61,9 @@ struct annotated_member {
+> >  	int size;
+> >  	bool is_union;
+> >  	bool is_flex_array;
+> > +	unsigned int depth;
+> > +	/* Children not expanded because the nesting limit was reached */
+> > +	bool truncated;
 > 
-> musl does none of that: its <stdlib.h> doesn't include <sys/types.h>
-> and it typedefs uint there only when _GNU_SOURCE/_BSD_SOURCE is
-> defined, while nothing else in this translation unit includes
-> <sys/types.h>. Building it on Alpine therefore fails with:
-> 
->   tests/workloads/code_with_type.c:9:21: error: unknown type name 'uint'; did you mean 'int'?
->   tests/workloads/code_with_type.c:39:17: error: implicit declaration of function 'test_rs' [-Wimplicit-function-declaration]
-> 
-> The second error is a consequence of the first one: with the
-> declaration at line 9 rejected, the call at line 39 has no prototype,
-> which is an error since gcc 14.
-> 
-> The breakage is only visible when rustc is present, because
-> tests/workloads/Build adds code_with_type.o when CONFIG_RUST_SUPPORT
-> is detected, and tools/build/feature only checks for "rustc
-> --version". That is why alpine:3.23 and alpine:3.24 fail while
-> alpine:3.22 and alpine:edge, lacking rustc, build fine and hide it.
-> 
-> Use unsigned int, which needs no header at all.
-> 
-> Fixes: 2e05bb52a12d3 ("perf test workload: Add code_with_type test workload")
-> Cc: Dmitrii Dolgov <9erthalion6@gmail.com>
-> Assisted-by: LLM
-> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+> Nit: it'd be better to switch the order of the last two fields to reduce
+> the padding.
 
-Acked-by: Namhyung Kim <namhyung@kernel.org>
+I should have used pahole... 8-)
 
-Thanks,
-Namhyung
+Will fix, thanks!
 
-> ---
->  tools/perf/tests/workloads/code_with_type.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/tools/perf/tests/workloads/code_with_type.c b/tools/perf/tests/workloads/code_with_type.c
-> index 65d7be7dac24d411..d2d437b86e0c6dbd 100644
-> --- a/tools/perf/tests/workloads/code_with_type.c
-> +++ b/tools/perf/tests/workloads/code_with_type.c
-> @@ -6,7 +6,7 @@
->  #include <linux/compiler.h>
->  #include "../tests.h"
->  
-> -extern void test_rs(uint count);
-> +extern void test_rs(unsigned int count);
->  
->  static volatile sig_atomic_t done;
->  
-> -- 
-> 2.55.0
-> 
+- Arnaldo
