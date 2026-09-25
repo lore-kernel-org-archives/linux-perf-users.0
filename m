@@ -1,116 +1,184 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B448E3E559A
-	for <linux-perf-users@vger.kernel.org>; Fri, 25 Sep 2026 23:08:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E57C8497B79
+	for <linux-perf-users@vger.kernel.org>; Fri, 25 Sep 2026 23:37:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790377695; cv=none; b=p/WDkPxNhADgs7qP4UOBR9jjaFY5I6Ml9VfhEf/aFIQOtDEFwuzhaqLQNh4ceAP37p25Pp7lHFMq2iiWs0DNv4w9gVRfQuzH7BDROHoXfQ0GUfyS0++s5Ftja9h/PbZgqL1LAkzFfKUHMe7enOfP+ZniioQyx/2WcX2ploTB4XA=
+	t=1790379454; cv=none; b=gcoR0pffiUCL246gwDc4p0ZPtJyK8yg5LuqYMbSxsGbugmB5Y095a9r4eOYJT0zE8goIJHInKcf8tMtVuw1FcIFADrKd/K7yVEDYcVPrX8eYUfw2v+WzUTu2rKAXo2Ye3VPwM20JrRv1UWC/ywhCR4/JEyFuX84G+ueHByd7A9M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790377695; c=relaxed/simple;
-	bh=rO0d2ILcSt25ITYu4+ErpQ1pyyRjnouYWBAlBFd5Gec=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=TiUIB9AtwyWT+9DLH89OOl5+UXU8dA4kcaeAsQeOGaQO5V9thcQAVHs3+RASph6O0pVKljXPmWND4ImV4Y3YPTf4pvWfUC+k1W6PRrkIP8tx9JJ1s5+vgkPdyj1JIS+/sp1KBaudy9D00Z06b/fFlbADxDN/nlXKnPxE/8TsiHE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZP60y+Qp; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1790379454; c=relaxed/simple;
+	bh=PWtdLBtxU+9/cXftfE94dBaNRRcXGQvPdUickPLZE6k=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=P2lOSysSRPvmsAgbr5a8g9wnlNupR2hyVD+bHNoKVCT2SVOdBQO2HP6g9yyAgdHFIZ9Q65oz6kKq/5XUv5qMcq7V4EyfIIiq1h8lNR3pSpWPKMsSToi65CEQiROTy/tgIkre6c2MNnXayF+TWZAF1zWgYL4+aNm+qdQ9/K7RbWM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LCfk8A1P; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZP60y+Qp"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6F6F61F000FF;
-	Fri, 25 Sep 2026 23:08:13 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LCfk8A1P"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F042B1F000FF;
+	Fri, 25 Sep 2026 23:37:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1790377693;
-	bh=nfunc8J0r5bPaVzSwi+mHITfN6zuNljDK4B27sA7QBs=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=ZP60y+QpJE7HjIXZr48Uq75Ll48zwIUaeX1L8SndasNsoykzC8+naLyG5KBppGuXs
-	 lsiFZB1Kcw1eVyWwWzmTlpt7DHYxSLZXYgT5nGQP3AqRcOwG6Umjy05U1o37CMWVq0
-	 NVZY1iYS3WYiu/emwOzHav0Sx9mzEhtfohBMOKsiAvlrmAXnymlqdamxBaQ+sGNoC0
-	 3l33cyY3MV9Dihj4NGNsIldQ1lvTXXRhDWacopAVWHpRw4xaBIxVZYxlvEQM7cXfQx
-	 HMsj4HuMXnYRbbJbWTae+0Ega7CKbuUliihQD0hI8WY6DPiDuDk+mIXgy8qD2LKy6k
-	 iL/EJI51aGLmA==
-From: sashiko-bot@kernel.org
+	s=k20260515; t=1790379452;
+	bh=j8YIGRAP5IopkiT35qkbfXmQvTPB9udAdRv7SuNUQJs=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References;
+	b=LCfk8A1P1WCtVBMTLqNeU/1ZMa7hln+fL2CToHyknqzC/TqwXgHhBhBRqtR3svfLd
+	 L7FFuQviXJB2ZVGKKawKFoarwr+9NBviBlHGzWCIVcUd5obwTSjPRSbdDx0WN2va4e
+	 YojtGNUQ366ksG7GJoX2Et2RJy37vKddNoCPxoGIcm80ROw0PCki//up19PjONR/Fo
+	 lnXmayXTfDns2KxS7DcfEaSY7z/QJcAK7JRDg7jd+v6K4DoOAX0MHbXLAX7Cq4UUBT
+	 BZ6hOrJtASpi11OHtvQtIDbmJJISiW+Md8J89QbpdwpgIYUrJpqwtnILF2CYVNn6io
+	 VmqJLgSCrntIg==
+Date: Sat, 26 Sep 2026 01:37:28 +0200
+From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Ian Rogers <irogers@google.com>, Adrian Hunter
+ <adrian.hunter@intel.com>, James Clark <james.clark@linaro.org>, Jiri Olsa
+ <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+ linux-perf-users@vger.kernel.org
 Subject: Re: [PATCH 1/1] perf tools: Bump the minimum Python version to 3.9
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Arnaldo Carvalho de Melo" <acme@kernel.org>
-Cc: linux-perf-users@vger.kernel.org
+Message-ID: <20260926013728.3e15cacc@foz.lan>
 In-Reply-To: <arb9OMEQ8HCcw-9O@x2>
 References: <arb9OMEQ8HCcw-9O@x2>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Fri, 25 Sep 2026 23:08:12 +0000
-Message-Id: <20260925230813.6F6F61F000FF@smtp.kernel.org>
+X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
-s) to consider:
-- [Low] perf: incomplete python 3.9 version check leads to build crash
---
+On Sat, 26 Sep 2026 01:01:12 +0200
+Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
 
-commit 7a016e98c4330410787d9ac22be5c76fe463b5ce
-Author: Arnaldo Carvalho de Melo <acme@kernel.org>
+> perf's build only refused interpreters older than 3.6, the check added
+> when jevents.py started using f-strings, and jevents.py carried a
+> removesuffix() shim to stay usable on them.
+> 
+> The kernel itself requires Python 3.9.x since 5e25b972a22be224 ("docs:
+> changes: update Python minimal version"), so tools in the tree are
+> expected to work with it, and staying compatible with older
+> interpreters stopped paying off:
+> 
+>  - the PEP 585 generics, list[...], used by the type annotations in
+>    jevents.py and util/setup.py are only subscriptable from Python 3.9
+>    and, being evaluated at import or definition time, they break the
+>    build on RHEL 8's python3.6.8 with:
+> 
+>    TypeError: 'type' object is not subscriptable
 
-perf tools: Bump the minimum Python version to 3.9
+If it is just for type, you probably could do something like:
 
-This commit bumps the minimum Python version required by the perf build
-from 3.6 to 3.9. It replaces the custom removesuffix() implementation
-with the built-in str.removesuffix() and updates the version check in
-Makefile.config.
+	from __future__ import annotations
 
+if you have a too old python version and you use import typing
+(I didn't test it myself - no idea it it would make any difference).
+
+But yeah, 3.6 is too old for my taste ;-)
+
+>  - ProcessPoolExecutor(initializer=, initargs=) requires Python 3.7, so
+>    generating pmu-events.c fails there as well.
+
+Double-checked with vermin:
+
+ $ vermin -vv ./tools/perf/pmu-events/jevents.py
+...
+  'concurrent.futures.ProcessPoolExecutor(initargs)' requires !2, 3.7
+  'concurrent.futures.ProcessPoolExecutor(initializer)' requires !2, 3.7
+
+> Rather than spreading version guards and typing.List() workarounds for
+> interpreters that cannot be supported anyway, make 3.9 the floor: check
+> for it in Makefile.config, where the jevents generation check already
+> lives, and drop the removesuffix() shim, since str.removesuffix() was
+> added in 3.9.
+> 
+> RHEL 8 is in feature freeze, so those wanting a new perf and its python
+> features have to vendor a newer interpreter, just as
+> Documentation/process/changes.rst already asks for the kernel itself.
+> 
+> Tested with Python 3.9.22: perf builds, generating pmu-events.c and the
+> python binding, with byte for byte identical output to the build made
+> with the shim, while Python 3.8.20 and 3.6.15 are rejected with the
+> "older than 3.9" error. vermin reports no perf build file as requiring
+> more than 3.9, the only offender being the runtime script
+> scripts/python/mem-phys-addr.py, which the build doesn't run.
+> 
+> Suggested-by: Ian Rogers <irogers@google.com>
+> Cc: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+> Assisted-by: LLM
+> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+
+Patch LGTM.
+
+Reviewed-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+
+> ---
+>  tools/perf/Makefile.config       |  8 +++++---
+>  tools/perf/pmu-events/jevents.py | 16 +++-------------
+>  2 files changed, 8 insertions(+), 16 deletions(-)
+> 
 > diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
-> index 0ba307e78fe1f..549a809a88ca2 100644
+> index b288ae0191acf7ef..92ac7c620b3ccd49 100644
 > --- a/tools/perf/Makefile.config
 > +++ b/tools/perf/Makefile.config
-> @@ -876,10 +876,12 @@ ifneq ($(NO_JEVENTS),1)
+> @@ -885,10 +885,12 @@ ifneq ($(NO_JEVENTS),1)
 >    ifndef PYTHON
->      $(error ERROR: No python interpreter needed for jevents generation. =
-Install python or build with NO_JEVENTS=3D1.)
+>      $(error ERROR: No python interpreter needed for jevents generation. Install python or build with NO_JEVENTS=1.)
 >    else
-> -    # jevents.py uses f-strings present in Python 3.6 released in Dec. 2=
-016.
-> -    JEVENTS_PYTHON_GOOD :=3D $(shell $(PYTHON) -c 'import sys;print("1" =
-if(sys.version_info.major >=3D 3 and sys.version_info.minor >=3D 6) else "0=
-")' 2> /dev/null)
+> -    # jevents.py uses f-strings present in Python 3.6 released in Dec. 2016.
+> -    JEVENTS_PYTHON_GOOD := $(shell $(PYTHON) -c 'import sys;print("1" if(sys.version_info.major >= 3 and sys.version_info.minor >= 6) else "0")' 2> /dev/null)
 > +    # Minimum Python version, the same one the kernel requires, see
-> +    # Documentation/process/changes.rst: jevents.py needs PEP 585 generi=
-cs,
+> +    # Documentation/process/changes.rst: jevents.py needs PEP 585 generics,
 > +    # list[...] and friends, that are subscriptable from Python 3.9.
-> +    JEVENTS_PYTHON_GOOD :=3D $(shell $(PYTHON) -c 'import sys;print("1" =
-if sys.version_info >=3D (3, 9) else "0")' 2> /dev/null)
+> +    JEVENTS_PYTHON_GOOD := $(shell $(PYTHON) -c 'import sys;print("1" if sys.version_info >= (3, 9) else "0")' 2> /dev/null)
 >      ifneq ($(JEVENTS_PYTHON_GOOD), 1)
-> -      $(error ERROR: Python interpreter needed for jevents generation to=
-o old (older than 3.6). Install a newer python or build with NO_JEVENTS=3D1=
-.)
-> +      $(error ERROR: Python interpreter needed for jevents generation to=
-o old (older than 3.9). Install a newer python or build with NO_JEVENTS=3D1=
-.)
-
-[Severity: Low]
-If a user with an older Python version follows the suggestion to build
-with NO_JEVENTS=3D1, won't the build crash later on?
-
-Because this version check is inside the ifneq ($(NO_JEVENTS),1) block,
-setting NO_JEVENTS=3D1 bypasses it. However, tools/perf/util/setup.py also
-requires Python 3.9 for the PEP 585 list[str] generic in functions like
-clang_has_option():
-
-tools/perf/util/setup.py:clang_has_option() {
-    def clang_has_option(cc: str, cc_args: list[str], ...
-}
-
-When the build reaches setup.py to build the Python bindings (unless
-NO_LIBPYTHON=3D1 is also specified), won't it fail with a cryptic TypeError
-("'type' object is not subscriptable") instead of a clean Makefile error?
-
-Should this Python 3.9 version requirement be enforced globally rather than
-just for jevents generation, or should the suggestion to use NO_JEVENTS=3D1
-be removed?
-
+> -      $(error ERROR: Python interpreter needed for jevents generation too old (older than 3.6). Install a newer python or build with NO_JEVENTS=1.)
+> +      $(error ERROR: Python interpreter needed for jevents generation too old (older than 3.9). Install a newer python or build with NO_JEVENTS=1.)
 >      endif
 >    endif
 >  endif
+> diff --git a/tools/perf/pmu-events/jevents.py b/tools/perf/pmu-events/jevents.py
+> index 074daae5308b110b..296bf68d10810952 100755
+> --- a/tools/perf/pmu-events/jevents.py
+> +++ b/tools/perf/pmu-events/jevents.py
+> @@ -65,15 +65,6 @@ _json_metric_attributes = [
+>  _json_enum_attributes = ['aggr_mode', 'deprecated', 'event_grouping', 'perpkg',
+>                           'default_show_events']
+>  
+> -def removesuffix(s: str, suffix: str) -> str:
+> -  """Remove the suffix from a string
+> -
+> -  The removesuffix function is added to str in Python 3.9. We aim for 3.6
+> -  compatibility and so provide our own function here.
+> -  """
+> -  return s[0:-len(suffix)] if s.endswith(suffix) else s
+> -
+> -
+>  def file_name_to_table_name(prefix: str, parents: Sequence[str],
+>                              dirname: str) -> str:
+>    """Generate a C table name from directory names."""
+> @@ -214,9 +205,8 @@ class JsonEvent:
+>        """Fix formatting issue for the desc string."""
+>        if s is None:
+>          return None
+> -      return removesuffix(removesuffix(removesuffix(s, '.  '),
+> -                                       '. '), '.').replace('\n', '\\n').replace(
+> -                                           '\"', '\\"').replace('\r', '\\r')
+> +      return s.removesuffix('.  ').removesuffix('. ').removesuffix('.').replace(
+> +          '\n', '\\n').replace('\"', '\\"').replace('\r', '\\r')
+>  
+>      def convert_aggr_mode(aggr_mode: Optional[str]) -> Optional[str]:
+>        """Returns the aggr_mode_class enum value associated with the JSON string."""
+> @@ -641,7 +631,7 @@ static const struct pmu_table_entry {_pending_metrics_tblname}[] = {{
+>  def get_topic(topic: str) -> str:
+>    if topic.endswith('metrics.json'):
+>      return 'metrics'
+> -  return removesuffix(topic, '.json').replace('-', ' ')
+> +  return topic.removesuffix('.json').replace('-', ' ')
+>  
+>  def preprocess_one_file(parents: Sequence[str], item: os.DirEntry) -> None:
+>    if item.is_dir():
 
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/arb9OMEQ8HCcw-9O@x2=
-?part=3D1
+
+
+Thanks,
+Mauro
