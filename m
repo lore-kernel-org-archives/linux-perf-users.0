@@ -1,135 +1,118 @@
-Received: from mail-qt1-f176.google.com (mail-qt1-f176.google.com [209.85.160.176])
+Received: from mail-qt1-f172.google.com (mail-qt1-f172.google.com [209.85.160.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5CA04D09FA
-	for <linux-perf-users@vger.kernel.org>; Fri, 25 Sep 2026 15:36:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.160.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38DC64C8C50
+	for <linux-perf-users@vger.kernel.org>; Fri, 25 Sep 2026 15:37:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.160.172
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790350611; cv=pass; b=T/hXvTi8GCPdGyV4Fs6+gNhD2ls6NVOlFjC+uQGzvlVwstMG/nlua9+KerQrKQsH5FD2h3F+pAOSLvN2ep2jVEyaNIHrpxRNqqKPY5WuhPlX9TyWy/6vFjvItj31N7swxjnmfuX7JXqReOu57mKIzXOf7mJGu8cW21BXgdJKknk=
+	t=1790350675; cv=pass; b=ElppNVhM5fZX6lUWIUbvAZe1UbSqC3q7UmX8EJS7Ddz/gjUirTWDIzlwKK4yTi970lx4JJYoXFewzVJrXM9ZRs1TOcUlJMigSz5OzVtg66lFMSr82uOdz5lqIRzPsQDg3+Vlo7QO0tVGue3GfwPyqkYq+NPzb3fKmQZep4slhLs=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790350611; c=relaxed/simple;
-	bh=ETJVPMpJzcUAznXvWNfiozqAROrzK6c0EB+nTNGmH6s=;
+	s=arc-20240116; t=1790350675; c=relaxed/simple;
+	bh=mKPQQujZxMNfUh0m5fG/9Me1zmKiPoB+4IPB+e75ce0=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=aG26nUu+hExP3WTG/JQDM0J9OZZymjfdFuMyaTEROsbY27BF6SP1sEj1/yXp9s88kJZk9/PYN7o1xN93YA5E0XL91XQ4T5JDT1iY33LqqqfMvDJWNZLs1OZuo/gBEgiBP2L3OM7GDmhrXG+mibN82bLBUHFvyVMV9GXkA7OdQ4g=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=edwnsQsv; arc=pass smtp.client-ip=209.85.160.176
+	 To:Cc:Content-Type; b=c1jgNBPmCEBY4HKUAWrf6gw1CW2d/CBaGhF8OzDIzDszFRFrBVPTbGkWgsSSp0AT4uUbNGtUnG1Qgw5m0JEb7EEgdpS82TtrZcR99H/5aqeWE6661Kg3uykxoVR3pY+Q7ij/d4sOTf5+fbys2Zqh+AHfohy6jmtGC7IoTD+2O40=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=vrXkCbzi; arc=pass smtp.client-ip=209.85.160.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="edwnsQsv"
-Received: by mail-qt1-f176.google.com with SMTP id d75a77b69052e-53113d72966so258761cf.1
-        for <linux-perf-users@vger.kernel.org>; Fri, 25 Sep 2026 08:36:49 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1790350609; cv=none;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vrXkCbzi"
+Received: by mail-qt1-f172.google.com with SMTP id d75a77b69052e-532e9ad9a1eso343911cf.0
+        for <linux-perf-users@vger.kernel.org>; Fri, 25 Sep 2026 08:37:53 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1790350672; cv=none;
         d=google.com; s=arc-20260327;
-        b=XXlflrlRsZt99CvGiKOTmsrqOz13zUIec+EDxmNgoV96sh4kAZwvzvKv6JdXX+pnLg
-         hM8jfXUtK2gG0UPhR4yFhqi/QIiP4Ph8v+gQPnwL8Hae+aPAoPJ8cEfrb7FlsUTWFukx
-         j2s9YwILFOkrtmp2h2FEW6IHP5u0wJEtHfemnxLzj4Un1rnPCSNyBaeC9BQ9LUaAMOiZ
-         OL+JfFtPmBnscv7ZlcwpEJ04vVnUlo8c4Sf+k+sinMsg4GcNaChWo3X0inASQHmXlOhV
-         I6wiS9CVNeU9Xzq0cUNXephRY0P9wWlcS9pzpPr/UjsMEHVnuNhoIsSENWYhZ5mW/tYe
-         wUFA==
+        b=GnXIzVBtPlH8Hs8EOeRioG+Ke1CwB/nFwy1WYgce64aAaIhSXgrsEGvd8fE15jwwFv
+         KKrXfq56ERHw38UZ6o1zbNbPH5Lmq6IfveGH8S5oob9aLmluufkE6BNGmn9iHwGWLVez
+         9YFXmuDhn6TSrj7xJ95mrvcgvFf2+omSDIzqeKviKnqXJe/4a2yXWaHEK/WIjwN1qx2i
+         iAyzy1hFMbfELj6ymoT/T4TdhJ12xl+l+Ze0R3ZTAjBjOtdv+j02T/y8SfHca/bgCt29
+         8nj5+hWf7F+u1brgph4UMF9IM/JBZ2LuPu5PqaA7Hj2Uz6FucO2eenQ2GVuCSwyY70mR
+         a+aQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:dkim-signature;
-        bh=Qv6yjwMH9L0+5sXgmaQRRhA21zs38OM1ICUpeT3O0Cs=;
-        fh=5jvUFjSC36Z/Yirw59wD7q4uG2Y6bPcMMVMjCYL/eCg=;
-        b=KhYUIaLg6NRwdpyBllAE/K7VLIiSB3azJlQ+jYga0PnsbHGb1wn6J/A2qUnNPYn/jT
-         L8kg+wT3DtO4Y2gRpJ+8pAoje9Kkw0oJobJQ8BEUikCFXkmjtd1FO+rEJutActgFvE7N
-         rlBxmiowZuCOJ3XcnM00ob7TqWXXjdkKz+OvlFMEul2JuzJiL0szFN0jK1pkC4lLIUB2
-         AVrzdpwr6/SlKDTudVK52kP98hFAj6aFRBo2xoZe8z2vf7Ex6MER8oTkwMaPGpOWPVmL
-         CYdR+5HhrhnBO399Kd7gErs1IQhvHkXvh1KhBm3mrUTe8yWCW6AVljmOL6FDTOYnnBcL
-         HXdw==;
+        bh=aRZHv9paNXwOCV+6sSsc+HnzJsuWsikfddWiWitjUqw=;
+        fh=WEqRKOurxYWQANlHjSxuhO5jnKbYzwZFrfZWIf8bo+Q=;
+        b=nygDJrI8KOIF9eXnXkLPvYuk10kkrxlv0CwteA4s7IdzCVeCTHeNy2bO5PAOI8W+u9
+         sqKpib70zEcBIjpQw+bXRg/Lc6/20/9LaQiCHUP+PZfIz0hBHE3Ao+8OSVHuo4kWtPrO
+         9y37I6ebIZa19vgm4h7G29t5P9yKIsuP7W1dp1KibDyLEVJr5rOSFt0lw+2a+1hYvsLP
+         zmWPhOXNjRto/IWQS/ozg+5NohEN6/rYHTFYbzn3nofyHnd4lhQw4fg2dGnBqpO7dJDz
+         73svCnjbomsuDBJQGCE9sCkVr57X1NQIUXyuMseOtiCLsWqTOUh1QfC3Ar8bbnsV1+zf
+         X7Lw==;
         darn=vger.kernel.org
 ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1790350609; x=1790955409; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1790350672; x=1790955472; darn=vger.kernel.org;
         h=content-transfer-encoding:content-type:cc:to:subject:message-id
          :date:from:in-reply-to:references:mime-version:from:to:cc:subject
          :date:message-id:reply-to:content-type;
-        bh=Qv6yjwMH9L0+5sXgmaQRRhA21zs38OM1ICUpeT3O0Cs=;
-        b=edwnsQsvb31PMQbhQHy0/08GH6nyG+tUM4J3JJkhAqYY3ribcgG60LaEquxoCEBuoB
-         eqUdtLIeUL5clhM8knV1nIelH91PRvjGQxkOamJwEDWgC7U7+gmmtzZC02cKcdN9QN3h
-         ZV8u/dUCt8Od6RJePkfWNwUyHkJOWR7Wb/5VNaD3PPjVUl5ROAfpEk9AWArN7lGWgzIx
-         8GogzhIgNlAESfUgjBgE3d4qchlOkz3D6Zb7q8giI3wm9duGDPEjlRVC2HlinGwgYc/T
-         UlF4zwcbCPjN7Ro154sfeT5kkdD8nO6sho7ExR1MEO/wSTObAYGqsVtsF17PRQ7H5Jgc
-         umVw==
+        bh=aRZHv9paNXwOCV+6sSsc+HnzJsuWsikfddWiWitjUqw=;
+        b=vrXkCbziKUarU9/Jl1BRoGoM1ZwWCfT/QrowiWXle9CXJ7eyKRDLU8Mo7Jnc2SxInJ
+         /b6T53i/SpX2wjIYU99YVS4OM7oVYmx4K9kHag+mhwhheQ8V5v6APuUIPeMbLDpceB0p
+         FVA9XaMhuCdck+taPKELTpbe0P5LLOCSscl+ExhzNKaF5dr1atB8UD8LIiXVL8y1tOJ3
+         chqD99H1+sldXrSkxledA4K6p42HUaNZofQZf4P1vijriOb2snv7eHhHg7GoSM5uYAgA
+         pEzrxFketDWqBd+XjeNhuY/LGfxc/P9z4VZmBALwraoaHCrV157pb272YNjblGKeLhO6
+         LYKw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1790350609; x=1790955409;
+        d=1e100.net; s=20260707; t=1790350672; x=1790955472;
         h=content-transfer-encoding:content-type:cc:to:subject:message-id
          :date:from:in-reply-to:references:mime-version:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=Qv6yjwMH9L0+5sXgmaQRRhA21zs38OM1ICUpeT3O0Cs=;
-        b=rD2GrmqD5Wyyr38W/xb7AuU4oLiyHzQ6fr4Ep9AFCvwlu/G4uddsBtuIkAWsVriKW5
-         aVpuMOoJdxwGPrMw/ePLZ1rcnqpwc/F+budYH60YEbYEhICLX3wWx6PmbZwcuxJ4lkqK
-         F7WEVymxJzAaX4C9DrTpwt4v93XbRktfIfia9eUvt3FzBkp+cWxXEXKPWl7oBJe39LVb
-         YfQ9Q881o/V5g5uJZU7ZcbUaeU81RvB6kQ+msJp1cEh33UDlEwpKG+SMH8UvSDc7XAye
-         vSS8M5w0oCHbUyVvl/TY7iN7bJ++opqIUPdb4WDgECY7yjKCtVNlAHA8vBQ3nhadjh+S
-         n6Hw==
-X-Gm-Message-State: AFuF++m8Ms3XzmiuMvO6+V4Mc8/JZy0PgUH5sEVCDgELNJ5UZje5tBsn
-	Gxadyx3V1788uM+YlRumI/8HGPwsFKdNplH/w4tMRwg/VP/xIX0EIe4zkUw8ADjarJ9n8wLkQyI
-	ktYgvTVoncInFafj6UVll3Y22P+vgkoyTk0lDJr25
-X-Gm-Gg: AYBFou2UIEXP8o6uQSK/n+LB6j2mKF2OJ+U3Sfw2hN4gr0xtDfD5st19wmsgSuTrg/V
-	zGgs8r1mYOGZmlnyYjejE24zh0YO69xUQ1QePiKOdSvfohvRQ24KdaghY/pmekMbvPPcURNwPNh
-	7OXYAP3f3NepOyBVnrzwzk/EevLAjRVNLrKMJRk/wmJ0HYMPlfV3cOPQoUq05lhPfo/YDcXM/Ey
-	P39IhGvkfp/GTh6BCggcJxVJtHpIHnfd5CjPWBKk0/o0/Aa/d5FcS8dDx7WY1wJJojD39p2X7p5
-	8NzvOLBGw+bNS09r3Jeodxa8GuPk0POgNQEZf74lpsQPYAQXKhnCdMZaEPr9PdNXkoRcCf+bNHY
-	1jEEMyICIYY1ZdnDNom2q
-X-Received: by 2002:a05:622a:5987:b0:531:16a:5a3d with SMTP id
- d75a77b69052e-5331a854757mr4724991cf.12.1790350607902; Fri, 25 Sep 2026
- 08:36:47 -0700 (PDT)
+        bh=aRZHv9paNXwOCV+6sSsc+HnzJsuWsikfddWiWitjUqw=;
+        b=QCQP4VkpHuGpOdSdBN9yy9Jpe0JfROpKON0XXj0jqcSwRGDZfbRKkYvIMmwZbtrqKY
+         fTjUFqq33IebK4zgjm+awhsznUTkjeQSWveZPrnMEhYCxDp40hINSip06Rki4AxtTuv8
+         Nsu0aZkSwhpS05uQkywIzcaEPyy3L+if0bNKWLEk0hquxZVq2rtxFtIgRjGzpampiq/I
+         y2me81wFyh8xtVzDhbEwSMyI5CRT3o7jOE7snVCc39jvUNd0McePNRW+TiFnkCtIU0h1
+         BUShqL2Vf6kvR4f0NtZZVt7Ix30pE1AFavOjemGD8T5Pj+WQouNzhd47m14A0Uzi7SvO
+         pw+A==
+X-Forwarded-Encrypted: i=1; AKwUvBxaBQLrXaZR9EVX/ekslDohLJnUYyD7ctshFKtxmtQLFFO2hQuKDKz9E4M24pBJHoZ4MANY80a8JDDjb5nLWS3m@vger.kernel.org
+X-Gm-Message-State: AFuF++lA9MBsIQoNyXIRPPv48JfXKDTojn2fTP3ilsSnBEUyYHEGQlpE
+	Kl8xlnpYs/AumxWPtvIODQdUAjLfCqGjxRNC75a6eaumt7xp6f+fhbZG7csgMM9DrYqlKWbevhT
+	5wm0YC/rF3NrixXyiuwTp2AHEd5iOF7Feqp+UR0Ul
+X-Gm-Gg: AYBFou0jEeQyunD6W+1EY7ixk5HEJ9PRZmPlnWaHkSzAM31E/bAWRtj6ZA3U5K715/Y
+	BgFAe+p3JOmPKrDQE/1tvXhGr3utWhWR0+HSJyEenP8Luq5yZKcdbIovVKSz8CTP7RwpryHJe4C
+	aCIcxQcfzxpsFTWlMdKS+bqlQ6UNZEKoSiwp+SJhiFiGdqgHJDQt3PxpRVdmDctOlvH1qpdp4yZ
+	QILEja/DGyANhJIoGNEEOmG9KWL4E7JIoUQsDp85qyTFx43mm3w38V3ViJ1f73IeSW3iNS4zh64
+	5DRnnbVAY6LPlCPeJyGP4ptTBNp7R6BHG0PoAtABhhufSRajak8SGBIC+/2jwkKG/4O9Iq5imYX
+	CtyTUTkXwM1I=
+X-Received: by 2002:a05:622a:310:b0:532:d72d:3e9c with SMTP id
+ d75a77b69052e-5331a7c270cmr3451761cf.6.1790350670909; Fri, 25 Sep 2026
+ 08:37:50 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <araUAt-S6YM_bbAf@x2>
-In-Reply-To: <araUAt-S6YM_bbAf@x2>
+References: <20260925150657.1826942-1-acme@kernel.org> <20260925150657.1826942-5-acme@kernel.org>
+In-Reply-To: <20260925150657.1826942-5-acme@kernel.org>
 From: Ian Rogers <irogers@google.com>
-Date: Fri, 25 Sep 2026 08:36:36 -0700
-X-Gm-Features: AclHuK8BkqzoQMoV_CDc2mGyENuJX02Azthfg8HnP5mSalUGaUhKyBcyiYr4Nvo
-Message-ID: <CAP-5=fUjJqOARxMHwLY2uKDFzroPmfjCDYf-=9C+hshh8bf8Tw@mail.gmail.com>
-Subject: Re: [PATCH 1/1] perf test workload: Use unsigned int in
- code_with_type instead of uint
+Date: Fri, 25 Sep 2026 08:37:39 -0700
+X-Gm-Features: AclHuK_rcMejODDQ1Icc7aDakCpLrkuQwxU-ufilDnYr9qtqZfMuP9kDEQauYJg
+Message-ID: <CAP-5=fVAekxsEGy91FHXsHmvpCyx48q-8UetLJ2B7cU8sYRaUg@mail.gmail.com>
+Subject: Re: [PATCH 4/6] perf annotate-data: Bound the member nesting recursion
 To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: linux-perf-users@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>, 
-	James Clark <james.clark@linaro.org>, Jiri Olsa <jolsa@kernel.org>, 
-	Namhyung Kim <namhyung@kernel.org>, Dmitrii Dolgov <9erthalion6@gmail.com>
+Cc: Namhyung Kim <namhyung@kernel.org>, Ingo Molnar <mingo@kernel.org>, 
+	Thomas Gleixner <tglx@linutronix.de>, James Clark <james.clark@linaro.org>, 
+	Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Sep 25, 2026 at 8:32=E2=80=AFAM Arnaldo Carvalho de Melo
+On Fri, Sep 25, 2026 at 8:07=E2=80=AFAM Arnaldo Carvalho de Melo
 <acme@kernel.org> wrote:
 >
-> The declaration of the Rust helper test_rs() uses "uint", a BSD-ism
-> that lives in <sys/types.h>, so on glibc it is only visible by
-> accident: glibc's <stdlib.h> includes <sys/types.h>, where uint is
-> exposed under __USE_MISC, which is on by default.
+> From: Arnaldo Carvalho de Melo <acme@redhat.com>
 >
-> musl does none of that: its <stdlib.h> doesn't include <sys/types.h>
-> and it typedefs uint there only when _GNU_SOURCE/_BSD_SOURCE is
-> defined, while nothing else in this translation unit includes
-> <sys/types.h>. Building it on Alpine therefore fails with:
+> Members are added recursively, and a broken DIE can make a member's
+> type point back at one of its own ancestors, recursing until the stack
+> is gone; nothing usable comes out of nesting members 32 deep anyway, so
+> stop there, marking the member as truncated and giving up on member
+> types that don't resolve.
 >
->   tests/workloads/code_with_type.c:9:21: error: unknown type name 'uint';=
- did you mean 'int'?
->   tests/workloads/code_with_type.c:39:17: error: implicit declaration of =
-function 'test_rs' [-Wimplicit-function-declaration]
+> The check is where the children of an aggregate would be expanded, so
+> only struct/union members are marked as truncated.
 >
-> The second error is a consequence of the first one: with the
-> declaration at line 9 rejected, the call at line 39 has no prototype,
-> which is an error since gcc 14.
->
-> The breakage is only visible when rustc is present, because
-> tests/workloads/Build adds code_with_type.o when CONFIG_RUST_SUPPORT
-> is detected, and tools/build/feature only checks for "rustc
-> --version". That is why alpine:3.23 and alpine:3.24 fail while
-> alpine:3.22 and alpine:edge, lacking rustc, build fine and hide it.
->
-> Use unsigned int, which needs no header at all.
->
-> Fixes: 2e05bb52a12d3 ("perf test workload: Add code_with_type test worklo=
-ad")
-> Cc: Dmitrii Dolgov <9erthalion6@gmail.com>
 > Assisted-by: LLM
 > Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 
@@ -139,23 +122,93 @@ Thanks,
 Ian
 
 > ---
->  tools/perf/tests/workloads/code_with_type.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  tools/perf/util/annotate-data.c | 20 ++++++++++++++++++--
+>  tools/perf/util/annotate-data.h |  3 +++
+>  2 files changed, 21 insertions(+), 2 deletions(-)
 >
-> diff --git a/tools/perf/tests/workloads/code_with_type.c b/tools/perf/tes=
-ts/workloads/code_with_type.c
-> index 65d7be7dac24d411..d2d437b86e0c6dbd 100644
-> --- a/tools/perf/tests/workloads/code_with_type.c
-> +++ b/tools/perf/tests/workloads/code_with_type.c
-> @@ -6,7 +6,7 @@
->  #include <linux/compiler.h>
->  #include "../tests.h"
+> diff --git a/tools/perf/util/annotate-data.c b/tools/perf/util/annotate-d=
+ata.c
+> index bc9698abc6a9e055..19a6ecd67f28719d 100644
+> --- a/tools/perf/util/annotate-data.c
+> +++ b/tools/perf/util/annotate-data.c
+> @@ -222,6 +222,12 @@ static bool data_type_less(struct rb_node *node_a, c=
+onst struct rb_node *node_b)
+>         return strcmp(a->self.type_name, b->self.type_name) < 0;
+>  }
 >
-> -extern void test_rs(uint count);
-> +extern void test_rs(unsigned int count);
+> +/*
+> + * A broken type can point back at one of its own ancestors: bound the
+> + * nesting so it doesn't recurse until the stack is gone.
+> + */
+> +#define MAX_MEMBER_DEPTH 32
+> +
+>  /* Recursively add new members for struct/union */
+>  static int __add_member_cb(Dwarf_Die *die, void *arg)
+>  {
+> @@ -236,6 +242,9 @@ static int __add_member_cb(Dwarf_Die *die, void *arg)
+>         if (dwarf_tag(die) !=3D DW_TAG_member)
+>                 return DIE_FIND_CB_SIBLING;
 >
->  static volatile sig_atomic_t done;
+> +       if (die_get_real_type(die, &die_mem) =3D=3D NULL)
+> +               return DIE_FIND_CB_SIBLING;
+> +
+>         member =3D zalloc(sizeof(*member));
+>         if (member =3D=3D NULL)
+>                 return DIE_FIND_CB_END;
+> @@ -248,8 +257,6 @@ static int __add_member_cb(Dwarf_Die *die, void *arg)
+>         if (die_get_typename(die, &sb) < 0)
+>                 strbuf_add(&sb, "(unknown type)", 14);
 >
+> -       die_get_real_type(die, &die_mem);
+> -
+>         if (dwarf_aggregate_size(&die_mem, &size) < 0 || size =3D=3D 0) {
+>                 if (dwarf_tag(&die_mem) =3D=3D DW_TAG_array_type) { /* fl=
+ex-array? */
+>                         die_get_real_type(&die_mem, &die_mem);
+> @@ -299,6 +306,7 @@ static int __add_member_cb(Dwarf_Die *die, void *arg)
+>         }
+>         member->size =3D size;
+>         member->offset =3D loc + parent->offset;
+> +       member->depth =3D parent->depth + 1;
+>         INIT_LIST_HEAD(&member->children);
+>
+>         list_for_each_entry_reverse(prev, &parent->children, node) {
+> @@ -313,6 +321,14 @@ static int __add_member_cb(Dwarf_Die *die, void *arg=
+)
+>                 member->is_union =3D true;
+>                 /* fall through */
+>         case DW_TAG_structure_type:
+> +               /* Only aggregates have children to expand, so only they =
+get truncated. */
+> +               if (member->depth >=3D MAX_MEMBER_DEPTH) {
+> +                       /* Consumed by the JSON exporter added in a later=
+ series. */
+> +                       member->truncated =3D true;
+> +                       pr_debug_dtp("member nesting limit reached at %s\=
+n",
+> +                                    member->type_name ?: "(unknown type)=
+");
+> +                       break;
+> +               }
+>                 die_find_child(&die_mem, __add_member_cb, member, &die_me=
+m);
+>                 break;
+>         default:
+> diff --git a/tools/perf/util/annotate-data.h b/tools/perf/util/annotate-d=
+ata.h
+> index 14b8113521a927cf..ca0abfb2a036d229 100644
+> --- a/tools/perf/util/annotate-data.h
+> +++ b/tools/perf/util/annotate-data.h
+> @@ -61,6 +61,9 @@ struct annotated_member {
+>         int size;
+>         bool is_union;
+>         bool is_flex_array;
+> +       unsigned int depth;
+> +       /* Children not expanded because the nesting limit was reached */
+> +       bool truncated;
+>  };
+>
+>  /**
 > --
-> 2.55.0
+> 2.53.0
 >
