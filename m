@@ -1,81 +1,81 @@
-Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
+Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09DF8438473
-	for <linux-perf-users@vger.kernel.org>; Fri, 25 Sep 2026 07:35:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.208.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36B9C443C11
+	for <linux-perf-users@vger.kernel.org>; Fri, 25 Sep 2026 07:37:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.208.53
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790321752; cv=pass; b=up8Nuh/ffkY/gSOy3NBWGcYOGyj8FEbzf6urTqVtUf1FEAUIulnzZRRFXDZcMl9AGCWqSFx50mGubNxoxsHXOpRsIJAZf6drSxHtOn/pgRgoQJf+tPlhI0GiC1SVeWBXV0jO19wG+xKTzmG7jGYZ7Ri1tpufZk4jm9ft9DKUkRY=
+	t=1790321866; cv=pass; b=HUXoJxh9nri2/cxVdE35ipZ6OMPQezaP9dM46z4ejHSdJkmRWEZ5O9UrxEY813NBo4go5A/XjVN2GDa5v/esDrwtMZ8ZH2BlWkTUz8qTCqJbva3Nht1mX7fgmXWHOYyKnW7Qzwc2q90BeUKuGxKC6ervnuB8TIjClNCnRFYrlAg=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790321752; c=relaxed/simple;
-	bh=QleRDPze6Fay9Y/d+9oXHJ/g/hcfyRz6rdp7ap/qQ+Y=;
+	s=arc-20240116; t=1790321866; c=relaxed/simple;
+	bh=4HRCApcqOCblV/nRa/gIhH9hhLpyjFWAyS7KPdKAl2s=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=pNnlIaxXJh9V140s5GwlT/cyXS42dXd99SvtgPghkx5RvqfzLh6AkGW4z0MuaN+Hq8FGjK+NtiTqm8W4JNNwzFiqhTeB6yMzqo794fZjGPejttGR2bMIlvBvXuf72ufuPkr8d/YYYImGHRbRhaIGbfNfXGJUMHvqX6UqZmS4vqk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=GBGvWS35; arc=pass smtp.client-ip=209.85.208.41
+	 To:Cc:Content-Type; b=pCi3A4rtLUNWFhASk0mqCovRyLOouVzxlu6Qfkl7xA2vs5bBYylQfMjb8klKFpR8EFe7mumKw5vw53CiV3FoG0wxksQ5GZRpxAuJy6PsXBKD6j22pETaeQ14pVjmM2fbjpSdaripnyrL7czdo+TwM9AsKZiBXVeMOVoz2h1NV3A=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=mQ9vFxFo; arc=pass smtp.client-ip=209.85.208.53
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="GBGvWS35"
-Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-6a5f9b036f9so5458a12.1
-        for <linux-perf-users@vger.kernel.org>; Fri, 25 Sep 2026 00:35:48 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1790321747; cv=none;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="mQ9vFxFo"
+Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-6a5f9b036f9so5560a12.1
+        for <linux-perf-users@vger.kernel.org>; Fri, 25 Sep 2026 00:37:44 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1790321862; cv=none;
         d=google.com; s=arc-20260327;
-        b=W6UN+MyQNmSZegYfDjoGw2/d1zR/xrrDOqAcvTLNnHPlZyMVZSKMwMcucYmqsOy4Qt
-         tFh6ubKxECsNVkaTUkHho6uzgTOCxUw3LT6yACWe6QCirff/gHUQrs61KSd7UGvSoyxe
-         bEn06Zqn43L/ulrwR2VozhJattJ4ufRACu4VX4lTurfiLf+72z3yPXg0dbhdkoOBoZYI
-         ma4BUOPs4LRHkc8ONkygLzQqF2bjjl+c6h0N1Fi5zi/jxP+VywYn0wELAHQlchCej96X
-         sBX8CEHwUlQ5Ik7P5+CY4zIDnSunbD8ukVQjJvICW62O/5xbN0uIPLYoI4mFPAkujWmm
-         9rEw==
+        b=qCaFRAeVy7MhYMxgy3UTsgJE5dlKg7TWNdy/NE4z9kdRZRl41/ApVmp+F1sdkI+EVr
+         1Wxd6bhNU3DJywlL9HCsBtfygD+M/ndNJp2q2Qe3IZZX88+l33LWCO5gMqE+QCy2fvuL
+         KnUjHaASrZzddQmFQYaxyFjCpZqlsqmQO0kM66aPHabOfC6aoOBK3gQpvLIj70GttKkr
+         g6kXMWYjmEST6j2l5BoEWV/j4GbJ1SCZUcCAXLclKLgY5NURUqkle5l9620rl9XJlvIb
+         vqbOfkKXwIVYoTy1okXc6iAWsvA9md/c7iCdxCpmqte0Suv6ObsLNBP9rQsVa29E9pZp
+         mCqg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:dkim-signature;
-        bh=TiarA2FI5/GYv9nr9lV3Ck7oSnVRWS2NuO02/gM+R5Q=;
-        fh=a9B1/W44yRD8f0BriBlJ63Ux79/0g7CpOdkBeFQuo0k=;
-        b=rt/zIjiSTBxhBxlLPAMDTc9tpX0VXDJFLXAOI/3Syn8lReEUsTUO559/eILrl28a5p
-         awOvjL/ITjDPlOJJLMR7oqUFNNCy4+Zt410wsRVxhxF/J+rUBMcrbEdw8KYyTAkh5OVf
-         B9PnJD1AAYmMFvIKeSFRFGA5TCXdLu8rE7N0oV8PEMuaZEp/lD+oa0dlgwCgTAaVZJXP
-         Yil0wraeT2x/NtZh8dOTbdUWKjEO488ZaJ56G9Ky76PbnTLZw42T9EiLQ2YTMpFn0qdV
-         WmmCslSePM7kjZpK704F95vT9D2t2508Xx9CO3Whr7VQiHlltUlwZcJbObd1W62IXAqo
-         OZTw==;
+        bh=1Oc+jzCqS0Wyq/bTJh2/I4jluChyvqK4NXUNsIigcps=;
+        fh=XeZS0DY8WukkdJOsepE1N81o4I4T+KbB875p8BAFeiU=;
+        b=hAD1W6J5veKyUxM1bMv5QgA0Pf9MCxky+e0V6w1SJlUjrctLWBR73s99j3g5Uq+LxX
+         yWPZ4HJiv8421IOeW4q0lyOcg4jrJNk1wbEMye0I5CtzdTpcFyl68XmfSOxsicd9poDN
+         uXhNQsiJ/rvTWA1rLl+FR4bMLRYq7bpJcp44TmsO1BcZpzd7ZrC2WVVj69azLZZJaNto
+         yNce3nsnJiVXS4rvXYJzNiXin8j/NxmRiFb0lwcoyx8YMQMVa0Kzxo1uch1d7HlTYuI8
+         NveaqkdNBZKesAJZwMtqW6GJRnWju6JxVXQW8Ga+PtJduoIWMpOju77KxA9zmG11A6HX
+         kc3A==;
         darn=vger.kernel.org
 ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1790321747; x=1790926547; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1790321862; x=1790926662; darn=vger.kernel.org;
         h=content-transfer-encoding:content-type:cc:to:subject:message-id
          :date:from:in-reply-to:references:mime-version:from:to:cc:subject
          :date:message-id:reply-to:content-type;
-        bh=TiarA2FI5/GYv9nr9lV3Ck7oSnVRWS2NuO02/gM+R5Q=;
-        b=GBGvWS35CRs52H+n0HibcXUxhDsFXef4XaGWh2jw679xAwuCg1uimStbUKyOmHzo62
-         aSMchmwbdzg7paOFIuf/8kQtxcF/LgrwJ4PWnwSTcUhTacl4XbbHR9zZfdic0iMf+lpj
-         xanAi9EmnoAPJUYHYLgxzOZH9198NTbtD+rg556M+8CT6VKcwMlDw2jxIv5UX9YzP9WH
-         OJARG7aOAYL2SLSrUoundJe8jBeryf8iNeYj6/bFKGTzhaYARaL24JE2HpwdUQCtcaMS
-         Afp21cIeWui2Su01twICQfXS+YmDFvrnzmWqxdXqsREfAh07Rj07E3xCH3No5p6o7nNy
-         +gfg==
+        bh=1Oc+jzCqS0Wyq/bTJh2/I4jluChyvqK4NXUNsIigcps=;
+        b=mQ9vFxFoabYALJuAnnXHoi1jXZaav9RmInZt43IwRm/fzvwjOopZ3o7VIc+dy42EPi
+         9HROBxO8UV5pJ3vyakmz2OrfmdMJ5l3k2QVu7h7aN2S0ymf58OD7LXQehwoCCooGWSlJ
+         MvGdJLno+5jm9IW1BGyaIVzD6rp/VRh1mI6TzCU97v5KFsxHRp89wyD14t2ZDP1tEBeD
+         A91+ZQG6N6rJ0BcW3pG13YSmw/G2ukmHBfEkN3uE08LggWf2y9iU8nW5r7knfUMWHZRm
+         YPH0c7LQUfotrpUgKUi9Amtde8tnp230k0vXLvU1SeSceyFG1gck3ElBqcrZJ09QAjWJ
+         kRGQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1790321747; x=1790926547;
+        d=1e100.net; s=20260707; t=1790321862; x=1790926662;
         h=content-transfer-encoding:content-type:cc:to:subject:message-id
          :date:from:in-reply-to:references:mime-version:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=TiarA2FI5/GYv9nr9lV3Ck7oSnVRWS2NuO02/gM+R5Q=;
-        b=BqxBVhNFTIX5FH4K28P/JTIjJRtytfh3WpdUSo0FTYDXqdbiR0y6Vp85L50BRnkd4R
-         xXywt8SazfF9LZtdtfdNAwL4Gc92O/xPR+CeCvlzDaDcGiCFZVpDomYtzPMf9ziYciys
-         MaaSOkcAcsEjnvnzESla2yHImtSFJbeX2YIQ5drFNZvo6qVvkh4gKaDadCB1VEpO3mIg
-         AvIYvM5a2X++Y6gITyyHxi1CAuxdoJ/Tc1LAykQYJtSDmfV4ETlQRXUB9N+od73BHJ2H
-         3y0k+KpTELGsxU8hxKF/CpeIEjN7ZpcCCE8ma/zsxStv4IAOijVnCKQlv7xjgjdFJkLp
-         DmIw==
-X-Forwarded-Encrypted: i=1; AKwUvBydmFq47v9VWkVYRNwPmxXhkuTZcYkt9QzanpJ4wzwUQKSA4TCyLQ1ewvUNu2Xg1KdKqakdnMC+a2uN20X5cEPL@vger.kernel.org
-X-Gm-Message-State: AFuF++n9+ZkGdGk4xDY+Qq1Bv03LbpcMkL1QKxNNRDONJpYoEq9c0KMd
-	xruP6Er07KYIfiI5d5WpsDRlWmp/jKUiEMeOXzIvPYedTDCC8BxG1/B9rswS/YhV7RInGTJp1T0
-	EamGNidL/0TGLKRPhGIe5VHm6fitSqohMFSmV9p/5
-X-Gm-Gg: AYBFou2gf8MVZCuH/71STENjdBG1fv6eHVJR4F3x9cMFVNJqHxdfkU+KoCin7jTs7qh
-	BT1UOoFurBGvsW59DjIjTo85WsP5AbbyZruopEEc5VV1wa6iAXTxCYqqYFsCqksvUsgUEXtYxHZ
-	c40V/4rkeV2ROywK4IaAlbU6PEhFh/4EWOTGdRd2fPUoKQH/1GbiGSENjJQ28yMZ273weejgGWF
-	nT30n3hy8mo1X22ZPzSdEVlT3Hm6nys8rY2ywZC/77W3HhawIdizUKx9WLAuQ66fYAkQYlQMmNT
-	jPNnYUPLEEBm23iNqgJ8R9x4icjimcgFhUhy0mVIj/tnUYPaxgR88evvKkiYnukB
-X-Received: by 2002:aa7:c64c:0:b0:6aa:e332:b762 with SMTP id
- 4fb4d7f45d1cf-6aae49c58f0mr23500a12.8.1790321746110; Fri, 25 Sep 2026
- 00:35:46 -0700 (PDT)
+        bh=1Oc+jzCqS0Wyq/bTJh2/I4jluChyvqK4NXUNsIigcps=;
+        b=mLbfdfzcO6W7S1IIh8MSZhtHC/3cJMDy1wYnghGnzPjbacgh+FjwcsHSa/K71B4WJe
+         zzRUEXVoiEu/NsmTE+bMp6tQS706/3Ia+m/jWbGOw9NXjA1neyvJSCOG1xNl7815L5t+
+         IMHcYall4+ipbVXP/aW0EOPl5r+bEIwvODLXRsaOIdazCBaYGk5UpKyHm8kahCSB8lWN
+         svo3xul6o1OuJYrX/GRjENvSfrXY7AYl39VG9CRfWizqeiO84OpTO/AODi/5Kf4rf8+l
+         B34QOc7E1GLEZ3Sqhoabl9XcWSJpzOl5JxJLDTVOaR72tiwhHsscdHtanhxVDqLJVC9N
+         jaUQ==
+X-Forwarded-Encrypted: i=1; AKwUvBwfgV04YbfiUxvivFzeJD49gg4lF0otO5nPfz5qMRGcHhluQQvQfIsMQLarb/3NYsP8+Tw/XwJzLsrUA80MjdFk@vger.kernel.org
+X-Gm-Message-State: AFuF++lqgkRu4BoNZ+a9BK0TvaUmC4Jarxb/0pGZgK7XjCqpmMXILsvD
+	aswy6rZ8h/bf2QvmnVQmNZGKBWR+t5p3BJIghlsxloEwnfRkCIO6BZ5dnF6dXe2cg2z9keb5LHa
+	Spx6CpqURiORdAlHIxI1tEK0k+hDty4LjcpFZwWg9
+X-Gm-Gg: AYBFou3WMXC/eK87CimQK9wv6c4XJCgeNidxwWNXa5QyI4K1EjTlmAK21GnX1YEebDx
+	tAwKkdrdluZrL1t9y42z1MPox3IEs5vX6GlOpTClt4p2/ZHXblazX6ai/p8Kk9UamLVYfrPMBmk
+	or3X8kOLiEgLmPj9cB+WR6ZfgohGGTRjvZQKVxubvn3rpjA+ylOC6dJbWvcEcMVqzainjJkx3TO
+	7LV7NDp5HaZuDrQE2BddOR684Re54Nbna5+onJsfEgSX11JsUhRwEzn7ssGMBM00jY/mnpdG0l4
+	l/tLRqh35r/7xJIhIyeGHkoEDNrxPmM1UKVZjKBD0+RiCd9BKKVNgg==
+X-Received: by 2002:a05:6402:2714:b0:6a6:f2a5:1b4f with SMTP id
+ 4fb4d7f45d1cf-6aae4729638mr36915a12.4.1790321859803; Fri, 25 Sep 2026
+ 00:37:39 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -83,14 +83,13 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 References: <20260917-b4-mmap-prepare-vma-flag-sanify-v3-0-4583d8a23bca@kernel.org>
- <20260917-b4-mmap-prepare-vma-flag-sanify-v3-6-4583d8a23bca@kernel.org> <DLNSNQP7L4FM.1JZQ0GS9300H9@nvidia.com>
-In-Reply-To: <DLNSNQP7L4FM.1JZQ0GS9300H9@nvidia.com>
+ <20260917-b4-mmap-prepare-vma-flag-sanify-v3-7-4583d8a23bca@kernel.org> <DLNSOBMBHIVC.22QI9YBL1U72E@nvidia.com>
+In-Reply-To: <DLNSOBMBHIVC.22QI9YBL1U72E@nvidia.com>
 From: Suren Baghdasaryan <surenb@google.com>
-Date: Fri, 25 Sep 2026 00:35:33 -0700
-X-Gm-Features: AclHuK_NuiQlFRW78Nf23QbG4E3oej6nx-ZjiAb0IRRSHloLT2xGmv-6NXWsN8E
-Message-ID: <CAJuCfpHpo58c6eOPY_CvP+ts2zwXQEDNX2bohXd0CBANYWrBWQ@mail.gmail.com>
-Subject: Re: [PATCH v3 06/40] mm: make map_kernel_pages_[prepare,complete]
- internal and unexported
+Date: Fri, 25 Sep 2026 00:37:26 -0700
+X-Gm-Features: AclHuK_RUT9CXNFLpx8ZY_roLEZNzp5S3oNdpNL4cW25fJBFg9wRGnSWohuMdYA
+Message-ID: <CAJuCfpH6AF-hOo4jU6OeNVpd+fgpqLpmcfAGs11J=nPCgAqG_w@mail.gmail.com>
+Subject: Re: [PATCH v3 07/40] mm/vma: tidy up map kernel pages enum values
 To: Zi Yan <ziy@nvidia.com>
 Cc: "Lorenzo Stoakes (ARM)" <ljs@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, 
 	"Liam R. Howlett" <liam@infradead.org>, Vlastimil Babka <vbabka@kernel.org>, Jann Horn <jannh@google.com>, 
@@ -156,29 +155,30 @@ Cc: "Lorenzo Stoakes (ARM)" <ljs@kernel.org>, Andrew Morton <akpm@linux-foundati
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Sep 24, 2026 at 12:30=E2=80=AFPM Zi Yan <ziy@nvidia.com> wrote:
+On Thu, Sep 24, 2026 at 12:31=E2=80=AFPM Zi Yan <ziy@nvidia.com> wrote:
 >
 > On Thu Sep 17, 2026 at 12:22 PM EDT, Lorenzo Stoakes (ARM) wrote:
-> > There's no reason to export the symbols for these functions which are o=
-nly
-> > called from internal mm logic, additionally there's no reason for them =
-to
-> > be declared in mm.h.
+> > MMAP_MAP_KERNEL_PAGES is a mouthful, discard the MAP_ as that's implied=
+ by
+> > MMAP.
 > >
-> > This patch therefore removes the exports and moves the declarations to
-> > mm/internal.h.
+> > Also while we're here delete useless comments for mmap actions whose na=
+mes
+> > clearly indicate what they are for.
+> >
+> > Also update the userland VMA tests to reflect this change.
 > >
 > > No functional change intended.
 > >
 > > Signed-off-by: Lorenzo Stoakes (ARM) <ljs@kernel.org>
 > > ---
-> >  include/linux/mm.h | 3 ---
-> >  mm/internal.h      | 3 +++
-> >  mm/memory.c        | 2 --
-> >  3 files changed, 3 insertions(+), 5 deletions(-)
+> >  include/linux/mm.h              | 2 +-
+> >  include/linux/mm_types.h        | 8 ++++----
+> >  mm/util.c                       | 8 ++++----
+> >  tools/testing/vma/include/dup.h | 8 ++++----
+> >  4 files changed, 13 insertions(+), 13 deletions(-)
 > >
->
-> Makse sense.
+> LGTM.
 >
 > Reviewed-by: Zi Yan <ziy@nvidia.com>
 
