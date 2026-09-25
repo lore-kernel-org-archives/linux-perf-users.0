@@ -1,44 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D15404D2EDC;
-	Fri, 25 Sep 2026 15:39:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8951D4D5980
+	for <linux-perf-users@vger.kernel.org>; Fri, 25 Sep 2026 15:41:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790350791; cv=none; b=Yb6C4rqm2/5KpsRIfPFVsH7uJUjUz0ZnXOgd6BBGcscNXwblh+zi9mCsFVbTc0TcqeZFzA1+3A7s40f5z+ZYOfTFAf/v39LYy3kg9SO5x7SDFhx50ipOyVIeo/70luZyq6voyEbmIJibIxnThsEfZzfHF8PqKP217tBPYVlgFys=
+	t=1790350889; cv=none; b=nHHxBTxAqA57A20gK55h9+nkECW037WsCXg6QlxYdDW5ZGRm6EgPv1+HSbuWIadPJNIt4tyyrcLxfjVelSzAUA8nzqWbPGy43xJYhtVD0Hr9ig3VvX5Bseg/OJRidMfR+XazHbtggiWOG21iDWcqZ0xTFfXjcw8UmCPXgKCo/vM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790350791; c=relaxed/simple;
-	bh=J5HIB+A7xw9N4g9RnI5JPKl0t6d0a1+ff6Q72XBfYro=;
+	s=arc-20240116; t=1790350889; c=relaxed/simple;
+	bh=f9V7nvRuDDXA+9B+o+2ItSTKcrIbEbqDtEAXahAyMpo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZJkyz2we+xf5KIXTstQPSTxfEIWGQV7FMRB7tWsriczGlx+v6Nyg3CKCqaqP2bMcR5jK3zleLw846MoPCdnsX0sUAwbBF3TnJtCsR9Y8K11YbRdmTbaKgX+wR8u7FzfAa93jRfN88E+zWlTL5qJR5Ll5cC3dFLP6i3CIrIlVUSo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GgNR9KSa; arc=none smtp.client-ip=100.103.45.18
+	 Content-Type:Content-Disposition:In-Reply-To; b=ily9T1+ILzhTd1ELryPQh8o8iWUSx6DGmU7M2njtC561n6aT4LehfymaxP0h7oL/I8TaBcarkaoP1WlblXC3TPa4rAwb0mgQPW0G5hPtJIKmTBzPywpxaIDOL13ZkiPwoXwvEqJP2GczSVmLJ42aN/NrhNiQnkaZIZIUX4//MzQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EFqeBTdd; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GgNR9KSa"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B45FA1F000FF;
-	Fri, 25 Sep 2026 15:39:48 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EFqeBTdd"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3E9CA1F000FF;
+	Fri, 25 Sep 2026 15:41:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1790350789;
-	bh=dgUtL3Esmm4f0G21+jYcyLyaM+xDeO7XBgis/c7TfHI=;
+	s=k20260515; t=1790350884;
+	bh=VXeqvXIuJ4yai0BSO6NRfIL/HZGbDnuDGZ0q1cfO7Ys=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=GgNR9KSa1BYCVSxFNfheZCkIEVzPcbzlrUieH/tGfqpjnfgDlTSqH1aNdT+/J1+1D
-	 r2RRgRfBdlQqZp1hiLrYVkTfrtdJWlbyNYct6Jy/snVvsrN9lL3zr8pLG4wYEmKi+C
-	 Ur2XhctKzRYPcEFU+NEc6LcYtueZELTZ787/pRrEheloZgswZ7AqRChqgb1TMUIHsy
-	 v6JiXT8HKXLQUsNgkXpclnevdo1FUxkVUPzX4MTdf4JyYFZT0Dzwp3xEQghplpu2ql
-	 sA3Y4MvYs6QylPT2S+0544jj8MXYklr3JzBkISSLkZDOJm9R07NPmE/ppTqopNKrTo
-	 3dw35BQ8x11+g==
-Date: Fri, 25 Sep 2026 17:39:46 +0200
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
+	b=EFqeBTdd810On/zYjJsHdC1GuZAx91oCcaOQWyMzRh6rT7BsHktZ2r48fJGVeieR+
+	 74kHo/McwG8BS/wqXqSy7Wb2hUv7t4AgC5E6Cx5zROYtuPoRduVGpLl/zvwMBOXk5e
+	 H3JrknhoeHKQCl7huXsn2uH3jCjGAnJCa6jGC/QGeE5EPSTu/424W3SlAOTQXFEk2l
+	 YLwJDueAdgCUAG+jfYFXMt9tJe4l4pJrBjeCUkTHg6UWqRh/EqlqHNqGJYQohaAIdY
+	 s2kLCT0rDPdf/RSh5NCOdXuiI+4vnLYmgUbF9JrFwvylqs58rY5aG8rz/ujk10ZFux
+	 FadEXZixiv1Sg==
+Date: Fri, 25 Sep 2026 08:41:22 -0700
+From: Namhyung Kim <namhyung@kernel.org>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: linux-perf-users@vger.kernel.org,
 	Adrian Hunter <adrian.hunter@intel.com>,
-	James Clark <james.clark@linaro.org>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1] perf test: stat metrics cgroup strip possible slash
- from cgroup name
-Message-ID: <araVwgCOx4cwNbLb@x2>
-References: <20260917061312.820074-1-irogers@google.com>
- <CAP-5=fW36Momg+N_P4vU08Pd_t+8PGK_-KfEn9HZjLPM4UO8nA@mail.gmail.com>
+	Ian Rogers <irogers@google.com>,
+	James Clark <james.clark@linaro.org>, Jiri Olsa <jolsa@kernel.org>,
+	Dmitrii Dolgov <9erthalion6@gmail.com>
+Subject: Re: [PATCH 1/1] perf test workload: Use unsigned int in
+ code_with_type instead of uint
+Message-ID: <araWImOoVxsvDGrz@z2>
+References: <araUAt-S6YM_bbAf@x2>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -47,21 +46,61 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fW36Momg+N_P4vU08Pd_t+8PGK_-KfEn9HZjLPM4UO8nA@mail.gmail.com>
+In-Reply-To: <araUAt-S6YM_bbAf@x2>
 
-On Fri, Sep 25, 2026 at 08:33:08AM -0700, Ian Rogers wrote:
-> On Wed, Sep 16, 2026 at 11:13 PM Ian Rogers <irogers@google.com> wrote:
-> >
-> > The grep to match cgroup name in metric output assumes no leading / on
-> > the cgroup name, however, cgroups in /proc/self/cgroup may have a
-> > leading /. Strip the / if it exists to avoid failures to match the
-> > cgroup name in the perf stat output.
-> >
-> > Signed-off-by: Ian Rogers <irogers@google.com>
+On Fri, Sep 25, 2026 at 05:32:18PM +0200, Arnaldo Carvalho de Melo wrote:
+> The declaration of the Rust helper test_rs() uses "uint", a BSD-ism
+> that lives in <sys/types.h>, so on glibc it is only visible by
+> accident: glibc's <stdlib.h> includes <sys/types.h>, where uint is
+> exposed under __USE_MISC, which is on by default.
 > 
-> Ping.
+> musl does none of that: its <stdlib.h> doesn't include <sys/types.h>
+> and it typedefs uint there only when _GNU_SOURCE/_BSD_SOURCE is
+> defined, while nothing else in this translation unit includes
+> <sys/types.h>. Building it on Alpine therefore fails with:
+> 
+>   tests/workloads/code_with_type.c:9:21: error: unknown type name 'uint'; did you mean 'int'?
+>   tests/workloads/code_with_type.c:39:17: error: implicit declaration of function 'test_rs' [-Wimplicit-function-declaration]
+> 
+> The second error is a consequence of the first one: with the
+> declaration at line 9 rejected, the call at line 39 has no prototype,
+> which is an error since gcc 14.
+> 
+> The breakage is only visible when rustc is present, because
+> tests/workloads/Build adds code_with_type.o when CONFIG_RUST_SUPPORT
+> is detected, and tools/build/feature only checks for "rustc
+> --version". That is why alpine:3.23 and alpine:3.24 fail while
+> alpine:3.22 and alpine:edge, lacking rustc, build fine and hide it.
+> 
+> Use unsigned int, which needs no header at all.
+> 
+> Fixes: 2e05bb52a12d3 ("perf test workload: Add code_with_type test workload")
+> Cc: Dmitrii Dolgov <9erthalion6@gmail.com>
+> Assisted-by: LLM
+> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-Thanks, applied to perf-tools-next, for v7.4.
+Acked-by: Namhyung Kim <namhyung@kernel.org>
 
-- Arnaldo
+Thanks,
+Namhyung
+
+> ---
+>  tools/perf/tests/workloads/code_with_type.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/tools/perf/tests/workloads/code_with_type.c b/tools/perf/tests/workloads/code_with_type.c
+> index 65d7be7dac24d411..d2d437b86e0c6dbd 100644
+> --- a/tools/perf/tests/workloads/code_with_type.c
+> +++ b/tools/perf/tests/workloads/code_with_type.c
+> @@ -6,7 +6,7 @@
+>  #include <linux/compiler.h>
+>  #include "../tests.h"
+>  
+> -extern void test_rs(uint count);
+> +extern void test_rs(unsigned int count);
+>  
+>  static volatile sig_atomic_t done;
+>  
+> -- 
+> 2.55.0
+> 
