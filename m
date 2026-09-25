@@ -1,135 +1,177 @@
-Received: from mail-qt1-f170.google.com (mail-qt1-f170.google.com [209.85.160.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6211A4D2EFB
-	for <linux-perf-users@vger.kernel.org>; Fri, 25 Sep 2026 20:22:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.160.170
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790367722; cv=pass; b=YgGJDv9lpUEs0iqfKnVgXYlbcZ9bKC3VmdlS3sJKgnX05sdnVebKk7SzbaoJHjTNoSjfmhd8CZU0EA1rznL7JcoHVjwYE5JuzY98FP/xSU2AtZPTHlwGp/Y6b4TKxNrm4b36GWDOcaUgeI7jMWTLlkqXyXDVOujYZcBi/LoUqsQ=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790367722; c=relaxed/simple;
-	bh=sOt1Bryk+Oxa7Fxrt6mMhlSIFpbqXbl83ndSRGg9HlM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=VtCLl2QPyNuQ0o9uwDZmWig5iNrjxIFx6BvizTv2XM8ihVVKddiz2x+/OG2IvdsF7/sS5bj6aWLp2dZ9CQvYSeo3bkZOIcZAx+q0zJ/Icjkcmc/jviW4rJElK1QVQJRMxvhua9Wol+DA4RMyrIz5lXvEBx5QjPFYwQsRVJXOJS8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=mK/sgXo6; arc=pass smtp.client-ip=209.85.160.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 297963D6CC4
+	for <linux-perf-users@vger.kernel.org>; Fri, 25 Sep 2026 20:47:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1790369254; cv=none; b=K2URaYm1mMl2fPhhAlnN9RZu6HMAz/RVfXjqnQBFh67BTfzCFbYjUCIjJn4Feskx7yBmitfUMkW+RbsXxhr5xrU5NuKjqa2qYJDSHaEyNINHfZqphGs71y4zavHPR4mQDULkUcxECiPOE9u95X8/S9NBNJWrgkdGUYdx0yC4hCA=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1790369254; c=relaxed/simple;
+	bh=r9clqjPUbkKKPZXyWti7JNPr2JgO9NRAe4Ld9B30v9Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=hv+0YOg55QhU6SrDUmOHvWlnD/WZplBCq8hlypIPyXX51KYkEKmkQDtJ21471wCY+oin4fBOJq3eCe/SdClv7TBQL5eM58tXpqBd3B13gAfz74CO9f5NfjDzNtQzRZE3QGv+jeQ9tywMIiOX7nAHcWjXiwcCqBTZxCSIpfIE8JY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=a+bh0vIV; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="mK/sgXo6"
-Received: by mail-qt1-f170.google.com with SMTP id d75a77b69052e-52faa58bff5so73881cf.0
-        for <linux-perf-users@vger.kernel.org>; Fri, 25 Sep 2026 13:22:01 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1790367720; cv=none;
-        d=google.com; s=arc-20260327;
-        b=ouSaaRG4RG4JF0TpIlN2OufJdTP0TPSwgaNMH2730MLtHEyvXOUahqkV8/cgtrPyop
-         L/Hr6jlaflTYeXVOyKYIvPxancGIbs2G9p0b4q/zwR0RRHA7STEIoa09VhJF2Nl808Gq
-         529VbBOxA8/COGFs49RWjC1aNQxVgj0Sipcxx0R6Bf5fnmbiqZrgXu1zq47iQItQ8cT1
-         05Yv3R7vprfbGUaq4xcOfzfQ9CyUz7byOZI0u2mP5T/Trg44yHKYYyENheSoRbrmZDbx
-         gf/q5bK0dyj6m9tR0plQ9TtDWa5t/U85CSE8W9k4tI3HevH8p2wICgYWZeKWOkHLaALw
-         HDmw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=X0gi+G5GK2ryrXr3Dgeum1cineZZb5AvOJsf1d2sjyI=;
-        fh=1fGc1oyiZSddfpVhsQIxCUUwy2cQwgTdJ5wDPrYDlBw=;
-        b=oWmoUQZWXAPATa/NCQCva3G4QwdU58qWzyGynQrphEgQLoK2QfydsN0fOQJW18wQsp
-         fZwt/F+I+FELyJvfRO3c4xLXelh6EY2rA+zNVr1Uml2en0Z7JNVY5+EwRtZdSfX1Yh9x
-         SgvYSGMHIMnLDY7WK8uPiL6U1jsK2bR/FSAl7jfjipU1K5kDLEzNYkFGR/FaRAQzz93I
-         4IrFDlJOZfykg0krxUU+q96nALaQce1R6epSJSzvz9Dy8I/5XdJSKUDOKoNCD+cGDxju
-         qayPGoABYyVO2li7sr+Ar4h4Yt+X4sJseTgvrT2NlRyjTeebnwAzOCrHM5E3MsEThmBd
-         Lupw==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1790367720; x=1790972520; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=X0gi+G5GK2ryrXr3Dgeum1cineZZb5AvOJsf1d2sjyI=;
-        b=mK/sgXo6SlZjzoJ1dHR5FgiJcFt47jOQUTR2uslH/t1W7/NLTR0JA2X/YCTgnLDFdO
-         HDfDxPOpe2YMJuiSGzX6MEMaSr+pM8pLFEBkWveB/okQDYyTR1bvy64mJioE/lwJh3f7
-         3lxJW6UhwvkyHeMPBZIO5cQltQY9UCaJ2/hM9mVqMN8YBr0a3luVTrMJGfU2SoSwbmxd
-         In+mKy5hNpNFfCgXgkHIATtOTwt2n0AKsv4kEumRVZYNTxjNT+jvsZ2fZMEDb2CHt+bv
-         nJSgsuctH61y18UHXutk+bcvsqYply1nsNn5QgAbScD8l1hSVRVXzd8YS34kZ2XP3rmb
-         95yw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1790367720; x=1790972520;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=X0gi+G5GK2ryrXr3Dgeum1cineZZb5AvOJsf1d2sjyI=;
-        b=hOGKZHXfBCZXo8nIKiVzAz6Ww5UTLhCZHA/rC0385A/i7rLOS84Ng7dIoRubO5L3Sr
-         8uTv0QJfjyH0I1p2ignNxggFZ0rMgwPdCLyaD7Y6O4j10uDClvtv8ILxXyfRc/Th5Uil
-         UaQxCK8bXlKiutIqNO+Gri/4vnbvVm3SOectMbe7f8rVYMeZ+TOJrwo2geMLHJ6WYEtf
-         T25EnGw/8CsYeJ2mXAMNwJohzGrGl99R1f/Sy46OUZWXm5DlmTrZfbAKdSwVyx6vl/NF
-         SW6M02UOC/i4G6wcoNsJWNmBN0DN+fQkYYlV5+gPiSZwUWlFIgtAyBiQeArHpJ8qnPJD
-         aa2w==
-X-Forwarded-Encrypted: i=1; AKwUvByvwz27hIdAv1P+oidXT1otXGIsUHH+oaPCfFgaXuG8lraHXhd/WWclbX1lyqQDGjoN7iddBK9a1kpUjCA4+hlZ@vger.kernel.org
-X-Gm-Message-State: AFuF++lWHIAi7wRCeHdim5MJg9j4tkaq2MEJH+oSKEmwE8He1JR14idW
-	jfa57J+n7rFEZwvgSDTJcKJlD92CQ3qjLLf27bonptUJL+m+7Vq3GnFs3o353QduFDEEDPFWoaL
-	fQ8ilA1itfeMn3QZTLzlwoIUAOYuS+PJmRHTuGvrX
-X-Gm-Gg: AYBFou3XCqtgva69oq1684HZXpkskBOXbM9ho9GSwHUCv4eE2p6/7QroLMyNaSWAuIt
-	4d9WPaGPk5CYu6e6eopc7frq6MPYHm2mSlK2hpKzri0ofYhouDxdxQDt88kDb/tBalRIuTkG9q1
-	sSh4RQXW8UsdlVXguKtxov6deemPcs1Gx12w80j8qqQjz1LkMWGxia307FkSd2nvUFj2Bo+D0hD
-	Ui7rpNsAb8YWvQT5vsCw+Nh8umE7P3AeDctsDV57toXaopuC5Bf+IfjPSYBRxJcGaDPjSSpVMII
-	eboQvA2nyUFe5cRfqjL4v6lc3WYuaHvytrJccMGDN8Ao6CwkxgIfEt+LogCQPNr7yRn3YasosuD
-	t5FhiJGAiZu/2KlSXVfGe
-X-Received: by 2002:a05:622a:1a8f:b0:532:c8ca:5ae9 with SMTP id
- d75a77b69052e-533226f9f89mr660001cf.11.1790367719382; Fri, 25 Sep 2026
- 13:21:59 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="a+bh0vIV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0963C1F000FF;
+	Fri, 25 Sep 2026 20:47:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1790369252;
+	bh=yOdqifkiB4/7nTBF3H0r6g16IkBVTsQqN8PEMJSQ06c=;
+	h=Date:From:To:Cc:Subject;
+	b=a+bh0vIVdRPwIB0FJKa3XwF3LoqJcYvvc6nXvyaeSuDhTVzIpmbpOidYea24tPEMs
+	 OnXlMSfLs0UQzAO6weVsxNDKRX8gQvWgSGon78ugnDbjNKZ8bZ4kVx7cH5QpuyUU4l
+	 upSw7ZMP3Exye7Wp+uv+huwvpojriZMwFDjLQUOdugrsExNm1uLSUIFwnDdQL5VwB4
+	 rjiaUl2zmzvEaFvS6b/kQagP/m4GcqZ8Kk0Vdvh1LKVZD/OEgdNoIGLJHdayis0l8M
+	 tcEaUVZBDXPOjqlZLVhQ81qX7yt+iZi1xkcUc21Jec58YbRI4I7qAsrH0iUpztlND3
+	 ZKbkBewsBT08w==
+Date: Fri, 25 Sep 2026 22:47:29 +0200
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Ian Rogers <irogers@google.com>
+Cc: Adrian Hunter <adrian.hunter@intel.com>,
+	James Clark <james.clark@linaro.org>, Jiri Olsa <jolsa@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	linux-perf-users@vger.kernel.org
+Subject: [PATCH 1/1] perf: Fix Python 3.6 build breakage in jevents.py and
+ util/setup.py
+Message-ID: <arbd4TJm4s9MVjN-@x2>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260925-perf-symbol-memory-send-v3-0-3e4e234c363b@uber.com>
- <20260925-perf-symbol-memory-send-v3-3-3e4e234c363b@uber.com>
- <CAP-5=fUumhE1-DT3a-EBYQADy6Az=nViGmz==n1ocqXiXAEQjg@mail.gmail.com> <CA+w=M=RJYSCuk1SoU+OR53Odf6OyKMsjDMUAtaxSmD_4Zyq7oQ@mail.gmail.com>
-In-Reply-To: <CA+w=M=RJYSCuk1SoU+OR53Odf6OyKMsjDMUAtaxSmD_4Zyq7oQ@mail.gmail.com>
-From: Ian Rogers <irogers@google.com>
-Date: Fri, 25 Sep 2026 13:21:47 -0700
-X-Gm-Features: AclHuK_Ev_ywUg_xKDVZaUqkULrA-zicLebaCnXdtLmoik360d-0oCFEYOm-qog
-Message-ID: <CAP-5=fUm_MYpz+K9qc9T-=Xy2FT2=FRgWpkmQaZvqrO1tuVYsw@mail.gmail.com>
-Subject: Re: [PATCH v3 3/6] perf symbols: Factor out duplicate symbol selection
-To: Alireza Haghdoost <haghdoost@uber.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, James Clark <james.clark@linaro.org>, 
-	Alexei Starovoitov <ast@kernel.org>, Andrii Nakryiko <andriin@fb.com>, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On Fri, Sep 25, 2026 at 12:55=E2=80=AFPM Alireza Haghdoost <haghdoost@uber.=
-com> wrote:
->
-> > > -int arch__choose_best_symbol(struct symbol *syma, struct symbol *sym=
-b);
-> > > +int arch__choose_best_symbol(const struct symbol_candidate *a,
-> > > +                            const struct symbol_candidate *b);
-> >
-> > Given you can change this function definition and only change 1 C
-> > file, is there any reason not to make the function static in symbol.c
-> > and move the struct symbol_candidate definition also to symbol.c?
-> >
->
-> Thanks for the review. Patch 5 calls symbol__choose_best() from
-> symbol-elf.c: the lazy index resolves same-address duplicates from its
-> index entries, not from struct symbols, and uses the same policy as
-> the eager loader. That's why patch 3 makes it non-static.
->
-> struct symbol_candidate has to stay in symbol.h as well, because
-> arch__choose_best_symbol() takes it and powerpc overrides that weak
-> function in arch/powerpc/util/sym-handling.c.
->
-> I can say this in the patch 3 commit message in v4.
+perf's build still accepts Python 3.6: Makefile.config only rejects
+interpreters older than 3.6 and jevents.py keeps its own removesuffix()
+shim for it, but two recently added constructs are evaluated when the
+module or the function is defined and only work on newer interpreters.
 
-Thanks, I saw this when I got to the later patches, sorry for the noise.
+PEP 585's list[...] became subscriptable in Python 3.9, so the module
+level annotations in jevents.py make Kbuild die at import time:
 
-Ian
+  TypeError: 'type' object is not subscriptable
+  make[3]: *** [pmu-events/Build:176: .../test-empty-pmu-events.c] Error 1
 
-> Thanks,
-> Alireza
+as seen on almalinux:8 with its python3.6.8, and the list[str]
+parameters of util/setup.py's functions fail the same way when the
+python binding is built.
+
+ProcessPoolExecutor(initializer=, initargs=) was added in Python 3.7,
+so generating pmu-events.c dies when the pool is created.
+
+Use the typing generics that exist on every supported interpreter and
+only pass initializer/initargs when the interpreter has them: on 3.6
+the default fork start method already leaves the worker processes with
+the parent's _arch_std_events, which is what _init_worker() sets up
+for spawn semantics.
+
+Tested with Python 3.6.15: make -C tools/perf completes, generating
+pmu-events.c and the python binding.
+
+Fixes: cda907c2c3f99 ("perf jevents: Add python type annotations")
+Fixes: 1fa8d81be1eb ("perf python: Clean up and restructure setup.py")
+Fixes: eaab2eb09dc2 ("perf pmu-events: Parallelize JSON and metric pre-computation in jevents.py")
+Assisted-by: LLM
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+---
+ tools/perf/pmu-events/jevents.py | 24 +++++++++++++++---------
+ tools/perf/util/setup.py         |  5 +++--
+ 2 files changed, 18 insertions(+), 11 deletions(-)
+
+diff --git a/tools/perf/pmu-events/jevents.py b/tools/perf/pmu-events/jevents.py
+index 074daae5308b110b..bdc89ec197680c1b 100755
+--- a/tools/perf/pmu-events/jevents.py
++++ b/tools/perf/pmu-events/jevents.py
+@@ -8,19 +8,19 @@ import json
+ import metric
+ import os
+ import sys
+-from typing import (Callable, Dict, Optional, Sequence, Set, Tuple)
++from typing import (Any, Callable, Dict, List, Optional, Sequence, Set, Tuple)
+ import collections
+ 
+ # Global command line arguments.
+ _args = None
+ # List of regular event tables.
+-_event_tables: list[str] = []
++_event_tables: List[str] = []
+ # List of event tables generated from "/sys" directories.
+-_sys_event_tables: list[str] = []
++_sys_event_tables: List[str] = []
+ # List of regular metric tables.
+-_metric_tables: list[str] = []
++_metric_tables: List[str] = []
+ # List of metric tables generated from "/sys" directories.
+-_sys_metric_tables: list[str] = []
++_sys_metric_tables: List[str] = []
+ # Mapping between sys event table names and sys metric table names.
+ _sys_event_table_to_metric_table_mapping = {}
+ # Map from an event name to an architecture standard
+@@ -28,11 +28,11 @@ _sys_event_table_to_metric_table_mapping = {}
+ # f'{_args.starting_dir}/{_args.arch}' directory.
+ _arch_std_events: Dict[str, "JsonEvent"] = {}
+ # Events to write out when the table is closed
+-_pending_events: list["JsonEvent"] = []
++_pending_events: List["JsonEvent"] = []
+ # Name of events table to be written out
+ _pending_events_tblname: Optional[str] = None
+ # Metrics to write out when the table is closed
+-_pending_metrics: list["JsonEvent"] = []
++_pending_metrics: List["JsonEvent"] = []
+ # Name of metrics table to be written out
+ _pending_metrics_tblname: Optional[str] = None
+ # Global BigCString shared by all structures.
+@@ -1556,9 +1556,15 @@ struct pmu_table_entry {
+     preprocess_arch_std_files(arch_path)
+     ftw(arch_path, [], collect_json)
+ 
++  # ProcessPoolExecutor's initializer/initargs need Python 3.7, on 3.6 the
++  # fork start method already leaves the workers with the parent's
++  # _arch_std_events, i.e. what _init_worker would set up.
++  executor_kwargs: Dict[str, Any] = {}
++  if sys.version_info >= (3, 7):
++    executor_kwargs = dict(initializer=_init_worker,
++                           initargs=(_arch_std_events,))
+   with concurrent.futures.ProcessPoolExecutor(max_workers=_parallel_worker_count(len(tasks)),
+-                                              initializer=_init_worker,
+-                                              initargs=(_arch_std_events,)) as executor:
++                                              **executor_kwargs) as executor:
+     for path, topic, events in executor.map(_parallel_read_json_events, tasks):
+       _json_cache[(path, topic)] = events
+ 
+diff --git a/tools/perf/util/setup.py b/tools/perf/util/setup.py
+index 8380980ade4c486f..ad904b374ec6eaba 100644
+--- a/tools/perf/util/setup.py
++++ b/tools/perf/util/setup.py
+@@ -11,13 +11,14 @@ import shlex
+ import shutil
+ import subprocess
+ import sysconfig
++from typing import List
+ 
+ from setuptools import setup, Extension
+ from setuptools.command.build_ext import build_ext as _build_ext
+ from setuptools.command.install_lib import install_lib as _install_lib
+ 
+ 
+-def clang_has_option(cc: str, cc_args: list[str], src_feature_tests: str, option: str) -> bool:
++def clang_has_option(cc: str, cc_args: List[str], src_feature_tests: str, option: str) -> bool:
+     """Check if clang supports a specific option.
+ 
+     Args:
+@@ -47,7 +48,7 @@ def clang_has_option(cc: str, cc_args: list[str], src_feature_tests: str, option
+     return not any(any(error in line for error in error_substrings) for line in cc_output)
+ 
+ 
+-def filter_clang_options(cc: str, cc_args: list[str], src_feature_tests: str) -> None:
++def filter_clang_options(cc: str, cc_args: List[str], src_feature_tests: str) -> None:
+     """Filter out unsupported clang options from sysconfig CFLAGS and OPT.
+ 
+     Args:
+-- 
+2.55.0
+
