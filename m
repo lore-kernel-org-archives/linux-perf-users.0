@@ -1,38 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07854442373;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23BAB46D0BD;
 	Fri, 25 Sep 2026 19:15:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790363720; cv=none; b=uLw+hStQV9rpDIwNThUo9oMRwbNcFXEL0RUVw36JL2KnhGSxmoMZnuDoOelfn61OQ5+KFcrH0PvDsQi1x6SgzeOoYGsv0TTUAyfhm8x62jE1M06BksgzXFopeBD107+15H7GMSYLPGNPk/DonFzoueWjmp+wjhO1sqdL59/1pmE=
+	t=1790363720; cv=none; b=QzMV0JCFLVNA47E4EAWYjXdVzCqVL8ufgmKDabSRwyKxcSQZYiAtdfmBBVh3SeoX4anlFda2iMzSSD5rkF+8SE1QtEvfqojlQWNS8sDWN53XpVVcLdJbt9SeMd/NV2UgigsFXIfD5qYSnHn1pSICva5o6J00ate7YR4SkmK9b30=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1790363720; c=relaxed/simple;
-	bh=Z6mD+xdSq/ZNgK3Q5emlIE6MQtxeXjWbFf/B7lYTUX8=;
+	bh=02i0M9cQVcI4OzfL9ZRzbIOSN6ZwbmiBZLNmG6nxo3Y=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=i2qMF0qijn+llNqLJotzv+NNlRuqLbu3o9Q/FE/nvm/41aorK7OeDgP6Sb2+EQDHB0O6xI29Gkpe4jt54cSmge0MzRZD19YCVQZD9PZtqIkepApRgWsE59ymONcJfe+1N/hMDazP7Mogs27D/XZkbWg+NOTMjuwtzzZaDh9fCUs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dQRPmZZ2; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=Mw0DlEPlrdzZhOPo0Ypdv5jnlXqA3+SX9LbOq8cTCyVH5da8AftcKDyHiRolqjPVoQvWB6wdghpBNXn3duJuSZfNDpje4rkYQEHLpCKVtAY3j1RhzotUfnB3yZUwefnfzbd0m0Mf20m/UFkd5DtIJ1ixz3x4IRORN94zQ8wH9vs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fapHcvZU; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dQRPmZZ2"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 39003C2BCFB;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fapHcvZU"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 28C7AC2BCF4;
 	Fri, 25 Sep 2026 19:15:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1790363718;
-	bh=Z6mD+xdSq/ZNgK3Q5emlIE6MQtxeXjWbFf/B7lYTUX8=;
+	bh=02i0M9cQVcI4OzfL9ZRzbIOSN6ZwbmiBZLNmG6nxo3Y=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=dQRPmZZ2HffDq++WsYL4iZbjphPsSwEWSdVdEY6arOsMwherKspYhwblt6MW32NIf
-	 Fm47bqJEBIhPu91vVu2J2eK7vi+4gh8hriBt9ddII1/jlAiATVDg1IXj6mTWvrCbSF
-	 yJbs6EEH9bEExUGTf90rHlGLUIMeHN7psDnYoYE3pI6pVSmwRCq4PlmMg7djAFB6K/
-	 wMdbRSXpkyxYUkhw1kLC1FXjCk+pdm3g17xMhgRM9bpDIUFd4I7Hqwq6CeCxjoqBZb
-	 9aJ6dVidkcelad0SuUOXERfdDXpv6lo6aqk0NFQJY2yXssquZu65rLcW0Qh8egh3qa
-	 NijrN/M0zzV3Q==
+	b=fapHcvZUicmb73uuObKaBee8PFtqzHeBCLr+6algNLdknYl6xZJjq2KZ7eX8PwIPg
+	 N4KZDMOR++vDIzLYhP97U50ggUnu++OsYvE4ZEGu+6E6vC7ziNAmxjuWYjBZ3PSf7M
+	 CLT1dDlGfQGbRQuwDutYocTcbnAoockgwojU4EwyJ3WJaeN6kL++bAwBzuSNXENjWj
+	 GQTs5TvXX1S8QTT4XVHTsadgtSJQsD7594wNqaVK8VodDcdrNZTRYNJvj4AeL9hr3K
+	 bs770559IOODakdlC6yXVaBN9c7DjK5wPs55mFhvi9b09Xlo2pNU6BZSYttQRu2xM5
+	 YwSm7/TJNC+mQ==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17894C9832C;
-	Fri, 25 Sep 2026 19:15:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F19C4C98328;
+	Fri, 25 Sep 2026 19:15:17 +0000 (UTC)
 From: Alireza Haghdoost via B4 Relay <devnull+haghdoost.uber.com@kernel.org>
-Date: Fri, 25 Sep 2026 12:09:39 -0700
-Subject: [PATCH v3 2/6] perf dso: Allow reading DSO data from an explicit
- file
+Date: Fri, 25 Sep 2026 12:09:38 -0700
+Subject: [PATCH v3 1/6] perf symbols: Fix broken ELF_C_READ_MMAP fallback
+ guard
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -41,7 +41,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260925-perf-symbol-memory-send-v3-2-3e4e234c363b@uber.com>
+Message-Id: <20260925-perf-symbol-memory-send-v3-1-3e4e234c363b@uber.com>
 References: <20260925-perf-symbol-memory-send-v3-0-3e4e234c363b@uber.com>
 In-Reply-To: <20260925-perf-symbol-memory-send-v3-0-3e4e234c363b@uber.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
@@ -55,21 +55,21 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
  Alireza Haghdoost <haghdoost@uber.com>
 X-Mailer: b4 0.15.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=6269; i=haghdoost@uber.com;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1501; i=haghdoost@uber.com;
  h=from:subject:message-id;
- bh=y6glUl+dokKT/nsYUSatFYnBRNntBRVmypJDz1I2m20=;
- b=owEBiQJ2/ZANAwAIAVNlBDxl2ALYAcsmYgBqtshDL0pWyyuT+eUv8jZG25N4hwDniqAJYkLSG
- 3Md2uYhWsmJAk8EAAEIADkWIQS5+sFL3gX/8PrA0S1TZQQ8ZdgC2AUCarbIQxsUgAAAAAAEAA5t
- YW51MiwyLjUrMS4xMiwwLDMACgkQU2UEPGXYAthQ2w/+LoLYOXvQ0lDbzwyyclv56rLiu+ORYG0
- 7BECCtbCE+QBBcWP7qFG3OzTJLpvRfQm1Oz327FFvo/4SgN69oOXMYTPzuq1vAKhYHyHg+tu2sp
- 10VFfSKAkTsa9aSrcf+rFO0qYjQc3ScXb4WuvKRYAOwFztsUj0QZXlZnvD0AnKf0ZGLUkR97/3V
- HOwPOHHdecw3a8Kn3GSdJdu83G2C2Cj6FXIgiY5MoQxaHgJaKh7nHaRbs7NbH8o4ny01UnBiSkA
- hlhzy0XOLn7JPcebjRVBXtm98DutNIAv/CKLlkFvgJM6FX2xQ/Zaw+K6ZReLCgVQBUC7AtmRjT5
- Z37jVfTN1AfcYKMtrqsQ6a4+hLHywfXshO3bWpRxqwI78eYWxJdt3xqpvddxzNmraPlDkvWiAPw
- JWTM0aQtVfzxDQUvZcAPvJEOH3ggXgB5HjCvdZOXWEYW/WbysDAtGGxH0CEuuMI4+3Yw1HycmLh
- FtKN9JePWenvm67JdfHx33jFjyAhtWE5otRTNBmarEsfP80NCyHUKWGznlF4pp/34jYbbVsmNel
- FvgIexnz3PbydQ4Cx6/7NoOyZLFzDYSCllHd5njk3oc7KHdeNXqM9lEugoWIs48S9AKuYXSfw9Z
- 9pS1zSYHU2M6QGudizpltc6/8btUHJP4OOMO5bffBwn8r4oDhq+o=
+ bh=Fie+m8uDrnEku3C9hTHPEiLsQANbwK1zFduANx60M6s=;
+ b=owEBiQJ2/ZANAwAIAVNlBDxl2ALYAcsmYgBqtshCpzsrTy68JCej2jYNxVbsTcbi9zZ25Pb6+
+ hUmrGve/3CJAk8EAAEIADkWIQS5+sFL3gX/8PrA0S1TZQQ8ZdgC2AUCarbIQhsUgAAAAAAEAA5t
+ YW51MiwyLjUrMS4xMiwwLDMACgkQU2UEPGXYAthXcxAAkX0bsj8EiGS+gGJ/fOI1ADGjhU7dwcE
+ ITVR2blrWPqv2/wipl49gq6ThcRqIKHHjUylBNmAiPx+fOpZU9dZYYxPpc9Jo/5eY0qZ4oTwg6C
+ zp+7Vdenb5HsCSMLcWtHBUtidU+36fgai34dEg9WTXW6RkXDbwc1vjHrBu44sAy6KQVP0w6yaai
+ N1yl+4Mq3N6YGOby6ZMCOriDasBMeJQBv7eKyeKxV+EtGoGLgrad2SOh46BCEpfUobuHFku4FXC
+ 82ZSh9mZrTNsLuUuckCu3hl9C05a2rLcsY4SzUzgM//kv54IQHGvC1+/2re2Qe6aUtjIo9S3Y9U
+ BaxfBJNMPj3m4CpDt2bCH1Jwpmat5LdRb3sjtPY/R+qOiMXH9HnoGgmjMINJ5kV6+CNY/IEKriL
+ Bz6mAwNQ+gHsFB5n8jf9dyQxA+esJzAZ2f4rN3Ku+eT5cxG9M6EeWy0fuAzqF2J//j67NSXoW0u
+ sDZaOauaCyuryPYzKUdQ7j9y6u+Gq2RHZoLteiBxgVipDBK2eyk8W3Pwkxh5ymFgnLuQBo4WnkC
+ ANIr76Irv0yuKsmnbJUmo5rDFj4ns/ZkL8FiLlQZriXRoRtarg2T4PogO7TIMLqxrD9fTcYeTDQ
+ nYsbhvfg8LV/ekki7nTXxiPT9QpEoqvxy0mr6fdYc0rTnyAz3jEI=
 X-Developer-Key: i=haghdoost@uber.com; a=openpgp;
  fpr=B9FAC14BDE05FFF0FAC0D12D5365043C65D802D8
 X-Endpoint-Received: by B4 Relay for haghdoost@uber.com/default with
@@ -79,184 +79,44 @@ Reply-To: haghdoost@uber.com
 
 From: Alireza Haghdoost <haghdoost@uber.com>
 
-The DSO data cache derives the file to open from the DSO's binary type,
-which can resolve to the runtime image rather than the file a symbol
-table was read from. With split debuginfo, offsets taken from the
-debuginfo file (for example string-table offsets) are then applied to an
-unrelated file.
+Commit 22dd1ac91a77 ("tools: Remove feature-libelf-mmap feature
+detection") replaced perf's compile-time feature test with an #ifdef on
+ELF_C_READ_MMAP. ELF_C_READ_MMAP is an Elf_Cmd enumerator rather than a
+preprocessor macro, so the condition is always false and perf silently
+uses ELF_C_READ.
 
-Add dso__data_set_path() so a DSO can be configured to read from one
-exact file while keeping the data cache's descriptor eviction and
-reopening. Such DSOs may be owned privately rather than being part of a
-dsos collection, so drop the assertion that every opened data DSO is in
-one.
+Perf already requires a sufficiently recent elfutils version that
+provides ELF_C_READ_MMAP. Use the enumerator directly instead of
+restoring a feature probe or retaining an unreachable fallback.
 
-Add a DSO data test that reads through an explicit path, closes the
-descriptor, and reads an uncached offset to exercise reopening.
-
+Fixes: 22dd1ac91a77 ("tools: Remove feature-libelf-mmap feature detection")
 Signed-off-by: Alireza Haghdoost <haghdoost@uber.com>
+Reviewed-by: Namhyung Kim <namhyung@kernel.org>
 ---
- tools/perf/tests/dso-data.c | 42 ++++++++++++++++++++++++++++++++++++++++++
- tools/perf/util/dso.c       | 43 ++++++++++++++++++++++++++++++++++---------
- tools/perf/util/dso.h       |  2 ++
- 3 files changed, 78 insertions(+), 9 deletions(-)
+ tools/perf/util/symbol.h | 10 +---------
+ 1 file changed, 1 insertion(+), 9 deletions(-)
 
-diff --git a/tools/perf/tests/dso-data.c b/tools/perf/tests/dso-data.c
-index 46bc3f597260..fbfb2f08d3ba 100644
---- a/tools/perf/tests/dso-data.c
-+++ b/tools/perf/tests/dso-data.c
-@@ -393,11 +393,53 @@ static int test__dso_data_reopen(struct test_suite *test __maybe_unused, int sub
- 	return 0;
+diff --git a/tools/perf/util/symbol.h b/tools/perf/util/symbol.h
+index d0bac824c79c..46b1649c64fc 100644
+--- a/tools/perf/util/symbol.h
++++ b/tools/perf/util/symbol.h
+@@ -57,15 +57,7 @@ static inline bool is_livepatch_symbol(const char *str)
+ 	return strstarts(str, KLP_SYM_PREFIX);
  }
  
-+static int test__dso_data_path(struct test_suite *test __maybe_unused, int subtest __maybe_unused)
-+{
-+	u8 expect[10] = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
-+	char *file = test_file(TEST_FILE_SIZE);
-+	struct dso *dso;
-+	long nr, nr_end;
-+	u8 buf[10];
-+
-+	TEST_ASSERT_VAL("No test file", file);
-+	nr = open_files_cnt();
-+
-+	/*
-+	 * The DSO name does not exist and the DSO is not in a dsos
-+	 * collection; reads must come from the configured path.
-+	 */
-+	dso = dso__new("/nonexistent/perf-test-dso-data-path");
-+	TEST_ASSERT_VAL("Failed to create dso", dso);
-+	dso__set_binary_type(dso, DSO_BINARY_TYPE__SYSTEM_PATH_DSO);
-+	TEST_ASSERT_VAL("Failed to set path", !dso__data_set_path(dso, file));
-+
-+	TEST_ASSERT_VAL("Wrong size",
-+			dso__data_read_offset(dso, NULL, 10, buf, 10) == 10);
-+	TEST_ASSERT_VAL("Wrong data", !memcmp(buf, expect, 10));
-+
-+	/* An uncached offset after close must reopen the configured path. */
-+	dso__data_close(dso);
-+	memset(buf, 0, sizeof(buf));
-+	TEST_ASSERT_VAL("Wrong size after reopen",
-+			dso__data_read_offset(dso, NULL, DSO__DATA_CACHE_SIZE * 2 + 10,
-+					      buf, 10) == 10);
-+	TEST_ASSERT_VAL("Wrong data after reopen",
-+			buf[0] == (DSO__DATA_CACHE_SIZE * 2 + 10) % 10);
-+
-+	dso__data_close(dso);
-+	dso__put(dso);
-+	unlink(file);
-+
-+	nr_end = open_files_cnt();
-+	TEST_ASSERT_VAL("failed leaking files", nr == nr_end);
-+	return 0;
-+}
+-/*
+- * libelf 0.8.x and earlier do not support ELF_C_READ_MMAP;
+- * for newer versions we can use mmap to reduce memory usage:
+- */
+-#ifdef ELF_C_READ_MMAP
+-# define PERF_ELF_C_READ_MMAP ELF_C_READ_MMAP
+-#else
+-# define PERF_ELF_C_READ_MMAP ELF_C_READ
+-#endif
++#define PERF_ELF_C_READ_MMAP ELF_C_READ_MMAP
  
- static struct test_case tests__dso_data[] = {
- 	TEST_CASE("read", dso_data),
- 	TEST_CASE("cache", dso_data_cache),
- 	TEST_CASE("reopen", dso_data_reopen),
-+	TEST_CASE("explicit path", dso_data_path),
- 	{	.name = NULL, }
- };
- 
-diff --git a/tools/perf/util/dso.c b/tools/perf/util/dso.c
-index 9e90de92fcfa..c88b2a771832 100644
---- a/tools/perf/util/dso.c
-+++ b/tools/perf/util/dso.c
-@@ -532,8 +532,6 @@ static void dso__list_add(struct dso *dso) EXCLUSIVE_LOCKS_REQUIRED(_dso__data_o
- #ifdef REFCNT_CHECKING
- 	dso__data(dso)->dso = dso__get(dso);
- #endif
--	/* Assume the dso is part of dsos, hence the optional reference count above. */
--	assert(dso__dsos(dso));
- 	dso__data_open_cnt++;
- }
- 
-@@ -578,16 +576,22 @@ char *dso__filename_with_chroot(const struct dso *dso, const char *filename)
- static char *dso__get_filename(struct dso *dso, const char *root_dir,
- 			       bool *decomp)
- {
--	char *name = malloc(PATH_MAX);
-+	char *name;
- 
- 	*decomp = false;
- 
--	if (name == NULL)
--		return NULL;
--
--	if (dso__read_binary_type_filename(dso, dso__binary_type(dso),
--					    root_dir, name, PATH_MAX))
--		goto out;
-+	if (dso__data(dso)->path) {
-+		name = strdup(dso__data(dso)->path);
-+		if (!name)
-+			return NULL;
-+	} else {
-+		name = malloc(PATH_MAX);
-+		if (!name)
-+			return NULL;
-+		if (dso__read_binary_type_filename(dso, dso__binary_type(dso),
-+						   root_dir, name, PATH_MAX))
-+			goto out;
-+	}
- 
- 	if (!is_regular_file(name)) {
- 		struct stat st;
-@@ -813,6 +817,26 @@ void dso__data_close(struct dso *dso)
- 	mutex_unlock(dso__data_open_lock());
- }
- 
-+/**
-+ * dso__data_set_path - Read @dso's data from an explicit file
-+ * @dso: dso object
-+ * @path: file to open instead of the path derived from the binary type
-+ *
-+ * Used when the data must come from one specific file, such as the separate
-+ * debuginfo file that a symbol table was read from. Must be called before any
-+ * data is read, as already cached data is not invalidated.
-+ */
-+int dso__data_set_path(struct dso *dso, const char *path)
-+{
-+	char *new_path = strdup(path);
-+
-+	if (!new_path)
-+		return -ENOMEM;
-+	free(dso__data(dso)->path);
-+	dso__data(dso)->path = new_path;
-+	return 0;
-+}
-+
- static void try_to_open_dso(struct dso *dso, struct machine *machine)
- 	EXCLUSIVE_LOCKS_REQUIRED(_dso__data_open_lock)
- {
-@@ -1762,6 +1786,7 @@ void dso__delete(struct dso *dso)
- 	dso__data_close(dso);
- 	auxtrace_cache__free(RC_CHK_ACCESS(dso)->auxtrace_cache);
- 	dso_cache__free(dso);
-+	zfree(&RC_CHK_ACCESS(dso)->data.path);
- 	dso__free_a2l(dso);
- 	dso__free_a2l_libbfd(dso);
- 	dso__free_libdw(dso);
-diff --git a/tools/perf/util/dso.h b/tools/perf/util/dso.h
-index e7d5f4bbf894..ff2c91e9a2b9 100644
---- a/tools/perf/util/dso.h
-+++ b/tools/perf/util/dso.h
-@@ -264,6 +264,7 @@ struct dso_data {
- #ifdef REFCNT_CHECKING
- 	struct dso	 *dso;
- #endif
-+	char		 *path;
- 	int		 fd;
- 	int		 status;
- 	u32		 status_seen;
-@@ -910,6 +911,7 @@ bool dso__data_get_fd(struct dso *dso, struct machine *machine, int *fd)
- 	EXCLUSIVE_TRYLOCK_FUNCTION(true, _dso__data_open_lock);
- void dso__data_put_fd(struct dso *dso) UNLOCK_FUNCTION(_dso__data_open_lock);
- void dso__data_close(struct dso *dso) LOCKS_EXCLUDED(_dso__data_open_lock);
-+int dso__data_set_path(struct dso *dso, const char *path);
- 
- int dso__data_file_size(struct dso *dso, struct machine *machine);
- off_t dso__data_size(struct dso *dso, struct machine *machine);
+ #ifdef HAVE_LIBELF_SUPPORT
+ Elf_Scn *elf_section_by_name(Elf *elf, GElf_Ehdr *ep,
 
 -- 
 Git-157)
