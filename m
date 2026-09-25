@@ -1,183 +1,63 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8723B3750D6;
-	Fri, 25 Sep 2026 13:04:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C5E349CF36;
+	Fri, 25 Sep 2026 13:05:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790341486; cv=none; b=RKkhTmF9JBUtud27LueKs5RehqSS2oWsxAnEY49OBFl1PdXldyTehc19+sNZHY/HBi1eigbqmWzBztu0slQ4W+qzaafCIziFduTcRzIaHNDMIK7YNTmJtffNUVZKgmhlYh6KI7vy+mM57yApOufWXxKOusfP+C+TO5SeRBIVaz0=
+	t=1790341517; cv=none; b=hybNzcPO71t9EGqa3epZOUnkkwfnaSugKfDA0qc1NEM9VedYgvKimu1GVHB4V9B0D4aKIoNuupa1oAwq2yvblD5E+vgjyrWZdsV9edSllPeQ4YlbPtrDpheFLVDkXGFxfLKd9hOgVOwAy0sGCar1DJ7QUZFi23JQsTcEvHYiqMU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790341486; c=relaxed/simple;
-	bh=4X1Qn26Rv02pij9epi25wycnZozbjcmE2gWYNwUGA9w=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=WPVFmLfFDt7K9nR/qWXWNNhzPL79AKvL2wow4EWmDAKn/aKdisBZgQeksB527ZvjT1YltlkCNVQEO8JuYz9KxstNHgTEQxbJMnq2suYH0fAO4ER6ZZnliDd736p1CBmFxuacMFwVWjm4W0KlVbR4E6i22PIv8MgFdH9zEee7fz0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SBOi/xz1; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1790341517; c=relaxed/simple;
+	bh=h+7jCsmx1mECXixYfE+2oe8fc8wZzXoe5MxL0D8ywVc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Nk4j4ulADZ+61Xyem6FKL3AYsg/wn+nsUsYWI1K6lOOmxyUIEIWQgsGbQMtNdPj+STFBOs/gbv18Y449Atby5n/ijFRpXPYh4arLjd+QVc5F0XDKYqUd6OgaBDVrH9PAt9+1XLvzmCXG481z+vkFHnu+eKVro85X/s2EcBaFBtE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=acXz5EZT; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SBOi/xz1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 363181F000FF;
-	Fri, 25 Sep 2026 13:04:43 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="acXz5EZT"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DD16D1F000FF;
+	Fri, 25 Sep 2026 13:05:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1790341485;
-	bh=92gf6m9YOIPDsCP688vyQFsYfi3lwgydMZ3LqXmn3gc=;
-	h=From:To:Cc:Subject:Date;
-	b=SBOi/xz15oQl7twIyrtO4yKBCgAQPj6/OZhYu8U3oP8ECGc8P4+iB7/0HxtrimI+p
-	 3hbKLbnScGXlW/P1Xqe7Ur17Z/p4I5GiNYK3vwCocskYglwQH70aKksT6l3enezdxh
-	 1jNKFyOd0tKdt+4NQQE7fIWc5IdGoik4Vso6c8gb3sy5I2g3Iahj6SAnl61rxNAnta
-	 uDqGXX6DRl2cRREfQqy/yxxeV2nfS2HZMXs0zyc8gmK1+78c854yQsdnmtMsvumQ0C
-	 zrdsJo1vHOm1Zp+HrjtwzoANXNy0iFZ/L1FikLc1U6wnRpzc2bxFSmvUKcw/LzfQxV
-	 G3DiELNF9IqXg==
-From: Arnd Bergmann <arnd@kernel.org>
-To: Will Deacon <will@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Geetha sowjanya <gakula@marvell.com>
-Cc: Arnd Bergmann <arnd@arndb.de>,
-	Robin Murphy <robin.murphy@arm.com>,
-	Yury Norov <ynorov@nvidia.com>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] perf: marvell: avoid large stack variables
-Date: Fri, 25 Sep 2026 15:04:30 +0200
-Message-ID: <20260925130440.4107512-1-arnd@kernel.org>
-X-Mailer: git-send-email 2.53.0
+	s=k20260515; t=1790341516;
+	bh=iRWDA7tN/Bxga1x0OC2hENb8kXP5XAj0Fo3YD+9p+Bg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=acXz5EZTDwb36o4wjiCL9R7+XzWGNQfTYEcnt7wvDGzsIWBWx7P1wOuSTzUA7TeJv
+	 +FkRNRlugCeYybqRgOYMJ3CbiVnhiXKZ+wGJCPAqk9Pk9/A+IY362k+3fFOLoQ58Hb
+	 teCIzZgsw0OeP7GXNkNnJ1zvyqIL8OAhrWWTVKRsm7Kp5p0Se5XDWhKR7cl4lkFqgt
+	 Y2f7At31+IT951ox/+UF6KWC+Bdi2A0aZDTuog2UaLhMKOTWcD1E3qzC8nFLuhVUn2
+	 cqgeqqX/gDQQHuNxm1HYmwQm0xvklv7wXls4uL0QFFA2lro2o0t2njktJl1cijxfPo
+	 7OYovGac92qfA==
+Date: Fri, 25 Sep 2026 15:05:13 +0200
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	James Clark <james.clark@linaro.org>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	sashiko-bot@kernel.org
+Subject: Re: [PATCH v1] tools include: Add missing stdarg.h include
+Message-ID: <arZxiWdPsMBz3ZKG@x2>
+References: <20260917040454.32916-1-irogers@google.com>
+ <aq4u1lMOBF61XJFu@z2>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aq4u1lMOBF61XJFu@z2>
 
-From: Arnd Bergmann <arnd@arndb.de>
+On Fri, Sep 18, 2026 at 11:42:30PM -0700, Namhyung Kim wrote:
+> On Wed, Sep 16, 2026 at 09:04:54PM -0700, Ian Rogers wrote:
+> > Header file makes use of varargs but doesn't directly include stdarg.h.
+> > 
+> > Reported-by: sashiko-bot@kernel.org
+> > Closes: https://lore.kernel.org/linux-perf-users/20260916062233.192271F000FF@smtp.kernel.org/
+> > Signed-off-by: Ian Rogers <irogers@google.com>
+> 
+> Acked-by: Namhyung Kim <namhyung@kernel.org>
 
-The probe function in this driver constructs multiple large structures
-on the stack, which ends up causing a size warning:
+Thanks, applied to perf-tools-next, for v7.4.
 
-drivers/perf/marvell_cn10k_ddr_pmu.c:1168:12: error: stack frame size (1296) exceeds limit (1280) in 'cn10k_ddr_perf_probe' [-Werror,-Wframe-larger-than]
- 1168 | static int cn10k_ddr_perf_probe(struct platform_device *pdev)
-      |            ^
-
-Avoid this warning and simplify the code by turning these into static
-const structures and directly assigning them without the extra copy.
-
-Fixes: 9b551a2446b2 ("perf: marvell: Add CN20K DDR PMU support")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- drivers/perf/marvell_cn10k_ddr_pmu.c | 85 +++++++++++++++-------------
- 1 file changed, 45 insertions(+), 40 deletions(-)
-
-diff --git a/drivers/perf/marvell_cn10k_ddr_pmu.c b/drivers/perf/marvell_cn10k_ddr_pmu.c
-index 0a8cb6166408..9b68d6c1c31c 100644
---- a/drivers/perf/marvell_cn10k_ddr_pmu.c
-+++ b/drivers/perf/marvell_cn10k_ddr_pmu.c
-@@ -1165,6 +1165,47 @@ static const struct ddr_pmu_platform_data odyssey_ddr_pmu_pdata = {
- };
- #endif
- 
-+static const struct pmu cn10k_pmu = {
-+	.module	      = THIS_MODULE,
-+	.capabilities = PERF_PMU_CAP_NO_EXCLUDE,
-+	.task_ctx_nr = perf_invalid_context,
-+	.attr_groups = cn10k_attr_groups,
-+	.event_init  = cn10k_ddr_perf_event_init,
-+	.add	     = cn10k_ddr_perf_event_add,
-+	.del	     = cn10k_ddr_perf_event_del,
-+	.start	     = cn10k_ddr_perf_event_start,
-+	.stop	     = cn10k_ddr_perf_event_stop,
-+	.read	     = cn10k_ddr_perf_event_update,
-+	.pmu_enable  = cn10k_ddr_perf_pmu_enable,
-+	.pmu_disable = cn10k_ddr_perf_pmu_disable,
-+};
-+
-+static const struct pmu ody_pmu = {
-+	.module       = THIS_MODULE,
-+	.capabilities = PERF_PMU_CAP_NO_EXCLUDE,
-+	.task_ctx_nr = perf_invalid_context,
-+	.attr_groups = odyssey_attr_groups,
-+	.event_init  = cn10k_ddr_perf_event_init,
-+	.add         = cn10k_ddr_perf_event_add,
-+	.del         = cn10k_ddr_perf_event_del,
-+	.start       = cn10k_ddr_perf_event_start,
-+	.stop        = cn10k_ddr_perf_event_stop,
-+	.read        = cn10k_ddr_perf_event_update,
-+};
-+
-+static const struct pmu cn20k_pmu = {
-+	.module       = THIS_MODULE,
-+	.capabilities = PERF_PMU_CAP_NO_EXCLUDE,
-+	.task_ctx_nr = perf_invalid_context,
-+	.attr_groups = cn20k_attr_groups,
-+	.event_init  = cn10k_ddr_perf_event_init,
-+	.add         = cn10k_ddr_perf_event_add,
-+	.del         = cn10k_ddr_perf_event_del,
-+	.start       = cn10k_ddr_perf_event_start,
-+	.stop        = cn10k_ddr_perf_event_stop,
-+	.read        = cn10k_ddr_perf_event_update,
-+};
-+
- static int cn10k_ddr_perf_probe(struct platform_device *pdev)
- {
- 	const struct ddr_pmu_platform_data *dev_data;
-@@ -1202,56 +1243,20 @@ static int cn10k_ddr_perf_probe(struct platform_device *pdev)
- 		/* Setup the PMU counter to work in manual mode */
- 		writeq_relaxed(OP_MODE_CTRL_VAL_MANUAL, ddr_pmu->base +
- 			       ddr_pmu->p_data->cnt_op_mode_ctrl);
-+		ddr_pmu->pmu = cn10k_pmu;
- 
--		ddr_pmu->pmu = (struct pmu) {
--			.module	      = THIS_MODULE,
--			.capabilities = PERF_PMU_CAP_NO_EXCLUDE,
--			.task_ctx_nr = perf_invalid_context,
--			.attr_groups = cn10k_attr_groups,
--			.event_init  = cn10k_ddr_perf_event_init,
--			.add	     = cn10k_ddr_perf_event_add,
--			.del	     = cn10k_ddr_perf_event_del,
--			.start	     = cn10k_ddr_perf_event_start,
--			.stop	     = cn10k_ddr_perf_event_stop,
--			.read	     = cn10k_ddr_perf_event_update,
--			.pmu_enable  = cn10k_ddr_perf_pmu_enable,
--			.pmu_disable = cn10k_ddr_perf_pmu_disable,
--		};
- 	}
- 
- 	if (silicon_flags & IS_ODY) {
- 		ddr_pmu->ops = &ddr_pmu_ody_ops;
--
--		ddr_pmu->pmu = (struct pmu) {
--			.module       = THIS_MODULE,
--			.capabilities = PERF_PMU_CAP_NO_EXCLUDE,
--			.task_ctx_nr = perf_invalid_context,
--			.attr_groups = odyssey_attr_groups,
--			.event_init  = cn10k_ddr_perf_event_init,
--			.add         = cn10k_ddr_perf_event_add,
--			.del         = cn10k_ddr_perf_event_del,
--			.start       = cn10k_ddr_perf_event_start,
--			.stop        = cn10k_ddr_perf_event_stop,
--			.read        = cn10k_ddr_perf_event_update,
--		};
-+		ddr_pmu->pmu = ody_pmu;
- 	}
- 
- 	if (silicon_flags & IS_CN20K) {
- 		ddr_pmu->ops = &ddr_pmu_ody_ops;
--
--		ddr_pmu->pmu = (struct pmu) {
--			.module       = THIS_MODULE,
--			.capabilities = PERF_PMU_CAP_NO_EXCLUDE,
--			.task_ctx_nr = perf_invalid_context,
--			.attr_groups = cn20k_attr_groups,
--			.event_init  = cn10k_ddr_perf_event_init,
--			.add         = cn10k_ddr_perf_event_add,
--			.del         = cn10k_ddr_perf_event_del,
--			.start       = cn10k_ddr_perf_event_start,
--			.stop        = cn10k_ddr_perf_event_stop,
--			.read        = cn10k_ddr_perf_event_update,
--		};
-+		ddr_pmu->pmu = cn20k_pmu;
- 	}
-+
- 	/* Choose this cpu to collect perf data */
- 	ddr_pmu->cpu = raw_smp_processor_id();
- 
--- 
-2.53.0
-
+- Arnaldo
