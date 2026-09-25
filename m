@@ -1,44 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D8FB4BD34B
-	for <linux-perf-users@vger.kernel.org>; Fri, 25 Sep 2026 15:11:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E32F2313E2C
+	for <linux-perf-users@vger.kernel.org>; Fri, 25 Sep 2026 15:13:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790349119; cv=none; b=pUioyljPT1ZzcU9pmMusaXNAhbwDDtwsyLy02Za3wegsxGUCLobuZSguePNyhiqNxi3+eCbvgzAg4PeVquVOEPWLhOIHsAQSXKTCQjsZ1ZjV6Z/DXvcwthyIBMjSTg/3myinS/nye4zKV2Ga2qiQ/BjD4aMxCHA8Ph0iAY0vCZg=
+	t=1790349235; cv=none; b=LT2lvs6uZSFZMx9AitdmvQ9NCTVpZUFOuvvp3C2vflqngU1ZHD5IieXhNA3DFsdFnVmIl274rUAfgMDNU39dLuJyF/xAhARCz3FmfS8fjkp1hyHmrnkgZc4nKfGOy+AsEdUf1kRWl0g4NQMnHE7CcYOMWINJpBuUehZ8x213Ils=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790349119; c=relaxed/simple;
-	bh=gWVBky2VSNhj5twBKyl5AcM46dVP7A7h8IvZ6Uky2L8=;
+	s=arc-20240116; t=1790349235; c=relaxed/simple;
+	bh=b5N43tD8tk1osNIB/VDFIBGmt75Evvx56HFaEvO51BE=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=ZD0D2PbQFM7IDV8rv8kT9zIn3+p9QFhT4lpJ5ZRYopoBIyITX+nV7hEQEGIqb5MxbQ6IAydnCEfXXWCS0Fcw1D0BF6VU5/VcUG9OXhBHZQBcB80ccV03i1WxvLd3kfjaHCijLm2+TVm1SWtkn38VJb2HEh1TE6ZcpKBGIpkjvxo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GVavG9ja; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=IyroVbsdXq0z1QXZh3zmBuDwGYD0X+A8yckYUDMVa/kYIc2F2xIP0r4Q8Fl4/CgHcpVvKAzfl9q6Xh1gYxzYjtSzPLriopb/gUkUaaCLmJtkbCovdBeaP0mSzpQsxmL5NLfwF64bc9miXZ5ki0QJ1Vg+p1DPy8uMYu3XpGmT0XM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=B+107dF/; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GVavG9ja"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0D40B1F000FF;
-	Fri, 25 Sep 2026 15:11:44 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="B+107dF/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B59001F00893;
+	Fri, 25 Sep 2026 15:13:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1790349105;
-	bh=gWVBky2VSNhj5twBKyl5AcM46dVP7A7h8IvZ6Uky2L8=;
+	s=k20260515; t=1790349226;
+	bh=b5N43tD8tk1osNIB/VDFIBGmt75Evvx56HFaEvO51BE=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=GVavG9ja5f04NiWfxqgOz0XlPnJyuoPTMweB54/rS1cF116rGrOnQGVbXpqIHw5I1
-	 apQDIxvjCTJQKXprX0fsEFQKsKhAqnfBxeypNgKXYnkU0bmZcTiRWLSFpyxpRAF4Il
-	 6zn2FdaqsOP6wzVgSrUOJy5MujJBbRy+fiWGBznsgpOBcnlN8g5PRq9AyHq8Y+Oqiu
-	 UY6RFZ223WV0em3fl7+WLKZuqKX8X8KryD7XYg3QTTSuh46mn91HBOtoRUNe6saviA
-	 7zEtGfZX0EuLdwzEIu+lLr27vnTToDVnSIf80QC+2BQtRoNXpM/dacxh+hPSYlLu3S
-	 ErCrancQIsFKg==
+	b=B+107dF/qEEhPnPveDQmr4XMvBERe4PDeJ/7wqyEe12jey/8tkjpDtrsp3wgORmpB
+	 WfddIlDSNRFaCDFyaEkg8h4uWAPE2Y+MHv08AskJUkxad6lx9/gNIW8Va3c+WpPn8U
+	 f53l7CPc8YaOtGOUyQ04GRQPrizbvoelSu0DGRdBWxUW08jhj7c64Og/AaJxUXodGn
+	 ysu+NWR49nZzHS8erp3ENf8RQacUbUE9zxcQZ9ieOMFWjwxZtHLzbz22/TZTbD23wg
+	 kkdPqlotXgvudPnn3azDEWZwETgbawrmQ50qGQ5qcF3Fc7ZwUMm9huI/hNQg4xkafx
+	 iVPA21E/qJLIA==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 3/6] perf annotate-data: Resolve type DIEs in the debug
- file they came from
+Subject: Re: [PATCH 1/6] perf dwarf-aux: Bound the type chases for broken
+ debug info
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Arnaldo Carvalho de Melo" <acme@kernel.org>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260925150657.1826942-4-acme@kernel.org>
+In-Reply-To: <20260925150657.1826942-2-acme@kernel.org>
 References: <20260925150657.1826942-1-acme@kernel.org>
- <20260925150657.1826942-4-acme@kernel.org>
+ <20260925150657.1826942-2-acme@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Fri, 25 Sep 2026 15:11:44 +0000
-Message-Id: <20260925151145.0D40B1F000FF@smtp.kernel.org>
+Date: Fri, 25 Sep 2026 15:13:46 +0000
+Message-Id: <20260925151346.B59001F00893@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -47,21 +47,16 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
 > From: Arnaldo Carvalho de Melo <acme@redhat.com>
 >=20
-> 'perf report -s type' hangs burning CPU on the dwz compressed debug
-> info of libz.so.1 (zlib-ng): die_collect_vars() saves the
-> dwarf_dieoffset() of the type DIE, which is relative to the file it
-> lives in - the dwz alt file for the types shared by more than one CU -
-> and update_var_state() resolves that offset in the main debug file,
-> parsing whatever is at it, here a typedef whose DW_AT_type refers to
-> itself.
+> A DIE parsed at an offset that is not the start of a DIE can have a
+> DW_AT_type that refers back to itself, making the typedef/qualifier
+> chases in die_get_real_type(), die_get_pointer_type() and
+> die_get_typename_from_type() spin forever; 'perf report -s type' did
+> that on the dwz compressed debug info of zlib-ng (libz.so.1).
 >=20
-> Record whether the type DIE came from the alt file and resolve the
-> offset with die_get_type_die() in that file, with no fallback.
+> No sane typedef/qualifier chain is 32 DIEs long, so give up on the type
+> with a pr_debug instead of hanging.
 >=20
-> Fixes: 06b2ce75386df04b ("perf annotate-data: Maintain variable type info=
-")
-> Fixes: 55ee3d005d62279d ("perf annotate-data: Add a cache for global vari=
-able types")
+> Cc: Masami Hiramatsu <mhiramat@kernel.org>
 > Assisted-by: LLM
 > Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 
@@ -69,5 +64,5 @@ Sashiko has reviewed this patch and found no issues. It looks great!
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260925150657.1826=
-942-1-acme@kernel.org?part=3D3
+942-1-acme@kernel.org?part=3D1
 
