@@ -1,240 +1,227 @@
-Received: from mail-qt1-f176.google.com (mail-qt1-f176.google.com [209.85.160.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from flow-b8-smtp.messagingengine.com (flow-b8-smtp.messagingengine.com [202.12.124.143])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06C153BBFC5
-	for <linux-perf-users@vger.kernel.org>; Fri, 25 Sep 2026 21:56:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.160.176
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790373371; cv=pass; b=jHCYSyL3BJnANndxKAKDM1yHyyB5wpS+Q4vTXbbjcdyCtr9okBHEG82fTaop1Y3kuycL1jNuIaKAELfwaclZf70FIVpUxCJcgTT40J+R1kI64FCOIgWoNd1n8Zu7m6NwJsh2ipxgL6ymgbiTlvIM4T/H27xz2fNlKFEhCG0C+dg=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790373371; c=relaxed/simple;
-	bh=hhEeJxyDgf0Rdb58JP/S95nGFRDpgKlKMtH/KKZod7k=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=CIZKOLP6uxy/b2uvtrLykzZJt3jKp/plN0r0O63cYmxBzeLnDMBU3GvmpXITnVa2j/R330ir5PgsO9zPKO46anbwpjfuR75/bUKFXh5vILLjBJ/+B5Ww5A+MDC0wq5AzQK8g6xzBB/haDLmaYQtXxcIR6JBSnOx8sE+KFGM8OeE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=RENZC0rB; arc=pass smtp.client-ip=209.85.160.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C1824570E1;
+	Fri, 25 Sep 2026 22:06:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.143
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1790374019; cv=none; b=KnF68ceULhHuwl9zGkE4KpadXcCo6dieB5pZxfwwdQhfx5EslvNRRqqmxFUm61zWlvrkq5cvHzh+nhe/R7TNEO8c9DNfZghyHYFtelAJXDWBWnFnOEHVl2jJ5/y+PipPF236SrMZILhlIa2RU+2llb4QyylhhFtBloJ9bPGDfJc=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1790374019; c=relaxed/simple;
+	bh=lS1TxV0OL5XbjJoEVVQOxIs/WZv/eAgyubI3NbbQssI=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=qBMOiV8XKYqE2k6LV4zGN+Ym0gNRay1evLw51EiIATao+r3QN1HLgUuNYoQbBZRKgtdG00suqHJJz+Zv+bRDauX/f0jlv9G/IRgVP00uVEiVlZR+Q36ywtU3gzLx0vNyhQ4Hrtw0SPFpKcOD9ivHoE8kPXv9GeTZh5VBN3yN2IE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=VV93A+GB; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=aGXV+YUS; arc=none smtp.client-ip=202.12.124.143
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="RENZC0rB"
-Received: by mail-qt1-f176.google.com with SMTP id d75a77b69052e-530e8c6fb80so51891cf.1
-        for <linux-perf-users@vger.kernel.org>; Fri, 25 Sep 2026 14:56:09 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1790373369; cv=none;
-        d=google.com; s=arc-20260327;
-        b=EaoaNheOkRLMxPkicic9HcJgVdJLPg5rgyX3DLggYpcJ+86293lECLi1NG/LCf7r5R
-         G0OKXSJfXFHZrjykilaGDH4V2K/AL0fvLsimsWTnslLutVON93XgNRQw3YZez6kVcP1t
-         xhrt7UeAvDqr41TcqUbsgMZa1kyOg3NcfEcAUFRjpmNDSS/UhzbnABMSJy755Wqi/eUZ
-         ffIfgi337GAqHdhIvz8cIuiULIW/xj5l/igXSr7nnv2pjsuVhZTspgYWkKRsMaDaVnxM
-         qer+BmEbp7ZOavoM1IlnYLnbTHxe497wD83/Y5tFLpiB/dyC03UMmaU/HC7O6BSgPshB
-         o8hw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=x17uoEv0pLsC+kg6NWB1ARGQDfu151lBiwdeVrtyu5g=;
-        fh=RLn8tM0bjL/LarxTW7CAR7ke064pVjZsLDk9ZQZcCHo=;
-        b=VXcrT8ZhWQhFhgMrde3MQgjV/T728xDzoUXwtTH1Mdq3jPAAJWH4I+LWtohCyH+Ryt
-         AX47XBYhuVo9CJBkZxeXdw0U78/F1pP2nZ5fe7G7CacW09H5oeFIgSmaddVJv55h4zGf
-         iucFEoKwpIvoCjgjaohf2tI9GmzA8FeXE4eZtVWoqbQicEn1XtdLBvH4l161cX3iC6hm
-         IuQkzWmZtqbOiKwOFmdUjr1fcS1mSiB7MqnITLSjX3K9S/QzMeCftKo78WtbxGQoWmSp
-         XbFh6UeyRKY00ICPP8vs8Gt6OmH2DLZg2ajrHbIrIZpM6vKEsUAkNNx14dLrt9sPXbcz
-         fLzA==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1790373369; x=1790978169; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=x17uoEv0pLsC+kg6NWB1ARGQDfu151lBiwdeVrtyu5g=;
-        b=RENZC0rB9HxtwaHXeS40Z4LGm+QaAqftxQz8pqyFHTIGKFWGfz8cAQGLknxJuqFYtx
-         FWxy8xC7H1+01hfpPZ0wNHgIhhVlB5hhqrjxzAkl5SXqvHPnMW2OWLBcymNZw+oH6938
-         8ZCCvU6SvpzjwR3HnycxqaoYKbQtAYTz/kS+FANf66D7Tib/9uP77MG8JrdrIhWs+zox
-         NpWAdU2OcWo6hDB1Gx23sQ1vjK7c6w4wTcVxJxEW4vQXdkEni6f9mwh1OJTgRzCNMcQ8
-         q56UdXKX0RhTMnm547g/Byv/AyRVCuVKmKjnEoD08khwZFe6D0Er9JwO3Np5nRD3LrEG
-         /8vg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1790373369; x=1790978169;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=x17uoEv0pLsC+kg6NWB1ARGQDfu151lBiwdeVrtyu5g=;
-        b=tqi9j7Ls52JAa3p9byfs9pGAhkf2X2++dcBk0nJzls9odRV60nvX9RKi2cJQHBrYUN
-         zKNB0pyJgnh4TWaxgQjDIJmFoBFf1qeNAJUnue+Mi6fqkWRdQIkqXkD/KPmD6n/CS1M3
-         6i3CSFHgDEMJiU4c75Y62Hat6eAVc26AL17p1t80c5nhzadonXrkvpj/7bj1Pe9LM/KH
-         m4evXIMmP/rXCrQLkEZ55i/PWYW+YYeLq6stgSIcvFMxTMpYFmabadPNB+WJoAXibc1o
-         6umghAzmpaVjp4u5TkCQow2SucoyZUwmLrnoEw4O52Rf9AUE/5VABiA6uQzjCpFIN97N
-         gxuQ==
-X-Forwarded-Encrypted: i=1; AKwUvBwTo5zb+wd7Iw6sneuSz9tn4rS06n4sqR5UXW266BTNigVa6dGzFixOCLH3h7zO1hPZd63fNmzF7K3cBnNI0qW3@vger.kernel.org
-X-Gm-Message-State: AFuF++nnqmIBv4h/bXvAFiwJgwvY6mO6W7jblyAEYBPPlPQ7eyaUWpnl
-	+QKTFkCFuQzWMEtuFPfIWPzC+ZcJBbZTBwP0tlV9lGDffHKvXzpMDSk0IFDWdMk59SdgsqqrREY
-	T2KlvVnnKIk4aWHb6CB3SW5aVkXN3h0ptdHjbNaYX
-X-Gm-Gg: AYBFou2Pxit37qsCi454aXLb3KoQM9iBOok2waO7tQgqFA6g+FXECEVhl9VNpMJuVXU
-	zRggem9lqNmKy6e+tBZh0WkFWjzcOyOk8TsJF0PcTvjPyQbGSU9mxbfA2/P2tEfop4OL0/1u7ny
-	UCJXv9taU6FDYXfeSTvuCxpGI2q3ymISJGPY25Z3Kk9JWVYPzb7WewEu1n4RgdSCyRun35jY+wI
-	JBLbZiVN55bqnHiszLvtgJzg3HkzACeHeeP4UdzQGNPSR9TxxUmHynytIyAOBvKNPlRKWz+iGHt
-	AnsnvMqDhIaverybaPvZfmQZXeE9G/u/gmZK/4lBXhKw5pcIBoJTVzx8/fumFb12qD0OesHhCRb
-	u4tTiED2qvA==
-X-Received: by 2002:a05:622a:8c4:b0:532:9220:a9ae with SMTP id
- d75a77b69052e-53320155dc1mr4752091cf.6.1790373368032; Fri, 25 Sep 2026
- 14:56:08 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="VV93A+GB";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="aGXV+YUS"
+Received: from ams-compute-02.internal (ams-compute-02.internal [10.64.2.62])
+	by mailflow.stl.internal (Postfix) with ESMTP id 573C313003B9;
+	Fri, 25 Sep 2026 18:06:52 -0400 (EDT)
+Received: from ams-imap-03 ([10.64.2.23])
+  by ams-compute-02.internal (MEProxy); Fri, 25 Sep 2026 18:06:56 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm1; t=1790374011;
+	 x=1790381211; bh=JrMmm48wWb5nfElfLTql9tnPeB0+8MEVeYNyAgGoaQE=; b=
+	VV93A+GBv2P9/qrRdwAhHm15SknYpPDoE9Rusj/hHzckBkjJVEcdDlJTHlO4p/7E
+	MsStEr6lA9ZZpv80ctYjcMxWtVfeFtMzS2Pz6b48b4mBBrO1C9yPQ1m/yB4jrJsU
+	Txgptg/CZdFHDOAYUVRGXXi1vMAjXp9R2q/zkAVgu2JU57U6eOhopKB9vdNOWomM
+	8KEOhPJEGjfknNt7dRh1N3UcGrPPo322SVDR7u2P7ODyCz9fXvOMVKwB4BGJLV4d
+	p1vZk++EfDAgCFACQelPXp+bGzwficcKO8bwIm5qbPT1tKzqp+6Byy8nrSst/iUF
+	5iM/+XBRXhRzlq/3FdZWSw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1790374011; x=
+	1790381211; bh=JrMmm48wWb5nfElfLTql9tnPeB0+8MEVeYNyAgGoaQE=; b=a
+	GXV+YUSmJZBpt2RL3eFg0yROgDvjwUpne/3aX5qHc2ia1wEVE/khGVzWW2IGsz5l
+	hd3jDKQVGFxsM4ytzm0w/bh9v/Q0fmxggROD5amVZbL2IpyazCJKEmXcfYygtqXQ
+	BNuhNcefmS8wBdPbdpsyQgC85zo4DoYIA7PTlnLy/b0B7TGhHrMTVWAcQVUniEoZ
+	1QJGFj+nGWa8IGhxIs0v/xiIAUYiBM7D6MMeI7Tqf0DCWrqnH693KRkitqw3jAgQ
+	k0QlTsip1+o1bnRtNhMLSAe/LoZeLLRCKWTKQF0vQQ12dvxRPUWAYPzU7TrYn2iP
+	xq/lsXF6iBqKAWrtf+W5Q==
+X-ME-Sender: <xms:cvC2aiSvwM8it39YGAo0r2BFMlajZQzHCF1-wybOlfFNnzuJE4_VgQ>
+    <xme:cvC2aim-IxtOzGmBKYQptfJ-5tq7fGqg-34DIWlZzsqMywgEQ0mR0QgqWq_6cb9JX
+    NjtResFg31PUDdRrYBtL-YJLF1e2pjmDFCJzHcjJRCB_VemwzQ9RdVm>
+X-ME-Proxy-Cause: dmFkZTGWorUwcHDaphCYw8v7P4r6eX5pMArEM2/fjfsVfdD8oh9PHyAFGRqsP8lKRNOvro
+    Ftaux56ZQWBnJufjCK4NoTl5gmyZyS2NrT/mOlvXaJbBgwyJlksfmDxh/T6ep3Q5rP1X5I
+    Gg3BUF69X8e0yxuG8tIsosXhwJWN04kZfd3Hs8hAZ/+JOdcATDpskVHlGuS/IemkueryOR
+    hIuVjhFQk7CePHMlVc9CQ7MECLINzrqb9LdZmsZGkkEkpHSYSPer552CpRSKn34v37USct
+    HhFuvihTiBMck5qt8HqfIL/ioFLlYd+AoG7CwtlhshQQ5QWzjlxpGOjuQuzfN0lyT2CNBA
+    xiE3/XVFoRJUnTcPHXnnP4ULg2/OhUw0cUVTM2Hl8kzEGyQmxm0APQJMTvjFGoCeexOfR/
+    jaxLRyktqvX8daF3L239waW+lQXkj8NIMZ45sRs0hondG/NYNiUtlwijloNURLVJpSRs1n
+    HjrVk8mAadcUojfqUFKMkwbvd1knunWFqf3wFKqO35MyuIsff+Lt3vTDKNneO2MS2loK5e
+    Q/dybw3p42QGSplvXOieL4zZL+ZwpJVbWdxv7+d9YbwYEGdtccmCLCVTEkoohZKIitwDZF
+    bbnjGJjj38fYWu6AOjGxXX1gJyhzi0LUn/N6YtrvJoDdXC/mveLWJ3hmsmrw
+X-ME-Proxy: <xmx:dvC2amzBvlQCAD5sW2JaXm3j0P9ai-oMPjy5v8vXmarN-S8XKRnZUw>
+    <xmx:dvC2auHhsX2b7IMnKKPnB_m7lyGmqEgN3tOfWJI43cbUmyqJIJe9DQ>
+    <xmx:dvC2avqA9un_ie7CCszm4rHR5kIbiuuqJAmgxGMKC0t4LTi-ke-ZMg>
+    <xmx:dvC2avxp2MUpSON7EdEvlibuWv90i4hC2qOqz0DFeopE6Lyo9tYUDA>
+    <xmx:e_C2asxjh4_ZZbt6wpAEkh3al--Q2E5cOHCufEezSsf4Ch9A-LWaZN6L>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.ams.internal (Postfix, from userid 501)
+	id 548BB32A0087; Fri, 25 Sep 2026 18:06:42 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260925-perf-symbol-memory-send-v3-0-3e4e234c363b@uber.com>
- <CAP-5=fWLp5c9HYZ6oTsfPhWprz3uMTT=mt3M-OVu8GEjzSpEww@mail.gmail.com> <CA+w=M=Tdyt=s9FTvDH_4ozk_1MM09J6xTdLrsq-WNhQ1S+ACXQ@mail.gmail.com>
-In-Reply-To: <CA+w=M=Tdyt=s9FTvDH_4ozk_1MM09J6xTdLrsq-WNhQ1S+ACXQ@mail.gmail.com>
-From: Ian Rogers <irogers@google.com>
-Date: Fri, 25 Sep 2026 14:55:56 -0700
-X-Gm-Features: AclHuK_BkAE6NX7F6Laiq_Pp1lj2vQI6Q3l2GiqPcrS7XwFuVKpt3MsrU6chZfI
-Message-ID: <CAP-5=fWMF=HrQwBObz1ryc7e+=0iJAwT=QSa0neYT73xCfqAjg@mail.gmail.com>
-Subject: Re: [PATCH v3 0/6] perf script: Bounded and lazy symbol loading
-To: Alireza Haghdoost <haghdoost@uber.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, James Clark <james.clark@linaro.org>, 
-	Alexei Starovoitov <ast@kernel.org>, Andrii Nakryiko <andriin@fb.com>, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-ThreadId: AJwEWD5WPnhk
+Date: Sat, 26 Sep 2026 00:06:22 +0200
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Lorenzo Stoakes" <ljs@kernel.org>,
+ "Andrew Morton" <akpm@linux-foundation.org>,
+ "Liam R. Howlett" <liam@infradead.org>,
+ "Vlastimil Babka (SUSE)" <vbabka@kernel.org>,
+ "Jann Horn" <jannh@google.com>, "Pedro Falcato" <pfalcato@suse.de>,
+ "David Hildenbrand (Red Hat)" <david@kernel.org>,
+ "Mike Rapoport" <rppt@kernel.org>,
+ "Suren Baghdasaryan" <surenb@google.com>,
+ "Michal Hocko" <mhocko@suse.com>, "Jonathan Corbet" <corbet@lwn.net>,
+ "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+ "Dennis Dalessandro" <dennis.dalessandro@cornelisnetworks.com>,
+ "Jason Gunthorpe" <jgg@ziepe.ca>, "Leon Romanovsky" <leon@kernel.org>,
+ "Paul Moore" <paul@paul-moore.com>,
+ "Stephen Smalley" <stephen.smalley.work@gmail.com>,
+ "Jaroslav Kysela" <perex@perex.cz>, "Takashi Iwai" <tiwai@suse.com>,
+ "Alexei Starovoitov" <ast@kernel.org>,
+ "Daniel Borkmann" <daniel@iogearbox.net>,
+ "Andrii Nakryiko" <andrii@kernel.org>,
+ "Eduard Zingerman" <eddyz87@gmail.com>,
+ "Kumar Kartikeya Dwivedi" <memxor@gmail.com>, "Zi Yan" <ziy@nvidia.com>,
+ "Baolin Wang" <baolin.wang@linux.alibaba.com>,
+ "Nico Pache" <nico.pache@linux.dev>,
+ "Ryan Roberts" <ryan.roberts@arm.com>, "Dev Jain" <dev.jain@arm.com>,
+ "Barry Song" <baohua@kernel.org>, "Lance Yang" <lance.yang@linux.dev>,
+ "Usama Arif" <usama.arif@linux.dev>,
+ "Kirill A. Shutemov" <kas@kernel.org>,
+ "Doug Gilbert" <dgilbert@interlog.com>,
+ "James E . J . Bottomley" <James.Bottomley@hansenpartnership.com>,
+ "Martin K. Petersen" <mkp@kernel.org>,
+ "Jaya Kumar" <jayalk@intworks.biz>, "Simona Vetter" <simona@ffwll.ch>,
+ "Helge Deller" <deller@gmx.de>, "Sebastian Reichel" <sre@kernel.org>,
+ "John Hubbard" <jhubbard@nvidia.com>, peterx <peterx@redhat.com>,
+ "Masami Hiramatsu" <mhiramat@kernel.org>,
+ "Oleg Nesterov" <oleg@redhat.com>,
+ "Peter Zijlstra" <peterz@infradead.org>,
+ "Thomas Gleixner" <tglx@kernel.org>, "Ingo Molnar" <mingo@redhat.com>,
+ "Borislav Petkov" <bp@alien8.de>,
+ "Dave Hansen" <dave.hansen@linux.intel.com>, x86@kernel.org,
+ "Arnaldo Carvalho de Melo" <acme@kernel.org>,
+ "Namhyung Kim" <namhyung@kernel.org>,
+ "Mark Rutland" <mark.rutland@arm.com>, "Rik van Riel" <riel@surriel.com>,
+ "Harry Yoo" <harry@kernel.org>, "Juri Lelli" <juri.lelli@redhat.com>,
+ "Vincent Guittot" <vincent.guittot@linaro.org>,
+ "Maarten Lankhorst" <maarten.lankhorst@linux.intel.com>,
+ "Maxime Ripard" <mripard@kernel.org>,
+ "Thomas Zimmermann" <tzimmermann@suse.de>,
+ "Dave Airlie" <airlied@gmail.com>, "Will Deacon" <will@kernel.org>,
+ "Aneesh Kumar K.V (Arm)" <aneesh.kumar@kernel.org>,
+ "Nicholas Piggin" <npiggin@gmail.com>,
+ "Muchun Song" <muchun.song@linux.dev>,
+ "Oscar Salvador" <osalvador@suse.de>,
+ "Matthew Wilcox" <willy@infradead.org>, "Jan Kara" <jack@suse.cz>,
+ "Marc Zyngier" <maz@kernel.org>, "Oliver Upton" <oupton@kernel.org>,
+ "Catalin Marinas" <catalin.marinas@arm.com>,
+ "Madhavan Srinivasan" <maddy@linux.ibm.com>,
+ "Anup Patel" <anup@brainfault.org>, "Paul Walmsley" <pjw@kernel.org>,
+ "Palmer Dabbelt" <palmer@dabbelt.com>,
+ "Albert Ou" <aou@eecs.berkeley.edu>,
+ "Christian Borntraeger" <borntraeger@linux.ibm.com>,
+ "Janosch Frank" <frankja@linux.ibm.com>,
+ "Claudio Imbrenda" <imbrenda@linux.ibm.com>,
+ "Alexander Gordeev" <agordeev@linux.ibm.com>,
+ "Gerald Schaefer" <gerald.schaefer@linux.ibm.com>,
+ "Heiko Carstens" <hca@linux.ibm.com>,
+ "Vasily Gorbik" <gor@linux.ibm.com>,
+ "David S . Miller" <davem@davemloft.net>,
+ "Andreas Larsson" <andreas@gaisler.com>,
+ "Alexander Viro" <viro@zeniv.linux.org.uk>,
+ "Christian Brauner" <brauner@kernel.org>,
+ "Matthew Brost" <matthew.brost@intel.com>,
+ "Joshua Hahn" <joshua.hahnjy@gmail.com>, "Rakie Kim" <rakie.kim@sk.com>,
+ "Byungchul Park" <byungchul@sk.com>, "Gregory Price" <gourry@gourry.net>,
+ "Ying Huang" <ying.huang@linux.alibaba.com>,
+ "Alistair Popple" <apopple@nvidia.com>, "Chris Li" <chrisl@kernel.org>,
+ "Kairui Song" <kasong@tencent.com>,
+ "Kemeng Shi" <shikemeng@huaweicloud.com>,
+ "Nhat Pham" <nphamcs@gmail.com>, "Baoquan He" <baoquan.he@linux.dev>,
+ "Youngjun Park" <youngjun.park@lge.com>,
+ "Johannes Weiner" <hannes@cmpxchg.org>, "Qi Zheng" <qi.zheng@linux.dev>,
+ "Shakeel Butt" <shakeel.butt@linux.dev>,
+ "Axel Rasmussen" <axelrasmussen@google.com>,
+ "Yuanchu Xie" <yuanchu@google.com>, "Wei Xu" <weixugc@google.com>,
+ "Chengming Zhou" <chengming.zhou@linux.dev>,
+ "Michal Hocko" <mhocko@kernel.org>, "Miklos Szeredi" <miklos@szeredi.hu>,
+ "Xu Xin" <xu.xin@linux.dev>
+Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+ linux-doc@vger.kernel.org, linux-usb@vger.kernel.org,
+ linux-rdma@vger.kernel.org, selinux@vger.kernel.org,
+ linux-sound@vger.kernel.org, bpf@vger.kernel.org, linux-scsi@vger.kernel.org,
+ linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org,
+ linux-trace-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+ Linux-Arch <linux-arch@vger.kernel.org>, linux-fsdevel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
+ linuxppc-dev@lists.ozlabs.org, kvm@vger.kernel.org,
+ kvm-riscv@lists.infradead.org, linux-riscv@lists.infradead.org,
+ linux-s390@vger.kernel.org, sparclinux@vger.kernel.org,
+ fuse-devel@lists.linux.dev, "Takashi Iwai" <tiwai@suse.de>,
+ "Emil Tsalapatis" <emil@etsalapatis.com>
+Message-Id: <d4d7d4c2-a1d5-41d0-b1c8-8ea0cc5a0397@app.fastmail.com>
+In-Reply-To: 
+ <20260917-b4-mmap-prepare-vma-flag-sanify-v3-0-4583d8a23bca@kernel.org>
+References: 
+ <20260917-b4-mmap-prepare-vma-flag-sanify-v3-0-4583d8a23bca@kernel.org>
+Subject: Re: [PATCH v3 00/40] mm: make VMA flag semantics explicit, eliminate
+ VM_SPECIAL
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 
-On Fri, Sep 25, 2026 at 2:28=E2=80=AFPM Alireza Haghdoost <haghdoost@uber.c=
-om> wrote:
+On Thu, Sep 17, 2026, at 18:22, Lorenzo Stoakes (ARM) wrote:
 >
-> > So currently we have a symbol as:
-> > ```
-> > /**
-> >  * A symtab entry. When allocated this may be preceded by an annotation=
- (see
-> >  * symbol__annotation) and/or a browser_index (see symbol__browser_inde=
-x).
-> >  */
-> > struct symbol {
-> >         struct rb_node  rb_node;
-> >         /** Range of symbol [start, end). */
-> >         u64             start;
-> >         u64             end;
-> >         /** Length of the string name. */
-> >         u16             namelen;
-> >         _Atomic uint16_t flags;
-> >         /** Architecture specific. Unused except on PPC where it holds
-> > st_other. */
-> >         u8              arch_sym;
-> >         /** The name of length namelen associated with the symbol. */
-> >         char            name[];
-> > };
-> > ```
-> > and the struct rb_node is a significant size cost:
-> > ```
-> > struct rb_node {
-> >         unsigned long  __rb_parent_color;
-> >         struct rb_node *rb_right;
-> >         struct rb_node *rb_left;
-> > } __attribute__((aligned(sizeof(long))));
-> > ```
-> >
-> > A sorted array of symbols would only require 1 pointer per entry,
-> > saving 2 words. The array could reside in the "symbols" variable
-> > passed around something like this:
-> > ```
-> > struct symbols {
-> >         struct rw_semaphore lock;
-> >         struct symbol **symbols;
-> >         unsigned int cnt;
-> >         unsigned int allocated;
-> >         bool sorted;
-> > };
-> > ```
-> > This is basically what we do with struct dso and dsos. With a struct
-> > symbols we can add a lock and ensure operations are appropriately
-> > synchronized. On top of this we can build lazy symbol resolution.
-> >
->
-> I agree that a sorted struct symbols array with its own lock would be
-> a cleaner container than the rb-tree. However, it would not save much
-> memory on its own. On a sample fixture, perf script materializes about
-> 765k symbols and peaks at 265 MiB RssAnon. Replacing the rb_node with
-> one pointer per symbol saves 16 bytes each, about 12 MiB in total.
-> Most of the memory goes to materializing symbols that are never
-> sampled. Lazy loading avoids that work and brings the peak down to
-> 39 MiB. Lazily materialized symbols are inserted one at a time between
-> lookups, which suits a tree better than a sorted array.
->
-> If the maintainers prefer the sorted array, I'm open to it, but I'd
-> like to be clear about the cost. The symbol rb-tree is used at around
-> 100 call sites in 18 files under tools/perf, so the conversion would
-> be a separate series that has to land first. It should also cover both
-> eager and lazy loading, so there is one container for materialized
-> symbols rather than a tree in one mode and an array in the other.
->
-> > ...For
-> > the bounded memory size, I'd prefer something like a reference count
-> > in every symbol (which uses one word we previously saved). We can
-> > periodically scan the symbols array for symbols with a reference count
-> > of 1 and then lower that count, knowing it is safe to release the
-> > symbol's memory because no other thread is referencing it. This would
-> > avoid having symbols appear as "[unknown]". We should really have a
-> > similar scan of the dsos to free up their memory.
-> >
->
-> Eviction would bound the steady state, but it doesn't bound the peak
-> on its own. Eager loading materializes the whole symtab when the DSO
-> is loaded, before anything can be evicted, and this series does not
-> add lazy loading for every loader (PPC64 .opd, .gnu_debugdata, the
-> kernel and modules still load eagerly). --max-symbol-bytes covers
-> those paths too. It is opt-in and off by default, and is meant for
-> hosts where perf shares memory with latency-sensitive services and the
-> operator needs a guaranteed upper bound. Like perf record --max-size,
-> what happens past the cap is deterministic: perf warns and reports
-> [unknown].
->
-> >
-> > I think the patches 4 and 5 do the core work, but they introduce some
-> > warts that I wish didn't have to exist. How do you feel about
-> > reference counting? To avoid reference count leaks we adding a
-> > checking framework that is documented here:
-> > https://perfwiki.github.io/main/reference-count-checking/
->
-> Reference counting would be useful for symbol lifetime and for the
-> annotation and browser_index cleanup, and freeing unreferenced symbols
-> would reduce steady-state memory. As above, I see it as a complement
-> to the cap rather than a replacement, since it can't guarantee an
-> upper bound.
->
-> Refcounting struct symbol touches every holder of a symbol pointer,
-> so I'd suggest doing it as a separate series using the refcount
-> checking framework rather than in this series.
->
-> If there are specific parts of patches 4 and 5 you see as warts,
-> please point me at them and I'll address them in v4.
->
-> For v4 I currently plan to bound the second pass of
-> dso__build_ondemand_index() by the allocated count, as reported by
-> Sashiko.
+>  mm/vma.c                                   | 246 +++++++++++++++++++-------
 
-So, I'm pretty against the complexity of dealing with symbols that may
-fail due to a memory pressure issue. I'm also against having memory of
-symbols bound, while memory for say debuginfo isn't. Ideally we'd have
-a language runtime that'd allow us to express some notion of weakly
-holding symbols live. I think we can implement a global function to
-reduce the memory footprint by iterating through sessions, machines,
-dsos, and symbols, squeezing them when possible. The problem with
-implementing that on top of patches 4 and 5 is that it's hard to see
-what would be kept, so we'd just revert the changes and start
-implementing the reference counting solution again.
+Hi Lorenzo,
 
-In the change there seems to be the addition of helper functions and
-structs like symbol_candidate. These appear in header files to be
-shared across C files. We have multiple notions of symbols, with and
-without libelf. I'd rather the change were more minimal given I think
-this is the wrong direction.
+I see that in linux-next there is a new build failure in some
+configurations in code that you are changing here:
 
-Thanks,
-Ian
+mm/vma.c: In function '__mmap_region':
+mm/vma.c:3083:1: error: the frame size of 1552 bytes is larger than 1536 bytes [-Werror=frame-larger-than=]
 
-> Thanks,
-> Alireza
+I don't immediately see anything that you did that would have introduced
+something bad that wasn't already there, so it's likely just gone from
+just below the limit I was using for my testing to just above. The 1536
+byte limit is what I use on 64-bit builds with KASAN and otherwise
+still has a clean build (with a small number of local fixup patches).
+
+What I see is that this function has multiple structures on the
+stack that have nontrivial sizes:
+
+        VMA_ITERATOR(vmi, mm, addr); /* 104 bytes */
+        MMAP_STATE(map, mm, &vmi, addr, len,...); /* 384 bytes */
+        struct vm_area_desc desc; /* 128 bytes */
+
+The config that caused this is https://pastebin.com/raw/5M95qHy5,
+which is an x86-64 build with CONFIG_KASAN_STACK enabled, and likely
+a few other configuration options that made it a little worse.
+KASAN_STACK tends to double the stack size used by structures
+in order to catch out-of-bounds accesses.
+
+If I sprinkle some 'noinline_for_stack' annotations on functions
+called by __mmap_region(), I can get the size down to 1144 in this
+config, but that doesn't sound like a great workaround.
+
+The large stack usage is potentially harmful if this ends up
+in call chains that have additional large stack usage (e.g.
+kmalloc() leading to reclaim). Any ideas for how to reduce it here?
+
+     Arnd
