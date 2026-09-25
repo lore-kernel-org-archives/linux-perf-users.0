@@ -1,153 +1,174 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF8A53E0749;
-	Thu, 24 Sep 2026 22:49:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF1FF184;
+	Fri, 25 Sep 2026 02:27:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790290186; cv=none; b=LRYRrU1F4tt8uysCXbtx8AZAHbW3yHQDGsAZ1fZZH5mW26cu7kvHskryzz8dZTSWFk/7QK6+3A6CjOrxSjjLBXoyzIy2Iy4DcX9Gc4hm4nItpX33DWkHAEIPss3qh52hf+9PjGL/LgOWSaM0bfJrlwc7uCeU+xRlWgpFN8Vo0bk=
+	t=1790303223; cv=none; b=CQ1NDdLAz54mAJu0Sxo5jR67LqgebVz3xzKgU5TyzhNdvOrQn/6ijX1y4HpYvweKAXKqaJJArP1iBDMOU1y6n286sORw+dtwvRTDpz7POUclJ7BqpyZLnQOvPFqbnedyrvIga7owQChx3MapDquAWZpjEBegQ8Tec7RwomzYqms=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790290186; c=relaxed/simple;
-	bh=X4N46zTnr8zPk2L5jVsXS384xSnr2JuLk2Bx7PaxCXc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Klrv/NMibaFXnQNPcpC7e+qse6R+wFLj4RNNzfLqg0wsxDFzTfr6M3b5TGvsiQX7rg7Gza7br7gi5+3vFu+/NWf8uBJHT9OJImv7SbX4+rDRft499ijxQ4FyT5mg2jqreTFTirKUWeJdiKP1wn3snyDlIatxHmCBtpcjHpCybC4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=G8VZZiY8; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1790303223; c=relaxed/simple;
+	bh=6PXS7H4wFEJClTzUFNo4UzuQSmfvDpFmThwxZEYbYB8=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=Fbp50tEInoMlHLI3aS8SanHwDlA3otuqY2mQebFYZRsG7vA+/B4TDx5IIqYgNPX1wUIngdll15fIZx0z7zCJxzx5nWTPF0Xf2lOCr4q149ohrDk/Txej8tFgH8LtH0MWBOx9HtcXfjHTQnvyOTk8SUeOzS7EDuo/z+MC1rEOqxQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oQIipZNM; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="G8VZZiY8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F3B131F000FF;
-	Thu, 24 Sep 2026 22:49:43 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oQIipZNM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 46C5A1F000FF;
+	Fri, 25 Sep 2026 02:27:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1790290184;
-	bh=SBnRjlZiMD6GNwF5HV2vUPlpIGI4oceGD3wHaGXf4Lw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=G8VZZiY8GSq6qLx3F0yb/nl8UQ8v87ci1lltEYNHB/PoOGluwTgcQg+opo/BMMeIW
-	 /HkO/pQC+NIW0XMN1GmfL217dv7ldbMpHIdaYrQ0YR5MTaQtnV1gi5up+S4rraA4vt
-	 RM2Ja5SG0sr8YyhFsWCv+x8U6+F5pfHApqOl8HV1G/cLTl+A5xG5YQ6ueX2YhzP2Sr
-	 cuAQeKmM1WagS68C9s7YWtP37hYwDlSxPsswUvuetWWEDuw1NimqLQTsxs1/R0ej2E
-	 Hz2zNpJbBrRfn4mf8/WAaDHtLH5m4MXNPQulxmXUYkVeR036WV+eJzILpDvwbwjjWX
-	 REks5oJyrbM0A==
-Date: Thu, 24 Sep 2026 15:49:42 -0700
-From: Namhyung Kim <namhyung@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: acme@kernel.org, howardchu95@gmail.com, adrian.hunter@intel.com,
-	james.clark@linaro.org, jolsa@kernel.org,
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-	mingo@redhat.com, peterz@infradead.org
-Subject: Re: [PATCH v5 11/23] perf trace: Do not set unaugmented BPF program
- on sys_exit map
-Message-ID: <arWpBizG27rMsHmZ@google.com>
-References: <cover.1790145937.git.irogers@google.com>
- <42dc47785bdb78054500591b193a1cb653ef39b7.1790145937.git.irogers@google.com>
+	s=k20260515; t=1790303221;
+	bh=xIV86QW+Coqh6Iuh30T332CDhfsBi3YyDaDo9LRNPcg=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References;
+	b=oQIipZNMlSPo/4Rd0UOQ3e3qgWvs2ojWz933HYzGA4Vlhc/V9spMb266t7N0wa5Vb
+	 aRXPhDyjSyxQUGgBh0UpkGP2Fx9+mwY0DW/Z70JuYW0hinIzy8XNhowlRC0Mm0aKiP
+	 Q0CItD8NRoByJQU0EN1KBi9eblXtpgmLSdnchioIXehUuhFrlaRc3RH7Kie+EqFlxy
+	 zTo6N+TLrZy4UO77r5+fJ1XXyRo9jaA7N6VIVEvJTcGjUPXTbgWb9mx0aA8XQjcijA
+	 BQ+bJA2zn3YskhogbVpDtOsCKlLIxpZd+xj0lyq4P961n89Jg1SgR9oXTub+12QfLS
+	 HqaufgPpI9JvQ==
+Date: Fri, 25 Sep 2026 11:26:57 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: sashiko-reviews@lists.linux.dev
+Cc: sashiko-bot@kernel.org, linux-perf-users@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, kvm@vger.kernel.org
+Subject: Re: [PATCH v17 10/13] tracing/wprobe: Add set_wprobe and
+ clear_wprobe event triggers
+Message-Id: <20260925112657.541352e9e87b745bd56ea76c@kernel.org>
+In-Reply-To: <20260922044325.587F31F00898@smtp.kernel.org>
+References: <179005108298.388919.4535333252892590932.stgit@devnote2>
+	<179005120276.388919.1645992887114424511.stgit@devnote2>
+	<20260922044325.587F31F00898@smtp.kernel.org>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <42dc47785bdb78054500591b193a1cb653ef39b7.1790145937.git.irogers@google.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Wed, Sep 23, 2026 at 12:13:51AM -0700, Ian Rogers wrote:
-> In trace__init_syscalls_bpf_prog_array_maps(), the BPF program array map
-> for sys_exit (syscalls_sys_exit) was populated with the result of
-> trace__bpf_prog_sys_exit_fd().
-> 
-> When a syscall had no specific exit augmenter,
-> trace__find_syscall_bpf_prog() fell back to unaugmented_prog
-> (syscall_unaugmented). However, syscall_unaugmented is a sys_enter
-> program that outputs enter arguments to __augmented_syscalls__.
-> 
-> As a consequence, when an unaugmented syscall exited, sys_exit
-> tail-called syscall_unaugmented, which interpreted the exit arguments as
-> enter arguments and emitted a duplicate, corrupt sys_enter event into
-> __augmented_syscalls__ right as the syscall completed.
+On Tue, 22 Sep 2026 04:43:24 +0000
+sashiko-bot@kernel.org wrote:
 
-Do you have a reproducer of this problem?  I've never seen this before.
-IIRC there's no augmentation at exit, then do we need to keep the tail
-call?
+> Thank you for your contribution! Sashiko AI review found 3 potential issue(s) to consider:
+> - [High] tracing/wprobe: NMI deadlock in wprobe_trigger() when count is not specified
+> - [High] tracing/wprobe: CPU hotplug race in __register_trace_wprobe() misses new CPUs
+> - [Medium] tracing/wprobe: TOCTOU race in wprobe_trigger() corrupts watchpoint address
+> --
+> 
+> commit b9f67542e6bf772512bb8cbf3c3011379c301eb4
+> Author: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> 
+> tracing/wprobe: Add set_wprobe and clear_wprobe event triggers
+> 
+> Add set_wprobe and clear_wprobe event triggers to dynamically attach
+> and detach hardware breakpoint address monitoring based on event field
+> contents.
+> 
+> Link: https://lore.kernel.org/all/59637b96946653393a7ad3c7de094094796b39c2.1785067572.git.wangjinchao600@gmail.com/
+> 
+> > diff --git a/kernel/trace/trace_wprobe.c b/kernel/trace/trace_wprobe.c
+> > index 9c6100b63e8d9..f1d6aa320f213 100644
+> > --- a/kernel/trace/trace_wprobe.c
+> > +++ b/kernel/trace/trace_wprobe.c
+> > @@ -193,20 +217,130 @@ static int __register_trace_wprobe(struct trace_wprobe *tw)
+> 
+> [ ... ]
+> 
+> >  	tw->bp_event = register_wide_hw_breakpoint(&attr, wprobe_perf_handler, tw);
+> >  	if (IS_ERR_PCPU(tw->bp_event)) {
+> >  		int ret = PTR_ERR_PCPU(tw->bp_event);
+> >  
+> >  		tw->bp_event = NULL;
+> >  		return ret;
+> >  	}
+> >  
+> > +	mutex_lock(&wprobe_mutex);
+> > +	list_add(&tw->active_list, &active_wprobes);
+> > +	mutex_unlock(&wprobe_mutex);
+> > +
+> 
+> [Severity: High]
+> Does this code have a race condition with CPU hotplug?
+> 
+> Looking at __register_trace_wprobe(), it calls register_wide_hw_breakpoint()
+> which installs breakpoints and releases the hotplug lock internally.
+> 
+> If a new CPU comes online immediately after that lock is released, but before
+> this wprobe is added to active_wprobes under wprobe_mutex, could the
+> wprobe_cpu_online() callback miss the wprobe? This would leave the new CPU
+> without hardware breakpoints installed for this probe.
 
-Thanks,
-Namhyung
+Hmm, OK. Taking a cpus_read_lock() for both can avoid this issue.
 
 > 
-> Fix this by:
-> 1. Returning NULL from trace__find_syscall_bpf_prog() when looking up exit
->    augmenters and none is found.
-> 2. Returning -1 from trace__bpf_prog_sys_exit_fd() when no exit program
->    is present.
-> 3. Only updating map_exit_fd when prog_fd >= 0.
-> 4. Clearing err = 0 when trace__bpf_sys_enter_beauty_map() returns
->    non-zero (indicating the syscall has no augmentable pointer arguments)
->    before continuing the loop, so a trailing run of such syscalls (e.g.
->    'perf trace -e close') does not leave err non-zero on return and abort
->    the session.
+> >  	return 0;
+> >  }
 > 
-> Assisted-by: Antigravity:gemini-3.1-pro
-> Signed-off-by: Ian Rogers <irogers@google.com>
-> ---
->  tools/perf/builtin-trace.c | 28 ++++++++++++++++++++++------
->  1 file changed, 22 insertions(+), 6 deletions(-)
+> [ ... ]
 > 
-> diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-> index aa2d64eb56bd..0ae14ecd9f00 100644
-> --- a/tools/perf/builtin-trace.c
-> +++ b/tools/perf/builtin-trace.c
-> @@ -4176,7 +4176,12 @@ static struct bpf_program *trace__find_syscall_bpf_prog(struct trace *trace __ma
->  	pr_debug("Couldn't find BPF prog \"%s\" to associate with syscalls:sys_%s_%s, not augmenting it\n",
->  		 prog_name, type, sc->name);
->  out_unaugmented:
-> -	return unaugmented_prog;
-> +	/*
-> +	 * Do not set unaugmented_prog for exit: syscall_unaugmented is a
-> +	 * sys_enter program that outputs enter arguments. Exit without a
-> +	 * specialized return augmenter returns 1 directly from sys_exit.
-> +	 */
-> +	return !strcmp(type, "exit") ? NULL : unaugmented_prog;
->  }
->  
->  static void trace__init_syscall_bpf_progs(struct trace *trace, int e_machine, int id)
-> @@ -4199,7 +4204,7 @@ static int trace__bpf_prog_sys_enter_fd(struct trace *trace, int e_machine, int
->  static int trace__bpf_prog_sys_exit_fd(struct trace *trace, int e_machine, int id)
->  {
->  	struct syscall *sc = trace__syscall_info(trace, NULL, e_machine, id);
-> -	return sc ? bpf_program__fd(sc->bpf_prog.sys_exit) : bpf_program__fd(unaugmented_prog);
-> +	return sc && sc->bpf_prog.sys_exit ? bpf_program__fd(sc->bpf_prog.sys_exit) : -1;
->  }
->  
->  static int trace__bpf_sys_enter_beauty_map(struct trace *trace, int e_machine, int key, unsigned int *beauty_array)
-> @@ -4454,16 +4459,27 @@ static int trace__init_syscalls_bpf_prog_array_maps(struct trace *trace, int e_m
->  		err = bpf_map_update_elem(map_enter_fd, &key, &prog_fd, BPF_ANY);
->  		if (err)
->  			break;
-> +		/* Only update the exit prog array map if an exit augmenter exists */
->  		prog_fd = trace__bpf_prog_sys_exit_fd(trace, e_machine, key);
-> -		err = bpf_map_update_elem(map_exit_fd, &key, &prog_fd, BPF_ANY);
-> -		if (err)
-> -			break;
-> +		if (prog_fd >= 0) {
-> +			err = bpf_map_update_elem(map_exit_fd, &key, &prog_fd, BPF_ANY);
-> +			if (err)
-> +				break;
-> +		}
->  
->  		/* use beauty_map to tell BPF how many bytes to collect, set beauty_map's value here */
->  		memset(beauty_array, 0, sizeof(beauty_array));
->  		err = trace__bpf_sys_enter_beauty_map(trace, e_machine, key, (unsigned int *)beauty_array);
-> -		if (err)
-> +		if (err) {
-> +			/*
-> +			 * Not a failure: the syscall just has no augmentable
-> +			 * arguments. Clear err, or a trailing run of such
-> +			 * syscalls, e.g. all of them for 'perf trace -e close',
-> +			 * would leave it set on return and abort the session.
-> +			 */
-> +			err = 0;
->  			continue;
-> +		}
->  		err = bpf_map_update_elem(beauty_map_fd, &key, beauty_array, BPF_ANY);
->  		if (err)
->  			break;
-> -- 
-> 2.56.0.rc1.315.gc6ed9934b7-goog
+> > @@ -767,9 +923,608 @@ static int trace_wprobe_show(struct seq_file *m, struct dyn_event *ev)
 > 
+> [ ... ]
+> 
+> > +static void wprobe_trigger(struct event_trigger_data *data,
+> > +			   struct trace_buffer *buffer,  void *rec,
+> > +			   struct ring_buffer_event *event)
+> > +{
+> > +	struct wprobe_trigger_data *wprobe_data = data->private_data;
+> > +	struct trace_wprobe *tw = wprobe_data->tw;
+> > +	unsigned long target_addr, addr = 0, flags;
+> > +
+> > +	if (wprobe_data->field) {
+> > +		if (!rec)
+> > +			return;
+> > +		addr = *(unsigned long *)((char *)rec + wprobe_data->offset);
+> > +		addr += wprobe_data->adjust;
+> > +	}
+> > +
+> > +	raw_spin_lock_irqsave(&tw->lock, flags);
+> > +
+> 
+> [Severity: High]
+> Could this raw_spin_lock_irqsave() cause a deadlock if interrupted by an NMI?
+> 
+> When no count limit is specified (EVENT_TRIGGER_FL_COUNT is not set),
+> wprobe_trigger() takes tw->lock before calling __wprobe_count_func().
+> 
+> If an NMI interrupts a CPU already holding tw->lock and hits a trace event
+> that fires the same uncounted trigger, it will attempt to acquire tw->lock
+> again here. Since the in_nmi() check is located inside __wprobe_count_func(),
+> the NMI would spin forever before realizing it shouldn't proceed.
+
+Ah, indeed. It should check in_nmi() earlier than the spin lock.
+
+> 
+> > +	if (!(data->flags & EVENT_TRIGGER_FL_COUNT)) {
+> > +		if (!__wprobe_count_func(data, addr)) {
+> > +			atomic_inc(&tw->missed);
+> > +			goto out;
+> > +		}
+> > +	}
+> 
+> [Severity: Medium]
+> Is there a time-of-check to time-of-use (TOCTOU) race here for counted
+> triggers?
+> 
+> For counted triggers, wprobe_count_func() is called locklessly by the trace
+> core, which evaluates __wprobe_count_func(). Then, wprobe_trigger() is called
+> and takes tw->lock. Because EVENT_TRIGGER_FL_COUNT is set, the state
+> validation check (__wprobe_count_func()) is explicitly skipped under the lock.
+> 
+> If a counted trigger fires concurrently on multiple CPUs, both might
+> observe the unset address locklessly. Could the second CPU unconditionally
+> overwrite tw->addr, breaking the exclusive trigger constraint?
+
+Hmm, indeed. I think the current event trigger subsystem is not well
+designed for the concurrency. Let me move the data->count update to
+wprobe_trigger() inside tw->lock critical region.
+
+Thank you,
+
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
