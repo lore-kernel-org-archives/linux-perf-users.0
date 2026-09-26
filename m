@@ -1,68 +1,63 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EC6F390226
-	for <linux-perf-users@vger.kernel.org>; Sat, 26 Sep 2026 06:34:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F247F38F95E
+	for <linux-perf-users@vger.kernel.org>; Sat, 26 Sep 2026 06:35:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790404489; cv=none; b=jdiCbdDDXFmIY3sLoqNf1yhKg9VEEP8ml3B2aMppJ5MJgkmJnaY4QqEgjrPZwVfTZ6d3I1RqwRdvrM6dlTIYceqCWzw2HSQlehS6xpp53kFpGLYd5ExC3xGu5e+YGPIWlB5U1zoPy7LwWWyTeHTM5uOyDTB1rLo7leRC2Xm3c+M=
+	t=1790404504; cv=none; b=lZzHSy3CqK3bPXwLgBEeLaMU5DXGa2KJ9MWkSrXFxzUfFE3qBXpjI8/hqQ10zr4d301g550jW/qR1fVLt6zrvey4KKbPWOqoT19T1aZgQxHm/O7Q08aS9BHJIyjT3Cql2zb6QB4zxctNmPnFRTx0ZS7H+oVEo+3ZyFNZplPIU3s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790404489; c=relaxed/simple;
-	bh=eibHxD/DnzwzeOdL3X9SnpjaTLr0rxO4r6AJM5mzXL0=;
+	s=arc-20240116; t=1790404504; c=relaxed/simple;
+	bh=qf8xssqqsv5Ujg//3j8Lfb2WfKBdZxsIFHiyzYRwKvU=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=ec0+mH6cxfSxjGnfH8Bu31GprkEmew73UYRBi5NDfDTaEEOlKbrnohVy0GQKF68Td3wITXbHWzWeCw7Qh7N/vdLkGxaDt/ksbbghPp40ihJ6pAK0Ovgd4os9t4YoAc8HcauJED7wRiD5s5fxGVMVC9Wc7b5lGEgb4WJXQYay6oI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Us3aABNr; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=i6mKXD/KVwAfJVwd3x4bA5MF2wh86ME71sW44s93xT6MjU6yXoDhd63/8i8kTvRAG1RWBR0mkw8Z7ErGmOmf6/o9+iGk0VjXP1gQLaod0h5h3wF8hFYYAkpJ9zFlCm9HSxa0SCHqzvOqACT4NZDSZob8N6srnlEwguIlwuaRSXc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fR38QcDr; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Us3aABNr"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B19AA1F00893;
-	Sat, 26 Sep 2026 06:34:46 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fR38QcDr"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 69A551F000FF;
+	Sat, 26 Sep 2026 06:35:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1790404486;
-	bh=XWgJfeWcA/9dE6AXX3Bt+7FUbZH0ViXvxAR889U7AY8=;
+	s=k20260515; t=1790404502;
+	bh=x7JJ1YY2ItyHzi1Qjtis91ytRZ/kspB2p17qH9TRcPg=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=Us3aABNruF6ToOqSvGO6gjrZrZpYUtrkQ7imUabCiYleooM0RjGjUTX0JA4HkDd3X
-	 Q2yxY5S+ILMGAwCeGYyxTDVoJOwfwr3b4K+d7C4ruyEuR7RUwkggG25yNB35YlzvU8
-	 F7yZxMOt+4nLc2oafpmRRGGbTq1A67/NQJ/Lh7+uMIEUqlXx2lnN9bOB3AIZ2WyH4n
-	 GjcY4GEWH9e7DXvOvltPf1DUO9A0CMGmuOni876NPluO9WGoQ9QFS8obdG0CCbmwgI
-	 TuYfSaljJURlRCqsK6/saaFlU4CWJPTgzssHmBqIgQUC7oHYBcMxMY/m72GM4z9eK8
-	 O2yiM6QFBhGew==
+	b=fR38QcDr9Im6fCwGsqTR/IRx2YXsG7CHtEZQBZ9FX69agEDprc/q2oY4JOGGXAumD
+	 K2s1fbT5psJ/EeHpB7d1T+qgIm6R5CIPP2LHDKj/QwkYFOoHAzCXFJr0OJfeEdsMtv
+	 wMS2k0eqxiyzs0TMjeeFF7dgzH/zTyTm6bW5/lz7X4wdePyZ7IUTJ3RRgfb5oynRVq
+	 tRduFJIKgrKQxKG9G3A2/+xNSDhMlc12/zwtP9EnfrIIw6kQsBR2pCL8FdPByhl402
+	 Csj+/BTz+GKMW0jZX2yHHX9yk/yq1v5TTKhIiifYA0GwLQcUBHenHScN6/PQB7q6PH
+	 Pqb5iMM1HBrbg==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v4 31/49] perf python: Port task-analyzer to perf module
+Subject: Re: [PATCH v4 39/49] perf python: Port powerpc-hcalls to perf
+ module
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Ian Rogers" <irogers@google.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260926062029.800743-32-irogers@google.com>
+In-Reply-To: <20260926062029.800743-40-irogers@google.com>
 References: <20260923181213.3032038-1-irogers@google.com>
  <20260926062029.800743-1-irogers@google.com>
- <20260926062029.800743-32-irogers@google.com>
+ <20260926062029.800743-40-irogers@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Sat, 26 Sep 2026 06:34:46 +0000
-Message-Id: <20260926063446.B19AA1F00893@smtp.kernel.org>
+Date: Sat, 26 Sep 2026 06:35:02 +0000
+Message-Id: <20260926063502.69A551F000FF@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-> Port task-analyzer.py from tools/perf/scripts/python/ to a standalone
-> script in tools/perf/python/ refactored into a class-based architecture.
+> Port powerpc-hcalls.py from tools/perf/scripts/python/ to a standalone
+> script in tools/perf/python/:
+> - Refactor the script into an HCallAnalyzer class with full type
+>   annotations to encapsulate per-CPU hypervisor call entry/exit state.
+> - Use perf.session for event processing to track hypervisor call entry
+>   and exit timestamps and aggregate min/max/average duration statistics
+>   against HCALL_TABLE.
+> - Add argparse CLI support (-i/--input) and remove Python 2
+>   compatibility code.
 >=20
-> Improvements compared to the legacy script:
-> - Support both offline perf.data file analysis (using perf.session) and
->   live trace capture (using evlist.read_on_cpu), accessing
->   sched:sched_switch tracepoint fields directly from sample objects.
-> - Automatically disable ANSI terminal color escape sequences when --csv
->   or --csv-summary is enabled so CSV column headers ('Comm,',
->   'Time Out-Out,', etc.) are never polluted by color codes when running
->   interactively on a TTY (e.g. as root).
-> - Sanitize non-printable characters and leading CSV formula characters
->   (=3D, +, -, @) in task comm strings.
-> - Emit a one-time warning to stderr if sched:sched_switch samples are
->   missing tracepoint fields (such as when recorded without libtraceevent
->   support).
->=20
-> Update test_task_analyzer.sh to invoke the standalone script.
+> Add a shell test (test_powerpc_hcalls_python.sh) to verify the
+> standalone script.
 >=20
 > Assisted-by: Antigravity:gemini-3.1-pro
 > Signed-off-by: Ian Rogers <irogers@google.com>
@@ -71,5 +66,5 @@ Sashiko has reviewed this patch and found no issues. It looks great!
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260926062029.8007=
-43-1-irogers@google.com?part=3D31
+43-1-irogers@google.com?part=3D39
 
