@@ -1,65 +1,65 @@
 Received: from mail-wr2-f35.google.com (mail-wr2-f35.google.com [74.125.225.99])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7655A399003
-	for <linux-perf-users@vger.kernel.org>; Sat, 26 Sep 2026 19:04:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82EE339A7F2
+	for <linux-perf-users@vger.kernel.org>; Sat, 26 Sep 2026 19:04:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.225.99
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790449497; cv=none; b=iei7LesTk+C9yqJKsIIXBMfJTIo8jpjccs1o0LGW6hkQdONADXn64jwUe3D/VltZWLoMmqE/FSWEF8wSfAczFzGu3VbhUNkfeqqXrKyw7Jb3OdFhhAxzgveVzfyqgu/h4SyQc6+k89yrRbAxMm5y1AgY1oxK0z3PkIlvKaZTIxI=
+	t=1790449498; cv=none; b=qzoWEZaKwPXnUZeXMBe0oHSbBoYKIdmy/nbHngBTuob3q0K6RSOlDih2Bdm0xodklEvDxflMzsgUiCozVlfcK7W3yK6fwsRaeOMczk3O45RooXi3Y/sfDkcLdC/TncXgEkXLKUfRzDxpUpdVWlOjw+Jjq9B87U/qdwR2sb1Ufr8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790449497; c=relaxed/simple;
-	bh=8kGK6JKtj/1yVH2ESWgYN+gWMEcdBWD4HFyY/VkC7kk=;
+	s=arc-20240116; t=1790449498; c=relaxed/simple;
+	bh=JsjWOn/Ig6TvpTUnWlM9GCCVCkgc+Omf00J9318U2AA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=WF8TgDZvy6icr8F13RmhHrQ7nkPlL+8ZGeSqc+9enUcdymG2AVtp3N4v95DzNJuvO73uk8pXTD7EdeXucNBnGjmFrkm5XE7L4LJLrRwPJ5uXFd+hcnuyY8+P3pTMgZ74NXUH7HI4f22VsjRfah0aFw8W9Z1vqELvhfjvI6Nxja4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MRLov1eY; arc=none smtp.client-ip=74.125.225.99
+	 MIME-Version; b=ulmuU/Pzp0WGWBdFm87Wqs66EztY/vVY0++ymxmhcQZ3GWuJwZixE2gqdO8zPLR4ocq7Mz5nSuabXUiy9D9BAGAmgLm6RBCvfexUdgaQi/Jq1Ssdeaknp/QHxJGHX4p86F6wjdy0WQZI2mmGsofXBBO/DntS4SzNEwdmh0LDWGY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lE9l3z7j; arc=none smtp.client-ip=74.125.225.99
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MRLov1eY"
-Received: by mail-wr2-f35.google.com with SMTP id ffacd0b85a97d-4885a1480a2so1014106f8f.3
-        for <linux-perf-users@vger.kernel.org>; Sat, 26 Sep 2026 12:04:55 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lE9l3z7j"
+Received: by mail-wr2-f35.google.com with SMTP id ffacd0b85a97d-488780459e2so1847712f8f.2
+        for <linux-perf-users@vger.kernel.org>; Sat, 26 Sep 2026 12:04:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1790449494; x=1791054294; darn=vger.kernel.org;
+        d=gmail.com; s=20251104; t=1790449495; x=1791054295; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=SNkPoBEsX8RuDQAeI6lrXEN/oS+MWd5V4w+FvgpiyOs=;
-        b=MRLov1eYxaRkTs+pLw5aZehZBMIe/qbJvUUDM8QSw1N8Kxnztr6sLR2L3NuXjCIS+T
-         4kU1rBFA22VABR8DtdKa8YoJ3hVyHlLzRiHuYbvO3XVa4wIHKWumlmLDiKQrztfJLL14
-         y1871VQCCpAME1gMmVSyWkVuYgsFm6XGvaeoQqfgWJXDhX6ch4MZ+m8avGvId88UViB6
-         7c1xvrJ41RSDrTKrtDVvmj8srOvQ9PcI7B91d93MHKUmWCCs13ctYgAHbBgRk13Rbqvr
-         Bp7UfLT2SLRg3WN2w+2k6la1ia95bzEWDhMwpseCYd8wD1KSfMTJpfOPQZjsL4jgFOLp
-         qirg==
+        bh=moYt9xjLjCCJeOMnvr2pWP4tP6d9gyEqKgc2feoMj+E=;
+        b=lE9l3z7jw2gRqKXDBmXQp4OBNZO/UQGkM2fNv5u6WYY7JH60+dfjP1zI/JMEO4kTm0
+         8XuPPEqIF16az2AJ1/GUXRw4YR7qAXLXy25Xblg7GrXohT9DrHb+ZRLIgTIJH4QOC3N1
+         8MaA25RL1JqP7Xx9gKPzgLGGWfMojQmIve5LbFiCgr6Jwn9AJ1TV3XbMfGjEZSVNLZDJ
+         pGtekaDB6Ywu2ylJEtosm5kCWFxLha0LLzbLKkFMa4vbA4a5YcqtqmWo2AeSKnHEQXDd
+         xZ71du9JVh0YL1PNMQF+uelJ7a0Sl7c2P1WbWBga8ReqUFeR4DFxKSN1JjMe3PrkmzKY
+         8x+A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1790449494; x=1791054294;
+        d=1e100.net; s=20260707; t=1790449495; x=1791054295;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=SNkPoBEsX8RuDQAeI6lrXEN/oS+MWd5V4w+FvgpiyOs=;
-        b=SuQbOg0owY1bqaMmxCzIeNfQ9iR9BvPz/bW9e9J3l4GditP4M/muJhoiutpuxyp91J
-         wrdtI1IB5Hh41JIAXIwWZ6isp9Quf3HS8WTZnnKtRSdo0jaXDur/IgtCeG0xTtPdWe/q
-         rWX36grPgm3/ef5WYpkZACtZebhd7YzoXNVsPa9y3q/xe9hiL2z3Z2wKz/4K3e6ttWIb
-         OmhxSbKs0rhukORL6N5FuRnZ0UlVmFzJW+b0Q0HPiclf/4m4cfrR8ENr/ibtLfSRhdyh
-         il44CLHx+Evnd0DwC67TZlwyhUJh1xzdRtBwQ+kptwpbbsXHznwFlS9YU0YNhpNLYH9K
-         K3Bw==
-X-Forwarded-Encrypted: i=1; AKwUvBxNhqVYqzjDA6eQSQdrPY5fPmpdEjr4NaQ0j0hpH9o2oOoT5c0l1dYfLWKw4WSZpvyDSWaGycwjVKiqTLCYBX5f@vger.kernel.org
-X-Gm-Message-State: AFq9FYIrgSxYWuHBDt2OQ0ZKQOGndi54BYAkcBfGoBToQPi9wm7kTWxH
-	w83C2yeA0KCs7L5Hz9kYM0gBzArQfEoR4kltM/OdLzS3tDj4deDMWYSB
-X-Gm-Gg: AYBFou0DSeydpR+Orq7wvN8WJK4zVY4aYl3PaPUMbqEGBQISl4mHj3Fpyhkpa46xXSf
-	q+AlijBlAndHdr6lY0JYvt1HnDfUk13fuvatcXRQvqmv7TuYC85bv00Ulc9l4UrTiI6cV53v220
-	aCzhik9dS2ffVB5iA7A6xbVZpE/TI6rLOxqp1UVb0/jtYj0rjrosfNMssrKSM2mr/H+0yOovAI1
-	GdpU5EU7Wy5OjWsLAFxMOZfhdgONdiNYc7KomnzcvbYxOgeqFuzOQG7DNt7ylgzTKB/QZEf1+Ji
-	wD7q4cIqKP5pPX4qeQDn+a1KigL5RjKxlyMD8Gdi+9pTuW4ItWQemcziFzZguTXLBvy4sbDJAuM
-	lEAnUc87UGZXSS3JjpPmuBGIgi8pXVhe2xqnkeY00gTBe58O957+y+vZ6ps8kd8EnS40ssopXw+
-	DKC+PatApBpt1BAT94smMCkgCpHfiApa61FoSBf/TnVUhP87AkoODskGc0YRKdvg2MiQ4XPhxrZ
-	OkwucfI7080+kvV+e9juu3twdvI8NWt2+BzcPWfSTZJzbfRqI/wsU30x9YGKW96R8uDLNeApirw
-	xXhy04vxNOfc79pcktsCl8JKsFGlkT2nutSFoLKncha698NXb/A=
-X-Received: by 2002:a05:6000:40dd:b0:488:8109:fe01 with SMTP id ffacd0b85a97d-488810a006bmr10533775f8f.46.1790449493765;
-        Sat, 26 Sep 2026 12:04:53 -0700 (PDT)
+        bh=moYt9xjLjCCJeOMnvr2pWP4tP6d9gyEqKgc2feoMj+E=;
+        b=gr4c75vbV7WFxizRJd9p1Qg0xtQ5+ACY/fRGQPBQtkaZhhwgy1TF25WFmoIXKEUuxZ
+         mbpFfOjb8/xklysbbdR/lUFgadtw444B+z7NvFbEYiZIpKOfgNlOEeC9e+doaCmz71xr
+         nyMAy04b6PPtbgLR0t738mOTCHnpqUoT8CsuYvxBhwc9AXYJiqA059sFUNC0aQ/+GmLh
+         /R/3Iae5bCWO/+S86ilf2WyXNrhylOxoq18hOxIexkTrOwuXKBqXKTZo9O9u/HMFNlNx
+         aS4VZMO2N/9U6jrAgTyZ+LMRhhvX5myznTjDYMPtELrUfdcSvHrlUVR3YMn0Pf9A5XLE
+         B3RQ==
+X-Forwarded-Encrypted: i=1; AKwUvByO2prWovpCiWk227Oo9bH12LOAEj70R42KLWvxSdkrbSw3YiLpNp5W/zjlZVPi/fs5lJ+At4iG+IxtM8Ffs5VN@vger.kernel.org
+X-Gm-Message-State: AFq9FYJU/yh9wOH5m3cJCvbvkQOi4YINa/m9IclsBy2eUjfozMByurz6
+	Leq5SEIM3MXZvBR76qXwfSFBD8mS/X6jUAWxYia3pfSaI3Gd/opkxDgC
+X-Gm-Gg: AYBFou0RoMuTtYwP5UoUwm52exhwgqM0FYJRtQNIrZW6+D3wHmm1wTNxBFtAcgbiUjL
+	q4nHXpAzRGkUenNn1vkO7DgRD6Zud+XpjSpe2xcjfNL8/lRPC/TOY24/Gz81evfHFAAiEyOuga+
+	FJZB2zoYsRXckTGzivcB+TT532NsiWleWfUz5YQRLg/mM6sTQsXLoNgKg1ozmyDlgwdKT3NjBrL
+	4q0SnNYWeb9F8wwM1W+AaAniyiMmHugny1ZM/3HmLb8gGs0wtFUpO85SoYf586xHQiCLlmWGPBY
+	L5XY+pznw8pMjtcoDzfRXa0o4UYoC68LVDyoLhTUrCm5IdHel9bityq3lncpRz0eQi8iHMEyIXY
+	SuouY+vW4HkZpKI8uqkV5AJ0oLL9FyWX5gbtSj9RQlt63FYziv2CNY9zRBJQBUpoutuo/SvZGZ3
+	c4dmEO5DwVvCZ48TDZX5gWXrEWFj5oRGadoPqePZ6oHWSgWzCW2TDhTt3tz8htf1m0TvLTNe/Zm
+	ISfslN4OwgsItrSajiYJmzFV+AWMndugklR+P5ITPpZU9zlSqkJcMUpVy5HvYx5JkzLkIRmGJvs
+	Q8XNbe9ZJWlT59B6DAQE79vFafa5U67n90TJdirSEZ1hYqTz9K0=
+X-Received: by 2002:a05:6000:384:b0:488:63f2:8766 with SMTP id ffacd0b85a97d-48871728c55mr16484789f8f.21.1790449494691;
+        Sat, 26 Sep 2026 12:04:54 -0700 (PDT)
 Received: from mikebook.tail5724d6.ts.net (83-244-142-114.cust-83.exponential-e.net. [83.244.142.114])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4887a34a638sm15216880f8f.9.2026.09.26.12.04.52
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4887a34a638sm15216880f8f.9.2026.09.26.12.04.53
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 26 Sep 2026 12:04:53 -0700 (PDT)
+        Sat, 26 Sep 2026 12:04:54 -0700 (PDT)
 From: Michal Pluta <michalpl2003@gmail.com>
 To: acme@kernel.org,
 	namhyung@kernel.org
@@ -78,9 +78,9 @@ Cc: Thomas Gleixner <tglx@kernel.org>,
 	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
 	linux-kernel@vger.kernel.org,
 	linux-perf-users@vger.kernel.org
-Subject: [PATCH 3/8] perf bench futex: Use the whole timeval for elapsed times
-Date: Sat, 26 Sep 2026 20:04:02 +0100
-Message-ID: <20260926190407.1106421-4-michalpl2003@gmail.com>
+Subject: [PATCH 4/8] perf bench futex: Reject invalid -q, -f and -b values
+Date: Sat, 26 Sep 2026 20:04:03 +0100
+Message-ID: <20260926190407.1106421-5-michalpl2003@gmail.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20260926190407.1106421-1-michalpl2003@gmail.com>
 References: <20260926190407.1106421-1-michalpl2003@gmail.com>
@@ -92,225 +92,70 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Several futex benchmarks read only one field of the struct timeval that
-timersub() produces, so part of the elapsed time is lost.
+Some values make a futex benchmark hang or are silently ignored.
 
-'futex wake', 'futex wake-parallel' and 'futex requeue' print tv_usec,
-so a run that takes 1.5 s is shown as 500 ms. 'futex hash' and 'futex
-lock-pi' divide their operation count by tv_sec, which overstates the
-throughput when a run is stopped early, and gives 0 if that happens
-within the first second. Their "total secs" is truncated in the same
-way.
+'futex requeue -q 0' never finishes, because no thread is requeued.
+'futex hash -f 0' never finishes either, because with no futexes the
+workers never notice that the run is over. A negative -b is treated as
+if it had not been given, and the kernel simply auto-sizes the hash.
 
-Use the whole timeval and print "total secs" with two decimals. With
---runtime=0 the rate is now computed over the time that actually
-elapsed, instead of showing 0.
+Print an error for these values, except for -b -1, which still means
+automatic sizing.
 
-Fixes: 27db78307481 ("perf bench: Add futex-wake microbenchmark")
 Fixes: 0fb298cf95c0 ("perf bench: Add futex-requeue microbenchmark")
 Fixes: a043971141f1 ("perf bench: Add futex-hash microbenchmark")
-Fixes: d2f3f5d2e9ca ("perf bench futex: Add lock_pi stresser")
-Fixes: d65817b4e707 ("perf bench futex: Support parallel waker threads")
+Fixes: 60035a3981a7 ("tools/perf: Allow to select the number of hash buckets")
 Assisted-by: LLM
 Signed-off-by: Michal Pluta <michalpl2003@gmail.com>
 ---
- tools/perf/bench/futex-hash.c          | 12 ++++++++----
- tools/perf/bench/futex-lock-pi.c       | 12 ++++++++----
- tools/perf/bench/futex-requeue.c       |  8 +++++---
- tools/perf/bench/futex-wake-parallel.c |  8 ++++++--
- tools/perf/bench/futex-wake.c          |  6 ++++--
- 5 files changed, 31 insertions(+), 15 deletions(-)
+ tools/perf/bench/futex-hash.c    | 3 +++
+ tools/perf/bench/futex-requeue.c | 4 ++++
+ tools/perf/bench/futex.c         | 3 +++
+ 3 files changed, 10 insertions(+)
 
 diff --git a/tools/perf/bench/futex-hash.c b/tools/perf/bench/futex-hash.c
-index 7e29f04da744..32b88df8ee6d 100644
+index 32b88df8ee6d..710c253cfe17 100644
 --- a/tools/perf/bench/futex-hash.c
 +++ b/tools/perf/bench/futex-hash.c
-@@ -18,6 +18,7 @@
- #include <stdlib.h>
- #include <linux/compiler.h>
- #include <linux/kernel.h>
-+#include <linux/time64.h>
- #include <linux/zalloc.h>
- #include <sys/time.h>
- #include <sys/mman.h>
-@@ -118,18 +119,19 @@ static void print_summary(void)
- 	unsigned long avg = avg_stats(&throughput_stats);
- 	double stddev = stddev_stats(&throughput_stats);
+@@ -161,6 +161,9 @@ int bench_futex_hash(int argc, const char **argv)
+ 	if (!params.nthreads) /* default to the number of CPUs */
+ 		params.nthreads = perf_cpu_map__nr(cpu);
  
--	printf("%sAveraged %ld operations/sec (+- %.2f%%), total secs = %d\n",
-+	printf("%sAveraged %ld operations/sec (+- %.2f%%), total secs = %.2f\n",
- 	       !params.silent ? "\n" : "", avg, rel_stddev_stats(stddev, avg),
--	       (int)bench__runtime.tv_sec);
-+	       bench__runtime.tv_sec + bench__runtime.tv_usec / (double)USEC_PER_SEC);
- 	futex_print_nbuckets(&params);
- }
- 
- int bench_futex_hash(int argc, const char **argv)
- {
- 	int ret = 0;
- 	cpu_set_t *cpuset;
- 	struct sigaction act;
- 	unsigned int i;
-+	u64 runtime_us;
- 	pthread_attr_t thread_attr;
- 	struct worker *worker = NULL;
- 	struct perf_cpu_map *cpu;
-@@ -229,9 +231,11 @@ int bench_futex_hash(int argc, const char **argv)
- 	cond_destroy(&thread_worker);
- 	mutex_destroy(&thread_lock);
- 
-+	runtime_us = (u64)bench__runtime.tv_sec * USEC_PER_SEC + bench__runtime.tv_usec;
++	if (!params.nfutexes)
++		errx(EXIT_FAILURE, "-f/--futexes must be at least 1");
 +
- 	for (i = 0; i < params.nthreads; i++) {
--		unsigned long t = bench__runtime.tv_sec > 0 ?
--			worker[i].ops / bench__runtime.tv_sec : 0;
-+		unsigned long t = runtime_us ?
-+			(u64)worker[i].ops * USEC_PER_SEC / runtime_us : 0;
- 		update_stats(&throughput_stats, t);
- 		if (!params.silent) {
- 			if (params.nfutexes == 1)
-diff --git a/tools/perf/bench/futex-lock-pi.c b/tools/perf/bench/futex-lock-pi.c
-index 40640b674427..7190f5102e09 100644
---- a/tools/perf/bench/futex-lock-pi.c
-+++ b/tools/perf/bench/futex-lock-pi.c
-@@ -13,6 +13,7 @@
- #include <subcmd/parse-options.h>
- #include <linux/compiler.h>
- #include <linux/kernel.h>
-+#include <linux/time64.h>
- #include <linux/zalloc.h>
- #include <errno.h>
- #include <perf/cpumap.h>
-@@ -66,9 +67,9 @@ static void print_summary(void)
- 	unsigned long avg = avg_stats(&throughput_stats);
- 	double stddev = stddev_stats(&throughput_stats);
- 
--	printf("%sAveraged %ld operations/sec (+- %.2f%%), total secs = %d\n",
-+	printf("%sAveraged %ld operations/sec (+- %.2f%%), total secs = %.2f\n",
- 	       !params.silent ? "\n" : "", avg, rel_stddev_stats(stddev, avg),
--	       (int)bench__runtime.tv_sec);
-+	       bench__runtime.tv_sec + bench__runtime.tv_usec / (double)USEC_PER_SEC);
- 	futex_print_nbuckets(&params);
- }
- 
-@@ -168,6 +169,7 @@ int bench_futex_lock_pi(int argc, const char **argv)
- {
- 	int ret = 0;
- 	unsigned int i;
-+	u64 runtime_us;
- 	struct sigaction act;
- 	struct perf_cpu_map *cpu;
- 
-@@ -233,9 +235,11 @@ int bench_futex_lock_pi(int argc, const char **argv)
- 	cond_destroy(&thread_worker);
- 	mutex_destroy(&thread_lock);
- 
-+	runtime_us = (u64)bench__runtime.tv_sec * USEC_PER_SEC + bench__runtime.tv_usec;
-+
- 	for (i = 0; i < params.nthreads; i++) {
--		unsigned long t = bench__runtime.tv_sec > 0 ?
--			worker[i].ops / bench__runtime.tv_sec : 0;
-+		unsigned long t = runtime_us ?
-+			(u64)worker[i].ops * USEC_PER_SEC / runtime_us : 0;
- 
- 		update_stats(&throughput_stats, t);
- 		if (!params.silent)
+ 	worker = calloc(params.nthreads, sizeof(*worker));
+ 	if (!worker)
+ 		goto errmem;
 diff --git a/tools/perf/bench/futex-requeue.c b/tools/perf/bench/futex-requeue.c
-index 0748b0fd689e..5d4708f40c60 100644
+index 5d4708f40c60..bc6efc2ecadb 100644
 --- a/tools/perf/bench/futex-requeue.c
 +++ b/tools/perf/bench/futex-requeue.c
-@@ -223,6 +223,7 @@ int bench_futex_requeue(int argc, const char **argv)
- 	for (j = 0; j < bench_repeat && !done; j++) {
- 		unsigned int nrequeued = 0, wakeups = 0;
- 		struct timeval start, end, runtime;
-+		u64 runtime_us;
+@@ -207,6 +207,10 @@ int bench_futex_requeue(int argc, const char **argv)
+ 	if (params.broadcast)
+ 		params.nrequeue = params.nthreads;
  
- 		/* create, launch & block all threads */
- 		block_threads(worker, cpu);
-@@ -267,23 +268,24 @@ int bench_futex_requeue(int argc, const char **argv)
++	/* A regular requeue that moves no threads would never finish. */
++	if (!params.pi && !params.nrequeue)
++		errx(EXIT_FAILURE, "-q/--nrequeue must be at least 1");
++
+ 	futex_set_nbuckets_param(&params);
  
- 		gettimeofday(&end, NULL);
- 		timersub(&end, &start, &runtime);
-+		runtime_us = (u64)runtime.tv_sec * USEC_PER_SEC + runtime.tv_usec;
+ 	printf("Run summary [PID %d]: Requeuing %d threads (from [%s] %p to %s%p), "
+diff --git a/tools/perf/bench/futex.c b/tools/perf/bench/futex.c
+index 1968c9d00b5b..5757d47f8f7c 100644
+--- a/tools/perf/bench/futex.c
++++ b/tools/perf/bench/futex.c
+@@ -17,6 +17,9 @@ void futex_set_nbuckets_param(struct bench_futex_parameters *params)
+ {
+ 	int ret;
  
- 		update_stats(&requeued_stats, nrequeued);
--		update_stats(&requeuetime_stats, runtime.tv_usec);
-+		update_stats(&requeuetime_stats, runtime_us);
++	if (params->nbuckets < -1)
++		errx(EXIT_FAILURE, "-b/--buckets must be -1 (auto), 0 or more");
++
+ 	if (params->nbuckets < 0)
+ 		return;
  
- 		if (!params.silent) {
- 			if (!params.pi)
- 				printf("[Run %d]: Requeued %d of %d threads in "
- 				       "%.4f ms\n", j + 1, nrequeued,
- 				       params.nthreads,
--				       runtime.tv_usec / (double)USEC_PER_MSEC);
-+				       runtime_us / (double)USEC_PER_MSEC);
- 			else {
- 				nrequeued -= wakeups;
- 				printf("[Run %d]: Awoke and Requeued (%d+%d) of "
- 				       "%d threads in %.4f ms\n",
- 				       j + 1, wakeups, nrequeued,
- 				       params.nthreads,
--				       runtime.tv_usec / (double)USEC_PER_MSEC);
-+				       runtime_us / (double)USEC_PER_MSEC);
- 			}
- 
- 		}
-diff --git a/tools/perf/bench/futex-wake-parallel.c b/tools/perf/bench/futex-wake-parallel.c
-index a089d8ee4b02..fa70b7d4b473 100644
---- a/tools/perf/bench/futex-wake-parallel.c
-+++ b/tools/perf/bench/futex-wake-parallel.c
-@@ -192,7 +192,9 @@ static void print_run(struct thread_data *waking_worker, unsigned int run_num)
- 	init_stats(&__waketime_stats);
- 
- 	for (i = 0; i < params.nwakes; i++) {
--		update_stats(&__waketime_stats, waking_worker[i].runtime.tv_usec);
-+		update_stats(&__waketime_stats,
-+			     (u64)waking_worker[i].runtime.tv_sec * USEC_PER_SEC +
-+			     waking_worker[i].runtime.tv_usec);
- 		update_stats(&__wakeup_stats, waking_worker[i].nwoken);
- 	}
- 
-@@ -229,7 +231,9 @@ static void do_run_stats(struct thread_data *waking_worker)
- 	unsigned int i;
- 
- 	for (i = 0; i < params.nwakes; i++) {
--		update_stats(&waketime_stats, waking_worker[i].runtime.tv_usec);
-+		update_stats(&waketime_stats,
-+			     (u64)waking_worker[i].runtime.tv_sec * USEC_PER_SEC +
-+			     waking_worker[i].runtime.tv_usec);
- 		update_stats(&wakeup_stats, waking_worker[i].nwoken);
- 	}
- 
-diff --git a/tools/perf/bench/futex-wake.c b/tools/perf/bench/futex-wake.c
-index 58427bb55c03..12a75be077a0 100644
---- a/tools/perf/bench/futex-wake.c
-+++ b/tools/perf/bench/futex-wake.c
-@@ -191,6 +191,7 @@ int bench_futex_wake(int argc, const char **argv)
- 	for (j = 0; j < bench_repeat && !done; j++) {
- 		unsigned int nwoken = 0;
- 		struct timeval start, end, runtime;
-+		u64 runtime_us;
- 
- 		/* create, launch & block all threads */
- 		block_threads(worker, cpu);
-@@ -211,14 +212,15 @@ int bench_futex_wake(int argc, const char **argv)
- 					     params.nwakes, futex_flag);
- 		gettimeofday(&end, NULL);
- 		timersub(&end, &start, &runtime);
-+		runtime_us = (u64)runtime.tv_sec * USEC_PER_SEC + runtime.tv_usec;
- 
- 		update_stats(&wakeup_stats, nwoken);
--		update_stats(&waketime_stats, runtime.tv_usec);
-+		update_stats(&waketime_stats, runtime_us);
- 
- 		if (!params.silent) {
- 			printf("[Run %d]: Wokeup %d of %d threads in %.4f ms\n",
- 			       j + 1, nwoken, params.nthreads,
--			       runtime.tv_usec / (double)USEC_PER_MSEC);
-+			       runtime_us / (double)USEC_PER_MSEC);
- 		}
- 
- 		for (i = 0; i < params.nthreads; i++) {
 -- 
 2.43.0
 
