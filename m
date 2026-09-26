@@ -1,65 +1,65 @@
-Received: from mail-wr2-f35.google.com (mail-wr2-f35.google.com [74.125.225.99])
+Received: from mail-wr2-f21.google.com (mail-wr2-f21.google.com [74.125.225.85])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 257DB39C637
-	for <linux-perf-users@vger.kernel.org>; Sat, 26 Sep 2026 19:05:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.225.99
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C31B3A0B38
+	for <linux-perf-users@vger.kernel.org>; Sat, 26 Sep 2026 19:04:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.225.85
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790449502; cv=none; b=p2vwblWyB2Vp7LDU3/mF3pbKaxg9OaXUUbrR4IfcBWYU5vbeO2mDYBuVLjCZDhswHAedV+hNOhC5YdwhkhtH6lf7yVRGKNl1IWkl4oA5zEkVWiA/vBTIyT4so5Yi+LfAvKBcBTMxo2hQrhh4LJWC+LO4v9FxyvpbahDl0ACQ+jw=
+	t=1790449509; cv=none; b=kuic2hcEBQqDfT6Knt3WQjZDu+BashmHZ34EHjwvrb4TMc1nDh+XA9Eye/eZGKsC9dZK+umlrdjQyMgpaJbVrAcvT1BMQPUzBRpBeAwQBlTP0fYk8/OT06pSKHl1C6CWfRZXXHwtSyYmtQ/jrH2+SXenikCERmwDCWZVtjU3pb8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790449502; c=relaxed/simple;
-	bh=5efpR+DiNzg66dM4qSO5vb38UBEV8l7bHBV08xctCYE=;
+	s=arc-20240116; t=1790449509; c=relaxed/simple;
+	bh=zlbW//0hdhYGgpt+5jn9RZCUwPsUfySvDtED+EIbmY4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=YmjccZs2ub6uZl61n6MZMKpYd9AzuVO4RJCT0i3fWj9t064OkYysmAs7Zrm45cX5ckeWx5LjxQ4Q+ujESjSBIZ+Wm9OICTNACxzlgvnOjow3DnlYDKtl3A3U2tFweR6NQEiOXbrM//HXZNqnCFa0OPqCv5NpDPsDQLuiFIS9k2c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ppTOzT/S; arc=none smtp.client-ip=74.125.225.99
+	 MIME-Version; b=b9o06Roh0vSoBnfK0dSH8cSdZLWH1BQ2fJRfS798x55eJaoM0I5h8dlPyvXg8/3TdRak/ukE3ksMzonQrfISRbC5MePi1ge/bw8I9WBDZ1NjYbnrgRnMPBXzzrbY6Yk9R8Hdz31Y02m17jM/hloEZO9vntPfiBCw63lLiQcFxZ8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fzc0CB1A; arc=none smtp.client-ip=74.125.225.85
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ppTOzT/S"
-Received: by mail-wr2-f35.google.com with SMTP id ffacd0b85a97d-4887f6cf16bso1045843f8f.0
-        for <linux-perf-users@vger.kernel.org>; Sat, 26 Sep 2026 12:05:00 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fzc0CB1A"
+Received: by mail-wr2-f21.google.com with SMTP id ffacd0b85a97d-48881a62e09so887062f8f.2
+        for <linux-perf-users@vger.kernel.org>; Sat, 26 Sep 2026 12:04:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1790449498; x=1791054298; darn=vger.kernel.org;
+        d=gmail.com; s=20251104; t=1790449497; x=1791054297; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=TVcPhX9Ogu0tKMjXQYOW4Gg0BvTVbjbny677ydMNzu8=;
-        b=ppTOzT/SbhgIMj4VXPebUsrORQsmQZMDWyP4RZTg7OcGwuCqf8pkipZGYDUf2BTHh8
-         GRp18nmx+KJghkSArdeYW2TiCjzjyYvy0ZB/aL7TzuAhr2MBq53HryAXyKFUP26niUML
-         vtmnJprVb7CI2Z+9sZVPXA1rE2u4AVnaXvLpI/fmPZHyAfwd2Ig+idsdczw/2kaZiVGT
-         cvmE6aUV/1TUrqYoPL1sr4CvRwA8abg6+jV1Ef2sPBHDwU78a+YAtWXBvMHboRTaEVCW
-         /3o6oSmIw6axJs0pDQzXEShz6waR/txrIj9NOi7/WaODtaphk1oX4AIj5eal1vFbkuPJ
-         UH6A==
+        bh=qKRL8yuzKjUECxvVmxvJc06I62mK9jEC8gKnB5LQ/tc=;
+        b=fzc0CB1AOSdun2ve+B53urvoK8Bq0ri7NKKo/KVfM9+A46zBxrvtCmsIyFj44V0dHS
+         ftY7X3p+1eZ8xI8jqzmI1c3Bf7LGhFobSgYtVVB/kzuuIBEeQGUvRtHcwXEfZtlvZQnz
+         AUOuhka4075QFurd0B0bxbWkvt4+KyyQFfyA4vIUBYmWO5fjz+11nLRWwQ/m/WUoaBMM
+         j2JcPPRZuth6iy2/jy2N7WlDXzY3NsaIIcrkqr7B3oAs6k5RJgOznJqUqy96igU8etNU
+         B0lUeDHwWOvrQU7mtzPIq3CU6vDmff0HjtWGi8xRRj4CnLGZ0j3btAgcJhcyyDJ+7O12
+         7gfg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1790449498; x=1791054298;
+        d=1e100.net; s=20260707; t=1790449497; x=1791054297;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=TVcPhX9Ogu0tKMjXQYOW4Gg0BvTVbjbny677ydMNzu8=;
-        b=fGGHCl8cIBR6+w5km8zDZ6FwnT5UCSkRtyXc5AiZN6mKjq+R0MMxECmCWDTYBWIN0s
-         PEKRmCdzcIz4r+qiiTIvzbfR+EZ2CCouomvAfaySfmvXzTr+1Xg25TNeD6XW+fqpgoXY
-         QtOA8naQEa71q/EYkJam6PeZ/PgbSbHfcvZQ5MiTzxyxgQQaKhg7WeyZc6C3nuTCCd8B
-         RhiMZ19y84IfEbb46fGbeWW2AZrUDgB9Nh1KsZ2Lr9yiei5IrlNrVr5xOdT+j/yNXd7U
-         aj7XclN9FinZ7zHcG8IyWSF2uUtBr/qOyEo/dcc8nQFdrZFL3fGRkfRGJvni3zIj3aZN
-         XZWg==
-X-Forwarded-Encrypted: i=1; AKwUvBwTt0dWqIbyw0+6I1kmlSr8kkXwuxHDftKXWOy5dMtP9XSj+wl5SR6EmKBTt7BmtIg9toXvbCelTDGUvVZcYFDk@vger.kernel.org
-X-Gm-Message-State: AFq9FYJ7cwox87X5gVZrCKRXds1xBoPaTM5nuDiiETmZcABN4v/Y2Dth
-	GZONx5DlEsVL8RmVdlue4HPsrmQrxKg58AYCPHtMnKDt4EE/fxt1stgg
-X-Gm-Gg: AYBFou0McgLBqNyH81KibXF9S/SsFSQ8UHrOf3kYonynMe9NEfotmogjdPmH81lwecd
-	oJgUwhQ6UEg+sJA7jPx7E4Tm61WQlG8D3HKbSQ8JxLW9ISqg2Re/ylbZZRkr303ZjFrOHcn4o6h
-	P/1mK3ZMVEiyMsUGe1xtnek1T4+Ltpj5a9UJWExwNTqZeov0Snn9K+65F8RSyZi5143yCtcmpln
-	3ECv19Kpkn4nDpNhzclgTjWVVq73RtST+2ZsiCjCAsMqEFXEurfDV8Wgwchi85tR3NICmFEdMpN
-	79KBi8wdLHdA35zgHAnqlxMwBKoQZzH9N/Ivi7XjiFVu0WTwKOd7dAN8h9IZBF/zU+42IGQVrOU
-	o0Y7+W0GmO85hbKPfKgqtxWpMJIcuAbItxMOjz3oq1L8sP/WtlCrXO62OCU+IU4KE/flQrBr56G
-	KDIcNrhedBSD5VS5nQFsZXccqTsihpdcpOlVnHwygTv0LMEueiCDB+0qXFh2uyw2VZ+6y3hBGcu
-	GS3Jodelk6ZRMnUvRQXtps1c1Tde9wrhHxJgdT3xuIMKjW5D/n2YVRVsY6ahVNI/Pjk12ziae79
-	rwWEQRQPI9Icn2jnhI1kJ2YqmY5mAAsTxzrChiovW+7x1Wfi5rs=
-X-Received: by 2002:a5d:5f81:0:b0:486:fcfd:45d4 with SMTP id ffacd0b85a97d-4887da07064mr11018629f8f.17.1790449498535;
-        Sat, 26 Sep 2026 12:04:58 -0700 (PDT)
+        bh=qKRL8yuzKjUECxvVmxvJc06I62mK9jEC8gKnB5LQ/tc=;
+        b=HdyUmUxr6xlcUrQuvYsFRiDYsBNxTe3arJr9zQdkf94vpivQjjYELrPT2/6nJTkTMs
+         OM6ylZTQWRavQphNvZxENSthuMDG6fff8bJ9opqfLK2Q8YHYH1MfOYpdFRzpcWVbNgfL
+         bYq1r8aF88967UAhOXGEAPq+zEPo2eSzPot+5r4AHXlOgxmX+5Dyl0sSqqu/i1tuBK5/
+         bjvN2cG/3fEFC3ojgFLQQaek639vMoobqHgRASPWVwnutsFuhlpeQaN6wB4nWzQby7et
+         Vd2Gji5gv9pecIwIiNoiOp88JtkdfRGFDAJmTf/ema6uNQT9wsRHCovZoZp9f7749a1v
+         XsrA==
+X-Forwarded-Encrypted: i=1; AKwUvBz37PW82Tlxy+bnN+4R1MuuL5kwgfekEv+K1/3nEIsjILQiYT3mfgUxQtRMNbWQC3/MUD+8emvFKUvH1hB5DSZC@vger.kernel.org
+X-Gm-Message-State: AFq9FYJdRZCz8cVa69zKVYTGaHAqRSUfd6ioUO8JCyhz2z1Vqf0vIw7b
+	bhl/jiv5YfHOzm5jRoLV79G1Rw8q+qbzdmfY6Yv4W430DoYgAuWfPK9/
+X-Gm-Gg: AYBFou0X0sjl00cnTxoEtKRqc+MTTAaUfcxzVp+bK1EaqOVsoCjz4wDePc4FUhNIbYH
+	dHzcBpc1RwVHDOIQgBpcM17gEYIOU13lQ5iRz6PKsWp3VFhlq8PRKq8KcnCqsRroL2FqsmsxlvB
+	ZQMz7N6ZrJAUdM+BbBX9ViWh2HwUt8VpkEltcZDNBVs+MDbIbJY3GlbPAhaac2vGB9mYmKHDJzq
+	QqorhnDQN2XLDJmlnzH7iF+u6Kb7c9+UlAhuaQy8cKTd/8a3hMcdw4hVRmpy+CtyFkJMaODdWw3
+	mV8xV6iluVqB9eRgFi4C1+vHCGGThh7aTQ5BE+gk6HxMsE5IzgXRHKt08HWRsCOQkI1qeIpYPYK
+	yQKdwds+MJNiVcHr6gsMUb8UGJVtgpvSdoda946v51c0xN49hjQn/zpJjL9dXVZiS7iQ7/fnVjd
+	Ol9+XBlly/TTVMf+czqifTxrGdR64i1AY+Kv06knheiWlYydPLB5cyCeH2ATVWGlNU792PIyEkh
+	QjDwjgIjcN8wD8mQOAbCJgLYTi9d9hrz13UFCppMlSmKEuN/k1hRTjiEopp/TQlhaZqyMizuKGk
+	dfDsw0tBXC4vbpK/VC2+OuZHiZTwQlrjGaPZGKfxkAwaKRclPHE=
+X-Received: by 2002:a05:6000:4024:b0:488:8904:913a with SMTP id ffacd0b85a97d-48889049589mr4517899f8f.8.1790449497523;
+        Sat, 26 Sep 2026 12:04:57 -0700 (PDT)
 Received: from mikebook.tail5724d6.ts.net (83-244-142-114.cust-83.exponential-e.net. [83.244.142.114])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4887a34a638sm15216880f8f.9.2026.09.26.12.04.57
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4887a34a638sm15216880f8f.9.2026.09.26.12.04.56
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 26 Sep 2026 12:04:58 -0700 (PDT)
+        Sat, 26 Sep 2026 12:04:57 -0700 (PDT)
 From: Michal Pluta <michalpl2003@gmail.com>
 To: acme@kernel.org,
 	namhyung@kernel.org
@@ -78,9 +78,9 @@ Cc: Thomas Gleixner <tglx@kernel.org>,
 	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
 	linux-kernel@vger.kernel.org,
 	linux-perf-users@vger.kernel.org
-Subject: [PATCH 8/8] perf bench futex: Fix wording in futex bench messages
-Date: Sat, 26 Sep 2026 20:04:07 +0100
-Message-ID: <20260926190407.1106421-9-michalpl2003@gmail.com>
+Subject: [PATCH 7/8] perf bench futex: Clean up two nits in futex hash
+Date: Sat, 26 Sep 2026 20:04:06 +0100
+Message-ID: <20260926190407.1106421-8-michalpl2003@gmail.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20260926190407.1106421-1-michalpl2003@gmail.com>
 References: <20260926190407.1106421-1-michalpl2003@gmail.com>
@@ -92,69 +92,41 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-When the kernel is using a different number of hash buckets than
-requested with -b, the message printed is ungrammatical, and it ends
-with a stale errno even though nothing failed:
+The worker's check for an unexpected futex_wait() result tests
+'errno != EAGAIN || errno != EWOULDBLOCK', which only works because the
+two are equal, so use '&&' instead.
 
-  Requested number of hash buckets does not currently used.
-  Requested: 3 in usage: 64
-  perf: prctl(PR_FUTEX_HASH): No such file or directory
+The CPU map is reference counted, so release it with perf_cpu_map__put()
+instead of free().
 
-Fix the wording and use errx(), so that no errno text is printed:
-
-  Requested number of buckets differs from the number in use.
-  Requested: 3, in use: 64
-  perf: prctl(PR_FUTEX_HASH)
-
-Also fix "Wokeup" in the 'futex wake' output, which should be "Woke up".
-
-Fixes: 60035a3981a7 ("tools/perf: Allow to select the number of hash buckets")
 Assisted-by: LLM
 Signed-off-by: Michal Pluta <michalpl2003@gmail.com>
 ---
- tools/perf/bench/futex-wake.c | 4 ++--
- tools/perf/bench/futex.c      | 6 +++---
- 2 files changed, 5 insertions(+), 5 deletions(-)
+ tools/perf/bench/futex-hash.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/bench/futex-wake.c b/tools/perf/bench/futex-wake.c
-index 7674622639ca..2cbf31e121d5 100644
---- a/tools/perf/bench/futex-wake.c
-+++ b/tools/perf/bench/futex-wake.c
-@@ -89,7 +89,7 @@ static void print_summary(void)
- 	double waketime_stddev = stddev_stats(&waketime_stats);
- 	unsigned int wakeup_avg = avg_stats(&wakeup_stats);
- 
--	printf("Wokeup %d of %d threads in %.4f ms (+-%.2f%%)\n",
-+	printf("Woke up %d of %d threads in %.4f ms (+-%.2f%%)\n",
- 	       wakeup_avg,
- 	       params.nthreads,
- 	       waketime_avg / USEC_PER_MSEC,
-@@ -223,7 +223,7 @@ int bench_futex_wake(int argc, const char **argv)
- 		update_stats(&waketime_stats, runtime_us);
- 
- 		if (!params.silent) {
--			printf("[Run %d]: Wokeup %d of %d threads in %.4f ms\n",
-+			printf("[Run %d]: Woke up %d of %d threads in %.4f ms\n",
- 			       j + 1, nwoken, params.nthreads,
- 			       runtime_us / (double)USEC_PER_MSEC);
+diff --git a/tools/perf/bench/futex-hash.c b/tools/perf/bench/futex-hash.c
+index e18d98664d27..6f4af1a52d1b 100644
+--- a/tools/perf/bench/futex-hash.c
++++ b/tools/perf/bench/futex-hash.c
+@@ -95,7 +95,7 @@ static void *workerfn(void *arg)
+ 			 */
+ 			ret = futex_wait(&w->futex[i], 1234, NULL, futex_flag);
+ 			if (!params.silent &&
+-			    (!ret || errno != EAGAIN || errno != EWOULDBLOCK))
++			    (!ret || (errno != EAGAIN && errno != EWOULDBLOCK)))
+ 				warn("Non-expected futex return call");
  		}
-diff --git a/tools/perf/bench/futex.c b/tools/perf/bench/futex.c
-index 5757d47f8f7c..be0cbc03682c 100644
---- a/tools/perf/bench/futex.c
-+++ b/tools/perf/bench/futex.c
-@@ -43,9 +43,9 @@ void futex_print_nbuckets(struct bench_futex_parameters *params)
- 				printf("Can't query number of buckets: %m\n");
- 				err(EXIT_FAILURE, "prctl(PR_FUTEX_HASH)");
- 			}
--			printf("Requested number of hash buckets does not currently used.\n");
--			printf("Requested: %d in usage: %d\n", params->nbuckets, ret);
--			err(EXIT_FAILURE, "prctl(PR_FUTEX_HASH)");
-+			printf("Requested number of buckets differs from the number in use.\n");
-+			printf("Requested: %d, in use: %d\n", params->nbuckets, ret);
-+			errx(EXIT_FAILURE, "prctl(PR_FUTEX_HASH)");
- 		}
- 		if (params->nbuckets == 0)
- 			ret = asprintf(&futex_hash_mode, "Futex hashing: global hash");
+ 	}  while (!done);
+@@ -256,7 +256,7 @@ int bench_futex_hash(int argc, const char **argv)
+ 	print_summary();
+ 
+ 	free(worker);
+-	free(cpu);
++	perf_cpu_map__put(cpu);
+ 	return ret;
+ errmem:
+ 	err(EXIT_FAILURE, "calloc");
 -- 
 2.43.0
 
