@@ -1,72 +1,57 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC61D388866
-	for <linux-perf-users@vger.kernel.org>; Sat, 26 Sep 2026 06:26:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2467935F5E1
+	for <linux-perf-users@vger.kernel.org>; Sat, 26 Sep 2026 06:28:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790403995; cv=none; b=XPJAR9YVmndi8G+8nV0gRfbck8uoWkcLA+pwr4yZ3AOW8HYjtWPlHmrgFWxEjR+5a9tt19HE6w2BhBbO2zBtxYNR7LicFzFRnYZaEUniQHoe3071p6NGDVpAGDDy5UKtwc8Cm6Q1tdi2aALvcErDkO1qVwzHcFAWYrweokfvW5w=
+	t=1790404137; cv=none; b=vF/sRrcTUb6YJ0evcpueQm4rU4TZlaOnjmtiVjqWncDdcHWG7LhaPXrTsWw8T6IGkM5h+eTdfZUhVKr90r6bU0QGgQOyRYupBS6lQ1ZfbyeR9ggVbGMpAX4Y+ftMQwP3rskglu5XL18aiztN8M8uttvgSq6+NGCsOwJyiTKjrWU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790403995; c=relaxed/simple;
-	bh=1A2aRKaeG1PbDPY6txkuvNUrxyftqcujj5TRzyH3MfA=;
+	s=arc-20240116; t=1790404137; c=relaxed/simple;
+	bh=UvFx9jywOtc+3G/RLvjyBHQohQ0eNK0/RIsO4Xri+Yk=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=djiBFKF5NLjPbjl8JSsKK8X2Edww48UEAN0zm6KFrD1I5JoOZgcCCfAO5zzzN688YC/tbmT5ZQyj6MkJqYIaSABOcQZ5GVqI+Zj1nt/KCR4siYd8qKg6b26fhczQXuc4vQx2p+ILQhYObSPqQ3nQmYYlN0INT8krsNdvecqqJm4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CYnfuU9U; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=t3jl7Bl/gGKzVldpvHY/zbHnpxPK+LRI5bd2m/6+gkW793AYbhO4ZoJGUahaAmavJ/kEEEkqA9TBagZATAkuRLJJEtNeBptEMDcdOHbPtaGqDEYt1snmSH/2Fp2ipRyu2pm057iSCrtAcFVR5z5rGQRZStAnwDwRVm2jxCVGSPg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PjafmOqE; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CYnfuU9U"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2FEE51F000FF;
-	Sat, 26 Sep 2026 06:26:34 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PjafmOqE"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 86F981F000FF;
+	Sat, 26 Sep 2026 06:28:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1790403994;
-	bh=cpLddbQqg4UlXCyZaDcFjBDpS2Bl/gjQoiHUT/d6eGk=;
+	s=k20260515; t=1790404135;
+	bh=UvFx9jywOtc+3G/RLvjyBHQohQ0eNK0/RIsO4Xri+Yk=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=CYnfuU9UvdOnrMODXwCP2eLQpD2LEL9Znx6MffSjETF22CAYSbNwEEJOPRElFBRnl
-	 7z4q/iw8wJilmZKNx+R+LL07pFdwO34J9gIavFZ1bBF/slKlnx2MGivtvTqOIG/ID6
-	 wbVxz6Yuul2it0+MY1RKDduZTVKE4P4unFuGFslmdjDFddIIKkZ5jGttD0ZacVF3/q
-	 3XWjCOas84VBDZiI5GoL4Li/20XW4ReQzvOCIk9CRbIvS2zVVIhWuz1c+htuPPPHze
-	 ZxBLaJv8bCsnrV38+DzaDJogBD2kD1U3nEbNPyD6pF+czWiYymXR2omfWHFnbzHnfO
-	 WlMatPo2xb07g==
+	b=PjafmOqEJbfseoU0HoIlPMCMfpIONrAVXQeFLjQm0AJK6zHhYaIhi5q407X9ZePj8
+	 FDUIw5T1XwznXS34GLKG6eZkfQ4FZc9XqbFW+6shf0ObSN2Nn0Kk+f4pZVP9ytpt1M
+	 iaq1/8S8vUYXjJxdhNPtYfhdU9Km9jdL1s8MSDqDS5/w4BdjjvVyvx9f21VkBVKHe8
+	 JmP1j1cQg8whwqpJzwiRgptMhDRLs380heSElAM7KS1YtfTtBZvv4qIwR44myGbqG1
+	 899emwcbh9ZLItZ6ZLG8Ebwgn+tWoWhWiCCWJ/SmNjF5WMo+D5Hs3Ig4svcGODkHM+
+	 aaEPVWLzDPP6A==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v4 07/49] perf python: Improve perf script -l
- descriptions
+Subject: Re: [PATCH v4 15/49] perf Makefile: Install standalone Python
+ scripts during transition
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Ian Rogers" <irogers@google.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260926062029.800743-8-irogers@google.com>
+In-Reply-To: <20260926062029.800743-16-irogers@google.com>
 References: <20260923181213.3032038-1-irogers@google.com>
  <20260926062029.800743-1-irogers@google.com>
- <20260926062029.800743-8-irogers@google.com>
+ <20260926062029.800743-16-irogers@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Sat, 26 Sep 2026 06:26:33 +0000
-Message-Id: <20260926062634.2FEE51F000FF@smtp.kernel.org>
+Date: Sat, 26 Sep 2026 06:28:55 +0000
+Message-Id: <20260926062855.86F981F000FF@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-> Add module docstrings to counting.py, tracepoint.py, and twatch.py. This
-> satisfies pylint's missing-module-docstring check and prepares these
-> existing standalone scripts in tools/perf/python/ for the later commit
-> in this series ("perf script: Support standalone scripts and remove
-> embedded scripting"), which updates 'perf script -l' to scan
-> tools/perf/python/ and display each script's module docstring:
->=20
-> ```
-> $ perf script -l
-> List of available scripts:
-> ...
->   counting
->     Example for counting perf events.
-> ...
->   tracepoint
->     Example showing how to enable a tracepoint and access its fields.
->   twatch
->     Example to show how to enable a software event and track
->     context switches.
-> ...
-> ```
+> Install the newly ported standalone Python scripts (python/*.py), type
+> stubs (python/perf.pyi), and compiled perf Python extension module
+> (python/perf*.so, when built) into $(perfexec_instdir_SQ)/python
+> alongside the legacy scripts during the transition phase so that newly
+> ported scripts can import perf directly from the installation directory
+> before legacy support is removed.
 >=20
 > Assisted-by: Antigravity:gemini-3.1-pro
 > Signed-off-by: Ian Rogers <irogers@google.com>
@@ -75,5 +60,5 @@ Sashiko has reviewed this patch and found no issues. It looks great!
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260926062029.8007=
-43-1-irogers@google.com?part=3D7
+43-1-irogers@google.com?part=3D15
 
