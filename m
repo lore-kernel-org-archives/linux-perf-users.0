@@ -1,56 +1,56 @@
-Received: from mail-dy1-f200.google.com (mail-dy1-f200.google.com [74.125.82.200])
+Received: from mail-dy1-f197.google.com (mail-dy1-f197.google.com [74.125.82.197])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 414253932FA
-	for <linux-perf-users@vger.kernel.org>; Sat, 26 Sep 2026 06:21:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05DB539A054
+	for <linux-perf-users@vger.kernel.org>; Sat, 26 Sep 2026 06:21:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790403694; cv=none; b=KulP0wswJMlxmA4vdow4ksB8FzOLkE9C/v/owc5EdcqDz3RP4eUyXY/jSozkUAv0qDEKJU9mtEH5bdlrvbf7/mN4jtZ5peROX6HMMLnBwQlk7t+Jqwjn/Zgea4UhrQQXSdp+uVECmDNAWdC/q96fGsktY7yWOzd4grO0nI1fwu8=
+	t=1790403695; cv=none; b=n/fz+iZTGzuHMtSc8OLJvuV6sxVW3xs2829Tfkg+cZ0RgdCUQL+BpY1GMbMDccNF5qN4urwhA6lJCflcVQV8GxM8JNL6OAioo2j/1SjR4vS3etxGQX47xBLPzr9rME4rRA2s5J2NOva7UnJzPpLVxvQr4Gn4I5R18LGpXwvSOFU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790403694; c=relaxed/simple;
-	bh=IcHLRKnMo9Pmb5+ufSPoK4x+KX8ee3aTsNLdmYUBkgU=;
+	s=arc-20240116; t=1790403695; c=relaxed/simple;
+	bh=IPqBB0C4p4yBkSse63lyqSGAllQDC+1yD/wY0Hs2/D8=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=OD+ow+mo8/mYfsIXsxsBumxvy6q6H6YVupeWqqPmKg8ugnH47v9pn/EL4QU7ZHupcbA22yd9vjACej9swfUvL3mKeNzvykhV83RN+occZfiX5AoU9f/QGlYJQR2+CHCHdi96ej1tv/FBM7EW7mr+Sth9mBaGia+FyVPoy9iq6gQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=wNzn2lJV; arc=none smtp.client-ip=74.125.82.200
+	 To:Cc:Content-Type; b=N6v7Fciz3Wbd9eJ8a3VvlOPl+V6dG63SM23mBh5EnW5IChzDO/eSnn1O+UDlxx4iHmgQJT/674zs7JdsKMni025E5MRrOu1qj/U0507juacCP0OiEjlb1ePOetKbzWCiEXpzry7fVB0uQejadqWjcC5FNeQHZbEM0SA+l28zgHc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Bd3i1GYp; arc=none smtp.client-ip=74.125.82.197
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="wNzn2lJV"
-Received: by mail-dy1-f200.google.com with SMTP id 5a478bee46e88-33baaba6371so3370084eec.1
-        for <linux-perf-users@vger.kernel.org>; Fri, 25 Sep 2026 23:21:30 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Bd3i1GYp"
+Received: by mail-dy1-f197.google.com with SMTP id 5a478bee46e88-342b66c0b06so687701eec.0
+        for <linux-perf-users@vger.kernel.org>; Fri, 25 Sep 2026 23:21:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1790403690; x=1791008490; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1790403692; x=1791008492; darn=vger.kernel.org;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=2VTy0fhZUkh9vJnlgTm0ZQf5p9zy+2gGP4Pq+mFlu6o=;
-        b=wNzn2lJVXTeviDKl/25LGMuCPDNLEXzmne1zSugaY1yZ6aH0cWj2hhkJvKOo8+5Ja3
-         ywOSyZC7XcH3IjlrYu4wmIqVeaai5XEz7G5m3C4j/nO3woS0CMl0FF7kS0q7QmG3p7qr
-         6mowlEPrpMivNn6PqMiMJeash6pmKDsgHNrQFY0idBDG5fEVzksvB4nSqdXTUfn1nIUF
-         RFtNEbjNE1oUDzDK0d2IGZuKCDqBH0zdHjMm5tnfpsHiR1VCI8iaNZxA4cegy58VSfX7
-         QKtdrreFW9DfL+X/OLqBSndk/PICE+JiHFrHvfrpzKtHCxFagGW1x6LUbv+IUIqCuX50
-         Fq5g==
+        bh=LbrTFhUX9MuP/ZpY/p1nYSUJddQyRbObomIhH6W5McU=;
+        b=Bd3i1GYpSxAL7xXH7NsDGALFtat25Egn2Qb15oZXEKQL4tuisM2wnxGVofUENJBw+U
+         A6bXdaiOs6WGjtWaRLcSjxNe5/zvAIODyP6tmkg+3AnswG93xvwaBiLQKqP/HzM6WsE4
+         SSrzGhr0PCf+3OK07ebmG2TO5eTLftQ2FDi+KPPkt0e4iEY7KuvK/dhisHjOnQLxaD8S
+         wC+9b9HLiNcHHU3TISrjFnmJWTepSUnvbvLfspbi68Ya2xH21OHqO1kWLcx2aBV7blCG
+         7LVX9xVGBop/2KU+VUVTDZdSAA5wsXYjBzWsQaQ+Jp3B0eWf5cahWihs1G2l0cyeBrDb
+         ML+w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1790403690; x=1791008490;
+        d=1e100.net; s=20260707; t=1790403692; x=1791008492;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=2VTy0fhZUkh9vJnlgTm0ZQf5p9zy+2gGP4Pq+mFlu6o=;
-        b=ovWjMt3abrT/2HdI30BZgBMezdKZuP/KwdKJtCpCWPKSbHlifDbcC86S9zhTHCUal1
-         N8GT0mCfodP5HzeFwuhpbGqj3f5zbJDd/OH/H4qr+g8sKMBmlLrjNOlWI4VtbA2T0nPK
-         C5TQFwWZlHyyLnLrv4aqGUO+ZN2sNLSDU9kf06bdKkbTN0beZwPsZZacEVtSgJqohEHe
-         bQzYS4sl/bqKS/nm412T6knCvtapMBgeWXIKhu7lyB7kg4QYS5fKXs2bZdtrsRQU/zts
-         sDDg7M/gjwHgI8YZb43nBv8Ea0oE3SD3qZOmK17g6ooRa+btzh59iTpCS49T/Xfc4mGe
-         aIWg==
-X-Forwarded-Encrypted: i=1; AKwUvBwX2F0tqSLUc2hnxeahgwsmbaprO8QI5FOx9ojSPuwoJ5mAyF+Rc4unCdnwI8KFUtMnr520ZQ9rOiZsMGQQaiJI@vger.kernel.org
-X-Gm-Message-State: AFuF++l5UWsb0rZYfwVrm4dl+zljf+OH7IYBNZabTtqS8boORdfUOexc
-	nyWWncM6spNu74qrXzv57N/SG+K8CiwMGB9n4AGWrGtGQF4P764cxZie3b6q4e2oj+iyvQ6bAF0
-	AcqYvs3IV2Q==
-X-Received: from dyos30.prod.google.com ([2002:a05:7300:6c9e:b0:342:805e:c749])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:693c:820c:b0:33c:e9d:6d4b
- with SMTP id 5a478bee46e88-34273057620mr2150826eec.41.1790403689769; Fri, 25
- Sep 2026 23:21:29 -0700 (PDT)
-Date: Fri, 25 Sep 2026 23:19:43 -0700
+        bh=LbrTFhUX9MuP/ZpY/p1nYSUJddQyRbObomIhH6W5McU=;
+        b=qsDFKdzmt/n14zrdZ4MZ4m1uIqFtnqNsJVfLMSnzdRRl7TaYtl3SrGZm+LTlmRxGdw
+         GgTCM/3eeLuE/LBDOFmvqv+AsmwvfnXRkO5IaI2ibA2Ja516RFgIxlGXz9UMCehhJoX7
+         z9u2B+Kue1GT9LkCAbXm/70g6CcLi3hst96TUQ/6PcKus18HoUJX9Jtr6ic+3id9r8PX
+         u063fh6i4B4wUBWR5dNADqFfyUqHAstVSw1yjA9jWkjSyAgafDYjKhH7uhUkLAUmJXdn
+         qJG64RKzwFPNMlwdeMnkwQQ+vxIJxjkvhM6aP32YqHcqXgPoR2RY+gBUscvE4RNeqLUq
+         sHeQ==
+X-Forwarded-Encrypted: i=1; AKwUvBz0+LwMY5HLNW7300iyW5kAYGFhLOjYR7zfm5Fk9/qFe1rJGcSxu7tVddZuSRYy51mPx6ohzZ6DQqK2CcF66BAz@vger.kernel.org
+X-Gm-Message-State: AFuF++nVEkjSIe2T84G85NDia+KIKrXwOacRvVzT3E88JzQaA1n6/fCb
+	mK6aAoHdiGb9aQvOyY/2TuPlml0O4/Xd7+wjRz343fP6vTEMd9V4GWBRPxNsMVdkgd7AQY8rQ2X
+	jOXJwV6cV6Q==
+X-Received: from dlbem1.prod.google.com ([2002:a05:7022:1001:b0:143:9658:f913])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:1e0d:b0:144:e998:462a
+ with SMTP id a92af1059eb24-146ce966733mr2112295c88.8.1790403691748; Fri, 25
+ Sep 2026 23:21:31 -0700 (PDT)
+Date: Fri, 25 Sep 2026 23:19:44 -0700
 In-Reply-To: <20260926062029.800743-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -60,8 +60,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260923181213.3032038-1-irogers@google.com> <20260926062029.800743-1-irogers@google.com>
 X-Mailer: git-send-email 2.56.0.rc1.315.gc6ed9934b7-goog
-Message-ID: <20260926062029.800743-17-irogers@google.com>
-Subject: [PATCH v4 16/49] perf python: Port stat-cpi to perf module
+Message-ID: <20260926062029.800743-18-irogers@google.com>
+Subject: [PATCH v4 17/49] perf python: Port mem-phys-addr to perf module
 From: Ian Rogers <irogers@google.com>
 To: irogers@google.com, acme@kernel.org, alice.mei.rogers@gmail.com, 
 	james.clark@linaro.org, leo.yan@linux.dev, namhyung@kernel.org
@@ -70,272 +70,184 @@ Cc: adrian.hunter@intel.com, dapeng1.mi@linux.intel.com,
 	mingo@redhat.com, peterz@infradead.org, tmricht@linux.ibm.com
 Content-Type: text/plain; charset="UTF-8"
 
-Port stat-cpi.py from the legacy embedded scripting framework to a
-standalone Python script in tools/perf/python/ to calculate Cycles Per
-Instruction (CPI) per interval per CPU or thread.
+Port mem-phys-addr.py to a standalone script in tools/perf/python/
+using the perf.session API to read perf.data files and profile physical
+memory access types against /proc/iomem.
 
 Improvements compared to the legacy script:
-- Support both perf.data file mode (via perf.session stat callbacks)
-  and live counter collection mode (using perf.parse_events,
-  evlist.open, and evsel.read across intervals), with automatic fallback
-  to user-space (:u) and self-process monitoring when perf_event_paranoid
-  restricts system-wide events (EACCES).
-- Compute per-interval counter deltas (val, ena, run) keyed by raw event
-  name so cumulative PERF_RECORD_STAT snapshots and hybrid PMU events
-  (e.g. cpu_core/cycles/, cpu_atom/cycles/) are accumulated accurately,
-  and scale counts by time_enabled / time_running when multiplexed.
-- Replace hard-coded CPU ([0, 1]) and thread ([0]) arrays with dynamic
-  CPU and thread discovery so arbitrary system topologies work
-  automatically.
-- Add CLI option handling (-i, -I, -p) via argparse and type annotations
-  passing mypy and pylint.
+- Parse the full indentation hierarchy of /proc/iomem into a parent-child
+  tree of frozen IomemEntry dataclasses (instead of only top-level
+  indent-0 ranges), resolving physical addresses to the most specific
+  sub-range (such as Kernel code/data/bss inside System RAM) and rolling
+  child counts up into parent totals.
+- Support profiling multiple memory events in a single perf.data session
+  (keyed by evsel name) instead of assuming a single global event.
+- Add argparse CLI options (-i/--input and --iomem to allow supplying an
+  offline /proc/iomem snapshot from a target system).
 
-Add a shell test (test_stat_cpi_python.sh) to verify the standalone
+Add a shell test (test_mem_phys_addr_python.sh) to verify the standalone
 script.
 
 Assisted-by: Antigravity:gemini-3.1-pro
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/python/stat-cpi.py                 | 219 ++++++++++++++++++
- .../perf/tests/shell/test_stat_cpi_python.sh  | 115 +++++++++
- 2 files changed, 334 insertions(+)
- create mode 100755 tools/perf/python/stat-cpi.py
- create mode 100755 tools/perf/tests/shell/test_stat_cpi_python.sh
+ tools/perf/python/mem-phys-addr.py            | 136 ++++++++++++++++++
+ .../tests/shell/test_mem_phys_addr_python.sh  | 102 +++++++++++++
+ 2 files changed, 238 insertions(+)
+ create mode 100755 tools/perf/python/mem-phys-addr.py
+ create mode 100755 tools/perf/tests/shell/test_mem_phys_addr_python.sh
 
-diff --git a/tools/perf/python/stat-cpi.py b/tools/perf/python/stat-cpi.py
+diff --git a/tools/perf/python/mem-phys-addr.py b/tools/perf/python/mem-phys-addr.py
 new file mode 100755
-index 000000000000..0b7d76876a6c
+index 000000000000..53ef7e9a14b5
 --- /dev/null
-+++ b/tools/perf/python/stat-cpi.py
-@@ -0,0 +1,219 @@
++++ b/tools/perf/python/mem-phys-addr.py
+@@ -0,0 +1,136 @@
 +#!/usr/bin/env python3
 +# SPDX-License-Identifier: GPL-2.0
-+"""Calculate CPI from perf stat data or live."""
++"""mem-phys-addr.py: Resolve physical address samples"""
 +from __future__ import annotations
-+
 +import argparse
-+import os
-+import signal
-+import sys
-+import time
-+from typing import Any, Optional
++import bisect
++import collections
++from dataclasses import dataclass
++import re
++from typing import (Dict, List, Optional)
++
 +import perf
 +
-+class StatCpiAnalyzer:
-+    """Accumulates cycles and instructions and calculates CPI."""
++@dataclass(frozen=True)
++class IomemEntry:
++    """Read from a line in /proc/iomem"""
++    begin: int
++    end: int
++    indent: int
++    label: str
 +
-+    def __init__(self, args: argparse.Namespace) -> None:
-+        self.args = args
-+        self.data: dict[str, float] = {}
-+        self.prev_data: dict[str, tuple[int, int, int]] = {}
-+        self.recorded_pairs: set[tuple[int, int]] = set()
++    def __lt__(self, other) -> bool:
++        if isinstance(other, int):
++            return self.begin < other
++        return self.begin < other.begin
 +
-+    def get_key(self, event: str, cpu: int, thread: int) -> str:
-+        """Get key for data dictionary."""
-+        return f"{event}-{cpu}-{thread}"
++    def __gt__(self, other) -> bool:
++        if isinstance(other, int):
++            return self.begin > other
++        return self.begin > other.begin
 +
-+    def store_key(self, cpu: int, thread: int) -> None:
-+        """Store CPU and thread IDs."""
-+        self.recorded_pairs.add((cpu, thread))
++# Physical memory layout from /proc/iomem. Key is the indent and then
++# a list of ranges.
++iomem: Dict[int, List[IomemEntry]] = collections.defaultdict(list)
++# Child nodes from the iomem parent.
++children: Dict[IomemEntry, List[IomemEntry]] = collections.defaultdict(list)
++# Maximum indent seen before an entry in the iomem file.
++_STATE: Dict[str, int] = {"max_indent": 0}
++# Per-event counts for each range of memory.
++event_counts: Dict[str, collections.Counter] = collections.defaultdict(collections.Counter)
 +
-+    def store(self, event: str, cpu: int, thread: int,
-+              counts: tuple[int, int, int], is_delta: bool = False,
-+              raw_name: Optional[str] = None) -> None:
-+        """Store counter values, computing difference from previous
-+        absolute values if not already deltas."""
-+        self.store_key(cpu, thread)
-+        key = self.get_key(event, cpu, thread)
-+        prev_key = self.get_key(raw_name or event, cpu, thread)
-+
-+        val, ena, run = counts
-+        if is_delta:
-+            # counts are already deltas
-+            cur_val = val
-+            cur_ena = ena
-+            cur_run = run
-+        else:
-+            if prev_key in self.prev_data:
-+                prev_val, prev_ena, prev_run = self.prev_data[prev_key]
-+                cur_val = val - prev_val
-+                cur_ena = ena - prev_ena
-+                cur_run = run - prev_run
-+            else:
-+                cur_val = val
-+                cur_ena = ena
-+                cur_run = run
-+            self.prev_data[prev_key] = counts  # Store absolute value for next time
-+
-+        # Scale each raw event's delta by its own multiplexing ratio before
-+        # summing across PMUs (e.g. cpu_core and cpu_atom on hybrid systems) so
-+        # enabled time from an idle PMU does not inflate the multiplier of an
-+        # active PMU.
-+        scaled_val = cur_val * (cur_ena / float(cur_run)) if cur_run > 0 else float(cur_val)
-+        self.data[key] = self.data.get(key, 0.0) + scaled_val
-+
-+    def get(self, event: str, cpu: int, thread: int) -> float:
-+        """Get scaled counter value."""
-+        key = self.get_key(event, cpu, thread)
-+        return self.data.get(key, 0.0)
-+
-+    @staticmethod
-+    def _classify_event(name: str) -> Optional[str]:
-+        """Classify an event name as 'cycles' or 'instructions'."""
-+        ev = name[6:-1] if name.startswith("evsel(") and name.endswith(")") else name
-+        ev = ev.split(":", 1)[0]
-+        if "/" in ev:
-+            parts = [p for p in ev.split("/") if p]
-+            if len(parts) >= 2:
-+                ev = parts[1]
-+        if ev in ("cycles", "cpu-cycles"):
-+            return "cycles"
-+        if ev == "instructions":
-+            return "instructions"
-+        return None
-+
-+    def process_stat_event(self, event: Any, name: Optional[str] = None) -> None:
-+        """Process PERF_RECORD_STAT and PERF_RECORD_STAT_ROUND events."""
-+        if event.type == perf.RECORD_STAT:
-+            if name:
-+                event_name = self._classify_event(name)
-+                if not event_name:
-+                    return
-+                self.store(event_name, event.cpu, event.thread,
-+                           (event.val, event.ena, event.run), raw_name=name)
-+        elif event.type == perf.RECORD_STAT_ROUND:
-+            timestamp = getattr(event, "time", 0)
-+            self.print_interval(timestamp)
-+            self.data.clear()
-+            self.recorded_pairs.clear()
-+
-+    def print_interval(self, timestamp: int) -> None:
-+        """Print CPI for the current interval."""
-+        for cpu, thread in sorted(self.recorded_pairs):
-+            cyc = self.get("cycles", cpu, thread)
-+            ins = self.get("instructions", cpu, thread)
-+            cpi = 0.0
-+            if ins != 0:
-+                cpi = cyc / float(ins)
-+            t_sec = timestamp / 1000000000.0
-+            print(f"{t_sec:15f}: cpu {cpu}, thread {thread} -> cpi {cpi:f} ({cyc:.0f}/{ins:.0f})")
-+
-+    def read_counters(self, evlist: Any) -> None:
-+        """Read counters live."""
-+        for evsel in evlist:
-+            name = str(evsel)
-+            event_name = self._classify_event(name)
-+            if not event_name:
++def parse_iomem(iomem_path: str):
++    """Populate iomem from iomem file"""
++    with open(iomem_path, 'r', encoding='ascii') as f:
++        for line in f:
++            line = line.rstrip('\n')
++            if not line or line.isspace():
 +                continue
++            indent = 0
++            while indent < len(line) and line[indent] == ' ':
++                indent += 1
++            _STATE["max_indent"] = max(_STATE["max_indent"], indent)
++            m = re.split('-|:', line, maxsplit=2)
++            if len(m) < 3:
++                continue
++            begin = int(m[0].strip(), 16)
++            end = int(m[1].strip(), 16)
++            label = m[2].strip()
++            entry = IomemEntry(begin, end, indent, label)
++            # Before adding entry, search for a parent node using its begin.
++            if indent > 0:
++                parent = find_memory_type(begin)
++                assert parent, f"Given indent expected a parent for {label}"
++                children[parent].append(entry)
++            iomem[indent].append(entry)
 +
-+            for cpu in evsel.cpus():
-+                for thread in evsel.threads():
-+                    try:
-+                        counts = evsel.read(cpu, thread)
-+                        self.store(event_name, cpu, thread,
-+                                   (counts.val, counts.ena, counts.run),
-+                                   is_delta=True, raw_name=name)
-+                    except OSError:
-+                        pass
++def find_memory_type(phys_addr) -> Optional[IomemEntry]:
++    """Search iomem for the range containing phys_addr with the maximum indent"""
++    for i in range(_STATE["max_indent"], -1, -1):
++        if i not in iomem:
++            continue
++        position = bisect.bisect_right(iomem[i], phys_addr)
++        if position == 0:
++            continue
++        iomem_entry = iomem[i][position-1]
++        if  iomem_entry.begin <= phys_addr <= iomem_entry.end:
++            return iomem_entry
++    return None
 +
-+    def run_file(self) -> None:
-+        """Process events from file."""
-+        session: Optional[perf.session] = perf.session(
-+            perf.data(self.args.input), stat=self.process_stat_event
-+        )
-+        try:
-+            assert session is not None
-+            session.process_events()
-+        finally:
-+            session = None
++def _print_entries(entries, load_mem_type_cnt, total):
++    """Print counts from parents down to their children"""
++    for entry in sorted(entries,
++                        key=lambda e: (-load_mem_type_cnt[e], e.begin)):
++        count = load_mem_type_cnt[entry]
++        if count > 0:
++            mem_type = ' ' * entry.indent + f"{entry.begin:x}-{entry.end:x} : {entry.label}"
++            percent = 100 * count / total
++            print(f"{mem_type:<40}  {count:>10}  {percent:>10.1f}")
++            _print_entries(children[entry], load_mem_type_cnt, total)
 +
-+    def _open_live_evlist(self) -> Any:
-+        """Open evlist for live mode, falling back to user-space or process scope on EACCES."""
-+        threads = perf.thread_map(self.args.pid) if self.args.pid else None
-+        candidates = [
-+            ("cycles,instructions", threads),
-+            ("cycles:u,instructions:u", threads),
-+        ]
-+        if threads is None:
-+            self_threads = perf.thread_map(os.getpid())
-+            candidates.append(("cycles,instructions", self_threads))
-+            candidates.append(("cycles:u,instructions:u", self_threads))
++def print_memory_type():
++    """Print the resolved memory types and their counts."""
++    if not event_counts:
++        print("No valid physical address samples found in perf data.")
++        return
 +
-+        last_err: Optional[OSError] = None
-+        for events, tmap in candidates:
-+            try:
-+                evlist = perf.parse_events(events, None, tmap)
-+                for evsel in evlist:
-+                    evsel.read_format |= (
-+                        perf.FORMAT_TOTAL_TIME_ENABLED | perf.FORMAT_TOTAL_TIME_RUNNING
-+                    )
-+                evlist.open()
-+                evlist.enable()
-+                return evlist
-+            except PermissionError as e:
-+                last_err = e
-+            except OSError as e:
-+                if e.errno == 13:
-+                    last_err = e
-+                else:
-+                    raise
-+        if last_err is not None:
-+            raise last_err
-+        raise RuntimeError("Failed to open events")
++    for event_name, load_mem_type_cnt in event_counts.items():
++        print(f"Event: {event_name}")
++        print(f"{'Memory type':<40}  {'count':>10}  {'percentage':>10}")
++        print(f"{'-' * 40:<40}  {'-' * 10:>10}  {'-' * 10:>10}")
++        total = sum(load_mem_type_cnt.values())
++        if total == 0:
++            continue
 +
-+    def run_live(self) -> None:
-+        """Read counters live."""
-+        try:
-+            evlist = self._open_live_evlist()
-+        except OSError as e:
-+            print(f"Failed to open events: {e}", file=sys.stderr)
-+            sys.exit(1)
++        # Add count from children into the parent.
++        for i in range(_STATE["max_indent"], -1, -1):
++            if i not in iomem:
++                continue
++            for entry in iomem[i]:
++                for child in children[entry]:
++                    if load_mem_type_cnt[child] > 0:
++                        load_mem_type_cnt[entry] += load_mem_type_cnt[child]
 +
-+        def handle_signal(_signum: int, _frame: Any) -> None:
-+            raise KeyboardInterrupt
-+
-+        signal.signal(signal.SIGINT, signal.default_int_handler)
-+        signal.signal(signal.SIGTERM, handle_signal)
-+
-+        print("Live mode started. Press Ctrl+C to stop.")
-+        try:
-+            while True:
-+                time.sleep(self.args.interval)
-+                timestamp = time.time_ns()
-+                self.read_counters(evlist)
-+                self.print_interval(timestamp)
-+                self.data.clear()
-+                self.recorded_pairs.clear()
-+        except KeyboardInterrupt:
-+            print("\nStopped.")
-+        finally:
-+            evlist.close()
-+
-+def main() -> None:
-+    """Main function."""
-+    ap = argparse.ArgumentParser(description="Calculate CPI from perf stat data or live")
-+    ap.add_argument("-i", "--input", help="Input file name (enables file mode)")
-+    ap.add_argument("-I", "--interval", type=float, default=1.0,
-+                    help="Interval in seconds for live mode")
-+    ap.add_argument("-p", "--pid", type=int,
-+                    help="Monitor specific process ID in live mode")
++        _print_entries(iomem[0], load_mem_type_cnt, total)
++        print()
++if __name__ == "__main__":
++    ap = argparse.ArgumentParser(description="Resolve physical address samples")
++    ap.add_argument("-i", "--input", default="perf.data", help="Input file name")
++    ap.add_argument("--iomem", default="/proc/iomem", help="Path to iomem file")
 +    args = ap.parse_args()
 +
-+    analyzer = StatCpiAnalyzer(args)
-+    if args.input:
-+        analyzer.run_file()
-+    else:
-+        analyzer.run_live()
++    def process_event(sample):
++        """Process a single sample event."""
++        phys_addr = sample.sample_phys_addr or 0
++        if not phys_addr:
++            return
++        entry = find_memory_type(phys_addr)
++        if entry:
++            event_name = str(sample.evsel)
++            if event_name.startswith("evsel(") and event_name.endswith(")"):
++                event_name = event_name[6:-1]
++            event_counts[event_name][entry] += 1
 +
-+if __name__ == "__main__":
-+    main()
-diff --git a/tools/perf/tests/shell/test_stat_cpi_python.sh b/tools/perf/tests/shell/test_stat_cpi_python.sh
++    parse_iomem(args.iomem)
++    perf.session(perf.data(args.input), sample=process_event).process_events()
++    print_memory_type()
+diff --git a/tools/perf/tests/shell/test_mem_phys_addr_python.sh b/tools/perf/tests/shell/test_mem_phys_addr_python.sh
 new file mode 100755
-index 000000000000..0960afa4c797
+index 000000000000..d094a0611a24
 --- /dev/null
-+++ b/tools/perf/tests/shell/test_stat_cpi_python.sh
-@@ -0,0 +1,115 @@
++++ b/tools/perf/tests/shell/test_mem_phys_addr_python.sh
+@@ -0,0 +1,102 @@
 +#!/bin/bash
 +# SPDX-License-Identifier: GPL-2.0
-+# stat-cpi python test
++# mem-phys-addr python test
 +
 +set -e
 +
@@ -346,93 +258,84 @@ index 000000000000..0960afa4c797
 +# If we don't have the perf python module, we can't test
 +if ! "$PYTHON" -c 'import perf' > /dev/null 2>&1; then
 +	echo "Skipping test, perf python module not found"
-+	return 2 2>/dev/null || exit 2
++	exit 2
 +fi
 +
 +script_dir="$(dirname "$0")/../../python"
-+script_path="${script_dir}/stat-cpi.py"
++script_path="${script_dir}/mem-phys-addr.py"
 +
 +if [ ! -f "$script_path" ]; then
-+	echo "Skipping test, stat-cpi.py not found at $script_path"
-+	return 2 2>/dev/null || exit 2
++	echo "Skipping test, mem-phys-addr.py not found at $script_path"
++	exit 2
 +fi
 +
 +err=0
-+ran=0
 +temp_data=""
++temp_iomem=""
 +temp_out=""
 +
 +cleanup() {
-+	[ -n "${pid}" ] && kill "$pid" 2>/dev/null || true
-+	[ -n "${workload_pid}" ] && kill "$workload_pid" 2>/dev/null || true
-+	rm -f "${temp_data}" "${temp_out}"
-+	trap - exit term int
++	rm -f "${temp_data}" "${temp_iomem}" "${temp_out}"
 +}
 +
-+trap_cleanup() {
-+	cleanup
-+	exit 1
-+}
-+trap trap_cleanup exit term int
++trap 'cleanup' EXIT TERM INT
 +
 +temp_data=$(mktemp /tmp/perf.data.XXXXXX)
++temp_iomem=$(mktemp /tmp/perf.iomem.XXXXXX)
 +temp_out=$(mktemp /tmp/perf.out.XXXXXX)
 +
-+test_live_mode() {
-+	echo "Testing stat-cpi.py live mode..."
-+	if ! perf stat -e cycles,instructions -- sleep 0.1 2>/dev/null && \
-+	   ! perf stat -e cycles:u,instructions:u -- sleep 0.1 2>/dev/null; then
-+		echo "perf stat failed (permissions?), skipping live mode test."
-+		return 0
-+	fi
-+	perf test -w noploop &
-+	workload_pid=$!
-+	if ! perf stat -e cycles,instructions -p "$workload_pid" -- sleep 0.05 2>/dev/null && \
-+	   ! perf stat -e cycles:u,instructions:u -p "$workload_pid" -- sleep 0.05 2>/dev/null; then
-+		kill "$workload_pid" 2>/dev/null || true
-+		workload_pid=""
-+		echo "perf stat -p failed (ptrace_scope?), skipping live mode test."
-+		return 0
-+	fi
-+	ran=1
++cat << 'EOF' > "${temp_iomem}"
++00000000-ffffffffffffffff : System RAM
++  00000000-7fffffffffffffff : Low RAM
++    00001000-00ffffff : Kernel code
++  8000000000000000-ffffffffffffffff : High RAM
++EOF
 +
-+	# Run live mode for 1 interval in the background, give it a tiny sleep, then interrupt
-+	"$PYTHON" "$script_path" -I 0.1 -p "$workload_pid" > "${temp_out}" &
-+	pid=$!
-+	sleep 0.5
-+	kill -INT "$pid" 2>/dev/null || true
-+	set +e
-+	wait "$pid"
-+	res=$?
-+	set -e
-+	pid=""
-+	kill "$workload_pid" 2>/dev/null || true
-+	workload_pid=""
-+	if [ $res -ne 0 ] && [ $res -ne 130 ] && [ $res -ne 143 ]; then
-+		echo "Live mode failed or crashed"
-+		err=1
-+	elif ! grep -q "cpi" "${temp_out}"; then
-+		echo "Live mode produced no cpi output"
++test_iomem_hierarchy() {
++	echo "Testing mem-phys-addr.py hierarchical iomem resolution..."
++	"$PYTHON" - "$script_path" "${temp_iomem}" << 'PYEOF' > "${temp_out}"
++import importlib.util
++import sys
++
++spec = importlib.util.spec_from_file_location("mem_phys_addr", sys.argv[1])
++mod = importlib.util.module_from_spec(spec)
++sys.modules[spec.name] = mod
++spec.loader.exec_module(mod)
++
++mod.parse_iomem(sys.argv[2])
++entry_kernel = mod.find_memory_type(0x100000)
++entry_high = mod.find_memory_type(0x9000000000000000)
++assert entry_kernel is not None and entry_kernel.label == "Kernel code"
++assert entry_high is not None and entry_high.label == "High RAM"
++mod.event_counts["cpu/mem-loads/"][entry_kernel] += 3
++mod.event_counts["cpu/mem-loads/"][entry_high] += 1
++mod.print_memory_type()
++PYEOF
++	if ! grep -q "System RAM" "${temp_out}" || \
++	   ! grep -q "Kernel code" "${temp_out}" || \
++	   ! grep -q "High RAM" "${temp_out}"; then
++		echo "Hierarchical iomem resolution test failed."
 +		err=1
 +	else
-+		echo "Live mode test passed."
++		echo "Hierarchical iomem resolution test passed."
 +	fi
 +}
 +
 +test_file_mode() {
-+	echo "Testing stat-cpi.py file mode..."
-+	# Generate some stat events - perf stat -I represents interval reporting
-+	if ! perf stat -e cycles,instructions -I 100 record -o "${temp_data}" \
-+		-- sleep 0.5 2>/dev/null && \
-+	   ! perf stat -e cycles:u,instructions:u -I 100 record -o "${temp_data}" \
-+		-- sleep 0.5 2>/dev/null; then
-+		echo "perf stat failed (permissions?), skipping file mode test."
-+		return
-+	fi
-+	ran=1
++	echo "Testing mem-phys-addr.py file mode..."
 +
-+	out=$("$PYTHON" "$script_path" -i "${temp_data}")
-+	if ! echo "$out" | grep -q "cpi"; then
++	# Generate memory access events (try unprivileged user-space first, then system-wide)
++	if ! perf record --phys-data -d -o "${temp_data}" \
++	     -- perf test -w datasym >/dev/null 2>&1 && \
++	   ! perf record -d -o "${temp_data}" -- perf test -w datasym >/dev/null 2>&1 && \
++	   ! perf record -d -a -o "${temp_data}" -- sleep 0.2 >/dev/null 2>&1; then
++		echo "Skipping file mode record test, perf record -d not supported"
++		return 0
++	fi
++
++	# Run the script with custom --iomem
++	if ! "$PYTHON" "$script_path" -i "${temp_data}" --iomem "${temp_iomem}" > "${temp_out}" || \
++	   [ ! -s "${temp_out}" ]; then
 +		echo "File mode test failed."
 +		err=1
 +	else
@@ -440,13 +343,9 @@ index 000000000000..0960afa4c797
 +	fi
 +}
 +
-+test_live_mode
++test_iomem_hierarchy
 +test_file_mode
 +
-+cleanup
-+if [ $ran -eq 0 ]; then
-+	exit 2
-+fi
 +exit $err
 -- 
 2.56.0.rc1.315.gc6ed9934b7-goog
