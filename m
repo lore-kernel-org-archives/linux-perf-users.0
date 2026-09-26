@@ -1,70 +1,69 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFAB338B14C
-	for <linux-perf-users@vger.kernel.org>; Sat, 26 Sep 2026 06:38:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 724C534250E
+	for <linux-perf-users@vger.kernel.org>; Sat, 26 Sep 2026 06:42:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790404701; cv=none; b=dX5orFYGWQE1ihwqD14/gRo5NuBF/M6Yf5SooGLNskL79Fc/Z4n5EjgpowWu1fcC5HZHsHC1RedIX/wX92jEsAb/v0pB3MvIqc6lw2kI1V+TL93ZujCCg5TCyJgVk/nUTvWYMAGO8d+g7Uk25i6zekqrPHeERKyvrQiHptTIHzo=
+	t=1790404978; cv=none; b=gMlz3FFRdoj6Rzf2PdAF/1lzuOtSGpdrjAhi8QKhrbGPJ6ZoO4Q+/IsXbjlWoJYOeP8+OhJvRh6rI7xLFkCOIfS33PGJk5QNL7IezR61cg6V9mMwTDv1+QIWzEIlU6Anh6PwjoAR1Xc7VhrfktdPTO3X4fN7F/s5s6ECbZMrEjA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790404701; c=relaxed/simple;
-	bh=UL/iytY1xA8puU30HoVmCX87lPmsEdDwCoW+fWuGLek=;
+	s=arc-20240116; t=1790404978; c=relaxed/simple;
+	bh=eVEb+XOeWOuSdMVsS1okfgkiGpeBBik61VWTWuoay1Y=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=JbEx9RflVuim1lp2eXG1hurIkUmTB7P/axJ3EcSErQ/hLmifvuNDb1jTR1jx/rs0Mo4fAXE2LyvKE9+S3RuWxw7TFDwqzxb6+oB9sz+bcgZ97yTtPCKoC+sRXz1BsJkQAksJPjI8ALYfmb6Rz62OXSTeyDgwXft3aXdu+ij1vqI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nmfv6HzV; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=PzCm1QwKLs23vyW/tuq689nmZV5Q931Ie+LmVwAnLwCfwxEQv+hx2RqHWpmUtOMkhIrSYH6BvRkLpY86hITx9LNNKLnquf7+5lbD/41bObzAAFGHUal8uh059caqR6zhOxWb1PvWCoIH5s+7hUIInIfYnC+NJOuKmmu4aRlrYpQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=G8II63YD; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nmfv6HzV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EEC951F000FF;
-	Sat, 26 Sep 2026 06:38:19 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="G8II63YD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C600D1F000FF;
+	Sat, 26 Sep 2026 06:42:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1790404700;
-	bh=8Awv3Af+F4sH6Y5JD3TXPghkd3Rs6KNUaIcmjimf3d8=;
+	s=k20260515; t=1790404976;
+	bh=+GIlHUqGenJxrdsUjB9N62j3xZrFLk++y4IAkOzQPeM=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=nmfv6HzVmFzcJIH0KGLT1wSPhcegmJaSHX8RHB07YegrS31EnfpEOs1CJ/EdzBEST
-	 /YoL9KSHts22+uzsN5MdwH8i6CqIbtDHFJ7xQ4tQ/bCJqh0LVRe9JDAkGBthoz6k+e
-	 yBZc3fRkNhILLD64iHkEvWnToAseZ5fU151rNdEho+2o0repmd2w1DGME2bwaBp4BA
-	 M9LQdPBdujhqmBnwNKebmdi1126gqMqNNI2cD+03+hinTuGeX/8ntE+UAZzgjpz2BR
-	 IeBeABmts8ZuYI5bouWhn2s8ydDHFBp8NyeQnwKFYOuUcuW6n4pzs7mo17ENVRHsYE
-	 6dqPclhuzMtuQ==
+	b=G8II63YDtCdhg0EE4Q6HUQckhGN+oswnGsJoHM6Ae4dwTRThOhrXbQ+kGDO2Gydc1
+	 KiNa8cU+/80zRbspmiHvMyQX05adyellvtrrTgQukY71NBGZInYzdNaQWQI+5haHjo
+	 7qMlVi8ZZHwYg8CCii9dRWqZrE4bY4hKv1JNbpONZVozu78cfOzLZ9OEyqjagbrppP
+	 t2hMLMYnBzaGl4EHWDUqmxxNlYjgl8wLeWHqI7DxvWkt9bjFj4AGH4rhh/AXSVzUVj
+	 ex8hegC/lFVDi6obJlY0tw4iVL0hDCnOwK+NDd5+Nt5gDBbqcGSBMJ2oF5lYFYTaEG
+	 c6XkeL9SQ/mkQ==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v4 42/49] perf python: Port export-to-sqlite to perf
- module
+Subject: Re: [PATCH v4 48/49] perf script: Support standalone scripts and
+ remove embedded scripting
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Ian Rogers" <irogers@google.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260926062029.800743-43-irogers@google.com>
+In-Reply-To: <20260926062029.800743-49-irogers@google.com>
 References: <20260923181213.3032038-1-irogers@google.com>
  <20260926062029.800743-1-irogers@google.com>
- <20260926062029.800743-43-irogers@google.com>
+ <20260926062029.800743-49-irogers@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Sat, 26 Sep 2026 06:38:19 +0000
-Message-Id: <20260926063819.EEC951F000FF@smtp.kernel.org>
+Date: Sat, 26 Sep 2026 06:42:56 +0000
+Message-Id: <20260926064256.C600D1F000FF@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-> Port export-to-sqlite.py to a standalone script in tools/perf/python/
-> using the perf module and Python's standard library sqlite3 module.
->=20
-> Improvements compared to the legacy script:
-> - Remove the dependency on PySide/QtSql by using Python's built-in
->   sqlite3 module in DatabaseExporter, allowing SQLite export on headless
->   and minimal systems without Qt installed.
-> - Support Intel PT and hardware instruction trace export via
->   perf.session(itrace=3D...) and perf.call_return callbacks, reconstructi=
-ng
->   relational call_paths and calls tables and decoding synthesized PT
->   payloads (ptwrite, cbr, mwait, pwre, exstop, pwrx).
-> - Export context_switches via perf.session's context_switch callback
->   and map thread and comm IDs to their relational database keys.
-> - Manage temporary staging files inside an isolated tempfile.mkdtemp()
->   directory with guaranteed cleanup in a finally block.
->=20
-> Update Documentation/db-export.txt and add a shell test
-> (test_export_to_sqlite_python.sh) to verify the standalone exporter.
+> Refactor 'perf script' to launch standalone scripts directly via fork()
+> and execvp() and remove the legacy embedded Perl and Python scripting
+> engines:
+> - Remove the embedded Perl scripting engine
+>   (util/scripting-engines/trace-event-perl.c), Perl scripts, bin
+>   wrappers, and Trace-Util library
+>   (scripts/perl/Perf-Trace-Util/), and script_perl.sh test.
+> - Remove libperl feature checks from Makefile.config, Makefile.perf,
+>   builtin-check.c, and Documentation/perf-check.txt.
+> - Remove -g / --gen-script option and scripting_ops dispatch table from
+>   builtin-script.c and trace-event-scripting.c.
+> - Hide the legacy -s / --script option and update script discovery in
+>   find_script() and list_available_scripts() to prioritize the system
+>   'python' directory over bare filenames in the current directory.
+> - Update the Python script shell tests (test_arm_coresight_disasm.sh,
+>   test_task_analyzer.sh, and test_*_python.sh) to invoke scripts via
+>   'perf script <script>' rather than running the Python interpreter
+>   directly on the script file path.
 >=20
 > Assisted-by: Antigravity:gemini-3.1-pro
 > Signed-off-by: Ian Rogers <irogers@google.com>
@@ -73,5 +72,5 @@ Sashiko has reviewed this patch and found no issues. It looks great!
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260926062029.8007=
-43-1-irogers@google.com?part=3D42
+43-1-irogers@google.com?part=3D48
 
