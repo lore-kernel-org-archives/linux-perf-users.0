@@ -1,266 +1,159 @@
-Received: from mail-qt1-f175.google.com (mail-qt1-f175.google.com [209.85.160.175])
+Received: from mail-qt1-f180.google.com (mail-qt1-f180.google.com [209.85.160.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79A751DFFB
-	for <linux-perf-users@vger.kernel.org>; Sat, 26 Sep 2026 22:46:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.160.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F7F51DFFB
+	for <linux-perf-users@vger.kernel.org>; Sat, 26 Sep 2026 22:47:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.160.180
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790462797; cv=pass; b=TDOwCVhImOpe7F8Uvmpe/9zevNjA0KO3gnozaDgwwu/jqi8rzdiwRKBDFlvKG66q84qfTVLWKpAVBupHlwh7bNeBjEubyFHc7skqvYJljdNwgBO+W6zHvUGrbTxvZPg1wVRGkdCyH3gCR0awuMqaZB88icd19QFXbQbl44Hz+3k=
+	t=1790462865; cv=pass; b=PcQ5NnjA7Uknk7bHV7Xm8DPVmixV8qYTG0tvHgiOEWXwXbCQrLdJVcxWI1U9KE0U/HdZOqorgoBWAlD/ZZvsoTErdSh6pLBBUYRMIaLm632ISlkbKRjT7FMAZlw8EdweZNKMm1FngbzO95GwFpBGummuFHTylAt3JeDsjvyOodo=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790462797; c=relaxed/simple;
-	bh=EGsHpMqvsJdko56+qOe+JPf8zXAERHfCpLuYy9xQ4Fw=;
+	s=arc-20240116; t=1790462865; c=relaxed/simple;
+	bh=/SAuPxmP3YRag5UnfnqJuuo5uQMonUx2h/RhunaOorM=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=c5/trX83173/M/liMro38KcRuQWJBxL7GXT3o4lOQQNbrDGsudJmmOAl9sK167R3WKCiLfYiGKyJBmJDlkn06j5CKem4zh5zGm1iFaSecOsAk99IkNspX4Yrs/wEnRHMVCttF4rGsP9ocTGHpDeeWjN5SsMNb8HKwUovNOlDc1k=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=EezoyIBf; arc=pass smtp.client-ip=209.85.160.175
+	 To:Cc:Content-Type; b=Z5uw6RmgTfq4C+NRdWONRDQCy0L/QqNEwspKW4uH50jFlcm4z+6Uaj1YQov74e6tiWGk9nfV6QWRxzRwCm1ukBRsLI4KO8CoDVyar++wjgXhfXgb/xfBVKZuTaw89QJgB73gJqJE4vUfzSAM9r5grm5T+WqkCO9ly1PSgRw+vQA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=vvAI1zRP; arc=pass smtp.client-ip=209.85.160.180
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="EezoyIBf"
-Received: by mail-qt1-f175.google.com with SMTP id d75a77b69052e-5333401e359so28361cf.1
-        for <linux-perf-users@vger.kernel.org>; Sat, 26 Sep 2026 15:46:35 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1790462794; cv=none;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vvAI1zRP"
+Received: by mail-qt1-f180.google.com with SMTP id d75a77b69052e-53113d72966so165141cf.1
+        for <linux-perf-users@vger.kernel.org>; Sat, 26 Sep 2026 15:47:44 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1790462863; cv=none;
         d=google.com; s=arc-20260327;
-        b=quoL6fDN2YPXSW3Pc+to9jmn8dhFiOa0T/Wr29IpCkwnA+nsv62hK6TEaoUoNFys21
-         uoDCpjFmwykgJXlmxQ920v/p6zrMwyelsdy9sZFpOu+UaAnctUr2f3BlGypNJSL30VdR
-         CnaWg9IjyzXjBlCewBDnQxWFmuWxDESqa3Cs+V55mbw40FdL92ZqEuN2QkogR5efjTXF
-         6d3oyI/HaR0YOGq9qBRyUb7ED4cEBcHYmwNMLx9btbAmQP18wCiRuw7hQ0cZ59Von8vy
-         ZpyCeIjc2XNlCOENIECCTEEAQiI6rJZNExMYpRL4kYXRw51iJIWD8cHyev0PzXVifCy9
-         nJ0A==
+        b=PinPVfSf7DrRB6CVz6NqtCPG9rbo51D20xWszjmufMP64AjgIriBFG4GOE4twFGQ5E
+         30cVvGRgZ+PrVGJTOO3IjCiGLKKX6eQkQk9upOYQL14I4TLb5QO3+/AQ/0P0qiRNRQvI
+         509/4BlL2orqlfNBcPSednPUXGOkmuS8AUWCgEHKH8KAfMDV8ihmDIyEchwHoeyc82Hu
+         TB7IpbxU6H7WvIF62ZsziaApqoDwiAr0s3rA+TfVTkB79x4mkjaajNlZURYa6IeDJ+e1
+         5RRES7ZUdJ8e2mTFDc7J2jORXRlipTbMPKXDhur4p7GXi8aTHFmxiqFDSW8JQYui3Ynj
+         E86A==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:dkim-signature;
-        bh=PCuo0S1OV4LTqlcYTiFFagxuS84m6WpikLQczzGr1KA=;
-        fh=8ls125a2vxRrs6JcTVEhd605bmYEzTwqFhhpXhSUp5k=;
-        b=MyGAKzNaACESz2ARE1kaivhV08kdPfq6qn2Ylcs8QAFg+O261rnW0rNVdTFsDAU0gg
-         EImGBHQPYfebvaT7YPz1UKE8YE49J74xKXhuE8U5rjZklWpk/4o+ucHrMhnhO/H8jggg
-         XmMrCoyyuNVSV4vehDxFCdvOFW3jY7nhe2x1feIIaP+T9RTD50+njwGWl3t+Rp7t+M4y
-         DKOEqDGtkPdqF3m4uRAn75V7S/OXWA6YLJUg1THahTbuQcd0j5csc+Dw0nBfEiEetAfS
-         +cHQk0MWatyJtoW/MLSAix+siKxbFUj0dBC/skNmxbeDUJQUKcCo2kL4fLtVKHhONrSR
-         010A==;
+        bh=XemkzGIt/BfBHHj+ls/O2WO7JmWM4hQedDYVYfzYN9s=;
+        fh=qf4Dck0NBfehNtb6AUA8pU1fSTX0VSWPG7lKbZCOOnA=;
+        b=OjpKpHnenyJyJQbOvdWTd82t1Nc3jx5tVF1PKgOziqW/mlhlgDGOgx/iJnubU5LG0w
+         eA2csXaU7uSx7AMbyYBQZKhdHxGTaAwf4g4Raff/VuUquGeUOKakpNyt3uOQgu6hXSf2
+         OMGcxGP5jqUkOrFxHG/FCsH8RcMHc4lVRk8sI1fXmqm4SMnjrkX9uhKLxc3k2DbR1ymf
+         5m6Kj4paD5hU2R+wH3x2W76+D1uHv7NTpF1lU22HQoTw9GTwFHVQaF0UddM8XKVKGYlR
+         Z3g+vjHXGthrpWfsJXROqlNRCshDItpxXUHtdtMJU10CoktMa/jzmaVVY/ZbMo+lEnL6
+         MU8w==;
         darn=vger.kernel.org
 ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1790462794; x=1791067594; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1790462863; x=1791067663; darn=vger.kernel.org;
         h=content-transfer-encoding:content-type:cc:to:subject:message-id
          :date:from:in-reply-to:references:mime-version:from:to:cc:subject
          :date:message-id:reply-to:content-type;
-        bh=PCuo0S1OV4LTqlcYTiFFagxuS84m6WpikLQczzGr1KA=;
-        b=EezoyIBfA4xIfoskj7bYG+kD6m4fv3Lvcd8SN5uFcFcVW+mSmw3Gv8VaytuW5aZBlH
-         XwrnZXL+9cu30X55tlKQtu7ORptUSnOhRDwqSd8C9FHfhXFSg8dJlc9xo3vsmkwDExNo
-         NmD+Q/elTKOT67ntKK9lwIneh9IOWBm/EuH7d3kpU++fdxSeBpw4fbwaB7rskzV+2TMT
-         J9/sY3lvR5kuNlA9WHoJOXqVJm1dMGgLKqpU8sccP38e5j1OnCNf4Jf6U2JxFRWXR2uI
-         JnGgHGbPIVj/McHo/ku7dZehJXy3EnmTEqfUzvbaoydoVb4S2MOhxGAYmDn1z5uCs5Qu
-         2ueQ==
+        bh=XemkzGIt/BfBHHj+ls/O2WO7JmWM4hQedDYVYfzYN9s=;
+        b=vvAI1zRPLRCklydjRULlW1r9wB1agadUesC6Xi5H/eEW5gNCR4BVM0e+oS0GbQy63I
+         NtSLxvRvQLatzQ9vJ+Z3zS5/5TLHS9q5w51cCv2GKXEJpUvkGun5yVt2qIvpEWlIZYAX
+         0wVyBo8knTCjhlOqHcVdpCJvgPutwv4y6mdusHXoyiHjBeS9bNrVSP+3bdHLkxrKbYgS
+         HATdUvQnXJwn6AVtQZs7Z4v+Xx4K74E+pAKx10Wtcn7LP/f1KjeRBfEnjwNlBSYK9yci
+         tZK4IeqbRBbJQziQPx7AaUxDJnsPBmTD2FJ2Nc+Igvgdk1AA3TBPNeD2GFQijwEUBmK6
+         aAFg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1790462794; x=1791067594;
+        d=1e100.net; s=20260707; t=1790462863; x=1791067663;
         h=content-transfer-encoding:content-type:cc:to:subject:message-id
          :date:from:in-reply-to:references:mime-version:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=PCuo0S1OV4LTqlcYTiFFagxuS84m6WpikLQczzGr1KA=;
-        b=WHvLqtqz0FOM/nboEgAILTycAphQjIsZ64vNJPBbi3/xsONVVqJEMPh+0pxis0NxfP
-         egke+/Bt9fqqBl3orQXICCWlDsaFP8bzlw6/mLjSXAuIKGoMuO48/diDK0vSvzftUL7e
-         V5Mjz8B3TQ5GNWkwuiBCRSzNVpqeRJ5zS4CT1Kbq3jjhT7+wDJSroGiqVZ+dGoMQVK9M
-         7w6SxfdQp7XImhADouQ0OgDzgHNUVPapl8WedHgYq1EhhB9GEzfS63+gdkQUW0wCovIf
-         eg7tGLpxkdQ89ANvcupyZT70BIlIXwjiEjgQwvzK7XjMkiINhSey0NSv4x0lAsgrf2Ih
-         m4NA==
-X-Forwarded-Encrypted: i=1; AKwUvBw7AJc3BktQepUM+d1sBiszHg0HGI9hJ004HXq7SatmgIj0LojNHZGTdCkxnPO+PkdAvSC4Efu2f+YowipRRKnM@vger.kernel.org
-X-Gm-Message-State: AFuF++l/QVMirj4H5kCVI3AYjmDw4eEy75vwulW1FHJUwZRiKBsS+Z3A
-	1z/2yNoOy6AJG5iJguaSZBsHf/N78ywk6CSKpcvCJvYyS3Rpdcj1jf65eEhdXydupEHgsvTJxjM
-	GVwB8tpLC5AzbLH+Tw8EBR19NjVTZxxQwES921B57
-X-Gm-Gg: AYBFou26huYEhd5hHyL9+RZP7dTF+G9W19vMj4xAieXYDrZzEaFhqzY/mNgKKN2q9aF
-	NV+g0ny6sIB4gvk8nACMb+6aA3RppyNcRQC9le1UJvnbJOZzcAoQyaQDaiN3H24+gDcn4P6d/0D
-	UFxiKP/PWJNViv7bz1oPgNGEq655Z9Vtwg25YvMCpdPjy3PKACmyr0nqAZceSLJZJB18hPpOFx4
-	v4bT8c9fdgkHHUGMtqCIFY0r7ak3zgfkOlEp+rm+DjPEfFh+AAL96BURXYkEq1ZRDU6xFRhaZRs
-	zS5RACBMT15hNf90ccIZFJtyFRsoFjbnWAIpz1NLBZC5+MGJD9Hv8JBuDRY1sFrafA==
-X-Received: by 2002:a05:622a:2613:b0:532:84d3:abb with SMTP id
- d75a77b69052e-533226c3db1mr13278171cf.7.1790462793627; Sat, 26 Sep 2026
- 15:46:33 -0700 (PDT)
+        bh=XemkzGIt/BfBHHj+ls/O2WO7JmWM4hQedDYVYfzYN9s=;
+        b=2SZDjkrV8USPphys5lK9edS3NipQdeSbUYPjUHXEhILbzpntTGA5t2yzQHViBs+CeS
+         KXxz2oDWjLFoqfvFli4HTTiqd71Lf8hErKQvAKubylOsc8qWl0dXlThVYeVVS424Lp6a
+         tTjUcc3msv8vE4LlmEjT4/eu1RRcxxLBabFl51ECSLlbk27HAMYOpboc4xPt3XWWWG3U
+         Q4i/sQSjEcAexQpWEbQ3w0/LO4+gVV9qd2aoVYCtUXfh2NnZ3Zuplp45uikphfgZ3btc
+         2nkMocn3PVKswH+ctJFEQFfurt66J5oURGx4f1vOntS+kRkoIA3cWnktfAHGepSJmc1N
+         YQMg==
+X-Gm-Message-State: AFuF++kce8IV5oIkMAVYTH6n78uZutjZCPG7L+4hrD3HoIB/EEErrF9y
+	dQKpXgz2BhTr402ka3qzzOGL+O9DPAfgmUxHnLPudZqNTh6Of8o12ZNv7H9fwiOcFPgX5978tSN
+	WH0ukPdpS0XIL7tSoj7wH7LE+4ZwZv6yYO30L1vA6
+X-Gm-Gg: AYBFou1f9jOqMm1zgMFMi6bmRyqPXJDYP4Q4qw6GVgPzISeRup3wqy8caD2QaUlR9uM
+	I2adgxnTJAJrJwazXg8EKhdSCw5pOynPO5y4YqOfbZoFQAlzc0xyCsNMDnL17ULflr+AYIfB5xQ
+	OS+BVHIh1lixGRgW61sen7g6zTU/OyabCTFXBlw/bkCUO4SEJVZdy48aK+Lpwz87bpcEZpLBAPu
+	vpv+vwUONjSdA4Ko/Ziw00wMc6AXgDXAR1RenG/n8QrGN16saPKWOHMbG1RpuZHOIjbuGkuIJei
+	SsyZjYhHFheC0dUj08n55/5c7wUJqADHu4jThFEgK/vou4/xHsTislq0unLisK9rXcM=
+X-Received: by 2002:a05:622a:411:b0:531:16a:5a3d with SMTP id
+ d75a77b69052e-5332017da1fmr14084341cf.12.1790462862716; Sat, 26 Sep 2026
+ 15:47:42 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260923181213.3032038-1-irogers@google.com> <20260926062029.800743-1-irogers@google.com>
- <argt6raEAmM4e9PI@x2>
-In-Reply-To: <argt6raEAmM4e9PI@x2>
+References: <argr21X4JoSl1O2W@x2>
+In-Reply-To: <argr21X4JoSl1O2W@x2>
 From: Ian Rogers <irogers@google.com>
-Date: Sat, 26 Sep 2026 15:46:22 -0700
-X-Gm-Features: AclHuK-0IxZAf1dYZJF9GMyttOC5x9pBIt1GNidk8M2Zep5e7G-BGHdFJ36Ha2g
-Message-ID: <CAP-5=fXvENrH1PrQvQmA22h_XRTB_f_ez_sFU9him6dU4uH0Ew@mail.gmail.com>
-Subject: Re: [PATCH v4 00/49] perf: Complete transition to standalone Python scripts
+Date: Sat, 26 Sep 2026 15:47:31 -0700
+X-Gm-Features: AclHuK9KZ82Jz51z8jpa4zDAk0MD9sk5jfvyH8p2hZS8jyjNrnf3AZSOn3de_Fg
+Message-ID: <CAP-5=fXtC3wWrw6TKt433bdfBTEo_JL5uJ=USuTtqM60KBXE6Q@mail.gmail.com>
+Subject: Re: [PATCH 1/1] perf timechart: Remove the unused use_old_power_events
+ variable
 To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: alice.mei.rogers@gmail.com, james.clark@linaro.org, leo.yan@linux.dev, 
-	namhyung@kernel.org, adrian.hunter@intel.com, dapeng1.mi@linux.intel.com, 
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
-	mingo@redhat.com, peterz@infradead.org, tmricht@linux.ibm.com
+Cc: linux-perf-users@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>, 
+	James Clark <james.clark@linaro.org>, Jiri Olsa <jolsa@kernel.org>, 
+	Namhyung Kim <namhyung@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Sat, Sep 26, 2026 at 1:41=E2=80=AFPM Arnaldo Carvalho de Melo
+On Sat, Sep 26, 2026 at 1:32=E2=80=AFPM Arnaldo Carvalho de Melo
 <acme@kernel.org> wrote:
 >
-> On Fri, Sep 25, 2026 at 11:19:27PM -0700, Ian Rogers wrote:
-> > The perf script command has historically supported running Python and P=
-erl
-> > scripts by embedding libpython and libperl. That approach has several
-> > drawbacks:
-> >  - high overhead from constructing Python dictionaries for every event
-> >    (whether used by the script or not),
-> >  - complex build dependencies on specific Python/Perl libraries,
-> >  - threading and interpreter lifecycle complications from embedding the
-> >    interpreter inside perf,
-> >  - no unified model for standalone scripts such as ilist.py, treport.py=
-,
-> >    tracepoint.py, and twatch.py.
+> It is set once and never read: its only reader went away in
+> 20c457b8587bee46 ("perf timechart: Adjust perf timechart to the new power
+> events") and nothing used it since, so the assignment was dead code for
+> 13 years.
 >
-> So I applied it and tested on the containers, make -C tools/perf
-> build-test and 'perf test', that has some flakiness running the new
-> tests for these python scripts in parallel, nothing that prevents it
-> from being merged now tho:
+> clang 23 extends -Wunused-but-set-variable to file-scope variables with
+> internal linkage, under the new -Wunused-but-set-global subgroup, and
+> with the -Werror that perf uses by default that turns the dead
+> assignment into a build error:
 >
-> =3D=3D=3D Test Summary =3D=3D=3D
-> Passed main tests : 146
-> Passed subtests   : 156
-> Skipped tests     : 28
-> Failed tests      : 13
-> List of failed tests:
->    72: Test dwarf unwind
->    88: daemon operations
->   101: perf kvm tests
->   111: perf record tests
->   112: perf record sample filtering (by BPF) tests
->   117: perf sched tests
->   137: check-perf-trace python test
->   138: compaction-times python test
->   141: failed-syscalls-by-pid python test
->   142: failed-syscalls python test
->   144: futex-contention python test
->   157: sctop python test
->   159: stat-cpi python test
-> root@x2:~# perf test 72
->  72: Test dwarf unwind                                                   =
-                                      : Ok
+>   builtin-timechart.c:355:12: error: variable 'use_old_power_events' set =
+but not used
+>       [-Werror,-Wunused-but-set-global]
 >
-> =3D=3D=3D Test Summary =3D=3D=3D
-> Passed main tests : 1
-> Passed subtests   : 0
-> Skipped tests     : 0
-> Failed tests      : 0
-> root@x2:~# perf test 88
->  88: daemon operations                                                   =
-                                      : Ok
+> as seen building with clang 23.1.1 on Fedora 45 and rawhide, where gcc,
+> older clang and clang without -Werror all keep building it.
 >
-> =3D=3D=3D Test Summary =3D=3D=3D
-> Passed main tests : 1
-> Passed subtests   : 0
-> Skipped tests     : 0
-> Failed tests      : 0
-> root@x2:~# perf test 101
-> 101: perf kvm tests                                                      =
-                                      : Ok
->
-> =3D=3D=3D Test Summary =3D=3D=3D
-> Passed main tests : 1
-> Passed subtests   : 0
-> Skipped tests     : 0
-> Failed tests      : 0
-> root@x2:~# perf test 112 ; perf test 117 ; perf test 137 ; perf test 141 =
-; perf test 142 ; perf test 144 ; perf test 157; perf test 159
-> 112: perf record sample filtering (by BPF) tests                         =
-                                      : Ok
->
-> =3D=3D=3D Test Summary =3D=3D=3D
-> Passed main tests : 1
-> Passed subtests   : 0
-> Skipped tests     : 0
-> Failed tests      : 0
-> 117: perf sched tests                                                    =
-                                      : Ok
->
-> =3D=3D=3D Test Summary =3D=3D=3D
-> Passed main tests : 1
-> Passed subtests   : 0
-> Skipped tests     : 0
-> Failed tests      : 0
-> 137: check-perf-trace python test                                        =
-                                      : Ok
->
-> =3D=3D=3D Test Summary =3D=3D=3D
-> Passed main tests : 1
-> Passed subtests   : 0
-> Skipped tests     : 0
-> Failed tests      : 0
-> 141: failed-syscalls-by-pid python test                                  =
-                                      : Ok
->
-> =3D=3D=3D Test Summary =3D=3D=3D
-> Passed main tests : 1
-> Passed subtests   : 0
-> Skipped tests     : 0
-> Failed tests      : 0
-> 142: failed-syscalls python test                                         =
-                                      : Ok
->
-> =3D=3D=3D Test Summary =3D=3D=3D
-> Passed main tests : 1
-> Passed subtests   : 0
-> Skipped tests     : 0
-> Failed tests      : 0
-> 144: futex-contention python test                                        =
-                                      : Ok
->
-> =3D=3D=3D Test Summary =3D=3D=3D
-> Passed main tests : 1
-> Passed subtests   : 0
-> Skipped tests     : 0
-> Failed tests      : 0
-> 157: sctop python test                                                   =
-                                      : Ok
->
-> =3D=3D=3D Test Summary =3D=3D=3D
-> Passed main tests : 1
-> Passed subtests   : 0
-> Skipped tests     : 0
-> Failed tests      : 0
-> 159: stat-cpi python test                                                =
-                                      : Ok
->
-> =3D=3D=3D Test Summary =3D=3D=3D
-> Passed main tests : 1
-> Passed subtests   : 0
-> Skipped tests     : 0
-> Failed tests      : 0
-> root@x2:~# uname -a
-> Linux x2 7.2.5-200.fc44.x86_64 #1 SMP PREEMPT_DYNAMIC Fri Sep 11 15:11:05=
- UTC 2026 x86_64 GNU/Linux
-> root@x2:~# cat /etc/os-release
-> NAME=3D"Fedora Linux"
-> VERSION=3D"44 (Workstation Edition)"
-> RELEASE_TYPE=3Dstable
-> ID=3Dfedora
-> VERSION_ID=3D44
-> VERSION_CODENAME=3D""
-> PRETTY_NAME=3D"Fedora Linux 44 (Workstation Edition)"
-> ANSI_COLOR=3D"0;38;2;60;110;180"
-> LOGO=3Dfedora-logo-icon
-> CPE_NAME=3D"cpe:/o:fedoraproject:fedora:44"
-> DEFAULT_HOSTNAME=3D"fedora"
-> HOME_URL=3D"https://fedoraproject.org/"
-> DOCUMENTATION_URL=3D"https://docs.fedoraproject.org/en-US/fedora/f44/"
-> SUPPORT_URL=3D"https://ask.fedoraproject.org/"
-> BUG_REPORT_URL=3D"https://bugzilla.redhat.com/"
-> REDHAT_BUGZILLA_PRODUCT=3D"Fedora"
-> REDHAT_BUGZILLA_PRODUCT_VERSION=3D44
-> REDHAT_SUPPORT_PRODUCT=3D"Fedora"
-> REDHAT_SUPPORT_PRODUCT_VERSION=3D44
-> SUPPORT_END=3D2027-05-19
-> VARIANT=3D"Workstation Edition"
-> VARIANT_ID=3Dworkstation
-> root@x2:~#
+> Assisted-by: LLM
+> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-That's great! I'll dig into the flakes.
+Reviewed-by: Ian Rogers <irogers@google.com>
 
-Thanks!
+Thanks,
 Ian
+
+> ---
+>  tools/perf/builtin-timechart.c | 5 -----
+>  1 file changed, 5 deletions(-)
+>
+> diff --git a/tools/perf/builtin-timechart.c b/tools/perf/builtin-timechar=
+t.c
+> index 3f9153d5ecfb79b0..3d88c90c6573bf88 100644
+> --- a/tools/perf/builtin-timechart.c
+> +++ b/tools/perf/builtin-timechart.c
+> @@ -351,10 +351,6 @@ static int process_exit_event(const struct perf_tool=
+ *tool,
+>         return 0;
+>  }
+>
+> -#ifdef SUPPORT_OLD_POWER_EVENTS
+> -static int use_old_power_events;
+> -#endif
+> -
+>  static void c_state_start(int cpu, u64 timestamp, int state)
+>  {
+>         cpus_cstate_start_times[cpu] =3D timestamp;
+> @@ -1943,7 +1939,6 @@ static int timechart__record(struct timechart *tcha=
+rt, int argc, const char **ar
+>  #ifdef SUPPORT_OLD_POWER_EVENTS
+>         if (!is_valid_tracepoint("power:cpu_idle") &&
+>             is_valid_tracepoint("power:power_start")) {
+> -               use_old_power_events =3D 1;
+>                 power_args_nr =3D 0;
+>         } else {
+>                 old_power_args_nr =3D 0;
+> --
+> 2.53.0
+>
