@@ -1,57 +1,72 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C862A2E762C
-	for <linux-perf-users@vger.kernel.org>; Sat, 26 Sep 2026 06:26:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC61D388866
+	for <linux-perf-users@vger.kernel.org>; Sat, 26 Sep 2026 06:26:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790403974; cv=none; b=uXleNFbpgbCpqJJfCfSycTqpvmS+Xu4V1HgiVD8X5AIO+yroGZZYu9CBVbsaRC1Gy77/hedHNgVDxKsJ+qFmBSuYfAdNId5vekloGDIK2xrlA84tjkXJ+QXTvuW8njDGYTy64gQ/ymq4zLDgEKIvE53oDsy/nFc9jtYP0hwU1rI=
+	t=1790403995; cv=none; b=XPJAR9YVmndi8G+8nV0gRfbck8uoWkcLA+pwr4yZ3AOW8HYjtWPlHmrgFWxEjR+5a9tt19HE6w2BhBbO2zBtxYNR7LicFzFRnYZaEUniQHoe3071p6NGDVpAGDDy5UKtwc8Cm6Q1tdi2aALvcErDkO1qVwzHcFAWYrweokfvW5w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790403974; c=relaxed/simple;
-	bh=27k5ACdR0xxTQxEzU/9ia0N8dsQBC+bHvsyoi/+gxYY=;
+	s=arc-20240116; t=1790403995; c=relaxed/simple;
+	bh=1A2aRKaeG1PbDPY6txkuvNUrxyftqcujj5TRzyH3MfA=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=TR1X3EU/ukMSx6vQz+uhkxa8n/tuEnDBpNXVavm/eP90cJDR04h1uY7ziJ5b0BNd72wwG40MyzGhkHxBoQyWvQNNG9aNyp4lZDj50F9d6uqxh3R3Yj9KBwmscQpDKF96ohf8BwYv8yxFGJuDc5+AFhIq29hWMTJYaWLD+KuBDrA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=j7l3zSEf; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=djiBFKF5NLjPbjl8JSsKK8X2Edww48UEAN0zm6KFrD1I5JoOZgcCCfAO5zzzN688YC/tbmT5ZQyj6MkJqYIaSABOcQZ5GVqI+Zj1nt/KCR4siYd8qKg6b26fhczQXuc4vQx2p+ILQhYObSPqQ3nQmYYlN0INT8krsNdvecqqJm4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CYnfuU9U; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="j7l3zSEf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7011C1F00893;
-	Sat, 26 Sep 2026 06:26:13 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CYnfuU9U"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2FEE51F000FF;
+	Sat, 26 Sep 2026 06:26:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1790403973;
-	bh=FgxYbAVmQ/Gn5ea7znq4+P03wopTtD+cBccNg4TAwNo=;
+	s=k20260515; t=1790403994;
+	bh=cpLddbQqg4UlXCyZaDcFjBDpS2Bl/gjQoiHUT/d6eGk=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=j7l3zSEfFPUbjAD1IbMj1cYEHGQ7vvsP0KchnZUFmTi4kh9bI/ms9QRDVtzrHdxOb
-	 GT1M3LDVoXApMujGK+FIs27klMZiEgSMymThxhGlFY5X6C+TDrC1q1WEesGp0PRUD7
-	 C9ybt4jfLDM8wCiHNGiF9zEjdLhs30cG5PrXHAmGZm16YkTgDPT3PpfpF21KtGpJz1
-	 6UdnDyoVjCWwOZOna9DjgCFjMb5aRr41cr9qalEl15d623cU+Pd1CNyCYRu6Kn8ljC
-	 l7T6itZcXbumceNFREVhq1C6AumzONdjT8ELKEX7prxONwdGOcRJxZ+9wlvvX630HA
-	 8uNmv3kGcChoQ==
+	b=CYnfuU9UvdOnrMODXwCP2eLQpD2LEL9Znx6MffSjETF22CAYSbNwEEJOPRElFBRnl
+	 7z4q/iw8wJilmZKNx+R+LL07pFdwO34J9gIavFZ1bBF/slKlnx2MGivtvTqOIG/ID6
+	 wbVxz6Yuul2it0+MY1RKDduZTVKE4P4unFuGFslmdjDFddIIKkZ5jGttD0ZacVF3/q
+	 3XWjCOas84VBDZiI5GoL4Li/20XW4ReQzvOCIk9CRbIvS2zVVIhWuz1c+htuPPPHze
+	 ZxBLaJv8bCsnrV38+DzaDJogBD2kD1U3nEbNPyD6pF+czWiYymXR2omfWHFnbzHnfO
+	 WlMatPo2xb07g==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v4 05/49] perf python: Clean up pylint warnings in
- tracepoint.py
+Subject: Re: [PATCH v4 07/49] perf python: Improve perf script -l
+ descriptions
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Ian Rogers" <irogers@google.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260926062029.800743-6-irogers@google.com>
+In-Reply-To: <20260926062029.800743-8-irogers@google.com>
 References: <20260923181213.3032038-1-irogers@google.com>
  <20260926062029.800743-1-irogers@google.com>
- <20260926062029.800743-6-irogers@google.com>
+ <20260926062029.800743-8-irogers@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Sat, 26 Sep 2026 06:26:13 +0000
-Message-Id: <20260926062613.7011C1F00893@smtp.kernel.org>
+Date: Sat, 26 Sep 2026 06:26:33 +0000
+Message-Id: <20260926062634.2FEE51F000FF@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-> Clean up pylint warnings in tracepoint.py so that it passes pylint
-> without warning suppression comments:
-> - Catch ImportError instead of bare 'except:' (W0702: bare-except) when
->   importing setproctitle.
-> - Remove unnecessary trailing semicolon (W0301: unnecessary-semicolon)
->   after evlist.enable().
+> Add module docstrings to counting.py, tracepoint.py, and twatch.py. This
+> satisfies pylint's missing-module-docstring check and prepares these
+> existing standalone scripts in tools/perf/python/ for the later commit
+> in this series ("perf script: Support standalone scripts and remove
+> embedded scripting"), which updates 'perf script -l' to scan
+> tools/perf/python/ and display each script's module docstring:
+>=20
+> ```
+> $ perf script -l
+> List of available scripts:
+> ...
+>   counting
+>     Example for counting perf events.
+> ...
+>   tracepoint
+>     Example showing how to enable a tracepoint and access its fields.
+>   twatch
+>     Example to show how to enable a software event and track
+>     context switches.
+> ...
+> ```
 >=20
 > Assisted-by: Antigravity:gemini-3.1-pro
 > Signed-off-by: Ian Rogers <irogers@google.com>
@@ -60,5 +75,5 @@ Sashiko has reviewed this patch and found no issues. It looks great!
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260926062029.8007=
-43-1-irogers@google.com?part=3D5
+43-1-irogers@google.com?part=3D7
 
