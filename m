@@ -1,75 +1,79 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 367CB39A078
-	for <linux-perf-users@vger.kernel.org>; Sat, 26 Sep 2026 06:35:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2DA939CCE3
+	for <linux-perf-users@vger.kernel.org>; Sat, 26 Sep 2026 06:35:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790404548; cv=none; b=hlKzpZN/qyVA2PdOJapbDW47d7Ip22vK9IhSD/ZsBwtvKdEP/+G+gdVqmuUuju94ai31tFR9TcNkfmgpdd+fLdTIDWIfgsIq0z3PFBF2BnKB/nIwkwXm+Q6JUBBse8BmcLSDAh9HoPDJh/TocB9r/Bk/IzNVbx2CGS/hp4vTJMc=
+	t=1790404552; cv=none; b=dJ2P+/SjGeSu2/AN9DCBFnwUpSk3fZNKVyvPSj1k/c5nbTzOKdsygElHIZwVZ/U5+rIGRxLZLDINsYysjOEPFu6d3CzNvpcavr+56+46/Uvg5laws49tEzIOtutoP8D++GcuAyCn4Qc1DAwEV9AkuRxq/lBeXjQxitQvXRT9aOQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790404548; c=relaxed/simple;
-	bh=FCHgMOVT+++zGf7/u3h8u1m4EuNE9pfrhJcZ/rkXTPs=;
+	s=arc-20240116; t=1790404552; c=relaxed/simple;
+	bh=toI0UtIwaRomKlhJ3jLikJ/KMRcbHrGemgy94ESozPY=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=DI8yYYR+AhfQvjyndFGYdpakwJyE34mVlQ1TWorwMbQ/KjMHebHGt+yASVQi2E+eOO+fV/tKe7DYIdTWY0dhRVs2VnVaVsomAEngjqiT1F9STDL4eFIGgf9KHCR2Aop4k2R5xvAzlvYCgZ31hN0jsAwAAlYp3pFjmyuHM+V8MaY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NnbX8PkW; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=N7q6Hz9OCgVUaYkENWZzt2ygz92xbq9uCztKKgNS8Dhh+XFkapdSB6HwPUjh36Si4C/pu9WrrsgmIx43XPwUgSRss273ZoZIk+NJZAllZ+r24qI2OcyS6RhDwb0Bdtx67Fn8kkfONoEDt+4AKvAd/Xz4U9EHZsK88bcOWUEIni8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lxrhpwpD; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NnbX8PkW"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8E8861F000FF;
-	Sat, 26 Sep 2026 06:35:39 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lxrhpwpD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 559481F00893;
+	Sat, 26 Sep 2026 06:35:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1790404539;
-	bh=BlduKkAvYw72fnqJDSa3SWEbh1EMwmVAkpRKmvWhnxQ=;
+	s=k20260515; t=1790404550;
+	bh=wHEEATKpjsfSlS3BIguqNbhmPYKhuFMeUaCOXPI2SWg=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=NnbX8PkWMxlT+W0ryGHmwnDB6YE6OkPEDCU5VXtYPbTSKXDHAcGTtYVwtJsTPh6/X
-	 PhJbPNVpTiKA9Ty0nQ8Qs0XqQWj8oChnkkJP1DY0jtqWTKHBptLXHU1TX2NAvZRhrE
-	 TU7LbHaaAU1zuc8dmBhibYiCoIr0XuM+ldGDsNeixBGl5gzsgDdEk4AzyvPRS+23JT
-	 F1alaYa+kCcTs2+3Mw4SdsU6E5EPr9qepBqyjSZ6uwstThmYeWmoAfDH5jVEtNDGBY
-	 ofb7g/jdYKlaGCOAdklNysQp8QyB7cL6cKZbuwwRLmlzCzNypAzlL5nT5PTVXRB8r8
-	 ZuttdrDnneFRA==
+	b=lxrhpwpDw83rdF2d6We2ZYyQ7mw1k2TPrtxA2elpjqwmWUIRG9FtiINmLrQI5RJV5
+	 mrDE6AACf+7G4nzWPSPkzQWVdC6xrUv0ea8Uu7N9Y6su0ETrTqllBO+MsOTErdDzKc
+	 NrmXKaKPmtW+1z29CDAfTGqv16xkeEMkd4nAXsOPpetTJPWZolIjy0m3Kj2+FG1VVf
+	 cfqBfqgx9so0VKf41As2/prL3kJ+ubBW50mA2BPh6CdtVYTKBHMMyiYT9VvlXS515n
+	 u+C+4Do+E3uW3MsKKUCb7hJKNx0f6xUUVGR73vySGqlc7SS1LvSgWftY5OXTO4aPU3
+	 eUmFEj1bVSf/g==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v4 33/49] perf python: Port wakeup-latency from Perl to
- perf module
+Subject: Re: [PATCH v4 38/49] perf python: Port arm-cs-trace-disasm to perf
+ module
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Ian Rogers" <irogers@google.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260926062029.800743-34-irogers@google.com>
+In-Reply-To: <20260926062029.800743-39-irogers@google.com>
 References: <20260923181213.3032038-1-irogers@google.com>
  <20260926062029.800743-1-irogers@google.com>
- <20260926062029.800743-34-irogers@google.com>
+ <20260926062029.800743-39-irogers@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Sat, 26 Sep 2026 06:35:39 +0000
-Message-Id: <20260926063539.8E8861F000FF@smtp.kernel.org>
+Date: Sat, 26 Sep 2026 06:35:49 +0000
+Message-Id: <20260926063550.559481F00893@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-> Replace the legacy Perl script wakeup-latency.pl with a standalone
-> Python script in tools/perf/python/wakeup-latency.py using the perf
-> Python module.
+> Port arm-cs-trace-disasm.py to a standalone script in tools/perf/python/
+> using the perf module directly.
 >=20
-> Improvements compared to the legacy Perl script:
-> - Remove the dependency on libperl and Perf::Trace::Util.
-> - Track wakeup timestamps per-task (keyed by the wakee PID on
->   sched:sched_wakeup and matched against next_pid on sched:sched_switch)
->   rather than per-CPU, avoiding mixed latencies when multiple wakeups
->   occur on a CPU before a context switch.
-> - Guard print_totals() when total_wakeups =3D=3D 0 (printing 'N/A' instead
->   of dividing by zero when a trace contains no matched wakeup/switch
->   pairs).
-> - Add argparse CLI options (-i/--input) and full type annotations.
+> Improvements compared to the legacy script:
+> - Encapsulate trace disassembly state in a TraceDisasm class.
+> - Default to itrace=3D"b" when creating perf.session() (overridable via
+>   --itrace or PERF_ITRACE) so all CoreSight branch samples are
+>   synthesized without requiring --itrace=3Db on the command line.
+> - Automatically search standard kernel debug paths (find_vmlinux())
+>   when -k/--vmlinux is not specified, and query
+>   perf.config_get("annotate.objdump") for the default objdump binary.
+> - Bound DISASM_CACHE memory consumption by evicting the cache at 1024
+>   entries and skipping caching of oversized (> 512 lines) objdump
+>   outputs.
+> - Use sample.srccode() from the perf extension module to annotate
+>   disassembly output with source filenames, line numbers, and source
+>   lines.
 >=20
-> Add a shell test
-> (test_wakeup_latency_python.sh) to verify the standalone script.
+> Update the ARM CoreSight disassembly shell test
+> (test_arm_coresight_disasm.sh) to invoke the standalone script.
 >=20
 > Assisted-by: Antigravity:gemini-3.1-pro
+> Reviewed-by: James Clark <james.clark@linaro.org>
 > Signed-off-by: Ian Rogers <irogers@google.com>
 
 Sashiko has reviewed this patch and found no issues. It looks great!
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260926062029.8007=
-43-1-irogers@google.com?part=3D33
+43-1-irogers@google.com?part=3D38
 
