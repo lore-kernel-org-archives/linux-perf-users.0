@@ -1,65 +1,54 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B12CD388E5A
-	for <linux-perf-users@vger.kernel.org>; Sat, 26 Sep 2026 19:09:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 311A438F941
+	for <linux-perf-users@vger.kernel.org>; Sat, 26 Sep 2026 19:10:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790449793; cv=none; b=KfvGQs4gGQThrXmSRYBMtboOBF3AyH0ShOXbe22Heko+12jSwyCPv+dnpEQD5lsrsn2tpikb2pg8PkGEZ+afuNm4qqTbl+DnIEoaSFpTHktmz45PIf9TO7rZVty/SSmv6/sv1SFqSdP7Uph/NkHimh4wf16Rzqy2M0rTjbcUbns=
+	t=1790449809; cv=none; b=j2VTPQZQARkYseILGAEpUhp2tStZ4H9ILYz3E5a4cF+4DqovChoeEtP1NOSRORqOl8o8T8fkSWppgwQENdAQH4TxSW5hZoHjpVw0AJIr7kJu9EWsSZfblNwiYaaaXrpkHSr99zMbR94Ie7kY13UrmJ3jSG681wVnfPqXBdKVlao=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790449793; c=relaxed/simple;
-	bh=r32P+4tgtjj6joRXqxPnY68VmtxP6W4dFxZxMVPS1HY=;
+	s=arc-20240116; t=1790449809; c=relaxed/simple;
+	bh=zQoIqGhlE2EAmfZKruOrzediUwkv4dhFpF0gUcXWZVc=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=Fb4kIahEALIwQJWCZ89IMlsOQ0LodSnODE/67Lb3/Y8LvLUiEB2q/fd6dLlfU9qxAs6d7D6Nls+ScmDtSYt8RlA288TLRotKXeaXUEdJTWe3E/Ro0YAOEDTfYfzcqMyFczF7YOkCYEc9cRGi4wjGq6c3OcESzQQKXdZZHVUfX6o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nZALOolY; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=NEHKoiEDMaQVJgI+C2tefodgdk1Pel+vYcNzMC4XK6uOjHKCkCqLhvPuBbpCr7lu3Ssk6ApQ0fDhZBakNOysiwkhOQgT6fH1wMTW9RX+CGoQSG5gtRDstC0GWViRfTEfIM8AejKT4s1r8hv2goN1b60G0dBAB5wJq4Znui8ZrlU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KH+i7zbn; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nZALOolY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1E03E1F000FF;
-	Sat, 26 Sep 2026 19:09:52 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KH+i7zbn"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AA5821F000FF;
+	Sat, 26 Sep 2026 19:10:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1790449792;
-	bh=pML5xL5nAfPbJl6Q5AmuBZP7cxpUP2JxQQvALq+dqrI=;
+	s=k20260515; t=1790449807;
+	bh=zQoIqGhlE2EAmfZKruOrzediUwkv4dhFpF0gUcXWZVc=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=nZALOolYRP00wJ0nB/neCeu+dNchVRZCYE1YlCxRJiSxXc3fuxNiIf1Aa5QU9J966
-	 H4sXHK5VoQyFHyf4Nbs42riCoNTjnT3ZWAfxCKj0bMdBDACRr8XdCtS9AxH3G5QScA
-	 qGXf12kmXLfFS1cKn1wCMQnzZqXTB/kLlRJbGjmr5iXv0jvsbWm7Qxo/dWQ0dCkJ5P
-	 umTxuZqjGqWfFkOvSbABY2zR04i4vT5/4QPNwknqtyyo6bQ4jyuY2thtI0t1Z1+6tI
-	 3Uiwpe2L+n2GG0AlAEPjQav2hgFqO4JLU54uYt3RAVXj1KFi6lklKgKbz/6p7QpgOY
-	 Vs2fQfNaJE3DQ==
+	b=KH+i7zbnzwT3TiTwsOwEKvdCLPjDWN/sU4GpLsu9CWQJsoREM3+9yxSxXH+rg2oif
+	 SRHl9d+BiD+NkFvKCSVbJNndMQCkuoILYJ+f7o8NiX5wzFcAlFG2Pd2UVDtYdpsGVg
+	 tq7wDJxhgzhCE1E1bh5aOHSlZ5UeLGhxmFuztGWzapDjzIpwdBJ6ccNykm60OykhAk
+	 aiy9OLGEb23CuAt2/NS9p7/TbcswP22Tk3KbFD8Fg9yZo4hUuINSSS5ZGvKyGfqkDe
+	 q8ZqakNJJ+2AjOMehJSjiU87kwsGFxQ7ZhPe1T2GGoo1xcJRkp7RkffP0qoXgQST8B
+	 xoi3Rz6lgyNZw==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 2/8] perf bench futex: Set the number of hash buckets in
- futex wake
+Subject: Re: [PATCH 6/8] perf bench futex: Use a 64-bit operation counter in
+ hash and lock-pi
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Michal Pluta" <michalpl2003@gmail.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260926190407.1106421-3-michalpl2003@gmail.com>
+In-Reply-To: <20260926190407.1106421-7-michalpl2003@gmail.com>
 References: <20260926190407.1106421-1-michalpl2003@gmail.com>
- <20260926190407.1106421-3-michalpl2003@gmail.com>
+ <20260926190407.1106421-7-michalpl2003@gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Sat, 26 Sep 2026 19:09:51 +0000
-Message-Id: <20260926190952.1E03E1F000FF@smtp.kernel.org>
+Date: Sat, 26 Sep 2026 19:10:07 +0000
+Message-Id: <20260926191007.AA5821F000FF@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-> 'perf bench futex wake -b N' fails unless N happens to be the number of
-> buckets the kernel is already using:
+> The per-thread operation counters in 'futex hash' and 'futex lock-pi'
+> are unsigned longs, which could overflow on 32-bit systems. Use u64
+> instead.
 >=20
->   $ perf bench futex wake -b 128
->   Requested number of hash buckets does not currently used.
->   Requested: 128 in usage: 64
->   perf: prctl(PR_FUTEX_HASH): No such file or directory
->=20
-> The other futex benchmarks call futex_set_nbuckets_param() to ask the
-> kernel for the requested size, but 'futex wake' only checks afterwards
-> which size is in use, so the request never reaches the kernel. The call
-> now happens before the run summary, as in the other benchmarks.
->=20
-> Fixes: 60035a3981a7 ("tools/perf: Allow to select the number of hash buck=
-ets")
 > Assisted-by: LLM
 > Signed-off-by: Michal Pluta <michalpl2003@gmail.com>
 
@@ -67,5 +56,5 @@ Sashiko has reviewed this patch and found no issues. It looks great!
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260926190407.1106=
-421-1-michalpl2003@gmail.com?part=3D2
+421-1-michalpl2003@gmail.com?part=3D6
 
