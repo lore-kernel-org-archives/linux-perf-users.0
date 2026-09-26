@@ -1,56 +1,56 @@
-Received: from mail-dy1-f197.google.com (mail-dy1-f197.google.com [74.125.82.197])
+Received: from mail-dl1-f72.google.com (mail-dl1-f72.google.com [74.125.82.72])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF5BA38DC6B
-	for <linux-perf-users@vger.kernel.org>; Sat, 26 Sep 2026 06:21:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.197
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A233638F926
+	for <linux-perf-users@vger.kernel.org>; Sat, 26 Sep 2026 06:21:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790403685; cv=none; b=qiLEyAKF772iv81GFMjnfGr6BabZ+Z4/XxK9JdBeIMoVrfn4T2uvRUtcOlXMzZGcKQRwWHe/zcatuggthSISddsAl//uNcrSTfccisFpKAVjR458YDWTdj/7rtKkeIfQZLGVjZNyW6SXG0zJsryRyXhSttxggKYTd+StTqbPA14=
+	t=1790403687; cv=none; b=hCr05KmrmBQiVNGariDyih6O+8UBzH4FVwQf2zSIhALDZTQDbc43kDtO+prFfIuoxLrR/0issiIt9QyXu+0fcMkyeZ7gRqubHyq5foy97Ee62uifpoNLFJ8C0/Z/YfFxc/rbsOm00IFGk36pOVEQi+icIcZiHH+fXOgzcdgCWV0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790403685; c=relaxed/simple;
-	bh=fRuFbEZzm6EEU8qDshsD2NDdv180ofPTnDqQ5bqR1HA=;
+	s=arc-20240116; t=1790403687; c=relaxed/simple;
+	bh=Kr5OeleJstb++k8KZyLVGC4d9kyLRaWCU17oF9MJqDY=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=jQ3J0bk1EJHM1f4SAMUA0HE34u/8EEt6CW7AxYoeEJdqo6YprHAP5Eb+ReNJWJd5ExolVL+m0i7ao7rqecXGIbN2sxM+iluu9jAlOeRBrCrVmrMng2r+pKdE58Fb4Piy3GBMXFYowEC8m0am6QggoT5c1Y9gNzKaR5Ol3qVsj0k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=bQazgJER; arc=none smtp.client-ip=74.125.82.197
+	 To:Cc:Content-Type; b=ogyslTCPqT22+H29SOjPqvddnEySKjEaUZ9jKB1Me46gMhXB1dCgo7JIw5j/X9g/qt5JYh5F68lgcUlX7v2pgAjbNnlNMPkZDvj0ppjvZ0iLESzXeYGB9s+g+eT+4Qb3ouHgCmBGtoWC6LKRuqUYI3U6FBz5H0re4A+6E+ddqhk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=arqkvmJH; arc=none smtp.client-ip=74.125.82.72
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="bQazgJER"
-Received: by mail-dy1-f197.google.com with SMTP id 5a478bee46e88-342217d8d53so2868010eec.0
-        for <linux-perf-users@vger.kernel.org>; Fri, 25 Sep 2026 23:21:21 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="arqkvmJH"
+Received: by mail-dl1-f72.google.com with SMTP id a92af1059eb24-14388794dcfso1531744c88.1
+        for <linux-perf-users@vger.kernel.org>; Fri, 25 Sep 2026 23:21:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1790403681; x=1791008481; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1790403683; x=1791008483; darn=vger.kernel.org;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=CvW2CDWntQxLDVckD1S7jNiRaLV9V4nXgFrCMcrK7wM=;
-        b=bQazgJERl9LxngI7VigwP9wHAfrvtMECpz7T9DId2SP9Hdmb1+ePnuW+G8O8t0GdjX
-         OE2NQiurEPL7YE7WqGbujgmCzMhF3O7Q21oeE41sMuqKENfmY6WNlHmWsCH5zEVSezsC
-         +fVtRDhme59tT0p9YeF6Qlah7WfRv3gga/bOl8QkmniyqmfybLF33z1/Pjvu71nFNH4P
-         Uiw+NcGTGH5Bnv/pisXmGKW1/Ht2X3xoMrh5JyBufbaYoJGK7jUylSytqV5HnSRcZY6X
-         ZMcw+CcbMERh4YPYnGgzClqI3/S4sms1bqQR0JyKQvBeZtwgb0KJGOUiDRKN2cL1LZrt
-         4g+Q==
+        bh=tntSJiK9DGB8SYPMrHAaQoWdgRVKgGBg3ctxgSFNdfk=;
+        b=arqkvmJHhRoz05M7lJ3nyO2hpEhZ0sG/dTcQz/e1uU/RZoN8d2HxV3E+JJYb5GxHCv
+         V6lLEC+UcdleByzQ/VdhHuNq6TJtLFAIo2vEXk/3f2LOsyx2UqVET5ploHsU3buQz1MY
+         gLuVsUJFP4Bi1DHaStxXNCbdpo2czTe75xOZ4RJpVJoFl4js9VE3o3FgO6NwIPHlYJus
+         HVuNSqvfgARCh6SQx/WVG4G14lP7hEKXhhmnoV6woJG5HKH5P8Ahy5afAmu/hR4lipek
+         9Hfypgy3UJhFViHIk3V//EdzlknNZwXow+HIPjsQLkZtBApjtdEziJTdvM9oZzBPzPCh
+         ezeg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1790403681; x=1791008481;
+        d=1e100.net; s=20260707; t=1790403683; x=1791008483;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=CvW2CDWntQxLDVckD1S7jNiRaLV9V4nXgFrCMcrK7wM=;
-        b=MQc4YbW5vNBBYC1eZGNpMKuSqgJz35KtFulgHp8ywGJ/2GSUGnbem8IHO0W/eowL/c
-         8FeQ1+1vIL+SUHj3R/qg9i0otol33ChE33tJrg+ha3co5awg5QWX1WOFf9Im4Crtei3j
-         bCwR2ymSDMoHNYOdNBBj3Er4zN8x+6lExvtcRIBU7B6sXnZfOGh7V6OFPfHG2cCXIl24
-         6eTb1v/p4xIkvEaCEY2upiTJNX9rsf2mZF0C9qeUeR0EugBQqDvb/2cdX2KvMYsaDkIN
-         Au/VOJni9YRp1QzwhVN0tnYDwWA+kiodb4ixj2KUxi+oD4dR7rPH/wsWeLLl/qhs6CvN
-         W6bQ==
-X-Forwarded-Encrypted: i=1; AKwUvBxbGj6jamcURMCQgF9Z/YuigV51HixhgCF2pW4i7D9m8EcbnkHRYIqkLFcpgju63uHZKvkWLaax8KWUghwMNUFd@vger.kernel.org
-X-Gm-Message-State: AFuF++lZHSn5g4vmboqs9k4MgNhL8NQVyD0dRJAh/KyF3pZeX7ktaNpT
-	UM7YnkNQL8pYdpwWBRJoLSl+5jMIJQFoh++s1LHfmEC31HKvcOCzXutWYGkNEuN2wLDUleQdrP5
-	7TZTHQ+Tm+w==
-X-Received: from dlk29.prod.google.com ([2002:a05:7022:11d:b0:146:80a8:412d])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:701b:4594:20b0:144:c127:dd1a
- with SMTP id a92af1059eb24-146d01b0302mr1923069c88.38.1790403680462; Fri, 25
- Sep 2026 23:21:20 -0700 (PDT)
-Date: Fri, 25 Sep 2026 23:19:38 -0700
+        bh=tntSJiK9DGB8SYPMrHAaQoWdgRVKgGBg3ctxgSFNdfk=;
+        b=L05ofycJRBoSMwqZFMFG+LpHwPEw7WzmY54rJEha95mDMMLxksoPN7NuTEEXZZZ8HB
+         SfLMepGi3M6qrHt/ezzp7L0e3dlPgxEYVlgJqCNTJbRsfS6PkT+NH8FHqPQHAsCNHpy5
+         CibLUJSa1QHWMAqw2stOceMiCRp/6bcP/E93AXzT+MPm9IAT/llckvyBGazfMoko11eW
+         Ty+HKpIMgJh5wN0kBjBa6GpycxvO1s8gFVDg2OOSIIf6vCPOy5z3b35knaOVpDAOeoPA
+         OOgzMR1e3RME2C77LUJyD0V8nWUg8Fq7WO08XCS5jBuI3Xg0uQGtTIZDLuDqS2EIJSzY
+         uymw==
+X-Forwarded-Encrypted: i=1; AKwUvBwhrIDTmyi2durSsiB3nV2y205oriptNE0dKAgh3CRcAfPdwAoE56drhzLc/L+0dm9QYDMXY+fQ7iv5MhS6KKJz@vger.kernel.org
+X-Gm-Message-State: AFuF++lpbM3/0CKZwy5e2p5fSKIhfEWr2sW+PiwB5mj5fZUdFcc7sBYk
+	lJX5dQWsou/5g2dUF02Mx1CmH+EP/gumTs68iPPhHCQjvahM+iY32utFFc4rgLf48Ec29sRUAi8
+	0d6K39re5tA==
+X-Received: from dlx14.prod.google.com ([2002:a05:7022:8e:b0:146:80a8:4131])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:701b:458d:b0:13d:19da:9370
+ with SMTP id a92af1059eb24-146ce67ee18mr2030284c88.17.1790403682303; Fri, 25
+ Sep 2026 23:21:22 -0700 (PDT)
+Date: Fri, 25 Sep 2026 23:19:39 -0700
 In-Reply-To: <20260926062029.800743-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -60,8 +60,9 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260923181213.3032038-1-irogers@google.com> <20260926062029.800743-1-irogers@google.com>
 X-Mailer: git-send-email 2.56.0.rc1.315.gc6ed9934b7-goog
-Message-ID: <20260926062029.800743-12-irogers@google.com>
-Subject: [PATCH v4 11/49] perf pmu-events: Clean up mypy and pylint issues
+Message-ID: <20260926062029.800743-13-irogers@google.com>
+Subject: [PATCH v4 12/49] perf test: Clean up mypy and pylint issues in shell
+ test libraries
 From: Ian Rogers <irogers@google.com>
 To: irogers@google.com, acme@kernel.org, alice.mei.rogers@gmail.com, 
 	james.clark@linaro.org, leo.yan@linux.dev, namhyung@kernel.org
@@ -70,1168 +71,618 @@ Cc: adrian.hunter@intel.com, dapeng1.mi@linux.intel.com,
 	mingo@redhat.com, peterz@infradead.org, tmricht@linux.ibm.com
 Content-Type: text/plain; charset="UTF-8"
 
-Clean up mypy type errors and pylint warnings across the pmu-events Python
-scripts (amd_metrics.py, intel_metrics.py, jevents.py,
-make_legacy_cache.py,
-and metric.py) in preparation for making MYPY and PYLINT build tests
-opt-out.
+Clean up mypy type errors and pylint errors/warnings in
+tools/perf/tests/shell/lib/ (attr.py, perf_json_output_lint.py, and
+perf_metric_validation.py):
+- Fix E0606 (possibly-used-before-assignment) in perf_metric_validation.py
+  by importing sys at module level.
+- Add type annotations for stack, second_results, collectlist,
+  get_bounds(), and main() in perf_metric_validation.py.
+- Avoid assigning -1 to list[int] expected_items in
+  perf_json_output_lint.py, rename shadowing variables, and remove
+  redundant lambdas.
+- Remove unnecessary semicolons, use lazy logging arguments, specify
+  exception types and file encodings, and initialize module-level logger
+  in attr.py.
 
-In addition to type annotations and unused import/variable cleanups, fix
-three bugs in intel_metrics.py exposed by static analysis:
-- Fix references to undefined 'args.model' (instead of '_args.model')
-  inside
-  try/except blocks in IntelL2() and UncoreMemBw(), which previously threw
-  NameError and silently disabled Skylake/CascadeLake L2 silent eviction
-  adjustments and uncore memory bandwidth JSON loading.
-- Define DC_WB_U and DC_WB_D before their first use in IntelL2(), fixing
-  an UnboundLocalError that silently dropped the l2_out_rate, wbn, and isd
-  metrics.
-- Fix Event-to-string comparison and addition in IntelFp() by comparing
-  and modifying 'f_assist.name' instead of the Event object 'f_assist'.
+Also update tools/perf/tests/shell/lib/setup_python.sh to:
+- Avoid x-prefix string comparisons.
+- Export PYTHON and resolve PYTHONPATH and PERF_EXEC_PATH from
+  BASH_SOURCE[0], ../../../python (for nested test directories such as
+  coresight/), and the directory containing the perf binary so out-of-tree
+  builds and standalone perf python scripts work seamlessly.
 
 Assisted-by: Antigravity:gemini-3.1-pro
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/pmu-events/amd_metrics.py       |  16 +-
- tools/perf/pmu-events/intel_metrics.py     | 259 ++++++++++-----------
- tools/perf/pmu-events/jevents.py           |  77 +++---
- tools/perf/pmu-events/make_legacy_cache.py |  34 +--
- tools/perf/pmu-events/metric.py            |  60 +++--
- 5 files changed, 214 insertions(+), 232 deletions(-)
+ tools/perf/tests/shell/lib/attr.py            | 86 ++++++++++---------
+ .../tests/shell/lib/perf_json_output_lint.py  | 36 ++++----
+ .../tests/shell/lib/perf_metric_validation.py | 53 ++++++------
+ tools/perf/tests/shell/lib/setup_python.sh    | 29 ++++++-
+ 4 files changed, 113 insertions(+), 91 deletions(-)
 
-diff --git a/tools/perf/pmu-events/amd_metrics.py b/tools/perf/pmu-events/amd_metrics.py
-index dccfcacaf148..42569b9153f4 100755
---- a/tools/perf/pmu-events/amd_metrics.py
-+++ b/tools/perf/pmu-events/amd_metrics.py
-@@ -3,7 +3,7 @@
- import argparse
- import math
- import os
--from typing import Optional
-+from typing import Optional, Union
- from common_metrics import Cycles
- from metric import (d_ratio, has_event, max, Event, JsonEncodeMetric,
-                     JsonEncodeMetricGroupDescriptions, Literal, LoadEvents,
-@@ -70,7 +70,6 @@ def AmdBr():
-         ])
+diff --git a/tools/perf/tests/shell/lib/attr.py b/tools/perf/tests/shell/lib/attr.py
+index bfccc727d9b2..7f3d5b64b00d 100644
+--- a/tools/perf/tests/shell/lib/attr.py
++++ b/tools/perf/tests/shell/lib/attr.py
+@@ -12,6 +12,8 @@ import re
+ import shutil
+ import subprocess
  
-     def Conditional() -> Optional[MetricGroup]:
--        global _zen_model
-         br = Event("ex_ret_brn_cond", "ex_ret_cond")
-         br_r = d_ratio(br, interval_sec)
-         ins_r = d_ratio(ins, br)
-@@ -156,25 +155,24 @@ def AmdCtxSw() -> MetricGroup:
- 
- 
- def AmdDtlb() -> Optional[MetricGroup]:
--    global _zen_model
-     if _zen_model >= 4:
-         return None
- 
--    d_dat = Event("ls_dc_accesses") if _zen_model <= 3 else None
-+    d_dat = Event("ls_dc_accesses")
-     d_h4k = Event("ls_l1_d_tlb_miss.tlb_reload_4k_l2_hit")
--    d_hcoal = Event(
-+    d_hcoal: Union[Event, int] = Event(
-         "ls_l1_d_tlb_miss.tlb_reload_coalesced_page_hit") if _zen_model >= 2 else 0
-     d_h2m = Event("ls_l1_d_tlb_miss.tlb_reload_2m_l2_hit")
-     d_h1g = Event("ls_l1_d_tlb_miss.tlb_reload_1g_l2_hit")
- 
-     d_m4k = Event("ls_l1_d_tlb_miss.tlb_reload_4k_l2_miss")
--    d_mcoal = Event(
-+    d_mcoal: Union[Event, int] = Event(
-         "ls_l1_d_tlb_miss.tlb_reload_coalesced_page_miss") if _zen_model >= 2 else 0
-     d_m2m = Event("ls_l1_d_tlb_miss.tlb_reload_2m_l2_miss")
-     d_m1g = Event("ls_l1_d_tlb_miss.tlb_reload_1g_l2_miss")
- 
--    d_w0 = Event("ls_tablewalker.dc_type0") if _zen_model <= 3 else None
--    d_w1 = Event("ls_tablewalker.dc_type1") if _zen_model <= 3 else None
-+    d_w0 = Event("ls_tablewalker.dc_type0")
-+    d_w1 = Event("ls_tablewalker.dc_type1")
-     walks = d_w0 + d_w1
-     walks_r = d_ratio(walks, interval_sec)
-     ins_w = d_ratio(ins, walks)
-@@ -266,7 +264,6 @@ def AmdDtlb() -> Optional[MetricGroup]:
- 
- 
- def AmdIotlb() -> Optional[MetricGroup]:
--    global _zen_model
-     if _zen_model < 2:
-         return None
- 
-@@ -322,7 +319,6 @@ def AmdIotlb() -> Optional[MetricGroup]:
- 
- 
- def AmdItlb():
--    global _zen_model
-     l2h = Event("bp_l1_tlb_miss_l2_tlb_hit", "bp_l1_tlb_miss_l2_hit")
-     l2m = Event("bp_l1_tlb_miss_l2_tlb_miss.all", "l2_itlb_misses",)
-     l2r = l2h + l2m
-diff --git a/tools/perf/pmu-events/intel_metrics.py b/tools/perf/pmu-events/intel_metrics.py
-index 9780bf978a41..4fd5c1de4333 100755
---- a/tools/perf/pmu-events/intel_metrics.py
-+++ b/tools/perf/pmu-events/intel_metrics.py
-@@ -5,10 +5,10 @@ import json
- import math
- import os
- import re
--from typing import Optional
-+from typing import Optional, Union
- from common_metrics import Cycles
--from metric import (d_ratio, has_event, max, aggr_nr, CheckPmu, Event,
--                    JsonEncodeMetric, JsonEncodeMetricGroupDescriptions,
-+from metric import (d_ratio, has_event, max, aggr_nr, CheckPmu, Constant, Event,
-+                    Expression, JsonEncodeMetric, JsonEncodeMetricGroupDescriptions,
-                     Literal, LoadEvents, Metric, MetricConstraint, MetricGroup,
-                     MetricRef, Select)
- 
-@@ -90,7 +90,7 @@ def Tsx() -> Optional[MetricGroup]:
-         # sysfs version so that we can detect its presence at runtime.
-         transaction_start = Event("RTM_RETIRED.START")
-         transaction_start = Event(f'{pmu}/tx\\-start/')
--    except:
-+    except ValueError:
-         return None
- 
-     elision_start = None
-@@ -100,7 +100,7 @@ def Tsx() -> Optional[MetricGroup]:
-         # case. Again, prefer the sysfs encoding of the event.
-         elision_start = Event("HLE_RETIRED.START")
-         elision_start = Event(f'{pmu}/el\\-start/')
--    except:
-+    except ValueError:
-         pass
- 
-     return MetricGroup('transaction', [
-@@ -139,7 +139,7 @@ def IntelBr():
-         br_clr = None
-         try:
-             br_clr = Event("BACLEARS.ANY", "BACLEARS.ALL")
--        except:
-+        except ValueError:
-             pass
- 
-         br_r = d_ratio(br_all, interval_sec)
-@@ -171,7 +171,7 @@ def IntelBr():
-             br_m_tk = Event("BR_MISP_RETIRED.NEAR_TAKEN",
-                             "BR_MISP_RETIRED.TAKEN_JCC",
-                             "BR_INST_RETIRED.MISPRED_TAKEN")
--        except:
-+        except ValueError:
-             pass
-         br_r = d_ratio(br_all, interval_sec)
-         ins_r = d_ratio(ins, br_all)
-@@ -199,7 +199,7 @@ def IntelBr():
-             br_m_cond = Event("BR_MISP_RETIRED.COND",
-                               "BR_MISP_RETIRED.CONDITIONAL",
-                               "BR_MISP_RETIRED.TAKEN_JCC")
--        except:
-+        except ValueError:
-             return None
- 
-         br_cond_nt = None
-@@ -207,7 +207,7 @@ def IntelBr():
-         try:
-             br_cond_nt = Event("BR_INST_RETIRED.COND_NTAKEN")
-             br_m_cond_nt = Event("BR_MISP_RETIRED.COND_NTAKEN")
--        except:
-+        except ValueError:
-             pass
-         br_r = d_ratio(br_cond, interval_sec)
-         ins_r = d_ratio(ins, br_cond)
-@@ -222,7 +222,7 @@ def IntelBr():
-                    "Retired conditional branch instructions mispredicted as a "
-                    "percentage of all conditional branches.", misp_r, "100%"),
-         ]
--        if not br_m_cond_nt:
-+        if not br_m_cond_nt or not br_cond_nt:
-             return MetricGroup("lpm_br_cond", taken_metrics)
- 
-         br_r = d_ratio(br_cond_nt, interval_sec)
-@@ -247,7 +247,7 @@ def IntelBr():
-     def Far() -> Optional[MetricGroup]:
-         try:
-             br_far = Event("BR_INST_RETIRED.FAR_BRANCH")
--        except:
-+        except ValueError:
-             return None
- 
-         br_r = d_ratio(br_far, interval_sec)
-@@ -284,7 +284,7 @@ def IntelCtxSw() -> MetricGroup:
-         ev = Event("MEM_INST_RETIRED.ALL_LOADS", "MEM_UOPS_RETIRED.ALL_LOADS")
-         metrics.append(Metric("lpm_cs_loads", "Loads per context switch",
-                               d_ratio(ev, cs), "loads/cs"))
--    except:
-+    except ValueError:
-         pass
- 
-     try:
-@@ -292,14 +292,14 @@ def IntelCtxSw() -> MetricGroup:
-                    "MEM_UOPS_RETIRED.ALL_STORES")
-         metrics.append(Metric("lpm_cs_stores", "Stores per context switch",
-                               d_ratio(ev, cs), "stores/cs"))
--    except:
-+    except ValueError:
-         pass
- 
-     try:
-         ev = Event("BR_INST_RETIRED.NEAR_TAKEN", "BR_INST_RETIRED.TAKEN_JCC")
-         metrics.append(Metric("lpm_cs_br_taken", "Branches taken per context switch",
-                               d_ratio(ev, cs), "br_taken/cs"))
--    except:
-+    except ValueError:
-         pass
- 
-     try:
-@@ -309,12 +309,12 @@ def IntelCtxSw() -> MetricGroup:
-         try:
-             l2_misses += Event("L2_RQSTS.HWPF_MISS",
-                                "L2_RQSTS.L2_PF_MISS", "L2_RQSTS.PF_MISS")
--        except:
-+        except ValueError:
-             pass
- 
-         metrics.append(Metric("lpm_cs_l2_misses", "L2 misses per context switch",
-                               d_ratio(l2_misses, cs), "l2_misses/cs"))
--    except:
-+    except ValueError:
-         pass
- 
-     return MetricGroup("lpm_cs", metrics,
-@@ -327,7 +327,7 @@ def IntelFpu() -> Optional[MetricGroup]:
-     try:
-         s_64 = Event("FP_ARITH_INST_RETIRED.SCALAR_SINGLE",
-                      "SIMD_INST_RETIRED.SCALAR_SINGLE")
--    except:
-+    except ValueError:
-         return None
-     d_64 = Event("FP_ARITH_INST_RETIRED.SCALAR_DOUBLE",
-                  "SIMD_INST_RETIRED.SCALAR_DOUBLE")
-@@ -352,21 +352,21 @@ def IntelFpu() -> Optional[MetricGroup]:
-         flop += 16 * s_512
-         d_512 = Event("FP_ARITH_INST_RETIRED.512B_PACKED_DOUBLE")
-         flop += 8 * d_512
--    except:
-+    except ValueError:
-         pass
- 
-     f_assist = Event("ASSISTS.FP", "FP_ASSIST.ANY", "FP_ASSIST.S")
--    if f_assist in [
-+    nmi_constraint = MetricConstraint.GROUPED_EVENTS
-+    if f_assist.name == "ASSISTS.FP":  # Icelake+
-+        nmi_constraint = MetricConstraint.NO_GROUP_EVENTS_NMI
-+    if f_assist.name in [
-         "ASSISTS.FP",
-         "FP_ASSIST.S",
-     ]:
--        f_assist += "/cmask=1/"
-+        f_assist = Event(f"{f_assist.name}/cmask=1/")
- 
-     flop_r = d_ratio(flop, interval_sec)
-     flop_c = d_ratio(flop, cyc)
--    nmi_constraint = MetricConstraint.GROUPED_EVENTS
--    if f_assist.name == "ASSISTS.FP":  # Icelake+
--        nmi_constraint = MetricConstraint.NO_GROUP_EVENTS_NMI
- 
-     def FpuMetrics(group: str, fl: Optional[Event], mult: int, desc: str) -> Optional[MetricGroup]:
-         if not fl:
-@@ -421,16 +421,17 @@ def IntelFpu() -> Optional[MetricGroup]:
- def IntelIlp() -> MetricGroup:
-     tsc = Event("msr/tsc/")
-     c0 = Event("msr/mperf/")
--    low = tsc - c0
-+    low = max(tsc - c0, 0)
-     inst_ret = Event("INST_RETIRED.ANY_P")
--    inst_ret_c = [Event(f"{inst_ret.name}/cmask={x}/") for x in range(1, 6)]
-     core_cycles = Event("CPU_CLK_UNHALTED.THREAD_P_ANY",
-                         "CPU_CLK_UNHALTED.DISTRIBUTED",
-                         "cycles")
-+    inst_ret_c = [Event(f"{inst_ret.name}/cmask={x}/") for x in range(1, 6)]
++log = logging.getLogger('test')
 +
-     ilp = [d_ratio(max(inst_ret_c[x] - inst_ret_c[x + 1], 0), core_cycles)
-            for x in range(0, 4)]
-     ilp.append(d_ratio(inst_ret_c[4], core_cycles))
--    ilp0 = 1
-+    ilp0: Expression = Constant(1)
-     for x in ilp:
-         ilp0 -= x
-     return MetricGroup("lpm_ilp", [
-@@ -465,7 +466,7 @@ def IntelIotlb() -> Optional[MetricGroup]:
-         + Event("UNC_IIO_IOMMU0.1G_HITS")
-     )
-     total_miss = Event("UNC_IIO_IOMMU0.MISSES")
--  except:
-+  except ValueError:
-     return None
+ def data_equal(a, b):
+     # Allow multiple values in assignment separated by '|'
+     a_list = a.split('|')
+@@ -89,19 +91,19 @@ class Event(dict):
  
-   miss_rate = d_ratio(total_miss, total_miss + total_hit)
-@@ -508,7 +509,7 @@ def IntelIotlb() -> Optional[MetricGroup]:
-             "100%",
-         ),
-     ]
--  except:
-+  except ValueError:
-     pass
+     def add(self, data):
+         for key, val in data:
+-            log.debug("      %s = %s" % (key, val))
++            log.debug("      %s = %s", key, val)
+             self[key] = val
  
-   return MetricGroup(
-@@ -519,59 +520,92 @@ def IntelIotlb() -> Optional[MetricGroup]:
+     def __init__(self, name, data, base):
+-        log.debug("    Event %s" % name);
+-        self.name  = name;
++        log.debug("    Event %s", name)
++        self.name  = name
+         self.group = ''
+         self.add(base)
+         self.add(data)
  
- 
- def IntelL2() -> Optional[MetricGroup]:
-+    assert _args is not None
-     try:
-         DC_HIT = Event("L2_RQSTS.DEMAND_DATA_RD_HIT")
--    except:
-+    except ValueError:
-         return None
-     try:
-         DC_MISS = Event("L2_RQSTS.DEMAND_DATA_RD_MISS")
--        l2_dmnd_miss = DC_MISS
--        l2_dmnd_rd_all = DC_MISS + DC_HIT
--    except:
-+        l2_dmnd_miss: Expression = DC_MISS
-+        l2_dmnd_rd_all: Expression = DC_MISS + DC_HIT
-+    except ValueError:
-         DC_ALL = Event("L2_RQSTS.ALL_DEMAND_DATA_RD")
-         l2_dmnd_miss = DC_ALL - DC_HIT
-         l2_dmnd_rd_all = DC_ALL
-     l2_dmnd_mrate = d_ratio(l2_dmnd_miss, interval_sec)
-     l2_dmnd_rrate = d_ratio(l2_dmnd_rd_all, interval_sec)
- 
--    DC_PFH = None
--    DC_PFM = None
--    l2_pf_all = None
--    l2_pf_mrate = None
--    l2_pf_rrate = None
-+    l2_useless_rate = None
-+    try:
-+        DC_OUT_U = Event("L2_LINES_OUT.USELESS_HWPF")
-+        l2_pf_useless = DC_OUT_U
-+        l2_useless_rate = d_ratio(l2_pf_useless, interval_sec)
-+    except ValueError:
-+        pass
-+
-+    hwpf_group = None
-     try:
-         DC_PFH = Event("L2_RQSTS.PF_HIT")
-         DC_PFM = Event("L2_RQSTS.PF_MISS")
-         l2_pf_all = DC_PFH + DC_PFM
-         l2_pf_mrate = d_ratio(DC_PFM, interval_sec)
-         l2_pf_rrate = d_ratio(l2_pf_all, interval_sec)
--    except:
-+        hwpf_group = MetricGroup("lpm_l2_hwpf", [
-+            Metric("lpm_l2_hwpf_hits", "L2 cache hardware prefetcher hits",
-+                   d_ratio(DC_PFH, l2_pf_all), "100%"),
-+            Metric("lpm_l2_hwpf_misses", "L2 cache hardware prefetcher misses",
-+                   d_ratio(DC_PFM, l2_pf_all), "100%"),
-+            Metric("lpm_l2_hwpf_useless", "L2 cache hardware prefetcher useless prefetches per second",
-+                   l2_useless_rate, "100%") if l2_useless_rate else None,
-+            Metric("lpm_l2_hwpf_requests", "L2 cache hardware prefetcher requests per second",
-+                   l2_pf_rrate, "100%"),
-+            Metric("lpm_l2_hwpf_misses", "L2 cache hardware prefetcher misses per second",
-+                   l2_pf_mrate, "100%"),
-+        ])
-+    except ValueError:
-         pass
- 
--    DC_RFOH = None
--    DC_RFOM = None
--    l2_rfo_all = None
--    l2_rfo_mrate = None
--    l2_rfo_rrate = None
-+    rfo_group = None
-     try:
-         DC_RFOH = Event("L2_RQSTS.RFO_HIT")
-         DC_RFOM = Event("L2_RQSTS.RFO_MISS")
-         l2_rfo_all = DC_RFOH + DC_RFOM
-         l2_rfo_mrate = d_ratio(DC_RFOM, interval_sec)
-         l2_rfo_rrate = d_ratio(l2_rfo_all, interval_sec)
--    except:
-+        rfo_group = MetricGroup("lpm_l2_rfo", [
-+            Metric("lpm_l2_rfo_hits", "L2 cache request for ownership (RFO) hits",
-+                   d_ratio(DC_RFOH, l2_rfo_all), "100%"),
-+            Metric("lpm_l2_rfo_misses", "L2 cache request for ownership (RFO) misses",
-+                   d_ratio(DC_RFOM, l2_rfo_all), "100%"),
-+            Metric("lpm_l2_rfo_requests", "L2 cache request for ownership (RFO) requests per second",
-+                   l2_rfo_rrate, "requests/s"),
-+            Metric("lpm_l2_rfo_misses", "L2 cache request for ownership (RFO) misses per second",
-+                   l2_rfo_mrate, "misses/s"),
-+        ])
-+    except ValueError:
-         pass
- 
-     DC_CH = None
-     try:
-         DC_CH = Event("L2_RQSTS.CODE_RD_HIT")
--    except:
-+    except ValueError:
-         pass
-     DC_CM = Event("L2_RQSTS.CODE_RD_MISS")
-     DC_IN = Event("L2_LINES_IN.ALL")
--    DC_OUT_NS = None
--    DC_OUT_S = None
--    l2_lines_out = None
-+
-+    DC_WB_U = None
-+    DC_WB_D = None
-+    wbu = None
-+    wbd = None
-+    try:
-+        DC_WB_U = Event("IDI_MISC.WB_UPGRADE")
-+        DC_WB_D = Event("IDI_MISC.WB_DOWNGRADE")
-+        wbu = d_ratio(DC_WB_U, interval_sec)
-+        wbd = d_ratio(DC_WB_D, interval_sec)
-+    except ValueError:
-+        pass
-+
-     l2_out_rate = None
-     wbn = None
-     isd = None
-@@ -583,43 +617,24 @@ def IntelL2() -> Optional[MetricGroup]:
-                          "L2_LINES_OUT.DEMAND_CLEAN",
-                          "L2_LINES_IN.I")
-         if DC_OUT_S.name == "L2_LINES_OUT.SILENT" and (
--                args.model.startswith("skylake") or
--                args.model == "cascadelakex"):
-+                _args.model.startswith("skylake") or
-+                _args.model == "cascadelakex"):
-             DC_OUT_S.name = "L2_LINES_OUT.SILENT/any/"
-         # bring is back to per-CPU
-         l2_s = Select(DC_OUT_S / 2, Literal("#smt_on"), DC_OUT_S)
-         l2_ns = DC_OUT_NS
-         l2_lines_out = l2_s + l2_ns
-         l2_out_rate = d_ratio(l2_lines_out, interval_sec)
--        nlr = max(l2_ns - DC_WB_U - DC_WB_D, 0)
--        wbn = d_ratio(nlr, interval_sec)
-+        if DC_WB_U and DC_WB_D:
-+            nlr = max(l2_ns - DC_WB_U - DC_WB_D, 0)
-+            wbn = d_ratio(nlr, interval_sec)
-         isd = d_ratio(l2_s, interval_sec)
--    except:
--        pass
--    DC_OUT_U = None
--    l2_pf_useless = None
--    l2_useless_rate = None
--    try:
--        DC_OUT_U = Event("L2_LINES_OUT.USELESS_HWPF")
--        l2_pf_useless = DC_OUT_U
--        l2_useless_rate = d_ratio(l2_pf_useless, interval_sec)
--    except:
--        pass
--    DC_WB_U = None
--    DC_WB_D = None
--    wbu = None
--    wbd = None
--    try:
--        DC_WB_U = Event("IDI_MISC.WB_UPGRADE")
--        DC_WB_D = Event("IDI_MISC.WB_DOWNGRADE")
--        wbu = d_ratio(DC_WB_U, interval_sec)
--        wbd = d_ratio(DC_WB_D, interval_sec)
--    except:
-+    except ValueError:
-         pass
- 
-     l2_lines_in = DC_IN
-     l2_code_all = (DC_CH + DC_CM) if DC_CH else None
--    l2_code_rate = d_ratio(l2_code_all, interval_sec) if DC_CH else None
-+    l2_code_rate = d_ratio(l2_code_all, interval_sec) if l2_code_all else None
-     l2_code_miss_rate = d_ratio(DC_CM, interval_sec)
-     l2_in_rate = d_ratio(l2_lines_in, interval_sec)
- 
-@@ -640,35 +655,15 @@ def IntelL2() -> Optional[MetricGroup]:
-             Metric("lpm_l2_rd_misses", "L2 cache data read misses per second",
-                    l2_dmnd_mrate, "misses/s"),
-         ]),
--        MetricGroup("lpm_l2_hwpf", [
--            Metric("lpm_l2_hwpf_hits", "L2 cache hardware prefetcher hits",
--                   d_ratio(DC_PFH, l2_pf_all), "100%"),
--            Metric("lpm_l2_hwpf_misses", "L2 cache hardware prefetcher misses",
--                   d_ratio(DC_PFM, l2_pf_all), "100%"),
--            Metric("lpm_l2_hwpf_useless", "L2 cache hardware prefetcher useless prefetches per second",
--                   l2_useless_rate, "100%") if l2_useless_rate else None,
--            Metric("lpm_l2_hwpf_requests", "L2 cache hardware prefetcher requests per second",
--                   l2_pf_rrate, "100%"),
--            Metric("lpm_l2_hwpf_misses", "L2 cache hardware prefetcher misses per second",
--                   l2_pf_mrate, "100%"),
--        ]) if DC_PFH else None,
--        MetricGroup("lpm_l2_rfo", [
--            Metric("lpm_l2_rfo_hits", "L2 cache request for ownership (RFO) hits",
--                   d_ratio(DC_RFOH, l2_rfo_all), "100%"),
--            Metric("lpm_l2_rfo_misses", "L2 cache request for ownership (RFO) misses",
--                   d_ratio(DC_RFOM, l2_rfo_all), "100%"),
--            Metric("lpm_l2_rfo_requests", "L2 cache request for ownership (RFO) requests per second",
--                   l2_rfo_rrate, "requests/s"),
--            Metric("lpm_l2_rfo_misses", "L2 cache request for ownership (RFO) misses per second",
--                   l2_rfo_mrate, "misses/s"),
--        ]) if DC_RFOH else None,
-+        hwpf_group,
-+        rfo_group,
-         MetricGroup("lpm_l2_code", [
-             Metric("lpm_l2_code_hits", "L2 cache code hits",
--                   d_ratio(DC_CH, l2_code_all), "100%") if DC_CH else None,
-+                   d_ratio(DC_CH, l2_code_all), "100%") if DC_CH and l2_code_all else None,
-             Metric("lpm_l2_code_misses", "L2 cache code misses",
--                   d_ratio(DC_CM, l2_code_all), "100%") if DC_CH else None,
-+                   d_ratio(DC_CM, l2_code_all), "100%") if DC_CH and l2_code_all else None,
-             Metric("lpm_l2_code_requests", "L2 cache code requests per second",
--                   l2_code_rate, "requests/s") if DC_CH else None,
-+                   l2_code_rate, "requests/s") if l2_code_rate else None,
-             Metric("lpm_l2_code_misses", "L2 cache code misses per second",
-                    l2_code_miss_rate, "misses/s"),
-         ]),
-@@ -706,7 +701,7 @@ def IntelMissLat() -> Optional[MetricGroup]:
-                                 "UNC_CHA_TOR_INSERTS.IA_MISS",
-                                 "UNC_C_TOR_INSERTS.MISS_REMOTE_OPCODE",
-                                 "UNC_C_TOR_INSERTS.NID_MISS_OPCODE")
--    except:
-+    except ValueError:
-         return None
- 
-     if (data_rd_loc_occ.name == "UNC_C_TOR_OCCUPANCY.MISS_LOCAL_OPCODE" or
-@@ -752,8 +747,8 @@ def IntelMissLat() -> Optional[MetricGroup]:
- def IntelMlp() -> Optional[Metric]:
-     try:
-         l1d = Event("L1D_PEND_MISS.PENDING")
--        l1dc = Event("L1D_PEND_MISS.PENDING_CYCLES")
--    except:
-+        l1dc: Expression = Event("L1D_PEND_MISS.PENDING_CYCLES")
-+    except ValueError:
-         return None
- 
-     l1dc = Select(l1dc / 2, Literal("#smt_on"), l1dc)
-@@ -764,8 +759,9 @@ def IntelMlp() -> Optional[Metric]:
- 
- 
- def IntelPorts() -> Optional[MetricGroup]:
--    pipeline_events = json.load(
--        open(f"{_args.events_path}/x86/{_args.model}/pipeline.json"))
-+    assert _args is not None
-+    with open(f"{_args.events_path}/x86/{_args.model}/pipeline.json", encoding="utf-8") as f:
-+        pipeline_events = json.load(f)
- 
-     core_cycles = Event("CPU_CLK_UNHALTED.THREAD_P_ANY",
-                         "CPU_CLK_UNHALTED.DISTRIBUTED",
-@@ -777,11 +773,10 @@ def IntelPorts() -> Optional[MetricGroup]:
-     for x in pipeline_events:
-         if "EventName" in x and re.search("^UOPS_DISPATCHED.PORT", x["EventName"]):
-             name = x["EventName"]
--            port = re.search(r"(PORT_[0-9].*)", name).group(0).lower()
--            if name.endswith("_CORE"):
--                cyc = core_cycles
--            else:
--                cyc = smt_cycles
-+            match = re.search(r"(PORT_[0-9].*)", name)
-+            assert match is not None
-+            port = match.group(0).lower()
-+            cyc: Expression = core_cycles if name.endswith("_CORE") else smt_cycles
-             metrics.append(Metric(f"lpm_{port}", f"{port} utilization (higher is better)",
-                                   d_ratio(Event(name), cyc), "100%"))
-     if len(metrics) == 0:
-@@ -800,7 +795,7 @@ def IntelSwpf() -> Optional[MetricGroup]:
-         s_t0 = Event("SW_PREFETCH_ACCESS.T0")
-         s_t1 = Event("SW_PREFETCH_ACCESS.T1_T2")
-         s_w = Event("SW_PREFETCH_ACCESS.PREFETCHW")
--    except:
-+    except ValueError:
-         return None
- 
-     all_sw = s_nta + s_t0 + s_t1 + s_w
-@@ -857,6 +852,7 @@ def IntelSwpf() -> Optional[MetricGroup]:
- 
- 
- def IntelLdSt() -> Optional[MetricGroup]:
-+    assert _args is not None
-     if _args.model in [
-         "bonnell",
-         "nehalemep",
-@@ -882,12 +878,12 @@ def IntelLdSt() -> Optional[MetricGroup]:
-     LDST_PRE = None
-     try:
-         LDST_PRE = Event("LOAD_HIT_PREFETCH.SWPF", "LOAD_HIT_PRE.SW_PF")
--    except:
-+    except ValueError:
-         pass
-     LDST_AT = None
-     try:
-         LDST_AT = Event("MEM_INST_RETIRED.LOCK_LOADS")
--    except:
-+    except ValueError:
-         pass
-     cyc = LDST_CYC
- 
-@@ -945,8 +941,8 @@ def UncoreCState() -> Optional[MetricGroup]:
-         pcu_ticks = Event("UNC_P_CLOCKTICKS")
-         c0 = Event("UNC_P_POWER_STATE_OCCUPANCY.CORES_C0")
-         c3 = Event("UNC_P_POWER_STATE_OCCUPANCY.CORES_C3")
--        c6 = Event("UNC_P_POWER_STATE_OCCUPANCY.CORES_C6")
--    except:
-+        c6: Expression = Event("UNC_P_POWER_STATE_OCCUPANCY.CORES_C6")
-+    except ValueError:
-         return None
- 
-     num_cores = Literal("#num_cores") / Literal("#num_packages")
-@@ -981,13 +977,10 @@ def UncoreDir() -> Optional[MetricGroup]:
-         cha_upd = Event("UNC_CHA_DIR_UPDATE.HA")
-         # Turn the umask into a ANY rather than HA filter.
-         cha_upd.name += "/umask=3,name=UNC_CHA_DIR_UPDATE.ANY/"
--    except:
-+    except ValueError:
-         return None
- 
-     m2m_total = m2m_hits + m2m_miss
--    upd = m2m_upd + cha_upd  # in cache lines
--    upd_r = upd / interval_sec
--    look_r = m2m_total / interval_sec
- 
-     scale = 64 / 1_000_000  # Cache lines to MB
-     return MetricGroup("lpm_dir", [
-@@ -1014,7 +1007,7 @@ def UncoreMem() -> Optional[MetricGroup]:
-                         "UNC_H_REQUESTS.WRITES_LOCAL")
-         rem_wrs = Event("UNC_CHA_REQUESTS.WRITES_REMOTE",
-                         "UNC_H_REQUESTS.WRITES_REMOTE")
--    except:
-+    except ValueError:
-         return None
- 
-     scale = 64 / 1_000_000
-@@ -1035,16 +1028,18 @@ def UncoreMem() -> Optional[MetricGroup]:
- 
- 
- def UncoreMemBw() -> Optional[MetricGroup]:
-+    assert _args is not None
-     mem_events = []
-     try:
--        mem_events = json.load(open(f"{os.path.dirname(os.path.realpath(__file__))}"
--                                    f"/arch/x86/{args.model}/uncore-memory.json"))
--    except:
-+        with open(f"{os.path.dirname(os.path.realpath(__file__))}"
-+                  f"/arch/x86/{_args.model}/uncore-memory.json", encoding="utf-8") as f:
-+            mem_events = json.load(f)
-+    except (OSError, ValueError):
-         pass
- 
--    ddr_rds = 0
--    ddr_wrs = 0
--    ddr_total = 0
-+    ddr_rds: Union[int, Expression] = 0
-+    ddr_wrs: Union[int, Expression] = 0
-+    ddr_total: Union[int, Expression] = 0
-     for x in mem_events:
-         if "EventName" in x:
-             name = x["EventName"]
-@@ -1059,17 +1054,17 @@ def UncoreMemBw() -> Optional[MetricGroup]:
-         try:
-             ddr_rds = Event("UNC_M_CAS_COUNT.RD")
-             ddr_wrs = Event("UNC_M_CAS_COUNT.WR")
--        except:
-+        except ValueError:
-             return None
- 
-     ddr_total = ddr_rds + ddr_wrs
- 
--    pmm_rds = 0
--    pmm_wrs = 0
-+    pmm_rds: Union[int, Expression] = 0
-+    pmm_wrs: Union[int, Expression] = 0
-     try:
-         pmm_rds = Event("UNC_M_PMM_RPQ_INSERTS")
-         pmm_wrs = Event("UNC_M_PMM_WPQ_INSERTS")
--    except:
-+    except ValueError:
-         pass
- 
-     pmm_total = pmm_rds + pmm_wrs
-@@ -1101,7 +1096,7 @@ def UncoreMemSat() -> Optional[Metric]:
-         sat = Event("UNC_CHA_DISTRESS_ASSERTED.VERT", "UNC_CHA_FAST_ASSERTED.VERT",
-                     "UNC_C_FAST_ASSERTED", "UNC_CHA_DISTRESS_ASSERTED.DPT_ANY",
-                     "UNC_CHA_DISTRESS_ASSERTED.DPT_NONLOCAL")
--    except:
-+    except ValueError:
-         return None
- 
-     desc = ("Mesh Bandwidth saturation (% CBOX cycles with FAST signal asserted, "
-@@ -1116,11 +1111,9 @@ def UncoreUpiBw() -> Optional[MetricGroup]:
-     try:
-         upi_rds = Event("UNC_UPI_RxL_FLITS.ALL_DATA")
-         upi_wrs = Event("UNC_UPI_TxL_FLITS.ALL_DATA")
--    except:
-+    except ValueError:
-         return None
- 
--    upi_total = upi_rds + upi_wrs
--
-     # From "Uncore Performance Monitoring": When measuring the amount of
-     # bandwidth consumed by transmission of the data (i.e. NOT including
-     # the header), it should be .ALL_DATA / 9 * 64B.
-diff --git a/tools/perf/pmu-events/jevents.py b/tools/perf/pmu-events/jevents.py
-index 074daae5308b..b2738aaeb398 100755
---- a/tools/perf/pmu-events/jevents.py
-+++ b/tools/perf/pmu-events/jevents.py
-@@ -3,7 +3,6 @@
- """Convert directories of JSON events to C code."""
- import argparse
- import csv
--from functools import lru_cache
- import json
- import metric
- import os
-@@ -22,7 +21,7 @@ _metric_tables: list[str] = []
- # List of metric tables generated from "/sys" directories.
- _sys_metric_tables: list[str] = []
- # Mapping between sys event table names and sys metric table names.
--_sys_event_table_to_metric_table_mapping = {}
-+_sys_event_table_to_metric_table_mapping: Dict[str, str] = {}
- # Map from an event name to an architecture standard
- # JsonEvent. Architecture standard events are in json files in the top
- # f'{_args.starting_dir}/{_args.arch}' directory.
-@@ -38,7 +37,7 @@ _pending_metrics_tblname: Optional[str] = None
- # Global BigCString shared by all structures.
- _bcs = None
- # Map from the name of a metric group to a description of the group.
--_metricgroups = {}
-+_metricgroups: Dict[str, str] = {}
- # Order specific JsonEvent attributes will be visited.
- _json_event_attributes = [
-     # cmp_sevent related attributes.
-@@ -124,17 +123,17 @@ class BigCString:
- 
-   def __init__(self):
-     self.strings = set()
--    self.insert_number = 0;
-+    self.insert_number = 0
-     self.insert_point = {}
-     self.metrics = set()
- 
--  def add(self, s: str, metric: bool) -> None:
-+  def add(self, s: str, is_metric: bool) -> None:
-     """Called to add to the big string."""
-     if s not in self.strings:
-       self.strings.add(s)
-       self.insert_point[s] = self.insert_number
-       self.insert_number += 1
--      if metric:
-+      if is_metric:
-         self.metrics.add(s)
- 
-   def compute(self) -> None:
-@@ -313,7 +312,7 @@ class JsonEvent:
-           return int(val, 16) == 0
-         else:
-           return int(val) == 0
--      except:
-+      except ValueError:
-         return False
- 
-     def canonicalize_value(val: str) -> str:
-@@ -321,7 +320,7 @@ class JsonEvent:
-         if val.startswith('0x'):
-           return llx(int(val, 16))
-         return str(int(val))
--      except:
-+      except ValueError:
-         return val
- 
-     eventcode = 0
-@@ -436,15 +435,15 @@ class JsonEvent:
-         s += f'\t{attr} = {value},\n'
-     return s + '}'
- 
--  def build_c_string(self, metric: bool) -> str:
-+  def build_c_string(self, is_metric: bool) -> str:
-     s = ''
--    for attr in _json_metric_attributes if metric else _json_event_attributes:
-+    for attr in _json_metric_attributes if is_metric else _json_event_attributes:
-       x = getattr(self, attr)
--      if metric and x and attr == 'metric_expr':
-+      if is_metric and x and attr == 'metric_expr':
-         # Convert parsed metric expressions into a string. Slashes
-         # must be doubled in the file.
-         x = x.ToPerfJson().replace('\\', '\\\\')
--      if metric and x and attr == 'metric_threshold':
-+      if is_metric and x and attr == 'metric_threshold':
-         x = x.replace('\\', '\\\\')
-       if attr in _json_enum_attributes:
-         s += x if x else '0'
-@@ -452,24 +451,25 @@ class JsonEvent:
-         s += f'{x}\\000' if x else '\\000'
-     return s
- 
--  def to_c_string(self, metric: bool) -> str:
-+  def to_c_string(self, is_metric: bool) -> str:
-     """Representation of the event as a C struct initializer."""
- 
-     def make_comment(s: str) -> str:
-         s = s.replace('*/', r'\*\/')
-         return f'\t/* {s} */\n' if len(s) < 80 else f'\t/* {s[0:80]}... */\n'
- 
--    s = self.build_c_string(metric)
-+    s = self.build_c_string(is_metric)
-     assert _bcs is not None
-     return f'{make_comment(s)}\t{{ { _bcs.offsets[s] } }},\n'
- 
- 
--_json_cache = {}
-+_json_cache: Dict[Tuple[str, str], Sequence[JsonEvent]] = {}
- def _read_json_events_impl(path: str, topic: str) -> Sequence[JsonEvent]:
-   """Read json events from the specified file."""
-   try:
--    events = json.load(open(path), object_hook=JsonEvent)
--  except BaseException as err:
-+    with open(path, encoding='utf-8') as f:
-+      events = json.load(f, object_hook=JsonEvent)
-+  except BaseException:
-     print(f"Exception processing {path}")
-     raise
-   metrics: list[Tuple[str, str, metric.Expression]] = []
-@@ -493,7 +493,6 @@ def read_json_events(path: str, topic: str) -> Sequence[JsonEvent]:
- 
- def preprocess_arch_std_files(archpath: str) -> None:
-   """Read in all architecture standard events."""
--  global _arch_std_events
-   for item in os.scandir(archpath):
-     if not item.is_file() or not item.name.endswith('.json'):
-       continue
-@@ -533,13 +532,10 @@ def print_pending_events() -> None:
-   if not _pending_events:
-     return
- 
--  global _pending_events_tblname
-   assert _pending_events_tblname is not None
-   if _pending_events_tblname.endswith('_sys'):
--    global _sys_event_tables
-     _sys_event_tables.append(_pending_events_tblname)
-   else:
--    global event_tables
-     _event_tables.append(_pending_events_tblname)
- 
-   first = True
-@@ -560,7 +556,7 @@ def print_pending_events() -> None:
-       last_pmu = event.pmu
-       pmus.add((event.pmu, pmu_name))
- 
--    _args.output_file.write(event.to_c_string(metric=False))
-+    _args.output_file.write(event.to_c_string(is_metric=False))
-     last_name = event.name
-   _pending_events = []
- 
-@@ -596,31 +592,28 @@ def print_pending_metrics() -> None:
-   if not _pending_metrics:
-     return
- 
--  global _pending_metrics_tblname
-   assert _pending_metrics_tblname is not None
-   if _pending_metrics_tblname.endswith('_sys'):
--    global _sys_metric_tables
-     _sys_metric_tables.append(_pending_metrics_tblname)
-   else:
--    global metric_tables
-     _metric_tables.append(_pending_metrics_tblname)
- 
-   first = True
-   last_pmu = None
-   pmus: Set[Tuple[str, str]] = set()
-   assert _args is not None
--  for metric in sorted(_pending_metrics, key=metric_cmp_key):
--    if metric.pmu != last_pmu:
-+  for m in sorted(_pending_metrics, key=metric_cmp_key):
-+    if m.pmu != last_pmu:
-       if not first:
-         _args.output_file.write('};\n')
--      pmu_name = metric.pmu.replace(',', '_')
-+      pmu_name = m.pmu.replace(',', '_')
-       _args.output_file.write(
-           f'static const struct compact_pmu_event {_pending_metrics_tblname}_{pmu_name}[] = {{\n')
-       first = False
--      last_pmu = metric.pmu
--      pmus.add((metric.pmu, pmu_name))
-+      last_pmu = m.pmu
-+      pmus.add((m.pmu, pmu_name))
- 
--    _args.output_file.write(metric.to_c_string(metric=True))
-+    _args.output_file.write(m.to_c_string(is_metric=True))
-   _pending_metrics = []
- 
-   _args.output_file.write(f"""
-@@ -659,13 +652,14 @@ def preprocess_one_file(parents: Sequence[str], item: os.DirEntry) -> None:
- 
-   assert _bcs is not None
-   if item.name.endswith('metricgroups.json'):
--    metricgroup_descriptions = json.load(open(item.path))
-+    with open(item.path, encoding='utf-8') as f:
-+      metricgroup_descriptions = json.load(f)
-     for mgroup in metricgroup_descriptions:
-       assert len(mgroup) > 1, parents
-       description = f"{metricgroup_descriptions[mgroup]}\\000"
-       mgroup = f"{mgroup}\\000"
--      _bcs.add(mgroup, metric=True)
--      _bcs.add(description, metric=True)
-+      _bcs.add(mgroup, is_metric=True)
-+      _bcs.add(description, is_metric=True)
-       _metricgroups[mgroup] = description
-     return
- 
-@@ -673,11 +667,12 @@ def preprocess_one_file(parents: Sequence[str], item: os.DirEntry) -> None:
-   for event in read_json_events(item.path, topic):
-     pmu_name = f"{event.pmu}\\000"
-     if event.name:
--      _bcs.add(pmu_name, metric=False)
--      _bcs.add(event.build_c_string(metric=False), metric=False)
-+      _bcs.add(pmu_name, is_metric=False)
-+      _bcs.add(event.build_c_string(is_metric=False), is_metric=False)
-     if event.metric_name:
--      _bcs.add(pmu_name, metric=True)
--      _bcs.add(event.build_c_string(metric=True), metric=True)
-+      pmu_name = f"{event.pmu}\\000"
-+      _bcs.add(pmu_name, is_metric=True)
-+      _bcs.add(event.build_c_string(is_metric=True), is_metric=True)
- 
- def process_one_file(parents: Sequence[str], item: os.DirEntry) -> None:
-   """Process a JSON file during the main walk."""
-@@ -787,7 +782,7 @@ static const struct pmu_events_map pmu_events_map[] = {
- },
- """)
-     else:
--      with open(f'{_args.starting_dir}/{arch}/mapfile.csv') as csvfile:
-+      with open(f'{_args.starting_dir}/{arch}/mapfile.csv', encoding='utf-8') as csvfile:
-         table = csv.reader(csvfile)
-         first = True
-         for row in table:
-@@ -881,8 +876,8 @@ int pmu_metrics_table__iterate_tables(pmu_metrics_table_iter_t fn, void *data)
- 
- 
- def print_system_mapping_table() -> None:
--  assert _args is not None
-   """C struct mapping table array for tables from /sys directories."""
-+  assert _args is not None
-   _args.output_file.write("""
- struct pmu_sys_events {
- \tconst char *name;
-@@ -1491,7 +1486,7 @@ def main() -> None:
-       except Exception as e:
-         raise RuntimeError(f'Action failure for \'{item.name}\' in {parents}') from e
-       if item.is_dir():
--        ftw(item.path, parents + [item.name], action)
-+        ftw(item.path, list(parents) + [item.name], action)
- 
-   ap = argparse.ArgumentParser()
-   ap.add_argument('arch', help='Architecture name like x86')
-diff --git a/tools/perf/pmu-events/make_legacy_cache.py b/tools/perf/pmu-events/make_legacy_cache.py
-index 28a1ff804f86..b224544f85f6 100755
---- a/tools/perf/pmu-events/make_legacy_cache.py
-+++ b/tools/perf/pmu-events/make_legacy_cache.py
-@@ -61,7 +61,7 @@ hw_cache_result = [
-      "misses"),
- ]
- 
--events = []
-+events: list[dict[str, str]] = []
- def add_event(name: str,
-               cache_id: int, cache_op: int, cache_result: int,
-               desc: str,
-@@ -87,10 +87,10 @@ def add_event(name: str,
-         event["Deprecated"] = "1"
-     events.append(event)
- 
--for (cache_id, names, ops, cache_desc) in hw_cache_id:
--    for name in names:
--        add_event(name,
--                  cache_id,
-+for (cid, names, ops, cache_desc) in hw_cache_id:
-+    for cname in names:
-+        add_event(cname,
-+                  cid,
-                   0, # PERF_COUNT_HW_CACHE_OP_READ
-                   0, # PERF_COUNT_HW_CACHE_RESULT_ACCESS
-                   f"{cache_desc} read accesses.",
-@@ -100,27 +100,29 @@ for (cache_id, names, ops, cache_desc) in hw_cache_id:
-             if op not in ops:
+     def equal(self, other):
+         for t in Event.terms:
+-            log.debug("      [%s] %s %s" % (t, self[t], other[t]));
++            log.debug("      [%s] %s %s", t, self[t], other[t])
+             if t not in self or t not in other:
+                 return False
+             if not data_equal(self[t], other[t]):
+@@ -118,7 +120,7 @@ class Event(dict):
+             if t not in self or t not in other:
                  continue
-             for op_name in op_names:
--                deprecated = (names[0] != name or op_names[1] != op_name)
--                add_event(f"{name}-{op_name}",
--                          cache_id,
-+                is_deprecated = (names[0] != cname or op_names[1] != op_name)
-+                add_event(f"{cname}-{op_name}",
-+                          cid,
-                           op,
-                           0, # PERF_COUNT_HW_CACHE_RESULT_ACCESS
-                           f"{cache_desc} {op_desc} accesses.",
--                          deprecated)
-+                          is_deprecated)
+             if not data_equal(self[t], other[t]):
+-                log.warning("expected %s=%s, got %s" % (t, self[t], other[t]))
++                log.warning("expected %s=%s, got %s", t, self[t], other[t])
  
-                 for (result,  result_names, result_desc) in hw_cache_result:
-                     for result_name in result_names:
--                        deprecated = ((names[0] != name or op_names[0] != op_name) or
--                                      (result == 0) or (result_names[0] != result_name))
--                        add_event(f"{name}-{op_name}-{result_name}",
--                                  cache_id, op, result,
-+                        is_deprecated = ((names[0] != cname or op_names[0] != op_name) or
-+                                         (result == 0) or (result_names[0] != result_name))
-+                        add_event(f"{cname}-{op_name}-{result_name}",
-+                                  cid,
-+                                  op,
-+                                  result,
-                                   f"{cache_desc} {op_desc} {result_desc}.",
--                                  deprecated)
-+                                  is_deprecated)
+ def parse_version(version):
+     if not version:
+@@ -149,7 +151,7 @@ class Test(object):
+         parser = configparser.ConfigParser()
+         parser.read(path)
  
-         for (result,  result_names, result_desc) in hw_cache_result:
-             for result_name in result_names:
--                add_event(f"{name}-{result_name}",
--                          cache_id,
-+                add_event(f"{cname}-{result_name}",
-+                          cid,
-                           0, # PERF_COUNT_HW_CACHE_OP_READ
-                           result,
-                           f"{cache_desc} read {result_desc}.",
-diff --git a/tools/perf/pmu-events/metric.py b/tools/perf/pmu-events/metric.py
-index ce025675898c..f5d81eccd5c3 100644
---- a/tools/perf/pmu-events/metric.py
-+++ b/tools/perf/pmu-events/metric.py
-@@ -6,18 +6,16 @@ import json
- import os
- import re
- from enum import Enum
--from typing import Dict, List, Optional, Set, Tuple, Union
-+from typing import Dict, List, Optional, Sequence, Set, Tuple, Union
+-        log.warning("running '%s'" % path)
++        log.warning("running '%s'", path)
  
--all_pmus = set()
--all_events = set()
--experimental_events = set()
--all_events_all_models = set()
-+all_pmus: Set[str] = set()
-+all_events: Set[str] = set()
-+experimental_events: Set[str] = set()
-+all_events_all_models: Set[str] = set()
+         self.path     = path
+         self.test_dir = options.test_dir
+@@ -159,15 +161,15 @@ class Test(object):
  
- def LoadEvents(directory: str) -> None:
-   """Populate a global set of all known events for the purpose of validating Event names"""
--  global all_pmus
-   global all_events
--  global experimental_events
-   global all_events_all_models
-   all_events = {
-       "context\\-switches",
-@@ -30,29 +28,31 @@ def LoadEvents(directory: str) -> None:
-     filename = os.fsdecode(file)
-     if filename.endswith(".json"):
-       try:
--        for x in json.load(open(f"{directory}/{filename}")):
--          if "Unit" in x:
--            all_pmus.add(x["Unit"])
--          if "EventName" in x:
--            all_events.add(x["EventName"])
--            if "Experimental" in x and x["Experimental"] == "1":
--              experimental_events.add(x["EventName"])
--          elif "ArchStdEvent" in x:
--            all_events.add(x["ArchStdEvent"])
-+        with open(f"{directory}/{filename}", encoding="utf-8") as f:
-+          for x in json.load(f):
-+            if "Unit" in x:
-+              all_pmus.add(x["Unit"])
-+            if "EventName" in x:
-+              all_events.add(x["EventName"])
-+              if "Experimental" in x and x["Experimental"] == "1":
-+                experimental_events.add(x["EventName"])
-+            elif "ArchStdEvent" in x:
-+              all_events.add(x["ArchStdEvent"])
-       except json.decoder.JSONDecodeError:
-         # The generated directory may be the same as the input, which
-         # causes partial json files. Ignore errors.
-         pass
-   all_events_all_models = all_events.copy()
--  for root, dirs, files in os.walk(directory + ".."):
-+  for root, _, files in os.walk(directory + ".."):
-     for filename in files:
-       if filename.endswith(".json"):
          try:
--          for x in json.load(open(f"{root}/{filename}")):
--            if "EventName" in x:
--              all_events_all_models.add(x["EventName"])
--            elif "ArchStdEvent" in x:
--              all_events_all_models.add(x["ArchStdEvent"])
-+          with open(f"{root}/{filename}", encoding="utf-8") as f:
-+            for x in json.load(f):
-+              if "EventName" in x:
-+                all_events_all_models.add(x["EventName"])
-+              elif "ArchStdEvent" in x:
-+                all_events_all_models.add(x["ArchStdEvent"])
-         except json.decoder.JSONDecodeError:
-           # The generated directory may be the same as the input, which
-           # causes partial json files. Ignore errors.
-@@ -65,7 +65,6 @@ def CheckPmu(name: str) -> bool:
+             self.ret  = parser.get('config', 'ret')
+-        except:
++        except Exception:
+             self.ret  = 0
  
- def CheckEvent(name: str) -> bool:
-   """Check the event name exists in the set of all loaded events"""
--  global all_events
-   if len(all_events) == 0:
-     # No events loaded so assume any event is good.
-     return True
-@@ -81,7 +80,6 @@ def CheckEvent(name: str) -> bool:
+         self.test_ret = parser.getboolean('config', 'test_ret', fallback=False)
  
- def CheckEveryEvent(*names: str) -> None:
-   """Check all the events exist in at least one json file"""
--  global all_events_all_models
-   if len(all_events_all_models) == 0:
-     assert len(names) == 1, f"Cannot determine valid events in {names}"
-     # No events loaded so assume any event is good.
-@@ -96,11 +94,10 @@ def CheckEveryEvent(*names: str) -> None:
-       if any([name.startswith(x) for x in ['amd', 'arm', 'cpu', 'msr', 'power', 'cha', 'uncore']]):
-         continue
-     if name not in all_events_all_models:
--      raise Exception(f"Is {name} a named json event?")
-+      raise ValueError(f"Is {name} a named json event?")
+         try:
+             self.arch  = parser.get('config', 'arch')
+-            log.warning("test limitation '%s'" % self.arch)
+-        except:
++            log.warning("test limitation '%s'", self.arch)
++        except Exception:
+             self.arch  = ''
+ 
+         self.auxv = parser.get('config', 'auxv', fallback=None)
+@@ -175,7 +177,7 @@ class Test(object):
+         self.kernel_until = parse_version(parser.get('config', 'kernel_until', fallback=None))
+         self.expect   = {}
+         self.result   = {}
+-        log.debug("  loading expected events");
++        log.debug("  loading expected events")
+         self.load_events(path, self.expect)
+ 
+     def is_event(self, name):
+@@ -203,7 +205,7 @@ class Test(object):
+             else:
+                 try:
+                     value = int(items[-1], 0)
+-                except:
++                except ValueError:
+                     value = items[-1]
+             return (items[0], value)
+ 
+@@ -227,7 +229,7 @@ class Test(object):
+         # Handle negated list such as !s390x,ppc
+         if arch_list[0][0] == '!':
+             arch_list[0] = arch_list[0][1:]
+-            log.warning("excluded architecture list %s" % arch_list)
++            log.warning("excluded architecture list %s", arch_list)
+             for arch_item in arch_list:
+                 # log.warning("test for %s arch is %s" % (arch_item, myarch))
+                 if arch_item == myarch:
+@@ -243,19 +245,19 @@ class Test(object):
+     def restore_sample_rate(self, value=10000):
+         try:
+             # Check value of sample_rate
+-            with open("/proc/sys/kernel/perf_event_max_sample_rate", "r") as fIn:
++            with open("/proc/sys/kernel/perf_event_max_sample_rate", "r", encoding="utf-8") as fIn:
+                 curr_value = fIn.readline()
+             # If too low restore to reasonable value
+             if not curr_value or int(curr_value) < int(value):
+-                with open("/proc/sys/kernel/perf_event_max_sample_rate", "w") as fOut:
++                with open("/proc/sys/kernel/perf_event_max_sample_rate", "w", encoding="utf-8") as fOut:
+                     fOut.write(str(value))
+ 
+         except IOError as e:
+-            log.warning("couldn't restore sample_rate value: I/O error %s" % e)
++            log.warning("couldn't restore sample_rate value: I/O error %s", e)
+         except ValueError as e:
+-            log.warning("couldn't restore sample_rate value: Value error %s" % e)
++            log.warning("couldn't restore sample_rate value: Value error %s", e)
+         except TypeError as e:
+-            log.warning("couldn't restore sample_rate value: Type error %s" % e)
++            log.warning("couldn't restore sample_rate value: Type error %s", e)
+ 
+     def load_events(self, path, events):
+         parser_event = configparser.ConfigParser()
+@@ -266,7 +268,7 @@ class Test(object):
+         # event' first as a base
+         for section in filter(self.is_event, parser_event.sections()):
+ 
+-            parser_items = parser_event.items(section);
++            parser_items = parser_event.items(section)
+             base_items   = {}
+ 
+             # Read parent event if there's any
+@@ -280,7 +282,7 @@ class Test(object):
+             events[section] = e
+ 
+     def run_cmd(self, tempdir):
+-        junk1, junk2, junk3, junk4, myarch = (os.uname())
++        _junk1, _junk2, _junk3, _junk4, myarch = (os.uname())
+ 
+         if self.skip_test_arch(myarch):
+             raise Notest(self, myarch)
+@@ -299,7 +301,7 @@ class Test(object):
+               self.perf, self.command, tempdir, self.args)
+         ret = os.WEXITSTATUS(os.system(cmd))
+ 
+-        log.info("  '%s' ret '%s', expected '%s'" % (cmd, str(ret), str(self.ret)))
++        log.info("  '%s' ret '%s', expected '%s'", cmd, str(ret), str(self.ret))
+ 
+         if not data_equal(str(ret), str(self.ret)):
+             if self.test_ret:
+@@ -310,34 +312,34 @@ class Test(object):
+     def compare(self, expect, result):
+         match = {}
+ 
+-        log.debug("  compare");
++        log.debug("  compare")
+ 
+         # For each expected event find all matching
+         # events in result. Fail if there's not any.
+         for exp_name, exp_event in expect.items():
+             exp_list = []
+             res_event = {}
+-            log.debug("    matching [%s]" % exp_name)
++            log.debug("    matching [%s]", exp_name)
+             for res_name, res_event in result.items():
+-                log.debug("      to [%s]" % res_name)
++                log.debug("      to [%s]", res_name)
+                 if (exp_event.equal(res_event)):
+                     exp_list.append(res_name)
+                     log.debug("    ->OK")
+                 else:
+-                    log.debug("    ->FAIL");
++                    log.debug("    ->FAIL")
+ 
+-            log.debug("    match: [%s] matches %s" % (exp_name, str(exp_list)))
++            log.debug("    match: [%s] matches %s", exp_name, str(exp_list))
+ 
+             # we did not any matching event - fail
+             if not exp_list:
+                 if exp_event.optional():
+-                    log.debug("    %s does not match, but is optional" % exp_name)
++                    log.debug("    %s does not match, but is optional", exp_name)
+                 else:
+                     if not res_event:
+-                        log.debug("    res_event is empty");
++                        log.debug("    res_event is empty")
+                     else:
+                         exp_event.diff(res_event)
+-                    raise Fail(self, 'match failure');
++                    raise Fail(self, 'match failure')
+ 
+             match[exp_name] = exp_list
+ 
+@@ -354,38 +356,38 @@ class Test(object):
+                 if res_group not in match[group]:
+                     raise Fail(self, 'group failure')
+ 
+-                log.debug("    group: [%s] matches group leader %s" %
+-                         (exp_name, str(match[group])))
++                log.debug("    group: [%s] matches group leader %s",
++                          exp_name, str(match[group]))
+ 
+         log.debug("  matched")
+ 
+     def resolve_groups(self, events):
+         for name, event in events.items():
+-            group_fd = event['group_fd'];
++            group_fd = event['group_fd']
+             if group_fd == '-1':
+-                continue;
++                continue
+ 
+             for iname, ievent in events.items():
+                 if (ievent['fd'] == group_fd):
+                     event.group = iname
+-                    log.debug('[%s] has group leader [%s]' % (name, iname))
+-                    break;
++                    log.debug('[%s] has group leader [%s]', name, iname)
++                    break
+ 
+     def run(self):
+-        tempdir = tempfile.mkdtemp();
++        tempdir = tempfile.mkdtemp()
+ 
+         try:
+             # run the test script
+-            self.run_cmd(tempdir);
++            self.run_cmd(tempdir)
+ 
+             # load events expectation for the test
+-            log.debug("  loading result events");
++            log.debug("  loading result events")
+             for f in glob.glob(tempdir + '/event*'):
+-                self.load_events(f, self.result);
++                self.load_events(f, self.result)
+ 
+             # resolve group_fd to event names
+-            self.resolve_groups(self.expect);
+-            self.resolve_groups(self.result);
++            self.resolve_groups(self.expect)
++            self.resolve_groups(self.result)
+ 
+             # do the expectation - results matching - both ways
+             self.compare(self.expect, self.result)
+@@ -401,9 +403,9 @@ def run_tests(options):
+         try:
+             Test(f, options).run()
+         except Unsup as obj:
+-            log.warning("unsupp  %s" % obj.getMsg())
++            log.warning("unsupp  %s", obj.getMsg())
+         except Notest as obj:
+-            log.warning("skipped %s" % obj.getMsg())
++            log.warning("skipped %s", obj.getMsg())
+ 
+ def setup_log(verbose):
+     global log
+diff --git a/tools/perf/tests/shell/lib/perf_json_output_lint.py b/tools/perf/tests/shell/lib/perf_json_output_lint.py
+index dafbde56cc76..8cde22ac9d97 100644
+--- a/tools/perf/tests/shell/lib/perf_json_output_lint.py
++++ b/tools/perf/tests/shell/lib/perf_json_output_lint.py
+@@ -46,46 +46,46 @@ def is_counter_value(num):
+ def is_metric_value(num):
+   return isfloat(num) or num == 'none'
+ 
+-def check_json_output(expected_items):
++def check_json_output(expected_count):
+   checks = {
+-      'counters': lambda x: isfloat(x),
++      'counters': isfloat,
+       'core': lambda x: True,
+-      'counter-value': lambda x: is_counter_value(x),
++      'counter-value': is_counter_value,
+       'cgroup': lambda x: True,
+-      'cpu': lambda x: isint(x),
++      'cpu': isint,
+       'cache': lambda x: True,
+       'cluster': lambda x: True,
+       'die': lambda x: True,
+       'event': lambda x: True,
+-      'event-runtime': lambda x: isfloat(x),
+-      'interval': lambda x: isfloat(x),
++      'event-runtime': isfloat,
++      'interval': isfloat,
+       'metric-unit': lambda x: True,
+-      'metric-value': lambda x: is_metric_value(x),
++      'metric-value': is_metric_value,
+       'metric-threshold': lambda x: x in ['unknown', 'good', 'less good', 'nearly bad', 'bad'],
+       'metricgroup': lambda x: True,
+       'node': lambda x: True,
+-      'pcnt-running': lambda x: isfloat(x),
++      'pcnt-running': isfloat,
+       'socket': lambda x: True,
+       'thread': lambda x: True,
+       'unit': lambda x: True,
+   }
+-  input = '[\n' + ','.join(Lines) + '\n]'
+-  for item in json.loads(input):
+-    if expected_items != -1:
++  json_input = '[\n' + ','.join(Lines) + '\n]'
++  for item in json.loads(json_input):
++    if expected_count:
+       count = len(item)
+-      if count not in expected_items and count >= 1 and count <= 7 and 'metric-value' in item:
++      if count not in expected_count and count >= 1 and count <= 7 and 'metric-value' in item:
+         # Events that generate >1 metric may have isolated metric
+         # values and possibly other prefixes like interval, core,
+         # counters, or event-runtime/pcnt-running from multiplexing.
+         pass
+-      elif count not in expected_items and count >= 1 and count <= 5 and 'metricgroup' in item:
++      elif count not in expected_count and count >= 1 and count <= 5 and 'metricgroup' in item:
+         pass
+-      elif count - 1 in expected_items and 'metric-threshold' in item:
++      elif count - 1 in expected_count and 'metric-threshold' in item:
+           pass
+-      elif count in expected_items and 'insn per cycle' in item:
++      elif count in expected_count and 'insn per cycle' in item:
+           pass
+-      elif count not in expected_items:
+-        raise RuntimeError(f'wrong number of fields. counted {count} expected {expected_items}'
++      elif count not in expected_count:
++        raise RuntimeError(f'wrong number of fields. counted {count} expected {expected_count}'
+                            f' in \'{item}\'')
+     for key, value in item.items():
+       if key not in checks:
+@@ -107,7 +107,7 @@ try:
+     expected_items = [1, 2]
+   else:
+     # If no option is specified, don't check the number of items.
+-    expected_items = -1
++    expected_items = []
+   check_json_output(expected_items)
+ except:
+   print('Test failed for input:\n' + '\n'.join(Lines))
+diff --git a/tools/perf/tests/shell/lib/perf_metric_validation.py b/tools/perf/tests/shell/lib/perf_metric_validation.py
+index 3d52f94f22b9..dff60337c030 100644
+--- a/tools/perf/tests/shell/lib/perf_metric_validation.py
++++ b/tools/perf/tests/shell/lib/perf_metric_validation.py
+@@ -1,10 +1,10 @@
+ # SPDX-License-Identifier: GPL-2.0
+-import re
+-import csv
+-import json
+ import argparse
++import json
+ from pathlib import Path
+ import subprocess
++import sys
++from typing import Any
  
  
- def IsExperimentalEvent(name: str) -> bool:
--  global experimental_events
-   if ':' in name:
-     # Remove trailing modifier.
-     name = name[:name.find(':')]
-@@ -447,14 +444,13 @@ class Event(Expression):
-         error += " or " + name
-       else:
-         error = name
--    global all_events
--    raise Exception(f"No event {error} in:\n{all_events}")
-+    raise ValueError(f"No event {error} in:\n{all_events}")
+ class TestError:
+@@ -77,11 +77,11 @@ class Validator:
  
-   def HasExperimentalEvents(self) -> bool:
-     return IsExperimentalEvent(self.name)
+     def read_json(self, filename: str) -> dict:
+         try:
+-            with open(Path(filename).resolve(), "r") as f:
++            with open(Path(filename).resolve(), "r", encoding="utf-8") as f:
+                 data = json.loads(f.read())
+         except OSError as e:
+             print(f"Error when reading file {e}")
+-            sys.exit()
++            sys.exit(1)
  
-   def ToPerfJson(self):
--    result = re.sub('/', '@', self.name)
-+    result = re.sub('/', '@', _FixEscapes(self.name))
-     return result
+         return data
  
-   def ToPython(self):
-@@ -655,7 +651,7 @@ class Metric:
+@@ -90,16 +90,16 @@ class Validator:
+         if not parent.exists():
+             parent.mkdir(parents=True)
  
-     return result
+-        with open(output_file, "w+") as output_file:
++        with open(output_file, "w+", encoding="utf-8") as out_f:
+             json.dump(data,
+-                      output_file,
++                      out_f,
+                       ensure_ascii=True,
+                       indent=4)
  
--  def ToMetricGroupDescriptions(self, root: bool = True) -> Dict[str, str]:
-+  def ToMetricGroupDescriptions(self, _root: bool = True) -> Dict[str, str]:
-     return {}
+     def get_results(self, idx: int = 0):
+         return self.results.get(idx)
  
- class MetricGroup:
-@@ -667,7 +663,7 @@ class MetricGroup:
-   """
+-    def get_bounds(self, lb, ub, error, alias={}, ridx: int = 0) -> list:
++    def get_bounds(self, lb, ub, error, alias=None, ridx: int = 0) -> tuple:
+         """
+         Get bounds and tolerance from lb, ub, and error.
+         If missing lb, use 0.0; missing ub, use float('inf); missing error, use self.tolerance.
+@@ -111,6 +111,9 @@ class Validator:
+                   upper bound, return -1 if the upper bound is a metric value and is not collected
+                   tolerance, denormalized base on upper bound value
+         """
++        if alias is None:
++            alias = {}
++
+         # init ubv and lbv to invalid values
+         def get_bound_value(bound, initval, ridx):
+             val = initval
+@@ -120,7 +123,7 @@ class Validator:
+                 if bound == '':
+                     val = float("inf")
+                 elif bound in alias:
+-                    vall = self.get_value(alias[ub], ridx)
++                    vall = self.get_value(alias[bound], ridx)
+                     if vall:
+                         val = vall[0]
+                 elif bound.replace('.', '1').isdigit():
+@@ -213,7 +216,7 @@ class Validator:
+         @param alias: the dict has alias to metric name mapping
+         @returns: value of the formula is success; -1 if the one or more metric value not provided
+         """
+-        stack = []
++        stack: list[Any] = []
+         b = 0
+         errs = []
+         sign = "+"
+@@ -230,9 +233,9 @@ class Validator:
+                 else:
+                     f = f + "{0}(={1:.4f})".format(s, v[0])
+                     if sign == "*":
+-                        stack[-1] = stack[-1] * v
++                        stack[-1] = stack[-1] * v[0]
+                     elif sign == "/":
+-                        stack[-1] = stack[-1] / v
++                        stack[-1] = stack[-1] / v[0]
+                     elif sign == '-':
+                         stack.append(-v[0])
+                     else:
+@@ -263,7 +266,7 @@ class Validator:
+             alias[m['Alias']] = m['Name']
+         lbv, ubv, t = self.get_bounds(
+             rule['RangeLower'], rule['RangeUpper'], rule['ErrorThreshold'], alias, ridx=rule['RuleIndex'])
+-        val, f = self.evaluate_formula(
++        val, _ = self.evaluate_formula(
+             rule['Formula'], alias, ridx=rule['RuleIndex'])
  
-   def __init__(self, name: str,
--               metric_list: List[Union[Optional[Metric], Optional['MetricGroup']]],
-+               metric_list: Sequence[Union[Optional[Metric], Optional['MetricGroup']]],
-                description: Optional[str] = None):
-     self.name = name
-     self.metric_list = []
-@@ -696,7 +692,7 @@ class MetricGroup:
-       result.append(x.ToPerfJson())
-     return result
+         lb = rule['RangeLower']
+@@ -316,7 +319,7 @@ class Validator:
+                 rerun.append(m['Name'])
  
--  def ToMetricGroupDescriptions(self, root: bool = True) -> Dict[str, str]:
-+  def ToMetricGroupDescriptions(self, _root: bool = True) -> Dict[str, str]:
-     result = {self.name: self.description} if self.description else {}
-     for x in self.metric_list:
-       result.update(x.ToMetricGroupDescriptions(False))
+         if len(rerun) > 0 and len(rerun) < 20:
+-            second_results = dict()
++            second_results: dict[Any, Any] = dict()
+             self.second_test(rerun, second_results)
+             for name, val in second_results.items():
+                 if name not in failures:
+@@ -373,7 +376,7 @@ class Validator:
+                     name = result["metric-unit"].split("  ")[1] if len(result["metric-unit"].split("  ")) > 1 \
+                         else result["metric-unit"]
+                     metricvalues[name.lower()] = float(result["metric-value"])
+-            except ValueError as error:
++            except ValueError:
+                 continue
+         return
+ 
+@@ -383,7 +386,7 @@ class Validator:
+         wl = workload.split()
+         command.extend(wl)
+         print(" ".join(command))
+-        cmd = subprocess.run(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, encoding='utf-8')
++        cmd = subprocess.run(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, encoding='utf-8', check=False)
+         lines = cmd.stderr.splitlines() + cmd.stdout.splitlines()
+         data = []
+         for line in lines:
+@@ -397,9 +400,9 @@ class Validator:
+         Collect metric data with "perf stat -M" on given workload with -a and -j.
+         """
+         self.results = dict()
+-        print(f"Starting perf collection")
++        print("Starting perf collection")
+         print(f"Long workload: {workload}")
+-        collectlist = dict()
++        collectlist: dict[int, Any] = dict()
+         if self.collectlist != "":
+             collectlist[0] = {x for x in self.collectlist.split(",")}
+         else:
+@@ -441,7 +444,7 @@ class Validator:
+         """
+         command = ['perf', 'list', '-j', '--details', 'metrics']
+         cmd = subprocess.run(command, stdout=subprocess.PIPE,
+-                             stderr=subprocess.PIPE, encoding='utf-8')
++                             stderr=subprocess.PIPE, encoding='utf-8', check=False)
+         try:
+             data = json.loads(cmd.stdout)
+             for m in data:
+@@ -454,9 +457,9 @@ class Validator:
+                 self.metrics.add(name)
+                 if 'ScaleUnit' in m and (m['ScaleUnit'] == '1%' or m['ScaleUnit'] == '100%'):
+                     self.pctgmetrics.add(name.lower())
+-        except ValueError as error:
+-            print(f"Error when parsing metric data")
+-            sys.exit()
++        except ValueError:
++            print("Error when parsing metric data")
++            sys.exit(1)
+ 
+         return
+ 
+@@ -519,9 +522,6 @@ class Validator:
+ 
+     # Initialize data structures before data validation of each workload
+     def _init_data(self):
+-
+-        testtypes = ['PositiveValueTest',
+-                     'RelationshipTest', 'SingleMetricTest']
+         self.results = dict()
+         self.ignoremetrics = set()
+         self.errlist = list()
+@@ -572,7 +572,7 @@ class Validator:
+ # End of Class Validator
+ 
+ 
+-def main() -> None:
++def main() -> int:
+     parser = argparse.ArgumentParser(
+         description="Launch metric value validation")
+ 
+@@ -602,5 +602,4 @@ def main() -> None:
+ 
+ 
+ if __name__ == "__main__":
+-    import sys
+     sys.exit(main())
+diff --git a/tools/perf/tests/shell/lib/setup_python.sh b/tools/perf/tests/shell/lib/setup_python.sh
+index 2173215a0517..758834f8dcf8 100644
+--- a/tools/perf/tests/shell/lib/setup_python.sh
++++ b/tools/perf/tests/shell/lib/setup_python.sh
+@@ -1,29 +1,50 @@
+ #!/bin/bash
+ # SPDX-License-Identifier: GPL-2.0
+ 
+-if [ "x$PYTHON" = "x" ]
++if [ -z "$PYTHON" ]
+ then
+   python3 --version >/dev/null 2>&1 && PYTHON=python3
+ fi
+-if [ "x$PYTHON" = "x" ]
++if [ -z "$PYTHON" ]
+ then
+   python --version >/dev/null 2>&1 && PYTHON=python
+ fi
+-if [ "x$PYTHON" = "x" ]
++if [ -z "$PYTHON" ]
+ then
+   echo Skipping test, python not detected please set environment variable PYTHON.
+   exit 2
+ fi
++export PYTHON
+ 
+-# Set PYTHONPATH to find the in-tree built perf.so first, avoiding system-wide perf.so
++# Set PYTHONPATH to find the built perf.so and standalone scripts first,
++# avoiding system-wide perf.so
+ if [ -n "$PERF_EXEC_PATH" ] && [ -d "$PERF_EXEC_PATH/python" ]; then
+   PYTHONPATH_DIR="$PERF_EXEC_PATH/python"
++elif [ -n "${BASH_SOURCE[0]}" ] && [ -d "$(dirname "${BASH_SOURCE[0]}")/../../../python" ]; then
++  PYTHONPATH_DIR="$(dirname "${BASH_SOURCE[0]}")/../../../python"
++elif [ -d "$(dirname "$0")/../../../python" ]; then
++  PYTHONPATH_DIR="$(dirname "$0")/../../../python"
+ elif [ -d "$(dirname "$0")/../../python" ]; then
+   PYTHONPATH_DIR="$(dirname "$0")/../../python"
+ elif [ -d "$(dirname "$0")/../python" ]; then
+   PYTHONPATH_DIR="$(dirname "$0")/../python"
+ fi
+ 
++if [ -n "${BASH_SOURCE[0]}" ] && [ -d "$(dirname "${BASH_SOURCE[0]}")/../../../python" ]; then
++  SRC_PYTHON_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../../../python" && pwd)"
++  export PYTHONPATH="$SRC_PYTHON_DIR${PYTHONPATH:+:$PYTHONPATH}"
++  if [ -z "$PERF_EXEC_PATH" ] || [ ! -f "$PERF_EXEC_PATH/python/perf_live.py" ]; then
++    PERF_EXEC_PATH="$(dirname "$SRC_PYTHON_DIR")"
++    export PERF_EXEC_PATH
++  fi
++fi
++
+ if [ -n "$PYTHONPATH_DIR" ]; then
+   export PYTHONPATH="$PYTHONPATH_DIR${PYTHONPATH:+:$PYTHONPATH}"
+ fi
++
++PERF_BIN=$(which perf 2>/dev/null || true)
++if [ -n "$PERF_BIN" ] && [ -d "$(dirname "$PERF_BIN")/python" ]; then
++  PERF_BIN_PYTHON="$(dirname "$PERF_BIN")/python"
++  export PYTHONPATH="$PERF_BIN_PYTHON${PYTHONPATH:+:$PYTHONPATH}"
++fi
 -- 
 2.56.0.rc1.315.gc6ed9934b7-goog
 
