@@ -1,348 +1,584 @@
-Received: from mail-qt1-f173.google.com (mail-qt1-f173.google.com [209.85.160.173])
+Received: from mail-qt1-f180.google.com (mail-qt1-f180.google.com [209.85.160.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 415CE377ABF
-	for <linux-perf-users@vger.kernel.org>; Sat, 26 Sep 2026 23:12:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.160.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B05FF3C4552
+	for <linux-perf-users@vger.kernel.org>; Sun, 27 Sep 2026 21:44:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.160.180
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790464336; cv=pass; b=afghmpOsH84jrjPztxTmgsgCy+UK2/JB3bZjjotZDJ8megjjFwOPxsyipwbIi3XItrR3dhEYz8Om6eRrcru6O5ICfTWs6YhbmhyHlq00XLgoXH43KgI+tx9SfOueJ112WCY0WRPlGCKACX+wNbYYsF2joIwmXX5qaEIqsAYXzAU=
+	t=1790545474; cv=pass; b=bGM9smMfHfI3UykLJ+ZkQV6ESP3UkgeRTCP0eBH4okZ4H/zEqzXwemBIFvFGiSIXLExznSABLftKQffNr0aZ0duyhorMbaNbtNJ/WQdacHWV1DGtVSvRvIr5P4CBmCwnTjEfOGiDNAL9b3/qV5x5Hfv8RdJ0iIh/0hI+LqhvhyE=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790464336; c=relaxed/simple;
-	bh=vcBWCJxRCBkOI0fu3YYDRBlsspXE7I5TKf52DaBxDT8=;
+	s=arc-20240116; t=1790545474; c=relaxed/simple;
+	bh=FAEI8WA8cSRyBC82ESn9Wgc0lJuxeWzrumO8pwMuOCw=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=aQ1zkugzydYngMINzNaoOvBbKH3f4xiD7XG4Iuf+6KjeZDc9HJ14Wy+CeHL3Kvrh+vI3aqnDVYcY7mQivXrvGwMmUuntlvgrFHW9Bt2YkD2N+b0enLRsfCG5pjUaXJf8FuAb5A4BAtfDkHY+7rJmmWnm8jQjszsSNNFho6KvnmA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=HDlJM8nM; arc=pass smtp.client-ip=209.85.160.173
+	 To:Cc:Content-Type; b=KMjP/h//pH2qFYJEAaTgoylLGhgpRnLQ32rF2lvjAmRKY8kivZXpYi/39Q7Wo6JXArzRna9h+4aOi+wvENZpiExInut4vb45NWqul6tL4oZmhZU9MTmVnrWzQfmj33jeNdeDa+SvdNY52Y/0cLx0R11MOAEZMDUpZqo5UEC05Cg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=uTkSzuSH; arc=pass smtp.client-ip=209.85.160.180
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="HDlJM8nM"
-Received: by mail-qt1-f173.google.com with SMTP id d75a77b69052e-5333401e359so29071cf.1
-        for <linux-perf-users@vger.kernel.org>; Sat, 26 Sep 2026 16:12:13 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1790464333; cv=none;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="uTkSzuSH"
+Received: by mail-qt1-f180.google.com with SMTP id d75a77b69052e-533202fe429so279681cf.0
+        for <linux-perf-users@vger.kernel.org>; Sun, 27 Sep 2026 14:44:31 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1790545470; cv=none;
         d=google.com; s=arc-20260327;
-        b=W5u2c+R/gOHSB9CEo1aqECrTb0rX8EZSp7pRyOzpklxp0hmDjKWOB52Q0DcnXlVDBl
-         R6wU/6HESFhCN6+MqtN8H9y9xFlDh/ZcqmwivbUVchA9m1S5ONQiv/NeYy9W3BW6IcBx
-         YxuSaPk9s5o0kmHJi6BAfXFyJwEE3PKXKwqvbLNsbxzbeQknAHe7R4DlFxjp97u9JIXP
-         iFfGZYLr3ocqZ5nY3IK3/V42qHfe5wF/eB783uKemM/qZ9w/My1i22cLhJLQy2o2WY47
-         YiafpjbNWxwq5PVKaOVHGSHfQz1RxNXHLJjCMY6NdmehFPoy+wzB2K2kGM9hwiOCrdkp
-         auoA==
+        b=G3jWo1DdhC7mrfsune7uG9km0HZt7kSH69H5voke9iUB6jn3IbiWRBcyCcZ7Y5Et2G
+         y7fLaP5jshCabN4dKqOwYaLIIevsNRDaSXN1KV5swjL1sneJpkCX9sSW0O7b9zBk787f
+         dJUnXdL3UVE50+WSyANeA5uH6Y7n4+4stOV2aIM04blcZiMO+cAryXYYjEmpGuMEB+s3
+         Yd4PLJtpDhl9JJCqUhMidGbeSS/xxYvHHxzdTu+qXUteo5G6Uu1I3bLTSTnqH0kuRpPG
+         TzdKkjEvYSl8ora710gRmlkDeZpEsMlQtaXqJMb8Jhj7/u9y2GhksVZgTlQ/Hj25q9vj
+         s4ag==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:dkim-signature;
-        bh=eDVjq6e9qHtHgOdz81PWcHYM3LUooF6QpX6TN4vA1tE=;
-        fh=pSqju1vGtwxTFVU8NzxTB/uENAS3sUS4ILmmT3plEH8=;
-        b=ZSvx794YzQY9Bt7JT/jJdvY8bAclBw/2U7sy/UIWbC4t2FDG9WYIhirmN5xglxz4U2
-         G0zGbgdB4XPRphkUOZdt6qkSy23z4I7M0mspbgpNaii65PcokOwr6xZtC1KuiWYDi8uM
-         YXxwCcEGDFOQk3NUiKITN+XCOX9XbKAJU/u5sWWGchZM/mSrmxrJg74vOXndTJ0Vm4bD
-         PiPKMz55bUkJ6kAa+52QSwKcRHZWFvPJTHEmiClCv2nx8Y7p68zBSdLIRH+a3xKEA3Pv
-         qknaOySvltBN3SzIo7+o5RQBnWQ0tjG6gxBl7nkmM/ioUWFU9X1LFPibbEV//OWfjA8p
-         MvYQ==;
+        bh=y119z7sdl3qfjHiuF1t57ekDKg+i4BGISMvCcdxAaw0=;
+        fh=17aHEdKNiFQRihKQPLSZlKCZbI4NWOS2Fxx9L2DJ/xU=;
+        b=jdo0+Nyioyh61rzB0uHomgSMWtCGg2GPxKXHD4+wLAknBrC0Tn4ridxXwLTfXRyD9Y
+         +HHUQGi8MZaTh3V3bMoJO11E0mfyX4QpHnJLQjYQIYc1YIZE9MEKXEPEpALi54hAMlP1
+         dxczBI/Pqn/b/QHJ4J3fF03BiMJ0eZu/CQYBpC+uT/Av1WkOqJYzX9FNpi/XxvUS6cod
+         9SYT77iPpOVgZqkY4g/G3/jS8YRC6TpXJSoA5et4DNAS9LDnO3LZDIFxmnFtDzJGSXMe
+         IgK0mCSOhWB+xQ1TPGkaU5R/Ss9Gf5WImov7v0LFtanYQd+Q09iBX3/iC450xXnDYGh/
+         z3Vw==;
         darn=vger.kernel.org
 ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1790464333; x=1791069133; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1790545470; x=1791150270; darn=vger.kernel.org;
         h=content-transfer-encoding:content-type:cc:to:subject:message-id
          :date:from:in-reply-to:references:mime-version:from:to:cc:subject
          :date:message-id:reply-to:content-type;
-        bh=eDVjq6e9qHtHgOdz81PWcHYM3LUooF6QpX6TN4vA1tE=;
-        b=HDlJM8nMc65A/SSqljwT5bmxj/scV426YKXajnUppGJIPYDBEzY9JGiBpnN9QjjYp+
-         HdkLnYuIAbG8VxwHR1b324fhUM/9/YZ09dHKq23OsPVtXOppJFZ5xs2tMFVWHHB9a+/m
-         g5RY0s5QGIlrieRFWBcJXNsW2ExxJHCbouDCQyFl7xjFW+kGhBIu03tW/DltbyQFW0gL
-         LOEZaQTVKdrKjK0d4eRu6tKW09ZQwoyf+4cn4ZNfRgmIo+i2nZqUUQKLdsqlBIIjGSzJ
-         rO0cPAonBw2X5pNONCKC0bbrS5v5X4sAJUg25BniFPCPSNaPh3Nu8PEI7/wHY6f7Cc/v
-         JS0A==
+        bh=y119z7sdl3qfjHiuF1t57ekDKg+i4BGISMvCcdxAaw0=;
+        b=uTkSzuSHeQFmSzU++DibyNABe/iMCmlnuZARLW+oPzV+mFV1OkuEV8PJE0U/YcZjPu
+         4mdU2eIzXntTN8extHtdUTrWM0zlxBCZlHb8yTSX7CxOUY6W+8uJvAsp6vrhsSd33NFV
+         gcB7PaSBopm59ICDkX0U+WkQ4ATVyRuqFw2DDw7CtGKI6dAG5d8otg5kCek5HIVxoG/C
+         dkESqKBViUiH3IjEVCXruxR284rpAEt+hOVcmMqjzQ74w6oWQNvgWISvUzAPqyATz/PT
+         WuGi5gc6LeFYHTgnPi01hn3LJr/iLZP32H7tARvOSNHlS/ETUVvvw7raXIFIU4kjf6b/
+         nHDA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1790464333; x=1791069133;
+        d=1e100.net; s=20260707; t=1790545470; x=1791150270;
         h=content-transfer-encoding:content-type:cc:to:subject:message-id
          :date:from:in-reply-to:references:mime-version:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=eDVjq6e9qHtHgOdz81PWcHYM3LUooF6QpX6TN4vA1tE=;
-        b=wLGOoh5e/yTbvgshlaspIDNTiyG4bj8BE7Ol9BbNigvvWFwl/PgKBwXMKeMItwnNeH
-         Ep4xTCf0zwHataYCSlIDd6lL7s95NEtg50vJ0m7zTJTXlMSpA3XSaMSR/hqeqLFR3jO4
-         WkGeokma7/4hJW+rDFodssz8MkAZrOI+rbFqZjgkYone8bdoD8nQ5YTufo4u3Y2lLsVY
-         r9kTz1a5ccXhWLt82irZvSMGCTg0EQGjxROuv3Pk62fPx0kpPyL0qlVQvwrj22p3dVzy
-         EmTfQJi1EyoJqLFeJlPuORoyzXpp4MPpYfQO+3cvMparAjCBVT0GAn222Kbr1eRQDoOn
-         AWbw==
-X-Forwarded-Encrypted: i=1; AKwUvBzSIYFsWZkTmFxOJ5wh9erTTmn1BoJTGBc5rWT7ZCZzGwbnimAp0Nz+utTD25JnnLU80Ck4YAIGKwA+7cK6sb0a@vger.kernel.org
-X-Gm-Message-State: AFuF++lfETqAnBTYh/Q8/3eIftBGouHmNX/gQhQ+mJxQ8jRDybXiaz47
-	Wm9mI3ABDBoxuF8GvgceinIY1n/6h/YXXtm+516JbW5LQI3DDyLKGLLtBgoTCh3vVWZ0pzch1jb
-	aj3vXwIMGw8HSf3LsItkf1ZdJgT0m0sCX+zHUy11ig/Rywbzvovznz53nH8Y=
-X-Gm-Gg: AYBFou3iHd9WuUdoj+l0pW9Fu1YWTpC+pEFvROsjOlV5GRvjrc/wZAVLHFgCMajblqc
-	PC45+ZlT/YAOwtPvxxuN13jCPqxzxgfG9sHoVoGZc3diXUPFCKX5AuUOkXp+Ib4vBCJKKFAucBM
-	Dfump0pcwYz72HfCoMobne/1b3B7NTRZ9DaxlTSD60RRHrQn0m0h2PA6xMnjKZFTSO3MI/VhFQP
-	yGjIljGpZtYULLQdnh284vc+uXLWQx8NYItCt7r6w+Z7z4R3MTc55aku4pNaxVzKZ+maPSt/iyg
-	QCGgXGwD4gtz+IEJjmSRW2E3eKXIlUqgGIu+DrebWcFuPTrPWaDf/nE=
-X-Received: by 2002:a05:622a:598c:b0:532:858d:e791 with SMTP id
- d75a77b69052e-533201552e2mr16816101cf.8.1790464332218; Sat, 26 Sep 2026
- 16:12:12 -0700 (PDT)
+        bh=y119z7sdl3qfjHiuF1t57ekDKg+i4BGISMvCcdxAaw0=;
+        b=jPJUXj9HEO+eOB/uhXhzeUp6UpY58qDU5ymelNrcH+PuNiAr6EFuVCEypFduz66skq
+         noRkK81bWmOBunzPWhy8xSh6zGMiq6Z9PPWNNRUBydBqqOmmAjyGzLPUXsBlzzd1gfLv
+         b2tzAIXkHDvkrN4Z0yezrubzb3rcW3eZgniCNQok3sYCVieapV7zkoRV6fGKM38MBFb4
+         umRjSCGmhbX9hGHaSAKUR8Siw7RqJGnlDLMD+ZiNz4ELC/COQKR/NWJyK1Gpb2ALlpIh
+         c+xlWmdAydXhASAJEn5q2K7nsLmH9lb2+kAU+1Zz3yQK+UidRldmBXjwIlZMj3jXr6lv
+         QSQw==
+X-Forwarded-Encrypted: i=1; AKwUvBzN1a3Xoz4QrN7coBMPKgzVzTBFBHz6Xv2FCtXw85hxdYQPeCh4mvQ21qEyvkH0VbAJoeh+qepy6FkzaHDbdfLm@vger.kernel.org
+X-Gm-Message-State: AFuF++msrGrI9TSb9VcVWB2MNcT8aB0eHeD/XtxM0icM4so3i/jhy3Zl
+	ZJxcOFsHervF1AUanw9kZBYaH49evzhDRvjyCS768QFip76uzuO9ynwr14bvs0IHHI2fzxMs3x+
+	W4opoWZtH+4S2ychGy6mVOaNVMFp09xrqFuN0heQ+
+X-Gm-Gg: AYBFou0XLz40pZFz8sZA27bfDGI5Ut62ZkCxmAVZ4b7tXJH9rAI8eS9yNINhtVDySRl
+	XwUI4c8lfKxm9z567pFh/qHYatKtlb2aduFvr9fYCReQ5P55L6fzz4v4vJ3BGG6imSo7cFNVjEO
+	WFVpnVj52nR8NLoNgBRvSWYo+pg7wsT9Wy1Uc8ULPXJum6LF8qxuooayUXAueJ7wfkHGnkEo2i+
+	BrVR8VPsB8FeBv6rJAYK8fUttWMYQHoJgDCybLnjhI+YKZjKeLpMXKCwUzssecRWsaZ9uqKnXeD
+	Nn5IsnYQsPIBfTcWl5dp5XY4gGJUY+NDLJrMC/XCYpWUfCSaMnzhWA==
+X-Received: by 2002:ac8:6104:0:b0:530:e00f:7768 with SMTP id
+ d75a77b69052e-5331fed98dfmr23915841cf.0.1790545469472; Sun, 27 Sep 2026
+ 14:44:29 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260923181213.3032038-1-irogers@google.com> <20260926062029.800743-1-irogers@google.com>
- <argt6raEAmM4e9PI@x2> <CAP-5=fXvENrH1PrQvQmA22h_XRTB_f_ez_sFU9him6dU4uH0Ew@mail.gmail.com>
-In-Reply-To: <CAP-5=fXvENrH1PrQvQmA22h_XRTB_f_ez_sFU9him6dU4uH0Ew@mail.gmail.com>
-From: Ian Rogers <irogers@google.com>
-Date: Sat, 26 Sep 2026 16:11:59 -0700
-X-Gm-Features: AclHuK-O3MFQHs4G5cM9DnMobIzdgtSjzHFYo5qRrntHk_NSBP0G7gxpBZrcg9I
-Message-ID: <CAP-5=fWFef2eS0fk7wQ9zyiHZBNf=_4aAVXaXpyfSnr0thf2rw@mail.gmail.com>
-Subject: Re: [PATCH v4 00/49] perf: Complete transition to standalone Python scripts
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: alice.mei.rogers@gmail.com, james.clark@linaro.org, leo.yan@linux.dev, 
-	namhyung@kernel.org, adrian.hunter@intel.com, dapeng1.mi@linux.intel.com, 
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
-	mingo@redhat.com, peterz@infradead.org, tmricht@linux.ibm.com
+References: <20260917-b4-mmap-prepare-vma-flag-sanify-v3-0-4583d8a23bca@kernel.org>
+ <20260917-b4-mmap-prepare-vma-flag-sanify-v3-8-4583d8a23bca@kernel.org>
+In-Reply-To: <20260917-b4-mmap-prepare-vma-flag-sanify-v3-8-4583d8a23bca@kernel.org>
+From: Suren Baghdasaryan <surenb@google.com>
+Date: Sun, 27 Sep 2026 14:44:18 -0700
+X-Gm-Features: AclHuK-2F2ckU1C-yxhObu0QhsQKrsVKTug_h-Hi9fsC16ALl2HO1fuDhZLvMkI
+Message-ID: <CAJuCfpEawD2NUO9EoqKnR6YR59XMdYrtUrj8KEwJVwO8AOk8Lw@mail.gmail.com>
+Subject: Re: [PATCH v3 08/40] mm: add mmap action for discontiguous kernel
+ page mapping
+To: "Lorenzo Stoakes (ARM)" <ljs@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>, "Liam R. Howlett" <liam@infradead.org>, 
+	Vlastimil Babka <vbabka@kernel.org>, Jann Horn <jannh@google.com>, Pedro Falcato <pfalcato@suse.de>, 
+	David Hildenbrand <david@kernel.org>, Mike Rapoport <rppt@kernel.org>, Michal Hocko <mhocko@suse.com>, 
+	Jonathan Corbet <corbet@lwn.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>, Jason Gunthorpe <jgg@ziepe.ca>, 
+	Leon Romanovsky <leon@kernel.org>, Paul Moore <paul@paul-moore.com>, 
+	Stephen Smalley <stephen.smalley.work@gmail.com>, Jaroslav Kysela <perex@perex.cz>, 
+	Takashi Iwai <tiwai@suse.com>, Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	Andrii Nakryiko <andrii@kernel.org>, Eduard Zingerman <eddyz87@gmail.com>, 
+	Kumar Kartikeya Dwivedi <memxor@gmail.com>, Zi Yan <ziy@nvidia.com>, 
+	Baolin Wang <baolin.wang@linux.alibaba.com>, Nico Pache <nico.pache@linux.dev>, 
+	Ryan Roberts <ryan.roberts@arm.com>, Dev Jain <dev.jain@arm.com>, Barry Song <baohua@kernel.org>, 
+	Lance Yang <lance.yang@linux.dev>, Usama Arif <usama.arif@linux.dev>, 
+	Kiryl Shutsemau <kas@kernel.org>, Doug Gilbert <dgilbert@interlog.com>, 
+	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>, 
+	"Martin K. Petersen" <mkp@kernel.org>, Jaya Kumar <jayalk@intworks.biz>, Simona Vetter <simona@ffwll.ch>, 
+	Helge Deller <deller@gmx.de>, Sebastian Reichel <sre@kernel.org>, John Hubbard <jhubbard@nvidia.com>, 
+	Peter Xu <peterx@redhat.com>, Masami Hiramatsu <mhiramat@kernel.org>, Oleg Nesterov <oleg@redhat.com>, 
+	Peter Zijlstra <peterz@infradead.org>, Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>, 
+	Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, Rik van Riel <riel@surriel.com>, Harry Yoo <harry@kernel.org>, 
+	Juri Lelli <juri.lelli@redhat.com>, Vincent Guittot <vincent.guittot@linaro.org>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Will Deacon <will@kernel.org>, 
+	"Aneesh Kumar K.V" <aneesh.kumar@kernel.org>, Nick Piggin <npiggin@gmail.com>, 
+	Arnd Bergmann <arnd@arndb.de>, Muchun Song <muchun.song@linux.dev>, 
+	Oscar Salvador <osalvador@suse.de>, "Matthew Wilcox (Oracle)" <willy@infradead.org>, Jan Kara <jack@suse.cz>, 
+	Marc Zyngier <maz@kernel.org>, Oliver Upton <oupton@kernel.org>, 
+	Catalin Marinas <catalin.marinas@arm.com>, Madhavan Srinivasan <maddy@linux.ibm.com>, 
+	Anup Patel <anup@brainfault.org>, Paul Walmsley <pjw@kernel.org>, 
+	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
+	Christian Borntraeger <borntraeger@linux.ibm.com>, Janosch Frank <frankja@linux.ibm.com>, 
+	Claudio Imbrenda <imbrenda@linux.ibm.com>, Alexander Gordeev <agordeev@linux.ibm.com>, 
+	Gerald Schaefer <gerald.schaefer@linux.ibm.com>, Heiko Carstens <hca@linux.ibm.com>, 
+	Vasily Gorbik <gor@linux.ibm.com>, "David S. Miller" <davem@davemloft.net>, 
+	Andreas Larsson <andreas@gaisler.com>, Alexander Viro <viro@zeniv.linux.org.uk>, 
+	Christian Brauner <brauner@kernel.org>, Matthew Brost <matthew.brost@intel.com>, 
+	Joshua Hahn <joshua.hahnjy@gmail.com>, Rakie Kim <rakie.kim@sk.com>, 
+	Byungchul Park <byungchul@sk.com>, Gregory Price <gourry@gourry.net>, 
+	Ying Huang <ying.huang@linux.alibaba.com>, Alistair Popple <apopple@nvidia.com>, 
+	Chris Li <chrisl@kernel.org>, Kairui Song <kasong@tencent.com>, 
+	Kemeng Shi <shikemeng@huaweicloud.com>, Nhat Pham <nphamcs@gmail.com>, 
+	Baoquan He <baoquan.he@linux.dev>, Youngjun Park <youngjun.park@lge.com>, 
+	Johannes Weiner <hannes@cmpxchg.org>, Qi Zheng <qi.zheng@linux.dev>, 
+	Shakeel Butt <shakeel.butt@linux.dev>, Axel Rasmussen <axelrasmussen@google.com>, 
+	Yuanchu Xie <yuanchu@google.com>, Wei Xu <weixugc@google.com>, 
+	Chengming Zhou <chengming.zhou@linux.dev>, Michal Hocko <mhocko@kernel.org>, 
+	Miklos Szeredi <miklos@szeredi.hu>, Xu Xin <xu.xin@linux.dev>, linux-mm@kvack.org, 
+	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
+	linux-usb@vger.kernel.org, linux-rdma@vger.kernel.org, 
+	selinux@vger.kernel.org, linux-sound@vger.kernel.org, bpf@vger.kernel.org, 
+	linux-scsi@vger.kernel.org, linux-fbdev@vger.kernel.org, 
+	dri-devel@lists.freedesktop.org, linux-trace-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, linux-arch@vger.kernel.org, 
+	linux-fsdevel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	kvmarm@lists.linux.dev, linuxppc-dev@lists.ozlabs.org, kvm@vger.kernel.org, 
+	kvm-riscv@lists.infradead.org, linux-riscv@lists.infradead.org, 
+	linux-s390@vger.kernel.org, sparclinux@vger.kernel.org, 
+	fuse-devel@lists.linux.dev
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Sat, Sep 26, 2026 at 3:46=E2=80=AFPM Ian Rogers <irogers@google.com> wro=
-te:
+On Thu, Sep 17, 2026 at 9:27=E2=80=AFAM Lorenzo Stoakes (ARM) <ljs@kernel.o=
+rg> wrote:
 >
-> On Sat, Sep 26, 2026 at 1:41=E2=80=AFPM Arnaldo Carvalho de Melo
-> <acme@kernel.org> wrote:
-> >
-> > On Fri, Sep 25, 2026 at 11:19:27PM -0700, Ian Rogers wrote:
-> > > The perf script command has historically supported running Python and=
- Perl
-> > > scripts by embedding libpython and libperl. That approach has several
-> > > drawbacks:
-> > >  - high overhead from constructing Python dictionaries for every even=
-t
-> > >    (whether used by the script or not),
-> > >  - complex build dependencies on specific Python/Perl libraries,
-> > >  - threading and interpreter lifecycle complications from embedding t=
-he
-> > >    interpreter inside perf,
-> > >  - no unified model for standalone scripts such as ilist.py, treport.=
-py,
-> > >    tracepoint.py, and twatch.py.
-> >
-> > So I applied it and tested on the containers, make -C tools/perf
-> > build-test and 'perf test', that has some flakiness running the new
-> > tests for these python scripts in parallel, nothing that prevents it
-> > from being merged now tho:
-> >
-> > =3D=3D=3D Test Summary =3D=3D=3D
-> > Passed main tests : 146
-> > Passed subtests   : 156
-> > Skipped tests     : 28
-> > Failed tests      : 13
-> > List of failed tests:
-> >    72: Test dwarf unwind
-> >    88: daemon operations
-> >   101: perf kvm tests
-> >   111: perf record tests
-> >   112: perf record sample filtering (by BPF) tests
-> >   117: perf sched tests
-> >   137: check-perf-trace python test
-> >   138: compaction-times python test
-> >   141: failed-syscalls-by-pid python test
-> >   142: failed-syscalls python test
-> >   144: futex-contention python test
-> >   157: sctop python test
-> >   159: stat-cpi python test
-> > root@x2:~# perf test 72
-> >  72: Test dwarf unwind                                                 =
-                                        : Ok
-> >
-> > =3D=3D=3D Test Summary =3D=3D=3D
-> > Passed main tests : 1
-> > Passed subtests   : 0
-> > Skipped tests     : 0
-> > Failed tests      : 0
-> > root@x2:~# perf test 88
-> >  88: daemon operations                                                 =
-                                        : Ok
-> >
-> > =3D=3D=3D Test Summary =3D=3D=3D
-> > Passed main tests : 1
-> > Passed subtests   : 0
-> > Skipped tests     : 0
-> > Failed tests      : 0
-> > root@x2:~# perf test 101
-> > 101: perf kvm tests                                                    =
-                                        : Ok
-> >
-> > =3D=3D=3D Test Summary =3D=3D=3D
-> > Passed main tests : 1
-> > Passed subtests   : 0
-> > Skipped tests     : 0
-> > Failed tests      : 0
-> > root@x2:~# perf test 112 ; perf test 117 ; perf test 137 ; perf test 14=
-1 ; perf test 142 ; perf test 144 ; perf test 157; perf test 159
-> > 112: perf record sample filtering (by BPF) tests                       =
-                                        : Ok
-> >
-> > =3D=3D=3D Test Summary =3D=3D=3D
-> > Passed main tests : 1
-> > Passed subtests   : 0
-> > Skipped tests     : 0
-> > Failed tests      : 0
-> > 117: perf sched tests                                                  =
-                                        : Ok
-> >
-> > =3D=3D=3D Test Summary =3D=3D=3D
-> > Passed main tests : 1
-> > Passed subtests   : 0
-> > Skipped tests     : 0
-> > Failed tests      : 0
-> > 137: check-perf-trace python test                                      =
-                                        : Ok
-> >
-> > =3D=3D=3D Test Summary =3D=3D=3D
-> > Passed main tests : 1
-> > Passed subtests   : 0
-> > Skipped tests     : 0
-> > Failed tests      : 0
-> > 141: failed-syscalls-by-pid python test                                =
-                                        : Ok
-> >
-> > =3D=3D=3D Test Summary =3D=3D=3D
-> > Passed main tests : 1
-> > Passed subtests   : 0
-> > Skipped tests     : 0
-> > Failed tests      : 0
-> > 142: failed-syscalls python test                                       =
-                                        : Ok
-> >
-> > =3D=3D=3D Test Summary =3D=3D=3D
-> > Passed main tests : 1
-> > Passed subtests   : 0
-> > Skipped tests     : 0
-> > Failed tests      : 0
-> > 144: futex-contention python test                                      =
-                                        : Ok
-> >
-> > =3D=3D=3D Test Summary =3D=3D=3D
-> > Passed main tests : 1
-> > Passed subtests   : 0
-> > Skipped tests     : 0
-> > Failed tests      : 0
-> > 157: sctop python test                                                 =
-                                        : Ok
-> >
-> > =3D=3D=3D Test Summary =3D=3D=3D
-> > Passed main tests : 1
-> > Passed subtests   : 0
-> > Skipped tests     : 0
-> > Failed tests      : 0
-> > 159: stat-cpi python test                                              =
-                                        : Ok
-> >
-> > =3D=3D=3D Test Summary =3D=3D=3D
-> > Passed main tests : 1
-> > Passed subtests   : 0
-> > Skipped tests     : 0
-> > Failed tests      : 0
-> > root@x2:~# uname -a
-> > Linux x2 7.2.5-200.fc44.x86_64 #1 SMP PREEMPT_DYNAMIC Fri Sep 11 15:11:=
-05 UTC 2026 x86_64 GNU/Linux
-> > root@x2:~# cat /etc/os-release
-> > NAME=3D"Fedora Linux"
-> > VERSION=3D"44 (Workstation Edition)"
-> > RELEASE_TYPE=3Dstable
-> > ID=3Dfedora
-> > VERSION_ID=3D44
-> > VERSION_CODENAME=3D""
-> > PRETTY_NAME=3D"Fedora Linux 44 (Workstation Edition)"
-> > ANSI_COLOR=3D"0;38;2;60;110;180"
-> > LOGO=3Dfedora-logo-icon
-> > CPE_NAME=3D"cpe:/o:fedoraproject:fedora:44"
-> > DEFAULT_HOSTNAME=3D"fedora"
-> > HOME_URL=3D"https://fedoraproject.org/"
-> > DOCUMENTATION_URL=3D"https://docs.fedoraproject.org/en-US/fedora/f44/"
-> > SUPPORT_URL=3D"https://ask.fedoraproject.org/"
-> > BUG_REPORT_URL=3D"https://bugzilla.redhat.com/"
-> > REDHAT_BUGZILLA_PRODUCT=3D"Fedora"
-> > REDHAT_BUGZILLA_PRODUCT_VERSION=3D44
-> > REDHAT_SUPPORT_PRODUCT=3D"Fedora"
-> > REDHAT_SUPPORT_PRODUCT_VERSION=3D44
-> > SUPPORT_END=3D2027-05-19
-> > VARIANT=3D"Workstation Edition"
-> > VARIANT_ID=3Dworkstation
-> > root@x2:~#
+> The existing kernel page mapping mmap actions allow for partial and full
+> mapping of an array of struct page pointers.
 >
-> That's great! I'll dig into the flakes.
+> However some drivers require the mapping of discontiguous ranges. Permit
+> this by providing discontig_kernel_page_ops which allows a driver to
+> specify how the operation should begin and how batches of pages should be
+> retrieved.
+>
+> It uses the minimum exposed interface to do so, providing address, page
+> offset and both vm_private_data state and a local private state object.
+>
+> ops->init can establish state for the operation, and ops->get outputs the
+> pages to map and their count. Should an error arise the core unmaps the
+> VMA, invoking vm_ops->close, which is therefore where any state establish=
+ed
+> by ops->init is released.
+>
+> Batches may not exceed the VMA, but may map less than its full range in
+> case the driver wishes to allow the user to map an area larger than the
+> available data.
+>
+> To use it, users invoke mmap_action_map_discontig_kernel_pages() with
+> initial local private state and a set of operations.
+>
+> Users can then use one of the provided helper functions to perform an
+> action:
+>
+> * discontig_kernel_map_abort() - Abort and leave the mapping as it has
+>   been accumulated so far.
+> * discontig_kernel_map_page() - Map a single page, or a compound page giv=
+en
+>   its head page.
+> * discontig_kernel_map_page_range() - Maps a struct page ** array of a
+>   specified count.
+>
+> The userland VMA tests are updated accordingly.
+>
+> Signed-off-by: Lorenzo Stoakes (ARM) <ljs@kernel.org>
+> ---
+>  include/linux/mm.h              |  45 +++++++++++++++++
+>  include/linux/mm_types.h        |  44 +++++++++++++++-
+>  mm/internal.h                   |   3 ++
+>  mm/memory.c                     | 108 ++++++++++++++++++++++++++++++++++=
+++++--
+>  mm/util.c                       |   7 +++
+>  tools/testing/vma/include/dup.h |  11 +++-
+>  6 files changed, 209 insertions(+), 9 deletions(-)
+>
+> diff --git a/include/linux/mm.h b/include/linux/mm.h
+> index a1f2d375cf7d..2a92193ac6a5 100644
+> --- a/include/linux/mm.h
+> +++ b/include/linux/mm.h
+> @@ -4647,10 +4647,55 @@ static inline void mmap_action_map_kernel_pages_f=
+ull(struct vm_area_desc *desc,
+>                                      vma_desc_pages(desc));
+>  }
+>
+> +static inline
+> +void mmap_action_map_discontig_kernel_pages(struct vm_area_desc *desc,
+> +               void *init_private, const struct discontig_kernel_page_op=
+s *ops)
+> +{
+> +       struct mmap_action *action =3D &desc->action;
+> +
+> +       action->type =3D MMAP_DISCONTIG_KERNEL_PAGES;
+> +       action->map_kernel_discontig.init_private =3D init_private;
+> +       action->map_kernel_discontig.ops =3D ops;
+> +}
+> +
+>  int mmap_action_prepare(struct vm_area_desc *desc);
+>  int mmap_action_complete(struct vm_area_struct *vma,
+>                          struct mmap_action *action, bool is_compat);
+>
+> +static inline void
+> +discontig_kernel_map_abort(struct discontig_kernel_page_state *state)
+> +{
+> +       state->action =3D DISCONTIG_KERNEL_PAGE_ABORT;
+> +}
+> +
+> +static inline void
+> +discontig_kernel_map_page(struct discontig_kernel_page_state *state,
+> +                         struct page *page)
+> +{
+> +       struct folio *folio =3D page_folio(page);
+> +
+> +       if (folio_test_large(folio)) {
+> +               VM_WARN_ON_ONCE(page !=3D folio_page(folio, 0));
+> +               state->action =3D DISCONTIG_KERNEL_PAGE_MAP_COMPOUND_PAGE=
+;
+> +               state->__folio =3D folio;
+> +               state->__nr_pages =3D min(state->nr_pages_remain,
+> +                                       folio_nr_pages(folio));
+> +       } else {
+> +               state->action =3D DISCONTIG_KERNEL_PAGE_MAP_PAGE;
+> +               state->__page =3D page;
+> +               state->__nr_pages =3D 1;
+> +       }
+> +}
+> +
+> +static inline void
+> +discontig_kernel_map_page_range(struct discontig_kernel_page_state *stat=
+e,
+> +                               struct page **page_arr, unsigned long nr_=
+pages)
+> +{
+> +       state->action =3D DISCONTIG_KERNEL_PAGE_MAP_PAGE_RANGE;
+> +       state->__page_arr =3D page_arr;
+> +       state->__nr_pages =3D nr_pages;
 
-Just to add, testing with perf-tools-next:
-```
-$ make -C tools/perf O=3D/tmp/perf DESTDIR=3D/tmp/perf-install DEBUG=3D1 in=
-stall
-...
-$ PERF_EXEC_PATH=3D/tmp/perf-install/libexec/perf-core
-/tmp/perf-install/bin/perf script -l
-List of available scripts:
-  arm-cs-trace-disasm                  arm-cs-trace-disasm.py: ARM
-CoreSight Trace Dump With Disassembler
-  check-perf-trace                     Basic test of Python scripting
-support for perf.
-  compaction-times                     Report time spent in memory compacti=
-on.
-  counting                             Example for counting perf events.
-  event_analyzing_sample               General event handler in
-Python, using SQLite to analyze events.
-  export-to-postgresql                 Export perf data to a
-postgresql database.
-  export-to-sqlite                     Export perf data to a sqlite3 databa=
-se.
-  exported-sql-viewer                  exported-sql-viewer.py: view
-data from sql database.
-  failed-syscalls                      Failed system call counts.
-  failed-syscalls-by-pid               Displays system-wide failed
-system call totals, broken down by pid.
-  flamegraph                           flamegraph.py - create flame
-graphs from perf samples using perf python module
-  futex-contention                     Measures futex contention.
-  gecko                                gecko.py - Convert perf record
-output to Firefox's gecko profile format
-  ilist                                Interactive perf list.
-  intel-pt-events                      Print Intel PT Events including
-Power Events and PTWRITE.
-  libxed                               Python wrapper for libxed.so
-  mem-phys-addr                        mem-phys-addr.py: Resolve
-physical address samples
-  net_dropmonitor                      Monitor the system for dropped
-packets and produce a report of drop locations and counts.
-  netdev-times                         Display a process of packets
-and processed time.
-  parallel-perf                        Parallel perf script.
-  perf_live                            Live event session helper using
-perf.evlist.
-  powerpc-hcalls                       Hypervisor call statistics
-  rw-by-file                           Display r/w activity for files
-read/written to for a given program.
-  rw-by-pid                            Display r/w activity for all process=
-es.
-  rwtop                                Periodically displays
-system-wide r/w call activity, broken down by pid.
-  sched-migration                      Cpu task migration overview toy
-  SchedGui                             SchedGui.py - Python extension
-for perf script, basic GUI code for traces drawing and overview.
-  sctop                                System call top
-  stackcollapse                        stackcollapse.py - format perf
-samples with one line per distinct call stack
-  stat-cpi                             Calculate CPI from perf stat
-data or live.
-  syscall-counts                       Displays system-wide system
-call totals, broken down by syscall.
-  syscall-counts-by-pid                Displays system-wide system
-call totals, broken down by syscall.
-  task-analyzer                        Comprehensive perf tasks analysis.
-  tracepoint                           Example showing how to enable a
-tracepoint and access its fields.
-  treport                              treport.py - perf report like
-tool written using textual.
-  twatch                               Example to show how to enable a
-software event and track context switches.
-  wakeup-latency                       Display avg/min/max wakeup latency.
-$ sudo bash -c "PERF_EXEC_PATH=3D/tmp/perf-install/libexec/perf-core
-/tmp/perf-install/bin/perf script ilist"
-...
-```
-:-D
+Shouldn't we cap state->__nr_pages at state->nr_pages_remain like you
+do in discontig_kernel_map_page()?
 
-Thanks!
-Ian
+> +}
+> +
+>  /* Look up the first VMA which exactly match the interval vm_start ... v=
+m_end */
+>  static inline struct vm_area_struct *find_exact_vma(struct mm_struct *mm=
+,
+>                                 unsigned long vm_start, unsigned long vm_=
+end)
+> diff --git a/include/linux/mm_types.h b/include/linux/mm_types.h
+> index 9ca2ea3664bc..0cb4f9603956 100644
+> --- a/include/linux/mm_types.h
+> +++ b/include/linux/mm_types.h
+> @@ -818,8 +818,44 @@ enum mmap_action_type {
+>         MMAP_NOTHING,
+>         MMAP_REMAP_PFN,
+>         MMAP_IO_REMAP_PFN,
+> -       MMAP_SIMPLE_IO_REMAP,   /* I/O remap with guardrails. */
+> -       MMAP_KERNEL_PAGES,      /* Map kernel page range from array. */
+> +       MMAP_SIMPLE_IO_REMAP,           /* I/O remap with guardrails. */
+> +       MMAP_KERNEL_PAGES,              /* Map kernel page range from arr=
+ay. */
+> +       MMAP_DISCONTIG_KERNEL_PAGES,    /* Map kernel discontig page rang=
+e. */
+> +};
+> +
+> +enum discontig_kernel_page_action {
+> +       DISCONTIG_KERNEL_PAGE_ABORT,
+> +       DISCONTIG_KERNEL_PAGE_MAP_PAGE,
+> +       DISCONTIG_KERNEL_PAGE_MAP_COMPOUND_PAGE,
+> +       DISCONTIG_KERNEL_PAGE_MAP_PAGE_RANGE,
+> +};
+> +
+> +struct discontig_kernel_page_state {
+> +       /* Map state. */
+> +       const unsigned long start;      /* Start address of VMA. */
+> +       const unsigned long end;        /* End address of VMA. */
+> +       unsigned long addr;             /* The current address to be mapp=
+ed. */
+> +       pgoff_t pgoff;                  /* The current pgoff to be mapped=
+. */
+> +       unsigned long nr_pages_mapped;  /* The number of pages mapped. */
+> +       unsigned long nr_pages_remain;  /* The number of pages remaining.=
+ */
+> +
+> +       /* User-defined state. */
+> +       void *vm_private_data;          /* VMA private data. */
+> +       void *private;                  /* Mapping private data. */
+> +
+> +       /* Users should not touch these, use discontig_kernel_map_*() hel=
+pers. */
+> +       enum discontig_kernel_page_action action;
+> +       union {
+> +               struct page *__page;
+> +               struct folio *__folio;
+> +               struct page **__page_arr;
+> +       };
+> +       unsigned long __nr_pages;
+> +};
+> +
+> +struct discontig_kernel_page_ops {
+> +       int (*init)(void *vm_private_data, void **private);
+> +       int (*get)(struct discontig_kernel_page_state *state);
+>  };
+>
+>  /*
+> @@ -844,6 +880,10 @@ struct mmap_action {
+>                         unsigned long nr_pages;
+>                         pgoff_t pgoff;
+>                 } map_kernel;
+> +               struct {
+> +                       void *init_private;
+> +                       const struct discontig_kernel_page_ops *ops;
+> +               } map_kernel_discontig;
+>         };
+>         enum mmap_action_type type;
+>
+> diff --git a/mm/internal.h b/mm/internal.h
+> index c767007c2187..b81fce5fe510 100644
+> --- a/mm/internal.h
+> +++ b/mm/internal.h
+> @@ -1516,6 +1516,9 @@ int simple_ioremap_prepare(struct vm_area_desc *des=
+c);
+>  int map_kernel_pages_prepare(struct vm_area_desc *desc);
+>  int map_kernel_pages_complete(struct vm_area_struct *vma,
+>                               struct mmap_action *action);
+> +int map_discontig_kernel_pages_prepare(struct vm_area_desc *desc);
+> +int map_discontig_kernel_pages_complete(struct vm_area_struct *vma,
+> +                                       struct mmap_action *action);
+>
+>  static inline int io_remap_pfn_range_prepare(struct vm_area_desc *desc)
+>  {
+> diff --git a/mm/memory.c b/mm/memory.c
+> index 448342883e9d..45b21bb04a18 100644
+> --- a/mm/memory.c
+> +++ b/mm/memory.c
+> @@ -2609,17 +2609,23 @@ int vm_insert_pages(struct vm_area_struct *vma, u=
+nsigned long addr,
+>  }
+>  EXPORT_SYMBOL(vm_insert_pages);
+>
+> +static void __map_kernel_pages_prepare(struct vm_area_desc *desc)
+> +{
+> +       if (vma_desc_test(desc, VMA_MIXEDMAP_BIT))
+> +               return;
+> +
+> +       VM_WARN_ON_ONCE(mmap_read_trylock(desc->mm));
+> +       VM_WARN_ON_ONCE(vma_desc_test(desc, VMA_PFNMAP_BIT));
+> +       vma_desc_set_flags(desc, VMA_MIXEDMAP_BIT);
+> +}
+> +
+>  int map_kernel_pages_prepare(struct vm_area_desc *desc)
+>  {
+>         const struct mmap_action *action =3D &desc->action;
+>         const unsigned long addr =3D action->map_kernel.start;
+>         unsigned long nr_pages, end;
+>
+> -       if (!vma_desc_test(desc, VMA_MIXEDMAP_BIT)) {
+> -               VM_WARN_ON_ONCE(mmap_read_trylock(desc->mm));
+> -               VM_WARN_ON_ONCE(vma_desc_test(desc, VMA_PFNMAP_BIT));
+> -               vma_desc_set_flags(desc, VMA_MIXEDMAP_BIT);
+> -       }
+> +       __map_kernel_pages_prepare(desc);
+>
+>         nr_pages =3D action->map_kernel.nr_pages;
+>         end =3D addr + PAGE_SIZE * nr_pages;
+> @@ -2640,6 +2646,98 @@ int map_kernel_pages_complete(struct vm_area_struc=
+t *vma,
+>                             &nr_pages, vma->vm_page_prot);
+>  }
+>
+> +int map_discontig_kernel_pages_prepare(struct vm_area_desc *desc)
+> +{
+> +       const struct mmap_action *action =3D &desc->action;
+> +       const struct discontig_kernel_page_ops *ops =3D
+> +               action->map_kernel_discontig.ops;
+> +
+> +       /* At minimum need to be able to get pages. */
+> +       if (WARN_ON_ONCE(!ops || !ops->get))
+> +               return -EINVAL;
+> +
+> +       __map_kernel_pages_prepare(desc);
+> +       return 0;
+> +}
+> +
+> +static int apply_discontig_action(struct vm_area_struct *vma,
+> +                                 struct discontig_kernel_page_state *sta=
+te)
+> +{
+> +       unsigned long nr_pages =3D state->__nr_pages;
+> +       unsigned long addr =3D state->addr;
+> +       unsigned long i;
+> +
+> +       if (state->action =3D=3D DISCONTIG_KERNEL_PAGE_MAP_PAGE)
+> +               return insert_page(vma, addr, state->__page,
+> +                                  vma->vm_page_prot, /*mkwrite=3D*/false=
+);
+> +       if (state->action =3D=3D DISCONTIG_KERNEL_PAGE_MAP_PAGE_RANGE)
+> +               return insert_pages(vma, addr, state->__page_arr,
+> +                                   &nr_pages, vma->vm_page_prot);
+> +
+> +       /* Compound folio - have to iterate through each page. */
+> +       for (i =3D 0; i < nr_pages; i++, addr +=3D PAGE_SIZE) {
+> +               struct page *page =3D folio_page(state->__folio, i);
+> +               int err;
+> +
+> +               err =3D insert_page(vma, addr, page, vma->vm_page_prot,
+> +                                 /*mkwrite=3D*/false);
+> +               if (err)
+> +                       return err;
+> +       }
+> +       return 0;
+> +}
+> +
+> +int map_discontig_kernel_pages_complete(struct vm_area_struct *vma,
+> +                                       struct mmap_action *action)
+> +{
+> +       const struct discontig_kernel_page_ops *ops =3D
+> +               action->map_kernel_discontig.ops;
+> +       struct discontig_kernel_page_state state =3D {
+> +               .start =3D vma->vm_start,
+> +               .end =3D vma->vm_end,
+> +               .addr =3D vma->vm_start,
+> +               .pgoff =3D vma->vm_pgoff,
+> +               .nr_pages_mapped =3D 0,
+> +               .nr_pages_remain =3D vma_pages(vma),
+> +               .vm_private_data =3D vma->vm_private_data,
+> +               .private =3D action->map_kernel_discontig.init_private,
+> +       };
+> +       int err =3D 0;
+> +
+> +       if (ops->init)
+> +               err =3D ops->init(vma->vm_private_data, &state.private);
+> +       if (err)
+> +               return err;
+> +
+> +       do {
+> +               unsigned long end, pgoff_end;
+> +               unsigned long nr_pages;
+> +
+> +               /* Default to abort. */
+> +               state.action =3D DISCONTIG_KERNEL_PAGE_ABORT;
+> +               err =3D ops->get(&state);
+> +               if (err || state.action =3D=3D DISCONTIG_KERNEL_PAGE_ABOR=
+T)
+> +                       return err;
+> +               nr_pages =3D state.__nr_pages;
+> +
+> +               if (!nr_pages || nr_pages > state.nr_pages_remain)
+> +                       return -EINVAL;
+> +               end =3D state.addr + PAGE_SIZE * nr_pages;
+> +               pgoff_end =3D state.pgoff + nr_pages;
+> +
+> +               err =3D apply_discontig_action(vma, &state);
+> +               if (err)
+> +                       return err;
+> +
+> +               state.addr =3D end;
+> +               state.pgoff =3D pgoff_end;
+> +               state.nr_pages_mapped +=3D nr_pages;
+> +               state.nr_pages_remain -=3D nr_pages;
+> +       } while (state.addr < vma->vm_end);
+> +
+> +       return 0;
+> +}
+> +
+>  /**
+>   * vm_insert_page - insert single page into user vma
+>   * @vma: user vma to map to
+> diff --git a/mm/util.c b/mm/util.c
+> index 438170490e7f..c5ee52aede1e 100644
+> --- a/mm/util.c
+> +++ b/mm/util.c
+> @@ -1469,6 +1469,8 @@ int mmap_action_prepare(struct vm_area_desc *desc)
+>                 return simple_ioremap_prepare(desc);
+>         case MMAP_KERNEL_PAGES:
+>                 return map_kernel_pages_prepare(desc);
+> +       case MMAP_DISCONTIG_KERNEL_PAGES:
+> +               return map_discontig_kernel_pages_prepare(desc);
+>         }
+>
+>         WARN_ON_ONCE(1);
+> @@ -1501,6 +1503,9 @@ int mmap_action_complete(struct vm_area_struct *vma=
+,
+>         case MMAP_KERNEL_PAGES:
+>                 err =3D map_kernel_pages_complete(vma, action);
+>                 break;
+> +       case MMAP_DISCONTIG_KERNEL_PAGES:
+> +               err =3D map_discontig_kernel_pages_complete(vma, action);
+> +               break;
+>         case MMAP_IO_REMAP_PFN:
+>         case MMAP_SIMPLE_IO_REMAP:
+>                 /* Should have been delegated. */
+> @@ -1522,6 +1527,7 @@ int mmap_action_prepare(struct vm_area_desc *desc)
+>         case MMAP_IO_REMAP_PFN:
+>         case MMAP_SIMPLE_IO_REMAP:
+>         case MMAP_KERNEL_PAGES:
+> +       case MMAP_DISCONTIG_KERNEL_PAGES:
+>                 WARN_ON_ONCE(1); /* nommu cannot handle these. */
+>                 break;
+>         }
+> @@ -1543,6 +1549,7 @@ int mmap_action_complete(struct vm_area_struct *vma=
+,
+>         case MMAP_IO_REMAP_PFN:
+>         case MMAP_SIMPLE_IO_REMAP:
+>         case MMAP_KERNEL_PAGES:
+> +       case MMAP_DISCONTIG_KERNEL_PAGES:
+>                 WARN_ON_ONCE(1); /* nommu cannot handle this. */
+>
+>                 err =3D -EINVAL;
+> diff --git a/tools/testing/vma/include/dup.h b/tools/testing/vma/include/=
+dup.h
+> index 1098655a5f4a..1d5f6b3cbd21 100644
+> --- a/tools/testing/vma/include/dup.h
+> +++ b/tools/testing/vma/include/dup.h
+> @@ -457,14 +457,17 @@ enum mmap_action_type {
+>         MMAP_NOTHING,
+>         MMAP_REMAP_PFN,
+>         MMAP_IO_REMAP_PFN,
+> -       MMAP_SIMPLE_IO_REMAP,   /* I/O remap with guardrails. */
+> -       MMAP_KERNEL_PAGES,      /* Map kernel page range from array. */
+> +       MMAP_SIMPLE_IO_REMAP,           /* I/O remap with guardrails. */
+> +       MMAP_KERNEL_PAGES,              /* Map kernel page range from arr=
+ay. */
+> +       MMAP_DISCONTIG_KERNEL_PAGES,    /* Map kernel discontig page rang=
+e. */
+>  };
+>
+>  /*
+>   * Describes an action an mmap_prepare hook can instruct to be taken to =
+complete
+>   * the mapping of a VMA. Specified in vm_area_desc.
+>   */
+> +struct discontig_kernel_page_ops;
+> +
+>  struct mmap_action {
+>         union {
+>                 struct {
+> @@ -483,6 +486,10 @@ struct mmap_action {
+>                         unsigned long nr_pages;
+>                         pgoff_t pgoff;
+>                 } map_kernel;
+> +               struct {
+> +                       void *init_private;
+> +                       const struct discontig_kernel_page_ops *ops;
+> +               } map_kernel_discontig;
+>         };
+>         enum mmap_action_type type;
+>
+>
+> --
+> 2.55.0
+>
