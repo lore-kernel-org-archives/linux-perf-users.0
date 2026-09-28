@@ -1,44 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A956D50278E
-	for <linux-perf-users@vger.kernel.org>; Mon, 28 Sep 2026 22:16:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2595B2EEE9E
+	for <linux-perf-users@vger.kernel.org>; Mon, 28 Sep 2026 22:19:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790633776; cv=none; b=d/ghPAfi5sv6XPX/K0tZLxhTy83NJzNy0ebwe99rpMLZRyeADAo/g9PdH/9yG5B3V2bcbMGW6LufOyV54LA+6rQj29lXv91qHDonliKYsr945ohdrbGmdBHYEIQQKBlES0Qa3KtX679R7FbO3LBBDKk8KIq8DTLDBk5P0T5/4Yg=
+	t=1790633967; cv=none; b=F0kINvJtmRfo4snmUB1G1TgrRxM2JR8iTak8BlOwWvk/DFFaEm3Qok20HiEpoFyJVCHfI4x0Eh+WkI0vnWCYXqmLTDmTY2sP0y40P91FaaSx1aR7yNAFjEycNoxMNKqWhiQM60GxF6BY19czk3WNsfo5XhqO+jYbwRar9DI/8Q0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790633776; c=relaxed/simple;
-	bh=7zZJ84tkUDd8rC9/Bhk9aBK99bPXlPryXOc/+75t2S4=;
+	s=arc-20240116; t=1790633967; c=relaxed/simple;
+	bh=x6e0Q9pcXiODx/vgSe3/rWcTV3ShDz6z4M9kb2ToI2o=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=AT2LxmVYtYNI7yPsyWo05BuxLzO0AcmcM4k3yiCMdro75Vzqm4RIykRDcJpUOb6YAIM4CbaOb8IvlBzxX6/X5KvGkSAZudhLt0ZB6dNUFJUKUOhyIP0ZgS1NjzVct6aniMvkQX4WiPPNWbyL+ha1l30fqgi874zS3n1dySZCfs8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ac1rsK9x; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=A0NjP1PO65l5IT0bo+yhPzfQlW3Es3gucs7TRNnw7ndk62/Cg4y8wlIbTDyCHYt7pFuV9419hvAhrF3w6eGZ3rN2i/1IY6diebmRohJJwyLLg7sW6ADIokCKuH+hTOl5wZHgOyoSdZ5P1nyJQHI+wVgggYCerqEm3tW3nbAKIkY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=F7hvAyqx; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ac1rsK9x"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 12C1F1F000FF;
-	Mon, 28 Sep 2026 22:16:15 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="F7hvAyqx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 76D751F000FF;
+	Mon, 28 Sep 2026 22:19:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1790633775;
-	bh=k3slciu5uTXPLix0XMKCsoArTo6hJPbWMapf6tzgLk0=;
+	s=k20260515; t=1790633965;
+	bh=zR4X5U/6v9IfftlKC9CFkzptUszbVQ9CcoUJIs2PINs=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=ac1rsK9xnnSnVwnovMjcUHBcYBhURf+L4J32Gx6mNWcd0l9HQHEBw1yMHCEw6U9It
-	 F6BxREn48UfWnFduRhOPKgLt6uP/bMzCjj93m8lLgx/VgLL2HInyIqjG1eSFJZs9UA
-	 j3hIyo30aCH/yCjCyMLZ2mFmki/qeSAVYMwC9WWX0K2ZvxC7bcUki6+dCT0mUHZetr
-	 ddcyOM0idVuJLpkFpQ+mi6ogek8g211itlr1Zb6ATIc0kfT3IkLTwGdVKfYLwuqimY
-	 pZMQDH6yS18Pbp3xI02ZcDxI6+MQVh4sy4Jwx45I+ImeQKI4pREtoIlJ4XnvxZ/qIR
-	 b33KrJugM5gRQ==
+	b=F7hvAyqxE2IbFSl5xiSqG5Q+ecPiHoi/Jo4DI8lBEvrgKLcfeWBtdt6fEI8Wg5vdK
+	 v9bQFJdIPLOntg0hSCgOkqvwB31qct/S1KTI8zYHMkXeu+vXgRnNPV2j9txKadB6E8
+	 UtwJeotBiEQp1dZZKmBSPqijiAfFnVGVh2yV7j4bZ+gEM5hHtcPj/+hHQ8u2ed3qCs
+	 V19qfepCJqpo//Bkbl3HZLGjEcB+BXJ+LDYxTls8OpfUJG+BqsElescfw2ar/JKt7z
+	 uMBdtk+Uf/M1RrhI6PdxsBRG3k3DjpLbQelt9ZxpajQeXRu40DVOWV7UWv+LaQ89Na
+	 s/x3wGb2cEz/w==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 3/4] perf scripts: Add perf-stuck, to tell where a
- running perf is stuck
+Subject: Re: [PATCH 1/4] perf config: Move perf_config__set_variable() to
+ util/config.c
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Arnaldo Carvalho de Melo" <acme@kernel.org>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260928220634.2451784-4-acme@kernel.org>
+In-Reply-To: <20260928220634.2451784-2-acme@kernel.org>
 References: <20260928220634.2451784-1-acme@kernel.org>
- <20260928220634.2451784-4-acme@kernel.org>
+ <20260928220634.2451784-2-acme@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Mon, 28 Sep 2026 22:16:14 +0000
-Message-Id: <20260928221615.12C1F1F000FF@smtp.kernel.org>
+Date: Mon, 28 Sep 2026 22:19:24 +0000
+Message-Id: <20260928221925.76D751F000FF@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -47,48 +47,98 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
 Thank you for your contribution! Sashiko AI review found 1 potential issue(=
 s) to consider:
-- [Low] perf scripts: perf-dso GDB command fails on ASan/LSan builds
+- [High] perf: data race in bad_config() causes stack UAF
 --
 
-commit 3e959f0b96fd50b6f00f007448b2245cac82c305
+commit 861fbcb5738f68f4bf3fa7cf60e666d3e7639e45
 Author: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-perf scripts: Add perf-stuck, to tell where a running perf is stuck
+perf config: Move perf_config__set_variable() to util/config.c
 
-This commit introduces a prototype perf-stuck script and accompanying GDB
-script to identify where a running perf process is stuck. It samples /proc
-entries and can optionally use GDB to dump the DWARF DIE chain.
+This commit moves perf_config__set_variable() out of the builtin so opt-in
+features can persist their choice from outside it. It also serializes
+parsing and rewriting with a mutex since config file access can now run on
+more than one thread.
 
-> diff --git a/tools/perf/scripts/perf-stuck.gdb b/tools/perf/scripts/perf-=
-stuck.gdb
-> new file mode 100644
-> index 0000000000000..2022f83c6bfdc
-> --- /dev/null
-> +++ b/tools/perf/scripts/perf-stuck.gdb
+> diff --git a/tools/perf/util/config.c b/tools/perf/util/config.c
+> index 8fe43b032e9af..da4213a704899 100644
+> --- a/tools/perf/util/config.c
+> +++ b/tools/perf/util/config.c
 [ ... ]
-> +define perf-dso
-> +  if $_any_caller_is("find_data_type", 20)
-> +    frame function find_data_type
-> +    # REFCNT_CHECKING, implied by an ASan/LSan build, wraps struct map a=
-nd
-> +    # struct dso in a proxy keeping the real object in ->orig, so there =
-the
-> +    # dso is map->orig->dso->orig, giving map->orig->dso->orig->name her=
-e;
-> +    # struct symbol is not wrapped, so sym->name needs no ->orig.
-> +    printf "dso=3D%s ip=3D0x%lx sym=3D%s\n", dloc->ms->map->dso->name, d=
-loc->ip, dloc->ms->sym ? dloc->ms->sym->name : "(no symbol)"
+> @@ -926,6 +926,84 @@ void perf_config__exit(void)
+>  	config_set =3D NULL;
+>  }
+> =20
+> +int perf_config_set__write(struct perf_config_set *set,
+> +			   const char *file_name, bool system_config)
+[ ... ]
+> +int perf_config__set_variable(const char *var, const char *value)
+> +{
+> +	char path[PATH_MAX];
+> +	char *user_config =3D mkpath(path, sizeof(path), "%s/.perfconfig", gete=
+nv("HOME"));
+> +	const char *config_filename =3D config_exclusive_filename ?: user_confi=
+g;
+> +		/*
+> +	 * When rewriting the system wide file all entries are marked as coming
+> +	 * from it and must be kept, or it would be truncated down to its
+> +	 * header.
+> +	 */
+> +	bool system_config =3D strcmp(config_filename, perf_etc_perfconfig()) =
+=3D=3D 0;
+> +	struct perf_config_set *set;
+> +	int ret =3D -1;
+> +
+> +	pthread_mutex_lock(&config_update_mutex);
+> +	set =3D perf_config_set__new();
+> +	if (!set)
+> +		goto out_err;
+> +
+> +	if (perf_config_set__collect(set, config_filename, var, value) < 0) {
 
-[Severity: Low]
-Does this command fail on ASan/LSan builds?=20
+[Severity: High]
+Can this lead to a stack use-after-free during concurrent config parsing?
 
-The comment correctly notes that REFCNT_CHECKING wraps struct map and struct
-dso in a proxy requiring ->orig access, but the printf statement hardcodes
-the standard non-ASan access path (dloc->ms->map->dso->name).
+A writer thread running perf_config__set_variable() assigns the global
+config_file_name to point to its local stack buffer (path) under config_mut=
+ex
+in perf_config_set__collect().
 
-This causes the perf-dso GDB macro to fail to evaluate and abort when
-running perf-stuck.sh -g against an ASan-instrumented perf process.
+Concurrently, a reader thread iterating cached configurations via perf_conf=
+ig()
+might encounter a malformed value and invoke bad_config(). bad_config() rea=
+ds
+config_file_name locklessly:
+
+tools/perf/util/config.c:bad_config() {
+    ...
+    if (config_file_name)
+        pr_warning("bad config value for '%s' in %s, ignoring...\n",
+                   name, config_file_name);
+    ...
+}
+
+If the reader reads the pointer locklessly, and the writer finishes and
+returns before the reader executes pr_warning(), won't the reader dereferen=
+ce
+the destroyed stack frame for path?
+
+> +		pr_err("Failed to add '%s=3D%s'\n", var, value);
+> +		goto out_err;
+> +	}
+> +
+> +	if (perf_config_set__write(set, config_filename, system_config) < 0) {
+> +		pr_err("Failed to set the configs on %s\n", config_filename);
+> +		goto out_err;
+> +	}
+> +
+> +	ret =3D 0;
+> +out_err:
+> +	perf_config_set__delete(set);
+> +	pthread_mutex_unlock(&config_update_mutex);
+> +	return ret;
+> +}
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260928220634.2451=
-784-1-acme@kernel.org?part=3D3
+784-1-acme@kernel.org?part=3D1
