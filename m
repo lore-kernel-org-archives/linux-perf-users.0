@@ -1,148 +1,56 @@
-Received: from mail-qt1-f177.google.com (mail-qt1-f177.google.com [209.85.160.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BF6C4E7808
-	for <linux-perf-users@vger.kernel.org>; Mon, 28 Sep 2026 16:12:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.160.177
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790611967; cv=pass; b=QJMrGfNwt3cL8DOvRf2vLZCmHM7IKsHtYSbujZw0bPDGoTudooOWwA/tplkBzRALpuSX5ikRUfGk0f/xbJPMYaSsBsJDctkIEBsfwBU+/YlvCNdxDm4T6XR1+OVqDHuYAcabVUj1excw6nNtcaSdgTjnVOBWbcFiOCyavm3cdyA=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790611967; c=relaxed/simple;
-	bh=9/5n3y53FjTjhvHDgz6T1mo7PBjDtEFNf/o3yogF9pU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=XLbiJbb6bO1hHxeZ1W4tl11hIwML/x8gk3/nx+cwdqcNwXJqzn7JNIF8uDxo61F8lh0d4/V4xWb9EqCC1DDAuOK6DT3YMMea0x4o/nOJFqVMSMVbAWGMcS4gWkp9/86f9sXKJBUW0TlgHZ8ySQ4rcyfVJFT4o5a31xJEjQis0Js=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=okkzBXfy; arc=pass smtp.client-ip=209.85.160.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 307344D9540
+	for <linux-perf-users@vger.kernel.org>; Mon, 28 Sep 2026 16:17:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1790612273; cv=none; b=s/+jBM92vEmhEvKtnZjl3XoNdsMOT9HzRS+oSwXTRhdEIImzPQ3slblM/d3pWBGYq/8pCilnauzu2l3QZ9F3fIw7/z6rKPW8Vyc0IRDY8/jEWHS2jxxhojfdf6BMOIx69NkTGG5tSmsdmYooIKFix+9LrEPm/Rd1DRUqF1d44OU=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1790612273; c=relaxed/simple;
+	bh=6Rw1gElFcBpnU1pb/9BjjWqUUU3i6v7QWwLIfb/1EhQ=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=cCWZpjNXebB4Hij84HNDtUfjAQGfHiGe8T9kUDuN0zP3rJdbNjG8egdn6oEkddWI2EntwjU6FR5lp49B1WgtMTmHdRoLXfI5cXBpjD/Lg4WGolfS58Z/IRTAWm+EHY+TY+d7FkOyw2nAvCK+S4Hj4cybzu1Kq6HGqoKsoLOzbbw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DodPwIPr; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="okkzBXfy"
-Received: by mail-qt1-f177.google.com with SMTP id d75a77b69052e-5333401e359so328431cf.1
-        for <linux-perf-users@vger.kernel.org>; Mon, 28 Sep 2026 09:12:45 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1790611965; cv=none;
-        d=google.com; s=arc-20260327;
-        b=KyQaaGv5mAYZsb2DHEILUIdRWVR7hWSNJ/Vi08899yK49eutJjsWo7xYRbDcgVY/Up
-         cfinw6mQBp1fFXt3tYgkAzZiKGSkiap0x5SIJXYTg6myPeeN4CTEmEF6BDFtFECCq/BQ
-         Fr73COJvEr1uc05jWpQigBhB2Y6HVlrMnUB7EOppnNM6bzsfEMTDkJWU2AYQFp1kXpRm
-         Y7Zc2VDeckQOKcYFszW9L2W1utiQIkg0i87A/ZSKdvXow2wYfYXBTheAvFVLhMdWZqfv
-         Nc4igdOSzLIe+rREAUMH1Bd5iaCYX37s3uHooPy1t41TeVgL95uGqSDdDozcROKLMyhC
-         xzog==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=jtwl90z0UN3pnLPH3ZZJ2kXHY9taouCeQz8eAktVkic=;
-        fh=iBE9EmbOPjoMN7APsCDZGz44W32Y+787wJLLxdHa9q4=;
-        b=H3EGPavR57AvppgPcswxFP9YB/23fHlQN5iNld8vzdykbkq508Psn5rj26wTgMlmwf
-         QzpBtp9I2tTyae5hZ6OQwJO4rtHDz/Z61xltHUPwOMaA2sNsLET9PXKzkais5mwfPt2H
-         I0O3xiwXocso6XbxS9qmzGHv3FKRc/rvDYHNcSpQ/GBRgQay5sS+4FjfoMbNBwDtEbN6
-         h6PCL/+9p+cHqFKxW9WTXSYaSFOZ/1wwSxsVFTIkGkRGORrfO+cviGUjHAT3PmR89kQ5
-         wjVXrnsI9WlfGxZxIA1HDRbk7hyzPVcfA3bGiyxa4A+9yotOkjDwAvnit/eYYw2u+Bff
-         6OUw==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1790611965; x=1791216765; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=jtwl90z0UN3pnLPH3ZZJ2kXHY9taouCeQz8eAktVkic=;
-        b=okkzBXfyQv35uAZrtHPHqBW3PC7h0eVzWHWawTsU4QHNvped9XBMWEO3NpaxHmItcd
-         IN4R1+OSKzKVbR6u4UEdNX81eQ0Hul8fFItGZzIQtl5UMgtbFLsJUXOsHvKr8Nt7voMC
-         U+FRviuPLHDkRUidQ+bpFsuPdaWnl75xgAIrWzQcnfI5LcinqGNXncakofS3+3LZtNF3
-         zHKExFVPPzAzDwCzs15d1mFOSKYeQUtGdejIdXNACnPLEyomtaXMKD+93lQ39KUGRnBN
-         ceXb2avTlINqlPN2XlIvQFoL9tldE4CMNK23P5tws/UcLczSuw6H4pNmLnDH14CKBSx/
-         KD5w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1790611965; x=1791216765;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=jtwl90z0UN3pnLPH3ZZJ2kXHY9taouCeQz8eAktVkic=;
-        b=QZQHyw/4kfBRbuc2Ou/NmgRUhrICJBZVWr3u0bvEX2KUd7Sj6hycKwvAUf2zCp17Cp
-         4mdGfKSCLaYPK5O/cpBBkwAA5+D6/SbS48VJbqHHMFXMqjlvSZAPR2GaAd9zGyYySKG4
-         EdIw0rjzISyuWz0/FjRIrPerjPkL9tE9vObQZRgActU2u6ShztpneuwqIfi/Q3UVlZ1e
-         el+pnBE7CFrGgb3L6pPWv0mdC/GyVPqvtvPf8Y3R4YYJW5QvRirk1xT3Fg5henEXkqwd
-         hmcBzD6WyS9R1ZM4aSS0oFbv+XXiyiy61JE6wF+rplrZlXqsAu3xDwSSXyymS6yPoI0x
-         V9jw==
-X-Gm-Message-State: AFuF++kPc3TvY5iNL/Htnj2da46J7KMoz7DWi6P43cFcaR0A0zSgRrL0
-	ppnZmaKusZtCRyQlf4g1NaAZ4njC1vUqXWCQWP5otF/vGgJvC4pXQMGqg8nrc6BHRqukNZ+ZDxl
-	mSKvaq0IvCs7DMF/9BIBspr1G5qvqiBxJUxdOlB2H
-X-Gm-Gg: AYBFou3ZgoMgxDh82dEaiPmQeTCdmvxVC3Z8KJvubIno1R8W+bIXDv1Kz5H+jZwTrPR
-	zZhxpg5/dWu9gOlglCduqwmx3Ks4Awe1b4AoX+4qmnoa+JjBPZne8tviLxNxI7mR3neC5ky3e7o
-	xdldi4I7A9y9TXYeiXzkTHhkov8UHavMwydT1v68wynrYnaRSZarnPB2wy30qs12Ta0+9d+48Fp
-	AC0TW+5OuIJCFZvNQfbKc5kWkIgL0BMxgp6izZuiiWPTXE9XSV41aHnLG3bs9MIymKnNX3uU4hc
-	VKEs2mg3SW3xXgA8WNQ4rNk3+SY/eKavXTMwAQQQ/1ArDXgEakgjmn/FRqWLC+P7bo+yq1OkrE8
-	y4pOA+GGz
-X-Received: by 2002:a05:622a:514d:b0:530:e335:4ef with SMTP id
- d75a77b69052e-53320076e0bmr26013661cf.2.1790611964291; Mon, 28 Sep 2026
- 09:12:44 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DodPwIPr"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CD8111F00898;
+	Mon, 28 Sep 2026 16:17:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1790612272;
+	bh=6Rw1gElFcBpnU1pb/9BjjWqUUU3i6v7QWwLIfb/1EhQ=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=DodPwIPrgfJWQND4NVhqDXrkdECM37KYusC3+TfRN7k4JzoM21HigtN6GF689c0Ko
+	 iRjoz93qLCWe4feOgXp5RXGbEPRKRUAsM7U94dwjx0R5MdG8/hmm8rRUYRODifHX1U
+	 GXOWPqA5PY+NVH70RSGfbmuOCLFIJvr2tygZ8+EAaDdyVFTvSHQXMySec05z51EZUG
+	 VgBis8rjbTBjdKVcKkwJHLoYgNeyHyKUL+CR3UCWWYhfPeCW8MC1utTTDAcR38qHt3
+	 EQhN7HrZTLrRynqGkcwJzKnKN2ozjad4ArMQzAe0Hg4VkX45rXIiokoYlonp2dZxyn
+	 Oxu4+2+RY0hiw==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH] perf arm-spe: Add Neoverse V3AE data source decoding
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Leo Yan" <leo.yan@arm.com>
+Cc: linux-perf-users@vger.kernel.org
+In-Reply-To: <20260928-perf_arm_spe_add_neoverse_v3ae-v1-1-738c9ed12d31@arm.com>
+References: <20260928-perf_arm_spe_add_neoverse_v3ae-v1-1-738c9ed12d31@arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Mon, 28 Sep 2026 16:17:51 +0000
+Message-Id: <20260928161751.CD8111F00898@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <ag8X7gcDw6jpJsLq@decadent.org.uk> <20260921175719.846883-1-irogers@google.com>
-In-Reply-To: <20260921175719.846883-1-irogers@google.com>
-From: Ian Rogers <irogers@google.com>
-Date: Mon, 28 Sep 2026 09:12:32 -0700
-X-Gm-Features: AclHuK-hxjh56xDGaVF6n08-980kUi7Pvlc_u2k27mAU3zemUfhouIkaRCBRU9o
-Message-ID: <CAP-5=fWEvnp1S4N37U69Shc=S_C7Xn+NnSiTS8q4YxR5_EUsXA@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] perf tools: Put Python egg info in output directory
-To: benh@debian.org, acme@kernel.org, namhyung@kernel.org
-Cc: linux-perf-users@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	mingo@redhat.com, peterz@infradead.org, rostedt@goodmis.org, 
-	tglozar@redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Mon, Sep 21, 2026 at 10:57=E2=80=AFAM Ian Rogers <irogers@google.com> wr=
-ote:
->
-> From: Ben Hutchings <benh@debian.org>
->
-> Installing the Python extension currently creates an egg-info
-> directory in the source tree, preventing a fully out-of-tree build.
->
-> Add the necessary runes to the setup.py comamnd line to relocate the
-> egg-info directory in an out-of-tree build.
->
-> Signed-off-by: Ben Hutchings <benh@debian.org>
-> Reviewed-by: Ian Rogers <irogers@google.com>
-> ---
-> v2: Rebase
+> Add all Neoverse V3AE revisions to the list so the common decoder can
+> populate the memory source and snoop information.
+>=20
+> Signed-off-by: Leo Yan <leo.yan@arm.com>
 
-Ben's build clean up that I've then rebased and addressed an issue
-with building in tools/perf seems like a nice to land thing. I'm not
-sure what more I can do to push this forward, and I replied on the
-list about the Sashiko feedback, which was a little wide of the mark.
-Let me know what you think; perhaps the tags are not done properly.
+Sashiko has reviewed this patch and found no issues. It looks great!
 
-Thanks,
-Ian
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260928-perf_arm_s=
+pe_add_neoverse_v3ae-v1-1-738c9ed12d31@arm.com?part=3D1
 
-
-> ---
->  tools/perf/Makefile.perf | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
->
-> diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
-> index 2438b40eaaec..438102bcae6c 100644
-> --- a/tools/perf/Makefile.perf
-> +++ b/tools/perf/Makefile.perf
-> @@ -908,7 +908,9 @@ install-build-deps:
->         $(Q)$(SHELL) $(srctree)/tools/perf/scripts/install-build-deps.sh =
-$(INSTALL_BUILD_DEPS_ARGS)
->
->  install-python_ext:
-> -       $(PYTHON_WORD) util/setup.py $(python_setup_quiet) install --root=
-=3D'/$(DESTDIR_SQ)'
-> +       $(PYTHON_WORD) util/setup.py $(python_setup_quiet) \
-> +               $(if $(OUTPUT),egg_info --egg-base $(OUTPUT)) \
-> +               install --root=3D'/$(DESTDIR_SQ)'
->
->  # 'make install-doc' should call 'make -C Documentation install'
->  $(INSTALL_DOC_TARGETS):
-> --
-> 2.55.0.1082.g2b9226bbc0-goog
->
