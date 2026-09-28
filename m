@@ -1,56 +1,56 @@
-Received: from mail-dy1-f200.google.com (mail-dy1-f200.google.com [74.125.82.200])
+Received: from mail-dl1-f70.google.com (mail-dl1-f70.google.com [74.125.82.70])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E15D39479C
-	for <linux-perf-users@vger.kernel.org>; Mon, 28 Sep 2026 18:26:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBC9A3955CD
+	for <linux-perf-users@vger.kernel.org>; Mon, 28 Sep 2026 18:26:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.70
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790619999; cv=none; b=U9RXgOIfSADclyV1XgUu3sGs/bAo4KDnRfxz6INhzVOC9CYMyo8QpucFWxOpCX3My9cct4OQRTBLjDc9+kqj3qn8llqO1yjpxobdhVVTTKCBzJ2GdAPz73OcwzFjuXw/jwn/h6cg5sU/yrOT2tDnTSOkOjHKeVXVYieEqRRhF3Q=
+	t=1790620001; cv=none; b=ABmZuMTaReXKa5uo3N4QG26c6KN5kwXQbihECsjLfBOsneywGzBjTrouhHjmDEqcZiqaXZN63k48MeqqN9tAtSUBg0rb8HJNl+RV+J+OpKh767a94PM2C8RgE16XW60DGZTIp3pXAboFP7uYnp+hOcr4RZB1EnlsITtx1AoQoA4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790619999; c=relaxed/simple;
-	bh=0hpC6WYhUaPoQCAA+yO9XhUMBwiDlLMACaS2N2EMRkg=;
+	s=arc-20240116; t=1790620001; c=relaxed/simple;
+	bh=+a05Q2428FCe7YhJZh9qZPE9IPSwYKKZt+pGEcJC4Ac=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=gVlSgP+dAIPF6T34Lmt4jTU/hLGP/jrTx7fqkCBqpn4Ecc4I26hHHAV7QLylH9XOnRcOoo5hUpcCJlwmpa+xBK3axkYwPQo3kiQRc6TEtcYVmh7uDb4sMxhlkeWbsr82wuGxx4xvXj3n39xZNkCEG/E5ogKoqg0UTkWmg753fCM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=dnXXI/Vz; arc=none smtp.client-ip=74.125.82.200
+	 To:Cc:Content-Type; b=DDR17+O/VOVOw7cyxaPotAGRJe2OHNu8JJqcWcyh5r1onFffnAXcWoIhJ5kvvUIzddBC9WI1ddc06oM4yW/C0SfIxS9qTmDovdjMR3Bl6QLF3gmUFhRnqz9qE/orpU2lVUNK1is4dcG095YBm8SJHiMFa+eZmaUCewOdn6t2OuA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=nIL4B4YX; arc=none smtp.client-ip=74.125.82.70
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dnXXI/Vz"
-Received: by mail-dy1-f200.google.com with SMTP id 5a478bee46e88-3282d5302ffso212359eec.1
-        for <linux-perf-users@vger.kernel.org>; Mon, 28 Sep 2026 11:26:37 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="nIL4B4YX"
+Received: by mail-dl1-f70.google.com with SMTP id a92af1059eb24-1383723dfddso1730113c88.0
+        for <linux-perf-users@vger.kernel.org>; Mon, 28 Sep 2026 11:26:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1790619997; x=1791224797; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1790619999; x=1791224799; darn=vger.kernel.org;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=o/mGEeHuSPa9qD+MdqsXUR95lGlbev8XDzvUO+1lxyE=;
-        b=dnXXI/VzTdNy0WhdTvrPjwLEO7kEh4PQdO9aPCkKCY7ral57kl0O+V6yJ65WhkA1Im
-         Chwh6FEptjPE7mTGDIQXbkgVUzwIh/8ZLE4dwuGnYUFW7pn765/eJPEklIzYjC75WTeP
-         HeNZixnIgwc7etCBojLAht9kJKnlt2u8csTCUI8PHzJcb99+/MdFb9NbM7ffmXyOZ6QZ
-         jVjE+d0Hz0jmm4LGRkgZJ4Yc4SgEWKBgpMLtAUlmS1bmQauBzn6gnzXgV4pXvJY75dg3
-         0U53scHZF+P31X8+6UNaYQmQZf/vHXtQxmkFsG5vxJVhElRHNr96akodtz6NJivUw0/q
-         HREw==
+        bh=q4hFD82Af3GD/0O4jphB7A4i7F+gxI+oJkaQQHxtJQk=;
+        b=nIL4B4YXcyLC52PRAzS+8dHXuMq95BMPD/XXr8wg0aXwpDZo6eBbdjhYkRSjBtKwUO
+         /5E1NAYeHzUKx7nYH9PoXm3lkVOH5zX9N30ZvoO43DzomJFr5gzj1anWJzKnX/7C2YH1
+         eiVgCNNOqcuL3blQs31RIebD6ebns9a8G2c2esuC/vPMJN3Jn5waH02AVC31vslZro9O
+         JpOxlHy/fvMd4rwDE1hYZGGc4EL7WIgIVpA56XiTHk0Q/a6qfsGna50CFPysey85to8Q
+         xz39pmsx09wnKutDTc8x8oZMuKD/gZUTdqUTOflh1SpzdGlFOrg4+hnD0nop8/eL8XAn
+         +wpQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1790619997; x=1791224797;
+        d=1e100.net; s=20260707; t=1790619999; x=1791224799;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=o/mGEeHuSPa9qD+MdqsXUR95lGlbev8XDzvUO+1lxyE=;
-        b=w2oT8NiSkqr0mJpIwc16s3B8sF7TkP5KtavNBBQ32d8sJtyaH7ocCyPJ2UnW8zlSsv
-         iD5uw8myzRNrvunyiIZHJGhygkm9aBWFx2X+ptNNvLZmlMDqKeWfl1OU+EPH62ZB029I
-         Lw1JbCGrNMmoTy8R8YIpOd+j5g1RKhRS+MM+x6MfZWsCUPBGfN5eMKZR3aeMi+lSsUAm
-         X/E0wf9XWLicdmKt6yVDA5elQKINck7RHCSwpvH7/gftbZ6w4nE9p7p/gzKmtFiFfPgX
-         ECfQfBZtzfODDbGuVgWqw00OeESzdAqYbieTOtGedsmeBt2cWGqIgaXHH9eK+6patUTx
-         S+pA==
-X-Forwarded-Encrypted: i=1; AKwUvBwVGAyU3YEAc3gFQzVpnHxY8OEU7FQpvdS517D8zqRzmjF19PAx95KfNo6+B0RKy09WXU6dGx0+TtsAweicN76S@vger.kernel.org
-X-Gm-Message-State: AFq9FYL+ANNUoanLR3SZW3/NkwJLIW4mzJnbH4iGfcOHZSCavMPmwRH/
-	ETZVXFpw5cZDAgP/lNpe0cyPKn3YU/cyP5qTGm3Dm8LY06cv4ReNtqT5GjEwMVk7sqGQmzH6yow
-	xyB6LaoMCeQ==
-X-Received: from dydb6.prod.google.com ([2002:a05:7300:80c6:b0:33b:c09b:a189])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7301:2829:b0:347:49d2:db76
- with SMTP id 5a478bee46e88-34af7c55279mr249264eec.7.1790619996135; Mon, 28
- Sep 2026 11:26:36 -0700 (PDT)
-Date: Mon, 28 Sep 2026 11:25:50 -0700
+        bh=q4hFD82Af3GD/0O4jphB7A4i7F+gxI+oJkaQQHxtJQk=;
+        b=AEVzEk9BchmDPV2JsrSqT2ir3pH/YMip1XOEgljielzeD5/hm9mzTzuad+zcE8UXUl
+         8svAGrc9Ph7d27mByv4igFOAxiN5hCk6ZPWIP5UtPeOMBCY0VZDJuPIXYPzVajuT8YAW
+         OudI7atTij3PvFwtVli0suF0H7keEMeqSJhQQfApmWhKLwRnT4ENS7kFcA4/GjL0DxBz
+         Z9gy7Bhr1gxS5AfB8KVeVQFgVVZ7Yr11ChBI5VF7pYLA5Uqes7Evu8Dh9QZDTNJqaXql
+         V20y0uSwW9dUql2ivdk+Sd8gW9HHRiaCcznl2xMZBlcD8F257eEsMv7/P8ZHp5H//HGg
+         jq0A==
+X-Forwarded-Encrypted: i=1; AKwUvByzDdXASC2jqTwF3eutzqCD9FgMan+jf0c/KO0PGMtfUgnRiPZppQxZj2OqTF9R5js+1A6TVuuz2gDBkI5NrU7+@vger.kernel.org
+X-Gm-Message-State: AFuF++kUgEFEMpcnpzV0G5+BHkEBKusPuTxua3FVkFudLyhU99epUY44
+	lCMu4wfJt+xLE6LFXIHSsuXfPQgy3bqkkrZBSqzspLZlirHYe6ecQ16u9arthHzxMVImTc+vukP
+	PW6s5u1OgMA==
+X-Received: from dlbsi8.prod.google.com ([2002:a05:7022:b888:b0:144:bbd4:62e0])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:7f0b:b0:14a:a6dc:9ca6
+ with SMTP id a92af1059eb24-14aa6dc9eafmr1619767c88.3.1790619998252; Mon, 28
+ Sep 2026 11:26:38 -0700 (PDT)
+Date: Mon, 28 Sep 2026 11:25:51 -0700
 In-Reply-To: <20260928182605.3649015-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -60,8 +60,9 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <cover.1790145937.git.irogers@google.com> <20260928182605.3649015-1-irogers@google.com>
 X-Mailer: git-send-email 2.56.0.rc1.315.gc6ed9934b7-goog
-Message-ID: <20260928182605.3649015-12-irogers@google.com>
-Subject: [PATCH v6 11/26] perf trace: Split unaugmented sys_exit program
+Message-ID: <20260928182605.3649015-13-irogers@google.com>
+Subject: [PATCH v6 12/26] perf trace: Use the CPU map index for the BPF output
+ event's fds
 From: Ian Rogers <irogers@google.com>
 To: Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
 	Aaron Tomlin <atomlin@atomlin.com>
@@ -72,133 +73,33 @@ Cc: Howard Chu <howardchu95@gmail.com>, Jakub Brnak <jbrnak@redhat.com>,
 	Ian Rogers <irogers@google.com>
 Content-Type: text/plain; charset="UTF-8"
 
-From: Namhyung Kim <namhyung@kernel.org>
+augmented_syscalls__setup_bpf_output() looks up the bpf-output event's
+file descriptor using the CPU number, but the fd xyarray is indexed by
+position in the CPU map. With -C, or with offline CPUs, the two differ
+and the lookup finds another CPU's fd or NULL, leaving those CPUs
+unaugmented.
 
-We want to handle syscall exit path differently so let's split the
-unaugmented exit BPF program.  Currently it does nothing (same as
-sys_enter).
+Use the CPU map index.
 
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-Link: https://lore.kernel.org/r/20250814071754.193265-3-namhyung@kernel.org
-[ irogers: Use struct syscall_{enter,exit}_args and make
-  trace__find_syscall_bpf_prog() fall back to the exit program for
-  exits ]
 Assisted-by: Antigravity:gemini-3.1-pro
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/builtin-trace.c                            | 10 ++++++----
- tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c |  8 +++++++-
- tools/perf/util/bpf_trace_augment.c                   |  9 +++++++--
- tools/perf/util/trace_augment.h                       | 10 ++++++++--
- 4 files changed, 28 insertions(+), 9 deletions(-)
+ tools/perf/util/bpf_trace_augment.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-index 1f89f85ba2e4..17e482ae02c9 100644
---- a/tools/perf/builtin-trace.c
-+++ b/tools/perf/builtin-trace.c
-@@ -4084,7 +4084,7 @@ static struct bpf_program *trace__find_syscall_bpf_prog(struct trace *trace __ma
- 	pr_debug("Couldn't find BPF prog \"%s\" to associate with syscalls:sys_%s_%s, not augmenting it\n",
- 		 prog_name, type, sc->name);
- out_unaugmented:
--	return unaugmented_prog;
-+	return strcmp(type, "exit") ? unaugmented_prog : augmented_syscalls__unaugmented_exit();
- }
- 
- static void trace__init_syscall_bpf_progs(struct trace *trace, int e_machine, int id)
-@@ -4101,13 +4101,15 @@ static void trace__init_syscall_bpf_progs(struct trace *trace, int e_machine, in
- static int trace__bpf_prog_sys_enter_fd(struct trace *trace, int e_machine, int id)
- {
- 	struct syscall *sc = trace__syscall_info(trace, NULL, e_machine, id);
--	return sc ? bpf_program__fd(sc->bpf_prog.sys_enter) : bpf_program__fd(unaugmented_prog);
-+	return sc ? bpf_program__fd(sc->bpf_prog.sys_enter) :
-+		bpf_program__fd(augmented_syscalls__unaugmented_enter());
- }
- 
- static int trace__bpf_prog_sys_exit_fd(struct trace *trace, int e_machine, int id)
- {
- 	struct syscall *sc = trace__syscall_info(trace, NULL, e_machine, id);
--	return sc ? bpf_program__fd(sc->bpf_prog.sys_exit) : bpf_program__fd(unaugmented_prog);
-+	return sc ? bpf_program__fd(sc->bpf_prog.sys_exit) :
-+		bpf_program__fd(augmented_syscalls__unaugmented_exit());
- }
- 
- static int trace__bpf_sys_enter_beauty_map(struct trace *trace, int e_machine, int key, unsigned int *beauty_array)
-@@ -4318,7 +4320,7 @@ static int trace__init_syscalls_bpf_prog_array_maps(struct trace *trace, int e_m
- 	if (augmented_syscalls__get_map_fds(&map_enter_fd, &map_exit_fd, &beauty_map_fd) < 0)
- 		return -1;
- 
--	unaugmented_prog = augmented_syscalls__unaugmented();
-+	unaugmented_prog = augmented_syscalls__unaugmented_enter();
- 
- 	for (int i = 0, num_idx = syscalltbl__num_idx(e_machine); i < num_idx; ++i) {
- 		int prog_fd, key = syscalltbl__id_at_idx(e_machine, i);
-diff --git a/tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c b/tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c
-index cc70861a23d6..18835c7512ac 100644
---- a/tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c
-+++ b/tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c
-@@ -192,7 +192,13 @@ unsigned int augmented_arg__read_str(struct augmented_arg *augmented_arg, const
- }
- 
- SEC("tp/raw_syscalls/sys_enter")
--int syscall_unaugmented(struct syscall_enter_args *args)
-+int sys_enter_unaugmented(struct syscall_enter_args *args)
-+{
-+	return 1;
-+}
-+
-+SEC("tp/raw_syscalls/sys_exit")
-+int sys_exit_unaugmented(struct syscall_exit_args *args)
- {
- 	return 1;
- }
 diff --git a/tools/perf/util/bpf_trace_augment.c b/tools/perf/util/bpf_trace_augment.c
-index ebb26225fb04..0f510554ad9f 100644
+index 0f510554ad9f..7087849031e6 100644
 --- a/tools/perf/util/bpf_trace_augment.c
 +++ b/tools/perf/util/bpf_trace_augment.c
-@@ -117,9 +117,14 @@ int augmented_syscalls__get_map_fds(int *enter_fd, int *exit_fd, int *beauty_fd)
- 	return 0;
- }
+@@ -76,8 +76,7 @@ void augmented_syscalls__setup_bpf_output(void)
  
--struct bpf_program *augmented_syscalls__unaugmented(void)
-+struct bpf_program *augmented_syscalls__unaugmented_enter(void)
- {
--	return skel->progs.syscall_unaugmented;
-+	return skel->progs.sys_enter_unaugmented;
-+}
-+
-+struct bpf_program *augmented_syscalls__unaugmented_exit(void)
-+{
-+	return skel->progs.sys_exit_unaugmented;
- }
- 
- struct bpf_program *augmented_syscalls__find_by_title(const char *name)
-diff --git a/tools/perf/util/trace_augment.h b/tools/perf/util/trace_augment.h
-index a1cd9a5e0213..9c91e2569890 100644
---- a/tools/perf/util/trace_augment.h
-+++ b/tools/perf/util/trace_augment.h
-@@ -15,7 +15,8 @@ void augmented_syscalls__setup_bpf_output(void);
- int augmented_syscalls__set_filter_pids(unsigned int nr, pid_t *pids);
- int augmented_syscalls__get_map_fds(int *enter_fd, int *exit_fd, int *beauty_fd);
- struct bpf_program *augmented_syscalls__find_by_title(const char *name);
--struct bpf_program *augmented_syscalls__unaugmented(void);
-+struct bpf_program *augmented_syscalls__unaugmented_enter(void);
-+struct bpf_program *augmented_syscalls__unaugmented_exit(void);
- void augmented_syscalls__cleanup(void);
- 
- #else /* !HAVE_BPF_SKEL */
-@@ -53,7 +54,12 @@ augmented_syscalls__find_by_title(const char *name __maybe_unused)
- 	return NULL;
- }
- 
--static inline struct bpf_program *augmented_syscalls__unaugmented(void)
-+static inline struct bpf_program *augmented_syscalls__unaugmented_enter(void)
-+{
-+	return NULL;
-+}
-+
-+static inline struct bpf_program *augmented_syscalls__unaugmented_exit(void)
- {
- 	return NULL;
+ 		bpf_map__update_elem(skel->maps.__augmented_syscalls__,
+ 				     &mycpu, sizeof(mycpu),
+-				     xyarray__entry(bpf_output->core.fd,
+-						    mycpu, 0),
++				     xyarray__entry(bpf_output->core.fd, i, 0),
+ 				     sizeof(__u32), BPF_ANY);
+ 	}
  }
 -- 
 2.56.0.rc1.315.gc6ed9934b7-goog
