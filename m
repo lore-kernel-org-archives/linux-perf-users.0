@@ -1,62 +1,110 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EB864EDCD6;
-	Mon, 28 Sep 2026 16:31:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 838104EDCD6
+	for <linux-perf-users@vger.kernel.org>; Mon, 28 Sep 2026 16:31:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790613106; cv=none; b=oTQq16Bvu6/NXF84G3rodS/pm6pij0LfdnTv8Bw1y16AmVychBwlPFOcXDsk+luIv8TCqkIYwy9KTb9qvxPcj7ksaNcbKUh0Q2/cKRMpH5QoH8cjgDsKIpNKuHJ1d7lhKZ7R/PfBNt1f2g5stijyPV/DpaicH+vMy7zxWYiljPk=
+	t=1790613110; cv=none; b=GXoMA7mVd7m7bscZgZT3rC5ulQR5pnc8cx9hdOGtCwPx8hvqK93l064F2xHZ1i8HsHLwXRwI8qajKeX8whad9UhYV/bfM6WsexQa/PoEA2OKwIMPN/yLRfDoN2QXvz5uOIo1MPX1v4MBtm6TB8I5qyO9/gD+bzy0OLqEzG3q8Rg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790613106; c=relaxed/simple;
-	bh=c541e+Yf/1TkzNRiiS1DegAycr4yZV+4QccWpKXqm8M=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=g4HklI5uMtCyySb/MYspRWXdsewR9Tz+GdqrXvgHBOAoNQNw7eJI3u28Qg+yXv9Q0R/8HO56cU9fg8IkYt9MsCHWx1nTtqqygx/RGjy1nRUiipWpq0zkiQBun8iqiaeB477xRuyvTg/RrKIQzvX93uIcoc3WbbWIWfM1zkqJjSE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ggGsrxCJ; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1790613110; c=relaxed/simple;
+	bh=rdBQD8pxg85IVChepzK7Yhdz6S+OdcAAlz/fwNtSImM=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=TzLZReLFp8UnWV/vBvj+vsyODvm/bc3XsC8haUXN75jIdJV318MNtYI3aa7a9src/Ih+VRPcNi5EB4mmNitPLeZk+EXLbTmLl4GpFRUuUqnW85NR7kHZMQ39ptFgef8B5kiGELIL9hGEtX1tTnnBXDOr13Qq5ynz3/jSolmV7tw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lnHIjrPS; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ggGsrxCJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C9BEA1F000FF;
-	Mon, 28 Sep 2026 16:31:44 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lnHIjrPS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DF0D71F00893;
+	Mon, 28 Sep 2026 16:31:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1790613105;
-	bh=5GpRpNe92QpGRvNBfRb9js65IBscjYzBPJDtk432NWo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=ggGsrxCJcCVfBhbDDe5wweiFa11dtdqZONL6hGceidJWjnTSl2SPFmGZXWpQDsw8f
-	 JwstrbRF5NyKr0IYJUTBIsjQ0umloPXgXRxrPnf41ADGTGCsHjwxcC2EtGuzjMlqh7
-	 BwZsjwGPT3Mi2rqSC+HiM63nVW4T7U6PW2dwo8mg4nq/52QTpy8KmrdbE1HEm9A5B4
-	 IwdWgpCTeYsGUFwuOeW2VWQy6sxN8djuyRVuAvaRyNp2nt3ZTXjb4GS+1fE0lRr3y3
-	 8mhRVYR2hewuRIRh4ohElTixJUKVTzAkUBflv1MZHyePic0en8YBJEHP98Lyxtfoof
-	 KizmyksIBKuOQ==
-Date: Mon, 28 Sep 2026 18:31:42 +0200
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Leo Yan <leo.yan@arm.com>
-Cc: John Garry <john.garry@linux.dev>, namhyung@kernel.org,
-	linux-perf-users@vger.kernel.org, will@kernel.org,
-	james.clark@linaro.org, mike.leach@arm.com, leo.yan@linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] MAINTAINERS: Update John Garry's address for from arm64
- perf tools
-Message-ID: <arqWbrUcrkQnHEjy@x2>
-References: <20260928151652.66499-1-john.garry@linux.dev>
- <20260928162436.GF14479@e132581.arm.com>
+	s=k20260515; t=1790613109;
+	bh=1aKAwEtw94np8VzA7IvBueWaWxcuJ0qT1kY2bUCzGOU=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=lnHIjrPSuaDZm4eEp/BucSw05sD9z+iU1GKUi5fqVN48qOtJXl6Zbu4fZ5HnkAvAP
+	 GbfnAIqDaVHiE0FP5KJ1zxWhENWl+S3i2EbRQi41gjCJXyKO7ybUI1d9hxL7Zrs5tA
+	 xMJRkrwMtBZXlIeNQkFSW3UcxvYgCuWXgFCMu5SKJD+BDRnnLkyD0eot2O7Kbne8AE
+	 8kkxWVNifec225MR8LWAbpuwZApxp5pXdb0e+lajN7havoU3C2Wz89PHlIeukPbnqk
+	 b1MDlE9/oVv+HLjiHhdTz08om75rwKdfww0m6um5FPThFcdf/MuVz3wZsqKMJnnW80
+	 77zvyv6MZXIOg==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH 4/4] perf test: Add false_sharing workload exhibiting
+ cross-CPU false sharing
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Arnaldo Carvalho de Melo" <acme@kernel.org>
+Cc: linux-perf-users@vger.kernel.org
+In-Reply-To: <20260928162250.2413383-5-acme@kernel.org>
+References: <20260928162250.2413383-1-acme@kernel.org>
+ <20260928162250.2413383-5-acme@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Mon, 28 Sep 2026 16:31:48 +0000
+Message-Id: <20260928163148.DF0D71F00893@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260928162436.GF14479@e132581.arm.com>
 
-On Mon, Sep 28, 2026 at 05:24:36PM +0100, Leo Yan wrote:
-> On Mon, Sep 28, 2026 at 04:16:52PM +0100, John Garry wrote:
-> > My employer e-mail address will stop working soon and I am likely to get
-> > more involved in this area in future, so update my address.
-> > 
-> > Signed-off-by: John Garry <john.garry@linux.dev>
-> 
-> Reviewed-by: Leo Yan <leo.yan@arm.com>
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+s) to consider:
+- [Medium] perf test: stack buffer overflow in false_sharing via CPU_SET(-1)
+--
 
-Thanks, applied to perf-tools-next, for v7.4.
+commit ca3d54512dd3bcec14cdfc83ca90f31bcb2e15f0
+Author: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-- Arnaldo
+perf test: Add false_sharing workload exhibiting cross-CPU false sharing
+   =20
+Add a 'perf test -w false_sharing' workload that hammers one shared
+struct from several CPUs, shaped as a TCP connection. The packet path
+runs in the main thread and up to four lookup threads hash the
+five-tuple and pull the config.
+
+> diff --git a/tools/perf/tests/workloads/false_sharing.c b/tools/perf/test=
+s/workloads/false_sharing.c
+> new file mode 100644
+> index 0000000000000..6fccb81e3ed1c
+> --- /dev/null
+> +++ b/tools/perf/tests/workloads/false_sharing.c
+[ ... ]
+> +static void pin_to_cpu(int cpu)
+> +{
+> +	cpu_set_t set;
+> +
+> +	CPU_ZERO(&set);
+> +	CPU_SET(cpu, &set);
+
+[Severity: Medium]
+When false_sharing() runs on a single-core machine or a restricted cpuset
+(where nallowed <=3D 1), it assigns -1 to the reader thread's target CPU:
+
+false_sharing() {
+    ...
+    for (i =3D 0; i < nreaders; i++) {
+        int cpu =3D nallowed > 1 ? allowed[(i + 1) % nallowed] : -1;
+        readers[i].cpu =3D cpu;
+        ...
+    }
+}
+
+Unlike the writer thread, which correctly guards the call with
+if (writer_cpu >=3D 0), the reader thread unconditionally calls pin_to_cpu(=
+-1):
+
+reader_fn() {
+    ...
+    pin_to_cpu(r->cpu);
+    ...
+}
+
+This passes -1 directly to CPU_SET() without any bounds checking. Could this
+negative index result in an out-of-bounds stack write that corrupts memory?
+
+> +	/* Best effort: in a restricted cpuset this fails and the thread runs u=
+npinned. */
+> +	pthread_setaffinity_np(pthread_self(), sizeof(set), &set);
+> +}
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260928162250.2413=
+383-1-acme@kernel.org?part=3D4
