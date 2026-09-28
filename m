@@ -1,48 +1,48 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9735D44F561;
-	Mon, 28 Sep 2026 07:50:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE029468C1D;
+	Mon, 28 Sep 2026 07:50:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790581839; cv=none; b=T54YXjr+u5nKGce7wePRZU8/FGkv4Qj/fqBCJExuMJrICCJygMU8k/mKjAu183nyfd0xYBn5pCIDxRh947i9ftesLR09YtsKy4m3k0DGofzWzxmcIwlZWgqsUpo7lSvYE6a3fyVXQ0cIHEhmErmCR5FZyPrVjg9XWLWF6Wp6oMQ=
+	t=1790581842; cv=none; b=i811MhjxkXgqd2vEWFiLVPQryVYrMnX4gK0V+lPKWwJVrGRK5+xhXrjwdOLODMmJNjaOEhhvqraYkOIibmr69fYRzDkDlnout/WugmKalkTJDfoH1VRufx0Hb8HKMr0lWShQYQntlDs7mO8G5Vtyx9OpSqR+sLcEj8TATMvthuo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790581839; c=relaxed/simple;
-	bh=vEd8OwtcxH5HtM1IEhQe1qV+pc57GYMXfy8ABNf+aFo=;
+	s=arc-20240116; t=1790581842; c=relaxed/simple;
+	bh=zdMq2btf1wH1v06mrDFanwpxOsb79eZWpQdtXOBGLEE=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=eocaL/xTjodcIcLmRnQhELOjQE14H7nDdpQBwk5dWZZ+f4QGibs6shPWlw0z7dNS325i5vUga6SIB6i6ua4CeQ+JyOYpHUAlUA5/nL8KXMR8mk+NSXVqteNVFsFtypVl76FUUneouqsKCV6wHNsnWOf+5MnklPqwzna5wkuSR2Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=O/HHMnBr; arc=none smtp.client-ip=198.175.65.21
+	 MIME-Version; b=hJn9723enedMsNdC/v50U/E7kD0bawPMYNoySrid0UFb7w3TCa79jXNP6Z6GWH50nS2z5ohGipQIT2YT7GdMuAUGBK+3f9LhZVCEL2+V88r37W3ypqLZHqexft4aXudjyP4mnli0fTYAIOudfrvSvyQ44zMNuQoodqlU4hw9bMI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IcfYYg+p; arc=none smtp.client-ip=198.175.65.21
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="O/HHMnBr"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IcfYYg+p"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1790581837; x=1822117837;
+  t=1790581841; x=1822117841;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=vEd8OwtcxH5HtM1IEhQe1qV+pc57GYMXfy8ABNf+aFo=;
-  b=O/HHMnBreYPBZ8FUTP8ieMX+0jAByQJyXiI87NzVz5A5XsEqKBE+0iXN
-   4DcDXAmk0Q6cF9huqao/pJ3H0YJ3a7/ipJBcfIJ5GG/RmjN8+mZ1zfwSD
-   uc+2DF8U3D3LRi2wQKkvPI9g4TMfcyoV7Y2mZsT4l2ajXZkKyZcvE52ln
-   nhcSk4jLZt/g+6hysb27TUN3uxu0Hso5UzZfnp418HyYj0odEVMx7nZn9
-   tkuJ/mOuxl8Cxssi6egQJH8yb1Jiris4kwXK3uW/qju8qcouNfIhNwLPH
-   tswLpMbFFqBHJ4JOUJQf9uGr03ow6Npx0Z1XbTrmY2PI3VkfCZ6oh9qfn
-   w==;
-X-CSE-ConnectionGUID: oz8mZmivRTy7GzknXfY2hg==
-X-CSE-MsgGUID: M4qB8fMAQ+WeVNDOd3bw1g==
-X-IronPort-AV: E=McAfee;i="6800,10657,11918"; a="90141383"
+  bh=zdMq2btf1wH1v06mrDFanwpxOsb79eZWpQdtXOBGLEE=;
+  b=IcfYYg+pETU6lT0fsYNYadMCIHphTINbHKEzo8ip+5UqqBGJ+WkQ+cdx
+   dmFNxJXh9mj3Zy10XjL8wRLmjsoZWMstAcmi8maTKj+juwno5SvKdEbL+
+   voCH3raJ1pdCacIXWYX/3pt026+QeqR8/mhGrWMtPMWbpEfDURKyL9Zgu
+   JUxTALPlt/sdjCHL/Liw8/8g1FzT/xR17nPmUxyPfF0VXmAbx/TA5T27l
+   qQKs43aFt8MeTbdvW/afFQ6ANqiTF9+ZB+2orQHaD5mGH2vjadr5BEh8R
+   qUDPLnz5ajvF2a2shFgAtC2vlxKatkomzZxqgad20/Y1XfA5P+hTtC8e9
+   Q==;
+X-CSE-ConnectionGUID: qYLLfPEaQQuq7yOOGat4eg==
+X-CSE-MsgGUID: ib0j6FY8QlafsK3FWfl06g==
+X-IronPort-AV: E=McAfee;i="6800,10657,11918"; a="90141388"
 X-IronPort-AV: E=Sophos;i="6.27,128,1787036400"; 
-   d="scan'208";a="90141383"
+   d="scan'208";a="90141388"
 Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Sep 2026 00:50:37 -0700
-X-CSE-ConnectionGUID: 3dMwjgzxRLqAyZi8Lk7eIQ==
-X-CSE-MsgGUID: Q86LTULORWC0q/qc3KMJcQ==
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Sep 2026 00:50:41 -0700
+X-CSE-ConnectionGUID: 5I5kSBesQguzIZKE8h/6JA==
+X-CSE-MsgGUID: nqut8e5rSieRFxg4UW67Wg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.27,128,1787036400"; 
-   d="scan'208";a="275024858"
+   d="scan'208";a="275024863"
 Received: from spr.sh.intel.com ([10.112.229.196])
-  by orviesa009.jf.intel.com with ESMTP; 28 Sep 2026 00:50:34 -0700
+  by orviesa009.jf.intel.com with ESMTP; 28 Sep 2026 00:50:37 -0700
 From: Dapeng Mi <dapeng1.mi@linux.intel.com>
 To: Peter Zijlstra <peterz@infradead.org>,
 	Ingo Molnar <mingo@redhat.com>,
@@ -60,9 +60,9 @@ Cc: linux-kernel@vger.kernel.org,
 	Falcon Thomas <thomas.falcon@intel.com>,
 	Xudong Hao <xudong.hao@intel.com>,
 	Dapeng Mi <dapeng1.mi@linux.intel.com>
-Subject: [PATCH 01/15] perf/x86/intel: Guard leader sibling walk on nr_siblings
-Date: Mon, 28 Sep 2026 15:42:55 +0800
-Message-Id: <20260928074309.898043-2-dapeng1.mi@linux.intel.com>
+Subject: [PATCH 02/15] perf/x86/intel: Reset active_fixed_ctrl_val on CPU teardown
+Date: Mon, 28 Sep 2026 15:42:56 +0800
+Message-Id: <20260928074309.898043-3-dapeng1.mi@linux.intel.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20260928074309.898043-1-dapeng1.mi@linux.intel.com>
 References: <20260928074309.898043-1-dapeng1.mi@linux.intel.com>
@@ -74,68 +74,57 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The leader event's ctx mutex is only held before calling
-pmu->event_init() for sibling events, not for a newly-created group
-leader.
+cpuc->active_fixed_ctrl_val tracks the value currently programmed into
+MSR_CORE_PERF_FIXED_CTR_CTRL, and reprogramming is skipped when the new
+value matches the cached one.
 
-Some paths in intel_pmu_hw_config() call for_each_sibling_event() on the
-leader itself. At that point, leader->ctx is not yet initialized, so the
-lockdep assertion in for_each_sibling_event() can trigger WARN_ON_ONCE(),
-and the access to leader->ctx is unsafe.
+After a CPU offline/online cycle, MSR_CORE_PERF_FIXED_CTR_CTRL may return
+to its reset state, but active_fixed_ctrl_val may still hold the
+pre-offline value. If the next computed fixed_ctrl_val matches that stale
+cache entry, the MSR update is incorrectly skipped, leaving
+MSR_CORE_PERF_FIXED_CTR_CTRL uninitialized for fixed counters and
+resulting in errors in fixed counter counting or samplig.
 
-This loop is unnecessary when the event is the group leader, because the
-leader has no siblings yet. Guard the iteration with leader->nr_siblings
-before calling for_each_sibling_event().
+Clear active_fixed_ctrl_val and MSR_CORE_PERF_FIXED_CTR_CTRL during CPU
+teardown so MSR_CORE_PERF_FIXED_CTR_CTRL is always reprogrammed when the
+CPU comes back online.
 
-Also move setting PERF_X86_EVENT_BRANCH_COUNTERS to the end of the
-branch-counter validation path so the flag is set only after all checks
-succeed.
-
-Fixes: 33744916196b ("perf/x86/intel: Support branch counters logging")
+Fixes: fae9ebde9696 ("perf/x86/intel: Optimize FIXED_CTR_CTRL access")
 Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
 ---
- arch/x86/events/intel/core.c | 13 ++++++++-----
- 1 file changed, 8 insertions(+), 5 deletions(-)
+ arch/x86/events/intel/core.c | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
 
 diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
-index 0a34d674df59..65815d13ae3f 100644
+index 65815d13ae3f..b8dd7b73c31a 100644
 --- a/arch/x86/events/intel/core.c
 +++ b/arch/x86/events/intel/core.c
-@@ -5046,11 +5046,12 @@ static int intel_pmu_hw_config(struct perf_event *event)
- 		leader = event->group_leader;
- 		if (intel_set_branch_counter_constr(leader, &num))
- 			return -EINVAL;
--		leader->hw.flags |= PERF_X86_EVENT_BRANCH_COUNTERS;
+@@ -6591,8 +6591,25 @@ static void free_excl_cntrs(struct cpu_hw_events *cpuc)
+ 	cpuc->constraint_list = NULL;
+ }
  
--		for_each_sibling_event(sibling, leader) {
--			if (intel_set_branch_counter_constr(sibling, &num))
--				return -EINVAL;
-+		if (leader->nr_siblings) {
-+			for_each_sibling_event(sibling, leader) {
-+				if (intel_set_branch_counter_constr(sibling, &num))
-+					return -EINVAL;
-+			}
- 		}
- 
- 		/* event isn't installed as a sibling yet. */
-@@ -5069,7 +5070,7 @@ static int intel_pmu_hw_config(struct perf_event *event)
- 		if (0 == (event->attr.branch_sample_type &
- 			  ~(PERF_SAMPLE_BRANCH_PLM_ALL |
- 			    PERF_SAMPLE_BRANCH_COUNTERS)))
--			event->hw.flags  &= ~PERF_X86_EVENT_NEEDS_BRANCH_STACK;
-+			event->hw.flags &= ~PERF_X86_EVENT_NEEDS_BRANCH_STACK;
- 
- 		/*
- 		 * Force the leader to be a LBR event. So LBRs can be reset
-@@ -5077,6 +5078,8 @@ static int intel_pmu_hw_config(struct perf_event *event)
- 		 */
- 		if (!intel_pmu_needs_branch_stack(leader))
- 			return -EINVAL;
++static void fini_fixed_cntrs_on_cpu(int cpu)
++{
++	struct cpu_hw_events *cpuc;
 +
-+		leader->hw.flags |= PERF_X86_EVENT_BRANCH_COUNTERS;
- 	}
- 
- 	if (intel_pmu_needs_branch_stack(event)) {
++	if (x86_pmu.version < 2)
++		return;
++
++	/*
++	 * Clear active_fixed_ctrl_val so MSR_CORE_PERF_FIXED_CTR_CTRL
++	 * can be reprogrammed after CPU online.
++	 */
++	cpuc = &per_cpu(cpu_hw_events, cpu);
++	cpuc->active_fixed_ctrl_val = 0;
++	wrmsrq_on_cpu(cpu, MSR_CORE_PERF_FIXED_CTR_CTRL, 0);
++}
++
+ static void intel_pmu_cpu_dying(int cpu)
+ {
++	fini_fixed_cntrs_on_cpu(cpu);
+ 	fini_debug_store_on_cpu(cpu);
+ 	fini_arch_pebs_on_cpu(cpu);
+ }
 -- 
 2.34.1
 
