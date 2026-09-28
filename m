@@ -1,73 +1,116 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1F48400978
-	for <linux-perf-users@vger.kernel.org>; Mon, 28 Sep 2026 09:55:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7F46D30EF9A;
+	Mon, 28 Sep 2026 10:16:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790589330; cv=none; b=sjuWKkCo06AqWOsqA0rU6i9MahonxwjkPetsZhErqsHJT8M5fqGYem6aTRFB3Wwyzlym9jMPyWPrkK01GUca/+mjc5Vbmupn8aT6NpLhiNSXUGR8j8KL6zOhnV83QsPYOjqF/ehYY3zqlQy+TIrUpa9va8AMbvZ8IvCORZAE3jk=
+	t=1790590567; cv=none; b=b6FkxRcy80cBd7camMyxFEKwbJ2ejdgC8j4IhImFBXaOBT7Rc8fSREfvWgQGpBkp4RC6a7tJ1RVVlhoxJ7hX+53Y36YegUO0wJPvn7FshFY1Wccbq1D58NLy2qVYGsxUwLj2Ep9v49AppFciU7IOZFHMevGtYHZeCO5rmLNEdKE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790589330; c=relaxed/simple;
-	bh=KOSmSinrizcJ16KqLC1NQPBemKsaSb4HLvU7Y8/SIco=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=N5m5PiizqdBCkKoDvZoftYpbe7P7RaQ4oQyZ6sODmQlU/2O/2mJvQmnY0P9/UXKkgtWnfRpMl6gxMp0jqmMFDszLn6oj3ik3B3Hi49yhROuUiC25gO9u+wtGyTlKy+CHEWWgANZU/4zjDswrpNoDSqeDYz4pSdDaaQm7rzAEEc8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WoYmT6Ki; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1790590567; c=relaxed/simple;
+	bh=TLcuAfNS5WGF0Ruj4addevBg9cjbks/F3rMnppHCpFQ=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=i3XuuAcMtrbBMZJMH9pUYi+c+ydBMqaRDprA6zqI0YEL707ILTipCILMSMzvhnLJ7Lndb+UB3fTtS7haOosYFAVPGTG+q4ocEEiYiiQh7gEa/hm0Zy/7MEsFSE1nHcjcbgKLCNZZB/OlqlpMLPtrGjAG33fs0/DVgjpYuD0snvg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=Qj293lBg; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WoYmT6Ki"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 605811F00893;
-	Mon, 28 Sep 2026 09:55:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1790589328;
-	bh=n1s0lFnjwsUuaR6BDzzeKyNyHq1FKSmYbKdXSla3amo=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=WoYmT6Kip3xDG2NiYm+IfHFWWHvo4TPFarhO6sq5Ilcu4lh0hRbueloFVg1Uuh202
-	 o1Ersr3zCkkS4QSvXP6IVIIJihf/ESH5X7VwFgkhn8UPZSpPULUVB3DqV5/zupahMi
-	 f9FxFiWk06Uc8ikjCd/S6ogllHZGsPL2PvpESRksJ5FxlR1u3U9lcihCNmrD0uvol2
-	 lT7wlGtHA/KKfvgZaxgh4gqEIqPD8bMAlSekJN7F0agtj1wbaYM2oGplVKHBnS3ZjQ
-	 829fsYJq3iqxVEhxgbIu3zpCKSJGycZPCkg1N0RP9ZNJU328ajNIv7K0KDRL8W7dbN
-	 ph3Pi+k8crZHQ==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 2/2] perf tsc: Replace the compile-time TSC support
- check with a weak hook
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Chen Pei" <cp0613@linux.alibaba.com>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260928094739.2605-3-cp0613@linux.alibaba.com>
-References: <20260928094739.2605-1-cp0613@linux.alibaba.com>
- <20260928094739.2605-3-cp0613@linux.alibaba.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Mon, 28 Sep 2026 09:55:27 +0000
-Message-Id: <20260928095528.605811F00893@smtp.kernel.org>
+	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="Qj293lBg"
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2E42F1595;
+	Mon, 28 Sep 2026 03:16:01 -0700 (PDT)
+Received: from e132581.arm.com (unknown [10.2.196.114])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C36183F86F;
+	Mon, 28 Sep 2026 03:16:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
+	t=1790590564; bh=TLcuAfNS5WGF0Ruj4addevBg9cjbks/F3rMnppHCpFQ=;
+	h=From:Date:Subject:To:Cc:From;
+	b=Qj293lBg/6b843xYXIk9YO/DL5ZlcuD8zBJGerZdZts+ENqsUVJep4w+Pc6KlwNJj
+	 nyWECdxejVewrMEYaQiMLr6lXZE+ra/3nb/mQeRs+c2ubsQmD8OFwQlfyDFmFqeQrz
+	 xKnzNC2CzPiDqaIAxo9yZSeKOCIuFOPJOIzGhrzQ=
+From: Leo Yan <leo.yan@arm.com>
+Date: Mon, 28 Sep 2026 11:15:51 +0100
+Subject: [PATCH v2] perf test: Record kcore for the CoreSight callchain
+ test
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20260928-perf_cs_etm_callchain_test_add_kcore-v2-1-24fff6fab009@arm.com>
+X-B4-Tracking: v=1; b=H4sIAFY+umoC/x2N0QqDMAwAf0XyvIIWJna/MkYoaaphrkpSZCD++
+ 8oeD467E4xV2ODRnaB8iMlWGvhbB7TEMrOT1Bh878c++MntrBnJkOsHKa5rs6RgZasYU8I3bco
+ uh5GnMOQw0B1aalfO8v1vnq/r+gGBWobudgAAAA==
+X-Change-ID: 20260928-perf_cs_etm_callchain_test_add_kcore-f96e891f91c5
+To: Arnaldo Carvalho de Melo <acme@kernel.org>, 
+ Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
+ Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+ Suzuki K Poulose <suzuki.poulose@arm.com>, Mike Leach <mike.leach@arm.com>, 
+ James Clark <james.clark@linaro.org>, Leo Yan <leo.yan@arm.com>
+Cc: coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org, 
+ linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1790590562; l=1896;
+ i=leo.yan@arm.com; s=20250604; h=from:subject:message-id;
+ bh=TLcuAfNS5WGF0Ruj4addevBg9cjbks/F3rMnppHCpFQ=;
+ b=PBLAJZQTz4UAxqKrLyv3CqWD4tY8pyLYcqZhXfLSXqr1Oaz+AT7oVouvPfS9f4nU0Vezdmpw/
+ 96D3DunWinYB0n/QnueUdjkNQgEPoW4JEGspaRGqwiD5ogGg8Fr8j/Z
+X-Developer-Key: i=leo.yan@arm.com; a=ed25519;
+ pk=k4BaDbvkCXzBFA7Nw184KHGP5thju8lKqJYIrOWxDhI=
 
-> The "TSC support" subtest of the "Convert perf time to TSC" test decides
-> whether the architecture is covered by matching compiler macros for
-> x86_64, i386 and arm64.  That list has to be edited for every new
-> architecture, and it can drift apart from the set of architectures that
-> really provide a counter: util/tsc.c already ships a weak rdtsc() which
-> an architecture overrides with a strong definition when it has one.
->=20
-> Add a weak arch__rdtsc_supported() next to the weak rdtsc(), let the
-> test query it instead of the macros, and have x86, arm64 and riscv
-> override it in the file where they implement rdtsc().  Support is then
-> declared next to the counter it describes, and a caller can tell a stub
-> apart from a real counter without keeping its own copy of the macro
-> list.  This follows the pattern of the other optional per-architecture
-> hooks in util/ such as get_cpuid_str().
->=20
-> x86 and arm64 keep the same behaviour, and riscv starts running the
-> subtest because it gained rdtsc() in the previous patch.
->=20
-> Signed-off-by: Chen Pei <cp0613@linux.alibaba.com>
+The CoreSight callchain test traces both userspace and kernel execution
+and checks the callchain across a syscall.
 
-Sashiko has reviewed this patch and found no issues. It looks great!
+Add --kcore to perf record to save the running kernel image alongside
+the trace data so perf script can use it to decode the kernel trace.
+If kcore is not available, the test will be skipped.
 
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260928094739.2605=
--1-cp0613@linux.alibaba.com?part=3D2
+Add a Fixes tag so the change can be backported to stable kernels and
+improve the test reliability.
+
+Fixes: ca0e19074bd6 ("perf test: Add Arm CoreSight callchain test")
+Reviewed-by: James Clark <james.clark@linaro.org>
+Signed-off-by: Leo Yan <leo.yan@arm.com>
+---
+Changes in v2:
+- Add check /proc/kcore and skip test if absent.
+
+Signed-off-by: Leo Yan <leo.yan@arm.com>
+---
+ tools/perf/tests/shell/coresight/callchain.sh | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
+
+diff --git a/tools/perf/tests/shell/coresight/callchain.sh b/tools/perf/tests/shell/coresight/callchain.sh
+index 13cca7dc11184002e3ddc058c0d0ffa1c458c483..43ad90bc30345efdd40ba4649ceeb435a1781a4b 100755
+--- a/tools/perf/tests/shell/coresight/callchain.sh
++++ b/tools/perf/tests/shell/coresight/callchain.sh
+@@ -30,6 +30,11 @@ skip_if_system_is_not_ready()
+ 		return 2
+ 	}
+ 
++	[ -e /proc/kcore ] || {
++		echo "[Skip] /proc/kcore is not available" >&2
++		return 2
++	}
++
+ 	return 0
+ }
+ 
+@@ -43,7 +48,7 @@ record_trace()
+ 
+ 	mkfifo "$cf" "$af"
+ 
+-	perf record -o "$data" -e cs_etm// --per-thread -D -1 --control fifo:"$cf","$af" -- \
++	perf record --kcore -o "$data" -e cs_etm// --per-thread -D -1 --control fifo:"$cf","$af" -- \
+ 		perf test --record-ctl fifo:"$cf","$af" -w callchain >/dev/null 2>&1 &&
+ 
+ 	# It is safe to use 'i3i' with a three-instruction interval, since the
+
+---
+base-commit: 0ae6fc78c5ce0dfd18d8712a50f0fd4602eff103
+change-id: 20260928-perf_cs_etm_callchain_test_add_kcore-f96e891f91c5
+
+Best regards,
+-- 
+Leo Yan <leo.yan@arm.com>
 
