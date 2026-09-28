@@ -1,46 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 612204EE85F;
-	Mon, 28 Sep 2026 16:31:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EB864EDCD6;
+	Mon, 28 Sep 2026 16:31:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790613079; cv=none; b=OEBt6Xt9pQa4qN7/8ZwScMaP8fAFaBfhmi1I4ImkaNmKPbg2LKdqNq2XA02B3fbfaAcdFW70PewQa3tuO0SnaimKRgjKK+6Ogq52bB55Vhkb5V5uqhSyXRNtrpvuD2uBXoQEM3++FaK5y/15yKTgS6SYv9TxPLOfd0kZTPIN0AU=
+	t=1790613106; cv=none; b=oTQq16Bvu6/NXF84G3rodS/pm6pij0LfdnTv8Bw1y16AmVychBwlPFOcXDsk+luIv8TCqkIYwy9KTb9qvxPcj7ksaNcbKUh0Q2/cKRMpH5QoH8cjgDsKIpNKuHJ1d7lhKZ7R/PfBNt1f2g5stijyPV/DpaicH+vMy7zxWYiljPk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790613079; c=relaxed/simple;
-	bh=zH0DVJ02puDPsbaUjxuAZFXxLZkHN2nL1uvpr3zHEp8=;
+	s=arc-20240116; t=1790613106; c=relaxed/simple;
+	bh=c541e+Yf/1TkzNRiiS1DegAycr4yZV+4QccWpKXqm8M=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=To8FESH5vEo7A2bVpVzl868DlZNbtRGYNb33hSbTeq109IzVbqVQ7xnWE5HuV0Nqge5R/O9vtniESDbuLcDLPiB/q/KPoFx66HW/3DRZG7Uu+Cdx+10gK9c4EqqsQZvmZeO6U90On7yOQux2iQyCnd2/r+XEjyFG6a2tbFUJIkU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ib25uwSy; arc=none smtp.client-ip=100.103.45.18
+	 Content-Type:Content-Disposition:In-Reply-To; b=g4HklI5uMtCyySb/MYspRWXdsewR9Tz+GdqrXvgHBOAoNQNw7eJI3u28Qg+yXv9Q0R/8HO56cU9fg8IkYt9MsCHWx1nTtqqygx/RGjy1nRUiipWpq0zkiQBun8iqiaeB477xRuyvTg/RrKIQzvX93uIcoc3WbbWIWfM1zkqJjSE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ggGsrxCJ; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ib25uwSy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6866C1F00899;
-	Mon, 28 Sep 2026 16:31:17 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ggGsrxCJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C9BEA1F000FF;
+	Mon, 28 Sep 2026 16:31:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1790613078;
-	bh=jy+fOa1xjY8i284m44/fZDl63yX20Ah34xZQpmbapvc=;
+	s=k20260515; t=1790613105;
+	bh=5GpRpNe92QpGRvNBfRb9js65IBscjYzBPJDtk432NWo=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=Ib25uwSyLD/KOs+hQ+BjeDKF+XD2P5kMw6ajYcP2wsXRyJXp4HXGU80+6NyL/0W5j
-	 QwgB804Hojoro3FPNI/TluOYwXvJK1ldHx5BlmogpSbQqHbEjaZa84axiJ/nlS3lnX
-	 uX8gHDJ9UEEPm+zJwWM7bzXpnedlD2Wjmm67zQ6k8tyGzFxocXZHt+vJL+HEc4/hEX
-	 w8vO73oPJ+xmfsAUAMloOMJzNvBK+MPcbFgxJ1JZwgZFxeAl2NQoKNvUzsYwcCgbTS
-	 LttMP4y+Hfl02y6t2bmor/d6yX5rGYSZYViCttqoI+cTEfynBAc6BVoczYbamYQ0Py
-	 JNT0kCIRakD4Q==
-Date: Mon, 28 Sep 2026 18:31:14 +0200
+	b=ggGsrxCJcCVfBhbDDe5wweiFa11dtdqZONL6hGceidJWjnTSl2SPFmGZXWpQDsw8f
+	 JwstrbRF5NyKr0IYJUTBIsjQ0umloPXgXRxrPnf41ADGTGCsHjwxcC2EtGuzjMlqh7
+	 BwZsjwGPT3Mi2rqSC+HiM63nVW4T7U6PW2dwo8mg4nq/52QTpy8KmrdbE1HEm9A5B4
+	 IwdWgpCTeYsGUFwuOeW2VWQy6sxN8djuyRVuAvaRyNp2nt3ZTXjb4GS+1fE0lRr3y3
+	 8mhRVYR2hewuRIRh4ohElTixJUKVTzAkUBflv1MZHyePic0en8YBJEHP98Lyxtfoof
+	 KizmyksIBKuOQ==
+Date: Mon, 28 Sep 2026 18:31:42 +0200
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Leo Yan <leo.yan@arm.com>
-Cc: Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Mike Leach <mike.leach@arm.com>,
-	James Clark <james.clark@linaro.org>, coresight@lists.linaro.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] perf test: Record kcore for the CoreSight callchain
- test
-Message-ID: <arqWUi5qJketJ3KQ@x2>
-References: <20260928-perf_cs_etm_callchain_test_add_kcore-v2-1-24fff6fab009@arm.com>
+Cc: John Garry <john.garry@linux.dev>, namhyung@kernel.org,
+	linux-perf-users@vger.kernel.org, will@kernel.org,
+	james.clark@linaro.org, mike.leach@arm.com, leo.yan@linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] MAINTAINERS: Update John Garry's address for from arm64
+ perf tools
+Message-ID: <arqWbrUcrkQnHEjy@x2>
+References: <20260928151652.66499-1-john.garry@linux.dev>
+ <20260928162436.GF14479@e132581.arm.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -49,19 +46,16 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260928-perf_cs_etm_callchain_test_add_kcore-v2-1-24fff6fab009@arm.com>
+In-Reply-To: <20260928162436.GF14479@e132581.arm.com>
 
-On Mon, Sep 28, 2026 at 11:15:51AM +0100, Leo Yan wrote:
-> The CoreSight callchain test traces both userspace and kernel execution
-> and checks the callchain across a syscall.
- 
-> Add --kcore to perf record to save the running kernel image alongside
-> the trace data so perf script can use it to decode the kernel trace.
-> If kcore is not available, the test will be skipped.
- 
-> Fixes: ca0e19074bd6 ("perf test: Add Arm CoreSight callchain test")
-> Reviewed-by: James Clark <james.clark@linaro.org>
-> Signed-off-by: Leo Yan <leo.yan@arm.com>
+On Mon, Sep 28, 2026 at 05:24:36PM +0100, Leo Yan wrote:
+> On Mon, Sep 28, 2026 at 04:16:52PM +0100, John Garry wrote:
+> > My employer e-mail address will stop working soon and I am likely to get
+> > more involved in this area in future, so update my address.
+> > 
+> > Signed-off-by: John Garry <john.garry@linux.dev>
+> 
+> Reviewed-by: Leo Yan <leo.yan@arm.com>
 
 Thanks, applied to perf-tools-next, for v7.4.
 
