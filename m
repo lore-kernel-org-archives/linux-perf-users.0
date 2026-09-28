@@ -1,75 +1,60 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0FFF2931EF
-	for <linux-perf-users@vger.kernel.org>; Mon, 28 Sep 2026 18:09:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B3F9377AB0
+	for <linux-perf-users@vger.kernel.org>; Mon, 28 Sep 2026 18:10:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790618969; cv=none; b=ODEDtp76uabuaNcNR7A6Fa9CjrMCj22f1TQ4BGrATMLD0BLtVb4Q7JjRxP2z/6cufo7+6K3BnPRdtnJtpXgrVB/74rTEkQdOYKciIHX3/nnZmppY/+qZ27MbqYlfE3UL1BWUbLiuhAVGE4tInBPLRMNKDh5QjuRLftawY0h1rJ4=
+	t=1790619046; cv=none; b=CKaxgQ39Y85f5Dbzxl3/JXOWm9AZbMqngFymlUl+UngpQuOH1XUh9R60n02ZUDTXWu2TEp8TkLr1iDq5EKHj9TD18sOANZB1r4mVCJHhDSyrAc5Pr1e7HxM5VeOmR2XYngUzzclYeJ2icftYs0FCYKaeST5YXy7KDFsNqV7GzxU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790618969; c=relaxed/simple;
-	bh=mTB7UQ9o/05RA99ikB+QPZ162H7epQ1mnNCAx6wGUXg=;
+	s=arc-20240116; t=1790619046; c=relaxed/simple;
+	bh=IZLYRz0IndOwZDAbNDWJJ1L3ns7thcj6JahvI+AWlkg=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=YfwuVaesFOKf4DaXJKI9mo3su4WftwZxsPVWRQiLjLRSzojaebhoIOwrDcoCoa+CQLza3p+GGfXoYaZTtk/ofefbFO0Ho2Ej6JvJSHtTbXw/rWmmYBgSnh8yv/vT+KdWr/Zlz2LHrWmClz9VL+BSzb8FPgtxkBdL/7VNo9d6zjU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JU5wB3Qe; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=JD0pdHyAj0QsGCarNN3AgzKupWplXJXRRL38FDkO/2RoXSppPNa0KNGku/jpQzuzHGfa6df9SFybpzWBOuI6O6yAl26jM2gyqfDp13NTyiKX71Bg2h2lkXrhT66D1EQ99dHBMsPkqAT/uMMX48pBvqmQXpQh0YAv9dSTmH3l/vo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dzEE1xXz; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JU5wB3Qe"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3F4411F000FF;
-	Mon, 28 Sep 2026 18:09:28 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dzEE1xXz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7FB911F000FF;
+	Mon, 28 Sep 2026 18:10:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1790618968;
-	bh=mTB7UQ9o/05RA99ikB+QPZ162H7epQ1mnNCAx6wGUXg=;
+	s=k20260515; t=1790619044;
+	bh=IZLYRz0IndOwZDAbNDWJJ1L3ns7thcj6JahvI+AWlkg=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=JU5wB3QeVHKdpRlWjzu+W9Le9L1muBzvCmYO5cn5WhqDQX4uZOkjRvCwFSnMEgegq
-	 jz+TV3zoehgeMdaxEfzi7KFV6hqMNvTx0SE5mZ8JLHVrOHdbL/Ue9opB3OCk2PzGbv
-	 eyiMywW9Yl/gFA30wMV5B7PJa6IW9iOQuYDdGAgWQ0csXqlXeWdYEhw/qysaLbaAnN
-	 5GVeDTxv8sOz8bvRbQAIq5f0ASXMM7xnPq39sfsRZ2+vMbW9TK25EqU984RP2guUVX
-	 X1dfNVLpLsghtU8xjmqDBhE9LX+bmZ482H6giSFfSq7f46eMvI0E/IIb0ZO3nLmei0
-	 Y01t026XETV3Q==
+	b=dzEE1xXziqAmwbhtDqf76nJiTB2XE5KSKoXaLUB0k0LPi2m93kXTxD/5bun/yTKK9
+	 eWykFq1BzBXb4Mw9nCybMawQiyNAlEeHpFtAwweqcCvipKcVSHldi84PEQgZj60VnL
+	 gTBaCRjedIlNybe8LqFJQERZneqJjnXBTe9+ELR5KWT481WArBXnRpL6cwjzVmzTWQ
+	 wHpYq40dT6u8y5HS5zGa2emtqqB+gYatbsVx64PHDw3nL/TMubO35gTHH5FWwHpZX8
+	 C29W4RmWzfTXRZkqN93oJTDuv6Y7amGcGzNuR1Bpdl25Eft0UmE6OrZuJu/asRpaSC
+	 JmWBA7Qqyz1EQ==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 1/1] perf/core: Require kernel access for text poke
- events
+Subject: Re: [PATCH] perf test probe_vfs_getname: Also look for the probe
+ line in do_getname()
 Reply-To: sashiko-reviews@lists.linux.dev
-To: "Zhengchuan Liang" <zcliangcn@gmail.com>
+To: "Ian Rogers" <irogers@google.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <99131354c41e23188f778b92f90363775b482395.1790573390.git.zcliangcn@gmail.com>
-References: <cover.1790573390.git.zcliangcn@gmail.com>
- <99131354c41e23188f778b92f90363775b482395.1790573390.git.zcliangcn@gmail.com>
+In-Reply-To: <20260926223905.6865105-1-irogers@google.com>
+References: <20260926223905.6865105-1-irogers@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Mon, 28 Sep 2026 18:09:27 +0000
-Message-Id: <20260928180928.3F4411F000FF@smtp.kernel.org>
+Date: Mon, 28 Sep 2026 18:10:44 +0000
+Message-Id: <20260928181044.7FB911F000FF@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-> Perf events with exclude_kernel=3D1 can be opened without kernel perf
-> access. However, exclude_kernel does not suppress text-poke sideband
-> records. Every PERF_RECORD_TEXT_POKE is marked PERF_RECORD_MISC_KERNEL
-> and contains a raw kernel instruction address.
+> Since commit 9fa3ec84587c ("allow incomplete imports of filenames"), in
+> v7.0, getname_flags() only calls do_getname(). None of the lines the
+> vfs_getname tests search for are in getname_flags() any more, so the
+> tests always skip. Fall back to the initname() call in do_getname().
 >=20
-> An unprivileged task can therefore open and mmap a task-local software
-> event with text_poke=3D1. Both opening a count-only tracepoint event and
-> configuring UDP GRO for ESP-in-UDP cause updates to inline static calls;
-> the observer receives the relocated addresses of the modified instruction=
-s.
-> For a known kernel image, any such address reveals the runtime kernel
-> text base despite KASLR.
->=20
-> Call perf_allow_kernel() whenever attr.text_poke is set, regardless of
-> exclude_kernel. Events that neither monitor kernel execution nor request
-> text-poke records retain their existing permissions.
->=20
-> Fixes: e17d43b93e54 ("perf: Add perf text poke event")
-> Cc: stable@vger.kernel.org
-> Assisted-by: LLM
-> Signed-off-by: Zhengchuan Liang <zcliangcn@gmail.com>
+> Assisted-by: Antigravity:gemini-3.1-pro
+> Signed-off-by: Ian Rogers <irogers@google.com>
 
 Sashiko has reviewed this patch and found no issues. It looks great!
 
 --=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/cover.1790573390.gi=
-t.zcliangcn@gmail.com?part=3D1
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260926223905.6865=
+105-1-irogers@google.com?part=3D1
 
