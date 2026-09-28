@@ -1,117 +1,104 @@
-Received: from out30-119.freemail.mail.aliyun.com (out30-119.freemail.mail.aliyun.com [115.124.30.119])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5DEF4734F3;
-	Mon, 28 Sep 2026 09:47:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.119
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 494AE495AF0
+	for <linux-perf-users@vger.kernel.org>; Mon, 28 Sep 2026 09:54:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790588882; cv=none; b=Dp4rPQzijJ89a7eKH/tcCxmWvoS44zxLzD/OBr9yNNkprrOF1TLYhsON+ZwF0t9BZTghp3nXsvziip3ybFTchB+Z7+kmjjavb8tPnljNZhxE9pYQYXhnLwJKwBfLxlR2wvsssIxWVdtWILzJYwrJcpYELSkNjNJ29w3ss4JLcZ8=
+	t=1790589268; cv=none; b=B+vCRaVHmYI85EftFWe2nsWRkJTkf75XkE1bsUqheZDN3B9mVPOAP/xsxlzs+3PMa61UHTaQukWmJC/snmU6rB4fFpJjRTcZmjE1/LQpaWu4VKCoxfcDKG4uT/nZicgYIW0vSZA0FOfKCWH1qciWNflf7M13j6mYkMRGwPcjUUY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790588882; c=relaxed/simple;
-	bh=5b18Ty9UFVLwooMLI6zBNF1EFrPs1maBNemN2hj5/FE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=iKV8pueVONOUDlVljMQKkg8S7isugKRrGazzrLVLO1yLYOUTaBmFBkisdczEARhzBotshINH8K7clCLkiNK28+AmxVS2MRiWxLQnln0eD0Qxa5jOz/uVmV/3PUJZkdLCEImCdqJuAhOHw+1TEzDmgYtRzgl3DRDEbbZdP1I99+k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=h/GLixwK; arc=none smtp.client-ip=115.124.30.119
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1790589268; c=relaxed/simple;
+	bh=E+FyaS8G6MYxK5IkaU3A2c2SGWiz6+EspdGEvaMZYSg=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=rY4bGGLDI47H3WPf0XkNlayQ4uHxBHLYBV8ru4hIlmPSlFe3lXEKRWWLq+5pO5+HDZHA4soZt0JXc+3r8/NrUsJAbfe6RQ717po9DSygeqtndczV9cSm5yIjvOEmoTh8nfyVuIZ/NWhN4Ojn7nQqLHftalzMmrLXmNJ/yTcn8Lw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=I2JMRfQt; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="h/GLixwK"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1790588865; h=From:To:Subject:Date:Message-ID:MIME-Version;
-	bh=EMqR6vKqG0eu05A9NobGOudkspzGkyf5Myx8wtsS/mc=;
-	b=h/GLixwKtVEJnsNZvjgtVnvFxdgxmJotz3Kf1VYdIIemaS2HpupGq88aaWDiWvTts4oH5/lak7qu6gLWWmxUZnF8whgREoN0So7R7p7FEpnA3SwnWbLF95UkIgKtL58xo+xl0ywAl8x89kVgQs/YKpsEOfLwC4nhZ4+Cq2oEEzQ=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R101e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037009110;MF=cp0613@linux.alibaba.com;NM=1;PH=DS;RN=21;SR=0;TI=SMTPD_---0XBlsELq_1790588859;
-Received: from DESKTOP-S9E58SO.localdomain(mailfrom:cp0613@linux.alibaba.com fp:SMTPD_---0XBlsELq_1790588859 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Mon, 28 Sep 2026 17:47:44 +0800
-From: Chen Pei <cp0613@linux.alibaba.com>
-To: acme@kernel.org,
-	peterz@infradead.org,
-	mingo@redhat.com,
-	namhyung@kernel.org
-Cc: mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com,
-	jolsa@kernel.org,
-	irogers@google.com,
-	adrian.hunter@intel.com,
-	james.clark@linaro.org,
-	leo.yan@linux.dev,
-	john.g.garry@oracle.com,
-	will@kernel.org,
-	mike.leach@arm.com,
-	pjw@kernel.org,
-	palmer@dabbelt.com,
-	guoren@kernel.org,
-	linux-perf-users@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-riscv@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 0/2] perf riscv: Implement rdtsc()
-Date: Mon, 28 Sep 2026 17:47:37 +0800
-Message-ID: <20260928094739.2605-1-cp0613@linux.alibaba.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="I2JMRfQt"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C035A1F000FF;
+	Mon, 28 Sep 2026 09:54:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1790589266;
+	bh=qjhHoasv+erHeat6DqiuH3eqmvgyssDSdN49uhrkzYI=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=I2JMRfQtLXW8YHolji5O+SvrnfmEuG/RBV1ZZE2w3bLvcwv7o6k7Fbfrrt4iM6RXS
+	 7kMBSUuZD3WD4oYotnhbrdgKBSw30MEDd6mUuWNkaAG/I3k9hA2XWO3VHsPBFDNrpv
+	 m84WWe/Ad8CJaHwbta57+iM6FE6EQojIes1RTw62Ap7tzVTwPDAmdrPcEZBPNNVGkC
+	 WLaUAgxvKeYkaBwKZbJeaHK5wGczmuW8KHQeCGyIJjQcK3nJGlQzucsgxKe2ooEo7X
+	 be/rwwJoujosol00VzbEoXAXK4SQrCBHX9BgOMjwMzk6RHQRpRtWWB/+5bCdf3qOcY
+	 BiB8PbYc0vDsg==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH 1/2] perf riscv: Implement rdtsc()
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Chen Pei" <cp0613@linux.alibaba.com>
+Cc: linux-perf-users@vger.kernel.org
+In-Reply-To: <20260928094739.2605-2-cp0613@linux.alibaba.com>
+References: <20260928094739.2605-1-cp0613@linux.alibaba.com>
+ <20260928094739.2605-2-cp0613@linux.alibaba.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Mon, 28 Sep 2026 09:54:26 +0000
+Message-Id: <20260928095426.C035A1F000FF@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-tools/perf falls back to the __weak rdtsc() stub in tools/perf/util/tsc.c
-on every architecture that does not override it, riscv included.  The
-stub returns a constant 0, so anything that reaches for the counter gets
-a value that means nothing and cannot tell it apart from a counter that
-happens to be at 0.
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+s) to consider:
+- [Medium] perf riscv: uninitialized upper 32 bits in rdtsc() on RV32
+--
 
-The time CSR is a natural TSC equivalent on riscv: readable from user
-mode, constant frequency, and the same counter that riscv's
-arch_perf_update_userpage() feeds the user page conversion fields from,
-ever since commit 83c5e13b8cbb ("riscv: Prepare for user-space perf
-event mmap support").  This series registers that on the tools side.
+commit fa857133aeb89c2c952b09a7575fc1ec0de78663
+Author: Chen Pei <cp0613@linux.alibaba.com>
 
-The two patches are split so that the first stands on its own:
+perf riscv: Implement rdtsc()
 
-1. Implement rdtsc() over the time CSR for riscv.
+There is no riscv implementation of rdtsc(), so perf links against the
+weak stub in util/tsc.c and every caller reads a constant 0.
+This commit implements rdtsc() over the time CSR with rdtime, which is a
+TSC equivalent on riscv.
 
-2. Replace the compile-time TSC support check with a weak
-   arch__rdtsc_supported() hook, so that support is declared next to
-   the rdtsc() it describes rather than in the central list of compiler
-   macros.
+> diff --git a/tools/perf/arch/riscv/util/tsc.c b/tools/perf/arch/riscv/uti=
+l/tsc.c
+> new file mode 100644
+> index 0000000000000..7cc4710ac38c3
+> --- /dev/null
+> +++ b/tools/perf/arch/riscv/util/tsc.c
+> @@ -0,0 +1,19 @@
+[ ... ]
+> +u64 rdtsc(void)
+> +{
+> +	u64 val;
+> +
+> +	/*
+> +	 * The time CSR ticks at a constant frequency and is the same counter
+> +	 * the kernel feeds into the user page conversion fields through
+> +	 * sched_clock(), so it is a TSC equivalent here.
+> +	 */
+> +	asm volatile("rdtime %0" : "=3Dr" (val));
 
-What this is worth beyond the subtest result:
+[Severity: Medium]
+On 32-bit RISC-V (RV32), does this leave the upper 32 bits of val
+uninitialized?
 
-1. The subtest is the only reader of those conversion fields riscv
-   can run, so it guards arithmetic that has shipped unexercised;
-   registering the counter at the same time leaves a future riscv
-   auxtrace driver the reading and the conversion already in place.
+The rdtime instruction on RV32 is a pseudo-instruction that reads only the
+lower 32 bits of the time CSR. Because the target variable val is a 64-bit
+integer (u64), the compiler maps it to a register pair on RV32.
 
-2. The hook gives a caller something to ask the architecture before
-   it uses the counter value, instead of each caller keeping its own
-   copy of the macro list.
+However, the inline assembly constraint "=3Dr" only writes to the first 32-=
+bit
+register, leaving the upper 32 bits completely uninitialized and containing
+garbage. This could corrupt perf timestamp calculations when running on an
+RV32 system.
 
-Tests:
-======
-- The "Convert perf time to TSC" test in a riscv64 QEMU virt guest
-  with sscofpmf: the subtest skips before the series, passes after it.
-- With the riscv implementation left out of the build, so that the
-  weak defaults are in effect, the subtest still skips: the behaviour
-  of an architecture without a counter is unchanged.
+Proper 64-bit CSR reading on RV32 requires a loop reading both the time and
+timeh CSRs.
 
-Chen Pei (2):
-  perf riscv: Implement rdtsc()
-  perf tsc: Replace the compile-time TSC support check with a weak hook
+> +
+> +	return val;
+> +}
 
- tools/perf/arch/arm64/util/tsc.c    |  5 +++++
- tools/perf/arch/riscv/util/Build    |  1 +
- tools/perf/arch/riscv/util/tsc.c    | 24 ++++++++++++++++++++++++
- tools/perf/arch/x86/util/tsc.c      |  5 +++++
- tools/perf/tests/perf-time-to-tsc.c | 12 +-----------
- tools/perf/util/tsc.c               |  9 +++++++++
- tools/perf/util/tsc.h               |  1 +
- 7 files changed, 46 insertions(+), 11 deletions(-)
- create mode 100644 tools/perf/arch/riscv/util/tsc.c
-
--- 
-2.50.1
-
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260928094739.2605=
+-1-cp0613@linux.alibaba.com?part=3D1
