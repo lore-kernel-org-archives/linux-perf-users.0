@@ -1,79 +1,156 @@
-Received: from out30-112.freemail.mail.aliyun.com (out30-112.freemail.mail.aliyun.com [115.124.30.112])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8E783921FB;
-	Mon, 28 Sep 2026 05:46:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.112
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 940733DCD9C;
+	Mon, 28 Sep 2026 05:51:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790574391; cv=none; b=TyDqJ6ivly8YKA0O3bDP9AN6oRX5Y+/uwW8eVRUptTQE4Zot3hLS5KaIQfUnXMa0eztREsMW8SB2K7nA9apY8gbKRJx7hbzfndcXUfLunbdoN0p3rtPyTTxtHFNKuG5HlQcb8rAyjtidPZ4p9egb7OMEhk1Ipz+PSBVac364Ksc=
+	t=1790574666; cv=none; b=cnUcNpsVoQSZTeyrzkENkAlbkl6wWy+e+7Wn48azFNnSI/fNhtE0K0BoNo2y7J/HlwQbyfAHTisqRJEvKn0Oti/2A3/VRDGo9ZPQYL0DMSJ+ctXgn83iauqTx3Q8ZdTnbsdMb4WzbdyeEt21MbkOn37m2Z0+T9gw3bkwJHdwJcQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790574391; c=relaxed/simple;
-	bh=ftFZ2HnEv4SL/A0+ikOrSM2KcTXY+Wyg5ROgkIxtHkY=;
-	h=Content-Type:MIME-Version:From:To:Cc:Subject:Date:Message-ID; b=HB8pVfNScwmLYDp3wZ2nGLS5AqEtOHdiQZdqGzXXEVNv/O78v+4mxpwxDA5jcFQ4/fEA0HLmZUYrttxMWyGq7rG6gAfFrrqVfycYNSWPZtrORED9dharOG9MD0Izg6L9syY6LYpAkm5onQy8z9jl0EZqVacVR+C57rJf00XOBvg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=IBijV9y7; arc=none smtp.client-ip=115.124.30.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1790574666; c=relaxed/simple;
+	bh=iaebpnMaYnKS9ZvbRr1eJA9tSQXjBOuBlh/ITNkiX9E=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=gj+bTNTagCt9ov70gvMnvjRBZr6e2/ZJCuls2SpmSQoBMh+VipefX5SflQI5n+qRNyiAUlmn3WbtIcBouWIZghEKnlq6JcMehGayzMh8HgvnSw7ew1c+SPFgTMP82DJ11UWc2EUIXPy+GSDYZ0sh6d57/iuAwRFu8xUAKzTrODk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WcYyHuTY; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="IBijV9y7"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1790574373; h=Content-Type:MIME-Version:From:To:Subject:Date:Message-ID;
-	bh=ftFZ2HnEv4SL/A0+ikOrSM2KcTXY+Wyg5ROgkIxtHkY=;
-	b=IBijV9y7rmUpXicbdAy87370TQRn5zcEGoenbyIzudyS/wSnAEWr3nqZTA1w7Z43lSpHfDZXqHDunoBs0naSPtZnGZnWIjOv4RSBwHS0AduCkxqrkOZI3H3QkXquVBw0eBH3hl6GFKhtF7LAultOO2vZTFwHBhz8XJXm5GPmbdc=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R191e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033045098064;MF=fuwenxin@linux.alibaba.com;NM=1;PH=DS;RN=7;SR=0;TI=SMTPD_---0XBiHlhz_1790574372;
-Received: from t50b09067.sqa.eu95(mailfrom:fuwenxin@linux.alibaba.com fp:SMTPD_---0XBiHlhz_1790574372 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Mon, 28 Sep 2026 13:46:13 +0800
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WcYyHuTY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 76CD71F00898;
+	Mon, 28 Sep 2026 05:51:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1790574663;
+	bh=HMjZrP6lltxxUD1SzToZTQUwxq0yUrffQcs24z28U4Q=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=WcYyHuTY6d1yS/FHFGyBlat3c1pp6QbifTHHlc2CBrKiRiNSiLlWk4DZov2RVVV4c
+	 g3wOOiRzR12Pa/u4mXxyJdP0E059CpavsK/UTpxgRxoSwdXYuEzHCrzSmvs0i+XDTE
+	 DA4cGrDqSXrwjfJEkHGeaheQoB2jDePzmq2rsM5f2dwlm+j/iSXXJtWBqBqX8UAUZ4
+	 kENwyGHJMY002vV1NShx/3pYPhSnqO+tiapdvTGtGfWu+/cWfJi72Rlk28Lgvc0r9M
+	 PblTbgNBuN+fHqP66FbHEDotzqvHps3j1nuGhlEhCMxpbKD50OkRQKxUYaanA8faA6
+	 SeimEqFy+EdkA==
+From: Namhyung Kim <namhyung@kernel.org>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	James Clark <james.clark@linaro.org>
+Cc: Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org,
+	Masami Hiramatsu <mhiramat@kernel.org>
+Subject: [PATCH v1 2/8] perf tools: Factor out dso__find_dbginfo_type()
+Date: Sun, 27 Sep 2026 22:50:49 -0700
+Message-ID: <20260928055055.95144-3-namhyung@kernel.org>
+X-Mailer: git-send-email 2.55.0
+In-Reply-To: <20260928055055.95144-1-namhyung@kernel.org>
+References: <20260928055055.95144-1-namhyung@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-From: Wenxin Fu <fuwenxin@linux.alibaba.com>
-To: acme@kernel.org
-Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
- irogers@google.com, weilin.wang@intel.com, adrian.hunter@intel.com,
- alexander.shishkin@linux.intel.com
-Subject: [PATCH] perf intel-tpebs: Stop record process before deleting the
- last entry
-Date: Mon, 28 Sep 2026 13:46:12 +0800
-Message-ID: <179057437287.652774.7332965203936908557@t50b09067.sqa.eu95>
+Content-Transfer-Encoding: 8bit
 
-ZXZzZWxfX3RwZWJzX2Nsb3NlKCkgZGVsZXRlcyB0aGUgcmV0aXJlLWxhdGVuY3kgZW50cnkgZnJv
-bQp0cGVic19yZXN1bHRzIGJlZm9yZSBjYWxsaW5nIHRwZWJzX3N0b3AoKS4gU2VuZGluZyB0aGUg
-U1RPUCBjb21tYW5kCnRlbXBvcmFyaWx5IGRyb3BzIHRwZWJzX210eCBpbnNpZGUgdHBlYnNfc2Vu
-ZF9yZWNvcmRfY21kKCksIGFuZCBpbgp0aGF0IHdpbmRvdyB0aGUgc2FtcGxlIHJlYWRlciB0aHJl
-YWQgbWF5IHN0aWxsIGJlIGRyYWluaW5nIHNhbXBsZXMKZmx1c2hlZCBieSBwZXJmIHJlY29yZCBh
-ZnRlciBTVE9QLiBXaXRoIHRoZSBlbnRyeSBhbHJlYWR5IGdvbmUsCnRwZWJzX3JldGlyZV9sYXRf
-X2ZpbmQoKSBmYWlscywgcHJvY2Vzc19zYW1wbGVfZXZlbnQoKSByZXR1cm5zCi1FSU5WQUwsIHRo
-ZSBzZXNzaW9uIGFib3J0cyBhbmQgcGVyZl9zZXNzaW9uX19kZWxldGUoKSBjbG9zZXMgdGhlCnBp
-cGUgcmVhZCBlbmQgZWFybHkuIHBlcmYgcmVjb3JkIHRoZW4gZ2V0cyBFUElQRSBvbiBpdHMgZmlu
-YWwgc3Rkb3V0CndyaXRlcyBhbmQgaXMga2lsbGVkIGJ5IFNJR1BJUEUgYmVmb3JlIHByaW50aW5n
-IGl0cyBzdW1tYXJ5IGxpbmVzLAptYWtpbmcgcGVyZiB0ZXN0ICJJbnRlbCBUUEVCUyBjb3VudGlu
-ZyBtb2RlIiBmbGFreSAofjMwJSBmYWlsdXJlCnJhdGUgd2l0aCAncGVyZiBzdGF0IC1lIGNhY2hl
-LW1pc3NlczpSIC0tcmVjb3JkLXRwZWJzIC1hIHNsZWVwIDAuMDEnCmluIGEgbG9vcCBvbiBhIDE5
-Mi1jb3JlIFhlb24gUGxhdGludW0gODQ3NUIpLgoKU3RvcCB0aGUgcmVjb3JkIHByb2Nlc3Mgd2hp
-bGUgdGhlIGxhc3QgZW50cnkgaXMgc3RpbGwgb24gdGhlIGxpc3Qgc28KdGhlIHJlYWRlciBjYW4g
-bWF0Y2ggYW5kIGRyYWluIHRoZSByZW1haW5pbmcgc2FtcGxlcywgYW5kIG9ubHkgZGVsZXRlCnRo
-ZSBlbnRyeSBhZnRlcndhcmRzLgoKRml4ZXM6IDhkYjVjYWJjZjFiNiAoInBlcmYgc3RhdDogRm9y
-ayBhbmQgbGF1bmNoICdwZXJmIHJlY29yZCcgd2hlbiAncGVyZiBzdGF0JyBuZWVkcyB0byBnZXQg
-cmV0aXJlIGxhdGVuY3kgdmFsdWUgZm9yIGEgbWV0cmljLiIpClNpZ25lZC1vZmYtYnk6IFdlbnhp
-biBGdSA8ZnV3ZW54aW5AbGludXguYWxpYmFiYS5jb20+Ci0tLQogdG9vbHMvcGVyZi91dGlsL2lu
-dGVsLXRwZWJzLmMgfCAxMCArKysrKysrLS0tCiAxIGZpbGUgY2hhbmdlZCwgNyBpbnNlcnRpb25z
-KCspLCAzIGRlbGV0aW9ucygtKQoKZGlmZiAtLWdpdCBhL3Rvb2xzL3BlcmYvdXRpbC9pbnRlbC10
-cGVicy5jIGIvdG9vbHMvcGVyZi91dGlsL2ludGVsLXRwZWJzLmMKaW5kZXggYjQxMTcxYjVkZjc3
-Li5lN2EwMTE4YmM1ZTQgMTAwNjQ0Ci0tLSBhL3Rvb2xzL3BlcmYvdXRpbC9pbnRlbC10cGVicy5j
-CisrKyBiL3Rvb2xzL3BlcmYvdXRpbC9pbnRlbC10cGVicy5jCkBAIC03MTEsMTEgKzcxMSwxNSBA
-QCB2b2lkIGV2c2VsX190cGVic19jbG9zZShzdHJ1Y3QgZXZzZWwgKmV2c2VsKQogCW11dGV4X2xv
-Y2sodHBlYnNfbXR4X2dldCgpKTsKIAl0ID0gdHBlYnNfcmV0aXJlX2xhdF9fZmluZChldnNlbCk7
-CiAJaWYgKHQpIHsKKwkJLyoKKwkJICogU3RvcCB3aGlsZSB0aGUgZW50cnkgaXMgc3RpbGwgdmlz
-aWJsZSBzbyB0aGUgcmVhZGVyIHRocmVhZCBjYW4KKwkJICogZHJhaW4gc2FtcGxlcyBmbHVzaGVk
-IGFmdGVyIFNUT1A7IG90aGVyd2lzZSBpdCBhYm9ydHMgdGhlCisJCSAqIHNlc3Npb24gYW5kIGNs
-b3NlcyB0aGUgcGlwZSwga2lsbGluZyBwZXJmIHJlY29yZCB3aXRoIFNJR1BJUEUuCisJCSAqLwor
-CQlpZiAobGlzdF9pc19sYXN0KCZ0LT5uZCwgJnRwZWJzX3Jlc3VsdHMpKQorCQkJdHBlYnNfc3Rv
-cCgpOwogCQlsaXN0X2RlbF9pbml0KCZ0LT5uZCk7CiAJCXRwZWJzX3JldGlyZV9sYXRfX2RlbGV0
-ZSh0KTsKLQotCQlpZiAobGlzdF9lbXB0eSgmdHBlYnNfcmVzdWx0cykpCi0JCQl0cGVic19zdG9w
-KCk7CiAJfQogCW11dGV4X3VubG9jayh0cGVic19tdHhfZ2V0KCkpOwogfQotLSAKMi40My43Cgo=
+It tries to find a file with working debug info by checking all possible
+debug types.
+
+Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+---
+ tools/perf/util/debuginfo.c | 23 ++++++-----------------
+ tools/perf/util/dso.c       | 28 ++++++++++++++++++++++++++++
+ tools/perf/util/dso.h       |  2 ++
+ 3 files changed, 36 insertions(+), 17 deletions(-)
+
+diff --git a/tools/perf/util/debuginfo.c b/tools/perf/util/debuginfo.c
+index 84a78b30ceac1066..d6bd0fcc22648f0e 100644
+--- a/tools/perf/util/debuginfo.c
++++ b/tools/perf/util/debuginfo.c
+@@ -93,15 +93,6 @@ static struct debuginfo *__debuginfo__new(const char *path)
+ 
+ struct debuginfo *debuginfo__new(const char *path)
+ {
+-	static const enum dso_binary_type distro_dwarf_types[] = {
+-		DSO_BINARY_TYPE__FEDORA_DEBUGINFO,
+-		DSO_BINARY_TYPE__UBUNTU_DEBUGINFO,
+-		DSO_BINARY_TYPE__OPENEMBEDDED_DEBUGINFO,
+-		DSO_BINARY_TYPE__BUILDID_DEBUGINFO,
+-		DSO_BINARY_TYPE__MIXEDUP_UBUNTU_DEBUGINFO,
+-		DSO_BINARY_TYPE__NOT_FOUND,
+-	};
+-	const enum dso_binary_type *type;
+ 	char buf[PATH_MAX], nil = '\0';
+ 	struct dso *dso;
+ 	struct debuginfo *dinfo = NULL;
+@@ -120,14 +111,12 @@ struct debuginfo *debuginfo__new(const char *path)
+ 	if (filename__read_build_id(path, &bid) > 0)
+ 		dso__set_build_id(dso, &bid);
+ 
+-	for (type = distro_dwarf_types;
+-	     !dinfo && *type != DSO_BINARY_TYPE__NOT_FOUND;
+-	     type++) {
+-		if (dso__read_binary_type_filename(dso, *type, &nil,
+-						   buf, PATH_MAX) < 0)
+-			continue;
+-		dinfo = __debuginfo__new(buf);
+-	}
++	dso__find_dbginfo_type(dso);
++	if (dso__read_binary_type_filename(dso, dso__dbginfo_type(dso), &nil,
++					   buf, PATH_MAX) < 0)
++		goto out;
++
++	dinfo = __debuginfo__new(buf);
+ 	dso__put(dso);
+ 
+ out:
+diff --git a/tools/perf/util/dso.c b/tools/perf/util/dso.c
+index 90a6f661278a9c81..10c4cd35b6d9464b 100644
+--- a/tools/perf/util/dso.c
++++ b/tools/perf/util/dso.c
+@@ -2108,3 +2108,31 @@ void dso__set_symsrc_filename(struct dso *dso, char *val)
+ 	dso__set_has_srcline(dso, true);
+ 	dso__set_a2l_fails(dso, 0);
+ }
++
++void dso__find_dbginfo_type(struct dso *dso)
++{
++	static const enum dso_binary_type dbginfo_types[] = {
++		DSO_BINARY_TYPE__FEDORA_DEBUGINFO,
++		DSO_BINARY_TYPE__UBUNTU_DEBUGINFO,
++		DSO_BINARY_TYPE__OPENEMBEDDED_DEBUGINFO,
++		DSO_BINARY_TYPE__BUILDID_DEBUGINFO,
++		DSO_BINARY_TYPE__MIXEDUP_UBUNTU_DEBUGINFO,
++		DSO_BINARY_TYPE__NOT_FOUND,
++	};
++	const enum dso_binary_type *type;
++	char buf[PATH_MAX];
++
++	if (dso__dbginfo_type(dso) != DSO_BINARY_TYPE__NOT_FOUND)
++		return;
++
++	for (type = dbginfo_types; *type != DSO_BINARY_TYPE__NOT_FOUND; type++) {
++		if (dso__read_binary_type_filename(dso, *type, "",
++						   buf, PATH_MAX) < 0)
++			continue;
++
++		if (filename__has_section(buf, ".debug_info"))
++			break;
++	}
++
++	dso__set_dbginfo_type(dso, *type);
++}
+diff --git a/tools/perf/util/dso.h b/tools/perf/util/dso.h
+index 34d187d1fc00efdc..a152957322f6b31c 100644
+--- a/tools/perf/util/dso.h
++++ b/tools/perf/util/dso.h
+@@ -1013,6 +1013,8 @@ static inline void dso__set_dbginfo_type(struct dso *dso, enum dso_binary_type b
+ 	RC_CHK_ACCESS(dso)->dbginfo_type = bt;
+ }
+ 
++void dso__find_dbginfo_type(struct dso *dso);
++
+ bool dso__is_object_file(const struct dso *dso);
+ 
+ void dso__free_a2l(struct dso *dso);
+-- 
+2.55.0
+
