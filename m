@@ -1,95 +1,119 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f200.google.com (mail-pf1-f200.google.com [209.85.210.200])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 481974E50BE
-	for <linux-perf-users@vger.kernel.org>; Mon, 28 Sep 2026 17:25:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C819235203E
+	for <linux-perf-users@vger.kernel.org>; Mon, 28 Sep 2026 17:51:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.200
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790616306; cv=none; b=QrKYesy1XOC20bp+gPYevcdHt/YHMFf4bKAOCNH0qm2sCXa7dFpm8S6ugqdYSXUTsicpRFZOtfkigEIu2Fiut8sIdx9gZd/G8U3+bIG0m1BV82AQr/ayewAEPzVUYyUS/XWwSXtX/PyAQQ2GRTdBFhUQCMMktoIGmfK7nXZ0fDw=
+	t=1790617894; cv=none; b=axsK/7OBEsNGZ4gUVznz6U+hYz3/VYayT709EbxFGfpTn+VHFfZhEzKcct4bVKf/qI2xaL+/sI7H3JWDmHgfiUKHZp6O7m2M6Yb+bocxn1oomriLXfkaHgxk9rSFH3V2XT/N20hDs/XzuoZ3qZTXzCckKlwsQdSVonkKi4gzuf4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790616306; c=relaxed/simple;
-	bh=efnqiGVFnE4gaQKynVVLuYSRrMyavCOGNOkt8hjgk5s=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=YHqS+42Jxu8Qi9PQeV41W1H3tclR3Zoo7P4ECmVE9qbr/1IujhYoD4V6qvM2ZzwTxm501d0D2oF3gylxWcaBGeQT2ZRKgr/5CU4wDYfGAq091Jh8BehKaueU0LfhIqL7p5ZzYrOet+t0vjd+bheKVhr7KggMA0Tp3ziFFMiLg3c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fjpgmkDq; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1790617894; c=relaxed/simple;
+	bh=VNMwxQxppRW3tdbwoKdNviu76yr1Zn6jW74zhNLGCQI=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=GfV+mFMtSL27aCBKBJwpXCTdlYZcp4+zBjmTYRHbFnrVDgEeNj0o1Hd4m1ZaBH/dJF1zvhzKGggZiCxDTJCIB09ajKXa9DuGfYaYMVuWr5fdYblHOHYIf8UiXwL9NbD46LHQeHu6KRx2GQ1QTLN6hTKFZoClV8Hra7+pfF4qhKY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ctshao.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=GU3EXJXc; arc=none smtp.client-ip=209.85.210.200
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ctshao.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fjpgmkDq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C0D671F000FF;
-	Mon, 28 Sep 2026 17:25:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1790616304;
-	bh=GZNySjAHeU4dFXLHgbXnxBKOhwvp9JFNS3tHRJVl1x8=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=fjpgmkDqiLAboBdKfPk161EaHoVgY71MZSUUir72VR1Jlu84vFy6SXYx8y7HQEEo3
-	 Q6JLJUaFzgK6fT98MbMv+56rDhfc+heG1Gq0DjZeureW8TWsWKKmZf2S+kHA6skZlA
-	 gbYAcdGJWMxNhIOMBUo7JflhyANtmJJCJEiRcrJCwk7Df5x4OS1FLL2U+vXUyYwxX8
-	 6La3JN5CCz0geeypfq4NaFobWU4iVfO6Qp6FswozSQuSCOzZMOmQqhHLxmCsNiIRB3
-	 39W8OaGirDc+PR2L7T4p545iyDO48xjQlofeKl8PGuTm7N84M0fD4Z4/YZGXr5IxOZ
-	 fa/aeI8Nh/hiQ==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v2 1/4] perf config: Move perf_config__set_variable() to
- util/config.c
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Arnaldo Carvalho de Melo" <acme@kernel.org>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260928171244.2437283-2-acme@kernel.org>
-References: <20260928171244.2437283-1-acme@kernel.org>
- <20260928171244.2437283-2-acme@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Mon, 28 Sep 2026 17:25:04 +0000
-Message-Id: <20260928172504.C0D671F000FF@smtp.kernel.org>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="GU3EXJXc"
+Received: by mail-pf1-f200.google.com with SMTP id d2e1a72fcca58-86ab8302b54so2601675b3a.1
+        for <linux-perf-users@vger.kernel.org>; Mon, 28 Sep 2026 10:51:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1790617892; x=1791222692; darn=vger.kernel.org;
+        h=content-type:cc:to:from:subject:message-id:mime-version:date:from
+         :to:cc:subject:date:message-id:reply-to:content-type;
+        bh=wSrqJvLhBkyJhZH2O6UR1pCUMv15qswDfL8SIgUikoA=;
+        b=GU3EXJXcBnaxeucfn2RKSY02Gw2B4+ENSVUYWd2PLroZU4R1srK/KAFi2hZFUIVQTW
+         EbiBjKF+sonTTows7YuW6qs42vtUI7cxGq6xZex+1nH9q4F+1v6ezZUtqpuHNizKhJaJ
+         Tq6VgMVXONnPStaUu0i4BpH33lnEN1HRTo8t8NVlxpAO/lpyqjeDpXmnIJ6HktN/MNvU
+         Tx7oTMsyYL7D4U3smog3JX52qruQJlPPe8Q5hWLDEzvl/0yP4lVlvZRJ+qCCo2R+mBWP
+         IpXZuvSLDCvCjL5ylWZd/+6pZjiGoWUfGd6Voc04iYySWJgpzN+tFvMzZ3gHiqUU7KjI
+         F02Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1790617892; x=1791222692;
+        h=content-type:cc:to:from:subject:message-id:mime-version:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=wSrqJvLhBkyJhZH2O6UR1pCUMv15qswDfL8SIgUikoA=;
+        b=zpX8K2EAdcqXv0ItEsUrplHEQZpjYXVDPLU9Ev/pYeaN1SZtY5z2HIeCashtPu9YTw
+         dtsZApPe3cbcyUwfEEJIo1LWy0ajOT0UPvHkPQ7CBgE2zW0s41HTcjOyS/BDXxuUmJm3
+         ExKrDLJ/Tkp8xGxmQCCTluGEyaqMSYnwKBW7IzTObYzI23Dcr5R0urhBxCwXFzIb4KI9
+         5In8nZ/43OPJAvChfvi+/sxG0p7zI/xIiBnMtv+VbiAhsrniRn7IQWlsnFpeqvWxQ1ZJ
+         dYOHCcZ7JagJnzNajZeqJW+EfSm+FRs+f49DLofR1afUJSQxd2i9uBt/UzHSn4FLqZF1
+         2pOA==
+X-Forwarded-Encrypted: i=1; AKwUvBzHom2b0aJFExu+hhuLEhXNyp2dSSUq1B2o5ns1obXUb9MSG1Byjy24MLk3ad+6PJHl6jE/Xh8xiBEaUTlZeh1B@vger.kernel.org
+X-Gm-Message-State: AFuF++mHkccLvJRdqz1HYi8F7jC+wLOIUZj6lx1oZkplR3QgON6YupnP
+	wVqeKLvigZUHEE4AJ4qEkcCibrei9AdTfBLY6qj8vElQRbmAdvzDoXhQd/rLtYhuDnUPSuqOT/v
+	7/qzq8Q==
+X-Received: from pfbdn2.prod.google.com ([2002:a05:6a00:4982:b0:884:c5c5:57c1])
+ (user=ctshao job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:807:b0:881:e626:74b7
+ with SMTP id d2e1a72fcca58-881e6268a39mr4686351b3a.49.1790617891690; Mon, 28
+ Sep 2026 10:51:31 -0700 (PDT)
+Date: Mon, 28 Sep 2026 10:51:25 -0700
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.56.0.rc1.315.gc6ed9934b7-goog
+Message-ID: <20260928175127.1032535-1-ctshao@google.com>
+Subject: [PATCH 0/2] perf jevents: Add NVIDIA Tegra410 uncore DDR and PCIe metrics
+From: Chun-Tse Shao <ctshao@google.com>
+To: acme@kernel.org, namhyung@kernel.org, irogers@google.com
+Cc: peterz@infradead.org, mingo@redhat.com, mark.rutland@arm.com, 
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org, adrian.hunter@intel.com, 
+	james.clark@linaro.org, bwicaksono@nvidia.com, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Chun-Tse Shao <ctshao@google.com>
+Content-Type: text/plain; charset="UTF-8"
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
-s) to consider:
-- [Medium] perf: strcmp crash on OOM via perf_etc_perfconfig()
+Add DDR bandwidth/latency and PCIe bandwidth metrics for the NVIDIA
+Tegra410 SoC to arm64_metrics.py. The metrics use the sysfs events of
+the Tegra410 UCF, CMEM latency and PCIE PMUs, and follow the formulas in
+Documentation/admin-guide/perf/nvidia-tegra410-pmu.rst.
+
+Patch 1 adds the DDR metrics and makes pmu-events/Build also run
+arm64_metrics.py for the nvidia vendor models. Patch 2 adds the PCIe
+metrics, in total and per PCIe Root Complex (RC).
+
+Tested on a 2-socket Tegra410 system:
+
+ - memcpy with multiload (from multichase) on socket 0 CPUs and memory:
+   lpm_ddr_bw is 740-744 GB/s at steady state (perf stat -I 2000),
+   multiload reports 708063 MiB/s (742 GB/s).
+ - Read only (stream-sum) and write only (memset) loads on socket 1:
+   lpm_ddr_rd_bw is 608 GB/s with 2.4 GB/s of writes, lpm_ddr_wr_bw is
+   628 GB/s with 1.1 GB/s of reads.
+ - memcpy on socket 0 CPUs with memory on socket 1: socket 0's
+   lpm_ddr_rem_rd_bw and socket 1's lpm_ddr_rd_bw count nearly the same
+   bytes (258.03 vs 258.73 GB).
+ - lpm_ddr_lat idle is 150 ns in the default aggregation, and 132 ns and
+   194 ns for socket 0 and 1 with --per-socket. Under the memcpy load it
+   is 555 ns by default and 563 ns for socket 0 with --per-socket, and
+   stays at 551-558 ns per interval with -I 1000.
+ - 8 GiB O_DIRECT dd read from an NVMe drive behind RC 0 of socket 0:
+   lpm_pcie_wr_bw_0 counts the 8 GiB at 8.7 GB/s (dd: 8.7 GB/s). With
+   the buffer on node 0 it shows up in lpm_pcie_loc_wr_bw_0, with the
+   buffer on node 1 in lpm_pcie_rem_wr_bw_0. With --per-socket, socket 0
+   shows the same and no metric of either socket is nan.
+ - With the nvidia_t410 metrics forced on a machine without these PMUs
+   (PERF_CPUID=0x000000004e0f0100 on an x86 JEVENTS_ARCH=all build), the
+   PCIe metrics read 0 rather than failing to parse, also with
+   --per-socket.
+ - "perf test 10" (PMU JSON event tests) passes on the Tegra410 system
+   and with the x86 JEVENTS_ARCH=all build.
+
+Chun-Tse Shao (2):
+  perf jevents: Add NVIDIA Tegra410 uncore DDR metrics
+  perf jevents: Add NVIDIA Tegra410 uncore PCIe metrics
+
+ tools/perf/pmu-events/Build            |   2 +-
+ tools/perf/pmu-events/arm64_metrics.py | 126 ++++++++++++++++++++++++-
+ tools/perf/pmu-events/metric.py        |   2 +-
+ 3 files changed, 126 insertions(+), 4 deletions(-)
+
+
+base-commit: 0ae6fc78c5ce0dfd18d8712a50f0fd4602eff103
 --
+2.56.0.rc1.315.gc6ed9934b7-goog
 
-commit fa97c6103dec622e75b990c48525b0269551b0aa
-Author: Arnaldo Carvalho de Melo <acme@redhat.com>
-
-perf config: Move perf_config__set_variable() to util/config.c
-
-This commit moves perf_config__set_variable() out of the perf config builtin
-so that opt-in features can persist their choice from outside it. It also
-serializes parsing and rewriting of config files using a mutex to support
-concurrent access from multiple threads.
-
-> diff --git a/tools/perf/util/config.c b/tools/perf/util/config.c
-> --- a/tools/perf/util/config.c
-> +++ b/tools/perf/util/config.c
-[ ... ]
-> +int perf_config__set_variable(const char *var, const char *value)
-> +{
-> +	char path[PATH_MAX];
-> +	char *user_config =3D mkpath(path, sizeof(path), "%s/.perfconfig", gete=
-nv("HOME"));
-> +	const char *config_filename =3D config_exclusive_filename ?: user_confi=
-g;
-> +		/*
-> +	 * When rewriting the system wide file all entries are marked as coming
-> +	 * from it and must be kept, or it would be truncated down to its
-> +	 * header.
-> +	 */
-> +	bool system_config =3D strcmp(config_filename, perf_etc_perfconfig()) =
-=3D=3D 0;
-
-[Severity: Medium]
-Can this cause a segmentation fault under memory pressure?
-
-In perf_config__set_variable(), if ETC_PERFCONFIG is an absolute path and
-system_path() fails to allocate memory via strdup(), it returns NULL.=20
-
-This NULL propagates through perf_etc_perfconfig() and is passed directly
-as the second argument to strcmp(), which will crash when dereferencing it.
-
-[ ... ]
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260928171244.2437=
-283-1-acme@kernel.org?part=3D1
