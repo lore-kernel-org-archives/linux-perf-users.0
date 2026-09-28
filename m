@@ -1,181 +1,95 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C3704E0200
-	for <linux-perf-users@vger.kernel.org>; Mon, 28 Sep 2026 17:23:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 481974E50BE
+	for <linux-perf-users@vger.kernel.org>; Mon, 28 Sep 2026 17:25:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790616194; cv=none; b=U7JuogXVAO0aIgeAq8OL+TNJY8MRJbtGZba88HE4OYgaY17qOTemalrixYUcyPzb9dcFd7oCX4B89CXiBz6eCFlfcRTVAdnDMhZnjomPFkFmOJD1e2P+xfAxDiK+GN86EEIgpNcKqNFpTiPFUOftEexyDv3TLIl8DV5K8PJk5yM=
+	t=1790616306; cv=none; b=QrKYesy1XOC20bp+gPYevcdHt/YHMFf4bKAOCNH0qm2sCXa7dFpm8S6ugqdYSXUTsicpRFZOtfkigEIu2Fiut8sIdx9gZd/G8U3+bIG0m1BV82AQr/ayewAEPzVUYyUS/XWwSXtX/PyAQQ2GRTdBFhUQCMMktoIGmfK7nXZ0fDw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790616194; c=relaxed/simple;
-	bh=f8TyX07F9bkJDq0hpSlPawMcU1C1WNfgcVGsy8BnQkk=;
+	s=arc-20240116; t=1790616306; c=relaxed/simple;
+	bh=efnqiGVFnE4gaQKynVVLuYSRrMyavCOGNOkt8hjgk5s=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=UwbEzcn0Ya65ZbAjD99fiDE5vFUkaH4bXSW8B1+Rop3G8VASGlOPQot4ZMGFiLRzIZG6yWDYHs3QjJKycZIPlECxE7LQC84bKIr9FeIG80TPYOpGJe5r3DM8A8o4m7KSjS1k/4svWAY2u6cd+A1jxJpTSx/DVT5Km2DDxTgGUI8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=H4n88eWU; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=YHqS+42Jxu8Qi9PQeV41W1H3tclR3Zoo7P4ECmVE9qbr/1IujhYoD4V6qvM2ZzwTxm501d0D2oF3gylxWcaBGeQT2ZRKgr/5CU4wDYfGAq091Jh8BehKaueU0LfhIqL7p5ZzYrOet+t0vjd+bheKVhr7KggMA0Tp3ziFFMiLg3c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fjpgmkDq; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="H4n88eWU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E457E1F000FF;
-	Mon, 28 Sep 2026 17:23:01 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fjpgmkDq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C0D671F000FF;
+	Mon, 28 Sep 2026 17:25:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1790616182;
-	bh=8FRmDjbph95mw0Ep6323WDTsRDhPTkGdhAt6EhX+4Cs=;
+	s=k20260515; t=1790616304;
+	bh=GZNySjAHeU4dFXLHgbXnxBKOhwvp9JFNS3tHRJVl1x8=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=H4n88eWUURYQetaakWEIppGowu6P/xDWjDivpIzT9TvUcCPopEJfQ02E2Ha1S3MPc
-	 RhmKG1A3154iN3oFYjqtKZ7UmuAFPiZu7HrDe1z90kJ4ytO0Az5GIJCZctjxfmbhTg
-	 aqMnLddYCFkNTjqkVyZN9wCqrEWIMH8z2yFI7yCCz4bPlbdXxWu/9tPsqNuTqOoLOz
-	 Hc70QlY6uXar+ie7qPneikHei8zoyB//qxRVMUupAo8urMzN7E1f/KI8uI/NlT1a1E
-	 kN8raWNn0oFgZ5S+BjGww+mogicgo6BB2z3MYPFXl+i/OPHv1SD5vDPTsIjYUDQb6v
-	 mxQbI0tTmUbuQ==
+	b=fjpgmkDqiLAboBdKfPk161EaHoVgY71MZSUUir72VR1Jlu84vFy6SXYx8y7HQEEo3
+	 Q6JLJUaFzgK6fT98MbMv+56rDhfc+heG1Gq0DjZeureW8TWsWKKmZf2S+kHA6skZlA
+	 gbYAcdGJWMxNhIOMBUo7JflhyANtmJJCJEiRcrJCwk7Df5x4OS1FLL2U+vXUyYwxX8
+	 6La3JN5CCz0geeypfq4NaFobWU4iVfO6Qp6FswozSQuSCOzZMOmQqhHLxmCsNiIRB3
+	 39W8OaGirDc+PR2L7T4p545iyDO48xjQlofeKl8PGuTm7N84M0fD4Z4/YZGXr5IxOZ
+	 fa/aeI8Nh/hiQ==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v2 3/4] perf scripts: Add perf-stuck, to tell where a
- running perf is stuck
+Subject: Re: [PATCH v2 1/4] perf config: Move perf_config__set_variable() to
+ util/config.c
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Arnaldo Carvalho de Melo" <acme@kernel.org>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260928171244.2437283-4-acme@kernel.org>
+In-Reply-To: <20260928171244.2437283-2-acme@kernel.org>
 References: <20260928171244.2437283-1-acme@kernel.org>
- <20260928171244.2437283-4-acme@kernel.org>
+ <20260928171244.2437283-2-acme@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Mon, 28 Sep 2026 17:23:01 +0000
-Message-Id: <20260928172301.E457E1F000FF@smtp.kernel.org>
+Date: Mon, 28 Sep 2026 17:25:04 +0000
+Message-Id: <20260928172504.C0D671F000FF@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 4 potential issue(=
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
 s) to consider:
-- [Medium] perf-stuck: gdb script can hang indefinitely via until command
-- [Medium] perf-stuck: potential deadlock in gdb script via inferior calls
-- [Medium] perf-stuck: gdb script crashes if map_symbol.sym is NULL
-- [Low] perf-stuck: shell option injection on process name or log path
+- [Medium] perf: strcmp crash on OOM via perf_etc_perfconfig()
 --
 
-commit 2f3e215696579c8fa2b53359bc4b83edfc0dd017
+commit fa97c6103dec622e75b990c48525b0269551b0aa
 Author: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-perf scripts: Add perf-stuck, to tell where a running perf is stuck
+perf config: Move perf_config__set_variable() to util/config.c
 
-This commit adds a prototype perf-stuck script and a gdb command file to
-identify whether a running perf process is stuck in a loop or runaway recur=
-sion.
-It samples the process via /proc and can optionally attach gdb to print DWA=
-RF
-type chasing DIE chains.
+This commit moves perf_config__set_variable() out of the perf config builtin
+so that opt-in features can persist their choice from outside it. It also
+serializes parsing and rewriting of config files using a mutex to support
+concurrent access from multiple threads.
 
-> diff --git a/tools/perf/scripts/perf-stuck.gdb b/tools/perf/scripts/perf-=
-stuck.gdb
-> new file mode 100644
-> index 0000000000000..ad595392f6beb
-> --- /dev/null
-> +++ b/tools/perf/scripts/perf-stuck.gdb
+> diff --git a/tools/perf/util/config.c b/tools/perf/util/config.c
+> --- a/tools/perf/util/config.c
+> +++ b/tools/perf/util/config.c
 [ ... ]
-> +define perf-die-chain
-> +  if $argc < 2
-> +    printf "usage: perf-die-chain <function> <die variable> [iterations]=
-\n"
-> +  else
-> +    frame function $arg0
-> +    if $argc =3D=3D 3
-> +      set $perf_die_chain_n =3D $arg2
-> +    else
-> +      set $perf_die_chain_n =3D 10
-> +    end
-> +    set $perf_die_chain_head =3D $pc
-> +    set $perf_die_chain_i =3D 0
-> +    while $perf_die_chain_i < $perf_die_chain_n
-> +      # Pointer type DIEs have no DW_AT_name, so dwarf_diename() can
-> +      # return NULL: printf %s of it would error out and abort this
-> +      # batch script, handle it.
-> +      set $perf_die_chain_name =3D (char *) dwarf_diename($arg1)
-> +      printf "chain[%d] die=3D%p addr=3D%p cu=3D%p off=3D0x%lx tag=3D%d =
-name=3D", $perf_die_chain_i, $arg1, $arg1->addr, $arg1->cu, ((Dwarf_Off) dw=
-arf_dieoffset($arg1)), ((int) dwarf_tag($arg1))
+> +int perf_config__set_variable(const char *var, const char *value)
+> +{
+> +	char path[PATH_MAX];
+> +	char *user_config =3D mkpath(path, sizeof(path), "%s/.perfconfig", gete=
+nv("HOME"));
+> +	const char *config_filename =3D config_exclusive_filename ?: user_confi=
+g;
+> +		/*
+> +	 * When rewriting the system wide file all entries are marked as coming
+> +	 * from it and must be kept, or it would be truncated down to its
+> +	 * header.
+> +	 */
+> +	bool system_config =3D strcmp(config_filename, perf_etc_perfconfig()) =
+=3D=3D 0;
 
 [Severity: Medium]
-Does evaluating dwarf_diename(), dwarf_dieoffset(), and dwarf_tag() risk
-deadlocking the debugger? If the target process is already blocked holding
-an internal library lock (such as a malloc or libdw lock), and the called
-functions attempt to acquire the same lock via GDB's dummy stack frame, the
-inferior thread will deadlock. In batch mode, this freezes the debugging
-session permanently.
+Can this cause a segmentation fault under memory pressure?
 
-> +      if $perf_die_chain_name =3D=3D 0
-> +	printf "(null)\n"
-> +      else
-> +	printf "%s\n", $perf_die_chain_name
-> +      end
-> +      until *$perf_die_chain_head
+In perf_config__set_variable(), if ETC_PERFCONFIG is an absolute path and
+system_path() fails to allocate memory via strdup(), it returns NULL.=20
 
-[Severity: Medium]
-Can this command cause the batch script to hang indefinitely? Since GDB
-yields execution to the inferior expecting it to hit the saved program
-counter, if the target process breaks out of its loop, returns from the
-function, or blocks elsewhere, the address will never be reached. Because
-GDB runs without a timeout in batch mode, this causes the debugger and
-parent script to hang.
+This NULL propagates through perf_etc_perfconfig() and is passed directly
+as the second argument to strcmp(), which will crash when dereferencing it.
 
-> +      set $perf_die_chain_i =3D $perf_die_chain_i + 1
-> +    end
-> +  end
-> +end
 [ ... ]
-> +define perf-dso
-> +  if $_any_caller_is("find_data_type", 20)
-> +    frame function find_data_type
-> +    printf "dso=3D%s ip=3D0x%lx sym=3D%s\n", dloc->ms->map->dso->name, d=
-loc->ip, dloc->ms->sym->name
-
-[Severity: Medium]
-Will this crash the GDB script if ms->sym is NULL? It is common for an
-address in perf tools to not resolve to a symbol, leaving ms->sym empty.
-Dereferencing NULL here causes the batch script execution to abort
-immediately with a memory access error, preventing further output.
-
-> +  else
-> +    printf "not in find_data_type()\n"
-> +  end
-> +end
-> diff --git a/tools/perf/scripts/perf-stuck.sh b/tools/perf/scripts/perf-s=
-tuck.sh
-> new file mode 100755
-> index 0000000000000..3b9b22124dbda
-> --- /dev/null
-> +++ b/tools/perf/scripts/perf-stuck.sh
-[ ... ]
-> +if [[ "$1" =3D~ ^[0-9]+$ ]]; then
-> +	pid=3D$1
-> +else
-> +	# Resolve the name against the caller's own processes: as root,
-> +	# unscoped pgrep picks the first match of any user, e.g. one planted
-> +	# to get gdb attached to it, use an explicit pid to look at a perf of
-> +	# another user.
-> +	pid=3D$(pgrep -x -u "$(id -u)" "$1" | head -1)
-
-[Severity: Low]
-Could this command fail or behave unexpectedly if the user provides a
-process name starting with a hyphen? The $1 argument will be interpreted as
-a command-line option by pgrep instead of a positional argument. A double
-dash end-of-options separator might prevent this issue.
-
-> +	[ -n "$pid" ] || { echo "no process named '$1' owned by $(id -un)"; exi=
-t 1; }
-> +fi
-[ ... ]
-> +	progress=3D
-> +	[ -n "$progress_log" ] && [ -s "$progress_log" ] && progress=3D$(tail -=
-1 "$progress_log")
-
-[Severity: Low]
-Can this command also fail due to option injection if the progress log path
-starts with a hyphen? Like pgrep above, tail will interpret the path as an
-option if it is not separated from the arguments.
-
-> +
-> +	if [ -n "$prev_cpu" ]; then
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260928171244.2437=
-283-1-acme@kernel.org?part=3D3
+283-1-acme@kernel.org?part=3D1
