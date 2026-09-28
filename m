@@ -1,65 +1,65 @@
 Received: from mail-wm2-f12.google.com (mail-wm2-f12.google.com [74.125.225.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27C5833FE05
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7FF93515E9
 	for <linux-perf-users@vger.kernel.org>; Mon, 28 Sep 2026 01:02:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.225.140
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790557362; cv=none; b=FxxiF6tj7gGnpyXbKrKIx/uLt6Gu/W4rIu0DuT9MpkuwRGDDHZwsm/Ahj3qCIhY+bNU9NfQepbJCUtzl3v90Tyl3cUIpYhNBCesPWxAnDrRSXoS98C0rt7/MUfQV7ecvFleO8mwzAEtpsd+8LNBvSkP9HY7RPRd1JSDN4nhMGcc=
+	t=1790557363; cv=none; b=KGRsedbThZDp5s6/CufvxpRgD6gWi+s5y2rotkLg+7bRWHSgrk8eHZy0SQS0K7DdEIyN74XHgATtPNyEOpCJXkHRJIjhPvoGyhB/uD56Lyna8knwvIitOl153FLVgXj6esFrlv/MiEA+F9s+WQFuJg19pQWMdjc880kR3Rl8hMA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790557362; c=relaxed/simple;
-	bh=aWZ5HcFMXl1VzTghLnSGrhORupqnBvdLRRT1cJ1vQa4=;
+	s=arc-20240116; t=1790557363; c=relaxed/simple;
+	bh=YeaJ4Ia0VTq5E1Pkw5SVDSdPOiqtRjvDNNn7V/os76g=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=P7t9b5j+W5iq8OdH76N5eEc96uxpz8YmvcuIkAmKzdXkjdd5RvonGYbzlyjAML+Ghg+m7poME2Tdf+HFn6dt4jlVtFCKNtBNOl4KAbKVy5HCJ/MkITqSxb9MNM4y9sOmsWOZEOf9ckmhVeVfowKHHMh/bqe5hY6GQoIN9kkjfTw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=E/VG3WCL; arc=none smtp.client-ip=74.125.225.140
+	 MIME-Version; b=lyX8+EwMma6OnCqQXKy5OEAPeyZxACq96fM/KyvAAqTYgHb7/G8xTrajfwkqBKzIUZgN09nMOvdWmAtYj/u3Ld6OeMLfzNVuoE9tX3c1ARE4G2b+9n5VIq46sNyT0woPNYrkI2a6tEeSzQg6VPBo5+pWJMaOG65CIbSU0cnt9qU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kHccM71A; arc=none smtp.client-ip=74.125.225.140
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E/VG3WCL"
-Received: by mail-wm2-f12.google.com with SMTP id 5b1f17b1804b1-49ffb83bf7aso11379625e9.2
-        for <linux-perf-users@vger.kernel.org>; Sun, 27 Sep 2026 18:02:40 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kHccM71A"
+Received: by mail-wm2-f12.google.com with SMTP id 5b1f17b1804b1-49ffb83bf7aso11379685e9.2
+        for <linux-perf-users@vger.kernel.org>; Sun, 27 Sep 2026 18:02:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1790557359; x=1791162159; darn=vger.kernel.org;
+        d=gmail.com; s=20251104; t=1790557360; x=1791162160; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=rig2zwORTLMLRCPpGPY7+gmti2mlQJRGf/4YQHeFYQU=;
-        b=E/VG3WCLro+/QcFOls8HEbJg3QhCxEfTgcNwSbb0K4rIRg0a0Ul7c/bGz7fzhH8hqJ
-         seCw+Hwvj3Ud+DAWQhgvujtT7cOy5JVD0LaG9TJxcRABTRNxelsJC1t7eXr3Rv+Jwjhj
-         hh5GDoRNmTafHcl2jyY8vqAOorRPQjPpnWVG4xzOsFv1IeehKzdmIGhyZWVvdvRtjLuE
-         28WaCs5MhQdXFQz4im3/mO4Mc/j8deXn7xJcF3xY1qBaFK+YYGpnZeYurPC5Oyv+9G9c
-         GDNilQ5e/q9R/wirRWKd7oxzZrS/o4IWVadtruvavKYYH63BcRbaSsAivprdbimrd4nP
-         IOZg==
+        bh=gD/C8uckJi4Nxey0HiO7Rb21XqdULzwYOsQTHmvqetg=;
+        b=kHccM71A+E/6RLdRyGkCyygfTREtsDo9jvMw7ZGxZ55/crVo8SF3Sr7IMm5NIdRIcI
+         hysYYkcv/CtOj3uGpM77XHyoaLA7a6kdnAEJmpe87eQF48W2OyT6zNVUYK8VZo1A+XBh
+         pSvcfdyPwSE9M2PKLs/HrUsFESPQJW/YUa8ipSPOJdMrdl7au0m02iiiD0DDs71CpanZ
+         /9/kbv5RxiyJXK8ByEoWqiG35sroRM40+nvo3WrcC8InFNHen12b3e3IWaBwFhG1lFsv
+         BSJbgE7f+UdvOxAbgpU2FZZfuZHy0D6sxxBjGquh4neYNMytVn2U6bf1FcaMyBY+8Vjy
+         wFOA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1790557359; x=1791162159;
+        d=1e100.net; s=20260707; t=1790557360; x=1791162160;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=rig2zwORTLMLRCPpGPY7+gmti2mlQJRGf/4YQHeFYQU=;
-        b=YdW3g2JSnzOkPm7EdA4KAgEIax/7sXrZ9hZI4WDaoDe5MkcdyVrvR8C1qhizdtGAKq
-         fQWssYxNvSvBf6B3YTKTNdfgPj54mt/tpNQqKDz5K576wWCJXif34X6qp/mHPuk8B6jr
-         impgiXhiJtY+Fvuqmf254H6KKxLk9Qh0/5bnkCUgLSVcy9DRqtVeC7z9AG5GxhkEpUZN
-         Msp1kAk25XseniuixYTTtbigtJqRofzCnnaVub6yuMtGt0gx/ip9mtH4bnLt+mQ/f3ZJ
-         Pm2MDQboI8fHXrzxzuunlips22b/qCjxWymN/zSJkVn46WRkioZlqqILnx0II3wWryvT
-         ERDA==
-X-Forwarded-Encrypted: i=1; AKwUvBwACBEEHTj0/iCht+R+4yQ2V7HFXOd3AL9F86otTsXaT3gmhwjxHdqrTKcXHrveYKpUcOstcPjgI2N3iQhwWzsO@vger.kernel.org
-X-Gm-Message-State: AFuF++mQb55wTltwsgO7tAwzIDYqypG52Qs+kmTwmBJ2AdkjYTdy8iPc
-	nIDK6l/10cDERCKbNxgyV7VDk/7fFWhIMh51/LjaPfw9l+mp1eDvImkZ
-X-Gm-Gg: AYBFou0CGCHUQf/ObP9d2KZQUetNaVo+UxjyP0U95S9BOUbV7625dqCB6jGMxo2mkYq
-	6/DlHagHT/IrqBjnEsAvX6XB+xJ/4AldFeze2/OLR9JeZiVV9sg+qBngpSJ/0pcF3XAvASYbptV
-	Y/O2NnRqe2jtBElKjl1anY+2dcSUPb/iAcmQZz/E5Rtf+kGpMmaitDgtIBZwazFMIAeQRn8m6o/
-	+cBfXAfV2Bzy1vVgePPmOeHRJv1NhZbfAeQU63O8wkmmdrdlAkYqHtUSY4lCGKqunkQVuAfpSyl
-	ukh5Vplk80Kn/06T/bu4kTvwSWgw43Y88L6fKSrJQOc4JTWPaFvnyYbzTDZ8iJqo4abBXh+QaxF
-	bz8FPTLIfZYrR89Y15AjSGj+QStZ7ty1g4kdyr9c1RIhuChvu3abt9wJWOOyAx8cFcTM/X343Vs
-	4YBDuE9q4NlOc1WXgBUt5GcRkw2erjJXG9tfTnI/L13SQzlUEXH7QwrK9gqJWmMY7SsdB8tXxua
-	Qzl3fewDv+xKSTZRt8RKjtneNnA9AFV00xYv4IyqJtsw7uClDbnto5OfKiQOkeQvasDPv7sCFaQ
-	pyHAxhHz1JEldbIIurxSkBBINjhVDHFTskmZJULuI0mj+9MGPZk=
-X-Received: by 2002:a05:600c:314f:b0:49f:e4ca:e09 with SMTP id 5b1f17b1804b1-49fe66ca9e5mr199203595e9.3.1790557359191;
-        Sun, 27 Sep 2026 18:02:39 -0700 (PDT)
+        bh=gD/C8uckJi4Nxey0HiO7Rb21XqdULzwYOsQTHmvqetg=;
+        b=KvrBMhlna4DOBSaTXLcU1ItpKPTz+GOKTTjZUPjd7Q1NVU/6clqx/8MXKSx7aE6mUW
+         LiKBdSHUjYnASyulHmuvRYRxu/Hz2vsFlwmJxJmLOrPz9hRGaQzBje9BzxtE+CHim6Lq
+         GDxhFcujI3IU0CAAgz5320hQSJZWc8nBugPGVQXGD9KnKhNJLrhzav6KPDfRNpUDSkLq
+         BbIW+mFPT0lc7ZJIaw62NsyX+hkv6F3AU3LXoPWHb2MMSpZ/czVtArKg/8dKfgVRRrwa
+         bb/pc6wKpD65pPvDjtiBEcSIsoelgJaM3y4vXAN/oILZu5QtFvPD/0N0Oll/39dkGgir
+         1JJw==
+X-Forwarded-Encrypted: i=1; AKwUvByqd0o6eUhUWYDBKutdBYWSfBTq9b+vmZbPftW1vJSIuiuEhny3Oo/E3XYLTY5z0KaaBQrLgk+BQrLm2pDx2TTC@vger.kernel.org
+X-Gm-Message-State: AFuF++neZq3We3qB4R1jiZGQAA2+FM9P7g1Rk+Ib34qopG2giM5Jecf5
+	A+kzFZYCiaQP1OOmZK/BpoQVID9HbaUl0l1mDq8KoF9JYjxfOhCfdQzy
+X-Gm-Gg: AYBFou1l/18wO97Jg9SwG5/ulV7642Zw6zVrGFq1EZVXe29ETbQFs1Nvwv8zIQ3+3gh
+	BD7lHgs9gir65JoBTRRzwOS9dXsmJGuE1Yp1GYfgp8UesMeSuRmvFi7JpQIpnAbVY+pCnV1LSTP
+	d9V2VAUijcYXByGw3Cjnb6owdrjQVDMNli9xh8a3K1tfsktOxCcHo7N6yW10TjE8Z7aiR4wC7xj
+	e5PKU14M/NRTq4pzp6NrR9eADFC2yG46U2yoummKxUuW6CEIervubN1ivBGngTSDe5udupY7wcb
+	RPPyj1zn8lXJ3wVXbaZxky8SijY5+dKZ1PwNBa2WNzStI7Uz7BP3PLzUEbjYetfco1BEGLLbpFQ
+	shWvCBQz3fc+van6aBtLCCPiNPbJW29B9Z6TJbo+rEA/yybpzaEZtjeHZVTPXsFBjT0vvr1ejEk
+	wKeUMIjeow1kdM7uHYNEoMzOsqJHRu1rY1L9tkhfjYPsjz93AqXNRsZMZTGydKGugspNHfRP/xL
+	LyXRMZ8FhwdAoeNzISrYscpg0babW64CuA7k5DidWt0VaVvfooJQWNJkSXpCk4p87fXYJAySpz4
+	JLJ5Cv51yQYDS9ZfSUgNc40b5siPD/htT6tO/sOp3UB9NT0ovYc=
+X-Received: by 2002:a05:600c:4e55:b0:49f:bd3c:bc1a with SMTP id 5b1f17b1804b1-49fe66f506fmr192589715e9.21.1790557360115;
+        Sun, 27 Sep 2026 18:02:40 -0700 (PDT)
 Received: from mikebook.tail5724d6.ts.net (83-244-142-114.cust-83.exponential-e.net. [83.244.142.114])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4a0017652d1sm144207825e9.5.2026.09.27.18.02.38
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4a0017652d1sm144207825e9.5.2026.09.27.18.02.39
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 27 Sep 2026 18:02:38 -0700 (PDT)
+        Sun, 27 Sep 2026 18:02:39 -0700 (PDT)
 From: Michal Pluta <michalpl2003@gmail.com>
 To: acme@kernel.org,
 	namhyung@kernel.org
@@ -73,9 +73,9 @@ Cc: Peter Zijlstra <peterz@infradead.org>,
 	James Clark <james.clark@linaro.org>,
 	linux-perf-users@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH 2/5] perf symbol: Don't return an unterminated Rust demangle buffer
-Date: Mon, 28 Sep 2026 02:02:24 +0100
-Message-ID: <20260928010227.1903673-3-michalpl2003@gmail.com>
+Subject: [PATCH 3/5] perf symbol: Grow the Rust demangle buffer geometrically
+Date: Mon, 28 Sep 2026 02:02:25 +0100
+Message-ID: <20260928010227.1903673-4-michalpl2003@gmail.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20260928010227.1903673-1-michalpl2003@gmail.com>
 References: <20260928010227.1903673-1-michalpl2003@gmail.com>
@@ -87,49 +87,89 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-When dso__demangle_sym() runs out of retries or fails to grow the
-output buffer for a Rust v0 symbol, it returns the buffer and callers
-blindly use it as the demangled symbol name.  However,
-rust_demangle_display_demangle() doesn't NUL terminate its output when
-it reports OverflowOverflow, so the buffer isn't a string.
+When a demangled Rust name doesn't fit in the provided buffer,
+dso__demangle_sym() adds 32 bytes to it and formats the name again from
+the start.  The number of attempts grows with the length of the output,
+so the total work is quadratic.  Names with deeply nested generic types
+need many attempts, leading to noticeable slowdowns in larger programs.
 
-Free the buffer and return NULL in both cases.  Callers already fall back
-to the mangled name when no demangled name is returned.
+Double the buffer instead, reaching the maximum buffer limit exactly
+rather than stopping 32 bytes early.  The demangled names are
+unchanged.
 
-Fixes: e20848c317b5 ("perf symbol-elf: Integrate rust-v0 demangling")
-Assisted-by: LLM
+Add a test for a symbol whose expansion exceeds the bound.
+
 Signed-off-by: Michal Pluta <michalpl2003@gmail.com>
 ---
- tools/perf/util/symbol.c | 11 +++++------
- 1 file changed, 5 insertions(+), 6 deletions(-)
+ tools/perf/tests/demangle-rust-v0-test.c | 12 ++++++++++++
+ tools/perf/util/symbol.c                 | 10 ++++++++--
+ 2 files changed, 20 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
-index 163652f071c6..3cb42805a82f 100644
---- a/tools/perf/util/symbol.c
-+++ b/tools/perf/util/symbol.c
-@@ -2762,17 +2762,16 @@ char *dso__demangle_sym(struct dso *dso, int kmodule, const char *elf_name)
- 		     buf_len < 1024 * 1024; buf_len += 32) {
- 			char *tmp = realloc(demangled, buf_len);
- 
--			if (!tmp) {
--				/* Failure to grow output buffer, return what is there. */
--				return demangled;
--			}
-+			if (!tmp)
-+				break;
- 			demangled = tmp;
- 			if (rust_demangle_display_demangle(&rust_demangle, demangled, buf_len,
- 							   /*alternate=*/true) == OverflowOk)
- 				return demangled;
- 		}
--		/* Buffer exceeded sensible bounds, return what is there. */
--		return demangled;
-+		/* Failure to grow output buffer or buffer exceeded sensible bounds. */
-+		free(demangled);
-+		return NULL;
+diff --git a/tools/perf/tests/demangle-rust-v0-test.c b/tools/perf/tests/demangle-rust-v0-test.c
+index ee4ddb61174b..d1e0636d73bc 100644
+--- a/tools/perf/tests/demangle-rust-v0-test.c
++++ b/tools/perf/tests/demangle-rust-v0-test.c
+@@ -69,6 +69,18 @@ static int test__demangle_rust(struct test_suite *test __maybe_unused, int subte
+ 		free(buf);
  	}
  
- 	demangled = cxx_demangle_sym(elf_name, verbose > 0, verbose > 0);
++	/*
++	 * A symbol with more lifetimes bound than fit in the largest buffer
++	 * must fail to demangle rather than give a truncated name.
++	 */
++	buf = dso__demangle_sym(/*dso=*/NULL, /*kmodule=*/0, "_RINvC1a1fFGZZZZZZ_EuE");
++	if (buf) {
++		pr_debug("FAILED: symbol larger than the buffer limit demangled to %zu bytes\n",
++			 strlen(buf));
++		ret = TEST_FAIL;
++		free(buf);
++	}
++
+ 	return ret;
+ }
+ 
+diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
+index 3cb42805a82f..1a52bc2980a0 100644
+--- a/tools/perf/util/symbol.c
++++ b/tools/perf/util/symbol.c
+@@ -2737,29 +2737,35 @@ char *cxx_demangle_sym(const char *str __maybe_unused, bool params __maybe_unuse
+ }
+ #endif /* !HAVE_CXA_DEMANGLE_SUPPORT */
+ 
++/* Buffer limit for a demangled Rust symbol name. */
++#define RUST_DEMANGLE_MAX_LEN (1024 * 1024)
++
+ char *dso__demangle_sym(struct dso *dso, int kmodule, const char *elf_name)
+ {
+ 	struct demangle rust_demangle = {
+ 		.style = DemangleStyleUnknown,
+ 	};
+ 	char *demangled = NULL;
++	size_t buf_len;
+ 
+ 	/*
+ 	 * We need to figure out if the object was created from C++ sources
+ 	 * DWARF DW_compile_unit has this, but we don't always have access
+ 	 * to it...
+ 	 */
+ 	if (!want_demangle((dso && dso__kernel(dso)) || kmodule))
+ 		return demangled;
+ 
+ 	rust_demangle_demangle(elf_name, &rust_demangle);
+ 	if (rust_demangle_is_known(&rust_demangle)) {
+ 		/* A rust mangled name. */
+ 		if (rust_demangle.mangled_len == 0)
+ 			return demangled;
+ 
+-		for (size_t buf_len = roundup_pow_of_two(rust_demangle.mangled_len * 2);
+-		     buf_len < 1024 * 1024; buf_len += 32) {
++		for (buf_len = min_t(size_t, roundup_pow_of_two(rust_demangle.mangled_len * 2),
++				     RUST_DEMANGLE_MAX_LEN);
++		     buf_len <= RUST_DEMANGLE_MAX_LEN;
++		     buf_len *= 2) {
+ 			char *tmp = realloc(demangled, buf_len);
+ 
+ 			if (!tmp)
 -- 
 2.43.0
 
