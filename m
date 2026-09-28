@@ -1,66 +1,88 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5E2319F40B
-	for <linux-perf-users@vger.kernel.org>; Mon, 28 Sep 2026 10:20:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 814354AA03A;
+	Mon, 28 Sep 2026 11:35:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790590842; cv=none; b=PjdqtLveCGmISjQStWbctEXybmszVx4Q4aWkZaq3oLU+WWy2UVUTbPvLETtZfLlAVrfkE9zcvx+Y0UX9Yd+se5agnADNug3mfq7gdDGTBDa1lXfO5nDeBrY/57msMmeVjnxzumFjQV35z1J/GCelKElr4vxJJS56Xubgq/KSrMo=
+	t=1790595322; cv=none; b=AArzXII93Sfsy4cXyg6rjYCOZc+hgyj389vNwVXuruGUr9qH2g9s4BMBd/3uuNLS0RnA94bNyjb8dAUNDM8dwcC+N9zQbN8Z9l70prdx4I5/Ys59bRzwNjdFZOiq7Uk6yJMKv0hRSN9qnj/rzSYBW7gWKDoSoCLi1CSmLEkiyDM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790590842; c=relaxed/simple;
-	bh=TkTxOqv610DsgWgcpf3TwNXqn1NDt5pAlAaZiac4cJk=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=DUkl01EdOu5KYQDGN6tywkIJMrtxYFiygYnz+QQ9Udz/YezMJ82uVqfOR+iqre86otWg4bhtm/r1RomuPNYYtlGTTV4cT1sVwVTOkfcIzquJPxEk3t9F7z9nbki/9j3wTv9YeFL+WjYaDeax97U/R1IvPWSKkr4X7qcb4J3Xngc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kaFNFDi4; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1790595322; c=relaxed/simple;
+	bh=5Mt9i6FKuVRyZRqfPs2gaFhgsD2PUofZrDsH8fx76qk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=USJirsa4kMjyVBv4vbRU16Z/Ds0xB4ujeTPKNuMULoeVyQgIXwjvtt5vZkybCs+tn+UsXzcGYOHDGoH5lix8+cQcCGPKmUM6rPw4dOmLvRR4kZCtTPm3ctmCQ2rtatPO7NqkQERNyJe8IuEOStK2HK4qr6nTWVpks7iMNB3Yu9Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=pass smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=YhQNRxqR; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kaFNFDi4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 491221F000FF;
-	Mon, 28 Sep 2026 10:20:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1790590841;
-	bh=TkTxOqv610DsgWgcpf3TwNXqn1NDt5pAlAaZiac4cJk=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=kaFNFDi4/f6Kuwxpt2mEnfwNy4HsPX+jQwcwnEyqHaEjrAYiMcw5vRg0JjaQYRDX+
-	 zwOwdDmZqr9aEMpiqJ5iQIruMAIUPpW3CU3XDLwUw+RHVXMA7J3qC7g9ysDn3bba8m
-	 Iq9RlUTlEnZF+Ji3gmcn0exLaLkd9elTwmfuFYuFTQ6JluK4IPPyFkUhnph/FbSU4v
-	 W+7al6N9gMvAwOamAPVoqisC6XqQhdXHua9imLP6wN8djF9QZJQKE1hVp5yiGFg2eJ
-	 EsEqOg+mcR6BUmJoCYNYCE/16VL6STinTe55zdj1OkzeZAtpgI4E3xpNp6T/N3GRa1
-	 OPAa3tBxApqYQ==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v2] perf test: Record kcore for the CoreSight callchain
- test
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Leo Yan" <leo.yan@arm.com>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260928-perf_cs_etm_callchain_test_add_kcore-v2-1-24fff6fab009@arm.com>
-References: <20260928-perf_cs_etm_callchain_test_add_kcore-v2-1-24fff6fab009@arm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Mon, 28 Sep 2026 10:20:40 +0000
-Message-Id: <20260928102041.491221F000FF@smtp.kernel.org>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="YhQNRxqR"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=khmPjeN+u+APZhVACT8SI8Ta/vWWuWX5CS8JMTHJ/H0=; b=YhQNRxqRRqtj3X3Qe4oz00EEVe
+	mFh2UA6TiDB4QlTZpKvkaH+EcDglF+DKukhzPWKTcZJzuwhAutS5Ea+v9uUOtAj7i53NoZdGUr9Ig
+	Jzor2K3TgNxxsLBl+MnjKERAQ9luNzdXvr57gKsqcy6DL8ExdnDWrqbXjNV540k/VOruYMcXf05yw
+	BtMDhFfclrjksawNFgXvZaFmgfjInUs1szmB9eiV8QkJrRpDbpaR6E16p72LLQd+d/3OpO1zZAon2
+	ajzRiFFqjDvHU0TzI2rXW6Se3UiQ7+ocRxYOwOCWpYEAhN40varSK0m79QHDKI/rO9FboWVSESxhm
+	jXhV9g0A==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.99.1 #2 (Red Hat Linux))
+	id 1xB9dV-00000006QJ4-1Hn1;
+	Mon, 28 Sep 2026 11:35:09 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id F0A95300754; Mon, 28 Sep 2026 13:35:07 +0200 (CEST)
+Date: Mon, 28 Sep 2026 13:35:07 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Leo Yan <leo.yan@arm.com>
+Cc: Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	James Clark <james.clark@linaro.org>,
+	Mike Leach <mike.leach@arm.com>, Tamas Petz <tamas.petz@arm.com>,
+	Tamas Zsoldos <tamas.zsoldos@arm.com>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, coresight@lists.linaro.org
+Subject: Re: [PATCH 1/3] perf/core: Export perf_event_itrace_started()
+Message-ID: <20260928113507.GA776954@noisy.programming.kicks-ass.net>
+References: <20260901-perf_suppress_itrace_start_records-v1-0-c4fbc6860859@arm.com>
+ <20260901-perf_suppress_itrace_start_records-v1-1-c4fbc6860859@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260901-perf_suppress_itrace_start_records-v1-1-c4fbc6860859@arm.com>
 
-> The CoreSight callchain test traces both userspace and kernel execution
-> and checks the callchain across a syscall.
->=20
-> Add --kcore to perf record to save the running kernel image alongside
-> the trace data so perf script can use it to decode the kernel trace.
-> If kcore is not available, the test will be skipped.
->=20
-> Add a Fixes tag so the change can be backported to stable kernels and
-> improve the test reliability.
->=20
-> Fixes: ca0e19074bd6 ("perf test: Add Arm CoreSight callchain test")
-> Reviewed-by: James Clark <james.clark@linaro.org>
+On Tue, Sep 01, 2026 at 05:36:15PM +0100, Leo Yan wrote:
+> Since Arm SPE and CoreSight drivers can be built as modules, export
+> perf_event_itrace_started() so that it can be used by these modules.
+> 
 > Signed-off-by: Leo Yan <leo.yan@arm.com>
 
-Sashiko has reviewed this patch and found no issues. It looks great!
+Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260928-perf_cs_et=
-m_callchain_test_add_kcore-v2-1-24fff6fab009@arm.com?part=3D1
-
+> ---
+>  kernel/events/core.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/kernel/events/core.c b/kernel/events/core.c
+> index a6c8e38a311042afab6b65814a84c67b87ba929b..8afe89179a62127eebae0f38f29cde045ba56251 100644
+> --- a/kernel/events/core.c
+> +++ b/kernel/events/core.c
+> @@ -10560,6 +10560,7 @@ void perf_event_itrace_started(struct perf_event *event)
+>  {
+>  	WRITE_ONCE(event->attach_state, event->attach_state | PERF_ATTACH_ITRACE);
+>  }
+> +EXPORT_SYMBOL_GPL(perf_event_itrace_started);
+>  
+>  static void perf_log_itrace_start(struct perf_event *event)
+>  {
+> 
+> -- 
+> 2.34.1
+> 
