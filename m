@@ -1,48 +1,48 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE8AC46EF6A;
-	Mon, 28 Sep 2026 07:51:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5754B46AA85;
+	Mon, 28 Sep 2026 07:51:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790581875; cv=none; b=tLvXCpvni46MGCNYHCuik8Q3uguluwSeBWiMmwj1PR/+FEx+sYkuZ6a5Eq1f8pEwX3FLMnuIs5Pcb8cCTNP0qrUsCIWWuD6Q14g2NE9gapYTGaeGnChBx2ZPpoM9QTkkDQpzbIWu050esIVWFsxADkC1bX/GLGWnY6zLhAp1v7g=
+	t=1790581878; cv=none; b=nkhWovn5lxrsPVf8R2UaZyRxIBpntAFjirdGBcatI7DO8/9piUCbo1HMCa7Q7K9WALHoh+Qq7JFpkDmCYHVYfb1oC1poScAX0bpMltjsaWTHz+OSrK4drOl+bL5k0lYm5RULajZk4m6eh8WLkuvs7W4RpSqi6N7MXJGfnpe9bxs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790581875; c=relaxed/simple;
-	bh=pPPctFcN7CeyRvru3KnUA5lzBnAoutvzhORmbnyPsRw=;
+	s=arc-20240116; t=1790581878; c=relaxed/simple;
+	bh=IXW0DEVPzXu922Ez4zq3r/dDJAJrBf/1rFZkmYRaQgc=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=U0HpsXCVZlUXG+aUSUVsyHJsMjFGFeSudDlQwbYBVfbsfYpw00jQ8NfTGZUApJKjJmkrikxkk0hKMwgpwpOiaBwUA5yelEbQZ4oiA4KjfNUIeqZ+FokcbS+ELgnO/CX/5En216K2F4seypXJk+kwr0at9zXKRbxYoLu+9EADAJw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Kw1ouQJN; arc=none smtp.client-ip=198.175.65.21
+	 MIME-Version; b=svk/xaThzQuj5qBfB4J00/19ny+lT62P38QSbDDIdHynUR2kpxniiAlWtCbw8GXa7L9LoxeH9IJDkgZtHHidZtfpUPYP16R606xVac+9kzYhR2Wl7jhzz2NbAK45DS5IGHSUw4s7agYAR8jATc5L0VPL3apT/bwkMccjYz8kX0o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lzagDJX9; arc=none smtp.client-ip=198.175.65.21
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Kw1ouQJN"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lzagDJX9"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1790581874; x=1822117874;
+  t=1790581877; x=1822117877;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=pPPctFcN7CeyRvru3KnUA5lzBnAoutvzhORmbnyPsRw=;
-  b=Kw1ouQJNk/4PF5TGxfu1dYNYHeTde25jFbWTJupFa+bGUZOoq2ehxIcq
-   tkdC6euWkHNST+11mgqgOxkWyEUVwKhhs1cuuzaAbPrbW0VnYr2FEcIwd
-   SjPoP8YM6fCmefx9u6wseIAPUwit8H2BmdOfoeTQa3aEKouhrrEXwFPiY
-   XFK5M1fkE/4n/ZZqa5fl/8Wqmh4Pmm/wd5QSUPoeoRQNAPf/HBM57M0Ym
-   R86a6FwU+jwL3k1UYiGHDN2UVquWppSMDbl2jZePBdW9U1M+qu6vi1Usu
-   5ipstNoLq87wVe1s3hy6zuCfdGkYkhTOAiZX76WpZKrcHaO7QbNQov/UL
-   A==;
-X-CSE-ConnectionGUID: ckH4R4SnR0OziahkwkOkEQ==
-X-CSE-MsgGUID: UviqdfhERCuVrc1LytfIwA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11918"; a="90141466"
+  bh=IXW0DEVPzXu922Ez4zq3r/dDJAJrBf/1rFZkmYRaQgc=;
+  b=lzagDJX9h8lI2ToirKkm3970SQ2rlZjb3Hekigel/oK4OJ1NGnbKlN5/
+   wzwOPVxcee/5B5EKx6wPl0DmIMMX1SWMU2sBX+OlYtEgtrbecgvm1gEHK
+   O+yMGwki7FofB3h3/ZIwXgq7hzeFApEuLmmeH50CsCN5hrv657Tn709I6
+   eHMSBSimdgyvvmiVylGtcr1utMUS50/FZY42HBJ0sPsCmrdSlNmDG71l7
+   d3HxX8p5+oksjPTbzpA/FRw4hsKh0KSYOtJnDXgUF2JwhuzAcRuaYCu8a
+   eB/HOWwKlEJq18+EECJegu2TYSoJcDBOB7R2p1gmKUP3JmNM/na7Dc+oB
+   g==;
+X-CSE-ConnectionGUID: pvldd4EKTge6LDBBvGkkZQ==
+X-CSE-MsgGUID: srmw6ShYQO2c5jzeEo9dCg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11918"; a="90141482"
 X-IronPort-AV: E=Sophos;i="6.27,128,1787036400"; 
-   d="scan'208";a="90141466"
+   d="scan'208";a="90141482"
 Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Sep 2026 00:51:13 -0700
-X-CSE-ConnectionGUID: weDpZP96SlCpxf1EhR12fw==
-X-CSE-MsgGUID: 0BaGu+hWRIiOeIEa2XQfFA==
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Sep 2026 00:51:17 -0700
+X-CSE-ConnectionGUID: EGM/3sD3SZWxfr4Ess/4Lw==
+X-CSE-MsgGUID: HT1yI4GWTHGre0odGoZoXw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.27,128,1787036400"; 
-   d="scan'208";a="275025007"
+   d="scan'208";a="275025031"
 Received: from spr.sh.intel.com ([10.112.229.196])
-  by orviesa009.jf.intel.com with ESMTP; 28 Sep 2026 00:51:10 -0700
+  by orviesa009.jf.intel.com with ESMTP; 28 Sep 2026 00:51:14 -0700
 From: Dapeng Mi <dapeng1.mi@linux.intel.com>
 To: Peter Zijlstra <peterz@infradead.org>,
 	Ingo Molnar <mingo@redhat.com>,
@@ -60,9 +60,9 @@ Cc: linux-kernel@vger.kernel.org,
 	Falcon Thomas <thomas.falcon@intel.com>,
 	Xudong Hao <xudong.hao@intel.com>,
 	Dapeng Mi <dapeng1.mi@linux.intel.com>
-Subject: [PATCH 11/15] perf/x86/intel: Fix invalid PEBS counts with counter-group support
-Date: Mon, 28 Sep 2026 15:43:05 +0800
-Message-Id: <20260928074309.898043-12-dapeng1.mi@linux.intel.com>
+Subject: [PATCH 12/15] perf/x86/intel: Make ACR static_call update architectural
+Date: Mon, 28 Sep 2026 15:43:06 +0800
+Message-Id: <20260928074309.898043-13-dapeng1.mi@linux.intel.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20260928074309.898043-1-dapeng1.mi@linux.intel.com>
 References: <20260928074309.898043-1-dapeng1.mi@linux.intel.com>
@@ -74,202 +74,83 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-On platforms with PEBS counter-group support (for example ARL and NVL),
-running mixed PEBS events can occasionally produce an invalidly large
-count for the instructions event, even exceeding the hardware counter
-width (48 bits).
+Auto counter reload (ACR) is an architectural feature, but the
+intel_pmu_enable_acr_event() static_call update is currently done in a
+model-specific way.
 
-$ perf record -e '{cpu_core/instructions,period=100000/u,\
-	cpu_core/l1-icache-load-misses,period=100000/u}:pS' -- ./foo
+This is only necessary because older platforms such as PTL/WCL only
+support ACR on E-core, which made the boot-time capability check on
+P-core impossible in the generic init path. Later platforms such as
+DMR/NVL support ACR on booting P-core and can detect it architecturally.
 
-The issue is caused by PEBS drain ordering. To avoid scanning the PEBS
-buffer twice, current drain helpers defer each event's last PEBS record
-and do not process all records strictly in sampling order. That is safe
-when no counter-group PEBS event is involved, but it can corrupt PEBS
-count updates when two or more active PEBS events use counter-group
-snapshotting.
+Make the intel_pmu_enable_acr_event() static_call update architectural
+so ACR can be enabled correctly on supported CPUs without relying on
+model-specific setup.
 
-Add intel_pmu_handle_pebs_records_in_order() and use it when two or more
-counter-group PEBS events are active, so records are processed strictly in
-sampling order for both adaptive PEBS and arch PEBS. This preserves
-correct count updates and prevents invalid PEBS counts.
-
-Fixes: 8807d922705f ("perf/x86/intel/ds: Factor out PEBS record processing code to functions")
 Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
 ---
- arch/x86/events/intel/ds.c | 131 +++++++++++++++++++++++++++++++++++--
- 1 file changed, 127 insertions(+), 4 deletions(-)
+ arch/x86/events/intel/core.c | 27 +++++++++++++++++++++++++--
+ 1 file changed, 25 insertions(+), 2 deletions(-)
 
-diff --git a/arch/x86/events/intel/ds.c b/arch/x86/events/intel/ds.c
-index 1562d4cb1903..06ce3129e4a9 100644
---- a/arch/x86/events/intel/ds.c
-+++ b/arch/x86/events/intel/ds.c
-@@ -3413,6 +3413,113 @@ intel_pmu_handle_pebs_records(struct pt_regs *iregs,
- 	return hweight64(events_bitmap);
- }
+diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
+index 3fc3795534bf..0d360fba4b79 100644
+--- a/arch/x86/events/intel/core.c
++++ b/arch/x86/events/intel/core.c
+@@ -6365,6 +6365,25 @@ static inline void __intel_update_large_pebs_flags(struct pmu *pmu)
  
-+static __always_inline int
-+intel_pmu_handle_pebs_records_in_order(struct pt_regs *iregs,
-+				       struct perf_sample_data *data,
-+				       void *base, void *top,
-+				       setup_fn setup_sample)
+ #define counter_mask(_gp, _fixed) ((_gp) | ((u64)(_fixed) << INTEL_PMC_IDX_FIXED))
+ 
++static bool intel_pmu_support_acr(void)
 +{
-+	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
-+	short counts[INTEL_PMC_IDX_FIXED + MAX_FIXED_PEBS_EVENTS] = {};
-+	void *last[INTEL_PMC_IDX_FIXED + MAX_FIXED_PEBS_EVENTS] = {NULL};
-+	struct x86_perf_regs *perf_regs = this_cpu_ptr(&x86_pebs_regs);
-+	struct pt_regs *regs = &perf_regs->regs;
-+	u64 mask = get_pebs_cntr_mask(cpuc);
-+	u64 events_bitmap = 0;
-+	bool corrupted = false;
-+	void *at, *next;
-+	int bit;
++	unsigned int eax, ebx, ecx, edx;
++	union cpuid35_eax eax_0;
++	union cpuid35_ebx ebx_0;
 +
-+	if (!iregs)
-+		iregs = &dummy_iregs;
++	if (!this_cpu_has(X86_FEATURE_ARCH_PERFMON_EXT))
++		return false;
 +
-+	/* Find the last PEBS record for each PEBS event. */
-+	for (at = base; at < top;) {
-+		u64 pebs_status;
-+
-+		next = find_next_pebs_record(at, top);
-+		if (!next) {
-+			corrupted = true;
-+			break;
-+		}
-+
-+		pebs_status = mask & get_pebs_cntr_status(at);
-+		for_each_set_bit(bit, (unsigned long *)&pebs_status,
-+				 INTEL_PMC_IDX_FIXED + MAX_FIXED_PEBS_EVENTS) {
-+			struct perf_event *event = cpuc->events[bit];
-+
-+			if (WARN_ON_ONCE(!event) ||
-+			    WARN_ON_ONCE(!event->attr.precise_ip))
-+				continue;
-+
-+			last[bit] = at;
-+		}
-+		at = next;
-+	}
-+
-+	/* Process all PEBS records in sampling order. */
-+	for (at = base; at < top;) {
-+		u64 pebs_status;
-+
-+		next = find_next_pebs_record(at, top);
-+		if (!next)
-+			break;
-+
-+		pebs_status = mask & get_pebs_cntr_status(at);
-+		events_bitmap |= pebs_status;
-+
-+		for_each_set_bit(bit, (unsigned long *)&pebs_status,
-+				 INTEL_PMC_IDX_FIXED + MAX_FIXED_PEBS_EVENTS) {
-+			struct perf_event *event = cpuc->events[bit];
-+
-+			if (WARN_ON_ONCE(!event) ||
-+			    WARN_ON_ONCE(!event->attr.precise_ip))
-+				continue;
-+
-+			if (last[bit] && (at != last[bit])) {
-+				counts[bit]++;
-+				__intel_pmu_pebs_event(event, iregs, regs, data,
-+						       at, setup_sample);
-+			} else {
-+				__intel_pmu_pebs_last_event(event, iregs, regs, data,
-+							    at, counts[bit] + 1,
-+							    corrupted,
-+							    setup_sample);
-+			}
-+		}
-+		at = next;
-+	}
-+
-+	if (!events_bitmap)
-+		intel_pmu_pebs_event_update_no_drain(cpuc, mask);
-+
-+	return hweight64(events_bitmap);
-+}
-+
-+static bool must_process_pebs_in_order(struct cpu_hw_events *cpuc)
-+{
-+	int count = 0;
-+	int bit;
-+
-+	/*
-+	 * When multiple PEBS events with counter-group are active, PEBS
-+	 * records must be processed in sampling order; otherwise counter-group
-+	 * updates can corrupt PEBS event counts.
-+	 */
-+	for_each_set_bit(bit, (unsigned long *)&cpuc->pebs_enabled, X86_PMC_IDX_MAX) {
-+		struct perf_event *event = cpuc->events[bit];
-+
-+		if (!event || !event->attr.precise_ip)
-+			continue;
-+		if (is_pebs_counter_event_group(event))
-+			count++;
-+		if (count > 1)
-+			return true;
++	cpuid(ARCH_PERFMON_EXT_LEAF, &eax_0.full, &ebx_0.full, &ecx, &edx);
++	if (eax_0.split.acr_subleaf) {
++		cpuid_count(ARCH_PERFMON_EXT_LEAF, ARCH_PERFMON_ACR_LEAF,
++			    &eax, &ebx, &ecx, &edx);
++		return !!counter_mask(eax, ebx);
 +	}
 +
 +	return false;
 +}
 +
- static int intel_pmu_drain_pebs_icl(struct pt_regs *iregs,
- 				    struct perf_sample_data *data)
+ static void update_pmu_cap_from_perfmonext(struct pmu *pmu)
  {
-@@ -3420,6 +3527,7 @@ static int intel_pmu_drain_pebs_icl(struct pt_regs *iregs,
- 	u64 mask = get_pebs_cntr_mask(cpuc);
- 	struct debug_store *ds = cpuc->ds;
- 	void *base, *top;
-+	int handled;
- 
- 	if (!x86_pmu.pebs_active)
- 		return 0;
-@@ -3433,8 +3541,15 @@ static int intel_pmu_drain_pebs_icl(struct pt_regs *iregs,
- 		return 0;
- 	}
- 
--	return intel_pmu_handle_pebs_records(iregs, data, base, top,
--					     setup_pebs_adaptive_sample_data);
-+	if (must_process_pebs_in_order(cpuc)) {
-+		handled = intel_pmu_handle_pebs_records_in_order(iregs, data,
-+				base, top, setup_pebs_adaptive_sample_data);
-+	} else {
-+		handled = intel_pmu_handle_pebs_records(iregs, data,
-+				base, top, setup_pebs_adaptive_sample_data);
-+	}
-+
-+	return handled;
+ 	unsigned int eax, ebx, ecx, edx;
+@@ -8112,7 +8131,6 @@ static __always_inline void intel_pmu_init_pnc(struct pmu *pmu)
+ 	hybrid(pmu, event_constraints) = intel_pnc_event_constraints;
+ 	hybrid(pmu, pebs_constraints) = intel_pnc_pebs_event_constraints;
+ 	hybrid(pmu, extra_regs) = intel_pnc_extra_regs;
+-	static_call_update(intel_pmu_enable_acr_event, intel_pmu_enable_acr);
  }
  
- static int intel_pmu_drain_arch_pebs(struct pt_regs *iregs,
-@@ -3444,6 +3559,7 @@ static int intel_pmu_drain_arch_pebs(struct pt_regs *iregs,
- 	u64 mask = get_pebs_cntr_mask(cpuc);
- 	union arch_pebs_index index;
- 	void *base, *top;
-+	int handled;
- 
- 	rdmsrq(MSR_IA32_PEBS_INDEX, index.whole);
- 
-@@ -3465,8 +3581,15 @@ static int intel_pmu_drain_arch_pebs(struct pt_regs *iregs,
- 		index.thresh = ARCH_PEBS_THRESH_SINGLE;
- 	wrmsrq(MSR_IA32_PEBS_INDEX, index.whole);
- 
--	return intel_pmu_handle_pebs_records(iregs, data, base, top,
--					     setup_arch_pebs_sample_data);
-+	if (must_process_pebs_in_order(cpuc)) {
-+		handled = intel_pmu_handle_pebs_records_in_order(iregs, data,
-+					base, top, setup_arch_pebs_sample_data);
-+	} else {
-+		handled = intel_pmu_handle_pebs_records(iregs, data,
-+					base, top, setup_arch_pebs_sample_data);
-+	}
-+
-+	return handled;
+ static __always_inline void intel_pmu_init_cyc(struct pmu *pmu)
+@@ -8160,7 +8178,6 @@ static __always_inline void intel_pmu_init_arw(struct pmu *pmu)
+ 	hybrid(pmu, event_constraints) = intel_arw_event_constraints;
+ 	hybrid(pmu, pebs_constraints) = intel_dkt_pebs_event_constraints;
+ 	hybrid(pmu, extra_regs) = intel_arw_extra_regs;
+-	static_call_update(intel_pmu_enable_acr_event, intel_pmu_enable_acr);
  }
  
- static void __init intel_arch_pebs_init(void)
+ __init int intel_pmu_init(void)
+@@ -9127,6 +9144,12 @@ __init int intel_pmu_init(void)
+ 	if (!is_hybrid())
+ 		intel_update_pmu_caps(NULL);
+ 
++	if (x86_pmu.acr_cntr_mask64 || intel_pmu_support_acr()) {
++		static_call_update(intel_pmu_enable_acr_event,
++				   intel_pmu_enable_acr);
++		pr_cont("Auto counter reload, ");
++	}
++
+ 	if (x86_pmu.arch_pebs) {
+ 		static_call_update(intel_pmu_disable_event_ext,
+ 				   intel_pmu_disable_event_ext);
 -- 
 2.34.1
 
