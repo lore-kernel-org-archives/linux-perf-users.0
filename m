@@ -1,47 +1,48 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D481145D5D9;
-	Mon, 28 Sep 2026 07:50:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9735D44F561;
+	Mon, 28 Sep 2026 07:50:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790581837; cv=none; b=G8gPPbND1ScsJzVyCbIxV9Nabenz8Mfsc+84kOI/hbDtxAinypw7QYedD+kON0cwJozbNYn9mTAvw2fbAOSagM9eKVcLxOvuv6eW4UMeDaQ6A4GQIm26S8lORAWPekwFhrnTjc8B87ChXKGecRx3/ls56UaZd84FlOSZI9lr68s=
+	t=1790581839; cv=none; b=T54YXjr+u5nKGce7wePRZU8/FGkv4Qj/fqBCJExuMJrICCJygMU8k/mKjAu183nyfd0xYBn5pCIDxRh947i9ftesLR09YtsKy4m3k0DGofzWzxmcIwlZWgqsUpo7lSvYE6a3fyVXQ0cIHEhmErmCR5FZyPrVjg9XWLWF6Wp6oMQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790581837; c=relaxed/simple;
-	bh=QdpPkamy9BthX/PDJO1JCiWxyjOHL9SY5wj6a3XCLIY=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=lIYjDI7UWXJzm8Ds+em4KIJQyP9qYMwQnARtJj4UhJjxa8WvSmZEeFAnW3gu0T8ABaNGiLVsNljOqOADVa4CFfsfXOHiiSh5LMSGOz9BO5tkcZV/W51ycQyJHID70fUurYROkuUXQLl6EPeBiqz08ZZQyHm8nX3/OJpt985S5yI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QDyxp2Ov; arc=none smtp.client-ip=198.175.65.21
+	s=arc-20240116; t=1790581839; c=relaxed/simple;
+	bh=vEd8OwtcxH5HtM1IEhQe1qV+pc57GYMXfy8ABNf+aFo=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=eocaL/xTjodcIcLmRnQhELOjQE14H7nDdpQBwk5dWZZ+f4QGibs6shPWlw0z7dNS325i5vUga6SIB6i6ua4CeQ+JyOYpHUAlUA5/nL8KXMR8mk+NSXVqteNVFsFtypVl76FUUneouqsKCV6wHNsnWOf+5MnklPqwzna5wkuSR2Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=O/HHMnBr; arc=none smtp.client-ip=198.175.65.21
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QDyxp2Ov"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="O/HHMnBr"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1790581835; x=1822117835;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=QdpPkamy9BthX/PDJO1JCiWxyjOHL9SY5wj6a3XCLIY=;
-  b=QDyxp2OvZQKsT9d7X42rV1j8DZyGtbFMgN2BWk/kAHpoVIREuPCInjYE
-   Xt6hwz6NPGohMshEagX6zuNrjtI3hqGXmQXebZx7ACpFEJ9pWb1Vedc1y
-   gb8mBeqzUN++x6AaRH7DtS3r0FGyFNHJsr229yAtOB5TiAZXhNJIDEbwZ
-   ukVuqz4cLlgdqFuJSxsd6Al6BljB29dkfQLqedsIaxZ1WSnl/XI9zkn7i
-   +enkDe85AJjj3UHDtkWPdVK2yZ2skqiuplOVk8sK8/olyD9G7iKGQYilO
-   ZBEK/vkzEGTjMcZi6lE69RfEEmhhmLt0bj7R5kzApC3ReR1ZZlsNC4oSW
-   Q==;
-X-CSE-ConnectionGUID: IYWC/B4KRcmOXQqcB7/dIQ==
-X-CSE-MsgGUID: pbypY+s3SEaiLOFfMu5JJw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11918"; a="90141372"
+  t=1790581837; x=1822117837;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=vEd8OwtcxH5HtM1IEhQe1qV+pc57GYMXfy8ABNf+aFo=;
+  b=O/HHMnBreYPBZ8FUTP8ieMX+0jAByQJyXiI87NzVz5A5XsEqKBE+0iXN
+   4DcDXAmk0Q6cF9huqao/pJ3H0YJ3a7/ipJBcfIJ5GG/RmjN8+mZ1zfwSD
+   uc+2DF8U3D3LRi2wQKkvPI9g4TMfcyoV7Y2mZsT4l2ajXZkKyZcvE52ln
+   nhcSk4jLZt/g+6hysb27TUN3uxu0Hso5UzZfnp418HyYj0odEVMx7nZn9
+   tkuJ/mOuxl8Cxssi6egQJH8yb1Jiris4kwXK3uW/qju8qcouNfIhNwLPH
+   tswLpMbFFqBHJ4JOUJQf9uGr03ow6Npx0Z1XbTrmY2PI3VkfCZ6oh9qfn
+   w==;
+X-CSE-ConnectionGUID: oz8mZmivRTy7GzknXfY2hg==
+X-CSE-MsgGUID: M4qB8fMAQ+WeVNDOd3bw1g==
+X-IronPort-AV: E=McAfee;i="6800,10657,11918"; a="90141383"
 X-IronPort-AV: E=Sophos;i="6.27,128,1787036400"; 
-   d="scan'208";a="90141372"
+   d="scan'208";a="90141383"
 Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Sep 2026 00:50:34 -0700
-X-CSE-ConnectionGUID: ubw6ekcwRsajQU7a5uFFYA==
-X-CSE-MsgGUID: REzxWCdpQXuzjMvZp8x9MQ==
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Sep 2026 00:50:37 -0700
+X-CSE-ConnectionGUID: 3dMwjgzxRLqAyZi8Lk7eIQ==
+X-CSE-MsgGUID: Q86LTULORWC0q/qc3KMJcQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.27,128,1787036400"; 
-   d="scan'208";a="275024845"
+   d="scan'208";a="275024858"
 Received: from spr.sh.intel.com ([10.112.229.196])
-  by orviesa009.jf.intel.com with ESMTP; 28 Sep 2026 00:50:30 -0700
+  by orviesa009.jf.intel.com with ESMTP; 28 Sep 2026 00:50:34 -0700
 From: Dapeng Mi <dapeng1.mi@linux.intel.com>
 To: Peter Zijlstra <peterz@infradead.org>,
 	Ingo Molnar <mingo@redhat.com>,
@@ -59,10 +60,12 @@ Cc: linux-kernel@vger.kernel.org,
 	Falcon Thomas <thomas.falcon@intel.com>,
 	Xudong Hao <xudong.hao@intel.com>,
 	Dapeng Mi <dapeng1.mi@linux.intel.com>
-Subject: [PATCH 00/15] perf/x86: Fix sampling bugs and relax slots-event grouping
-Date: Mon, 28 Sep 2026 15:42:54 +0800
-Message-Id: <20260928074309.898043-1-dapeng1.mi@linux.intel.com>
+Subject: [PATCH 01/15] perf/x86/intel: Guard leader sibling walk on nr_siblings
+Date: Mon, 28 Sep 2026 15:42:55 +0800
+Message-Id: <20260928074309.898043-2-dapeng1.mi@linux.intel.com>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20260928074309.898043-1-dapeng1.mi@linux.intel.com>
+References: <20260928074309.898043-1-dapeng1.mi@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -71,67 +74,68 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This series fixes several recently discovered sampling issues:
-- a warning about a missing ctx->mutex hold during LBR counter event
-  initialization.
-- PEBS sampling failures after CPU offline/online for both legacy PEBS
-  and arch-PEBS.
-- invalid counts reported by non-PEBS ACR events in SAMPLE_READ mode.
-- stale or incorrect counts reported by PEBS events without counter
-  snapshot support.
-- incorrect event counts are seen when multiple PEBS events are active
-  in a group.
+The leader event's ctx mutex is only held before calling
+pmu->event_init() for sibling events, not for a newly-created group
+leader.
 
-It also relaxes the slots-event restriction for topdown event groups:
-the slots event no longer has to be the group leader, which makes
-sampling for groups containing topdown metric events more flexible.
+Some paths in intel_pmu_hw_config() call for_each_sibling_event() on the
+leader itself. At that point, leader->ctx is not yet initialized, so the
+lockdep assertion in for_each_sibling_event() can trigger WARN_ON_ONCE(),
+and the access to leader->ctx is unsafe.
 
-Patch layout:
-- patch 01: fix the warning triggered by for_each_sibling_event() while
-  iterating LBR counter events.
-- patches 02-04: fix PEBS sampling failures after CPU offline/online for
-  both legacy PEBS and arch-PEBS.
-- patches 05-06: fix minor PEBS handler issues.
-- patch 07: fix invalid counts reported by non-PEBS ACR events in
-  SAMPLE_READ mode.
-- patch 08: fix stale counts reported by PEBS events without counter
-  snapshot support.
-- patches 09-11: refactor PEBS handlers to remove duplicated code and
-  fix incorrect counts when multiple PEBS events are active in group.
-- patch 12: make ACR static_call updates architectural to avoid
-  model-specific updates on every platform
-- patch 13: add is_x86_event() checks before testing for
-  slots/topdown/mem-loads events
-- patches 14-15: allow a slots event to be a non-group leader, making 
-  sampling for groups containing topdown metric events more flexible.
+This loop is unnecessary when the event is the group leader, because the
+leader has no siblings yet. Guard the iteration with leader->nr_siblings
+before calling for_each_sibling_event().
 
-Dapeng Mi (15):
-  perf/x86/intel: Guard leader sibling walk on nr_siblings
-  perf/x86/intel: Reset active_fixed_ctrl_val on CPU teardown
-  perf/x86/intel: Reset active_pebs_data_cfg on CPU teardown
-  perf/x86/intel: Reset cached acr_cfg_b[] and cfg_c_val[] on CPU
-    teardown
-  perf/x86/intel: Pass correct PEBS counter mask to no-drain update path
-  perf/x86/intel: Limit PEBS counter iteration to valid array bounds
-  perf/x86/intel: Reject SAMPLE_READ for no-counter-snapshot ACR events
-  perf/x86/intel: Fix stale PEBS count without counter-group support
-  perf/x86/intel: Refactor intel_pmu_drain_arch_pebs()
-  perf/x86/intel: Refactor intel_pmu_drain_pebs_icl()
-  perf/x86/intel: Fix invalid PEBS counts with counter-group support
-  perf/x86/intel: Make ACR static_call update architectural
-  perf/x86: Validate event type before topdown/mem-loads classification
-  perf/core: Add event_caps dependency flags
-  perf/x86/intel: Allow Topdown metrics with a non-leader slots event
+Also move setting PERF_X86_EVENT_BRANCH_COUNTERS to the end of the
+branch-counter validation path so the flag is set only after all checks
+succeed.
 
- arch/x86/events/intel/core.c | 216 +++++++++++++++++--
- arch/x86/events/intel/ds.c   | 390 ++++++++++++++++++++++++-----------
- arch/x86/events/perf_event.h |  14 +-
- include/linux/perf_event.h   |   8 +
- kernel/events/core.c         |  52 ++++-
- 5 files changed, 535 insertions(+), 145 deletions(-)
+Fixes: 33744916196b ("perf/x86/intel: Support branch counters logging")
+Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
+---
+ arch/x86/events/intel/core.c | 13 ++++++++-----
+ 1 file changed, 8 insertions(+), 5 deletions(-)
 
-
-base-commit: 6350de8671b94afb7691d110f63bcda42f658a69
+diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
+index 0a34d674df59..65815d13ae3f 100644
+--- a/arch/x86/events/intel/core.c
++++ b/arch/x86/events/intel/core.c
+@@ -5046,11 +5046,12 @@ static int intel_pmu_hw_config(struct perf_event *event)
+ 		leader = event->group_leader;
+ 		if (intel_set_branch_counter_constr(leader, &num))
+ 			return -EINVAL;
+-		leader->hw.flags |= PERF_X86_EVENT_BRANCH_COUNTERS;
+ 
+-		for_each_sibling_event(sibling, leader) {
+-			if (intel_set_branch_counter_constr(sibling, &num))
+-				return -EINVAL;
++		if (leader->nr_siblings) {
++			for_each_sibling_event(sibling, leader) {
++				if (intel_set_branch_counter_constr(sibling, &num))
++					return -EINVAL;
++			}
+ 		}
+ 
+ 		/* event isn't installed as a sibling yet. */
+@@ -5069,7 +5070,7 @@ static int intel_pmu_hw_config(struct perf_event *event)
+ 		if (0 == (event->attr.branch_sample_type &
+ 			  ~(PERF_SAMPLE_BRANCH_PLM_ALL |
+ 			    PERF_SAMPLE_BRANCH_COUNTERS)))
+-			event->hw.flags  &= ~PERF_X86_EVENT_NEEDS_BRANCH_STACK;
++			event->hw.flags &= ~PERF_X86_EVENT_NEEDS_BRANCH_STACK;
+ 
+ 		/*
+ 		 * Force the leader to be a LBR event. So LBRs can be reset
+@@ -5077,6 +5078,8 @@ static int intel_pmu_hw_config(struct perf_event *event)
+ 		 */
+ 		if (!intel_pmu_needs_branch_stack(leader))
+ 			return -EINVAL;
++
++		leader->hw.flags |= PERF_X86_EVENT_BRANCH_COUNTERS;
+ 	}
+ 
+ 	if (intel_pmu_needs_branch_stack(event)) {
 -- 
 2.34.1
 
