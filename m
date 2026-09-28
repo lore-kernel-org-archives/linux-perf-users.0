@@ -1,78 +1,65 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 834624E433A;
-	Mon, 28 Sep 2026 16:38:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3801D4E0207;
+	Mon, 28 Sep 2026 16:39:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790613516; cv=none; b=Whpl1VsQfcoJhidnFpniAw/FVDqSXIHXP8gfFNTTNoSVTnCokJL3SCoVXbfMpslrxGnDYNtvYMmPyk5JEfkyzTuv89iD9H1+ixe3Mx1FghmQuZEtmJHTXPkCw0DkD7Dn/jzayWb0BuMWcXq2PKtBM1aHEHTPHLxH/g0BHuG4094=
+	t=1790613600; cv=none; b=rkOQvyQSr+VAz+83F7q7GawJGI4z8dW6dPHbcieX5MogfrGXSfy4FtHkm8KMWfmOEnWXxSXY05fPqQaNfPjCUCxaSIqYBxjr7E2ooSVYVTkiCT7krxRAOkV/YRk5MjJ0NNcFIbM8P4tM7XDiA4AVpS4xDTdlcE5CGy8KJoLhcNY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790613516; c=relaxed/simple;
-	bh=8IGYsrmQjDLwYeUaicBX1VfgAQ0acsDasG1WuvpdtNA=;
+	s=arc-20240116; t=1790613600; c=relaxed/simple;
+	bh=EI+ExcLlqUMlwR+1/cXEMXjfhgLk3Tb6j3gLOjZVYEY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QRAIYGXSw3sn6esc/BUzDV58WGasB/lJgSzL3HROZCi5f6eyyeVQoV/TeCtFfoQ8dMHZKq7X9QS9ZBcFnuHODdlECb8IO2FO4EuhQIN6qhelQX9GzHWl7DQZvcXqsCkOe8Ak8RZ74hh9sWR2dWCPGu4CSlgW+O8sNNsgjMhoBc8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nXtWRFGV; arc=none smtp.client-ip=100.103.45.18
+	 Content-Type:Content-Disposition:In-Reply-To; b=bd9xCVfCcag8zDfNPEVpxArNgs8YAJc3nbOOwGAjzxKaWfUD7xt66jtHwLLq27w1eTrHpnrXR+umQ/5XHWum6L6ljoUweHSoIFA5Eydlc0LjSLcISSxq3+VJMZ07UCVhpuNSCApGP3JGToo3VzQqU885/7M4EZ0USSWdDEJbOUc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eKxx/D1g; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nXtWRFGV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5C9FA1F000FF;
-	Mon, 28 Sep 2026 16:38:34 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eKxx/D1g"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 790FE1F000FF;
+	Mon, 28 Sep 2026 16:39:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1790613515;
-	bh=EEs6XBwb7wcETBBUBOE2KSWJ90Sk3QjaTWGPUFquhvA=;
+	s=k20260515; t=1790613599;
+	bh=c6m6jRyI1NLeD77KG7fU8tiGxkfFIZL+IbELI4e9oc4=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=nXtWRFGVW/S6IpHnH0eA/6SNG4v/wN22c2Sra6jafao5O6fKDxAWKmdkVw2/SePqr
-	 D2SHC1cpXg+Vz52WG1LSYqfmuCygl/SAtZwW7TFwU5BQMc2Vm2SU3+mc5WQ7OMGfXc
-	 gbbHgyVIyAAwwSHZl+CaSpGmbSBcbcAU3zB/qIilt5NBu9YFUIbR7kfIjHlrAcMfZU
-	 VLAz3as3ShWWpG0XIeIosNeF83ugJRZeNxC1XV9NXaQ0akM75Z5YzfFbpVj4LwWf8V
-	 yf09QtO3VRFAV53Lti9neU7yqeQJrDUQaTaOzlcA8mh+SyrzFlxX/LituGXwOTy8Z3
-	 ajZj5UFxQbb2Q==
-Date: Mon, 28 Sep 2026 18:38:31 +0200
+	b=eKxx/D1gebg9IUHY5s/CMz6d7BqsCuKd2JkInatrHw0JVYIsar9xQQ9S+c+0EXLfb
+	 /Hp0eKhN97TfR3TupbIhwdt8Z52pzTpyZfJWq+GW6m+UN+XnGE511eOj1UaIgwcS43
+	 TLxSfqUcLHC0EVogWHRS5o+5OW9E0uvBt/FEjMqhH1vzSPn53MwOYv15t7drPtSgvU
+	 dbNhULKesvJ3HG2pFSzlFgb3i8Y/cs54ayvuZxp8QfJ4tZwzQkMktpCsIyD+XqNdUF
+	 LSNW+St5VuKbGZlBSPxAI2LSymWqhpYRKjMEvz/YnYCoA8lmCrd8ibEN6pFkUs+M6j
+	 W130PGtjd0Scg==
+Date: Mon, 28 Sep 2026 18:39:56 +0200
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: James Clark <james.clark@linaro.org>
-Cc: =?iso-8859-1?Q?Beno=EEt?= Monin <benoit.monin@bootlin.com>,
-	Gregory CLEMENT <gregory.clement@bootlin.com>,
-	=?iso-8859-1?Q?Th=E9o?= Lebrun <theo.lebrun@bootlin.com>,
-	Tawfik Bayouk <tawfik.bayouk@mobileye.com>,
-	Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-	Arnaldo Carvalho de Melo <acme@redhat.com>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+To: Ian Rogers <irogers@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
 	Adrian Hunter <adrian.hunter@intel.com>,
-	Markus Mayer <mmayer@broadcom.com>
-Subject: Re: [PATCH] perf build: Improve fix for "argument list too long"
- error
-Message-ID: <arqYB8gNWWsCpp51@x2>
-References: <20260928-perf-orphan-args-v1-1-8cacf784621e@bootlin.com>
- <8bc8b276-bc4e-4a6d-b770-5b02c79946d4@linaro.org>
+	James Clark <james.clark@linaro.org>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1] perf test code-reading: Fix duplicate kernel maps and
+ machine leak
+Message-ID: <arqYXHPRWlqbDwYh@x2>
+References: <20260928075517.3057621-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <8bc8b276-bc4e-4a6d-b770-5b02c79946d4@linaro.org>
+In-Reply-To: <20260928075517.3057621-1-irogers@google.com>
 
-On Mon, Sep 28, 2026 at 10:15:47AM +0100, James Clark wrote:
-> On 28/09/2026 09:55, Benoît Monin wrote:
-> > Express the orphan file list as paths relative to $(OUT_DIR) by
-> > stripping the common prefix and restoring it with printf, the same
-> > approach used in scripts/Makefile.clean, so the shell arguments stay
-> > short.
-
-> > Fixes: b6712d91f8f5 ("perf build: Prevent "argument list too long" error")
-> > Suggested-by: Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>
-> > Signed-off-by: Benoît Monin <benoit.monin@bootlin.com>
-> > Tested-by: Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>
+On Mon, Sep 28, 2026 at 12:55:17AM -0700, Ian Rogers wrote:
+> Furthermore, when try_kcore is true and !have_kcore, returning
+> TEST_CODE_READING_NO_KCORE directly bypasses out_err, leaking the entire
+> struct machine, its kernel/module maps and DSOs, all kallsyms symbols,
+> and host_env.
 > 
-> Reviewed-by: James Clark <james.clark@linaro.org>
+> Remove the redundant machine__create_kernel_maps() call, check for
+> !machine after machine__new_host(), and jump to out_err when returning
+> TEST_CODE_READING_NO_KCORE.
+ 
+> Fixes: 0fd4008ed755 ("perf test: Use machine__new_host in mmap thread code reading test")
+> Assisted-by: Antigravity:gemini-3.1-pro
 
 Thanks, applied to perf-tools-next, for v7.4.
 
