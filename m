@@ -1,178 +1,159 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7384495ADD
-	for <linux-perf-users@vger.kernel.org>; Mon, 28 Sep 2026 21:14:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790630096; cv=none; b=jcRC0dk7tBOjKM3ZulYkcDRCwKWn+F6Z0gF5J3rqQnCTq2fdU3QYzV1k0WrbbPAYYpStt7YI11Khk1aJRy8jrc2p/tdUa6yVV42KiDjrfCwH4XPO9fUQrT+6FN9rfRTIiAtT12SGO2cnrm0uuAj5P5YRaRwgEZfZxkU322IdYfI=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790630096; c=relaxed/simple;
-	bh=sXz9h0Ce6QlAUGZanA2s4RKe6l4AxaOZK4NspK6gyuQ=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=lbd42Ih0sKD8fQOd5IRc/NSroV1/P1eCM7weTvGGKFhlnkYlIml2qKfkloDQePPAYQEPm693YkHX0qPh2bdJu6CoWEXX1efT7gcPt52Sv8dN1HuAahWau0We5LSLERpds1SQbMVS36cR+XdzghPWq8n1CXQpWgEaX3tfQXqFmC8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=A9ieUzko; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A445548C41A
+	for <linux-perf-users@vger.kernel.org>; Mon, 28 Sep 2026 21:32:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.178
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1790631131; cv=pass; b=jZKwY9hSLYm2CDydRm/rpLdN63rMySuLKUqjK9UEobDk7b16FYEkSMI0Digz5OW/XeCOOsUi9xjtuVpsgG3uAu78zYv533/+Rkem39foruW00YyskKzDXsuRI7uHhdL2gMffn8rcn+vxprdTld3V3AVV4AvsZWC1DndSTAeSwzM=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1790631131; c=relaxed/simple;
+	bh=p1RBWTYNXB1ayt1mjn73C403W2YSUfo7GSBkq13gnuM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=j7c35oOgG3+SAacDsI3q1WB/htASIhB6car9w9dJRIRWzIhAwdw6vHeIv4naX0BbIW8AOehwbP4d1ok6+iad8kwTgOhOMYbTIHD3QMhj35qQUlGdle39oYXXQEKq6hwUTldW7zCLZrTZC8PXTcyUFnEj7aIg48sKx43IU4Gl6tc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=M+dg0mRb; arc=pass smtp.client-ip=209.85.214.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="A9ieUzko"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 384301F000FF;
-	Mon, 28 Sep 2026 21:14:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1790630095;
-	bh=V/1DsE1by44FmX/yaVNaXvAXshn6FT5osAlsKtC6jf4=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=A9ieUzko8R3mumK+q+fDrA7C0WlAtE92ZetBvZZLqHPx5D8tLsO6RjgLA5bO+z2If
-	 8+4vNS3Ojr2gRKRZA4Xg1YzEkDWQHbX0uWczdZOzgjBv2P8royxkpQb+J5hw3d7eka
-	 p8IoAdpd1gByxkQs0a5Y5iNrA7TudkRfExAIFVrwDF7uHw1EbhNZzYBNaDWdRrGjG8
-	 bUuPkmyEQJWfzUJcnGXejnF2VBWzli4GfnY1eZX6CSRzY2F2J6JsqDtPklpT5CXG+e
-	 MX7wXIC0Kxx90p+hsYlD/H2yKA8W08watTHhJ9wVXjJuTY2V6alBA36yxaFzYvX31Q
-	 ujaqR3HfSlTVw==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v1 1/2] perf test: Add per-test timeout support
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Ian Rogers" <irogers@google.com>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260928210144.3925224-1-irogers@google.com>
-References: <20260928210144.3925224-1-irogers@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Mon, 28 Sep 2026 21:14:54 +0000
-Message-Id: <20260928211455.384301F000FF@smtp.kernel.org>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="M+dg0mRb"
+Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-2d3b445a84fso10635ad.1
+        for <linux-perf-users@vger.kernel.org>; Mon, 28 Sep 2026 14:32:07 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1790631124; cv=none;
+        d=google.com; s=arc-20260327;
+        b=gd2Y3Q1ReHWD5DNHSfnN/eqkbSSx3ne1u8FpG35BrE6H3BHfdCBaZHRk5xN9N0phGX
+         Q+RjJSrfvjbS+WHkG07CsquEV3sZDtNtgC64HE70vI7YtPd/QdHM24gDADTa/H8XDsl3
+         7zxL6wts+CeL1672ZdJPsH7eIqBdFExxcu1rwAMoa9WlpDNcxAxtaM+9Nh0bRkq38Uao
+         EttwP+6fzrKmwCup/+gvSHpB7pHKTsS5btExD9V5c5rXop0RWx4S2rjN6vFM6DB9HK/p
+         k9+FQ9i531+ZPaPPqM6b1z43IJHnV24er3SkDg+0LacvTK7Ip2YokPXLbDHSG7YX9soo
+         IFjg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=+lE1VGJm7uxmdcjGqZxkzLy2YHUwYwaDzNyp54coWZ0=;
+        fh=Yu9UJrzJzrHOzbPD0mYbSynsXGg0XA6S6+z72DoqE2g=;
+        b=rjJMRH8mRu0htm4Y7PDGI2meHOXMoaYuLrgcLhqi6TJcwtfbgOHfuWOrc/1gGBk74J
+         sHIBTP68jWX1mx1dqzOxXg9TKD5ydlWFsZiX71mZf1xsrUG/hQl4Y62sA1ZiKU4Dd5qn
+         Yr2VBZ/tQQSABTNeaF4pE4WFd3Rlsn3HTddL8ib6xs8wXL4+bjJFSjcKse8kP9aR3w6n
+         J7RN3nks0rMKrPHJErogm6QEf75JoL4+wZ6vvAO9/exOenpdRFpEgfFTN6ytaH6CPzy7
+         HjWP19x6yOiqEZ5XF2qnKeuqRPJdp08rSuG/+KMBr37IjFcwZvXmB/B7tMddyxi7hs98
+         SVQA==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1790631124; x=1791235924; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=+lE1VGJm7uxmdcjGqZxkzLy2YHUwYwaDzNyp54coWZ0=;
+        b=M+dg0mRbsyQ/tPSCr+GFl01fo1ArXZ//eEh0Nsa+XUexwNiHZZiFRJjWJKFkqajCqN
+         08DqXy7WyKldSY60pd4HEjPJjeqsZvvXN3d4Lr13baXawHnSSnQdOM46iXCCK9uoJRyF
+         bDftiJqY6j/eLqMH17O1VcAoIQ9w9lSZI1d4VkPFFm60+DC8gXtaM8LrWqJMCJ2MWubN
+         m7WkYMjiQyfDZjZcM0B9IMVuCc+EO77nwHeiEq/wHx3jH+t8fkPfD/V80jBnRpGdJjv2
+         qwSbfnEXBwKhW/4DiNPrOH8AYIF7HPZKGSgGmo/lcwEIBuyA8IxHtgO7cN67o7m1NSQ/
+         BzDQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1790631124; x=1791235924;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=+lE1VGJm7uxmdcjGqZxkzLy2YHUwYwaDzNyp54coWZ0=;
+        b=Qgs8xW6z23y/nlXwyIbOsbnp1dRhXFzHl9MQzGUE0ueokVvmFviI53evFoHSA7ZBXG
+         O8+Lp0wO4cL/j9VPTdUcXIuf+LF9kL80JMUXCoDvWpzQDvSz8B3CAUtP3so4zMMo4Y2l
+         qNpN5/z21hIVlGoEJeNdQQgniMNK33SNGb1dvg8q7aBoDObsXKMPwwj0aOr7UdASjMS7
+         xetXfC4ohTtQHDVRtgN5bR9frg62FKhhTVtIFKdt/NF6POxRJ7Xn1nNDi6gvud63no8O
+         nM5voPhKm9E690ZHaATTQYuiO6j+XfIlcBMB76BcdJRiyiOUMl0QJxGPizsZH/RJVwjW
+         rjdw==
+X-Forwarded-Encrypted: i=1; AKwUvBz4tC3NjM1oZJHRf87UEWwaWv1n3XWrlHhcB/vzffCURtk5Y/Ue9WIdzSuEVF6BSVI6XDAypFEWryHBxgSqicMO@vger.kernel.org
+X-Gm-Message-State: AFq9FYLY8PO5Io4rCb3JSa3NtO1EagalyYCFkjjJJxvR3P3EAXo/vDCw
+	uOrLoIg41+QJdgfcUHn6QgYfGLwHkz1kgbs6+opwS/nH/1KG0n61FnfLk5b+44dRtTA1p2yP32T
+	J0DCnKUUPwHVQ/H6tHw9pQK7fAdh8Bxz6+AUdXKiB
+X-Gm-Gg: AYBFou2B+KE9ch4tlXE+SS3hCkbjJ4sfVJeuxSNOj55JjjXnD6JuzMxjjWk6dXHMmGx
+	uCDP1Mt3K8BWosSTLGbIC2ecMdsPB/WIIBihj7MnukNHejorodMly5zGl3wfKhfwysa5cgUIFR0
+	SVGHJLt4EbiXMyzli9uUjp4vkn4b0wvsc7jCCGkiwrK55PgYKD6isD80Lwee+Ilmtx5/sH6tGPX
+	p3FFl5wOZvShorYh6mCIFrxmVSO8po9MysEfn1s7Annma0XyRpNMe/U4slhUR21iicgF/etyvXB
+	sKdzIbxRuotccJkES5lOOypVXNKwNnWnlZhbmiwQd0lv9a8Co56yued+KlhCvJv2Mp5CQdsnORQ
+	vFLy/D/i9xg==
+X-Received: by 2002:a17:902:e551:b0:2df:9957:d1bd with SMTP id
+ d9443c01a7336-2e2c7a2d7ccmr288835ad.18.1790631123861; Mon, 28 Sep 2026
+ 14:32:03 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+References: <20260928010227.1903673-1-michalpl2003@gmail.com> <20260928010227.1903673-2-michalpl2003@gmail.com>
+In-Reply-To: <20260928010227.1903673-2-michalpl2003@gmail.com>
+From: Ian Rogers <irogers@google.com>
+Date: Mon, 28 Sep 2026 14:31:49 -0700
+X-Gm-Features: AclHuK961jia0Cign6WJrnpm7yNwXw1WkLXNkziDawCLyR5WWyWV5QS-KMIVEBs
+Message-ID: <CAP-5=fWs6xu53uBqCpWvTtqSAx+kySoMM06pbJyaNa=L_7evQg@mail.gmail.com>
+Subject: Re: [PATCH 1/5] perf test demangle: Fail when demangling fails
+To: Michal Pluta <michalpl2003@gmail.com>
+Cc: acme@kernel.org, namhyung@kernel.org, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, James Clark <james.clark@linaro.org>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Thank you for your contribution! Sashiko AI review found 3 potential issue(=
-s) to consider:
-- [High] perf test: overly broad waitpid() condition hangs test suite on no=
-rmal failures
-- [Medium] perf test: child tests inherit SA_RESTART SIGALRM handler, break=
-ing alarm()
-- [Medium] perf test: SIGKILL escalation for timed-out process groups is ab=
-orted prematurely
---
+On Sun, Sep 27, 2026 at 6:02=E2=80=AFPM Michal Pluta <michalpl2003@gmail.co=
+m> wrote:
+>
+> The Rust and Java demangle tests only log a NULL result from
+> dso__demangle_sym() and carry on, so a symbol that fails to demangle
+> doesn't fail the test.  Set TEST_FAIL.
+>
+> Assisted-by: LLM
+> Signed-off-by: Michal Pluta <michalpl2003@gmail.com>
 
-commit efae32fde876d5c28dcaff79950fdf6547005215
-Author: Ian Rogers <irogers@google.com>
+Fixes: 07f2b1287c97 ("perf test demangle-java: Don't segv if demangling fai=
+ls")
+Fixes: bdf05ccd1841 ("perf test demangle-rust: Add Rust demangling test")
 
-perf test: Add per-test timeout support
+Reviewed-by: Ian Rogers <irogers@google.com>
 
-This commit adds a new per-test timeout to perf test, defaulting to 60
-seconds. Tests are placed into separate process groups, and timeouts are
-enforced using an ITIMER_REAL periodic timer that sends SIGTERM followed
-by a SIGKILL escalation after 1 second.
+Thanks!
+Ian
 
-> diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-t=
-est.c
-> --- a/tools/perf/tests/builtin-test.c
-> +++ b/tools/perf/tests/builtin-test.c
-[ ... ]
-> @@ -378,20 +395,31 @@ static int run_test_child(struct child_process *pro=
-cess)
-> =20
->  	check_leaks();
->  err_out:
-> -	fflush(NULL);
->  	for (size_t i =3D 0; i < ARRAY_SIZE(signals); i++)
->  		signal(signals[i], SIG_DFL);
-
-[Severity: Medium]
-Does this omit SIGALRM from being reset to SIG_DFL?
-
-Since the parent __cmd_test() sets up a no-op handler with SA_RESTART for
-SIGALRM before forking, children will inherit that handler. Will builtin te=
-sts
-that rely on the default SIGALRM behavior (like using alarm() to prevent
-internal hangs) fail to terminate because the no-op handler overrides it?
-
-> +	if (err =3D=3D TEST_FAIL) {
-> +		/*
-> +		 * Wait for any spawned child processes (such as shell scripts
-> +		 * running trap cleanup handlers on SIGTERM) to finish before
-> +		 * exiting.
-> +		 */
-> +		while (waitpid(-1, NULL, 0) > 0 || errno =3D=3D EINTR)
-> +			;
-> +	}
-
-[Severity: High]
-Can this loop hang the test suite indefinitely on normal failures?
-
-This condition catches all normal test failures (err =3D=3D TEST_FAIL), not=
- just
-tests interrupted by a timeout SIGTERM. If a test spawns child processes and
-fails normally, it will block on waitpid(-1) because the child processes we=
-re
-never signaled to exit.
-
-Will this hang the entire test run until the global timeout triggers, or
-deadlock completely if timeouts are disabled via the dont-fork path?
-
-> +	fflush(NULL);
->  	return -err;
->  }
-[ ... ]
-> @@ -748,6 +792,47 @@ static void print_test_failure_snippet(FILE *fp, con=
-st char *buf)
->  	free(line_lens);
->  }
-> =20
-> +static void cmd_test_alarm_handler(int sig __maybe_unused)
-> +{
-> +}
-> +
-> +static void check_child_timeout(struct child_test *child, const struct t=
-imespec *now)
-> +{
-> +	double elapsed;
-> +	pid_t pid;
-> +
-> +	if (!test_timeout || !child || child->done || child->process.finished)
-> +		return;
-
-[Severity: Medium]
-Does returning early when child->done is true bypass the SIGKILL escalation?
-
-If the immediate child process exits after receiving SIGTERM, the parent
-marks the entire test case as done (setting child->done to true in
-finish_tests_parallel).
-
-Will checking child->done here completely bypass the 1-second timer and the
-kill(-pid, SIGKILL) call for the broader process group, leaving any
-subprocesses that ignored SIGTERM to leak?
-
-> +
-> +	pid =3D child->process.pid;
-> +	if (pid <=3D 0)
-> +		return;
-> +
-> +	if (!child->timed_out) {
-> +		elapsed =3D (now->tv_sec - child->start_time.tv_sec) +
-> +			  (now->tv_nsec - child->start_time.tv_nsec) / 1000000000.0;
-> +		if (elapsed >=3D test_timeout) {
-> +			child->timed_out =3D true;
-> +			child->timeout_time =3D *now;
-> +			pr_debug3("Timeout (%us) for test %d.%d (pid %d), sending SIGTERM\n",
-> +				  test_timeout, child->suite_num + 1,
-> +				  child->test_case_num + 1, pid);
-> +			kill(-pid, SIGTERM);
-> +			kill(pid, SIGTERM);
-> +		}
-> +	} else if (!child->sigkill_sent) {
-> +		elapsed =3D (now->tv_sec - child->timeout_time.tv_sec) +
-> +			  (now->tv_nsec - child->timeout_time.tv_nsec) / 1000000000.0;
-> +		if (elapsed >=3D 1.0) {
-> +			child->sigkill_sent =3D true;
-> +			pr_debug3("Sending SIGKILL to timed out test %d.%d (pid %d)\n",
-> +				  child->suite_num + 1, child->test_case_num + 1, pid);
-> +			kill(-pid, SIGKILL);
-> +			kill(pid, SIGKILL);
-> +		}
-> +	}
-> +}
-[ ... ]
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260928210144.3925=
-224-1-irogers@google.com?part=3D1
+> ---
+>  tools/perf/tests/demangle-java-test.c    | 1 +
+>  tools/perf/tests/demangle-rust-v0-test.c | 1 +
+>  2 files changed, 2 insertions(+)
+>
+> diff --git a/tools/perf/tests/demangle-java-test.c b/tools/perf/tests/dem=
+angle-java-test.c
+> index 0fb3e5a4a0ed..a8eb0f4effad 100644
+> --- a/tools/perf/tests/demangle-java-test.c
+> +++ b/tools/perf/tests/demangle-java-test.c
+> @@ -33,6 +33,7 @@ static int test__demangle_java(struct test_suite *test =
+__maybe_unused, int subte
+>                 if (!buf) {
+>                         pr_debug("FAILED to demangle: \"%s\"\n \"%s\"\n",=
+ test_cases[i].mangled,
+>                                  test_cases[i].demangled);
+> +                       ret =3D TEST_FAIL;
+>                         continue;
+>                 }
+>                 if (strcmp(buf, test_cases[i].demangled)) {
+> diff --git a/tools/perf/tests/demangle-rust-v0-test.c b/tools/perf/tests/=
+demangle-rust-v0-test.c
+> index 904f966c65d7..ee4ddb61174b 100644
+> --- a/tools/perf/tests/demangle-rust-v0-test.c
+> +++ b/tools/perf/tests/demangle-rust-v0-test.c
+> @@ -58,6 +58,7 @@ static int test__demangle_rust(struct test_suite *test =
+__maybe_unused, int subte
+>                 if (!buf) {
+>                         pr_debug("FAILED to demangle: \"%s\"\n \"%s\"\n",=
+ test_cases[i].mangled,
+>                                  test_cases[i].demangled);
+> +                       ret =3D TEST_FAIL;
+>                         continue;
+>                 }
+>                 if (strcmp(buf, test_cases[i].demangled)) {
+> --
+> 2.43.0
+>
