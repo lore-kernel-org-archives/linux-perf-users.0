@@ -1,48 +1,48 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1BB3466B00;
-	Mon, 28 Sep 2026 07:51:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D4E1468C1B;
+	Mon, 28 Sep 2026 07:51:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790581886; cv=none; b=CDmz4xXypAtFNW21Dko13onQ7opACyJOBqgMqKAs/5uZDRRLiriY1EUkouas/izL88NVO6FztIzinRs6yTIQKzM4CoOZIvuVXKK4mzp6raemb+EqW2USBnowyqcjnBGVJ0BmErP3fNpXIwPCkvQ2nyugy7k6ZPh3NL7IYjuMr/Y=
+	t=1790581890; cv=none; b=HnRjmnURr4U7jRDbimV3EVcWzB+VwdQQSpBKqSd8L2gfNOH4FSEtBVpl5gmfPwNBXJHUZZDv3cjR3YoyWBj0DXh7ywvJjoZofktis19YiapozS+vhZKF6YWmUsHBqBe5WVab6ltN1la+R5Iom6GWN8Fqx/qfPO86ivxsE/3uGoY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790581886; c=relaxed/simple;
-	bh=ecrL/4xuo15JW0uPHaTcNYGs77A+2PvICKir9lRJCX4=;
+	s=arc-20240116; t=1790581890; c=relaxed/simple;
+	bh=9mMxMy/W548eqOty8etxmi7s5A1WgX23GlmvlU5b6aM=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=cUtPPtw9eJLBEraOSA220Zbp2s58VJlMMuorsOajbvLKUAoFlOSo4tTBfJmS8aowp1mDufq9cZUPNbKsS/tCmxPP1YFQqKR+0tt7WrNeaQYtIugrpZmUzXYhKQRCO4PZzjq6CHaw3uA4Xv87WMKAXg2NVSDTbx0Nt3fIJPvFc4o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HemgkKT1; arc=none smtp.client-ip=198.175.65.21
+	 MIME-Version; b=WFTezr78M4YPX0M2FjeANp9VJtjH2McqxeJZjYceDNNeYgKnfvOSzaekYvY3PUcN/N8K3FGVJplkhUZ2+yQoL95CUyruEz1VbwdWb2JsqvlQboH2lKrGqVExVbUkD2BSKUpCeDrD74skJGiVWCDaKz30ARF4mLRdDTgTqTGRcvM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kxhwXqjb; arc=none smtp.client-ip=198.175.65.21
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HemgkKT1"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kxhwXqjb"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1790581885; x=1822117885;
+  t=1790581888; x=1822117888;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=ecrL/4xuo15JW0uPHaTcNYGs77A+2PvICKir9lRJCX4=;
-  b=HemgkKT1dYW0DsYW1fTYrxCHCvE4eOLpDqH3Nu0SksKEAqY4kta379yb
-   SpKOXHmq97HE+FTsMCpbpdhX3fmhR0Izoa1JPDERySJeSTkpOUhFuyB1K
-   dho7pYZIdWN61bPJOXCuCzQcrKSWDTWj8/BQvFT2pi3Ms2kZLhYkCeLew
-   6t5CPXlRhiY+EeRniR0lHydpV7NRbFCQUEu8vcaZ4ePnPrQlYzN6awBTQ
-   sNLIGzyjdHiDZ3wm7en3bs5VdV2yEyqljwyVoYiYk67cTFCctv2/doBD1
-   woKqS9lcKKcg9Ocz2D0ZDtkBZ0ombHHfjf7cTt/FwqAEKiu/fsW1hB+BR
-   g==;
-X-CSE-ConnectionGUID: LwJELkxJRZa57IIQIY5bDw==
-X-CSE-MsgGUID: GRUzQLzVQf2Cu/W34ddNDA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11918"; a="90141504"
+  bh=9mMxMy/W548eqOty8etxmi7s5A1WgX23GlmvlU5b6aM=;
+  b=kxhwXqjbGzPwnUyMOJpgu0SSrRPxbEpRJkfR6XB+LsgACWw68EwwEIqI
+   bi8+blI5wMN9pUxhpIaDF/jVdt39RhxGIoPHqwLf/0EHyMg2+CLYgF5hZ
+   EyMh+HNbwR+qXQlvUFevZB1OQerEgm/PMtvzsbUUTIPs8yIkVoDo7Os0m
+   hg3GNsjirRz/Zy44FzOTFXcT21BmBzBpfFnh92bAtJJNVK7u+z1Gm7T/O
+   7I9aNUCxBT7GoiTYtOEbn8HIcaEwU049mhTKxwh2EMmR3qh4oNn2/a+qt
+   1Ji+D0g2idi1TKXQQrpBGuXRHuVYh+UQtSlJylaEDq0srBNf4SaBQh/oE
+   Q==;
+X-CSE-ConnectionGUID: M2XqYkfBTVuAdlYjX7seIg==
+X-CSE-MsgGUID: /qNWiNAFRY+ZHdUVOHcdgg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11918"; a="90141513"
 X-IronPort-AV: E=Sophos;i="6.27,128,1787036400"; 
-   d="scan'208";a="90141504"
+   d="scan'208";a="90141513"
 Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Sep 2026 00:51:24 -0700
-X-CSE-ConnectionGUID: Vuk+BD07Q5yge0/S/ZZ/hA==
-X-CSE-MsgGUID: XhojjUq/TXWsFRffOwoj7A==
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Sep 2026 00:51:28 -0700
+X-CSE-ConnectionGUID: xVxiL8hnQxmSsE4cfxbD2A==
+X-CSE-MsgGUID: 3r5hGCsuQ+2n8JhUBVjzOQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.27,128,1787036400"; 
-   d="scan'208";a="275025069"
+   d="scan'208";a="275025081"
 Received: from spr.sh.intel.com ([10.112.229.196])
-  by orviesa009.jf.intel.com with ESMTP; 28 Sep 2026 00:51:21 -0700
+  by orviesa009.jf.intel.com with ESMTP; 28 Sep 2026 00:51:25 -0700
 From: Dapeng Mi <dapeng1.mi@linux.intel.com>
 To: Peter Zijlstra <peterz@infradead.org>,
 	Ingo Molnar <mingo@redhat.com>,
@@ -60,9 +60,9 @@ Cc: linux-kernel@vger.kernel.org,
 	Falcon Thomas <thomas.falcon@intel.com>,
 	Xudong Hao <xudong.hao@intel.com>,
 	Dapeng Mi <dapeng1.mi@linux.intel.com>
-Subject: [PATCH 14/15] perf/core: Add event_caps dependency flags
-Date: Mon, 28 Sep 2026 15:43:08 +0800
-Message-Id: <20260928074309.898043-15-dapeng1.mi@linux.intel.com>
+Subject: [PATCH 15/15] perf/x86/intel: Allow Topdown metrics with a non-leader slots event
+Date: Mon, 28 Sep 2026 15:43:09 +0800
+Message-Id: <20260928074309.898043-16-dapeng1.mi@linux.intel.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20260928074309.898043-1-dapeng1.mi@linux.intel.com>
 References: <20260928074309.898043-1-dapeng1.mi@linux.intel.com>
@@ -74,132 +74,96 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add two new event capability flags:
-- PERF_EV_CAP_RELIED_ON: An event that other group events rely on. Must
-  not be set on a group leader.
-- PERF_EV_CAP_RELIANT: An event that relies on a group event carrying
-  PERF_EV_CAP_RELIED_ON. Must not be combined with PERF_EV_CAP_RELIED_ON.
-  If the dependency is on the group leader, use PERF_EV_CAP_SIBLING
-  instead of PERF_EV_CAP_RELIANT.
+Topdown metric events currently require the slots event to be the group
+leader. That is unnecessarily strict. For metric counting, it is
+sufficient that a valid slots event exists in the same group, regardless
+of whether it is the leader.
 
-When an event with PERF_EV_CAP_RELIED_ON is detached from the group, all
-events in the group carrying PERF_EV_CAP_RELIANT can no longer function
-and must be transitioned to the ERROR state.
+Relax the validation in intel_pmu_hw_config() to accept a slots sibling
+and validate metric constraints against that slots event. This enables
+leader sampling for groups such as:
+
+-e '{cycles:p,slots,topdown-retiring}:S'
+
+Keep the existing ordering rule: the slots event must appear before all
+metric events. Group validation is incremental, and intel_pmu_hw_config()
+cannot determine whether the current event is the last event in the
+group.
+
+Also set the slots event with PERF_EV_CAP_RELIED_ON and metric events
+with PERF_EV_CAP_RELIANT so that detaching the slots event will place
+the dependent metric events into the ERROR state if slots event is not
+the group leader.
 
 Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
 ---
- include/linux/perf_event.h |  8 ++++++
- kernel/events/core.c       | 52 +++++++++++++++++++++++++++++++++-----
- 2 files changed, 53 insertions(+), 7 deletions(-)
+ arch/x86/events/intel/core.c | 37 +++++++++++++++++++++++++++++-------
+ 1 file changed, 30 insertions(+), 7 deletions(-)
 
-diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
-index 7797ce207555..3031fe8dab37 100644
---- a/include/linux/perf_event.h
-+++ b/include/linux/perf_event.h
-@@ -706,11 +706,19 @@ typedef void (*perf_overflow_handler_t)(struct perf_event *,
-  * group it is scheduled out and moved into an unrecoverable ERROR state.
-  * PERF_EV_CAP_READ_SCOPE: A CPU event that can be read from any CPU of the
-  * PMU scope where it is active.
-+ * PERF_EV_CAP_RELIED_ON: An event on which other group members depend.
-+ * This flag must not be set on a group leader.
-+ * PERF_EV_CAP_RELIANT: A member that depends on another group event carrying
-+ * PERF_EV_CAP_RELIED_ON. It must not be combined with PERF_EV_CAP_RELIED_ON
-+ * and must not be set on a group leader. If the dependency is on the group
-+ * leader, use PERF_EV_CAP_SIBLING instead.
-  */
- #define PERF_EV_CAP_SOFTWARE		BIT(0)
- #define PERF_EV_CAP_READ_ACTIVE_PKG	BIT(1)
- #define PERF_EV_CAP_SIBLING		BIT(2)
- #define PERF_EV_CAP_READ_SCOPE		BIT(3)
-+#define PERF_EV_CAP_RELIED_ON		BIT(4)
-+#define PERF_EV_CAP_RELIANT		BIT(5)
+diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
+index 6cc1462c9c82..9025f29f625d 100644
+--- a/arch/x86/events/intel/core.c
++++ b/arch/x86/events/intel/core.c
+@@ -5300,30 +5300,53 @@ static int intel_pmu_hw_config(struct perf_event *event)
  
- #define SWEVENT_HLIST_BITS		8
- #define SWEVENT_HLIST_SIZE		(1 << SWEVENT_HLIST_BITS)
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index de05df65ab3d..55db0ad8b93a 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -2349,13 +2349,12 @@ static void perf_promote_sibling_to_leader(struct perf_event *sibling,
- 					   int group_caps)
- {
- 	/*
--	 * Events that have PERF_EV_CAP_SIBLING require being part of
--	 * a group and cannot exist on their own, schedule them out
--	 * and move them into the ERROR state. Also see
--	 * _perf_event_enable(), it will not be able to recover this
--	 * ERROR state.
-+	 * Events with PERF_EV_CAP_SIBLING or PERF_EV_CAP_RELIANT
-+	 * must stay in a group or depend on another event in the
-+	 * group; otherwise schedule them out and move them to ERROR.
-+	 * _perf_event_enable() cannot recover from this state.
- 	 */
--	if (sibling->event_caps & PERF_EV_CAP_SIBLING)
-+	if (sibling->event_caps & (PERF_EV_CAP_SIBLING | PERF_EV_CAP_RELIANT))
- 		__event_disable(sibling, ctx, PERF_EVENT_STATE_ERROR);
+ 		if (is_available_metric_event(event)) {
+ 			struct perf_event *leader = event->group_leader;
++			struct perf_event *slots = NULL;
++			struct perf_event *sibling;
  
- 	sibling->group_leader = sibling;
-@@ -2371,6 +2370,43 @@ static void perf_promote_sibling_to_leader(struct perf_event *sibling,
- 	perf_event__header_size(sibling);
- }
+ 			/* The metric events don't support sampling. */
+ 			if (is_sampling_event(event))
+ 				return -EINVAL;
  
-+static void perf_group_disable_reliants(struct perf_event *event)
-+{
-+	struct perf_event *leader = event->group_leader;
-+	struct perf_event *sibling, *tmp;
-+	struct perf_event_context *ctx = event->ctx;
-+	u32 mask = PERF_EV_CAP_RELIED_ON | PERF_EV_CAP_RELIANT;
+-			/* The metric events require a slots group leader. */
+-			if (!is_slots_event(leader))
++			/*
++			 * intel_pmu_hw_config() cannot tell whether the current
++			 * event is the last one in the group. Require the slots
++			 * event to appear before all metric events.
++			 */
++			if (is_slots_event(leader)) {
++				slots = leader;
++			} else if (leader->nr_siblings) {
++				for_each_sibling_event(sibling, leader) {
++					if (is_slots_event(sibling)) {
++						slots = sibling;
++						break;
++					}
++				}
++			}
 +
-+	if (!(event->event_caps & PERF_EV_CAP_RELIED_ON))
-+		return;
-+
-+	/* Group leader should not carry PERF_EV_CAP_RELIED_ON. */
-+	WARN_ON_ONCE(leader->event_caps & PERF_EV_CAP_RELIED_ON);
-+	/* Group leader should not carry PERF_EV_CAP_RELIANT. */
-+	WARN_ON_ONCE(leader->event_caps & PERF_EV_CAP_RELIANT);
-+
-+	/*
-+	 * Disable all siblings that rely on this event. Without it,
-+	 * they cannot function and would otherwise fall into ERROR state.
-+	 */
-+	list_for_each_entry_safe(sibling, tmp, &leader->sibling_list, sibling_list) {
-+		if (!(sibling->event_caps & PERF_EV_CAP_RELIANT))
-+			continue;
-+
-+		/*
-+		 * An event must not set both PERF_EV_CAP_RELIED_ON and
-+		 * PERF_EV_CAP_RELIANT simultaneously.
-+		 */
-+		if (WARN_ON_ONCE((sibling->event_caps & mask) == mask))
-+			continue;
-+
-+		list_del_init(&sibling->sibling_list);
-+		leader->nr_siblings--;
-+		leader->group_generation++;
-+		perf_promote_sibling_to_leader(sibling, ctx, leader->group_caps);
-+	}
-+}
-+
- static void perf_group_detach(struct perf_event *event)
- {
- 	struct perf_event *leader = event->group_leader;
-@@ -2393,6 +2429,7 @@ static void perf_group_detach(struct perf_event *event)
- 	 * If this is a sibling, remove it from its group.
- 	 */
- 	if (leader != event) {
-+		perf_group_disable_reliants(event);
- 		list_del_init(&event->sibling_list);
- 		leader->nr_siblings--;
- 		leader->group_generation++;
-@@ -3305,7 +3342,8 @@ static void _perf_event_enable(struct perf_event *event)
- 		/*
- 		 * Detached SIBLING events cannot leave ERROR state.
- 		 */
--		if (event->event_caps & PERF_EV_CAP_SIBLING &&
-+		if (event->event_caps &
-+		    (PERF_EV_CAP_SIBLING | PERF_EV_CAP_RELIANT) &&
- 		    event->group_leader == event)
- 			goto out;
++			/* The metric events require a slots event. */
++			if (!slots)
+ 				return -EINVAL;
+ 
+ 			/*
+-			 * The leader/SLOTS must not be a sampling event for
++			 * The slots event must not be a sampling event for
+ 			 * metric use; hardware requires it starts at 0 when used
+ 			 * in conjunction with MSR_PERF_METRICS.
+ 			 */
+-			if (is_sampling_event(leader))
++			if (is_sampling_event(slots))
+ 				return -EINVAL;
+ 
+-			event->event_caps |= PERF_EV_CAP_SIBLING;
++			if (slots == leader) {
++				event->event_caps |= PERF_EV_CAP_SIBLING;
++			} else {
++				slots->event_caps |= PERF_EV_CAP_RELIED_ON;
++				event->event_caps |= PERF_EV_CAP_RELIANT;
++			}
+ 			/*
+ 			 * Only once we have a METRICs sibling do we
+ 			 * need TopDown magic.
+ 			 */
+-			leader->hw.flags |= PERF_X86_EVENT_TOPDOWN;
+-			event->hw.flags  |= PERF_X86_EVENT_TOPDOWN;
++			slots->hw.flags |= PERF_X86_EVENT_TOPDOWN;
++			event->hw.flags |= PERF_X86_EVENT_TOPDOWN;
+ 		}
+ 	}
  
 -- 
 2.34.1
