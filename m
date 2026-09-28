@@ -1,95 +1,96 @@
-Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
+Received: from mail-qt1-f182.google.com (mail-qt1-f182.google.com [209.85.160.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A445548C41A
-	for <linux-perf-users@vger.kernel.org>; Mon, 28 Sep 2026 21:32:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C69C73ACEE9
+	for <linux-perf-users@vger.kernel.org>; Mon, 28 Sep 2026 21:33:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.160.182
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790631131; cv=pass; b=jZKwY9hSLYm2CDydRm/rpLdN63rMySuLKUqjK9UEobDk7b16FYEkSMI0Digz5OW/XeCOOsUi9xjtuVpsgG3uAu78zYv533/+Rkem39foruW00YyskKzDXsuRI7uHhdL2gMffn8rcn+vxprdTld3V3AVV4AvsZWC1DndSTAeSwzM=
+	t=1790631242; cv=pass; b=EAXQvDA4L/tx/OUUOx/F7QJwpCZW4nAJQepkXmmSYvk8O5paHbBtnVSEICvoPPSepD87MAX+SS4vqGVeeZ6bcgn5jT+PL1VEDLyOROCjsYDhOykoV7DeXqXHmI5F1B/HUxszyI6hTBgVw2KtGFjsI6y+Lhx++WZxsThi7nZVPcY=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790631131; c=relaxed/simple;
-	bh=p1RBWTYNXB1ayt1mjn73C403W2YSUfo7GSBkq13gnuM=;
+	s=arc-20240116; t=1790631242; c=relaxed/simple;
+	bh=mvnwzhrAjkxMDQIccUyeWUTpXbWAVvfTvL0DsV5qTxk=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=j7c35oOgG3+SAacDsI3q1WB/htASIhB6car9w9dJRIRWzIhAwdw6vHeIv4naX0BbIW8AOehwbP4d1ok6+iad8kwTgOhOMYbTIHD3QMhj35qQUlGdle39oYXXQEKq6hwUTldW7zCLZrTZC8PXTcyUFnEj7aIg48sKx43IU4Gl6tc=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=M+dg0mRb; arc=pass smtp.client-ip=209.85.214.178
+	 To:Cc:Content-Type; b=Dq6RLybRQAOJMJuI81oDS1QnMeUFVLRiC2ZB5hQlO+KXWOlGfGR4Hn4hOa/Z/vgZ76pronAuHhV1bOIrfuwhLBS1TJcpIqtu8fL3Bf5P9wjpOThU+lh7p4848WbkkmMzEcJwFy2RSdH+gTLPgFClx51S+83ppp2MakUp2yi8gMw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=cbllXQMi; arc=pass smtp.client-ip=209.85.160.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="M+dg0mRb"
-Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-2d3b445a84fso10635ad.1
-        for <linux-perf-users@vger.kernel.org>; Mon, 28 Sep 2026 14:32:07 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1790631124; cv=none;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="cbllXQMi"
+Received: by mail-qt1-f182.google.com with SMTP id d75a77b69052e-53328262efbso108141cf.0
+        for <linux-perf-users@vger.kernel.org>; Mon, 28 Sep 2026 14:33:58 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1790631237; cv=none;
         d=google.com; s=arc-20260327;
-        b=gd2Y3Q1ReHWD5DNHSfnN/eqkbSSx3ne1u8FpG35BrE6H3BHfdCBaZHRk5xN9N0phGX
-         Q+RjJSrfvjbS+WHkG07CsquEV3sZDtNtgC64HE70vI7YtPd/QdHM24gDADTa/H8XDsl3
-         7zxL6wts+CeL1672ZdJPsH7eIqBdFExxcu1rwAMoa9WlpDNcxAxtaM+9Nh0bRkq38Uao
-         EttwP+6fzrKmwCup/+gvSHpB7pHKTsS5btExD9V5c5rXop0RWx4S2rjN6vFM6DB9HK/p
-         k9+FQ9i531+ZPaPPqM6b1z43IJHnV24er3SkDg+0LacvTK7Ip2YokPXLbDHSG7YX9soo
-         IFjg==
+        b=hTZBLr7Oumyhn6TonGiUseasiP5FI07fa9+4sT9v1YnbaOJ29GplJClh9Gt+dgh1+h
+         HUX4Rdt2HapmBGrfkRNcCoSaTWMBjXgg3up8oLxHrcBVSjjf12zB8BMHvjTwSYNEPMn4
+         cetmKfYOtjjOeFtU2Xq5tQHDRsx+O6F39VxSeBs0sHcZliPZ3Onp4AZV1xM22xiDjndv
+         fWGDeyIJuD+L0Y3WIyeo+CPUBpIalNJ1GnHapm/VVg22Q+Nn+3mLvX0gMmfJu+tP3SP8
+         0Z2THTg33rz7/B3WUPShE69WsXZJHFVWDQ9M9siaQYTEJsPl678pamA2DUx6aSRSvdrf
+         bM1g==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:dkim-signature;
-        bh=+lE1VGJm7uxmdcjGqZxkzLy2YHUwYwaDzNyp54coWZ0=;
-        fh=Yu9UJrzJzrHOzbPD0mYbSynsXGg0XA6S6+z72DoqE2g=;
-        b=rjJMRH8mRu0htm4Y7PDGI2meHOXMoaYuLrgcLhqi6TJcwtfbgOHfuWOrc/1gGBk74J
-         sHIBTP68jWX1mx1dqzOxXg9TKD5ydlWFsZiX71mZf1xsrUG/hQl4Y62sA1ZiKU4Dd5qn
-         Yr2VBZ/tQQSABTNeaF4pE4WFd3Rlsn3HTddL8ib6xs8wXL4+bjJFSjcKse8kP9aR3w6n
-         J7RN3nks0rMKrPHJErogm6QEf75JoL4+wZ6vvAO9/exOenpdRFpEgfFTN6ytaH6CPzy7
-         HjWP19x6yOiqEZ5XF2qnKeuqRPJdp08rSuG/+KMBr37IjFcwZvXmB/B7tMddyxi7hs98
-         SVQA==;
+        bh=8eEcchkIpkzuM/k/bywXXqMRJi4G2cjVVq0/v/CZCJo=;
+        fh=az28TDS0mJ1xCPAAtk9k3L42xJraTAAC/kqoi3FTv/U=;
+        b=AxrZXlTFnC9hbtGJUV8T9+J/daVvAlaj42i6nzxS8nFV/v03XvL/dp2ppt8Krxuikc
+         YvyxZ9+kMrBKWhZC2gb5g0zkVThZEnKdLcjXsjA+0p7yfO+jJV9ZGyLnQ1M7mODbC1Ma
+         gHv7ug/cTy0xRKRNqmvw2fWFcW0pxCc8Z9dm3EUzqqyfbegzYF1koSf3G86n+5tKNRek
+         Fy0lNPdfwZxMmshtx9qNorw9u7ymx8hK75m5diCu6/UNky+D/30vxJ0ePdUhsncYf9M6
+         mVMgiD6PNFEvGcAUpqRK+MaIWXMwT3Duh2Zts3fcY/JU8Do91UQsaPMIO6/v4DgPjW7t
+         X60w==;
         darn=vger.kernel.org
 ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1790631124; x=1791235924; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1790631237; x=1791236037; darn=vger.kernel.org;
         h=content-transfer-encoding:content-type:cc:to:subject:message-id
          :date:from:in-reply-to:references:mime-version:from:to:cc:subject
          :date:message-id:reply-to:content-type;
-        bh=+lE1VGJm7uxmdcjGqZxkzLy2YHUwYwaDzNyp54coWZ0=;
-        b=M+dg0mRbsyQ/tPSCr+GFl01fo1ArXZ//eEh0Nsa+XUexwNiHZZiFRJjWJKFkqajCqN
-         08DqXy7WyKldSY60pd4HEjPJjeqsZvvXN3d4Lr13baXawHnSSnQdOM46iXCCK9uoJRyF
-         bDftiJqY6j/eLqMH17O1VcAoIQ9w9lSZI1d4VkPFFm60+DC8gXtaM8LrWqJMCJ2MWubN
-         m7WkYMjiQyfDZjZcM0B9IMVuCc+EO77nwHeiEq/wHx3jH+t8fkPfD/V80jBnRpGdJjv2
-         qwSbfnEXBwKhW/4DiNPrOH8AYIF7HPZKGSgGmo/lcwEIBuyA8IxHtgO7cN67o7m1NSQ/
-         BzDQ==
+        bh=8eEcchkIpkzuM/k/bywXXqMRJi4G2cjVVq0/v/CZCJo=;
+        b=cbllXQMiWRgOBjxvlxCbIF4a26yBnHX1iIKioPDZJWQ2wKo/7LqE5gT3N3BwlgOv5S
+         2UAIJkfPxk3VFbCnjVMAetepDGHLDLyy57grVbv5uTFLCLLTPFIGxckzxETU4SlexBNr
+         cXaADWClQ2+fGKPZduCUdsdXNQO4053xfG5XoBYJtHs8V9TWOPH+SqAGvOTfDlKI2MBn
+         RoGSbdMWdq9F4hK6Z5BKhVwqU9x2tThmRYh15dYCI0fiFRkHVRTUCAHPhAbyynpKJW8z
+         eynbPyGx88uUERHces/CijfFTsf5SkUJ75VMHncF3THsMYPQoIX0qp2w7NPVAWXlkVK2
+         YWLA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1790631124; x=1791235924;
+        d=1e100.net; s=20260707; t=1790631237; x=1791236037;
         h=content-transfer-encoding:content-type:cc:to:subject:message-id
          :date:from:in-reply-to:references:mime-version:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=+lE1VGJm7uxmdcjGqZxkzLy2YHUwYwaDzNyp54coWZ0=;
-        b=Qgs8xW6z23y/nlXwyIbOsbnp1dRhXFzHl9MQzGUE0ueokVvmFviI53evFoHSA7ZBXG
-         O8+Lp0wO4cL/j9VPTdUcXIuf+LF9kL80JMUXCoDvWpzQDvSz8B3CAUtP3so4zMMo4Y2l
-         qNpN5/z21hIVlGoEJeNdQQgniMNK33SNGb1dvg8q7aBoDObsXKMPwwj0aOr7UdASjMS7
-         xetXfC4ohTtQHDVRtgN5bR9frg62FKhhTVtIFKdt/NF6POxRJ7Xn1nNDi6gvud63no8O
-         nM5voPhKm9E690ZHaATTQYuiO6j+XfIlcBMB76BcdJRiyiOUMl0QJxGPizsZH/RJVwjW
-         rjdw==
-X-Forwarded-Encrypted: i=1; AKwUvBz4tC3NjM1oZJHRf87UEWwaWv1n3XWrlHhcB/vzffCURtk5Y/Ue9WIdzSuEVF6BSVI6XDAypFEWryHBxgSqicMO@vger.kernel.org
-X-Gm-Message-State: AFq9FYLY8PO5Io4rCb3JSa3NtO1EagalyYCFkjjJJxvR3P3EAXo/vDCw
-	uOrLoIg41+QJdgfcUHn6QgYfGLwHkz1kgbs6+opwS/nH/1KG0n61FnfLk5b+44dRtTA1p2yP32T
-	J0DCnKUUPwHVQ/H6tHw9pQK7fAdh8Bxz6+AUdXKiB
-X-Gm-Gg: AYBFou2B+KE9ch4tlXE+SS3hCkbjJ4sfVJeuxSNOj55JjjXnD6JuzMxjjWk6dXHMmGx
-	uCDP1Mt3K8BWosSTLGbIC2ecMdsPB/WIIBihj7MnukNHejorodMly5zGl3wfKhfwysa5cgUIFR0
-	SVGHJLt4EbiXMyzli9uUjp4vkn4b0wvsc7jCCGkiwrK55PgYKD6isD80Lwee+Ilmtx5/sH6tGPX
-	p3FFl5wOZvShorYh6mCIFrxmVSO8po9MysEfn1s7Annma0XyRpNMe/U4slhUR21iicgF/etyvXB
-	sKdzIbxRuotccJkES5lOOypVXNKwNnWnlZhbmiwQd0lv9a8Co56yued+KlhCvJv2Mp5CQdsnORQ
-	vFLy/D/i9xg==
-X-Received: by 2002:a17:902:e551:b0:2df:9957:d1bd with SMTP id
- d9443c01a7336-2e2c7a2d7ccmr288835ad.18.1790631123861; Mon, 28 Sep 2026
- 14:32:03 -0700 (PDT)
+        bh=8eEcchkIpkzuM/k/bywXXqMRJi4G2cjVVq0/v/CZCJo=;
+        b=ho1EYRdryp4bDD03GYnQqcBS0fYwOZDm426jsHCbAcYiydD0CfrOI26vu12UOq31qd
+         rTfwR3Sm+7ibcQDKYhU0cRQo5cNI3s5X41nxLWLxjXw+zwtC4h1lzAQcCTu7/JWUImgM
+         bEaO4IJ0bWCV8ud410aj+Wwrd+yddcrHlNlohl0qNQH0efNAVrHUdnZLhycTinuD98Y5
+         A/kh2JPj05NwtaA7MaY50LLoB+o6eU1lGTcIxRze0hXDA/FxWCJ+MOuD2EvzXReXBRn7
+         4hqUHgTxplR3YwB0xdwNR30XezV87Ges3Dmpwqzo3B27Olj9KTKmn9FqhRMJ/0K63I6C
+         CYJg==
+X-Forwarded-Encrypted: i=1; AKwUvBy4d+BkInz0Pd0EJDAnEjkJDvqfqNKMGKUDNcbVcWggJyLp78aL4vYvheRZr2NUFS/uJQwW5uS/gcNd+vU1P6vI@vger.kernel.org
+X-Gm-Message-State: AFuF++kRH0bHdeRq5A3Sa9JWERIzPo5ixuCb52V7ex5/BZ1271tRy8dt
+	y+5MSYWDq4gXGk2rVCLR63scEzHeT00g8jLPEpwlvZH4VKPtcUzmHOlBtZY/oNFTVjoDhrDt2jH
+	kDZm94Hj+N34WrQSOA0Tm5kaKMS3wjS7EhKa5zHRy
+X-Gm-Gg: AYBFou1jZQ94zsdpC71H8QJPevK13u/L9lUy/qQ/s1xscGbAhgyPhUANCZhy8BcH8YC
+	xvPBJf6FiBaaLNwW1M919wUAxfAkX+7EDgnqshYbvFalFzESnEw1nvQRAIXjybl0/HRnUyfE+wH
+	XAvHnH0KWBjpqKgUi7D16rpVysJiMXKQvKHBkyAv9Zvp7+K3zEC/EXV1Pm4/zb9eLTdt01xMhTL
+	Sk6DRByOKacC0rZawdwgfLz8k6bPRJmBNDLUZz8p6381sGcNAj3LdU139WWodWoRT/xeugzphpz
+	Bid1fZU0sVaEyncxaVHEZjpv2dUzq4fRkH7I+ujSohB8kazD20Skb8SfRvbwjVruJGRXMpfW3bE
+	oC5U0xMPrMA==
+X-Received: by 2002:ac8:5dca:0:b0:52f:9ed4:8d76 with SMTP id
+ d75a77b69052e-5332017d9f6mr39094041cf.14.1790631236924; Mon, 28 Sep 2026
+ 14:33:56 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260928010227.1903673-1-michalpl2003@gmail.com> <20260928010227.1903673-2-michalpl2003@gmail.com>
-In-Reply-To: <20260928010227.1903673-2-michalpl2003@gmail.com>
+References: <20260928010227.1903673-1-michalpl2003@gmail.com> <20260928010227.1903673-3-michalpl2003@gmail.com>
+In-Reply-To: <20260928010227.1903673-3-michalpl2003@gmail.com>
 From: Ian Rogers <irogers@google.com>
-Date: Mon, 28 Sep 2026 14:31:49 -0700
-X-Gm-Features: AclHuK961jia0Cign6WJrnpm7yNwXw1WkLXNkziDawCLyR5WWyWV5QS-KMIVEBs
-Message-ID: <CAP-5=fWs6xu53uBqCpWvTtqSAx+kySoMM06pbJyaNa=L_7evQg@mail.gmail.com>
-Subject: Re: [PATCH 1/5] perf test demangle: Fail when demangling fails
+Date: Mon, 28 Sep 2026 14:33:45 -0700
+X-Gm-Features: AclHuK8tOhJaaF_R6BCpvZsdIDDniOhALvqDSFCbWhh5mpLbAdq-z3_Ao579OEI
+Message-ID: <CAP-5=fUZZkagjaQy0wvme_L_+yif826nPXJzXNJ2YXuYZ6RW3A@mail.gmail.com>
+Subject: Re: [PATCH 2/5] perf symbol: Don't return an unterminated Rust
+ demangle buffer
 To: Michal Pluta <michalpl2003@gmail.com>
 Cc: acme@kernel.org, namhyung@kernel.org, 
 	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
@@ -103,57 +104,62 @@ Content-Transfer-Encoding: quoted-printable
 On Sun, Sep 27, 2026 at 6:02=E2=80=AFPM Michal Pluta <michalpl2003@gmail.co=
 m> wrote:
 >
-> The Rust and Java demangle tests only log a NULL result from
-> dso__demangle_sym() and carry on, so a symbol that fails to demangle
-> doesn't fail the test.  Set TEST_FAIL.
+> When dso__demangle_sym() runs out of retries or fails to grow the
+> output buffer for a Rust v0 symbol, it returns the buffer and callers
+> blindly use it as the demangled symbol name.  However,
+> rust_demangle_display_demangle() doesn't NUL terminate its output when
+> it reports OverflowOverflow, so the buffer isn't a string.
 >
+> Free the buffer and return NULL in both cases.  Callers already fall back
+> to the mangled name when no demangled name is returned.
+>
+> Fixes: e20848c317b5 ("perf symbol-elf: Integrate rust-v0 demangling")
 > Assisted-by: LLM
 > Signed-off-by: Michal Pluta <michalpl2003@gmail.com>
 
-Fixes: 07f2b1287c97 ("perf test demangle-java: Don't segv if demangling fai=
-ls")
-Fixes: bdf05ccd1841 ("perf test demangle-rust: Add Rust demangling test")
-
 Reviewed-by: Ian Rogers <irogers@google.com>
 
-Thanks!
+Thanks,
 Ian
 
 > ---
->  tools/perf/tests/demangle-java-test.c    | 1 +
->  tools/perf/tests/demangle-rust-v0-test.c | 1 +
->  2 files changed, 2 insertions(+)
+>  tools/perf/util/symbol.c | 11 +++++------
+>  1 file changed, 5 insertions(+), 6 deletions(-)
 >
-> diff --git a/tools/perf/tests/demangle-java-test.c b/tools/perf/tests/dem=
-angle-java-test.c
-> index 0fb3e5a4a0ed..a8eb0f4effad 100644
-> --- a/tools/perf/tests/demangle-java-test.c
-> +++ b/tools/perf/tests/demangle-java-test.c
-> @@ -33,6 +33,7 @@ static int test__demangle_java(struct test_suite *test =
-__maybe_unused, int subte
->                 if (!buf) {
->                         pr_debug("FAILED to demangle: \"%s\"\n \"%s\"\n",=
- test_cases[i].mangled,
->                                  test_cases[i].demangled);
-> +                       ret =3D TEST_FAIL;
->                         continue;
+> diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
+> index 163652f071c6..3cb42805a82f 100644
+> --- a/tools/perf/util/symbol.c
+> +++ b/tools/perf/util/symbol.c
+> @@ -2762,17 +2762,16 @@ char *dso__demangle_sym(struct dso *dso, int kmod=
+ule, const char *elf_name)
+>                      buf_len < 1024 * 1024; buf_len +=3D 32) {
+>                         char *tmp =3D realloc(demangled, buf_len);
+>
+> -                       if (!tmp) {
+> -                               /* Failure to grow output buffer, return =
+what is there. */
+> -                               return demangled;
+> -                       }
+> +                       if (!tmp)
+> +                               break;
+>                         demangled =3D tmp;
+>                         if (rust_demangle_display_demangle(&rust_demangle=
+, demangled, buf_len,
+>                                                            /*alternate=3D=
+*/true) =3D=3D OverflowOk)
+>                                 return demangled;
 >                 }
->                 if (strcmp(buf, test_cases[i].demangled)) {
-> diff --git a/tools/perf/tests/demangle-rust-v0-test.c b/tools/perf/tests/=
-demangle-rust-v0-test.c
-> index 904f966c65d7..ee4ddb61174b 100644
-> --- a/tools/perf/tests/demangle-rust-v0-test.c
-> +++ b/tools/perf/tests/demangle-rust-v0-test.c
-> @@ -58,6 +58,7 @@ static int test__demangle_rust(struct test_suite *test =
-__maybe_unused, int subte
->                 if (!buf) {
->                         pr_debug("FAILED to demangle: \"%s\"\n \"%s\"\n",=
- test_cases[i].mangled,
->                                  test_cases[i].demangled);
-> +                       ret =3D TEST_FAIL;
->                         continue;
->                 }
->                 if (strcmp(buf, test_cases[i].demangled)) {
+> -               /* Buffer exceeded sensible bounds, return what is there.=
+ */
+> -               return demangled;
+> +               /* Failure to grow output buffer or buffer exceeded sensi=
+ble bounds. */
+> +               free(demangled);
+> +               return NULL;
+>         }
+>
+>         demangled =3D cxx_demangle_sym(elf_name, verbose > 0, verbose > 0=
+);
 > --
 > 2.43.0
 >
