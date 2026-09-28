@@ -1,109 +1,124 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm2-f13.google.com (mail-wm2-f13.google.com [74.125.225.141])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9925E4BA1F2
-	for <linux-perf-users@vger.kernel.org>; Mon, 28 Sep 2026 12:09:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A97EF3CEB9D
+	for <linux-perf-users@vger.kernel.org>; Mon, 28 Sep 2026 12:58:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.225.141
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790597353; cv=none; b=tcJD9a2+7dofaBgU+JsRzFrKxUDpHUUk7w4Yy+HibLVzgZFf1L9FNurFd99GdHwL4X3Irhvc41nLorHlSlNz6dHZH+8HXj3Fasopb3sV5sP2z/llogzCvoNuF4h88eBE7WJvobqe3xVpLobKEzSbrAtzt91yB7De+qFlpOoxTiM=
+	t=1790600302; cv=none; b=Q1EHAgWTtntA3iu5V505k+wPiiGfLtAyjU/DmKppJQ93x16K+ThqsSHLio2c+28kPENp5pqnZPq4rew5jsQuHg9W2dP2MojMlnOoY6N5AVr5TyRXk7lbfJfWO4g2sx4Ttz0AojpEK0i4ZOJSFHb6C/CewM69spesbOwreYAiDDw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790597353; c=relaxed/simple;
-	bh=4EoSMQA+XY9yuhooSgCHWM2R2uRzxq4WvC1+UMSQetM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=R7WBMnmchQBfciiXIW4dvrrWJoQIKxtPnRxxymkN0vo+vBNMVhP0Xn+CjkBEPU6t3s3NqYPBwyZtSzrXjIF5L4f0IkUadilw/4u79/g+LxTmpipkWeEf4ArkSwzlmwcll9OGidBMfXCKnXCIxvcjN8vSR6noSnd7sVAGiSE7VHw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cyDhWWuy; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1790600302; c=relaxed/simple;
+	bh=opqUuNwVVNIW8ea5IRUlxjD9JrJo4Pr8hTFI+t6s9dk=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=Kze58W7n6AxbBaJZXqns9pUz9KWtsVHEM/Wn2NTyvxLAeTS51/yqiKlsGF2TKYqiteQ3X74DB0PxytwaN2bMwRcI/nL5f0Y2BAcNm4YsXVg915eTvi/VS87nav9erQkEpUQvunEVuvNSZhBNfqyYfxyAUKT7XkpzaR9wRkBOVcI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=l+B376hH; arc=none smtp.client-ip=74.125.225.141
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cyDhWWuy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CB8F81F00893;
-	Mon, 28 Sep 2026 12:09:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1790597352;
-	bh=XtPKbrkM1Kn/88jqbZcwsS73FQvXsAKH+oCo6vKE8CM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=cyDhWWuyBgP7HXhxSAbTRgAtAGr2xdkF61Nc3irZvUdWjF9RvvYYfg/WTPSrjTfzc
-	 v8pdIiLY80inLS0clqoNf0JceU7lui2rNjf8RmiEC+8B535NxHPbgmxyUSNYIpbrJc
-	 fDJOLO5JaAwnl1saW0Bc+2gAE5fSbcyeUCjuStgapLmYfFy8w8jQ3aDWabaGpDP92V
-	 XlR942uf3n3E0aAOLW4z+e3mor6AKwm1iwOGi7EXyJtMzxpqmUI+rLuwJzlmMq3ona
-	 oE6m4oe8rA2Di/lEbcD8rRrk68qd/sljNf9HoHeC7+KhKS77T3hNugWHmVpAY/Xx1S
-	 2xaRd6Wl+TJNA==
-Date: Mon, 28 Sep 2026 14:09:08 +0200
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Adrian Hunter <adrian.hunter@intel.com>,
-	James Clark <james.clark@linaro.org>, Jiri Olsa <jolsa@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH 1/1] tools feature gettid: Undef _GNU_SOURCE before
- defining it
-Message-ID: <arpY5Mgccbd20eqj@x2>
-References: <arpXYeRUu3B-ouqB@x2>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="l+B376hH"
+Received: by mail-wm2-f13.google.com with SMTP id 5b1f17b1804b1-49b912d8239so24374585e9.0
+        for <linux-perf-users@vger.kernel.org>; Mon, 28 Sep 2026 05:58:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1790600299; x=1791205099; darn=vger.kernel.org;
+        h=cc:to:message-id:content-transfer-encoding:content-type
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
+         :reply-to:content-type;
+        bh=Zy50wRanV9QRFX1Uc3aTqTuUchKwnDsmrwu1WF2sxfk=;
+        b=l+B376hHwwBOuzuJGr1LwFcxII5632cv61CNicMrHjP6WoZhlwEJamA+AUfQ1Zuijp
+         M8U9+rdQpXonjwF5S2AjH6cmMmtQd4oV5NsK+W1xu5hVDURY4aDMmVY6wKU0qFney2p4
+         MtIcbkGvHGuAKmG8MasAEUQbHlbiWd0tbyDLn6HEzB/GOkW23uU25eWhNJd9uvAy86uJ
+         23FmHaE/ISTBXW/UCd7qxHEWeihV9+MpW5MMYLPKFem7JGweXiteqc2FfXFlxk8TouaM
+         AM7sQchq5MYvlmoNIbJuoHuwVT8FGbJY5mnOfbTVJtF+FFuwEBFDGO0YdSyRpLDfnYlg
+         H1zQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1790600299; x=1791205099;
+        h=cc:to:message-id:content-transfer-encoding:content-type
+         :mime-version:subject:date:from:x-gm-gg:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to:content-type;
+        bh=Zy50wRanV9QRFX1Uc3aTqTuUchKwnDsmrwu1WF2sxfk=;
+        b=Ca252StLXMTe221KWDNXIR3OOKftaCOtdUzWHW32YYJV3/OkAHxtjO4FA1Mb4CMSsT
+         D3HH5yUjRO8Y8lGOKLGdgZosSme6J9FvKQD188Nd1oBzRzTb1YqyZv/vGEKakJHQ1jVy
+         zgx1SuHXmSPMSGbM0ilk7stIOFOtTUZZH9AJDHg7SstrPRsowhfO4EaxZ4qWL9lruPMb
+         +w/RMbkC4mFiRyMrfmGOyrQSopsTcq50Or07X5SYnW7o2b8qn3YUwySa11riNBN5cR1u
+         sFFUxtczI5Ohy4jdGYgw/Mgwu3JKEvYuOmYh4RxsegXKhT7mJBRVwNUBJR+FRaYZpDaE
+         VvGw==
+X-Gm-Message-State: AFuF++mewO1hy0ejimjIT8dpk2yVMm2r+zOoi6pu8Bmm98FsVPtYIRrG
+	eMec5cXowoc+jzmxbvT89KLqzPVVVChhImVJKFUWIlEcqEbPHkU148FiqWupgouBNh0=
+X-Gm-Gg: AYBFou0fxbguqfhybmpMbBWdMUBnLqNOz4/VFlvv6wvBSKiqTZkvhWZ1eH7UVF5ux8E
+	yK31lOQk2WxxAQnmhYGKrI+DPJdUXOLjyJ6/5WYyJwCNw4dyWN574eQSIc4eUJgrf2FKwG8OFih
+	DZ3y35pHSPzFGIZzSa8KANMxlF91ZDqGow9QJtHj0ggchYLUpujQ4lsDzUkK5P2NZyGHjbn1LEj
+	qjf4URkiz6IafFhAe/ld/JANUj3Xpd45gHvOm9H/YDoCwTFLTm5bVu2my14Wyy3Kj7Q6PWAmKNB
+	chnpGMWdC9J7+ygNWZj3RHD55bJO47fRngunHJjBsSscRiiYNAGzrznvtph7odWSrTxhC7UXEZX
+	Q9oXiUds6aUP99sCGXPZUwXhh1XNe+h3XWWDuy/WOZwmk07vTOLnwNyIKZe16aiSjqyZ81ksbNt
+	4ENfd4uE80s2oOeCzVnTHKyEj7GU3g0/79LDA7wawSWO8jGrDZjI3It3LcqGH2LdLlGZx+BUmkq
+	g==
+X-Received: by 2002:a05:600c:8718:b0:49c:fa21:1c84 with SMTP id 5b1f17b1804b1-49fe7bba7e7mr210571935e9.25.1790600298839;
+        Mon, 28 Sep 2026 05:58:18 -0700 (PDT)
+Received: from pop-os.local ([37.18.141.193])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-49fef5fe71csm189530045e9.2.2026.09.28.05.58.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 28 Sep 2026 05:58:18 -0700 (PDT)
+From: James Clark <james.clark@linaro.org>
+Date: Mon, 28 Sep 2026 13:58:09 +0100
+Subject: [PATCH] perf python: Fix arm-cs-trace-disasm type error
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <arpXYeRUu3B-ouqB@x2>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20260928-james-perf-mypy-cs-disasm-v1-1-1bda909475ce@linaro.org>
+X-B4-Tracking: v=1; b=H4sIAGBkumoC/yXMQQrCMBBG4auUWTsQA5bqVcTFJPmrU0gNGRVL6
+ d2NuvwW761kqAqjU7dSxUtN73PDftdRvMl8BWtqJu98745+4EkyjAvqyHkpC0fjpCaWGekgwYX
+ eySDU+lIx6vv3Pl/+tmeYEB/fIW3bBwa3ATd9AAAA
+X-Change-ID: 20260928-james-perf-mypy-cs-disasm-ed5ab0b60a8a
+To: Arnaldo Carvalho de Melo <acme@kernel.org>, 
+ Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>, 
+ Leo Yan <leo.yan@arm.com>
+Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ James Clark <james.clark@linaro.org>
+X-Mailer: b4 0.15.2
 
-On Mon, Sep 28, 2026 at 02:02:45PM +0200, Arnaldo Carvalho de Melo wrote:
-> Since most of tools/build/feature/test-*.c feature tests are included in
-> tools/build/feature/test-all.c, we can't just define _GNU_SOURCE as it
-> may already been defined and this will break the build with:
-> 
->   acme@alta:~$ cat /tmp/build/perf-tools-next/feature/test-all.make.output
->   In file included from test-all.c:26:
->   test-gettid.c:3:9: error: "_GNU_SOURCE" redefined [-Werror]
->       3 | #define _GNU_SOURCE
->         |         ^~~~~~~~~~~
->   In file included from /usr/include/python3.13/pyconfig.h:9,
->                    from /usr/include/python3.13/Python.h:14,
->                    from test-python-module.c:2,
->                    from test-all.c:14:
->   /usr/include/aarch64-linux-gnu/python3.13/pyconfig.h:1810:10: note: this is the location of the previous definition
->    1810 | # define _GNU_SOURCE 1
->         |          ^~~~~~~~~~~
->   cc1: all warnings being treated as errors
->   acme@alta:~$
-> 
-> I.e. pyconfig.h is included by the new test-python-module.c, that is at
-> the start of test-all.c, defines _GNU_SOURCE, noticed on Debian 13
-> (/usr/include/aarch64-linux-gnu/python3.13/pyconfig.h, libpython
-> 3.13.5-2+deb13u5), and then test-all.c includes test-gettid.c that was
+The perf sample dso_bid getter returns a string or None, matching its
+Optional[str] annotation. Attempting to decode it as bytes causes mypy
+to report union-attr errors, even though this was behind a conditional
+that checked for bytes type.
 
-Noticed as well on fedora:
+Use the string directly, retaining the fallback for an unknown build ID.
 
-make: Leaving directory '/home/acme/git/perf-tools-next/tools/perf'
-105: 'import perf' in python                                                                                   : Ok
+This fixes the following build error:
 
-=== Test Summary ===
-Passed main tests : 1
-Passed subtests   : 0
-Skipped tests     : 0
-Failed tests      : 0
-In file included from test-all.c:26:
-test-gettid.c:3:9: error: ‘_GNU_SOURCE’ redefined [-Werror]
-    3 | #define _GNU_SOURCE
-      |         ^~~~~~~~~~~
-In file included from /usr/include/python3.14/pyconfig.h:6,
-                 from /usr/include/python3.14/Python.h:14,
-                 from test-python-module.c:2,
-                 from test-all.c:14:
-/usr/include/python3.14/pyconfig-64.h:1879:10: note: this is the location of the previous definition
- 1879 | # define _GNU_SOURCE 1
-      |          ^~~~~~~~~~~
-cc1: all warnings being treated as errors
-⬢ [acme@toolbx perf-tools-next]$ head /etc/os-release
-NAME="Fedora Linux"
-VERSION="44 (Toolbx Container Image)"
-RELEASE_TYPE=stable
-ID=fedora
-VERSION_ID=44
-VERSION_CODENAME=""
-PRETTY_NAME="Fedora Linux 44 (Toolbx Container Image)"
-ANSI_COLOR="0;38;2;60;110;180"
-LOGO=fedora-logo-icon
-CPE_NAME="cpe:/o:fedoraproject:fedora:44"
-⬢ [acme@toolbx perf-tools-next]$
+  python/arm-cs-trace-disasm.py:266: error: Item "None" of "str | None" has no attribute "decode"  [union-attr]
+
+Fixes: 279b402e5143 ("perf python: Port arm-cs-trace-disasm to perf module")
+Assisted-by: Codex:GPT-6-Astra
+Signed-off-by: James Clark <james.clark@linaro.org>
+---
+ tools/perf/python/arm-cs-trace-disasm.py | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
+
+diff --git a/tools/perf/python/arm-cs-trace-disasm.py b/tools/perf/python/arm-cs-trace-disasm.py
+index cf126ac79c18..1812ccaf4b20 100755
+--- a/tools/perf/python/arm-cs-trace-disasm.py
++++ b/tools/perf/python/arm-cs-trace-disasm.py
+@@ -263,9 +263,7 @@ class TraceDisasm:
+ 
+         dso = getattr(sample, 'dso_long_name', None) or sample.dso or '[unknown]'
+         symbol = sample.symbol or '[unknown]'
+-        dso_bid = (sample.dso_bid.decode('utf-8')
+-                   if isinstance(sample.dso_bid, bytes)
+-                   else str(sample.dso_bid or '[unknown]'))
++        dso_bid = sample.dso_bid or '[unknown]'
+         dso_start = sample.map_start
+         dso_end = sample.map_end
+         map_pgoff = sample.map_pgoff or 0
+
+---
+base-commit: 0ae6fc78c5ce0dfd18d8712a50f0fd4602eff103
+change-id: 20260928-james-perf-mypy-cs-disasm-ed5ab0b60a8a
+
+Best regards,
+--  
+James Clark <james.clark@linaro.org>
+
