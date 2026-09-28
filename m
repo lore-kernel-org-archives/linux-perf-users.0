@@ -1,130 +1,95 @@
-Received: from mail-ej2-f43.google.com (mail-ej2-f43.google.com [74.125.228.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0C0C466B09
-	for <linux-perf-users@vger.kernel.org>; Mon, 28 Sep 2026 09:15:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.228.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 635C74519A3
+	for <linux-perf-users@vger.kernel.org>; Mon, 28 Sep 2026 09:19:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790586953; cv=none; b=guqNI8l+6X30ciFkei07Prk6x5iuet+Q4Z6QNYBkkXpDt6OJ6KQGUp6HIeBRDZipTb7llxO2Cp3a0dOgu9QzzSwTsIgLptYGc+ayrA70kTrLf+sjKCO2YH/uMAI65NQNOhsUCBBWx1UDlhClHCiIze90RP07Pssmw8GxPet2gKU=
+	t=1790587150; cv=none; b=HX2C4fvqqdb6DCZr5DuLRM0DRsKsfkbGrdWuSl25JxF7dXB1cpYFiZShqOaZj7Wv5slCaH0HZgON7edd75qh4v4z+6/rDueKmH7PnhkWg51n/yaE/1fqKlDtQpHMxUjmT+bnRE4IT2ne/0Yf7aDvUvLVQ2b70vM+kO6nwjw84JU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790586953; c=relaxed/simple;
-	bh=JHjweW4tKjJzdlaIpmKAFsqozfRQUWPcEqdfjwpoddk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=rODWp2TFAOWa1Tys05Zm2wROUnmXEv0eP4+AxDw3E1enYjXhRUxzZIOZcBR6Os1xM6OellyCZ9SV8nuCwYKxtdNcwxs458o9irhnlRxdILS6O/znoF7vX/y1JaOWCzrfqP5URSc5fSeJlnSouCMzjVDlHsQjVqsiiXbSUXcwONU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=QmWLroh8; arc=none smtp.client-ip=74.125.228.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1790587150; c=relaxed/simple;
+	bh=9J3AcSv2kMQbTMlQHlviNEkdPL8KrSp5qEip4jmwl08=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=oQ6ZViPmRH1SxxXqwuxSy2+InutSnlN1HiuKDhy/3j2oK+ZkVzao9TNVMv/q1fhltn7ZvBUbn37kUQ0EgHQiYdJp4ib6d4hXLatdSNFE8ngr2C3KvtofUQMIQr+wyIsmPaCW5F1VUc2c4kfY2jNUedPJ3msPLf7V89JtjkrX31c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VJgqmS09; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QmWLroh8"
-Received: by mail-ej2-f43.google.com with SMTP id a640c23a62f3a-c2af9270c53so234267466b.1
-        for <linux-perf-users@vger.kernel.org>; Mon, 28 Sep 2026 02:15:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1790586950; x=1791191750; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:in-reply-to:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=/rEuFHJDtEaYDRIoBn4eFmTqqB11z/QrLz8Ps7ePt5c=;
-        b=QmWLroh8z5u4qAU/NBLXVMZUSwH6fM52h9L5UUqM6VcfrO28VlU6MHE2bh3ucis/OX
-         zjEplXeiko3PjrZL4lPphY2Ra32NV+RMoDp+f5RaqqB7N2B5esuKsowsef9vOH82bwES
-         hVotGwYYVt73p8TjHSBVB8E9dN4QgU3fSZgAxaoyGizuiLwFG1N1N/zHuPUPh7HG8snQ
-         SazAqgYjWOww80RAYGRDBOA4utPE1RlBFdHj9Ve1nvQWNNm5alvazVu71jL53BYM3qA0
-         tJiiZWpR7Dk0JGGOPjFBtetH514hDi9nEPGqpnAN6qZ4soww36abdh+UHP0Mlj6k7Y/c
-         hs3A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1790586950; x=1791191750;
-        h=content-transfer-encoding:content-type:in-reply-to:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=/rEuFHJDtEaYDRIoBn4eFmTqqB11z/QrLz8Ps7ePt5c=;
-        b=qiHUeiWdtgUVRx4RAKBgHRJKNaY2hSfB2usiEjslnoK62B/SSwTvExyZjISokOX+q/
-         f1hwR73AAqsmOfeMF4MsJ+NOPCyYJt2gLNXFlFQusQ7QUI/osAIAbO6mcsBXv+6ARdoN
-         sLR5lV5g+FIAHAh8GIDvqcVhsTMRmX1+/zHwCO1q3LsuA8uzNqk0dOQJ5KAORpuuV3Xm
-         qwNWxkzBsPgWEBKx5hUS7QVNvieS6OcsgXigQMx0wcdp04ATyRGvQ4uV5MyfojunmaaV
-         EPgKsSLolieXt3hys3lijffksKeQYU9OmIeVsTzAxCvCIVDwR0EHqIhZWs0N2S3G4UDu
-         BoxQ==
-X-Forwarded-Encrypted: i=1; AKwUvBwuytrdMTE6HAkWM1yUjLmaOP5qodULqKn1cbMveMRVazRNItg2zAxy8vn427C8RGr40adCJSaNucKAUzlVXBSr@vger.kernel.org
-X-Gm-Message-State: AFuF++mEgniWeDJWGJsdNRM4LC5Pyno7myVWrvzLehQHks8u+N4dFxLg
-	qpLj5XncabyYyAd5bA+OPAZ1XkDUmxXK8iS6WsDmolHHwy9gs1yToDndR5vT8ElHcmQ=
-X-Gm-Gg: AYBFou3gzc9ZiSQQvrDUrJrj1Nw/RojgSWQRkoxAInI+dyTXT0wa79PZzDXrCNrc5A0
-	c4IwtcTvk/TKH7VlQ8aKSMwo8PwU5WRXQBbNyUDAjryBuwbpmKL92JysGk/bmg/nXtHMb4L9Wvb
-	4JVrwazsv+01vhbg8tCp2ONfOzx9teqM+bG+LPasP4YftM2XvVvTG/+QTNvKM8cNOJY6E/RDQpY
-	OnoiUZo4rN6ekCAcduDEp1R8iphfgHK0JO/uZaDYnPurwaCE8FIAPadEV1S9y9eto1v/7YhN4Zy
-	/R89umXXHHX1eXfZMrWWJjP98pVK+uL7+ofPJQQ/EJNrW9J2TzUeAifSiGXuuvTjrxE/x51eJ82
-	GmzCe+iIxCP/1YOIbZYShsvQtG4/XzCSICDvtEw+QH8a2k37dnN8OVwwYwHWyI4Fey1OPb8o1kA
-	NB2aP5eH72amA2+zbMa2USiACQO3PJVGE5g1ulJZozxPPBo0XPW/j0Ifo8V7CeJMGTymaHFD9P7
-	AQ=
-X-Received: by 2002:a17:907:6ea3:b0:c26:1649:47af with SMTP id a640c23a62f3a-c2ac53cb0afmr1026470866b.37.1790586950002;
-        Mon, 28 Sep 2026 02:15:50 -0700 (PDT)
-Received: from [192.168.1.3] ([37.18.141.193])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-c2de21a6349sm77293766b.21.2026.09.28.02.15.47
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 28 Sep 2026 02:15:48 -0700 (PDT)
-Message-ID: <8bc8b276-bc4e-4a6d-b770-5b02c79946d4@linaro.org>
-Date: Mon, 28 Sep 2026 10:15:47 +0100
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VJgqmS09"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E01101F000FF;
+	Mon, 28 Sep 2026 09:19:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1790587149;
+	bh=kIUCChVR1R/zXQUAKOd0olnO6hrM3HCJ9nptynHj6MM=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=VJgqmS09jj2hByFsSXjupcdhqC3nFEmcW/jiNRLH85vtZxdtnocA4ZyLBBGvk2Ur6
+	 XQsYI0H63MkjG7TGXrgZv1d5BAJtwu0TEj90Hq3pezBXzGJT4pNhUspk27swvyPpmi
+	 VJEY1gIbrQIDoO5DVUl8tK0JtYc0pYl0GupN6/CDcjKJQ2psTjoMQoauG/zqnrIo1R
+	 j+1ZJcpreFc0OhY7oAHPrdL300kKrLM0ODVNOjxohNBqlstiJrcaap7POCkOQAdOCd
+	 76HJYfjUrKdxwR8p/983LTWmxPhxMHcr5Y2z1x1M5gQaj7dE5mH+pwGUjLLbm4mk++
+	 HM1HW4nRfe2rA==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH] perf test: Record kcore for the CoreSight callchain
+ test
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Leo Yan" <leo.yan@arm.com>
+Cc: linux-perf-users@vger.kernel.org
+In-Reply-To: <20260928090644.24346-1-leo.yan@arm.com>
+References: <20260928090644.24346-1-leo.yan@arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Mon, 28 Sep 2026 09:19:08 +0000
+Message-Id: <20260928091908.E01101F000FF@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] perf build: Improve fix for "argument list too long"
- error
-To: =?UTF-8?Q?Beno=C3=AEt_Monin?= <benoit.monin@bootlin.com>
-Cc: Gregory CLEMENT <gregory.clement@bootlin.com>,
- =?UTF-8?Q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>,
- Tawfik Bayouk <tawfik.bayouk@mobileye.com>,
- Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>,
- Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
- Arnaldo Carvalho de Melo <acme@redhat.com>,
- linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
- Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>, Markus Mayer <mmayer@broadcom.com>
-References: <20260928-perf-orphan-args-v1-1-8cacf784621e@bootlin.com>
-Content-Language: en-US
-From: James Clark <james.clark@linaro.org>
-In-Reply-To: <20260928-perf-orphan-args-v1-1-8cacf784621e@bootlin.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
 
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+s) to consider:
+- [Medium] perf/test: fail instead of skip when /proc/kcore is inaccessible
+--
 
+commit f13d58799b60cb0c738cb7c9e2cb5ed0a5fa9e32
+Author: Leo Yan <leo.yan@arm.com>
+Subject: perf test: Record kcore for the CoreSight callchain test
 
-On 28/09/2026 09:55, Benoît Monin wrote:
-> The orphaned pmu-events JSON files are passed to the shell via
-> `echo "$^"`, which puts the whole list into a single argument. With
-> a long enough output directory path and enough files, exec'ing
-> /bin/sh fails with:
-> 
->    make[5]: /bin/sh: Argument list too long
->    make[5]: *** [pmu-events/Build:228: prune_orphans] Error 127
-> 
-> This only happens with out-of-tree builds, when setting O= to a
-> relatively long path.
-> 
-> To reproduce, build once with JEVENTS_ARCH=all, then rebuild with
-> a smaller JEVENTS_ARCH without cleaning first, so the leftover files
-> become orphans. Using nds32 (which leaves ~1100 orphans), an output
-> path of only ~70 characters is already enough to trigger it:
-> 
->    OUT=/any/long/path (at least 70 characters)
->    make -C tools/perf JEVENTS_ARCH=all   O=$OUT -j$(nproc)
->    make -C tools/perf JEVENTS_ARCH=nds32 O=$OUT -j$(nproc)
-> 
-> Express the orphan file list as paths relative to $(OUT_DIR) by
-> stripping the common prefix and restoring it with printf, the same
-> approach used in scripts/Makefile.clean, so the shell arguments stay
-> short.
-> 
-> Fixes: b6712d91f8f5 ("perf build: Prevent "argument list too long" error")
-> Suggested-by: Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>
-> Signed-off-by: Benoît Monin <benoit.monin@bootlin.com>
-> Tested-by: Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>
+The CoreSight callchain test traces both userspace and kernel execution
+and checks the callchain across a syscall.
 
-Reviewed-by: James Clark <james.clark@linaro.org>
+Add --kcore to perf record to save the running kernel image alongside
+the trace data so perf script can use it to decode the kernel trace.
 
+> diff --git a/tools/perf/tests/shell/coresight/callchain.sh b/tools/perf/t=
+ests/shell/coresight/callchain.sh
+> index 13cca7dc11184..b69187f1a37f5 100755
+> --- a/tools/perf/tests/shell/coresight/callchain.sh
+> +++ b/tools/perf/tests/shell/coresight/callchain.sh
+> @@ -43,7 +43,7 @@ record_trace()
+> =20
+>  	mkfifo "$cf" "$af"
+> =20
+> -	perf record -o "$data" -e cs_etm// --per-thread -D -1 --control fifo:"$=
+cf","$af" -- \
+> +	perf record --kcore -o "$data" -e cs_etm// --per-thread -D -1 --control=
+ fifo:"$cf","$af" -- \
+
+[Severity: Medium]
+Will this unconditional --kcore flag cause the test to fail instead of=20
+skipping when /proc/kcore is inaccessible?
+
+If /proc/kcore is missing (e.g., due to CONFIG_PROC_KCORE=3Dn) or restricted
+by kernel lockdown, perf record --kcore returns an error. This error causes
+record_trace() to fail, which propagates an overall test failure (exit
+code 1) instead of gracefully skipping (exit code 2). This may cause false
+positive regression reports in kernel CI environments.
+
+Should skip_if_system_is_not_ready() be updated to check [ -r /proc/kcore ]
+to ensure the test degrades gracefully?
+
+>  		perf test --record-ctl fifo:"$cf","$af" -w callchain >/dev/null 2>&1 &&
+> =20
+>  	# It is safe to use 'i3i' with a three-instruction interval, since the
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260928090644.2434=
+6-1-leo.yan@arm.com?part=3D1
