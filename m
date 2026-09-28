@@ -1,56 +1,56 @@
-Received: from mail-dy1-f199.google.com (mail-dy1-f199.google.com [74.125.82.199])
+Received: from mail-dl1-f70.google.com (mail-dl1-f70.google.com [74.125.82.70])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83C8F38CFED
-	for <linux-perf-users@vger.kernel.org>; Mon, 28 Sep 2026 18:26:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5256D390218
+	for <linux-perf-users@vger.kernel.org>; Mon, 28 Sep 2026 18:26:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.70
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790619991; cv=none; b=cAHErSIcBDW7wealMpoyrPX9kKX4ij0B6niGkXHyZwu6Aw0mew+MR1rBT6QAKRi9T6IgbGLyhCPJDd/o4kQmLy8G0X+0wsb87vryOKrtHRG+lGfQpu91Etpcc0VUgp+ufzm9sunl1aWKvEES2McgA3RFB6IqCLhcf2pkSJMdhTU=
+	t=1790619992; cv=none; b=q5JvsspiIHhuxZv/T1GCnb4lTfiWj5DB7w+9YyLHbXW9Ni+cWTACQ5tnkhjB5yo2rkHxHSxEhRtRPbyplyoSlIbAex0YlaUIk/r/aXIBfOMFVTZWfjqzRK5DRF7ZQ8kIpXPfGChWV8l52iPfcD8R/NaDRvBO56CkmoRX3xkpkdo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790619991; c=relaxed/simple;
-	bh=21FnBt6xz+cS1Eo3vnZo8gnR2+yMIJbL6y/GpuBa6Dw=;
+	s=arc-20240116; t=1790619992; c=relaxed/simple;
+	bh=lRKOlDQ8umJZTg3FSzW0Rr4KYkJ8OL5VaTSO6fLlblo=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=nUOmpmycFt6plcxIehROENJI4ZSwOcAGgpjfVOr4lpEx5a2UBGcyXqbp7HWfzjbEDV7oFdE8BD0IxSuVO1DJKjEidhIyBCQQRKW4KCs7WJqKw1lvDlzAe7lPGZz+CWwtAObhlEmQz2eZJOOMc7Pt/p4o0lOLaYkZahccl012zk0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=KBdqyMn0; arc=none smtp.client-ip=74.125.82.199
+	 To:Cc:Content-Type; b=InJXl/9R6oSDV22qWtRPP/uxEIMF4ESAmq+yrp1y01vVLYvFNYimUlP2axaAXuMLeIDt+rU47tU0GPdk/n5zRetqghbDDtQ2/vZsC10X2T8baxCBBY0tE3scEQ/ld10x+RjD0kZZHiSIJvrp+I3u2usO/npvYGxgvjNiYD5pnjQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=KRiey6Rk; arc=none smtp.client-ip=74.125.82.70
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KBdqyMn0"
-Received: by mail-dy1-f199.google.com with SMTP id 5a478bee46e88-33baaba6371so12326772eec.1
-        for <linux-perf-users@vger.kernel.org>; Mon, 28 Sep 2026 11:26:29 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KRiey6Rk"
+Received: by mail-dl1-f70.google.com with SMTP id a92af1059eb24-1416f32fe11so739864c88.0
+        for <linux-perf-users@vger.kernel.org>; Mon, 28 Sep 2026 11:26:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1790619988; x=1791224788; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1790619990; x=1791224790; darn=vger.kernel.org;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=39cwik9DwX/Gul1DUOxUABvjvx6S1yrwHfQQwFrAFYw=;
-        b=KBdqyMn0XHfY9AGL+mnK6bZjbcMjrI+cISqzfPO5TwrMRr7EWnVdXUxPXEeWyFJsu+
-         o6Fe7Bzr0eko4PoD4hgdNa6vdNGZn/Tg9oY798UlF2/rFIEHtO3siMHR0HjWMu+Qmt2D
-         dUknox2LpnJFl5j65F22qMdrbK5+dZscp/+KZBwOVeSCIDwSuCvzN5EK5uOeQFg/UQF9
-         Ex2QkgiPN6Ti2S2y2a7johyVXTHYliWI6mcUI5KDSSJJHGt+4PdJDU/tjFpvaBBqQP5L
-         rX9mE0vdKrGuG5eEEUYxJxfOyCFzpeGrSSVk7P8js1WfRNM0mk2fMoEyWqCgn5YYfuch
-         cekg==
+        bh=GcQRCFFdrrvDKqPLX56RorRyNSAs/FHweIcyglmIQnU=;
+        b=KRiey6RkvW+Yk5xJ6awLbfJCKs9BIlgWRdOqA2VKiKFOZrm0d+N1jKPwPq2ToywqEe
+         WTlBQGnlTlsjBTIgwQlnx7NbviYa+czUq47pAAbTa9xOQP+STwPslIk+reLjSlYuavF1
+         KCd8NvL1muISZzN8foPKtPRjaXwR+HP+87AYUaRWLrVPvubRLNbK+sRuQ/e+YAjuME8i
+         KNs7qWXJJyol4S5i7AO9aqaasWK790ATpEO0NLFuhn1nK20xNEmz6af+Hm9fm8ijCITf
+         wayad0BwXgFqqxTn3rFzo73kBE8X+pLdV1fuaoGRBEfk+JAikzCVy6xKPIb9esubSqeT
+         SVrw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1790619988; x=1791224788;
+        d=1e100.net; s=20260707; t=1790619990; x=1791224790;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=39cwik9DwX/Gul1DUOxUABvjvx6S1yrwHfQQwFrAFYw=;
-        b=N+u642vxiAnoeR8LZFFaFqg9UzOE+6nfylIsNIsdr0whH2mQTFom81tjpc6kMNxusb
-         hTU82bV1857n/7PqlbeUbyfN9eY7d7Fp1Q6OtyP/T5VNuZp+C42gU3mfVi9VKcGrOGev
-         sCk75eqGygYlH+iWs0GoeFB5b60q8L3CjzowRjH73WKms95UAlXc9B6S5g5Q6E5B0juy
-         4XNXPuUx+jTEo/TRQXJ8AkvktvcG3c+wDF3TRzuoamf70A/dhApOOdZcPxSfV6UHArRx
-         ogzHRFMSWDEkO6y2QMbsDnr3jFn9kC2s+Od5EosBsAQL2yk51Xido1iEjnBGlHkjGtyA
-         j07g==
-X-Forwarded-Encrypted: i=1; AKwUvBy2v1Cz0EMQaKj8BtxYawCDOY5BDO6dD7CX8BFma5qkdSU/dVImdSD3Mg8LWrB/0EsFdzYcYysSCkYYaJwF05+S@vger.kernel.org
-X-Gm-Message-State: AFuF++lva98RCtILb0bPu5Joh1+cr3lMW6oqtc0bJopP9g7YR8c+7Vys
-	QFjq4an6gCLeg4y80LPNrkd42G5ZrOU8KjfT/Bk3UWDHtLEGkahBEhRTNsKAvfQpgBdkp/wD9Lp
-	3VoR43FfzUg==
-X-Received: from dlx24.prod.google.com ([2002:a05:7022:98:b0:14a:fd8a:cbe4])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:701b:2506:b0:149:50cb:216f
- with SMTP id a92af1059eb24-14950cb2220mr4877126c88.33.1790619988070; Mon, 28
- Sep 2026 11:26:28 -0700 (PDT)
-Date: Mon, 28 Sep 2026 11:25:46 -0700
+        bh=GcQRCFFdrrvDKqPLX56RorRyNSAs/FHweIcyglmIQnU=;
+        b=P1VpshOYewX4eemayBvOdgOg94nQWfF3TpHpZP8nf9QuulcBjzl/6UyPg54OymfWMm
+         gYXzx0BccaEnN9eqk19YjmdKcIfg+wnpowxI+HmZynNYlWaXGJ0ogwN0TKtoNi9UextK
+         lBb7RcfoRJqhv85vwsVnE4HAckGJifQtF8jVHNAOlej7qNrbZpWT61gaHT8BL9zRMD02
+         Tu/LNquX5aqX9iMUmVKE/1GO1WMuVjcIbAjKFrNgKMsf11RRnmY9N0UPfMsEsVWBwkUn
+         6/93XvgOg3LnNAANjoFtkGok5BnXrkrRJV/r+Gb0c6Vqdib2hxWIq4SPBah8nyVIig7o
+         DcdQ==
+X-Forwarded-Encrypted: i=1; AKwUvByPXPNOVM6vuPyr1aaexjTaFfXuopirVY1VK3VydaiHqRBU+5q3d950fv+nq1AV07vxwMd4fFk96nYlFcvElyer@vger.kernel.org
+X-Gm-Message-State: AFuF++lR3ISwP0ONflwcfX1LhfUEW9FYrIbgOgVxhTrLkURN26cqdjkX
+	TNmChD5o8ej8GwuML7+wP+Vuuhda153/QW/zp+iOpDjEqGbxfVYeVnrsYbTXlWnRe6ljW89naVF
+	WPgyXigwVng==
+X-Received: from dlbro1.prod.google.com ([2002:a05:7022:1581:b0:14a:a05f:b9e8])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:701b:42ce:10b0:143:5c63:23bb
+ with SMTP id a92af1059eb24-146ce4958fbmr11365206c88.11.1790619989872; Mon, 28
+ Sep 2026 11:26:29 -0700 (PDT)
+Date: Mon, 28 Sep 2026 11:25:47 -0700
 In-Reply-To: <20260928182605.3649015-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -60,8 +60,9 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <cover.1790145937.git.irogers@google.com> <20260928182605.3649015-1-irogers@google.com>
 X-Mailer: git-send-email 2.56.0.rc1.315.gc6ed9934b7-goog
-Message-ID: <20260928182605.3649015-8-irogers@google.com>
-Subject: [PATCH v6 07/26] perf trace: Start BPF summary before starting workload
+Message-ID: <20260928182605.3649015-9-irogers@google.com>
+Subject: [PATCH v6 08/26] perf trace: Stop at internal fields when walking
+ syscall arguments
 From: Ian Rogers <irogers@google.com>
 To: Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
 	Aaron Tomlin <atomlin@atomlin.com>
@@ -72,44 +73,53 @@ Cc: Howard Chu <howardchu95@gmail.com>, Jakub Brnak <jbrnak@redhat.com>,
 	Ian Rogers <irogers@google.com>
 Content-Type: text/plain; charset="UTF-8"
 
-trace_start_bpf_summary() is called after evlist__start_workload(), so a
-short lived workload can make its syscalls, or even exit, before the BPF
-summary is enabled. It also ignores --delay. Enable it along with the
-evlist, before the workload starts or after the initial delay.
+Since v6.19 syscall tracepoints may end with __data_loc char[] fields
+holding user space strings, these aren't syscall arguments.
+syscall__scnprintf_args() walks them anyway, printing the extra raw
+syscall arguments at those indices under the internal field's name, and
+trace__bpf_sys_enter_beauty_map() considers them when building the BPF
+beauty map. The internal fields come after the arguments, so stop at the
+first one.
 
 Assisted-by: Antigravity:gemini-3.1-pro
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/builtin-trace.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+ tools/perf/builtin-trace.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
 diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-index f94745a60f4a..1ffe824ba670 100644
+index 1ffe824ba670..35d39a3fe803 100644
 --- a/tools/perf/builtin-trace.c
 +++ b/tools/perf/builtin-trace.c
-@@ -4855,17 +4855,19 @@ static int trace__run(struct trace *trace, int argc, const char **argv)
- 	if (!target__none(&trace->opts.target) && !trace->opts.target.initial_delay)
- 		evlist__enable(evlist);
+@@ -2647,6 +2647,9 @@ static size_t syscall__scnprintf_args(struct syscall *sc, char *bf, size_t size,
  
-+	if (trace->summary_bpf && !trace->opts.target.initial_delay)
-+		trace_start_bpf_summary();
+ 		for (field = sc->args; field;
+ 		     field = field->next, ++arg.idx, bit <<= 1) {
++			if (is_internal_field(field))
++				break;
 +
- 	if (forks)
- 		evlist__start_workload(evlist);
+ 			if (arg.mask & bit)
+ 				continue;
  
- 	if (trace->opts.target.initial_delay) {
- 		usleep(trace->opts.target.initial_delay * 1000);
- 		evlist__enable(evlist);
-+		if (trace->summary_bpf)
-+			trace_start_bpf_summary();
- 	}
+@@ -4134,6 +4137,9 @@ static int trace__bpf_sys_enter_beauty_map(struct trace *trace, int e_machine, i
+ 		return -1;
  
--	if (trace->summary_bpf)
--		trace_start_bpf_summary();
--
- 	trace->multiple_threads = perf_thread_map__pid(evlist__core(evlist)->threads, 0) == -1 ||
- 		perf_thread_map__nr(evlist__core(evlist)->threads) > 1 ||
- 		evlist__first(evlist)->core.attr.inherit;
+ 	for (i = 0, field = sc->args; field; ++i, field = field->next) {
++		if (is_internal_field(field))
++			break;
++
+ 		// XXX We're only collecting pointer payloads _from_ user space
+ 		if (!sc->arg_fmt[i].from_user)
+ 			continue;
+@@ -4188,6 +4194,8 @@ static int trace__bpf_sys_enter_beauty_map(struct trace *trace, int e_machine, i
+ 
+ 			/* find the size of the buffer that appears in pairs with buf */
+ 			for (j = 0, field_tmp = sc->args; field_tmp; ++j, field_tmp = field_tmp->next) {
++				if (is_internal_field(field_tmp))
++					break;
+ 				if (!(field_tmp->flags & TEP_FIELD_IS_POINTER) && /* only integers */
+ 				    (strstr(field_tmp->name, "count") ||
+ 				     strstr(field_tmp->name, "siz") ||  /* size, bufsiz */
 -- 
 2.56.0.rc1.315.gc6ed9934b7-goog
 
