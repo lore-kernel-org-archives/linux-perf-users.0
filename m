@@ -1,114 +1,111 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DA24A52F29A;
-	Tue, 29 Sep 2026 14:53:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4640C516174;
+	Tue, 29 Sep 2026 15:08:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790693593; cv=none; b=stWuFh0jxy5clW8M5J6Hgx7gCxBdENBr7KCMHYmqagcRM9i6B9nhc5LQWQgValyxc/TyIDruc+qDgrDxegH85qNjcDzW3vnvLKripw2JorUp9AJpdSQVNLvgYBDxmh/QtyT2ZmdE2z6zS+D/WT/KcUABwOWWMWxoDb5Z8/ARN5E=
+	t=1790694553; cv=none; b=MUxVvWOquzMMnByhXahFkS2DGPY3Ex4nv9Ch998z6xPSgERKwGICeOmBhTMc9mRyDUUIuwo6W74YHo8Q2Zbck/54V4g7uUFRLMMTWIiHRqE7yhIelFHSf8SwGdho7ArZzySF4b9Iz0ZTCUKmRIxRH7XX7h9iDC46lujfnlAVt3A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790693593; c=relaxed/simple;
-	bh=xe0u2OqcNn3XLy6J5fEP3c71Qbz5WPCvV1bZlG39UNQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SdTbRVSuVuE7o54HcNbfWf0sXINcHivlc6FtDnwvP38xUMxAMnmf3UNQPxq6RzxVjebuvsBcpaT43hvTM16UfoIZXn3tASMUAlLEccXAA3oNkkiTY2mWsLxSfuODCOUnTVeRa945iCUFEyMGbb2d3vM3tA4z1FpD7IMYOHrq/bI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=RJf75crA; arc=none smtp.client-ip=217.140.110.172
+	s=arc-20240116; t=1790694553; c=relaxed/simple;
+	bh=gpgdTcKKkQ2T93h4ye/efBPzAsnfbZjwW5J01PoQ3tY=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=GpucgsfP3mg65d/m56NPlENsnnQ0Lj7pZxP99RRZdN2J6LEOQg/Xm2DHQrpJlP3vc85H1GW+DbqIiCvMX1J2xwFX3qsnw6TBjqhGpMJJihAmGMKrl0fXLcggiwG7HDd4G6erj+UCoSQPAbis6wZmWrF9AdX2lDtYshzPbsJGhWg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=YM0tHVm9; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="RJf75crA"
+	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="YM0tHVm9"
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EB4721516;
-	Tue, 29 Sep 2026 07:53:03 -0700 (PDT)
-Received: from localhost (unknown [10.2.196.114])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1B4123F86F;
-	Tue, 29 Sep 2026 07:53:06 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 568751516;
+	Tue, 29 Sep 2026 08:08:41 -0700 (PDT)
+Received: from e132581.arm.com (unknown [10.2.196.114])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B9C993F85F;
+	Tue, 29 Sep 2026 08:08:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
-	t=1790693587; bh=xe0u2OqcNn3XLy6J5fEP3c71Qbz5WPCvV1bZlG39UNQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=RJf75crAw12LpUzgMwjbb2pnc0M07hmf/YC4DUYUj6h76MCPo1QPjoyZbYMUBv6i1
-	 ZvODaa7mSdPZ+0iI/UnFcUxhMiiRxb8xS9RM6hHIDUT0KZph4CAeN0BAc5KOtTDJt4
-	 6zkel5aGVO3z4zJq84cV0h0Jx2tHyg1Hi/mhy/H0=
-Date: Tue, 29 Sep 2026 15:53:05 +0100
+	t=1790694524; bh=gpgdTcKKkQ2T93h4ye/efBPzAsnfbZjwW5J01PoQ3tY=;
+	h=From:Date:Subject:To:Cc:From;
+	b=YM0tHVm9z3VNtJkABsoO6KmV6xZ/52v6cdwuEd5fBZOUujUDw+b6Dsg81UEYT/jsW
+	 7SyN1XK52kKQ9oeY9xqG/XyvvwBuxgLL1cVZOBrwWnW/ynXfzVbizUQGad+RIaMd21
+	 28DTjFf/LcTRW+GKDiNGwyNvKHWTdag3sD7ZoSb4=
 From: Leo Yan <leo.yan@arm.com>
-To: James Clark <james.clark@linaro.org>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Ingo Molnar <mingo@kernel.org>, linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Sashiko AI <sashiko-bot@kernel.org>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH] perf/core: Fix ITRACE start suppression for inherited
+Date: Tue, 29 Sep 2026 16:08:32 +0100
+Subject: [PATCH v2] perf/core: Fix ITRACE start suppression for inherited
  events
-Message-ID: <20260929145305.GI14479@e132581.arm.com>
-References: <20260903-perf_core_itrace_start_fix_inherit_event-v1-1-6bff7e675af5@arm.com>
- <f0aa7195-9c79-4ac7-8bb0-d508927a01cf@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <f0aa7195-9c79-4ac7-8bb0-d508927a01cf@linaro.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20260929-perf_core_itrace_start_fix_inherit_event-v2-1-9361a946ed56@arm.com>
+X-B4-Tracking: v=1; b=H4sIAG/Uu2oC/52NQQ6DIBBFr2JYlwYxonTVezSGUBzqLAQzENLGe
+ PdSj9Dl+/l5b2cJCCGxW7MzgoIJY6ggLw1ziw0v4DhXZlJIJbTo+AbkjYsEBjNZByZlS9l4fBs
+ MS5VlAwVC5nbUnZgHLUetWdVtBPV0ph5T5QVTjvQ5y6X9rX9ESstbrp7eD6CG3vr+bmm9uriy6
+ TiOL+C5QXreAAAA
+X-Change-ID: 20260903-perf_core_itrace_start_fix_inherit_event-a8930d792899
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+ Arnaldo Carvalho de Melo <acme@kernel.org>, 
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
+ Adrian Hunter <adrian.hunter@intel.com>, 
+ James Clark <james.clark@linaro.org>
+Cc: Ingo Molnar <mingo@kernel.org>, linux-perf-users@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Sashiko AI <sashiko-bot@kernel.org>, 
+ Leo Yan <leo.yan@arm.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1790694522; l=1913;
+ i=leo.yan@arm.com; s=20250604; h=from:subject:message-id;
+ bh=gpgdTcKKkQ2T93h4ye/efBPzAsnfbZjwW5J01PoQ3tY=;
+ b=TuAGK+c5/qhIpC/WOIH+7K3yWavAUKRc50/vsn3LndQHNJdnMrNDOaJe0UVyQNzrDi8t7YulE
+ aqbEJX2wt+pCiIBx16dF5gXlAuyI5tBX3n8msK6zhUmp1Xdc3CZOZ5N
+X-Developer-Key: i=leo.yan@arm.com; a=ed25519;
+ pk=k4BaDbvkCXzBFA7Nw184KHGP5thju8lKqJYIrOWxDhI=
 
-On Mon, Sep 28, 2026 at 10:38:42AM +0100, James Clark wrote:
-> 
-> On 03/09/2026 10:35, Leo Yan wrote:
-> > PMU drivers call perf_event_itrace_started() for the event that has
-> > started tracing. This sets PERF_ATTACH_ITRACE in that event's
-> > attach_state.
-> > 
-> > For inherited events, however, perf_log_itrace_start() replaces the
-> > child event with its parent before checking PERF_ATTACH_ITRACE. The
-> > setter and checker therefore operate on different events. If the
-> > parent's flag is clear, the child continues to emit ITRACE_START
-> > records on subsequent schedule-ins. If the parent has already started,
-> > its flag can instead suppress the child's initial record.
-> 
-> This last part would need an earlier fixes: commit. The problem of
-> suppressing child ITRACE_START records existed since the beginning on
-> ec0d772 ("perf: Add ITRACE_START record to indicate that tracing has
-> started").
-> 
-> Although the fixes: commit would be correct if the only problem was that
-> setting and getting are on different events.
+perf_log_itrace_start() follows event->parent before checking
+PERF_ATTACH_ITRACE, but perf_event_itrace_started() sets the flag on the
+event passed by the PMU driver. If an inherited event starts tracing
+before its parent, the parent's flag remains clear and the child emits
+redundant ITRACE_START records on subsequent schedule-ins.
 
-Makes sense. However, if follow your suggestion to change the setter to
-fix the setter/checker mismatch, 9a6694cfa239 remains the appropriate
-Fixes tag, since it introduced that mismatch; and it is a feasible
-point for back port.
+Follow event->parent in perf_event_itrace_started() as well, so that the
+setter and checker use the same event. This preserves the original
+suppression policy: ITRACE_START supplies the initial task context when
+tracing begins, while subsequent task switches are tracked through
+context-switch records or trace context packets.
 
-> > Remove the parent substitution so that perf_log_itrace_start() checks
-> > the same event that the PMU driver marks as started.
-> > 
-> > This is safe for tool consumers. Intel PT uses the ITRACE_START record
-> > to set the current thread context. CoreSight ETM uses the record only
-> > to find or create the corresponding thread. Neither decoder depends on
-> > the parent event.
-> > 
-> 
-> It's probably harmless to emit more ITRACE_STARTs, but it doesn't fit the
-> original purpose of why it was added. It seems to be for when tracing first
-> starts, which would be _after_ the corresponding sched event. Once tracing
-> has started you can follow the subsequent sched events, so you don't need
-> more ITRACE_START records for each child. Could we not fix it by changing
-> the setter to follow the parent event to match, which would respect the
-> original meaning?
+Reported-by: Sashiko AI <sashiko-bot@kernel.org>
+Closes: https://lore.kernel.org/linux-perf-users/20260901164705.042781F000E9@smtp.kernel.org/
+Fixes: 9a6694cfa239 ("perf/x86/intel/pt: Do not force sync packets on every schedule-in")
+Signed-off-by: Leo Yan <leo.yan@arm.com>
+---
+Changes in v2:
+- Changed setter to fetch parent event instead (James).
+- Link to v1: https://lore.kernel.org/r/20260903-perf_core_itrace_start_fix_inherit_event-v1-1-6bff7e675af5@arm.com
+---
+ kernel/events/core.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-My concern was whether an inherited event and its parent could trace
-concurrently on different CPUs.
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index 634d2ccbab82d8bfe9d1bd7f8c6745f60260dbd9..85d924cce387f88de0c1efe6c22754d38430c9d6 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -10568,6 +10568,9 @@ void perf_event_text_poke(const void *addr, const void *old_bytes,
+ 
+ void perf_event_itrace_started(struct perf_event *event)
+ {
++	if (event->parent)
++		event = event->parent;
++
+ 	WRITE_ONCE(event->attach_state, event->attach_state | PERF_ATTACH_ITRACE);
+ }
+ 
 
-Normal inherited AUX recording uses CPU restricted events (cpu != -1),
-children inherit the parent event’s CPU restriction, a particular parent
-event and its children cannot trace concurrently on different CPUs.
+---
+base-commit: 6f8319e3e9a44dd537d17f41565a8453c560a581
+change-id: 20260903-perf_core_itrace_start_fix_inherit_event-a8930d792899
 
-Since inherit with cpu == -1 prevents buffer mapping [1], my concern for
-this case is also not valid.
+Best regards,
+-- 
+Leo Yan <leo.yan@arm.com>
 
-I will update the patch to update setter. Thanks for suggestion.
-
-[1] https://man7.org/linux/man-pages/man2/perf_event_open.2.html
