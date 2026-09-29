@@ -1,412 +1,154 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yx1-f41.google.com (mail-yx1-f41.google.com [74.125.224.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D8254E0B94;
-	Tue, 29 Sep 2026 21:23:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790716991; cv=none; b=IvgcNcoNop8ApCC2cvPX46PoM3i3SzmNovjO4ZAnNTXva+SuyyMfKyt0M0i47GNX8iZcEnqshOlyj4yLwmP7snSJ62hsEzG2kELKQ6aW5k8/TDu6eSqNXWP7zb0M1yaSqlxz2dez7yyXSCa3OXxngU7koAyAyfi/DcjiC28tv2w=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790716991; c=relaxed/simple;
-	bh=pyv2CJ6U1xjt/8VL5T1MSbEfxfA8SW+fz0tkwo7VmF0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=CY7hSpl8DsULUQXOAWZFvGiI4S7puZPLmNpwbwSsqRspVk+Ux5htmeSbMfuZhhy0C6Jd4Jeno765hIXBIaA/3jKTCPdfiX6lqwthq3PRGz/hcHqCDldPZWRcPRaORfnGek6McQuI0fLIk/zGPJUhLFKgxVjJyj7kPLSjbFrTuzI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lMJ4L7gl; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 371AA392825
+	for <linux-perf-users@vger.kernel.org>; Tue, 29 Sep 2026 21:24:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.224.41
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1790717083; cv=pass; b=KseRJYmaPX21a++n07uVYg5CbtcyVq1ttrJEeGBg91D86IhdCDWYqMlrZ9D94R7wb4Oso1fq5u2/q3g0cqvwIFb5oucNgNad/+hfH0e8kKIdsOCllxwOMHJzTI5YWOgyiQW1kxiyYI8zNGmnTN04NjNvWwsI3dB/xCpW5qQFTzE=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1790717083; c=relaxed/simple;
+	bh=iLXo43O7JmOuus9Fwsu7TvH61/8erOqVOuqqIrToHow=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Pdu55oQOaHiaFlzv4FHNhPax2pV5VXGQHSziMQMFiqHo1IxXHiXgwimxQUS7JDiFJuUapbggclZYLJT5YSnU9WavYv+WuxhhoviAj9V4qUJvUeDuczJrXZ3NGaxy8II947NoN+KxZuqvzRAhTrorDXWEneaBWNqVZG3RoeF6pJo=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=uber.com; spf=fail smtp.mailfrom=uber.com; dkim=pass (1024-bit key) header.d=uber.com header.i=@uber.com header.b=kZ3JRQWR; arc=pass smtp.client-ip=74.125.224.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=uber.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=uber.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lMJ4L7gl"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8B55F1F00893;
-	Tue, 29 Sep 2026 21:23:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1790716989;
-	bh=dPlmz+U5FHreUXzwy4thE8ZJB6hRf9x7o9qsGEO42rI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=lMJ4L7gltQ0t5pOQBvHw2ClgbYq0lsczVytSRxptDCNDqb4KBdHG4wRepIerP8xZ3
-	 JzX6JFjkZn/+XZdOAi6xmScBD9//Bo7Q1MUECd4cYSSZQqNBmWCEhhzTi2c7/1lF8D
-	 9gfZnIgq06s4jpqbYYqe6dwluW1F+e748Hj2Zxupsg+IUaE4d5pg/N7FXNah6ACqSZ
-	 CSPlV5uyS00tj4XCGAsuS1SHuzV+sYXgwERpdMxRAuE6X2ipEOZWqgxdItcZ9Btj6w
-	 ZMFXpRk+89ZcJdsdODAV+1W1RT1OwNXRhFgO+fqQ6DmtR2BM9+Gp7HahX0GEVFpSuv
-	 dBZcLg01LSiTw==
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Ingo Molnar <mingo@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	James Clark <james.clark@linaro.org>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Clark Williams <williams@redhat.com>,
-	linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 5/5] perf test: Add false_sharing workload exhibiting cross-CPU false sharing
-Date: Tue, 29 Sep 2026 23:22:46 +0200
-Message-ID: <20260929212246.2532021-6-acme@kernel.org>
-X-Mailer: git-send-email 2.55.0
-In-Reply-To: <20260929212246.2532021-1-acme@kernel.org>
-References: <20260929212246.2532021-1-acme@kernel.org>
+	dkim=pass (1024-bit key) header.d=uber.com header.i=@uber.com header.b="kZ3JRQWR"
+Received: by mail-yx1-f41.google.com with SMTP id 956f58d0204a3-6714595153cso1110152d50.0
+        for <linux-perf-users@vger.kernel.org>; Tue, 29 Sep 2026 14:24:42 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1790717081; cv=none;
+        d=google.com; s=arc-20260327;
+        b=lnRogXz59esgc7aVZ/6t/GVKkX6VC+U6WaHoNkp/0PPWBPy/Gmznv0RXnIGZVTzgpj
+         ECVANyWKZPdrXIM5x1mIL9IAbgUS1M1g28CU/Y8FqGbQ/nvOtWUuAWazoDKzSTJlKrHT
+         4n+pFcB8InfdhvzrjVJ/lqCj9aX55HG5x6Q9b+3ZVbfnhAPJoUTyRG+BBgvnofmhM+WH
+         ZH6GhTIzhUufBgk+MEoAwD2/tfE+0Cer9DRT1U9/nh7+eS+asMuIE6KPDRZO1IHD5eJf
+         MWCcyx1LVwllh6PVkd0Vf680SOT8vZAK8e0mU1+DDYXBemgmLp3iv9W6ww5po0I4ivxR
+         2E0Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:dkim-signature;
+        bh=XsxJSbC/0qpT3PgH/uznE1JYs4z7KKK2Tw1kr61c3yI=;
+        fh=sjJ2/JU4v2WXXDD1N/ySPkfi0VFxDVeCMiI6ZDYZsGw=;
+        b=rMwkCtEStRm7sCqZ221TfIFAnS6AZojgEUa4rOBMn4/r8BbOp/oCPrrT5TLd+abtH+
+         sFkskKYDlFQWD/OnM+CmnluphMn81P5Op1lVCI+KYbSOWjYiJ7ba4wFXi8AOD1+v2N73
+         DZ15oLiG8QWiDj/gUjBCC3f4oYaF7Gk2FXU0rzpWdnh+8kBzy19Zpfy5HBc0sW4YlmiL
+         emXVRmV8ql0E0HN/IyKjyZChmI4iep85ngXiKMURHbWi7KFUb0bQJVH0uyKZYQ8BUP76
+         QlNZP32xO7C8HS4qyzzKRybwSWAnrNuEfYfNlE/ipCWjxs+vrGIYk5xW349uzk2UVH/E
+         s9MQ==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=uber.com; s=google; t=1790717081; x=1791321881; darn=vger.kernel.org;
+        h=content-type:cc:to:subject:message-id:date:from:in-reply-to
+         :references:mime-version:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=XsxJSbC/0qpT3PgH/uznE1JYs4z7KKK2Tw1kr61c3yI=;
+        b=kZ3JRQWRs+OYJ98JSBjxauOL9k9ApdE0uxNiXuDTEPfbt3NU3XdEkY1NQU3NThkjJt
+         dY9ikm7H2XNYTv8wX3lxb1fZlI8oIw751GGU7sh6/uX6L+JA3MNAEexGedR9SIeo4A2M
+         T1ZT7YlpGdkqPm15ehtFQF9xXNU3VYHcz//mQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1790717081; x=1791321881;
+        h=content-type:cc:to:subject:message-id:date:from:in-reply-to
+         :references:mime-version:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to:content-type;
+        bh=XsxJSbC/0qpT3PgH/uznE1JYs4z7KKK2Tw1kr61c3yI=;
+        b=LJzGIzIysmtg05gXAHjzO/NuYUmFKTNHnMk5qt9FMs4D6h6IH6i5wk6o465x8uEkQA
+         HeIr/e5GIHJSmsHNP/EZ8an3JhQ6hwbZk7HN1EL0PxIfWqj2jf0StttNAFqpyi7Mhxeh
+         65RhPjs9MngkV85S4X+8V2SNueK5TQHsb9e52+hrKWyeb0a+cB1vL+ISu0JzW0+u3hKR
+         m5tLDxF89f5Krm7JjQSwcP7FvVtusMR2GjeNni/Th0ihwMeDw7G11zP4xIlZS1sKxdvu
+         NlxbWmT0AEqS3xxJA1iHsRaNCIvIutw4DJIBlNkxKNrkucSP8VA/Fowb1INOS70uwqQP
+         z8mA==
+X-Forwarded-Encrypted: i=1; AKwUvBzED9R5kfuzuhVE8atl6zQaB3R9EnRhHBs9nXPAGoCPKXCfmesP+TACcDfEEYaAPZjdD6v8VVULYG+7ubef1kUn@vger.kernel.org
+X-Gm-Message-State: AFuF++kYjRihu002XXrBLrZXjtCHc2hhj8gQsQfQU3t8fzxGpRu3w2ox
+	ifnJ9gZjxv5P8aOsUxSsTrqGyLZIycy5D4iBqVMKgq9zXTHOECTKyPlq95PSWePDiKRiHimH3Ho
+	EDrjBsnHocbIqXERSe2Y0mmq4FbILNmNPwXqpHhys4A==
+X-Gm-Gg: AYBFou1jXOqCQeBSuOlqY6Sa8k5EnEsCC3fMb+GvpZvKnpKp0pjJPnSfysBdR1TpVPR
+	P7q94j1aAfnkigV8C6ImhPqHYnB1k+K4UorgSmF9+nqJrla+3zGRweKrV3KyvRp+dmHSaEGFrsT
+	oT+PaoDVx/mK0x6rtS63DEuvWhJtnMk8sU1sH9840kbQBNupJZZstqb0yLKiql5tGMVaWmwUiAX
+	e0Xq5kRpxJcZGA5B6M9oj0bjwE0tOrTOu24wukjLgKipK/cqSTiUSA7VkNL8OP+pm7RrZwzRiQM
+	TitQmmTav6Ff3HhQPX+eN08UsIeYr/bTYF9Yd4pMh1y52YERTbjSZ06yEdTzEAhdQRI88YSHQsR
+	Q1BRWOQ9LQ54=
+X-Received: by 2002:a53:d019:0:b0:675:300c:3938 with SMTP id
+ 956f58d0204a3-67560b590aamr1239328d50.14.1790717080747; Tue, 29 Sep 2026
+ 14:24:40 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20260928075237.3055101-1-irogers@google.com> <CA+w=M=R7vMK9-YZufh1ZW7efsVh=vCVkeh2_4rPSAsN=SH8MuQ@mail.gmail.com>
+ <CAP-5=fUFWGxNSS+TW4iHqeWu+24-R2rq63oBX19VxkTXnqo+4A@mail.gmail.com>
+ <arrhc_7jvX_W2uXS@google.com> <CAP-5=fUuwXTN6kjDrSqygN-Dy3OFuWMH705_tsCXX=dbG747QA@mail.gmail.com>
+ <CA+w=M=S3USeLyFNaHSjHL+cmzssWk2Bygahetzr0dNU55TZEMw@mail.gmail.com> <arv-9NWWZ14TG5Te@google.com>
+In-Reply-To: <arv-9NWWZ14TG5Te@google.com>
+From: Alireza Haghdoost <haghdoost@uber.com>
+Date: Tue, 29 Sep 2026 14:24:24 -0700
+X-Gm-Features: AclHuK9U0_hOZFiXzRILk-R0tWVBa5apQWlupDVVHBlduv0A77qNXQe3k2lPckk
+Message-ID: <CA+w=M=TFNBOr9Bxca0WmvAH3gSnr3Yc73jsubus=s4WSL-n1eQ@mail.gmail.com>
+Subject: Re: [PATCH v1 0/7] perf symbol: Reference counting, flat array
+ storage, and LRU shrinking
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Ian Rogers <irogers@google.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, James Clark <james.clark@linaro.org>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-From: Arnaldo Carvalho de Melo <acme@redhat.com>
+> > That is close to what patch 5/6 of my v3 does. Its index is a sorted
+> > array of fixed-size entries:
+> >
+> >    struct sym_idx {
+> >            u64     start;
+> >            u64     end;
+> >            u32     name_off;
+> >            u8      binding;
+> >            u8      type;
+> >            u8      flags;
+> >    };
+> >
+> > That is 24 bytes per symbol. The name is read from the string table
+> > and demangled only when a sample lands in the symbol. The difference
+> > from your description is that v3 then creates a regular struct symbol
+> > for the hit and inserts it in the rb-tree, because the rest of perf
+> > holds struct symbol pointers. If the entry itself were the symbol,
+> > with the name as a pointer/offset union, that extra step would go
+> > away. Ian's patch 1 would help: once every name access goes through
+> > symbol__name(), that accessor is the only place that has to resolve
+> > an offset.
+>
+> I'm curious if name_off would work well for PLT symbols which come from
+> the dynamic symbol table.  Probably you need to handle them differently.
+>
 
-Add a 'perf test -w false_sharing' workload that hammers one shared
-struct from several CPUs, shaped as a TCP connection: a read-mostly
-identity (five-tuple) shares a cacheline with per-packet rx counters
-(the false-sharing line), a second line has packet-path private tx and
-congestion control counters, and a third the connection config.
+Hi Namhyung,
 
-The packet path runs in the main thread and up to four lookup threads
-hash the five-tuple and pull the config, reading one volatile shared
-instance directly so the accesses are PC-relative and resolvable by the
-data type profiler.
+Yes, synthesized PLT symbols need separate handling, but current
+upstream already has that path and my v3 series keeps it.
 
-Assisted-by: LLM
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
----
- tools/perf/tests/builtin-test.c               |   1 +
- tools/perf/tests/shell/data_type_profiling.sh |   9 +-
- tools/perf/tests/tests.h                      |   1 +
- tools/perf/tests/workloads/Build              |   2 +
- tools/perf/tests/workloads/false_sharing.c    | 250 ++++++++++++++++++
- 5 files changed, 261 insertions(+), 2 deletions(-)
- create mode 100644 tools/perf/tests/workloads/false_sharing.c
+For a regular ELF symbol, name_off is its st_name: a byte offset into
+.strtab for .symtab, or .dynstr for .dynsym. So the same index format
+works for both tables. v3 uses .dynsym when a DSO has no .symtab.
 
-diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-test.c
-index d2f594921e25bda9..98134b1c74cf80f4 100644
---- a/tools/perf/tests/builtin-test.c
-+++ b/tools/perf/tests/builtin-test.c
-@@ -175,6 +175,7 @@ static struct test_workload *workloads[] = {
- 	&workload__context_switch_loop,
- 	&workload__deterministic,
- 	&workload__callchain,
-+	&workload__false_sharing,
- 
- #ifdef HAVE_RUST_SUPPORT
- 	&workload__code_with_type,
-diff --git a/tools/perf/tests/shell/data_type_profiling.sh b/tools/perf/tests/shell/data_type_profiling.sh
-index a916c410274aa888..57203e0e5f857540 100755
---- a/tools/perf/tests/shell/data_type_profiling.sh
-+++ b/tools/perf/tests/shell/data_type_profiling.sh
-@@ -8,8 +8,8 @@ set -e
- # data type profiling manifestation
- 
- # Values in testtypes and testprogs should match
--testtypes=("# data-type: struct Buf" "# data-type: struct buf")
--testprogs=("perf test -w code_with_type" "perf test -w datasym")
-+testtypes=("# data-type: struct Buf" "# data-type: struct buf" "# data-type: struct net_conn")
-+testprogs=("perf test -w code_with_type" "perf test -w datasym" "perf test -w false_sharing")
- 
- err=0
- perfdata=$(mktemp /tmp/__perf_test.perf.data.XXXXX)
-@@ -59,6 +59,9 @@ test_basic_annotate() {
- 
-     "xC")
-     index=1 ;;
-+
-+    "xFS")
-+    index=2 ;;
-   esac
- 
-   # Under 'set -e' a bare failing command aborts the script through the EXIT
-@@ -114,6 +117,8 @@ test_basic_annotate Basic Rust
- test_basic_annotate Pipe Rust
- test_basic_annotate Basic C
- test_basic_annotate Pipe C
-+test_basic_annotate Basic FS
-+test_basic_annotate Pipe FS
- 
- cleanup
- exit $err
-diff --git a/tools/perf/tests/tests.h b/tools/perf/tests/tests.h
-index 9c96f33483d14356..f379620069d34f3a 100644
---- a/tools/perf/tests/tests.h
-+++ b/tools/perf/tests/tests.h
-@@ -250,6 +250,7 @@ DECLARE_WORKLOAD(jitdump);
- DECLARE_WORKLOAD(context_switch_loop);
- DECLARE_WORKLOAD(deterministic);
- DECLARE_WORKLOAD(callchain);
-+DECLARE_WORKLOAD(false_sharing);
- 
- #ifdef HAVE_RUST_SUPPORT
- DECLARE_WORKLOAD(code_with_type);
-diff --git a/tools/perf/tests/workloads/Build b/tools/perf/tests/workloads/Build
-index 048e371eb63e3164..18fceddccb56c013 100644
---- a/tools/perf/tests/workloads/Build
-+++ b/tools/perf/tests/workloads/Build
-@@ -14,6 +14,7 @@ perf-test-y += jitdump.o
- perf-test-y += context_switch_loop.o
- perf-test-y += deterministic.o
- perf-test-y += callchain.o
-+perf-test-y += false_sharing.o
- 
- ifeq ($(CONFIG_RUST_SUPPORT),y)
-     perf-test-y += code_with_type.o
-@@ -29,3 +30,4 @@ CFLAGS_inlineloop.o       = -g -O2
- CFLAGS_deterministic.o    = -g -O0 -fno-inline -U_FORTIFY_SOURCE
- CFLAGS_named_threads.o    = -g -O0 -fno-inline -U_FORTIFY_SOURCE
- CFLAGS_callchain.o        = -g -O0 -fno-inline -U_FORTIFY_SOURCE
-+CFLAGS_false_sharing.o    = -g -O0 -fno-inline -U_FORTIFY_SOURCE
-diff --git a/tools/perf/tests/workloads/false_sharing.c b/tools/perf/tests/workloads/false_sharing.c
-new file mode 100644
-index 0000000000000000..0448fa03180bb566
---- /dev/null
-+++ b/tools/perf/tests/workloads/false_sharing.c
-@@ -0,0 +1,250 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * False-sharing demo for data type profiling, shaped as a TCP
-+ * connection: a read-mostly identity shares a cacheline with per-packet
-+ * rx counters (the false-sharing line), a second line has packet-path
-+ * private tx and congestion control counters, and a third the connection
-+ * config.
-+ *
-+ * With a 'perf mem record' of this workload the profiler shows accesses
-+ * to different members of the same cacheline, which the CTF stream lets
-+ * pahole flag as false sharing on line 0.
-+ */
-+#include <pthread.h>
-+#include <sched.h>
-+#include <stdint.h>
-+#include <stdlib.h>
-+#include <stdio.h>
-+#include <signal.h>
-+#include <unistd.h>
-+#include <linux/compiler.h>
-+#include "../tests.h"
-+
-+struct net_conn {
-+	/* cacheline 0: identity (read-mostly) + rx counters (per packet) */
-+	uint32_t	saddr;		/*   0 */
-+	uint32_t	daddr;		/*   4 */
-+	uint16_t	sport;		/*   8 */
-+	uint16_t	dport;		/*  10 */
-+	uint8_t		state;		/*  12: 1 == ESTABLISHED */
-+	uint8_t		protocol;	/*  13: 6 == TCP */
-+	uint16_t	__pad0;		/*  14 */
-+	uint64_t	bytes_rx;	/*  16: every packet */
-+	uint64_t	packets_rx;	/*  24: every packet */
-+	uint32_t	rx_queue;	/*  32: backlog depth, fluctuates */
-+	uint8_t		__pad1[24];	/*  36..59 */
-+	uint32_t	last_ack;	/*  60: written per ACK */
-+	/* cacheline 1: tx + congestion control (packet-path private) */
-+	uint64_t	bytes_tx;	/*  64: every packet */
-+	uint64_t	packets_tx;	/*  72: every packet */
-+	uint32_t	cwnd;		/*  80: on every ACK */
-+	uint32_t	ssthresh;	/*  84: on loss */
-+	uint32_t	rtt_us;		/*  88: on every ACK */
-+	uint32_t	retrans;	/*  92: on timeout */
-+	uint32_t	__pad2[8];	/*  96..127 */
-+	/* cacheline 2: config, set at setup, read by everybody */
-+	uint16_t	mss;		/* 128 */
-+	uint8_t		snd_wscale;	/* 130 */
-+	uint8_t		rcv_wscale;	/* 131 */
-+	uint32_t	keepalive_int;	/* 132 */
-+	uint32_t	mark;		/* 136: firewall mark */
-+	uint32_t	priority;	/* 140: traffic class */
-+	uint32_t	__pad3[12];	/* 144..191 */
-+} __attribute__((aligned(64)));
-+
-+/* Volatile so every iteration really loads and stores. */
-+static volatile struct net_conn conn;
-+/* Keeps the reader checksums alive after the threads join. */
-+static volatile unsigned long fs_sink;
-+
-+static volatile sig_atomic_t done;
-+
-+/*
-+ * One cacheline each: sum before cpu, or the implicit padding after cpu
-+ * pushes the struct past 64 bytes, and aligning it to a cacheline then
-+ * rounds it up to 128.
-+ */
-+struct fs_reader {
-+	pthread_t	thread;
-+	unsigned long	sum;
-+	int		cpu;
-+	char		__pad[64 - sizeof(pthread_t) - sizeof(unsigned long) - sizeof(int)];
-+} __attribute__((aligned(64)));
-+
-+static void sighandler(int sig __maybe_unused)
-+{
-+	done = 1;
-+}
-+
-+static void pin_to_cpu(int cpu)
-+{
-+	cpu_set_t set;
-+
-+	/* There may be no second CPU in a restricted cpuset. */
-+	if (cpu < 0)
-+		return;
-+
-+	CPU_ZERO(&set);
-+	CPU_SET(cpu, &set);
-+	/* Best effort: in a restricted cpuset this fails and the thread runs unpinned. */
-+	pthread_setaffinity_np(pthread_self(), sizeof(set), &set);
-+}
-+
-+/*
-+ * Connection lookup, as a load balancer or 'ss' scrape would do it: the
-+ * reads go straight to the global, this file is built -O0 and a local
-+ * pointer would be reloaded from a stack slot, a form the data type
-+ * resolver does not track.
-+ */
-+static void *reader_fn(void *arg)
-+{
-+	struct fs_reader *r = arg;
-+	unsigned long sum = 0;
-+
-+	pthread_setname_np(pthread_self(), "fs-reader");
-+	pin_to_cpu(r->cpu);
-+
-+	while (!done) {
-+		sum += conn.saddr + conn.daddr + conn.sport + conn.dport +
-+		       conn.state + conn.protocol;
-+		sum += conn.mss + conn.snd_wscale + conn.rcv_wscale +
-+		       conn.keepalive_int + conn.mark + conn.priority;
-+	}
-+	r->sum = sum;
-+	return NULL;
-+}
-+
-+static int false_sharing(int argc, const char **argv)
-+{
-+	double sec = 2.0;
-+	int nreaders = 0, nr_allowed = 0, err = 1;
-+	int *allowed = NULL, nallowed = 0;
-+	cpu_set_t set;
-+	int nr_mask_bits = sizeof(set) * 8 < CPU_SETSIZE ? sizeof(set) * 8 : CPU_SETSIZE;
-+	struct fs_reader *readers = NULL;
-+	int i, writer_cpu;
-+	unsigned long n = 0;
-+
-+	pthread_setname_np(pthread_self(), "fs-writer");
-+	if (argc > 0)
-+		sec = atof(argv[0]);
-+	if (!(sec > 0.0)) {
-+		fprintf(stderr, "Error: seconds (%f) must be > 0\n", sec);
-+		return 1;
-+	}
-+	if (argc > 1)
-+		nreaders = atoi(argv[1]);
-+
-+	/*
-+	 * A connection that just got established: identity and config fixed
-+	 * from here on, counters at zero.
-+	 */
-+	conn.saddr = 0x0a000001;	/* 10.0.0.1 */
-+	conn.daddr = 0x0a000002;	/* 10.0.0.2 */
-+	conn.sport = 54321;
-+	conn.dport = 443;
-+	conn.state = 1;			/* ESTABLISHED */
-+	conn.protocol = 6;		/* TCP */
-+	conn.mss = 1448;
-+	conn.snd_wscale = 7;
-+	conn.rcv_wscale = 7;
-+	conn.keepalive_int = 7200;
-+	conn.cwnd = 10;
-+	conn.ssthresh = 65535;
-+	conn.rtt_us = 50;
-+
-+	/*
-+	 * Pin against the allowed set, restricted cpusets still spread the threads.
-+	 * The whole mask is looked at, not the CPU count: the count can be lower
-+	 * than the highest ID in it, as when a cpuset allows only high numbered
-+	 * CPUs, and then no allowed CPU would be found at all.
-+	 */
-+	if (sched_getaffinity(0, sizeof(set), &set) == 0) {
-+		for (i = 0; i < nr_mask_bits; i++) {
-+			if (!CPU_ISSET(i, &set))
-+				continue;
-+			nr_allowed++;
-+		}
-+		allowed = malloc(nr_allowed * sizeof(int));
-+		if (allowed == NULL) {
-+			fprintf(stderr, "Error: malloc failed for CPU list\n");
-+			return 1;
-+		}
-+		for (i = 0; i < nr_mask_bits; i++) {
-+			if (CPU_ISSET(i, &set))
-+				allowed[nallowed++] = i;
-+		}
-+	}
-+	if (nreaders <= 0) {
-+		/* By default leave one CPU for the packet path, up to 4 readers. */
-+		nreaders = nallowed > 1 ? nallowed - 1 : 1;
-+		if (nreaders > 4)
-+			nreaders = 4;
-+	}
-+
-+	signal(SIGINT, sighandler);
-+	signal(SIGALRM, sighandler);
-+
-+	readers = calloc(nreaders, sizeof(*readers));
-+	if (readers == NULL) {
-+		fprintf(stderr, "Error: calloc failed for %d readers\n", nreaders);
-+		goto out;
-+	}
-+	for (i = 0; i < nreaders; i++) {
-+		int cpu = nallowed > 1 ? allowed[(i + 1) % nallowed] : -1;
-+
-+		readers[i].cpu = cpu;
-+		if (pthread_create(&readers[i].thread, NULL, reader_fn, &readers[i])) {
-+			fprintf(stderr, "Error: failed to create reader %d\n", i);
-+			done = 1; // Ensure started threads terminate.
-+			nreaders = i;
-+			goto out_join;
-+		}
-+	}
-+	writer_cpu = nallowed > 0 ? allowed[0] : -1;
-+	if (nallowed == 1)
-+		fprintf(stderr, "Warning: single CPU allowed, no cross-CPU traffic expected\n");
-+	if (writer_cpu >= 0)
-+		pin_to_cpu(writer_cpu);
-+
-+	/*
-+	 * The packet path: receive, acknowledge, transmit, repeat; every 64th
-+	 * packet simulates a loss so ssthresh/retrans get sampled too.
-+	 */
-+	if (sec < 1.0) {
-+		useconds_t usecs = (useconds_t)(sec * 1000000.0);
-+
-+		ualarm(usecs > 0 ? usecs : 1, 0);
-+	} else
-+		alarm((unsigned int)sec);
-+	while (!done) {
-+		conn.bytes_rx += conn.mss;
-+		conn.packets_rx++;
-+		conn.rx_queue = (uint32_t)(n & 0x3f);
-+		conn.last_ack = (uint32_t)n;
-+		conn.bytes_tx += conn.mss;
-+		conn.packets_tx++;
-+		conn.cwnd = 10 + (n & 15);
-+		conn.rtt_us = 50 + (n & 7);
-+		if ((n & 63) == 0) {
-+			conn.ssthresh = conn.cwnd / 2;
-+			conn.retrans++;
-+		}
-+		n++;
-+	}
-+	err = 0;
-+out_join:
-+	for (i = 0; i < nreaders; i++) {
-+		if (readers[i].thread) {
-+			pthread_join(readers[i].thread, /*retval=*/NULL);
-+			fs_sink += readers[i].sum;
-+		}
-+	}
-+	fs_sink += (unsigned long)(conn.bytes_rx + conn.bytes_tx + n);
-+	free(readers);
-+out:
-+	free(allowed);
-+	return err;
-+}
-+
-+DEFINE_WORKLOAD(false_sharing);
--- 
-2.55.0
+An @plt symbol is synthesized rather than read directly from either
+symbol table. Upstream's dso__synthesize_plt_symbols() gets its address
+from the .plt layout, finds its base name through .rela.plt and
+.dynsym, and appends "@plt". The existing code also handles .plt.got
+and .plt.sec this way.
 
+Since name_off only identifies the base string, it cannot represent
+the added "@plt" suffix by itself. I think we should keep synthesizing
+these as regular symbols, as upstream does now. v3 only makes the byte
+cap apply to them and, in lazy mode, clips the index at .plt so a
+preceding zero-size symbol cannot overlap the PLT entries. With the cap
+disabled, which is the default, PLT synthesis is unchanged.
+
+There aren't many of them. On the sample fixture, has 381
+.rela.plt entries against about 319,000 .symtab symbols, and the other
+binary has 100 against about 637,000. Therefore, I think keeping the existing
+upstream path has little memory cost compared with the main symbol table.
+
+Thanks,
+Alireza
