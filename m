@@ -1,47 +1,50 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8F6D3D79EF;
-	Tue, 29 Sep 2026 17:55:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBEE0322B9F;
+	Tue, 29 Sep 2026 18:06:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790704546; cv=none; b=by+pbyxfn30TuvokMe9QFgUsqbmlGQoxvzVsLAXgfZiZ5w9RG6uS1tUGY/YTvinHGdyIqtS/8tNUfzvIFACmQhWOTRIboUTBiVOAdSQmEI69c6zigMxxnTnzyOTst3/Un4HMQi8gOCimNUmroahOV8HXFyaNzlGZIKNGO241Fko=
+	t=1790705191; cv=none; b=nHmPX90IMqVa9cEudbNnrU0biN1rOcMvLTQj29sgY67dcXj3YuZIqOhDK6DEUo6rlWg0hLG/pXrr4KbTihb8AINjNSmyoOLyyK7ztEkPWra10R/p4yVunHc2v3jfNjUdiRJfAM1GgPrFXcc1qILVbA36qpulbxph5Mg4SxJsJEQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790704546; c=relaxed/simple;
-	bh=+5/gGRV7+bGWeSytasPJm7958J+AlMlcFBbxYc3p9tg=;
+	s=arc-20240116; t=1790705191; c=relaxed/simple;
+	bh=uPAjSR1QmXabbgzwP0YmtFC7QzRJncJcuvbYsjqMkuA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=O/xp0fB7JNhE3aM6UBa9KVLKqHP4QYQZOO2cFLnCcSi1IllQ7NsfUnz22aURm0ZuI6gFuDKWN9IkYXSoIrHKLS3pIuRoXIvuL59NnrV4BMFLg+dnyvR/tYdhrWxzn4x0q6lm0hxQc4kRRheavpCHuRdAlezZVGmOkp+pgQ/RN2g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=U+5NUFCE; arc=none smtp.client-ip=100.103.45.18
+	 Content-Type:Content-Disposition:In-Reply-To; b=jBDh8drZLVk7EKRL3VFSBrcZM62/foC1zW0pSn5TGKyDexEW0vHrf3iwWe2+R5Au7AM0ONLIUZoUQj3cIrKp7J8rgEDWtCnkpY+PWex+zUONPrgs/sP/tW4KceeBsQtBmaC88tP394MEsMywO7sq1Ku12lWbiO4Ytspg4OCH+kk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RlIpyMO1; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="U+5NUFCE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B9A9D1F000FF;
-	Tue, 29 Sep 2026 17:55:43 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RlIpyMO1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 394CC1F000FF;
+	Tue, 29 Sep 2026 18:06:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1790704544;
-	bh=esfF9Qz0gETSR4upswG9db8Y42cHzlo/5RJP4FmP8yI=;
+	s=k20260515; t=1790705189;
+	bh=HAqrEQT9SKU1pZoXMIZa5VtYpeKc+tvfoD1qi7Sf1w4=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=U+5NUFCEu8DrAr9wwZHB/QpcsYdQJFbhESZMaqc1hOroY49YA7AkNF3hYpBHh4v+y
-	 /QjOk6nOZP7dW42cWr9H3S2zmq8QFwDBugwrjfqXncX9WcL80YqQFY4nRzG4PFERXr
-	 W6OoGZQVglXnVgVkgiz3Mg785FH9S1DjxiFkScC82RelYmaPdTGMFSBeu7XA1FY5Qm
-	 dMW3JNf3yMSI70n8JrMhcql8kZYlDjYwTB3wvxLnUUYQ+aoeQfYUKpWi21H50SFDKB
-	 fmE54YCY0cglzHo2NQxZh5nDxG45I+iKUL9GcDTMz5XKxMHtPURuXZfwARVERb6LsC
-	 MuZlga2nNwKpQ==
-Date: Tue, 29 Sep 2026 10:55:40 -0700
+	b=RlIpyMO1CVFJpzhWkrlINLR0yRM7ozyX9jcRYfiQyx3zOJvBBSnHoLr0s6YM7NW7B
+	 ZYUfeZSt5zG3M0b+ymaLf+rIe7860+z0YQYZWF8DwyEoLL1umBnzHcQeD8GhtTU/Ji
+	 QNvoQe+vTxN6cr8BVKf7A/kN5PvU/h/V81EiBu83LqGPSQyibjsQD5fqoF4f/ihLHa
+	 8FvbAa1R0RdqcWGx7wqfi/NuexApmBGN/NvUcaglQ+CxV4cf/jBCEoTBvhwGX7Sgd+
+	 WLErOalzFAP/Ijjv7xkFGSwvCMYdrTfNRZ9XiCTMFN6SeFAOXHFjNIXZ19dARc8SdT
+	 Uv77hbXHRePqw==
+Date: Tue, 29 Sep 2026 11:06:27 -0700
 From: Namhyung Kim <namhyung@kernel.org>
-To: haghdoost@uber.com
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+To: Ian Rogers <irogers@google.com>
+Cc: Alireza Haghdoost <haghdoost@uber.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
 	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Jiri Olsa <jolsa@kernel.org>,
 	Adrian Hunter <adrian.hunter@intel.com>,
-	James Clark <james.clark@linaro.org>, Leo Yan <leo.yan@linux.dev>,
-	Arnaldo Carvalho de Melo <acme@redhat.com>,
+	James Clark <james.clark@linaro.org>,
 	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] perf symbols: Don't let a module's last symbol overlap
- the next module
-Message-ID: <arv7nGmcDGjt7p7K@google.com>
-References: <20260928-haghdoost-perf-symbols-fixup-module-end-v1-1-0a70d1edd401@uber.com>
+Subject: Re: [PATCH v1 0/7] perf symbol: Reference counting, flat array
+ storage, and LRU shrinking
+Message-ID: <arv-I_QOi1pcfhvP@google.com>
+References: <20260928075237.3055101-1-irogers@google.com>
+ <CA+w=M=R7vMK9-YZufh1ZW7efsVh=vCVkeh2_4rPSAsN=SH8MuQ@mail.gmail.com>
+ <CAP-5=fUFWGxNSS+TW4iHqeWu+24-R2rq63oBX19VxkTXnqo+4A@mail.gmail.com>
+ <arrhc_7jvX_W2uXS@google.com>
+ <CAP-5=fUuwXTN6kjDrSqygN-Dy3OFuWMH705_tsCXX=dbG747QA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -50,176 +53,117 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20260928-haghdoost-perf-symbols-fixup-module-end-v1-1-0a70d1edd401@uber.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAP-5=fUuwXTN6kjDrSqygN-Dy3OFuWMH705_tsCXX=dbG747QA@mail.gmail.com>
 
-On Mon, Sep 28, 2026 at 04:32:27PM -0700, Alireza Haghdoost via B4 Relay wrote:
-> From: Alireza Haghdoost <haghdoost@uber.com>
+On Mon, Sep 28, 2026 at 03:04:59PM -0700, Ian Rogers wrote:
+> On Mon, Sep 28, 2026 at 2:51 PM Namhyung Kim <namhyung@kernel.org> wrote:
+> >
+> > Hello,
+> >
+> > On Mon, Sep 28, 2026 at 01:55:26PM -0700, Ian Rogers wrote:
+> > > On Mon, Sep 28, 2026 at 12:45 PM Alireza Haghdoost <haghdoost@uber.com> wrote:
+> > > >
+> > > > On Mon, Sep 28, 2026 at 12:52 AM Ian Rogers <irogers@google.com> wrote:
+> > > > >    annotations. Saves 48 bytes per struct symbol (two rb_nodes) and provides
+> > > > >    cache-friendly binary search (bsearch) and callback-based iteration.
+> > > >
+> > > > Hi Ian,
+> > > >
+> > > > Thanks for posting this and for Cc'ing me. I built it on edd8a9fe2eca0,
+> > > > the same base as the v3 series I sent last week, and compared it with
+> > > > v3 in eager mode (today's behavior) and with --lazy-load-symbols.
+> > > >
+> > > > All runs use perf script --no-inline --max-stack 127
+> > > > -F comm,tid,time,ip,sym,dso, with one warm-up and three runs; the
+> > > > median is shown below. Peak anon is the maximum RssAnon from
+> > > > /proc/PID/status, sampled every 10 ms.
+> > > >
+> > > > 1) Production: 120 s cgroup profile of a storage service on an 80-CPU
+> > > >    host (perf record -a -g -F 99 -G <cgroup>). 54k samples, 11 DSOs,
+> > > >    5% of lines [unknown].
+> > > >
+> > > >                   time     max RSS    peak anon
+> > > >    v3 eager      4.5 s    386 MiB     314 MiB
+> > > >    v3 lazy       3.7 s    151 MiB      80 MiB
+> > > >    this series  95.9 s    309 MiB     275 MiB
+> > > >
+> > > > 2) A sample fixture from my v3 cover letter, a worst case with 73% of
+> > > >    lines [unknown]:
+> > > >
+> > > >                   time     max RSS
+> > > >    v3 eager      3.2 s    334 MiB
+> > > >    v3 lazy       1.9 s    106 MiB
+> > > >    this series 205.3 s    449 MiB
+> > > >
+> > > > Most of the time goes to reloading. On the fixture, a profile shows it
+> > > > under map__find_symbol() -> dso__load() -> dso__load_sym(). After each
+> > > > shrink, the first miss in a shrunk DSO re-parses its whole symtab, and
+> > > > addresses that resolve to [unknown] miss every time.
+> > > >
+> > > > The peak is still set by dso__load(), since the whole symtab is
+> > > > materialized before a shrink can run. That is the main blocker for us
+> > > > running perf script at scale: we can't bound how much memory it will
+> > > > use, so we have to contain it with memory.max, and then the profiling
+> > > > job fails with an OOM kill instead of degrading.
+> > >
+> > > Hi Alireza, and thanks for the feedback! I'll see what can be done
+> > > about dso__load in v2.
+> >
+> > Thanks for the patches and the analysis.
+> >
+> > I think many of this memory overhead come from the symbol string.
+> > Probably we don't use most of them.  Then would it be nice if we can
+> > lazy-load the strings?  Then it'd have an union of a pointer and a file
+> > offset for symbol strings.  The find-by-name API is used rarely for
+> > user DSOs and the kernel symbols should be fully loaded anyway.
+> >
+> > Without the string (and the priv part), now it has a fixed size so it
+> > should be saved in an array directly.  Probably we can add a limit there
+> > and print it with offset when it doesn't have the name.
+> >
+> > I'm a bit skeptical about the refcount approach here.  It may be hard to
+> > determine when it reclaims memory.  I guess the lazy-load strings with
+> > an array would give similar savings like Alireza's work.
 > 
-> symbols__fixup_end() extends a zero-size symbol that is the last one in
-> the kernel or in a module to the end of the next page. On x86 the next
-> module can start in that page, so the stretched symbol overlaps it, and
-> a lookup can return the wrong symbol. For example:
+> Thanks Namhyung. Without reference counting we lack a good way to
+> discard symbols; we must either assume they always exist as in the
+> current code or implement reference counting. I don't see a way around
+> it. Alireza's patches introduced an "unknown" state for when a symbol
+> limit was hit, but I think that'd be frustrating in practice. We could
+> use it after trying to shrink memory use, in my opinion.
 > 
->   ffffffffc0c4aa50 t dca_sysfs_exit    [dca]
->   ffffffffc0c4b000 t __nft_trace_packet [nf_tables]
->   ffffffffc0c4b0b0 t nft_do_chain      [nf_tables]
-> 
-> dca_sysfs_exit gets end 0xffffffffc0c4c000, and samples in nft_do_chain
-> are reported as dca_sysfs_exit.
-> 
-> This patch clamps the end to the next symbol's start. The ARM case this
-> code was added for, where the next module is far away, is unchanged.
-> 
-> Add a "Kallsyms symbol ends" test case to the Symbols suite that covers
-> the kernel/module boundary, adjacent modules and a distant module.
-> 
-> Fixes: 8799ebce84d6 ("perf symbol: Update symbols__fixup_end()")
-> Fixes: bacefe0c7b77 ("perf tools: Fixup module symbol end address properly")
-> Signed-off-by: Alireza Haghdoost <haghdoost@uber.com>
+> Fwiw, I never like switching the rbtree to an array. The issue is that
+> the rbtree has references that really should be managed by a reference
+> count. Doing that is a challenge in the current code and a sorted
+> array offers similar performance while simplifying the reference
+> counting.
 
-Acked-by: Namhyung Kim <namhyung@kernel.org>
+Once the symbol becomes small enough, we may not need to shrink memory.
+Alireze shows the lazy loading works fine and IIUC it maintains symbol
+index which is 24 bytes.  Without rbtree we can make it 32 bytes
+(also without the name string), then I think it'd be enough.
 
 Thanks,
 Namhyung
 
-> ---
->  tools/perf/util/symbol.c   |  4 ++
->  tools/perf/tests/symbols.c | 96 +++++++++++++++++++++++++++++++++++++++++++++-
->  2 files changed, 99 insertions(+), 1 deletion(-)
 > 
-> diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
-> index 163652f071c6f..f0a7f5a30e696 100644
-> --- a/tools/perf/util/symbol.c
-> +++ b/tools/perf/util/symbol.c
-> @@ -302,6 +302,10 @@ void symbols__fixup_end(struct rb_root_cached *symbols, bool is_kallsyms)
->  			else
->  				prev->end = curr->start;
->  
-> +			/* The next module can start within that page */
-> +			if (prev->end > curr->start)
-> +				prev->end = curr->start;
-> +
->  			pr_debug4("%s sym:%s end:%#" PRIx64 "\n",
->  				  __func__, prev->name, prev->end);
->  		}
-> diff --git a/tools/perf/tests/symbols.c b/tools/perf/tests/symbols.c
-> index c09e04f36035a..b644d95c6be9a 100644
-> --- a/tools/perf/tests/symbols.c
-> +++ b/tools/perf/tests/symbols.c
-> @@ -2,6 +2,7 @@
->  #include <linux/compiler.h>
->  #include <linux/string.h>
->  #include <sys/mman.h>
-> +#include <inttypes.h>
->  #include <limits.h>
->  #include "debug.h"
->  #include "dso.h"
-> @@ -223,4 +224,97 @@ static int test__symbols(struct test_suite *test __maybe_unused, int subtest __m
->  	return ret;
->  }
->  
-> -DEFINE_SUITE("Symbols", symbols);
-> +struct kallsyms_sym {
-> +	u64 start;
-> +	const char *name;
-> +};
-> +
-> +/*
-> + * kallsyms from an x86 host where nf_tables was loaded in the page right
-> + * after the last symbol of dca, plus a kernel symbol followed closely by a
-> + * module and a module far away from the others.
-> + */
-> +static const struct kallsyms_sym kallsyms_syms[] = {
-> +	{ 0xffffffff81000000, "_stext" },
-> +	{ 0xffffffff81000ff0, "last_kernel_symbol" },
-> +	{ 0xffffffff81001000, "near_module_symbol\t[near]" },
-> +	{ 0xffffffffc0c4aa40, "dca_exit\t[dca]" },
-> +	{ 0xffffffffc0c4aa50, "dca_sysfs_exit\t[dca]" },
-> +	{ 0xffffffffc0c4b000, "__nft_trace_packet\t[nf_tables]" },
-> +	{ 0xffffffffc0c4b0b0, "nft_do_chain\t[nf_tables]" },
-> +	{ 0xffffffffc0c4b4e0, "nf_tables_core_module_exit\t[nf_tables]" },
-> +	{ 0xffffffffc2000000, "far_module_symbol\t[far]" },
-> +};
-> +
-> +static int check_symbol(struct dso *dso, u64 addr, const char *name, u64 end)
-> +{
-> +	struct symbol *sym = dso__find_symbol_nocache(dso, addr);
-> +
-> +	if (!sym || strcmp(sym->name, name)) {
-> +		pr_debug("%#" PRIx64 ": expected %s, got %s\n", addr, name,
-> +			 sym ? sym->name : "no symbol");
-> +		return TEST_FAIL;
-> +	}
-> +	if (sym->end != end) {
-> +		pr_debug("%s: expected end %#" PRIx64 ", got %#" PRIx64 "\n",
-> +			 name, end, sym->end);
-> +		return TEST_FAIL;
-> +	}
-> +	return TEST_OK;
-> +}
-> +
-> +static int test__kallsyms_fixup_end(struct test_suite *test __maybe_unused,
-> +				    int subtest __maybe_unused)
-> +{
-> +	struct dso *dso = dso__new("[kernel.kallsyms]");
-> +	int ret = TEST_FAIL;
-> +
-> +	if (!dso)
-> +		return TEST_FAIL;
-> +
-> +	for (unsigned int i = 0; i < ARRAY_SIZE(kallsyms_syms); i++) {
-> +		struct symbol *sym = symbol__new(kallsyms_syms[i].start, 0, 0, 0,
-> +						 kallsyms_syms[i].name);
-> +
-> +		if (!sym)
-> +			goto out;
-> +		symbols__insert(dso__symbols(dso), sym);
-> +	}
-> +
-> +	symbols__fixup_end(dso__symbols(dso), true);
-> +
-> +	ret = TEST_OK;
-> +	/* The next symbol is too close for the end of the page. */
-> +	if (check_symbol(dso, 0xffffffff81000ff8, "last_kernel_symbol",
-> +			 0xffffffff81001000))
-> +		ret = TEST_FAIL;
-> +	if (check_symbol(dso, 0xffffffffc0c4aa58, "dca_sysfs_exit\t[dca]",
-> +			 0xffffffffc0c4b000))
-> +		ret = TEST_FAIL;
-> +	if (check_symbol(dso, 0xffffffffc0c4b280, "nft_do_chain\t[nf_tables]",
-> +			 0xffffffffc0c4b4e0))
-> +		ret = TEST_FAIL;
-> +
-> +	/* Far from the next module, the end of the page is still used. */
-> +	if (check_symbol(dso, 0xffffffffc0c4b4f0,
-> +			 "nf_tables_core_module_exit\t[nf_tables]",
-> +			 0xffffffffc0c4d000))
-> +		ret = TEST_FAIL;
-> +	if (check_symbol(dso, 0xffffffff81001008, "near_module_symbol\t[near]",
-> +			 0xffffffff81002000))
-> +		ret = TEST_FAIL;
-> +out:
-> +	dso__put(dso);
-> +	return ret;
-> +}
-> +
-> +static struct test_case tests__symbols[] = {
-> +	TEST_CASE("Symbols", symbols),
-> +	TEST_CASE("Kallsyms symbol ends", kallsyms_fixup_end),
-> +	{ .name = NULL, }
-> +};
-> +
-> +struct test_suite suite__symbols = {
-> +	.desc = "Symbols",
-> +	.test_cases = tests__symbols,
-> +};
+> We load all symbols instead of lazily because we need the end of a
+> symbol, which we can only determine by processing the entire symbol
+> table as the end of one symbol is the start of the next. We generally
+> translate one address in a DSO into a symbol, so loading all symbols
+> is overkill. I think we can do better by loading only symbols within a
+> certain address window rather than loading all symbols in a DSO. We
+> can then expand this window as more symbols are needed. This at least
+> bounds the number of symbols but isn't quite lazy loading.
 > 
-> ---
-> base-commit: 0ae6fc78c5ce0dfd18d8712a50f0fd4602eff103
-> change-id: 20260928-haghdoost-perf-symbols-fixup-module-end-11ce6858f0c4
+> Alireza also made good points about how symbols not being found or
+> being shrunk leads to thrashing patterns. I think we can fix this by
+> maintaining extra state in the DSO. I'm working to add this into v2.
 > 
-> Best regards,
-> --  
-> Alireza Haghdoost <haghdoost@uber.com>
+> Thanks,
+> Ian
 > 
-> 
+> > Thanks,
+> > Namhyung
+> >
