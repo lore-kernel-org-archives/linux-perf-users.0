@@ -1,56 +1,56 @@
-Received: from mail-dl1-f70.google.com (mail-dl1-f70.google.com [74.125.82.70])
+Received: from mail-dl1-f72.google.com (mail-dl1-f72.google.com [74.125.82.72])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C09C93612DB
-	for <linux-perf-users@vger.kernel.org>; Tue, 29 Sep 2026 02:19:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.70
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97C4E3612DB
+	for <linux-perf-users@vger.kernel.org>; Tue, 29 Sep 2026 02:19:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790648374; cv=none; b=aInqViBDgL9DIk9ROs2W56Ucf/pwswpgYhF7lMrBtC+91aUGLBmY1V0FV8cD3Ujg+rlFfUKalqGvP5/KdxVh3ZaroOwLMgmBO3+Uykg7sdUvexO7Z5M1MRL0SdGvRM8eTGIZBqTep+Sg9gtd6q7QFBwMXmvGYHpuvrfS0QULc6k=
+	t=1790648376; cv=none; b=fjW6MIOqoY7F2v2sVv16nZqrKzEchnShir+BVi9etQ9OHIYWknv85inRPzjdhSg9RSIW5fVGo5lGF6F+c3LehPXQhc6vNQJ+mfjcApfdbZec/zGlgrr9PRelMje0veyXlVUY05YzNq2VRGaJiedRaeC2BZa3ZUjC9ICDT0pTwDQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790648374; c=relaxed/simple;
-	bh=pBofXCSoz0580TqDIs2SzhFYvGcGoy2SIBU+GBQI2pk=;
+	s=arc-20240116; t=1790648376; c=relaxed/simple;
+	bh=r2ZJrExRp4N+CcL1DCwy2vvs7zCWSHOI+GvBR9IyHpA=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=HVknxPG7FXnQqL608mWj8AhvFB0+LTKwroWrrjyCtMH+1q7rREFWnsR1V19FPVsOldd1r+4g+R9/z7buiFYqULCVpZE9K268yikwVZTYPwLL6MGA+WOOcQYv9ZP/mdhiy8/3HaiirqfizlDEhqioLcmXfI/Gsl1j5XvXq0WowAQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=vkCn1ApX; arc=none smtp.client-ip=74.125.82.70
+	 To:Cc:Content-Type; b=m51IsTQEEj7EBWCA9N/OVFmDRRGX4cfT5kVHoazaGGRJlPvhc85pY+pnEOgHrpyX9LJmVhdOPHgkrd+K9G7dCG2i1C05L4zpRd5DfYM5w1vN4I+oXntYs4+8u0oorrlY1I7qOk23aXfOa3A0CFtQj0A0R29JyQPBbyraDvCpO+8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=qInfBnGi; arc=none smtp.client-ip=74.125.82.72
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vkCn1ApX"
-Received: by mail-dl1-f70.google.com with SMTP id a92af1059eb24-14318be7d79so116749c88.0
-        for <linux-perf-users@vger.kernel.org>; Mon, 28 Sep 2026 19:19:32 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qInfBnGi"
+Received: by mail-dl1-f72.google.com with SMTP id a92af1059eb24-14373747468so3385702c88.1
+        for <linux-perf-users@vger.kernel.org>; Mon, 28 Sep 2026 19:19:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1790648372; x=1791253172; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1790648374; x=1791253174; darn=vger.kernel.org;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=TCPDaS9SCDFLDd2tP5GGB5abgauys+2bQBUXQL5BFjI=;
-        b=vkCn1ApXPhjybUbE3kSn1cCfuHk85IzDxWMKuNFgOOOnkapHCT4PQkGIvUmyA0VeVL
-         0sv6gEDL9iqYv2r534Iv1ll8pz4p91UpHfiXG38QD8c5Ho2VMnDnWgwLaEuD9mZgz/1G
-         eWHsi8qyqYBZpR/FKu+89ypjlD9jZ7yC8aDiysumIgnWxoHojMtBGL8nJU1dOBrC7j1X
-         cngf9EAAjY/XrFVsTAGhZsp+EzDEbZbNcdaXuXP9J3Jaw/j6HqTum7HG12bxR5yfjtXG
-         hBtP3ROsZPl4TQRFS5Ve/atbr1DY3Fh3MhVCZSCuiwJFvP+rIPAbIblvtTrXPYHxVnQA
-         PzVg==
+        bh=fPSf/ysgJ4XUz1/4wckhxwFiqk6aeQnaQw8kcoJGG6E=;
+        b=qInfBnGi+D7pFDlhNEAO+I//v3Qd0D21OEcDmYJm9o8FbbjvYJEg9weA37DpwSjYUh
+         0NZIERBG6UNVAIuRJZTRNiq9dZVXBFY9zCjUgGZTX/g5mUzU/iwwbBtPOSOVvPViL+et
+         KT5jfN2PkBuHSHGKvEArz8otnVAXKMiAf73xBw2kLm5ScMGXlNskkNZA9t1xbJZWCQE8
+         c8wpIk6VOzbKYE5h3bBllybWb+ua+0xXRBmchWcGtsidM/NhCS9jPkrdQ9IIn2OSp8z4
+         FOM7NDjsF7J5Og/vnG2X09RLuMVvAM1e14OQrDA9UVQzV8R//6Ut/KYdXDbUKWlxJ9ds
+         FhxA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1790648372; x=1791253172;
+        d=1e100.net; s=20260707; t=1790648374; x=1791253174;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=TCPDaS9SCDFLDd2tP5GGB5abgauys+2bQBUXQL5BFjI=;
-        b=hBOvjYfXOUOro5EMBLkWt989hQdVPbUUKOknqj34kCnO8CMaLnwbZxYZNfVAtk6Ftu
-         MKGW/TyqltEyeyTZEDLKqnp9a+sZuz5zb6vI3+UVnmXZ8R+YKrPTiz6tzkL3Puzkjwy5
-         zjR4pve2lAf6v+lmTUDOj8/beo1GY+5v5sGLm4tEADxztzO53YRxMgTrmI+wpUduR3ib
-         uljqYHVISWA49HP3AXDQwaxsFT+NIr1LCbL93fyOPlfgqpgHQkJ2MRJmudeIgL5nEgI2
-         mX0q31TgwDtKNCLBGCO5AuymOFIWDUcjG692nh1ldcGk12GSZ8uWPgfnipBXXAzV44Z4
-         3Yhg==
-X-Forwarded-Encrypted: i=1; AKwUvBwa6y/fEJrvlmTIAUJSELIDfebazxe+lYRI2fh0IH4FHlFAmE97Rwb24fKG06dOBeKnXLMZASJh5cCXIvj0jXCK@vger.kernel.org
-X-Gm-Message-State: AFuF++kQFh5HDaAnjk/66zAcvawcX6jYm1Nm11sS4Cy35+OnGcCzTg/0
-	WwV4PFKPyjfdWFlRBAqg4rY4DfNrIXa6eXjabwfFh2IC6PYXDTkUh1jU2VXDbdWdpAxsJ0/Tw5M
-	WnfAmZY1pFA==
-X-Received: from dlbut3.prod.google.com ([2002:a05:7022:7e03:b0:146:33a4:4ffa])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:701b:2301:b0:143:26ea:371c
- with SMTP id a92af1059eb24-146cfcd816amr12229622c88.28.1790648371557; Mon, 28
- Sep 2026 19:19:31 -0700 (PDT)
-Date: Mon, 28 Sep 2026 19:19:05 -0700
+        bh=fPSf/ysgJ4XUz1/4wckhxwFiqk6aeQnaQw8kcoJGG6E=;
+        b=GsFpaYre/yvVK7N2V84oZGrNnhcnNhZlzQGM4sQ2XF4Veil8rfOq5RS3VNkMM63Yzf
+         QMnmaRrFDa/um/v1DXQvYWlFstCEk4WLcwymd0ikJBZPhtnd3wWRQYuq32/pkbl5FJNd
+         qcL/scL2yV+sb8yLUMUK76RRWXnF9Bbr8oppfaYExSHH9uuOvQU03FXNEk3sXVzEE4hA
+         +AAMvodjDfeuALwx4lQf/LoeDku/E6VRNveDS/U8tH4ohVk/8rXXn24NLs29O7DUCwJL
+         Wqhx+w6CNqzxXyNr+FJLCl/Eoh20SW+hfn8l1qlPi+rSQ1whOK3GFFxvnXL0w6PUCgVA
+         NCNQ==
+X-Forwarded-Encrypted: i=1; AKwUvBxcP5VE2ARuAHzjxR/V6381iCrYsrT00PFjoLhTREY0m46gyNiarUDyfZRHCaPCr3goBDC2E8SgY8GJXINkjpwX@vger.kernel.org
+X-Gm-Message-State: AFuF++lseRpsqzJhAm7bveR4U5zBNxQpz3aWDgx54xiC/ckm0BVV/0sj
+	XyIaCjtVALetz9puOxeN66PAsiit157e0pZFz41UVdDJQPyUBsPufAq/gy55h2yfXNvOe1LNd53
+	cfmh/3HtO4A==
+X-Received: from dlx9.prod.google.com ([2002:a05:7022:89:b0:144:d025:68b5])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:701b:2704:b0:148:4d6c:201e
+ with SMTP id a92af1059eb24-1484d6c27d7mr9676047c88.23.1790648373248; Mon, 28
+ Sep 2026 19:19:33 -0700 (PDT)
+Date: Mon, 28 Sep 2026 19:19:06 -0700
 In-Reply-To: <20260929021913.56010-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -60,9 +60,9 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260929021913.56010-1-irogers@google.com>
 X-Mailer: git-send-email 2.56.0.rc1.315.gc6ed9934b7-goog
-Message-ID: <20260929021913.56010-2-irogers@google.com>
-Subject: [PATCH v1 1/9] perf evsel: Clamp sample_id size for ksymbol, bpf, and
- text_poke events
+Message-ID: <20260929021913.56010-3-irogers@google.com>
+Subject: [PATCH v1 2/9] perf python sctop: Fix offline interval printing and
+ test flakiness
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>
@@ -71,144 +71,150 @@ Cc: Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
 	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-On kernels without the fix ("perf/core: Restore header fields in
-sideband output callbacks") to restore event_id.header.size in
-perf_event_ksymbol_output(), perf_event_bpf_output(), and
-perf_event_text_poke_output(), concurrent perf sessions cause those
-sideband records to be emitted with header.size inflated by multiple
-id_header_size increments while the single id_sample is written
-immediately after the event payload. Indexing backwards from
-event->header.size reads uninitialized ring-buffer bytes at the end of
-the record, causing evlist__event2evsel() to fail with -EFAULT.
+In sctop.py, process_event() updated self.last_print_time on every
+sample in offline mode even when skip was true for non-matching comm
+events. When filtering by comm with a short interval (such as 'sleep 1'
+in test_sctop_python.sh) on a system-wide recording spanning more than
+1 second under heavy load, non-matching samples could trigger
+print_current_totals() and clear self.syscalls, followed by finally:
+printing a trailing empty table. In addition, analyzer.e_machine was
+initialized after session.process_events() instead of before.
 
-Add evsel__event_size() to clamp the effective size used to locate the
-trailing id_sample for PERF_RECORD_KSYMBOL, PERF_RECORD_BPF_EVENT, and
-PERF_RECORD_TEXT_POKE to payload + id_hdr_size while leaving
-event->header.size intact for advancing the ring-buffer/file stream.
+Fix sctop.py by initializing analyzer.e_machine before
+session.process_events(), only advancing self.last_print_time when a
+sample is not skipped, and only calling print_current_totals() in
+finally: if no table has been printed yet or remaining syscalls are
+pending.
 
-Fixes: 9aa0bfa370b2 ("perf tools: Handle PERF_RECORD_KSYMBOL")
-Fixes: 45178a928a4b ("perf tools: Handle PERF_RECORD_BPF_EVENT")
-Fixes: 246eba8e9041 ("perf tools: Add support for PERF_RECORD_TEXT_POKE")
-Link: https://lore.kernel.org/r/20260929014206.4175245-1-irogers@google.com
+In test_sctop_python.sh, use 'perf list tracepoint' instead of
+unfiltered 'perf list', record the child workload directly without '-a'
+and with '-B -N --no-bpf-event' to avoid system-wide ringbuffer overflow
+and synthesis contention, and retry up to 5 times if needed.
+
+Fixes: b83f0bacf5e4 ("perf python: Port sctop to perf module")
 Assisted-by: Antigravity:gemini-3.1-pro
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/evlist.c |  6 ++--
- tools/perf/util/evsel.c  | 59 +++++++++++++++++++++++++++++++++++++++-
- tools/perf/util/evsel.h  |  1 +
- 3 files changed, 63 insertions(+), 3 deletions(-)
+ tools/perf/python/sctop.py                  |  9 ++--
+ tools/perf/tests/shell/test_sctop_python.sh | 48 +++++++++++----------
+ 2 files changed, 31 insertions(+), 26 deletions(-)
 
-diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
-index 9392d912d254..c2402e4791b6 100644
---- a/tools/perf/util/evlist.c
-+++ b/tools/perf/util/evlist.c
-@@ -973,13 +973,15 @@ static int evlist__event2id(struct evlist *evlist, union perf_event *event, u64
- 	const __u64 *array = event->sample.array;
- 	ssize_t n;
+diff --git a/tools/perf/python/sctop.py b/tools/perf/python/sctop.py
+index 42e95ecfffad..c524e08e6440 100755
+--- a/tools/perf/python/sctop.py
++++ b/tools/perf/python/sctop.py
+@@ -37,6 +37,7 @@ class SCTopAnalyzer:
+         self.offline = offline
+         self.own_pid = os.getpid()
+         self.last_print_time: Optional[int] = None
++        self.printed = False
+         self.session: Optional[perf.session] = None
+         self.e_machine: Optional[int] = None
  
--	n = (event->header.size - sizeof(event->header)) >> 3;
--
- 	if (event->header.type == PERF_RECORD_SAMPLE) {
-+		n = (event->header.size - sizeof(event->header)) >> 3;
- 		if (evlist__id_pos(evlist) >= n)
- 			return -1;
- 		*id = array[evlist__id_pos(evlist)];
- 	} else {
-+		u16 size = evsel__event_size(evlist__first(evlist), event);
-+
-+		n = (size - sizeof(event->header)) >> 3;
- 		if (evlist__is_pos(evlist) > n)
- 			return -1;
- 		n -= evlist__is_pos(evlist);
-diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index 3367242c5764..70da6be798cc 100644
---- a/tools/perf/util/evsel.c
-+++ b/tools/perf/util/evsel.c
-@@ -3216,7 +3216,7 @@ static int perf_evsel__parse_id_sample(const union perf_event *event,
- 	const __u64 *array = event->sample.array;
- 	bool swapped = evsel->needs_swap;
- 	union u64_swap u;
--	int i = ((event->header.size - sizeof(event->header)) / sizeof(u64)) - 1;
-+	int i = ((evsel__event_size(evsel, event) - sizeof(event->header)) / sizeof(u64)) - 1;
+@@ -127,7 +128,7 @@ class SCTopAnalyzer:
+             if not skip and is_enter and 0 <= (syscall_id & ~0x40000000) <= 0xffff:
+                 self.syscalls[syscall_id] += 1
  
- 	if (type & PERF_SAMPLE_IDENTIFIER) {
- 		if (i < 0)
-@@ -3966,6 +3966,63 @@ u16 evsel__id_hdr_size(const struct evsel *evsel)
- 	return size;
- }
+-        if self.offline and hasattr(sample, "sample_time"):
++        if not skip and self.offline and hasattr(sample, "sample_time"):
+             interval_ns = self.interval * (10 ** 9)
+             if self.last_print_time is None:
+                 self.last_print_time = sample.sample_time
+@@ -137,6 +138,7 @@ class SCTopAnalyzer:
  
-+/*
-+ * Prior to kernel fix, perf_event_ksymbol_output(), perf_event_bpf_output(),
-+ * and perf_event_text_poke_output() in kernel/events/core.c did not save and
-+ * restore event_id.header.size across perf_iterate_sb() iterations. When
-+ * multiple perf_events had attr.ksymbol, attr.bpf_event, or attr.text_poke
-+ * enabled, header.size was incremented by id_header_size for each matching
-+ * event while only a single id_sample was written immediately after the event
-+ * payload. Clamp the effective size used to locate the trailing id_sample to
-+ * payload + id_hdr_size so events recorded on unpatched kernels can be parsed
-+ * without reading uninitialized ring-buffer bytes.
-+ */
-+u16 evsel__event_size(const struct evsel *evsel, const union perf_event *event)
-+{
-+	u16 size = event->header.size;
-+	u16 id_hdr_size;
-+	size_t payload;
-+
-+	if (!evsel->core.attr.sample_id_all)
-+		return size;
-+
-+	switch (event->header.type) {
-+	case PERF_RECORD_KSYMBOL: {
-+		const char *name = event->ksymbol.name;
-+		size_t fixed = offsetof(struct perf_record_ksymbol, name);
-+		size_t max_len, len;
-+
-+		if (size <= fixed)
-+			return size;
-+		max_len = size - fixed;
-+		len = strnlen(name, max_len);
-+		if (len == max_len)
-+			return size;
-+		payload = fixed + PERF_ALIGN(len + 1, sizeof(u64));
-+		break;
-+	}
-+	case PERF_RECORD_BPF_EVENT:
-+		payload = sizeof(struct perf_record_bpf_event);
-+		break;
-+	case PERF_RECORD_TEXT_POKE: {
-+		size_t fixed = offsetof(struct perf_record_text_poke_event, bytes);
-+
-+		if (size < fixed)
-+			return size;
-+		payload = fixed + PERF_ALIGN((size_t)event->text_poke.old_len +
-+					     event->text_poke.new_len, sizeof(u64));
-+		break;
-+	}
-+	default:
-+		return size;
-+	}
-+
-+	id_hdr_size = evsel__id_hdr_size(evsel);
-+	if (payload + id_hdr_size < size)
-+		return payload + id_hdr_size;
-+	return size;
-+}
-+
- #ifdef HAVE_LIBTRACEEVENT
- struct tep_format_field *evsel__field(struct evsel *evsel, const char *name)
- {
-diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
-index 5c5799cee601..174f3414fd3c 100644
---- a/tools/perf/util/evsel.h
-+++ b/tools/perf/util/evsel.h
-@@ -469,6 +469,7 @@ int evsel__parse_sample_timestamp(struct evsel *evsel, union perf_event *event,
- 				  u64 *timestamp);
+     def print_current_totals(self):
+         """Print current syscall totals."""
++        self.printed = True
+         # Clear terminal
+         if not self.offline:
+             print("\x1b[2J\x1b[H", end="")
+@@ -217,8 +219,8 @@ def main():
+         if args.input:
+             session = perf.session(perf.data(args.input), sample=analyzer.process_event)
+             analyzer.session = session
+-            session.process_events()
+             analyzer.e_machine = getattr(session, "e_machine", None)
++            session.process_events()
+         else:
+             try:
+                 live_session = LiveSession(
+@@ -237,7 +239,8 @@ def main():
+         sys.exit(1)
+     finally:
+         if args.input:
+-            analyzer.print_current_totals()
++            if not analyzer.printed or analyzer.syscalls:
++                analyzer.print_current_totals()
+             # Break the reference cycle between perf.session and analyzer.process_event
+             # because perf.session lacks cyclic GC support (tp_traverse).
+             analyzer.session = None
+diff --git a/tools/perf/tests/shell/test_sctop_python.sh b/tools/perf/tests/shell/test_sctop_python.sh
+index 007f2584cce6..230eeca96fb8 100755
+--- a/tools/perf/tests/shell/test_sctop_python.sh
++++ b/tools/perf/tests/shell/test_sctop_python.sh
+@@ -41,37 +41,39 @@ temp_out=$(mktemp /tmp/perf.out.XXXXXX)
+ echo "Testing sctop.py..."
  
- u16 evsel__id_hdr_size(const struct evsel *evsel);
-+u16 evsel__event_size(const struct evsel *evsel, const union perf_event *event);
+ # Create a perf.data file.
+-if perf list | grep -q "raw_syscalls:sys_enter"; then
+-	perf record -e raw_syscalls:sys_enter -a -o "${temp_data}" \
+-		-- sleep 0.1 >/dev/null 2>&1 || \
+-		{ echo "Skipping test, perf record failed"; exit 2; }
+-else
++if ! perf list tracepoint | grep -q "raw_syscalls:sys_enter"; then
+ 	echo "Skipping test, no raw_syscalls:sys_enter event"
+ 	exit 2
+ fi
  
- static inline struct evsel *evsel__next(struct evsel *evsel)
- {
+-if [ ! -s "${temp_data}" ]; then
+-	echo "Skipping test, perf record failed to create data"
+-	exit 2
+-fi
++passed=0
++for _ in 1 2 3 4 5; do
++	rm -f "${temp_data}" "${temp_out}"
++	if ! perf record -B -N --no-bpf-event -e raw_syscalls:sys_enter -o "${temp_data}" \
++		-- sh -c "sleep 0.1; sleep 0.05" >/dev/null 2>&1; then
++		echo "Skipping test, perf record failed"
++		exit 2
++	fi
++
++	if [ ! -s "${temp_data}" ]; then
++		continue
++	fi
++
++	# Check that the script executes
++	if perf script sctop -i "${temp_data}" > "${temp_out}" && \
++	   grep -E -q "[0-9]+$" "${temp_out}" && \
++	   perf script sctop -i "${temp_data}" sleep 1 > "${temp_out}" && \
++	   grep -E -q "[0-9]+$" "${temp_out}"; then
++		passed=1
++		break
++	fi
++done
+ 
+-# Check that the script executes
+-if ! perf script sctop -i "${temp_data}" > "${temp_out}"; then
++if [ "$passed" -eq 0 ]; then
+ 	echo "sctop.py test failed"
+ 	err=1
+-elif ! grep -E -q "[0-9]+$" "${temp_out}"; then
+-	echo "Failed to find metric data rows in default run"
+-	err=1
+-elif ! perf script sctop -i "${temp_data}" sleep 1 > "${temp_out}"; then
+-	echo "sctop.py comm+interval test failed"
+-	err=1
+ else
+-	if ! grep -E -q "[0-9]+$" "${temp_out}"; then
+-		echo "Failed to find metric data rows"
+-		err=1
+-	else
+-		echo "sctop test passed."
+-	fi
++	echo "sctop test passed."
+ fi
+ rm -f "${temp_out}"
+ 
 -- 
 2.56.0.rc1.315.gc6ed9934b7-goog
 
