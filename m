@@ -1,29 +1,30 @@
-Received: from out30-101.freemail.mail.aliyun.com (out30-101.freemail.mail.aliyun.com [115.124.30.101])
+Received: from out30-111.freemail.mail.aliyun.com (out30-111.freemail.mail.aliyun.com [115.124.30.111])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEF512BEC34;
-	Tue, 29 Sep 2026 03:41:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 167B037B402;
+	Tue, 29 Sep 2026 03:41:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.111
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790653310; cv=none; b=sK/PSK+N0tm1g4fCOtNkLIv3gN/GnguZ4+EXLqj8jXP4HMlV0aSOQ026pLCeq5IAyRRifl9Xn9MMXfP5ojV/JKAZbrB1rzwKGnS379NjXh2KDCV1dI8/Hf4H3usj/7FbbNbu4jW/iuhLHwQC06IP3jK2MpVYTcc/r75Sfzlw8pU=
+	t=1790653311; cv=none; b=BpyVs+kS7fsYi5kCR5zEp8BREcgo4QwzFak/AVM0OMWLcg4SpW4usb++jCdXA8CDLqn6DH7znMVHXuVmgax+/jOa/vgfgV3TfgL3ETJy3awBaxKhX8yMXME/tzFs12HdTFKTIhjDXqoRldnV/cHQ76+wueNeLQT0YnyWCErMFXc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790653310; c=relaxed/simple;
-	bh=XtC2PpTUqFiwER6avxQuNzIDluVCAxWNcbGY59pPVHc=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=YbeHq2oq6f0l6C127sUTF7SVFaxKL/u5n94IvzDPSXDCw3ZuHUD2OMhhPMCKGb8DIgdC62ZMXIZSogdLP8BUmLYqsGecbNCJC0pQvlND6z9Q0KIA5v9z4g08SBg5wOlB/NTaNOx7sEvQAfPx/YjYUlvyafGrCvVZ52QUWBMC990=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=GMV9XxXG; arc=none smtp.client-ip=115.124.30.101
+	s=arc-20240116; t=1790653311; c=relaxed/simple;
+	bh=Sv4kNgWFVauDHzIZndXBBIo0WOYGvyV2zfjl1tValFU=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=g1GGfIz8srIuXGP8N3HGZvCaX6gX7iSbdDkLoAzN1SatnSQl2l2/1ypO5bS7Y4XmT/NoxkRehQGDoJ4x6e3mYa4EJk3I+nX+YJFWEUlRIh7N7Dn9rxwqPREAZRvXdSKVAYpFX1wskatUioZnS2RdlzLeP3Sy/9ta124fa9yXRj4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=FucF6+HY; arc=none smtp.client-ip=115.124.30.111
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="GMV9XxXG"
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="FucF6+HY"
 DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=linux.alibaba.com; s=default;
-	t=1790653298; h=From:To:Subject:Date:Message-ID:MIME-Version;
-	bh=nAu9I11wCZbEgfjoBBQOuGXm3l1adZEVZbodMdFHRcA=;
-	b=GMV9XxXGhunyLWbLkLyHvk5t2HqyGidpsgcYFfEjVi5JOmL8zHWBi9tvPdNFVviTahPhJdAtlBq+BiIyfzkAOehVxpphWszB6l5q6wKtcZ9H5TX5SIQa1ZdJN23cASV8fZofAgmMn2mnEu+qKQ7rgNGAsCQIHu+QEYYC1B0aUCE=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R111e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033045133197;MF=cp0613@linux.alibaba.com;NM=1;PH=DS;RN=21;SR=0;TI=SMTPD_---0XBrsV8l_1790653293;
-Received: from DESKTOP-S9E58SO.localdomain(mailfrom:cp0613@linux.alibaba.com fp:SMTPD_---0XBrsV8l_1790653293 cluster:ay36)
+	t=1790653302; h=From:To:Subject:Date:Message-ID:MIME-Version;
+	bh=cxgSoOlX1qoO+V9gQu3kRbObk1n3POX5OUlcjG8xVss=;
+	b=FucF6+HYzwBRvjkN5wHoRPp+2MZ4CEGRvWmSM4vQH81PTE8SL3LV9rvroWu1ZnHYwTHEFr3kVzObXS8WPMdSA7RcQHRzL+lUQaYbafYGvtr/I4lmnWH5CCcK+q8D2hvzlU+nTozbKqkziF+0iKjuP7iCrnEBJ8Di4flQPITgUKA=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R911e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033045133197;MF=cp0613@linux.alibaba.com;NM=1;PH=DS;RN=21;SR=0;TI=SMTPD_---0XBrsVAL_1790653299;
+Received: from DESKTOP-S9E58SO.localdomain(mailfrom:cp0613@linux.alibaba.com fp:SMTPD_---0XBrsVAL_1790653299 cluster:ay36)
           by smtp.aliyun-inc.com;
-          Tue, 29 Sep 2026 11:41:37 +0800
+          Tue, 29 Sep 2026 11:41:40 +0800
 From: Chen Pei <cp0613@linux.alibaba.com>
 To: acme@kernel.org,
 	peterz@infradead.org,
@@ -46,10 +47,12 @@ Cc: mark.rutland@arm.com,
 	linux-arm-kernel@lists.infradead.org,
 	linux-riscv@lists.infradead.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 0/2] perf riscv: Implement rdtsc()
-Date: Tue, 29 Sep 2026 11:41:31 +0800
-Message-ID: <20260929034133.2153-1-cp0613@linux.alibaba.com>
+Subject: [PATCH v2 2/2] perf tsc: Declare TSC support from the build system
+Date: Tue, 29 Sep 2026 11:41:33 +0800
+Message-ID: <20260929034133.2153-3-cp0613@linux.alibaba.com>
 X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20260929034133.2153-1-cp0613@linux.alibaba.com>
+References: <20260929034133.2153-1-cp0613@linux.alibaba.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -58,69 +61,109 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-tools/perf falls back to the __weak rdtsc() stub in tools/perf/util/tsc.c
-on every architecture that does not override it, riscv included.  The
-stub returns a constant 0, so anything that reaches for the counter gets
-a value that means nothing and cannot tell it apart from a counter that
-happens to be at 0.
+The "TSC support" subtest of the "Convert perf time to TSC" test decides
+whether the architecture is covered by matching compiler macros for
+x86_64, i386 and arm64.  That list has to be edited for every new
+architecture and can drift apart from the set of architectures that really
+provide a counter.
 
-The time CSR is a natural TSC equivalent on riscv: readable from user
-mode, constant frequency, and the same counter that riscv's
-arch_perf_update_userpage() feeds the user page conversion fields from,
-ever since commit 83c5e13b8cbb ("riscv: Prepare for user-space perf
-event mmap support").  This series registers that on the tools side.
+Declare the capability where the implementation is, following the
+PERF_HAVE_JITDUMP pattern: an architecture with a usable counter sets
+PERF_HAVE_RDTSC in its arch Makefile, Makefile.config turns it into
+-DHAVE_RDTSC, and the test keys off that.
 
-The two patches are split so that the first stands on its own:
+x86 and arm64 keep the same behaviour, riscv starts running the subtest
+where the previous patch defines rdtsc().
 
-1. Implement rdtsc() over the time CSR for riscv64.
-
-2. Have the build system say which architectures have a usable counter,
-   instead of a list of compiler macros inside the test.
-
-What this is worth beyond the subtest result:
-
-1. The subtest is the only reader of those conversion fields riscv
-   can run, so it guards arithmetic that has shipped unexercised;
-   registering the counter at the same time leaves a future riscv
-   auxtrace driver the reading and the conversion already in place.
-
-2. The flag lets a caller ask whether the architecture has a counter
-   before it uses the value, without keeping its own copy of a list
-   that has to be edited every time an architecture grows an
-   implementation.
-
-Changes since v1:
-- Define rdtsc() for RV64 only. RV32 now keeps the weak stub.
-- Declare the capability through the build system rather than through a
-  weak arch__rdtsc_supported() hook, following the PERF_HAVE_JITDUMP
-  pattern, as Leo Yan suggested.
-
-Tests:
-======
-- riscv64 QEMU virt guest with sscofpmf, comparing the build before the
-  series with the build after it: before, the "TSC support" subtest skips
-  and the conversion subtest fails while comparing against the stub's
-  constant 0; after, both report Ok.
-- riscv64 and riscv32 cross builds: the compile command of
-  tests/perf-time-to-tsc.o carries -DHAVE_RDTSC on rv64 and not on
-  rv32, so RV32 stays on the weak stub.
-- x86_64 host and arm64 cross builds: -DHAVE_RDTSC is in effect for
-  both, and on the host the "TSC support" subtest still reports Ok.
-
-Chen Pei (2):
-  perf riscv: Implement rdtsc()
-  perf tsc: Declare TSC support from the build system
+Signed-off-by: Chen Pei <cp0613@linux.alibaba.com>
+---
+Changes in v2:
+- Declare the capability through the build system instead of a weak
+  arch__rdtsc_supported() hook.
 
  tools/perf/Makefile.config          |  4 ++++
  tools/perf/arch/arm64/Makefile      |  1 +
  tools/perf/arch/riscv/Makefile      |  1 +
- tools/perf/arch/riscv/util/Build    |  1 +
- tools/perf/arch/riscv/util/tsc.c    | 27 +++++++++++++++++++++++++++
  tools/perf/arch/x86/Makefile        |  1 +
  tools/perf/tests/perf-time-to-tsc.c | 19 ++++---------------
- 7 files changed, 39 insertions(+), 15 deletions(-)
- create mode 100644 tools/perf/arch/riscv/util/tsc.c
+ 5 files changed, 11 insertions(+), 15 deletions(-)
 
+diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
+index 4d5993da9f94..f1b3bf208231 100644
+--- a/tools/perf/Makefile.config
++++ b/tools/perf/Makefile.config
+@@ -618,6 +618,10 @@ ifdef PERF_HAVE_JITDUMP
+   endif
+ endif
+ 
++ifeq ($(PERF_HAVE_RDTSC),1)
++  CFLAGS += -DHAVE_RDTSC
++endif
++
+ ifeq ($(SRCARCH),powerpc)
+   ifndef NO_LIBDW
+     CFLAGS += -DHAVE_SKIP_CALLCHAIN_IDX
+diff --git a/tools/perf/arch/arm64/Makefile b/tools/perf/arch/arm64/Makefile
+index 44cc3f023318..b9cd559065d6 100644
+--- a/tools/perf/arch/arm64/Makefile
++++ b/tools/perf/arch/arm64/Makefile
+@@ -1,2 +1,3 @@
+ # SPDX-License-Identifier: GPL-2.0
+ PERF_HAVE_JITDUMP := 1
++PERF_HAVE_RDTSC := 1
+diff --git a/tools/perf/arch/riscv/Makefile b/tools/perf/arch/riscv/Makefile
+index 44cc3f023318..8036bf55da8e 100644
+--- a/tools/perf/arch/riscv/Makefile
++++ b/tools/perf/arch/riscv/Makefile
+@@ -1,2 +1,3 @@
+ # SPDX-License-Identifier: GPL-2.0
+ PERF_HAVE_JITDUMP := 1
++PERF_HAVE_RDTSC := $(IS_64_BIT)
+diff --git a/tools/perf/arch/x86/Makefile b/tools/perf/arch/x86/Makefile
+index 44cc3f023318..b9cd559065d6 100644
+--- a/tools/perf/arch/x86/Makefile
++++ b/tools/perf/arch/x86/Makefile
+@@ -1,2 +1,3 @@
+ # SPDX-License-Identifier: GPL-2.0
+ PERF_HAVE_JITDUMP := 1
++PERF_HAVE_RDTSC := 1
+diff --git a/tools/perf/tests/perf-time-to-tsc.c b/tools/perf/tests/perf-time-to-tsc.c
+index f8f71fdd32b1..feb8063f8b59 100644
+--- a/tools/perf/tests/perf-time-to-tsc.c
++++ b/tools/perf/tests/perf-time-to-tsc.c
+@@ -22,16 +22,6 @@
+ #include "tests.h"
+ #include "util/sample.h"
+ 
+-/*
+- * Except x86_64/i386 and Arm64, other archs don't support TSC in perf.  Just
+- * enable the test for x86_64/i386 and Arm64 archs.
+- */
+-#if defined(__x86_64__) || defined(__i386__) || defined(__aarch64__)
+-#define TSC_IS_SUPPORTED 1
+-#else
+-#define TSC_IS_SUPPORTED 0
+-#endif
+-
+ #define CHECK__(x) {				\
+ 	while ((x) < 0) {			\
+ 		pr_debug(#x " failed!\n");	\
+@@ -49,11 +39,10 @@
+ static int test__tsc_is_supported(struct test_suite *test __maybe_unused,
+ 				  int subtest __maybe_unused)
+ {
+-	if (!TSC_IS_SUPPORTED) {
+-		pr_debug("Test not supported on this architecture\n");
+-		return TEST_SKIP;
+-	}
+-
++#ifndef HAVE_RDTSC
++	pr_debug("Test not supported on this architecture\n");
++	return TEST_SKIP;
++#endif
+ 	return TEST_OK;
+ }
+ 
 -- 
 2.50.1
 
