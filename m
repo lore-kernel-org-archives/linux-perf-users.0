@@ -1,67 +1,68 @@
 Received: from mail-dy1-f200.google.com (mail-dy1-f200.google.com [74.125.82.200])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42AE1415B79
-	for <linux-perf-users@vger.kernel.org>; Tue, 29 Sep 2026 06:58:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5257746AA8E
+	for <linux-perf-users@vger.kernel.org>; Tue, 29 Sep 2026 06:58:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.200
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790665126; cv=none; b=iGPcOihckzjv8yDOSlqGJMBu/AkN5AKNFNeDvZ3Uq1MwLu6cC3rkFtPnBwSYBEhmG8azrDwFrDUfUNzq8dH+yiWItdZg0inNCWReaPQDwCQsGHb9w/N2Z0iNVG7RBMSx3S+ZhHdaPDmvSQgV+gtcvZZSx1pYlcon+4RXh7NalIo=
+	t=1790665128; cv=none; b=DQjFsFMtNGMCz36fdLvBeEIqb/uWjQZD1P10jb+MgxHAcil7WNWXSGmAgTcKBYkaytuKX5PAnWW+/7uyMncsxcuW7T69dyrp4KtguSkYbrbn5bVgLFNU+9aVPl7Cllbg7Nd315O1NLpYFkP4uhuela1+VWMSP7BOEkFHNQaPX2o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790665126; c=relaxed/simple;
-	bh=9kqLMfanvdLAQxMxraQPI4SxZw79H5eYL3MjinweS/Y=;
+	s=arc-20240116; t=1790665128; c=relaxed/simple;
+	bh=LIT+Mj37AFxcZ2d9dpxAPCt7wuvSBRTDOaeA5wZ8cyU=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=pWAQVpiO4Yg0t5LsCVsE9WYwNdth3pdluQp/pFZnnAqBbHtyHJktNMzMf5wrP5mKARwZudYO8hYFNgB7OWLts4GPVGeK+AF7hnQkuB6U20dF9SGMcvX3DbEzk3yjKaWVDNeqFk1nO4fyTc9RAvw6F0K1exOhc940qW0TB9Y9JTI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=j+dhdiwz; arc=none smtp.client-ip=74.125.82.200
+	 To:Cc:Content-Type; b=sOr9RJPBOPvEevBkMlhicTAQKPBNiuftefI51tv/GjiFk8jYGzvqj9qqC+6VdkXqYG5iGbLMKyDVlE1VsCvtuambml6+skz6xh2mZzRhakuZ0yui4wJLtkCovyMbRrvkOGUj/jvj8U2WTMD8j5xZJGF+qIRjM/QnTjWNuZZA1+o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=sgdh49fs; arc=none smtp.client-ip=74.125.82.200
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="j+dhdiwz"
-Received: by mail-dy1-f200.google.com with SMTP id 5a478bee46e88-34bbf2e3c5cso140387eec.0
-        for <linux-perf-users@vger.kernel.org>; Mon, 28 Sep 2026 23:58:45 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="sgdh49fs"
+Received: by mail-dy1-f200.google.com with SMTP id 5a478bee46e88-349ffa249bdso2632845eec.0
+        for <linux-perf-users@vger.kernel.org>; Mon, 28 Sep 2026 23:58:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1790665124; x=1791269924; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1790665126; x=1791269926; darn=vger.kernel.org;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=ExAFyzjlUXFMi++6alO8YF275i9lX0VxhukKiY7LTbE=;
-        b=j+dhdiwzNodp91exwLR9MaWXbLsF3Ywo6Du2A6czs175wb369R1DqwlERnwiheQZsL
-         4PcdmxKGRz3/jWkDc9d2t0+ZlZtTZhkDLgkfKp84aa1S/xWLMi+cs7eTYezT8J/Fha4L
-         uW/f3/tif5wy3Dh9PsWQ2n3s/boMdtss1y4+560HGrH6iWQLgDryue06S73BW5pdryrw
-         16gei4BaAhXl2GhPDI+ih7PxF9TdGs0DCj9Sak/bQfL1qr/80RkfkqIVdiV398JSAn+J
-         9OFwFSja3dJWFlzpU1T88Ht0CnC7bv/rpd3hNrNxWzMTZX/7fLwAPHtiW4y0GYzgv/ck
-         ApZw==
+        bh=dL1YrJB9DStko+tZvm0pEZrXZbvhA+kH5+rHsbWDgE8=;
+        b=sgdh49fsgqqTQQxlPxJhCJOq7kzaYP+iuFBovCfsflZHt8Q8RziTNOSB4H2ttv0gw9
+         Cq7Xdii3vIcxf/01EtiCbchikzCMqV50F79kBdjoxVdzqvGzyQiFSu7b97DjYHQ9KT2l
+         B6ckiVjhvwrnfTzF/d3QvCb+MwB7o8H8o1XnoJNPTfZJukXL/y73tuedZR51fU216AfP
+         GAF3V5EzGCKfye21MBiN4mJojOFkutKVoV4+E+sUWa0Lw94UrLyLYT5FAc25LfvMiyBv
+         bu3KIRM4dI7MKqqxdeHHOUfj2y8h0inaH+QGiWQ3sxO6x4iEFUow5gJ22UVY/NhGsPoc
+         ymUA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1790665124; x=1791269924;
+        d=1e100.net; s=20260707; t=1790665126; x=1791269926;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=ExAFyzjlUXFMi++6alO8YF275i9lX0VxhukKiY7LTbE=;
-        b=Ctm6omkwlH9KlxgdOhQtGusrjekz7GzUGmRhXXqIdL713JwCaK3TM3NrhpTZd9cEPN
-         nvKtw/1WE/6Rz95ZJcAoJ9YpASj+vWVWJRWBKW37m3+vfj+U2CTYSA4msjrS6F3zBTrL
-         S+akq2UTyryUz60Hl+N+TteRivIruVNK4rjsCBaQqcI81fhi/ckhfbzMxEs4XM1yaaBY
-         DiBUodmvHIQ6RGgiD0L18Q7tm31+vGV1d8/n9CQ4n6Uny//9rc+fKnv+gVM8wLVsFiiK
-         gGsLMk5GdKF9idm/62wD2Dhw/tgCWxemhuRDtMgPGPvSVABxxBLnjNmwhu1y8tAKcZkr
-         49ew==
-X-Forwarded-Encrypted: i=1; AKwUvBzeYSrmzb5GOeLzRz92a1fZt198TsTvO2rg+8xOveeANSdKVrUAm9OdlYLftVuXxVDVhcQmNBW66rZv0wgTOBRU@vger.kernel.org
-X-Gm-Message-State: AFuF++n8tvpcRP1GOcrjwPKQe15X3LmQQRbxHL/HMnn+HytP8yGVB4ej
-	tw+5/77IHAhjTGUoFRZE41Lpqjeick8boipMCIRCaR+HdGNrdk5+dzU1RUiJixcyA/aVqrOQu4s
-	pwT4lv38ODw==
-X-Received: from dlbbt22.prod.google.com ([2002:a05:7022:996:b0:143:c6c8:ff2c])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7023:c083:b0:144:c112:5f24
- with SMTP id a92af1059eb24-146cfbdd167mr13536496c88.25.1790665124051; Mon, 28
- Sep 2026 23:58:44 -0700 (PDT)
-Date: Mon, 28 Sep 2026 23:58:30 -0700
-In-Reply-To: <20260929062937.374137-1-irogers@google.com>
+        bh=dL1YrJB9DStko+tZvm0pEZrXZbvhA+kH5+rHsbWDgE8=;
+        b=m41N6GiNp/WvfuycvW//vfZceVH9OTjiK7PsJ6XY5bEyxUQ9BszwPRhp91vGN/5+2m
+         GvKZAu1Q6VFbZRnKVLvQLnJgafX9kpogEvcUYZVOREiHejgq8yzlWPlwkzlFMlumdS9K
+         Si43UC1kfdoP00ivFZ5K8wARoI77QXfH1Swp2Jr7hwC2LLrw7EViLDSO4jULxs1/IAm0
+         5skPpej3dUFfWFgBspmgcbNW3tc9fAKqjv9dZZ6i4L7qby8VCT3GbamU8HoKKvO26Xb5
+         YElBSOjVtIz53fPHAif22t/sxw2WcH3QZW6i1UHloHurNMZV934q5evl0c88SeyI4+JE
+         wGew==
+X-Forwarded-Encrypted: i=1; AKwUvBz9qY2aGVZEZnWp4cxxvcIog29Ql1iz2thT8BlfoejYxRGU6aoIsE3k1qzU4FgZudi79mbMm1/I9bI5dZBENaK3@vger.kernel.org
+X-Gm-Message-State: AFq9FYLOqwLS51ngS57kvoWvcbbbQ833DCRBv7npjm73YxlAGOdCWMgB
+	tEeEfJ2OqwcdhJvv9cYr5fNy/vxi0enpSSCXzKUAsqlKLc21TpdYBuFuNzETRCc0JZiQRf88XJ4
+	p7hVTQjN5mg==
+X-Received: from dyjo40.prod.google.com ([2002:a05:7300:33a8:b0:341:6552:8c35])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7300:8189:b0:342:e7a0:2829
+ with SMTP id 5a478bee46e88-342e7a0534dmr16465081eec.26.1790665125886; Mon, 28
+ Sep 2026 23:58:45 -0700 (PDT)
+Date: Mon, 28 Sep 2026 23:58:31 -0700
+In-Reply-To: <20260929065839.407062-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-References: <20260929062937.374137-1-irogers@google.com>
+References: <20260929062937.374137-1-irogers@google.com> <20260929065839.407062-1-irogers@google.com>
 X-Mailer: git-send-email 2.56.0.rc1.315.gc6ed9934b7-goog
-Message-ID: <20260929065839.407062-1-irogers@google.com>
-Subject: [PATCH v3 0/9] perf python: Follow-up fixes and shell test deflaking
+Message-ID: <20260929065839.407062-2-irogers@google.com>
+Subject: [PATCH v3 1/9] perf evsel: Clamp sample_id size for ksymbol, bpf, and
+ text_poke events
 From: Ian Rogers <irogers@google.com>
 To: irogers@google.com, acme@kernel.org, namhyung@kernel.org
 Cc: adrian.hunter@intel.com, james.clark@linaro.org, jolsa@kernel.org, 
@@ -69,97 +70,144 @@ Cc: adrian.hunter@intel.com, james.clark@linaro.org, jolsa@kernel.org,
 	mingo@redhat.com, peterz@infradead.org
 Content-Type: text/plain; charset="UTF-8"
 
-This series contains follow-up fixes for the standalone Python scripts
-and their shell tests, particularly when running 'perf test' as root
-under heavy parallel load:
+On kernels without the fix ("perf/core: Restore header fields in
+sideband output callbacks") to restore event_id.header.size in
+perf_event_ksymbol_output(), perf_event_bpf_output(), and
+perf_event_text_poke_output(), concurrent perf sessions cause those
+sideband records to be emitted with header.size inflated by multiple
+id_header_size increments while the single id_sample is written
+immediately after the event payload. Indexing backwards from
+event->header.size reads uninitialized ring-buffer bytes at the end of
+the record, causing evlist__event2evsel() to fail with -EFAULT.
 
-- Clamp sample_id size calculation for PERF_RECORD_KSYMBOL,
-  PERF_RECORD_BPF_EVENT, and PERF_RECORD_TEXT_POKE records to work
-  around kernels without "perf/core: Restore header fields in sideband
-  output callbacks" [1].
-- Fix offline interval printing in sctop.py and live signal races in
-  stat-cpi.py.
-- Deflake Intel PT, failed-syscalls, and other Python shell tests under
-  parallel 'perf test' load by scoping tracepoint checks to
-  'perf list tracepoint', passing '-B -N --no-bpf-event' to 'perf record',
-  and avoiding unnecessary system-wide ('-a') recordings.
-- Default event_analyzing_sample.py to an in-memory SQLite database
-  (':memory:') when '--db' is not specified.
-- Initialize perf debug output ('perf_debug_setup()') when loading the
-  'perf' Python extension module.
-- Fix races in 'perf list' ('perf_pmus__print_pmu_events()' and
-  'tp_pmu.c') when concurrent tests dynamically create and remove
-  kprobe/uprobes tracepoints.
+Add evsel__event_size() to clamp the effective size used to locate the
+trailing id_sample for PERF_RECORD_KSYMBOL, PERF_RECORD_BPF_EVENT, and
+PERF_RECORD_TEXT_POKE to payload + id_hdr_size while leaving
+event->header.size intact for advancing the ring-buffer/file stream.
 
-v3:
-- Wrap _open_live_evlist() inside the try/except KeyboardInterrupt block
-  in stat-cpi.py so signals arriving during event initialization are
-  caught and cleaned up gracefully.
+Fixes: 9aa0bfa370b2 ("perf tools: Handle PERF_RECORD_KSYMBOL")
+Fixes: 45178a928a4b ("perf tools: Handle PERF_RECORD_BPF_EVENT")
+Fixes: 246eba8e9041 ("perf tools: Add support for PERF_RECORD_TEXT_POKE")
+Link: https://lore.kernel.org/r/20260929014206.4175245-1-irogers@google.com
+Assisted-by: Antigravity:gemini-3.1-pro
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ tools/perf/util/evlist.c |  6 ++--
+ tools/perf/util/evsel.c  | 59 +++++++++++++++++++++++++++++++++++++++-
+ tools/perf/util/evsel.h  |  1 +
+ 3 files changed, 63 insertions(+), 3 deletions(-)
 
-v2:
-- Fix 8-byte alignment calculation for PERF_RECORD_TEXT_POKE payload in
-  evsel__event_size() by aligning fixed + old_len + new_len.
-- Keep offline interval clock advancing on all samples in sctop.py while
-  flushing any remaining syscalls at EOF.
-- Use 'mktemp -d' private directories in test_sctop_python.sh and
-  test_failed_syscalls_python.sh so temporary files are not unlinked and
-  recreated directly in /tmp.
-- Explicitly include <stdlib.h> in tools/perf/util/pmus.c.
-
-[1] https://lore.kernel.org/r/20260929014206.4175245-1-irogers@google.com
-
-Ian Rogers (9):
-  perf evsel: Clamp sample_id size for ksymbol, bpf, and text_poke
-    events
-  perf python sctop: Fix offline interval printing and test flakiness
-  perf python stat-cpi: Fix live mode signal races and test flakiness
-  perf test: Deflake Intel PT Python shell tests under load
-  perf test: Deflake failed-syscalls Python shell tests under load
-  perf test: Reduce overhead and contention in Python shell tests
-  perf python event_analyzing_sample: Default to in-memory SQLite
-    database
-  perf python: Initialize debug output on module load
-  perf pmu: Fix race with concurrent tracepoint creation and removal in
-    perf list
-
- tools/perf/python/event_analyzing_sample.py   | 35 +++-------
- tools/perf/python/sctop.py                    |  7 +-
- tools/perf/python/stat-cpi.py                 | 32 ++++++---
- .../shell/test_check_perf_trace_python.sh     |  8 ++-
- .../shell/test_compaction_times_python.sh     |  8 ++-
- .../test_event_analyzing_sample_python.sh     | 11 ++-
- .../shell/test_export_to_postgresql_python.sh | 49 +++++++------
- .../shell/test_export_to_sqlite_python.sh     | 50 ++++++++------
- .../test_failed_syscalls_by_pid_python.sh     | 68 +++++++++++--------
- .../shell/test_failed_syscalls_python.sh      | 54 +++++++++------
- .../tests/shell/test_flamegraph_python.sh     |  5 +-
- .../shell/test_futex_contention_python.sh     |  7 +-
- tools/perf/tests/shell/test_gecko_python.sh   |  3 +-
- .../shell/test_intel_pt_events_python.sh      | 43 ++++++------
- .../tests/shell/test_mem_phys_addr_python.sh  |  8 ++-
- .../shell/test_net_dropmonitor_python.sh      |  9 +--
- .../tests/shell/test_netdev_times_python.sh   |  6 +-
- .../tests/shell/test_powerpc_hcalls_python.sh |  4 +-
- .../tests/shell/test_rw_by_file_python.sh     |  5 +-
- .../perf/tests/shell/test_rw_by_pid_python.sh |  4 +-
- tools/perf/tests/shell/test_rwtop_python.sh   |  4 +-
- .../shell/test_sched_migration_python.sh      |  4 +-
- tools/perf/tests/shell/test_sctop_python.sh   | 58 ++++++++--------
- .../tests/shell/test_stackcollapse_python.sh  |  2 +-
- .../perf/tests/shell/test_stat_cpi_python.sh  | 12 +++-
- .../test_syscall_counts_by_pid_python.sh      |  6 +-
- .../tests/shell/test_syscall_counts_python.sh |  5 +-
- tools/perf/tests/shell/test_task_analyzer.sh  |  3 +-
- .../tests/shell/test_wakeup_latency_python.sh |  7 +-
- tools/perf/util/debug.c                       |  2 +-
- tools/perf/util/evlist.c                      |  6 +-
- tools/perf/util/evsel.c                       | 59 +++++++++++++++-
- tools/perf/util/evsel.h                       |  1 +
- tools/perf/util/pmus.c                        | 21 ++++--
- tools/perf/util/python.c                      |  1 +
- tools/perf/util/tp_pmu.c                      |  8 ++-
- 36 files changed, 378 insertions(+), 237 deletions(-)
-
+diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
+index 9392d912d254..c2402e4791b6 100644
+--- a/tools/perf/util/evlist.c
++++ b/tools/perf/util/evlist.c
+@@ -973,13 +973,15 @@ static int evlist__event2id(struct evlist *evlist, union perf_event *event, u64
+ 	const __u64 *array = event->sample.array;
+ 	ssize_t n;
+ 
+-	n = (event->header.size - sizeof(event->header)) >> 3;
+-
+ 	if (event->header.type == PERF_RECORD_SAMPLE) {
++		n = (event->header.size - sizeof(event->header)) >> 3;
+ 		if (evlist__id_pos(evlist) >= n)
+ 			return -1;
+ 		*id = array[evlist__id_pos(evlist)];
+ 	} else {
++		u16 size = evsel__event_size(evlist__first(evlist), event);
++
++		n = (size - sizeof(event->header)) >> 3;
+ 		if (evlist__is_pos(evlist) > n)
+ 			return -1;
+ 		n -= evlist__is_pos(evlist);
+diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+index 3367242c5764..9c5e7510f0c0 100644
+--- a/tools/perf/util/evsel.c
++++ b/tools/perf/util/evsel.c
+@@ -3216,7 +3216,7 @@ static int perf_evsel__parse_id_sample(const union perf_event *event,
+ 	const __u64 *array = event->sample.array;
+ 	bool swapped = evsel->needs_swap;
+ 	union u64_swap u;
+-	int i = ((event->header.size - sizeof(event->header)) / sizeof(u64)) - 1;
++	int i = ((evsel__event_size(evsel, event) - sizeof(event->header)) / sizeof(u64)) - 1;
+ 
+ 	if (type & PERF_SAMPLE_IDENTIFIER) {
+ 		if (i < 0)
+@@ -3966,6 +3966,63 @@ u16 evsel__id_hdr_size(const struct evsel *evsel)
+ 	return size;
+ }
+ 
++/*
++ * Prior to kernel fix, perf_event_ksymbol_output(), perf_event_bpf_output(),
++ * and perf_event_text_poke_output() in kernel/events/core.c did not save and
++ * restore event_id.header.size across perf_iterate_sb() iterations. When
++ * multiple perf_events had attr.ksymbol, attr.bpf_event, or attr.text_poke
++ * enabled, header.size was incremented by id_header_size for each matching
++ * event while only a single id_sample was written immediately after the event
++ * payload. Clamp the effective size used to locate the trailing id_sample to
++ * payload + id_hdr_size so events recorded on unpatched kernels can be parsed
++ * without reading uninitialized ring-buffer bytes.
++ */
++u16 evsel__event_size(const struct evsel *evsel, const union perf_event *event)
++{
++	u16 size = event->header.size;
++	u16 id_hdr_size;
++	size_t payload;
++
++	if (!evsel->core.attr.sample_id_all)
++		return size;
++
++	switch (event->header.type) {
++	case PERF_RECORD_KSYMBOL: {
++		const char *name = event->ksymbol.name;
++		size_t fixed = offsetof(struct perf_record_ksymbol, name);
++		size_t max_len, len;
++
++		if (size <= fixed)
++			return size;
++		max_len = size - fixed;
++		len = strnlen(name, max_len);
++		if (len == max_len)
++			return size;
++		payload = fixed + PERF_ALIGN(len + 1, sizeof(u64));
++		break;
++	}
++	case PERF_RECORD_BPF_EVENT:
++		payload = sizeof(struct perf_record_bpf_event);
++		break;
++	case PERF_RECORD_TEXT_POKE: {
++		size_t fixed = offsetof(struct perf_record_text_poke_event, bytes);
++
++		if (size < fixed)
++			return size;
++		payload = PERF_ALIGN(fixed + (size_t)event->text_poke.old_len +
++				     event->text_poke.new_len, sizeof(u64));
++		break;
++	}
++	default:
++		return size;
++	}
++
++	id_hdr_size = evsel__id_hdr_size(evsel);
++	if (payload + id_hdr_size < size)
++		return payload + id_hdr_size;
++	return size;
++}
++
+ #ifdef HAVE_LIBTRACEEVENT
+ struct tep_format_field *evsel__field(struct evsel *evsel, const char *name)
+ {
+diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
+index 5c5799cee601..174f3414fd3c 100644
+--- a/tools/perf/util/evsel.h
++++ b/tools/perf/util/evsel.h
+@@ -469,6 +469,7 @@ int evsel__parse_sample_timestamp(struct evsel *evsel, union perf_event *event,
+ 				  u64 *timestamp);
+ 
+ u16 evsel__id_hdr_size(const struct evsel *evsel);
++u16 evsel__event_size(const struct evsel *evsel, const union perf_event *event);
+ 
+ static inline struct evsel *evsel__next(struct evsel *evsel)
+ {
 -- 
 2.56.0.rc1.315.gc6ed9934b7-goog
 
