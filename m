@@ -1,56 +1,56 @@
-Received: from mail-dy1-f200.google.com (mail-dy1-f200.google.com [74.125.82.200])
+Received: from mail-dl1-f71.google.com (mail-dl1-f71.google.com [74.125.82.71])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C97E1471279
-	for <linux-perf-users@vger.kernel.org>; Tue, 29 Sep 2026 06:58:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8563046EC9B
+	for <linux-perf-users@vger.kernel.org>; Tue, 29 Sep 2026 06:59:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.71
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790665139; cv=none; b=Ah2UjH8pZzgzahW81buoJRUyU82qHr0eIdOxTghxTto+t7PjGxSfMa6Z+wLnL5/IduKaGBb9l/07/yvOOK6o7f4g+PYwECKJn1Zx5JVNO+AUkMeoSSmtXbIi63o0J9uUrWJYk6mNuudjkzkKwsGvCpZ4zWSBwxUbEeITE9Wek2k=
+	t=1790665156; cv=none; b=Vl0O5GJoJglU1pARsKElhiOngq9PgNSRrrV8lBCmH8QnofJ+50ufrzdDzSMm+l3hNiDujKI1NWWzPmqVfKEwOOBuE3vZfhLR0OV6DM8CkP2wz5mbXFHBl/nI4kwhhaHqNRzYkFro6dgYNqQPDGWt6Er2wi1r1gm2RYm1MWSxfHo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790665139; c=relaxed/simple;
-	bh=huabu+RxgYWn508JxJzFACq545qIjmrzr3ISmqOOuD0=;
+	s=arc-20240116; t=1790665156; c=relaxed/simple;
+	bh=P+MsrHFEjrElGIN7hMAk1Fg8wsWDhle8TK7KpcN/sH4=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=MzxeF1Xt+TnsaVt56gz3ejR0wbuGm2rK5lMRxLfQOZ5wqFxRmP6Ca28AuIp0nnVqFXC7lUxj+KzneLIRDRWVCGOrbT+ZfZIKGSt/vQQHgj+VwIY58G5bXe3AlPVP/AG41BJarrk2dtml9VkfomNnxbdMYlUuinLK7LYQciJj7Fc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=KMcfvAcF; arc=none smtp.client-ip=74.125.82.200
+	 To:Cc:Content-Type; b=joaDxaTYrBPLaHzhbX9Tbj/GsaaqD3cwjkMaEAqfq+znGeZDgX38hf0YYmuEndjc8YMo7Np6b+pDHDHGqSXcUJt1CaDYlFc/unJT33Rcqn/YHnKcAUz7wWheGdjJVNUfn+M2H9WnJyAIWydv6X4EvPf/eGM3NtrnlhJ51JlmwVE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Byt+rzdz; arc=none smtp.client-ip=74.125.82.71
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KMcfvAcF"
-Received: by mail-dy1-f200.google.com with SMTP id 5a478bee46e88-341eff9e381so3232336eec.1
-        for <linux-perf-users@vger.kernel.org>; Mon, 28 Sep 2026 23:58:56 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Byt+rzdz"
+Received: by mail-dl1-f71.google.com with SMTP id a92af1059eb24-1438719cc1eso4376539c88.0
+        for <linux-perf-users@vger.kernel.org>; Mon, 28 Sep 2026 23:59:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1790665136; x=1791269936; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1790665153; x=1791269953; darn=vger.kernel.org;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=yv5diHZMF/3Y8pazLLa8+vi3Vu4ucUVcQqFcEImBeHs=;
-        b=KMcfvAcFar8jQXQg0u/NGSuSvUyohp9G/KSAvuOJ94Qmj7RJNgySjc5c1sTRjy7FSa
-         /0Uf2RjZlEqFcNUNXXxTIN6US0UVft7pbe1EqsP1ij6wsivMURemd5cNxghPAtvZw0Iu
-         qqU4ShafSwx9ld2Aav7ySKRFrLcn+AYxw01c0HzDTvrxk7gMITerf2Ohg1XiIhRNdVQW
-         8h4cPUVK9bH4bw+W5n1XDuNkBLsDrSPJB/DMWYG7pR1i48QGcDOD86sSop0xeg2ElDo3
-         OBCsslnWpn/z5e6xtBF1M+bMvyKnB/lYwGmqQveuOzxIdlmJJ+wIQLr4RVghwU2QHhgg
-         SHug==
+        bh=tJCPYv9x3XltGBwvKs/62P1gUROuXoCewbM+ScxfAAk=;
+        b=Byt+rzdzXbFRZ481H2oa59lXEZ1Ey7vNNkSoFjuBtH3d+a+fp0mSs69FJukc3oLEoG
+         GeH4ExG2xI+mwo6Flkc3tQjKiHu6LsISLYLt/pR4wjIrSOaMePFxPK+RL1l35rvRoCs3
+         ptSqfNyBRbLTqZqVDbUtvnwGJnbiBmtH+r14s87CaYyKz5LfdaCtBwiWw3Uycc76Ntuz
+         Zqqq9ijr9OXVI+uLaZCimGcy6gesZXIglQrHjb8wOViK+3NAuWNZIiFC+KPEa+OH08L8
+         0z1E73CbRc4d6aK+C0zR99IllaoPASkF+MIU1kb+h3b4nEN/jm/0DQAT775qP+I7dvOr
+         do6Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1790665136; x=1791269936;
+        d=1e100.net; s=20260707; t=1790665153; x=1791269953;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=yv5diHZMF/3Y8pazLLa8+vi3Vu4ucUVcQqFcEImBeHs=;
-        b=V9edEKHWlhIfaVIZt33I2CAQ2pJmDILS9egXHs2c4JFymv+S8JmOGvd5qRLPwHnGOy
-         WtNXH3c41S72yUDu+0X6hAGf9DzgiJAn2V0CwfIFrEwvDaPqJ8sYGvsgvC+/WjsXz0ST
-         ZsiEC8To/vkDrbPMNQsnDTQiKRTD938tnDXRcK+yA3D6cceh7DamlYNJxJmxv9V/iDqI
-         1z0PXM9czUGskCckrXmq3Om4nu6BpExyia3a548zeBSK7/gzIHFwv5h+63JCBI7zWtL9
-         PBKtJAZC2Bia2J0wAhe5vk6pk85NYkYN+r78K4IFHqfrytcb28cQYO0graQXPfIwwrkJ
-         CTQA==
-X-Forwarded-Encrypted: i=1; AKwUvBzKXXVv2lR+wGQi0Lqbjm8NppcpbzfhOsZMZiKaVGJm0wlMAfhZzkJC/c84p4hQJRxPfn9GriOiCQh+yG/SVEjc@vger.kernel.org
-X-Gm-Message-State: AFuF++kVtCeJBAeAphOBOYDLhZNDZds+MGdHygNUGwQhmkcbpgg1puMf
-	VSg51a338UkiJGHRj74f4tRJEc1rw8O6Oz9pdRa29GnJmDl7zAt6XdiBdbPdPIOUbv79BZuXm+s
-	oBfH0hXRHdg==
-X-Received: from dltt19.prod.google.com ([2002:a05:701a:c973:b0:143:83fd:ad8a])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:701b:4543:10b0:148:bc4a:8356
- with SMTP id a92af1059eb24-148bc4a86c2mr7171083c88.28.1790665135590; Mon, 28
- Sep 2026 23:58:55 -0700 (PDT)
-Date: Mon, 28 Sep 2026 23:58:36 -0700
+        bh=tJCPYv9x3XltGBwvKs/62P1gUROuXoCewbM+ScxfAAk=;
+        b=gbXkelEdTWBdj1siUSW6s8n8cfKDu+0vORZPP2U8S7vGg6mCDcSSHliQPatZ2uoeUM
+         Y3kI3MCYWYFqPhhONiJ9TB9mJ4GXu7jy9kJnyCPwxgSD8dhkbYHP9SQlCnUIKYnN4iux
+         jOjengR62bikLWUTS6l3oKqLGIPX68V1tpsOfM9lQePfWfHDbtHRoo9xYVTBCqpbJsQl
+         wlJwXOc2iikVUsVumAeZJEibdUkbCGl9fHfL3jIvCpeSXRH1Jmb/XxtCXUm+shh93eFw
+         rxfhQyc9rEpbmvOLLMmI2Q1XDtHNv3Qa3VAh6Wl1OUUjGqEnpnMLggfVY45XYR1pP81R
+         BOgg==
+X-Forwarded-Encrypted: i=1; AKwUvByna3g+rSfRTzjfQWM9ZyfN28wkzDt0R4YphsoosfXsGGCOe8De2YZNUOqwq9E61w1JPoxzR97BeXB+bQiOdJLZ@vger.kernel.org
+X-Gm-Message-State: AFuF++mg7iSFXj6fc1yrz4x7ZTOcQgPDbYuunBrlvNQJ6hXsdzYh5Jfm
+	q9ZJVHznvwpP3WuXAzkBeEpUpXEobIA9a/WcRxqYqYg/j0nvmNYkCVaTJ8UgFkCy7WIlUeqfN/s
+	bOwecDB+o5A==
+X-Received: from dlbsw8.prod.google.com ([2002:a05:7022:3a88:b0:146:40d5:dd6b])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:701b:42c1:20b0:143:2982:1046
+ with SMTP id a92af1059eb24-146d039e8e0mr13027199c88.39.1790665153145; Mon, 28
+ Sep 2026 23:59:13 -0700 (PDT)
+Date: Mon, 28 Sep 2026 23:58:37 -0700
 In-Reply-To: <20260929065839.407062-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -60,9 +60,9 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260929062937.374137-1-irogers@google.com> <20260929065839.407062-1-irogers@google.com>
 X-Mailer: git-send-email 2.56.0.rc1.315.gc6ed9934b7-goog
-Message-ID: <20260929065839.407062-7-irogers@google.com>
-Subject: [PATCH v3 6/9] perf test: Reduce overhead and contention in Python
- shell tests
+Message-ID: <20260929065839.407062-8-irogers@google.com>
+Subject: [PATCH v3 7/9] perf python event_analyzing_sample: Default to
+ in-memory SQLite database
 From: Ian Rogers <irogers@google.com>
 To: irogers@google.com, acme@kernel.org, namhyung@kernel.org
 Cc: adrian.hunter@intel.com, james.clark@linaro.org, jolsa@kernel.org, 
@@ -70,411 +70,117 @@ Cc: adrian.hunter@intel.com, james.clark@linaro.org, jolsa@kernel.org,
 	mingo@redhat.com, peterz@infradead.org
 Content-Type: text/plain; charset="UTF-8"
 
-When all Python shell tests run concurrently during 'perf test' under
-heavy load:
-1. Unfiltered 'perf list' initializes all hardware PMUs and metrics in
-   each test process; use 'perf list tracepoint' when checking for
-   tracepoint events.
-2. Running 'perf record' without '-B -N --no-bpf-event' synthesizes BPF
-   events across the system and caches build-ids into ~/.debug; add
-   '-B -N --no-bpf-event' to all Python shell test recordings.
-3. Drop '-a' in test_check_perf_trace_python.sh,
-   test_rw_by_file_python.sh, test_rw_by_pid_python.sh,
-   test_rwtop_python.sh, and test_syscall_counts_by_pid_python.sh where
-   only a single child workload ('dd' or 'sleep') is tested, avoiding
-   system-wide /proc synthesis and ringbuffer contention.
-4. Add '-W 1' to 'ping -c 1' in test_net_dropmonitor_python.sh and
-   test_netdev_times_python.sh, and narrow 'compaction:*' to
-   'compaction:mm_compaction_begin,compaction:mm_compaction_end' in
-   test_compaction_times_python.sh.
+When -d/--db is not specified, event_analyzing_sample.py created a
+temporary file in /tmp via tempfile.mkstemp() and deleted it in
+trace_end(). As noted during review, creating the database in a shared
+/tmp directory does not reserve SQLite's auxiliary sidecar filenames
+(-journal or -wal), and a temporary on-disk file is unnecessary when the
+caller did not ask to persist the database.
 
+Default to sqlite3.connect(":memory:") when db_path is not provided,
+removing the temporary file creation and cleanup logic, and test both
+the default in-memory mode and explicit -d file mode in
+test_event_analyzing_sample_python.sh.
+
+Fixes: eeb70645a809 ("perf python: Port event_analyzing_sample to perf module")
 Assisted-by: Antigravity:gemini-3.1-pro
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/tests/shell/test_check_perf_trace_python.sh   | 8 +++++---
- tools/perf/tests/shell/test_compaction_times_python.sh   | 8 +++++---
- .../tests/shell/test_event_analyzing_sample_python.sh    | 3 ++-
- tools/perf/tests/shell/test_flamegraph_python.sh         | 5 +++--
- tools/perf/tests/shell/test_futex_contention_python.sh   | 7 ++++---
- tools/perf/tests/shell/test_gecko_python.sh              | 3 ++-
- tools/perf/tests/shell/test_mem_phys_addr_python.sh      | 8 +++++---
- tools/perf/tests/shell/test_net_dropmonitor_python.sh    | 9 +++++----
- tools/perf/tests/shell/test_netdev_times_python.sh       | 6 +++---
- tools/perf/tests/shell/test_powerpc_hcalls_python.sh     | 4 ++--
- tools/perf/tests/shell/test_rw_by_file_python.sh         | 5 +++--
- tools/perf/tests/shell/test_rw_by_pid_python.sh          | 4 ++--
- tools/perf/tests/shell/test_rwtop_python.sh              | 4 ++--
- tools/perf/tests/shell/test_sched_migration_python.sh    | 4 ++--
- tools/perf/tests/shell/test_stackcollapse_python.sh      | 2 +-
- .../tests/shell/test_syscall_counts_by_pid_python.sh     | 6 +++---
- tools/perf/tests/shell/test_syscall_counts_python.sh     | 5 +++--
- tools/perf/tests/shell/test_task_analyzer.sh             | 3 ++-
- tools/perf/tests/shell/test_wakeup_latency_python.sh     | 7 ++++---
- 19 files changed, 58 insertions(+), 43 deletions(-)
+ tools/perf/python/event_analyzing_sample.py   | 35 ++++++-------------
+ .../test_event_analyzing_sample_python.sh     |  8 ++++-
+ 2 files changed, 17 insertions(+), 26 deletions(-)
 
-diff --git a/tools/perf/tests/shell/test_check_perf_trace_python.sh b/tools/perf/tests/shell/test_check_perf_trace_python.sh
-index 92cc7b1f0033..baf55945d429 100755
---- a/tools/perf/tests/shell/test_check_perf_trace_python.sh
-+++ b/tools/perf/tests/shell/test_check_perf_trace_python.sh
-@@ -45,10 +45,11 @@ test_file_mode() {
- 	echo "Testing check-perf-trace.py..."
+diff --git a/tools/perf/python/event_analyzing_sample.py b/tools/perf/python/event_analyzing_sample.py
+index 15b47cff9fa3..b4efee88d94b 100755
+--- a/tools/perf/python/event_analyzing_sample.py
++++ b/tools/perf/python/event_analyzing_sample.py
+@@ -17,10 +17,8 @@ from __future__ import annotations
  
- 	events=""
--	if perf list | grep -q "irq:softirq_entry"; then
-+	tp_list=$(perf list tracepoint)
-+	if echo "$tp_list" | grep -q "irq:softirq_entry"; then
- 		events="irq:softirq_entry"
- 	fi
--	if perf list | grep -q "kmem:kmalloc"; then
-+	if echo "$tp_list" | grep -q "kmem:kmalloc"; then
- 		if [ -n "$events" ]; then
- 			events="$events,kmem:kmalloc,kmem:kfree"
- 		else
-@@ -62,7 +63,8 @@ test_file_mode() {
- 	fi
+ import argparse
+ import math
+-import os
+ import sqlite3
+ import struct
+-import tempfile
+ from typing import Any
+ import perf
  
- 	# Generate events
--	if ! perf record -e "$events" -a -o "${temp_data}" -- sleep 0.5 >/dev/null 2>&1; then
-+	if ! perf record -B -N --no-bpf-event -e "$events" -o "${temp_data}" \
-+		-- sh -c "sleep 0.1" >/dev/null 2>&1; then
- 		echo "Skipping test, perf record failed"
- 		exit 2
- 	fi
-diff --git a/tools/perf/tests/shell/test_compaction_times_python.sh b/tools/perf/tests/shell/test_compaction_times_python.sh
-index 50397afaafed..3f5a71e52388 100755
---- a/tools/perf/tests/shell/test_compaction_times_python.sh
-+++ b/tools/perf/tests/shell/test_compaction_times_python.sh
-@@ -44,15 +44,17 @@ test_file_mode() {
- 	echo "Testing compaction-times.py..."
+@@ -117,16 +115,11 @@ session: Any = None
  
- 	# Check for any compaction events to see if kernel supports it
--	if ! perf list | grep -q "compaction:mm_compaction_begin"; then
-+	if ! perf list tracepoint | grep -q "compaction:mm_compaction_begin"; then
- 		echo "Skipping test, compaction tracepoints not found"
- 		exit 2
- 	fi
+ class _DB:
+     con: sqlite3.Connection | None = None
+-    temp_path: str | None = None
  
- 	# Generate some events
--	# We might not naturally trigger compaction in 0.5s sleep, but the script
-+	# We might not naturally trigger compaction in 0.1s sleep, but the script
- 	# should parse the empty or sparse file correctly without crashing.
--	if ! perf record -e "compaction:*" -a -o "${temp_data}" -- sleep 0.5 >/dev/null 2>&1; then
-+	if ! perf record -B -N --no-bpf-event \
-+		-e "compaction:mm_compaction_begin,compaction:mm_compaction_end" \
-+		-a -o "${temp_data}" -- sleep 0.1 >/dev/null 2>&1; then
- 		echo "Skipping test, perf record failed"
- 		exit 2
- 	fi
+ def trace_begin(db_path: str | None = None) -> None:
+     """Initialize database tables."""
+     print("In trace_begin:\n")
+-    if not db_path:
+-        fd, db_path = tempfile.mkstemp(prefix="perf_events_", suffix=".db")
+-        os.close(fd)
+-        _DB.temp_path = db_path
+-    con = sqlite3.connect(db_path)
++    con = sqlite3.connect(db_path or ":memory:")
+     try:
+         # Drop any pre-existing tables so repeated runs do not accumulate duplicate events.
+         con.execute("drop table if exists gen_events;")
+@@ -297,28 +290,20 @@ def show_pebs_ll() -> None:
+ def trace_end() -> None:
+     """Called at the end of trace processing."""
+     print("In trace_end:\n")
+-    try:
+-        if _DB.con:
+-            try:
+-                _DB.con.commit()
+-                show_general_events()
+-                show_pebs_ll()
+-            finally:
+-                _DB.con.close()
+-                _DB.con = None
+-    finally:
+-        if _DB.temp_path and os.path.exists(_DB.temp_path):
+-            try:
+-                os.remove(_DB.temp_path)
+-            except OSError:
+-                pass
+-            _DB.temp_path = None
++    if _DB.con:
++        try:
++            _DB.con.commit()
++            show_general_events()
++            show_pebs_ll()
++        finally:
++            _DB.con.close()
++            _DB.con = None
+ 
+ if __name__ == "__main__":
+     ap = argparse.ArgumentParser(description="Analyze events with SQLite")
+     ap.add_argument("-i", "--input", default="perf.data", help="Input file name")
+     ap.add_argument("-d", "--db", "--database", dest="database", default=None,
+-                    help="Database file name (defaults to a temporary file cleaned up on exit)")
++                    help="Database file name (defaults to an in-memory database)")
+     args = ap.parse_args()
+ 
+     try:
 diff --git a/tools/perf/tests/shell/test_event_analyzing_sample_python.sh b/tools/perf/tests/shell/test_event_analyzing_sample_python.sh
-index a7a8ded003db..5f0a41080acf 100755
+index 5f0a41080acf..cddb12b67698 100755
 --- a/tools/perf/tests/shell/test_event_analyzing_sample_python.sh
 +++ b/tools/perf/tests/shell/test_event_analyzing_sample_python.sh
-@@ -39,7 +39,8 @@ test_file_mode() {
- 	echo "Testing event_analyzing_sample.py..."
- 
- 	# Generate some events
--	if ! perf record -o "${temp_data}" -- perf test -w noploop >/dev/null 2>&1; then
-+	if ! perf record -B -N --no-bpf-event -o "${temp_data}" \
-+		-- perf test -w noploop >/dev/null 2>&1; then
- 		echo "Skipping test, perf record failed"
+@@ -45,8 +45,14 @@ test_file_mode() {
  		exit 2
  	fi
-diff --git a/tools/perf/tests/shell/test_flamegraph_python.sh b/tools/perf/tests/shell/test_flamegraph_python.sh
-index 86313c72f53e..787d6bbdf04a 100755
---- a/tools/perf/tests/shell/test_flamegraph_python.sh
-+++ b/tools/perf/tests/shell/test_flamegraph_python.sh
-@@ -60,7 +60,8 @@ test_file_mode() {
- 	echo "Testing flamegraph.py..."
  
- 	# Generate some events with callchains
--	if ! perf record -g -o "${temp_data}" -- perf test -w noploop >/dev/null 2>&1; then
-+	if ! perf record -B -N --no-bpf-event -g -o "${temp_data}" \
-+		-- perf test -w noploop >/dev/null 2>&1; then
- 		echo "Skipping test, perf record -g failed (permissions or lack of support)"
- 		exit 2
- 	fi
-@@ -75,7 +76,7 @@ test_file_mode() {
- 
- 	# Run the script in pipe ('-') mode and validate JSON output
- 	rm -f "${temp_json}"
--	if ! perf record -g -o - -- perf test -w noploop 2>/dev/null | \
-+	if ! perf record -B -N --no-bpf-event -g -o - -- perf test -w noploop 2>/dev/null | \
- 		perf script flamegraph -i - -f json -o "${temp_json}" >/dev/null; then
- 		echo "Pipe stdin JSON mode test failed."
+-	# Run the script
++	# Run the script with default (:memory:) database and with explicit -d path
+ 	if ! perf script event_analyzing_sample -i "${temp_data}" \
++		> "${temp_dir}/perf.mem.out" 2>&1 || \
++	   ! grep -q "Statistics about the general events" "${temp_dir}/perf.mem.out" || \
++	   grep -q "Error creating/inserting event" "${temp_dir}/perf.mem.out"; then
++		echo "Default in-memory database mode test failed."
++		err=1
++	elif ! perf script event_analyzing_sample -i "${temp_data}" \
+ 		-d "${temp_db}" > "${temp_dir}/perf.out" 2>&1; then
+ 		echo "File mode test failed."
  		err=1
-diff --git a/tools/perf/tests/shell/test_futex_contention_python.sh b/tools/perf/tests/shell/test_futex_contention_python.sh
-index a8846ed68ac2..41ce8470a75f 100755
---- a/tools/perf/tests/shell/test_futex_contention_python.sh
-+++ b/tools/perf/tests/shell/test_futex_contention_python.sh
-@@ -89,14 +89,15 @@ EOF
- test_file_mode() {
- 	echo "Testing futex-contention.py..."
- 	# Some systems might not have syscalls:sys_enter_futex
--	if ! perf list | grep -q syscalls:sys_enter_futex; then
-+	if ! perf list tracepoint | grep -q syscalls:sys_enter_futex; then
- 		echo "Skipping file mode test, syscalls:sys_enter_futex not found"
- 		return
- 	fi
- 
- 	# Generate some futex events
--	if ! perf record -e syscalls:sys_enter_futex,syscalls:sys_exit_futex -a -o "${temp_data}" \
--		-- sleep 0.5 2>/dev/null; then
-+	if ! perf record -B -N --no-bpf-event \
-+		-e syscalls:sys_enter_futex,syscalls:sys_exit_futex -a -o "${temp_data}" \
-+		-- sleep 0.1 2>/dev/null; then
- 		echo "Skipping file mode test (record failed)"
- 		return
- 	fi
-diff --git a/tools/perf/tests/shell/test_gecko_python.sh b/tools/perf/tests/shell/test_gecko_python.sh
-index de1d7fcf88b7..18e9f5cd2ab0 100755
---- a/tools/perf/tests/shell/test_gecko_python.sh
-+++ b/tools/perf/tests/shell/test_gecko_python.sh
-@@ -39,7 +39,8 @@ test_file_mode() {
- 	echo "Testing gecko.py..."
- 
- 	# Generate some events with callchains
--	if ! perf record -g -o "${temp_data}" -- perf test -w noploop >/dev/null 2>&1; then
-+	if ! perf record -B -N --no-bpf-event -g -o "${temp_data}" \
-+		-- perf test -w noploop >/dev/null 2>&1; then
- 		echo "Skipping test, perf record -g failed (permissions or lack of support)"
- 		exit 2
- 	fi
-diff --git a/tools/perf/tests/shell/test_mem_phys_addr_python.sh b/tools/perf/tests/shell/test_mem_phys_addr_python.sh
-index 451692d5e089..cbb9f572be9d 100755
---- a/tools/perf/tests/shell/test_mem_phys_addr_python.sh
-+++ b/tools/perf/tests/shell/test_mem_phys_addr_python.sh
-@@ -78,10 +78,12 @@ test_file_mode() {
- 	echo "Testing mem-phys-addr.py file mode..."
- 
- 	# Generate memory access events (try unprivileged user-space first, then system-wide)
--	if ! perf record --phys-data -d -o "${temp_data}" \
-+	if ! perf record -B -N --no-bpf-event --phys-data -d -o "${temp_data}" \
- 	     -- perf test -w datasym >/dev/null 2>&1 && \
--	   ! perf record -d -o "${temp_data}" -- perf test -w datasym >/dev/null 2>&1 && \
--	   ! perf record -d -a -o "${temp_data}" -- sleep 0.2 >/dev/null 2>&1; then
-+	   ! perf record -B -N --no-bpf-event -d -o "${temp_data}" \
-+	     -- perf test -w datasym >/dev/null 2>&1 && \
-+	   ! perf record -B -N --no-bpf-event -d -a -o "${temp_data}" \
-+	     -- sleep 0.1 >/dev/null 2>&1; then
- 		echo "Skipping file mode record test, perf record -d not supported"
- 		return 0
- 	fi
-diff --git a/tools/perf/tests/shell/test_net_dropmonitor_python.sh b/tools/perf/tests/shell/test_net_dropmonitor_python.sh
-index 05056a897bc9..2e37994418fc 100755
---- a/tools/perf/tests/shell/test_net_dropmonitor_python.sh
-+++ b/tools/perf/tests/shell/test_net_dropmonitor_python.sh
-@@ -42,11 +42,12 @@ temp_out=$(mktemp /tmp/perf.out.XXXXXX)
- echo "Testing net_dropmonitor.py..."
- 
- # Create a perf.data file. Force dropping a packet if tracepoint is available!
--if ! perf record -e skb:kfree_skb -o "${temp_data}" -a \
--	-- ping -c 1 255.255.255.255 >/dev/null 2>&1; then
--	if ! perf record -e skb:kfree_skb -o "${temp_data}" \
-+if ! perf record -B -N --no-bpf-event -e skb:kfree_skb -o "${temp_data}" -a \
-+	-- ping -c 1 -W 1 255.255.255.255 >/dev/null 2>&1; then
-+	if ! perf record -B -N --no-bpf-event -e skb:kfree_skb -o "${temp_data}" \
- 		-- sleep 0.1 >/dev/null 2>&1; then
--		if ! perf record -o "${temp_data}" -- uname >/dev/null 2>&1; then
-+		if ! perf record -B -N --no-bpf-event -o "${temp_data}" \
-+			-- uname >/dev/null 2>&1; then
- 			echo "Skipping test, cannot record perf events"
- 			exit 2
- 		fi
-diff --git a/tools/perf/tests/shell/test_netdev_times_python.sh b/tools/perf/tests/shell/test_netdev_times_python.sh
-index 393bf446efb2..0d8d10a42cab 100755
---- a/tools/perf/tests/shell/test_netdev_times_python.sh
-+++ b/tools/perf/tests/shell/test_netdev_times_python.sh
-@@ -85,9 +85,9 @@ then
- fi
- 
- # Create a perf.data file. Force dropping a packet if tracepoint is available!
--if ! perf record -e skb:kfree_skb -a -o "${temp_data}" \
--	-- ping -c 1 127.0.0.1 >/dev/null 2>&1; then
--	perf record -e cycles -o "${temp_data}" \
-+if ! perf record -B -N --no-bpf-event -e skb:kfree_skb -a -o "${temp_data}" \
-+	-- ping -c 1 -W 1 127.0.0.1 >/dev/null 2>&1; then
-+	perf record -B -N --no-bpf-event -e cycles -o "${temp_data}" \
- 		-- perf test -w noploop >/dev/null 2>&1 || \
- 		{ echo "Skipping test, perf record failed"; exit 2; }
- fi
-diff --git a/tools/perf/tests/shell/test_powerpc_hcalls_python.sh b/tools/perf/tests/shell/test_powerpc_hcalls_python.sh
-index 19569c6d3613..b140ccf00ffa 100755
---- a/tools/perf/tests/shell/test_powerpc_hcalls_python.sh
-+++ b/tools/perf/tests/shell/test_powerpc_hcalls_python.sh
-@@ -67,8 +67,8 @@ if ! grep -q "H_REMOVE.*1.*1500.*1500.*1500" "${temp_out}"; then
- fi
- 
- # Create a perf.data file if powerpc hcall tracepoints are available on this host.
--if ! perf record -e powerpc:hcall_entry,powerpc:hcall_exit -a -o "${temp_data}" \
--	-- perf test -w noploop >/dev/null 2>&1; then
-+if ! perf record -B -N --no-bpf-event -e powerpc:hcall_entry,powerpc:hcall_exit \
-+	-a -o "${temp_data}" -- perf test -w noploop >/dev/null 2>&1; then
- 	echo "Skipping live record test, powerpc hcall tracepoints not available"
- 	exit 0
- fi
-diff --git a/tools/perf/tests/shell/test_rw_by_file_python.sh b/tools/perf/tests/shell/test_rw_by_file_python.sh
-index f121597f418f..e3c538c3ace3 100755
---- a/tools/perf/tests/shell/test_rw_by_file_python.sh
-+++ b/tools/perf/tests/shell/test_rw_by_file_python.sh
-@@ -37,8 +37,9 @@ temp_out=$(mktemp /tmp/perf.out.XXXXXX)
- echo "Testing rw-by-file.py..."
- 
- # Create a perf.data file. Try to get tracepoint data.
--if perf list | grep -q "syscalls:sys_enter_read"; then
--	perf record -e syscalls:sys_enter_read,syscalls:sys_enter_write -a -o "${temp_data}" \
-+if perf list tracepoint | grep -q "syscalls:sys_enter_read"; then
-+	perf record -B -N --no-bpf-event -e syscalls:sys_enter_read,syscalls:sys_enter_write \
-+		-o "${temp_data}" \
- 		-- dd if=/dev/urandom of=/dev/null bs=1M count=10 >/dev/null 2>&1 || \
- 		{ echo "Skipping test, perf record failed"; exit 2; }
- else
-diff --git a/tools/perf/tests/shell/test_rw_by_pid_python.sh b/tools/perf/tests/shell/test_rw_by_pid_python.sh
-index 41eaa29097a2..cd93c1d9714c 100755
---- a/tools/perf/tests/shell/test_rw_by_pid_python.sh
-+++ b/tools/perf/tests/shell/test_rw_by_pid_python.sh
-@@ -41,10 +41,10 @@ temp_out=$(mktemp /tmp/perf.out.XXXXXX)
- echo "Testing rw-by-pid.py..."
- 
- # Create a perf.data file. Try to get tracepoint data.
--if perf list | grep -q "syscalls:sys_enter_read"; then
-+if perf list tracepoint | grep -q "syscalls:sys_enter_read"; then
- 	ev="syscalls:sys_enter_read,syscalls:sys_exit_read"
- 	ev="${ev},syscalls:sys_enter_write,syscalls:sys_exit_write"
--	perf record -e "$ev" -a -o "${temp_data}" \
-+	perf record -B -N --no-bpf-event -e "$ev" -o "${temp_data}" \
- 		-- dd if=/dev/urandom of=/dev/null bs=1M count=10 >/dev/null 2>&1 || \
- 		{ echo "Skipping test, perf record failed"; exit 2; }
- else
-diff --git a/tools/perf/tests/shell/test_rwtop_python.sh b/tools/perf/tests/shell/test_rwtop_python.sh
-index 05897e384702..d33807923c92 100755
---- a/tools/perf/tests/shell/test_rwtop_python.sh
-+++ b/tools/perf/tests/shell/test_rwtop_python.sh
-@@ -41,10 +41,10 @@ temp_out=$(mktemp /tmp/perf.out.XXXXXX)
- echo "Testing rwtop.py..."
- 
- # Create a perf.data file. Try to get tracepoint data.
--if perf list | grep -q "syscalls:sys_enter_read"; then
-+if perf list tracepoint | grep -q "syscalls:sys_enter_read"; then
- 	ev="syscalls:sys_enter_read,syscalls:sys_exit_read"
- 	ev="${ev},syscalls:sys_enter_write,syscalls:sys_exit_write"
--	perf record -e "$ev" -a -o "${temp_data}" \
-+	perf record -B -N --no-bpf-event -e "$ev" -o "${temp_data}" \
- 		-- dd if=/dev/urandom of=/dev/null bs=1M count=10 >/dev/null 2>&1 || \
- 		{ echo "Skipping test, perf record failed"; exit 2; }
- else
-diff --git a/tools/perf/tests/shell/test_sched_migration_python.sh b/tools/perf/tests/shell/test_sched_migration_python.sh
-index 75465bcd3791..714275b0e492 100755
---- a/tools/perf/tests/shell/test_sched_migration_python.sh
-+++ b/tools/perf/tests/shell/test_sched_migration_python.sh
-@@ -44,10 +44,10 @@ echo "Testing sched-migration.py..."
- ev="sched:sched_switch,sched:sched_migrate_task"
- ev="${ev},sched:sched_wakeup_new,sched:sched_wakeup"
- has_sched=1
--if ! perf record -e "$ev" -a -o "${temp_data}" \
-+if ! perf record -B -N --no-bpf-event -e "$ev" -a -o "${temp_data}" \
- 	-- sleep 0.1 >/dev/null 2>&1; then
- 	has_sched=0
--	perf record -e cycles -o "${temp_data}" \
-+	perf record -B -N --no-bpf-event -e cycles -o "${temp_data}" \
- 		-- perf test -w noploop >/dev/null 2>&1 || \
- 		{ echo "Skipping test, perf record failed"; exit 2; }
- fi
-diff --git a/tools/perf/tests/shell/test_stackcollapse_python.sh b/tools/perf/tests/shell/test_stackcollapse_python.sh
-index ce0f80407eec..2048734c5e0d 100755
---- a/tools/perf/tests/shell/test_stackcollapse_python.sh
-+++ b/tools/perf/tests/shell/test_stackcollapse_python.sh
-@@ -37,7 +37,7 @@ echo "Testing stackcollapse.py..."
- 
- # Create a perf.data file with callchains. Use a busy workload rather than
- # sleep, as an idle system may not generate any samples at all.
--perf record -g -o "${temp_data}" \
-+perf record -B -N --no-bpf-event -g -o "${temp_data}" \
- 		-- perf test -w noploop >/dev/null 2>&1 || \
- 		{ echo "Skipping test, perf record failed"; exit 2; }
- 
-diff --git a/tools/perf/tests/shell/test_syscall_counts_by_pid_python.sh b/tools/perf/tests/shell/test_syscall_counts_by_pid_python.sh
-index 45bbdc554c8f..300289fe33b4 100755
---- a/tools/perf/tests/shell/test_syscall_counts_by_pid_python.sh
-+++ b/tools/perf/tests/shell/test_syscall_counts_by_pid_python.sh
-@@ -43,14 +43,14 @@ temp_out=$(mktemp /tmp/perf.out.XXXXXX)
- test_file_mode() {
- 	echo "Testing syscall-counts-by-pid.py..."
- 	# Some systems might not have raw_syscalls:sys_enter
--	if ! perf list | grep -q raw_syscalls:sys_enter; then
-+	if ! perf list tracepoint | grep -q raw_syscalls:sys_enter; then
- 		echo "Skipping test, raw_syscalls:sys_enter not found"
- 		exit 2
- 	fi
- 
- 	# Generate some syscall events
--	perf record -e raw_syscalls:sys_enter -a -o "${temp_data}" \
--		-- sleep 0.5 >/dev/null 2>&1 || \
-+	perf record -B -N --no-bpf-event -e raw_syscalls:sys_enter -o "${temp_data}" \
-+		-- sh -c "sleep 0.1; sleep 0.05" >/dev/null 2>&1 || \
- 		{ echo "Skipping test, perf record failed"; exit 2; }
- 
- 	if ! perf script syscall-counts-by-pid -i "${temp_data}" > "${temp_out}"; then
-diff --git a/tools/perf/tests/shell/test_syscall_counts_python.sh b/tools/perf/tests/shell/test_syscall_counts_python.sh
-index 310e05d399f9..86463f14391b 100755
---- a/tools/perf/tests/shell/test_syscall_counts_python.sh
-+++ b/tools/perf/tests/shell/test_syscall_counts_python.sh
-@@ -43,13 +43,14 @@ temp_out=$(mktemp /tmp/perf.out.XXXXXX)
- test_file_mode() {
- 	echo "Testing syscall-counts.py..."
- 	# Some systems might not have raw_syscalls:sys_enter (e.g. stripped kernels or permissions)
--	if ! perf list | grep -q raw_syscalls:sys_enter; then
-+	if ! perf list tracepoint | grep -q raw_syscalls:sys_enter; then
- 		echo "Skipping test, raw_syscalls:sys_enter not found"
- 		exit 2
- 	fi
- 
- 	# Generate some syscall events
--	if ! perf record -e raw_syscalls:sys_enter -o "${temp_data}" -- sleep 0.5 2>/dev/null; then
-+	if ! perf record -B -N --no-bpf-event -e raw_syscalls:sys_enter -o "${temp_data}" \
-+		-- sh -c "sleep 0.1; sleep 0.05" 2>/dev/null; then
- 		echo "perf record failed (permissions?), skipping file mode test."
- 		exit 2
- 	fi
-diff --git a/tools/perf/tests/shell/test_task_analyzer.sh b/tools/perf/tests/shell/test_task_analyzer.sh
-index f99a637a6099..f53fa4a27c79 100755
---- a/tools/perf/tests/shell/test_task_analyzer.sh
-+++ b/tools/perf/tests/shell/test_task_analyzer.sh
-@@ -60,7 +60,8 @@ skip_no_probe_record_support() {
- 
- prepare_perf_data() {
- 	# 1s should be sufficient to catch at least some switches
--	perf record -e sched:sched_switch -a -o "${perfdata}" -- sleep 1 > /dev/null 2>&1
-+	perf record -B -N --no-bpf-event -e sched:sched_switch -a -o "${perfdata}" \
-+		-- sleep 1 > /dev/null 2>&1
- 	# check if perf data file got created in above step.
- 	if [ ! -e "${perfdata}" ]; then
- 		printf "FAIL: perf record failed to create \"${perfdata}\" \n"
-diff --git a/tools/perf/tests/shell/test_wakeup_latency_python.sh b/tools/perf/tests/shell/test_wakeup_latency_python.sh
-index cb2571449168..b43a86996be2 100755
---- a/tools/perf/tests/shell/test_wakeup_latency_python.sh
-+++ b/tools/perf/tests/shell/test_wakeup_latency_python.sh
-@@ -41,9 +41,9 @@ temp_out=$(mktemp /tmp/perf.out.XXXXXX)
- echo "Testing wakeup-latency.py..."
- 
- # Create a perf.data file. Try to get tracepoint data.
--if perf list | grep -q "sched:sched_wakeup"; then
-+if perf list tracepoint | grep -q "sched:sched_wakeup"; then
- 	ev="sched:sched_wakeup,sched:sched_wakeup_new,sched:sched_switch"
--	perf record -e "$ev" -a -o "${temp_data}" \
-+	perf record -B -N --no-bpf-event -e "$ev" -a -o "${temp_data}" \
- 		-- sleep 0.1 >/dev/null 2>&1 || \
- 		{ echo "Skipping test, perf record failed"; exit 2; }
- else
-@@ -70,7 +70,8 @@ else
- fi
- 
- # Also test zero-wakeups / unhandled events path to verify division-by-zero protection
--if perf record -e cycles -o "${temp_data}" -- perf test -w noploop >/dev/null 2>&1; then
-+if perf record -B -N --no-bpf-event -e cycles -o "${temp_data}" \
-+	-- perf test -w noploop >/dev/null 2>&1; then
- 	if ! perf script wakeup-latency -i "${temp_data}" > "${temp_out}" || \
- 	   ! grep -q "avg_wakeup_latency (ns): N/A" "${temp_out}"; then
- 		echo "wakeup-latency zero-wakeups guard test failed"
 -- 
 2.56.0.rc1.315.gc6ed9934b7-goog
 
