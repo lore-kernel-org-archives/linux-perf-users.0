@@ -1,44 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBE743E1688;
-	Tue, 29 Sep 2026 19:20:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7FCD346ADB;
+	Tue, 29 Sep 2026 19:23:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790709610; cv=none; b=pNhvp6JweoK4tMLVmRXVcBikEDOpQgE6TGpevzG22SfNNyJFtZPCn54mnlzSpiEvN/BYU9VRPB+gnRysGmXyahMJ72/YTHTu8zIXBZDjPDwYmRwE9c64ATiEyXmJp1WA/D6RhWSd3yfExvzM2wtdjyC0VIIr8OCyMMQiWZxav4w=
+	t=1790709783; cv=none; b=VqxcqaGsKKIb/seX+QnyVCfh1+IWMiNU9PIh8ePXhObV61kv/hlsdkwETTL4uTwtSn6ka59PAYw9Zv5e7j5qGuSVZYkmx+a+c2Rm8YPv3cqCFIfKTkaAsCx95GMp8OQZLvOeNg0fygGd633LfsogZiTiM6yOn/Hn1AnMO3hwe48=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790709610; c=relaxed/simple;
-	bh=INxxy56tTTNw+wpmvRiYmVDphGb9zWgB4gZ+ry8gRW0=;
+	s=arc-20240116; t=1790709783; c=relaxed/simple;
+	bh=Op35jOFEVO8q1FpaZPLqCmdjlEUyMgZq4FjE74YSMO4=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=beuB51elEpumQk/SdjKsgpbXR3eVX1Gro6nb33dKqrr5bCWD2tfMbfQsvLi7e+zeioWMlBSYYHDBtRYf2SwxBYKGYBN5JSBQF8WTeQk2o95QQIb2x9WtFOUEgjpuBhE0hBoFiCo7L8h6XGKbcG1Bl4fV+6MgONeSOxR9ao22JXs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZKGb5R2d; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=PRhiqP08coPmYVVYbvsE2RZRwy4W0q1JNoZuvy/uHgYi6UQpvI/TuAXMSWZ3FBt1rPTDinI0s/KIutbfnvOrvPoUIyF6+G3/9Kz33YXYHz+9tgDaoR5mblaD+1Qzpjtxf7HzN+hDlkMvZO6eli8qy8bx+K/Yh70xUkA8mA3xG5Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XBip+Ryi; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZKGb5R2d"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3685E1F000FF;
-	Tue, 29 Sep 2026 19:20:08 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XBip+Ryi"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4C29B1F000FF;
+	Tue, 29 Sep 2026 19:23:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1790709608;
-	bh=1qzlXq55cXRH/6p3qQnNSeSnAxfYu5OWeUNKOL/US2E=;
+	s=k20260515; t=1790709781;
+	bh=s+HEq5AYNCtq+yb9nxheQ3wUZ4LJAr2Uxenvd5vaqRM=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=ZKGb5R2d374v1LRq7wiR3R1ggnPfwavym/M4QTFMYd8WJIg/t7tfDHAyCJZ/i3mrD
-	 82dOd8t1jACgvggImdJMWnGyq/3EQ2AYnzkcMRDk4XYM0KIyiiSeVMmUidKeYWnCeJ
-	 f3LJ39UzwYFH78iyA5fp9YH/A4qW0N+v9VNGcnFE7sDnfu3MlUks5rOby8QFvsVK5G
-	 HtsxGH1g0n3xref7194ZS8AIITzE5eV0Jx4XalH8H9/gveH7X+xKJ6Zv8dh321pLzs
-	 yXS0BBlRsn4CbTOkmq7M0PINP/mca0aTFT3YdrBANMha45wIDUB7/A9lyW/Q45H925
-	 67xW/36ltJ+Og==
+	b=XBip+RyiYP+7zRteSGS0ClPlLvcl4yO/VsWXzy4dfJMf44ExrT+GyDXOXPDT/cKRQ
+	 ir5QS5X5qy8dVhtNIktqavVEM1vyKNhLBv7j6+kTE315bI2XqogCewYvy6rOSzPv2Q
+	 C9fLeQzbM5rnsXix18WRfZtcQI0ETEPzmerr9YliZ471xJl/d4flOXum9RMwZUO8q3
+	 93Ht5Y0vO1SpL1VyrChOsWym03s20hE5c/TgYiKqcIaLv3w9bRO+DDK6VOAYjzAL5l
+	 PEQnkUNrAMgsjAZDkLTwDus2FxivBFqNQ97yCrl83NeFUYy154T5MtCC6rvbVdTCNO
+	 nXMBRRJfPOkIw==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH stable 5.15 2/2] perf test bpf: Address error about
+Subject: Re: [PATCH stable 6.1 2/2] perf test bpf: Address error about
  non-null argument for epoll_pwait 2nd arg
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Florian Fainelli" <florian.fainelli@broadcom.com>
-Cc: bpf@vger.kernel.org, linux-perf-users@vger.kernel.org
-In-Reply-To: <20260929191541.264038-3-florian.fainelli@broadcom.com>
-References: <20260929191541.264038-1-florian.fainelli@broadcom.com>
- <20260929191541.264038-3-florian.fainelli@broadcom.com>
+Cc: linux-perf-users@vger.kernel.org, bpf@vger.kernel.org
+In-Reply-To: <20260929191834.266354-3-florian.fainelli@broadcom.com>
+References: <20260929191834.266354-1-florian.fainelli@broadcom.com>
+ <20260929191834.266354-3-florian.fainelli@broadcom.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Tue, 29 Sep 2026 19:20:07 +0000
-Message-Id: <20260929192008.3685E1F000FF@smtp.kernel.org>
+Date: Tue, 29 Sep 2026 19:23:00 +0000
+Message-Id: <20260929192301.4C29B1F000FF@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -73,6 +73,6 @@ s,
 Sashiko has reviewed this patch and found no issues. It looks great!
 
 --=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260929191541.2640=
-38-1-florian.fainelli@broadcom.com?part=3D2
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260929191834.2663=
+54-2-florian.fainelli@broadcom.com?part=3D2
 
