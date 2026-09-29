@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CE593CC7EA;
-	Tue, 29 Sep 2026 01:11:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78DE63CCA13;
+	Tue, 29 Sep 2026 01:11:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790644313; cv=none; b=ca+7Eh1EaiC8pBcU+anmFmDLbyVQctMye6aevyl1AKalWEWWdH+S6FvmwzY6RwUR+KdRfdUXrcYazz5og6SFrxF9HCi6TBPvk8GzOxSLh4XD9HqNTp16jjSz5uKJw+2utOMq4wpfcnNAoJMTHMTGlQWJR19f9I9zvjOZ0fxp5X0=
+	t=1790644313; cv=none; b=on+VSZkpX0RmLirv7FEGod2pqPaUy3z1VGek0KgluNi9nR0M6n6j+5PTKwRSfOm7kqlib+DoWzKaKMJKhmTD9wTzPpJgv/SZh4H9sH77Uc9I+DtxTDsWsQPbijqwXSsG+wlUGWNrPpJCHSnUZUNCt2g7Q+Nmke9Pm/wzVOOGw+w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1790644313; c=relaxed/simple;
-	bh=rTI+2BuScq7ak5eTIRWwY6jPw6CZh6yOjnU9ThJEjuA=;
+	bh=SZsJBOQGGi+xPoHok+6aQWU+9BIq7J7bXzrrjAqrOsg=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=YjBoc8zloSwq4hXQEEDnJ9yukm7qtTShjPhUqFSbrvhJuIF7b9fzRfrHwTL41kU/lx0uFXG+ISh+o+z+83uEkAz/iarVU5r3NpP7SUyP4pQWI5klMjhF03nSFs5co5gYEj8BdlrWR88WplSsGWdLGzTYyuNMT+P1fNlJOJvkyyQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RNFR+aTK; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version; b=CatKqIjPMpYMDQavrp74KdWMQTD7jq5kV4n5W/zw+LCD4ZBWLDqm17WppDHp0kCNcv96HPBkEMSGKFlBuzdT7F1QiRf96HpsBuSzb/3pkG+7DDgzsa39NjEUwOLfmQBQ3wyuwa/ZSTRP8vZP/Y66p9COaG9pmTOH+3PX1e1gjJA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IIQ9gJBx; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RNFR+aTK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 43CC41F0089D;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IIQ9gJBx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CE3F71F00899;
 	Tue, 29 Sep 2026 01:11:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1790644311;
-	bh=1/48DZIxr3zvd28xH+pHA0Hjnda1Iq6UKXxPbEYouKI=;
+	s=k20260515; t=1790644312;
+	bh=yL0J4w1nDHoGp8zjddSGrUuCV2rCq4GELY9Y9wEsQ3w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=RNFR+aTKhdZgPEI27bkmMwrjlkeo5KD6KqWRWvgxMPwN91FCIbzzakiNNmvSSqXXz
-	 gRfgw0SzARW4MHugP90MQR7fLSsBbTi0jwyRScYW8C9ptkHuJV+kyz/qZk5k/pydKF
-	 uE4NfCPjj3JtA5uf6jR5pWTYemW0RoselEgOFXZtFwtfKa8Qa++Uzr9/tQdAe3sfED
-	 S+73lok1RhUY+2hHq48AljTpBDuYbnMEI5ynZfPiL1J0f+HG/N5HEh4BpycvmNMkrc
-	 4ddBTA/WvhwLlPtGn+P9N1snENZnblVnX2+cBx3LPkEmsIg+LoXLd16Id87pNmPOYM
-	 ujPPynmNZ/q2w==
+	b=IIQ9gJBxafXVAzaYzUB7bQ8vBq1kAZ+6eq5qJqr2t1KNGi3bBbzqpVtj25a7pmLsz
+	 oulxIOBfV3BVWEvVaM+2dTRoC2HsDgEiR1NHhggk+irJbqcgsN6y1JzRoIAw0RycCh
+	 0Uom8UFuOnTi9xwdo+9tz6p804722pEtnpqT7/YQ0yRhiauqFm/fS0tbbXh/2xafGG
+	 XyauBZi31ugV3nyWLdDLVTtwGIz1JELvN4wZAGh6TPpRR1TuFDqanWEjnUOFMz10n2
+	 jVHshpjEhM2xUvBaUds/ed1zAmg53+NJlnywmYp8RRXX5XcXbNzFbHm0isWdU8FMEo
+	 ZrnhHlK76H4ng==
 From: Namhyung Kim <namhyung@kernel.org>
 To: Arnaldo Carvalho de Melo <acme@kernel.org>,
 	Ian Rogers <irogers@google.com>,
@@ -38,9 +38,9 @@ Cc: Jiri Olsa <jolsa@kernel.org>,
 	linux-perf-users@vger.kernel.org,
 	Masami Hiramatsu <mhiramat@kernel.org>,
 	Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH v2 5/8] perf tools: Add dso__put_filename()
-Date: Mon, 28 Sep 2026 18:11:36 -0700
-Message-ID: <20260929011139.53242-6-namhyung@kernel.org>
+Subject: [PATCH v2 6/8] perf tools: Avoid repeated failing search for debuginfo
+Date: Mon, 28 Sep 2026 18:11:37 -0700
+Message-ID: <20260929011139.53242-7-namhyung@kernel.org>
 X-Mailer: git-send-email 2.55.0
 In-Reply-To: <20260929011139.53242-1-namhyung@kernel.org>
 References: <20260929011139.53242-1-namhyung@kernel.org>
@@ -52,114 +52,61 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-It's a counterpart of the dso__get_filename() as the returned string
-should be free.  Optionally it needs to remove a temporary file if it's
-decompressed on the fly.
-
-Currently the dso argument is not used, but it's better to pair with the
-matching dso.
+If dso has no debuginfo, dso__find_dbginfo_type() may repeat the same
+search for available types.  Let's add a new field (debuginfo_searched)
+not to do it.
 
 Reviewed-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 ---
- tools/perf/util/debuginfo.c |  5 +----
- tools/perf/util/dso.c       | 27 +++++++++++++--------------
- tools/perf/util/dso.h       |  2 ++
- 3 files changed, 16 insertions(+), 18 deletions(-)
+ tools/perf/util/dso.c |  4 ++++
+ tools/perf/util/dso.h | 11 +++++++++++
+ 2 files changed, 15 insertions(+)
 
-diff --git a/tools/perf/util/debuginfo.c b/tools/perf/util/debuginfo.c
-index 38e9299765182bd7..fc2640dcd29d3aaa 100644
---- a/tools/perf/util/debuginfo.c
-+++ b/tools/perf/util/debuginfo.c
-@@ -118,10 +118,7 @@ struct debuginfo *debuginfo__new(const char *path)
- 		return NULL;
- 
- 	dinfo = __debuginfo__new(filename);
--
--	if (decomp)
--		unlink(filename);
--	free(filename);
-+	dso__put_filename(dso, filename, decomp);
- 	dso__put(dso);
- 
- 	return dinfo;
 diff --git a/tools/perf/util/dso.c b/tools/perf/util/dso.c
-index 7fd6b64583d8b61a..c765c9b80e957871 100644
+index c765c9b80e957871..f7a786e0c3cf6a29 100644
 --- a/tools/perf/util/dso.c
 +++ b/tools/perf/util/dso.c
-@@ -661,6 +661,14 @@ char *dso__get_filename(struct dso *dso, const char *root_dir, bool *decomp,
- 	return NULL;
- }
+@@ -2129,6 +2129,10 @@ void dso__find_dbginfo_type(struct dso *dso)
+ 	if (dso__dbginfo_type(dso) != DSO_BINARY_TYPE__NOT_FOUND)
+ 		return;
  
-+void dso__put_filename(struct dso *dso __maybe_unused, char *filename, bool decomp)
-+{
-+	if (decomp)
-+		unlink(filename);
++	if (dso__debuginfo_searched(dso))
++		return;
++	dso__set_debuginfo_searched(dso);
 +
-+	free(filename);
-+}
-+
- static int __open_dso(struct dso *dso, struct machine *machine)
- 	EXCLUSIVE_LOCKS_REQUIRED(_dso__data_open_lock)
- {
-@@ -680,11 +688,8 @@ static int __open_dso(struct dso *dso, struct machine *machine)
- 		fd = -errno;
- 	}
- 
--	if (decomp)
--		unlink(name);
--
-+	dso__put_filename(dso, name, decomp);
- 	mutex_unlock(dso__lock(dso));
--	free(name);
- 	return fd;
- }
- 
-@@ -2088,14 +2093,11 @@ struct debuginfo *dso__debuginfo(struct dso *dso)
- 	mutex_lock(dso__lock(dso));
- 
- 	name = dso__get_filename(dso, "", &decomp, dso__dbginfo_type(dso));
--	if (name)
-+	if (name) {
- 		dinfo = debuginfo__new(name);
--
--	if (decomp)
--		unlink(name);
--
-+		dso__put_filename(dso, name, decomp);
-+	}
- 	mutex_unlock(dso__lock(dso));
--	free(name);
- 	return dinfo;
- }
- 
-@@ -2135,10 +2137,7 @@ void dso__find_dbginfo_type(struct dso *dso)
- 		found = filename__has_section(path, ".debug_info") ||
- 			filename__has_section(path, ".zdebug_info");
- 
--		if (decomp)
--			unlink(path);
--		free(path);
--
-+		dso__put_filename(dso, path, decomp);
- 		if (found)
- 			break;
- 	}
+ 	for (type = dbginfo_types; *type != DSO_BINARY_TYPE__NOT_FOUND; type++) {
+ 		path = dso__get_filename(dso, "", &decomp, *type);
+ 		if (path == NULL)
 diff --git a/tools/perf/util/dso.h b/tools/perf/util/dso.h
-index 94cc7ea89ceb5bd9..45c4954d5eaf9ffa 100644
+index 45c4954d5eaf9ffa..3f08d45e7f53a508 100644
 --- a/tools/perf/util/dso.h
 +++ b/tools/perf/util/dso.h
-@@ -841,8 +841,10 @@ int dso__kernel_module_get_build_id(struct dso *dso, const char *root_dir);
- char dso__symtab_origin(const struct dso *dso);
- int dso__read_binary_type_filename(const struct dso *dso, enum dso_binary_type type,
- 				   const char *root_dir, char *filename, size_t size);
-+/* returned filename should be freed by dso__put_filename() */
- char *dso__get_filename(struct dso *dso, const char *root_dir, bool *decomp,
- 			enum dso_binary_type type);
-+void dso__put_filename(struct dso *dso, char *filename, bool decomp);
- bool is_kernel_module(const char *pathname, int cpumode);
- bool dso__needs_decompress(struct dso *dso);
- int dso__decompress_kmodule_fd(struct dso *dso, const char *name);
+@@ -349,6 +349,7 @@ DECLARE_RC_STRUCT(dso) {
+ 	u8		 short_name_allocated:1;
+ 	u8		 long_name_allocated:1;
+ 	u8		 is_64_bit:1;
++	u8		 debuginfo_searched:1;
+ 	bool		 sorted_by_name;
+ 	bool		 loaded;
+ 	u8		 rel;
+@@ -1019,6 +1020,16 @@ static inline void dso__set_dbginfo_type(struct dso *dso, enum dso_binary_type b
+ 
+ void dso__find_dbginfo_type(struct dso *dso);
+ 
++static inline bool dso__debuginfo_searched(const struct dso *dso)
++{
++	return RC_CHK_ACCESS(dso)->debuginfo_searched;
++}
++
++static inline void dso__set_debuginfo_searched(struct dso *dso)
++{
++	RC_CHK_ACCESS(dso)->debuginfo_searched = 1;
++}
++
+ bool dso__is_object_file(const struct dso *dso);
+ 
+ void dso__free_a2l(struct dso *dso);
 -- 
 2.55.0
 
