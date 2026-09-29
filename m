@@ -1,171 +1,213 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33D3A38DC78;
-	Tue, 29 Sep 2026 23:48:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C62D372EDD;
+	Tue, 29 Sep 2026 23:58:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790725696; cv=none; b=s0H1SHj1rmGduMpKZOVfg7ZonrClKnIMeMCXHf1DgpZVk07FaPXoctD/V4V4/0vJ0ASwaRefmXjT13L533ajEe3hzltM2uqZbjwR1f+aCLTH8rZPlN3kGVN3WZxU0q3+sD0FLsyxFJDuJrDWCK18HewENRNbi+835+BmuRqcrrk=
+	t=1790726298; cv=none; b=PMZCzIpfTmsH+DzB8bfbO+G7tGjswanwgFnD1s0eaHOVF8Rbkw2TqTVuXXJnPTe1GfVQo7Ab38G6Dk28M9cS5hXoamH+Bp7f4rY5pkTdFcDWRzN9HxsO+SY4NJPmTxKEzSKgJj029ZAiPVk/TIy6rL/S5FT9wVq+7cmN9htHkzE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790725696; c=relaxed/simple;
-	bh=IeLpjxVDA3GrnDgmvTeCyQjgNOUdg4es+X/2CCUKubU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=g9bb/sYsMvtW0QHTihBDp+BR0u1EJeDa/s8EthtidHeqLJ44SWRbzgvRXiXCheLh+by1WhgCZSjk5lWZw+MR63xYjp6bnUDxPKwkcitKSB7KzDwPH9ZjnrCK+CDTgNIorCtBFV61uG7aC3YjxDHW0gSetbUtsgx3WW8foqJPN1Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VhzkGaRe; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1790726298; c=relaxed/simple;
+	bh=c7MoQ0McuuWc5hSvRsoKsLhQpIvXSpZ1py4o7MufjE0=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=tTJDuqXhaQK9WP4RO2rIoJJFenOhE7fIAOj0pgXYn/5fsL2pIBrpqkLE1Yc6E2PUMVLTw/oVVjTAbf+VM5vWDQKHk7qIq7JHeceDYuZqrywLtlqJJUQjSaUWwgFGqy+t6eeK+wgt8cPEgoUZDzBzqkoid796gmnhhIfEa1OUuXQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SjTZO47C; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VhzkGaRe"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6C4E61F000FF;
-	Tue, 29 Sep 2026 23:48:14 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SjTZO47C"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 356B01F000FF;
+	Tue, 29 Sep 2026 23:58:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1790725694;
-	bh=gIqFVKJu6AToIPs1PJ0I4keo47YZu7KeaLmxN+BVCuI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=VhzkGaReqEEO2XgPU/r2WxwZs5SREUmfSQgiINcUoXIv8bBkXCl/itC0FnAJhcF8n
-	 Tz+4njQV8/Wgfcl43M937K7PtNuNSkcGEXjt3HUaVepxjLJcyrhqL2+36zcl7IyBHH
-	 jbsE8zfLCs6qhqBfgUTtJhqNRxkRwcsi184Gp+TemzUMEBuS628poVt66JzIIL4yry
-	 49uRU97VXmCzeR4F6TYSr2gMQFr2uHv8fjuk9UI29dF4bxd8hN+WyweFY7EjOE8Txh
-	 dAUolPFB7vgrvHbuKDJpZODJWAwXCrV7wIX0Q45KTU1L0jJ2Wr8fVUtoAdNoCM8sFE
-	 0quruYrLofanw==
-Date: Tue, 29 Sep 2026 16:48:12 -0700
-From: Namhyung Kim <namhyung@kernel.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
-	James Clark <james.clark@linaro.org>, Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: Re: [PATCH 3/5] perf report: Add --no-progress option
-Message-ID: <arxOPEU1bCePHzVx@google.com>
-References: <20260929212246.2532021-1-acme@kernel.org>
- <20260929212246.2532021-4-acme@kernel.org>
+	s=k20260515; t=1790726296;
+	bh=kJtbXgOmUBQQmBkKV/prrCPczHPcLI1tyn/KSadxlnA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References;
+	b=SjTZO47CxVHRnnhWyZqWRGIwx5oQ/Z02pb4YyCKZoFsEO9Gh+x4xdps7wWLsnAxtr
+	 psyFdlrKKXp9k5l6sZ/ByK5OFyYux5mpbyuY4CVwNaIDXEvhAc2Nd4Hl5jfW3q76Kw
+	 rzKRHDLV69q4Sh1AhdPgYAg/VfVTsaiaEQtCZ2z+v5cjdAg6FBdQUSf0iVCE8rka6P
+	 41JZZewK7BEASloNvL0OjuZhGkQCXKp/P4jFnZA9YbKLqvhkuDMyfUyJ5vHTW7Iv8H
+	 bkA1FYCh4TjsUPrrSSPdObFlj8f53gEgy5nHOwYtaKoPy4eipcPBl9Q+f4tGJcqpsk
+	 Tlw2J2sakYFhQ==
+Date: Wed, 30 Sep 2026 08:58:11 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Ian Rogers
+ <irogers@google.com>, James Clark <james.clark@linaro.org>, Jiri Olsa
+ <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, Peter Zijlstra
+ <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, LKML
+ <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org, Masami
+ Hiramatsu <mhiramat@kernel.org>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: Re: [PATCH v2 8/8] perf tools: Update debuginfo__new() to take DSO
+Message-Id: <20260930085811.bf08e4fa082f4f303b7fe817@kernel.org>
+In-Reply-To: <20260929011139.53242-9-namhyung@kernel.org>
+References: <20260929011139.53242-1-namhyung@kernel.org>
+	<20260929011139.53242-9-namhyung@kernel.org>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20260929212246.2532021-4-acme@kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Tue, Sep 29, 2026 at 11:22:44PM +0200, Arnaldo Carvalho de Melo wrote:
-> From: Arnaldo Carvalho de Melo <acme@redhat.com>
+On Mon, 28 Sep 2026 18:11:39 -0700
+Namhyung Kim <namhyung@kernel.org> wrote:
+
+> It should be the common case to get debuginfo from existing DSOs.
+> Now dso__debuginfo() calls it with its debuginfo type to avoid the
+> unnecessary loop to find the location of debug file.
 > 
-> Add the counterpart of --progress: the TUI and GTK browsers present
-> progress of their own and there is no way to turn it off, while the
-> option just added allows asking for it when there is none.  Install the
-> no-op ui_progress ops, the ones already used until a backend sets
-> theirs, after setup_browser() installed them.  The phases are still
-> counted, nothing is shown for them, and --no-progress takes precedence
-> over --progress.
-
-Hmm.. I mean --progress already gives --no-progress for free.  We just
-need to handle that for TUI and GTK.
-
-Thanks,
-Namhyung
-
+> Update existing function to debuginfo__from_path() for clarity.
 > 
-> Suggested-by: Namhyung Kim <namhyung@kernel.org>
-> Assisted-by: LLM
-> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+
+Looks good to me.
+
+Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+
+Thanks!
+
+> Reviewed-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 > ---
->  tools/perf/Documentation/perf-report.txt |  5 +++++
->  tools/perf/builtin-report.c              | 17 ++++++++++++++---
->  tools/perf/ui/progress.c                 |  6 ++++++
->  tools/perf/ui/progress.h                 |  2 ++
->  4 files changed, 27 insertions(+), 3 deletions(-)
+>  tools/perf/util/debuginfo.c   | 28 ++++++++++++++++++----------
+>  tools/perf/util/debuginfo.h   | 13 +++++++++++--
+>  tools/perf/util/dso.c         | 11 ++---------
+>  tools/perf/util/probe-event.c |  4 ++--
+>  4 files changed, 33 insertions(+), 23 deletions(-)
 > 
-> diff --git a/tools/perf/Documentation/perf-report.txt b/tools/perf/Documentation/perf-report.txt
-> index a7429a30ec28f903..bc0f2031b100f425 100644
-> --- a/tools/perf/Documentation/perf-report.txt
-> +++ b/tools/perf/Documentation/perf-report.txt
-> @@ -43,6 +43,11 @@ OPTIONS
->  	present progress information, or when --quiet is used, that asks
->  	for no messages at all.
+> diff --git a/tools/perf/util/debuginfo.c b/tools/perf/util/debuginfo.c
+> index fc2640dcd29d3aaa..db188c397d63880c 100644
+> --- a/tools/perf/util/debuginfo.c
+> +++ b/tools/perf/util/debuginfo.c
+> @@ -91,13 +91,27 @@ static struct debuginfo *__debuginfo__new(const char *path)
+>  	return dbg;
+>  }
 >  
-> +--no-progress::
-> +	Do not show progress while processing the perf.data file.  It
-> +	also turns off the progress the TUI and GTK browsers present,
-> +	which is their own, and takes precedence over --progress.
-> +
->  -n::
->  --show-nr-samples::
->  	Show the number of samples for each symbol
-> diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
-> index 963808b561e547c3..8d23c077fab5f874 100644
-> --- a/tools/perf/builtin-report.c
-> +++ b/tools/perf/builtin-report.c
-> @@ -88,6 +88,7 @@ struct report {
->  #endif
->  	bool			use_stdio;
->  	bool			progress;
-> +	bool			no_progress;
->  	bool			show_full_info;
->  	bool			show_threads;
->  	bool			inverted_callchain;
-> @@ -1385,8 +1386,16 @@ int cmd_report(int argc, const char **argv)
->  		    "Use the stdio interface"),
->  	OPT_BOOLEAN(0, "weights", &symbol_conf.annotate_weight,
->  			"Show or hide weight columns in annotation. Default show if non-zero."),
-> -	OPT_BOOLEAN(0, "progress", &report.progress,
-> -		    "Show progress while processing the perf.data file"),
-> +	/*
-> +	 * Not auto negatable: parse-options turns --no-progress into the
-> +	 * negation of this option before it ever reaches the --no-progress
-> +	 * below, which is the one that also turns off the TUI and GTK progress.
-> +	 */
-> +	OPT_BOOLEAN_FLAG(0, "progress", &report.progress,
-> +			 "Show progress while processing the perf.data file",
-> +			 PARSE_OPT_NOAUTONEG),
-> +	OPT_BOOLEAN(0, "no-progress", &report.no_progress,
-> +		    "Do not show progress while processing the perf.data file"),
->  	OPT_BOOLEAN(0, "header", &report.header, "Show data header."),
->  	OPT_BOOLEAN(0, "header-only", &report.header_only,
->  		    "Show only data header."),
-> @@ -1798,7 +1807,9 @@ int cmd_report(int argc, const char **argv)
->  	 * processed so far for each processing phase.  --quiet asks for no
->  	 * messages at all, so it leaves the phases uncounted.
->  	 */
-> -	if (report.progress && !quiet && use_browser == 0)
-> +	if (report.no_progress)
-> +		ui_progress__noop_init();
-> +	else if (report.progress && !quiet && use_browser == 0)
->  		stdio_progress__init();
->  
->  	if (report.data_type && use_browser == 1) {
-> diff --git a/tools/perf/ui/progress.c b/tools/perf/ui/progress.c
-> index 99d60223c74b2957..362680989ace606a 100644
-> --- a/tools/perf/ui/progress.c
-> +++ b/tools/perf/ui/progress.c
-> @@ -13,6 +13,12 @@ static struct ui_progress_ops null_progress__ops =
->  
->  struct ui_progress_ops *ui_progress__ops = &null_progress__ops;
->  
-> +/* Everything counts but nothing is shown, the way it starts out. */
-> +void ui_progress__noop_init(void)
+> -struct debuginfo *debuginfo__new(const char *path)
+> +struct debuginfo *debuginfo__new(struct dso *dso)
 > +{
-> +	ui_progress__ops = &null_progress__ops;
+> +	struct debuginfo *dinfo;
+> +	char *path;
+> +	bool decomp = false;
+> +
+> +	dso__find_dbginfo_type(dso);
+> +	path = dso__get_filename(dso, "", &decomp, dso__dbginfo_type(dso));
+> +	if (path == NULL)
+> +		return NULL;
+> +
+> +	dinfo = __debuginfo__new(path);
+> +	dso__put_filename(dso, path, decomp);
+> +	return dinfo;
 > +}
 > +
->  void ui_progress__update(struct ui_progress *p, u64 adv)
+> +struct debuginfo *debuginfo__from_path(const char *path)
 >  {
->  	u64 last = p->curr;
-> diff --git a/tools/perf/ui/progress.h b/tools/perf/ui/progress.h
-> index 03f1a8bb260ba076..e8c4f9f768aaf12b 100644
-> --- a/tools/perf/ui/progress.h
-> +++ b/tools/perf/ui/progress.h
-> @@ -25,6 +25,8 @@ void ui_progress__update(struct ui_progress *p, u64 adv);
+>  	struct dso *dso;
+>  	struct debuginfo *dinfo;
+>  	struct build_id bid = { .size = 0 };
+> -	char *filename;
+> -	bool decomp = false;
 >  
->  void stdio_progress__init(void);
+>  	/* Try to open distro debuginfo files */
+>  	dso = dso__new(path);
+> @@ -112,13 +126,7 @@ struct debuginfo *debuginfo__new(const char *path)
+>  	if (filename__read_build_id(path, &bid) > 0)
+>  		dso__set_build_id(dso, &bid);
 >  
-> +void ui_progress__noop_init(void);
+> -	dso__find_dbginfo_type(dso);
+> -	filename = dso__get_filename(dso, "", &decomp, dso__dbginfo_type(dso));
+> -	if (filename == NULL)
+> -		return NULL;
+> -
+> -	dinfo = __debuginfo__new(filename);
+> -	dso__put_filename(dso, filename, decomp);
+> +	dinfo = debuginfo__new(dso);
+>  	dso__put(dso);
+>  
+>  	return dinfo;
+> diff --git a/tools/perf/util/debuginfo.h b/tools/perf/util/debuginfo.h
+> index a52d69932815cd72..ade40d54ea125988 100644
+> --- a/tools/perf/util/debuginfo.h
+> +++ b/tools/perf/util/debuginfo.h
+> @@ -18,8 +18,12 @@ struct debuginfo {
+>  	const unsigned char	*build_id;
+>  };
+>  
+> +struct dso;
 > +
->  struct ui_progress_ops {
->  	void (*init)(struct ui_progress *p);
->  	void (*update)(struct ui_progress *p);
+>  /* This also tries to open distro debuginfo */
+> -struct debuginfo *debuginfo__new(const char *path);
+> +struct debuginfo *debuginfo__from_path(const char *path);
+> +/* Create a debuginfo using information in DSO */
+> +struct debuginfo *debuginfo__new(struct dso *dso);
+>  void debuginfo__delete(struct debuginfo *dbg);
+>  
+>  int debuginfo__get_text_offset(struct debuginfo *dbg, Dwarf_Addr *offs,
+> @@ -31,7 +35,12 @@ int debuginfo__get_text_offset(struct debuginfo *dbg, Dwarf_Addr *offs,
+>  struct debuginfo {
+>  };
+>  
+> -static inline struct debuginfo *debuginfo__new(const char *path __maybe_unused)
+> +static inline struct debuginfo *debuginfo__from_path(const char *path __maybe_unused)
+> +{
+> +	return NULL;
+> +}
+> +
+> +static inline struct debuginfo *debuginfo__new(struct dso *dso __maybe_unused)
+>  {
+>  	return NULL;
+>  }
+> diff --git a/tools/perf/util/dso.c b/tools/perf/util/dso.c
+> index e4a2a0ea38823b5f..d3017c82ffb5f4b1 100644
+> --- a/tools/perf/util/dso.c
+> +++ b/tools/perf/util/dso.c
+> @@ -2086,17 +2086,10 @@ const u8 *dso__read_symbol(struct dso *dso, const char *symfs_filename,
+>  
+>  struct debuginfo *dso__debuginfo(struct dso *dso)
+>  {
+> -	char *name;
+> -	bool decomp = false;
+> -	struct debuginfo *dinfo = NULL;
+> +	struct debuginfo *dinfo;
+>  
+>  	mutex_lock(dso__lock(dso));
+> -
+> -	name = dso__get_filename(dso, "", &decomp, dso__dbginfo_type(dso));
+> -	if (name) {
+> -		dinfo = debuginfo__new(name);
+> -		dso__put_filename(dso, name, decomp);
+> -	}
+> +	dinfo = debuginfo__new(dso);
+>  	mutex_unlock(dso__lock(dso));
+>  	return dinfo;
+>  }
+> diff --git a/tools/perf/util/probe-event.c b/tools/perf/util/probe-event.c
+> index 11ae4a09412c9bd9..1534280c0c1d59cb 100644
+> --- a/tools/perf/util/probe-event.c
+> +++ b/tools/perf/util/probe-event.c
+> @@ -519,7 +519,7 @@ static struct debuginfo *open_from_debuginfod(struct dso *dso, struct nsinfo *ns
+>  		pr_debug("Load debuginfo from debuginfod (%s)\n", path);
+>  
+>  	nsinfo__mountns_enter(nsi, &nsc);
+> -	ret = debuginfo__new((const char *)path);
+> +	ret = debuginfo__from_path((const char *)path);
+>  	nsinfo__mountns_exit(&nsc);
+>  	return ret;
+>  }
+> @@ -567,7 +567,7 @@ static struct debuginfo *open_debuginfo(const char *module, struct nsinfo *nsi,
+>  		path = dso__long_name(dso);
+>  	}
+>  	nsinfo__mountns_enter(nsi, &nsc);
+> -	ret = debuginfo__new(path);
+> +	ret = debuginfo__from_path(path);
+>  	if (!ret && !silent) {
+>  		pr_warning("The %s file has no debug information.\n", path);
+>  		if (!module || !strtailcmp(path, ".ko"))
 > -- 
 > 2.55.0
 > 
+> 
+
+
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
