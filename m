@@ -1,44 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90CA64483B4;
-	Tue, 29 Sep 2026 19:23:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A578C54A7D0;
+	Tue, 29 Sep 2026 19:26:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790709793; cv=none; b=HugBoGZ1mkVmlr7q9kHvdsmwG1AFDtsTeoKY140Z2VenFP5MHTxxrQznslc1s5LIVn7+7OLWhHHT5en1JmJsy/xXYqNt6TZd8adOlUwqTnav/j5xWbPtfR7/HAieI/S7Xz+AXq7VWBNLKrpdzMvkQQ2YCQ0kpxSBCFVRb0gILBw=
+	t=1790710010; cv=none; b=Q7iB4osB4zwtcy4th6veXbqHnTHs0QTPGFnfl10FbKScR4uLCjdBkHeAFVHI6gjLc1GpIrrQ5kYMKqUTba+EN1WBblCnPsEWpa0kliM1VDcRbJcw2cYABX6D2MBtsRUYoRphuC1imyZa5gvxJLGpXnByYt6LR3zuAAAVBPNu0e8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790709793; c=relaxed/simple;
-	bh=I5WUhXAfhAbnyBzRfivbs1AmYqn2xJKLbaFgMFNgsl0=;
+	s=arc-20240116; t=1790710010; c=relaxed/simple;
+	bh=vIytM0bSrSvlOpspfJLA9lPCg56r6wyLT5IliUH7Brw=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=Rk5ePXNLh9ygpiPi1D6P9TavkjVCpUAAoPMpu0CazTdPCw8K+vQZWkMXY5T1DbhvaW+3d37curJuoLgTSbNV9ry30x0mM/c741/SzwQAE9qCYYkuqd4WUu7BxpngBrXv6TmIxJAEJ4AUDQbGR5g8w63M8fOaf3h68L8BjTEEBuI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HUKlHtNY; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=Y/ke82mGM4HoQlpASMQkfSq+ui5rlQXg+qMvxmQjkh8d8AXLRpNS9UkkjfmmA5Ph8zv2TOtQxEGFertocJ1QUVyDYnmifTeRn6i0pemz8LUf3XomKRAUYqVhagmHKVJFl5SXgo90EiwM3YSMsts8IxG6a0k4i8F1Ibnw8ocf2Io=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZGa4r9ze; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HUKlHtNY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 000C91F000FF;
-	Tue, 29 Sep 2026 19:23:11 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZGa4r9ze"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 206631F000FF;
+	Tue, 29 Sep 2026 19:26:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1790709792;
-	bh=tjcrUK0cSisZ2xdPFzqY8/FgS593HiIkPd6r4XQ3JDo=;
+	s=k20260515; t=1790710009;
+	bh=GtPDZlzOUwrO+1RJinr6p359dFR2sI5vkzijrv2qoSI=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=HUKlHtNYc7vaTcqzGPRspVpL/FB0r0CsuT8addW3pwQFQDT31/0nKkY/Ad5ffZ0Tg
-	 +rpnCVzP/xHTPWujoIeC6w5HUawpsZQGz7XTwZxTiiKup0afBSnNe54r1AGxefvVpX
-	 kUjVPCBuSCKpXTeH+F27UQQbZPDa2AudZRIrcx9p4CuQ1zRJSlJ0qh/d/3jN6qsoDh
-	 SJHxcUCEz8f1Gv1R0h5Fmz2v5izKw2WPlUhnyOxizdTvMlZAxPZh3p3IpaAjkfbFh5
-	 ZEjjwtF69CGIbXxcaYg4pU1e+09TYJ1geVfeoxpj7mDkYvm4XUbN50E20PqvhLVJAk
-	 7QB2GARR4f4vQ==
+	b=ZGa4r9ze3aJJN+yUfFOlDXemrBLFmetUjaaqRhoC/SVZ2gTMzcMqHHIeNRTx2tfZc
+	 g5vxEDhQlUDDWnH2j9WriqL4lEgAZnoUg868FNDNGu/t/HYNQC5qAHdt7v/m09CB3d
+	 0eG5IVLumtSFsM+J4GUs/JlFYC7YB6uuAazslLuUiG2KRGCMGq+iDr1n1BjK2SSHMG
+	 Ah8WAVeIHNvr0XHZjqGxYSE29ULZetLJXG36FzHHb8gLPFwSeD9CZ8D9h4flP8jwog
+	 1BSyJGT7/A9q8rtTYEpbthPwqKOslouEwjt8NLnXSsnGXRH72N4l7eLaNfvwnOqjxt
+	 5b2K31dKPLZFw==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH stable 5.15 1/2] perf tools: Fix a asan issue in
+Subject: Re: [PATCH stable 6.1 1/2] perf tools: Fix a asan issue in
  parse_events_multi_pmu_add()
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Florian Fainelli" <florian.fainelli@broadcom.com>
 Cc: linux-perf-users@vger.kernel.org, bpf@vger.kernel.org
-In-Reply-To: <20260929191541.264038-2-florian.fainelli@broadcom.com>
-References: <20260929191541.264038-1-florian.fainelli@broadcom.com>
- <20260929191541.264038-2-florian.fainelli@broadcom.com>
+In-Reply-To: <20260929191834.266354-2-florian.fainelli@broadcom.com>
+References: <20260929191834.266354-1-florian.fainelli@broadcom.com>
+ <20260929191834.266354-2-florian.fainelli@broadcom.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Tue, 29 Sep 2026 19:23:11 +0000
-Message-Id: <20260929192312.000C91F000FF@smtp.kernel.org>
+Date: Tue, 29 Sep 2026 19:26:48 +0000
+Message-Id: <20260929192649.206631F000FF@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -66,16 +66,16 @@ n : 0,
 >         |                              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~=
 ^~~
 > [ ... ]
+> Cc: Leo Yan <leo.yan@linaro.org>
+> Cc: Peter Zijlstra <peterz@infradead.org>
 > Link: https://lore.kernel.org/r/20230331202949.810326-2-namhyung@kernel.o=
 rg
 > Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-> [florian: Resolve conflict in parse_events_multi_pmu_add() where term
->  initialization is located inside the PMU scan loop in 5.15.y]
 > Signed-off-by: Florian Fainelli <florian.fainelli@broadcom.com>
 
 Sashiko has reviewed this patch and found no issues. It looks great!
 
 --=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260929191541.2640=
-38-1-florian.fainelli@broadcom.com?part=3D1
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260929191834.2663=
+54-2-florian.fainelli@broadcom.com?part=3D1
 
