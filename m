@@ -1,525 +1,261 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm2-f13.google.com (mail-wm2-f13.google.com [74.125.225.141])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43E8D34EEEE;
-	Tue, 29 Sep 2026 12:04:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 215BE521200
+	for <linux-perf-users@vger.kernel.org>; Tue, 29 Sep 2026 12:22:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.225.141
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790683476; cv=none; b=BISrcKwFb8tM7TTa3Gs/4sq7Lsiw00mUABmkOUoDk8Qre428MgtikYWNf2sAa4Ev7l8aQAGviiNTlQV/ixn5t9p6Uzh+dmzKDgLKlECV5Fl3NVD8kYvMnYr4Sz1mOCMKjAvZgz6WCbh8AdtXcGrjT/Woaf39ycXwp8JkAW1CtfM=
+	t=1790684584; cv=none; b=R+rv3kJWs3nFoENOTbqy6xbr1L/dxS+/pGba/Q6A0xUrT9zvruFB8hNAaJU/rcg6IpHlagm+JvGbtqEDolIUhPHoYtWyn9v1qZia8l29AKd3seRLo2S/3ukM/u7nuIBc2/Qh/j+iiUVhNlv9K4M1AHoOkvijtZ4P2x4QXyqC+hU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790683476; c=relaxed/simple;
-	bh=1y76855U6ChdIrhrqweUZHPoC7pVIbY69wDQlNdEx1E=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=M9uBvSd4bOZhoT+Pubk7YDzlQ3SGK/Hcuk8j9iNU5bGUc2cw4KdST2Kexz8nLJwyglUSuIBhRpfXhA/Fjz4MZ8HxyJXY4ksRKCssnpegPyxoC96fkROthFGupvkARFWpk88aH7obEqmksolADDzKBfPmHq05bRxbF6fe0rijbgM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=pass smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=Ih+isx6z; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1790684584; c=relaxed/simple;
+	bh=WT4gq31nqrP8Fe2y3D59ZEOHqafYjC83nzbUyNfaSfw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ZPDQdagRBIZzNwTThBslaYe9ElBs0PNmIO+4PpZ2cOLyk2elsrgzw28WrAWeTceUIsdf3/4aGXagzstb/iUSeQjJrnPR+pe4fTgkoI9gebVhcD6jBLYbNYruriIEDsph7mNZYO9FxDEzNuOHVzlCL2V/Fpz0sG5IUH5/+HDeuOY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=vtdMnr07; arc=none smtp.client-ip=74.125.225.141
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Ih+isx6z"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=gwtnzsRCmg/KlI6wP8v+iy295jBczPbk3ZA5tWfqhFU=; b=Ih+isx6zVuklPt3zqlYuYMHcDJ
-	Z+oJjTxwVPT2IfD2qzUkUBeXDQJjQGx60kF14PoAR6gatbxEs4IOr5cJ0jzWg06PQPFIpBYgOgq84
-	1y/kPBdrHZYlj5clLymuiY3LfcGJdCK5ukJwPprqV5QPZ9+R2+BSGnC5R0/WFWL6FAn05DBHJRF3Q
-	aXAISh8JNzXK99pwcoVJx8APQhd6hDdxlP2Fj+PdjkZasQkOtGmM7E+htVDfWliWGMTbOnz4SB67h
-	ZJEi3+tu5kivXfje569oEmyGkunPMVVo3GABtfbxsI5sGs2bheSTj+O1aquxVwelIrlDUikLmLAJP
-	MPSuXVbQ==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.99.2 #2 (Red Hat Linux))
-	id 1xBWZH-00000002aLG-2A5m;
-	Tue, 29 Sep 2026 12:04:21 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 0029F300AAD; Tue, 29 Sep 2026 14:04:17 +0200 (CEST)
-Date: Tue, 29 Sep 2026 14:04:17 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	James Clark <james.clark@linaro.org>, Song Liu <song@kernel.org>,
-	Alexei Starovoitov <ast@kernel.org>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	bpf@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [PATCH v1] perf/core: Restore header fields in sideband output
- callbacks
-Message-ID: <20260929120417.GT4120091@noisy.programming.kicks-ass.net>
-References: <20260929014206.4175245-1-irogers@google.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vtdMnr07"
+Received: by mail-wm2-f13.google.com with SMTP id 5b1f17b1804b1-49e79a408deso25789875e9.2
+        for <linux-perf-users@vger.kernel.org>; Tue, 29 Sep 2026 05:22:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1790684578; x=1791289378; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:in-reply-to:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=oAoykZR6asRmW0K7OS4CG9fLxAWwLUV9JiX7VJ+7PxE=;
+        b=vtdMnr07bJcUkuZTfu9JC10LPUaKBIRrSsmVxC5kkk1iT5n2m21mc5ZuluCdy+T6E3
+         Im4/As1WCA7eQQCfr3T7fPHYOLh5Qcz0Xc3MQLeJyKjs3BwBTMC78DmOo8cu/ytx8aQw
+         H2uoLSLmLGGO5qm4svRrQB1yKih2UZ34Qo4MUA/3fatviBBK8SMcn6SyB2TfABkXf9kl
+         x5J2MfrCrM5VhZ/QRsJgHI75aaR7zXUJwc2deU7qkkM4GL6OQBncLhVTmmSRiZuAArd7
+         3cLND1QlTyK5m2UVy0TLa4s9nlxsBjC4AgCy61jvHd3iKHI0/EclMqmTnfJ1zq3w8HHv
+         yxYw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1790684578; x=1791289378;
+        h=content-transfer-encoding:content-type:in-reply-to:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=oAoykZR6asRmW0K7OS4CG9fLxAWwLUV9JiX7VJ+7PxE=;
+        b=Gd/aiHZTDsJ48kt5UpSdHCRpZ2/mKThVaoBLDBbc04BxQjSq+b8/i+U020Qz0WBdgh
+         8X980wbSfadpdoZdfKx7x5qdhnwgpHY5Uit507W/O5A7l4oIHkBo4HqRV3IpvaXfIuEL
+         4o21Hbzsr+8hJOxE/3JC2rPBPz/v/qmQMd4Ixzn2qaGWWMspvycz2JintMlpPDZfh2Yk
+         QzByo89T5GEQtGqSJa8dt/cF7YgEe6OLMweu+8HAmoNCDsW3Y2uTw1mmznHdWHGyvZoE
+         DuLBccVnPh83ohvBbQLiUcJV/sKid3/ObNxRlGmeLQGVqDd+bce3wsbiSiBGTjp+z7GR
+         95/A==
+X-Forwarded-Encrypted: i=1; AKwUvBwRK0qQ8Api3PmhCxvIPlL8lz3lO2IL43uyMCnTUbbzY1KFLdpAcTeh1vxGJIgKYA5GL01CFo2z3t1S3BwJayb4@vger.kernel.org
+X-Gm-Message-State: AFuF++lDxKwRZbhucy7qNcBm/CkQb+vaU1ByqKjjzNuegLmOXp04vtQe
+	69HXzGHZCWiez1Dxot2WU1F2jQ4MCNGI9WXVRNs+Ij6pdP7+IWxuRElN7wH0rThz34Y=
+X-Gm-Gg: AYBFou3w4fr0kO3cKxBiIePECUumdVivbDURGdIuvc9PSHg/CVRiw5A4ohF3cOvn0gI
+	6pZ7ncfZj8uUxt/W6nijmP+SRO35P05yO8+YjkgPGcF7aSPEidtzyBZxRrEijbq3IAedA2lVinq
+	N77zWe85Jakst74O/PIHlR6+QSaG4C4RvduObSc/xVdsrOB/zbgS4/uswRyufkveRGC6KHRNyi9
+	28Wgkzxhlmri0VJmVudLXqJeeCCr3VoK43a4EU6+On5Ys+kq9HGNPF07fAxf2jGLltowvABMvvr
+	3Stq5H/9kSqjXnSuRecJ4lbQzDdseA/kBqqHMJqlqbQm3I3jL920HrHvKkJmwnZAbcrNSE5JNAG
+	piyiJVjEmtmrKQZTTkla8SH19jPy5zdKIJyV82SKTlQ2/v8EqsVGl+Dhj9B9B0/Yc8DNrzwEI6o
+	V6nShm/qVAGI1mOM7CQgB7BrixRJIXrrDK1DQJTDchn6f+8satM2+frQiOlDpAPBoXNMGofP32U
+	ss=
+X-Received: by 2002:a05:600c:4ecf:b0:4a0:108:3b54 with SMTP id 5b1f17b1804b1-4a001e8c316mr100957425e9.32.1790684577698;
+        Tue, 29 Sep 2026 05:22:57 -0700 (PDT)
+Received: from [192.168.1.3] ([37.18.141.193])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4a013b8f6f5sm5072545e9.10.2026.09.29.05.22.56
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 29 Sep 2026 05:22:57 -0700 (PDT)
+Message-ID: <d371220f-9ad2-41ca-a2a5-930c46801c31@linaro.org>
+Date: Tue, 29 Sep 2026 13:22:55 +0100
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260929014206.4175245-1-irogers@google.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 11/14] perf tests: Check CoreSight IRQ entry and exit
+To: Leo Yan <leo.yan@arm.com>
+Cc: Arnaldo Carvalho de Melo <acme@redhat.com>, coresight@lists.linaro.org,
+ linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
+ Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>,
+ Mike Leach <mike.leach@arm.com>, Suzuki K Poulose <suzuki.poulose@arm.com>,
+ Suyash Mahar <smahar@meta.com>, Amir Ayupov <aaupov@fb.com>
+References: <20260923-perf_cs_etm_fix_non_taken-v2-0-6ab8c07a5455@arm.com>
+ <20260923-perf_cs_etm_fix_non_taken-v2-11-6ab8c07a5455@arm.com>
+Content-Language: en-US
+From: James Clark <james.clark@linaro.org>
+In-Reply-To: <20260923-perf_cs_etm_fix_non_taken-v2-11-6ab8c07a5455@arm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Mon, Sep 28, 2026 at 06:42:06PM -0700, Ian Rogers wrote:
-> perf_iterate_sb() invokes its callback for each matching perf_event on
-> the CPU and task context, passing a shared caller-allocated event
-> structure.
+
+
+On 23/09/2026 16:21, Leo Yan wrote:
+> Add an AArch64 branch_not_taken_loop workload and a CoreSight shell test
+> checking IRQ entry and exit PCs. Use cpu-clock generates timer
+> interrupts.
 > 
-> perf_event_header__init_id() increments header->size by
-> event->id_header_size. Unlike perf_event_task_output(),
-> perf_event_comm_output(), perf_event_namespaces_output(),
-> perf_event_cgroup_output(), perf_event_mmap_output(), and
-> perf_callchain_deferred_output(), three sideband callbacks failed to
-> save and restore header.size around perf_event_header__init_id():
-> - perf_event_ksymbol_output()
-> - perf_event_bpf_output()
-> - perf_event_text_poke_output()
+> Retry at different timer frequencies and skip if no complete pair is
+> captured.
 
-I also found perf_event_switch_output(). Does something like so also
-work?
+Maybe we need to look into storing existing recordings somewhere or 
+committing small ones into the repo again. This test took 3 minutes to 
+run on my N1SDP, which is 3x longer than the entire Coresight suite, and 
+then it skipped anyway:
 
----
- kernel/events/core.c | 131 ++++++++++++++++++++++++---------------------------
- 1 file changed, 61 insertions(+), 70 deletions(-)
+173: CoreSight IRQ entry and exit:
+---- start ----
+test child forked, pid 6804
+Recording timer IRQs at 1000 Hz
+No complete exception entry/exit pair
+No complete IRQ pair in this recording
+Recording timer IRQs at 4000 Hz
+No complete exception entry/exit pair
+No complete IRQ pair in this recording
+Recording timer IRQs at 10000 Hz
+No complete exception entry/exit pair
+No complete IRQ pair in this recording
+[Skip] No complete IRQ pair after three recordings
+---- end(-2) ----
+173: CoreSight IRQ entry and exit
 
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index de05df65ab3d..28770ca689c8 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -9108,12 +9108,22 @@ perf_event_read_event(struct perf_event *event,
- 	perf_output_end(&handle);
- }
- 
--typedef void (perf_iterate_f)(struct perf_event *event, void *data);
-+typedef void (perf_iterate_f)(struct perf_event *event, struct perf_event_header *header);
-+
-+static __always_inline
-+void __perf_iterate_output(perf_iterate_f output,
-+			   struct perf_event *event,
-+			   struct perf_event_header *header)
-+{
-+	struct perf_event_header old = *header;
-+	output(event, header);
-+	*header = old;
-+}
- 
- static void
- perf_iterate_ctx(struct perf_event_context *ctx,
- 		   perf_iterate_f output,
--		   void *data, bool all)
-+		   struct perf_event_header *header, bool all)
- {
- 	struct perf_event *event;
- 
-@@ -9125,11 +9135,11 @@ perf_iterate_ctx(struct perf_event_context *ctx,
- 				continue;
- 		}
- 
--		output(event, data);
-+		__perf_iterate_output(output, event, header);
- 	}
- }
- 
--static void perf_iterate_sb_cpu(perf_iterate_f output, void *data)
-+static void perf_iterate_sb_cpu(perf_iterate_f output, struct perf_event_header *header)
- {
- 	struct pmu_event_list *pel = this_cpu_ptr(&pmu_sb_events);
- 	struct perf_event *event;
-@@ -9147,7 +9157,8 @@ static void perf_iterate_sb_cpu(perf_iterate_f output, void *data)
- 			continue;
- 		if (!event_filter_match(event))
- 			continue;
--		output(event, data);
-+
-+		__perf_iterate_output(output, event, header);
- 	}
- }
- 
-@@ -9158,7 +9169,7 @@ static void perf_iterate_sb_cpu(perf_iterate_f output, void *data)
-  * your event, otherwise it might not get delivered.
-  */
- static void
--perf_iterate_sb(perf_iterate_f output, void *data,
-+perf_iterate_sb(perf_iterate_f output, struct perf_event_header *header,
- 	       struct perf_event_context *task_ctx)
- {
- 	struct perf_event_context *ctx;
-@@ -9172,15 +9183,15 @@ perf_iterate_sb(perf_iterate_f output, void *data,
- 	 * context.
- 	 */
- 	if (task_ctx) {
--		perf_iterate_ctx(task_ctx, output, data, false);
-+		perf_iterate_ctx(task_ctx, output, header, false);
- 		goto done;
- 	}
- 
--	perf_iterate_sb_cpu(output, data);
-+	perf_iterate_sb_cpu(output, header);
- 
- 	ctx = rcu_dereference(current->perf_event_ctxp);
- 	if (ctx)
--		perf_iterate_ctx(ctx, output, data, false);
-+		perf_iterate_ctx(ctx, output, header, false);
- done:
- 	preempt_enable();
- 	rcu_read_unlock();
-@@ -9347,13 +9358,13 @@ static int perf_event_task_match(struct perf_event *event)
- }
- 
- static void perf_event_task_output(struct perf_event *event,
--				   void *data)
-+				   struct perf_event_header *header)
- {
--	struct perf_task_event *task_event = data;
-+	auto task_event = container_of(header, struct perf_task_event, event_id.header);
-+	struct task_struct *task = task_event->task;
- 	struct perf_output_handle handle;
- 	struct perf_sample_data	sample;
--	struct task_struct *task = task_event->task;
--	int ret, size = task_event->event_id.header.size;
-+	int ret;
- 
- 	if (!perf_event_task_match(event))
- 		return;
-@@ -9363,7 +9374,7 @@ static void perf_event_task_output(struct perf_event *event,
- 	ret = perf_output_begin(&handle, &sample, event,
- 				task_event->event_id.header.size);
- 	if (ret)
--		goto out;
-+		return;
- 
- 	task_event->event_id.pid = perf_event_pid(event, task);
- 	task_event->event_id.tid = perf_event_tid(event, task);
-@@ -9385,8 +9396,6 @@ static void perf_event_task_output(struct perf_event *event,
- 	perf_event__output_id_sample(event, &handle, &sample);
- 
- 	perf_output_end(&handle);
--out:
--	task_event->event_id.header.size = size;
- }
- 
- static void perf_event_task(struct task_struct *task,
-@@ -9418,7 +9427,7 @@ static void perf_event_task(struct task_struct *task,
- 	};
- 
- 	perf_iterate_sb(perf_event_task_output,
--		       &task_event,
-+		       &task_event.event_id.header,
- 		       task_ctx);
- }
- 
-@@ -9499,12 +9508,11 @@ static int perf_event_comm_match(struct perf_event *event)
- }
- 
- static void perf_event_comm_output(struct perf_event *event,
--				   void *data)
-+				   struct perf_event_header *header)
- {
--	struct perf_comm_event *comm_event = data;
-+	auto comm_event = container_of(header, struct perf_comm_event, event_id.header);
- 	struct perf_output_handle handle;
- 	struct perf_sample_data sample;
--	int size = comm_event->event_id.header.size;
- 	int ret;
- 
- 	if (!perf_event_comm_match(event))
-@@ -9513,9 +9521,8 @@ static void perf_event_comm_output(struct perf_event *event,
- 	perf_event_header__init_id(&comm_event->event_id.header, &sample, event);
- 	ret = perf_output_begin(&handle, &sample, event,
- 				comm_event->event_id.header.size);
--
- 	if (ret)
--		goto out;
-+		return;
- 
- 	comm_event->event_id.pid = perf_event_pid(event, comm_event->task);
- 	comm_event->event_id.tid = perf_event_tid(event, comm_event->task);
-@@ -9527,8 +9534,6 @@ static void perf_event_comm_output(struct perf_event *event,
- 	perf_event__output_id_sample(event, &handle, &sample);
- 
- 	perf_output_end(&handle);
--out:
--	comm_event->event_id.header.size = size;
- }
- 
- static void perf_event_comm_event(struct perf_comm_event *comm_event)
-@@ -9546,7 +9551,7 @@ static void perf_event_comm_event(struct perf_comm_event *comm_event)
- 	comm_event->event_id.header.size = sizeof(comm_event->event_id) + size;
- 
- 	perf_iterate_sb(perf_event_comm_output,
--		       comm_event,
-+		       &comm_event->event_id.header,
- 		       NULL);
- }
- 
-@@ -9598,12 +9603,11 @@ static int perf_event_namespaces_match(struct perf_event *event)
- }
- 
- static void perf_event_namespaces_output(struct perf_event *event,
--					 void *data)
-+					 struct perf_event_header *header)
- {
--	struct perf_namespaces_event *namespaces_event = data;
-+	auto namespaces_event = container_of(header, struct perf_namespaces_event, event_id.header);
- 	struct perf_output_handle handle;
- 	struct perf_sample_data sample;
--	u16 header_size = namespaces_event->event_id.header.size;
- 	int ret;
- 
- 	if (!perf_event_namespaces_match(event))
-@@ -9614,7 +9618,7 @@ static void perf_event_namespaces_output(struct perf_event *event,
- 	ret = perf_output_begin(&handle, &sample, event,
- 				namespaces_event->event_id.header.size);
- 	if (ret)
--		goto out;
-+		return;
- 
- 	namespaces_event->event_id.pid = perf_event_pid(event,
- 							namespaces_event->task);
-@@ -9626,8 +9630,6 @@ static void perf_event_namespaces_output(struct perf_event *event,
- 	perf_event__output_id_sample(event, &handle, &sample);
- 
- 	perf_output_end(&handle);
--out:
--	namespaces_event->event_id.header.size = header_size;
- }
- 
- static void perf_fill_ns_link_info(struct perf_ns_link_info *ns_link_info,
-@@ -9701,7 +9703,7 @@ void perf_event_namespaces(struct task_struct *task)
- #endif
- 
- 	perf_iterate_sb(perf_event_namespaces_output,
--			&namespaces_event,
-+			&namespaces_event.event_id.header,
- 			NULL);
- }
- 
-@@ -9725,12 +9727,11 @@ static int perf_event_cgroup_match(struct perf_event *event)
- 	return event->attr.cgroup;
- }
- 
--static void perf_event_cgroup_output(struct perf_event *event, void *data)
-+static void perf_event_cgroup_output(struct perf_event *event, struct perf_event_header *header)
- {
--	struct perf_cgroup_event *cgroup_event = data;
-+	auto cgroup_event = container_of(header, struct perf_cgroup_event, event_id.header);
- 	struct perf_output_handle handle;
- 	struct perf_sample_data sample;
--	u16 header_size = cgroup_event->event_id.header.size;
- 	int ret;
- 
- 	if (!perf_event_cgroup_match(event))
-@@ -9741,7 +9742,7 @@ static void perf_event_cgroup_output(struct perf_event *event, void *data)
- 	ret = perf_output_begin(&handle, &sample, event,
- 				cgroup_event->event_id.header.size);
- 	if (ret)
--		goto out;
-+		return;
- 
- 	perf_output_put(&handle, cgroup_event->event_id);
- 	__output_copy(&handle, cgroup_event->path, cgroup_event->path_size);
-@@ -9749,8 +9750,6 @@ static void perf_event_cgroup_output(struct perf_event *event, void *data)
- 	perf_event__output_id_sample(event, &handle, &sample);
- 
- 	perf_output_end(&handle);
--out:
--	cgroup_event->event_id.header.size = header_size;
- }
- 
- static void perf_event_cgroup(struct cgroup *cgrp)
-@@ -9796,7 +9795,7 @@ static void perf_event_cgroup(struct cgroup *cgrp)
- 	cgroup_event.path_size = size;
- 
- 	perf_iterate_sb(perf_event_cgroup_output,
--			&cgroup_event,
-+			&cgroup_event.event_id.header,
- 			NULL);
- 
- 	kfree(pathname);
-@@ -9832,9 +9831,8 @@ struct perf_mmap_event {
- };
- 
- static int perf_event_mmap_match(struct perf_event *event,
--				 void *data)
-+				 struct perf_mmap_event *mmap_event)
- {
--	struct perf_mmap_event *mmap_event = data;
- 	struct vm_area_struct *vma = mmap_event->vma;
- 	int executable = vma->vm_flags & VM_EXEC;
- 
-@@ -9843,17 +9841,15 @@ static int perf_event_mmap_match(struct perf_event *event,
- }
- 
- static void perf_event_mmap_output(struct perf_event *event,
--				   void *data)
-+				   struct perf_event_header *header)
- {
--	struct perf_mmap_event *mmap_event = data;
-+	auto mmap_event = container_of(header, struct perf_mmap_event, event_id.header);
- 	struct perf_output_handle handle;
- 	struct perf_sample_data sample;
--	int size = mmap_event->event_id.header.size;
--	u32 type = mmap_event->event_id.header.type;
- 	bool use_build_id;
- 	int ret;
- 
--	if (!perf_event_mmap_match(event, data))
-+	if (!perf_event_mmap_match(event, mmap_event))
- 		return;
- 
- 	if (event->attr.mmap2) {
-@@ -9870,7 +9866,7 @@ static void perf_event_mmap_output(struct perf_event *event,
- 	ret = perf_output_begin(&handle, &sample, event,
- 				mmap_event->event_id.header.size);
- 	if (ret)
--		goto out;
-+		return;
- 
- 	mmap_event->event_id.pid = perf_event_pid(event, current);
- 	mmap_event->event_id.tid = perf_event_tid(event, current);
-@@ -9904,9 +9900,6 @@ static void perf_event_mmap_output(struct perf_event *event,
- 	perf_event__output_id_sample(event, &handle, &sample);
- 
- 	perf_output_end(&handle);
--out:
--	mmap_event->event_id.header.size = size;
--	mmap_event->event_id.header.type = type;
- }
- 
- static void perf_event_mmap_event(struct perf_mmap_event *mmap_event)
-@@ -10011,7 +10004,7 @@ static void perf_event_mmap_event(struct perf_mmap_event *mmap_event)
- 		build_id_parse_nofault(vma, mmap_event->build_id, &mmap_event->build_id_size);
- 
- 	perf_iterate_sb(perf_event_mmap_output,
--		       mmap_event,
-+		       &mmap_event->event_id.header,
- 		       NULL);
- 
- 	kfree(buf);
-@@ -10236,9 +10229,9 @@ static int perf_event_switch_match(struct perf_event *event)
- 	return event->attr.context_switch;
- }
- 
--static void perf_event_switch_output(struct perf_event *event, void *data)
-+static void perf_event_switch_output(struct perf_event *event, struct perf_event_header *header)
- {
--	struct perf_switch_event *se = data;
-+	auto se = container_of(header, struct perf_switch_event, event_id.header);
- 	struct perf_output_handle handle;
- 	struct perf_sample_data sample;
- 	int ret;
-@@ -10301,7 +10294,7 @@ static void perf_event_switch(struct task_struct *task,
- 				PERF_RECORD_MISC_SWITCH_OUT_PREEMPT;
- 	}
- 
--	perf_iterate_sb(perf_event_switch_output, &switch_event, NULL);
-+	perf_iterate_sb(perf_event_switch_output, &switch_event.event_id.header, NULL);
- }
- 
- /*
-@@ -10366,9 +10359,9 @@ static int perf_event_ksymbol_match(struct perf_event *event)
- 	return event->attr.ksymbol;
- }
- 
--static void perf_event_ksymbol_output(struct perf_event *event, void *data)
-+static void perf_event_ksymbol_output(struct perf_event *event, struct perf_event_header *header)
- {
--	struct perf_ksymbol_event *ksymbol_event = data;
-+	auto ksymbol_event = container_of(header, struct perf_ksymbol_event, event_id.header);
- 	struct perf_output_handle handle;
- 	struct perf_sample_data sample;
- 	int ret;
-@@ -10430,7 +10423,7 @@ void perf_event_ksymbol(u16 ksym_type, u64 addr, u32 len, bool unregister,
- 		},
- 	};
- 
--	perf_iterate_sb(perf_event_ksymbol_output, &ksymbol_event, NULL);
-+	perf_iterate_sb(perf_event_ksymbol_output, &ksymbol_event.event_id.header, NULL);
- 	return;
- err:
- 	WARN_ONCE(1, "%s: Invalid KSYMBOL type 0x%x\n", __func__, ksym_type);
-@@ -10456,9 +10449,9 @@ static int perf_event_bpf_match(struct perf_event *event)
- 	return event->attr.bpf_event;
- }
- 
--static void perf_event_bpf_output(struct perf_event *event, void *data)
-+static void perf_event_bpf_output(struct perf_event *event, struct perf_event_header *header)
- {
--	struct perf_bpf_event *bpf_event = data;
-+	auto bpf_event = container_of(header, struct perf_bpf_event, event_id.header);
- 	struct perf_output_handle handle;
- 	struct perf_sample_data sample;
- 	int ret;
-@@ -10536,7 +10529,7 @@ void perf_event_bpf_event(struct bpf_prog *prog,
- 	BUILD_BUG_ON(BPF_TAG_SIZE % sizeof(u64));
- 
- 	memcpy(bpf_event.event_id.tag, prog->tag, BPF_TAG_SIZE);
--	perf_iterate_sb(perf_event_bpf_output, &bpf_event, NULL);
-+	perf_iterate_sb(perf_event_bpf_output, &bpf_event.event_id.header, NULL);
- }
- 
- struct perf_callchain_deferred_event {
-@@ -10549,12 +10542,12 @@ struct perf_callchain_deferred_event {
- 	} event;
- };
- 
--static void perf_callchain_deferred_output(struct perf_event *event, void *data)
-+static void perf_callchain_deferred_output(struct perf_event *event, struct perf_event_header *header)
- {
--	struct perf_callchain_deferred_event *deferred_event = data;
-+	auto deferred_event = container_of(header, struct perf_callchain_deferred_event, event.header);
- 	struct perf_output_handle handle;
- 	struct perf_sample_data sample;
--	int ret, size = deferred_event->event.header.size;
-+	int ret;
- 
- 	if (!event->attr.defer_output)
- 		return;
-@@ -10565,7 +10558,7 @@ static void perf_callchain_deferred_output(struct perf_event *event, void *data)
- 	ret = perf_output_begin(&handle, &sample, event,
- 				deferred_event->event.header.size);
- 	if (ret)
--		goto out;
-+		return;
- 
- 	perf_output_put(&handle, deferred_event->event);
- 	for (int i = 0; i < deferred_event->trace->nr; i++) {
-@@ -10575,8 +10568,6 @@ static void perf_callchain_deferred_output(struct perf_event *event, void *data)
- 	perf_event__output_id_sample(event, &handle, &sample);
- 
- 	perf_output_end(&handle);
--out:
--	deferred_event->event.header.size = size;
- }
- 
- static void perf_unwind_deferred_callback(struct unwind_work *work,
-@@ -10596,7 +10587,7 @@ static void perf_unwind_deferred_callback(struct unwind_work *work,
- 		},
- 	};
- 
--	perf_iterate_sb(perf_callchain_deferred_output, &deferred_event, NULL);
-+	perf_iterate_sb(perf_callchain_deferred_output, &deferred_event.event.header, NULL);
- }
- 
- struct perf_text_poke_event {
-@@ -10618,9 +10609,9 @@ static int perf_event_text_poke_match(struct perf_event *event)
- 	return event->attr.text_poke;
- }
- 
--static void perf_event_text_poke_output(struct perf_event *event, void *data)
-+static void perf_event_text_poke_output(struct perf_event *event, struct perf_event_header *header)
- {
--	struct perf_text_poke_event *text_poke_event = data;
-+	auto text_poke_event = container_of(header, struct perf_text_poke_event, event_id.header);
- 	struct perf_output_handle handle;
- 	struct perf_sample_data sample;
- 	u64 padding = 0;
-@@ -10680,7 +10671,7 @@ void perf_event_text_poke(const void *addr, const void *old_bytes,
- 		},
- 	};
- 
--	perf_iterate_sb(perf_event_text_poke_output, &text_poke_event, NULL);
-+	perf_iterate_sb(perf_event_text_poke_output, &text_poke_event.event_id.header, NULL);
- }
- 
- void perf_event_itrace_started(struct perf_event *event)
+
+Really this test is only looking for how a single exception on a single 
+branch is decoded, it shouldn't be affected by how it was recorded. Even 
+a few bytes of trace would be enough to test it. Or maybe we could add 
+some kind of unit test framework that mocks out OpenCSD and allows us to 
+script how different packets affect the decoder?
+
+But we have to be careful to not add slow tests because it means they're 
+much less likely to be run, or results ignored as it's so hard to 
+iterate quickly. Or also in this case, silently skipped if something 
+regresses.
+
+> 
+> For example, an expected hw int/iret pair is:
+> 
+>    hw int           5cc928 => ffff800080010c80 insn: 63 04 00 f1
+>    ...
+>    iret   ffff800080012284 =>           5cc928 insn: e0 03 9f d6
+> 
+> The entry PC is the architectural resume address, here SUBS X3, X3, #1
+> at 0x5cc928. After the IRQ is handled, ERET returns to the same PC to
+> continue execution.
+> 
+> Assisted-by: Codex:gpt-6
+> Signed-off-by: Leo Yan <leo.yan@arm.com>
+> ---
+>   tools/perf/tests/builtin-test.c                    |   1 +
+>   tools/perf/tests/shell/coresight/irq_entry_exit.sh |  37 +++++
+>   tools/perf/tests/shell/lib/coresight_exception.sh  | 165 +++++++++++++++++++++
+>   tools/perf/tests/tests.h                           |   1 +
+>   tools/perf/tests/workloads/Build                   |   2 +
+>   tools/perf/tests/workloads/branch_not_taken_loop.c |  33 +++++
+>   6 files changed, 239 insertions(+)
+> 
+> diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-test.c
+> index 6259ed805c5f75799d52ac742b77cf278f98bd9d..8eab221f115e75a3ef90be975d4ed0558ceb2b16 100644
+> --- a/tools/perf/tests/builtin-test.c
+> +++ b/tools/perf/tests/builtin-test.c
+> @@ -171,6 +171,7 @@ static struct test_workload *workloads[] = {
+>   	&workload__datasym,
+>   	&workload__landlock,
+>   	&workload__traploop,
+> +	&workload__branch_not_taken_loop,
+>   	&workload__inlineloop,
+>   	&workload__jitdump,
+>   	&workload__context_switch_loop,
+> diff --git a/tools/perf/tests/shell/coresight/irq_entry_exit.sh b/tools/perf/tests/shell/coresight/irq_entry_exit.sh
+> new file mode 100755
+> index 0000000000000000000000000000000000000000..f164daa222b0550ceb106aa6a1215740a1432017
+> --- /dev/null
+> +++ b/tools/perf/tests/shell/coresight/irq_entry_exit.sh
+> @@ -0,0 +1,37 @@
+> +#!/bin/bash
+> +# SPDX-License-Identifier: GPL-2.0
+> +# CoreSight IRQ entry and exit (exclusive)
+> +
+> +# shellcheck source=../lib/coresight_exception.sh
+
+No need for these anymore, see 
+https://lore.kernel.org/linux-perf-users/20260921-james-perf-shellcheck-source-v1-1-adcfc107c997@linaro.org/
+
+> +. "$(dirname "$0")/../lib/coresight_exception.sh"
+> +
+> +test_irq_entry_exit()
+> +{
+> +	# IRQs must return to the interrupted PC. Retry at different timer
+> +	# frequencies if trace gaps leave no complete entry/exit pair.
+> +	for freq in 1000 4000 10000; do
+> +		echo "Recording timer IRQs at $freq Hz"
+> +		if ! record_trace_with_cpu_clock "$freq" branch_not_taken_loop; then
+> +			cat "$tmpdir/record.log"
+> +			echo "Failed to record the IRQ workload"
+> +			return 1
+> +		fi
+> +
+> +		decode_trace || return 1
+> +
+> +		check_exception_pairs "hw int" "iret" 0
+> +		result=$?
+> +		case $result in
+> +		0) return 0 ;;
+> +		1) cat "$tmpdir/script.log"; return 1 ;;
+> +		2) echo "No complete IRQ pair in this recording" ;;
+> +		*) return "$result" ;;
+> +		esac
+> +	done
+> +
+> +	echo "[Skip] No complete IRQ pair after three recordings"
+> +	return 2
+> +}
+> +
+> +setup_exception_test || exit $?
+> +test_irq_entry_exit
+> diff --git a/tools/perf/tests/shell/lib/coresight_exception.sh b/tools/perf/tests/shell/lib/coresight_exception.sh
+> new file mode 100644
+> index 0000000000000000000000000000000000000000..f0133c258625147405ba4641ff7e442437fc66b8
+> --- /dev/null
+> +++ b/tools/perf/tests/shell/lib/coresight_exception.sh
+> @@ -0,0 +1,165 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +# Common helpers for CoreSight exception entry and return tests.
+> +
+> +cleanup()
+> +{
+> +	case $? in
+> +	0|2) rm -rf "$tmpdir" ;;
+> +	*) echo "Test files retained in $tmpdir" ;;
+> +	esac
+> +}
+> +
+> +record_trace_with_cpu_clock()
+> +{
+> +	local clock_opts=()
+> +
+> +	record_freq=$1
+> +	shift
+> +
+> +	# A zero frequency omits the cpu-clock event.
+> +	if [ "$record_freq" -gt 0 ]; then
+> +		# Generate timer IRQs without delivering a signal to the workload.
+> +		clock_opts=(-e cpu-clock:u -F "$record_freq")
+> +	fi
+> +
+> +	# FIFO control bounds the trace to the workload.
+> +	# --kcore supplies the running kernel's instructions for decoding.
+> +	taskset -c "$cpu" perf record -B --no-bpf-event --per-thread --kcore \
+> +		-e cs_etm/timestamp=0/uk "${clock_opts[@]}" \
+> +		-m,4M -D -1 --control fifo:"$tmpdir/ctl","$tmpdir/ack" \
+> +		-o "$tmpdir/data" -- \
+> +		perf test --record-ctl fifo:"$tmpdir/ctl","$tmpdir/ack" -w "$@" \
+> +		> "$tmpdir/record.log" 2>&1
+
+There's a shellcheck warning here:
+
+   (warning): Word is of the form "A"B"C" (B indicated). Did you mean 
+"ABC" or "A\"B\"C"?
+
+You can avoid it by passing the whole path as "$cf" and "$af" like the 
+other coresight tests.
+
+
