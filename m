@@ -1,79 +1,78 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from out30-97.freemail.mail.aliyun.com (out30-97.freemail.mail.aliyun.com [115.124.30.97])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 663AA3A7F54
-	for <linux-perf-users@vger.kernel.org>; Tue, 29 Sep 2026 03:00:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AB6D3911AB;
+	Tue, 29 Sep 2026 03:40:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.97
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790650838; cv=none; b=UXju1zTNzvG4fVPs/Acy87kdggIvDbVCLT2rHdFcO7QNjk0YEB+QsC2EuLpO5BAo/Y8/m+4IdlxTNLb0clVSlBozlXIx+k5pnt7Y+A1l/OSjtdjUMleEyjEH9PAu24VE9KEMp8SyXZLm22QBLmv1+naGw0LuCbjLH/PE8K5X/+g=
+	t=1790653235; cv=none; b=OP4pvjIEogwJzasmkjy4L5eDcBLWhvBrpK13Is19zSBxQTSxd4fN+o8R4J4Yhq7sRBFsNGU7tA+5SxJLqjyB3uAiImxbRE15MWH7p2aRn6JAblt0KYA2xcx0Vz0fmtvOxlzu6Q3H9ES+X6i1SCN8Hx58NU8pOEdtq2RFI5gMPZ0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790650838; c=relaxed/simple;
-	bh=bBGFFivXNSx+UWnRIM/5ERy8+w3xGXV4QLtf/mJfjBg=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=LKmiosjX+hnQgY7uJJ1ckmadR0R5PNIZaLddrhoopTXk4gZVOZ83iNQcbVhiVegXjENQhoekjO+JwJ0eWOBY02abVxoE59Te99g83gxvPa6duXDHTgVa3CuTX02VgEQfuIz6sfhNuXrqiT03IJo23RlrUvEI59YKZOYjQy5z1zI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=moKCUUxj; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1790653235; c=relaxed/simple;
+	bh=qXy2sRf3UPjdIHWylaXPiQGMJd9HqpbGIqCOgYXTgM0=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=GfrBLg/z5R0jfHMIQiyYDP1eMt746WSJ7NC74+xK0RFuJV6hm6V+sYdmH5H3ISkg5JL8+ciptaH7NMpcXhR42/gA8GxIND3Q9PE1uv/7pzwIms8h3+FEl68MCvtj1LW5S/u5bdr6HbKpvQNTWxUjO5U4M1aI4mHS14JC3GtKl3E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=h5wUwGlF; arc=none smtp.client-ip=115.124.30.97
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="moKCUUxj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 02D801F00893;
-	Tue, 29 Sep 2026 03:00:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1790650833;
-	bh=fZjv/VAJuWZrzI190IrWmbz0a5gi/zx8GpXmmR9Hl/E=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=moKCUUxjPSbbaJMJ2Rq1TgPCEDjAA77slCRESccFWDmDL7dSPRrVVpMVDqCLVOO+t
-	 UTpavcOdpNdkruOx3rLrNfqetqIUgqrrBO/FcRqBhMUSwuY0GTieNn+Z3RZZCR08+l
-	 C7i47IuSCN94zZBA9W0+0+0uI0SXwdHMerwWYfuCP0x0EfiQe7AnhWqVt9a+kjUNLX
-	 xFPwZwGalpq2yKfCciWWzgVyolgxPhBr8v4PaU00XoX3o+yUypLXhLWWVFBU5t5cGK
-	 HUVbzOpGDU0Af5L7RL3tCkSblkTz8toap4P1Q6VN27NJKYOrQ/nShRsAfazg6XUL3A
-	 19c895brxXgPg==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v3 1/2] perf test: Add per-test timeout support
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Ian Rogers" <irogers@google.com>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260929025345.88829-1-irogers@google.com>
-References: <20260929011837.4157334-1-irogers@google.com>
- <20260929025345.88829-1-irogers@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Tue, 29 Sep 2026 03:00:32 +0000
-Message-Id: <20260929030033.02D801F00893@smtp.kernel.org>
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="h5wUwGlF"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1790653223; h=From:To:Subject:Date:Message-ID:MIME-Version;
+	bh=qXy2sRf3UPjdIHWylaXPiQGMJd9HqpbGIqCOgYXTgM0=;
+	b=h5wUwGlF8mWNI5ZH5ykL/+1H/DUmkkV+XsPE0kCcNwcVye+wBwp11KLUkyo0feRXJ1VVAYdiwDTTH4WGLuABi4QhkCH7JRMJhWhOmmokaMe1llqGPvrse+Qg6PZt/XsrwcfcpgWQ56X+BhYwcqLZZYk8HGBzmJ2ACdCQD1r0BYs=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R181e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037033178;MF=cp0613@linux.alibaba.com;NM=1;PH=DS;RN=21;SR=0;TI=SMTPD_---0XBrsUfB_1790653212;
+Received: from DESKTOP-S9E58SO.localdomain(mailfrom:cp0613@linux.alibaba.com fp:SMTPD_---0XBrsUfB_1790653212 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Tue, 29 Sep 2026 11:40:21 +0800
+From: Chen Pei <cp0613@linux.alibaba.com>
+To: Leo Yan <leo.yan@arm.com>
+Cc: acme@kernel.org,
+	peterz@infradead.org,
+	mingo@redhat.com,
+	namhyung@kernel.org,
+	mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org,
+	irogers@google.com,
+	adrian.hunter@intel.com,
+	james.clark@linaro.org,
+	john.g.garry@oracle.com,
+	will@kernel.org,
+	mike.leach@arm.com,
+	pjw@kernel.org,
+	palmer@dabbelt.com,
+	guoren@kernel.org,
+	linux-perf-users@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-riscv@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] perf tsc: Replace the compile-time TSC support check with a weak hook
+Date: Tue, 29 Sep 2026 11:40:11 +0800
+Message-ID: <20260929034013.2110-1-cp0613@linux.alibaba.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20260928163442.GG14479@e132581.arm.com>
+References: <20260928094739.2605-1-cp0613@linux.alibaba.com> <20260928094739.2605-3-cp0613@linux.alibaba.com> <20260928163442.GG14479@e132581.arm.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-> When a test hangs in 'perf test', the entire test run hangs and makes it
-> difficult to inspect output from other tests.
->=20
-> Add a new TEST_TIMEOUT result category and a per-test timeout (default
-> 60 seconds, configurable via '-t'/'--timeout', with 0 to disable). When
-> '-F' ('--dont-fork') is specified, timeouts are disabled.
->=20
-> To enforce the timeout:
-> - Place each forked test child into its own process group via
->   setpgid(0, 0) in the child and setpgid(pid, pid) in the parent so any
->   subprocesses spawned by shell or workload tests can be terminated
->   together.
-> - Arm an ITIMER_REAL periodic timer with a SIGALRM handler (using
->   SA_RESTART so /proc status reads in check_if_command_finished() are
->   not interrupted by EINTR while poll()/usleep() waits still wake up).
-> - Check elapsed child runtimes against test_timeout in finish_test() and
->   finish_tests_parallel(), sending SIGTERM first and escalating to
->   SIGKILL after 1 second if the child process group has not exited.
-> - Report timed out tests in red ('TIMEOUT!'), track and display them in
->   the test summary, and emit '<error message=3D"TIMEOUT" type=3D"timeout"=
->'
->   counted under the 'errors' attribute in JUnit XML output.
-> - Document '-t'/'--timeout' and '-F'/'--dont-fork' in perf-test.txt.
->=20
-> Assisted-by: Antigravity:gemini-3.1-pro
-> Signed-off-by: Ian Rogers <irogers@google.com>
+Hi Leo,
 
-Sashiko has reviewed this patch and found no issues. It looks great!
+Thanks a lot for the review.
 
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260929025345.8882=
-9-1-irogers@google.com?part=3D1
+> Just a bit on refactoring. You could refer to the implementation of
+> PERF_HAVE_JITDUMP in arch Makefile and "CFLAGS += -DHAVE_JITDUMP" and
+> do similiar thing for rdtsc.
+>
+> Seems to me, we can just use build system for configurations.
 
+Makes sense, I'll change it that way in v2, thanks for pointing at the
+existing pattern.
+
+Best regards,
+Pei
