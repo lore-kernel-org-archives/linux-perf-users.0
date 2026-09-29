@@ -1,417 +1,156 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oi2-f12.google.com (mail-oi2-f12.google.com [74.125.231.204])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B23F451C052;
-	Tue, 29 Sep 2026 18:29:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D137154146B
+	for <linux-perf-users@vger.kernel.org>; Tue, 29 Sep 2026 18:29:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.231.204
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790706547; cv=none; b=UeFj034sScV2rH8qqkUSyqA0MajeGtPUvNKC9pbHvJPK148WU7o+c6iSojdYUQop78G+LyuZWbkkjJqTQUCAgPPwR95+yEXPJDd07NenYVVU1WQLdH8s1wbKGAdQ1pkfJTxix2As2xLmwK5LtVmXgBtG2IRy+M/qqAfNHfANkiY=
+	t=1790706581; cv=none; b=QGYRk2W1gVW9RNHoKrAG5tTGuVQIlMr2/5bZLfvFq0HF7spNcX6YTx4RvWtzZ+cJXVc9KlICj2fiCcbuSsdgwx/5BEVcBGLQ6tr+xtpCwd6slsWvF7Vx3xOEw2BQSfKX6EwWMz3lIzPaK78hr8KEgf0v4cz5pvjSqUk7SwUUqJk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790706547; c=relaxed/simple;
-	bh=CxXIsA7743Lzpof3c35k1EqHa7rWkEV42dY55t3ftS8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sguev57cHXz5Ag+JnoHiXerxvs25NUdxsoxRVwTR4LSMx7jz5ianyxID+8GZewVAPa8kQGRkt5yR8g2kFzmNZ3kxXOHaOFOUI+Bgv9Bn2N94HGcihJuLPW1BC/V0sVaLv1v4mnOSHksX+/+4jb4kU/Wug+9sOT/QWXirXee3RlM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VcgEULi9; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1790706581; c=relaxed/simple;
+	bh=/5++U61XAoH/VSVR//J0hU1yz7OfZSDFFShlI6bBPSQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=s7XKiBuW+WeidjeQS5i30cJOVuVvZz4HtQ3RhYuA/EAdGVJspz7O7KRR4P/PRdVRUkmIXrAK6VTXA4P6ZyGmHFt8pT53bWYUXycMUKzTQnDAYOc6gWFPnJ3klqLFj/pENvZvQwPqAtBNndx3JOPfyNcXN8+TJnfi5FRC4L/Upio=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gd+Ek8qX; arc=none smtp.client-ip=74.125.231.204
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VcgEULi9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DCEE41F00893;
-	Tue, 29 Sep 2026 18:29:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1790706544;
-	bh=4bEmdRol8hWIkS2OsUzcCLTjlXH5oD2m/BnUzKemRns=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=VcgEULi9EQbsV75NEzn9DiRssPMhhXIWvlwBcMX4H8DaoWdVaImYIbjAZ6EdxgGp5
-	 HCLlmYnsjINQURr78LXU2Rmnc71cjSEwbi5MXRkyuhTx98330P1GMjvq+kpTdwYAxb
-	 gfrLh0rx3Oq/toAX6GeTTVHoMZLwgYEQeH2ior1b38RbSX5qZ491GFDEBRcWE47fIy
-	 rRwN1pAwWDiRB7/+PYrvDiJl53E3GQA1yX8PFTsqplHCKEjvFBUg18VaOA3+CSN2Si
-	 u0dcYIzfcPAzuD7P2hH7TtR+YAS6ME8dqCBU8yAaRIv0iYs2MTtuQeL4FLGeQII6l4
-	 uGBh9X6kaAztg==
-Date: Tue, 29 Sep 2026 11:29:02 -0700
-From: Namhyung Kim <namhyung@kernel.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
-	James Clark <james.clark@linaro.org>, Jiri Olsa <jolsa@kernel.org>,
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gd+Ek8qX"
+Received: by mail-oi2-f12.google.com with SMTP id 5614622812f47-4b37a29bf27so2093877b6e.2
+        for <linux-perf-users@vger.kernel.org>; Tue, 29 Sep 2026 11:29:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1790706579; x=1791311379; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=tHysdsRd5NU3JnGkGkLnvGMuzNOaAa664hZky0TTqHs=;
+        b=gd+Ek8qXyOpE9n6Jo1f5u8uKmu0f9afK+GbuncFu6rrXqQ8/7v9oPtwE9XtOphxMdD
+         peCW1l1O6XOvR2biQxyTBz8t7f6uk3/XPKdXwTwel67k8BbsBQxQM4TyNn+MGegVl/ro
+         CuuWfPe3stP3fLwLkm3YVUOfh3+Z5T3TN3KtbI8kfxC6wDn0sxPqC6SEyoIeFUoS0loA
+         UL/sFMIQ9TmeanCr3zXa/8edcPXhpnZL1IAy7wx0a2o8OXSWakX2/lw2vXXZFZYwSIkd
+         sVZXxFrxOiAJ+vQ0Tq7VdCFoiZ6RJdnEMAflNGnoR/QQ4n0xfKN6U060nhUC+civXuh7
+         Fbcg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1790706579; x=1791311379;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=tHysdsRd5NU3JnGkGkLnvGMuzNOaAa664hZky0TTqHs=;
+        b=BQqZQyi66IOBFDMMSQ+bZF5mpbfvmJ5lu0yQtWJ4jIYPuetX+sk9yY60QxJV/B2J5d
+         Df7fGCgdtHWEdRnF1URE9Mv731UPLHAxBxpMFS1SRD+vXHx+XjrEJAAtPjfYflfyG3Ay
+         GFmigiTFH4+DoFlLtdDQfMxl1B8rspUAiZI2GsV5T/AtygbonhlebfSC8+lBwgtVtTvw
+         5Z2OUv0I8GvQMY0+HUvjNxE1FsSzToX/sIjfnCcai5qPr73By9NJHvhUxxqW9AnjgVom
+         PML5TnAx/450VS3KzOi3KiizN/5C8fok2x95RnHgN/EQF3+7S3lutNU25SnnyYeuXMeF
+         5V7w==
+X-Forwarded-Encrypted: i=1; AKwUvByRy9oB0gDZiRF2EGKkoCayPtGZx+BbLLIFbGcPh1dHX1s0mhcgQNQBJdtFMBMldtTtIX2uS67qfXAVTpKEjQ3r@vger.kernel.org
+X-Gm-Message-State: AFuF++ktcZsxHE7/+K8gKLl5yCVo28vDC0IJDIHN5V6MGshyWFIYW/4R
+	zYxQs8rIEaT4Q9CSK1I+sR8VMbyASFLH1EGssdJA5WXY7pzTE6QBx+AH
+X-Gm-Gg: AYBFou0+D3vVn5DWJTVJNhVEvFsNpqo7TX6iuo9VmkF6gFCV1bNOPQqN7Q8fjmJnxsT
+	7qN9msIaJrGAImflW12x27G5jdqtOnvgETfqlNSnFKGhkEEcHKr2vIWb35Gcld31gn3xuh/a3a4
+	641NVFhZnVqiVnLnB5wLhuz+7mJ89XhNuRHxOQXv0Z7x75dyOzeQC1lX3Ath9RbOGuXrh+2wkAf
+	WR/PypXHwZSlki7d87j0tO5K12vWL5JVK/1p2d1QlULG5yjgODWAjQP3rCptPoUAUoukSncH8nC
+	TQivmMr4JxxjHwwOgL0o98Ddh4eDbvD8zovk5gQFsVHlg0T5spIINoJzRFWtrWqmxwe/XQFRYqS
+	0NHk2TcCUQgGZ+8nCiGE0/keQY+E31YmXoOc4N/JG0OATafkYFERoXm03QmOP9kJwS4aMYmFXU4
+	6rIu+AZzNXULeIv4oOBYInyP5q29ZSHiIMqSyaxrT11DtA1Sy1+nfRMRXe1novckfx68WJFkMfl
+	9lfb0YqiATohhGs7JJaayv6kyIRmLhQngEn4gCG
+X-Received: by 2002:a05:6808:2385:b0:4d6:9293:9bc3 with SMTP id 5614622812f47-4f06f2dcc17mr348674b6e.61.1790706578607;
+        Tue, 29 Sep 2026 11:29:38 -0700 (PDT)
+Received: from archlinux.lan ([136.34.156.120])
+        by smtp.gmail.com with ESMTPSA id 5614622812f47-4f0ade01337sm821b6e.8.2026.09.29.11.29.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 29 Sep 2026 11:29:37 -0700 (PDT)
+From: Danish Khateeb <danishkhateeb03@gmail.com>
+To: Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
 	Ian Rogers <irogers@google.com>,
 	Adrian Hunter <adrian.hunter@intel.com>,
-	Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org,
+	James Clark <james.clark@linaro.org>,
+	Marco Elver <elver@google.com>,
+	Frederic Weisbecker <frederic@kernel.org>,
 	linux-perf-users@vger.kernel.org,
-	Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: Re: [PATCH 2/4] perf report: Add --progress option
-Message-ID: <arwDbuRFZnqdQi_C@google.com>
-References: <20260928220634.2451784-1-acme@kernel.org>
- <20260928220634.2451784-3-acme@kernel.org>
+	linux-kernel@vger.kernel.org,
+	Danish Khateeb <danishkhateeb03@gmail.com>,
+	stable@vger.kernel.org
+Subject: [PATCH] perf/core: Don't send SIGTRAP after exec removed the event
+Date: Tue, 29 Sep 2026 13:29:35 -0500
+Message-ID: <20260929182935.355892-1-danishkhateeb03@gmail.com>
+X-Mailer: git-send-email 2.55.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20260928220634.2451784-3-acme@kernel.org>
+Content-Transfer-Encoding: 8bit
 
-On Tue, Sep 29, 2026 at 12:06:32AM +0200, Arnaldo Carvalho de Melo wrote:
-> From: Arnaldo Carvalho de Melo <acme@redhat.com>
-> 
-> Processing a large session with stdio output gives no feedback about
-> which phase perf is in or how far along it is: ui_progress updates are
-> only shown by the TUI.  Add --progress, installing a stdio backend
-> (ui/stdio/progress.c) that prints the phase title, percentage and
-> counts:
-> 
->   Processing events... [42.3%] 317M / 746M
-> 
-> Phases can be nested, so the backend tracks the ones started to
-> complete the right one on ui_progress__finish(); that requires
-> init()/finish() pairs, fixed in ordered-events.c and the pipe and
-> directory event processing.
-> 
-> Assisted-by: LLM
-> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-> ---
->  tools/perf/Documentation/perf-report.txt |  13 ++
->  tools/perf/builtin-report.c              |  10 ++
->  tools/perf/ui/Build                      |   1 +
->  tools/perf/ui/progress.h                 |   2 +
->  tools/perf/ui/stdio/progress.c           | 162 +++++++++++++++++++++++
->  tools/perf/util/ordered-events.c         |  16 ++-
->  tools/perf/util/session.c                |  12 +-
->  7 files changed, 209 insertions(+), 7 deletions(-)
->  create mode 100644 tools/perf/ui/stdio/progress.c
-> 
-> diff --git a/tools/perf/Documentation/perf-report.txt b/tools/perf/Documentation/perf-report.txt
-> index 3718ebd297ce0673..9b0a62fd361fd58f 100644
-> --- a/tools/perf/Documentation/perf-report.txt
-> +++ b/tools/perf/Documentation/perf-report.txt
-> @@ -29,6 +29,19 @@ OPTIONS
->  --quiet::
->  	Do not show any warnings or messages.  (Suppress -v)
->  
-> +--progress::
-> +	Show progress for each of the processing phases, printing the
-> +	percentage done and the current/total counts: the first phase
-> +	counts the bytes of the perf.data file processed so far, the
-> +	merge and sort phases count hist entries, e.g.:
-> +
-> +	Processing events... [ 42.3%] 4G / 10G
-> +	Merging related events... [  7.1%] 1024 / 14387
-> +	Sorting events for output... [ 98.2%] 14132 / 14387
-> +
-> +	It is a no-op when using the TUI or GTK browsers, that already
-> +	present progress information.
+A sigtrap event must also set remove_on_exec, so that its SIGTRAP never
+reaches a program after exec. But the signal is sent from task work,
+which only runs on the way back to user space. If the event overflows
+shortly before execve(), the task work can still be pending when the
+task enters execve(), and then runs when execve() returns. By then
+perf_event_exec() has removed the event and the new program has default
+signal handlers, so the SIGTRAP kills it.
 
-I'm not sure what to do if --quiet and --progress were given together.
+The exec_stress test in the remove_on_exec selftest catches this and
+fails about half the time in a VM. A process that opens a sigtrap event
+on itself and then calls execve() is killed by SIGTRAP in 15% of runs on
+an AMD machine running v7.2, and in half of them in a VM.
 
-Also maybe meaningful to handle --no-progress for TUI and GTK.
+perf_event_exit_event() sets PERF_EVENT_STATE_EXIT when it removes the
+event, on exec and on exit. The exit case is already caught by the
+PF_EXITING check in perf_sigtrap(), so an event in that state there was
+removed by exec. Don't send the signal for it.
 
-Thanks,
-Namhyung
+Fixes: 97ba62b27867 ("perf: Add support for SIGTRAP on perf events")
+Cc: stable@vger.kernel.org
+Assisted-by: LLM
+Signed-off-by: Danish Khateeb <danishkhateeb03@gmail.com>
+---
 
-> +
->  -n::
->  --show-nr-samples::
->  	Show the number of samples for each symbol
-> diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
-> index 57225bc87731d074..d89a63742f622fde 100644
-> --- a/tools/perf/builtin-report.c
-> +++ b/tools/perf/builtin-report.c
-> @@ -87,6 +87,7 @@ struct report {
->  	bool			use_gtk;
->  #endif
->  	bool			use_stdio;
-> +	bool			progress;
->  	bool			show_full_info;
->  	bool			show_threads;
->  	bool			inverted_callchain;
-> @@ -1384,6 +1385,8 @@ int cmd_report(int argc, const char **argv)
->  		    "Use the stdio interface"),
->  	OPT_BOOLEAN(0, "weights", &symbol_conf.annotate_weight,
->  			"Show or hide weight columns in annotation. Default show if non-zero."),
-> +	OPT_BOOLEAN(0, "progress", &report.progress,
-> +		    "Show progress while processing the perf.data file"),
->  	OPT_BOOLEAN(0, "header", &report.header, "Show data header."),
->  	OPT_BOOLEAN(0, "header-only", &report.header_only,
->  		    "Show only data header."),
-> @@ -1790,6 +1793,13 @@ int cmd_report(int argc, const char **argv)
->  	else
->  		use_browser = 0;
->  
-> +	/*
-> +	 * For the stdio case: print the percentage of the perf.data file
-> +	 * processed so far for each processing phase.
-> +	 */
-> +	if (report.progress && use_browser == 0)
-> +		stdio_progress__init();
-> +
->  	if (report.data_type && use_browser == 1) {
->  		symbol_conf.annotate_data_member = true;
->  		symbol_conf.annotate_data_sample = true;
-> diff --git a/tools/perf/ui/Build b/tools/perf/ui/Build
-> index 6005f813c9e3990c..a7b1740d51c80f23 100644
-> --- a/tools/perf/ui/Build
-> +++ b/tools/perf/ui/Build
-> @@ -4,6 +4,7 @@ perf-ui-y += progress.o
->  perf-ui-y += util.o
->  perf-ui-y += hist.o
->  perf-ui-y += stdio/hist.o
-> +perf-ui-y += stdio/progress.o
->  
->  CFLAGS_setup.o += -DLIBDIR="BUILD_STR($(LIBDIR))"
->  
-> diff --git a/tools/perf/ui/progress.h b/tools/perf/ui/progress.h
-> index 4f52c37b2f099a82..03f1a8bb260ba076 100644
-> --- a/tools/perf/ui/progress.h
-> +++ b/tools/perf/ui/progress.h
-> @@ -23,6 +23,8 @@ void __ui_progress__init(struct ui_progress *p, u64 total,
->  
->  void ui_progress__update(struct ui_progress *p, u64 adv);
->  
-> +void stdio_progress__init(void);
-> +
->  struct ui_progress_ops {
->  	void (*init)(struct ui_progress *p);
->  	void (*update)(struct ui_progress *p);
-> diff --git a/tools/perf/ui/stdio/progress.c b/tools/perf/ui/stdio/progress.c
-> new file mode 100644
-> index 0000000000000000..1938766a35faa0fb
-> --- /dev/null
-> +++ b/tools/perf/ui/stdio/progress.c
-> @@ -0,0 +1,162 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Progress feedback for the stdio (non-TUI/GTK) case, enabled with
-> + * 'perf report --progress'.
-> + */
-> +#include <inttypes.h>
-> +#include <stdio.h>
-> +#include <unistd.h>
-> +#include <linux/kernel.h>
-> +#include "../../util/debug.h"
-> +#include "../../util/units.h"
-> +#include "../progress.h"
-> +
-> +/*
-> + * Phases can be nested, so keep track of the ones started so far to be
-> + * able to complete the right one on ui_progress__finish(), which gets
-> + * no arguments.
-> + */
-> +#define STDIO_PROGRESS__MAX_DEPTH 8
-> +
-> +struct stdio_progress_phase {
-> +	struct ui_progress	*p;
-> +	u64			last_printed;
-> +	size_t			last_len;
-> +};
-> +
-> +static struct stdio_progress_phase stdio_progress__stack[STDIO_PROGRESS__MAX_DEPTH];
-> +static int stdio_progress__depth;
-> +static bool stdio_progress__is_tty;
-> +/* Phases that didn't fit on the stack are not shown. */
-> +static int stdio_progress__dropped;
-> +
-> +static void stdio_progress__print_phase(struct stdio_progress_phase *phase,
-> +					u64 curr)
-> +{
-> +	struct ui_progress *p = phase->p;
-> +	char buf_cur[20], buf_tot[20], buf[128];
-> +	double percent = p->total ? 100.0 * (double)curr / (double)p->total : 0.0;
-> +	size_t len;
-> +
-> +	/*
-> +	 * Only the completion line shows 100.0%: a 99.99% progress would round
-> +	 * up to it and look like a duplicate at finish time.
-> +	 */
-> +	if (curr < p->total && percent > 99.9)
-> +		percent = 99.9;
-> +
-> +	if (p->size) {
-> +		unit_number__scnprintf(buf_cur, sizeof(buf_cur), curr);
-> +		unit_number__scnprintf(buf_tot, sizeof(buf_tot), p->total);
-> +		len = scnprintf(buf, sizeof(buf), "%s [%5.1f%%] %s / %s",
-> +				p->title, percent, buf_cur, buf_tot);
-> +	} else {
-> +		len = scnprintf(buf, sizeof(buf), "%s [%5.1f%%] %" PRIu64 " / %" PRIu64,
-> +				p->title, percent, curr, p->total);
-> +	}
-> +
-> +	if (!stdio_progress__is_tty) {
-> +		fprintf(stderr, "%s\n", buf);
-> +		goto out;
-> +	}
-> +
-> +	/* Pad to the length of the previous line to erase its leftovers. */
-> +	fprintf(stderr, "\r%s%*s", buf,
-> +		(int)(len < phase->last_len ? phase->last_len - len : 0), "");
-> +	phase->last_len = len;
-> +out:
-> +	phase->last_printed = curr;
-> +	fflush(stderr);
-> +}
-> +
-> +static void __stdio_progress__init(struct ui_progress *p)
-> +{
-> +	/* The default step is meant for the TUI bar, use 1% steps for stdio. */
-> +	p->next = p->step = p->total / 100 ?: 1;
-> +
-> +	if (stdio_progress__depth == STDIO_PROGRESS__MAX_DEPTH) {
-> +				/*
-> +		 * Out of room: don't start this phase, its finish() is swallowed and
-> +		 * its updates ignored below.
-> +		 */
-> +		pr_warning("progress phases nested deeper than %d, not showing progress for %s\n",
-> +			   STDIO_PROGRESS__MAX_DEPTH, p->title);
-> +		stdio_progress__dropped++;
-> +		return;
-> +	}
-> +
-> +	/* Start a nested phase in a line of its own. */
-> +	if (stdio_progress__depth && stdio_progress__is_tty)
-> +		fputc('\n', stderr);
-> +
-> +	stdio_progress__stack[stdio_progress__depth++] =
-> +		(struct stdio_progress_phase) {
-> +			.p = p,
-> +			.last_printed = 0,
-> +			.last_len = 0,
-> +		};
-> +
-> +	stdio_progress__print_phase(&stdio_progress__stack[stdio_progress__depth - 1],
-> +				    p->curr);
-> +}
-> +
-> +static void stdio_progress__update(struct ui_progress *p)
-> +{
-> +		/*
-> +	 * An update that doesn't match the innermost phase means something is
-> +	 * out of sync: print nothing rather than another phase's numbers, or
-> +	 * read past the stack.
-> +	 */
-> +	if (!stdio_progress__depth ||
-> +	    stdio_progress__stack[stdio_progress__depth - 1].p != p)
-> +		return;
-> +
-> +	stdio_progress__print_phase(&stdio_progress__stack[stdio_progress__depth - 1],
-> +				    p->curr);
-> +}
-> +
-> +static void stdio_progress__finish(void)
-> +{
-> +	struct stdio_progress_phase *phase;
-> +
-> +	/*
-> +	 * Being the innermost phase, its finish() comes first: swallow it, or
-> +	 * it would complete the phase that encloses it.
-> +	 */
-> +	if (stdio_progress__dropped) {
-> +		stdio_progress__dropped--;
-> +		return;
-> +	}
-> +
-> +	if (!stdio_progress__depth)
-> +		return;
-> +
-> +	phase = &stdio_progress__stack[--stdio_progress__depth];
-> +
-> +	/*
-> +	 * The last line may have stopped short of the total, close this phase
-> +	 * showing it as complete unless that was already printed.
-> +	 */
-> +	if (phase->last_printed != phase->p->total)
-> +		stdio_progress__print_phase(phase, phase->p->total);
-> +
-> +	phase->last_printed	= 0;
-> +	phase->last_len		= 0;
-> +
-> +	if (stdio_progress__is_tty)
-> +		fputc('\n', stderr);
-> +
-> +	fflush(stderr);
-> +}
-> +
-> +static struct ui_progress_ops stdio_progress__ops = {
-> +	.init	= __stdio_progress__init,
-> +	.update	= stdio_progress__update,
-> +	.finish	= stdio_progress__finish,
-> +};
-> +
-> +void stdio_progress__init(void)
-> +{
-> +	stdio_progress__is_tty = isatty(STDERR_FILENO) == 1;
-> +	ui_progress__ops = &stdio_progress__ops;
-> +}
-> diff --git a/tools/perf/util/ordered-events.c b/tools/perf/util/ordered-events.c
-> index a5857f9f5af2d3de..54c85663e733be4d 100644
-> --- a/tools/perf/util/ordered-events.c
-> +++ b/tools/perf/util/ordered-events.c
-> @@ -237,14 +237,16 @@ static int do_flush(struct ordered_events *oe, bool show_progress)
->  		ui_progress__init(&prog, oe->nr_events, "Processing time ordered events...");
->  
->  	list_for_each_entry_safe(iter, tmp, head, list) {
-> -		if (session_done())
-> -			return 0;
-> +		if (session_done()) {
-> +			ret = 0;
-> +			goto out_progress;
-> +		}
->  
->  		if (iter->timestamp > limit)
->  			break;
->  		ret = oe->deliver(oe, iter);
->  		if (ret < 0)
-> -			return ret;
-> +			goto out_progress;
->  
->  		ordered_events__delete(oe, iter);
->  		oe->last_flush = iter->timestamp;
-> @@ -258,10 +260,16 @@ static int do_flush(struct ordered_events *oe, bool show_progress)
->  	else if (last_ts <= limit)
->  		oe->last = list_entry(head->prev, struct ordered_event, list);
->  
-> +	ret = 0;
-> +out_progress:
-> +	/*
-> +	 * Always pair ui_progress__init() with ui_progress__finish(), the
-> +	 * stdio backend tracks the phases on a stack.
-> +	 */
->  	if (show_progress)
->  		ui_progress__finish();
->  
-> -	return 0;
-> +	return ret;
->  }
->  
->  static int __ordered_events__flush(struct ordered_events *oe, enum oe_flush how,
-> diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
-> index 7fea9e72726c936c..c4b4c7fb3b864589 100644
-> --- a/tools/perf/util/session.c
-> +++ b/tools/perf/util/session.c
-> @@ -3253,8 +3253,12 @@ static int __perf_session__process_pipe_events(struct perf_session *session)
->  	cur_size = sizeof(union perf_event);
->  
->  	buf = malloc(cur_size);
-> -	if (!buf)
-> -		return -errno;
-> +	if (!buf) {
-> +		err = -errno;
-> +		if (update_prog)
-> +			ui_progress__finish();
-> +		return err;
-> +	}
->  	ordered_events__set_copy_on_queue(oe, true);
->  more:
->  	event = buf;
-> @@ -3753,8 +3757,10 @@ static int __perf_session__process_dir_events(struct perf_session *session)
->  	}
->  
->  	rd = calloc(nr_readers, sizeof(struct reader));
-> -	if (!rd)
-> +	if (!rd) {
-> +		ui_progress__finish();
->  		return -ENOMEM;
-> +	}
->  
->  	rd[0] = (struct reader) {
->  		.fd		 = perf_data__fd(session->data),
-> -- 
-> 2.55.0
-> 
+Notes:
+    Tested on v7.3-rc5 x86_64 under virtme-ng (KASAN, lockdep, 8 vCPUs on an
+    AMD Zen 3 host):
+    
+    - selftests/perf_events/remove_on_exec: exec_stress failed in 10 of 20
+      runs before, all 20 pass after.
+    - The exec_stress pattern in a loop (30 inheriting children, 50 rounds):
+      a child was killed by SIGTRAP in 20 rounds before, in none after.
+    - Each child opens its own sigtrap + remove_on_exec event and execs:
+      1078 of 2000 children were killed by SIGTRAP before, none after. The
+      same program kills 297 of 2000 children on the bare-metal host running
+      v7.2.6.
+    - sigtrap_threads passes before and after. No new kernel warnings.
+    
+    v7.2 fails the same way in the VM. I did not test kernels older than
+    v7.2. gcc W=1 and sparse show no new warnings.
+
+ kernel/events/core.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index 634d2ccbab82..948583ffeb53 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -7631,6 +7631,14 @@ static void perf_sigtrap(struct perf_event *event)
+ 	if (current->flags & PF_EXITING)
+ 		return;
+ 
++	/*
++	 * exec() removed the event (remove_on_exec) after this signal was
++	 * queued. The new program has default signal handlers, so a SIGTRAP
++	 * would kill it.
++	 */
++	if (event->state == PERF_EVENT_STATE_EXIT)
++		return;
++
+ 	/*
+ 	 * We'd expect this to only occur if the irq_work is delayed and either
+ 	 * ctx->task or current has changed in the meantime. This can be the
+
+base-commit: 72d3fcf802c45d00b300f25b848a93c3a2bd7c7e
+-- 
+2.55.0
+
