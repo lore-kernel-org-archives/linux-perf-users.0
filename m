@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF9F72BDC0F;
-	Tue, 29 Sep 2026 01:11:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3536A3B9D96;
+	Tue, 29 Sep 2026 01:11:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790644310; cv=none; b=tu9y5Us8BbvQp8UoXKh7vaDgdmbqRyo8Oc0CsoVonG0xpkX7nBe0ZhMdTciA5q/z5sDt1XpQNhVhxcDJk9jK8g8XFSVDm5z2N2rrgWwRpq3ZpDxD9b5qto9yajdumxDxungrXRsACzmV2hroUR8XPK7cHzZ4f4XCmVOkthYZt40=
+	t=1790644311; cv=none; b=bAPXn2IJpiNxYOikeuuatG6ctwZsPls0uje4njwxXa+pMEPByR2VS0QAO12UYrA/5NtbWkBgOAu0DR2D/CUyVBDrwNFNcOwe6x6Zc5MLhhyiTsJvYQZJNicO+sgL8XWfz4N4izCEQwj9vkkUcQobPHDt2otzjyMeh6WTaj9VYdg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790644310; c=relaxed/simple;
-	bh=18Djt8dYO3QiVHynPo3hB9gIagUVfA8ugDtT5B0G0vM=;
+	s=arc-20240116; t=1790644311; c=relaxed/simple;
+	bh=DbxqdctmvGkNfnXBKKvs2hivk5pylbisRQ3ZkP+b8PM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=F01J7MWAad883Ry7536JLFgRFiQVv3OZSqb+usRwE0KI9+QArGLKQmP0++lCgW3AToVAWuSsch2muG0lqtSW9bIwZ6+H2o+GmU0jHnU0nYa2IdT2XcUYLyUxqj2ashJIIsQvkiUx8KUVZ8KzuLjg8Oewzx4eNEmd6vmxzTeTkhU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KarE43qM; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version; b=AUUKBw8Wznu/FYaa+JaY59zUEt7YxwHvtmMfbWINnjXcz2UMOxZJkm7vAwswK9bKCMsraXhMpn8WkaRHRi48ZrYZhxMVh1Lw32t259YctNseaHS/0mhlkS32jZKXh0NKvDN4ANKpbNuvhvqCwE4ANTnuEHLuYhz80YgMkWhtrm0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=frg9Ftou; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KarE43qM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0B2611F000FF;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="frg9Ftou"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 925581F00899;
 	Tue, 29 Sep 2026 01:11:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1790644309;
-	bh=hUR86lBmsadyYk8/+3bcb1Ps4lRyzHJyJ5U9V0WTvOs=;
+	s=k20260515; t=1790644310;
+	bh=T1pMpqpCV4ae5fxBOaC1Iu1tpef3aO4iiXQBXZ9wrak=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=KarE43qM2JUUFp/4nqTZyepsmI3J2wMBK1BtWazUYPfuWVPGX1vMlxBfC0Y5N0JH9
-	 c04ABAB/b+vpnIxpq9xF0MzXSzypHdXtrFTJZQooSinZa7Uk9c29BDM5+N2yxbTWyo
-	 WUE3t2BUefVFevELRWPYFmTCqrIx8FJcPyKpF+c08hEhTfOMLnEZqGAoO2DE88+9qt
-	 dCMi2N6xdg1pQ0aacUTALiUJ8tsJvuF/CY+zmyx/x2wLa+vXDzf8etCy+ImHKm6oNq
-	 +fODdUoqoqEG5iyY2kYxw7bXkalsF0614Qb/qWZoNDHl8bWdBko2E7yPpSgs4lPo0w
-	 ib7xDWAgl6kPA==
+	b=frg9FtouPQ7/kResTa5fGXhDoBWf9k7GlyDNx62LZd4hNbr5tHi6X0qDDNdEJZgSK
+	 cfxTWnpizbpPvKpaLGuJaf0DM7xJjYC6Hfs0cmvu+qM4GAMAT4ZHB/rbAL/+lFsf6l
+	 6Jbe00wRuTAGKrRAma52ZZ4OQ/5RbIZjqzB9vORJXULpbaeEfwmzhYigZrDX1H+XC/
+	 TD2xA30seARtCrRKuCXkhtiaKN3lTHnb+oC4LUSeYuxyIr8qyH7h52IdxXaZiioTRy
+	 g54lIyygt9/vT5WTMJ5KesMN1MROHRD63SI0dWck/q+nngrM6mjzp+USFLSMeBHFMb
+	 ON/i6nqr5/NMA==
 From: Namhyung Kim <namhyung@kernel.org>
 To: Arnaldo Carvalho de Melo <acme@kernel.org>,
 	Ian Rogers <irogers@google.com>,
@@ -38,9 +38,9 @@ Cc: Jiri Olsa <jolsa@kernel.org>,
 	linux-perf-users@vger.kernel.org,
 	Masami Hiramatsu <mhiramat@kernel.org>,
 	Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH v2 1/8] perf tools: Add dso->dbginfo_type field
-Date: Mon, 28 Sep 2026 18:11:32 -0700
-Message-ID: <20260929011139.53242-2-namhyung@kernel.org>
+Subject: [PATCH v2 2/8] perf tools: Factor out dso__find_dbginfo_type()
+Date: Mon, 28 Sep 2026 18:11:33 -0700
+Message-ID: <20260929011139.53242-3-namhyung@kernel.org>
 X-Mailer: git-send-email 2.55.0
 In-Reply-To: <20260929011139.53242-1-namhyung@kernel.org>
 References: <20260929011139.53242-1-namhyung@kernel.org>
@@ -52,61 +52,104 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-It saves where the debug info is available for the given DSO.  It's
-sometimes different than where binary data or symbol table is located.
-So let's add a new field to save the info.
+It tries to find a file with working debug info by checking all possible
+debug types.  It checks if the file has one of known debug info sections.
 
 Reviewed-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 ---
- tools/perf/util/dso.c |  1 +
- tools/perf/util/dso.h | 16 ++++++++++++++++
- 2 files changed, 17 insertions(+)
+ tools/perf/util/debuginfo.c | 23 ++++++-----------------
+ tools/perf/util/dso.c       | 29 +++++++++++++++++++++++++++++
+ tools/perf/util/dso.h       |  2 ++
+ 3 files changed, 37 insertions(+), 17 deletions(-)
 
+diff --git a/tools/perf/util/debuginfo.c b/tools/perf/util/debuginfo.c
+index 84a78b30ceac1066..d6bd0fcc22648f0e 100644
+--- a/tools/perf/util/debuginfo.c
++++ b/tools/perf/util/debuginfo.c
+@@ -93,15 +93,6 @@ static struct debuginfo *__debuginfo__new(const char *path)
+ 
+ struct debuginfo *debuginfo__new(const char *path)
+ {
+-	static const enum dso_binary_type distro_dwarf_types[] = {
+-		DSO_BINARY_TYPE__FEDORA_DEBUGINFO,
+-		DSO_BINARY_TYPE__UBUNTU_DEBUGINFO,
+-		DSO_BINARY_TYPE__OPENEMBEDDED_DEBUGINFO,
+-		DSO_BINARY_TYPE__BUILDID_DEBUGINFO,
+-		DSO_BINARY_TYPE__MIXEDUP_UBUNTU_DEBUGINFO,
+-		DSO_BINARY_TYPE__NOT_FOUND,
+-	};
+-	const enum dso_binary_type *type;
+ 	char buf[PATH_MAX], nil = '\0';
+ 	struct dso *dso;
+ 	struct debuginfo *dinfo = NULL;
+@@ -120,14 +111,12 @@ struct debuginfo *debuginfo__new(const char *path)
+ 	if (filename__read_build_id(path, &bid) > 0)
+ 		dso__set_build_id(dso, &bid);
+ 
+-	for (type = distro_dwarf_types;
+-	     !dinfo && *type != DSO_BINARY_TYPE__NOT_FOUND;
+-	     type++) {
+-		if (dso__read_binary_type_filename(dso, *type, &nil,
+-						   buf, PATH_MAX) < 0)
+-			continue;
+-		dinfo = __debuginfo__new(buf);
+-	}
++	dso__find_dbginfo_type(dso);
++	if (dso__read_binary_type_filename(dso, dso__dbginfo_type(dso), &nil,
++					   buf, PATH_MAX) < 0)
++		goto out;
++
++	dinfo = __debuginfo__new(buf);
+ 	dso__put(dso);
+ 
+ out:
 diff --git a/tools/perf/util/dso.c b/tools/perf/util/dso.c
-index 11db461f2032bc41..90a6f661278a9c81 100644
+index 90a6f661278a9c81..44cfc16cfbe49600 100644
 --- a/tools/perf/util/dso.c
 +++ b/tools/perf/util/dso.c
-@@ -1721,6 +1721,7 @@ struct dso *dso__new_id(const char *name, const struct dso_id *id)
- 		dso->data.status = DSO_DATA_STATUS_UNKNOWN;
- 		dso->symtab_type = DSO_BINARY_TYPE__NOT_FOUND;
- 		dso->binary_type = DSO_BINARY_TYPE__NOT_FOUND;
-+		dso->dbginfo_type = DSO_BINARY_TYPE__NOT_FOUND;
- 		dso->is_64_bit = (sizeof(void *) == 8);
- 		dso->loaded = 0;
- 		dso->rel = 0;
+@@ -2108,3 +2108,32 @@ void dso__set_symsrc_filename(struct dso *dso, char *val)
+ 	dso__set_has_srcline(dso, true);
+ 	dso__set_a2l_fails(dso, 0);
+ }
++
++void dso__find_dbginfo_type(struct dso *dso)
++{
++	static const enum dso_binary_type dbginfo_types[] = {
++		DSO_BINARY_TYPE__FEDORA_DEBUGINFO,
++		DSO_BINARY_TYPE__UBUNTU_DEBUGINFO,
++		DSO_BINARY_TYPE__MIXEDUP_UBUNTU_DEBUGINFO,
++		DSO_BINARY_TYPE__OPENEMBEDDED_DEBUGINFO,
++		DSO_BINARY_TYPE__BUILDID_DEBUGINFO,
++		DSO_BINARY_TYPE__NOT_FOUND,
++	};
++	const enum dso_binary_type *type;
++	char buf[PATH_MAX];
++
++	if (dso__dbginfo_type(dso) != DSO_BINARY_TYPE__NOT_FOUND)
++		return;
++
++	for (type = dbginfo_types; *type != DSO_BINARY_TYPE__NOT_FOUND; type++) {
++		if (dso__read_binary_type_filename(dso, *type, "",
++						   buf, PATH_MAX) < 0)
++			continue;
++
++		if (filename__has_section(buf, ".debug_info") ||
++		    filename__has_section(buf, ".zdebug_info"))
++			break;
++	}
++
++	dso__set_dbginfo_type(dso, *type);
++}
 diff --git a/tools/perf/util/dso.h b/tools/perf/util/dso.h
-index e7d5f4bbf89497c0..34d187d1fc00efdc 100644
+index 34d187d1fc00efdc..a152957322f6b31c 100644
 --- a/tools/perf/util/dso.h
 +++ b/tools/perf/util/dso.h
-@@ -328,8 +328,14 @@ DECLARE_RC_STRUCT(dso) {
- 	enum dso_load_errno	load_errno;
- 	u16		 long_name_len;
- 	u16		 short_name_len;
-+	/*
-+	 * DSO file data can be spread into multiple places.  Distros usually
-+	 * place debug info to a separate file.  Symbol tables may exist in
-+	 * the binary or the debug file.  Let's separate them.
-+	 */
- 	enum dso_binary_type	symtab_type:8;
- 	enum dso_binary_type	binary_type:8;
-+	enum dso_binary_type	dbginfo_type:8;
- 	enum dso_space_type	kernel:2;
- 	enum dso_swap_type	needs_swap:2;
- 	bool			is_kmod:1;
-@@ -997,6 +1003,16 @@ static inline bool dso__is_kallsyms(const struct dso *dso)
- 	return is_guest_kallsyms_pid_name(name);
+@@ -1013,6 +1013,8 @@ static inline void dso__set_dbginfo_type(struct dso *dso, enum dso_binary_type b
+ 	RC_CHK_ACCESS(dso)->dbginfo_type = bt;
  }
  
-+static inline enum dso_binary_type dso__dbginfo_type(const struct dso *dso)
-+{
-+	return RC_CHK_ACCESS(dso)->dbginfo_type;
-+}
-+
-+static inline void dso__set_dbginfo_type(struct dso *dso, enum dso_binary_type bt)
-+{
-+	RC_CHK_ACCESS(dso)->dbginfo_type = bt;
-+}
++void dso__find_dbginfo_type(struct dso *dso);
 +
  bool dso__is_object_file(const struct dso *dso);
  
