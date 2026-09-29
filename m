@@ -1,77 +1,108 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from akranes.kaiser.cx (akranes.kaiser.cx [152.53.16.207])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31DA639B489
-	for <linux-perf-users@vger.kernel.org>; Tue, 29 Sep 2026 07:08:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFBCE3AA50B;
+	Tue, 29 Sep 2026 08:13:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=152.53.16.207
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790665694; cv=none; b=MLxh4tkZdnhe8KQGsw95hwVCD9+7VtOwOHWORVLFmIJIgooqGTdARvEehHTexT8UAfXoiugbTqxo/RhK4gAlgIMSE5LV17ZFKynKlo3T6EiXgusxixPC68m/8/TwxUhnHlZDCAqkneiIRJRt4CDG70VStoUw7VhECVfjGR9I7eU=
+	t=1790669591; cv=none; b=ZLzOjqZ+lQREzTKnuN9+jrGM+ZzizjkIw1ZozQM1w1vkC6Jty4nNLT5eca6wJyh9TZYkmD/tOTnUURUEQq+KahSzF7Zdd193TExMt5DQwkFEJjv4Qd9PyUhthq7JKKBHfdYpYotDlEtEOAXttY06Fh5sGP2OND1aZSbsEC/1/+s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790665694; c=relaxed/simple;
-	bh=wph2NWQ7Osfua+PNpMDTR9ngYDJi7RP3zuwX1eIb3Ds=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=lGINDl6Kw3f8jwY+qCViGLIAW0Sq7tJV+BynJ/QHFSYcMbkYaKRBMfDN5nOczV0nECUANDE5t0/s/iNArY14SMyfYEFWvbM67Xc0frBwxZWtziFLy3gG9jH8NZdewntR/uORIs7HYF4BjGrqdAjWom4qCmIhs06kUOgRFrDLDZ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jGi8SEHd; arc=none smtp.client-ip=100.103.45.18
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jGi8SEHd"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EC7B01F000FF;
-	Tue, 29 Sep 2026 07:08:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1790665693;
-	bh=wph2NWQ7Osfua+PNpMDTR9ngYDJi7RP3zuwX1eIb3Ds=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=jGi8SEHdsuA2j1fjEiE0MYGpecySppfmSN3aIDI4lLS/H17PrJWysBwv3h9pkDtEt
-	 2CqjDoTgbS5sA+sRCH1rBzn0qjkQ8SWJIDzGtANqizfGcupBqcWHpvbgmubWk4rNkQ
-	 kIm4S+/migpz+YCIVF7UEy6XIMT6S8EODpTwpkpI9oH3mInT8IoXiSWHwC8BtVqb2b
-	 lfg0lGpX8UBNaZx78UfncifNerAsQwqL7R1XGgNm5MrXt/NrmZxgnE+7d3nPbfMtBR
-	 zAN81m6SsGPDcOzUEv4LM8vUrJ66lpqBTK8sKG/Mwl7SG7FjQob0Ce23RGIVxvOI7V
-	 VBEmLI8478ccw==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v3 1/9] perf evsel: Clamp sample_id size for ksymbol,
- bpf, and text_poke events
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Ian Rogers" <irogers@google.com>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260929065839.407062-2-irogers@google.com>
-References: <20260929062937.374137-1-irogers@google.com>
- <20260929065839.407062-1-irogers@google.com>
- <20260929065839.407062-2-irogers@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Tue, 29 Sep 2026 07:08:12 +0000
-Message-Id: <20260929070812.EC7B01F000FF@smtp.kernel.org>
+	s=arc-20240116; t=1790669591; c=relaxed/simple;
+	bh=v8DQUlsclNkmugEM/JKprg85AKOfY+LbK3ZR6vv+I9g=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Aa0rK9LaUn51jv7GQ2CyUzTOHvxjU0UYmenH4JH2PKyNiYZ6bX43cTDCy21HfVeoaEi+ol/x2g9C0fQWhz1QANS6RVYQNVS+Y6bIM39E/2/jvxsv9B9JA2GwDp0taulCeiArUQAGSXLitGhkcyD8PEQ7aAhgtL97fezYVCKd9Zw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kaiser.cx; spf=pass smtp.mailfrom=kaiser.cx; arc=none smtp.client-ip=152.53.16.207
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kaiser.cx
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kaiser.cx
+Received: from martin by akranes.kaiser.cx with local (Exim 4.98.2)
+	(envelope-from <martin@akranes.kaiser.cx>)
+	id 1xBSG5-00000002hMb-0XNg;
+	Tue, 29 Sep 2026 09:28:13 +0200
+Date: Tue, 29 Sep 2026 09:28:13 +0200
+From: Martin Kaiser <martin@kaiser.cx>
+To: Shuai Xue <xueshuai@linux.alibaba.com>
+Cc: palmer@dabbelt.com, pjw@kernel.org, aou@eecs.berkeley.edu,
+	alex@ghiti.fr, linux-riscv@lists.infradead.org, oleg@redhat.com,
+	rostedt@goodmis.org, mhiramat@kernel.org, mark.rutland@arm.com,
+	peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+	namhyung@kernel.org, alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com,
+	james.clark@linaro.org, jpoimboe@kernel.org, jikos@kernel.org,
+	mbenes@suse.cz, pmladek@suse.com, joe.lawrence@redhat.com,
+	shuah@kernel.org, mpdesouza@suse.com, oliver.yang@linux.alibaba.com,
+	zhuo.song@linux.alibaba.com, jkchen@linux.alibaba.com,
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org, live-patching@vger.kernel.org,
+	linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH v6 0/7] riscv: Add reliable stack unwinding for livepatch
+Message-ID: <artojcJftbMIgPrj@akranes.kaiser.cx>
+References: <20260914092648.51254-1-xueshuai@linux.alibaba.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260914092648.51254-1-xueshuai@linux.alibaba.com>
+Sender: "Martin Kaiser,,," <martin@akranes.kaiser.cx>
 
-> On kernels without the fix ("perf/core: Restore header fields in
-> sideband output callbacks") to restore event_id.header.size in
-> perf_event_ksymbol_output(), perf_event_bpf_output(), and
-> perf_event_text_poke_output(), concurrent perf sessions cause those
-> sideband records to be emitted with header.size inflated by multiple
-> id_header_size increments while the single id_sample is written
-> immediately after the event payload. Indexing backwards from
-> event->header.size reads uninitialized ring-buffer bytes at the end of
-> the record, causing evlist__event2evsel() to fail with -EFAULT.
->=20
-> Add evsel__event_size() to clamp the effective size used to locate the
-> trailing id_sample for PERF_RECORD_KSYMBOL, PERF_RECORD_BPF_EVENT, and
-> PERF_RECORD_TEXT_POKE to payload + id_hdr_size while leaving
-> event->header.size intact for advancing the ring-buffer/file stream.
->=20
-> Fixes: 9aa0bfa370b2 ("perf tools: Handle PERF_RECORD_KSYMBOL")
-> Fixes: 45178a928a4b ("perf tools: Handle PERF_RECORD_BPF_EVENT")
-> Fixes: 246eba8e9041 ("perf tools: Add support for PERF_RECORD_TEXT_POKE")
-> Link: https://lore.kernel.org/r/20260929014206.4175245-1-irogers@google.c=
-om
-> Assisted-by: Antigravity:gemini-3.1-pro
-> Signed-off-by: Ian Rogers <irogers@google.com>
+Thus wrote Shuai Xue (xueshuai@linux.alibaba.com):
 
-Sashiko has reviewed this patch and found no issues. It looks great!
+> Hi,
 
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260929065839.4070=
-62-1-irogers@google.com?part=3D1
+> This is v6 of the RISC-V reliable stack unwinding series for livepatch.
+> Wang Han has left our team, so I am taking over this series from now on.
 
+> The series adds explicit frame-record metadata, preserves the frame
+> pointer through dynamic ftrace, and replaces the open-coded stack walker
+> with a conservative frame-pointer based unwinder. It then enables the
+> RISC-V livepatch capability and adds the syscall-wrapper selftest prefix.
+
+> Changes since v5:
+> * Rebase onto the current riscv/for-next; no functional changes.
+> * Fold in the tags collected from the v5 thread:
+>   - Reviewed-by: Shuai Xue on 2/7, 3/7, 4/7 and 6/7
+>   - Acked-by: Miroslav Benes on 7/7
+> * Add my sign-off as the new sender.
+
+> Since the patches are otherwise identical to v5, the v5 validation
+> results still apply. For reference, from the v5 cover letter:
+> * Built Linux 7.2.0-rc6 with riscv64-unknown-linux-gnu-gcc 15.2.0
+>   and binutils 2.46.
+> * Standard livepatch configuration built successfully, including
+>   Image, vmlinux, modules, compile_commands.json and GDB scripts.
+> * CONFIG_IRQ_STACKS=n variant linked successfully with GCC.
+> * QEMU 8.2.2, 1 CPU: livepatch selftests PASS: 7, SKIP: 1,
+>   FAIL: 0; ftrace function graph 3 passed, 0 failed, 3 unsupported.
+> * QEMU 8.2.2, 4 CPUs: livepatch selftests PASS: 7, SKIP: 1,
+>   FAIL: 0; ftrace function graph 3 passed, 0 failed, 3 unsupported.
+> * No BUG, WARNING, Oops, panic, unreliable stack or Call Trace found
+>   by the validation log scans. Expected negative livepatch errors are
+>   part of the selftests.
+
+> v5 was posted in early August and has been quiet since then. I would
+> appreciate it if the series could be considered for the upcoming merge
+> window. Happy to address any remaining feedback.
+
+> Base:
+> riscv/for-next 77ae27fd98f3 ("Merge tag 'printk-for-7.3' of git://git.kernel.org/pub/scm/linux/kernel/git/printk/linux")
+
+> Previous versions:
+> v5: https://lore.kernel.org/r/20260804103626.2803112-1-wanghan@linux.alibaba.com
+> v4 RESEND: https://lore.kernel.org/r/20260629072713.3273743-1-wanghan@linux.alibaba.com
+> v3: https://lore.kernel.org/r/cover.194d76e3a15b.v3.riscv-livepatch.wanghan@linux.alibaba.com
+> v2: https://lore.kernel.org/r/20260528082310.1994388-1-wanghan@linux.alibaba.com
+> v1: https://lore.kernel.org/r/20260527123530.2593918-1-wanghan@linux.alibaba.com
+
+> Assisted-by: Qoder:Qwen-3.8-MAX-Preview
+
+Thanks for these patches.
+
+I tried them on a standard rv64 qemu and on a rv64 cheri system
+(cheri-linux.org). The latter needed some minor tweaks, but in
+both cases, I could get livepatch to work.
+
+Reviewed-by: Martin Kaiser <martin@kaiser.cx>
+Tested-by: Martin Kaiser <martin@kaiser.cx>
