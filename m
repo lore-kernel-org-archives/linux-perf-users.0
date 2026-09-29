@@ -1,143 +1,194 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1598F402436
-	for <linux-perf-users@vger.kernel.org>; Tue, 29 Sep 2026 22:46:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3404532FA18;
+	Tue, 29 Sep 2026 23:37:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790722020; cv=none; b=EipzI6THH/sxpoPa+k/JEximbqsRFu680EUIG3wEaAMGB6ogi9McCWQkhPqiIflb6kmSdSYJzXhfi1klvcgpTKDNbRrVEY1g6I12EHBnUVX4pNm/l4Q8m1AKg19cZchwPaxTG1Lw+N3vBT9k6tGhMkg4CSfN1Jd6q8sCdSKsy3c=
+	t=1790725038; cv=none; b=AM8yOkaBA6YA2p2tFDSjkcJ8o0sYhtESFEgCWTX3QbCfRpR4LbfUAW5rZehx4qqGqAE/y4p9dFdyWFHavy/cG7NXVReZBymqvzYn4wzidsfUn86u55Hk2C0pqVfAWJimcmth8ZGTybKY75dl1//XcN+FllPKGmOV3PBR4s9W7Ms=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790722020; c=relaxed/simple;
-	bh=ScEvV3+sCczWpA2s81KQkS874xNuSVg+Wnsk5HeoX3w=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=AD8xavXg2N6VU+ei5tn/w4aIpLKdpiR2a4teLFGkwBhqIFOJR+aFq0fnQope+f3T9cz6eOka1VrsoESd5KVAyjyWzcDszrWjPM2BE0rmt6tFT2rcat2HyMbs/msQr4W+daWj3rYLC1DclFvOkiyLmlkaNP8bCqXD4MJTiX9tYnI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gX94Cnou; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1790725038; c=relaxed/simple;
+	bh=uXvN0o/i49sd09BGH+OHO5km4+lh8+UVoNj8DyAMh2g=;
+	h=Content-Type:MIME-Version:Message-Id:In-Reply-To:References:
+	 Subject:From:To:Cc:Date; b=IV/LoAOU4Y7WSFCpmV4uHYt4T5csUNT5+WmD0M9o51KNjo67TD4hLBz4F43AutxWi0yhOHH6KfCSduCfQNTHJJApSZ6WFegKembplwcVLbq3rvqeKKuD29gXyq1+fC+IrfxOvbxVl2rT+NOPLM3HxjBWyTkauwTU09ktA0sxnok=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=M5tMbgrk; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gX94Cnou"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7A15E1F000FF;
-	Tue, 29 Sep 2026 22:46:58 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="M5tMbgrk"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DA53B1F000FF;
+	Tue, 29 Sep 2026 23:37:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1790722018;
-	bh=exArMXcav+vIirQdLJB417i7DHZmmg8wdbRmKjnuiIU=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=gX94CnoumbIhjQ0BZQ3oG7muk8jZNOBNoIy/YQ5lT5VET10OFkF2bdNBMA1H0Ug/4
-	 24YLR4ARdKm1rBJm8WhW55Cml785Vlb337+Ydjueb1RbFD1eZ3e4MpMsTCIdoiuD+B
-	 //p0d1EUvqhpoA68b7VIaqC32kFkpJ7Rkvt5SHwIsFwErnaKUsLFnXkbuh5Pl1OKpB
-	 AMH8XobgVsMHzpVrYuKXiaYT7sR71cuN0eFy9DOppZrJChQzMqETzspkrAs4L46Rah
-	 AkPPliZxUhzYkqvmlQMZE5fREN9TeeF6ATmbhZpYPe1vZPf7jMJn1Qs0UsoaJCTxmQ
-	 KqNQYPW+moBbg==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH] perf/arm-cmn: Allow userspace to select the PMU's CPU
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Haris Okanovic" <harisokn@amazon.com>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260929223244.2411400-1-harisokn@amazon.com>
-References: <20260929223244.2411400-1-harisokn@amazon.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Tue, 29 Sep 2026 22:46:58 +0000
-Message-Id: <20260929224658.7A15E1F000FF@smtp.kernel.org>
+	s=k20260515; t=1790725036;
+	bh=WHiYLve/r8dKdJur6CLdF1ljoKuGu9MvD9+c1UIePVY=;
+	h=In-Reply-To:References:Subject:From:To:Cc:Date;
+	b=M5tMbgrkov2WEkxH+jdoYNwC5CHPdy7Zt3lqertwdfZbF/qqbbbpmEvIr2GgeQMl/
+	 k1X6mb6cu+0cycJhbCZ+xCaA/MQ0l3UblRETJ9399UuLJ1POWo2dxyvoFc4cGGFQd+
+	 R2yMBXQZyZF45DB1hXqD+u/P5UPOus5mVxEyFdvKFOkouW0UzTNDh9a5RL5NXyy0cC
+	 /X9o+GxZEaNOsiKsga+hBawTLGcpXqm8mU45DFdDPS3mDafYy63Gd6gFEjOKZHgSOf
+	 Ar6j0jcUIuNsmq4ymJrfExlkwtTc6dO4uat03Vo4h42GdSQ8WkayyJKq7NRU0xZs7d
+	 XDtEYQVnYKuoA==
+Content-Type: multipart/mixed; boundary="===============6591287826219115497=="
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Message-Id: <d8aa770b82f03b9cbae1bc84c8505c32d451abde5fe4517a903f1311b940b0d6@mail.kernel.org>
+In-Reply-To: <20260929014206.4175245-1-irogers@google.com>
+References: <20260929014206.4175245-1-irogers@google.com>
+Subject: Re: [PATCH v1] perf/core: Restore header fields in sideband output callbacks
+From: bot+bpf-ci@kernel.org
+To: irogers@google.com,peterz@infradead.org,mingo@redhat.com,acme@kernel.org,namhyung@kernel.org
+Cc: mark.rutland@arm.com,alexander.shishkin@linux.intel.com,jolsa@kernel.org,irogers@google.com,adrian.hunter@intel.com,james.clark@linaro.org,song@kernel.org,ast@kernel.org,linux-perf-users@vger.kernel.org,linux-kernel@vger.kernel.org,bpf@vger.kernel.org,stable@vger.kernel.org,ast@kernel.org,andrii@kernel.org,daniel@iogearbox.net,martin.lau@kernel.org,eddyz87@gmail.com,yonghong.song@linux.dev,mason@kernel.org,ihor.solodrai@linux.dev
+Date: Tue, 29 Sep 2026 23:37:15 +0000 (UTC)
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
-s) to consider:
-- [High] perf/arm-cmn: PMU context split data race via sysfs cpumask write
---
+--===============6591287826219115497==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 
-commit cd1fc8e509238a5fe44eb8583d42c30948f80fe1
-Author: Haris Okanovic <harisokn@amazon.com>
-Subject: perf/arm-cmn: Allow userspace to select the PMU's CPU
+> diff --git a/kernel/events/core.c b/kernel/events/core.c
+> index db7b76d6b68a..2be915a293ce 100644
+> --- a/kernel/events/core.c
+> +++ b/kernel/events/core.c
+> @@ -9032,6 +9032,11 @@ static void perf_iterate_sb_cpu(perf_iterate_f output, void *data)
+>   *
+>   * For new callers; ensure that account_pmu_sb_event() includes
+>   * your event, otherwise it might not get delivered.
+> + *
+> + * Note: @data is shared across all @output calls, so any fields modified
+> + * incrementally or conditionally (e.g. header.size via
+> + * perf_event_header__init_id()) must be saved and restored by @output,
+> + * or unconditionally re-initialized on each call.
+>   */
+>  static void
+>  perf_iterate_sb(perf_iterate_f output, void *data,
 
-This commit allows userspace to migrate the PMU's CPU by making the 'cpumas=
-k'
-sysfs attribute writable. It uses the existing arm_cmn_migrate() function to
-move the PMU context and interrupts to the newly selected CPU, allowing
-administrators to move background work away from latency-sensitive CPUs.
+Peter Zijlstra identified that perf_event_switch_output() also modifies
+header.type and header.size before calling perf_event_header__init_id()
+and suggested it might need similar treatment.
 
-> diff --git a/drivers/perf/arm-cmn.c b/drivers/perf/arm-cmn.c
-> index b162de3d9d169..77eed6dbb1bdb 100644
-> --- a/drivers/perf/arm-cmn.c
-> +++ b/drivers/perf/arm-cmn.c
+Looking at perf_event_switch_output():
+
+    if (event->ctx->task) {
+        se->event_id.header.type = PERF_RECORD_SWITCH;
+        se->event_id.header.size = sizeof(se->event_id.header);
+    } else {
+        se->event_id.header.type = PERF_RECORD_SWITCH_CPU_WIDE;
+        se->event_id.header.size = sizeof(se->event_id);
+        ...
+    }
+    perf_event_header__init_id(&se->event_id.header, &sample, event);
+
+The new comment mentions that fields must be "saved and restored by
+@output, or unconditionally re-initialized on each call."
+perf_event_switch_output() does unconditionally reinitialize both
+header.type and header.size at the start of each callback invocation,
+which should prevent the accumulation bug.
+
+Is this analysis correct, or does perf_event_switch_output() need the
+save/restore pattern as well?
+
+> @@ -9726,6 +9731,7 @@ static void perf_event_mmap_output(struct perf_event *event,
+>  	struct perf_sample_data sample;
+>  	int size = mmap_event->event_id.header.size;
+>  	u32 type = mmap_event->event_id.header.type;
+> +	u16 misc = mmap_event->event_id.header.misc;
+>  	bool use_build_id;
+>  	int ret;
+>
 
 [ ... ]
 
-> @@ -1519,8 +1523,42 @@ static ssize_t arm_cmn_cpumask_show(struct device =
-*dev,
->  	return sysfs_emit(buf, "%*pbl\n", cpumask_pr_args(cpumask_of(cmn->cpu))=
-);
+> @@ -9783,6 +9789,7 @@ static void perf_event_mmap_output(struct perf_event *event,
+>  out:
+>  	mmap_event->event_id.header.size = size;
+>  	mmap_event->event_id.header.type = type;
+> +	mmap_event->event_id.header.misc = misc;
 >  }
-> =20
-> +static ssize_t arm_cmn_cpumask_store(struct device *dev,
-> +				     struct device_attribute *attr,
-> +				     const char *buf, size_t count)
-> +{
-> +	static DEFINE_MUTEX(cpumask_mutex);
-> +
-> +	struct arm_cmn *cmn =3D to_cmn(dev_get_drvdata(dev));
-> +	unsigned int cpu;
-> +	int err;
-> +
-> +	err =3D kstrtouint(buf, 0, &cpu);
-> +	if (err)
-> +		return err;
-> +
-> +	if (cpu >=3D nr_cpu_ids)
-> +		return -EINVAL;
-> +
-> +	/* Serialises multiple writers against each other */
-> +	mutex_lock(&cpumask_mutex);
-> +	/* Blocks hotplug during write */
-> +	cpus_read_lock();
-> +
-> +	if (!cpu_online(cpu))
-> +		err =3D -EINVAL;
-> +	else if (cpu !=3D cmn->cpu)
-> +		arm_cmn_migrate(cmn, cpu);
 
-[Severity: High]
-Is there a race condition here with concurrent perf_event_open() calls?
+[ ... ]
 
-If a process calls perf_event_open() concurrently, arm_cmn_event_init() rea=
-ds
-cmn->cpu locklessly:
+> @@ -10247,6 +10254,7 @@ static void perf_event_ksymbol_output(struct perf_event *event, void *data)
+>  	struct perf_ksymbol_event *ksymbol_event = data;
+>  	struct perf_output_handle handle;
+>  	struct perf_sample_data sample;
+> +	u16 header_size = ksymbol_event->event_id.header.size;
+>  	int ret;
+>
+>  	if (!perf_event_ksymbol_match(event))
+> @@ -10257,13 +10265,15 @@ static void perf_event_ksymbol_output(struct perf_event *event, void *data)
+>  	ret = perf_output_begin(&handle, &sample, event,
+>  				ksymbol_event->event_id.header.size);
+>  	if (ret)
+> -		return;
+> +		goto out;
+>
+>  	perf_output_put(&handle, ksymbol_event->event_id);
+>  	__output_copy(&handle, ksymbol_event->name, ksymbol_event->name_len);
+>  	perf_event__output_id_sample(event, &handle, &sample);
+>
+>  	perf_output_end(&handle);
+> +out:
+> +	ksymbol_event->event_id.header.size = header_size;
+>  }
 
-drivers/perf/arm-cmn.c:arm_cmn_event_init() {
-	...
-	event->cpu =3D cmn->cpu;
-	if (event->cpu < 0)
-		return -EINVAL;
-	...
-}
+[ ... ]
 
-If this sysfs write changes cmn->cpu and migrates existing PMU contexts
-to the new CPU right after arm_cmn_event_init() reads the old CPU,
-the new event will be installed on the old CPU.
+> @@ -10337,6 +10347,7 @@ static void perf_event_bpf_output(struct perf_event *event, void *data)
+>  	struct perf_bpf_event *bpf_event = data;
+>  	struct perf_output_handle handle;
+>  	struct perf_sample_data sample;
+> +	u16 header_size = bpf_event->event_id.header.size;
+>  	int ret;
+>
+>  	if (!perf_event_bpf_match(event))
+> @@ -10347,12 +10358,14 @@ static void perf_event_bpf_output(struct perf_event *event, void *data)
+>  	ret = perf_output_begin(&handle, &sample, event,
+>  				bpf_event->event_id.header.size);
+>  	if (ret)
+> -		return;
+> +		goto out;
+>
+>  	perf_output_put(&handle, bpf_event->event_id);
+>  	perf_event__output_id_sample(event, &handle, &sample);
+>
+>  	perf_output_end(&handle);
+> +out:
+> +	bpf_event->event_id.header.size = header_size;
+>  }
 
-Since the old CPU remains fully online (unlike a true CPU hotplug event),
-this splits the PMU context across multiple CPUs. PMU callbacks like
-arm_cmn_event_add() can then execute simultaneously on different CPUs:
+[ ... ]
 
-drivers/perf/arm-cmn.c:arm_cmn_event_add() {
-	...
-	while (dtm->pmu_config_low & CMN__PMEVCNT_PAIRED(dtm_idx))
-	...
-}
+> @@ -10499,6 +10512,7 @@ static void perf_event_text_poke_output(struct perf_event *event, void *data)
+>  	struct perf_text_poke_event *text_poke_event = data;
+>  	struct perf_output_handle handle;
+>  	struct perf_sample_data sample;
+> +	u16 header_size = text_poke_event->event_id.header.size;
+>  	u64 padding = 0;
+>  	int ret;
+>
+> @@ -10510,7 +10524,7 @@ static void perf_event_text_poke_output(struct perf_event *event, void *data)
+>  	ret = perf_output_begin(&handle, &sample, event,
+>  				text_poke_event->event_id.header.size);
+>  	if (ret)
+> -		return;
+> +		goto out;
+>
+>  	perf_output_put(&handle, text_poke_event->event_id);
+>  	perf_output_put(&handle, text_poke_event->old_len);
+> @@ -10525,6 +10539,8 @@ static void perf_event_text_poke_output(struct perf_event *event, void *data)
+>  	perf_event__output_id_sample(event, &handle, &sample);
+>
+>  	perf_output_end(&handle);
+> +out:
+> +	text_poke_event->event_id.header.size = header_size;
+>  }
 
-Could this lead to concurrent read-modify-writes to shared PMU hardware sta=
-te
-and array structures without locking?
 
-> +
-> +	cpus_read_unlock();
-> +	mutex_unlock(&cpumask_mutex);
-> +
-> +	return err ?: count;
-> +}
+---
+AI reviewed your patch. Please fix the bug or email reply why it's not a bug.
+See: https://github.com/kernel-patches/vmtest/blob/master/ci/claude/README.md
 
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260929223244.2411=
-400-1-harisokn@amazon.com?part=3D1
+CI run summary: https://github.com/kernel-patches/bpf/actions/runs/36643934404
+--===============6591287826219115497==--
