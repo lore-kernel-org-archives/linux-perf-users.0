@@ -1,156 +1,391 @@
-Received: from mail-oi2-f12.google.com (mail-oi2-f12.google.com [74.125.231.204])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D137154146B
-	for <linux-perf-users@vger.kernel.org>; Tue, 29 Sep 2026 18:29:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.231.204
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4F5E3EB0F1;
+	Tue, 29 Sep 2026 18:31:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790706581; cv=none; b=QGYRk2W1gVW9RNHoKrAG5tTGuVQIlMr2/5bZLfvFq0HF7spNcX6YTx4RvWtzZ+cJXVc9KlICj2fiCcbuSsdgwx/5BEVcBGLQ6tr+xtpCwd6slsWvF7Vx3xOEw2BQSfKX6EwWMz3lIzPaK78hr8KEgf0v4cz5pvjSqUk7SwUUqJk=
+	t=1790706675; cv=none; b=aIkTXtRSJLWPpfUMq1Cv1TaSKiFgWvBkb3RF73WKhx8RwfrCP+Ac+Sb41cDsheA+qdigVTaR8vNCbYBYLaay8u68z4cZVMYaWV5bvxZqlIM1Qq+5JqfF8eg97sRhFlUv/ltKIUCENU21Xu4iBJ8ohmiASNyyJUcH+vxObC0slbA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790706581; c=relaxed/simple;
-	bh=/5++U61XAoH/VSVR//J0hU1yz7OfZSDFFShlI6bBPSQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=s7XKiBuW+WeidjeQS5i30cJOVuVvZz4HtQ3RhYuA/EAdGVJspz7O7KRR4P/PRdVRUkmIXrAK6VTXA4P6ZyGmHFt8pT53bWYUXycMUKzTQnDAYOc6gWFPnJ3klqLFj/pENvZvQwPqAtBNndx3JOPfyNcXN8+TJnfi5FRC4L/Upio=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gd+Ek8qX; arc=none smtp.client-ip=74.125.231.204
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1790706675; c=relaxed/simple;
+	bh=BF/uQRzDnn9pskHDHJN0llI/msi/n8lHwOW/d5rWTno=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=O/g6ZlT6Kx+VEoYg19hhvS3+MC9oBE1yTAVBGkeOoDa2h8dS7F/7fCxyGbhLXckmRufPx/mRsRciZnYrsi+IhgTJSJkZ+8b1Gj+mjORiBhV6TJnWW5yLcs+PUFh44oQ8A9EM9njKGO56Tsj7Ppzxtk/XbaTR4Inu7mfHWDzJPEE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=R7yGkHk5; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gd+Ek8qX"
-Received: by mail-oi2-f12.google.com with SMTP id 5614622812f47-4b37a29bf27so2093877b6e.2
-        for <linux-perf-users@vger.kernel.org>; Tue, 29 Sep 2026 11:29:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1790706579; x=1791311379; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=tHysdsRd5NU3JnGkGkLnvGMuzNOaAa664hZky0TTqHs=;
-        b=gd+Ek8qXyOpE9n6Jo1f5u8uKmu0f9afK+GbuncFu6rrXqQ8/7v9oPtwE9XtOphxMdD
-         peCW1l1O6XOvR2biQxyTBz8t7f6uk3/XPKdXwTwel67k8BbsBQxQM4TyNn+MGegVl/ro
-         CuuWfPe3stP3fLwLkm3YVUOfh3+Z5T3TN3KtbI8kfxC6wDn0sxPqC6SEyoIeFUoS0loA
-         UL/sFMIQ9TmeanCr3zXa/8edcPXhpnZL1IAy7wx0a2o8OXSWakX2/lw2vXXZFZYwSIkd
-         sVZXxFrxOiAJ+vQ0Tq7VdCFoiZ6RJdnEMAflNGnoR/QQ4n0xfKN6U060nhUC+civXuh7
-         Fbcg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1790706579; x=1791311379;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=tHysdsRd5NU3JnGkGkLnvGMuzNOaAa664hZky0TTqHs=;
-        b=BQqZQyi66IOBFDMMSQ+bZF5mpbfvmJ5lu0yQtWJ4jIYPuetX+sk9yY60QxJV/B2J5d
-         Df7fGCgdtHWEdRnF1URE9Mv731UPLHAxBxpMFS1SRD+vXHx+XjrEJAAtPjfYflfyG3Ay
-         GFmigiTFH4+DoFlLtdDQfMxl1B8rspUAiZI2GsV5T/AtygbonhlebfSC8+lBwgtVtTvw
-         5Z2OUv0I8GvQMY0+HUvjNxE1FsSzToX/sIjfnCcai5qPr73By9NJHvhUxxqW9AnjgVom
-         PML5TnAx/450VS3KzOi3KiizN/5C8fok2x95RnHgN/EQF3+7S3lutNU25SnnyYeuXMeF
-         5V7w==
-X-Forwarded-Encrypted: i=1; AKwUvByRy9oB0gDZiRF2EGKkoCayPtGZx+BbLLIFbGcPh1dHX1s0mhcgQNQBJdtFMBMldtTtIX2uS67qfXAVTpKEjQ3r@vger.kernel.org
-X-Gm-Message-State: AFuF++ktcZsxHE7/+K8gKLl5yCVo28vDC0IJDIHN5V6MGshyWFIYW/4R
-	zYxQs8rIEaT4Q9CSK1I+sR8VMbyASFLH1EGssdJA5WXY7pzTE6QBx+AH
-X-Gm-Gg: AYBFou0+D3vVn5DWJTVJNhVEvFsNpqo7TX6iuo9VmkF6gFCV1bNOPQqN7Q8fjmJnxsT
-	7qN9msIaJrGAImflW12x27G5jdqtOnvgETfqlNSnFKGhkEEcHKr2vIWb35Gcld31gn3xuh/a3a4
-	641NVFhZnVqiVnLnB5wLhuz+7mJ89XhNuRHxOQXv0Z7x75dyOzeQC1lX3Ath9RbOGuXrh+2wkAf
-	WR/PypXHwZSlki7d87j0tO5K12vWL5JVK/1p2d1QlULG5yjgODWAjQP3rCptPoUAUoukSncH8nC
-	TQivmMr4JxxjHwwOgL0o98Ddh4eDbvD8zovk5gQFsVHlg0T5spIINoJzRFWtrWqmxwe/XQFRYqS
-	0NHk2TcCUQgGZ+8nCiGE0/keQY+E31YmXoOc4N/JG0OATafkYFERoXm03QmOP9kJwS4aMYmFXU4
-	6rIu+AZzNXULeIv4oOBYInyP5q29ZSHiIMqSyaxrT11DtA1Sy1+nfRMRXe1novckfx68WJFkMfl
-	9lfb0YqiATohhGs7JJaayv6kyIRmLhQngEn4gCG
-X-Received: by 2002:a05:6808:2385:b0:4d6:9293:9bc3 with SMTP id 5614622812f47-4f06f2dcc17mr348674b6e.61.1790706578607;
-        Tue, 29 Sep 2026 11:29:38 -0700 (PDT)
-Received: from archlinux.lan ([136.34.156.120])
-        by smtp.gmail.com with ESMTPSA id 5614622812f47-4f0ade01337sm821b6e.8.2026.09.29.11.29.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 29 Sep 2026 11:29:37 -0700 (PDT)
-From: Danish Khateeb <danishkhateeb03@gmail.com>
-To: Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="R7yGkHk5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DAED51F00893;
+	Tue, 29 Sep 2026 18:31:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1790706673;
+	bh=8zB9odqPE5xO/cTdbrEVTgTCHFGwY5zr2TXgNCHKN2s=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=R7yGkHk5+jFxrtqUaBzTW1nZz1VOgJ+kc5hItAwJDCwsN6zdess6uZS+05dvMEFO5
+	 a0p6AvlB2bC+H/5I3banORJsRZeuQmuSCu7FperuB86zx9zVcfTucFbjyj5WtJ3emp
+	 BusRzWDRsylUSuY/o1swpmm+qRHVWnFshWs+AXAPa8YK+hJv4Bj3aZo1v5kE3HvUV2
+	 cBeC0Cjt/xKyEZG3w8Ri98YHIwN7/QZuDSxRZBhYYJHK2F1/JhC9SRDR34XZFi7txu
+	 rfbTEH9JmZyhxhKpeju9ueDM3TXVhQ5rQcAp17nmZ0DTLbdBtlwWq5G6aCKtSPxlt+
+	 5GegpcQTHokEQ==
+Date: Tue, 29 Sep 2026 11:31:11 -0700
+From: Namhyung Kim <namhyung@kernel.org>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
+	James Clark <james.clark@linaro.org>, Jiri Olsa <jolsa@kernel.org>,
 	Ian Rogers <irogers@google.com>,
 	Adrian Hunter <adrian.hunter@intel.com>,
-	James Clark <james.clark@linaro.org>,
-	Marco Elver <elver@google.com>,
-	Frederic Weisbecker <frederic@kernel.org>,
+	Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org,
 	linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Danish Khateeb <danishkhateeb03@gmail.com>,
-	stable@vger.kernel.org
-Subject: [PATCH] perf/core: Don't send SIGTRAP after exec removed the event
-Date: Tue, 29 Sep 2026 13:29:35 -0500
-Message-ID: <20260929182935.355892-1-danishkhateeb03@gmail.com>
-X-Mailer: git-send-email 2.55.0
+	Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: Re: [PATCH 3/4] perf scripts: Add perf-stuck, to tell where a
+ running perf is stuck
+Message-ID: <arwD7-9VQuS2LvWc@google.com>
+References: <20260928220634.2451784-1-acme@kernel.org>
+ <20260928220634.2451784-4-acme@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20260928220634.2451784-4-acme@kernel.org>
 
-A sigtrap event must also set remove_on_exec, so that its SIGTRAP never
-reaches a program after exec. But the signal is sent from task work,
-which only runs on the way back to user space. If the event overflows
-shortly before execve(), the task work can still be pending when the
-task enters execve(), and then runs when execve() returns. By then
-perf_event_exec() has removed the event and the new program has default
-signal handlers, so the SIGTRAP kills it.
+On Tue, Sep 29, 2026 at 12:06:33AM +0200, Arnaldo Carvalho de Melo wrote:
+> From: Arnaldo Carvalho de Melo <acme@redhat.com>
+> 
+> A perf that takes forever is hard to tell apart from one stuck in a
+> loop, and there is no way to see where without attaching gdb.
+> perf-stuck.sh samples a running process' /proc entries and its progress
+> line at a fixed interval, and with -g runs gdb (perf-stuck.gdb, adding
+> the perf-die-chain command) when no progress is made across two
+> samples, printing the DIE chain a DWARF type chase is stuck in.
 
-The exec_stress test in the remove_on_exec selftest catches this and
-fails about half the time in a VM. A process that opens a sigtrap event
-on itself and then calls execve() is killed by SIGTRAP in 15% of runs on
-an AMD machine running v7.2, and in half of them in a VM.
+Probably you need to check if gdb is available first.
 
-perf_event_exit_event() sets PERF_EVENT_STATE_EXIT when it removes the
-event, on exec and on exit. The exit case is already caught by the
-PF_EXITING check in perf_sigtrap(), so an event in that state there was
-removed by exec. Don't send the signal for it.
+Thanks,
+Namhyung
 
-Fixes: 97ba62b27867 ("perf: Add support for SIGTRAP on perf events")
-Cc: stable@vger.kernel.org
-Assisted-by: LLM
-Signed-off-by: Danish Khateeb <danishkhateeb03@gmail.com>
----
-
-Notes:
-    Tested on v7.3-rc5 x86_64 under virtme-ng (KASAN, lockdep, 8 vCPUs on an
-    AMD Zen 3 host):
-    
-    - selftests/perf_events/remove_on_exec: exec_stress failed in 10 of 20
-      runs before, all 20 pass after.
-    - The exec_stress pattern in a loop (30 inheriting children, 50 rounds):
-      a child was killed by SIGTRAP in 20 rounds before, in none after.
-    - Each child opens its own sigtrap + remove_on_exec event and execs:
-      1078 of 2000 children were killed by SIGTRAP before, none after. The
-      same program kills 297 of 2000 children on the bare-metal host running
-      v7.2.6.
-    - sigtrap_threads passes before and after. No new kernel warnings.
-    
-    v7.2 fails the same way in the VM. I did not test kernels older than
-    v7.2. gcc W=1 and sparse show no new warnings.
-
- kernel/events/core.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
-
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 634d2ccbab82..948583ffeb53 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -7631,6 +7631,14 @@ static void perf_sigtrap(struct perf_event *event)
- 	if (current->flags & PF_EXITING)
- 		return;
- 
-+	/*
-+	 * exec() removed the event (remove_on_exec) after this signal was
-+	 * queued. The new program has default signal handlers, so a SIGTRAP
-+	 * would kill it.
-+	 */
-+	if (event->state == PERF_EVENT_STATE_EXIT)
-+		return;
-+
- 	/*
- 	 * We'd expect this to only occur if the irq_work is delayed and either
- 	 * ctx->task or current has changed in the meantime. This can be the
-
-base-commit: 72d3fcf802c45d00b300f25b848a93c3a2bd7c7e
--- 
-2.55.0
-
+> 
+> It is a prototype: the plan is to turn it into a first class 'perf
+> stuck' command.  The process name is resolved with pgrep among the
+> caller's own processes only, as root an unscoped one would attach gdb
+> to the first process of any user with a matching name.
+> 
+> Assisted-by: LLM
+> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+> ---
+>  tools/perf/scripts/perf-stuck.gdb | 109 ++++++++++++++++++
+>  tools/perf/scripts/perf-stuck.sh  | 184 ++++++++++++++++++++++++++++++
+>  2 files changed, 293 insertions(+)
+>  create mode 100644 tools/perf/scripts/perf-stuck.gdb
+>  create mode 100755 tools/perf/scripts/perf-stuck.sh
+> 
+> diff --git a/tools/perf/scripts/perf-stuck.gdb b/tools/perf/scripts/perf-stuck.gdb
+> new file mode 100644
+> index 0000000000000000..2022f83c6bfdc646
+> --- /dev/null
+> +++ b/tools/perf/scripts/perf-stuck.gdb
+> @@ -0,0 +1,109 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +#
+> +# gdb commands for a stuck perf, used by perf-stuck.sh -g and usable directly:
+> +#
+> +#   gdb -p $(pgrep -x perf) -batch -x perf-stuck.gdb -ex bt
+> +#
+> +# PROTOTYPE: part of the perf-stuck.sh stopgap, wants to become a first
+> +# class 'perf stuck' command printing these DIE chains without gdb.
+> +#
+> +# The commands are for the DWARF type chasers in util/dwarf-aux.c:
+> +#
+> +#   perf-die-chain <function> <die variable> [iterations]
+> +#   perf-die-chain-all [iterations]
+> +#   perf-dso
+> +#
+> +# For each iteration of the chasing loop they print the DIE address, the
+> +# CU, its file offset, tag and name: a cycle shows as the same (addr, cu)
+> +# pairs repeating, and a CU changing between iterations means the chase
+> +# hops between a debug file and its dwz common file.
+> +
+> +set pagination off
+> +set confirm off
+> +set debuginfod enabled off
+> +set print pretty on
+> +set height 0
+> +set width 0
+> +
+> +define perf-die-chain
+> +  if $argc < 2
+> +    printf "usage: perf-die-chain <function> <die variable> [iterations]\n"
+> +  else
+> +    frame function $arg0
+> +    if $argc == 3
+> +      set $perf_die_chain_n = $arg2
+> +    else
+> +      set $perf_die_chain_n = 10
+> +    end
+> +    set $perf_die_chain_head = $pc
+> +    set $perf_die_chain_i = 0
+> +    while $perf_die_chain_i < $perf_die_chain_n
+> +      # Pointer type DIEs have no DW_AT_name, so dwarf_diename() can
+> +      # return NULL: printf %s of it would error out and abort this
+> +      # batch script, handle it.
+> +      set $perf_die_chain_name = (char *) dwarf_diename($arg1)
+> +      printf "chain[%d] die=%p addr=%p cu=%p off=0x%lx tag=%d name=", $perf_die_chain_i, $arg1, $arg1->addr, $arg1->cu, ((Dwarf_Off) dwarf_dieoffset($arg1)), ((int) dwarf_tag($arg1))
+> +      if $perf_die_chain_name == 0
+> +	printf "(null)\n"
+> +      else
+> +	printf "%s\n", $perf_die_chain_name
+> +      end
+> +      until *$perf_die_chain_head
+> +      set $perf_die_chain_i = $perf_die_chain_i + 1
+> +    end
+> +  end
+> +end
+> +
+> +document perf-die-chain
+> +Print the DIE chain being walked by a DWARF type chasing loop.
+> +usage: perf-die-chain <function> <die variable> [iterations]
+> +  perf-die-chain die_get_pointer_type type_die
+> +  perf-die-chain __die_get_real_type vr_die
+> +  perf-die-chain die_get_real_type vr_die
+> +end
+> +
+> +define perf-die-chain-all
+> +  if $argc == 0
+> +    set $perf_die_chain_n = 10
+> +  else
+> +    set $perf_die_chain_n = $arg0
+> +  end
+> +  if $_any_caller_is("die_get_pointer_type", 20)
+> +    printf "stuck in die_get_pointer_type():\n"
+> +    perf-die-chain die_get_pointer_type type_die $perf_die_chain_n
+> +  else
+> +    if $_any_caller_is("__die_get_real_type", 20)
+> +      printf "stuck in __die_get_real_type():\n"
+> +      perf-die-chain __die_get_real_type vr_die $perf_die_chain_n
+> +    else
+> +      if $_any_caller_is("die_get_real_type", 20)
+> +        printf "stuck in die_get_real_type():\n"
+> +        perf-die-chain die_get_real_type vr_die $perf_die_chain_n
+> +      else
+> +        printf "not in a DWARF type chaser, try: bt\n"
+> +      end
+> +    end
+> +  end
+> +end
+> +
+> +document perf-die-chain-all
+> +Find which DWARF type chaser the process is in and print the DIE chain.
+> +usage: perf-die-chain-all [iterations]
+> +end
+> +
+> +define perf-dso
+> +  if $_any_caller_is("find_data_type", 20)
+> +    frame function find_data_type
+> +    # REFCNT_CHECKING, implied by an ASan/LSan build, wraps struct map and
+> +    # struct dso in a proxy keeping the real object in ->orig, so there the
+> +    # dso is map->orig->dso->orig, giving map->orig->dso->orig->name here;
+> +    # struct symbol is not wrapped, so sym->name needs no ->orig.
+> +    printf "dso=%s ip=0x%lx sym=%s\n", dloc->ms->map->dso->name, dloc->ip, dloc->ms->sym ? dloc->ms->sym->name : "(no symbol)"
+> +  else
+> +    printf "not in find_data_type()\n"
+> +  end
+> +end
+> +
+> +document perf-dso
+> +Print the dso, ip and symbol of the data location being resolved.
+> +end
+> diff --git a/tools/perf/scripts/perf-stuck.sh b/tools/perf/scripts/perf-stuck.sh
+> new file mode 100755
+> index 0000000000000000..5622a6e0742988c3
+> --- /dev/null
+> +++ b/tools/perf/scripts/perf-stuck.sh
+> @@ -0,0 +1,184 @@
+> +#!/bin/bash
+> +# SPDX-License-Identifier: GPL-2.0
+> +#
+> +# perf-stuck - tell a spinning perf apart from a blocked or recursing one
+> +#
+> +# Arnaldo Carvalho de Melo <acme@redhat.com>
+> +#
+> +# PROTOTYPE: wants to become a first class 'perf stuck' command, sampling
+> +# a process from inside perf, with the knowledge of perf's phases and of
+> +# the DWARF type chasing loops built in, instead of poking /proc and
+> +# shelling out to gdb.
+> +#
+> +# Samples /proc/<pid> at a fixed interval and prints the CPU time used
+> +# since the previous sample, the [stack] mapping start and size, and the
+> +# last line of a progress log when one is given, e.g. the stderr of
+> +# 'perf report --progress': burning a full interval with a constant
+> +# stack is a loop, a [stack] start moving down is runaway recursion.
+> +#
+> +# With -g it runs gdb (perf-stuck.gdb) when no progress is made for two
+> +# consecutive samples, printing the DIE chain a DWARF type chase is
+> +# walking.
+> +#
+> +# usage: perf-stuck.sh [options] <pid|process-name>
+> +
+> +set -u
+> +
+> +usage() {
+> +	cat <<-EOF
+> +	usage: perf-stuck.sh [options] <pid|process-name>
+> +
+> +	  -i <secs>   sampling interval (default: 10)
+> +	  -n <count>  stop after this many samples (default: watch till it exits)
+> +	  -l <file>   progress log, its last line is printed with every sample
+> +	  -g          run gdb with perf-stuck.gdb when no progress is made for
+> +	              two consecutive samples, writing the output to a temp file
+> +	  -x <file>   use this gdb command file instead of perf-stuck.gdb
+> +	  -h          this help
+> +	EOF
+> +	exit "${1:-0}"
+> +}
+> +
+> +interval=10
+> +count=0
+> +progress_log=
+> +use_gdb=
+> +gdb_cmds=
+> +
+> +while getopts "i:n:l:gx:h" opt; do
+> +	case "$opt" in
+> +	i) interval=$OPTARG ;;
+> +	n) count=$OPTARG ;;
+> +	l) progress_log=$OPTARG ;;
+> +	g) use_gdb=1 ;;
+> +	x) gdb_cmds=$OPTARG ;;
+> +	h) usage 0 ;;
+> +	*) usage 1 ;;
+> +	esac
+> +done
+> +shift $((OPTIND - 1))
+> +
+> +[ $# -eq 1 ] || usage 1
+> +
+> +if [[ "$1" =~ ^[0-9]+$ ]]; then
+> +	pid=$1
+> +else
+> +	# Resolve the name against the caller's own processes: as root,
+> +	# unscoped pgrep picks the first match of any user, e.g. one planted
+> +	# to get gdb attached to it, use an explicit pid to look at a perf of
+> +	# another user.
+> +	pid=$(pgrep -x -u "$(id -u)" -- "$1" | head -1)
+> +	[ -n "$pid" ] || { echo "no process named '$1' owned by $(id -un)"; exit 1; }
+> +fi
+> +
+> +[ -d /proc/"$pid" ] || { echo "no process $pid"; exit 1; }
+> +
+> +if [ -n "$use_gdb" ] && [ -z "$gdb_cmds" ]; then
+> +	gdb_cmds=$(dirname "$0")/perf-stuck.gdb
+> +	[ -r "$gdb_cmds" ] || { echo "cannot read $gdb_cmds"; exit 1; }
+> +fi
+> +
+> +hz=$(getconf CLK_TCK)
+> +psz=$(getconf PAGESIZE)
+> +prev_cpu=
+> +prev_stack=
+> +prev_progress=
+> +stuck=0
+> +gdb_done=
+> +nsample=0
+> +
+> +# The command line is whatever the process was started with, so drop the
+> +# control characters from it: a process started with escape sequences in
+> +# its arguments, e.g. one replaying a log line, would otherwise get them
+> +# replayed on the terminal of whoever runs this.
+> +cmdline=$(tr '\0' ' ' < /proc/"$pid"/cmdline | tr -d '[:cntrl:]')
+> +
+> +echo "watching $pid ($cmdline) every ${interval}s"
+> +
+> +while :; do
+> +	if [ ! -d /proc/"$pid" ]; then
+> +		echo "$(date +%T) process gone"
+> +		break
+> +	fi
+> +
+> +	# Field 2, the command name, is in parentheses and can contain
+> +	# spaces, so drop it together with the pid before splitting so the
+> +	# fields line up.  %d keeps the CPU time out of scientific
+> +	# notation, that bash arithmetic can't parse past six digits.
+> +	if ! stat_line=$(awk '{ sub(/^[^ ]+ \(.*\) /, "");
+> +			       printf "%s %d %d\n", $1, $12 + $13, $22 }' \
+> +			 /proc/"$pid"/stat 2>/dev/null); then
+> +		echo "$(date +%T) process gone"
+> +		break
+> +	fi
+> +
+> +	# The process can be gone between the check above and this read, in
+> +	# which case there is nothing to report: 'set -u' would otherwise
+> +	# turn the unbound fields into an aborted script.
+> +	if [ -z "$stat_line" ]; then
+> +		echo "$(date +%T) process gone"
+> +		break
+> +	fi
+> +
+> +	stat=($stat_line)
+> +	state=${stat[0]}
+> +	cpu=${stat[1]}
+> +	# field 24 of /proc/<pid>/stat, the resident set size in pages
+> +	rss=$(( stat[2] * psz / 1024 ))
+> +
+> +	stack=$(awk '/\[stack\]/{print $1; exit}' /proc/"$pid"/maps 2>/dev/null)
+> +	if [ -n "$stack" ]; then
+> +		stack_start=0x${stack%-*}
+> +		stack_size=$(( 0x${stack#*-} - stack_start ))
+> +		stack_txt="$stack size=$((stack_size / 1024))kB"
+> +	else
+> +		stack_start=
+> +		stack_txt="-"
+> +	fi
+> +
+> +	progress=
+> +	[ -n "$progress_log" ] && [ -s "$progress_log" ] && progress=$(tail -1 -- "$progress_log")
+> +
+> +	if [ -n "$prev_cpu" ]; then
+> +		cpu_delta=$(( cpu - prev_cpu ))
+> +		# No progress log, or one with nothing written to it yet, leaves
+> +		# no progress to look at, so count the samples that show none:
+> +		# -g then looks at where the process is after two intervals.
+> +		# Otherwise count the repeats of the same last line.
+> +		if [ -z "$progress" ] || [ "$progress" = "$prev_progress" ]; then
+> +			stuck=$((stuck + 1))
+> +		else
+> +			stuck=0
+> +		fi
+> +		stuck_txt="stuck=${stuck}"
+> +		[ "$stack_start" != "$prev_stack" ] && stuck_txt="$stuck_txt STACK"
+> +	else
+> +		cpu_delta=0
+> +		stuck_txt=""
+> +	fi
+> +
+> +	printf '%s state=%s cpu=+%d (%d.%02ds) rss=%dkB stack=%s %s %s\n' \
+> +	       "$(date +%T)" "$state" "$cpu_delta" \
+> +	       $(( cpu_delta / hz )) $(( (cpu_delta % hz) * 100 / hz )) \
+> +	       "$rss" "$stack_txt" "$stuck_txt" "${progress:-(no progress log)}"
+> +
+> +	if [ -n "$use_gdb" ] && [ -z "$gdb_done" ] && [ "$stuck" -ge 2 ]; then
+> +		gdb_log=$(mktemp /tmp/perf-stuck-gdb.XXXXXX)
+> +		# The gdb script makes inferior calls, and a call into a perf
+> +		# wedged in a loop never returns, so bound the run; SIGINT
+> +		# releases the inferior instead of leaving perf stopped.
+> +		timeout --signal=INT 30 gdb -p "$pid" -batch -x "$gdb_cmds" -ex bt \
+> +		    -ex 'perf-die-chain-all' -ex perf-dso -ex detach > "$gdb_log" 2>&1
+> +		gdb_done=1
+> +		echo "... gdb output of $pid in $gdb_log"
+> +	fi
+> +
+> +	prev_cpu=$cpu
+> +	prev_stack=$stack_start
+> +	prev_progress=$progress
+> +
+> +	nsample=$((nsample + 1))
+> +	[ "$count" -gt 0 ] && [ "$nsample" -ge "$count" ] && break
+> +
+> +	sleep "$interval"
+> +done
+> -- 
+> 2.55.0
+> 
