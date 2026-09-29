@@ -1,87 +1,120 @@
-Received: from relay.hostedemail.com (smtprelay0017.hostedemail.com [216.40.44.17])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09F7F322B9F;
-	Tue, 29 Sep 2026 18:45:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8CB33D47AB
+	for <linux-perf-users@vger.kernel.org>; Tue, 29 Sep 2026 18:46:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790707517; cv=none; b=C8GQ+4EGNB59ZdiozFPci/RVVzJVNojSm94wgkWnPPrLuzUMk0JlrV2ioFudealGhDTWWL99L1Aeerd2UudfTSCCUzK5NVV3xOs3MCcilpgyDM/uJ0epVBouUqv87RttJfKXyM4CRxgUiE1XqttSpX3midxL8HYVlW5TRosM/ZQ=
+	t=1790707601; cv=none; b=unXcFTT8hyHbnd+tTm/b8O7Ap2CQBI4F8N2Qe27f2X1V9inqnxXy+cBwS9jeUSDVyaWu8CxeDJTeua/3c8eT8H4l0ifq6qxEvS+z11pyFYGSWXojhQQZucGbBgjM1Bwp8H3I1PmaHQzOkj4P75LqpXY9KZszAKC8A5wzNbcthEA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790707517; c=relaxed/simple;
-	bh=2JdM+OMPCZBlPoQlhlqezVeWZuDcC5Zlfj3r2CMimOE=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=OJDcQSMkli7iZvoESzTCKdpqp0Zl0lp7YlSmtouiDeLKPXIXxAyQFPMoO9nyk6Vi9FFbn5Iv4yNzZ9FZMhKlrx7F8Rm8+/jS6Ol+2aravher/ANiFqzkgJact1Op8gmuQUa52nFrCv9w8m+FjbpxmLWQRcDP6EfQ2CEHf1F5x+A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; dkim=pass (1024-bit key) header.d=goodmis.org header.i=@goodmis.org header.b=A9s7kt09; arc=none smtp.client-ip=216.40.44.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+	s=arc-20240116; t=1790707601; c=relaxed/simple;
+	bh=fT3dsXu+UR2/r1Sgo5jEU/OoH4F10hTX5rsuwzs/MO4=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=WElceiVXtJYnMqdOfOoVURokNQnqEh5eH/XCyQdAAWO+UceC6fP+2CxikKwKft6o6BHtaPG3iMfud5hPoMZK+ZMOdy4gr0mKC80Oa7ZX3kd73+qPliRE0yMFLOeMJSDFs9j/DR8jGBuZcuOIG4vvCgsNqTdoEKMsyz185yKds8s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mMdzDeou; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=goodmis.org header.i=@goodmis.org header.b="A9s7kt09"
-Received: from omf13.hostedemail.com (lb01a-stub [10.200.18.249])
-	by unirelay06.hostedemail.com (Postfix) with ESMTP id B498CA6E7E;
-	Tue, 29 Sep 2026 18:45:07 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf13.hostedemail.com (Postfix) with ESMTPA id D3D5920012;
-	Tue, 29 Sep 2026 18:45:04 +0000 (UTC)
-Date: Tue, 29 Sep 2026 14:45:01 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Zhengchuan Liang <zcliangcn@gmail.com>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Ross Zwisler <zwisler@google.com>,
- linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org, Peter
- Zijlstra <peterz@infradead.org>, linux-perf-users@vger.kernel.org,
- stable@vger.kernel.org
-Subject: Re: [PATCH 1/1] tracing: Require tracepoint permission for perf
- function filters
-Message-ID: <20260929144501.3b8dcaa1@fedora>
-In-Reply-To: <95d3721fa8d4c7a4577ec14e9d7caec4fd0cefcc.1790553331.git.zcliangcn@gmail.com>
-References: <cover.1790553331.git.zcliangcn@gmail.com>
-	<95d3721fa8d4c7a4577ec14e9d7caec4fd0cefcc.1790553331.git.zcliangcn@gmail.com>
-X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-redhat-linux-gnu)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mMdzDeou"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 53F4E1F000FF;
+	Tue, 29 Sep 2026 18:46:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1790707599;
+	bh=SX2rZpueXTZOAg3WcIidnq015JX1qp50RHXPeoDlLYw=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=mMdzDeouG/aZl0goUzax7aIKR7fDTARuUzJksFFM5lBrRRSiTBSGaXb1fLT3ewZWD
+	 HfsMIJTgi8mI1JvtHgumBBcaLDmTNyewE7PGS/wp3t0w4VeI1hNIFGgslDg+QIheE2
+	 ngxm6zqGgDZuqzeLIHWdYq4t754xNd7TKrBMPsURIf6oSj0COlui0bM/s3wVi9WL5X
+	 xbpHP84QTxKwznCZVjtzQ49vsxY7Fn6VmanXOhmzUrhpnCguBtz3CizXAf0DZYLItr
+	 SKp+YYIdX5eUCb1fN6NzKb+OHUQQaBIyMwi6Wt6gV1TS78cMfRhTya81JjJ+fCGHH2
+	 owhsqq7yE5Wpg==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH] perf/core: Don't send SIGTRAP after exec removed the
+ event
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Danish Khateeb" <danishkhateeb03@gmail.com>
+Cc: linux-perf-users@vger.kernel.org
+In-Reply-To: <20260929182935.355892-1-danishkhateeb03@gmail.com>
+References: <20260929182935.355892-1-danishkhateeb03@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Tue, 29 Sep 2026 18:46:38 +0000
+Message-Id: <20260929184639.53F4E1F000FF@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Stat-Signature: 4ya17dfarmkk4htb96ob3aha9eommb6e
-X-Rspamd-Server: rspamout04
-X-Rspamd-Queue-Id: D3D5920012
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX18GL/mrHDhEiZ3ZbHV70hICMpCHCUrs18A=
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=goodmis.org; h=date:from:to:cc:subject:message-id:in-reply-to:references:mime-version:content-type:content-transfer-encoding; s=dkim1; bh=erBVOtzQymQefzUtqhd4VKSH1rxw2Rm3xOKAGzz55vU=; b=A9s7kt09INscftYVxj+F8EKD/EKmIQbkaztj0PetDyBg5GyrchzpvzN5FZClLbONuAhnpvQTnZIzoO0zUR5N24FNMJOIOlzKpIUmNFY7Tg0kqkdleodNBMzz4VcpgSjdb2qEJfe4EFLdlSavo4PizKqPufEECBNZ4suV1yYW240=
-X-HE-Tag: 1790707504-858915
-X-HE-Meta: U2FsdGVkX18U2j4LHPRsXH7+1ORfjtFwJBdEeS1WZcEaRhTIQfsCCILWYQnB391saFBb5LYQ7oOpnh2j+x2JIT0ZYvfEF++nUziZ+fBB2pl5Lf6hZNHtUf6j9kQGc1Bvppeof1rfyvi69c086ryIUkL7cjLB1avt2KQAsC0v+tpKDLBULZgmaDLV8TwCkoYFwkCIy6dWt1/m0Y5o6cnUai2hhKyfm5LdpZR/07aYrmfbJb875Xm37t9+nlfA8y8D1iFyt9P9mOwCVfYHn4QnStLbsQvLihhsVp81U3LwceRuFnmmgcP3qSwg7DN26n5A6dBMP9re3P96CaqYHIB1PwVyfWovNSFaMYLvq7reiZ1DjvCdcjhphw==
 
-On Sun, 27 Sep 2026 17:00:31 -0700
-Zhengchuan Liang <zcliangcn@gmail.com> wrote:
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+s) to consider:
+- [High] perf: strict event->state check allows fatal SIGTRAP on execve wit=
+h O_CLOEXEC
+--
 
-> Count-only perf tracepoint events can be opened without tracepoint
-> permission because they do not sample raw event data. Their SET_FILTER
-> ioctl still parses .function predicates. Numeric operands call
-> kallsyms_lookup_size_offset(), making ioctl success an oracle for
-> recovering the randomized kernel text base. Symbolic operands resolve
-> hidden symbol addresses and can also match user-controlled event fields
-> against those addresses.
-> 
-> Pass the perf origin through filter parsing and require
-> perf_allow_tracepoint() before resolving either form of .function
-> operand. Ordinary perf count filters and tracefs event filters retain
-> their existing behavior.
-> 
-> Fixes: e6745a4da964 ("tracing: Add a way to filter function addresses to function names")
-> Cc: stable@vger.kernel.org
-> Assisted-by: LLM
-> Signed-off-by: Zhengchuan Liang <zcliangcn@gmail.com>
-> ---
->  kernel/trace/trace_events_filter.c | 39 ++++++++++++++++++++++--------
+commit 7195999db39d67f15f48d557a068f0dc7588f8ab
+Author: Danish Khateeb <danishkhateeb03@gmail.com>
 
-NAK.
+perf/core: Don't send SIGTRAP after exec removed the event
 
-This is a perf issue and not a ftrace issue. It should not touch any
-code in kernel/trace/* for the fix.
+This commit prevents a SIGTRAP from reaching a newly executed program if an
+event with remove_on_exec overflows right before execve(). It adds a check =
+for
+the PERF_EVENT_STATE_EXIT state in perf_sigtrap() to drop the signal if the
+event was removed during exec.
 
-Looks to me the code that calls ftrace_profile_set_filter() from
-kernel/events/core.c should not be allowed by unprivileged users.
+> diff --git a/kernel/events/core.c b/kernel/events/core.c
+> index 634d2ccbab82d..948583ffeb535 100644
+> --- a/kernel/events/core.c
+> +++ b/kernel/events/core.c
+> @@ -7631,6 +7631,14 @@ static void perf_sigtrap(struct perf_event *event)
+>  	if (current->flags & PF_EXITING)
+>  		return;
+> =20
+> +	/*
+> +	 * exec() removed the event (remove_on_exec) after this signal was
+> +	 * queued. The new program has default signal handlers, so a SIGTRAP
+> +	 * would kill it.
+> +	 */
+> +	if (event->state =3D=3D PERF_EVENT_STATE_EXIT)
 
--- Steve
+[Severity: High]
+Does this strict equality check account for the PERF_EVENT_STATE_DEAD state
+caused by O_CLOEXEC processing?
+
+If a perf event is configured with remove_on_exec=3D1, sigtrap=3D1, and the=
+ file
+descriptor is opened with O_CLOEXEC, an event overflow queues
+perf_pending_task() via task_work_add().
+
+When the task begins execve(), do_close_on_exec() closes the O_CLOEXEC file
+descriptor. fput() then queues ____fput via task_work_add(). Because the
+task_works list executes in LIFO order (works are prepended to the head),
+____fput is positioned to run before perf_pending_task().
+
+After perf_event_exec() removes the event and sets=20
+event->state =3D PERF_EVENT_STATE_EXIT, execve() completes and task_work_ru=
+n()
+begins processing:
+
+____fput()
+   perf_release()
+      perf_event_release_kernel()
+         event->state =3D PERF_EVENT_STATE_DEAD;
+
+When perf_pending_task() subsequently runs and calls perf_sigtrap(), the
+event state is PERF_EVENT_STATE_DEAD (-5). Since -5 !=3D PERF_EVENT_STATE_E=
+XIT
+(-3), the strict equality check bypasses the filter, erroneously sending
+SIGTRAP and killing the new program.
+
+Should this check for detached states via=20
+if (event->state <=3D PERF_EVENT_STATE_EXIT) instead?
+
+> +		return;
+> +
+>  	/*
+>  	 * We'd expect this to only occur if the irq_work is delayed and either
+>  	 * ctx->task or current has changed in the meantime. This can be the
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260929182935.3558=
+92-1-danishkhateeb03@gmail.com?part=3D1
