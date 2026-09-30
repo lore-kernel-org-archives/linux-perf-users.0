@@ -1,91 +1,66 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 15A2B472068;
-	Wed, 30 Sep 2026 09:01:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5474357D0F
+	for <linux-perf-users@vger.kernel.org>; Wed, 30 Sep 2026 09:04:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790758912; cv=none; b=Aib5GZ1+GtNktIfJlpibILs4FWXNyfA4CdcE9+HxMj6OfpfNmyib79qhD2siYBHCIbu5RYtgtdTpD77vh6UugR2uMsZ8j7z4HTyCPFgBNzAQWm5WfzhKRYrlKeX/GCDlz3o4EunFEkuxNeGVVPStHnRnMuJi4zSXLkH+bbbOniQ=
+	t=1790759048; cv=none; b=P199oz3mE+0F9o3IjxmrTDFDCf1t6GGq+UOZQ75YJR0C6aqTxPMvtAdrIE6yF7eLxOkR70BinbRVlSvTgdh2X+bepDLD9qngfP/Zs9pTF8Sc/mZEHelhvFnSlUPkDTmbLIiUutuRDDycG/vIQvGvUjaL1HuoFEYLiamm9e3RWxU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790758912; c=relaxed/simple;
-	bh=5VXyDGgHM1h2GOfGAbHZtu7Q+5PwQ6iLptI7+l4XeJk=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=mzNHx/9VClP5yKk714+NjxdRCXauSIhsqYZyOWQMNs6VLkmVimTihpizZdIY3jBArzKuhgKTxemUWR/fKE4ywe8nlWZgQIxosmZTb3ZSyFv+hRkHaGqnl3MFP2DDfCMX3SE7wSPQeHTkUYzf8zv8f42IwqlifRnUs2JJelnM9wc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=US7GJ2qP; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+	s=arc-20240116; t=1790759048; c=relaxed/simple;
+	bh=ZLxwj5EcnWDBMZhvR/6qGHz3DZO9EOdphDJqsBCxHR4=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=bqdsC9+aMMmidvoWNpQOP1ReSApAV/lTQSV7i6EqKBcnUqO74lo5nyXPEqiXfMDdQHy4SQxmgM2fO+c4O0gTXyHDH+j/KLTYqgGi0EmzAfaNII8FOc9fKC8CbcTugHuEwOt13YgOSWUJp+I1Mpjfp6Z0hYF/LOIYlmVyzby+JnM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ebd8pa1h; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="US7GJ2qP"
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F1E4C1477;
-	Wed, 30 Sep 2026 02:01:46 -0700 (PDT)
-Received: from e132581.arm.com (unknown [10.2.196.114])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CC2133F85F;
-	Wed, 30 Sep 2026 02:01:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
-	t=1790758910; bh=5VXyDGgHM1h2GOfGAbHZtu7Q+5PwQ6iLptI7+l4XeJk=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=US7GJ2qPJ6kHeFbWuS2oYY1yFB3ZAXC7/pnjjMAqqqzhMcf7glSKr3UL4gkrwAE5Q
-	 RXJfkiKzBk0lEYntw4M9XvKDuBk86wRqF5MHIMz3mbOgkhnuhHCNC0DmEOPGzGPQJt
-	 DKZNh/A6KCePxjARm2jD/La5X+3Gtj2nd1rAVD9g=
-From: Leo Yan <leo.yan@arm.com>
-Date: Wed, 30 Sep 2026 10:01:14 +0100
-Subject: [PATCH 3/3] perf test: Suppress optparse deprecation warning with
- older pylint
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ebd8pa1h"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 344661F000FF;
+	Wed, 30 Sep 2026 09:04:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1790759047;
+	bh=ZLxwj5EcnWDBMZhvR/6qGHz3DZO9EOdphDJqsBCxHR4=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=ebd8pa1hemTXY2NyGFVBtTa8DNqtkrZwd4zXZ3cnaAGnn4+fqPH7u5L6kuudZFJ00
+	 +ZFFthrh6H/TV9j6yIvQntas18JssxYTp97uTFsYfEEsx6toxMKpE2nYFkq5MTaY6K
+	 v8Y/eIFlH6arcqH1JpCn4vDtMN/EBYRw5Q6bd9aW4coouTIaJRjFBl3Sw0wbwHuHoc
+	 m5WBj3T+es2v8ml00Y9nkCZH3oRqtUHVYsHXSeNfjfdFcNp1nczdmsrQUYFDP/jYXo
+	 LqSWdVz20ieXyZiVP/Hk5wK/WX6nSicXF46un31JBf+Wp9Bn77PCf9r1hkzx71ahm6
+	 dAZV2m2f29gmQ==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH 3/3] perf test: Suppress optparse deprecation warning
+ with older pylint
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Leo Yan" <leo.yan@arm.com>
+Cc: linux-perf-users@vger.kernel.org
+In-Reply-To: <20260930-perf_fix_pylint_errors-v1-3-f72151d8b255@arm.com>
+References: <20260930-perf_fix_pylint_errors-v1-0-f72151d8b255@arm.com>
+ <20260930-perf_fix_pylint_errors-v1-3-f72151d8b255@arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Wed, 30 Sep 2026 09:04:06 +0000
+Message-Id: <20260930090407.344661F000FF@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20260930-perf_fix_pylint_errors-v1-3-f72151d8b255@arm.com>
-References: <20260930-perf_fix_pylint_errors-v1-0-f72151d8b255@arm.com>
-In-Reply-To: <20260930-perf_fix_pylint_errors-v1-0-f72151d8b255@arm.com>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>, 
- Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
- Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
- James Clark <james.clark@linaro.org>, Aishwarya TCV <aishwarya.tcv@arm.com>
-Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Arnaldo Carvalho de Melo <acme@redhat.com>, Leo Yan <leo.yan@arm.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1790758902; l=1253;
- i=leo.yan@arm.com; s=20250604; h=from:subject:message-id;
- bh=5VXyDGgHM1h2GOfGAbHZtu7Q+5PwQ6iLptI7+l4XeJk=;
- b=c8vfxeqPyWRTCmMOO5KtVAEldFceYDFDK3XfVbFob2+HSi4l7npn6rT3NFaqzCezTGaBc603P
- ZpC1Jsk7lPHD9lfFm8sG4b006xRisG5iXjBoYWJDc3NHgcVqhjS9PxF
-X-Developer-Key: i=leo.yan@arm.com; a=ed25519;
- pk=k4BaDbvkCXzBFA7Nw184KHGP5thju8lKqJYIrOWxDhI=
 
-Python 3.13 reversed optparse's deprecation, and pylint 3.3.5 removed it
-from the deprecated-module list. Perf supports older pylint versions,
-so suppress the warning on this import and document the reason. Keep
-other deprecated-module diagnostics enabled.
+> Python 3.13 reversed optparse's deprecation, and pylint 3.3.5 removed it
+> from the deprecated-module list. Perf supports older pylint versions,
+> so suppress the warning on this import and document the reason. Keep
+> other deprecated-module diagnostics enabled.
+>=20
+> Link: https://docs.python.org/3.13/whatsnew/3.13.html#optparse
+> Link: https://pylint.readthedocs.io/en/latest/whatsnew/3/3.3/index.html#w=
+hat-s-new-in-pylint-3-3-5
+> Fixes: 8a54784e708b ("perf build: Add pylint build tests")
+> Reported-by: Aishwarya TCV <aishwarya.tcv@arm.com>
+> Assisted-by: Codex:gpt-6
+> Signed-off-by: Leo Yan <leo.yan@arm.com>
 
-Link: https://docs.python.org/3.13/whatsnew/3.13.html#optparse
-Link: https://pylint.readthedocs.io/en/latest/whatsnew/3/3.3/index.html#what-s-new-in-pylint-3-3-5
-Fixes: 8a54784e708b ("perf build: Add pylint build tests")
-Reported-by: Aishwarya TCV <aishwarya.tcv@arm.com>
-Assisted-by: Codex:gpt-6
-Signed-off-by: Leo Yan <leo.yan@arm.com>
----
- tools/perf/tests/shell/lib/attr.py | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+Sashiko has reviewed this patch and found no issues. It looks great!
 
-diff --git a/tools/perf/tests/shell/lib/attr.py b/tools/perf/tests/shell/lib/attr.py
-index 7f3d5b64b00dd7de45baff4f7d9baff89e003147..523257bcf8e126cb662af589727144bb26cff4d5 100644
---- a/tools/perf/tests/shell/lib/attr.py
-+++ b/tools/perf/tests/shell/lib/attr.py
-@@ -4,7 +4,8 @@ import configparser
- import os
- import sys
- import glob
--import optparse
-+# Pylint before 3.3.5 still treats optparse as deprecated.
-+import optparse  # pylint: disable=deprecated-module
- import platform
- import tempfile
- import logging
-
--- 
-2.34.1
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260930-perf_fix_p=
+ylint_errors-v1-0-f72151d8b255@arm.com?part=3D3
 
