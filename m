@@ -1,35 +1,35 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F2B41472068;
-	Wed, 30 Sep 2026 09:01:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2057D472541;
+	Wed, 30 Sep 2026 09:01:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790758908; cv=none; b=Ok8xw+ZSNenAX3x4Oukhm6kDn0ZJ4IN6WfZnrWcHXAvBwPGDZnJhct+phO70+ecbRC5+V9tthmW6B97cc+HQ8bymbnssBqOfX5erC8/yqV3vZrnl5IaS3Y6MJqbuBmhcdSw5zdCXJ+kXPIJ4OQzoPqT6xpne6zMpSt44nKJB9e0=
+	t=1790758910; cv=none; b=ADUCk36hkntbMaNHh8h1Soip1CFv++/gRStDvINY6XXMkEJ/b48ESc3NfdAI8SfdS6b/fT4zdYsxytXyHTQ2duJi10pAXDd1VBg5zPEZObVvgr7O6Wf1cTdNVAFl5lRQhQwQwm4IrUpy/OpEuKeKUWsTbC1v5f4q+HBoGptiVJc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790758908; c=relaxed/simple;
-	bh=iZGcNeKnKXgv7OLBl5q/CEiuEGUHm7/yAueS+sBHUts=;
+	s=arc-20240116; t=1790758910; c=relaxed/simple;
+	bh=tG05ycxW7yyGxx8/mTiqYxOCp9x/OHDfO5cfPD19NOA=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=sKL1G2OuMvCQ0RCohsbFAZzbFqi8GaX8VLS4y+I2r5iPOZ2e/cxtLdBOpt+p+A6qkLV9VHwTOTVOOA3T4BvgaLuVlywV+YAR42slJHg36/DdGZbDmOD+zGDGqqYai3AMKyCMYjVscT+G71jB/lI3lquYb2nb2BeqgupK/7WQryg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=fbVgtHYv; arc=none smtp.client-ip=217.140.110.172
+	 In-Reply-To:To:Cc; b=AKoBJdNNpMbd7c3ZlWC0eimLwcbXyxO8y2ugm0XOyz6ljqD9ufPr4IwaGGzFfbUjIYVZFDcPfdQCXCGj+KxHNpAaOtvTlKvip3DY5CTqrHQyc1YYBwkwnXoMsNzungK9K9Q4NousbGF9aGf62VSjj8GXQNEWYbBJ/dVj1M/DuC4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=PC97V+oO; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="fbVgtHYv"
+	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="PC97V+oO"
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2ADD81477;
-	Wed, 30 Sep 2026 02:01:43 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 15479143D;
+	Wed, 30 Sep 2026 02:01:45 -0700 (PDT)
 Received: from e132581.arm.com (unknown [10.2.196.114])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0805E3F85F;
-	Wed, 30 Sep 2026 02:01:44 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E400A3F85F;
+	Wed, 30 Sep 2026 02:01:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
-	t=1790758906; bh=iZGcNeKnKXgv7OLBl5q/CEiuEGUHm7/yAueS+sBHUts=;
+	t=1790758908; bh=tG05ycxW7yyGxx8/mTiqYxOCp9x/OHDfO5cfPD19NOA=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=fbVgtHYvMCUbhXbwcL8QW0mvwKsbc+laiy6GxZVe7h3N+kLzxtAMGhER3EMmlNCLS
-	 88mLraj5mPF3fj6RWaLqD0S3gW3d+9BxbxH24bGKGjR8/LhjmuBW3AnPyP6ZIMh4wy
-	 BJxncxHSf2QEI/0acz3pTSJLTbpH3b5AWOX8MOZI=
+	b=PC97V+oO8e4W5ienZnhyZAjX4dkj1IWu/T3ZZ/gyvdbbpVdmQ9Ly+I8FK6gLxDFK/
+	 yDU9XmSpDW6pUr1vCwHdA0SwxwGNweOAVEYnsGGTQAhBpE2nxdhiS8qqg0JT4pz1Zg
+	 p26CtYhBDtTvdhdTHL7oqN8ZhMCqAaQTgxC9UmuI=
 From: Leo Yan <leo.yan@arm.com>
-Date: Wed, 30 Sep 2026 10:01:12 +0100
-Subject: [PATCH 1/3] perf build: Build the Python extension before pylint
- consumers
+Date: Wed, 30 Sep 2026 10:01:13 +0100
+Subject: [PATCH 2/3] perf build: Add the output Python directory to
+ pylint's PYTHONPATH
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -38,7 +38,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260930-perf_fix_pylint_errors-v1-1-f72151d8b255@arm.com>
+Message-Id: <20260930-perf_fix_pylint_errors-v1-2-f72151d8b255@arm.com>
 References: <20260930-perf_fix_pylint_errors-v1-0-f72151d8b255@arm.com>
 In-Reply-To: <20260930-perf_fix_pylint_errors-v1-0-f72151d8b255@arm.com>
 To: Arnaldo Carvalho de Melo <acme@kernel.org>, 
@@ -48,47 +48,38 @@ To: Arnaldo Carvalho de Melo <acme@kernel.org>,
 Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
  Arnaldo Carvalho de Melo <acme@redhat.com>, Leo Yan <leo.yan@arm.com>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1790758902; l=1313;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1790758902; l=1215;
  i=leo.yan@arm.com; s=20250604; h=from:subject:message-id;
- bh=iZGcNeKnKXgv7OLBl5q/CEiuEGUHm7/yAueS+sBHUts=;
- b=81YHczmGTeF6BxCNc2WQFdpE8VCa6gBEItXJ6ZGo8Zj76dQoPN569zg5wmQmJtQYkDbmY/+H9
- QqsM77guaTkADfUhbuYI5MmF/+h2lxY9/gE0+Tz4NqqChvidM3JLgxq
+ bh=tG05ycxW7yyGxx8/mTiqYxOCp9x/OHDfO5cfPD19NOA=;
+ b=ls6h//SGUIpHDhPKBDm9NOZyXv3qrfeewH5JqcLpiybkUDDzxn/4ZZMt+2alzuZD5onsdsLH/
+ WC/GH8kFbjjDifNBaAzSGheIGDR3/7mJhYibEA5xA6Lj5IK+6Oxzkjz
 X-Developer-Key: i=leo.yan@arm.com; a=ed25519;
  pk=k4BaDbvkCXzBFA7Nw184KHGP5thju8lKqJYIrOWxDhI=
 
-Pylint checks for tests and standalone Python scripts can run before the
-perf Python extension is available. On a clean parallel build, an import
-error can stop make before the extension is built.
+Prepend the output Python directory to pylint's PYTHONPATH so builds
+using O= can also find the generated extension.
 
-When pylint is enabled, make the perf and perf-test sub-makes wait for the
-enabled language bindings using an order-only dependency. The extension
-does not depend on either consumer, so this does not introduce a cycle.
-
-Fixes: 8a54784e708b ("perf build: Add pylint build tests")
+Fixes: 5fe83fb352c8 ("perf build: Make pylint build test opt-out (NO_PYLINT=1)")
 Reported-by: Aishwarya TCV <aishwarya.tcv@arm.com>
 Assisted-by: Codex:gpt-6
 Signed-off-by: Leo Yan <leo.yan@arm.com>
 ---
- tools/perf/Makefile.perf | 6 ++++++
- 1 file changed, 6 insertions(+)
+ tools/perf/Makefile.perf | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
-index 0102c3468a0b79fb22966d8cbd8fa8525d2ff3ae..d350d085542c64fc6d0bed4c5d7d1daac51efa8b 100644
+index d350d085542c64fc6d0bed4c5d7d1daac51efa8b..0151aac394569671b98c98a42d97f75d380856cc 100644
 --- a/tools/perf/Makefile.perf
 +++ b/tools/perf/Makefile.perf
-@@ -578,6 +578,12 @@ strip: $(PROGRAMS) $(OUTPUT)perf
- 	$(STRIP) $(STRIP_OPTS) $(PROGRAMS) $(OUTPUT)perf
- 
- PERF_IN := $(OUTPUT)perf-in.o
-+
-+ifdef PYLINT
-+# Build the Python extension before starting sub-makes that lint its users.
-+$(PERF_IN) $(LIBPERF_TEST_IN): | $(LANG_BINDINGS)
-+endif
-+
- export NO_JEVENTS
- 
- build := -f $(srctree)/tools/build/Makefile.build dir=. obj
+@@ -310,7 +310,7 @@ ifneq ($(force_fixdep),1)
+       $(warning Warning: pylint version is older than 2.16.0, skipping pylint checks.)
+       override PYLINT :=
+     else
+-      override PYLINT := PYTHONPATH=$(srctree)/tools/perf/python:$(srctree)/tools/perf/pmu-events \
++      override PYLINT := PYTHONPATH=$(abspath $(OUTPUT)python):$(srctree)/tools/perf/python:$(srctree)/tools/perf/pmu-events \
+         $(PYLINT) --disable=all --enable=E,W --disable=W0123,W0311,W0511,W0603,W0622,W0718 \
+         --ignored-modules=textual,setproctitle
+     endif
 
 -- 
 2.34.1
