@@ -1,109 +1,101 @@
-Received: from mail-oo2-f37.google.com (mail-oo2-f37.google.com [74.125.231.165])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDD2F46D2D2
-	for <linux-perf-users@vger.kernel.org>; Wed, 30 Sep 2026 15:59:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.231.165
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1D5C14F85CA;
+	Wed, 30 Sep 2026 16:43:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790783947; cv=none; b=uGo3dOmmoV2hqjOozRE2S5tGA1m/Mp/pdXGwrKrCTafkw6O3kFS7PF2OhAzbKtJMB5QwcVf652WnD8rdi1sR3ifg1hQQrZIJneISy57D0KN8mLiVFLgCeK8E3urifeYsTxDCLfIACHwAJFZzpaVRtk5yN9C1JlDhauJ6sc7fld4=
+	t=1790786596; cv=none; b=TEjwYVMxSSdA6phtN7W/qDgsFYGqWG8DwjwWaANxadn9quisMraKR45rhg0ZbqHRjEGoPqcATWcMlds3Ev9Ht+DP2pxp7wgWX8D+oZDr69dBM0UBpUFbhHFj2ECgePaIy7Ya1iQx0B9Qm0Spy+AphJl4j1Tne0dbVwBf43VUL00=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790783947; c=relaxed/simple;
-	bh=fvsBMFcu3Leki1paprd4GO9igVhuE1WvRPncPexrkec=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=sBDCTA9LoT4XjYhrWwqqocUz0xoRGPRZuwhENogE4iq7/SluXszgMc71UyYt2vWH3SyeyOKp6XhnDRG0PdzBDx9iKgnY/JAA8p2myVqYu0fJghUN1OaxwUDqhBABySSV3fs9Lj1kttZwfel2acUlvyvGw6TvlOGN9/nYffdGZ10=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Li+chHqJ; arc=none smtp.client-ip=74.125.231.165
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1790786596; c=relaxed/simple;
+	bh=+ZQQF2h9wliOPrMz684FyPaCAEQVKIU22UOLcW8B9DU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=KzVR1/Xp+GmMilWENtGWFO6lcQRiAu9+LaE3IxtzvwGC/wXoaD7MdErczOOuRuq7cCGXfJT4x1HR3VibObet/KcEjcgCwGrGR17HesDeb7M0Qf+WrNcO/s3HXfVq+WMrWfY0AgKYpYpIMtlZ5w+xG6fnCQlPtIQOTUgVvq/UzOA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=nt7xGr1X; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Li+chHqJ"
-Received: by mail-oo2-f37.google.com with SMTP id 46e09a7af769-8137b129131so3649643a34.2
-        for <linux-perf-users@vger.kernel.org>; Wed, 30 Sep 2026 08:59:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1790783942; x=1791388742; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=Izn5bAPBe1bZbR1JsJZ2Zid1xDZroTRIy3cYsqCZHmU=;
-        b=Li+chHqJG+dTu0ff4+s8dZ9lcAJyMLq3PuEPJrzNJ0iBLYCRQda9hHJ6El+p2yMiv3
-         ZPxEMa9lbxHSL4Jmvn01QaOLvCL/mJ1lfLzqR+ooZZPHC0YpNWEu/lr5joJTrxQAkM6w
-         KbVLzZiG9detMAnU+2JFctEqSAYVfAdhuVAO+An7xeE7yrUWB/L71sKbPTy+VXccJA/v
-         xZEDauwGtsH0BWsBmLYUnw63hbg9Mym7pJuRd0/6BC9ABqMITmnL7A2QSvzGgkfZUR6Y
-         mXOfdiXjZO884k4/qx+JWxNOMCz/s1HTo3ymQZqMukCQbVrJSG+/rJki2KWm+oPlKnaQ
-         3CAA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1790783942; x=1791388742;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=Izn5bAPBe1bZbR1JsJZ2Zid1xDZroTRIy3cYsqCZHmU=;
-        b=yaE2DLH1N5n+55C9xntSt3k48LPDQlEWbeSJ/OdI5v/ZQc7v2Aryaq6KikW9hNfKi7
-         9Eu1ylRfHWe2uMmCjUPaUB8zGxyx85FpFeWFQcr2S7xXDjbWG+3Cu4+ODVurwKY0HBXM
-         YE2qrn3w/CZkJ9JAe/qxMUKsYx+ki3W2RaIae0qx9KprDu66POxPOZTPTt4OUa2emlx5
-         6lA6Bx4i09S84u5RysMzT65rVaLow2bQ3DI/sApreeFlRAttN0oPtnmK4rEowX2R9Szv
-         l29HkFq8+ixgzvvxyOTJzEBdpCCU3tqD6PxlWekRBk5yWcizBzbibB9U6tHDnm1i0+il
-         SUVg==
-X-Forwarded-Encrypted: i=1; AKwUvBxWXXu+BRmWV/vW3oMTdVZjZzKcbNPfg0gMJoksPRDTlcrxmAwOjEyIHsl8UWBWXKlz7T2YfTyoe9XrVm/La2pu@vger.kernel.org
-X-Gm-Message-State: AFuF++m0Z3fb8EAGY3sVq8yS05TIS9boG5x4rQ83ptHEkrAdUdvSOdqy
-	TkSj7PWrch2B8yjZAAOIfhqPjqFQs3QTZ4vuyIXy4RJb8qFrj+Obv43G
-X-Gm-Gg: AYBFou31/yJjM8UljnGVMUMSADInJOiHkdf/bTd71gf/iv6YJsLoiKIE+xTYB5XtpmO
-	gKdEGamFJZ4kvX0dNAsi/aglsG48F3u+0sKUb3gG2OMENypSg+r+k8yJwLRd2N1rsk1RKYpL9sB
-	DNvH98fE2VTNjazPwwesBzamH34X7yF0SUvffp4PU2hVAroWDHcSTA5Jw6h9ChtGREu6di9Hve1
-	mr0v95c6+7rJ6PkeT+P6ZrcMCNXsXfjr5DcNjROmpJBuqxRCaeyWn8XLilrtac6Tc+6nFzor5c0
-	bmRsupLu9HbEJLlX0w6dpOfc6SzZiV6HbbsvWrdd7PypZNf9kGoYdKnskUAISYchLMp8aOisRUr
-	8SR0s1EMQaCmncehmq7GbwSWwyozZH2fBpkL2zpmTetLKDgMhKrkVIZTRyYY0SRERxspLuZTCdN
-	jr8HjqQr4DfMIDMD9kw1yVz9ZQNz6QbZdugeQshJIJOGzbxUHNtt5BgqeAazL3SzUYEsER8gIyS
-	L/rgxoOzgAjdWPwpDdA2oyME7zEgofUBglxjyLo
-X-Received: by 2002:a4a:e914:0:b0:6b9:8413:89b8 with SMTP id 006d021491bc7-6dcf592ea93mr1794882eaf.57.1790783942229;
-        Wed, 30 Sep 2026 08:59:02 -0700 (PDT)
-Received: from archlinux.lan ([136.34.156.120])
-        by smtp.gmail.com with ESMTPSA id 006d021491bc7-6dd982ed764sm332033eaf.11.2026.09.30.08.59.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 30 Sep 2026 08:59:01 -0700 (PDT)
-From: Danishk2445 <danishkhateeb03@gmail.com>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Danish Khateeb <danishkhateeb03@gmail.com>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
+	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="nt7xGr1X"
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 118EC497;
+	Wed, 30 Sep 2026 09:43:11 -0700 (PDT)
+Received: from localhost (unknown [10.2.196.114])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0F3713F85F;
+	Wed, 30 Sep 2026 09:43:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
+	t=1790786594; bh=+ZQQF2h9wliOPrMz684FyPaCAEQVKIU22UOLcW8B9DU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=nt7xGr1XngY7AXps+0QzGOhk/AqApXQZu9RwBkbxHcHmRvMiGAhwX/+OYrgmbQt2g
+	 C8ax0Sr59DyL7okecWYUwf70W2O7KmCQBqw0XbJOAel9byN122uEuH89YRvsy2pJfe
+	 a5u3N0avZIxgHNvUDykVknZ8vLnz1jVyNJrE6QHQ=
+Date: Wed, 30 Sep 2026 17:43:11 +0100
+From: Leo Yan <leo.yan@arm.com>
+To: Will Deacon <will@kernel.org>
+Cc: Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Mike Leach <mike.leach@arm.com>,
 	James Clark <james.clark@linaro.org>,
-	Marco Elver <elver@google.com>,
-	Frederic Weisbecker <frederic@kernel.org>,
-	Luo Gengkun <luogengkun2@huawei.com>,
-	linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Subject: Re: [PATCH v2] perf/core: Don't send SIGTRAP after exec removed the event
-Date: Wed, 30 Sep 2026 10:59:00 -0500
-Message-ID: <20260930155900.65984-1-danishkhateeb03@gmail.com>
-X-Mailer: git-send-email 2.55.0
-In-Reply-To: <20260930151610.GN88198@noisy.programming.kicks-ass.net>
-References: <20260930144248.59858-1-danishkhateeb03@gmail.com> <20260930151610.GN88198@noisy.programming.kicks-ass.net>
+	Anshuman Khandual <anshuman.khandual@arm.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Tamas Petz <tamas.petz@arm.com>,
+	Tamas Zsoldos <tamas.zsoldos@arm.com>,
+	Michiel van Tol <michiel.vantol@arm.com>,
+	Dev Jain <dev.jain@arm.com>, David Hildenbrand <david@kernel.org>,
+	Yabin Cui <yabinc@google.com>, James Morse <james.morse@arm.com>,
+	coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH 2/2] perf: arm_spe: Prefer large AUX mappings
+Message-ID: <20260930164311.GK14479@e132581.arm.com>
+References: <20260810-perf_aux_trace_large_granule-v1-0-03306c9339e3@arm.com>
+ <20260810-perf_aux_trace_large_granule-v1-2-03306c9339e3@arm.com>
+ <annp-BdTviQoH6vy@willie-the-truck>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <annp-BdTviQoH6vy@willie-the-truck>
 
-From: Danish Khateeb <danishkhateeb03@gmail.com>
+Hi Will,
 
-On Wed, Sep 30, 2026 at 05:16:10PM +0200, Peter Zijlstra wrote:
-> Is this the same problem as this one?
->
->   https://patch.msgid.link/20260920075026.990582-1-luogengkun2@huawei.com
+On Mon, Aug 10, 2026 at 04:10:48PM +0100, Will Deacon wrote:
+> On Mon, Aug 10, 2026 at 03:44:42PM +0100, Leo Yan wrote:
+> > Commit 18049c8cff9c ("perf/aux: Allocate non-contiguous AUX pages by
+> > default") made the AUX allocator use order-0 pages by default unless a
+> > PMU explicitly asks for contiguous allocations.
+> 
+> But that commit specifically calls out SPE as benefitting from
+> non-contiguous pages:
+> 
+>   "For instance, ARM SPE and TRBE operate with virtual pages, and
+>    Coresight ETR allocates a separate buffer. For these PMUs,
+>    allocating contiguous AUX pages unnecessarily exacerbates memory
+>    fragmentation. This fragmentation can prevent their use on
+>    long-running devices."
+> 
+> so why doesn't passing PERF_PMU_CAP_AUX_PREFER_LARGE reintroduce the
+> problems that 18049c8cff9c was trying to solve?
 
-No. That one is an exec into a non-dumpable binary, where
-perf_event_exit_task() sets TASK_TOMBSTONE and the WARN fires. This is
-an ordinary exec: ctx->task doesn't change and the SIGTRAP kills the
-new program. With Luo's patch on rc5 that still happens (567 of 2000
-runs), with this one it doesn't, and Luo's WARN goes away too, since
-perf_event_exit_task() sets every event to PERF_EVENT_STATE_EXIT.
+How about adding a field to struct pmu to specify a preferred maximum
+page order for the AUX buffer? The perf core could try that order first
+and fall back to smaller orders if the allocation fails.
 
-Thanks
-Danish
+For example, the Neoverse V2 TRM documents:
+
+  L1 Trace Buffer Extension (TRBE) TLB: 1 entry
+
+Given the single L1 TRBE TLB entry, the TRBE driver could prefer
+PMD_ORDER (2 MiB with 4 KiB pages) to reduce TLB pressure. This reflects
+the hardware characteristic.
+
+This could be a trade-off instead of using PERF_PMU_CAP_AUX_PREFER_LARGE,
+avoiding large contiguous allocations that could reintroduce the Android
+OOM issue. I did a quick test with this approach and the results look
+positive.
+
+Does this sound like a reasonable direction? I might also need Yabin's
+judgement from Android side.
+
+Thanks,
+Leo
