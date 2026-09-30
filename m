@@ -1,184 +1,188 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5CF4378823;
-	Wed, 30 Sep 2026 04:15:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0C53A38D3E2;
+	Wed, 30 Sep 2026 04:20:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790741758; cv=none; b=OZ6aPnJAU/j2s9C+NlIsbBFgsDgBkBUt3Z/4y74INedzjiZL7FDNRxSU8//vm9PmcIcIqatLm4mzYtqTXZ7mBHvaYGf4ZKuXpFRO7eg8FVdd6wVhxvFiwbA4S3pI0ymw2Bpegw4t+FQWGOmaVln8ldu+Gp0ii21A5TxkFtjLd2k=
+	t=1790742062; cv=none; b=lQLtQAvNfCK3uF8G8ZMnhpvLNPZ+PzRUPqWN1GmTV0SJl4121+FTBtaMTjFPL7ebBmgpA4XnAfY3Qf3hTTqcjlZURQr0rmTz/Q7JQoXQD2PVoo8WptVOG8gArhL1fh1y7bLtVPH6bugb0k8n1tN1pimQYQ6kkWE0WgkaXTBe9nM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790741758; c=relaxed/simple;
-	bh=CIXIzkbXMmKQ5jAbYHHqYpDNIb6gSdlF4o2Q69gJhTI=;
+	s=arc-20240116; t=1790742062; c=relaxed/simple;
+	bh=UxlHUYv22rgyq7ZVxruY0QE2y0GtfTw2R9yOES+jmXc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ABA5FC9B5/+q5ZviisXkA9z6joruxZ+cm2SA5/2rJfOHpWSXB8/B/Yc8Mp0PsRTHpORQIh1HNaXa1h1n5CDFfAWEkX9iesk+NIVPu3aBN/l6SEOOqtrBQ8boS6fEcLoYxHgsb6olNILoWZ+CssG4KbMf/GWVu6obOX+vTfbk2Yw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FC3WWlmD; arc=none smtp.client-ip=100.103.45.18
+	 Content-Type:Content-Disposition:In-Reply-To; b=CV0H1v8xarG78X70LuN7sylUxDuEtbkZxvEIMN71aplOBMtw0TaVh47QAWKYbH+wHX50zLUYEN7Jlo6VXTTBh7bPlVfCrrGNxHaobaMB519tlOplwEgQTjs8WVoH1GOOjWHjNpPtNmbyL9dGL8LeoJB63qj/4FXHRPpMrILCZLw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=iiXj3sGk; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FC3WWlmD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ED0EC1F000FF;
-	Wed, 30 Sep 2026 04:15:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1790741756;
-	bh=6/otGvuRtigsBPkxcPsET88cBu7mN+IvbEgMcsUyri8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=FC3WWlmD3CZNGsMuUoyg9ovZHeKSz3YRk85wKDLxzBg9e0uCFvcArQ/y+MJ4dPU3v
-	 mupmvMsvc9PoTQsbeSpqprzZXFn5bzZuhOMlsCzG09rTh65kLo1dj4RT2+z+rdME8X
-	 CoV6gUu6zWvxo55wvAaAk8zuA2Dh05D4bMvcjV87RcUHEXY5Xh4duXvf50JE2pxj4d
-	 82Qxmhhl0akbaSohaRU5bFxVSIz7b4pD3INViphf4pegS9w7OMuANincf60JXB5biF
-	 y0+G6y7AH99aADbyGbp5TmMUCkyJ9K1v7ce03aiNV8XO7LaJV2bpyszUNV55MbwvrE
-	 a85QIxcINQCzA==
-Date: Tue, 29 Sep 2026 21:15:54 -0700
-From: Namhyung Kim <namhyung@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Aaron Tomlin <atomlin@atomlin.com>,
-	Howard Chu <howardchu95@gmail.com>, Jakub Brnak <jbrnak@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>, Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	James Clark <james.clark@linaro.org>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v6 04/26] perf trace: Bounds check augmented arguments
- before reading them
-Message-ID: <aryM-gu0FlmB1-Jw@google.com>
-References: <cover.1790145937.git.irogers@google.com>
- <20260928182605.3649015-1-irogers@google.com>
- <20260928182605.3649015-5-irogers@google.com>
+	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="iiXj3sGk"
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DD02B16F3;
+	Tue, 29 Sep 2026 21:20:55 -0700 (PDT)
+Received: from localhost (a085714.arm.com [10.164.19.28])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D13163F85F;
+	Tue, 29 Sep 2026 21:20:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
+	t=1790742059; bh=UxlHUYv22rgyq7ZVxruY0QE2y0GtfTw2R9yOES+jmXc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=iiXj3sGkrhMAurjVuvisN1wyrF4L5DGjA9KvALcFVE4OmoxhVrf+/REwA/xaRN5Yk
+	 5me6wieFhJOwAoyLIoLbXtSHLf2oRy3WVoldA0+46lHll1bRbjR+OrUDdKJOwbDcUR
+	 LpuyMIJJwxFQf9usQsgGIu9RHfEsZZyZAGi0LfSg=
+Date: Wed, 30 Sep 2026 09:50:55 +0530
+From: Anshuman Khandual <anshuman.khandual@arm.com>
+To: Muhammad Usama Anjum <usama.anjum@arm.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>, 
+	David Hildenbrand <david@kernel.org>, Lorenzo Stoakes <ljs@kernel.org>, 
+	"Liam R. Howlett" <liam@infradead.org>, Vlastimil Babka <vbabka@kernel.org>, 
+	Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, 
+	Michal Hocko <mhocko@suse.com>, Xu Xin <xu.xin16@zte.com.cn>, 
+	Chengming Zhou <chengming.zhou@linux.dev>, Jann Horn <jannh@google.com>, 
+	Muchun Song <muchun.song@linux.dev>, Oscar Salvador <osalvador@suse.de>, 
+	Pedro Falcato <pfalcato@suse.de>, Arnd Bergmann <arnd@arndb.de>, Will Deacon <will@kernel.org>, 
+	"Aneesh Kumar K.V" <aneesh.kumar@kernel.org>, Nick Piggin <npiggin@gmail.com>, 
+	Peter Zijlstra <peterz@infradead.org>, Pasha Tatashin <pasha.tatashin@soleen.com>, 
+	Rik van Riel <riel@surriel.com>, Harry Yoo <harry@kernel.org>, Lance Yang <lance.yang@linux.dev>, 
+	Chris Li <chrisl@kernel.org>, Kairui Song <kasong@tencent.com>, 
+	Kemeng Shi <shikemeng@huaweicloud.com>, Nhat Pham <nphamcs@gmail.com>, Baoquan He <baoquan.he@linux.dev>, 
+	Barry Song <baohua@kernel.org>, Youngjun Park <youngjun.park@lge.com>, 
+	Uladzislau Rezki <urezki@gmail.com>, Steven Rostedt <rostedt@goodmis.org>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	Andrii Nakryiko <andrii@kernel.org>, Eduard Zingerman <eddyz87@gmail.com>, 
+	Kumar Kartikeya Dwivedi <memxor@gmail.com>, Martin KaFai Lau <martin.lau@linux.dev>, 
+	Song Liu <song@kernel.org>, Yonghong Song <yonghong.song@linux.dev>, 
+	Jiri Olsa <jolsa@kernel.org>, Emil Tsalapatis <emil@etsalapatis.com>, 
+	Ihor Solodrai <ihor.solodrai@linux.dev>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	James Clark <james.clark@linaro.org>, SJ Park <sj@kernel.org>, 
+	"Matthew Wilcox (Oracle)" <willy@infradead.org>, Jan Kara <jack@suse.cz>, Jason Gunthorpe <jgg@ziepe.ca>, 
+	John Hubbard <jhubbard@nvidia.com>, Peter Xu <peterx@redhat.com>, Leon Romanovsky <leon@kernel.org>, 
+	Zi Yan <ziy@nvidia.com>, Baolin Wang <baolin.wang@linux.alibaba.com>, 
+	Nico Pache <nico.pache@linux.dev>, Ryan Roberts <ryan.roberts@arm.com>, Dev Jain <dev.jain@arm.com>, 
+	Usama Arif <usama.arif@linux.dev>, Kiryl Shutsemau <kas@kernel.org>, 
+	Andrey Ryabinin <ryabinin.a.a@gmail.com>, Alexander Potapenko <glider@google.com>, 
+	Andrey Konovalov <andreyknvl@gmail.com>, Dmitry Vyukov <dvyukov@google.com>, 
+	Vincenzo Frascino <vincenzo.frascino@arm.com>, Miaohe Lin <linmiaohe@huawei.com>, 
+	Naoya Horiguchi <nao.horiguchi@gmail.com>, Matthew Brost <matthew.brost@intel.com>, 
+	Joshua Hahn <joshua.hahnjy@gmail.com>, Rakie Kim <rakie.kim@sk.com>, Byungchul Park <byungchul@sk.com>, 
+	Gregory Price <gourry@gourry.net>, Ying Huang <ying.huang@linux.alibaba.com>, 
+	Alistair Popple <apopple@nvidia.com>, Dennis Zhou <dennis@kernel.org>, Tejun Heo <tj@kernel.org>, 
+	Christoph Lameter <cl@gentwo.org>, Johannes Weiner <hannes@cmpxchg.org>, 
+	Qi Zheng <qi.zheng@linux.dev>, Shakeel Butt <shakeel.butt@linux.dev>, 
+	Axel Rasmussen <axelrasmussen@google.com>, Yuanchu Xie <yuanchu@google.com>, Wei Xu <weixugc@google.com>, 
+	Jani Nikula <jani.nikula@linux.intel.com>, Joonas Lahtinen <joonas.lahtinen@linux.intel.com>, 
+	Rodrigo Vivi <rodrigo.vivi@intel.com>, Tvrtko Ursulin <tursulin@ursulin.net>, 
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, Juergen Gross <jgross@suse.com>, 
+	Stefano Stabellini <sstabellini@kernel.org>, Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>, 
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org, linux-fsdevel@vger.kernel.org, 
+	linux-arch@vger.kernel.org, linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, damon@lists.linux.dev, kasan-dev@googlegroups.com, 
+	intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org, xen-devel@lists.xenproject.org
+Subject: Re: [PATCH v3 2/9] mm: rename pointers to software PTE values as
+ ptentp
+Message-ID: <ch63uaxr36anablz2sra57huiud2gxjtpmilwk4je2qkm5hb7j@eiun5t4erg2l>
+References: <20260922-pte0-v3-0-5670b8cb9059@arm.com>
+ <20260922-pte0-v3-2-5670b8cb9059@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260928182605.3649015-5-irogers@google.com>
+In-Reply-To: <20260922-pte0-v3-2-5670b8cb9059@arm.com>
 
-On Mon, Sep 28, 2026 at 11:25:43AM -0700, Ian Rogers wrote:
-> syscall_arg__scnprintf_buf() and syscall_arg__scnprintf_augmented_string()
-> trust the augmented arg's size, so a bad one reads out of bounds:
+On Tue, Sep 22, 2026 at 06:12:30PM +0100, Muhammad Usama Anjum wrote:
+> Some interfaces use pte_t * for a software PTE value rather than for an
+> entry stored in a PTE table. These pointers must remain pte_t * when
+> pointers to PTE table storage are converted to hw_pte_t *.
 > 
->   #3 0x4c0fa0 in syscall_arg__scnprintf_buf builtin-trace.c:1955
->   #4 0x4c2f3d in syscall_arg_fmt__scnprintf_val builtin-trace.c:2632
->   #5 0x4c33ae in syscall__scnprintf_args builtin-trace.c:2722
->   #6 0x4c43d3 in trace__sys_enter builtin-trace.c:3094
->   #7 0x4c7865 in trace__handle_event builtin-trace.c:4013
+> Rename these parameters in the install_pte callback,
+> write_protect_page(), and guard_install_set_pte() to ptentp. The later
+> Coccinelle conversion skips pointers named ptentp, allowing it to convert
+> the remaining PTE table pointers without changing these interfaces.
 > 
-> Move the check in btf_struct_scnprintf() to a helper,
-> syscall_arg__augmented_args_valid(), and use it in both. When the check
-> fails, syscall_arg__scnprintf_filename() now falls back to vfs_getname or
-> the pointer.
+> Some functions already use ptentp for such pointers, including:
+> - madvise_folio_pte_batch()
+> - folio_pte_batch_flags()
+> No need to rename them.
 > 
-> Reported-by: Arnaldo Carvalho de Melo <acme@kernel.org>
-> Closes: https://lore.kernel.org/linux-perf-users/arJ-gpzqOHk-gF8T@x2/
-> Assisted-by: Antigravity:gemini-3.1-pro
-> Signed-off-by: Ian Rogers <irogers@google.com>
+> This patch only renames parameters and makes no functional change.
+> 
+> Acked-by: David Hildenbrand (Arm) <david@kernel.org>
+> Signed-off-by: Muhammad Usama Anjum <usama.anjum@arm.com>
 
-Reviewed-by: Namhyung Kim <namhyung@kernel.org>
-
-Thanks,
-Namhyung
+Reviewed-by: Anshuman Khandual <anshuman.khandual@arm.com>
 
 > ---
->  tools/perf/builtin-trace.c       | 23 ++++++++++++++---------
->  tools/perf/trace/beauty/beauty.h | 17 +++++++++++++++++
->  2 files changed, 31 insertions(+), 9 deletions(-)
+> Changes since v1:
+> - Rewrite the subject and description to distinguish software PTE
+>   values from PTE table storage.
 > 
-> diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-> index c39de91140a0..85db74965280 100644
-> --- a/tools/perf/builtin-trace.c
-> +++ b/tools/perf/builtin-trace.c
-> @@ -1139,14 +1139,11 @@ static size_t btf_struct_scnprintf(const struct btf_type *type, struct btf *btf,
->  	LIBBPF_OPTS(btf_dump_opts, dump_opts);
->  	LIBBPF_OPTS(btf_dump_type_data_opts, dump_data_opts);
+> Changes since RFC v1:
+> - Update the description for the architecture opt-in conversion.
+> ---
+>  include/linux/pagewalk.h | 2 +-
+>  mm/ksm.c                 | 4 ++--
+>  mm/madvise.c             | 4 ++--
+>  3 files changed, 5 insertions(+), 5 deletions(-)
+> 
+> diff --git a/include/linux/pagewalk.h b/include/linux/pagewalk.h
+> index b41d7265c01bc..c34d826c5e4a2 100644
+> --- a/include/linux/pagewalk.h
+> +++ b/include/linux/pagewalk.h
+> @@ -89,7 +89,7 @@ struct mm_walk_ops {
+>  		       struct mm_walk *walk);
+>  	void (*post_vma)(struct mm_walk *walk);
+>  	int (*install_pte)(unsigned long addr, unsigned long next,
+> -			   pte_t *ptep, struct mm_walk *walk);
+> +			   pte_t *ptentp, struct mm_walk *walk);
+>  	enum page_walk_lock walk_lock;
+>  };
 >  
-> -	if (arg == NULL || arg->augmented.args == NULL || arg->augmented.size < (int)sizeof(*augmented_arg) ||
-> +	if (!syscall_arg__augmented_args_valid(arg, type->size) ||
->  	    arg->fmt == NULL || !arg->fmt->from_user)
->  		return 0;
+> diff --git a/mm/ksm.c b/mm/ksm.c
+> index 624f37975e129..2a4f19fe0f696 100644
+> --- a/mm/ksm.c
+> +++ b/mm/ksm.c
+> @@ -1292,7 +1292,7 @@ static u32 calc_checksum(struct page *page)
+>  }
 >  
->  	augmented_arg = arg->augmented.args;
-> -	if (augmented_arg->size <= 0 || augmented_arg->size > arg->augmented.size - (int)sizeof(*augmented_arg) ||
-> -	    (size_t)augmented_arg->size < type->size)
-> -		return 0;
->  
->  	dump_data_opts.compact	  = true;
->  	dump_data_opts.skip_names = !arg->trace->show_arg_names;
-> @@ -1904,12 +1901,18 @@ static void thread__set_filename_pos(struct thread *thread, const char *bf,
->  static size_t syscall_arg__scnprintf_augmented_string(struct syscall_arg *arg, char *bf, size_t size)
+>  static int write_protect_page(struct vm_area_struct *vma, struct folio *folio,
+> -			      pte_t *orig_pte)
+> +			      pte_t *ptentp)
 >  {
->  	struct augmented_arg *augmented_arg = arg->augmented.args;
-> -	size_t printed = scnprintf(bf, size, "\"%.*s\"", augmented_arg->size, augmented_arg->value);
-> +	size_t printed;
-> +	int consumed;
-> +
-> +	if (!syscall_arg__augmented_args_valid(arg, 0))
-> +		return 0;
-> +
-> +	printed = scnprintf(bf, size, "\"%.*s\"", augmented_arg->size, augmented_arg->value);
->  	/*
->  	 * So that the next arg with a payload can consume its augmented arg, i.e. for rename* syscalls
->  	 * we would have two strings, each prefixed by its size.
->  	 */
-> -	int consumed = sizeof(*augmented_arg) + augmented_arg->size;
-> +	consumed = sizeof(*augmented_arg) + augmented_arg->size;
+>  	struct mm_struct *mm = vma->vm_mm;
+>  	DEFINE_FOLIO_VMA_WALK(pvmw, folio, vma, 0, 0);
+> @@ -1371,7 +1371,7 @@ static int write_protect_page(struct vm_area_struct *vma, struct folio *folio,
 >  
->  	arg->augmented.args = ((void *)arg->augmented.args) + consumed;
->  	arg->augmented.size -= consumed;
-> @@ -1922,7 +1925,7 @@ static size_t syscall_arg__scnprintf_filename(char *bf, size_t size,
+>  		set_pte_at(mm, pvmw.address, pvmw.pte, entry);
+>  	}
+> -	*orig_pte = entry;
+> +	*ptentp = entry;
+>  	err = 0;
+>  
+>  out_unlock:
+> diff --git a/mm/madvise.c b/mm/madvise.c
+> index 73c2901b9adbf..dd75a673e108f 100644
+> --- a/mm/madvise.c
+> +++ b/mm/madvise.c
+> @@ -1113,12 +1113,12 @@ static int guard_install_pte_entry(pte_t *pte, unsigned long addr,
+>  }
+>  
+>  static int guard_install_set_pte(unsigned long addr, unsigned long next,
+> -				 pte_t *ptep, struct mm_walk *walk)
+> +				 pte_t *ptentp, struct mm_walk *walk)
 >  {
->  	unsigned long ptr = arg->val;
+>  	unsigned long *nr_pages = (unsigned long *)walk->private;
 >  
-> -	if (arg->augmented.args)
-> +	if (syscall_arg__augmented_args_valid(arg, 0))
->  		return syscall_arg__scnprintf_augmented_string(arg, bf, size);
+>  	/* Simply install a PTE marker, this causes segfault on access. */
+> -	*ptep = make_pte_marker(PTE_MARKER_GUARD);
+> +	*ptentp = make_pte_marker(PTE_MARKER_GUARD);
+>  	(*nr_pages)++;
 >  
->  	if (!arg->trace->vfs_getname)
-> @@ -1938,13 +1941,15 @@ static size_t syscall_arg__scnprintf_filename(char *bf, size_t size,
->  static size_t syscall_arg__scnprintf_buf(char *bf, size_t size, struct syscall_arg *arg)
->  {
->  	struct augmented_arg *augmented_arg = arg->augmented.args;
-> -	unsigned char *orig = (unsigned char *)augmented_arg->value;
->  	size_t printed = 0;
-> +	unsigned char *orig;
->  	int consumed;
->  
-> -	if (augmented_arg == NULL)
-> +	if (!syscall_arg__augmented_args_valid(arg, 0))
->  		return 0;
->  
-> +	orig = (unsigned char *)augmented_arg->value;
-> +
->  	for (int j = 0; j < augmented_arg->size; ++j) {
->  		bool control_char = orig[j] <= MAX_CONTROL_CHAR || orig[j] >= MAX_ASCII;
->  		/* print control characters (0~31 and 127), and non-ascii characters in \(digits) */
-> diff --git a/tools/perf/trace/beauty/beauty.h b/tools/perf/trace/beauty/beauty.h
-> index 0f4801c61a5b..1cd307328bb2 100644
-> --- a/tools/perf/trace/beauty/beauty.h
-> +++ b/tools/perf/trace/beauty/beauty.h
-> @@ -124,6 +124,23 @@ struct syscall_arg {
->  
->  unsigned long syscall_arg__val(struct syscall_arg *arg, u8 idx);
->  
-> +/* Is there a whole augmented arg left with at least @need bytes of payload? */
-> +static inline bool syscall_arg__augmented_args_valid(struct syscall_arg *arg, size_t need)
-> +{
-> +	const struct augmented_arg *augmented_arg;
-> +
-> +	if (arg == NULL || arg->augmented.args == NULL ||
-> +	    arg->augmented.size < (int)sizeof(*augmented_arg))
-> +		return false;
-> +
-> +	augmented_arg = arg->augmented.args;
-> +	if (augmented_arg->size < 0 ||
-> +	    augmented_arg->size > arg->augmented.size - (int)sizeof(*augmented_arg))
-> +		return false;
-> +
-> +	return (size_t)augmented_arg->size >= need;
-> +}
-> +
->  size_t syscall_arg__scnprintf_strarray_flags(char *bf, size_t size, struct syscall_arg *arg);
->  #define SCA_STRARRAY_FLAGS syscall_arg__scnprintf_strarray_flags
->  
+>  	return 0;
+> 
 > -- 
-> 2.56.0.rc1.315.gc6ed9934b7-goog
+> 2.47.3
 > 
