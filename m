@@ -1,92 +1,66 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CC13C4DDB27;
-	Wed, 30 Sep 2026 13:11:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 523134D6C3F
+	for <linux-perf-users@vger.kernel.org>; Wed, 30 Sep 2026 13:13:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790773934; cv=none; b=NPfGj1GIS38oQzpjoVCzmGaTSKYBK8vhnDY8Gb+tlRYdKOjGsi7vL9Jit8vzryQzvZ5cPGoC+iy1OExVdBaxOzPLqMw7y2Iai0W4YX6RbRAzk+cT3OIq56dL5pHbbAL2AIpXo9bMn46w/WPydk4Ym2mGUXgeDg1JHQFIoCCU99I=
+	t=1790774022; cv=none; b=teA1lgxy96uu5FBgFQimNSbV9mWT6n8y1rK4HnFTvPTiRLwUn4VanrUrq9pXGjW/tg9CPrsmUt/vajpa4poryajWSU8b8kpLjOvlJ3bbQjr+aFAUqZ5QkpOg5HKjpoXvq1rLsyG/B0CEPEPSwqbzfzQfB7LmTos4sjkg4hwpjoI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790773934; c=relaxed/simple;
-	bh=cYj/IwgZOGpvuHZ3PhyEo2b3WW5jo1U+Y/ZN3oRMbQA=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=rdn8OZfGJ2Ix1hJZX0uL1NojG2dXXbyj9EmiHVQFLIrW1o1Mjnd/2HeVSCJz2WMOKqPIwp4PcpZ/Yiy2XZKFwmvJYJIBDIMo94FFt//IbxhxxumUXe7VsCNop+ZH2DYrexC3IpRmqkiPlhF3gqg6OqAMpwMhf2YlEziI+tVIq/s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=q5NjspRi; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+	s=arc-20240116; t=1790774022; c=relaxed/simple;
+	bh=8D4jb11bMVjvzyB4vZLVB50tBO76Wc6Xl43JSXAeI8E=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=UIZqPpMqQAUoOR5hktEiK5dU88Gm9b7euOBeV0y++Xy6OCQrUIEVuWKaviATiRLduyPPmbqPCiRGbYZh02zb5KzkDn5tz09USOB9xNAeC65EQ0eM/ieWXRNRTy/fbwAW9vcrz8Q2mdfGVdIn6g4P94P2upSN8EtGUCcA+0ADI8M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ljwjRopO; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="q5NjspRi"
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DC42C169E;
-	Wed, 30 Sep 2026 06:11:50 -0700 (PDT)
-Received: from e132581.arm.com (unknown [10.2.196.114])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B1B933F86F;
-	Wed, 30 Sep 2026 06:11:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
-	t=1790773914; bh=cYj/IwgZOGpvuHZ3PhyEo2b3WW5jo1U+Y/ZN3oRMbQA=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=q5NjspRiBGJEkU84saywkQXV87ayOGmpuwc9tZxANz3tXNxutYKLwxbBORxmWjFrC
-	 10ZTGrari/GMGNDtjM1J8NyUB2H9oJFO1U2xikOgl14L29ly7QiiNBwn+SaOd2TVOq
-	 x7AmC+IPu/BRAPooAnJTeVGl5zPXHSsp1GkTG0e4=
-From: Leo Yan <leo.yan@arm.com>
-Date: Wed, 30 Sep 2026 14:11:39 +0100
-Subject: [PATCH v2 4/4] perf python: Avoid shadowing exception name in
- PostgreSQL exporter
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ljwjRopO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 77A5C1F0089A;
+	Wed, 30 Sep 2026 13:13:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1790774011;
+	bh=8D4jb11bMVjvzyB4vZLVB50tBO76Wc6Xl43JSXAeI8E=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=ljwjRopOX3KSfa9XH769mwKzSSMMwbMYXOC963nvzkqOz2qcZIOptgewFT4/IFjvk
+	 UJ12lw+3HlL4XAsynAiimXjF0nDZN719cVti7lugvWHm7TsYQ/xgZmlQ3yguxO2F8H
+	 TASNh3UNjrRJh+bXjqq4j69FmgALg9VuBR4N9P8VCJ1n9iIZUD1oeqCwaize98ujBN
+	 VETDJs2W0BoyWtQS5/sAEfYrnWMCx0sLvQehMKh7P6nCUgogEhNe/t7118FUMPQdRh
+	 bOSP7/aggf43juBjw8eerI3MdmSQsLfGtrDnb56R9VtwFBMAWhlT+h43sUthth27jv
+	 DFaxddysP3/DA==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v2 3/4] perf test: Suppress optparse deprecation warning
+ with older pylint
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Leo Yan" <leo.yan@arm.com>
+Cc: linux-perf-users@vger.kernel.org
+In-Reply-To: <20260930-perf_fix_pylint_errors-v2-3-945cd526576b@arm.com>
+References: <20260930-perf_fix_pylint_errors-v2-0-945cd526576b@arm.com>
+ <20260930-perf_fix_pylint_errors-v2-3-945cd526576b@arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Wed, 30 Sep 2026 13:13:31 +0000
+Message-Id: <20260930131331.77A5C1F0089A@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20260930-perf_fix_pylint_errors-v2-4-945cd526576b@arm.com>
-References: <20260930-perf_fix_pylint_errors-v2-0-945cd526576b@arm.com>
-In-Reply-To: <20260930-perf_fix_pylint_errors-v2-0-945cd526576b@arm.com>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>, 
- Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
- Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
- James Clark <james.clark@linaro.org>, Aishwarya TCV <aishwarya.tcv@arm.com>
-Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Arnaldo Carvalho de Melo <acme@redhat.com>, Leo Yan <leo.yan@arm.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1790773904; l=1345;
- i=leo.yan@arm.com; s=20250604; h=from:subject:message-id;
- bh=cYj/IwgZOGpvuHZ3PhyEo2b3WW5jo1U+Y/ZN3oRMbQA=;
- b=kpxLVNL3EO5HLwz1dxjGD8o637iE0kQbCTuLRX1Bs9k3SYvDjCbtV9Pre93cSAXW+CuH88GaU
- TJyByeDwf+zD5VpeC/ijFpzlEqG4hGa8D4g0Zd2jEp9xTeunDiFUGmB
-X-Developer-Key: i=leo.yan@arm.com; a=ed25519;
- pk=k4BaDbvkCXzBFA7Nw184KHGP5thju8lKqJYIrOWxDhI=
 
-During the perf build, pylint reports:
+> Python 3.13 reversed optparse's deprecation, and pylint 3.3.5 removed it
+> from the deprecated-module list. Perf supports older pylint versions,
+> so suppress the warning on this import and document the reason. Keep
+> other deprecated-module diagnostics enabled.
+>=20
+> Link: https://docs.python.org/3.13/whatsnew/3.13.html#optparse
+> Link: https://pylint.readthedocs.io/en/latest/whatsnew/3/3.3/index.html#w=
+hat-s-new-in-pylint-3-3-5
+> Fixes: 8a54784e708b ("perf build: Add pylint build tests")
+> Reported-by: Aishwarya TCV <aishwarya.tcv@arm.com>
+> Assisted-by: Codex:gpt-6
+> Signed-off-by: Leo Yan <leo.yan@arm.com>
 
-  ************* Module export-to-postgresql
-  python/export-to-postgresql.py:319:8: W0621: Redefining name 'e' from outer scope (line 100) (redefined-outer-name)
+Sashiko has reviewed this patch and found no issues. It looks great!
 
-Rename 'e' to 'db_error' to clear the warning.
-
-Fixes: b1f968c9656a ("perf python: Port export-to-postgresql to perf module")
-Assisted-by: Codex:gpt-6
-Signed-off-by: Leo Yan <leo.yan@arm.com>
----
- tools/perf/python/export-to-postgresql.py | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/tools/perf/python/export-to-postgresql.py b/tools/perf/python/export-to-postgresql.py
-index b6782129354ed3b1bd750af41e7a002c7134bf12..9cac64dee361214de3d1f9907c5e6849327c8ed7 100755
---- a/tools/perf/python/export-to-postgresql.py
-+++ b/tools/perf/python/export-to-postgresql.py
-@@ -316,9 +316,9 @@ class PostgresExporter:
-             # SQL identifiers are double-quoted; escape embedded double quotes by doubling them.
-             db_name = self.dbname.replace('"', '""')
-             self.do_query(f'CREATE DATABASE "{db_name}"')
--        except Exception as e:
-+        except Exception as db_error:
-             shutil.rmtree(self.output_dir_name, ignore_errors=True)
--            raise e
-+            raise db_error
-         self.disconnect()
- 
-         self.connect(self.dbname)
-
--- 
-2.34.1
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260930-perf_fix_p=
+ylint_errors-v2-0-945cd526576b@arm.com?part=3D3
 
