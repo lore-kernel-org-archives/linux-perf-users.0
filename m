@@ -1,222 +1,280 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95DDF44AB65
-	for <linux-perf-users@vger.kernel.org>; Wed, 30 Sep 2026 06:56:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC5EF3C2762
+	for <linux-perf-users@vger.kernel.org>; Wed, 30 Sep 2026 06:56:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790751368; cv=none; b=skI75/ej27OUoPn706VA0Wh1Hum1ABFCJMlY9ksVlw40ApDNpSu18CaODoF7SaYnikCVoV5Bks1v+gh4CNFBxH9qz2GsbZVkQ4NjRe8PeMV9FjittdFLrk+mtwRBgPr7oizuKKO2M5QzZdcCvlhbqacqdB2Eq+HqrGreJWHWnz4=
+	t=1790751394; cv=none; b=YxcmP0ZIN3CNmBVbAwETEML3fN8BbUp65seEDIEcCqxPOkO2kHa/npmZEtSLYXwlxJO98TEr4pOZPA50YDTZaRmtyMnnyS8N8sGYzVyi8IxNa0TRqfj0P+awJwuLmnvGR3Zg5O5twV6bg4ORsi8YvsvPVuKz/W1JAKPyM36v9Oo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790751368; c=relaxed/simple;
-	bh=ABkB+nnE15aJYPbWBGnr0zozEoWZq7uJquGyr3n0PAk=;
+	s=arc-20240116; t=1790751394; c=relaxed/simple;
+	bh=G0F+W0Jc4SKKCsUVfVaiLiNUzV3Geyl+n8pm+oqeRiQ=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=R0pZJbGNHLB48cDiOx+Fg/rLJJva0XR/vPI5IKt7n42v4X/R2KCTjQFLAPIkn33hIJlpXwhLEi+bM8YarSmDrggU7neQzm+t40t3uZi/Wrhqzo6slIwRODgPkPIYMP4IRb1cwex1gQ27pIy/lbA6/HtxrsqsCFe7GYfkS5MzWTw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UFl66oW9; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=JXgF7uYQDsmroQ/Wg+cJPRgeXnLqwizz1MpMGH5ks3Z7VA7MuvynFIrZN0Uq7FwGzxKUwyGhHaP++C8PcdcjTipxpATblr0k75OyEAc1VHTFKNaajVu5/knprVIkgRX96f4lRRd6W7Iut1AalbG6zGcDiz1nVV49Ix3LoRZCDcY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=O7SzIE+Z; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UFl66oW9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D7AC71F00898;
-	Wed, 30 Sep 2026 06:56:00 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="O7SzIE+Z"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 91E3F1F000FF;
+	Wed, 30 Sep 2026 06:56:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1790751361;
-	bh=Yv2GpjGnkL6pwuOeDCaEs/3YshlVooBbfICcFXitaQQ=;
+	s=k20260515; t=1790751386;
+	bh=a/taHUy7S38tLGzCpkkxf0Myf7Ns62xk6iPNKZa9SvE=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=UFl66oW9AK/IeZtotIODxBDkZvuBtt/aC+yIpgan89dlkoIWZjoQ0P6TwvGtGcJo6
-	 EnjgRh6ygUGly9+o9jaHEKJ2hNsoLI2u8747y8gW4/Vf0tSgXc/qjnspFxaVqxUb+w
-	 xURosRyo/11ofoAqvdyRwe0aoSzWOtmFRwCUdQxbbdNl0MZvhxdihLHEmef97rx3m/
-	 GDUGk1h4thqkWxfQ5A3TxVnUFtBf4AtIWcdLHOS8c+Rq640MXSYSc8SQqtjkyHwtQD
-	 oU4WDR1lnC6un7y9OVoHiYme0NMkZzjBJYgX48cQfopmo/lHdW8JRKJcspQC+eaRFB
-	 FcqeorH9PYZTg==
+	b=O7SzIE+ZJZWDqDND21LcddnyKBze6A+XkvYogDQgtpGXo1/iFVaohAs+d2MTI9mA7
+	 16VTAaeXq/7fVeFnudolMFXpt3+dEyom/LYO6JuDY+VHn0faCr8vgC41r5flEN0Upg
+	 2QcG1ymaidYBFWaqy3NWiqrKSP+/cZmgKeK5PPFS++K9jKuyADYLI8+6ALwHkNBF4q
+	 xvanXG3xxXES7/6nu0u/VDtXY0YEFD1Nd8acfB/n3i6HvKWf8uVU7RmBY3T7ZVdBcy
+	 rdr/NamT5Tvy36yLi7Hun033NJojQsIxDz1+0wouRpcofMN4D7cYn6JQg4TF6q0F7W
+	 hK85tdtpXZJig==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v7 3/8] riscv: ptrace support for hardware
- break/watchpoints
+Subject: Re: [PATCH v7 6/8] riscv: Add software supported single stepping
+ with mc/mc6 triggers
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Himanshu Chauhan" <himanshu.chauhan@oss.qualcomm.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260930063919.608911-4-himanshu.chauhan@oss.qualcomm.com>
+In-Reply-To: <20260930063919.608911-7-himanshu.chauhan@oss.qualcomm.com>
 References: <20260930063919.608911-1-himanshu.chauhan@oss.qualcomm.com>
- <20260930063919.608911-4-himanshu.chauhan@oss.qualcomm.com>
+ <20260930063919.608911-7-himanshu.chauhan@oss.qualcomm.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Wed, 30 Sep 2026 06:56:00 +0000
-Message-Id: <20260930065600.D7AC71F00898@smtp.kernel.org>
+Date: Wed, 30 Sep 2026 06:56:26 +0000
+Message-Id: <20260930065626.91E3F1F000FF@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 6 potential issue(=
-s) to consider:
-- [High] riscv/ptrace: HW breakpoints leaked across execve() via PTRACE_SET=
-HBPREGS
-- [High] riscv/ptrace: PTRACE_GETREGSET fails with -EINVAL when triggers > =
-16
-- [High] riscv/ptrace: kernel stack leak via uninitialized memory in riscv_=
-hw_break_set
-- [Medium] riscv/ptrace: missing hardware breakpoint support for compat pro=
-cesses
-- [Medium] riscv/ptrace: SETHBPREGS and SETREGSET operate on disjoint break=
-point arrays
-- [Medium] riscv/ptrace: missing array_index_nospec in riscv_ptrace_bp_get/=
-set
+Thank you for your contribution! Sashiko AI review found 10 potential issue=
+(s) to consider:
+- [Critical] riscv/hw_breakpoint: Unprivileged user can arm HW breakpoints =
+on kernel addresses (DoS)
+- [High] riscv/hw_breakpoint: HW breakpoint permanently lost on control flo=
+w divergence
+- [High] riscv/hw_breakpoint: infinite trap loop if get_insn_safe fails
+- [High] riscv/hw_breakpoint: setup_singlestep overrides synchronous event =
+disablement
+- [High] riscv/hw_breakpoint: CPU-wide breakpoints permanently lost on task=
+ migration
+- [Medium] riscv/hw_breakpoint: state machine corruption on install failure
+- [Medium] riscv/hw_breakpoint: infinite loop when single-stepping sret
+- [Low] riscv/hw_breakpoint: saved_tdata fields are completely unused
+- [Low] riscv/hw_breakpoint: incorrect next_addr logged due to loop variabl=
+e shadowing
+- [Low] riscv/hw_breakpoint: redundant bit clearing on zero-initialized fie=
+lds
 --
 
-commit 62c2c75a3fb752fd74e38e9ad58187d943832421
+commit 39e397c6cb04690cc3a8477d767b61ec32e69fda
 Author: Himanshu Chauhan <himanshu.chauhan@oss.qualcomm.com>
+Subject: riscv: Add software supported single stepping with mc/mc6 triggers
 
-riscv: ptrace support for hardware break/watchpoints
+This commit adds software-supported single-stepping for mc/mc6 triggers on=
+=20
+RISC-V. It attempts to avoid loops by temporarily disabling the current=20
+breakpoint, setting a new execute breakpoint at the next instruction's=20
+address, and restoring the original breakpoint once the next instruction is=
+ hit.
 
-This commit adds ptrace support for hardware breakpoints and watchpoints
-on RISC-V. It introduces NT_RISCV_HW_BREAK/WATCH for GETREGSET/SETREGSET
-and a convenience request pair PTRACE_GETHBPREGS/SETHBPREGS.
+> diff --git a/arch/riscv/kernel/hw_breakpoint.c b/arch/riscv/kernel/hw_bre=
+akpoint.c
+> index dd6f639539691..9597ed3625378 100644
+> --- a/arch/riscv/kernel/hw_breakpoint.c
+> +++ b/arch/riscv/kernel/hw_breakpoint.c
+[ ... ]
+> +static int setup_singlestep(struct perf_event *event, struct pt_regs *re=
+gs)
+> +{
+> +	struct arch_hw_breakpoint *bp =3D counter_arch_bp(event);
+> +	unsigned long insn, next_addr =3D 0;
+> +	int ret;
+> +	struct arch_hw_breakpoint tmp =3D {};
+> +
+> +	/*
+> +	 * Save the original trigger configuration so we can restore it
+> +	 * after the single-step fires.
+> +	 */
+> +	bp->saved_tdata1 =3D bp->tdata1;
+> +	bp->saved_tdata2 =3D bp->tdata2;
+> +	bp->saved_tdata3 =3D bp->tdata3;
 
-> diff --git a/arch/riscv/kernel/ptrace.c b/arch/riscv/kernel/ptrace.c
-> index f336a183667eb..2d4ee51e68597 100644
-> --- a/arch/riscv/kernel/ptrace.c
-> +++ b/arch/riscv/kernel/ptrace.c
+[Severity: Low]
+Are these saved values actually consumed? The restore logic in
+hw_breakpoint_handler() seems to ignore them and completely recreates the
+state from scratch via hw_breakpoint_arch_parse().
+
+> +
+> +	ret =3D get_insn_safe(regs, regs->epc, &insn);
+> +	if (ret < 0)
+> +		return ret;
+
+[Severity: High]
+What happens if get_insn_safe() fails (for example, if the user space
+instruction page is swapped out, causing get_insn() to fail under
+pagefault_disable())?
+
+Since hw_breakpoint_handler() logs the error and returns NOTIFY_DONE without
+advancing the PC or disabling the execute trigger, will the CPU immediately
+re-trap on the exact same instruction upon resuming, leading to an infinite
+loop?
+
+> +
+> +	next_addr =3D get_step_address(regs, insn);
+
+[Severity: Medium]
+When single-stepping an sret instruction, the underlying call to
+get_next_insn_address_standard() calculates the step target to be the
+current instruction itself. Since this configures an execute breakpoint
+at the same address, does this cause an infinite loop where the CPU
+repeatedly traps before executing the sret?
+
+> +
+> +	/*
+> +	 * Software path: update the trigger in-place to an execute
+> +	 * breakpoint at next_addr.  Build the tdata directly without
+> +	 * calling hw_breakpoint_arch_parse() so that bp->len, bp->type
+> +	 * and bp->address are not overwritten and remain valid for the
+> +	 * handler's matching logic after restore.
+> +	 */
+> +	tmp.tdata1 =3D 0;
+> +	tmp.tdata2 =3D next_addr;
+> +	tmp.tdata3 =3D 0;
+> +	switch (dbtr_type) {
+> +	case RISCV_DBTR_TRIG_MCONTROL6:
+> +		RISCV_DBTR_SET_MC6_EXEC_BIT(tmp.tdata1);
+> +		tmp.tdata1 =3D RISCV_DBTR_SET_MC6_SIZE(tmp.tdata1, 0);
+> +		tmp.tdata1 =3D RISCV_DBTR_SET_MC6_TYPE(tmp.tdata1,
+> +						     RISCV_DBTR_TRIG_MCONTROL6);
+> +		CLEAR_DBTR_BIT(tmp.tdata1, RISCV_DBTR_MC6_DMODE_BIT);
+> +		CLEAR_DBTR_BIT(tmp.tdata1, RISCV_DBTR_MC6_TIMING_BIT);
+> +		CLEAR_DBTR_BIT(tmp.tdata1, RISCV_DBTR_MC6_SELECT_BIT);
+> +		CLEAR_DBTR_BIT(tmp.tdata1, RISCV_DBTR_MC6_ACTION_BIT);
+
+[Severity: Low]
+Since tmp.tdata1 is explicitly initialized to 0 above, are these
+CLEAR_DBTR_BIT operations necessary?=20
+
+Also, does clearing the ACTION_BIT this way correctly handle the multi-bit
+nature of this field, or does it only clear the lowest bit?
+
+> +		CLEAR_DBTR_BIT(tmp.tdata1, RISCV_DBTR_MC6_CHAIN_BIT);
+> +		CLEAR_DBTR_BIT(tmp.tdata1, RISCV_DBTR_MC6_MATCH_BIT);
+> +		CLEAR_DBTR_BIT(tmp.tdata1, RISCV_DBTR_MC6_M_BIT);
+> +		CLEAR_DBTR_BIT(tmp.tdata1, RISCV_DBTR_MC6_VS_BIT);
+> +		CLEAR_DBTR_BIT(tmp.tdata1, RISCV_DBTR_MC6_VU_BIT);
+> +		SET_DBTR_BIT(tmp.tdata1, RISCV_DBTR_MC6_S_BIT);
+> +		SET_DBTR_BIT(tmp.tdata1, RISCV_DBTR_MC6_U_BIT);
+
+[Severity: Critical]
+Does this allow an unprivileged user to arm hardware breakpoints on kernel
+addresses?=20
+
+Since this unconditionally sets both the Supervisor and User bits and
+bypasses arch_check_bp_in_kernelspace(), could a user place a user-space
+breakpoint on a jalr instruction and set the target register to a critical
+kernel address (like the stvec trap vector)? If the hardware trigger fires
+in Supervisor mode, could this instantly lock up the CPU in a recursive
+breakpoint exception loop?
 
 [ ... ]
-
-> @@ -372,6 +378,397 @@ static int riscv_cfi_set(struct task_struct *target,
-> +void flush_ptrace_hw_breakpoint(struct task_struct *tsk)
-> +{
-> +	int i;
-> +	struct thread_struct *t =3D &tsk->thread;
+> +	arch_update_hw_breakpoint(event);
 > +
-> +	for (i =3D 0; i < RISCV_MAX_BP; i++) {
-> +		if (t->debug.hbp_break[i]) {
-> +			unregister_hw_breakpoint(t->debug.hbp_break[i]);
-> +			t->debug.hbp_break[i] =3D NULL;
+> +	bp->in_callback =3D true;
+> +	bp->next_addr =3D next_addr;
+> +	return 0;
+> +}
+
+[Severity: High]
+How does this interact with CPU-wide hardware breakpoints (such as
+perf record -a)?=20
+
+If the currently running task migrates to another CPU before reaching
+next_addr, does the original CPU get permanently stuck waiting for an
+instruction it will never execute, effectively losing the CPU-wide
+breakpoint?
+
+[ ... ]
+>  static int hw_breakpoint_handler(struct die_args *args)
+>  {
+[ ... ]
+> +		if (bp->in_callback) {
+> +			expecting_callback =3D true;
+> +			if (args->regs->epc !=3D bp->next_addr)
+> +				continue;
+
+[Severity: High]
+If execution diverges before next_addr is reached (for instance, due to an
+interrupt, a signal handler, or task migration), args->regs->epc will not
+match next_addr. Since the handler just bails out here, is the original
+breakpoint permanently lost? Is there a fallback mechanism to recover the
+lost trigger?
+
+> +
+> +			arch_uninstall_hw_breakpoint(event);
+> +
+> +			/* Restore original breakpoint */
+> +			if (hw_breakpoint_arch_parse(NULL, &event->attr, bp))
+> +				goto exit;
+> +
+> +			if (arch_install_hw_breakpoint(event))
+> +				goto exit;
+
+[Severity: Medium]
+If arch_install_hw_breakpoint() fails here, we jump to exit without clearing
+bp->in_callback =3D false. Will this leave the perf event alive in the soft=
+ware
+state but corrupted for any future re-enabling?
+
+> +
+> +			bp->in_callback =3D false;
+> +			bp_ret =3D NOTIFY_STOP;
+> +			goto exit;
 > +		}
+> +
+> +		switch (event->attr.bp_type) {
+> +		/* Breakpoint */
+> +		case HW_BREAKPOINT_X:
+> +			{
+> +				bool hit =3D bp->address =3D=3D args->regs->epc;
+> +
+> +				if (!hit && dbtr_type =3D=3D RISCV_DBTR_TRIG_MCONTROL6)
+> +					hit =3D mc6_read_and_clear_hit(i) !=3D RISCV_DBTR_MC6_HIT_FALSE;
+> +
+> +				if (hit) {
+> +					perf_bp_event(event, args->regs);
+> +					ret =3D setup_singlestep(event, args->regs);
+
+[Severity: High]
+Can setup_singlestep() override a synchronous event disablement?
+
+If perf_bp_event() triggers the perf PMU to synchronously disable the event
+(e.g., if a sample limit is reached), setup_singlestep() executes immediate=
+ly
+afterwards. Since it unconditionally sets the enable bits and calls
+arch_update_hw_breakpoint(), does this forcefully re-enable the breakpoint =
+in
+hardware in single-step mode, overriding the request to disable it?
+
+[ ... ]
+>  	}
+> =20
+> -	return ret;
+> +	if (expecting_callback) {
+> +		pr_err("in_callback set but epc (%lx) not at next_addr (%lx).\n",
+> +		       args->regs->epc, bp->next_addr);
 > +	}
 
-[Severity: High]
-Does this code leak hardware breakpoints across execve()?
+[Severity: Low]
+At this point outside the loop, doesn't 'bp' hold the value of the last
+event processed in the array, rather than the event that actually had
+in_callback =3D=3D true? Will this output an unrelated next_addr value in t=
+he
+error log?
 
-PTRACE_SETHBPREGS stores hardware breakpoints in child->thread.ptrace_bps,
-but this function only unregisters breakpoints in debug.hbp_break and
-completely ignores ptrace_bps. If the tracee executes a SUID binary, do the
-hardware breakpoints remain active in the privileged context?
-
-[ ... ]
-
-> +static int ptrace_hbp_set_event(unsigned int note_type,
-> +				struct task_struct *tsk,
-> +				unsigned long idx,
-> +				struct perf_event *bp)
-> +{
-> +	int err =3D -EINVAL;
-> +
-> +	switch (note_type) {
-> +	case NT_RISCV_HW_BREAK:
-> +		if (idx >=3D RISCV_MAX_BP)
-> +			goto out;
-> +		idx =3D array_index_nospec(idx, RISCV_MAX_BP);
-> +		tsk->thread.debug.hbp_break[idx] =3D bp;
-
-[Severity: Medium]
-Are PTRACE_SETHBPREGS and PTRACE_SETREGSET operating on completely disjoint
-memory locations?
-
-PTRACE_SETREGSET populates tsk->thread.debug.hbp_break, while PTRACE_SETHBP=
-REGS
-populates tsk->thread.ptrace_bps. Can a debugger using both APIs independen=
-tly
-allocate up to 16 breakpoints in each array, potentially consuming the enti=
-re
-hardware trigger pool and observing disconnected states?
-
-[ ... ]
-
-> +static int ptrace_hbp_get_resource_info(unsigned int note_type, u32 *inf=
-o)
-> +{
-> +	u8 num;
-> +
-> +	switch (note_type) {
-> +	case NT_RISCV_HW_BREAK:
-> +		num =3D hw_breakpoint_slots(TYPE_INST);
-> +		break;
-
-[Severity: High]
-Can hw_breakpoint_slots() return a value larger than 16 (RISCV_MAX_BP)?
-
-If a platform has more than 16 triggers, riscv_hw_break_get() and
-riscv_hw_break_set() will iterate up to that number. However, the accessor
-ptrace_hbp_get_event() contains a hardcoded bounds check returning -EINVAL
-if idx >=3D RISCV_MAX_BP.
-
-Would this cause the entire PTRACE_GETREGSET/SETREGSET syscall to abort with
--EINVAL when hitting index 16 on such platforms?
-
-[ ... ]
-
-> +static int riscv_hw_break_set(struct task_struct *target,
-> +			const struct user_regset *regset,
-> +			unsigned int pos, unsigned int count,
-> +			const void *kbuf, const void __user *ubuf)
-> +{
-> +	unsigned int note_type =3D regset->core_note_type;
-> +	int ret, idx =3D 0, offset, limit;
-> +	u32 ctrl;
-
-[Severity: High]
-Is ctrl properly initialized before use?
-
-user_regset_copyin() allows partial copies if count is smaller than the tar=
-get
-size. If a tracer supplies an iov_len of 9 or 17, user_regset_copyin() will
-copy only 1 byte into ctrl, leaving the remaining 3 bytes containing
-uninitialized kernel stack data.
-
-When this partially initialized ctrl is passed to ptrace_hbp_set_ctrl() and
-later read out via PTRACE_GETREGSET, could it successfully leak uninitializ=
-ed
-kernel stack memory to userspace?
-
-[ ... ]
-
-> +static int riscv_ptrace_bp_get(struct task_struct *child, unsigned long =
-idx,
-> +			  struct __riscv_hwdebug_state *state)
-> +{
-> +	struct perf_event *bp;
-> +
-> +	if (idx >=3D RISCV_HW_BP_NUM_MAX)
-> +		return -EINVAL;
-> +
-> +	bp =3D child->thread.ptrace_bps[idx];
-
-[Severity: Medium]
-Might an array_index_nospec() mitigation be needed here to prevent speculat=
-ive
-out-of-bounds reads?
-
-The user-supplied index idx is bounds-checked, but without array_index_nosp=
-ec(),
-speculative execution can bypass the bounds check and read out-of-bounds fr=
-om
-the ptrace_bps array. The resulting pointer is immediately dereferenced, wh=
-ich
-could provide an arbitrary speculative load gadget.
-
-[ ... ]
-
-Since compat_riscv_user_regset and compat_arch_ptrace() were not modified in
-this patch:
-
-arch/riscv/kernel/ptrace.c:compat_riscv_user_regset[] =3D {
-...
-arch/riscv/kernel/ptrace.c:compat_arch_ptrace() {
-
-[Severity: Medium]
-Will 32-bit processes running on a 64-bit kernel be able to use hardware
-breakpoints?
-
-These additions were omitted from compat_riscv_user_regset and
-compat_arch_ptrace(), which seems to break feature parity for compat tracin=
-g.
+> +exit:
+> +	return bp_ret;
+>  }
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260930063919.6089=
-11-1-himanshu.chauhan@oss.qualcomm.com?part=3D3
+11-1-himanshu.chauhan@oss.qualcomm.com?part=3D6
