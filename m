@@ -1,64 +1,65 @@
-Received: from mail-yx2-f13.google.com (mail-yx2-f13.google.com [74.125.224.141])
+Received: from mail-qv2-f41.google.com (mail-qv2-f41.google.com [74.125.230.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD1893E1681
-	for <linux-perf-users@vger.kernel.org>; Wed, 30 Sep 2026 21:00:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.224.141
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEDBF3AE1BB
+	for <linux-perf-users@vger.kernel.org>; Wed, 30 Sep 2026 21:00:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.230.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790802058; cv=none; b=CAFTPF2B3DA/6o57q4a5T9rBehIUkqbRAUyJcdxoB2AXDRcVK0MeDEZNe+ao1m3hMsCl4Umy03w5cbhI6DYH5Mt9SzQNeDcW09FqxqkAieyl19OlIZAq6zOAMvuLLQCP87lwod/Vn+VFBQ0AD8iT+7sPAr9LGrhw6+TOt8iwi6E=
+	t=1790802062; cv=none; b=Bbb9wo72o8+deAIlG9JPQLjPil5RJanK5c9rJ/2ylzM8Z+eFkW2RP7gjeJoenGDZA3cX8GQyHYyyvluU6poxKXoeKoDzF4xnQ7zaYN8lUnxWWmn6w05cKMmV/bgqJMFGVUGbuFiVAZykCa6gMyVZ2lO5gEUvDXAruy2KQnGyqTw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790802058; c=relaxed/simple;
-	bh=gFMg6q1TiNC/5q0bOvHfPBh2rN+HWfW92KVwbVMwGGk=;
+	s=arc-20240116; t=1790802062; c=relaxed/simple;
+	bh=C6on9fb4dRJ9OF5H+4jptyB19LUKgq66SGPjw8LrbBE=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Vv4phCwSaWsNdKoz/0pTf6fbJ3wjspR62Ynhq+244C3VrrAHugKt6/2EbSShJpWO9SJxaiLKJ34FWe6/UmglVhWBTsGEkvZPPxXSbepPk+xwk5IIPVGmLuUeZbdpUNLzefAb1iuYX5t/nPVQdIMBbQgkM+GNUcxiW8HWijsQJSI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ncsu.edu; spf=pass smtp.mailfrom=ncsu.edu; dkim=pass (2048-bit key) header.d=ncsu.edu header.i=@ncsu.edu header.b=fDtd2WBo; arc=none smtp.client-ip=74.125.224.141
+	 MIME-Version; b=H2r7Hb6PXGURiko4yyAYJtlSiQAMCTKSZREMok2JYIicUZXsonpp4HxgxvT/p3eivSqMQ8UQnDokk1NUqggsBVFXn1YuiVpjIxDuuKQCBN3CFiC+kQX51WTDDr3DPXmminein4LYgPZ10dWzdI9WKeKp2kZjLCzMoak0RPwfiRU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ncsu.edu; spf=pass smtp.mailfrom=ncsu.edu; dkim=pass (2048-bit key) header.d=ncsu.edu header.i=@ncsu.edu header.b=JwTA/VXu; arc=none smtp.client-ip=74.125.230.169
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ncsu.edu
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ncsu.edu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ncsu.edu header.i=@ncsu.edu header.b="fDtd2WBo"
-Received: by mail-yx2-f13.google.com with SMTP id 956f58d0204a3-670fee39d73so6437382d50.3
-        for <linux-perf-users@vger.kernel.org>; Wed, 30 Sep 2026 14:00:55 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=ncsu.edu header.i=@ncsu.edu header.b="JwTA/VXu"
+Received: by mail-qv2-f41.google.com with SMTP id 6a1803df08f44-91788e38a27so21995896d6.3
+        for <linux-perf-users@vger.kernel.org>; Wed, 30 Sep 2026 14:00:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ncsu.edu; s=google; t=1790802055; x=1791406855; darn=vger.kernel.org;
+        d=ncsu.edu; s=google; t=1790802057; x=1791406857; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=8CmX6ioAYxJPCAPz0/Bhdwb/CbObsNSPjxI3S26V74U=;
-        b=fDtd2WBoXqJ/djkErZosWbHRFERb7T+OqAqQ2YBAhAG7i0jqjFUvOUgJ/rBfbIe/7K
-         3QKFpan3i7RHSmwLF+N4cxZZWViGqHPXjbwtGzdsgvYwBuU9OzK0w9An62MjD7I4e3Pt
-         U+Jd3TH7Xi5Jn3AbFoxGih/IUeFHOpZ+QBboLNvpdzod1hc8sRJYz5qSlwIUdsqvrG4/
-         SorNlZ5HIe3sZusZ90x+ZT4QtDfLnRlrM1/ughLPes9o8plV+Odato6gDc3BP/smUL5f
-         sMSmfGKmQvXFfE1KUwiK8DcBEUHkRk+V2Fz22bw7MdVZqI09d3etNj0fMprjimaov5Vb
-         UIbQ==
+        bh=oRua+5qU9W340RitC/sDxdtHM7QXLh0bpym94OxAOC0=;
+        b=JwTA/VXu8PBVpeMomfm2pbGJFINPPHR6+iCZ+YrX+KoEwRemsok6DrijV6GMsXJVil
+         1C9fhCAzMXQcqKxHKFSFvBoUlT225eMBjVAL9oLI13W3DrmgK71XqRaT3RHHQaP0pqmm
+         BSP0wCHOqI45IbPgQr5j/XG1VryVm7qyeLE5fmp33Na68ikFngBiB/77pkcekdlwfCwt
+         TMzDkOrSlf8R7EAgZNK7XjB5gAnik93bB8/pwm1R46/esD575C6jBr4EFsNt6ao8M9PN
+         4KzaedoQFtwSZzNg3e9S4dQVV+EgimHUL3C4iXAelcajvduHqQpxNMHSTjlLtxDDWpfw
+         yDjw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1790802055; x=1791406855;
+        d=1e100.net; s=20260707; t=1790802057; x=1791406857;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=8CmX6ioAYxJPCAPz0/Bhdwb/CbObsNSPjxI3S26V74U=;
-        b=HZj3R5xIGcDb6OAXTsFW5WG1iP6m3HmyUmPzzHmx6qASiLSkNEsrfKBdDP373qs2q/
-         fqMSZTzn9loay4dT2ujkdB8Pa34ovG/3BFhPEGuCYj6wbM113wpEGw0c6Du0IkvBCjvX
-         EqCC6dwFJ/zqU7WPmJr4F2KA7f2abN80fevSlhLj7qXPpj6iaQUE1V8gcRkm9Atj9WlG
-         OkQZb4++wlCoBHJxD/SbHVHeV57IwkPE/jUY5DopB6AIUSOVoCZQrC3p1UGMhNnXucmj
-         hzquB1wx0rVsv6whDesFPEUx4mk96xPKMI7a6KFmt5A2KhaC1sujJ2pq7THmPZ7RwgqT
-         zefg==
-X-Forwarded-Encrypted: i=1; AKwUvByy3GGQqdvjC39uhsf7UTwaW9EtcLgR4+NqBsu43pWVuw3VAXZQEGq701iitw2yoAU6cYJTAcMP2K9c0tpwF0VH@vger.kernel.org
-X-Gm-Message-State: AFq9FYJk+epNLB/vu2rPpdsC6jw85Lv/S9w4o7S6SRKuH50D7rPDhQiM
-	cuMVhhwDIQQeiJyltrNMSL4JZmtEXoxsFyayDlZJRhb9U5e+NvLl9zUjysZOITbUCQ==
-X-Gm-Gg: AYBFou3xLvr4NUb2C8eZKsZwZ/W898GrqKXa4F3qSjIemlEeBswDG/qb80Dt+AFRExZ
-	xJuqEpdKm9fuUEVSz3BeL9/zgx3DM+moIo9BWTNJpxhSooOESPRVjKGaCqqMecGjDh1H4AouHCc
-	MyYUgW93Uba2XRmaLujoERA4NxSpmzd7DpmgucOkEYnRyu/o6PqUNR1xM7fFJicnO+Je/y5AGPd
-	QePUcdWfYNic9zeLw9cnQH10mNhj9VWtDJbyLENfIXgklISjm7yyJtV1uoa2cMrdI3WkJdV/rih
-	A+6KBmOxUi7fWeIdZEN29meGfK79Ii7I8b2LyyTjyr4Tac7AFJARyC0JQJNFS40su112JWr30CO
-	IG5A+/dbXMxFc6qz6KeURIqNdmKERfiwB2pZWiX8HT27xusHtpyjzceSD+4KG2aUv1PPsgBpfwf
-	p/y+MrEgv/ayB0cnEVoHRzeIz32I3232heBTnDM3O8Cet6qz5xKaMr9GZUdS0EeksnCPb1XzwHI
-	vLcXU3U+5k9T1EtMmAMvpdjZo8/RZhYJKWxgxw2edH/qLQjpUWvoAg0dSV5m6fTcM4=
-X-Received: by 2002:a05:690e:400a:b0:676:85dc:84d1 with SMTP id 956f58d0204a3-67685dc8598mr1439532d50.41.1790802054128;
-        Wed, 30 Sep 2026 14:00:54 -0700 (PDT)
+        bh=oRua+5qU9W340RitC/sDxdtHM7QXLh0bpym94OxAOC0=;
+        b=WmRAfNUZatBjCfF+8aA1F9nJUeC7I/ozjw8u4Ar1XB3BvoW43BHIX894ZEtrReaEHg
+         jWjn4t0jxjNUhnSmBLwASGPuokB0XMoIt+mGGIIdINcjqgz6vAmPExNTPtB/kkr76D6z
+         +Kq40OahmtO4vQxE5cWOaUUGh3Bw+9r+A1PU7i8FsVeL2FwRLMtZSfJBAeaI6U+uT4MS
+         t7IEbXmePxQ9pjsxppdd+Anm/2zgNssM4q+6fSoJ0e6WEHABztszsc6iT52Fn4LwmRIg
+         cLUTbc118a+L8qLxvKyMmmi4co06y4zSsFnfVeBgqB9o0ne9bTSQnv3pwwxCe4Hq+sfr
+         7YmQ==
+X-Forwarded-Encrypted: i=1; AKwUvBxXaoyoV+3RkxDm/H6OLgsDxYB6zLa3TK4+QeZAXZhvI1vJQlBRtoq5NTc4n/4q5JTA1hRJjNJ5+bQRWyaK7/L3@vger.kernel.org
+X-Gm-Message-State: AFuF++mk6lCOZAfIdV918v5ZQPLVYZ75R69pKoEStM8ZcltRheY2lOt8
+	MAqnU3WJQuad/BP6GC8D/jwCfy18voDzNwLeFeo7TPxOCI1ZS+DuDpRsYegLpiUAEw==
+X-Gm-Gg: AYBFou28XCmQmZtor2HFNGeIjKoN9a3nRA8VdLMILpVMk4QsOs2d03fwN48ZUK2N8HS
+	JDpjo6Zlv9EP7UMSz6gcj7bB6o23c/wfwC5YDv7PBR3TsrhJG7xS/DOjXcHkcwyWt9Qe/c9YGut
+	Z3WnpF03eKe6WouQeBsmhXvORnuTlKdKvPuWI+iwgFC6yXy2VS4PX9p6ybzf85CcWlOGlRhGRAr
+	Ef+wxhli+9BlxhCFkUdINmtDO0v59gSh9bRrY/Iqw1An4mcSSD1s/kTkidmG71HZ5Up88StmdHD
+	q/9RI9taud3ampAhWynQtybmTrRcWYepSeXuOCtjcxGJCQkon1PTmE8DlVAKUcCysyGfhpEv1tu
+	jq/FJitwx6PEG3pVkMfuDBsBtnES+2i+85mMJoB2ofu5W8lq8cSvK6r2ufN+iqHiGfB5t/6DAVy
+	wjq1H0sGFn8ksvBzUyoBBTscDgbOgDzY4aH4YtWg3+gB4ZluB3688WtS803eRa6DxQtVr3v7uoj
+	W2OWFYEPiGCEGijWCsX+H/NC3qXkyNA0ETNrHNUh+K2CxVVMpe0Uz/JRCxDcQk4t20qMBvV5ose
+	8w==
+X-Received: by 2002:a05:6214:2262:b0:915:bd52:6dd6 with SMTP id 6a1803df08f44-917a09c991fmr45982566d6.4.1790802055795;
+        Wed, 30 Sep 2026 14:00:55 -0700 (PDT)
 Received: from flag-System-Product-Name.tail132f98.ts.net ([136.61.118.42])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-917a8a579d8sm8580336d6.38.2026.09.30.14.00.53
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-917a8a579d8sm8580336d6.38.2026.09.30.14.00.54
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 30 Sep 2026 14:00:53 -0700 (PDT)
+        Wed, 30 Sep 2026 14:00:55 -0700 (PDT)
 From: Yanbo Zhao <yzhao62@ncsu.edu>
 To: Namhyung Kim <namhyung@kernel.org>,
 	Arnaldo Carvalho de Melo <acme@kernel.org>,
@@ -76,9 +77,9 @@ Cc: Jiri Olsa <jolsa@kernel.org>,
 	linux-perf-users@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Yanbo Zhao <yzhao62@ncsu.edu>
-Subject: [PATCH v2 2/3] perf dwarf-aux: Add C++ vtable helpers
-Date: Wed, 30 Sep 2026 17:00:37 -0400
-Message-ID: <20260930210038.196928-3-yzhao62@ncsu.edu>
+Subject: [PATCH v2 3/3] perf annotate: Resolve C++ virtual function calls in x86 insn tracking
+Date: Wed, 30 Sep 2026 17:00:38 -0400
+Message-ID: <20260930210038.196928-4-yzhao62@ncsu.edu>
 X-Mailer: git-send-email 2.53.0
 In-Reply-To: <20260930210038.196928-1-yzhao62@ncsu.edu>
 References: <20260930210038.196928-1-yzhao62@ncsu.edu>
@@ -90,392 +91,320 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add DWARF helper functions needed to resolve C++ virtual function calls
-statically in the data type profiling:
+A C++ virtual function call is an indirect call through the vtable.
+The instruction tracking of the data type profiling cannot resolve the
+callee name for it, so the return type is lost and the type of the
+register holding the returned value is unknown after the call.  It
+matters when the returned value is used directly to access memory, like
+in 'p->next()->val', where no DWARF variable describes the temporary.
 
-- die_get_vtable_index() returns the vtable slot index of a virtual
-  function DIE from DW_AT_vtable_elem_location.  DWARF defines the
-  attribute as a location description of the slot but GCC and Clang
-  both emit the slot index as a single DW_OP_constu, which is also how
-  debuggers interpret it.
+The vtable pointer and the slot index are known statically from the
+type of the object pointer, so the callee can be found by DWARF.  Track
+the two steps of a virtual call in update_insn_state_x86():
 
-- die_find_virtual_func() finds the virtual function DIE at a given
-  vtable slot index of a class.  The (primary) vtable of a class starts
-  with the vtable of its primary base class, i.e. the first non-virtual
-  base class at offset 0 which has a vtable, and the slots for virtual
-  functions introduced by the class come after that.  So it looks at
-  the class first and then follows the primary base class chain.
-  Non-primary base classes have their own secondary vtables with a
-  different slot numbering, so they are not searched.  Note that an
-  empty base class can be placed at offset 0 too (empty base
-  optimization) and it comes before the primary base in DWARF if it's
-  declared first, like 'struct Derived : Empty, Base'.  So the base
-  class needs to be checked if it has the vtable pointer at offset 0.
+1. Loading the vtable pointer from the object.  When a load from a
+   register with a pointer type hits the '_vptr' member of the class
+   (or one of its base classes), the destination register is marked as
+   TSR_KIND_VTABLE_PTR with the class DIE returned by
+   die_get_vptr_class().
 
-- die_is_vtbl_ptr_type() checks if a type is the vtable pointer.
-  Compilers add the vtable pointer as an artificial member named
-  '_vptr.<class>' (GCC) or '_vptr$<class>' (Clang) to the class that
-  first introduces virtual functions, and both give it a type of
-  pointer to a pointer type named '__vtbl_ptr_type'.  Checking the
-  type is cheap once a member type is resolved, so the instruction
-  tracking can use it on every pointer access without an extra DWARF
-  lookup.
+2. Calling through the vtable.  GCC emits the call in two forms:
 
-- die_get_vptr_class() checks if the member at an offset of a class is
-  the vtable pointer, following DW_TAG_inheritance into base class
-  subobjects like die_get_member_type(), and returns the class whose
-  vtable it points to.  Since
-  the primary vtable of a derived class extends the one of its base,
-  the vtable pointer at offset 0 is returned as the vtable of the
-  (derived) class itself, and only when a non-primary base subobject at
-  a non-zero offset is entered it's the vtable of that base class.
-  die_deref_vptr_class() is a variant for an access through a pointer
-  to the class like die_deref_ptr_type().
+     mov    (%rbx),%rax          # vtable pointer
+     call   *0x8(%rax)           # slot 1
 
-For example, with the following classes (GCC 15, -O2 -g):
+   or, with speculative devirtualization when it can guess the target,
+   the function pointer is loaded first and compared with the guess:
 
-  struct Base {
-      long a;
-      virtual long get(long x);
-      virtual void set(long v);
+     mov    (%rbx),%rax          # vtable pointer
+     mov    0x8(%rax),%rax       # function pointer at slot 1
+     cmp    %r14,%rax
+     je     <inlined copy>
+     call   *%rax
+
+   For the first form, the call handler resolves the slot from the
+   offset of the target operand when the base register is a vtable
+   pointer.  For the second form, the load from a vtable pointer
+   register marks the destination as TSR_KIND_VFUNC_PTR holding the
+   return type of the function at the slot, and the call handler uses
+   it when the target operand is such a register.  In both cases the
+   function DIE is found by die_find_virtual_func() and its return
+   type is set to the return value register like a direct call.  Void
+   functions have no return type and are simply ignored.
+
+The resolution happens before the caller-saved registers are
+invalidated since the register used for the call is one of them.
+
+To let the call handler see the target operand, call__parse() saves
+the operand of an indirect call (without the leading '*') to
+ops->target.raw so that annotate_get_insn_location() can extract the
+register and offset for both '*0x8(%rax)' and '*%rax'.
+
+The new kinds are pointer-sized and not compound when saved to the
+stack, and pr_debug_type_name() knows how to print them.
+
+The slot index is calculated with the host pointer size like the
+other places for now.  Only the primary vtable is handled: a virtual
+call through a pointer to a non-primary base class subobject (multiple
+inheritance) gets the class of that base from die_get_vptr_class() so
+the slot index is looked up in the right vtable, but the receiver
+adjustment (this pointer thunks) is not tracked.
+
+For example, with the following code built with -O2 -g:
+
+  struct Node {
+      long val;
+      Node *nxt;
+      virtual Node *next() { return nxt; }
+      ...
   };
-  struct Other {
-      long c;
-      virtual long hi();
-  };
-  struct Multi : Base, Other {
-      long d;
-      long get(long x) override;
-      long hi() override;
-  };
 
-the vtable pointers and slot indexes are described like below:
+  long run(Node *p, long n)
+  {
+      long s = 0;
+      for (long i = 0; i < n; i++)
+          s += p->next()->val;
+      return s;
+  }
 
-  <1><10b>: Abbrev Number: 15 (DW_TAG_structure_type)
-     <10c>   DW_AT_name        : Base
-  <2><14d>: Abbrev Number: 25 (DW_TAG_member)
-     <14e>   DW_AT_name        : _vptr.Base
-     <152>   DW_AT_type        : <0x2bf>
-     <156>   DW_AT_data_member_location: 0
-  <2><15f>: Abbrev Number: 17 (DW_TAG_subprogram)
-     <160>   DW_AT_name        : get
-     <16e>   DW_AT_virtuality  : 1        (virtual)
-     <16e>  DW_AT_vtable_elem_location: (DW_OP_constu: 0)
-  <2><188>: Abbrev Number: 38 (DW_TAG_subprogram)
-     <189>   DW_AT_name        : set
-     <194>   DW_AT_virtuality  : 1        (virtual)
-     <195>  DW_AT_vtable_elem_location: (DW_OP_constu: 1)
-  ...
-  <1><2f>: Abbrev Number: 15 (DW_TAG_structure_type)
-     <30>   DW_AT_name        : Multi
-  <2><3e>: Abbrev Number: 20 (DW_TAG_inheritance)
-     <3f>   DW_AT_type        : <0x10b>                        # Base
-     <43>   DW_AT_data_member_location: 0
-  <2><44>: Abbrev Number: 20 (DW_TAG_inheritance)
-     <45>   DW_AT_type        : <0x1d0>                        # Other
-     <49>   DW_AT_data_member_location: 16
-  <2><a2>: Abbrev Number: 17 (DW_TAG_subprogram)
-     <a3>   DW_AT_name        : get
-     <b1>   DW_AT_vtable_elem_location: (DW_OP_constu: 0)
-  <2><cb>: Abbrev Number: 17 (DW_TAG_subprogram)
-     <cc>   DW_AT_name        : hi
-     <d9>   DW_AT_vtable_elem_location: (DW_OP_constu: 4)
+'perf annotate --code-with-type' now shows the type for the access to
+the returned pointer after the call which was unknown before:
 
-Multi::hi() is at slot 4 of the primary vtable of Multi (after get,
-set and the two destructor entries), while Other::hi() is at slot 0
-of the vtable of Other.  Thus for a 'Multi *' the vtable pointer at
-offset 0 is looked up with Multi: slot 4 finds Multi::hi() and slot 1
-finds Base::set() through the primary base.  The vtable pointer at
-offset 16 belongs to the Other subobject, so it's looked up with Other
-where slot 0 finds Other::hi().
+  1251:  movq  (%rbp), %rax      # data-type: struct Node +0 (_vptr.Node)
+  1255:  movq  (%rax), %rax
+  1258:  cmpq  %r14, %rax
+  125b:  je    0x1240
+  125d:  movq  %rbp, %rdi
+  1260:  addq  $1, %rbx
+  1264:  callq *%rax
+  1266:  addq  8(%rax), %r12     # data-type: struct Node +0x8 (val)
 
 Signed-off-by: Yanbo Zhao <yzhao62@ncsu.edu>
 ---
 Changes in v2:
-- Drop the DW_AT_vtable_elem_index fallback which does not exist in
-  DWARF (0x8c is DW_AT_loclists_base) (Namhyung).
-- Drop the DW_LANG_C_plus_plus_* fallback macros; they are enum
-  constants and the language check is not needed anymore (Namhyung).
-- Drop cu_get_language(), cu_is_cplusplus(), die_get_base_class(),
-  die_get_parent() and die_find_member_by_offset() which are unused
-  or duplicate die_get_member_type() (Namhyung, Sashiko).
-- Document that die_get_vtable_index() returns the vtable slot index
-  of the function.  GCC and Clang both emit DW_AT_vtable_elem_location
-  as a single DW_OP_constu with the slot index, not a byte offset
-  (Namhyung, Sashiko).
-- Fix die_find_virtual_func() to return the DW_TAG_subprogram DIE
-  instead of the DW_TAG_inheritance DIE when the function is found in
-  a base class (Sashiko).
-- Follow only the primary base class chain in die_find_virtual_func()
-  since non-primary base classes have their own secondary vtables with
-  a different slot numbering, and skip an empty base class at offset 0
-  which comes before the primary base in DWARF.
-- Add die_is_vtbl_ptr_type() to identify the vtable pointer by its
-  type ('__vtbl_ptr_type') and die_get_vptr_class() /
-  die_deref_vptr_class() to get the class of the vtable pointer
-  through base class subobjects, replacing die_find_member_by_offset()
-  and die_is_vptr_member().
+- Remove the receiver ('this' pointer) register update after the call
+  and the type_state::arg0_reg field.  The code was unreachable since
+  the register is caller-saved and already invalidated, and it's not
+  needed: the 'this' pointer lives in a callee-saved register or on
+  the stack across the call and the DWARF location lists cover it
+  (Sashiko, Namhyung).
+- Handle 'call *%reg' in addition to 'call *N(%reg)'.  GCC emits it
+  with speculative devirtualization: the function pointer is loaded
+  from the vtable, compared with the guessed target and then called.
+  The load is tracked as TSR_KIND_VFUNC_PTR holding the return type
+  of the function at the slot (Sashiko).
+- Strip the leading '*' of an indirect call operand in call__parse()
+  when saving ops->target.raw, instead of in extract_reg_offset()
+  which is not reached for '*%reg' (Sashiko).
+- Ignore virtual functions returning void (no return type) instead of
+  treating it as a failure (Namhyung).
+- Keep the existing pointer dereference branch and its fall-through
+  to the multi-register and per-cpu paths intact.  The vtable pointer
+  is detected from the member type resolved there, so the common
+  path only pays a tag check.
+- Treat the new register kinds as pointer-sized and non-compound when
+  saved to the stack.
+- Drop the unnecessary include of dwarf-aux.h and hist.h.
 
- tools/perf/util/dwarf-aux.c | 216 ++++++++++++++++++++++++++++++++++++
- tools/perf/util/dwarf-aux.h |  18 +++
- 2 files changed, 234 insertions(+)
+ tools/perf/util/annotate-arch/annotate-x86.c | 76 +++++++++++++++++++-
+ tools/perf/util/annotate-data.c              | 15 +++-
+ tools/perf/util/annotate-data.h              |  4 ++
+ tools/perf/util/disasm.c                     |  5 ++
+ 4 files changed, 96 insertions(+), 4 deletions(-)
 
-diff --git a/tools/perf/util/dwarf-aux.c b/tools/perf/util/dwarf-aux.c
-index eb4b8f3475df..b1f3dca057ab 100644
---- a/tools/perf/util/dwarf-aux.c
-+++ b/tools/perf/util/dwarf-aux.c
-@@ -2293,6 +2293,222 @@ Dwarf_Die *die_get_member_type(Dwarf_Die *type_die, int offset,
- 	return die_mem;
+diff --git a/tools/perf/util/annotate-arch/annotate-x86.c b/tools/perf/util/annotate-arch/annotate-x86.c
+index 1acf31a2c759..d21192b74b6b 100644
+--- a/tools/perf/util/annotate-arch/annotate-x86.c
++++ b/tools/perf/util/annotate-arch/annotate-x86.c
+@@ -216,6 +216,29 @@ static void invalidate_reg_state(struct type_state_reg *reg)
+ 	reg->copied_from = -1;
  }
  
-+/**
-+ * die_get_vtable_index - Get the vtable slot index of a virtual function
-+ * @func_die: a DW_TAG_subprogram DIE
-+ *
-+ * Returns the index of the slot of @func_die in the vtable of its class or
-+ * -1 if it's not a virtual function.  DWARF defines the
-+ * DW_AT_vtable_elem_location as a location description of the slot, but
-+ * both GCC and Clang emit the slot index as a single DW_OP_constu (or
-+ * DW_OP_litN) and it's what debuggers expect too.
-+ */
-+int die_get_vtable_index(Dwarf_Die *func_die)
-+{
-+	Dwarf_Attribute attr;
-+	Dwarf_Op *expr;
-+	size_t nexpr;
-+
-+	if (dwarf_attr_integrate(func_die, DW_AT_vtable_elem_location, &attr) == NULL)
-+		return -1;
-+
-+	if (dwarf_getlocation(&attr, &expr, &nexpr) < 0 || nexpr != 1)
-+		return -1;
-+
-+	if (expr[0].atom == DW_OP_constu)
-+		return expr[0].number;
-+
-+	if (expr[0].atom >= DW_OP_lit0 && expr[0].atom <= DW_OP_lit31)
-+		return expr[0].atom - DW_OP_lit0;
-+
-+	pr_debug("Unexpected vtable_elem_location OP %x\n", expr[0].atom);
-+	return -1;
-+}
-+
-+static int __die_find_virtual_func_cb(Dwarf_Die *die_mem, void *arg)
-+{
-+	int index = (long)arg;
-+
-+	if (dwarf_tag(die_mem) != DW_TAG_subprogram)
-+		return DIE_FIND_CB_SIBLING;
-+
-+	if (die_get_vtable_index(die_mem) == index)
-+		return DIE_FIND_CB_END;
-+
-+	return DIE_FIND_CB_SIBLING;
-+}
-+
 +/*
-+ * Find the primary base class: the first non-virtual base class at offset 0
-+ * which has a vtable.  Note that an empty base class can also be placed at
-+ * offset 0 (empty base optimization) before the primary base.
++ * Get the return type of the C++ virtual function at the @offset in the
++ * vtable of @class_die.  Returns false if it's not found or the function
++ * returns void.
 + */
-+static int __die_find_primary_base_cb(Dwarf_Die *die_mem, void *arg __maybe_unused)
++static bool vtable_get_rettype(Dwarf_Die *class_die, int offset,
++			       Dwarf_Die *type_die)
 +{
-+	Dwarf_Attribute attr;
-+	Dwarf_Die base_die, vptr_die;
-+	Dwarf_Word loc;
++	Dwarf_Die func_die;
++	int index;
 +
-+	if (dwarf_tag(die_mem) != DW_TAG_inheritance)
-+		return DIE_FIND_CB_SIBLING;
-+
-+	if (dwarf_attr_integrate(die_mem, DW_AT_virtuality, &attr))
-+		return DIE_FIND_CB_SIBLING;
-+
-+	if (die_get_data_member_location(die_mem, &loc) < 0 || loc != 0)
-+		return DIE_FIND_CB_SIBLING;
-+
-+	if (die_get_real_type(die_mem, &base_die) == NULL)
-+		return DIE_FIND_CB_SIBLING;
-+
-+	/* It should have the vtable pointer at offset 0 */
-+	if (die_get_vptr_class(&base_die, 0, &vptr_die) == NULL)
-+		return DIE_FIND_CB_SIBLING;
-+
-+	return DIE_FIND_CB_END;
-+}
-+
-+/**
-+ * die_find_virtual_func - Find a virtual function by its vtable slot index
-+ * @class_die: a class type DIE
-+ * @index: index of the slot in the vtable of @class_die
-+ * @die_mem: a buffer for result DIE
-+ *
-+ * Search a DW_TAG_subprogram DIE at the slot @index of the vtable of
-+ * @class_die and store the DIE to @die_mem and returns it if found.  The
-+ * (primary) vtable of a class starts with the vtable of its primary base
-+ * class, that is the first non-virtual base class at offset 0 which has a
-+ * vtable, and virtual functions introduced by the class come after that.
-+ * So if @class_die doesn't have a virtual function with the @index, it
-+ * continues to the primary base.  Other (non-primary) base classes have
-+ * their own secondary vtables where the index is different, so they are
-+ * not searched.
-+ *
-+ * Returns NULL if not found.
-+ */
-+Dwarf_Die *die_find_virtual_func(Dwarf_Die *class_die, int index,
-+				 Dwarf_Die *die_mem)
-+{
-+	Dwarf_Die cur_die = *class_die;
-+	Dwarf_Die base_die;
-+
-+	while (die_is_compound_type(&cur_die)) {
-+		if (die_find_child(&cur_die, __die_find_virtual_func_cb,
-+				   (void *)(long)index, die_mem))
-+			return die_mem;
-+
-+		if (die_find_child(&cur_die, __die_find_primary_base_cb,
-+				   NULL, &base_die) == NULL)
-+			break;
-+
-+		if (die_get_real_type(&base_die, &cur_die) == NULL)
-+			break;
-+	}
-+	return NULL;
-+}
-+
-+/**
-+ * die_is_vtbl_ptr_type - Check if the type is a C++ vtable pointer
-+ * @type_die: a type DIE
-+ *
-+ * Compilers add the vtable pointer as an artificial member to the class
-+ * that introduces virtual functions first.  Both GCC and Clang give it a
-+ * type of pointer to a pointer type named "__vtbl_ptr_type", so it can
-+ * be identified by the type without looking at the member name.
-+ */
-+bool die_is_vtbl_ptr_type(Dwarf_Die *type_die)
-+{
-+	Dwarf_Die ptr_die;
-+	const char *name;
-+
-+	if (dwarf_tag(type_die) != DW_TAG_pointer_type)
++	if (offset < 0)
 +		return false;
 +
-+	if (die_get_real_type(type_die, &ptr_die) == NULL)
++	/* TODO: arch-dependent pointer size */
++	index = offset / sizeof(void *);
++
++	if (die_find_virtual_func(class_die, index, &func_die) == NULL)
 +		return false;
 +
-+	name = dwarf_diename(&ptr_die);
-+	return name != NULL && !strcmp(name, "__vtbl_ptr_type");
++	return die_get_real_type(&func_die, type_die) != NULL;
 +}
 +
-+/**
-+ * die_get_vptr_class - Get the class of the vtable pointer at the offset
-+ * @type_die: a class type DIE
-+ * @offset: offset of the accessed member in @type_die
-+ * @die_mem: a buffer for result DIE
-+ *
-+ * Check if the member at @offset in @type_die is a vtable pointer and
-+ * return the class DIE whose vtable it points to.  The vtable pointer is
-+ * a member of the class that introduces virtual functions first, so it
-+ * follows DW_TAG_inheritance to look into the base class subobjects like
-+ * die_get_member_type().
-+ *
-+ * Note that the vtable pointer at offset 0 belongs to the (primary) vtable
-+ * of @type_die itself as it extends the one of the primary base class.
-+ * Only when a non-primary base class subobject (at non-zero offset) is
-+ * entered, it points to a separate vtable of the base class.
-+ *
-+ * Returns NULL if the member at @offset is not a vtable pointer.
-+ */
-+Dwarf_Die *die_get_vptr_class(Dwarf_Die *type_die, int offset,
-+			      Dwarf_Die *die_mem)
-+{
-+	Dwarf_Die class_die = *type_die;
-+	Dwarf_Die vptr_class = *type_die;
-+	Dwarf_Die member_die, mb_type;
-+	Dwarf_Word loc;
+ static void update_insn_state_x86(struct type_state *state,
+ 				  struct data_loc_info *dloc, Dwarf_Die *cu_die,
+ 				  struct disasm_line *dl)
+@@ -236,6 +259,7 @@ static void update_insn_state_x86(struct type_state *state,
+ 		struct symbol *func = dl->ops.target.sym;
+ 		const char *call_name;
+ 		u64 call_addr;
++		bool has_rettype = false;
+ 
+ 		/* Try to resolve the call target name */
+ 		if (func)
+@@ -252,6 +276,26 @@ static void update_insn_state_x86(struct type_state *state,
+ 		else
+ 			pr_debug_dtp("call [%x] <unknown>\n", insn_offset);
+ 
++		/*
++		 * Resolve the return type of a C++ virtual function call
++		 * before invalidating the caller-saved register used for the
++		 * indirect call.  It's either through the vtable pointer
++		 * directly like 'call *0x8(%rax)' or through the function
++		 * pointer loaded from the vtable like 'call *%rax'.
++		 */
++		if (has_reg_type(state, dst->reg1) && state->regs[dst->reg1].ok) {
++			tsr = &state->regs[dst->reg1];
 +
-+	while (die_is_compound_type(&class_die)) {
-+		if (die_find_child(&class_die, __die_find_member_offset_cb,
-+				   (void *)(long)offset, &member_die) == NULL)
-+			return NULL;
-+
-+		if (dwarf_tag(&member_die) == DW_TAG_member) {
-+			if (die_get_real_type(&member_die, &mb_type) == NULL ||
-+			    !die_is_vtbl_ptr_type(&mb_type))
-+				return NULL;
-+
-+			*die_mem = vptr_class;
-+			return die_mem;
++			if (dst->mem_ref && !dst->multi_regs &&
++			    tsr->kind == TSR_KIND_VTABLE_PTR &&
++			    vtable_get_rettype(&tsr->type, dst->offset, &type_die)) {
++				has_rettype = true;
++			} else if (!dst->mem_ref && tsr->kind == TSR_KIND_VFUNC_PTR) {
++				type_die = tsr->type;
++				has_rettype = true;
++			}
 +		}
 +
-+		/* DW_TAG_inheritance: go into the base class subobject */
-+		if (die_get_data_member_location(&member_die, &loc) < 0)
-+			return NULL;
-+
-+		if (die_get_real_type(&member_die, &class_die) == NULL)
-+			return NULL;
-+
-+		offset -= loc;
-+		if (loc != 0)
-+			vptr_class = class_die;
-+	}
-+	return NULL;
-+}
-+
-+/**
-+ * die_deref_vptr_class - Get the class of the vtable pointer via pointer access
-+ * @ptr_die: a pointer type DIE
-+ * @offset: offset of the accessed member from the pointer
-+ * @die_mem: a buffer for result DIE
-+ *
-+ * Same as die_get_vptr_class() but for an access through a pointer to the
-+ * class, like die_deref_ptr_type().
-+ */
-+Dwarf_Die *die_deref_vptr_class(Dwarf_Die *ptr_die, int offset,
-+				Dwarf_Die *die_mem)
-+{
-+	Dwarf_Die type_die;
-+
-+	if (dwarf_tag(ptr_die) != DW_TAG_pointer_type)
-+		return NULL;
-+
-+	if (die_get_real_type(ptr_die, &type_die) == NULL)
-+		return NULL;
-+
-+	return die_get_vptr_class(&type_die, offset, die_mem);
-+}
-+
- /**
-  * die_deref_ptr_type - Return type info for pointer access
-  * @ptr_die: a pointer type DIE
-diff --git a/tools/perf/util/dwarf-aux.h b/tools/perf/util/dwarf-aux.h
-index 7c893e385824..803182cdff8a 100644
---- a/tools/perf/util/dwarf-aux.h
-+++ b/tools/perf/util/dwarf-aux.h
-@@ -26,6 +26,24 @@ const char *cu_get_comp_dir(Dwarf_Die *cu_die);
- /* Check if DIE is a compound type (structure, union, or class) */
- bool die_is_compound_type(Dwarf_Die *type_die);
+ 		/* Invalidate caller-saved registers after call */
+ 		call_addr = map__rip_2objdump(dloc->ms->map,
+ 					      dloc->ms->sym->start + dl->al.offset);
+@@ -267,7 +311,10 @@ static void update_insn_state_x86(struct type_state *state,
+ 		}
  
-+/* Get the vtable slot index of a virtual function (-1 if not virtual) */
-+int die_get_vtable_index(Dwarf_Die *func_die);
+ 		/* Update register with the return type (if any) */
+-		if (call_name && die_find_func_rettype(cu_die, call_name, &type_die)) {
++		if (call_name && die_find_func_rettype(cu_die, call_name, &type_die))
++			has_rettype = true;
 +
-+/* Find the virtual function at the vtable slot index of a class */
-+Dwarf_Die *die_find_virtual_func(Dwarf_Die *class_die, int index,
-+				 Dwarf_Die *die_mem);
++		if (has_rettype) {
+ 			tsr = &state->regs[state->ret_reg];
+ 			tsr->type = type_die;
+ 			tsr->kind = TSR_KIND_TYPE;
+@@ -622,13 +669,38 @@ static void update_insn_state_x86(struct type_state *state,
+ 			}
+ 			pr_debug_type_name(&tsr->type, tsr->kind);
+ 		}
++		/* Load a function pointer from the vtable (for 'call *%reg') */
++		else if (has_reg_type(state, sreg) && state->regs[sreg].ok &&
++			 state->regs[sreg].kind == TSR_KIND_VTABLE_PTR &&
++			 vtable_get_rettype(&state->regs[sreg].type, src->offset,
++					    &type_die)) {
++			tsr->type = type_die;
++			tsr->kind = TSR_KIND_VFUNC_PTR;
++			tsr->offset = 0;
++			tsr->ok = true;
 +
-+/* Check if the type is a C++ vtable pointer (pointer to __vtbl_ptr_type) */
-+bool die_is_vtbl_ptr_type(Dwarf_Die *type_die);
++			pr_debug_dtp("mov [%x] %#x(reg%d) -> reg%d",
++				     insn_offset, src->offset, sreg, dst->reg1);
++			pr_debug_type_name(&tsr->type, tsr->kind);
++		}
+ 		/* And then dereference the pointer if it has one */
+ 		else if (has_reg_type(state, sreg) && state->regs[sreg].ok &&
+ 			 state->regs[sreg].kind == TSR_KIND_TYPE &&
+ 			 die_deref_ptr_type(&state->regs[sreg].type,
+ 					    src->offset + state->regs[sreg].offset, &type_die)) {
++			/*
++			 * The vtable pointer of a C++ object needs the class
++			 * to resolve virtual calls through it.
++			 */
++			if (die_is_vtbl_ptr_type(&type_die) &&
++			    die_deref_vptr_class(&state->regs[sreg].type,
++						 src->offset + state->regs[sreg].offset,
++						 &type_die))
++				tsr->kind = TSR_KIND_VTABLE_PTR;
++			else
++				tsr->kind = TSR_KIND_TYPE;
 +
-+/* Get the class of the vtable pointer at the offset of a type (or NULL) */
-+Dwarf_Die *die_get_vptr_class(Dwarf_Die *type_die, int offset,
-+			      Dwarf_Die *die_mem);
+ 			tsr->type = type_die;
+-			tsr->kind = TSR_KIND_TYPE;
+ 			tsr->offset = 0;
+ 			tsr->ok = true;
+ 
+diff --git a/tools/perf/util/annotate-data.c b/tools/perf/util/annotate-data.c
+index 8a9d3f2eec4d..e9bf76cc2863 100644
+--- a/tools/perf/util/annotate-data.c
++++ b/tools/perf/util/annotate-data.c
+@@ -67,6 +67,14 @@ void pr_debug_type_name(Dwarf_Die *die, enum type_state_kind kind)
+ 		pr_info(" pointer");
+ 		/* it also prints the type info */
+ 		break;
++	case TSR_KIND_VTABLE_PTR:
++		pr_info(" vtable pointer");
++		/* it also prints the type info */
++		break;
++	case TSR_KIND_VFUNC_PTR:
++		pr_info(" virtual function pointer returning");
++		/* it also prints the type info */
++		break;
+ 	case TSR_KIND_CANARY:
+ 		pr_info(" stack canary\n");
+ 		return;
+@@ -715,8 +723,11 @@ void set_stack_state(struct type_state_stack *stack, int offset, u8 kind,
+ 			    Dwarf_Die *type_die, int ptr_offset)
+ {
+ 	Dwarf_Word size;
++	bool is_pointer = (kind == TSR_KIND_POINTER ||
++			   kind == TSR_KIND_VTABLE_PTR ||
++			   kind == TSR_KIND_VFUNC_PTR);
+ 
+-	if (kind == TSR_KIND_POINTER) {
++	if (is_pointer) {
+ 		/* TODO: arch-dependent pointer size */
+ 		size = sizeof(void *);
+ 	}
+@@ -729,7 +740,7 @@ void set_stack_state(struct type_state_stack *stack, int offset, u8 kind,
+ 	stack->ptr_offset = ptr_offset;
+ 	stack->kind = kind;
+ 
+-	if (kind == TSR_KIND_POINTER) {
++	if (is_pointer) {
+ 		stack->compound = false;
+ 		return;
+ 	}
+diff --git a/tools/perf/util/annotate-data.h b/tools/perf/util/annotate-data.h
+index bbf4fd35c1d7..14dab1beae2c 100644
+--- a/tools/perf/util/annotate-data.h
++++ b/tools/perf/util/annotate-data.h
+@@ -36,6 +36,10 @@ enum type_state_kind {
+ 	TSR_KIND_CONST,
+ 	TSR_KIND_PERCPU_POINTER,
+ 	TSR_KIND_POINTER,
++	/* C++ vtable pointer of the class in 'type' */
++	TSR_KIND_VTABLE_PTR,
++	/* C++ virtual function pointer with the return type in 'type' */
++	TSR_KIND_VFUNC_PTR,
+ 	TSR_KIND_CANARY,
+ };
+ 
+diff --git a/tools/perf/util/disasm.c b/tools/perf/util/disasm.c
+index 5478c134e7e3..5d96ee4c866b 100644
+--- a/tools/perf/util/disasm.c
++++ b/tools/perf/util/disasm.c
+@@ -300,6 +300,11 @@ static int call__parse(const struct arch *arch, struct ins_operands *ops, struct
+ 	if (tok != NULL) {
+ 		endptr++;
+ 
++		/* Save the operand (without '*') to extract register and offset */
++		ops->target.raw = strdup(tok + 1);
++		if (ops->target.raw == NULL)
++			return -1;
 +
-+/* Get the class of the vtable pointer at the offset from a pointer (or NULL) */
-+Dwarf_Die *die_deref_vptr_class(Dwarf_Die *ptr_die, int offset,
-+				Dwarf_Die *die_mem);
-+
- /* Get a line number and file name for given address */
- int cu_find_lineinfo(Dwarf_Die *cudie, Dwarf_Addr addr,
- 		     const char **fname, int *lineno);
+ 		/* Indirect call can use a non-rip register and offset: callq  *0x8(%rbx).
+ 		 * Do not parse such instruction.  */
+ 		if (strstr(endptr, "(%r") == NULL)
 -- 
 2.53.0
 
