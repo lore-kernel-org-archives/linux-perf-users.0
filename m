@@ -1,225 +1,279 @@
-Received: from BN8PR05CU002.outbound.protection.outlook.com (mail-eastus2azon11011014.outbound.protection.outlook.com [52.101.57.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed2-f32.google.com (mail-ed2-f32.google.com [74.125.228.96])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C47804F85AB;
-	Wed, 30 Sep 2026 15:28:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.57.14
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790782119; cv=fail; b=A73yTFuOXp33nZ47reN6uaiSVeCPX9QPgQu4klTRM9P+7l7zuBu8+bYdydo7KPGDycFJesdmhGXq+7b+P4sVs6eoSl+MKqgPUn88HnOhieNK8gEPUFWcXOStEY2bTJgglrHXNA0OcYgeH/X7oG8kueggWcE75J1Jhg7zpf0YMM4=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790782119; c=relaxed/simple;
-	bh=mrR2p5hMKgCRApuAlcdwULmrCPEieDj5CYrcRy2szig=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=qIFHqLGXjZSfBGf1cAV4IV3GmjawTkChxkoQPGJKHFSrYg749GtD1EIrOaFbcWrqXLrK7TjRb5DPa6TlQB3sHM04Vzh9nUAguVCbgA3jDmG5tL3gpZFQrsp7zWwWMxztxxP9rN7CswiqLLpCNQ2U1U2AEt9CUyt9LiamD51vrGc=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=D1N0qPH6; arc=fail smtp.client-ip=52.101.57.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54E955013C9
+	for <linux-perf-users@vger.kernel.org>; Wed, 30 Sep 2026 15:28:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.228.96
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1790782137; cv=none; b=OWf8RMEF+nNxQmdqBoHVeBt8Ymh5aKxc9c9W+vJCk4hOjRNbLN0gqsM9/LG8cj9W7XZXPcR2heciCRGex7DKRReHRrYS3rWN6cWHPZRm5stn77TLNEN+4bh/IHdEHgkGakKsPc8WjWSq3oIpIZ1XQVeAO+2NlK6eQ3zEkSJyCEo=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1790782137; c=relaxed/simple;
+	bh=buw7eilKhVYBpVzHXoFXBKSXA87LBruo6Br9DLlJ1Js=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=a98AvDY5hVpxDqzBocMHCKhcCi7H8x1tAaG3cRQy7WScgsUFCISrBaefxVq6cWHl5AITL3pcZkIFT6+ObQOrvSuSPApmo79C75V/4CY7ke5FzV4DU/mtuBMMUhXc7DcgDmEWKBI9Y0bILkShBdezow72wfTTaKjlww1c7Ig0bfY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=jsiDjkf/; arc=none smtp.client-ip=74.125.228.96
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="D1N0qPH6"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=s8uTyHY6ca0S0gFpYdWeYhmt2qrfVim81f/ez5gEyTG7rnWCcA8/efKeY19pYTwnxwABRHXRKolDwQi2UhO6Qz7e2tw2LtkJhsBVye4eWtkujwDZZ27NbV2cskWBD4nzj1Dd3LmiOn4W3u3obhqoFQUlgEbfAT/rGvrdzux+FUcMcTWhIntHiV95U798sZ0k9HBVZ5bIWiu68czDL62rHBAnmeLn4IK07kBZs/ig5ErqAxPLXbvEKipxMPC6OIyzO6xtuBjjFcSmzsvMHjYPfjA5yanrW4EaKx+lblQaKX1kfhoTPznH15l3TzT35GNhWLmss4FkNHGG6SvIvUG8mQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=j8w1jBnA80+jx0tcZGoqUFaJ5onaLQirx/OFTHfw1Is=;
- b=JtWj3321OWFasox9ZMgOhmSAZPBdcjqPps/So50HJ7tSj2RIaFzWfVwmg056K6Itl7SlkJcHCMMvQbbJTMO79OGYAlUlJuGtRtdVkL6sMFAexi7rnPCZHLYdW5ylCqSCWp9Tbtmwyu09O7a/B+uMNCtRv6iEaMwjKiTLORhoRLOqV/0Taa1tt9sChnpupDPn3t2atSyDikEKWBFyLPz6ExmCk3P8/RraolNwzkaYCWDAWdQNlhDsDztRxk7p+U8gIFWQke2ge3GUrf5TMVmjVdk8i+weC5bxjqn4edtnPcOmAcvjaRYdEw7K/USJ6WkTMuC5RDb/DfHvcDWyW50Ymw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=j8w1jBnA80+jx0tcZGoqUFaJ5onaLQirx/OFTHfw1Is=;
- b=D1N0qPH6GDpjju4aIZpuxd1dhaa2+ullhx2NmCdQEzl3PVKYtQiHUacX80CpSDdjg0S1R5ugLiFraR2ypmUMTxGd3LzzhmR/rTewwQlyA92Mi3NJk3EQlxFcyrFGanZDy1OGzsQAUD7urm32U1uSNCKFWM7dEF8VvyJRYcckG81trDtDoXM+IP/gyS2UIZcfmNG4Lwk6NQHtbSLnUzilm8CMps9VuTI1+77XdaqWXsdqZUz2hwiQ3NL+9v2iT0+9kWqOl5A7DD0o3HbuAv6X5Y5zR2uE1C2tjPAIc1EOJrtUqptRVP22RCCLNS8C4ohXmhwm7eqoEgGQhlD+OCe9zQ==
-Authentication-Results: mx.microsoft.com 1; dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from IA0PR12MB8374.namprd12.prod.outlook.com (2603:10b6:208:40e::7)
- by DM4PR12MB5724.namprd12.prod.outlook.com (2603:10b6:8:5f::9) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.21.451.26; Wed, 30 Sep 2026 15:27:57 +0000
-Received: from IA0PR12MB8374.namprd12.prod.outlook.com
- ([fe80::d85f:4c87:ae84:3f16]) by IA0PR12MB8374.namprd12.prod.outlook.com
- ([fe80::d85f:4c87:ae84:3f16%6]) with mapi id 15.21.0472.015; Wed, 30 Sep 2026
- 15:27:57 +0000
-From: Zi Yan <ziy@nvidia.com>
-To: Muhammad Usama Anjum <usama.anjum@arm.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
- David Hildenbrand <david@kernel.org>, Lorenzo Stoakes <ljs@kernel.org>,
- "Liam R. Howlett" <liam@infradead.org>, Vlastimil Babka <vbabka@kernel.org>,
- Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>,
- Michal Hocko <mhocko@suse.com>, Xu Xin <xu.xin16@zte.com.cn>,
- Chengming Zhou <chengming.zhou@linux.dev>, Jann Horn <jannh@google.com>,
- Muchun Song <muchun.song@linux.dev>, Oscar Salvador <osalvador@suse.de>,
- Pedro Falcato <pfalcato@suse.de>, Arnd Bergmann <arnd@arndb.de>,
- Will Deacon <will@kernel.org>, "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>,
- Nick Piggin <npiggin@gmail.com>, Peter Zijlstra <peterz@infradead.org>,
- Pasha Tatashin <pasha.tatashin@soleen.com>, Rik van Riel <riel@surriel.com>,
- Harry Yoo <harry@kernel.org>, Lance Yang <lance.yang@linux.dev>,
- Chris Li <chrisl@kernel.org>, Kairui Song <kasong@tencent.com>,
- Kemeng Shi <shikemeng@huaweicloud.com>, Nhat Pham <nphamcs@gmail.com>,
- Baoquan He <baoquan.he@linux.dev>, Barry Song <baohua@kernel.org>,
- Youngjun Park <youngjun.park@lge.com>, Uladzislau Rezki <urezki@gmail.com>,
- Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
- Andrii Nakryiko <andrii@kernel.org>, Eduard Zingerman <eddyz87@gmail.com>,
- Kumar Kartikeya Dwivedi <memxor@gmail.com>,
- Martin KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>,
- Yonghong Song <yonghong.song@linux.dev>, Jiri Olsa <jolsa@kernel.org>,
- Emil Tsalapatis <emil@etsalapatis.com>,
- Ihor Solodrai <ihor.solodrai@linux.dev>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>,
- James Clark <james.clark@linaro.org>, SJ Park <sj@kernel.org>,
- "Matthew Wilcox (Oracle)" <willy@infradead.org>, Jan Kara <jack@suse.cz>,
- Jason Gunthorpe <jgg@ziepe.ca>, John Hubbard <jhubbard@nvidia.com>,
- Peter Xu <peterx@redhat.com>, Leon Romanovsky <leon@kernel.org>,
- Baolin Wang <baolin.wang@linux.alibaba.com>,
- Nico Pache <nico.pache@linux.dev>, Ryan Roberts <ryan.roberts@arm.com>,
- Dev Jain <dev.jain@arm.com>, Usama Arif <usama.arif@linux.dev>,
- Kiryl Shutsemau <kas@kernel.org>, Andrey Ryabinin <ryabinin.a.a@gmail.com>,
- Alexander Potapenko <glider@google.com>,
- Andrey Konovalov <andreyknvl@gmail.com>, Dmitry Vyukov <dvyukov@google.com>,
- Vincenzo Frascino <vincenzo.frascino@arm.com>,
- Miaohe Lin <linmiaohe@huawei.com>, Naoya Horiguchi <nao.horiguchi@gmail.com>,
- Matthew Brost <matthew.brost@intel.com>,
- Joshua Hahn <joshua.hahnjy@gmail.com>, Rakie Kim <rakie.kim@sk.com>,
- Byungchul Park <byungchul@sk.com>, Gregory Price <gourry@gourry.net>,
- Ying Huang <ying.huang@linux.alibaba.com>,
- Alistair Popple <apopple@nvidia.com>, Dennis Zhou <dennis@kernel.org>,
- Tejun Heo <tj@kernel.org>, Christoph Lameter <cl@gentwo.org>,
- Johannes Weiner <hannes@cmpxchg.org>, Qi Zheng <qi.zheng@linux.dev>,
- Shakeel Butt <shakeel.butt@linux.dev>,
- Axel Rasmussen <axelrasmussen@google.com>, Yuanchu Xie <yuanchu@google.com>,
- Wei Xu <weixugc@google.com>, Jani Nikula <jani.nikula@linux.intel.com>,
- Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
- Rodrigo Vivi <rodrigo.vivi@intel.com>, Tvrtko Ursulin <tursulin@ursulin.net>,
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
- Juergen Gross <jgross@suse.com>, Stefano Stabellini <sstabellini@kernel.org>,
- Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>,
- linux-kernel@vger.kernel.org, linux-mm@kvack.org,
- linux-fsdevel@vger.kernel.org, linux-arch@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org,
- linux-perf-users@vger.kernel.org, damon@lists.linux.dev,
- kasan-dev@googlegroups.com, intel-gfx@lists.freedesktop.org,
- dri-devel@lists.freedesktop.org, xen-devel@lists.xenproject.org
-Subject: Re: [PATCH v3 1/9] mm: introduce hw_pte_t for PTE table storage
-Date: Wed, 30 Sep 2026 11:27:53 -0400
-X-Mailer: MailMate (3.0r7032)
-Message-ID: <51D02557-E9CC-4806-917E-279C6E66AF1A@nvidia.com>
-In-Reply-To: <20260922-pte0-v3-1-5670b8cb9059@arm.com>
-References: <20260922-pte0-v3-0-5670b8cb9059@arm.com>
- <20260922-pte0-v3-1-5670b8cb9059@arm.com>
-Content-Type: text/plain
-X-MS-Reactions: disallow
-X-ClientProxiedBy: BL1PR13CA0112.namprd13.prod.outlook.com
- (2603:10b6:208:2b9::27) To IA0PR12MB8374.namprd12.prod.outlook.com
- (2603:10b6:208:40e::7)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jsiDjkf/"
+Received: by mail-ed2-f32.google.com with SMTP id 4fb4d7f45d1cf-6acb91ecaccso2883765a12.2
+        for <linux-perf-users@vger.kernel.org>; Wed, 30 Sep 2026 08:28:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1790782119; x=1791386919; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:in-reply-to:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=GQ41yj00/XNv9YnqFd8MxyPQ2Or7W/eiTKmLpRiCxws=;
+        b=jsiDjkf/cU+nwHRtIWEBcIVKe7nh5e42us7XxZDWebjPwMshfwuiyEc7N5eKph2JJf
+         N4LExnNHmGDgULHQ/Mwtp226DIbaJNO70v9ogT4bqLVSI70GD7puhUqRhYGlLkvP4Lrl
+         Jv3qp88H6yxry5g/BSzv0GC6IdlYTdRrWEgHAQlyw9OmC22Z4WGVjHTVei4FaGEyYxfh
+         kCIv5ij+1fJNqFiH16MJwvvPsK40dIPrCDtv0FDErfR1ekEPmO5UMjba59q9IMuWVni3
+         jRGCbmx8CWfr7h9n/1QxLYO5QSHTkwEIcq5V670r1CAg0o4nK/gzC2EKBaZWE3brQNK1
+         kKxw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1790782119; x=1791386919;
+        h=content-transfer-encoding:content-type:in-reply-to:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=GQ41yj00/XNv9YnqFd8MxyPQ2Or7W/eiTKmLpRiCxws=;
+        b=rkfzmi3Bt3RB/5xQm4zzFYscl64p7/Ip+5MEXMolIBpLLOYCaGmxDL8cOCM7qjWJkU
+         zpBJQ4nVDRE6ZGLaob+TTEv/9k4B5ZvMXGRsKyV7Zo01HWzUHR2UbTKJ8g4Ai+LUcWip
+         7cazGm34ahom/0Xib5y7VWKciscb5Hd6JUrQuD3HR+Z+abmCAyO6z7KAXn2PHqwn6sgm
+         LDtWisQKYg4KuM3j3qrvnSiEZixbM530wAltrxxNG4bfBBbs3LsWbZjlZGt8doz77Sa5
+         UNOgifhhAb5MM0RQh/QBN0vjUykpzg1uV0OPDRBdbKhfIb2EZQPWXVFI8Aelp86sDj13
+         oBbA==
+X-Forwarded-Encrypted: i=1; AKwUvBwGvTzbtpvTVjXBwu+HJl9JtiLQysinOH6bF/r915Criv6WoBoQUVqcWQzEGDKPkTeIVrYdlrOVrnVeH2m65LAJ@vger.kernel.org
+X-Gm-Message-State: AFq9FYKvSiPSiuQwjDgLKReu9UnCqyrEvrEack2mBHs2evb0WHoOVFTf
+	NG+3S/fOmlxQVCC7PWFkIp9nmmbwYoHXrLl3G0h5GKjnqLWE0jw+TW2gk7AXV3YJNks=
+X-Gm-Gg: AYBFou1Qx8dy2Ghzzh/iOHotCSUOjO1uxVtvL3B3JhZSADp/9z2N0zj0OqL9IIn7Iji
+	xi2H1Rabp45sNmHjc0ybEoAnYtQC8tcWFoTzsqD91pWz9lqsD6PnOfis6MR4c+UUKJphdbiiyi4
+	VU0Mal+wdwWBrjlu9jl3LbsxEsWTRWUIA/moYuykzRo+rbbiOeHVJ+frRwMY+SQ8RO6wsKKK0kI
+	HKMztI89GMS4ePdLg7C4WuEyOauOZ1NqRgBgDZL17ZYZEVzScOkcR3jr42v+f4P6o6CHo+kKUy9
+	U6DqtzVxNo5xlTqpU6KqdiKYFM3FNgYHEbKZzgEfDANIDX0q3pLIjkr5eUhX2Pw4BWytsaUK3xq
+	XexYJH+H0mbfedfxpsxIm/gUnCVct3P2qllmCnwh0ABliN6g3fE3deN8+IDftWVlMIs/Nes3/+i
+	Ql8XMpuQCgD1EOZOxBnkV4vjQ+yvEN98BE5X7T8MC8CMRa0KmjQk1lQFDx7JTmXYG1bZMqNPwco
+	4Q=
+X-Received: by 2002:a05:6402:4543:b0:6ab:bafd:260e with SMTP id 4fb4d7f45d1cf-6ae199672d1mr1029959a12.44.1790782119271;
+        Wed, 30 Sep 2026 08:28:39 -0700 (PDT)
+Received: from [192.168.1.3] ([37.18.141.193])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-6ae156a2082sm1010321a12.30.2026.09.30.08.28.37
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 30 Sep 2026 08:28:38 -0700 (PDT)
+Message-ID: <f54b9ea6-48b1-4f6c-92cc-b0a9249c2fb0@linaro.org>
+Date: Wed, 30 Sep 2026 16:28:37 +0100
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: IA0PR12MB8374:EE_|DM4PR12MB5724:EE_
-X-MS-Office365-Filtering-Correlation-Id: d214dff4-b381-4957-d09d-08df1f07674d
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|7416014|376014|1800799024|23010399003|366016|10067099003|4143699003|11063799006|56012099006|10063799003|22082099003|18002099003;
-X-Microsoft-Antispam-Message-Info:
-	NTMS7w3pkwbdyX8kXLQQPd6bmp7vgxhsw8wWUgoxv0BrTrWoioXQwXj9y2sXwxqK/qp94qzNdh/w34dJBNSvbrkk9mQbv2eUPT1dCR5tZ1ctxQM8bgU8kBHD7llfqbs2uDuPa0FCmoZMt4aJnvieWCKHKxci7qcqJAuMjkWfrFU8R5RZ0Pp+gWd6vaVst+KGOu7iQzlS6ZiiLCyEHCFhE5UTWJFFq6SPOOfeik7Z0B1OXZ2zH9V2SuK02wJNgjSYLbszkIqi50F10i5CEUJ3ZGuCkyo3DM/MwDsQAmHM8Bp6vKunIh4HqtMQOnv7zekcp+FzN5RAzsi0FWBm5ZLmamnACbJ3ID8Uhc2HbeBvXNONVsFjYpykdaOuaDLwRN1/WB3MpYmtTWpOhyqq8LIb7VFs6nvId/Ccql4GAZZPIAqWvI0kj6zudAav0tOCf5ocPxPGvqv0srNHGzljQMohQkc5knSeLiz0T7I3twibdB+LZUKnkqS4g6gZxOLx8jHHOrM7CcIMBFvSVOy124A+psloR+Sir++O4fteJpkRLIH2eo2XV3ANbGLdqlMLl7bvZevXSVQuXGwtEFUG0PQnGs49YCqwB44rR9hCbCcjSPAnPCpAXVR+pJ987rdeYw2WIN+jnl6TeeNBBReTpntyPBD6DV97FUla1GcpMqCM9h8=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:IA0PR12MB8374.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(1800799024)(23010399003)(366016)(10067099003)(4143699003)(11063799006)(56012099006)(10063799003)(22082099003)(18002099003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?MXu4eQniVxMuLf/9bfDbC7QY5S/GZmk+BEhdZPsCpb2Fwvz+snepEPRv42qo?=
- =?us-ascii?Q?J+fGc6zIpN2r69MH3j1NbAw+66SPKNJSbZWhUSOYSaWDRf4WysG/w2mdz+cN?=
- =?us-ascii?Q?vp3KKbYKM8MhsCZWkFB42OashkTTgzj6OZ6vq7YylqGondij1VlWCYNmcP8S?=
- =?us-ascii?Q?6CXUVF1CZY8gLz31yQcOyjXSX5r+5W5adH8GV43S5daPLgy1FP1pch3Vqrlf?=
- =?us-ascii?Q?LydlKNFlFcd6CQvLAmRZRg5f+x5EGG7YhPBj+3BMbN4LI/lNWXYIpqiHqL7j?=
- =?us-ascii?Q?oXhMMivi1j3CAIyHtKjnBqsGsncsD9Df+DEDyitdDfZE5i1G5UrNPgcatcz/?=
- =?us-ascii?Q?mOfTjD8IZ8ZR2rMuwlWGM7cKyWdpZ5SlTiRxY5CJuWwlCSWlWhK7Mn9edgn9?=
- =?us-ascii?Q?Abtswnt7rCImfHaCNvjLM8bxzr2VL0lWfaOQoi0ZkND6Uxjx80xWYDeDdcLy?=
- =?us-ascii?Q?E2M4AQSakyvohHmvNmzUGfYvmOf5UofkU4avmkfn0FAKO3HBNZ84eu6/qB0/?=
- =?us-ascii?Q?BZkh42wfg4Tpp5AzexqE0YlzTTYdsEhTlxyMDpY0dY/493VkD3G3VmmenLvc?=
- =?us-ascii?Q?rOsNrznL3Ai/WSC9dPAJ2ZVp4YFIfEewJtaYthUYeM1mHNwkHM57C3jhqJZE?=
- =?us-ascii?Q?oE/mixWkz2wHs5AScj9awqrTKdoG+D2+UP55curGBCATRmTl/m7GNbhLI8DD?=
- =?us-ascii?Q?/LpUx+iBAnEP2/sP4eK6DpVctibX9lPiiKkUQDwfqPwHb4HWHRBFrm7hyvbb?=
- =?us-ascii?Q?1q0FRxmMe40oskj/VcMiMnLOYQolAHPLNrau928odO+HIqfP4yZRqOG4dD0h?=
- =?us-ascii?Q?PwtkEzoBxPv+ezIzGXMVj6vnzZHj9k+INQcrtqClIA1ORalRBd8jzvtlji5b?=
- =?us-ascii?Q?/2qlXjfsInReKmjefmVeIOG1K/qzZ5l/6e/Lwvopa6VTFuL+SrhYv9N/Yoc5?=
- =?us-ascii?Q?j8+pg/TPURR8FqRiO5nzmXCWudtk9pQowrK1N1/noRFW++Oxh5J6KEGxWoBg?=
- =?us-ascii?Q?bPvscNfCLhlUpVRhJ/HlU6qHXIHRVZT2ops9BEj/kj5gQGfI4gKjYUo8q2wm?=
- =?us-ascii?Q?EnQA7IeJ2rTYpUTpOztbqVoqKIAugvcp5LpMgIaQJgYyR90PdeQk8rB206pU?=
- =?us-ascii?Q?OEevidn/mt07l+4qXT8oBb9a22pTAX5Oz0iY9j1ManvQYZpzc2pC2r3XI/7w?=
- =?us-ascii?Q?yFS4ZzYI7p519xaiDGAOAL210+5azfqWPKAg6FPBqpqqUj4RH+MzvfU0VjFl?=
- =?us-ascii?Q?OmpY5RRcLDE94Cy1REYNVkR0ntXfbZovloDW2XYuRh1PRBAplbFbVz1CF6j5?=
- =?us-ascii?Q?HNbo0gHXo8t5IB4239rfrJjNIMAv2hWLBuATBn9RDSclotP3/WVbOlTrrAcA?=
- =?us-ascii?Q?alpY8++184I9GbRwPtp9oFf7AqX1so53T0aej11fWXSkDCa1pQAAGqrwk30V?=
- =?us-ascii?Q?IMeN5jH8ijdgbAThHaaerWzyh9CUxr0uM5fjHYLb6lohDLNnl+7gCzQlXXVU?=
- =?us-ascii?Q?kknZDCREfrCBcTH4jTRN6YVj+UUrdNs44QUakpZEqj9lZJvG3tCBCjQ5tiLa?=
- =?us-ascii?Q?YWv8bBtBYiNnp4zT2e28zycu04Xl/sgRPaac3E0Vo5JfjdtnbDUBYehX0WWg?=
- =?us-ascii?Q?lEcYH+QxwZlpE3cj0tzisjeSTXu2N+jw3p9Iel/2Fl9/zZx2i9uYQxMkEDjn?=
- =?us-ascii?Q?GS3vsX2AB2EzWefPjnuPPbP5XqaqtZOHwLXLZGiQl5NHkVEOqH+nMbTsJp/E?=
- =?us-ascii?Q?7DP2WO6Skg=3D=3D?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d214dff4-b381-4957-d09d-08df1f07674d
-X-MS-Exchange-CrossTenant-AuthSource: IA0PR12MB8374.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Sep 2026 15:27:56.9730
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: YLttr6nZbAZEgLwiA1BQTWtmyJC4gk3s+HBEIV2F7pIcz4C++d3nVT6aZtPTmkRN
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB5724
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v9 16/22] KVM: arm64: Apply dynamic guest counter
+ reservations
+To: Colton Lewis <coltonlewis@google.com>
+Cc: Marc Zyngier <maz@kernel.org>, Oliver Upton <oupton@kernel.org>,
+ Oliver Upton <oliver.upton@linux.dev>, Joey Gouly <joey.gouly@arm.com>,
+ Suzuki K Poulose <suzuki.poulose@arm.com>, Zenghui Yu
+ <yuzenghui@huawei.com>, Fuad Tabba <fuad.tabba@linux.dev>,
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>, Paolo Bonzini <pbonzini@redhat.com>,
+ Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
+ Zide Chen <zide.chen@intel.com>, Alexandru Elisei
+ <alexandru.elisei@arm.com>,
+ Ganapatrao Kulkarni <gankulkarni@os.amperecomputing.com>,
+ Mingwei Zhang <mizhang@google.com>, Jonathan Corbet <corbet@lwn.net>,
+ Russell King <linux@armlinux.org.uk>, Shuah Khan <shuah@kernel.org>,
+ linux-perf-users@vger.kernel.org, linux-kselftest@vger.kernel.org,
+ linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ kvm@vger.kernel.org, kvmarm@lists.linux.dev,
+ linux-arm-kernel@lists.infradead.org
+References: <20260924172928.2110956-1-coltonlewis@google.com>
+ <20260924172928.2110956-17-coltonlewis@google.com>
+Content-Language: en-US
+From: James Clark <james.clark@linaro.org>
+In-Reply-To: <20260924172928.2110956-17-coltonlewis@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On 22 Sep 2026, at 13:12, Muhammad Usama Anjum wrote:
 
-> pte_t is used both for software PTE values and for entries stored in a PTE
-> table, so pte_t * does not distinguish a pointer to a software PTE
-> value from a pointer to table storage.
->
-> Introduce hw_pte_t as the generic name for a PTE table element. Define it
-> as a macro alias of pte_t by default. When an architecture selects
-> ARCH_HAS_HW_PTE_T, define it as a structure containing a pte_t instead.
-> This preserves the representation while allowing converted architectures
-> to enforce the distinction at compile time.
->
-> Name the generic wrapper structure __hw_pte_t so architectures can
-> forward-declare it when pgtable_t must be defined before the generic
-> hw_pte_t typedef is visible. This avoids header-order dependencies.
->
-> Keep the C type definitions behind an __ASSEMBLY__ check because
-> architecture assembly sources can include this header indirectly. Include
-> asm/page.h so consumers such as linux/vmalloc.h retain the page definitions
-> they previously obtained from that header.
->
-> Acked-by: David Hildenbrand (Arm) <david@kernel.org>
-> Signed-off-by: Muhammad Usama Anjum <usama.anjum@arm.com>
+
+On 24/09/2026 18:29, Colton Lewis wrote:
+> Reserve and release guest PMU counters dynamically during vCPU load and
+> put rather than statically at VM creation.
+> 
+> Add kvm_pmu_set_guest_counters() in arch/arm64/kvm/pmu-direct.c, called
+> from kvm_pmu_load() and kvm_pmu_put(). When the requested guest counter
+> mask collides with active host events in cpuc->used_mask (or when
+> releasing counters after squeezing a host event), invoke
+> perf_pmu_resched_update() with kvm_pmu_update_mask() to update the
+> per-CPU cpuc->cntr_mask between scheduling host events out and back in;
+> otherwise update cpuc->cntr_mask directly with interrupts disabled.
+> 
+> Signed-off-by: Colton Lewis <coltonlewis@google.com>
 > ---
-> Changes since v1:
-> - Name the generic wrapper structure __hw_pte_t so architectures can
->   forward-declare it, and explain why this is required.
-> - Use software PTE value terminology.
->
-> Changes since RFC v1:
-> - Add the ARCH_HAS_HW_PTE_T opt-in and generic wrapper definition.
-> - Exclude the C type definitions from assembly sources.
-> - Update the description for the new opt-in model.
-> ---
->  MAINTAINERS                   |  1 +
->  include/linux/pgtable_types.h | 17 +++++++++++++++++
->  mm/Kconfig                    |  3 +++
->  3 files changed, 21 insertions(+)
->
-LGTM.
+>   arch/arm64/kvm/pmu-direct.c  | 77 ++++++++++++++++++++++++++++++++++++
+>   include/linux/perf/arm_pmu.h |  1 +
+>   2 files changed, 78 insertions(+)
+> 
+> diff --git a/arch/arm64/kvm/pmu-direct.c b/arch/arm64/kvm/pmu-direct.c
+> index a22c9258c2452..31d5afc44f36e 100644
+> --- a/arch/arm64/kvm/pmu-direct.c
+> +++ b/arch/arm64/kvm/pmu-direct.c
+> @@ -115,6 +115,77 @@ u64 kvm_pmu_direct_pmcr_read(struct kvm_vcpu *vcpu)
+>   		ARMV8_PMU_PMCR_N);
+>   }
+>   
+> +/* Callback to update counter mask between perf scheduling */
+> +static void kvm_pmu_update_mask(struct pmu *pmu, void *data)
+> +{
+> +	struct arm_pmu *arm_pmu = to_arm_pmu(pmu);
+> +	struct pmu_hw_events *cpuc = this_cpu_ptr(arm_pmu->hw_events);
+> +	unsigned long *new_mask = data;
+> +
+> +	bitmap_copy(cpuc->cntr_mask, new_mask, ARMPMU_MAX_HWEVENTS);
+> +}
+> +
+> +/**
+> + * kvm_pmu_set_guest_counters() - Handle dynamic counter reservations
+> + * @cpu_pmu: struct arm_pmu to potentially modify
+> + * @guest_mask: new guest mask for the pmu
+> + *
+> + * Check if guest counters will interfere with current host events and
+> + * call into perf_pmu_resched_update if a reschedule is required.
+> + */
+> +static void kvm_pmu_set_guest_counters(struct arm_pmu *cpu_pmu, u64 guest_mask)
+> +{
+> +	struct pmu_hw_events *cpuc = this_cpu_ptr(cpu_pmu->hw_events);
+> +	DECLARE_BITMAP(guest_bitmap, ARMPMU_MAX_HWEVENTS);
+> +	DECLARE_BITMAP(new_mask, ARMPMU_MAX_HWEVENTS);
+> +	unsigned long flags;
+> +	bool need_resched = false;
+> +
+> +	bitmap_from_arr64(guest_bitmap, &guest_mask, ARMPMU_MAX_HWEVENTS);
+> +	bitmap_copy(new_mask, cpu_pmu->cntr_mask, ARMPMU_MAX_HWEVENTS);
+> +
+> +	local_irq_save(flags);
+> +	if (guest_mask) {
+> +		/* Subtract guest counters from available host mask */
+> +		bitmap_andnot(new_mask, new_mask, guest_bitmap, ARMPMU_MAX_HWEVENTS);
+> +
+> +		/* Did we collide with an active host event? */
+> +		if (bitmap_intersects(cpuc->used_mask, guest_bitmap, ARMPMU_MAX_HWEVENTS)) {
+> +			int idx;
+> +
+> +			need_resched = true;
+> +			cpuc->host_squeezed = true;
+> +
+> +			/* Look for pinned events that are about to be preempted */
+> +			for_each_set_bit(idx, guest_bitmap, ARMPMU_MAX_HWEVENTS) {
+> +				if (test_bit(idx, cpuc->used_mask) && cpuc->events[idx] &&
+> +				    cpuc->events[idx]->attr.pinned) {
+> +					pr_warn_once("perf: Pinned host event squeezed out by KVM guest PMU partition\n");
 
-Acked-by: Zi Yan <ziy@nvidia.com>
+If you enable pseudo-NMIs, watchdog_hardlockup_enable() installs the 
+watchdog using a pinned PMU event. If host userspace also has a pinned 
+event on the mandatory 1 PMU counter assigned to the host, then a guest 
+could potentially squeeze out the watchdog.
 
-Best Regards,
-Yan, Zi
+I'm wondering if we need to prioritise kernel owned events? Or we just 
+treat them the same as any other event, and with PMU partitioning assume 
+they can't be guaranteed to be running? I feel like you would expect a 
+watchdog to be a bit more than best effort though, especially if there 
+was always a guaranteed counter available to put it on.
+
+I didn't follow it through completely, but it also looks like if the 
+event gets squeezed it would enter an error state and then never be 
+re-enabled, even after the guest stops running.
+
+Note, that I think the current ordering means that the watchdog won't 
+actually get squeezed out because it's created first. But I don't think 
+we can rely on the ordering as a strong guarantee, and it might get 
+broken by refactoring in the future.
+
+
+> +					break;
+> +				}
+> +			}
+> +		}
+> +	} else {
+> +		/*
+> +		 * Restoring to full mask.
+> +		 * Only resched if we previously squeezed an event.
+> +		 */
+> +		if (cpuc->host_squeezed) {
+> +			need_resched = true;
+> +			cpuc->host_squeezed = false;
+> +		}
+> +	}
+> +	if (!need_resched)
+> +		/* Host was never using guest counters anyway */
+> +		bitmap_copy(cpuc->cntr_mask, new_mask, ARMPMU_MAX_HWEVENTS);
+> +	local_irq_restore(flags);
+> +
+> +	if (need_resched) {
+> +		/* Collision: run full perf reschedule */
+> +		perf_pmu_resched_update(&cpu_pmu->pmu, kvm_pmu_update_mask, new_mask);
+> +	}
+> +}
+> +
+>   /**
+>    * kvm_pmu_host_counter_mask() - Compute bitmask of host-reserved counters
+>    *
+> @@ -255,6 +326,7 @@ static void kvm_pmu_apply_event_filter(struct kvm_vcpu *vcpu)
+>    */
+>   void kvm_pmu_load(struct kvm_vcpu *vcpu)
+>   {
+> +	struct arm_pmu *pmu;
+>   	unsigned long guest_counters;
+>   	u64 mask;
+>   	u8 i;
+> @@ -269,7 +341,9 @@ void kvm_pmu_load(struct kvm_vcpu *vcpu)
+>   
+>   	preempt_disable();
+>   
+> +	pmu = vcpu->kvm->arch.arm_pmu;
+>   	guest_counters = kvm_vcpu_pmu_guest_counter_mask(vcpu);
+> +	kvm_pmu_set_guest_counters(pmu, guest_counters);
+>   	kvm_pmu_apply_event_filter(vcpu);
+>   
+>   	for_each_set_bit(i, &guest_counters, ARMPMU_MAX_HWEVENTS) {
+> @@ -329,6 +403,7 @@ void kvm_pmu_load(struct kvm_vcpu *vcpu)
+>    */
+>   void kvm_pmu_put(struct kvm_vcpu *vcpu)
+>   {
+> +	struct arm_pmu *pmu;
+>   	unsigned long guest_counters;
+>   	unsigned long flags;
+>   	u64 mask;
+> @@ -345,6 +420,7 @@ void kvm_pmu_put(struct kvm_vcpu *vcpu)
+>   
+>   	preempt_disable();
+>   
+> +	pmu = vcpu->kvm->arch.arm_pmu;
+>   	guest_counters = kvm_vcpu_pmu_guest_counter_mask(vcpu);
+>   	mask = guest_counters;
+>   
+> @@ -395,5 +471,6 @@ void kvm_pmu_put(struct kvm_vcpu *vcpu)
+>   	write_sysreg(val & mask, pmovsclr_el0);
+>   	local_irq_restore(flags);
+>   
+> +	kvm_pmu_set_guest_counters(pmu, 0);
+>   	preempt_enable();
+>   }
+> diff --git a/include/linux/perf/arm_pmu.h b/include/linux/perf/arm_pmu.h
+> index be1e345e99a77..45658273ffa86 100644
+> --- a/include/linux/perf/arm_pmu.h
+> +++ b/include/linux/perf/arm_pmu.h
+> @@ -76,6 +76,7 @@ struct pmu_hw_events {
+>   
+>   	/* Active events requesting branch records */
+>   	unsigned int		branch_users;
+> +	bool host_squeezed;
+>   };
+>   
+>   enum armpmu_attr_groups {
+
