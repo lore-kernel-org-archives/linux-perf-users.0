@@ -1,44 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F31E4F55B3
-	for <linux-perf-users@vger.kernel.org>; Wed, 30 Sep 2026 21:10:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA35A42CAE7
+	for <linux-perf-users@vger.kernel.org>; Wed, 30 Sep 2026 21:10:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790802653; cv=none; b=dzlj/C0V6VvOvqt6Gx8iyQwdWX+vw+ouQeh74Dp1kZs+B5ltHkLPWxamyiu0Zu+3eF3OI7Qv5NYPJUpwhgHtRVCb9G/uvtO+eRlvB/dSR9PLxU1/rQRB+i/AzXkDcjEdM7f7KmPuSviMHUhpLZrRySu6Raz7Rk4AF/W6Mp3zdkw=
+	t=1790802658; cv=none; b=kzpIqiN0paDVgEpoLB4Jspm661ilmXyczk1m/w/JiEoTJeNS0HNKCy3eqUZhr42qm9dIns8uUUYEPFKD+03wQW9sfAzaXg06DOCHgQDEsEvSHXP6CL4pA1Kpcns6ymG6EObyC03THcC7B+eAFikwe64jkZkSLWBkxJaiTPhyz1M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790802653; c=relaxed/simple;
-	bh=Ivgb1rwYxUc1S0q8v7/wfPgF49/78uvwmClxnhHDwrw=;
+	s=arc-20240116; t=1790802658; c=relaxed/simple;
+	bh=st7/cWPZXTMfahEePY4wjQ4MO0qZsd5tOlUTskkEcBM=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=pXDVllNQIiluqUVwLImJVdGPoQDw3sOAywO0C4OfAyROjd7R+pcVDesp9KYbw0+Z7oIzDzTULLFAEkaWPl2TvfJWPywHn2+J3pepAQpIFwcFxCvhtKQa1uSrKjVl6ciFLNY4fgJA7vgpV2fHwAxyrb9xi/kUMWY4laD8Y8HAkh4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QYDzn30k; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=uJa93+wD0BadRTzXNVah8ixjVzu99NFHYZ4/D6C+Zpvu/L66eKRNBh9QGbdW4fDaI3A+HIdhF98eMykNdxJivzHfvb9IEQln1f6eVePC9YoQOegJxaZ6TmpWYaJRH+Q9Mt+kO2BTn52aAwcR+97ccgVPceflXEzhouh6hl/3ccc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OKoHJ/tO; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QYDzn30k"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8EFDA1F000FF;
-	Wed, 30 Sep 2026 21:10:51 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OKoHJ/tO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2E1641F000FF;
+	Wed, 30 Sep 2026 21:10:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1790802651;
-	bh=5kw7o0C4xtN1bpKMyJewq9U07FFjvqe6P6x7MXOPFqU=;
+	s=k20260515; t=1790802657;
+	bh=Lyfz5CARg519hLgbHk26vz7GOnYejQDx6kmUqLMpsnc=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=QYDzn30kGPYB8F5uRPKzDpZ9xeKwD0H2H56F2rqQ7IFtWewt3ZHb5t3vW5+98w1CX
-	 +8aqBRSovJHIp7yLIozRZpO4Jpy6FQQ+EbpQKh94s43tNHhTLPWH4kt6lE9yCl5t26
-	 7RRVOsxVHQOToyQ1uwAV15UVzg/Hj0P8MAc/LqM9tfwMG7DGz/gQPtsiaelauGSe3y
-	 baMTbb4/KaocJHnFWqHIaWkfdbMETWnkOM7UJpIpDrsqGESGU6U9ZFp5gLnFNUIwdw
-	 nAfOZ4v2OoNArVaGvzpFdrvxejFqle4YPhlqtYSuYTf7vWTeaYe82ZrgGrGY9N1JJG
-	 Ts4gNtvBRFeNg==
+	b=OKoHJ/tOKd65Ree1mu8Lnsph1novDlMH0XB8URrGZg1zUCypcA1XcJcTNNMe3okjb
+	 tCIWjR2GeEiTtP7vpM1xQs/FZhPcV9c1bnlBx/PKm9Rm1uIeL75rxDa9UwpVijBqeu
+	 A8m2hexAGHFgjTshrvJz6jHshEBtLmwbHtycOnqu19C4m41rkpyJpD/CWp5n2F3JgZ
+	 r8WCRjt1t4itpiH++LKmQwLY7hFazvt+XDWJjCr2rJVONmpQL58Fb6LyBsOzogcFio
+	 IG7PDknGS9xIQubQ6FF41hdt9FmE33zb5YTSYaT5JiCc1QmZA+4hTln9l7n4S+VJOZ
+	 cLTPlO9qV84Gg==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v2 1/3] perf dwarf-aux: Add die_is_compound_type() to
- handle C++ class types
+Subject: Re: [PATCH v2 2/3] perf dwarf-aux: Add C++ vtable helpers
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Yanbo Zhao" <yzhao62@ncsu.edu>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260930210038.196928-2-yzhao62@ncsu.edu>
+In-Reply-To: <20260930210038.196928-3-yzhao62@ncsu.edu>
 References: <20260930210038.196928-1-yzhao62@ncsu.edu>
- <20260930210038.196928-2-yzhao62@ncsu.edu>
+ <20260930210038.196928-3-yzhao62@ncsu.edu>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Wed, 30 Sep 2026 21:10:51 +0000
-Message-Id: <20260930211051.8EFDA1F000FF@smtp.kernel.org>
+Date: Wed, 30 Sep 2026 21:10:56 +0000
+Message-Id: <20260930211057.2E1641F000FF@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -47,94 +46,95 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
 Thank you for your contribution! Sashiko AI review found 2 potential issue(=
 s) to consider:
-- [High] perf/dwarf-aux: stack overflow in __die_find_member_offset_cb via =
-cyclic inheritance
-- [Medium] perf/dwarf-aux: flex array detection fails for C++ classes
+- [Medium] perf dwarf-aux: DW_AT_virtuality presence check incorrectly skip=
+s non-virtual bases
+- [Medium] perf dwarf-aux: infinite loop in C++ inheritance traversal on ma=
+lformed DWARF
 --
 
-commit 3f3b9b56b2e28f1713af3b40ab8946d5bbc8d245
+commit e1f1b87424c8d58d923a8c3fbc1408fa0ae0c3b9
 Author: Yanbo Zhao <yzhao62@ncsu.edu>
 
-perf dwarf-aux: Add die_is_compound_type() to handle C++ class types
-
-This commit introduces die_is_compound_type() to support C++ classes alongs=
-ide
-structs and unions. It also updates offset lookups to descend into base cla=
-ss
-subobjects using DW_TAG_inheritance entries.
+perf dwarf-aux: Add C++ vtable helpers
+   =20
+Add DWARF helper functions needed to resolve C++ virtual function calls
+statically in the data type profiling.
 
 > diff --git a/tools/perf/util/dwarf-aux.c b/tools/perf/util/dwarf-aux.c
-> index 54f8b5ec74a2f..eb4b8f3475df1 100644
+> index eb4b8f3475df1..b1f3dca057abb 100644
 > --- a/tools/perf/util/dwarf-aux.c
 > +++ b/tools/perf/util/dwarf-aux.c
-> @@ -61,6 +61,14 @@ const char *cu_get_comp_dir(Dwarf_Die *cu_die)
->  	return dwarf_formstring(&attr);
->  }
-> =20
-> +bool die_is_compound_type(Dwarf_Die *type_die)
+> @@ -2293,6 +2293,222 @@ Dwarf_Die *die_get_member_type(Dwarf_Die *type_di=
+e, int offset,
+> [ ... ]
+> +static int __die_find_primary_base_cb(Dwarf_Die *die_mem, void *arg __ma=
+ybe_unused)
 > +{
-> +	int tag =3D dwarf_tag(type_die);
+> +	Dwarf_Attribute attr;
+> +	Dwarf_Die base_die, vptr_die;
+> +	Dwarf_Word loc;
 > +
-> +	return tag =3D=3D DW_TAG_structure_type || tag =3D=3D DW_TAG_union_type=
- ||
-> +	       tag =3D=3D DW_TAG_class_type;
-> +}
+> +	if (dwarf_tag(die_mem) !=3D DW_TAG_inheritance)
+> +		return DIE_FIND_CB_SIBLING;
+> +
+> +	if (dwarf_attr_integrate(die_mem, DW_AT_virtuality, &attr))
+> +		return DIE_FIND_CB_SIBLING;
 
 [Severity: Medium]
-Does die_has_flex_array_recurse() also need to be updated to use this new
-helper?
+Does this code incorrectly skip valid primary base classes when parsing DWA=
+RF 5?
 
-If we look at die_has_flex_array_recurse() in tools/perf/util/dwarf-aux.c,
-it currently forces flex array detection to return false for C++ classes
-because it explicitly ignores DW_TAG_class_type:
+DWARF 5 allows DW_AT_virtuality to be present with the default value
+DW_VIRTUALITY_none (0x00).
 
-    if (tag !=3D DW_TAG_structure_type && tag !=3D DW_TAG_union_type)
-        return false;
-    ...
-    if (tag =3D=3D DW_TAG_structure_type && found) {
-        if (is_flex_array_member(&last_mb))
-            return true;
+If a compiler explicitly emits this default value, will the presence check
+evaluate to true and falsely identify the non-virtual base as virtual,
+skipping it?
 
-Could this cause accesses to flex array members inside C++ classes to be
-wrongly rejected as out-of-bounds?
-
-[ ... ]
-
-> @@ -2164,6 +2180,30 @@ static int __die_find_member_offset_cb(Dwarf_Die *=
-die_mem, void *arg)
->  			loc =3D 0;
->  	}
-> =20
-> +	if (tag =3D=3D DW_TAG_inheritance) {
-> +		Dwarf_Die base_die, member_die;
 > +
-> +		/*
-> +		 * A base class subobject can be smaller than the size of the
-> +		 * class type: an empty base takes no space (EBO) and a member
-> +		 * of the derived class can be placed in the tail padding of
-> +		 * the base.  In both cases a member of the derived class is
-> +		 * at the same offset as the base, so only match the base if
-> +		 * it actually has a member at the offset.
-> +		 */
-> +		if (offset < loc)
-> +			return DIE_FIND_CB_SIBLING;
+> +	if (die_get_data_member_location(die_mem, &loc) < 0 || loc !=3D 0)
+> [ ... ]
+> +Dwarf_Die *die_find_virtual_func(Dwarf_Die *class_die, int index,
+> +				 Dwarf_Die *die_mem)
+> +{
+> +	Dwarf_Die cur_die =3D *class_die;
+> +	Dwarf_Die base_die;
 > +
-> +		if (die_get_real_type(die_mem, &base_die) =3D=3D NULL)
-> +			return DIE_FIND_CB_SIBLING;
+> +	while (die_is_compound_type(&cur_die)) {
+
+[Severity: Medium]
+Can this loop hang indefinitely when processing malformed DWARF?
+
+If a maliciously crafted or malformed DWARF file contains cyclic inheritanc=
+e,
+die_get_real_type() resolves the type back to the current class.
+
+Since the loop does not maintain a depth counter or cycle detection, does it
+spin infinitely as it re-evaluates the same class type?
+
+> +		if (die_find_child(&cur_die, __die_find_virtual_func_cb,
+> +				   (void *)(long)index, die_mem))
+> +			return die_mem;
+> [ ... ]
+> +Dwarf_Die *die_get_vptr_class(Dwarf_Die *type_die, int offset,
+> +			      Dwarf_Die *die_mem)
+> +{
+> +	Dwarf_Die class_die =3D *type_die;
+> +	Dwarf_Die vptr_class =3D *type_die;
+> +	Dwarf_Die member_die, mb_type;
+> +	Dwarf_Word loc;
 > +
-> +		if (die_find_child(&base_die, __die_find_member_offset_cb,
-> +				   (void *)(long)(offset - loc), &member_die))
-> +			return DIE_FIND_CB_END;
+> +	while (die_is_compound_type(&class_die)) {
 
-[Severity: High]
-Does this recursive call into the DWARF child tree lack a depth limit?
+[Severity: Medium]
+Similarly, does this loop also lack a depth limit or cycle detection when
+traversing base class subobjects dynamically, risking infinite cycles on
+malformed DWARF?
 
-Unlike __add_member_cb(), there is no recursion depth limit tracked or
-enforced here. If a maliciously crafted or corrupted DWARF file contains
-cyclic inheritance (e.g., A inherits from B, B inherits from A), could
-this trigger unbounded mutual recursion between die_find_child() and
-__die_find_member_offset_cb(), rapidly exhausting the stack?
+> +		if (die_find_child(&class_die, __die_find_member_offset_cb,
+> +				   (void *)(long)offset, &member_die) =3D=3D NULL)
+> +			return NULL;
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260930210038.1969=
-28-1-yzhao62@ncsu.edu?part=3D1
+28-1-yzhao62@ncsu.edu?part=3D2
