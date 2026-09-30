@@ -1,30 +1,30 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 635A5455616;
-	Wed, 30 Sep 2026 20:16:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CC894DE70B;
+	Wed, 30 Sep 2026 20:20:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790799407; cv=none; b=dQQMdx+dy9En+gyDzPb7kSmQvOvt+CXxwt9hDx8Ocf0zuMye3/t5ISO3BP+bBps5PrAWV+74ge1O/rlFPnh5YulO1J/+eYTxYVCWr78VsYX2/5uLTbM5mnMQ3uNLnTDIWXrAJyt/vpLuHsM/8u1aVwGMAM25lUD2Bf9HQ/y5x30=
+	t=1790799654; cv=none; b=ICjPvU8ZFiUmP2q9ZxbfpOwT7k+bxcBFWCPhAhaYyfChtpn/kzhLIeSh+okLxCDkyF3fLRUwR3UW4kjwyeMv+Cx3V82AiayMIXanwlIMZW5OcBOnYp/ZH6SdhP9QHlp9KYSu0ZPLPUtCFxYi5O9TzKnpzO+6DOggiCAEnI/fnJQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790799407; c=relaxed/simple;
-	bh=YHhbmkGcjt0XJGtNB+k9UXRyMSzALCrYIS1gHah/Tc4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Wmyg4z3FsfFyu0OMudIpgB+O1hc+HuzCIbNKSqQwV615HM2uqfeoBMLqIBdXI8y1zCD6E5l0KlmHR1cOSnsnnXHgDUAhc4TIrUjI6lkPyG/OXPK/VJm4gD+aYYUbC07Z+wKKyczni2ZdrNuDHRjwRdm5psW936KDGtTHgdwjhbc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MUhZ/SW+; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1790799654; c=relaxed/simple;
+	bh=mJXb1CYIqK4AsS834i6sof1vL6Jqu8U27uRRKuT4BLw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=CG01DTZDMZbTB1EATzzZoykjFPWtC/ydTY3hWkeC5hZIN9SlVzHBe/9yJ7B1z2EnGA9/xwBq2+L6mbi8ApPApnhleD9RbHRyK9pKi9USA+OymXjpVRPK6MrHmq23F/pLJl7YT1m/m1cX46qwR+jkScSpfpdOKthFGS/N5asn+CU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MoGxCAG9; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MUhZ/SW+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2C3361F000FF;
-	Wed, 30 Sep 2026 20:16:41 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MoGxCAG9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 30E221F000FF;
+	Wed, 30 Sep 2026 20:20:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1790799406;
-	bh=r2+T9QlYhb8V1vGFMQT48Ttio8lY1V7v5DeS74DqK7c=;
+	s=k20260515; t=1790799653;
+	bh=mQynPCgYV0pRF+s8X9xrcuJxLtzPOpczaBeV0jQ1fi8=;
 	h=From:To:Cc:Subject:Date;
-	b=MUhZ/SW+wdxXKaINdpCiT7FPhkzLOP1L3JZ0x1CpB0QxRwpmRK82hw1oV9kQisCAI
-	 MwMnd2EbxKNZl5JomSbulKaXlOgoVOBTgeaVY0l/+u0uRd/hi4OpW3QBnJrIJgHi1L
-	 RrC/5p1MNMBTxUU251tG0cVgKTVfrJq5zNYTTq3J4d+xkHDbXfdMcVK9TSYDI4+Yvo
-	 s5fAipodWoxX8WcWhy+0Q95bUJkH9dbwx/GrNVWkira1yERqk7VyQAB/viXhvceoSh
-	 dGljzTBraD5AaCLhPmQcu+Zr3I7JWHzzQ4HqoxPBoX2PXHan7o3r4VprrUmP7jXYxH
-	 jGaEIhEtLfj7g==
+	b=MoGxCAG9N+AekbTdAmj8troBbe7u+ie0IwfXyRC561iY4ZLq0o1CVbPilgEjo7p/e
+	 m55iqq2rr41vwX1ZUgjmwIygCnGbsw7SQDJF+Gv/jdThvSs0rFfpdAAHRJYOT8iv0i
+	 /fvDoFnWuOp+1RuqXMruX5mwPMnKdoMnjuAqhGmQwsG7hkW7a6zek15L6qeGKqgkeu
+	 /H7tOafW9oiQB95iR+KITf9l2RPAPHAlt1kS3wgXPEjO9BKGyM7gKZqhgWrNjmv8bo
+	 nGxbbtlgT2I4CiZE0NG8oztElMHx/r3HmIy5c7mI50ZNgsj5+/+StPB6ahatzGHSP9
+	 3C/+/p8iA3BIw==
 From: Thorsten Blum <blum@kernel.org>
 To: Peter Zijlstra <peterz@infradead.org>,
 	Ingo Molnar <mingo@redhat.com>,
@@ -45,9 +45,9 @@ Cc: Thorsten Blum <blum@kernel.org>,
 	Dapeng Mi <dapeng1.mi@linux.intel.com>,
 	linux-perf-users@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH RESEND v2] perf/x86/intel/uncore: Use sysfs_emit() in uncore_event_show()
-Date: Wed, 30 Sep 2026 22:16:18 +0200
-Message-ID: <20260930201617.111270-2-blum@kernel.org>
+Subject: [PATCH RESEND] perf/x86/core: Simplify hybrid PMU registration failure path
+Date: Wed, 30 Sep 2026 22:20:18 +0200
+Message-ID: <20260930202016.111577-3-blum@kernel.org>
 X-Mailer: git-send-email 2.55.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -55,45 +55,56 @@ List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1395; i=blum@kernel.org; h=from:subject; bh=YHhbmkGcjt0XJGtNB+k9UXRyMSzALCrYIS1gHah/Tc4=; b=owGbwMvMwCUWt7pQ4caZUj3G02pJDFl78wR3Kl1Mnyijc8rs3OMb8/wDXr/ZfHQxI8tt221Wu Z7P9M3MOkpZGMS4GGTFFFkezPoxw7e0pnKTScROmDmsTCBDGLg4BWAiYuyMDMcCov1qar6Jsofd Vvxxt0xXRKr66HzfKs/KEN0kKc9HzAz/tE8L3fr3OuU5w9uHdxyakizuMHaF9pWFimrbGmq55wZ xAAA=
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1569; i=blum@kernel.org; h=from:subject; bh=mJXb1CYIqK4AsS834i6sof1vL6Jqu8U27uRRKuT4BLw=; b=owGbwMvMwCUWt7pQ4caZUj3G02pJDFl78xnCNQ4u+5ZkFXn6XNSvc30Byg+aD+2KnyXE+qfik EndPZGtHaUsDGJcDLJiiiwPZv2Y4VtaU7nJJGInzBxWJpAhDFycAjCRl9MY/odqP4j94r/i6vc2 LwUj8bjZ5Zo/ukw/Be3W/qsxLfRG7zVGhm+HDiTtmy/y89CUzTzlV9K6tpaG+l98ZzP9duDiQH0 nPk4A
 X-Developer-Key: i=blum@kernel.org; a=openpgp; fpr=1D60735E8AEF3BE473B69D84733678FD8DFEEAD4
 Content-Transfer-Encoding: 8bit
 
-Replace sprintf() with sysfs_emit() in uncore_event_show(). sysfs_emit()
-is preferred for formatting sysfs output because it provides safer
-bounds checking.
+Handle perf_pmu_register() errors directly instead of breaking out of
+the registration loop and checking the index separately. Reuse the loop
+index i to unregister any previously registered PMUs in reverse order
+and drop the extra index j.
 
-Add a terminating newline as suggested by checkpatch.
+Also log the failing PMU's name and error code.
 
-Acked-by: Namhyung Kim <namhyung@kernel.org>
-Signed-off-by: Thorsten Blum <blum@kernel.org>
 Reviewed-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
-Reviewed-by: Ian Rogers <irogers@google.com>
+Signed-off-by: Thorsten Blum <blum@kernel.org>
 ---
-Changes in v2:
-- Add a terminating newline as suggested by checkpatch
-- v1: https://lore.kernel.org/r/20260206194254.36105-2-thorsten.blum@linux.dev/
----
- arch/x86/events/intel/uncore.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ arch/x86/events/core.c | 18 ++++++++----------
+ 1 file changed, 8 insertions(+), 10 deletions(-)
 
-diff --git a/arch/x86/events/intel/uncore.c b/arch/x86/events/intel/uncore.c
-index b2109b37ea7f..b35a779e9b17 100644
---- a/arch/x86/events/intel/uncore.c
-+++ b/arch/x86/events/intel/uncore.c
-@@ -1,5 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0-only
- #include <linux/module.h>
-+#include <linux/sysfs.h>
+diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
+index 9b1a9032e36d..6c7f9c8e3b24 100644
+--- a/arch/x86/events/core.c
++++ b/arch/x86/events/core.c
+@@ -2714,7 +2714,7 @@ static int __init init_hw_perf_events(void)
+ 			goto out2;
+ 	} else {
+ 		struct x86_hybrid_pmu *hybrid_pmu;
+-		int i, j;
++		int i;
  
- #include <asm/cpu_device_id.h>
- #include <asm/intel-family.h>
-@@ -153,7 +154,7 @@ ssize_t uncore_event_show(struct device *dev,
- {
- 	struct uncore_event_desc *event =
- 		container_of(attr, struct uncore_event_desc, attr);
--	return sprintf(buf, "%s", event->config);
-+	return sysfs_emit(buf, "%s\n", event->config);
- }
+ 		for (i = 0; i < x86_pmu.num_hybrid_pmus; i++) {
+ 			hybrid_pmu = &x86_pmu.hybrid_pmu[i];
+@@ -2725,15 +2725,13 @@ static int __init init_hw_perf_events(void)
  
- struct intel_uncore_box *uncore_pmu_to_box(struct intel_uncore_pmu *pmu, int cpu)
+ 			err = perf_pmu_register(&hybrid_pmu->pmu, hybrid_pmu->name,
+ 						(hybrid_pmu->pmu_type == hybrid_big) ? PERF_TYPE_RAW : -1);
+-			if (err)
+-				break;
+-		}
+-
+-		if (i < x86_pmu.num_hybrid_pmus) {
+-			for (j = 0; j < i; j++)
+-				perf_pmu_unregister(&x86_pmu.hybrid_pmu[j].pmu);
+-			pr_warn("Failed to register hybrid PMUs\n");
+-			goto out2;
++			if (err) {
++				while (i--)
++					perf_pmu_unregister(&x86_pmu.hybrid_pmu[i].pmu);
++				pr_warn("Failed to register hybrid PMU %s: %d\n",
++					hybrid_pmu->name, err);
++				goto out2;
++			}
+ 		}
+ 	}
+ 
