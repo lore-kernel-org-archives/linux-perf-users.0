@@ -1,96 +1,96 @@
-Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
+Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A395651DE1C
-	for <linux-perf-users@vger.kernel.org>; Wed, 30 Sep 2026 17:44:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AB275208BA
+	for <linux-perf-users@vger.kernel.org>; Wed, 30 Sep 2026 17:45:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.177
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790790300; cv=pass; b=KA9sTLtQc9Sv4i7Hp32FHTnAadGX2H0fox5GRHBH5t7LJuf8zNIfXa9WtCNep5NWbgtV045Pe7WOPtZnZ5CHZ4J/XLSqZeUSwv4OWeKzUxEz8jYfo4U0PNYoU3pU99ni5c0eRbvxdu5fodZmULNDJdWE/4DlMzOB7+hOovIa78I=
+	t=1790790354; cv=pass; b=jAxaNFsIDIbbR95kVkrb7TWBvShbAFLCTv9Fcsws1iq/Uwb3nkxK+L87dYBlrq/1qMYPvoPSrIlAUptftNInRuLCnwEG+7Htn2zxx9ObhgDy6xMRc4EIngxVkGjvmZpsn/Foy7LbTo9RpzvHLk4pLI03tyM6f8EkEN+A9G/ritg=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790790300; c=relaxed/simple;
-	bh=dTMeDWBANZwX4zFzq7MAqH9ZhFq7Chw/56eNHl++Lw8=;
+	s=arc-20240116; t=1790790354; c=relaxed/simple;
+	bh=pVumn0Fo0Z/w/+LO3c6ave9SWS9g+8WQZ+u7BTWnxvY=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=c0lHZH9shSLFDHDb/k6GqsEvw/6uiXFFVQfsI9m+hflkb9t3lP71/bC3jb85i2ZRjpsbSfhnLmPzmfeVXiGQfmWuCnxhXPdQEvkBsIUd0RhTHHk4cqbQorr3uEncstLVyzhVc6raIf+NDutZAOwURovL/TxhUAgblw4cjGGKCRI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=aEmEfaBd; arc=pass smtp.client-ip=209.85.214.175
+	 To:Cc:Content-Type; b=Vm/kXVqvbavWG7Nbs3ESiHMZtR3/OW9d1ahyWxTTL/AcMGwbUIvb547ThhaxQ1qturDHk89IMWJkhm+LxVAQSNR/YbNdtz5KT9MYyuT+RnfFeBxVf2XWl6K0MsR7CP6jDbmgK3tDEgRM+TumMVR9FNGfkfB4Csv3tzsPuAJoFsM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=EJFjUS/o; arc=pass smtp.client-ip=209.85.214.177
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="aEmEfaBd"
-Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-2d8fd7a3f38so6685ad.1
-        for <linux-perf-users@vger.kernel.org>; Wed, 30 Sep 2026 10:44:58 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1790790298; cv=none;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="EJFjUS/o"
+Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-2e2e4ef20beso6795ad.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 30 Sep 2026 10:45:52 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1790790352; cv=none;
         d=google.com; s=arc-20260327;
-        b=n5q4XqYsAW+5ESuhprc0/9aBOGskBPJqqrcIM3qcMI+te8c4mJuHyYZwYDJVlFeq4v
-         yE0TZMmzu2muEB8D70m1dnvh0yXiHGVq6LdkUr5QHVN3Lcb71Q0rcwFi1zWkPm/FstMl
-         Mq8WQ5xZPvdmhfNt/9moArWqnkkyVWNLYmW0icookFpJe46KtJ/FQnKIts3iT8sTmgQZ
-         ILrfMX+0ThYilY0GTEFUvczSoEOQ8a+YeNNuu0nh+FBq9iBpYp3m+lEkwmrYwsjfhZQK
-         pwpDBm71OP7h7SQqS7bL4uyPQH6O9c84QcFJZEW2YZAtPCkezICMUa9RhoouOIZdDuTW
-         MU/w==
+        b=BO4P5qZpKQrkjZ+kLDdmX/F8jZEuutkxc9pJaZ4Zlp8qH9yCCkEMAN+PpxoVJzvWOc
+         pgfI11bzGQLg2X+nYQxObmgkSYDggdu0LdVoRALlcckylzOaxRmle8PK2+Olf7TO2BoR
+         Ls60Np7Ew3bD15B+gzJ0pWg9K0yrKb7YsY4N/UAyGhg7fGBQ8hNqK5tXQUu7KICHQ4xL
+         M2kCGUAukR6+xlgdaTr2mphRCSDznSMj4PAHYBB0jqfSkVQ+AW1zGeXfCSd+gLECoFO6
+         SETI/48eycPJtzMupzz9RsuUreXPQFgib91LN7LM0IHqR74GcBjYEmzEDieqgAp6+vQS
+         WNMw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:dkim-signature;
-        bh=vngjmlHD1xi99YkDD1eun3vfRJyktfk498bj+4C7248=;
-        fh=CRqBOSNf3FiTT9gZcBSmshpsfAK2yOtvFmVMH4DRqmM=;
-        b=OS8ygXMju3CwW/GseNwgCnI4DKVsAwmyMe9AFE0GqPT66rD6MuClMdxQ4udmHLaI0R
-         2eisRxZE3OqkubMWiiAQaWb0w7UaLi1QT5VDLs/Rk1z7ZVTc107LBBfmk0D/OEgV0a66
-         3bJKf2JrS6dUNSWJR11yDiRGOMLm+e+Xv9BRDm1JmoSNFOdQrsXikIRnVZBXOhw/M+vO
-         GV3Z94TMCzMYiBOi10lzUkkXtWyddZWJIqoCRq14QTYCIe5tjT3YBMn7i7DhdbB1VG+8
-         Hn1+l7o7Xy72MzRZXbAdcrHLYoJDIYgLTvuOzLhfiDrUbXKSeCMTrFlHMPoKwPNOocOR
-         B3eg==;
+        bh=745lyEoVbjciTEzOpvKdu3hogLTn3ptSICKnH9CyO6A=;
+        fh=ZBuH1pIVCg1wzSzuMl6kyGM6YzdeqysITGwIQZLn6CY=;
+        b=QuuqJ5t8Gsm2/wJuG0Uk6G9o6Ndwb+2ejKGa6zvlXColc4+GnM52CYGMx2DYcJZaGA
+         FXoetl86Yb2GseCSUAefLq7jOT4Hibl/Eys+gZM9exFhg51HuyfsMHBUkxNbjewJwt8B
+         u9G4tUp+yRp1ceL2qXgplUWRd2uS3wtRgzQyQE5Qp91kDMYNhDksog5qd7qRXwkjpNzb
+         Sh2k1ku1VA8qxEKVYftBZ7jijC2XLS3TPGOy+Z3Pe/R1bzlVWnEos+y0qWp34Rt1rwDk
+         U7j7/7Sdkq6SL0dVOBpt7JNDX5Zn39Snf9Mqp6hJg8c9wsvIbjnLUO7TdpG73Iayv0eQ
+         ZCCg==;
         darn=vger.kernel.org
 ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1790790298; x=1791395098; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1790790352; x=1791395152; darn=vger.kernel.org;
         h=content-transfer-encoding:content-type:cc:to:subject:message-id
          :date:from:in-reply-to:references:mime-version:from:to:cc:subject
          :date:message-id:reply-to:content-type;
-        bh=vngjmlHD1xi99YkDD1eun3vfRJyktfk498bj+4C7248=;
-        b=aEmEfaBdRi1bvohp0k0CgcmSYMB9bBPTOVPMGa3b12RwXohDhrDrc4J7o+aKZ8nLg6
-         NcMj0hmX3Hz1NmRspa/fQ3i1YimdscIwU0oQ0MOZUq5A7V9N+9NSPrCdIZcDXgiAcr8k
-         ofCPvjpsBLstwl+jPw7xSv+IWy80ROBx9DJTZCvNcgwlbedt9SaVeNFiQ1DGZZ0lxC3n
-         jwIzMA0WjjVZtergorxUoP1a20w0k3CPh6D/7lWiKlT1HOp0dXB9i/LY1awQdjf0Ri80
-         3IatRmy11MqdJqMpJcjGIgr49F+UqVV2DfLXZep6Rt+omQ+02gXytBXUm0er9pAaFVeK
-         NgtA==
+        bh=745lyEoVbjciTEzOpvKdu3hogLTn3ptSICKnH9CyO6A=;
+        b=EJFjUS/oL3BZt+Y6WK3ESm7MOyNzzaaetWmYRD/xd9fm9OkgLCTfXPRBqiYGpwKrKV
+         /xecn1iURtNlI6NFHRHrNNShBlYsJ/Hm3za3jMufMGgKvcIKvHlT3RAiREMrNvbtytcB
+         MyDgpbTZ51ZMocv6cAkGrHNluNeW0fgfAgGrVHBmBCQQWRg1BAPAtrLbZM4Gk8xA6y9I
+         VYhQjbNln1VFQZbCg8p/fR32xyMFeKO5VlXd9CHBmsnnBFKOo56wPfrTzuicMnbKx8TX
+         j4uZNXwlbmo6gOUFVNbIrn9j7VSMd8uceh6/agEbIXG9dnD/+/T+OsngwcD9DK2dJi+w
+         SZTA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1790790298; x=1791395098;
+        d=1e100.net; s=20260707; t=1790790352; x=1791395152;
         h=content-transfer-encoding:content-type:cc:to:subject:message-id
          :date:from:in-reply-to:references:mime-version:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=vngjmlHD1xi99YkDD1eun3vfRJyktfk498bj+4C7248=;
-        b=v9iy5n3h0vBuPjNbTcYK4lEUmpCtwf8xKa9sWVr64AoWTlWx+R3oqsWqvaiVLb3+57
-         4mOSMjbyva1XxIP6v2QseKPmsAgMUHC7I7tOubpHv9f2uUNbAKyT7DVh5P/sU2Gq3+eQ
-         SnkunLMnhnQCBs/dVXOBNehBl246ptl0Vn9mj38S1Vb0ee8WlLFxqEFk/vwyfPak0PEI
-         ygLQCAoJ4Dsh2upl7EdLy0CYx2vfcQg4UPKkoCdkxKy4CVzH8jJ802NHSDiS9rTq+O9/
-         +p185yLhLThdnuN3O9I5dooSiIehVQLOBpc8BUkMx50fwl2WzmPsrhpGhdJaTXgNnFI/
-         tYGQ==
-X-Forwarded-Encrypted: i=1; AKwUvByDdU4iqZFk/EIEJzkiQt96EXhwd0kWY7/7ddeacF0J79I5KP6jYpNhjLZpCDLnBDGBq2zNqFL+BpIHmEeRfHns@vger.kernel.org
-X-Gm-Message-State: AFq9FYJE+GBV0vBeNc4HxggOg5t+19X3LfPXuK4DnzigS28yysLwvtBg
-	itxpWgPfUlg1tEqgws+8PCTKNibexJ75hxQzr9wmLCaI8hOdBnKlmmzaZsoZHtM9wCvELfB2zES
-	8CHzLNjnZU0NnH5cJrIO88W3bBB4qX29lEyENRw1m
-X-Gm-Gg: AYBFou0thOeYu5lzB6sguSO2szOdJQ+vgORANEU/Cnyr3leWVUp9g9/yOsgNAR9b5jA
-	bh3webUq2GJ/v/xV/3zWnLn6PCLwFIL0pe8L0wX2Q89Hn2+gUtHgwiJlgqkqb8cgBgFFTRUyqGn
-	JG8wBvmuittxyqYXaoTtkLsGSmqXrklpboZnhajP88F7nkgEeIpyvFd5vXj6gpAMaS96yreZ5uJ
-	qqyyp31p6EikL2Qi2nMgKWCmAhS1kW/iQ9jFvZfiWYvN/HjX9g4DLLaugKnmmXQ1ako5c8L89Q/
-	zPi0rr2dS+NkQY8lqsjuVqOtFZPTsu44x1Rltx4Ur+0vmGO+L5tybdGqDqZQ7qjV7ercKoVoJvj
-	ThVd+YIwkQw==
-X-Received: by 2002:a17:902:e54c:b0:2df:96ca:d7c7 with SMTP id
- d9443c01a7336-2e301dece82mr251145ad.10.1790790297249; Wed, 30 Sep 2026
- 10:44:57 -0700 (PDT)
+        bh=745lyEoVbjciTEzOpvKdu3hogLTn3ptSICKnH9CyO6A=;
+        b=rFv3Il0l6dA2nwcJ/BPA7TPhIy7OqWLsnyK1gyqBbrejITiwtKvWKsCJiZwbZeu1Cd
+         dSb6NtcwsCF8AOM87yZn1uOJYTXF+TKGHwu4+Xw8ouZkJ/0yhL76KC1gc78z3OlQomMe
+         ISz4h0n5ohyFjDR5+mIO/Hjbt3ex2vjh7t+U+sVcvZvMP67odkCkkcb02yyZjtWEmc0X
+         6mVWn4xjfbTxawgs8ldf0vA1pJ7yJwJLDr931AoY8vK4ug0vZUk2TH3hK04FfqJoj0AP
+         lZTy2QnCDTJWENVk9vrVZ5Pz1EXa0/R2KgmbtSzKiMSfe7zTKuiluT0vjcLeU+47RAHU
+         +l7Q==
+X-Forwarded-Encrypted: i=1; AKwUvByI7sy0xO52eoGUsUhQr6/hMlfOocykQ07PVBQ2ayMvWtykxFSBQfjlPpdFuu5k1ZyowVdbzFhJqbfVrBsCjXVp@vger.kernel.org
+X-Gm-Message-State: AFq9FYJGSUX4FMnK5YIsXt0flDwNEF2yVxE0mIrObMYJTOia9XA8I3NM
+	8cAvGHPjN+6gXlxy/CaJjNdXYB9NDqgwQnhMTA8EjGd+wnj0y+lZxXlDj8wLVCxlgXrZVGpiHfm
+	0kE8a86co5C9FH0Z0GiMYvJd408YuwqkteyCnTN71
+X-Gm-Gg: AYBFou0zRqw7/WF2H3I+krfNG7NG9v03HjaVVmkmL/H6Odzuw51EvDN6Uj5plh/oyZn
+	9I67beKLHgM42McpocR9xfAtlTCfqxqH8QKQfVDlND40fzv4SlGYxYZxo7HgyvlSHcAO+7O2aWu
+	RT24ec90OJlBhWUatjUg+29J5bnChj2vTyUGww7aODdeEf8ooUpxbl0+Yv4+bQKqq91/3nNhKBk
+	rcNjIc6mT3Z/R1+dmJj08Dc2aOEv90iK//0ITprGHn+vVrqbIAxYcTYXom7ak7BYdeF1YqXACw2
+	xh5Amsk+OpQOvgxFF2K7BGKOBRsIwNPIa/e2xGn5E2EHBXZIfHyZilRdDXd3+lUpP0Ognj+ErVf
+	XK9sy4abTxQ==
+X-Received: by 2002:a17:903:440c:b0:2ca:bf8e:360b with SMTP id
+ d9443c01a7336-2e301ae0dcbmr343165ad.9.1790790351709; Wed, 30 Sep 2026
+ 10:45:51 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260930-perf_fix_pylint_errors-v2-0-945cd526576b@arm.com> <20260930-perf_fix_pylint_errors-v2-1-945cd526576b@arm.com>
-In-Reply-To: <20260930-perf_fix_pylint_errors-v2-1-945cd526576b@arm.com>
+References: <20260930-perf_fix_pylint_errors-v2-0-945cd526576b@arm.com> <20260930-perf_fix_pylint_errors-v2-2-945cd526576b@arm.com>
+In-Reply-To: <20260930-perf_fix_pylint_errors-v2-2-945cd526576b@arm.com>
 From: Ian Rogers <irogers@google.com>
-Date: Wed, 30 Sep 2026 10:44:43 -0700
-X-Gm-Features: AclHuK8Q8xPg6i3xX-fz2gQbZHAvDFk-QDgWrco9bghsWQtgt8BR2aK1_aiIAF0
-Message-ID: <CAP-5=fWco1iTWud2Z19bpBQMgNC1E6TcyZU6unjdZsi7NJgz1Q@mail.gmail.com>
-Subject: Re: [PATCH v2 1/4] perf build: Build the Python extension before
- pylint consumers
+Date: Wed, 30 Sep 2026 10:45:38 -0700
+X-Gm-Features: AclHuK96gSFJbCoU7KxewvSZZwDRlAoq9ZSjsa8u-XvTg7Cf3dwYi2d78g4fo5A
+Message-ID: <CAP-5=fXwsY4DAL3qfNzdAF6SipeGP-YURhVDZzjCgdkXety_KA@mail.gmail.com>
+Subject: Re: [PATCH v2 2/4] perf build: Add the output Python directory to
+ pylint's PYTHONPATH
 To: Leo Yan <leo.yan@arm.com>
 Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
 	Adrian Hunter <adrian.hunter@intel.com>, James Clark <james.clark@linaro.org>, 
@@ -101,97 +101,42 @@ Content-Transfer-Encoding: quoted-printable
 
 On Wed, Sep 30, 2026 at 6:11=E2=80=AFAM Leo Yan <leo.yan@arm.com> wrote:
 >
-> Pylint checks for tests and standalone Python scripts can run before the
-> perf Python extension is available. On a clean parallel build, an import
-> error can stop make before the extension is built.
+> Prepend the output Python directory to pylint's PYTHONPATH so builds
+> using O=3D can also find the generated extension.
 >
-> Run the script and test pylint checks in separate sub-makes after the
-> language bindings are built. Keep their rules in the respective Build
-> files so the perf and perf-test C sub-makes can compile concurrently with
-> util and the Python extension. An isolated make perf does not need to
-> build the extension just for these checks.
->
-> Fixes: 8a54784e708b ("perf build: Add pylint build tests")
+> Fixes: 5fe83fb352c8 ("perf build: Make pylint build test opt-out (NO_PYLI=
+NT=3D1)")
 > Reported-by: Aishwarya TCV <aishwarya.tcv@arm.com>
 > Assisted-by: Codex:gpt-6
 > Signed-off-by: Leo Yan <leo.yan@arm.com>
 
 Reviewed-by: Ian Rogers <irogers@google.com>
 
-Thanks Leo! Should we do the same thing for mypy and shellcheck? This
-should help overall build performance.
-
+Thanks!
 Ian
 
 > ---
->  tools/perf/Build         |  4 +++-
->  tools/perf/Makefile.perf | 15 +++++++++++++++
->  tools/perf/tests/Build   |  4 +++-
->  3 files changed, 21 insertions(+), 2 deletions(-)
+>  tools/perf/Makefile.perf | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 >
-> diff --git a/tools/perf/Build b/tools/perf/Build
-> index 8a0b5592a973384deafc5bb5cc7ed0cc91e0257e..09fd88f5aca54118a9b089e9c=
-20124e23de77517 100644
-> --- a/tools/perf/Build
-> +++ b/tools/perf/Build
-> @@ -102,4 +102,6 @@ $(OUTPUT)%.pylint_log: %
->         $(call rule_mkdir)
->         $(Q)$(call echo-cmd,test)$(PYLINT) "$<" > $@ || (cat $@ && rm $@ =
-&& false)
->
-> -perf-y +=3D $(PYLINT_TEST_LOGS)
-> +.PHONY: pylint
-> +pylint: $(addprefix $(OUTPUT),$(PYLINT_TEST_LOGS))
-> +       @:
 > diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
-> index 0102c3468a0b79fb22966d8cbd8fa8525d2ff3ae..0eb4e7c29c400021907d3da71=
-6bc4871f0df8d88 100644
+> index 0eb4e7c29c400021907d3da716bc4871f0df8d88..7ceefc1da774625d9f48d3bb0=
+498ceb819b84d26 100644
 > --- a/tools/perf/Makefile.perf
 > +++ b/tools/perf/Makefile.perf
-> @@ -578,6 +578,7 @@ strip: $(PROGRAMS) $(OUTPUT)perf
->         $(STRIP) $(STRIP_OPTS) $(PROGRAMS) $(OUTPUT)perf
->
->  PERF_IN :=3D $(OUTPUT)perf-in.o
-> +
->  export NO_JEVENTS
->
->  build :=3D -f $(srctree)/tools/build/Makefile.build dir=3D. obj
-> @@ -633,6 +634,20 @@ $(SCRIPTS) : $(OUTPUT)% : %.sh
->  $(OUTPUT)PERF-VERSION-FILE: .FORCE-PERF-VERSION-FILE
->         $(Q)$(SHELL_PATH) util/PERF-VERSION-GEN $(OUTPUT)
->
-> +ifdef PYLINT
-> +# Run Python checks after the extension is ready, independently of C bui=
-lds.
-> +all: pylint-perf pylint-tests
-> +.PHONY: pylint-perf pylint-tests
-> +
-> +pylint-perf pylint-tests: | $(LANG_BINDINGS)
-> +
-> +pylint-perf:
-> +       $(Q)$(MAKE) $(build)=3Dperf pylint
-> +
-> +pylint-tests:
-> +       $(Q)$(MAKE) $(build)=3Dperf-test dir=3Dtests pylint
-> +endif
-> +
->  # These can record PERF_VERSION
->  perf.spec $(SCRIPTS) \
->         : $(OUTPUT)PERF-VERSION-FILE
-> diff --git a/tools/perf/tests/Build b/tools/perf/tests/Build
-> index 8fecd539012429c0f517d95f145a91137333322b..05c545aac73232a322652a611=
-9c3178f39b83145 100644
-> --- a/tools/perf/tests/Build
-> +++ b/tools/perf/tests/Build
-> @@ -119,4 +119,6 @@ $(OUTPUT)%.pylint_log: %
->         $(call rule_mkdir)
->         $(Q)$(call echo-cmd,test)$(PYLINT) "$<" > $@ || (cat $@ && rm $@ =
-&& false)
->
-> -perf-test-y +=3D $(PYLINT_TEST_LOGS)
-> +.PHONY: pylint
-> +pylint: $(addprefix $(OUTPUT)tests/,$(PYLINT_TEST_LOGS))
-> +       @:
+> @@ -310,7 +310,7 @@ ifneq ($(force_fixdep),1)
+>        $(warning Warning: pylint version is older than 2.16.0, skipping p=
+ylint checks.)
+>        override PYLINT :=3D
+>      else
+> -      override PYLINT :=3D PYTHONPATH=3D$(srctree)/tools/perf/python:$(s=
+rctree)/tools/perf/pmu-events \
+> +      override PYLINT :=3D PYTHONPATH=3D$(abspath $(OUTPUT)python):$(src=
+tree)/tools/perf/python:$(srctree)/tools/perf/pmu-events \
+>          $(PYLINT) --disable=3Dall --enable=3DE,W --disable=3DW0123,W0311=
+,W0511,W0603,W0622,W0718 \
+>          --ignored-modules=3Dtextual,setproctitle
+>      endif
 >
 > --
 > 2.34.1
