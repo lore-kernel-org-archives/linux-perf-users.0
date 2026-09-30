@@ -1,191 +1,207 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA92A509EF1;
-	Wed, 30 Sep 2026 17:32:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790789569; cv=none; b=FRDTKQuRMAKGJeoP2o19k02PfpxCVPw19nIYoLo//e4JD+o9A5P8r7ex8d81a1BvySVaepNuOSAsSC9ca67ptif5KgO13gysVWWkuD4vLUk02ZqX6s+baDTc8G0hePug1nqV1lN31rQk0GIXBXuxk4O+lnI2KJtovakpz0wbR6I=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790789569; c=relaxed/simple;
-	bh=HrEKcgBPnWFjFAT8UAfCtF1p1BPdH2urAL8TbXl5cgY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RFHX7VMhmLV5lbctfmniu0eGQpDWb5yFJKsDOMHxJSgdy2lB92R/D9yALmVVdZa0mzmFpEoWxu0t1+GwSAlZ3APuFYIYpT4zc2boNsxFNHK85n473BAW5cDQHKeJfq8MUha3YLV/v0QzOO+QEGNkWcJBTub7FW0TeZ6bAwassJw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FfvGSQVe; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3033E52844E
+	for <linux-perf-users@vger.kernel.org>; Wed, 30 Sep 2026 17:39:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.180
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1790789999; cv=pass; b=qub9LiXNJvCr9VwMidRd9tONWJUpxDHMJId+ic828eyLottINj1dtAjMfKg7aQHZC2Vs9qSl8f6RTEhMYqmJHrcyVfvF8EbDoKoLiGOWWkjd+bJzGFlFHebRmdlv6EEXkCdVqSofF41jy1L3FLkbtkfOE7HQ1ApoiAdVi3Lqo9o=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1790789999; c=relaxed/simple;
+	bh=KN/Rqtx7rGY8tNQcOlCkzLKItNYw0df2BnSud3LUPxc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=WxEi99l74rS5gH8IzrPjMN3xYpDNe0Ebr4N9V3SmUkX4izO6jlH3To+ybKTeCrysbq6zNyTH1H/Ur1/waswSoI4dhYkIuOK6cC4cdgEqL9YiuOmRq0dEmFeRMr2UYwFdoY7Ot0NBT7Bo/ofTyp8fNhX5/sJA3mXHNu+OtJA5Eg0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=KjvB2znI; arc=pass smtp.client-ip=209.85.214.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FfvGSQVe"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EB3641F0089B;
-	Wed, 30 Sep 2026 17:32:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1790789567;
-	bh=PeSvKXfbWgn2drrRT648IyKRy5Xkg3VzOhKONMfuMA4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=FfvGSQVe/I2E79RYRrSImI/7xozLXbS0THkSv6iRyYTOCxt4SquSA3vfnk10Dyz0B
-	 l8Vyjc+tJwsZMD4m67wUblWc82uqzhfHvgz3L17ZLbab2STA54TSWrAg9Jo7hnEfQ8
-	 Sl/wAKCAVwWCD5plO1uXf82KGpczof60sKhx2nhqlns4+jRk/vyZHW3Kk+ta52WawK
-	 uZLa8iweyKFU9GB88NVbOaygmzrpUNf126glR94lxXw/XxGXQM6ErDuX6EllSyi7Gt
-	 lemrdX2vgouKRVG5LUvoO0e1plsKhrXSGY/N86Aqr7YGkP554eCdIuYXmP3KdE7gxW
-	 DPR15rGBjBqog==
-Date: Wed, 30 Sep 2026 19:32:43 +0200
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Namhyung Kim <namhyung@kernel.org>, Aaron Tomlin <atomlin@atomlin.com>,
-	Howard Chu <howardchu95@gmail.com>, Jakub Brnak <jbrnak@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>, Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	James Clark <james.clark@linaro.org>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v6 00/26] perf trace: Fix BPF filtering and make tracing
- tests non-exclusive
-Message-ID: <ar1HuxPsRpiOZ_4K@x2>
-References: <cover.1790145937.git.irogers@google.com>
- <20260928182605.3649015-1-irogers@google.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KjvB2znI"
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-2d8fd7a3f38so6295ad.1
+        for <linux-perf-users@vger.kernel.org>; Wed, 30 Sep 2026 10:39:57 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1790789997; cv=none;
+        d=google.com; s=arc-20260327;
+        b=X2Vg4iRBaqkHi7i9YMJGggNtx38Uoldy9mF5Tl9ZeO3IV1VwD0XExPIiDZ3vx/5CQ2
+         QlK2S/XfGpzSNUgZ8KVPZZYKNsiqbNOL9a29cJplaccyKy7CYFM4groAa/vFv/aS7Xa9
+         mkNVLjCmDCDBTq/4OkZ35POoge11rjmORAp5bPkJIAoZAptSVCwg0gxWDJpeTKiZT2xI
+         TfikImKYj0DPym9JhLXh6LSYi8XE39Ti8sKNsMyVUpvM1zoMTwL1pkTfKZTF3UKhG2PM
+         IYqjy0vLIq9QYya6iVRRxItV6yfBTGe/Vgjph6ek240AY9Lb4Wc3AH+KHSNnn1QX0XqV
+         CgrQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=xeSOziaumI9XifhmcFeHCXHccq2sADh9JjkKw2o1NPs=;
+        fh=/i8hHft2UGoMRBqsilQk2++Hl2Vcj3JXY9rRSiLyubE=;
+        b=ZLdyvbkk3Nv8SozjpFJuoVjRcV1GjPwKrWhnYR9ZBMGpJN483XugRICLGUp2NVrqcZ
+         aQmsvwQGgA7ZbAH3pZPDVX52fUsAHi0JdpOYNJ+Whkik4H3CpZiORTQjgpzjvBK3Ba6d
+         qvySvmh9LqUchfhVhA0oGBqvFkKSIXsKR8M3gT3blrpGL3UZi4juKAHnpXpwVrmr/XSZ
+         lwAaJlR4Avj99Rn8CzXkM+UXONilhxoavnZcgCTLy8vDQwjoj+ro7hXYqfYqWw0EGzn8
+         +BEVoDj6vY2xEKw+UTRCDcE2Q+jKDoj5Gjik4iC8nZ8GCLDH8hktT9cJZnphvEWwGc7Z
+         4asQ==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1790789997; x=1791394797; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=xeSOziaumI9XifhmcFeHCXHccq2sADh9JjkKw2o1NPs=;
+        b=KjvB2znILURAlKkCUGNtfuYyGHhaAw7uRCpTsbRzFHJYmjJj1+C62XvJIA33lG6NcD
+         24RLvQCxzlIFm7aucSI4HBcFob35qZ4w96q5/uBajzZbUNrEJmake+wgo0l/133Li+5z
+         qDnUCb9t+KWu5ZUxgijFnpf+Gg6bk6W141cBMgTm9omXsq4ipw7Va+2vnuthMn04RKQu
+         Fv0FzfeOKYKDfg/QeBtJW3eVRjGkpKIQ1M+IOJz0f6PAhGCT/8ky5oIOknfMBq1mNvqD
+         d84LROdRCrvfEy7DZmg+jxxjBUFUUvPnxIDJMY1Ogj7Wr7hrLVY0UavPlEoX6MnymOpn
+         h0XA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1790789997; x=1791394797;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=xeSOziaumI9XifhmcFeHCXHccq2sADh9JjkKw2o1NPs=;
+        b=viemdcsDOpo74tA6qm8Q9Bp/mhGwKQRlya3ylYrzV8vvu+NrfGDwZpOxtmPvejgUFG
+         LP89UqFKNVySHHNDnlF8qys5nvNqHRbp9gMRAkUh6RgM5iWAYGFfJDUqEjvy0LddL9J9
+         lklWZgKIS7YVT5zhX/85rPpzKGkLm5RCmAuSsxiK2POnTNvjw/QC+JBuxoJMinMTTbYZ
+         b10pDgsI6oEeH1/KmTVpeWBQfTeAaBmOnTiyz1nzT3yrcHZHmjxtYeaas4HvxTBvr4fO
+         UtYsoviFZtetCeH7lRFAwZxo8rYkBTPJ3Te9e4bAIQXprrnWgRRaXfxmKtrGcgLpzHdZ
+         LBwg==
+X-Forwarded-Encrypted: i=1; AKwUvBw6fbZpNk0V7YbRRX+M94shF8cKPOcuTw0E9kLzc8gZcZ5JP9l7F/S2YuqoaUVEq8f9IBYDbMtY5/gSZR4CzedN@vger.kernel.org
+X-Gm-Message-State: AFq9FYKL4b3qdZBpip42bxJswPUfvSViKVgy9VmpqGbN++x0orfaS49j
+	IFv4YWCm2azs+CM9g0R7S8ESIEk5wUS6NARaJMfKTPJEcgHo0RnCrX3M1yrwwxi0KQkQ8YJmagN
+	kt3AVeGfyfPREeqUCLZ0bbPotU/Z3dtRv6TxFm9U+
+X-Gm-Gg: AYBFou3zcCrWFQUiin6vwelqnKpl9sMpWSqtD7nSafLzBS1zd9O60fdavRXGDHS0YyC
+	sscw+pjQqnVzlMsf+fxinqGS9hcZC3efY4UaN4zP5enAg97gkzX7pQyQOigw86ttjVMlZay7Y44
+	Yx6+igL4G2anf3fP2L0732r7LtfcIHuGo58JMGe7MiuHhxyuhjlNjKaJaSDvNb5e96fARAm8GkO
+	6ZqeQPSHHsT2Sp+q0bI4eP7Q/n/LjG0RY4ImrNJ1PFJ+7QuJgr7GKlY1SS/C/VYzq35qs8oFTbB
+	8obI0TFHEst2TuFzqiDbSuSYTwQzu7oTiJMVmjyjR+3Dqgz2Emvb/s5STmwDhNhee9FXJMNxEYO
+	qiBl7826+kPf7hZ/dZ+sS
+X-Received: by 2002:a17:903:440c:b0:2ca:bf8e:360b with SMTP id
+ d9443c01a7336-2e301ae0dcbmr307005ad.9.1790789996691; Wed, 30 Sep 2026
+ 10:39:56 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260928182605.3649015-1-irogers@google.com>
+References: <20260930-perf_fix_pylint_errors-v2-0-945cd526576b@arm.com> <20260930-perf_fix_pylint_errors-v2-3-945cd526576b@arm.com>
+In-Reply-To: <20260930-perf_fix_pylint_errors-v2-3-945cd526576b@arm.com>
+From: Ian Rogers <irogers@google.com>
+Date: Wed, 30 Sep 2026 10:39:36 -0700
+X-Gm-Features: AclHuK9kLeMrfwk9I-RYYoof2MH0Qg05_NtpTwJTjZx8s_pCEExP8FfQ-LN3U-8
+Message-ID: <CAP-5=fVzy-=8ryObpHWiW6WDcvpW7SqRkAWwmNvoSgQmgz-3gQ@mail.gmail.com>
+Subject: Re: [PATCH v2 3/4] perf test: Suppress optparse deprecation warning
+ with older pylint
+To: Leo Yan <leo.yan@arm.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, James Clark <james.clark@linaro.org>, 
+	Aishwarya TCV <aishwarya.tcv@arm.com>, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Sep 28, 2026 at 11:25:39AM -0700, Ian Rogers wrote:
-> perf trace's BPF programs return 0 from raw_syscalls:sys_{enter,exit} to
-> filter, which drops the event for every other session using the
-> tracepoint. Fix that, and bugs found on the way, so the perf trace and
-> probe tests can run in parallel.
+On Wed, Sep 30, 2026 at 6:11=E2=80=AFAM Leo Yan <leo.yan@arm.com> wrote:
+>
+> Python 3.13 reversed optparse's deprecation, and pylint 3.3.5 removed it
+> from the deprecated-module list. Perf supports older pylint versions,
+> so suppress the warning on this import and document the reason. Keep
+> other deprecated-module diagnostics enabled.
+>
+> Link: https://docs.python.org/3.13/whatsnew/3.13.html#optparse
+> Link: https://pylint.readthedocs.io/en/latest/whatsnew/3/3.3/index.html#w=
+hat-s-new-in-pylint-3-3-5
+> Fixes: 8a54784e708b ("perf build: Add pylint build tests")
+> Reported-by: Aishwarya TCV <aishwarya.tcv@arm.com>
+> Assisted-by: Codex:gpt-6
+> Signed-off-by: Leo Yan <leo.yan@arm.com>
+> ---
+>  tools/perf/tests/shell/lib/attr.py | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+>
+> diff --git a/tools/perf/tests/shell/lib/attr.py b/tools/perf/tests/shell/=
+lib/attr.py
+> index 7f3d5b64b00dd7de45baff4f7d9baff89e003147..523257bcf8e126cb662af5897=
+27144bb26cff4d5 100644
+> --- a/tools/perf/tests/shell/lib/attr.py
+> +++ b/tools/perf/tests/shell/lib/attr.py
+> @@ -4,7 +4,8 @@ import configparser
+>  import os
+>  import sys
+>  import glob
+> -import optparse
+> +# Pylint before 3.3.5 still treats optparse as deprecated.
+> +import optparse  # pylint: disable=3Ddeprecated-module
 
-Applied the first 4 patches so far,
+Thanks Leo! Could we just update to argparse here?
+```
+diff --git a/tools/perf/tests/shell/lib/attr.py
+b/tools/perf/tests/shell/lib/attr.py
+index 7f3d5b64b00d..68f06df9565a 100644
+--- a/tools/perf/tests/shell/lib/attr.py
++++ b/tools/perf/tests/shell/lib/attr.py
+@@ -4,7 +4,7 @@ import configparser
+ import os
+ import sys
+ import glob
+-import optparse
++import argparse
+ import platform
+ import tempfile
+ import logging
+@@ -426,29 +426,20 @@ def setup_log(verbose):
+     ch.setFormatter(formatter)
+     log.addHandler(ch)
 
-- Arnaldo
- 
-> Patches 1-6 fix reading augmented arguments.
-> 
-> Patches 7-10 fix starting the BPF summary, and the syscall tracepoints'
-> internal fields being taken for arguments.
-> 
-> Patches 11-18 fix the filtering. Namhyung's series [2], patches 11, 17
-> and 18, sends sys_exit as well as sys_enter through the bpf-output event
-> so nothing is vetoed. That event only works for the first thread of a
-> task target and not for its children, so patches 14-16 open it on every
-> CPU and select the target's tasks in BPF, keyed by process when
-> inheriting. Patch 19 adds --no-syscall-augment.
-> 
-> Patches 20-26 scope the tests' probes and events to their pid so they
-> can drop the exclusive tag.
-> 
-> Aaron's series [1] overlaps patches 4 and 5, whose approach was
-> preferred. In [1], 3/7 steps over a string by its size rounded up to 8,
-> but the BTF augmenter packs arguments unaligned, so the second path of
-> rename-like syscalls is misread. 2/7 doesn't step over the zero sized
-> argument a failed read leaves, so the next argument rereads it. [1] also
-> has checkpatch warnings, Reported-by without Closes: and 112 column
-> lines.
-> 
-> >From [2], Jakub's 1/5, using the kernel's syscall tracepoint structs, is
-> left out as these fixes don't need it and patches 1, 2, 15 and 17 change
-> the same code. It can follow on top. 3/5 adds common_type to the existing
-> structs instead and, among the changes noted in it, always returns 1
-> from augmented__output(), as returning 0 from the tail called augmenters
-> still vetoed the tracepoint. 5/5 keeps trace+probe_vfs_getname.sh
-> exclusive, as without BPF every perf trace opens its probe.
-> 
-> The series applies on top of [3], which fixes the vfs_getname tests on
-> v7.0+ kernels and changes the same lines as patch 21.
-> 
-> Tested on x86_64, the trace and probe tests pass under 'perf test -r3'.
-> Every patch builds with and without BUILD_BPF_SKEL.
-> 
-> [1] https://lore.kernel.org/r/20260919005530.728615-1-atomlin@atomlin.com
-> [2] https://lore.kernel.org/r/20250814071754.193265-1-namhyung@kernel.org
-> [3] https://lore.kernel.org/r/20260926223905.6865105-1-irogers@google.com
-> 
-> v6:
->  - Shorter commit messages and comments (Namhyung).
->  - Keep v5 8-9/23 as patches 4 and 5 rather than Aaron's [1], see above.
->  - New patch 6 copies sockaddr arguments by their length, so IPv6
->    addresses are shown.
->  - Namhyung's 2-4/5 with patches 15 and 16 replace v5 11-15/23, and his
->    5/5 replaces v5 22/23, see above.
->  - Seed the target's tasks before the events are opened, rather than
->    re-reading /proc after attaching, keyed by process when inheriting.
->    Tasks that don't fit are reported as lost, suggesting
->    --no-syscall-augment.
->  - Patch 14 moves bpf-filter's convert_to_tgid() to thread_map.c, fixing
->    a read after free and a comm containing "Tgid:" being taken for it.
->  - Split v5 7/23 into patches 8-10, stopping at the first internal
->    field (Namhyung).
->  - --no-syscall-augment is its own patch (Namhyung).
->  - Drop v5 3-5/23, now applied.
->  - Drop v5 16/23, as perf-tools-next's port of task-analyzer to the perf
->    module made the same change.
-> 
-> Ian Rogers (22):
->   perf trace: Set the augmented arg header in the augmenters that omit
->     it
->   perf trace: Include the augmented arg header in nanosleep's payload
->     length
->   perf trace: Don't read sample padding as an augmented argument
->   perf trace: Bounds check augmented arguments before reading them
->   perf trace: Bound the fixed size augmented argument beautifiers
->   perf trace: Copy sockaddr arguments by their length
->   perf trace: Start BPF summary before starting workload
->   perf trace: Stop at internal fields when walking syscall arguments
->   perf trace: Don't allocate syscall arg formats for internal fields
->   perf trace: Only take augmented arguments from the BPF output event
->   perf trace: Use the CPU map index for the BPF output event's fds
->   perf trace: Destroy the BPF skeleton if it fails to load
->   perf thread_map: Add thread_map__tgid()
->   perf trace: Filter the target's tasks in BPF
->   perf trace: Open the BPF output event on every CPU for task targets
->   perf trace: Add an option to disable syscall augmentation
->   perf test common: Only disable probes in clear_all_probes
->   perf test probe_vfs_getname: Scope probe name to PID and make
->     non-exclusive
->   perf test record+probe_libc_inet_pton: Scope event to PID and make
->     non-exclusive
->   perf test trace_summary: Improve error diagnostics
->   perf test trace_btf_general: Drop --max-events=1 and make
->     non-exclusive
->   perf test uprobe_from_different_cu: Scope probe name to PID
-> 
-> Namhyung Kim (4):
->   perf trace: Split unaugmented sys_exit program
->   perf trace: Do not return 0 from syscall tracepoint BPF
->   perf trace: Remove unused code
->   perf test: Remove exclusive tag from perf trace tests
-> 
->  tools/perf/Documentation/perf-trace.txt       |   6 +
->  tools/perf/builtin-trace.c                    | 441 ++++++++++--------
->  tools/perf/tests/shell/common/init.sh         |  21 +-
->  .../perf/tests/shell/lib/probe_vfs_getname.sh |  25 +-
->  tools/perf/tests/shell/probe_vfs_getname.sh   |   3 +-
->  .../shell/record+probe_libc_inet_pton.sh      |  85 +++-
->  .../shell/record+script_probe_vfs_getname.sh  |  16 +-
->  .../shell/test_uprobe_from_different_cu.sh    |   7 +-
->  .../tests/shell/trace+probe_vfs_getname.sh    |   5 +
->  tools/perf/tests/shell/trace_btf_general.sh   |   8 +-
->  tools/perf/tests/shell/trace_summary.sh       |  15 +-
->  tools/perf/trace/beauty/beauty.h              |  17 +
->  tools/perf/trace/beauty/perf_event_open.c     |  31 +-
->  tools/perf/trace/beauty/sockaddr.c            |  49 +-
->  tools/perf/trace/beauty/timespec.c            |   2 +-
->  tools/perf/util/bpf-filter.c                  |  29 +-
->  .../bpf_skel/augmented_raw_syscalls.bpf.c     | 210 +++++++--
->  tools/perf/util/bpf_skel/perf_trace_u.h       |  14 +
->  tools/perf/util/bpf_skel/vmlinux/vmlinux.h    |   9 +
->  tools/perf/util/bpf_trace_augment.c           |  89 +++-
->  tools/perf/util/thread_map.c                  |  26 ++
->  tools/perf/util/thread_map.h                  |   1 +
->  tools/perf/util/trace_augment.h               |  34 +-
->  23 files changed, 800 insertions(+), 343 deletions(-)
->  create mode 100644 tools/perf/util/bpf_skel/perf_trace_u.h
-> 
-> 
-> base-commit: 0ae6fc78c5ce0dfd18d8712a50f0fd4602eff103
-> prerequisite-patch-id: 8c69aafd92a5783df1ce11b7ab792ab39508380e
-> -- 
-> 2.56.0.rc1.315.gc6ed9934b7-goog
-> 
+-USAGE =3D '''%s [OPTIONS]
+-  -d dir  # tests dir
+-  -p path # perf binary
+-  -t test # single test
+-  -v      # verbose level
+-''' % sys.argv[0]
+-
+ def main():
+-    parser =3D optparse.OptionParser(usage=3DUSAGE)
+-
+-    parser.add_option("-t", "--test",
+-                      action=3D"store", type=3D"string", dest=3D"test")
+-    parser.add_option("-d", "--test-dir",
+-                      action=3D"store", type=3D"string", dest=3D"test_dir"=
+)
+-    parser.add_option("-p", "--perf",
+-                      action=3D"store", type=3D"string", dest=3D"perf")
+-    parser.add_option("-v", "--verbose",
+-                      default=3D0, action=3D"count", dest=3D"verbose")
+-
+-    options, args =3D parser.parse_args()
+-    if args:
+-        parser.error('FAILED wrong arguments %s' %  ' '.join(args))
+-        return -1
++    parser =3D argparse.ArgumentParser()
++
++    parser.add_argument("-t", "--test",
++                        action=3D"store", dest=3D"test", help=3D"single te=
+st")
++    parser.add_argument("-d", "--test-dir",
++                        action=3D"store", dest=3D"test_dir", help=3D"tests=
+ dir")
++    parser.add_argument("-p", "--perf",
++                        action=3D"store", dest=3D"perf", help=3D"perf bina=
+ry")
++    parser.add_argument("-v", "--verbose",
++                        default=3D0, action=3D"count", dest=3D"verbose",
++                        help=3D"verbose level")
++
++    options =3D parser.parse_args()
+
+     setup_log(options.verbose)
+```
+
+Thanks,
+Ian
+
+>  import platform
+>  import tempfile
+>  import logging
+>
+> --
+> 2.34.1
+>
