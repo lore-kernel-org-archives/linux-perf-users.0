@@ -1,207 +1,242 @@
-Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from DU2PR03CU002.outbound.protection.outlook.com (mail-northeuropeazon11011039.outbound.protection.outlook.com [52.101.65.39])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3033E52844E
-	for <linux-perf-users@vger.kernel.org>; Wed, 30 Sep 2026 17:39:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.180
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790789999; cv=pass; b=qub9LiXNJvCr9VwMidRd9tONWJUpxDHMJId+ic828eyLottINj1dtAjMfKg7aQHZC2Vs9qSl8f6RTEhMYqmJHrcyVfvF8EbDoKoLiGOWWkjd+bJzGFlFHebRmdlv6EEXkCdVqSofF41jy1L3FLkbtkfOE7HQ1ApoiAdVi3Lqo9o=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790789999; c=relaxed/simple;
-	bh=KN/Rqtx7rGY8tNQcOlCkzLKItNYw0df2BnSud3LUPxc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=WxEi99l74rS5gH8IzrPjMN3xYpDNe0Ebr4N9V3SmUkX4izO6jlH3To+ybKTeCrysbq6zNyTH1H/Ur1/waswSoI4dhYkIuOK6cC4cdgEqL9YiuOmRq0dEmFeRMr2UYwFdoY7Ot0NBT7Bo/ofTyp8fNhX5/sJA3mXHNu+OtJA5Eg0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=KjvB2znI; arc=pass smtp.client-ip=209.85.214.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21C3951FCC8;
+	Wed, 30 Sep 2026 17:41:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.65.39
+ARC-Seal:i=3; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1790790076; cv=fail; b=byFItsMhAEfHEu0K6KByRh4L6y/YwewryC6ltk8kRqqsERkBcjz3Nz30H9ZJSFAh0sr6z/IjGe1C2tG4aSEKRBB+ypsaon5nTvsgu3DSxREmKfUGuPIsC4pSE+Njy35O+whWIy+UKJLiLxOvj9nLa+9pFNLJTZoSNuxeP0Oa5bA=
+ARC-Message-Signature:i=3; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1790790076; c=relaxed/simple;
+	bh=0fRGPtoQ+NQVLfyjBT6ARAJLDTGEzmajzQsOs5jGVSY=;
+	h=Message-ID:Date:Cc:Subject:To:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=In4wVSecJNKGSbOC3GF23f8a8dcuPcD6YCW9AynOD2+1VbDWW7cYPt27kMaqzYnbP/eLaEpb0fUPBhZXCLEl1BHjOdlAE4Zq2ok19PAPB7qXt+YhNvN4gaBW8tBpd8cEPOre2uFUQzhIm+8PwJ7qTsP9cqnpYTqNFmyoKmauosE=
+ARC-Authentication-Results:i=3; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=oDOAon48; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=oDOAon48; arc=fail smtp.client-ip=52.101.65.39
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KjvB2znI"
-Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-2d8fd7a3f38so6295ad.1
-        for <linux-perf-users@vger.kernel.org>; Wed, 30 Sep 2026 10:39:57 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1790789997; cv=none;
-        d=google.com; s=arc-20260327;
-        b=X2Vg4iRBaqkHi7i9YMJGggNtx38Uoldy9mF5Tl9ZeO3IV1VwD0XExPIiDZ3vx/5CQ2
-         QlK2S/XfGpzSNUgZ8KVPZZYKNsiqbNOL9a29cJplaccyKy7CYFM4groAa/vFv/aS7Xa9
-         mkNVLjCmDCDBTq/4OkZ35POoge11rjmORAp5bPkJIAoZAptSVCwg0gxWDJpeTKiZT2xI
-         TfikImKYj0DPym9JhLXh6LSYi8XE39Ti8sKNsMyVUpvM1zoMTwL1pkTfKZTF3UKhG2PM
-         IYqjy0vLIq9QYya6iVRRxItV6yfBTGe/Vgjph6ek240AY9Lb4Wc3AH+KHSNnn1QX0XqV
-         CgrQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=xeSOziaumI9XifhmcFeHCXHccq2sADh9JjkKw2o1NPs=;
-        fh=/i8hHft2UGoMRBqsilQk2++Hl2Vcj3JXY9rRSiLyubE=;
-        b=ZLdyvbkk3Nv8SozjpFJuoVjRcV1GjPwKrWhnYR9ZBMGpJN483XugRICLGUp2NVrqcZ
-         aQmsvwQGgA7ZbAH3pZPDVX52fUsAHi0JdpOYNJ+Whkik4H3CpZiORTQjgpzjvBK3Ba6d
-         qvySvmh9LqUchfhVhA0oGBqvFkKSIXsKR8M3gT3blrpGL3UZi4juKAHnpXpwVrmr/XSZ
-         lwAaJlR4Avj99Rn8CzXkM+UXONilhxoavnZcgCTLy8vDQwjoj+ro7hXYqfYqWw0EGzn8
-         +BEVoDj6vY2xEKw+UTRCDcE2Q+jKDoj5Gjik4iC8nZ8GCLDH8hktT9cJZnphvEWwGc7Z
-         4asQ==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1790789997; x=1791394797; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=xeSOziaumI9XifhmcFeHCXHccq2sADh9JjkKw2o1NPs=;
-        b=KjvB2znILURAlKkCUGNtfuYyGHhaAw7uRCpTsbRzFHJYmjJj1+C62XvJIA33lG6NcD
-         24RLvQCxzlIFm7aucSI4HBcFob35qZ4w96q5/uBajzZbUNrEJmake+wgo0l/133Li+5z
-         qDnUCb9t+KWu5ZUxgijFnpf+Gg6bk6W141cBMgTm9omXsq4ipw7Va+2vnuthMn04RKQu
-         Fv0FzfeOKYKDfg/QeBtJW3eVRjGkpKIQ1M+IOJz0f6PAhGCT/8ky5oIOknfMBq1mNvqD
-         d84LROdRCrvfEy7DZmg+jxxjBUFUUvPnxIDJMY1Ogj7Wr7hrLVY0UavPlEoX6MnymOpn
-         h0XA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1790789997; x=1791394797;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=xeSOziaumI9XifhmcFeHCXHccq2sADh9JjkKw2o1NPs=;
-        b=viemdcsDOpo74tA6qm8Q9Bp/mhGwKQRlya3ylYrzV8vvu+NrfGDwZpOxtmPvejgUFG
-         LP89UqFKNVySHHNDnlF8qys5nvNqHRbp9gMRAkUh6RgM5iWAYGFfJDUqEjvy0LddL9J9
-         lklWZgKIS7YVT5zhX/85rPpzKGkLm5RCmAuSsxiK2POnTNvjw/QC+JBuxoJMinMTTbYZ
-         b10pDgsI6oEeH1/KmTVpeWBQfTeAaBmOnTiyz1nzT3yrcHZHmjxtYeaas4HvxTBvr4fO
-         UtYsoviFZtetCeH7lRFAwZxo8rYkBTPJ3Te9e4bAIQXprrnWgRRaXfxmKtrGcgLpzHdZ
-         LBwg==
-X-Forwarded-Encrypted: i=1; AKwUvBw6fbZpNk0V7YbRRX+M94shF8cKPOcuTw0E9kLzc8gZcZ5JP9l7F/S2YuqoaUVEq8f9IBYDbMtY5/gSZR4CzedN@vger.kernel.org
-X-Gm-Message-State: AFq9FYKL4b3qdZBpip42bxJswPUfvSViKVgy9VmpqGbN++x0orfaS49j
-	IFv4YWCm2azs+CM9g0R7S8ESIEk5wUS6NARaJMfKTPJEcgHo0RnCrX3M1yrwwxi0KQkQ8YJmagN
-	kt3AVeGfyfPREeqUCLZ0bbPotU/Z3dtRv6TxFm9U+
-X-Gm-Gg: AYBFou3zcCrWFQUiin6vwelqnKpl9sMpWSqtD7nSafLzBS1zd9O60fdavRXGDHS0YyC
-	sscw+pjQqnVzlMsf+fxinqGS9hcZC3efY4UaN4zP5enAg97gkzX7pQyQOigw86ttjVMlZay7Y44
-	Yx6+igL4G2anf3fP2L0732r7LtfcIHuGo58JMGe7MiuHhxyuhjlNjKaJaSDvNb5e96fARAm8GkO
-	6ZqeQPSHHsT2Sp+q0bI4eP7Q/n/LjG0RY4ImrNJ1PFJ+7QuJgr7GKlY1SS/C/VYzq35qs8oFTbB
-	8obI0TFHEst2TuFzqiDbSuSYTwQzu7oTiJMVmjyjR+3Dqgz2Emvb/s5STmwDhNhee9FXJMNxEYO
-	qiBl7826+kPf7hZ/dZ+sS
-X-Received: by 2002:a17:903:440c:b0:2ca:bf8e:360b with SMTP id
- d9443c01a7336-2e301ae0dcbmr307005ad.9.1790789996691; Wed, 30 Sep 2026
- 10:39:56 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="oDOAon48";
+	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="oDOAon48"
+ARC-Seal: i=2; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=pass;
+ b=rnmT8kao+W+92vbrU+1X5YqYwSCJzV9dgvDMeKGltPUdCc1kSpS2h9VyOlJAmEFDk4zZOYgww7dk/oAvjjC+lr2TuM3Q3ZGbytMliClaT1mhu2m49Pzl2SvKZCLGfuINNZaFj0Gso9da3LKabAV8ht7DBcl5qoMQfk+Lu5yetWiq64hTfH1k1UUQVOa+zjfgovW8unB7me7tLvbHYVz8/phB5xoaocpaqYJDc+E1JI99XNl9aT2tlmyJTMz3GSTpNjTz+dm068OX1V1zSFb1HLq6kQOucFGAipSET9MehkMYZycMrIFWY4HusmPr5B9OYBiw6UJEdVmLkUdXXGM/2Q==
+ARC-Message-Signature: i=2; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=6Dj3mza0d7acfswRMgXyXAp0FLYQUvs4v9I7WURo1EM=;
+ b=wZiqYr0SPoLlLzTjnKBNL1ao93XBR+kDf0TbPItLGPBZpPta+vJE6OCxsbb2TSfHgBXc4Z1K+5qs+tVD+xHySY7EwRqQO9e/tNVi0pfozQaXaVZqPhOJ08adNn/j3OXrHsP3MRz0K4QN4mNdIM20RsEO9t+MUbX5dIHNeMJqugSVTonGmQkmZIcgTGLvkDRjBzCEfOxWe6HGI323vtIE2v6yTqIpwD9nl65cPNimpPzHs0KEZmIJF2CTxruHBqWHdZkZq64+J8TSQfG1owQzKxs3CfM/f7lK5E2z2WquCAseXpjGyQj1BkpxrlCTs7lk874q5CD4rTsu/As6oGfawA==
+ARC-Authentication-Results: i=2; mx.microsoft.com 1; spf=pass (sender ip is
+ 4.158.2.129) smtp.rcpttodomain=linux-foundation.org smtp.mailfrom=arm.com;
+ dmarc=pass (p=none sp=none pct=100) action=none header.from=arm.com;
+ dkim=pass (signature was verified) header.d=arm.com; arc=pass (0 oda=1 ltdi=1
+ spf=[1,1,smtp.mailfrom=arm.com] dkim=[1,1,header.d=arm.com]
+ dmarc=[1,1,header.from=arm.com])
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arm.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=6Dj3mza0d7acfswRMgXyXAp0FLYQUvs4v9I7WURo1EM=;
+ b=oDOAon48OeBS6pTAWmIZUiQfOFqJqq0xC/o9Tw0s5gOjXQnDoL+hPmSOeIkUgQpL+YkpspeF+nomKaA5eICb+l8wbbqFVNLMc+h2jYeZCLL8eWRyN5teXiYFyGCxF3PiWxHeWL27e/t/Lx4Wc8Ar2gbhQeb+jWPPxZ9fx1sWosc=
+Received: from VI1P189CA0011.EURP189.PROD.OUTLOOK.COM (2603:10a6:802:2a::24)
+ by DU5PR08MB10677.eurprd08.prod.outlook.com (2603:10a6:10:529::6) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.472.14; Wed, 30 Sep
+ 2026 17:41:08 +0000
+Received: from MI3PEPF00008485.eurprd02.prod.outlook.com
+ (2603:10a6:802:2a:cafe::7d) by VI1P189CA0011.outlook.office365.com
+ (2603:10a6:802:2a::24) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.21.472.14 via Frontend Transport; Wed,
+ 30 Sep 2026 17:41:08 +0000
+X-MS-Exchange-Authentication-Results: mx.microsoft.com 1; spf=pass (sender IP
+ is 4.158.2.129) smtp.mailfrom=arm.com; dkim=pass (signature was verified)
+ header.d=arm.com;dmarc=pass action=none header.from=arm.com;
+Received-SPF: Pass (protection.outlook.com: domain of arm.com designates
+ 4.158.2.129 as permitted sender) receiver=protection.outlook.com;
+ client-ip=4.158.2.129; helo=outbound-uk1.az.dlp.m.darktrace.com; pr=C
+Received: from outbound-uk1.az.dlp.m.darktrace.com (4.158.2.129) by
+ MI3PEPF00008485.mail.protection.outlook.com (10.167.240.132) with Microsoft
+ SMTP Server (version=TLS1_3, cipher=TLS_AES_256_GCM_SHA384) id 15.21.472.14
+ via Frontend Transport; Wed, 30 Sep 2026 17:41:07 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=MUZQb3FAg7yfr2Gmy65jr58i8W7Vn13ARnWdNaUoxX4nsvwmwZAYBAvK52SM7RPBMA2jLKTeQjot5JDkgVcSPC0SS8AwTnJk98aLdlWmxhB5rSXOtR9ObN/iQuVdnX9h+nqy3v5PNsCyJlHIxrBuL8X0wN46uF7tSgaiHR6juqe3StVFe6EsN4NDOC1bxNmKJXhedpIAypEaraZX1M3DGRFk242WiBT7OFtCCP7JdLl0ExLB8cgNGhE/KrUI/Tt0BztagRXiX1POKo2JsuG+t/qydQMUn72csR4mKdNUwNAWwKN7iFmH3KJGd9CWc3hTXN0c/p7FDr7kHl8F0WvnqQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=6Dj3mza0d7acfswRMgXyXAp0FLYQUvs4v9I7WURo1EM=;
+ b=VLFluQFA4wUPvgWQqHMQT8kDLgBsVRnxlZBM2UP9tj/aZn2yC8vHyHQ6aCyngsOl2jw1YVXg2vvUYrtRFUOjt2qSKRMJRLXwcLedBPPi/rSTLR6a58omQe6iS0Wy2Qy7j+InZjL+X7H7Nsw8dFepQKnkClXmiELQhiy59cz3a6X+33l1HbEA3fUL/r6kGULXPlrpsGNC4yAIchLd9ZWe9jIqgL+PG4kxLz0UfXY+FTQZGUyBohS33RTOyu6lSBqOGBis73hp3IXIcD6+/uVStswqXKLNKazfxIMVc6Wv1dgJGlfQ/NNyoOrvBOlL+Qg2X0od6iYBNk9IrjA4zDEiHQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
+ header.d=arm.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arm.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=6Dj3mza0d7acfswRMgXyXAp0FLYQUvs4v9I7WURo1EM=;
+ b=oDOAon48OeBS6pTAWmIZUiQfOFqJqq0xC/o9Tw0s5gOjXQnDoL+hPmSOeIkUgQpL+YkpspeF+nomKaA5eICb+l8wbbqFVNLMc+h2jYeZCLL8eWRyN5teXiYFyGCxF3PiWxHeWL27e/t/Lx4Wc8Ar2gbhQeb+jWPPxZ9fx1sWosc=
+Authentication-Results-Original: mx.microsoft.com 1; dkim=none (message not
+ signed) header.d=none;dmarc=none action=none header.from=arm.com;
+Received: from VI1PR08MB3421.eurprd08.prod.outlook.com (2603:10a6:803:80::16)
+ by AS8PR08MB9840.eurprd08.prod.outlook.com (2603:10a6:20b:613::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.472.7; Wed, 30 Sep
+ 2026 17:40:33 +0000
+Received: from VI1PR08MB3421.eurprd08.prod.outlook.com
+ ([fe80::e079:6bd:fbe0:89b4]) by VI1PR08MB3421.eurprd08.prod.outlook.com
+ ([fe80::e079:6bd:fbe0:89b4%3]) with mapi id 15.21.0472.012; Wed, 30 Sep 2026
+ 17:40:33 +0000
+Message-ID: <63db3469-82d0-4997-9bcf-31bb3aa59deb@arm.com>
+Date: Wed, 30 Sep 2026 18:40:28 +0100
+User-Agent: Mozilla Thunderbird
+Cc: usama.anjum@arm.com, Andrew Morton <akpm@linux-foundation.org>,
+ David Hildenbrand <david@kernel.org>, Lorenzo Stoakes <ljs@kernel.org>,
+ "Liam R. Howlett" <liam@infradead.org>, Vlastimil Babka <vbabka@kernel.org>,
+ Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>,
+ Michal Hocko <mhocko@suse.com>, Xu Xin <xu.xin16@zte.com.cn>,
+ Chengming Zhou <chengming.zhou@linux.dev>, Jann Horn <jannh@google.com>,
+ Muchun Song <muchun.song@linux.dev>, Oscar Salvador <osalvador@suse.de>,
+ Pedro Falcato <pfalcato@suse.de>, Arnd Bergmann <arnd@arndb.de>,
+ Will Deacon <will@kernel.org>, "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>,
+ Nick Piggin <npiggin@gmail.com>, Peter Zijlstra <peterz@infradead.org>,
+ Pasha Tatashin <pasha.tatashin@soleen.com>, Rik van Riel <riel@surriel.com>,
+ Harry Yoo <harry@kernel.org>, Lance Yang <lance.yang@linux.dev>,
+ Chris Li <chrisl@kernel.org>, Kairui Song <kasong@tencent.com>,
+ Kemeng Shi <shikemeng@huaweicloud.com>, Nhat Pham <nphamcs@gmail.com>,
+ Baoquan He <baoquan.he@linux.dev>, Barry Song <baohua@kernel.org>,
+ Youngjun Park <youngjun.park@lge.com>, Uladzislau Rezki <urezki@gmail.com>,
+ Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
+ Andrii Nakryiko <andrii@kernel.org>, Eduard Zingerman <eddyz87@gmail.com>,
+ Kumar Kartikeya Dwivedi <memxor@gmail.com>,
+ Martin KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>,
+ Yonghong Song <yonghong.song@linux.dev>, Jiri Olsa <jolsa@kernel.org>,
+ Emil Tsalapatis <emil@etsalapatis.com>,
+ Ihor Solodrai <ihor.solodrai@linux.dev>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>,
+ James Clark <james.clark@linaro.org>, SJ Park <sj@kernel.org>,
+ "Matthew Wilcox (Oracle)" <willy@infradead.org>, Jan Kara <jack@suse.cz>,
+ Jason Gunthorpe <jgg@ziepe.ca>, John Hubbard <jhubbard@nvidia.com>,
+ Peter Xu <peterx@redhat.com>, Leon Romanovsky <leon@kernel.org>,
+ Zi Yan <ziy@nvidia.com>, Baolin Wang <baolin.wang@linux.alibaba.com>,
+ Nico Pache <nico.pache@linux.dev>, Ryan Roberts <ryan.roberts@arm.com>,
+ Dev Jain <dev.jain@arm.com>, Usama Arif <usama.arif@linux.dev>,
+ Kiryl Shutsemau <kas@kernel.org>, Andrey Ryabinin <ryabinin.a.a@gmail.com>,
+ Alexander Potapenko <glider@google.com>,
+ Andrey Konovalov <andreyknvl@gmail.com>, Dmitry Vyukov <dvyukov@google.com>,
+ Vincenzo Frascino <vincenzo.frascino@arm.com>,
+ Miaohe Lin <linmiaohe@huawei.com>, Naoya Horiguchi
+ <nao.horiguchi@gmail.com>, Matthew Brost <matthew.brost@intel.com>,
+ Joshua Hahn <joshua.hahnjy@gmail.com>, Rakie Kim <rakie.kim@sk.com>,
+ Byungchul Park <byungchul@sk.com>, Gregory Price <gourry@gourry.net>,
+ Ying Huang <ying.huang@linux.alibaba.com>,
+ Alistair Popple <apopple@nvidia.com>, Dennis Zhou <dennis@kernel.org>,
+ Tejun Heo <tj@kernel.org>, Christoph Lameter <cl@gentwo.org>,
+ Johannes Weiner <hannes@cmpxchg.org>, Qi Zheng <qi.zheng@linux.dev>,
+ Shakeel Butt <shakeel.butt@linux.dev>,
+ Axel Rasmussen <axelrasmussen@google.com>, Yuanchu Xie <yuanchu@google.com>,
+ Wei Xu <weixugc@google.com>, Jani Nikula <jani.nikula@linux.intel.com>,
+ Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+ Rodrigo Vivi <rodrigo.vivi@intel.com>, Tvrtko Ursulin
+ <tursulin@ursulin.net>, David Airlie <airlied@gmail.com>,
+ Simona Vetter <simona@ffwll.ch>, Juergen Gross <jgross@suse.com>,
+ Stefano Stabellini <sstabellini@kernel.org>,
+ Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>,
+ linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+ linux-fsdevel@vger.kernel.org, linux-arch@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org,
+ linux-perf-users@vger.kernel.org, damon@lists.linux.dev,
+ kasan-dev@googlegroups.com, intel-gfx@lists.freedesktop.org,
+ dri-devel@lists.freedesktop.org, xen-devel@lists.xenproject.org
+Subject: Re: [PATCH v3 3/9] mm: use hw_pte_t for generic PTE table storage
+To: Anshuman Khandual <anshuman.khandual@arm.com>
+References: <20260922-pte0-v3-0-5670b8cb9059@arm.com>
+ <20260922-pte0-v3-3-5670b8cb9059@arm.com>
+ <xzlxdkrjilskjcagnl33eed7ijxrgfhoalmmmq5ks3wgjmkkhi@zchtxpr2amff>
+From: Muhammad Usama Anjum <usama.anjum@arm.com>
+Content-Language: en-US
+In-Reply-To: <xzlxdkrjilskjcagnl33eed7ijxrgfhoalmmmq5ks3wgjmkkhi@zchtxpr2amff>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: LO4P265CA0267.GBRP265.PROD.OUTLOOK.COM
+ (2603:10a6:600:37c::7) To VI1PR08MB3421.eurprd08.prod.outlook.com
+ (2603:10a6:803:80::16)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260930-perf_fix_pylint_errors-v2-0-945cd526576b@arm.com> <20260930-perf_fix_pylint_errors-v2-3-945cd526576b@arm.com>
-In-Reply-To: <20260930-perf_fix_pylint_errors-v2-3-945cd526576b@arm.com>
-From: Ian Rogers <irogers@google.com>
-Date: Wed, 30 Sep 2026 10:39:36 -0700
-X-Gm-Features: AclHuK9kLeMrfwk9I-RYYoof2MH0Qg05_NtpTwJTjZx8s_pCEExP8FfQ-LN3U-8
-Message-ID: <CAP-5=fVzy-=8ryObpHWiW6WDcvpW7SqRkAWwmNvoSgQmgz-3gQ@mail.gmail.com>
-Subject: Re: [PATCH v2 3/4] perf test: Suppress optparse deprecation warning
- with older pylint
-To: Leo Yan <leo.yan@arm.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, James Clark <james.clark@linaro.org>, 
-	Aishwarya TCV <aishwarya.tcv@arm.com>, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-TrafficTypeDiagnostic:
+	VI1PR08MB3421:EE_|AS8PR08MB9840:EE_|MI3PEPF00008485:EE_|DU5PR08MB10677:EE_
+X-MS-Office365-Filtering-Correlation-Id: f654edf1-1795-4e27-6e0f-08df1f1a0268
+x-checkrecipientrouted: true
+NoDisclaimer: true
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam-Untrusted:
+ BCL:0;ARA:13230040|366016|7416014|376014|23010399003|1800799024|6133799003|22082099003|18002099003|10067099003|56012099006|11063799006|3023799007|4143699003;
+X-Microsoft-Antispam-Message-Info-Original:
+ oGI7muJrlZpwF/CpDHEzSDJCtzoqS/F3W423126M4B7XVwwmWQMfuelL6Drv404qx12ulnjM4McoRoH2NEquKYER7GCiXUBW2yAtyKLG5ZfBjfUL99P38usNcVC0HjNO/EWQlAlszKFgqK3QjtoK4jRiTZR7h6q3UCvMmEmJj+Zc9flQRzesGOjw4Bjzlc3JwakYyyuP81YRfDZjr7WXaL/YBEk7WP5Zx6XX8bST7EL+YkcQsAL+jYauBpPQJMJTxHW0+4D6r28jU7hFISb4k5fLhdxsCJMhvjoqyCScUWK2XexS1WeyCKHxbXAiR9Y4lzTTl3bM0wOUObWbYPGoseq1+bd9V+gDvz44n9Z4sZWuclTXfJ797kFqNJ/dPY0hlLRBBtPFczXpxW4Jrwo6fhrvbUxlTKhMYweDNyxCG4hMOWqh3Pr0y8Cb31TKDgfZ4nTLwfT0q+OdTJKI+g3t2OHVEynSCqM+0eNK6RhXhg9pN4QLKVzZrNL/3bJPKMPULVkmlZhCDxhH3d2glFtWSxtnJJjOqVwGHoiEvWxeYzo9pWCj1RGSYhinwWMWpXcHfT1Ts1H82zA8m24Olqxekvt6pCSivv9BdoOTXhQuY5Z51sxkdkvXU/UY5OHdGsaD/0ljbuXWDhq2J61EwuOBFAIVLiLOUXMAB0as2Shst3Q=
+X-Forefront-Antispam-Report-Untrusted:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR08MB3421.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(7416014)(376014)(23010399003)(1800799024)(6133799003)(22082099003)(18002099003)(10067099003)(56012099006)(11063799006)(3023799007)(4143699003);DIR:OUT;SFP:1101;
+X-Exchange-RoutingPolicyChecked:
+ ZRh/vaUJ8vPLDwbrpqZLGWjxaIwOvyvt14r+gVvGKmgPPwK2TDTTLFe3d41eOrldXN2Fh6Rlgp30is4w/0Ee+/Iz707w8ulVg8jMkeJmQ9QgGwFHZ5aPzws0sX9jQQk+GVEI8LwKndr1/707rxzO8hbJd1HDaxV8NCyM+pYvcnxP1HNJHpEykUsZ0nxE9BGYRfQ1OVtCbOkU9xW6FoIiOOaiHUJhQJUJf98vL796fhWLRMJ5tWyDNUEy39UrG+G97sssgwv7emKfpTstqUBx5b83Q5zktpXhxsiXlgmkTb7hcUBoY38o6Myeb2CjQybUiRxo5I3mlgrYuef+nXXc+w==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS8PR08MB9840
+X-EOPAttributedMessage: 0
+X-MS-Exchange-Transport-CrossTenantHeadersStripped:
+ MI3PEPF00008485.eurprd02.prod.outlook.com
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id-Prvs:
+	5a3f536c-6b22-4217-dabc-08df1f19ed82
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|82310400026|7416014|376014|1800799024|23010399003|14060799003|35042699022|36860700016|6133799003|22082099003|18002099003|3023799007|56012099006|10067099003|4143699003|11063799006;
+X-Microsoft-Antispam-Message-Info:
+	lKEksvLE37fjc2mwiNSXeiH0ULDoLEwpGCyPCthjhujizaV0pVRBxx78QRZ1fDXyKhJ3hY09i2N+AXkOtyC7aoof15gnXkUqwBXrDxDS/qn45IYL5Y5dFNmhnQD6GBKvj3n/bNRgneKt66YF7BZ48BfttEHtgm8PzSta57upzE04JYeWzPqXitdBqKaGDQ3qRkvq2/oHFq3SfONA7s8G05F9SDsA596dv6X1UK9iEH/Tlrh0YIO7+nvJu47da4GjBXFzkHwdqG05wYNyPTMJZHIAyMxCyXUtPiAIgP7A/TU4YG/zaavEXXd2XLX8H6il4ABjnPNJNSIjsqiWv0h1XTGMmT2TPU+3piIhyBgwnRhS7JwtT/8R/wYew/0OqSmOEogGVWlgGO+Km2Apgo3EGt0PQaonNACOL/0OaLaRGYyH3Kovf29vAW6Ylyod1VI3x8pjOQWM+4aIAAbmTm9Zu4w6O4kEKvAXbwF3Cg01zCGDtXy9+vU27Da2W2rEHkbG7NO3z/DwJZO0q8h5FwY0ZNgKvdt0PhDAWpNU4+uSalGZCzhNYbII/7qRhGdLWgM516z4jfQhafhNJKNGPrFEr2t15IWwpQMC8AxM6HQavlpzjxhtfiGB/jQze0YLTwRu+V0X1cf85Yr6Os9y6not/T4iH/8oKIQRfSspcLC0IturY2rxEY+4W++8FzKLPUMkRYaHzDHnYr+3VY+t7SIu6Q==
+X-Forefront-Antispam-Report:
+	CIP:4.158.2.129;CTRY:GB;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:outbound-uk1.az.dlp.m.darktrace.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(7416014)(376014)(1800799024)(23010399003)(14060799003)(35042699022)(36860700016)(6133799003)(22082099003)(18002099003)(3023799007)(56012099006)(10067099003)(4143699003)(11063799006);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	shaQxYrWuv0/HunaC8qXu8DHPkm5VaxjmfyI4Nk4p8VJB+fstynyA1uZ+UA19aEaaljuD9vLf0nUSaDJgSjOMRNOhtcd52Yd6OVG7kIP4ZUyFGyDc0O8fh+m53bbPz2aAJwLuWrJmseTOcYd34e1kD8nlzHqPfb1xqiXCQKcEEpTPrwBQ5StMGs1YaZ4xFCcBsNs8Tlvqk3ch+pVUCQqWh81hROJF70SSeybACbI7TnGdR2QD0Qn4mUvPOaVYgYTiREvbv47Wp7mbkz6aw2ReTn94zGFNrxRpyvf327epAN5j82rEPKp25y901lLPiel0MHNUzqu8VBIHdkm2KE/CccuYNt5avoouA+7tiNSMWwY9GI5G9AK5zJJXne97UcTBqV8XoiIlB02gF4JGujHgDpEczv0mxrBIv+e8VXBlC7CXhMwxZmNXUQHMGRMCSKg
+X-OriginatorOrg: arm.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Sep 2026 17:41:07.8344
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: f654edf1-1795-4e27-6e0f-08df1f1a0268
+X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[4.158.2.129];Helo=[outbound-uk1.az.dlp.m.darktrace.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	MI3PEPF00008485.eurprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DU5PR08MB10677
 
-On Wed, Sep 30, 2026 at 6:11=E2=80=AFAM Leo Yan <leo.yan@arm.com> wrote:
->
-> Python 3.13 reversed optparse's deprecation, and pylint 3.3.5 removed it
-> from the deprecated-module list. Perf supports older pylint versions,
-> so suppress the warning on this import and document the reason. Keep
-> other deprecated-module diagnostics enabled.
->
-> Link: https://docs.python.org/3.13/whatsnew/3.13.html#optparse
-> Link: https://pylint.readthedocs.io/en/latest/whatsnew/3/3.3/index.html#w=
-hat-s-new-in-pylint-3-3-5
-> Fixes: 8a54784e708b ("perf build: Add pylint build tests")
-> Reported-by: Aishwarya TCV <aishwarya.tcv@arm.com>
-> Assisted-by: Codex:gpt-6
-> Signed-off-by: Leo Yan <leo.yan@arm.com>
-> ---
->  tools/perf/tests/shell/lib/attr.py | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
->
-> diff --git a/tools/perf/tests/shell/lib/attr.py b/tools/perf/tests/shell/=
-lib/attr.py
-> index 7f3d5b64b00dd7de45baff4f7d9baff89e003147..523257bcf8e126cb662af5897=
-27144bb26cff4d5 100644
-> --- a/tools/perf/tests/shell/lib/attr.py
-> +++ b/tools/perf/tests/shell/lib/attr.py
-> @@ -4,7 +4,8 @@ import configparser
->  import os
->  import sys
->  import glob
-> -import optparse
-> +# Pylint before 3.3.5 still treats optparse as deprecated.
-> +import optparse  # pylint: disable=3Ddeprecated-module
+On 30/09/2026 5:35 am, Anshuman Khandual wrote:
+> On Tue, Sep 22, 2026 at 06:12:31PM +0100, Muhammad Usama Anjum wrote:
+>> Generic page-table interfaces use pte_t * for both pointers to PTE table
+>> storage and pointers to software PTE values. Convert the generic
+>> declarations and their MM, fs, and kernel users together so parameters,
+>> return types, callbacks, and local pointers that designate table storage
+>> use hw_pte_t *.
+>>
+>> Include linux/pgtable_types.h from headers that expose the converted
+>> interfaces. It continues to provide pgprot_t to vmalloc.h through
+>> asm/page.h.
+>>
+>> Keep software PTE values as pte_t and retain pte_t * for value interfaces.
+>>
+>> No architecture selects ARCH_HAS_HW_PTE_T at this point, so hw_pte_t
+>> remains an alias of pte_t and this changes the interface vocabulary without
+>> changing representation or behavior.
+>>
+>> Most of this mechanical conversion was generated with the Coccinelle script
+>> included in the cover letter. The script deliberately ignores pte_t *
+> 
+> Just wondering - should this Coccinelle script that converted all these
+> instances be saved inside ./scripts/coccinelle/ for future referene.
 
-Thanks Leo! Could we just update to argparse here?
-```
-diff --git a/tools/perf/tests/shell/lib/attr.py
-b/tools/perf/tests/shell/lib/attr.py
-index 7f3d5b64b00d..68f06df9565a 100644
---- a/tools/perf/tests/shell/lib/attr.py
-+++ b/tools/perf/tests/shell/lib/attr.py
-@@ -4,7 +4,7 @@ import configparser
- import os
- import sys
- import glob
--import optparse
-+import argparse
- import platform
- import tempfile
- import logging
-@@ -426,29 +426,20 @@ def setup_log(verbose):
-     ch.setFormatter(formatter)
-     log.addHandler(ch)
+Thanks for the suggestion. This script was written for this one-time conversion
+and requires manual review to distinguish HW PTE table pointers from SW PTE
+pointers. After the conversion, it would not be useful.
+(Maybe other arch can use it to do their conversion. But they can always
+copy script from the series)
 
--USAGE =3D '''%s [OPTIONS]
--  -d dir  # tests dir
--  -p path # perf binary
--  -t test # single test
--  -v      # verbose level
--''' % sys.argv[0]
--
- def main():
--    parser =3D optparse.OptionParser(usage=3DUSAGE)
--
--    parser.add_option("-t", "--test",
--                      action=3D"store", type=3D"string", dest=3D"test")
--    parser.add_option("-d", "--test-dir",
--                      action=3D"store", type=3D"string", dest=3D"test_dir"=
-)
--    parser.add_option("-p", "--perf",
--                      action=3D"store", type=3D"string", dest=3D"perf")
--    parser.add_option("-v", "--verbose",
--                      default=3D0, action=3D"count", dest=3D"verbose")
--
--    options, args =3D parser.parse_args()
--    if args:
--        parser.error('FAILED wrong arguments %s' %  ' '.join(args))
--        return -1
-+    parser =3D argparse.ArgumentParser()
-+
-+    parser.add_argument("-t", "--test",
-+                        action=3D"store", dest=3D"test", help=3D"single te=
-st")
-+    parser.add_argument("-d", "--test-dir",
-+                        action=3D"store", dest=3D"test_dir", help=3D"tests=
- dir")
-+    parser.add_argument("-p", "--perf",
-+                        action=3D"store", dest=3D"perf", help=3D"perf bina=
-ry")
-+    parser.add_argument("-v", "--verbose",
-+                        default=3D0, action=3D"count", dest=3D"verbose",
-+                        help=3D"verbose level")
-+
-+    options =3D parser.parse_args()
-
-     setup_log(options.verbose)
-```
-
+-- 
 Thanks,
-Ian
-
->  import platform
->  import tempfile
->  import logging
->
-> --
-> 2.34.1
->
+Usama
