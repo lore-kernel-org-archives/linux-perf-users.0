@@ -1,127 +1,224 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from pdx-out-006.esa.us-west-2.outbound.mail-perimeter.amazon.com (pdx-out-006.esa.us-west-2.outbound.mail-perimeter.amazon.com [52.26.1.71])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1853C3D1A97;
-	Wed, 30 Sep 2026 19:14:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790795687; cv=none; b=WTbXHIQ0uUTnSeTr7ldg5oQFommcxnWn5MQ0E0wnIvB0nejJsvu+4okG9DiGvLiOXelWWTNXDBF6HpS2PGelduJb4XoCXdl1cn6vxJK2H2dANG21k6/LBnTfK5qF90UngWPS5288fTp8fHBHeMfIl02YFxrpiAZNW5jEgPmBrck=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790795687; c=relaxed/simple;
-	bh=Bt9C70NQRLI1lLUFR6TJPPnnD3XYBOz5O1BWHzwQ5oQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IcsVYK6O1PR82JzuWwVY9vw4O3sLtRqPhlyxNymKeNFZFMXNC+7Fx1U5jOEemZAGi4D9wbN2YGBjkOR7j9eqEEd5uzbS3Oqc7t8qdjkW8ASA7z/jVmohSIPsqs8gsiaXM0+4ZHyKWNcFZhLZtqY5tHO6J480fI3GbB7JlN8a3oU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=a3HWBzZy; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B40B36826E;
+	Wed, 30 Sep 2026 19:29:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.26.1.71
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1790796573; cv=fail; b=BRSrd2sg9ij3K+wKJIDxTqYAefQUTnsOYbmwwRGCrPDY/4gZ1ewfit45C/trwckFRgnPwqRDRiITelZBwz3kECY/Xsmsr5YUMZhJ73lgPZah+7GlqmJXcUmE3Zvuqf8KAMl+fmwI67dLcBUJjJVFN4tA4Q+YPP5Yzxi6Q6bG9k0=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1790796573; c=relaxed/simple;
+	bh=T+tajYXb6EoCJ6SQSsx4iRa4GBbUv81/tBORF5tv6aU=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=jolqDcT+H5v6y2KusTEYLEeHyjTRrchXLgYDnEyDzLEjJuQTkbU3RBEnYnME/NTo5cF8kjC2uGqlszKPUyxx7o6Qin1uLUtBlbyh7IYkcqVsftmJzyhOarQiLLN0VRLnPQCVBRYlQeE2wLQf27n+kTkpfO9pWlDId6WLF9GBCNs=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.com; dkim=pass (2048-bit key) header.d=amazon.com header.i=@amazon.com header.b=X37wmNus; arc=fail smtp.client-ip=52.26.1.71
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="a3HWBzZy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 455141F000FF;
-	Wed, 30 Sep 2026 19:14:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1790795685;
-	bh=CPkOd7/2MOCd1481qdelnJoCv5niJgOW5Kl95Ne6ScA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=a3HWBzZyPlEt6CTsktmAcOb6wb4STm3Ht4Vj8u97bNB49Zw6B9/4uFpvMy1cKa6U+
-	 SIgyXYnneHb/PalWG2bjeihPf6CjlLsM+Bws/z5LeWdB5fjJ7PFPcjjsGuA5LvkR3q
-	 X7u+L2ZJpdxs/HAG3fE2FN9lhNLbucfH/wBoDAM89amAE9VBMAG4OPzr+3wt/EWjta
-	 EIKkmoLcAmMke2fbLkbbWOort64vStKjyaKFQsOhcXrJ4SOKOu7dqqIQ4aiOCgsfqd
-	 sibhs+cHeEbTGS7pxmexkCgSfoOslzlKobixxG1ENA+KnNtPVdEgOg+RP0Ne8ttz24
-	 slAqlPdqRWXLw==
-Date: Wed, 30 Sep 2026 21:14:42 +0200
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Namhyung Kim <namhyung@kernel.org>, Aaron Tomlin <atomlin@atomlin.com>,
-	Howard Chu <howardchu95@gmail.com>, Jakub Brnak <jbrnak@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>, Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	James Clark <james.clark@linaro.org>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v6 06/26] perf trace: Copy sockaddr arguments by their
- length
-Message-ID: <ar1fon_Z4uT3Cd22@x2>
-References: <cover.1790145937.git.irogers@google.com>
- <20260928182605.3649015-1-irogers@google.com>
- <20260928182605.3649015-7-irogers@google.com>
+	dkim=pass (2048-bit key) header.d=amazon.com header.i=@amazon.com header.b="X37wmNus"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazoncorp2;
+  t=1790796572; x=1822332572;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=T+tajYXb6EoCJ6SQSsx4iRa4GBbUv81/tBORF5tv6aU=;
+  b=X37wmNuszT6HeCt5HUXj5JxTEhZBGV6xoeG9npFFqQS35+JCXdEJb4d9
+   hzBtD/iQ1Y4vNYi61NX2H/4QKGDM6Yj15IjB9bzXkoMebHT/7wBiyFtoM
+   svp9pLzDCVMomuqmcg0Tuvx5tULwPka133A5oe3BkqVzyFfIgcaRInVa3
+   7WCWtnET0Ih/0OfEiKGEUm2F109V95Xuimzlonylj2uKwe7EHAYAEzZxp
+   mnC7wy1Q8Sy73CbM5fvh8E1BWcnnktdK/hnTiTWpqQAdiJwAFFoJ65viq
+   pi/2kTFJb9ytl2gUNBabUg+qGjRBX6uUdcrtYBJJfRClnmbQon2NpQa88
+   g==;
+X-CSE-ConnectionGUID: /DNjClJaS1GJ7vH67AR/Gw==
+X-CSE-MsgGUID: JuCNy2XJROegu5blFFoB8w==
+X-IronPort-AV: E=Sophos;i="6.27,133,1787011200"; 
+   d="scan'208";a="30106393"
+Received: from ip-10-5-0-115.us-west-2.compute.internal (HELO smtpout.naws.us-west-2.prod.farcaster.email.amazon.dev) ([10.5.0.115])
+  by internal-pdx-out-006.esa.us-west-2.outbound.mail-perimeter.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Sep 2026 19:29:32 +0000
+Received: from EX19MTAUWC002.ant.amazon.com [205.251.233.111:30374]
+ by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.62.119:2525] with esmtp (Farcaster)
+ id 5afd9171-aa51-45e9-b4be-4f43e0a043bb; Wed, 30 Sep 2026 19:29:31 +0000 (UTC)
+X-Farcaster-Flow-ID: 5afd9171-aa51-45e9-b4be-4f43e0a043bb
+Received: from EX19EXOUWB001.ant.amazon.com (10.250.64.229) by
+ EX19MTAUWC002.ant.amazon.com (10.250.64.143) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.2562.49;
+ Wed, 30 Sep 2026 19:29:31 +0000
+Received: from EX19EXOUWB001.ant.amazon.com (10.250.64.229) by
+ EX19EXOUWB001.ant.amazon.com (10.250.64.229) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.2562.49;
+ Wed, 30 Sep 2026 19:29:31 +0000
+Received: from CO1PR08CU001.outbound.protection.outlook.com (10.250.64.168) by
+ EX19EXOUWB001.ant.amazon.com (10.250.64.229) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.2562.49
+ via Frontend Transport; Wed, 30 Sep 2026 19:29:31 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=e6B4Uidvl0+F2FSWrU6UYXGd1zR1Jl3bh+9qRC0ulzNyzte9ItKy3wIon3ppMvV6EHzRbD/hNe/d66ezBYRy1SgX+5kQSocjd3kr8+RQaQviawAoM+cLAetYoNCSaWrdpygWfybtc7X+Pa1H7fSs76XSxyV/o7/daTVKMmH3uTlkSaaJy7a2o69yR8IZYCJi+i1uVMWgAYIkCU+oS89XPQMhZNL0IHX/lXLZCbnTUyPKkoNuZkKe1lKyQ/oJfu8JLmbZzmfX0zflvlzqk9lS14x6E0ZiO8wKwZqe6qaEoXBzkHLNHlhgeUxnVm6PV0/Kv/XqS8QY0fmiWbmQzQSG9A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=T+tajYXb6EoCJ6SQSsx4iRa4GBbUv81/tBORF5tv6aU=;
+ b=Jee3vptL2tCNqNJHM6RePTYm4xybc9662+SZdwn7u9oKFV/lWjnuxOcOSYSNlBSQDDaPfK7dGdkcgVsziKjOf3EUO6IstvYIiwxTdamDWWW/nywX+wyrxVkiL4ToU6F0pTXN1bzA1gY/UlsJl6biYfGS9ypI3LO6uKZLwq+EA+AFWgu+GktIUwFTBoC3Isj4dSCImn7iqWNsfGv8zfYFTuI11Rn1lRGgnNv/9oixXilX1m3g6o0CVipu93/XonkgqJffKznv/FbkQLcQ88hCB/ThfjX1oApktnO2z2LgoplN7BBS8Inx3l03U0d/T4CYgOI22LLhKGobAwPugBEKIg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amazon.com; dmarc=pass action=none header.from=amazon.com;
+ dkim=pass header.d=amazon.com; arc=none
+Received: from CY2PR18MB843218.namprd18.prod.outlook.com
+ (2603:10b6:930:10f::23) by CH4PR18MB6261.namprd18.prod.outlook.com
+ (2603:10b6:610:22e::11) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.451.25; Wed, 30 Sep
+ 2026 19:29:25 +0000
+Received: from CY2PR18MB843218.namprd18.prod.outlook.com
+ ([fe80::f89e:823f:6d11:2f68]) by CY2PR18MB843218.namprd18.prod.outlook.com
+ ([fe80::f89e:823f:6d11:2f68%6]) with mapi id 15.21.0451.022; Wed, 30 Sep 2026
+ 19:29:25 +0000
+From: "Okanovic, Haris" <harisokn@amazon.com>
+To: Robin Murphy <robin.murphy@arm.com>, "mark.rutland@arm.com"
+	<mark.rutland@arm.com>, "will@kernel.org" <will@kernel.org>
+CC: "linux-arm-kernel@lists.infradead.org"
+	<linux-arm-kernel@lists.infradead.org>, "linux-perf-users@vger.kernel.org"
+	<linux-perf-users@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "Okanovic, Haris" <harisokn@amazon.com>
+Subject: Re: [PATCH] perf/arm-cmn: Allow userspace to select the PMU's CPU
+Thread-Topic: [PATCH] perf/arm-cmn: Allow userspace to select the PMU's CPU
+Thread-Index: AQHdURIAJvo3yua2RUmC2W5fD5s0ew==
+Date: Wed, 30 Sep 2026 19:29:25 +0000
+Message-ID: <CY2PR18MB8432185386B28FBC1DA23F3333A88B2@CY2PR18MB843218.namprd18.prod.outlook.com>
+References: <20260929223244.2411400-1-harisokn@amazon.com>
+ <b782f893-e3ab-40f7-a7c5-ce19660be2c1@arm.com>
+In-Reply-To: <b782f893-e3ab-40f7-a7c5-ce19660be2c1@arm.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+msip_labels:
+authentication-results: mx.microsoft.com 1; dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amazon.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: CY2PR18MB843218:EE_|CH4PR18MB6261:EE_
+x-ms-office365-filtering-correlation-id: 581ff5a3-b5f3-41fe-91ab-08df1f292308
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;ARA:13230040|1800799024|366016|376014|23010399003|6133799003|22082099003|10067099003|3023799007|18002099003|56012099006|38070700021|11063799006|5023799004|4143699003;
+x-microsoft-antispam-message-info: UvDqJhzS3AzCuAr4zpircy+EZzBOLROIGy/uNUBHkY995zezQemFgqIYWn/Ra1RXYIyZOHXpw1KYzqaJVFq+V9/1LUQW6i3KF+yCUGrY7z7okAZzzoDwqVMBAap5lmfctcNDPJlZMm5szr4QhCIC+pjeXhTFpWO0p/lQVk8FmkiRcSnw/WTxZZTlKDDqgRcxCv4/mHp2l7PQW4K0uBHNhMpX4QXpN69qr6yNVYhF9KQt0OrnAeIle8e5nPZWdfBYQr17F6nNZSrmNZmTQ5/zl5MVT914rr2F41cXXkQpQg30LaG1K93l0bf1AHHeOiJgzA7iwEIWe/ze+5Rmj57+E602g1d45TkL9u1Ut5dpKe6hoZVP7CymJi8Jf5TaqL3JdDB54uB9wxipywo+4f3N//Y53q9bsTGpxEr096cfOb75Ainp8YqX85bm9z8+3B421NZSysjGYGTY5BR/9uypgKeTeIL2XKpZn2TLobY/MP5DntKRwERhA/vz5ZbOpkNr1AbTIZ3u857vsVCqa7OVLv8BFHdCv4mevimWcyfq5hCugPHnJEyvhBsaXptWYPxp8yyOPWlQVpRhJIWn+dirsT/Aw73KQhrsXmiape5+7lszrFfuXQ829oY6YcoIzezByXm5F9F28ZFixIs4f2LCDMe/8DC8NMEMvUsobMB2hWy5NnDmWJZi1lRmyme/B0N4EjitoC3Co5cO0vgnnQpBN4EVOLXm7jy3zhlwj8WoYbo=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CY2PR18MB843218.namprd18.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(23010399003)(6133799003)(22082099003)(10067099003)(3023799007)(18002099003)(56012099006)(38070700021)(11063799006)(5023799004)(4143699003);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?iso-8859-1?Q?7jJ00vHMEUaDKbTwk0fmWCGJp2aelLl+MMjnxC2L1OYei3Y1NkejS0STlf?=
+ =?iso-8859-1?Q?P1Dsw6e2nFsvP3lsX+OI2w+DouDBVB9c+lCU466GTYkOQjBOxCAdU1ld/5?=
+ =?iso-8859-1?Q?RXuXCuI+Qv5MD6OzXeRKnigFTmynHtZTIn+658s6GYkCfJvbo2xjLEHFzZ?=
+ =?iso-8859-1?Q?7heW34aq0XOWa/CUC4BryvKiNCBVPKjZh1OgHQAJ36bL9/9Ffm0n6TvsSX?=
+ =?iso-8859-1?Q?W7yw6wtZzgBuQupcVT6uLmO4ivpYqFlwKbkkMS+gwdKR7gzzLi5l6T5oLQ?=
+ =?iso-8859-1?Q?oI5PWwR0ME/6DXxxRYgyx48B7278FKTxtFGEq7pk0hnZ//ekfaj6vZ9dlq?=
+ =?iso-8859-1?Q?6aZY1ZbMFSDeoETVk+RRpk+PiQwc22B7hVifP8tMG/XN59/5PYl2aStxnA?=
+ =?iso-8859-1?Q?vRyg6vSLtxV6m6l8ocx7Gk4UpMFGsjpLmVBfs0imHdHfmthfioMwdlp2x6?=
+ =?iso-8859-1?Q?w8Z1cXaEx9YTZmymL5KHE50+KTEja4ddUbZD/KXYYueP6NDWxpi6WrcBiQ?=
+ =?iso-8859-1?Q?h60STDlX3OCPcPGdGzTLGeR1IjLjrG97WED5d6nGcEVlqxoY2J0mX4vIT+?=
+ =?iso-8859-1?Q?mJDQAyIUkaADUCzb9vChW7u9uThjUBQxHWVVruyWVvj963dnKFjIuY4le8?=
+ =?iso-8859-1?Q?EtvqyBAbLCIstsJb75G0pgQFhemk2MjmeLkDqD8i6bvNSVl5jT+oveS8xy?=
+ =?iso-8859-1?Q?/MR6NPmyUOl9ChE5QkGlGZOcYkQCE+5Sj7niLp67mesqz/hohOCUP6a8GS?=
+ =?iso-8859-1?Q?8csfbZlugb6JOZ35mQ+Uq9MCr7CFv0dewqVZ7f/8eE5SprrASupsC2Mpcc?=
+ =?iso-8859-1?Q?MMGkqbR5jMhMrPZIrhWmBhRdbYY3WRaMZ/pyYVyXfDl7glqzSqLD0h9xFU?=
+ =?iso-8859-1?Q?AJ0MzVGDbMwVc7CNmzwZqch7GumuimJaV5WVHKuY83mTQEbXcjPjRm3zEb?=
+ =?iso-8859-1?Q?xSVOArHNtdpgAdo0nYkxyRkvORCeKupM4TR+WAkN81Crv4AYojauZAoLDT?=
+ =?iso-8859-1?Q?10YS0aNQ1hHCkFIxbukKDVb4nisIP4XRtXkV9i6mcFmcBN4wMc7giNtA86?=
+ =?iso-8859-1?Q?5GXJXd5fVISs9Jdm+Va+F17vfjBaz4d1u4YnU+xTlq1E0pPjpUHi/ONtOt?=
+ =?iso-8859-1?Q?Mi6+1c48V2ptvlTUdFpzmKoXZE7TAoIliOZlV3uTXQh8d0eJRwqDLQ0KGe?=
+ =?iso-8859-1?Q?NmXWT7LcNXkS6KRt7DsixXfTWNbe/7WRqbP+EotmV2QBudBWBOm+lWTEGx?=
+ =?iso-8859-1?Q?qYTrVlZ/YBdveQ55QeI07QfiXT9GvpXlxISEGoZqaGVT+aX9/LTI8I4w+r?=
+ =?iso-8859-1?Q?CawWy99fAev0xTd+3P92HMWv40PiV3wj6lJKc4/4E9DXOhAWADIQu3+m5k?=
+ =?iso-8859-1?Q?WChKVKqRolJdrp27rh03tkHHyEt9tt+kxQeADi4cUoMqbGQMgKsx+81h0g?=
+ =?iso-8859-1?Q?PZM19v/oDHk/noxwcZgMsAStoMISaIf2RUQ2mLsm2BqYTU4kAlvpd4JfEN?=
+ =?iso-8859-1?Q?uyIKO5aVTf1sapjtVEaCZ0ONwn0xie5J012g0jLOg/9d5X42pEKCsRE06a?=
+ =?iso-8859-1?Q?vxFeZ1a+Ebok8IAGrmmzyaArt6k1Upx0+qA3Y+9btwHqKfR7WFdwjIdBXd?=
+ =?iso-8859-1?Q?7QXPmvTDfMxaumf0QHBFB4bhyLZySm6e+DUdpVEV4okK8RgnmQ4+3BBI8M?=
+ =?iso-8859-1?Q?l3E91TQ2MdcXNc8eZkS0FE/q5oPXg5/5J7u+9HhtoOjI+0HcDubQ/eKt2S?=
+ =?iso-8859-1?Q?cNMpoBY+Kv3TJoRXRazuS8PWwI4514Pi6bE5IL7thW4wMG?=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260928182605.3649015-7-irogers@google.com>
+X-Exchange-RoutingPolicyChecked: f4KLlOvkCz7e1pk5Pxbf0ockcUKr4xLszewduZ/ajtCBeEsDSGtVpmPwzzbRGjb9q0nxy5q1MYWrjszh4BvvYPqVKTsiRU0+di+GpHZ2Z51SoO5/AUVZef6vCJyjYRi9jb4Zb4Oc1A94KHMC0Ob0mKvOlCmu0Il0cAkx6tlN0t4JN9lIw//J1DwDI+2McLd80ky/nvtfPXPCAxepXgZFikHl8iMoz5s+Q/6JdMXC/qWVDY0936x1R1MHQiMPrJrsvpN+Jkry88fo2kHhBF9zEQyptArLUhgVAXDPMGRo4TCsGzw8WemBh7aIcGEItoRgsQmaZP0Ilw6ABeClFfUp+g==
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: CY2PR18MB843218.namprd18.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 581ff5a3-b5f3-41fe-91ab-08df1f292308
+X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Sep 2026 19:29:25.1369
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 5280104a-472d-4538-9ccf-1e1d0efe8b1b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: ACnTOE03h9cYX8fbG4ZUaDnesiXdbCio9vxCJyBbVA82G0fWQBfWqBu7jUD43GlFvpNM8pQ8+U8QppFIjnp+AA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH4PR18MB6261
+X-OriginatorOrg: amazon.com
 
-On Mon, Sep 28, 2026 at 11:25:45AM -0700, Ian Rogers wrote:
-> The BTF augmenter copies sizeof(struct sockaddr), 16 bytes, for the
-> sockaddr arguments of connect, bind and sendto, and runs before the
-> sys_enter_connect and sys_enter_sendto programs that copy their length.
-> An IPv6 address needs 24 or 28 bytes, so the rest was read from past the
-> payload, and now that the printers are bounded only its family is shown.
-> 
-> Copy them as buffers sized by the length argument after them, up to the
-> 32 bytes augmented buffers are limited to. That holds an IPv6 address
-> and doubles the AF_LOCAL path shown.
-> 
-> Fixes: a68fd6a6cdd3 ("perf trace: Collect augmented data using BPF")
-> Assisted-by: Antigravity:gemini-3.1-pro
-> Signed-off-by: Ian Rogers <irogers@google.com>
-> ---
->  tools/perf/builtin-trace.c | 7 ++++++-
->  1 file changed, 6 insertions(+), 1 deletion(-)
-> 
-> diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-> index 85db74965280..f94745a60f4a 100644
-> --- a/tools/perf/builtin-trace.c
-> +++ b/tools/perf/builtin-trace.c
-> @@ -4159,7 +4159,12 @@ static int trace__bpf_sys_enter_beauty_map(struct trace *trace, int e_machine, i
->  				continue;
->  
->  			bt = sc->arg_fmt[i].type;
-> -			beauty_array[i] = bt->size;
-> +			/* Copy a sockaddr as a buffer sized by the next argument, e.g. addrlen. */
-> +			if (strcmp(name, "sockaddr") == 0 && field->next &&
-> +			    strstr(field->next->name, "len"))
-> +				beauty_array[i] = -((i + 1) + 1);
-> +			else
-> +				beauty_array[i] = bt->size;
-
-
-Humm, I thought that this would be called in BPF handlers like:
-
-SEC("tp/syscalls/sys_enter_connect")
-int sys_enter_connect(struct syscall_enter_args *args)
-{
-        struct augmented_args_payload *augmented_args = augmented_args_payload();
-        const void *sockaddr_arg = (const void *)args->args[1];
-        unsigned int socklen = args->args[2];
-        unsigned int len = sizeof(u64) + sizeof(augmented_args->args); // the size + err in all 'augmented_arg' structs
-
-        if (augmented_args == NULL)
-                return 1; /* Failure: don't filter */
-
-        _Static_assert(is_power_of_2(sizeof(augmented_args->arg.saddr)), "sizeof(augmented_args->arg.saddr) needs to be a power of two");
-        socklen &= sizeof(augmented_args->arg.saddr) - 1;
-
-        bpf_probe_read_user(&augmented_args->arg.saddr, socklen, sockaddr_arg);
-        augmented_args->arg.size = socklen;
-        augmented_args->arg.err = 0;
-
-        return augmented__output(args, augmented_args, len + socklen);
-}
-
-And it knows how many bytes to read by looking at socklen
-(args->args[2]), i.e. not use the generic BPF handler that uses this
-beauty_array, because knowing how many bytes to read in this case is
-dynamic, varies with each syscall, according to one of its arguments :-\
-
-What am I missing?
-
-- Arnaldo
-
-
->  			can_augment = true;
->  		} else if (field->flags & TEP_FIELD_IS_POINTER && /* string */
->  			   strcmp(field->type, "const char *") == 0 &&
-> -- 
-> 2.56.0.rc1.315.gc6ed9934b7-goog
+Hi Robin,=0A=
+=0A=
+> > All of the PMU's recurring work therefore lands on one CPU. This is=0A=
+> > problematic on systems which reserve particular CPUs for latency=0A=
+> > sensitive work or confine background activity to a chosen set of=0A=
+> > housekeeping CPUs.=0A=
+=0A=
+> > There is no way to set it explicitly. perf_event_open() and 'perf stat=
+=0A=
+> > -C' have no effect because arm_cmn_event_init() overwrites event->cpu;=
+=0A=
+> > /proc/irq/*/smp_affinity is refused for the DTC interrupts, which are=
+=0A=
+> > requested with IRQF_NOBALANCING because their affinity has to follow th=
+e=0A=
+> > owning CPU.=0A=
+=0A=
+> All system PMU drivers have the same concern in this regard - why=0A=
+> should arm-cmn be special?=0A=
+=0A=
+As I mentioned earlier, we can improve performance on certain system=0A=
+topologies by assigning PMU work to housekeeping CPUs.=0A=
+=0A=
+arm-cmn has no constraints around CPU assignment, so this is possible.=0A=
+Every register access is MMIO and the DTC interrupts can be affinitised=0A=
+anywhere, so any online CPU can own it. That's what makes "write any=0A=
+online CPU" a sound interface here. I've moved it to CPUs in both NUMA=0A=
+nodes on the two platforms I tested.=0A=
+=0A=
+You're right that the concern is general, but a single interface isn't=0A=
+easily shared, because the set of CPUs that a PMU may be driven from=0A=
+is platform/device-specific:=0A=
+=0A=
+arm_dsu_pmu, for instance, can only be driven from the CPUs attached to=0A=
+the DSU, which it already exposes as "associated_cpus" and enforces in=0A=
+event_init(); hisi_uncore_pmu publishes the same attribute.=0A=
+=0A=
+Intel uncore is per-die: MSR-accessed boxes must be read from a CPU on=0A=
+the target die, since rdmsr reads the executing CPU. Accepting an=0A=
+arbitrary CPU there would silently read a different die's counters.=0A=
+=0A=
+Do you have an alternate API in mind?=0A=
+=0A=
+> What prevents =0A=
+> perf_event_open racing against this update such that the new event->cpu =
+=0A=
+> still ends up with the old value, and thus will no longer be correctly =
+=0A=
+> synchronised against other scheduling calls/overflow interrupts/etc.?=0A=
+=0A=
+> Now yes, I think technically that race might already exist in a tiny =0A=
+> window due to the order of hotplug callbacks (yet another reason why I'd =
+=0A=
+> like to clean up hotplug handling...), but at worst it's still =0A=
+> relatively benign if the old CPU is actually going offline, since it =0A=
+> will very soon reach a state where that misconfigured new event just =0A=
+> won't work - since trying to schedule or read it depends on =0A=
+> cross-calling a CPU that's now gone - but at least it's then not capable =
+=0A=
+> of corrupting _other_ events.=0A=
+=0A=
+You're right, nothing prevents it today. I assumed the cpus_read_lock() in=
+=0A=
+the store covered this, but perf_event_open() doesn't take it. I'll look in=
+to=0A=
+closing that window in a v2.=0A=
+=0A=
+--=0A=
+Haris Okanovic=0A=
+AWS Graviton=0A=
