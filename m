@@ -1,226 +1,173 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BFDAC359A99;
-	Wed, 30 Sep 2026 13:36:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-oo2-f40.google.com (mail-oo2-f40.google.com [74.125.231.168])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2607D2F6565
+	for <linux-perf-users@vger.kernel.org>; Wed, 30 Sep 2026 14:42:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.231.168
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790775387; cv=none; b=mgY2/erO9+M1e+B7CdIO3FQASwEW3DWPXTl9SGK4baGFYzsXI1aExXqP9LpZeRhJpFYndImAzzYmUkGxJbhuyt9U7ffyXOKcR8V2H3HL6vjVoam4ZXhOlTTqnWASqpz05kOFBewGoX2aEPTLM+J5MsbGAOpgcL5ij2IR3JWPtFE=
+	t=1790779381; cv=none; b=nBAjMjZR1lrRE3r3DCE8wNxUcLCSPUF10OcSo8Jxg9yLVbgFwRnB7QvdsZL/BkVuoYTzYu1QXz2C9Aokrh5DBXE0GIIxRrAoF6i5C85XzglYyxkep2QYPSttOOHAtdweCiJzlW+ARgfoxocQQuN00oDs/7KBcZMZjF4ClrNGe5I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790775387; c=relaxed/simple;
-	bh=MWCvg4sjK/uErDxiJSNTuEfe/fE6ubDEaPpL4yLsOJU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=gN6lNVxBmlj+S87rF8LG+W4aINGotnTasxohfajw2ztq6/G4oc4Ep6q0oX08Jx9dleQNsmOvaQqCNEr2jun80MdK9LB7pdSIsBTCkOhtcYm6TEkZxD+r/5IieGd5Ql5x2WKfKKklrMESaH1fdDSIwzh+QXkcLXTvulzdKtF2ibQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=DWAFlDVz; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+	s=arc-20240116; t=1790779381; c=relaxed/simple;
+	bh=8UcWVXM+EmggUJG9RPNWsrlMH3hzHO+NyygDLU1YsGw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=hkKVy67KvU/W4Icp79cMdoLTKZbCxQTvjPrVvOb9F2Y3m95DX8dNBVUz9pl6ubJHF+G7SXYv0Ee+UKD5p4YHxzUfciFpw+1NbGz3Z5iEqtY+c0iMnsIb0IGsyGUoows4ZbkrG75S3zrP6ssmcEDVHm6dG+AxAA3Z2Qb/lqVqQAw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dy32UqnP; arc=none smtp.client-ip=74.125.231.168
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="DWAFlDVz"
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 78BF1497;
-	Wed, 30 Sep 2026 06:36:12 -0700 (PDT)
-Received: from [10.57.85.29] (unknown [10.57.85.29])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C98E03F86F;
-	Wed, 30 Sep 2026 06:36:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
-	t=1790775375; bh=MWCvg4sjK/uErDxiJSNTuEfe/fE6ubDEaPpL4yLsOJU=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=DWAFlDVzKXIRcL9optFIbIIh9On6QwWlHn3t84awWXg+fiddvTAT19gXAPZkFhTZ/
-	 G+sFhjcmcySLQfhWIa7n2J032I4Cvi3G+qVeRbWTEqRAFmwsa1/HkWnVxu/BWoDSwt
-	 ts25+5YXwzXpQL8kvczPNYSr+bWaaEkvGMWBwIMU=
-Message-ID: <b782f893-e3ab-40f7-a7c5-ce19660be2c1@arm.com>
-Date: Wed, 30 Sep 2026 14:36:06 +0100
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dy32UqnP"
+Received: by mail-oo2-f40.google.com with SMTP id 006d021491bc7-6c72bd8a02fso2947411eaf.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 30 Sep 2026 07:42:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1790779371; x=1791384171; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=lCYghwym+9Y4w6eXWM454UE/qTUCfuDedvhfnXRMawY=;
+        b=dy32UqnPl+BzkaikiClvupMqvPh0AuM/W63XwSJmOz3zVdaePgQuOESYOQyeo8Tc9R
+         PcH1UnP0d68nfvfRIpnqKYXCjNIHpkmIMDqTK4ekfip38Ur8PuKC7xRXpxyc2JXlU27H
+         HBApB4YGWEtZGNL4it5Dbokc2b1me2xYUnEmPhN21LCP5PmZYV5fOG0TdAaI90kTVORZ
+         OVbnnHvHJPsm+7BOsvUCZ0339uG7ptC7F/+lUEdn/KrhphQcXL8GeoYj6O2c4NLy2DPy
+         1lTbHy9V0T94+QeRMYLACUBLcOLzV73wvB402U48SBk5ZZjHXm+P0MSEMJpZ+cRIBNPf
+         OHWA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1790779371; x=1791384171;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=lCYghwym+9Y4w6eXWM454UE/qTUCfuDedvhfnXRMawY=;
+        b=E+601YX79t1mo7529swmpNDa2Px27jAdF+zIM1F4IacLOHviCDeDXyL/qNSIqUzaUR
+         YyTd2XIUGTLfH7OcSVRtWGwliFW6cEWkeOoeZACjB0TTF+IKB+SG5a6rFsfcRu+NDPPY
+         Tttz6bGd3rfvYti3fgBQBCevAZswV2vsPk2f9TWjc07U/wOZL7ClpyUcNHFHTjfh3M/2
+         Xpi5gfS1vy638dsb38ganOflnwcqzcUK7zt8YNikkPm1OmtLU4YJDFRO8+JOI1f3jnyH
+         vG6MyLj3SgmoPLkycULjpe61oqWz+6RByO3WLNi4lvaXAVeVg2tBS5OtySF+jw105ssI
+         1bIg==
+X-Forwarded-Encrypted: i=1; AKwUvBx5Q5Fj0geKGF0H2Ci85NtKllTViiMucqLT+VXdLYqfOHJWMB/IhmfHg6AgfN5JuFA0YR/4W3J3/BRAs91OIrfx@vger.kernel.org
+X-Gm-Message-State: AFuF++npM+uxs/a4TygvrSUyDkQYtbEF8SF48R9mZZPk3LgBJSQk3Ood
+	8L4mz11K0MC5cWradgNAMUyfP8EIJlUkBdLVUtPmA+ei5wI8WLumwG64WgOc2w==
+X-Gm-Gg: AYBFou1ojNmF3WQlMV3yBjV6KYmf4mzeIeyeaRxfU04FH6uwGnjC0U+Qjd3aBlio12k
+	Le1Ongj3bwoQKdjFHfXMyt+rnffT/xFPjewWLKH4SGFcbdEO82ndn0GEDYPRzFsU3cYtNzVtvoW
+	zIUzErHWWEyWh5JHQMzpiww4DzEwZHLS2Aq3H8r9nIbXdRvL2r79Svn4CdGTDXDmviTk+RBAMY6
+	S6GxkwUmryQFSEOduzYMqNTIVc3jOFo0bk6f17knTNBajnqP+x553s4t7NTlDAbryWYKZpAvlPo
+	XDlB93yXVWf7AvUbgzvtoLzZtuD0tfrlkEdjTQhssJVsWCpvkM8Ekgv97606JFYaUq9+5PI1dk/
+	7yYTQv2r9XTpnMeRp9NS1AqDq7k/VUsUa2vVyWupTD3yKG5RtXawRdXWQI9a9EFEiiYdV6ePRCn
+	qG1rxtCa5S/tZnsCe4s7xAulT8H9P6pcbJzRSHXfQOI+BFooElGM/8kr9yaElYAnM6oKsVhjxRP
+	KAcJBRMMmGXqFUFyFh4WGyhASsV14tsoJu5n/mt8K+uz3TJuYE=
+X-Received: by 2002:a05:6820:60f:b0:6b8:ce67:77d5 with SMTP id 006d021491bc7-6dcf1ab0479mr1793103eaf.13.1790779371494;
+        Wed, 30 Sep 2026 07:42:51 -0700 (PDT)
+Received: from archlinux.lan ([136.34.156.120])
+        by smtp.gmail.com with ESMTPSA id 46e09a7af769-820635e68b3sm1091810a34.17.2026.09.30.07.42.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 30 Sep 2026 07:42:50 -0700 (PDT)
+From: Danish Khateeb <danishkhateeb03@gmail.com>
+To: Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	James Clark <james.clark@linaro.org>,
+	Marco Elver <elver@google.com>,
+	Frederic Weisbecker <frederic@kernel.org>,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Danish Khateeb <danishkhateeb03@gmail.com>,
+	stable@vger.kernel.org
+Subject: [PATCH v2] perf/core: Don't send SIGTRAP after exec removed the event
+Date: Wed, 30 Sep 2026 09:42:48 -0500
+Message-ID: <20260930144248.59858-1-danishkhateeb03@gmail.com>
+X-Mailer: git-send-email 2.55.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] perf/arm-cmn: Allow userspace to select the PMU's CPU
-To: Haris Okanovic <harisokn@amazon.com>, mark.rutland@arm.com,
- will@kernel.org
-Cc: linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20260929223244.2411400-1-harisokn@amazon.com>
-From: Robin Murphy <robin.murphy@arm.com>
-Content-Language: en-GB
-In-Reply-To: <20260929223244.2411400-1-harisokn@amazon.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 2026-09-29 11:32 pm, Haris Okanovic wrote:
-> arm_cmn_probe() picks the CPU that owns the PMU with
-> 
-> 	cmn->cpu = cpumask_local_spread(0, dev_to_node(cmn->dev));
-> 
-> and arm_cmn_event_init() then binds every event to it unconditionally.
-> That choice is only revisited by the CPU hotplug callbacks, so in
-> practice the PMU stays on the first CPU local to the interconnect's NUMA
-> node, which is usually CPU 0.
-> 
-> All of the PMU's recurring work therefore lands on one CPU. This is
-> problematic on systems which reserve particular CPUs for latency
-> sensitive work or confine background activity to a chosen set of
-> housekeeping CPUs.
-> 
-> There is no way to set it explicitly. perf_event_open() and 'perf stat
-> -C' have no effect because arm_cmn_event_init() overwrites event->cpu;
-> /proc/irq/*/smp_affinity is refused for the DTC interrupts, which are
-> requested with IRQF_NOBALANCING because their affinity has to follow the
-> owning CPU.
+A sigtrap event must also set remove_on_exec, so that its SIGTRAP never
+reaches a program after exec. But the signal is sent from task work,
+which only runs on the way back to user space. If the event overflows
+shortly before execve(), the task work can still be pending when the
+task enters execve(), and then runs when execve() returns. By then
+perf_event_exec() has removed the event and the new program has default
+signal handlers, so the SIGTRAP kills it.
 
-All system PMU drivers have the same concern in this regard - why should 
-arm-cmn be special?
+The exec_stress test in the remove_on_exec selftest catches this and
+fails about half the time in a VM. A process that opens a sigtrap event
+on itself and then calls execve() is killed by SIGTRAP in 15% to 50% of
+runs, both on an AMD machine running v7.2 and in a VM, with or without
+close-on-exec on the event fd.
 
-> Make the existing 'cpumask' attribute writable. It already reports the
-> CPU which owns the PMU; writing a CPU number now migrates the PMU there
-> via the existing arm_cmn_migrate(), which moves the perf contexts and
-> the DTC interrupt affinity together. Since the PMU has a single owning
-> CPU, anything other than one CPU number is rejected.
-> 
-> The attribute expresses a preference rather than a guarantee. The
-> hotplug callbacks may still move the PMU, for example when the chosen
-> CPU is offlined.
-> 
-> Signed-off-by: Haris Okanovic <harisokn@amazon.com>
-> ---
-> I made the existing 'cpumask' attribute writable rather than
-> adding a new one. Every other implementation of that file is read-only,
-> so I am happy to switch to a separate attribute if you would prefer to
-> keep 'cpumask' uniformly read-only across PMUs.
-> 
-> Tested on two platforms with CONFIG_PROVE_LOCKING=y:
-> 
->    AWS m9g.metal-48xl CMN S3,  one mesh,   192 CPUs
->    AWS m8g.metal-48xl CMN-700, two meshes, 192 CPUs
-> 
->    - Multiplexing occurs on the configured CPU.
->    - Offlining the owning CPU migrates the PMU and updates the attribute.
->    - Writes racing CPU offline/online produced no lockdep reports.
+perf_event_exit_event() sets PERF_EVENT_STATE_EXIT when exec removes the
+event. If the event fd is close-on-exec and was the last reference to
+the file, exec also queues the file release as task work. Task work runs
+newest first, so perf_release() runs before the SIGTRAP work and moves
+the event on to PERF_EVENT_STATE_DEAD. Exit is already caught by the
+PF_EXITING check in perf_sigtrap(). So don't send the signal when the
+event state is PERF_EVENT_STATE_EXIT or lower, which means the event has
+been removed. That also covers PERF_EVENT_STATE_REVOKED, where the PMU
+is gone.
 
-Lockdep isn't going to do much anyway, since the whole point is that 
-perf mostly depends on CPU affinity and IRQ masking for mutual exclusion 
-and serialisation, rather than explicit locking. What prevents 
-perf_event_open racing against this update such that the new event->cpu 
-still ends up with the old value, and thus will no longer be correctly 
-synchronised against other scheduling calls/overflow interrupts/etc.?
+Fixes: 97ba62b27867 ("perf: Add support for SIGTRAP on perf events")
+Cc: stable@vger.kernel.org
+Assisted-by: LLM
+Signed-off-by: Danish Khateeb <danishkhateeb03@gmail.com>
+---
 
-Now yes, I think technically that race might already exist in a tiny 
-window due to the order of hotplug callbacks (yet another reason why I'd 
-like to clean up hotplug handling...), but at worst it's still 
-relatively benign if the old CPU is actually going offline, since it 
-will very soon reach a state where that misconfigured new event just 
-won't work - since trying to schedule or read it depends on 
-cross-calling a CPU that's now gone - but at least it's then not capable 
-of corrupting _other_ events.
+Notes:
+    Changes in v2:
+    - Skip the signal for every state at or below PERF_EVENT_STATE_EXIT, not
+      only EXIT. With a close-on-exec event fd the file release runs first
+      and moves the event to PERF_EVENT_STATE_DEAD, so v1 still killed 360
+      of 2000 children. Reported by Sashiko.
+    - v1: https://lore.kernel.org/all/20260929182935.355892-1-danishkhateeb03@gmail.com/
+    
+    Tested on v7.3-rc5 x86_64 under virtme-ng (KASAN, lockdep, 8 vCPUs on an
+    AMD Zen 3 host):
+    
+    - selftests/perf_events/remove_on_exec: exec_stress failed in 9 of 20
+      runs before, all 20 pass after.
+    - The exec_stress pattern in a loop (30 inheriting children, 50 rounds):
+      a child was killed by SIGTRAP in 17 rounds before, in none after.
+    - Each child opens its own sigtrap + remove_on_exec event and execs:
+      756 of 2000 children were killed before, none after. With
+      PERF_FLAG_FD_CLOEXEC: 836 of 2000 before, 360 with v1, none after.
+      On the bare-metal host running v7.2.6 the same program kills 297 to
+      1033 of 2000 children across runs, and 1012 of 2000 with
+      PERF_FLAG_FD_CLOEXEC.
+    - sigtrap_threads, watermark_signal and mmap pass before and after. No
+      new kernel warnings.
+    
+    v7.2 fails the same way in the VM. I did not test kernels older than
+    v7.2. gcc W=1 and sparse show no new warnings.
 
-Thanks,
-Robin.
+ kernel/events/core.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-> ---
->   Documentation/admin-guide/perf/arm-cmn.rst | 18 ++++++++++
->   drivers/perf/arm-cmn.c                     | 40 +++++++++++++++++++++-
->   2 files changed, 57 insertions(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/admin-guide/perf/arm-cmn.rst b/Documentation/admin-guide/perf/arm-cmn.rst
-> index 796e25b7027b2..bf75b686cef76 100644
-> --- a/Documentation/admin-guide/perf/arm-cmn.rst
-> +++ b/Documentation/admin-guide/perf/arm-cmn.rst
-> @@ -44,6 +44,24 @@ given type. To target a specific node, "bynodeid" must be set to 1 and
->   "nodeid" to the appropriate value derived from the CMN configuration
->   (as defined in the "Node ID Mapping" section of the TRM).
->   
-> +CPU affinity
-> +------------
-> +
-> +The driver also provides a "cpumask" sysfs attribute, which contains a
-> +single CPU ID, of the processor which will be used to handle all the CMN
-> +PMU events.
-> +
-> +The attribute is writable, and accepts a single CPU ID to move the PMU
-> +to that processor, for instance to keep counter reads, interrupt handling
-> +and event rotation away from CPUs reserved for latency sensitive work::
-> +
-> +  $# echo 5 > /sys/bus/event_source/devices/arm_cmn_0/cpumask
-> +
-> +This expresses a preference rather than a guarantee. In case of the
-> +chosen processor being offlined, or a processor local to the
-> +interconnect's NUMA node coming online while the chosen one is not, the
-> +events and interrupts are migrated and the attribute is updated.
-> +
->   Watchpoints
->   -----------
->   
-> diff --git a/drivers/perf/arm-cmn.c b/drivers/perf/arm-cmn.c
-> index 5378fba916cf5..4f82d667d8828 100644
-> --- a/drivers/perf/arm-cmn.c
-> +++ b/drivers/perf/arm-cmn.c
-> @@ -5,6 +5,7 @@
->   #include <linux/acpi.h>
->   #include <linux/bitfield.h>
->   #include <linux/bitops.h>
-> +#include <linux/cpu.h>
->   #include <linux/debugfs.h>
->   #include <linux/interrupt.h>
->   #include <linux/io.h>
-> @@ -12,6 +13,7 @@
->   #include <linux/kernel.h>
->   #include <linux/list.h>
->   #include <linux/module.h>
-> +#include <linux/mutex.h>
->   #include <linux/of.h>
->   #include <linux/perf_event.h>
->   #include <linux/platform_device.h>
-> @@ -404,6 +406,8 @@ struct arm_cmn_nodeid {
->   	u8 dev;
->   };
->   
-> +static void arm_cmn_migrate(struct arm_cmn *cmn, unsigned int cpu);
-> +
->   static int arm_cmn_xyidbits(const struct arm_cmn *cmn)
->   {
->   	return fls((cmn->mesh_x - 1) | (cmn->mesh_y - 1));
-> @@ -1519,8 +1523,42 @@ static ssize_t arm_cmn_cpumask_show(struct device *dev,
->   	return sysfs_emit(buf, "%*pbl\n", cpumask_pr_args(cpumask_of(cmn->cpu)));
->   }
->   
-> +static ssize_t arm_cmn_cpumask_store(struct device *dev,
-> +				     struct device_attribute *attr,
-> +				     const char *buf, size_t count)
-> +{
-> +	static DEFINE_MUTEX(cpumask_mutex);
-> +
-> +	struct arm_cmn *cmn = to_cmn(dev_get_drvdata(dev));
-> +	unsigned int cpu;
-> +	int err;
-> +
-> +	err = kstrtouint(buf, 0, &cpu);
-> +	if (err)
-> +		return err;
-> +
-> +	if (cpu >= nr_cpu_ids)
-> +		return -EINVAL;
-> +
-> +	/* Serialises multiple writers against each other */
-> +	mutex_lock(&cpumask_mutex);
-> +	/* Blocks hotplug during write */
-> +	cpus_read_lock();
-> +
-> +	if (!cpu_online(cpu))
-> +		err = -EINVAL;
-> +	else if (cpu != cmn->cpu)
-> +		arm_cmn_migrate(cmn, cpu);
-> +
-> +	cpus_read_unlock();
-> +	mutex_unlock(&cpumask_mutex);
-> +
-> +	return err ?: count;
-> +}
-> +
->   static struct device_attribute arm_cmn_cpumask_attr =
-> -		__ATTR(cpumask, 0444, arm_cmn_cpumask_show, NULL);
-> +		__ATTR(cpumask, 0644, arm_cmn_cpumask_show,
-> +		       arm_cmn_cpumask_store);
->   
->   static ssize_t arm_cmn_identifier_show(struct device *dev,
->   				       struct device_attribute *attr, char *buf)
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index 634d2ccbab82..eabe6cdf7a88 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -7631,6 +7631,15 @@ static void perf_sigtrap(struct perf_event *event)
+ 	if (current->flags & PF_EXITING)
+ 		return;
+ 
++	/*
++	 * The event was removed after this signal was queued, e.g. by exec()
++	 * (remove_on_exec), which may also have closed its fd (close-on-exec).
++	 * The new program has default signal handlers, so a SIGTRAP would
++	 * kill it.
++	 */
++	if (event->state <= PERF_EVENT_STATE_EXIT)
++		return;
++
+ 	/*
+ 	 * We'd expect this to only occur if the irq_work is delayed and either
+ 	 * ctx->task or current has changed in the meantime. This can be the
+
+base-commit: 72d3fcf802c45d00b300f25b848a93c3a2bd7c7e
+-- 
+2.55.0
 
