@@ -1,56 +1,56 @@
-Received: from mail-dl1-f70.google.com (mail-dl1-f70.google.com [74.125.82.70])
+Received: from mail-dy1-f197.google.com (mail-dy1-f197.google.com [74.125.82.197])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17CAA3B7747
-	for <linux-perf-users@vger.kernel.org>; Thu,  1 Oct 2026 02:34:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.70
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CA1337F32B
+	for <linux-perf-users@vger.kernel.org>; Thu,  1 Oct 2026 02:34:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790822077; cv=none; b=O3gNEfF2qBKOe3KWee32ojakMJsqVWB0My6ULpp2UxnhzPeF0JSxTDlHbroTlYi3pUj7rnkp44ObJR07FmhH8yTezm4DDlDBo/Wi92mcAevShJxW5fSgOuLEzQLB0CL950VBz41WMzvT4r4IpUj82m1NSyqiOHe/er6jUcNITIU=
+	t=1790822079; cv=none; b=PxEk/xUuWNprGQ8UETZCZdSbtsZ9HwSkEJfy596kKYx/WPmVf2EDpZ69BnETcUQMXtZI2GnqN/+9ou49nVQp0LW61aSPRE2lp2c4QnJpRjGserJYc83ri6IBj/CISQS4StcULWSDPUESUpx63G/m/YLkC7HtP+zKxnfxFK6C2zM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790822077; c=relaxed/simple;
-	bh=O5ODVShe1B0LC+rEY7qNyzL+7S9xq/jUBnul6lx10x4=;
+	s=arc-20240116; t=1790822079; c=relaxed/simple;
+	bh=nCk8Lv3H8Cmg+OiOa/MpQh4oQCFkO6JG4+qPbVNH81U=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=bYOBrGaB/diQRsIqWKxfboeJQ7R2HPMEOoc1r8Gw9KLsrguNxW9MiTTpNQ9jEX1VBQp1YSFwt5S86WJLq/QmwzDKOU0oGtJv1MMUh83i2vuYyVhPH6BxcHH2FSanfsZgRpdfOOAU23orN9aLBePNa5tmTxdcZnqpPN6DLCI+Klc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=tlnAlGi9; arc=none smtp.client-ip=74.125.82.70
+	 To:Content-Type; b=IDlV1c2HtUIlQjPCS8QhPYg3Mm5LbAyxWs7jZ+HAidSwTd6E8ymoV/oMqRu4LudQ99yYURqH2BCzp1kjYle7IxaUQFZD7cTio6BD057BOxKxU7V99dPM64ge1JEoF29D07TT4oud+XspkBAew/8Y6uf05y9jGz/Oa4/XXIuyw9Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=FvIdXi5T; arc=none smtp.client-ip=74.125.82.197
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="tlnAlGi9"
-Received: by mail-dl1-f70.google.com with SMTP id a92af1059eb24-1431ba79941so6831162c88.1
-        for <linux-perf-users@vger.kernel.org>; Wed, 30 Sep 2026 19:34:36 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="FvIdXi5T"
+Received: by mail-dy1-f197.google.com with SMTP id 5a478bee46e88-3282d5302ffso655573eec.1
+        for <linux-perf-users@vger.kernel.org>; Wed, 30 Sep 2026 19:34:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1790822075; x=1791426875; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1790822077; x=1791426877; darn=vger.kernel.org;
         h=content-type:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=x310nNqKeL5QTlQDhNqpbdK2+BHdclA/oEK1ZuBObLY=;
-        b=tlnAlGi9OGYiN6+TYhs0ZSmNXgTxyE0wcGLhzc0miBcyuGPCDRU7OF5bp+M6ISe+3z
-         QY4yaW9W4Ml3UzUS50B14c0CkxszTvadwnX1LSvLkHqF61lDmJi9CkxaD2kUJBnyr9jD
-         cA9WNDimp/FcypWWnhD8ECYOVLVKnk3ukXknK9gMjDsoH1AA57iHfJa879H6K2UiVsv/
-         lHnx+dapuA4/qE5yPM6g5csye2UcditjGPmdhkwHE2F+xS5Wox63pFD1dPA6h+c40xH6
-         xloPLG1O7pnIduzZdEXXC4CGJFB+B/k9C8z9sb8RBYYc0YQq7IqZ1Z4c0YC7d/a0+xEi
-         d37w==
+        bh=pCEa6kHSF7nHp9DpSeBucrqoV5vSti5uYXxrjWyY/IM=;
+        b=FvIdXi5TDh/Dw/7otrPsh/6hnW5THel61VNpIhTDVy8CwITrBFtw0Oan6tKQsE3vyN
+         879dLLwz9MURtLcDpJ6G+vXh771yNJ9EnWI/hueU6auyE2eh63EF8Q8TAZDd8+YP6wXo
+         XDHwD/tpcb4d+nGzMZLDdyikZgfE4bORgK5pEDYG8XG7aNYO2xY+mQbyzhx2099grTbE
+         Y87HpNmv5Nlluj7LQ2bsQrJxZVhRPO0Y4c/o05kH4lY6vGrwWz0EteXGhTtv8Nh6VWh5
+         KeCGuD7L43u7PrlG5v41uMpRULQZCesjpSFZUWbNR+2MSDH+UyZVmIGeYTnV+QlqxEx/
+         sniQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1790822075; x=1791426875;
+        d=1e100.net; s=20260707; t=1790822077; x=1791426877;
         h=content-type:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=x310nNqKeL5QTlQDhNqpbdK2+BHdclA/oEK1ZuBObLY=;
-        b=QjLLVsIz6EY/GD4J8TWka1RWE85x/Knafn7/sl8WfaE/UOR/c7uMJEfjnpH/NSqe9h
-         0cA/FZ5V3+WVkf+hon8+SYpCoP3D8phWPGlLVh1F5DudDUjs1OLUkN4Al+ADFCZee+Fg
-         JPejJzecm2bnAlAKyAyOGPpHe44prKCS4Tt9QoWlNvwplACP1zxkgs7jCf3SwqdVCfpN
-         iGuL/e3yiESclkWFKlMtZH16tfSs5vnZJW5S2+u61kT6uPOQ8dpM+x+TJ/AycBmmMF94
-         PKbZWHRfKgRM/sP1HmI6zz0YJlylHu/FzOlcOhfZWmQ8eRDMxBkos6YmVVFCBRXTk/Fx
-         CofQ==
-X-Forwarded-Encrypted: i=1; AKwUvBwBDW2lGkpnzdAtt2n7PdEyuaHx1rHr6Tn833BsYjQd+w1GYC0mR0dmP97yxovHg7lfokXvprwNCOgutxSEUCfD@vger.kernel.org
-X-Gm-Message-State: AFuF++kco4B0i5iwCjf/TYgTuCqsj2vejcsIhkZy+jhEc6lB4oSfnG92
-	Yh3oQtou+3hkqBxvLbtusFGNR04kwEBfziJ7/k60LvQGISvvdfcRkrhUg40gVu01m/XmNOesEbY
-	Tw34ugy6Dhg==
-X-Received: from dlbrl17.prod.google.com ([2002:a05:7022:f511:b0:143:9658:f913])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:3715:b0:143:5c63:23a1
- with SMTP id a92af1059eb24-14d3204da83mr3085033c88.19.1790822074757; Wed, 30
- Sep 2026 19:34:34 -0700 (PDT)
-Date: Wed, 30 Sep 2026 19:34:22 -0700
+        bh=pCEa6kHSF7nHp9DpSeBucrqoV5vSti5uYXxrjWyY/IM=;
+        b=PJAE9M3FX3inpHy5aZ8DaPUW8qx75Hj80GPZYKUMJrWlI5OwMlsgcPwscEvNyAsw0J
+         fbEjD43qKMAzLxYBgySKLubndFgnz4ca+bB3PEirdvBz54oJqiWRKLWcV66Y71AFytw8
+         7x7hbKJMX7qvgBo6AlM30GwT1I9PtFCJGTG4jf7onYFk79/1fdQVZrCHcrgRmSNMQgEN
+         6UoHg+gv023O9CcPbW0M1wu03sDkC1oPTnd90QneWkd36aW+nZPYK1yIZF/XaNOtM2o9
+         q9JHVvJfjQkJgGLjKeJE+q2oAf1YKoCcK0SmIWiGzpXMzEROOFfKt6URXuoOX/pUe3ML
+         dIkg==
+X-Forwarded-Encrypted: i=1; AKwUvBzPbc4z4UF633ANgGM3IuL3lySe37P11oLhloeKSpBabArS1UNhBQobkBFTYbF8H2Ruy6sxCnaXvMt5+qi5Q1nP@vger.kernel.org
+X-Gm-Message-State: AFuF++n+hNoO1GIpdBqh7YRrGbEbZVEpoXedV0xx558S6l8BesRcR3m3
+	OYgFcYXxC0QC6sTMj/Xiw+Yczq9FKXMzLQW1OkH62EUC0ZDZmOps8r79H9Diqauk7olSRg03HsX
+	PXzFu6PxQBA==
+X-Received: from dycnr9-n1.prod.google.com ([2002:a05:7300:e9c9:10b0:33e:8d5d:6f5b])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:701b:2605:b0:14e:5e6b:e6e2
+ with SMTP id a92af1059eb24-14e5e6bee29mr179513c88.18.1790822076829; Wed, 30
+ Sep 2026 19:34:36 -0700 (PDT)
+Date: Wed, 30 Sep 2026 19:34:23 -0700
 In-Reply-To: <20261001023423.1225713-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -60,9 +60,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20261001023423.1225713-1-irogers@google.com>
 X-Mailer: git-send-email 2.56.0.rc1.315.gc6ed9934b7-goog
-Message-ID: <20261001023423.1225713-4-irogers@google.com>
-Subject: [PATCH 3/4] perf build: Clear GTK4 instead of setting unused NO_GTK4
- when gtk4 is missing
+Message-ID: <20261001023423.1225713-5-irogers@google.com>
+Subject: [PATCH 4/4] perf build: Fix clean and install target dependencies
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
@@ -71,36 +70,131 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-Commit 4751bddd3f98 ("perf tools: Make GTK2 support opt-in") switched
-Makefile.config and Makefile.perf from checking 'ifndef NO_GTK2' to
-'ifdef GTK2' (now 'ifdef GTK4'), leaving 'NO_GTK4 := 1' in
-Makefile.config unused. As a result, when building with GTK4=1 on a
-system without gtk4 development headers, Makefile.perf still attempted
-to build and install libperf-gtk.so under 'ifdef GTK4'.
+Fix several missing dependencies and ordering issues for clean and
+install targets:
 
-Replace 'NO_GTK4 := 1' with 'override GTK4 :=' so that 'ifdef GTK4' in
-Makefile.perf evaluates to false when the gtk4 feature check fails.
+1. In tools/perf/Makefile, order 'install*' goals after 'all' when both
+   are passed on the command line (e.g. 'make -j clean all install') so
+   two concurrent Makefile.perf sub-makes do not race in the same build
+   directory, and mark 'all' and 'clean' as .PHONY.
 
-Fixes: 4751bddd3f98 ("perf tools: Make GTK2 support opt-in")
+2. In tools/perf/Makefile.perf, when 'clean' is passed alongside build
+   or install goals (e.g. 'make -f Makefile.perf clean install'), run
+   'clean' sequentially before 'fixdep' and 'sub-make' rather than
+   running 'clean' in parallel with the build inside 'sub-make'.
+
+3. Ensure '$(OUTPUT)python' is created inside the recipe for
+   '$(OUTPUT)python/perf$(PYTHON_EXTENSION_SUFFIX)' rather than only at
+   Makefile parse time, in case 'clean' removed the directory.
+
+4. Add '$(LANG_BINDINGS)' as a prerequisite of 'install-python_ext' so
+   the Python C extension is built with the proper compiler/linker flags
+   and perf libraries before 'setup.py install' runs.
+
+5. Add 'install-bin', 'install-tools', 'install-tests',
+   'install-python_ext', '$(DOC_TARGETS)', and '$(INSTALL_DOC_TARGETS)'
+   to .PHONY in Makefile.perf.
+
+6. Prefix targets emitted by Documentation/build-docdep.perl with
+   '$(OUTPUT)' so '$(OUTPUT)doc.dep' matches out-of-tree documentation
+   targets when 'O=' is specified.
+
 Assisted-by: Antigravity:gemini-3.1-pro
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/Makefile.config | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/perf/Documentation/build-docdep.perl |  2 +-
+ tools/perf/Makefile                        |  9 ++++++++-
+ tools/perf/Makefile.perf                   | 19 +++++++++++++++----
+ 3 files changed, 24 insertions(+), 6 deletions(-)
 
-diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
-index 8f46885d6df5..cafc7be79643 100644
---- a/tools/perf/Makefile.config
-+++ b/tools/perf/Makefile.config
-@@ -786,7 +786,7 @@ ifdef GTK4
-   $(call feature_check,gtk4)
-   ifneq ($(feature-gtk4), 1)
-     $(warning GTK4 not found, disables GTK4 support. Please install gtk4-devel or libgtk-4-dev)
--    NO_GTK4 := 1
-+    override GTK4 :=
-   else
-     CFLAGS += -DHAVE_GTK4_SUPPORT
-     GTK_CFLAGS += $(shell $(PKG_CONFIG) --cflags gtk4 2>/dev/null)
+diff --git a/tools/perf/Documentation/build-docdep.perl b/tools/perf/Documentation/build-docdep.perl
+index ba4205e0302a..f19f5107fe0f 100755
+--- a/tools/perf/Documentation/build-docdep.perl
++++ b/tools/perf/Documentation/build-docdep.perl
+@@ -41,6 +41,6 @@ while ($changed) {
+ while (my ($text, $included) = each %include) {
+     if (! exists $included{$text} &&
+ 	(my $base = $text) =~ s/\.txt$//) {
+-	print "$base.html $base.xml : ", join(" ", keys %$included), "\n";
++	print "\$(OUTPUT)$base.html \$(OUTPUT)$base.xml : ", join(" ", keys %$included), "\n";
+     }
+ }
+diff --git a/tools/perf/Makefile b/tools/perf/Makefile
+index b8d38728306a..a0d7035cd97b 100644
+--- a/tools/perf/Makefile
++++ b/tools/perf/Makefile
+@@ -93,6 +93,13 @@ ifeq ($(has_clean),1)
+ $(rest): clean
+   endif # rest
+ endif # has_clean
++
++ifneq ($(filter all,$(MAKECMDGOALS)),)
++  install_goals := $(filter install%,$(MAKECMDGOALS))
++  ifneq ($(install_goals),)
++$(install_goals): all
++  endif
++endif
+ endif # MAKECMDGOALS
+ 
+ #
+@@ -130,4 +137,4 @@ check-headers:
+ 	$(print_msg)
+ 	$(make)
+ 
+-.PHONY: tags TAGS FORCE Makefile build-test build-test-tarball check-headers
++.PHONY: all clean tags TAGS FORCE Makefile build-test build-test-tarball check-headers
+diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
+index 836225b08649..d90bdd319c72 100644
+--- a/tools/perf/Makefile.perf
++++ b/tools/perf/Makefile.perf
+@@ -327,9 +327,17 @@ export HOSTCC HOSTLD HOSTAR HOSTCFLAGS SHELLCHECK MYPY PYLINT CONFIG_PERF_BPF_SK
+ include $(srctree)/tools/build/Makefile.include
+ 
+ ifeq ($(force_fixdep),1)
+-goals := $(filter-out all sub-make, $(MAKECMDGOALS))
++goals := $(filter-out all sub-make clean, $(MAKECMDGOALS))
+ 
+-$(goals) all: sub-make
++ifneq ($(filter clean,$(MAKECMDGOALS)),)
++clean-make:
++	$(Q)$(MAKE) -f Makefile.perf -j1 clean
++
++fixdep: clean-make
++.PHONY: clean-make
++endif
++
++$(goals) all clean: sub-make
+ 
+ sub-make: fixdep
+ 	$(Q)$(MAKE) FIXDEP_BUILT=1 -f Makefile.perf $(goals)
+@@ -565,6 +573,7 @@ $(OUTPUT)python/perf$(PYTHON_EXTENSION_SUFFIX): util/python.c util/setup.py pyth
+         CFLAGS='$(CFLAGS)' LDFLAGS='$(LDFLAGS) $(LIBS_PY)' \
+ 	  $(PYTHON_WORD) util/setup.py \
+ 	  $(python_setup_quiet) build_ext; \
++	$(MKDIR) -p $(OUTPUT)python; \
+ 	cp $(PYTHON_EXTBUILD_LIB)perf*.so $(OUTPUT)python/; \
+ 	if [ "$(abspath python/perf.pyi)" != "$(abspath $(OUTPUT)python/perf.pyi)" ]; then \
+ 		cp python/perf.pyi $(OUTPUT)python/; \
+@@ -994,7 +1003,7 @@ install: install-bin try-install-man
+ install-build-deps:
+ 	$(Q)$(SHELL) $(srctree)/tools/perf/scripts/install-build-deps.sh $(INSTALL_BUILD_DEPS_ARGS)
+ 
+-install-python_ext:
++install-python_ext: $(LANG_BINDINGS)
+ 	$(PYTHON_WORD) util/setup.py $(python_setup_quiet) \
+ 		$(if $(OUTPUT),egg_info --egg-base $(OUTPUT)) \
+ 		install --root='/$(DESTDIR_SQ)'
+@@ -1070,7 +1079,9 @@ endif
+ 
+ FORCE:
+ 
+-.PHONY: all install install-build-deps clean config-clean strip install-gtk
++.PHONY: all install install-bin install-tools install-tests install-build-deps
++.PHONY: install-gtk install-python_ext $(DOC_TARGETS) $(INSTALL_DOC_TARGETS)
++.PHONY: clean config-clean strip
+ .PHONY: shell_compatibility_test please_set_SHELL_PATH_to_a_more_modern_shell
+ .PHONY: .FORCE-PERF-VERSION-FILE TAGS tags cscope FORCE prepare bpf-skel-prepare
+ .PHONY: python_perf_target
 -- 
 2.56.0.rc1.315.gc6ed9934b7-goog
 
