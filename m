@@ -1,67 +1,68 @@
 Received: from mail-oi1-f200.google.com (mail-oi1-f200.google.com [209.85.167.200])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB951361945
-	for <linux-perf-users@vger.kernel.org>; Thu,  1 Oct 2026 21:34:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D35749E5D9
+	for <linux-perf-users@vger.kernel.org>; Thu,  1 Oct 2026 21:34:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.200
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790890444; cv=none; b=kA4W0E3ubSwWVZ3RdPWbPkxZm6cs+XwJ2YQhu0C2Urf8dSaQ2zRzYAjlkn38rTalHKbV7yhoj7NceMbsxCwa4lUkwSbr0CY4z2rky7nUakTtxew3JrRaMMXT5m6mwGVx0cefgbMLeOhYts7i/MTMGaTSimtgr/U6tknqZPM3QkI=
+	t=1790890446; cv=none; b=e6dTumS+I7nxUrodkAk7Z6LeCIMJ5r1S/f91DZojn10Njc09D4Va5Brew0dmLZpfNGaE1QawrsBSnbihhYLPqoFqWYoQZFDxN0Q2ChIJx4cPMgrM8fFtC3PdmhCA/G6f/r2P/3iv+iFLre1PfEfbRPUjA48ZjzFMToBaqMAeaww=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790890444; c=relaxed/simple;
-	bh=nT9hMrtZRR/2siI80QtehZ8BnMD1l4DAL83J/BAbUcM=;
+	s=arc-20240116; t=1790890446; c=relaxed/simple;
+	bh=aIbawXPVSEHJ0DscG76tmh9vZXpkAHRdIDz4TIVMzco=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=bhaDgSA4h/B2E3o0rJIDUgtd+/Y8kwXYKXmobuKI0lBswAxgrPZ4+id2Rno6XLRVVVKA5QL6E5WDOM4JUfTCb4+5eYuHlLh1BnoZxgPxau6/QYzDmpqb8yHHikfcW2w6TpgGHIdsSa/zcqz7N7P5onoubRzvPTlVduYkO2b02DQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--coltonlewis.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=tlM3Lxtc; arc=none smtp.client-ip=209.85.167.200
+	 To:Cc:Content-Type; b=GzW5i1ButxLovJ/L3uG7GMNFxbgGz1F9HQVtxEWJUsatEo+NS89cPYPaUBgEKKZ7XnrTfytuDfpHuAnBR4HxvDFjrz1MukB7IFUCgTWf4fhUPl2mMDHmFZKD2ZpHQMerWLmlxbggL3/a5A8Kan6dUItqn7AbqD3df7ASv5LkKl0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--coltonlewis.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=boKQkQy/; arc=none smtp.client-ip=209.85.167.200
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--coltonlewis.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="tlM3Lxtc"
-Received: by mail-oi1-f200.google.com with SMTP id 5614622812f47-4e937c5bd4fso4868111b6e.2
-        for <linux-perf-users@vger.kernel.org>; Thu, 01 Oct 2026 14:34:00 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="boKQkQy/"
+Received: by mail-oi1-f200.google.com with SMTP id 5614622812f47-4c7f887ac6bso10583720b6e.3
+        for <linux-perf-users@vger.kernel.org>; Thu, 01 Oct 2026 14:34:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1790890439; x=1791495239; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1790890440; x=1791495240; darn=vger.kernel.org;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=nT9hMrtZRR/2siI80QtehZ8BnMD1l4DAL83J/BAbUcM=;
-        b=tlM3Lxtc3WbIZgWz/Xm+xUadbSBplTug2uUjQgOHf8LqtVeSfHnfzdKEY3MKHG3hIB
-         pGbXeenqxFZMyOIOw5fLqnl4Vc8TXJx+iLR2zhaY3T74vpojbMBPtA+AxIqDsgZeTi1X
-         NHyiSKlysIlTdFyhK8gXAEcGZTg7EPVyQVoYO563WrhvWt1chumYtIMU4q3h5188AFOn
-         8bRz11fSTBgxH7CrBAdROTRTlyIKahNT2RP+bZO6PiBfoY4EVVqI+KrSDNp7Rcfkn70l
-         sdS4UhbqD28R022nca9PFW3THNTgpMqV8e0fnQrSnc+2YHt5drIXwrer7xEAJnUNz/1i
-         DWVw==
+        bh=aIbawXPVSEHJ0DscG76tmh9vZXpkAHRdIDz4TIVMzco=;
+        b=boKQkQy/fz28Xxju7V9yf/r1v3muO9vuW8iub1LH0Bqun/fKl1N3uTn+dYgOksswlM
+         +wgI56EJ9zDa62YaMPd7H3+1WHTt/S2ayjNIEfWf5o08aRrMZMPvRXL3awQxupifx+yp
+         2/73Bla8Yej6UHnMOakEVOaTkz5EJCwerZdkIGduFdcYyiv4naUWABD3dvW3LpQkygaB
+         kiGb6d+VN+Lrlmh5neRjwWT61McYKzAjyOT4JYMyXFMh6gRZ2VbK7pv8AHfeZbhYHrln
+         34ginvXjIkstxJaaG+TRFEZINScgv7KZA3ssois+zz9yrUzB9FGShoh1arvpRwKTfmSm
+         /uZg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1790890439; x=1791495239;
+        d=1e100.net; s=20260707; t=1790890440; x=1791495240;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=nT9hMrtZRR/2siI80QtehZ8BnMD1l4DAL83J/BAbUcM=;
-        b=acgpyWhR3QXMNrpuvZRr7h3n+T7oQtCSRgCOz29mJ+58qu0ZObX8urU2Q4JaFEUT18
-         I95I5mpVNBYuAPANpYtouBH5qJbhMX1S2pIf1rbAReq7WmQGewQNnvGnktaaGCFuWjM/
-         zHOOeqVTG1PbSqY3XPFh8xy3ljq6Cbk74O58Ki8pJQYB1hCx0koIWDFFoam3H70a1ObC
-         aXRiEFpzJq0EylhRYsElMm9gIH+31c2B0OJUg2F+mmTG4fp0ke+Mwq09QxV2bKNDU6IF
-         Uncln+cTOceQWaAUsAZ7vNjnHp3DJfWQFSbsl9XH8pPMpFp+4kg+9FQRRrXr2QsouwQU
-         fbVA==
-X-Forwarded-Encrypted: i=1; AKwUvBwc81JOxUPCb8dMEOh+ScU5jmEJhdkeNt+2Dxl4veTnIcxKbQl+0e7A5bRmnploQHWRCVVA2/KbRcThG2Q+g1Of@vger.kernel.org
-X-Gm-Message-State: AFuF++nhbwCj1rDH3CURbQjI0X28Ebs+cRB4Bk/D7tV7Cq+xhK0T8skZ
-	kSV7qA1OtvbWdB7LgHD4ru/7JfwFhZCpXhM5GZgmfkfR2n7X9im/q6Dh1NqdEAN6ldtHHYTxCVQ
-	PQiNJQoDrQrj1RA9KfAbEUtTfWA==
-X-Received: from ioben34.prod.google.com ([2002:a05:6602:3f62:b0:9af:289c:476c])
+        bh=aIbawXPVSEHJ0DscG76tmh9vZXpkAHRdIDz4TIVMzco=;
+        b=XeGZXODSOeJ819Eju5PJYZrk1IdsASNFJQitpHnQYqecxVfDhwBh4Us7Lr6rqIWGmo
+         0/I7UohNDCcS81NHb6eE00UGIE/u+j78YgSM04sA6JYvLwgs3fx1XD7lCRdbRGj59nlE
+         m7DcirMWaWg5hf8QBIvRtLFP+rEzXWb4jxEQjkX9BnM8r4ehOgxTPP4XfN74IQ8Ftz/W
+         isYPtN1dRFuNOd7E9KcN/L/+YJlchTFqpAbJyYdAgn/scQ74m+X+JNwAaYpzzoFcu2X7
+         Q9Mf+IFUq2FiPJAQawz2WhwKulYXjZunRxjoWKCaxIDmrIJbpBqvkEKy9Sbq9KHNinus
+         lGbw==
+X-Forwarded-Encrypted: i=1; AKwUvBwlTRg/yAx2zg/GrslDDUzNq63tQ9xeu2GfuzujF2ksJgpmCy+geotKSO6wDQLVSyy26BjUi7WKOmkZDB6s82AX@vger.kernel.org
+X-Gm-Message-State: AFuF++kOwm48YIp1zGbJGw+8Zu2lrO5dju6WETbV0hQIRerVZEfewfUG
+	tV7/qC4v6196U92VsaQY9x4fCW7rHFbqLJlwk/kfjMBYQIQ80i6CatgYJjOcACyrOJKWx9Skq6D
+	RC6egURispy53yjRCouTI93jCrw==
+X-Received: from ilbby7.prod.google.com ([2002:a05:6e02:2607:b0:50f:46b5:b429])
  (user=coltonlewis job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:6808:bc1:b0:4c3:2e7:55bb with SMTP id 5614622812f47-4f52a57e776mr435364b6e.38.1790890438606;
- Thu, 01 Oct 2026 14:33:58 -0700 (PDT)
-Date: Thu,  1 Oct 2026 21:33:56 +0000
-In-Reply-To: <5750151d-cb99-4f9d-b469-12a7b7796985@linaro.org>
+ 2002:a05:6808:2219:b0:4e6:6079:c33d with SMTP id 5614622812f47-4f5292ffc0amr467127b6e.10.1790890439463;
+ Thu, 01 Oct 2026 14:33:59 -0700 (PDT)
+Date: Thu,  1 Oct 2026 21:33:57 +0000
+In-Reply-To: <f54b9ea6-48b1-4f6c-92cc-b0a9249c2fb0@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-References: <20260924172928.2110956-1-coltonlewis@google.com> <5750151d-cb99-4f9d-b469-12a7b7796985@linaro.org>
+References: <20260924172928.2110956-1-coltonlewis@google.com>
+ <20260924172928.2110956-17-coltonlewis@google.com> <f54b9ea6-48b1-4f6c-92cc-b0a9249c2fb0@linaro.org>
 X-Mailer: git-send-email 2.56.0.rc1.315.gc6ed9934b7-goog
-Message-ID: <20261001213357.2088894-2-coltonlewis@google.com>
-Subject: Re: [PATCH v9 00/22] ARM64 PMU Partitioning
+Message-ID: <20261001213357.2088894-3-coltonlewis@google.com>
+Subject: Re: [PATCH v9 16/22] KVM: arm64: Apply dynamic guest counter reservations
 From: Colton Lewis <coltonlewis@google.com>
 To: James Clark <james.clark@linaro.org>
 Cc: Colton Lewis <coltonlewis@google.com>, Marc Zyngier <maz@kernel.org>, 
@@ -83,38 +84,39 @@ Content-Type: text/plain; charset="UTF-8"
 
 Hi James,
 
-On Wed, Sep 30, 2026 at 04:26:23PM +0100, James Clark wrote:
-> On 24/09/2026 18:29, Colton Lewis wrote:
-> > This series creates a new PMU scheme on ARM, a partitioned PMU that
-> > allows reserving a subset of counters for more direct guest access,
-> > significantly reducing overhead. More details, including performance
-> > benchmarks, can be read in the v1 cover letter linked below.
-> >
-> > There is no longer a kernel command line parameter
-> > (`arm_pmuv3.reserved_host_counters`); PMU partitioning is now completely
-> > controlled via the KVM API using `KVM_ARM_VCPU_PMU_V3_ENABLE_PARTITION`
-> > and `KVM_ARM_VCPU_PMU_V3_SET_NR_COUNTERS` vCPU device attributes. When
+On Wed, Sep 30, 2026 at 04:28:37PM +0100, James Clark wrote:
+> If you enable pseudo-NMIs, watchdog_hardlockup_enable() installs the
+> watchdog using a pinned PMU event. If host userspace also has a pinned event
+> on the mandatory 1 PMU counter assigned to the host, then a guest could
+> potentially squeeze out the watchdog.
 >
-> As far as I know there isn't a straightforward way to get the number of hw
-> counters from userspace. You have to either parse dmesg or attempt to open
-> incrementally more counters in a group until it fails.
+> I'm wondering if we need to prioritise kernel owned events? Or we just treat
+> them the same as any other event, and with PMU partitioning assume they
+> can't be guaranteed to be running? I feel like you would expect a watchdog
+> to be a bit more than best effort though, especially if there was always a
+> guaranteed counter available to put it on.
 >
-> This makes doing things like "use all counters for guest" or "reserve two
-> for the host" difficult. Maybe it's time to add a file to the PMU that
-> userspace can use query this.
+> I didn't follow it through completely, but it also looks like if the event
+> gets squeezed it would enter an error state and then never be re-enabled,
+> even after the guest stops running.
+>
+> Note, that I think the current ordering means that the watchdog won't
+> actually get squeezed out because it's created first. But I don't think we
+> can rely on the ordering as a strong guarantee, and it might get broken by
+> refactoring in the future.
 
-Inside a VMM, userspace can query the default PMCR_EL0.N via
-KVM_GET_ONE_REG(SYS_PMCR_EL0) after KVM_ARM_VCPU_INIT (or
-KVM_ARM_VCPU_PMU_V3_SET_PMU) and before calling
-KVM_ARM_VCPU_PMU_V3_SET_NR_COUNTERS, since KVM initializes
-nr_pmu_counters to the PMU's max_counters (which is how
-vpmu_counter_access discovers the limit).
+Good catch. Even without future refactoring, creation order can be
+defeated today if /proc/sys/kernel/nmi_watchdog is toggled off and back
+on at runtime while a userspace per-CPU pinned event is already open,
+giving the re-created watchdog a higher group_index and causing
+merge_sched_in() to put it into PERF_EVENT_STATE_ERROR when a
+partitioned guest takes PMCCNTR_EL0.
 
-For users and management tools outside the VMM (e.g. choosing N to pass
-on the QEMU command line), I agree it's awkward that
-/sys/bus/event_source/devices/<pmu>/caps/ exposes slots and bus_width
-but not the number of counters. I will add a patch to expose a caps
-attribute for the number of counters in drivers/perf/arm_pmuv3.c.
+Prioritizing kernel-owned events (!event->owner) ahead of userspace
+events in perf_event_groups_cmp() and perf_less_group_idx() guarantees
+that a kernel-pinned watchdog always wins the mandatory host counter
+over userspace pinned events regardless of creation order. I will look
+into adding that for v10.
 
 Thanks,
 Colton
