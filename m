@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 883C151CF6A;
-	Thu,  1 Oct 2026 18:54:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAA245237A3;
+	Thu,  1 Oct 2026 18:54:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790880869; cv=none; b=F28aP0Sw5X/iomRzoNtQq8uY6wfdWSqxioobWRf61gait5J7ZTtdrAtdeRymVdLYQn0jUzNPABiXXwbLmVeumnYCeDCBFq3kaqC6Lb3sFagtHydFctNhj5wZrSwuzt9M6OgYDL+P9sUsnxLKdJO3zAJALf6CLoDi7b5VQcRYJXY=
+	t=1790880872; cv=none; b=VankETDsB1//0KiCkyUr8XfER+IP2kwWmnkeFH3EXhJq/naYCnuttCcZqpSw7ZGhG6RGPHOAcDGv/57W4853eXXVZ+qyrLEo0ObPwlacBKnaNhbqvRe+yDMUdCN05kZt+syp3cGY9vj7QX8GXKqGXwTiBZoAxKkb5R2rItaC5Tg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790880869; c=relaxed/simple;
-	bh=mu7VGumEcJQprINCQfmX1+W1xgQLOgrbJTrfFdZYFqQ=;
+	s=arc-20240116; t=1790880872; c=relaxed/simple;
+	bh=njA7WrMJdtp0wAuE/osO+5W3afVlIa5rTdjhjNksPKM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=p0GoDMx1OeFozpDwy1Rkp6dGSfdgWrecPm+j7dNfJ29zo+n5Ml5xRdQ1zIKqweM2xUybP9xy7J0BC/O/BEd7t/zNzT7QfgsKrSIQSGgBhQqGLVxtw6qR9/oK0xGmJpKnXxByRQPteK9Ld00smMaD0ZLVpzZPpyJNbuAPXjnKQ7U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kk4cXWaJ; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version; b=MH+dT9A6DIVD/5CxKEdi92fhrGM9gX7hj4HpSEe+qyqgde2/oPxOLwVgcnsLVFqsoecbfOMFsds+p1e+Hpn6rKoDWUen24c3EpPwUiDpEuAB6G4EdC3I9md7Ba2oJJ4gibdTQ9h9roWrDVt/e1jgStvpmVvF0rOHjdVpEQHlxOU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OtoZe8SY; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kk4cXWaJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 180DA1F00898;
-	Thu,  1 Oct 2026 18:54:23 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OtoZe8SY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A52521F000FF;
+	Thu,  1 Oct 2026 18:54:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1790880867;
-	bh=MfKs8OtBqCDByBYpjgQyZ3lj/pwcgNUSo+gP59FQ2kg=;
+	s=k20260515; t=1790880870;
+	bh=Pis958JvHhCtTiQRsZlvqowXuWNjKOiL0SZd2+68XcY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=kk4cXWaJIfTq4YWDqT0WWdMbkB8OvaqphcOU0dkoI56BBP03c0Z9W2vO1Rv75x2r+
-	 ECI6NF35GlOPH+GdIKSu9mTDKR6NpvTLURyaond7jde94IG9rqvZuP7xsnLtSru7++
-	 fy7vEUImpD6TqVGZ43Odzp+Bik+zI40Ew5DX1jt6qnETcUyoJrTHgNZIVkKx70pJgF
-	 WtEt7FeZPk1Qfq05L8ivInm1JVf1VO+zBg/Trxf/rOIW1xPPhskiX3ylu0XeSbeKDY
-	 IFQTeefu+adZgULAw6NtcyOgP4yLAC0IT3MHj4Vo3zv6UzusrIByMJkHSoktl8KB64
-	 /wBsi4XSSmzLQ==
+	b=OtoZe8SYMY2VYdBFQQXBl5BUBmGiR7+SufIIU7FTWz2uub8eYo6GMQZZCZXSH37IJ
+	 u9sn/5CruoUJAFk7MKfLCU5JuspLrE9WQQwSQ0UZdEjgd03fnrETVio1knEA7ZZGfp
+	 EBNHlTLGheRIJlAifCdWj1ksaXzIwa/wsyHNP9E7tsAl9lKG7EkwRRYI6vwPgYTg4A
+	 oA3ef5Uap0F5SYQgP/oAW9200AtJU1+xZMQQBKrgphW7l28TOcOSlBxhePSgeisj3b
+	 q7GtVCClFxp9EV24UxmkL9KGkXeSxU8WNU/xLSnutwcoPflBGUXH1k8Rib672mdVx7
+	 dybSpR55Ug7gg==
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Namhyung Kim <namhyung@kernel.org>
 Cc: Ingo Molnar <mingo@kernel.org>,
@@ -38,9 +38,9 @@ Cc: Ingo Molnar <mingo@kernel.org>,
 	linux-kernel@vger.kernel.org,
 	linux-perf-users@vger.kernel.org,
 	Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH v7 5/9] perf config: Serialize config file access with a mutex
-Date: Thu,  1 Oct 2026 20:53:56 +0200
-Message-ID: <20261001185400.2754753-6-acme@kernel.org>
+Subject: [PATCH v7 6/9] perf report: Add --progress option
+Date: Thu,  1 Oct 2026 20:53:57 +0200
+Message-ID: <20261001185400.2754753-7-acme@kernel.org>
 X-Mailer: git-send-email 2.55.0
 In-Reply-To: <20261001185400.2754753-1-acme@kernel.org>
 References: <20261001185400.2754753-1-acme@kernel.org>
@@ -54,249 +54,354 @@ Content-Transfer-Encoding: 8bit
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-Config file access shares the static parser state and, since
-perf_config__set_variable() became an entry point for background
-features, can run on more than one thread: a feature writing the
-config while perf top's display thread reads it.  Serialize parsing
-and rewriting with config_mutex and the whole read-modify-write of
-perf_config__set_variable() with config_update_mutex; config_set_mutex
-comes before it, as building the set parses the config files.
+Processing a large session with stdio output gives no feedback about
+which phase perf is in or how far along it is: ui_progress updates are
+only shown by the TUI.  Add --progress, installing a stdio backend
+(ui/stdio/progress.c) that prints the phase title, percentage and
+counts:
 
-perf has its own mutex type, util/mutex.h; the file scope mutexes
-here use the DEFINE_MUTEX() static initializer added in the previous
-patch.  The two lazy inits that system_path() and home_perfconfig()
-do would leak all but one of the strings racing on two threads, so
-they move to DO_ONCE(), added in the previous patch as well.
-bad_config() runs on the dispatching thread, outside config_mutex, so
-it stops reading config_file_name, which the parsing thread owns.
+  Processing events... [ 42.3%] 317M / 746M
+
+Phases can be nested, so the backend tracks the ones started to
+complete the right one on ui_progress__finish(); that requires
+init()/finish() pairs, fixed in ordered-events.c and the pipe and
+directory event processing.
 
 Assisted-by: LLM
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/config.c | 106 +++++++++++++++++++++++++++------------
- 1 file changed, 73 insertions(+), 33 deletions(-)
+ tools/perf/Documentation/perf-report.txt |  14 ++
+ tools/perf/builtin-report.c              |   6 +
+ tools/perf/ui/Build                      |   1 +
+ tools/perf/ui/progress.h                 |   2 +
+ tools/perf/ui/stdio/progress.c           | 162 +++++++++++++++++++++++
+ tools/perf/util/ordered-events.c         |  16 ++-
+ tools/perf/util/session.c                |  12 +-
+ 7 files changed, 206 insertions(+), 7 deletions(-)
+ create mode 100644 tools/perf/ui/stdio/progress.c
 
-diff --git a/tools/perf/util/config.c b/tools/perf/util/config.c
-index 6e0ff8a9140ccf96..287401f159e66e8c 100644
---- a/tools/perf/util/config.c
-+++ b/tools/perf/util/config.c
-@@ -31,6 +31,7 @@
- #include "callchain.h"
- #include "debug.h"
- #include "header.h"
-+#include "mutex.h"
- #include "path.h"
- #include "srcline.h"
- #include "unwind.h"
-@@ -371,10 +372,8 @@ static int perf_parse_long(const char *value, long *ret)
+diff --git a/tools/perf/Documentation/perf-report.txt b/tools/perf/Documentation/perf-report.txt
+index 3718ebd297ce0673..a7429a30ec28f903 100644
+--- a/tools/perf/Documentation/perf-report.txt
++++ b/tools/perf/Documentation/perf-report.txt
+@@ -29,6 +29,20 @@ OPTIONS
+ --quiet::
+ 	Do not show any warnings or messages.  (Suppress -v)
  
- static void bad_config(const char *name)
- {
--	if (config_file_name)
--		pr_warning("bad config value for '%s' in %s, ignoring...\n", name, config_file_name);
--	else
--		pr_warning("bad config value for '%s', ignoring...\n", name);
-+	/* config_file_name is owned by the parsing thread, under config_mutex. */
-+	pr_warning("bad config value for '%s', ignoring...\n", name);
- }
- 
- int perf_config_u64(u64 *dest, const char *name, const char *value)
-@@ -550,11 +549,18 @@ int perf_default_config(const char *var, const char *value,
- 	return 0;
- }
- 
-+/* Parsing and rewriting share the static parser state. */
-+static DEFINE_MUTEX(config_mutex);
++--progress::
++	Show progress for each of the processing phases, printing the
++	percentage done and the current/total counts: the first phase
++	counts the bytes of the perf.data file processed so far, the
++	merge and sort phases count hist entries, e.g.:
 +
-+/* Serializes whole perf_config__set_variable() updates. */
-+static DEFINE_MUTEX(config_update_mutex);
++	Processing events... [ 42.3%] 4G / 10G
++	Merging related events... [  7.1%] 1024 / 14387
++	Sorting events for output... [ 98.2%] 14132 / 14387
 +
- static int perf_config_from_file(config_fn_t fn, const char *filename, void *data)
- {
- 	int ret;
- 	FILE *f = fopen(filename, "r");
++	It is a no-op when using the TUI or GTK browsers, that already
++	present progress information, or when --quiet is used, that asks
++	for no messages at all.
++
+ -n::
+ --show-nr-samples::
+ 	Show the number of samples for each symbol
+diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
+index 57225bc87731d074..81e13fb8194976c9 100644
+--- a/tools/perf/builtin-report.c
++++ b/tools/perf/builtin-report.c
+@@ -87,6 +87,7 @@ struct report {
+ 	bool			use_gtk;
+ #endif
+ 	bool			use_stdio;
++	bool			progress;
+ 	bool			show_full_info;
+ 	bool			show_threads;
+ 	bool			inverted_callchain;
+@@ -1384,6 +1385,8 @@ int cmd_report(int argc, const char **argv)
+ 		    "Use the stdio interface"),
+ 	OPT_BOOLEAN(0, "weights", &symbol_conf.annotate_weight,
+ 			"Show or hide weight columns in annotation. Default show if non-zero."),
++	OPT_BOOLEAN(0, "progress", &report.progress,
++		    "Show progress while processing the perf.data file"),
+ 	OPT_BOOLEAN(0, "header", &report.header, "Show data header."),
+ 	OPT_BOOLEAN(0, "header-only", &report.header_only,
+ 		    "Show only data header."),
+@@ -1790,6 +1793,9 @@ int cmd_report(int argc, const char **argv)
+ 	else
+ 		use_browser = 0;
  
-+	mutex_lock(&config_mutex);
- 	ret = -1;
- 	if (f) {
- 		config_file = f;
-@@ -565,21 +571,24 @@ static int perf_config_from_file(config_fn_t fn, const char *filename, void *dat
- 		fclose(f);
- 		config_file_name = NULL;
- 	}
-+	mutex_unlock(&config_mutex);
- 	return ret;
- }
++	if (report.progress && !quiet && use_browser == 0)
++		stdio_progress__init();
++
+ 	if (report.data_type && use_browser == 1) {
+ 		symbol_conf.annotate_data_member = true;
+ 		symbol_conf.annotate_data_sample = true;
+diff --git a/tools/perf/ui/Build b/tools/perf/ui/Build
+index 6005f813c9e3990c..a7b1740d51c80f23 100644
+--- a/tools/perf/ui/Build
++++ b/tools/perf/ui/Build
+@@ -4,6 +4,7 @@ perf-ui-y += progress.o
+ perf-ui-y += util.o
+ perf-ui-y += hist.o
+ perf-ui-y += stdio/hist.o
++perf-ui-y += stdio/progress.o
  
--const char *perf_etc_perfconfig(void)
--{
--	static const char *system_wide;
-+/* system_path() allocates, so it is computed once. */
-+static const char *etc_perfconfig;
+ CFLAGS_setup.o += -DLIBDIR="BUILD_STR($(LIBDIR))"
  
--	if (!system_wide)
--		/*
--		 * ETC_PERFCONFIG is absolute, so its unresolved path is
--		 * the same string, better than the callers crashing.
--		 */
--		system_wide = system_path(ETC_PERFCONFIG) ?: ETC_PERFCONFIG;
-+static void perf_etc_perfconfig__init(void)
+diff --git a/tools/perf/ui/progress.h b/tools/perf/ui/progress.h
+index 4f52c37b2f099a82..03f1a8bb260ba076 100644
+--- a/tools/perf/ui/progress.h
++++ b/tools/perf/ui/progress.h
+@@ -23,6 +23,8 @@ void __ui_progress__init(struct ui_progress *p, u64 total,
+ 
+ void ui_progress__update(struct ui_progress *p, u64 adv);
+ 
++void stdio_progress__init(void);
++
+ struct ui_progress_ops {
+ 	void (*init)(struct ui_progress *p);
+ 	void (*update)(struct ui_progress *p);
+diff --git a/tools/perf/ui/stdio/progress.c b/tools/perf/ui/stdio/progress.c
+new file mode 100644
+index 0000000000000000..118a6cf6555d59f5
+--- /dev/null
++++ b/tools/perf/ui/stdio/progress.c
+@@ -0,0 +1,162 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Progress feedback for the stdio (non-TUI/GTK) case, enabled with
++ * 'perf report --progress'.
++ */
++#include <inttypes.h>
++#include <stdio.h>
++#include <unistd.h>
++#include <linux/kernel.h>
++#include "../../util/debug.h"
++#include "../../util/units.h"
++#include "../progress.h"
++
++/*
++ * Phases can be nested, so keep track of the ones started so far to be
++ * able to complete the right one on ui_progress__finish(), which gets
++ * no arguments.
++ */
++#define STDIO_PROGRESS__MAX_DEPTH 8
++
++struct stdio_progress_phase {
++	struct ui_progress	*p;
++	u64			last_printed;
++	size_t			last_len;
++};
++
++static struct stdio_progress_phase stdio_progress__stack[STDIO_PROGRESS__MAX_DEPTH];
++static int stdio_progress__depth;
++static bool stdio_progress__is_tty;
++/* Phases that didn't fit on the stack are not shown. */
++static int stdio_progress__dropped;
++
++static void stdio_progress__print_phase(struct stdio_progress_phase *phase,
++					u64 curr)
 +{
-+	etc_perfconfig = system_path(ETC_PERFCONFIG);
-+	if (!etc_perfconfig)
-+		etc_perfconfig = ETC_PERFCONFIG;
++	struct ui_progress *p = phase->p;
++	char buf_cur[20], buf_tot[20], buf[128];
++	double percent = p->total ? 100.0 * (double)curr / (double)p->total : 0.0;
++	size_t len;
++
++	/*
++	 * Only the completion line shows 100.0%: a 99.99% progress would round
++	 * up to it and look like a duplicate at finish time.
++	 */
++	if (curr < p->total && percent > 99.9)
++		percent = 99.9;
++
++	if (p->size) {
++		unit_number__scnprintf(buf_cur, sizeof(buf_cur), curr);
++		unit_number__scnprintf(buf_tot, sizeof(buf_tot), p->total);
++		len = scnprintf(buf, sizeof(buf), "%s [%5.1f%%] %s / %s",
++				p->title, percent, buf_cur, buf_tot);
++	} else {
++		len = scnprintf(buf, sizeof(buf), "%s [%5.1f%%] %" PRIu64 " / %" PRIu64,
++				p->title, percent, curr, p->total);
++	}
++
++	if (!stdio_progress__is_tty) {
++		fprintf(stderr, "%s\n", buf);
++		goto out;
++	}
++
++	/* Pad to the length of the previous line to erase its leftovers. */
++	fprintf(stderr, "\r%s%*s", buf,
++		(int)(len < phase->last_len ? phase->last_len - len : 0), "");
++	phase->last_len = len;
++out:
++	phase->last_printed = curr;
++	fflush(stderr);
 +}
- 
--	return system_wide;
-+const char *perf_etc_perfconfig(void)
-+{
-+	DO_ONCE(perf_etc_perfconfig__init);
-+	return etc_perfconfig;
- }
- 
- static int perf_env_bool(const char *k, int def)
-@@ -637,19 +646,18 @@ static char *home_perfconfig(void)
- 	return NULL;
- }
- 
--const char *perf_home_perfconfig(void)
--{
--	static const char *config;
--	static bool failed;
--
--	if (failed || config)
--		return config;
-+/* home_perfconfig() allocates and warns, so it is computed once. */
-+static const char *home_config;
- 
--	config = home_perfconfig();
--	if (!config)
--		failed = true;
-+static void perf_home_perfconfig__init(void)
-+{
-+	home_config = home_perfconfig();
-+}
- 
--	return config;
-+const char *perf_home_perfconfig(void)
-+{
-+	DO_ONCE(perf_home_perfconfig__init);
-+	return home_config;
- }
- 
- static struct perf_config_section *find_section(struct list_head *sections,
-@@ -790,8 +798,15 @@ static int collect_config(const char *var, const char *value,
- int perf_config_set__collect(struct perf_config_set *set, const char *file_name,
- 			     const char *var, const char *value)
- {
-+	int ret;
 +
-+	mutex_lock(&config_mutex);
- 	config_file_name = file_name;
--	return collect_config(var, value, set);
-+	ret = collect_config(var, value, set);
-+	/* Don't leave the static parser state pointing at the caller's buffer. */
-+	config_file_name = NULL;
-+	mutex_unlock(&config_mutex);
++static void __stdio_progress__init(struct ui_progress *p)
++{
++	/* The default step is meant for the TUI bar, use 1% steps for stdio. */
++	p->next = p->step = p->total / 100 ?: 1;
++
++	if (stdio_progress__depth == STDIO_PROGRESS__MAX_DEPTH) {
++		/*
++		 * Out of room: don't start this phase, its finish() is
++		 * swallowed and its updates ignored below.
++		 */
++		pr_warning("progress phases nested deeper than %d, not showing progress for %s\n",
++			   STDIO_PROGRESS__MAX_DEPTH, p->title);
++		stdio_progress__dropped++;
++		return;
++	}
++
++	/* Start a nested phase in a line of its own. */
++	if (stdio_progress__depth && stdio_progress__is_tty)
++		fputc('\n', stderr);
++
++	stdio_progress__stack[stdio_progress__depth++] =
++		(struct stdio_progress_phase) {
++			.p = p,
++			.last_printed = 0,
++			.last_len = 0,
++		};
++
++	stdio_progress__print_phase(&stdio_progress__stack[stdio_progress__depth - 1],
++				    p->curr);
++}
++
++static void stdio_progress__update(struct ui_progress *p)
++{
++	/*
++	 * An update that doesn't match the innermost phase means something
++	 * is out of sync: print nothing rather than another phase's
++	 * numbers, or read past the stack.
++	 */
++	if (!stdio_progress__depth ||
++	    stdio_progress__stack[stdio_progress__depth - 1].p != p)
++		return;
++
++	stdio_progress__print_phase(&stdio_progress__stack[stdio_progress__depth - 1],
++				    p->curr);
++}
++
++static void stdio_progress__finish(void)
++{
++	struct stdio_progress_phase *phase;
++
++	/*
++	 * Being the innermost phase, its finish() comes first: swallow it, or
++	 * it would complete the phase that encloses it.
++	 */
++	if (stdio_progress__dropped) {
++		stdio_progress__dropped--;
++		return;
++	}
++
++	if (!stdio_progress__depth)
++		return;
++
++	phase = &stdio_progress__stack[--stdio_progress__depth];
++
++	/*
++	 * The last line may have stopped short of the total, close this phase
++	 * showing it as complete unless that was already printed.
++	 */
++	if (phase->last_printed != phase->p->total)
++		stdio_progress__print_phase(phase, phase->p->total);
++
++	phase->last_printed	= 0;
++	phase->last_len		= 0;
++
++	if (stdio_progress__is_tty)
++		fputc('\n', stderr);
++
++	fflush(stderr);
++}
++
++static struct ui_progress_ops stdio_progress__ops = {
++	.init	= __stdio_progress__init,
++	.update	= stdio_progress__update,
++	.finish	= stdio_progress__finish,
++};
++
++void stdio_progress__init(void)
++{
++	stdio_progress__is_tty = isatty(STDERR_FILENO) == 1;
++	ui_progress__ops = &stdio_progress__ops;
++}
+diff --git a/tools/perf/util/ordered-events.c b/tools/perf/util/ordered-events.c
+index a5857f9f5af2d3de..54c85663e733be4d 100644
+--- a/tools/perf/util/ordered-events.c
++++ b/tools/perf/util/ordered-events.c
+@@ -237,14 +237,16 @@ static int do_flush(struct ordered_events *oe, bool show_progress)
+ 		ui_progress__init(&prog, oe->nr_events, "Processing time ordered events...");
+ 
+ 	list_for_each_entry_safe(iter, tmp, head, list) {
+-		if (session_done())
+-			return 0;
++		if (session_done()) {
++			ret = 0;
++			goto out_progress;
++		}
+ 
+ 		if (iter->timestamp > limit)
+ 			break;
+ 		ret = oe->deliver(oe, iter);
+ 		if (ret < 0)
+-			return ret;
++			goto out_progress;
+ 
+ 		ordered_events__delete(oe, iter);
+ 		oe->last_flush = iter->timestamp;
+@@ -258,10 +260,16 @@ static int do_flush(struct ordered_events *oe, bool show_progress)
+ 	else if (last_ts <= limit)
+ 		oe->last = list_entry(head->prev, struct ordered_event, list);
+ 
++	ret = 0;
++out_progress:
++	/*
++	 * Always pair ui_progress__init() with ui_progress__finish(), the
++	 * stdio backend tracks the phases on a stack.
++	 */
+ 	if (show_progress)
+ 		ui_progress__finish();
+ 
+-	return 0;
 +	return ret;
  }
  
- static int perf_config_set__init(struct perf_config_set *set)
-@@ -838,6 +853,10 @@ struct perf_config_set *perf_config_set__load_file(const char *file)
- 	return set;
- }
+ static int __ordered_events__flush(struct ordered_events *oe, enum oe_flush how,
+diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
+index 7fea9e72726c936c..c4b4c7fb3b864589 100644
+--- a/tools/perf/util/session.c
++++ b/tools/perf/util/session.c
+@@ -3253,8 +3253,12 @@ static int __perf_session__process_pipe_events(struct perf_session *session)
+ 	cur_size = sizeof(union perf_event);
  
-+/* Not config_mutex: building the set parses the config files, which takes it. */
-+static DEFINE_MUTEX(config_set_mutex);
-+
-+/* Called with config_set_mutex held. */
- static int perf_config__init(void)
- {
- 	if (config_set == NULL)
-@@ -878,16 +897,26 @@ int perf_config_set(struct perf_config_set *set,
- 
- int perf_config(config_fn_t fn, void *data)
- {
--	if (config_set == NULL && perf_config__init())
-+	struct perf_config_set *set;
-+
-+	/* Not held across the dispatch: a callback can call perf_config() again. */
-+	mutex_lock(&config_set_mutex);
-+	if (perf_config__init()) {
-+		mutex_unlock(&config_set_mutex);
- 		return -1;
+ 	buf = malloc(cur_size);
+-	if (!buf)
+-		return -errno;
++	if (!buf) {
++		err = -errno;
++		if (update_prog)
++			ui_progress__finish();
++		return err;
 +	}
-+	set = config_set;
-+	mutex_unlock(&config_set_mutex);
- 
--	return perf_config_set(config_set, fn, data);
-+	return perf_config_set(set, fn, data);
- }
- 
- void perf_config__exit(void)
- {
-+	mutex_lock(&config_set_mutex);
- 	perf_config_set__delete(config_set);
- 	config_set = NULL;
-+	mutex_unlock(&config_set_mutex);
- }
- 
- int perf_config_set__write(struct perf_config_set *set,
-@@ -898,9 +927,12 @@ int perf_config_set__write(struct perf_config_set *set,
- 	int ret = 0;
- 	FILE *fp;
- 
-+	mutex_lock(&config_mutex);
- 	fp = fopen(file_name, "w");
--	if (!fp)
-+	if (!fp) {
-+		mutex_unlock(&config_mutex);
- 		return -1;
-+	}
- 
- 	if (fprintf(fp, "# this file is auto-generated.\n") < 0)
- 		ret = -1;
-@@ -922,6 +954,7 @@ int perf_config_set__write(struct perf_config_set *set,
+ 	ordered_events__set_copy_on_queue(oe, true);
+ more:
+ 	event = buf;
+@@ -3753,8 +3757,10 @@ static int __perf_session__process_dir_events(struct perf_session *session)
  	}
- 	if (fclose(fp) != 0)
- 		ret = -1;
-+	mutex_unlock(&config_mutex);
  
- 	return ret;
- }
-@@ -933,14 +966,20 @@ int perf_config_set__write(struct perf_config_set *set,
-  */
- int perf_config__set_variable(const char *var, const char *value)
- {
--	char path[PATH_MAX];
--	char *user_config = mkpath(path, sizeof(path), "%s/.perfconfig", getenv("HOME"));
- 	const char *config_filename;
- 	bool system_config;
--	struct perf_config_set *set;
-+	struct perf_config_set *set = NULL;
- 	int ret = -1;
- 
--	config_filename = config_exclusive_filename ?: user_config;
-+	mutex_lock(&config_update_mutex);
-+
-+	/* Static: the parser publishes it as config_file_name. */
-+	{
-+		static char path[PATH_MAX];
-+		char *user_config = mkpath(path, sizeof(path), "%s/.perfconfig", getenv("HOME"));
-+
-+		config_filename = config_exclusive_filename ?: user_config;
+ 	rd = calloc(nr_readers, sizeof(struct reader));
+-	if (!rd)
++	if (!rd) {
++		ui_progress__finish();
+ 		return -ENOMEM;
 +	}
  
- 	/* Rewriting the system wide file keeps its entries, or it is truncated. */
- 	system_config = strcmp(config_filename, perf_etc_perfconfig()) == 0;
-@@ -962,6 +1001,7 @@ int perf_config__set_variable(const char *var, const char *value)
- 	ret = 0;
- out_err:
- 	perf_config_set__delete(set);
-+	mutex_unlock(&config_update_mutex);
- 	return ret;
- }
- 
+ 	rd[0] = (struct reader) {
+ 		.fd		 = perf_data__fd(session->data),
 -- 
 2.55.0
 
