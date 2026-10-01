@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAA245237A3;
-	Thu,  1 Oct 2026 18:54:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E84F3CF21F;
+	Thu,  1 Oct 2026 18:54:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790880872; cv=none; b=VankETDsB1//0KiCkyUr8XfER+IP2kwWmnkeFH3EXhJq/naYCnuttCcZqpSw7ZGhG6RGPHOAcDGv/57W4853eXXVZ+qyrLEo0ObPwlacBKnaNhbqvRe+yDMUdCN05kZt+syp3cGY9vj7QX8GXKqGXwTiBZoAxKkb5R2rItaC5Tg=
+	t=1790880875; cv=none; b=B78N7uioHHmfg3cFaOjEV5l+iY+vjP+Hhg2UBBj6MzwoM1id/yVFQVvVUyVGX9FSnY2Vca3bGh98ZVOAA3RsDNfoYBD8GgX+Ri2JTun6kkwO7k9L29Vu/Pjkino/6ruWX2LB6QbFN3T4ENi1zefl0T6NFIoNhzgTfNHWtvIpUUo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790880872; c=relaxed/simple;
-	bh=njA7WrMJdtp0wAuE/osO+5W3afVlIa5rTdjhjNksPKM=;
+	s=arc-20240116; t=1790880875; c=relaxed/simple;
+	bh=9bPn1koXs4obEqqoVQM+nyg3XG1ggs5RMO89AgdHXHw=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=MH+dT9A6DIVD/5CxKEdi92fhrGM9gX7hj4HpSEe+qyqgde2/oPxOLwVgcnsLVFqsoecbfOMFsds+p1e+Hpn6rKoDWUen24c3EpPwUiDpEuAB6G4EdC3I9md7Ba2oJJ4gibdTQ9h9roWrDVt/e1jgStvpmVvF0rOHjdVpEQHlxOU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OtoZe8SY; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version; b=hVT1OF1WrG+vZZs2UOghpNoO0k2RK+Tm851DuHTmU6FU0wxt3kpIbMPbcN6FTw9/74Gh8iUCi3XPEB1kY3Af8+khVbVpHqJ0sATYAWlFzqP6HXuUzgXqfqh1vprnzz8GBuadtOW9WhTqTpYU//x8ya7ATGL0VYHDe+7fEqKW1L8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FnJXf2J+; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OtoZe8SY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A52521F000FF;
-	Thu,  1 Oct 2026 18:54:27 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FnJXf2J+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 261031F00899;
+	Thu,  1 Oct 2026 18:54:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1790880870;
-	bh=Pis958JvHhCtTiQRsZlvqowXuWNjKOiL0SZd2+68XcY=;
+	s=k20260515; t=1790880874;
+	bh=NcY1S+W15PLa/BGdDFIaPoZN8W/RM1PdImAaQGCLNns=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=OtoZe8SYMY2VYdBFQQXBl5BUBmGiR7+SufIIU7FTWz2uub8eYo6GMQZZCZXSH37IJ
-	 u9sn/5CruoUJAFk7MKfLCU5JuspLrE9WQQwSQ0UZdEjgd03fnrETVio1knEA7ZZGfp
-	 EBNHlTLGheRIJlAifCdWj1ksaXzIwa/wsyHNP9E7tsAl9lKG7EkwRRYI6vwPgYTg4A
-	 oA3ef5Uap0F5SYQgP/oAW9200AtJU1+xZMQQBKrgphW7l28TOcOSlBxhePSgeisj3b
-	 q7GtVCClFxp9EV24UxmkL9KGkXeSxU8WNU/xLSnutwcoPflBGUXH1k8Rib672mdVx7
-	 dybSpR55Ug7gg==
+	b=FnJXf2J+srHaAq6jLCPL6uL5m+gRDpD5HL3xa5JHSgqNL9th0tnbvrB7MrwCswy93
+	 i78FCnciwYzoTx3QdvYqdyvZ1YBz3x2lzLb0lcST9U8j1dmIfAxPcuTL01/pYynwZU
+	 7/7MLvUQEMEXhLga8Xh+XzjHY4FnlpcJD6SsvOxwKwUPasjm04vXd6CQNop2Eq0+3v
+	 66w1/VeHRULqrNVg7FSFe03pPo/SPB5xGxbSD3HvHuQ6EQf9tyurEuugjlz22F69Yz
+	 5kLSfuLD6YFP6XSU/IMTpn/thZx8ssIk+i/MH4CkEcxgGPqLHz0eHz6E5LPgRsjRt1
+	 M6M6k5gnEQOiA==
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Namhyung Kim <namhyung@kernel.org>
 Cc: Ingo Molnar <mingo@kernel.org>,
@@ -38,9 +38,9 @@ Cc: Ingo Molnar <mingo@kernel.org>,
 	linux-kernel@vger.kernel.org,
 	linux-perf-users@vger.kernel.org,
 	Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH v7 6/9] perf report: Add --progress option
-Date: Thu,  1 Oct 2026 20:53:57 +0200
-Message-ID: <20261001185400.2754753-7-acme@kernel.org>
+Subject: [PATCH v7 7/9] perf report: Add --no-progress option
+Date: Thu,  1 Oct 2026 20:53:58 +0200
+Message-ID: <20261001185400.2754753-8-acme@kernel.org>
 X-Mailer: git-send-email 2.55.0
 In-Reply-To: <20261001185400.2754753-1-acme@kernel.org>
 References: <20261001185400.2754753-1-acme@kernel.org>
@@ -54,354 +54,107 @@ Content-Transfer-Encoding: 8bit
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-Processing a large session with stdio output gives no feedback about
-which phase perf is in or how far along it is: ui_progress updates are
-only shown by the TUI.  Add --progress, installing a stdio backend
-(ui/stdio/progress.c) that prints the phase title, percentage and
-counts:
+Now that --progress is being added for the stdio case, wire up its
+counterpart for the browsers: the TUI and GTK ones present progress of
+their own and there is no way to turn it off.  Install the no-op
+ui_progress ops, the ones already used until a backend sets theirs,
+after setup_browser() installed the ones of the browser in use.  The
+phases are still counted, nothing is shown for them, and no second
+option is needed for it: parse-options provides --no-progress as the
+negation of --progress, report.progress_set saying that it was asked
+for, report.progress being false both when nothing was asked for and
+when --no-progress was.
 
-  Processing events... [ 42.3%] 317M / 746M
-
-Phases can be nested, so the backend tracks the ones started to
-complete the right one on ui_progress__finish(); that requires
-init()/finish() pairs, fixed in ordered-events.c and the pipe and
-directory event processing.
-
+Suggested-by: Namhyung Kim <namhyung@kernel.org>
 Assisted-by: LLM
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/Documentation/perf-report.txt |  14 ++
- tools/perf/builtin-report.c              |   6 +
- tools/perf/ui/Build                      |   1 +
- tools/perf/ui/progress.h                 |   2 +
- tools/perf/ui/stdio/progress.c           | 162 +++++++++++++++++++++++
- tools/perf/util/ordered-events.c         |  16 ++-
- tools/perf/util/session.c                |  12 +-
- 7 files changed, 206 insertions(+), 7 deletions(-)
- create mode 100644 tools/perf/ui/stdio/progress.c
+ tools/perf/Documentation/perf-report.txt | 5 +++++
+ tools/perf/builtin-report.c              | 9 ++++++---
+ tools/perf/ui/progress.c                 | 6 ++++++
+ tools/perf/ui/progress.h                 | 2 ++
+ 4 files changed, 19 insertions(+), 3 deletions(-)
 
 diff --git a/tools/perf/Documentation/perf-report.txt b/tools/perf/Documentation/perf-report.txt
-index 3718ebd297ce0673..a7429a30ec28f903 100644
+index a7429a30ec28f903..e145124d6c9a1097 100644
 --- a/tools/perf/Documentation/perf-report.txt
 +++ b/tools/perf/Documentation/perf-report.txt
-@@ -29,6 +29,20 @@ OPTIONS
- --quiet::
- 	Do not show any warnings or messages.  (Suppress -v)
+@@ -43,6 +43,11 @@ OPTIONS
+ 	present progress information, or when --quiet is used, that asks
+ 	for no messages at all.
  
-+--progress::
-+	Show progress for each of the processing phases, printing the
-+	percentage done and the current/total counts: the first phase
-+	counts the bytes of the perf.data file processed so far, the
-+	merge and sort phases count hist entries, e.g.:
-+
-+	Processing events... [ 42.3%] 4G / 10G
-+	Merging related events... [  7.1%] 1024 / 14387
-+	Sorting events for output... [ 98.2%] 14132 / 14387
-+
-+	It is a no-op when using the TUI or GTK browsers, that already
-+	present progress information, or when --quiet is used, that asks
-+	for no messages at all.
++--no-progress::
++	Do not show progress while processing the perf.data file.  It
++	also turns off the progress the TUI and GTK browsers present,
++	which is their own.
 +
  -n::
  --show-nr-samples::
  	Show the number of samples for each symbol
 diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
-index 57225bc87731d074..81e13fb8194976c9 100644
+index 81e13fb8194976c9..29085fdc91e58884 100644
 --- a/tools/perf/builtin-report.c
 +++ b/tools/perf/builtin-report.c
-@@ -87,6 +87,7 @@ struct report {
- 	bool			use_gtk;
+@@ -88,6 +88,7 @@ struct report {
  #endif
  	bool			use_stdio;
-+	bool			progress;
+ 	bool			progress;
++	bool			progress_set;
  	bool			show_full_info;
  	bool			show_threads;
  	bool			inverted_callchain;
-@@ -1384,6 +1385,8 @@ int cmd_report(int argc, const char **argv)
+@@ -1385,8 +1386,8 @@ int cmd_report(int argc, const char **argv)
  		    "Use the stdio interface"),
  	OPT_BOOLEAN(0, "weights", &symbol_conf.annotate_weight,
  			"Show or hide weight columns in annotation. Default show if non-zero."),
-+	OPT_BOOLEAN(0, "progress", &report.progress,
-+		    "Show progress while processing the perf.data file"),
+-	OPT_BOOLEAN(0, "progress", &report.progress,
+-		    "Show progress while processing the perf.data file"),
++	OPT_BOOLEAN_SET(0, "progress", &report.progress, &report.progress_set,
++			"Show progress while processing the perf.data file"),
  	OPT_BOOLEAN(0, "header", &report.header, "Show data header."),
  	OPT_BOOLEAN(0, "header-only", &report.header_only,
  		    "Show only data header."),
-@@ -1790,6 +1793,9 @@ int cmd_report(int argc, const char **argv)
+@@ -1793,7 +1794,9 @@ int cmd_report(int argc, const char **argv)
  	else
  		use_browser = 0;
  
-+	if (report.progress && !quiet && use_browser == 0)
-+		stdio_progress__init();
-+
+-	if (report.progress && !quiet && use_browser == 0)
++	if (report.progress_set && !report.progress)
++		ui_progress__noop_init();
++	else if (report.progress && !quiet && use_browser == 0)
+ 		stdio_progress__init();
+ 
  	if (report.data_type && use_browser == 1) {
- 		symbol_conf.annotate_data_member = true;
- 		symbol_conf.annotate_data_sample = true;
-diff --git a/tools/perf/ui/Build b/tools/perf/ui/Build
-index 6005f813c9e3990c..a7b1740d51c80f23 100644
---- a/tools/perf/ui/Build
-+++ b/tools/perf/ui/Build
-@@ -4,6 +4,7 @@ perf-ui-y += progress.o
- perf-ui-y += util.o
- perf-ui-y += hist.o
- perf-ui-y += stdio/hist.o
-+perf-ui-y += stdio/progress.o
+diff --git a/tools/perf/ui/progress.c b/tools/perf/ui/progress.c
+index 99d60223c74b2957..362680989ace606a 100644
+--- a/tools/perf/ui/progress.c
++++ b/tools/perf/ui/progress.c
+@@ -13,6 +13,12 @@ static struct ui_progress_ops null_progress__ops =
  
- CFLAGS_setup.o += -DLIBDIR="BUILD_STR($(LIBDIR))"
+ struct ui_progress_ops *ui_progress__ops = &null_progress__ops;
  
++/* Everything counts but nothing is shown, the way it starts out. */
++void ui_progress__noop_init(void)
++{
++	ui_progress__ops = &null_progress__ops;
++}
++
+ void ui_progress__update(struct ui_progress *p, u64 adv)
+ {
+ 	u64 last = p->curr;
 diff --git a/tools/perf/ui/progress.h b/tools/perf/ui/progress.h
-index 4f52c37b2f099a82..03f1a8bb260ba076 100644
+index 03f1a8bb260ba076..e8c4f9f768aaf12b 100644
 --- a/tools/perf/ui/progress.h
 +++ b/tools/perf/ui/progress.h
-@@ -23,6 +23,8 @@ void __ui_progress__init(struct ui_progress *p, u64 total,
+@@ -25,6 +25,8 @@ void ui_progress__update(struct ui_progress *p, u64 adv);
  
- void ui_progress__update(struct ui_progress *p, u64 adv);
+ void stdio_progress__init(void);
  
-+void stdio_progress__init(void);
++void ui_progress__noop_init(void);
 +
  struct ui_progress_ops {
  	void (*init)(struct ui_progress *p);
  	void (*update)(struct ui_progress *p);
-diff --git a/tools/perf/ui/stdio/progress.c b/tools/perf/ui/stdio/progress.c
-new file mode 100644
-index 0000000000000000..118a6cf6555d59f5
---- /dev/null
-+++ b/tools/perf/ui/stdio/progress.c
-@@ -0,0 +1,162 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Progress feedback for the stdio (non-TUI/GTK) case, enabled with
-+ * 'perf report --progress'.
-+ */
-+#include <inttypes.h>
-+#include <stdio.h>
-+#include <unistd.h>
-+#include <linux/kernel.h>
-+#include "../../util/debug.h"
-+#include "../../util/units.h"
-+#include "../progress.h"
-+
-+/*
-+ * Phases can be nested, so keep track of the ones started so far to be
-+ * able to complete the right one on ui_progress__finish(), which gets
-+ * no arguments.
-+ */
-+#define STDIO_PROGRESS__MAX_DEPTH 8
-+
-+struct stdio_progress_phase {
-+	struct ui_progress	*p;
-+	u64			last_printed;
-+	size_t			last_len;
-+};
-+
-+static struct stdio_progress_phase stdio_progress__stack[STDIO_PROGRESS__MAX_DEPTH];
-+static int stdio_progress__depth;
-+static bool stdio_progress__is_tty;
-+/* Phases that didn't fit on the stack are not shown. */
-+static int stdio_progress__dropped;
-+
-+static void stdio_progress__print_phase(struct stdio_progress_phase *phase,
-+					u64 curr)
-+{
-+	struct ui_progress *p = phase->p;
-+	char buf_cur[20], buf_tot[20], buf[128];
-+	double percent = p->total ? 100.0 * (double)curr / (double)p->total : 0.0;
-+	size_t len;
-+
-+	/*
-+	 * Only the completion line shows 100.0%: a 99.99% progress would round
-+	 * up to it and look like a duplicate at finish time.
-+	 */
-+	if (curr < p->total && percent > 99.9)
-+		percent = 99.9;
-+
-+	if (p->size) {
-+		unit_number__scnprintf(buf_cur, sizeof(buf_cur), curr);
-+		unit_number__scnprintf(buf_tot, sizeof(buf_tot), p->total);
-+		len = scnprintf(buf, sizeof(buf), "%s [%5.1f%%] %s / %s",
-+				p->title, percent, buf_cur, buf_tot);
-+	} else {
-+		len = scnprintf(buf, sizeof(buf), "%s [%5.1f%%] %" PRIu64 " / %" PRIu64,
-+				p->title, percent, curr, p->total);
-+	}
-+
-+	if (!stdio_progress__is_tty) {
-+		fprintf(stderr, "%s\n", buf);
-+		goto out;
-+	}
-+
-+	/* Pad to the length of the previous line to erase its leftovers. */
-+	fprintf(stderr, "\r%s%*s", buf,
-+		(int)(len < phase->last_len ? phase->last_len - len : 0), "");
-+	phase->last_len = len;
-+out:
-+	phase->last_printed = curr;
-+	fflush(stderr);
-+}
-+
-+static void __stdio_progress__init(struct ui_progress *p)
-+{
-+	/* The default step is meant for the TUI bar, use 1% steps for stdio. */
-+	p->next = p->step = p->total / 100 ?: 1;
-+
-+	if (stdio_progress__depth == STDIO_PROGRESS__MAX_DEPTH) {
-+		/*
-+		 * Out of room: don't start this phase, its finish() is
-+		 * swallowed and its updates ignored below.
-+		 */
-+		pr_warning("progress phases nested deeper than %d, not showing progress for %s\n",
-+			   STDIO_PROGRESS__MAX_DEPTH, p->title);
-+		stdio_progress__dropped++;
-+		return;
-+	}
-+
-+	/* Start a nested phase in a line of its own. */
-+	if (stdio_progress__depth && stdio_progress__is_tty)
-+		fputc('\n', stderr);
-+
-+	stdio_progress__stack[stdio_progress__depth++] =
-+		(struct stdio_progress_phase) {
-+			.p = p,
-+			.last_printed = 0,
-+			.last_len = 0,
-+		};
-+
-+	stdio_progress__print_phase(&stdio_progress__stack[stdio_progress__depth - 1],
-+				    p->curr);
-+}
-+
-+static void stdio_progress__update(struct ui_progress *p)
-+{
-+	/*
-+	 * An update that doesn't match the innermost phase means something
-+	 * is out of sync: print nothing rather than another phase's
-+	 * numbers, or read past the stack.
-+	 */
-+	if (!stdio_progress__depth ||
-+	    stdio_progress__stack[stdio_progress__depth - 1].p != p)
-+		return;
-+
-+	stdio_progress__print_phase(&stdio_progress__stack[stdio_progress__depth - 1],
-+				    p->curr);
-+}
-+
-+static void stdio_progress__finish(void)
-+{
-+	struct stdio_progress_phase *phase;
-+
-+	/*
-+	 * Being the innermost phase, its finish() comes first: swallow it, or
-+	 * it would complete the phase that encloses it.
-+	 */
-+	if (stdio_progress__dropped) {
-+		stdio_progress__dropped--;
-+		return;
-+	}
-+
-+	if (!stdio_progress__depth)
-+		return;
-+
-+	phase = &stdio_progress__stack[--stdio_progress__depth];
-+
-+	/*
-+	 * The last line may have stopped short of the total, close this phase
-+	 * showing it as complete unless that was already printed.
-+	 */
-+	if (phase->last_printed != phase->p->total)
-+		stdio_progress__print_phase(phase, phase->p->total);
-+
-+	phase->last_printed	= 0;
-+	phase->last_len		= 0;
-+
-+	if (stdio_progress__is_tty)
-+		fputc('\n', stderr);
-+
-+	fflush(stderr);
-+}
-+
-+static struct ui_progress_ops stdio_progress__ops = {
-+	.init	= __stdio_progress__init,
-+	.update	= stdio_progress__update,
-+	.finish	= stdio_progress__finish,
-+};
-+
-+void stdio_progress__init(void)
-+{
-+	stdio_progress__is_tty = isatty(STDERR_FILENO) == 1;
-+	ui_progress__ops = &stdio_progress__ops;
-+}
-diff --git a/tools/perf/util/ordered-events.c b/tools/perf/util/ordered-events.c
-index a5857f9f5af2d3de..54c85663e733be4d 100644
---- a/tools/perf/util/ordered-events.c
-+++ b/tools/perf/util/ordered-events.c
-@@ -237,14 +237,16 @@ static int do_flush(struct ordered_events *oe, bool show_progress)
- 		ui_progress__init(&prog, oe->nr_events, "Processing time ordered events...");
- 
- 	list_for_each_entry_safe(iter, tmp, head, list) {
--		if (session_done())
--			return 0;
-+		if (session_done()) {
-+			ret = 0;
-+			goto out_progress;
-+		}
- 
- 		if (iter->timestamp > limit)
- 			break;
- 		ret = oe->deliver(oe, iter);
- 		if (ret < 0)
--			return ret;
-+			goto out_progress;
- 
- 		ordered_events__delete(oe, iter);
- 		oe->last_flush = iter->timestamp;
-@@ -258,10 +260,16 @@ static int do_flush(struct ordered_events *oe, bool show_progress)
- 	else if (last_ts <= limit)
- 		oe->last = list_entry(head->prev, struct ordered_event, list);
- 
-+	ret = 0;
-+out_progress:
-+	/*
-+	 * Always pair ui_progress__init() with ui_progress__finish(), the
-+	 * stdio backend tracks the phases on a stack.
-+	 */
- 	if (show_progress)
- 		ui_progress__finish();
- 
--	return 0;
-+	return ret;
- }
- 
- static int __ordered_events__flush(struct ordered_events *oe, enum oe_flush how,
-diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
-index 7fea9e72726c936c..c4b4c7fb3b864589 100644
---- a/tools/perf/util/session.c
-+++ b/tools/perf/util/session.c
-@@ -3253,8 +3253,12 @@ static int __perf_session__process_pipe_events(struct perf_session *session)
- 	cur_size = sizeof(union perf_event);
- 
- 	buf = malloc(cur_size);
--	if (!buf)
--		return -errno;
-+	if (!buf) {
-+		err = -errno;
-+		if (update_prog)
-+			ui_progress__finish();
-+		return err;
-+	}
- 	ordered_events__set_copy_on_queue(oe, true);
- more:
- 	event = buf;
-@@ -3753,8 +3757,10 @@ static int __perf_session__process_dir_events(struct perf_session *session)
- 	}
- 
- 	rd = calloc(nr_readers, sizeof(struct reader));
--	if (!rd)
-+	if (!rd) {
-+		ui_progress__finish();
- 		return -ENOMEM;
-+	}
- 
- 	rd[0] = (struct reader) {
- 		.fd		 = perf_data__fd(session->data),
 -- 
 2.55.0
 
