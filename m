@@ -1,51 +1,53 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6679547074;
-	Thu,  1 Oct 2026 07:08:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0C163BD241;
+	Thu,  1 Oct 2026 07:16:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790838497; cv=none; b=RKe+5wpKJcq6hiDFc+1mteUTA4Y7obz7e2gh1R+Y8N7Mbc3/wAkBLvIxSCl2K1zczC7yzfGGzLXIHLtGSPQAd+OEyyhFPscCkc2sPzO9N6iaRt06pKRyNgAObxE5WIkQDQu+Hy44NSZbQEzWwWWBhZ5qT74pAyj62d1ZEwUclUA=
+	t=1790838984; cv=none; b=dSEeqGqfGs1EliqQjrvguUB90rdoQVKiJjjPpvzMavKr9Dpa6pB70uJWlv4tGw072Bs4P8YrCCc3CDlMvSZlfctv3YRL/4xWewkJn3D/7tKBQSn9IPpn9gDEs6GQPU66EiWpxDxgQ2OU7lUtA+upooXl9jw6ItmsRC0Iy1x7TEY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790838497; c=relaxed/simple;
-	bh=nbXgcRbx4i5BTLZ8EzF2YcTdwfj6YP7znNDB2WMKF1w=;
+	s=arc-20240116; t=1790838984; c=relaxed/simple;
+	bh=7616dSR0C2vuwuOm07V3UdWHY26IRi0xhf8L+Y9kvx8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UOOUYh5mXZ+tPbd/CsrqrYCMlMRkWN11FzuTTezadhbP8A2aSX9X1uwYVRpRrYh4Qo9lVtvFWGBwlXY6AmFZa5V7MkEFNpHHiiAc3KJgAvju3mwNFSAwTMcG2dDY5iStQUwa0/IZAbow2xMzoqzeXh4qpknVM1vXPg6A4KosnWU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=pass smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=Tm/Y533+; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=infradead.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=I9ya15+NrTiImIb4uPJ8xOxpI6b3heE4lvd3ha4yOXRjbpa7lFqoFRYM6fafINxeijeQrq/d+KJ/ayLDamNNYYGTrtsAXpXW9ljEvziilEfXr7arh607tzk6qf+u2dssHFOHho3xHvNLuUSkup8QO0NGmgY1TW4gtIClnmsO09A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AGmiUefp; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Tm/Y533+"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=Ezn1/5i1OKioygyWwMMHCtWeGbbfzgZse0+udSMI8ss=; b=Tm/Y533+Uegl1mXDMgHAjYnLzK
-	87KbPYIyyIisz24b+9tUWbSkjr9ELrZ+QvjSoVisH7ATuTLvwZXbCMeTJWuEEc3lYhu1tZ2spYR56
-	aDKZfmptlTqG6sQYeEXk8EjqLOjoOmg1mFRJ1p/n17b8b1g561P2gawiGeDh8UDVV3IyXBqSA/5tm
-	J125TJnPzE72H4WBUk15757ip/NFtWliCfpYjxiThujImSRhyD3v/LN7ihQ2P/0hZKYvVmDWeR8CF
-	8heQI0fg1+5EpKMEZpcgYuCkqywJgt72mSVPbrXA45Xhwtney2tvDf0RdTJ2AFGuXVQ/E+4Q5kr35
-	vAFUs9dA==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1xCAtY-00000005u1N-2s8c;
-	Thu, 01 Oct 2026 07:07:56 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 9E4AE300390; Thu, 01 Oct 2026 09:07:55 +0200 (CEST)
-Date: Thu, 1 Oct 2026 09:07:55 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Ian Rogers <irogers@google.com>
-Cc: acme@kernel.org, adrian.hunter@intel.com,
-	alexander.shishkin@linux.intel.com, ast@kernel.org,
-	bpf@vger.kernel.org, james.clark@linaro.org, jolsa@kernel.org,
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-	mark.rutland@arm.com, mingo@redhat.com, namhyung@kernel.org,
-	song@kernel.org, stable@vger.kernel.org
-Subject: Re: [PATCH v1] perf/core: Replace perf_event_header__init_id with
- full header init
-Message-ID: <20261001070755.GQ88198@noisy.programming.kicks-ass.net>
-References: <20260929182108.794434-1-irogers@google.com>
- <20260929222332.973435-1-irogers@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AGmiUefp"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 977581F000FF;
+	Thu,  1 Oct 2026 07:16:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1790838976;
+	bh=wXGrqQD9809RW+EIr/bRf710tUjrok9k7DNn43iscUM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=AGmiUefpQ6l75QZK6aeQlp9UPq1InEMepRYnLgKRKneJbssdvdgA0t6TjDBM6kQpZ
+	 RvPaddId0hCVvOkKMb7AnE/Hm9Jslt4H0RSGIonOTjh2MhRHvFl5+LtyvxBvZFzfzf
+	 3gqTiz6bvOdQjIX/37l2f7t5d4FeITcb5glYcxF/5WXerC4BGs/1KB8kX88zNeZfwJ
+	 fsEzZDtnAKyMB1o3pKWJxNCeiSQTLmsfYniy9NGi+WQFVMnJB9BYoWukb/CLMek6pR
+	 mN8rfZ6btQS8GV+5jxdc15FeCNMObU56CMgzMxynhW1d4NUrI/X19BPINawEoge6zT
+	 6LszC3Cp6gx8A==
+Date: Thu, 1 Oct 2026 08:16:09 +0100
+From: Will Deacon <will@kernel.org>
+To: Leo Yan <leo.yan@arm.com>
+Cc: Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Mike Leach <mike.leach@arm.com>,
+	James Clark <james.clark@linaro.org>,
+	Anshuman Khandual <anshuman.khandual@arm.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Tamas Petz <tamas.petz@arm.com>,
+	Tamas Zsoldos <tamas.zsoldos@arm.com>,
+	Michiel van Tol <michiel.vantol@arm.com>,
+	Dev Jain <dev.jain@arm.com>, David Hildenbrand <david@kernel.org>,
+	Yabin Cui <yabinc@google.com>, James Morse <james.morse@arm.com>,
+	coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH 2/2] perf: arm_spe: Prefer large AUX mappings
+Message-ID: <ar4Iuanz_vA4twGP@willie-the-truck>
+References: <20260810-perf_aux_trace_large_granule-v1-0-03306c9339e3@arm.com>
+ <20260810-perf_aux_trace_large_granule-v1-2-03306c9339e3@arm.com>
+ <annp-BdTviQoH6vy@willie-the-truck>
+ <20260930164311.GK14479@e132581.arm.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -54,52 +56,55 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260929222332.973435-1-irogers@google.com>
+In-Reply-To: <20260930164311.GK14479@e132581.arm.com>
 
-On Tue, Sep 29, 2026 at 03:23:32PM -0700, Ian Rogers wrote:
+On Wed, Sep 30, 2026 at 05:43:11PM +0100, Leo Yan wrote:
+> On Mon, Aug 10, 2026 at 04:10:48PM +0100, Will Deacon wrote:
+> > On Mon, Aug 10, 2026 at 03:44:42PM +0100, Leo Yan wrote:
+> > > Commit 18049c8cff9c ("perf/aux: Allocate non-contiguous AUX pages by
+> > > default") made the AUX allocator use order-0 pages by default unless a
+> > > PMU explicitly asks for contiguous allocations.
+> > 
+> > But that commit specifically calls out SPE as benefitting from
+> > non-contiguous pages:
+> > 
+> >   "For instance, ARM SPE and TRBE operate with virtual pages, and
+> >    Coresight ETR allocates a separate buffer. For these PMUs,
+> >    allocating contiguous AUX pages unnecessarily exacerbates memory
+> >    fragmentation. This fragmentation can prevent their use on
+> >    long-running devices."
+> > 
+> > so why doesn't passing PERF_PMU_CAP_AUX_PREFER_LARGE reintroduce the
+> > problems that 18049c8cff9c was trying to solve?
+> 
+> How about adding a field to struct pmu to specify a preferred maximum
+> page order for the AUX buffer? The perf core could try that order first
+> and fall back to smaller orders if the allocation fails.
 
-> Rather than splitting header initialization between callers and output
-> callbacks and saving/restoring mutated header fields, replace
-> perf_event_header__init_id() with
-> perf_event_header__init_header_and_id(), which initializes header->type,
-> header->misc, and header->size alongside the sample_id fields on each
-> invocation.
+I'm not sure that's thr right place for it, really. The driver has no
+clue about whether it makes sense to use large contiguous mappings or
+not, so I'd have thought that decision should be driven from userspace
+(e.g. like MADV_HUGEPAGE) because it really depends on the user's
+preference and isn't a fixed property of the hardware.
 
-> diff --git a/kernel/events/core.c b/kernel/events/core.c
-> index 33210aff3ee6..c1b2d0c9b2af 100644
-> --- a/kernel/events/core.c
-> +++ b/kernel/events/core.c
-> @@ -8119,13 +8119,18 @@ static void __perf_event_header__init_id(struct perf_sample_data *data,
->  	}
->  }
->  
-> -void perf_event_header__init_id(struct perf_event_header *header,
-> -				struct perf_sample_data *data,
-> -				struct perf_event *event)
-> +void perf_event_header__init_header_and_id(struct perf_event_header *header,
-> +					   struct perf_sample_data *data,
-> +					   u32 type, u16 misc, u16 size,
-> +					   struct perf_event *event)
->  {
-> +	header->type = type;
-> +	header->misc = misc;
->  	if (event->attr.sample_id_all) {
-> -		header->size += event->id_header_size;
-> +		header->size = size + event->id_header_size;
->  		__perf_event_header__init_id(data, event, event->attr.sample_type);
-> +	} else {
-> +		header->size = size;
->  	}
->  }
+> For example, the Neoverse V2 TRM documents:
+> 
+>   L1 Trace Buffer Extension (TRBE) TLB: 1 entry
 
-I've renamed the thing to perf_event_header__init(). Also, I've done:
+Wow, they really pulled out the stops for that implementation. I bet
+we're supposed to be grateful for that entry!
 
-	header->size = size;
+> Given the single L1 TRBE TLB entry, the TRBE driver could prefer
+> PMD_ORDER (2 MiB with 4 KiB pages) to reduce TLB pressure. This reflects
+> the hardware characteristic.
+> 
+> This could be a trade-off instead of using PERF_PMU_CAP_AUX_PREFER_LARGE,
+> avoiding large contiguous allocations that could reintroduce the Android
+> OOM issue. I did a quick test with this approach and the results look
+> positive.
 
-and restored the:
+I really don't want the driver to second-guess userspace based on whatever
+information it happens to have hard-coded about the specific CPU it's
+running on.
 
-		header->size += event->id_header_size;
-
-and lost the else :-)
-
-But yes, this is better. Thanks!
+Will
