@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D6CF443C14;
-	Thu,  1 Oct 2026 07:18:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4E25495AE7;
+	Thu,  1 Oct 2026 07:24:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790839141; cv=none; b=LhANfQVOg/u2XkN035ku2V2YR3oA7Aw+IDFG++34ehH+stluljiWT8uGkT1vrw73p0vNm9fbJJRHUoM1gk4LtX8vkCYx7e9H4Euqs1EiotbbOGv5THvKuCG54n9sEGMmAS2XYp/dVy6i2w+weHHZKJzfupjvYaOChl+C6gN6ugw=
+	t=1790839492; cv=none; b=nqwzppVk6om1ikFAPsZQ3oJ0mvZCo2Y+N38k2G3KStAbVIztZQ/AeAaK+3jZr70YN9syHTmW2Va7nj7pOhXIB3P8kzb7J8c3Z8HAFV53oWUZWpgZaHg7bnBbxRXQrVRwUJa/48e0r35MaRC0JAPi7bCufKiqhk1ohA6XNUYxVUM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790839141; c=relaxed/simple;
-	bh=IhzhHTLsBlOxRamTH+55tvBCeK1HfuMHtgtAewER2q8=;
+	s=arc-20240116; t=1790839492; c=relaxed/simple;
+	bh=suq++U8maVc1MZD8XduDV/eZA8m9s6ShB7xjuAhDj4U=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=J4OEawxQynJ4VkOZQ1B5iNQJ03dZnU4Qzzils8pQvdbWMA8PUWTEfCKqVGSfciGkS+swZNooqM8KQusHY9iV70RouAeCO+wWPLmW92SporhNJCy74ZReW0w93Pr/cnzaaw5WHKaOeE5iz+Wt33PVsbsGp79eKZl7+N+gUStuAko=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Jw1jJueI; arc=none smtp.client-ip=100.103.45.18
+	 Content-Type:Content-Disposition:In-Reply-To; b=ORldFiruNsiTuUxiT+YZcqVznXoIxGTcR1QLI1wsTv4wSDKJqHKiuOMn2cuZx0vfpEkKGBZaX8jn4u5JbBToTrf1HNUqbcfnAGeaZpKwh0NOwwz7sJtLhYlwDFHl1ZgM8iP2HekjUlS+Zr+w1fMvcgbQtEj9IJt33czYwh2u/ts=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iM8qYeD1; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Jw1jJueI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 049641F000FF;
-	Thu,  1 Oct 2026 07:18:56 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iM8qYeD1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 104351F000FF;
+	Thu,  1 Oct 2026 07:24:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1790839137;
-	bh=td4PwlxUA4cQL+wgROECagmNFxUMif0p53eQWJ+N7gg=;
+	s=k20260515; t=1790839485;
+	bh=cemCbxcoXGCmsGnSgqml/bkSsdAI28pvjgdmhqUo4EM=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=Jw1jJueIT+g0WBAN9fgwhVusygPw6xwis5OQAO/MQbUBZCtrPLXRIE+QjLsl2c2rs
-	 m9NplEoP7J08Rg7JoTgPpBBfPXXYkD+x0ZW2xxbW5aqRHpQ+KC3WfBn2P5fwOZPgZy
-	 cVRem7oJTcIJUTLMZXyu73oecGbPRCZjMaSQ0gOLMSfkPYPbODDwGUxs+B0V4xxpWR
-	 dFA3yHr1bGl+BKEkAmdcGxz5aYxgSOUjt1tmmdC3Zqwh+n0hFn7DTwEcsNEoPyPcni
-	 P2HxRygjyzrvqq4MgSrmCw6GdzN7wKiZOuvdK08G0bRVqtrZ8/8cz5tcua5XAhefYp
-	 TVffooipFxrLQ==
-Date: Thu, 1 Oct 2026 00:18:55 -0700
+	b=iM8qYeD1t5j+0zRaBOrbv56K1UqBpD56ZrIEpGSC61vIvSDRaTb1H7BAqMfH4cnVg
+	 x3Z/7MxIOy2BQUdoqo926+vYdxlpJtFo0U3Ktm/wGawqKT5xF8AxFLbrkgONel75lA
+	 rhTe8xCLPWflzsSheeeOA95G8ZDzyV1VCAsMpUiWgheCFr7vx9stYXW2JvsNDlJtXi
+	 raGpudKbm+kis9z6hlQF5q6KFtYS4gJ9Wc2GVmOCyf6wH0nZSpy2jdNOlHCm6HBGLh
+	 EH5CYby92iyL9dwJ3JtYcjCxlYb7pIpb5wLf97M2lbVV1LbUnsErnn7AnfPZK7fxX/
+	 Zo2Cc0rFjEUAA==
+Date: Thu, 1 Oct 2026 00:24:43 -0700
 From: Namhyung Kim <namhyung@kernel.org>
 To: Arnaldo Carvalho de Melo <acme@kernel.org>
 Cc: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
@@ -36,11 +36,11 @@ Cc: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
 	Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org,
 	linux-perf-users@vger.kernel.org,
 	Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: Re: [PATCH v6 1/5] perf config: Move perf_config__set_variable() to
- util/config.c
-Message-ID: <ar4JX79-r_4gCNfG@z2>
+Subject: Re: [PATCH v6 4/5] perf scripts: Add perf-stuck, to tell where a
+ running perf is stuck
+Message-ID: <ar4Kuy76IXbmCY2y@z2>
 References: <20260930213716.2633750-1-acme@kernel.org>
- <20260930213716.2633750-2-acme@kernel.org>
+ <20260930213716.2633750-5-acme@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -49,459 +49,379 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20260930213716.2633750-2-acme@kernel.org>
+In-Reply-To: <20260930213716.2633750-5-acme@kernel.org>
 
-On Wed, Sep 30, 2026 at 11:37:12PM +0200, Arnaldo Carvalho de Melo wrote:
+On Wed, Sep 30, 2026 at 11:37:15PM +0200, Arnaldo Carvalho de Melo wrote:
 > From: Arnaldo Carvalho de Melo <acme@redhat.com>
 > 
-> Move perf_config__set_variable() out of the 'perf config' builtin so
-> that opt-in features can persist their choice from outside it, e.g.
-> util/debuginfo.c writing core.debuginfod=false when the user disables
-> debuginfod for the rest of the session.  The
-> set_config() body becomes perf_config_set__write(), with the
-> system_config choice as an argument, as the builtin's
-> use_system_config/use_user_config statics are not available outside it.
+> A perf that takes forever is hard to tell apart from one stuck in a
+> loop, and there is no way to see where without attaching gdb.
+> perf-stuck.sh samples a running process' /proc entries and its progress
+> line at a fixed interval, and with -g runs gdb (perf-stuck.gdb, adding
+> the perf-die-chain command) when no progress is made across two
+> samples, printing the DIE chain a DWARF type chase is stuck in.
 > 
-> All config file access shares the static parser state and can now run
-> on more than one thread, with a feature writing the config while perf
-> top's display thread reads it, so serialize parsing and
-> rewriting with a mutex, and the whole read-modify-write of
-> perf_config__set_variable() against itself.
+> It is a prototype: the plan is to turn it into a first class 'perf
+> stuck' command.  The process name is resolved with pgrep among the
+> caller's own processes only, as root an unscoped one would attach gdb
+> to the first process of any user with a matching name.
 > 
-> perf_config_set__write() checked fopen() but none of the fprintf()s or
-> fclose(), so a write failure after truncating the file was reported as
-> success.  Harmless for the interactive 'perf config' this came from,
-> but this makes it an entry point a background feature can call with no
-> other feedback, so propagate those errors too.
-> 
-> perf_etc_perfconfig() caches what system_path() returns, and that
-> allocates, so on failure every caller dereferenced NULL, the
-> pre-existing ones in perf_config_from_file() and in the daemon
-> included.  Pre-existing, not introduced here, but this rewrites the
-> accessor anyway, so make it total: the unresolved path is the same
-> string for the usual absolute ETC_PERFCONFIG.
-
-I think this patch does many things.  Can we split them? 
-
+> -i and -n are now validated instead of failing later inside the
+> sampling loop, -x now requires -g and gets the same readability check
+> as the default gdb command file, and gdb_done is cleared whenever
+> progress resumes, so -g can fire again on a later stall instead of at
+> most once per run.
 > 
 > Assisted-by: LLM
 > Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 > ---
->  tools/perf/builtin-config.c |  70 +-----------
->  tools/perf/util/config.c    | 219 ++++++++++++++++++++++++++++++++----
->  tools/perf/util/config.h    |   2 +
->  3 files changed, 201 insertions(+), 90 deletions(-)
+>  tools/perf/scripts/perf-stuck.gdb | 129 ++++++++++++++++++++
+>  tools/perf/scripts/perf-stuck.sh  | 193 ++++++++++++++++++++++++++++++
+>  2 files changed, 322 insertions(+)
+>  create mode 100644 tools/perf/scripts/perf-stuck.gdb
+>  create mode 100755 tools/perf/scripts/perf-stuck.sh
 > 
-> diff --git a/tools/perf/builtin-config.c b/tools/perf/builtin-config.c
-> index cefd042e4f853466..3b074aca8d344539 100644
-> --- a/tools/perf/builtin-config.c
-> +++ b/tools/perf/builtin-config.c
-> @@ -41,37 +41,7 @@ static struct option config_options[] = {
->  
->  static int set_config(struct perf_config_set *set, const char *file_name)
->  {
-> -	struct perf_config_section *section = NULL;
-> -	struct perf_config_item *item = NULL;
-> -	const char *first_line = "# this file is auto-generated.";
-> -	FILE *fp;
-> -
-> -	if (set == NULL)
-> -		return -1;
-> -
-> -	fp = fopen(file_name, "w");
-> -	if (!fp)
-> -		return -1;
-> -
-> -	fprintf(fp, "%s\n", first_line);
-> -
-> -	/* overwrite configvariables */
-> -	perf_config_items__for_each_entry(&set->sections, section) {
-> -		if (!use_system_config && section->from_system_config)
-> -			continue;
-> -		fprintf(fp, "[%s]\n", section->name);
-> -
-> -		perf_config_items__for_each_entry(&section->items, item) {
-> -			if (!use_system_config && item->from_system_config)
-> -				continue;
-> -			if (item->value)
-> -				fprintf(fp, "\t%s = %s\n",
-> -					item->name, item->value);
-> -		}
-> -	}
-> -	fclose(fp);
-> -
-> -	return 0;
-> +	return perf_config_set__write(set, file_name, use_system_config);
->  }
->  
->  static int show_spec_config(struct perf_config_set *set, const char *var)
-> @@ -158,44 +128,6 @@ static int parse_config_arg(char *arg, char **var, char **value)
->  	return 0;
->  }
->  
-> -int perf_config__set_variable(const char *var, const char *value)
-> -{
-> -	char path[PATH_MAX];
-> -	char *user_config = mkpath(path, sizeof(path), "%s/.perfconfig", getenv("HOME"));
-> -	const char *config_filename;
-> -	struct perf_config_set *set;
-> -	int ret = -1;
-> -
-> -	if (use_system_config)
-> -		config_exclusive_filename = perf_etc_perfconfig();
-> -	else if (use_user_config)
-> -		config_exclusive_filename = user_config;
-> -
-> -	if (!config_exclusive_filename)
-> -		config_filename = user_config;
-> -	else
-> -		config_filename = config_exclusive_filename;
-> -
-> -	set = perf_config_set__new();
-> -	if (!set)
-> -		goto out_err;
-> -
-> -	if (perf_config_set__collect(set, config_filename, var, value) < 0) {
-> -		pr_err("Failed to add '%s=%s'\n", var, value);
-> -		goto out_err;
-> -	}
-> -
-> -	if (set_config(set, config_filename) < 0) {
-> -		pr_err("Failed to set the configs on %s\n", config_filename);
-> -		goto out_err;
-> -	}
-> -
-> -	ret = 0;
-> -out_err:
-> -	perf_config_set__delete(set);
-> -	return ret;
-> -}
-> -
->  int cmd_config(int argc, const char **argv)
->  {
->  	int i, ret = -1;
-> diff --git a/tools/perf/util/config.c b/tools/perf/util/config.c
-> index 8fe43b032e9af88a..3b6a45569ae3d2eb 100644
-> --- a/tools/perf/util/config.c
-> +++ b/tools/perf/util/config.c
-> @@ -12,6 +12,8 @@
->  #include "config.h"
->  
->  #include <errno.h>
-> +#include <limits.h>
-> +#include <pthread.h>
->  #include <stdbool.h>
->  #include <stdio.h>
->  #include <stdlib.h>
-> @@ -370,10 +372,15 @@ static int perf_parse_long(const char *value, long *ret)
->  
->  static void bad_config(const char *name)
->  {
-> -	if (config_file_name)
-> -		pr_warning("bad config value for '%s' in %s, ignoring...\n", name, config_file_name);
-> -	else
-> -		pr_warning("bad config value for '%s', ignoring...\n", name);
-> +	/*
-> +	 * No file name here: config_file_name is set and cleared by
-> +	 * whichever thread has a config file in flight, under config_mutex,
-> +	 * while this runs on the thread dispatching the collected values.
-> +	 * Reading it would race with that thread: NULL between the check
-> +	 * and the use, or the file it is parsing, not the one the bad value
-> +	 * came from.
-> +	 */
-> +	pr_warning("bad config value for '%s', ignoring...\n", name);
->  }
->  
->  int perf_config_u64(u64 *dest, const char *name, const char *value)
-> @@ -549,11 +556,26 @@ int perf_default_config(const char *var, const char *value,
->  	return 0;
->  }
->  
-> +/*
-> + * Serialize config file access: parsing and rewriting share the static
-> + * parser state and can run on more than one thread, the debuginfod
-> + * fetch writing core.debuginfod=false while perf top reads it.
-> + */
-> +static pthread_mutex_t config_mutex = PTHREAD_MUTEX_INITIALIZER;
+> diff --git a/tools/perf/scripts/perf-stuck.gdb b/tools/perf/scripts/perf-stuck.gdb
+> new file mode 100644
+> index 0000000000000000..be7b9e3fcb5d6d98
+> --- /dev/null
+> +++ b/tools/perf/scripts/perf-stuck.gdb
+> @@ -0,0 +1,129 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +#
+> +# gdb commands for a stuck perf, used by perf-stuck.sh -g and usable directly:
+> +#
+> +#   gdb -p $(pgrep -x perf) -batch -x perf-stuck.gdb -ex bt
+> +#
+> +# PROTOTYPE: part of the perf-stuck.sh stopgap, wants to become a first
+> +# class 'perf stuck' command printing these DIE chains without gdb.
+> +#
+> +# The commands are for the DWARF type chasers in util/dwarf-aux.c:
+> +#
+> +#   perf-die-chain <function> <die variable> [iterations]
+> +#   perf-die-chain-all [iterations]
+> +#   perf-dso
+> +#
+> +# For each iteration of the chasing loop they print the DIE address, the
+> +# CU, its file offset, tag and name: a cycle shows as the same (addr, cu)
+> +# pairs repeating, and a CU changing between iterations means the chase
+> +# hops between a debug file and its dwz common file.
+> +
+> +set pagination off
+> +set confirm off
+> +set debuginfod enabled off
+> +set print pretty on
+> +set height 0
+> +set width 0
+> +
+> +define perf-die-chain
+> +  if $argc < 2
+> +    printf "usage: perf-die-chain <function> <die variable> [iterations]\n"
+> +  else
+> +    frame function $arg0
+> +    if $argc == 3
+> +      set $perf_die_chain_n = $arg2
+> +    else
+> +      set $perf_die_chain_n = 10
+> +    end
+> +    set $perf_die_chain_head = $pc
+> +    set $perf_die_chain_i = 0
+> +    while $perf_die_chain_i < $perf_die_chain_n
+> +      # Pointer type DIEs have no DW_AT_name, so dwarf_diename() can
+> +      # return NULL: printf %s of it would error out and abort this
+> +      # batch script, handle it.
+> +      set $perf_die_chain_name = (char *) dwarf_diename($arg1)
+> +      printf "chain[%d] die=%p addr=%p cu=%p off=0x%lx tag=%d name=", $perf_die_chain_i, $arg1, $arg1->addr, $arg1->cu, ((Dwarf_Off) dwarf_dieoffset($arg1)), ((int) dwarf_tag($arg1))
 
-Nit: perf has its own mutex type and helper functions.  But I suspect it
-doesn't have the static initializer yet.
+Nit: can you please break this line?
 
 Thanks,
 Namhyung
 
 
+> +      if $perf_die_chain_name == 0
+> +	printf "(null)\n"
+> +      else
+> +	printf "%s\n", $perf_die_chain_name
+> +      end
+> +      until *$perf_die_chain_head
+> +      set $perf_die_chain_i = $perf_die_chain_i + 1
+> +    end
+> +  end
+> +end
 > +
-> +/*
-> + * perf_config__set_variable() is a read-modify-write of a config file,
-> + * and config_mutex serializes just each of its steps: take it for the
-> + * whole update so callers can't write over each other's changes.
-> + */
-> +static pthread_mutex_t config_update_mutex = PTHREAD_MUTEX_INITIALIZER;
+> +document perf-die-chain
+> +Print the DIE chain being walked by a DWARF type chasing loop.
+> +usage: perf-die-chain <function> <die variable> [iterations]
+> +  perf-die-chain die_get_pointer_type type_die
+> +  perf-die-chain __die_get_real_type vr_die
+> +  perf-die-chain die_get_real_type vr_die
+> +end
 > +
->  static int perf_config_from_file(config_fn_t fn, const char *filename, void *data)
->  {
->  	int ret;
->  	FILE *f = fopen(filename, "r");
->  
-> +	pthread_mutex_lock(&config_mutex);
->  	ret = -1;
->  	if (f) {
->  		config_file = f;
-> @@ -564,15 +586,34 @@ static int perf_config_from_file(config_fn_t fn, const char *filename, void *dat
->  		fclose(f);
->  		config_file_name = NULL;
->  	}
-> +	pthread_mutex_unlock(&config_mutex);
->  	return ret;
->  }
->  
-> +/*
-> + * Computed once: system_path() allocates, a lazy init racing on two
-> + * threads would leak all but one of the strings.
-> + */
-> +static const char *etc_perfconfig;
+> +define perf-die-chain-all
+> +  if $argc == 0
+> +    set $perf_die_chain_n = 10
+> +  else
+> +    set $perf_die_chain_n = $arg0
+> +  end
+> +  if $_any_caller_is("die_get_pointer_type", 20)
+> +    printf "stuck in die_get_pointer_type():\n"
+> +    perf-die-chain die_get_pointer_type type_die $perf_die_chain_n
+> +  else
+> +    if $_any_caller_is("__die_get_real_type", 20)
+> +      printf "stuck in __die_get_real_type():\n"
+> +      perf-die-chain __die_get_real_type vr_die $perf_die_chain_n
+> +    else
+> +      if $_any_caller_is("die_get_real_type", 20)
+> +        printf "stuck in die_get_real_type():\n"
+> +        perf-die-chain die_get_real_type vr_die $perf_die_chain_n
+> +      else
+> +        printf "not in a DWARF type chaser, try: bt\n"
+> +      end
+> +    end
+> +  end
+> +end
 > +
-> +static void perf_etc_perfconfig__init(void)
-> +{
-> +	etc_perfconfig = system_path(ETC_PERFCONFIG);
-> +	/*
-> +	 * None of the callers check for NULL, so an allocation failure
-> +	 * here leaves all of them dereferencing it.  The unresolved path
-> +	 * is the same string when ETC_PERFCONFIG is absolute anyway.
-> +	 */
-> +	if (!etc_perfconfig)
-> +		etc_perfconfig = ETC_PERFCONFIG;
+> +document perf-die-chain-all
+> +Find which DWARF type chaser the process is in and print the DIE chain.
+> +usage: perf-die-chain-all [iterations]
+> +end
+> +
+> +define perf-dso
+> +  if $_any_caller_is("find_data_type", 20)
+> +    frame function find_data_type
+> +    # REFCNT_CHECKING, implied by an ASan/LSan build, wraps struct map and
+> +    # struct dso in a proxy keeping the real object in ->orig, the dso being
+> +    # map->orig->dso->orig there; struct symbol is not wrapped, so sym->name
+> +    # needs no ->orig.  There is no way to ask gdb which layout it is looking
+> +    # at, so walk each candidate until one evaluates.  Requiring gdb's Python
+> +    # here adds nothing: $_any_caller_is() is one of its functions already.
+> +    python
+> +import gdb
+> +
+> +dso = None
+> +for expr in ("dloc->ms->map->dso->name",
+> +             "dloc->ms->map->orig->dso->orig->name"):
+> +    try:
+> +        gdb.parse_and_eval(expr)
+> +        dso = expr
+> +        break
+> +    except gdb.error:
+> +        pass
+> +
+> +if dso is None:
+> +    print("dso=(no such member in struct map)")
+> +else:
+> +    gdb.execute('printf "dso=%s ip=0x%lx sym=%s\\n", ' + dso +
+> +                ', dloc->ip, dloc->ms->sym ? dloc->ms->sym->name : "(no symbol)"')
+> +    end
+> +  else
+> +    printf "not in find_data_type()\n"
+> +  end
+> +end
+> +
+> +document perf-dso
+> +Print the dso, ip and symbol of the data location being resolved.
+> +end
+> diff --git a/tools/perf/scripts/perf-stuck.sh b/tools/perf/scripts/perf-stuck.sh
+> new file mode 100755
+> index 0000000000000000..f9b545c107905a4e
+> --- /dev/null
+> +++ b/tools/perf/scripts/perf-stuck.sh
+> @@ -0,0 +1,193 @@
+> +#!/bin/bash
+> +# SPDX-License-Identifier: GPL-2.0
+> +#
+> +# perf-stuck - tell a spinning perf apart from a blocked or recursing one
+> +#
+> +# Arnaldo Carvalho de Melo <acme@redhat.com>
+> +#
+> +# PROTOTYPE: wants to become a first class 'perf stuck' command, sampling
+> +# a process from inside perf, with the knowledge of perf's phases and of
+> +# the DWARF type chasing loops built in, instead of poking /proc and
+> +# shelling out to gdb.
+> +#
+> +# Samples /proc/<pid> at a fixed interval and prints the CPU time used
+> +# since the previous sample, the [stack] mapping start and size, and the
+> +# last line of a progress log when one is given, e.g. the stderr of
+> +# 'perf report --progress': burning a full interval with a constant
+> +# stack is a loop, a [stack] start moving down is runaway recursion.
+> +#
+> +# With -g it runs gdb (perf-stuck.gdb) when no progress is made for two
+> +# consecutive samples, printing the DIE chain a DWARF type chase is
+> +# walking.
+> +#
+> +# usage: perf-stuck.sh [options] <pid|process-name>
+> +
+> +set -u
+> +
+> +usage() {
+> +	cat <<-EOF
+> +	usage: perf-stuck.sh [options] <pid|process-name>
+> +
+> +	  -i <secs>   sampling interval (default: 10)
+> +	  -n <count>  stop after this many samples (default: watch till it exits)
+> +	  -l <file>   progress log, its last line is printed with every sample
+> +	  -g          run gdb with perf-stuck.gdb when no progress is made for
+> +	              two consecutive samples, writing the output to a temp file
+> +	  -x <file>   use this gdb command file instead of perf-stuck.gdb
+> +	  -h          this help
+> +	EOF
+> +	exit "${1:-0}"
 > +}
 > +
->  const char *perf_etc_perfconfig(void)
->  {
-> -	static const char *system_wide;
-> -	if (!system_wide)
-> -		system_wide = system_path(ETC_PERFCONFIG);
-> -	return system_wide;
-> +	static pthread_once_t once = PTHREAD_ONCE_INIT;
+> +interval=10
+> +count=0
+> +progress_log=
+> +use_gdb=
+> +gdb_cmds=
 > +
-> +	pthread_once(&once, perf_etc_perfconfig__init);
-> +	return etc_perfconfig;
->  }
->  
->  static int perf_env_bool(const char *k, int def)
-> @@ -630,19 +671,25 @@ static char *home_perfconfig(void)
->  	return NULL;
->  }
->  
-> -const char *perf_home_perfconfig(void)
-> -{
-> -	static const char *config;
-> -	static bool failed;
-> +/*
-> + * Computed once for the same reason as perf_etc_perfconfig() above:
-> + * home_perfconfig() allocates, a lazy init racing on two threads would
-> + * leak all but one of the strings, and the warnings it may print would
-> + * come out more than once.
-> + */
-> +static const char *home_config;
->  
-> -	if (failed || config)
-> -		return config;
-> +static void perf_home_perfconfig__init(void)
-> +{
-> +	home_config = home_perfconfig();
-> +}
->  
-> -	config = home_perfconfig();
-> -	if (!config)
-> -		failed = true;
-> +const char *perf_home_perfconfig(void)
-> +{
-> +	static pthread_once_t once = PTHREAD_ONCE_INIT;
->  
-> -	return config;
-> +	pthread_once(&once, perf_home_perfconfig__init);
-> +	return home_config;
->  }
->  
->  static struct perf_config_section *find_section(struct list_head *sections,
-> @@ -783,8 +830,18 @@ static int collect_config(const char *var, const char *value,
->  int perf_config_set__collect(struct perf_config_set *set, const char *file_name,
->  			     const char *var, const char *value)
->  {
-> +	int ret;
+> +while getopts "i:n:l:gx:h" opt; do
+> +	case "$opt" in
+> +	i) interval=$OPTARG ;;
+> +	n) count=$OPTARG ;;
+> +	l) progress_log=$OPTARG ;;
+> +	g) use_gdb=1 ;;
+> +	x) gdb_cmds=$OPTARG ;;
+> +	h) usage 0 ;;
+> +	*) usage 1 ;;
+> +	esac
+> +done
+> +shift $((OPTIND - 1))
 > +
-> +	pthread_mutex_lock(&config_mutex);
->  	config_file_name = file_name;
-> -	return collect_config(var, value, set);
-> +	ret = collect_config(var, value, set);
-> +	/*
-> +	 * Don't leave the static parser state pointing at the caller's
-> +	 * buffer.
-> +	 */
-> +	config_file_name = NULL;
-> +	pthread_mutex_unlock(&config_mutex);
-> +	return ret;
->  }
->  
->  static int perf_config_set__init(struct perf_config_set *set)
-> @@ -831,6 +888,16 @@ struct perf_config_set *perf_config_set__load_file(const char *file)
->  	return set;
->  }
->  
-> +/*
-> + * The global config_set is built lazily: two threads in perf_config() at
-> + * once would both build one and leak all but the last, and config_set must
-> + * not be read while another thread swaps it, so take it one at a time.  Not
-> + * with config_mutex: building the set parses the config files, which takes
-> + * that one.
-> + */
-> +static pthread_mutex_t config_set_mutex = PTHREAD_MUTEX_INITIALIZER;
+> +[[ "$interval" =~ ^[0-9]+$ ]] && [ "$interval" -gt 0 ] ||
+> +	{ echo "-i wants a positive integer, got '$interval'"; usage 1; }
+> +[[ "$count" =~ ^[0-9]+$ ]] ||
+> +	{ echo "-n wants a non-negative integer, got '$count'"; usage 1; }
+> +[ -n "$gdb_cmds" ] && [ -z "$use_gdb" ] && { echo "-x needs -g"; usage 1; }
 > +
-> +/* Called with config_set_mutex held. */
->  static int perf_config__init(void)
->  {
->  	if (config_set == NULL)
-> @@ -871,16 +938,126 @@ int perf_config_set(struct perf_config_set *set,
->  
->  int perf_config(config_fn_t fn, void *data)
->  {
-> -	if (config_set == NULL && perf_config__init())
-> +	struct perf_config_set *set;
+> +[ $# -eq 1 ] || usage 1
 > +
-> +	/*
-> +	 * The mutex is taken just for the lazy init and for the pointer:
-> +	 * the dispatch below only reads the set, so a callback that called
-> +	 * perf_config() again would find it unlocked, and only
-> +	 * perf_config__exit() replaces the set.
-> +	 */
-> +	pthread_mutex_lock(&config_set_mutex);
-> +	if (perf_config__init()) {
-> +		pthread_mutex_unlock(&config_set_mutex);
->  		return -1;
-> +	}
-> +	set = config_set;
-> +	pthread_mutex_unlock(&config_set_mutex);
->  
-> -	return perf_config_set(config_set, fn, data);
-> +	return perf_config_set(set, fn, data);
->  }
->  
->  void perf_config__exit(void)
->  {
-> +	pthread_mutex_lock(&config_set_mutex);
->  	perf_config_set__delete(config_set);
->  	config_set = NULL;
-> +	pthread_mutex_unlock(&config_set_mutex);
-> +}
+> +if [[ "$1" =~ ^[0-9]+$ ]]; then
+> +	pid=$1
+> +else
+> +	# Resolve the name against the caller's own processes: as root,
+> +	# unscoped pgrep picks the first match of any user, e.g. one planted
+> +	# to get gdb attached to it, use an explicit pid to look at a perf of
+> +	# another user.
+> +	pid=$(pgrep -x -u "$(id -u)" -- "$1" | head -1)
+> +	[ -n "$pid" ] || { echo "no process named '$1' owned by $(id -un)"; exit 1; }
+> +fi
 > +
-> +int perf_config_set__write(struct perf_config_set *set,
-> +			   const char *file_name, bool system_config)
-> +{
-> +	struct perf_config_section *section = NULL;
-> +	struct perf_config_item *item = NULL;
-> +	int ret = 0;
-> +	FILE *fp;
+> +[ -d /proc/"$pid" ] || { echo "no process $pid"; exit 1; }
 > +
-> +	pthread_mutex_lock(&config_mutex);
-> +	fp = fopen(file_name, "w");
-> +	if (!fp) {
-> +		pthread_mutex_unlock(&config_mutex);
-> +		return -1;
-> +	}
+> +if [ -n "$use_gdb" ]; then
+> +	# Fail before watching, not two samples in when -g would fire.
+> +	command -v gdb > /dev/null || { echo "gdb not found, -g needs it"; exit 1; }
+> +	[ -z "$gdb_cmds" ] && gdb_cmds=$(dirname "$0")/perf-stuck.gdb
+> +	[ -r "$gdb_cmds" ] || { echo "cannot read $gdb_cmds"; exit 1; }
+> +fi
 > +
-> +	if (fprintf(fp, "# this file is auto-generated.\n") < 0)
-> +		ret = -1;
+> +hz=$(getconf CLK_TCK)
+> +psz=$(getconf PAGESIZE)
+> +prev_cpu=
+> +prev_stack=
+> +prev_progress=
+> +stuck=0
+> +gdb_done=
+> +nsample=0
 > +
-> +	/* overwrite configvariables */
-> +	perf_config_sections__for_each_entry(&set->sections, section) {
-> +		if (!system_config && section->from_system_config)
-> +			continue;
-> +		if (fprintf(fp, "[%s]\n", section->name) < 0)
-> +			ret = -1;
+> +# The command line is whatever the process was started with, so drop the
+> +# control characters from it: a process started with escape sequences in
+> +# its arguments, e.g. one replaying a log line, would otherwise get them
+> +# replayed on the terminal of whoever runs this.
+> +cmdline=$(tr '\0' ' ' < /proc/"$pid"/cmdline | tr -d '[:cntrl:]')
 > +
-> +		perf_config_items__for_each_entry(&section->items, item) {
-> +			if (!system_config && item->from_system_config)
-> +				continue;
-> +			if (item->value &&
-> +			    fprintf(fp, "\t%s = %s\n", item->name, item->value) < 0)
-> +				ret = -1;
-> +		}
-> +	}
-> +	if (fclose(fp) != 0)
-> +		ret = -1;
-> +	pthread_mutex_unlock(&config_mutex);
+> +echo "watching $pid ($cmdline) every ${interval}s"
 > +
-> +	return ret;
-> +}
+> +while :; do
+> +	if [ ! -d /proc/"$pid" ]; then
+> +		echo "$(date +%T) process gone"
+> +		break
+> +	fi
 > +
-> +/*
-> + * Set @var=@value in the configuration file perf is using: ~/.perfconfig
-> + * or the file named by PERF_CONFIG, which makes perf read only that
-> + * file.  The rewrite is the same 'perf config' does, comments are not
-> + * preserved.
-> + */
-> +int perf_config__set_variable(const char *var, const char *value)
-> +{
-> +	const char *config_filename;
-> +	bool system_config;
-> +	struct perf_config_set *set = NULL;
-> +	int ret = -1;
+> +	# Field 2, the command name, is in parentheses and can contain
+> +	# spaces, so drop it together with the pid before splitting so the
+> +	# fields line up.  %d keeps the CPU time out of scientific
+> +	# notation, that bash arithmetic can't parse past six digits.
+> +	if ! stat_line=$(awk '{ sub(/^[^ ]+ \(.*\) /, "");
+> +			       printf "%s %d %d\n", $1, $12 + $13, $22 }' \
+> +			 /proc/"$pid"/stat 2>/dev/null); then
+> +		echo "$(date +%T) process gone"
+> +		break
+> +	fi
 > +
-> +	pthread_mutex_lock(&config_update_mutex);
+> +	# The process can be gone between the check above and this read, in
+> +	# which case there is nothing to report: 'set -u' would otherwise
+> +	# turn the unbound fields into an aborted script.
+> +	if [ -z "$stat_line" ]; then
+> +		echo "$(date +%T) process gone"
+> +		break
+> +	fi
 > +
-> +	/*
-> +	 * Not on the stack: the parser publishes this buffer as
-> +	 * config_file_name, which another thread may still be reading.  It is
-> +	 * shared by every caller, so it is formatted under the lock above.
-> +	 */
-> +	{
-> +		static char path[PATH_MAX];
-> +		char *user_config = mkpath(path, sizeof(path), "%s/.perfconfig", getenv("HOME"));
+> +	stat=($stat_line)
+> +	state=${stat[0]}
+> +	cpu=${stat[1]}
+> +	# field 24 of /proc/<pid>/stat, the resident set size in pages
+> +	rss=$(( stat[2] * psz / 1024 ))
 > +
-> +		config_filename = config_exclusive_filename ?: user_config;
-> +	}
+> +	stack=$(awk '/\[stack\]/{print $1; exit}' /proc/"$pid"/maps 2>/dev/null)
+> +	if [ -n "$stack" ]; then
+> +		stack_start=0x${stack%-*}
+> +		stack_size=$(( 0x${stack#*-} - stack_start ))
+> +		stack_txt="$stack size=$((stack_size / 1024))kB"
+> +	else
+> +		stack_start=
+> +		stack_txt="-"
+> +	fi
 > +
-> +	/*
-> +	 * When rewriting the system wide file all entries are marked as coming
-> +	 * from it and must be kept, or it would be truncated down to its
-> +	 * header.
-> +	 */
-> +	system_config = strcmp(config_filename, perf_etc_perfconfig()) == 0;
+> +	progress=
+> +	[ -n "$progress_log" ] && [ -s "$progress_log" ] && progress=$(tail -1 -- "$progress_log")
 > +
-> +	set = perf_config_set__new();
-> +	if (!set)
-> +		goto out_err;
+> +	if [ -n "$prev_cpu" ]; then
+> +		cpu_delta=$(( cpu - prev_cpu ))
+> +		# No progress log, or one with nothing written to it yet, leaves
+> +		# no progress to look at, so count the samples that show none:
+> +		# -g then looks at where the process is after two intervals.
+> +		# Otherwise count the repeats of the same last line.
+> +		if [ -z "$progress" ] || [ "$progress" = "$prev_progress" ]; then
+> +			stuck=$((stuck + 1))
+> +		else
+> +			stuck=0
+> +			gdb_done=
+> +		fi
+> +		stuck_txt="stuck=${stuck}"
+> +		[ "$stack_start" != "$prev_stack" ] && stuck_txt="$stuck_txt STACK"
+> +	else
+> +		cpu_delta=0
+> +		stuck_txt=""
+> +	fi
 > +
-> +	if (perf_config_set__collect(set, config_filename, var, value) < 0) {
-> +		pr_err("Failed to add '%s=%s'\n", var, value);
-> +		goto out_err;
-> +	}
+> +	printf '%s state=%s cpu=+%d (%d.%02ds) rss=%dkB stack=%s %s %s\n' \
+> +	       "$(date +%T)" "$state" "$cpu_delta" \
+> +	       $(( cpu_delta / hz )) $(( (cpu_delta % hz) * 100 / hz )) \
+> +	       "$rss" "$stack_txt" "$stuck_txt" "${progress:-(no progress log)}"
 > +
-> +	if (perf_config_set__write(set, config_filename, system_config) < 0) {
-> +		pr_err("Failed to set the configs on %s\n", config_filename);
-> +		goto out_err;
-> +	}
+> +	if [ -n "$use_gdb" ] && [ -z "$gdb_done" ] && [ "$stuck" -ge 2 ]; then
+> +		gdb_log=$(mktemp /tmp/perf-stuck-gdb.XXXXXX)
+> +		# The gdb script makes inferior calls, and a call into a perf
+> +		# wedged in a loop never returns, so bound the run; SIGINT
+> +		# releases the inferior instead of leaving perf stopped.
+> +		timeout --signal=INT 30 gdb -p "$pid" -batch -x "$gdb_cmds" -ex bt \
+> +		    -ex 'perf-die-chain-all' -ex perf-dso -ex detach > "$gdb_log" 2>&1
+> +		gdb_done=1
+> +		echo "... gdb output of $pid in $gdb_log"
+> +	fi
 > +
-> +	ret = 0;
-> +out_err:
-> +	perf_config_set__delete(set);
-> +	pthread_mutex_unlock(&config_update_mutex);
-> +	return ret;
->  }
->  
->  static void perf_config_item__delete(struct perf_config_item *item)
-> diff --git a/tools/perf/util/config.h b/tools/perf/util/config.h
-> index 987b47cf54c350ba..9098f8a045850c97 100644
-> --- a/tools/perf/util/config.h
-> +++ b/tools/perf/util/config.h
-> @@ -33,6 +33,8 @@ int perf_config_scan(const char *name, const char *fmt, ...) __scanf(2, 3);
->  const char *perf_config_get(const char *name);
->  int perf_config_set(struct perf_config_set *set,
->  		    config_fn_t fn, void *data);
-> +int perf_config_set__write(struct perf_config_set *set,
-> +			   const char *file_name, bool system_config);
->  int perf_config_int(int *dest, const char *, const char *);
->  int perf_config_u8(u8 *dest, const char *name, const char *value);
->  int perf_config_u64(u64 *dest, const char *, const char *);
+> +	prev_cpu=$cpu
+> +	prev_stack=$stack_start
+> +	prev_progress=$progress
+> +
+> +	nsample=$((nsample + 1))
+> +	[ "$count" -gt 0 ] && [ "$nsample" -ge "$count" ] && break
+> +
+> +	sleep "$interval"
+> +done
 > -- 
 > 2.55.0
 > 
