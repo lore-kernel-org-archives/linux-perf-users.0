@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8094842122F;
-	Thu,  1 Oct 2026 18:54:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 657E13C9EF1;
+	Thu,  1 Oct 2026 18:54:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790880857; cv=none; b=gW8QMCFdYt6uRePnKm71Q7+1zxw8vwkNFus0vMQRQ3sbVqh5fBU8rgiVNFUAlqCLK+oRJIVCJQUdlrNK7COx6D1N/OFvqwf25YdcreJWTF5WOguDUSUQJOEB5nzt9VTBrjcyJWHKoZqCZO6RoEPX/JWigwbMLExOtFvALcegbVo=
+	t=1790880861; cv=none; b=BkAV/5JJhUCLfx0Sg6XhDa+FKfj+0/jfU8KNfafDbYrX/xHr+48avYeoDB2mEB0GiT1kG+Ey4Z4lOMpRxUubfARRHOnicbDD3YThvAIjtCFjrl5o1Hi9NxUPlLy5E3+VUGO9Z5R+0IVNTsCe98rwLdlAYo9YJjlk01QOJ+k8nCE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790880857; c=relaxed/simple;
-	bh=xnJ0E046ME8LTvEUrOdXxLjWWji+HEg+GCi03JsverE=;
+	s=arc-20240116; t=1790880861; c=relaxed/simple;
+	bh=Dgh3sRdHf2PcYrdOL/7o0iCt97LnQ5tUH1RA4taB/Vw=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=JTqs+LwmmL1AJDOPF2aoUsJ+GSALlHFy6yfOaXfnVF8DJMzYWNJkRE6lSB/sqDwQCgaC/wcT7XPKZULyET3VDHWAGIV55Ij+U3MrzTKFNj7DrL7Z2LHgc6PqFRh07VkDfkm2rYHZfOFohVyLkhNUJsn+NrzS/LEM9GByIggSoQU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=e9NHOFCD; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version; b=Xu1GLlx7Nma05oBgmHaWb2qnnNY1dbJVqigheUeZEKCVoP+A1DXW1ZzPAvZArfjHBIXuNa8D3EnG1IyTZKjuFZ/IZs9vJUgsE/np6MNIPGNMyVBer31FjVQ6iNA45HVbu8Zyi3qsFuWHAr0MdIOFNZjTfyvXU1Ytb2/CColf6DU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nDXsf9k3; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="e9NHOFCD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 10E881F000FF;
-	Thu,  1 Oct 2026 18:54:12 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nDXsf9k3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CDB441F00898;
+	Thu,  1 Oct 2026 18:54:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1790880856;
-	bh=GsRS+8QUyzXT3sy05mzdqRSQVHQwC0/XHLNHgHoSuiM=;
+	s=k20260515; t=1790880860;
+	bh=OBKP8NmwUjXwEyDc9gSaOA3RTicUkdI0rDQMOs+pZHk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=e9NHOFCDv2lFtcoVHguSDY8o+/kU91Ua7BNoCcDrpmZCzWy3lwFnn9Zs7shl4W7dV
-	 27SgIZ3la5atbrFcHxTvk9AO0w6tLFI548BqlRpzuMkVIYwCMguJ6BXLk5Bb5hZ8op
-	 pT+D21vOBGWeVVgCDOVwMv2B/o2U29DF9gOKPMnZG2aNOGdzQV+8c16jVMJYuKsFYY
-	 1Oh/a1+QvHv5LK9Q0kywRHXadWo3Pqg8Cx/wRHwrPttzRULoTGKxdesrhf93Fo8Le9
-	 5yJWoGF8ZkVjhNc5W1vdOj64sds+cfRS7Nf1N6p3dwYqAH3V7bGKrczfGc2PFjZkjY
-	 3MR/Vtv1vXu5g==
+	b=nDXsf9k3Vb/UDgiYk8XjDWOKjrs664nF1qZjfELF8fHAJcTec9ryjbK3nQ84WivKC
+	 S2kAKK/vIJGvUhPOzLeIxpNjr2hbHOLGoB+gOMPT13uhEFD5k6eT+yNcS8G6bQc36g
+	 bn2QULgObHVemk04JfyGC8zpm69UK883ZyV1CP+Q8Vlv1e8380GFoEE2qnlRcIGEQ0
+	 xPitanH6yimmnhidBXzTly3Brxl1V13v9aoLBRU1HrjjhqR1lYHouk+A5Izb2oAEYc
+	 8jBA2e2LTi4DDO//kH5rqdsuNiF0NFVub782N5H2saMfAaYU6k7PTKlXk/CbkrmVve
+	 h3JSjVX8UmSgA==
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Namhyung Kim <namhyung@kernel.org>
 Cc: Ingo Molnar <mingo@kernel.org>,
@@ -38,9 +38,9 @@ Cc: Ingo Molnar <mingo@kernel.org>,
 	linux-kernel@vger.kernel.org,
 	linux-perf-users@vger.kernel.org,
 	Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH v7 2/9] perf config: Make perf_etc_perfconfig() never return NULL
-Date: Thu,  1 Oct 2026 20:53:53 +0200
-Message-ID: <20261001185400.2754753-3-acme@kernel.org>
+Subject: [PATCH v7 3/9] perf mutex: Add DEFINE_MUTEX() static initializer
+Date: Thu,  1 Oct 2026 20:53:54 +0200
+Message-ID: <20261001185400.2754753-4-acme@kernel.org>
 X-Mailer: git-send-email 2.55.0
 In-Reply-To: <20261001185400.2754753-1-acme@kernel.org>
 References: <20261001185400.2754753-1-acme@kernel.org>
@@ -54,38 +54,30 @@ Content-Transfer-Encoding: 8bit
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-perf_etc_perfconfig() returns what system_path() gives, and that
-allocates, so on failure every caller dereferenced NULL, the
-pre-existing ones in perf_config_set__init() and in the daemon
-included.  For the usual absolute ETC_PERFCONFIG system_path() just
-returns a strdup of it, so use ETC_PERFCONFIG itself when that fails.
+For file scope mutexes, so that they don't need a constructor function
+to initialize them at startup, mirroring PTHREAD_MUTEX_INITIALIZER
+while keeping the clang -Wthread-safety annotations of struct mutex.
 
 Assisted-by: LLM
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/config.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ tools/perf/util/mutex.h | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/tools/perf/util/config.c b/tools/perf/util/config.c
-index 85e50d0a25580da0..6e0ff8a9140ccf96 100644
---- a/tools/perf/util/config.c
-+++ b/tools/perf/util/config.c
-@@ -571,8 +571,14 @@ static int perf_config_from_file(config_fn_t fn, const char *filename, void *dat
- const char *perf_etc_perfconfig(void)
- {
- 	static const char *system_wide;
-+
- 	if (!system_wide)
--		system_wide = system_path(ETC_PERFCONFIG);
-+		/*
-+		 * ETC_PERFCONFIG is absolute, so its unresolved path is
-+		 * the same string, better than the callers crashing.
-+		 */
-+		system_wide = system_path(ETC_PERFCONFIG) ?: ETC_PERFCONFIG;
-+
- 	return system_wide;
- }
+diff --git a/tools/perf/util/mutex.h b/tools/perf/util/mutex.h
+index 70232d8d094f8bfc..b85a80ad60386aed 100644
+--- a/tools/perf/util/mutex.h
++++ b/tools/perf/util/mutex.h
+@@ -92,6 +92,9 @@ struct LOCKABLE mutex {
+ 	pthread_mutex_t lock;
+ };
  
++/* Statically initialized mutex, for the file scope ones. */
++#define DEFINE_MUTEX(name) struct mutex name = { .lock = PTHREAD_MUTEX_INITIALIZER }
++
+ /* A wrapper around the condition variable implementation. */
+ struct cond {
+ 	pthread_cond_t cond;
 -- 
 2.55.0
 
