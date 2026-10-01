@@ -1,238 +1,200 @@
-Received: from BYAPR05CU005.outbound.protection.outlook.com (mail-westusazon11010044.outbound.protection.outlook.com [52.101.85.44])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98B9E28C009;
-	Thu,  1 Oct 2026 15:23:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.85.44
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790868213; cv=fail; b=qd203AtNfOSCLO01LQ6ARz/ndSgDNzaBaahxgD5gvVBqPBZXOPU7SufrygjZMP9XAbvkJkl7eKBr76jHT7dEAdkFxY64elUyqXJm9QMz8qR6AvILI/gltTmvnYxYTdYGiGYxKPTJvlma8a5sPxez5DFB7Pr+zL2PrUJax91x2y8=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790868213; c=relaxed/simple;
-	bh=LLjIzSz7vTK+CgMq4VmaInH+yLMRDJXSMfzx/3bPKXk=;
-	h=Content-Type:Date:Message-Id:Cc:To:From:Subject:References:
-	 In-Reply-To:MIME-Version; b=qIS9FFuPuZK+vjEf24RXUHdw6suId8mEWdkVMZUcVpOFzCdmDoZ0gNu8xz49UuppRBZB/uTCG1/TH7xr07XFbANB373cO8a4VqeXGLor54KXcy+EeH3SO0UAB//U50ZN+lsvGEqhEiGruaUL5yMB4v8OKtra5JrUhc+Dq2aFj0I=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=TQHAzu9e; arc=fail smtp.client-ip=52.101.85.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2F91489866;
+	Thu,  1 Oct 2026 15:32:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1790868757; cv=none; b=YEraOJUe6L1DuIhwfXDtsbgQd+lUbOV9yIXf98ozY9ZN+s6WzOvEGUvTtqAEK+AD6VNJYkeRFNRawPWXVz3ufcUrAvkcjysHNXM1QdoVKGLTnZLMCJEIk0oksutqY0vL1aA196lZR4K4snxINXY8QuUNSm6aASBS4Qvyzh2oXO8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1790868757; c=relaxed/simple;
+	bh=MgSy1JGEr9GQ5cdFsgzcMRYgyAD3NCS+UpU86vzMn7E=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=A4CVxVoEJwWZgEZlJmnF1tR6+fxgAviy2zHvOTcCgc2ohPP2otKXonTJHjQ6EWdx3QtptZ9XX3R91tmKsie4xXybP6z7Sp0RXChvh4u8ugIKKz+8jIcDWP4cgL0cos0kW1mvhXXLLPiAZ3fI49gFVNJBvynPIcax+XJ/dyFfHac=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gwHnIgpK; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="TQHAzu9e"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=rVEsUqt485td5yMc/TmZTRotg0nefR0Q2UOfcr+3bp6G1ZN9pooY5oUWL7r8OBtGSE0qgZVQYlF9Lc7AoW5QovChvrfKvQw7h7M8/40aR4R8l7VDPOMcoFao4pFCH4zyQtXqUPpoDTXPMN2BRcr7/DdJJLeVQVq7Xd7dVe382zCHnMIsDsYo8m/A9uWV3TEIdU9DwWubDNAqT+v/PjJ0TTfYbSbAqLdCUCn/kz3HP5zPvG9JJiPgVtSp6m+afHSa5S+i4SKpCLIfnRPFzk6JnjALicL0wTth2e1umDfQZUqfN7JaZnY9wPuRnU2LShnsgiNrhorRh6A9kXTLCQB2gw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=0I+tLX4sSdDtskFCx4KqZkGPZGt7ceNDv0HpitMg7NQ=;
- b=CSit+SJYKvP/ETHxyIUNRHQ+jhiAiOrh+dZ1lQQqFepeNK87S7iKOZ58szE3+Qr/hdhjuIOG7L2BbEKeJsEecjKCt2zthZEmc2zKndhERsYgTVtBqqQcrRuVG2Zs5Rvo9NerEYtRUUDcWqi0xyYPzfLT3FgMhzoJAUm7bHp7lp1GxwdMXeUS9Rts5azdgo98bsDp4ZXS3XDbM24sZBUTCojAkndrcCjud2wGiiN27u3Uw78wCqaBxrmsYPLjQlnLHotAsIDdt/a8+aMWHtqWjMFBUckvdNDa1w4e8rYZ5rkWg5QuqQo1O/5Bi8CoEifjQmvrvDkNtDeOtjEgzIsyxg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=0I+tLX4sSdDtskFCx4KqZkGPZGt7ceNDv0HpitMg7NQ=;
- b=TQHAzu9eXbAyEIP+3BjNLXEIdQQQMQKJamm3rZcMcnJPZnACCMbPsYtBpO1A++54I0eGEy0Z3wzTA0JAVX5qNZURbB9T+EFeRCupr4c8V/lC4M5D0+27mQasINa0VF4vXwYpHckv9SfQY2FlgdHmwjg++s7630NdHYe6jF/p+L6Mv6h9Na/Dxsuk6ZXbq4OBHCY+0BvshT6O5UBprw8nG1BaJBHhabMAnnLe2O61vEPmi2w42739+qqpwizrdSFuxyAtcAfTw58VaoDbYJrzkW1CBZsUPsDDnEu0hyicM9fBoEMepj0L4IG7Pmy6qQ75VO5UAFMXRX6Oh/A8UOb2iA==
-Authentication-Results: mx.microsoft.com 1; dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from IA0PR12MB8374.namprd12.prod.outlook.com (2603:10b6:208:40e::7)
- by IA1PR12MB7686.namprd12.prod.outlook.com (2603:10b6:208:422::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.451.24; Thu, 1 Oct
- 2026 15:23:17 +0000
-Received: from IA0PR12MB8374.namprd12.prod.outlook.com
- ([fe80::d85f:4c87:ae84:3f16]) by IA0PR12MB8374.namprd12.prod.outlook.com
- ([fe80::d85f:4c87:ae84:3f16%6]) with mapi id 15.21.0472.016; Thu, 1 Oct 2026
- 15:23:17 +0000
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Thu, 01 Oct 2026 11:23:09 -0400
-Message-Id: <DLTLSGL9YVQA.2DGDT17IQEDOR@nvidia.com>
-Cc: <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
- <linux-doc@vger.kernel.org>, <linux-usb@vger.kernel.org>,
- <linux-rdma@vger.kernel.org>, <selinux@vger.kernel.org>,
- <linux-sound@vger.kernel.org>, <bpf@vger.kernel.org>,
- <linux-scsi@vger.kernel.org>, <linux-fbdev@vger.kernel.org>,
- <dri-devel@lists.freedesktop.org>, <linux-trace-kernel@vger.kernel.org>,
- <linux-perf-users@vger.kernel.org>, <linux-arch@vger.kernel.org>,
- <linux-fsdevel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
- <kvmarm@lists.linux.dev>, <linuxppc-dev@lists.ozlabs.org>,
- <kvm@vger.kernel.org>, <kvm-riscv@lists.infradead.org>,
- <linux-riscv@lists.infradead.org>, <linux-s390@vger.kernel.org>,
- <sparclinux@vger.kernel.org>, <fuse-devel@lists.linux.dev>
-To: "Lorenzo Stoakes (ARM)" <ljs@kernel.org>, "Andrew Morton"
- <akpm@linux-foundation.org>, "Liam R. Howlett" <liam@infradead.org>,
- "Vlastimil Babka" <vbabka@kernel.org>, "Jann Horn" <jannh@google.com>,
- "Pedro Falcato" <pfalcato@suse.de>, "David Hildenbrand" <david@kernel.org>,
- "Mike Rapoport" <rppt@kernel.org>, "Suren Baghdasaryan"
- <surenb@google.com>, "Michal Hocko" <mhocko@suse.com>, "Jonathan Corbet"
- <corbet@lwn.net>, "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
- "Dennis Dalessandro" <dennis.dalessandro@cornelisnetworks.com>, "Jason
- Gunthorpe" <jgg@ziepe.ca>, "Leon Romanovsky" <leon@kernel.org>, "Paul
- Moore" <paul@paul-moore.com>, "Stephen Smalley"
- <stephen.smalley.work@gmail.com>, "Jaroslav Kysela" <perex@perex.cz>,
- "Takashi Iwai" <tiwai@suse.com>, "Alexei Starovoitov" <ast@kernel.org>,
- "Daniel Borkmann" <daniel@iogearbox.net>, "Andrii Nakryiko"
- <andrii@kernel.org>, "Eduard Zingerman" <eddyz87@gmail.com>, "Kumar
- Kartikeya Dwivedi" <memxor@gmail.com>, "Baolin Wang"
- <baolin.wang@linux.alibaba.com>, "Nico Pache" <nico.pache@linux.dev>, "Ryan
- Roberts" <ryan.roberts@arm.com>, "Dev Jain" <dev.jain@arm.com>, "Barry
- Song" <baohua@kernel.org>, "Lance Yang" <lance.yang@linux.dev>, "Usama
- Arif" <usama.arif@linux.dev>, "Kiryl Shutsemau" <kas@kernel.org>, "Doug
- Gilbert" <dgilbert@interlog.com>, "James E.J. Bottomley"
- <James.Bottomley@HansenPartnership.com>, "Martin K. Petersen"
- <mkp@kernel.org>, "Jaya Kumar" <jayalk@intworks.biz>, "Simona Vetter"
- <simona@ffwll.ch>, "Helge Deller" <deller@gmx.de>, "Sebastian Reichel"
- <sre@kernel.org>, "John Hubbard" <jhubbard@nvidia.com>, "Peter Xu"
- <peterx@redhat.com>, "Masami Hiramatsu" <mhiramat@kernel.org>, "Oleg
- Nesterov" <oleg@redhat.com>, "Peter Zijlstra" <peterz@infradead.org>,
- "Thomas Gleixner" <tglx@kernel.org>, "Ingo Molnar" <mingo@redhat.com>,
- "Borislav Petkov" <bp@alien8.de>, "Dave Hansen"
- <dave.hansen@linux.intel.com>, <x86@kernel.org>, "Arnaldo Carvalho de Melo"
- <acme@kernel.org>, "Namhyung Kim" <namhyung@kernel.org>, "Mark Rutland"
- <mark.rutland@arm.com>, "Rik van Riel" <riel@surriel.com>, "Harry Yoo"
- <harry@kernel.org>, "Juri Lelli" <juri.lelli@redhat.com>, "Vincent Guittot"
- <vincent.guittot@linaro.org>, "Maarten Lankhorst"
- <maarten.lankhorst@linux.intel.com>, "Maxime Ripard" <mripard@kernel.org>,
- "Thomas Zimmermann" <tzimmermann@suse.de>, "David Airlie"
- <airlied@gmail.com>, "Will Deacon" <will@kernel.org>, "Aneesh Kumar K.V"
- <aneesh.kumar@kernel.org>, "Nick Piggin" <npiggin@gmail.com>, "Arnd
- Bergmann" <arnd@arndb.de>, "Muchun Song" <muchun.song@linux.dev>, "Oscar
- Salvador" <osalvador@suse.de>, "Matthew Wilcox (Oracle)"
- <willy@infradead.org>, "Jan Kara" <jack@suse.cz>, "Marc Zyngier"
- <maz@kernel.org>, "Oliver Upton" <oupton@kernel.org>, "Catalin Marinas"
- <catalin.marinas@arm.com>, "Madhavan Srinivasan" <maddy@linux.ibm.com>,
- "Anup Patel" <anup@brainfault.org>, "Paul Walmsley" <pjw@kernel.org>,
- "Palmer Dabbelt" <palmer@dabbelt.com>, "Albert Ou" <aou@eecs.berkeley.edu>,
- "Christian Borntraeger" <borntraeger@linux.ibm.com>, "Janosch Frank"
- <frankja@linux.ibm.com>, "Claudio Imbrenda" <imbrenda@linux.ibm.com>,
- "Alexander Gordeev" <agordeev@linux.ibm.com>, "Gerald Schaefer"
- <gerald.schaefer@linux.ibm.com>, "Heiko Carstens" <hca@linux.ibm.com>,
- "Vasily Gorbik" <gor@linux.ibm.com>, "David S. Miller"
- <davem@davemloft.net>, "Andreas Larsson" <andreas@gaisler.com>, "Alexander
- Viro" <viro@zeniv.linux.org.uk>, "Christian Brauner" <brauner@kernel.org>,
- "Matthew Brost" <matthew.brost@intel.com>, "Joshua Hahn"
- <joshua.hahnjy@gmail.com>, "Rakie Kim" <rakie.kim@sk.com>, "Byungchul Park"
- <byungchul@sk.com>, "Gregory Price" <gourry@gourry.net>, "Ying Huang"
- <ying.huang@linux.alibaba.com>, "Alistair Popple" <apopple@nvidia.com>,
- "Chris Li" <chrisl@kernel.org>, "Kairui Song" <kasong@tencent.com>, "Kemeng
- Shi" <shikemeng@huaweicloud.com>, "Nhat Pham" <nphamcs@gmail.com>, "Baoquan
- He" <baoquan.he@linux.dev>, "Youngjun Park" <youngjun.park@lge.com>,
- "Johannes Weiner" <hannes@cmpxchg.org>, "Qi Zheng" <qi.zheng@linux.dev>,
- "Shakeel Butt" <shakeel.butt@linux.dev>, "Axel Rasmussen"
- <axelrasmussen@google.com>, "Yuanchu Xie" <yuanchu@google.com>, "Wei Xu"
- <weixugc@google.com>, "Chengming Zhou" <chengming.zhou@linux.dev>, "Michal
- Hocko" <mhocko@kernel.org>, "Miklos Szeredi" <miklos@szeredi.hu>, "Xu Xin"
- <xu.xin@linux.dev>
-From: "Zi Yan" <ziy@nvidia.com>
-Subject: Re: [PATCH v3 40/40] mm/vma: introduce and use
- vma[_flags]_can_gup()
-X-Mailer: aerc 0.22.0
-References: <20260917-b4-mmap-prepare-vma-flag-sanify-v3-0-4583d8a23bca@kernel.org> <20260917-b4-mmap-prepare-vma-flag-sanify-v3-40-4583d8a23bca@kernel.org>
-In-Reply-To: <20260917-b4-mmap-prepare-vma-flag-sanify-v3-40-4583d8a23bca@kernel.org>
-X-ClientProxiedBy: YQZPR01CA0016.CANPRD01.PROD.OUTLOOK.COM
- (2603:10b6:c01:85::15) To IA0PR12MB8374.namprd12.prod.outlook.com
- (2603:10b6:208:40e::7)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gwHnIgpK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B7AC51F000FF;
+	Thu,  1 Oct 2026 15:32:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1790868755;
+	bh=XsTGhcW2BJRIT77mn6aghmJW2+X6SOLYothKvLoVsEs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=gwHnIgpKWK1Ai85udQQ6ZmXDTDqe6edUi61z3TOw793kieEfMxG6hwSEPoZp1xNsZ
+	 4kAzOGFpd8M2M6Ge1BA0BWc/BuirIkk/cWXUHodRYqDn6q+Hue2sOv9d5C20Xb8dB3
+	 LxuWy5Vwz9A6HQDHw6MBMSdeaQwj3vPRXhj2YkLomI8TfrTCIATcJ1CJs8Gm8+MG7N
+	 E2m/aH0Rc2UG6MaFhHiYGe4n2mAUWiHAH52yfnHbfghyiWH+ToVNjP8wlITm1BAICl
+	 +ioStruhFWGcvFVHaXANk+lrQjW6zpjcB9Yv1t8eSSYmSxBCXtwhNILEI1WQGIGfe1
+	 MvzAs3NgXYzOg==
+Date: Thu, 1 Oct 2026 17:32:30 +0200
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Ian Rogers <irogers@google.com>
+Cc: Namhyung Kim <namhyung@kernel.org>, Aaron Tomlin <atomlin@atomlin.com>,
+	Howard Chu <howardchu95@gmail.com>, Jakub Brnak <jbrnak@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>, Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	James Clark <james.clark@linaro.org>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v6 06/26] perf trace: Copy sockaddr arguments by their
+ length
+Message-ID: <ar59DtUVE6dMPn3j@x2>
+References: <cover.1790145937.git.irogers@google.com>
+ <20260928182605.3649015-1-irogers@google.com>
+ <20260928182605.3649015-7-irogers@google.com>
+ <ar1fon_Z4uT3Cd22@x2>
+ <ar2WYemXnrbDx-Il@google.com>
+ <CAP-5=fVPANOdM5vFY93SCm=mN5Z1U+jMqa7s6piqgtAbUrCBbg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: IA0PR12MB8374:EE_|IA1PR12MB7686:EE_
-X-MS-Office365-Filtering-Correlation-Id: 76c5c4a7-3c4c-46f8-9098-08df1fcfead3
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|23010399003|1800799024|366016|376014|7416014|10067099003|11063799006|921020|6133799003|22082099003|18002099003|56012099006|4143699003;
-X-Microsoft-Antispam-Message-Info:
-	1twG8QghL+LTBuRZdZe37qTOAySIskxqIpP0AGo3hUOMQZitMd6g8nea0HxR7s6dXP2mMKp9Bz9MiDK4+Rk/baaXMDwUZJKUPsRxWhWfyOw7ukLQd9qwNbQ/4TodQDjDjtTnGz9MnVSWud59f9LIidGxuzjklD3hsUbII4tZcU2upZVw569SQ8WefERt3kE33BNQmNKlIHgRCe8OusaQDxJNJprEiq6+XD2/ahZMj1dg7gseESwTJS57uu964wu0+BopWSE9jLmiFtLpqgV0kvr5FSXTMGpJI3hbG3dPwhmREfMw0GoPTfaP+4CwOBeNIOiSejrR6nI9sMG8FY4fErpOI0mzBElVGaN4e9OivGwG1F6ObB4ZP1J489iUc897Tc3GnFlcAkC5pASErANxPC/7peKVHRQKAqhiiFdMLUZvu/6mCcEmZLm915MnXy5D9OlWi1BA6b9fFQ81poP48/vMI1p5dmudHk3fH4sJvcc9VNeulb5chOluaJJmZ9BQ2C+kOxsV7u60pedoWNmcs/2G5q77zlN7PpFAdeQXSI9Z35Cjr0HNw3ybcsn8lyI2OnG6t3Q6/sJIxo5sxYCb/bmTamRudLfmgCRauPXadYLDAb2B7L20dYwMu0E97GONUaLGr1W+Jqi85Y/GUmCtdoCZHSpdhhd+mplRQNaBZks9B3RVIXqPH6dEB6VFdrguEsQ6LU7oltvMELV3eXXSfA==
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:IA0PR12MB8374.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(23010399003)(1800799024)(366016)(376014)(7416014)(10067099003)(11063799006)(921020)(6133799003)(22082099003)(18002099003)(56012099006)(4143699003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?emMxS0xUMFBwQlp4RmNPa1pWV1hPQXVnYlc0VHFGRHRBK0VwRUpIZGZUdnBa?=
- =?utf-8?B?QjI1LzNNRks2eFJUTkxhdzNZOWhJalJuODJ4eFU0bzVKaXpITEdndElwM2JJ?=
- =?utf-8?B?eUtYT0ROS2RGWjBUbFJsZWViQ2JZYWxoamV2aTVjSEEzK25EK3FIWkx6eGM2?=
- =?utf-8?B?MitVUjVLTHYwL2RWaW5LQ2N3SWovYWtLN1dJbzlvem5TdFdicmdPU2FkWkNu?=
- =?utf-8?B?NXhlK0JubVBQRHpYMnNleXltMDZ4YlRMRnhTQzVjdWR4dU9CWE9aL2lLQUxY?=
- =?utf-8?B?REhVM0pOMHdtRUdjQmdqQW5hR0dMTjVSTUhicWl3RW1NcFd2S0ZQc0dKc1g2?=
- =?utf-8?B?Z2R4RmtCd281R2dBaWVBWHBRT0MvWTJ4R0ZOWmNOOGkrY1ZSVlI5b3UzdklW?=
- =?utf-8?B?R0d2YXRhT2JEVms5T1hWN2JzN09QSDdjajMxZWVzY0JrMWRBL0txMUZCSXFN?=
- =?utf-8?B?TFlYeExMUmRMc2Uzci9GM1BjdkpmZ1d3M2ZBc2tiZGpOMERNRWRlVWxRa0Zl?=
- =?utf-8?B?cHc4QTFRSzFzcml3cFBydEF4bGE3WFQ0dmVlb21DSVp2dXpMRUxENkxZaW1Q?=
- =?utf-8?B?Q3k4bGJnWkJsVTIwYUZuMXJaekZuamcvWG92bGcwUTh1TERSb2loK1BITmJr?=
- =?utf-8?B?cHFXVS9LZFZTbkZuM2hpeWRRMUJ0eFQ3all1aTAyZWlveDVMTnowL0p1YTA0?=
- =?utf-8?B?YThaQm9yUnUxOW8wejlyZjFVSlYvMFhSYXVFWmdzSy94bGxiNEhTTENid09w?=
- =?utf-8?B?YjF1cGo3RldMY05iM1lqTzdBQnplL2twRDBMcGJtNUgwTlBBWjFja2dwVld0?=
- =?utf-8?B?Y01Mak81eFcwdnNKYVc0bSsrUGo4d3VOK0pqK1k4U0xMdGFaT253blFhVTlv?=
- =?utf-8?B?WmxPR3Rjejhrb1MzY0Z5QWxESUVTS3hrL2g2b002SkdUb1FyTVFSMGYzK3Yw?=
- =?utf-8?B?bERkQTQ4WHB0SktXSjJHZW1PMjNFSUpteldxUW9NbWdRTkw3dlZZdks5bzlL?=
- =?utf-8?B?T0R5YmQvMGRXWEovLzdYNk5qcmhVcFU5VUQ0WGthdi9nV0VNOHBULzlaV3Y3?=
- =?utf-8?B?K2o1aHNHN0ZKRzBOTlNKWXhhemhqR3dzcXFhL1JUYjF3WnVkUm5IakZDcllp?=
- =?utf-8?B?M2VxNnhGTm9GTG0zaUhZZXNaV2R3ZlN4MjV0cXBza1FyTDlPZnZLcWY3Nm1t?=
- =?utf-8?B?WUFnTldZbjVkRkM5K2kxUHprbFN0RUU5MFY3d0s3S2NTS29DQmhMWWphTVBC?=
- =?utf-8?B?b1ZYbHB0cWZnY2M1WlA3WUZuLzVOUEJXaTl1TEQ3Mzc2dndiWHBJMlJ2dlNH?=
- =?utf-8?B?cE8ybGFRcVNLclhtU2lxRE56ZXJTM01kakhjZDAwSUF4VzU1NmxleTgvdjNY?=
- =?utf-8?B?amZXVlY0cDRYaHJGZnViUGdaNnE0dk92aDVtTnhGdTc1aTZ0Z1ZZbmhmbGUw?=
- =?utf-8?B?NDJBSVZhRWN4UXk4SktQZ0hOcmE2TFZYTVBwdEN4NnZ0TGtnSy9EWXNrSm00?=
- =?utf-8?B?VWJDUk82eWM0U1hXTXNRTnNGZlozUEFhVE55eEdPTDNBM3E4d1Nna1Ntc3Zi?=
- =?utf-8?B?RHJVMk10cW1mY096QWV6bkNVQ0taR2lNYTlqanVtSGhzeUJMYXdCNXNZZndj?=
- =?utf-8?B?endxWjlYbk51djlMYTFDV1FSODRFRjluNEZkQVZ0My93cGNQbGZIUFdUVWFp?=
- =?utf-8?B?RnJveDJRWXFqdERYOTRycU9IbGhEb1dvSnlQb1NsL05rVVJYRVZIZmI1MjMv?=
- =?utf-8?B?Vlg1RXFwSmtkbmVXMUNOMXhwUDVyUVdLTFVWbkVoa3h2YUV4QldPTzZYaG50?=
- =?utf-8?B?SnNMOUJUditmdG9wRXFIOVRzM0l0ZlVZMWcvL0NKT0ltT3NFdzMxRSt1TFhN?=
- =?utf-8?B?ZTZwWHlxT0NtaHNFdFZ6UE5TWVgyQ3Bxdlh3Z1o1RzVFSzhZVitRNkNSM2pZ?=
- =?utf-8?B?N1FIcG9kc1hYRXhiQlNPMUxxWEdUZzQ0cWEyOEJKelVhRWtUQXZIa3VYS3hF?=
- =?utf-8?B?ZGZnaXVCeS91NVpVdTdSaXFYYm5UdmhFWk1DWmI4ajhRZE9yUkx6R3JadDV5?=
- =?utf-8?B?cDM5Z2tsTFdjb2JxWllFYXZYSSthclJVQ3RyTWl0OUdLMGNPREg3d3N1ejc0?=
- =?utf-8?B?UjVaUmxXZk90anZrZjRtTG5lNnZLcTlkZlN4UzFwemthUjYweitNMWxTQjlG?=
- =?utf-8?B?cm9wQUhaVUFjeTVkRG4xYm55M21zVW9UZmlsOEZoQ2tWbWt5dVR4QzgxUHhM?=
- =?utf-8?B?YlRnZUV2aDVoSmREOTlLRXA3cEZYcHJIZ2pTN25lRTRLSUJQOXMzcXRxcmpQ?=
- =?utf-8?Q?fTZLeOxC795AdVOPCi?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 76c5c4a7-3c4c-46f8-9098-08df1fcfead3
-X-MS-Exchange-CrossTenant-AuthSource: IA0PR12MB8374.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Oct 2026 15:23:17.0514
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: lo6/yKs2xgO8cAsoFikJ2BNR9Dx7LfFUc24eVWmjmRlVcF7mIZDA1YR2hh9uG6Um
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB7686
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAP-5=fVPANOdM5vFY93SCm=mN5Z1U+jMqa7s6piqgtAbUrCBbg@mail.gmail.com>
 
-On Thu Sep 17, 2026 at 12:22 PM EDT, Lorenzo Stoakes (ARM) wrote:
-> GUP cannot be used for VMAs which set VMA_IO_BIT - because memory-mapped
-> I/O must not be accessed on the user's behalf - or VMA_PFNMAP_BIT - becau=
-se
-> PFN maps have no folios which the kernel is permitted to access.
->
-> Rather than keeping these checks open-coded, abstract them to
-> vma_flags_can_gup() and its VMA wrapper vma_can_gup().
->
-> A number of other places make the same check to decide whether a mapping
-> can be populated or accessed as GUP would, so update those too.
->
-> While here, drop a reference to 'special' and replace a use of the
-> deprecated VMA flags API in vma_dump_size().
->
-> No functional change intended.
->
-> Signed-off-by: Lorenzo Stoakes (ARM) <ljs@kernel.org>
-> ---
->  fs/coredump.c      |  4 ++--
->  include/linux/mm.h | 29 +++++++++++++++++++++++++++++
->  mm/gup.c           |  7 +++----
->  mm/hmm.c           |  3 +--
->  mm/memory.c        | 14 ++++++++------
->  mm/mempolicy.c     |  3 ++-
->  6 files changed, 45 insertions(+), 15 deletions(-)
->
-Makes sense.
+On Wed, Sep 30, 2026 at 11:01:01PM -0700, Ian Rogers wrote:
+> On Wed, Sep 30, 2026 at 4:08 PM Namhyung Kim <namhyung@kernel.org> wrote:
+> >
+> > On Wed, Sep 30, 2026 at 09:14:42PM +0200, Arnaldo Carvalho de Melo wrote:
+> > > On Mon, Sep 28, 2026 at 11:25:45AM -0700, Ian Rogers wrote:
+> > > > The BTF augmenter copies sizeof(struct sockaddr), 16 bytes, for the
+> > > > sockaddr arguments of connect, bind and sendto, and runs before the
+> > > > sys_enter_connect and sys_enter_sendto programs that copy their length.
+> > > > An IPv6 address needs 24 or 28 bytes, so the rest was read from past the
+> > > > payload, and now that the printers are bounded only its family is shown.
+> > > >
+> > > > Copy them as buffers sized by the length argument after them, up to the
+> > > > 32 bytes augmented buffers are limited to. That holds an IPv6 address
+> > > > and doubles the AF_LOCAL path shown.
+> > > >
+> > > > Fixes: a68fd6a6cdd3 ("perf trace: Collect augmented data using BPF")
+> > > > Assisted-by: Antigravity:gemini-3.1-pro
+> > > > Signed-off-by: Ian Rogers <irogers@google.com>
+> > > > ---
+> > > >  tools/perf/builtin-trace.c | 7 ++++++-
+> > > >  1 file changed, 6 insertions(+), 1 deletion(-)
+> > > >
+> > > > diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
+> > > > index 85db74965280..f94745a60f4a 100644
+> > > > --- a/tools/perf/builtin-trace.c
+> > > > +++ b/tools/perf/builtin-trace.c
+> > > > @@ -4159,7 +4159,12 @@ static int trace__bpf_sys_enter_beauty_map(struct trace *trace, int e_machine, i
+> > > >                             continue;
+> > > >
+> > > >                     bt = sc->arg_fmt[i].type;
+> > > > -                   beauty_array[i] = bt->size;
+> > > > +                   /* Copy a sockaddr as a buffer sized by the next argument, e.g. addrlen. */
+> > > > +                   if (strcmp(name, "sockaddr") == 0 && field->next &&
+> > > > +                       strstr(field->next->name, "len"))
+> > > > +                           beauty_array[i] = -((i + 1) + 1);
+> > > > +                   else
+> > > > +                           beauty_array[i] = bt->size;
+> > >
+> > >
+> > > Humm, I thought that this would be called in BPF handlers like:
+> > >
+> > > SEC("tp/syscalls/sys_enter_connect")
+> > > int sys_enter_connect(struct syscall_enter_args *args)
+> > > {
+> > >         struct augmented_args_payload *augmented_args = augmented_args_payload();
+> > >         const void *sockaddr_arg = (const void *)args->args[1];
+> > >         unsigned int socklen = args->args[2];
+> > >         unsigned int len = sizeof(u64) + sizeof(augmented_args->args); // the size + err in all 'augmented_arg' structs
+> > >
+> > >         if (augmented_args == NULL)
+> > >                 return 1; /* Failure: don't filter */
+> > >
+> > >         _Static_assert(is_power_of_2(sizeof(augmented_args->arg.saddr)), "sizeof(augmented_args->arg.saddr) needs to be a power of two");
+> > >         socklen &= sizeof(augmented_args->arg.saddr) - 1;
+> > >
+> > >         bpf_probe_read_user(&augmented_args->arg.saddr, socklen, sockaddr_arg);
+> > >         augmented_args->arg.size = socklen;
+> > >         augmented_args->arg.err = 0;
+> > >
+> > >         return augmented__output(args, augmented_args, len + socklen);
+> > > }
+> > >
+> > > And it knows how many bytes to read by looking at socklen
+> > > (args->args[2]), i.e. not use the generic BPF handler that uses this
+> > > beauty_array, because knowing how many bytes to read in this case is
+> > > dynamic, varies with each syscall, according to one of its arguments :-\
+> > >
+> > > What am I missing?
+> >
+> > I think Ian's patch update the beauty map which is used by
+> > augment_sys_enter() before tail-calling syscall-specific functions.
+> >
+> > It'd be great if we cover all syscalls in the BPF skeleton and switch
+> > to the beauty-map and discard the functions.
+> 
+> Right, as Namhyung says, sys_enter() runs augment_sys_enter() before
+> tail-calling syscalls_sys_enter, and only falls back to the tail call
+> if augment_sys_enter() returns non-zero:
+> 
+>   if (augment_sys_enter(args, &augmented_args->args))
+>     bpf_tail_call(args, &syscalls_sys_enter, augmented_args->args.syscall_nr);
+> 
+> trace__init_syscalls_bpf_prog_array_maps() populates beauty_map_enter
+> for every enabled syscall, even ones with a dedicated sys_enter_*
+> program. In trace__bpf_sys_enter_beauty_map(), connect, bind and
+> sendto's "struct sockaddr *" argument matched the struct branch, which
+> looked up "struct sockaddr" in BTF and put bt->size (16 bytes) in
+> beauty_array. So whenever BTF was available, augment_sys_enter()
+> handled connect, bind and sendto by copying 16 bytes and returned 0,
+> and sys_enter_connect / sys_enter_sendto were never tail-called.
+> 
+> beauty_array already supports dynamic lengths from another syscall
+> argument: a negative entry -(j + 1) tells augment_arg() to read
+> args->args[j] bytes (clamped to TRACE_AUG_MAX_BUF = 32), which was
+> added for buffer arguments like write's buf/count. This patch uses
+> that encoding for struct sockaddr * when the next argument is its
+> length.
 
-Reviewed-by: Zi Yan <ziy@nvidia.com>
+I guess that clamp can be made bigger, 64 maybe? Applying the series
+now.
 
---=20
-Best Regards,
-Yan, Zi
+Committer testing:
 
+Is using BPF:
+
+  root@x2:~# strace -e bpf perf trace -e connect,bind |& head -5
+  bpf(BPF_TOKEN_CREATE, {token_create={flags=0, bpffs_fd=12}}, 8) = -1 EOPNOTSUPP (Operation not supported)
+  bpf(BPF_PROG_LOAD, {prog_type=BPF_PROG_TYPE_SOCKET_FILTER, insn_cnt=2, insns=0x7ffea3054260, license="GPL", log_level=0, log_size=0, log_buf=NULL, kern_version=KERNEL_VERSION(0, 0, 0), prog_flags=0, prog_name="", prog_ifindex=0, expected_attach_type=BPF_CGROUP_INET_INGRESS, prog_btf_fd=0, func_info_rec_size=0, func_info=NULL, func_info_cnt=0, line_info_rec_size=0, line_info=NULL, line_info_cnt=0, attach_btf_id=0, attach_prog_fd=0, core_relo_cnt=0, fd_array=NULL, core_relos=NULL, core_relo_rec_size=0, log_true_size=0, prog_token_fd=0}, 148) = 12
+  bpf(BPF_PROG_LOAD, {prog_type=BPF_PROG_TYPE_SOCKET_FILTER, insn_cnt=2, insns=0x7ffea3054390, license="GPL", log_level=0, log_size=0, log_buf=NULL, kern_version=KERNEL_VERSION(0, 0, 0), prog_flags=0, prog_name="", prog_ifindex=0, expected_attach_type=BPF_CGROUP_INET_INGRESS, prog_btf_fd=0, func_info_rec_size=0, func_info=NULL, func_info_cnt=0, line_info_rec_size=0, line_info=NULL, line_info_cnt=0, attach_btf_id=0, attach_prog_fd=0, core_relo_cnt=0, fd_array=NULL, core_relos=NULL, core_relo_rec_size=0, log_true_size=0, prog_token_fd=0, fd_array_cnt=0, signature=NULL, signature_size=0, keyring_id=0}, 168) = 12
+  bpf(BPF_PROG_LOAD, {prog_type=BPF_PROG_TYPE_SOCKET_FILTER, insn_cnt=2, insns=0x7ffea3053f80, license="GPL", log_level=0, log_size=0, log_buf=NULL, kern_version=KERNEL_VERSION(0, 0, 0), prog_flags=0, prog_name="libbpf_nametest", prog_ifindex=0, expected_attach_type=BPF_CGROUP_INET_INGRESS, prog_btf_fd=0, func_info_rec_size=0, func_info=NULL, func_info_cnt=0, line_info_rec_size=0, line_info=NULL, line_info_cnt=0, attach_btf_id=0, attach_prog_fd=0, core_relo_cnt=0, fd_array=NULL, core_relos=NULL, core_relo_rec_size=0, log_true_size=0, prog_token_fd=0}, 148) = 12
+  bpf(BPF_MAP_CREATE, {map_type=BPF_MAP_TYPE_ARRAY, key_size=4, value_size=4, max_entries=1, map_flags=BPF_F_MMAPABLE, inner_map_fd=0, map_name="libbpf_mmap", map_ifindex=0, btf_fd=0, btf_key_type_id=0, btf_value_type_id=0, btf_vmlinux_value_type_id=0, map_extra=0, value_type_btf_obj_fd=0, map_token_fd=0, excl_prog_hash=NULL, excl_prog_hash_size=0}, 92) = 12
+  root@x2:~#
+
+And btf:
+
+  root@x2:~# strace -e openat perf trace -e connect,bind |& grep "/sys/kernel/btf/vmlinux"
+  openat(AT_FDCWD, "/sys/kernel/btf/vmlinux", O_RDONLY) = 12
+  ^C
+  root@x2:~#
+
+And copying the sockaddr parameters according to its addrlen or the cap
+in the augmented bpf, that probably needs to be a bit bigger for local
+sockets:
+
+  ⬢ [acme@toolbx perf-tools-next]$ echo -n /var/run/.heim_org.h5l.kcm-soc | wc -c
+  30
+  ⬢ [acme@toolbx perf-tools-next]$ ls -la /var/run/.heim_org.h5l.kcm-socket 
+  srw-rw-rw-. 1 nobody nobody 0 Sep 14 23:13 /var/run/.heim_org.h5l.kcm-socket
+  ⬢ [acme@toolbx perf-tools-next]$ 
+
+  root@x2:~# perf trace -e connect,bind --max-events 10
+       0.000 ( 0.717 ms): pool-0/29901 connect(fd: 9, uservaddr: { .family: LOCAL, path: /var/run/.heim_org.h5l.kcm-soc }, addrlen: 110) = 0
+       3.733 ( 0.059 ms): pool-0/29901 connect(fd: 10, uservaddr: { .family: LOCAL, path: /var/run/.heim_org.h5l.kcm-soc }, addrlen: 110) = 0
+       8.859 ( 0.054 ms): pool-0/29901 connect(fd: 9, uservaddr: { .family: LOCAL, path: /var/run/.heim_org.h5l.kcm-soc }, addrlen: 110) = 0
+      10.880 ( 0.053 ms): pool-0/29901 connect(fd: 9, uservaddr: { .family: LOCAL, path: /var/run/.heim_org.h5l.kcm-soc }, addrlen: 110) = 0
+    1225.303 ( 0.081 ms): systemd-resolv/103685 connect(fd: 30, uservaddr: { .family: INET6, port: 53, addr: fd55:6f31:c26b::1, scope_id: 4 }, addrlen: 28) = 0
+    1226.000 ( 0.046 ms): systemd-resolv/103685 connect(fd: 31, uservaddr: { .family: INET6, port: 53, addr: fd55:6f31:c26b::1, scope_id: 4 }, addrlen: 28) = 0
+    1371.972 ( 0.055 ms): systemd-resolv/103685 connect(fd: 27, uservaddr: { .family: INET6, port: 53, addr: fd55:6f31:c26b::1, scope_id: 4 }, addrlen: 28) = 0
+    1382.266 ( 0.260 ms): Socket Thread/2663038 connect(fd: 178, uservaddr: { .family: INET, port: 443, addr: 186.192.83.34 }, addrlen: 16) = -1 (unknown) (Operation now in progress)
+    5003.508 ( 0.063 ms): pool-0/29901 connect(fd: 9, uservaddr: { .family: LOCAL, path: /var/run/.heim_org.h5l.kcm-soc }, addrlen: 110) = 0
+    5007.007 ( 0.054 ms): pool-0/29901 connect(fd: 10, uservaddr: { .family: LOCAL, path: /var/run/.heim_org.h5l.kcm-soc }, addrlen: 110) = 0
+  root@x2:~#
