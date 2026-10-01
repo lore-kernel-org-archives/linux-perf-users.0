@@ -1,43 +1,47 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F101E3E00B5;
-	Thu,  1 Oct 2026 15:55:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4570550AC15;
+	Thu,  1 Oct 2026 15:55:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790870102; cv=none; b=Mt4BOPZLr44ih+Ed8nZGfW+9bDO9Pb1evhZd4/YJiFrt7EI7rMcX5lSnUMl8qLq7s5vOfyLZ4GX2la0ADp0VPtsGsypvE8k2kEKH47l5oHL1eTFhkKdseT+KaNl69WXQ8vz3wfMBLnsjvcnbseXITZyRXL02vB6ow6x2qiMBYZA=
+	t=1790870151; cv=none; b=PGgsoWppSwKoaBCVAaEWPiUoJrw1h9EOHwwoUdXJbwsfzlAlzF84Lp2KV94wZkPcIQpxy7Lz6c1iUmfBx7iaIHsZjcz0nEeUPG45r0d/JaJVzYENazGBmB5FVpFheFgJU8nq0kuE+Zh3qA+G+N6TZC5OdBV6TLxmk9o6PbgnPUg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790870102; c=relaxed/simple;
-	bh=SNuCZLyhrL/dvOwZDXcJDyoGYMKO1kRmJvc6DGGLrGk=;
+	s=arc-20240116; t=1790870151; c=relaxed/simple;
+	bh=9G8fC9vK6q3WS7QyN9/mgOXXOGbJu6zmrLM+PWRXRu0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JKCAOA1iQHggWovzupfcY1afv9n+YfN6g2EpA4cRVw6XCA1eAm4qKXDxGaCyabE8THbwjqVu+vcydxKiaD7hEcA31bS2G3SIjrwaW2w6UussK5v5qZG8VL83EtV2HrSLEm61oPmRNkZRUJ/lurFYWZ7Tb2i5eCbOPp8UnNQ6S4E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oUG6n2iq; arc=none smtp.client-ip=100.103.45.18
+	 Content-Type:Content-Disposition:In-Reply-To; b=TfdRjma1LhrWy20iYe4mc12Ksr7zeZjyaP/AKCqfv+qvvX4Pds64DN8vLWvLHunkATmjaAGitwVcG+BwTeG5LMCFGLSFxfxXhQQjeKMldsqi8RrnWAJ8L4zP7ymjGeqiteUnRFJ5f+V8gAzHWC+IQtFgo0vwjkdPhoUBuq0bM+U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=lA2rqNIw; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oUG6n2iq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6A6BA1F000FF;
-	Thu,  1 Oct 2026 15:54:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1790870100;
-	bh=SNuCZLyhrL/dvOwZDXcJDyoGYMKO1kRmJvc6DGGLrGk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=oUG6n2iqJqbQJn/VMqxsqkmSt4ec9MpyWYfvsakBk4kuq7xqggrhfA09Y0qIaiHbf
-	 FEdYAGZ4o+axe4PxUioVz6h2aJnmqKdEzmnucvfvOkXfR7pBkPftuDUTyZTF+hfN7Z
-	 R4Ml29XJcXHA+oiqW5r2ZFqgD1KTgtrzEgCtRQn4VeMvupe8uNQmR6BVxjyK8XqsFP
-	 Vnl2s77AkBmZ/L6ZDPNNTTSwC9+NO+EFB6NSxuGIzqDZvsIVBmQ4IdRqckOBYGsSMs
-	 TYzH8/IgK8qFSbbEC2lfN+8aJXinxRVzYWFmthhNUArlhiEe2DjEfdOo1pKehexqb+
-	 0Un2DAmdoJ6zQ==
-Date: Thu, 1 Oct 2026 17:54:56 +0200
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="lA2rqNIw"
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 37D321476;
+	Thu,  1 Oct 2026 08:55:37 -0700 (PDT)
+Received: from localhost (unknown [10.2.196.114])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 443013F86F;
+	Thu,  1 Oct 2026 08:55:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
+	t=1790870140; bh=9G8fC9vK6q3WS7QyN9/mgOXXOGbJu6zmrLM+PWRXRu0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=lA2rqNIwSfXh1CQf8o+gTWbCPDKoMqpEk/DpJm5TIZKLkhBiDE37L1QOyQ1xIRT6O
+	 z4kWw/ghQy65lQ/FQamYsEiy/4wl8BhKNy/HeZZ4WM5gG5Pu0Klxf4ByQi7y1GmfBh
+	 hWcx9s1bxZYNjX+35pXiAJjWUY0cxoVSVlR3ShqE=
+Date: Thu, 1 Oct 2026 16:55:38 +0100
+From: Leo Yan <leo.yan@arm.com>
 To: Ian Rogers <irogers@google.com>
-Cc: leo.yan@arm.com, namhyung@kernel.org, adrian.hunter@intel.com,
-	james.clark@linaro.org, jolsa@kernel.org,
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-	mingo@redhat.com, peterz@infradead.org
-Subject: Re: [PATCH v2 0/4] perf build: Linter parallelism and clean/install
- dependency fixes
-Message-ID: <ar6CUGUl4ihlJvDd@x2>
-References: <20261001023423.1225713-1-irogers@google.com>
- <20261001054120.1570943-1-irogers@google.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	James Clark <james.clark@linaro.org>,
+	Aishwarya TCV <aishwarya.tcv@arm.com>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: Re: [PATCH v2 3/4] perf test: Suppress optparse deprecation warning
+ with older pylint
+Message-ID: <20261001155538.GA1208404@e132581.arm.com>
+References: <20260930-perf_fix_pylint_errors-v2-0-945cd526576b@arm.com>
+ <20260930-perf_fix_pylint_errors-v2-3-945cd526576b@arm.com>
+ <CAP-5=fVzy-=8ryObpHWiW6WDcvpW7SqRkAWwmNvoSgQmgz-3gQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -46,13 +50,18 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20261001054120.1570943-1-irogers@google.com>
+In-Reply-To: <CAP-5=fVzy-=8ryObpHWiW6WDcvpW7SqRkAWwmNvoSgQmgz-3gQ@mail.gmail.com>
 
-On Wed, Sep 30, 2026 at 10:41:16PM -0700, Ian Rogers wrote:
-> This series includes a small Python test cleanup alongside build system
-> improvements for linter parallelism and clean/install target
-> dependencies:
+On Wed, Sep 30, 2026 at 10:39:36AM -0700, Ian Rogers wrote:
 
-Thanks, applied to perf-tools-next, for v7.4.
+[...]
 
-- Arnaldo
+> > -import optparse
+> > +# Pylint before 3.3.5 still treats optparse as deprecated.
+> > +import optparse  # pylint: disable=deprecated-module
+> 
+> Thanks Leo! Could we just update to argparse here?
+
+Thanks for suggestion. Please see the new patch:
+
+https://lore.kernel.org/linux-perf-users/20261001-perf_replace_optparse_with_argparse-v1-1-268b604f8e55@arm.com/T/#u
