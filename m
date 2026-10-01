@@ -1,95 +1,127 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej2-f43.google.com (mail-ej2-f43.google.com [74.125.228.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D731435295C;
-	Thu,  1 Oct 2026 09:21:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5006A4FB9AA
+	for <linux-perf-users@vger.kernel.org>; Thu,  1 Oct 2026 10:34:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.228.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790846463; cv=none; b=d5O4xIy0QqX+jTy0ZcHJ/VinyOvY69QD8G9EjrP5XZkTicrNhqwmKOodpfp5OtAfkNhK4n9VrWbywNw04ibL4jop4dSH32s3pKa8wuE4gGbzX3dwPED5lYlOwTyMR/tjk3RNHzx/qnoObp294pUOSHDPQUi0hkL0lDzXYmsiUqk=
+	t=1790850860; cv=none; b=t72vaIXjIwZKQlTlQDvTLpcw3Io5Hstc9pF+JcEvyC98wtdJ88ADUmA4ctSdcxh9R7wGcgpnooxxMlra9pNLP/s11UiukQ/fQp//o6eeflk3W8bWUmdfNgNk1iyaAqrhh6mANsUYqZ+ZglDx2a+4x+G7C33AMdfXA5DI30b3/iI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790846463; c=relaxed/simple;
-	bh=njYanVLPlAem2c0zXBo9WBCHCDoClG/x7hrVtGipiDA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=A8n9kKgH6hRFjqKKEi9v31s4Pp+N8DtieHio2L2YX1vMbqkSF9N+ObucZC4Fs6LSAm+4++CV6Io4AW8S8ebOdxxrI3x7vr5O54IJdULUpyhhnLq1USSodPA8N6shp6Xun/HwgnJsALPsLxfavoWWtlLvZLKS4TPpk+l+L9aYT5A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XSCsouq8; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1790850860; c=relaxed/simple;
+	bh=VEfnYd8hTZyWgfCATX2hNdW7HMso3ZFyFWxEXtxRroY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=RL/torUxW7gS7+cpptfOSRg3Y6MuDhKbgjhA4NkV3wC7OX3rzezI3iRTkJtOuL92iwhGbEESbEqLuwRqtFZpwEliYYrVHDNUtLFAr3GsbEXYg/n6mtKwe/v3QIj41TSx6poV6cINbEey6ihSmnBR0INgP5wuE+CHf7/d5M89xTA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=BIPnsqBz; arc=none smtp.client-ip=74.125.228.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XSCsouq8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AB3C41F00898;
-	Thu,  1 Oct 2026 09:21:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1790846461;
-	bh=tmMg+2dUfFfQY8f7vhiLYbEk6LDfyadGi4lV+Q8PpEM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=XSCsouq8KVpRwc0xFNaev7AUrWdJ9N+acYSWG8ZCo0R8OahjJwosT2M5natza2B2j
-	 UBDrMABv7ujD8pPdb5QiILpUacAaSgymxmLfcqORXGz0uEfVK/dso2bPyWyOrJCoxb
-	 dP8ReK2EhqQK3+jeU9mKAt9AkpOo0LDBraA+7IeTtBV1HMqVDNp6g9bNNneqMNHngH
-	 55G1YhXQEAI8devDxhXfj0zoXpLMnXLzFZZqqh79Q08KYxUnSNohOny8IrTVhZGudg
-	 1l7Sh/N0gNDu1++lpk4FCDF4buwJ31WXJpQuIWSK/+X5F9AN0ZS9fcPNjEMdeiPgJ/
-	 EyBGvUyP+ERxQ==
-Date: Thu, 1 Oct 2026 11:20:58 +0200
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
-	James Clark <james.clark@linaro.org>, Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: Re: [PATCH v6 3/5] perf report: Add --no-progress option
-Message-ID: <ar4l-s_pniJSJW45@x2>
-References: <20260930213716.2633750-1-acme@kernel.org>
- <20260930213716.2633750-4-acme@kernel.org>
- <ar4FRWnf6ZBFk7Rl@z2>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="BIPnsqBz"
+Received: by mail-ej2-f43.google.com with SMTP id a640c23a62f3a-c2a1f611461so241063766b.1
+        for <linux-perf-users@vger.kernel.org>; Thu, 01 Oct 2026 03:34:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1790850853; x=1791455653; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:in-reply-to:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=fsEC2ObM81Hk4wNSJw0hwoJxDbidZYEWvF/d0koOBjc=;
+        b=BIPnsqBza8eF3mRVs8mkgCTmAHmV4c9sy2pH25NOe5CILjR4HlEHvmmVqy1QYyQn2q
+         +yRU1PXf/7yYdLJASXH4kqgCsnVosD73K9kg7LOMpJDN1JIDHQVUvPjp8TL4FFfcIPY+
+         cm+qvJ8UUNCWVZFDBbMgkjQatlpjk921SkJ8OIS/QvNI43eye4YW7H+1kvUqnGLzemF7
+         RQVkPYdJuRpXieIUXnsSzX9DE7VB5cHO5SQvLMoI0ASEZbePDgGFaiHfvioRntJdxBx7
+         GJWDccOzd8ejgl4wFiL8ljqR8dAYEsHw79EaiZtum0uhVBCxxSXJ5y9gYWIKWMJjgG7n
+         Cfyg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1790850853; x=1791455653;
+        h=content-transfer-encoding:content-type:in-reply-to:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=fsEC2ObM81Hk4wNSJw0hwoJxDbidZYEWvF/d0koOBjc=;
+        b=ZsznUdBbgkXXy8nF/tWquId7AsIflJ6boif7TIwzeoygBTDMjLswbegrNP5TJzaTUb
+         xmR5Dw8xwErK7mR4EFpqAltBFX1KzAloIiaAK9hv3Jaa/siPqnKYfWN0CJ+t/V9rOVBm
+         e4HtK0bPq9B/BGLvYMFWBQCP0bLyM+6abbErOfdciBl4cWwizhWLwYV7Bt7Po2rNiU3R
+         EKk3fwgQ8Xem5NZ1KrNAqJYjbu+lQPAvKaq5nzLGRBGR60S68G2Scm2YeFAL8dxjtjn1
+         pjrVCqO81nir92/h8NJSTYHYpA42rxuZv03WQ/m5DwlxuT1W9YmXC7y6ZTkq/cEyvnuO
+         JSSg==
+X-Forwarded-Encrypted: i=1; AKwUvBwrLNrRjbfSgrT6jX6doiDHodYSwriq77+ns2kmpLF7/utPGCwXDz/1rvitqR5R5wzqr0sI5yCfNpnPtESuMzsl@vger.kernel.org
+X-Gm-Message-State: AFuF++muvvGPWzT2fpP6tsz5Z53do/RWmmFJn09/6hez3/4/J7zaVT8f
+	lfWqNIENOle08ngc6cj6/fC+4AszaweTQjfC/QRRyiY/y1tWyQzN1Vf4ryyz2Aci+LM=
+X-Gm-Gg: AYBFou2/GSqSu+q6b4YCeCW8vFBueISo4QxYDHLx38V0xgmwPphhZHmOokRyxgawXww
+	HDnpDWotXhOQx56MOFdWyaNb+L8po4ByTX3xj6dkRq5mJAaenmzXU+92zxuOppsyeYUdBDUzCK3
+	hNRUV3jmLT25hbKlCVlwkHCo5+zYV81lqkW8W2qwMP1650/TxyCxGSHzQ6QS8Qki8QzuxcX7zq8
+	8LqZWElQBg5r+G681MeG7sFC7SlcFzOLa1yjiHp6AYZNw5XXfFk7jPcxqwN8zb72I6rYSVp8ps3
+	PRKbN/9Z1Ey20I8+kjoSsG8GtcmMWj43Oy0ebu8R0fj6TcRLUT8rGhoKq4fkWsjngMppAzARBep
+	oFHvwuRjbbd/UOA7NXwUkD22TBo67g+yVdEN5iVcVYEqZ7v5shP7ouxPLz2t35v/SJ/CVTLNuPc
+	Jwq66xOPvG+rHjQTnaEEShv300ofd/ivV7RphynJiTR8uDw7+z43VM7TUVhvc/8fm//s/+lzV33
+	II=
+X-Received: by 2002:a17:907:7287:b0:c2d:d4dd:8b5 with SMTP id a640c23a62f3a-c2e33e610bdmr207503066b.19.1790850853125;
+        Thu, 01 Oct 2026 03:34:13 -0700 (PDT)
+Received: from [192.168.1.3] ([37.18.141.193])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-c2e31a3eb32sm135974866b.3.2026.10.01.03.34.11
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 01 Oct 2026 03:34:12 -0700 (PDT)
+Message-ID: <dc7a2922-bee7-42d1-b4a0-7469cd06f4b5@linaro.org>
+Date: Thu, 1 Oct 2026 11:34:11 +0100
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ar4FRWnf6ZBFk7Rl@z2>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/6] perf: cs-etm: Don't add global v0 HW_IDs to
+ unformatted queues
+To: Leo Yan <leo.yan@arm.com>
+Cc: John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>,
+ Mike Leach <mike.leach@arm.com>, Leo Yan <leo.yan@linux.dev>,
+ Suzuki K Poulose <suzuki.poulose@arm.com>,
+ Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>, Suyash Mahar <smahar@meta.com>,
+ Amir Ayupov <aaupov@fb.com>, Arnaldo Carvalho de Melo <acme@redhat.com>,
+ linux-arm-kernel@lists.infradead.org, coresight@lists.linaro.org,
+ linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20260821-james-cs-hw_id-output-failure-v1-0-9d532ddabcc3@linaro.org>
+ <20260821-james-cs-hw_id-output-failure-v1-1-9d532ddabcc3@linaro.org>
+ <20260904164309.GZ8904@e132581.arm.com>
+Content-Language: en-US
+From: James Clark <james.clark@linaro.org>
+In-Reply-To: <20260904164309.GZ8904@e132581.arm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Thu, Oct 01, 2026 at 12:01:25AM -0700, Namhyung Kim wrote:
-> On Wed, Sep 30, 2026 at 11:37:14PM +0200, Arnaldo Carvalho de Melo wrote:
-> > +++ b/tools/perf/builtin-report.c
-> > @@ -88,6 +88,7 @@ struct report {
-> >  #endif
-> >  	bool			use_stdio;
-> >  	bool			progress;
-> > +	bool			progress_set;
-> >  	bool			show_full_info;
-> >  	bool			show_threads;
-> >  	bool			inverted_callchain;
-> > @@ -1385,8 +1386,15 @@ int cmd_report(int argc, const char **argv)
-> >  		    "Use the stdio interface"),
-> >  	OPT_BOOLEAN(0, "weights", &symbol_conf.annotate_weight,
-> >  			"Show or hide weight columns in annotation. Default show if non-zero."),
-> > -	OPT_BOOLEAN(0, "progress", &report.progress,
-> > -		    "Show progress while processing the perf.data file"),
-> > +	/*
-> > +	 * No --no-progress option to add: parse-options provides it as
-> > +	 * the negation of this one, clearing report.progress, which is
-> > +	 * also how it starts out.  progress_set is what tells the hook
-> > +	 * below to stop the TUI and GTK browsers as well, they show
-> > +	 * progress until asked not to.
-> > +	 */
- 
-> Nit: I think we can drop this comment.
- 
-> > @@ -1796,9 +1804,13 @@ int cmd_report(int argc, const char **argv)
-> >  	/*
-> >  	 * For the stdio case: print the percentage of the perf.data file
-> >  	 * processed so far for each processing phase.  --quiet asks for no
-> > -	 * messages at all, so it leaves the phases uncounted.
-> > +	 * messages at all, so it leaves the phases uncounted, and
-> > +	 * --no-progress, progress_set with progress cleared, turns off what
-> > +	 * the TUI and GTK browsers show as well.
-> >  	 */
- 
-> Maybe this one too..
 
-Will drop both.
 
-- Arnaldo
+On 04/09/2026 17:43, Leo Yan wrote:
+> On Fri, Aug 21, 2026 at 10:50:29AM +0100, James Clark wrote:
+>> In the case of mixed formatted and unformatted trace with v0 HW_IDs, or
+>> no HW_IDs at all resulting in the cs_etm__map_trace_ids_metadata()
+>> fallback, formatted queues will write their HW_IDs to unformatted
+>> queues.
+> 
+> I understand a session can support multiple sinks, but I don't expect
+> to mix up formatted and unformatted trace (see sinks_compatible()).
+> 
+
+But sinks_compatible() is only called multiple times for per-thread 
+sessions. For per-CPU, userspace opens separate events per-CPU. If the 
+user doesn't specify a sink then the default one is chosen which can be 
+a different type for each CPU/path.
+
+> For the mentioned fallback, I am also struggling to establish a case.
+> Even AUX_OUTPUT_HW_ID records are absent randomly, I don't think this
+> impacts the queue's format initalization, no?
+
+The fallback uses the metadata only, without sink information, which is 
+equivalent to v0 records. So it's just another way to trigger the same 
+problem.
+
+If you're using global v0 mappings, then we assume that all trace IDs 
+are possible in all queues, which results in multiple decoders being 
+created and triggers an error in OpenCSD once it sees that being 
+combined with unformatted.
+
