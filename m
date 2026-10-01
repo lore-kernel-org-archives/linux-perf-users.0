@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBA8842122F;
-	Thu,  1 Oct 2026 18:54:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 883C151CF6A;
+	Thu,  1 Oct 2026 18:54:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790880865; cv=none; b=MX6VhGStmQwZ0KwcxWSPltzJuIyZhkclOwmXtuaTtBsMbemxyINR2FJdT8/Th4FR1Q3+kMVh5FRwUj0AfPXMmwjymqFAGw4I10o6uwqNlM+nBeqTfDDVCJ1qaISetJi/bEeIHdWGQVn9ssEBBBWuLjWuchgYZfyTL72BSErB4gw=
+	t=1790880869; cv=none; b=F28aP0Sw5X/iomRzoNtQq8uY6wfdWSqxioobWRf61gait5J7ZTtdrAtdeRymVdLYQn0jUzNPABiXXwbLmVeumnYCeDCBFq3kaqC6Lb3sFagtHydFctNhj5wZrSwuzt9M6OgYDL+P9sUsnxLKdJO3zAJALf6CLoDi7b5VQcRYJXY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790880865; c=relaxed/simple;
-	bh=tmOLRhJ/wVy6QMEKFBf7nu/AAA3kN/A6CBISnDIVv9Q=;
+	s=arc-20240116; t=1790880869; c=relaxed/simple;
+	bh=mu7VGumEcJQprINCQfmX1+W1xgQLOgrbJTrfFdZYFqQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=XtX9bMS1rfNBj8obxQnQzCCUhQZqPV6VR72YquCTxTK7DIfBXzidv5gG4enUmD4InQ/Q2UvX/Qf63MWPIFlH53ydqYJPoxsEeLhL0LJI8Z2Hwu3M5y/v2IbQpwFIgHKvqeXDgT/548Q1I8jEcTN1Es4WMlsOE4SqnmIRxKozag8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HXsZrhwv; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version; b=p0GoDMx1OeFozpDwy1Rkp6dGSfdgWrecPm+j7dNfJ29zo+n5Ml5xRdQ1zIKqweM2xUybP9xy7J0BC/O/BEd7t/zNzT7QfgsKrSIQSGgBhQqGLVxtw6qR9/oK0xGmJpKnXxByRQPteK9Ld00smMaD0ZLVpzZPpyJNbuAPXjnKQ7U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kk4cXWaJ; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HXsZrhwv"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 93C011F00899;
-	Thu,  1 Oct 2026 18:54:20 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kk4cXWaJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 180DA1F00898;
+	Thu,  1 Oct 2026 18:54:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1790880863;
-	bh=k3PB4VXc9btsIZyuEobSXeM/lcAKbTJyqxM2CjADxMk=;
+	s=k20260515; t=1790880867;
+	bh=MfKs8OtBqCDByBYpjgQyZ3lj/pwcgNUSo+gP59FQ2kg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=HXsZrhwvvM3rMvmNgxomZkead5h7jmdvv4Yi/YhsZR9HDXEzbaCZgLfl3hYKCbCik
-	 to32UaeoYGkSTwDLE4NRXz5IW6gxOue+Ax9aUmYkkXjAFOVuUUyS3CyFODsl6s0a2U
-	 qrAiJBJ6RvNIiBoS0vVqa3EfWbUV2QmnEhQFxa0zKNoEb/w6YJVLQRVVTbZsxqsjuS
-	 jO+rtlOIvDT14S/9F2eQlKASLuugDkRG5mLp6HkxUj0Iia4qXIOTUKtxIGehzYV+Bs
-	 FptPZZhYPiPcPdv5S9vj++3yQrI0pjd1YSmpAgZ3N7mbDAMOtslRdiceVjCNYg+utF
-	 H+L2MlOpReLiw==
+	b=kk4cXWaJIfTq4YWDqT0WWdMbkB8OvaqphcOU0dkoI56BBP03c0Z9W2vO1Rv75x2r+
+	 ECI6NF35GlOPH+GdIKSu9mTDKR6NpvTLURyaond7jde94IG9rqvZuP7xsnLtSru7++
+	 fy7vEUImpD6TqVGZ43Odzp+Bik+zI40Ew5DX1jt6qnETcUyoJrTHgNZIVkKx70pJgF
+	 WtEt7FeZPk1Qfq05L8ivInm1JVf1VO+zBg/Trxf/rOIW1xPPhskiX3ylu0XeSbeKDY
+	 IFQTeefu+adZgULAw6NtcyOgP4yLAC0IT3MHj4Vo3zv6UzusrIByMJkHSoktl8KB64
+	 /wBsi4XSSmzLQ==
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Namhyung Kim <namhyung@kernel.org>
 Cc: Ingo Molnar <mingo@kernel.org>,
@@ -38,9 +38,9 @@ Cc: Ingo Molnar <mingo@kernel.org>,
 	linux-kernel@vger.kernel.org,
 	linux-perf-users@vger.kernel.org,
 	Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH v7 4/9] perf mutex: Add DO_ONCE() for one-time initialization
-Date: Thu,  1 Oct 2026 20:53:55 +0200
-Message-ID: <20261001185400.2754753-5-acme@kernel.org>
+Subject: [PATCH v7 5/9] perf config: Serialize config file access with a mutex
+Date: Thu,  1 Oct 2026 20:53:56 +0200
+Message-ID: <20261001185400.2754753-6-acme@kernel.org>
 X-Mailer: git-send-email 2.55.0
 In-Reply-To: <20261001185400.2754753-1-acme@kernel.org>
 References: <20261001185400.2754753-1-acme@kernel.org>
@@ -54,56 +54,249 @@ Content-Transfer-Encoding: 8bit
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-For lazy init that more than one thread can race into, without
-pthread_once() so that it stays within perf's locking primitives and
-clang's -Wthread-safety keeps an eye on the mutexes involved.
+Config file access shares the static parser state and, since
+perf_config__set_variable() became an entry point for background
+features, can run on more than one thread: a feature writing the
+config while perf top's display thread reads it.  Serialize parsing
+and rewriting with config_mutex and the whole read-modify-write of
+perf_config__set_variable() with config_update_mutex; config_set_mutex
+comes before it, as building the set parses the config files.
 
-Mirrors the kernel's include/linux/once.h DO_ONCE(), dropping its
-static key fast path, unnecessary at these cold init paths: a per call
-site static bool plus a statically initialized mutex, double checked.
-As there, code reachable from more than one call site must go through
-a common helper.
+perf has its own mutex type, util/mutex.h; the file scope mutexes
+here use the DEFINE_MUTEX() static initializer added in the previous
+patch.  The two lazy inits that system_path() and home_perfconfig()
+do would leak all but one of the strings racing on two threads, so
+they move to DO_ONCE(), added in the previous patch as well.
+bad_config() runs on the dispatching thread, outside config_mutex, so
+it stops reading config_file_name, which the parsing thread owns.
 
 Assisted-by: LLM
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/mutex.h | 23 +++++++++++++++++++++++
- 1 file changed, 23 insertions(+)
+ tools/perf/util/config.c | 106 +++++++++++++++++++++++++++------------
+ 1 file changed, 73 insertions(+), 33 deletions(-)
 
-diff --git a/tools/perf/util/mutex.h b/tools/perf/util/mutex.h
-index b85a80ad60386aed..87937970615ff675 100644
---- a/tools/perf/util/mutex.h
-+++ b/tools/perf/util/mutex.h
-@@ -95,6 +95,29 @@ struct LOCKABLE mutex {
- /* Statically initialized mutex, for the file scope ones. */
- #define DEFINE_MUTEX(name) struct mutex name = { .lock = PTHREAD_MUTEX_INITIALIZER }
+diff --git a/tools/perf/util/config.c b/tools/perf/util/config.c
+index 6e0ff8a9140ccf96..287401f159e66e8c 100644
+--- a/tools/perf/util/config.c
++++ b/tools/perf/util/config.c
+@@ -31,6 +31,7 @@
+ #include "callchain.h"
+ #include "debug.h"
+ #include "header.h"
++#include "mutex.h"
+ #include "path.h"
+ #include "srcline.h"
+ #include "unwind.h"
+@@ -371,10 +372,8 @@ static int perf_parse_long(const char *value, long *ret)
  
-+/*
-+ * Runs fn() exactly once however many threads race to it, the rest wait
-+ * for it to finish; per call site state, so multiple sites wanting the
-+ * same once use a common helper, as in the kernel's DO_ONCE().
-+ */
-+#define DO_ONCE(fn, ...)						       \
-+	({								       \
-+		static bool ___done;					       \
-+		static DEFINE_MUTEX(___once_lock);			       \
-+		bool ___ret = false;					       \
-+									       \
-+		if (!___done) {						       \
-+			mutex_lock(&___once_lock);			       \
-+			if (!___done) {					       \
-+				fn(__VA_ARGS__);			       \
-+				___done = true;				       \
-+				___ret = true;				       \
-+			}						       \
-+			mutex_unlock(&___once_lock);			       \
-+		}							       \
-+		___ret;							       \
-+	})
+ static void bad_config(const char *name)
+ {
+-	if (config_file_name)
+-		pr_warning("bad config value for '%s' in %s, ignoring...\n", name, config_file_name);
+-	else
+-		pr_warning("bad config value for '%s', ignoring...\n", name);
++	/* config_file_name is owned by the parsing thread, under config_mutex. */
++	pr_warning("bad config value for '%s', ignoring...\n", name);
+ }
+ 
+ int perf_config_u64(u64 *dest, const char *name, const char *value)
+@@ -550,11 +549,18 @@ int perf_default_config(const char *var, const char *value,
+ 	return 0;
+ }
+ 
++/* Parsing and rewriting share the static parser state. */
++static DEFINE_MUTEX(config_mutex);
 +
- /* A wrapper around the condition variable implementation. */
- struct cond {
- 	pthread_cond_t cond;
++/* Serializes whole perf_config__set_variable() updates. */
++static DEFINE_MUTEX(config_update_mutex);
++
+ static int perf_config_from_file(config_fn_t fn, const char *filename, void *data)
+ {
+ 	int ret;
+ 	FILE *f = fopen(filename, "r");
+ 
++	mutex_lock(&config_mutex);
+ 	ret = -1;
+ 	if (f) {
+ 		config_file = f;
+@@ -565,21 +571,24 @@ static int perf_config_from_file(config_fn_t fn, const char *filename, void *dat
+ 		fclose(f);
+ 		config_file_name = NULL;
+ 	}
++	mutex_unlock(&config_mutex);
+ 	return ret;
+ }
+ 
+-const char *perf_etc_perfconfig(void)
+-{
+-	static const char *system_wide;
++/* system_path() allocates, so it is computed once. */
++static const char *etc_perfconfig;
+ 
+-	if (!system_wide)
+-		/*
+-		 * ETC_PERFCONFIG is absolute, so its unresolved path is
+-		 * the same string, better than the callers crashing.
+-		 */
+-		system_wide = system_path(ETC_PERFCONFIG) ?: ETC_PERFCONFIG;
++static void perf_etc_perfconfig__init(void)
++{
++	etc_perfconfig = system_path(ETC_PERFCONFIG);
++	if (!etc_perfconfig)
++		etc_perfconfig = ETC_PERFCONFIG;
++}
+ 
+-	return system_wide;
++const char *perf_etc_perfconfig(void)
++{
++	DO_ONCE(perf_etc_perfconfig__init);
++	return etc_perfconfig;
+ }
+ 
+ static int perf_env_bool(const char *k, int def)
+@@ -637,19 +646,18 @@ static char *home_perfconfig(void)
+ 	return NULL;
+ }
+ 
+-const char *perf_home_perfconfig(void)
+-{
+-	static const char *config;
+-	static bool failed;
+-
+-	if (failed || config)
+-		return config;
++/* home_perfconfig() allocates and warns, so it is computed once. */
++static const char *home_config;
+ 
+-	config = home_perfconfig();
+-	if (!config)
+-		failed = true;
++static void perf_home_perfconfig__init(void)
++{
++	home_config = home_perfconfig();
++}
+ 
+-	return config;
++const char *perf_home_perfconfig(void)
++{
++	DO_ONCE(perf_home_perfconfig__init);
++	return home_config;
+ }
+ 
+ static struct perf_config_section *find_section(struct list_head *sections,
+@@ -790,8 +798,15 @@ static int collect_config(const char *var, const char *value,
+ int perf_config_set__collect(struct perf_config_set *set, const char *file_name,
+ 			     const char *var, const char *value)
+ {
++	int ret;
++
++	mutex_lock(&config_mutex);
+ 	config_file_name = file_name;
+-	return collect_config(var, value, set);
++	ret = collect_config(var, value, set);
++	/* Don't leave the static parser state pointing at the caller's buffer. */
++	config_file_name = NULL;
++	mutex_unlock(&config_mutex);
++	return ret;
+ }
+ 
+ static int perf_config_set__init(struct perf_config_set *set)
+@@ -838,6 +853,10 @@ struct perf_config_set *perf_config_set__load_file(const char *file)
+ 	return set;
+ }
+ 
++/* Not config_mutex: building the set parses the config files, which takes it. */
++static DEFINE_MUTEX(config_set_mutex);
++
++/* Called with config_set_mutex held. */
+ static int perf_config__init(void)
+ {
+ 	if (config_set == NULL)
+@@ -878,16 +897,26 @@ int perf_config_set(struct perf_config_set *set,
+ 
+ int perf_config(config_fn_t fn, void *data)
+ {
+-	if (config_set == NULL && perf_config__init())
++	struct perf_config_set *set;
++
++	/* Not held across the dispatch: a callback can call perf_config() again. */
++	mutex_lock(&config_set_mutex);
++	if (perf_config__init()) {
++		mutex_unlock(&config_set_mutex);
+ 		return -1;
++	}
++	set = config_set;
++	mutex_unlock(&config_set_mutex);
+ 
+-	return perf_config_set(config_set, fn, data);
++	return perf_config_set(set, fn, data);
+ }
+ 
+ void perf_config__exit(void)
+ {
++	mutex_lock(&config_set_mutex);
+ 	perf_config_set__delete(config_set);
+ 	config_set = NULL;
++	mutex_unlock(&config_set_mutex);
+ }
+ 
+ int perf_config_set__write(struct perf_config_set *set,
+@@ -898,9 +927,12 @@ int perf_config_set__write(struct perf_config_set *set,
+ 	int ret = 0;
+ 	FILE *fp;
+ 
++	mutex_lock(&config_mutex);
+ 	fp = fopen(file_name, "w");
+-	if (!fp)
++	if (!fp) {
++		mutex_unlock(&config_mutex);
+ 		return -1;
++	}
+ 
+ 	if (fprintf(fp, "# this file is auto-generated.\n") < 0)
+ 		ret = -1;
+@@ -922,6 +954,7 @@ int perf_config_set__write(struct perf_config_set *set,
+ 	}
+ 	if (fclose(fp) != 0)
+ 		ret = -1;
++	mutex_unlock(&config_mutex);
+ 
+ 	return ret;
+ }
+@@ -933,14 +966,20 @@ int perf_config_set__write(struct perf_config_set *set,
+  */
+ int perf_config__set_variable(const char *var, const char *value)
+ {
+-	char path[PATH_MAX];
+-	char *user_config = mkpath(path, sizeof(path), "%s/.perfconfig", getenv("HOME"));
+ 	const char *config_filename;
+ 	bool system_config;
+-	struct perf_config_set *set;
++	struct perf_config_set *set = NULL;
+ 	int ret = -1;
+ 
+-	config_filename = config_exclusive_filename ?: user_config;
++	mutex_lock(&config_update_mutex);
++
++	/* Static: the parser publishes it as config_file_name. */
++	{
++		static char path[PATH_MAX];
++		char *user_config = mkpath(path, sizeof(path), "%s/.perfconfig", getenv("HOME"));
++
++		config_filename = config_exclusive_filename ?: user_config;
++	}
+ 
+ 	/* Rewriting the system wide file keeps its entries, or it is truncated. */
+ 	system_config = strcmp(config_filename, perf_etc_perfconfig()) == 0;
+@@ -962,6 +1001,7 @@ int perf_config__set_variable(const char *var, const char *value)
+ 	ret = 0;
+ out_err:
+ 	perf_config_set__delete(set);
++	mutex_unlock(&config_update_mutex);
+ 	return ret;
+ }
+ 
 -- 
 2.55.0
 
