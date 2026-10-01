@@ -1,200 +1,73 @@
-Received: from mail-dy1-f197.google.com (mail-dy1-f197.google.com [74.125.82.197])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CA1337F32B
-	for <linux-perf-users@vger.kernel.org>; Thu,  1 Oct 2026 02:34:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.197
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 027B43BB671
+	for <linux-perf-users@vger.kernel.org>; Thu,  1 Oct 2026 02:39:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790822079; cv=none; b=PxEk/xUuWNprGQ8UETZCZdSbtsZ9HwSkEJfy596kKYx/WPmVf2EDpZ69BnETcUQMXtZI2GnqN/+9ou49nVQp0LW61aSPRE2lp2c4QnJpRjGserJYc83ri6IBj/CISQS4StcULWSDPUESUpx63G/m/YLkC7HtP+zKxnfxFK6C2zM=
+	t=1790822348; cv=none; b=nJYU7FDRxV/6PJoDzA/BteZA1yJtoTaj7K67Pi+03sWl3TE6eYbQgtJgIp/PabM/E8ZIsaWmo01THxEW8MXdJ5UEHCzi2uSlDSVjs+Vud2BAeaHZubd4/hLKl3EuzSKgEepa0f6B/uzWGmftHeGzSl9tTHSXLciAqV/8mMQ61XY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790822079; c=relaxed/simple;
-	bh=nCk8Lv3H8Cmg+OiOa/MpQh4oQCFkO6JG4+qPbVNH81U=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=IDlV1c2HtUIlQjPCS8QhPYg3Mm5LbAyxWs7jZ+HAidSwTd6E8ymoV/oMqRu4LudQ99yYURqH2BCzp1kjYle7IxaUQFZD7cTio6BD057BOxKxU7V99dPM64ge1JEoF29D07TT4oud+XspkBAew/8Y6uf05y9jGz/Oa4/XXIuyw9Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=FvIdXi5T; arc=none smtp.client-ip=74.125.82.197
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
+	s=arc-20240116; t=1790822348; c=relaxed/simple;
+	bh=F/c/wsKV94MMaZ+HjsSeQ63tPNdxr2rnCnQccSumzQc=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=cGsEVe2MXw4dYxI3UqtrHiUhWIBUDNGksRq6ZiIkiHeoTV9QHwrbrZ3Pz26kTWKBe8ArXbtSC2s7UKY1ywNuyS7CqYAG7onbEj8Ob2NWd/Y7iWwbIW1jQZrr561u3iXjgwsLE1QsLlDViz//Nz+QdAfd5luWoMIQ5JnePCHXPbg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HSF7xS6x; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="FvIdXi5T"
-Received: by mail-dy1-f197.google.com with SMTP id 5a478bee46e88-3282d5302ffso655573eec.1
-        for <linux-perf-users@vger.kernel.org>; Wed, 30 Sep 2026 19:34:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1790822077; x=1791426877; darn=vger.kernel.org;
-        h=content-type:to:from:subject:message-id:references:mime-version
-         :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=pCEa6kHSF7nHp9DpSeBucrqoV5vSti5uYXxrjWyY/IM=;
-        b=FvIdXi5TDh/Dw/7otrPsh/6hnW5THel61VNpIhTDVy8CwITrBFtw0Oan6tKQsE3vyN
-         879dLLwz9MURtLcDpJ6G+vXh771yNJ9EnWI/hueU6auyE2eh63EF8Q8TAZDd8+YP6wXo
-         XDHwD/tpcb4d+nGzMZLDdyikZgfE4bORgK5pEDYG8XG7aNYO2xY+mQbyzhx2099grTbE
-         Y87HpNmv5Nlluj7LQ2bsQrJxZVhRPO0Y4c/o05kH4lY6vGrwWz0EteXGhTtv8Nh6VWh5
-         KeCGuD7L43u7PrlG5v41uMpRULQZCesjpSFZUWbNR+2MSDH+UyZVmIGeYTnV+QlqxEx/
-         sniQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1790822077; x=1791426877;
-        h=content-type:to:from:subject:message-id:references:mime-version
-         :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=pCEa6kHSF7nHp9DpSeBucrqoV5vSti5uYXxrjWyY/IM=;
-        b=PJAE9M3FX3inpHy5aZ8DaPUW8qx75Hj80GPZYKUMJrWlI5OwMlsgcPwscEvNyAsw0J
-         fbEjD43qKMAzLxYBgySKLubndFgnz4ca+bB3PEirdvBz54oJqiWRKLWcV66Y71AFytw8
-         7x7hbKJMX7qvgBo6AlM30GwT1I9PtFCJGTG4jf7onYFk79/1fdQVZrCHcrgRmSNMQgEN
-         6UoHg+gv023O9CcPbW0M1wu03sDkC1oPTnd90QneWkd36aW+nZPYK1yIZF/XaNOtM2o9
-         q9JHVvJfjQkJgGLjKeJE+q2oAf1YKoCcK0SmIWiGzpXMzEROOFfKt6URXuoOX/pUe3ML
-         dIkg==
-X-Forwarded-Encrypted: i=1; AKwUvBzPbc4z4UF633ANgGM3IuL3lySe37P11oLhloeKSpBabArS1UNhBQobkBFTYbF8H2Ruy6sxCnaXvMt5+qi5Q1nP@vger.kernel.org
-X-Gm-Message-State: AFuF++n+hNoO1GIpdBqh7YRrGbEbZVEpoXedV0xx558S6l8BesRcR3m3
-	OYgFcYXxC0QC6sTMj/Xiw+Yczq9FKXMzLQW1OkH62EUC0ZDZmOps8r79H9Diqauk7olSRg03HsX
-	PXzFu6PxQBA==
-X-Received: from dycnr9-n1.prod.google.com ([2002:a05:7300:e9c9:10b0:33e:8d5d:6f5b])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:701b:2605:b0:14e:5e6b:e6e2
- with SMTP id a92af1059eb24-14e5e6bee29mr179513c88.18.1790822076829; Wed, 30
- Sep 2026 19:34:36 -0700 (PDT)
-Date: Wed, 30 Sep 2026 19:34:23 -0700
-In-Reply-To: <20261001023423.1225713-1-irogers@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HSF7xS6x"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BAA021F000FF;
+	Thu,  1 Oct 2026 02:39:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1790822346;
+	bh=F/c/wsKV94MMaZ+HjsSeQ63tPNdxr2rnCnQccSumzQc=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=HSF7xS6xC8fVpZ8seeAtXd9kDqBi7a3SJ2p1seFRf0juA0eySddsyK13M56SH1YfE
+	 e7jKSgzY6Yjo7b5PHtiT+IobF3/rHLO9E4hNRWDwAH0MDOrOduqyW7DXF+pZDlS1r8
+	 DcvDeVHNesucQGMCKnBnR1Crgi23HLydg5K0w9Jtn742GK1Z5P2EMCuBcsD7bmbnXB
+	 Sas9av9eM51vnfOv8bF0dk4JOS3IcYiDLhkowu81T/dbQNc2vyT0QRTv5i8LGOvrkV
+	 NV2FDJS6rL45RL3fuSZcg5PTubjx46y4LyDbD0jMRQKuHRKtUkTZQ3EfoUV7c+Jqyn
+	 /IApAA123e1zw==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH 2/4] perf build: Run shellcheck, mypy, and remaining
+ pylint checks in parallel
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Ian Rogers" <irogers@google.com>
+Cc: linux-perf-users@vger.kernel.org
+In-Reply-To: <20261001023423.1225713-3-irogers@google.com>
+References: <20261001023423.1225713-1-irogers@google.com>
+ <20261001023423.1225713-3-irogers@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Thu, 01 Oct 2026 02:39:06 +0000
+Message-Id: <20261001023906.BAA021F000FF@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20261001023423.1225713-1-irogers@google.com>
-X-Mailer: git-send-email 2.56.0.rc1.315.gc6ed9934b7-goog
-Message-ID: <20261001023423.1225713-5-irogers@google.com>
-Subject: [PATCH 4/4] perf build: Fix clean and install target dependencies
-From: Ian Rogers <irogers@google.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	James Clark <james.clark@linaro.org>, Leo Yan <leo.yan@arm.com>, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
 
-Fix several missing dependencies and ordering issues for clean and
-install targets:
+> Following the approach used for pylint on standalone scripts and tests,
+> move the shellcheck and mypy checks in tools/perf/Build and
+> tools/perf/tests/Build, as well as the mypy and pylint checks in
+> tools/perf/util/Build and tools/perf/pmu-events/Build, into dedicated
+> phony targets invoked as top-level sub-makes from Makefile.perf.
+>=20
+> Also add 'perf' to pylint's --ignored-modules (leaving perf module
+> type-checking to mypy via perf.pyi), since astroid's ImportlibFinder
+> only resolves .pyi stubs for package directories (__init__.pyi) rather
+> than single-file stubs like perf.pyi and does not introspect C
+> extensions by default. This removes the need for pylint to wait on
+> building $(LANG_BINDINGS).
+>=20
+> This avoids blocking jevents code generation, archive creation
+> (libperf-util.a, libperf-test.a, libpmu-events.a), and final linking of
+> the perf binary and Python extension on linter execution.
+>=20
+> Assisted-by: Antigravity:gemini-3.1-pro
+> Signed-off-by: Ian Rogers <irogers@google.com>
 
-1. In tools/perf/Makefile, order 'install*' goals after 'all' when both
-   are passed on the command line (e.g. 'make -j clean all install') so
-   two concurrent Makefile.perf sub-makes do not race in the same build
-   directory, and mark 'all' and 'clean' as .PHONY.
+Sashiko has reviewed this patch and found no issues. It looks great!
 
-2. In tools/perf/Makefile.perf, when 'clean' is passed alongside build
-   or install goals (e.g. 'make -f Makefile.perf clean install'), run
-   'clean' sequentially before 'fixdep' and 'sub-make' rather than
-   running 'clean' in parallel with the build inside 'sub-make'.
-
-3. Ensure '$(OUTPUT)python' is created inside the recipe for
-   '$(OUTPUT)python/perf$(PYTHON_EXTENSION_SUFFIX)' rather than only at
-   Makefile parse time, in case 'clean' removed the directory.
-
-4. Add '$(LANG_BINDINGS)' as a prerequisite of 'install-python_ext' so
-   the Python C extension is built with the proper compiler/linker flags
-   and perf libraries before 'setup.py install' runs.
-
-5. Add 'install-bin', 'install-tools', 'install-tests',
-   'install-python_ext', '$(DOC_TARGETS)', and '$(INSTALL_DOC_TARGETS)'
-   to .PHONY in Makefile.perf.
-
-6. Prefix targets emitted by Documentation/build-docdep.perl with
-   '$(OUTPUT)' so '$(OUTPUT)doc.dep' matches out-of-tree documentation
-   targets when 'O=' is specified.
-
-Assisted-by: Antigravity:gemini-3.1-pro
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/Documentation/build-docdep.perl |  2 +-
- tools/perf/Makefile                        |  9 ++++++++-
- tools/perf/Makefile.perf                   | 19 +++++++++++++++----
- 3 files changed, 24 insertions(+), 6 deletions(-)
-
-diff --git a/tools/perf/Documentation/build-docdep.perl b/tools/perf/Documentation/build-docdep.perl
-index ba4205e0302a..f19f5107fe0f 100755
---- a/tools/perf/Documentation/build-docdep.perl
-+++ b/tools/perf/Documentation/build-docdep.perl
-@@ -41,6 +41,6 @@ while ($changed) {
- while (my ($text, $included) = each %include) {
-     if (! exists $included{$text} &&
- 	(my $base = $text) =~ s/\.txt$//) {
--	print "$base.html $base.xml : ", join(" ", keys %$included), "\n";
-+	print "\$(OUTPUT)$base.html \$(OUTPUT)$base.xml : ", join(" ", keys %$included), "\n";
-     }
- }
-diff --git a/tools/perf/Makefile b/tools/perf/Makefile
-index b8d38728306a..a0d7035cd97b 100644
---- a/tools/perf/Makefile
-+++ b/tools/perf/Makefile
-@@ -93,6 +93,13 @@ ifeq ($(has_clean),1)
- $(rest): clean
-   endif # rest
- endif # has_clean
-+
-+ifneq ($(filter all,$(MAKECMDGOALS)),)
-+  install_goals := $(filter install%,$(MAKECMDGOALS))
-+  ifneq ($(install_goals),)
-+$(install_goals): all
-+  endif
-+endif
- endif # MAKECMDGOALS
- 
- #
-@@ -130,4 +137,4 @@ check-headers:
- 	$(print_msg)
- 	$(make)
- 
--.PHONY: tags TAGS FORCE Makefile build-test build-test-tarball check-headers
-+.PHONY: all clean tags TAGS FORCE Makefile build-test build-test-tarball check-headers
-diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
-index 836225b08649..d90bdd319c72 100644
---- a/tools/perf/Makefile.perf
-+++ b/tools/perf/Makefile.perf
-@@ -327,9 +327,17 @@ export HOSTCC HOSTLD HOSTAR HOSTCFLAGS SHELLCHECK MYPY PYLINT CONFIG_PERF_BPF_SK
- include $(srctree)/tools/build/Makefile.include
- 
- ifeq ($(force_fixdep),1)
--goals := $(filter-out all sub-make, $(MAKECMDGOALS))
-+goals := $(filter-out all sub-make clean, $(MAKECMDGOALS))
- 
--$(goals) all: sub-make
-+ifneq ($(filter clean,$(MAKECMDGOALS)),)
-+clean-make:
-+	$(Q)$(MAKE) -f Makefile.perf -j1 clean
-+
-+fixdep: clean-make
-+.PHONY: clean-make
-+endif
-+
-+$(goals) all clean: sub-make
- 
- sub-make: fixdep
- 	$(Q)$(MAKE) FIXDEP_BUILT=1 -f Makefile.perf $(goals)
-@@ -565,6 +573,7 @@ $(OUTPUT)python/perf$(PYTHON_EXTENSION_SUFFIX): util/python.c util/setup.py pyth
-         CFLAGS='$(CFLAGS)' LDFLAGS='$(LDFLAGS) $(LIBS_PY)' \
- 	  $(PYTHON_WORD) util/setup.py \
- 	  $(python_setup_quiet) build_ext; \
-+	$(MKDIR) -p $(OUTPUT)python; \
- 	cp $(PYTHON_EXTBUILD_LIB)perf*.so $(OUTPUT)python/; \
- 	if [ "$(abspath python/perf.pyi)" != "$(abspath $(OUTPUT)python/perf.pyi)" ]; then \
- 		cp python/perf.pyi $(OUTPUT)python/; \
-@@ -994,7 +1003,7 @@ install: install-bin try-install-man
- install-build-deps:
- 	$(Q)$(SHELL) $(srctree)/tools/perf/scripts/install-build-deps.sh $(INSTALL_BUILD_DEPS_ARGS)
- 
--install-python_ext:
-+install-python_ext: $(LANG_BINDINGS)
- 	$(PYTHON_WORD) util/setup.py $(python_setup_quiet) \
- 		$(if $(OUTPUT),egg_info --egg-base $(OUTPUT)) \
- 		install --root='/$(DESTDIR_SQ)'
-@@ -1070,7 +1079,9 @@ endif
- 
- FORCE:
- 
--.PHONY: all install install-build-deps clean config-clean strip install-gtk
-+.PHONY: all install install-bin install-tools install-tests install-build-deps
-+.PHONY: install-gtk install-python_ext $(DOC_TARGETS) $(INSTALL_DOC_TARGETS)
-+.PHONY: clean config-clean strip
- .PHONY: shell_compatibility_test please_set_SHELL_PATH_to_a_more_modern_shell
- .PHONY: .FORCE-PERF-VERSION-FILE TAGS tags cscope FORCE prepare bpf-skel-prepare
- .PHONY: python_perf_target
--- 
-2.56.0.rc1.315.gc6ed9934b7-goog
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261001023423.1225=
+713-1-irogers@google.com?part=3D2
 
