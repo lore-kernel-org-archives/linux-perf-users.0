@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1298B521221;
-	Thu,  1 Oct 2026 18:54:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEBF43C9EF1;
+	Thu,  1 Oct 2026 18:54:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790880879; cv=none; b=fWrPBAza0AsYtUP1V4Du7NbbeUQgENo8g+13b6+hDq3vkodWaMBQlesap8ildlbCWZkTnUp0mswsliJu6eOzjt4pez5U18FtbToyWLjB+nd5YluHVYCpjROx3JLE6cT/12q/TAMuJM2857WZjMDbD6FbRkBxQI0ugOibH2kcimU=
+	t=1790880883; cv=none; b=jMkplXxgTiwOP7EJWf1UCaJi0+LvybBqE4FBd0ODX80YUMPUyd3ej+R5qMzE/VJapx7zdbl56myAYvGXXo2ajc7IkIUDO1gU7u8dZ/oDYYq7DcsFsvtaiYhvqiCkc7rdCHbs6n89dQd2n+fNo8flAl19e687ngtAIT9vdfRuUBA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790880879; c=relaxed/simple;
-	bh=4Yxovua+/tI8ib3iMKBxO5N+UTN4Xq9EN3V1SGegSd0=;
+	s=arc-20240116; t=1790880883; c=relaxed/simple;
+	bh=VqHxztFNCQm8ABM/FA5xlCVwXWpkcwt9nSdBMTNjzOs=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Mlqyd/0Zks5c4AAnYm+JcVnYbNSLbCbKW0nP8QXfbh14g7eLMYBc2hvccUmkLo1H91arMftdNhg2tNzZsIFSjautIIIsniBVOBjtoyEw1Mzn2UBVnBb9YeUK3Ve6pviZa0csPyTonCUXFCOCVFk8N2HeuSpIvOmDVyA4SNkt50c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VgcO1DG9; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version; b=F4R9OwDfy7tEbv5NTG51uszef4UeHx9BSxV1YC5xohqcpPcRUGxAOUFSbxPPugCmFshK9LjbdtOZwf5/yRLFTF+OpkGUEql/HOTc3tyrN58Q0hMJArg+JvsW6lyJRPrRAXWUbdLo7kZ3ug6egzyDZayVFfF0V9Hset+n+2ZQDkw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EY8OgiyC; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VgcO1DG9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A919A1F000FF;
-	Thu,  1 Oct 2026 18:54:34 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EY8OgiyC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 816311F00898;
+	Thu,  1 Oct 2026 18:54:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1790880878;
-	bh=qVGE7KRH9eVP3llPFjhqDsAJpcueV9It7PXpk+0JIp8=;
+	s=k20260515; t=1790880881;
+	bh=wO21KOou+XydjY7N/GyLFlM/I9mtLVnu9UKvHU3zFH8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=VgcO1DG9Orl0Wvp3KtVcq2CQLU/tqHxeAx0dGsLerwcTqVAZceLwyiE30qPh3TpX1
-	 BjQywOpghFXvLCVqgoqL/RTOckz9nuJ/yIA0VTIBeLmOLOXZowSJz6stQWMILyKfz8
-	 Cgb5QKfWD/QgU5HqwneZgWtKq2x2h6KKkUn4GrCDJfcJDkGIgQ3IBjqm5/oBBgvUn3
-	 Xnyqe1MnQ5VC3xlCmOr92bf5douYlQ882Nd5yrhxZWlwhapLZWDQdCRlz7KDkx6X3C
-	 R27pX9XeKy9YsXyQfEB/YS2ivHy3ci5xilh2HbAqs5BzZRc6QkZExfE6Krdx2sYUXn
-	 VPPk0fN/QtIcA==
+	b=EY8OgiyCuY4U/xxiN+w83jhERgLeSDPnMaowyVcQ2XoqlEv7SKD+YoTiWbSACOXSX
+	 zsCf1qlo0CBdDZDVrKBH6ZdndeJl+IzgGyoWvmHW4p3M4h18g3Nth0QllxVBb8JIBF
+	 qQllUsEp8fOOh+HKAjUsKRe+wsFLIsbMr7Kd/H3LZX3Ic6WTz/dWVBfjAeiY9hTpmY
+	 vONaSfS4rqy5Vf8ysXAlFVQ1z9bLIjI02HBYPhrUrYbX/sWQ2OfQVAkbnltmExWIGt
+	 wTKehrQl2wP/GMyyvWKsiNZuff6MP9Pcth45Vc0S39OD88tz5T4FivfQtdymbFoEyi
+	 bLp5edo7ErNKQ==
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Namhyung Kim <namhyung@kernel.org>
 Cc: Ingo Molnar <mingo@kernel.org>,
@@ -38,9 +38,9 @@ Cc: Ingo Molnar <mingo@kernel.org>,
 	linux-kernel@vger.kernel.org,
 	linux-perf-users@vger.kernel.org,
 	Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH v7 8/9] perf scripts: Add perf-stuck, to tell where a running perf is stuck
-Date: Thu,  1 Oct 2026 20:53:59 +0200
-Message-ID: <20261001185400.2754753-9-acme@kernel.org>
+Subject: [PATCH v7 9/9] perf test: Add false_sharing workload exhibiting cross-CPU false sharing
+Date: Thu,  1 Oct 2026 20:54:00 +0200
+Message-ID: <20261001185400.2754753-10-acme@kernel.org>
 X-Mailer: git-send-email 2.55.0
 In-Reply-To: <20261001185400.2754753-1-acme@kernel.org>
 References: <20261001185400.2754753-1-acme@kernel.org>
@@ -54,369 +54,444 @@ Content-Transfer-Encoding: 8bit
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-A perf that takes forever is hard to tell apart from one stuck in a
-loop, and there is no way to see where without attaching gdb.
-perf-stuck.sh samples a running process' /proc entries and its progress
-line at a fixed interval, and with -g runs gdb (perf-stuck.gdb, adding
-the perf-die-chain command) when no progress is made across two
-samples, printing the DIE chain a DWARF type chase is stuck in.
+Add a 'perf test -w false_sharing' workload that hammers one shared
+struct from several CPUs, shaped as a TCP connection: a read-mostly
+identity (five-tuple) shares a cacheline with per-packet rx counters
+(the false-sharing line), a second line has packet-path private tx and
+congestion control counters, and a third the connection config.
 
-It is a prototype: the plan is to turn it into a first class 'perf
-stuck' command.  The process name is resolved with pgrep among the
-caller's own processes only, as root an unscoped one would attach gdb
-to the first process of any user with a matching name.
+The packet path runs in the main thread and up to four lookup threads
+sum the five-tuple and pull the config, reading one volatile shared
+instance directly so the accesses are PC-relative and resolvable by the
+data type profiler.
 
--i and -n are now validated instead of failing later inside the
-sampling loop, -x now requires -g and gets the same readability check
-as the default gdb command file, and gdb_done is cleared whenever
-progress resumes, so -g can fire again on a later stall instead of at
-most once per run.
+Data type profiling of the workload with cacheline info:
+
+  $ perf mem record -- perf test -r5 -w false_sharing
+  [ perf record: Woken up 19 times to write data ]
+  [ perf record: Captured and wrote 5.612 MB perf.data (72454 samples) ]
+  $ perf report -s type,typecln -H --group --stdio
+  # Total Lost Samples: 0
+  #
+  # Samples: 72K of events 'cpu/mem-loads,ldlat=30/P, cpu/mem-stores/P'
+  # Event count (approx.): 1261814616
+  #
+  #            Overhead  Data Type / Data Type Cacheline
+  # ...................  ...............................
+  #
+      88.99%  35.88%     struct net_conn
+         56.43%  17.50%     struct net_conn: cache-line 0
+         32.55%   0.00%     struct net_conn: cache-line 2
+          0.01%  18.38%     struct net_conn: cache-line 1
+      10.08%  63.03%     (unknown)
+         10.08%  63.03%     (unknown): cache-line 0
+       0.82%   0.13%     int
+          0.82%   0.13%     int: cache-line 0
+       0.01%   0.02%     struct folio
+          0.01%   0.02%     struct folio: cache-line 0
+       0.01%   0.03%     Elf64_Addr
+          0.01%   0.03%     Elf64_Addr: cache-line 0
+       0.01%   0.03%     struct sched_entity
+          0.01%   0.03%     struct sched_entity: cache-line 1
+          0.00%   0.00%     struct sched_entity: cache-line 4
+          0.00%   0.00%     struct sched_entity: cache-line 2
+          0.00%   0.00%     struct sched_entity: cache-line 3
+          0.00%   0.00%     struct sched_entity: cache-line 0
+       0.01%   0.00%     struct task_group
+          0.01%   0.00%     struct task_group: cache-line 4
+          0.00%   0.00%     struct task_group: cache-line 5
+       0.00%   0.00%     struct css_rstat_cpu
+          0.00%   0.00%     struct css_rstat_cpu: cache-line 0
+  $ perf report -s type,typecln,typeoff -H --group --stdio
+  # Total Lost Samples: 0
+  #
+  # Samples: 72K of events 'cpu/mem-loads,ldlat=30/P, cpu/mem-stores/P'
+  # Event count (approx.): 1261814616
+  #
+  #               Overhead  Data Type / Data Type Cacheline / Data Type Offset
+  # ......................  ..................................................
+  #
+      88.99%  35.88%        struct net_conn
+         56.43%  17.50%        struct net_conn: cache-line 0
+             9.81%   0.00%        struct net_conn +0xa (dport)
+             9.54%   0.00%        struct net_conn +0x8 (sport)
+             9.53%   0.00%        struct net_conn +0xc (state)
+             9.48%   0.00%        struct net_conn +0xd (protocol)
+             9.27%   0.00%        struct net_conn +0x4 (daddr)
+             8.79%   0.00%        struct net_conn +0 (saddr)
+             0.00%  12.08%        struct net_conn +0x10 (bytes_rx)
+             0.00%   1.71%        struct net_conn +0x18 (packets_rx)
+             0.00%   2.80%        struct net_conn +0x20 (rx_queue)
+             0.00%   0.91%        struct net_conn +0x3c (last_ack)
+         32.55%   0.00%        struct net_conn: cache-line 2
+             5.70%   0.00%        struct net_conn +0x83 (rcv_wscale)
+             5.46%   0.00%        struct net_conn +0x84 (keepalive_int)
+             5.43%   0.00%        struct net_conn +0x82 (snd_wscale)
+             5.39%   0.00%        struct net_conn +0x80 (mss)
+             5.34%   0.00%        struct net_conn +0x88 (mark)
+             5.23%   0.00%        struct net_conn +0x8c (priority)
+          0.01%  18.38%        struct net_conn: cache-line 1
+             0.01%   0.05%        struct net_conn +0x5c (retrans)
+             0.00%   4.83%        struct net_conn +0x40 (bytes_tx)
+             0.00%  10.63%        struct net_conn +0x48 (packets_tx)
+             0.00%   1.54%        struct net_conn +0x58 (rtt_us)
+             0.00%   1.07%        struct net_conn +0x50 (cwnd)
+             0.00%   0.25%        struct net_conn +0x54 (ssthresh)
+      10.08%  63.03%        (unknown)
+         10.08%  63.03%        (unknown): cache-line 0
+            10.08%  63.03%        (unknown)
+       0.82%   0.13%        int
+          0.82%   0.13%        int: cache-line 0
+             0.82%   0.13%        int +0 (no field)
+       0.01%   0.02%        struct folio
+          0.01%   0.02%        struct folio: cache-line 0
+             0.01%   0.00%        struct folio +0 (flags.f)
+             0.00%   0.01%        struct folio +0x34 (_refcount.counter)
+             0.00%   0.00%        struct folio +0x18 (mapping)
 
 Assisted-by: LLM
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/scripts/perf-stuck.gdb | 131 ++++++++++++++++++++
- tools/perf/scripts/perf-stuck.sh  | 193 ++++++++++++++++++++++++++++++
- 2 files changed, 324 insertions(+)
- create mode 100644 tools/perf/scripts/perf-stuck.gdb
- create mode 100755 tools/perf/scripts/perf-stuck.sh
+ tools/perf/tests/builtin-test.c               |   1 +
+ tools/perf/tests/shell/data_type_profiling.sh |   9 +-
+ tools/perf/tests/tests.h                      |   1 +
+ tools/perf/tests/workloads/Build              |   2 +
+ tools/perf/tests/workloads/false_sharing.c    | 251 ++++++++++++++++++
+ 5 files changed, 262 insertions(+), 2 deletions(-)
+ create mode 100644 tools/perf/tests/workloads/false_sharing.c
 
-diff --git a/tools/perf/scripts/perf-stuck.gdb b/tools/perf/scripts/perf-stuck.gdb
+diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-test.c
+index d2f594921e25bda9..98134b1c74cf80f4 100644
+--- a/tools/perf/tests/builtin-test.c
++++ b/tools/perf/tests/builtin-test.c
+@@ -175,6 +175,7 @@ static struct test_workload *workloads[] = {
+ 	&workload__context_switch_loop,
+ 	&workload__deterministic,
+ 	&workload__callchain,
++	&workload__false_sharing,
+ 
+ #ifdef HAVE_RUST_SUPPORT
+ 	&workload__code_with_type,
+diff --git a/tools/perf/tests/shell/data_type_profiling.sh b/tools/perf/tests/shell/data_type_profiling.sh
+index a916c410274aa888..57203e0e5f857540 100755
+--- a/tools/perf/tests/shell/data_type_profiling.sh
++++ b/tools/perf/tests/shell/data_type_profiling.sh
+@@ -8,8 +8,8 @@ set -e
+ # data type profiling manifestation
+ 
+ # Values in testtypes and testprogs should match
+-testtypes=("# data-type: struct Buf" "# data-type: struct buf")
+-testprogs=("perf test -w code_with_type" "perf test -w datasym")
++testtypes=("# data-type: struct Buf" "# data-type: struct buf" "# data-type: struct net_conn")
++testprogs=("perf test -w code_with_type" "perf test -w datasym" "perf test -w false_sharing")
+ 
+ err=0
+ perfdata=$(mktemp /tmp/__perf_test.perf.data.XXXXX)
+@@ -59,6 +59,9 @@ test_basic_annotate() {
+ 
+     "xC")
+     index=1 ;;
++
++    "xFS")
++    index=2 ;;
+   esac
+ 
+   # Under 'set -e' a bare failing command aborts the script through the EXIT
+@@ -114,6 +117,8 @@ test_basic_annotate Basic Rust
+ test_basic_annotate Pipe Rust
+ test_basic_annotate Basic C
+ test_basic_annotate Pipe C
++test_basic_annotate Basic FS
++test_basic_annotate Pipe FS
+ 
+ cleanup
+ exit $err
+diff --git a/tools/perf/tests/tests.h b/tools/perf/tests/tests.h
+index 9c96f33483d14356..f379620069d34f3a 100644
+--- a/tools/perf/tests/tests.h
++++ b/tools/perf/tests/tests.h
+@@ -250,6 +250,7 @@ DECLARE_WORKLOAD(jitdump);
+ DECLARE_WORKLOAD(context_switch_loop);
+ DECLARE_WORKLOAD(deterministic);
+ DECLARE_WORKLOAD(callchain);
++DECLARE_WORKLOAD(false_sharing);
+ 
+ #ifdef HAVE_RUST_SUPPORT
+ DECLARE_WORKLOAD(code_with_type);
+diff --git a/tools/perf/tests/workloads/Build b/tools/perf/tests/workloads/Build
+index 048e371eb63e3164..18fceddccb56c013 100644
+--- a/tools/perf/tests/workloads/Build
++++ b/tools/perf/tests/workloads/Build
+@@ -14,6 +14,7 @@ perf-test-y += jitdump.o
+ perf-test-y += context_switch_loop.o
+ perf-test-y += deterministic.o
+ perf-test-y += callchain.o
++perf-test-y += false_sharing.o
+ 
+ ifeq ($(CONFIG_RUST_SUPPORT),y)
+     perf-test-y += code_with_type.o
+@@ -29,3 +30,4 @@ CFLAGS_inlineloop.o       = -g -O2
+ CFLAGS_deterministic.o    = -g -O0 -fno-inline -U_FORTIFY_SOURCE
+ CFLAGS_named_threads.o    = -g -O0 -fno-inline -U_FORTIFY_SOURCE
+ CFLAGS_callchain.o        = -g -O0 -fno-inline -U_FORTIFY_SOURCE
++CFLAGS_false_sharing.o    = -g -O0 -fno-inline -U_FORTIFY_SOURCE
+diff --git a/tools/perf/tests/workloads/false_sharing.c b/tools/perf/tests/workloads/false_sharing.c
 new file mode 100644
-index 0000000000000000..b7f810198272ebf7
+index 0000000000000000..e949bb36646a97a5
 --- /dev/null
-+++ b/tools/perf/scripts/perf-stuck.gdb
-@@ -0,0 +1,131 @@
-+# SPDX-License-Identifier: GPL-2.0
-+#
-+# gdb commands for a stuck perf, used by perf-stuck.sh -g and usable directly:
-+#
-+#   gdb -p $(pgrep -x perf) -batch -x perf-stuck.gdb -ex bt
-+#
-+# PROTOTYPE: part of the perf-stuck.sh stopgap, wants to become a first
-+# class 'perf stuck' command printing these DIE chains without gdb.
-+#
-+# The commands are for the DWARF type chasers in util/dwarf-aux.c:
-+#
-+#   perf-die-chain <function> <die variable> [iterations]
-+#   perf-die-chain-all [iterations]
-+#   perf-dso
-+#
-+# For each iteration of the chasing loop they print the DIE address, the
-+# CU, its file offset, tag and name: a cycle shows as the same (addr, cu)
-+# pairs repeating, and a CU changing between iterations means the chase
-+# hops between a debug file and its dwz common file.
++++ b/tools/perf/tests/workloads/false_sharing.c
+@@ -0,0 +1,251 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * False-sharing demo for data type profiling, shaped as a TCP
++ * connection: a read-mostly identity shares a cacheline with per-packet
++ * rx counters (the false-sharing line), a second line has packet-path
++ * private tx and congestion control counters, and a third the connection
++ * config.
++ *
++ * 'perf mem record' of this workload followed by 'perf report -s type'
++ * (see tests/shell/data_type_profiling.sh) resolves the accesses to
++ * struct net_conn members, showing the rx counters and the read-mostly
++ * identity sharing cacheline 0.
++ */
++#include <pthread.h>
++#include <sched.h>
++#include <stdint.h>
++#include <stdlib.h>
++#include <stdio.h>
++#include <signal.h>
++#include <unistd.h>
++#include <linux/compiler.h>
++#include "../tests.h"
 +
-+set pagination off
-+set confirm off
-+set debuginfod enabled off
-+set print pretty on
-+set height 0
-+set width 0
++struct net_conn {
++	/* cacheline 0: identity (read-mostly) + rx counters (per packet) */
++	uint32_t	saddr;		/*   0 */
++	uint32_t	daddr;		/*   4 */
++	uint16_t	sport;		/*   8 */
++	uint16_t	dport;		/*  10 */
++	uint8_t		state;		/*  12: 1 == ESTABLISHED */
++	uint8_t		protocol;	/*  13: 6 == TCP */
++	uint16_t	__pad0;		/*  14 */
++	uint64_t	bytes_rx;	/*  16: every packet */
++	uint64_t	packets_rx;	/*  24: every packet */
++	uint32_t	rx_queue;	/*  32: backlog depth, fluctuates */
++	uint8_t		__pad1[24];	/*  36..59 */
++	uint32_t	last_ack;	/*  60: written per ACK */
++	/* cacheline 1: tx + congestion control (packet-path private) */
++	uint64_t	bytes_tx;	/*  64: every packet */
++	uint64_t	packets_tx;	/*  72: every packet */
++	uint32_t	cwnd;		/*  80: on every ACK */
++	uint32_t	ssthresh;	/*  84: on loss */
++	uint32_t	rtt_us;		/*  88: on every ACK */
++	uint32_t	retrans;	/*  92: on timeout */
++	uint32_t	__pad2[8];	/*  96..127 */
++	/* cacheline 2: config, set at setup, read by everybody */
++	uint16_t	mss;		/* 128 */
++	uint8_t		snd_wscale;	/* 130 */
++	uint8_t		rcv_wscale;	/* 131 */
++	uint32_t	keepalive_int;	/* 132 */
++	uint32_t	mark;		/* 136: firewall mark */
++	uint32_t	priority;	/* 140: traffic class */
++	uint32_t	__pad3[12];	/* 144..191 */
++} __attribute__((aligned(64)));
 +
-+define perf-die-chain
-+  if $argc < 2
-+    printf "usage: perf-die-chain <function> <die variable> [iterations]\n"
-+  else
-+    frame function $arg0
-+    if $argc == 3
-+      set $perf_die_chain_n = $arg2
-+    else
-+      set $perf_die_chain_n = 10
-+    end
-+    set $perf_die_chain_head = $pc
-+    set $perf_die_chain_i = 0
-+    while $perf_die_chain_i < $perf_die_chain_n
-+      # Pointer type DIEs have no DW_AT_name, so dwarf_diename() can
-+      # return NULL: printf %s of it would error out and abort this
-+      # batch script, handle it.
-+      set $perf_die_chain_name = (char *) dwarf_diename($arg1)
-+      printf "chain[%d] die=%p addr=%p cu=%p off=0x%lx tag=%d name=", \
-+	     $perf_die_chain_i, $arg1, $arg1->addr, $arg1->cu, \
-+	     ((Dwarf_Off) dwarf_dieoffset($arg1)), ((int) dwarf_tag($arg1))
-+      if $perf_die_chain_name == 0
-+	printf "(null)\n"
-+      else
-+	printf "%s\n", $perf_die_chain_name
-+      end
-+      until *$perf_die_chain_head
-+      set $perf_die_chain_i = $perf_die_chain_i + 1
-+    end
-+  end
-+end
++/* Volatile so every iteration really loads and stores. */
++static volatile struct net_conn conn;
++/* Keeps the reader checksums alive after the threads join. */
++static volatile unsigned long fs_sink;
 +
-+document perf-die-chain
-+Print the DIE chain being walked by a DWARF type chasing loop.
-+usage: perf-die-chain <function> <die variable> [iterations]
-+  perf-die-chain die_get_pointer_type type_die
-+  perf-die-chain __die_get_real_type vr_die
-+  perf-die-chain die_get_real_type vr_die
-+end
++static volatile sig_atomic_t done;
 +
-+define perf-die-chain-all
-+  if $argc == 0
-+    set $perf_die_chain_n = 10
-+  else
-+    set $perf_die_chain_n = $arg0
-+  end
-+  if $_any_caller_is("die_get_pointer_type", 20)
-+    printf "stuck in die_get_pointer_type():\n"
-+    perf-die-chain die_get_pointer_type type_die $perf_die_chain_n
-+  else
-+    if $_any_caller_is("__die_get_real_type", 20)
-+      printf "stuck in __die_get_real_type():\n"
-+      perf-die-chain __die_get_real_type vr_die $perf_die_chain_n
-+    else
-+      if $_any_caller_is("die_get_real_type", 20)
-+        printf "stuck in die_get_real_type():\n"
-+        perf-die-chain die_get_real_type vr_die $perf_die_chain_n
-+      else
-+        printf "not in a DWARF type chaser, try: bt\n"
-+      end
-+    end
-+  end
-+end
++/*
++ * One cacheline each: sum before cpu, or the implicit padding after cpu
++ * pushes the struct past 64 bytes, and aligning it to a cacheline then
++ * rounds it up to 128.
++ */
++struct fs_reader {
++	pthread_t	thread;
++	unsigned long	sum;
++	int		cpu;
++	char		__pad[64 - sizeof(pthread_t) - sizeof(unsigned long) - sizeof(int)];
++} __attribute__((aligned(64)));
 +
-+document perf-die-chain-all
-+Find which DWARF type chaser the process is in and print the DIE chain.
-+usage: perf-die-chain-all [iterations]
-+end
-+
-+define perf-dso
-+  if $_any_caller_is("find_data_type", 20)
-+    frame function find_data_type
-+    # REFCNT_CHECKING, implied by an ASan/LSan build, wraps struct map and
-+    # struct dso in a proxy keeping the real object in ->orig, the dso being
-+    # map->orig->dso->orig there; struct symbol is not wrapped, so sym->name
-+    # needs no ->orig.  There is no way to ask gdb which layout it is looking
-+    # at, so walk each candidate until one evaluates.  Requiring gdb's Python
-+    # here adds nothing: $_any_caller_is() is one of its functions already.
-+    python
-+import gdb
-+
-+dso = None
-+for expr in ("dloc->ms->map->dso->name",
-+             "dloc->ms->map->orig->dso->orig->name"):
-+    try:
-+        gdb.parse_and_eval(expr)
-+        dso = expr
-+        break
-+    except gdb.error:
-+        pass
-+
-+if dso is None:
-+    print("dso=(no such member in struct map)")
-+else:
-+    gdb.execute('printf "dso=%s ip=0x%lx sym=%s\\n", ' + dso +
-+                ', dloc->ip, dloc->ms->sym ? dloc->ms->sym->name : "(no symbol)"')
-+    end
-+  else
-+    printf "not in find_data_type()\n"
-+  end
-+end
-+
-+document perf-dso
-+Print the dso, ip and symbol of the data location being resolved.
-+end
-diff --git a/tools/perf/scripts/perf-stuck.sh b/tools/perf/scripts/perf-stuck.sh
-new file mode 100755
-index 0000000000000000..f9b545c107905a4e
---- /dev/null
-+++ b/tools/perf/scripts/perf-stuck.sh
-@@ -0,0 +1,193 @@
-+#!/bin/bash
-+# SPDX-License-Identifier: GPL-2.0
-+#
-+# perf-stuck - tell a spinning perf apart from a blocked or recursing one
-+#
-+# Arnaldo Carvalho de Melo <acme@redhat.com>
-+#
-+# PROTOTYPE: wants to become a first class 'perf stuck' command, sampling
-+# a process from inside perf, with the knowledge of perf's phases and of
-+# the DWARF type chasing loops built in, instead of poking /proc and
-+# shelling out to gdb.
-+#
-+# Samples /proc/<pid> at a fixed interval and prints the CPU time used
-+# since the previous sample, the [stack] mapping start and size, and the
-+# last line of a progress log when one is given, e.g. the stderr of
-+# 'perf report --progress': burning a full interval with a constant
-+# stack is a loop, a [stack] start moving down is runaway recursion.
-+#
-+# With -g it runs gdb (perf-stuck.gdb) when no progress is made for two
-+# consecutive samples, printing the DIE chain a DWARF type chase is
-+# walking.
-+#
-+# usage: perf-stuck.sh [options] <pid|process-name>
-+
-+set -u
-+
-+usage() {
-+	cat <<-EOF
-+	usage: perf-stuck.sh [options] <pid|process-name>
-+
-+	  -i <secs>   sampling interval (default: 10)
-+	  -n <count>  stop after this many samples (default: watch till it exits)
-+	  -l <file>   progress log, its last line is printed with every sample
-+	  -g          run gdb with perf-stuck.gdb when no progress is made for
-+	              two consecutive samples, writing the output to a temp file
-+	  -x <file>   use this gdb command file instead of perf-stuck.gdb
-+	  -h          this help
-+	EOF
-+	exit "${1:-0}"
++static void sighandler(int sig __maybe_unused)
++{
++	done = 1;
 +}
 +
-+interval=10
-+count=0
-+progress_log=
-+use_gdb=
-+gdb_cmds=
++static void pin_to_cpu(int cpu)
++{
++	cpu_set_t set;
 +
-+while getopts "i:n:l:gx:h" opt; do
-+	case "$opt" in
-+	i) interval=$OPTARG ;;
-+	n) count=$OPTARG ;;
-+	l) progress_log=$OPTARG ;;
-+	g) use_gdb=1 ;;
-+	x) gdb_cmds=$OPTARG ;;
-+	h) usage 0 ;;
-+	*) usage 1 ;;
-+	esac
-+done
-+shift $((OPTIND - 1))
++	/* There may be no second CPU in a restricted cpuset. */
++	if (cpu < 0)
++		return;
 +
-+[[ "$interval" =~ ^[0-9]+$ ]] && [ "$interval" -gt 0 ] ||
-+	{ echo "-i wants a positive integer, got '$interval'"; usage 1; }
-+[[ "$count" =~ ^[0-9]+$ ]] ||
-+	{ echo "-n wants a non-negative integer, got '$count'"; usage 1; }
-+[ -n "$gdb_cmds" ] && [ -z "$use_gdb" ] && { echo "-x needs -g"; usage 1; }
++	CPU_ZERO(&set);
++	CPU_SET(cpu, &set);
++	/* Best effort: in a restricted cpuset this fails and the thread runs unpinned. */
++	pthread_setaffinity_np(pthread_self(), sizeof(set), &set);
++}
 +
-+[ $# -eq 1 ] || usage 1
++/*
++ * Connection lookup, as a load balancer or 'ss' scrape would do it: the
++ * reads go straight to the global, this file is built -O0 and a local
++ * pointer would be reloaded from a stack slot, a form the data type
++ * resolver does not track.
++ */
++static void *reader_fn(void *arg)
++{
++	struct fs_reader *r = arg;
++	unsigned long sum = 0;
 +
-+if [[ "$1" =~ ^[0-9]+$ ]]; then
-+	pid=$1
-+else
-+	# Resolve the name against the caller's own processes: as root,
-+	# unscoped pgrep picks the first match of any user, e.g. one planted
-+	# to get gdb attached to it, use an explicit pid to look at a perf of
-+	# another user.
-+	pid=$(pgrep -x -u "$(id -u)" -- "$1" | head -1)
-+	[ -n "$pid" ] || { echo "no process named '$1' owned by $(id -un)"; exit 1; }
-+fi
++	pthread_setname_np(pthread_self(), "fs-reader");
++	pin_to_cpu(r->cpu);
 +
-+[ -d /proc/"$pid" ] || { echo "no process $pid"; exit 1; }
++	while (!done) {
++		sum += conn.saddr + conn.daddr + conn.sport + conn.dport +
++		       conn.state + conn.protocol;
++		sum += conn.mss + conn.snd_wscale + conn.rcv_wscale +
++		       conn.keepalive_int + conn.mark + conn.priority;
++	}
++	r->sum = sum;
++	return NULL;
++}
 +
-+if [ -n "$use_gdb" ]; then
-+	# Fail before watching, not two samples in when -g would fire.
-+	command -v gdb > /dev/null || { echo "gdb not found, -g needs it"; exit 1; }
-+	[ -z "$gdb_cmds" ] && gdb_cmds=$(dirname "$0")/perf-stuck.gdb
-+	[ -r "$gdb_cmds" ] || { echo "cannot read $gdb_cmds"; exit 1; }
-+fi
++static int false_sharing(int argc, const char **argv)
++{
++	double sec = 2.0;
++	int nreaders = 0, nr_allowed = 0, err = 1;
++	int *allowed = NULL, nallowed = 0;
++	cpu_set_t set;
++	int nr_mask_bits = sizeof(set) * 8 < CPU_SETSIZE ? sizeof(set) * 8 : CPU_SETSIZE;
++	struct fs_reader *readers = NULL;
++	int i, writer_cpu;
++	unsigned long n = 0;
 +
-+hz=$(getconf CLK_TCK)
-+psz=$(getconf PAGESIZE)
-+prev_cpu=
-+prev_stack=
-+prev_progress=
-+stuck=0
-+gdb_done=
-+nsample=0
++	pthread_setname_np(pthread_self(), "fs-writer");
++	if (argc > 0)
++		sec = atof(argv[0]);
++	if (!(sec > 0.0)) {
++		fprintf(stderr, "Error: seconds (%f) must be > 0\n", sec);
++		return 1;
++	}
++	if (argc > 1)
++		nreaders = atoi(argv[1]);
 +
-+# The command line is whatever the process was started with, so drop the
-+# control characters from it: a process started with escape sequences in
-+# its arguments, e.g. one replaying a log line, would otherwise get them
-+# replayed on the terminal of whoever runs this.
-+cmdline=$(tr '\0' ' ' < /proc/"$pid"/cmdline | tr -d '[:cntrl:]')
++	/*
++	 * A connection that just got established: identity and config fixed
++	 * from here on, counters at zero.
++	 */
++	conn.saddr = 0x0a000001;	/* 10.0.0.1 */
++	conn.daddr = 0x0a000002;	/* 10.0.0.2 */
++	conn.sport = 54321;
++	conn.dport = 443;
++	conn.state = 1;			/* ESTABLISHED */
++	conn.protocol = 6;		/* TCP */
++	conn.mss = 1448;
++	conn.snd_wscale = 7;
++	conn.rcv_wscale = 7;
++	conn.keepalive_int = 7200;
++	conn.cwnd = 10;
++	conn.ssthresh = 65535;
++	conn.rtt_us = 50;
 +
-+echo "watching $pid ($cmdline) every ${interval}s"
++	/*
++	 * Pin against the allowed set, restricted cpusets still spread the threads.
++	 * The whole mask is looked at, not the CPU count: the count can be lower
++	 * than the highest ID in it, as when a cpuset allows only high numbered
++	 * CPUs, and then no allowed CPU would be found at all.
++	 */
++	if (sched_getaffinity(0, sizeof(set), &set) == 0) {
++		for (i = 0; i < nr_mask_bits; i++) {
++			if (!CPU_ISSET(i, &set))
++				continue;
++			nr_allowed++;
++		}
++		allowed = malloc(nr_allowed * sizeof(int));
++		if (allowed == NULL) {
++			fprintf(stderr, "Error: malloc failed for CPU list\n");
++			return 1;
++		}
++		for (i = 0; i < nr_mask_bits; i++) {
++			if (CPU_ISSET(i, &set))
++				allowed[nallowed++] = i;
++		}
++	}
++	if (nreaders <= 0) {
++		/* By default leave one CPU for the packet path, up to 4 readers. */
++		nreaders = nallowed > 1 ? nallowed - 1 : 1;
++		if (nreaders > 4)
++			nreaders = 4;
++	}
 +
-+while :; do
-+	if [ ! -d /proc/"$pid" ]; then
-+		echo "$(date +%T) process gone"
-+		break
-+	fi
++	signal(SIGINT, sighandler);
++	signal(SIGALRM, sighandler);
 +
-+	# Field 2, the command name, is in parentheses and can contain
-+	# spaces, so drop it together with the pid before splitting so the
-+	# fields line up.  %d keeps the CPU time out of scientific
-+	# notation, that bash arithmetic can't parse past six digits.
-+	if ! stat_line=$(awk '{ sub(/^[^ ]+ \(.*\) /, "");
-+			       printf "%s %d %d\n", $1, $12 + $13, $22 }' \
-+			 /proc/"$pid"/stat 2>/dev/null); then
-+		echo "$(date +%T) process gone"
-+		break
-+	fi
++	readers = calloc(nreaders, sizeof(*readers));
++	if (readers == NULL) {
++		fprintf(stderr, "Error: calloc failed for %d readers\n", nreaders);
++		goto out;
++	}
++	for (i = 0; i < nreaders; i++) {
++		int cpu = nallowed > 1 ? allowed[(i + 1) % nallowed] : -1;
 +
-+	# The process can be gone between the check above and this read, in
-+	# which case there is nothing to report: 'set -u' would otherwise
-+	# turn the unbound fields into an aborted script.
-+	if [ -z "$stat_line" ]; then
-+		echo "$(date +%T) process gone"
-+		break
-+	fi
++		readers[i].cpu = cpu;
++		if (pthread_create(&readers[i].thread, NULL, reader_fn, &readers[i])) {
++			fprintf(stderr, "Error: failed to create reader %d\n", i);
++			done = 1; // Ensure started threads terminate.
++			nreaders = i;
++			goto out_join;
++		}
++	}
++	writer_cpu = nallowed > 0 ? allowed[0] : -1;
++	if (nallowed == 1)
++		fprintf(stderr, "Warning: single CPU allowed, no cross-CPU traffic expected\n");
++	if (writer_cpu >= 0)
++		pin_to_cpu(writer_cpu);
 +
-+	stat=($stat_line)
-+	state=${stat[0]}
-+	cpu=${stat[1]}
-+	# field 24 of /proc/<pid>/stat, the resident set size in pages
-+	rss=$(( stat[2] * psz / 1024 ))
++	/*
++	 * The packet path: receive, acknowledge, transmit, repeat; every 64th
++	 * packet simulates a loss so ssthresh/retrans get sampled too.
++	 */
++	if (sec < 1.0) {
++		useconds_t usecs = (useconds_t)(sec * 1000000.0);
 +
-+	stack=$(awk '/\[stack\]/{print $1; exit}' /proc/"$pid"/maps 2>/dev/null)
-+	if [ -n "$stack" ]; then
-+		stack_start=0x${stack%-*}
-+		stack_size=$(( 0x${stack#*-} - stack_start ))
-+		stack_txt="$stack size=$((stack_size / 1024))kB"
-+	else
-+		stack_start=
-+		stack_txt="-"
-+	fi
++		ualarm(usecs > 0 ? usecs : 1, 0);
++	} else
++		alarm((unsigned int)sec);
++	while (!done) {
++		conn.bytes_rx += conn.mss;
++		conn.packets_rx++;
++		conn.rx_queue = (uint32_t)(n & 0x3f);
++		conn.last_ack = (uint32_t)n;
++		conn.bytes_tx += conn.mss;
++		conn.packets_tx++;
++		conn.cwnd = 10 + (n & 15);
++		conn.rtt_us = 50 + (n & 7);
++		if ((n & 63) == 0) {
++			conn.ssthresh = conn.cwnd / 2;
++			conn.retrans++;
++		}
++		n++;
++	}
++	err = 0;
++out_join:
++	for (i = 0; i < nreaders; i++) {
++		if (readers[i].thread) {
++			pthread_join(readers[i].thread, /*retval=*/NULL);
++			fs_sink += readers[i].sum;
++		}
++	}
++	fs_sink += (unsigned long)(conn.bytes_rx + conn.bytes_tx + n);
++	free(readers);
++out:
++	free(allowed);
++	return err;
++}
 +
-+	progress=
-+	[ -n "$progress_log" ] && [ -s "$progress_log" ] && progress=$(tail -1 -- "$progress_log")
-+
-+	if [ -n "$prev_cpu" ]; then
-+		cpu_delta=$(( cpu - prev_cpu ))
-+		# No progress log, or one with nothing written to it yet, leaves
-+		# no progress to look at, so count the samples that show none:
-+		# -g then looks at where the process is after two intervals.
-+		# Otherwise count the repeats of the same last line.
-+		if [ -z "$progress" ] || [ "$progress" = "$prev_progress" ]; then
-+			stuck=$((stuck + 1))
-+		else
-+			stuck=0
-+			gdb_done=
-+		fi
-+		stuck_txt="stuck=${stuck}"
-+		[ "$stack_start" != "$prev_stack" ] && stuck_txt="$stuck_txt STACK"
-+	else
-+		cpu_delta=0
-+		stuck_txt=""
-+	fi
-+
-+	printf '%s state=%s cpu=+%d (%d.%02ds) rss=%dkB stack=%s %s %s\n' \
-+	       "$(date +%T)" "$state" "$cpu_delta" \
-+	       $(( cpu_delta / hz )) $(( (cpu_delta % hz) * 100 / hz )) \
-+	       "$rss" "$stack_txt" "$stuck_txt" "${progress:-(no progress log)}"
-+
-+	if [ -n "$use_gdb" ] && [ -z "$gdb_done" ] && [ "$stuck" -ge 2 ]; then
-+		gdb_log=$(mktemp /tmp/perf-stuck-gdb.XXXXXX)
-+		# The gdb script makes inferior calls, and a call into a perf
-+		# wedged in a loop never returns, so bound the run; SIGINT
-+		# releases the inferior instead of leaving perf stopped.
-+		timeout --signal=INT 30 gdb -p "$pid" -batch -x "$gdb_cmds" -ex bt \
-+		    -ex 'perf-die-chain-all' -ex perf-dso -ex detach > "$gdb_log" 2>&1
-+		gdb_done=1
-+		echo "... gdb output of $pid in $gdb_log"
-+	fi
-+
-+	prev_cpu=$cpu
-+	prev_stack=$stack_start
-+	prev_progress=$progress
-+
-+	nsample=$((nsample + 1))
-+	[ "$count" -gt 0 ] && [ "$nsample" -ge "$count" ] && break
-+
-+	sleep "$interval"
-+done
++DEFINE_WORKLOAD(false_sharing);
 -- 
 2.55.0
 
