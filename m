@@ -1,76 +1,64 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87E4047DD78
-	for <linux-perf-users@vger.kernel.org>; Fri,  2 Oct 2026 10:34:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A28E347F3A1
+	for <linux-perf-users@vger.kernel.org>; Fri,  2 Oct 2026 10:35:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790937289; cv=none; b=rBza5pp9AA7S/srG/+m5yr1vYGtICWFV3mTFt/PwCR6T+J9fJJHwoCUeVKqQbaLYt3a5QQlrA1MaPwOG1mnHprrV13Db4fhIsKlU9xck7fyItfUFPqQ07vBrXgswEBxACj8Xf47fQxpbkqXBgB0JDKYNq+JRxH+MWYgY9yce07Y=
+	t=1790937352; cv=none; b=uaBqq5vBD/J4iAfxI4p3Sq/vKOs2s82bOVpdAZZUY+WJmiT0qvJN4DcPq2OzrVmwsMIPj/GJf7POjBBZN2P7UsCcnkDiWr+KJ/0+rqcG78ftX5sdmMXzRFjws6CsMM4C6bTXn6Dr/If2J1FR3W7IU2MabZirh3FE0x200c7kN9s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790937289; c=relaxed/simple;
-	bh=SywR1lfbmaXWFBHdlMiL3aAkD12tOWO3YU0FUQJ7120=;
+	s=arc-20240116; t=1790937352; c=relaxed/simple;
+	bh=JJo/2/Uj53BOwNUy6ETaLity0Zfj3oqKk8OJsOqczA4=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=UgQK9hEAZOJ3HcQFSEkVuIL3EVI9NA6M4zNhlqdwy8DvqKbMHWkYA049v30qx83W+gr0Cs3KtrjgW4GHBMTwqfnNa3XbUVTNLgAcJ8xDMZ0rmiNw9tfFScz2RpPr5jCUNPtlisOOo0nTdxb7tunE2IPmwG0gtJG7se9jtfuCkOY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cdOMdd6Q; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=XzBzT1S0DDSqp7AyQMnw2QpbUYKHNSMyiBeRyNIaXJWDXQlfbUitkqu1EfIy/sS+fSsC39HJg3yevtXAOTgQcP1/l1XbWiu6YjCc5nD1r01fFtjEmiBRzd6CIUmF08LMQ2QiX/Gs2vw8gXwP3jSzg65VuQBhDtYdTh0zylyn7bo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GU6OmXpe; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cdOMdd6Q"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 02A901F000FF;
-	Fri,  2 Oct 2026 10:34:47 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GU6OmXpe"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 36C901F00893;
+	Fri,  2 Oct 2026 10:35:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1790937288;
-	bh=wRE1RrDXNnrMYy4jiJj3lJmWWK9iGW+xAYKd4HV3u3M=;
+	s=k20260515; t=1790937350;
+	bh=JJo/2/Uj53BOwNUy6ETaLity0Zfj3oqKk8OJsOqczA4=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=cdOMdd6Qt/lqznRbR4W3P+Y/5Ja09fQPp0RvgmSUUBLcr9uzWNxdhsthE3NouGCa5
-	 n5aLvsxHEWX4Btpmcsxgx/ZCfWxnvtI98GBQB+siDBHvTxiYsEPjxIrkcqP3mKgQn2
-	 PO89tH3kzh89CfgVcrD9rt1sdMuXsqDLz0ZLE+7RTuONKY52aOIUIOSZ78aiwcV+iJ
-	 o2xEy+JTofxs+tJ3KwdH2tryh+xmnYTzd9x05Ni9dkYIhEvJteE9tvIAtq1L64APUP
-	 Hyq0enuwdVMzP1J2RuUKrxw1jN+ozuT6nBijKWY6ORRzBygy2jX1U/3eQiaN1ef1Hq
-	 Y2ud/9TBf+VmQ==
+	b=GU6OmXpec/DS5pobpuFsQAhjJXONARrHAnfjZOuHclRtVT7hIx3zBSsCcPj1tpU5x
+	 TqCGA0GvpGLdOalrVFV+uYNGpr2TBmpCUDSKr+1oCvVPkRaJJzlOcp22HByx+c80Dn
+	 z9AeZbu9w8f8ji7HfCQweEP/f/Jub/ZaKNFSIshItuqdKdo+IHNkpG12B5Sh4U+E04
+	 L+RIWgnh+wYi7vLSHiYnuHEFqhwcjf+/QDhWto2AFd+CL5D1dQLMCuiSgwWW5XybRE
+	 zsN3ftCFLWrfYkWDjOmEVIJVbk1ZwY4nwGCdwM7nDN9IS7Sdrkegup5p6F6p4wJFeF
+	 5PD9kv0GqFEnA==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v8 8/9] perf scripts: Add perf-stuck, to tell where a
- running perf is stuck
+Subject: Re: [PATCH 3/4] perf: arm_pmu: Add workaround for FUJITSU-MONAKA
+ Erratum E#030002
 Reply-To: sashiko-reviews@lists.linux.dev
-To: "Arnaldo Carvalho de Melo" <acme@kernel.org>
+To: "Tomohiro Misono" <misono.tomohiro@fujitsu.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20261002102110.27587-9-acme@kernel.org>
-References: <20261002102110.27587-1-acme@kernel.org>
- <20261002102110.27587-9-acme@kernel.org>
+In-Reply-To: <20261002-monaka-fix-for-upstream-v1-3-4aec0b0cbe34@fujitsu.com>
+References: <20261002-monaka-fix-for-upstream-v1-0-4aec0b0cbe34@fujitsu.com>
+ <20261002-monaka-fix-for-upstream-v1-3-4aec0b0cbe34@fujitsu.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Fri, 02 Oct 2026 10:34:47 +0000
-Message-Id: <20261002103448.02A901F000FF@smtp.kernel.org>
+Date: Fri, 02 Oct 2026 10:35:49 +0000
+Message-Id: <20261002103550.36C901F00893@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-> From: Arnaldo Carvalho de Melo <acme@redhat.com>
+> FUJITSU-MONAKA Erratum E#030002 affects FUJITSU-MONAKA CPU.
 >=20
-> A perf that takes forever is hard to tell apart from one stuck in a
-> loop, and there is no way to see where without attaching gdb.
-> perf-stuck.sh samples a running process' /proc entries and its progress
-> line at a fixed interval, and with -g runs gdb (perf-stuck.gdb, adding
-> the perf-die-chain command) when no progress is made across two
-> samples, printing the DIE chain a DWARF type chase is stuck in.
+> On affected FUJITSU-MONAKA CPUs, after a PMU event counter is
+> stopped at a value just before overflow, an overflow might still
+> be incorrectly detected, resulting interrupt storm in some case.
 >=20
-> It is a prototype: the plan is to turn it into a first class 'perf
-> stuck' command.  The process name is resolved with pgrep among the
-> caller's own processes only, as root an unscoped one would attach gdb
-> to the first process of any user with a matching name.
+> Work around the erratum by avoiding programming PMU event counters
+> with values within five counts of overflow.
 >=20
-> -i and -n are now validated instead of failing later inside the
-> sampling loop, -x now requires -g and gets the same readability check
-> as the default gdb command file, and gdb_done is cleared whenever
-> progress resumes, so -g can fire again on a later stall instead of at
-> most once per run.
->=20
-> Assisted-by: LLM
-> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+> Signed-off-by: Tomohiro Misono <misono.tomohiro@fujitsu.com>
 
 Sashiko has reviewed this patch and found no issues. It looks great!
 
 --=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261002102110.2758=
-7-1-acme@kernel.org?part=3D8
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261002-monaka-fix=
+-for-upstream-v1-0-4aec0b0cbe34@fujitsu.com?part=3D3
 
