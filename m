@@ -1,194 +1,209 @@
-Received: from mail-dl2-f43.google.com (mail-dl2-f43.google.com [74.125.229.171])
+Received: from mta0.migadu.com (out-142.mta0.migadu.com [91.218.175.142])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E77E385D9D
-	for <linux-perf-users@vger.kernel.org>; Thu,  1 Oct 2026 23:46:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.229.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF5A5361963
+	for <linux-perf-users@vger.kernel.org>; Fri,  2 Oct 2026 04:36:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.142
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790898388; cv=none; b=ha4vnYaQyOM6SAxv4ZO17aAbIDsRg8Jse0BO3ooYJsaZ5H9H9FWZtVxFK7pDWz9KEXd8Cz9OXfYk9oJtR+6uXEG9adr54F5q6EVm7NYXP+VfZ53I69cQPUMsnrrZuzzFv3l5XFCKdfGI0wmyqJz42k0kNC1yI5a8IrA2lIqEmKY=
+	t=1790915803; cv=none; b=n6SgkujcsGI0cTtm3+BBxeGc9uVkEak+J+xNUGff/OZBshR6iu1gWxwgfDhY8maZGvvW+BWtZ7OntmrJFHiWpuTq3Fd+0L0SMp6gY858upsDsqkssFdxKFHwj1BsIfCimMY24/DTBvljrYBxAQMk6Iwe+hbW5bt97vZK4sOGrbA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790898388; c=relaxed/simple;
-	bh=Whjk9IC5hygHpAH3BmB9KIBiB7myeCeEHo2qEY17RHc=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=OCJ2SLCL5DfKTDhs3bC8Vzo39CvNFvBiYKFythWmrH7s7tolTtXK4F43Sli5A12yLLIdvDRqxgf9ZHKReGvtSX42vR6WG4yV3rMjY8njxnXwn4dVaUurSHMxTabEJfyxhbKwjg2CpvLssQwRH3Po8AsgL0UWe1D5SGxbO3h5w9Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=euEe1hdh; arc=none smtp.client-ip=74.125.229.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1790915803; c=relaxed/simple;
+	bh=y/0CXx9eIXXSUi0htzgjyz98uoanzac/KLtq3JYsrjo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=tttTR5FyR0svX8ZXGyjTyMM9XDMiHSGpKM4ogrF5/j3ItVipqVTyRu6QJTJ2sZOtNp35rNpQmsArYqWXYgOfw+LzJGGWGWT8mZ+QyrZ/AdJ8M2m2UZIebo8JuviBH+ucqVZI0xiNR8BJkDJiyC+7j1Bexv5FNhLYUyU8m7wge7k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=xP7aSUJC; arc=none smtp.client-ip=91.218.175.142
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="euEe1hdh"
-Received: by mail-dl2-f43.google.com with SMTP id a92af1059eb24-142dd046b87so5611984c88.2
-        for <linux-perf-users@vger.kernel.org>; Thu, 01 Oct 2026 16:46:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1790898386; x=1791503186; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=h2hby3hPpEJUKa8O9qSBl+BlKsHlHonnOrzx+w19uMQ=;
-        b=euEe1hdhF6VfSCJaFC3mITA/GfSSHXHztkyVXq/xe1bHJR54WDJmEODB8IAMYdP8Zs
-         vUhM9NOsgWba/HE09LXsv/PRB6DL8i7CTo+H0Zyiemnjy4Mr9NhFSYptrCoxdg8tGA3Z
-         BmoiJWdx0aiK3ogTp3m89tfOlUDZsKUvnghiP4hxXABflBetg9hFZ5OQVwWJYcPvssPr
-         ayNyEBld2HJBpnCtOtdGVl15SnyHBEhkdovuWl6wlGZ1ejn2mhqYm86voMOIeMHrpmcY
-         H+RK8vpwJvXXXgvcqbIt7UldFZ9GHO98yMdpQKoMQ8Hci2OFWKtJR+ymtro9Vvf97Uci
-         8h7Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1790898386; x=1791503186;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=h2hby3hPpEJUKa8O9qSBl+BlKsHlHonnOrzx+w19uMQ=;
-        b=BIS/yOLNq9qdB6tmPh3FnVkmgGfUaGwenQRSvfRo1lx0tAYiVLM6mZKHh+/3/f9fcr
-         0bvK+pUs+zj8vpV8Eg2YY1wmr4NzHuzb6uXzcYJSrv6u6oIpsV3rGo1XCwKgE9gjxDNl
-         IlRy4jyUheDIgCpCnTP+X7R2ogZEkkWQfQFpvTYeK+WD5MB+t/3Qu8LkkaHgWFhTOXl3
-         v/CwsbqiawupVY9YpfY0fV4jr2LeLMSk4sDxJE34Akxb/fCWzAdJoj442NRK2BEqgnJM
-         yjzBZKHwyqqs5gTFRqZPnxwG9KVeWUZHBr4yVfUSFPt6D9zt2K37I0mUOEfKrFr6bi9b
-         UNvQ==
-X-Forwarded-Encrypted: i=1; AKwUvBzlkL/6PuCpZc1pOB5lOhSOhJhTkqEmnRGKYODoxDCvQcJieWvzEw8fT1LLhX6vFcDxORh+gvj2L3QqocrBYQ0P@vger.kernel.org
-X-Gm-Message-State: AFq9FYK15XK5AyiKw0EP3DScBgaZDdvA0YRjsVIuvpGxv95i7mpxbfFB
-	Nm/5eWt0gzjjDJyX84i251bmg77L8tLMhL2SqawMC/39WpweLLaesG+h
-X-Gm-Gg: AYBFou0e/2b1R3oyfYtkKa5Ib4nCyN47nCMUd/BpOqjXzQrHNjWw3K1uDzPB/9CkDwF
-	4y2h2+dwl80VseRh6Ey8Nmd2TGjHx62xaIsQPjAs8XSMXDp2PA6z0O5hnRFk3S1nrzLllN1h9W/
-	lMg8RayAdUV7VPBv9dXJgYOQXxnhRaIhTa4ThnhYIILZm7gBtye7L0lt824nCYqIq6gQR8PsG4r
-	8HKC3vAD/BZfpbla1+3gE42vS1omMKnfqqUsdCljD3N74Dv/ka1cqFwONZStn472QIGCQ3NgqYK
-	Y1HJ2nKg1UgRE6h/83AjveKzSyPh88Omya7SAYNxvuA0OGSS+yp5qEQuGZ8vlHTPh3Upb2c/i/g
-	wjgPR3mZfM66psBYC6GPYuRaUxQ8nR9hHU1/oupsqatgiz8OA34Vz+UO0O2SrKmaDwpTaOTRHqm
-	Zp8Y0vJiTG/vHElwJ1up6mDMiPvZ+dTirJIGIZyomIYOL5sE3gXykp4j4oC586cpw+E+757BG6i
-	Exn3VJ4
-X-Received: by 2002:a05:7022:ea8b:b0:148:302e:1bed with SMTP id a92af1059eb24-14f5c2f1505mr962254c88.38.1790898385400;
-        Thu, 01 Oct 2026 16:46:25 -0700 (PDT)
-Received: from kq.cs.ucr.edu (kq.cs.ucr.edu. [169.235.27.223])
-        by smtp.gmail.com with ESMTPSA id a92af1059eb24-14f45fedd43sm2542818c88.4.2026.10.01.16.46.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 01 Oct 2026 16:46:25 -0700 (PDT)
-From: Zhengchuan Liang <zcliangcn@gmail.com>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	James Clark <james.clark@linaro.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Ross Zwisler <zwisler@google.com>,
-	linux-perf-users@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Zhengchuan Liang <zcliangcn@gmail.com>
-Subject: [PATCH v2 1/1] perf/core: Restrict function predicates in trace event filters
-Date: Thu,  1 Oct 2026 16:46:11 -0700
-Message-Id: <e66d86bf790ce51ca865c354a9b7a716c08b552f.1790891867.git.zcliangcn@gmail.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <cover.1790891867.git.zcliangcn@gmail.com>
-References: <cover.1790891867.git.zcliangcn@gmail.com>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="xP7aSUJC"
+X-Envelope-To: linux-perf-users@vger.kernel.org
+DKIM-Signature: a=rsa-sha256; bh=y/0CXx9eIXXSUi0htzgjyz98uoanzac/KLtq3JYsrjo=;
+ c=simple/simple; d=linux.dev;
+ h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
+ t=1790915796; v=1; x=1791520596;
+ b=xP7aSUJCP1VTTt6HWpzfU6gfjbJUEIPtiK8ipSLspAPJnzEqFk/WM+JNBurF6U2QCmVsxMvG
+ 3PR1iwIg3AKQMVR7+YU7efgObTMGdGBxsTGYBdZZ+wpGtupWp9dgG2wr3Cg9QLQOQHoKY73d1nf
+ KBHl4A10s6law16XIbcTgVec=
+X-Envelope-To: linux-perf-users@vger.kernel.org
+Received: by smtp.migadu.com with ESMTPS id d68e9918b237ea7b;
+	Fri, 02 Oct 2026 04:36:36 +0000
+X-Mizu-Trace-ID: d68e9918b237ea7b
+X-Migadu-Flow: FLOW_OUT
+Message-ID: <596bfb65-db2d-413b-8039-c921031b50fd@linux.dev>
+Date: Thu, 1 Oct 2026 21:36:24 -0700
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH bpf-next v4 00/12] bpf: make the vmlinux BTF an on-demand
+ loadable module (CONFIG_DEBUG_INFO_BTF=m) to save ~5.4 MB memory
+To: Jay Wang <wanjay@amazon.com>, bpf@vger.kernel.org,
+ Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
+ Andrii Nakryiko <andrii@kernel.org>, Eduard Zingerman <eddyz87@gmail.com>,
+ Kumar Kartikeya Dwivedi <memxor@gmail.com>
+Cc: Alan Maguire <alan.maguire@oracle.com>,
+ Martin KaFai Lau <martin.lau@linux.dev>,
+ Yonghong Song <yonghong.song@linux.dev>, Jiri Olsa <jolsa@kernel.org>,
+ Quentin Monnet <qmo@kernel.org>, Nathan Chancellor <nathan@kernel.org>,
+ Nicolas Schier <nsc@kernel.org>, linux-kbuild@vger.kernel.org,
+ =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>,
+ Christian Heusel <christian@heusel.eu>, Luis Chamberlain
+ <mcgrof@kernel.org>, Petr Pavlu <petr.pavlu@suse.com>,
+ Sami Tolvanen <samitolvanen@google.com>, linux-modules@vger.kernel.org,
+ Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ linux-trace-kernel@vger.kernel.org,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
+ linux-perf-users@vger.kernel.org, Jiri Kosina <jikos@kernel.org>,
+ Benjamin Tissoires <bentiss@kernel.org>, linux-input@vger.kernel.org,
+ Tejun Heo <tj@kernel.org>, David Vernet <void@manifault.com>,
+ Andrea Righi <arighi@nvidia.com>, Changwoo Min <changwoo@igalia.com>,
+ sched-ext@lists.linux.dev, Shuah Khan <shuah@kernel.org>,
+ linux-kselftest@vger.kernel.org, Miguel Ojeda <ojeda@kernel.org>,
+ rust-for-linux@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+ linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Hazem Mohamed Abuelfotoh <abuehaze@amazon.com>,
+ Bjoern Doebel <doebel@amazon.de>, Martin Pohlack <mpohlack@amazon.de>,
+ jay.wang.upstream@gmail.com
+References: <20261001225214.12351-1-wanjay@amazon.com>
+Content-Language: en-US
+From: Ihor Solodrai <ihor.solodrai@linux.dev>
+In-Reply-To: <20261001225214.12351-1-wanjay@amazon.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Count-only perf tracepoint events can be opened without tracepoint
-permission because they do not expose raw sample data. Their
-PERF_EVENT_IOC_SET_FILTER ioctl can still pass filter expressions to the
-tracing parser.
+On 2026-10-01 3:52 p.m., Jay Wang wrote:
+> Based on and tested against bpf-next commit b5a4aa31abd6 ("bpf, cgroup:
+> Fix cgroup struct_ops query for a second attach type").
+> 
+> This series makes CONFIG_DEBUG_INFO_BTF a tristate, so that it can be
+> set to =m.  With =m the vmlinux BTF is carried by a module, btf_vmlinux,
+> that the kernel loads the first time user space asks for something that
+> needs the BTF.  On a system where nothing does, that saves ~5.4 MB of
+> RAM with a distribution config; on a system that uses BTF, it behaves as
+> with =y.  =y itself is untouched.
+> 
+> Problem
+> -------
+> 
+> The vmlinux BTF that CONFIG_DEBUG_INFO_BTF=y builds into the kernel
+> image takes ~5.4 MB of memory, resident from boot whether anything uses
+> it or not.  On small instances that is not negligible.
+> 
+> A distribution cannot simply turn it off for the users who do not need
+> it: it ships one kernel build for all its users, and BTF is not debug
+> info anymore.  CO-RE, fentry/fexit, kfuncs, struct_ops, sched_ext and
+> bpf-lsm all depend on it, so =n takes those away from everyone who does
+> use them.
+> 
+> Hence this series adds CONFIG_DEBUG_INFO_BTF=m: the BTF becomes an
+> on-demand module.  Users who never use BTF get the memory back; for
+> users who do, the first request that needs it loads it, and everything
+> works as with =y.
+> 
+> [...]
+> 
+>   Documentation/bpf/btf.rst                  |   68 ++
+>   Makefile                                   |    8 +-
+>   include/asm-generic/vmlinux.lds.h          |   32 +-
+>   include/linux/bpf.h                        |   15 +
+>   include/linux/btf.h                        |   11 +
+>   include/linux/btf_ids.h                    |    2 +-
+>   include/linux/compiler_types.h             |    2 +-
+>   include/linux/module.h                     |    2 +-
+>   include/trace/trace_events.h               |    2 +-
+>   init/Kconfig                               |    2 +-
+>   kernel/bpf/Makefile                        |    6 +-
+>   kernel/bpf/bpf_struct_ops.c                |    3 +-
+>   kernel/bpf/btf.c                           | 1085 ++++++++++++++++++--
+>   kernel/bpf/btf_vmlinux.c                   |   23 +
+>   kernel/bpf/inode.c                         |   44 +-
+>   kernel/bpf/preload/Kconfig                 |    4 +
+>   kernel/bpf/syscall.c                       |   51 +-
+>   kernel/bpf/sysfs_btf.c                     |   97 +-
+>   kernel/bpf/verifier.c                      |  172 +++-
+>   kernel/module/Kconfig                      |    2 +-
+>   kernel/module/main.c                       |    4 +-
+>   kernel/trace/bpf_trace.c                   |    3 +-
+>   kernel/trace/trace_events.c                |   10 +
+>   kernel/trace/trace_output.c                |    7 +
+>   kernel/trace/trace_probe.c                 |   16 +
+>   kernel/trace/trace_syscalls.c              |    6 +-
+>   lib/Kconfig.debug                          |   30 +-
+>   net/netfilter/Makefile                     |    6 +-
+>   net/xfrm/Makefile                          |    4 +-
+>   samples/bpf/Makefile                       |    6 +-
+>   samples/hid/Makefile                       |    6 +-
+>   scripts/Makefile.modfinal                  |   28 +-
+>   scripts/Makefile.vmlinux                   |    5 +
+>   scripts/gen-btf.sh                         |   53 +-
+>   scripts/link-vmlinux.sh                    |   25 +-
+>   scripts/package/PKGBUILD                   |    7 +
+>   scripts/package/kernel.spec                |    4 +
+>   scripts/package/mkspec                     |    7 +
+>   tools/bpf/bpftool/Makefile                 |    6 +-
+>   tools/bpf/resolve_btfids/main.c            |  217 +++-
+>   tools/perf/bpf_skel.mak                    |    8 +-
+>   tools/sched_ext/Makefile                   |    6 +-
+>   tools/testing/selftests/bpf/Makefile       |    6 +-
+>   tools/testing/selftests/hid/Makefile       |    6 +-
+>   tools/testing/selftests/sched_ext/Makefile |    6 +-
+>   45 files changed, 1936 insertions(+), 177 deletions(-)
 
-A .function operand makes the parser resolve either a numeric kernel
-address or a kernel symbol. The ioctl return value can therefore be used
-as an oracle to recover the randomized kernel text base.
+This series caught my attention because of the sheer amount of the code
+and the iteration speed. I've tried to read the cover (it was
+tiresome, please ask your "agent" to be concise), and fed the series
+to my bot.
 
-Trace events marked TRACE_EVENT_FL_CAP_ANY are different: task-local
-events may expose their raw fields to unprivileged users. Syscall
-tracepoints and uprobes deliberately use this exception, so denying every
-filter without tracepoint permission would break their ordinary filters.
+A question I had: is it really worth 2k of complicated kernel code to
+*maybe sometimes* save <10Mb of memory?
 
-Check perf_allow_tracepoint() in perf. If permission is denied, continue
-only for a task-attached TRACE_EVENT_FL_CAP_ANY event whose filter does
-not contain an unquoted .function postfix. This rejects the predicate
-before the tracing parser can resolve either form of operand. The scan
-uses the parser's quote rules, so .function inside a string operand
-remains an ordinary filter value.
+And then the bot found this:
 
-This preserves ordinary filters on task-local events whose fields are
-already available to the caller, while non-CAP_ANY filters and kernel
-address resolution remain unavailable without tracepoint permission.
+     What systemd does at every boot
 
-Fixes: e6745a4da964 ("tracing: Add a way to filter function addresses to function names")
-Cc: stable@vger.kernel.org
-Assisted-by: LLM
-Signed-off-by: Zhengchuan Liang <zcliangcn@gmail.com>
----
-Changes in v2:
-- Keep the entire fix in perf, without modifying kernel/trace/*, as
-  requested by Steven.
-- Preserve ordinary filters for task-local TRACE_EVENT_FL_CAP_ANY events
-  while rejecting their unquoted .function predicates without tracepoint
-  permission.
-- Reject all filters on other trace events without tracepoint permission.
-- Follow the tracing parser's quote rules so .function inside a string
-  operand remains an ordinary value.
+     PID1 loads and attaches a BTF-dependent LSM program at every boot
 
-v1: https://lore.kernel.org/all/95d3721fa8d4c7a4577ec14e9d7caec4fd0cefcc.1790553331.git.zcliangcn@gmail.com/
+       src/core/manager.c:1026-1059, in manager_new():
 
- kernel/events/core.c | 35 +++++++++++++++++++++++++++++++++++
- 1 file changed, 35 insertions(+)
+       if (FLAGS_SET(test_run_flags, MANAGER_TEST_RUN_MINIMAL)) {
+               ...
+       } else {
+               ...
+               (void) bpf_restrict_fs_setup(m);
+       }
 
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 634d2ccbab82..11db8689ac90 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -12251,6 +12251,33 @@ perf_event_set_addr_filter(struct perf_event *event, char *filter_str)
- 	return ret;
- }
- 
-+#ifdef CONFIG_EVENT_TRACING
-+static bool perf_event_filter_has_function(const char *filter_str)
-+{
-+	char quote = 0;
-+
-+	for (; *filter_str; filter_str++) {
-+		if (quote) {
-+			if (*filter_str == quote)
-+				quote = 0;
-+			continue;
-+		}
-+
-+		switch (*filter_str) {
-+		case '\'':
-+		case '"':
-+			quote = *filter_str;
-+			break;
-+		default:
-+			if (str_has_prefix(filter_str, ".function"))
-+				return true;
-+		}
-+	}
-+
-+	return false;
-+}
-+#endif
-+
- static int perf_event_set_filter(struct perf_event *event, void __user *arg)
- {
- 	int ret = -EINVAL;
-@@ -12264,6 +12291,14 @@ static int perf_event_set_filter(struct perf_event *event, void __user *arg)
- 	if (perf_event_is_tracing(event)) {
- 		struct perf_event_context *ctx = event->ctx;
- 
-+		ret = perf_allow_tracepoint();
-+		if (ret && (!(event->attach_state & PERF_ATTACH_TASK) ||
-+			    !(event->tp_event->flags & TRACE_EVENT_FL_CAP_ANY) ||
-+			    perf_event_filter_has_function(filter_str))) {
-+			kfree(filter_str);
-+			return ret;
-+		}
-+
- 		/*
- 		 * Beware, here be dragons!!
- 		 *
--- 
-2.25.1
+https://github.com/systemd/systemd/blob/main/src/core/manager.c#L1026-L1059
+https://github.com/systemd/systemd/blob/main/src/core/bpf-restrict-fs.c#L27-L85
+
+Do those tiny VMs that you target run systemd with BPF LSM?
+I assume you target concrete VMs, not "small instances" in a vacuum.
+
+You can check this by booting them with =m and then:
+   $ lsmod | grep btf_vmlinux
+   $ systemctl --version  # look for +BPF_FRAMEWORK
+   $ cat /sys/kernel/security/lsm
+
+If the answer is "yes" for the majority of them, the whole project is
+moot, because the module will be loaded immediately on boot.
+
+My bot found more stuff implementation-wise...
+
+I suggest to slow down, stop burning tokens for a bit, and first try
+to figure out the important details:
+   - who will actually benefit from these memory savings and do they care?
+   - is it worth it in terms of implementation complexity?
+
+Even for LLM it's easier to deal with a 100 lines of code than with 2k.
+
+pw-bot: cr
+
+>   create mode 100644 kernel/bpf/btf_vmlinux.c
+> 
+> 
+> base-commit: b5a4aa31abd6fe90009b63e35dc18c67d041ec0c
+
