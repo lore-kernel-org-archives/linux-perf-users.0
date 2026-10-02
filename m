@@ -1,30 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED95444683D;
-	Fri,  2 Oct 2026 10:21:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1136B3A6EEC;
+	Fri,  2 Oct 2026 10:21:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790936491; cv=none; b=Gw0zuIcU1afYpRD/0LBNVpeKZuP/uVXC3HeLyVYJRRYP+mG4OW9Bwizapoz78OEg6bOKoCZQCGyhMbuPlFRxC4kwHizIhcQ0csUeLsq97aCMKUny62aNEycbpRwSsBnG4X/H4KFlliR56QmCfneRjyHLN3n5OAevsGaPl2KBhsY=
+	t=1790936499; cv=none; b=FRyAb+v3dKEVrvJnfhrHnX1BYx3RwM4+J/2HZXmsHjuh7TwRVZ7btBGwKLTPoS4m3t0/aYHqBNmeCISIyJ3G+tBIv4ZwCYpycrBRbKm2zpt/ulakk579QgZaqCMagTe+lrl29j1TeE10+oXQ1amlW7/y+NKiRpx6IF9xrSVkvPQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790936491; c=relaxed/simple;
-	bh=Dyi6in+cNWRItZYyfWrZHGhI+zoJL7WiOxLyERBxVkw=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=o2T4Cdrvos+6SGYV1vNtcx18atpwjsoXJ65VSs38nuBFpb2q0vvmCJ/eF64O6nFgOOw3qk+RQQ1bHlAP4bRbKBeFO9RNy7rh2m7zwOd5nuoO3AizE1NWL1o4TwOP5EizHsYLJZtOB4aoQl1gnmBgj9Y9jbZgu0ATW0WNdtn1ge8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=c7yWX46q; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1790936499; c=relaxed/simple;
+	bh=BcKDBp0/tuqohCP4tWXyzXYGfmCGzpagjswWlJJfqd0=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=MyswhVVAl9ZvvEMKkLNGJ2hMl3454hwB9T6CtP0q0InIEST8cWqEne9XEBO6pXhK4zq/XEOwKbu6mMfcIm4bSkKOaV+86wprIrNW0cNuUKqU6yP8Zj9oEIiPzqJADd81GaD289yC2E4vxRDQVaXP+snIhUYawPPyntAfwlj8oko=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HepzrwUc; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c7yWX46q"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 136AC1F000FF;
-	Fri,  2 Oct 2026 10:21:20 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HepzrwUc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CE7481F00893;
+	Fri,  2 Oct 2026 10:21:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1790936489;
-	bh=iyd5IOvqBTDFQiuU43/QtRxGVhH8m8AX1+ryLPibNiM=;
-	h=From:To:Cc:Subject:Date;
-	b=c7yWX46q9ZZ3uT+D7xlvS4S0lPXxiT0XByHvGIIjQxxwauJmiFAcARfNlFYGNdyi6
-	 XyH4hc0N1q2FhxLqUh/OLmS5N0pPE3bC64+XdG9KiqyeQ3cM6OIeCSoDsUvTs3FRuy
-	 ZOmGiSpOCcNGem6LyukijnNpPWdzgYG2KH/2lIIfsWS2D36beRBvAGRIrj0GvneSZZ
-	 HT48fLIYiRxUmaL7i4EhR+MNs4k0Tpzvc2kYXZUBDzqcg6sQreonYOOZCdVwYJklxf
-	 y4mGN3xJpGhkRc/aHh5/9hvVvRkzBYdLCKC1N6QICR027d10JJSDiuzPf6GnmeYIrr
-	 ym4KD44cR2mBQ==
+	s=k20260515; t=1790936497;
+	bh=dRGHatdLxqJVQm7rM650Tq0H3Js2+HM8FHgq6/8hJIs=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=HepzrwUczU1yR4YhwXct13zIuL2tjPQ11zyBzmiPEAQ/E0+xApOkFBEVmodaaukjy
+	 FRO+AxfdRqAi37RFIYEDHLHugc9lQdvcBqIIyz2E7iilhPpvb3MLBks47DWd3Yze5X
+	 YUujNogNAwcG8Oh9Wdfuq23iTnKv6PGGsN/8NmRtbBjONrBUN1bUkiLB7KzgcDjAYl
+	 V7PwjsCU6SbEvn5XmdSnENZeS3B4j1ibpivHgrhsDL6zJOgaQN1TszW2pD0H/kOTTQ
+	 WQZjjLgUvP7G/KQSca+anaxOk2pXKoHAws42onTRq2Rj6nDseiP9jH8B5im6ZT9EEW
+	 Ru1YYQu4hqNWA==
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Namhyung Kim <namhyung@kernel.org>
 Cc: Ingo Molnar <mingo@kernel.org>,
@@ -36,11 +37,13 @@ Cc: Ingo Molnar <mingo@kernel.org>,
 	Clark Williams <williams@redhat.com>,
 	linux-kernel@vger.kernel.org,
 	linux-perf-users@vger.kernel.org,
-	Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH v8 0/9] perf tools: Add progress diagnostics and a false-sharing workload
-Date: Fri,  2 Oct 2026 12:21:01 +0200
-Message-ID: <20261002102110.27587-1-acme@kernel.org>
+	Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: [PATCH v8 1/9] perf config: Move perf_config__set_variable() to util/config.c
+Date: Fri,  2 Oct 2026 12:21:02 +0200
+Message-ID: <20261002102110.27587-2-acme@kernel.org>
 X-Mailer: git-send-email 2.54.0
+In-Reply-To: <20261002102110.27587-1-acme@kernel.org>
+References: <20261002102110.27587-1-acme@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -49,160 +52,225 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Hi,
+From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-This series adds progress and stuck-process diagnostics to perf, and a
-workload that makes false sharing visible to data type profiling.
+Move perf_config__set_variable() out of the 'perf config' builtin so
+that opt-in features can persist their choice from outside it, e.g.
+util/debuginfo.c writing core.debuginfod=false when the user disables
+debuginfod for the rest of the session.  The set_config() body becomes
+perf_config_set__write(), with the system_config choice as an argument,
+as the builtin's use_system_config/use_user_config statics are not
+available outside it.
 
-The changes are:
+perf_config_set__write() checked fopen() but none of the fprintf()s or
+fclose(), so a write failure after truncating the file was reported as
+success.  Harmless for the interactive 'perf config' this came from,
+but this makes it an entry point a background feature can call with no
+other feedback, so propagate those errors too.
 
-  - move perf_config__set_variable() to util/config.c and serialize config
-    parser and read-modify-write state, so non-builtin perf code can persist
-    configuration changes safely;
+Assisted-by: LLM
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+---
+ tools/perf/builtin-config.c | 70 +---------------------------------
+ tools/perf/util/config.c    | 76 +++++++++++++++++++++++++++++++++++++
+ tools/perf/util/config.h    |  2 +
+ 3 files changed, 79 insertions(+), 69 deletions(-)
 
-  - add 'perf report --progress' for stdio users, showing the current phase,
-    percentage, and counts while a session is processed;
+diff --git a/tools/perf/builtin-config.c b/tools/perf/builtin-config.c
+index cefd042e4f853466..3b074aca8d344539 100644
+--- a/tools/perf/builtin-config.c
++++ b/tools/perf/builtin-config.c
+@@ -41,37 +41,7 @@ static struct option config_options[] = {
+ 
+ static int set_config(struct perf_config_set *set, const char *file_name)
+ {
+-	struct perf_config_section *section = NULL;
+-	struct perf_config_item *item = NULL;
+-	const char *first_line = "# this file is auto-generated.";
+-	FILE *fp;
+-
+-	if (set == NULL)
+-		return -1;
+-
+-	fp = fopen(file_name, "w");
+-	if (!fp)
+-		return -1;
+-
+-	fprintf(fp, "%s\n", first_line);
+-
+-	/* overwrite configvariables */
+-	perf_config_items__for_each_entry(&set->sections, section) {
+-		if (!use_system_config && section->from_system_config)
+-			continue;
+-		fprintf(fp, "[%s]\n", section->name);
+-
+-		perf_config_items__for_each_entry(&section->items, item) {
+-			if (!use_system_config && item->from_system_config)
+-				continue;
+-			if (item->value)
+-				fprintf(fp, "\t%s = %s\n",
+-					item->name, item->value);
+-		}
+-	}
+-	fclose(fp);
+-
+-	return 0;
++	return perf_config_set__write(set, file_name, use_system_config);
+ }
+ 
+ static int show_spec_config(struct perf_config_set *set, const char *var)
+@@ -158,44 +128,6 @@ static int parse_config_arg(char *arg, char **var, char **value)
+ 	return 0;
+ }
+ 
+-int perf_config__set_variable(const char *var, const char *value)
+-{
+-	char path[PATH_MAX];
+-	char *user_config = mkpath(path, sizeof(path), "%s/.perfconfig", getenv("HOME"));
+-	const char *config_filename;
+-	struct perf_config_set *set;
+-	int ret = -1;
+-
+-	if (use_system_config)
+-		config_exclusive_filename = perf_etc_perfconfig();
+-	else if (use_user_config)
+-		config_exclusive_filename = user_config;
+-
+-	if (!config_exclusive_filename)
+-		config_filename = user_config;
+-	else
+-		config_filename = config_exclusive_filename;
+-
+-	set = perf_config_set__new();
+-	if (!set)
+-		goto out_err;
+-
+-	if (perf_config_set__collect(set, config_filename, var, value) < 0) {
+-		pr_err("Failed to add '%s=%s'\n", var, value);
+-		goto out_err;
+-	}
+-
+-	if (set_config(set, config_filename) < 0) {
+-		pr_err("Failed to set the configs on %s\n", config_filename);
+-		goto out_err;
+-	}
+-
+-	ret = 0;
+-out_err:
+-	perf_config_set__delete(set);
+-	return ret;
+-}
+-
+ int cmd_config(int argc, const char **argv)
+ {
+ 	int i, ret = -1;
+diff --git a/tools/perf/util/config.c b/tools/perf/util/config.c
+index 8fe43b032e9af88a..85e50d0a25580da0 100644
+--- a/tools/perf/util/config.c
++++ b/tools/perf/util/config.c
+@@ -12,6 +12,7 @@
+ #include "config.h"
+ 
+ #include <errno.h>
++#include <limits.h>
+ #include <stdbool.h>
+ #include <stdio.h>
+ #include <stdlib.h>
+@@ -883,6 +884,81 @@ void perf_config__exit(void)
+ 	config_set = NULL;
+ }
+ 
++int perf_config_set__write(struct perf_config_set *set,
++			   const char *file_name, bool system_config)
++{
++	struct perf_config_section *section = NULL;
++	struct perf_config_item *item = NULL;
++	int ret = 0;
++	FILE *fp;
++
++	fp = fopen(file_name, "w");
++	if (!fp)
++		return -1;
++
++	if (fprintf(fp, "# this file is auto-generated.\n") < 0)
++		ret = -1;
++
++	/* overwrite configvariables */
++	perf_config_sections__for_each_entry(&set->sections, section) {
++		if (!system_config && section->from_system_config)
++			continue;
++		if (fprintf(fp, "[%s]\n", section->name) < 0)
++			ret = -1;
++
++		perf_config_items__for_each_entry(&section->items, item) {
++			if (!system_config && item->from_system_config)
++				continue;
++			if (item->value &&
++			    fprintf(fp, "\t%s = %s\n", item->name, item->value) < 0)
++				ret = -1;
++		}
++	}
++	if (fclose(fp) != 0)
++		ret = -1;
++
++	return ret;
++}
++
++/*
++ * Set @var=@value in the config file perf is using: ~/.perfconfig or the
++ * file named by PERF_CONFIG.  Same rewrite 'perf config' does, comments
++ * are not preserved.
++ */
++int perf_config__set_variable(const char *var, const char *value)
++{
++	char path[PATH_MAX];
++	char *user_config = mkpath(path, sizeof(path), "%s/.perfconfig", getenv("HOME"));
++	const char *config_filename;
++	bool system_config;
++	struct perf_config_set *set;
++	int ret = -1;
++
++	config_filename = config_exclusive_filename ?: user_config;
++
++	/* Rewriting the system wide file keeps its entries, or it is truncated. */
++	system_config = strcmp(config_filename, perf_etc_perfconfig()) == 0;
++
++	set = perf_config_set__new();
++	if (!set)
++		goto out_err;
++
++	if (perf_config_set__collect(set, config_filename, var, value) < 0) {
++		pr_err("Failed to add '%s=%s'\n", var, value);
++		goto out_err;
++	}
++
++	if (perf_config_set__write(set, config_filename, system_config) < 0) {
++		pr_err("Failed to set the configs on %s\n", config_filename);
++		goto out_err;
++	}
++
++	ret = 0;
++out_err:
++	perf_config_set__delete(set);
++	return ret;
++}
++
+ static void perf_config_item__delete(struct perf_config_item *item)
+ {
+ 	zfree(&item->name);
+diff --git a/tools/perf/util/config.h b/tools/perf/util/config.h
+index 987b47cf54c350ba..9098f8a045850c97 100644
+--- a/tools/perf/util/config.h
++++ b/tools/perf/util/config.h
+@@ -33,6 +33,8 @@ int perf_config_scan(const char *name, const char *fmt, ...) __scanf(2, 3);
+ const char *perf_config_get(const char *name);
+ int perf_config_set(struct perf_config_set *set,
+ 		    config_fn_t fn, void *data);
++int perf_config_set__write(struct perf_config_set *set,
++			   const char *file_name, bool system_config);
+ int perf_config_int(int *dest, const char *, const char *);
+ int perf_config_u8(u8 *dest, const char *name, const char *value);
+ int perf_config_u64(u64 *dest, const char *, const char *);
+-- 
+2.55.0
 
-  - wire up 'perf report --no-progress', the counterpart of the option
-    above, for the TUI and GTK browsers, whose progress there is no other
-    way to turn off;
-
-  - add the prototype tools/perf/scripts/perf-stuck.sh helper, which samples
-    a running perf process and can invoke the accompanying GDB commands when
-    progress stops;
-
-  - add 'perf test -w false_sharing', a synthetic TCP-shaped workload with
-    identity and packet counters sharing a cacheline, and include it in the
-    data type profiling shell test.
-
-Best regards,
-
-- Arnaldo
-
-What changed from v7:
-
-  - tools/perf/util/mutex.h: the DO_ONCE() lockless fast path pairs its
-    __ATOMIC_ACQUIRE load with the __ATOMIC_RELEASE store.  sashiko, v7;
-
-What changed from v6:
-
-  - patch 1/5 split into four: the move, perf_etc_perfconfig() never
-    returning NULL, the DEFINE_MUTEX() prep and the serialization.
-    Namhyung Kim asked, v6;
-
-  - tools/perf/util/{config.c,mutex.h}: perf's own mutex type, adding
-    the DEFINE_MUTEX() initializer it lacked.  Namhyung Kim, v6;
-
-  - tools/perf/util/mutex.h: add DO_ONCE() one-time init, from the
-    kernel's once.h, moving the lazy inits in config.c to it;
-
-  - tools/perf/builtin-report.c: drop the option negation and stdio
-    hook comments Namhyung Kim asked to drop, reviewing v6;
-
-  - tools/perf/scripts/perf-stuck.gdb: break the long printf() line.
-    Namhyung Kim, reviewing v6;
-
-  - the false_sharing cset now carries the data type profiling output
-    with cacheline info.  Namhyung Kim asked for it, reviewing v6.
-
-What changed from v5:
-
-  - tools/perf/util/config.c: drop the config_file_name read in
-    bad_config(), locking would buy a consistent NULL.  Sashiko, v5;
-
-  - tools/perf/util/config.c: new config_set_mutex around the shared
-    set's init/teardown, home init via pthread_once.  Sashiko, v5;
-
-  - tools/perf/builtin-report.c, perf-report.txt: --no-progress is
-    --progress's auto negation, last wins.  Namhyung Kim, reviewing v5.
-
-What changed from v4:
-
-  - tools/perf/builtin-report.c: mark --progress PARSE_OPT_NOAUTONEG,
-    parse_long_opt() claimed --no-progress first.  Sashiko, v4;
-
-  - tools/perf/util/config.c: format the path buffer inside the critical
-    section.  Sashiko pointed out the window, reviewing v4;
-
-  - tools/perf/tests/workloads/false_sharing.c: walk every bit of the
-    affinity mask, not _SC_NPROCESSORS_CONF.  Sashiko, reviewing v4.
-
-What changed from v3:
-
-  - tools/perf/util/config.c: keep the buffer handed to the parser in
-    static storage.  Sashiko, reviewing v3;
-
-  - tools/perf/scripts/perf-stuck.gdb: perf-dso walks each dso candidate
-    until one evaluates, for REFCNT_CHECKING builds.  Sashiko, v3;
-
-  - tools/perf/tests/workloads/false_sharing.c: sum before cpu in struct
-    fs_reader, the padding after cpu rounded it to 128.  Sashiko, v3;
-
-  - tools/perf/builtin-report.c: --quiet wins over --progress, the phases
-    stay uncounted, documented next to it.  Namhyung Kim, v3;
-
-  - tools/perf/builtin-report.c, tools/perf/ui/progress.c: --no-progress
-    installs the no-op ops.  Suggested by Namhyung Kim, reviewing v3;
-
-  - tools/perf/scripts/perf-stuck.sh: check gdb is there before
-    watching.  Namhyung Kim, reviewing v3.
-
-What changed from v2:
-
-  - tools/perf/util/config.c: make perf_etc_perfconfig() total, falling
-    back to the unresolved path.  Sashiko, reviewing v2;
-
-  - tools/perf/scripts/perf-stuck.gdb: don't deref map_symbol.sym without
-    a NULL check.  Sashiko, reviewing v2;
-
-  - tools/perf/scripts/perf-stuck.gdb: note the REFCNT_CHECKING proxy
-    next to the structure walks;
-
-  - tools/perf/scripts/perf-stuck.sh: count samples with no progress to
-    look at, an empty log never fired -g;
-
-  - tools/perf/scripts/perf-stuck.sh: `--` for pgrep and tail against
-    names starting with a hyphen;
-
-  - tools/perf/scripts/perf-stuck.sh: bound the gdb run with
-    `timeout --signal=INT 30`.
-
-What changed from v1:
-
-  - avoid calling CPU_SET() with -1 when false_sharing runs with only one
-    CPU available in its affinity mask.
-
- tools/perf/Documentation/perf-report.txt      |  19 ++
- tools/perf/builtin-config.c                   |  70 +----
- tools/perf/builtin-report.c                   |   9 +
- tools/perf/scripts/perf-stuck.gdb             | 131 +++++++++
- tools/perf/scripts/perf-stuck.sh              | 193 ++++++++++++++
- tools/perf/tests/builtin-test.c               |   1 +
- tools/perf/tests/shell/data_type_profiling.sh |   9 +-
- tools/perf/tests/tests.h                      |   1 +
- tools/perf/tests/workloads/Build              |   2 +
- tools/perf/tests/workloads/false_sharing.c    | 251 ++++++++++++++++++
- tools/perf/ui/Build                           |   1 +
- tools/perf/ui/progress.c                      |   6 +
- tools/perf/ui/progress.h                      |   4 +
- tools/perf/ui/stdio/progress.c                | 162 +++++++++++
- tools/perf/util/config.c                      | 166 ++++++++++--
- tools/perf/util/config.h                      |   2 +
- tools/perf/util/mutex.h                       |  27 ++
- tools/perf/util/ordered-events.c              |  16 +-
- tools/perf/util/session.c                     |  12 +-
- 19 files changed, 982 insertions(+), 100 deletions(-)
- create mode 100644 tools/perf/scripts/perf-stuck.gdb
- create mode 100755 tools/perf/scripts/perf-stuck.sh
- create mode 100644 tools/perf/tests/workloads/false_sharing.c
- create mode 100644 tools/perf/ui/stdio/progress.c
-
-base-commit: 0ae6fc78c5ce0dfd
-v1-head: 45d7917f7e05e8a29828ed5f0bbdc94fc938f79f
-v2-head: d4f84e4de8890194924ccd897a8e6773e7d4240b
-v3-head: 485532296710225862daf8ffb19802ae327efe2a
-v4-head: 38193635508e0a5f04a6ebf70db27534b68b2d5b
-v5-head: e99bc48f6c72b9cc67b4e4143a0364acac5523bb
-v6-head: 7dc99dbb6504f199c3c39487d91370d1bbb7a827
-v7-head: b357a76666d08f74eb99c755cca41855a96f6169
---
