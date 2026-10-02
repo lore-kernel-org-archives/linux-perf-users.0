@@ -1,37 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B677B21A457;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B670D1CAA92;
 	Fri,  2 Oct 2026 18:45:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790966759; cv=none; b=YsluQyWai1yeF0OlAfXci7v2/CQ6sokUmh4PqSYq5Fkg8k/LzeRogicSVWGbtEQrJfwDrYxnIwpIlVjH+j00W3oPGCthQtN8fKFXZFVdbHQTmRFgk43WpaedT8j+rar9ZPoOFzwcOfgngQBIzFJ+67FbVgCaagEqXcSb5MYsuW4=
+	t=1790966759; cv=none; b=T86/9YzmnPr0XtoJIZm2Gdqorjb7X/R7HuUPlLdMbGXcOdNQBQ5WqFjkfASLCztt6mjTI8s00NJ0PHio3IBkUOJ9/GyhCCLT4kPQtnJPAWYewJgWhEDx2qDXaPdpKCACLspeHkGgpQf1fx7W/1GVhHBbaqFR7IXQhjQIvq3Oarw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1790966759; c=relaxed/simple;
-	bh=1buPypiXvTu/cMquRf3aPBXMbSV0t5ikFWvC350DM6g=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=h4GVNHIJbfr3Evs+zIU4l2cQJ0GIm32hLQkPVdPvqtEk1SI+7/rxhIfcIV6YGoE2m+2k1mMv1Mi+e1QhaIaH/VjsLe9LqIw0B5AjWT0hHoQ+OK0tEXLJmEG35G5gZuBOdhvymp0q0xuYia/BHgBD2zS6Ut8fPgWO6YF5uSXtrDQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rebyjWnp; arc=none smtp.client-ip=10.30.226.201
+	bh=ef4/doqkLnjyR7FrM9GrShQwWwnrw1B1ABNfQvp/c88=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=aRZpCPC0JATqXEcTqdiz8+fv+bENsm0jkCZ5c7S0GBs33x+78iTigcEMuciUWl956AjAUL9Yd6WY1iaGmIK6e0/Z6OAT6igcOFGPcUt2J0msnT+Q+o7oz6bWuZ/IWo7oBdeDGGO8/eJ28r6lFMGzjulrU5mNzeQ+wKsw6kHwIV4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZHSDleQA; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rebyjWnp"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 3DABFC2BCF4;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZHSDleQA"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 65126C4AF15;
 	Fri,  2 Oct 2026 18:45:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1790966759;
-	bh=1buPypiXvTu/cMquRf3aPBXMbSV0t5ikFWvC350DM6g=;
-	h=From:Subject:Date:To:Cc:Reply-To:From;
-	b=rebyjWnp6Qn65+Hk1sZIVuzcFLQ9ZHkaroc2hf7tOVqB4LRjuE/yWVHnPjZyMVk+l
-	 u90HUZLECDHlz0LGquNQLvgryAlvU476PuEJSa8DlVLMlZipCs9Ov6jMikHabRS1MD
-	 c4G8bFbGX1mH6IV5S48dVE9yMHOEcx2lCTm6uSwdQszcKlVQLYs9rsx+m4FJTy1vnh
-	 gWMO3/XWwljWF2yEs4vMbkiucPjgGuwokfK2QfO6Eolk28y3nyETVFlFyQMNdvYE/4
-	 IbfHORMnxV2LEC7pBZTHgGMF/Lg+MIpwVhm9ryfcHmWf4gdGCIE/O3Wo3CylgnBpY5
-	 eSvLCzSvUO1kg==
+	bh=ef4/doqkLnjyR7FrM9GrShQwWwnrw1B1ABNfQvp/c88=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
+	b=ZHSDleQAh2IoMLfTscEzArKIj+m7yLRnGn8mQdVAnHeBHimRR/LkWeewGjWkyktlD
+	 rcdBaHcm+vfr++EcvalmXjWlS4jHb1PndXFAlxGNyCmNbjUOSfZQwWY11XPkSTNbOd
+	 0JP8ELJ1Hn9syQ3OlIEC3C8/7Z8hIRGEmqFCbWd0S8hYMEjmbMrHK9TGZ9bSHRcrSW
+	 K5Y4kRPFO7Qqul46ndbYuqaOPymxO1zMgUoHQx0lRoWhvL5QZFPJPXS/R4QkHF3JYe
+	 2l0fuv9s8G2UJOXDwREe29dAX8CpVqVVVELJ9ailAdCDdvsXNMKkPgq9Ra5vUhUr6C
+	 Z+T9qMjhlwyiw==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 173F9CA5FD4;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BB13CA5FE5;
 	Fri,  2 Oct 2026 18:45:59 +0000 (UTC)
 From: Alireza Haghdoost via B4 Relay <devnull+haghdoost.uber.com@kernel.org>
-Subject: [PATCH v4 0/5] perf script: Lazy symbol loading
-Date: Fri, 02 Oct 2026 11:45:32 -0700
-Message-Id: <20261002-perf-symbol-memory-send-v4-0-0a592bb2539e@uber.com>
+Date: Fri, 02 Oct 2026 11:45:35 -0700
+Subject: [PATCH v4 3/5] perf symbols: Factor out duplicate symbol selection
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -40,11 +40,9 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAAAAAAAC/4XOTQ6CMBAF4KuYrq1pO/yIK+9hXNB2KjVCSQtEQ
- ri7BTfERF2+5M33ZiIBvcVATruJeBxssK6JIdnviKrK5obU6piJYCJjBU9pi97QMNbSPWiNtfM
- jDdhoirkyquSlAl2QeN16NPa5ypfrO4de3lF1C7c0Khu6eL5OD3zp/V8ZOGWUa4CMoeCG5edeo
- j8oV5NlZBBbpvjOiMgkRSqPhrFS5+qDgQ0jfnwDkQFMUECiIAO5YeZ5fgEYXfnVXQEAAA==
-X-Change-ID: 20260915-perf-symbol-memory-send-e7cfca1ac3d9
+Message-Id: <20261002-perf-symbol-memory-send-v4-3-0a592bb2539e@uber.com>
+References: <20261002-perf-symbol-memory-send-v4-0-0a592bb2539e@uber.com>
+In-Reply-To: <20261002-perf-symbol-memory-send-v4-0-0a592bb2539e@uber.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
  Arnaldo Carvalho de Melo <acme@kernel.org>, 
  Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
@@ -56,21 +54,21 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
  Alireza Haghdoost <haghdoost@uber.com>
 X-Mailer: b4 0.15.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=9067; i=haghdoost@uber.com;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=5684; i=haghdoost@uber.com;
  h=from:subject:message-id;
- bh=1buPypiXvTu/cMquRf3aPBXMbSV0t5ikFWvC350DM6g=;
- b=owEBiQJ2/ZANAwAIAVNlBDxl2ALYAcsmYgBqv/vZOBhoQTZSFb27FxK41gdQGZ1RvgCTb8KYA
- SFmlkdvqn6JAk8EAAEIADkWIQS5+sFL3gX/8PrA0S1TZQQ8ZdgC2AUCar/72RsUgAAAAAAEAA5t
- YW51MiwyLjUrMS4xMiwwLDMACgkQU2UEPGXYAtgEZQ/9E8v7RhKtnOCibC6Xpu7TkP6324ZXAZI
- LuL49BzaNmzvNxXP9swFK2ywtHlIWJl6zNj5ORJYCNoFGavfIC3mbVZsXYzEmGaw14KaKOr3qvx
- gSlj6yUGMeT4fzxt8amgRmt8o6PvUDyFo/eiFulDMMZ2u/oZCgygvQdgn/Fb7uomreafEmAsXUE
- cE1eGKeCJmDF7YLJEba0XDI4FO4LiyDO9OruJDaUscbp6xNeFE3qlD37lXjuBpfD3HadfWHMBqS
- tHv0Az2CCd/SOGBVi2vKSE8UEE/5Fq2rBZOdne2emEpAfMPUF15j9WJBEZDYYboezqh/VsNZOJu
- t+9CFmm/2287ev0hVVUBaSssCOW+/hrJ8VyDeDXFal8SR/cMg0Plrv38AtzmkjH4MD7GNckWVbE
- B9JzP9/N6wl3HE1ffLls8mIIwNAc7BqL+Wbs0UoGt4JqXmVruTZChbCYPBvDCVbiDh2rk4ZHBlu
- O1CyfXAMS27p/rtgolVAO2sL4b2B6cvTST6k+eQ13fgEGcOa9YgtWqiqvlQH7RHT/VIHlgASjtK
- BB7bXw+bJyZVFb9lzo3fV0LHM51sGRLnG/X4y8f8xZqdy3dSAOYlk9GOafKjmazJDMQN83p5tuV
- A6X5gRXegc+ZDgrOFPXLHNn16dzIOAa9rS495CXfIxZCZTf+SvUw=
+ bh=Ky+OYrqZSHk+7lank2LYMaDOqGiz1W+4+DT3dXV1I8E=;
+ b=owEBiQJ2/ZANAwAIAVNlBDxl2ALYAcsmYgBqv/vld6VXq+SObwVGjyI+5i9UwSavV2vxHuSqz
+ 7JftRX58bSJAk8EAAEIADkWIQS5+sFL3gX/8PrA0S1TZQQ8ZdgC2AUCar/75RsUgAAAAAAEAA5t
+ YW51MiwyLjUrMS4xMiwwLDMACgkQU2UEPGXYAtipyw/9HKcONTosS0nuQhDTjLy7i86B8oDAV6o
+ k7/a/9FR7NdKLIPtvhja5CpOYzK3b6BV/A4NeA6xq8bjVRP+KXcr5dJw+MN/Ro8HBTDPSod8w4w
+ tf+wAQ65snwlVMSbji3iOCV2D9+UGIv1RGgGtSBKm3gngrp3R29428EhwGZ0Kv6trCTS1uJaak2
+ o0lh+A1W1sPYeWTf2Q809TEt6DGH4npnQi8GBtqAHx4bLwF0fnsfh/QeFjPOxRvaXapB7W4YdyY
+ EfIIHJ/VtRjYgcuvMV8wKD6StOolupZt3M2ndnOoQcJMi3RDObrKSxvswT1iWc4UA3n+eAE5cMa
+ Rsa1xAsIOYDmPRlsI769phW86wF5tcX9iWbFGGEbHGS98vcYOwdNV16hukr5MZWC7++JcGeZO5t
+ cEmfkLqpbl1i8vQar9qBXUOSDVzwF1FIdiYdSFTnOjGVd5f4WoJqAa9zSshSNDHF89a4gi7rAB6
+ /+E2ULL+seJ9RQJSuPlxBwNSZavmHUlOGOltd4NbTqrFtZkoaFpeYWklsaxhtcCLLfaY1Hs+EZu
+ cosOEkLGNaYTZ0Wz9TQjc3bqQtixWlxl6y5XttncgBfygyX/AuUBhMff04IFQEHWgkVhfhSuygY
+ qpJa1KVoq2n3dzCrnvod2C1uRUDdQWCRHLTeaoEH22vaxOY3AMs0=
 X-Developer-Key: i=haghdoost@uber.com; a=openpgp;
  fpr=B9FAC14BDE05FFF0FAC0D12D5365043C65D802D8
 X-Endpoint-Received: by B4 Relay for haghdoost@uber.com/default with
@@ -78,178 +76,169 @@ X-Endpoint-Received: by B4 Relay for haghdoost@uber.com/default with
 X-Original-From: Alireza Haghdoost <haghdoost@uber.com>
 Reply-To: haghdoost@uber.com
 
-perf script loads the entire ELF symbol table of every DSO that appears
-in a sample, allocating each symbol into an rb-tree held until process
-exit. Most of those symbols are never sampled. On a large profile this
-turns symbol loading into the main memory cost of perf script, and in a
-memory-constrained cgroup into an OOM kill.
+From: Alireza Haghdoost <haghdoost@uber.com>
 
-This series adds an opt-in lazy loader for userspace ELF DSOs, after a
-regression fix and two preparatory patches:
+symbols__fixup_duplicate() chooses between symbols with the same start
+address through choose_best_symbol(), which needs fully constructed
+struct symbol objects. The lazy symbol loader added later in this series
+selects among aliases from its index entries, before any struct symbol
+exists, so it cannot use it.
 
-  [1/5] Fix a broken "#ifdef ELF_C_READ_MMAP" guard so perf actually
-        mmaps ELF files instead of malloc'ing section data. This is a
-        standalone regression fix for 22dd1ac91a77.
+This patch moves the policy into symbol__choose_best(), which compares
+the size, name, type and binding of two candidates described by struct
+symbol_candidate, and passes the same description to the
+arch__choose_best_symbol() hook. choose_best_symbol() becomes a wrapper
+that describes two struct symbols. No functional change intended.
 
-  [2/5] Let a DSO read its data from one explicit file through the DSO
-        data cache. This fixes the split-debuginfo case where offsets from
-        the debuginfo file would be applied to the runtime image.
+symbol__choose_best() is not static so that the lazy loader can call it.
+struct symbol_candidate stays in symbol.h because powerpc overrides the
+weak arch__choose_best_symbol(), which takes it.
 
-  [3/5] Factor duplicate-symbol selection so it works on symbol
-        attributes rather than struct symbol. No functional change.
-
-  [4/5] --lazy-load-symbols: build a compact per-DSO sorted index and
-        resolve only the sampled addresses, reading names through the DSO
-        data cache at lookup time.
-
-  [5/5] Unit and shell tests.
-
-Patches 1-3 stand on their own and can be applied first.
-
-On a 120 second cgroup profile of a production database service (54k
-samples across 11 DSOs), peak RssAnon drops from 314 MiB to 80 MiB and
-wall time from 4.49 s to 3.75 s, with identical output. Memory
-optimizations usually cost time; this one does not because lazy loading
-skips a lot of calloc and demangle calls.
-
-This series does not change struct symbol. The new sorted index holds
-only the address range, binding, type and string-table offset of each
-symbol. When a sample hits an entry, perf reads and demangles the name
-and creates a normal struct symbol with the name embedded, so the rest
-of perf never sees an unresolved name.
-
-Lazy loading handles the common userspace ELF symtab/dynsym path. The
-kernel, modules, PPC64 .opd and .gnu_debugdata still load eagerly, and
-eager loading remains the default.
-
-This is independent of Ian's reference counting and shrinking series
-[1]. The two should complement each other: lazy loading avoids creating
-symbols that are never used, and shrinking can reclaim the ones that
-were.
-
-[1] https://lore.kernel.org/all/20260928075237.3055101-1-irogers@google.com/
-
-Changes in v4:
-
-- Drop --max-symbol-bytes and all symbol byte accounting (Ian). PLT
-  symbols are synthesized exactly as before.
-- Rebase onto current perf-tools-next. dso__get_filename() now takes a
-  binary type and is shared with debuginfo lookup, so 2/5 applies the
-  explicit data path in __open_dso() instead.
-- 3/5: explain why symbol__choose_best() and struct symbol_candidate are
-  shared (Ian).
-- 4/5: bound the second pass of dso__build_ondemand_index() by the count
-  from the first pass, so a file that changes in between cannot overflow
-  the index (Sashiko). State that materialized symbols still embed their
-  names.
-- 4/5: read names with the DSO lock dropped. The DSO data cache takes its
-  global lock before DSO locks, so reading under the DSO lock could
-  deadlock against another thread opening DSO data. Serialize name reads
-  per index and free a detached index after its last reader. Check the
-  source with open() and pread() at load time, and materialize IFUNCs
-  then for PLT synthesis.
-- 4/5: index .dynsym together with .symtab as the eager loader does;
-  symbols present only in .dynsym were missing. Drop .dynsym copies of
-  .symtab entries while indexing.
-- 4/5: resolve an address inside nested symbols to the innermost one; an
-  address past the end of the inner symbol used to miss.
-- 4/5: read names from build-id cache files in perf's own mount
-  namespace, where dso__load() opened them.
-- 4/5: also load the runtime .dynsym of a DSO whose symbols come from
-  .gnu_debugdata eagerly, so that duplicate selection sees both tables.
-  It was indexed lazily, and an alias could resolve to a different name.
-- 4/5: pass the IFUNC alias mark on through duplicate selection as
-  symbols__fixup_duplicate() does. Marking the winner whenever any alias
-  was an IFUNC could name an IRELATIVE PLT slot differently.
-- 4/5: shorten the --lazy-load-symbols documentation and list the DSOs
-  that always load eagerly.
-- 5/5: drop the budget tests and the separate skip-status shell test.
-  Rename the unit test suite to "Lazy symbol loading"; the race test now
-  has address lookups racing name lookups and checks every symbol is
-  materialized once. The parity test also checks the names that lazy
-  lookups return, before and after materialization. Add tests for
-  lookups racing DSO data reads, nested symbols, .dynsym-only symbols,
-  .gnu_debugdata, IFUNC aliases and a profiled process in another mount
-  namespace. Rename the split-debuginfo shell test to
-  lazy_load_symbols_parity.sh, which now covers five binaries.
-
-Link: https://lore.kernel.org/all/20260925-perf-symbol-memory-send-v3-0-3e4e234c363b@uber.com/
-
-Changes in v3:
-
-- Rebase onto current perf-tools-next.
-- Pick up Namhyung's Reviewed-by for patch 1.
-- Split the exact-path DSO data support into its own patch (2/6), with a
-  DSO data test for reading and reopening through an explicit path.
-- Move the duplicate-selection refactor into a preparatory patch (3/6)
-  and factor the whole lazy alias-group handling (traversal, demangling,
-  IFUNC propagation, compaction) into one helper.
-- Keep struct symbol::namelen as u16. Charge symbol bytes from the stored
-  namelen on both allocation and free, and drop the 64 KiB-name test.
-- Fix lazy-loading races reported by Sashiko: in lazy mode, address
-  lookups always take the DSO lock, and building the name-sorted array
-  materializes and frees the lazy index even when the budget truncates
-  it, so the name array is never invalidated. dso__reset_symbol_names()
-  is gone. Add a concurrent budget-truncation test.
-- In lazy mode, when no PT_LOAD covers a symbol and its section is NOBITS
-  in the debuginfo file, adjust with the runtime section header as eager
-  loading does. Add a lazy/eager symbol parity test and a split-debuginfo
-  shell test that exercises this path.
-- Keep each unit test with the code it needs (DSO data in 2/6, budget
-  reservation in 4/6); the other tests stay in 6/6.
-
-Link: https://lore.kernel.org/all/20260919-perf-symbol-memory-send-v2-0-495b8f00ad7c@uber.com/
-
-Changes in v2:
-
-- Replace direct pread() name reads with the exact symbol source's DSO data
-  cache, preserving split-debuginfo offsets and descriptor reopen behavior.
-- Drop the byte-identical-output claim and retain eager loading for PPC64
-  .opd and .gnu_debugdata.
-- Make the symbol budget atomic and strict, account complete name lengths,
-  accept a bare 0 as unlimited, and keep partial zero-sized ranges from
-  covering omitted symbols.
-- Align lazy lookup with eager duplicate and IFUNC selection, PLT clipping,
-  and name-sorted materialization.
-- Move option documentation into the feature patches. Add unit and shell
-  coverage for cache reopen, truncated names, budget truncation, and skip
-  handling.
-
-Link: https://lore.kernel.org/all/20260915-perf-symbol-memory-send-v1-0-1d3360e21f07@uber.com/
-
+Signed-off-by: Alireza Haghdoost <haghdoost@uber.com>
 ---
-Alireza Haghdoost (5):
-      perf symbols: Fix broken ELF_C_READ_MMAP fallback guard
-      perf dso: Allow reading DSO data from an explicit file
-      perf symbols: Factor out duplicate symbol selection
-      perf script: Add --lazy-load-symbols for lazy symbol loading
-      perf test: Test lazy symbol loading
+ tools/perf/arch/powerpc/util/sym-handling.c |  6 ++--
+ tools/perf/util/symbol.c                    | 43 +++++++++++++++++++++--------
+ tools/perf/util/symbol.h                    | 14 +++++++++-
+ 3 files changed, 47 insertions(+), 16 deletions(-)
 
- tools/perf/Documentation/perf-script.txt           |   9 +
- tools/perf/arch/powerpc/util/sym-handling.c        |   6 +-
- tools/perf/builtin-script.c                        |   2 +
- tools/perf/tests/Build                             |   1 +
- tools/perf/tests/builtin-test.c                    |   1 +
- tools/perf/tests/dso-data.c                        |  42 +
- tools/perf/tests/shell/lazy_load_symbols_parity.sh | 326 ++++++++
- tools/perf/tests/shell/script_lazy_load_symbols.sh | 185 ++++
- tools/perf/tests/symbol-lazy.c                     | 699 ++++++++++++++++
- tools/perf/tests/tests.h                           |   1 +
- tools/perf/util/dso.c                              |  54 +-
- tools/perf/util/dso.h                              |  61 ++
- tools/perf/util/map.c                              |   7 +-
- tools/perf/util/symbol-elf.c                       | 926 +++++++++++++++++++++
- tools/perf/util/symbol-minimal.c                   |   9 +
- tools/perf/util/symbol.c                           |  52 +-
- tools/perf/util/symbol.h                           |  24 +-
- tools/perf/util/symbol_conf.h                      |   1 +
- 18 files changed, 2376 insertions(+), 30 deletions(-)
----
-base-commit: 705da5b15ab89ba97b11eedbe507c2fd83d31cb9
-change-id: 20260915-perf-symbol-memory-send-e7cfca1ac3d9
+diff --git a/tools/perf/arch/powerpc/util/sym-handling.c b/tools/perf/arch/powerpc/util/sym-handling.c
+index 947bfad7aa59..c263cbfefba5 100644
+--- a/tools/perf/arch/powerpc/util/sym-handling.c
++++ b/tools/perf/arch/powerpc/util/sym-handling.c
+@@ -10,10 +10,10 @@
+ #include "probe-event.h"
+ #include "probe-file.h"
+ 
+-int arch__choose_best_symbol(struct symbol *syma,
+-			     struct symbol *symb __maybe_unused)
++int arch__choose_best_symbol(const struct symbol_candidate *syma,
++			     const struct symbol_candidate *symb __maybe_unused)
+ {
+-	char *sym = syma->name;
++	const char *sym = syma->name;
+ 
+ #if !defined(_CALL_ELF) || _CALL_ELF != 2
+ 	/* Skip over any initial dot */
+diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
+index 5d98888d068c..f590b69f9f01 100644
+--- a/tools/perf/util/symbol.c
++++ b/tools/perf/util/symbol.c
+@@ -145,8 +145,8 @@ int __weak arch__compare_symbol_names_n(const char *namea, const char *nameb,
+ 	return strncmp(namea, nameb, n);
+ }
+ 
+-int __weak arch__choose_best_symbol(struct symbol *syma,
+-				    struct symbol *symb __maybe_unused)
++int __weak arch__choose_best_symbol(const struct symbol_candidate *syma,
++				    const struct symbol_candidate *symb __maybe_unused)
+ {
+ 	/* Avoid "SyS" kernel syscall aliases */
+ 	if (strlen(syma->name) >= 3 && !strncmp(syma->name, "SyS", 3))
+@@ -157,38 +157,39 @@ int __weak arch__choose_best_symbol(struct symbol *syma,
+ 	return SYMBOL_A;
+ }
+ 
+-static int choose_best_symbol(struct symbol *syma, struct symbol *symb)
++int symbol__choose_best(const struct symbol_candidate *syma,
++			const struct symbol_candidate *symb)
+ {
+ 	s64 a;
+ 	s64 b;
+ 	size_t na, nb;
+ 
+ 	/* Prefer a symbol with non zero length */
+-	a = syma->end - syma->start;
+-	b = symb->end - symb->start;
++	a = syma->size;
++	b = symb->size;
+ 	if ((b == 0) && (a > 0))
+ 		return SYMBOL_A;
+ 	else if ((a == 0) && (b > 0))
+ 		return SYMBOL_B;
+ 
+-	if (symbol__type(syma) != symbol__type(symb)) {
+-		if (symbol__type(syma) == STT_NOTYPE)
++	if (syma->type != symb->type) {
++		if (syma->type == STT_NOTYPE)
+ 			return SYMBOL_B;
+-		if (symbol__type(symb) == STT_NOTYPE)
++		if (symb->type == STT_NOTYPE)
+ 			return SYMBOL_A;
+ 	}
+ 
+ 	/* Prefer a non weak symbol over a weak one */
+-	a = symbol__binding(syma) == STB_WEAK;
+-	b = symbol__binding(symb) == STB_WEAK;
++	a = syma->binding == STB_WEAK;
++	b = symb->binding == STB_WEAK;
+ 	if (b && !a)
+ 		return SYMBOL_A;
+ 	if (a && !b)
+ 		return SYMBOL_B;
+ 
+ 	/* Prefer a global symbol over a non global one */
+-	a = symbol__binding(syma) == STB_GLOBAL;
+-	b = symbol__binding(symb) == STB_GLOBAL;
++	a = syma->binding == STB_GLOBAL;
++	b = symb->binding == STB_GLOBAL;
+ 	if (a && !b)
+ 		return SYMBOL_A;
+ 	if (b && !a)
+@@ -213,6 +214,24 @@ static int choose_best_symbol(struct symbol *syma, struct symbol *symb)
+ 	return arch__choose_best_symbol(syma, symb);
+ }
+ 
++static int choose_best_symbol(struct symbol *syma, struct symbol *symb)
++{
++	struct symbol_candidate a = {
++		.size = syma->end - syma->start,
++		.name = syma->name,
++		.type = symbol__type(syma),
++		.binding = symbol__binding(syma),
++	};
++	struct symbol_candidate b = {
++		.size = symb->end - symb->start,
++		.name = symb->name,
++		.type = symbol__type(symb),
++		.binding = symbol__binding(symb),
++	};
++
++	return symbol__choose_best(&a, &b);
++}
++
+ void symbols__fixup_duplicate(struct rb_root_cached *symbols)
+ {
+ 	struct rb_node *nd;
+diff --git a/tools/perf/util/symbol.h b/tools/perf/util/symbol.h
+index 46b1649c64fc..b9fa722a9a14 100644
+--- a/tools/perf/util/symbol.h
++++ b/tools/perf/util/symbol.h
+@@ -299,10 +299,22 @@ const char *arch__normalize_symbol_name(const char *name);
+ #define SYMBOL_A 0
+ #define SYMBOL_B 1
+ 
++/* Attributes used to choose between symbols that share a start address. */
++struct symbol_candidate {
++	u64		size;
++	const char	*name;
++	u8		type;
++	u8		binding;
++};
++
++int symbol__choose_best(const struct symbol_candidate *a,
++			const struct symbol_candidate *b);
++
+ int arch__compare_symbol_names(const char *namea, const char *nameb);
+ int arch__compare_symbol_names_n(const char *namea, const char *nameb,
+ 				 unsigned int n);
+-int arch__choose_best_symbol(struct symbol *syma, struct symbol *symb);
++int arch__choose_best_symbol(const struct symbol_candidate *a,
++			     const struct symbol_candidate *b);
+ 
+ enum symbol_tag_include {
+ 	SYMBOL_TAG_INCLUDE__NONE = 0,
 
-Best regards,
---  
-Alireza Haghdoost <haghdoost@uber.com>
+-- 
+Git-157)
 
 
