@@ -1,60 +1,60 @@
-Received: from esa12.hc1455-7.c3s2.iphmx.com (esa12.hc1455-7.c3s2.iphmx.com [139.138.37.100])
+Received: from esa7.hc1455-7.c3s2.iphmx.com (esa7.hc1455-7.c3s2.iphmx.com [139.138.61.252])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CC2A47C10A;
-	Fri,  2 Oct 2026 10:28:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=139.138.37.100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CE1D47C0F2;
+	Fri,  2 Oct 2026 10:28:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=139.138.61.252
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790936898; cv=none; b=ecBmGradAdMXGGFF977ddPVZdiG/W0nuzqq5dJe6Hs4xjUGCvDOPYlrVR/qGahHEqCu6uOhVPPLWwSOc0MwLTtcqCVI78SDZX/l3ywEMNWI6qHNmv2TSTxn2bGk09FqyQL4ZlcPhvWz6xwkQ9whpoGUlzGKK06muePwqiR+4Twc=
+	t=1790936907; cv=none; b=RX6PFTSYG/i27B7fj/DngWll4tF/LPpm7Ti6tgtNNGwJh3irE3/qRNm6BFnEEkF0VuHX8yXEucfqMJA+dllgvSSVcfB9WbPMW29tU/yJU3PmXUUAousmra9PQSgONmd0jn3/xBfejAb3FjEWz5OGdUHBGSy348yBKwexFQaBwjM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790936898; c=relaxed/simple;
-	bh=Xqi6OaaaW1eG1O5rqaNPfGA7QBOWDo0BOw04yYs2hp0=;
+	s=arc-20240116; t=1790936907; c=relaxed/simple;
+	bh=Zpu3urQf3oxIJUVQosZq9QS20FzJZCQC2Qh54I8f2wY=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=kknfRrcXJu3tPnb4+hiBCPrnJ6evsGb7V8g5rNqYstDjPKA81usWftjbi2JIP9Y7atb2FqWFrX/pUus77W3rn+qwPQg3sBCpWQaZiggX669wjWAvqT8t6Qd/FnetEEoZNaBoEAl+YBkpxGfnn1eE6IP+LR3kbVN9JhqOIzFIZ4A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fujitsu.com; spf=pass smtp.mailfrom=fujitsu.com; dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b=H9coD+QA; arc=none smtp.client-ip=139.138.37.100
+	 In-Reply-To:To:Cc; b=dhSfmIyjcrZkx95zwq59lPyC9M1ToXqV5DSjpicjd4Fn4y+zsYhceSrmI2AUqwP9RzVJM6Lh1KqlF0Cf0xSUTElKZNmm4iiN63mnUVffcs7FlKKAGcdpzZV7X3FYT+LloLRYKDVl0CE3jfB0sPiAo6Gsypk7hF7EyvHIKKZS1WA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fujitsu.com; spf=pass smtp.mailfrom=fujitsu.com; dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b=ouuVpd2o; arc=none smtp.client-ip=139.138.61.252
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fujitsu.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fujitsu.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b="H9coD+QA"
+	dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b="ouuVpd2o"
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
   d=fujitsu.com; i=@fujitsu.com; q=dns/txt; s=fj2;
-  t=1790936897; x=1822472897;
+  t=1790936905; x=1822472905;
   h=from:date:subject:mime-version:content-transfer-encoding:
    message-id:references:in-reply-to:to:cc;
-  bh=Xqi6OaaaW1eG1O5rqaNPfGA7QBOWDo0BOw04yYs2hp0=;
-  b=H9coD+QA1D2ODtVBSKGhhRZ/7C2RYSXNRbA5oL5vFamObNrwbIEXdZyJ
-   Flv28OHFPZqCxtn5QBbgXmonKqnqfUbPmJCw1I7hncqR+7/x9iL41XeHH
-   JsC34F84Lq4R9lOSJL8cGZ7GI0X2m7Njgvdjz+uAZBRMZZ4ZJswkP2Muc
-   yLt602GgaUajV4HRITlQjO7eyh2Dsd4M9mPWjbhqhblkZK/iR0HPTGMGC
-   gXkRcCAwRwRPZ85eohA8N2d/JGC/mYwtwgl/C06sf7/4XxG/ZQ83Azywc
-   2f9cY/XfwZcQ+h1qOXd+lCulSOCBSvLZjEwwWuVNDsHP7iRXonvIwPRlK
-   Q==;
-X-CSE-ConnectionGUID: MSfa78nfRQ+z7xoQcQ6b5w==
-X-CSE-MsgGUID: t/Y/DX73SN+lcKeYmqREnQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11922"; a="234702585"
+  bh=Zpu3urQf3oxIJUVQosZq9QS20FzJZCQC2Qh54I8f2wY=;
+  b=ouuVpd2ofSK3QH3kDHF9E/vYdUo8w1O0z/5mfTAnz4q66csJrKtHloVW
+   iOHzVCYBLwqApNnYgscZ7+4bDRv+lcecbQoCYCcJRdUMw7p+B/o01H2iA
+   EQ5LtZvy8HKeEQDngKIP/GXRAeFAgfyTd0EmFtUiVvNhbsVOEdy46HnvK
+   W35lMSsuAA0tZEgZX99SgbQoDiT6eclwTpnhQrdnftfS/vzb3yJzGj8gc
+   xp5E/vNqxl8WvAWTsYB1/f3l6hHRu1UYF7dVBqMlCJdCqo9iKGENuVr6f
+   qUZHin4dXyeGAskkdUFVjoYQAO3WlzSYz+UTzhxnQQD6pKnUi0Jw177n+
+   w==;
+X-CSE-ConnectionGUID: 3QqRO0P+RKiUm11MvblLvw==
+X-CSE-MsgGUID: D8DTNYOwSOib/Mg/aRGJ7w==
+X-IronPort-AV: E=McAfee;i="6800,10657,11922"; a="235852649"
 X-IronPort-AV: E=Sophos;i="6.27,136,1786978800"; 
-   d="scan'208";a="234702585"
+   d="scan'208";a="235852649"
 Received: from gmgwuk01.global.fujitsu.com ([172.187.114.235])
-  by esa12.hc1455-7.c3s2.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Oct 2026 19:28:08 +0900
+  by esa7.hc1455-7.c3s2.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Oct 2026 19:28:18 +0900
 Received: from az2uksmgm4.o.css.fujitsu.com (unknown [10.151.22.201])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by gmgwuk01.global.fujitsu.com (Postfix) with ESMTPS id 930B4821127;
-	Fri,  2 Oct 2026 10:28:08 +0000 (UTC)
+	by gmgwuk01.global.fujitsu.com (Postfix) with ESMTPS id 22EBB1002BB2;
+	Fri,  2 Oct 2026 10:28:18 +0000 (UTC)
 Received: from az2nlsmom4.fujitsu.com (unknown [10.150.26.201])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by az2uksmgm4.o.css.fujitsu.com (Postfix) with ESMTPS id 4522A1401228;
-	Fri,  2 Oct 2026 10:28:08 +0000 (UTC)
+	by az2uksmgm4.o.css.fujitsu.com (Postfix) with ESMTPS id C895514003DE;
+	Fri,  2 Oct 2026 10:28:17 +0000 (UTC)
 Received: from [127.0.1.1] (unknown [10.124.178.20])
-	by az2nlsmom4.fujitsu.com (Postfix) with ESMTP id 16C25201F385;
-	Fri,  2 Oct 2026 10:28:02 +0000 (UTC)
+	by az2nlsmom4.fujitsu.com (Postfix) with ESMTP id 8F083201F388;
+	Fri,  2 Oct 2026 10:28:12 +0000 (UTC)
 From: Tomohiro Misono <misono.tomohiro@fujitsu.com>
-Date: Fri, 02 Oct 2026 19:26:50 +0900
-Subject: [PATCH 2/4] arm64: tlb: Add tlbi workaround for FUJITSU-MONAKA
- Erratum E#030001
+Date: Fri, 02 Oct 2026 19:26:52 +0900
+Subject: [PATCH 4/4] irqchip/gicv3: Add workaround for FUJITSU-MONAKA
+ erratum E#030003
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -63,7 +63,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20261002-monaka-fix-for-upstream-v1-2-4aec0b0cbe34@fujitsu.com>
+Message-Id: <20261002-monaka-fix-for-upstream-v1-4-4aec0b0cbe34@fujitsu.com>
 References: <20261002-monaka-fix-for-upstream-v1-0-4aec0b0cbe34@fujitsu.com>
 In-Reply-To: <20261002-monaka-fix-for-upstream-v1-0-4aec0b0cbe34@fujitsu.com>
 To: Tomohiro Misono <misono.tomohiro@fujitsu.com>, 
@@ -76,174 +76,152 @@ Cc: Kohei Enju <enju.kohei@fujitsu.com>,
  linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
  linux-doc@vger.kernel.org, linux-perf-users@vger.kernel.org
 X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1790936872; l=6562;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1790936872; l=5720;
  i=misono.tomohiro@fujitsu.com; s=20261002; h=from:subject:message-id;
- bh=Xqi6OaaaW1eG1O5rqaNPfGA7QBOWDo0BOw04yYs2hp0=;
- b=haTsLoxBcGblWtg/2NIVSnt/+5mB7vT+Ssk2vlskNZ7bsTiu3hAWyWBIlsrx/4cKGu8BBfNwr
- 0MknhFLBo4fDAYXmtA2lgqaPVv0XA/0yEyDRbaEZ8dhYRCrjkUOw8Ku
+ bh=jkObIAIoT0RNsftzOQUSWlKwKsutsNQFB2NYPEgb7Vw=;
+ b=LY1jpWiCDJvh8gK9G+UcRIdldypzoWwkO+VorSOsx//qRJhQp07JuBox6Ztu/PpoRoJI15ouj
+ haNCdO0BkgpBqeLfqGIFEVyprmk7PPlBHuoC2ipvpmGE5bdcFowxEhv
 X-Developer-Key: i=misono.tomohiro@fujitsu.com; a=ed25519;
  pk=VLRxj5y4GJrHLmj3e2NBg30fX2U//ydi7c2G2qiNo10=
 
-FUJITSU-MONAKA Erratum E#030001 affects FUJITSU-MONAKA CPU
-when using 64k page size.
+From: Kohei Enju <enju.kohei@fujitsu.com>
 
-On affected FUJITSU-MONAKA CPUs, range-based TLBI operations
-targeting a VA or IPA may fail to invalidate TLB entries when
-addr[34:29] == all 1 && addr[28:0] == 0 for 512MB mappings.
-The affected instructions are:
-  RVA[L]E{1,2,3}*, RVAA[L]E1*, and RIPAS2[L]E1*.
+On affected FUJITSU-MONAKA CPUs, an SGI generated by writing to
+ICC_SGI0R_EL1, ICC_SGI1R_EL1, or ICC_ASGI1R_EL1 may be lost if the
+operation races with CPU interface processing triggered by the arrival
+of a higher-priority interrupt, an update to a pending interrupt, or a
+transition of the PE to the Sleep state. When this occurs, the system
+register write does not complete, causing the issuing core to hang.
 
-Work around the erratum by issuing additional non-range
-TLBI instructions corresponding to the affected VA or IPA
-range-based TLBI operations.
+Work around the erratum by writing 1 to the bit corresponding to the
+target SGI INTID in GICR_ISPENDR0 of each target PE's GIC Redistributor,
+instead of writing to the affected system registers.
 
-Signed-off-by: Tomohiro Misono <misono.tomohiro@fujitsu.com>
+The affinity topology of affected systems has Aff0 == 0 for every PE,
+with PEs distinguished by higher affinity levels. Consequently, an
+ICC_SGI1R_EL1 write can target only one PE, so the workaround does not
+increase the number of writes required to send an SGI to multiple PEs.
+
+Accessing a target PE's GICR_ISPENDR0 requires its Redistributor base to
+have been discovered. Affected platforms conform to SBBR, which requires
+PSCI for secondary CPU boot. They therefore do not use the ACPI Parking
+protocol, which sends an IPI before the secondary CPU has initialized
+its Redistributor. With PSCI, a secondary CPU discovers its
+Redistributor before becoming an IPI target.
+
+Signed-off-by: Kohei Enju <enju.kohei@fujitsu.com>
 ---
  Documentation/arch/arm64/silicon-errata.rst |  2 ++
- arch/arm64/Kconfig                          | 19 +++++++++++++++++
- arch/arm64/include/asm/cpucaps.h            |  2 ++
- arch/arm64/include/asm/tlbflush.h           | 33 +++++++++++++++++++++++++++++
- arch/arm64/kernel/cpu_errata.c              | 10 +++++++++
- arch/arm64/tools/cpucaps                    |  1 +
- 6 files changed, 67 insertions(+)
+ drivers/irqchip/irq-gic-v3.c                | 48 +++++++++++++++++++++++++++++
+ 2 files changed, 50 insertions(+)
 
 diff --git a/Documentation/arch/arm64/silicon-errata.rst b/Documentation/arch/arm64/silicon-errata.rst
-index ac3248b9f2f3..8ab6284e3d10 100644
+index 429bdf9a3d9d..13328a30df59 100644
 --- a/Documentation/arch/arm64/silicon-errata.rst
 +++ b/Documentation/arch/arm64/silicon-errata.rst
-@@ -373,6 +373,8 @@ stable kernels.
+@@ -377,6 +377,8 @@ stable kernels.
  +----------------+-----------------+-----------------+-----------------------------+
- | Fujitsu        | A64FX           | E#010001        | FUJITSU_ERRATUM_010001      |
+ | Fujitsu        | MONAKA          | E#030002        | FUJITSU_ERRATUM_030002      |
  +----------------+-----------------+-----------------+-----------------------------+
-+| Fujitsu        | MONAKA          | E#030001        | FUJITSU_ERRATUM_030001      |
++| Fujitsu        | MONAKA GICv3/v4 | E#030003        | N/A                         |
 ++----------------+-----------------+-----------------+-----------------------------+
  +----------------+-----------------+-----------------+-----------------------------+
  | ASR            | ASR8601         | #8601001        | N/A                         |
  +----------------+-----------------+-----------------+-----------------------------+
-diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-index b5a51b0ef944..38248a31d5f1 100644
---- a/arch/arm64/Kconfig
-+++ b/arch/arm64/Kconfig
-@@ -1312,6 +1312,25 @@ config FUJITSU_ERRATUM_010001
+diff --git a/drivers/irqchip/irq-gic-v3.c b/drivers/irqchip/irq-gic-v3.c
+index 6e1fa5b247fc..e73fea8a0e27 100644
+--- a/drivers/irqchip/irq-gic-v3.c
++++ b/drivers/irqchip/irq-gic-v3.c
+@@ -80,6 +80,8 @@ static DEFINE_STATIC_KEY_FALSE(gic_nvidia_t241_erratum);
  
- 	  If unsure, say Y.
+ static DEFINE_STATIC_KEY_FALSE(gic_arm64_2941627_erratum);
  
-+config FUJITSU_ERRATUM_030001
-+	bool "FUJITSU-MONAKA erratum E#030001: Range TLBI may fail to invalidate some entries"
-+	depends on PAGE_SIZE_64KB
-+	default y
-+	help
-+	  This option adds a workaround for FUJITSU-MONAKA erratum E#030001.
-+	  On affected FUJITSU-MONAKA CPUs, range-based TLBI operation
-+	  targeting a VA or IPA may fail to invalidate some TLB entries
-+	  for 512MB mappings. The affected instructions are RVA[L]E{1,2,3}*,
-+	  RVAA[L]E1*, and RIPAS2[L]E1*.
++static DEFINE_STATIC_KEY_FALSE(gic_fujitsu_030003_erratum);
 +
-+	  Work around the erratum by issuing additional non-range TLBI
-+	  instructions corresponding to the affected VA or IPA range-based
-+	  TLBI operations.
-+
-+	  The erratum only affects the FUJITSU-MONAKA on 64k pagesize.
-+
-+	  If unsure, say Y.
-+
- config HISILICON_ERRATUM_161600802
- 	bool "Hip07 161600802: Erroneous redistributor VLPI base"
- 	default y
-diff --git a/arch/arm64/include/asm/cpucaps.h b/arch/arm64/include/asm/cpucaps.h
-index 76350b38f0d7..9220b917ec20 100644
---- a/arch/arm64/include/asm/cpucaps.h
-+++ b/arch/arm64/include/asm/cpucaps.h
-@@ -66,6 +66,8 @@ cpucap_is_possible(const unsigned int cap)
- 		return IS_ENABLED(CONFIG_ARM64_ERRATUM_3194386);
- 	case ARM64_WORKAROUND_4193714:
- 		return IS_ENABLED(CONFIG_ARM64_ERRATUM_4193714);
-+	case ARM64_WORKAROUND_FUJITSU_030001:
-+		return IS_ENABLED(CONFIG_FUJITSU_ERRATUM_030001);
- 	case ARM64_MPAM:
- 		/*
- 		 * KVM MPAM support doesn't rely on the host kernel supporting MPAM.
-diff --git a/arch/arm64/include/asm/tlbflush.h b/arch/arm64/include/asm/tlbflush.h
-index 14a78ac0f800..0487daec1652 100644
---- a/arch/arm64/include/asm/tlbflush.h
-+++ b/arch/arm64/include/asm/tlbflush.h
-@@ -487,6 +487,37 @@ static __always_inline void __tlbi_range(tlbi_op op, u64 addr,
- 	op(arg);
+ static struct gic_chip_data gic_data __read_mostly;
+ static DEFINE_STATIC_KEY_TRUE(supports_deactivate_key);
+ 
+@@ -238,6 +240,9 @@ static DEFINE_PER_CPU(bool, has_rss);
+ #define gic_data_rdist()		(this_cpu_ptr(gic_data.rdists.rdist))
+ #define gic_data_rdist_rd_base()	(gic_data_rdist()->rd_base)
+ #define gic_data_rdist_sgi_base()	(gic_data_rdist_rd_base() + SZ_64K)
++#define gic_data_rdist_cpu(cpu)		(per_cpu_ptr(gic_data.rdists.rdist, cpu))
++#define gic_data_rdist_rd_base_cpu(cpu)	(gic_data_rdist_cpu(cpu)->rd_base)
++#define gic_data_rdist_sgi_base_cpu(cpu)	(gic_data_rdist_rd_base_cpu(cpu) + SZ_64K)
+ 
+ /* Our default, arbitrary priority value. Linux only uses one anyway. */
+ #define DEFAULT_PMR_VALUE	0xf0
+@@ -1373,6 +1378,13 @@ static void gic_send_sgi(u64 cluster_id, u16 tlist, unsigned int irq)
+ 	gic_write_sgi1r(val);
  }
  
-+#ifdef CONFIG_FUJITSU_ERRATUM_030001
-+static inline void fujitsu_erratum_wa(tlbi_op lop, u64 start, u64 end, u16 asid)
++static void gic_send_sgi_via_rdist(int cpu, unsigned int irq)
 +{
-+	u64 addr;
++	void __iomem *base = gic_data_rdist_sgi_base_cpu(cpu);
 +
-+	if (!alternative_has_cap_unlikely(ARM64_WORKAROUND_FUJITSU_030001))
++	writel_relaxed(BIT(irq), base + GICR_ISPENDR0);
++}
++
+ static void gic_ipi_send_mask(struct irq_data *d, const struct cpumask *mask)
+ {
+ 	int cpu;
+@@ -1386,6 +1398,22 @@ static void gic_ipi_send_mask(struct irq_data *d, const struct cpumask *mask)
+ 	 */
+ 	dsb(ishst);
+ 
++	if (static_branch_unlikely(&gic_fujitsu_030003_erratum)) {
++		/*
++		 * The affinity topology of affected systems has Aff0 == 0 for
++		 * every PE; PEs are distinguished by higher affinity levels.
++		 * ICC_SGI1R_EL1 therefore targets only one PE per write, so
++		 * using GICR_ISPENDR0 does not increase the number of writes
++		 * required to send an SGI to multiple PEs.
++		 */
++		for_each_cpu(cpu, mask)
++			gic_send_sgi_via_rdist(cpu, d->hwirq);
++
++		/* Force the above writes to GICR_ISPENDR0 to be executed */
++		dsb(st);
 +		return;
-+
-+	/*
-+	 * The erratum fails to invalidate TLBI entries in the range when
-+	 * addr[34:29] == all 1 && addr[28:0] == all 0 for 512M hugepage.
-+	 * However, since it cannot be determined reliably if the target
-+	 * entry is hugepage or not here, always assume hugepage is used.
-+	 * The workaround is to issue extra non-range TLBI ops corresponding
-+	 * to the affected VA or IPA range-based ops in the range.
-+	 */
-+	addr = (start & GENMASK_ULL(63, 35)) | GENMASK_ULL(34, 29);
-+	while (addr < end) {
-+		__tlbi_level_asid(lop, addr, TLBI_TTL_UNKNOWN, asid);
-+		if (addr + BIT_ULL(35) < addr)
-+			/* overflow */
-+			break;
-+		addr += BIT_ULL(35);
 +	}
-+}
-+#else
-+static inline void fujitsu_erratum_wa(tlbi_op lop, u64 start, u64 end, u16 asid)
-+{
-+}
-+#endif /* CONFIG_FUJITSU_ERRATUM_030001 */
 +
- static __always_inline void __flush_tlb_range_op(tlbi_op lop, tlbi_op rop,
- 						 u64 start, size_t pages,
- 						 u64 stride, u16 asid,
-@@ -518,6 +549,8 @@ static __always_inline void __flush_tlb_range_op(tlbi_op lop, tlbi_op rop,
- 		__tlbi_level_asid(lop, addr, level, asid);
- 		addr += stride;
- 	}
-+
-+	fujitsu_erratum_wa(lop, start, end, asid);
+ 	for_each_cpu(cpu, mask) {
+ 		u64 cluster_id = MPIDR_TO_SGI_CLUSTER_ID(gic_cpu_to_affinity(cpu));
+ 		u16 tlist;
+@@ -1871,6 +1899,20 @@ static bool gic_enable_quirk_rk3399(void *data)
+ 	return false;
  }
  
- #define __flush_s1_tlb_range_op(op, start, pages, stride, asid, tlb_level) \
-diff --git a/arch/arm64/kernel/cpu_errata.c b/arch/arm64/kernel/cpu_errata.c
-index 8ec47d89b45b..5b9dea3c761d 100644
---- a/arch/arm64/kernel/cpu_errata.c
-+++ b/arch/arm64/kernel/cpu_errata.c
-@@ -1027,6 +1027,16 @@ const struct arm64_cpu_capabilities arm64_errata[] = {
- 		.matches = has_impdef_pmuv3,
- 		.cpu_enable = cpu_enable_impdef_pmuv3_traps,
++#define SMCCC_SOC_ID_FUJITSU_MONAKA	0x00040003
++
++static bool gic_enable_quirk_fujitsu_030003(void *data)
++{
++	s32 soc_id = arm_smccc_get_soc_id_version();
++
++	/* Check JEP106 code for FUJITSU-MONAKA chip (0004:0003) */
++	if (soc_id != SMCCC_SOC_ID_FUJITSU_MONAKA)
++		return false;
++
++	static_branch_enable(&gic_fujitsu_030003_erratum);
++	return true;
++}
++
+ static bool rd_set_non_coherent(void *data)
+ {
+ 	struct gic_chip_data *d = data;
+@@ -1951,6 +1993,12 @@ static const struct gic_quirk gic_quirks[] = {
+ 		.mask	= 0xff000fff,
+ 		.init	= gic_enable_quirk_rk3399,
  	},
-+#ifdef CONFIG_FUJITSU_ERRATUM_030001
 +	{
-+		.desc = "FUJITSU-MONAKA Erratum E#030001",
-+		.capability = ARM64_WORKAROUND_FUJITSU_030001,
-+		ERRATA_MIDR_RANGE_LIST(((const struct midr_range[]) {
-+					MIDR_ALL_VERSIONS(MIDR_FUJITSU_MONAKA),
-+					{}
-+				})),
++		.desc	= "GICv3: Fujitsu erratum 030003",
++		.iidr	= 0x0403043b,
++		.mask	= 0xffffffff,
++		.init	= gic_enable_quirk_fujitsu_030003,
 +	},
-+#endif
  	{
- 		.desc = "Known broken GICv3 SEIS implementation",
- 		.capability = ARM64_WORKAROUND_GICv3_BROKEN_SEIS,
-diff --git a/arch/arm64/tools/cpucaps b/arch/arm64/tools/cpucaps
-index 2775ba3359cf..50a9aa0e2bf0 100644
---- a/arch/arm64/tools/cpucaps
-+++ b/arch/arm64/tools/cpucaps
-@@ -132,3 +132,4 @@ WORKAROUND_REPEAT_TLBI_SYNC
- WORKAROUND_SPECULATIVE_AT
- WORKAROUND_SPECULATIVE_SSBS
- WORKAROUND_SPECULATIVE_UNPRIV_LOAD
-+WORKAROUND_FUJITSU_030001
+ 	}
+ };
 
 -- 
 2.43.0
