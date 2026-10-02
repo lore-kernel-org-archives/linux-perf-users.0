@@ -1,94 +1,94 @@
-Received: from mail-qt1-f174.google.com (mail-qt1-f174.google.com [209.85.160.174])
+Received: from mail-qt1-f175.google.com (mail-qt1-f175.google.com [209.85.160.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2B313A16AE
-	for <linux-perf-users@vger.kernel.org>; Fri,  2 Oct 2026 22:13:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.160.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4F363C9EE6
+	for <linux-perf-users@vger.kernel.org>; Fri,  2 Oct 2026 22:16:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.160.175
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790979200; cv=pass; b=GZhurRc5zbg/fmZSsel5WFugDkCXeBSRSVIutZakC47owvcUEKYQ5SW+mYywuv9Z992M2SnH/RkwmSdUBhy6bZ9pHzW3xgyJI6G2qk0mULFI6/c2SjuNjfkTQaa+jOWvyqjkdPk1lPP9KvZPFvEUoiCvVc5XG93Nk+HRK/AwQqQ=
+	t=1790979377; cv=pass; b=j631uPsbusb8Ry4wAxfEYtFiIef8weTGZ47cnaMW32+EQxYNea3zNRv7gIlq2tIPCoAcs3h+sKfftMYrdbbuIW6G/I/PF9Dqg/DeD0Er+5qgeqMIHcBwC+APYGiOvijT37h57T+7aQbyD97MDQ3tLYRZoJkUtsNR7JiVQ/xT63w=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790979200; c=relaxed/simple;
-	bh=3oCSoelva8wEMM3KnsFQNgKv+tmBYN/dndab7/bw8P8=;
+	s=arc-20240116; t=1790979377; c=relaxed/simple;
+	bh=+5zLPRe7jiIR4G9auvQRB7tyTnGsVwR8jZaUb5mior8=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=KCyTOtfiQqd8OEgxLsUD4F5Uvmg1szgAMgdT5/nAt3o3VCajb70NcEigp2/eSBLcRj2uwTkdUVh7YAj05uuRjZlvScc3Z9+vFpX9LjsAL9GtofJvFscXtlv9qRvAPXnAddty8R/4XQyUVArI8P9faIkKNnbU2qA28M6CF4FbmDM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=omfFJrSM; arc=pass smtp.client-ip=209.85.160.174
+	 To:Cc:Content-Type; b=YVxt2hAh4WCDtJ5gihIQ4wyORic+4hQN46g18CWHIjGkKyyppKdn3YECQyZLr4u8XBmBo7q6u+0mRFedd2HYXve2RSCIHU+r4PfxlnDuK0IOMYRmKaplnFVoaXIq4wHY6JqPiqOVY07NmpDJej2mfj460qhBo4AeEzFHcFNnXLk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=cmu5+n3X; arc=pass smtp.client-ip=209.85.160.175
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="omfFJrSM"
-Received: by mail-qt1-f174.google.com with SMTP id d75a77b69052e-5337fa12431so29761cf.1
-        for <linux-perf-users@vger.kernel.org>; Fri, 02 Oct 2026 15:13:18 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1790979198; cv=none;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="cmu5+n3X"
+Received: by mail-qt1-f175.google.com with SMTP id d75a77b69052e-53113d72966so35491cf.1
+        for <linux-perf-users@vger.kernel.org>; Fri, 02 Oct 2026 15:16:15 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1790979375; cv=none;
         d=google.com; s=arc-20260327;
-        b=LYT57mY9l5yS2l3A3g3OvJty7hOiYvc7gmigHTZjcVyTuFaOY19GPeGqiUUbLtoFdU
-         fFWiGOyZid0ygc0aASBis/mqoPejAdSpcjwbPYk84Kwx4/uiMMlmGGve/O1h6slXiZgD
-         aDkXiNq3MT6I/u793q8izFh/KJ37jcNgpMpYJeMEYEE3U3Er2JvRRd4WanyCurF5my9+
-         prbpfryUfWqII5Mn4W4Ow6ruBh4n4DGh2iERFyAZOXQDXzortNBCOF1xuD2rQHb3z0+U
-         13602Pv8+jyb/6LbwXhonU0rbAr6QhKnUPtZ3m39cxPx3TwNORRsMDIia024zSfVl7Ng
-         75Iw==
+        b=Itg0ZzqYIxH+2q59qtPwOtNXSOb3SoaCF0xjWPhmC0lJbdp/h7qjQWQYCUJBT8QtTd
+         yHe0CMOLFo38L0CmtGuYdkzRUKcolZW3sLqdL3lG1coO/zDIyJNQNijDr0u2DBu5vmR/
+         VoLShfhlZWL1gJAvz6o7DSZi/dJs2HuTUcw1FBIaIbKOS7hgv+DaYurKRL0SSucjq/lG
+         me7Sigye1KOJ9A7F3O+iszqa4wUbrv+5GX8kXRc0Yj2aLjcSRSnbZDcDG0mZIBtUJmv7
+         C8KdcI2HXcNa2JxWFvvUVZGmA8H1pfBKySpF5pguP8iezPEXSBieFn6oVM5RJXct8aZO
+         hVmA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:dkim-signature;
-        bh=EQ29teI38L8bIbQ7Fl3d6Y+oq0SQgd1o+9aDJy9uRqA=;
-        fh=hSBYLW0Pz+f+l94BU3vVe91MZGDQv88vh+0b0IpG6iA=;
-        b=Fho7MDMne2atZPuJQRry86EGUp0Zos7BKvmMvBDOLoXcqM8H2BFp6fn3ybwRKgQubW
-         VdMH09T9O7Y0zVdE2l9qCQuCnlBNqm0VS8Sq80a95Ibc2IBLKvHogBdgyUxPe5qMJ1oA
-         U+LUQB6kcbQ8elzXhpla2uuFzDpAxAi37usZuE0sP9X23H9CYEgBOOx7I0UrhOuh2RSF
-         iXFIy+VnHM0kNnsEv4wbMEaARltZALMRxIfXE9F/7lRM3jAgzVNcYgKhIw0fipEn1MSA
-         +TrUXKdqYDDMh80z7s7+XShNpZnPYPiLJ08Gvqhzmvon5q43sdZBTRB01nkhdDhfb9Bm
-         Cwjg==;
+        bh=isApfnsinfyGiDWvI6+FZQrTyDCrDfqQP1dy41N8CAk=;
+        fh=pbqiEG3xvS7kA4ExpTzXT+zsU7LwlqXJn1j3tCZeCb8=;
+        b=j1+NUFHJyJ9i37dy0RGIQu+gIRo7Z/egX2o4tbhfk9sBHLJK80V1neeGAKWP7BjHr+
+         xXUKK6wLvbatJgex1eurQoZgGkc6jngjtHTwziqhzGbuSeefr9PKMkA17SgheE2CudKg
+         0HNA+2maqShnO6LN1DZueuETUyjvaF1BdBtMimPXCvGBK3cQxsAhlfsLhlaxFsoVCO6y
+         4QcWhi3GvUWdvpjhkD1yDy52hAMJZ3EUTC70T+/HgSE5OnV4sZ7jKj+XbrD6BGNl/eOu
+         LNRh9XO1xAJVYfY99JMVTanz1JhQdJs4GGF3VZrTjVGwUpEFHdIWtLjPbkeJreFCIWlx
+         ekwQ==;
         darn=vger.kernel.org
 ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1790979198; x=1791583998; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1790979375; x=1791584175; darn=vger.kernel.org;
         h=content-transfer-encoding:content-type:cc:to:subject:message-id
          :date:from:in-reply-to:references:mime-version:from:to:cc:subject
          :date:message-id:reply-to:content-type;
-        bh=EQ29teI38L8bIbQ7Fl3d6Y+oq0SQgd1o+9aDJy9uRqA=;
-        b=omfFJrSMbJ7D/Lo/Ag6qu5ieVfUjwTB7rDpEph9QJV2Cg+VfEpHj/DVUV+zlSPZV5I
-         efn8JOHRFaShEPlK5pkC7RleCFLxp8nn6BXHjR4ysy/RG+/+oRpQE0RVxHpWxiRa9ivp
-         j3goGBDT/3RDkvgSay2htHclpRG3hap6OXoxoRoLpL2EZ+zAno/wHubfhoOh5GeJACiL
-         giV4KbTTv59MJ/L4b6HBEpbGurwGZ0idGCYyJxIdTwRUhGAzkcleCBWUeNJUCQsgDG0C
-         yhHMAOE7DIAzXREp0SgNjjkPWhDhFQA59YPB1T6nVP7hbs+TZkDQiI32VyBwzV9HqO/U
-         +UeQ==
+        bh=isApfnsinfyGiDWvI6+FZQrTyDCrDfqQP1dy41N8CAk=;
+        b=cmu5+n3X6u3LQzICXRFM/zG9hp2GjgMXF/lnzB9pupBkoh5oefWJVCVNjvBALaMjp2
+         Z//CfRaCGEfehiO5ZTuhap0/gwBqGpEALkSZrvutKZ54IcuYAFF0fczW2KyUYNiNTjVN
+         +MgEdV2w0b3GNn3e2N8k0nU9aNSVKIB1hAFPFutH32JSWJm+lm4Kjr+VS+yU4zP0VA95
+         XPRist7KTb6No+GC+741uOeQFKx2bo3Z0k7M2ondLLTUU5cZg5kx3x8vpf64awtkD1I0
+         lEkSaQr7GiRNw7dZr2/BIxqKbsLO0zQ9OXXxH63zZDkxYTCKjjuzGAvpYPxUCGGgELwq
+         R/TA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1790979198; x=1791583998;
+        d=1e100.net; s=20260707; t=1790979375; x=1791584175;
         h=content-transfer-encoding:content-type:cc:to:subject:message-id
          :date:from:in-reply-to:references:mime-version:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=EQ29teI38L8bIbQ7Fl3d6Y+oq0SQgd1o+9aDJy9uRqA=;
-        b=LJjLsIHTrgjzf/PMDiZ5phFAGG7dxVkR4CNXVydg2YLmr8xFc0tlLlNsMU93whTfJE
-         vBGKknHvNJkG3Td1P36TlYmFZBp/gU3qZhrYyYHNoCzV48m7S7/wpuv+2a+8yy5ralaq
-         MePf8oGCNr1Jk0RvslKl0/rD5kTqg9flQ5/rbFfCqwsfooZ0Px7VRi9uuX/xdPG6Xwu0
-         kH4SqUjLElf6R6bgeXCFaHnwkmxUSsEdj+YspgEk4sBvX7jKYO0bUUZQFdSy/HwJ0Y4l
-         xlH+S0mLFAkAK31hQAzXXyevhG5xbzVIQsPEjW1bp0GrPK8nZgnBicsk78T7eULc5oYU
-         U/Jw==
-X-Forwarded-Encrypted: i=1; AKwUvBw4RjY2OaHMZugTxcDRVPifXf0fYNq3dWv8JylvH2lML/+2Jrcrooxy/H+RYeA4SliyKDx+oBjOgi42bAZT9plZ@vger.kernel.org
-X-Gm-Message-State: AFuF++lF/Q05SMBF9sWMrfZACGdiYznkPRwRxZjnrgY6YIXdRDrggljT
-	g0a6+t5MIDDO6cDrXdxOGacH7c/LajSYtImlVegPc46giWBPg9FEX2O0WPdsdEvGwUrHhgEXY4W
-	oONm5jLwakJBg+ziaNW5DFTXbrQPLHg508LCU6c7apAJGlrchT0yopVe4
-X-Gm-Gg: AYBFou3TrmBfJCjivU7McnMuGOt6USsUlGmADScjhOxvhtTiCsrRmCctoebtAxRsDfq
-	jRviryqCsMmPp5EsyOemRQm+fAWBF6X08ryd3+QVRuajkUYQX4JOnAcyS1n4tfpT1C7dQztwCU/
-	b0qxAHUafxwcnhJPKZDlihbCY/+dhF38mWRbiX3t9hJ9amW2LaGZxfk2sb7sAeVxAQK02WTDWgL
-	P9a52iaOuIWBc2wZcLhgYtGrgGAe6v33PCOuSLdL+1+hqTQ6AnMepOpaiMjYmKpzwOghXUV/a1u
-	gXaA93wj40VJ7jRFTMlFcF6dGi5bCUoTV/gdQx33FdjQwWmkrks5PMk=
-X-Received: by 2002:a05:622a:4014:b0:532:c8ca:5ae9 with SMTP id
- d75a77b69052e-535131e85f3mr2393841cf.11.1790979196977; Fri, 02 Oct 2026
- 15:13:16 -0700 (PDT)
+        bh=isApfnsinfyGiDWvI6+FZQrTyDCrDfqQP1dy41N8CAk=;
+        b=1IS0lC4Jd5oF4m3DxP78z+cnQwQJvfxYzoR7QVcl+2cijLcxwMRHgs2QC4actUdLgO
+         5L8Yee+X4FAoIqTfyszWvrDkNH6+fCLQrLuUmfkq1h3ZLs/J2LwZUBFHhjeWRm96APXU
+         YIpZORjweABXqqvY5f1fT9hLB/H8mnCx77ykhQXLYztP25TXPsAfB49SG8z08QqVCHjj
+         IHQjhQf9K9BmIwxZ2qA+el9HSsDoTSkGqlAM0Adar8Z82F+IVffdqfD6+LIXxYLLNrjJ
+         lVmsumCZBSdYD8lQpkmxP+Apxyti3GTAWn1eM/WC4/X07qzNGck+xt/g9tQBdWuI8oJ9
+         gyXg==
+X-Forwarded-Encrypted: i=1; AKwUvBxRFfQFdCAeTCr0pQlVaT7g/KrT05XPsviZlsTNsCelBeJRVhWxoZz2GYeCMKiGD59/+KPzSxxhxKJd9lLrD7vr@vger.kernel.org
+X-Gm-Message-State: AFuF++lSVgDlnGIuiF6J/74/LNlmRkMWxRyMuu5av4xz8ZDcygfOjJ9D
+	+tto6+GC4qbU1JzpFm2BK1P+KNEa1KWbgn2DLqjR0JQrFi0Nxs61ZGL0R2kh98HHkLisavNx0bs
+	01nUj+/RTkBuIPwiDXU7xc7cEJP7JqT5al8ODYOMf
+X-Gm-Gg: AYBFou3yV4RNCFdM+4Jfw52oaQ9NlNoIY7XTOEH8pSLsgGiNHmwrCxMlJzo8rG23T9E
+	r2galqKlkAJX+M0ccOjjV8KF1Or0pMOmnPbIZKaqd6PauK4jSt46gSHdl35sbRkhnx5H5PkDbys
+	YFeXe9RgXAhpIuiPV4UVuYLea0P1qovn4Lmq4TNvYTGPEoCfOP6Znk2J+1Gw/SFs0Sqk9a6Xq8K
+	fjMJ5LQ0fa1KifuXwMQvY3tnHC479Sv4ehNUBGMaUqcaxjWs1Jnw2J9okhjvdXEQcZwph5hhH99
+	2t/NhW7AIIwm0ueljZEGupbEJ22ZaMLkWK1UQZCLqFUAy9VIQV0wXtE=
+X-Received: by 2002:a05:622a:488d:b0:533:9746:9a86 with SMTP id
+ d75a77b69052e-5351470cf21mr800001cf.5.1790979373951; Fri, 02 Oct 2026
+ 15:16:13 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20261002-perf-symbol-memory-send-v4-0-0a592bb2539e@uber.com> <20261002-perf-symbol-memory-send-v4-2-0a592bb2539e@uber.com>
-In-Reply-To: <20261002-perf-symbol-memory-send-v4-2-0a592bb2539e@uber.com>
+References: <20261002-perf-symbol-memory-send-v4-0-0a592bb2539e@uber.com> <20261002-perf-symbol-memory-send-v4-3-0a592bb2539e@uber.com>
+In-Reply-To: <20261002-perf-symbol-memory-send-v4-3-0a592bb2539e@uber.com>
 From: Ian Rogers <irogers@google.com>
-Date: Fri, 2 Oct 2026 15:13:05 -0700
-X-Gm-Features: AclHuK-n2inwDRpXE-eHYDXqtUDMB-vcp4C_0X534QicZirvVEBAXRaVDx_u-3o
-Message-ID: <CAP-5=fX=BvLMm-JHLqaR6ACmP0buF9TSvRLf_Cs1us-o6aMGRQ@mail.gmail.com>
-Subject: Re: [PATCH v4 2/5] perf dso: Allow reading DSO data from an explicit file
+Date: Fri, 2 Oct 2026 15:16:02 -0700
+X-Gm-Features: AclHuK93t0jOehP9Jo976D8MsudkDaiRH5lfDWH-ham0dGq_flZBPKh1NXGy0Ew
+Message-ID: <CAP-5=fW_gTX3oXi5_tzsFo2VYxhcsuuoTBxFAzkP-yPsroAoOw@mail.gmail.com>
+Subject: Re: [PATCH v4 3/5] perf symbols: Factor out duplicate symbol selection
 To: haghdoost@uber.com
 Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -105,195 +105,182 @@ On Fri, Oct 2, 2026 at 11:46=E2=80=AFAM Alireza Haghdoost via B4 Relay
 >
 > From: Alireza Haghdoost <haghdoost@uber.com>
 >
-> The DSO data cache derives the file to open from the DSO's binary type,
-> which can resolve to the runtime image rather than the file a symbol
-> table was read from. The lazy symbol loader added later in this series
-> reads symbol names at string-table offsets in the file the symbol table
-> came from. With split debuginfo, the data cache would apply those
-> debuginfo offsets to the runtime image.
+> symbols__fixup_duplicate() chooses between symbols with the same start
+> address through choose_best_symbol(), which needs fully constructed
+> struct symbol objects. The lazy symbol loader added later in this series
+> selects among aliases from its index entries, before any struct symbol
+> exists, so it cannot use it.
 >
-> This patch adds dso__data_set_path() so a DSO can be configured to read
-> from one exact file while keeping the data cache's descriptor eviction
-> and reopening. The path is used only when the data cache opens the file;
-> dso__get_filename() and its debuginfo callers are unchanged. Such DSOs
-> may be owned privately rather than being part of a dsos collection, so
-> the patch also drops the assertion that every opened data DSO is in one.
+> This patch moves the policy into symbol__choose_best(), which compares
+> the size, name, type and binding of two candidates described by struct
+> symbol_candidate, and passes the same description to the
+> arch__choose_best_symbol() hook. choose_best_symbol() becomes a wrapper
+> that describes two struct symbols. No functional change intended.
+>
+> symbol__choose_best() is not static so that the lazy loader can call it.
+> struct symbol_candidate stays in symbol.h because powerpc overrides the
+> weak arch__choose_best_symbol(), which takes it.
 
-I think some context is missing here. Why do I want a DSO that isn't
-part of a machine's DSOs? I can see a use for testing, do you want
-this feature for more than testing?
+Could we have symbol__choose_best() that takes struct symbol
+arguments? The struct symbol_candidate doesn't appear to add anything
+other than a cache of symbol values, and these could be as well cached
+in local variables.
 
 Thanks,
 Ian
 
-> Add a DSO data test that reads through an explicit path, closes the
-> descriptor, and reads an uncached offset to exercise reopening.
->
 > Signed-off-by: Alireza Haghdoost <haghdoost@uber.com>
 > ---
->  tools/perf/tests/dso-data.c | 42 +++++++++++++++++++++++++++++++++++++++=
-+++
->  tools/perf/util/dso.c       | 30 ++++++++++++++++++++++++++----
->  tools/perf/util/dso.h       |  2 ++
->  3 files changed, 70 insertions(+), 4 deletions(-)
+>  tools/perf/arch/powerpc/util/sym-handling.c |  6 ++--
+>  tools/perf/util/symbol.c                    | 43 +++++++++++++++++++++--=
+------
+>  tools/perf/util/symbol.h                    | 14 +++++++++-
+>  3 files changed, 47 insertions(+), 16 deletions(-)
 >
-> diff --git a/tools/perf/tests/dso-data.c b/tools/perf/tests/dso-data.c
-> index 46bc3f597260..fbfb2f08d3ba 100644
-> --- a/tools/perf/tests/dso-data.c
-> +++ b/tools/perf/tests/dso-data.c
-> @@ -393,11 +393,53 @@ static int test__dso_data_reopen(struct test_suite =
-*test __maybe_unused, int sub
->         return 0;
->  }
+> diff --git a/tools/perf/arch/powerpc/util/sym-handling.c b/tools/perf/arc=
+h/powerpc/util/sym-handling.c
+> index 947bfad7aa59..c263cbfefba5 100644
+> --- a/tools/perf/arch/powerpc/util/sym-handling.c
+> +++ b/tools/perf/arch/powerpc/util/sym-handling.c
+> @@ -10,10 +10,10 @@
+>  #include "probe-event.h"
+>  #include "probe-file.h"
 >
-> +static int test__dso_data_path(struct test_suite *test __maybe_unused, i=
-nt subtest __maybe_unused)
-> +{
-> +       u8 expect[10] =3D { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
-> +       char *file =3D test_file(TEST_FILE_SIZE);
-> +       struct dso *dso;
-> +       long nr, nr_end;
-> +       u8 buf[10];
-> +
-> +       TEST_ASSERT_VAL("No test file", file);
-> +       nr =3D open_files_cnt();
-> +
-> +       /*
-> +        * The DSO name does not exist and the DSO is not in a dsos
-> +        * collection; reads must come from the configured path.
-> +        */
-> +       dso =3D dso__new("/nonexistent/perf-test-dso-data-path");
-> +       TEST_ASSERT_VAL("Failed to create dso", dso);
-> +       dso__set_binary_type(dso, DSO_BINARY_TYPE__SYSTEM_PATH_DSO);
-> +       TEST_ASSERT_VAL("Failed to set path", !dso__data_set_path(dso, fi=
-le));
-> +
-> +       TEST_ASSERT_VAL("Wrong size",
-> +                       dso__data_read_offset(dso, NULL, 10, buf, 10) =3D=
-=3D 10);
-> +       TEST_ASSERT_VAL("Wrong data", !memcmp(buf, expect, 10));
-> +
-> +       /* An uncached offset after close must reopen the configured path=
-. */
-> +       dso__data_close(dso);
-> +       memset(buf, 0, sizeof(buf));
-> +       TEST_ASSERT_VAL("Wrong size after reopen",
-> +                       dso__data_read_offset(dso, NULL, DSO__DATA_CACHE_=
-SIZE * 2 + 10,
-> +                                             buf, 10) =3D=3D 10);
-> +       TEST_ASSERT_VAL("Wrong data after reopen",
-> +                       buf[0] =3D=3D (DSO__DATA_CACHE_SIZE * 2 + 10) % 1=
-0);
-> +
-> +       dso__data_close(dso);
-> +       dso__put(dso);
-> +       unlink(file);
-> +
-> +       nr_end =3D open_files_cnt();
-> +       TEST_ASSERT_VAL("failed leaking files", nr =3D=3D nr_end);
-> +       return 0;
-> +}
->
->  static struct test_case tests__dso_data[] =3D {
->         TEST_CASE("read", dso_data),
->         TEST_CASE("cache", dso_data_cache),
->         TEST_CASE("reopen", dso_data_reopen),
-> +       TEST_CASE("explicit path", dso_data_path),
->         {       .name =3D NULL, }
->  };
->
-> diff --git a/tools/perf/util/dso.c b/tools/perf/util/dso.c
-> index d3017c82ffb5..5c4872810ada 100644
-> --- a/tools/perf/util/dso.c
-> +++ b/tools/perf/util/dso.c
-> @@ -547,8 +547,6 @@ static void dso__list_add(struct dso *dso) EXCLUSIVE_=
-LOCKS_REQUIRED(_dso__data_o
->  #ifdef REFCNT_CHECKING
->         dso__data(dso)->dso =3D dso__get(dso);
->  #endif
-> -       /* Assume the dso is part of dsos, hence the optional reference c=
-ount above. */
-> -       assert(dso__dsos(dso));
->         dso__data_open_cnt++;
->  }
->
-> @@ -678,8 +676,11 @@ static int __open_dso(struct dso *dso, struct machin=
-e *machine)
->
->         mutex_lock(dso__lock(dso));
->
-> -       name =3D dso__get_filename(dso, machine ? machine->root_dir : "",=
- &decomp,
-> -                                dso__binary_type(dso));
-> +       if (dso__data(dso)->path)
-> +               name =3D strdup(dso__data(dso)->path);
-> +       else
-> +               name =3D dso__get_filename(dso, machine ? machine->root_d=
-ir : "",
-> +                                        &decomp, dso__binary_type(dso));
->         if (name) {
->                 fd =3D do_open(name);
->         } else {
-> @@ -833,6 +834,26 @@ void dso__data_close(struct dso *dso)
->         mutex_unlock(dso__data_open_lock());
->  }
->
-> +/**
-> + * dso__data_set_path - Read @dso's data from an explicit file
-> + * @dso: dso object
-> + * @path: file to open instead of the path derived from the binary type
-> + *
-> + * Used when the data must come from one specific file, such as the sepa=
-rate
-> + * debuginfo file that a symbol table was read from. Must be called befo=
-re any
-> + * data is read, as already cached data is not invalidated.
-> + */
-> +int dso__data_set_path(struct dso *dso, const char *path)
-> +{
-> +       char *new_path =3D strdup(path);
-> +
-> +       if (!new_path)
-> +               return -ENOMEM;
-> +       free(dso__data(dso)->path);
-> +       dso__data(dso)->path =3D new_path;
-> +       return 0;
-> +}
-> +
->  static void try_to_open_dso(struct dso *dso, struct machine *machine)
->         EXCLUSIVE_LOCKS_REQUIRED(_dso__data_open_lock)
+> -int arch__choose_best_symbol(struct symbol *syma,
+> -                            struct symbol *symb __maybe_unused)
+> +int arch__choose_best_symbol(const struct symbol_candidate *syma,
+> +                            const struct symbol_candidate *symb __maybe_=
+unused)
 >  {
-> @@ -1783,6 +1804,7 @@ void dso__delete(struct dso *dso)
->         dso__data_close(dso);
->         auxtrace_cache__free(RC_CHK_ACCESS(dso)->auxtrace_cache);
->         dso_cache__free(dso);
-> +       zfree(&RC_CHK_ACCESS(dso)->data.path);
->         dso__free_a2l(dso);
->         dso__free_a2l_libbfd(dso);
->         dso__free_libdw(dso);
-> diff --git a/tools/perf/util/dso.h b/tools/perf/util/dso.h
-> index 3f08d45e7f53..7bcd5ec0c312 100644
-> --- a/tools/perf/util/dso.h
-> +++ b/tools/perf/util/dso.h
-> @@ -264,6 +264,7 @@ struct dso_data {
->  #ifdef REFCNT_CHECKING
->         struct dso       *dso;
->  #endif
-> +       char             *path;
->         int              fd;
->         int              status;
->         u32              status_seen;
-> @@ -921,6 +922,7 @@ bool dso__data_get_fd(struct dso *dso, struct machine=
- *machine, int *fd)
->         EXCLUSIVE_TRYLOCK_FUNCTION(true, _dso__data_open_lock);
->  void dso__data_put_fd(struct dso *dso) UNLOCK_FUNCTION(_dso__data_open_l=
-ock);
->  void dso__data_close(struct dso *dso) LOCKS_EXCLUDED(_dso__data_open_loc=
-k);
-> +int dso__data_set_path(struct dso *dso, const char *path);
+> -       char *sym =3D syma->name;
+> +       const char *sym =3D syma->name;
 >
->  int dso__data_file_size(struct dso *dso, struct machine *machine);
->  off_t dso__data_size(struct dso *dso, struct machine *machine);
+>  #if !defined(_CALL_ELF) || _CALL_ELF !=3D 2
+>         /* Skip over any initial dot */
+> diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
+> index 5d98888d068c..f590b69f9f01 100644
+> --- a/tools/perf/util/symbol.c
+> +++ b/tools/perf/util/symbol.c
+> @@ -145,8 +145,8 @@ int __weak arch__compare_symbol_names_n(const char *n=
+amea, const char *nameb,
+>         return strncmp(namea, nameb, n);
+>  }
+>
+> -int __weak arch__choose_best_symbol(struct symbol *syma,
+> -                                   struct symbol *symb __maybe_unused)
+> +int __weak arch__choose_best_symbol(const struct symbol_candidate *syma,
+> +                                   const struct symbol_candidate *symb _=
+_maybe_unused)
+>  {
+>         /* Avoid "SyS" kernel syscall aliases */
+>         if (strlen(syma->name) >=3D 3 && !strncmp(syma->name, "SyS", 3))
+> @@ -157,38 +157,39 @@ int __weak arch__choose_best_symbol(struct symbol *=
+syma,
+>         return SYMBOL_A;
+>  }
+>
+> -static int choose_best_symbol(struct symbol *syma, struct symbol *symb)
+> +int symbol__choose_best(const struct symbol_candidate *syma,
+> +                       const struct symbol_candidate *symb)
+>  {
+>         s64 a;
+>         s64 b;
+>         size_t na, nb;
+>
+>         /* Prefer a symbol with non zero length */
+> -       a =3D syma->end - syma->start;
+> -       b =3D symb->end - symb->start;
+> +       a =3D syma->size;
+> +       b =3D symb->size;
+>         if ((b =3D=3D 0) && (a > 0))
+>                 return SYMBOL_A;
+>         else if ((a =3D=3D 0) && (b > 0))
+>                 return SYMBOL_B;
+>
+> -       if (symbol__type(syma) !=3D symbol__type(symb)) {
+> -               if (symbol__type(syma) =3D=3D STT_NOTYPE)
+> +       if (syma->type !=3D symb->type) {
+> +               if (syma->type =3D=3D STT_NOTYPE)
+>                         return SYMBOL_B;
+> -               if (symbol__type(symb) =3D=3D STT_NOTYPE)
+> +               if (symb->type =3D=3D STT_NOTYPE)
+>                         return SYMBOL_A;
+>         }
+>
+>         /* Prefer a non weak symbol over a weak one */
+> -       a =3D symbol__binding(syma) =3D=3D STB_WEAK;
+> -       b =3D symbol__binding(symb) =3D=3D STB_WEAK;
+> +       a =3D syma->binding =3D=3D STB_WEAK;
+> +       b =3D symb->binding =3D=3D STB_WEAK;
+>         if (b && !a)
+>                 return SYMBOL_A;
+>         if (a && !b)
+>                 return SYMBOL_B;
+>
+>         /* Prefer a global symbol over a non global one */
+> -       a =3D symbol__binding(syma) =3D=3D STB_GLOBAL;
+> -       b =3D symbol__binding(symb) =3D=3D STB_GLOBAL;
+> +       a =3D syma->binding =3D=3D STB_GLOBAL;
+> +       b =3D symb->binding =3D=3D STB_GLOBAL;
+>         if (a && !b)
+>                 return SYMBOL_A;
+>         if (b && !a)
+> @@ -213,6 +214,24 @@ static int choose_best_symbol(struct symbol *syma, s=
+truct symbol *symb)
+>         return arch__choose_best_symbol(syma, symb);
+>  }
+>
+> +static int choose_best_symbol(struct symbol *syma, struct symbol *symb)
+> +{
+> +       struct symbol_candidate a =3D {
+> +               .size =3D syma->end - syma->start,
+> +               .name =3D syma->name,
+> +               .type =3D symbol__type(syma),
+> +               .binding =3D symbol__binding(syma),
+> +       };
+> +       struct symbol_candidate b =3D {
+> +               .size =3D symb->end - symb->start,
+> +               .name =3D symb->name,
+> +               .type =3D symbol__type(symb),
+> +               .binding =3D symbol__binding(symb),
+> +       };
+> +
+> +       return symbol__choose_best(&a, &b);
+> +}
+> +
+>  void symbols__fixup_duplicate(struct rb_root_cached *symbols)
+>  {
+>         struct rb_node *nd;
+> diff --git a/tools/perf/util/symbol.h b/tools/perf/util/symbol.h
+> index 46b1649c64fc..b9fa722a9a14 100644
+> --- a/tools/perf/util/symbol.h
+> +++ b/tools/perf/util/symbol.h
+> @@ -299,10 +299,22 @@ const char *arch__normalize_symbol_name(const char =
+*name);
+>  #define SYMBOL_A 0
+>  #define SYMBOL_B 1
+>
+> +/* Attributes used to choose between symbols that share a start address.=
+ */
+> +struct symbol_candidate {
+> +       u64             size;
+> +       const char      *name;
+> +       u8              type;
+> +       u8              binding;
+> +};
+> +
+> +int symbol__choose_best(const struct symbol_candidate *a,
+> +                       const struct symbol_candidate *b);
+> +
+>  int arch__compare_symbol_names(const char *namea, const char *nameb);
+>  int arch__compare_symbol_names_n(const char *namea, const char *nameb,
+>                                  unsigned int n);
+> -int arch__choose_best_symbol(struct symbol *syma, struct symbol *symb);
+> +int arch__choose_best_symbol(const struct symbol_candidate *a,
+> +                            const struct symbol_candidate *b);
+>
+>  enum symbol_tag_include {
+>         SYMBOL_TAG_INCLUDE__NONE =3D 0,
 >
 > --
 > Git-157)
