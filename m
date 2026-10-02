@@ -1,38 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B66AD4A35;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B677B21A457;
 	Fri,  2 Oct 2026 18:45:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790966759; cv=none; b=iEa2eSfRBuZh2b7trv2CXEmt6AF3eWFKrhYGfisPOykNR2f2jmzS/DGKbPDyJ5UpdTJUyCJnQL5NaDdxTHMQnAfPouSikQNCYict3Ve0W8Ke5GYmjMX3jjpmjITK4yg1/zVUJC0niuI919rAG8Xo5/5797fSTg/BNkTomKXslU4=
+	t=1790966759; cv=none; b=YsluQyWai1yeF0OlAfXci7v2/CQ6sokUmh4PqSYq5Fkg8k/LzeRogicSVWGbtEQrJfwDrYxnIwpIlVjH+j00W3oPGCthQtN8fKFXZFVdbHQTmRFgk43WpaedT8j+rar9ZPoOFzwcOfgngQBIzFJ+67FbVgCaagEqXcSb5MYsuW4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1790966759; c=relaxed/simple;
-	bh=lfy6QkoPZcrMkahaXCHW6z0VByntaV973icvPdYGzJM=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=MvP4kmE41eKQAynmHlSeJFPtY1pAalItNEBn4lfH6sKsTMJCj5oC1m7j7fWobatD0T0G2qDsKk3lVnUfykVQE+40XElu5yo5ZFjXg3vP0CRy1nn9NfQmLBEXPZjvSEk7ZfT08Q/umStjMDvJQWbmjr5sgtkD2BaRa//PgvWpVZc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bwYPXbrv; arc=none smtp.client-ip=10.30.226.201
+	bh=1buPypiXvTu/cMquRf3aPBXMbSV0t5ikFWvC350DM6g=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=h4GVNHIJbfr3Evs+zIU4l2cQJ0GIm32hLQkPVdPvqtEk1SI+7/rxhIfcIV6YGoE2m+2k1mMv1Mi+e1QhaIaH/VjsLe9LqIw0B5AjWT0hHoQ+OK0tEXLJmEG35G5gZuBOdhvymp0q0xuYia/BHgBD2zS6Ut8fPgWO6YF5uSXtrDQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rebyjWnp; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bwYPXbrv"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 5B70AC4AF13;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rebyjWnp"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 3DABFC2BCF4;
 	Fri,  2 Oct 2026 18:45:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1790966759;
-	bh=lfy6QkoPZcrMkahaXCHW6z0VByntaV973icvPdYGzJM=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=bwYPXbrvyZMEFhbKO92aEiFOceqLRw1f7Pg/HgloRnsCS2M/+zbORy8T3kItfNkuu
-	 GthkeNPKCPmduW9p3MmT2xS6Ey5j2o4Xkf00C5ZYTG8HS+2NuxtvYKLGqlG9ExXkts
-	 BIakBLf4//Wq2ce+sqPIKtn0gK3zOyhFXBiXSPa2c2N3pU1z7BUy6uWZHjaw9K5enM
-	 OoM373Q9zA7GRaLmNsj/q33Uo4qIT4tivBjaLcC3EmlzHNByd+IrzGk2k2RYXONhUV
-	 daNYbBCU7t5JR7xyHy4K/o18j7TFEUjYymnQIg4nglyoxsZYy2AHztahRPKtCgoUwZ
-	 j1eH16wQNg9Eg==
+	bh=1buPypiXvTu/cMquRf3aPBXMbSV0t5ikFWvC350DM6g=;
+	h=From:Subject:Date:To:Cc:Reply-To:From;
+	b=rebyjWnp6Qn65+Hk1sZIVuzcFLQ9ZHkaroc2hf7tOVqB4LRjuE/yWVHnPjZyMVk+l
+	 u90HUZLECDHlz0LGquNQLvgryAlvU476PuEJSa8DlVLMlZipCs9Ov6jMikHabRS1MD
+	 c4G8bFbGX1mH6IV5S48dVE9yMHOEcx2lCTm6uSwdQszcKlVQLYs9rsx+m4FJTy1vnh
+	 gWMO3/XWwljWF2yEs4vMbkiucPjgGuwokfK2QfO6Eolk28y3nyETVFlFyQMNdvYE/4
+	 IbfHORMnxV2LEC7pBZTHgGMF/Lg+MIpwVhm9ryfcHmWf4gdGCIE/O3Wo3CylgnBpY5
+	 eSvLCzSvUO1kg==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BBBECA5FDD;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 173F9CA5FD4;
 	Fri,  2 Oct 2026 18:45:59 +0000 (UTC)
 From: Alireza Haghdoost via B4 Relay <devnull+haghdoost.uber.com@kernel.org>
-Date: Fri, 02 Oct 2026 11:45:34 -0700
-Subject: [PATCH v4 2/5] perf dso: Allow reading DSO data from an explicit
- file
+Subject: [PATCH v4 0/5] perf script: Lazy symbol loading
+Date: Fri, 02 Oct 2026 11:45:32 -0700
+Message-Id: <20261002-perf-symbol-memory-send-v4-0-0a592bb2539e@uber.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -41,9 +40,11 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20261002-perf-symbol-memory-send-v4-2-0a592bb2539e@uber.com>
-References: <20261002-perf-symbol-memory-send-v4-0-0a592bb2539e@uber.com>
-In-Reply-To: <20261002-perf-symbol-memory-send-v4-0-0a592bb2539e@uber.com>
+X-B4-Tracking: v=1; b=H4sIAAAAAAAC/4XOTQ6CMBAF4KuYrq1pO/yIK+9hXNB2KjVCSQtEQ
+ ri7BTfERF2+5M33ZiIBvcVATruJeBxssK6JIdnviKrK5obU6piJYCJjBU9pi97QMNbSPWiNtfM
+ jDdhoirkyquSlAl2QeN16NPa5ypfrO4de3lF1C7c0Khu6eL5OD3zp/V8ZOGWUa4CMoeCG5edeo
+ j8oV5NlZBBbpvjOiMgkRSqPhrFS5+qDgQ0jfnwDkQFMUECiIAO5YeZ5fgEYXfnVXQEAAA==
+X-Change-ID: 20260915-perf-symbol-memory-send-e7cfca1ac3d9
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
  Arnaldo Carvalho de Melo <acme@kernel.org>, 
  Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
@@ -55,21 +56,21 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
  Alireza Haghdoost <haghdoost@uber.com>
 X-Mailer: b4 0.15.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=6171; i=haghdoost@uber.com;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=9067; i=haghdoost@uber.com;
  h=from:subject:message-id;
- bh=zHOBxWbVfbd1CinZEWKES+6xUEv+Rr9ivgGHO2OKulE=;
- b=owEBiQJ2/ZANAwAIAVNlBDxl2ALYAcsmYgBqv/vlacBMx4u+Gc+9zCAAstqxXq5l2tRZq1QQ2
- Nz/ts58mYyJAk8EAAEIADkWIQS5+sFL3gX/8PrA0S1TZQQ8ZdgC2AUCar/75RsUgAAAAAAEAA5t
- YW51MiwyLjUrMS4xMiwwLDMACgkQU2UEPGXYAtg7Hg/+LIRkW2VZ2prNJzuT5t13INR4VliDyq7
- Bq7+BcBKEM7Dcba0NmjKf3Qp1zXDD9OaYRv2F7kbLCi+O+G3l4+ds4rE1//zyTz/kSggy0DZTzC
- mH70C7nQMietV9LY9mkDSn7yZECqmg55Y1cruyT9JgGAjKwqMf6orra8e867UrQd8bu9ewYfMaG
- mXmB7xvE6bDwLXYQIFgv2EbuQPNVv7BK3pS9oFiGv0NnA9qWc4WsngoNf20AFLrLu7PrZy83UDf
- d7Um0bTH1j4JkpIpYjUzQhrki+WIBJzimjAxusGZe1XfmyVh76WCRcE37XIQjt54akUf2eZv2F5
- mppetaudZp8cgxr0lhmuslii6PGPlV9vrDDNEr0ZbKMUOuFMLU06WG6lp6mRjyBLJHB1FZgHV7N
- giHmFjnSwVdGvBhihxFAPuZq/k+YR511AObNw8RTCySoeUQDkFX+MdqyNTkOGIMdrGRd6fKC630
- Pgi+9/zEQxGUP7CL5T8RSECAcoWkHJz/Vw+/IWzSxiNE3RnbTLI8V7Opwo+ovGfU+GVIm8ayaiW
- vnVBUT5INNpPhZds696AgMiH9T6TNLvsKpWzaKtYrHf7dOBXWxVPAHl0DAu3aeefgbATW37fqbW
- J3Fjw0292zPYD8Ypcfu8/dBm6jCcVaMZ/3GN4oT1GUQlGuc8Qg0s=
+ bh=1buPypiXvTu/cMquRf3aPBXMbSV0t5ikFWvC350DM6g=;
+ b=owEBiQJ2/ZANAwAIAVNlBDxl2ALYAcsmYgBqv/vZOBhoQTZSFb27FxK41gdQGZ1RvgCTb8KYA
+ SFmlkdvqn6JAk8EAAEIADkWIQS5+sFL3gX/8PrA0S1TZQQ8ZdgC2AUCar/72RsUgAAAAAAEAA5t
+ YW51MiwyLjUrMS4xMiwwLDMACgkQU2UEPGXYAtgEZQ/9E8v7RhKtnOCibC6Xpu7TkP6324ZXAZI
+ LuL49BzaNmzvNxXP9swFK2ywtHlIWJl6zNj5ORJYCNoFGavfIC3mbVZsXYzEmGaw14KaKOr3qvx
+ gSlj6yUGMeT4fzxt8amgRmt8o6PvUDyFo/eiFulDMMZ2u/oZCgygvQdgn/Fb7uomreafEmAsXUE
+ cE1eGKeCJmDF7YLJEba0XDI4FO4LiyDO9OruJDaUscbp6xNeFE3qlD37lXjuBpfD3HadfWHMBqS
+ tHv0Az2CCd/SOGBVi2vKSE8UEE/5Fq2rBZOdne2emEpAfMPUF15j9WJBEZDYYboezqh/VsNZOJu
+ t+9CFmm/2287ev0hVVUBaSssCOW+/hrJ8VyDeDXFal8SR/cMg0Plrv38AtzmkjH4MD7GNckWVbE
+ B9JzP9/N6wl3HE1ffLls8mIIwNAc7BqL+Wbs0UoGt4JqXmVruTZChbCYPBvDCVbiDh2rk4ZHBlu
+ O1CyfXAMS27p/rtgolVAO2sL4b2B6cvTST6k+eQ13fgEGcOa9YgtWqiqvlQH7RHT/VIHlgASjtK
+ BB7bXw+bJyZVFb9lzo3fV0LHM51sGRLnG/X4y8f8xZqdy3dSAOYlk9GOafKjmazJDMQN83p5tuV
+ A6X5gRXegc+ZDgrOFPXLHNn16dzIOAa9rS495CXfIxZCZTf+SvUw=
 X-Developer-Key: i=haghdoost@uber.com; a=openpgp;
  fpr=B9FAC14BDE05FFF0FAC0D12D5365043C65D802D8
 X-Endpoint-Received: by B4 Relay for haghdoost@uber.com/default with
@@ -77,174 +78,178 @@ X-Endpoint-Received: by B4 Relay for haghdoost@uber.com/default with
 X-Original-From: Alireza Haghdoost <haghdoost@uber.com>
 Reply-To: haghdoost@uber.com
 
-From: Alireza Haghdoost <haghdoost@uber.com>
+perf script loads the entire ELF symbol table of every DSO that appears
+in a sample, allocating each symbol into an rb-tree held until process
+exit. Most of those symbols are never sampled. On a large profile this
+turns symbol loading into the main memory cost of perf script, and in a
+memory-constrained cgroup into an OOM kill.
 
-The DSO data cache derives the file to open from the DSO's binary type,
-which can resolve to the runtime image rather than the file a symbol
-table was read from. The lazy symbol loader added later in this series
-reads symbol names at string-table offsets in the file the symbol table
-came from. With split debuginfo, the data cache would apply those
-debuginfo offsets to the runtime image.
+This series adds an opt-in lazy loader for userspace ELF DSOs, after a
+regression fix and two preparatory patches:
 
-This patch adds dso__data_set_path() so a DSO can be configured to read
-from one exact file while keeping the data cache's descriptor eviction
-and reopening. The path is used only when the data cache opens the file;
-dso__get_filename() and its debuginfo callers are unchanged. Such DSOs
-may be owned privately rather than being part of a dsos collection, so
-the patch also drops the assertion that every opened data DSO is in one.
+  [1/5] Fix a broken "#ifdef ELF_C_READ_MMAP" guard so perf actually
+        mmaps ELF files instead of malloc'ing section data. This is a
+        standalone regression fix for 22dd1ac91a77.
 
-Add a DSO data test that reads through an explicit path, closes the
-descriptor, and reads an uncached offset to exercise reopening.
+  [2/5] Let a DSO read its data from one explicit file through the DSO
+        data cache. This fixes the split-debuginfo case where offsets from
+        the debuginfo file would be applied to the runtime image.
 
-Signed-off-by: Alireza Haghdoost <haghdoost@uber.com>
+  [3/5] Factor duplicate-symbol selection so it works on symbol
+        attributes rather than struct symbol. No functional change.
+
+  [4/5] --lazy-load-symbols: build a compact per-DSO sorted index and
+        resolve only the sampled addresses, reading names through the DSO
+        data cache at lookup time.
+
+  [5/5] Unit and shell tests.
+
+Patches 1-3 stand on their own and can be applied first.
+
+On a 120 second cgroup profile of a production database service (54k
+samples across 11 DSOs), peak RssAnon drops from 314 MiB to 80 MiB and
+wall time from 4.49 s to 3.75 s, with identical output. Memory
+optimizations usually cost time; this one does not because lazy loading
+skips a lot of calloc and demangle calls.
+
+This series does not change struct symbol. The new sorted index holds
+only the address range, binding, type and string-table offset of each
+symbol. When a sample hits an entry, perf reads and demangles the name
+and creates a normal struct symbol with the name embedded, so the rest
+of perf never sees an unresolved name.
+
+Lazy loading handles the common userspace ELF symtab/dynsym path. The
+kernel, modules, PPC64 .opd and .gnu_debugdata still load eagerly, and
+eager loading remains the default.
+
+This is independent of Ian's reference counting and shrinking series
+[1]. The two should complement each other: lazy loading avoids creating
+symbols that are never used, and shrinking can reclaim the ones that
+were.
+
+[1] https://lore.kernel.org/all/20260928075237.3055101-1-irogers@google.com/
+
+Changes in v4:
+
+- Drop --max-symbol-bytes and all symbol byte accounting (Ian). PLT
+  symbols are synthesized exactly as before.
+- Rebase onto current perf-tools-next. dso__get_filename() now takes a
+  binary type and is shared with debuginfo lookup, so 2/5 applies the
+  explicit data path in __open_dso() instead.
+- 3/5: explain why symbol__choose_best() and struct symbol_candidate are
+  shared (Ian).
+- 4/5: bound the second pass of dso__build_ondemand_index() by the count
+  from the first pass, so a file that changes in between cannot overflow
+  the index (Sashiko). State that materialized symbols still embed their
+  names.
+- 4/5: read names with the DSO lock dropped. The DSO data cache takes its
+  global lock before DSO locks, so reading under the DSO lock could
+  deadlock against another thread opening DSO data. Serialize name reads
+  per index and free a detached index after its last reader. Check the
+  source with open() and pread() at load time, and materialize IFUNCs
+  then for PLT synthesis.
+- 4/5: index .dynsym together with .symtab as the eager loader does;
+  symbols present only in .dynsym were missing. Drop .dynsym copies of
+  .symtab entries while indexing.
+- 4/5: resolve an address inside nested symbols to the innermost one; an
+  address past the end of the inner symbol used to miss.
+- 4/5: read names from build-id cache files in perf's own mount
+  namespace, where dso__load() opened them.
+- 4/5: also load the runtime .dynsym of a DSO whose symbols come from
+  .gnu_debugdata eagerly, so that duplicate selection sees both tables.
+  It was indexed lazily, and an alias could resolve to a different name.
+- 4/5: pass the IFUNC alias mark on through duplicate selection as
+  symbols__fixup_duplicate() does. Marking the winner whenever any alias
+  was an IFUNC could name an IRELATIVE PLT slot differently.
+- 4/5: shorten the --lazy-load-symbols documentation and list the DSOs
+  that always load eagerly.
+- 5/5: drop the budget tests and the separate skip-status shell test.
+  Rename the unit test suite to "Lazy symbol loading"; the race test now
+  has address lookups racing name lookups and checks every symbol is
+  materialized once. The parity test also checks the names that lazy
+  lookups return, before and after materialization. Add tests for
+  lookups racing DSO data reads, nested symbols, .dynsym-only symbols,
+  .gnu_debugdata, IFUNC aliases and a profiled process in another mount
+  namespace. Rename the split-debuginfo shell test to
+  lazy_load_symbols_parity.sh, which now covers five binaries.
+
+Link: https://lore.kernel.org/all/20260925-perf-symbol-memory-send-v3-0-3e4e234c363b@uber.com/
+
+Changes in v3:
+
+- Rebase onto current perf-tools-next.
+- Pick up Namhyung's Reviewed-by for patch 1.
+- Split the exact-path DSO data support into its own patch (2/6), with a
+  DSO data test for reading and reopening through an explicit path.
+- Move the duplicate-selection refactor into a preparatory patch (3/6)
+  and factor the whole lazy alias-group handling (traversal, demangling,
+  IFUNC propagation, compaction) into one helper.
+- Keep struct symbol::namelen as u16. Charge symbol bytes from the stored
+  namelen on both allocation and free, and drop the 64 KiB-name test.
+- Fix lazy-loading races reported by Sashiko: in lazy mode, address
+  lookups always take the DSO lock, and building the name-sorted array
+  materializes and frees the lazy index even when the budget truncates
+  it, so the name array is never invalidated. dso__reset_symbol_names()
+  is gone. Add a concurrent budget-truncation test.
+- In lazy mode, when no PT_LOAD covers a symbol and its section is NOBITS
+  in the debuginfo file, adjust with the runtime section header as eager
+  loading does. Add a lazy/eager symbol parity test and a split-debuginfo
+  shell test that exercises this path.
+- Keep each unit test with the code it needs (DSO data in 2/6, budget
+  reservation in 4/6); the other tests stay in 6/6.
+
+Link: https://lore.kernel.org/all/20260919-perf-symbol-memory-send-v2-0-495b8f00ad7c@uber.com/
+
+Changes in v2:
+
+- Replace direct pread() name reads with the exact symbol source's DSO data
+  cache, preserving split-debuginfo offsets and descriptor reopen behavior.
+- Drop the byte-identical-output claim and retain eager loading for PPC64
+  .opd and .gnu_debugdata.
+- Make the symbol budget atomic and strict, account complete name lengths,
+  accept a bare 0 as unlimited, and keep partial zero-sized ranges from
+  covering omitted symbols.
+- Align lazy lookup with eager duplicate and IFUNC selection, PLT clipping,
+  and name-sorted materialization.
+- Move option documentation into the feature patches. Add unit and shell
+  coverage for cache reopen, truncated names, budget truncation, and skip
+  handling.
+
+Link: https://lore.kernel.org/all/20260915-perf-symbol-memory-send-v1-0-1d3360e21f07@uber.com/
+
 ---
- tools/perf/tests/dso-data.c | 42 ++++++++++++++++++++++++++++++++++++++++++
- tools/perf/util/dso.c       | 30 ++++++++++++++++++++++++++----
- tools/perf/util/dso.h       |  2 ++
- 3 files changed, 70 insertions(+), 4 deletions(-)
+Alireza Haghdoost (5):
+      perf symbols: Fix broken ELF_C_READ_MMAP fallback guard
+      perf dso: Allow reading DSO data from an explicit file
+      perf symbols: Factor out duplicate symbol selection
+      perf script: Add --lazy-load-symbols for lazy symbol loading
+      perf test: Test lazy symbol loading
 
-diff --git a/tools/perf/tests/dso-data.c b/tools/perf/tests/dso-data.c
-index 46bc3f597260..fbfb2f08d3ba 100644
---- a/tools/perf/tests/dso-data.c
-+++ b/tools/perf/tests/dso-data.c
-@@ -393,11 +393,53 @@ static int test__dso_data_reopen(struct test_suite *test __maybe_unused, int sub
- 	return 0;
- }
- 
-+static int test__dso_data_path(struct test_suite *test __maybe_unused, int subtest __maybe_unused)
-+{
-+	u8 expect[10] = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
-+	char *file = test_file(TEST_FILE_SIZE);
-+	struct dso *dso;
-+	long nr, nr_end;
-+	u8 buf[10];
-+
-+	TEST_ASSERT_VAL("No test file", file);
-+	nr = open_files_cnt();
-+
-+	/*
-+	 * The DSO name does not exist and the DSO is not in a dsos
-+	 * collection; reads must come from the configured path.
-+	 */
-+	dso = dso__new("/nonexistent/perf-test-dso-data-path");
-+	TEST_ASSERT_VAL("Failed to create dso", dso);
-+	dso__set_binary_type(dso, DSO_BINARY_TYPE__SYSTEM_PATH_DSO);
-+	TEST_ASSERT_VAL("Failed to set path", !dso__data_set_path(dso, file));
-+
-+	TEST_ASSERT_VAL("Wrong size",
-+			dso__data_read_offset(dso, NULL, 10, buf, 10) == 10);
-+	TEST_ASSERT_VAL("Wrong data", !memcmp(buf, expect, 10));
-+
-+	/* An uncached offset after close must reopen the configured path. */
-+	dso__data_close(dso);
-+	memset(buf, 0, sizeof(buf));
-+	TEST_ASSERT_VAL("Wrong size after reopen",
-+			dso__data_read_offset(dso, NULL, DSO__DATA_CACHE_SIZE * 2 + 10,
-+					      buf, 10) == 10);
-+	TEST_ASSERT_VAL("Wrong data after reopen",
-+			buf[0] == (DSO__DATA_CACHE_SIZE * 2 + 10) % 10);
-+
-+	dso__data_close(dso);
-+	dso__put(dso);
-+	unlink(file);
-+
-+	nr_end = open_files_cnt();
-+	TEST_ASSERT_VAL("failed leaking files", nr == nr_end);
-+	return 0;
-+}
- 
- static struct test_case tests__dso_data[] = {
- 	TEST_CASE("read", dso_data),
- 	TEST_CASE("cache", dso_data_cache),
- 	TEST_CASE("reopen", dso_data_reopen),
-+	TEST_CASE("explicit path", dso_data_path),
- 	{	.name = NULL, }
- };
- 
-diff --git a/tools/perf/util/dso.c b/tools/perf/util/dso.c
-index d3017c82ffb5..5c4872810ada 100644
---- a/tools/perf/util/dso.c
-+++ b/tools/perf/util/dso.c
-@@ -547,8 +547,6 @@ static void dso__list_add(struct dso *dso) EXCLUSIVE_LOCKS_REQUIRED(_dso__data_o
- #ifdef REFCNT_CHECKING
- 	dso__data(dso)->dso = dso__get(dso);
- #endif
--	/* Assume the dso is part of dsos, hence the optional reference count above. */
--	assert(dso__dsos(dso));
- 	dso__data_open_cnt++;
- }
- 
-@@ -678,8 +676,11 @@ static int __open_dso(struct dso *dso, struct machine *machine)
- 
- 	mutex_lock(dso__lock(dso));
- 
--	name = dso__get_filename(dso, machine ? machine->root_dir : "", &decomp,
--				 dso__binary_type(dso));
-+	if (dso__data(dso)->path)
-+		name = strdup(dso__data(dso)->path);
-+	else
-+		name = dso__get_filename(dso, machine ? machine->root_dir : "",
-+					 &decomp, dso__binary_type(dso));
- 	if (name) {
- 		fd = do_open(name);
- 	} else {
-@@ -833,6 +834,26 @@ void dso__data_close(struct dso *dso)
- 	mutex_unlock(dso__data_open_lock());
- }
- 
-+/**
-+ * dso__data_set_path - Read @dso's data from an explicit file
-+ * @dso: dso object
-+ * @path: file to open instead of the path derived from the binary type
-+ *
-+ * Used when the data must come from one specific file, such as the separate
-+ * debuginfo file that a symbol table was read from. Must be called before any
-+ * data is read, as already cached data is not invalidated.
-+ */
-+int dso__data_set_path(struct dso *dso, const char *path)
-+{
-+	char *new_path = strdup(path);
-+
-+	if (!new_path)
-+		return -ENOMEM;
-+	free(dso__data(dso)->path);
-+	dso__data(dso)->path = new_path;
-+	return 0;
-+}
-+
- static void try_to_open_dso(struct dso *dso, struct machine *machine)
- 	EXCLUSIVE_LOCKS_REQUIRED(_dso__data_open_lock)
- {
-@@ -1783,6 +1804,7 @@ void dso__delete(struct dso *dso)
- 	dso__data_close(dso);
- 	auxtrace_cache__free(RC_CHK_ACCESS(dso)->auxtrace_cache);
- 	dso_cache__free(dso);
-+	zfree(&RC_CHK_ACCESS(dso)->data.path);
- 	dso__free_a2l(dso);
- 	dso__free_a2l_libbfd(dso);
- 	dso__free_libdw(dso);
-diff --git a/tools/perf/util/dso.h b/tools/perf/util/dso.h
-index 3f08d45e7f53..7bcd5ec0c312 100644
---- a/tools/perf/util/dso.h
-+++ b/tools/perf/util/dso.h
-@@ -264,6 +264,7 @@ struct dso_data {
- #ifdef REFCNT_CHECKING
- 	struct dso	 *dso;
- #endif
-+	char		 *path;
- 	int		 fd;
- 	int		 status;
- 	u32		 status_seen;
-@@ -921,6 +922,7 @@ bool dso__data_get_fd(struct dso *dso, struct machine *machine, int *fd)
- 	EXCLUSIVE_TRYLOCK_FUNCTION(true, _dso__data_open_lock);
- void dso__data_put_fd(struct dso *dso) UNLOCK_FUNCTION(_dso__data_open_lock);
- void dso__data_close(struct dso *dso) LOCKS_EXCLUDED(_dso__data_open_lock);
-+int dso__data_set_path(struct dso *dso, const char *path);
- 
- int dso__data_file_size(struct dso *dso, struct machine *machine);
- off_t dso__data_size(struct dso *dso, struct machine *machine);
+ tools/perf/Documentation/perf-script.txt           |   9 +
+ tools/perf/arch/powerpc/util/sym-handling.c        |   6 +-
+ tools/perf/builtin-script.c                        |   2 +
+ tools/perf/tests/Build                             |   1 +
+ tools/perf/tests/builtin-test.c                    |   1 +
+ tools/perf/tests/dso-data.c                        |  42 +
+ tools/perf/tests/shell/lazy_load_symbols_parity.sh | 326 ++++++++
+ tools/perf/tests/shell/script_lazy_load_symbols.sh | 185 ++++
+ tools/perf/tests/symbol-lazy.c                     | 699 ++++++++++++++++
+ tools/perf/tests/tests.h                           |   1 +
+ tools/perf/util/dso.c                              |  54 +-
+ tools/perf/util/dso.h                              |  61 ++
+ tools/perf/util/map.c                              |   7 +-
+ tools/perf/util/symbol-elf.c                       | 926 +++++++++++++++++++++
+ tools/perf/util/symbol-minimal.c                   |   9 +
+ tools/perf/util/symbol.c                           |  52 +-
+ tools/perf/util/symbol.h                           |  24 +-
+ tools/perf/util/symbol_conf.h                      |   1 +
+ 18 files changed, 2376 insertions(+), 30 deletions(-)
+---
+base-commit: 705da5b15ab89ba97b11eedbe507c2fd83d31cb9
+change-id: 20260915-perf-symbol-memory-send-e7cfca1ac3d9
 
--- 
-Git-157)
+Best regards,
+--  
+Alireza Haghdoost <haghdoost@uber.com>
 
 
