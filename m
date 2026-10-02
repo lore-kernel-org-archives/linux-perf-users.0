@@ -1,280 +1,79 @@
-Received: from mail-wm2-f12.google.com (mail-wm2-f12.google.com [74.125.225.140])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EAD348551E
-	for <linux-perf-users@vger.kernel.org>; Fri,  2 Oct 2026 11:15:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.225.140
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E4ED36654C
+	for <linux-perf-users@vger.kernel.org>; Fri,  2 Oct 2026 11:23:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790939743; cv=none; b=t+uqw/QYfH2eL33g6xoPP9xpz9L4K76EXwPoN9LXOTz71HFkdhsLcOsatjkuZvMnq73tZEju6CjaLIeh1Kpf9tTiJX+DXQ/8DOGS77qK82350H/DCKP6CuokbnBKSh4yUtXvlMrqSZOGibcwswM/5sU4NLHh+PutZ+QbiWwNNMw=
+	t=1790940207; cv=none; b=qMSeFdS6oOFICANdR3lXmU24dcNeUAjFclhsghZl9KoWX2a8oavB5cMXmI9lb6S8AVowdLPBRRW4QgMMbRxYRqB1zqwqkvSzdVLabx2RWWcNcdlfEyVj0mdU5FyXFQ4PH0jWFToC2F4Fyii7Zdxs/DOqKNcEV4Tx2J7HLzOmlkQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790939743; c=relaxed/simple;
-	bh=M3rPYMcpTIRHBZ3NVVSsH8snhyXO8wiBrkIMArVMaI0=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=CK6gIbo/wAZm7JEiTqHxLXUB3/lFXGGNI47QsYsQ23lebpTi4foXbMXdsbofo2zek30J3pPAgUFAIFbAX1eAzX3Zsacvz+9QCLua7iaDEqM/KlgubqSPiOo6Py2SlVDbmq4pne7jkof7nQWXVfe8NcNWvx5cUtE0PMj6bWRusz0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=gEe+QpTm; arc=none smtp.client-ip=74.125.225.140
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1790940207; c=relaxed/simple;
+	bh=sIaPLjzqft4JpSIuOR6jNBf1IOsgcaJiZ1hQ18gXTac=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=rjXRhc0M1sW8od1OsaNanbCMDW11jCvT7DOsEpREPmN++46HuyrsBWot3dreKJjOl5m+Nzt/w3aHsbJF6Bujr66CZnPrauo+N28U7o5UjkHWWjzJRyoLY7+DXFuQ2sZ47eGzz7SsRx714an+H1HYkZItE5gcBm68fNeNC0KBpNQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nLVI29bV; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gEe+QpTm"
-Received: by mail-wm2-f12.google.com with SMTP id 5b1f17b1804b1-49cd5462b69so41972945e9.1
-        for <linux-perf-users@vger.kernel.org>; Fri, 02 Oct 2026 04:15:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1790939732; x=1791544532; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :content-type:mime-version:subject:date:from:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=OUfzXk7gzJEOddY/hfe9OLAQHpkFenB0R/fhaQZ1l64=;
-        b=gEe+QpTmNePj+81ejwBEnb6ufcwPNt/OXBvu31fxtSL+GMxUdcOrKW3TZ5PwXGPTD7
-         5tGbL8/oU/HtEO5aLvCxqEvAR8lYzyMXAgR7e0H0zu46Svfcw3tHuUKsy/sdNSfmWu6d
-         DrNV8I4jcIxnnU+zRbdd7ii+snFEuVtn9R/5grbP3KVVWDucHr9oy7TleI8k04Q2fLAt
-         VHYTmITWbwQOTgCX5ERgIHAtBive+PsWtwFejZSP99HEoMKUesjBR2M/eFYDs1aVMf1/
-         3lNe5e2ZyRluOIYkrmDAAFuvegOpwVzo7nowAcTIfT9tn3sYeeztRFFOqhdhLKRg91mx
-         GprA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1790939732; x=1791544532;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :content-type:mime-version:subject:date:from:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=OUfzXk7gzJEOddY/hfe9OLAQHpkFenB0R/fhaQZ1l64=;
-        b=MYXds9jV2KkJ1f8N7efOY1lJ/GpHL8XnhzkHfhjmhx1yvDaYqSkrrWl3aHcpsYikmG
-         i0Th6QDIxs/PXV/auG28B6MWrl4jPfex99xbYfF7VLR5DCgiXA4bGha+zqQIsV1aB1Ak
-         wfgFOMidEBNi7GqEgi6FI6KwGN40qgKTGo54CsOzuiEpBJwCGQ0aMvFKGfYFP1/6qbGb
-         14MLDD+MloqqLXbVjdbwLQcd5bhXiUlHure7wQHi9dnGBsClYzW2voi+khUNE/DdO0qf
-         JlLiTJzuAB4Fj8KWi+5MhNXywqFcBM4lruoBgvlSzP7pvMlRXEVNPndF7jkY8mlZzRgx
-         Vvxw==
-X-Forwarded-Encrypted: i=1; AKwUvBxg0kD4mKi7RuI4TdfaXMFqn5K1ybr2wyBua00lSbFV/Bx4Xn+oUKnZ8PAEqXLrjjijVVW2Pqa8q0XT1oT3ee6T@vger.kernel.org
-X-Gm-Message-State: AFuF++n61Z8jxuo1LcbC6mvUf+cYLSLy8IWJWLT0c8yNGpVJBbjPVDJt
-	VTZJx1c2HLlOhOuBlD7HJxgilUs4ZMpHbm04Dk6mdZpWlYEr9J+WU9lflaEbYOD5vEg=
-X-Gm-Gg: AYBFou08osk+lFjOys1OUr0wa1PwPGoIOJA6R1os4jDZ7M1UnX2jT/0xpnNahLDhv93
-	A4NTHqGPvyWcT5Hcm/N+hliT9LktaDHAPpoFqeEmPuvfsz4PSIrD0FBKGwUmLaHCHCgifthrsT+
-	lyQfKyLUuv8Q2JegxmxsIBmQBSzkol+O/+zogsmltAljU8qUse/In4t+oxCi51PG9d4I5dK1KpG
-	qbPeTT6VCuBNQ0UVH0IZyUxUKZIwocncrZJVM0gDB1mao9VejNA03tFUIsTxV+QMpYaK/ohjm8G
-	Go5f1UiMnb4f0xV11mcueqtN5Z36ZEQxkAFIdjbj6P7HG1l9XljB7WBf+GFSGWcHEcCJ4pHzWtH
-	cSc/WxS/J+58QxM0pyVGU3S3Hqtla+9o4AUEgD5aui585L53KDVYlMetCmyVlAfOUE3D6jmvHFa
-	Q3WRM1suFRXsF3F4ZEoDcVwkfqoTv17JFmY9LIjzb3TAA6TGcBRAzdNBA+Ib+YKkm4OxhIU8uvw
-	g==
-X-Received: by 2002:a05:600c:4e8e:b0:49f:ce78:3561 with SMTP id 5b1f17b1804b1-4a02759b360mr45109215e9.18.1790939731921;
-        Fri, 02 Oct 2026 04:15:31 -0700 (PDT)
-Received: from pop-os.local ([37.18.141.193])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-48b38306dd4sm4752986f8f.43.2026.10.02.04.15.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 02 Oct 2026 04:15:31 -0700 (PDT)
-From: James Clark <james.clark@linaro.org>
-Date: Fri, 02 Oct 2026 12:15:14 +0100
-Subject: [PATCH v3 4/4] perf: cs-etm: Respect --no-itrace option
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nLVI29bV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 43F0D1F000FF;
+	Fri,  2 Oct 2026 11:23:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1790940206;
+	bh=sIaPLjzqft4JpSIuOR6jNBf1IOsgcaJiZ1hQ18gXTac=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=nLVI29bVhBjvlRjtpoKEsIYIixpLFZRqCJNkIyUAcj2+JW3+5eIAYaA0jA3aFU6GK
+	 t+u/nvvh+/6fBPg+OeYN9/uzXqs04E+q/Ujn1tOBwh4hFbMaHoXvrdMImdUXA6mjVy
+	 DI3pX69jCJcmxZEB+q8e8GHUVQ1f4hRK3Kxt7P3FfIPSo3enEQ2I2LEswOpWJxGzTF
+	 Ef1lewBQ1vr1unDJWSTzzwdJY2SDnJYpqX/UCMi0izjJGpQF9hMvozjRhumVM8Vdm7
+	 v2Y61R4y8ih7ZbrgeDQhGYlAcspQvHEzbLfJJ4e775ocFXdg8Fye29qwlI2I2iMlsS
+	 zvxx3wX+zeVaQ==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v3 3/4] perf cs-etm: Synthesize missing HW_ID mappings
+ for raw trace
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "James Clark" <james.clark@linaro.org>
+Cc: linux-perf-users@vger.kernel.org
+In-Reply-To: <20261002-james-cs-hw_id-output-failure-v3-3-1d8b6ef339c8@linaro.org>
+References: <20261002-james-cs-hw_id-output-failure-v3-0-1d8b6ef339c8@linaro.org>
+ <20261002-james-cs-hw_id-output-failure-v3-3-1d8b6ef339c8@linaro.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Fri, 02 Oct 2026 11:23:25 +0000
+Message-Id: <20261002112326.43F0D1F000FF@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20261002-james-cs-hw_id-output-failure-v3-4-1d8b6ef339c8@linaro.org>
-References: <20261002-james-cs-hw_id-output-failure-v3-0-1d8b6ef339c8@linaro.org>
-In-Reply-To: <20261002-james-cs-hw_id-output-failure-v3-0-1d8b6ef339c8@linaro.org>
-To: John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>, 
- Mike Leach <mike.leach@arm.com>, Leo Yan <leo.yan@linux.dev>, 
- Suzuki K Poulose <suzuki.poulose@arm.com>, 
- Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
- Arnaldo Carvalho de Melo <acme@kernel.org>, 
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
- Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
- Adrian Hunter <adrian.hunter@intel.com>, Leo Yan <leo.yan@arm.com>, 
- Suyash Mahar <smahar@meta.com>, Amir Ayupov <aaupov@fb.com>
-Cc: Arnaldo Carvalho de Melo <acme@redhat.com>, 
- linux-arm-kernel@lists.infradead.org, coresight@lists.linaro.org, 
- linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
- James Clark <james.clark@linaro.org>
-X-Mailer: b4 0.15.2
 
-If there is a bug in decoding then Perf will exit early and you can't
-investigate by using the raw dump mode. Make the --no-itrace option stop
-Coresight decoding after printing the aux header so decode errors don't
-stop the rest of the samples being printed.
+> From: Leo Yan <leo.yan@arm.com>
+>=20
+> The CoreSight driver emits PERF_RECORD_AUX_OUTPUT_HW_ID via
+> perf_report_aux_output_id(). If the perf ring buffer is full,
+> perf_report_aux_output_id() can fail to emit the record and return
+> silently.
+>=20
+> When at least one HW_ID record is present in the file, perf skips the
+> legacy metadata-only trace ID mapping path. Therefore any raw AUX queue
+> whose HW_ID record was dropped can be left with an empty traceid_list,
+> and cs_etm__create_queue_decoders() will not create a decoder for that
+> queue.
+>=20
+> Fix it by ignoring all HW_IDs for unformatted queues and always create
+> one decoder per queue unconditionally. Trace ID is unused so we can hard
+> code it to 1 (0 is a special value used in
+> 'pending_timestamp_chan_id' to indicate not pending). We also need put
+> the same trace ID in the CPU metadata because the relationship between
+> CPU metadata and traceid_list is bidirectional. Moving
+> cs_etm__metadata_set_trace_id() into the mapping function solves this
+> and simplifies existing code. cs_etm__insert_trace_id_node() now does
+> two things, so rename it to a more generic cs_etm__map_trace_id().
+>=20
+> Signed-off-by: Leo Yan <leo.yan@arm.com>
+> Signed-off-by: James Clark <james.clark@linaro.org>
 
-pmu_type and evsel_is_auxtrace need to be set so that the
-unleader_auxtrace() behavior is the same as without --no-itrace.
+Sashiko has reviewed this patch and found no issues. It looks great!
 
-Reviewed-by: Adrian Hunter <adrian.hunter@intel.com>
-Signed-off-by: James Clark <james.clark@linaro.org>
----
- tools/perf/util/auxtrace.c |  2 +-
- tools/perf/util/auxtrace.h |  1 +
- tools/perf/util/cs-etm.c   | 66 +++++++++++++++++++++++++---------------------
- 3 files changed, 38 insertions(+), 31 deletions(-)
-
-diff --git a/tools/perf/util/auxtrace.c b/tools/perf/util/auxtrace.c
-index ed2113190785..2557cbec37b3 100644
---- a/tools/perf/util/auxtrace.c
-+++ b/tools/perf/util/auxtrace.c
-@@ -123,7 +123,7 @@ static int evlist__regroup(struct evlist *evlist, struct evsel *leader, struct e
- 	return 0;
- }
- 
--static bool auxtrace__dont_decode(struct perf_session *session)
-+bool auxtrace__dont_decode(struct perf_session *session)
- {
- 	return !session->itrace_synth_opts ||
- 	       session->itrace_synth_opts->dont_decode;
-diff --git a/tools/perf/util/auxtrace.h b/tools/perf/util/auxtrace.h
-index 5012bead1b92..c29a8444f08e 100644
---- a/tools/perf/util/auxtrace.h
-+++ b/tools/perf/util/auxtrace.h
-@@ -650,6 +650,7 @@ void auxtrace__free(struct perf_session *session);
- bool auxtrace__evsel_is_auxtrace(struct perf_session *session,
- 				 struct evsel *evsel);
- u64 auxtrace_synth_id_range_start(struct evsel *evsel);
-+bool auxtrace__dont_decode(struct perf_session *session);
- 
- #define ITRACE_HELP \
- "				i[period]:    		synthesize instructions events\n" \
-diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
-index c0152549e3e2..bdcf94813129 100644
---- a/tools/perf/util/cs-etm.c
-+++ b/tools/perf/util/cs-etm.c
-@@ -965,7 +965,7 @@ static int cs_etm__flush_events(struct perf_session *session,
- 	struct cs_etm_auxtrace *etm = container_of(session->auxtrace,
- 						   struct cs_etm_auxtrace,
- 						   auxtrace);
--	if (dump_trace)
-+	if (dump_trace || auxtrace__dont_decode(session))
- 		return 0;
- 
- 	if (!tool->ordered_events)
-@@ -3002,7 +3002,7 @@ static int cs_etm__process_event(struct perf_session *session,
- 						   struct cs_etm_auxtrace,
- 						   auxtrace);
- 
--	if (dump_trace)
-+	if (dump_trace || auxtrace__dont_decode(session))
- 		return 0;
- 
- 	if (!tool->ordered_events) {
-@@ -3552,27 +3552,49 @@ int cs_etm__process_auxtrace_info_full(union perf_event *event,
- 	int err = 0;
- 	int aux_hw_id_found;
- 	int i;
--	u64 *ptr = NULL;
-+	u64 *ptr = (u64 *) auxtrace_info->priv;
- 	u64 **metadata = NULL;
- 
--	/* First the global part */
--	ptr = (u64 *) auxtrace_info->priv;
--	num_cpu = ptr[CS_PMU_TYPE_CPUS] & 0xffffffff;
-+	etm = zalloc(sizeof(*etm));
-+	if (!etm)
-+		return -ENOMEM;
-+
-+	session->auxtrace = &etm->auxtrace;
-+	etm->auxtrace.free = cs_etm__free;
-+	etm->auxtrace.evsel_is_auxtrace = cs_etm__evsel_is_auxtrace;
-+	etm->auxtrace.process_event = cs_etm__process_event;
-+	etm->auxtrace.process_auxtrace_event = cs_etm__process_auxtrace_event;
-+	etm->auxtrace.flush_events = cs_etm__flush_events;
-+	etm->auxtrace.free_events = cs_etm__free_events;
-+	etm->pmu_type = (unsigned int) ((ptr[CS_PMU_TYPE_CPUS] >> 32) & 0xffffffff);
-+
-+	/*
-+	 * Don't go further than the minimum required to identify this event as
-+	 * auxtrace with cs_etm__evsel_is_auxtrace() so unleader_auxtrace()
-+	 * works.
-+	 */
-+	if (auxtrace__dont_decode(session))
-+		return 0;
- 
- 	/*
- 	 * Bound num_cpu by the event size: the global header consumes
- 	 * CS_ETM_HEADER_SIZE bytes, and each CPU needs at least one u64
- 	 * metadata entry after that.
- 	 */
-+	num_cpu = ptr[CS_PMU_TYPE_CPUS] & 0xffffffff;
- 	priv_size = total_size - event_header_size - INFO_HEADER_SIZE -
- 		    CS_ETM_HEADER_SIZE;
- 	if (num_cpu <= 0 || priv_size <= 0 ||
--	    num_cpu > priv_size / (int)sizeof(u64))
--		return -EINVAL;
-+	    num_cpu > priv_size / (int)sizeof(u64)) {
-+		err = -EINVAL;
-+		goto err_free_etm;
-+	}
- 
- 	metadata = zalloc(sizeof(*metadata) * num_cpu);
--	if (!metadata)
--		return -ENOMEM;
-+	if (!metadata) {
-+		err = -ENOMEM;
-+		goto err_free_etm;
-+	}
- 
- 	/* Start parsing after the common part of the header */
- 	i = CS_HEADER_VERSION_MAX;
-@@ -3631,13 +3653,6 @@ int cs_etm__process_auxtrace_info_full(union perf_event *event,
- 		goto err_free_metadata;
- 	}
- 
--	etm = zalloc(sizeof(*etm));
--
--	if (!etm) {
--		err = -ENOMEM;
--		goto err_free_metadata;
--	}
--
- 	/*
- 	 * As all the ETMs run at the same exception level, the system should
- 	 * have the same PID format crossing CPUs.  So cache the PID format
-@@ -3647,7 +3662,7 @@ int cs_etm__process_auxtrace_info_full(union perf_event *event,
- 
- 	err = auxtrace_queues__init_nr(&etm->queues, max_cpu + 1);
- 	if (err)
--		goto err_free_etm;
-+		goto err_free_metadata;
- 
- 	for (unsigned int j = 0; j < etm->queues.nr_queues; ++j) {
- 		err = cs_etm__setup_queue(etm, &etm->queues.queue_array[j], j);
-@@ -3685,7 +3700,6 @@ int cs_etm__process_auxtrace_info_full(union perf_event *event,
- 	etm->session = session;
- 
- 	etm->num_cpu = num_cpu;
--	etm->pmu_type = (unsigned int) ((ptr[CS_PMU_TYPE_CPUS] >> 32) & 0xffffffff);
- 	etm->snapshot_mode = (ptr[CS_ETM_SNAPSHOT] != 0);
- 	etm->metadata = metadata;
- 	etm->auxtrace_type = auxtrace_info->type;
-@@ -3712,14 +3726,6 @@ int cs_etm__process_auxtrace_info_full(union perf_event *event,
- 			    "you can specify the itrace option 'T' for timestamp decoding\n"
- 			    "if the Coresight timestamp on the platform is same with the kernel time.\n\n");
- 
--	etm->auxtrace.process_event = cs_etm__process_event;
--	etm->auxtrace.process_auxtrace_event = cs_etm__process_auxtrace_event;
--	etm->auxtrace.flush_events = cs_etm__flush_events;
--	etm->auxtrace.free_events = cs_etm__free_events;
--	etm->auxtrace.free = cs_etm__free;
--	etm->auxtrace.evsel_is_auxtrace = cs_etm__evsel_is_auxtrace;
--	session->auxtrace = &etm->auxtrace;
--
- 	cs_etm__setup_timeless_decoding(etm);
- 
- 	etm->tc.time_shift = tc->time_shift;
-@@ -3797,13 +3803,13 @@ int cs_etm__process_auxtrace_info_full(union perf_event *event,
- 
- err_free_queues:
- 	cs_etm__free_queues(etm);
--	session->auxtrace = NULL;
--err_free_etm:
--	zfree(&etm);
- err_free_metadata:
- 	/* No need to check @metadata[j], free(NULL) is supported */
- 	for (int j = 0; j < num_cpu; j++)
- 		zfree(&metadata[j]);
- 	zfree(&metadata);
-+err_free_etm:
-+	session->auxtrace = NULL;
-+	zfree(&etm);
- 	return err;
- }
-
--- 
-2.43.0
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261002-james-cs-h=
+w_id-output-failure-v3-0-1d8b6ef339c8@linaro.org?part=3D3
 
