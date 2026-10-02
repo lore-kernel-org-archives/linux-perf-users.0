@@ -1,56 +1,56 @@
-Received: from mail-dy1-f200.google.com (mail-dy1-f200.google.com [74.125.82.200])
+Received: from mail-dy1-f199.google.com (mail-dy1-f199.google.com [74.125.82.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1CD6511180
-	for <linux-perf-users@vger.kernel.org>; Fri,  2 Oct 2026 17:39:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AF564B8296
+	for <linux-perf-users@vger.kernel.org>; Fri,  2 Oct 2026 17:39:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790962759; cv=none; b=sZoUemqzpr8lu+jzDiEtQH/QGqSafXxy85wdACwjY8/LlPT+sD69edxtzvPZJKWf2u7SjaacxtzIuIY+933jpUcB3BViB1FRVY93yOaJYlu+I+QTT0MqW3XEtSPS8osZSXuRgf+IzxM5Rwpq6jxImj/Yz1EsmsRGMWBHlRy87jQ=
+	t=1790962773; cv=none; b=giSGtNY8CJz0yLuAzlfkCE4m13KOvyOSGiiwYU+UbvImC9oCJy5+nURIqN9aL9P6W6BfN1ZOFJwjuEkt6dxT8e4pIRKQhvixu/eTuhXRMfd+wsPjwUJj+e0I7RDXFkfemVxLv/kqa9cImZeEyLidh5RqlHpH33MuC9CGMMxq590=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790962759; c=relaxed/simple;
-	bh=CMzijwOnhUqGvTpwakUmeuxhzHujfavjnl3VBeyf+yA=;
+	s=arc-20240116; t=1790962773; c=relaxed/simple;
+	bh=xvpaUz4B3bDmJ8mp3NbbbkWxfiCH0sSgdPy2CH2zBbg=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=NIcnYjdTmpwXsPu8ntVz4h2n9N9AeTa3mqzQ28fs1wmZavYaWYgdTTUyvoysn5Jl48UoTEa4imWALvll/o4IxvhsSzlKcS6R/aNm8wGFMIvx0QG+vt3+HNfaA26OL22i/UbxF+OZgn8fxt77SFW3g6G36RkaibtPc7TWNCbe+c4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=EDenhtgi; arc=none smtp.client-ip=74.125.82.200
+	 To:Cc:Content-Type; b=aE9jQdozp7v1j4hKz6zxu85ugyVS6HWZi0v+a77wdVEjw48gofZS3Nv2dqK2kV1zcHdAEG12k76z0XPKW+k/d3Eph7mwYfEJyrJCjdRLRxR703igk6JTlAm10PmhcJJ1LUKPoAmWjhSN7NvXJhtWbrl4O1eQErSt89u7tplSpjQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=dFrjyW40; arc=none smtp.client-ip=74.125.82.199
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="EDenhtgi"
-Received: by mail-dy1-f200.google.com with SMTP id 5a478bee46e88-34e676375d9so1643383eec.0
-        for <linux-perf-users@vger.kernel.org>; Fri, 02 Oct 2026 10:39:09 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dFrjyW40"
+Received: by mail-dy1-f199.google.com with SMTP id 5a478bee46e88-3510a481ae9so792057eec.1
+        for <linux-perf-users@vger.kernel.org>; Fri, 02 Oct 2026 10:39:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1790962747; x=1791567547; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1790962759; x=1791567559; darn=vger.kernel.org;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=68X3ApZEvBvgqt6sZPlAdyoMSaW46naAFLLLljM6n2U=;
-        b=EDenhtgi0p1XWbkmN3GQhxWERr0O0A+8ikJiqaDgYbS/UqdQ83VK+70N/x7lE5kOiy
-         BHDQYyQtoiMJCJqfC1GqICTOtTEGHmHhpcskfhMR0hpzhd8Ua3IpL5iChp0x6dhjQ4h8
-         wUgYxaMTeKwKB9a/CSLuRlVvxy7PssDpRcLD3sSbWHVnmJSp+8d2WF1/dwhjvNo60XN9
-         dvBGOfJI35HgYIXhSoSwE0wCI5oWvZCdEBnDPAS0Sq9KMxLh3z4Oxp3dgwdu8QcgAHp1
-         xc/+I6FmxowHXFpWboeyWhun+wa7Sh3s5I4hgPw8x0fdJYLAnCVD/NugM2WzfAK19d5O
-         iIEw==
+        bh=FiRedINEl1Qq/ylBeM4HgVFBA243D1uRumj3a6WIf5g=;
+        b=dFrjyW40pFon4RdW7ep7Gkq4cETVZ/PelsWTdpI9OWkppvZ3jmENiEOHtyAq07Kpt4
+         cOwXmcJTtLPIPPxj7l9bMenjy1Kts9WTCMkmg/bdBIccWGZ+IUqQn9Yud4EIIM6jHGuQ
+         Xx3LXZfF5UrTVBwCVRc78wTdiaWTEqszA89XdPiHUXHcZ54HW9mpx1dGFgT/5xytTcXS
+         VgF0u9XjNN6UkgZpf+gY2VfFV7CqbewENzv1y+MU23puJ1++SA7HBlgyYI24b92gqemu
+         fLL71lU1eGr7wOmojFS715PoegjDne1gdSbo5pWgFVP5o7H2YS1FWDipeEppde78DytX
+         3iYw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1790962747; x=1791567547;
+        d=1e100.net; s=20260707; t=1790962759; x=1791567559;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=68X3ApZEvBvgqt6sZPlAdyoMSaW46naAFLLLljM6n2U=;
-        b=e0Xn+jUpElYCi8WO8lIDoPisxm/vC0OPmYwcRTSU0lzKLTj0I5HPm+dAOOjdMUEhtP
-         kJOvvD9Zr6ekXhikQsKzmWpSlp/utUlEK9P9LE28nxc/yKNwKfPJqk1DUGcqg+wTwX72
-         bElQDbdYDbs0MHCKnyY8coVS0bWf3qeghhPK77JA/2W/nBbFUF/ZwkeExYYGElOOr0eq
-         0f5i5QzoVJ3v70V4unXbYj56Tki54P1lZv39K1Ithv3g0JoP9V1+Ib3V29LLfbaWoa37
-         BBvvw7GwQR3JpEzMxPl4Jyn9FuJ5+SayOVkyjmtjThTSfWHA2kqq5F2t1ss/p9MroaHP
-         UZEA==
-X-Forwarded-Encrypted: i=1; AKwUvBwy6Z5AY50zVwBx9kuFczYk5DZ6oWxsBrYLBhHivwqwzwNcJ1TOHHPe8f/T8m51VrwKbuK0wnu35gVzh02UfUJr@vger.kernel.org
-X-Gm-Message-State: AFq9FYJhj8mc8srq3arYhfNZNbJb8nvlfiIzR0HQty5Z6cxxHb8R1KOP
-	3kNiSHTuIH8EPrBENKZj83bee+1SvsYuA198nZ7gvy6dieXAngtvw+inNVxVtvDHsp/v42OBWEa
-	fVlioVOnj7A==
-X-Received: from dybsc11.prod.google.com ([2002:a05:7301:4b0b:b0:33e:55a2:f3c0])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7301:1c1a:b0:34e:2150:e5a4
- with SMTP id 5a478bee46e88-34e2150e886mr6245976eec.16.1790962746101; Fri, 02
- Oct 2026 10:39:06 -0700 (PDT)
-Date: Fri,  2 Oct 2026 10:38:36 -0700
+        bh=FiRedINEl1Qq/ylBeM4HgVFBA243D1uRumj3a6WIf5g=;
+        b=XipGc/KSMW0poq3WUVasOsInDzUPU6yO6eNM6Z/B2nzPMXbfNQHRK4HF/0nownDADV
+         RmTvYd77N68YGJ7POghbvE8dEltl2kWu5W1cPMQGKyW0lGa3ml0rTGsGJpAn39BwdqmW
+         E+cyNufXDuefNp9ym6Hi788nRfnxprTtLWWELOnwVJSJTJOjz3AjQZSoy1PhxJL4EJNW
+         N49GXts2d6aYfllxUEE2EsPjcFpXAh9tCg8nLPocVKmzso5CR3tpgjcP8qt0GhiZz/jn
+         l+G8dy0yHKMowSxdTCWnQ+ofn0EzKkUfu+/BBMZZygTiQYcVRGpwsjtI6UOZ9vThcv/r
+         vMZg==
+X-Forwarded-Encrypted: i=1; AKwUvBzkb76pAf362ZZVFKPBzRVhCIWq3Y5d8mthJeyJnCh/FJf8CUhdECJiumSSURz7EFILSgyJwcj146IkZLu9w4x/@vger.kernel.org
+X-Gm-Message-State: AFuF++mcgBoWWuyQ8XHqP5xhi1CbBM35/Fwz6ARF+XZ8AqYXLs6fyusq
+	5B3u7uY8+BTRRjdlJHaJkMySQ3GNg3Qd6zLcwPmP+KNcJBaxK5dx7a0WeZdVNskHJIX+7kggTXY
+	0Za3RpYb0JA==
+X-Received: from dlbvv15.prod.google.com ([2002:a05:7022:5f0f:b0:14b:4891:4b9e])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:304:b0:14a:51c8:e9f2
+ with SMTP id a92af1059eb24-14f5c2ef7bfmr5648977c88.31.1790962758704; Fri, 02
+ Oct 2026 10:39:18 -0700 (PDT)
+Date: Fri,  2 Oct 2026 10:38:37 -0700
 In-Reply-To: <20261002173848.3228217-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -60,8 +60,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250424061943.1321025-1-irogers@google.com> <20261002173848.3228217-1-irogers@google.com>
 X-Mailer: git-send-email 2.56.0.rc1.315.gc6ed9934b7-goog
-Message-ID: <20261002173848.3228217-4-irogers@google.com>
-Subject: [PATCH v2 3/8] perf/core: Implement BUILD_ID_OFFSET sample type
+Message-ID: <20261002173848.3228217-5-irogers@google.com>
+Subject: [PATCH v2 4/8] perf: Refactor thread map and symbol APIs to take perf_sample
 From: Ian Rogers <irogers@google.com>
 To: irogers@google.com, acme@kernel.org, adrian.hunter@intel.com, 
 	mingo@redhat.com, namhyung@kernel.org, peterz@infradead.org
@@ -77,541 +77,867 @@ Cc: ak@linux.intel.com, alexander.shishkin@linux.intel.com,
 	yangyicong@hisilicon.com
 Content-Type: text/plain; charset="UTF-8"
 
-Implement PERF_SAMPLE_BUILD_ID_OFFSET and
-PERF_SAMPLE_CALLCHAIN_BUILD_ID_OFFSET payload writing in the perf event
-core by reusing BPF's stack_map_get_build_id_offset().
-
-When attr.defer_callchain is set, user-space IPs and callchains request
-a deferred unwind via unwind_deferred_request() and emit a
-PERF_CONTEXT_USER_DEFERRED marker and cookie in the sample. In the
-faultable task_work callback (perf_unwind_deferred_callback), the
-unwound user IPs are resolved to build IDs and file offsets using
-stack_map_get_build_id_offset(..., may_fault=true) and emitted in
-PERF_RECORD_CALLCHAIN_DEFERRED with PERF_RECORD_MISC_MMAP_BUILD_ID set.
-
-When attr.defer_callchain is not set (or if deferred unwinding is
-unavailable), user-space IPs and callchains are resolved in-place during
-perf_output_sample() using stack_map_get_build_id_offset(...,
-may_fault=false). If the mmap_lock cannot be trylocked or the ELF
-header/note pages are not present in the page cache (nor mlocked into
-memory), resolution falls back to emitting a zero-sized build ID
-(size = 0) with the virtual address as the offset. Using the deferred
-approach (attr.defer_callchain and attr.defer_output) is therefore
-preferred as it can fault in pages and wait on locks, resolving more
-build IDs without requiring ELF header pages to be mlocked in the page
-cache.
-
-Kernel-space IPs and callchain entries are emitted with a zero-sized
-build ID (size = 0) and the virtual address as the offset.
+Refactor thread__find_map and thread__find_symbol family of APIs to
+take a struct perf_sample * instead of cpumode and addr. This prepares
+for looking up symbols using build ID and offset, which is contained in
+the sample payload instead of the address.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- include/linux/bpf.h        |  14 ++
- include/linux/perf_event.h |   1 +
- kernel/bpf/stackmap.c      |   4 +-
- kernel/events/core.c       | 298 +++++++++++++++++++++++++++++++++++--
- 4 files changed, 304 insertions(+), 13 deletions(-)
+ .../arch/powerpc/util/skip-callchain-idx.c    |  4 +-
+ tools/perf/builtin-inject.c                   |  2 +-
+ tools/perf/builtin-script.c                   | 40 +++++++++++----
+ tools/perf/builtin-timechart.c                |  5 +-
+ tools/perf/builtin-trace.c                    | 10 ++--
+ tools/perf/tests/code-reading.c               |  4 +-
+ tools/perf/tests/mmap-thread-lookup.c         |  9 +++-
+ tools/perf/util/annotate-data.c               |  5 +-
+ tools/perf/util/aslr.c                        | 16 ++++--
+ tools/perf/util/build-id.c                    |  2 +-
+ tools/perf/util/capstone.c                    |  4 +-
+ tools/perf/util/cs-etm.c                      |  4 +-
+ tools/perf/util/data-convert-json.c           |  4 +-
+ tools/perf/util/debug.c                       |  4 +-
+ tools/perf/util/dlfilter.c                    |  8 ++-
+ tools/perf/util/event.c                       | 51 ++++++++++---------
+ tools/perf/util/intel-pt.c                    | 14 +++--
+ tools/perf/util/machine.c                     | 18 +++++--
+ tools/perf/util/python.c                      | 18 +++++--
+ tools/perf/util/thread.c                      | 11 ++--
+ tools/perf/util/thread.h                      | 14 ++---
+ tools/perf/util/unwind-libdw.c                |  7 ++-
+ tools/perf/util/unwind-libunwind.c            |  8 ++-
+ 23 files changed, 179 insertions(+), 83 deletions(-)
 
-diff --git a/include/linux/bpf.h b/include/linux/bpf.h
-index e57af902560c..750133762436 100644
---- a/include/linux/bpf.h
-+++ b/include/linux/bpf.h
-@@ -4217,4 +4217,18 @@ static inline int bpf_map_check_op_flags(struct bpf_map *map, u64 flags, u64 all
+diff --git a/tools/perf/arch/powerpc/util/skip-callchain-idx.c b/tools/perf/arch/powerpc/util/skip-callchain-idx.c
+index 472714cfad38..cb29d9eafa89 100644
+--- a/tools/perf/arch/powerpc/util/skip-callchain-idx.c
++++ b/tools/perf/arch/powerpc/util/skip-callchain-idx.c
+@@ -225,7 +225,9 @@ int arch_skip_callchain_idx(struct thread *thread, struct ip_callchain *chain)
+ 	addr_location__init(&al);
+ 	ip = chain->ips[1];
+ 
+-	thread__find_symbol(thread, PERF_RECORD_MISC_USER, ip, &al);
++	thread__find_symbol(thread,
++			    &(struct perf_sample){.cpumode = PERF_RECORD_MISC_USER, .ip = ip},
++			    &al);
+ 
+ 	if (al.map)
+ 		dso = map__dso(al.map);
+diff --git a/tools/perf/builtin-inject.c b/tools/perf/builtin-inject.c
+index 67f019acb6c0..42ed367d729f 100644
+--- a/tools/perf/builtin-inject.c
++++ b/tools/perf/builtin-inject.c
+@@ -1167,7 +1167,7 @@ static int perf_event__inject_buildid(const struct perf_tool *tool, union perf_e
+ 		goto repipe;
+ 	}
+ 
+-	if (thread__find_map(thread, sample->cpumode, sample->ip, &al)) {
++	if (thread__find_map(thread, sample, &al)) {
+ 		mark_dso_hit(inject, tool, sample, machine, args.mmap_evsel, al.map,
+ 			     /*sample_in_dso=*/true);
+ 	}
+diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
+index b6691ebb1b4e..99e9e0c60f14 100644
+--- a/tools/perf/builtin-script.c
++++ b/tools/perf/builtin-script.c
+@@ -1063,6 +1063,7 @@ static int perf_sample__fprintf_brstack(struct perf_sample *sample,
+ {
+ 	struct branch_stack *br = sample->branch_stack;
+ 	struct branch_entry *entries = perf_sample__branch_entries(sample);
++	struct perf_sample br_sample = {};
+ 	u64 i, from, to;
+ 	int printed = 0;
+ 
+@@ -1079,8 +1080,12 @@ static int perf_sample__fprintf_brstack(struct perf_sample *sample,
+ 
+ 			addr_location__init(&alf);
+ 			addr_location__init(&alt);
+-			thread__find_map_fb(thread, sample->cpumode, from, &alf);
+-			thread__find_map_fb(thread, sample->cpumode, to, &alt);
++			br_sample.cpumode = sample->cpumode;
++			br_sample.ip = from;
++			thread__find_map_fb(thread, &br_sample, &alf);
++			br_sample.cpumode = sample->cpumode;
++			br_sample.ip = to;
++			thread__find_map_fb(thread, &br_sample, &alt);
+ 
+ 			printed += map__fprintf_dsoname_dsoff(alf.map, PRINT_FIELD(DSOFF), alf.addr, fp);
+ 			printed += fprintf(fp, "/0x%"PRIx64, to);
+@@ -1102,6 +1107,7 @@ static int perf_sample__fprintf_brstacksym(struct perf_sample *sample,
+ {
+ 	struct branch_stack *br = sample->branch_stack;
+ 	struct branch_entry *entries = perf_sample__branch_entries(sample);
++	struct perf_sample br_sample = {};
+ 	u64 i, from, to;
+ 	int printed = 0;
+ 
+@@ -1116,8 +1122,12 @@ static int perf_sample__fprintf_brstacksym(struct perf_sample *sample,
+ 		from = entries[i].from;
+ 		to   = entries[i].to;
+ 
+-		thread__find_symbol_fb(thread, sample->cpumode, from, &alf);
+-		thread__find_symbol_fb(thread, sample->cpumode, to, &alt);
++		br_sample.cpumode = sample->cpumode;
++		br_sample.ip = from;
++		thread__find_symbol_fb(thread, &br_sample, &alf);
++		br_sample.cpumode = sample->cpumode;
++		br_sample.ip = to;
++		thread__find_symbol_fb(thread, &br_sample, &alt);
+ 
+ 		printed += symbol__fprintf_symname_offs(alf.sym, &alf, fp);
+ 		if (PRINT_FIELD(DSO))
+@@ -1140,6 +1150,7 @@ static int perf_sample__fprintf_brstackoff(struct perf_sample *sample,
+ {
+ 	struct branch_stack *br = sample->branch_stack;
+ 	struct branch_entry *entries = perf_sample__branch_entries(sample);
++	struct perf_sample br_sample = {};
+ 	u64 i, from, to;
+ 	int printed = 0;
+ 
+@@ -1154,11 +1165,15 @@ static int perf_sample__fprintf_brstackoff(struct perf_sample *sample,
+ 		from = entries[i].from;
+ 		to   = entries[i].to;
+ 
+-		if (thread__find_map_fb(thread, sample->cpumode, from, &alf) &&
++		br_sample.cpumode = sample->cpumode;
++		br_sample.ip = from;
++		if (thread__find_map_fb(thread, &br_sample, &alf) &&
+ 		    !dso__adjust_symbols(map__dso(alf.map)))
+ 			from = map__dso_map_ip(alf.map, from);
+ 
+-		if (thread__find_map_fb(thread, sample->cpumode, to, &alt) &&
++		br_sample.cpumode = sample->cpumode;
++		br_sample.ip = to;
++		if (thread__find_map_fb(thread, &br_sample, &alt) &&
+ 		    !dso__adjust_symbols(map__dso(alt.map)))
+ 			to = map__dso_map_ip(alt.map, to);
+ 
+@@ -1216,7 +1231,10 @@ static int grab_bb(u8 *buffer, u64 start, u64 end,
+ 	}
+ 
+ 	addr_location__init(&al);
+-	if (!thread__find_map(thread, *cpumode, start, &al) || (dso = map__dso(al.map)) == NULL) {
++	if (!thread__find_map(thread,
++			      &(struct perf_sample){.cpumode = *cpumode,
++						    .ip = start}, &al) ||
++	    (dso = map__dso(al.map)) == NULL) {
+ 		pr_debug("\tcannot resolve %" PRIx64 "-%" PRIx64 "\n", start, end);
+ 		goto out;
+ 	}
+@@ -1291,7 +1309,7 @@ static int print_srccode(struct thread *thread, u8 cpumode, uint64_t addr)
+ 	int ret = 0;
+ 
+ 	addr_location__init(&al);
+-	thread__find_map(thread, cpumode, addr, &al);
++	thread__find_map(thread, &(struct perf_sample){.cpumode = cpumode, .ip = addr}, &al);
+ 	if (!al.map)
+ 		goto out;
+ 	ret = map__fprintf_srccode(al.map, al.addr, stdout,
+@@ -1346,7 +1364,9 @@ static int ip__fprintf_jump(uint64_t ip, struct branch_entry *en,
+ 		struct addr_location al;
+ 
+ 		addr_location__init(&al);
+-		thread__find_map(thread, x->cpumode, ip, &al);
++		thread__find_map(thread,
++			 &(struct perf_sample){.cpumode = x->cpumode,
++					       .ip = ip}, &al);
+ 		printed += map__fprintf_srcline(al.map, al.addr, " srcline: ", fp);
+ 		printed += fprintf(fp, "\t");
+ 		addr_location__exit(&al);
+@@ -1406,7 +1426,7 @@ static int ip__fprintf_sym(uint64_t addr, struct thread *thread,
+ 	int off, printed = 0, ret = 0;
+ 
+ 	addr_location__init(&al);
+-	thread__find_map(thread, cpumode, addr, &al);
++	thread__find_map(thread, &(struct perf_sample){.cpumode = cpumode, .ip = addr}, &al);
+ 
+ 	if ((*lastsym) && al.addr >= (*lastsym)->start && al.addr < (*lastsym)->end)
+ 		goto out;
+diff --git a/tools/perf/builtin-timechart.c b/tools/perf/builtin-timechart.c
+index 3d88c90c6573..745fd04e478a 100644
+--- a/tools/perf/builtin-timechart.c
++++ b/tools/perf/builtin-timechart.c
+@@ -512,6 +512,7 @@ static char *cat_backtrace(struct perf_sample *sample,
+ 	size_t p_len;
+ 	u8 cpumode = PERF_RECORD_MISC_USER;
+ 	struct ip_callchain *chain = sample->callchain;
++	struct perf_sample ip_sample = {};
+ 	FILE *f = open_memstream(&p, &p_len);
+ 	bool corrupted = false;
+ 
+@@ -560,7 +561,9 @@ static char *cat_backtrace(struct perf_sample *sample,
+ 
+ 		addr_location__init(&tal);
+ 		tal.filtered = 0;
+-		if (thread__find_symbol(al.thread, cpumode, ip, &tal))
++		ip_sample.cpumode = cpumode;
++		ip_sample.ip = ip;
++		if (thread__find_symbol(al.thread, &ip_sample, &tal))
+ 			fprintf(f, "..... %016" PRIx64 " %s\n", ip, tal.sym->name);
+ 		else
+ 			fprintf(f, "..... %016" PRIx64 "\n", ip);
+diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
+index d327603ae454..15b73580c5c2 100644
+--- a/tools/perf/builtin-trace.c
++++ b/tools/perf/builtin-trace.c
+@@ -3700,7 +3700,7 @@ static int trace__pgfault(struct trace *trace,
+ 	if (trace->summary_only)
+ 		goto out;
+ 
+-	thread__find_symbol(thread, sample->cpumode, sample->ip, &al);
++	thread__find_symbol(thread, sample, &al);
+ 
+ 	trace__fprintf_entry_head(trace, thread, 0, true, sample->time,
+ 				  sample->cpu, trace->output);
+@@ -3713,10 +3713,14 @@ static int trace__pgfault(struct trace *trace,
+ 
+ 	fprintf(trace->output, "] => ");
+ 
+-	thread__find_symbol(thread, sample->cpumode, sample->addr, &al);
++	thread__find_symbol(thread,
++			    &(struct perf_sample){.cpumode = sample->cpumode,
++						  .ip = sample->addr}, &al);
+ 
+ 	if (!al.map) {
+-		thread__find_symbol(thread, sample->cpumode, sample->addr, &al);
++		thread__find_symbol(thread,
++			    &(struct perf_sample){.cpumode = sample->cpumode,
++						  .ip = sample->addr}, &al);
+ 
+ 		if (al.map)
+ 			map_type = 'x';
+diff --git a/tools/perf/tests/code-reading.c b/tools/perf/tests/code-reading.c
+index c50b526f44fb..f339e2157dfc 100644
+--- a/tools/perf/tests/code-reading.c
++++ b/tools/perf/tests/code-reading.c
+@@ -394,7 +394,9 @@ static int read_object_code(u64 addr, size_t len, u8 cpumode,
+ 	pr_debug("Reading object code for memory address: %#"PRIx64"\n", addr);
+ 
+ 	addr_location__init(&al);
+-	if (!thread__find_map(thread, cpumode, addr, &al) || !map__dso(al.map)) {
++	if (!thread__find_map(thread,
++			      &(struct perf_sample){.cpumode = cpumode,
++						    .ip = addr}, &al) || !map__dso(al.map)) {
+ 		if (cpumode == PERF_RECORD_MISC_HYPERVISOR) {
+ 			pr_debug("Hypervisor address can not be resolved - skipping\n");
+ 			goto out;
+diff --git a/tools/perf/tests/mmap-thread-lookup.c b/tools/perf/tests/mmap-thread-lookup.c
+index 0c5619c6e6e9..dca8bbfe780a 100644
+--- a/tools/perf/tests/mmap-thread-lookup.c
++++ b/tools/perf/tests/mmap-thread-lookup.c
+@@ -195,8 +195,10 @@ static int mmap_events(synth_cb synth)
+ 
+ 		pr_debug("looking for map %p\n", td->map);
+ 
+-		thread__find_map(thread, PERF_RECORD_MISC_USER,
+-				 (unsigned long) (td->map + 1), &al);
++		thread__find_map(thread, &(struct perf_sample){
++					.cpumode = PERF_RECORD_MISC_USER,
++					.ip = (unsigned long) (td->map + 1),
++				 }, &al);
+ 
+ 		thread__put(thread);
+ 
+@@ -208,7 +210,10 @@ static int mmap_events(synth_cb synth)
+ 		}
+ 
+ 		pr_debug("map %p, addr %" PRIx64 "\n", al.map, map__start(al.map));
++
+ 		addr_location__exit(&al);
++		if (err)
++			break;
+ 	}
+ 
+ 	machine__delete(machine);
+diff --git a/tools/perf/util/annotate-data.c b/tools/perf/util/annotate-data.c
+index 19a6ecd67f28..b53dcb11bbb0 100644
+--- a/tools/perf/util/annotate-data.c
++++ b/tools/perf/util/annotate-data.c
+@@ -848,8 +848,9 @@ bool get_global_var_info(struct data_loc_info *dloc, u64 addr,
+ 	mem_addr = addr + map__reloc(dloc->ms->map);
+ 
+ 	addr_location__init(&al);
+-	sym = thread__find_symbol_fb(dloc->thread, dloc->cpumode,
+-				     mem_addr, &al);
++	sym = thread__find_symbol_fb(dloc->thread,
++				     &(struct perf_sample){.cpumode = dloc->cpumode,
++							   .ip = mem_addr}, &al);
+ 	if (sym) {
+ 		*var_name = sym->name;
+ 		/* Calculate type offset from the start of variable */
+diff --git a/tools/perf/util/aslr.c b/tools/perf/util/aslr.c
+index e365f807b021..acda28a6fd2d 100644
+--- a/tools/perf/util/aslr.c
++++ b/tools/perf/util/aslr.c
+@@ -155,7 +155,9 @@ static u64 aslr_tool__remap_address(struct aslr_tool *aslr,
+ 		return 0; /* No thread. */
+ 
+ 	addr_location__init(&al);
+-	if (!thread__find_map(aslr_thread, cpumode, addr, &al)) {
++	if (!thread__find_map(aslr_thread,
++			      &(struct perf_sample){.cpumode = cpumode, .ip = addr},
++			      &al)) {
+ 		/*
+ 		 * If lookup fails with specified cpumode, try fallback to the other space
+ 		 * to be robust against bad cpumode in samples.
+@@ -169,7 +171,9 @@ static u64 aslr_tool__remap_address(struct aslr_tool *aslr,
+ 		else if (cpumode == PERF_RECORD_MISC_GUEST_USER)
+ 			effective_cpumode = PERF_RECORD_MISC_GUEST_KERNEL;
+ 
+-		if (!thread__find_map(aslr_thread, effective_cpumode, addr, &al)) {
++		if (!thread__find_map(aslr_thread,
++				      &(struct perf_sample){.cpumode = effective_cpumode,
++							    .ip = addr}, &al)) {
+ 			addr_location__exit(&al);
+ 			return 0; /* No mmap. */
+ 		}
+@@ -286,7 +290,9 @@ static u64 aslr_tool__findnew_mapping(struct aslr_tool *aslr,
+ 	remap_key.pid = (cpumode == PERF_RECORD_MISC_KERNEL ||
+ 			 cpumode == PERF_RECORD_MISC_GUEST_KERNEL) ?
+ 			kernel_pid : thread__pid(aslr_thread);
+-	if (thread__find_map(aslr_thread, cpumode, start, &al)) {
++	if (thread__find_map(aslr_thread,
++			     &(struct perf_sample){.cpumode = cpumode, .ip = start},
++			     &al)) {
+ 		struct dso *dso = map__dso(al.map);
+ 		const char *dso_name = dso ? dso__long_name(dso) : NULL;
+ 
+@@ -343,7 +349,9 @@ static u64 aslr_tool__findnew_mapping(struct aslr_tool *aslr,
+ 		remap_addr = top->remapped_max;
+ 
+ 		addr_location__init(&prev_al);
+-		if (thread__find_map(aslr_thread, cpumode, start - 1, &prev_al)) {
++		if (thread__find_map(aslr_thread,
++				     &(struct perf_sample){.cpumode = cpumode,
++							   .ip = start - 1}, &prev_al)) {
+ 			if (map__end(prev_al.map) == start)
+ 				is_contiguous = true;
+ 		}
+diff --git a/tools/perf/util/build-id.c b/tools/perf/util/build-id.c
+index 02233ef0eaff..6c0d33b1609d 100644
+--- a/tools/perf/util/build-id.c
++++ b/tools/perf/util/build-id.c
+@@ -69,7 +69,7 @@ int build_id__mark_dso_hit(const struct perf_tool *tool __maybe_unused,
+ 	}
+ 
+ 	addr_location__init(&al);
+-	if (thread__find_map(thread, sample->cpumode, sample->ip, &al))
++	if (thread__find_map(thread, sample, &al))
+ 		dso__set_hit(map__dso(al.map));
+ 
+ 	addr_location__exit(&al);
+diff --git a/tools/perf/util/capstone.c b/tools/perf/util/capstone.c
+index 95881f15324a..fbad96e1e6a9 100644
+--- a/tools/perf/util/capstone.c
++++ b/tools/perf/util/capstone.c
+@@ -252,7 +252,9 @@ static size_t print_insn_x86(struct thread *thread, u8 cpumode, struct cs_insn *
+ 
+ 		addr_location__init(&al);
+ 		if (op->type == X86_OP_IMM &&
+-		    thread__find_symbol(thread, cpumode, op->imm, &al)) {
++		    thread__find_symbol(thread,
++					&(struct perf_sample){.cpumode = cpumode,
++							      .ip = op->imm}, &al)) {
+ 			printed += fprintf(fp, "%s ", insn[0].mnemonic);
+ 			printed += symbol__fprintf_symname_offs(al.sym, &al, fp);
+ 			if (print_opts & PRINT_INSN_IMM_HEX)
+diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
+index 2d1ab34f7b6b..31a11b802c1e 100644
+--- a/tools/perf/util/cs-etm.c
++++ b/tools/perf/util/cs-etm.c
+@@ -1152,7 +1152,9 @@ static u32 __cs_etm__mem_access(struct cs_etm_queue *etmq,
+ 
+ 	cpumode = cs_etm__cpu_mode(etmq, address, el);
+ 
+-	if (!thread__find_map(thread, cpumode, address, &al))
++	if (!thread__find_map(thread,
++			      &(struct perf_sample){.cpumode = cpumode,
++						    .ip = address}, &al))
+ 		goto out;
+ 
+ 	dso = map__dso(al.map);
+diff --git a/tools/perf/util/data-convert-json.c b/tools/perf/util/data-convert-json.c
+index 40888b7c4467..8fa7bfdaadff 100644
+--- a/tools/perf/util/data-convert-json.c
++++ b/tools/perf/util/data-convert-json.c
+@@ -235,7 +235,9 @@ static int process_sample_event(const struct perf_tool *tool,
+ 				fputc(',', out);
+ 
+ 			addr_location__init(&tal);
+-			ok = thread__find_symbol(al.thread, cpumode, ip, &tal);
++			ok = thread__find_symbol(al.thread,
++						 &(struct perf_sample){.cpumode = cpumode,
++								       .ip = ip}, &tal);
+ 			output_sample_callchain_entry(tool, ip, ok ? &tal : NULL);
+ 			addr_location__exit(&tal);
+ 		}
+diff --git a/tools/perf/util/debug.c b/tools/perf/util/debug.c
+index b7095519419e..2f31b3663ec1 100644
+--- a/tools/perf/util/debug.c
++++ b/tools/perf/util/debug.c
+@@ -339,7 +339,9 @@ void __dump_stack(FILE *file, void **stackdump, size_t stackdump_size)
+ 		bool printed = false;
+ 
+ 		addr_location__init(&al);
+-		if (thread && thread__find_map(thread, PERF_RECORD_MISC_USER, addr, &al)) {
++		if (thread && thread__find_map(thread,
++				       &(struct perf_sample){.cpumode = PERF_RECORD_MISC_USER,
++							     .ip = addr}, &al)) {
+ 			al.sym = map__find_symbol(al.map, al.addr);
+ 			if (al.sym) {
+ 				fprintf(file, "    #%zd %p in %s ", i, stackdump[i], al.sym->name);
+diff --git a/tools/perf/util/dlfilter.c b/tools/perf/util/dlfilter.c
+index e11e144af62b..8a33bfe50939 100644
+--- a/tools/perf/util/dlfilter.c
++++ b/tools/perf/util/dlfilter.c
+@@ -177,7 +177,9 @@ static __s32 dlfilter__resolve_address(void *ctx, __u64 address, struct perf_dlf
+ 		return -1;
+ 
+ 	addr_location__init(&al);
+-	thread__find_symbol_fb(thread, d->sample->cpumode, address, &al);
++	thread__find_symbol_fb(thread,
++			       &(struct perf_sample){.cpumode = d->sample->cpumode,
++						     .ip = address}, &al);
+ 
+ 	al_to_d_al(&al, &d_al);
+ 
+@@ -314,7 +316,9 @@ static __s32 dlfilter__object_code(void *ctx, __u64 ip, void *buf, __u32 len)
+ 
+ 	addr_location__init(&a);
+ 
+-	thread__find_map_fb(al->thread, d->sample->cpumode, ip, &a);
++	thread__find_map_fb(al->thread,
++			    &(struct perf_sample){.cpumode = d->sample->cpumode,
++						  .ip = ip}, &a);
+ 	ret = a.map ? code_read(ip, a.map, d->machine, buf, len) : -1;
+ 
+ 	addr_location__exit(&a);
+diff --git a/tools/perf/util/event.c b/tools/perf/util/event.c
+index c69ae57ce679..cd13a0c3cb52 100644
+--- a/tools/perf/util/event.c
++++ b/tools/perf/util/event.c
+@@ -691,7 +691,7 @@ int perf_event__process(const struct perf_tool *tool __maybe_unused,
+ 	return machine__process_event(machine, event, sample);
+ }
+ 
+-struct map *thread__find_map(struct thread *thread, u8 cpumode, u64 addr,
++struct map *thread__find_map(struct thread *thread, struct perf_sample *sample,
+ 			     struct addr_location *al)
+ {
+ 	struct maps *maps = thread__maps(thread);
+@@ -702,34 +702,34 @@ struct map *thread__find_map(struct thread *thread, u8 cpumode, u64 addr,
+ 	thread__zput(al->thread);
+ 	al->thread = thread__get(thread);
+ 
+-	al->addr = addr;
+-	al->cpumode = cpumode;
++	al->addr = sample->ip;
++	al->cpumode = sample->cpumode;
+ 	al->filtered = 0;
+ 
+ 	if (machine == NULL)
+ 		return NULL;
+ 
+-	if (cpumode == PERF_RECORD_MISC_KERNEL && perf_host) {
++	if (sample->cpumode == PERF_RECORD_MISC_KERNEL && perf_host) {
+ 		al->level = 'k';
+ 		maps = machine__kernel_maps(machine);
+ 		load_map = !symbol_conf.lazy_load_kernel_maps;
+-	} else if (cpumode == PERF_RECORD_MISC_USER && perf_host) {
++	} else if (sample->cpumode == PERF_RECORD_MISC_USER && perf_host) {
+ 		al->level = '.';
+-	} else if (cpumode == PERF_RECORD_MISC_GUEST_KERNEL && perf_guest) {
++	} else if (sample->cpumode == PERF_RECORD_MISC_GUEST_KERNEL && perf_guest) {
+ 		al->level = 'g';
+ 		maps = machine__kernel_maps(machine);
+ 		load_map = !symbol_conf.lazy_load_kernel_maps;
+-	} else if (cpumode == PERF_RECORD_MISC_GUEST_USER && perf_guest) {
++	} else if (sample->cpumode == PERF_RECORD_MISC_GUEST_USER && perf_guest) {
+ 		al->level = 'u';
+ 	} else {
+ 		al->level = 'H';
+ 
+-		if ((cpumode == PERF_RECORD_MISC_GUEST_USER ||
+-			cpumode == PERF_RECORD_MISC_GUEST_KERNEL) &&
++		if ((sample->cpumode == PERF_RECORD_MISC_GUEST_USER ||
++			sample->cpumode == PERF_RECORD_MISC_GUEST_KERNEL) &&
+ 			!perf_guest)
+ 			al->filtered |= (1 << HIST_FILTER__GUEST);
+-		if ((cpumode == PERF_RECORD_MISC_USER ||
+-			cpumode == PERF_RECORD_MISC_KERNEL) &&
++		if ((sample->cpumode == PERF_RECORD_MISC_USER ||
++			sample->cpumode == PERF_RECORD_MISC_KERNEL) &&
+ 			!perf_host)
+ 			al->filtered |= (1 << HIST_FILTER__HOST);
+ 
+@@ -754,33 +754,34 @@ struct map *thread__find_map(struct thread *thread, u8 cpumode, u64 addr,
+  * because it applies only to the sample 'ip' and not necessary to 'addr' or
+  * branch stack addresses. If possible, use a fallback to deal with those cases.
+  */
+-struct map *thread__find_map_fb(struct thread *thread, u8 cpumode, u64 addr,
++struct map *thread__find_map_fb(struct thread *thread, struct perf_sample *sample,
+ 				struct addr_location *al)
+ {
+-	struct map *map = thread__find_map(thread, cpumode, addr, al);
++	struct map *map = thread__find_map(thread, sample, al);
+ 	struct machine *machine = maps__machine(thread__maps(thread));
+-	u8 addr_cpumode = machine__addr_cpumode(machine, cpumode, addr);
++	u8 addr_cpumode = machine__addr_cpumode(machine, sample->cpumode, sample->ip);
+ 
+-	if (map || addr_cpumode == cpumode)
++	if (map || addr_cpumode == sample->cpumode)
+ 		return map;
+ 
+-	return thread__find_map(thread, addr_cpumode, addr, al);
++	sample->cpumode = addr_cpumode;
++	return thread__find_map(thread, sample, al);
+ }
+ 
+-struct symbol *thread__find_symbol(struct thread *thread, u8 cpumode,
+-				   u64 addr, struct addr_location *al)
++struct symbol *thread__find_symbol(struct thread *thread, struct perf_sample *sample,
++				   struct addr_location *al)
+ {
+ 	al->sym = NULL;
+-	if (thread__find_map(thread, cpumode, addr, al))
++	if (thread__find_map(thread, sample, al))
+ 		al->sym = map__find_symbol(al->map, al->addr);
+ 	return al->sym;
+ }
+ 
+-struct symbol *thread__find_symbol_fb(struct thread *thread, u8 cpumode,
+-				      u64 addr, struct addr_location *al)
++struct symbol *thread__find_symbol_fb(struct thread *thread, struct perf_sample *sample,
++				      struct addr_location *al)
+ {
+ 	al->sym = NULL;
+-	if (thread__find_map_fb(thread, cpumode, addr, al))
++	if (thread__find_map_fb(thread, sample, al))
+ 		al->sym = map__find_symbol(al->map, al->addr);
+ 	return al->sym;
+ }
+@@ -816,7 +817,7 @@ int machine__resolve(struct machine *machine, struct addr_location *al,
+ 		return -1;
+ 
+ 	dump_printf(" ... thread: %s:%d\n", thread__comm_str(thread), thread__tid(thread));
+-	thread__find_map(thread, sample->cpumode, sample->ip, al);
++	thread__find_map(thread, sample, al);
+ 	dso = al->map ? map__dso(al->map) : NULL;
+ 	dump_printf(" ...... dso: %s\n",
+ 		dso
+@@ -934,7 +935,9 @@ bool sample_addr_correlates_sym(struct perf_event_attr *attr)
+ void thread__resolve(struct thread *thread, struct addr_location *al,
+ 		     struct perf_sample *sample)
+ {
+-	thread__find_map_fb(thread, sample->cpumode, sample->addr, al);
++	thread__find_map_fb(thread,
++			    &(struct perf_sample){.cpumode = sample->cpumode,
++						  .ip = sample->addr}, al);
+ 
+ 	al->cpu = sample->cpu;
+ 	al->sym = NULL;
+diff --git a/tools/perf/util/intel-pt.c b/tools/perf/util/intel-pt.c
+index 8c21c9f52d57..243c252276ad 100644
+--- a/tools/perf/util/intel-pt.c
++++ b/tools/perf/util/intel-pt.c
+@@ -752,6 +752,7 @@ static int intel_pt_walk_next_insn(struct intel_pt_insn *intel_pt_insn,
+ {
+ 	struct intel_pt_queue *ptq = data;
+ 	struct machine *machine = ptq->pt->machine;
++	struct perf_sample sample = {};
+ 	struct thread *thread;
+ 	struct addr_location al;
+ 	unsigned char buf[INTEL_PT_INSN_BUF_SZ];
+@@ -809,10 +810,13 @@ static int intel_pt_walk_next_insn(struct intel_pt_insn *intel_pt_insn,
+ 		}
+ 	}
+ 
++	sample.cpumode = cpumode;
++
+ 	while (1) {
+ 		struct dso *dso;
+ 
+-		if (!thread__find_map(thread, cpumode, *ip, &al) || !map__dso(al.map)) {
++		sample.ip = *ip;
++		if (!thread__find_map(thread, &sample, &al) || !map__dso(al.map)) {
+ 			if (al.map)
+ 				intel_pt_log("ERROR: thread has no dso for %#" PRIx64 "\n", *ip);
+ 			else
+@@ -1007,7 +1011,9 @@ static int __intel_pt_pgd_ip(uint64_t ip, void *data)
+ 		return -EINVAL;
+ 
+ 	addr_location__init(&al);
+-	if (!thread__find_map(thread, cpumode, ip, &al) || !map__dso(al.map))
++	if (!thread__find_map(thread,
++			      &(struct perf_sample){.cpumode = cpumode,
++						    .ip = ip}, &al) || !map__dso(al.map))
+ 		return -EINVAL;
+ 
+ 	offset = map__map_ip(al.map, ip);
+@@ -3656,7 +3662,9 @@ static int intel_pt_find_map(struct thread *thread, u8 cpumode, u64 addr,
+ 			     struct addr_location *al)
+ {
+ 	if (!al->map || addr < map__start(al->map) || addr >= map__end(al->map)) {
+-		if (!thread__find_map(thread, cpumode, addr, al))
++		if (!thread__find_map(thread,
++				      &(struct perf_sample){.cpumode = cpumode,
++							    .ip = addr}, al))
+ 			return -1;
+ 	}
+ 
+diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
+index 4bcb16da6481..1a13253d0c7f 100644
+--- a/tools/perf/util/machine.c
++++ b/tools/perf/util/machine.c
+@@ -2064,6 +2064,7 @@ static void ip__resolve_ams(struct thread *thread,
+ 			    struct addr_map_symbol *ams,
+ 			    u64 ip)
+ {
++	static __thread struct perf_sample sample;
+ 	struct addr_location al;
+ 
+ 	addr_location__init(&al);
+@@ -2074,7 +2075,8 @@ static void ip__resolve_ams(struct thread *thread,
+ 	 * Thus, we have to try consecutively until we find a match
+ 	 * or else, the symbol is unknown
+ 	 */
+-	thread__find_cpumode_addr_location(thread, ip, /*symbols=*/true, &al);
++	sample.ip = ip;
++	thread__find_cpumode_addr_location(thread, &sample, /*symbols=*/true, &al);
+ 
+ 	ams->addr = ip;
+ 	ams->al_addr = al.addr;
+@@ -2091,11 +2093,14 @@ static void ip__resolve_data(struct thread *thread,
+ 			     u8 m, struct addr_map_symbol *ams,
+ 			     u64 addr, u64 phys_addr, u64 daddr_page_size)
+ {
++	static __thread struct perf_sample sample;
+ 	struct addr_location al;
+ 
+ 	addr_location__init(&al);
+ 
+-	thread__find_symbol(thread, m, addr, &al);
++	sample.cpumode = m;
++	sample.ip = addr;
++	thread__find_symbol(thread, &sample, &al);
+ 
+ 	ams->addr = addr;
+ 	ams->al_addr = al.addr;
+@@ -2218,6 +2223,7 @@ static int add_callchain_ip(struct thread *thread,
+ 			    u64 branch_from,
+ 			    bool symbols)
+ {
++	static __thread struct perf_sample sample;
+ 	struct map_symbol ms = {};
+ 	struct addr_location al;
+ 	int nr_loop_iter = 0, err = 0;
+@@ -2228,8 +2234,9 @@ static int add_callchain_ip(struct thread *thread,
+ 	al.filtered = 0;
+ 	al.sym = NULL;
+ 	al.srcline = NULL;
++	sample.ip = ip;
+ 	if (!cpumode) {
+-		thread__find_cpumode_addr_location(thread, ip, symbols, &al);
++		thread__find_cpumode_addr_location(thread, &sample, symbols, &al);
+ 	} else {
+ 		if (ip >= PERF_CONTEXT_MAX) {
+ 			switch (ip) {
+@@ -2256,10 +2263,11 @@ static int add_callchain_ip(struct thread *thread,
+ 			}
+ 			goto out;
+ 		}
++		sample.cpumode = *cpumode;
+ 		if (symbols)
+-			thread__find_symbol(thread, *cpumode, ip, &al);
++			thread__find_symbol(thread, &sample, &al);
+ 		else
+-			thread__find_map(thread, *cpumode, ip, &al);
++			thread__find_map(thread, &sample, &al);
+ 	}
+ 
+ 	if (al.sym != NULL) {
+diff --git a/tools/perf/util/python.c b/tools/perf/util/python.c
+index cc9257e2cceb..a1f156fadc44 100644
+--- a/tools/perf/util/python.c
++++ b/tools/perf/util/python.c
+@@ -851,7 +851,10 @@ static PyObject *pyrf_sample_event__srccode(PyObject *self, PyObject *args)
+ 
+ 	if (addr != pevent->sample.ip) {
+ 		addr_location__init(&al);
+-		thread__find_symbol_fb(pevent->al.thread, pevent->sample.cpumode, addr, &al);
++		thread__find_symbol_fb(pevent->al.thread,
++			       &(struct perf_sample){
++				       .cpumode = pevent->sample.cpumode,
++				       .ip = addr}, &al);
+ 	} else {
+ 		addr_location__init(&al);
+ 		al.thread = thread__get(pevent->al.thread);
+@@ -1242,8 +1245,12 @@ static int pyrf_sample_event__resolve_addr_al(struct pyrf_event *pevent,
+ 	if (pyrf_sample_event__resolve_al(pevent) < 0 || !pevent->al.thread)
+ 		return -1;
+ 
+-	thread__find_symbol_fb(pevent->al.thread, pevent->sample.cpumode,
+-			       pevent->sample.addr, addr_al);
++	thread__find_symbol_fb(pevent->al.thread,
++			       &(struct perf_sample){
++				       .cpumode = pevent->sample.cpumode,
++				       .ip = pevent->sample.addr,
++			       },
++			       addr_al);
  	return 0;
  }
  
-+#if defined(CONFIG_BPF_SYSCALL) && defined(CONFIG_PERF_EVENTS)
-+void stack_map_get_build_id_offset(struct bpf_stack_build_id *id_offs,
-+				   u32 trace_nr, bool user, bool may_fault);
-+#else
-+static inline void stack_map_get_build_id_offset(struct bpf_stack_build_id *id_offs,
-+						 u32 trace_nr, bool user, bool may_fault)
-+{
-+	for (u32 i = 0; i < trace_nr; i++) {
-+		id_offs[i].status = BPF_STACK_BUILD_ID_IP;
-+		memset(id_offs[i].build_id, 0, BPF_BUILD_ID_SIZE);
-+	}
-+}
-+#endif
-+
- #endif /* _LINUX_BPF_H */
-diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
-index 5842552294c1..3868923f6a79 100644
---- a/include/linux/perf_event.h
-+++ b/include/linux/perf_event.h
-@@ -1347,6 +1347,7 @@ struct perf_sample_data {
- 	u64				data_page_size;
- 	u64				code_page_size;
- 	u64				aux_size;
-+	u64				callchain_bid_nr;
- } ____cacheline_aligned;
- 
- /* default value for data source */
-diff --git a/kernel/bpf/stackmap.c b/kernel/bpf/stackmap.c
-index d09d4c3fe547..4e06c1697786 100644
---- a/kernel/bpf/stackmap.c
-+++ b/kernel/bpf/stackmap.c
-@@ -411,8 +411,8 @@ static void stack_map_get_build_id_offset_sleepable(struct bpf_stack_build_id *i
-  *     id_offs[i].build_id is zeroed out and id_offs[i].status is set to
-  *     BPF_STACK_BUILD_ID_IP.
-  */
--static void stack_map_get_build_id_offset(struct bpf_stack_build_id *id_offs,
--					  u32 trace_nr, bool user, bool may_fault)
-+void stack_map_get_build_id_offset(struct bpf_stack_build_id *id_offs,
-+				   u32 trace_nr, bool user, bool may_fault)
+@@ -4363,6 +4370,7 @@ static PyObject *pyrf_call_path__to_callchain(const struct call_path *cp,
+ 					      struct thread *thread)
  {
- 	struct mmap_unlock_irq_work *work;
- 	bool has_user_ctx = user && current && current->mm;
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 33210aff3ee6..7f6bf96f7473 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -460,6 +460,8 @@ static atomic_t nr_bpf_events __read_mostly;
- static atomic_t nr_cgroup_events __read_mostly;
- static atomic_t nr_text_poke_events __read_mostly;
- static atomic_t nr_build_id_events __read_mostly;
-+static atomic_t nr_build_id_offset_events __read_mostly;
-+static atomic_t nr_callchain_build_id_offset_events __read_mostly;
+ 	struct pyrf_callchain *pchain;
++	struct perf_sample sample = {};
+ 	const struct call_path *pos;
+ 	u64 nr_frames = 0;
  
- static LIST_HEAD(pmus);
- static DEFINE_MUTEX(pmus_lock);
-@@ -2048,6 +2050,14 @@ static int __perf_event_read_size(u64 read_format, int nr_siblings)
- 	return size + nr * entry;
+@@ -4395,7 +4403,9 @@ static PyObject *pyrf_call_path__to_callchain(const struct call_path *cp,
+ 						    : PERF_RECORD_MISC_USER;
+ 
+ 			addr_location__init(&al);
+-			thread__find_map(thread, cpumode, pos->ip, &al);
++			sample.cpumode = cpumode;
++			sample.ip = pos->ip;
++			thread__find_map(thread, &sample, &al);
+ 			frame->map = map__get(al.map);
+ 			if (frame->map)
+ 				frame->sym = pos->sym;
+diff --git a/tools/perf/util/thread.c b/tools/perf/util/thread.c
+index 91118c301913..ad3f1ae8a92e 100644
+--- a/tools/perf/util/thread.c
++++ b/tools/perf/util/thread.c
+@@ -413,7 +413,7 @@ int thread__fork(struct thread *thread, struct thread *parent, u64 timestamp, bo
+ 	return thread__clone_maps(thread, parent, do_maps_clone);
  }
  
-+struct perf_sample_build_id_offset {
-+	u8	size;
-+	u8	res1;
-+	u16	res2;
-+	u8	build_id[BUILD_ID_SIZE_MAX];
-+	u64	offset;
-+};
-+
- static void __perf_event_header_size(struct perf_event *event, u64 sample_type)
+-void thread__find_cpumode_addr_location(struct thread *thread, u64 addr,
++void thread__find_cpumode_addr_location(struct thread *thread, struct perf_sample *sample,
+ 					bool symbols, struct addr_location *al)
  {
- 	struct perf_sample_data *data;
-@@ -2086,6 +2096,9 @@ static void __perf_event_header_size(struct perf_event *event, u64 sample_type)
- 	if (sample_type & PERF_SAMPLE_CODE_PAGE_SIZE)
- 		size += sizeof(data->code_page_size);
- 
-+	if (sample_type & PERF_SAMPLE_BUILD_ID_OFFSET)
-+		size += sizeof(struct perf_sample_build_id_offset);
-+
- 	event->header_size = size;
- }
- 
-@@ -5341,7 +5354,7 @@ static bool is_sb_event(struct perf_event *event)
- 	    attr->comm || attr->comm_exec ||
- 	    attr->task || attr->ksymbol ||
- 	    attr->context_switch || attr->text_poke ||
--	    attr->bpf_event)
-+	    attr->bpf_event || attr->defer_output)
- 		return true;
- 
- 	return false;
-@@ -5619,6 +5632,10 @@ static void unaccount_event(struct perf_event *event)
- 		atomic_dec(&nr_mmap_events);
- 	if (event->attr.build_id)
- 		atomic_dec(&nr_build_id_events);
-+	if (event->attr.sample_type & PERF_SAMPLE_BUILD_ID_OFFSET)
-+		atomic_dec(&nr_build_id_offset_events);
-+	if (event->attr.sample_type & PERF_SAMPLE_CALLCHAIN_BUILD_ID_OFFSET)
-+		atomic_dec(&nr_callchain_build_id_offset_events);
- 	if (event->attr.comm)
- 		atomic_dec(&nr_comm_events);
- 	if (event->attr.namespaces)
-@@ -8276,6 +8293,155 @@ static void perf_output_read(struct perf_output_handle *handle,
- 		perf_output_read_one(handle, event, enabled, running);
- }
- 
-+static struct unwind_work perf_unwind_work;
-+
-+struct perf_bpf_build_id_buf {
-+	local_t active;
-+	struct bpf_stack_build_id bids[PERF_MAX_STACK_DEPTH + 1];
-+};
-+
-+static DEFINE_PER_CPU(struct perf_bpf_build_id_buf, perf_bpf_build_id_buf);
-+
-+static void perf_bpf_to_sample_bid_offset(struct bpf_stack_build_id *bpf_bid)
-+{
-+	struct perf_sample_build_id_offset *bid = (void *)bpf_bid;
-+	u8 size = 0;
-+
-+	static_assert(sizeof(*bid) == sizeof(*bpf_bid));
-+	static_assert(offsetof(struct perf_sample_build_id_offset, build_id) ==
-+		      offsetof(struct bpf_stack_build_id, build_id));
-+	static_assert(offsetof(struct perf_sample_build_id_offset, offset) ==
-+		      offsetof(struct bpf_stack_build_id, offset));
-+
-+	if (bpf_bid->status == BPF_STACK_BUILD_ID_VALID)
-+		size = BUILD_ID_SIZE_MAX;
-+	else
-+		memset(bid->build_id, 0, sizeof(bid->build_id));
-+
-+	bid->size = size;
-+	bid->res1 = 0;
-+	bid->res2 = 0;
-+}
-+
-+static void perf_output_sample_build_id(struct perf_output_handle *handle,
-+					struct perf_event_header *header,
-+					struct perf_sample_data *data,
-+					struct perf_event *event)
-+{
-+	u64 sample_type = data->type;
-+	bool sample_bid = sample_type & PERF_SAMPLE_BUILD_ID_OFFSET;
-+	bool callchain_bid = sample_type & PERF_SAMPLE_CALLCHAIN_BUILD_ID_OFFSET;
-+	bool crosstask = event->ctx->task && event->ctx->task != current;
-+	bool has_user_ctx = is_user_task(current) && current->mm && !crosstask;
-+	bool is_user = (header->misc & PERF_RECORD_MISC_CPUMODE_MASK) ==
-+		       PERF_RECORD_MISC_USER;
-+	u64 defer_cookie = 0;
-+	u64 callchain_nr = callchain_bid ? data->callchain_bid_nr : 0;
-+	u64 user_start = callchain_nr;
-+	u32 resolve_ip_nr = 0, resolve_cc_nr = 0, total_resolve_nr;
-+	struct perf_bpf_build_id_buf *buf = NULL;
-+
-+	if (sample_bid) {
-+		bool defer_user = IS_ENABLED(CONFIG_UNWIND_USER) &&
-+				  is_user && has_user_ctx &&
-+				  event->attr.defer_callchain &&
-+				  !(sample_type & PERF_SAMPLE_CALLCHAIN);
-+
-+		if (defer_user &&
-+		    unwind_deferred_request(&perf_unwind_work, &defer_cookie) < 0)
-+			defer_cookie = 0;
-+
-+		if (!defer_cookie && is_user && has_user_ctx)
-+			resolve_ip_nr = 1;
-+	}
-+
-+	if (callchain_bid && has_user_ctx) {
-+		for (u64 i = 0; i < callchain_nr; i++) {
-+			if (data->callchain->ip[i] == PERF_CONTEXT_USER) {
-+				user_start = i + 1;
-+				break;
-+			}
-+		}
-+		if (user_start < callchain_nr) {
-+			resolve_cc_nr = min_t(u64, callchain_nr - user_start,
-+					      PERF_MAX_STACK_DEPTH);
-+		}
-+	}
-+
-+	total_resolve_nr = resolve_ip_nr + resolve_cc_nr;
-+	if (total_resolve_nr) {
-+		buf = get_cpu_ptr(&perf_bpf_build_id_buf);
-+		if (local_cmpxchg(&buf->active, 0, 1) == 0) {
-+			if (resolve_ip_nr)
-+				buf->bids[0].ip = data->ip;
-+			for (u32 i = 0; i < resolve_cc_nr; i++) {
-+				buf->bids[resolve_ip_nr + i].ip =
-+					data->callchain->ip[user_start + i];
-+			}
-+			stack_map_get_build_id_offset(buf->bids,
-+						      total_resolve_nr,
-+						      true, false);
-+			for (u32 i = 0; i < total_resolve_nr; i++)
-+				perf_bpf_to_sample_bid_offset(&buf->bids[i]);
-+		} else {
-+			put_cpu_ptr(&perf_bpf_build_id_buf);
-+			buf = NULL;
-+		}
-+	}
-+
-+	if (sample_bid) {
-+		if (defer_cookie) {
-+			u64 deferred_bid[4] = {
-+				0,
-+				PERF_CONTEXT_USER_DEFERRED,
-+				defer_cookie,
-+				data->ip,
-+			};
-+
-+			perf_output_put(handle, deferred_bid);
-+		} else if (buf && resolve_ip_nr) {
-+			perf_output_copy(handle, &buf->bids[0],
-+					 sizeof(buf->bids[0]));
-+		} else {
-+			struct perf_sample_build_id_offset bid_offset = {
-+				.offset = data->ip,
-+			};
-+
-+			perf_output_put(handle, bid_offset);
-+		}
-+	}
-+
-+	if (callchain_bid) {
-+		u64 unres_prefix = buf ? user_start : callchain_nr;
-+		u64 resolved_end = unres_prefix + (buf ? resolve_cc_nr : 0);
-+
-+		perf_output_put(handle, callchain_nr);
-+		for (u64 i = 0; i < unres_prefix; i++) {
-+			struct perf_sample_build_id_offset bid_offset = {
-+				.offset = data->callchain->ip[i],
-+			};
-+
-+			perf_output_put(handle, bid_offset);
-+		}
-+		if (buf && resolve_cc_nr) {
-+			perf_output_copy(handle, &buf->bids[resolve_ip_nr],
-+					 resolve_cc_nr * sizeof(buf->bids[0]));
-+		}
-+		for (u64 i = resolved_end; i < callchain_nr; i++) {
-+			struct perf_sample_build_id_offset bid_offset = {
-+				.offset = data->callchain->ip[i],
-+			};
-+
-+			perf_output_put(handle, bid_offset);
-+		}
-+	}
-+
-+	if (buf) {
-+		local_set(&buf->active, 0);
-+		put_cpu_ptr(&perf_bpf_build_id_buf);
-+	}
-+}
-+
- void perf_output_sample(struct perf_output_handle *handle,
- 			struct perf_event_header *header,
- 			struct perf_sample_data *data,
-@@ -8455,6 +8621,10 @@ void perf_output_sample(struct perf_output_handle *handle,
- 			perf_aux_sample_output(event, handle, data);
- 	}
- 
-+	if (sample_type &
-+	    (PERF_SAMPLE_BUILD_ID_OFFSET | PERF_SAMPLE_CALLCHAIN_BUILD_ID_OFFSET))
-+		perf_output_sample_build_id(handle, header, data, event);
-+
- 	if (!event->attr.watermark) {
- 		int wakeup_events = event->attr.wakeup_events;
- 
-@@ -8598,8 +8768,6 @@ static u64 perf_get_page_size(unsigned long addr)
- 
- static struct perf_callchain_entry __empty_callchain = { .nr = 0, };
- 
--static struct unwind_work perf_unwind_work;
--
- struct perf_callchain_entry *
- perf_callchain(struct perf_event *event, struct pt_regs *regs)
- {
-@@ -8663,7 +8831,7 @@ void perf_prepare_sample(struct perf_sample_data *data,
- 
- 	__perf_event_header__init_id(data, event, filtered_sample_type);
- 
--	if (filtered_sample_type & PERF_SAMPLE_IP) {
-+	if (filtered_sample_type & (PERF_SAMPLE_IP | PERF_SAMPLE_BUILD_ID_OFFSET)) {
- 		data->ip = perf_instruction_pointer(event, regs);
- 		data->sample_flags |= PERF_SAMPLE_IP;
- 	}
-@@ -8671,6 +8839,14 @@ void perf_prepare_sample(struct perf_sample_data *data,
- 	if (filtered_sample_type & PERF_SAMPLE_CALLCHAIN)
- 		perf_sample_save_callchain(data, event, regs);
- 
-+	if (filtered_sample_type & PERF_SAMPLE_CALLCHAIN_BUILD_ID_OFFSET) {
-+		if (!(data->sample_flags & PERF_SAMPLE_CALLCHAIN))
-+			data->callchain = perf_callchain(event, regs);
-+
-+		data->dyn_size += sizeof(u64);
-+	}
-+
-+
- 	if (filtered_sample_type & PERF_SAMPLE_RAW) {
- 		data->raw = NULL;
- 		data->dyn_size += sizeof(u64);
-@@ -8820,6 +8996,20 @@ void perf_prepare_sample(struct perf_sample_data *data,
- 		data->dyn_size += size + sizeof(u64); /* size above */
- 		data->sample_flags |= PERF_SAMPLE_AUX;
- 	}
-+
-+	if (filtered_sample_type & PERF_SAMPLE_CALLCHAIN_BUILD_ID_OFFSET) {
-+		u32 header_size = perf_sample_data_size(data, event);
-+		u64 max_nr = 0, nr;
-+
-+		if (header_size < U16_MAX) {
-+			max_nr = (U16_MAX - header_size) /
-+				 sizeof(struct perf_sample_build_id_offset);
-+		}
-+		nr = min_t(u64, data->callchain->nr, max_nr);
-+		data->callchain_bid_nr = nr;
-+		data->dyn_size += nr * sizeof(struct perf_sample_build_id_offset);
-+		data->sample_flags |= PERF_SAMPLE_CALLCHAIN_BUILD_ID_OFFSET;
-+	}
- }
- 
- void perf_prepare_header(struct perf_event_header *header,
-@@ -10414,6 +10604,8 @@ void perf_event_bpf_event(struct bpf_prog *prog,
- 
- struct perf_callchain_deferred_event {
- 	struct unwind_stacktrace *trace;
-+	struct perf_sample_build_id_offset *bids;
-+	u16 nr_bids;
- 	struct {
- 		struct perf_event_header	header;
- 		u64				cookie;
-@@ -10422,17 +10614,83 @@ struct perf_callchain_deferred_event {
- 	} event;
- };
- 
-+static struct perf_sample_build_id_offset *
-+perf_resolve_build_id_offsets(struct unwind_stacktrace *trace, u16 *nr_bids_out)
-+{
-+	struct perf_sample_build_id_offset *bids;
-+	struct bpf_stack_build_id *bpf_bids;
-+	u16 nr = trace->nr;
-+
-+	*nr_bids_out = 0;
-+	if (!nr || !current->mm)
-+		return NULL;
-+
-+	if (!atomic_read(&nr_callchain_build_id_offset_events)) {
-+		if (!atomic_read(&nr_build_id_offset_events))
-+			return NULL;
-+		nr = 1;
-+	}
-+
-+	bids = kcalloc(nr, sizeof(*bids), GFP_KERNEL);
-+	if (!bids)
-+		return NULL;
-+
-+	bpf_bids = (struct bpf_stack_build_id *)bids;
-+	for (u16 i = 0; i < nr; i++)
-+		bpf_bids[i].ip = trace->entries[i];
-+
-+	stack_map_get_build_id_offset(bpf_bids, nr, true, true);
-+
-+	for (u16 i = 0; i < nr; i++)
-+		perf_bpf_to_sample_bid_offset(&bpf_bids[i]);
-+
-+	*nr_bids_out = nr;
-+	return bids;
-+}
-+
- static void perf_callchain_deferred_output(struct perf_event *event, void *data)
- {
- 	struct perf_callchain_deferred_event *deferred_event = data;
- 	struct perf_output_handle handle;
- 	struct perf_sample_data sample;
--	int ret, size = deferred_event->event.header.size;
-+	u64 nr = deferred_event->trace->nr;
-+	size_t elem_size;
-+	bool use_bid;
-+	u16 header_size, orig_misc, id_size;
-+	int ret;
- 
- 	if (!event->attr.defer_output)
- 		return;
- 
-+	if (event->attr.sample_type & PERF_SAMPLE_CALLCHAIN_BUILD_ID_OFFSET) {
-+		use_bid = deferred_event->bids != NULL;
-+		if (use_bid)
-+			nr = min_t(u64, nr, deferred_event->nr_bids);
-+	} else if ((event->attr.sample_type & PERF_SAMPLE_BUILD_ID_OFFSET) &&
-+		   !(event->attr.sample_type & PERF_SAMPLE_CALLCHAIN)) {
-+		nr = min_t(u64, nr, 1);
-+		use_bid = deferred_event->bids != NULL;
-+		if (use_bid)
-+			nr = min_t(u64, nr, deferred_event->nr_bids);
-+	} else {
-+		use_bid = false;
-+	}
-+
-+	elem_size = use_bid ? sizeof(struct perf_sample_build_id_offset) :
-+			      sizeof(u64);
-+	id_size = event->attr.sample_id_all ? event->id_header_size : 0;
-+	nr = min_t(u64, nr,
-+		   (U16_MAX - sizeof(deferred_event->event) - id_size) / elem_size);
-+
-+	orig_misc = deferred_event->event.header.misc;
-+	if (use_bid)
-+		deferred_event->event.header.misc |= PERF_RECORD_MISC_MMAP_BUILD_ID;
-+	header_size = sizeof(deferred_event->event) + (nr * elem_size);
-+	deferred_event->event.header.size = header_size;
-+	deferred_event->event.nr = nr;
-+
- 	/* XXX do we really need sample_id_all for this ??? */
-+	perf_sample_data_init(&sample, 0, 0);
- 	perf_event_header__init_id(&deferred_event->event.header, &sample, event);
- 
- 	ret = perf_output_begin(&handle, &sample, event,
-@@ -10441,22 +10699,33 @@ static void perf_callchain_deferred_output(struct perf_event *event, void *data)
- 		goto out;
- 
- 	perf_output_put(&handle, deferred_event->event);
--	for (int i = 0; i < deferred_event->trace->nr; i++) {
--		u64 entry = deferred_event->trace->entries[i];
--		perf_output_put(&handle, entry);
-+	if (use_bid) {
-+		for (u64 i = 0; i < nr; i++)
-+			perf_output_put(&handle, deferred_event->bids[i]);
-+	} else {
-+		for (u64 i = 0; i < nr; i++) {
-+			u64 entry = deferred_event->trace->entries[i];
-+
-+			perf_output_put(&handle, entry);
-+		}
- 	}
- 	perf_event__output_id_sample(event, &handle, &sample);
- 
- 	perf_output_end(&handle);
- out:
--	deferred_event->event.header.size = size;
-+	deferred_event->event.header.misc = orig_misc;
- }
- 
- static void perf_unwind_deferred_callback(struct unwind_work *work,
- 					 struct unwind_stacktrace *trace, u64 cookie)
- {
-+	u16 nr_bids = 0;
-+	struct perf_sample_build_id_offset *bids =
-+		perf_resolve_build_id_offsets(trace, &nr_bids);
- 	struct perf_callchain_deferred_event deferred_event = {
- 		.trace = trace,
-+		.bids = bids,
-+		.nr_bids = nr_bids,
- 		.event = {
- 			.header = {
- 				.type = PERF_RECORD_CALLCHAIN_DEFERRED,
-@@ -10470,6 +10739,7 @@ static void perf_unwind_deferred_callback(struct unwind_work *work,
+ 	size_t i;
+@@ -425,10 +425,11 @@ void thread__find_cpumode_addr_location(struct thread *thread, u64 addr,
  	};
  
- 	perf_iterate_sb(perf_callchain_deferred_output, &deferred_event, NULL);
-+	kfree(bids);
- }
+ 	for (i = 0; i < ARRAY_SIZE(cpumodes); i++) {
++		sample->cpumode = cpumodes[i];
+ 		if (symbols)
+-			thread__find_symbol(thread, cpumodes[i], addr, al);
++			thread__find_symbol(thread, sample, al);
+ 		else
+-			thread__find_map(thread, cpumodes[i], addr, al);
++			thread__find_map(thread, sample, al);
  
- struct perf_text_poke_event {
-@@ -13314,6 +13584,10 @@ static void account_event(struct perf_event *event)
- 		atomic_inc(&nr_mmap_events);
- 	if (event->attr.build_id)
- 		atomic_inc(&nr_build_id_events);
-+	if (event->attr.sample_type & PERF_SAMPLE_BUILD_ID_OFFSET)
-+		atomic_inc(&nr_build_id_offset_events);
-+	if (event->attr.sample_type & PERF_SAMPLE_CALLCHAIN_BUILD_ID_OFFSET)
-+		atomic_inc(&nr_callchain_build_id_offset_events);
- 	if (event->attr.comm)
- 		atomic_inc(&nr_comm_events);
- 	if (event->attr.namespaces)
-@@ -13582,7 +13856,8 @@ perf_event_alloc(struct perf_event_attr *attr, int cpu,
+ 		if (al->map)
+ 			break;
+@@ -579,6 +580,7 @@ int thread__memcpy(struct thread *thread, struct machine *machine,
+ 		   void *buf, u64 ip, int len, bool *is64bit)
+ {
+ 	u8 cpumode = PERF_RECORD_MISC_USER;
++	struct perf_sample sample = { .ip = ip };
+ 	struct addr_location al;
+ 	struct dso *dso;
+ 	long offset;
+@@ -587,7 +589,8 @@ int thread__memcpy(struct thread *thread, struct machine *machine,
+ 		cpumode = PERF_RECORD_MISC_KERNEL;
+ 
+ 	addr_location__init(&al);
+-	if (!thread__find_map(thread, cpumode, ip, &al)) {
++	sample.cpumode = cpumode;
++	if (!thread__find_map(thread, &sample, &al)) {
+ 		addr_location__exit(&al);
+ 		return -1;
  	}
+diff --git a/tools/perf/util/thread.h b/tools/perf/util/thread.h
+index d82fce8173ae..f0c50eafeee5 100644
+--- a/tools/perf/util/thread.h
++++ b/tools/perf/util/thread.h
+@@ -124,17 +124,17 @@ size_t thread__fprintf(struct thread *thread, FILE *fp);
  
- 	if (!event->parent) {
--		if (event->attr.sample_type & PERF_SAMPLE_CALLCHAIN) {
-+		if (event->attr.sample_type &
-+		    (PERF_SAMPLE_CALLCHAIN | PERF_SAMPLE_CALLCHAIN_BUILD_ID_OFFSET)) {
- 			err = get_callchain_buffers(attr->sample_max_stack);
- 			if (err)
- 				return ERR_PTR(err);
-@@ -13943,7 +14218,8 @@ SYSCALL_DEFINE5(perf_event_open,
- 		return err;
+ struct thread *thread__main_thread(struct machine *machine, struct thread *thread);
  
- 	if (!attr.exclude_kernel ||
--	    ((attr.sample_type & PERF_SAMPLE_CALLCHAIN) &&
-+	    ((attr.sample_type &
-+	      (PERF_SAMPLE_CALLCHAIN | PERF_SAMPLE_CALLCHAIN_BUILD_ID_OFFSET)) &&
- 	     !attr.exclude_callchain_kernel)) {
- 		err = perf_allow_kernel();
- 		if (err)
+-struct map *thread__find_map(struct thread *thread, u8 cpumode, u64 addr,
++struct map *thread__find_map(struct thread *thread, struct perf_sample *sample,
+ 			     struct addr_location *al);
+-struct map *thread__find_map_fb(struct thread *thread, u8 cpumode, u64 addr,
++struct map *thread__find_map_fb(struct thread *thread, struct perf_sample *sample,
+ 				struct addr_location *al);
+ 
+-struct symbol *thread__find_symbol(struct thread *thread, u8 cpumode,
+-				   u64 addr, struct addr_location *al);
+-struct symbol *thread__find_symbol_fb(struct thread *thread, u8 cpumode,
+-				      u64 addr, struct addr_location *al);
++struct symbol *thread__find_symbol(struct thread *thread, struct perf_sample *sample,
++				   struct addr_location *al);
++struct symbol *thread__find_symbol_fb(struct thread *thread, struct perf_sample *sample,
++				      struct addr_location *al);
+ 
+-void thread__find_cpumode_addr_location(struct thread *thread, u64 addr,
++void thread__find_cpumode_addr_location(struct thread *thread, struct perf_sample *sample,
+ 					bool symbols, struct addr_location *al);
+ 
+ int thread__memcpy(struct thread *thread, struct machine *machine,
+diff --git a/tools/perf/util/unwind-libdw.c b/tools/perf/util/unwind-libdw.c
+index d49901b1571e..855faa54c0cf 100644
+--- a/tools/perf/util/unwind-libdw.c
++++ b/tools/perf/util/unwind-libdw.c
+@@ -82,7 +82,9 @@ static int __report_module(struct addr_location *al, u64 ip,
+ 	 * Some callers will use al->sym, so we can't just use the
+ 	 * cheaper thread__find_map() here.
+ 	 */
+-	thread__find_symbol(ui->thread, PERF_RECORD_MISC_USER, ip, al);
++	thread__find_symbol(ui->thread,
++			    &(struct perf_sample){.cpumode = PERF_RECORD_MISC_USER, .ip = ip},
++			    al);
+ 
+ 	if (al->map)
+ 		dso = map__dso(al->map);
+@@ -208,13 +210,14 @@ static bool get_thread(Dwfl *dwfl __maybe_unused, pid_t tid, void *arg,
+ static int access_dso_mem(struct unwind_info *ui, Dwarf_Addr addr,
+ 			  Dwarf_Word *data, size_t len)
+ {
++	struct perf_sample sample = { .cpumode = PERF_RECORD_MISC_USER, .ip = addr };
+ 	struct addr_location al;
+ 	union u64_swap u;
+ 	ssize_t size;
+ 	struct dso *dso;
+ 
+ 	addr_location__init(&al);
+-	if (!thread__find_map(ui->thread, PERF_RECORD_MISC_USER, addr, &al)) {
++	if (!thread__find_map(ui->thread, &sample, &al)) {
+ 		pr_debug("unwind: no map for %lx\n", (unsigned long)addr);
+ 		goto out_fail;
+ 	}
+diff --git a/tools/perf/util/unwind-libunwind.c b/tools/perf/util/unwind-libunwind.c
+index 6052383e862b..83f043f266da 100644
+--- a/tools/perf/util/unwind-libunwind.c
++++ b/tools/perf/util/unwind-libunwind.c
+@@ -370,7 +370,9 @@ static struct map *find_map(uint64_t ip, struct unwind_info *ui)
+ 	struct map *ret;
+ 
+ 	addr_location__init(&al);
+-	thread__find_map(ui->thread, PERF_RECORD_MISC_USER, ip, &al);
++	thread__find_map(ui->thread,
++			 &(struct perf_sample){.cpumode = PERF_RECORD_MISC_USER, .ip = ip},
++			 &al);
+ 	ret = map__get(al.map);
+ 	addr_location__exit(&al);
+ 	return ret;
+@@ -626,7 +628,9 @@ static int entry(uint64_t ip, struct thread *thread, unwind_entry_cb_t cb, void
+ 	int ret;
+ 
+ 	addr_location__init(&al);
+-	e.ms.sym = thread__find_symbol(thread, PERF_RECORD_MISC_USER, ip, &al);
++	e.ms.sym = thread__find_symbol(thread,
++				       &(struct perf_sample){.cpumode = PERF_RECORD_MISC_USER,
++							     .ip = ip}, &al);
+ 	e.ip     = ip;
+ 	e.ms.map = al.map;
+ 	e.ms.thread = thread__get(al.thread);
 -- 
 2.56.0.rc1.315.gc6ed9934b7-goog
 
