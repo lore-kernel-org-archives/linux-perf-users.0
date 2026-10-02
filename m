@@ -1,79 +1,79 @@
-Received: from mail-yx2-f42.google.com (mail-yx2-f42.google.com [74.125.224.170])
+Received: from mail-yx2-f37.google.com (mail-yx2-f37.google.com [74.125.224.165])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67ABE4078E1
-	for <linux-perf-users@vger.kernel.org>; Fri,  2 Oct 2026 23:26:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.224.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1D443C3BFE
+	for <linux-perf-users@vger.kernel.org>; Fri,  2 Oct 2026 23:28:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.224.165
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790983564; cv=pass; b=u83UXmx+Q+PTm1SdetUj+oZs0a2QQYGNgt0wjiUp4Jo7F5Da3jmcALvMixoqvSaDRpS90H0+Rl+gLr3GaXh0HJip4BXp5x8rNvkCfM3xp0kYfmX1FUU+vKV8OdZUlK4V1IjFOlaZZiIHJzK7o+G+2uNl0aTDayksKlvyNJZQXOw=
+	t=1790983735; cv=pass; b=S+1ryvNGiF1jOe749E8Jr7W4njn1qM/nhAA/VfNSDKpZYkIYiaZFcwsrjVliPpd+UtL3THoyki/ll5W8/YcAvbdKgItc4ewLKF01A0Vmdy9VfwJWwOvcOFMFpli48jACueixD5Kp4qPCKklpwnER707rMGrKg0DbaUHUniN4O5Q=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790983564; c=relaxed/simple;
-	bh=u8gVVSgBrEyEZ0ngpczrNEJeXuDf1kkf1UVuVDZXvhY=;
+	s=arc-20240116; t=1790983735; c=relaxed/simple;
+	bh=rOs5frUl7ApBA1qQpObFxVYYelIhp/dTTYYpB+JInF4=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=OhLSwtEqGRzTi1LMkt8lYbaOFaPXkVpJAfuRo8lCh5jZAxGwTythjmPiCMZhvYKkfhvqt7sqSDP50FjrZN5/cFZ86d2nDoClE7A6j38GsXPxLh51tv9Ral1H7QMfXV4n1ejvIAdlsw3G5Hp2pttQjEqZ7mA7SdBsDY8BW1JNPT8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=uber.com; spf=fail smtp.mailfrom=uber.com; dkim=pass (1024-bit key) header.d=uber.com header.i=@uber.com header.b=poPoUCJa; arc=pass smtp.client-ip=74.125.224.170
+	 To:Cc:Content-Type; b=P4AkzFqkv+WTqZyAt1wtZAjDLyB6o0G1htROpaiSAtCj4vGhX0IRkjgKicHdY+hJQasqkN8YKeA49x2LiM85PeFCemi3i3IRGAdtsIOtsr0Ash82rDi+ykM2lcLSzOI5syddEbOFlJ0BN9KPP5kdtnb7Jc5ZhwlszhvbRpcfjyo=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=uber.com; spf=fail smtp.mailfrom=uber.com; dkim=pass (1024-bit key) header.d=uber.com header.i=@uber.com header.b=uH+dAZW4; arc=pass smtp.client-ip=74.125.224.165
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=uber.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=uber.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=uber.com header.i=@uber.com header.b="poPoUCJa"
-Received: by mail-yx2-f42.google.com with SMTP id 956f58d0204a3-672ce86b21aso40726d50.3
-        for <linux-perf-users@vger.kernel.org>; Fri, 02 Oct 2026 16:26:03 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1790983562; cv=none;
+	dkim=pass (1024-bit key) header.d=uber.com header.i=@uber.com header.b="uH+dAZW4"
+Received: by mail-yx2-f37.google.com with SMTP id 956f58d0204a3-677baaef644so35683d50.3
+        for <linux-perf-users@vger.kernel.org>; Fri, 02 Oct 2026 16:28:53 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1790983733; cv=none;
         d=google.com; s=arc-20260327;
-        b=UgTaz+J/Md9VW899hFDvO/kcM0ik8xhw6wIEv+tfZ/X5cmNSZdju5gJc3uqOgeVzIh
-         uUbmu/umfanSAtJysQqB9yYbWzA5ZlJFpoj6aQZvHPTIQg4MD7Onht+ZQziG02clv7Gt
-         pJARWsEEV1L7NNyRQNn2GqCdtL7VFq9VPzcLHkG2n/Fx1Ayk8h9ajXBoSw2zco5uW62n
-         QRUyud8X8zCASyzagvo1zLcOvPQUMHs1oUGGwTqLD4F5yUiGsuCbQQmfiKRdD63WeaZt
-         jkn0Nx8R8OF/RJgj/4fHkfm2gcCtmHRxShyv7SJRJ+W+IQGsaAUQvf/KH5rVNhL4dS3R
-         vNmw==
+        b=Zfgoz+grIh2i/gWVlJ3SLNRcyZmeeDapAavgkKw0pTAo8gQstRVwYAI9Cd8FY88+El
+         ictHYO7XvUXdrk/2D8vrWVCkolCPrKTfsuZBBfV7H7kMK3cNuhGTpOV1nJLDE9qiGQhx
+         d98UHio5VK8A2TOUCoLqE0seIa4b7GIFAZMTanczUgXRLAdFMMoCMRxunaNrZQKIj6po
+         ftCJG32Jk63utRHBuiA2/Lehk7cZjNfLWVckB/gOkowRefxYjSZTlZalK0WduloIwxVV
+         wwTaxAfjIqHQ2gFkLFFBQG76Dntm/0Os/z5z0/rcCL3SqeB5jT0Ef0bZKfHw1yEnb5MX
+         VtNw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:dkim-signature;
-        bh=u8gVVSgBrEyEZ0ngpczrNEJeXuDf1kkf1UVuVDZXvhY=;
-        fh=AkUAc9PDsI9ZlWTuSygdM+NPGmI20lerxQ/cmv82vHs=;
-        b=FTY+CNjaOWeDiJOvnvNsIJs6cL3tWHLzPWYPcm4MOlSS2F3bpXCS/3MW3KeAvuiwlW
-         JA0goEvJ2v32zjxVVl6Zwgyu0oCYIMODPSHpvQqRTMfo15+Ll+3UMI1HbNL3OF1aVt90
-         diPtqKdYOaqvVusKEwfe6eT7Gh1pz4W/R/61m2XYqOWZrvP4P8vS/RAMbxAn/3MYRZvl
-         7S/98XeKPMAuzEAQHPjVs9kF63foRc/+X7X8BAGHG2Kc/R14RLYqMUJgP9SXHRKxqDty
-         jE2KcZMUtW34WAO4AeuOubWItiuMAt/FjVt0DU/49s1XOiY2k4MDO5XT8Jg8QRjzsL5h
-         8vaw==;
+        bh=rOs5frUl7ApBA1qQpObFxVYYelIhp/dTTYYpB+JInF4=;
+        fh=Tb1g8OgVtFTDtDh4ABhFz5Gy5IYreiBgnae7sAXQQuM=;
+        b=n7lzUyjDR7A5BXB0ctdbG8LzzSnjiHfpDGZkaEUOhZAA7ZOK0qEbwaJmzE+BUOWl1x
+         4PU9yjpTMV9CBFMlxzE98m/mtBBa7DnDXf89PfLM3hnBdbMA989+NAuUF5YZtrXlXM+W
+         LMvdccV2swN0MjTQP+ggpooYKvXu/npSaO9YRIAJogR2RZw6hcza8bZGNYuK7hvmcHB6
+         gL0aURUVLTm1dr7DfvtPDdHFgvqfjfyEvDMe+cATWEBpE8jRyptCI/DjDWibFqwnqVx6
+         /bwEYGONWJQwMV8WdEDXQJbE0H6Bsatvp11iJbu8Wzie4auyqk/DKLD3xIqdtXzC2fAS
+         vmbA==;
         darn=vger.kernel.org
 ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=uber.com; s=google; t=1790983562; x=1791588362; darn=vger.kernel.org;
+        d=uber.com; s=google; t=1790983733; x=1791588533; darn=vger.kernel.org;
         h=content-transfer-encoding:content-type:cc:to:subject:message-id
          :date:from:in-reply-to:references:mime-version:from:to:cc:subject
          :date:message-id:reply-to:content-type;
-        bh=u8gVVSgBrEyEZ0ngpczrNEJeXuDf1kkf1UVuVDZXvhY=;
-        b=poPoUCJaJTVARtJ9jLfbIFI6Oo+P1THbdWPGmccfi+WPK2khdYHENXGWmyMO2PSsMg
-         ogMWPoE8fqSGxU94KhWPDFXbMP2Ae9duaCM6oAhoMrlRMODEECvMKXf6epxhkR59sddT
-         sslVGO7JiQSTmRhjbsvsNE1/+G+4+r7xgGzF4=
+        bh=rOs5frUl7ApBA1qQpObFxVYYelIhp/dTTYYpB+JInF4=;
+        b=uH+dAZW4JR9oY/1sYMJGNbEfqp8zPsDMJMGETPWhwWnJX7FXpbBujnuUlNkoZNGY83
+         +iO9SOE0BKdFf5NnQ71MWZ2w9iZbgc11tObQGDsLxg9ayf3cGd+WoA9qWRpx6TsC28aQ
+         065DQyEoPRNO4tTDB5umP8V78HwGbLutIOi6Q=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1790983562; x=1791588362;
+        d=1e100.net; s=20260707; t=1790983733; x=1791588533;
         h=content-transfer-encoding:content-type:cc:to:subject:message-id
          :date:from:in-reply-to:references:mime-version:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=u8gVVSgBrEyEZ0ngpczrNEJeXuDf1kkf1UVuVDZXvhY=;
-        b=Km4sENJ0jH3mXAObqFTEedZb5/fC99SFjoBOCWslqmbtnEhucHYLKyLlDttfVCYVzC
-         7lbnuhIunU7AkMe4JDUpVPeRmNcmoDeS5XDq1jfn7d1VBykSYL6yOJNXH/xWzTY9BmGU
-         L1rqfajZRTHAakqm7Ka10KjyP7axCKAfFZ/KVgIFhD8x5WlF+2SLnM4plFUDBqAKHUj9
-         cvaLGj4AvEORuzGLVWBX6vXEvTLa8AudX2nVoqIYjO9cSXD0ZVatRl04T6X0ecY0p68W
-         EjUrD7JXgDIwy8D8OASSLiW4hALJSPqAHeq7ELgAzg3iVYAliYPneI9blAcgHGz6CJOL
-         4UsA==
-X-Forwarded-Encrypted: i=1; AKwUvBxwUixqofhdfFSmpGUQ0wVOVrsZe3wybS7iCfIs7O5kXkZj0ANrF2OcmkSxrppeugGiPNFQ6Jr/ZjKjSjn9I2DE@vger.kernel.org
-X-Gm-Message-State: AFq9FYJetxpn72C9XbRpN7DYgWLV2y8mCIkkJcZs/idyyxLxTtqkXACt
-	BWzENhKdMzycoUuXHAmRVUEo3S+FSypCf9EmmG5u9J25edkQbSZsTLu6p5pH6dHinvQv8E0MctL
-	wsmTLiXl/SXuuqrkf6eccAbLtflrkJYlMGcRKZ5gJhg==
-X-Gm-Gg: AYBFou3vXPys90bRHGrnpQ3AXVgNHRBw5JaKsXFjLasxpqMPBMRwranLrie9V/xScUY
-	f7cHIdRAoYKhizJ9kjpf43LgZ05RGrOb1cZ70n1rtL8a1p77vPIHocr2kOUG84yi2J32ICU4DVm
-	MuiifWoOiI+RzXR2GEkTrBQ+29e/b8HEDeB6CHROsyoUit0p+QFlqkUgNoYXojYEjyeTV7q6Kdt
-	6RXaKErd6/hoSyl1ZAlWRqNzNmppf/P9IN2UIe5KXgY3J6mNZUaWAcHZWNNcl0kvuQaJ5nDkeKG
-	ByBHmE3t+D74sZzi5jum1cPMYb5TNNOKMxGBsR/RgQNQpLEclMgFBi1BFdN/cknwX0XTVEjbR2Y
-	4YC5/D3hu3uu0nTXPFLiZ6w==
-X-Received: by 2002:a05:690e:804:20b0:672:99e0:ebf6 with SMTP id
- 956f58d0204a3-677ac1af0femr1170670d50.142.1790983561984; Fri, 02 Oct 2026
- 16:26:01 -0700 (PDT)
+        bh=rOs5frUl7ApBA1qQpObFxVYYelIhp/dTTYYpB+JInF4=;
+        b=vOYO8Too49bgAmvNQw9snIrAQaVmE8VdaGyqDZyxga2tANiBCxzIAQrosTG+cC8dvV
+         2JJM9coOjU1k2rWslBd7t2Mh2C7bavPbe5z7JeQR1at1w6iRCw0QPu5GI8blKovpzWJ0
+         80cOrIb31i+u35tq+3WcP/JBOWtmbd/zs5rEX81adNjDLZmXY5P92/6NEvBdy558rfHX
+         VHoQmm6RJrX6iBC7AAL2oR5E9t8rBQy2gX/wMGNbigfX6TUIcwbUNlTPEnr8mpUp6tOs
+         vmTiW3OhJHec5wxKIyLNxOCFpQ4pJHPwNDe0uNLFn7+zYpMh+13RwVq25EjhmxttKRGk
+         pLUA==
+X-Forwarded-Encrypted: i=1; AKwUvByR9BYtn/fPRJ2zmTio9NzlQg8zARjL90hGpEheoaHxsf1bkHyEbISf5Al/0IH7qf7w08RUmDDr9+odgl52n5Uw@vger.kernel.org
+X-Gm-Message-State: AFq9FYLeHNPq7OaWHh3rkVnwSNcZCw7nVcvU6WjrXFFN70S31d6RqW77
+	VDYyisdrjIJeGHqxKol/wBoatRY6eG5ZiATx6Issax0sQ9SY0IOrBs0w2Ok9mBoYIXrG3p/sE6M
+	u4mw3gj4Op4ILo5lTnyNp412AvocmgtVvbE0MPT/Lpw==
+X-Gm-Gg: AYBFou2Sx5BG6Z+MoYdZafc/fKFGiSxjsxYht83Q+iERxLS7jYsHfyj5gWWv7h7vZNF
+	Ymwp2zzOX74h3bGtoluV7Tp7HVPSN1UYTyt/QRqBcr4nrEYvmUriICM7sz2ua5ESoKf0Ru1g2Yu
+	UXCTTP2vcbdNRoOMXtGL5ZzpwUkuvyCD1qTHe2tB08XJUguMcXJ1lQ39jf+O40tWBsr591+/TEO
+	uF2Ks+2F8Ws8BDSYNFrmBTAyYFKgoGLg8hSMqCArJ6hKq0+sLcfHXw4Febq2O1ilruuC47OuHH9
+	D5WuiKBybsg/Z2odL3M8yr6Zx7udLuz24aQ7m7blkK/z2ltNyBCWLTPDKz+VLfMITzJzpeItIL4
+	0kpaGwjzcc8eQ4ArYoSiHAw==
+X-Received: by 2002:a05:690e:d59:b0:677:aa00:24dd with SMTP id
+ 956f58d0204a3-677abf9d5a7mr1984885d50.22.1790983732433; Fri, 02 Oct 2026
+ 16:28:52 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -81,13 +81,13 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 References: <20261002-perf-symbol-memory-send-v4-0-0a592bb2539e@uber.com>
- <20261002-perf-symbol-memory-send-v4-2-0a592bb2539e@uber.com> <CAP-5=fX=BvLMm-JHLqaR6ACmP0buF9TSvRLf_Cs1us-o6aMGRQ@mail.gmail.com>
-In-Reply-To: <CAP-5=fX=BvLMm-JHLqaR6ACmP0buF9TSvRLf_Cs1us-o6aMGRQ@mail.gmail.com>
+ <20261002-perf-symbol-memory-send-v4-3-0a592bb2539e@uber.com> <CAP-5=fW_gTX3oXi5_tzsFo2VYxhcsuuoTBxFAzkP-yPsroAoOw@mail.gmail.com>
+In-Reply-To: <CAP-5=fW_gTX3oXi5_tzsFo2VYxhcsuuoTBxFAzkP-yPsroAoOw@mail.gmail.com>
 From: Alireza Haghdoost <haghdoost@uber.com>
-Date: Fri, 2 Oct 2026 16:25:45 -0700
-X-Gm-Features: AclHuK-ph-iyfrQ2eVW2jG3FptK-AGuI-o72WhxQK4yu3pLAKj6OtRrC1G1nndg
-Message-ID: <CA+w=M=REOd1gvi+c6vkd0Ue=q2d_gfC2xeJ_KSVg0H0AaOA+pw@mail.gmail.com>
-Subject: Re: [PATCH v4 2/5] perf dso: Allow reading DSO data from an explicit file
+Date: Fri, 2 Oct 2026 16:28:36 -0700
+X-Gm-Features: AclHuK_XNZXq0VLPIzQnZJ8iQoLi5tbRYCcG5bg7Q-IHQTqgF8BemgGQiDZtpSs
+Message-ID: <CA+w=M=T1arGfG8NhhuL9WEBf5myoJ8S8MqqJ2MG=TkMhRwn1Dg@mail.gmail.com>
+Subject: Re: [PATCH v4 3/5] perf symbols: Factor out duplicate symbol selection
 To: Ian Rogers <irogers@google.com>
 Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -99,7 +99,7 @@ Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Oct 2, 2026 at 3:13=E2=80=AFPM Ian Rogers <irogers@google.com> wrot=
+On Fri, Oct 2, 2026 at 3:16=E2=80=AFPM Ian Rogers <irogers@google.com> wrot=
 e:
 >
 > On Fri, Oct 2, 2026 at 11:46=E2=80=AFAM Alireza Haghdoost via B4 Relay
@@ -107,36 +107,45 @@ e:
 > >
 > > From: Alireza Haghdoost <haghdoost@uber.com>
 > >
-> > The DSO data cache derives the file to open from the DSO's binary type,
-> > which can resolve to the runtime image rather than the file a symbol
-> > table was read from. The lazy symbol loader added later in this series
-> > reads symbol names at string-table offsets in the file the symbol table
-> > came from. With split debuginfo, the data cache would apply those
-> > debuginfo offsets to the runtime image.
+> > symbols__fixup_duplicate() chooses between symbols with the same start
+> > address through choose_best_symbol(), which needs fully constructed
+> > struct symbol objects. The lazy symbol loader added later in this serie=
+s
+> > selects among aliases from its index entries, before any struct symbol
+> > exists, so it cannot use it.
 > >
-> > This patch adds dso__data_set_path() so a DSO can be configured to read
-> > from one exact file while keeping the data cache's descriptor eviction
-> > and reopening. The path is used only when the data cache opens the file=
-;
-> > dso__get_filename() and its debuginfo callers are unchanged. Such DSOs
-> > may be owned privately rather than being part of a dsos collection, so
-> > the patch also drops the assertion that every opened data DSO is in one=
+> > This patch moves the policy into symbol__choose_best(), which compares
+> > the size, name, type and binding of two candidates described by struct
+> > symbol_candidate, and passes the same description to the
+> > arch__choose_best_symbol() hook. choose_best_symbol() becomes a wrapper
+> > that describes two struct symbols. No functional change intended.
+> >
+> > symbol__choose_best() is not static so that the lazy loader can call it=
 .
+> > struct symbol_candidate stays in symbol.h because powerpc overrides the
+> > weak arch__choose_best_symbol(), which takes it.
 >
-> I think some context is missing here. Why do I want a DSO that isn't
-> part of a machine's DSOs? I can see a use for testing, do you want
-> this feature for more than testing?
+> Could we have symbol__choose_best() that takes struct symbol
+> arguments? The struct symbol_candidate doesn't appear to add anything
+> other than a cache of symbol values, and these could be as well cached
+> in local variables.
+>
+> Thanks,
+> Ian
 >
 
-Yes, the production consumer is 4/5 in
-tools/perf/util/symbol-elf.c:2143-2146, where
-dso__build_ondemand_index() creates the private data DSO and sets the exact
-symbol-source path.
+The lazy caller is the reason it cannot take struct symbol. In patch 4/5,
+sym_idx__dedup_aliases() (tools/perf/util/symbol-elf.c:1765-1808) selects
+aliases while building the compact index, before any struct symbol exists.
+Creating temporary symbols would require allocations and name copies becaus=
+e
+struct symbol embeds its name.
 
-The lazy loader needs this data-cache handle because the symbol table may
-come from separate debuginfo rather than the runtime image. Namhyung asked
-during the v2 review that this known split-debuginfo problem be separated
-from the lazy loader as an independent fix.
+struct symbol_candidate is a non-owning view of the four attributes shared
+by the eager struct-symbol path and the lazy index path, including the
+powerpc hook. Without it, the common helper would need eight scalar
+arguments. Would a different name for the helper or struct make that intent
+clearer?
 
 Thanks,
 Alireza
