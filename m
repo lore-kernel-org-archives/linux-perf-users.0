@@ -1,37 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B670D1CAA92;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B68112264CA;
 	Fri,  2 Oct 2026 18:45:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790966759; cv=none; b=T86/9YzmnPr0XtoJIZm2Gdqorjb7X/R7HuUPlLdMbGXcOdNQBQ5WqFjkfASLCztt6mjTI8s00NJ0PHio3IBkUOJ9/GyhCCLT4kPQtnJPAWYewJgWhEDx2qDXaPdpKCACLspeHkGgpQf1fx7W/1GVhHBbaqFR7IXQhjQIvq3Oarw=
+	t=1790966759; cv=none; b=AsRYwDlL2yYB1DvilFXCpFmvFlX4lZQ4xWIOWZjkgyuyDmiA+8gn8GrkhqrTbfmvh/dpS0rnZdJKtDQF9TfrUCythVy8K6f3s48n+9BQhvNFeSLuOk3TfucP6TPDjPPuYajiHDUlciL0PCfdWMTQtkbI9F9cDU4cn+KEeiJOwzg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1790966759; c=relaxed/simple;
-	bh=ef4/doqkLnjyR7FrM9GrShQwWwnrw1B1ABNfQvp/c88=;
+	bh=02i0M9cQVcI4OzfL9ZRzbIOSN6ZwbmiBZLNmG6nxo3Y=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=aRZpCPC0JATqXEcTqdiz8+fv+bENsm0jkCZ5c7S0GBs33x+78iTigcEMuciUWl956AjAUL9Yd6WY1iaGmIK6e0/Z6OAT6igcOFGPcUt2J0msnT+Q+o7oz6bWuZ/IWo7oBdeDGGO8/eJ28r6lFMGzjulrU5mNzeQ+wKsw6kHwIV4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZHSDleQA; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=SVqzNVqZNeaph151waE7ZksPFu26LPC3xm0AAR3pMSOM6A9Uem8eEM35USN08YT1q+ZZB9cMEvIt+ibin76Y8VYicobv0HzLnD6KmqdqB2HLIWBLsQ8SFB+lwoOhts1kW7RCc/rwd7zIdioudZwZq4ImDxv0Nw5VjpsYwNS4vyI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S3hBnNtZ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZHSDleQA"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 65126C4AF15;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S3hBnNtZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 51586C4AF12;
 	Fri,  2 Oct 2026 18:45:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1790966759;
-	bh=ef4/doqkLnjyR7FrM9GrShQwWwnrw1B1ABNfQvp/c88=;
+	bh=02i0M9cQVcI4OzfL9ZRzbIOSN6ZwbmiBZLNmG6nxo3Y=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=ZHSDleQAh2IoMLfTscEzArKIj+m7yLRnGn8mQdVAnHeBHimRR/LkWeewGjWkyktlD
-	 rcdBaHcm+vfr++EcvalmXjWlS4jHb1PndXFAlxGNyCmNbjUOSfZQwWY11XPkSTNbOd
-	 0JP8ELJ1Hn9syQ3OlIEC3C8/7Z8hIRGEmqFCbWd0S8hYMEjmbMrHK9TGZ9bSHRcrSW
-	 K5Y4kRPFO7Qqul46ndbYuqaOPymxO1zMgUoHQx0lRoWhvL5QZFPJPXS/R4QkHF3JYe
-	 2l0fuv9s8G2UJOXDwREe29dAX8CpVqVVVELJ9ailAdCDdvsXNMKkPgq9Ra5vUhUr6C
-	 Z+T9qMjhlwyiw==
+	b=S3hBnNtZ9O/qZq82bc+X9VLxfgrG8FsY0M3Uru2HjU8qgA2Syf0VDpQeEcwvvP53b
+	 gsbg4bXQTWSyzjthDQuEOD6mLm8LwAeRkMksuVyqXxkYtghqSgIOiUb9oZMmfYiSBx
+	 ihkQD3z4HTun7FHr0qY9XzI+6sTxQlfFwbgpUnzcCbjC8DtWZDket+svTrMMqqyrHT
+	 L9upOfCg/AyOpAUSbUaqgajJq2cVBfLGp0u4wgNJ8z8XO+RsEWu9HnOuCbOlnJypmF
+	 C4Scboh8iLBSVyuGMnKmol+antpZrBiNV6BhA2nPmHKu/HE9oPJB3njaBTotKCqkGO
+	 zH3+amnmUBHkQ==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BB13CA5FE5;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A28FCA5FE0;
 	Fri,  2 Oct 2026 18:45:59 +0000 (UTC)
 From: Alireza Haghdoost via B4 Relay <devnull+haghdoost.uber.com@kernel.org>
-Date: Fri, 02 Oct 2026 11:45:35 -0700
-Subject: [PATCH v4 3/5] perf symbols: Factor out duplicate symbol selection
+Date: Fri, 02 Oct 2026 11:45:33 -0700
+Subject: [PATCH v4 1/5] perf symbols: Fix broken ELF_C_READ_MMAP fallback
+ guard
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -40,7 +41,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20261002-perf-symbol-memory-send-v4-3-0a592bb2539e@uber.com>
+Message-Id: <20261002-perf-symbol-memory-send-v4-1-0a592bb2539e@uber.com>
 References: <20261002-perf-symbol-memory-send-v4-0-0a592bb2539e@uber.com>
 In-Reply-To: <20261002-perf-symbol-memory-send-v4-0-0a592bb2539e@uber.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
@@ -54,21 +55,21 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
  Alireza Haghdoost <haghdoost@uber.com>
 X-Mailer: b4 0.15.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=5684; i=haghdoost@uber.com;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1501; i=haghdoost@uber.com;
  h=from:subject:message-id;
- bh=Ky+OYrqZSHk+7lank2LYMaDOqGiz1W+4+DT3dXV1I8E=;
- b=owEBiQJ2/ZANAwAIAVNlBDxl2ALYAcsmYgBqv/vld6VXq+SObwVGjyI+5i9UwSavV2vxHuSqz
- 7JftRX58bSJAk8EAAEIADkWIQS5+sFL3gX/8PrA0S1TZQQ8ZdgC2AUCar/75RsUgAAAAAAEAA5t
- YW51MiwyLjUrMS4xMiwwLDMACgkQU2UEPGXYAtipyw/9HKcONTosS0nuQhDTjLy7i86B8oDAV6o
- k7/a/9FR7NdKLIPtvhja5CpOYzK3b6BV/A4NeA6xq8bjVRP+KXcr5dJw+MN/Ro8HBTDPSod8w4w
- tf+wAQ65snwlVMSbji3iOCV2D9+UGIv1RGgGtSBKm3gngrp3R29428EhwGZ0Kv6trCTS1uJaak2
- o0lh+A1W1sPYeWTf2Q809TEt6DGH4npnQi8GBtqAHx4bLwF0fnsfh/QeFjPOxRvaXapB7W4YdyY
- EfIIHJ/VtRjYgcuvMV8wKD6StOolupZt3M2ndnOoQcJMi3RDObrKSxvswT1iWc4UA3n+eAE5cMa
- Rsa1xAsIOYDmPRlsI769phW86wF5tcX9iWbFGGEbHGS98vcYOwdNV16hukr5MZWC7++JcGeZO5t
- cEmfkLqpbl1i8vQar9qBXUOSDVzwF1FIdiYdSFTnOjGVd5f4WoJqAa9zSshSNDHF89a4gi7rAB6
- /+E2ULL+seJ9RQJSuPlxBwNSZavmHUlOGOltd4NbTqrFtZkoaFpeYWklsaxhtcCLLfaY1Hs+EZu
- cosOEkLGNaYTZ0Wz9TQjc3bqQtixWlxl6y5XttncgBfygyX/AuUBhMff04IFQEHWgkVhfhSuygY
- qpJa1KVoq2n3dzCrnvod2C1uRUDdQWCRHLTeaoEH22vaxOY3AMs0=
+ bh=Fie+m8uDrnEku3C9hTHPEiLsQANbwK1zFduANx60M6s=;
+ b=owEBiQJ2/ZANAwAIAVNlBDxl2ALYAcsmYgBqv/vkFLIf4inrlYhbSjNrLcejy/dUHW7jHb3DY
+ MtjWy68uzCJAk8EAAEIADkWIQS5+sFL3gX/8PrA0S1TZQQ8ZdgC2AUCar/75BsUgAAAAAAEAA5t
+ YW51MiwyLjUrMS4xMiwwLDMACgkQU2UEPGXYAtj7sw//QG/Td0j0BGXRT2vPRe/HJeSG+Hl84Qb
+ nuqrP4uB86oV7rlLrPdjrwL4xdY4mlVKmQBKE5Dbtm1rCGocKj3XnonvDFhWHUZok/cnSEJteDv
+ jc30hlEf+9yW75ICbhOaFHHTjBPFkitBE2VUXI6rjlx5nbFl+QBQkSyZANEq37Y072v6sdxeEuf
+ YzUGrN+qbufdVT4a9E/n7aKD42XyR8c7sYFk42r221HeV/ksEAByaAUAuSR0hN39IVMqCpXWAwj
+ orQ0LR5EUfAr2NazAk0aVdei6wwNNNMUIqaOh2IA1kOhUW/nlelFykMFpyI0rhG7+fGWBsZk9B8
+ D2+8jbYRqv1soVIxD8wWFXSsYYJvLQYCpqaOlE29rbY2EXNvZopEfmk6jLYNW+PfHvAkIqe8QKK
+ lu8KOTuwVeK6S75afgLvqxMrkYoXf5+U4a4QtqLCiAhw/v66CCoDJvdIqcl8YChyWxKc6yOTBfY
+ cuvCOfY92IIYKu8D/SgGI6Bsh812Z9TffmEL4GRba2E71J0zLamyD9pSgUdMGYe//E7XZmY65+k
+ yq34XAohenh29OxgNghZCZGxGuB+MtBWxaToHA8YI6OH58fI4KaUbL3wwhwIIAtnBRQnYM6qOs1
+ uNyoZ5w3oH+/PpddiB5sJxgC8ncK/rRRu95+I4r/SHvQMJuXlqWY=
 X-Developer-Key: i=haghdoost@uber.com; a=openpgp;
  fpr=B9FAC14BDE05FFF0FAC0D12D5365043C65D802D8
 X-Endpoint-Received: by B4 Relay for haghdoost@uber.com/default with
@@ -78,165 +79,44 @@ Reply-To: haghdoost@uber.com
 
 From: Alireza Haghdoost <haghdoost@uber.com>
 
-symbols__fixup_duplicate() chooses between symbols with the same start
-address through choose_best_symbol(), which needs fully constructed
-struct symbol objects. The lazy symbol loader added later in this series
-selects among aliases from its index entries, before any struct symbol
-exists, so it cannot use it.
+Commit 22dd1ac91a77 ("tools: Remove feature-libelf-mmap feature
+detection") replaced perf's compile-time feature test with an #ifdef on
+ELF_C_READ_MMAP. ELF_C_READ_MMAP is an Elf_Cmd enumerator rather than a
+preprocessor macro, so the condition is always false and perf silently
+uses ELF_C_READ.
 
-This patch moves the policy into symbol__choose_best(), which compares
-the size, name, type and binding of two candidates described by struct
-symbol_candidate, and passes the same description to the
-arch__choose_best_symbol() hook. choose_best_symbol() becomes a wrapper
-that describes two struct symbols. No functional change intended.
+Perf already requires a sufficiently recent elfutils version that
+provides ELF_C_READ_MMAP. Use the enumerator directly instead of
+restoring a feature probe or retaining an unreachable fallback.
 
-symbol__choose_best() is not static so that the lazy loader can call it.
-struct symbol_candidate stays in symbol.h because powerpc overrides the
-weak arch__choose_best_symbol(), which takes it.
-
+Fixes: 22dd1ac91a77 ("tools: Remove feature-libelf-mmap feature detection")
 Signed-off-by: Alireza Haghdoost <haghdoost@uber.com>
+Reviewed-by: Namhyung Kim <namhyung@kernel.org>
 ---
- tools/perf/arch/powerpc/util/sym-handling.c |  6 ++--
- tools/perf/util/symbol.c                    | 43 +++++++++++++++++++++--------
- tools/perf/util/symbol.h                    | 14 +++++++++-
- 3 files changed, 47 insertions(+), 16 deletions(-)
+ tools/perf/util/symbol.h | 10 +---------
+ 1 file changed, 1 insertion(+), 9 deletions(-)
 
-diff --git a/tools/perf/arch/powerpc/util/sym-handling.c b/tools/perf/arch/powerpc/util/sym-handling.c
-index 947bfad7aa59..c263cbfefba5 100644
---- a/tools/perf/arch/powerpc/util/sym-handling.c
-+++ b/tools/perf/arch/powerpc/util/sym-handling.c
-@@ -10,10 +10,10 @@
- #include "probe-event.h"
- #include "probe-file.h"
- 
--int arch__choose_best_symbol(struct symbol *syma,
--			     struct symbol *symb __maybe_unused)
-+int arch__choose_best_symbol(const struct symbol_candidate *syma,
-+			     const struct symbol_candidate *symb __maybe_unused)
- {
--	char *sym = syma->name;
-+	const char *sym = syma->name;
- 
- #if !defined(_CALL_ELF) || _CALL_ELF != 2
- 	/* Skip over any initial dot */
-diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
-index 5d98888d068c..f590b69f9f01 100644
---- a/tools/perf/util/symbol.c
-+++ b/tools/perf/util/symbol.c
-@@ -145,8 +145,8 @@ int __weak arch__compare_symbol_names_n(const char *namea, const char *nameb,
- 	return strncmp(namea, nameb, n);
- }
- 
--int __weak arch__choose_best_symbol(struct symbol *syma,
--				    struct symbol *symb __maybe_unused)
-+int __weak arch__choose_best_symbol(const struct symbol_candidate *syma,
-+				    const struct symbol_candidate *symb __maybe_unused)
- {
- 	/* Avoid "SyS" kernel syscall aliases */
- 	if (strlen(syma->name) >= 3 && !strncmp(syma->name, "SyS", 3))
-@@ -157,38 +157,39 @@ int __weak arch__choose_best_symbol(struct symbol *syma,
- 	return SYMBOL_A;
- }
- 
--static int choose_best_symbol(struct symbol *syma, struct symbol *symb)
-+int symbol__choose_best(const struct symbol_candidate *syma,
-+			const struct symbol_candidate *symb)
- {
- 	s64 a;
- 	s64 b;
- 	size_t na, nb;
- 
- 	/* Prefer a symbol with non zero length */
--	a = syma->end - syma->start;
--	b = symb->end - symb->start;
-+	a = syma->size;
-+	b = symb->size;
- 	if ((b == 0) && (a > 0))
- 		return SYMBOL_A;
- 	else if ((a == 0) && (b > 0))
- 		return SYMBOL_B;
- 
--	if (symbol__type(syma) != symbol__type(symb)) {
--		if (symbol__type(syma) == STT_NOTYPE)
-+	if (syma->type != symb->type) {
-+		if (syma->type == STT_NOTYPE)
- 			return SYMBOL_B;
--		if (symbol__type(symb) == STT_NOTYPE)
-+		if (symb->type == STT_NOTYPE)
- 			return SYMBOL_A;
- 	}
- 
- 	/* Prefer a non weak symbol over a weak one */
--	a = symbol__binding(syma) == STB_WEAK;
--	b = symbol__binding(symb) == STB_WEAK;
-+	a = syma->binding == STB_WEAK;
-+	b = symb->binding == STB_WEAK;
- 	if (b && !a)
- 		return SYMBOL_A;
- 	if (a && !b)
- 		return SYMBOL_B;
- 
- 	/* Prefer a global symbol over a non global one */
--	a = symbol__binding(syma) == STB_GLOBAL;
--	b = symbol__binding(symb) == STB_GLOBAL;
-+	a = syma->binding == STB_GLOBAL;
-+	b = symb->binding == STB_GLOBAL;
- 	if (a && !b)
- 		return SYMBOL_A;
- 	if (b && !a)
-@@ -213,6 +214,24 @@ static int choose_best_symbol(struct symbol *syma, struct symbol *symb)
- 	return arch__choose_best_symbol(syma, symb);
- }
- 
-+static int choose_best_symbol(struct symbol *syma, struct symbol *symb)
-+{
-+	struct symbol_candidate a = {
-+		.size = syma->end - syma->start,
-+		.name = syma->name,
-+		.type = symbol__type(syma),
-+		.binding = symbol__binding(syma),
-+	};
-+	struct symbol_candidate b = {
-+		.size = symb->end - symb->start,
-+		.name = symb->name,
-+		.type = symbol__type(symb),
-+		.binding = symbol__binding(symb),
-+	};
-+
-+	return symbol__choose_best(&a, &b);
-+}
-+
- void symbols__fixup_duplicate(struct rb_root_cached *symbols)
- {
- 	struct rb_node *nd;
 diff --git a/tools/perf/util/symbol.h b/tools/perf/util/symbol.h
-index 46b1649c64fc..b9fa722a9a14 100644
+index d0bac824c79c..46b1649c64fc 100644
 --- a/tools/perf/util/symbol.h
 +++ b/tools/perf/util/symbol.h
-@@ -299,10 +299,22 @@ const char *arch__normalize_symbol_name(const char *name);
- #define SYMBOL_A 0
- #define SYMBOL_B 1
+@@ -57,15 +57,7 @@ static inline bool is_livepatch_symbol(const char *str)
+ 	return strstarts(str, KLP_SYM_PREFIX);
+ }
  
-+/* Attributes used to choose between symbols that share a start address. */
-+struct symbol_candidate {
-+	u64		size;
-+	const char	*name;
-+	u8		type;
-+	u8		binding;
-+};
-+
-+int symbol__choose_best(const struct symbol_candidate *a,
-+			const struct symbol_candidate *b);
-+
- int arch__compare_symbol_names(const char *namea, const char *nameb);
- int arch__compare_symbol_names_n(const char *namea, const char *nameb,
- 				 unsigned int n);
--int arch__choose_best_symbol(struct symbol *syma, struct symbol *symb);
-+int arch__choose_best_symbol(const struct symbol_candidate *a,
-+			     const struct symbol_candidate *b);
+-/*
+- * libelf 0.8.x and earlier do not support ELF_C_READ_MMAP;
+- * for newer versions we can use mmap to reduce memory usage:
+- */
+-#ifdef ELF_C_READ_MMAP
+-# define PERF_ELF_C_READ_MMAP ELF_C_READ_MMAP
+-#else
+-# define PERF_ELF_C_READ_MMAP ELF_C_READ
+-#endif
++#define PERF_ELF_C_READ_MMAP ELF_C_READ_MMAP
  
- enum symbol_tag_include {
- 	SYMBOL_TAG_INCLUDE__NONE = 0,
+ #ifdef HAVE_LIBELF_SUPPORT
+ Elf_Scn *elf_section_by_name(Elf *elf, GElf_Ehdr *ep,
 
 -- 
 Git-157)
