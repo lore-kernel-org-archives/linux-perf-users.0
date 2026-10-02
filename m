@@ -1,79 +1,79 @@
 Received: from mail-yx2-f37.google.com (mail-yx2-f37.google.com [74.125.224.165])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1D443C3BFE
-	for <linux-perf-users@vger.kernel.org>; Fri,  2 Oct 2026 23:28:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DCF838AC8C
+	for <linux-perf-users@vger.kernel.org>; Fri,  2 Oct 2026 23:53:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.224.165
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790983735; cv=pass; b=S+1ryvNGiF1jOe749E8Jr7W4njn1qM/nhAA/VfNSDKpZYkIYiaZFcwsrjVliPpd+UtL3THoyki/ll5W8/YcAvbdKgItc4ewLKF01A0Vmdy9VfwJWwOvcOFMFpli48jACueixD5Kp4qPCKklpwnER707rMGrKg0DbaUHUniN4O5Q=
+	t=1790985188; cv=pass; b=mWNHzZtACGbGF0QOKJf6QyjseMwUssxr3d4vJWj1aRglg2FnYHb798A3YhWyN/cFF5Saher7TSe6wKzrTv2KjHi/a+nmQUsQt6NJvw/fKSYlJixT3YBnywERXVqshH8hRXDRZ0qMdD51SChth7TvjgM9ifhKqd7bP3oKxDMUhf4=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790983735; c=relaxed/simple;
-	bh=rOs5frUl7ApBA1qQpObFxVYYelIhp/dTTYYpB+JInF4=;
+	s=arc-20240116; t=1790985188; c=relaxed/simple;
+	bh=TSRxsIng2LPiyM2hNH2bG7x0/DCnogvfIBYewgQ58xU=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=P4AkzFqkv+WTqZyAt1wtZAjDLyB6o0G1htROpaiSAtCj4vGhX0IRkjgKicHdY+hJQasqkN8YKeA49x2LiM85PeFCemi3i3IRGAdtsIOtsr0Ash82rDi+ykM2lcLSzOI5syddEbOFlJ0BN9KPP5kdtnb7Jc5ZhwlszhvbRpcfjyo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=uber.com; spf=fail smtp.mailfrom=uber.com; dkim=pass (1024-bit key) header.d=uber.com header.i=@uber.com header.b=uH+dAZW4; arc=pass smtp.client-ip=74.125.224.165
+	 To:Cc:Content-Type; b=P6Ws93fq6bvlvGVFsuKGZXWQ4/FHHIUvwb0Y8u/U/Sqol2F5PKgVLZu1+cAb3q2QFeY+7p+3/CWtgJePVXXzHTKjtWtu7HhJCkSGWZOfqspJfdXrYMRNJZ/O3yAplW8eVePA+USHG997VQcFIDo+L3yX8i9AFa4QkV5BZ6Vx+6Y=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=uber.com; spf=fail smtp.mailfrom=uber.com; dkim=pass (1024-bit key) header.d=uber.com header.i=@uber.com header.b=q8SF/OHS; arc=pass smtp.client-ip=74.125.224.165
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=uber.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=uber.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=uber.com header.i=@uber.com header.b="uH+dAZW4"
-Received: by mail-yx2-f37.google.com with SMTP id 956f58d0204a3-677baaef644so35683d50.3
-        for <linux-perf-users@vger.kernel.org>; Fri, 02 Oct 2026 16:28:53 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1790983733; cv=none;
+	dkim=pass (1024-bit key) header.d=uber.com header.i=@uber.com header.b="q8SF/OHS"
+Received: by mail-yx2-f37.google.com with SMTP id 956f58d0204a3-677a7faac73so42508d50.2
+        for <linux-perf-users@vger.kernel.org>; Fri, 02 Oct 2026 16:53:07 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1790985186; cv=none;
         d=google.com; s=arc-20260327;
-        b=Zfgoz+grIh2i/gWVlJ3SLNRcyZmeeDapAavgkKw0pTAo8gQstRVwYAI9Cd8FY88+El
-         ictHYO7XvUXdrk/2D8vrWVCkolCPrKTfsuZBBfV7H7kMK3cNuhGTpOV1nJLDE9qiGQhx
-         d98UHio5VK8A2TOUCoLqE0seIa4b7GIFAZMTanczUgXRLAdFMMoCMRxunaNrZQKIj6po
-         ftCJG32Jk63utRHBuiA2/Lehk7cZjNfLWVckB/gOkowRefxYjSZTlZalK0WduloIwxVV
-         wwTaxAfjIqHQ2gFkLFFBQG76Dntm/0Os/z5z0/rcCL3SqeB5jT0Ef0bZKfHw1yEnb5MX
-         VtNw==
+        b=lYmbN6tTP6ReUuIGx4ziuxveGFg0c0IrreeeDiLyfYRBF60mHp9jOchX0vLbm5CBPE
+         3MGnQEUALPTeXCGsA5ikpeiE7ccD1P9CUL7PF3m6GjLjL8u8DQw6zoLcZO06Djc2ID4b
+         PvVoNNh5mFdv5sLII99XSJGevKo/lLTOYgUVlTG0t4jZdqOjzcJdN5OQPtRWNewCSJJy
+         2TQX9S45PdP7PSmV+Zqp+Y6GqfLWRM5twqdI0w+f7kVxYdfdlpnp04GHX49UUIjAl6Fz
+         d6gyJBWI9jkj7q9FQyiuchwpJZvqRiKtb9/xBrV0dhcCYjspg0l/07qcxwd6iJq/m9iD
+         L5Wg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:dkim-signature;
-        bh=rOs5frUl7ApBA1qQpObFxVYYelIhp/dTTYYpB+JInF4=;
-        fh=Tb1g8OgVtFTDtDh4ABhFz5Gy5IYreiBgnae7sAXQQuM=;
-        b=n7lzUyjDR7A5BXB0ctdbG8LzzSnjiHfpDGZkaEUOhZAA7ZOK0qEbwaJmzE+BUOWl1x
-         4PU9yjpTMV9CBFMlxzE98m/mtBBa7DnDXf89PfLM3hnBdbMA989+NAuUF5YZtrXlXM+W
-         LMvdccV2swN0MjTQP+ggpooYKvXu/npSaO9YRIAJogR2RZw6hcza8bZGNYuK7hvmcHB6
-         gL0aURUVLTm1dr7DfvtPDdHFgvqfjfyEvDMe+cATWEBpE8jRyptCI/DjDWibFqwnqVx6
-         /bwEYGONWJQwMV8WdEDXQJbE0H6Bsatvp11iJbu8Wzie4auyqk/DKLD3xIqdtXzC2fAS
-         vmbA==;
+        bh=snMBNVyodSm2QRZvcyx88wssCDSjiEt9T08zFclT1E0=;
+        fh=DoqBoISS8EZE6qU00Gq0KVqYKDuv2toSzBydbeZ0njU=;
+        b=dubIIVOq8uBjxySwOKjKAwr/9V7lWgCT4FcAUHu3+gw8T2mmEsV06bitCFlYzs/u/i
+         83g4DUxD5DrK+c7unJWW28AqOz4KRdqQEaexzogZ60Jy5QUl4ajpnIjwib08RfF/g7nX
+         53m/qQM2pyhIkYIgiSginZzNOuTpePI2XPvQ4BKaPpICv5SUZN98tLNDiiWNtk3npf1X
+         WgJETW8b0PsIrxeLgSZy3H2ASa66FItcjt/cVleTIiGexnDd5nN+EM7ydUyyO5M397yA
+         v8yBdTiSqX2deWJO67pWenhChUdp4H15v8pu9F2/DumBebb1EgD3997lZof/lizbNPNV
+         C7GA==;
         darn=vger.kernel.org
 ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=uber.com; s=google; t=1790983733; x=1791588533; darn=vger.kernel.org;
+        d=uber.com; s=google; t=1790985186; x=1791589986; darn=vger.kernel.org;
         h=content-transfer-encoding:content-type:cc:to:subject:message-id
          :date:from:in-reply-to:references:mime-version:from:to:cc:subject
          :date:message-id:reply-to:content-type;
-        bh=rOs5frUl7ApBA1qQpObFxVYYelIhp/dTTYYpB+JInF4=;
-        b=uH+dAZW4JR9oY/1sYMJGNbEfqp8zPsDMJMGETPWhwWnJX7FXpbBujnuUlNkoZNGY83
-         +iO9SOE0BKdFf5NnQ71MWZ2w9iZbgc11tObQGDsLxg9ayf3cGd+WoA9qWRpx6TsC28aQ
-         065DQyEoPRNO4tTDB5umP8V78HwGbLutIOi6Q=
+        bh=snMBNVyodSm2QRZvcyx88wssCDSjiEt9T08zFclT1E0=;
+        b=q8SF/OHSdg7NbMsCsGRcn5xGocA4nDcbGLUPZoU4g/U+zDXtA6GYX2IAcp9qX/+isX
+         BXDRu7OlEKrfOJnEvO+lHUAD4PBDlvxJLT5dFTYaqY25zOeHoByi3RMGDsZtZI394Yzr
+         Bo/7OPSOh4ROJjEpzViryUlmyBSnwkhfX2Ql0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1790983733; x=1791588533;
+        d=1e100.net; s=20260707; t=1790985186; x=1791589986;
         h=content-transfer-encoding:content-type:cc:to:subject:message-id
          :date:from:in-reply-to:references:mime-version:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=rOs5frUl7ApBA1qQpObFxVYYelIhp/dTTYYpB+JInF4=;
-        b=vOYO8Too49bgAmvNQw9snIrAQaVmE8VdaGyqDZyxga2tANiBCxzIAQrosTG+cC8dvV
-         2JJM9coOjU1k2rWslBd7t2Mh2C7bavPbe5z7JeQR1at1w6iRCw0QPu5GI8blKovpzWJ0
-         80cOrIb31i+u35tq+3WcP/JBOWtmbd/zs5rEX81adNjDLZmXY5P92/6NEvBdy558rfHX
-         VHoQmm6RJrX6iBC7AAL2oR5E9t8rBQy2gX/wMGNbigfX6TUIcwbUNlTPEnr8mpUp6tOs
-         vmTiW3OhJHec5wxKIyLNxOCFpQ4pJHPwNDe0uNLFn7+zYpMh+13RwVq25EjhmxttKRGk
-         pLUA==
-X-Forwarded-Encrypted: i=1; AKwUvByR9BYtn/fPRJ2zmTio9NzlQg8zARjL90hGpEheoaHxsf1bkHyEbISf5Al/0IH7qf7w08RUmDDr9+odgl52n5Uw@vger.kernel.org
-X-Gm-Message-State: AFq9FYLeHNPq7OaWHh3rkVnwSNcZCw7nVcvU6WjrXFFN70S31d6RqW77
-	VDYyisdrjIJeGHqxKol/wBoatRY6eG5ZiATx6Issax0sQ9SY0IOrBs0w2Ok9mBoYIXrG3p/sE6M
-	u4mw3gj4Op4ILo5lTnyNp412AvocmgtVvbE0MPT/Lpw==
-X-Gm-Gg: AYBFou2Sx5BG6Z+MoYdZafc/fKFGiSxjsxYht83Q+iERxLS7jYsHfyj5gWWv7h7vZNF
-	Ymwp2zzOX74h3bGtoluV7Tp7HVPSN1UYTyt/QRqBcr4nrEYvmUriICM7sz2ua5ESoKf0Ru1g2Yu
-	UXCTTP2vcbdNRoOMXtGL5ZzpwUkuvyCD1qTHe2tB08XJUguMcXJ1lQ39jf+O40tWBsr591+/TEO
-	uF2Ks+2F8Ws8BDSYNFrmBTAyYFKgoGLg8hSMqCArJ6hKq0+sLcfHXw4Febq2O1ilruuC47OuHH9
-	D5WuiKBybsg/Z2odL3M8yr6Zx7udLuz24aQ7m7blkK/z2ltNyBCWLTPDKz+VLfMITzJzpeItIL4
-	0kpaGwjzcc8eQ4ArYoSiHAw==
-X-Received: by 2002:a05:690e:d59:b0:677:aa00:24dd with SMTP id
- 956f58d0204a3-677abf9d5a7mr1984885d50.22.1790983732433; Fri, 02 Oct 2026
- 16:28:52 -0700 (PDT)
+        bh=snMBNVyodSm2QRZvcyx88wssCDSjiEt9T08zFclT1E0=;
+        b=L/weLQSMGie7hUIWmS77o9YPFjypTspp1HbfYzjrmfQrSNrS2sSGs/2KDIQrwOmUIi
+         UAKE7N92btULxm5JHLvLsC9/BbZmNMWagT64dszI5VqMEdTEmIbeiqY3+lkajlxck3pj
+         KpzGQojl1381x4/MV3RiqpmJ3qTxqJZBm3NM/I1a+UHfJjAIitp9O/K0KUt0P4K0Bwac
+         +ugrojTtjqimioSq8MJENYrlgVjEBeRJ8ZwYQpEkgLjpZkvBDexgOU5iqRdoBNi5Siq6
+         OvQ5ewi6igc1RbtjpmS+H8Bf/8wtCaYuHxhKVnNA+ukADVmec5QrkvjMY1jnsnWyKdUu
+         /cGg==
+X-Forwarded-Encrypted: i=1; AKwUvBxtb0AM5hl+2tiR9h8/fq/buzZRYvfh+GCSEI4KYiRiDMNzl3GqJ7Fv81QfcqRVUKHoEWp3fwqncBG4HbdtJze8@vger.kernel.org
+X-Gm-Message-State: AFq9FYKqGHYWG8j2AI1hlHeWK6laFFRkz+p9rlUuAsm9mf+8oYff9GI9
+	KzV9MdYrIjoSWm9xo9ClGJA0zZ5hCEabdoTxBJOY6BYIpf4m+kqRvKtdsajonvrff98d0R3Gr1p
+	J1J0T90wCmsU0pXfWAKtpkagE7uf2ypsBbp2TMnVaNg==
+X-Gm-Gg: AYBFou35EZppbqPSZPc0nAr+SSNmPFldTabVSM7Dli2DVZ21dAI6bBzEviDIT43NwI5
+	Kq4k2/9tTRehf2GnP0FbdPOQAKVJqiPMs8nq8lrJwehgyvmIC1nkdxSVlPl4Qua6eHWbLDTROZl
+	1ZLr1JLDQnrcx3iZ/VOJd0CPgB8M0LUNrIK0UvcI8x+Scg3HWLH9pJnir/xk1//QnD+PiWj83SU
+	kORUUwSHHMeTGmQhZcMCXV2hayQYfOzF6Tsp9A2jM+baIUQ98oXvfvEzBwbG+lAakkDHwC0XsFt
+	0fJZkuZWW1O+Giq8Kj8J2EooQ6ACNc0dYa2+5dl1bwoweiLyrwBmenTWtE2twU+63jMaVc7Z6rn
+	+bHFZAgvYNwE=
+X-Received: by 2002:a53:c407:0:b0:671:3843:62fa with SMTP id
+ 956f58d0204a3-677ac0ca3a9mr1478803d50.84.1790985185963; Fri, 02 Oct 2026
+ 16:53:05 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -81,13 +81,14 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 References: <20261002-perf-symbol-memory-send-v4-0-0a592bb2539e@uber.com>
- <20261002-perf-symbol-memory-send-v4-3-0a592bb2539e@uber.com> <CAP-5=fW_gTX3oXi5_tzsFo2VYxhcsuuoTBxFAzkP-yPsroAoOw@mail.gmail.com>
-In-Reply-To: <CAP-5=fW_gTX3oXi5_tzsFo2VYxhcsuuoTBxFAzkP-yPsroAoOw@mail.gmail.com>
+ <20261002-perf-symbol-memory-send-v4-4-0a592bb2539e@uber.com> <CAP-5=fUMvUU=kGkGej4FSTYAMjO_ygZ5uQ4pdb+5NwivdjMwkA@mail.gmail.com>
+In-Reply-To: <CAP-5=fUMvUU=kGkGej4FSTYAMjO_ygZ5uQ4pdb+5NwivdjMwkA@mail.gmail.com>
 From: Alireza Haghdoost <haghdoost@uber.com>
-Date: Fri, 2 Oct 2026 16:28:36 -0700
-X-Gm-Features: AclHuK_XNZXq0VLPIzQnZJ8iQoLi5tbRYCcG5bg7Q-IHQTqgF8BemgGQiDZtpSs
-Message-ID: <CA+w=M=T1arGfG8NhhuL9WEBf5myoJ8S8MqqJ2MG=TkMhRwn1Dg@mail.gmail.com>
-Subject: Re: [PATCH v4 3/5] perf symbols: Factor out duplicate symbol selection
+Date: Fri, 2 Oct 2026 16:52:50 -0700
+X-Gm-Features: AclHuK827T4jon6f_COBhtcH9C1xH434yiGa8Buid9-rGjvKkgkVXDkkQWBvBzE
+Message-ID: <CA+w=M=QL7TrqAhd1urQg2BEj2jTxLGU4aDWku8OuF=c1Tbxeyw@mail.gmail.com>
+Subject: Re: [PATCH v4 4/5] perf script: Add --lazy-load-symbols for lazy
+ symbol loading
 To: Ian Rogers <irogers@google.com>
 Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -99,53 +100,122 @@ Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Oct 2, 2026 at 3:16=E2=80=AFPM Ian Rogers <irogers@google.com> wrot=
+On Fri, Oct 2, 2026 at 3:39=E2=80=AFPM Ian Rogers <irogers@google.com> wrot=
 e:
 >
-> On Fri, Oct 2, 2026 at 11:46=E2=80=AFAM Alireza Haghdoost via B4 Relay
-> <devnull+haghdoost.uber.com@kernel.org> wrote:
-> >
-> > From: Alireza Haghdoost <haghdoost@uber.com>
-> >
-> > symbols__fixup_duplicate() chooses between symbols with the same start
-> > address through choose_best_symbol(), which needs fully constructed
-> > struct symbol objects. The lazy symbol loader added later in this serie=
-s
-> > selects among aliases from its index entries, before any struct symbol
-> > exists, so it cannot use it.
-> >
-> > This patch moves the policy into symbol__choose_best(), which compares
-> > the size, name, type and binding of two candidates described by struct
-> > symbol_candidate, and passes the same description to the
-> > arch__choose_best_symbol() hook. choose_best_symbol() becomes a wrapper
-> > that describes two struct symbols. No functional change intended.
-> >
-> > symbol__choose_best() is not static so that the lazy loader can call it=
-.
-> > struct symbol_candidate stays in symbol.h because powerpc overrides the
-> > weak arch__choose_best_symbol(), which takes it.
+> > +
+> > +struct dso_ondemand {
+> > +       struct dso              *data_dso;
 >
-> Could we have symbol__choose_best() that takes struct symbol
-> arguments? The struct symbol_candidate doesn't appear to add anything
-> other than a cache of symbol values, and these could be as well cached
-> in local variables.
->
-> Thanks,
-> Ian
+> Could you add kernel doc for dso_ondemand? I believe it is keeping
+> state while resolving symbols, but the name makes it sound more
+> persistent.
 >
 
-The lazy caller is the reason it cannot take struct symbol. In patch 4/5,
-sym_idx__dedup_aliases() (tools/perf/util/symbol-elf.c:1765-1808) selects
-aliases while building the compact index, before any struct symbol exists.
-Creating temporary symbols would require allocations and name copies becaus=
-e
-struct symbol embeds its name.
+Yes, will do. It is persistent per-DSO state that holds the compact index
+and symbol source used for lazy address resolution. It remains attached
+until name sorting materializes all symbols, or until the DSO is destroyed
+during teardown.
 
-struct symbol_candidate is a non-owning view of the four attributes shared
-by the eager struct-symbol path and the lazy index path, including the
-powerpc hook. Without it, the common helper would need eight scalar
-arguments. Would a different name for the helper or struct make that intent
-clearer?
+I'll add kernel-doc documenting its purpose, lifetime and locking. I can al=
+so
+rename it to dso_lazy_symbols if that makes the lifetime clearer.
+
+
+> >  struct symbol *map__find_symbol(struct map *map, u64 addr)
+> >  {
+> > +       struct dso *dso;
+> > +
+> >         if (map__load(map) < 0)
+> >                 return NULL;
+> >
+> > -       return dso__find_symbol(map__dso(map), addr);
+> > +       dso =3D map__dso(map);
+> > +       if (symbol_conf.lazy_load_symbols)
+> > +               return dso__find_symbol_ondemand(dso, addr);
+> > +       return dso__find_symbol(dso, addr);
+>
+> Why not do this logic in dso__find_symbol?
+>
+
+Good point. Will do.
+
+> > +/* Return the number of entries starting at or before @addr. */
+> > +static u32 sym_idx__upper_bound(const struct dso_ondemand *od, u64 add=
+r)
+> > +{
+> > +       u32 lo =3D 0, hi =3D od->nr_sorted;
+> > +
+> > +       while (lo < hi) {
+> > +               u32 mid =3D lo + (hi - lo) / 2;
+> > +
+> > +               if (od->sorted[mid].start <=3D addr)
+> > +                       lo =3D mid + 1;
+> > +               else
+> > +                       hi =3D mid;
+> > +       }
+> > +       return lo;
+> > +}
+>
+> Would the upper and lower bound only matter if symbols were
+> duplicated? I'm wondering if we can use bsearch?
+>
+
+Not only for duplicates. Lower bound finds the first start >=3D addr, while
+upper bound finds the first start > addr.
+
+For example:
+
+  outer: [100, 200)
+  inner: [120, 150)
+
+At address 130, a range-based bsearch() may return either symbol because bo=
+th
+contain it. Upper bound selects inner, and at address 160 its outer link le=
+ads
+back to outer. At the exact start 120, upper bound is also needed so that
+decrementing the result selects inner rather than outer.
+
+Duplicate-start aliases are normally collapsed by sym_idx__dedup_aliases();
+they remain only with allow_aliases. The lower-bound callers also need an
+insertion point, which bsearch() cannot provide.
+
+I can combine the two loops into one helper parameterized by lower versus
+upper bound and document this behavior.
+
+
+> > +static bool sym_idx__from_sym(struct symsrc *syms_ss,
+> > +                             struct symsrc *runtime_ss, Elf_Data *secs=
+trs,
+> > +                             bool dynsym, const struct sym_idx *symtab=
+,
+> > +                             u32 nr, const size_t *strndx,
+> > +                             const GElf_Sym *sym, struct sym_idx *idx)
+> > +{
+> > +       Elf *elf =3D syms_ss->elf;
+> > +       GElf_Shdr shdr =3D dynsym ? syms_ss->dynshdr : syms_ss->symshdr=
+;
+> > +       u16 e_machine =3D syms_ss->ehdr.e_machine;
+> > +       u64 adjusted =3D sym->st_value;
+> > +       GElf_Phdr phdr;
+> > +
+> > +       if (!ondemand_sym_ok(elf, secstrs, sym, shdr.sh_link, e_machine=
+))
+> > +               return false;
+> > +
+> > +       if (e_machine =3D=3D EM_ARM && GELF_ST_TYPE(sym->st_info) =3D=
+=3D STT_FUNC &&
+> > +           (adjusted & 1))
+> > +               --adjusted;
+>
+> Worth a comment that this is stripping of the thumb/not-thumb indicator b=
+it.
+>
+
+Ack. I'll add the same explanation used by the eager loader: ARM Thumb
+function symbols have bit 0 set as an indicator, so the index strips that b=
+it
+from the address.
 
 Thanks,
 Alireza
