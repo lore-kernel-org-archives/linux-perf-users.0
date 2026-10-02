@@ -1,171 +1,167 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF8D81E8826;
-	Fri,  2 Oct 2026 12:27:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8231438332A;
+	Fri,  2 Oct 2026 12:33:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.154.123
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790944029; cv=none; b=erBqfgXGHsd1jVjLho7CugjYYYc55AleATwFlExXA1i1u7aZnMxJMylZf64qcSzNiY0/mDbVG4Z3pS3+8fvCZCn93ZZll1UKXZxjDy7KoqdQsNM5QKZy2HdnCtFX4ULDWwsJs8SRJNKC6r+id5cbcp8FYc5V4hStAHRLpUs7E8k=
+	t=1790944409; cv=none; b=roH1f8DVihAr1INeSKvHlOBFZtW2Unv+P0itYjgAyuCrzsAoeaItOa2IhGgW7JQNsFi0NkIX8ht9OL8CIaht6Sv+II8aAJT3cCoksSvebT6FnLBkZVHiqB88BfGZM2q9B19kNJg79IF7f++b+qhcuKotdZNCTWk9uQdS/2GsgWE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790944029; c=relaxed/simple;
-	bh=Rz6XYStyWFzN0ZjvCDWKB7fThH12QCzItZ/47IqIX1M=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nVGwnXLyY6g12xgkmUUko/v5dErWQpE6JuDyhfLd4cJzhHA0iqbUjJlyNYpOcpiO5CDoM5+lRMJlkNbCZAe4mWVflZKrX9YTc2remEg8chNRtKmJPEoGB1/p03XySvVDjntmpw4dLxN5NqpaRHZodhYMZzIMXBkb+mAUXwFS3SU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cxL+MpzC; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1790944409; c=relaxed/simple;
+	bh=NDgEPa0XeDvsUmZpfYIS+OBNFMqFM1UOXxuPhnqM03g=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=SgESlp0Zl6AEO9oFlT2ZRDloF6nIzvVA9NWiNdA7TT++g/Nw6muXsHVConw8fWkpetdS0sWZwOMjx2tQps35xqwz4i3RwLzwli58BGcA7TwnA1IYl/MSlfeZPNYZyS5SyqK8/rOEJ1gcmVcnnfZZV6gtdIZtFlkAJKSiqNQFZsQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=GqNF4z36; arc=none smtp.client-ip=68.232.154.123
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cxL+MpzC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1C8FE1F000FF;
-	Fri,  2 Oct 2026 12:26:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1790944027;
-	bh=hHcwGbw/dTLavCD1q0Wz915FUcvfzunoMb3D7u+JUi8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=cxL+MpzC1cfSdjAOczoG1wPIbWTQrpCLMvzVBXSmnKiDFYDBMn64LTPj/OWtWuFXw
-	 gMS4it0MZsivPy8icpf5Socvb5mYV2Im4m2dtIO0izWysvPZaaVznKHHE8BUgxTm84
-	 r9D0MJpBzqhVcI1wDRYzLV3kd3Y/HTsDcWwM/QeLKcJvTZvL+5LlcKmc0a0aAwrQ2U
-	 ZYFaZjVC0hCZ6nCAC8I0h5O90ago1k3NGUIsPkt6VWSJG/PggFTuZRQsBvT4/V6tEj
-	 +1USCOD4kbv5ptO7N71o+f+lwiUaQKKZEz6kENcKDRXDz8XMOg2VDIFttVx9pefZu/
-	 Fg8q/hmZlpmxg==
-Date: Fri, 2 Oct 2026 13:26:38 +0100
-From: "Lorenzo Stoakes (ARM)" <ljs@kernel.org>
-To: Zi Yan <ziy@nvidia.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, 
-	"Liam R. Howlett" <liam@infradead.org>, Vlastimil Babka <vbabka@kernel.org>, 
-	Jann Horn <jannh@google.com>, Pedro Falcato <pfalcato@suse.de>, 
-	David Hildenbrand <david@kernel.org>, Mike Rapoport <rppt@kernel.org>, 
-	Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>, Jonathan Corbet <corbet@lwn.net>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>, 
-	Jason Gunthorpe <jgg@ziepe.ca>, Leon Romanovsky <leon@kernel.org>, 
-	Paul Moore <paul@paul-moore.com>, Stephen Smalley <stephen.smalley.work@gmail.com>, 
-	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
-	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
-	Andrii Nakryiko <andrii@kernel.org>, Eduard Zingerman <eddyz87@gmail.com>, 
-	Kumar Kartikeya Dwivedi <memxor@gmail.com>, Baolin Wang <baolin.wang@linux.alibaba.com>, 
-	Nico Pache <nico.pache@linux.dev>, Ryan Roberts <ryan.roberts@arm.com>, Dev Jain <dev.jain@arm.com>, 
-	Barry Song <baohua@kernel.org>, Lance Yang <lance.yang@linux.dev>, 
-	Usama Arif <usama.arif@linux.dev>, Kiryl Shutsemau <kas@kernel.org>, 
-	Doug Gilbert <dgilbert@interlog.com>, "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>, 
-	"Martin K. Petersen" <mkp@kernel.org>, Jaya Kumar <jayalk@intworks.biz>, 
-	Simona Vetter <simona@ffwll.ch>, Helge Deller <deller@gmx.de>, Sebastian Reichel <sre@kernel.org>, 
-	John Hubbard <jhubbard@nvidia.com>, Peter Xu <peterx@redhat.com>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Oleg Nesterov <oleg@redhat.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Thomas Gleixner <tglx@kernel.org>, 
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, Arnaldo Carvalho de Melo <acme@kernel.org>, 
-	Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Rik van Riel <riel@surriel.com>, Harry Yoo <harry@kernel.org>, Juri Lelli <juri.lelli@redhat.com>, 
-	Vincent Guittot <vincent.guittot@linaro.org>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
-	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
-	David Airlie <airlied@gmail.com>, Will Deacon <will@kernel.org>, 
-	"Aneesh Kumar K.V" <aneesh.kumar@kernel.org>, Nick Piggin <npiggin@gmail.com>, Arnd Bergmann <arnd@arndb.de>, 
-	Muchun Song <muchun.song@linux.dev>, Oscar Salvador <osalvador@suse.de>, 
-	"Matthew Wilcox (Oracle)" <willy@infradead.org>, Jan Kara <jack@suse.cz>, Marc Zyngier <maz@kernel.org>, 
-	Oliver Upton <oupton@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, 
-	Madhavan Srinivasan <maddy@linux.ibm.com>, Anup Patel <anup@brainfault.org>, Paul Walmsley <pjw@kernel.org>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
-	Christian Borntraeger <borntraeger@linux.ibm.com>, Janosch Frank <frankja@linux.ibm.com>, 
-	Claudio Imbrenda <imbrenda@linux.ibm.com>, Alexander Gordeev <agordeev@linux.ibm.com>, 
-	Gerald Schaefer <gerald.schaefer@linux.ibm.com>, Heiko Carstens <hca@linux.ibm.com>, 
-	Vasily Gorbik <gor@linux.ibm.com>, "David S. Miller" <davem@davemloft.net>, 
-	Andreas Larsson <andreas@gaisler.com>, Alexander Viro <viro@zeniv.linux.org.uk>, 
-	Christian Brauner <brauner@kernel.org>, Matthew Brost <matthew.brost@intel.com>, 
-	Joshua Hahn <joshua.hahnjy@gmail.com>, Rakie Kim <rakie.kim@sk.com>, Byungchul Park <byungchul@sk.com>, 
-	Gregory Price <gourry@gourry.net>, Ying Huang <ying.huang@linux.alibaba.com>, 
-	Alistair Popple <apopple@nvidia.com>, Chris Li <chrisl@kernel.org>, Kairui Song <kasong@tencent.com>, 
-	Kemeng Shi <shikemeng@huaweicloud.com>, Nhat Pham <nphamcs@gmail.com>, Baoquan He <baoquan.he@linux.dev>, 
-	Youngjun Park <youngjun.park@lge.com>, Johannes Weiner <hannes@cmpxchg.org>, 
-	Qi Zheng <qi.zheng@linux.dev>, Shakeel Butt <shakeel.butt@linux.dev>, 
-	Axel Rasmussen <axelrasmussen@google.com>, Yuanchu Xie <yuanchu@google.com>, Wei Xu <weixugc@google.com>, 
-	Chengming Zhou <chengming.zhou@linux.dev>, Michal Hocko <mhocko@kernel.org>, 
-	Miklos Szeredi <miklos@szeredi.hu>, Xu Xin <xu.xin@linux.dev>, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, linux-usb@vger.kernel.org, 
-	linux-rdma@vger.kernel.org, selinux@vger.kernel.org, linux-sound@vger.kernel.org, 
-	bpf@vger.kernel.org, linux-scsi@vger.kernel.org, linux-fbdev@vger.kernel.org, 
-	dri-devel@lists.freedesktop.org, linux-trace-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, linux-arch@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, linuxppc-dev@lists.ozlabs.org, 
-	kvm@vger.kernel.org, kvm-riscv@lists.infradead.org, linux-riscv@lists.infradead.org, 
-	linux-s390@vger.kernel.org, sparclinux@vger.kernel.org, fuse-devel@lists.linux.dev
-Subject: Re: [PATCH v3 23/40] mm/mlock: clear VMA_LOCKED_MASK over mmap
- callback
-Message-ID: <ar-i13TARsDuUsQg@gremlin>
-References: <20260917-b4-mmap-prepare-vma-flag-sanify-v3-0-4583d8a23bca@kernel.org>
- <20260917-b4-mmap-prepare-vma-flag-sanify-v3-23-4583d8a23bca@kernel.org>
- <DLTLQ9NOBV36.1D1MY7SZABEQP@nvidia.com>
+	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="GqNF4z36"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1790944407; x=1822480407;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=NDgEPa0XeDvsUmZpfYIS+OBNFMqFM1UOXxuPhnqM03g=;
+  b=GqNF4z367Grc6WPc4FFqsgJLlSABT8GH1UK80aE/4DlWUYLZwtphrfn/
+   mok53HWngeIytVnRP7EKi79UFLPC6ap6wv8889N5f/0HeSYjkwDH/zB7o
+   qKP6YWOSM3W3oinwFSmYVs4H/kQX4cGlR5Z8NzwwST1r2kx08HShenwmG
+   ceiL/vYJtTgtHI+ANV6/09vWLHUSmWuqQrGX91gcgtCefhhKTzSVpY8Rr
+   0MfDjinHbuxtuZkO688SrVkpKYSMTUPDv5aGn6IJxHr/BaAXRsQkOCZ6f
+   EghjNM9j5uVgqpeXkAkSeTNzKbg7jJeZlqpdaISL+XroJx6ZR9VH1tRcA
+   Q==;
+X-CSE-ConnectionGUID: YsK1ByWlSzaT8IyPnfeHRg==
+X-CSE-MsgGUID: LEe5eKNsT6m+ajl436z7BQ==
+X-IronPort-AV: E=Sophos;i="6.27,136,1787036400"; 
+   d="asc'?scan'208";a="63552307"
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
+  by esa4.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 02 Oct 2026 05:33:26 -0700
+Received: from chn-vm-ex02.mchp-main.com (10.10.85.144) by
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.58; Fri, 2 Oct 2026 05:33:25 -0700
+Received: from wendy (10.10.85.11) by chn-vm-ex02.mchp-main.com (10.10.85.144)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.58 via Frontend
+ Transport; Fri, 2 Oct 2026 05:33:20 -0700
+Date: Fri, 2 Oct 2026 13:31:59 +0100
+From: Conor Dooley <conor.dooley@microchip.com>
+To: Zhanpeng Zhang <zhangzhanpeng.jasper@bytedance.com>
+CC: Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>, Himanshu
+ Chauhan <himanshu.chauhan@oss.qualcomm.com>, Conor Dooley <conor@kernel.org>,
+	Anup Patel <anup@brainfault.org>, =?iso-8859-1?Q?Cl=E9ment_L=E9ger?=
+	<cleger@rivosinc.com>, Yunhui Cui <cuiyunhui@bytedance.com>, Atish Patra
+	<atish.patra@linux.dev>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar
+	<mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim
+	<namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexander
+ Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>,
+	James Clark <james.clark@linaro.org>, Will Deacon <will@kernel.org>, Thomas
+ Gleixner <tglx@kernel.org>, Jonathan Corbet <corbet@lwn.net>, Randy Dunlap
+	<rdunlap@infradead.org>, Shuah Khan <skhan@linuxfoundation.org>, Shuah Khan
+	<shuah@kernel.org>, Yuanzhu <yuanzhu@bytedance.com>, Yicong Yang
+	<yang.yicong@picoheart.com>, Susheng Yang <yang.susheng@zte.com.cn>,
+	<linux-riscv@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+	<linux-perf-users@vger.kernel.org>, <linux-doc@vger.kernel.org>,
+	<linux-kselftest@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH v10 RESEND 7/9] perf: RISC-V: add support for SSE event
+Message-ID: <20261002-reach-cloning-f1594729dbe3@wendy>
+References: <cover.1789974241.git.zhangzhanpeng.jasper@bytedance.com>
+ <4f7828b3e30407de9df205264bb94edc767d318c.1789974241.git.zhangzhanpeng.jasper@bytedance.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="1CpoeXeJ7HJ+y6fs"
 Content-Disposition: inline
-In-Reply-To: <DLTLQ9NOBV36.1D1MY7SZABEQP@nvidia.com>
+In-Reply-To: <4f7828b3e30407de9df205264bb94edc767d318c.1789974241.git.zhangzhanpeng.jasper@bytedance.com>
 
-On Thu, Oct 01, 2026 at 11:20:17AM -0400, Zi Yan wrote:
-> On Thu Sep 17, 2026 at 12:22 PM EDT, Lorenzo Stoakes (ARM) wrote:
-> > Currently there's a confusing mess around VMA_LOCKED_BIT and
-> > VMA_LOCKONFAULT_BIT.
-> >
-> > It is permitted for drivers to set any flags they like, with the VMA
-> > already possessing lock flags.
-> >
-> > This results in the absurd situation of a VMA possessing both
-> > VMA_SPECIAL_FLAGS and VMA_LOCKED_MASK flags, which is not permitted.
-> >
-> > This has resulted in mlock_vma_folio() having a very silly check for this
-> > scenario to work around it.
-> >
-> > There is no need for this - just clear the flags before invoking the hook
-> > and reinstate them afterwards if they are required.
-> >
-> > Nothing relies upon this being set during the mmap operation.
-> >
-> > mmap_prepare is unaffected by this so requires no fix.
-> >
-> > Signed-off-by: Lorenzo Stoakes (ARM) <ljs@kernel.org>
-> > ---
-> >  mm/internal.h |  9 +--------
-> >  mm/vma.c      | 14 ++++++++++++++
-> >  2 files changed, 15 insertions(+), 8 deletions(-)
-> >
-> <snip>
->
-> > +	/* If VMA flags still valid for locked mask, reinstate. */
-> > +	if (vma_supports_mlock(vma)) {
-> > +		const vma_flags_t mask =
-> > +			vma_flags_and_mask(&map->vma_flags,
-> > +					   VMA_LOCKED_MASK);
-> > +
-> > +		vma_set_flags_mask(vma, mask);
->
-> It took me a while to figure out vma_set_flags_mask() is an OR
-> operation.
+--1CpoeXeJ7HJ+y6fs
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Yeah naming is hard :)
+On Mon, Sep 21, 2026 at 07:15:04PM +0800, Zhanpeng Zhang wrote:
+> From: Cl=E9ment L=E9ger <cleger@rivosinc.com>
+>=20
+> Register a handler for the local PMU overflow SSE event so that RISC-V
+> perf can receive overflows even when normal S-mode interrupts are masked.
+> Reuse the existing overflow handler and pass it the interrupted pt_regs
+> rebuilt by the architecture SSE entry path.
+>=20
+> Select the delivery mechanism once during PMU probe. Prefer SSE when its
+> event can be registered and enabled. If the extension or PMU event is
+> explicitly unsupported, use the ordinary PMU interrupt. Do not enable the
+> interrupt after any other SSE setup failure or when a crash kernel may
+> have inherited firmware state. Install the PMU enable and disable
+> callbacks only after SSE delivery becomes active.
+>=20
+> Keep the local PMU SSE event disabled across CPU power management. On
+> entry, the generic SSE notifier masks the hart before the lower-priority
+> PMU notifier disables the event and stops the counters. On exit, the SSE
+> notifier first unmasks the hart while the event remains disabled. The PMU
+> notifier then restores counters and event userpage state before enabling
+> the event. An unmask failure stops the notifier chain and leaves the
+> counters stopped. Ordinary PMU interrupts retain their existing notifier
+> ordering.
+>=20
+> An SSE overflow can arrive as soon as the event is enabled during probe.
+> Publish the counter mask before SSE setup, so an early handler can stop
+> the counter source even before perf starts admitting normal samples.
+> After a real overflow, restart only counters whose perf state is still
+> running. Honor a non-zero return from perf_event_overflow() and leave
+> throttled events stopped.
+>=20
+> Guest attribution is not part of this version. Detect an interrupted guest
+> from hstatus.SPV and skip its sample while still updating the period and
+> counter state, rather than exposing guest state as a host sample.
+>=20
+> The perf PMU callbacks cannot return errors. If an SSE transition or
+> interrupted-context read fails, latch the failure per CPU and stop its
+> mapped events through the normal perf state transitions. Do not reset the
+> firmware counter mapping behind perf, restart a failed event, or attempt a
+> runtime switch to IRQ delivery.
+>=20
+> During cleanup, close callback admission and synchronously drain each CPU
+> before disabling and unregistering the SSE event. If firmware refuses the
+> cleanup, stop the counter source and transfer the event to the SSE core so
+> later CPU hotplug or shutdown processing can retry without using freed PMU
+> callback state.
+>=20
+> Signed-off-by: Cl=E9ment L=E9ger <cleger@rivosinc.com>
+> Co-developed-by: Himanshu Chauhan <himanshu.chauhan@oss.qualcomm.com>
+> Signed-off-by: Himanshu Chauhan <himanshu.chauhan@oss.qualcomm.com>
+> Co-developed-by: Zhanpeng Zhang <zhangzhanpeng.jasper@bytedance.com>
+> Signed-off-by: Zhanpeng Zhang <zhangzhanpeng.jasper@bytedance.com>
+> ---
+>  Documentation/arch/riscv/index.rst     |   1 +
+>  Documentation/arch/riscv/pmu-sse.rst   |  55 +++
+>  MAINTAINERS                            |   1 +
+>  drivers/firmware/riscv/riscv_sbi_sse.c |   9 +
+>  drivers/perf/Kconfig                   |  11 +
+>  drivers/perf/riscv_pmu.c               |  14 +-
+>  drivers/perf/riscv_pmu_sbi.c           | 540 ++++++++++++++++++++-----
+>  include/linux/perf/riscv_pmu.h         |  20 +-
+>  include/linux/riscv_sbi_sse.h          |   6 +
+>  9 files changed, 564 insertions(+), 93 deletions(-)
+>  create mode 100644 Documentation/arch/riscv/pmu-sse.rst
 
-Let me add a comment here though because it's kinda a bit unusual.
+Acked-by: Conor Dooley <conor.dooley@microchip.com>
 
->
-> > +	}
-> > +
-> >  	map->vma_flags = vma->flags;
-> >
-> >  	return 0;
->
-> Otherwise, LGTM.
->
-> Reviewed-by: Zi Yan <ziy@nvidia.com>
+--1CpoeXeJ7HJ+y6fs
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Thanks!
+-----BEGIN PGP SIGNATURE-----
 
->
->
->
-> --
-> Best Regards,
-> Yan, Zi
->
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCar+kPwAKCRB4tDGHoIJi
+0nZkAQC+nQDWcheoZ/uoVpx3J1ReYYcarCsWNy5EGzoBtyzH5QEA1ZEVCP+p6hA3
+bTJLWk5wESdHUitdwSiuB/6AYgPHXwE=
+=1K1t
+-----END PGP SIGNATURE-----
 
---
-Cheers, Lorenzo
+--1CpoeXeJ7HJ+y6fs--
