@@ -1,56 +1,56 @@
-Received: from mail-dy1-f200.google.com (mail-dy1-f200.google.com [74.125.82.200])
+Received: from mail-dl1-f71.google.com (mail-dl1-f71.google.com [74.125.82.71])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 433DD46AA62
-	for <linux-perf-users@vger.kernel.org>; Fri,  2 Oct 2026 18:26:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82E46515995
+	for <linux-perf-users@vger.kernel.org>; Fri,  2 Oct 2026 18:26:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.71
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790965617; cv=none; b=dpNvb38CI0S7DAJ08+t8oc+bbLmzCv3k1A7h41VSkOZbkfDkGs+jiiz4FurTJ0lnIKW3nHPxNPRJm0a7/+ON7QMfgMiq0dcgLetB+N+mGe/ECsNtIyoPEoq4obGe8b5vIr7SO+L+fGyXfQ7c9lT/1b3FDwfcdoRxMj7wg4v9e7I=
+	t=1790965626; cv=none; b=EZJ8r+slZKWvsiNHIHdRSriiGxwo/wKrl0qjIYuKZBs7Z9RM33ZPth+o7IHo49k27CG9SNNPmEEEDl144FgjeBb5iNSb39SLNIRQqmiyo17+J953ynRPcO4W4WddFtNIjhB2eh9r1da7j00K10lsVBadAuJeVZGGsiakNz2AwUs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790965617; c=relaxed/simple;
-	bh=g0GyOwewiKm4KFOlzqRQCAtrtf8EN3ovGx6G7yO1wy8=;
+	s=arc-20240116; t=1790965626; c=relaxed/simple;
+	bh=Ppsm2iwCwEiXBncYOr0kj+K4ygWswKzoOM3THLkaBOc=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=HNm1dRBMH1+TmDLVqEZ5jtp55JQK//bN5Ewk/tB7o241kHcn6lDP34K78LXM8B5kCG02NGf7o0gx6Yi7YREuF1gjOQEYhJuFLuyNiZT67Mh1qPSDlz1DIUKzQxqSJ6Hriakmm6OlSxNPIAwW/ECMAHDKUz8TOXKWCJpkxp3NB30=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=jsiuOcpT; arc=none smtp.client-ip=74.125.82.200
+	 To:Content-Type; b=gBI7SZUaktPqj+XNNfag4fOwVejUJD56MNQ4n1QJq7yiEaLhJuLdwKqbreohSuGjOrzV0Kyu4wX9ysRL9Nf8gHhM5Ba50vt3vO5D+j6fcWCcNSREOdXz/3w4X1oVLQE0H8/2DoF47GWYu+QWh7z1DMdsoQvymtB5OPlSsqKa6rQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=L8L9GbeW; arc=none smtp.client-ip=74.125.82.71
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jsiuOcpT"
-Received: by mail-dy1-f200.google.com with SMTP id 5a478bee46e88-3425098ae4bso2219048eec.0
-        for <linux-perf-users@vger.kernel.org>; Fri, 02 Oct 2026 11:26:54 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="L8L9GbeW"
+Received: by mail-dl1-f71.google.com with SMTP id a92af1059eb24-1416f32fe11so9386072c88.0
+        for <linux-perf-users@vger.kernel.org>; Fri, 02 Oct 2026 11:26:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1790965614; x=1791570414; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1790965616; x=1791570416; darn=vger.kernel.org;
         h=content-type:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=g91waQbjvf78Q7TEpkLcmdZM/4XvXhkFKly0O9VpCVo=;
-        b=jsiuOcpTmRGTrmNeh0vSibGPktk4Q+icB5/LWaZJPWreeiziKWd7cjTvY8t/W+wpKd
-         F1THbjLwJ6NwCWV1JQnLE4DQzIM0TgI30Ih9h7D8FG3+3mqcPAg+L8Bfv/QvREgYUiuC
-         +fBUaHDb0PS/Quoy9Alhn5tBUM8ztyxsuZp+rofuiv6ObhXSwtp3xle6teOmRCDMjSE3
-         KWm2YAGeK6W2ARf3NmI0TgJ1wR0BcLDTYtS5uXpsXsF30Y93bcTS+a8IkiQ1uSrZ5qLu
-         Gs5iIObwP/SMGePYokgtPeI9m9czEeRGekDQt0mVWwhempnO8HgNanDbwO7qOd1XINIT
-         3hrg==
+        bh=xJeoSrG1sFQbzoddGzDwymqwtwNEzCJZbEVP4wJuqFQ=;
+        b=L8L9GbeWlcXjK1Ej1RGFPbkdzL2XG9M3H9JHuXrHEuWg28tXQQXRpfxx5Lfz4sIPzv
+         Zhwe9td/2sAF3BqRk9H/XeRtnUheEjaiBZuj9kMbSxY2g3DaM/g2ZSRPmXFrPmB2vh+G
+         caZGY0z5h12+wT2Chd3SB1K7eTZFGzuQ8IBJXzoxA0wQBs9RFI18Wlqha7SWYy7yc5Es
+         JMjW1oz9kwhSsac0OZEh8bm5n5Vg8JImmCnnDZltpbD4bmzJRMEdw06prlcTH0cbXtjf
+         pWwMIid1P+XigqtUBOQW5ZmiRVlEcYp82tjaQBwTYsIhcDzEh2W9E78Vpf7biIBHBDxc
+         EOLw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1790965614; x=1791570414;
+        d=1e100.net; s=20260707; t=1790965616; x=1791570416;
         h=content-type:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=g91waQbjvf78Q7TEpkLcmdZM/4XvXhkFKly0O9VpCVo=;
-        b=dJf2bsTSJTyOxooXkKKfsv4u+75c828rUbbFZp3uMEJMDK8/vsD4RrBkBLwYGL8F8Y
-         uW7jTMcRzXXC8xbJrGy/gkd+pLK2Hm74J4LSejE5clz4wLX93LHlzK8EKW6AC/vZiMN7
-         Uw85drlQPsxXpWCAN6CL/22O5orbd2ZnyO0fJqhrWB49exY1nLSVER7CV4j0LwhmzLKA
-         ZpD6aEt5lSz67JUsvqpEF3qww5bbIcI9C3j1/0ZAQOOjb8VZn0KkfK+gBq4Kl6Ca6JmN
-         T2KsntOa7RjLO63JLaoQCJVjyH0NfW+2fnQOVadmCkuRhpb2J/u/KSICZAejV6hurZWb
-         JZbw==
-X-Forwarded-Encrypted: i=1; AKwUvBySM7tHEAT2VtYqqzCdDD7vFBCx2n0QzxB2C/Hrb3+fIKCDE1Ea3bYLYBe77aYUmNpXeeMk8uITKvYkY4bQsO4Q@vger.kernel.org
-X-Gm-Message-State: AFuF++k6lEBncxfM0YFVDATlhIw69+ZwjYIAhf4n1dfNnngOStdJMh3L
-	d0uLxF6q57Yd2WIQSfdKcYNJ9BsfGtWWs8ChlxeHpcBBxvQTsCoxNHz9vREO3TLYpKbEaRhOZu0
-	G6NtE7kA9AQ==
-X-Received: from dyblf46.prod.google.com ([2002:a05:7301:a2e:b0:33c:28de:54ad])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:701b:428a:10b0:143:f79:f662
- with SMTP id a92af1059eb24-14dce22d73emr7298591c88.1.1790965613495; Fri, 02
- Oct 2026 11:26:53 -0700 (PDT)
-Date: Fri,  2 Oct 2026 11:26:15 -0700
+        bh=xJeoSrG1sFQbzoddGzDwymqwtwNEzCJZbEVP4wJuqFQ=;
+        b=QWR3gnrVYd7dMp3qaRRR273SGHzC2SrGT8q3rmogMZWNSoQMbh5vQTK7Dw5cEaTN2D
+         +A2Qinb4oYjmvHdw0/VsiVwUsI9zj/GbGsAh1MNw3a4J9VmWKo9mxQS5SyWB8j4CEz4w
+         G+ceLJ1nWSK5GKtByhJ5ROOGspVNSDfOmx5JrJtWhNEWbDcqhkCCwzgqfzxSB4aB+Hvo
+         ZbeRNWVY7iZ4+313daLsre9hvcalNaVOJWzaem/V69vWjF2FWD8XxGbdS3zIVCOmLEW3
+         xRmo41iQjkFmC5jbJ72NIk5UmylcChPxYsTLt4uRrJb5c8vdqReS0ucQU+zyFHdU26d1
+         Hefw==
+X-Forwarded-Encrypted: i=1; AKwUvBycpGRRsouAYJHHB9HV1+5hYbZgO9H0I75Y0Cqz7gprrO0HNivu/CwmkkQupbQFNvakQBDfAdxvLOD9N+Cw55My@vger.kernel.org
+X-Gm-Message-State: AFuF++nIeJhOxJ/nWeecZuTunjzZMkryHDkKdLPBH3ZfwySc3rZZjROs
+	DxdWOHYO+Mh7E43X95zWZ0P9gbLMTI0kONjMco1B6lxvxNWgP6edYpKDX6TmE3hA+fRzXo1/JBB
+	bMpqLPi8qNA==
+X-Received: from dlnn16.prod.google.com ([2002:a05:7022:6190:b0:151:c50e:fd9d])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:7e0c:b0:150:3c69:2adb
+ with SMTP id a92af1059eb24-1503c692d2bmr2320768c88.2.1790965615875; Fri, 02
+ Oct 2026 11:26:55 -0700 (PDT)
+Date: Fri,  2 Oct 2026 11:26:16 -0700
 In-Reply-To: <20261002182624.3259797-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -60,8 +60,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20261002182624.3259797-1-irogers@google.com>
 X-Mailer: git-send-email 2.56.0.rc1.315.gc6ed9934b7-goog
-Message-ID: <20261002182624.3259797-7-irogers@google.com>
-Subject: [PATCH v1 06/13] perf list: Add a --tui option to launch ilist
+Message-ID: <20261002182624.3259797-8-irogers@google.com>
+Subject: [PATCH v1 07/13] perf test: Add a test for the ilist script
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
@@ -73,129 +73,207 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-Add a --tui option to perf list that launches the textual based ilist
-script through perf script, similar to perf timechart --tui. Rather
-than printing the events, the PMUs, events and metrics can be browsed
-interactively and the selected event or metric is counted on each CPU.
-Arguments after '--' are passed to the script.
+Test launching ilist through perf script and perf list --tui, and drive
+the textual app headless: check the tree of PMUs and metrics, search for
+and select the software task-clock event checking its counters are
+shown, check a failed search shows an error and select a metric. Failing
+to open counters, for example for want of permissions, is tolerated as
+an error dialog is shown.
 
 Assisted-by: Antigravity:gemini-3.1-pro
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/Documentation/perf-list.txt | 10 ++++++++
- tools/perf/builtin-list.c              | 34 ++++++++++++++++++++++++++
- 2 files changed, 44 insertions(+)
+ tools/perf/tests/shell/test_ilist_python.sh | 181 ++++++++++++++++++++
+ 1 file changed, 181 insertions(+)
+ create mode 100755 tools/perf/tests/shell/test_ilist_python.sh
 
-diff --git a/tools/perf/Documentation/perf-list.txt b/tools/perf/Documentation/perf-list.txt
-index a4378a0cd914..17e582998474 100644
---- a/tools/perf/Documentation/perf-list.txt
-+++ b/tools/perf/Documentation/perf-list.txt
-@@ -10,6 +10,7 @@ SYNOPSIS
- [verse]
- 'perf list' [<options>]
-             [hw|sw|cache|tracepoint|pmu|sdt|metric|metricgroup|event_glob]
-+'perf list' --tui [-- <ilist options>]
- 
- DESCRIPTION
- -----------
-@@ -51,6 +52,15 @@ Output in JSON format.
- --output=::
- 	Output file name. By default output is written to stdout.
- 
-+--tui::
-+Rather than printing the events, interactively browse the PMUs, events and
-+metrics in the terminal using the 'ilist' python script (see
-+linkperf:perf-script[1]). Selecting an event or metric shows its description
-+and counts it on each CPU. The script requires the perf python module and the
-+python 'textual' library. Other options are ignored, arguments after '--' are
-+passed to the script, for example 'perf list --tui -- -I 0.5' to update the
-+counts every 0.5 seconds.
+diff --git a/tools/perf/tests/shell/test_ilist_python.sh b/tools/perf/tests/shell/test_ilist_python.sh
+new file mode 100755
+index 000000000000..83048474710d
+--- /dev/null
++++ b/tools/perf/tests/shell/test_ilist_python.sh
+@@ -0,0 +1,181 @@
++#!/bin/bash
++# perf script ilist and perf list --tui test
++# SPDX-License-Identifier: GPL-2.0
 +
- [[EVENT_MODIFIERS]]
- EVENT MODIFIERS
- ---------------
-diff --git a/tools/perf/builtin-list.c b/tools/perf/builtin-list.c
-index 4118424cb364..47668d66c395 100644
---- a/tools/perf/builtin-list.c
-+++ b/tools/perf/builtin-list.c
-@@ -24,8 +24,10 @@
- #include <subcmd/parse-options.h>
- #include <linux/zalloc.h>
- #include <ctype.h>
-+#include <errno.h>
- #include <stdarg.h>
- #include <stdio.h>
-+#include <stdlib.h>
- 
- /**
-  * struct print_state - State and configuration passed to the default_print
-@@ -538,6 +540,31 @@ static bool default_skip_duplicate_pmus(void *ps)
- 	return !print_state->long_desc;
- }
- 
-+/*
-+ * Launch the interactive textual based ilist python script via 'perf script'
-+ * that finds the script and sets up the python environment. Arguments are
-+ * passed to the script.
-+ */
-+static int list__tui(int argc, const char **argv)
-+{
-+	const char **script_argv;
-+	int script_argc = 0, ret;
++set -e
 +
-+	script_argv = calloc(argc + 4, sizeof(*script_argv));
-+	if (!script_argv)
-+		return -ENOMEM;
++shelldir=$(dirname "$0")
++# shellcheck source=lib/setup_python.sh
++. "${shelldir}"/lib/setup_python.sh
 +
-+	script_argv[script_argc++] = "script";
-+	script_argv[script_argc++] = "ilist";
-+	script_argv[script_argc++] = "--";
-+	for (int i = 0; i < argc; i++)
-+		script_argv[script_argc++] = argv[i];
++if ! "$PYTHON" -c 'import perf' > /dev/null 2>&1; then
++	echo "Skipping test, perf python module not found"
++	exit 2
++fi
 +
-+	ret = cmd_script(script_argc, script_argv);
-+	free(script_argv);
-+	return ret;
++if ! "$PYTHON" -c 'import textual' > /dev/null 2>&1; then
++	echo "Skipping test, python textual library not found"
++	exit 2
++fi
++
++err=0
++output=$(mktemp /tmp/__perf_ilist_test.output.XXXXX)
++
++cleanup() {
++	rm -f "${output}"
++	trap - EXIT TERM INT
 +}
 +
- int cmd_list(int argc, const char **argv)
- {
- 	int i, ret = 0;
-@@ -562,6 +589,7 @@ int cmd_list(int argc, const char **argv)
- 	const char *unit_name = NULL;
- 	const char *output_path = NULL;
- 	bool json = false;
-+	bool use_tui = false;
- 	struct option list_options[] = {
- 		OPT_BOOLEAN(0, "raw-dump", &default_ps.name_only, "Dump raw events"),
- 		OPT_BOOLEAN('j', "json", &json, "JSON encode events and metrics"),
-@@ -578,6 +606,8 @@ int cmd_list(int argc, const char **argv)
- 			   "Limit PMU or metric printing to the given PMU (e.g. cpu, core or atom)."),
- 		OPT_STRING(0, "unit", &unit_name, "PMU name",
- 			   "Limit PMU or metric printing to the specified PMU."),
-+		OPT_BOOLEAN(0, "tui", &use_tui,
-+			    "Interactively browse and count events and metrics with ilist"),
- 		OPT_INCR(0, "debug", &verbose,
- 			     "Enable debugging output"),
- 		OPT_END()
-@@ -588,6 +618,7 @@ int cmd_list(int argc, const char **argv)
- #else
- 		"perf list [<options>] [hw|sw|cache|tracepoint|pmu|sdt|metric|metricgroup|event_glob]",
- #endif
-+		"perf list --tui [-- <ilist options>]",
- 		NULL
- 	};
- 
-@@ -598,6 +629,9 @@ int cmd_list(int argc, const char **argv)
- 	argc = parse_options(argc, argv, list_options, list_usage,
- 			     PARSE_OPT_STOP_AT_NON_OPTION);
- 
-+	if (use_tui)
-+		return list__tui(argc, argv);
++trap_cleanup() {
++	echo "Unexpected signal in ${FUNCNAME[1]}"
++	cleanup
++	exit 1
++}
++trap trap_cleanup EXIT TERM INT
 +
- 	if (json)
- 		ps = &json_ps.common;
- 
++test_plumbing() {
++	echo "ilist plumbing test"
++	# The script should be found and run by perf script, --help doesn't
++	# need a terminal.
++	if ! perf script ilist --help > "${output}" 2>&1; then
++		echo "ilist plumbing test [Failed: script failed]"
++		cat "${output}"
++		err=1
++		return
++	fi
++	if ! grep -q -- "--interval" "${output}"; then
++		echo "ilist plumbing test [Failed: script not launched]"
++		cat "${output}"
++		err=1
++		return
++	fi
++	echo "ilist plumbing test [Success]"
++}
++
++test_list_tui() {
++	echo "perf list --tui plumbing test"
++	# Arguments after -- are passed to the script launched by perf list.
++	if ! perf list --tui -- --help > "${output}" 2>&1; then
++		echo "perf list --tui plumbing test [Failed: script failed]"
++		cat "${output}"
++		err=1
++		return
++	fi
++	if ! grep -q -- "--interval" "${output}"; then
++		echo "perf list --tui plumbing test [Failed: script not launched]"
++		cat "${output}"
++		err=1
++		return
++	fi
++	echo "perf list --tui plumbing test [Success]"
++}
++
++test_headless_ui() {
++	echo "ilist headless UI test"
++	# Drive the textual app without a terminal. Opening counters may fail
++	# for want of permissions, in which case an error dialog is shown.
++	if ! "$PYTHON" > "${output}" 2>&1 <<'EOF'
++import asyncio
++import ilist
++from textual.widgets import Label, Tree
++
++async def dismiss_error(app, pilot) -> bool:
++    """Close the error dialog if shown, returning whether it was."""
++    if not isinstance(app.screen, ilist.ErrorScreen):
++        return False
++    await pilot.click("#error")
++    await pilot.pause()
++    if isinstance(app.screen, ilist.ErrorScreen):
++        raise RuntimeError("Error dialog not dismissed")
++    return True
++
++async def search(pilot, text: str) -> None:
++    await pilot.press("s")
++    await pilot.pause()
++    await pilot.press(*text, "enter")
++    await pilot.pause()
++
++def find_leaf(node, cls):
++    """Find the first node whose data is of type cls."""
++    if isinstance(node.data, cls):
++        return node
++    for child in node.children:
++        found = find_leaf(child, cls)
++        if found:
++            return found
++    return None
++
++async def check_counting(app, pilot, name: str) -> None:
++    """Check the selected event is shown and counting, or that it failed to open."""
++    await pilot.pause(0.5)
++    if await dismiss_error(app, pilot):
++        print(f"{name}: failed to open")
++        return
++    shown = str(app.query_one("#event_name", Label).render())
++    if shown != name:
++        raise RuntimeError(f"Selected {shown} rather than {name}")
++    if not app.query(ilist.CounterSparkline) or not app.query("#counter_total"):
++        raise RuntimeError(f"No counters shown for {name}")
++    print(f"{name}: total {app.query_one('#counter_total', Label).render()}")
++
++async def run() -> None:
++    app = ilist.IListApp(0.1)
++    async with app.run_test(size=(120, 40)) as pilot:
++        await pilot.pause()
++        tree = app.query_one("#root", Tree)
++        top = [str(node.label) for node in tree.root.children]
++        if top != ["PMUs", "Metrics"]:
++            raise RuntimeError(f"Unexpected tree: {top}")
++        pmus = [str(node.label) for node in tree.root.children[0].children]
++        if "software" not in pmus:
++            raise RuntimeError(f"No software PMU in: {pmus}")
++
++        # Search for a software event, which exists everywhere. The search
++        # result is selected which opens the event.
++        await search(pilot, "task-clock")
++        found = app.cur_search_result
++        if not found or not isinstance(found.data, ilist.PmuEvent) or \
++           "task-clock" not in str(found.label):
++            raise RuntimeError(f"Search didn't find task-clock: {found}")
++        await check_counting(app, pilot, found.data.name())
++        if not app.query_one("#active_search", Label).display:
++            raise RuntimeError("Active search not shown")
++        await pilot.press("n", "p", "down", "up", "c")
++        await pilot.pause(0.2)
++        await dismiss_error(app, pilot)
++
++        # Searching for something that doesn't exist shows an error.
++        await search(pilot, "no-such-event-xyzzy")
++        if not await dismiss_error(app, pilot):
++            raise RuntimeError("No error for a failed search")
++
++        # Select a metric, if there are any.
++        metric = find_leaf(tree.root, ilist.Metric)
++        if metric:
++            app.expand_and_select(metric)
++            await check_counting(app, pilot, metric.data.name())
++        print("headless UI ok")
++
++asyncio.run(run())
++EOF
++	then
++		echo "ilist headless UI test [Failed: exception]"
++		cat "${output}"
++		err=1
++		return
++	fi
++	if ! grep -q "headless UI ok" "${output}"; then
++		echo "ilist headless UI test [Failed: unexpected output]"
++		cat "${output}"
++		err=1
++		return
++	fi
++	echo "ilist headless UI test [Success]"
++}
++
++test_plumbing
++test_list_tui
++test_headless_ui
++
++cleanup
++exit $err
 -- 
 2.56.0.rc1.315.gc6ed9934b7-goog
 
