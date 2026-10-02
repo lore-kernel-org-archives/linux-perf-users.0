@@ -1,72 +1,76 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEFC7471423
-	for <linux-perf-users@vger.kernel.org>; Fri,  2 Oct 2026 09:13:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB1D04746AE;
+	Fri,  2 Oct 2026 09:14:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790932397; cv=none; b=Q+/WaKFzpwfMAS5P8/sRbsiAt+GGuNEzlAYDTa5/s3e0mDOn5TikcyBb4kv8onRk0jYkDla8YPVVGK8eEPj8w+vjJkkgR4RqgpI4qI7pNcnHJf3Nm/6UYD5Xqa2kUCqPyuWxS1rCwbTPSG9ZmYqHRh010IrXNrGEx5p98wclJ38=
+	t=1790932449; cv=none; b=OO8TE/65TBrPSF9+KEJ0yVUcOQh7InFpyyUHImbx0FouAD9ZYBIMw4KrVj4gJLG+B1Fp/Gu+UKzeCyq+E0tu0ij6Ptqj34V/oYnvCx1x2K79j84kwQI8YUuOs66IxmhPxBPzkjQGO60s2fMBQMftH0wcKz6RVePuOyb5YAAESHM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790932397; c=relaxed/simple;
-	bh=Nt5P+I7AEwVVDe+F3x+z+4dMtsOgQ7kQcy1sdGF/lOs=;
+	s=arc-20240116; t=1790932449; c=relaxed/simple;
+	bh=i+L6umLn8Z+swB5e/ezod3yKaQQItgE1+v82GarEcf8=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=h32x/vLRn/lrZ2K4o3PU1nSIF/HEW3atKOUr37KYYcAE0uM3GwvDTOR2st86wxBWWmCsXfEhfYL7ei0r1/TD7tnnyX1LtQroh8XG3ldyXKVO75uT+OpeKzI+mGM3vmcRqmmTrpxPbNhKDuRD0K+NyLPdMU0WXL2KTDR4Bq9rtMQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=k3O3ykjY; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=hJHN07UDTY4/FKol0tQ4KICptw9InHxZXS1BdWPBxkzz1+wFsxBDp4qbmpE43D2wYV5fEGmar/JZAXWfsJRo9wJYLe6A755Pl9Gn7kdsefsKbRAQ2LZbcAZpSdmVHMLDuOPldTPrXW6XY8FMADcG92kjS4S6q6ezzYCYq7eJQqk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PorT1Gxe; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="k3O3ykjY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C072F1F00899;
-	Fri,  2 Oct 2026 09:13:12 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PorT1Gxe"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4E1161F000FF;
+	Fri,  2 Oct 2026 09:14:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1790932392;
-	bh=4MYGs8Uth1R2sjiIVhdP4A84PUPLOsJycWKsF50c0+U=;
+	s=k20260515; t=1790932447;
+	bh=5ellbPr8x94rTylTsDiFZddy2NzL3VmyKG0ClhU0u9s=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=k3O3ykjYV98M2nlxulZnMF0b5/svp2OPiy2BYRHbgqLfMZQNpYReOhRwrRiS3qWg6
-	 6+Wv6KXEIjSWPrNB4Kuwix5AYYSk7IaOgJOnkk7RetmhQSvsqEC/4ttU9eB1X3SEy/
-	 5sAX/JvVBvNT3b2I2FJt3TRwcDBM5Ns/+6OwRv7NdAg6ZbVDfffv+9Owt3C50WB7rD
-	 3Wwuyu08TqKJcjiEQ/pywbTz2poAoMx2+xB8Bgt5WnUUWA5iBo3tPJouydg6zJM/jb
-	 ScXXxuAx3mXuSycx3ZuRX/xLpiPE4gvukEyqUxuZ7pAXmsJ52XDbLSOlK4BKoT8UKA
-	 9z0DeASIKzSiw==
+	b=PorT1GxeCTQYPX519lAxP8lBCW/e9L3vsM3kOW2FhASinPrhK1PZgggB7nVem9Dye
+	 38oJDlarSF3Qq99AtrLY0+hCkpnvDAAaVZSx1p7VNjh5TNTrKOHn3TCp1gy3dBoDB5
+	 HiYwhacb6o12jQoncy8xM0Eut7oRcH+aGwKpWajJP8ISS1aLP5fH0GSR+yUyHCb3WT
+	 id3CoqEvKNyFhgiCYk2hFH4GSC20biINPIzT7y5wCukbBu9p2Drpfk8mzDZw9D2J53
+	 15qM3EqLY8CO0yXqJk031hNu6en2YgwCEeG8G19+DM0rs5PNXH4MPqIaHa1ABp+5l1
+	 GItR7pK2y7ruA==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v7 1/9] perf config: Move perf_config__set_variable() to
- util/config.c
+Subject: Re: [PATCH bpf-next v4 10/12] resolve_btfids: add --btf_link to
+ fill in .BTF.link records
 Reply-To: sashiko-reviews@lists.linux.dev
-To: "Arnaldo Carvalho de Melo" <acme@kernel.org>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20261001185400.2754753-2-acme@kernel.org>
-References: <20261001185400.2754753-1-acme@kernel.org>
- <20261001185400.2754753-2-acme@kernel.org>
+To: "Jay Wang" <wanjay@amazon.com>
+Cc: linux-input@vger.kernel.org, dmitry.torokhov@gmail.com, bpf@vger.kernel.org, sched-ext@lists.linux.dev, linux-perf-users@vger.kernel.org, linux-trace-kernel@vger.kernel.org, "Petr
+ Pavlu" <petr.pavlu@suse.com>, gary@garyguo.net, linux-modules@vger.kernel.org, ojeda@kernel.org
+In-Reply-To: <20261001225214.12351-11-wanjay@amazon.com>
+References: <20261001225214.12351-1-wanjay@amazon.com>
+ <20261001225214.12351-11-wanjay@amazon.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Fri, 02 Oct 2026 09:13:12 +0000
-Message-Id: <20261002091312.C072F1F00899@smtp.kernel.org>
+Date: Fri, 02 Oct 2026 09:14:06 +0000
+Message-Id: <20261002091407.4E1161F000FF@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-> From: Arnaldo Carvalho de Melo <acme@redhat.com>
+> From: Alan Maguire <alan.maguire@oracle.com>
 >=20
-> Move perf_config__set_variable() out of the 'perf config' builtin so
-> that opt-in features can persist their choice from outside it, e.g.
-> util/debuginfo.c writing core.debuginfod=3Dfalse when the user disables
-> debuginfod for the rest of the session.  The set_config() body becomes
-> perf_config_set__write(), with the system_config choice as an argument,
-> as the builtin's use_system_config/use_user_config statics are not
-> available outside it.
+> With CONFIG_DEBUG_INFO_BTF=3Dm the vmlinux BTF is not part of the kernel
+> image but carried by a module, and the kernel has to know, before that
+> module is loaded, which module that is, how large the BTF is and which
+> BTF it was built with.  It keeps that in a .BTF.link record (struct
+> btf_link): the name of the module, NUL-padded to the target's
+> __MODULE_NAME_LEN, the SHA-256 of the BTF, and its size in the byte
+> order of the target.  Inline BTF delivered as a module, a planned
+> follow-up, needs the same for its own section, in .BTF.inline.link.
 >=20
-> perf_config_set__write() checked fopen() but none of the fprintf()s or
-> fclose(), so a write failure after truncating the file was reported as
-> success.  Harmless for the interactive 'perf config' this came from,
-> but this makes it an entry point a background feature can call with no
-> other feedback, so propagate those errors too.
+> Fill these records in where .BTF_ids is patched, after the final link,
+> when the BTF is final: the --patch_btfids pass takes one or more
 >=20
-> Assisted-by: LLM
-> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+>     --btf_link <section>:<module>:<raw BTF file>
+> [ ... ]
+>  inline BTF changes; take the ELF class and byte order from the ELF
+>  header in patch_btf_link() rather than from elf_collect(), set up libelf
+>  there too, report each failure, refuse an overlong section name and
+>  --btf_link without --patch_btfids, document the option]
+> Signed-off-by: Jay Wang <wanjay@amazon.com>
 
 Sashiko has reviewed this patch and found no issues. It looks great!
 
 --=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261001185400.2754=
-753-1-acme@kernel.org?part=3D1
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261001225214.1235=
+1-1-wanjay@amazon.com?part=3D10
 
