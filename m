@@ -1,75 +1,64 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A1A55412276;
-	Fri,  2 Oct 2026 07:52:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 306B634D93B
+	for <linux-perf-users@vger.kernel.org>; Fri,  2 Oct 2026 09:12:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790927539; cv=none; b=oudWw1BdaMNtJhi+z1fPlgXkHmFza/5nzAfIxJ45wMixXF2u8FOKTZ0ufvo+OO7a7YKKBR9PHGtl7e4GuNkdptSRv+1O3gebHXWDC9090ErqmDRQJmAZ8nwi92+6jMm3OGgYh4ZCrAG/c6BOq6kJMcDMEgZaeI8/KWw4bFnPk9w=
+	t=1790932380; cv=none; b=iMId1lqF1v5IOKg8zquRtgKiFES4aDVeKc+AyJ+eoMWg9uP0jGl9HONBUQUT+/fuzbVqL1a6BHaKPaGhJVSD8D1sbTVcGulh6uhYkG0owNSMYL+LnBg8vsCpsxAzkDif6HvHs/oXtEVrvHEOPUju2DXNH/kpN3iNKl9OERGhD48=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790927539; c=relaxed/simple;
-	bh=+RDiVJOBHcLWyoFcL8fzBTJOSy0HVXaB5fVTASrdkJM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=B7OxDAkGuJIcZJnGe3C1dicWwW7UlJ/fhYg54j2UJcx4suwfn8TKGt6AyK1k7umsp2DQV6WF8ITqNbAfeIwnpLsWZcXJ/SBKzszrqPtTdZZtkO/2lsL3/OPH3DLDRSfX6HKuwwhZBFMUR0762fQdPFK5UPF6ZWRFQVWopi15kFU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=T8yCSVq+; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+	s=arc-20240116; t=1790932380; c=relaxed/simple;
+	bh=FcxZB56B3Psj0HAi9rHR9MSyaJU5hyed+/oZQIL9QvA=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=ZWAoHFT4OtcVNddEqZbZ6Vo/+unkyFkkeX2gEbFjD/Fok83B/7GDMG4WSgOaGu2o1dQ4Xtu9PC7EOxGaWE12wX7RP5xu+gbQ/SKU+mt44stvYC3DVzU4Xc2BiZ+6P484BXqYAM737m6t7mjCMLcO/9ZaxfMcF/BEqN/N+CSbVNg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GQ899HpP; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="T8yCSVq+"
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2D331497;
-	Fri,  2 Oct 2026 00:52:12 -0700 (PDT)
-Received: from localhost (unknown [10.2.196.114])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3AC503F86F;
-	Fri,  2 Oct 2026 00:52:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
-	t=1790927535; bh=+RDiVJOBHcLWyoFcL8fzBTJOSy0HVXaB5fVTASrdkJM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=T8yCSVq+IkcMsgFlqIyulbFNDBdKc6tHrs4MCE42T9rnK9TkoEXF68HgZTEecqvUR
-	 QBHp1zQ9kS6AqXQRItdrbs/hVknn/zEqRtpNt6ZxxQGf1yNwNBtC7XzJbd+TUEZBbj
-	 CcLuMa6XRVfOBjYd1WuveK6A0XCRygQdowC6dwjg=
-Date: Fri, 2 Oct 2026 08:52:13 +0100
-From: Leo Yan <leo.yan@arm.com>
-To: Ian Rogers <irogers@google.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	James Clark <james.clark@linaro.org>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] perf test: Replace optparse with argparse in attr.py
-Message-ID: <20261002075213.GB1208404@e132581.arm.com>
-References: <20261001-perf_replace_optparse_with_argparse-v1-1-268b604f8e55@arm.com>
- <CAP-5=fUKDL6yDs0-7h7zz43BJ1uwC6Y-CiS5TMh+=F=iNc=7Jw@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GQ899HpP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 49AED1F000FF;
+	Fri,  2 Oct 2026 09:12:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1790932378;
+	bh=FcxZB56B3Psj0HAi9rHR9MSyaJU5hyed+/oZQIL9QvA=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=GQ899HpP4MyJfrfcbvYeeByd+SzqigM5knccbcp+o01skHlkeAsb8c9SCkViAdoVt
+	 aOdlksCAhqp/lDZ0YM/3+jAxlJ1GsLMYJ2omV+NKrEIeXJ5MotRoZCVPVKlUkiJ0iU
+	 iNTe4DdoSKy8a5Jc3DhuPyS1r++gJIZyjkW4q7Sf0y7U5bpRM1nGPaY5QxtcHm0NOn
+	 JT7DEtF93r/uzNBlBCV1uBJy6nUKMVD875jzCzPtZNHNzZu8fluv4UWomZneEEATGW
+	 Ug/kSfHJR3j0V1V9svEWEavJqNVGdnz4xMR2/iHAsIlYdcHeRciHTdWf6SpkW54/pd
+	 hAfrgj6GbMp+A==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH 1/2] tools: perf: add perf_input_name() helper
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Stephen Brennan" <stephen.s.brennan@oracle.com>
+Cc: linux-perf-users@vger.kernel.org
+In-Reply-To: <20261001182004.1160406-2-stephen.s.brennan@oracle.com>
+References: <20261001182004.1160406-1-stephen.s.brennan@oracle.com>
+ <20261001182004.1160406-2-stephen.s.brennan@oracle.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Fri, 02 Oct 2026 09:12:52 +0000
+Message-Id: <20261002091258.49AED1F000FF@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fUKDL6yDs0-7h7zz43BJ1uwC6Y-CiS5TMh+=F=iNc=7Jw@mail.gmail.com>
 
-On Thu, Oct 01, 2026 at 09:20:20AM -0700, Ian Rogers wrote:
-> On Thu, Oct 1, 2026 at 8:52 AM Leo Yan <leo.yan@arm.com> wrote:
-> >
-> > Depending on the Python and pylint versions, pylint can report that
-> > optparse is deprecated and fail the lint check. Use argparse to avoid
-> > this potential warning.
-> >
-> > Preserve the existing options and defaults, and let argparse handle
-> > help and unexpected positional arguments.
-> >
-> > Tested with:
-> >
-> >   # ./perf test -v 'Perf attribute expectations test'
-> >   78: Perf attribute expectations test              : Ok
-> >
-> > Suggested-by: Ian Rogers <irogers@google.com>
-> > Signed-off-by: Leo Yan <leo.yan@arm.com>
-> 
-> Hi Leo, thanks for the fix! I see Arnaldo already took this equivalent change:
-> https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/commit/?h=tmp.perf-tools-next&id=cd116fcbc0bec7340a659e62210b963c49f93c1e
-> 
-> Sorry for the extra work, but again thanks!
+> The perf scripting API does not expose the name of the input file being
+> processed. Some scripts, like flamegraph.py, assume that the "-i" option
+> will be passed through, but when perf actually processes "-i", it does
+> not keep it on the command line for the script. (This could break some
+> scripts which do not expect it.)
+>=20
+> To allow scripts to know what file they're processing, add a new helper
+> perf_input_name(), which returns either the filename being processed, or
+> None for an unnamed pipe.
+>=20
+> Signed-off-by: Stephen Brennan <stephen.s.brennan@oracle.com>
 
-It is fine, thanks let me know.
+Sashiko has reviewed this patch and found no issues. It looks great!
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261001182004.1160=
+406-1-stephen.s.brennan@oracle.com?part=3D1
+
