@@ -1,1349 +1,184 @@
-Received: from mail-dl2-f23.google.com (mail-dl2-f23.google.com [74.125.229.151])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 765984071E9
-	for <linux-perf-users@vger.kernel.org>; Fri,  2 Oct 2026 06:33:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.229.151
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E45F93E1D07;
+	Fri,  2 Oct 2026 06:52:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790922805; cv=none; b=J5+kjVfBoRnM3obs/FkBFZLslr0+P6LPZv52s/PSI+vVltnf3PlEsPfU32FsmgtL9dtiFf9BcW/LzC27uyF8UF1tJGzo9BWKRM3H6DTTJAyvXfpcghajPmoMFCBKpCOnAgG3pvQObrSP8hWD7kgwEwHw/1W9ogONmNzJxHRbUfw=
+	t=1790923972; cv=none; b=K6BpjuQPKSzkkaQe0q+UDcxBxQoynrDXZOQgXM0EkKflYZ6Wh7ZcF6MVbD7fFt3cv005XhaRHFONNE8JJkjYW2YjVd0/bMETpERZjqLRwoNaDPjXtysjR6iukzxVa6V6qaGabXW9sO77hHHLnpX6O4fD19ZQ8T6a0aYhWZnDwwA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790922805; c=relaxed/simple;
-	bh=zRyaUvCRZkILruwi+Iord5g961cu9lxCLivsG122IlQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=qaFcsjaXYO5zhO4aO029MWBv6zSGqgPHpXsviqlyFfgSH776PzueghzCehOxYn5FZ5ke+X/J20ZTq3uWWIKHkfGjj0KWA3XU0y95aeEHxXGqTvllZWPi7f6mF1jEprxs3gPlw1hnx0/WWUSnYiMY/iCSs4ZTyqMXEkKxUNy/ujY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com; spf=pass smtp.mailfrom=sifive.com; dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b=dbjklkoE; arc=none smtp.client-ip=74.125.229.151
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sifive.com
+	s=arc-20240116; t=1790923972; c=relaxed/simple;
+	bh=qB2Wypr9G/9D5c5y2YXcfVZc9vgDAVA8p+hTwJcQ4bM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Pj7L2aLqOLNtIeaAqmR/jAL8KWCaqNQCBPT69oUMXPI1t+PDlz5nIw/B7GYGihJAQ++oiW4ev8GtsbTH+J6mJtdt262SSO+GNIawHsPiYiwZXxqE2SA79181pwutKERh1oN1IJvJDmrFvG6GeXPXF7nHd3m8czmSxoQwWaZhyWI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=c8bDWgyU; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="dbjklkoE"
-Received: by mail-dl2-f23.google.com with SMTP id a92af1059eb24-144efd1ea76so4551146c88.1
-        for <linux-perf-users@vger.kernel.org>; Thu, 01 Oct 2026 23:33:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google; t=1790922801; x=1791527601; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:mime-version:references
-         :in-reply-to:message-id:date:subject:cc:to:from:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=o2JMKEoodVWqinmfiI1FbLid6UM6vaKVSaowerwAA00=;
-        b=dbjklkoEpqQYdMpcWjLwFuVF41N4/iKnx4TuqAJG3nRj8B880yYyZILbzcK6caBkKv
-         iiQha594cFeDOfBAINF7az6zaZTnEUJeBrkMyBvQEA4bdWGdXcsz+VrVClSclfeyVWL/
-         bX11KTWZGpQaeCfX3Skx0czmmA4xOlPn4kGpHyPY4Q3oXzxjITcOKVScetTakHe0V54T
-         N4kn0ysYoz2XFsl0Zvna0QtZhzNbldADSS5CN9Y9jq+Pka1oY3xfG37tRvP25OcyDAMQ
-         QYNhLGGjxhr4Fybw5YUF/mhA6HWUIPxOLS6VWbO/6/223nYEDHDRAAur3JpO1RtjGQa5
-         4ELg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1790922801; x=1791527601;
-        h=content-transfer-encoding:content-type:mime-version:references
-         :in-reply-to:message-id:date:subject:cc:to:from:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=o2JMKEoodVWqinmfiI1FbLid6UM6vaKVSaowerwAA00=;
-        b=2T7he5C7LbaR6Kgm9NuQ3wef8wNOf5FFAgnoHpr0IRrc7YHY3ZQcTJv/MU+NhkO8MD
-         lgIrMceM2as7XBNfRXvp/ieVZw0vNM4xgBTuv2PE3vhh07iWcbVaBxd/+zeEVlsBxFq3
-         auNXAlU/WilBfB81CkzS9hyoU32HqKSZC82isqGGw5pi9yRm78mP84C3ex1z1TGC/UA4
-         SNTfNVHL7kyk8mN8//8LQMTeKu7fBuEFBXT+yfyFevM1AP2i5W69NMCBiMYTSngp29fU
-         qPl72wBbS1vmVofhZnq+2Gr/kwTlSdIzGJ7b7nx1Q1XTPOkZpioqja4yqfFentEcZjw2
-         i0Vg==
-X-Forwarded-Encrypted: i=1; AKwUvBwDMbepSfAOlHM91/nF/wyFndQp8e40VZJ08mrRbcoQR0hzWs2jGjETA2CThrAGwoIy3hr4nGurF5KOVtHSQMc3@vger.kernel.org
-X-Gm-Message-State: AFuF++luLpEUjXCjQb5M4m5wTCKEX9iB27n9d6vwhvTEuOsO+BdsbBcf
-	WhD9vXHpwCAp/RJnWHdT6Sp+EbwBME4EJQTcwIuy7NBw25j+RyLCXf5JRotqYYop+uI=
-X-Gm-Gg: AYBFou3IQqDCOvv9IW0P2MQZBRZc/Pv0sDsPWBe0QmWae2wr2IjrS4hUpTGQBqdaCo6
-	BnYk1/otiwbICRdJeufquQjE0e4zsjwTaFsuCBPtscoM1wXXI3HQcIL7xyJtuRDU27pXZAekzKF
-	KcKSeYr9qUk68fkIHtb5Y0qmYscpX6V5r10H4VFE4FtuD6DdWygF+n2Vctn1+ZDNAatrkhd0foX
-	FkkapBvLygYLDtIFLPoYhM/QnVXEv3AgiyKjEfWwyKFnXio9cek5DOSO1vmZmnc0yx54XlvwhwC
-	0vj4XboyyaTOKNk2ml4gV5octEFhHMu1G4YDdds/H9Ll2bIfSa3f6WWZUiHnL4jDJdbsJGUAf49
-	TraC82jutW0irO+mQGLVd4akvu7+WfWxmgInDnZepIw+Y0FUo0jLMyFmacTK573FnTpjI33wCJE
-	sAa82hSqLs4bTlY+RKyR6oogDy81vS8FaXOITL6/g3g46uNaEsHicXeDtb3D9UmXZdxj6XCpCDF
-	rMxXBBocpU=
-X-Received: by 2002:a05:7022:297:20b0:14d:3930:647d with SMTP id a92af1059eb24-14f5b026973mr1603123c88.9.1790922800844;
-        Thu, 01 Oct 2026 23:33:20 -0700 (PDT)
-Received: from sw04.internal.sifive.com ([4.53.31.132])
-        by smtp.gmail.com with ESMTPSA id a92af1059eb24-14f45fedd43sm6315754c88.4.2026.10.01.23.33.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 01 Oct 2026 23:33:18 -0700 (PDT)
-From: Zong Li <zong.li@sifive.com>
-To: tomasz.jeznach@linux.dev,
-	joro@8bytes.org,
-	will@kernel.org,
-	robin.murphy@arm.com,
-	pjw@kernel.org,
-	palmer@dabbelt.com,
-	aou@eecs.berkeley.edu,
-	alex@ghiti.fr,
-	mark.rutland@arm.com,
-	andrew.jones@oss.qualcomm.com,
-	guoren@kernel.org,
-	david.laight.linux@gmail.com,
-	zhangzhanpeng.jasper@bytedance.com,
-	yang.yicong@picoheart.com,
-	nutty.liu@hotmail.com,
-	iommu@lists.linux.dev,
-	linux-riscv@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org
-Cc: Zong Li <zong.li@sifive.com>,
-	Chen Pei <cp0613@linux.alibaba.com>,
-	Fangyu Yu <fangyu.yu@linux.alibaba.com>
-Subject: [PATCH v15 1/2] drivers/perf: riscv-iommu: add risc-v iommu pmu driver
-Date: Thu,  1 Oct 2026 23:33:11 -0700
-Message-ID: <20261002063315.1535817-2-zong.li@sifive.com>
-X-Mailer: git-send-email @GIT_VERSION@
-In-Reply-To: <20261002063315.1535817-1-zong.li@sifive.com>
-References: <20261002063315.1535817-1-zong.li@sifive.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c8bDWgyU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B78DB1F000FF;
+	Fri,  2 Oct 2026 06:52:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1790923970;
+	bh=u15YH4Gk1jY734f7Ru9LTF8CNh+n4MtAogEYgBYqpnw=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=c8bDWgyU7nbSbFiXaryamWOeLdeQpMchMrG0YjFpHuBOQ1PuqIEtbmxLMXTlp4ewM
+	 OL/GoVIH5VS5zURtCMofHqaWCe4cVE9WJ8MPM3FdcVOyMRU1YSbKnFj7c9DjyEVkSw
+	 9gCmXRSqnWhhFoMhDJ/lGP59xmGFDa3YmRJMrGx+9mw3LMY8NLYorwZ19bld8oz5rO
+	 DgWfbQbiLCLEg2FXnUdwmI6B06bIL+jviB54nuqoHIQ8yrkmiuMD5hPR0jQVPoCSav
+	 mIx8HAdy4CslS+i7YzgBC1u1s9bonkEoTcmwC1glIfgxX4mWnJ3lRT0smKX9wzYurc
+	 IJYDuX5dbpfvw==
+Message-ID: <bd623df8-d5f0-46a3-927f-f0a4b458e651@kernel.org>
+Date: Fri, 2 Oct 2026 08:52:06 +0200
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 27/40] mm: remove hugetlb_inline.h
+To: "Lorenzo Stoakes (ARM)" <ljs@kernel.org>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ "Liam R. Howlett" <liam@infradead.org>, Vlastimil Babka <vbabka@kernel.org>,
+ Jann Horn <jannh@google.com>, Pedro Falcato <pfalcato@suse.de>,
+ Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>,
+ Michal Hocko <mhocko@suse.com>, Jonathan Corbet <corbet@lwn.net>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>,
+ Jason Gunthorpe <jgg@ziepe.ca>, Leon Romanovsky <leon@kernel.org>,
+ Paul Moore <paul@paul-moore.com>,
+ Stephen Smalley <stephen.smalley.work@gmail.com>,
+ Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+ Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
+ Andrii Nakryiko <andrii@kernel.org>, Eduard Zingerman <eddyz87@gmail.com>,
+ Kumar Kartikeya Dwivedi <memxor@gmail.com>, Zi Yan <ziy@nvidia.com>,
+ Baolin Wang <baolin.wang@linux.alibaba.com>,
+ Nico Pache <nico.pache@linux.dev>, Ryan Roberts <ryan.roberts@arm.com>,
+ Dev Jain <dev.jain@arm.com>, Barry Song <baohua@kernel.org>,
+ Lance Yang <lance.yang@linux.dev>, Usama Arif <usama.arif@linux.dev>,
+ Kiryl Shutsemau <kas@kernel.org>, Doug Gilbert <dgilbert@interlog.com>,
+ "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
+ "Martin K. Petersen" <mkp@kernel.org>, Jaya Kumar <jayalk@intworks.biz>,
+ Simona Vetter <simona@ffwll.ch>, Helge Deller <deller@gmx.de>,
+ Sebastian Reichel <sre@kernel.org>, John Hubbard <jhubbard@nvidia.com>,
+ Peter Xu <peterx@redhat.com>, Masami Hiramatsu <mhiramat@kernel.org>,
+ Oleg Nesterov <oleg@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
+ Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ x86@kernel.org, Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Rik van Riel <riel@surriel.com>, Harry Yoo <harry@kernel.org>,
+ Juri Lelli <juri.lelli@redhat.com>,
+ Vincent Guittot <vincent.guittot@linaro.org>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ David Airlie <airlied@gmail.com>, Will Deacon <will@kernel.org>,
+ "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>, Nick Piggin
+ <npiggin@gmail.com>, Arnd Bergmann <arnd@arndb.de>,
+ Muchun Song <muchun.song@linux.dev>, Oscar Salvador <osalvador@suse.de>,
+ "Matthew Wilcox (Oracle)" <willy@infradead.org>, Jan Kara <jack@suse.cz>,
+ Marc Zyngier <maz@kernel.org>, Oliver Upton <oupton@kernel.org>,
+ Catalin Marinas <catalin.marinas@arm.com>,
+ Madhavan Srinivasan <maddy@linux.ibm.com>, Anup Patel <anup@brainfault.org>,
+ Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>,
+ Albert Ou <aou@eecs.berkeley.edu>,
+ Christian Borntraeger <borntraeger@linux.ibm.com>,
+ Janosch Frank <frankja@linux.ibm.com>,
+ Claudio Imbrenda <imbrenda@linux.ibm.com>,
+ Alexander Gordeev <agordeev@linux.ibm.com>,
+ Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
+ Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
+ "David S. Miller" <davem@davemloft.net>,
+ Andreas Larsson <andreas@gaisler.com>,
+ Alexander Viro <viro@zeniv.linux.org.uk>,
+ Christian Brauner <brauner@kernel.org>,
+ Matthew Brost <matthew.brost@intel.com>,
+ Joshua Hahn <joshua.hahnjy@gmail.com>, Rakie Kim <rakie.kim@sk.com>,
+ Byungchul Park <byungchul@sk.com>, Gregory Price <gourry@gourry.net>,
+ Ying Huang <ying.huang@linux.alibaba.com>,
+ Alistair Popple <apopple@nvidia.com>, Chris Li <chrisl@kernel.org>,
+ Kairui Song <kasong@tencent.com>, Kemeng Shi <shikemeng@huaweicloud.com>,
+ Nhat Pham <nphamcs@gmail.com>, Baoquan He <baoquan.he@linux.dev>,
+ Youngjun Park <youngjun.park@lge.com>, Johannes Weiner <hannes@cmpxchg.org>,
+ Qi Zheng <qi.zheng@linux.dev>, Shakeel Butt <shakeel.butt@linux.dev>,
+ Axel Rasmussen <axelrasmussen@google.com>, Yuanchu Xie <yuanchu@google.com>,
+ Wei Xu <weixugc@google.com>, Chengming Zhou <chengming.zhou@linux.dev>,
+ Michal Hocko <mhocko@kernel.org>, Miklos Szeredi <miklos@szeredi.hu>,
+ Xu Xin <xu.xin@linux.dev>
+Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+ linux-doc@vger.kernel.org, linux-usb@vger.kernel.org,
+ linux-rdma@vger.kernel.org, selinux@vger.kernel.org,
+ linux-sound@vger.kernel.org, bpf@vger.kernel.org,
+ linux-scsi@vger.kernel.org, linux-fbdev@vger.kernel.org,
+ dri-devel@lists.freedesktop.org, linux-trace-kernel@vger.kernel.org,
+ linux-perf-users@vger.kernel.org, linux-arch@vger.kernel.org,
+ linux-fsdevel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ kvmarm@lists.linux.dev, linuxppc-dev@lists.ozlabs.org, kvm@vger.kernel.org,
+ kvm-riscv@lists.infradead.org, linux-riscv@lists.infradead.org,
+ linux-s390@vger.kernel.org, sparclinux@vger.kernel.org,
+ fuse-devel@lists.linux.dev
+References: <20260917-b4-mmap-prepare-vma-flag-sanify-v3-0-4583d8a23bca@kernel.org>
+ <20260917-b4-mmap-prepare-vma-flag-sanify-v3-27-4583d8a23bca@kernel.org>
+From: "David Hildenbrand (Arm)" <david@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=david@kernel.org; keydata=
+ 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
+ qIws/H2t
+In-Reply-To: <20260917-b4-mmap-prepare-vma-flag-sanify-v3-27-4583d8a23bca@kernel.org>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-Add a new driver to support the RISC-V IOMMU PMU. This is an auxiliary
-device driver created by the parent RISC-V IOMMU driver.
+On 9/17/26 18:22, Lorenzo Stoakes (ARM) wrote:
+> This header really makes little sense - every place it is included mm.h is
+> also included, and the header itself includes mm.h, so it does nothing to
+> reduce header size.
 
-The performance monitor provides counters with filtering support to
-collect events for specific device ID/process ID, or GSCID/PSCID.
 
-The RISC-V IOMMU PMU separates the cycle counter from the event counters.
-The cycle counter is not associated with iohpmevt0, so a software-defined
-cycle event is required for the perf subsystem.
+It's very small indeed
 
-The number and width of the counters are hardware-implemented and must
-be detected at runtime.
+Acked-by: David Hildenbrand (Arm) <david@kernel.org>
 
-Leave out all the dead cleanup code (i.e. .remove() operation) if the
-PMU driver is tied to the IOMMU driver and can never realistically be
-removed.
-
-PMU-related definitions are moved into the perf driver, where they are
-used exclusively.
-
-According to RISC-V IOMMU specification Chapter 6:
-Whether an 8 byte access to an IOMMU register is single-copy atomic is
-UNSPECIFIED. Use two separate 4 byte accesses for hardware
-compatibility.
-
-Use raw spin lock to avoid CPU hotplug race and IRQCHIP_MOVE_DEFERRED
-
- - CPU hotplug race: serialises used_counters/events[]/IOCOUNTINH against
-   riscv_iommu_pmu_offline_cpu()'s perf_pmu_migrate_context()
- - PCI MSI/MSI-X on IMSIC sets IRQCHIP_MOVE_DEFERRED, so
-   irq_set_affinity() reports success while only recording the request
-   and the move is applied later, in interrupt context. Until then the
-   interrupt is still routed to the CPU the irqchip picked initially,
-   which is not the CPU the events are bound to.
-
-Tested-by: Chen Pei <cp0613@linux.alibaba.com>
-Tested-by: Fangyu Yu <fangyu.yu@linux.alibaba.com>
-Reviewed-by: Nutty Liu <nutty.liu@hotmail.com>
-Reviewed-by: Guo Ren (Alibaba DAMO Academy) <guoren@kernel.org>
-Reviewed-by: Yicong Yang <yang.yicong@picoheart.com>
-Suggested-by: David Laight <david.laight.linux@gmail.com>
-Suggested-by: Guo Ren <guoren@kernel.org>
-Link: https://lore.kernel.org/linux-riscv/20260618143634.7f3dd6c5@pumpkin/
-Signed-off-by: Zong Li <zong.li@sifive.com>
----
- drivers/iommu/riscv/iommu-bits.h |   61 --
- drivers/perf/Kconfig             |   12 +
- drivers/perf/Makefile            |    1 +
- drivers/perf/riscv_iommu_pmu.c   | 1081 ++++++++++++++++++++++++++++++
- 4 files changed, 1094 insertions(+), 61 deletions(-)
- create mode 100644 drivers/perf/riscv_iommu_pmu.c
-
-diff --git a/drivers/iommu/riscv/iommu-bits.h b/drivers/iommu/riscv/iommu-bits.h
-index f2ef9bd3cde9..6b5de913a032 100644
---- a/drivers/iommu/riscv/iommu-bits.h
-+++ b/drivers/iommu/riscv/iommu-bits.h
-@@ -192,67 +192,6 @@ enum riscv_iommu_ddtp_modes {
- #define RISCV_IOMMU_IPSR_PMIP		BIT(RISCV_IOMMU_INTR_PM)
- #define RISCV_IOMMU_IPSR_PIP		BIT(RISCV_IOMMU_INTR_PQ)
- 
--/* 5.19 Performance monitoring counter overflow status (32bits) */
--#define RISCV_IOMMU_REG_IOCOUNTOVF	0x0058
--#define RISCV_IOMMU_IOCOUNTOVF_CY	BIT(0)
--#define RISCV_IOMMU_IOCOUNTOVF_HPM	GENMASK_ULL(31, 1)
--
--/* 5.20 Performance monitoring counter inhibits (32bits) */
--#define RISCV_IOMMU_REG_IOCOUNTINH	0x005C
--#define RISCV_IOMMU_IOCOUNTINH_CY	BIT(0)
--#define RISCV_IOMMU_IOCOUNTINH_HPM	GENMASK(31, 1)
--
--/* 5.21 Performance monitoring cycles counter (64bits) */
--#define RISCV_IOMMU_REG_IOHPMCYCLES     0x0060
--#define RISCV_IOMMU_IOHPMCYCLES_COUNTER	GENMASK_ULL(62, 0)
--#define RISCV_IOMMU_IOHPMCYCLES_OF	BIT_ULL(63)
--
--/* 5.22 Performance monitoring event counters (31 * 64bits) */
--#define RISCV_IOMMU_REG_IOHPMCTR_BASE	0x0068
--#define RISCV_IOMMU_REG_IOHPMCTR(_n)	(RISCV_IOMMU_REG_IOHPMCTR_BASE + ((_n) * 0x8))
--
--/* 5.23 Performance monitoring event selectors (31 * 64bits) */
--#define RISCV_IOMMU_REG_IOHPMEVT_BASE	0x0160
--#define RISCV_IOMMU_REG_IOHPMEVT(_n)	(RISCV_IOMMU_REG_IOHPMEVT_BASE + ((_n) * 0x8))
--#define RISCV_IOMMU_IOHPMEVT_EVENTID	GENMASK_ULL(14, 0)
--#define RISCV_IOMMU_IOHPMEVT_DMASK	BIT_ULL(15)
--#define RISCV_IOMMU_IOHPMEVT_PID_PSCID	GENMASK_ULL(35, 16)
--#define RISCV_IOMMU_IOHPMEVT_DID_GSCID	GENMASK_ULL(59, 36)
--#define RISCV_IOMMU_IOHPMEVT_PV_PSCV	BIT_ULL(60)
--#define RISCV_IOMMU_IOHPMEVT_DV_GSCV	BIT_ULL(61)
--#define RISCV_IOMMU_IOHPMEVT_IDT	BIT_ULL(62)
--#define RISCV_IOMMU_IOHPMEVT_OF		BIT_ULL(63)
--
--/* Number of defined performance-monitoring event selectors */
--#define RISCV_IOMMU_IOHPMEVT_CNT	31
--
--/**
-- * enum riscv_iommu_hpmevent_id - Performance-monitoring event identifier
-- *
-- * @RISCV_IOMMU_HPMEVENT_INVALID: Invalid event, do not count
-- * @RISCV_IOMMU_HPMEVENT_URQ: Untranslated requests
-- * @RISCV_IOMMU_HPMEVENT_TRQ: Translated requests
-- * @RISCV_IOMMU_HPMEVENT_ATS_RQ: ATS translation requests
-- * @RISCV_IOMMU_HPMEVENT_TLB_MISS: TLB misses
-- * @RISCV_IOMMU_HPMEVENT_DD_WALK: Device directory walks
-- * @RISCV_IOMMU_HPMEVENT_PD_WALK: Process directory walks
-- * @RISCV_IOMMU_HPMEVENT_S_VS_WALKS: First-stage page table walks
-- * @RISCV_IOMMU_HPMEVENT_G_WALKS: Second-stage page table walks
-- * @RISCV_IOMMU_HPMEVENT_MAX: Value to denote maximum Event IDs
-- */
--enum riscv_iommu_hpmevent_id {
--	RISCV_IOMMU_HPMEVENT_INVALID    = 0,
--	RISCV_IOMMU_HPMEVENT_URQ        = 1,
--	RISCV_IOMMU_HPMEVENT_TRQ        = 2,
--	RISCV_IOMMU_HPMEVENT_ATS_RQ     = 3,
--	RISCV_IOMMU_HPMEVENT_TLB_MISS   = 4,
--	RISCV_IOMMU_HPMEVENT_DD_WALK    = 5,
--	RISCV_IOMMU_HPMEVENT_PD_WALK    = 6,
--	RISCV_IOMMU_HPMEVENT_S_VS_WALKS = 7,
--	RISCV_IOMMU_HPMEVENT_G_WALKS    = 8,
--	RISCV_IOMMU_HPMEVENT_MAX        = 9
--};
--
- /* 5.24 Translation request IOVA (64bits) */
- #define RISCV_IOMMU_REG_TR_REQ_IOVA     0x0258
- #define RISCV_IOMMU_TR_REQ_IOVA_VPN	GENMASK_ULL(63, 12)
-diff --git a/drivers/perf/Kconfig b/drivers/perf/Kconfig
-index 245e7bb763b9..8cce6c2ea626 100644
---- a/drivers/perf/Kconfig
-+++ b/drivers/perf/Kconfig
-@@ -105,6 +105,18 @@ config RISCV_PMU_SBI
- 	  full perf feature support i.e. counter overflow, privilege mode
- 	  filtering, counter configuration.
- 
-+config RISCV_IOMMU_PMU
-+	depends on RISCV || COMPILE_TEST
-+	depends on RISCV_IOMMU
-+	bool "RISC-V IOMMU Hardware Performance Monitor"
-+	default y
-+	help
-+	  Say Y if you want to use the RISC-V IOMMU performance monitor
-+	  implementation. The performance monitor is an optional hardware
-+	  feature, and whether it is actually enabled depends on IOMMU
-+	  hardware support. If the underlying hardware does not implement
-+	  the PMU, this option will have no effect.
-+
- config STARFIVE_STARLINK_PMU
- 	depends on ARCH_STARFIVE || COMPILE_TEST
- 	depends on 64BIT
-diff --git a/drivers/perf/Makefile b/drivers/perf/Makefile
-index eb8a022dad9a..90c75f3c0ac1 100644
---- a/drivers/perf/Makefile
-+++ b/drivers/perf/Makefile
-@@ -20,6 +20,7 @@ obj-$(CONFIG_QCOM_L3_PMU) += qcom_l3_pmu.o
- obj-$(CONFIG_RISCV_PMU) += riscv_pmu.o
- obj-$(CONFIG_RISCV_PMU_LEGACY) += riscv_pmu_legacy.o
- obj-$(CONFIG_RISCV_PMU_SBI) += riscv_pmu_sbi.o
-+obj-$(CONFIG_RISCV_IOMMU_PMU) += riscv_iommu_pmu.o
- obj-$(CONFIG_STARFIVE_STARLINK_PMU) += starfive_starlink_pmu.o
- obj-$(CONFIG_THUNDERX2_PMU) += thunderx2_pmu.o
- obj-$(CONFIG_XGENE_PMU) += xgene_pmu.o
-diff --git a/drivers/perf/riscv_iommu_pmu.c b/drivers/perf/riscv_iommu_pmu.c
-new file mode 100644
-index 000000000000..25f217ac97e7
---- /dev/null
-+++ b/drivers/perf/riscv_iommu_pmu.c
-@@ -0,0 +1,1081 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Copyright (C) 2026 SiFive
-+ *
-+ * Authors
-+ *	Zong Li <zong.li@sifive.com>
-+ */
-+
-+#include <linux/auxiliary_bus.h>
-+#include <linux/cpu.h>
-+#include <linux/cpumask.h>
-+#include <linux/io-64-nonatomic-hi-lo.h>
-+#include <linux/perf_event.h>
-+
-+#include "../iommu/riscv/iommu.h"
-+
-+/* 5.19 Performance monitoring counter overflow status (32bits) */
-+#define RISCV_IOMMU_REG_IOCOUNTOVF	0x0058
-+#define RISCV_IOMMU_IOCOUNTOVF_CY	BIT(0)
-+#define RISCV_IOMMU_IOCOUNTOVF_HPM	GENMASK_ULL(31, 1)
-+
-+/* 5.20 Performance monitoring counter inhibits (32bits) */
-+#define RISCV_IOMMU_REG_IOCOUNTINH	0x005C
-+#define RISCV_IOMMU_IOCOUNTINH_CY	BIT(0)
-+#define RISCV_IOMMU_IOCOUNTINH_HPM	GENMASK(31, 0)
-+
-+/* 5.21 Performance monitoring cycles counter (64bits) */
-+#define RISCV_IOMMU_REG_IOHPMCYCLES	0x0060
-+#define RISCV_IOMMU_IOHPMCYCLES_COUNTER	GENMASK_ULL(62, 0)
-+#define RISCV_IOMMU_IOHPMCYCLES_OF	BIT_ULL(63)
-+#define RISCV_IOMMU_REG_IOHPMCTR(_n)	(RISCV_IOMMU_REG_IOHPMCYCLES + ((_n) * 0x8))
-+
-+/* 5.22 Performance monitoring event counters (31 * 64bits) */
-+#define RISCV_IOMMU_REG_IOHPMCTR_BASE	0x0068
-+#define RISCV_IOMMU_IOHPMCTR_COUNTER	GENMASK_ULL(63, 0)
-+
-+/* 5.23 Performance monitoring event selectors (31 * 64bits) */
-+#define RISCV_IOMMU_REG_IOHPMEVT_BASE	0x0160
-+#define RISCV_IOMMU_REG_IOHPMEVT(_n)	(RISCV_IOMMU_REG_IOHPMEVT_BASE + ((_n) * 0x8))
-+#define RISCV_IOMMU_IOHPMEVT_EVENTID	GENMASK_ULL(14, 0)
-+#define RISCV_IOMMU_IOHPMEVT_DMASK	BIT_ULL(15)
-+#define RISCV_IOMMU_IOHPMEVT_PID_PSCID	GENMASK_ULL(35, 16)
-+#define RISCV_IOMMU_IOHPMEVT_DID_GSCID	GENMASK_ULL(59, 36)
-+#define RISCV_IOMMU_IOHPMEVT_PV_PSCV	BIT_ULL(60)
-+#define RISCV_IOMMU_IOHPMEVT_DV_GSCV	BIT_ULL(61)
-+#define RISCV_IOMMU_IOHPMEVT_IDT	BIT_ULL(62)
-+#define RISCV_IOMMU_IOHPMEVT_OF		BIT_ULL(63)
-+#define RISCV_IOMMU_IOHPMEVT_EVENT	GENMASK_ULL(62, 0)
-+
-+/* The total number of counters is 31 event counters plus 1 cycle counter */
-+#define RISCV_IOMMU_HPM_COUNTER_NUM	32
-+
-+/* Counter index 0 is the cycle counter, the event counters start at index 1 */
-+#define RISCV_IOMMU_HPM_CYCLE_IDX	0
-+
-+static int cpuhp_state;
-+
-+/**
-+ * enum riscv_iommu_hpmevent_id - Performance-monitoring event identifier
-+ *
-+ * @RISCV_IOMMU_HPMEVENT_CYCLE: Clock cycle counter
-+ * @RISCV_IOMMU_HPMEVENT_URQ: Untranslated requests
-+ * @RISCV_IOMMU_HPMEVENT_TRQ: Translated requests
-+ * @RISCV_IOMMU_HPMEVENT_ATS_RQ: ATS translation requests
-+ * @RISCV_IOMMU_HPMEVENT_TLB_MISS: TLB misses
-+ * @RISCV_IOMMU_HPMEVENT_DD_WALK: Device directory walks
-+ * @RISCV_IOMMU_HPMEVENT_PD_WALK: Process directory walks
-+ * @RISCV_IOMMU_HPMEVENT_S_VS_WALKS: First-stage page table walks
-+ * @RISCV_IOMMU_HPMEVENT_G_WALKS: Second-stage page table walks
-+ * @RISCV_IOMMU_HPMEVENT_MAX: Value to denote maximum Event IDs
-+ *
-+ * The specification does not define an event ID for counting the
-+ * number of clock cycles, meaning there is no associated 'iohpmevt0'.
-+ * Event ID 0 is an invalid event and does not overlap with any valid
-+ * event ID. Let's repurpose ID 0 as the cycle for perf, the cycle
-+ * event is not actually written into any register, it serves solely
-+ * as an identifier.
-+ */
-+enum riscv_iommu_hpmevent_id {
-+	RISCV_IOMMU_HPMEVENT_CYCLE	= 0,
-+	RISCV_IOMMU_HPMEVENT_URQ        = 1,
-+	RISCV_IOMMU_HPMEVENT_TRQ        = 2,
-+	RISCV_IOMMU_HPMEVENT_ATS_RQ     = 3,
-+	RISCV_IOMMU_HPMEVENT_TLB_MISS   = 4,
-+	RISCV_IOMMU_HPMEVENT_DD_WALK    = 5,
-+	RISCV_IOMMU_HPMEVENT_PD_WALK    = 6,
-+	RISCV_IOMMU_HPMEVENT_S_VS_WALKS = 7,
-+	RISCV_IOMMU_HPMEVENT_G_WALKS    = 8,
-+	RISCV_IOMMU_HPMEVENT_MAX        = 9
-+};
-+
-+/*
-+ * Section 6.23 reserves event IDs 16384-32767 for custom events. IDs between
-+ * RISCV_IOMMU_HPMEVENT_MAX and this are reserved by the specification.
-+ */
-+#define RISCV_IOMMU_HPMEVENT_CUSTOM_FIRST	16384
-+
-+struct riscv_iommu_pmu {
-+	struct pmu pmu;
-+	struct hlist_node node;
-+	void __iomem *reg;
-+	int on_cpu;
-+	unsigned int irq;
-+	int numa_node;
-+	unsigned int num_counters;
-+	/* Per-counter writable width; index 0 is IOHPMCYCLES */
-+	u64 cntr_mask[RISCV_IOMMU_HPM_COUNTER_NUM];
-+	/* IOCOUNTINH value which inhibits every implemented counter */
-+	u32 inhibit_all;
-+	struct perf_event *events[RISCV_IOMMU_HPM_COUNTER_NUM];
-+	/* Counter indices the hardware actually implements */
-+	DECLARE_BITMAP(implemented_counters, RISCV_IOMMU_HPM_COUNTER_NUM);
-+	DECLARE_BITMAP(used_counters, RISCV_IOMMU_HPM_COUNTER_NUM);
-+	/*
-+	 * Serialises used_counters/events[]/IOCOUNTINH for
-+	 * CPU hotplug race and IRQCHIP_MOVE_DEFERRED (PCI MSI/MSI-X on IMSIC)
-+	 */
-+	raw_spinlock_t lock;
-+};
-+
-+#define to_riscv_iommu_pmu(p) (container_of(p, struct riscv_iommu_pmu, pmu))
-+
-+#define RISCV_IOMMU_PMU_ATTR_EXTRACTOR(_name, _mask)			\
-+	static inline u32 get_##_name(struct perf_event *event)		\
-+	{								\
-+		return FIELD_GET(_mask, event->attr.config);		\
-+	}								\
-+
-+RISCV_IOMMU_PMU_ATTR_EXTRACTOR(event, RISCV_IOMMU_IOHPMEVT_EVENTID);
-+RISCV_IOMMU_PMU_ATTR_EXTRACTOR(partial_matching, RISCV_IOMMU_IOHPMEVT_DMASK);
-+RISCV_IOMMU_PMU_ATTR_EXTRACTOR(pid_pscid, RISCV_IOMMU_IOHPMEVT_PID_PSCID);
-+RISCV_IOMMU_PMU_ATTR_EXTRACTOR(did_gscid, RISCV_IOMMU_IOHPMEVT_DID_GSCID);
-+RISCV_IOMMU_PMU_ATTR_EXTRACTOR(filter_pid_pscid, RISCV_IOMMU_IOHPMEVT_PV_PSCV);
-+RISCV_IOMMU_PMU_ATTR_EXTRACTOR(filter_did_gscid, RISCV_IOMMU_IOHPMEVT_DV_GSCV);
-+RISCV_IOMMU_PMU_ATTR_EXTRACTOR(filter_id_type, RISCV_IOMMU_IOHPMEVT_IDT);
-+
-+/* Formats */
-+PMU_FORMAT_ATTR(event,            "config:0-14");
-+PMU_FORMAT_ATTR(partial_matching, "config:15");
-+PMU_FORMAT_ATTR(pid_pscid,        "config:16-35");
-+PMU_FORMAT_ATTR(did_gscid,        "config:36-59");
-+PMU_FORMAT_ATTR(filter_pid_pscid, "config:60");
-+PMU_FORMAT_ATTR(filter_did_gscid, "config:61");
-+PMU_FORMAT_ATTR(filter_id_type,   "config:62");
-+
-+static struct attribute *riscv_iommu_pmu_formats[] = {
-+	&format_attr_event.attr,
-+	&format_attr_partial_matching.attr,
-+	&format_attr_pid_pscid.attr,
-+	&format_attr_did_gscid.attr,
-+	&format_attr_filter_pid_pscid.attr,
-+	&format_attr_filter_did_gscid.attr,
-+	&format_attr_filter_id_type.attr,
-+	NULL,
-+};
-+
-+static const struct attribute_group riscv_iommu_pmu_format_group = {
-+	.name = "format",
-+	.attrs = riscv_iommu_pmu_formats,
-+};
-+
-+/* Events */
-+static ssize_t riscv_iommu_pmu_event_show(struct device *dev,
-+					  struct device_attribute *attr,
-+					  char *page)
-+{
-+	struct perf_pmu_events_attr *pmu_attr;
-+
-+	pmu_attr = container_of(attr, struct perf_pmu_events_attr, attr);
-+
-+	return sysfs_emit(page, "event=0x%02llx\n", pmu_attr->id);
-+}
-+
-+#define RISCV_IOMMU_PMU_EVENT_ATTR(name, id)			\
-+	PMU_EVENT_ATTR_ID(name, riscv_iommu_pmu_event_show, id)
-+
-+static struct attribute *riscv_iommu_pmu_events[] = {
-+	RISCV_IOMMU_PMU_EVENT_ATTR(cycle, RISCV_IOMMU_HPMEVENT_CYCLE),
-+	RISCV_IOMMU_PMU_EVENT_ATTR(untranslated_req, RISCV_IOMMU_HPMEVENT_URQ),
-+	RISCV_IOMMU_PMU_EVENT_ATTR(translated_req, RISCV_IOMMU_HPMEVENT_TRQ),
-+	RISCV_IOMMU_PMU_EVENT_ATTR(ats_trans_req, RISCV_IOMMU_HPMEVENT_ATS_RQ),
-+	RISCV_IOMMU_PMU_EVENT_ATTR(tlb_miss, RISCV_IOMMU_HPMEVENT_TLB_MISS),
-+	RISCV_IOMMU_PMU_EVENT_ATTR(ddt_walks, RISCV_IOMMU_HPMEVENT_DD_WALK),
-+	RISCV_IOMMU_PMU_EVENT_ATTR(pdt_walks, RISCV_IOMMU_HPMEVENT_PD_WALK),
-+	RISCV_IOMMU_PMU_EVENT_ATTR(s_vs_pt_walks, RISCV_IOMMU_HPMEVENT_S_VS_WALKS),
-+	RISCV_IOMMU_PMU_EVENT_ATTR(g_pt_walks, RISCV_IOMMU_HPMEVENT_G_WALKS),
-+	NULL,
-+};
-+
-+static const struct attribute_group riscv_iommu_pmu_events_group = {
-+	.name = "events",
-+	.attrs = riscv_iommu_pmu_events,
-+};
-+
-+/* cpumask */
-+static ssize_t riscv_iommu_cpumask_show(struct device *dev,
-+					struct device_attribute *attr,
-+					char *buf)
-+{
-+	struct riscv_iommu_pmu *pmu = to_riscv_iommu_pmu(dev_get_drvdata(dev));
-+	int on_cpu = pmu->on_cpu;
-+
-+	/*
-+	 * riscv_iommu_pmu_offline_cpu() leaves on_cpu at -1 when it cannot
-+	 * find another online CPU to migrate to. Report an empty mask rather
-+	 * than feeding -1 to cpumask_of(), which indexes out of bounds.
-+	 */
-+	if (on_cpu < 0)
-+		return sysfs_emit(buf, "%*pbl\n", cpumask_pr_args(cpu_none_mask));
-+
-+	return sysfs_emit(buf, "%*pbl\n", cpumask_pr_args(cpumask_of(on_cpu)));
-+}
-+
-+static struct device_attribute riscv_iommu_cpumask_attr =
-+	__ATTR(cpumask, 0444, riscv_iommu_cpumask_show, NULL);
-+
-+static struct attribute *riscv_iommu_cpumask_attrs[] = {
-+	&riscv_iommu_cpumask_attr.attr,
-+	NULL
-+};
-+
-+static const struct attribute_group riscv_iommu_pmu_cpumask_group = {
-+	.attrs = riscv_iommu_cpumask_attrs,
-+};
-+
-+static const struct attribute_group *riscv_iommu_pmu_attr_grps[] = {
-+	&riscv_iommu_pmu_cpumask_group,
-+	&riscv_iommu_pmu_format_group,
-+	&riscv_iommu_pmu_events_group,
-+	NULL,
-+};
-+
-+/*
-+ * Register access wrapper
-+ *
-+ * According to RISC-V IOMMU specification Chapter 6:
-+ * A 4 byte access to an IOMMU register must be single-copy atomic.
-+ * Whether an 8 byte access to an IOMMU register is single-copy atomic is UNSPECIFIED
-+ *
-+ * Use two separate 4 byte accesses for hardware compatibility
-+ */
-+static u64 riscv_iommu_pmu_readq(void __iomem *addr)
-+{
-+	return hi_lo_readq(addr);
-+}
-+
-+static void riscv_iommu_pmu_writeq(u64 value, void __iomem *addr)
-+{
-+	hi_lo_writeq(value, addr);
-+}
-+
-+/* PMU Operations */
-+static void riscv_iommu_pmu_set_counter(struct riscv_iommu_pmu *pmu, u32 idx,
-+					u64 value)
-+{
-+	u64 counter_mask = pmu->cntr_mask[idx];
-+
-+	riscv_iommu_pmu_writeq(value & counter_mask, pmu->reg + RISCV_IOMMU_REG_IOHPMCTR(idx));
-+}
-+
-+/*
-+ * As stated in the RISC-V IOMMU Specification, Chapter 6:
-+ * Whether an 8 byte access to an IOMMU register is single-copy atomic
-+ * is UNSPECIFIED, and such an access may appear, internally to the
-+ * IOMMU, as if two separate 4 byte accesses - first to the high half
-+ * and second to the low half - were performed
-+ *
-+ * To make sure the driver works correctly on different hardware,
-+ * the software will always use two 4-byte access for the counter.
-+ *
-+ * This function implements the hi-lo-hi pattern to detect and handle
-+ * wraparound during the read operation:
-+ *   1. Read high half (hi)
-+ *   2. Read low half (lo)
-+ *   3. Read high half again (hi_again)
-+ *
-+ * If both reads of the high half agree, then the low half did not carry
-+ * into the high half in between, so the two halves belong together. If
-+ * they differ, the low half wrapped during the read and the whole
-+ * sequence is retried. A single re-read of the low half is not enough:
-+ * if the caller (or a hypervisor running it) is preempted for long enough,
-+ * the counter may wrap again before that re-read completes, pairing a
-+ * stale high half with a low half from yet another wrap. Retrying the
-+ * full hi/lo/hi sequence until two consecutive high-half reads agree
-+ * converges on a consistent pair regardless of how long the preemption
-+ * lasts.
-+ */
-+static u64 riscv_iommu_pmu_get_counter(struct riscv_iommu_pmu *pmu, u32 idx)
-+{
-+	void __iomem *addr = pmu->reg + RISCV_IOMMU_REG_IOHPMCTR(idx);
-+	u64 value, counter_mask = pmu->cntr_mask[idx];
-+	u32 hi, lo, hi_again;
-+
-+	do {
-+		hi = readl(addr + 4);
-+		lo = readl(addr);
-+		hi_again = readl(addr + 4);
-+	} while (hi_again != hi);
-+
-+	value = (((u64)hi << 32) | lo) & counter_mask;
-+
-+	/* The bit 63 of cycle counter (i.e., idx == 0) is OF bit */
-+	return idx ? value : (value & ~RISCV_IOMMU_IOHPMCYCLES_OF);
-+}
-+
-+static bool is_cycle_event(u64 event)
-+{
-+	return FIELD_GET(RISCV_IOMMU_IOHPMEVT_EVENTID, event) ==
-+	       RISCV_IOMMU_HPMEVENT_CYCLE;
-+}
-+
-+static void riscv_iommu_pmu_set_event(struct riscv_iommu_pmu *pmu, u32 idx,
-+				      u64 value)
-+{
-+	/* There is no associated IOHPMEVT0 for IOHPMCYCLES */
-+	if (is_cycle_event(value))
-+		return;
-+
-+	/* Event counter start from idx 1 */
-+	riscv_iommu_pmu_writeq(FIELD_GET(RISCV_IOMMU_IOHPMEVT_EVENT, value),
-+			       pmu->reg + RISCV_IOMMU_REG_IOHPMEVT(idx - 1));
-+}
-+
-+static void riscv_iommu_pmu_enable_counter(struct riscv_iommu_pmu *pmu, u32 idx)
-+{
-+	void __iomem *addr = pmu->reg + RISCV_IOMMU_REG_IOCOUNTINH;
-+	u32 value = readl(addr);
-+
-+	writel(value & ~BIT(idx), addr);
-+}
-+
-+static void riscv_iommu_pmu_disable_counter(struct riscv_iommu_pmu *pmu, u32 idx)
-+{
-+	void __iomem *addr = pmu->reg + RISCV_IOMMU_REG_IOCOUNTINH;
-+	u32 value = readl(addr);
-+
-+	writel(value | BIT(idx), addr);
-+}
-+
-+static void riscv_iommu_pmu_clear_ovf(struct riscv_iommu_pmu *pmu, u32 idx)
-+{
-+	u64 value;
-+
-+	/* Counter is disabled here, making it safe to read and write registers */
-+	if (idx == RISCV_IOMMU_HPM_CYCLE_IDX) {
-+		value = riscv_iommu_pmu_readq(pmu->reg + RISCV_IOMMU_REG_IOHPMCYCLES) &
-+					      ~RISCV_IOMMU_IOHPMCYCLES_OF;
-+		riscv_iommu_pmu_writeq(value, pmu->reg + RISCV_IOMMU_REG_IOHPMCYCLES);
-+	} else {
-+		/* Event counter start from idx 1 */
-+		value = riscv_iommu_pmu_readq(pmu->reg + RISCV_IOMMU_REG_IOHPMEVT(idx - 1)) &
-+					      ~RISCV_IOMMU_IOHPMEVT_OF;
-+		riscv_iommu_pmu_writeq(value, pmu->reg + RISCV_IOMMU_REG_IOHPMEVT(idx - 1));
-+	}
-+}
-+
-+static void riscv_iommu_pmu_start_all(struct riscv_iommu_pmu *pmu, u32 inhibit)
-+{
-+	writel(inhibit, pmu->reg + RISCV_IOMMU_REG_IOCOUNTINH);
-+}
-+
-+/* Returns the inhibit state prior to stopping, so callers can restore it later */
-+static u32 riscv_iommu_pmu_stop_all(struct riscv_iommu_pmu *pmu)
-+{
-+	void __iomem *addr = pmu->reg + RISCV_IOMMU_REG_IOCOUNTINH;
-+	u32 inhibit = readl(addr);
-+
-+	/*
-+	 * Inhibit exactly the implemented counters. A truncated mask would
-+	 * clear the inhibit bit of an implemented but out-of-range counter,
-+	 * letting it run unprogrammed until it overflows.
-+	 */
-+	writel(pmu->inhibit_all, addr);
-+
-+	return inhibit;
-+}
-+
-+/* PMU APIs */
-+static void riscv_iommu_pmu_set_period(struct perf_event *event)
-+{
-+	struct riscv_iommu_pmu *pmu = to_riscv_iommu_pmu(event->pmu);
-+	struct hw_perf_event *hwc = &event->hw;
-+	u64 counter_mask = pmu->cntr_mask[hwc->idx];
-+	u64 period;
-+
-+	/*
-+	 * Limit the maximum period to prevent the counter value
-+	 * from overtaking the one we are about to program.
-+	 * In effect we are reducing max_period to account for
-+	 * interrupt latency (and we are being very conservative).
-+	 */
-+	period = counter_mask >> 1;
-+	riscv_iommu_pmu_set_counter(pmu, hwc->idx, period);
-+	local64_set(&hwc->prev_count, period);
-+}
-+
-+/*
-+ * Tally @config against what the hardware implements: one cycle counter plus
-+ * pmu->num_counters - 1 event counters. Returns false once the group would need
-+ * more of either than exist, so that groups which could never be scheduled are
-+ * rejected in ->event_init() instead of failing with -EAGAIN in ->add() forever.
-+ */
-+static bool riscv_iommu_pmu_claim_counter(struct riscv_iommu_pmu *pmu, u64 config,
-+					  unsigned int *nr_cycles,
-+					  unsigned int *nr_events)
-+{
-+	if (is_cycle_event(config))
-+		return ++(*nr_cycles) <= 1;
-+
-+	return ++(*nr_events) <= pmu->num_counters - 1;
-+}
-+
-+/*
-+ * Section 6.23 Table 19 only defines IDT=1 for these events. For the others an
-+ * unsupported IDT setting means the counter does not increment at all.
-+ */
-+static bool riscv_iommu_pmu_idt_supported(u32 event_id)
-+{
-+	switch (event_id) {
-+	case RISCV_IOMMU_HPMEVENT_TLB_MISS:
-+	case RISCV_IOMMU_HPMEVENT_S_VS_WALKS:
-+	case RISCV_IOMMU_HPMEVENT_G_WALKS:
-+		return true;
-+	default:
-+		return false;
-+	}
-+}
-+
-+static int riscv_iommu_pmu_event_init(struct perf_event *event)
-+{
-+	struct riscv_iommu_pmu *pmu = to_riscv_iommu_pmu(event->pmu);
-+	struct hw_perf_event *hwc = &event->hw;
-+	struct perf_event *sibling;
-+	unsigned int nr_cycles = 0;
-+	unsigned int nr_events = 0;
-+	int on_cpu;
-+
-+	if (event->attr.type != event->pmu->type)
-+		return -ENOENT;
-+
-+	if (is_sampling_event(event))
-+		return -EOPNOTSUPP;
-+
-+	if (event->cpu < 0)
-+		return -EOPNOTSUPP;
-+
-+	/*
-+	 * Reject the range reserved between the standard events and the custom
-+	 * event space.
-+	 * Custom IDs are passed through: their meaning is implementation-defined,
-+	 * so this driver cannot validate them any further.
-+	 */
-+	if (get_event(event) >= RISCV_IOMMU_HPMEVENT_MAX &&
-+	    get_event(event) < RISCV_IOMMU_HPMEVENT_CUSTOM_FIRST)
-+		return -EINVAL;
-+
-+	/*
-+	 * An IDT setting the event does not support makes the hardware simply
-+	 * not increment the counter, which is indistinguishable from an idle
-+	 * one. Reject it rather than silently reporting zero. Custom events are
-+	 * exempt: their IDT semantics are implementation-defined.
-+	 */
-+	if (get_filter_id_type(event) &&
-+	    get_event(event) < RISCV_IOMMU_HPMEVENT_MAX &&
-+	    !riscv_iommu_pmu_idt_supported(get_event(event)))
-+		return -EINVAL;
-+
-+	/*
-+	 * There is no IOHPMEVT register associated with IOHPMCYCLES, so none
-+	 * of the filtering fields can be programmed for the cycle event.
-+	 * Reject them here instead of counting unfiltered cycles behind the
-+	 * user's back.
-+	 */
-+	if (is_cycle_event(event->attr.config) &&
-+	    (event->attr.config & ~RISCV_IOMMU_IOHPMEVT_EVENTID))
-+		return -EINVAL;
-+
-+	/*
-+	 * All events are bound to the CPU the interrupt is affine to. That
-+	 * CPU is unset while no online CPU could be found for this PMU, and
-+	 * assigning -1 here would turn this into a task bound event, which is
-+	 * not something this PMU can serve.
-+	 */
-+	on_cpu = pmu->on_cpu;
-+	if (on_cpu < 0)
-+		return -ENODEV;
-+
-+	event->cpu = on_cpu;
-+
-+	hwc->idx = -1;
-+	hwc->config = event->attr.config;
-+
-+	/*
-+	 * Account for this event itself first. It has to be done before the
-+	 * check below, otherwise an event which is on its own would never be
-+	 * matched against the number of counters the hardware implements.
-+	 */
-+	if (!riscv_iommu_pmu_claim_counter(pmu, event->attr.config,
-+					   &nr_cycles, &nr_events))
-+		return -EINVAL;
-+
-+	/* On its own, so there is no group to validate */
-+	if (event->group_leader == event)
-+		return 0;
-+
-+	/*
-+	 * Software events never occupy a hardware counter, so they do not have
-+	 * to sit on this pmu and do not consume any of its budget. Anything
-+	 * else in the group does, starting with the leader.
-+	 */
-+	if (!is_software_event(event->group_leader)) {
-+		/* A hardware leader has to share this pmu's counters */
-+		if (event->group_leader->pmu != event->pmu)
-+			return -EINVAL;
-+
-+		if (!riscv_iommu_pmu_claim_counter(pmu,
-+						   event->group_leader->attr.config,
-+						   &nr_cycles, &nr_events))
-+			return -EINVAL;
-+	}
-+
-+	/*
-+	 * Then the rest of the group. This walks group_leader->sibling_list,
-+	 * which does not contain the event being initialised yet - hence
-+	 * accounting for it separately above.
-+	 */
-+	for_each_sibling_event(sibling, event->group_leader) {
-+		if (is_software_event(sibling))
-+			continue;
-+
-+		if (sibling->pmu != event->pmu)
-+			return -EINVAL;
-+
-+		if (!riscv_iommu_pmu_claim_counter(pmu, sibling->attr.config,
-+						   &nr_cycles, &nr_events))
-+			return -EINVAL;
-+	}
-+
-+	return 0;
-+}
-+
-+static void riscv_iommu_pmu_update(struct perf_event *event)
-+{
-+	struct hw_perf_event *hwc = &event->hw;
-+	struct riscv_iommu_pmu *pmu = to_riscv_iommu_pmu(event->pmu);
-+	u64 delta, prev, now;
-+	u32 idx = hwc->idx;
-+	u64 counter_mask = pmu->cntr_mask[idx];
-+
-+	/*
-+	 * riscv_iommu_pmu_set_period() resets the hardware counter and
-+	 * prev_count as two separate writes.
-+	 * Pairing a "prev" read from before that reset with a "now" read from
-+	 * after it would produce a nonsensical, possibly huge, delta.
-+	 * Re-checking prev_count after the hardware read detects that torn
-+	 * pairing and retries.
-+	 */
-+	do {
-+		prev = local64_read(&hwc->prev_count);
-+		now = riscv_iommu_pmu_get_counter(pmu, idx);
-+	} while (prev != local64_read(&hwc->prev_count) ||
-+		 local64_cmpxchg(&hwc->prev_count, prev, now) != prev);
-+
-+	delta = (now - prev) & counter_mask;
-+	local64_add(delta, &event->count);
-+}
-+
-+static void riscv_iommu_pmu_start(struct perf_event *event, int flags)
-+{
-+	struct riscv_iommu_pmu *pmu = to_riscv_iommu_pmu(event->pmu);
-+	struct hw_perf_event *hwc = &event->hw;
-+	unsigned long irqflags;
-+
-+	if (WARN_ON_ONCE(!(event->hw.state & PERF_HES_STOPPED)))
-+		return;
-+
-+	if (flags & PERF_EF_RELOAD)
-+		WARN_ON_ONCE(!(event->hw.state & PERF_HES_UPTODATE));
-+
-+	raw_spin_lock_irqsave(&pmu->lock, irqflags);
-+	hwc->state = 0;
-+	riscv_iommu_pmu_set_period(event);
-+	riscv_iommu_pmu_set_event(pmu, hwc->idx, hwc->config);
-+	riscv_iommu_pmu_enable_counter(pmu, hwc->idx);
-+	raw_spin_unlock_irqrestore(&pmu->lock, irqflags);
-+
-+	perf_event_update_userpage(event);
-+}
-+
-+static void riscv_iommu_pmu_stop(struct perf_event *event, int flags)
-+{
-+	struct riscv_iommu_pmu *pmu = to_riscv_iommu_pmu(event->pmu);
-+	struct hw_perf_event *hwc = &event->hw;
-+	unsigned long irqflags;
-+	int idx = hwc->idx;
-+
-+	if (hwc->state & PERF_HES_STOPPED)
-+		return;
-+
-+	raw_spin_lock_irqsave(&pmu->lock, irqflags);
-+	riscv_iommu_pmu_disable_counter(pmu, idx);
-+	if ((flags & PERF_EF_UPDATE) && !(hwc->state & PERF_HES_UPTODATE))
-+		riscv_iommu_pmu_update(event);
-+	hwc->state |= PERF_HES_STOPPED | PERF_HES_UPTODATE;
-+	raw_spin_unlock_irqrestore(&pmu->lock, irqflags);
-+}
-+
-+static int riscv_iommu_pmu_add(struct perf_event *event, int flags)
-+{
-+	struct riscv_iommu_pmu *pmu = to_riscv_iommu_pmu(event->pmu);
-+	struct hw_perf_event *hwc = &event->hw;
-+	unsigned long irqflags;
-+	unsigned int idx;
-+
-+	raw_spin_lock_irqsave(&pmu->lock, irqflags);
-+
-+	/* Reserve index zero for iohpmcycles */
-+	if (is_cycle_event(event->attr.config))
-+		idx = RISCV_IOMMU_HPM_CYCLE_IDX;
-+	else
-+		/*
-+		 * Pick a counter which is implemented and not already taken.
-+		 * The implemented set may be sparse, so the free index cannot be
-+		 * searched for within a consecutive range.
-+		 */
-+		idx = find_next_andnot_bit(pmu->implemented_counters,
-+					   pmu->used_counters,
-+					   RISCV_IOMMU_HPM_COUNTER_NUM,
-+					   RISCV_IOMMU_HPM_CYCLE_IDX + 1);
-+
-+	/* All event counters or cycle counter are in use */
-+	if (idx >= RISCV_IOMMU_HPM_COUNTER_NUM || pmu->events[idx]) {
-+		raw_spin_unlock_irqrestore(&pmu->lock, irqflags);
-+		return -EAGAIN;
-+	}
-+
-+	set_bit(idx, pmu->used_counters);
-+
-+	pmu->events[idx] = event;
-+	hwc->idx = idx;
-+	hwc->state = PERF_HES_STOPPED | PERF_HES_UPTODATE;
-+	local64_set(&hwc->prev_count, 0);
-+
-+	raw_spin_unlock_irqrestore(&pmu->lock, irqflags);
-+
-+	if (flags & PERF_EF_START)
-+		riscv_iommu_pmu_start(event, flags);
-+
-+	/* Propagate changes to the userspace mapping. */
-+	perf_event_update_userpage(event);
-+
-+	return 0;
-+}
-+
-+static void riscv_iommu_pmu_read(struct perf_event *event)
-+{
-+	riscv_iommu_pmu_update(event);
-+}
-+
-+static void riscv_iommu_pmu_del(struct perf_event *event, int flags)
-+{
-+	struct riscv_iommu_pmu *pmu = to_riscv_iommu_pmu(event->pmu);
-+	struct hw_perf_event *hwc = &event->hw;
-+	unsigned long irqflags;
-+	int idx = hwc->idx;
-+
-+	riscv_iommu_pmu_stop(event, PERF_EF_UPDATE);
-+
-+	raw_spin_lock_irqsave(&pmu->lock, irqflags);
-+	pmu->events[idx] = NULL;
-+	clear_bit(idx, pmu->used_counters);
-+	raw_spin_unlock_irqrestore(&pmu->lock, irqflags);
-+
-+	perf_event_update_userpage(event);
-+}
-+
-+/*
-+ * Pick the CPU perf assigns these events to: riscv_iommu_pmu_event_init()
-+ * sets event->cpu to pmu->on_cpu, and perf_pmu_migrate_context() moves
-+ * already-installed events to a new on_cpu when this changes. This has no
-+ * bearing on which CPU riscv_iommu_pmu_irq_handler() itself runs on -
-+ * pmu->lock serialises the two regardless of that, rather than requiring
-+ * them to run on the same CPU. Only consider CPUs which the irqchip
-+ * actually accepts - committing on_cpu to a CPU which irq_set_affinity()
-+ * then rejects would leave events bound to a CPU whose interrupt the
-+ * irqchip refuses to deliver.
-+ *
-+ * cpumask_local_spread() walks the online CPUs in order of NUMA distance from
-+ * the iommu, so the closest usable one wins.
-+ *
-+ * Returns the chosen CPU, or nr_cpu_ids if none could be used.
-+ */
-+static unsigned int riscv_iommu_pmu_bind_cpu(struct riscv_iommu_pmu *pmu,
-+					     unsigned int skip_cpu)
-+{
-+	unsigned int cpu, i;
-+
-+	for (i = 0; i < num_online_cpus(); i++) {
-+		cpu = cpumask_local_spread(i, pmu->numa_node);
-+		if (cpu == skip_cpu)
-+			continue;
-+		if (!irq_set_affinity(pmu->irq, cpumask_of(cpu)))
-+			return cpu;
-+	}
-+
-+	return nr_cpu_ids;
-+}
-+
-+static int riscv_iommu_pmu_online_cpu(unsigned int cpu, struct hlist_node *node)
-+{
-+	struct riscv_iommu_pmu *iommu_pmu;
-+	unsigned int target_cpu;
-+
-+	iommu_pmu = hlist_entry_safe(node, struct riscv_iommu_pmu, node);
-+
-+	if (READ_ONCE(iommu_pmu->on_cpu) != -1)
-+		return 0;
-+
-+	target_cpu = riscv_iommu_pmu_bind_cpu(iommu_pmu, nr_cpu_ids);
-+	if (target_cpu >= nr_cpu_ids) {
-+		/* on_cpu stays unset, so a later callback tries again */
-+		pr_debug("failed to point irq %u at any online cpu\n",
-+			 iommu_pmu->irq);
-+		return 0;
-+	}
-+
-+	WRITE_ONCE(iommu_pmu->on_cpu, target_cpu);
-+
-+	return 0;
-+}
-+
-+static int riscv_iommu_pmu_offline_cpu(unsigned int cpu, struct hlist_node *node)
-+{
-+	struct riscv_iommu_pmu *iommu_pmu;
-+	unsigned int target_cpu;
-+
-+	iommu_pmu = hlist_entry_safe(node, struct riscv_iommu_pmu, node);
-+
-+	if (READ_ONCE(iommu_pmu->on_cpu) != (int)cpu)
-+		return 0;
-+
-+	/*
-+	 * The last online CPU cannot be taken offline, and this callback runs
-+	 * before __cpu_disable() clears the outgoing CPU from cpu_online_mask,
-+	 * so there is always another online CPU to move to.
-+	 *
-+	 * Should that ever fail, unset on_cpu rather than leaving it pointing at
-+	 * the CPU which is going away. That keeps events from being bound to a
-+	 * dead CPU and lets riscv_iommu_pmu_online_cpu() pick again once a CPU
-+	 * comes back.
-+	 */
-+	target_cpu = riscv_iommu_pmu_bind_cpu(iommu_pmu, cpu);
-+	if (WARN_ON_ONCE(target_cpu >= nr_cpu_ids)) {
-+		WRITE_ONCE(iommu_pmu->on_cpu, -1);
-+	} else {
-+		WRITE_ONCE(iommu_pmu->on_cpu, target_cpu);
-+		/*
-+		 * perf_pmu_migrate_context() runs ->del() on cpu and ->add()
-+		 * on target_cpu with a synchronize_rcu() gap in between.
-+		 * riscv_iommu_pmu_irq_handler() can run concurrently with
-+		 * either step, on whichever CPU the interrupt physically
-+		 * lands on - pmu->lock serialises it against them instead of
-+		 * racing.
-+		 */
-+		perf_pmu_migrate_context(&iommu_pmu->pmu, cpu, target_cpu);
-+	}
-+
-+	return 0;
-+}
-+
-+/*
-+ * pmu->lock serialises this against ->add()/->del()/->start()/->stop(),
-+ * which can run on a different CPU than this while
-+ * riscv_iommu_pmu_offline_cpu() is migrating events across a
-+ * perf_pmu_migrate_context() call. ->read() does not take the lock: it
-+ * only calls riscv_iommu_pmu_update(), whose retry loop already resolves
-+ * concurrency against the set_period() done here.
-+ */
-+static irqreturn_t riscv_iommu_pmu_irq_handler(int irq, void *dev_id)
-+{
-+	struct riscv_iommu_pmu *pmu = (struct riscv_iommu_pmu *)dev_id;
-+	DECLARE_BITMAP(ovf_bitmap, BITS_PER_TYPE(u64));
-+	unsigned long irqflags;
-+	u32 ovf, idx, inhibit;
-+
-+	/* Check whether this interrupt is for PMU */
-+	if (!(readl_relaxed(pmu->reg + RISCV_IOMMU_REG_IPSR) & RISCV_IOMMU_IPSR_PMIP))
-+		return IRQ_NONE;
-+
-+	raw_spin_lock_irqsave(&pmu->lock, irqflags);
-+
-+	inhibit = riscv_iommu_pmu_stop_all(pmu);
-+
-+	ovf = readl(pmu->reg + RISCV_IOMMU_REG_IOCOUNTOVF);
-+	if (ovf) {
-+		bitmap_from_u64(ovf_bitmap, ovf);
-+
-+		for_each_set_bit(idx, ovf_bitmap, RISCV_IOMMU_HPM_COUNTER_NUM) {
-+			struct perf_event *event = pmu->events[idx];
-+
-+			/*
-+			 * pmu->events[idx] only means the counter is allocated,
-+			 * not that it is counting. A counter which has not been
-+			 * started has no valid prev_count to compute a delta
-+			 * against, and one which has been stopped must not be
-+			 * reprogrammed here. The overflow bit still has to be
-+			 * cleared below in either case, including when the event
-+			 * was already removed by riscv_iommu_pmu_del(),
-+			 * otherwise the interrupt would stay pending forever.
-+			 */
-+			if (event && !(event->hw.state & PERF_HES_STOPPED)) {
-+				riscv_iommu_pmu_update(event);
-+				riscv_iommu_pmu_set_period(event);
-+			}
-+
-+			riscv_iommu_pmu_clear_ovf(pmu, idx);
-+		}
-+	}
-+
-+	/* Clear performance monitoring interrupt pending bit */
-+	writel_relaxed(RISCV_IOMMU_IPSR_PMIP, pmu->reg + RISCV_IOMMU_REG_IPSR);
-+
-+	riscv_iommu_pmu_start_all(pmu, inhibit);
-+
-+	raw_spin_unlock_irqrestore(&pmu->lock, irqflags);
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static unsigned int riscv_iommu_pmu_get_irq_num(struct riscv_iommu_device *iommu)
-+{
-+	/* Reuse ICVEC.CIV mask for all interrupt vectors mapping */
-+	int vec = (iommu->icvec >> (RISCV_IOMMU_INTR_PM * 4)) & RISCV_IOMMU_ICVEC_CIV;
-+
-+	return iommu->irqs[vec];
-+}
-+
-+static int riscv_iommu_pmu_request_irq(struct auxiliary_device *auxdev,
-+				       struct riscv_iommu_device *iommu,
-+				       struct riscv_iommu_pmu *pmu)
-+{
-+	/*
-+	 * Bind the handler to the auxiliary device, which is the same devres
-+	 * scope that frees @pmu. Requesting it on the parent iommu device
-+	 * would keep the handler registered with a dangling dev_id once @pmu
-+	 * is freed, either on a later probe failure or on device removal.
-+	 *
-+	 * IRQF_SHARED is required because ICVEC maps the performance
-+	 * monitoring source onto one of the vectors the iommu driver already
-+	 * requested for its queues whenever fewer than RISCV_IOMMU_INTR_COUNT
-+	 * vectors are available. Both requesters have to agree on sharing, or
-+	 * this one is rejected with -EBUSY. IRQF_ONESHOT does not have to be
-+	 * matched by hand: devm_request_irq() adds IRQF_COND_ONESHOT, so this
-+	 * handler adopts whatever the first requester picked.
-+	 */
-+	return devm_request_irq(&auxdev->dev, pmu->irq, riscv_iommu_pmu_irq_handler,
-+				IRQF_SHARED | IRQF_NOBALANCING,
-+				dev_name(iommu->dev), pmu);
-+}
-+
-+static void riscv_iommu_pmu_remove_cpuhp_instance(void *data)
-+{
-+	struct riscv_iommu_pmu *pmu = data;
-+
-+	cpuhp_state_remove_instance_nocalls(cpuhp_state, &pmu->node);
-+}
-+
-+static void riscv_iommu_pmu_do_unregister(void *data)
-+{
-+	struct riscv_iommu_pmu *pmu = data;
-+
-+	perf_pmu_unregister(&pmu->pmu);
-+}
-+
-+static int riscv_iommu_pmu_probe(struct auxiliary_device *auxdev,
-+				 const struct auxiliary_device_id *id)
-+{
-+	struct riscv_iommu_device *iommu_dev = dev_get_platdata(&auxdev->dev);
-+	struct riscv_iommu_pmu *iommu_pmu;
-+	void __iomem *addr;
-+	unsigned int idx;
-+	char *name;
-+	u32 inhibit;
-+	int ret;
-+
-+	iommu_pmu = devm_kzalloc(&auxdev->dev, sizeof(*iommu_pmu), GFP_KERNEL);
-+	if (!iommu_pmu)
-+		return -ENOMEM;
-+
-+	iommu_pmu->reg = iommu_dev->reg;
-+
-+	raw_spin_lock_init(&iommu_pmu->lock);
-+
-+	/*
-+	 * Which counters exist and how wide each one is are both
-+	 * hardware-implemented, detected by writing 1s and reading back which
-+	 * bits stuck.
-+	 *
-+	 * Section 6.22 defines each IOHPMCTR as an independent 64-bit WARL
-+	 * register, so neither the set of implemented counters nor their widths
-+	 * can be assumed uniform. Keep an implemented-counter bitmap and a
-+	 * per-counter mask rather than a count and one shared width: a
-+	 * consecutive index bound derived from a popcount would both hand out
-+	 * counters which do not exist and leave overflows of implemented
-+	 * counters above the bound unacknowledged, which makes pmip reassert
-+	 * forever.
-+	 *
-+	 * The per-counter masks are still assumed to be a contiguous run of
-+	 * bits starting at bit 0, which is what riscv_iommu_pmu_update() relies
-+	 * on when it masks the difference of two samples to handle wraparound.
-+	 *
-+	 * The specification requires a minimum of one programmable event
-+	 * counter besides the cycles counter when capabilities.HPM is 1, which
-+	 * is the condition under which this device is created. So a compliant
-+	 * implementation always provides at least two counters, and both
-+	 * IOHPMCYCLES and the first IOHPMCTR are always present. A readback
-+	 * which says otherwise is non-compliant hardware and is rejected rather
-+	 * than worked around.
-+	 */
-+	addr = iommu_pmu->reg + RISCV_IOMMU_REG_IOCOUNTINH;
-+	writel(RISCV_IOMMU_IOCOUNTINH_HPM, addr);
-+	inhibit = readl(addr);
-+	bitmap_from_arr32(iommu_pmu->implemented_counters, &inhibit,
-+			  RISCV_IOMMU_HPM_COUNTER_NUM);
-+
-+	/* Bit 63 of IOHPMCYCLES is the OF bit, not part of the counter */
-+	addr = iommu_pmu->reg + RISCV_IOMMU_REG_IOHPMCYCLES;
-+	riscv_iommu_pmu_writeq(RISCV_IOMMU_IOHPMCYCLES_COUNTER, addr);
-+	iommu_pmu->cntr_mask[RISCV_IOMMU_HPM_CYCLE_IDX] =
-+		riscv_iommu_pmu_readq(addr) & RISCV_IOMMU_IOHPMCYCLES_COUNTER;
-+	if (!iommu_pmu->cntr_mask[RISCV_IOMMU_HPM_CYCLE_IDX]) {
-+		dev_err(&auxdev->dev, "cycles counter is not implemented\n");
-+		return -ENODEV;
-+	}
-+
-+	/* Detect the width of each implemented event counter individually */
-+	idx = RISCV_IOMMU_HPM_CYCLE_IDX + 1;
-+	for_each_set_bit_from(idx, iommu_pmu->implemented_counters,
-+			      RISCV_IOMMU_HPM_COUNTER_NUM) {
-+		addr = iommu_pmu->reg + RISCV_IOMMU_REG_IOHPMCTR(idx);
-+		riscv_iommu_pmu_writeq(RISCV_IOMMU_IOHPMCTR_COUNTER, addr);
-+		iommu_pmu->cntr_mask[idx] = riscv_iommu_pmu_readq(addr);
-+
-+		/* A counter with no writable bits is not really there */
-+		if (!iommu_pmu->cntr_mask[idx])
-+			clear_bit(idx, iommu_pmu->implemented_counters);
-+	}
-+
-+	iommu_pmu->num_counters = bitmap_weight(iommu_pmu->implemented_counters,
-+						RISCV_IOMMU_HPM_COUNTER_NUM);
-+	if (iommu_pmu->num_counters < 2) {
-+		dev_err(&auxdev->dev, "hardware reports %u counter(s)\n",
-+			iommu_pmu->num_counters);
-+		return -ENODEV;
-+	}
-+
-+	bitmap_to_arr32(&iommu_pmu->inhibit_all, iommu_pmu->implemented_counters,
-+			RISCV_IOMMU_HPM_COUNTER_NUM);
-+
-+	iommu_pmu->pmu = (struct pmu) {
-+		.module		= THIS_MODULE,
-+		.parent		= &auxdev->dev,
-+		.task_ctx_nr	= perf_invalid_context,
-+		.event_init	= riscv_iommu_pmu_event_init,
-+		.add		= riscv_iommu_pmu_add,
-+		.del		= riscv_iommu_pmu_del,
-+		.start		= riscv_iommu_pmu_start,
-+		.stop		= riscv_iommu_pmu_stop,
-+		.read		= riscv_iommu_pmu_read,
-+		.attr_groups	= riscv_iommu_pmu_attr_grps,
-+		.capabilities	= PERF_PMU_CAP_NO_EXCLUDE,
-+	};
-+
-+	auxiliary_set_drvdata(auxdev, iommu_pmu);
-+
-+	name = devm_kasprintf(&auxdev->dev, GFP_KERNEL,
-+			      "riscv_iommu_pmu_%u", auxdev->id);
-+	if (!name) {
-+		dev_err(&auxdev->dev, "Failed to create name riscv_iommu_pmu_%u\n",
-+			auxdev->id);
-+		return -ENOMEM;
-+	}
-+
-+	iommu_pmu->numa_node = dev_to_node(iommu_dev->dev);
-+	iommu_pmu->irq = riscv_iommu_pmu_get_irq_num(iommu_dev);
-+
-+	ret = riscv_iommu_pmu_request_irq(auxdev, iommu_dev, iommu_pmu);
-+	if (ret) {
-+		dev_err(&auxdev->dev, "Failed to request irq %s: %d\n", name, ret);
-+		return ret;
-+	}
-+
-+	/*
-+	 * Bind all events to the same cpu context to avoid race enabling.
-+	 * riscv_iommu_pmu_online_cpu() picks the CPU and sets the irq
-+	 * affinity for us once the instance is registered below.
-+	 */
-+	iommu_pmu->on_cpu = -1;
-+
-+	ret = cpuhp_state_add_instance(cpuhp_state, &iommu_pmu->node);
-+	if (ret) {
-+		dev_err(&auxdev->dev, "Failed to register hotplug %s: %d\n", name, ret);
-+		return ret;
-+	}
-+
-+	ret = perf_pmu_register(&iommu_pmu->pmu, name, -1);
-+	if (ret) {
-+		dev_err(&auxdev->dev, "Failed to register %s: %d\n", name, ret);
-+		cpuhp_state_remove_instance_nocalls(cpuhp_state, &iommu_pmu->node);
-+		return ret;
-+	}
-+
-+	ret = devm_add_action_or_reset(&auxdev->dev,
-+				       riscv_iommu_pmu_do_unregister,
-+				       iommu_pmu);
-+	if (ret) {
-+		/*
-+		 * The action above has already run, so the pmu is unregistered
-+		 * and pmu->cpu_pmu_context is freed. Drop the cpuhp instance
-+		 * with _nocalls() so the teardown callback cannot reach it, and
-+		 * so it does not outlive iommu_pmu on the global cpuhp list.
-+		 */
-+		cpuhp_state_remove_instance_nocalls(cpuhp_state, &iommu_pmu->node);
-+		return ret;
-+	}
-+
-+	/*
-+	 * Registered after do_unregister so it runs first (LIFO) on unbind:
-+	 * the cpuhp instance must be gone before perf_pmu_unregister() runs.
-+	 */
-+	ret = devm_add_action_or_reset(&auxdev->dev,
-+				       riscv_iommu_pmu_remove_cpuhp_instance,
-+				       iommu_pmu);
-+	if (ret)
-+		return ret;
-+
-+	/*
-+	 * The PMU name only carries the aux dev id, not the iommu dev name, so
-+	 * find the iommu dev name here to map this PMU back to its iommu dev.
-+	 */
-+	dev_info(&auxdev->dev, "%s: Registered with %u counters (iommu %s)\n",
-+		 name, iommu_pmu->num_counters, dev_name(iommu_dev->dev));
-+
-+	return 0;
-+}
-+
-+static const struct auxiliary_device_id riscv_iommu_pmu_id_table[] = {
-+	{ .name = "riscv-iommu.pmu" },
-+	{}
-+};
-+MODULE_DEVICE_TABLE(auxiliary, riscv_iommu_pmu_id_table);
-+
-+static struct auxiliary_driver iommu_pmu_driver = {
-+	.driver = {
-+		.suppress_bind_attrs = true,
-+	},
-+	.probe		= riscv_iommu_pmu_probe,
-+	.id_table	= riscv_iommu_pmu_id_table,
-+};
-+
-+static int __init riscv_iommu_pmu_init(void)
-+{
-+	int ret;
-+
-+	cpuhp_state = cpuhp_setup_state_multi(CPUHP_AP_ONLINE_DYN,
-+					      "perf/riscv/iommu:online",
-+					      riscv_iommu_pmu_online_cpu,
-+					      riscv_iommu_pmu_offline_cpu);
-+	if (cpuhp_state < 0)
-+		return cpuhp_state;
-+
-+	ret = auxiliary_driver_register(&iommu_pmu_driver);
-+	if (ret)
-+		cpuhp_remove_multi_state(cpuhp_state);
-+
-+	return ret;
-+}
-+module_init(riscv_iommu_pmu_init);
-+
-+MODULE_DESCRIPTION("RISC-V IOMMU PMU");
-+MODULE_LICENSE("GPL");
 -- 
-2.43.7
+Cheers,
 
+David
