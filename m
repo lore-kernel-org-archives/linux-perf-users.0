@@ -1,258 +1,244 @@
-Received: from LO2P265CU024.outbound.protection.outlook.com (mail-uksouthazon11021136.outbound.protection.outlook.com [52.101.95.136])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CC483E316B;
-	Fri,  2 Oct 2026 21:31:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.95.136
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790976714; cv=fail; b=VHaRAIqZRMnp4oWkfjvPa1/y6HdO1b7IOfUqv9ihjf7mkPCfU48X75qYQnNnFult9+r+RPJLTh5ljWmFdViose/AfgdiLe/L/bP6YqPfq8xotKs7u5SOtGIBsIMCp2QgfibjDeuPUK91y6OXMuOhj9nbVICLnTk8cSrtRKGi9jA=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790976714; c=relaxed/simple;
-	bh=Q9+ph5kGSQRbYvw8rq8nkycPe0eSh7I01fpVHKxaujI=;
-	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=AK9N6FNR/igtB9ldeZdgAR5W5LBFXU/yAP5Sbx17X8ttV3T8eM2lW393KyZNEUfgMAR79ASgN85EItHfsplvneRA7weVryBbNvxGDzdQ7oZm9+j/iXgG2SAWLd/HHeTHgw9Ke8hnK4gZqLwgYCamnFGdmPFTxGw3eXhAkeQ3neE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=atomlin.com; spf=pass smtp.mailfrom=atomlin.com; arc=fail smtp.client-ip=52.101.95.136
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=atomlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=atomlin.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=PkgsYBUEiTdimLYre2sNesvmIUmdTfXX2XJcECxLGw2hRBeAUZQYmfv10FtqUJSdej/0bXYS+Y18Sbnt00pP6EDtSKmt3x1SwH/qFh8E68xTQa5W7YL3177XQmEpxaynB6dFqpojZRUm5dajvTxKwYQUIpe/jX08h5O90uqkFULM//woyUvPAk+SpOpUMiFY2ms1imar0iu1YgvIxy/rD7NRGaQvv6eVDHquY/wiurYR5UNYacNGtvQRA8TJGCaZZ8ribhiDNaIFP6WSLCHRT84u+NdcpI6JCEkamQuklealPJNR3AShKI0q0ox+2+LfgHeSI9ppDmPUKlglJNjJ2Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001; h=From:Date:Subject:Message-ID:MIME-Version;
- bh=AEY9HUsxJ+b4G7usFFn6f1hdprCWJSIMXifOADMEcgk=;
- b=sbC5xONavaJVx/agDwYXUsbO/woz00pF69T2O8v8RYNg45bKWgDl8E9+Zpt/zYoqx/OldtbnT5uOUySfzzHO1m+NeA9ip4DxKsk3Oc0HV03AVsn23oQUQM4bjev4+kwyRk3cdkkahpHLxou1hL3nHGnwhE9zdHUr6ck1yQa8s4yPPPqGR8SQBumhUX4cim5Om3r53iSeEkG6B4JbyM+KEKomJRXG+Y9J3jfFTxOg9g4MNNwu5NhD47tpELlLEMBl/EfYRq4l3dAPI8XHT/gKhNbysVQTzN2bO5Yq6RayDQYzp27LWxKXOhL4LVVtjde9M3u5iT7TALspOtsqzcaS3w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=atomlin.com; dmarc=pass action=none header.from=atomlin.com;
- dkim=pass header.d=atomlin.com; arc=none
-Authentication-Results: mx.microsoft.com 1; dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=atomlin.com;
-Received: from CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM (2603:10a6:400:183::5)
- by CW1P123MB7791.GBRP123.PROD.OUTLOOK.COM (2603:10a6:400:248::7) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.472.19; Fri, 2 Oct
- 2026 21:31:49 +0000
-Received: from CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM
- ([fe80::cec4:77ab:262e:d230]) by CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM
- ([fe80::cec4:77ab:262e:d230%4]) with mapi id 15.21.0472.016; Fri, 2 Oct 2026
- 21:31:48 +0000
-From: Aaron Tomlin <atomlin@atomlin.com>
-To: peterz@infradead.org,
-	mingo@redhat.com,
-	acme@kernel.org,
-	namhyung@kernel.org
-Cc: mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com,
-	jolsa@kernel.org,
-	irogers@google.com,
-	adrian.hunter@intel.com,
-	atomlin@atomlin.com,
-	linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] perf trace: Support --bitmask-list with --libtraceevent
-Date: Fri,  2 Oct 2026 17:31:45 -0400
-Message-ID: <20261002213145.333100-1-atomlin@atomlin.com>
-X-Mailer: git-send-email 2.55.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: MN0PR05CA0023.namprd05.prod.outlook.com
- (2603:10b6:208:52c::14) To CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM
- (2603:10a6:400:183::5)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07FE638D3EE;
+	Fri,  2 Oct 2026 21:44:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1790977473; cv=none; b=hopvbfAqcuHipWWUip+75f0ti+bGsHLXcSbOVdDU5SnaoucHutXuMHHOkMq7nAStXDjMGgLhKUUHF156U84cqoPRWsr5HF+eRv7dH897eqhta/1jxTVG6l4Z++/qwzQPf8nJjc44YQdW3tz8S/7zpSlGHbLAN+9TMsXIIluK/nE=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1790977473; c=relaxed/simple;
+	bh=WjY9uuASAWcKW+A9BcEvlS/UD6uyh5fsFHFWq4cQqN4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=DHRc51HUOy3rKlvq+O+F2y/1TmKk6+7yGJkDBJNEEIuZ9famyEYIkIJzbQUem2H934F+poZX4TGgJAumBHIoe+wIFGZxZ/eskKOo05WVjikIyJWNzDxHCn2fJg4XOtdB2IeDar+yPdlUEW6MKdJYEOZULuPGD/BGwvMmx/1kenI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AE3K2Vl6; arc=none smtp.client-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AE3K2Vl6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 796E11F000FF;
+	Fri,  2 Oct 2026 21:43:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1790977471;
+	bh=OA3SWpmyamGsgLm56ptL6ZZTSR6Zq7plBZES8synHmE=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=AE3K2Vl6OU3amVn9J34OyDXo5u1hI3Mgm76Co3njixBfbVl64pXy3KEbB1jH8gRje
+	 QzEjOx/ZmPa7dt1h1ln0FZNOs9B5d7jj1GcFevU7BKECR4TXLrzS9x+6/afNqFrGT7
+	 yNEKJavEShFhBifEUwBHpczx9wfA7LjwqY6fcQZfjIOxWvWmDdWdPhs8aj0q2SlDQn
+	 FYkHpHYM2SXBmscPVtj/tf8Xdi53y05kFVkFgW6wFqz/77U6tWGH7KCPpGkArViUfj
+	 tNE9xVruf47GFQGiBY8JlBhcz1AvwBdFtJMDo+bZCZePjO602Qjz/uH3K5WiBZ4yUf
+	 +Tq6ReP7g1HxA==
+Message-ID: <a202523f-a696-4a8e-be77-7170c3913cdf@kernel.org>
+Date: Fri, 2 Oct 2026 23:43:53 +0200
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CWLP123MB6607:EE_|CW1P123MB7791:EE_
-X-MS-Office365-Filtering-Correlation-Id: 4ef0e1a2-c7fc-4634-1e62-08df20cc90c3
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|23010399003|366016|7416014|376014|18002099003|10067099003|3023799007|56012099006|6133799003;
-X-Microsoft-Antispam-Message-Info:
-	UPPLv4KwL9mRGi3GuKEPJ8BzzLdgv8sFSgcLWs9D+sWIRGR8NufQ7U9Blwq7weJ9/k/l5gvAX4/nzBhpMQoJDwmyUAPSYjJEg+SlXmzfi+LID61oz7sLMjC+4+6k7d0BsTJfHhS2JYyCgPyGGWsgZ0tGHzd+wRQEMpQLkhk1LpvcoZVvCSTZncZ2fKFww2n7hXEs9/lwTwoG19IETd/maFN13XV6BfyWpP+uxkt2az5Gog6m0ZQPQ3MPJxWmHjdBQbbjp58GuI3l2uNgzUvkKM2LpNqTl4kGqb7nDHE0xmJxgXgHoOK0h1YrwTjxTOOsia+0VGxSV9n97DBecW9uao+0qfpIapAuxYy/hu0TrNhCb5XzE50RSkwhyMzhUOxAFOlHPR1eA8op5SuNpoMJeDaIs6rPj31jwKBBPYhNoTA28pArxLgqCEKIqgu58G1nLqrZUANl78u74EJhrgab3/4jAxSpTlQ/oJ5+GMs4+FlViB2nBzhymOXRspxqCUzk3upa7MkJAwEiyld3hsirG43cxIa6CTqdSNE/aLExM62insBLefm3EsMNR3Dd9KOcm2/4dNMSysvpxPBm50tmdBS2BcCViz6SMomiVo6koVkXLAJr4VRXCjEHgo6foBXDVVmu19+PC4j0BrZxo/vFUyf4+hItvIc6JANbT4wIJUE=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(23010399003)(366016)(7416014)(376014)(18002099003)(10067099003)(3023799007)(56012099006)(6133799003);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?g+r/wr1n2spx/EI25bYGmPaj1tu3i5znTl5j4lT/7JtUZHMbvxXcRorCpnot?=
- =?us-ascii?Q?NOD6VlTaUinPdTHipsZfME5MASo9ieS0qOWlJiX47u1lH51RRPTXCJbjCyX+?=
- =?us-ascii?Q?v/Mcv1DwepaNVOZpiZUCQGPhvCXO8w22l1QI80g/RHUEUX4kbMtq2gvp8Msu?=
- =?us-ascii?Q?O3l8BzCUzrM9veCIx99ufp2WD3H7XY166I7g18uWfX5aCjB09BvwkNKM+xbS?=
- =?us-ascii?Q?o1L8eNWn8LRW36ghW12waQA77WGBC0hUd61TC/LqfaVcEB905c5vf+7jyiRq?=
- =?us-ascii?Q?NLAeAxIrczMZxjHixIBMgDVPeVtsx0d+tqszQ7HY9Igiomc8coVVtdIw32Cn?=
- =?us-ascii?Q?LeD5xpmr3I39FyrLLcx9DR6PC3Qm874IXTCdxi45qBbVU6Bv+hRONb8YeVPr?=
- =?us-ascii?Q?+Ne79W/J3ZaKd7t0UNXQd2OSP09LhrvJBuPgA+04zbo9eZmjY4CwQ/dapR4T?=
- =?us-ascii?Q?ui+euHWQ6tt3D/fxo9PEetn7t/J/XFqxNDpYNkR/G1AgPBKq6atj8EqeJ9vt?=
- =?us-ascii?Q?AoP4I59X0hwgT8jENZpxdDsR9VO4djtr787JiKi0rOAbySto2HfLb+qI3jar?=
- =?us-ascii?Q?PNyU/t1fvuYhWVmLXL3FOO5V8i+P1jMonIDYxzwSrXSO8FmgUKDGTOCISWjW?=
- =?us-ascii?Q?vhbpAGlyxeosZrJMor1fBLkHnq1B2WvmM1nCKsql+9iuaRNxXAOSUBh9w9Go?=
- =?us-ascii?Q?3/UN0a6uxlVtOaAgYQFSaxAdibSiTEs/FLP0WVq7mnD/WRNeS0ROn2AUrfbb?=
- =?us-ascii?Q?C4clIIx0LLMztJblneHxPsDufSfo5okRgtaE9yRscDU6waiEyzCX7AhOj8ik?=
- =?us-ascii?Q?ov9YRSiHCBaXAhmVfFyN934wCCtg6h4mfuD78TWWJdNWCt69PuQiPqSaU+lg?=
- =?us-ascii?Q?6dKdBZgPbFCCqC6VzqO0n7TQVZRoynn8IeRpveVWsh1t+YPoc1uNcDCPc+Mu?=
- =?us-ascii?Q?rbwiah/5ZTJO+l0LzK4IhxHDJ/Cr8iTfwlq8OG2wG10a4dlcnHAwJ87Gsx+N?=
- =?us-ascii?Q?GzIRkNHpm8yVuFEBalDyvA1IoGpqFFBF8gUP9AJgeJx0HQibXbmWMy1/xCml?=
- =?us-ascii?Q?b7hurO84gUfSF9zisOPVyUTe5Zv5pMcgfTexDGQhPy9C7bMKQx2GBv9czYAf?=
- =?us-ascii?Q?uedOVMbOYDqCMH8hbycwfSPhuqIJvkwgcGgJiReJhgZbMyBW2A8ISGQXL6+3?=
- =?us-ascii?Q?W3eq8bRG8/KjcPXUbCK1Pb1WWNUiD1sKXK+RaqLnc+3xuwtzgflxA+6o46Na?=
- =?us-ascii?Q?PYNypheL7Pid+saJtVy1qoL8KYlBaC/s+FCLkzU4852Yq+wd0Mx+Axd1RDOo?=
- =?us-ascii?Q?piAoGAUCmNKZVg6rbjcvxkAltPrelTUiZ/Y2W3o8ZunyoVZYQUJXyKk9kmaR?=
- =?us-ascii?Q?DiHJOIILWTsjsq8esjRJYOYabxsP87AOp4V4i0phK3uTKsJbYUYX9LQwYF3N?=
- =?us-ascii?Q?qjWvuEL120G2jFEPfMVNOl8FXAfWJai8wu861SM+F4GzNH0RLDE1nygt01PJ?=
- =?us-ascii?Q?9ndZ2mRBEuYFusxJWZyFH0Y//DHjVuo5N/V9h6SH3fitsYaLwI8kyTdXyL/z?=
- =?us-ascii?Q?ZC8od4NCpmzqnhpSal3jc4tFzr2MowRufO1zhHGFLp38D5e3rc45ZVJ5KWHI?=
- =?us-ascii?Q?m1VsP4/ROziawHRAnVasIMbeZN++OsiddKJhYGyXxc36WIPanZ+1zigHb/XW?=
- =?us-ascii?Q?D5UYdDX4LBZrgRcykdQyf54QxVuiG43dLLIQtfK5g5L0PxH1yOvCg1pBQNTN?=
- =?us-ascii?Q?ufj/6YKW3g=3D=3D?=
-X-OriginatorOrg: atomlin.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4ef0e1a2-c7fc-4634-1e62-08df20cc90c3
-X-MS-Exchange-CrossTenant-AuthSource: CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Oct 2026 21:31:48.6468
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: e6a32402-7d7b-4830-9a2b-76945bbbcb57
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: hqPbp+0cOeLV77LyGivVNu4ONg57CF+8wDvs87PgSvNWFhvy/lryfROgPm1pjShnDolYExJi0egH47hrBrqN0w==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CW1P123MB7791
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 31/40] mm/vma: introduce vma[_flags]_is_persistent()
+To: "Lorenzo Stoakes (ARM)" <ljs@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+ "Liam R. Howlett" <liam@infradead.org>, Vlastimil Babka <vbabka@kernel.org>,
+ Jann Horn <jannh@google.com>, Pedro Falcato <pfalcato@suse.de>,
+ Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>,
+ Michal Hocko <mhocko@suse.com>, Jonathan Corbet <corbet@lwn.net>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>,
+ Jason Gunthorpe <jgg@ziepe.ca>, Leon Romanovsky <leon@kernel.org>,
+ Paul Moore <paul@paul-moore.com>,
+ Stephen Smalley <stephen.smalley.work@gmail.com>,
+ Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+ Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
+ Andrii Nakryiko <andrii@kernel.org>, Eduard Zingerman <eddyz87@gmail.com>,
+ Kumar Kartikeya Dwivedi <memxor@gmail.com>, Zi Yan <ziy@nvidia.com>,
+ Baolin Wang <baolin.wang@linux.alibaba.com>,
+ Nico Pache <nico.pache@linux.dev>, Ryan Roberts <ryan.roberts@arm.com>,
+ Dev Jain <dev.jain@arm.com>, Barry Song <baohua@kernel.org>,
+ Lance Yang <lance.yang@linux.dev>, Usama Arif <usama.arif@linux.dev>,
+ Kiryl Shutsemau <kas@kernel.org>, Doug Gilbert <dgilbert@interlog.com>,
+ "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
+ "Martin K. Petersen" <mkp@kernel.org>, Jaya Kumar <jayalk@intworks.biz>,
+ Simona Vetter <simona@ffwll.ch>, Helge Deller <deller@gmx.de>,
+ Sebastian Reichel <sre@kernel.org>, John Hubbard <jhubbard@nvidia.com>,
+ Peter Xu <peterx@redhat.com>, Masami Hiramatsu <mhiramat@kernel.org>,
+ Oleg Nesterov <oleg@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
+ Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ x86@kernel.org, Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Rik van Riel <riel@surriel.com>, Harry Yoo <harry@kernel.org>,
+ Juri Lelli <juri.lelli@redhat.com>,
+ Vincent Guittot <vincent.guittot@linaro.org>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ David Airlie <airlied@gmail.com>, Will Deacon <will@kernel.org>,
+ "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>, Nick Piggin
+ <npiggin@gmail.com>, Arnd Bergmann <arnd@arndb.de>,
+ Muchun Song <muchun.song@linux.dev>, Oscar Salvador <osalvador@suse.de>,
+ "Matthew Wilcox (Oracle)" <willy@infradead.org>, Jan Kara <jack@suse.cz>,
+ Marc Zyngier <maz@kernel.org>, Oliver Upton <oupton@kernel.org>,
+ Catalin Marinas <catalin.marinas@arm.com>,
+ Madhavan Srinivasan <maddy@linux.ibm.com>, Anup Patel <anup@brainfault.org>,
+ Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>,
+ Albert Ou <aou@eecs.berkeley.edu>,
+ Christian Borntraeger <borntraeger@linux.ibm.com>,
+ Janosch Frank <frankja@linux.ibm.com>,
+ Claudio Imbrenda <imbrenda@linux.ibm.com>,
+ Alexander Gordeev <agordeev@linux.ibm.com>,
+ Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
+ Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
+ "David S. Miller" <davem@davemloft.net>,
+ Andreas Larsson <andreas@gaisler.com>,
+ Alexander Viro <viro@zeniv.linux.org.uk>,
+ Christian Brauner <brauner@kernel.org>,
+ Matthew Brost <matthew.brost@intel.com>,
+ Joshua Hahn <joshua.hahnjy@gmail.com>, Rakie Kim <rakie.kim@sk.com>,
+ Byungchul Park <byungchul@sk.com>, Gregory Price <gourry@gourry.net>,
+ Ying Huang <ying.huang@linux.alibaba.com>,
+ Alistair Popple <apopple@nvidia.com>, Chris Li <chrisl@kernel.org>,
+ Kairui Song <kasong@tencent.com>, Kemeng Shi <shikemeng@huaweicloud.com>,
+ Nhat Pham <nphamcs@gmail.com>, Baoquan He <baoquan.he@linux.dev>,
+ Youngjun Park <youngjun.park@lge.com>, Johannes Weiner <hannes@cmpxchg.org>,
+ Qi Zheng <qi.zheng@linux.dev>, Shakeel Butt <shakeel.butt@linux.dev>,
+ Axel Rasmussen <axelrasmussen@google.com>, Yuanchu Xie <yuanchu@google.com>,
+ Wei Xu <weixugc@google.com>, Chengming Zhou <chengming.zhou@linux.dev>,
+ Michal Hocko <mhocko@kernel.org>, Miklos Szeredi <miklos@szeredi.hu>,
+ Xu Xin <xu.xin@linux.dev>, linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+ linux-doc@vger.kernel.org, linux-usb@vger.kernel.org,
+ linux-rdma@vger.kernel.org, selinux@vger.kernel.org,
+ linux-sound@vger.kernel.org, bpf@vger.kernel.org,
+ linux-scsi@vger.kernel.org, linux-fbdev@vger.kernel.org,
+ dri-devel@lists.freedesktop.org, linux-trace-kernel@vger.kernel.org,
+ linux-perf-users@vger.kernel.org, linux-arch@vger.kernel.org,
+ linux-fsdevel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ kvmarm@lists.linux.dev, linuxppc-dev@lists.ozlabs.org, kvm@vger.kernel.org,
+ kvm-riscv@lists.infradead.org, linux-riscv@lists.infradead.org,
+ linux-s390@vger.kernel.org, sparclinux@vger.kernel.org,
+ fuse-devel@lists.linux.dev
+References: <20260917-b4-mmap-prepare-vma-flag-sanify-v3-0-4583d8a23bca@kernel.org>
+ <20260917-b4-mmap-prepare-vma-flag-sanify-v3-31-4583d8a23bca@kernel.org>
+ <9bbdf4e8-6984-4477-a183-f0b236047381@kernel.org>
+ <3557015d-23dd-41ef-9832-78b58587f3f4@kernel.org>
+ <81e1e5ae-0aab-4584-81e6-3fc9c2634d07@kernel.org> <ar-b_Ug__TBzIZsb@gremlin>
+ <2e5a4e6c-8f9c-4050-8998-454b83f4823b@kernel.org> <ar-luB9QVCRshtIw@gremlin>
+ <3387642b-c39f-4f19-ba0c-267bbd2fe91d@kernel.org> <ar-ux41ILjI1Px9S@gremlin>
+From: "David Hildenbrand (Arm)" <david@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=david@kernel.org; keydata=
+ xsFNBFXLn5EBEAC+zYvAFJxCBY9Tr1xZgcESmxVNI/0ffzE/ZQOiHJl6mGkmA1R7/uUpiCjJ
+ dBrn+lhhOYjjNefFQou6478faXE6o2AhmebqT4KiQoUQFV4R7y1KMEKoSyy8hQaK1umALTdL
+ QZLQMzNE74ap+GDK0wnacPQFpcG1AE9RMq3aeErY5tujekBS32jfC/7AnH7I0v1v1TbbK3Gp
+ XNeiN4QroO+5qaSr0ID2sz5jtBLRb15RMre27E1ImpaIv2Jw8NJgW0k/D1RyKCwaTsgRdwuK
+ Kx/Y91XuSBdz0uOyU/S8kM1+ag0wvsGlpBVxRR/xw/E8M7TEwuCZQArqqTCmkG6HGcXFT0V9
+ PXFNNgV5jXMQRwU0O/ztJIQqsE5LsUomE//bLwzj9IVsaQpKDqW6TAPjcdBDPLHvriq7kGjt
+ WhVhdl0qEYB8lkBEU7V2Yb+SYhmhpDrti9Fq1EsmhiHSkxJcGREoMK/63r9WLZYI3+4W2rAc
+ UucZa4OT27U5ZISjNg3Ev0rxU5UH2/pT4wJCfxwocmqaRr6UYmrtZmND89X0KigoFD/XSeVv
+ jwBRNjPAubK9/k5NoRrYqztM9W6sJqrH8+UWZ1Idd/DdmogJh0gNC0+N42Za9yBRURfIdKSb
+ B3JfpUqcWwE7vUaYrHG1nw54pLUoPG6sAA7Mehl3nd4pZUALHwARAQABzS5EYXZpZCBIaWxk
+ ZW5icmFuZCAoQ3VycmVudCkgPGRhdmlkQGtlcm5lbC5vcmc+wsGQBBMBCAA6AhsDBQkmWAik
+ AgsJBBUKCQgCFgICHgUCF4AWIQQb2cqtc1xMOkYN/MpN3hD3AP+DWgUCaYJt/AIZAQAKCRBN
+ 3hD3AP+DWriiD/9BLGEKG+N8L2AXhikJg6YmXom9ytRwPqDgpHpVg2xdhopoWdMRXjzOrIKD
+ g4LSnFaKneQD0hZhoArEeamG5tyo32xoRsPwkbpIzL0OKSZ8G6mVbFGpjmyDLQCAxteXCLXz
+ ZI0VbsuJKelYnKcXWOIndOrNRvE5eoOfTt2XfBnAapxMYY2IsV+qaUXlO63GgfIOg8RBaj7x
+ 3NxkI3rV0SHhI4GU9K6jCvGghxeS1QX6L/XI9mfAYaIwGy5B68kF26piAVYv/QZDEVIpo3t7
+ /fjSpxKT8plJH6rhhR0epy8dWRHk3qT5tk2P85twasdloWtkMZ7FsCJRKWscm1BLpsDn6EQ4
+ jeMHECiY9kGKKi8dQpv3FRyo2QApZ49NNDbwcR0ZndK0XFo15iH708H5Qja/8TuXCwnPWAcJ
+ DQoNIDFyaxe26Rx3ZwUkRALa3iPcVjE0//TrQ4KnFf+lMBSrS33xDDBfevW9+Dk6IISmDH1R
+ HFq2jpkN+FX/PE8eVhV68B2DsAPZ5rUwyCKUXPTJ/irrCCmAAb5Jpv11S7hUSpqtM/6oVESC
+ 3z/7CzrVtRODzLtNgV4r5EI+wAv/3PgJLlMwgJM90Fb3CB2IgbxhjvmB1WNdvXACVydx55V7
+ LPPKodSTF29rlnQAf9HLgCphuuSrrPn5VQDaYZl4N/7zc2wcWM7BTQRVy5+RARAA59fefSDR
+ 9nMGCb9LbMX+TFAoIQo/wgP5XPyzLYakO+94GrgfZjfhdaxPXMsl2+o8jhp/hlIzG56taNdt
+ VZtPp3ih1AgbR8rHgXw1xwOpuAd5lE1qNd54ndHuADO9a9A0vPimIes78Hi1/yy+ZEEvRkHk
+ /kDa6F3AtTc1m4rbbOk2fiKzzsE9YXweFjQvl9p+AMw6qd/iC4lUk9g0+FQXNdRs+o4o6Qvy
+ iOQJfGQ4UcBuOy1IrkJrd8qq5jet1fcM2j4QvsW8CLDWZS1L7kZ5gT5EycMKxUWb8LuRjxzZ
+ 3QY1aQH2kkzn6acigU3HLtgFyV1gBNV44ehjgvJpRY2cC8VhanTx0dZ9mj1YKIky5N+C0f21
+ zvntBqcxV0+3p8MrxRRcgEtDZNav+xAoT3G0W4SahAaUTWXpsZoOecwtxi74CyneQNPTDjNg
+ azHmvpdBVEfj7k3p4dmJp5i0U66Onmf6mMFpArvBRSMOKU9DlAzMi4IvhiNWjKVaIE2Se9BY
+ FdKVAJaZq85P2y20ZBd08ILnKcj7XKZkLU5FkoA0udEBvQ0f9QLNyyy3DZMCQWcwRuj1m73D
+ sq8DEFBdZ5eEkj1dCyx+t/ga6x2rHyc8Sl86oK1tvAkwBNsfKou3v+jP/l14a7DGBvrmlYjO
+ 59o3t6inu6H7pt7OL6u6BQj7DoMAEQEAAcLBfAQYAQgAJgIbDBYhBBvZyq1zXEw6Rg38yk3e
+ EPcA/4NaBQJonNqrBQkmWAihAAoJEE3eEPcA/4NaKtMQALAJ8PzprBEXbXcEXwDKQu+P/vts
+ IfUb1UNMfMV76BicGa5NCZnJNQASDP/+bFg6O3gx5NbhHHPeaWz/VxlOmYHokHodOvtL0WCC
+ 8A5PEP8tOk6029Z+J+xUcMrJClNVFpzVvOpb1lCbhjwAV465Hy+NUSbbUiRxdzNQtLtgZzOV
+ Zw7jxUCs4UUZLQTCuBpFgb15bBxYZ/BL9MbzxPxvfUQIPbnzQMcqtpUs21CMK2PdfCh5c4gS
+ sDci6D5/ZIBw94UQWmGpM/O1ilGXde2ZzzGYl64glmccD8e87OnEgKnH3FbnJnT4iJchtSvx
+ yJNi1+t0+qDti4m88+/9IuPqCKb6Stl+s2dnLtJNrjXBGJtsQG/sRpqsJz5x1/2nPJSRMsx9
+ 5YfqbdrJSOFXDzZ8/r82HgQEtUvlSXNaXCa95ez0UkOG7+bDm2b3s0XahBQeLVCH0mw3RAQg
+ r7xDAYKIrAwfHHmMTnBQDPJwVqxJjVNr7yBic4yfzVWGCGNE4DnOW0vcIeoyhy9vnIa3w1uZ
+ 3iyY2Nsd7JxfKu1PRhCGwXzRw5TlfEsoRI7V9A8isUCoqE2Dzh3FvYHVeX4Us+bRL/oqareJ
+ CIFqgYMyvHj7Q06kTKmauOe4Nf0l0qEkIuIzfoLJ3qr5UyXc2hLtWyT9Ir+lYlX9efqh7mOY
+ qIws/H2t
+In-Reply-To: <ar-ux41ILjI1Px9S@gremlin>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Commit ab74d1fbe061 ("perf trace: Add --bitmask-list command-line option")
-introduced the --bitmask-list option to display cpumasks and bitmasks as
-condensed, human-readable range lists (e.g. "0,2-5,7") instead of the
-default hexadecimal format.
+On 10/2/26 15:59, Lorenzo Stoakes (ARM) wrote:
+> On Fri, Oct 02, 2026 at 03:11:27PM +0200, David Hildenbrand (Arm) wrote:
+>> I'd be very happy if we could find a clear way to describe "this is what we call
+>> user memory: anon+pagecache", if that could come handy in such a context.
+> 
+> Rather than arguing about it, how about shifting things to 'what backs the
+> mapping' and something like:
+> 
+> /* big long kdoc... */
+> static inline bool vma_flags_is_mm_backed(const vma_flags_t *flags)
+> {
+> 	/* hugetlb is a fixed mapping, but the mm owns it entirely. */
+> 	if (vma_flags_is_hugetlb(flags))
+> 		return true;
+> 
+> 	/*
+> 	 * Kernel-owned mappings are populated by their owner, and fixed mappings
+> 	 * have a layout the mm cannot assume ordinary fault semantics over.
+> 	 */
+> 	if (vma_flags_is_kernel_owned(flags) ||
+> 	    vma_flags_is_fixed_mapping(flags))
+> 		return false;
+> 
+> 	/* The mm has promised it may discard droppable memory at any time. */
+> 	return !vma_flags_test_single_mask(flags, VMA_DROPPABLE);
+> }
 
-However, that implementation only augmented trace__fprintf_tp_fields().
-When --libtraceevent is specified, event formatting is delegated to
-event_format__fprintf(), which bypasses trace__fprintf_tp_fields() and
-relies directly on libtraceevent.
+In my other mail I was wondering whether we could use vma_is_mm_managed() to
+express !vma_is_kernel_owned(). Maybe vma_is_mm_backed() could fit into that
+picture.
 
-In libtraceevent, tracepoint bitmask fields defined using __get_bitmask()
-are parsed into TEP_PRINT_BITMASK AST nodes and unconditionally formatted
-as raw 32-bit hex chunks (e.g. "00000000,00000005"), ignoring the
---bitmask-list command-line option.
+Reading above I am still confused why something that expresses "backed" talks
+about "fixed mappings and ownership", sorry :(
 
-While a dedicated configuration API in libtraceevent would be the ideal
-long-term solution, that requires a new upstream libtraceevent release
-and conditional version checks in perf. To provide immediate support for
-existing installations, traverse the event format's print argument AST
-in perf trace and rewrite any TEP_PRINT_BITMASK nodes to TEP_PRINT_CPUMASK
-when --bitmask-list is enabled. Both types share the identical union
-payload (arg->bitmask.field), but TEP_PRINT_CPUMASK instructs
-libtraceevent's print engine (print_cpumask_to_seq()) to render the mask
-as a condensed range list.
+It's late here, and this is a hard nut to crack.
 
-To avoid any per-sample overhead in the event handling fast path, perform
-this transformation once during tracepoint setup via
-trace__init_tp_bitmask_list() for both live tracing (cmd_trace()) and
-recording replay (trace__replay()), leaving trace__event_handler()
-untouched. All enum values of enum tep_print_arg_type are explicitly
-covered in the switch statement to satisfy -Wswitch-enum under -Werror.
+What we have here is:
 
-Signed-off-by: Aaron Tomlin <atomlin@atomlin.com>
----
- tools/perf/builtin-trace.c | 75 ++++++++++++++++++++++++++++++++++++++
- 1 file changed, 75 insertions(+)
+1) Is this an ordinary MM-managed VMA. So far so good, I understand that. (with
+   a twist what I just learned about things that map random allocated pages
+   through -> fault, but so far so good)
 
-diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-index c3c7f1f85c53..57249df65fe3 100644
---- a/tools/perf/builtin-trace.c
-+++ b/tools/perf/builtin-trace.c
-@@ -4857,6 +4857,77 @@ static int trace__run(struct trace *trace, int argc, const char **argv)
- 	goto out_put_evlist;
- }
- 
-+#ifdef HAVE_LIBTRACEEVENT
-+static void tep_print_arg__set_bitmask_list(struct tep_print_arg *arg)
-+{
-+	for (; arg; arg = arg->next) {
-+		switch (arg->type) {
-+		case TEP_PRINT_BITMASK:
-+			arg->type = TEP_PRINT_CPUMASK;
-+			break;
-+		case TEP_PRINT_OP:
-+			tep_print_arg__set_bitmask_list(arg->op.left);
-+			tep_print_arg__set_bitmask_list(arg->op.right);
-+			break;
-+		case TEP_PRINT_FUNC:
-+			tep_print_arg__set_bitmask_list(arg->func.args);
-+			break;
-+		case TEP_PRINT_FLAGS:
-+			tep_print_arg__set_bitmask_list(arg->flags.field);
-+			break;
-+		case TEP_PRINT_SYMBOL:
-+			tep_print_arg__set_bitmask_list(arg->symbol.field);
-+			break;
-+		case TEP_PRINT_HEX:
-+			tep_print_arg__set_bitmask_list(arg->hex.field);
-+			tep_print_arg__set_bitmask_list(arg->hex.size);
-+			break;
-+		case TEP_PRINT_INT_ARRAY:
-+			tep_print_arg__set_bitmask_list(arg->int_array.field);
-+			tep_print_arg__set_bitmask_list(arg->int_array.count);
-+			tep_print_arg__set_bitmask_list(arg->int_array.el_size);
-+			break;
-+		case TEP_PRINT_TYPE:
-+			tep_print_arg__set_bitmask_list(arg->typecast.item);
-+			break;
-+		case TEP_PRINT_DYNAMIC_ARRAY:
-+			tep_print_arg__set_bitmask_list(arg->dynarray.index);
-+			break;
-+		case TEP_PRINT_NULL:
-+		case TEP_PRINT_ATOM:
-+		case TEP_PRINT_FIELD:
-+		case TEP_PRINT_STRING:
-+		case TEP_PRINT_BSTRING:
-+		case TEP_PRINT_DYNAMIC_ARRAY_LEN:
-+		case TEP_PRINT_HEX_STR:
-+		case TEP_PRINT_CPUMASK:
-+		default:
-+			break;
-+		}
-+	}
-+}
-+
-+static void trace__init_tp_bitmask_list(struct trace *trace, struct evlist *evlist)
-+{
-+	struct evsel *evsel;
-+
-+	if (!trace->libtraceevent_print || !trace->bitmask_list)
-+		return;
-+
-+	evlist__for_each_entry(evlist, evsel) {
-+		struct tep_event *tp_format = evsel__tp_format(evsel);
-+
-+		if (tp_format)
-+			tep_print_arg__set_bitmask_list(tp_format->print_fmt.args);
-+	}
-+}
-+#else
-+static void trace__init_tp_bitmask_list(struct trace *trace __maybe_unused,
-+					struct evlist *evlist __maybe_unused)
-+{
-+}
-+#endif
-+
- static int trace__replay(struct trace *trace)
- {
- 	const struct evsel_str_handler handlers[] = {
-@@ -4908,6 +4979,8 @@ static int trace__replay(struct trace *trace)
- 	if (err)
- 		goto out;
- 
-+	trace__init_tp_bitmask_list(trace, session->evlist);
-+
- 	evsel = evlist__find_tracepoint_by_name(session->evlist, "raw_syscalls:sys_enter");
- 	trace->syscalls.events.sys_enter = evsel;
- 	/* older kernels have syscalls tp versus raw_syscalls */
-@@ -5814,6 +5887,8 @@ int cmd_trace(int argc, const char **argv)
- 
- 		if (use_btf)
- 			trace__load_vmlinux_btf(&trace);
-+
-+		trace__init_tp_bitmask_list(&trace, trace.evlist);
- 	}
- 
- 	/*
+2) Is this MM "fixed" that makes expand/merge tricky, except if it's hugetlb
+   where we can still handle it.
+
+I think VM_DONTEXPAND is also rather misnamed :( I assume it really means, using
+sel_mmap_policy_ops() as an example: the MM manages the things that are getting
+mapped in here (->fault), but the pages are not really pagecache/anon, but some
+other shit. So we cannot expand the mapping.
+
+Gah, so complicated.
+
+3) Can the MM drop the pages at any time.
+
+
+I still think that 3) does not quite fit into that picture. Using something like
+
+"vma_is_mm_backed" to say "this is mm-managed, but all things in there come from
+core-mm and not some other random shit people punch into ->fault" would work for me.
+
+(not sure if there is still some other way how someone could get random pages
+into a VMA ... or how to catch someone not setting the DONTEXPAND flag)
+
+God, this is all such a confusing mess with so many ways of getting stuff messed
+up by other parts of the system. Thanks for working on cleaning that up.
+
 -- 
-2.55.0
+Cheers,
 
+David
