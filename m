@@ -1,40 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 364A33438A0;
-	Fri,  2 Oct 2026 22:52:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98A0D38E8BE;
+	Fri,  2 Oct 2026 22:56:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790981566; cv=none; b=gZF3XbxRSi3W0hfltz9Me/RIj+OgcGJ8VEuLAoZl1jkm4xYZ0+aPJxdqDYVMPvJZr6r75KrgfWqAliUiOXz+v2z7+7KNOtDHtZ+hWjzaN9sGuGG+7sWQ1O72I7f1ouErGZcnKKEOPiZADEjghxWkq4u7bUqKzrUOfvRDV/9K8Q8=
+	t=1790981809; cv=none; b=fLHsITYFkM4GxBSEKP+5qqDQh9g+CVs3xiTEkRF0X6TV4CKi+ireJ5VPo3CASlhFajtlIHFdOzcilUY0Dj5GnE65xXWvlsF1rzGhlDDgdycS7qVNNI2VhVYzFw6WTam6+T0AMwGYxlmzJJjhCUQ0pVTjhhRC0crzHHcAPcS47vo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790981566; c=relaxed/simple;
-	bh=0+PRHAdnIW4b5KGtIbdTCy6AkPvzX4dQrn+b/TfinPY=;
+	s=arc-20240116; t=1790981809; c=relaxed/simple;
+	bh=GFx/LeUutYGou8DsysigmeQmHVZsZ6+hH0tks7jO7Tc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WL5TDrgKZ2DA9U+L0ys+7GPEtQmOr9Rki5y9y+zwO9rGZ13dB04AbxlGC4efHr+HrQT5Z8RohyEkk0h1WWY3ts2lyXHhhDFbXAzS3roKOZ+kvI/55Ds/KiX/SqCCBxT4NEWtm1sSiNWDanxT94fT15lSN6rhloT8xM53c6oeKSM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Y8qxcvla; arc=none smtp.client-ip=100.103.45.18
+	 Content-Type:Content-Disposition:In-Reply-To; b=h7zFuZ2ajSOHLLCZQBzCtKYto0hoqyLrAQckN3bhMtUnOwUN5lt6DDk9wHuGhw7O6srPPtoZGdfwOfXPX6yEDHFbEx1Qqxf1RYvzr1DW7qFktOPUIhavXB+2UGDtouPL7lJKSGv+b9L8FgmBoKIRiUO1IUb9YUrdcZ96lTq5KVE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=A8tUhLBc; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Y8qxcvla"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 92D5F1F000FF;
-	Fri,  2 Oct 2026 22:52:44 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="A8tUhLBc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 25D1C1F000FF;
+	Fri,  2 Oct 2026 22:56:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1790981564;
-	bh=sk8cmahE72VkyCDPGqs7Xgd7IrOvJ3nVdLA7qac7vYo=;
+	s=k20260515; t=1790981808;
+	bh=4ix/4A8+bmjpefCe0g2D3yU51PxoWBhvKoT6KgI83UQ=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=Y8qxcvlacV3yYi9GMwbiU+wADA1L4gc/4LwDBFFAiTbrLw3To91c/V0upinBCYOJU
-	 TZ00ynl6Y5mOyleeBefpNlvVyXuyLSknlpt8DIYgRvJFBg1qf9U67PJXVQGmkqVEmY
-	 hfAmDS17P3/y6/5UYbJ5C5GIicX6ShrzgHXMo/lvB/poEeKZyxYhkEQ6E0+cj+jR8T
-	 TePqFQtWYE8EppwKI6148erlXB2DK8rUmt68fItT5lUfuByH1VhpJz9+6xgwD8paW4
-	 BrVHIpkAqH5NhwNDB8kvfBD1zqHew0i0JqoSifHCx5m2hyOGZZhDKyrA5wqb71cfQ6
-	 ucWb6f4DZkbaw==
-Date: Fri, 2 Oct 2026 15:52:43 -0700
+	b=A8tUhLBcScFLRNZn0CdsgC4NVThzvEkPAtm2D5cAzDzfyUXt1vLwEZVXUR5CT0+sh
+	 FbejBpXVDS0iK8SRhPsHzxezLzXhB+VCcUQ6O3mzNvKUIDgO73Go2WAX9TUY/ynDlV
+	 NsZUZwESApKt0yjW/opmN4ztKdp1bjrjFDinOT5tEsDrgzPQX6m3uo4J7W5RH78AKX
+	 O/HOGmycUE9yBz98XQXHa8corPbjms2CWpCRluOGCOtEAt9A4aYV+9m5bqtMl5+oHv
+	 TXKpXMkQMvD7ws+If+B9hhAhNlNt+VIsY/5CA7v6ZsE3ZT4Ylr5+DoOPBsnvSWwTsu
+	 el/LpupsXgfSQ==
+Date: Fri, 2 Oct 2026 15:56:46 -0700
 From: Namhyung Kim <namhyung@kernel.org>
 To: sashiko-reviews@lists.linux.dev
 Cc: Yanbo Zhao <yzhao62@ncsu.edu>, linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v2 2/3] perf dwarf-aux: Add C++ vtable helpers
-Message-ID: <asA1u7LBRp2gqbWI@google.com>
+Subject: Re: [PATCH v2 3/3] perf annotate: Resolve C++ virtual function calls
+ in x86 insn tracking
+Message-ID: <asA2rgBbNuwh-zR-@google.com>
 References: <20260930210038.196928-1-yzhao62@ncsu.edu>
- <20260930210038.196928-3-yzhao62@ncsu.edu>
- <20260930211057.2E1641F000FF@smtp.kernel.org>
+ <20260930210038.196928-4-yzhao62@ncsu.edu>
+ <20260930211112.B2A431F000FF@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -44,106 +45,173 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20260930211057.2E1641F000FF@smtp.kernel.org>
+In-Reply-To: <20260930211112.B2A431F000FF@smtp.kernel.org>
 
-On Wed, Sep 30, 2026 at 09:10:56PM +0000, sashiko-bot@kernel.org wrote:
+On Wed, Sep 30, 2026 at 09:11:12PM +0000, sashiko-bot@kernel.org wrote:
 > Thank you for your contribution! Sashiko AI review found 2 potential issue(s) to consider:
-> - [Medium] perf dwarf-aux: DW_AT_virtuality presence check incorrectly skips non-virtual bases
-> - [Medium] perf dwarf-aux: infinite loop in C++ inheritance traversal on malformed DWARF
+> - [Medium] perf: cross-platform analysis broken by hardcoded host pointer size
+> - [Medium] perf: vtable pointer load ignores multi-register index
 > --
 > 
-> commit e1f1b87424c8d58d923a8c3fbc1408fa0ae0c3b9
+> commit a71181b28893b295ef8ae1558faf7b1c66e3593b
 > Author: Yanbo Zhao <yzhao62@ncsu.edu>
 > 
-> perf dwarf-aux: Add C++ vtable helpers
->     
-> Add DWARF helper functions needed to resolve C++ virtual function calls
-> statically in the data type profiling.
+> perf annotate: Resolve C++ virtual function calls in x86 insn tracking
 > 
-> > diff --git a/tools/perf/util/dwarf-aux.c b/tools/perf/util/dwarf-aux.c
-> > index eb4b8f3475df1..b1f3dca057abb 100644
-> > --- a/tools/perf/util/dwarf-aux.c
-> > +++ b/tools/perf/util/dwarf-aux.c
-> > @@ -2293,6 +2293,222 @@ Dwarf_Die *die_get_member_type(Dwarf_Die *type_die, int offset,
-> > [ ... ]
-> > +static int __die_find_primary_base_cb(Dwarf_Die *die_mem, void *arg __maybe_unused)
+> This commit introduces tracking of C++ virtual function calls by resolving
+> vtable pointer loads and virtual function calls through the vtable in x86
+> instruction state tracking. It enhances update_insn_state_x86() to handle
+> TSR_KIND_VTABLE_PTR and TSR_KIND_VFUNC_PTR register states.
+> 
+> > diff --git a/tools/perf/util/annotate-arch/annotate-x86.c b/tools/perf/util/annotate-arch/annotate-x86.c
+> > index 1acf31a2c7597..d21192b74b6bf 100644
+> > --- a/tools/perf/util/annotate-arch/annotate-x86.c
+> > +++ b/tools/perf/util/annotate-arch/annotate-x86.c
+> 
+> [ ... ]
+> 
+> > @@ -216,6 +216,29 @@ static void invalidate_reg_state(struct type_state_reg *reg)
+> >  	reg->copied_from = -1;
+> >  }
+> >  
+> > +/*
+> > + * Get the return type of the C++ virtual function at the @offset in the
+> > + * vtable of @class_die.  Returns false if it's not found or the function
+> > + * returns void.
+> > + */
+> > +static bool vtable_get_rettype(Dwarf_Die *class_die, int offset,
+> > +			       Dwarf_Die *type_die)
 > > +{
-> > +	Dwarf_Attribute attr;
-> > +	Dwarf_Die base_die, vptr_die;
-> > +	Dwarf_Word loc;
+> > +	Dwarf_Die func_die;
+> > +	int index;
 > > +
-> > +	if (dwarf_tag(die_mem) != DW_TAG_inheritance)
-> > +		return DIE_FIND_CB_SIBLING;
+> > +	if (offset < 0)
+> > +		return false;
 > > +
-> > +	if (dwarf_attr_integrate(die_mem, DW_AT_virtuality, &attr))
-> > +		return DIE_FIND_CB_SIBLING;
+> > +	/* TODO: arch-dependent pointer size */
+> > +	index = offset / sizeof(void *);
 > 
 > [Severity: Medium]
-> Does this code incorrectly skip valid primary base classes when parsing DWARF 5?
+> Will dividing the target's vtable byte offset by the host's sizeof(void *)
+> compute an incorrect slot index when analyzing data from an architecture
+> with a different pointer size?
 > 
-> DWARF 5 allows DW_AT_virtuality to be present with the default value
-> DW_VIRTUALITY_none (0x00).
-> 
-> If a compiler explicitly emits this default value, will the presence check
-> evaluate to true and falsely identify the non-virtual base as virtual,
-> skipping it?
+> Relying on host execution details like sizeof(void *) breaks
+> cross-platform analysis (e.g., analyzing 32-bit x86 perf.data on a
+> 64-bit host).
 
-Right, it'd be better to check the value of the attribute as well.
+I think this is fine for now as we also have other places assuming the
+host pointer size.  We'll fix it later.
 
 > 
 > > +
-> > +	if (die_get_data_member_location(die_mem, &loc) < 0 || loc != 0)
-> > [ ... ]
-> > +Dwarf_Die *die_find_virtual_func(Dwarf_Die *class_die, int index,
-> > +				 Dwarf_Die *die_mem)
-> > +{
-> > +	Dwarf_Die cur_die = *class_die;
-> > +	Dwarf_Die base_die;
+> > +	if (die_find_virtual_func(class_die, index, &func_die) == NULL)
+> > +		return false;
 > > +
-> > +	while (die_is_compound_type(&cur_die)) {
+> > +	return die_get_real_type(&func_die, type_die) != NULL;
+> > +}
+> > +
+> >  static void update_insn_state_x86(struct type_state *state,
+> 
+> [ ... ]
+> 
+> > @@ -622,13 +669,38 @@ static void update_insn_state_x86(struct type_state *state,
+> >  			}
+> >  			pr_debug_type_name(&tsr->type, tsr->kind);
+> >  		}
+> > +		/* Load a function pointer from the vtable (for 'call *%reg') */
+> > +		else if (has_reg_type(state, sreg) && state->regs[sreg].ok &&
+> > +			 state->regs[sreg].kind == TSR_KIND_VTABLE_PTR &&
+> > +			 vtable_get_rettype(&state->regs[sreg].type, src->offset,
+> > +					    &type_die)) {
 > 
 > [Severity: Medium]
-> Can this loop hang indefinitely when processing malformed DWARF?
+> Does this query the wrong vtable slot by ignoring the index register when
+> src->multi_regs is true?
 > 
-> If a maliciously crafted or malformed DWARF file contains cyclic inheritance,
-> die_get_real_type() resolves the type back to the current class.
-> 
-> Since the loop does not maintain a depth counter or cycle detection, does it
-> spin infinitely as it re-evaluates the same class type?
+> If the operand is an indexed memory reference using multiple registers
+> (e.g., mov 0x8(%rbx, %rcx, 8), %rax), src->offset contains only the
+> static displacement part, not the dynamic index. Should this verify
+> !src->multi_regs before querying the DWARF vtable with src->offset?
 
-It seems sashiko is picky about possible recursions on invalid dwarf.
-As we recently added recursion depth limits, can you follow the
-convention and bail out if it detects one?
+Multiple register is not handled well in the current code.  Dealing with
+dynamic index would require more careful instruction tracking.
 
-> 
-> > +		if (die_find_child(&cur_die, __die_find_virtual_func_cb,
-> > +				   (void *)(long)index, die_mem))
-> > +			return die_mem;
-> > [ ... ]
-> > +Dwarf_Die *die_get_vptr_class(Dwarf_Die *type_die, int offset,
-> > +			      Dwarf_Die *die_mem)
-> > +{
-> > +	Dwarf_Die class_die = *type_die;
-> > +	Dwarf_Die vptr_class = *type_die;
-> > +	Dwarf_Die member_die, mb_type;
-> > +	Dwarf_Word loc;
-> > +
-> > +	while (die_is_compound_type(&class_die)) {
-> 
-> [Severity: Medium]
-> Similarly, does this loop also lack a depth limit or cycle detection when
-> traversing base class subobjects dynamically, risking infinite cycles on
-> malformed DWARF?
-
-Ditto.
+Anyway, it'd be safer to check !src->multi_regs here.
 
 Thanks,
 Namhyung
 
 > 
-> > +		if (die_find_child(&class_die, __die_find_member_offset_cb,
-> > +				   (void *)(long)offset, &member_die) == NULL)
-> > +			return NULL;
+> > +			tsr->type = type_die;
+> > +			tsr->kind = TSR_KIND_VFUNC_PTR;
+> > +			tsr->offset = 0;
+> > +			tsr->ok = true;
+> > +
+> > +			pr_debug_dtp("mov [%x] %#x(reg%d) -> reg%d",
+> > +				     insn_offset, src->offset, sreg, dst->reg1);
+> > +			pr_debug_type_name(&tsr->type, tsr->kind);
+> > +		}
+> >  		/* And then dereference the pointer if it has one */
+> 
+> [ ... ]
+> 
+> > diff --git a/tools/perf/util/annotate-data.c b/tools/perf/util/annotate-data.c
+> > index 8a9d3f2eec4dc..e9bf76cc28633 100644
+> > --- a/tools/perf/util/annotate-data.c
+> > +++ b/tools/perf/util/annotate-data.c
+> 
+> [ ... ]
+> 
+> > @@ -715,8 +723,11 @@ void set_stack_state(struct type_state_stack *stack, int offset, u8 kind,
+> >  			    Dwarf_Die *type_die, int ptr_offset)
+> >  {
+> >  	Dwarf_Word size;
+> > +	bool is_pointer = (kind == TSR_KIND_POINTER ||
+> > +			   kind == TSR_KIND_VTABLE_PTR ||
+> > +			   kind == TSR_KIND_VFUNC_PTR);
+> >  
+> > -	if (kind == TSR_KIND_POINTER) {
+> > +	if (is_pointer) {
+> >  		/* TODO: arch-dependent pointer size */
+> >  		size = sizeof(void *);
+> >  	}
+> 
+> [Severity: Medium]
+> Like the vtable_get_rettype() issue above, will hardcoding the host's
+> pointer size here corrupt the stack state tracking for the target
+> architecture?
+> 
+> [ ... ]
+> 
+> > diff --git a/tools/perf/util/disasm.c b/tools/perf/util/disasm.c
+> > index 5478c134e7e3b..5d96ee4c866b6 100644
+> > --- a/tools/perf/util/disasm.c
+> > +++ b/tools/perf/util/disasm.c
+> 
+> [ ... ]
+> 
+> > @@ -300,6 +300,11 @@ static int call__parse(const struct arch *arch, struct ins_operands *ops, struct
+> >  	if (tok != NULL) {
+> >  		endptr++;
+> >  
+> > +		/* Save the operand (without '*') to extract register and offset */
+> > +		ops->target.raw = strdup(tok + 1);
+> 
+> [Severity: Low]
+> This is a pre-existing issue, but this file calls strdup() without
+> explicitly including <string.h>.
+> 
+> Can we add the explicit <string.h> include? The perf subsystem guide states
+> that POSIX standard headers should be explicitly included to prevent musl
+> compilation failures from missing implicit inclusions.
+> 
+> > +		if (ops->target.raw == NULL)
+> > +			return -1;
+> > +
+> >  		/* Indirect call can use a non-rip register and offset: callq  *0x8(%rbx).
+> >  		 * Do not parse such instruction.  */
+> >  		if (strstr(endptr, "(%r") == NULL)
 > 
 > -- 
-> Sashiko AI review · https://sashiko.dev/#/patchset/20260930210038.196928-1-yzhao62@ncsu.edu?part=2
+> Sashiko AI review · https://sashiko.dev/#/patchset/20260930210038.196928-1-yzhao62@ncsu.edu?part=3
