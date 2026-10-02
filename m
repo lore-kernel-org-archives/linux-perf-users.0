@@ -1,428 +1,300 @@
-Received: from mail-dy1-f197.google.com (mail-dy1-f197.google.com [74.125.82.197])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B9D25172D2
-	for <linux-perf-users@vger.kernel.org>; Fri,  2 Oct 2026 18:27:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.197
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790965636; cv=none; b=dLrDddq/jjlePaNJuVu8J9P77ZA5C0PjNxpMHOjEyCt2F8ly44IbtmUq6j1O4WiDWRTKQuVL0fAH8kRcGJ+3RP+e6+T8g5ZKKUmT/bT5+znIFCRmOFLmUCYSk7Riez4ddYrQpoLuYzPceXFmn1kIRyU/qYlmceL/4buFiRXAGO8=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790965636; c=relaxed/simple;
-	bh=JJGlskCPl8cRlonr11l2yopx94OGnCrMosF4n4IWxpw=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=RT0IVInBbwMWtb44Ydjnmd9n9RHXJKyAUm1xUUXeymmJVuClpgawxAK0pzOX1Ud3Z43OWUnEzBKwpuuxTkzDNMwWscqixbxqTF0OtZDFeXg/8Aob4Y9RC/gv645RU0hOqvM/yHAPZzFh2j0ZfQpfAeAhEPDG/uHO6P7BG7lahpM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=XtZlS7eM; arc=none smtp.client-ip=74.125.82.197
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CB0F51589D;
+	Fri,  2 Oct 2026 18:28:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1790965728; cv=fail; b=PfDCtxfkeJXNy9clWzCXsjDXwQbYotcYOJVO9nPIgws9QkMSxFB3Bh1f/bAjCYLxADTgic7w8tEoJmourMt00pPIVlNGZR6QLGKAWW0ynI1RG6U11osoixfAz7RQZ2UzzSkpFJuxibmTAJGLdjiFn87/kfvGNX3NRlsPBrvzM2Q=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1790965728; c=relaxed/simple;
+	bh=sRzGwQLT7uNWGk0lYQNg51SL++RLd0HcfdCpOouPHr0=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 Content-Type:MIME-Version; b=qWLw+utQlFriK8HXy6h/kHgZqsJd3zqudSHWmowZzRh2wciN9qP5LzByRUOdd6KOI4UBPu5tz9VoUBAgO2VBoDNBJfbHZaH2f0i1M3xpsrjWjdhO/k43Vms8pdZBXpIZLZA8f0Rc78/qVCRm9rF6dd25VsyPDZVPbS5cmbHxJeQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=Ei7J4Waz; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=U5keYFyN; arc=fail smtp.client-ip=205.220.177.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="XtZlS7eM"
-Received: by mail-dy1-f197.google.com with SMTP id 5a478bee46e88-33c35f5ca6cso6563105eec.1
-        for <linux-perf-users@vger.kernel.org>; Fri, 02 Oct 2026 11:27:14 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Ei7J4Waz";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="U5keYFyN"
+Received: from pps.filterd (m0333520.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 692EbdJ0730159;
+	Fri, 2 Oct 2026 18:28:10 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=
+	corp-2025-04-25; bh=UQeufG8q3oaQzAaZV7HT2BSSalh5npBV9lZzs65PW0c=; b=
+	Ei7J4Waz+z2+hHer5Sn10xpwXmJ7GV+dYM44F1TVxZkBXXo0N18Btn84bD9ZMS/d
+	1093vs92zdvcYZ8STnPlZXxrVhd9mj53k16gsPe8ZPshz8cJrHPEwDCNoCaRnv3c
+	UootMyW0mu8KXeqHzXWtjOipS+bmGCcsEKWtPXfiIge56/KdauFQop2xFTbE8hc/
+	zZupbnWoMAMvlO2BQOu6sht+NJ+f3UtHWAN3v/h4i3sYaFrHL6r1l+2fP0ArH4jH
+	RXaP/m6Sl7T/e3jLa+sM1Fw2bXMKITVe+KLwj1DsH4j+CIZ7/cVSNKL8wjmubbdN
+	Qh6kURbAujr0QZeQYN3xZw==
+Received: from phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta01.appoci.oracle.com [138.1.114.2])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 4gx63c4jka-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 02 Oct 2026 18:28:09 +0000 (GMT)
+Received: from pps.filterd (phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.7/8.18.1.7) with ESMTP id 692IK0vC038965;
+	Fri, 2 Oct 2026 18:28:08 GMT
+Received: from ch4pr04cu002.outbound.protection.outlook.com (mail-northcentralusazon11013002.outbound.protection.outlook.com [40.107.201.2])
+	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 4gx4gg2ryp-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Fri, 02 Oct 2026 18:28:08 +0000 (GMT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=qxwCPASDZKmNG8PIzXO8EsdsMql0ZOx56X35unEK6LvgZUQ85yL6XxHe6B6oHBRlHzYK6aGDRZ4E0/XgGxBoR6Dcz6FTkcn0kt5aFVFObC+w3MrM2yRpWe10lpeVQiFwZoixZi68gu0s9Hs17/lw+XP/t7d//rlEMLx0lGwHVLdNtTWxxjNouEfOdXwmOgTHBCt9AOkupypNH2E+6qXJGTn6U2Nr+4L18VzQP+2koNKc62rgLokqzw4qFh4u//rXXhMH9mTT9JH77XoTvSOaJZZF+tE9gV0MCgFO8bN9iDTdoXwGVTpgm6QXhGttHHllF0jSyUwxyYnOMwJYHyS9aw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=UQeufG8q3oaQzAaZV7HT2BSSalh5npBV9lZzs65PW0c=;
+ b=NA2DlV4wVI/PdjE/Kl6l9L9VvT9lkIB9aKvrETHOz3MTCYsH+cAfsXu4zGc+rzkFmRf9Q/oC8yObADpnAais+fqu9JEnrSktYxgc+KV/ic6PQY9vZqAxYbKupTP8PeXcOqcdhT/cB/jJ6ose9aF+o9B0wNmBn2iBluddFhxSRH5z0De2Jr7STgKkG5FPA/7lHhgcAgODDRddezPX6wjIb7yuZgW4N/wpFKgQ6n8Auk3hGel+SybCIRNqrIrUYifYWfsoYeT219+9AaRyoATRO3D/ctuGEhTvI9+AmvoQmQNZczsuWdK7kSeAwofJdxGHfssNyvYinnfrYI2xs6YZMw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1790965633; x=1791570433; darn=vger.kernel.org;
-        h=content-type:to:from:subject:message-id:references:mime-version
-         :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=I/vz4U6MgSF7z+SVi7OL0AEffAfpjEPrAkUKJ+kbtOM=;
-        b=XtZlS7eMPKOa+ryHCpaZFjjpZPA2MYODAY/X8UIlrBVQqnJT4zabQhZ0LKj6tpGTb1
-         ngA+MbAIooiiLPLeJBvVg98jrqai78QTG/XaIICZZrA+NbCVqsPamGRc8S9m1weNQwR9
-         vY0+Y6Phggo4gajcd2/mdfV3XBmQCXBivuIZb6bxFKCifSt2yxzdDdeez2Kg6R4zM74z
-         /EYM8IYK6Sw1vqkUSQbpIbNUue9sV1D+R6DRHdut/deZ456eNldd8ZyxnKZL0gReg2Sp
-         6tq6qbyDeU3EeS5s2JiupuporXTvv6cJJWdAB1DvvH0/pfe6FDuEETkrCWlVxLf6Y2rE
-         degg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1790965633; x=1791570433;
-        h=content-type:to:from:subject:message-id:references:mime-version
-         :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=I/vz4U6MgSF7z+SVi7OL0AEffAfpjEPrAkUKJ+kbtOM=;
-        b=Eeyh3icq4bfoP2w8v/ps4eT3sPxRxm+n1K0mylbIsC4IweM/pmX1/g8Ps7fs6qutph
-         eQbl9HjmQl9Y8eAsRYB1MoB77cytBEr7ddilDRzYela4jTudRs6bWZcVdELr97L5A9Kc
-         ZD5WQG8V1V4VyJZYZsADD7V4roGfx38hcy82BDtzmSiRRelK0N2315A7JfcxjWoLIkOI
-         6NqkzGECkVSJX0lK+LfCZBc2NPJnKMtK0wJH5RQhJ9cPDuP26l3uqx5nJewdqdErFGPc
-         7iRYHx28Hpt35Yf+GHeouln2vumSfhCrjy8JTXa06aQSo2YDDdGkpBag0x49K54U6bAB
-         rcXg==
-X-Forwarded-Encrypted: i=1; AKwUvBz0+6Axjh63AlMkCI0NjwltLSHNOyYdUXgnWDrhkyjvlntQ59yrcH8O58H3Fao+ToCHlEhxMdQOt9wj9d1/ktKD@vger.kernel.org
-X-Gm-Message-State: AFq9FYJc1oGBi2sXM1GgH7E98LNB4742gRofkp+/sSryLzgNFc0hTIWS
-	1S4xLi9Sarbu6AaOb+4LuRzyBoiUhjc0srHGZulCH5K6L7NcQhkE+suuYhecsoHEFG5EyvCsRHt
-	npY0uvJdeaw==
-X-Received: from dyvj19-n2.prod.google.com ([2002:a05:693c:87d3:20b0:34c:3c02:32f])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:693c:42c9:b0:34d:864c:6e4
- with SMTP id 5a478bee46e88-34f2198b10emr3086264eec.36.1790965632539; Fri, 02
- Oct 2026 11:27:12 -0700 (PDT)
-Date: Fri,  2 Oct 2026 11:26:22 -0700
-In-Reply-To: <20261002182624.3259797-1-irogers@google.com>
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=UQeufG8q3oaQzAaZV7HT2BSSalh5npBV9lZzs65PW0c=;
+ b=U5keYFyNa/aUCtaGmgrHIqEF8PUG4suBokOW6RsG/4PqijKlyDb8ynupOTMNFq55R64TZ4bUDfpnIr8M9NmgyMnW87qGNLMpWhuSLH/KXN2a8UfJGqWwGmNmuFK3EtJJR5Y8D9p82MK3Uw8WLUfuv+U23EvtDQCUdudKeviSIHw=
+Authentication-Results: mx.microsoft.com 1; dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=oracle.com;
+Received: from LV3PR10MB7868.namprd10.prod.outlook.com (2603:10b6:408:1b4::9)
+ by BY5PR10MB4147.namprd10.prod.outlook.com (2603:10b6:a03:20e::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.496.13; Fri, 2 Oct
+ 2026 18:28:00 +0000
+Received: from LV3PR10MB7868.namprd10.prod.outlook.com
+ ([fe80::9105:4421:4267:8fce]) by LV3PR10MB7868.namprd10.prod.outlook.com
+ ([fe80::9105:4421:4267:8fce%6]) with mapi id 15.21.0496.010; Fri, 2 Oct 2026
+ 18:28:00 +0000
+From: Stephen Brennan <stephen.s.brennan@oracle.com>
+To: Ian Rogers <irogers@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Namhyung Kim
+ <namhyung@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Ingo
+ Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
+        James Clark
+ <james.clark@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>, Jiri Olsa
+ <jolsa@kernel.org>,
+        Alexander Shishkin
+ <alexander.shishkin@linux.intel.com>,
+        Adrian Hunter
+ <adrian.hunter@intel.com>,
+        linux-perf-users@vger.kernel.org, Alice
+ <alice.mei.rogers@gmail.com>
+Subject: Re: [PATCH 0/2] perf script flamegraph: Fix input file name errors
+In-Reply-To: <CAP-5=fVkoy6ZJ_3Y3E2s=7ccdQd3aUz_g-e6ivX68=aHBsmnkg@mail.gmail.com>
+References: <20261001182004.1160406-1-stephen.s.brennan@oracle.com>
+ <CAP-5=fVkoy6ZJ_3Y3E2s=7ccdQd3aUz_g-e6ivX68=aHBsmnkg@mail.gmail.com>
+Date: Fri, 02 Oct 2026 11:27:57 -0700
+Message-ID: <87o6dc9cuq.fsf@oracle.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-ClientProxiedBy: CH0PR03CA0381.namprd03.prod.outlook.com
+ (2603:10b6:610:119::16) To LV3PR10MB7868.namprd10.prod.outlook.com
+ (2603:10b6:408:1b4::9)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20261002182624.3259797-1-irogers@google.com>
-X-Mailer: git-send-email 2.56.0.rc1.315.gc6ed9934b7-goog
-Message-ID: <20261002182624.3259797-14-irogers@google.com>
-Subject: [PATCH v1 13/13] perf test: Test perf timechart --live
-From: Ian Rogers <irogers@google.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	James Clark <james.clark@linaro.org>, Thomas Falcon <thomas.falcon@intel.com>, 
-	Alice Rogers <alice.mei.rogers@gmail.com>, Changbin Du <changbin.du@huawei.com>, 
-	Tengda Wu <wutengda@huaweicloud.com>, tanze <tanze@kylinos.cn>, 
-	Athira Rajeev <atrajeev@linux.ibm.com>, Dapeng Mi <dapeng1.mi@linux.intel.com>, 
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: LV3PR10MB7868:EE_|BY5PR10MB4147:EE_
+X-MS-Office365-Filtering-Correlation-Id: 18089c52-2067-4531-459c-08df20b2e35d
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|366016|376014|7416014|23010399003|10067099003|18002099003|22082099003|4143699003|56012099006|6133799003;
+X-Microsoft-Antispam-Message-Info:
+	1wpXQREPgDPe2bCVeuivW1JKTLUzzoyDgKLwWW0udfWTZWxqESghtesi6ZKFuVfRpgPnpNHpgjKsdqg9S2cBnMjJZJDFMcxmc2ekH8Kw2D9t9stg3SDG/LQIK+r08OET/k/jRluH1W77udu43yWyrVyYLJdj+zmnUUpQG7i8VcWKj6Rd1TBsYFTpFMKWfRKUPJBvyHYNRPR3lYu0Ikj/ztzSiy3yIjE2eDW5WAhRyxqs7RPDfX6wCkCDvTw2TSDq35FRwERqWbjoB/R362PvFQ5NFORLnH2gUW6QvNowhzfOROEyJ6aXGkGq1VeH8VjnqdDiQ9r2rT1wtRwBR3bgzzCaNoea8TNZp13wGnxMrd0Y+nR2lEBia3jduB+NoqmZmgo/amb8aOhQQg+GG67xct0znCnwBq4v38hPQM9R9Rsga9MmFNnE+fgFOweluldbz5XCyjOszDuKUXH0qjTRkwISt/47SVkD0Z/xB1Zj8SJmv+ckuFVcn9PhZo73uDB4/F5Q84G3v6OI05V0vU6IYuE/AdboWtB14eIeCHNbjJrGPHKvt6iyyE0gpT4S6viWUTijEn0l3a6BI4pXniwE8bkgJEVycYcUTYxJ7da89ulF4lH7XEv6WOlEHGk+rdgkR1Xp6fRz4dJyteshIAQ5Wbq1a+mPfbCyYTnuxQn9J58=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV3PR10MB7868.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(7416014)(23010399003)(10067099003)(18002099003)(22082099003)(4143699003)(56012099006)(6133799003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?R2NWRnFCYVVVY2dDMGVqdGNiZTdGTUZXVkYwODErVThWZk5na2VmS0VDV1Rq?=
+ =?utf-8?B?ZWFMdGRJNlU1TXlPRTRzM2ovVUlTQkN3eGFKc0ZlaFlXa2o5NmZRQXV2WjUx?=
+ =?utf-8?B?bWdpYWRJWlo2aW5SbjVXTUU2K3BXQUY0NEViWHF0ekZqdnduam9NVm1YdWtt?=
+ =?utf-8?B?NUJPd3NUdHlJM2swc0RvVzRJa1Z2QVBHbHJRb3JTb1U4MjJXUmxGakRvVUlC?=
+ =?utf-8?B?cWs0YldkUHlXR2grTGNqZG9FUXdieDdScGpMa2xDcVAybDk2RGJRbmo1aGM4?=
+ =?utf-8?B?Q1A0VXNBVUhRaTFYRmJVeDlqSDJ1aGVkNVBiQ1BUOEJ1alc3WkVTNEJRQnoz?=
+ =?utf-8?B?QmFGWEVFQkdCaTJaMTJUajl2MXAyZG5sUklBME5tUUl4WEt4Mjl4UXNMZXh1?=
+ =?utf-8?B?Qnc4N2E0NEtWWEpRbExNTENTamgyTVdKTDlmZGQxbm1vdFJJK2EwMnZ5ZkJs?=
+ =?utf-8?B?OWdseXdVb1FNVTdpTmVhc3orVlhYSWRmMkJrNUVnQUx5R0x2eVg3cGM4c2xw?=
+ =?utf-8?B?amRxbG90L1lNbDMwV1J1Q2ZsZ2NGaDFtUmlNc2hCOUlLVGxWaXc2Q0k4Z0x4?=
+ =?utf-8?B?aTNtd25oR0lEUk1Lbjk3OEtDYWtpVXBsKytsTU9ibmp3TEJBV0ZMay9rZ1lL?=
+ =?utf-8?B?OWVLOUorbEFFUEFPT2szclFNc3BRK00zZzJXaFZmaHdjUGZKYTg3SVE1NGxM?=
+ =?utf-8?B?THFwSm5DS1l0elo2Q0gwYVcraVdOQjduMFRZc3BEeE9qWXd1YkhtNFNYLzNq?=
+ =?utf-8?B?SFpFUG45cUJmc1JFRlVLY0JxZy83WUFvdlc0eGVTd2NEL3R2c2hvdlg2Mzhk?=
+ =?utf-8?B?Qjh6VWFIK20xVVVaRkZUaENIK1FLb21IR0JERGRjKzBjMWtGZGFVd0J4Rkdl?=
+ =?utf-8?B?NGYvd0w1dmRySTE2K0ltRmloWDNHV1dwMElGOWNMc1M4b21pekVDMGk2ajcr?=
+ =?utf-8?B?ek1wRVAxTVFoQlBSaFg1TzdrNW1LQ3RQbzVDZnJuaVBaSkR4VGdFNmwycTFn?=
+ =?utf-8?B?TUhGYUlkYTdkS1k5ZG05S1FtbCtaMmNzbHZ1dTJhMkRsSjZmNU01SEdyc0hU?=
+ =?utf-8?B?OGpLNUJjdVovVXNlWWhXMjQwaFVSdnVaakM2d1lobVFTR2ZzcXBsbjdibUJx?=
+ =?utf-8?B?VEtOdU14UlhNa2U3bjdFNURyUUw3amlTYWdVYStjWDFqZ2FFMnRqRHpUTGVx?=
+ =?utf-8?B?K05PSGs2eWRzNWtRQW5tYWdleVpMZC9qUmlzZk9rWUdKak44eHZwb0I0aWhr?=
+ =?utf-8?B?MUI0d2o3RmY0RUp3SHh2S05oT2tObDlLRVE1bmx0QjJjQ3ZIa3dWQ2tyL3hH?=
+ =?utf-8?B?OTd0TFk2SW1LYWs0WWs5L3JGakpYcTBNTW1TMmZOV3FENVgvN3psanFvUlJx?=
+ =?utf-8?B?RFltaGsvaVpWbHJxaDEwRDRHTkhiWStVdVRQOEF1cDVZcXJETng5end6WnhE?=
+ =?utf-8?B?eW5kNHlTVzlGUlcvOVRVNXhKM0ttd3BvQXZ2eUlHM1NrYnpXRU1BRG4zNzVW?=
+ =?utf-8?B?aU4wTmFwZlFyUzh1NGNKaDE5aldUU3MybmNtWFZCZ3NwMm4yRWxnUlhMeTdp?=
+ =?utf-8?B?QjBlTE56Ump4MG10UE5vSVNUS1M2ZnlHVk81bjR1aUZVWCtpUnZ2TlQyRWgw?=
+ =?utf-8?B?azJZaWNDYitlUmdvWHFVS2JQaVFIWnhkKzVEZEVPaEZKU2I3SkZGSW1DTjZI?=
+ =?utf-8?B?UFFmWW01TmZHWXpBbjBYR1NxdDI5Q3dTUGRiQUZiTzNrSVh0aC8vR3pCRU5M?=
+ =?utf-8?B?RGo2YkVPMXNJNitlNG5VeUdBSHV5TVdrdEl6WlFCZUE0ZW95bG9wa0FjSzBo?=
+ =?utf-8?B?Wk4zU1pqWDkzdlVHa2pkWEY0YkNwR290NFkzL0JKc3BvRm1hSmRmNzkwMUx1?=
+ =?utf-8?B?M2xBUWQwN3VsZi9nakgxTU1oZEFENml0TTVXOGVKU3llK0FPdVhWVTVSU2Jt?=
+ =?utf-8?B?Z3lLME9VUHdXUG93TFR6VTR4bkJ1Zm1saGNSa05kWjRFNVhyVnlyWVRvbE4r?=
+ =?utf-8?B?VUNvZjkxbDlMZjY4cnZiWUsvUXJRV3RnenhKcWIwNDZLWFVEblZkWnhZSVF5?=
+ =?utf-8?B?aGs2RXNCUlIvY2E0WVB1cE5ROFk3YzQzVFdPV0VraE5yaGNud1kxT3NrVkdH?=
+ =?utf-8?B?RjZxNzVZd2NDVDRIMUxFMmxzOHJVeEt0YlNTa1RPWDlhRW5nUFovR3JmRzRq?=
+ =?utf-8?B?VGRCczBrRlB0UGR6SUZ0SmlPc01qRk9jVGNBMUI2dmpTMlVVNEZpVVBQeWNL?=
+ =?utf-8?B?T3hCSWQ2NnRLWmhsNzFkN3AzYlBEQ2dhRDRJaERvcWg3R2N4L1R5c2tPOU5B?=
+ =?utf-8?B?OUlkQmNrNmtmUVZZeHQ1YnF6ajF5ZXZ4MzU1Umo3SUpVMVkybXVQQzZUdzBU?=
+ =?utf-8?Q?ApAUQI/U34FJ2CP4=3D?=
+X-Exchange-RoutingPolicyChecked:
+	sdJWMBQWFdPRFuL3tlZGzp2fk+wnWS7PyFTvsH3IvQmFzq4WLUKBwhY5wigMxRgOrdRO+V/ZQXKSSSX8S72h7cfHksgQVy+8iA687ZGiI9CISQAXy1nzgIKprU6dNj8T0C1yQJtZW8/RxTRbj8r0FVtcVwDJ+UHJkZOMsiKbSerEfiKZHK5V+wCr730K1TIB6KvxL59vkk5jruxKUHQmXiuW9RFCL8vctusYSF5Fsqn4B2++tTCo8LbF9AnlgelvbXe6S82lz0l+2e1DzREtLohKaMYXEb6t4CHbr6UnFyF+L17Twli+JIx9IZODp1UcyUs3exPwuCeRRhgWMNEAQA==
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
+	puI1iaKE30VgASOYWmcfacrIYQJPKgtRpkTVUC4zJwofKHWLjqZ2m9eOT9HocPtmjhx38uB4e4E1JY7PS+5rR6PQbFA90tv7Gpi/7CwvFN6vAg0UmhrgIq1Wcf1T6HLTu1ffhenQyJ45XsDOzBVCd61RZDj0Aj+D8sxymqafwkufHh5R75SjvvjXur/8xotfJa3QdTlU2lTMjuCEecMJPAxrizYEf2VpYhiCCDUWoTupBkO1Xc0jQIhc7+vTE4huS3Bn0VPItu0tQc3RI/+FBjwE11BGcW00ouCrGaNl8VasELnP8xopb6REztyypRQriADrKpknuNW3gSObKP7gl/QHn8sxN1ugOo1sR7T7ZUmDzKk8SkROQW/CcizGpR5iPPvWTij94dldHN9+EH09GN+E8KAezSn4VsTx28bKCq4mvQEWkM4b5hWowhdyTvZ7dFror8R9OYUQx12E7Lzcow9BeKPImE4eIuG0Y53HfMGhOHb45uEnre/jyQHh/qza8WtmCy1YXmzgE4zsBBmebn99ZNJrphNXuzlO5ZEgHMiqCYroDWbNGLPGcnoK10uSvmuSS1W+QhNksMjhVhzqlLTHPeF8AGpvCx7nLOHMDzQ=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 18089c52-2067-4531-459c-08df20b2e35d
+X-MS-Exchange-CrossTenant-AuthSource: LV3PR10MB7868.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Oct 2026 18:28:00.2383
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: dGYV4FN8FyyGU7iUX0eKgtajQVhteM2YMmcNhZ7zTAz7bDYq/l4i28A1Gaxo7t/Ng4Xwj9oyu2Kezow+LLhwghMHZxTIFWNuLgw9YeYUINw=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR10MB4147
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1176,Hydra:6.1.134,FMLib:17.12.100.49
+ definitions=2026-10-02_05,2026-10-02_02,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0
+ adultscore=0 lowpriorityscore=0 mlxscore=0 spamscore=0 malwarescore=0
+ suspectscore=0 mlxlogscore=999 phishscore=0 classifier=spam adjust=0
+ reason=mlx scancount=1 engine=8.19.0-2609040000 definitions=main-2610020073
+X-Proofpoint-Spam-Info: AW1haW4tMjYxMDAyMDA3MyBTYWx0ZWRfX5RellY0g/P9j
+ ruiYN/zeRMQRPlLk54rke6IzSp/xzIj2melB6CwyBqpuv2sUvwA73NalAp32Lqw3P71+EVa8077
+ Qt87FMZYjwV9GYMf0dvneI2VtO61CJUu764lQVNdciyI5HcFq/MW
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYxMDAyMDA3MyBTYWx0ZWRfX5ziut9BQB9fd
+ LmjsP4SB/ub29jmqs7bDL2ppBPHWInGFPtMbnUxYN57KgGuqWYsrrgSO7wlj3YqM0YNrfhwIcjQ
+ VmSP6OpUjI7ghGFS8sanDFPDhKckjRTwkbH/ruR2iqUKD25b4nqAfDJdIpNsloh7hXYO7A+Z+2e
+ gbOKfdUvIMK3SFIeml0kW2m8SJeuOUB2NYeQja1W9mz91zW3btL97YeLKkat8D3UQyL55g+aV15
+ hoSMZTCOXJO2ng6h1VVjUM6E/lVue1ud+k5gc+3vIPsSB8YG1yNPN2fER9TQxN2L9qf2n8AGdbW
+ hyGzcszS4caXuMQoizmdzT6hrc4r4rm3JbP8ZRqZrQ+2eyMz+uGwGIpT6IsAMEi2yzCEag+lX8I
+ +6G1ZdourPoeVwwMIb6eQSU/20yMFxunB8MSlwQ9LpduhlUJ9vsBQMB/L0r4LDBbgAJK1w8/FqK
+ /k2UM+oPRzr4VGUhIFA==
+X-Proofpoint-ORIG-GUID: lUSBwQ4GBDBz52pFj_t-qkKdmcYzoGtn
+X-Proofpoint-GUID: lUSBwQ4GBDBz52pFj_t-qkKdmcYzoGtn
+X-Authority-Analysis: v=2.4 cv=PPGaavqC c=1 sm=1 tr=0 ts=6abff7b9 cx=c_pps
+ a=XiAAW1AwiKB2Y8Wsi+sD2Q==:117 a=XiAAW1AwiKB2Y8Wsi+sD2Q==:17
+ a=6eWqkTHjU83fiwn7nKZWdM+Sl24=:19 a=z/mQ4Ysz8XfWz/Q5cLBRGdckG28=:19
+ a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10
+ a=660iZSQnnn4A:10 a=GoEa3M9JfhUA:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=jiCTI4zE5U7BLdzWsZGv:22 a=BqU2WV_vvsyTyxaotp0D:22 a=VwQbUJbxAAAA:8
+ a=1XWaLZrsAAAA:8 a=yPCof4ZbAAAA:8 a=yJMZlIcQM3o1iPV7IOcA:9 a=QEXdDO2ut3YA:10
 
-From: Alice Rogers <alice.mei.rogers@gmail.com>
+Ian Rogers <irogers@google.com> writes:
+> On Thu, Oct 1, 2026 at 11:20=E2=80=AFAM Stephen Brennan
+> <stephen.s.brennan@oracle.com> wrote:
+>>
+>> The flamegraph.py script has a "-i" option which it uses in an attempt t=
+o
+>> know the input file name for the data it is processing. But perf itself =
+is
+>> using that flag and not forwarding its value to the script, so the entir=
+e
+>> strategy won't work. It's further complicated by how the option processi=
+ng
+>> is handled in the flamegraph-report script -- details in patch 2.
+>>
+>> This series introduces a helper to allow python scripts to see the input
+>> file name, and then fixes flamegraph.py. Testing with a variety of optio=
+ns
+>> like below shows that it is using the correct input files in most use ca=
+ses
+>> I can think of:
+>>
+>> $ export PERF_EXEC_PATH=3D$(pwd)/tools/perf
+>>
+>> $ sudo -E tools/perf/perf script flamegraph -a -F999 -- sleep 1
+>> dumping data to flamegraph.html
+>>
+>> $ sudo -E tools/perf/perf script record flamegraph \
+>>                           -o myfile.data -a -F999 -- sleep 1
+>> [ perf record: Woken up 1 times to write data ]
+>> [ perf record: Captured and wrote 2.891 MB myfile.data (1832 samples) ]
+>>
+>> $ sudo -E tools/perf/perf script report flamegraph -i myfile.data \
+>>                                  -- -o myfile.html
+>> dumping data to myfile.html
+>>
+>> $ sudo -E tools/perf/perf script \
+>>        -s tools/perf/scripts/python/flamegraph.py -i myfile.data
+>> dumping data to flamegraph.html
+>>
+>> $ sudo -E tools/perf/perf script record flamegraph \
+>>        -o - -a -F999 -- sleep 1 \
+>>     | tools/perf/perf script report flamegraph -i - -- -o manual.html
+>> [ perf record: Woken up 1 times to write data ]
+>> [ perf record: Captured and wrote 2.936 MB - ]
+>> dumping data to manual.html
+>
+> Hi Stephen,
+>
+> Thank you for the contribution! Unfortunately we recently deleted all
+> of this code in this series:
+> https://lore.kernel.org/linux-perf-users/20260926062029.800743-1-irogers@=
+google.com/
+> You can find the latest code in the perf-tools-next branch:
+> https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.=
+git/
 
-Extend test_ttimechart_python.sh to cover --live option validation,
-LiveRecorder's perf record subprocess, control pipe and -o output file,
-a synthetic live UI test exercising the rolling window, pruning,
-pause/resume and zoom following, and a live workload recording test when
-scheduler tracepoints are accessible.
+Hi Ian,
+Thanks, I should have checked there first.
 
-Assisted-by: Antigravity:gemini-3.1-pro
-Signed-off-by: Alice Rogers <alice.mei.rogers@gmail.com>
-Co-developed-by: Ian Rogers <irogers@google.com>
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- .../tests/shell/test_ttimechart_python.sh     | 300 ++++++++++++++++++
- 1 file changed, 300 insertions(+)
+> The flamegraph code that now uses perf's python module is here:
+> https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.=
+git/tree/tools/perf/python/flamegraph.py?h=3Dperf-tools-next
 
-diff --git a/tools/perf/tests/shell/test_ttimechart_python.sh b/tools/perf/tests/shell/test_ttimechart_python.sh
-index 87b91ed8fc16..495060586cfc 100755
---- a/tools/perf/tests/shell/test_ttimechart_python.sh
-+++ b/tools/perf/tests/shell/test_ttimechart_python.sh
-@@ -82,6 +82,34 @@ test_plumbing() {
- 		err=1
- 		return
- 	fi
-+	if perf timechart --live -i "${perfdata}" > "${output}" 2>&1 ||
-+	   ! grep -q -- "--live can't be used with -i" "${output}"; then
-+		echo "perf timechart --tui plumbing test [Failed: --live with -i not rejected]"
-+		cat "${output}"
-+		err=1
-+		return
-+	fi
-+	if perf timechart --live --window 0 < /dev/null > "${output}" 2>&1 ||
-+	   ! grep -q -- "--window must be a positive" "${output}"; then
-+		echo "perf timechart --tui plumbing test [Failed: --window 0 not rejected]"
-+		cat "${output}"
-+		err=1
-+		return
-+	fi
-+	if perf timechart --tui --window 5 < /dev/null > "${output}" 2>&1 ||
-+	   ! grep -q -- "require --live" "${output}"; then
-+		echo "perf timechart --tui plumbing test [Failed: --window without --live]"
-+		cat "${output}"
-+		err=1
-+		return
-+	fi
-+	if perf timechart --live -I -P < /dev/null > "${output}" 2>&1 ||
-+	   ! grep -q -- "-I cannot be used with -P or -T" "${output}"; then
-+		echo "perf timechart --tui plumbing test [Failed: -I with -P not rejected]"
-+		cat "${output}"
-+		err=1
-+		return
-+	fi
- 	echo "perf timechart --tui plumbing test [Success]"
- }
- 
-@@ -115,6 +143,43 @@ test_no_events() {
- 		err=1
- 		return
- 	fi
-+	# Exercise LiveRecorder's perf record subprocess, control pipe and
-+	# -o output file using task-clock when tracepoints may be unavailable.
-+	rm -f "${clockdata}"
-+	if ! "$PYTHON" - "${PERF_BIN:-perf}" "${clockdata}" \
-+		"$(declare -f workload); workload" > "${output}" 2>&1 <<'EOF'
-+import asyncio
-+import os
-+import sys
-+import ttimechart as tc
-+
-+async def run() -> None:
-+    rec = tc.LiveRecorder(sys.argv[1], False, False, ["bash", "-c", sys.argv[3]], sys.argv[2])
-+    rec.events = lambda: ["task-clock"]
-+    rec.start()
-+    app = tc.TimechartApp("live", False, False, [], live=rec, window=5.0)
-+    try:
-+        async with app.run_test(size=(120, 40)) as pilot:
-+            await pilot.press("space")
-+            await pilot.pause(0.1)
-+            await pilot.press("space")
-+            for _ in range(300):
-+                if app.return_code is not None:
-+                    break
-+                await pilot.pause(0.05)
-+    finally:
-+        rec.stop()
-+    if app.return_code != 1 or not app.data.nr_samples or not os.path.getsize(sys.argv[2]):
-+        raise RuntimeError(f"Unexpected result: rc={app.return_code} samples={app.data.nr_samples}")
-+
-+asyncio.run(run())
-+EOF
-+	then
-+		echo "ttimechart no events test [Failed: LiveRecorder task-clock test]"
-+		cat "${output}"
-+		err=1
-+		return
-+	fi
- 	echo "ttimechart no events test [Success]"
- }
- 
-@@ -218,8 +283,242 @@ EOF
- 	echo "ttimechart headless UI test [Success]"
- }
- 
-+test_live_synthetic() {
-+	echo "ttimechart live UI test (synthetic)"
-+	# Exercise live mode's rolling window, pruning, pause/resume and
-+	# following with a fake recorder, which doesn't need tracepoint
-+	# permissions.
-+	if ! "$PYTHON" - > "${output}" 2>&1 <<'EOF'
-+import asyncio
-+import threading
-+import time
-+from time import monotonic_ns
-+import ttimechart as tc
-+
-+SEC = 1_000_000_000
-+
-+class Ev:
-+    def __init__(self, name):
-+        self.name = name
-+    def __str__(self):
-+        return f"evsel({self.name})"
-+
-+class Sample:
-+    def __init__(self, name, t, cpu, tid, **kw):
-+        self.evsel = Ev(name)
-+        self.sample_time = t
-+        self.sample_cpu = cpu
-+        self.sample_tid = tid
-+        self.sample_pid = tid
-+        self.sample_id = hash(name)
-+        for k, v in kw.items():
-+            setattr(self, k, v)
-+
-+class FakeRecorder:
-+    def __init__(self):
-+        self.origin = monotonic_ns()
-+        self.data_fd = -1
-+        self.flush_interval = 0.05
-+        self.paused = False
-+        self.pause_calls = []
-+        self.stopped = threading.Event()
-+        self.finish = False
-+
-+    def backlog(self):
-+        return 0.0
-+
-+    def set_paused(self, paused):
-+        self.paused = paused
-+        self.pause_calls.append(paused)
-+
-+    def stop(self):
-+        self.stopped.set()
-+
-+    def error_text(self):
-+        return ""
-+
-+async def run() -> None:
-+    rec = FakeRecorder()
-+
-+    def fake_read(data, _fd):
-+        t0 = rec.origin
-+        # Task 300 only runs at the start so pruning should drop it once the
-+        # 1s window advances past t0 + 3000.
-+        data.process_event(Sample("sched:sched_wakeup", t0 + 1000, 0, 1,
-+                                  pid=300, comm="early", common_pid=1, common_flags=0))
-+        data.process_event(Sample("sched:sched_switch", t0 + 2000, 0, 0,
-+                                  prev_pid=0, prev_comm="swapper", prev_state=1,
-+                                  next_pid=300, next_comm="early"))
-+        data.process_event(Sample("sched:sched_switch", t0 + 3000, 0, 300,
-+                                  prev_pid=300, prev_comm="early", prev_state=1,
-+                                  next_pid=0, next_comm="swapper"))
-+        cur = 0
-+        while not rec.stopped.is_set() and not rec.finish:
-+            now = monotonic_ns()
-+            if rec.paused:
-+                time.sleep(0.01)
-+                continue
-+            nxt = 100 if cur == 0 else 0
-+            comm = "worker" if nxt == 100 else "swapper"
-+            prev_comm = "worker" if cur == 100 else "swapper"
-+            if nxt:
-+                data.process_event(Sample("sched:sched_wakeup", now, 0, cur or 1,
-+                                          pid=nxt, comm=comm, common_pid=cur or 1,
-+                                          common_flags=0))
-+            data.process_event(Sample("sched:sched_switch", now, 0, cur,
-+                                      prev_pid=cur, prev_comm=prev_comm, prev_state=1,
-+                                      next_pid=nxt, next_comm=comm))
-+            cur = nxt
-+            time.sleep(0.005)
-+
-+    tc.read_events = fake_read
-+    app = tc.TimechartApp("live", False, False, [], live=rec, window=1.0)
-+    async with app.run_test(size=(120, 40)) as pilot:
-+        for _ in range(300):
-+            with app.data.lock:
-+                if app.data.pruned_to > rec.origin + 3000:
-+                    break
-+            await pilot.pause(0.05)
-+        with app.data.lock:
-+            if app.data.pruned_to <= rec.origin + 3000 or 300 in app.data.tasks:
-+                raise RuntimeError("Task outside the window was not pruned")
-+            starts = [t.segs.starts[0] for t in app.data.tasks.values() if len(t.segs)]
-+            if not starts or min(starts) < app.data.pruned_to:
-+                raise RuntimeError(f"Unpruned segments: {starts} < {app.data.pruned_to}")
-+        if app.window.last - app.window.first != SEC:
-+            raise RuntimeError(f"Unexpected window span: {app.window}")
-+
-+        await pilot.press("space")
-+        await pilot.pause(0.2)
-+        if rec.pause_calls != [True] or "Paused" not in app.sub_title:
-+            raise RuntimeError(f"Did not pause: {rec.pause_calls} {app.sub_title}")
-+        frozen = app.window.last
-+        await pilot.pause(0.4)
-+        if app.window.last != frozen:
-+            raise RuntimeError("Window moved while paused")
-+        await pilot.press("space")
-+        await pilot.pause(0.3)
-+        if rec.pause_calls != [True, False] or not app.following:
-+            raise RuntimeError("Did not resume")
-+
-+        await pilot.press("plus")
-+        await pilot.pause(0.2)
-+        if app.following:
-+            raise RuntimeError("Zooming did not stop following")
-+        await pilot.press("0")
-+        await pilot.pause(0.2)
-+        if not app.following:
-+            raise RuntimeError("Resetting zoom did not resume following")
-+
-+        rec.finish = True
-+        for _ in range(100):
-+            if not app.recording:
-+                break
-+            await pilot.pause(0.05)
-+        if app.recording or "Finished" not in app.sub_title:
-+            raise RuntimeError(f"Did not finish: {app.sub_title}")
-+
-+    # Also test live I/O-only mode (-I).
-+    io_events = tc.LiveRecorder("perf", False, False, [], None, io_only=True).events()
-+    if not io_events or not all(e.startswith("syscalls:sys_") for e in io_events):
-+        raise RuntimeError(f"Unexpected I/O events: {io_events}")
-+    io_rec = FakeRecorder()
-+
-+    def fake_io_read(data, _fd):
-+        now = monotonic_ns()
-+        # Self I/O should be ignored in live mode.
-+        own = tc.os.getpid()
-+        data.process_event(Sample("syscalls:sys_enter_read", now, 0, own, fd=3))
-+        data.process_event(Sample("syscalls:sys_exit_read", now + 1000, 0, own, ret=64))
-+        # Workload I/O should be recorded.
-+        data.process_event(Sample("syscalls:sys_enter_read", now + 2000, 0, 4242, fd=4))
-+        data.process_event(Sample("syscalls:sys_exit_read", now + 5000, 0, 4242, ret=4096))
-+        data.process_event(Sample("syscalls:sys_enter_write", now + 6000, 0, 4242, fd=5))
-+        data.process_event(Sample("syscalls:sys_exit_write", now + 9000, 0, 4242, ret=2048))
-+
-+    tc.read_events = fake_io_read
-+    io_app = tc.TimechartApp("live", False, False, [], live=io_rec, window=1.0, io_only=True)
-+    async with io_app.run_test(size=(120, 40)) as pilot:
-+        for _ in range(100):
-+            if not io_app.recording:
-+                break
-+            await pilot.pause(0.05)
-+        await pilot.pause()
-+        tabs = io_app.query_one(tc.TabbedContent)
-+        if tabs.active != "io" or not io_app.io_tasks or io_app.data.io_events != 4:
-+            raise RuntimeError(f"Unexpected I/O state: active={tabs.active} "
-+                               f"tasks={len(io_app.io_tasks)} events={io_app.data.io_events}")
-+        tabs.active = "summary"
-+        await pilot.pause()
-+        await pilot.press("enter")
-+        await pilot.pause()
-+        if tabs.active != "io":
-+            raise RuntimeError(f"Summary enter did not activate I/O tab: {tabs.active}")
-+        print("live synthetic ok")
-+
-+asyncio.run(run())
-+EOF
-+	then
-+		echo "ttimechart live UI test (synthetic) [Failed: exception]"
-+		cat "${output}"
-+		err=1
-+		return
-+	fi
-+	if ! grep -q "live synthetic ok" "${output}"; then
-+		echo "ttimechart live UI test (synthetic) [Failed: unexpected output]"
-+		cat "${output}"
-+		err=1
-+		return
-+	fi
-+	echo "ttimechart live UI test (synthetic) [Success]"
-+}
-+
-+test_live_record() {
-+	echo "ttimechart live record test"
-+	rm -f "${perfdata}.live"
-+	if ! "$PYTHON" - "${PERF_BIN:-perf}" "${perfdata}.live" \
-+		"$(declare -f workload); workload" > "${output}" 2>&1 <<'EOF'
-+import asyncio
-+import sys
-+import ttimechart as tc
-+
-+async def run() -> None:
-+    rec = tc.LiveRecorder(sys.argv[1], False, False, ["bash", "-c", sys.argv[3]], sys.argv[2])
-+    rec.start()
-+    app = tc.TimechartApp("live", False, False, [], live=rec, window=5.0)
-+    try:
-+        async with app.run_test(size=(120, 40)) as pilot:
-+            for _ in range(600):
-+                if not app.recording:
-+                    break
-+                await pilot.pause(0.1)
-+            if app.recording or not app.data.has_events():
-+                raise RuntimeError("Live recording of workload did not complete")
-+            print("live record ok")
-+    finally:
-+        rec.stop()
-+
-+asyncio.run(run())
-+EOF
-+	then
-+		echo "ttimechart live record test [Failed: exception]"
-+		cat "${output}"
-+		err=1
-+		return
-+	fi
-+	if ! perf script ttimechart -i "${perfdata}.live" --dump > "${output}" 2>&1 ||
-+	   ! grep -q "^Duration: .*sched events: [1-9]" "${output}"; then
-+		echo "ttimechart live record test [Failed: saved perf.data unreadable]"
-+		cat "${output}"
-+		err=1
-+		return
-+	fi
-+	echo "ttimechart live record test [Success]"
-+}
-+
- test_plumbing
- test_no_events
-+test_live_synthetic
- 
- if ! record; then
- 	echo "Skipping remaining tests, failed to record scheduler events (permissions?)"
-@@ -232,6 +531,7 @@ fi
- 
- test_dump
- test_headless_ui
-+test_live_record
- 
- cleanup
- exit $err
--- 
-2.56.0.rc1.315.gc6ed9934b7-goog
+That looks exciting! It makes things a lot easier to have perf as a
+regular Python module rather than wrapping the interpreter. It will be
+tricky for Oracle Linux which allows parallel installation of perf
+versions, but I guess we made our own bed there :)
 
+> and we even have some tests now:
+> https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.=
+git/tree/tools/perf/tests/shell/test_flamegraph_python.sh?h=3Dperf-tools-ne=
+xt
+>
+> You may also like to play with the console flamegraph that is part of tre=
+port:
+> https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.=
+git/tree/tools/perf/python/treport.py?h=3Dperf-tools-next
+
+This is quite slick! I'll definitely be playing more with the python
+module.
+
+Thanks,
+Stephen
+
+> Thanks,
+> Ian
+>
+>
+>> Stephen Brennan (2):
+>>   tools: perf: add perf_input_name() helper
+>>   tools: perf: flamegraph.py: fix "Error reading report header"
+>>
+>>  .../perf/Documentation/perf-script-python.txt |  1 +
+>>  .../scripts/python/Perf-Trace-Util/Context.c  | 16 ++++++++++++++
+>>  tools/perf/scripts/python/flamegraph.py       | 22 +++++++++----------
+>>  3 files changed, 27 insertions(+), 12 deletions(-)
+>>
+>> --
+>> 2.52.0
+>>
