@@ -1,99 +1,90 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4162A4EF14B;
-	Fri,  2 Oct 2026 16:17:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0FF83D76;
+	Fri,  2 Oct 2026 16:19:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790957862; cv=none; b=nFGyr9Zj5RzI28hy5NorsC7nV8+5fyRl7jDx18ZlpZvw2JF/ej+lU4a1j6LijMhLFkv4DuGEo4AlOSZnRyFe7GIHLyp/ICngvU0dV05NHQNzbY0kaIBtXL0vBELjDKVwgpoPqeXiWGiivjAl6LljPP7ss6AsatByAuqzqHpb2Aw=
+	t=1790957942; cv=none; b=Tn1GhjCTC8RRGXFb/6WP7pH+KecXzbg2QII5IkfhhC6StqcTFRieRBrwryJ6mlFPdxO5HdYBXp0zrhxlaAkt5LWR9wHvj60ly0lIZEGNUJFXMlnT+6UuSZm27EwtYONQTaVobnCvCfc3FTFFxEEgk8VqUKEg/txQSzXp5SMWfh4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790957862; c=relaxed/simple;
-	bh=2UTKHksEaCXV1vC+/5CjGX3Vmty1Raa+dblfQ/QZPEw=;
+	s=arc-20240116; t=1790957942; c=relaxed/simple;
+	bh=B48fwaa56pY4U+My0GqpvR9gOogOUEm2JeWSv86s0YU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bFnfzk/if2ZBpIr6VQE/xw3KZVs2jLMdJykHKj4RrTdkJQwU7B8/LLDi4CxcMnHjqHPqW/JEi0DSS+7Z10wjDRCTyojsQbad9rcMXKgBnuFOTZyJbUx5Q7CSyMxYlv2/ntB/Hj0Mz3qUM22WNEEHg4r8mDvROrMYx6wN1MnkKsQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Vg3zhq1g; arc=none smtp.client-ip=100.103.45.18
+	 Content-Type:Content-Disposition:In-Reply-To; b=YmOhKp01dR5enYubV2e4ERzzcsr0gKD2bW9kOcKtUxJIzGclxP82kIncUFnGxV6Z/y5f2niT0MrklL0Bd8MWspHx1BRuw0NKgwNtDk2f5eYiAB5hE6p805jqm3f6cB1kElUW1Csau7bhmGsfjYxdjTfx2aRfRBWEsLB/DukOrAg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cSacBtJO; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Vg3zhq1g"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 240981F000FF;
-	Fri,  2 Oct 2026 16:17:39 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cSacBtJO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CB6141F000FF;
+	Fri,  2 Oct 2026 16:18:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1790957860;
-	bh=rZN4P466B9E/iFmEdFu0SQsxiQmkN3TRjtaOfbQc9KM=;
+	s=k20260515; t=1790957940;
+	bh=eWmjm7vEKisLYbLXL6w0pR7Ro/v6UckZORlsLJ3XLUc=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=Vg3zhq1gBz5u99dsJXJl9vvVsPfDihUcZa4m+QevYhmFHndST6FU/uwl3yhBnnhsM
-	 awo/E9AwPDw9YgXxzJvWJymQDAPyWpemmSyy5LH6Tbpmq3HvlSKEr4XcUUillMUTYN
-	 Ri+wfwqE9j3yl/KsQ8los+YzyOFsJHx8cwB4tflzq4gqJ5d+h3JPiSqsv/5BsmMTxf
-	 e4ksjYQEjm2qfPBzu1dU+KufgJQuaBHj8Wv+SQeF9K5xps0PtlzfAqDDgsWyeORaMG
-	 u6nV/fQCwEPRKdH+QuAwj+QMXEDOmJT4N8Au/N7yPYsfg0oSogecb/wnL5T22toSSb
-	 l6Oz3qjEL8ETA==
-Date: Fri, 2 Oct 2026 18:17:37 +0200
+	b=cSacBtJO4kq0zNSOtsryekHLMV6tj7igTBIjf8XbrtphydCvD0SpPvQ9qi8Bsp95X
+	 VYHWi9DQfKKRHlk//+wWPcuwBJC8FqkSnBTlurHiKnk6lf9yAGXNGKUPCBBzSH48FW
+	 Ve5GkkPqkDBeKpvVz6Z6ggXFztrVGlIm8QHdsSSbHfL42+CRoj5gzgjcejfV+VQliW
+	 zEoMsCYjwvi779FxQLcRUcvJ+weCAnEPuY+syc4lppS4WdzSIx5FoiEy/O3vmUGuQr
+	 nI2ZUs0kvrJt36wF9tDsmSVl7H08QlDwbVUc1jkORyY7xez1YX+XMC/6l8MXQaM1c+
+	 mwHqH0lB4gxYA==
+Date: Fri, 2 Oct 2026 18:18:57 +0200
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Ian Rogers <irogers@google.com>
-Cc: adrian.hunter@intel.com, atomlin@atomlin.com, howardchu95@gmail.com,
-	james.clark@linaro.org, jbrnak@redhat.com, jolsa@kernel.org,
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-	mingo@redhat.com, namhyung@kernel.org, peterz@infradead.org,
-	Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: Re: [PATCH 1/2] perf trace: Only call bpf_get_current_pid_tgid()
- when filtering tasks
-Message-ID: <ar_ZIdRIoo1p_RXH@x2>
-References: <ar6nzTSj17IxCy0j@x2>
- <20261002065440.2781176-1-irogers@google.com>
+Cc: James Clark <james.clark@linaro.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>, Leo Yan <leo.yan@arm.com>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] perf python: Track linked libraries as extension
+ dependencies
+Message-ID: <ar_ZcRqAZxwQpr4O@x2>
+References: <20261001-james-perf-stale-python-build-v1-1-dd3b14644606@linaro.org>
+ <CAP-5=fVsTGp+_gsk-yCiK58A7O3LuK0okOuHwuVr+xgiSHVGLQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20261002065440.2781176-1-irogers@google.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAP-5=fVsTGp+_gsk-yCiK58A7O3LuK0okOuHwuVr+xgiSHVGLQ@mail.gmail.com>
 
-On Thu, Oct 01, 2026 at 11:54:39PM -0700, Ian Rogers wrote:
-> In task_traced(), bpf_get_current_pid_tgid() was called before checking
-> has_pids_to_trace. Because BPF helper calls are not marked pure, the
-> compiler cannot sink the call past the has_pids_to_trace check, so the
-> helper was called on every syscall enter and exit even when tracing
-> system-wide.
+On Thu, Oct 01, 2026 at 09:25:02AM -0700, Ian Rogers wrote:
+> On Thu, Oct 1, 2026 at 8:48 AM James Clark <james.clark@linaro.org> wrote:
+> >
+> > Since the Python extension switched to linking perf libraries, setup.py
+> > only lists util/python.c as a source. The libraries are supplied through
+> > LDFLAGS, which setuptools does not consider when deciding whether the
+> > extension needs to be rebuilt.
+> >
+> > When a library changes, make invokes setup.py, but setuptools can skip
+> > the build and the recipe copies the stale cached extension back into
+> > python/. This leaves perf and its Python module running different
+> > versions of the same code.
+> >
+> > Pass the linked library paths to setup.py and declare them as Extension
+> > dependencies so that library changes trigger a rebuild. Include
+> > EXTRA_PERFLIBS in the shared library list so that both make and
+> > setuptools track those inputs as well, preserving the existing linker
+> > order.
+> >
+> > Fixes: 9dabf4003423 ("perf python: Switch module to linking libraries from building source")
+> > Assisted-by: Codex:GPT-6-Astra
+> > Signed-off-by: James Clark <james.clark@linaro.org>
 > 
-> Check has_pids_to_trace before calling bpf_get_current_pid_tgid().
-> 
-> Suggested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+> Reviewed-by: Ian Rogers <irogers@google.com>
 
-Thanks, appreciated, applied,
+git am complained, applied manually:
+
+⬢ [acme@tb-x2-perf perf-tools-next]$ patch -p1 < ./20261001_james_clark_perf_python_track_linked_libraries_as_extension_dependencies.mbx
+patching file tools/perf/Makefile.perf
+Hunk #1 succeeded at 538 (offset 12 lines).
+Hunk #2 succeeded at 571 with fuzz 1 (offset 12 lines).
+patching file tools/perf/util/setup.py
+⬢ [acme@tb-x2-perf perf-tools-next]$
 
 - Arnaldo
-
-> Assisted-by: Antigravity:gemini-3.1-pro
-> Signed-off-by: Ian Rogers <irogers@google.com>
-> ---
->  tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c | 6 ++++--
->  1 file changed, 4 insertions(+), 2 deletions(-)
-> 
-> diff --git a/tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c b/tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c
-> index d16e55706335..0b2ef9541f84 100644
-> --- a/tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c
-> +++ b/tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c
-> @@ -494,13 +494,15 @@ static bool pid_filter__has(struct pids_filtered *pids, pid_t pid)
->  
->  static bool task_traced(void)
->  {
-> -	u64 pid_tgid = bpf_get_current_pid_tgid();
-> -	pid_t pid = uses_tgid ? pid_tgid >> 32 : (pid_t)pid_tgid;
-> +	u64 pid_tgid;
-> +	pid_t pid;
->  	bool *traced;
->  
->  	if (!has_pids_to_trace)
->  		return true;
->  
-> +	pid_tgid = bpf_get_current_pid_tgid();
-> +	pid = uses_tgid ? pid_tgid >> 32 : (pid_t)pid_tgid;
->  	traced = bpf_map_lookup_elem(&pids_to_trace, &pid);
->  	return traced && *traced;
->  }
-> 
-> base-commit: 148cd3adf2df9e53fd9b3070ae1178d4876f8c67
-> -- 
-> 2.56.0.rc1.315.gc6ed9934b7-goog
-> 
