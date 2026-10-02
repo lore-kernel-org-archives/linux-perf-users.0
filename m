@@ -1,217 +1,142 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yx2-f42.google.com (mail-yx2-f42.google.com [74.125.224.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98A0D38E8BE;
-	Fri,  2 Oct 2026 22:56:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790981809; cv=none; b=fLHsITYFkM4GxBSEKP+5qqDQh9g+CVs3xiTEkRF0X6TV4CKi+ireJ5VPo3CASlhFajtlIHFdOzcilUY0Dj5GnE65xXWvlsF1rzGhlDDgdycS7qVNNI2VhVYzFw6WTam6+T0AMwGYxlmzJJjhCUQ0pVTjhhRC0crzHHcAPcS47vo=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790981809; c=relaxed/simple;
-	bh=GFx/LeUutYGou8DsysigmeQmHVZsZ6+hH0tks7jO7Tc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=h7zFuZ2ajSOHLLCZQBzCtKYto0hoqyLrAQckN3bhMtUnOwUN5lt6DDk9wHuGhw7O6srPPtoZGdfwOfXPX6yEDHFbEx1Qqxf1RYvzr1DW7qFktOPUIhavXB+2UGDtouPL7lJKSGv+b9L8FgmBoKIRiUO1IUb9YUrdcZ96lTq5KVE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=A8tUhLBc; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67ABE4078E1
+	for <linux-perf-users@vger.kernel.org>; Fri,  2 Oct 2026 23:26:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.224.170
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1790983564; cv=pass; b=u83UXmx+Q+PTm1SdetUj+oZs0a2QQYGNgt0wjiUp4Jo7F5Da3jmcALvMixoqvSaDRpS90H0+Rl+gLr3GaXh0HJip4BXp5x8rNvkCfM3xp0kYfmX1FUU+vKV8OdZUlK4V1IjFOlaZZiIHJzK7o+G+2uNl0aTDayksKlvyNJZQXOw=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1790983564; c=relaxed/simple;
+	bh=u8gVVSgBrEyEZ0ngpczrNEJeXuDf1kkf1UVuVDZXvhY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=OhLSwtEqGRzTi1LMkt8lYbaOFaPXkVpJAfuRo8lCh5jZAxGwTythjmPiCMZhvYKkfhvqt7sqSDP50FjrZN5/cFZ86d2nDoClE7A6j38GsXPxLh51tv9Ral1H7QMfXV4n1ejvIAdlsw3G5Hp2pttQjEqZ7mA7SdBsDY8BW1JNPT8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=uber.com; spf=fail smtp.mailfrom=uber.com; dkim=pass (1024-bit key) header.d=uber.com header.i=@uber.com header.b=poPoUCJa; arc=pass smtp.client-ip=74.125.224.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=uber.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=uber.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="A8tUhLBc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 25D1C1F000FF;
-	Fri,  2 Oct 2026 22:56:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1790981808;
-	bh=4ix/4A8+bmjpefCe0g2D3yU51PxoWBhvKoT6KgI83UQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=A8tUhLBcScFLRNZn0CdsgC4NVThzvEkPAtm2D5cAzDzfyUXt1vLwEZVXUR5CT0+sh
-	 FbejBpXVDS0iK8SRhPsHzxezLzXhB+VCcUQ6O3mzNvKUIDgO73Go2WAX9TUY/ynDlV
-	 NsZUZwESApKt0yjW/opmN4ztKdp1bjrjFDinOT5tEsDrgzPQX6m3uo4J7W5RH78AKX
-	 O/HOGmycUE9yBz98XQXHa8corPbjms2CWpCRluOGCOtEAt9A4aYV+9m5bqtMl5+oHv
-	 TXKpXMkQMvD7ws+If+B9hhAhNlNt+VIsY/5CA7v6ZsE3ZT4Ylr5+DoOPBsnvSWwTsu
-	 el/LpupsXgfSQ==
-Date: Fri, 2 Oct 2026 15:56:46 -0700
-From: Namhyung Kim <namhyung@kernel.org>
-To: sashiko-reviews@lists.linux.dev
-Cc: Yanbo Zhao <yzhao62@ncsu.edu>, linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v2 3/3] perf annotate: Resolve C++ virtual function calls
- in x86 insn tracking
-Message-ID: <asA2rgBbNuwh-zR-@google.com>
-References: <20260930210038.196928-1-yzhao62@ncsu.edu>
- <20260930210038.196928-4-yzhao62@ncsu.edu>
- <20260930211112.B2A431F000FF@smtp.kernel.org>
+	dkim=pass (1024-bit key) header.d=uber.com header.i=@uber.com header.b="poPoUCJa"
+Received: by mail-yx2-f42.google.com with SMTP id 956f58d0204a3-672ce86b21aso40726d50.3
+        for <linux-perf-users@vger.kernel.org>; Fri, 02 Oct 2026 16:26:03 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1790983562; cv=none;
+        d=google.com; s=arc-20260327;
+        b=UgTaz+J/Md9VW899hFDvO/kcM0ik8xhw6wIEv+tfZ/X5cmNSZdju5gJc3uqOgeVzIh
+         uUbmu/umfanSAtJysQqB9yYbWzA5ZlJFpoj6aQZvHPTIQg4MD7Onht+ZQziG02clv7Gt
+         pJARWsEEV1L7NNyRQNn2GqCdtL7VFq9VPzcLHkG2n/Fx1Ayk8h9ajXBoSw2zco5uW62n
+         QRUyud8X8zCASyzagvo1zLcOvPQUMHs1oUGGwTqLD4F5yUiGsuCbQQmfiKRdD63WeaZt
+         jkn0Nx8R8OF/RJgj/4fHkfm2gcCtmHRxShyv7SJRJ+W+IQGsaAUQvf/KH5rVNhL4dS3R
+         vNmw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=u8gVVSgBrEyEZ0ngpczrNEJeXuDf1kkf1UVuVDZXvhY=;
+        fh=AkUAc9PDsI9ZlWTuSygdM+NPGmI20lerxQ/cmv82vHs=;
+        b=FTY+CNjaOWeDiJOvnvNsIJs6cL3tWHLzPWYPcm4MOlSS2F3bpXCS/3MW3KeAvuiwlW
+         JA0goEvJ2v32zjxVVl6Zwgyu0oCYIMODPSHpvQqRTMfo15+Ll+3UMI1HbNL3OF1aVt90
+         diPtqKdYOaqvVusKEwfe6eT7Gh1pz4W/R/61m2XYqOWZrvP4P8vS/RAMbxAn/3MYRZvl
+         7S/98XeKPMAuzEAQHPjVs9kF63foRc/+X7X8BAGHG2Kc/R14RLYqMUJgP9SXHRKxqDty
+         jE2KcZMUtW34WAO4AeuOubWItiuMAt/FjVt0DU/49s1XOiY2k4MDO5XT8Jg8QRjzsL5h
+         8vaw==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=uber.com; s=google; t=1790983562; x=1791588362; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=u8gVVSgBrEyEZ0ngpczrNEJeXuDf1kkf1UVuVDZXvhY=;
+        b=poPoUCJaJTVARtJ9jLfbIFI6Oo+P1THbdWPGmccfi+WPK2khdYHENXGWmyMO2PSsMg
+         ogMWPoE8fqSGxU94KhWPDFXbMP2Ae9duaCM6oAhoMrlRMODEECvMKXf6epxhkR59sddT
+         sslVGO7JiQSTmRhjbsvsNE1/+G+4+r7xgGzF4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1790983562; x=1791588362;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=u8gVVSgBrEyEZ0ngpczrNEJeXuDf1kkf1UVuVDZXvhY=;
+        b=Km4sENJ0jH3mXAObqFTEedZb5/fC99SFjoBOCWslqmbtnEhucHYLKyLlDttfVCYVzC
+         7lbnuhIunU7AkMe4JDUpVPeRmNcmoDeS5XDq1jfn7d1VBykSYL6yOJNXH/xWzTY9BmGU
+         L1rqfajZRTHAakqm7Ka10KjyP7axCKAfFZ/KVgIFhD8x5WlF+2SLnM4plFUDBqAKHUj9
+         cvaLGj4AvEORuzGLVWBX6vXEvTLa8AudX2nVoqIYjO9cSXD0ZVatRl04T6X0ecY0p68W
+         EjUrD7JXgDIwy8D8OASSLiW4hALJSPqAHeq7ELgAzg3iVYAliYPneI9blAcgHGz6CJOL
+         4UsA==
+X-Forwarded-Encrypted: i=1; AKwUvBxwUixqofhdfFSmpGUQ0wVOVrsZe3wybS7iCfIs7O5kXkZj0ANrF2OcmkSxrppeugGiPNFQ6Jr/ZjKjSjn9I2DE@vger.kernel.org
+X-Gm-Message-State: AFq9FYJetxpn72C9XbRpN7DYgWLV2y8mCIkkJcZs/idyyxLxTtqkXACt
+	BWzENhKdMzycoUuXHAmRVUEo3S+FSypCf9EmmG5u9J25edkQbSZsTLu6p5pH6dHinvQv8E0MctL
+	wsmTLiXl/SXuuqrkf6eccAbLtflrkJYlMGcRKZ5gJhg==
+X-Gm-Gg: AYBFou3vXPys90bRHGrnpQ3AXVgNHRBw5JaKsXFjLasxpqMPBMRwranLrie9V/xScUY
+	f7cHIdRAoYKhizJ9kjpf43LgZ05RGrOb1cZ70n1rtL8a1p77vPIHocr2kOUG84yi2J32ICU4DVm
+	MuiifWoOiI+RzXR2GEkTrBQ+29e/b8HEDeB6CHROsyoUit0p+QFlqkUgNoYXojYEjyeTV7q6Kdt
+	6RXaKErd6/hoSyl1ZAlWRqNzNmppf/P9IN2UIe5KXgY3J6mNZUaWAcHZWNNcl0kvuQaJ5nDkeKG
+	ByBHmE3t+D74sZzi5jum1cPMYb5TNNOKMxGBsR/RgQNQpLEclMgFBi1BFdN/cknwX0XTVEjbR2Y
+	4YC5/D3hu3uu0nTXPFLiZ6w==
+X-Received: by 2002:a05:690e:804:20b0:672:99e0:ebf6 with SMTP id
+ 956f58d0204a3-677ac1af0femr1170670d50.142.1790983561984; Fri, 02 Oct 2026
+ 16:26:01 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20260930211112.B2A431F000FF@smtp.kernel.org>
+References: <20261002-perf-symbol-memory-send-v4-0-0a592bb2539e@uber.com>
+ <20261002-perf-symbol-memory-send-v4-2-0a592bb2539e@uber.com> <CAP-5=fX=BvLMm-JHLqaR6ACmP0buF9TSvRLf_Cs1us-o6aMGRQ@mail.gmail.com>
+In-Reply-To: <CAP-5=fX=BvLMm-JHLqaR6ACmP0buF9TSvRLf_Cs1us-o6aMGRQ@mail.gmail.com>
+From: Alireza Haghdoost <haghdoost@uber.com>
+Date: Fri, 2 Oct 2026 16:25:45 -0700
+X-Gm-Features: AclHuK-ph-iyfrQ2eVW2jG3FptK-AGuI-o72WhxQK4yu3pLAKj6OtRrC1G1nndg
+Message-ID: <CA+w=M=REOd1gvi+c6vkd0Ue=q2d_gfC2xeJ_KSVg0H0AaOA+pw@mail.gmail.com>
+Subject: Re: [PATCH v4 2/5] perf dso: Allow reading DSO data from an explicit file
+To: Ian Rogers <irogers@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, James Clark <james.clark@linaro.org>, 
+	Alexei Starovoitov <ast@kernel.org>, Andrii Nakryiko <andriin@fb.com>, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Sep 30, 2026 at 09:11:12PM +0000, sashiko-bot@kernel.org wrote:
-> Thank you for your contribution! Sashiko AI review found 2 potential issue(s) to consider:
-> - [Medium] perf: cross-platform analysis broken by hardcoded host pointer size
-> - [Medium] perf: vtable pointer load ignores multi-register index
-> --
-> 
-> commit a71181b28893b295ef8ae1558faf7b1c66e3593b
-> Author: Yanbo Zhao <yzhao62@ncsu.edu>
-> 
-> perf annotate: Resolve C++ virtual function calls in x86 insn tracking
-> 
-> This commit introduces tracking of C++ virtual function calls by resolving
-> vtable pointer loads and virtual function calls through the vtable in x86
-> instruction state tracking. It enhances update_insn_state_x86() to handle
-> TSR_KIND_VTABLE_PTR and TSR_KIND_VFUNC_PTR register states.
-> 
-> > diff --git a/tools/perf/util/annotate-arch/annotate-x86.c b/tools/perf/util/annotate-arch/annotate-x86.c
-> > index 1acf31a2c7597..d21192b74b6bf 100644
-> > --- a/tools/perf/util/annotate-arch/annotate-x86.c
-> > +++ b/tools/perf/util/annotate-arch/annotate-x86.c
-> 
-> [ ... ]
-> 
-> > @@ -216,6 +216,29 @@ static void invalidate_reg_state(struct type_state_reg *reg)
-> >  	reg->copied_from = -1;
-> >  }
-> >  
-> > +/*
-> > + * Get the return type of the C++ virtual function at the @offset in the
-> > + * vtable of @class_die.  Returns false if it's not found or the function
-> > + * returns void.
-> > + */
-> > +static bool vtable_get_rettype(Dwarf_Die *class_die, int offset,
-> > +			       Dwarf_Die *type_die)
-> > +{
-> > +	Dwarf_Die func_die;
-> > +	int index;
-> > +
-> > +	if (offset < 0)
-> > +		return false;
-> > +
-> > +	/* TODO: arch-dependent pointer size */
-> > +	index = offset / sizeof(void *);
-> 
-> [Severity: Medium]
-> Will dividing the target's vtable byte offset by the host's sizeof(void *)
-> compute an incorrect slot index when analyzing data from an architecture
-> with a different pointer size?
-> 
-> Relying on host execution details like sizeof(void *) breaks
-> cross-platform analysis (e.g., analyzing 32-bit x86 perf.data on a
-> 64-bit host).
+On Fri, Oct 2, 2026 at 3:13=E2=80=AFPM Ian Rogers <irogers@google.com> wrot=
+e:
+>
+> On Fri, Oct 2, 2026 at 11:46=E2=80=AFAM Alireza Haghdoost via B4 Relay
+> <devnull+haghdoost.uber.com@kernel.org> wrote:
+> >
+> > From: Alireza Haghdoost <haghdoost@uber.com>
+> >
+> > The DSO data cache derives the file to open from the DSO's binary type,
+> > which can resolve to the runtime image rather than the file a symbol
+> > table was read from. The lazy symbol loader added later in this series
+> > reads symbol names at string-table offsets in the file the symbol table
+> > came from. With split debuginfo, the data cache would apply those
+> > debuginfo offsets to the runtime image.
+> >
+> > This patch adds dso__data_set_path() so a DSO can be configured to read
+> > from one exact file while keeping the data cache's descriptor eviction
+> > and reopening. The path is used only when the data cache opens the file=
+;
+> > dso__get_filename() and its debuginfo callers are unchanged. Such DSOs
+> > may be owned privately rather than being part of a dsos collection, so
+> > the patch also drops the assertion that every opened data DSO is in one=
+.
+>
+> I think some context is missing here. Why do I want a DSO that isn't
+> part of a machine's DSOs? I can see a use for testing, do you want
+> this feature for more than testing?
+>
 
-I think this is fine for now as we also have other places assuming the
-host pointer size.  We'll fix it later.
+Yes, the production consumer is 4/5 in
+tools/perf/util/symbol-elf.c:2143-2146, where
+dso__build_ondemand_index() creates the private data DSO and sets the exact
+symbol-source path.
 
-> 
-> > +
-> > +	if (die_find_virtual_func(class_die, index, &func_die) == NULL)
-> > +		return false;
-> > +
-> > +	return die_get_real_type(&func_die, type_die) != NULL;
-> > +}
-> > +
-> >  static void update_insn_state_x86(struct type_state *state,
-> 
-> [ ... ]
-> 
-> > @@ -622,13 +669,38 @@ static void update_insn_state_x86(struct type_state *state,
-> >  			}
-> >  			pr_debug_type_name(&tsr->type, tsr->kind);
-> >  		}
-> > +		/* Load a function pointer from the vtable (for 'call *%reg') */
-> > +		else if (has_reg_type(state, sreg) && state->regs[sreg].ok &&
-> > +			 state->regs[sreg].kind == TSR_KIND_VTABLE_PTR &&
-> > +			 vtable_get_rettype(&state->regs[sreg].type, src->offset,
-> > +					    &type_die)) {
-> 
-> [Severity: Medium]
-> Does this query the wrong vtable slot by ignoring the index register when
-> src->multi_regs is true?
-> 
-> If the operand is an indexed memory reference using multiple registers
-> (e.g., mov 0x8(%rbx, %rcx, 8), %rax), src->offset contains only the
-> static displacement part, not the dynamic index. Should this verify
-> !src->multi_regs before querying the DWARF vtable with src->offset?
-
-Multiple register is not handled well in the current code.  Dealing with
-dynamic index would require more careful instruction tracking.
-
-Anyway, it'd be safer to check !src->multi_regs here.
+The lazy loader needs this data-cache handle because the symbol table may
+come from separate debuginfo rather than the runtime image. Namhyung asked
+during the v2 review that this known split-debuginfo problem be separated
+from the lazy loader as an independent fix.
 
 Thanks,
-Namhyung
-
-> 
-> > +			tsr->type = type_die;
-> > +			tsr->kind = TSR_KIND_VFUNC_PTR;
-> > +			tsr->offset = 0;
-> > +			tsr->ok = true;
-> > +
-> > +			pr_debug_dtp("mov [%x] %#x(reg%d) -> reg%d",
-> > +				     insn_offset, src->offset, sreg, dst->reg1);
-> > +			pr_debug_type_name(&tsr->type, tsr->kind);
-> > +		}
-> >  		/* And then dereference the pointer if it has one */
-> 
-> [ ... ]
-> 
-> > diff --git a/tools/perf/util/annotate-data.c b/tools/perf/util/annotate-data.c
-> > index 8a9d3f2eec4dc..e9bf76cc28633 100644
-> > --- a/tools/perf/util/annotate-data.c
-> > +++ b/tools/perf/util/annotate-data.c
-> 
-> [ ... ]
-> 
-> > @@ -715,8 +723,11 @@ void set_stack_state(struct type_state_stack *stack, int offset, u8 kind,
-> >  			    Dwarf_Die *type_die, int ptr_offset)
-> >  {
-> >  	Dwarf_Word size;
-> > +	bool is_pointer = (kind == TSR_KIND_POINTER ||
-> > +			   kind == TSR_KIND_VTABLE_PTR ||
-> > +			   kind == TSR_KIND_VFUNC_PTR);
-> >  
-> > -	if (kind == TSR_KIND_POINTER) {
-> > +	if (is_pointer) {
-> >  		/* TODO: arch-dependent pointer size */
-> >  		size = sizeof(void *);
-> >  	}
-> 
-> [Severity: Medium]
-> Like the vtable_get_rettype() issue above, will hardcoding the host's
-> pointer size here corrupt the stack state tracking for the target
-> architecture?
-> 
-> [ ... ]
-> 
-> > diff --git a/tools/perf/util/disasm.c b/tools/perf/util/disasm.c
-> > index 5478c134e7e3b..5d96ee4c866b6 100644
-> > --- a/tools/perf/util/disasm.c
-> > +++ b/tools/perf/util/disasm.c
-> 
-> [ ... ]
-> 
-> > @@ -300,6 +300,11 @@ static int call__parse(const struct arch *arch, struct ins_operands *ops, struct
-> >  	if (tok != NULL) {
-> >  		endptr++;
-> >  
-> > +		/* Save the operand (without '*') to extract register and offset */
-> > +		ops->target.raw = strdup(tok + 1);
-> 
-> [Severity: Low]
-> This is a pre-existing issue, but this file calls strdup() without
-> explicitly including <string.h>.
-> 
-> Can we add the explicit <string.h> include? The perf subsystem guide states
-> that POSIX standard headers should be explicitly included to prevent musl
-> compilation failures from missing implicit inclusions.
-> 
-> > +		if (ops->target.raw == NULL)
-> > +			return -1;
-> > +
-> >  		/* Indirect call can use a non-rip register and offset: callq  *0x8(%rbx).
-> >  		 * Do not parse such instruction.  */
-> >  		if (strstr(endptr, "(%r") == NULL)
-> 
-> -- 
-> Sashiko AI review · https://sashiko.dev/#/patchset/20260930210038.196928-1-yzhao62@ncsu.edu?part=3
+Alireza
