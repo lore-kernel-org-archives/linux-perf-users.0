@@ -1,338 +1,138 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84B7F3F9264;
-	Sat,  3 Oct 2026 09:35:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791020160; cv=none; b=C4pua0Vnv+2GbjbDYsmNRmeXQ5xb7EXWiWatGlKG+CTxo5sdSpy7cy2tJboDJfnQ+MQyvzogfwJXLlAuvfnfUhXNxyvaydYJNQAyT7H8Z9aMWiXUb3R7FAzobT5g8xLLvugp0kDk1e5Wgk3n3MiAgKtq8YakbGwSDa19vfJiOtY=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791020160; c=relaxed/simple;
-	bh=euGgRr62l+jXN1ud+5CYZz90C6i6h78D5b6Ef/5RB+E=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VYyNttdTB2K0s/UBMSOH8oHI+miLj3cUUAXhUCRxAuZOp0h6xErkOo6vnoEYk1xP8ZQxVWhsIDvfZ4yhY52NcKcjQ2N3ZS2RTXtrdFwQvVWzEt2unTs5EEPVS9/HhBivdE6qVC+i+0Afu5BG6YdqeEMgb5gjVqH/Dvfbb04gLQs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XNLu8Zam; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69F893AE198
+	for <linux-perf-users@vger.kernel.org>; Sat,  3 Oct 2026 11:12:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.176
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1791025925; cv=pass; b=ggAnvZSMePJ4j/QSNWAFf0pI4+ruf7GotymP7PbUYGqdXukzwHwi39J834WAhfUkRUWuQKpaLLSIYj+Km0YsPqSIylENOu2L3bg1mihX5XFBHtA7TZ9YqLgjh7ieVgWz4oaRLmWUOShaVNYW3ByfTgSpFhcKYXGLOj8EzYN7jBc=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1791025925; c=relaxed/simple;
+	bh=rLgxAjUxQiSdL6QzfFYoFCwEhfYuwxFVk8+D/cQg3Os=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=P70RLfwOfnpZRtAVXMxbSq9dtVC0lsuTtaX+dnySY3sFoxYufJihQ2VTb0dDCkZaRWfUbZRJkEE9lQMnw5q2Y/nqB4lWsvMvqMZppvDeIqWmh0uKmGi9eoMDLA4jWHz3gfUaBEE9+4zP55iVAiw0kENoooTR+edtyv35TQjqSqM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=F+4vk1OE; arc=pass smtp.client-ip=209.85.214.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XNLu8Zam"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BC8FB1F0089B;
-	Sat,  3 Oct 2026 09:35:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1791020156;
-	bh=P9h5jkFg9wPDKLALCrLAZac+jzb4KvaSwjrCb7YK1oY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=XNLu8ZamK3vbN0Ze+udMM3lEPncLh3gXn6TfNHiSXU5kfvWXI8PRmOLrnotDOr+su
-	 5hyBxVB5pkVF+Yg4RGv3fQjrbox4tlQdnlu012zJP1RiNKgw/uv7Fy+pEcB34aLgat
-	 9FIob5lu2WIlvdJGdx7daQnTeJ0XyAcTMN95ylwVSpSIv9osq1g8EKL43BF2s3Ylio
-	 eplzZz69JXaoU0Pqg6zAPzs6pvkRNdiXQmTIacSlvw6VJmD18ANVEbSlQmBIni6NUA
-	 SksOq3+hdLfGNiIfH7ymP+iFh6FsDIafiiEBMtt+PkpcDwKGbHoBCTIC5OEjApRajL
-	 3f2uH6CRQ7o0Q==
-Date: Sat, 3 Oct 2026 11:35:44 +0200
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	James Clark <james.clark@linaro.org>,
-	Thomas Falcon <thomas.falcon@intel.com>,
-	Alice Rogers <alice.mei.rogers@gmail.com>,
-	Changbin Du <changbin.du@huawei.com>,
-	Tengda Wu <wutengda@huaweicloud.com>, tanze <tanze@kylinos.cn>,
-	Athira Rajeev <atrajeev@linux.ibm.com>,
-	Dapeng Mi <dapeng1.mi@linux.intel.com>,
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v1 09/13] perf test: Add a test for the treport script
-Message-ID: <asDMcH6oLeO4ABTS@x2>
-References: <20261002182624.3259797-1-irogers@google.com>
- <20261002182624.3259797-10-irogers@google.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="F+4vk1OE"
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-2e2e0f3dd40so2319245ad.3
+        for <linux-perf-users@vger.kernel.org>; Sat, 03 Oct 2026 04:12:04 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1791025924; cv=none;
+        d=google.com; s=arc-20260327;
+        b=IHKOE0KWsupp8Aw+IuGZ3SX1HyO3RBdokhRBgrTtkN7q4DUBd1uE1GKw56kufkAs0t
+         PV/ASsaQ0a5jsriQ2G7eZfudMY63PawYxNBve9y928SW91nt0s0iMcNN3Jj6p4BmDEux
+         UO/z9vuD3KkwIeZTUGfi6d7V2mZXRLgJktXD31F3VXJSThpXVLPMT92kyofTsigdRm3F
+         IMT2nMhZUzEpAUvsiqrR1NAnDWdaGhSLGKgz0S20Drs0HeaRYwL+RjwcicnF4UmVtFAr
+         cRyij1evoWB1zZMOkukoEINO6Sw3h+Y57CJD7EXS7NJR27vYRUMUIj25d66BRn1BlVjx
+         zq7w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:dkim-signature;
+        bh=ZOkPI3tXRwTtIn8qocSrw0Y1LMVW42C4jrO7SmDiYa4=;
+        fh=19EyY3G995ISpy5vRXp8tSK7TsCO8t5pdFUWeTnJH2M=;
+        b=jemawkoSiS8Jd/F8uUovi9Fn+IMxhR97YqG+AEqThLfKf1oTNz6IaqcCrOESGUt7ro
+         9ma+AXpNEPtwP9AnLyayiJq2ePEJGw4EhvlxKNE6zI5RNCQcmDfw/nWd4SPzAubtWjBn
+         eSieAltlrDV3urfraOhMRLwr5WIehwbrFHxWG01lA2v7G3bjYubn4ARp12RySBS+J3NP
+         xOOXp9Gg0grs5SoCSTAhiAIzMK8YYaZTzGZAXFyKU5KX20FbEjgjse6NDBdRUZhQWIcL
+         3ZH1GGXKFH7kHvuzlrOk+/NazRyHqP/EQoB598doRS5AhfFc1pcZzqz1PfLDUymKvY1f
+         EeTA==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1791025924; x=1791630724; darn=vger.kernel.org;
+        h=content-type:cc:to:subject:message-id:date:from:in-reply-to
+         :references:mime-version:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=ZOkPI3tXRwTtIn8qocSrw0Y1LMVW42C4jrO7SmDiYa4=;
+        b=F+4vk1OEuO9TVU08gykFc9++gSdfE7fGmjpGD+LsXNUdNzr50lJ9naeormHtDMm95E
+         Ime8CafGVXmVfsiyACyTtEsV6uig/SaIzSRY0LHeHXk6+lWg/aPICn2iHWekbguQ7Rg0
+         Ww0RHS7Fb8OcmDC2vg1EV1NbssItwd0NZKvkb493+aUZIfEqexbdkUQUkKV8+0vqw01l
+         euaIxNYx9hhQYt/pcsgMc8UTOBX3XL87MN3WfmTsnc/cfIbnMNRMrSUqlUJvZec+SyhY
+         skA2fQjII32ZLII+lSoc9mn7iBcu+Z5C39oXhTdI0/843do8i6xvHipAF0K3EPwBoCJv
+         7+tw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1791025924; x=1791630724;
+        h=content-type:cc:to:subject:message-id:date:from:in-reply-to
+         :references:mime-version:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to:content-type;
+        bh=ZOkPI3tXRwTtIn8qocSrw0Y1LMVW42C4jrO7SmDiYa4=;
+        b=uppTXEmswBHCKSt4hJLivxYHAsywgqyYAro1+/nOQ25lZGRNEaumjgHHC3K+xI4Wta
+         day5WDpAygJbz4mwYL4w5eCiINR2Ge6NeST8Qe9TJoEB58INfjbZvylJhsc/FDIUMGWg
+         o42UlFEA39cj4CoDZ2UIEHpabQcZqPFRiz6Cl10m7CWK7We/TWeRebtyh7ymX9qlgJqY
+         CTt64b0KuXcbn0DLFper1VxHiOqb5w0DBVmNPVUpXAfJN4SqEZvEc2C99OofxI+X2rZd
+         FGK8qXIwMD5fDRTWN7GwVZR5Lc+kfR1E/v63NzbcK5XLe/VXl8L84d6TwqBVBgl1Yfm/
+         40sQ==
+X-Forwarded-Encrypted: i=1; AKwUvBzaBPJEQNbExe4RA8KnhwmkJTwH15LG7keahrpmFFzkXML2Z2QJlmLBrZTsewsnkt+1WOI0Cl2oxuNS6u56/3Np@vger.kernel.org
+X-Gm-Message-State: AFq9FYIOEVimsCu+LQUe0gB/4d1My+F8/G343YzjoPMFIkjL/0nLCTFS
+	d+r27qIqXTGHNC8nAOsxy6E1aFdLG1SDxvUdBdqb4Ac8nQ4TPwpBfuJG7flMZweO+x9x1SY20C5
+	pQDI4BUrU2QUQ4PfBce0pJVpnyEyqHC0=
+X-Gm-Gg: AYBFou01Otqlsn+xnPQWRPb1zI9UvyWw775XN6MKY/nwT6XTZ2wNRJaNiqI0U0Madxq
+	QCgKWKWMtTX5uWrZ1bKK4XeWReUFdd0hotEC6DjJydG0SErUhVEDscWwWHuQZaTMu9CrCgZbXWQ
+	8TjLFpE8GF+fTHJGO7k8PRevSwSECIxrsbT/vQ5uk3KERN/JKm8lhCdTTL183ClSlSm8WOlTCAC
+	S126I2HQ+q1Iakbs3cKlZebPOkSejCktWOjkhUxj6+aIo96IcCCz3o4ZJoogNPvyIyvwpgplAVb
+	47QRwPnNW2tq6DkkBS65fLeEaP2rxAUhv1rY3O2TEJk0g/0oirZHhMOEsMJZt7LGjpFITj6qrEV
+	HFCHv9rDuObZ1Z+QywVDB4ale6Bpu1q6eqS6PhswQKi7rpatKmjYZRrSktF1JkAGQoTmdQJvfU2
+	RDCSYLW7NzaaYZj58GNoZsmbVZrw==
+X-Received: by 2002:a17:903:2406:b0:2d6:ff5f:eeda with SMTP id
+ d9443c01a7336-2e4ea0db41amr21785615ad.6.1791025923705; Sat, 03 Oct 2026
+ 04:12:03 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20261002182624.3259797-10-irogers@google.com>
+References: <20260811041934.7609-1-phucduc.bui@gmail.com> <ar_fLAeFU4rmrwiH@willie-the-truck>
+ <CAABR9nGqwTGcrr6bKsV5+0GYwkQoP0s_Tu6aTJrhJJW_ZRqFYg@mail.gmail.com> <asCyI2_CNSoDJy1w@willie-the-truck>
+In-Reply-To: <asCyI2_CNSoDJy1w@willie-the-truck>
+From: Bui Duc Phuc <phucduc.bui@gmail.com>
+Date: Sat, 3 Oct 2026 18:11:52 +0700
+X-Gm-Features: AclHuK9Zi1mA9PZ0oSISuDkDrpCS_y9Tgcj6SbSA32DMxp-Ws9T5eeG0iizhVxU
+Message-ID: <CAABR9nH3pkFB-htyrD-Z+iBBcYoVX4Z-hFa_binWCXg9_cHU6A@mail.gmail.com>
+Subject: Re: [PATCH] perf/arm-smmuv3: Propagate errors from optional IRQ lookup
+To: Will Deacon <will@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, linux-perf-users@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Fri, Oct 02, 2026 at 11:26:18AM -0700, Ian Rogers wrote:
-> From: Alice Rogers <alice.mei.rogers@gmail.com>
-> 
-> Test launching treport through perf script, the error for a file that
-> isn't a perf.data file, drive the textual app headless checking the
-> profile matches one built without the UI and exercising the key
-> bindings, and that quitting while loading stops the background load.
+Hi Will,
 
-+        tabs.active = "flame"
-+        await pilot.pause()
-+        await pilot.press("down", "down", "right", "enter", "escape", "up", "left")
-+        await pilot.pause()
-+        print("headless UI ok")
+> > > Not sure about this. If it's optional, why should we bail the probe if
+> > > we don't manage to get an irq? Surely it's better to continue without
+> > > the interrupt in that case?
+> > >
+> >
+> > platform_get_irq_optional() returns -ENXIO when no IRQ is available.
+> > Other negative return values indicate errors, including -EPROBE_DEFER.
+> > In the case of -EPROBE_DEFER, we should propagate the error so that
+> > the probe can be retried later.
+>
+> Thanks, The -EPROBE_DEFER case seems more compelling, so perhaps we should
+> check for the expliitly (because it won't fail the probe altogether)?
+>
 
-This is super great, testing a TUI app in 'perf test', well done.
+The idea of the _optional getters is that only the "not present" case
+is turned into a special value (-ENXIO here, NULL for
+devm_clk_get_optional()), while real errors are still reported to the
+caller.
 
-- Arnaldo
- 
-> Assisted-by: Antigravity:gemini-3.1-pro
-> Signed-off-by: Alice Rogers <alice.mei.rogers@gmail.com>
-> Co-developed-by: Ian Rogers <irogers@google.com>
-> Signed-off-by: Ian Rogers <irogers@google.com>
-> ---
->  tools/perf/tests/shell/test_treport_python.sh | 247 ++++++++++++++++++
->  1 file changed, 247 insertions(+)
->  create mode 100755 tools/perf/tests/shell/test_treport_python.sh
-> 
-> diff --git a/tools/perf/tests/shell/test_treport_python.sh b/tools/perf/tests/shell/test_treport_python.sh
-> new file mode 100755
-> index 000000000000..155993b8be79
-> --- /dev/null
-> +++ b/tools/perf/tests/shell/test_treport_python.sh
-> @@ -0,0 +1,247 @@
-> +#!/bin/bash
-> +# perf script treport test
-> +# SPDX-License-Identifier: GPL-2.0
-> +
-> +set -e
-> +
-> +shelldir=$(dirname "$0")
-> +# shellcheck source=lib/setup_python.sh
-> +. "${shelldir}"/lib/setup_python.sh
-> +
-> +if ! "$PYTHON" -c 'import perf' > /dev/null 2>&1; then
-> +	echo "Skipping test, perf python module not found"
-> +	exit 2
-> +fi
-> +
-> +if ! "$PYTHON" -c 'import textual' > /dev/null 2>&1; then
-> +	echo "Skipping test, python textual library not found"
-> +	exit 2
-> +fi
-> +
-> +err=0
-> +perfdata=
-> +output=
-> +badfile=
-> +
-> +cleanup() {
-> +	[ -n "${perfdata}" ] && rm -f "${perfdata}"*
-> +	rm -f "${output}" "${badfile}"
-> +	trap - EXIT TERM INT
-> +}
-> +
-> +trap_cleanup() {
-> +	echo "Unexpected signal in ${FUNCNAME[1]}"
-> +	cleanup
-> +	exit 1
-> +}
-> +trap trap_cleanup EXIT TERM INT
-> +
-> +perfdata=$(mktemp /tmp/__perf_treport_test.perf.data.XXXXX)
-> +output=$(mktemp /tmp/__perf_treport_test.output.XXXXX)
-> +badfile=$(mktemp /tmp/__perf_treport_test.bad.XXXXX)
-> +
-> +test_plumbing() {
-> +	echo "treport plumbing test"
-> +	# A missing input file should be reported by the script launched
-> +	# through perf script, this doesn't need a terminal.
-> +	if perf script treport -i "${perfdata}.missing" > "${output}" 2>&1; then
-> +		echo "treport plumbing test [Failed: missing file not an error]"
-> +		err=1
-> +		return
-> +	fi
-> +	if ! grep -q "not found" "${output}"; then
-> +		echo "treport plumbing test [Failed: script not launched]"
-> +		cat "${output}"
-> +		err=1
-> +		return
-> +	fi
-> +	echo "treport plumbing test [Success]"
-> +}
-> +
-> +test_bad_file() {
-> +	echo "treport bad file test"
-> +	echo "not a perf.data file" > "${badfile}"
-> +	# The app starts before the file is read, so the error is reported by
-> +	# the app exiting with a failure.
-> +	if ! "$PYTHON" - "${badfile}" > "${output}" 2>&1 <<'EOF'
-> +import asyncio
-> +import sys
-> +import treport
-> +
-> +async def run() -> None:
-> +    app = treport.ReportApp(sys.argv[1])
-> +    async with app.run_test(size=(120, 40)) as pilot:
-> +        for _ in range(100):
-> +            if app.return_code is not None:
-> +                break
-> +            await pilot.pause(0.1)
-> +    if app.return_code != 1:
-> +        raise RuntimeError(f"Unexpected return code {app.return_code}")
-> +    print("bad file ok")
-> +
-> +asyncio.run(run())
-> +EOF
-> +	then
-> +		echo "treport bad file test [Failed: exception]"
-> +		cat "${output}"
-> +		err=1
-> +		return
-> +	fi
-> +	if ! grep -q "bad file ok" "${output}"; then
-> +		echo "treport bad file test [Failed: unexpected output]"
-> +		cat "${output}"
-> +		err=1
-> +		return
-> +	fi
-> +	echo "treport bad file test [Success]"
-> +}
-> +
-> +record() {
-> +	# A software event with callchains that doesn't need privileges.
-> +	perf record -e task-clock -g -o "${perfdata}" -- perf test -w noploop \
-> +		> /dev/null 2>&1
-> +}
-> +
-> +test_headless_ui() {
-> +	echo "treport headless UI test"
-> +	# Drive the textual app without a terminal, check the profile shown
-> +	# matches one built without the UI and exercise the key bindings.
-> +	if ! "$PYTHON" - "${perfdata}" > "${output}" 2>&1 <<'EOF'
-> +import asyncio
-> +import sys
-> +import treport
-> +
-> +def labels(tree, tnode, out):
-> +    for child in tnode.children:
-> +        out.append(str(child.label))
-> +        if child.is_expanded:
-> +            labels(tree, child, out)
-> +    return out
-> +
-> +async def run() -> None:
-> +    expected = treport.ProfileBuilder()
-> +    expected.read(sys.argv[1])
-> +    if not expected.root.children:
-> +        raise RuntimeError("No samples in the profile")
-> +
-> +    # The app starts before the profile is built in a background thread.
-> +    app = treport.ReportApp(sys.argv[1])
-> +    async with app.run_test(size=(120, 40)) as pilot:
-> +        for _ in range(600):
-> +            if app.loaded:
-> +                break
-> +            await pilot.pause(0.1)
-> +        if not app.loaded:
-> +            raise RuntimeError("Timed out loading data")
-> +        await pilot.pause()
-> +        if app.sub_title.startswith("Loading") or "samples" not in app.sub_title:
-> +            raise RuntimeError(f"Unexpected sub-title: {app.sub_title}")
-> +        totals = {name: node.value for name, node in app.root.children.items()}
-> +        want = {name: node.value for name, node in expected.root.children.items()}
-> +        if totals != want:
-> +            raise RuntimeError(f"Profile {totals} differs from {want}")
-> +        tree = app.query_one(treport.ProfileTree)
-> +        shown = labels(tree, tree.root, [])
-> +        if not any("noploop" in label for label in shown):
-> +            raise RuntimeError(f"noploop not shown in: {shown}")
-> +        await pilot.press("down", "down", "enter", "up", "enter")
-> +        tabs = app.query_one(treport.TabbedContent)
-> +        tabs.active = "flame"
-> +        await pilot.pause()
-> +        await pilot.press("down", "down", "right", "enter", "escape", "up", "left")
-> +        await pilot.pause()
-> +        print("headless UI ok")
-> +
-> +asyncio.run(run())
-> +EOF
-> +	then
-> +		echo "treport headless UI test [Failed: exception]"
-> +		cat "${output}"
-> +		err=1
-> +		return
-> +	fi
-> +	if ! grep -q "headless UI ok" "${output}"; then
-> +		echo "treport headless UI test [Failed: unexpected output]"
-> +		cat "${output}"
-> +		err=1
-> +		return
-> +	fi
-> +	echo "treport headless UI test [Success]"
-> +}
-> +
-> +test_cancel() {
-> +	echo "treport cancel test"
-> +	# Quitting while loading should stop the background thread without a
-> +	# "processing failed" error from the session.
-> +	if ! "$PYTHON" - "${perfdata}" > "${output}" 2>&1 <<'EOF'
-> +import asyncio
-> +import sys
-> +import time
-> +import treport
-> +
-> +# Check for cancellation often and slow processing each sample so that the
-> +# load can't finish before it is cancelled.
-> +treport.ProfileBuilder.PROGRESS_INTERVAL = 1
-> +process_event = treport.ProfileBuilder.process_event
-> +
-> +def slow_process_event(self, sample) -> None:
-> +    time.sleep(0.001)
-> +    process_event(self, sample)
-> +
-> +treport.ProfileBuilder.process_event = slow_process_event
-> +
-> +async def run() -> None:
-> +    app = treport.ReportApp(sys.argv[1])
-> +    async with app.run_test(size=(120, 40)) as pilot:
-> +        for _ in range(100):
-> +            loading = app.loading
-> +            if loading is not None and loading.nr_samples > 0:
-> +                break
-> +            await pilot.pause(0.1)
-> +        if loading is None or app.loaded:
-> +            raise RuntimeError("Background load not in progress")
-> +        await pilot.press("ctrl+q")
-> +    for _ in range(100):
-> +        if app.loading is None:
-> +            break
-> +        time.sleep(0.1)
-> +    if app.loading is not None:
-> +        raise RuntimeError("Background load didn't stop")
-> +    if not loading.cancelled or app.loaded:
-> +        raise RuntimeError("Background load wasn't cancelled")
-> +    print("cancel ok")
-> +
-> +asyncio.run(run())
-> +EOF
-> +	then
-> +		echo "treport cancel test [Failed: exception]"
-> +		cat "${output}"
-> +		err=1
-> +		return
-> +	fi
-> +	if ! grep -q "cancel ok" "${output}" || grep -q "processing failed" "${output}"; then
-> +		echo "treport cancel test [Failed: unexpected output]"
-> +		cat "${output}"
-> +		err=1
-> +		return
-> +	fi
-> +	echo "treport cancel test [Success]"
-> +}
-> +
-> +test_plumbing
-> +test_bad_file
-> +
-> +if ! record; then
-> +	echo "Skipping remaining tests, failed to record samples"
-> +	if [ $err -eq 0 ]; then
-> +		err=2
-> +	fi
-> +	cleanup
-> +	exit $err
-> +fi
-> +
-> +test_headless_ui
-> +test_cancel
-> +
-> +cleanup
-> +exit $err
-> -- 
-> 2.56.0.rc1.315.gc6ed9934b7-goog
+Besides -EPROBE_DEFER, platform_get_irq_optional() can return other
+negative error values depending on how the IRQ is obtained. These
+indicate an actual error rather than the IRQ simply being absent.
+Ignoring them would leave the device running without its interrupt
+and no indication of what went wrong.
+
+So I'd rather keep:
+
+-----------------------------------------------------
+irq = platform_get_irq_optional(pdev, 0);
+if (irq < 0 && irq != -ENXIO)
+        return irq;
+-----------------------------------------------------
+
+and continue without the IRQ only for -ENXIO. This is also the usual
+pattern for platform_get_irq_optional() users.
+
+Best regards,
+Phuc
