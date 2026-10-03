@@ -1,73 +1,96 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm2-f12.google.com (mail-wm2-f12.google.com [74.125.225.140])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F06D4AA3F6;
-	Sat,  3 Oct 2026 17:57:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B6093AA500
+	for <linux-perf-users@vger.kernel.org>; Sat,  3 Oct 2026 18:02:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.225.140
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791050246; cv=none; b=nPzKsm0tFkDS64woY+MSoulkr49zC6nNMOmQNXqVuEWKTX6DCHu9zpIQoffw9EJ0/pS1YTsqMn+pSdUlZQKQLcKGeh8agmFXDAWMEON7eTYV5lcGE+5XvFuQqWHVhq9M9qAa6qScJEwZOzcakd0T0joTsX27nMOA6X2wbY956Ks=
+	t=1791050554; cv=none; b=gSZHy6mYZ9kWCHXfXeyoKpdPh8m7tij/HhTnNshG5xGCfsYia2kl2AgfRdPFD4Zh4MZmF/taYXT/38k9UOI90Np7OO6Fi9Ah4MF+PQ5W9uGQJSPWLiKwqRJ5ixvd34nHEMV1p3Rxqy4S2SV1CqByJ1QXdAHqg2LNFJi35sSSg0A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791050246; c=relaxed/simple;
-	bh=RC989HcI12wPyOanWxIBD7MOcc65XB3Vn73cbeKYUO8=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=V2Xnl+ZL209OtRzvMT4QiZBphP4YGOghBqS3idFg3Yo5JHts71JLsiEKbpss4DPHuj3+RM5D1bKfsmUo4UywKWJl+lXX1jbVm+v5sAzKoo0GsZlOJ1Hw27U9tzuFhj6LR+LoKvM9xRPYAE5eH60WCGIncnYjATeDut0Ujc5Bn3E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=K2WF2DVj; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1791050554; c=relaxed/simple;
+	bh=1fA35AzLMLI8IsjeYb5yaRW8LrQiraBlfHGAy9JiyXU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=TNaGrIyhqwhk1lEHhdskRqkMdNcG6cSnHhFbPrIXRkMXs99slJv1F1vHszNxo8ziNJBkKi/lNWhsfmcY1CST/nbU//n6gW5kIefA58X92SNa1e25BBJyS+SoTp6wPg7yv+TyOn21ZUnzM9zGAWEHFxYbR0eFVd/xkHmT+x1qw5A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=truenas.com; spf=pass smtp.mailfrom=truenas.com; dkim=pass (2048-bit key) header.d=truenas.com header.i=@truenas.com header.b=AmJNRO1t; arc=none smtp.client-ip=74.125.225.140
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=truenas.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=truenas.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="K2WF2DVj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A0B021F0089B;
-	Sat,  3 Oct 2026 17:57:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1791050245;
-	bh=RC989HcI12wPyOanWxIBD7MOcc65XB3Vn73cbeKYUO8=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=K2WF2DVjiC8L1kPZ54UxDD5eHjxBabtTANH5an1GfV6t6jTmGvOxU6KJG6zQKCejW
-	 0WiJkYypgBhUcLXN2OzZxIK7DzJz1DspyPvG6YxTrNDbLWoV/eqF/X5s7Mc4QrkjdV
-	 +f1f5zletnmvEN2WG+66+Regx3w82JzYk5TdvvPsGOmfGoGHT+IiF6H4hZQdaRbBY3
-	 Feiw+L6a7dvqJ3oV4gvIOwd5tiSWXcX+MVb1hLcqoBYPLpTgeT0/xgC+eHT9dOmAtd
-	 vDk60pFydgLEsAmmcjGny+rKdj3qhmpcYXBadwkJVyqCTtqV23kadO+euiZMI/6BsG
-	 gON285uyAdURg==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v4 36/38] mm: eliminate VM_SPECIAL, VMA_SPECIAL_FLAGS
-Reply-To: sashiko-reviews@lists.linux.dev
-To: =?utf-8?b?TG9yZW56byBTdG9ha2VzIChBUk0p?= <ljs@kernel.org>
-Cc: linux-s390@vger.kernel.org, "Christian Borntraeger" <borntraeger@linux.ibm.com>, "Heiko
- Carstens" <hca@linux.ibm.com>, kvm@vger.kernel.org, "Oliver Upton" <oupton@kernel.org>, kvmarm@lists.linux.dev, "Marc
- Zyngier" <maz@kernel.org>, linux-scsi@vger.kernel.org, linux-perf-users@vger.kernel.org, "Vasily
- Gorbik" <gor@linux.ibm.com>, dri-devel@lists.freedesktop.org, linux-rdma@vger.kernel.org, bpf@vger.kernel.org, "Alexander
- Gordeev" <agordeev@linux.ibm.com>, linux-trace-kernel@vger.kernel.org, selinux@vger.kernel.org
-In-Reply-To: <20261003-b4-mmap-prepare-vma-flag-sanify-v4-36-a1f052500fd7@kernel.org>
-References: <20261003-b4-mmap-prepare-vma-flag-sanify-v4-0-a1f052500fd7@kernel.org>
- <20261003-b4-mmap-prepare-vma-flag-sanify-v4-36-a1f052500fd7@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Sat, 03 Oct 2026 17:57:24 +0000
-Message-Id: <20261003175724.A0B021F0089B@smtp.kernel.org>
+	dkim=pass (2048-bit key) header.d=truenas.com header.i=@truenas.com header.b="AmJNRO1t"
+Received: by mail-wm2-f12.google.com with SMTP id 5b1f17b1804b1-49cd5462b69so4220445e9.1
+        for <linux-perf-users@vger.kernel.org>; Sat, 03 Oct 2026 11:02:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=truenas.com; s=google; t=1791050550; x=1791655350; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:from:date:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=1fA35AzLMLI8IsjeYb5yaRW8LrQiraBlfHGAy9JiyXU=;
+        b=AmJNRO1t6oWi0aOw+mT2mVndfXFuJ5Z3Czm2jr9X34mIMdbbTcJl/yp2donqbXgOSm
+         G96nGc/CthyG2os9pHyHhLnnf116S8eB+e4brYmVuYDOnydOgqUOrLlwFDkJxDkd+hAp
+         2Ov77RcTStcZLUrsXEawI4yClLqZdHzF5xPFVeQD18OdFqzcqpxLzsxo6JTHYElnjJEc
+         1ZU11YzqcNtEKUslhyPm7dm+mYbzA4ttiCa9M4wMYvhmhBpuf5sQvGp4Y4dW8I/0sbcc
+         lmX2ac8IpmIppGN2TQPhjq9m56ONpQ+9YQF3louEVH+qwUcLdSLbxrFNxWBO9mfDigrK
+         0AFA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1791050550; x=1791655350;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:from:date:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=1fA35AzLMLI8IsjeYb5yaRW8LrQiraBlfHGAy9JiyXU=;
+        b=PrVm76BY24eUwtA8Kn7eVBiBELEVbSG9ITDmlyxWUaoU/3DMvKIgz9uMttQnyO7AHz
+         PTDncUrJyA+LAhymu3hKVOmBqGjiBkUSnYwiJPDlwZHi8K0wgMXZvQjycNwuHM5Y4CoR
+         G2UzYqmHA7QhMoBWgbdd891lBTNGu9lwdquosIFZbXaCbim4oYZjdoAN6oUBERkDtiTw
+         hj6yXvWQzjj2UHrE8Gmd3oIbg+VidqQlYJkHZhijD9/R5rw0ZIZI4wgpU5pzzswbPSCB
+         a9gXX2xxJ3IjpYNhl+/zcZPG4W4GVzXbf8fRQHYtoFWk+owcRjVsGYY1Tk1lQHjHEP8n
+         4Epg==
+X-Forwarded-Encrypted: i=1; AKwUvBzMp19Z2DBzxjxnkfMNW9fsMWiJ+ZlWjJvCcQPPN3lsbGbTvuTR799IIAv3pNgmnirnEGCoUniuaRMmLuCWzAuc@vger.kernel.org
+X-Gm-Message-State: AFuF++klVYruAG0Ul21MEOGdvw+7ZREW8Pzivby5r8M1fd1xIAXBp/RX
+	EkBiV7KjAHzP3upWtihj9p8E8hnlmJM25/XkCbm3N0/WicpwhIV87HONWw8C8UdsbBRcSWKW3Eu
+	gJ0XmzStr
+X-Gm-Gg: AYBFou0xCD60zHhCrLw2rrBN9mlkYvhtrbjUe7Ljld2HLlPLeB1ZK99roPhXdjQfeH3
+	72HaIrp9kP5ZbLoohUmh/cH3fq7eTuAHLfB2o3IXGadUwDd33Hpf/bWeV9oi7ejYSLfGgC6Aqbg
+	ye9MEJRRv7sOA4g2OuDtW5M4Y9sLMylG37lKJJyxk8XjJTvK4XrTneq9eX65vCimi7QUswHVux3
+	lkM6OcIKMgmtK/AaJjcx9bKtUuZzO+EauvMoh15ueqFFQbGtMDXo9f82QQzGg0eqbyE+1A0tZbe
+	FfQwsEtQrTpNdmelGLA9aZl3Zqbrugaoif9ewVe2ZF8MQgYY/IFR6HW/N7rWsNC8UHf5wgDsyse
+	TCRydI0TQyNM2OTYtQSq0whqcezt2stpI/1td7PMyBpf/fCome9ubcgcwXGTo2FDC825i2qZakK
+	oZUlIX6rZecEc0EHCcgec6cpgqEPPfbxT3PXM/raNcruIG6crq7w==
+X-Received: by 2002:a05:600c:4e55:b0:49e:823a:9dec with SMTP id 5b1f17b1804b1-4a0274e9c4amr107646605e9.3.1791050550421;
+        Sat, 03 Oct 2026 11:02:30 -0700 (PDT)
+Received: from hamza-PC ([2400:adc1:158:c700::2])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-48b382f89c3sm12646948f8f.34.2026.10.03.11.02.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 03 Oct 2026 11:02:29 -0700 (PDT)
+Date: Sat, 3 Oct 2026 23:02:24 +0500
+From: Ameer Hamza <ameer.hamza@truenas.com>
+To: "Lorenzo Stoakes (ARM)" <ljs@kernel.org>
+Cc: rppt@kernel.org, peterz@infradead.org, akpm@linux-foundation.org, 
+	david@kernel.org, mingo@redhat.com, acme@kernel.org, namhyung@kernel.org, 
+	linux-mm@kvack.org, linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	regressions@lists.linux.dev, stable@vger.kernel.org, 4ncienth@gmail.com, sashal@kernel.org, 
+	alexander.motin@truenas.com, caleb.stjohn@truenas.com
+Subject: Re: [REGRESSION] secretmem: SIGBUS on memfd_secret() pages while
+ perf record runs
+Message-ID: <asFC2Oryo2-9ww5r@hamza-PC>
+References: <20261002175651.811343-1-ameer.hamza@truenas.com>
+ <asEllR7if-J3wteg@gremlin>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <asEllR7if-J3wteg@gremlin>
 
-> Every user of the VM_SPECIAL or VMA_SPECIAL_FLAGS has now been converted =
-to
-> predicates which explicitly express what is actually being checked for
-> rather than the nebulous concept of possessing 'special' VMA flags.
->=20
-> In any case 'special' is not so special a term of art in mm - it includes
-> VDSO/VVAR mappings, special in the sense of vm_normal_folio() and probably
-> other cases too.
->=20
-> Therefore make things less special by eliminating these now unused flags.
->=20
-> No functional change intended.
->=20
-> Acked-by: Zi Yan <ziy@nvidia.com>
-> Acked-by: David Hildenbrand (Arm) <david@kernel.org>
-> Signed-off-by: Lorenzo Stoakes (ARM) <ljs@kernel.org>
+On Sat, Oct 03, 2026 at 04:56:32PM +0100, Lorenzo Stoakes (ARM) wrote:
+> So this is a bug in perf, which should use its own counter for this,
+> AFAICT.
 
-Sashiko has reviewed this patch and found no issues. It looks great!
+Agreed, and the report's closing question pointed the same way, since
+the commit itself closes a real hole. Glad the longstanding perf bug is
+getting fixed as a result. Thanks for the analysis and for turning the
+fix around so quickly.
 
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261003-b4-mmap-pr=
-epare-vma-flag-sanify-v4-0-a1f052500fd7@kernel.org?part=3D36
-
+Thanks,
+Ameer Hamza
