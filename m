@@ -1,101 +1,144 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BA723624A5;
-	Sat,  3 Oct 2026 14:30:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3D9D44C50B;
+	Sat,  3 Oct 2026 15:56:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791037814; cv=none; b=TRoGuWOMvN38GLqR4y+OOG5HbgNrf2i2pDldQkWimOneJ7px+do1H/9UvbGYHxBJ9XzJ3ai/EKkD4LNVZsNFXV7+V/Re2LIVugnW0wTyLqpCT9dShmRKHXgB+KfG7lmaw6RevmfKsdhn7YFGSnUb3l7t6OFRMyX82yFyuJVyUMw=
+	t=1791043007; cv=none; b=BEvfMb25Yd2lUe5FKhXDbisSKC+bZppH42bJtGxhkqMYlkRc3Q9nakr/RAwf0W3nQKLcg2xzYrKWuqMRo/g0aPfrtm/KZcJSrRk0vmLmMUoNO0hmLbuldedHouwaWEYQ843XQEknj/2CirxINtFDD8PCeAAfg0bd0rKtmopgpJY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791037814; c=relaxed/simple;
-	bh=t0UDno8TrYYCKqsnhBUcmiISR33g6wQpfmrIYgzFs6I=;
+	s=arc-20240116; t=1791043007; c=relaxed/simple;
+	bh=QBmPqkM+BWPZEGUf8wgfH/hL9uC8UI8aHcoqXD3eDno=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oXrAGPhR6L/K2W2iNAIAZ5csq9G0uZ3ouitK6gGjYjPeMQ8PtzZat9O8tiE+5wnN/c7Aq+Lcly7Sb0dw3Jy1JqsfKONNzPKFx7y0ivKe8LNGQ0Y2Rsi+Czs3g2oM7kad4Pyl+l4KERrxF8PKvU+/q1NYl7BV8PLI968ajpreIpM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=G5nou7g3; arc=none smtp.client-ip=100.103.45.18
+	 Content-Type:Content-Disposition:In-Reply-To; b=n38QrLjr9btOmaW3v5QoZKeacA9g9Pr6rgfYY56SCQMl03I/wPtqQM7ak+ztheH6BW7URGG+cgpzIw3he3bP+xeHQr8/P6GBxniOggD4iy0e82Sb32j70YGFB5FMWo5JkGtBZIBC1Ggxnlk7MlqDrbHBZZ1MN08LCUd2CJY0ul4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UPGAYEhX; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="G5nou7g3"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BA99C1F0089D;
-	Sat,  3 Oct 2026 14:30:11 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UPGAYEhX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 679141F0089D;
+	Sat,  3 Oct 2026 15:56:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1791037812;
-	bh=0VOKNZsXt8POVkaKJcBsptOeZCCqTjnL2Hl8Rsw8LdQ=;
+	s=k20260515; t=1791042998;
+	bh=NzhxsV7jtoLr70i/Q5PxTj0BUfUeVGbJ6ybWMLKfAzA=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=G5nou7g3BqkL8GO0V7LH3FWiz4Xoa6UoLxbdYyBRNRvGCkLhqMbp6+wA6pS2p/wVK
-	 sidohVIkYNtujZDVfUM350+FJ1wgxX60ajONcjnohTOYKxjQMkWAyWELf0CnGvr02Q
-	 gjohG0PwgaN8nLfzWqbu/L7Nia0F7RUnlNp248cYN3q92WlLgwaMyITpAQqEehfXjP
-	 sea+oh86kMUv9RdeT7EsCS9ncjSttPEBd3y2ixsVo0icKtKNxWC3oeZh/c3Q5WQ0Sk
-	 EhQsd9nLHWTRG2SBKA3cDpqFKNSGHPTNptvc7RmnmGg5bTdKrg/s5hmD3gnBUMZB7v
-	 QtpTiEniK6sSg==
-Date: Sat, 3 Oct 2026 10:30:10 -0400
-From: Sasha Levin <sashal@kernel.org>
-To: "Lorenzo Stoakes (ARM)" <ljs@kernel.org>
-Cc: rppt@kernel.org, peterz@infradead.org, akpm@linux-foundation.org,
-	david@kernel.org, mingo@redhat.com, acme@kernel.org,
-	namhyung@kernel.org, linux-mm@kvack.org,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	regressions@lists.linux.dev, stable@vger.kernel.org,
-	4ncienth@gmail.com, alexander.motin@truenas.com,
-	caleb.stjohn@truenas.com, ameer.hamza@truenas.com
+	b=UPGAYEhXKD563KxiLn5ax0iwVPtf7O8U/4Rrb7nteA/xQiyDEM7ymdL3mWaQ4HF4v
+	 qOfW01Y+a4iSnEmajSp0nHa77ZjyUH8XNKCKdf2dw9hYFa2HTBOg61IDwMtyTWcARE
+	 Ep54D2ZuvN89OY7aCj2sH9wCDrdnhPBt2YZOqyq1CxkozpJEX2GC0tKNR5oUrSabhV
+	 Z08QwcxH0Jzk5Yg5lBF40TagpG5a0CDp7iyXTaF7Y+5zYsaDi12VW17ywuDgGaKufs
+	 WrJTYFodEGflFSOWoLnRFCY3cLC0pAzd9dkj9XWX2KMtimdQ0RDHV1njziP5LvrXDo
+	 1xkenDJLThOTA==
+Date: Sat, 3 Oct 2026 16:56:32 +0100
+From: "Lorenzo Stoakes (ARM)" <ljs@kernel.org>
+To: Ameer Hamza <ameer.hamza@truenas.com>
+Cc: rppt@kernel.org, peterz@infradead.org, akpm@linux-foundation.org, 
+	david@kernel.org, mingo@redhat.com, acme@kernel.org, namhyung@kernel.org, 
+	linux-mm@kvack.org, linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	regressions@lists.linux.dev, stable@vger.kernel.org, 4ncienth@gmail.com, sashal@kernel.org, 
+	alexander.motin@truenas.com, caleb.stjohn@truenas.com
 Subject: Re: [REGRESSION] secretmem: SIGBUS on memfd_secret() pages while
  perf record runs
-Message-ID: <asERcvLuNJatsBL7@laps>
+Message-ID: <asEllR7if-J3wteg@gremlin>
 References: <20261002175651.811343-1-ameer.hamza@truenas.com>
- <2026-10-02-rc-reply-0003-re-secretmem-sigbus-perf@kernel.org>
- <asDF77csaLDIuHTB@gremlin>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <asDF77csaLDIuHTB@gremlin>
+In-Reply-To: <20261002175651.811343-1-ameer.hamza@truenas.com>
 
-On Sat, Oct 03, 2026 at 10:18:34AM +0100, Lorenzo Stoakes (ARM) wrote:
->On Fri, Oct 02, 2026 at 09:30:23PM -0400, Sasha Levin wrote:
->> > Since commit 97d34aa65c29 ("mm/secretmem: properly account locked
->> > pages"), in v7.3-rc2 and the 6.18.52 and 7.2.5 backports, touching a
->> > memfd_secret() page for the first time fails with SIGBUS while the
->> > same user is running perf record, and read() into such a page fails
->>
->> Thanks for the report. I've dropped 97d34aa65c29 from the 6.12 queue,
->> and also removed the copies that were staged for 6.6 and 6.1.
->>
->> 7.2.y and 6.18.y already shipped it, so those need an upstream fix,
->> which stable will pick up once it lands.
+On Fri, Oct 02, 2026 at 10:56:51PM +0500, Ameer Hamza wrote:
+> Hi,
 >
->Sasha,
+> Since commit 97d34aa65c29 ("mm/secretmem: properly account locked
+> pages"), in v7.3-rc2 and the 6.18.52 and 7.2.5 backports, touching a
+> memfd_secret() page for the first time fails with SIGBUS while the
+> same user is running perf record, and read() into such a page fails
+> with EFAULT. This happens for root as well as for an unprivileged
+> user running its own perf record. It reproduces on v7.3-rc4 and
+> 6.18.52, and the same test passes without the recording or with the
+> commit reverted.
 >
->Could we perhaps take a breath and pause?
-
-I pulled this out quickly because I didn't want this issue to go into the kernels that were released this morning.
-
-In general, our policy around this type of reports is that if the issue is in a
-released LTS kernel, we will wait for a fix upstream, and if the issue is still
-in our queues, we will simply drop the patch from the queue.
-
->This patch fixes a really quite serious vulnerability that allows an
->unprivileged process to allocate arbitrary, unreclaimable (i.e. OOMK cannot
->save you) memory.
+> The commit charges secretmem pages to the per-user user->locked_vm
+> and checks that counter against RLIMIT_MEMLOCK, with no CAP_IPC_LOCK
+> exemption because the fd can be passed to other processes. perf has
+> charged its ring buffers to the same counter since 2009, up to
+> perf_event_mlock_kb per online CPU, and only what exceeds that
+> allowance is checked against RLIMIT_MEMLOCK. sysctl/kernel.rst
+> describes the allowance as not counted against the mlock limit, yet
+> it sits in the counter that secretmem now enforces. perf record sizes
+> its buffers to the allowance by default, 516 KiB per CPU, so on 16 or
+> more CPUs one recording uses up the default 8 MiB limit on its own,
+> and on fewer CPUs it leaves correspondingly less for secretmem.
 >
->Allow me to assess the validity of this report _before_ dropping things
->from queues perhaps? :)
+> Reproducer, as root on a 16 vCPU x86_64 guest with the default
+> ulimit -l 8192, while "perf record -o /tmp/p.data -- sleep 300" runs
+> in another shell:
+>
+>   fd = syscall(SYS_memfd_secret, 0);
+>   ftruncate(fd, 4096);
+>   p = mmap(NULL, 4096, PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
+>   read(open("/dev/zero", O_RDONLY), p, 4096);   /* EFAULT */
+>   p[0] = 1;                                     /* SIGBUS */
+>
+> The commit closes a real hole, unbounded pinning of unevictable memory
+> by unprivileged users. The question is whether the perf_event_mlock_kb
+> allowance is meant to count against the RLIMIT_MEMLOCK budget that
+> secretmem and the other subsystems accounting to user->locked_vm
+> enforce, or whether perf should keep it in a counter of its own, which
+> would leave the hole closed and secretmem usable during a recording.
+>
+> #regzbot introduced: 97d34aa65c29
+>
 
-No disagreement that this would have been better - in this case it was timing
-as the releases were about to happen the following day, so the safest choice
-was to drop it while we figure it out.
+Hi,
 
->It was sent late on Friday in a week that I was ill and it's Saturday
->pre-LPC, so that's hardly a timeframe that I could reasonably have replied.
+Thanks for the report, however this is not a regression in secretmem.
 
-Keep in mind that our release cycles are fairly short, so this shouldn't be too
-big of a deal?
+The field that is being used for tracking the allowance (user->locked_vm)
+is used by everything-but-perf to track against RLIMIT_MEMLOCK, but perf is
+using it for something else (pinned_vm).
 
-We will generally go for the safe option of dropping a commit that introduces a
-regression as it's fairly easy to queue it back up very soon after a
-diagnosis/fix shows up.
+So this is a bug in perf, which should use its own counter for this,
+AFAICT.
 
--- 
-Thanks,
-Sasha
+Actually it seems perf invented the field (user->locked_vm) to calculate
+memory that actually isn't mlock()'d, but is kernel-allocated and pinned so
+treated 'as if' it were.
+
+It tracks a per-process (rather than per-mm) RLIMIT_MEMLOCK allowance plus
+a 'gift' of extra available pages which exceeds this.
+
+Every other user since is checking against RLIMIT_MEMLOCK (and you'd hit
+the same issues with them too) - io_uring, MSG_ZEROCOPY, AF_XDP, iommufd,
+s390 KVM zCPI and now secretmem.
+
+So this is a long-standing bug it seems.
+
+Other things:
+
+The SIGBUS is unfortunately necessary - since the region is populated on
+fault, it is only then that it can be determined whether the limit is
+violated.
+
+Not being unlimited on CAP_IPC_LOCK is also, unfortunately, necessary to
+resolve the security hole - often privileged processes hand out secretmem
+to other unprivileged processes.
+
+If those processes then didn't apply the limit check, the mitigation can't
+work.
+
+The commit message goes into detail about all this.
+
+The way to address this right now, as I see you've applied yourselves as
+far as I can see (in [0]), is to change the limits to account for this.
+
+I will work on a patch for perf that fixes this specific issue.
+
+Sasha - you can re-queue the fix. I will send out another fix for perf.
+
+--
+Cheers, Lorenzo
+
+[0]:https://github.com/truenas/truenas_ros/pull/128
