@@ -1,51 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEAB83B0583;
-	Sat,  3 Oct 2026 09:15:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 639813537E8;
+	Sat,  3 Oct 2026 09:18:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791018930; cv=none; b=gJmkCuYFR1LKh2JOTToe7wfTq6QNzHOYUKy/PpuxMruX8iW4SajqpFlmk1w7CuSGvjTV5eWrjWvTo79dVq/bX//6n3/ZjJpAsIhSXLjLlpiEOU6tdrvDWIF9Zuwwyy42/KZ9dfTFkF8NGCfiilFQ/4S1pCsFD/fntHl9EZ7dI14=
+	t=1791019122; cv=none; b=ZVuDHfTNcipf68lXDr2fb3IPzNIKTkBeZgUiTL70qJOBm++Bqeu5ARcwtue7IcUBz1Wn17rSbKRDDHDeQQX9XGGA/3t0dijxqOF/xJL1YjEq05/SZvzDxlBWbb5PLzhkQdzO2VRSnfKLsNj+nMExP9oLO9SFoY+cJ00FBykcwxk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791018930; c=relaxed/simple;
-	bh=K8GmayE6g10SoT6eoCaqLkqKB1d8JHC79L2j+0+jX+A=;
+	s=arc-20240116; t=1791019122; c=relaxed/simple;
+	bh=6UG7OBe1pIKeQYfgpbxk8n7/tnFRBnoNzl8SocuNRbg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Mupkt0HpruDxmEvErzagA945VS6L4BuE/GLPHIoJQILH4hH+Ks8H+vdPNJ2SW35CJwOmwt8hDMendaShu+uqHU9XW4FsBC8Cz+aKeJHqk3/YompDxfxH+8zMqZ6MNR2ne29KUuPED3IfelEx+av7Pn5ibFN1czV4PHq+Ay6/G4I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RkM/AKu6; arc=none smtp.client-ip=100.103.45.18
+	 Content-Type:Content-Disposition:In-Reply-To; b=JtnKrnY6NI+NUNX1GRCp4lXZTOidZjVig7Bbo+2IU1icnCM8dVrfWLxkt3Dx//5+lCZdJoXMEI5Zsr538NFEUVpSGn5IGRu6Zg4QsC+TgEhQXCS88h6dJIWKXwchxVDyOqD/JRfqM7G8fNeiyL3uWeubVCSa99ugfoi7mCGr954=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RVdZvFd7; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RkM/AKu6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5416C1F0089B;
-	Sat,  3 Oct 2026 09:15:26 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RVdZvFd7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1B8C81F0089B;
+	Sat,  3 Oct 2026 09:18:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1791018928;
-	bh=dX+CVOnLfx7LepqKXHzDbspbQiu7gCKbNWR2HCxhkD8=;
+	s=k20260515; t=1791019121;
+	bh=6UG7OBe1pIKeQYfgpbxk8n7/tnFRBnoNzl8SocuNRbg=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=RkM/AKu6iYp+JeJx8TNb/pz+3fi1VdE/nQgI3fpC3rup/2hLvC+ItHsLk1zDgKkgZ
-	 o3rvjjj/6zLYoIjcYL2CPH+nH6F2EMYtKW1pWydnzEl5byUTybai9O8rr6MOzIwPLr
-	 L1VdXhvjbze9dSF3U+TgzwrmlvI+c/14WSFkv2RLpY4ONwoJEQe/1JkIqp4p2RHkyU
-	 zopYL6bxxQ+NCckYmkGMjuf1G90F9x1qjxX4E068SJ9AzKR5mp+HtjAwmM8NiasVO9
-	 RfcqWnlgiWsN2qXrZFfwgTeGu6tPmD2jlgYCBZhY9O9H05s99oKczn4y8vcBx6eQ63
-	 kwDRo2PZbz2pg==
-Date: Sat, 3 Oct 2026 11:15:21 +0200
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	James Clark <james.clark@linaro.org>,
-	Thomas Falcon <thomas.falcon@intel.com>,
-	Alice Rogers <alice.mei.rogers@gmail.com>,
-	Changbin Du <changbin.du@huawei.com>,
-	Tengda Wu <wutengda@huaweicloud.com>, tanze <tanze@kylinos.cn>,
-	Athira Rajeev <atrajeev@linux.ibm.com>,
-	Dapeng Mi <dapeng1.mi@linux.intel.com>,
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v1 00/13] perf timechart/list/treport: Interactive
- Textual TUIs and perf python session improvements
-Message-ID: <asDHqdVt4CKq_EoL@x2>
-References: <20261002182624.3259797-1-irogers@google.com>
- <asDGb6qOgJzXDpNo@x2>
- <asDHBIbfvCUbPT2A@x2>
+	b=RVdZvFd7/PpZR32+eZg7X1QRZ7g/q6oTQ6OEknlAyPszGrI+fv6bFpSXAyKc2n4zO
+	 8n9dU5jrjDG9xlXBZuisTlYA/57Bbcu5eQoFDFyO84sITO/5CnXX6WWdnkBEMZx74e
+	 IPRAGMZQ92UbIT3O+wG+rhkYCWoziPX2apKLB+P5U7QySKxwSQEcHkhUlLzvczlE+K
+	 Mhf+JUQdE+YYzI9grPKcdqxagMueig5tF5FxMnRN5hD9J9bNu+kbuVchQ2qFpvmZtz
+	 1bkwmpwcbXXW2P5N2ghxQg5qv3iFPV+bRYp8oq8CNgm2PNxz5+6mp64P0ehGIFm3hn
+	 0SXBRAqR82yCA==
+Date: Sat, 3 Oct 2026 10:18:34 +0100
+From: "Lorenzo Stoakes (ARM)" <ljs@kernel.org>
+To: Sasha Levin <sashal@kernel.org>
+Cc: rppt@kernel.org, peterz@infradead.org, akpm@linux-foundation.org, 
+	david@kernel.org, mingo@redhat.com, acme@kernel.org, namhyung@kernel.org, 
+	linux-mm@kvack.org, linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	regressions@lists.linux.dev, stable@vger.kernel.org, 4ncienth@gmail.com, 
+	alexander.motin@truenas.com, caleb.stjohn@truenas.com, ameer.hamza@truenas.com
+Subject: Re: [REGRESSION] secretmem: SIGBUS on memfd_secret() pages while
+ perf record runs
+Message-ID: <asDF77csaLDIuHTB@gremlin>
+References: <20261002175651.811343-1-ameer.hamza@truenas.com>
+ <2026-10-02-rc-reply-0003-re-secretmem-sigbus-perf@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -54,35 +47,35 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <asDHBIbfvCUbPT2A@x2>
+In-Reply-To: <2026-10-02-rc-reply-0003-re-secretmem-sigbus-perf@kernel.org>
 
-On Sat, Oct 03, 2026 at 11:12:44AM +0200, Arnaldo Carvalho de Melo wrote:
-> On Sat, Oct 03, 2026 at 11:10:16AM +0200, Arnaldo Carvalho de Melo wrote:
-> > On Fri, Oct 02, 2026 at 11:26:09AM -0700, Ian Rogers wrote:
-> > > 2. 'perf list --tui' and ilist test (patches 6-7):
-> > >    - Add 'perf list --tui' to launch the interactive ilist script via
-> > >      'perf script', and add a shell test driving ilist headlessly.
-> > 
-> > Applied and tested
->  
-> 
->  This one seems to be pre-existent:
-> 
-> root@x2:/home/acme/git/perf-tools-next# tools/perf/python/sctop.py
->  syscall events:
-> 
-> event                                     count
-> ----------------------------------------  ----------
-> Traceback (most recent call last):
->   File "/home/acme/git/perf-tools-next/tools/perf/python/sctop.py", line 253, in <module>
->     main()
->     ~~~~^^
+On Fri, Oct 02, 2026 at 09:30:23PM -0400, Sasha Levin wrote:
+> > Since commit 97d34aa65c29 ("mm/secretmem: properly account locked
+> > pages"), in v7.3-rc2 and the 6.18.52 and 7.2.5 backports, touching a
+> > memfd_secret() page for the first time fails with SIGBUS while the
+> > same user is running perf record, and read() into such a page fails
+>
+> Thanks for the report. I've dropped 97d34aa65c29 from the 6.12 queue,
+> and also removed the copies that were staged for 6.6 and 6.1.
+>
+> 7.2.y and 6.18.y already shipped it, so those need an upstream fix,
+> which stable will pick up once it lands.
 
-Nevermind, root was finding some old python binding, after:
+Sasha,
 
-root@x2:/home/acme/git/perf-tools-next# export PYTHONPATH=/tmp/build/perf-tools-next/
+Could we perhaps take a breath and pause?
 
-it works,
+This patch fixes a really quite serious vulnerability that allows an
+unprivileged process to allocate arbitrary, unreclaimable (i.e. OOMK cannot
+save you) memory.
 
-- Arnaldo
+Allow me to assess the validity of this report _before_ dropping things
+from queues perhaps? :)
 
+It was sent late on Friday in a week that I was ill and it's Saturday
+pre-LPC, so that's hardly a timeframe that I could reasonably have replied.
+
+Thanks!
+
+--
+Cheers, Lorenzo
