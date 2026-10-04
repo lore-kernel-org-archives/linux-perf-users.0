@@ -1,49 +1,50 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9AE4409298;
-	Sun,  4 Oct 2026 22:09:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC50E41B8CD;
+	Sun,  4 Oct 2026 22:09:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791151786; cv=none; b=nqvkjfOvOQ0szxwa0FtWd3gJmAMn4f1YFZXFF3DRRd44a7IbHbST1tyjycYR3soGsganWIUpkHSycjPxOs4GvSj4vZJ/zSID0tjS+OsRvqFTM7r4VEFhOf1QKmCkW1sJaJbXk3W7Wtwh8v1t1OZTk1hyDwAsf2CwUmaA7IXuN8I=
+	t=1791151789; cv=none; b=owRSklCobGceAutohJ/XwMGfbGAgDO0cRINL1RZ6Sl+JbV+VddjiYHlu1PNqZzuddXPiPkr+z4IB/UOstiT53RzDkHP+18cSi8ZNL3heN8mmTK58x81IBnp/9w5NZorUeZ2KyF8ExV4LKu9luM7YjQDm9nUzY7+fsdx/3oBDWxI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791151786; c=relaxed/simple;
-	bh=OtLVyEsaesOT4wzWy0oPxweRW/Mg8IsDyxmkskUHD6o=;
+	s=arc-20240116; t=1791151789; c=relaxed/simple;
+	bh=z+YiW3wkpUZIaph7rj58DXrc5RBoRuQj4IA1F0Oxw3A=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=CzQ/1BRIIVkE73ObuEMXqK/RKaew+4moXVpT2jXi/HVAcTHOA8hKW0a2IOAIMzidnGwsO1g22gSr6y8jXgDnoA1PkbyX+wmDlcW8+3M/zKJB0XZ5caoB9+e9JKTwhfnNVN1lmJ2kHS5VWP0IG83sge2SFwzmoBXIaENCSDgIwoo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fA7FZlfh; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version:Content-Type; b=Fb0xey5+ZtuK1wqD75nDSJuMmNWmy3GV0x14KoZjM+z/aZs5lA9OmFhdmwmcT5S35Muba91chz3CtLkBH7Asz1aNU8xR2keE3R3QZzmIcK3crrrkHD9TMKUV5vj8fWpMJLZLDKU21Jk2g9d9gf53fgOt8UImx58Wvv9awLsMpDI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UQIGghcm; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fA7FZlfh"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 153FC1F000FF;
-	Sun,  4 Oct 2026 22:09:41 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UQIGghcm"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D72441F00898;
+	Sun,  4 Oct 2026 22:09:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1791151784;
-	bh=GEpsd3NY71emI/OU49o6DxhBuREbDH43G5MVLueQf1M=;
+	s=k20260515; t=1791151787;
+	bh=vkNIQLMpC1d0MEJXAzW0sGVZFQPX3e0T6cZ2nuvw/Bs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=fA7FZlfh2W9/hpnctq9tr1o0yQnOFCnkaOTqTSrBgMzFcNLPjxul2caadNj73wipx
-	 dFPny8lZMhs/03/zoLz+mCFJecd6Z7aYLz18RNj2t+9ZLnj6i/QZQHsvAcBW+SP0AX
-	 DQdnISC1IIPcW3clt/nPLSzU+B6sePHL3I2jrZbDXw0Hbg8vSyx3H1PORLdpunqvdx
-	 tUCwt+dLL2VoD3duJW4n/I4wP1nBQspFDi81xPFtXKW7s4Gs4+VYOZrmpxhC67sjEd
-	 7AsKZ1jIVhAMnNMjYmIG0tknP9MPVVXw4XJ6ZjgEiHPELZkSAT2Q2Ipm4aNcmQdqMH
-	 7Hw/SrDagQxhA==
+	b=UQIGghcmZ2XPSAGpdOETkygsDHVBwLjNJemPo2BdKKHMrkSfXA4i1U/OV7ph006pu
+	 OmjvWTkoIaMe2wZpusrKJqhvzM9aQEuNrmAilDXVne69UwK+TsUSz7gQ69EO80a70r
+	 0ZoMis4oCoJMWnV7SPg8PEOIdkmsyJCL6712k52yosu8Ks8EYDxP+knNn7NvkUc5cx
+	 WMBo2BDjbXmXwVNAN1UZGvCuvdp8q5noKk9BSPvHeTHOoZMAtSxxePeeVPjZOD/pYA
+	 AmQolxiJyhmzvOHZm24BVO1yM9g679NErgZebCyhy3sXNSErPsAX+w0V3XVq4d/Hzr
+	 aGm7Dkn/VvVAQ==
 From: Will Deacon <will@kernel.org>
-To: Khuong Dinh <khuong@os.amperecomputing.com>,
-	Runyu Xiao <runyu.xiao@seu.edu.cn>
+To: Shuai Xue <xueshuai@linux.alibaba.com>,
+	Jing Zhang <renyu.zj@linux.alibaba.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Yunhui Cui <cuiyunhui@bytedance.com>,
+	Markus Elfring <Markus.Elfring@web.de>,
+	Ruoyu Wang <ruoyuw560@gmail.com>
 Cc: catalin.marinas@arm.com,
-	mark.rutland@arm.com,
 	kernel-team@android.com,
 	Will Deacon <will@kernel.org>,
 	linux-arm-kernel@lists.infradead.org,
 	linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org,
-	Jianhao Xu <jianhao.xu@seu.edu.cn>
-Subject: Re: [PATCH] perf: xgene: initialize lock before requesting IRQ
-Date: Sun,  4 Oct 2026 23:09:18 +0100
-Message-ID: <179114855064.1630764.1277374161771369343.b4-ty@kernel.org>
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] perf/dwc_pcie: Fix PCI device reference leak in probe
+Date: Sun,  4 Oct 2026 23:09:19 +0100
+Message-ID: <179113437863.1501714.3722625240012640399.b4-ty@kernel.org>
 X-Mailer: git-send-email 2.47.3
-In-Reply-To: <20260902072241.3489222-1-runyu.xiao@seu.edu.cn>
-References: <20260902072241.3489222-1-runyu.xiao@seu.edu.cn>
+In-Reply-To: <20260820135611.3901886-1-ruoyuw560@gmail.com>
+References: <20260820135611.3901886-1-ruoyuw560@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -53,21 +54,23 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
-On Wed, 02 Sep 2026 15:22:41 +0800, Runyu Xiao wrote:
-> xgene_pmu_probe() requests the PMU IRQ before initializing
-> xgene_pmu->lock. request_irq() enables IRQ handling before it returns,
-> so xgene_pmu_isr() can run in this window and acquire the uninitialized
-> raw spinlock.
+On Thu, 20 Aug 2026 21:56:11 +0800, Ruoyu Wang wrote:
+> pci_get_domain_bus_and_slot() returns a referenced PCI device. When the
+> subsequent RAS DES capability lookup fails, dwc_pcie_pmu_probe() returns
+> -ENODEV without releasing that reference. Repeated failed probes can
+> therefore keep the PCI device allocated after removal.
 > 
-> Initialize the lock before requesting the IRQ so the handler always sees a
-> valid lock.
+> Declare the looked-up device with __free(pci_dev_put), so the temporary
+> reference is released on every return path. Keeping the reference scoped
+> to the whole probe also covers all later uses of the device during
+> initialization.
 > 
 > [...]
 
 Applied to arm64 (for-next/perf), thanks!
 
-[1/1] perf: xgene: initialize lock before requesting IRQ
-      https://git.kernel.org/arm64/c/d4b7b0c77142
+[1/1] perf/dwc_pcie: Fix PCI device reference leak in probe
+      https://git.kernel.org/arm64/c/3a4067658363
 
 Cheers,
 -- 
