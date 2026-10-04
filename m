@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 103A041BA72;
-	Sun,  4 Oct 2026 10:21:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B377F39CCF2;
+	Sun,  4 Oct 2026 10:21:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791109314; cv=none; b=fHu0+fP9B/ErgBdSY15ym2xEP2PszsDrh6wtkPvRCbFbZcOsKUcPg+IyvormSuHTp6WGaXw2G9rYcD+h2ZMQ/8HUMJ2kMHSbq6Ht7n9WqHhlE6W2YlMo5qWnRqDAj2HL/ZppWl8HzVFi6JqX6/HLBe2Xjf9456pdnvEvJ0RLEC8=
+	t=1791109317; cv=none; b=Ifv9myu0xzMkJ7gcM3UVYrpzsnFXuTjKVHHB7HAlXMmdLIKV97M/KQsyirGLtCrz3Wcp6CHjHxTWKsvCqoL09Eovp7fmxn/RcXmEA3zFmhhGWAD9jzV4SSxxXsu8890qyAMm2C5jaJZkIRnTdpUhCOPOScC4iMSoYQa+jIqrg4A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791109314; c=relaxed/simple;
-	bh=04nKJxb7KBkfm5qtc3Gm0+HVdy1gaDWmg5x6ec/HShA=;
+	s=arc-20240116; t=1791109317; c=relaxed/simple;
+	bh=YqEtDNP2HV0mLPxH10/gbf1H72RTgVr948823/q4Boo=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=XsjPWJSsshMy/DJQQW1ju6ijyM65GL4oVQJkYaI8QRqngBiPp94u2+cSZRzi/78cSwIC0PQolqyCjgbeeQtNACGzvBjxpgA9L/dUaLvZQktbXbr4k8BJ3/nCHl3ycjrwZwOlbopFs8K5L0PWSJzuR1vnmOoSkPCqvKsDTRP+Qes=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=agimpmMD; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version; b=ECvqS6e84ST7jwtThHT0mvCX0uRHCXqsPwU4Qtl0Zm1ituWknIPCX5e0m5VzBzXCUFucVxBVQF2SS89x3iBkqg0Gq0HzG5tU5xWbnSC2jMxhXtRWuFzwq5U/ola2eg7KsPp+WFH/5Oq/dumG5fr5ItkxJpfgPeSqm0UIwB8e8us=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ioNPsJmQ; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="agimpmMD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1C69F1F00893;
-	Sun,  4 Oct 2026 10:21:49 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ioNPsJmQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7E2D11F000FF;
+	Sun,  4 Oct 2026 10:21:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1791109312;
-	bh=qDnbwqNz/qkKaYJQY1gH1IVgC/6lZFFcRASabjBz9q4=;
+	s=k20260515; t=1791109316;
+	bh=BgRyqkmROtB9xJY3E+pxWBtSxAVsrJ/0mFxXQxPkYng=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=agimpmMDR8OWkr6Ehw5hASPKJd4Pn/JCLSi1ZfXHqjFqaEcvVcBgOwgXgGoGLV29a
-	 2yDYuaogbCmJXvhTm6NZpe/stDU9xZZCRydEBib8pt8obAwF27NHl8vWeze/l0A/RG
-	 a1Gr/6aiqr71CLFT/7jtXuGsUTTs5g+YOSIgFN9xkyLSsVsA+tBiu4jwuaHiNcKbJR
-	 4KRVSsCVb2amIC2145wus0id8u8tNOKYfzoxMHWhZYA2LnTbT3cxD7XfQQnxgZQsl8
-	 FPwjJtLo9i44UOaDndQ+k7beZSyj+GJg7xoernVogqWZvq7MlExurj3tySVYxa4WJu
-	 d48QQF8XX33vg==
+	b=ioNPsJmQPlCR9Q6PQkrab84xgVAPa7sVKi6BwfTdrd4sJgKpe7++aiO/3r4NdsBXK
+	 pyP8LZeJI1k/rWFtgF/i6fApneqTi7FBsgUEbbwoxWepEggq9dMNZnhSj6MgnJLLNC
+	 xmqAGrQWiKyqjZAH7pZUfA0rcNN0b1CHFmQrfA4DRfbCVh6m2Ew0/ilSPlM32KpQSm
+	 WlGKjAJ7IkP9+RXYBIZLbg1dsQ3nsXO06Tuq8Wu/7RhctrZAYRXP7n/ggx5v2YqPWz
+	 FW3vI2LwtceowmawWeIXB9JAsRh8/gZa0g5C7Ih/kG7wSfF9QJLDkhlIDP7PjEp66d
+	 Zm0IKFE9kcE7Q==
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Namhyung Kim <namhyung@kernel.org>
 Cc: Ingo Molnar <mingo@kernel.org>,
@@ -38,9 +38,9 @@ Cc: Ingo Molnar <mingo@kernel.org>,
 	linux-kernel@vger.kernel.org,
 	linux-perf-users@vger.kernel.org,
 	Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH v10 3/9] perf mutex: Add DEFINE_MUTEX() static initializer
-Date: Sun,  4 Oct 2026 12:21:27 +0200
-Message-ID: <20261004102133.26392-4-acme@kernel.org>
+Subject: [PATCH v10 4/9] perf mutex: Add DO_ONCE() for one-time initialization
+Date: Sun,  4 Oct 2026 12:21:28 +0200
+Message-ID: <20261004102133.26392-5-acme@kernel.org>
 X-Mailer: git-send-email 2.54.0
 In-Reply-To: <20261004102133.26392-1-acme@kernel.org>
 References: <20261004102133.26392-1-acme@kernel.org>
@@ -54,42 +54,62 @@ Content-Transfer-Encoding: 8bit
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-For file scope mutexes, so that they don't need a constructor function
-to initialize them at startup, mirroring PTHREAD_MUTEX_INITIALIZER
-while keeping the clang -Wthread-safety annotations of struct mutex.
+For lazy init that more than one thread can race into, without
+pthread_once() so that it stays within perf's locking primitives and
+clang's -Wthread-safety keeps an eye on the mutexes involved.
 
-DEBUG=1 builds have mutex_init() set PTHREAD_MUTEX_ERRORCHECK, making
-the CHECK_ERR() paths in mutex_lock()/mutex_unlock() report relocking a
-held mutex and unlocking one that isn't held.  PTHREAD_MUTEX_INITIALIZER
-gives a default type mutex, so statically initialized ones would silently
-lose that: use PTHREAD_ERRORCHECK_MUTEX_INITIALIZER_NP, a glibc
-extension, falling back to the default type in libcs that lack it.
+Mirrors the kernel's include/linux/once.h DO_ONCE(), dropping its
+static key fast path, unnecessary at these cold init paths: a per call
+site static bool plus a statically initialized mutex, double checked.
+As there, code reachable from more than one call site must go through
+a common helper.
+
+The lockless fast path reads ___done with an acquire, paired with a
+release store after fn(), so that fn()'s side effects are visible to
+threads taking the fast path, which the dropped static key used to
+guarantee.
+
+The __atomic builtins are used rather than smp_load_acquire()/
+smp_store_release() because ThreadSanitizer understands them,
+avoiding reports on ___done and on what fn() initialized.
 
 Assisted-by: LLM
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/mutex.h | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ tools/perf/util/mutex.h | 24 ++++++++++++++++++++++++
+ 1 file changed, 24 insertions(+)
 
 diff --git a/tools/perf/util/mutex.h b/tools/perf/util/mutex.h
-index 70232d8d094f8bfc..fe04db21d19c5b0b 100644
+index fe04db21d19c5b0b..5554937675886ef3 100644
 --- a/tools/perf/util/mutex.h
 +++ b/tools/perf/util/mutex.h
-@@ -92,6 +92,18 @@ struct LOCKABLE mutex {
- 	pthread_mutex_t lock;
- };
+@@ -104,6 +104,30 @@ struct LOCKABLE mutex {
+ #endif
+ #define DEFINE_MUTEX(name) struct mutex name = { .lock = __PERF_MUTEX_INITIALIZER }
  
 +/*
-+ * Statically initialized mutex, for the file scope ones. Error checking
-+ * in !NDEBUG builds, like mutex_init(); the glibc-only errorcheck
-+ * initializer falls back to the default type elsewhere.
++ * Runs fn() exactly once however many threads race to it, the rest wait
++ * for it to finish; per call site state, so multiple sites wanting the
++ * same once use a common helper, as in the kernel's DO_ONCE().
 + */
-+#if !defined(NDEBUG) && defined(PTHREAD_ERRORCHECK_MUTEX_INITIALIZER_NP)
-+#define __PERF_MUTEX_INITIALIZER PTHREAD_ERRORCHECK_MUTEX_INITIALIZER_NP
-+#else
-+#define __PERF_MUTEX_INITIALIZER PTHREAD_MUTEX_INITIALIZER
-+#endif
-+#define DEFINE_MUTEX(name) struct mutex name = { .lock = __PERF_MUTEX_INITIALIZER }
++#define DO_ONCE(fn, ...)						       \
++	({								       \
++		static bool ___done;					       \
++		static DEFINE_MUTEX(___once_lock);			       \
++		bool ___ret = false;					       \
++									       \
++		if (!__atomic_load_n(&___done, __ATOMIC_ACQUIRE)) {	       \
++			mutex_lock(&___once_lock);			       \
++			if (!___done) {					       \
++				fn(__VA_ARGS__);			       \
++				__atomic_store_n(&___done, true,	       \
++						 __ATOMIC_RELEASE);	       \
++				___ret = true;				       \
++			}						       \
++			mutex_unlock(&___once_lock);			       \
++		}							       \
++		___ret;							       \
++	})
 +
  /* A wrapper around the condition variable implementation. */
  struct cond {
