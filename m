@@ -1,231 +1,198 @@
-Received: from mail-qt1-f176.google.com (mail-qt1-f176.google.com [209.85.160.176])
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FF1A481241
-	for <linux-perf-users@vger.kernel.org>; Sun,  4 Oct 2026 18:39:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.160.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E2B047142E
+	for <linux-perf-users@vger.kernel.org>; Sun,  4 Oct 2026 19:55:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.171
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791139165; cv=pass; b=a3mOwUA4xU5lAlAahhePtcjCvREkXM54JNQTiE3NEoNrGLhm1XzA9JRytPqLbBGvIN1Pmz3rT7XjCeLM7ftAIySeZANZVuUGyB6PwSWArrmXfIVdVJNrD0EmejfmjOypjObivkOIyiQUGu/9LdZrLjJpeTdVPv733gVwV5do7xQ=
+	t=1791143711; cv=pass; b=XrwFUUJ+2V6E+WitYCoGe/rBcJaIq7rVB7CCmgH6sy+S8qbzyNxqRD0JaAySWgY3XWmg8P0ue56KHQg30SqZO6rYAjIrb6PygAsJ3HTrI81AylDGtfZYeMJtZhvBDumDL+3P5M7+8mam6UYANREJj/dkp+PV5n/kxL6G81XnHyU=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791139165; c=relaxed/simple;
-	bh=Q5SKncuQynV4x7Bps+RIZqUEFmiH2TTHOAAQrnnR074=;
+	s=arc-20240116; t=1791143711; c=relaxed/simple;
+	bh=Jh7QrlOttp/hJOGnDhr5dP/akcAxUwVLAJfz5fQRGrA=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=YOPg2BTanazrpyHS+YNTFVDjWjoGJig70hFk8mUANdkWE3k/n9cj9DzTKM1C/BnU3rJ87eK+LovHW3bBUrI7yWmHvnekdoBA5u+zKp6LPbMieJ+NIGzA0pJoXKa0AaoSOG5xteJCPmlmp/Nse9UyK4wgcDFcEAMxYJPBn/u0Gd0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=l0iHyxjb; arc=pass smtp.client-ip=209.85.160.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	 To:Cc:Content-Type; b=tliwtDYKbOZgKfDEax6/Of8Twjv0gdJOR38wruOKiHPMHJLApNNJcnWIv5OSpuESyi0aO83C2f7/uYuDPRThlgLPvTquhLhHOaVvYvfCQvtVmXQ1hSht/cPTBQ6h26A0CYuCZNJtUjX8uKVjgnOMQOo9Z4fO3+RKSTnmS4duews=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ncsu.edu; spf=pass smtp.mailfrom=ncsu.edu; dkim=pass (2048-bit key) header.d=ncsu.edu header.i=@ncsu.edu header.b=GxcfUGHa; arc=pass smtp.client-ip=209.85.214.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ncsu.edu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ncsu.edu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="l0iHyxjb"
-Received: by mail-qt1-f176.google.com with SMTP id d75a77b69052e-5337c7b9937so265811cf.0
-        for <linux-perf-users@vger.kernel.org>; Sun, 04 Oct 2026 11:39:21 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1791139161; cv=none;
+	dkim=pass (2048-bit key) header.d=ncsu.edu header.i=@ncsu.edu header.b="GxcfUGHa"
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-2e4a341d177so6345685ad.0
+        for <linux-perf-users@vger.kernel.org>; Sun, 04 Oct 2026 12:55:08 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1791143708; cv=none;
         d=google.com; s=arc-20260327;
-        b=EDpXrtvPAL7+xUFyODx6HOQt2ioULLZBvS2pI3H2UxdCaPn0p4mC3QoMM9gK8u3iQC
-         c92vOIW+uc0+5Nvt/wuuHguDjhvUv1iwDypfabQLfWDEnJdrLwMi8CTrzuwIKPFkMBXs
-         incdDevuTZXFvGiZStCFaB9GZYzgXadETe005oJhyrw3OIApH/U/7pg14Zos/OpGPkzV
-         b2deFlGokLhWCj1amse0ALHPvdnEOV+TQztambJxHuIhtqWW1JrdKxBWFFfblGt9nxf+
-         tX6tqRlV54v8H35/9pBSPJ2rTtPtKkEzroRtA12KiElAciEn0ky9ZWiPX3w6WGXAq3CH
-         kISQ==
+        b=iNc2/hkVZ1uXRWkMDVO7Ccrq09ucPsUJtyrp4A7IpcfTe3Nv7fIbqAYD6tNbljFcqV
+         wBzj3wO6AFkM98tCZqXmyZVBQ/UHg5ON2NDntWOU0VpufT9PbLZEub6nYbHPy7EvXANT
+         dy+usi4Uz4YYFxA1k68gQmDZDw8oOLc9MulavUqqbeZUxJp+go1uy+4C0pCfmHwju1dW
+         CuK5HPekvPzp7Mi0IGCCJjaE3FXdK5CnSEswKQIJl+DQOLHrtFrLtcGkZZOkt6RqE/33
+         oBFPPu0UIkWoPbN0o5pRENTXwLgTN6/N2sRZpZDtDEv9uaOiantxCM2ORNsaiprEaKqU
+         bPvw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:dkim-signature;
-        bh=ZSC0w1neootLkbih9TUxoXkKPCkBI7t1n5ZaTzyKsnU=;
-        fh=oM4ALxvBA5tRO2YDBBXafbPJ5cMiQBYEiI0EYIs0s1w=;
-        b=iVv6sGOSaZjRj+7ECNE807tyzARxUvTx0kB9TVYW6vCCV3sPDZoQ8e0Weuyf4lPwQv
-         uBVSPDA4dCJkjl5LtnQV9uKgae07dqZm4dcFYHTI0UDelGeNBXZmiZIUL6S6NtGvLRlS
-         /LGBAaQna/LNLIFdHwkKsthdlGCdb5BZm7+2MdFhhYS/s09eHzWFUDr+WvdthlAYYj/f
-         cJ5yHCa59JrxZVt+G4xyvoE8khvueqNTSSo40VZ6JhRVcP7mYRNF2V/oqT3gD8A9K1CA
-         Du+/U6p0O12E47IQmoZ6O6fvTlilCPLhqjBr1P8HD3rp6fdbFWsjNfavtxLrbYc15K/n
-         kAsA==;
+        bh=P6RFZCyUChiX/tp/C+y/RH4dV99Sf5c60j1c6Xm2mKQ=;
+        fh=B/YNpWXB6prln9A3FcBgFX1njmDV/akXvaplpPEELro=;
+        b=BHE3py9G91p0onleZLynCDPIS5ZdFoVIpOSWk+SxVGFcri+DC11BwUQO9J3KZR2g5b
+         LVlEd4Cu8HfMi5J1jhmfTCNYktoYIxlr0rAuqgSB+NxTwUerP2+bFP2gBsmrvovFO0GL
+         7dO9oWbAsqwGVY4tTcsubm78Yr5lkPiex0gIeGA7U0eiSCura0OAnmIcvl1cqRsq6dKG
+         VGGRM5rAodx8tCBZV0WgQ/Z37pzViBgsBIdjs1KFgqFf/ITr08djeYlJW4LItRNXskkG
+         GjZfVNHGKJLkR19h962GOyPXHNiExy2AedTYWuoT9nBxMB3o1ey9lI1kE4cR7tDx/fOi
+         rdOg==;
         darn=vger.kernel.org
 ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1791139161; x=1791743961; darn=vger.kernel.org;
+        d=ncsu.edu; s=google; t=1791143708; x=1791748508; darn=vger.kernel.org;
         h=content-transfer-encoding:content-type:cc:to:subject:message-id
          :date:from:in-reply-to:references:mime-version:from:to:cc:subject
          :date:message-id:reply-to:content-type;
-        bh=ZSC0w1neootLkbih9TUxoXkKPCkBI7t1n5ZaTzyKsnU=;
-        b=l0iHyxjbrFA0mj0qSWG3UEuOwCfeu39THooR7JdjvlpS5iPbcpbOGXWgFlwrHqiq17
-         g6OREDzEJg1B4R9e3NlLt/FQGfnUhJDJq9ugUkIwHD8Ouc6I0KCAE+AjFJ5im2Q3teHM
-         xpabytF01LqRy3edoNlhxz/KOOwY/glawDCIRDkU1ItyqnPxe60feD3VqcauD0MIeU4s
-         Cvv/OfjgN/b+SrE6g8xki0vgbqOIO/2Zkxe+N05IzJfOVKCkkH4F7eFCLA6UNgq7uegJ
-         Iz6k97ECHJF0Ws6uFXO0NrKMD645vu6jOd91RLmcYxQ0T3ig64z73JKnKEdXvgZ6oM2B
-         rqAQ==
+        bh=P6RFZCyUChiX/tp/C+y/RH4dV99Sf5c60j1c6Xm2mKQ=;
+        b=GxcfUGHacyEcXVmAQ++ZXlnjvuqYZpE9LjzLXPkyzhmY1uor33veceaX8jw58zcOb3
+         6THoGGaF+89oOPkIfDzRlBUKLEB+Fd/gkxJSZ7CQpv1KSqvtnqoKk+SA7fYQLLqfPp2D
+         TXp9g+rAKDNd6XOX7moAcssiIdwc7iB/ZFlY4435/tM4PLwUKdqx1f1b+JBkI0PnU+B4
+         lxR6Yq/dI/4SW3S2OWyQbqV5nAqdXwE879o3N5mZn3QVtmEGaFP2oxh4DrNoc5kk6xFq
+         YyoItMLRb0jcvVJ6ay9GzpLEwhAUNcT9gV3M3mIb2ulsq998sQ4X4qFlyqzjv+OK8QIN
+         DUMw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1791139161; x=1791743961;
+        d=1e100.net; s=20260707; t=1791143708; x=1791748508;
         h=content-transfer-encoding:content-type:cc:to:subject:message-id
          :date:from:in-reply-to:references:mime-version:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=ZSC0w1neootLkbih9TUxoXkKPCkBI7t1n5ZaTzyKsnU=;
-        b=ln+elsRhvRAXsXqhcEQ1q3iz1dRGFwAW5UVY7WKntW87FGOCnbWlI3qiWqgwdunIKX
-         1QDMPm/LR2VA4iApuQAmsz8Ueot7D4jrozYkmxDlj6bKbVBvzPQgaufWGoRD0As0VlFT
-         cp17UY/kONcrUx0sTXLKagfVDIdqHdx/YlxC4ZQZRET8sikA2hmK94G52B3ZTmtBG7Qt
-         hwKL9S4jHw/5zuhYAFSO+31u51tiA5fOFi9RnhJQfqR5ZZO1xqXh1xTaqsAz+AX9Lu3e
-         mcv/tQ6niks87BNCZ2aGxi6kNJle2Yfn55JjiuVHACru86tcQ5E0NwNph1T3R3GdO5Fx
-         cHqw==
-X-Forwarded-Encrypted: i=1; AKwUvBweeNdeZJgZCNhIIe8VYp3Dno4niM7DSO+adAGesZPWt7Q9G7bbCoLpy/fvtFVHJ+n3KQHpdrBM2befnMcBQR/u@vger.kernel.org
-X-Gm-Message-State: AFuF++kskvki9yjedu8WNxdTZkMQGeYWSd6xKae/LXwANaIUbB2cy7yK
-	v4y9S+tTt4nRvTPLE8DbU4dQAaMk3AUMDcVi9fjVKDtI657oaiOKuUguXQ9fgwRFQJ5sUvok7kQ
-	mEISnzTo/CSuDmKYMkmyGhof/cjCSLKDOMCFRjTPI
-X-Gm-Gg: AYBFou2QjJHG3Y5LfBD+r0aOoxEtt48LJ/OU4W9unu+ZKGyDQKpNpDQTEGAUhp/FGy6
-	txjEBadRBCrhE6cLqrE3hfyBoq8FGqRZSeyRpx/2tvHf0ODEH7sWql2b1fK/bACGom/KxsklOUG
-	vcWnrCOarn6ocbvvZAOPOKZKlL8rXFmMOfr1G1CH3B48Mj4R6NROIJEGOov11XpMMz99NwBRZQs
-	36WMOano9sxJ7RTSb7fi4J7/l6zQBidjD9hZ0cF2AgEVTeZWke089JSx2OPisQGcAQUq6QPFSTG
-	1jHD96hYXR3mGfcAZkLwGhq8lyle4nKnCzswunNIh/QsQXRU2IYxkRhu
-X-Received: by 2002:a05:622a:a16:b0:531:282:6560 with SMTP id
- d75a77b69052e-5351322e1b3mr19806961cf.15.1791139160071; Sun, 04 Oct 2026
- 11:39:20 -0700 (PDT)
+        bh=P6RFZCyUChiX/tp/C+y/RH4dV99Sf5c60j1c6Xm2mKQ=;
+        b=SEWk4YIkg2COL3THyk98xHPIIJkbyEUK5YiwBHsKgX2jsQMAzpwL9fJwMIzmXhKste
+         2LHLV66SlvzshG8I5SzR5vThLpsj2KgDobxT/yHt33KdOzjQVZO5oJ1lfXkGhI7GV86a
+         PX7mIgvgu4rBbRwl/qIr/piH1pHDOaF3c6BqeEB8gKOsvETUnUOQ9Ju0vt6BYyfXIcER
+         BxdzV9hB3EHUgwvTx7hKaopBAF2skVq2fv8Djlawi1EeT9YX7ZPyOxJfYOeyLgPFtS7h
+         VNUbwwZgsa6VdVL+TRcX8eML22aqL7AAC7APBLMjb4yw1U2+0Kx3kcuK95YBFklbEOyy
+         F4ig==
+X-Forwarded-Encrypted: i=1; AKwUvByaLWYwbB35tsL/hTCOjoZGTVDFyhji1MkVQN4e6qsuo9KI7U0XA0ugOYWT6iwf3XBDK7lZRcx933hHFtnXR3fC@vger.kernel.org
+X-Gm-Message-State: AFq9FYJKji6TR+ZKCrL1Kwc6vhPrs9D05oxU5U1VtjSmzLm6pOdAd2bR
+	+Hz4KIAePW1/lSw3IyOvUeSimS7MiWkvggglV0QoIOTdIUSrrGsQOd125KijRkIEdPGUCNMHZWF
+	OHC1jXHJPU0ft7+gKcNvEHPuA75vAysO/ciaENKBW
+X-Gm-Gg: AYBFou3kBPhij6WurylARKEHBZrjNGizlv7ifj9AkfQga3zyubIuaU3zjTmtczcgWS2
+	xIWGYnZC4h8bzrx3vLDz2dsq25YDWcHHJSt7SBV02Da+hEW9swyiLvh0F/P/0qcUqv8r4DphkJE
+	CWFOebOoF8IR7wVGmufzTiOkf4jawLd46PRtIDvi9CbzKKvEdDpQgbCOo/jH92UMGer2rS6rJ3/
+	WuXjA2VoCQZpJKaWmoq3ByHPPnJGfo9l++RYw5yuL5u1vWEBOw3+7BjUGZrYsCc4saReDYv1wIs
+	VnMPYjzRjsm4Eh9fY3C2SGBaroT9hpGnwzxEfw5M3wCEe+a2I9CcN2ql6+ZHRSbhh/NKWk5mrel
+	xUdzcntt/kB4=
+X-Received: by 2002:a17:903:3df4:b0:2df:a4d8:579e with SMTP id
+ d9443c01a7336-2e5106355d6mr37437385ad.45.1791143707699; Sun, 04 Oct 2026
+ 12:55:07 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20261003-b4-mmap-prepare-vma-flag-sanify-v4-0-a1f052500fd7@kernel.org>
- <20261003-b4-mmap-prepare-vma-flag-sanify-v4-21-a1f052500fd7@kernel.org>
-In-Reply-To: <20261003-b4-mmap-prepare-vma-flag-sanify-v4-21-a1f052500fd7@kernel.org>
-From: Suren Baghdasaryan <surenb@google.com>
-Date: Sun, 4 Oct 2026 20:39:04 +0200
-X-Gm-Features: AclHuK-BFFMO7RL_23L1uoIyefqTPzoxo4liaojYggefG4PLZrnFo0OrrSwhSqQ
-Message-ID: <CAJuCfpGtyaqwi__OXcB=iy2+LUVzFnLo-Q=Rdxz728_EHdTaWA@mail.gmail.com>
-Subject: Re: [PATCH v4 21/38] uprobes: remove VM_IO, set VM_MIXEDMAP for
- mapped kernel pages
-To: "Lorenzo Stoakes (ARM)" <ljs@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>, "Liam R. Howlett" <liam@infradead.org>, 
-	Vlastimil Babka <vbabka@kernel.org>, Jann Horn <jannh@google.com>, Pedro Falcato <pfalcato@suse.de>, 
-	David Hildenbrand <david@kernel.org>, Mike Rapoport <rppt@kernel.org>, Michal Hocko <mhocko@suse.com>, 
-	Jonathan Corbet <corbet@lwn.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>, Jason Gunthorpe <jgg@ziepe.ca>, 
-	Leon Romanovsky <leon@kernel.org>, Paul Moore <paul@paul-moore.com>, 
-	Stephen Smalley <stephen.smalley.work@gmail.com>, Jaroslav Kysela <perex@perex.cz>, 
-	Takashi Iwai <tiwai@suse.com>, Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
-	Andrii Nakryiko <andrii@kernel.org>, Eduard Zingerman <eddyz87@gmail.com>, 
-	Kumar Kartikeya Dwivedi <memxor@gmail.com>, Zi Yan <ziy@nvidia.com>, 
-	Baolin Wang <baolin.wang@linux.alibaba.com>, Nico Pache <nico.pache@linux.dev>, 
-	Ryan Roberts <ryan.roberts@arm.com>, Dev Jain <dev.jain@arm.com>, Barry Song <baohua@kernel.org>, 
-	Lance Yang <lance.yang@linux.dev>, Usama Arif <usama.arif@linux.dev>, 
-	Kiryl Shutsemau <kas@kernel.org>, Doug Gilbert <dgilbert@interlog.com>, 
-	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>, 
-	"Martin K. Petersen" <mkp@kernel.org>, Simona Vetter <simona@ffwll.ch>, Helge Deller <deller@gmx.de>, 
-	Sebastian Reichel <sre@kernel.org>, John Hubbard <jhubbard@nvidia.com>, Peter Xu <peterx@redhat.com>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Oleg Nesterov <oleg@redhat.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>, 
-	Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, Rik van Riel <riel@surriel.com>, Harry Yoo <harry@kernel.org>, 
-	Juri Lelli <juri.lelli@redhat.com>, Vincent Guittot <vincent.guittot@linaro.org>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Will Deacon <will@kernel.org>, 
-	"Aneesh Kumar K.V" <aneesh.kumar@kernel.org>, Nick Piggin <npiggin@gmail.com>, 
-	Arnd Bergmann <arnd@arndb.de>, Muchun Song <muchun.song@linux.dev>, 
-	Oscar Salvador <osalvador@suse.de>, "Matthew Wilcox (Oracle)" <willy@infradead.org>, Jan Kara <jack@suse.cz>, 
-	Marc Zyngier <maz@kernel.org>, Oliver Upton <oupton@kernel.org>, 
-	Catalin Marinas <catalin.marinas@arm.com>, Madhavan Srinivasan <maddy@linux.ibm.com>, 
-	Anup Patel <anup@brainfault.org>, Paul Walmsley <pjw@kernel.org>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
-	Christian Borntraeger <borntraeger@linux.ibm.com>, Janosch Frank <frankja@linux.ibm.com>, 
-	Claudio Imbrenda <imbrenda@linux.ibm.com>, Alexander Gordeev <agordeev@linux.ibm.com>, 
-	Gerald Schaefer <gerald.schaefer@linux.ibm.com>, Heiko Carstens <hca@linux.ibm.com>, 
-	Vasily Gorbik <gor@linux.ibm.com>, "David S. Miller" <davem@davemloft.net>, 
-	Andreas Larsson <andreas@gaisler.com>, Alexander Viro <viro@zeniv.linux.org.uk>, 
-	Christian Brauner <brauner@kernel.org>, Matthew Brost <matthew.brost@intel.com>, 
-	Joshua Hahn <joshua.hahnjy@gmail.com>, Rakie Kim <rakie.kim@sk.com>, 
-	Byungchul Park <byungchul@sk.com>, Gregory Price <gourry@gourry.net>, 
-	Ying Huang <ying.huang@linux.alibaba.com>, Alistair Popple <apopple@nvidia.com>, 
-	Chris Li <chrisl@kernel.org>, Kairui Song <kasong@tencent.com>, 
-	Kemeng Shi <shikemeng@huaweicloud.com>, Nhat Pham <nphamcs@gmail.com>, 
-	Baoquan He <baoquan.he@linux.dev>, Youngjun Park <youngjun.park@lge.com>, 
-	Johannes Weiner <hannes@cmpxchg.org>, Qi Zheng <qi.zheng@linux.dev>, 
-	Shakeel Butt <shakeel.butt@linux.dev>, Axel Rasmussen <axelrasmussen@google.com>, 
-	Yuanchu Xie <yuanchu@google.com>, Wei Xu <weixugc@google.com>, 
-	Chengming Zhou <chengming.zhou@linux.dev>, Michal Hocko <mhocko@kernel.org>, 
-	Miklos Szeredi <miklos@szeredi.hu>, Xu Xin <xu.xin@linux.dev>, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
-	linux-usb@vger.kernel.org, linux-rdma@vger.kernel.org, 
-	selinux@vger.kernel.org, linux-sound@vger.kernel.org, bpf@vger.kernel.org, 
-	linux-scsi@vger.kernel.org, linux-fbdev@vger.kernel.org, 
-	dri-devel@lists.freedesktop.org, linux-trace-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, linux-arch@vger.kernel.org, 
-	linux-fsdevel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	kvmarm@lists.linux.dev, linuxppc-dev@lists.ozlabs.org, kvm@vger.kernel.org, 
-	kvm-riscv@lists.infradead.org, linux-riscv@lists.infradead.org, 
-	linux-s390@vger.kernel.org, sparclinux@vger.kernel.org, 
-	fuse-devel@lists.linux.dev
+References: <20260930210038.196928-1-yzhao62@ncsu.edu> <20260930210038.196928-2-yzhao62@ncsu.edu>
+ <20260930211051.8EFDA1F000FF@smtp.kernel.org> <ar6i_ZKXNVZmze2r@google.com> <ar_dGYiNoo04-OEK@x2>
+In-Reply-To: <ar_dGYiNoo04-OEK@x2>
+From: Yanbo Zhao <yzhao62@ncsu.edu>
+Date: Sun, 4 Oct 2026 15:54:55 -0400
+X-Gm-Features: AclHuK_fTdiCh8dZTLaIHxhK9TmQN-VSQrMo_UjkUH2Z6NvvPB4Ss4Mw7_KN0uo
+Message-ID: <CA+J8vibQxdKXpqstnv0+BGpwn7dd_E_kQS5GE9dCyR47--da5w@mail.gmail.com>
+Subject: Re: [PATCH v2 1/3] perf dwarf-aux: Add die_is_compound_type() to
+ handle C++ class types
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Namhyung Kim <namhyung@kernel.org>, sashiko-reviews@lists.linux.dev, 
+	linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Sat, Oct 3, 2026 at 6:40=E2=80=AFPM Lorenzo Stoakes (ARM) <ljs@kernel.or=
-g> wrote:
->
-> These are not MMIO pages so VMA_IO_BIT is an inappropriate flag to set.
->
-> Instead, set them VMA_MIXEDMAP_BIT as they are kernel mappings and this i=
-s
-> the appropriate flag to set for those.
->
-> This provides the semantics required - no VMA merging is permitted, but
-> does not prevent GUP.
->
-> However this has no meaningful impact as these are refcounted and thus ca=
-n
-> be GUPed.
->
-> A previous commit already prevented __mm_populate() from being invoked on
-> XOL areas, which VMA_IO_BIT was previously relied upon to do, so that is =
-no
-> longer required.
->
-> Both VMAs set a VMA name, so always_dump_vma() returns true before
-> vma_dump_size() reaches its VMA_IO_BIT check, and thus there is no change
-> in core dump behaviour.
->
-> Change this for both the core xol_add_vma() function and the x86-specific
-> get_uprobe_trampoline() function.
->
-> Signed-off-by: Lorenzo Stoakes (ARM) <ljs@kernel.org>
+Hello Arnaldo and Namhyung,
 
-Reviewed-by: Suren Baghdasaryan <surenb@google.com>
+On Fri, Oct 02, 2026 at 06:34:33PM +0200, Arnaldo Carvalho de Melo wrote:
+> On Thu, Oct 01, 2026 at 11:14:21AM -0700, Namhyung Kim wrote:
+> > IIUC C++ officially doesn't support flexible arrays and there are
+> > better alternatives so I guess it's rare to see them in C++ classes.
+> > Maybe it's ok to ignore them until we find it's really needed.
+>
+> ok on both counts, there is another patch with a Sashiko report, can you
+> guys reply to that one as well?
 
+Thanks for the review.  I agree with both, so I'll leave this patch as
+is.
 
-> ---
->  arch/x86/kernel/uprobes.c | 2 +-
->  kernel/events/uprobes.c   | 4 ++--
->  2 files changed, 3 insertions(+), 3 deletions(-)
+For the recursion in __die_find_member_offset_cb(), the callback needs
+to carry the depth in its argument.  I'll send it as a separate patch
+on top of this series.
+
+I will reply to the reports for the patch 2 and 3 as well and send v3
+with the changes in those two patches, and there will be no change in
+this one.
+
+Thanks,
+Yanbo
+
+On Fri, Oct 2, 2026 at 12:34=E2=80=AFPM Arnaldo Carvalho de Melo
+<acme@kernel.org> wrote:
 >
-> diff --git a/arch/x86/kernel/uprobes.c b/arch/x86/kernel/uprobes.c
-> index 65a2de82ecd2..0f60c0d076b6 100644
-> --- a/arch/x86/kernel/uprobes.c
-> +++ b/arch/x86/kernel/uprobes.c
-> @@ -715,7 +715,7 @@ static struct vm_area_struct *get_uprobe_trampoline(s=
-truct mm_struct *mm, unsign
+> On Thu, Oct 01, 2026 at 11:14:21AM -0700, Namhyung Kim wrote:
+> > On Wed, Sep 30, 2026 at 09:10:51PM +0000, sashiko-bot@kernel.org wrote:
+> > > Thank you for your contribution! Sashiko AI review found 2 potential =
+issue(s) to consider:
+> > > - [High] perf/dwarf-aux: stack overflow in __die_find_member_offset_c=
+b via cyclic inheritance
+> > > - [Medium] perf/dwarf-aux: flex array detection fails for C++ classes
+> > > --
+> > >
+> > > commit 3f3b9b56b2e28f1713af3b40ab8946d5bbc8d245
+> > > Author: Yanbo Zhao <yzhao62@ncsu.edu>
+> > >
+> > > perf dwarf-aux: Add die_is_compound_type() to handle C++ class types
+> > >
+> > > This commit introduces die_is_compound_type() to support C++ classes =
+alongside
+> > > structs and unions. It also updates offset lookups to descend into ba=
+se class
+> > > subobjects using DW_TAG_inheritance entries.
+> > >
+> > > > diff --git a/tools/perf/util/dwarf-aux.c b/tools/perf/util/dwarf-au=
+x.c
+> > > > index 54f8b5ec74a2f..eb4b8f3475df1 100644
+> > > > --- a/tools/perf/util/dwarf-aux.c
+> > > > +++ b/tools/perf/util/dwarf-aux.c
+> > > > @@ -61,6 +61,14 @@ const char *cu_get_comp_dir(Dwarf_Die *cu_die)
+> > > >   return dwarf_formstring(&attr);
+> > > >  }
+> > > >
+> > > > +bool die_is_compound_type(Dwarf_Die *type_die)
+> > > > +{
+> > > > + int tag =3D dwarf_tag(type_die);
+> > > > +
+> > > > + return tag =3D=3D DW_TAG_structure_type || tag =3D=3D DW_TAG_unio=
+n_type ||
+> > > > +        tag =3D=3D DW_TAG_class_type;
+> > > > +}
+> > >
+> > > [Severity: Medium]
+> > > Does die_has_flex_array_recurse() also need to be updated to use this=
+ new
+> > > helper?
+> > >
+> > > If we look at die_has_flex_array_recurse() in tools/perf/util/dwarf-a=
+ux.c,
+> > > it currently forces flex array detection to return false for C++ clas=
+ses
+> > > because it explicitly ignores DW_TAG_class_type:
+> > >
+> > >     if (tag !=3D DW_TAG_structure_type && tag !=3D DW_TAG_union_type)
+> > >         return false;
+> > >     ...
+> > >     if (tag =3D=3D DW_TAG_structure_type && found) {
+> > >         if (is_flex_array_member(&last_mb))
+> > >             return true;
+> > >
+> > > Could this cause accesses to flex array members inside C++ classes to=
+ be
+> > > wrongly rejected as out-of-bounds?
 >
->         *new_mapping =3D true;
->         return _install_special_mapping(mm, vaddr, PAGE_SIZE,
-> -                               VM_READ|VM_EXEC|VM_MAYEXEC|VM_MAYREAD|VM_=
-IO,
-> +                               VM_READ|VM_EXEC|VM_MAYEXEC|VM_MAYREAD|VM_=
-MIXEDMAP,
->                                 &tramp_mapping);
->  }
+> > IIUC C++ officially doesn't support flexible arrays and there are
+> > better alternatives so I guess it's rare to see them in C++ classes.
+> > Maybe it's ok to ignore them until we find it's really needed.
 >
-> diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
-> index 7709ea882477..b89cc5cee002 100644
-> --- a/kernel/events/uprobes.c
-> +++ b/kernel/events/uprobes.c
-> @@ -1726,8 +1726,8 @@ static int xol_add_vma(struct mm_struct *mm, struct=
- xol_area *area)
->         }
+> ok on both counts, there is another patch with a Sashiko report, can you
+> guys reply to that one as well?
 >
->         vma =3D _install_special_mapping(mm, area->vaddr, PAGE_SIZE,
-> -                               VM_EXEC|VM_MAYEXEC|VM_DONTCOPY|VM_IO|
-> -                               VM_SEALED_SYSMAP,
-> +                               VM_EXEC|VM_MAYEXEC|VM_DONTCOPY|
-> +                               VM_MIXEDMAP|VM_SEALED_SYSMAP,
->                                 &xol_mapping);
->         if (IS_ERR(vma)) {
->                 ret =3D PTR_ERR(vma);
+> Thanks,
 >
-> --
-> 2.55.0
->
+> - Arnaldo
