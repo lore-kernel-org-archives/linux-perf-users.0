@@ -1,96 +1,97 @@
-Received: from mail-pj2-f39.google.com (mail-pj2-f39.google.com [74.125.227.167])
+Received: from mail-pj2-f43.google.com (mail-pj2-f43.google.com [74.125.227.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 801504756DC
-	for <linux-perf-users@vger.kernel.org>; Sun,  4 Oct 2026 19:56:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.227.167
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05C553F0A8C
+	for <linux-perf-users@vger.kernel.org>; Sun,  4 Oct 2026 19:57:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.227.171
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791143793; cv=pass; b=PqlcPFc8Tn43DeGU+wCAOS8Oe9fTZnsyRpv8NhK+x97pMmW6MKKiiUOqgEyI91Re6jJD3y+tVFFR/NK0HM+f2r1v9lSdRnzdD9R9OSbcLoyKs1HQ7EDbQ+wI8apFghn2suz4rmhW8/q6iEOxE2GCYkLBDm7BC02ozwtTdx0yeiI=
+	t=1791143839; cv=pass; b=UAKe5BmTq6Td/ie8DXg3IB86vbR8KA7M4cZQbfSPsIwZwCRKRYQuYICyW5n2hhqhsNLHj3EWhfbeXn1jIYH6sg5E2/tZatjb8xYiKDgEKUlnOoAJtx7si7F5SfFsrcpdTaEcPtJlYP1AVLipb0vtPCPZLwF+Jf0LhVKUQw4F1yg=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791143793; c=relaxed/simple;
-	bh=OnsVEjVr9nZISo1f+HA1XAFuoQXPTMkVBewjQpZFVEI=;
+	s=arc-20240116; t=1791143839; c=relaxed/simple;
+	bh=/YxhJJOfk8LhrtN8rf3i6ByASX2d/JTy4zyMHoji1/o=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=szQeNOxbD0DlxdZD9ZO/DIwLgAs6xOqBytyRb7ykEfSpcCMKRAJxzJaE6MZkFGHN/kZmtliL7NM19xrXsAAXrNX3cUZbTfH7dD9zkhNvIRcYGza/HSPjcUSKX04BgZZbG+PaOmRm9Mrp2bm6h2O8/woebcs/LFLFqL0c7OF+FiM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ncsu.edu; spf=pass smtp.mailfrom=ncsu.edu; dkim=pass (2048-bit key) header.d=ncsu.edu header.i=@ncsu.edu header.b=FiSo08sA; arc=pass smtp.client-ip=74.125.227.167
+	 To:Cc:Content-Type; b=FLGIfIue6Klv5b6T4PiUpYSUn1zPakMqng0bxnKz4BWxroISh/xehWagFpndMxKfDayduhTmFEUrwXAM1SGWS7kxUVciKYcCIMM1Q85Y90t3lUndt2/qNk3kNxHHTBS1TUXn+ahDfGfYMFVelZ9UDp5Gjsfrx7jBw7UNK5bQknc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ncsu.edu; spf=pass smtp.mailfrom=ncsu.edu; dkim=pass (2048-bit key) header.d=ncsu.edu header.i=@ncsu.edu header.b=EVmIx3sN; arc=pass smtp.client-ip=74.125.227.171
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ncsu.edu
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ncsu.edu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ncsu.edu header.i=@ncsu.edu header.b="FiSo08sA"
-Received: by mail-pj2-f39.google.com with SMTP id 98e67ed59e1d1-3a49b6bb21eso498196a91.3
-        for <linux-perf-users@vger.kernel.org>; Sun, 04 Oct 2026 12:56:31 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1791143791; cv=none;
+	dkim=pass (2048-bit key) header.d=ncsu.edu header.i=@ncsu.edu header.b="EVmIx3sN"
+Received: by mail-pj2-f43.google.com with SMTP id 98e67ed59e1d1-3a494638445so510418a91.1
+        for <linux-perf-users@vger.kernel.org>; Sun, 04 Oct 2026 12:57:16 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1791143836; cv=none;
         d=google.com; s=arc-20260327;
-        b=qalGMuRn8RV9Qp1vtbhqiVJ3WJN7oC5/dziKQjZF6MFDmi6WlWes4KJKY/T7EUbrpb
-         1Hf6iD2wislPs3CDc6WHwk4mPzEwxP3cptLFeaad46dGtCYTaaDQ3rlAK5qLLOvvRMuP
-         E8M3mI69UsbFhxSAGFLpVI9AGPHZXn/+OioAJxakDzSXZNiprJ7zXNWp8SomR755JpW8
-         iJ6a4UN+q14axcL3zp/ZmQ2Ig8JMvZ5Qy3Tisrrjll3AUqXVFUkB82tpGe4qYnbcUz2K
-         xPuuyi5v+uXXfQv+BoJjZzrR+dEhBtgztIrKOD4gljA4ZviCCByHuXfcECJUpUX66JHo
-         KZSQ==
+        b=hcWVOFQlb+u3qEM+lzXOXpO54QIG/dSEzae3DYI2XUAX4XkcFRhib2QuFyvbexTnL4
+         WctKj5aBCS17h5jdcF6vQJPC7nErta0uUJaJ2MbZS2+SuXT3Nr5yCB3ZOvOTuc8GdPVe
+         gpqTrtnQP3iJL0pbghJ5pQX7u/BEIzM6qtyqgamkMYXF1q8dEUfxB7qrAuIAoX/kFWrr
+         RkzViy0yhnJK+NAaBAtKFIs1Ok3lDZd63GLkh642unGfq8vEFnC3nqaBdjprUqBoQl5G
+         3PAisL26XCTKk54MUhIhna0mAdhA618YLvQl+qvGTRYZnRjrtWbiG9y8N6MWKjtl1fN8
+         z9Qg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:dkim-signature;
-        bh=rfGcP5S/SMntYoP2Pr+7iM7tILrMvCrH9eSgNIL7aCo=;
-        fh=9SlmeBn821EcLAvY51W6guDFFVB2Rbg40c1xysg1mLc=;
-        b=kq/j2upOfcnuBJ7iJU5pdWdQYihFY3lp7ZxIiUOP9FqEiVfOfCxJMQ2bWiANVoLsOr
-         +aWeSkoXDYlRJeZz/DgHEsN2szwvq4Y8NcARdGbAYNVzIVNqCq49DScnnm0BDN9ECAMt
-         SnIk2eSCRyQTfwTQ6DKdNIGdebs2BL3t3XjrFKfsOb6WmP5/WWFgcn5sQm3CghC2w7LQ
-         ctempR5VLbP1YTVru1MRAgI5ui1r42fh51WLUbdbgGo7f6CxcpkLwN6+y6AewEPaGbnS
-         S/4DVI/7lfqorq6ElSp1IQn2/PSqFmoE0Xp5MdP5OSZxPjaxD+2lS1XNGrIJkhLSu9Yi
-         shIg==;
+        bh=/piDQ/GD4Joce/NhAHq+0bOi7R0U3/eENCknMZ7zfbU=;
+        fh=ysRdTsrnFxOnh9YzHZWbghRNOq6T56NcXoYJtQ6mgbY=;
+        b=dtXBAClKTkhldms97JuiXgDUuj6snUk06HzvR7O4VYOGW7GSXd2bKacScO+YUnHsaA
+         BDGozZyoXRWHQOAjImr6banNWMaISdpTl2hcSLGsMEnsdJf+aBcIpyOLhNz5y+AScC8+
+         UxOF8MxOsVLQIdczb/SchjtERoqSQJXJrAksLlL6j7dlfPHGTOCpbJ5DFSpVcntPDncT
+         SCAnC/YXoJq300eb/9LQZmouI+IS5roIX3V1txcV0KNmML54EJ8akTAzcHYtXPqfKKo5
+         4y4Lu6eUwG6tuXin3KYytXmqq43leGr1ETNeVM2E/64gwg2JJtE4OTzjMUtUAxzaYDVC
+         nlbA==;
         darn=vger.kernel.org
 ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ncsu.edu; s=google; t=1791143791; x=1791748591; darn=vger.kernel.org;
+        d=ncsu.edu; s=google; t=1791143836; x=1791748636; darn=vger.kernel.org;
         h=content-transfer-encoding:content-type:cc:to:subject:message-id
          :date:from:in-reply-to:references:mime-version:from:to:cc:subject
          :date:message-id:reply-to:content-type;
-        bh=rfGcP5S/SMntYoP2Pr+7iM7tILrMvCrH9eSgNIL7aCo=;
-        b=FiSo08sAA/SMEpt90/djtG3p122zAoW45IAec0wxGDWZE0bT4OmcE/ndbTqD1Ja5sv
-         BRvcbG29RuJAvqRHBL7+cEN9P0ur3Iz/ftcNcB45ChLN6NXsg8zv84dVbgRyLp3gOGqf
-         3EVStJ1okiPwdpU7PnvotXb0DCCvvafKXZKbHLSgNKZatno/EarbFRDNSPK442pr49M+
-         nXfKYKntU87c8nOO4b4EDmnl1G4JeeCmWxMhWXZ1WJJRNLztLcmBKF1kNnwTlMw3/w3U
-         GSMSg/3OKndPX1VQ9cY7bDUPlBKfg85Hpl4OhL6pB8KLhWR267O39uUfyjNc6gjK8a/l
-         7utw==
+        bh=/piDQ/GD4Joce/NhAHq+0bOi7R0U3/eENCknMZ7zfbU=;
+        b=EVmIx3sNR2Osq3LDcz55ttui1ARLuqXbl4jc1vwwGFXoUdlj2+/yxNwDzH1BbAOpyz
+         1kTtOWzKfDwp7kKnpiAcpEYl4LOWnvYHAEcpAOGPrtW3IATa9dNxmkgYVm/Y373gqAHO
+         dKXVNp7uuDEAJrcxCqEjUCNgJXJWjBAclHS7q0JWyN7noEsL9WEHlWJ8OoTbPk59pZvk
+         WaKu/ejehGG0qjzykBito+MQ33AXbobRANkxy6VPr8H/RzcgVYVfM3eT63iJE4UFT0v4
+         1hn+EJzM/VUpupRBqL2oYpf6ZqSzng1SHi5vFEpRkSLnOJvTw6pgxuxmsiPgBMJ0jBD+
+         1o6g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1791143791; x=1791748591;
+        d=1e100.net; s=20260707; t=1791143836; x=1791748636;
         h=content-transfer-encoding:content-type:cc:to:subject:message-id
          :date:from:in-reply-to:references:mime-version:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=rfGcP5S/SMntYoP2Pr+7iM7tILrMvCrH9eSgNIL7aCo=;
-        b=pFb9CxjrWZi3/Fx5kG9FvhlyJWXzwkfeg80weF9xapjsd/XI+/ydeQZof8uo0lE9ig
-         TntrWI6c21DhVkexJhstFRUu6J3tZA99ZBrZ9ll2+oi7B9mRVBrlfgforBEBJIbaDWnt
-         9lweoekdqCU7qkl6hLO+PsU2COP+Pqef55oF7jPj0HzKzBybailGpTdhCT+QkkhGspWL
-         VKqdL+1pkGeY8thR2sFbQiYExgT1YbYpyNAMKuUadfFtXrUhru3f5Wx9bLYOulPqnu89
-         c2bEVMWxeXSmkXJ9qI6CWG6JaYonqn6baBgmCg1z8OZfXXclL9F2LeSeHYM3XTKJUSb1
-         /9xA==
-X-Forwarded-Encrypted: i=1; AKwUvBwqfAGqa9oJ2F70NEXuBFy0a//6+saxCimG0558AnOoM1qW18qUL0GtrksypePFF+8MFNH3qTAMkrsTsvYLDDQS@vger.kernel.org
-X-Gm-Message-State: AFq9FYLuMnB4CIawX1yxNLfra4NK8pD14/SOeXvb+v57VRcAuSZVsO16
-	cAsusjtQtuocEsMA2qUModmvbi+iQ3cJUz1he5sNsMILJp6Nm5H5UR7DgOlbzl9VfKFLZ7KFv7k
-	Vt8C3dwAzERBqVlJxrubgwOLSF/5KR12FwFJUkcxn
-X-Gm-Gg: AYBFou2Ynn/1rDrK2B0GQu0+F3CETtITDyhqEprAF12g9YcQrCyTSSP1s6/sP+TsN5M
-	k/42tR6xkjeOsdtsarJCOGwXNwv3XTUJ0gptEnaO7Y898SKAV/pyyjnUPVL6VCtnFNDCjy8jVNL
-	zUhMFiuccFXzgLR5WToEpCYWdM4Qiu5ifyBO9gL8/8PtolsYyfsn/mNsBzcpbO69KpT3qnzg1kj
-	wbmNpf3Fqb7t+Ip395yDWbQtORB+UPHOHq8GmilU1IL0C7wz6v5v0PUT8SYQHM0zpJyOqj8f+iN
-	b7M/ByowNSNda+WVoSymehxq4eeD72eYpHJ+O8sQxLzlFC8YwUsD4SYMOwFeb9vozKDR5vFRdr0
-	/24hwHZ4v9m0=
-X-Received: by 2002:a17:902:e88f:b0:2dd:c100:7cc1 with SMTP id
- d9443c01a7336-2e49b6e3399mr77155665ad.61.1791143790665; Sun, 04 Oct 2026
- 12:56:30 -0700 (PDT)
+        bh=/piDQ/GD4Joce/NhAHq+0bOi7R0U3/eENCknMZ7zfbU=;
+        b=jplkOyJ66loZH6NcWlHy9uNbM5LUEaSzdEfHDZmSz2/kKNBHe42ZGCwrLmTjJFVBo/
+         65KfjsrKJzaiSglkQ8VLBOqymbzXBkJDl3lCb1QU2z9yKX3FZ9pcuXsACcOYztzHXcSU
+         ZdNFf0QOARh7b8ViibSQgPx8eiWG2KAZdic947AdWIMK7Y92/ETVR2VcXILVo3xZ+VVa
+         i4JLFD4zwa35y7Ati0wuGK8S6NAEWcHvCuUJI7h5v97yhddltT8CfxP02cMdzTfddsZo
+         4J6HxvXmbaZXGRSNwyNZVUX/0k2IcbV0ddIFYyF6py7wuf6y22XYStKba1byK7ltGSe5
+         jp/g==
+X-Forwarded-Encrypted: i=1; AKwUvBzPy2YgHPX3crdcSU9y2MlVbX1vbjVu2bBAt1UxLrKvNzZbJ0wW9ErVr2KzXpC5/H+4jOOX8+b1xziclFsEGwFU@vger.kernel.org
+X-Gm-Message-State: AFq9FYJeh5AlEFpp0p7ZG4c4uBTQonispOdV3cO0QSneaQrFtG6kfUDm
+	lgU9zBJqLkTFwANzYFATQbmYy1yOgTVhki298W2C0DWA4JgFd5+5i+Sk2kanrDz2RpshCr6mL0C
+	CQdSRiUYAM6AWVtPP7eMHvALBFPHf+pHo/Ylrg7b1
+X-Gm-Gg: AYBFou35xLRUwCJFLHDc9GLOzY57qYxborBXqxgiPvY6NBgzc0eVtBTws6Skv4JSw1U
+	y1UZZnX/erWxcHtzVln1ee5FyNZs0H1o8+d2oYhevT0/SlSGFKEeVJWnBiTVmmZCfhcLSCyacc1
+	yKtuFK32HRXolNX1BLQXikRxpPPN8x0IWJP9OQ5206lPRUPVBvwLidZAleTKskm/xFVaDwOozzE
+	5CQK5Whht2jciaWZIbRBbOrosKsjDoKanf21TFNkSIHNGe1v7/OzuwhyXdqgr0EGNdu2HdfigrM
+	Kqi6rr8hP3msPStv8rTNS8BV1V9bEIKkIYhEb3VRIWvgDEhkp8AQoqhBxit2qKqXCV2HE2K+/vW
+	mfldim+I1IuM=
+X-Received: by 2002:a17:902:f550:b0:2e5:70cd:b606 with SMTP id
+ d9443c01a7336-2e571119743mr17718365ad.56.1791143836040; Sun, 04 Oct 2026
+ 12:57:16 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260930210038.196928-1-yzhao62@ncsu.edu> <20260930210038.196928-3-yzhao62@ncsu.edu>
- <20260930211057.2E1641F000FF@smtp.kernel.org> <asA1u7LBRp2gqbWI@google.com>
-In-Reply-To: <asA1u7LBRp2gqbWI@google.com>
+References: <20260930210038.196928-1-yzhao62@ncsu.edu> <20260930210038.196928-4-yzhao62@ncsu.edu>
+ <20260930211112.B2A431F000FF@smtp.kernel.org> <asA2rgBbNuwh-zR-@google.com>
+In-Reply-To: <asA2rgBbNuwh-zR-@google.com>
 From: Yanbo Zhao <yzhao62@ncsu.edu>
-Date: Sun, 4 Oct 2026 15:56:18 -0400
-X-Gm-Features: AclHuK8azCsvMF2wtXn3kb6m8zEbWMVz8t3HFQY0Wks_POrbAr3mS2ZkyYlGXgQ
-Message-ID: <CA+J8via_aVdUYdfJRut-9Yar5iEJExBnW9s8fyOHxW1705TrDg@mail.gmail.com>
-Subject: Re: [PATCH v2 2/3] perf dwarf-aux: Add C++ vtable helpers
+Date: Sun, 4 Oct 2026 15:57:05 -0400
+X-Gm-Features: AclHuK8OqTuwHRlg7cibP1nTwimgKS070HMpOUhLnNJDI3Iy1fSgfGIWhabDzmc
+Message-ID: <CA+J8vibM=6-wq2=1NgcBCZjbVyD-+pKq8Y2auUB0RtreLQUxmA@mail.gmail.com>
+Subject: Re: [PATCH v2 3/3] perf annotate: Resolve C++ virtual function calls
+ in x86 insn tracking
 To: Namhyung Kim <namhyung@kernel.org>
 Cc: sashiko-reviews@lists.linux.dev, linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
@@ -98,151 +99,234 @@ Content-Transfer-Encoding: quoted-printable
 
 Hello Namhyung,
 
-On Fri, Oct 02, 2026 at 03:52:43PM -0700, Namhyung Kim wrote:
-> On Wed, Sep 30, 2026 at 09:10:56PM +0000, sashiko-bot@kernel.org wrote:
+On Fri, Oct 02, 2026 at 03:56:46PM -0700, Namhyung Kim wrote:
+> On Wed, Sep 30, 2026 at 09:11:12PM +0000, sashiko-bot@kernel.org wrote:
 > > [Severity: Medium]
-> > Does this code incorrectly skip valid primary base classes when parsing=
- DWARF 5?
-> >
-> > DWARF 5 allows DW_AT_virtuality to be present with the default value
-> > DW_VIRTUALITY_none (0x00).
+> > Will dividing the target's vtable byte offset by the host's sizeof(void=
+ *)
+> > compute an incorrect slot index when analyzing data from an architectur=
+e
+> > with a different pointer size?
 >
-> Right, it'd be better to check the value of the attribute as well.
+> I think this is fine for now as we also have other places assuming the
+> host pointer size.  We'll fix it later.
 
-Will do.  I'll skip the base class only if the value is not
-DW_VIRTUALITY_none.
+Ok, I'll keep it with the TODO comment.
 
 > > [Severity: Medium]
-> > Can this loop hang indefinitely when processing malformed DWARF?
+> > Does this query the wrong vtable slot by ignoring the index register wh=
+en
+> > src->multi_regs is true?
 >
-> It seems sashiko is picky about possible recursions on invalid dwarf.
-> As we recently added recursion depth limits, can you follow the
-> convention and bail out if it detects one?
+> Multiple register is not handled well in the current code.  Dealing with
+> dynamic index would require more careful instruction tracking.
+>
+> Anyway, it'd be safer to check !src->multi_regs here.
 
-Sure.  I'll use MAX_TYPE_CHASE to bound the loops in
-die_find_virtual_func() and die_get_vptr_class(), and bail out with a
-debug message like the other places in v3.
+Will add.  I'll also add the same check where it marks a register as
+the vtable pointer, since the offset doesn't tell the member with an
+index register there either.
+
+I'll send v3 with these changes.
 
 Thanks,
 Yanbo
 
-On Fri, Oct 2, 2026 at 6:52=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> w=
+On Fri, Oct 2, 2026 at 6:56=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> w=
 rote:
 >
-> On Wed, Sep 30, 2026 at 09:10:56PM +0000, sashiko-bot@kernel.org wrote:
+> On Wed, Sep 30, 2026 at 09:11:12PM +0000, sashiko-bot@kernel.org wrote:
 > > Thank you for your contribution! Sashiko AI review found 2 potential is=
 sue(s) to consider:
-> > - [Medium] perf dwarf-aux: DW_AT_virtuality presence check incorrectly =
-skips non-virtual bases
-> > - [Medium] perf dwarf-aux: infinite loop in C++ inheritance traversal o=
-n malformed DWARF
+> > - [Medium] perf: cross-platform analysis broken by hardcoded host point=
+er size
+> > - [Medium] perf: vtable pointer load ignores multi-register index
 > > --
 > >
-> > commit e1f1b87424c8d58d923a8c3fbc1408fa0ae0c3b9
+> > commit a71181b28893b295ef8ae1558faf7b1c66e3593b
 > > Author: Yanbo Zhao <yzhao62@ncsu.edu>
 > >
-> > perf dwarf-aux: Add C++ vtable helpers
+> > perf annotate: Resolve C++ virtual function calls in x86 insn tracking
 > >
-> > Add DWARF helper functions needed to resolve C++ virtual function calls
-> > statically in the data type profiling.
+> > This commit introduces tracking of C++ virtual function calls by resolv=
+ing
+> > vtable pointer loads and virtual function calls through the vtable in x=
+86
+> > instruction state tracking. It enhances update_insn_state_x86() to hand=
+le
+> > TSR_KIND_VTABLE_PTR and TSR_KIND_VFUNC_PTR register states.
 > >
-> > > diff --git a/tools/perf/util/dwarf-aux.c b/tools/perf/util/dwarf-aux.=
-c
-> > > index eb4b8f3475df1..b1f3dca057abb 100644
-> > > --- a/tools/perf/util/dwarf-aux.c
-> > > +++ b/tools/perf/util/dwarf-aux.c
-> > > @@ -2293,6 +2293,222 @@ Dwarf_Die *die_get_member_type(Dwarf_Die *typ=
-e_die, int offset,
-> > > [ ... ]
-> > > +static int __die_find_primary_base_cb(Dwarf_Die *die_mem, void *arg =
-__maybe_unused)
+> > > diff --git a/tools/perf/util/annotate-arch/annotate-x86.c b/tools/per=
+f/util/annotate-arch/annotate-x86.c
+> > > index 1acf31a2c7597..d21192b74b6bf 100644
+> > > --- a/tools/perf/util/annotate-arch/annotate-x86.c
+> > > +++ b/tools/perf/util/annotate-arch/annotate-x86.c
+> >
+> > [ ... ]
+> >
+> > > @@ -216,6 +216,29 @@ static void invalidate_reg_state(struct type_sta=
+te_reg *reg)
+> > >     reg->copied_from =3D -1;
+> > >  }
+> > >
+> > > +/*
+> > > + * Get the return type of the C++ virtual function at the @offset in=
+ the
+> > > + * vtable of @class_die.  Returns false if it's not found or the fun=
+ction
+> > > + * returns void.
+> > > + */
+> > > +static bool vtable_get_rettype(Dwarf_Die *class_die, int offset,
+> > > +                          Dwarf_Die *type_die)
 > > > +{
-> > > +   Dwarf_Attribute attr;
-> > > +   Dwarf_Die base_die, vptr_die;
-> > > +   Dwarf_Word loc;
+> > > +   Dwarf_Die func_die;
+> > > +   int index;
 > > > +
-> > > +   if (dwarf_tag(die_mem) !=3D DW_TAG_inheritance)
-> > > +           return DIE_FIND_CB_SIBLING;
+> > > +   if (offset < 0)
+> > > +           return false;
 > > > +
-> > > +   if (dwarf_attr_integrate(die_mem, DW_AT_virtuality, &attr))
-> > > +           return DIE_FIND_CB_SIBLING;
+> > > +   /* TODO: arch-dependent pointer size */
+> > > +   index =3D offset / sizeof(void *);
 > >
 > > [Severity: Medium]
-> > Does this code incorrectly skip valid primary base classes when parsing=
- DWARF 5?
+> > Will dividing the target's vtable byte offset by the host's sizeof(void=
+ *)
+> > compute an incorrect slot index when analyzing data from an architectur=
+e
+> > with a different pointer size?
 > >
-> > DWARF 5 allows DW_AT_virtuality to be present with the default value
-> > DW_VIRTUALITY_none (0x00).
-> >
-> > If a compiler explicitly emits this default value, will the presence ch=
-eck
-> > evaluate to true and falsely identify the non-virtual base as virtual,
-> > skipping it?
+> > Relying on host execution details like sizeof(void *) breaks
+> > cross-platform analysis (e.g., analyzing 32-bit x86 perf.data on a
+> > 64-bit host).
 >
-> Right, it'd be better to check the value of the attribute as well.
+> I think this is fine for now as we also have other places assuming the
+> host pointer size.  We'll fix it later.
 >
 > >
 > > > +
-> > > +   if (die_get_data_member_location(die_mem, &loc) < 0 || loc !=3D 0=
-)
-> > > [ ... ]
-> > > +Dwarf_Die *die_find_virtual_func(Dwarf_Die *class_die, int index,
-> > > +                            Dwarf_Die *die_mem)
-> > > +{
-> > > +   Dwarf_Die cur_die =3D *class_die;
-> > > +   Dwarf_Die base_die;
+> > > +   if (die_find_virtual_func(class_die, index, &func_die) =3D=3D NUL=
+L)
+> > > +           return false;
 > > > +
-> > > +   while (die_is_compound_type(&cur_die)) {
+> > > +   return die_get_real_type(&func_die, type_die) !=3D NULL;
+> > > +}
+> > > +
+> > >  static void update_insn_state_x86(struct type_state *state,
+> >
+> > [ ... ]
+> >
+> > > @@ -622,13 +669,38 @@ static void update_insn_state_x86(struct type_s=
+tate *state,
+> > >                     }
+> > >                     pr_debug_type_name(&tsr->type, tsr->kind);
+> > >             }
+> > > +           /* Load a function pointer from the vtable (for 'call *%r=
+eg') */
+> > > +           else if (has_reg_type(state, sreg) && state->regs[sreg].o=
+k &&
+> > > +                    state->regs[sreg].kind =3D=3D TSR_KIND_VTABLE_PT=
+R &&
+> > > +                    vtable_get_rettype(&state->regs[sreg].type, src-=
+>offset,
+> > > +                                       &type_die)) {
 > >
 > > [Severity: Medium]
-> > Can this loop hang indefinitely when processing malformed DWARF?
-> >
-> > If a maliciously crafted or malformed DWARF file contains cyclic inheri=
-tance,
-> > die_get_real_type() resolves the type back to the current class.
-> >
-> > Since the loop does not maintain a depth counter or cycle detection, do=
-es it
-> > spin infinitely as it re-evaluates the same class type?
->
-> It seems sashiko is picky about possible recursions on invalid dwarf.
-> As we recently added recursion depth limits, can you follow the
-> convention and bail out if it detects one?
->
-> >
-> > > +           if (die_find_child(&cur_die, __die_find_virtual_func_cb,
-> > > +                              (void *)(long)index, die_mem))
-> > > +                   return die_mem;
-> > > [ ... ]
-> > > +Dwarf_Die *die_get_vptr_class(Dwarf_Die *type_die, int offset,
-> > > +                         Dwarf_Die *die_mem)
-> > > +{
-> > > +   Dwarf_Die class_die =3D *type_die;
-> > > +   Dwarf_Die vptr_class =3D *type_die;
-> > > +   Dwarf_Die member_die, mb_type;
-> > > +   Dwarf_Word loc;
-> > > +
-> > > +   while (die_is_compound_type(&class_die)) {
-> >
-> > [Severity: Medium]
-> > Similarly, does this loop also lack a depth limit or cycle detection wh=
+> > Does this query the wrong vtable slot by ignoring the index register wh=
 en
-> > traversing base class subobjects dynamically, risking infinite cycles o=
-n
-> > malformed DWARF?
+> > src->multi_regs is true?
+> >
+> > If the operand is an indexed memory reference using multiple registers
+> > (e.g., mov 0x8(%rbx, %rcx, 8), %rax), src->offset contains only the
+> > static displacement part, not the dynamic index. Should this verify
+> > !src->multi_regs before querying the DWARF vtable with src->offset?
 >
-> Ditto.
+> Multiple register is not handled well in the current code.  Dealing with
+> dynamic index would require more careful instruction tracking.
+>
+> Anyway, it'd be safer to check !src->multi_regs here.
 >
 > Thanks,
 > Namhyung
 >
 > >
-> > > +           if (die_find_child(&class_die, __die_find_member_offset_c=
-b,
-> > > +                              (void *)(long)offset, &member_die) =3D=
-=3D NULL)
-> > > +                   return NULL;
+> > > +                   tsr->type =3D type_die;
+> > > +                   tsr->kind =3D TSR_KIND_VFUNC_PTR;
+> > > +                   tsr->offset =3D 0;
+> > > +                   tsr->ok =3D true;
+> > > +
+> > > +                   pr_debug_dtp("mov [%x] %#x(reg%d) -> reg%d",
+> > > +                                insn_offset, src->offset, sreg, dst-=
+>reg1);
+> > > +                   pr_debug_type_name(&tsr->type, tsr->kind);
+> > > +           }
+> > >             /* And then dereference the pointer if it has one */
+> >
+> > [ ... ]
+> >
+> > > diff --git a/tools/perf/util/annotate-data.c b/tools/perf/util/annota=
+te-data.c
+> > > index 8a9d3f2eec4dc..e9bf76cc28633 100644
+> > > --- a/tools/perf/util/annotate-data.c
+> > > +++ b/tools/perf/util/annotate-data.c
+> >
+> > [ ... ]
+> >
+> > > @@ -715,8 +723,11 @@ void set_stack_state(struct type_state_stack *st=
+ack, int offset, u8 kind,
+> > >                         Dwarf_Die *type_die, int ptr_offset)
+> > >  {
+> > >     Dwarf_Word size;
+> > > +   bool is_pointer =3D (kind =3D=3D TSR_KIND_POINTER ||
+> > > +                      kind =3D=3D TSR_KIND_VTABLE_PTR ||
+> > > +                      kind =3D=3D TSR_KIND_VFUNC_PTR);
+> > >
+> > > -   if (kind =3D=3D TSR_KIND_POINTER) {
+> > > +   if (is_pointer) {
+> > >             /* TODO: arch-dependent pointer size */
+> > >             size =3D sizeof(void *);
+> > >     }
+> >
+> > [Severity: Medium]
+> > Like the vtable_get_rettype() issue above, will hardcoding the host's
+> > pointer size here corrupt the stack state tracking for the target
+> > architecture?
+> >
+> > [ ... ]
+> >
+> > > diff --git a/tools/perf/util/disasm.c b/tools/perf/util/disasm.c
+> > > index 5478c134e7e3b..5d96ee4c866b6 100644
+> > > --- a/tools/perf/util/disasm.c
+> > > +++ b/tools/perf/util/disasm.c
+> >
+> > [ ... ]
+> >
+> > > @@ -300,6 +300,11 @@ static int call__parse(const struct arch *arch, =
+struct ins_operands *ops, struct
+> > >     if (tok !=3D NULL) {
+> > >             endptr++;
+> > >
+> > > +           /* Save the operand (without '*') to extract register and=
+ offset */
+> > > +           ops->target.raw =3D strdup(tok + 1);
+> >
+> > [Severity: Low]
+> > This is a pre-existing issue, but this file calls strdup() without
+> > explicitly including <string.h>.
+> >
+> > Can we add the explicit <string.h> include? The perf subsystem guide st=
+ates
+> > that POSIX standard headers should be explicitly included to prevent mu=
+sl
+> > compilation failures from missing implicit inclusions.
+> >
+> > > +           if (ops->target.raw =3D=3D NULL)
+> > > +                   return -1;
+> > > +
+> > >             /* Indirect call can use a non-rip register and offset: c=
+allq  *0x8(%rbx).
+> > >              * Do not parse such instruction.  */
+> > >             if (strstr(endptr, "(%r") =3D=3D NULL)
 > >
 > > --
 > > Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260930210038.=
-196928-1-yzhao62@ncsu.edu?part=3D2
+196928-1-yzhao62@ncsu.edu?part=3D3
