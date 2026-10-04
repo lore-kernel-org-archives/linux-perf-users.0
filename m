@@ -1,43 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33BA83A1B5
-	for <linux-perf-users@vger.kernel.org>; Sun,  4 Oct 2026 06:11:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0986B1A6822
+	for <linux-perf-users@vger.kernel.org>; Sun,  4 Oct 2026 06:11:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791094271; cv=none; b=ntyVXIySgK3AT9hUWTGhKnQjqnrs+2+mJa6Qo7qJfH1RBdgcvDtZLdwyXpJd1+2IYvTtAePqYfmhkWks0LyUNZVkZJsLkJXy4bWe/Ai2Xj+cv+YGtrBCAoSOZ4mW44zERzupsHgjr+ptKzvkXzGfumx8DtDSiEGp14ec8G4WN5c=
+	t=1791094299; cv=none; b=C1OGoSKB0SFo8HsXtErf5c9MLSWyUTWTRkxXQE0EEhnTTRRenpJInka0vZaEtU+lyhvo4F7Qkpa6IzMPjG3ZzpqAPS3D4v8MSkrgMZkFCXy7nw7xoaf6YK0WfvTYKSqtLUvkwq9PvK6TQkleVJjKZrVc2wFYemVdy5yJeMHxSPs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791094271; c=relaxed/simple;
-	bh=e/WOcc5YwzUrzaZUa0B0/DFnb4S++PTFdHm0aYCqyIw=;
+	s=arc-20240116; t=1791094299; c=relaxed/simple;
+	bh=UAr2rXETEow067z6s0QESdZd3tCpphMV7HOIHNNsn6Q=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=glFAdmfHCl5CSSvE23j4/lu0K8kqVeyih495jBZiLnIBNFsD6NvnB+KOHcx7TA5ksE0egMPavjkdW3P39eUhXQR7MGpjzanxKquVk8HjV75eN4syrSAGnddrNc1ZfK8s5mgDyBghi4mSnimRIpLav/ZZFdHqB4jW5fdqJ4+ZBp4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RCrV9E0l; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=Ek1Se62VxuggnyzuRaUU/H3TWWX2ojhICi4ezcgHhqhwFXJAxDHEMjxt/TLy69DbqgHNF59ysvVT5WgM5mBZQta7sP52WwYZvOsFZRk0clZ2OJEfwrBUJ6yuQuDlA9CElhOWCbo9PkNBV7gJn0QH5sFOJWvWkLYZkZzVqQqvrLE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IYoecxUn; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RCrV9E0l"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 86B801F000FF;
-	Sun,  4 Oct 2026 06:11:09 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IYoecxUn"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 81A9D1F000FF;
+	Sun,  4 Oct 2026 06:11:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1791094269;
-	bh=ELuI+GhlApX/KgrpCYxMW+YDChXPcNvN6z2BuuECFlc=;
+	s=k20260515; t=1791094297;
+	bh=hK7CpXRmZIfovb/4zC6yg2mUV0Nuk8jKcOFuwTAqxng=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=RCrV9E0leB/atiGMPBz/RcDc3L3pZkfkDpkeOTv/nFEIBTPg1G9xi/dXlIWV+ofEP
-	 zwbetDNcBS2O7EYd/41tCAsCSpl/2sk7wbeeAlvmxc1jCZvDwG+CaBEaRVL9K+Nfsz
-	 NJiWaLSqS+TZz+Hho2D2f9sNVrAAtGi1Mf9lVBChkmiAa7KH/wddQJnjfwfjamT+MZ
-	 ebWNoQsB9Rwxjwqqq3U0iJ9uWXyqWSA3gWVuxMacDmHJfvs7CRgcwZ5btXqqsncqJ3
-	 rWQ8oLsoQOrOoEdJjrZ3br5Fk0svm1HNQv34ipjNqyxsyfnLYB1QD9qbDNFfGq3CBz
-	 m1Bd4FEGGwkoQ==
+	b=IYoecxUnVuefMX7v0zC4yuP0DW5QFyZO52IuWeBj7JVjE84yZwV15buJ8Z718Y9jX
+	 22BuW6sWjWlEoCe7aC6KIWzRh1nHn5fsQo/UU7Sn00GzNbTbPb7RjqBEpgufq8YjKN
+	 yJ82YktQwBve/efWFsOp8dCTjjMo+lWomzScd/mlGv8glNb22PoM/N3S6wMUU7zt93
+	 FWvLsquuwZqkM9H4rJhl5QyEFjh16yOKLFf4IvGuq4oL0x47psPdiaXxLSSzKNX/HJ
+	 SJb628FQSI4VQApBmtQGe8LcAM62ZjrEXmW2eY1tLUeovT2CZF5KkZBGxkZF6/pc4J
+	 uc3g69NyZ+sJA==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v9 7/9] perf report: Add --no-progress option
+Subject: Re: [PATCH v9 9/9] perf test: Add false_sharing workload exhibiting
+ cross-CPU false sharing
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Arnaldo Carvalho de Melo" <acme@kernel.org>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20261004060457.3353-8-acme@kernel.org>
+In-Reply-To: <20261004060457.3353-10-acme@kernel.org>
 References: <20261004060457.3353-1-acme@kernel.org>
- <20261004060457.3353-8-acme@kernel.org>
+ <20261004060457.3353-10-acme@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Sun, 04 Oct 2026 06:11:09 +0000
-Message-Id: <20261004061109.86B801F000FF@smtp.kernel.org>
+Date: Sun, 04 Oct 2026 06:11:35 +0000
+Message-Id: <20261004061137.81A9D1F000FF@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -46,18 +47,23 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
 > From: Arnaldo Carvalho de Melo <acme@redhat.com>
 >=20
-> Now that --progress is being added for the stdio case, wire up its
-> counterpart for the browsers: the TUI and GTK ones present progress of
-> their own and there is no way to turn it off.  Install the no-op
-> ui_progress ops, the ones already used until a backend sets theirs,
-> after setup_browser() installed the ones of the browser in use.  The
-> phases are still counted, nothing is shown for them, and no second
-> option is needed for it: parse-options provides --no-progress as the
-> negation of --progress, report.progress_set saying that it was asked
-> for, report.progress being false both when nothing was asked for and
-> when --no-progress was.
+> Add a 'perf test -w false_sharing' workload that hammers one shared
+> struct from several CPUs, shaped as a TCP connection: a read-mostly
+> identity (five-tuple) shares a cacheline with per-packet rx counters
+> (the false-sharing line), a second line has packet-path private tx and
+> congestion control counters, and a third the connection config.
 >=20
-> Suggested-by: Namhyung Kim <namhyung@kernel.org>
+> The packet path runs in the main thread and up to four lookup threads
+> sum the five-tuple and pull the config, reading one volatile shared
+> instance directly so the accesses are PC-relative and resolvable by the
+> data type profiler.
+>=20
+> Data type profiling of the workload with cacheline info:
+>=20
+> [ ... ]
+>              0.00%   0.01%        struct folio +0x34 (_refcount.counter)
+>              0.00%   0.00%        struct folio +0x18 (mapping)
+>=20
 > Assisted-by: LLM
 > Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 
@@ -65,5 +71,5 @@ Sashiko has reviewed this patch and found no issues. It looks great!
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261004060457.3353=
--1-acme@kernel.org?part=3D7
+-1-acme@kernel.org?part=3D9
 
