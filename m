@@ -1,64 +1,65 @@
-Received: from mail-pz2-f12.google.com (mail-pz2-f12.google.com [74.125.228.12])
+Received: from mail-pz2-f41.google.com (mail-pz2-f41.google.com [74.125.228.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC86747208F
-	for <linux-perf-users@vger.kernel.org>; Sun,  4 Oct 2026 17:35:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.228.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 177D035F609
+	for <linux-perf-users@vger.kernel.org>; Sun,  4 Oct 2026 17:35:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.228.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791135326; cv=none; b=WQKnt614kgcXtah7VI5EkqcbSZ3rGx5Hp3hqwUht2uDzqtxjr1UZlzPaCvbG1mhEAHfy9olyrvLwgczuKT2qrkQPkvrvZxy6J9iDIxpZFEJdbFvpB9A3fX6aHNSFMhn0R9EhyJTxuOMJMidWIth88+HbukQnAOwSyJIAsXjhdDo=
+	t=1791135333; cv=none; b=PfSzkuEGxMmwju0Lmoj3Wz+52cspGPYREN9PnFlErG1+qgEG+L7wzEhi3CUz2KoD5UXZZhZLSwGvvKtZuKdsE/pSk1RyW4X5V9V/YmjgJVOlXXRL5S/I80IeFY2Ztmi4jpfGU2LooLTfJPe4NIwAhPSkz1luuUWF7VBnN3tLkVU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791135326; c=relaxed/simple;
-	bh=A92TnaeD9sPotpS20FBYiuYY5aXwJuXXao6Lkoo66Nc=;
+	s=arc-20240116; t=1791135333; c=relaxed/simple;
+	bh=/vjBRujpg0xLdgGljJLAkgdDgofuDHOEIvsre6nf37A=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=XbxOpf/6Hgfyzu+J7PljG5WyDm/AB/HBg/B4XGFmcdjhiGcOTT11pH1SYhFPKZga8nKUps06gBxpGWhJTBPJQUi4XDZt4BLAgdGQEGlmXOA0QW5Ko0u9GNMKi76oaIWKSJLPdkSFnhU2j2jFPTQY4R/4vP6lB3B+DxloTl6Pc8Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IiW0DxdI; arc=none smtp.client-ip=74.125.228.12
+	 MIME-Version:Content-Type; b=UL8PryQUGanrxy+mJOvNmeMBYlDQ7KljUaNiBZYFotNtPKXF5FcoclTO+f3HRLbpJ63vdVPBAo33WN8s9rmBtIF97yIpl14Vpmlx4fqhweupMhK0RslCRfLaPLn5LH+Oe4ADMezKN8wy1GkmGb8H+RZ/ko7nWgtr+1nZnGht/Mc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=qT/tEDZD; arc=none smtp.client-ip=74.125.228.41
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IiW0DxdI"
-Received: by mail-pz2-f12.google.com with SMTP id d2e1a72fcca58-85469d249c6so465940b3a.1
-        for <linux-perf-users@vger.kernel.org>; Sun, 04 Oct 2026 10:35:18 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qT/tEDZD"
+Received: by mail-pz2-f41.google.com with SMTP id d2e1a72fcca58-88e8f5a5de2so86608b3a.1
+        for <linux-perf-users@vger.kernel.org>; Sun, 04 Oct 2026 10:35:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1791135317; x=1791740117; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=ucoKS5Z1NvmoX9tY0eQL9oK5ahppwH8SeQ2foxdCSmM=;
-        b=IiW0DxdIZxl0JbqrvHp8rCKEy/rsQcDazedM3h49PV7Uq411Zvdpj6lMklfdWG4Wys
-         FqO9MzoSeR0fbk6DkIdi50oAXU+bFSAOhqQcdpzGWsqg5dQCc44nm3zgW8Syozzw8wxt
-         9VmbwkCAKhas1xG4h+N6QXmSwAPeX5i9yj8K+mie4ujHVGHf1X6zW2rkHeUJChn80xer
-         tYkCWubZ+BTk29ffitr/yxdDoobDB2tz/fkXovMHh+kpWAW3M/q5AoO+jNtw89A/Yuym
-         PLVH9veTDf2Iou0ntNAl636xkmQmPWLf3epp3aSdr16XRDFdpiQJvEteFegnV0+XMq2f
-         cnSA==
+        d=gmail.com; s=20251104; t=1791135325; x=1791740125; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:mime-version:references
+         :in-reply-to:message-id:date:subject:cc:to:from:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=+AUsJRZOp6ZB2cjFXTNdVKAUi22M2zG0G5YVErUNqXQ=;
+        b=qT/tEDZDc3rIwxkXonNXmM5HIimZYP0TOgwxoYywzlcJLY5uxmD+yxufLKHEa+sMHq
+         6EyqalPzcqpy/dxpTjZylEk2srm+KYsLu3LeFK3aI53Nt93jOWAq2Jb4YAR8a7M9VlT3
+         zkoN1tvCUDFEys+3XL/ci8PS6Txg9G2CbKJeXR7XN4XZkjwCCawkFjfX+1TM+VjoHL2u
+         wvFr/I1/cRNa43FONrtogTSqgzAYoxRyGiE92sBZ98TTSFzYwMhHs92baVvUVbS8Gu+N
+         niyLZkZ6nYXYU3IsywfyIEslwlF5Vdx0/On0LwYIYmAetmhR+PHV8GAz43N+bE9zJiya
+         mxUA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1791135317; x=1791740117;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=ucoKS5Z1NvmoX9tY0eQL9oK5ahppwH8SeQ2foxdCSmM=;
-        b=qi9PA8yzS1Nlnumy/zavgekXZIAiXQziXiHhPihw6UR+6tXdVIOpQbkMk0LlFGbsnB
-         gNIdQhCyg8N3AIw86eaAoKtbab/Tty5ob0l/C9n1EOyNbfb4IbUA+0JGN9rq2FVGfwJ4
-         11+WUTF43jNL8TLNhmCp6GE3kyWGa0RRNAheic+72JwllseOIwRFhgzrjl5rnM5bybhQ
-         /Tps1ysuxFL0eZtJw07FldXBAPU3xSmbaWDEuTD5dcmzmhzAGhOQbldoeQ+P6KTHyEBy
-         iH8NeoUFDEOdtt/YMGmErm1UwSN+o8P2ok67hRrEoAbVGjRB6398WguFVfs5tXsG7tZv
-         EVBg==
-X-Forwarded-Encrypted: i=1; AKwUvBzdUJFobRgMgZvK8sJYJw2KQ1zNSW5OfZiRCkOgkEPFf+vTHa3bUI4y0JLtAumr8G53MqEV5MyDG+GlQhkaYruk@vger.kernel.org
-X-Gm-Message-State: AFuF++kGnbeOz9bUt9IANorjGcCOfA09aLz+KL9G8qU3t14bYIEXq+iU
-	7fJRhQIdofYA13/XS0TZKbN19rlqCS9S15+T2B1NQfmTUpao7DaC8zoh
-X-Gm-Gg: AYBFou2OwWba0S5Iw6tEyKKBN+MWcAYnhdsQdDaoKTNW1tuHeIN2KVYlA6uJxzLBL++
-	uPcd1K+nLNzoTQPfqaD8Esu/IwLhbYFnzMUi+VhdlXcjYWeKV3vypkoCIltH5kNZ+Vui1MLwhRZ
-	vVtfKPW8u8QpqacTjrwsh6jFOqb767pvAuysZJZuSuJVhVG4zpKkdYDcdKzHv7MSrt0JkWczzDy
-	Tiho/OD0wb57AmoAztFhO9zDNZZpMuy1ijaevlLoXT6M+nOE7V2Aitg5NBksr/UPoAFWhXuVCAz
-	tcMOuaL6D7ANN5jYrO+esNBErPI4wV1BQWguC5kSUcQTR9PfJdGys6dwkPVItOi3j7Ux9stEGSf
-	EVDFjAluF7ea0AsCo1IIeLkF0W0QzZn2YcGu/CUe7a7Uw6d//2pz1WwXFxXZFU9UeMuQoQy2i74
-	OQSn7uXtgGRi43dSG2iFzH80vN/O/J4rpeyk0DFJDSE1bTDBgukdiSrDYszBWRDlDjdXBUr5EER
-	bBNIuI2wgNAgYFovGCyGI1NehHnHw==
-X-Received: by 2002:a05:6a00:2350:b0:885:e434:76ec with SMTP id d2e1a72fcca58-88af86601a4mr7122808b3a.45.1791135316236;
-        Sun, 04 Oct 2026 10:35:16 -0700 (PDT)
+        d=1e100.net; s=20260707; t=1791135325; x=1791740125;
+        h=content-transfer-encoding:content-type:mime-version:references
+         :in-reply-to:message-id:date:subject:cc:to:from:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=+AUsJRZOp6ZB2cjFXTNdVKAUi22M2zG0G5YVErUNqXQ=;
+        b=L9YMj/Fj5XAgwbLz/hZrflHPmMutdkFMnFdOC9Itu56gKAT9+rc8fUycL7xA6kaE6X
+         TIhlgx/1qDgXCH6SImHaiN3doZuvcdguDejZToLMzXfyKj7c3Ss+PdUd1wbcVeNOP8Mc
+         6UIcfxyLscLazDiaIB7M2WEr39KZdwwBXbwKJlrA+5hb8W1/hqfjP95G3e1NTUwyiFvl
+         sVQpg111DVPOxNSH1V586DDOP57PkHSuDiBXn5VGiW9XpNR13W7cehlHLwy7qt86HnDQ
+         iKyqhXYV22bgZCxgbGx7DLNUhE6kLtH/EOYZKkTguXBuKUs5KSh6ojKAXV+Cpl/TDRvH
+         jmiA==
+X-Forwarded-Encrypted: i=1; AKwUvBwK1TJnrdnPXD9oU75hk+U7SZTMVCfauOacytHvh72dDzO7Fo+lRW25aZt1bM1FDtwXR2NeMiBLqKebANu/ELYE@vger.kernel.org
+X-Gm-Message-State: AFuF++mVrnMqIfGRAuetrZtFTmz53Mao81hQwqVeJns/WadqNCcau52W
+	F6q1/w5pITx8CkAaQWUcrk6woB9gYU6kHcnkZUemkkcbrrRFkEwTIJmW
+X-Gm-Gg: AYBFou3bMIfFAyYzqm1kQjaYehCXGRrbIjGFg0KM7Cd18+bD25qsDqhI7Jl2UIwHemJ
+	IKyBM+p/H5sVgMwD9Jp+AtDJWM+sSWhKfwHCL3R8CzDIeii3IEFF9zPF8Z+Sc2y7WTgi9AZrzxN
+	TSVwZqDhwv8xotSEAEHqvgvcbAwYEVjMNsB8tzM79q/g+H0ApsWNPCMjb2cjCXHvKfQWkzApi6R
+	Lek6sr3SqlDGuM4tYxfvHH/GNYkwdei5hEuP3YgzcNlV96Ppo3r0nDe2ufNalkf0VW/2y9U/CMJ
+	XSCdb0g5zFybgMLCBGRkW0R8qYYxKhsOfS6Qpc6kMrWGcGgqpFRghmNIeMV7Gj24roAxd/tAIRI
+	VA2TocYQ/Gmo9wIkgxka4NAud7ryoCkQgBWyalBbYHqZjE0xjKgeC3eiWuD4U2PLgy0uoaci+4Y
+	r/ZMLTvp0+WeURci8B55J3fmFNril0KFtw3v0QGEsHfnrzq1Q6uw4HLwWA4jnATuG8zvRTFq3zq
+	OPxjzoC/CrHH358NI/bqUgtkhOc3g==
+X-Received: by 2002:a05:6a21:8285:b0:3e1:6c:2fbc with SMTP id adf61e73a8af0-3e1006c30b4mr741978637.62.1791135325118;
+        Sun, 04 Oct 2026 10:35:25 -0700 (PDT)
 Received: from kernel.tail6741c6.ts.net ([216.195.201.24])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-88b0d247930sm2678370b3a.54.2026.10.04.10.35.10
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-88b0d247930sm2678370b3a.54.2026.10.04.10.35.16
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 04 Oct 2026 10:35:15 -0700 (PDT)
+        Sun, 04 Oct 2026 10:35:23 -0700 (PDT)
 From: Kunwu Chan <kunwu.chan@gmail.com>
 To: peterz@infradead.org,
 	mingo@redhat.com,
@@ -81,9 +82,9 @@ Cc: sj@kernel.org,
 	linux-kernel@vger.kernel.org,
 	linux-perf-users@vger.kernel.org,
 	linux-kselftest@vger.kernel.org
-Subject: [PATCH 1/5] perf/core: add AUX buffer ownership for kernel events
-Date: Mon,  5 Oct 2026 01:34:53 +0800
-Message-ID: <20261004173458.837842-2-kunwu.chan@gmail.com>
+Subject: [PATCH 2/5] perf/core: add AUX ring accessors for kernel consumers
+Date: Mon,  5 Oct 2026 01:34:54 +0800
+Message-ID: <20261004173458.837842-3-kunwu.chan@gmail.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20261004173458.837842-1-kunwu.chan@gmail.com>
 References: <20261004173458.837842-1-kunwu.chan@gmail.com>
@@ -93,285 +94,349 @@ List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Add an in-kernel AUX owner reference and setup/release helpers for
-kernel-created perf events that need an AUX buffer without a userspace
-mmap.  The setup path validates that the event is a kernel event with
-no parent, rejects non-power-of-two page counts and negative watermark
-values, allocates the perf buffer and AUX pages, records the kernel
-owner, and attaches the buffer under the same lock.
+Add kernel-consumer accessors for the published AUX producer head, the
+consumer tail, and copying a possibly wrapped AUX interval without exposing
+perf's internal page array.
 
-perf_event_release_aux() stops AUX writers, frees AUX storage, and
-detaches the buffer, in that order, matching the AUX teardown ordering
-of perf_mmap_close(): perf_pmu_output_stop() walks event->rb->event_list
-and rb_free_aux() must run while the buffer is still referenced by the
-event.  The single event->rb reference is dropped by
-ring_buffer_attach(event, NULL) itself, so the release path does not
-put it again.
+Use the same memory ordering as mmap consumers: order data reads after the
+published head with smp_rmb() and order completed data reads before
+advancing the tail with smp_mb().  Validate cursor distances in the
+absolute cursor domain before applying the ring mask, so rewound,
+already-consumed, and future windows are rejected even across unsigned
+cursor wrap.
 
-Both functions run under event->mmap_mutex, the lock that already
-serialises ring-buffer attach/detach transitions for an event:
-perf_mmap(), perf_mmap_close(), _perf_event_set_output() and
-_free_event() all hold it around ring_buffer_attach().  Concurrent
-perf_event_release_aux() callers therefore go through the same
-serialisation point, and a second release call, or a release of a
-buffer this API does not own, is a no-op.
-
-Keep aux_mmap_count dedicated to userspace mappings.
-perf_aux_output_begin() accepts a writer while either a userspace or kernel
-owner remains, preserving the existing teardown ordering.
+Hold an AUX reference while copying so storage cannot disappear under the
+consumer.  Restrict the helpers to buffers owned by the kernel AUX setup
+API.  Document the API in
+Documentation/userspace-api/perf_ring_buffer.rst.
 
 Co-developed-by: Lian Wang <lianux.mm@gmail.com>
 Signed-off-by: Lian Wang <lianux.mm@gmail.com>
 Signed-off-by: Kunwu Chan <kunwu.chan@gmail.com>
 ---
- include/linux/perf_event.h  |  11 +++
- kernel/events/core.c        | 164 ++++++++++++++++++++++++++++++++++++
- kernel/events/internal.h    |   6 ++
- kernel/events/ring_buffer.c |  11 ++-
- 4 files changed, 188 insertions(+), 4 deletions(-)
+ .../userspace-api/perf_ring_buffer.rst        |  62 +++++-
+ include/linux/perf_event.h                    |   7 +
+ kernel/events/ring_buffer.c                   | 202 +++++++++++++++++-
+ 3 files changed, 269 insertions(+), 2 deletions(-)
 
+diff --git a/Documentation/userspace-api/perf_ring_buffer.rst b/Documentation/userspace-api/perf_ring_buffer.rst
+index dc71544532ce..206c57ee6c35 100644
+--- a/Documentation/userspace-api/perf_ring_buffer.rst
++++ b/Documentation/userspace-api/perf_ring_buffer.rst
+@@ -26,6 +26,7 @@ Perf ring buffer
+     3.1  The relationship between AUX and regular ring buffers
+     3.2  AUX events
+     3.3  Snapshot mode
++    3.4  Kernel-consumer AUX buffer access
+ 
+ 
+ 1. Introduction
+@@ -827,4 +828,63 @@ mode.
+          |                 AUX Ring buffer 3     | <- aux_head
+          +---------------------------------------+
+ 
+-                Figure 9. Snapshot with system wide mode
++                 Figure 9. Snapshot with system wide mode
++
++3.4 Kernel-consumer AUX buffer access
++-------------------------------------
++
++The AUX ring buffer is normally consumed from user space via mmap()
++on the perf event fd.  Some tracing PMUs (e.g. ARM SPE) write trace
++records directly to the AUX buffer without generating a
++perf_event_overflow() callback for each record.  A kernel consumer
++therefore needs to own and drain the AUX buffer itself rather than
++rely on the overflow path.
++
++The perf core provides five exported functions for in-kernel
++consumers that do not have a user-space mmap:
++
++  - ``perf_event_setup_aux(event, nr_pages, watermark)`` — allocate
++    an AUX ring buffer for a kernel-created perf event.  The event
++    must be created by ``perf_event_create_kernel_counter()``; it
++    must not have a parent or an existing ring buffer.  ``nr_pages``
++    must be a power of two and ``watermark`` must be non-negative
++    (0 selects half the buffer).
++
++  - ``perf_event_release_aux(event)`` — tear down the AUX buffer
++    allocated by ``perf_event_setup_aux()``.  Must be called before
++    ``perf_event_release_kernel()``.  Safe to call on an event that
++    never had an AUX buffer, and on one whose buffer was already
++    released (no-op).  A ring buffer not owned by the kernel AUX API
++    is left attached.  The whole teardown is serialised on the
++    event's mmap mutex, so concurrent callers on the same event are
++    safe: one performs the teardown and the others return.
++
++  - ``perf_event_aux_head(event)`` — read the published producer
++    head.  Returns 0 if the event has no ring buffer.
++
++  - ``perf_event_aux_tail_set(event, tail)`` — advance the consumer
++    tail.  The new tail is an absolute cursor: it is accepted only
++    within the current produced window, not ahead of the published
++    producer cursor and no more than one buffer size behind it; an
++    out-of-range tail is rejected with ``-EINVAL``.
++
++  - ``perf_event_aux_copy(event, from, to, buf)`` — copy a possibly
++    wrapped AUX interval into a linear buffer.  The ``from``/``to``
++    cursors are absolute and must lie between the consumer cursor
++    (``tail``) and the published producer cursor (``head``).
++
++The owner reference is tracked by ``aux_kernel_count`` on the
++``perf_buffer``, separate from the userspace ``aux_mmap_count``.
++``perf_aux_output_begin()`` admits a writer while either owner
++count is non-zero, so a kernel consumer and a userspace consumer
++on different events for the same PMU do not interfere.
++
++A userspace mmap and a kernel ``perf_event_setup_aux()`` on the
++*same* event cannot coexist: the second call finds ``event->rb``
++already set and returns ``-EBUSY``.
++
++Memory ordering follows the same protocol as the userspace AUX
++mmap consumer: ``perf_event_aux_head()`` uses ``smp_rmb()`` to pair
++with the producer's data-write barrier before publishing ``aux_head``,
++and ``perf_event_aux_tail_set()`` uses ``smp_mb()`` to order prior
++data reads before advancing ``aux_tail``.
 diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
-index 7797ce207555..78fd2ed11fcf 100644
+index 78fd2ed11fcf..0d96145f75ed 100644
 --- a/include/linux/perf_event.h
 +++ b/include/linux/perf_event.h
-@@ -1255,6 +1255,17 @@ perf_event_create_kernel_counter(struct perf_event_attr *attr,
- 				 perf_overflow_handler_t callback,
- 				 void *context);
+@@ -1266,6 +1266,13 @@ extern int perf_event_setup_aux(struct perf_event *event, int nr_pages,
+ 				long watermark);
+ extern void perf_event_release_aux(struct perf_event *event);
  
-+/*
-+ * AUX ring-buffer support for kernel-created events (no user mmap).
-+ * perf_event_setup_aux() allocates the buffer the PMU writes into via
-+ * perf_aux_output_begin()/perf_aux_output_end(); the paired
-+ * perf_event_release_aux() must be called before
-+ * perf_event_release_kernel().
-+ */
-+extern int perf_event_setup_aux(struct perf_event *event, int nr_pages,
-+				long watermark);
-+extern void perf_event_release_aux(struct perf_event *event);
++/* AUX ring accessors for kernel consumers (no user-space mmap). */
++extern unsigned long perf_event_aux_head(struct perf_event *event);
++extern int perf_event_aux_tail_set(struct perf_event *event,
++				   unsigned long tail);
++extern long perf_event_aux_copy(struct perf_event *event, unsigned long from,
++				unsigned long to, void *buf);
 +
  extern void perf_pmu_migrate_context(struct pmu *pmu,
  				     int src_cpu, int dst_cpu);
  extern int perf_event_read_local(struct perf_event *event, u64 *value,
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index de05df65ab3d..966e74645cc9 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -7139,6 +7139,170 @@ static void perf_mmap_close(struct vm_area_struct *vma)
- 	ring_buffer_put(rb); /* could be last */
- }
- 
-+/*
-+ * perf_event_setup_aux()/perf_event_release_aux() - AUX buffer support for
-+ * kernel-created perf events (perf_event_create_kernel_counter()).
-+ *
-+ * perf_mmap()/perf_mmap_close() build and tear down AUX buffers for
-+ * user-space events; kernel consumers (e.g. DAMON's ARM SPE backend) have no
-+ * mmap, so they need this symmetric pair to get a buffer the PMU can write
-+ * into via perf_aux_output_begin()/perf_aux_output_end().
-+ *
-+ * event->mmap_mutex is not an mmap-specific lock here: it is the lock that
-+ * already serialises ring-buffer attach/detach transitions for an event
-+ * (perf_mmap(), perf_mmap_close(), _perf_event_set_output() and
-+ * _free_event() all hold it around ring_buffer_attach()).  Both functions
-+ * below use it so that the attach and detach they perform are atomic with
-+ * respect to those paths and to each other.
-+ *
-+ * The buffer holds an AUX owner reference (aux_kernel_count = 1) so
-+ * perf_aux_output_begin() admits writers and so it is torn down here
-+ * rather than by perf_mmap_close().  perf_event_release_aux() also detaches
-+ * the event's normal ring-buffer reference before the event is released.
-+ */
-+
-+/**
-+ * perf_event_setup_aux() - Allocate an AUX ring buffer for an event.
-+ * @event:	Kernel-created perf event (must not have an rb yet).
-+ * @nr_pages:	AUX buffer size in pages; power of two, >= 1.
-+ * @watermark:	AUX watermark; 0 selects the perf default (half the buffer).
-+ *
-+ * The buffer is non-overwrite streaming (RING_BUFFER_WRITABLE): the PMU
-+ * pauses when the buffer is full until the consumer advances the tail.
-+ * Must be called before the event is enabled.  The PMU's ->setup_aux()
-+ * callback (e.g. arm_spe_pmu_setup_aux) validates the size and maps the
-+ * pages for hardware writes.  The ring buffer is allocated with zero
-+ * data pages, so PERF_RECORD_AUX events are not recorded; this is
-+ * intentional for kernel consumers that drain trace data directly.
-+ * Returns 0 on success, -errno otherwise.
-+ */
-+int perf_event_setup_aux(struct perf_event *event, int nr_pages,
-+			 long watermark)
-+{
-+	struct perf_buffer *rb;
-+	int ret;
-+
-+	if (!is_kernel_event(event) || event->parent ||
-+	    !is_power_of_2(nr_pages) || watermark < 0)
-+		return -EINVAL;
-+
-+	mutex_lock(&event->mmap_mutex);
-+	if (event->rb) {
-+		ret = -EBUSY;
-+		goto out_unlock;
-+	}
-+
-+	rb = rb_alloc(0, 0, event->cpu, 0);
-+	if (!rb) {
-+		ret = -ENOMEM;
-+		goto out_unlock;
-+	}
-+
-+	/* AUX area sits right after the user (control) page. */
-+	ret = rb_alloc_aux(rb, event, 1, nr_pages, watermark,
-+			   RING_BUFFER_WRITABLE);
-+	if (ret)
-+		goto err_put;
-+
-+	/*
-+	 * No user-space mmap exists for this buffer; record an in-kernel
-+	 * AUX owner (aux_kernel_count) instead so perf_aux_output_begin()
-+	 * admits writers and perf_event_release_aux() performs the teardown
-+	 * that perf_mmap_close() would otherwise do.
-+	 */
-+	refcount_set(&rb->aux_kernel_count, 1);
-+
-+	/* Transfer the allocation reference to the event. */
-+	ring_buffer_attach(event, rb);
-+	mutex_unlock(&event->mmap_mutex);
-+
-+	return 0;
-+
-+err_put:
-+	ring_buffer_put(rb);
-+out_unlock:
-+	mutex_unlock(&event->mmap_mutex);
-+	return ret;
-+}
-+EXPORT_SYMBOL_GPL(perf_event_setup_aux);
-+
-+/**
-+ * perf_event_release_aux() - Tear down an AUX buffer for an event.
-+ * @event:	Event with an AUX buffer allocated by perf_event_setup_aux().
-+ *
-+ * Stops any active AUX writers, frees the AUX pages, and detaches the ring
-+ * buffer from the event.  Must be called before perf_event_release_kernel().
-+ * Safe to call with a missing rb (no-op); a second call is also a no-op.
-+ * A ring buffer not allocated by perf_event_setup_aux() is left attached.
-+ *
-+ * The whole teardown runs under event->mmap_mutex, the lock that already
-+ * serialises ring-buffer attach/detach transitions for this event
-+ * (perf_mmap(), perf_mmap_close() and _perf_event_set_output() hold it
-+ * around ring_buffer_attach()): concurrent callers on the same event
-+ * serialise here, so exactly one of them drops the single
-+ * aux_kernel_count owner reference and performs the teardown, and the
-+ * others then observe event->rb == NULL and return.  Holding it also
-+ * keeps event->rb valid across perf_pmu_output_stop(), which walks
-+ * event->rb->event_list, until the detach is done.
-+ *
-+ * The ordering matches the AUX teardown of perf_mmap_close(): the PMU
-+ * output is stopped and the AUX pages freed before the buffer is
-+ * detached from the event, because perf_pmu_output_stop() walks
-+ * event->rb->event_list and rb_free_aux() must run while the buffer is
-+ * still referenced by the event.
-+ *
-+ * The caller must quiesce AUX consumers before releasing the buffer;
-+ * active AUX references at release time indicate a violated lifetime
-+ * contract (see the aux_refcount WARN below).
-+ */
-+void perf_event_release_aux(struct perf_event *event)
-+{
-+	struct perf_buffer *rb;
-+
-+	if (!is_kernel_event(event) || event->parent)
-+		return;
-+
-+	mutex_lock(&event->mmap_mutex);
-+
-+	rb = event->rb;
-+	if (!rb)
-+		goto out_unlock;
-+
-+	/* Only tear down a ring buffer that this API owns. */
-+	if (!rb_has_aux(rb) || !refcount_read(&rb->aux_kernel_count))
-+		goto out_unlock;
-+
-+	/*
-+	 * Drop the kernel AUX-owner reference; writers are refused once it
-+	 * reaches zero (perf_aux_output_begin()).  Since concurrent
-+	 * releases serialise on mmap_mutex and setup rejects a second
-+	 * buffer with -EBUSY, the count can only be 1 here.
-+	 */
-+	WARN_ON_ONCE(!refcount_dec_and_test(&rb->aux_kernel_count));
-+
-+	/*
-+	 * Stop all AUX events writing to this buffer so the pages can be
-+	 * freed; the aux_mutex serialisation matches perf_mmap_close().
-+	 */
-+	mutex_lock(&rb->aux_mutex);
-+	perf_pmu_output_stop(event);
-+	rb_free_aux(rb);
-+	WARN_ON_ONCE(refcount_read(&rb->aux_refcount));
-+	mutex_unlock(&rb->aux_mutex);
-+
-+	/*
-+	 * Detach the buffer from the event.  ring_buffer_attach(event, NULL)
-+	 * drops the event->rb reference itself (the allocation reference
-+	 * transferred by perf_event_setup_aux()), so no extra
-+	 * ring_buffer_put() is needed here.
-+	 */
-+	ring_buffer_attach(event, NULL);
-+
-+out_unlock:
-+	mutex_unlock(&event->mmap_mutex);
-+}
-+EXPORT_SYMBOL_GPL(perf_event_release_aux);
-+
- static vm_fault_t perf_mmap_pfn_mkwrite(struct vm_fault *vmf)
- {
- 	/* The first page is the user control page, others are read-only. */
-diff --git a/kernel/events/internal.h b/kernel/events/internal.h
-index c03c4f2eea57..760b7659ad87 100644
---- a/kernel/events/internal.h
-+++ b/kernel/events/internal.h
-@@ -48,6 +48,12 @@ struct perf_buffer {
- 	int				aux_nr_pages;
- 	int				aux_overwrite;
- 	refcount_t			aux_mmap_count;
-+	/*
-+	 * In-kernel AUX owner reference, set by perf_event_setup_aux():
-+	 * admits writers and ties the AUX teardown to
-+	 * perf_event_release_aux() when no userspace mmap holds the buffer.
-+	 */
-+	refcount_t			aux_kernel_count;
- 	unsigned long			aux_mmap_locked;
- 	void				(*free_aux)(void *);
- 	refcount_t			aux_refcount;
 diff --git a/kernel/events/ring_buffer.c b/kernel/events/ring_buffer.c
-index 1b1ffe0533e5..eae28e42346c 100644
+index eae28e42346c..2c6f260fcf91 100644
 --- a/kernel/events/ring_buffer.c
 +++ b/kernel/events/ring_buffer.c
-@@ -395,14 +395,17 @@ void *perf_aux_output_begin(struct perf_output_handle *handle,
- 		goto err;
- 
- 	/*
--	 * If aux_mmap_count is zero, the aux buffer is in perf_mmap_close(),
--	 * about to get freed, so we leave immediately.
-+	 * If no AUX owner remains, the buffer is in perf_mmap_close() or
-+	 * perf_event_release_aux(), about to get freed, so we leave
-+	 * immediately.  aux_mmap_count tracks user-space mmap owners;
-+	 * aux_kernel_count tracks in-kernel owners (perf_event_setup_aux()).
+@@ -398,7 +398,8 @@ void *perf_aux_output_begin(struct perf_output_handle *handle,
+ 	 * If no AUX owner remains, the buffer is in perf_mmap_close() or
+ 	 * perf_event_release_aux(), about to get freed, so we leave
+ 	 * immediately.  aux_mmap_count tracks user-space mmap owners;
+-	 * aux_kernel_count tracks in-kernel owners (perf_event_setup_aux()).
++	 * aux_kernel_count tracks the in-kernel AUX owner
++	 * (perf_event_setup_aux()).
  	 *
--	 * Checking rb::aux_mmap_count and rb::refcount has to be done in
-+	 * Checking the AUX owner counts and rb::refcount has to be done in
+ 	 * Checking the AUX owner counts and rb::refcount has to be done in
  	 * the same order, see perf_mmap_close. Otherwise we end up freeing
- 	 * aux pages in this path, which is a bug, because in_atomic().
- 	 */
--	if (!refcount_read(&rb->aux_mmap_count))
-+	if (!refcount_read(&rb->aux_mmap_count) &&
-+	    !refcount_read(&rb->aux_kernel_count))
- 		goto err;
+@@ -585,6 +586,205 @@ void *perf_get_aux(struct perf_output_handle *handle)
+ }
+ EXPORT_SYMBOL_GPL(perf_get_aux);
  
- 	if (!refcount_inc_not_zero(&rb->aux_refcount))
++/*
++ * perf_event_aux_head()/perf_event_aux_tail_set()/perf_event_aux_copy() -
++ * AUX ring accessors for kernel consumers (e.g. DAMON's ARM SPE backend).
++ *
++ * The write cursor rb->aux_head is maintained by the PMU driver via
++ * perf_aux_output_end(), which also publishes it to user_page->aux_head;
++ * the consumer cursor lives in user_page->aux_tail (same absolute cursor
++ * domain).  The kernel consumer has no mmap, so these are the counterpart
++ * of the user-space mmap protocol.
++ *
++ * As in the user-space protocol, data visibility is the producer's duty:
++ * the PMU driver must make AUX data visible before calling
++ * perf_aux_output_end(), which then publishes the new head.  Kernel
++ * consumers use the same read- and full-barrier ordering as mmap consumers.
++ */
++
++static bool rb_has_kernel_aux(struct perf_buffer *rb)
++{
++	return rb_has_aux(rb) && refcount_read(&rb->aux_kernel_count);
++}
++
++/**
++ * perf_event_aux_head() - Return the event's absolute AUX write cursor.
++ * @event:	Event with an AUX buffer (perf_event_setup_aux()).
++ *
++ * Returns the current rb->aux_head, or 0 if the event has no ring buffer.
++ */
++unsigned long perf_event_aux_head(struct perf_event *event)
++{
++	struct perf_buffer *rb = ring_buffer_get(event);
++	unsigned long head = 0;
++
++	if (rb && rb_has_kernel_aux(rb)) {
++		head = READ_ONCE(rb->user_page->aux_head);
++		/* Pairs with the producer's AUX-data write barrier. */
++		smp_rmb();
++	}
++	if (rb)
++		ring_buffer_put(rb);
++	return head;
++}
++EXPORT_SYMBOL_GPL(perf_event_aux_head);
++
++/**
++ * perf_event_aux_tail_set() - Advance the event's AUX consumer cursor.
++ * @event:	Event with an AUX buffer.
++ * @tail:	New absolute consumer cursor.
++ *
++ * Frees the consumed space so perf_aux_output_begin() can compute space
++ * again for the PMU writer.  @tail is an absolute cursor: it is accepted
++ * only within the current produced window, i.e. not ahead of the
++ * published producer cursor and no more than one buffer size behind it;
++ * a tail outside that window would corrupt the free-space computation
++ * in perf_aux_output_begin() and let the producer overwrite unconsumed
++ * data.
++ *
++ * If a non-overwrite buffer becomes full, the producer may be stopped;
++ * advancing the tail alone does not resume it, and the consumer is
++ * responsible for re-enabling the event if needed (as user-space AUX
++ * consumers do).
++ *
++ * Returns 0 on success, -ENOENT if the event has no ring buffer, -EINVAL
++ * on an out-of-range tail.
++ */
++int perf_event_aux_tail_set(struct perf_event *event, unsigned long tail)
++{
++	struct perf_buffer *rb = ring_buffer_get(event);
++	unsigned long advance, aux_size, head, old_tail;
++	int ret = -EINVAL;
++
++	if (!rb)
++		return -ENOENT;
++
++	if (!rb_has_kernel_aux(rb)) {
++		ret = -ENOENT;
++		goto out;
++	}
++
++	aux_size = (unsigned long)rb->aux_nr_pages << PAGE_SHIFT;
++	old_tail = READ_ONCE(rb->user_page->aux_tail);
++	/*
++	 * Pairs with the producer's AUX-data write barrier in
++	 * perf_aux_output_end() before it publishes aux_head.
++	 */
++	smp_rmb();
++	head = READ_ONCE(rb->user_page->aux_head);
++	advance = tail - old_tail;
++
++	/* Modular distances keep the check valid when a cursor wraps. */
++	if (head - old_tail <= aux_size && advance <= head - old_tail) {
++		/* Order all prior AUX data reads before releasing the space. */
++		smp_mb();
++		WRITE_ONCE(rb->user_page->aux_tail, tail);
++		ret = 0;
++	}
++
++out:
++	ring_buffer_put(rb);
++	return ret;
++}
++EXPORT_SYMBOL_GPL(perf_event_aux_tail_set);
++
++/**
++ * perf_event_aux_copy() - Copy an AUX window into a linear buffer.
++ * @event:	Event with an AUX buffer.
++ * @from:	Absolute start cursor (inclusive).
++ * @to:		Absolute end cursor (exclusive).
++ * @buf:	Destination; must hold (to - from) bytes.
++ *
++ * Handles wrap-around within the ring.  Returns the number of bytes
++ * copied, or -errno.  The requested window is validated in the
++ * absolute cursor domain -- between the consumer cursor and the
++ * published producer cursor, and not larger than the ring -- before
++ * the cursors are converted into ring offsets.
++ */
++long perf_event_aux_copy(struct perf_event *event, unsigned long from,
++			 unsigned long to, void *buf)
++{
++	struct perf_buffer *rb = ring_buffer_get(event);
++	unsigned long aux_size, available, head, len, start, tail, tocopy;
++	long ret;
++
++	if (!rb)
++		return -ENOENT;
++
++	if (!rb_has_kernel_aux(rb)) {
++		ret = -ENOENT;
++		goto out;
++	}
++
++	/*
++	 * The AUX pages have a lifetime of their own, governed by
++	 * aux_refcount (see rb_alloc_aux): producers and consumers can both
++	 * hold references, and a concurrent perf_event_release_aux() drops
++	 * the owner's.  Take one for the duration of the copy.
++	 */
++	if (!refcount_inc_not_zero(&rb->aux_refcount)) {
++		ret = -ENOENT;
++		goto out;
++	}
++
++	if (!buf) {
++		ret = -EINVAL;
++		goto out_aux;
++	}
++
++	aux_size = (unsigned long)rb->aux_nr_pages << PAGE_SHIFT;
++	tail = READ_ONCE(rb->user_page->aux_tail);
++	head = READ_ONCE(rb->user_page->aux_head);
++	/* Pairs with the producer's AUX-data write barrier. */
++	smp_rmb();
++	available = head - tail;
++	start = from - tail;
++	len = to - from;
++
++	/*
++	 * Validate modular distances before masking: the requested window
++	 * must be wholly contained between the consumer cursor and the
++	 * published producer cursor.  This rejects rewound, already
++	 * consumed, and future cursors while remaining correct across
++	 * unsigned cursor wrap.
++	 */
++	if (available > aux_size || start > available ||
++	    len > available - start) {
++		ret = -EINVAL;
++		goto out_aux;
++	}
++	if (!len) {
++		ret = 0;
++		goto out_aux;
++	}
++
++	from &= aux_size - 1;
++	to &= aux_size - 1;
++	ret = 0;
++
++	do {
++		tocopy = PAGE_SIZE - offset_in_page(from);
++		if (to > from)
++			tocopy = min(tocopy, to - from);
++		if (!tocopy)
++			break;
++
++		memcpy(buf + ret, rb->aux_pages[from >> PAGE_SHIFT] +
++		       offset_in_page(from), tocopy);
++
++		ret += tocopy;
++		from += tocopy;
++		from &= aux_size - 1;
++	} while (to != from);
++
++out_aux:
++	rb_free_aux(rb);
++out:
++	ring_buffer_put(rb);
++	return ret;
++}
++EXPORT_SYMBOL_GPL(perf_event_aux_copy);
++
+ /*
+  * Copy out AUX data from an AUX handle.
+  */
 -- 
 2.43.0
 
