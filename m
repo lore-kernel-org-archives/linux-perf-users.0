@@ -1,42 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBCDA3064B5;
-	Mon,  5 Oct 2026 22:44:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A634634EF1F
+	for <linux-perf-users@vger.kernel.org>; Mon,  5 Oct 2026 22:47:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791240284; cv=none; b=g+8fvJYJtARLoOMsfgDqXz0ScN2yxEGhp9cd9pvJ1if1w6/gf0zVMIrNUaKbaXNlMYkAP7FnT3ChDsP9eXe7j70vrbRNRjXT0c7K9hZCm47pq2GKwAIX9PVdN3KpSlYc/bXkR4cy1kBuru/uy3C9sPCpdJjTn1omjopCAepZroQ=
+	t=1791240449; cv=none; b=EBBq5eRZAkqQWG5tF/qm2VJ2Q0OwODflRI9g1gZx8BDMXRFHntMAjmvOtHP/IrDep1n+KAyObsrw7HeHbVwMJm5DwAPHnQjmrSZpKSiwKJofPG1Kl2PAcUovHpLM2L4Eb4z/bxYdLeua2FujM4nZfiU7EczXZi1k3ppYcwiA+DM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791240284; c=relaxed/simple;
-	bh=dwYzbdQ1B/JSGSGnEmkLzad5oUP224aEmrBywC4kFgk=;
+	s=arc-20240116; t=1791240449; c=relaxed/simple;
+	bh=TqLCr9kvEGrfBgVQ9P+NLQD6g59gb1Ofp/EGHKzCnZo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IrrCop/UpgoEkznB71CcAKIaA8THjniGOo5BPOjjmjnP340LKJ4NxYwbSAAWXKIdMVw8P8PXTL+WN5+Di9uQ4LQYY1WAIPHRaSYtkrWInsO/g0qSj1a1MKylwrLQUucsieaGNWLwXrKQescaEkhKNZOAqOZ7evshZGKWsejpk1U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lN/tvqZh; arc=none smtp.client-ip=100.103.45.18
+	 Content-Type:Content-Disposition:In-Reply-To; b=oerb8IMpr+ec5Jy+8nEHz9R0NrY194of8gtx88xagsVWa+SU9+Hh1n7LWrmT2nRqlLSOCuBcrdYotcwbi00WRjsxWwaJ4U9X8U39BKiSG8DPOLArrUAXx9zYfy9zDVvjGoO5uFd72DW6tiIc7xo6AjC8KW7n/70VIaRgH4O/rSU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XgazwCB4; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lN/tvqZh"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6AE3D1F000FF;
-	Mon,  5 Oct 2026 22:44:43 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XgazwCB4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A72761F000FF;
+	Mon,  5 Oct 2026 22:47:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1791240283;
-	bh=mAif6fUSfIAXR2mzufrQU8zeL0ZREPraNNRHJZ03CMM=;
+	s=k20260515; t=1791240446;
+	bh=OtnojGfS9dbZW5QOHF6ThZuMNFGwmDszlMzCTPYmsX8=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=lN/tvqZhtdxKX5S2ROMoBmcM1sFpSKQsOl/ZxWbRbrhyXfZa1ULSH4lOtG2Dr8sj1
-	 PGyPVVNXZx3LWMOu4VJAswnUcZlfejU+R+2pbVC5S0aCObGJ7iEPZu9ZE/d061mRpe
-	 45dhu+d3bt6DgY1qmklgAuPkYcas/tmvmmyF3AYslic+9APKoQqugUSELClpBqDwNX
-	 PgeKqWQyOs7qhS4c+xTI8LSUuzXiVRlrTJw6jKZK9ZtwGV4UASwipQFexELjXEBugp
-	 rYNxz2vaH0nlbpUtqTU9IoiZzKxCKdjN08fCbKTR36ZGy1j47zTkNA/Hjd0UyyAhhF
-	 QowCv2iV9gfRw==
-Date: Mon, 5 Oct 2026 15:44:42 -0700
+	b=XgazwCB4z5xTdqLWnaqbG0nrzwjgIlckacBwHzaC7RPPcDFfkljeSEXZ3H52fLeDD
+	 QAY5OOwD3OcG+TD3dO8DFrAUiZ8LM+Zig2kOQ7dn8gWpV8v+biK68DS+Vxhu8V+yTq
+	 eSlrqnkVPQU4JDWDbPcukAZu+g+UhN1GNBPVK0/gd59CxFXFrPThk7Lc27Jl1IFNmv
+	 5szvFKqsTFdGQbX/iKpMXLzoFFA2KaMaL5xHIirv+LcGG31DJWfphwch2X5a1uuOFf
+	 JxLYAa5/PTxtXF87jyZhtSo2/KYndOhfI7wdIwqgP09HtLeT+ff2/0KeynamUBErJA
+	 HhDhjhdFiX/QQ==
+Date: Mon, 5 Oct 2026 15:47:25 -0700
 From: Namhyung Kim <namhyung@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: acme@kernel.org, 9erthalion6@gmail.com, adrian.hunter@intel.com,
-	james.clark@linaro.org, jolsa@kernel.org, leo.yan@arm.com,
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-	mingo@redhat.com, peterz@infradead.org
-Subject: Re: [PATCH v3 1/2] perf test: Add per-test timeout support
-Message-ID: <asQoWrGYmM-lGx5G@google.com>
-References: <20260929011837.4157334-1-irogers@google.com>
- <20260929025345.88829-1-irogers@google.com>
+To: Michael Petlan <mpetlan@redhat.com>
+Cc: linux-perf-users@vger.kernel.org, irogers@google.com, acme@redhat.com
+Subject: Re: [PATCH 0/2] perf test attr: Fix and re-enable the test
+Message-ID: <asQo_ZqrjOAoJ1ux@google.com>
+References: <20260924223027.799654-1-mpetlan@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -45,39 +41,32 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20260929025345.88829-1-irogers@google.com>
+In-Reply-To: <20260924223027.799654-1-mpetlan@redhat.com>
 
-On Mon, Sep 28, 2026 at 07:53:44PM -0700, Ian Rogers wrote:
-> When a test hangs in 'perf test', the entire test run hangs and makes it
-> difficult to inspect output from other tests.
-> 
-> Add a new TEST_TIMEOUT result category and a per-test timeout (default
-> 60 seconds, configurable via '-t'/'--timeout', with 0 to disable). When
-> '-F' ('--dont-fork') is specified, timeouts are disabled.
-> 
-> To enforce the timeout:
-> - Place each forked test child into its own process group via
->   setpgid(0, 0) in the child and setpgid(pid, pid) in the parent so any
->   subprocesses spawned by shell or workload tests can be terminated
->   together.
-> - Arm an ITIMER_REAL periodic timer with a SIGALRM handler (using
->   SA_RESTART so /proc status reads in check_if_command_finished() are
->   not interrupted by EINTR while poll()/usleep() waits still wake up).
+Hello,
 
-Do we really need this timer?  I think poll() already has a timeout so
-it'll wake up on every 100 msec anyway?
+On Fri, Sep 25, 2026 at 12:30:25AM +0200, Michael Petlan wrote:
+> Hello all,
+> 
+> I have noticed that a testcase formerly known as "Setup struct perf_event_attr",
+> later renamed to "Perf attribute expectations test" has been disabled by
+> accident during the move.
+> 
+> That also probably led to forgetting to update the struct size, which is now
+> fixed by the second patch.
+> 
+> Michael
+> 
+> 
+> Michael Petlan (2):
+>   perf test attr: Propagate the return value from the test to the
+>     wrapper
+>   perf test attr: Fix wrong size expectation for events
+
+The "Fixes" tag format is a bit different, but otherwise
+
+Acked-by: Namhyung Kim <namhyung@kernel.org>
 
 Thanks,
 Namhyung
 
-
-> - Check elapsed child runtimes against test_timeout in finish_test() and
->   finish_tests_parallel(), sending SIGTERM first and escalating to
->   SIGKILL after 1 second if the child process group has not exited.
-> - Report timed out tests in red ('TIMEOUT!'), track and display them in
->   the test summary, and emit '<error message="TIMEOUT" type="timeout">'
->   counted under the 'errors' attribute in JUnit XML output.
-> - Document '-t'/'--timeout' and '-F'/'--dont-fork' in perf-test.txt.
-> 
-> Assisted-by: Antigravity:gemini-3.1-pro
-> Signed-off-by: Ian Rogers <irogers@google.com>
