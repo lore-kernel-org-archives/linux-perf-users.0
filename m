@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61F4235837C;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E092E35B137;
 	Mon,  5 Oct 2026 06:34:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791182060; cv=none; b=oeVeg/c6HFD5v7YTPXDP0vb4VJkDf8KsnbxkV+fvERUdZmra5Kev5mbGUNe5ViorLUFGwbdHnui7pf1N1eBJNJ3Vcx7yE1UETTmYhR8JLobm2ndoAcvs7EmCdly0rexeQdz17ddeNtvtI+PBW63uHv15+DwKSTQwxChM2LT8rzk=
+	t=1791182061; cv=none; b=GqRqaglQHHKVKfM7fqsm8ETLeqSYuNdlKnxgefZwTTsJDlHFOJLXYu1kWZsFLsJAl1IyEGTA5z/uNifn6p9kSpDV431k1CKRCZ7guPTL6SdkHMy4TeiTbDkvdOQdqCWDwDXzKw4xrTpjzqVBYx8OIC7k4QH5fCgxE5aN6PDSr4Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791182060; c=relaxed/simple;
-	bh=2FSTKbLVedQuCD3pn1ra+g41XUxrwY1C6lZ+yCiJEjo=;
+	s=arc-20240116; t=1791182061; c=relaxed/simple;
+	bh=IPiuA7mvAh8Cc9ghjIeunwGi6lNsBeZ9idyJsCuy02A=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=J5IgQDyE6pY8MitXJcbybky4bEyiTavAS3WkmhnfC+PKxn5MCwLbTFZpvfbdfxLUNQGbN5uTH9pcnsk6w713ToQPJmT01rGlx5LHKzKfgiKCBd3x7FRlB87EVRS9iGF0VzsCOkOeZA6mcy+Ojj3AN/hPsJxOnfGgePESxxpywg0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YWaiEf7D; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version; b=NbHEz0Jn+RSon+7M4BjekfmV10LQi3hN1sr93ioEUbD0GsSbT0l85rXOctK/EWT/jcgyLXcQfJ5l76+hXTtCIWl8OEV+R4gxozpm7kxAmtjqaBT0+nyQILuT3enVBNdS/VQepK1hfzkrE1nwKw/jRm1dskNMUdCnFvrkwgLHiXs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fixTUtc1; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YWaiEf7D"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E376F1F000FF;
-	Mon,  5 Oct 2026 06:34:18 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fixTUtc1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 725A71F0089B;
+	Mon,  5 Oct 2026 06:34:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
 	s=k20260515; t=1791182059;
-	bh=+ESkVjER986pktI7XdpKJMdzEpupRBe8XcIIgRpPowc=;
+	bh=EAMczUtP2gPR0t49GLGwF+EnBCs37VmOUafNFQVOLjk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=YWaiEf7DwBMid5Kk8AwPQV3sUlFbod5+f/Ss/fty7F+JXG0FsYTlL4YHX8zD47TAe
-	 W3dbYvnWdACkuD8YStgWOLhJAGuZz1Ju4BcEM+7Mc8ZcayusLBQqbyc+4UQjwnshOl
-	 /VorxkhDebAQ5JAaAOrlPMctpxOYMdzm5ZBZfcK/9huy04iaUJpsN9q2Z1Xr7hDrXB
-	 lCXltv/2v+892kgRONXNn26AT5vzTNCxbVIrlfUpl1IuhHNavXSSAkxSCdVe0wI/VU
-	 mpUJR1DlAhEKz8RLMB5sZ7YFsp98zEQsZcTAbyfq61eYJTdexrnfAwQZtifnoM+u2Q
-	 CDTi+xInF/4PQ==
+	b=fixTUtc1J0Nn8rHyFyXEUrZlMnLmYV2m6n3MaQ8LmlaHXo/BnNebaj2kgwi1zFtju
+	 InuWZ934JFrvYA41W7XG23rWeqSjafa/adRMcXrOrcg0A+N2E6Kc1x++udZE0p6/sG
+	 fgIzlKo2BIl5583Hl49k9qplhaeBb+apT2mShLme8S3iRHpeXT8nP+SXzpMF9moyCA
+	 SotcYPTJb25qnN8Js8T2XXfUNd8QEk6xcoyOJx0AGKeLHqHhS/cQbzJy2N1n59uowr
+	 VPIM+yHXNEFqUPi5jsdXtmjw3sZO7aqlFytFcH6nLI/8d8WK7wFuwI2Xj2xPX2Y3T4
+	 Tc9qQiiju9NSA==
 From: Namhyung Kim <namhyung@kernel.org>
 To: Arnaldo Carvalho de Melo <acme@kernel.org>,
 	Ian Rogers <irogers@google.com>,
@@ -36,9 +36,9 @@ Cc: Jiri Olsa <jolsa@kernel.org>,
 	Ingo Molnar <mingo@kernel.org>,
 	LKML <linux-kernel@vger.kernel.org>,
 	linux-perf-users@vger.kernel.org
-Subject: [PATCH v1 4/7] perf symbol: Set binary/symtab type for split kallsyms
-Date: Sun,  4 Oct 2026 23:34:08 -0700
-Message-ID: <20261005063411.114244-5-namhyung@kernel.org>
+Subject: [PATCH v1 5/7] perf symbol: Set dso symtab type for libbfd
+Date: Sun,  4 Oct 2026 23:34:09 -0700
+Message-ID: <20261005063411.114244-6-namhyung@kernel.org>
 X-Mailer: git-send-email 2.55.0
 In-Reply-To: <20261005063411.114244-1-namhyung@kernel.org>
 References: <20261005063411.114244-1-namhyung@kernel.org>
@@ -50,27 +50,27 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-When it creates new DSOs for split kallsyms, set the binary and symtab
-type to KALLSYMS properly.
+It missed to set the dso symtab type when the symbols are loaded by
+libbfd.  When it happens both syms_ss and runtime_ss may not be set
+and won't call dso__load_sym().
 
 Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 ---
- tools/perf/util/symbol.c | 2 ++
- 1 file changed, 2 insertions(+)
+ tools/perf/util/symbol.c | 1 +
+ 1 file changed, 1 insertion(+)
 
 diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
-index cf099cbd29f268ec..fc6e4dff282bc2dc 100644
+index fc6e4dff282bc2dc..02b096ccbc60ac2a 100644
 --- a/tools/perf/util/symbol.c
 +++ b/tools/perf/util/symbol.c
-@@ -1099,6 +1099,8 @@ static int maps__split_kallsyms(struct maps *kmaps, struct dso *dso, u64 delta,
- 				return -1;
+@@ -1933,6 +1933,7 @@ int dso__load(struct dso *dso, struct map *map)
+ 			nsinfo__mountns_enter(dso__nsinfo(dso), &nsc);
  
- 			dso__set_kernel(ndso, dso__kernel(dso));
-+			dso__set_binary_type(ndso, dso__binary_type(dso));
-+			dso__set_symtab_type(ndso, dso__symtab_type(dso));
- 			dso__set_loaded(ndso);
- 
- 			curr_map = map__new2(pos->start, ndso);
+ 		if (bfdrc == 0) {
++			dso__set_symtab_type(dso, symtab_type);
+ 			ret = 0;
+ 			break;
+ 		}
 -- 
 2.55.0
 
