@@ -1,94 +1,194 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D4AFF47F2E0
-	for <linux-perf-users@vger.kernel.org>; Mon,  5 Oct 2026 13:15:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0388B47125A
+	for <linux-perf-users@vger.kernel.org>; Mon,  5 Oct 2026 13:43:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791206137; cv=none; b=ZkqmbRj1UjPW73kQq20btsh2g04epGWv7jW2Lsh20vO/ld82vJdG+CqyV+fwzVzlcZS1W+eXBI/Wvz6RNBT1u8a1daYH9bxzV3uFyi7V4O7qqfAMztRGzgSMYS9BCV5q7mM4XLd7zNu7NJ9B4dGmPZI17qmlSMKOCyp/GIVYmMk=
+	t=1791207818; cv=none; b=GdG80l8w52/5tPLpZpECpS7XplyjAiPm+EgE7xj7Rb1ZVajHK7NR6pGTEVZd2wB8EPgLUvZX/6dkq+uNJxG5sRjPbkQcCPI5nV55/wQa+fMgch0dQrNLCOqSc5JT4A0XVRytJHtRo62vWo1EP+pVKRy022428k1aM+1rhb4xs3Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791206137; c=relaxed/simple;
-	bh=m3tmSH0+leL7BS79iE/YdCgWfzPU9HDRqYcmSoRJD60=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=gAoswqGTxhCkMayw6kmnP0c6CqFBejdehw1I+mj2JiNVjZY3Pdh/+Zsbn01WWCmJARZ+499GFZdFfx4e0YBO9fym0rGHS5ZjIIfsDlt9lMzByCrAz+reI7uGOZsTrYO/vorZs8p50gLMJppx+DmRXG4r/grEGCwfwp3JIQGRw/g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=KIoe/8CV; arc=none smtp.client-ip=217.140.110.172
+	s=arc-20240116; t=1791207818; c=relaxed/simple;
+	bh=CWv6wDh/LavMy4SV7bBu3KaB84y77Ij9h09DIbD8w5s=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Bg09PHNr+wlxVIo2eCdW6i3HkxG9FV6CoNuqPKO7PTmpP/DhiPi6pvtxEgut3DCkc+lODquN4h4lNoYGdSznYxkKrWAJFe/MTjzbP4Tim/pTD5eX/hCnYk7zSb/nkDKI288mW4YQEkSmqwJPp1IehZ/fTXbDklurweVoJASyprQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=VLYv7U5E; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="KIoe/8CV"
+	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="VLYv7U5E"
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6C187152B;
-	Mon,  5 Oct 2026 06:15:31 -0700 (PDT)
-Received: from [10.2.212.23] (e121345-lin.cambridge.arm.com [10.2.212.23])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 43B0C3F86F;
-	Mon,  5 Oct 2026 06:15:34 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 32DC0152B;
+	Mon,  5 Oct 2026 06:43:33 -0700 (PDT)
+Received: from e121345-lin.cambridge.arm.com (e121345-lin.cambridge.arm.com [10.2.212.23])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id E30A93F86F;
+	Mon,  5 Oct 2026 06:43:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
-	t=1791206134; bh=m3tmSH0+leL7BS79iE/YdCgWfzPU9HDRqYcmSoRJD60=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=KIoe/8CVD+wIe5QvHf9R7AMxlQqGiVNz0V7h5QPw/ZHk2OZsH79wmWEzt9Y1FfqzX
-	 ZwsAJ3IoJNBq2cwafU4UjpJMqKW6zdpFuJFYIwSYCjQwsWSP+CbwK11PYGo8zrCCQa
-	 FZMAltM8TzJtX3bWD+Hw3zF3f5wPv7kbo7+WdpbY=
-Message-ID: <426110f0-0ef4-4f15-b68f-103a863df3aa@arm.com>
-Date: Mon, 5 Oct 2026 14:15:32 +0100
+	t=1791207816; bh=CWv6wDh/LavMy4SV7bBu3KaB84y77Ij9h09DIbD8w5s=;
+	h=From:To:Cc:Subject:Date:From;
+	b=VLYv7U5EP08T54sp7h2B/09wBnOsC4TvmV02qYm6eGHza6LJHmO1R8roAh6sT2slN
+	 +rvqGyGgHDQGKgWruurZ3lqoiG2xPqrMgNDnHr4JWyPg4bkDSAE5hMdUJUz5g5IIA2
+	 +Zk9w/TmBh0kM9L12NVmftvoIdG2RhIFUTW2c0DE=
+From: Robin Murphy <robin.murphy@arm.com>
+To: will@kernel.org
+Cc: mark.rutland@arm.com,
+	linux-perf-users@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org
+Subject: [PATCH v2] perf/arm_cspmu: Add Arm system PMU
+Date: Mon,  5 Oct 2026 14:42:53 +0100
+Message-ID: <162173d376d223941b0c8b4e4a1c9ad2ae5c11a3.1791207773.git.robin.murphy@arm.com>
+X-Mailer: git-send-email 2.54.0.dirty
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3] perf: Add Arm Bus Monitor Unit driver
-To: Will Deacon <will@kernel.org>
-Cc: mark.rutland@arm.com, linux-perf-users@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org
-References: <c936505c43275f434bce924b7657e42bfb25579c.1789652832.git.robin.murphy@arm.com>
- <asLO8rGQPYo3KhKB@willie-the-truck>
-From: Robin Murphy <robin.murphy@arm.com>
-Content-Language: en-GB
-In-Reply-To: <asLO8rGQPYo3KhKB@willie-the-truck>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 04/10/2026 11:10 pm, Will Deacon wrote:
-> On Thu, Sep 17, 2026 at 02:47:12PM +0100, Robin Murphy wrote:
->> Arm's Bus Monitor Unit is a low-level performance analysis tool for
->> matching and counting transactions at interconnect interfaces. Each
->> BMU consists of a number of "interface monitoring units", with some
->> global controls to synchronise them and so permit accurate calculation
->> of cross-interface metrics. Each IMU contains, among other things, its
->> own PMU largely based on the CoreSight PMU architecture, but with some
->> functional incompatibilities due to the nature of how much per-event
->> filtering needs to be crammed in to categorise AXI/CHI transactions at
->> the protocol level. As such it gets an honorary home in arm_cspmu/ in
->> order to share the common register definitions, but for simplicity does
->> not try to bend the functional abstraction to fit.
->>
->> Signed-off-by: Robin Murphy <robin.murphy@arm.com>
->>
->> ---
->> v3:
->>   - Couple of inconsequential tweaks to shut Sashiko up about things
->>     that would never actually happen anyway
->>   - Drop unneeded DT patches that I can't be bothered to fix right now
-> 
-> Please can you take a look at the Sashiko comments on this one?
+Arm's latest Compute Subsystems and SoCs are using a common PMU block
+in various places which can mostly just be driven as a generic 64-bit
+CoreSight PMU, but does have an IMP-DEF register for additional
+filtering. The details of event and filter encodings depend on the
+particular PMU instance, so are left to the higher level Arm Telemetry
+Solution tooling.
 
-I did start writing a reply at the time, but it was getting so sarcastic 
-that even I thought better of sending it...
+Signed-off-by: Robin Murphy <robin.murphy@arm.com>
+---
 
-In (polite) summary:
+v2: Rebase onto for-next/perf
 
-1 - Gibberish
-2 - Yes if firmware blatantly mis-describes the hardware then Linux may 
-not work properly. Whoop de do.
-3 - Yeah so?
-4 - Pants-on-head gibberish, but the second part about COMPILE_TEST is 
-fair (an oversight from ripping out the DT support) - fix is already in 
--next via the ACPI tree[1]
-5 - Yeah so?
-6,7 - Yes, welcome to perf...
+ drivers/perf/arm_cspmu/Kconfig      |  7 +++
+ drivers/perf/arm_cspmu/Makefile     |  1 +
+ drivers/perf/arm_cspmu/arm_cspmu.c  |  7 +++
+ drivers/perf/arm_cspmu/arm_cspmu.h  |  1 +
+ drivers/perf/arm_cspmu/arm_syspmu.c | 67 +++++++++++++++++++++++++++++
+ 5 files changed, 83 insertions(+)
+ create mode 100644 drivers/perf/arm_cspmu/arm_syspmu.c
 
-Cheers,
-Robin.
-
-[1] 
-https://lore.kernel.org/all/CAJZ5v0g4k6FhyQMypkRyVJMkSBUsmeuetJuxRA826PcA7Mo5Hg@mail.gmail.com/
+diff --git a/drivers/perf/arm_cspmu/Kconfig b/drivers/perf/arm_cspmu/Kconfig
+index 6f4e28fc84a2..25bd55f036a4 100644
+--- a/drivers/perf/arm_cspmu/Kconfig
++++ b/drivers/perf/arm_cspmu/Kconfig
+@@ -27,3 +27,10 @@ config AMPERE_CORESIGHT_PMU_ARCH_SYSTEM_PMU
+ 
+ 	  In the first phase, the driver enables support on MCU PMU used in
+ 	  AmpereOne SoC family.
++
++config ARM_SYSTEM_PMU
++	tristate "Arm System PMU"
++	depends on ARM_CORESIGHT_PMU_ARCH_SYSTEM_PMU
++	help
++	  Support additional event filtering attributes for the CoreSight-based
++	  PMU blocks found in various parts of Arm Compute Subsystems and SoCs.
+diff --git a/drivers/perf/arm_cspmu/Makefile b/drivers/perf/arm_cspmu/Makefile
+index 220a734efd54..90c3cd710157 100644
+--- a/drivers/perf/arm_cspmu/Makefile
++++ b/drivers/perf/arm_cspmu/Makefile
+@@ -8,3 +8,4 @@ arm_cspmu_module-y := arm_cspmu.o
+ 
+ obj-$(CONFIG_NVIDIA_CORESIGHT_PMU_ARCH_SYSTEM_PMU) += nvidia_cspmu.o
+ obj-$(CONFIG_AMPERE_CORESIGHT_PMU_ARCH_SYSTEM_PMU) += ampere_cspmu.o
++obj-$(CONFIG_ARM_SYSTEM_PMU) += arm_syspmu.o
+diff --git a/drivers/perf/arm_cspmu/arm_cspmu.c b/drivers/perf/arm_cspmu/arm_cspmu.c
+index 912f03ce3ef5..9f298ea1a974 100644
+--- a/drivers/perf/arm_cspmu/arm_cspmu.c
++++ b/drivers/perf/arm_cspmu/arm_cspmu.c
+@@ -358,6 +358,13 @@ static struct arm_cspmu_impl_match impl_match[] = {
+ 		.module		= NULL,
+ 		.impl_init_ops	= NULL,
+ 	},
++	{
++		.module_name	= "arm_syspmu",
++		.pmiidr_val	= ARM_CSPMU_IMPL_ID_ARM,
++		.pmiidr_mask	= PMIIDR_IMPLEMENTER,
++		.module		= NULL,
++		.impl_init_ops	= NULL,
++	},
+ 	{
+ 		.module_name	= "ampere_cspmu",
+ 		.pmiidr_val	= ARM_CSPMU_IMPL_ID_AMPERE,
+diff --git a/drivers/perf/arm_cspmu/arm_cspmu.h b/drivers/perf/arm_cspmu/arm_cspmu.h
+index c4058d602477..03e34692a965 100644
+--- a/drivers/perf/arm_cspmu/arm_cspmu.h
++++ b/drivers/perf/arm_cspmu/arm_cspmu.h
+@@ -149,6 +149,7 @@
+ 
+ /* JEDEC-assigned JEP106 identification code */
+ #define ARM_CSPMU_IMPL_ID_NVIDIA	0x36B
++#define ARM_CSPMU_IMPL_ID_ARM		0x43B
+ #define ARM_CSPMU_IMPL_ID_AMPERE	0xA16
+ 
+ /* PMDEVARCH */
+diff --git a/drivers/perf/arm_cspmu/arm_syspmu.c b/drivers/perf/arm_cspmu/arm_syspmu.c
+new file mode 100644
+index 000000000000..ac234768a2f8
+--- /dev/null
++++ b/drivers/perf/arm_cspmu/arm_syspmu.c
+@@ -0,0 +1,67 @@
++// SPDX-License-Identifier: GPL-2.0
++
++#include <linux/io.h>
++#include <linux/module.h>
++
++#include "arm_cspmu.h"
++
++#define PMEVFILT3R	0x200
++
++static struct attribute *arm_syspmu_format_attrs[] = {
++	ARM_CSPMU_FORMAT_EVENT_ATTR,
++	ARM_CSPMU_FORMAT_FILTER_ATTR,
++	ARM_CSPMU_FORMAT_FILTER2_ATTR,
++	ARM_CSPMU_FORMAT_ATTR(filter3, "config3:0-63"),
++	NULL,
++};
++
++static struct attribute **arm_syspmu_get_format_attrs(const struct arm_cspmu *cspmu)
++{
++	return devm_kmemdup(cspmu->dev, arm_syspmu_format_attrs,
++			    sizeof(arm_syspmu_format_attrs), GFP_KERNEL);
++}
++
++static void arm_syspmu_set_ev_filter(struct arm_cspmu *cspmu,
++				     const struct perf_event *event)
++{
++	u32 offset = 8 * event->hw.idx;
++
++	writeq(event->attr.config1, cspmu->base0 + PMEVFILTR + offset);
++	writeq(event->attr.config2, cspmu->base0 + PMEVFILT2R + offset);
++	writeq(event->attr.config3, cspmu->base0 + PMEVFILT3R + offset);
++}
++
++static int arm_syspmu_init_ops(struct arm_cspmu *cspmu)
++{
++	switch (FIELD_GET(PMIIDR_PRODUCTID, cspmu->impl.pmiidr)) {
++	case 0x9c3:
++		cspmu->impl.ops.set_ev_filter = arm_syspmu_set_ev_filter;
++		cspmu->impl.ops.get_format_attrs = arm_syspmu_get_format_attrs;
++		break;
++	default:
++		break;
++	}
++	return 0;
++}
++
++static const struct arm_cspmu_impl_match arm_syspmu_param = {
++	.pmiidr_val	= ARM_CSPMU_IMPL_ID_ARM,
++	.module		= THIS_MODULE,
++	.impl_init_ops	= arm_syspmu_init_ops
++};
++
++static int __init arm_syspmu_init(void)
++{
++	return arm_cspmu_impl_register(&arm_syspmu_param);
++}
++
++static void __exit arm_syspmu_exit(void)
++{
++	arm_cspmu_impl_unregister(&arm_syspmu_param);
++}
++
++module_init(arm_syspmu_init);
++module_exit(arm_syspmu_exit);
++
++MODULE_DESCRIPTION("Arm System PMU Driver");
++MODULE_LICENSE("GPL");
+-- 
+2.54.0.dirty
 
