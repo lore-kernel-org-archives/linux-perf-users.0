@@ -1,75 +1,117 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mta1.migadu.com (out-244.mta1.migadu.com [95.215.58.244])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EC9A2F83A2
-	for <linux-perf-users@vger.kernel.org>; Mon,  5 Oct 2026 17:44:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 300E3280331
+	for <linux-perf-users@vger.kernel.org>; Mon,  5 Oct 2026 19:01:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.244
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791222256; cv=none; b=ujOjjNQxA6QBgZRtEZHmtO3ni2/ldouRnawTMi1YIZJ2JhAIIr0NuoACUN4mUjJX+orOXU++bitlzIPFUVznDYrPoJhxhugqG6vc4KM3eFMojVjVN9K8JaOhAOJ/zHXB1tUItj9ZiCH8UGx1n0fu+7OlOg/1ATABdtjrB+6HbZo=
+	t=1791226895; cv=none; b=uzXGhZhvrghNV+Rb431VKy39LuKeGF3MCA631wYPPll/RmlLX6nBv/u3QfEaOXocDStnkS9Q2B/XUKNgyeO1iaXQafUHZooqilGctQPUprQ+4NBdMs1aEo0kS+U10uhy6fiiXPIx1Q2c2Tk7IWQbVnIWd2Qw5rhuziSk2sNTZfo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791222256; c=relaxed/simple;
-	bh=A/EGoujZITJ0403WoC0Cq6qnIixjcekWRNf94MpUVkU=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=Li6ShHYMm4rryMQrhfbfyvH2WJJskxNGh1YUBQDnZ52aArOKHiWp/2BWjWVthagcEEa7AVxj6psmiFpJrJ3skNwFb6lRu2GTJ7Je+U+V8I8r8luub1zjJRXlTbjsnY/uvOEnTUPgneAtIGmWHCxpKbHeZftM8MbKkuKoIP3MfSc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kQe/1W8N; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1791226895; c=relaxed/simple;
+	bh=rJT8G0sgga4UeEHY50WFHahh2k7AQRpW/V4C83LPcM4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=T++hxqVn/V8H76KlBdRyIxV0VGTzLhNgZRbvHyDElImvve90Wpl2vQD1/LpMHIRlRsZh/4n1ARWt/rXwEWrZp2EOQfhkP3lpwK5FDGvXiZ2dXQyJ57m0cbBWbkib9sLdz4B+/hZjxB81xq1CL9kBoPB6CmZjYhokc62ucKeXtxQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=rpgOxRCu; arc=none smtp.client-ip=95.215.58.244
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kQe/1W8N"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 930CE1F000FF;
-	Mon,  5 Oct 2026 17:44:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1791222254;
-	bh=A/EGoujZITJ0403WoC0Cq6qnIixjcekWRNf94MpUVkU=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=kQe/1W8NiHpvS5rd2ktunVQEhMS6qttg35uskqriN+CEdWdJ/pDL5v7HYGPBaTx19
-	 qECtPYyfX7QXFD2S311s+BW60LcZrtZqFXEv6kBg+j4g9/9EhuA/4xpJaXulfT75Re
-	 BPYark07RoS7hg6Q1YeWkMa7f3VvJna+2td82KfLsxSlu8ax7I3ZuHhity7Q5uDDxb
-	 dlXlkm2L4SPOlRQ2t3V4eo0nqn3XKnDyHFO9ZARpqYZnihxMUmHQY7KZc+QEt2nAJV
-	 xm3yE/MITQtfSatGrQHmby3Oav8RHthv8W3BGq6Vxl3vxPy7Kp+tcgk98YBQo9ioAp
-	 E65ClWfpI7lpA==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v5 4/5] perf script: Add --lazy-load-symbols for lazy
- symbol loading
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Alireza Haghdoost" <haghdoost@uber.com>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20261005-perf-symbol-memory-send-v5-4-165dceb2b049@uber.com>
-References: <20261005-perf-symbol-memory-send-v5-0-165dceb2b049@uber.com>
- <20261005-perf-symbol-memory-send-v5-4-165dceb2b049@uber.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Mon, 05 Oct 2026 17:44:14 +0000
-Message-Id: <20261005174414.930CE1F000FF@smtp.kernel.org>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="rpgOxRCu"
+X-Envelope-To: linux-perf-users@vger.kernel.org
+DKIM-Signature: a=rsa-sha256; bh=rJT8G0sgga4UeEHY50WFHahh2k7AQRpW/V4C83LPcM4=;
+ c=simple/simple; d=linux.dev;
+ h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
+ t=1791226891; v=1; x=1791831691;
+ b=rpgOxRCuBdRBG9Cruva0qem46KyAXqHLWajd0ZjIRz0kgD8tNqxyOJ2IoAc2uiVFYp0AWqwU
+ fYK9s+nOEwPq6TEVKyQTb7ZG9spRm+B0UmWQ9BG569oC3jH+5BUQFc768yIcjo1AEuCsOtbT9Nt
+ bjqyL+C+m3j1OwXepyyLRNU0=
+X-Envelope-To: linux-perf-users@vger.kernel.org
+Received: by smtp.migadu.com with ESMTPS id 3eee9485e3972e9f;
+	Mon, 05 Oct 2026 19:01:30 +0000
+X-Mizu-Trace-ID: 3eee9485e3972e9f
+X-Migadu-Flow: FLOW_OUT
+Message-ID: <7844ef03-d9b2-4a10-8f14-1b498ada9043@linux.dev>
+Date: Mon, 5 Oct 2026 12:01:17 -0700
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH bpf-next v4 00/12] bpf: make the vmlinux BTF an on-demand
+ loadable module (CONFIG_DEBUG_INFO_BTF=m) to save ~5.4 MB memory
+To: Jay Wang <wanjay@amazon.com>, bpf@vger.kernel.org, ast@kernel.org,
+ daniel@iogearbox.net, andrii@kernel.org, eddyz87@gmail.com, memxor@gmail.com
+Cc: alan.maguire@oracle.com, martin.lau@linux.dev, yonghong.song@linux.dev,
+ jolsa@kernel.org, qmo@kernel.org, nathan@kernel.org, nsc@kernel.org,
+ linux-kbuild@vger.kernel.org, linux@weissschuh.net, christian@heusel.eu,
+ mcgrof@kernel.org, petr.pavlu@suse.com, samitolvanen@google.com,
+ linux-modules@vger.kernel.org, rostedt@goodmis.org, mhiramat@kernel.org,
+ mathieu.desnoyers@efficios.com, linux-trace-kernel@vger.kernel.org,
+ acme@kernel.org, namhyung@kernel.org, irogers@google.com,
+ linux-perf-users@vger.kernel.org, jikos@kernel.org, bentiss@kernel.org,
+ linux-input@vger.kernel.org, tj@kernel.org, void@manifault.com,
+ arighi@nvidia.com, changwoo@igalia.com, sched-ext@lists.linux.dev,
+ shuah@kernel.org, linux-kselftest@vger.kernel.org, ojeda@kernel.org,
+ rust-for-linux@vger.kernel.org, arnd@arndb.de, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org, abuehaze@amazon.com, doebel@amazon.de,
+ mpohlack@amazon.de, jay.wang.upstream@gmail.com
+References: <44315425-c505-46fe-8379-f19d78ff3abb@linux.dev>
+ <20261004222127.31128-1-wanjay@amazon.com>
+Content-Language: en-US
+From: Ihor Solodrai <ihor.solodrai@linux.dev>
+In-Reply-To: <20261004222127.31128-1-wanjay@amazon.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-> From: Alireza Haghdoost <haghdoost@uber.com>
->=20
-> perf script eagerly materializes eligible symbols from every DSO
-> encountered in samples and keeps them in an rb-tree until exit.
-> Most of those symbols are never sampled. On a large profile this
-> turns symbol loading into the main memory cost of perf script, and in a
-> memory-constrained cgroup into an OOM kill.
->=20
-> This patch adds --lazy-load-symbols for userspace ELF DSOs. It builds a
-> compact address-sorted index and materializes ordinary struct symbols on
-> demand. Names are read and demangled from the exact ELF source through
-> the existing DSO data cache; resolved symbols are then inserted into the
-> DSO's existing rb-tree.
->=20
-> struct symbol is unchanged. Each index entry holds only the address range,
-> [ ... ]
-> entire lazy index and detaches it from the DSO. A detached index remains
-> alive until its last reader finishes, ensuring that no symbols are added
-> after the name-sorted array is built.
->=20
-> Signed-off-by: Alireza Haghdoost <haghdoost@uber.com>
+On 10/4/26 3:21 PM, Jay Wang wrote:
+>>    - If I know I don't need BPF on the workload, and these 5.4 MB
+>>      bite me, I can just turn off BPF
+> 
+> They cannot, even when they know they do not need it.  As the cover
+> letter says, the cloud provider usually ships one kernel build to all of
+> its customers. [...]
 
-Sashiko has reviewed this patch and found no issues. It looks great!
+Ah, I get it now. Thanks.
 
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261005-perf-symbo=
-l-memory-send-v5-0-165dceb2b049@uber.com?part=3D4
+So the constraint is that the cloud provider ships a single kernel
+revision to all users, and there is currently no mechanism to on/off
+BPF other than a kernel build flag.
+
+I'd be tempted to say "just ship two kernels", it's simpler than the
+upstream change. But I understand the downsides of that as well.
+
+And obviously a good upstream feature may benefit many more users.
+
+> [...]
+>>      Keep zstd-compressed blob in the kernel image and decompress and
+>>      parse it synchronously on first use.
+> 
+> Thanks for putting this forward.  This compression approach is simpler 
+> than loading a module.  I expect the overall code complexity to stay similar
+> to v3, since both need to find the first user and defer the module BTF parsing
+> until then, but it should be easier to merge into mainline because it avoids
+> the request_module() deadlocks.
+> 
+> Would you like to prepare it for a formal submission, or would you
+> like me to do so?  Either works for me.  Ideally it lands in time for
+> the next LTS kernel, so that we can adopt it there.
+
+Please go ahead and submit the compression approach. Looks like we are
+converging on that. Feel free to use the prototype code if it's
+useful, it uses parts of your series anyway.
+
+> 
+> From what I can see, most of the work left is in that deferral.
+> Whoever needs the BTF first also parses the waiting module BTFs and
+> replays the queued registrations, struct_ops ->init() included, under
+> whatever locks it holds at that point, e.g. event_mutex or
+> bpf_verifier_lock, or inside the module notifier.  So the
+> cand_cache_mutex ABBA you found may not be the only deadlock.  Besides
+> that, only x86_64 was touched so far, so it needs extending to the
+> other architectures as well.
+
+Yes, I think you are right that the hard part here is the deferral,
+because everything expects vmlinux BTF to just be there.  I don't
+think this is avoidable whatever memory saving approach we choose.
 
