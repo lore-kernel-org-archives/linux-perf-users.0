@@ -1,64 +1,64 @@
 Received: from mail-qk2-f12.google.com (mail-qk2-f12.google.com [74.125.230.204])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC8623290C9
-	for <linux-perf-users@vger.kernel.org>; Mon,  5 Oct 2026 20:10:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5DC8481A87
+	for <linux-perf-users@vger.kernel.org>; Mon,  5 Oct 2026 20:10:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.230.204
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791231031; cv=none; b=u0AtnS3solSbchAWz7ci3aXkv4a3hw7q8YfK9nV3CVsESrcbC/lpItG0gK3HsgBHSPWP/bbMeUtNGqefBJxj4qFgPIKoPAwCjQj3tj1yWzQjiilq9/F/u2j2BSFPYMGdXNeZIVY03kf2tvXxzw0Fd+adBiRCzkvoA2+hMTXeKM8=
+	t=1791231034; cv=none; b=nHw27AX1ffYu8pDQ6daXuyfRsI2PfN+96DBmtJBe7DHJCOQZOxeeEREjWuVXiBaZOyEJfvFjVbJi+429hSuCwpghRyztrlzOLknN7dCE2nHObiXBHlNpcaDiy6oc05cRoBZKoQO37ID00NDCO/8g5MmKwiMI9zNUgHuzlhZx7Lc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791231031; c=relaxed/simple;
-	bh=sjgTEEqa3dNngedBPzz6yodJsbopCr5WmJorYKNVngY=;
+	s=arc-20240116; t=1791231034; c=relaxed/simple;
+	bh=wt8Y6z2Iiei+74vL572jqhASo5WeTw/QRtwgPmCVWmE=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=IOCa/eIO4unwKyAKraR5zzPz/58Wg7NTLdxX4MAvbMIv++HWy4mtXP4OiDkRlF/7c1PaEz9ozHzwdXAZf5cKIYZmK38Rh1nyxPVX+RY/351mb3Q/4QF9l/V32eCbWKvjlpI3kcpJYfa/yqzAMS/vo7IyIFf63ShNDqAXhr1gTAk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ncsu.edu; spf=pass smtp.mailfrom=ncsu.edu; dkim=pass (2048-bit key) header.d=ncsu.edu header.i=@ncsu.edu header.b=fFiWM0Fy; arc=none smtp.client-ip=74.125.230.204
+	 MIME-Version; b=T0LhWb7iJeFRZ+sY8ON+b5fX+YbbxPY08i1pt0EO7SrHRieFSuX4pGqa8J4EwaaojafDlzIVTObhbs+CaNhC+ArklQWXRG/S7tZGcAty50gv0X+E5iLdWLpsbBowfhYkOBWj9/KmDXG7Sy8qwlDNJguRN+OYfeWLYwNWf3v4ftU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ncsu.edu; spf=pass smtp.mailfrom=ncsu.edu; dkim=pass (2048-bit key) header.d=ncsu.edu header.i=@ncsu.edu header.b=JEswTVy5; arc=none smtp.client-ip=74.125.230.204
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ncsu.edu
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ncsu.edu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ncsu.edu header.i=@ncsu.edu header.b="fFiWM0Fy"
-Received: by mail-qk2-f12.google.com with SMTP id d75a77b69052e-5309a20a55bso21623151cf.1
-        for <linux-perf-users@vger.kernel.org>; Mon, 05 Oct 2026 13:10:28 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=ncsu.edu header.i=@ncsu.edu header.b="JEswTVy5"
+Received: by mail-qk2-f12.google.com with SMTP id d75a77b69052e-5309a20a55bso21623581cf.1
+        for <linux-perf-users@vger.kernel.org>; Mon, 05 Oct 2026 13:10:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ncsu.edu; s=google; t=1791231028; x=1791835828; darn=vger.kernel.org;
+        d=ncsu.edu; s=google; t=1791231031; x=1791835831; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=4gTC+ObY8Gna8uWXuZKB0+MEzZaUe655gOZK/ZwiSb8=;
-        b=fFiWM0Fyu3vhtLmtGB35XSBv3mkVDPSJC66b72GGCeksQfucjwgsuwo+R9G+ydKrP5
-         lYi4j7OQ53CsEdXdaTgaEAczbR3hQWuRkvZ1h1dlMv3d/aFEjbtGZfCh+9PV66M/PJ2n
-         lCw6fZ9/QVPZRj9bUoL1knEfk/iK1s7kioPH/6SBtLvzhzltfS2+Eallg0IA3wGB7mIx
-         wz4NTF9OvzdnVAxqSYc9lyNcWdcHax9+yCJSYYzphAOO3f1UqfjMk/2PoKUdUcQ5vV1R
-         VQ8zGGeK3SHQEdlD/AJCK+VfBO9iZn9jmWDI9qY2rPVid0wkAxat44fCVsl+sPjyW2Di
-         N+WA==
+        bh=9s9TDSl/fTUICjDuR9BFeYtpFDBpQ3XNy9h6yxmpwhw=;
+        b=JEswTVy5jfo7SXrsMDWrDAkKUyjYsZj8FXNPlue17QEtBI+BzFTaxapXVzubFnQsah
+         9R5noIDRRt6qePPHwRltdjYBjvRu95rY177obhK4tRoUiRmb87hJTAVJDyDHsPlvGlcj
+         U+M37aCbKYthlE/F7x8h+UqWyeeQQc6HW2g1hU9VtpHWpeqNFBKozkSzk6XZcjX5wfMw
+         JKNPxac8x+WER0GD17IKeuLtv4IXOPQfxCAa2rRFvAGUbGm2LKJzOJ6h3pbyvu0dodOu
+         swe/vzabrMa6rahvtPHJ1Ocob3cGbktr3GoPypOXXuhtse2vQKJgD7Smz3QVJrWR9JsY
+         gRJw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1791231028; x=1791835828;
+        d=1e100.net; s=20260707; t=1791231031; x=1791835831;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=4gTC+ObY8Gna8uWXuZKB0+MEzZaUe655gOZK/ZwiSb8=;
-        b=P2WheZeOSH8ORMYKArN6Jc/8k9zON/Wh7qd2nZH8xA7Lr4pkP61WaC51uFXCSJ476K
-         hI1BftTprej+etfh9vwBYHmnYyemBAQcGXv7iN4nUqMdf6LQoTZ38PGTcCPJr0JLDzpK
-         ERaH33AGyPjNpkYvPo80ZoLjrW+Pr96Mpf+oO1fEHZFKdkBd7xsnxuLoNSb+TeLbh5qr
-         QPd1XsTWAlYGT/UVxYqkJ6IS9whACwD4zOALGh8C+Rfwwb5qpbPl3003SeeyBzSP5Bsv
-         YaEUsVNF3QAKKlUrkV6dxkDY89xpnaAPL6gdvdlnMGqFEpCsTQqeFyrUWFosDUONINUr
-         0XmQ==
-X-Forwarded-Encrypted: i=1; AKwUvBzQrLFadqNmJ3c8/Ienyektuv9lQgnBsK/XY8jB4qzZ77c8yHElas0k1nB6giSouhMrwO+jMy8TWdINgWHJVCJe@vger.kernel.org
-X-Gm-Message-State: AFuF++mnXtm3vZDCJ0QppevmRh8toYTCrri6kdG8qqM0KwbyR5S5lQGl
-	m6wmMsGyT53x3ypKog5Q5V5q4BBDKv+Xna1AU55kWGLFerhg8+kShyf2ZUPYkc58ew==
-X-Gm-Gg: AYBFou119Nw1n3MTy42JJnfULl2p/M1dDRK1hr5RzZgLttu3DRH+CQXsEYYTiCBOlXr
-	qc090PHiXZXmGrY1/ssMGgKvbqnvIfi0CniBv4+3y24V4o7NB+60/5V0rsodKYfOAbLgl6cknen
-	eKf9cXwHsPF3Ggor/C5FJkIwraZ3iYEI0AhLlIg1n0LgcjlLbEQuduL/GAqkjjaS+u4rTL2Ykkc
-	3wYaJptO/vMaPs7aaL0SbQouweFDUUkdICyvVrNJxX7T89suNtbAW38jXW1fTt9Hr0SyaA5dYjd
-	Gv9jyfyxvGD/DtYUAJ75oiMjfD3KxEgmmQUPLVCtYLVFewPi+7JJNy5x4UrAQzBX8EmULukRFrc
-	NM7JyI38G80km/lO6aP1Rv8ab1XyRLnPwrCkM2cz3bHm+ahRMdKAH+i5IioEoBnPug835iwKBn0
-	Wr1ROuD6KYCWN7B035avgDgrIbwuGQ/hcW7FeLV+Xw1yRxml1N2X4PzK4VomWmnAP53T/8GAqhz
-	eQVBK4M5SNH1TCfWgry1EBiBLCMTA9XULP42jaEx6oUUXiHXnoTrN/0DCt0YutwDZA=
-X-Received: by 2002:a05:622a:64d:b0:535:11e7:fdb3 with SMTP id d75a77b69052e-53511e80d1bmr156071961cf.34.1791231027301;
-        Mon, 05 Oct 2026 13:10:27 -0700 (PDT)
+        bh=9s9TDSl/fTUICjDuR9BFeYtpFDBpQ3XNy9h6yxmpwhw=;
+        b=X6FIxrR1CtThq83N1SSgNQIPu29CSTGNKXwr6s0gnJnv6Vtc2uDBfwniV4ciAWlvBx
+         YNW9FHj2ueShIKigZ4JPnlVegXf9FaSwnCIJtIKfgLkwzm5Rp1Q3QeH4ONxVcy6rTesU
+         uE7ni8VusBOnNKTTbSkIuHkZFK44KBeHEqVnRUmNDP9SKz+iugk7Mmw/trIqwutbuBF1
+         JQ1FxcH7Y5kKi6oLrZzuJ7NjQkmJQ53KBmDD0H6Ljr/CtvHIW8URWGmEVXpZaOunn0Rn
+         P14CqkHw7H5i1M1Y7HR9EUUkeJMgg/YV5fncciFH8dFs5/NMY+aQ2c5r/HfK750LCEWe
+         PA5Q==
+X-Forwarded-Encrypted: i=1; AKwUvBx/vCC8sOMzt8btz0Bx+EDsqDqD/PRWHgEqU0KXNWwvGj6J7Rv9zaDE5/z9K4uWlNv5+JspBwy+/ji9luwxKxeC@vger.kernel.org
+X-Gm-Message-State: AFuF++lfEGEapVFVucBBJRrT5MG3+O0a7AyIUg/izp+WWDXuHNyQBHel
+	e2pVmA8bnuqlath9emKnHP0FdnxBNAxX5DvRedIawYM1eZZYGYM7XR+U9bjN1cMfXg==
+X-Gm-Gg: AYBFou2Iv+5GQjIRxJZzdimNuzIq2sMT1SDWzVPlOSQ7GQpbsMIsT9SmMYf9+X1ww/L
+	xv0N9YswRxmhrSK4a55Cnq6r7H79WAfhuhTgWhJLPOckj905c8VVM4iqj2UwkHsBBvb6arkVb9s
+	Ese2ObhRvnL7R9i5LKQSyZtZb2XoIZBsM2Lwxqjy8UUUDNDjIyu7oSAealQjG2ObdrOD1r3RVi+
+	jRiMZ4beSrjtZbN7EZWfTx3oouLw+LmqGzmCnxKEiIw1sLl9F8x3W1FpVKBAaUAMGJLTxywpHtX
+	pgh4+jpkxjbnqJ9/33R7kea9ceXLZBfGz+d3GqAD8aQ6VksJUYzjRGNxpBlY4MYBmHWZYVyecIE
+	3L57voQsY+QuSauB0hcZnpochX5c0PP2PlbEDGeou8uUMAUheND1rMllVgjZyDv184JDsLSubQD
+	4doeh9n9GLdifxGUXRoykOAd3pEGYv9x42r7Mg5Z562Nt2/dGNseJRLRtlDUIdSyBd6u5uP7WyE
+	8QPKJxSPXohzBJWFBjRnwETfPqYIo/Hz0SzDDYefTQ4zq9JOFcAN0QCWeS/0ufODgM=
+X-Received: by 2002:a05:622a:98f:b0:535:175c:523f with SMTP id d75a77b69052e-535175c6d5fmr116403961cf.53.1791231030391;
+        Mon, 05 Oct 2026 13:10:30 -0700 (PDT)
 Received: from flag-System-Product-Name.tail132f98.ts.net ([136.61.118.42])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-53398a9c92csm106693991cf.11.2026.10.05.13.10.25
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-53398a9c92csm106693991cf.11.2026.10.05.13.10.27
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 05 Oct 2026 13:10:26 -0700 (PDT)
+        Mon, 05 Oct 2026 13:10:28 -0700 (PDT)
 From: Yanbo Zhao <yzhao62@ncsu.edu>
 To: Namhyung Kim <namhyung@kernel.org>,
 	Arnaldo Carvalho de Melo <acme@kernel.org>,
@@ -76,9 +76,9 @@ Cc: Jiri Olsa <jolsa@kernel.org>,
 	linux-perf-users@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Yanbo Zhao <yzhao62@ncsu.edu>
-Subject: [PATCH v3 1/3] perf dwarf-aux: Add die_is_compound_type() to handle C++ class types
-Date: Mon,  5 Oct 2026 16:10:08 -0400
-Message-ID: <20261005201010.36493-2-yzhao62@ncsu.edu>
+Subject: [PATCH v3 2/3] perf dwarf-aux: Add C++ vtable helpers
+Date: Mon,  5 Oct 2026 16:10:09 -0400
+Message-ID: <20261005201010.36493-3-yzhao62@ncsu.edu>
 X-Mailer: git-send-email 2.53.0
 In-Reply-To: <20261005201010.36493-1-yzhao62@ncsu.edu>
 References: <20261005201010.36493-1-yzhao62@ncsu.edu>
@@ -90,375 +90,416 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Introduce the die_is_compound_type() helper which checks for
-DW_TAG_structure_type, DW_TAG_union_type, and DW_TAG_class_type, and
-convert the existing open-coded struct/union tag checks to use it:
-- die_get_member_type() in dwarf-aux.c.
-- is_compound_type() and set_stack_state() in annotate-data.c.
+Add DWARF helper functions needed to resolve C++ virtual function calls
+statically in the data type profiling:
 
-The switch in __add_member_cb() also handles unions and the nesting
-limit, so DW_TAG_class_type is just added there as another case.
+- die_get_vtable_index() returns the vtable slot index of a virtual
+  function DIE from DW_AT_vtable_elem_location.  DWARF defines the
+  attribute as a location description of the slot but GCC and Clang
+  both emit the slot index as a single DW_OP_constu, which is also how
+  debuggers interpret it.
 
-Also accept DW_TAG_inheritance in the member lookup callbacks
-(__die_find_member_offset_cb() and __add_member_cb()) so that member
-lookup by offset descends into C++ base class subobjects.
+- die_find_virtual_func() finds the virtual function DIE at a given
+  vtable slot index of a class.  The (primary) vtable of a class starts
+  with the vtable of its primary base class, i.e. the first non-virtual
+  base class at offset 0 which has a vtable, and the slots for virtual
+  functions introduced by the class come after that.  So it looks at
+  the class first and then follows the primary base class chain.
+  Non-primary base classes have their own secondary vtables with a
+  different slot numbering, so they are not searched.  Note that an
+  empty base class can be placed at offset 0 too (empty base
+  optimization) and it comes before the primary base in DWARF if it's
+  declared first, like 'struct Derived : Empty, Base'.  So the base
+  class needs to be checked if it has the vtable pointer at offset 0.
 
-In DWARF, a base class subobject is described by a DW_TAG_inheritance
-child of the derived class DIE.  It sits next to the DW_TAG_member
-children and carries the same DW_AT_type and DW_AT_data_member_location
-attributes, so it can be treated like an unnamed member whose type is
-the base class.  Members inherited from the base are not repeated in
-the derived class DIE; they can only be reached through the
-DW_TAG_inheritance entry.
+- die_is_vtbl_ptr_type() checks if a type is the vtable pointer.
+  Compilers add the vtable pointer as an artificial member named
+  '_vptr.<class>' (GCC) or '_vptr$<class>' (Clang) to the class that
+  first introduces virtual functions, and both give it a type of
+  pointer to a pointer type named '__vtbl_ptr_type'.  Checking the
+  type is cheap once a member type is resolved, so the instruction
+  tracking can use it on every pointer access without an extra DWARF
+  lookup.
+
+- die_get_vptr_class() checks if the member at an offset of a class is
+  the vtable pointer, following DW_TAG_inheritance into base class
+  subobjects like die_get_member_type(), and returns the class whose
+  vtable it points to.  Since
+  the primary vtable of a derived class extends the one of its base,
+  the vtable pointer at offset 0 is returned as the vtable of the
+  (derived) class itself, and only when a non-primary base subobject at
+  a non-zero offset is entered it's the vtable of that base class.
+  die_deref_vptr_class() is a variant for an access through a pointer
+  to the class like die_deref_ptr_type().
+
+The walks over the base classes in die_find_virtual_func() and
+die_get_vptr_class() are bounded by MAX_TYPE_CHASE like the other type
+chases, in case of broken debug info with cyclic inheritance.
 
 For example, with the following classes (GCC 15, -O2 -g):
 
-  struct Base  { long a; virtual long get(long x); };
-  struct Other { long c; virtual long hi(); };
-  struct Multi : Base, Other { long d; ... };
+  struct Base {
+      long a;
+      virtual long get(long x);
+      virtual void set(long v);
+  };
+  struct Other {
+      long c;
+      virtual long hi();
+  };
+  struct Multi : Base, Other {
+      long d;
+      long get(long x) override;
+      long hi() override;
+  };
 
-the DWARF looks like this (subprogram DIEs omitted):
+the vtable pointers and slot indexes are described like below:
 
-  <1><2f>: Abbrev Number: 15 (DW_TAG_structure_type)
-     <30>   DW_AT_name        : Multi
-     <34>   DW_AT_byte_size   : 40
-  <2><3e>: Abbrev Number: 20 (DW_TAG_inheritance)
-     <3f>   DW_AT_type        : <0x10b>
-     <43>   DW_AT_data_member_location: 0
-  <2><44>: Abbrev Number: 20 (DW_TAG_inheritance)
-     <45>   DW_AT_type        : <0x1d0>
-     <49>   DW_AT_data_member_location: 16
-  <2><99>: Abbrev Number: 16 (DW_TAG_member)
-     <9a>   DW_AT_name        : d
-     <a1>   DW_AT_data_member_location: 32
-  ...
   <1><10b>: Abbrev Number: 15 (DW_TAG_structure_type)
      <10c>   DW_AT_name        : Base
-     <110>   DW_AT_byte_size   : 16
   <2><14d>: Abbrev Number: 25 (DW_TAG_member)
      <14e>   DW_AT_name        : _vptr.Base
+     <152>   DW_AT_type        : <0x2bf>
      <156>   DW_AT_data_member_location: 0
-  <2><156>: Abbrev Number: 16 (DW_TAG_member)
-     <157>   DW_AT_name        : a
-     <15e>   DW_AT_data_member_location: 8
+  <2><15f>: Abbrev Number: 17 (DW_TAG_subprogram)
+     <160>   DW_AT_name        : get
+     <16e>   DW_AT_virtuality  : 1        (virtual)
+     <16e>  DW_AT_vtable_elem_location: (DW_OP_constu: 0)
+  <2><188>: Abbrev Number: 38 (DW_TAG_subprogram)
+     <189>   DW_AT_name        : set
+     <194>   DW_AT_virtuality  : 1        (virtual)
+     <195>  DW_AT_vtable_elem_location: (DW_OP_constu: 1)
   ...
-  <1><1d0>: Abbrev Number: 15 (DW_TAG_structure_type)
-     <1d1>   DW_AT_name        : Other
-     <1d5>   DW_AT_byte_size   : 16
-  <2><245>: Abbrev Number: 25 (DW_TAG_member)
-     <246>   DW_AT_name        : _vptr.Other
-     <24e>   DW_AT_data_member_location: 0
-  <2><24e>: Abbrev Number: 16 (DW_TAG_member)
-     <24f>   DW_AT_name        : c
-     <256>   DW_AT_data_member_location: 8
+  <1><2f>: Abbrev Number: 15 (DW_TAG_structure_type)
+     <30>   DW_AT_name        : Multi
+  <2><3e>: Abbrev Number: 20 (DW_TAG_inheritance)
+     <3f>   DW_AT_type        : <0x10b>                        # Base
+     <43>   DW_AT_data_member_location: 0
+  <2><44>: Abbrev Number: 20 (DW_TAG_inheritance)
+     <45>   DW_AT_type        : <0x1d0>                        # Other
+     <49>   DW_AT_data_member_location: 16
+  <2><a2>: Abbrev Number: 17 (DW_TAG_subprogram)
+     <a3>   DW_AT_name        : get
+     <b1>   DW_AT_vtable_elem_location: (DW_OP_constu: 0)
+  <2><cb>: Abbrev Number: 17 (DW_TAG_subprogram)
+     <cc>   DW_AT_name        : hi
+     <d9>   DW_AT_vtable_elem_location: (DW_OP_constu: 4)
 
-An access to 'struct Multi' at offset 0x8 is Base::a, and one at
-offset 0x18 is Other::c.  Neither of them is a DW_TAG_member of Multi.
-With DW_TAG_inheritance accepted in __die_find_member_offset_cb(),
-die_get_member_type() finds the DW_TAG_inheritance at offset 0 (size
-16, covering 0x8), follows its DW_AT_type to Base, and then resolves
-'a' at offset 0x8 within Base.  Likewise offset 0x18 goes through the
-second DW_TAG_inheritance at 16 and resolves to 'c' at offset 0x8 in
-Other.  The same applies to __add_member_cb() which builds the member
-tree used to print 'Data Type Offset' names.
-
-Note that this is only about the layout of data members: a base class
-subobject is looked up in the same way regardless of how many base
-classes the class has.  Resolving virtual function calls through the
-vtable of a class with multiple base classes is a separate matter and
-is described in the following patches.
-
-Note that GCC emits DW_TAG_structure_type for a C++ 'struct' even when
-it has virtual functions, and DW_TAG_class_type for 'class', so both
-tags need to be treated as compound types.
-
-A base class subobject differs from a member in three ways that need
-care:
-
-1. It can take less space than the size of the base class type.  An
-   empty base occupies no bytes (empty base optimization) although the
-   DW_AT_byte_size of the base type is 1, and a member of the derived
-   class can be placed in the tail padding of the base:
-
-     struct Empty {};
-     struct EboD : Empty { long x; };         // Empty at 0, x at 0
-
-     struct B { long a; int b; B(); };        // sizeof(B) == 16
-     struct TailD : B { int c; };             // B at 0, c at 12
-
-   The DW_TAG_inheritance comes before the DW_TAG_member in DWARF, so
-   an offset-based lookup would match the base first and then fail to
-   find the member in it.  To handle this, __die_find_member_offset_cb()
-   only matches a DW_TAG_inheritance if the base class actually has a
-   member at the offset, and fill_member_name() continues with the next
-   sibling when an anonymous child (a base class or an anonymous
-   struct/union) has nothing at the offset.
-
-2. A virtual base class has a DW_AT_data_member_location that is a
-   location expression evaluated at runtime with the vtable:
-
-     struct V { long v; };
-     struct VirtD : virtual V { long d; };
-
-     <2><5d>: Abbrev Number: 13 (DW_TAG_inheritance)
-        <5e>   DW_AT_type        : <0x2f>
-        <62>   DW_AT_data_member_location: 6 byte block: 12 6 48 1c 6 22
-                 (DW_OP_dup; DW_OP_deref; DW_OP_lit24; DW_OP_minus;
-                  DW_OP_deref; DW_OP_plus)
-        <69>   DW_AT_virtuality  : 1        (virtual)
-
-   Its offset cannot be resolved statically, so such an entry is
-   skipped in both __die_find_member_offset_cb() and __add_member_cb()
-   instead of falling back to offset 0 which would shadow the vtable
-   pointer of the derived class.
-
-3. DW_TAG_inheritance has no DW_AT_name.  It's added to the member
-   tree as an anonymous entry with the base class as its type name,
-   so 'Data Type Offset' shows the member name without the base class,
-   like 'struct Multi +0x8 (a)'.
-
-With this, accesses through pointers to the types above are resolved
-as below, where the first two were reported as '(no field)' before:
-
-  struct EboD  +0    (x)
-  struct TailD +0xc  (c)
-  struct VirtD +0x8  (d)
-
-This extends the existing member type resolution and data type
-profiling state handling to C++ classes with inheritance without
-changing behavior for C struct/union types.
+Multi::hi() is at slot 4 of the primary vtable of Multi (after get,
+set and the two destructor entries), while Other::hi() is at slot 0
+of the vtable of Other.  Thus for a 'Multi *' the vtable pointer at
+offset 0 is looked up with Multi: slot 4 finds Multi::hi() and slot 1
+finds Base::set() through the primary base.  The vtable pointer at
+offset 16 belongs to the Other subobject, so it's looked up with Other
+where slot 0 finds Other::hi().
 
 Signed-off-by: Yanbo Zhao <yzhao62@ncsu.edu>
 ---
 Changes in v3:
-- No change.
+- Check the value of DW_AT_virtuality instead of its presence, as it
+  can be DW_VIRTUALITY_none (Sashiko, Namhyung).
+- Bound the base class walks in die_find_virtual_func() and
+  die_get_vptr_class() with MAX_TYPE_CHASE and bail out, in case of
+  broken debug info with cyclic inheritance (Sashiko, Namhyung).
 
 Changes in v2:
-- Add an example DWARF of a class with base classes to the commit
-  message and explain why DW_TAG_inheritance is handled like
-  DW_TAG_member (Namhyung).
-- Skip virtual base classes whose DW_AT_data_member_location is a
-  runtime expression instead of falling back to offset 0, in both
-  __die_find_member_offset_cb() and __add_member_cb() (Sashiko).
-- Match a DW_TAG_inheritance in the offset lookup only if the base
-  class actually has a member at the offset, so that a member of the
-  derived class placed at the same offset as an empty base (EBO) or in
-  the tail padding of the base is found (Sashiko).
-- Continue with the next sibling in fill_member_name() when an
-  anonymous child (base class) has nothing at the offset, so the member
-  name is shown instead of '(no field)' in the cases above.
+- Drop the DW_AT_vtable_elem_index fallback which does not exist in
+  DWARF (0x8c is DW_AT_loclists_base) (Namhyung).
+- Drop the DW_LANG_C_plus_plus_* fallback macros; they are enum
+  constants and the language check is not needed anymore (Namhyung).
+- Drop cu_get_language(), cu_is_cplusplus(), die_get_base_class(),
+  die_get_parent() and die_find_member_by_offset() which are unused
+  or duplicate die_get_member_type() (Namhyung, Sashiko).
+- Document that die_get_vtable_index() returns the vtable slot index
+  of the function.  GCC and Clang both emit DW_AT_vtable_elem_location
+  as a single DW_OP_constu with the slot index, not a byte offset
+  (Namhyung, Sashiko).
+- Fix die_find_virtual_func() to return the DW_TAG_subprogram DIE
+  instead of the DW_TAG_inheritance DIE when the function is found in
+  a base class (Sashiko).
+- Follow only the primary base class chain in die_find_virtual_func()
+  since non-primary base classes have their own secondary vtables with
+  a different slot numbering, and skip an empty base class at offset 0
+  which comes before the primary base in DWARF.
+- Add die_is_vtbl_ptr_type() to identify the vtable pointer by its
+  type ('__vtbl_ptr_type') and die_get_vptr_class() /
+  die_deref_vptr_class() to get the class of the vtable pointer
+  through base class subobjects, replacing die_find_member_by_offset()
+  and die_is_vptr_member().
 
- tools/perf/util/annotate-data.c | 46 +++++++++++++++++++------------
- tools/perf/util/dwarf-aux.c     | 49 +++++++++++++++++++++++++++++----
- tools/perf/util/dwarf-aux.h     |  3 ++
- 3 files changed, 76 insertions(+), 22 deletions(-)
+ tools/perf/util/dwarf-aux.c | 233 ++++++++++++++++++++++++++++++++++++
+ tools/perf/util/dwarf-aux.h |  18 +++
+ 2 files changed, 251 insertions(+)
 
-diff --git a/tools/perf/util/annotate-data.c b/tools/perf/util/annotate-data.c
-index 19a6ecd67f28..8a9d3f2eec4d 100644
---- a/tools/perf/util/annotate-data.c
-+++ b/tools/perf/util/annotate-data.c
-@@ -237,9 +237,17 @@ static int __add_member_cb(Dwarf_Die *die, void *arg)
- 	Dwarf_Word size, loc, bit_size = 0;
- 	Dwarf_Attribute attr;
- 	struct strbuf sb;
--	int tag;
-+	int tag = dwarf_tag(die);
-+
-+	if (tag != DW_TAG_member && tag != DW_TAG_inheritance)
-+		return DIE_FIND_CB_SIBLING;
- 
--	if (dwarf_tag(die) != DW_TAG_member)
-+	/*
-+	 * A virtual base class (C++) has a location expression evaluated
-+	 * using the vtable at runtime, so its offset is not known here.
-+	 */
-+	if (tag == DW_TAG_inheritance &&
-+	    die_get_data_member_location(die, &loc) < 0)
- 		return DIE_FIND_CB_SIBLING;
- 
- 	if (die_get_real_type(die, &die_mem) == NULL)
-@@ -321,6 +329,7 @@ static int __add_member_cb(Dwarf_Die *die, void *arg)
- 		member->is_union = true;
- 		/* fall through */
- 	case DW_TAG_structure_type:
-+	case DW_TAG_class_type:
- 		/* Only aggregates have children to expand, so only they get truncated. */
- 		if (member->depth >= MAX_MEMBER_DEPTH) {
- 			/* Consumed by the JSON exporter added in a later series. */
-@@ -405,8 +414,21 @@ static int fill_member_name(char *buf, size_t sz, struct annotated_member *m,
- 		if (offset < child->offset || offset >= child->offset + child->size)
- 			continue;
- 
--		found = true;
--		break;
-+		if (child->var_name) {
-+			found = true;
-+			break;
-+		}
-+
-+		/*
-+		 * An anonymous child is a C++ base class or an anonymous
-+		 * struct/union.  A base class subobject can share the offset
-+		 * with a member of the derived class (empty base or tail
-+		 * padding reuse), so keep looking if nothing is found in it.
-+		 */
-+		len = fill_member_name(buf, sz, child, offset, first,
-+				       has_flex_array);
-+		if (len)
-+			return len;
- 	}
- 
- 	if (!found && has_flex_array) {
-@@ -565,9 +587,7 @@ static const char *match_result_str(enum type_match_result tmr)
- 
- static bool is_compound_type(Dwarf_Die *type_die)
- {
--	int tag = dwarf_tag(type_die);
--
--	return tag == DW_TAG_structure_type || tag == DW_TAG_union_type;
-+	return die_is_compound_type(type_die);
- }
- 
- /* returns if Type B has better information than Type A */
-@@ -694,7 +714,6 @@ struct type_state_stack *find_stack_state(struct type_state *state,
- void set_stack_state(struct type_state_stack *stack, int offset, u8 kind,
- 			    Dwarf_Die *type_die, int ptr_offset)
- {
--	int tag;
- 	Dwarf_Word size;
- 
- 	if (kind == TSR_KIND_POINTER) {
-@@ -715,17 +734,10 @@ void set_stack_state(struct type_state_stack *stack, int offset, u8 kind,
- 		return;
- 	}
- 
--	tag = dwarf_tag(type_die);
--
--	switch (tag) {
--	case DW_TAG_structure_type:
--	case DW_TAG_union_type:
-+	if (die_is_compound_type(type_die))
- 		stack->compound = (kind != TSR_KIND_PERCPU_POINTER);
--		break;
--	default:
-+	else
- 		stack->compound = false;
--		break;
--	}
- }
- 
- struct type_state_stack *findnew_stack_state(struct type_state *state,
 diff --git a/tools/perf/util/dwarf-aux.c b/tools/perf/util/dwarf-aux.c
-index 54f8b5ec74a2..eb4b8f3475df 100644
+index eb4b8f3475df..10079f47a6c3 100644
 --- a/tools/perf/util/dwarf-aux.c
 +++ b/tools/perf/util/dwarf-aux.c
-@@ -61,6 +61,14 @@ const char *cu_get_comp_dir(Dwarf_Die *cu_die)
- 	return dwarf_formstring(&attr);
+@@ -2293,6 +2293,239 @@ Dwarf_Die *die_get_member_type(Dwarf_Die *type_die, int offset,
+ 	return die_mem;
  }
  
-+bool die_is_compound_type(Dwarf_Die *type_die)
++/**
++ * die_get_vtable_index - Get the vtable slot index of a virtual function
++ * @func_die: a DW_TAG_subprogram DIE
++ *
++ * Returns the index of the slot of @func_die in the vtable of its class or
++ * -1 if it's not a virtual function.  DWARF defines the
++ * DW_AT_vtable_elem_location as a location description of the slot, but
++ * both GCC and Clang emit the slot index as a single DW_OP_constu (or
++ * DW_OP_litN) and it's what debuggers expect too.
++ */
++int die_get_vtable_index(Dwarf_Die *func_die)
 +{
-+	int tag = dwarf_tag(type_die);
++	Dwarf_Attribute attr;
++	Dwarf_Op *expr;
++	size_t nexpr;
 +
-+	return tag == DW_TAG_structure_type || tag == DW_TAG_union_type ||
-+	       tag == DW_TAG_class_type;
++	if (dwarf_attr_integrate(func_die, DW_AT_vtable_elem_location, &attr) == NULL)
++		return -1;
++
++	if (dwarf_getlocation(&attr, &expr, &nexpr) < 0 || nexpr != 1)
++		return -1;
++
++	if (expr[0].atom == DW_OP_constu)
++		return expr[0].number;
++
++	if (expr[0].atom >= DW_OP_lit0 && expr[0].atom <= DW_OP_lit31)
++		return expr[0].atom - DW_OP_lit0;
++
++	pr_debug("Unexpected vtable_elem_location OP %x\n", expr[0].atom);
++	return -1;
 +}
 +
- /* Unlike dwarf_getsrc_die(), cu_getsrc_die() only returns statement line */
- static Dwarf_Line *cu_getsrc_die(Dwarf_Die *cu_die, Dwarf_Addr addr)
- {
-@@ -2150,13 +2158,21 @@ static int __die_find_member_offset_cb(Dwarf_Die *die_mem, void *arg)
- 	Dwarf_Word offset = (long)arg;
- 	int tag = dwarf_tag(die_mem);
- 
--	if (tag != DW_TAG_member)
-+	if (tag != DW_TAG_member && tag != DW_TAG_inheritance)
- 		return DIE_FIND_CB_SIBLING;
- 
- 	/* Unions might not have location */
- 	if (die_get_data_member_location(die_mem, &loc) < 0) {
- 		Dwarf_Attribute attr;
- 
-+		/*
-+		 * A virtual base class (C++) has a location expression that
-+		 * needs the vtable at runtime.  Skip it as it cannot be
-+		 * resolved statically.
-+		 */
-+		if (tag == DW_TAG_inheritance)
-+			return DIE_FIND_CB_SIBLING;
++static int __die_find_virtual_func_cb(Dwarf_Die *die_mem, void *arg)
++{
++	int index = (long)arg;
 +
- 		if (dwarf_attr_integrate(die_mem, DW_AT_data_bit_offset, &attr) &&
- 		    dwarf_formudata(&attr, &loc) == 0)
- 			loc /= 8;
-@@ -2164,6 +2180,30 @@ static int __die_find_member_offset_cb(Dwarf_Die *die_mem, void *arg)
- 			loc = 0;
- 	}
- 
-+	if (tag == DW_TAG_inheritance) {
-+		Dwarf_Die base_die, member_die;
-+
-+		/*
-+		 * A base class subobject can be smaller than the size of the
-+		 * class type: an empty base takes no space (EBO) and a member
-+		 * of the derived class can be placed in the tail padding of
-+		 * the base.  In both cases a member of the derived class is
-+		 * at the same offset as the base, so only match the base if
-+		 * it actually has a member at the offset.
-+		 */
-+		if (offset < loc)
-+			return DIE_FIND_CB_SIBLING;
-+
-+		if (die_get_real_type(die_mem, &base_die) == NULL)
-+			return DIE_FIND_CB_SIBLING;
-+
-+		if (die_find_child(&base_die, __die_find_member_offset_cb,
-+				   (void *)(long)(offset - loc), &member_die))
-+			return DIE_FIND_CB_END;
-+
++	if (dwarf_tag(die_mem) != DW_TAG_subprogram)
 +		return DIE_FIND_CB_SIBLING;
-+	}
 +
- 	if (offset == loc)
- 		return DIE_FIND_CB_END;
- 
-@@ -2201,7 +2241,7 @@ Dwarf_Die *die_get_member_type(Dwarf_Die *type_die, int offset,
- 
- 	tag = dwarf_tag(type_die);
- 	/* If it's not a compound type, return the type directly */
--	if (tag != DW_TAG_structure_type && tag != DW_TAG_union_type) {
-+	if (!die_is_compound_type(type_die)) {
- 		Dwarf_Word size;
- 
- 		if (dwarf_aggregate_size(type_die, &size) < 0)
-@@ -2216,7 +2256,7 @@ Dwarf_Die *die_get_member_type(Dwarf_Die *type_die, int offset,
- 
- 	mb_type = *type_die;
- 	/* TODO: Handle union types better? */
--	while (tag == DW_TAG_structure_type || tag == DW_TAG_union_type) {
-+	while (die_is_compound_type(&mb_type)) {
- 		member = die_find_child(&mb_type, __die_find_member_offset_cb,
- 					(void *)(long)offset, die_mem);
- 		if (member == NULL)
-@@ -2227,8 +2267,7 @@ Dwarf_Die *die_get_member_type(Dwarf_Die *type_die, int offset,
- 
- 		tag = dwarf_tag(&mb_type);
- 
--		if (tag == DW_TAG_structure_type || tag == DW_TAG_union_type ||
--		    tag == DW_TAG_array_type) {
-+		if (die_is_compound_type(&mb_type) || tag == DW_TAG_array_type) {
- 			Dwarf_Word loc;
- 
- 			/* Update offset for the start of the member struct */
++	if (die_get_vtable_index(die_mem) == index)
++		return DIE_FIND_CB_END;
++
++	return DIE_FIND_CB_SIBLING;
++}
++
++/*
++ * Find the primary base class: the first non-virtual base class at offset 0
++ * which has a vtable.  Note that an empty base class can also be placed at
++ * offset 0 (empty base optimization) before the primary base.
++ */
++static int __die_find_primary_base_cb(Dwarf_Die *die_mem, void *arg __maybe_unused)
++{
++	Dwarf_Attribute attr;
++	Dwarf_Die base_die, vptr_die;
++	Dwarf_Word loc, virtuality;
++
++	if (dwarf_tag(die_mem) != DW_TAG_inheritance)
++		return DIE_FIND_CB_SIBLING;
++
++	/* The attribute can be present with DW_VIRTUALITY_none */
++	if (dwarf_attr_integrate(die_mem, DW_AT_virtuality, &attr) &&
++	    dwarf_formudata(&attr, &virtuality) == 0 &&
++	    virtuality != DW_VIRTUALITY_none)
++		return DIE_FIND_CB_SIBLING;
++
++	if (die_get_data_member_location(die_mem, &loc) < 0 || loc != 0)
++		return DIE_FIND_CB_SIBLING;
++
++	if (die_get_real_type(die_mem, &base_die) == NULL)
++		return DIE_FIND_CB_SIBLING;
++
++	/* It should have the vtable pointer at offset 0 */
++	if (die_get_vptr_class(&base_die, 0, &vptr_die) == NULL)
++		return DIE_FIND_CB_SIBLING;
++
++	return DIE_FIND_CB_END;
++}
++
++/**
++ * die_find_virtual_func - Find a virtual function by its vtable slot index
++ * @class_die: a class type DIE
++ * @index: index of the slot in the vtable of @class_die
++ * @die_mem: a buffer for result DIE
++ *
++ * Search a DW_TAG_subprogram DIE at the slot @index of the vtable of
++ * @class_die and store the DIE to @die_mem and returns it if found.  The
++ * (primary) vtable of a class starts with the vtable of its primary base
++ * class, that is the first non-virtual base class at offset 0 which has a
++ * vtable, and virtual functions introduced by the class come after that.
++ * So if @class_die doesn't have a virtual function with the @index, it
++ * continues to the primary base.  Other (non-primary) base classes have
++ * their own secondary vtables where the index is different, so they are
++ * not searched.
++ *
++ * Returns NULL if not found.
++ */
++Dwarf_Die *die_find_virtual_func(Dwarf_Die *class_die, int index,
++				 Dwarf_Die *die_mem)
++{
++	Dwarf_Die cur_die = *class_die;
++	Dwarf_Die base_die;
++	int chase = 0;
++
++	while (die_is_compound_type(&cur_die)) {
++		if (++chase > MAX_TYPE_CHASE) {
++			pr_debug("DWARF: base class chase limit reached at DIE 0x%lx\n",
++				 (unsigned long)dwarf_dieoffset(class_die));
++			return NULL;
++		}
++
++		if (die_find_child(&cur_die, __die_find_virtual_func_cb,
++				   (void *)(long)index, die_mem))
++			return die_mem;
++
++		if (die_find_child(&cur_die, __die_find_primary_base_cb,
++				   NULL, &base_die) == NULL)
++			break;
++
++		if (die_get_real_type(&base_die, &cur_die) == NULL)
++			break;
++	}
++	return NULL;
++}
++
++/**
++ * die_is_vtbl_ptr_type - Check if the type is a C++ vtable pointer
++ * @type_die: a type DIE
++ *
++ * Compilers add the vtable pointer as an artificial member to the class
++ * that introduces virtual functions first.  Both GCC and Clang give it a
++ * type of pointer to a pointer type named "__vtbl_ptr_type", so it can
++ * be identified by the type without looking at the member name.
++ */
++bool die_is_vtbl_ptr_type(Dwarf_Die *type_die)
++{
++	Dwarf_Die ptr_die;
++	const char *name;
++
++	if (dwarf_tag(type_die) != DW_TAG_pointer_type)
++		return false;
++
++	if (die_get_real_type(type_die, &ptr_die) == NULL)
++		return false;
++
++	name = dwarf_diename(&ptr_die);
++	return name != NULL && !strcmp(name, "__vtbl_ptr_type");
++}
++
++/**
++ * die_get_vptr_class - Get the class of the vtable pointer at the offset
++ * @type_die: a class type DIE
++ * @offset: offset of the accessed member in @type_die
++ * @die_mem: a buffer for result DIE
++ *
++ * Check if the member at @offset in @type_die is a vtable pointer and
++ * return the class DIE whose vtable it points to.  The vtable pointer is
++ * a member of the class that introduces virtual functions first, so it
++ * follows DW_TAG_inheritance to look into the base class subobjects like
++ * die_get_member_type().
++ *
++ * Note that the vtable pointer at offset 0 belongs to the (primary) vtable
++ * of @type_die itself as it extends the one of the primary base class.
++ * Only when a non-primary base class subobject (at non-zero offset) is
++ * entered, it points to a separate vtable of the base class.
++ *
++ * Returns NULL if the member at @offset is not a vtable pointer.
++ */
++Dwarf_Die *die_get_vptr_class(Dwarf_Die *type_die, int offset,
++			      Dwarf_Die *die_mem)
++{
++	Dwarf_Die class_die = *type_die;
++	Dwarf_Die vptr_class = *type_die;
++	Dwarf_Die member_die, mb_type;
++	Dwarf_Word loc;
++	int chase = 0;
++
++	while (die_is_compound_type(&class_die)) {
++		if (++chase > MAX_TYPE_CHASE) {
++			pr_debug("DWARF: base class chase limit reached at DIE 0x%lx\n",
++				 (unsigned long)dwarf_dieoffset(type_die));
++			return NULL;
++		}
++
++		if (die_find_child(&class_die, __die_find_member_offset_cb,
++				   (void *)(long)offset, &member_die) == NULL)
++			return NULL;
++
++		if (dwarf_tag(&member_die) == DW_TAG_member) {
++			if (die_get_real_type(&member_die, &mb_type) == NULL ||
++			    !die_is_vtbl_ptr_type(&mb_type))
++				return NULL;
++
++			*die_mem = vptr_class;
++			return die_mem;
++		}
++
++		/* DW_TAG_inheritance: go into the base class subobject */
++		if (die_get_data_member_location(&member_die, &loc) < 0)
++			return NULL;
++
++		if (die_get_real_type(&member_die, &class_die) == NULL)
++			return NULL;
++
++		offset -= loc;
++		if (loc != 0)
++			vptr_class = class_die;
++	}
++	return NULL;
++}
++
++/**
++ * die_deref_vptr_class - Get the class of the vtable pointer via pointer access
++ * @ptr_die: a pointer type DIE
++ * @offset: offset of the accessed member from the pointer
++ * @die_mem: a buffer for result DIE
++ *
++ * Same as die_get_vptr_class() but for an access through a pointer to the
++ * class, like die_deref_ptr_type().
++ */
++Dwarf_Die *die_deref_vptr_class(Dwarf_Die *ptr_die, int offset,
++				Dwarf_Die *die_mem)
++{
++	Dwarf_Die type_die;
++
++	if (dwarf_tag(ptr_die) != DW_TAG_pointer_type)
++		return NULL;
++
++	if (die_get_real_type(ptr_die, &type_die) == NULL)
++		return NULL;
++
++	return die_get_vptr_class(&type_die, offset, die_mem);
++}
++
+ /**
+  * die_deref_ptr_type - Return type info for pointer access
+  * @ptr_die: a pointer type DIE
 diff --git a/tools/perf/util/dwarf-aux.h b/tools/perf/util/dwarf-aux.h
-index 6f9145510adc..7c893e385824 100644
+index 7c893e385824..803182cdff8a 100644
 --- a/tools/perf/util/dwarf-aux.h
 +++ b/tools/perf/util/dwarf-aux.h
-@@ -23,6 +23,9 @@ const char *cu_find_realpath(Dwarf_Die *cu_die, const char *fname);
- /* Get DW_AT_comp_dir (should be NULL with older gcc) */
- const char *cu_get_comp_dir(Dwarf_Die *cu_die);
+@@ -26,6 +26,24 @@ const char *cu_get_comp_dir(Dwarf_Die *cu_die);
+ /* Check if DIE is a compound type (structure, union, or class) */
+ bool die_is_compound_type(Dwarf_Die *type_die);
  
-+/* Check if DIE is a compound type (structure, union, or class) */
-+bool die_is_compound_type(Dwarf_Die *type_die);
++/* Get the vtable slot index of a virtual function (-1 if not virtual) */
++int die_get_vtable_index(Dwarf_Die *func_die);
++
++/* Find the virtual function at the vtable slot index of a class */
++Dwarf_Die *die_find_virtual_func(Dwarf_Die *class_die, int index,
++				 Dwarf_Die *die_mem);
++
++/* Check if the type is a C++ vtable pointer (pointer to __vtbl_ptr_type) */
++bool die_is_vtbl_ptr_type(Dwarf_Die *type_die);
++
++/* Get the class of the vtable pointer at the offset of a type (or NULL) */
++Dwarf_Die *die_get_vptr_class(Dwarf_Die *type_die, int offset,
++			      Dwarf_Die *die_mem);
++
++/* Get the class of the vtable pointer at the offset from a pointer (or NULL) */
++Dwarf_Die *die_deref_vptr_class(Dwarf_Die *ptr_die, int offset,
++				Dwarf_Die *die_mem);
 +
  /* Get a line number and file name for given address */
  int cu_find_lineinfo(Dwarf_Die *cudie, Dwarf_Addr addr,
