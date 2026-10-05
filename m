@@ -1,68 +1,68 @@
-Received: from mail-ed2-f43.google.com (mail-ed2-f43.google.com [74.125.228.107])
+Received: from mail-ej2-f43.google.com (mail-ej2-f43.google.com [74.125.228.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 340D73E833E
-	for <linux-perf-users@vger.kernel.org>; Mon,  5 Oct 2026 08:33:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.228.107
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BB4F443E2F
+	for <linux-perf-users@vger.kernel.org>; Mon,  5 Oct 2026 09:31:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.228.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791189236; cv=none; b=VQ+3+bRlPQ/ugiJIeqlGWR4+2LeScNUtK9sc6aG/L64p2TeZSMrpKQMYG3AL/AVFUBw1DDhZ5fEE0feyoOGf/nPVtrBEV0nVb3tRcjVTMuzKMd0WJMrLxSpXkiMLsnBpQMbaWUbmz8QXyR869XxCelaVoE3poakXT8K76PcGH4M=
+	t=1791192715; cv=none; b=ikniNr3e11XDrAIiEYBA+tUNRQpVY/VEoQu5kO4vYqXDLg+C0yngoOzWeBxBjlvmlqusE1SCc+PoBMPdNuMuSAQzd4pq48H+a6u9c+vYsMhFMnlmOII6YY37IizSAX8kCoJQyhIjb4jssEQd6iixcPFxPy4HiQcwYcWDezWl/rM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791189236; c=relaxed/simple;
-	bh=7mgyRzesFLFROC0q+fCt+AVsMpWCRWhTyy0sbEdAAgE=;
+	s=arc-20240116; t=1791192715; c=relaxed/simple;
+	bh=Ane+bsiS8GQAApnlKO324S8NnqoCU6uZtPzlLeDK6xo=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ES0rvUuGifzyRTvK8uQX0vv4HJI5FGMDtI4MxkwDQriZjarBJ7u0Le4IFY7o/HdPNhfJ61s+xL/T48ti9KOPEEcgj1WdtDa1669bA8rdgc4styYB4IhxqRggCy4G2HLUTdlP9iRkja5c2aL1/VCY8REfyGe7rv/bCNuwWi8TAEg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=MkxN+HmA; arc=none smtp.client-ip=74.125.228.107
+	 In-Reply-To:Content-Type; b=equG2uyjgtn2wVfOP/p6cVGWsNnuTVJrd9BDryNGbwwVoVvsIRzY02sSQ9B6tQrVpDYJuPBI6wDdb2Ohuj4RcCCXLCpXj/Bdu16ce6Kbuz/h0fFvX5jIqZujBg+no1WpBvwMMwSsf/dZxBGThcJ2jlAefge+eg95eCwou5ncepI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Ki168ysh; arc=none smtp.client-ip=74.125.228.171
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MkxN+HmA"
-Received: by mail-ed2-f43.google.com with SMTP id 4fb4d7f45d1cf-6ae19319854so1904260a12.3
-        for <linux-perf-users@vger.kernel.org>; Mon, 05 Oct 2026 01:33:54 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Ki168ysh"
+Received: by mail-ej2-f43.google.com with SMTP id a640c23a62f3a-c2a1f611461so104973366b.1
+        for <linux-perf-users@vger.kernel.org>; Mon, 05 Oct 2026 02:31:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1791189233; x=1791794033; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1791192711; x=1791797511; darn=vger.kernel.org;
         h=content-transfer-encoding:content-type:in-reply-to:from
          :content-language:references:cc:to:subject:user-agent:mime-version
          :date:message-id:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=O6/Hu0+FzeutECjLCJhR6ThF6X+jor72I2j2aChvi7s=;
-        b=MkxN+HmAXMdrj5w/polwz4ybhxUb1vHn/3prFs6I8a4B7cr62/nV7Un0e8F68UVLND
-         W4D8xrVYyzRBcqYEt00vVgbcP6hJv8f3i2Fw3/u7KCDE8Tv1mHfKhpbjwYqfGfIPQIdx
-         LOwaJgKxjXfLRQ4lzUPaPtPgiYHtuKdwJAsFjum7MkcaEKYJTlVERFBPf3oYgS+Nk2lu
-         2nM9hEA4Q/ibem05LWdHl+IuTTnRul/G2O5MoOZf05NnlcraU30fMX0hOvVz4kK+Xw9W
-         mU0fjCXCEUjmRUzkRco4Iya8Q7Txi5EMMUs79VCPu8NSPqh/gXRYJqLLAN/4c2CzPkU4
-         cZSw==
+        bh=jj8juTRF8BNg42eLql4dmeLHvm0zqwKNTWAupdQfKl8=;
+        b=Ki168yshyKSGzSdfK6DceYLGGMJgjYBk7pO5okfqxEbtHirexNpz8wVhxqIl9bS/Hu
+         4lU9+PV2jDaGnu6m2aIVDyvFqIulSU+4FxDBgpsFDOxRT5SK9N8DiK9nISCRl8pTmYzX
+         CcdHVz1yuaSegiEyWlII/5HtjB7OvjRA/ZTEWfWECTm/w/jfEANJM/5BsO3Kj1SrnleC
+         ja0tQLX1MjKXUbzTpNQr+gX9h2imX7jG3BhDL7/kf9CgC9WL/4xWlFKidjvQIUL7rGtL
+         2uKxXClbd1c6T9XuLIBrCpi1Od4qcet/iHaT5aT/zIKRGKmoKB9nHmobOD36x8DrnU/q
+         DjXA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1791189233; x=1791794033;
+        d=1e100.net; s=20260707; t=1791192711; x=1791797511;
         h=content-transfer-encoding:content-type:in-reply-to:from
          :content-language:references:cc:to:subject:user-agent:mime-version
          :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=O6/Hu0+FzeutECjLCJhR6ThF6X+jor72I2j2aChvi7s=;
-        b=XZoUwAhUhN/PhMsTdsD5TVSSnYNeGxJzWccpo3QxV1wqyVVxqghJ4LH0VvuEzXZxST
-         7LoK2Npd+xK7wtbFVYxZzvtYOMsVJsArzhj5ch/go5F0un+YWoHY7pGagddP0z6vHc1W
-         K1g6wgEuIAPzPXL2r7+UdKNNp442CCMIobnM3KaPLMFss8Tb9KRh8YoPuflmnkW8LAP/
-         f17p+WjAEBJARANBZKWKBcSwNQZlCB601BF8+i4ByHQi6fVZGuh41p6oAzvrOltRluyr
-         VwmHeDBSvKgn/34qkuJdVCbx2icS6QxQ898l/3r/AuP5mAuyt9KxM3UxcYK1iJsKgcwa
-         kDsg==
-X-Forwarded-Encrypted: i=1; AKwUvBwBjqNffTplWXAIhCUgCzuJfGDxrPW3/Yi6fcgqJoaZXogqDFE763ChNkJu+gwxhIU9wbxlUlBah0RFYHiu/Kab@vger.kernel.org
-X-Gm-Message-State: AFq9FYKXSP+opnbtnNk2ZaN7kGUPkj/jVxpWfGmi/KGYiP3RlY1yh/Hn
-	GO97wGAx0gobRHTJATq3JMozzrtvpI8WBxdxx098Zg241elzfNZLRSv380K/ZaRRaGI=
-X-Gm-Gg: AYBFou1X4XK/s2y2IXBlkNbrinyaA6hLmFg2rZaSNeXcVJ/sjukpAU+XkH9aRVLofgB
-	sqqPulrcdsqTkqHkK39aFSqDc2NFXi5xYxv8GSRn0k/KdSuluJ9m8+obYBh2i9VGgZRVgS+ugkX
-	7wFa+CRVyO2l0I/6ZVCztDkG4+r/3fUc+ik+h2jK3TDRjJuL4AEsn9OCL7XqkVHYUIm+ROndHza
-	79WRq1S5mrgKw0JK7QdoyOhAphBS16DwmK60q3MlL/DL4a3v7spzpCe8X92aydohdm4eYSm7SAP
-	vghx6azbM5caqeuNPiVBuazCXYISFJrC+7nLL7TL3HtLml6730LQB0XvgDM4aO3X7D+UUgO4ONy
-	NBQnPwfNmDwDPfga+gMBnKB1gbwYFp7D9g7TG3NAHSBWU5fnowx5smi5QnpCQzwcFSySB1Te0Fg
-	41sAR2VZ9z7eInRd3zvTOmQTmrh/s6TyzaBELjKHYNN8AGLGGXYTRLeO/+wXxiWRnz0AU6YUzAv
-	t8=
-X-Received: by 2002:a05:6402:4594:b0:6ac:c82f:3caa with SMTP id 4fb4d7f45d1cf-6af9e03e03dmr8002385a12.1.1791189233468;
-        Mon, 05 Oct 2026 01:33:53 -0700 (PDT)
+        bh=jj8juTRF8BNg42eLql4dmeLHvm0zqwKNTWAupdQfKl8=;
+        b=m0isOmezsOQSyPp6DIDQAc2XUHdz8K048pISFcMOHU0Mc5TrkxiHoX1/lX4t/qgFv6
+         ml5tQEs9ckff0sjyAYaD+mgWe/3stq7M0ezBGcWf+XnlTSAp3+wJ3NMIFEzj5JXSYTQa
+         VGbCCS04WwxCwmbAVm4I6X8M8k/sKLKZwrlzAe44pk/Box72MmLr0Fp1VPLk6cAKbKvX
+         +uX8pzW9t6LcJbr7lNrgBnhlJmT38dTc9CLQibNmoCjKl5bwkdu9uar6b+9iLKIi6Zh9
+         gJAoOvhdH2QiRlKEwJqRYSOlfzsGbVfkh+lmRa8ZLDRMrvPt130NNNrHM/sonbvEIr2Y
+         XDMA==
+X-Forwarded-Encrypted: i=1; AKwUvBybD/ffqbV+hXJc222eHk8VzkITEnDr/yuSccPVOEBqe3YGHwITBk4I2Sc1XoHI/GCKU7iAoo6aq7orfiZ2H6MV@vger.kernel.org
+X-Gm-Message-State: AFuF++mqmNEfCsjmZUUnn4Xxa/irWqAqDYYgD/3bxepbZCS7+w07FBo8
+	LlxJgK/rVequ5KzfOMUJtPU3RrgiiBQcM0abP/0PEA6cssKNJXMQDGPzeLHTl9MVvVo=
+X-Gm-Gg: AYBFou0h2iU7xP4Lvps1bWJDvZEWWyUm7fmswSj8seWYycmWc1vVhCO70ckOWem2jh2
+	hi3CLwLDOOgXdwKqNRluyirI5hIQLyMdhu1Sh5sZCWpLGAIkiXHdZyzYLOgCIpfp17NQHSJbLss
+	AaMDVHUTpBWUkpSerG6evpUS7HMiRAxwgC/nTF53GNLbBz47Z4sAQSoBG5MYXqjIj60vNbZeGpD
+	JkePaj26hfx5AjGfDtujGi9mZrep2Q+tzXmI4kRw2y0Af8Zs+o9R1Q6msWmD5cRR42F9gDigSz0
+	OvjfHEvuQ4LTYbL79YUDOvH/CV+WkCS8j4EsOx460pkNd1os2th9ODauAl4o6wjwE86RWP9VxrZ
+	CaS1gZNIWDGTZnku/pYe0x9Brv7g8m+zjCO+7xwgMRiPrBkz5EipwD6jYQCdMClY4Rjk35xbR1q
+	KQF5KLpNXYSb0PZK+dMe/psWcCPVX7Vn617KlhURSNDAP6CbMyfFRp/zeZO4/4a1/j/D6rhtYaH
+	4Julql+necB9Q==
+X-Received: by 2002:a17:907:179a:b0:c2d:c6e7:9e9a with SMTP id a640c23a62f3a-c2e4aabae2emr924547566b.11.1791192711132;
+        Mon, 05 Oct 2026 02:31:51 -0700 (PDT)
 Received: from [192.168.1.3] ([37.18.141.193])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-6afb005a424sm3031255a12.0.2026.10.05.01.33.52
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-c3155ef11b9sm49533566b.0.2026.10.05.02.31.49
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 05 Oct 2026 01:33:52 -0700 (PDT)
-Message-ID: <c22b2771-95c5-4f1d-bd9e-26088313b864@linaro.org>
-Date: Mon, 5 Oct 2026 09:33:51 +0100
+        Mon, 05 Oct 2026 02:31:50 -0700 (PDT)
+Message-ID: <9c5e1aa7-4e0f-4576-b322-b4594cdea5b0@linaro.org>
+Date: Mon, 5 Oct 2026 10:31:48 +0100
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -70,72 +70,86 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 3/4] perf cs-etm: Synthesize missing HW_ID mappings for
- raw trace
-To: Leo Yan <leo.yan@arm.com>
-Cc: John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>,
- Mike Leach <mike.leach@arm.com>, Leo Yan <leo.yan@linux.dev>,
- Suzuki K Poulose <suzuki.poulose@arm.com>,
- Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>, Suyash Mahar <smahar@meta.com>,
- Amir Ayupov <aaupov@fb.com>, Arnaldo Carvalho de Melo <acme@redhat.com>,
- linux-arm-kernel@lists.infradead.org, coresight@lists.linaro.org,
- linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20261002-james-cs-hw_id-output-failure-v3-0-1d8b6ef339c8@linaro.org>
- <20261002-james-cs-hw_id-output-failure-v3-3-1d8b6ef339c8@linaro.org>
- <20261002171405.GG1208404@e132581.arm.com>
+Subject: Re: [PATCH 2/3] perf: arm_spe: Factor HW discard mode out of
+ arm_spe_perf_aux_output_begin()
+To: Will Deacon <will@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Leo Yan <leo.yan@arm.com>,
+ Suzuki Poulose <Suzuki.Poulose@arm.com>, Al Grant <Al.Grant@arm.com>,
+ linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20260805-james-spe-software-discard-v1-0-0ff0e44c4c92@linaro.org>
+ <20260805-james-spe-software-discard-v1-2-0ff0e44c4c92@linaro.org>
+ <asNfh-qywjOPxajj@willie-the-truck>
 Content-Language: en-US
 From: James Clark <james.clark@linaro.org>
-In-Reply-To: <20261002171405.GG1208404@e132581.arm.com>
+In-Reply-To: <asNfh-qywjOPxajj@willie-the-truck>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
 
 
-On 02/10/2026 18:14, Leo Yan wrote:
-> On Fri, Oct 02, 2026 at 12:15:13PM +0100, James Clark wrote:
+On 05/10/2026 09:27, Will Deacon wrote:
+> On Wed, Aug 05, 2026 at 04:01:52PM +0100, James Clark wrote:
+>> Discard mode doesn't call perf_aux_output_begin() or emit aux records,
+>> and enabling it never fails. We'll add a second discard mode in the
+>> next commit so it will be cleaner if there is a separate begin function
+>> just for discard mode.
+>>
+>> No functional changes intended.
 > 
 > [...]
 > 
->>   static struct cs_etm_queue *cs_etm__get_queue(struct cs_etm_auxtrace *etm, int cpu)
->> @@ -314,12 +317,11 @@ static int cs_etm__map_trace_id_v0(struct cs_etm_auxtrace *etm, u8 trace_chan_id
->>   		return -EINVAL;
->>   
->>   	/*
->> -	 * If the queue is unformatted then only save one mapping in the
->> -	 * queue associated with that CPU so only one decoder is made.
->> +	 * Ignore HW_IDs for unformatted, a decoder will be made
->> +	 * unconditionally later.
->>   	 */
->>   	if (etmq->format == UNFORMATTED)
->> -		return cs_etm__insert_trace_id_node(etmq, trace_chan_id,
->> -						    cpu_metadata);
->> +		return 0;
+>> +static void arm_spe_pmu_begin_discard(struct perf_output_handle *handle,
+>> +				      struct perf_event *event)
+>> +{
+>> +	u64 limit;
+>> +
+>> +	limit = FIELD_PREP(PMBLIMITR_EL1_FM, PMBLIMITR_EL1_FM_DISCARD);
+>> +	limit |= PMBLIMITR_EL1_E;
+>> +
+>> +	write_sysreg_s(limit, SYS_PMBLIMITR_EL1);
+>> +}
+>> +
+>>   static int arm_spe_perf_aux_output_begin(struct perf_output_handle *handle,
+>>   					 struct perf_event *event)
+>>   {
+>>   	u64 base, limit;
+>>   	struct arm_spe_pmu_buf *buf;
 > 
-> Nitpick: It seems to me that we can move the
-> etmq->format == UNFORMATTED check into cs_etm__process_aux_output_hw_id().
-> 
-> This avoids duplicating the check in both cs_etm__map_trace_id_v0()
-> and cs_etm__process_trace_id_v0_1(), and makes it more apparent that
-> the unformatted case does not use HW_ID at all.
-> 
-> It's up to you whether to keep it as is or update it. Either way:
+> Is it worth checking that we have a discard event in begin_discard() and
+> similarly that we don't have a discard event in output_begin()? It looks
+> like quite an error-prone interface for the caller, otherwise.
 > 
 
-I might leave it for now. It's also called by 
-cs_etm__map_trace_ids_metadata() which doesn't have a reference to the 
-queue, and neither does cs_etm__process_aux_output_hw_id(). Probably not 
-worth another refactor at this point.
+Makes sense, I can add that.
 
-> Reviewed-by: Leo Yan leo.yan@arm.com
+>> @@ -775,6 +785,12 @@ static irqreturn_t arm_spe_pmu_irq_handler(int irq, void *dev)
+>>   		arm_spe_pmu_disable_and_drain_local();
+>>   		break;
+>>   	case SPE_PMU_BUF_FAULT_ACT_OK:
+>> +		if (arm_spe_discard_mode(event)) {
+>> +			arm_spe_pmu_begin_discard(handle, event);
+>> +			isb();
+>> +			break;
+>> +		}
 > 
-> P.S. Although I contributed the initial idea, the change is now quite
-> different from the original patch I shared. Please feel free to drop my
-> name if you prefer.
+> This looks like new behaviour?
+> 
+> Will
 
-Will do if I send another one, but it looks like it can be applied now 
-so it might have to stay.
+I just extracted the discard part of arm_spe_perf_aux_output_begin() 
+into here and arm_spe_pmu_begin_discard(). The PMBLIMITR_EL1 write and 
+isb() should be the same.
+
+Do you mean that now it does arm_spe_pmu_begin_discard() unconditionally 
+before checking PERF_AUX_FLAG_TRUNCATED? Truncated would never be set in 
+HW discard mode, so it should be equivalent. And the IRQ would never 
+fire anyway so we don't get here until SW discard is added, and even if 
+it did, handle->event is NULL so the handler would exit on the first 
+line anyway.
+
+I suppose there's another change that it can never call 
+arm_spe_pmu_stop()? But that wouldn't have happened in discard mode either.
+
+James
+
