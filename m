@@ -1,118 +1,177 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6189F37BE7F;
-	Mon,  5 Oct 2026 10:38:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF2C631F989;
+	Mon,  5 Oct 2026 11:33:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791196698; cv=none; b=FVlqq2rsou4j6PlaZvURo4Qy4YSKFAAtaZTc+NXPULX+ho9GjIpRyWAiJsYu9meEZSKstem8rPB3vwv5Yp3ShxvcZWIv8GCf12Z9zoDVjK3JfjXcsafLRcQpgN1PblOdGPZqGnXWH0nHLShzgsXBzrXNb+SyqPVDo0+1Z93hyJE=
+	t=1791200013; cv=none; b=nBW5HHe91frdpTjpBoYu2VeOtTD/4KQoaRmB90jUD5xR06gQgLcEYK1IguOBkmaxVGkrt2jMeot+Wuht0+VKPtfNNanbAmmS7RBUzRV1+vztcZwycKJNpfbn7X1uC7bsTCvYNBP9TR6MsjwPMkonUCEqbEoeASMbITl7PkvqVKU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791196698; c=relaxed/simple;
-	bh=j8wyTefbsbtfFLV5cRmAHzJ85gOEq8aYtQ47JwtEOwo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=WNCCFHotnvy7IrjgTLTR5vBqLz80lgXeLw5GczckJ3AudBjOjJVJyT12vvspn0ojbAzKyQIgCJDR+e6WQnhdImUdzqoYjlM+i9T+X08eLfwuLwoW1aa/3CIFg67ddVvBY87p4LxPCFys5BVCNpSuJZmkrglvEiTJxAQLz/GfD1s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RKqmEfKR; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1791200013; c=relaxed/simple;
+	bh=Wpr48c94oU5+NvzPcit0pqXalaVgtcp9KdCZNclssVY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=X8jMVXeL7TlbVEZsbJU9uWLOhXOpOt6JMsIWa0kVWvta6QAIRxZBeQp76aBGFsT410PsnH523H6O8PimdwY2XCCX2vaxYkBdzKHnPmM1AYzNH5AWj2chZzdbBs0uoPz6Y4Og8ucCp+52nC2GBBm9pyfajJQ5K1VTYvzl0HV1mqc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DAIHjFWA; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RKqmEfKR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 289651F000FF;
-	Mon,  5 Oct 2026 10:38:12 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DAIHjFWA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B80CC1F000FF;
+	Mon,  5 Oct 2026 11:33:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1791196697;
-	bh=5Vc3pQESdRpcWqTuss+dPZ/DLBJnzfWaOHoQnAvQTc0=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=RKqmEfKRxP8fAHQMJMcrK1N47J5Kf29T154D+wJlWpgAcpFhX73rOYp/QpS5LFWtf
-	 T9lo54D1QXoEUSj8pch7RiOpTACrtNAi9ja7Te1FUor5TyK6i5aYSaAPKoLYR8KHOu
-	 0rusExbXF+n6zMnAqfBNkulPB9xvjjKeCX8BsQjsRfh+xTRxRDmfU4TaFvJFZMpxVX
-	 QZVpVqZkWvRs5oKNSoInnQfjiAkxYiS1Lr6FLizYmlNbGiFkOveLc/WnntNlquuVNn
-	 GDsC0F0hF6aZ84lDwR+S+loJJVUpF9EfcLk9zrDKe9gi3N/9hkSJWXqqjwM5SuIs2Y
-	 UbWYGOgiuNjNw==
-Message-ID: <d286ba75-c89c-4b34-8447-e1d9eeb2d515@kernel.org>
-Date: Mon, 5 Oct 2026 12:38:09 +0200
+	s=k20260515; t=1791200012;
+	bh=CDSI1fzd06xogRlRsAAlSIYZUx/yG6yhOmXVab/hmYc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=DAIHjFWAxf3xmj/jwYqfZwZ3E1mfmWBY9gBGxuEz+hac12tLDEw1xFYEQai0vqGXr
+	 jv3ltiorrhLfi+YBk4d0asUZKPAWiQQzrw3Qbx9y9k0u9CBjZmqR3vQRqM0A4YxSAE
+	 iiovdQT0LoDxmYm/9q/caD/w+O/o18v1JgDKvZVuQmdQbgeZt13oSKtalEfh6pWnCq
+	 xyqUqNNRIsn3ptFwE7sm24QRwi1YS6P5LeHZxFJBCmGMhsTKS0RYmsY9vQ+HsINNyY
+	 QVInw/TGlIBjwKHGRD6i6noNqm8SLkI6cm2x1sWh+Q0ojxZRHXJIvUw0d5RPUF7AkF
+	 PYy1fF/7cq7zw==
+Date: Mon, 5 Oct 2026 13:17:12 +0200
+From: Nicolas Schier <nsc@kernel.org>
+To: Jay Wang <wanjay@amazon.com>
+Cc: bpf@vger.kernel.org, Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Eduard Zingerman <eddyz87@gmail.com>,
+	Kumar Kartikeya Dwivedi <memxor@gmail.com>,
+	Alan Maguire <alan.maguire@oracle.com>,
+	Martin KaFai Lau <martin.lau@linux.dev>,
+	Yonghong Song <yonghong.song@linux.dev>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Ihor Solodrai <ihor.solodrai@linux.dev>,
+	Quentin Monnet <qmo@kernel.org>,
+	Nathan Chancellor <nathan@kernel.org>, linux-kbuild@vger.kernel.org,
+	Thomas =?iso-8859-1?Q?Wei=DFschuh?= <linux@weissschuh.net>,
+	Christian Heusel <christian@heusel.eu>,
+	Luis Chamberlain <mcgrof@kernel.org>,
+	Petr Pavlu <petr.pavlu@suse.com>,
+	Sami Tolvanen <samitolvanen@google.com>,
+	linux-modules@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	linux-trace-kernel@vger.kernel.org,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
+	linux-perf-users@vger.kernel.org, Jiri Kosina <jikos@kernel.org>,
+	Benjamin Tissoires <bentiss@kernel.org>,
+	linux-input@vger.kernel.org, Tejun Heo <tj@kernel.org>,
+	David Vernet <void@manifault.com>, Andrea Righi <arighi@nvidia.com>,
+	Changwoo Min <changwoo@igalia.com>, sched-ext@lists.linux.dev,
+	Shuah Khan <shuah@kernel.org>, linux-kselftest@vger.kernel.org,
+	Miguel Ojeda <ojeda@kernel.org>, rust-for-linux@vger.kernel.org,
+	Arnd Bergmann <arnd@arndb.de>, linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Hazem Mohamed Abuelfotoh <abuehaze@amazon.com>,
+	Bjoern Doebel <doebel@amazon.de>,
+	Martin Pohlack <mpohlack@amazon.de>, jay.wang.upstream@gmail.com
+Subject: Re: [PATCH bpf-next v4 11/12] tools, samples: take the vmlinux BTF
+ from vmlinux.unstripped first
+Message-ID: <asOHOPlWCp1kKZiT@derry.ads.avm.de>
+Mail-Followup-To: Nicolas Schier <nsc@kernel.org>,
+	Jay Wang <wanjay@amazon.com>, bpf@vger.kernel.org,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Eduard Zingerman <eddyz87@gmail.com>,
+	Kumar Kartikeya Dwivedi <memxor@gmail.com>,
+	Alan Maguire <alan.maguire@oracle.com>,
+	Martin KaFai Lau <martin.lau@linux.dev>,
+	Yonghong Song <yonghong.song@linux.dev>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Ihor Solodrai <ihor.solodrai@linux.dev>,
+	Quentin Monnet <qmo@kernel.org>,
+	Nathan Chancellor <nathan@kernel.org>, linux-kbuild@vger.kernel.org,
+	Thomas =?iso-8859-1?Q?Wei=DFschuh?= <linux@weissschuh.net>,
+	Christian Heusel <christian@heusel.eu>,
+	Luis Chamberlain <mcgrof@kernel.org>,
+	Petr Pavlu <petr.pavlu@suse.com>,
+	Sami Tolvanen <samitolvanen@google.com>,
+	linux-modules@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	linux-trace-kernel@vger.kernel.org,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
+	linux-perf-users@vger.kernel.org, Jiri Kosina <jikos@kernel.org>,
+	Benjamin Tissoires <bentiss@kernel.org>,
+	linux-input@vger.kernel.org, Tejun Heo <tj@kernel.org>,
+	David Vernet <void@manifault.com>, Andrea Righi <arighi@nvidia.com>,
+	Changwoo Min <changwoo@igalia.com>, sched-ext@lists.linux.dev,
+	Shuah Khan <shuah@kernel.org>, linux-kselftest@vger.kernel.org,
+	Miguel Ojeda <ojeda@kernel.org>, rust-for-linux@vger.kernel.org,
+	Arnd Bergmann <arnd@arndb.de>, linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Hazem Mohamed Abuelfotoh <abuehaze@amazon.com>,
+	Bjoern Doebel <doebel@amazon.de>,
+	Martin Pohlack <mpohlack@amazon.de>, jay.wang.upstream@gmail.com
+References: <20261001225214.12351-1-wanjay@amazon.com>
+ <20261001225214.12351-12-wanjay@amazon.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [REGRESSION] secretmem: SIGBUS on memfd_secret() pages while perf
- record runs
-To: Ameer Hamza <ameer.hamza@truenas.com>
-Cc: ljs@kernel.org, rppt@kernel.org, peterz@infradead.org,
- akpm@linux-foundation.org, mingo@redhat.com, acme@kernel.org,
- namhyung@kernel.org, linux-mm@kvack.org, linux-perf-users@vger.kernel.org,
- linux-kernel@vger.kernel.org, regressions@lists.linux.dev,
- stable@vger.kernel.org, 4ncienth@gmail.com, sashal@kernel.org,
- alexander.motin@truenas.com, caleb.stjohn@truenas.com
-References: <20261002175651.811343-1-ameer.hamza@truenas.com>
- <3c5b9d1e-5ed4-4bd1-b532-39f2d4612965@kernel.org> <asE0ctESLO306qYs@hamza-PC>
-From: "David Hildenbrand (Arm)" <david@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=david@kernel.org; keydata=
- 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
- qIws/H2t
-In-Reply-To: <asE0ctESLO306qYs@hamza-PC>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20261001225214.12351-12-wanjay@amazon.com>
 
-On 10/3/26 19:05, Ameer Hamza wrote:
-> On Sat, Oct 03, 2026 at 04:14:49PM +0200, David Hildenbrand (Arm) wrote:
->> May I know whether this problem was found by
->>
->> (a) A real workload
->>
->> (b) A test case
->>
->> (c) Complains by some tooling
+On Thu, Oct 01, 2026 at 10:52:13PM +0000, Jay Wang wrote:
+> With CONFIG_DEBUG_INFO_BTF=m, which the next patch makes possible, the
+> vmlinux BTF is not part of vmlinux: scripts/Makefile.vmlinux strips .BTF
+> from it, and only vmlinux.unstripped, from which vmlinux is made, keeps
+> it.  The tools and samples that generate vmlinux.h from a kernel build
+> tree take the first vmlinux they find, so after an =m build they would
+> pick one without BTF and fail, e.g. the bpftool skeletons when bpftool is
+> built from the kernel tree right after the kernel.
 > 
-> (a). A root userspace process that keeps secrets in memfd_secret()
-> failed while perf record ran on the same machine. I reduced it to the
-> snippet in the report.
+> Look for vmlinux.unstripped before vmlinux in each of these lists.  Every
+> kernel build produces it, and with =y it carries the same BTF as vmlinux,
+> so nothing changes there.  perf filters the candidates for a .BTF
+> section, but its unanchored grep also matches .BTF_ids and .BTF.link,
+> which vmlinux keeps with =m; match the section name exactly.
+> 
+> Signed-off-by: Jay Wang <wanjay@amazon.com>
+> ---
+>  samples/bpf/Makefile                       | 6 +++++-
+>  samples/hid/Makefile                       | 6 +++++-
+>  tools/bpf/bpftool/Makefile                 | 6 +++++-
+>  tools/perf/bpf_skel.mak                    | 8 ++++++--
+>  tools/sched_ext/Makefile                   | 6 +++++-
+>  tools/testing/selftests/bpf/Makefile       | 6 +++++-
+>  tools/testing/selftests/hid/Makefile       | 6 +++++-
+>  tools/testing/selftests/sched_ext/Makefile | 6 +++++-
+>  8 files changed, 41 insertions(+), 9 deletions(-)
+> 
+> diff --git a/samples/bpf/Makefile b/samples/bpf/Makefile
+> index c28e65046986..fb5cd2d5b6f8 100644
+> --- a/samples/bpf/Makefile
+> +++ b/samples/bpf/Makefile
+> @@ -305,8 +305,12 @@ $(obj)/$(TRACE_HELPERS): TPROGS_CFLAGS := $(TPROGS_CFLAGS) -D__must_check=
+>  
+>  -include $(BPF_SAMPLES_PATH)/Makefile.target
+>  
+> -VMLINUX_BTF_PATHS ?= $(abspath $(if $(O),$(O)/vmlinux))				\
+> +# With CONFIG_DEBUG_INFO_BTF=m only vmlinux.unstripped has the BTF
+> +VMLINUX_BTF_PATHS ?= $(abspath $(if $(O),$(O)/vmlinux.unstripped))		\
+> +		     $(abspath $(if $(O),$(O)/vmlinux))				\
+> +		     $(abspath $(if $(KBUILD_OUTPUT),$(KBUILD_OUTPUT)/vmlinux.unstripped))	\
+>  		     $(abspath $(if $(KBUILD_OUTPUT),$(KBUILD_OUTPUT)/vmlinux))	\
+> +		     $(abspath $(objtree)/vmlinux.unstripped)			\
+>  		     $(abspath $(objtree)/vmlinux)
 
-Thanks!
+(out-of-scope for the concrete patch)
 
--- 
-Cheers,
+I am surprised that of these multi-ambiguous path list.  It looks to me
+as if samples/bpf/ and samples/hid/ are always built via Kbuild, thus
+there is proper management of variables like O, KBUILD_OUTPUT and
+objtree already.  I'd expect 
 
-David
+		     $(abspath $(objtree)/vmlinux.unstripped)			\
+  		     $(abspath $(objtree)/vmlinux)
+
+to be enough here.  But I may be missing something.
+
+
+Kind regards,
+Nicolas
