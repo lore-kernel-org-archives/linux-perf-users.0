@@ -1,44 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BFEA2D2394
-	for <linux-perf-users@vger.kernel.org>; Mon,  5 Oct 2026 17:37:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AF5D3064B5
+	for <linux-perf-users@vger.kernel.org>; Mon,  5 Oct 2026 17:37:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791221833; cv=none; b=WQsQB6fVDYrDQvLjsrn0kV1fjvvITbsPSTk6NFD1bWCkpLyW8yXKHKCJynPvDT5gTZTiglbqPidSc5U+7gt2fzrJkukdAwg5+kzHMEXmI9KWo+7f54EBPnne5gjihy6Y6iLPVRCc+/afUUZSdzllyH1QVboPbAIXk3/F0NiQNog=
+	t=1791221868; cv=none; b=MrIPI+bGHekLQAxDSW6Nn0EJsDsz/L0pVkvZN+DO5znvNemiiyWwcGs2YukcLwnd33INQtw1DDimXfhdrwndknc/RNlP8SNjdAQV3Q512esjiZW7bLfPq1HiQ/DG/kKG/1KuPdX8FY545ko+HaZKBOqqLNM3Re3IBDnk2miRVPE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791221833; c=relaxed/simple;
-	bh=F1BMgvln+SqluZDuDYnRl5MBVXYA9uigqeDPLEd5fSg=;
+	s=arc-20240116; t=1791221868; c=relaxed/simple;
+	bh=6fC0St7BaJwUSuv4rXBERUVKhHhSZStI8Bq2n1JweDk=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=CzPAav3xFYkoqUNJCs4BjEO5ym/Tf3vzNWaSmuFV4/SmK2zh5emHgCW50rP4NhnROmuoYqM+3GUd0DzfTf09epXhE/L8/GkAKwi9b7/gzLH/RyH4U90ezf4AWjUm13OEP03qBsCMXL1pSC7AYMlHMuwP+aed3JdZ2i6QLk5s9+s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Wxt4ncxh; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=bj7M2AIm3kb0rv+VYomDhjv3PVvC/53NrhtmRmKbIziq9GLRxsH3r9MGspgV0lQPKvR0cHTxhB0yKWF7sf6Ynec/s1EWdCDwc7QfRViIFGSyRZck1l1SrcBUqzxm8cWEDrpIeQyi7396PhyOqmA0SieAklVBf8qhFz3TmdmbXHs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cWND7z9c; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Wxt4ncxh"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1E0E21F00893;
-	Mon,  5 Oct 2026 17:37:11 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cWND7z9c"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DE4611F000FF;
+	Mon,  5 Oct 2026 17:37:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1791221831;
-	bh=F1BMgvln+SqluZDuDYnRl5MBVXYA9uigqeDPLEd5fSg=;
+	s=k20260515; t=1791221867;
+	bh=6fC0St7BaJwUSuv4rXBERUVKhHhSZStI8Bq2n1JweDk=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=Wxt4ncxhbVW45raE7CxHkjgwA3Y7vdAd6Wg8otjh5k6lfaLAO5r36H7G2h23JcLbq
-	 apVXIZKW9aCsmTiyXz/dRf5cfLAVn5uPtv9Yewpb0gQofxU1OeqUZjPz36ArCvzN3p
-	 jSBo3rlWrH4kEeEYropYVXO00D+2PU0lpgL+XmjiRzfTgAXrChkDZeASMfOg4xk+fj
-	 tU3jL8yQUBOz5DHlbL+i3SSSQ7wIZpPkwYt7MscBqNr3Nt+wEl8CNFBWeFJZ1poPL6
-	 B7AFxjG+S1ZQ0L+uHs9H2YSSWACITTUC+Bvgagi1hjksj3rYZeaG0d+6XvjFLj5/R1
-	 lq6jdLS9esYfw==
+	b=cWND7z9caYPM0Ra4jyttGfbsItBNUlsbe18cOZBKAq10mU2Vx7pa33U1nrfNaqJux
+	 6vtZZt4IHy5bfCa6kqF9dBaLGk+X8vqQpaRfXkp3GxmPGdofG0eoCe0hFnSba8MxI3
+	 WFcfF5E0+VeVLXHOkFrH/Pbs/vsYY8VyfgHaXIe5oKTSaGglxrlSHJblFqbRbEOju+
+	 QRma3EqyrEUvapH5a/wE3+c0gOzbAM1aKpUAK8jtnYkZRXfU9guQfUzs886GydbNAM
+	 Jl2I6E0sStpYsDsuNFIZRNEQX0Rh0Z7p8JOx8/+tOquL8im0E8JVyzdqq/DSEh0o63
+	 7D9cKtygoMq8Q==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v5 1/5] perf symbols: Fix broken ELF_C_READ_MMAP
- fallback guard
+Subject: Re: [PATCH v5 3/5] perf symbols: Factor out duplicate symbol
+ selection
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Alireza Haghdoost" <haghdoost@uber.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20261005-perf-symbol-memory-send-v5-1-165dceb2b049@uber.com>
+In-Reply-To: <20261005-perf-symbol-memory-send-v5-3-165dceb2b049@uber.com>
 References: <20261005-perf-symbol-memory-send-v5-0-165dceb2b049@uber.com>
- <20261005-perf-symbol-memory-send-v5-1-165dceb2b049@uber.com>
+ <20261005-perf-symbol-memory-send-v5-3-165dceb2b049@uber.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Mon, 05 Oct 2026 17:37:10 +0000
-Message-Id: <20261005173711.1E0E21F00893@smtp.kernel.org>
+Date: Mon, 05 Oct 2026 17:37:46 +0000
+Message-Id: <20261005173746.DE4611F000FF@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -47,23 +47,27 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
 > From: Alireza Haghdoost <haghdoost@uber.com>
 >=20
-> Commit 22dd1ac91a77 ("tools: Remove feature-libelf-mmap feature
-> detection") replaced perf's compile-time feature test with an #ifdef on
-> ELF_C_READ_MMAP. ELF_C_READ_MMAP is an Elf_Cmd enumerator rather than a
-> preprocessor macro, so the condition is always false and perf silently
-> uses ELF_C_READ.
+> symbols__fixup_duplicate() chooses between symbols with the same start
+> address through choose_best_symbol(), which needs fully constructed
+> struct symbol objects. The lazy symbol loader added later in this series
+> selects among aliases from its index entries, before any struct symbol
+> exists, so it cannot use it.
 >=20
-> Perf already requires a sufficiently recent elfutils version that
-> provides ELF_C_READ_MMAP. Use the enumerator directly instead of
-> restoring a feature probe or retaining an unreachable fallback.
+> This patch moves the policy into symbol__choose_best(), which compares
+> the size, name, type and binding of two candidates described by struct
+> symbol_candidate, and passes the same description to the
+> arch__choose_best_symbol() hook. choose_best_symbol() becomes a wrapper
+> that describes two struct symbols. No functional change intended.
 >=20
-> Fixes: 22dd1ac91a77 ("tools: Remove feature-libelf-mmap feature detection=
-")
+> symbol__choose_best() is not static so that the lazy loader can call it.
+> struct symbol_candidate stays in symbol.h because powerpc overrides the
+> weak arch__choose_best_symbol(), which takes it.
+>=20
 > Signed-off-by: Alireza Haghdoost <haghdoost@uber.com>
 
 Sashiko has reviewed this patch and found no issues. It looks great!
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261005-perf-symbo=
-l-memory-send-v5-0-165dceb2b049@uber.com?part=3D1
+l-memory-send-v5-0-165dceb2b049@uber.com?part=3D3
 
