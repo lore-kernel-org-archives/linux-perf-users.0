@@ -1,74 +1,124 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD0F346D0BD
-	for <linux-perf-users@vger.kernel.org>; Mon,  5 Oct 2026 17:41:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EBA9F1F5821;
+	Mon,  5 Oct 2026 17:41:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791222088; cv=none; b=W+xDubfB5tuGTtWjaE2j7BQAyK041XaEUxS+GKmW7WFAvhVndeuHY+Jb7ni1q+paBL1npUv8amePwEg8MGOZJuWdvxxVVdYvnJ7PAF5Sz+bv//gaor9V6xIgc/QU9VYykgAybODGR6x02UKjGEX/Rhy+1eK8HUbUAVlMbsOrHz8=
+	t=1791222110; cv=none; b=A+qjMnbaZu8qnOXWlZ2dJeKKFx4iayN7PcEej0QTB2CO75JE/Vc/XtIk6tGQJWjwDViC9fm86jHFdugWHJINFFD0lM+PHxTtwJrP9eyzpT49B8voi2+7inOIPNtCV2JaqLI2XdlG7vnP9i3kV2qJWNF+Cy2Tv/+rsjDcwtb2O/I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791222088; c=relaxed/simple;
-	bh=+60uZpFEHyMENT+2YuMbEeC+akCR+3h17v0k2r2t0rY=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=YZe0ugVnwMVh2OQu5YqUMyl7VjZtAkHZB+fwCuWAFJ7ac19ox+qRjLyAjjH1TaM+ZC86eCCLUkvZhfiADF5JH4G6fFY1SkqoRE/Sw8zW9bcOYG5oUx4GEWW8EQCy/XrjijtcFtC2uTlExnigIU+2sRTmyEqz8HpD5iffM9XzXTQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VZWQqbtl; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1791222110; c=relaxed/simple;
+	bh=f/5e/Z9B77F5t4G8/U+7nSw/Rar9Vnq5D17CPKi5ySY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=cVoGWQtVz6fqy4gBPBpy95W7umOzx6XEnjHZS857WRXZQSLZsZZimhmUH1fAmx/RAi5ceAKmKeWpPxfmfyreWz1q+jxZ41881jHgIiSFX0dspi6i+3Qbd4ESBl0dOG1bc8I6eDxcPEDad1M6WX0HAvCfsvM96UXQHU7srOU9T6s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=h7bNc1xn; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VZWQqbtl"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9D1661F00893;
-	Mon,  5 Oct 2026 17:41:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1791222087;
-	bh=+60uZpFEHyMENT+2YuMbEeC+akCR+3h17v0k2r2t0rY=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=VZWQqbtl8eJw82ZBs58eS/W3rZqLBxrXdUp3yKl7+xgXrCk8B/2j+kZqOcun53kIC
-	 OkDR0wOmL46aRsSA6ZhHTlpcAB9QZ6sJRRamlKyaEOis5fzG2oVDArphKkRVnSEG4L
-	 +4PNJ3c3r/N0mq+LqbYDuAStfdQ3EMhPuqR6ujlNs4j+z7XhvB/onFv7KIt9VT82vf
-	 YJ9EV7SgrXaDe78Tkr4VQMxVP1pc2rwtM9digU4LYLFAijUOy3mkzOKErg4bVVTco2
-	 6O7ABcLRQAlwCcYHpYddT5rGwKWMjeed980d5+vcEgUpr9YWBFJon8sncNH44suitu
-	 SAecK1VoEH9CA==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v5 2/5] perf dso: Allow reading DSO data from an
- explicit file
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Alireza Haghdoost" <haghdoost@uber.com>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20261005-perf-symbol-memory-send-v5-2-165dceb2b049@uber.com>
-References: <20261005-perf-symbol-memory-send-v5-0-165dceb2b049@uber.com>
- <20261005-perf-symbol-memory-send-v5-2-165dceb2b049@uber.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Mon, 05 Oct 2026 17:41:27 +0000
-Message-Id: <20261005174127.9D1661F00893@smtp.kernel.org>
+	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="h7bNc1xn"
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6F153152B;
+	Mon,  5 Oct 2026 10:41:43 -0700 (PDT)
+Received: from localhost (unknown [10.2.196.114])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 742B93F86F;
+	Mon,  5 Oct 2026 10:41:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
+	t=1791222106; bh=f/5e/Z9B77F5t4G8/U+7nSw/Rar9Vnq5D17CPKi5ySY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=h7bNc1xnMmNMm0LxBw4vvrZAJzwbes/MqKwyxaPAwqxqA4VMIN41eaGGa9JeE9pPV
+	 utijAy+SFxb4Bm31njiiATFVS0Itf5C3lk2RHghO3pFSMUy8GIHEbw18lTsb7b3J7H
+	 8QX7xY8IK4b7lWfZjPxKzUTk+drDghTFFuj/wkcY=
+Date: Mon, 5 Oct 2026 18:41:44 +0100
+From: Leo Yan <leo.yan@arm.com>
+To: Will Deacon <will@kernel.org>
+Cc: Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Mike Leach <mike.leach@arm.com>,
+	James Clark <james.clark@linaro.org>,
+	Anshuman Khandual <anshuman.khandual@arm.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Tamas Petz <tamas.petz@arm.com>,
+	Tamas Zsoldos <tamas.zsoldos@arm.com>,
+	Michiel van Tol <michiel.vantol@arm.com>,
+	Dev Jain <dev.jain@arm.com>, David Hildenbrand <david@kernel.org>,
+	Yabin Cui <yabinc@google.com>, James Morse <james.morse@arm.com>,
+	coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH 2/2] perf: arm_spe: Prefer large AUX mappings
+Message-ID: <20261005174144.GL1208404@e132581.arm.com>
+References: <20260810-perf_aux_trace_large_granule-v1-0-03306c9339e3@arm.com>
+ <20260810-perf_aux_trace_large_granule-v1-2-03306c9339e3@arm.com>
+ <annp-BdTviQoH6vy@willie-the-truck>
+ <20260930164311.GK14479@e132581.arm.com>
+ <ar4Iuanz_vA4twGP@willie-the-truck>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ar4Iuanz_vA4twGP@willie-the-truck>
 
-> From: Alireza Haghdoost <haghdoost@uber.com>
->=20
-> The DSO data cache derives the file to open from the DSO's binary type,
-> which can resolve to the runtime image rather than the file a symbol
-> table was read from. The lazy symbol loader added later in this series
-> reads symbol names at string-table offsets in the file the symbol table
-> came from. With split debuginfo, the data cache would apply those
-> debuginfo offsets to the runtime image.
->=20
-> This patch adds dso__data_set_path() so a DSO can be configured to read
-> from one exact file while keeping the data cache's descriptor eviction
-> and reopening. The path is used only when the data cache opens the file;
-> dso__get_filename() and its debuginfo callers are unchanged. Such DSOs
-> may be owned privately rather than being part of a dsos collection, so
-> the patch also drops the assertion that every opened data DSO is in one.
->=20
-> Add a DSO data test that reads through an explicit path, closes the
-> descriptor, and reads an uncached offset to exercise reopening.
->=20
-> Signed-off-by: Alireza Haghdoost <haghdoost@uber.com>
+On Thu, Oct 01, 2026 at 08:16:09AM +0100, Will Deacon wrote:
+> On Wed, Sep 30, 2026 at 05:43:11PM +0100, Leo Yan wrote:
 
-Sashiko has reviewed this patch and found no issues. It looks great!
+> > How about adding a field to struct pmu to specify a preferred maximum
+> > page order for the AUX buffer? The perf core could try that order first
+> > and fall back to smaller orders if the allocation fails.
+> 
+> I'm not sure that's thr right place for it, really. The driver has no
+> clue about whether it makes sense to use large contiguous mappings or
+> not, so I'd have thought that decision should be driven from userspace
+> (e.g. like MADV_HUGEPAGE) because it really depends on the user's
+> preference and isn't a fixed property of the hardware.
 
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261005-perf-symbo=
-l-memory-send-v5-0-165dceb2b049@uber.com?part=3D2
+Here MADV_HUGEPAGE cannot directly apply on this case: perf allocates
+the AUX pages during mmap, while TRBE accesses them through a separate
+kernel vmap() mapping.
 
+MADV_HUGEPAGE is applied after mmap, but a preference (or flag) would
+need to be specified before the AUX mmap.
+
+> > For example, the Neoverse V2 TRM documents:
+> > 
+> >   L1 Trace Buffer Extension (TRBE) TLB: 1 entry
+> 
+> Wow, they really pulled out the stops for that implementation. I bet
+> we're supposed to be grateful for that entry!
+
+Yeah, Neoverse V3 was improved to have two entries. Even so, I was told
+it still suffers from TLB misses, so still needs a large mapping
+granule.
+
+> > Given the single L1 TRBE TLB entry, the TRBE driver could prefer
+> > PMD_ORDER (2 MiB with 4 KiB pages) to reduce TLB pressure. This reflects
+> > the hardware characteristic.
+> > 
+> > This could be a trade-off instead of using PERF_PMU_CAP_AUX_PREFER_LARGE,
+> > avoiding large contiguous allocations that could reintroduce the Android
+> > OOM issue. I did a quick test with this approach and the results look
+> > positive.
+> 
+> I really don't want the driver to second-guess userspace based on whatever
+> information it happens to have hard-coded about the specific CPU it's
+> running on.
+
+The kernel already takes the PERF_PMU_CAP_AUX_PREFER_LARGE flag from a
+PMU; a preferred maximum order would let the driver give it a bounded
+value.
+
+I do not intend to hard-code or guess a preference for a particular CPU
+variant. We can map TRBE or SPE buffer at PMD granularity. On a 4
+KiB-page system, PMD_ORDER is order 9, or 2 MiB. Requesting a larger
+contiguous chunk cannot increase the mapping granule, so I would cap the
+preference there. It remains a preference: perf can fall back to smaller
+orders when allocation fails.
+
+Exposing the preference to userspace also seems problematic. Users
+generally lack the hardware details needed to choose an appropriate
+value. Even if tools provide a default, the same policy would need to
+be duplicated across perf, simpleperf, and proprietary tools. I don't
+think userspace tools are the right place for this policy.
+
+Thanks,
+Leo
