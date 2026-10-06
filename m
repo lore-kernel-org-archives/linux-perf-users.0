@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5508948A8A7;
-	Tue,  6 Oct 2026 14:57:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F10C148640B;
+	Tue,  6 Oct 2026 14:57:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791298665; cv=none; b=MX2Jde5LzWIwgungmr9vvOjLHfrR6iaPs++Zpfm+nFKtfqkCC9NJ8TKtVtmrHR2loOx3HBqzLivdmxcfyEY/KuoLT+ujKg/o8ptQ/5MgrN7hKqj6B0GlTAJ+6+caU5BUNiMbxWjFVrX/05qNR4n3iuldP+Eh1bx+W0xd8JKL7fk=
+	t=1791298669; cv=none; b=b4DBGEb8ZtftXK+x2Iy1otfR1f6Ia1boa68cArNDjiqouYjwdmaAbokY1TfvKCCAgIOAqH/LpQFE0nSIondf0xLRA/Ih2I+MYs8VC1cxYP3vyx6oB8E/40EJi5RREMzPMnouVJt5gs/iHIkfrgOLvXOamsL6UyXMds/XQvwme74=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791298665; c=relaxed/simple;
-	bh=BcKDBp0/tuqohCP4tWXyzXYGfmCGzpagjswWlJJfqd0=;
+	s=arc-20240116; t=1791298669; c=relaxed/simple;
+	bh=xnJ0E046ME8LTvEUrOdXxLjWWji+HEg+GCi03JsverE=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=kHSstfxc5Bdae3XkAMRoxSh+okPgNACKm4UpOgWTUSTBcQKy672eu2Uz/zf9qWFzCipq1Qtj7uYZhcGNUgbQtAY/kGALLikn2RdgDNUuMM5xi3+h5H5wptOXHWpNIzFBqixLXP2W1hOU5p1QeCMAXikTUzetQmT42QwOCYH5M2Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AEKzmsj4; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version; b=NIa3vCz4sU+EC7XLwPTvYOfY18VCFCogiEBGo3KWpLuwsnbOa5d6OY9c225HYmc1jixvZbx5yN7uXdI/J9Zaai15lNWuNFLErOHhSP7/eJrs8VwaVRL9j5J4haL0lf/YoanYc1esMTzKnjtRAmKg6vwf8gDYfGOYF41xSw6As/k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Zu72sqJ4; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AEKzmsj4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0C6ED1F0089C;
-	Tue,  6 Oct 2026 14:57:40 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Zu72sqJ4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8194A1F0089B;
+	Tue,  6 Oct 2026 14:57:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1791298664;
-	bh=dRGHatdLxqJVQm7rM650Tq0H3Js2+HM8FHgq6/8hJIs=;
+	s=k20260515; t=1791298667;
+	bh=GsRS+8QUyzXT3sy05mzdqRSQVHQwC0/XHLNHgHoSuiM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=AEKzmsj41x23/TgLAKFBhlLQW2XlAWvzT6csOdbQii5WYi5c/YjMPcgN1wtFi/hKS
-	 bwHP4jWNVBO92A3z0XOYoPVuoXm6RpUxsSc/zhqZles3WOUL8P9F+tcObcJJMpI/fX
-	 CUoo+rSha6pdEkmHim0HluqnVftbMn8OorDXlaKNzFzRUJsTnndVN5JltbzggZk2Q5
-	 L2kc4RHQfP+YULS2ezIYpUOym1t/zAuc4BrDqP1o2ZzbX6hPjDwcFTs94MF8XCY6wx
-	 2zewlQ4ytBP04aLJi8EMERhCZcfwEdY6u0sj+naFQJ1RTZyF5IzFt25QJ4jVzwCKru
-	 57DieVrLkvIXg==
+	b=Zu72sqJ4U4JHLXjNFkNzZD5UPT2EWFqKGvxzk0dA+eckaFybmqsLAHPA/XPQVMlsu
+	 h2gARIlihk4lAEtgSi1hjgiExLZzWPv0L9vp9o+JJc2/gWjYZsWUPEvO+YR2kSH4oR
+	 CJIIgYnrDirgEHnNoxfnz3q8+3yqcP7Xv4oUNFz3quOJ+Bot45DfkY5SwhNi8B0N8k
+	 d1BO1vCKFOobjeF+FGOxhx6RroYZtWHtFNMW5jl2jA4bgGBN1J34oNFAx7IRVmA4QB
+	 BrpQ1yInNRGsyl2OiiiSlsXDaNDCEhThhOmmdUlxLIRvvailH2Oa6LYi5w8DuAYYOr
+	 Wjy8gyWn/BnxA==
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Namhyung Kim <namhyung@kernel.org>
 Cc: Ingo Molnar <mingo@kernel.org>,
@@ -38,9 +38,9 @@ Cc: Ingo Molnar <mingo@kernel.org>,
 	linux-kernel@vger.kernel.org,
 	linux-perf-users@vger.kernel.org,
 	Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 1/8] perf config: Move perf_config__set_variable() to util/config.c
-Date: Tue,  6 Oct 2026 16:57:22 +0200
-Message-ID: <20261006145729.3028247-2-acme@kernel.org>
+Subject: [PATCH 2/8] perf config: Make perf_etc_perfconfig() never return NULL
+Date: Tue,  6 Oct 2026 16:57:23 +0200
+Message-ID: <20261006145729.3028247-3-acme@kernel.org>
 X-Mailer: git-send-email 2.55.0
 In-Reply-To: <20261006145729.3028247-1-acme@kernel.org>
 References: <20261006145729.3028247-1-acme@kernel.org>
@@ -54,223 +54,38 @@ Content-Transfer-Encoding: 8bit
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-Move perf_config__set_variable() out of the 'perf config' builtin so
-that opt-in features can persist their choice from outside it, e.g.
-util/debuginfo.c writing core.debuginfod=false when the user disables
-debuginfod for the rest of the session.  The set_config() body becomes
-perf_config_set__write(), with the system_config choice as an argument,
-as the builtin's use_system_config/use_user_config statics are not
-available outside it.
-
-perf_config_set__write() checked fopen() but none of the fprintf()s or
-fclose(), so a write failure after truncating the file was reported as
-success.  Harmless for the interactive 'perf config' this came from,
-but this makes it an entry point a background feature can call with no
-other feedback, so propagate those errors too.
+perf_etc_perfconfig() returns what system_path() gives, and that
+allocates, so on failure every caller dereferenced NULL, the
+pre-existing ones in perf_config_set__init() and in the daemon
+included.  For the usual absolute ETC_PERFCONFIG system_path() just
+returns a strdup of it, so use ETC_PERFCONFIG itself when that fails.
 
 Assisted-by: LLM
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/builtin-config.c | 70 +---------------------------------
- tools/perf/util/config.c    | 76 +++++++++++++++++++++++++++++++++++++
- tools/perf/util/config.h    |  2 +
- 3 files changed, 79 insertions(+), 69 deletions(-)
+ tools/perf/util/config.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/builtin-config.c b/tools/perf/builtin-config.c
-index cefd042e4f853466..3b074aca8d344539 100644
---- a/tools/perf/builtin-config.c
-+++ b/tools/perf/builtin-config.c
-@@ -41,37 +41,7 @@ static struct option config_options[] = {
- 
- static int set_config(struct perf_config_set *set, const char *file_name)
- {
--	struct perf_config_section *section = NULL;
--	struct perf_config_item *item = NULL;
--	const char *first_line = "# this file is auto-generated.";
--	FILE *fp;
--
--	if (set == NULL)
--		return -1;
--
--	fp = fopen(file_name, "w");
--	if (!fp)
--		return -1;
--
--	fprintf(fp, "%s\n", first_line);
--
--	/* overwrite configvariables */
--	perf_config_items__for_each_entry(&set->sections, section) {
--		if (!use_system_config && section->from_system_config)
--			continue;
--		fprintf(fp, "[%s]\n", section->name);
--
--		perf_config_items__for_each_entry(&section->items, item) {
--			if (!use_system_config && item->from_system_config)
--				continue;
--			if (item->value)
--				fprintf(fp, "\t%s = %s\n",
--					item->name, item->value);
--		}
--	}
--	fclose(fp);
--
--	return 0;
-+	return perf_config_set__write(set, file_name, use_system_config);
- }
- 
- static int show_spec_config(struct perf_config_set *set, const char *var)
-@@ -158,44 +128,6 @@ static int parse_config_arg(char *arg, char **var, char **value)
- 	return 0;
- }
- 
--int perf_config__set_variable(const char *var, const char *value)
--{
--	char path[PATH_MAX];
--	char *user_config = mkpath(path, sizeof(path), "%s/.perfconfig", getenv("HOME"));
--	const char *config_filename;
--	struct perf_config_set *set;
--	int ret = -1;
--
--	if (use_system_config)
--		config_exclusive_filename = perf_etc_perfconfig();
--	else if (use_user_config)
--		config_exclusive_filename = user_config;
--
--	if (!config_exclusive_filename)
--		config_filename = user_config;
--	else
--		config_filename = config_exclusive_filename;
--
--	set = perf_config_set__new();
--	if (!set)
--		goto out_err;
--
--	if (perf_config_set__collect(set, config_filename, var, value) < 0) {
--		pr_err("Failed to add '%s=%s'\n", var, value);
--		goto out_err;
--	}
--
--	if (set_config(set, config_filename) < 0) {
--		pr_err("Failed to set the configs on %s\n", config_filename);
--		goto out_err;
--	}
--
--	ret = 0;
--out_err:
--	perf_config_set__delete(set);
--	return ret;
--}
--
- int cmd_config(int argc, const char **argv)
- {
- 	int i, ret = -1;
 diff --git a/tools/perf/util/config.c b/tools/perf/util/config.c
-index 8fe43b032e9af88a..85e50d0a25580da0 100644
+index 85e50d0a25580da0..6e0ff8a9140ccf96 100644
 --- a/tools/perf/util/config.c
 +++ b/tools/perf/util/config.c
-@@ -12,6 +12,7 @@
- #include "config.h"
- 
- #include <errno.h>
-+#include <limits.h>
- #include <stdbool.h>
- #include <stdio.h>
- #include <stdlib.h>
-@@ -883,6 +884,81 @@ void perf_config__exit(void)
- 	config_set = NULL;
+@@ -571,8 +571,14 @@ static int perf_config_from_file(config_fn_t fn, const char *filename, void *dat
+ const char *perf_etc_perfconfig(void)
+ {
+ 	static const char *system_wide;
++
+ 	if (!system_wide)
+-		system_wide = system_path(ETC_PERFCONFIG);
++		/*
++		 * ETC_PERFCONFIG is absolute, so its unresolved path is
++		 * the same string, better than the callers crashing.
++		 */
++		system_wide = system_path(ETC_PERFCONFIG) ?: ETC_PERFCONFIG;
++
+ 	return system_wide;
  }
  
-+int perf_config_set__write(struct perf_config_set *set,
-+			   const char *file_name, bool system_config)
-+{
-+	struct perf_config_section *section = NULL;
-+	struct perf_config_item *item = NULL;
-+	int ret = 0;
-+	FILE *fp;
-+
-+	fp = fopen(file_name, "w");
-+	if (!fp)
-+		return -1;
-+
-+	if (fprintf(fp, "# this file is auto-generated.\n") < 0)
-+		ret = -1;
-+
-+	/* overwrite configvariables */
-+	perf_config_sections__for_each_entry(&set->sections, section) {
-+		if (!system_config && section->from_system_config)
-+			continue;
-+		if (fprintf(fp, "[%s]\n", section->name) < 0)
-+			ret = -1;
-+
-+		perf_config_items__for_each_entry(&section->items, item) {
-+			if (!system_config && item->from_system_config)
-+				continue;
-+			if (item->value &&
-+			    fprintf(fp, "\t%s = %s\n", item->name, item->value) < 0)
-+				ret = -1;
-+		}
-+	}
-+	if (fclose(fp) != 0)
-+		ret = -1;
-+
-+	return ret;
-+}
-+
-+/*
-+ * Set @var=@value in the config file perf is using: ~/.perfconfig or the
-+ * file named by PERF_CONFIG.  Same rewrite 'perf config' does, comments
-+ * are not preserved.
-+ */
-+int perf_config__set_variable(const char *var, const char *value)
-+{
-+	char path[PATH_MAX];
-+	char *user_config = mkpath(path, sizeof(path), "%s/.perfconfig", getenv("HOME"));
-+	const char *config_filename;
-+	bool system_config;
-+	struct perf_config_set *set;
-+	int ret = -1;
-+
-+	config_filename = config_exclusive_filename ?: user_config;
-+
-+	/* Rewriting the system wide file keeps its entries, or it is truncated. */
-+	system_config = strcmp(config_filename, perf_etc_perfconfig()) == 0;
-+
-+	set = perf_config_set__new();
-+	if (!set)
-+		goto out_err;
-+
-+	if (perf_config_set__collect(set, config_filename, var, value) < 0) {
-+		pr_err("Failed to add '%s=%s'\n", var, value);
-+		goto out_err;
-+	}
-+
-+	if (perf_config_set__write(set, config_filename, system_config) < 0) {
-+		pr_err("Failed to set the configs on %s\n", config_filename);
-+		goto out_err;
-+	}
-+
-+	ret = 0;
-+out_err:
-+	perf_config_set__delete(set);
-+	return ret;
-+}
-+
- static void perf_config_item__delete(struct perf_config_item *item)
- {
- 	zfree(&item->name);
-diff --git a/tools/perf/util/config.h b/tools/perf/util/config.h
-index 987b47cf54c350ba..9098f8a045850c97 100644
---- a/tools/perf/util/config.h
-+++ b/tools/perf/util/config.h
-@@ -33,6 +33,8 @@ int perf_config_scan(const char *name, const char *fmt, ...) __scanf(2, 3);
- const char *perf_config_get(const char *name);
- int perf_config_set(struct perf_config_set *set,
- 		    config_fn_t fn, void *data);
-+int perf_config_set__write(struct perf_config_set *set,
-+			   const char *file_name, bool system_config);
- int perf_config_int(int *dest, const char *, const char *);
- int perf_config_u8(u8 *dest, const char *name, const char *value);
- int perf_config_u64(u64 *dest, const char *, const char *);
 -- 
 2.55.0
 
