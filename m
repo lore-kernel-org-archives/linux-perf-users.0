@@ -1,173 +1,240 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB818463B61
-	for <linux-perf-users@vger.kernel.org>; Tue,  6 Oct 2026 13:34:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03DEB3E51E8;
+	Tue,  6 Oct 2026 14:57:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791293643; cv=none; b=snFr5II7w32G2y0cWcJ1ZCDQMw7unw7xpKoD5pK3N0jBBshU0GlIs6IYZR6wCFjksM5Uve/thXz2RU1NrW44M7TocbSv6SlSMRxM0jvRbvYYDKFTWkHKu2wTZFz3KeHlR2Bbv5tuD0CMdMbLSIxZJTml8UmbHlrjRTaJ5asZ0n4=
+	t=1791298662; cv=none; b=lbpUnbJIyB/ZhBmBchPHcDI5GStucpTAMUHaSFmNOHWzH0+DSMuFpO0sBouJl4tKz79JcyDJgE9g94hByEoyiTy82lZUyRs55nChqOgpQ5AEqQjLVW2Q7EW+9tbJPK4cPD1NYhGsVJbz97Nj6+U2BQi167O0yKw0Sa+TU/8F+Ew=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791293643; c=relaxed/simple;
-	bh=rfvg750VyCb/AEbsw/hurwO+oNANwew7D38aGIRgbDo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZH3p878YUgnen9UAXasZubTpOZFY/cU7b9NJsIesB0mdex6fytyBDTXFfu3R9nG+v9inB6ZH+KSq2FdQMyt5iTM3BhacvMMmFy8IRScOu9F7y6nl3mikmzIOP1JZGE6qzqlcAl6fzC0cTfkQOD8piQUtBczPHhwUp8CqSdZigN0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hm9Gb0WD; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1791298662; c=relaxed/simple;
+	bh=I1ldmrszqga8FLpTk2MiqLXDJeWsb3v5AzkGny7KPaQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=TbXbjtgclAgkekglDwHnugHGkEbjn+sqkpzLWm9zAAO1XQE5OyCdeIxs1KQXC+lFuR00a2Bkcn2IheEQCg/6B8geA1Hcyv5BEbE5PflkBBZIKPnr0ZgJ02wkQQoWNh7axGdppnHFSvVNondQ76+Q0xvqWftFaY727sbLfzs9zrE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hfW7ba8r; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hm9Gb0WD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B56201F000FF;
-	Tue,  6 Oct 2026 13:34:00 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hfW7ba8r"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EBFD01F0089B;
+	Tue,  6 Oct 2026 14:57:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1791293641;
-	bh=nGyxJzJBLXjRROwNps9ipuSBamy+aLQIkxNje113aNo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=hm9Gb0WDwLDv8w2tB2/M26G6zm+1Qu4xfw5GxZtpi+7QoyQ3QMe/5uJBu/ams+Jcu
-	 aA55ic05UU+vm0Ba3HhQmD4die10I2rsVjSgHBOxjLSQkByohf/Ob0/6q87wgtKXL+
-	 0AJH1uwCzz3e67O9WT0HEwf6sedY2bSp4IG9ffj9L/lFrE9ELJDPbe3R6qZrpeuvaF
-	 dAlYrrde8BNFP67X2JPWlV5ZUcid/wYGtbL2M/J9cMsWmNVV7rd5FzBYak5uwAP7eh
-	 AetgtVui8WQf4I5u8QjbtfSersafZWlFcratRgKnHFSkpuKPJUWN47VE+y1qQbFr81
-	 hrLj9JRF27FnA==
-Date: Tue, 6 Oct 2026 15:33:57 +0200
+	s=k20260515; t=1791298660;
+	bh=uK5/naOC3qxutLrdGzKhd7lzTlYRuYoEsZHM943pKNY=;
+	h=From:To:Cc:Subject:Date;
+	b=hfW7ba8rbGLm0nJHztexwsU8DJIZJNcAn7JM+xj5/RRhzzfvvplQSvV3DL4Sqg5bg
+	 6N4DB80mvKuPUj2Wk7N0r0WEeIdlZnzZPbjAeqcTg6+WibguR7d0ZRLErl75BXKX2/
+	 is/YA/NLN+cH9/m7GMz6vbI/pboEPRRb71f9pfv0MZvAu8Y6OeJZFSjwr9f3p7IScv
+	 WNJNhVke2BS1WJVuEtuSwJ+wQ1aqDMUBjc3EAznrbz4Nt0E0lgVP7ueLecRM/fXwZz
+	 eFzMG490GM3bleT6HdFj7CR+5Fq41X1tDMUJhN385jUYNjAtYNdkUU86g2KrJhqFPd
+	 BZw/HoRwnYbsg==
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Michael Petlan <mpetlan@redhat.com>
-Cc: linux-perf-users@vger.kernel.org, irogers@google.com,
-	namhyung@kernel.org, acme@redhat.com
-Subject: Re: [PATCH 2/2] perf test attr: Fix wrong size expectation for events
-Message-ID: <asT4xQW9Vy492Yyl@x2>
-References: <20260924223027.799654-1-mpetlan@redhat.com>
- <20260924223027.799654-3-mpetlan@redhat.com>
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Ingo Molnar <mingo@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	James Clark <james.clark@linaro.org>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Clark Williams <williams@redhat.com>,
+	linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	Arnaldo Carvalho de Melo <acme@kernel.org>
+Subject: [PATCH v12 0/8] perf tools: Add progress diagnostics and a false-sharing workload
+Date: Tue,  6 Oct 2026 16:57:21 +0200
+Message-ID: <20261006145729.3028247-1-acme@kernel.org>
+X-Mailer: git-send-email 2.55.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260924223027.799654-3-mpetlan@redhat.com>
+Content-Transfer-Encoding: 8bit
 
-On Fri, Sep 25, 2026 at 12:30:27AM +0200, Michael Petlan wrote:
-> Although config4 has been added into struct perf_event_attr, the size
-> expectation for the struct hasn't been adjusted. This hasn't been
-> noticed, since the testcase's return value has been ignored after
-> rewriting the testcase to python until previous commit.
-> 
-> Fix that.
-> 
-> Fixes: 80cdf208117a36de82a30d210b3b8df0f193e75b ("tools headers UAPI: Sync linux/perf_event.h with the kernel sources")
+Hi,
 
-> Fixes: cbbfba4847b8a5299d36e002bf864b21bb83295d ("perf: Add perf_event_attr::config4")
+This series adds progress diagnostics to perf, and a workload that makes
+false sharing visible to data type profiling.
 
-This cset changes a kernel header, kernel developers are not expected to
-update tools/ living code, they are welcomed to do so, so it didn't
-introduce a problem, so the cset that updates the tools/include/ is the
-one that should be in the fixes.
+The changes are:
 
-I was going to do that when I noticed this:
+  - move perf_config__set_variable() to util/config.c and serialize config
+    parser and read-modify-write state, so non-builtin perf code can persist
+    configuration changes safely;
 
- #define PERF_ATTR_SIZE_VER9                    144     /* add: config4 */
-+#define PERF_ATTR_SIZE_VER10                   176     /* Add: sample_simd_{vec|pred}_reg_* */
+  - add 'perf report --progress' for stdio users, showing the current phase,
+    percentage, and counts while a session is processed;
 
-in tools/include/uapi/linux/perf_event.h, i.e. with your patch it will
-continue broken, as it is not taking into account this one:
+  - wire up 'perf report --no-progress', the counterpart of the option
+    above, for the TUI and GTK browsers, whose progress there is no other
+    way to turn off;
 
-commit eb89aef367e4701038869e1ddfa719463524e3e3
-Author: Dapeng Mi <dapeng1.mi@linux.intel.com>
-Date:   Mon Sep 14 09:40:43 2026 +0800
+  - add 'perf test -w false_sharing', a synthetic TCP-shaped workload with
+    identity and packet counters sharing a cacheline, and include it in the
+    data type profiling shell test.
 
-    perf headers: Sync perf_event.h/perf_regs.h with the kernel headers
-
-    Sync the UAPI header changes of supporting SIMD/eGPRs/SSP sampling into
-    corresponding tools UAPI headers.
-
-So I'm updating your patch to have 176 instead of 144.
-
-The test is still failing tho, for some other reason:
-
-running '/home/acme/libexec/perf-core/tests/shell/attr/test-record-graph-default'
-test limitation '!aarch64'
-excluded architecture list ['aarch64']
-running '/home/acme/libexec/perf-core/tests/shell/attr/test-record-graph-default-aarch64'
-test limitation 'aarch64'
-skipped [x86_64] '/home/acme/libexec/perf-core/tests/shell/attr/test-record-graph-default-aarch64'
-running '/home/acme/libexec/perf-core/tests/shell/attr/test-record-graph-dwarf'
-expected sample_type=45359, got 12583
-FAILED '/home/acme/libexec/perf-core/tests/shell/attr/test-record-graph-dwarf' - match failure
----- end(-1) ----
- 82: Perf attribute expectations test                                                                       : FAILED!
-
-=== Test Summary ===
-Passed main tests : 0
-Passed subtests   : 0
-Skipped tests     : 0
-Failed tests      : 1
-List of failed tests:
-   82: Perf attribute expectations test
-root@x2:~#
-
-Investigating.
+Follow up work: the DO_ONCE() one-time init primitive added here mirrors
+what the eight pre-existing raw pthread_once() users in util/ (annotate.c,
+callchain.c, comm.c, dso.c, fncache.c, intel-tpebs.c, libbfd.c, pmus.c)
+need, conversions that will also exercise the DEFINE_MUTEX() static
+initializer; converting them is left for after this series.
+Best regards,
 
 - Arnaldo
- 
-> Signed-off-by: Michael Petlan <mpetlan@redhat.com>
-> ---
->  tools/perf/tests/shell/attr/base-record          | 2 +-
->  tools/perf/tests/shell/attr/base-stat            | 2 +-
->  tools/perf/tests/shell/attr/system-wide-dummy    | 2 +-
->  tools/perf/tests/shell/attr/test-record-dummy-C0 | 2 +-
->  4 files changed, 4 insertions(+), 4 deletions(-)
-> 
-> diff --git a/tools/perf/tests/shell/attr/base-record b/tools/perf/tests/shell/attr/base-record
-> index b44e4e6e4443..dd76fbdb628f 100644
-> --- a/tools/perf/tests/shell/attr/base-record
-> +++ b/tools/perf/tests/shell/attr/base-record
-> @@ -5,7 +5,7 @@ group_fd=-1
->  flags=0|8
->  cpu=*
->  type=0|1
-> -size=136
-> +size=144
->  config=0|1
->  sample_period=*
->  sample_type=263
-> diff --git a/tools/perf/tests/shell/attr/base-stat b/tools/perf/tests/shell/attr/base-stat
-> index fccd8ec4d1b0..d769e69bb4f5 100644
-> --- a/tools/perf/tests/shell/attr/base-stat
-> +++ b/tools/perf/tests/shell/attr/base-stat
-> @@ -5,7 +5,7 @@ group_fd=-1
->  flags=0|8
->  cpu=*
->  type=0
-> -size=136
-> +size=144
->  config=0
->  sample_period=0
->  sample_type=65536
-> diff --git a/tools/perf/tests/shell/attr/system-wide-dummy b/tools/perf/tests/shell/attr/system-wide-dummy
-> index a1e1d6a263bf..9806de3d9c9e 100644
-> --- a/tools/perf/tests/shell/attr/system-wide-dummy
-> +++ b/tools/perf/tests/shell/attr/system-wide-dummy
-> @@ -7,7 +7,7 @@ cpu=*
->  pid=-1
->  flags=8
->  type=1
-> -size=136
-> +size=144
->  config=9
->  sample_period=1
->  # PERF_SAMPLE_IP | PERF_SAMPLE_TID | PERF_SAMPLE_TIME |
-> diff --git a/tools/perf/tests/shell/attr/test-record-dummy-C0 b/tools/perf/tests/shell/attr/test-record-dummy-C0
-> index 91499405fff4..23e00e7f8ace 100644
-> --- a/tools/perf/tests/shell/attr/test-record-dummy-C0
-> +++ b/tools/perf/tests/shell/attr/test-record-dummy-C0
-> @@ -10,7 +10,7 @@ cpu=0
->  pid=-1
->  flags=8
->  type=1
-> -size=136
-> +size=144
->  config=9
->  sample_period=4000
->  # PERF_SAMPLE_IP | PERF_SAMPLE_TID | PERF_SAMPLE_TIME |
-> -- 
-> 2.52.0
-> 
+
+What changed from v11:
+
+  - The 'perf-stuck' patch is removed for the time being, to be submitted
+    separately later on;
+
+What changed from v10:
+
+  - tools/perf/scripts/perf-stuck.sh: pin the watched process by its start
+    time, so a recycled PID can't get samples or gdb; Sashiko, v10;
+
+  - tools/perf/scripts/perf-stuck.sh: drop the control characters from the
+    shown progress updates, no terminal escape injection; Sashiko, v10;
+
+  - tools/perf/tests/shell/perf_stuck.sh: test the script, from option
+    validation to the gdb DIE chain runs on stand-in workloads;
+
+What changed from v9:
+
+  - tools/perf/ui/stdio/progress.c: progress updates now work well with
+    the pager, printed to /dev/tty so they update in place;
+
+  - tools/perf/scripts/perf-stuck.sh: take the last progress update
+    from a bounded tail window, dropping the \r's.  Sashiko, v9;
+
+What changed from v8:
+
+  - tools/perf/util/mutex.h: DEFINE_MUTEX() statics keep mutex_init()'s
+    !NDEBUG errorcheck type;
+
+  - patch 4/9 commit log: clarify the acquire/release pairing, what the
+    dropped static key used to guarantee.
+
+What changed from v7:
+
+  - tools/perf/util/mutex.h: the DO_ONCE() lockless fast path pairs its
+    __ATOMIC_ACQUIRE load with the __ATOMIC_RELEASE store.  sashiko, v7;
+
+What changed from v6:
+
+  - patch 1/5 split into four: the move, perf_etc_perfconfig() never
+    returning NULL, the DEFINE_MUTEX() prep and the serialization.
+    Namhyung Kim asked, v6;
+
+  - tools/perf/util/{config.c,mutex.h}: perf's own mutex type, adding
+    the DEFINE_MUTEX() initializer it lacked.  Namhyung Kim, v6;
+
+  - tools/perf/util/mutex.h: add DO_ONCE() one-time init, from the
+    kernel's once.h, moving the lazy inits in config.c to it;
+
+  - tools/perf/builtin-report.c: drop the option negation and stdio
+    hook comments Namhyung Kim asked to drop, reviewing v6;
+
+  - tools/perf/scripts/perf-stuck.gdb: break the long printf() line.
+    Namhyung Kim, reviewing v6;
+
+  - the false_sharing cset now carries the data type profiling output
+    with cacheline info.  Namhyung Kim asked for it, reviewing v6.
+
+What changed from v5:
+
+  - tools/perf/util/config.c: drop the config_file_name read in
+    bad_config(), locking would buy a consistent NULL.  Sashiko, v5;
+
+  - tools/perf/util/config.c: new config_set_mutex around the shared
+    set's init/teardown, home init via pthread_once.  Sashiko, v5;
+
+  - tools/perf/builtin-report.c, perf-report.txt: --no-progress is
+    --progress's auto negation, last wins.  Namhyung Kim, reviewing v5.
+
+What changed from v4:
+
+  - tools/perf/builtin-report.c: mark --progress PARSE_OPT_NOAUTONEG,
+    parse_long_opt() claimed --no-progress first.  Sashiko, v4;
+
+  - tools/perf/util/config.c: format the path buffer inside the critical
+    section.  Sashiko pointed out the window, reviewing v4;
+
+  - tools/perf/tests/workloads/false_sharing.c: walk every bit of the
+    affinity mask, not _SC_NPROCESSORS_CONF.  Sashiko, reviewing v4.
+
+What changed from v3:
+
+  - tools/perf/util/config.c: keep the buffer handed to the parser in
+    static storage.  Sashiko, reviewing v3;
+
+  - tools/perf/scripts/perf-stuck.gdb: perf-dso walks each dso candidate
+    until one evaluates, for REFCNT_CHECKING builds.  Sashiko, v3;
+
+  - tools/perf/tests/workloads/false_sharing.c: sum before cpu in struct
+    fs_reader, the padding after cpu rounded it to 128.  Sashiko, v3;
+
+  - tools/perf/builtin-report.c: --quiet wins over --progress, the phases
+    stay uncounted, documented next to it.  Namhyung Kim, v3;
+
+  - tools/perf/builtin-report.c, tools/perf/ui/progress.c: --no-progress
+    installs the no-op ops.  Suggested by Namhyung Kim, reviewing v3;
+
+  - tools/perf/scripts/perf-stuck.sh: check gdb is there before
+    watching.  Namhyung Kim, reviewing v3.
+
+What changed from v2:
+
+  - tools/perf/util/config.c: make perf_etc_perfconfig() total, falling
+    back to the unresolved path.  Sashiko, reviewing v2;
+
+  - tools/perf/scripts/perf-stuck.gdb: don't deref map_symbol.sym without
+    a NULL check.  Sashiko, reviewing v2;
+
+  - tools/perf/scripts/perf-stuck.gdb: note the REFCNT_CHECKING proxy
+    next to the structure walks;
+
+  - tools/perf/scripts/perf-stuck.sh: count samples with no progress to
+    look at, an empty log never fired -g;
+
+  - tools/perf/scripts/perf-stuck.sh: `--` for pgrep and tail against
+    names starting with a hyphen;
+
+  - tools/perf/scripts/perf-stuck.sh: bound the gdb run with
+    `timeout --signal=INT 30`.
+
+What changed from v1:
+
+  - avoid calling CPU_SET() with -1 when false_sharing runs with only one
+    CPU available in its affinity mask.
+
+  tools/perf/Documentation/perf-report.txt      |  19 ++
+  tools/perf/builtin-config.c                   |  70 +----
+  tools/perf/builtin-report.c                   |   9 +
+  tools/perf/tests/builtin-test.c               |   1 +
+  tools/perf/tests/shell/data_type_profiling.sh |   9 +-
+  tools/perf/tests/tests.h                      |   1 +
+  tools/perf/tests/workloads/Build              |   2 +
+  tools/perf/tests/workloads/false_sharing.c    | 251 ++++++++++++++++++
+  tools/perf/ui/Build                           |   1 +
+  tools/perf/ui/progress.c                      |   6 +
+  tools/perf/ui/progress.h                      |   4 +
+  tools/perf/ui/stdio/progress.c                | 170 ++++++++++++
+  tools/perf/util/config.c                      | 166 ++++++++++--
+  tools/perf/util/config.h                      |   2 +
+  tools/perf/util/mutex.h                       |  36 +++
+  tools/perf/util/ordered-events.c              |  16 +-
+  tools/perf/util/session.c                     |  12 +-
+  17 files changed, 675 insertions(+), 100 deletions(-)
+  create mode 100644 tools/perf/tests/workloads/false_sharing.c
+  create mode 100644 tools/perf/ui/stdio/progress.c
+base-commit: 705da5b15ab89ba9
+v1-head: 45d7917f7e05e8a29828ed5f0bbdc94fc938f79f
+v2-head: d4f84e4de8890194924ccd897a8e6773e7d4240b
+v3-head: 485532296710225862daf8ffb19802ae327efe2a
+v4-head: 38193635508e0a5f04a6ebf70db27534b68b2d5b
+v5-head: e99bc48f6c72b9cc67b4e4143a0364acac5523bb
+v6-head: 7dc99dbb6504f199c3c39487d91370d1bbb7a827
+v7-head: b357a76666d08f74eb99c755cca41855a96f6169
+v8-head: 257b5ea6115ad5126d2c881523ea6c660cf5d28c
+v9-head: 70235104c6cf7d18d91f46de1a233abbeb65893a
+v10-head: 1ecf850c2694d20ca9cd0014f2a42528ef4dbfec
+v11-head: a3ddbaab18aa24fba520927f71d0ea66edfc5593
+--
