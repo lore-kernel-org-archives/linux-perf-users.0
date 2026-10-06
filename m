@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 578E64E06C2;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D965A4E3229;
 	Tue,  6 Oct 2026 23:43:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791330197; cv=none; b=G3hIkO7J16hBvebdiTnwVpcHGdg8rIrMOKuU0WarCt4Gt6tCGWlcXmdqmZ9pRObTj+TS5JeRhunPaujh7fw5aR4zWmEfnoy6oP+zjFSyDTHT+3cq9P9ICcNTS9qMpHZios8dRbQg5m9Kq8XoVzkSo2RIzWjG+pqPQzKd8v6XC4U=
+	t=1791330198; cv=none; b=bEzJMPLoycH3YYhb7ezjZeROT2LRTkXx8AZtokccwWyhiy3Kd1gD0nqG2qQjnw/XGOmIWC0PCrBDZATSZU+T3bgKshV8QyjHWeyUM7FwvPn/so62DC5s8pYcX2xkh8gtCfqbDUWPWV25xXSE8DNPAVeFJ8PFJb/qHCLK40bJxc4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791330197; c=relaxed/simple;
-	bh=6LztdQU/aVbI2jO/EGYoCz4lpiTtsmIXyiDcXJbkU3A=;
+	s=arc-20240116; t=1791330198; c=relaxed/simple;
+	bh=vSQQbUZBwsHCX/C2qZ3hQXjFPEWOd8WAs3hYFzK7kJo=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=fpH6RfB3KcUAGQgK0M4h2pwz4qFiCzKXBOajPrKIx75SzPYxlj2Im5ZAvcN8ufMnnWHsi8aZc1tHc50EfVMS2VNm8uQ0CfIA6hNwbNmgSUbEEGDg6N2DGOuDEYLSe4Sey7vKV8sWWogi8jADgpdS3gdYiV4z5ngwBK5tl45Y5OM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eQ9IImMx; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version; b=bv+ln6WthQVNHzarVk8bTey7joPChHD2z9/PygAmgHsuol2PxFgknvkuIWJr6eqZa+ry1DKxQDXPT1sqm8aygBqLjZo7ouCJbyjjh20BXiB4zM5ZZ9VrNviNKtdLVAVZBbqqyqXyFWDXvpyOpdAmRPapVaJAZmwrNMArbPi0hRQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gJC6coAR; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eQ9IImMx"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E7DE41F0089C;
-	Tue,  6 Oct 2026 23:43:15 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gJC6coAR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 62C111F0089D;
+	Tue,  6 Oct 2026 23:43:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
 	s=k20260515; t=1791330196;
-	bh=KrJx+y56rkSpRgY4OmmHUZywXuNepZW0jfsbY795ggc=;
+	bh=1jDUSorU4kyVGRVWcaneTaZaVDiAL2DMUj9EKPVJMao=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=eQ9IImMx9VrG+3tceU8LK77PjvnXyPcfQs2XHBCIf/kc+57u+n2Iu1ODZBq3REYRp
-	 mijgYXN/jEoriPZGcgd5PARubkSM1B1z7i4LQvHzyWBo/btdq8sA3Gqgm+OTErVUZi
-	 3CdRWXxtfIA4jgRwwPhOlMINqLQfP23UjgjGjfhy+1wBI9wOLlRCRlV9RyMKi3vUky
-	 5sju9R4I9XGJ5tiQsf1U5V/rEQyMIosHseAT9Pi//jQRGrblBbkzcK5SOU+I+EddZA
-	 JjlOZ+mA15n2U6vFpaIA8GBxtTEqyDSyjv06fEi04qmW0pnRm5vxJg/04O+A+NFRXu
-	 35y2EjH45o1vQ==
+	b=gJC6coARNpL6ZbzbQK+8BCncbJVSfFkv+GKROTrtdsIK41+Y7oZz2Q+2gNeNaPavC
+	 C0WqKCzv1321mAyh0ph0+h/LfHSnWGza7oXdOVwInUbMYOcpeB3Qys6aVVTZ+cCAif
+	 +qasfcl+8RmioIMBrgJ9C36/GxVhlxGAvSGzNbhxofFWiBYtJPfMRpUyfxgy2+m4yN
+	 YIx3xym8xTmPd9bzu8gIHpais4bZ40G/cLPOXJtObERvn8Yiz/bSUlUyz5/MD2X7zO
+	 LVGKlxzOW2kVH7vjpuXnlwq2S8RM256aEmncBwcLJvMIHfTJOUiO4NL7pTl1pC/u4C
+	 LosV8LS3D2+mA==
 From: Namhyung Kim <namhyung@kernel.org>
 To: Arnaldo Carvalho de Melo <acme@kernel.org>
 Cc: Ian Rogers <irogers@google.com>,
@@ -36,9 +36,9 @@ Cc: Ian Rogers <irogers@google.com>,
 	Ingo Molnar <mingo@kernel.org>,
 	LKML <linux-kernel@vger.kernel.org>,
 	linux-perf-users@vger.kernel.org
-Subject: [PATCH v2 01/10] perf tools: Remove redundant dso data init
-Date: Tue,  6 Oct 2026 16:43:05 -0700
-Message-ID: <20261006234315.920817-2-namhyung@kernel.org>
+Subject: [PATCH v2 02/10] perf tools: Try linked debug files for DSO debug info
+Date: Tue,  6 Oct 2026 16:43:06 -0700
+Message-ID: <20261006234315.920817-3-namhyung@kernel.org>
 X-Mailer: git-send-email 2.56.0.rc1.315.gc6ed9934b7-goog
 In-Reply-To: <20261006234315.920817-1-namhyung@kernel.org>
 References: <20261006234315.920817-1-namhyung@kernel.org>
@@ -50,26 +50,27 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The fd and status are initialized later with cache.
+The dso__find_dbginfo_type() should try DSO_BINARY_TYPE__DEBUGLINK so it
+can follow the .gnu_debuglink and find the debug information in the
+separate file.
 
 Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 ---
- tools/perf/util/dso.c | 2 --
- 1 file changed, 2 deletions(-)
+ tools/perf/util/dso.c | 1 +
+ 1 file changed, 1 insertion(+)
 
 diff --git a/tools/perf/util/dso.c b/tools/perf/util/dso.c
-index d3017c82ffb5f4b1..df03f84c9723560e 100644
+index df03f84c9723560e..913877b84b2d437e 100644
 --- a/tools/perf/util/dso.c
 +++ b/tools/perf/util/dso.c
-@@ -1722,8 +1722,6 @@ struct dso *dso__new_id(const char *name, const struct dso_id *id)
- 		dso->srclines = RB_ROOT_CACHED;
- 		dso->data_types = RB_ROOT;
- 		dso->global_vars = RB_ROOT;
--		dso->data.fd = -1;
--		dso->data.status = DSO_DATA_STATUS_UNKNOWN;
- 		dso->symtab_type = DSO_BINARY_TYPE__NOT_FOUND;
- 		dso->binary_type = DSO_BINARY_TYPE__NOT_FOUND;
- 		dso->dbginfo_type = DSO_BINARY_TYPE__NOT_FOUND;
+@@ -2111,6 +2111,7 @@ void dso__find_dbginfo_type(struct dso *dso)
+ 		DSO_BINARY_TYPE__OPENEMBEDDED_DEBUGINFO,
+ 		DSO_BINARY_TYPE__BUILDID_DEBUGINFO,
+ 		DSO_BINARY_TYPE__SYSTEM_PATH_DSO,
++		DSO_BINARY_TYPE__DEBUGLINK,
+ 		DSO_BINARY_TYPE__NOT_FOUND,
+ 	};
+ 	const enum dso_binary_type *type;
 -- 
 2.56.0.rc1.315.gc6ed9934b7-goog
 
