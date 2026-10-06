@@ -1,52 +1,53 @@
-Received: from OS0P286CU010.outbound.protection.outlook.com (mail-japanwestazon11011011.outbound.protection.outlook.com [40.107.74.11])
+Received: from OS0P286CU010.outbound.protection.outlook.com (mail-japanwestazon11011031.outbound.protection.outlook.com [40.107.74.31])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CA313AD503;
-	Tue,  6 Oct 2026 09:45:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.74.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F0F53ABDA8;
+	Tue,  6 Oct 2026 09:49:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.74.31
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791279956; cv=fail; b=LHns+oh/vxQYGFiBDnoUFl+XvW7bMJQ+LrKXXVmVRoHAC9ztUPBrCkw4eR9+11p1MGwM14Iud7Eg7UEuZEDuoR2CVjuC9ztCK3eTK6QEUL1jcaDPzDaNqXnU+FvvlL26ZkAYliKWUdM/Krw0tVfP1cbH7sgaNTi6htIKfUtnNzY=
+	t=1791280164; cv=fail; b=I8eNR6UV4wqBwb/gDt5CHLwrEVg8tKAh9omIAwd73mV7OEujaL7KzC8WriWxC2jZYy+oRnegBUuImNk7Cn1gmCbHOF2MsOXlTrE7F/co/W9CR5zp4EjfpLTfoXFKqOiZo9zt8kh3wBfuZS9av4wL5NuIJ+DXz4/z4r4KDwC2rtY=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791279956; c=relaxed/simple;
-	bh=/vIhX/593NggoUVlw25lNOHDj6/yLpAyIU/ReJ1SV2A=;
+	s=arc-20240116; t=1791280164; c=relaxed/simple;
+	bh=zrtPoorkCY+phgQpcsRCF19rffQCjMIrhzHNtEuZf/I=;
 	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=aP+WIR1Uw41U73ac7jFUOS7CmSexNZ+a7ySt7Mk2mkFaNqLjtuAiU0xhxFNxdFgZrzOZlLqVayoUhIQPQXO4qMCUTW0h0bT0lkpwWUfUnsTHbRAIHTQFEqsFr/bLcSqaWd+oPPW0fhyMNQXi0s9Zwk3im/6yWqCDhGAmaGfluvY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fujitsu.com; spf=pass smtp.mailfrom=fujitsu.com; dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b=fnjRLcVw; arc=fail smtp.client-ip=40.107.74.11
+	 Content-Type:MIME-Version; b=q7H4c8jO+BRu7lJDllFxaHutis51eyALtKenq9s1Wg3RO2dkWm9Um64HPbawXBJLqI6jxghDZNYvCXukuk3dRIt08s3tXo0izwPSkXGVEPgKEsy6GB4dXrrrKbJi2KVnRQYng1KlcCjKX+n+1Dal2MwLtjgG+udmPD1o5CcWOGs=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fujitsu.com; spf=pass smtp.mailfrom=fujitsu.com; dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b=FVsFSfyj; arc=fail smtp.client-ip=40.107.74.31
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fujitsu.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fujitsu.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b="fnjRLcVw"
+	dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b="FVsFSfyj"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=sILRUJKOQe3WRhhZyBjJp7LgDqb7w2O+kXc+kxavCfCokYIn+OL8e+bAkHvKq6hkhPajJ9p+kwoCOz1DhMAlhvtpZbKD9MpYEMkfIHhMsyErFrMZnFv0YAwxgMqKRsJhswF8WveCrYUFBYdutyyH/jSKSEsQ4SNlNaPvSpP+ZXcdMfOnypNnOtTLtPp+TJm6pdtpLthfBo8QfhRBRX+xZWWKYZOG9720cuvB7E3QOAfKbCsNYmaPINFtRmfiE6QkRLHsEPrURxs6k17xHySs/SXzOZRl9mcsenMbRNB7gFGaTtxHSnKLCYGJ9tYGVdsg5b+8RMuvTPqZR4SZIJzJuw==
+ b=POzsiXn+niJNvGAC+yRIJ1OhvPEP4AJYQHk28Az7uTJkZ9tWC/LlzIfhqaOG7gGsMluI0s6GMVLJimdDc/x9iJWu0553FXbVPe2pjPTXjrfwqxmYvEXuQFwfHReqT5iLu1KFX9/LMEOgixHKnMOk4YH5E6NTvgYLLCq4V89yIIq0CGbgosBCcILIx+9DatTm1IyDXJ//J9J6SwYsYfZ3LdnvfVOBKkF5JPTBQFmir/9O5JrKjlkAR+0CCGcQ5XBaHrotda2xgEIAzSPzStrLmlmWZLSg03RaO1ecFDItenCCjrn6Npt8Cp/9Ws/lBxIBmzgP4w79DkJT2Ocm1k+ihg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=T6lZUkpVR2embVnE4gj43/nQGZnGE5UdHFQRo7taqeo=;
- b=eewA/9RVODE1X5L1UhHElgxo3HS4inTGt1+43U1G0eZD+IGftUhvtYtbFMHbLefVYO70VD2JGTs3CGqwEv5OnmTY9PyK28jpclP2bkkGjEIVb7MokWpP4ByYSoD5D1b1MI9cU2QHyiXMrPUEJ6Q7glaBT+G7bOs8XkBUBnXO0AyvyIfmQbqXe3u5wIXKxUKDFFYlGr42AZhcnuR1PiMMZzFbKhMTP/6+v7i5S67uvN3VjPGd4KuphGYKoJ1IZFg6k3aKnP4IZL/7kLx9U8X2g9ZpIOCWJpVPjZV3+0Bf1xakmImZIvAmOy6Gd7GkDolRfK3I9Oy4FtN8Mv8/cuJp4g==
+ bh=tvd0LMwnw+V/bTgbhunX8Rc7voLlfcSL/ZfYU1aSD2g=;
+ b=B96r54v+Y1hscoO4TJ/iDkmF80FGK7iDIUKETlOK2EMkHWmVSFcv2/EYxDPny3l2U37enbvEe6E36/pZp4PGVJgbMwKrspVt4LvHbePXHreU/O+pxPOg3yzXLOsF4FS9UyKaVJuQtWfshDQFOc3/J8/qUi0qA9TasodDUflOblBIIXQL6HHokrP1wAwxW19EsnxEyeusQJnOadaY8L0zkTWkH25YyyopmeAZQwQNos7cvIX8qSEk9E2MChMlRoFeSYiEdfQ5Zs5WFcGD3fWSuupgQqt1e1RRcz0SNyS2POxvujCPdCSFNoRknqfq4mpp87kMYo8MihAneatZNeJzRw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=fujitsu.com; dmarc=pass action=none header.from=fujitsu.com;
  dkim=pass header.d=fujitsu.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fujitsu.com;
  s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=T6lZUkpVR2embVnE4gj43/nQGZnGE5UdHFQRo7taqeo=;
- b=fnjRLcVwkjM/eiNXZbNg8QeX6hR7Hfgf8QNF4eDNzEBbVEAoEVrwZdZGpe2QRd6p+H21eiPfG+rYmuQv8jU/QzxpTnMlZCPnoa9xxidEWW8ZNJgbGNaqq6PIXMHJwuMCYHiYAO5yrZWZtoZP+684JIUt4QeYM4zEaoz08fi6miZqe/ArhPAv1YE9KNKsIT6sG6WCPGwBREOUaOU8gCSKNaC+xtXLwN5ZoHK8mXN03Ij/9XKjmGyMCrnlPD1X0R1ZD6/14iNXZjQNZfJTap7X7ieJbUGT9IxN/jQyBublFaOCEAPbiBHEjLEbYxv2x05gHfh48tuXuWuIj4ujomAloQ==
+ bh=tvd0LMwnw+V/bTgbhunX8Rc7voLlfcSL/ZfYU1aSD2g=;
+ b=FVsFSfyjaKumCoqJ7otnysxOapZ2H8GqhK7yzeqCV3Hjy6P/tZbIMGyF2ZT327TfEYZKGVhv7YQmu0GwCr1r2ny/mLCOdDfnbUk+SFvIqR977oyopjjr6cq44OLomhjKe1zIv3OOI3mImEzbbjZfSSaDByJdME5ppuGWf9rbKCVsDVcCZ7aM8ABnUuwj6cM7EH65XAE8Eok/r2KmXP+k5JBvxjW3WsI4uAIoKcbWYUkQgSXimitlMXK5WSwEifDEekv2MsT4posRaCHuiSZc6tWbRfCXLSMS5YpSuiVSQV7GddmEOcRd8X4cbWfQna3nmBqP/vRwPwg6NNsSgan4jw==
 Received: from TY7PR01MB15746.jpnprd01.prod.outlook.com (2603:1096:405:290::6)
  by TYCPR01MB8455.jpnprd01.prod.outlook.com (2603:1096:400:15d::13) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.472.20; Tue, 6 Oct
- 2026 09:45:50 +0000
+ 2026 09:49:20 +0000
 Received: from TY7PR01MB15746.jpnprd01.prod.outlook.com
  ([fe80::bc79:d427:b0a9:a793]) by TY7PR01MB15746.jpnprd01.prod.outlook.com
  ([fe80::bc79:d427:b0a9:a793%5]) with mapi id 15.21.0472.016; Tue, 6 Oct 2026
- 09:45:50 +0000
+ 09:49:20 +0000
 From: "Tomohiro Misono (Fujitsu)" <misono.tomohiro@fujitsu.com>
-To: 'Mark Rutland' <mark.rutland@arm.com>
-CC: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
-	Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>,
-	Randy Dunlap <rdunlap@infradead.org>, Marc Zyngier <maz@kernel.org>, Thomas
- Gleixner <tglx@kernel.org>, Radu Rendec <radu@rendec.net>, "Kohei Enju
- (Fujitsu)" <enju.kohei@fujitsu.com>, "linux-arm-kernel@lists.infradead.org"
+To: 'Will Deacon' <will@kernel.org>
+CC: Catalin Marinas <catalin.marinas@arm.com>, Mark Rutland
+	<mark.rutland@arm.com>, Jonathan Corbet <corbet@lwn.net>, Shuah Khan
+	<skhan@linuxfoundation.org>, Randy Dunlap <rdunlap@infradead.org>, Marc
+ Zyngier <maz@kernel.org>, Thomas Gleixner <tglx@kernel.org>, Radu Rendec
+	<radu@rendec.net>, "Kohei Enju (Fujitsu)" <enju.kohei@fujitsu.com>,
+	"linux-arm-kernel@lists.infradead.org"
 	<linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org"
 	<linux-kernel@vger.kernel.org>, "linux-doc@vger.kernel.org"
 	<linux-doc@vger.kernel.org>, "linux-perf-users@vger.kernel.org"
@@ -55,80 +56,80 @@ Subject: RE: [PATCH 2/4] arm64: tlb: Add tlbi workaround for FUJITSU-MONAKA
  Erratum E#030001
 Thread-Topic: [PATCH 2/4] arm64: tlb: Add tlbi workaround for FUJITSU-MONAKA
  Erratum E#030001
-Thread-Index: AQHdUli6CS8L1/ubT06LulaRj+FfqbbqN4QAgAYQ06A=
-Date: Tue, 6 Oct 2026 09:45:46 +0000
-Deferred-Delivery: Tue, 6 Oct 2026 09:45:46 +0000
+Thread-Index: AQHdUli6CS8L1/ubT06LulaRj+FfqbbqMogAgAYXhKA=
+Date: Tue, 6 Oct 2026 09:48:50 +0000
+Deferred-Delivery: Tue, 6 Oct 2026 09:48:50 +0000
 Message-ID:
- <TY7PR01MB15746E4CA4B8681290E6E59E9E5952@TY7PR01MB15746.jpnprd01.prod.outlook.com>
+ <TY7PR01MB15746A2EBB844A9E4E83CE849E5952@TY7PR01MB15746.jpnprd01.prod.outlook.com>
 References: <20261002-monaka-fix-for-upstream-v1-0-4aec0b0cbe34@fujitsu.com>
  <20261002-monaka-fix-for-upstream-v1-2-4aec0b0cbe34@fujitsu.com>
- <ar-rGjVKB0vqB-Jx@J2N7QTR9R3.cambridge.arm.com>
-In-Reply-To: <ar-rGjVKB0vqB-Jx@J2N7QTR9R3.cambridge.arm.com>
+ <ar-m7DUSMhe0euXC@willie-the-truck>
+In-Reply-To: <ar-m7DUSMhe0euXC@willie-the-truck>
 Accept-Language: ja-JP, en-US
 Content-Language: ja-JP
 X-MS-Has-Attach:
 X-MS-TNEF-Correlator:
 msip_labels:
- MSIP_Label_1e92ef73-0ad1-40c5-ad55-46de3396802f_ActionId=8d2c5c2c-bcdd-47e4-939b-ee5d29ff1bf0;MSIP_Label_1e92ef73-0ad1-40c5-ad55-46de3396802f_ContentBits=0;MSIP_Label_1e92ef73-0ad1-40c5-ad55-46de3396802f_Enabled=true;MSIP_Label_1e92ef73-0ad1-40c5-ad55-46de3396802f_Method=Privileged;MSIP_Label_1e92ef73-0ad1-40c5-ad55-46de3396802f_Name=FUJITSU-PUBLIC?;MSIP_Label_1e92ef73-0ad1-40c5-ad55-46de3396802f_SetDate=2026-10-06T09:44:12Z;MSIP_Label_1e92ef73-0ad1-40c5-ad55-46de3396802f_SiteId=a19f121d-81e1-4858-a9d8-736e267fd4c7;MSIP_Label_1e92ef73-0ad1-40c5-ad55-46de3396802f_Tag=10,
- 0, 1, 1;
+ MSIP_Label_a7295cc1-d279-42ac-ab4d-3b0f4fece050_ActionId=44936c83-f8de-497d-b8f2-5abf81ecd2b8;MSIP_Label_a7295cc1-d279-42ac-ab4d-3b0f4fece050_ContentBits=0;MSIP_Label_a7295cc1-d279-42ac-ab4d-3b0f4fece050_Enabled=true;MSIP_Label_a7295cc1-d279-42ac-ab4d-3b0f4fece050_Method=Standard;MSIP_Label_a7295cc1-d279-42ac-ab4d-3b0f4fece050_Name=FUJITSU-RESTRICTED?;MSIP_Label_a7295cc1-d279-42ac-ab4d-3b0f4fece050_SetDate=2026-10-06T09:45:07Z;MSIP_Label_a7295cc1-d279-42ac-ab4d-3b0f4fece050_SiteId=a19f121d-81e1-4858-a9d8-736e267fd4c7;MSIP_Label_a7295cc1-d279-42ac-ab4d-3b0f4fece050_Tag=10,
+ 3, 0, 1;
 authentication-results: mx.microsoft.com 1; dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=fujitsu.com;
 x-ms-publictraffictype: Email
 x-ms-traffictypediagnostic: TY7PR01MB15746:EE_|TYCPR01MB8455:EE_
-x-ms-office365-filtering-correlation-id: 662f0004-32a8-4176-aa7d-08df238e9b28
+x-ms-office365-filtering-correlation-id: 30de4444-ccec-4afd-5a9d-08df238f1850
 x-ms-exchange-senderadcheck: 1
 x-ms-exchange-antispam-relay: 0
 x-microsoft-antispam:
- BCL:0;ARA:13230040|7416014|376014|23010399003|1800799024|366016|6133799003|10067099003|22082099003|18002099003|1580799027|3023799007|38070700021|4143699003|56012099006|11063799006;
+ BCL:0;ARA:13230040|366016|1800799024|7416014|376014|23010399003|38070700021|11063799006|56012099006|4143699003|22082099003|10067099003|18002099003|3023799007|1580799027;
 x-microsoft-antispam-message-info:
- v27I0o2VJljXpLa46oIhgpGPMoiv/7aMNfNkUIA2vWr82Vzlt08hMd0/t/0JxXpQwoyTGKzF/YcRpABs1t4KAeYca3PETwb7+ETCRgfsbrQoQGi/m2EtdeRuXPp92jSv2w3JJ7ZgFDiOi6prQ2Mz+pUUlGipnXKMe8/Q/4vpDIn0b1ZnqupToMKVd0f+gsMEI02CAtC1mbqC8ZgEZjG3D77pI5u+V8i/Xic0eu8qeVvpc1YojDrvuAoA6I1i5HRIRqn3bo9T4NZTiMN/W+2h3VXQyaSUpLaZc1biPKYbFbFInTzrPiZ2yXW373WK9oQIT2/a3GfsXfolre/fZ50n8MvzCl5BF4NoyPYa9XwHLHvVnVQw/YnDF4huthC9PcZgBASmSxe4u0dVBfkXp0IUWEUUnZtJackJbcP98lmQf4Ygw2HPKRzUOHUUzeRoiXhYu3ZOrrIN1NtOIl4NdVe6deIEp/aSX/8HhAR86iTLbLYwcAu+Y8M1M/yHC8+YjmkLaYI+0vUP0QbedkIxXB0Dx48mGCejnzGf0M+GMTrypqQrGlvWanpYva27bXSFnKDfNCZ6MO/G8SkZFDLERvMkyyP6kJC2/bsFYOTfuIufYHUCMj6kFKsp1OJ8/bGlPOA8fVJAQQ1A0lIG+1267ta0LmTIFVO31yByzsJHrfVOExEcLOL5auaxLz0tnepVrHxS7++2d0N2Nk9Jf6USLBxVlroH3+S8hkSEs0C62n0TpjJGooRiJ8v+tJAcUaN8rF33
+ J0GKuNyNlbGk+xSgMn1c9U2i6nLtOfFbsPBDdQvGpJyQOuo0Vfals0fJNdtSo5wWyOkvoe4HWrNjfe1asz3GkVE6olm2n5c6taleEEUq6dlmAwW6ozSyAlCNrJwVkO052Y+jAiA9nr+wUTA7NU59Osk10hDgHylr7CBCzDFa6/iG9RRZoj+jsJh/VrowGZ3cOj4/z4YDVSqShIhoqXb5AoYOzqnZfCNjb2dhD1GD3OyObjmnrq9YU3bL0sFMkvCtXLxbXWcyZ+agPDUcpdxHZDGH7/K45bCODWm04pGLoxYeDXbUKbWOssxLzfE8Ap+ryTsJ3jVhq3wY78yNOYDhHpWfX/2Oy7lSo50eqtZ8od0CcJnGIOguS4KYOi+cMyGIBcgHZFW42My8GN3t6CNxnFscYR1n27Pzj75ioEyyhl7Dp+4c+5e1Nak3VUgYaPTxKc360n8cGTv8hGeIjJ9iK/CNJIP/Pbw+Pe73y5Y21+dbtvYggq9e5kfkoPFMolV12UoaemQNfRYtbA0UPuFPhkE49diHmZaVhi1+VkIeWmgVoBTMxyRqfblivMKS0qqKwPWymkEN58kUvq1/H1P504KRSp1qirSo77siY/4JbxLXuzaFwh22LQCYCVMPdWalZDj6bB2rPJwZDhlUlchhe5byHEFz0JxChX2bEXaU33Hs34GlmFUUI5urizysIWD2Q3eqIopnyAFai2z1l4Qw/5S8LvEuMctLPRxTCEhmnJ3AHy+rp6QOJNqsW0tgQ9XJ
 x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:ja;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TY7PR01MB15746.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(23010399003)(1800799024)(366016)(6133799003)(10067099003)(22082099003)(18002099003)(1580799027)(3023799007)(38070700021)(4143699003)(56012099006)(11063799006);DIR:OUT;SFP:1101;
+ CIP:255.255.255.255;CTRY:;LANG:ja;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TY7PR01MB15746.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(7416014)(376014)(23010399003)(38070700021)(11063799006)(56012099006)(4143699003)(22082099003)(10067099003)(18002099003)(3023799007)(1580799027);DIR:OUT;SFP:1101;
 x-ms-exchange-antispam-messagedata-chunkcount: 1
 x-ms-exchange-antispam-messagedata-0:
- =?iso-2022-jp?B?Zi9jVFpudFo3aStOdHN5aVNNOHBoeTFsaG13bE5VM0ZGZkFaLzdueHdD?=
- =?iso-2022-jp?B?cFVsMVlYN3hoZ2t4c1IwdFpmY1laMjNmbzliazRvVUhXWE1SUlZSaGNz?=
- =?iso-2022-jp?B?TnNoRUUxdG15czFVUkovR3Rja0xndHNxUUNRai9OaHBETTM5U2lMZWpQ?=
- =?iso-2022-jp?B?Yk1ZNW03cGRKelBJenBWdEQwK2xBL3FxenRqa0tNcWxwdUVNUGRZQ2dw?=
- =?iso-2022-jp?B?ajFJcWt1M0o5UEQxeUM3UWJyZWtJM1pOZHVkSHhQTzBUTWUvVGUrTEVB?=
- =?iso-2022-jp?B?eG5WSEV5eTNUQVV2K3Z4cW0yRVNjdmNmMlh6c2ova1RlMmhCY0xIT0NV?=
- =?iso-2022-jp?B?b0RSQVp2OThJcGtvTmRrVi8vcHRhWGdZTGVaWUpYR1pDcGRvSkdrbFVa?=
- =?iso-2022-jp?B?TlJicjQvWHlrYkZmY0FwN0E4bGtac3phMk1QWWYzQXJVdFpvSjREdFVS?=
- =?iso-2022-jp?B?Q0o2UHB5ZG0vdVh0bktDSU9UeVZRelhpR3BCVjJ5RUM1YWZ3cG5HVEZr?=
- =?iso-2022-jp?B?N2NnSmhEM2U4clVoeGl0bWpuUXBORllWQjNSU1d2b0NlU1lRbGNLZXNW?=
- =?iso-2022-jp?B?M0V3R3NHWkJmaVJ5N05JREo2WnZyN1RSemI3WDd5ZlhlWVJwU3BDWE5i?=
- =?iso-2022-jp?B?ZFI1d3lqNEVScnR5T3hNVlZPTkpvdUxLNklmZzZNVis2ZzhkSzVPVC9m?=
- =?iso-2022-jp?B?TVh0RVFKa0RydmRXVEJXNkZaQS9NNkM5djRsa1RNYXorT1NRbG41RlVL?=
- =?iso-2022-jp?B?S0h4VzVOZXhtZEFRU1NzTmR5Y1p2SUVFUnF4Uk5qejB3T1B2OW5jUXFz?=
- =?iso-2022-jp?B?ZnhmWlVMdjA4VkthT0p5ZU9NbGp5a3RuRXZGR0dib20vWXNuanNYSWMx?=
- =?iso-2022-jp?B?OXZzcXMydjJpZlZDL1YxV0ZlNndiUUJmSjJOMzZnbHpoU25GWXpxcHF6?=
- =?iso-2022-jp?B?a0dwWEQ4MW01VHVzemlOODFwaTZjTlVicVNIeFgxalJPdXhpSDl4M1lm?=
- =?iso-2022-jp?B?QWFkQ0MvSTZrTVVqYVE1ei82ZUo4Q1ozNGNvM1krNFk0MUlRc2lpVG1E?=
- =?iso-2022-jp?B?cXdYeVRuU0lMa1kxVDRrUzZBTWkwYUd1bWdxa1BTVGk4MFBoOHpLd1hm?=
- =?iso-2022-jp?B?MzVReU5VMFczUGU0c2ZzZERUM2psQUFURFJabFdOeDdHdW9kN0MvWU5C?=
- =?iso-2022-jp?B?dGhuWXdkd0pKb1BTMWFReVRqVnRwM2lwQkN4Z3Q3UHJ6d0EzU2FjeWxx?=
- =?iso-2022-jp?B?S0pRY0xXSGJvSklnTGZNWDZwYzZVVEpkRkkzdUhDK3JwTWsxQ2tVOC9Y?=
- =?iso-2022-jp?B?ZVBRU3prRkpYV0pQTUp1bG1jZjBSRHB4MW45MCtXYVVzNU9HTXU2bjhv?=
- =?iso-2022-jp?B?WmNlOHBVaDZuSXhyeHRuSWZ0WWpuVDU1a3RyVkYrSkVXUlZBcGFFa2NR?=
- =?iso-2022-jp?B?TjlNK0dBSXdiZ0FiTm1JcnVOTHpkc25KSXZNSUdQVVVpckIwTE1uZC8w?=
- =?iso-2022-jp?B?clg2TlBZVDVYMk5TUkY3WXNkWHpoRTQ3QnNyTGVUZjQyTHFQdzlSNlRL?=
- =?iso-2022-jp?B?MldGWXl3UWQzNHpIQ2FlSmlPOHVvNy9iekQvalBDUm0ySlFQSERwVmpu?=
- =?iso-2022-jp?B?c3JCcWdnNU1ZN1lNYUVLMVBjZkJJZFBDRWh6WkxjSWVHb09nRlRWTnNp?=
- =?iso-2022-jp?B?cklCZkJ6OE1IMFBBZHVOMHJvMmNRNXh1Q0Ntb3pUV1U2ZC9uZ1RVYjk0?=
- =?iso-2022-jp?B?QjBwcFgvUVk1NmxyaWtlYVRDMEFScGIvSzMyOXEzbzBwWmMyYVExcklt?=
- =?iso-2022-jp?B?eUswWTQ4MlhwbzdTY0VNRExHcmtnSGxNUUFsT1FhVEFXdXppSmZCM3RH?=
- =?iso-2022-jp?B?a3d3ZEpSaTBmc3REbzVmdG43cGtYS1Vwb2pQcTlpUlZOWXdMVDBEVmVY?=
- =?iso-2022-jp?B?WnBsbERJWTRJZTJIeDEydEhzb2lwWktpZE1id3hzc21PdXduN2FLYnIr?=
- =?iso-2022-jp?B?TWFVTFQyQVdNZWVlMEJVcndMVi9Qa2lacGc0WHU4WkYyZFZIc1pyM3FJ?=
- =?iso-2022-jp?B?MGs3eW5TS1BJQXhPcHkyMGo0bGJUaUlHaVpwMUZuazREWng3MkMzenZp?=
- =?iso-2022-jp?B?NjhwbkthZTlPWTZCaEVtTVFZbVFjZHBrV0RyazV3QzI0THROb2c5V1RS?=
- =?iso-2022-jp?B?TVZFbnRsUmdCUGpRTWp1eW4wTWNYdW9JOGN4VjhpVnkzWHBQZDdlU3dt?=
- =?iso-2022-jp?B?WlhYWkk3dFl0alowRW13cTZjVnBVcW9OL0YyOWExajhxYUxSVEU4NkdN?=
- =?iso-2022-jp?B?RzFzS0RsTG5scHdMdmkrSVJkYWVJcC9GRmZFNTlZeERKZVM3U3NYejJm?=
- =?iso-2022-jp?B?eEFEOEtZUUlMV0cxTTM3RWdBVlQ0N3QrWFpJYVlFOGd1ZTBUeXpBaHF1?=
- =?iso-2022-jp?B?ZU52OGhDWVpDdUFVcHE0dGQyU2xJbHZvb3g5Z0gvZ0lBeFVLalhwTjlP?=
- =?iso-2022-jp?B?VGYzZ2hUaDIvSGNTOWFQTGxsaEN0QkFFUFV0RUZ0a3BDVHIzUExKTDVS?=
- =?iso-2022-jp?B?UytPd1pEST0=?=
+ =?iso-2022-jp?B?RE1uQjBQNWdVUWJQekdueDhBZlZQLzlZYTdqUmx0N1pmZEZZcUYyanA3?=
+ =?iso-2022-jp?B?OVdXUEVwdXRmOHVOcDVBR09PUWEzcE85dWRnWUZoOVhqZ20vWFhrYW9O?=
+ =?iso-2022-jp?B?V0RrYSsvRjFYaGtpNVVpTDRKYXBTM2pVWlk4V1U1ZWtFODdudEh2Y0NE?=
+ =?iso-2022-jp?B?dHZZUk42SE53b1EyVnNhSElRQXVOMlhKcDFycW4zbzQ0VnA2Q2VsOXdh?=
+ =?iso-2022-jp?B?b1dLN0dmbnhyT1M0UVpRalB2VEh2ZHFNRUhRSHNZVG1UcVRvWmpCRTlX?=
+ =?iso-2022-jp?B?SGVYVjJpMzRNRkllbGVuSlBKVXQzNyswU2doNytINXFvQWxjbGU5Z3h1?=
+ =?iso-2022-jp?B?NmY5TUEvc0ZUQXdlZ1N1RGR4V3dSQ1VIWUN5R2xqRXM5eHEycEhpNDZD?=
+ =?iso-2022-jp?B?Nkh2YmVvbVRQc0t2T1gzdU5TWmlaQkFqMW5QVm1BNmU4VnhIaWNtWit3?=
+ =?iso-2022-jp?B?VUM5dWM3ck9nbXJXOXdRTFd2ZkR6YTh2c201WnZqWklBVmtjV0p0K0g0?=
+ =?iso-2022-jp?B?UVFBenEyMXJTZlBSUUx4R2JDNjNaVGlIbERoVWdwUEI1czJBaVV6aGVT?=
+ =?iso-2022-jp?B?eG5BNzVzaTFNRlJQN2V3RUdtNHpkUjJHQU93bDFqMVFpYStMbzl1SUI2?=
+ =?iso-2022-jp?B?ZHE5bWJXRldlWjlJclk4YzNSZ1MzVjd2dm5tOXF2MnRyZWk0TEVtWnJm?=
+ =?iso-2022-jp?B?YVh4QUVoWEg4bmRHS3lYV3FCVnV0bjZ3WTMvTVJIL0w4bDlMMlJaWjhh?=
+ =?iso-2022-jp?B?bll6NUgxdnJobmZKeW9jWUVtejRuemhiS2RkelB4MWRreE9UTUllN1Vo?=
+ =?iso-2022-jp?B?VGRxRUxLT3N0NTNpN1NVL29iQldiMzBvSXBzYUlLcWRPVmNZNXErc3o1?=
+ =?iso-2022-jp?B?RFVrWSs2NWhONytFWTRCMENBaE0xWnJ0RnRLamhhV2VGY1NXYkF5OUw5?=
+ =?iso-2022-jp?B?TzlFR0Y5ZE1nL01ZL3JSYk9scG15NE5aQUVWY3RXOWQzZCtUY1ZFRjU3?=
+ =?iso-2022-jp?B?aEE5Q2NvRExRM0xpSSt4RkcvaFhaSnVBd3RGcCtaQ0ZJSUROZm4vM2Zk?=
+ =?iso-2022-jp?B?aUs0ZXVkejNpbnlKV09JTlpldFpXZ0Y0WU50bXo5eTI0UEEzSmJWcGxH?=
+ =?iso-2022-jp?B?cElLV2NKWDVHVmgwb1hBZ3FMcWhVZWVDVEFSdmt5eWVFUDNSMk83RXdO?=
+ =?iso-2022-jp?B?ODNWcGdIMktjbUVwRktPVE5wMTVJQkZ3WGFoR2R2WGptR2M5MW8rbWlp?=
+ =?iso-2022-jp?B?L2cwSWFoei9qbjhyT0pMcmwxUmNvSjBjb1F6US9QbDFWYXMrd0VPVm1o?=
+ =?iso-2022-jp?B?UlVUWEhQckJTLzVKRWZTVDhabmtRZ1pNclV6UlF5aGNyVHAycWZzNWdF?=
+ =?iso-2022-jp?B?UmpHY0lydUV1bXNURVJ0L285U0Z4TFc2QXdaeTFsTDZ5bkZ0MFpxRXlW?=
+ =?iso-2022-jp?B?dCsrN1RYdlBHTmo1d1c4ekNnWEhRcWFhOXQ1OTFWcUY1aEZjYkMwdTBo?=
+ =?iso-2022-jp?B?S0VCYUVMT0NOZVpqR1J5NHZFZWZUYzF0b0x4eGUwRTVYRUkxUVNnd240?=
+ =?iso-2022-jp?B?K2pTNHNJR3BhTThpTm5tNlVxQXFic3NCV2x3NXAwaXBNM2dCSk1nTTlQ?=
+ =?iso-2022-jp?B?SDA2cHJSbzg5emtEZkNwVWZxN3UrR0FTKzVMcFI1T24wRGkyVWh0RVhC?=
+ =?iso-2022-jp?B?OHFCekE4TTBObUFoTms0MkxtWFJ3M2JkNUhsMEFsRzIvRU13TWtQbmtq?=
+ =?iso-2022-jp?B?QnVySEp2bURIYUx6UjhpZGRabGdDK0M1bkFjZ3hwL0Z0dkM3b2hDcTZm?=
+ =?iso-2022-jp?B?blRZVVZJRkJxQktFckx0dy9OZDEwdnNwWnRaS2c5QVFiNDRzbEV1VXhY?=
+ =?iso-2022-jp?B?cW9YWG9oeVI2Z2JUVXVEdm8vMG1mT1ZvYTFpRkhYcnVlNEFDb3FIUmw1?=
+ =?iso-2022-jp?B?cUlKWmkxU2RYR3I4YTdJcEJaeHZ1b0x1MTRqY2JLVHp4YTBGZjJCaUY4?=
+ =?iso-2022-jp?B?bmFPd3A5cVgxcEZTV09KMEhGTlN2aURkTUZwbEo0dG9GNlg2VXpYQkR6?=
+ =?iso-2022-jp?B?NjdnekVuVmxrRkxxU3NOQU1sOTZ6QStRTzJNNk8xWG4yQ0s3T1BSNWow?=
+ =?iso-2022-jp?B?MHNrY0lXYXRNT1RoWG9sU2lLd0xub1VOZm9XV1UzM01PbGFjaHFVSmtm?=
+ =?iso-2022-jp?B?eVlPb2o3bUdKV3hiNjh4eDljMDZRNktPLzdNSnFoOG9lNXVvMkFSc1ZW?=
+ =?iso-2022-jp?B?TmVMWjF5ODZvNm8zdXdxUTQ4Sk5jbnhCZmVFR1NDK2ptakJLejdLOTh3?=
+ =?iso-2022-jp?B?TFJFdEsyaEt1cFdlcnlGcWJMUnFWa3JDWi9BVE1KRVZ0MXFTZ3FlRzlB?=
+ =?iso-2022-jp?B?bjBMMGZjaVJLWTdoVlNSUzFocFdJTHFxbzJWbmVrWHpTKy9uM3UxWXVG?=
+ =?iso-2022-jp?B?MU5RTTV1eFl3TlMzVS9pTGY1ZUFjczYwNW5CN1poc0JTTndwdkY4b3ZC?=
+ =?iso-2022-jp?B?WmErSTBXN0ljVzhEaGxPUWs0RHhUd0V6b1dFS0ZkRXdRNzE1QmFDNmEz?=
+ =?iso-2022-jp?B?UFpjNWl5ND0=?=
 Content-Type: text/plain; charset="iso-2022-jp"
 Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
@@ -138,20 +139,20 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-Exchange-RoutingPolicyChecked:
-	1arnFq+tkO1fNrdEysCFR6TMUqLFd8edjjSFm9YA9ItBVbQnQu5qR15D+zZHF2W2jO7nC9hAlJJwGScrX25eWwMn/PjZma4yOIkbLnjRmKBy41BaHwa02PMLVqgfK2EMKh3ufcNYJg+2n7mcYZhfYCkDPNS1VrS0eOJsiLqgOkCMjQLoEfy+n1UcmCkazqkzx2eKrA6TDdAFfcUsED+TWHSWCEtPBmxNNYiU4NuqWI917Qh8EC/AOHD3bmmcyFX9/8OpTzWxxmOfUlr0FKW1jDAZ0Y7Ju6pt9QD6ekkin6cs4/ycEr2G87HQlpYxGNexcpoKdPI/Cl+J0CxQsxA/Ug==
+	G6ZxeSJuZ9a9ScS5+MfBTqepQ9sH6P87eZrMN2bFtmf5w/Bh2O9U8lc2oU7vp3Gg6w1XYxLvW4aaoJE+Ws9LVAGZMlq9lQgjFxqlQ0Kfc8J4sCl6fIasFaY+IrawSpyztEpfno2bIWdvF4I+va87NIckpweJbL5VPpFvJnPwTV5XABpUS2tpRUB+zWPc/vxR3iXO/lbjDjJ2sSzyrtHXbKoXlp9nvrqTFiLIuhzAZpeOVXvd75LfKTEHAEy2wiZno5vS6AwnAn4dYdmsNjTWnus8c8ZfxHc4jL+k7k1uLjAFq+PTr3mJwwF+h6axOEg4bYgogFJ83+TDS3MFl6Clug==
 X-OriginatorOrg: fujitsu.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
 X-MS-Exchange-CrossTenant-AuthSource: TY7PR01MB15746.jpnprd01.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 662f0004-32a8-4176-aa7d-08df238e9b28
-X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Oct 2026 09:45:50.4733
+X-MS-Exchange-CrossTenant-Network-Message-Id: 30de4444-ccec-4afd-5a9d-08df238f1850
+X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Oct 2026 09:49:20.4843
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: a19f121d-81e1-4858-a9d8-736e267fd4c7
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: T3PCXBeZfjx7L1abmdLcv134zqxdz0A9Ghy8l03jj9MJPfNPTLF06Hc4CaX0pSoFXzhwFRphAuAG9c3xo8e9axpgACTQeXS7DJ2VkKyj534=
+X-MS-Exchange-CrossTenant-userprincipalname: P6MJXoOteBhkfXbWYVrKQdi2A9aDwAWPE9+FYjI9/JoZjIrSCLHrbItozIT7O/k0SwoR3PVYoTFdKnKMJnGpqkqJwgQmW4ChlfXFWUHPc3c=
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYCPR01MB8455
 
-Hi Mark,
+Hi Will,
 
 > Subject: Re: [PATCH 2/4] arm64: tlb: Add tlbi workaround for FUJITSU-MONA=
 KA Erratum E#030001
@@ -165,225 +166,20 @@ KA Erratum E#030001
 > > addr[34:29] =3D=3D all 1 && addr[28:0] =3D=3D 0 for 512MB mappings.
 > > The affected instructions are:
 > >   RVA[L]E{1,2,3}*, RVAA[L]E1*, and RIPAS2[L]E1*.
->=20
-> How does this work when all of the following are true:
->=20
-> * The S1 translation granule is 4K.
-> * The S2 translation granule is 64K.
-> * S1 has a 1G block translating VA x to IPA y.
-> * S2 has a 512M block translating IPA y to PA z.
->=20
-> In that case, can a "512MB mapping" exist for VA x? I would expect so.
->=20
-> Assuming that is the case, the S1 translation granule doesn't matter,
-> and the S1 workaround cannot depend on PAGE_SIZE_64KB.
-
-Your expectation is correct. I confirmed that this erratum could occur in=20
-that case as well (S1 1G block & S2 512M block). This is also affected by
-GPT size. Therefore, the PAGE_SIZE condition needs to be removed.
-
+> >
 > > Work around the erratum by issuing additional non-range
 > > TLBI instructions corresponding to the affected VA or IPA
 > > range-based TLBI operations.
-> >
-> > Signed-off-by: Tomohiro Misono <misono.tomohiro@fujitsu.com>
-> > ---
-> >  Documentation/arch/arm64/silicon-errata.rst |  2 ++
-> >  arch/arm64/Kconfig                          | 19 +++++++++++++++++
-> >  arch/arm64/include/asm/cpucaps.h            |  2 ++
-> >  arch/arm64/include/asm/tlbflush.h           | 33 +++++++++++++++++++++=
-++++++++
-> >  arch/arm64/kernel/cpu_errata.c              | 10 +++++++++
-> >  arch/arm64/tools/cpucaps                    |  1 +
-> >  6 files changed, 67 insertions(+)
-> >
-> > diff --git a/Documentation/arch/arm64/silicon-errata.rst
-> b/Documentation/arch/arm64/silicon-errata.rst
-> > index ac3248b9f2f3..8ab6284e3d10 100644
-> > --- a/Documentation/arch/arm64/silicon-errata.rst
-> > +++ b/Documentation/arch/arm64/silicon-errata.rst
-> > @@ -373,6 +373,8 @@ stable kernels.
-> >  +----------------+-----------------+-----------------+----------------=
--------------+
-> >  | Fujitsu        | A64FX           | E#010001        | FUJITSU_ERRATUM=
-_010001      |
-> >  +----------------+-----------------+-----------------+----------------=
--------------+
-> > +| Fujitsu        | MONAKA          | E#030001        | FUJITSU_ERRATUM=
-_030001      |
-> > ++----------------+-----------------+-----------------+----------------=
--------------+
-> >  +----------------+-----------------+-----------------+----------------=
--------------+
-> >  | ASR            | ASR8601         | #8601001        | N/A            =
-             |
-> >  +----------------+-----------------+-----------------+----------------=
--------------+
-> > diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-> > index b5a51b0ef944..38248a31d5f1 100644
-> > --- a/arch/arm64/Kconfig
-> > +++ b/arch/arm64/Kconfig
-> > @@ -1312,6 +1312,25 @@ config FUJITSU_ERRATUM_010001
-> >
-> >  	  If unsure, say Y.
-> >
-> > +config FUJITSU_ERRATUM_030001
-> > +	bool "FUJITSU-MONAKA erratum E#030001: Range TLBI may fail to invalid=
-ate some entries"
-> > +	depends on PAGE_SIZE_64KB
 >=20
-> As above, I strongly suspect this depends on the conbiation of S1 and S2
-> sizes, and could happen regardless of whether S1 uses 64K.
->=20
-> > +	default y
-> > +	help
-> > +	  This option adds a workaround for FUJITSU-MONAKA erratum E#030001.
-> > +	  On affected FUJITSU-MONAKA CPUs, range-based TLBI operation
-> > +	  targeting a VA or IPA may fail to invalidate some TLB entries
-> > +	  for 512MB mappings. The affected instructions are RVA[L]E{1,2,3}*,
-> > +	  RVAA[L]E1*, and RIPAS2[L]E1*.
-> > +
-> > +	  Work around the erratum by issuing additional non-range TLBI
-> > +	  instructions corresponding to the affected VA or IPA range-based
-> > +	  TLBI operations.
-> > +
-> > +	  The erratum only affects the FUJITSU-MONAKA on 64k pagesize.
-> > +
-> > +	  If unsure, say Y.
-> > +
-> >  config HISILICON_ERRATUM_161600802
-> >  	bool "Hip07 161600802: Erroneous redistributor VLPI base"
-> >  	default y
-> > diff --git a/arch/arm64/include/asm/cpucaps.h b/arch/arm64/include/asm/=
-cpucaps.h
-> > index 76350b38f0d7..9220b917ec20 100644
-> > --- a/arch/arm64/include/asm/cpucaps.h
-> > +++ b/arch/arm64/include/asm/cpucaps.h
-> > @@ -66,6 +66,8 @@ cpucap_is_possible(const unsigned int cap)
-> >  		return IS_ENABLED(CONFIG_ARM64_ERRATUM_3194386);
-> >  	case ARM64_WORKAROUND_4193714:
-> >  		return IS_ENABLED(CONFIG_ARM64_ERRATUM_4193714);
-> > +	case ARM64_WORKAROUND_FUJITSU_030001:
-> > +		return IS_ENABLED(CONFIG_FUJITSU_ERRATUM_030001);
-> >  	case ARM64_MPAM:
-> >  		/*
-> >  		 * KVM MPAM support doesn't rely on the host kernel supporting MPAM.
-> > diff --git a/arch/arm64/include/asm/tlbflush.h b/arch/arm64/include/asm=
-/tlbflush.h
-> > index 14a78ac0f800..0487daec1652 100644
-> > --- a/arch/arm64/include/asm/tlbflush.h
-> > +++ b/arch/arm64/include/asm/tlbflush.h
-> > @@ -487,6 +487,37 @@ static __always_inline void __tlbi_range(tlbi_op o=
-p, u64 addr,
-> >  	op(arg);
-> >  }
-> >
-> > +#ifdef CONFIG_FUJITSU_ERRATUM_030001
-> > +static inline void fujitsu_erratum_wa(tlbi_op lop, u64 start, u64 end,=
- u16 asid)
-> > +{
-> > +	u64 addr;
-> > +
-> > +	if (!alternative_has_cap_unlikely(ARM64_WORKAROUND_FUJITSU_030001))
-> > +		return;
-> > +
-> > +	/*
-> > +	 * The erratum fails to invalidate TLBI entries in the range when
-> > +	 * addr[34:29] =3D=3D all 1 && addr[28:0] =3D=3D all 0 for 512M hugep=
-age.
-> > +	 * However, since it cannot be determined reliably if the target
-> > +	 * entry is hugepage or not here, always assume hugepage is used.
-> > +	 * The workaround is to issue extra non-range TLBI ops corresponding
-> > +	 * to the affected VA or IPA range-based ops in the range.
-> > +	 */
-> > +	addr =3D (start & GENMASK_ULL(63, 35)) | GENMASK_ULL(34, 29);
-> > +	while (addr < end) {
-> > +		__tlbi_level_asid(lop, addr, TLBI_TTL_UNKNOWN, asid);
-> > +		if (addr + BIT_ULL(35) < addr)
-> > +			/* overflow */
-> > +			break;
-> > +		addr +=3D BIT_ULL(35);
-> > +	}
-> > +}
-> > +#else
-> > +static inline void fujitsu_erratum_wa(tlbi_op lop, u64 start, u64 end,=
- u16 asid)
-> > +{
-> > +}
-> > +#endif /* CONFIG_FUJITSU_ERRATUM_030001 */
-> > +
-> >  static __always_inline void __flush_tlb_range_op(tlbi_op lop, tlbi_op =
-rop,
-> >  						 u64 start, size_t pages,
-> >  						 u64 stride, u16 asid,
-> > @@ -518,6 +549,8 @@ static __always_inline void __flush_tlb_range_op(tl=
-bi_op lop, tlbi_op rop,
-> >  		__tlbi_level_asid(lop, addr, level, asid);
-> >  		addr +=3D stride;
-> >  	}
-> > +
-> > +	fujitsu_erratum_wa(lop, start, end, asid);
-> >  }
->=20
-> It would be much simpler to say range invalidation doesn't work on this
-> part.
+> Why don't we just avoid using range invalidation on these parts instead?
 
-Disabling range operations on MONAKA CPUs would be another solution.=20
+As I replied in Mark's comment, disabling range operations on MONAKA CPUs w=
+ould be another solution.=20
 We'd like to select the option that minimizes the performance impact.
-Since the PAGE_SIZE condition has changed, I will check the performance
-impact of this erratum (including on a 4k kernel).
-
->=20
-> >
-> >  #define __flush_s1_tlb_range_op(op, start, pages, stride, asid, tlb_le=
-vel) \
-> > diff --git a/arch/arm64/kernel/cpu_errata.c b/arch/arm64/kernel/cpu_err=
-ata.c
-> > index 8ec47d89b45b..5b9dea3c761d 100644
-> > --- a/arch/arm64/kernel/cpu_errata.c
-> > +++ b/arch/arm64/kernel/cpu_errata.c
-> > @@ -1027,6 +1027,16 @@ const struct arm64_cpu_capabilities arm64_errata=
-[] =3D {
-> >  		.matches =3D has_impdef_pmuv3,
-> >  		.cpu_enable =3D cpu_enable_impdef_pmuv3_traps,
-> >  	},
-> > +#ifdef CONFIG_FUJITSU_ERRATUM_030001
-> > +	{
-> > +		.desc =3D "FUJITSU-MONAKA Erratum E#030001",
-> > +		.capability =3D ARM64_WORKAROUND_FUJITSU_030001,
-> > +		ERRATA_MIDR_RANGE_LIST(((const struct midr_range[]) {
-> > +					MIDR_ALL_VERSIONS(MIDR_FUJITSU_MONAKA),
-> > +					{}
-> > +				})),
-> > +	},
->=20
-> Are you expecting to add other parts here?
->=20
-> Is there a (future?) revision of MONAKA with this fixed?
-
-There is currently no plan of fix for this part.
 
 Thanks for the review.
 Best Regards,
 Tomohiro Misono
 
 >=20
-> Mark.
->=20
-> > +#endif
-> >  	{
-> >  		.desc =3D "Known broken GICv3 SEIS implementation",
-> >  		.capability =3D ARM64_WORKAROUND_GICv3_BROKEN_SEIS,
-> > diff --git a/arch/arm64/tools/cpucaps b/arch/arm64/tools/cpucaps
-> > index 2775ba3359cf..50a9aa0e2bf0 100644
-> > --- a/arch/arm64/tools/cpucaps
-> > +++ b/arch/arm64/tools/cpucaps
-> > @@ -132,3 +132,4 @@ WORKAROUND_REPEAT_TLBI_SYNC
-> >  WORKAROUND_SPECULATIVE_AT
-> >  WORKAROUND_SPECULATIVE_SSBS
-> >  WORKAROUND_SPECULATIVE_UNPRIV_LOAD
-> > +WORKAROUND_FUJITSU_030001
-> >
-> > --
-> > 2.43.0
-> >
+> Will
