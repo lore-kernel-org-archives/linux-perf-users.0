@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68B9A4EFFCA;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE0254F7980;
 	Tue,  6 Oct 2026 23:43:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791330198; cv=none; b=QehGv/pJR8VWIHRDwktjAbnV3OBgvylIqRBI4dtK2tM+VTahhe10evSfnTRFZUUbd8HN9waJvPtZuitGK83u/t87YRP9f3c4TzEN9nXzwJ94cK4wu4/jJK649V1OXLuK7RoAmCbjgQG/Or1KHkpAIogxWTc2gjJ5uQes8q+qkuI=
+	t=1791330198; cv=none; b=NCJSZjyNPbloiGLln/HAP0igHhtHWpxmx3zih3PGoWdJpld8MNlM+iEc1y33ciI0HFx1ju3qx/aL7IBpybP6r19t+m89W4UcpehQqO2LiJLIsut6v7lXs3/d4cEqPjYiBVbyhOsGQ9+CgpDvMkxQk96rg6JEDAZF+7qdltEWBg4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1791330198; c=relaxed/simple;
-	bh=kHMYBwOxKALcIgA2i31cQNoQFEMseDCxpnQspihU6lk=;
+	bh=IV7TAcJQ9U6RZsc65RnIqs5nUIgpKZkm6o+w8wwASm8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=PN1fjrHKOyzCOC9PXb5uT+6X2pajiyghMFiHCIaLXGY+9PPGIoYERMobur2fbJvk5/VX2sTACTPcLhad+OPsu0fBDXIPXoIpj5Hp4saDveU81Pis8a+Iw2nQr0cnwvXy6zoLMYMormNE8pS0GebarptgJcexqRHO5kWRwrVR09Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=abef6p5g; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version; b=bAR534sAlUqCzUlTMfJmvGdzlWer8mPieJRqg/Fs/Gxtum2ptJlixcDPBJLiE7ILqIYJYwdfYpzKGUR9n1FK+HpXWnqHh9wPGzVG+GGn9rq1iTaOiLrkb7/c12kzc6H2ClRYItwG6fTeP/f0ebd/OOOlGpS7swZbGgF3KJk/0FU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XEWPxmJi; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="abef6p5g"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D1D8D1F0089E;
-	Tue,  6 Oct 2026 23:43:16 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XEWPxmJi"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 42CF11F008A1;
+	Tue,  6 Oct 2026 23:43:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
 	s=k20260515; t=1791330197;
-	bh=7Da8wURD0WnwA9OQdH7RvQZApt2CV9ebUxVFum4B11I=;
+	bh=aQw9+LesQxZvA+9iLaZIcHIemY4k/zSJn3zEoWnBz7k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=abef6p5g4naT2b11sCOakB3dauzjt8hOOGGtabiCq2lAjDfqJssqIPfbI+ERThR2o
-	 qAtZabJ6jpfkQmSSRD5bRGbjmxxfU4KWv/Rv07TdgQIQeH2saIwqaSctk/Dwz9orjK
-	 WG76LprSAGd3I1GaH9zH5j4sv3vcKwQS8xgh8v9miaw3t2RajYMr5hjBobYwzk5lJE
-	 wkHgmvy395GjwecSy3NxGQv5eQlUW9m5kAYOvrv+hgf1ok4uhxNHjAqweFH+/tSbX2
-	 hvJHTkWnf1LKtlrB23hyQG3GQ5ryIOVhBL/W2iCGJsAJI3NEKjB7IDo6DSIqbo+3xj
-	 E94wJTs6+8wkg==
+	b=XEWPxmJix7pYgcqvCyAkziPqkHfaRcXTW/PAD6a0vbqSsYe00FEeu6hb9H4t77SMw
+	 c+srxCNQb92i6DvSvhTFZbrKJSNnVxTa1zzVPQTsZDkUjPpMO3D8uGpPp//SHaxBm5
+	 v7k9GXqiV+bJ0hYf/BHXssbALy9cWRrHmX7MHl7blpacD3reioBgmerKcb3uX0VpwO
+	 Mscz3w5lYrOe82nNVNiQE+avtmxkH+5T4Ndw4FTQU2C8kuMnrHlVa21l2V/+Pg5jO7
+	 fUrNPdh7bVSBzIBW/9OKuKrBPoCy4Kc7tmWkpW4gtu5+bY0bg8V/k3ab8+TfqpAP7Q
+	 YwP5xyTlslMPw==
 From: Namhyung Kim <namhyung@kernel.org>
 To: Arnaldo Carvalho de Melo <acme@kernel.org>
 Cc: Ian Rogers <irogers@google.com>,
@@ -36,9 +36,9 @@ Cc: Ian Rogers <irogers@google.com>,
 	Ingo Molnar <mingo@kernel.org>,
 	LKML <linux-kernel@vger.kernel.org>,
 	linux-perf-users@vger.kernel.org
-Subject: [PATCH v2 03/10] perf symbol: Update symtab type of vmlinux from build-id cache
-Date: Tue,  6 Oct 2026 16:43:07 -0700
-Message-ID: <20261006234315.920817-4-namhyung@kernel.org>
+Subject: [PATCH v2 04/10] perf symbol: Set binary/symtab type for split kallsyms
+Date: Tue,  6 Oct 2026 16:43:08 -0700
+Message-ID: <20261006234315.920817-5-namhyung@kernel.org>
 X-Mailer: git-send-email 2.56.0.rc1.315.gc6ed9934b7-goog
 In-Reply-To: <20261006234315.920817-1-namhyung@kernel.org>
 References: <20261006234315.920817-1-namhyung@kernel.org>
@@ -50,41 +50,27 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Currently dso__load_vmlinux() sets both binary type and symtab type to
-VMLINUX.  To precisely track the symtab type of the kernel dso, update
-the type to build-id cache if it's loaded from there.  It won't have
-any functional difference though.
+When it creates new DSOs for split kallsyms, set the binary and symtab
+type to KALLSYMS properly.
 
 Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 ---
- tools/perf/util/symbol.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ tools/perf/util/symbol.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
 diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
-index 5d98888d068c741a..cf099cbd29f268ec 100644
+index cf099cbd29f268ec..fc6e4dff282bc2dc 100644
 --- a/tools/perf/util/symbol.c
 +++ b/tools/perf/util/symbol.c
-@@ -2079,7 +2079,7 @@ int dso__load_vmlinux_path(struct dso *dso, struct map *map)
- 	if (filename != NULL) {
- 		err = dso__load_vmlinux(dso, map, filename, true);
- 		if (err > 0)
--			goto out;
-+			dso__set_symtab_type(dso, DSO_BINARY_TYPE__BUILD_ID_CACHE);
- 	}
- out:
- 	return err;
-@@ -2235,8 +2235,10 @@ static int dso__load_kernel_sym(struct dso *dso, struct map *map)
- 		filename = __dso__build_id_filename(dso, NULL, 0, false, false);
- 	if (filename != NULL) {
- 		err = dso__load_vmlinux(dso, map, filename, true);
--		if (err > 0)
-+		if (err > 0) {
-+			dso__set_symtab_type(dso, DSO_BINARY_TYPE__BUILD_ID_CACHE);
- 			return err;
-+		}
- 	}
+@@ -1099,6 +1099,8 @@ static int maps__split_kallsyms(struct maps *kmaps, struct dso *dso, u64 delta,
+ 				return -1;
  
- 	if (!symbol_conf.ignore_vmlinux && vmlinux_path != NULL) {
+ 			dso__set_kernel(ndso, dso__kernel(dso));
++			dso__set_binary_type(ndso, dso__binary_type(dso));
++			dso__set_symtab_type(ndso, dso__symtab_type(dso));
+ 			dso__set_loaded(ndso);
+ 
+ 			curr_map = map__new2(pos->start, ndso);
 -- 
 2.56.0.rc1.315.gc6ed9934b7-goog
 
