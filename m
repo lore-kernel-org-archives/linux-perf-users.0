@@ -1,44 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AC1D8834
-	for <linux-perf-users@vger.kernel.org>; Tue,  6 Oct 2026 23:35:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CBEA8834
+	for <linux-perf-users@vger.kernel.org>; Tue,  6 Oct 2026 23:35:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791329710; cv=none; b=clDX5VA8f6zgG9Aj5Tt95Sf4UfGEaQi1wKoPVwbmhs8ApdrggjHbdggZmfPhRvR1qZkhVgDSSn/yr+B//VzpxxEl5e+g/ZpD3ocLYs+RzMhehS9xcBYlW/FDUUairwef1Bzs/A4aZzMhdJPiW1KrHp9UmQnHOxxHQ1rIrlyq9s0=
+	t=1791329746; cv=none; b=FHAjtOG8ekS404Of+Xpv+GAZ37h4oy8K4oFSo6ClYR5lz0XSNfhDGhjtvLaEqV98RowANcmF4cKRxnsiG6Nr5q0HrNFaScvr9wPjhqCws7nTIEdLyhO2n6xMGdxZuK0zdRfHPLt8gqELIv2zsetwqLJvmfSZlZs+gtObaSXv9gw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791329710; c=relaxed/simple;
-	bh=72T51Pnyfg7HFs5fqYkFvbCTZRMLpVoLJ+h/KffYvaA=;
+	s=arc-20240116; t=1791329746; c=relaxed/simple;
+	bh=Y2TSaivEadBWp1yRlRcuaMNZR6P3ABiOeDclDxeIuGs=;
 	h=Message-ID:From:Subject:To:Cc:In-Reply-To:References:Content-Type:
-	 Date; b=OlxbsmmLF6m+n0kZtYgkZxZcns1T9wLkik/s5g87w6iQrsI3yUoAfXmCkVuPq/ZEIw8T6DVU+1Q9Hvy81o+9F0/pScphEP3pV7nuYHVCOZ8ka8t8ljncUkRgjyJYsmRPHfDydFcH2YW2pPH8KzpY3EO2kwXrT69kozWl9xm13zY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VqsOoa/8; arc=none smtp.client-ip=100.103.45.18
+	 Date; b=rkNhIqmz159HfM2KbVSuA1ajb5zckOswRvSOXMWQIanuWd1f1Hprhg+OVaiMuIQ8p04YHdccYYX8PiINqhM1jw2nJPskcBC+cnqSZCiTAaHjkFvg+g9GlsmpjeTloKoGqDT8MKuPcnLIirvJ02rZWdzP1Tb2ewiB2FpnIaRkL70=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Osq56kIt; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VqsOoa/8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DCE551F0089B;
-	Tue,  6 Oct 2026 23:35:08 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Osq56kIt"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8DD041F0089B;
+	Tue,  6 Oct 2026 23:35:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1791329709;
-	bh=vZ3Bc455tcf63IIctkEMRiXS4OFmdZHcs8jAcC9McPg=;
+	s=k20260515; t=1791329744;
+	bh=T3YETzf/j7D9+SIpv8GiqhdUQHUQ5OhmBkrXr5Gy4KI=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=VqsOoa/8XCA8zJzyXRg6TMw42L36ModBFbrsyGji0l++CMlxX6ZAsQvF5/JimD/nn
-	 xC/Lzg07+OOTFR1UCaL5I9JGyhfUuHmEjCzII57iMqQEcen9B2jJvnNCEXJylU6B96
-	 BGuiTNHS+2/RAJI0JQ5jmOD+HE7reN0V4cPVYI+QT+jM2TU2A/M2pR1JmDf9g8UJkF
-	 mBiNK/om0Dxe8nbDItg8rNtKcxLHq+1/BjbQX9MXIqO29OiaIpITXYY3TgAObZedXP
-	 rAa4S7R6tNxq5uwKf++KxTm9kE2bmmch5Q56rjAqLjl1c0MKQt0MqIhH7ZEo2Bi6X3
-	 zROdwAqY2eo0A==
-Message-ID: <sashiko-outbox-162512@kernel.org>
+	b=Osq56kItZTmkiJE1oC3/4FhahSqufmibLAGJkWf3y+Ew+5VFect6CSnRVBCJ6yaU5
+	 7WbagkDz50c+q4sUt68ZfKw8wSB7xfbdPMH2gP1hQaSK1mtOXUG7RGngyd79QXmEm7
+	 a9RLGxO9AUdui+yodTrbX4fABaDHuOo+tlfKKNU+5RXCXKvCbA7DJfE5ihNEwumK2d
+	 GkWMRMNtjcCkJkMYzzr0rYHO4XLU6kSLvirANwNZSsYG1TegAQWU2J3PDPzO+6v0Sn
+	 Z/Rd4QCIuPws/IaClAQgEuQ5hgqFKaEIrWvrHl7K3zgRtuEGYpnM7iXAjFI3FCLBAk
+	 8jJZuNc2746aw==
+Message-ID: <sashiko-outbox-162513@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH perf-tools-next v2 4/4] perf ftrace: Support omitting
- execution duration in function graph tracer
+Subject: Re: [PATCH perf-tools-next v2 1/4] perf ftrace: Optimise
+ __cmd_ftrace() stack frame with strbuf streaming
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Aaron Tomlin" <atomlin@atomlin.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20261006232756.65620-5-atomlin@atomlin.com>
+In-Reply-To: <20261006232756.65620-2-atomlin@atomlin.com>
 References: <20261006232756.65620-1-atomlin@atomlin.com>
- <20261006232756.65620-5-atomlin@atomlin.com>
+ <20261006232756.65620-2-atomlin@atomlin.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Tue, 06 Oct 2026 23:35:08 +0000
+Date: Tue, 06 Oct 2026 23:35:44 +0000
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -47,66 +47,59 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
 Thank you for your contribution! Sashiko AI review found 1 potential issue(=
 s) to consider:
-- [Medium] perf ftrace: --graph-opts duration silently clobbers noduration
+- [Medium] perf: Memory leak of buf and linebuf on early ftrace setup error=
+ paths
 --
 
-commit e23672676ea60d48741ccc720b34c8778668c668
+commit e5886f5c4e0cc584a5a7ac05c7c069ab1b80f135
 Author: Aaron Tomlin <atomlin@atomlin.com>
 
-    perf ftrace: Support omitting execution duration in function graph trac=
-er
-   =20
-    The Linux kernel's function graph tracer displays the execution duration
-    of completed functions by default via the funcgraph-duration trace
-    option. Introduce support for omitting function duration by exposing the
-    noduration sub-option under --graph-opts (and conversely duration=3D[0|=
-1]).
+perf ftrace: Optimise __cmd_ftrace() stack frame with strbuf streaming
+
+This commit refactors __cmd_ftrace() to use a dynamically allocated buffer
+and a string buffer for streaming trace data instead of a fixed stack array.
 
 > diff --git a/tools/perf/builtin-ftrace.c b/tools/perf/builtin-ftrace.c
-> index e11418e619378..88df6b09d9b0d 100644
+> index 6017493ff1797..4e77a0b2513f8 100644
 > --- a/tools/perf/builtin-ftrace.c
 > +++ b/tools/perf/builtin-ftrace.c
+
 [ ... ]
-> @@ -1754,6 +1772,8 @@ static int parse_graph_tracer_opts(const struct opt=
-ion *opt,
->  		{ .name =3D "retaddr",		.value_ptr =3D &ftrace->graph_retaddr },
->  		{ .name =3D "nosleep-time",	.value_ptr =3D &ftrace->graph_nosleep_time=
- },
->  		{ .name =3D "noirqs",		.value_ptr =3D &ftrace->graph_noirqs },
-> +		{ .name =3D "noduration",		.value_ptr =3D &ftrace->graph_noduration },
-> +		{ .name =3D "duration",		.value_ptr =3D &duration },
->  		{ .name =3D "verbose",		.value_ptr =3D &ftrace->graph_verbose },
->  		{ .name =3D "thresh",		.value_ptr =3D &ftrace->graph_thresh },
->  		{ .name =3D "depth",		.value_ptr =3D &ftrace->graph_depth },
-> @@ -1769,6 +1789,9 @@ static int parse_graph_tracer_opts(const struct opt=
-ion *opt,
->  	if (ret)
->  		return ret;
+
+> @@ -767,6 +771,13 @@ static int __cmd_ftrace(struct perf_ftrace *ftrace)
 > =20
-> +	if (duration !=3D -1)
-> +		ftrace->graph_noduration =3D !duration;
+>  	setup_pager();
+> =20
+> +	buf =3D malloc(TRACE_BUF_SIZE);
+> +	if (!buf) {
+> +		pr_err("failed to allocate trace buffer\n");
+> +		goto out_reset;
+> +	}
+> +	strbuf_init(&linebuf, 512);
 > +
+>  	trace_file =3D get_tracing_instance_file("trace_pipe");
+>  	if (!trace_file) {
+>  		pr_err("failed to open trace_pipe\n");
 
 [Severity: Medium]
-Does this logic unconditionally overwrite the noduration parameter?
+If get_tracing_instance_file("trace_pipe") returns NULL, or if the subseque=
+nt
+open(trace_file, O_RDONLY) fails within __cmd_ftrace() in
+tools/perf/builtin-ftrace.c, the error path executes goto out_reset.
 
-If a user executes perf ftrace with --graph-opts duration=3D1,noduration, t=
-he
-token parsing loop in perf_parse_sublevel_options() correctly processes them
-sequentially. It sets duration to 1 and ftrace->graph_noduration to 1.
+Because the out_reset label completely skips the resource teardown label
+out_close_fd:
 
-However, since duration !=3D -1 is evaluated after the loop, it overwrites
-ftrace->graph_noduration with !1 (which is 0). This causes the duration
-parameter to always clobber the noduration parameter, regardless of their
-order in the comma-separated list.
+out_close_fd:
+	free(buf);
+	strbuf_release(&linebuf);
+	close(trace_fd);
+out_reset:
+	exit_tracing_instance();
 
-Would it be possible to parse both directives strictly in the order they are
-specified without unconditionally overriding one after the loop?
-
->  	if (filter_retaddr !=3D -1) {
->  		ftrace->filter_retaddr =3D (filter_retaddr !=3D 0);
->  		ftrace->filter_retaddr_set =3D true;
+Does this permanently leak the heap-allocated buf (TRACE_BUF_SIZE bytes) and
+the internal buffer of linebuf on these early ftrace setup error paths?
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261006232756.6562=
-0-1-atomlin@atomlin.com?part=3D4
+0-1-atomlin@atomlin.com?part=3D1
