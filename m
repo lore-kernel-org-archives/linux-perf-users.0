@@ -1,43 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11F68498933
-	for <linux-perf-users@vger.kernel.org>; Tue,  6 Oct 2026 15:03:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9293C472F81
+	for <linux-perf-users@vger.kernel.org>; Tue,  6 Oct 2026 15:04:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791299035; cv=none; b=uGT/alNp4lW4xhzsiRw9WoTnlP4pUqfmMsWAFhhy9OxWh2Cpr0HzhdAkxLagaqv5Aav28UUxMjSwgmsSpwY1RQlWkcFLflkRbvyUiJrMkBGhNJRS5XuixI4P0hBZHb/pQzqPNVIbcN+4dWsl9pLzbo9OlyRCsWlx4buYwLz2aHc=
+	t=1791299065; cv=none; b=k2ytf7ConEGjy/sfGsZstf2BfnBXHH9VRZMe5qTsdFbD4sLgjlnT6bwjvfHeG47fAdKJORYk4I18WCny1lbnk557S7/CdsaOPavpwDH38royLH7g29KJAJSOl27dFmz4B8xqSTFszSA+u/a3HERc3adrbU8DY4eNCkWlRNCOH34=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791299035; c=relaxed/simple;
-	bh=gTsx0DNd0K6i1tldkJmQIdbMNxAbCce7jAypsxq+6T4=;
+	s=arc-20240116; t=1791299065; c=relaxed/simple;
+	bh=qC5rM+j1HHkbHtUenG84EN5OARVgA7lSr9Ffl3A5z9U=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=rSa/rj2AqZ749XUJCMFXd5r29ofCRQfA6eScunSdeJjzsiguVRuIHEXRu/wSf4hG+6EktoMlu7l1u11XswOWj3dlNHMcP2h1jLbOQ/mWn0pMfNcDAxYdYU1Cc7d6e4QjlRxItbMAXAFnAROKymivCsWLVUzIkhsXOjlpjv4vUn8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=K17qDoi3; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=JskbOE7dWKADnHmUl1iL6vL2s6rr2EfZwPEr7c1XLVN9DsQdizW7BovWf3sh9VggutvFBc6igys7owFdqFrD+mfHFRG/WzdU59Ls5c1y2hoTtDsY5yhoDxze0IikOnjdBz0XWAnUMAPxqzzIJRi4D/KpJYosHWukRNtr2luB/cI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ADlCTQo1; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="K17qDoi3"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6D7881F0089B;
-	Tue,  6 Oct 2026 15:03:53 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ADlCTQo1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 14DE01F0089B;
+	Tue,  6 Oct 2026 15:04:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1791299033;
-	bh=lvu1dobXhxkBPRg+r70eZHuwLQnufr4bczybcnWwEkg=;
+	s=k20260515; t=1791299064;
+	bh=qC5rM+j1HHkbHtUenG84EN5OARVgA7lSr9Ffl3A5z9U=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=K17qDoi3Y+sh9ZprrZ+zXcHi1MtwHK68quP+NsBmJS04cSVVH1xq9vkm7rvaKhGQ3
-	 q0RxFHHSh7mkx6ZYB3kZYW+QZY4KUzk1MKZWFZduGq+Qxo74b8P9lSvV7jXZVN401u
-	 BK8D/mVd3VtdZ5vXgQab+crKliLHyyHkHlrSDFQ7MW6LMSUqRdPh1YRL7nNGRVrgtt
-	 rXAw+ErhwuvbvDFsGkZ8retg1k9I4zsI+HixxNa14Tj5O18ndMnIIijWPIYxdYD9TG
-	 iSxaaBwF4stEm9nq1wzzP+PQzO3JGYW5/tGrIdkbLpqGy0MhmRoPnOtQa5orBfOLB6
-	 tLsMJfJT2/eZw==
+	b=ADlCTQo1lIO8vp18KVYny5QOUtIie9A4YyFmF0LnsR0Gp1Ymez80J4ztaaT41OKaQ
+	 3opLMvs+v9hRpf/QQL6nM36ztVtN0wPXjNFD4nYwCugt2IEkfc25rHvGPDqfX/X/7R
+	 uMxBH5eyGYktFnaTYBJPer6/h03SLaRLnFOLtaz+itvH1G7krIEJ3YPleJy1yTko/x
+	 +7fjeiZ+kRGNMK77eXL9YiUK4PkR8iKgR1pbNLnNkrkEHM5VdtBwgyYaYVHKcUv4h+
+	 pXI0ET7KkbVRGK+i8UvPKtjiu2xdxYlHxhHBHs50h6Kueo8dZADqtPR8xtR3NDaOCe
+	 7MXLoNgxrb/5A==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 6/8] perf report: Add --progress option
+Subject: Re: [PATCH 4/8] perf mutex: Add DO_ONCE() for one-time
+ initialization
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Arnaldo Carvalho de Melo" <acme@kernel.org>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20261006145729.3028247-7-acme@kernel.org>
+In-Reply-To: <20261006145729.3028247-5-acme@kernel.org>
 References: <20261006145729.3028247-1-acme@kernel.org>
- <20261006145729.3028247-7-acme@kernel.org>
+ <20261006145729.3028247-5-acme@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Tue, 06 Oct 2026 15:03:53 +0000
-Message-Id: <20261006150353.6D7881F0089B@smtp.kernel.org>
+Date: Tue, 06 Oct 2026 15:04:23 +0000
+Message-Id: <20261006150424.14DE01F0089B@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -46,23 +47,24 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
 > From: Arnaldo Carvalho de Melo <acme@redhat.com>
 >=20
-> Processing a large session with stdio output gives no feedback about
-> which phase perf is in or how far along it is: ui_progress updates are
-> only shown by the TUI.  Add --progress, installing a stdio backend
-> (ui/stdio/progress.c) that prints the phase title, percentage and
-> counts:
+> For lazy init that more than one thread can race into, without
+> pthread_once() so that it stays within perf's locking primitives and
+> clang's -Wthread-safety keeps an eye on the mutexes involved.
 >=20
->   Processing events... [ 42.3%] 317M / 746M
+> Mirrors the kernel's include/linux/once.h DO_ONCE(), dropping its
+> static key fast path, unnecessary at these cold init paths: a per call
+> site static bool plus a statically initialized mutex, double checked.
+> As there, code reachable from more than one call site must go through
+> a common helper.
 >=20
-> Phases can be nested, so the backend tracks the ones started to
-> complete the right one on ui_progress__finish(); that requires
-> init()/finish() pairs, fixed in ordered-events.c and the pipe and
-> directory event processing.
+> The lockless fast path reads ___done with an acquire, paired with a
+> release store after fn(), so that fn()'s side effects are visible to
+> threads taking the fast path, which the dropped static key used to
+> guarantee.
 >=20
-> With a pager both stdout and stderr lead to it, so isatty(stderr)
-> turns false and the updates end up printed one per line in the
-> pager's output: use /dev/tty in that case, so that the updates keep
-> updating in place, untouched by the pager.
+> The __atomic builtins are used rather than smp_load_acquire()/
+> smp_store_release() because ThreadSanitizer understands them,
+> avoiding reports on ___done and on what fn() initialized.
 >=20
 > Assisted-by: LLM
 > Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
@@ -71,5 +73,5 @@ Sashiko has reviewed this patch and found no issues. It looks great!
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261006145729.3028=
-247-1-acme@kernel.org?part=3D6
+247-1-acme@kernel.org?part=3D4
 
