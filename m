@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACCEC49EC7F;
-	Tue,  6 Oct 2026 16:13:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1E5049F126;
+	Tue,  6 Oct 2026 16:13:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791303215; cv=none; b=d7qaJLU8ySbquKL3WSAJHmnyU5zGBPL4Ny54Ir5n69nJreFwguzfrh3DW9WuhIxGfVTdH+VN9sdTlaXVuufDp6qNSpBMgXDGzPLCvfY4DLmY1O0w0DCmmCbCei+Ku9eL5GQniW4Pllw4kLeG+qSOdjM6MwZIsjup/I5I6TLRZgk=
+	t=1791303220; cv=none; b=b2Q2iZCIzy0zIfI4cCemATVLArqG5JgElfmQsEJJizsZWmMFwK/qJh8R+CZ+VWaaddhj83qtsRD5BUTTFec0guqC0HY8UN7qyqlxzz97GcpaMppcB0Tx87a9PsB5YRm0ZD8+cg1h9UJ6FVwAyRiI3K56qu9O/zL3/FCUt60rYV4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791303215; c=relaxed/simple;
-	bh=TTnNl9JqLU87c/7cVyFgsQKC+lffghoISyatQVUHlhM=;
+	s=arc-20240116; t=1791303220; c=relaxed/simple;
+	bh=blTe50G5CW8Av3QGUqqQ9RKrTp9rPcL8gMXmX8YG6PA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=dPga5HORCmYUQAgT8mwRBkOcISchnxWD1/uKDZWJq2KorZa3zF3qFT6tdG/DS60+dBr1Mb6JQZ+D0JRdnH3a/iXeuThrWaObgjM1RO8g7wetXUxQjSjK0QiPlZ2y+5Wso1ShrAUFmabY0NARuqdBmEz+w8o3nE2spgSf2mlvSuo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=R772vWIt; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version; b=rB11RK12W6FkK5VxKe6vn6yLBRyi12oUS9A8fmSavZcneQwak73qpoVHSj9iu21KXTN6EllRtKxqbxuHyJR4/kFVOT4wNZ7aVSapxcpPJJNY8+wc/ud+uSOKqr6DIB+D3VHD46IDz1MiwB7yIYKmZJL6d9WUbmXZRXnDARr4F6k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZEJiLUrJ; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="R772vWIt"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 979181F0089B;
-	Tue,  6 Oct 2026 16:13:30 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZEJiLUrJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 047EA1F0089C;
+	Tue,  6 Oct 2026 16:13:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1791303214;
-	bh=g4XB4iqrtWd+IKyx7sfJIrOGRGSn3h2tBdJvmPHRUHQ=;
+	s=k20260515; t=1791303218;
+	bh=B93c2QflIkrAuM/g9mt1s/SFesbAVkqbLnzBVrbUB6g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=R772vWIt0rE27u4X7xBRqzOWdt9nCLV8A5m0vscGLX4p8yoxAnEq/Sx6S4ZtyFuhZ
-	 r0yoOZLWnHJl5wM4kyLgYvCEhG+j0E0dRxN6IvuRrPDLX0uAqhrTEMuxefEBzTUoNA
-	 2Iksn8MdN+kkIIi8uzpwNXKZIWCCxMUZ25wovyb3e8/3K4Fa+ZHwRDRzUtbGlOJUqW
-	 z5JzcNRbCB74si2xvo9QIe9a1mYhtF/E3CdjaOSxNkpAJiyDkQCE1K1B5BEJyfUHmR
-	 npGOt3KvmsI6TTmLc2SjR+N5RHTUH3SJmqNdhks/N0NLv8wJ6lj0s/nadXK+xpSCqW
-	 7EzRWiSZNj4KQ==
+	b=ZEJiLUrJLHcExtVhjysUKsW7kw2RZ4b65ch+xt38uLpn6Ki+1dYIm0vPlY3LmTB1k
+	 NdEPBwwoLbbIkmxG9gPaUnF6sCXqrVmXCpuNMHxwFCzhlNZuX+zDdHi3kExJ9t7JwX
+	 Ej3TMX2s/F6fV1YO1noNwZPsXHKYJaHDv/CwvgeKdjMGbxoVN3kqnzb4o9HQHLRpMF
+	 6AfAWxwWwssNfDfdjdVQPnNDO8tsClnrMYSyzOSzGDRc//iXtPuE1fYXApsWbW5uJH
+	 qTFx4TEiXE1djj86kCvkkHKzKcgoIo5jojmjLJB7k22dvCO2xywrWAI/0Cd3QubKAo
+	 jXzw+eVcPl6Mg==
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Namhyung Kim <namhyung@kernel.org>
 Cc: Ingo Molnar <mingo@kernel.org>,
@@ -37,11 +37,10 @@ Cc: Ingo Molnar <mingo@kernel.org>,
 	Clark Williams <williams@redhat.com>,
 	linux-kernel@vger.kernel.org,
 	linux-perf-users@vger.kernel.org,
-	Michael Petlan <mpetlan@redhat.com>,
 	Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 2/6] perf test attr: Fix wrong size expectation for events
-Date: Tue,  6 Oct 2026 18:13:05 +0200
-Message-ID: <20261006161309.3078488-3-acme@kernel.org>
+Subject: [PATCH 3/6] perf test attr: Fix record dwarf sample_type expectation
+Date: Tue,  6 Oct 2026 18:13:06 +0200
+Message-ID: <20261006161309.3078488-4-acme@kernel.org>
 X-Mailer: git-send-email 2.55.0
 In-Reply-To: <20261006161309.3078488-1-acme@kernel.org>
 References: <20261006161309.3078488-1-acme@kernel.org>
@@ -53,80 +52,54 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Michael Petlan <mpetlan@redhat.com>
+From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-Although config4 has been added into struct perf_event_attr, the size
-expectation for the struct hasn't been adjusted. This hasn't been
-noticed, since the testcase's return value has been ignored after
-rewriting the testcase to python until previous commit.
+Since bdd051e249141c79 ("perf record: Split --data-mmap option"),
+record_opts__parse_callchain() sets record_data_mmap instead of
+record->sample_address for the DWARF unwind mode, so -d/--data and its
+implied PERF_SAMPLE_DATA_SRC are not enabled implicitly anymore.
 
-Fix that.
+As a result, --call-graph dwarf no longer sets PERF_SAMPLE_ADDR and
+PERF_SAMPLE_DATA_SRC, making the test fail:
 
-Fixes: eb89aef367e47010 ("perf headers: Sync perf_event.h/perf_regs.h with the kernel headers")
-Fixes: 80cdf208117a36de ("tools headers UAPI: Sync linux/perf_event.h with the kernel sources")
-Signed-off-by: Michael Petlan <mpetlan@redhat.com>
-Acked-by: Namhyung Kim <namhyung@kernel.org>
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+  expected sample_type=45359, got 12583
+
+where 45359 (0xb12f) is:
+
+  IP|TID|TIME|ADDR|CALLCHAIN|PERIOD|REGS_USER|STACK_USER|DATA_SRC
+
+and 12583 (0x3127) is:
+
+  IP|TID|TIME|CALLCHAIN|PERIOD|REGS_USER|STACK_USER
+
+i.e. the values differ exactly by PERF_SAMPLE_ADDR (0x8) and
+PERF_SAMPLE_DATA_SRC (0x8000).  The mmap_data=1 expectation is still
+correct as DWARF now enables record_data_mmap.
+
+This went unnoticed because tests/attr.sh ignored attr.py's return
+value until 04a0a19ede01e771 ("perf test attr: Propagate the return
+value from the test to the wrapper").
+
+Fixes: bdd051e249141c79 ("perf record: Split --data-mmap option")
+Assisted-by: LLM
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/tests/shell/attr/base-record          | 2 +-
- tools/perf/tests/shell/attr/base-stat            | 2 +-
- tools/perf/tests/shell/attr/system-wide-dummy    | 2 +-
- tools/perf/tests/shell/attr/test-record-dummy-C0 | 2 +-
- 4 files changed, 4 insertions(+), 4 deletions(-)
+ tools/perf/tests/shell/attr/test-record-graph-dwarf | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/perf/tests/shell/attr/base-record b/tools/perf/tests/shell/attr/base-record
-index b44e4e6e444386af..a4597d4c0cd12550 100644
---- a/tools/perf/tests/shell/attr/base-record
-+++ b/tools/perf/tests/shell/attr/base-record
-@@ -5,7 +5,7 @@ group_fd=-1
- flags=0|8
- cpu=*
- type=0|1
--size=136
-+size=176
- config=0|1
- sample_period=*
- sample_type=263
-diff --git a/tools/perf/tests/shell/attr/base-stat b/tools/perf/tests/shell/attr/base-stat
-index fccd8ec4d1b0225c..67d6eea8947034e1 100644
---- a/tools/perf/tests/shell/attr/base-stat
-+++ b/tools/perf/tests/shell/attr/base-stat
-@@ -5,7 +5,7 @@ group_fd=-1
- flags=0|8
- cpu=*
- type=0
--size=136
-+size=176
- config=0
- sample_period=0
- sample_type=65536
-diff --git a/tools/perf/tests/shell/attr/system-wide-dummy b/tools/perf/tests/shell/attr/system-wide-dummy
-index a1e1d6a263bf14e7..b062ad7f3c1c61dc 100644
---- a/tools/perf/tests/shell/attr/system-wide-dummy
-+++ b/tools/perf/tests/shell/attr/system-wide-dummy
-@@ -7,7 +7,7 @@ cpu=*
- pid=-1
- flags=8
- type=1
--size=136
-+size=176
- config=9
- sample_period=1
- # PERF_SAMPLE_IP | PERF_SAMPLE_TID | PERF_SAMPLE_TIME |
-diff --git a/tools/perf/tests/shell/attr/test-record-dummy-C0 b/tools/perf/tests/shell/attr/test-record-dummy-C0
-index 91499405fff4d32b..54adb835d203f2b1 100644
---- a/tools/perf/tests/shell/attr/test-record-dummy-C0
-+++ b/tools/perf/tests/shell/attr/test-record-dummy-C0
-@@ -10,7 +10,7 @@ cpu=0
- pid=-1
- flags=8
- type=1
--size=136
-+size=176
- config=9
- sample_period=4000
- # PERF_SAMPLE_IP | PERF_SAMPLE_TID | PERF_SAMPLE_TIME |
+diff --git a/tools/perf/tests/shell/attr/test-record-graph-dwarf b/tools/perf/tests/shell/attr/test-record-graph-dwarf
+index ae92061d611ded68..fbe0faa8cdb6a8f4 100644
+--- a/tools/perf/tests/shell/attr/test-record-graph-dwarf
++++ b/tools/perf/tests/shell/attr/test-record-graph-dwarf
+@@ -4,7 +4,7 @@ args    = --no-bpf-event --call-graph dwarf -- kill >/dev/null 2>&1
+ ret     = 1
+ 
+ [event:base-record]
+-sample_type=45359
++sample_type=12583
+ exclude_callchain_user=1
+ sample_stack_user=8192
+ # TODO different for each arch, no support for that now
 -- 
 2.55.0
 
