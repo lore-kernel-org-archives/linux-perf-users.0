@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D965A4E3229;
-	Tue,  6 Oct 2026 23:43:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68B9A4EFFCA;
+	Tue,  6 Oct 2026 23:43:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791330198; cv=none; b=bEzJMPLoycH3YYhb7ezjZeROT2LRTkXx8AZtokccwWyhiy3Kd1gD0nqG2qQjnw/XGOmIWC0PCrBDZATSZU+T3bgKshV8QyjHWeyUM7FwvPn/so62DC5s8pYcX2xkh8gtCfqbDUWPWV25xXSE8DNPAVeFJ8PFJb/qHCLK40bJxc4=
+	t=1791330198; cv=none; b=QehGv/pJR8VWIHRDwktjAbnV3OBgvylIqRBI4dtK2tM+VTahhe10evSfnTRFZUUbd8HN9waJvPtZuitGK83u/t87YRP9f3c4TzEN9nXzwJ94cK4wu4/jJK649V1OXLuK7RoAmCbjgQG/Or1KHkpAIogxWTc2gjJ5uQes8q+qkuI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1791330198; c=relaxed/simple;
-	bh=vSQQbUZBwsHCX/C2qZ3hQXjFPEWOd8WAs3hYFzK7kJo=;
+	bh=kHMYBwOxKALcIgA2i31cQNoQFEMseDCxpnQspihU6lk=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=bv+ln6WthQVNHzarVk8bTey7joPChHD2z9/PygAmgHsuol2PxFgknvkuIWJr6eqZa+ry1DKxQDXPT1sqm8aygBqLjZo7ouCJbyjjh20BXiB4zM5ZZ9VrNviNKtdLVAVZBbqqyqXyFWDXvpyOpdAmRPapVaJAZmwrNMArbPi0hRQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gJC6coAR; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version; b=PN1fjrHKOyzCOC9PXb5uT+6X2pajiyghMFiHCIaLXGY+9PPGIoYERMobur2fbJvk5/VX2sTACTPcLhad+OPsu0fBDXIPXoIpj5Hp4saDveU81Pis8a+Iw2nQr0cnwvXy6zoLMYMormNE8pS0GebarptgJcexqRHO5kWRwrVR09Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=abef6p5g; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gJC6coAR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 62C111F0089D;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="abef6p5g"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D1D8D1F0089E;
 	Tue,  6 Oct 2026 23:43:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1791330196;
-	bh=1jDUSorU4kyVGRVWcaneTaZaVDiAL2DMUj9EKPVJMao=;
+	s=k20260515; t=1791330197;
+	bh=7Da8wURD0WnwA9OQdH7RvQZApt2CV9ebUxVFum4B11I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=gJC6coARNpL6ZbzbQK+8BCncbJVSfFkv+GKROTrtdsIK41+Y7oZz2Q+2gNeNaPavC
-	 C0WqKCzv1321mAyh0ph0+h/LfHSnWGza7oXdOVwInUbMYOcpeB3Qys6aVVTZ+cCAif
-	 +qasfcl+8RmioIMBrgJ9C36/GxVhlxGAvSGzNbhxofFWiBYtJPfMRpUyfxgy2+m4yN
-	 YIx3xym8xTmPd9bzu8gIHpais4bZ40G/cLPOXJtObERvn8Yiz/bSUlUyz5/MD2X7zO
-	 LVGKlxzOW2kVH7vjpuXnlwq2S8RM256aEmncBwcLJvMIHfTJOUiO4NL7pTl1pC/u4C
-	 LosV8LS3D2+mA==
+	b=abef6p5g4naT2b11sCOakB3dauzjt8hOOGGtabiCq2lAjDfqJssqIPfbI+ERThR2o
+	 qAtZabJ6jpfkQmSSRD5bRGbjmxxfU4KWv/Rv07TdgQIQeH2saIwqaSctk/Dwz9orjK
+	 WG76LprSAGd3I1GaH9zH5j4sv3vcKwQS8xgh8v9miaw3t2RajYMr5hjBobYwzk5lJE
+	 wkHgmvy395GjwecSy3NxGQv5eQlUW9m5kAYOvrv+hgf1ok4uhxNHjAqweFH+/tSbX2
+	 hvJHTkWnf1LKtlrB23hyQG3GQ5ryIOVhBL/W2iCGJsAJI3NEKjB7IDo6DSIqbo+3xj
+	 E94wJTs6+8wkg==
 From: Namhyung Kim <namhyung@kernel.org>
 To: Arnaldo Carvalho de Melo <acme@kernel.org>
 Cc: Ian Rogers <irogers@google.com>,
@@ -36,9 +36,9 @@ Cc: Ian Rogers <irogers@google.com>,
 	Ingo Molnar <mingo@kernel.org>,
 	LKML <linux-kernel@vger.kernel.org>,
 	linux-perf-users@vger.kernel.org
-Subject: [PATCH v2 02/10] perf tools: Try linked debug files for DSO debug info
-Date: Tue,  6 Oct 2026 16:43:06 -0700
-Message-ID: <20261006234315.920817-3-namhyung@kernel.org>
+Subject: [PATCH v2 03/10] perf symbol: Update symtab type of vmlinux from build-id cache
+Date: Tue,  6 Oct 2026 16:43:07 -0700
+Message-ID: <20261006234315.920817-4-namhyung@kernel.org>
 X-Mailer: git-send-email 2.56.0.rc1.315.gc6ed9934b7-goog
 In-Reply-To: <20261006234315.920817-1-namhyung@kernel.org>
 References: <20261006234315.920817-1-namhyung@kernel.org>
@@ -50,27 +50,41 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The dso__find_dbginfo_type() should try DSO_BINARY_TYPE__DEBUGLINK so it
-can follow the .gnu_debuglink and find the debug information in the
-separate file.
+Currently dso__load_vmlinux() sets both binary type and symtab type to
+VMLINUX.  To precisely track the symtab type of the kernel dso, update
+the type to build-id cache if it's loaded from there.  It won't have
+any functional difference though.
 
 Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 ---
- tools/perf/util/dso.c | 1 +
- 1 file changed, 1 insertion(+)
+ tools/perf/util/symbol.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/util/dso.c b/tools/perf/util/dso.c
-index df03f84c9723560e..913877b84b2d437e 100644
---- a/tools/perf/util/dso.c
-+++ b/tools/perf/util/dso.c
-@@ -2111,6 +2111,7 @@ void dso__find_dbginfo_type(struct dso *dso)
- 		DSO_BINARY_TYPE__OPENEMBEDDED_DEBUGINFO,
- 		DSO_BINARY_TYPE__BUILDID_DEBUGINFO,
- 		DSO_BINARY_TYPE__SYSTEM_PATH_DSO,
-+		DSO_BINARY_TYPE__DEBUGLINK,
- 		DSO_BINARY_TYPE__NOT_FOUND,
- 	};
- 	const enum dso_binary_type *type;
+diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
+index 5d98888d068c741a..cf099cbd29f268ec 100644
+--- a/tools/perf/util/symbol.c
++++ b/tools/perf/util/symbol.c
+@@ -2079,7 +2079,7 @@ int dso__load_vmlinux_path(struct dso *dso, struct map *map)
+ 	if (filename != NULL) {
+ 		err = dso__load_vmlinux(dso, map, filename, true);
+ 		if (err > 0)
+-			goto out;
++			dso__set_symtab_type(dso, DSO_BINARY_TYPE__BUILD_ID_CACHE);
+ 	}
+ out:
+ 	return err;
+@@ -2235,8 +2235,10 @@ static int dso__load_kernel_sym(struct dso *dso, struct map *map)
+ 		filename = __dso__build_id_filename(dso, NULL, 0, false, false);
+ 	if (filename != NULL) {
+ 		err = dso__load_vmlinux(dso, map, filename, true);
+-		if (err > 0)
++		if (err > 0) {
++			dso__set_symtab_type(dso, DSO_BINARY_TYPE__BUILD_ID_CACHE);
+ 			return err;
++		}
+ 	}
+ 
+ 	if (!symbol_conf.ignore_vmlinux && vmlinux_path != NULL) {
 -- 
 2.56.0.rc1.315.gc6ed9934b7-goog
 
