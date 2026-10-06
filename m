@@ -1,198 +1,229 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0ECBE378811
-	for <linux-perf-users@vger.kernel.org>; Tue,  6 Oct 2026 16:50:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1103E49E129;
+	Tue,  6 Oct 2026 17:18:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791305408; cv=none; b=N9wb3B6EU0UcElfGFHoJauF0CuMim0NnBEEkHxIUbV72kR44uH6zu80aeekjRN7AYA+kvFQld7kcxjhri64and8zAVWnVGfQrG+H2JtOT9Vhnlo33gMXDa3918Xw5JeNUw+2XuCG30L9TSaMFRcpAxT2qDcN2tIx5nj50LzV4w8=
+	t=1791307086; cv=none; b=ltD8px51i+pF2OXJnm8RXwgfbWItFk/epyjFOPnByRiwM5MaBvsa5P2FPVh5Xmg9Gzl+rqy+B67m/XVpDzdMEai/DeDgHoYa7j+ETt6zLdByiEZSUnUdr1Qg++3IJiDr5H54qWCM3K2JvbEP9coBPtApHu2Gi8dff1L+kZRN/BU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791305408; c=relaxed/simple;
-	bh=XdWVLu9sDP5uClSRZG6NkTi5fq91RirMIRywgvCBtBw=;
-	h=Message-ID:From:Subject:To:Cc:In-Reply-To:References:Content-Type:
-	 Date; b=pWKLNiO+lKcS3HRPvQwNDCtYz35mSUklDTVaBGOm0a4JanFk5VaabmL+IkqhNFAvzymtvGEZITBQtv23E4A6eCY8h9TYfEip7VdHtzxqBBOAaSegMa1K93TbD9NLFZBYavh8SSQ2Fw6QsyGTzhyiSSYNAT/oBC6j34WNnMo6JsE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KZBveLDD; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1791307086; c=relaxed/simple;
+	bh=ldhidRQkpbXIfBHpxregDRh7fkE0mKVToAxs/apJWsk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=oZqw8JsfnhG0RazZcenSpfUccg3A+a1zmKy9y+xFoHyjFk84e/Fd4r+s2WVaRHWbTvckR7FLTYnzUKsp8LganTxobVHfx2MRjAKgggIo+++S8wb1YPXACTFix+rilGewGPHaHayPL1ZxNvPnYPKvG7MJ2KB7RzkLl0VjWbUtYNk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=ABNIjXMk; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KZBveLDD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B64D31F0089C;
-	Tue,  6 Oct 2026 16:50:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1791305405;
-	bh=rmDtv01T9MYhv+paMK8FenHcg93IFaczrHcvN4cRSNE=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=KZBveLDDT9ORiGPLps8M3ID7LdpI2ze+Uk6aekc6sPViV21NlUrOvxVfxnNT+9CBT
-	 P3l4zmFuSJs+mULVi+UOsaK2WEbJvlYF1IaKVWFhOwPg4aYLUWAuwoOUa8m8QaYeW6
-	 ive7iMiGv/LShJjO1HBhwBie7sd1Eq7NDHq8K5TtI+iZ6HaBavmeGCJGydrojbOudU
-	 wTiyYYXkt+fHEgfing1qQ5odft1gi17aOsvvMpkBJkfvp2jU0hrqMAKrwdkjQjF+/F
-	 rVeUCKdo1eEjI56AuVZ1Bjyb8W2a2LuVqeE3wwTBekxdeyeeuIMkh6pZlt/A4wEsCt
-	 k+Ieh9a3bT1kA==
-Message-ID: <sashiko-outbox-162271@kernel.org>
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v5 2/2] perf tests: mmap-basic: fix user rdpmc detection
- logic
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "James Clark" <james.clark@linaro.org>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20261006-rdpmc-detection-logic-v5-2-b25c9d49baa1@linaro.org>
-References: <20261006-rdpmc-detection-logic-v5-0-b25c9d49baa1@linaro.org>
- <20261006-rdpmc-detection-logic-v5-2-b25c9d49baa1@linaro.org>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Tue, 06 Oct 2026 16:50:05 +0000
+	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="ABNIjXMk"
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C63CC1516;
+	Tue,  6 Oct 2026 10:17:58 -0700 (PDT)
+Received: from [10.2.213.24] (e137867.arm.com [10.2.213.24])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0E0883F763;
+	Tue,  6 Oct 2026 10:17:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
+	t=1791307082; bh=ldhidRQkpbXIfBHpxregDRh7fkE0mKVToAxs/apJWsk=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=ABNIjXMk/egPevczmKqd/PHJ8uZgO+6b/7Hi9v0ZrE05RS4vB03gBVFFwCnm3fBuI
+	 mDnZXcYKjRQciMKu6qGeaLmJXkhiq0B43HorYKsVkusdl8UUydCqUOAOAPJAuPj5Xc
+	 1Agf9kFu/a8qDLvNBdPLXLGPNz8iqtV6BfRHX2IQ=
+Message-ID: <fd405cda-51bd-4b1c-803c-f2597b2b128e@arm.com>
+Date: Tue, 6 Oct 2026 18:17:52 +0100
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3] ARM, ARM64, LONGARCH, XTENSA: Delay HW BP notification
+ to task_work()
+To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ linux-rt-devel@lists.linux.dev, linux-perf-users@vger.kernel.org,
+ loongarch@lists.linux.dev
+Cc: "Luis Claudio R. Goncalves" <lgoncalv@redhat.com>,
+ Waiman Long <longman@redhat.com>, Catalin Marinas <catalin.marinas@arm.com>,
+ Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Clark Williams <clrkwllms@kernel.org>, Steven Rostedt <rostedt@goodmis.org>,
+ Adrian Hunter <adrian.hunter@intel.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Huacai Chen <chenhuacai@kernel.org>, Ian Rogers <irogers@google.com>,
+ Ingo Molnar <mingo@redhat.com>, James Clark <james.clark@linaro.org>,
+ Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+ Oleg Nesterov <oleg@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
+ Russell King <linux@armlinux.org.uk>, WANG Xuerui <kernel@xen0n.name>,
+ Chris Zankel <chris@zankel.net>, Max Filippov <jcmvbkbc@gmail.com>,
+ Ada Couprie Diaz <ada.coupriediaz@arm.com>, Linus Walleij <linusw@kernel.org>
+References: <20261001143516.Ew8C97WS@linutronix.de>
+From: Ada Couprie Diaz <ada.coupriediaz@arm.com>
+Content-Language: en-US, en-GB, fr
+Organization: Arm Ltd.
+In-Reply-To: <20261001143516.Ew8C97WS@linutronix.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Thank you for your contribution! Sashiko AI review found 5 potential issue(=
-s) to consider:
-- [High] perf: System state leak when encountering unexpected user read sta=
-te
-- [Medium] perf: Logic bug in user_read_file_op() overwrites read failure e=
-rror code
-- [Medium] perf tests: NULL pointer dereference in perf_evsel__delete() on =
-allocation failure
-- [Low] perf: Missing POSIX header <unistd.h> for musl compatibility
-- [Low] perf: TEST_FAIL is unconditionally overwritten by TEST_SKIP
---
+Hi Sebastian,
 
-commit 5162e68ee94e9013764b1ff51c5530feccced06c
-Author: James Clark <james.clark@linaro.org>
+Sorry for the long wait, finally taking a look at this !
+(+Linus Walleij for the `arch/arm/` side)
 
-perf tests: mmap-basic: fix user rdpmc detection logic
+On 01/10/2026 15:35, Sebastian Andrzej Siewior wrote:
+> Waiman, Luis, Ada reported that HW breakpoints on ARM64 trigger
+> "sleeping while atomic" warnings on PREEMPT_RT. The hardware event is
+> delivered with disabled interrupts and perf intrastrucure expects
+> disabled interrupts while the overflow callback is invoked.
+>
+> The callback then sends a SIGTRAP signal for which it acquires
+> sighand_struct::siglock, a spinlock_t which becomes a sleeping lock and
+> must not be acquired in atomic context.
+>
+> Delay the event callback until the return to userland.
+> Add perf_arch_hwbp_notify(), a generic perf callback which delayes the
+> actual callback invocation to task_work_add() callback. This callback
+> invokes the architecture defines callback arch_hwbp_send_sig().
+Typo : `[...] architecture defined [...]`
+> This requires struct callback_head and the functions require
+> ARCH_NEED_PERF_HW_NOTIF to be defined.
+>
+> This was reported against ARM64. ARM, LongARCH and Xtensa follow the
+> same pattern are also converted. Xtensa is the only not supporting
+> PREEMPT_RT but now we have all architectures using the same pattern.
+>
+> Reported-by: Luis Claudio R. Goncalves <lgoncalv@redhat.com>
+> Reported-by: Waiman Long <longman@redhat.com>
+> Closes: https://lore.kernel.org/all/aho0eqjMESuHxECr@redhat.com/
+> Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+> ---
+>
+> v2…v3: https://lore.kernel.org/all/20260814085118.OPEA_Ssn@linutronix.de/
+>   - Add Xtensa for completion
+>   - sashiko complains and wants TWA_SIGNAL instead TWA_RESUME. His
+>     argument is that a syscall will trap via get_user() and loop forever
+>     instead making progress. This is wrong IMHO. ARM64 will single step
+>     over the watchpoint and continue execution. The only downside is that
+>     userland will get notified after the syscall completed. So my theory.
+>     Using TWA_SIGNAL is worse: Assume we have a watchpoint on UADDR and
+>     are in a futex() syscall. The get_user() invocation will trigger the
+>     exception, the debug handler will step over and queue a signal. The
+>     futex code will notice this and return ERESTARTNOINTR. A signal will
+>     be sent, the syscall restarts, traps onto UADDR again, the loop
+>     continues. But this should be case now, too…
+>     Now that I look into arch_build_bp_info() and do actual testing I must
+>     say arm64 does not support mixed breakpoints. This means there is no
+>     breakpoint in kernel on a userland address. \o/
 
-This commit modifies the mmap-basic perf test to use
-/proc/sys/kernel/perf_user_access as a fallback for user counter access.
-It tracks and restores the user read state, checks constraints for
-different architectures, and handles file permission edge cases.
+For the record, the comment on `task_work_add()` reads :
+> @TWA_SIGNAL works like signals, in that the it will interrupt the targeted
+> task and run the task_work, regardless of whether the task is currently
+> running in the kernel or userspace.
+> [...]
+> @TWA_RESUME work is run only when the task exits the kernel and returns to
+> user mode, or before entering guest mode.
 
-> diff --git a/tools/perf/tests/mmap-basic.c b/tools/perf/tests/mmap-basic.c
-> index 208cd889f23db..2c3276e82da8f 100644
-> --- a/tools/perf/tests/mmap-basic.c
-> +++ b/tools/perf/tests/mmap-basic.c
-> @@ -12,6 +12,8 @@
->  #include <perf/evlist.h>
->  #include <perf/mmap.h>
-> =20
-> +#include <tools/config.h>
+At least on arm64, we are explicitly not preemptible while handling
+hardware breakpoint/watchpoint exceptions. (See `debug_exception_enter()`
+in `arch/arm64/kernel/entry-common.c`). So `TWA_RESUME` is definitely
+the behaviour we want in my opinion.
+
+>
+> v1…v2: https://lore.kernel.org/all/20260713144939.FuCj9yvZ@linutronix.de/
+>   - sashiko complained that a memory breakpoint might trigger several
+>     times before a signal is sent if the syscall touches the memory (via
+>     get_user()) more than once before returning back. This would lead to
+>     list corruption in task_work_add(). To handle this, there is now a
+>     variable which is set via xchg before task_work_add() and cleared
+>     after the signal has been sent.
+>
+>   arch/arm/include/asm/hw_breakpoint.h       |  1 +
+>   arch/arm/kernel/ptrace.c                   |  6 ++---
+>   arch/arm64/include/asm/hw_breakpoint.h     |  1 +
+>   arch/arm64/kernel/ptrace.c                 |  6 ++---
+>   arch/loongarch/include/asm/hw_breakpoint.h |  1 +
+>   arch/loongarch/kernel/ptrace.c             |  6 ++---
+>   arch/xtensa/include/asm/hw_breakpoint.h    |  1 +
+>   arch/xtensa/kernel/ptrace.c                |  6 ++---
+>   include/linux/hw_breakpoint.h              |  3 +++
+>   include/linux/perf_event.h                 |  4 ++++
+>   kernel/events/core.c                       | 26 ++++++++++++++++++++++
+>   11 files changed, 45 insertions(+), 16 deletions(-)
+>
+> [...]
+>
+> diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
+> index 915c6fd3f0845..4e0cea7f59e4c 100644
+> --- a/include/linux/perf_event.h
+> +++ b/include/linux/perf_event.h
+> @@ -215,6 +215,10 @@ struct hw_perf_event {
+>   
+>   	/* Last sync'ed generation of filters */
+>   	unsigned long			addr_filters_gen;
+> +#ifdef ARCH_NEED_PERF_HW_NOTIF
+> +	struct callback_head		arch_hw_notif;
+> +	int				arch_hw_notif_busy;
+> +#endif
+>   
+>   /*
+>    * hw_perf_event::state flags; used to track the PERF_EF_* state.
+> diff --git a/kernel/events/core.c b/kernel/events/core.c
+> index 634d2ccbab82d..9b38a14880361 100644
+> --- a/kernel/events/core.c
+> +++ b/kernel/events/core.c
+> @@ -13381,6 +13381,28 @@ static void account_event(struct perf_event *event)
+>   	account_pmu_sb_event(event);
+>   }
+>   
+> +#ifdef ARCH_NEED_PERF_HW_NOTIF
+> +static void perf_arch_hwbp_send_sig(struct callback_head *head)
+> +{
+> +	struct perf_event *bp;
 > +
->  #include "cpumap.h"
-
-[Severity: Low]
-Does this file need to explicitly include <unistd.h>? The patch adds calls
-to POSIX file I/O operations like read, write, close, and lseek in this fil=
-e.
-Without direct inclusion, this might fail to compile on systems using musl
-libc.
-
-[ ... ]
-
-> +static enum user_read_state user_read_file_op(int fd, enum user_read_sta=
-te enabled)
->  {
->  	char buf[2] =3D {0, '\n'};
-> +	ssize_t len =3D read(fd, buf, 1);
-> +	enum user_read_state old_user_read =3D USER_READ_ERR_NO_FILE;
-> =20
-> +	if (len <=3D 0)
->  		pr_debug("%s read failed\n", __func__);
-> +	old_user_read =3D buf[0];
-
-[Severity: Medium]
-If read() fails and len is less than or equal to zero, buf[0] retains its
-initialized value of 0. By unconditionally assigning old_user_read =3D buf[=
-0],
-does this overwrite the -1 error state (USER_READ_ERR_NO_FILE) initialized
-above?
-
-Returning 0 on error seems to trigger an unexpected state failure later on
-in the test.
-
-[ ... ]
-
-> @@ -256,8 +284,28 @@ static int test_stat_user_read(u64 event, enum user_=
-read_state enabled)
->  		bool mapped =3D false, opened =3D false, rdpmc_supported;
->  		struct perf_counts_values counts =3D { .val =3D 0 };
-> =20
-> +		if (__is_defined(__aarch64__) && enabled =3D=3D USER_READ_ENABLED)
-> +			attr.config1 =3D 0x2;  /* Request user access */
-> =20
->  		pr_debug("User space counter reading for PMU %s\n", pmu->name);
+> +	bp = container_of(head, struct perf_event, hw.arch_hw_notif);
+> +	arch_hwbp_send_sig(bp);
+> +	xchg_relaxed(&bp->hw.arch_hw_notif_busy, 0);
+> +	put_event(bp);
+> +}
 > +
-> +		if (saved_user_read_state =3D=3D USER_READ_ERR_PERM) {
-> +			pr_debug("User space counter reading for PMU %s [Failed to get user r=
-ead state]\n",
-> +				 pmu->name);
-> +			ret =3D TEST_SKIP;
-> +			continue;
-> +		}
+> +void perf_arch_hwbp_notify(struct perf_event *bp, struct perf_sample_data *data,
+> +			   struct pt_regs *regs)
+> +{
+> +	if (WARN_ON_ONCE(!atomic_long_inc_not_zero(&bp->refcount)))
+> +		return;
+> +	if (xchg_relaxed(&bp->hw.arch_hw_notif_busy, 1) ||
+> +	    WARN_ON_ONCE(task_work_add(current, &bp->hw.arch_hw_notif, TWA_RESUME)))
+> +		put_event(bp);
+> +}
+> +#endif
 
-[Severity: Low]
-If an earlier iteration of the PMU loop encountered a failure and set
-ret =3D TEST_FAIL, does setting ret =3D TEST_SKIP unconditionally here over=
-write
-the previous failure state?=20
+I find the function names a bit counter-intuitive, compared to the other
+arch-specific perf functions.
+Given the name `perf_arch_...`, I would have expected them to be defined
+in arch code, rather than in the generic perf code.
+ From what I can see, usually perf functions calling an arch-specific
+function lack the `_arch_` infix of their `arch_` counterpart.
 
-This could mask test failures on heterogenous systems where multiple core
-PMUs are tested.
+I do not know very well what we expect in perf, so I might be off-base,
+but would calling them `perf_hwbp_send_sig()` and `perf_hwbp_notify()`
+make sense ?
 
-> +
-> +		/* Check value is in the expected range */
-> +		if (saved_user_read_state !=3D USER_READ_ERR_NO_FILE &&
-> +		    (saved_user_read_state < USER_READ_DISABLED ||
-> +		     saved_user_read_state >=3D USER_READ_MAX)) {
-> +			pr_err("User space counter reading for PMU %s [Unexpected current sta=
-te %d]\n",
-> +				pmu->name, saved_user_read_state);
-> +			ret =3D TEST_FAIL;
-> +			continue;
-> +		}
 
-[Severity: High]
-By using continue here, we bypass the loop's cleanup block and the call
-to set_user_read(pmu, saved_user_read_state) at the very end of the loop.
+Otherwise, it looks good to me on the arm64 side !
+I had a look on the arm side as well, given the debug handling architecture
+is similar, and I think it is OK on there as well, though I wouldn't mind
+a more experienced arm review :)
 
-Does this leak the state modification and leave user-space counter reading
-permanently enabled or modified on the system?
+Reviewed-by: Ada Couprie Diaz <ada.coupriediaz@arm.com>
 
-[ ... ]
+I also tested the patch with pNMI and CONFIG_PREEMPT_RT on arm64 : I can
+confirm that the atomic sleep warning is gone and everything works
+as expected !
 
->  		/* Make the evsel. */
->  		evsel =3D perf_evsel__new(&attr);
->  		if (!evsel) {
->  			pr_err("User space counter reading for PMU %s [Failed to allocate evs=
-el]\n",
->  				pmu->name);
->  			ret =3D TEST_FAIL;
->  			goto cleanup;
->  		}
+Tested-by: Ada Couprie Diaz <ada.coupriediaz@arm.com> (arm64)
 
-[ ... ]
+Thanks a lot for looking into this, combined with[0] the hardware debug
+handling should be much cleaner ! :)
+Kind regards,
+Ada
 
-> +cleanup:
-> +		if (mapped)
-> +			perf_evsel__munmap(evsel);
-> +		if (opened)
-> +			perf_evsel__close(evsel);
-> +		perf_evsel__delete(evsel);
+[0]: https://lore.kernel.org/r/20260907163101.131569-1-ada.coupriediaz@arm.com
 
-[Severity: Medium]
-If perf_evsel__new() fails and returns NULL, we jump directly to cleanup
-and call perf_evsel__delete(evsel) with a NULL pointer.=20
-
-Looking at perf_evsel__exit(evsel) inside perf_evsel__delete, it
-dereferences evsel immediately without checking for NULL:
-
-tools/lib/perf/evsel.c:perf_evsel__exit() {
-    assert(evsel->fd =3D=3D NULL);
-    ...
-    perf_cpu_map__put(evsel->cpus);
-}
-
-Will this result in a segmentation fault if perf_evsel__new() fails?
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261006-rdpmc-dete=
-ction-logic-v5-0-b25c9d49baa1@linaro.org?part=3D2
