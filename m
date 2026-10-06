@@ -1,105 +1,111 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C96DA38759C
-	for <linux-perf-users@vger.kernel.org>; Tue,  6 Oct 2026 23:58:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F354E3CF20C
+	for <linux-perf-users@vger.kernel.org>; Tue,  6 Oct 2026 23:59:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791331118; cv=none; b=a1XdpRLmnxcoIaqtG5ZVwQ2TOWK/u0bgfvqqZ4zKkunEzpF6w+IlVk3Pu3GIBhp9WkmqOgwZCbPDASD8PXiyapBO50QSR/A2EHNb1/cInuzMvuzJqTErsH0YoUyPiwGKaDFrsguh0snQJyzdzc2ewwzvDvx0qQIBACfgxtacVX8=
+	t=1791331144; cv=none; b=otvM+av4Jiv7bzFtctycsiNvuRCwI1OfD+etj/3gNU1oWclAnS5knBVrkGdhxxCqo1Cds3bfwcL8nDKyEhAJWy6C0rsjMUwnxXO/XOfCD7Vvs5ONiwfutBJVer1XLoTLxjhCYprMBy3ExCPO1KIJmbJu1aLdFdlOnFKBZxJA7mQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791331118; c=relaxed/simple;
-	bh=tekBi0dMMgxusMnpmvlWWBQEgepsgGjOYKnDDTNaT5s=;
+	s=arc-20240116; t=1791331144; c=relaxed/simple;
+	bh=cSiiAhsGO9vI086v5u3Bwn08VIn/BDUExhPxyyx7qHg=;
 	h=Message-ID:From:Subject:To:Cc:In-Reply-To:References:Content-Type:
-	 Date; b=KiguvNbkVYUj7nd0XjhdIOX41/ZBoE6vJ/nYuxsz0aFNd7fd35jiLG2Fa3o0BarXnn7FIxv9UwRSTW+IQg8/RKtJiQBBFya0ErJCNjkUV0xDZp9E5lbUy3SNjnFtkLxczwS3zGnQu7u286kBZzwopj5v2daV+QqluTpOL21ruKs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CUfcadJ1; arc=none smtp.client-ip=100.103.45.18
+	 Date; b=Cqv+3Vj+EhPsIizMw17sUe3w7ZLkOZ+mDsdfz14Sx2BzbCKvroep7cq+0LEC5Z4TfmPVQ5xtFAAkEpT7tNvV6Qj8zXBp9K+H/QvXkkZIzW7Q1cWFgGBNHxQWwsvC8/JxmYsSzYFFKK1X3ejrQqJ054Nmuc9J5JEx43AiuG41Nug=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nFMaCU7E; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CUfcadJ1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 399791F0089B;
-	Tue,  6 Oct 2026 23:58:37 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nFMaCU7E"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AD41B1F0089B;
+	Tue,  6 Oct 2026 23:59:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1791331117;
-	bh=kRWsVIbkZ5sn4VPHgsHLdGMMwsvOHW0AzZ59ap2kejM=;
+	s=k20260515; t=1791331143;
+	bh=UXFmdJVqJmkD+0VCnJQ8ftqNOQQQhLID1/kImuqJtuc=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=CUfcadJ1iKf9eLbxgrkgP6dU8ynbaWaUzU1+ZxSq96+0sDo9LFHz93qK14KSQBQ5r
-	 mrtt3uEF5UE920uKqfVvx4GBgZJnpenTT7a1dkZ2SsgY4jJqv5dXvX9tUWv+lrsg2H
-	 e05ViXNEH4cG8m11WfZhd3s112g4xHM6ILPL1NbGhZpUWa15w57zMwvo0kVpT9ekQr
-	 IX16umMB+xm0gnj8O223XsXRbaGbrev4HTX0EigZerKYSBDwV2jB2Y03AR1jYW8Dm0
-	 +kXS9OqmUTacaiOFTRB36aefvDGxumSAY5PDxpln5Mozh+k+z+Lt9wVZDn/YKOnnWC
-	 Be4weRSulGQEA==
-Message-ID: <sashiko-outbox-162542@kernel.org>
+	b=nFMaCU7EAfklogIJC2JmTKwZTmEEwu4G2egW5n2HHYTmkIhySn8A/9s1iuK67uZ9m
+	 C/5TAKZ50IDDC6FwVnwUxdZVT44pdABUgUC+uINhee5Xv+umc74hfxY713f1pmRKSQ
+	 USwNQsp6B2wrk80CKvjWimjGtLB6osVR7cjq+X1p7jhRSgMbgyJT7AVuXNW6CJ7JdZ
+	 2GuwVcgaURVzsRt4lnbt06FYnjQGv1N1awyOTCAU0wu52pAYZ1bkyvZ6CMcEaLNeJ/
+	 o+seNhYJFGtFRJwYbP36L4DBqlN/xKm/uoghEw9A0djHhAoOTqxcRfRTe3/EwWmTt0
+	 SMDPyBEs58kWA==
+Message-ID: <sashiko-outbox-162544@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v2 04/10] perf symbol: Set binary/symtab type for split
- kallsyms
+Subject: Re: [PATCH v2 10/10] perf test: Fix dso data tests
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Namhyung Kim" <namhyung@kernel.org>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20261006234315.920817-5-namhyung@kernel.org>
+In-Reply-To: <20261006234315.920817-11-namhyung@kernel.org>
 References: <20261006234315.920817-1-namhyung@kernel.org>
- <20261006234315.920817-5-namhyung@kernel.org>
+ <20261006234315.920817-11-namhyung@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Tue, 06 Oct 2026 23:58:36 +0000
+Date: Tue, 06 Oct 2026 23:59:03 +0000
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+Thank you for your contribution! Sashiko AI review found 2 potential issue(=
 s) to consider:
-- [Medium] perf: Incorrect binary_type copied to split kallsyms DSOs
+- [Medium] perf test: NULL pointer dereference on dso__new() failure
+- [Medium] perf: NULL pointer dereference when dso__new() fails
 --
 
-commit caef899ba7808ad89c1adfe535b155dac7c2ebd1
+commit 2688b984099e76fca1d46c74193628a04bf63e97
 Author: Namhyung Kim <namhyung@kernel.org>
 
-perf symbol: Set binary/symtab type for split kallsyms
+perf test: Fix dso data tests
 
-When it creates new DSOs for split kallsyms, set the binary and symtab
-type to KALLSYMS properly.
+This commit fixes the dso data tests by bypassing the ELF check for binary
+types so that read/write operations on the test file can proceed properly.
 
-> diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
-> index cf099cbd29f26..fc6e4dff282bc 100644
-> --- a/tools/perf/util/symbol.c
-> +++ b/tools/perf/util/symbol.c
-> @@ -1099,6 +1099,8 @@ static int maps__split_kallsyms(struct maps *kmaps,=
- struct dso *dso, u64 delta,
->  				return -1;
+> diff --git a/tools/perf/tests/dso-data.c b/tools/perf/tests/dso-data.c
+> index 46bc3f5972600..5a027ffab541b 100644
+> --- a/tools/perf/tests/dso-data.c
+> +++ b/tools/perf/tests/dso-data.c
+> @@ -138,6 +138,9 @@ static int test__dso_data(struct test_suite *test __m=
+aybe_unused, int subtest __
+>  	dsos__init(&machine.dsos);
 > =20
->  			dso__set_kernel(ndso, dso__kernel(dso));
-> +			dso__set_binary_type(ndso, dso__binary_type(dso));
-> +			dso__set_symtab_type(ndso, dso__symtab_type(dso));
+>  	dso =3D dso__new(file);
+> +	/* override the binary type for dso data access */
+> +	dso__set_binary_type(dso, DSO_BINARY_TYPE__SYSTEM_PATH_DSO);
+> +	dso__set_bintype_searched(dso);
 
 [Severity: Medium]
-Are we copying an outdated binary_type into the new split DSOs here?
+Will this crash if dso__new() fails?
 
-Looking at the execution flow, maps__split_kallsyms() is called via
-dso__load_kallsyms() from within dso__load_kernel_sym():
+If memory allocation fails and dso__new() returns NULL, these newly added
+calls will unconditionally dereference the pointer, causing a segmentation
+fault instead of allowing dsos__add() to handle the NULL safely and fail
+the test gracefully.
 
-dso__load_kernel_sym() {
-	...
-do_kallsyms:
-	err =3D dso__load_kallsyms(dso, kallsyms_filename, map);
-	...
-	if (err > 0 && !dso__is_kcore(dso)) {
-		...
-		dso__set_binary_type(dso, DSO_BINARY_TYPE__KALLSYMS);
-	...
-}
+>  	TEST_ASSERT_VAL("Failed to add dso", !dsos__add(&machine.dsos, dso));
+>  	TEST_ASSERT_VAL("Failed to access to dso",
+>  			dso__data_fd(dso, &machine) >=3D 0);
 
-Because dso__load_kallsyms() executes before dso__load_kernel_sym() updates
-the parent dso's binary_type to DSO_BINARY_TYPE__KALLSYMS, the value return=
-ed
-by dso__binary_type(dso) during the split operation may still be the old
-stale value.
+[ ... ]
 
-Could this prevent the split kallsyms DSOs from receiving the correct
-binary and symtab types?
-
->  			dso__set_loaded(ndso);
+> @@ -225,6 +228,9 @@ static int dsos__create(int cnt, int size, struct dso=
+s *dsos)
 > =20
->  			curr_map =3D map__new2(pos->start, ndso);
+>  		TEST_ASSERT_VAL("failed to get dso file", file);
+>  		dso =3D dso__new(file);
+> +		/* override the binary type for dso data access */
+> +		dso__set_binary_type(dso, DSO_BINARY_TYPE__SYSTEM_PATH_DSO);
+> +		dso__set_bintype_searched(dso);
+
+[Severity: Medium]
+Similarly, does this bypass the subsequent NULL check for dso?
+
+By unconditionally dereferencing dso, a failure from dso__new() will cause
+a crash before reaching the explicit TEST_ASSERT_VAL() check intended to sa=
+fely
+handle this exact allocation failure.
+
+>  		TEST_ASSERT_VAL("failed to get dso", dso);
+>  		TEST_ASSERT_VAL("failed to add dso", !dsos__add(dsos, dso));
+>  		dso__put(dso);
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261006234315.9208=
-17-1-namhyung@kernel.org?part=3D4
+17-1-namhyung@kernel.org?part=3D10
