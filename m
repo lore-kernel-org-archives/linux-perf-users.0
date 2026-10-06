@@ -1,151 +1,125 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57C2A3BBFB4
-	for <linux-perf-users@vger.kernel.org>; Tue,  6 Oct 2026 23:57:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 973893CF20C
+	for <linux-perf-users@vger.kernel.org>; Tue,  6 Oct 2026 23:57:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791331036; cv=none; b=cgzx5D7Bazqk909uJU/k90P/0JAcrY2SODVbeeQsfqMmkxYkRuucP97hn9jyu8rWDwhUhFpIMGhfz8E+kTClc0+LKq/nfsZAbqVXQUn3zes57XXhbkOpPfDcj7ulMUlbn59Uc7aHVDrBrJ21VuTKFoD8UjKQNng+56Ts5O92urM=
+	t=1791331056; cv=none; b=R/9J3f8DTmFRrXUemrzxQyT4lD2y11JwpXlzveSTSIIv2xXZqv4U7rYzg/DEmcIo1IhcwS+wpoK/S7UAasFTctrQlzqkSK5R6RlDvVddLhmBLsZ9IWaMhPTCZTGclUfpkzAREvaQIjXvFTmhOZc4AuIUvgAs1hJhy01xoq4XVTc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791331036; c=relaxed/simple;
-	bh=f8khyF+J15m6n42ZFuce6nm5VECtBYA7Urmq/dJuU5c=;
+	s=arc-20240116; t=1791331056; c=relaxed/simple;
+	bh=xMlWH8kBJ/rOVAb5xfwzLQ/UL8r3f3as/yLn3gqLXYQ=;
 	h=Message-ID:From:Subject:To:Cc:In-Reply-To:References:Content-Type:
-	 Date; b=dXgYeqyiNfYMqouI40smDkc6Ot2YYM4Kt3XgJt2ROAMcdvK6z/foMKjI+/HyGmlnPVmsjhiBF5V1AVg23FJeOq+hyvvTApNlSQvB91WJdJ7rp/prShTwk0Oi6/dVuueGhYTamg+94BGZ1FcdApCDD+EZV4+rR6kNx1ZEY8TBGTI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ihXBadAR; arc=none smtp.client-ip=100.103.45.18
+	 Date; b=ur+KDO0KnCHzySwualja8VhDyugU4JfCS1hmJcS7+T0IU8WNLC7i9c5ToEUdli9cNAgLe9FS4giJjJxwTABwkowajpqXVyUfQTFFRz1ogEFetx8JW6gJpGu/dytmCainj7w1YZHzMwazz/iPuMGW0BiVuyLtfyO9ElILBr1gNec=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oIA8kn0K; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ihXBadAR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6EDDD1F0089B;
-	Tue,  6 Oct 2026 23:57:14 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oIA8kn0K"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1D36A1F0089B;
+	Tue,  6 Oct 2026 23:57:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1791331034;
-	bh=KJ93hq9LiIZ1emwM3blsFxAzZgs9pmGcRFg2M37HJAQ=;
+	s=k20260515; t=1791331055;
+	bh=X0Tk039E6cyM7MEPtEfINjcgbju3VzHDEcGDwVNldJ8=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=ihXBadAR+6JpZHBVVGbI7aUR88I4iZb+Fq7UVmpqAygl79auddN/Cq9rvmhWsR1gS
-	 z06fok900z5YeKa3svy2lNPhxKzcy/rmVRh1yrqTHON+VlVu9HPHyX3BLoCK3Sa5RT
-	 gGWXeDBUx4HIkA/M17SXBUYcXHy46H/iBINgbZBK9/xtZsf9DVQB/EfEkxE599SZZB
-	 1LfDHowJV+4nQJe3VKsVs89JZf7lZbvZ4Hb4eVfmaN9QrChioGXbb+LtznZg0UXYWd
-	 2kPenqryoAUAeMrCNxpOKio+lfs8wPWdiwXuiTk61jNkNrxF7cgoKs6oYnTBJK212o
-	 WwMkqaxMiqQ3Q==
-Message-ID: <sashiko-outbox-162539@kernel.org>
+	b=oIA8kn0KLkKQ+yfQk/1Rbl8mKT1hgdNTBgRVQ1l5SS5Bg0mZkLJKrKje6Exx+HN4U
+	 ALZY5Ijf1rME3tkMgsFOUypumH52cKeQkbgHk6kWbtrjfG95S+sCpugtjljdRXvz5S
+	 UiuijoJGwj9C0A5TTHGdyqgsh4m8pPVqcgOI5bKZuYZcHE2m5dUKCGYMctzZFxJSwJ
+	 N3n0pqqiiNVn99HKGdPhchieI0qbq5YfrAbqYMcEOke1JLqrFo9N4zC8UsiBd5uIMU
+	 z04jhvn72Hm8LJnZdsmKLHetHCTLX2z1sSOPxJul4aCZVMGYjIXBDY/r4c3TrTzuXx
+	 vIGec1UYb8SWQ==
+Message-ID: <sashiko-outbox-162540@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v2 08/10] perf symbol: Do not set binary type from
- symtab type
+Subject: Re: [PATCH v2 05/10] perf symbol: Set dso symtab type for libbfd
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Namhyung Kim" <namhyung@kernel.org>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20261006234315.920817-9-namhyung@kernel.org>
+In-Reply-To: <20261006234315.920817-6-namhyung@kernel.org>
 References: <20261006234315.920817-1-namhyung@kernel.org>
- <20261006234315.920817-9-namhyung@kernel.org>
+ <20261006234315.920817-6-namhyung@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Tue, 06 Oct 2026 23:57:13 +0000
+Date: Tue, 06 Oct 2026 23:57:34 +0000
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 3 potential issue(=
+Thank you for your contribution! Sashiko AI review found 2 potential issue(=
 s) to consider:
-- [High] perf: data-only DSOs fail to open due to strict .text section requ=
-irement
-- [High] perf: compat offline DWARF unwinding broken due to missing binary_=
-type
-- [Medium] perf: redundant double-decompression of compressed kernel modules
+- [High] perf: dso__load() returns 0 on libbfd success causing map__load() =
+to discard first sample
+- [Low] perf: unintended fallthrough to dso__load_sym clobbers libbfd symta=
+b type
 --
 
-commit 0528580a893b2b2066f28586347977aa4bf1e268
+commit c31089cce4c931915ffad7363dd2a84096e2a4cf
 Author: Namhyung Kim <namhyung@kernel.org>
 
-perf symbol: Do not set binary type from symtab type
+perf symbol: Set dso symtab type for libbfd
 
-The DSO binary type is to access the binary (e.g. instruction) data
-while symtab type is for the symbol table.  They may or may not be in
-the same file.  We should track them separately and correctly.
+It missed to set the dso symtab type when the symbols are loaded by
+libbfd.  When it happens both syms_ss and runtime_ss may not be set
+and won't call dso__load_sym().
 
 > diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
-> index 389dbd7e5192f..1175cb60f8206 100644
+> index fc6e4dff282bc..02b096ccbc60a 100644
 > --- a/tools/perf/util/symbol.c
 > +++ b/tools/perf/util/symbol.c
-> @@ -1956,19 +1956,6 @@ int dso__load(struct dso *dso, struct map *map)
+> @@ -1933,6 +1933,7 @@ int dso__load(struct dso *dso, struct map *map)
+>  			nsinfo__mountns_enter(dso__nsinfo(dso), &nsc);
 > =20
->  		if (next_slot) {
->  			ss_pos++;
-> -
-> -			/*
-> -			 * The binary type is used to find the file containing
-> -			 * the executed instructions, so prefer the types that
-> -			 * refer to the actual object over debug-only files such
-> -			 * as DSO_BINARY_TYPE__DEBUGLINK.
-> -			 */
-> -			if (dso__binary_type(dso) =3D=3D DSO_BINARY_TYPE__NOT_FOUND ||
-> -			    symtab_type =3D=3D DSO_BINARY_TYPE__BUILD_ID_CACHE ||
-> -			    (symtab_type =3D=3D DSO_BINARY_TYPE__SYSTEM_PATH_DSO &&
-> -			     dso__binary_type(dso) !=3D DSO_BINARY_TYPE__BUILD_ID_CACHE))
-> -				dso__set_binary_type(dso, symtab_type);
-> -
+>  		if (bfdrc =3D=3D 0) {
+> +			dso__set_symtab_type(dso, symtab_type);
+>  			ret =3D 0;
 
 [Severity: High]
-Does removing this fallback prevent opening data-only DSOs?
+Does returning 0 here cause map__load() to discard the first sample?
 
-Without this early assignment, DSOs remain as DSO_BINARY_TYPE__NOT_FOUND.
-Any profiling workload attempting to access symbols in a DSO without
-executable code might hit this path:
+Unlike dso__load_sym(), which returns the number of loaded symbols (> 0),
+leaving ret =3D 0 causes dso__load() to return 0. The caller map__load()
+strictly checks "if (nr =3D=3D 0)" and treats it as a failure:
 
-try_to_open_dso()
-  __dso__find_binary_type()
-    filename__has_section(path, ".text")
-
-Because the ".text" check fails for data-only DSOs, the binary type remains
-DSO_BINARY_TYPE__NOT_FOUND. This bypasses the correct opening logic in
-open_dso() and permanently marks the DSO with DSO_DATA_STATUS_ERROR. Can we
-still open data-only DSOs (like eBPF maps or data-only kernel modules)
-after this change?
-
-[Severity: Medium]
-Without the early binary type assignment, does this introduce redundant
-decompression for compressed kernel modules?
-
-When try_to_open_dso() is called for a compressed kernel module, it first
-calls __dso__find_binary_type(), which uses dso__get_filename() to fully
-decompress the module to a temporary file just to check for a ".text"
-section, and then unlinks it.
-
-Immediately following this, try_to_open_dso() calls open_dso() which again
-calls dso__get_filename(), triggering a second complete decompression of the
-exact same module. Can this cause severe performance degradation when
-processing profiles containing compressed kernel modules?
-
-[Severity: High]
-Could this removal also break offline DWARF stack unwinding for compat task=
-s?
-
-Because user-space maps now have a binary type of DSO_BINARY_TYPE__NOT_FOUND
-during early processing, when thread__e_machine_endian() calls
-dso__e_machine_endian() to determine the architecture, it hits the fallback:
-
-tools/perf/util/dso.c:dso__e_machine_endian() {
+tools/perf/util/map.c:map__load() {
     ...
-    switch (dso__binary_type(dso)) {
+	} else if (nr =3D=3D 0) {
     ...
-    case DSO_BINARY_TYPE__NOT_FOUND:
-    default:
-        if (e_flags)
-            *e_flags =3D 0;
-        return EM_NONE;
-    }
+		return -1;
+	}
+
+Because dso__load() correctly calls dso__set_loaded(dso) before returning,
+subsequent calls to map__load() hit the early success path and return 0.
+As a result, does the very first symbol lookup for a libbfd-loaded map
+spuriously fail and cause perf to discard the sample?
+
+>  			break;
+
+[Severity: Low]
+Does breaking out of the loop here unintentionally clobber the libbfd symtab
+type if syms_ss was already set?
+
+If a prior loop iteration populates syms_ss (e.g., from an ELF file) and a
+subsequent iteration successfully loads libbfd symbols (bfdrc =3D=3D 0), the
+loop breaks here to return the libbfd symbols.
+
+However, since syms_ss is non-NULL from the prior iteration, the post-loop
+cleanup bypass fails:
+
+tools/perf/util/symbol.c:dso__load() {
+    ...
+	if (!runtime_ss && !syms_ss)
+		goto out_free;
+    ...
+	if (syms_ss)
+		ret =3D dso__load_sym(dso, map, syms_ss, runtime_ss, kmod);
+    ...
 }
 
-It immediately fails and returns EM_NONE without attempting to open the fil=
-e.
-Consequently, thread__e_machine_endian() fails to extract the architecture
-from any map and falls back to perf_env__e_machine(), which incorrectly
-applies the host architecture to the compat thread.
+Because execution falls through to dso__load_sym(), does it unconditionally
+call dso__set_symtab_type(dso, syms_ss->type) and silently overwrite the
+newly added symtab_type, mixing the symbols?
 
->  			if (syms_ss && runtime_ss)
->  				break;
->  		} else {
+>  		}
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261006234315.9208=
-17-1-namhyung@kernel.org?part=3D8
+17-1-namhyung@kernel.org?part=3D5
