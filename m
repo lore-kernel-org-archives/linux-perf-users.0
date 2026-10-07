@@ -1,214 +1,149 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f199.google.com (mail-pl1-f199.google.com [209.85.214.199])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46B6A38E126;
-	Wed,  7 Oct 2026 23:24:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34446376BF2
+	for <linux-perf-users@vger.kernel.org>; Wed,  7 Oct 2026 23:48:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791415491; cv=none; b=ELAp2SkZIST8OBnOVvyIx2yY0nKIfOPpAJta5vE/XDFNuwmtL5PiOxVOdQjqbSp+C3yVAZxN2Km0D2UVCXOuHaYO6UgZNBnRDNxhL6eylH0V7LZ1d1Xu/n7WIRozvONuuUz1zUgsob2M0OyA3oxdzUam69iUqQA3iwCYndto1Yk=
+	t=1791416901; cv=none; b=dUz4BPbHVqS3V6OrNdaaKn2PmgtKlNxl7CDkxaU4UNDg8Yi7VtwM7zuMhlik+uiRKHfbWgmEYv/lH4tvRnsD4DzienhA4IyHOe3TvFe5H5RcIvC5opzXiAGB7m7YkHUK0TUpv48qu2G6p8KSfJeAS432rMsB1aqY+UZ11s44cCE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791415491; c=relaxed/simple;
-	bh=BmMvJ2rlz4kKLbhR/BSaoYnqq9DjjBjH6iA94RGwYjs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MecjoUp7cbehKllIGAM/RzoEBBcXT+oBGsi1aO/ViwIT2RwXWA/8cplm23KqoAGcCV5FSPVw9rXjPrTRO3mjO+K/wCRnCoqirPiLogfxSymC+aDcpzbnoUsR5dF6eUwy4o5sksee7Fsv2QzpsGYL4I3Viq8eTSBSLvxVIyhAsl0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mdIDp3Yq; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1791416901; c=relaxed/simple;
+	bh=P352MQ0w1qgm2BzPcNWiQb1rh8hqEdm2IZRAobTEiYo=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=mznBTpZ+5ckTGbZMVD0BwOb7hAbDjoE4iz6Lx9PWDUI6RJp6xyzjqCtz8ND0xFB9mcRj8j1E8XjhMxkyTBn70td4UWXVntgjeSDiISRInd/bvztDCYUpfWK1YSnkibQ3MmR2xDQzctZ1mW4FPV9osmhk/szG2Hj780yME/yJtjw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--jmattson.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Y/Cc5pe5; arc=none smtp.client-ip=209.85.214.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--jmattson.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mdIDp3Yq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 86A821F000FF;
-	Wed,  7 Oct 2026 23:24:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1791415489;
-	bh=ZGdYjXpDNWRI/i/RNZNFTXjtymnRcJfMdWCwA4vvxjE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=mdIDp3YqqrGVp4fhHyQE3WTCy3CLwWwzFbYAxxmTjNBf/8ibDYKdlmP7IY3kD7vcz
-	 lbUZh0NHq6KUsTryhqNgwUnBE4A1RzxcX1u+4Xt6AHC8Dc+/JgvpHbAehEi/9dadKT
-	 0H8elO7GtSOVylEFk6RBn2AIMii2fqtsmtji1d/1ccBJnRKQikqaj5Y8HQvqeWdADO
-	 DrJ28DVkDXr6jGoqRRJoPUci3B4Dvh8kyjnneEhf0DW9GD3IehRj5BHT3YsVDI0v5+
-	 +3m9OqPCqWv485Z43I2zQGXVDEpZWECkIKfvOxUqXmiLiG7jOzMSqilUlRH7icey+J
-	 ArahEDJ3iIeCA==
-Date: Wed, 7 Oct 2026 16:24:48 -0700
-From: Namhyung Kim <namhyung@kernel.org>
-To: Aaron Tomlin <atomlin@atomlin.com>
-Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
-	mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-	jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH perf-tools-next v2 0/4] perf ftrace: Support inlined
- functions and display enhancements in function graph tracer
-Message-ID: <asbUwDTKJ54HvNYi@google.com>
-References: <20261006232756.65620-1-atomlin@atomlin.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Y/Cc5pe5"
+Received: by mail-pl1-f199.google.com with SMTP id d9443c01a7336-2d55d8cd938so68585725ad.1
+        for <linux-perf-users@vger.kernel.org>; Wed, 07 Oct 2026 16:48:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1791416899; x=1792021699; darn=vger.kernel.org;
+        h=content-type:cc:to:from:subject:message-id:mime-version:date:from
+         :to:cc:subject:date:message-id:reply-to:content-type;
+        bh=P/qZSRXDmeAvjD0DisYEACWhpixTZPSAh00XBTPdWmE=;
+        b=Y/Cc5pe5dx5mvGYGgxjbuPAF9K4OuRA3IUWplDPzw6LIMO+buu9e5MZzpLl8veKD7t
+         YWY9ep6QnyUFFMJWc96wSzIaT2cE6C0S8qCUsAhOdB2nEb5xa4ZtLH5OOcPh+dzQc8kQ
+         Er8NQtYSNELk9z3PARIjgE22KLV3iaM42tR7+AKPu9Tl1sbYmKLeoqPzIaVWFQWU0PCc
+         M+7RmS/ru4aOPYevviR0mm7deaJIkr/DK/qe9d91FNMhOIbLyI2WTpzD+TsizrnipbFB
+         H4gn4CpnUZnoNTwb3GdbMbzGIWc6JjfWVd+YrVrFdlK1pd/NQwsBS0kLhi0BhsBE/32q
+         N9Qw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1791416899; x=1792021699;
+        h=content-type:cc:to:from:subject:message-id:mime-version:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=P/qZSRXDmeAvjD0DisYEACWhpixTZPSAh00XBTPdWmE=;
+        b=LordAb1HWeU4RzDmYDE7VP0vVDQX7lLnSme22+KCIw0OaYIu1A7uPyo4JF58B5DljS
+         c1MgNP3zHdTpjDvnphkpFKPjrZJhEpJMIeCx7+PM9dMC/VpYg8pXU6mHO3vwrTX8xt2i
+         AuXeYhvef2QVz5vdsc3kxZnJBfCI3ZCZ890wes7Es8fjdpYzuWsfrGDpjViuf/2tBZ21
+         DrHWXgokmlpDAegswUJuSs8XeVusIIk/JO3/CliKS9GfT2UCEOXdHqdGiV1KWcxlisH5
+         d4Y1nddioj3haw6kTl3ArNV8gqrmCncfpq9xR9Wy1M+ufHzvh95fmf+yVD26fVCHpcAD
+         Z/Ig==
+X-Forwarded-Encrypted: i=1; AKwUvBxz7p2ScLtGYeR1XaxEEL9fAStinCamTbXJQX1MmyXRxCzUyqCQK6BV/ghAiGp4KUaq+Hy1vyj4WiJPiTm97w6y@vger.kernel.org
+X-Gm-Message-State: AFq9FYJuJ1De1qR9Lu1GumCpMFacw7XqZiBq8Sc2vlcn9kGUd4qVZZGR
+	h7NzpHSeuwTXf8p+nZB2lhK6UKWT6OSbj4zQzh44b8YbM8iNyGkK4aJ+dMlddP+MGIE6gasvyFK
+	JG3Vwqp2wxK9eSQ==
+X-Received: from plbh2.prod.google.com ([2002:a17:902:eec2:b0:2e4:28f9:4cef])
+ (user=jmattson job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a17:902:ce8b:b0:2dd:c053:9c6b with SMTP id d9443c01a7336-2e60d24eb52mr28956665ad.33.1791416899244;
+ Wed, 07 Oct 2026 16:48:19 -0700 (PDT)
+Date: Wed,  7 Oct 2026 16:48:09 -0700
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20261006232756.65620-1-atomlin@atomlin.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.56.0.385.gd3acb90ef8-goog
+Message-ID: <20261007234815.4026028-1-jmattson@google.com>
+Subject: [PATCH] perf/amd/ibs: Clear stale IBS_{FETCH|OP}_CTL in
+ perf_ibs_start() with CTL2[Dis]
+From: Jim Mattson <jmattson@google.com>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>
+Cc: Jim Mattson <jmattson@google.com>, Ravi Bangoria <ravi.bangoria@amd.com>, 
+	Manali Shukla <manali.shukla@amd.com>, Sandipan Das <sandipan.das@amd.com>, 
+	Namhyung Kim <namhyung@kernel.org>, Arnaldo Carvalho de Melo <acme@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	James Clark <james.clark@linaro.org>, Thomas Gleixner <tglx@kernel.org>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
+	"H. Peter Anvin" <hpa@zytor.com>, Yosry Ahmed <yosry@kernel.org>, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-Hello,
+Commit 1b044ff3c17e ("perf/amd/ibs: Avoid race between event add and
+NMI") makes perf_ibs_start() reset IBS_{FETCH|OP}_CTL before it sets
+IBS_STARTED. Thus, an NMI from another source that arrives before the
+event is enabled finds Val=0 and does not process a stale sample or
+enable the event too early.
 
-Interesting work!
+The reset is a call to perf_ibs_disable_event() with config=0. A later
+commit changed perf_ibs_disable_event():
 
-On Tue, Oct 06, 2026 at 07:27:52PM -0400, Aaron Tomlin wrote:
-> The Linux kernel's function graph tracer operates at the machine
-> instruction level via compiler instrumentation
-> (-fpatchable-function-entry), recording entry and return events for
-> physical function calls. Consequently, functions inlined by the compiler
-> are invisible in the resulting call-graph, as no discrete call or return
-> instructions are emitted for them. While technically expected, this
-> omission frequently obscures the logical execution flow when analysing
-> kernel subsystems heavily reliant upon inlining (such as the scheduler,
-> memory management, locking primitives, and RCU).
-> 
-> When the kernel is configured with CONFIG_FUNCTION_GRAPH_RETADDR=y, the
-> funcgraph-retaddr trace option records the caller's return address on each
-> function entry, manifested in the trace stream as a comment
-> (e.g. /* <-wake_up_new_task+0x1d1/0x3e0 */). By interrogating DWARF debug
-> information from the kernel image (vmlinux) utilising libdw, perf ftrace
-> resolves this return address to its inlined callchain and synthesises the
-> intermediate inlined frames directly into the streamed call-graph.
-> 
-> Synthesised inlined functions are rendered with an explicit /* (inline) */
-> annotation at both entry and exit:
-> 
->      # CPU  DURATION              FUNCTION CALLS
->      # |     |   |                 |   |   |   |
->       1)   0.856 us |  mutex_unlock(lock=0xffffffffbc28bfa0);
->       0)            |  wake_up_new_task(p=0xffff8b1f183bac80) {
->       0)            |    rb_irq_work_queue() { /* (inline) */
->       0)            |      rb_wakeups() { /* (inline) */
->       0)   1.374 us |        housekeeping_any_cpu(type=3);
->       0)            |        arch_irq_work_raise() {
->       0)            |          apic_wait_icr_idle() { /* (inline) */
->       0)            |            x2apic_send_IPI_self(vector=246) {
->       0)            |              instr_sysvec_irq_work() { /* (inline) */
->       0)            |                irq_enter_rcu() {
->       0)            |                  instr_sysvec_irq_work() { /* (inline) */
->       0)   0.673 us |                    irqtime_account_irq();
->       0)            |                  } /* instr_sysvec_irq_work (inline) */
->       0)   1.697 us |                }
+  commit efa5700ec0da ("perf/amd/ibs: Support IBS_{FETCH|OP}_CTL2[Dis] to eliminate RMW race")
 
-Let me read this output..
+When IBS_CAPS_DIS is set, the function now writes only
+IBS_{FETCH|OP}_CTL2 and returns. It does not write IBS_{FETCH|OP}_CTL.
+On hardware with IBS_CAPS_DIS, the reset does nothing, and the race is
+possible again: CTL still holds the previous sample, with Val=1, when
+IBS_STARTED is set.
 
-It seems housekeeping_any_cpu() is called from the inlined chain:
+Clear IBS_{FETCH|OP}_CTL explicitly when IBS_CAPS_DIS is set, as
+perf_ibs_disable_event() did before CTL2 support. Everything in CTL is
+stale at this point, so it does not matter if this write discards a
+Val that the hardware sets late.
 
-  wake_up_new_task()
-    -> rb_irq_work_queue()
-      -> rb_wakeups()
-        -> housekeeping_any_cpu()
+Fixes: efa5700ec0da ("perf/amd/ibs: Support IBS_{FETCH|OP}_CTL2[Dis] to eliminate RMW race")
+Assisted-by: LLM
+Signed-off-by: Jim Mattson <jmattson@google.com>
+---
+I reproduced the race on hardware with IBS_CAPS_DIS. To make the window
+wider, I added a debug-only udelay() between set_bit(IBS_STARTED) and
+perf_ibs_enable_event() in perf_ibs_start(). A throttled ibs_op event
+gave about 1000 perf_ibs_start() calls per second, and a cycles event
+gave NMIs from the core PMU. In 60 seconds:
 
-But I think the actual call chain would seem like:
+  - Without this patch, IBS_OP_CTL[Val] was 1 at every
+    perf_ibs_start() call (60003 of 60003). The IBS op NMI handler took
+    the stale sample and re-enabled the event during the window 17
+    times.
+  - With this patch, the handler never took a sample during the window.
 
-  wake_up_new_task()
-    -> rb_wakeups()
-      -> rb_irq_work_queue()
-        -> housekeeping_any_cpu()
+Without the udelay(), the window is only a few instructions long.
 
-And I don't know how wake_up_new_task() called rb_wakeups() directly.
+A related question for AMD: with IBS_CAPS_DIS, perf_ibs_stop() now
+leaves IBS_{FETCH|OP}_CTL[En]=1. APM vol. 2, section 15.38, says that
+IbsFetchEn and IbsOpEn must be 0 at VMRUN of an SEV-ES or SEV-SNP
+guest with IBS virtualization enabled, and should be 0 for other
+guests. Can the hardware set CTL[Val] or change CTL in any other way
+after CTL2[Dis] is set to 1? If not, perf_ibs_stop() can safely clear
+CTL[En] with a read-modify-write after it sets CTL2[Dis].
 
-Also how do you know if arch_irq_work_raise() is called within the same
-inlined call-chain?  It seems rb_irq_work_queue() indeed calls the
-function after housekeeping_any_cpu():
+ arch/x86/events/amd/ibs.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-  rb_irq_work_queue()
-    -> irq_work_queue_on()
-      -> __irq_work_queue_local()
-        -> irq_work_raise()
+diff --git a/arch/x86/events/amd/ibs.c b/arch/x86/events/amd/ibs.c
+index 3531f9c23b8c..3a5475006b59 100644
+--- a/arch/x86/events/amd/ibs.c
++++ b/arch/x86/events/amd/ibs.c
+@@ -580,8 +580,15 @@ static void perf_ibs_start(struct perf_event *event, int flags)
+ 	 * Doing so prevents a race condition in which an NMI due to other
+ 	 * source might accidentally activate the event before we enable
+ 	 * it ourselves.
++	 *
++	 * With IBS_CAPS_DIS, perf_ibs_disable_event() only sets CTL2[Dis]
++	 * and leaves the previous sample in CTL, so clear CTL explicitly.
++	 * Anything in CTL is stale, so it does not matter if this write
++	 * discards a late Val.
+ 	 */
+ 	perf_ibs_disable_event(perf_ibs, hwc, 0);
++	if (ibs_caps & IBS_CAPS_DIS)
++		wrmsrq(hwc->config_base, 0);
+ 
+ 	/*
+ 	 * Set STARTED before enabling the hardware, such that a subsequent NMI
+-- 
+2.56.0.385.gd3acb90ef8-goog
 
-I guess you compare the callchain with the previous one and merge the
-call if they match.  Then it would support partial match and close some
-parents correctly like when other function is called from rb_wakeups(),
-for example.
-
-> 
-> This series decomposes the feature into a modular, bisectable progression
-> of four patches:
-> 
->     1.  Stack frame optimisation in __cmd_ftrace()
-> 
->         Replaces the 4096-byte stack array in __cmd_ftrace() with dynamic
->         heap allocation alongside struct strbuf streaming, reducing the
->         stack frame footprint by over 96% (down to ~160 bytes) while
->         ensuring complete line-delimited records and robust EOF handling.
-> 
->     2.  Return address comment filtering
-> 
->         Introduces ftrace_parse_retaddr() and ftrace_filter_retaddr() with
->         --filter-retaddr and --graph-opts filter-retaddr to strip caller
->         comments from trace output, accompanied by an initial unit test
->         suite in tools/perf/tests/ftrace.c.
-
-I'm curious why do we need options as we already have 'retaddr' graph-option
-to enable it.  I think it should work the same as 'retaddr' is not
-given, no?  Otherwise, we could add 'noretaddr' instead.
-
-Also I think it's only useful with the --inline option.  If so, we could
-handle that automatically when it's given (and 'retaddr' is not given).
-
-Thanks,
-Namhyung
-
-> 
->     3.  Inlined function call-graph reconstruction
-> 
->         Introduces --inline and -k or --vmlinux, dynamically synthesising
->         inlined frames marked with /* (inline) */. Correctly matches bare
->         closing braces ('}') when funcgraph-tail is disabled, clamps stack
->         depth to prevent indentation drift, and expands the automated test
->         suite to verify inline resolution, comment filtering, and stack
->         saturation recovery.
-> 
->     4.  Execution duration suppression
-> 
->         Introduces --graph-opts noduration (and duration=[0|1]) to toggle
->         the kernel's funcgraph-duration tracing option, omitting the
->         duration column when the user is focused purely on call-graph
->         topology and inlined hierarchy.
-> 
-> Changes since v1:
-> 
->  - Modularised the implementation into a 4-patch bisectable series rather
->    than a monolithic commit
-> 
->  - Resolved potential infinite loop on poll() upon trace_pipe EOF
-> 
->  - Fixed stuck call stack frames when funcgraph-tail is disabled by
->    supporting bare closing delimiters matching LIFO stack frames
-> 
->  - Prevented unbounded indentation growth on deep call trees by clamping
->    inline expansion and synchronising cs->inlined_depth to frames
->    successfully pushed onto cs->stack
-> 
->  - Added dedicated unit tests covering bare closing braces and stack
->    saturation recovery
-> 
->  - Refined option documentation in perf-ftrace.txt
-> 
->  - Link to v1: https://lore.kernel.org/lkml/20261005211518.26786-1-atomlin@atomlin.com/
-> 
-> Aaron Tomlin (4):
->   perf ftrace: Optimise __cmd_ftrace() stack frame with strbuf streaming
->   perf ftrace: Support filtering return address comments
->   perf ftrace: Support display of inlined functions in function graph
->     tracer
->   perf ftrace: Support omitting execution duration in function graph
->     tracer
-> 
->  tools/perf/Documentation/perf-ftrace.txt |  21 +
->  tools/perf/builtin-ftrace.c              | 126 +++++-
->  tools/perf/tests/Build                   |   1 +
->  tools/perf/tests/builtin-test.c          |   1 +
->  tools/perf/tests/ftrace.c                | 240 ++++++++++
->  tools/perf/tests/tests.h                 |   1 +
->  tools/perf/util/Build                    |   1 +
->  tools/perf/util/ftrace.c                 | 537 +++++++++++++++++++++++
->  tools/perf/util/ftrace.h                 |  17 +
->  9 files changed, 933 insertions(+), 12 deletions(-)
->  create mode 100644 tools/perf/tests/ftrace.c
->  create mode 100644 tools/perf/util/ftrace.c
-> 
-> -- 
-> 2.55.0
-> 
