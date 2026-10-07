@@ -1,111 +1,146 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F354E3CF20C
-	for <linux-perf-users@vger.kernel.org>; Tue,  6 Oct 2026 23:59:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D73437E2E2;
+	Wed,  7 Oct 2026 00:00:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791331144; cv=none; b=otvM+av4Jiv7bzFtctycsiNvuRCwI1OfD+etj/3gNU1oWclAnS5knBVrkGdhxxCqo1Cds3bfwcL8nDKyEhAJWy6C0rsjMUwnxXO/XOfCD7Vvs5ONiwfutBJVer1XLoTLxjhCYprMBy3ExCPO1KIJmbJu1aLdFdlOnFKBZxJA7mQ=
+	t=1791331229; cv=none; b=TVtxBaGPEfewGJHxTmNF2QT62GZ/FSqqFkjcIRisAj+zyVpI+WXYLTfrU2zq5HpaAYIltCJ1/HZS836pDFrJZBAWih1c5piXL8wuoOrp0JKhGqNN/xSFh8A0S4Q5nO5IS4mWDRkGTJqyL0hsBNWKqy+iqTo42LG16+kbjlg+uZ0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791331144; c=relaxed/simple;
-	bh=cSiiAhsGO9vI086v5u3Bwn08VIn/BDUExhPxyyx7qHg=;
-	h=Message-ID:From:Subject:To:Cc:In-Reply-To:References:Content-Type:
-	 Date; b=Cqv+3Vj+EhPsIizMw17sUe3w7ZLkOZ+mDsdfz14Sx2BzbCKvroep7cq+0LEC5Z4TfmPVQ5xtFAAkEpT7tNvV6Qj8zXBp9K+H/QvXkkZIzW7Q1cWFgGBNHxQWwsvC8/JxmYsSzYFFKK1X3ejrQqJ054Nmuc9J5JEx43AiuG41Nug=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nFMaCU7E; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1791331229; c=relaxed/simple;
+	bh=O8cjTq4VeULJjq0zHalstFo9Np73snipNdj7AQn6teE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=WOEQ1goSyWfrSI5vODFp/vCt0RUMYgBVA2DXqwmWX69ib74otcCUaIqtD53Fb77Kpl77DWLeQ1fhSAaZt0uYA/My92GrzQ9dEM0K8t5DHBT/AEJdXskcjXjLEllxPy3OqVTQpxOH+hOP53V0qQWZpFOGDl92YszB8Y2oRD1g5vE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WSduVHKq; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nFMaCU7E"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AD41B1F0089B;
-	Tue,  6 Oct 2026 23:59:03 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WSduVHKq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C61FF1F0089B;
+	Wed,  7 Oct 2026 00:00:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1791331143;
-	bh=UXFmdJVqJmkD+0VCnJQ8ftqNOQQQhLID1/kImuqJtuc=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=nFMaCU7EAfklogIJC2JmTKwZTmEEwu4G2egW5n2HHYTmkIhySn8A/9s1iuK67uZ9m
-	 C/5TAKZ50IDDC6FwVnwUxdZVT44pdABUgUC+uINhee5Xv+umc74hfxY713f1pmRKSQ
-	 USwNQsp6B2wrk80CKvjWimjGtLB6osVR7cjq+X1p7jhRSgMbgyJT7AVuXNW6CJ7JdZ
-	 2GuwVcgaURVzsRt4lnbt06FYnjQGv1N1awyOTCAU0wu52pAYZ1bkyvZ6CMcEaLNeJ/
-	 o+seNhYJFGtFRJwYbP36L4DBqlN/xKm/uoghEw9A0djHhAoOTqxcRfRTe3/EwWmTt0
-	 SMDPyBEs58kWA==
-Message-ID: <sashiko-outbox-162544@kernel.org>
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v2 10/10] perf test: Fix dso data tests
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Namhyung Kim" <namhyung@kernel.org>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20261006234315.920817-11-namhyung@kernel.org>
-References: <20261006234315.920817-1-namhyung@kernel.org>
- <20261006234315.920817-11-namhyung@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Tue, 06 Oct 2026 23:59:03 +0000
+	s=k20260515; t=1791331228;
+	bh=DJ5e6p3gSH3PMxt48dwVWIWVlP69WqN7ftz9vaqSN9c=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=WSduVHKqC+5HP0TI2IaWUo+Ok8wHRpr63cvmfWVIEuMz/eUpUPxgg/8pVIt/sdBqQ
+	 k+whirIH+ghKH+ld5UMYgtYKXjFHkn0yfXnRc/sIKyGyMZQW9OB9ZbROMhv4d+kmLu
+	 4ilSkqFitCeZGszKGXZIj9cXDMsUBI9QcIa8OWgkRkbLQrvXzQQM7k0p/1bn1FSv9s
+	 21xg0R8WcqFZ4htRoFZ46RHv9pTizctg5FOhHyL66JN/LefQoqb33CM9/51xg/Hbcm
+	 m3lozTjkcEKJbxHa7rY+elieXKOFkSMrh/xUiCN7eAyosVHzbt9XOg47oaH1Ue+9kP
+	 MQ9byiyE24dkQ==
+Date: Tue, 6 Oct 2026 17:00:26 -0700
+From: Namhyung Kim <namhyung@kernel.org>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
+	James Clark <james.clark@linaro.org>, Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: Re: [PATCH 0/6 v1] perf test attr: Fix the re-enabled test
+Message-ID: <asWLmvF-3YtoKJ7j@google.com>
+References: <20261006161309.3078488-1-acme@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20261006161309.3078488-1-acme@kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 2 potential issue(=
-s) to consider:
-- [Medium] perf test: NULL pointer dereference on dso__new() failure
-- [Medium] perf: NULL pointer dereference when dso__new() fails
---
+On Tue, Oct 06, 2026 at 06:13:03PM +0200, Arnaldo Carvalho de Melo wrote:
+> From: Arnaldo Carvalho de Melo <acme@redhat.com>
+> 
+> Hello all,
+> 
+> This series fixes the "Perf attribute expectations test" (perf test 82,
+> formerly "Setup struct perf_event_attr").
+> 
+> Patches 1-2 are Michael Petlan's prerequisite fixes that make the shell
+> wrapper propagate attr.py's return value and correct the
+> perf_event_attr size expectation after struct config4 was added.  They
+> are included at the start of the series so that it applies cleanly on
+> the current perf-tools-next (and for the review bots to verify the new
+> patches); the new fixes are patches 3-6.
+> 
+> With the test reporting failures again, several stale expectations
+> surfaced and are addressed here:
+> 
+> - test-record-graph-dwarf still expected PERF_SAMPLE_ADDR and
+>   PERF_SAMPLE_DATA_SRC for --call-graph dwarf.  Those were dropped by
+>   bdd051e249141c79 ("perf record: Split --data-mmap option"), which
+>   decoupled data MMAP recording from the sample address bits.
+> 
+> - The record and stat group tests expected cache-misses and
+>   instructions to be the legacy PERF_TYPE_HARDWARE events, but since
+>   b1c5efbfd92eb84d ("perf parse-events: Remove hard coded legacy
+>   hardware and cache parsing") they resolve to the core PMU sysfs/JSON
+>   events, so request the legacy encodings explicitly with the
+>   legacy-hardware-config term.
+> 
+> - The perf stat default metrics open their events in groups and the
+>   raw encodings of instructions, branch-misses, cpu-cycles and
+>   stalled-cycles-frontend/backend differ between Intel and AMD, so
+>   base-stat now accepts the standalone and group variants and
+>   test-stat-default/detailed-{1,2,3} gained the per-vendor raw
+>   encodings.
+> 
+> - attr.py no longer requires a recorded event to be in a group when
+>   the matching expectation does not declare one, allowing the stat
+>   tests to verify event attributes without encoding the metric
+>   grouping.  Expectations that declare a group are still verified in
+>   both directions.
+> 
+> The test passes with 'perf test -vv attribute' on x86_64.  The AMD
+> encodings come from the amd_pmu_event_map tables in
+> arch/x86/events/amd/core.c.
 
-commit 2688b984099e76fca1d46c74193628a04bf63e97
-Author: Namhyung Kim <namhyung@kernel.org>
+On my machine, the current tmp.perf-tools-next which contains these
+changes fails like this.
 
-perf test: Fix dso data tests
+  $ tools/perf/perf test -v 82
+  ---- start ----
+  test child forked, pid 931585
+  /home/namhyung/project/linux/tools/perf/tests/shell/attr.sh: line 20: python: command not found
+  ---- end(-1) ----
+   82: Perf attribute expectations test                                                 : FAILED!
+  
+  === Test Summary ===
+  Passed main tests : 0
+  Passed subtests   : 0
+  Skipped tests     : 0
+  Failed tests      : 1
+  List of failed tests:
+     82: Perf attribute expectations test
 
-This commit fixes the dso data tests by bypassing the ELF check for binary
-types so that read/write operations on the test file can proceed properly.
+The below patch fixes the problem.
 
-> diff --git a/tools/perf/tests/dso-data.c b/tools/perf/tests/dso-data.c
-> index 46bc3f5972600..5a027ffab541b 100644
-> --- a/tools/perf/tests/dso-data.c
-> +++ b/tools/perf/tests/dso-data.c
-> @@ -138,6 +138,9 @@ static int test__dso_data(struct test_suite *test __m=
-aybe_unused, int subtest __
->  	dsos__init(&machine.dsos);
-> =20
->  	dso =3D dso__new(file);
-> +	/* override the binary type for dso data access */
-> +	dso__set_binary_type(dso, DSO_BINARY_TYPE__SYSTEM_PATH_DSO);
-> +	dso__set_bintype_searched(dso);
+Thanks,
+Namhyung
 
-[Severity: Medium]
-Will this crash if dso__new() fails?
 
-If memory allocation fails and dso__new() returns NULL, these newly added
-calls will unconditionally dereference the pointer, causing a segmentation
-fault instead of allowing dsos__add() to handle the NULL safely and fail
-the test gracefully.
-
->  	TEST_ASSERT_VAL("Failed to add dso", !dsos__add(&machine.dsos, dso));
->  	TEST_ASSERT_VAL("Failed to access to dso",
->  			dso__data_fd(dso, &machine) >=3D 0);
-
-[ ... ]
-
-> @@ -225,6 +228,9 @@ static int dsos__create(int cnt, int size, struct dso=
-s *dsos)
-> =20
->  		TEST_ASSERT_VAL("failed to get dso file", file);
->  		dso =3D dso__new(file);
-> +		/* override the binary type for dso data access */
-> +		dso__set_binary_type(dso, DSO_BINARY_TYPE__SYSTEM_PATH_DSO);
-> +		dso__set_bintype_searched(dso);
-
-[Severity: Medium]
-Similarly, does this bypass the subsequent NULL check for dso?
-
-By unconditionally dereferencing dso, a failure from dso__new() will cause
-a crash before reaching the explicit TEST_ASSERT_VAL() check intended to sa=
-fely
-handle this exact allocation failure.
-
->  		TEST_ASSERT_VAL("failed to get dso", dso);
->  		TEST_ASSERT_VAL("failed to add dso", !dsos__add(dsos, dso));
->  		dso__put(dso);
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261006234315.9208=
-17-1-namhyung@kernel.org?part=3D10
+diff --git a/tools/perf/tests/shell/attr.sh b/tools/perf/tests/shell/attr.sh
+index 307e1535795a34dc..ca3ca4a193971ec1 100755
+--- a/tools/perf/tests/shell/attr.sh
++++ b/tools/perf/tests/shell/attr.sh
+@@ -4,6 +4,10 @@
+ 
+ err=0
+ 
++shelldir=$(dirname "$0")
++# shellcheck source=lib/setup_python.sh
++. "${shelldir}"/lib/setup_python.sh
++
+ cleanup() {
+   trap - EXIT TERM INT
+ }
+@@ -17,7 +21,7 @@ trap trap_cleanup EXIT TERM INT
+ 
+ shelldir=$(dirname "$0")
+ perf_path=$(which perf)
+-python "${shelldir}"/lib/attr.py -d "${shelldir}"/attr -v -p "$perf_path"
++$PYTHON "${shelldir}"/lib/attr.py -d "${shelldir}"/attr -v -p "$perf_path"
+ err=$?
+ cleanup
+ exit $err
