@@ -1,183 +1,135 @@
-Received: from esa9.hc1455-7.c3s2.iphmx.com (esa9.hc1455-7.c3s2.iphmx.com [139.138.36.223])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D8C7391835;
-	Wed,  7 Oct 2026 08:18:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=139.138.36.223
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40A4042CB07
+	for <linux-perf-users@vger.kernel.org>; Wed,  7 Oct 2026 08:31:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791361131; cv=none; b=aOM+Wx1ueVYXxUkqqP8Kdz3/lAWJ2sk69+1FRAILq5hf2que7s0GiqeagYo0C4GeAON/t49Wjv5ocVbKm7HKG+anJpuIhWl/y6pxO2dHVIZLgWkBwKrhRoOpaZXwCAbUjjtMzYDZFyf/hskWOdpQkuXy3fSxpxaTba/FrimXNkc=
+	t=1791361866; cv=none; b=fmKsfa/Ho9iwIHfdQwXsBWlV6dZaYl56UEgWMsSNb9V+1ERru/N7xoERurzYY/SBTYtOyZ+Arr6+DTAzCwzuIbIsvn9mEejZcCB+UZZ0htIrcKzTgSnf67qjS9ZvxYF3OrrttSvDudS49yZtEPnn0HjpXOF8Y5457JC0NDJfr9k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791361131; c=relaxed/simple;
-	bh=MyqC3h/MCGtGNFcHgQdVBKkmwX4hPvWFwf5yZpwYALk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EGL/huHiZEVLQS88i7dEs96Pm+Slwk6AkCXTGgF/qWTVIPs4HqvTG1pGQvrFb0KtTCNlEH8xo9hkXpWNE8EzSwHzRRvY0BixLEQatA3XRooBsXUlMIV66Od6fXcBh+05Nz5B2GXVZNPeIC49fDcjdRBpXocFnOtbm1o80pV1f2c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fujitsu.com; spf=pass smtp.mailfrom=fujitsu.com; dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b=VWFnsp1o; arc=none smtp.client-ip=139.138.36.223
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fujitsu.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fujitsu.com
+	s=arc-20240116; t=1791361866; c=relaxed/simple;
+	bh=9pfrJQvbXPTXAs7usrGS/ac0n1oyVbNYxeq49UVm6fY=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=aMfdOZjOs/CHYgpQFJ+8yOGHdDUAsG8O1LF+RXacx1mZSswdWHsp2yRs1pr3qcyywjDNOpHrcbbJ/f/EGrCT+VOQPto0/kiFFMVHsiL9FjfZuqdoGFqM+O+bgRZZNmmNB4QzJcu1kbO2PbjhsqR+x2B+wkz40X6AXZRP1gUqPj8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=H90rS2lD; arc=none smtp.client-ip=209.85.128.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b="VWFnsp1o"
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=fujitsu.com; i=@fujitsu.com; q=dns/txt; s=fj2;
-  t=1791361134; x=1822897134;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=MyqC3h/MCGtGNFcHgQdVBKkmwX4hPvWFwf5yZpwYALk=;
-  b=VWFnsp1onXxat3U1/zrgRvN5Y8bjvOp5xGXpUdmNE8tfZSowZWuktVkD
-   fQKXJpug57d49Bgnuieo+L8jjQeAhkCKgmGMtJmRstYVJhukiHWSQoOhp
-   yKAtjk8k6WjRSsJlcq4zEp5FlWFBVeMxStEOWY6qFFMA/E8PMTGhazyBc
-   OQuNPOxDezEvxL4II5YJs/DUNf0vcJiV90YmDuV2/EctMe6yE/8ex7l0A
-   wLqKLnieIsUzBfozNa4msE3gyuM4IfFtHVX0b5wb21oH1FNoCHkIREYqw
-   Q0x4HRJAaT51CodNdXWm6mRn+WcbLCtgbvi7RnWu5ADdniMZ+yr+KfqdV
-   g==;
-X-CSE-ConnectionGUID: a8D3CcJKQimngFF89Cwtvg==
-X-CSE-MsgGUID: tNYKJC5HQ3u2MDVmrdoBOw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11927"; a="244987115"
-X-IronPort-AV: E=Sophos;i="6.27,144,1786978800"; 
-   d="scan'208";a="244987115"
-Received: from gmgwnl01.global.fujitsu.com ([52.143.17.124])
-  by esa9.hc1455-7.c3s2.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Oct 2026 17:17:42 +0900
-Received: from az2nlsmgm3.fujitsu.com (unknown [10.150.26.205])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by gmgwnl01.global.fujitsu.com (Postfix) with ESMTPS id 4B78D40613C;
-	Wed,  7 Oct 2026 08:17:37 +0000 (UTC)
-Received: from az2nlsmom4.fujitsu.com (unknown [10.150.26.201])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by az2nlsmgm3.fujitsu.com (Postfix) with ESMTPS id EFD9F18019BE;
-	Wed,  7 Oct 2026 08:17:36 +0000 (UTC)
-Received: from FCCLS0092175.localdomain (unknown [10.8.51.148])
-	by az2nlsmom4.fujitsu.com (Postfix) with SMTP id 9AEAF2000AA7;
-	Wed,  7 Oct 2026 08:17:31 +0000 (UTC)
-Date: Wed, 7 Oct 2026 17:17:29 +0900
-From: Kohei Enju <enju.kohei@fujitsu.com>
-To: Marc Zyngier <maz@kernel.org>
-Cc: Tomohiro Misono <misono.tomohiro@fujitsu.com>, 
-	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, Jonathan Corbet <corbet@lwn.net>, 
-	Shuah Khan <skhan@linuxfoundation.org>, Randy Dunlap <rdunlap@infradead.org>, 
-	Thomas Gleixner <tglx@kernel.org>, Radu Rendec <radu@rendec.net>, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH 4/4] irqchip/gicv3: Add workaround for FUJITSU-MONAKA
- erratum E#030003
-Message-ID: <asX5CiaDodoFrn0q@FCCLS0092175.localdomain>
-References: <20261002-monaka-fix-for-upstream-v1-0-4aec0b0cbe34@fujitsu.com>
- <20261002-monaka-fix-for-upstream-v1-4-4aec0b0cbe34@fujitsu.com>
- <86tsn42sqr.wl-maz@kernel.org>
- <asS5r0WNCQpMIo4p@FCCLS0092175.localdomain>
- <878q4b2mj5.wl-maz@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="H90rS2lD"
+Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-4a17f65ab8bso3040295e9.1
+        for <linux-perf-users@vger.kernel.org>; Wed, 07 Oct 2026 01:31:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1791361862; x=1791966662; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:date:from:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=Z1JaVbIvVyJ1UmpioILy1Ttyxf2JZ8HMV5yk2EbJ/oI=;
+        b=H90rS2lDz93Zrh390HldScEfGzTf16enLdqivL11kq/PxQ6o0x2eeJIiRCW5m7FAyM
+         /nkhkOop4w3HQL2cw557AfPW6dgKAnvnBaXS6ODX90PiomD4mKcpSPJTyY+XmIsBJQHo
+         7XIOjRVlmhRtPNklWNqjqMDZAvcYuWAnV6lWZ+QlgppWD0YCNDp8OuctFaAV4dhPWWaO
+         Q3e42346PIMAB0Y8W2lsqcE0B2XL96yyOHZSqi6NevCBiebGBmJ7HnLYXD54X9TcuOBo
+         DF4tEZZP3wG1Mx4HhzSdHDFYoso8z2/unslWpIpZQlU+hFk9RIp6KDw4pP6USmWCUXG5
+         Xx9Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1791361862; x=1791966662;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:date:from:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=Z1JaVbIvVyJ1UmpioILy1Ttyxf2JZ8HMV5yk2EbJ/oI=;
+        b=b57o7UTqhsDGSYDIzE22H25zO6xI0GvU65Ym+AkCLe+Rz/68mrn5OLXm9YJl1mQsS3
+         zscV2j1UXHliP+xP0UazqnBBGMTfxWt+GNQoVoDaIb6Jd76WNjOB14wEbLdqdXGGnmBs
+         gTFJqxyaWcu39P1zBrwNvyGE9QhtQj/V3PBRd0zdgUb/ElVAsES9adNcNbW812fEdeni
+         basfNaVaQLX6shz/DpQjIQWOOMoGIBh2VrL5aWEfVygawQ5MKLu3RowoPGCtHRiIbGnL
+         Xc/3EDGkJQgarpNwcA7Nkeanp5Q86VC02pGUJsR1QfrXC6SayuikusexSJpOu2BGupoI
+         vWsA==
+X-Forwarded-Encrypted: i=1; AKwUvBzGyF7M3ukUWRioSInPTxPw9AEC/2mdi+F+Xp6HWMlZrSJLmhhJQj+AwoGX03KuAE62wNP6SWgu6432sqWsSd9d@vger.kernel.org
+X-Gm-Message-State: AFuF++k5tWvTLUmScg2eSfdVusDnmfhBVuZgYrQhU2l/s6G5+EtbcM2I
+	zHxgeXb5SdRtaZs0BM/UKEpM5Gajx+FBt4YJ48sMcTivLOxPUTdc6e90
+X-Gm-Gg: AYBFou1lBnxfhePI/+KK0npC/4slpfcKY4HxWvpBtQQHj1RD04NCQ1hn7AQ7M4EzAbA
+	v/Y3iqbBcvw2nyrc3aK6rc2HPWs158IEV56RAa3UbtR7qIon1Hn6Fz3o+9BIBT3DUDtjezxl2q8
+	G3i6Rw1wk3mEFIKZ31nyCLP24rcHgDZh1HJzOqQyG8NWsuJ8c2X7RVh7X90AlnQp8xuY9Oxp9Wv
+	Zqzt3VvbHkVKIbgJ+7N9LLT69E2SngDNvRU/OLSdNrOT5t76DcWdf5DuOHeLczG7kkuZiuhz7+k
+	mb70OcFUU2sKlDejQqIqgwsbNlxNKo9i+B3BIr5ic+iwE7aqlolDBi/bYrDsbajYLcvKlNbv790
+	Y209joHugoWdP6HQWc53KvXJTMTcFU3Mv+B+v2/jVl+R6LGUnz5bMNSvS23jyfSC6rXblqKbHMQ
+	gv8S37Z/C1+R9VCRUO43Og/Im0dm5Tnkq8C2/r1tgyExNRuhaTSahnHEcth0tPxrh3aawt7GTq+
+	dQfog==
+X-Received: by 2002:a05:600c:3f14:b0:4a0:1c94:7042 with SMTP id 5b1f17b1804b1-4a1802eab45mr23342815e9.8.1791361861821;
+        Wed, 07 Oct 2026 01:31:01 -0700 (PDT)
+Received: from localhost (90-182-211-1.rcp.o2.cz. [90.182.211.1])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4a17f653d7csm49071365e9.14.2026.10.07.01.31.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 07 Oct 2026 01:31:00 -0700 (PDT)
+From: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Date: Wed, 7 Oct 2026 10:31:00 +0200
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
+	James Clark <james.clark@linaro.org>, Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: Re: [PATCH 0/6 v1] perf test attr: Fix the re-enabled test
+Message-ID: <asYDREqTrh9ZDUhm@localhost>
+References: <20261006161309.3078488-1-acme@kernel.org>
+ <asWLmvF-3YtoKJ7j@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <878q4b2mj5.wl-maz@kernel.org>
+In-Reply-To: <asWLmvF-3YtoKJ7j@google.com>
 
-Hi Marc,
+On Tue, Oct 06, 2026 at 05:00:26PM -0700, Namhyung Kim wrote:
+> On Tue, Oct 06, 2026 at 06:13:03PM +0200, Arnaldo Carvalho de Melo wrote:
+> > From: Arnaldo Carvalho de Melo <acme@redhat.com>
+ > The test passes with 'perf test -vv attribute' on x86_64.  The AMD
+> > encodings come from the amd_pmu_event_map tables in
+> > arch/x86/events/amd/core.c.
+> 
+> On my machine, the current tmp.perf-tools-next which contains these
+> changes fails like this.
+> 
+>   $ tools/perf/perf test -v 82
+>   ---- start ----
+>   test child forked, pid 931585
+>   /home/namhyung/project/linux/tools/perf/tests/shell/attr.sh: line 20: python: command not found
+>   ---- end(-1) ----
+>    82: Perf attribute expectations test                                                 : FAILED!
+>   
+>   === Test Summary ===
+>   Passed main tests : 0
+>   Passed subtests   : 0
+>   Skipped tests     : 0
+>   Failed tests      : 1
+>   List of failed tests:
+>      82: Perf attribute expectations test
+> 
+> The below patch fixes the problem.
 
-On 10/06 10:42, Marc Zyngier wrote:
-> On Tue, 06 Oct 2026 10:08:19 +0100,
-> Kohei Enju <enju.kohei@fujitsu.com> wrote:
-> > 
-> > On 10/02 13:26, Marc Zyngier wrote:
-> > > On Fri, 02 Oct 2026 11:26:52 +0100,
-> > > Tomohiro Misono <misono.tomohiro@fujitsu.com> wrote:
-> > > > 
-> > > > From: Kohei Enju <enju.kohei@fujitsu.com>
-> > > > 
-> > > > On affected FUJITSU-MONAKA CPUs, an SGI generated by writing to
-> > > > ICC_SGI0R_EL1, ICC_SGI1R_EL1, or ICC_ASGI1R_EL1 may be lost if the
-> > > > operation races with CPU interface processing triggered by the arrival
-> > > > of a higher-priority interrupt, an update to a pending interrupt, or a
-> > > > transition of the PE to the Sleep state. When this occurs, the system
-> > > > register write does not complete, causing the issuing core to hang.
-> > > >
-> > > 
-> > > Is the SGI lost? Or is the sender core hanging?
-> > 
-> > Both: the SGI is lost, and the sysreg write does not complete, causing
-> > the sending core to hang.
-> 
-> I don't think the two are distinguishable. You might want to simplify
-> the commit message to simply say that the CPU hangs.
-> 
-> [...]
-> 
-> > > > +		 */
-> > > > +		for_each_cpu(cpu, mask)
-> > > > +			gic_send_sgi_via_rdist(cpu, d->hwirq);
-> > > > +
-> > > > +		/* Force the above writes to GICR_ISPENDR0 to be executed */
-> > > > +		dsb(st);
-> > > 
-> > > This doesn't force things to be executed. This is about completion of
-> > > the access, and with an nGnRE mapping, it doesn't enforce that the
-> > > stores actually reach the RDs, only an arbitrary point in the memory
-> > > subsystem.  The only way to guarantee this is to perform a read-back.
-> > 
-> > Understood.
-> > 
-> > I hadn't considered this when writing v1, but on further reflection, I
-> > don't think gic_ipi_send_mask() needs to wait for the target CPUs to
-> > handle the IPIs.
-> 
-> It's not about the target CPU handling the IPI, that'd be crazy. It is
-> about making sure that the IPI request has been observed by the HW and
-> that it is not going to race with something else.
-> 
-> > Given that the GICv2 driver does not wait for MMIO
-> > write completion either, I don't think we need to ensure completion of
-> > these writes before returning.
-> 
-> GICv2 has different architectural requirements (i.e. none). GICv3 is a
-> bit clearer, see the requirements at the end of 12.1.3 in IHI0069H.b.
-> 
-> > 
-> > If my understanding is correct, I'll remove the dsb(st) in v2.
-> >
-> 
-> As indicated in the spec, you either need nGnRnE+DSB, or a read-back.
-> Given that Linux uses nGnRE for all device mappings, read-back is the
-> only option here.
+still without your patch:
 
-I understand that section 12.1.3 describes how software can guarantee
-completion of a memory-mapped GIC write. With an nGnRE mapping, if the
-GICR_ISPENDR0 writes must complete before gic_ipi_send_mask() returns, a
-read-back from each target Redistributor is needed.
+root@number:~# perf test attribute
+ 82: Perf attribute expectations t: Ok
 
-What I am trying to understand is whether completion at this point is an
-architectural requirement for this particular write, or a requirement of
-Linux's ipi_send_mask() interface.
+ === Test Summary ===
+ Passed main tests : 1
+ Passed subtests   : 0
+ Skipped tests     : 0
+ Failed tests      : 0
+ root@number:~# grep "model name" -m1 /proc/cpuinfo
+ model name      : AMD Ryzen 9 9950X3D 16-Core Processor
+ root@number:~# uname -a
+ Linux number 7.2.7-200.fc44.x86_64 #1 SMP PREEMPT_DYNAMIC Mon Sep 21
+ 18:25:57 UTC 2026 x86_64 GNU/Linux
+ root@number:~#
 
-I could not find an explicit completion requirement for ipi_send_mask()
-itself. The normal GICv3 path also appears to return after an ISB,
-without the DSB described in section 12.1.6 as necessary to guarantee
-that the associated Redistributor has observed the write. This is why I
-am unsure what completion guarantee is required here.
+ I reproduced the build failure in an ARM64 Debian Trixie machine,
+ applying your patch to try again.
 
-More specifically, I would like to understand:
-- What could an outstanding IPI request race with?
-- Which component must have observed the request before
-  gic_ipi_send_mask() returns: the CPU interface, the sending PE's
-  Redistributor, or the target Redistributor?
-
-A pointer to the relevant architectural requirement or an example of
-such a race in Linux would help me understand why completion is needed
-here.
-
-Thanks,
-Kohei
-
-> 
-> Thanks,
-> 
-> 	M.
-> 
-> -- 
-> Jazz isn't dead. It just smells funny.
+ - Arnaldo
