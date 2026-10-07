@@ -1,192 +1,267 @@
-Received: from LO0P265CU003.outbound.protection.outlook.com (mail-uksouthazon11022096.outbound.protection.outlook.com [52.101.96.96])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f45.google.com (mail-pj1-f45.google.com [209.85.216.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A87538B158
-	for <linux-perf-users@vger.kernel.org>; Wed,  7 Oct 2026 16:04:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.96.96
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 856A03D5668
+	for <linux-perf-users@vger.kernel.org>; Wed,  7 Oct 2026 16:14:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.216.45
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791389048; cv=fail; b=jZp657pPsztqsv0EC3400MdyubxGcSxFXH+1q2Le5yhp47JvMDmuBiCOguZakzgjFWjkydpdzyny+smbuxNKDLtwEX6qjTnFJmkNm2XBhjLGWsJl4bb/uBnWASKKV84a/BWCidpVe8FJhJEofu9CfQNidq6zbderokWP7SyE0X8=
+	t=1791389652; cv=pass; b=XDwhVdPuU+MMmBeiM9fQa4x9akiQIOQOYvOe8k/WU/MAaFa4XJ8LwrxW+Xffo6jm1dItK8B8VtP3rJfudGeemVQeQOlMCujBKxYsUK16QT3y+yKzNnVcHY6/mCZ94+HIKOK0SmUfPhHJ+bTCmS62surnYLysoTZ3MU7vXoSvrl8=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791389048; c=relaxed/simple;
-	bh=94WPvwOF5+LzjXJCgHgPzCwIoF3pXDK60JYv82u1Q4I=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=I/w0+VYhIj0L8WhQXbuJXein7E0LGDI/L6+BjrzYRNr63lcz+hp54XCU26B4oFoz1dL4A9PdP99/iE5Sb+pLnYca4Id5ci+Qr0Mnt+e6pGTe4vtUk9k7toVi0UogFUUtw8t0NzOQgIIF49EH7/PtGiBVxqDWMITDOob78wRrI+U=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=atomlin.com; spf=pass smtp.mailfrom=atomlin.com; arc=fail smtp.client-ip=52.101.96.96
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=atomlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=atomlin.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=e38WV8XyPSIRVpD3Zo15PKIMknsvPcD4aHV1FZbJ33M1Wwg0knrLVKsZ1NWBzBJwkff/rSmWJKhfT1kCZrBGB5usfZI+qhSVR3Ex0cb8Bs+RkaTzgyyC3TU2juebJTcbnx/OTeCBOtQHurJ+82k8/frEMLxuJduzRxM6ateVjq0MgwOqd/ywzHhfXriShgsLAGR+ijI6qRiwXZwXV+tHJl5k3zq6Ofvc84H3bbHvARa4UyqD21TOjoHwgCntaXRnQbs9tRCzYQxRLCgKP0Lk0jYgOXRfKLxsjyJ5oEvmKCGpTC9sj4xMk7exJJoYAEfRjl9KqQpgB52lfBHaV+b9aQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001; h=From:Date:Subject:Message-ID:MIME-Version;
- bh=covI2A1UaID/n6cFQFvhWfRxCv2W1Qm6pSqxz2oMuV8=;
- b=Ve/u5MiCbl72d0BwL5TGq7tx9UOksZkJ/hP4Cc1KCqn0gYEmdvTu71nkDICS6MjDrmwh2D+8HtBRYiGPu91u0BUmjQRnzfsiQNevD2mdInVe5TY5fsh2wboSbpLpzyy3yRzgbiWXj23j004xw/CKM3d+4ViE1J0g9ppSLtp5H/wdVi7uzj4jJozJ18y5b4oNICKxichntSK3/0dqASOEWjMViwP9xeG3iGp0JkZJiwBc41JkqgC2ISxqmOqQNsRpwGB15fYelTCRPUBYDts41FA8Lfle08mCCytl60L8aZ/wy18E/x4y4SGFZvZM+mAmkAVGxUktqrdgBx70ptRlYw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=atomlin.com; dmarc=pass action=none header.from=atomlin.com;
- dkim=pass header.d=atomlin.com; arc=none
-Authentication-Results: mx.microsoft.com 1; dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=atomlin.com;
-Received: from CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM (2603:10a6:400:183::5)
- by LO4P123MB6693.GBRP123.PROD.OUTLOOK.COM (2603:10a6:600:2e0::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.472.20; Wed, 7 Oct
- 2026 16:04:03 +0000
-Received: from CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM
- ([fe80::cec4:77ab:262e:d230]) by CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM
- ([fe80::cec4:77ab:262e:d230%4]) with mapi id 15.21.0496.015; Wed, 7 Oct 2026
- 16:04:03 +0000
-Date: Wed, 7 Oct 2026 12:04:01 -0400
-From: Aaron Tomlin <atomlin@atomlin.com>
-To: sashiko-reviews@lists.linux.dev
-Cc: linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH perf-tools-next v2 2/4] perf ftrace: Support filtering
- return address comments
-Message-ID: <ern7gdkhtfndho45foktcia7anawej353v27wxbiauod3f2jaf@nnbhzgwjxmsq>
-References: <20261006232756.65620-1-atomlin@atomlin.com>
- <20261006232756.65620-3-atomlin@atomlin.com>
- <sashiko-outbox-162514@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <sashiko-outbox-162514@kernel.org>
-X-ClientProxiedBy: VIUP296CA0043.AUTP296.PROD.OUTLOOK.COM
- (2603:10a6:800:34b::19) To CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM
- (2603:10a6:400:183::5)
+	s=arc-20240116; t=1791389652; c=relaxed/simple;
+	bh=WKUs52uoC9EQE/UJ+NNwRhWd//Mj9ebAmu+GkM0uTyM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=jlGXJ4GKP0FVO4UaYDSgJMk2tYuqQwCD5i28J2L8F6gql5uuzlmX9PlhtaXqxxTTpluVU6qEDAlcR6GfBlE+Z6HedNCu2QV0RPiLaGFz7s5/mB7vuuU428Z9Dm5anuKp452gIdxG43zukWdkCTWSCMBPOVladkbVZgCyFGsmPTw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ncsu.edu; spf=pass smtp.mailfrom=ncsu.edu; dkim=pass (2048-bit key) header.d=ncsu.edu header.i=@ncsu.edu header.b=XYDMKc+O; arc=pass smtp.client-ip=209.85.216.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ncsu.edu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ncsu.edu
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=ncsu.edu header.i=@ncsu.edu header.b="XYDMKc+O"
+Received: by mail-pj1-f45.google.com with SMTP id 98e67ed59e1d1-38759bcd877so1906119a91.2
+        for <linux-perf-users@vger.kernel.org>; Wed, 07 Oct 2026 09:14:08 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1791389648; cv=none;
+        d=google.com; s=arc-20260327;
+        b=IRTgZfFyNYnz5Cox7VWTWX8QjCSeYSWewgEF/9pj8R/ak24GI0E/5Pu2E8OMRE9pko
+         Yvj1FuMGwcNOb4LHb7Xweg72kSi2kq27CQ7Nb5EtlGvrRnC8ynVzeiB4u+8dxQa8WNki
+         uUip6OtUdaMStFAAd1u60/DT5gAg1oZ2UkVbmLGLHqE92S5thQTCaZo9sd29pVSTcK9I
+         d3FC4tU03CUT1H0mkDGJRwZVHlt2pQLZqHec1NphLGjuwExn4MF4XH+np1/JwOM74K/g
+         fvzVTWblW01Hadbp8TJ7u9vZB3xcqiDOdAiWHq1tsfRAl/9Z61qJ0OCB+/Jw0Tpxy/xT
+         jDAA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=EwTAWcr73xgYfBX4GXvfxHil13WRE/QVYtr1aSJOR0E=;
+        fh=oQjnPkyZM/SZp3GcyAAkqNNB60liF4Px0OY+lxCnlE0=;
+        b=TFX/pgMI22IbpdW076aYWNt2ofbw2kqnRhiqrR9GP37mrZD+PQeNDtu1gEYQRPTbpQ
+         0sECXaSFAtBlSnvmvG5hZCedzZndoxfJdvBPvsDSHJYOMjYS4779SCbhZDzu6qcUjbuv
+         eWKl2O+qXVvT2x7WjstNMkrJgddiYPTtYvn6uqNFk3pnrxdxiaLH40shv9ZVctBChRaP
+         MLCpxA6e4M3CPxChgVDcNM/TaGTxYRIOxRoyLzTzDCccbyZ183z/LF7EEzjqKg9wEO89
+         Cu1vqihRugoUjvzLyoAqwjlNJzlsNsZ+y7+2vT+LPwITtSO9izN5NpLOxa81WLJ6qpnV
+         fX2w==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ncsu.edu; s=google; t=1791389648; x=1791994448; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=EwTAWcr73xgYfBX4GXvfxHil13WRE/QVYtr1aSJOR0E=;
+        b=XYDMKc+OVqGBL+kUUjz7NUE9PqyzwZz6FMFAKkP9g4HZ+gcg/Z/mfMcz6JypcInRDV
+         ZcxpznonHMVQJGGT4Rw5SWplchPNIvThDD/4YTF31+KJ0ZXsdjSslFH0L1e5mATI5y0D
+         r5wNEDXZCpNkx0snySTjbyWL0FGGHD+wJNnSixo1k2KoSb8rWGpSr32Sl30Ha3yM0f0i
+         BI/Tq52wJ4HxmKdOSjnQncXZiFnZ+l7Zo1JIZ5U9AK8TbtvD/lUKL7TspRDWMSOZyyue
+         rPsNb4a6uveq73rICQn7X797FCMEzUeCXRqj992Rv34k6E3/PYY5oVlGu4hPBTlry7zR
+         T7Xg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1791389648; x=1791994448;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=EwTAWcr73xgYfBX4GXvfxHil13WRE/QVYtr1aSJOR0E=;
+        b=g+UUmumK1zB9SNYMRslm93H1jT6RFNny8T5KTin/5SLREvi9AsxlkkDH1LqcBKbq40
+         IdeOWX3A0jcdRIGypaa328kMlofa+mH06Z3J6r+CiL7iBP4YxoHGOCvmQ8TvnhVPrZ53
+         Rt4RaUzz5ZkNFeIxCRdJq/F9DHd7QPGGvpc5oCSHAbdToX6lqhdJ8NJXQFr/DQWg3KWh
+         +2+NfVAehExQ1CQ5qX8UP47kvhzqs3vAe6cfTrtaVEoMir3GrAoxdGs26oac38FjT0Ru
+         tAt2Y+QSV3amWG9J3cytkU3Ir9aBXeR3TqEr9xN8zhCbIDpbzw8QcVD3bt01f51h/Fmo
+         jEyg==
+X-Forwarded-Encrypted: i=1; AKwUvBz/+bpYKGRNvr8FIsGvVSDgG0BLtAOlmV6SNfqRUqfL0+g4rTWppeuq8LAlAHz4/JslekkuIrhrotRn6+STPgKE@vger.kernel.org
+X-Gm-Message-State: AFq9FYKGoWEI3PIhyycYz9bg0Ieg/CclrVbdgr60TgdCb6N5rAmyLzlS
+	uHKAo4rryediCrxRl//vbJiS/78rw1VArvGl3RT5Y9LCQ1TuJTAR3VRvScnrrWpNiyM28bKR4rW
+	iEcR0Dr9eCFqPlrAcNpLXCLp8mjsrJHNMqeJ/scuP
+X-Gm-Gg: AYBFou1VFwp3waIDakVgFBQ0ISvKNjdWpe88K/FR3wdIycL5lb+qgau/VyYcrHWRDeK
+	nC8+86OzT/KYHwdiMqPBCU8Rrn88Fd29HWnKdUwH996JO6T5CFUCEAj+b3cMsL06NW3BMfsRvWV
+	NVMaf/aFAndLbM6h/rzUMu7ao/0uR1OMaSstUAhNdbCAym64jIyMVnFIvEsc3/ErF4qTGzqv7dl
+	YDQaP1vpuzT9XNmt0NMxnJ/QLr/p+JnYemwRNAovyIJ1HKVTHelId35XhMEkwKrEdOBEr4tEHHL
+	Eca1DL89xujVYXZoWlAfH+66ScaqnbdvS0vtHQ2PEDZGJNHF8gXjbuac+JJtOlYwaPBStgVC6me
+	3HURKPlIM3vI=
+X-Received: by 2002:a17:90b:57ce:b0:3a4:fa1a:2b1d with SMTP id
+ 98e67ed59e1d1-3a8a1c3ac39mr2165844a91.62.1791389647673; Wed, 07 Oct 2026
+ 09:14:07 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CWLP123MB6607:EE_|LO4P123MB6693:EE_
-X-MS-Office365-Filtering-Correlation-Id: df527df6-e282-4fea-db81-08df248c9b58
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|23010399003|376014|1800799024|366016|6133799003|18002099003|22082099003|10067099003|3023799007|56012099006|4143699003|27256017;
-X-Microsoft-Antispam-Message-Info:
-	XOz5nvmEsa9W2CGPoTCHhVy+t2VZ3bezep0lmBWbvUZ6MZyUV8hFRK/+VRKRqyywemlMcJt7SSJd8ZPh+8u9ml8UsRgCEGKMY62G3PuR5Wp8Gw5MDLNTEUttBca/Y6OVtAWS7vO0/SoNyxVTkzejKtKjdA9FP4QakY0cgzYUiRn8LRFJmopjWKFq3wqbwlrQTQ9AjNrbypNIkecdaTv+8h1bPNkIMKIsh+OH3KNRsBpq8fqMqg5z4JbUQXRTR5TzNc43/pAUFfoLhXKwAUrYucfoWnxQLhUK80UsxfnnSlw9Fyvjn9eMl2xo/Vm0dlLYeD6uI1En6ySbOcuxXnvw32Xi3gGHwKlXjtvbFW/zkscec37WUnaKtPxQeGSA3/9B3EVxX4unYwD+aZjGzli6tf2BZTIL7vmzIioOeUvtnqpIBc53aAnzHj+uHq9MdbieT8gRpH3e9PDA/J6mOuHxK+Zv+sHP7236U9xa9k5PVOVD37JCgdGNQQ08ZnzlWTCt7oq7iONnnt3MXCwQYH38PlS79rEhGZ0Dfa6gu5CHnr/XQW6euLDcgPqrg+W2ORRBai7bBbKIqf6deUm4+LnnxwB04fDAzFUjAG1YGyF9Nm7etLVcuA7q3taaXcpI2vMfRcqwnR8N9CQWbX7rIaoF67pNcdMvun6B60+t19BxrYM=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(23010399003)(376014)(1800799024)(366016)(6133799003)(18002099003)(22082099003)(10067099003)(3023799007)(56012099006)(4143699003)(27256017);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?Wk9jdUNKdTdFcjA5dFBuOEU3RGxXTGpDUXNuWHNtSmJVSFA3REdsd2J6N3hH?=
- =?utf-8?B?TTRyNk9jV1pQL1dScmN3MGx1aklnanEyZUFaNHJwcmxQUi8wMHJHR2UvcEND?=
- =?utf-8?B?czhsMzMybzhURllxYjd6dnRtTk8vUk82b1QvQWlYTHErTjJvbW9OS1dhbjZo?=
- =?utf-8?B?SWlQY1RCc2E0aFgxem9XM003M01GNUtUZlpCenBaZ2NqRkNXZFptUHlCTGM1?=
- =?utf-8?B?V0JhY1hPd1NIbGh5d2g5emJ0RkpxR0xwZ0pENDVoY2tKN2g1dmxkOHZtY01C?=
- =?utf-8?B?QWtDUytxSUs0d3BKZGdpbms5Q0xzQVNUTWRxSlUvU1VaeEF0QmpoN3FkVmYw?=
- =?utf-8?B?OTFZcWdiNWdFQklEc09OTDJHSnpqam9TVEIwMkZGN09nK2tmeGE3T2xaZ0N6?=
- =?utf-8?B?RHE1Sjk4dVBxWVkrMnQ2MDlLc1FmTTZicXJHRjJEWTMwOHF2R0pCVWJjMElB?=
- =?utf-8?B?THd2WmdkUy83azJmaVlXbk90U3RCT2FKYmpVRVlhcTRXeDhzTUdiS01MeE9w?=
- =?utf-8?B?MWJPNHlxZnBsZHIyZzBMOGZibVBWUTBES3pKRHlLdklPQWN1THdGMkxuVGVM?=
- =?utf-8?B?Skd5R05NdWFaWjEza3RRSzZaQUxwdE1zeVluS290THFjRThOc01MQWM0R0ZX?=
- =?utf-8?B?ZUxzNVRoL2tqSG05RGl4ZUV0b3Z5RURIcmNCYmp1TGo1V0hiUWZWUEFxMTky?=
- =?utf-8?B?QzY1M3R0MHU2eXlPdWtOZndhZ1JBYzAzSU05a1RRU0ppNHEzQzJ4TDVld3ly?=
- =?utf-8?B?R2FXWm9EdW80VVA1L3NOVUZjRDkwbkZFOG1jWTVTR3QxdXYrTzREZ1ZIdy9u?=
- =?utf-8?B?UitGSWZBeWxGcTg5ZVY5cjlNOGZSUlRVa2U5ejlvSFdGN3k0VkpKSlNtLytz?=
- =?utf-8?B?V21jSGQxZXcyTkxYaTIzck5NMGlyRE10TG9MV0NZbndhYi91VGpGZTZtYksr?=
- =?utf-8?B?ZVlHOHNhVXI2aHlNSTZyUFpUUkM4LzVmRGtPV0hRNFVocTMxUjl4bXhRUEYx?=
- =?utf-8?B?d1hiVWpDSEViY241aWpJSWhBYm81YysrTk16SnhXVERBejJaekc4MkxOSU5F?=
- =?utf-8?B?dFRCYlU4UFJVY1V0Z00xbGM0K2JKQmQ0RmpKT0owSXpVRUVQdUxWaXhQUEJv?=
- =?utf-8?B?Vk5mZ0NSMnM3Sisvdm5IWUdUZzJzU1JzaEhjektwbzFLZGZoTTJrbHNLdGR0?=
- =?utf-8?B?Vy9pcEtPZk5mU0puNzc0OUc5R1l2ZGhwd09xU2p1aERYOXJwVi9OYUFCM2hr?=
- =?utf-8?B?UDNBQ3U0TDJjRDVwNG1QMzFmN24rTkErMGlYY3I2TS9RNWpldDV5TDF6Kzg5?=
- =?utf-8?B?UVZkK0xLUktrZzYrelpsL29BSnRYMlpUMUpTNXpNTHBjMWhQYlJnM2NDckJC?=
- =?utf-8?B?dFVDRzhFUURQYUZieE9CNytzdVZpM2s1bWVEY1R4ZjYzMHRoQVRkWlpaMmR3?=
- =?utf-8?B?WERKeUtCNHRMMlRaT212MWRmR2dSWFdSbTNac093M2NmbEQyZFlCOWhoVW42?=
- =?utf-8?B?Y2NOT2hxSzZPcXhzbW1qd1pJVkZjc0VpZWt2MDBUUUg1L0hMdldhREVVYWJi?=
- =?utf-8?B?VnFHL0c5bUZpZnBVck03c3g4VGlXa09qQm5FTS9hZmE5cEpWWG0zclBldHRn?=
- =?utf-8?B?akpqRk1GeVZGck8vUlU2NDdTK2VPdGtTK3hRVnhCbXVldUp6dHZJSnVPSUZC?=
- =?utf-8?B?K09IUysvTVd3WTBNdTVzamxTcTJtdWd0Z1AyckVFbW9JL2dyWEZuSmFvOUVP?=
- =?utf-8?B?bmc4SjBwZzBTMlJ2K05TYktrTTRhS2UvemZnWGVxQnRTYkxNKzZCOE9ZWGxO?=
- =?utf-8?B?NGdydDBld3Y5M1diL3VZTFd3Qmh2bk1KaytuQktRUmJMVm1XMjM1UDlQS3lS?=
- =?utf-8?B?VlpwN1p0bERiMmRFV2VtRDhjV0daeXJhN3RqdTh6Y0tXVlIxWTdnWU5qZFRi?=
- =?utf-8?B?UVhTaHFndE91UG92OG5rZ3lIQW5rWGhvYUdWcVM1TjdEOXk2eEFwZWVzb3dJ?=
- =?utf-8?B?clZiV2pCMGpXYkFScmRURjdRaGRLR2VsSG9maE9WQzliUndPQ3ZKTnlKZStl?=
- =?utf-8?B?K0c2UE5UbFg3ZzBSZmp0ZFMvcHk4VFZDdTgwNEgydCtvRXZUUG9KT0t1SjVR?=
- =?utf-8?B?N0JKZmp2a3NEV0I5cmRCNUdXSmVHcUJiWUxPak93a0cyT0F1SURJUXhwNzRx?=
- =?utf-8?B?T0ovUnhST0Z3ZHZyTjlNaC9PODFwZjhiYVJqbTBnTnNRN09iTVY0ckJjaHZB?=
- =?utf-8?B?SG5xTHJMaVBOcCtYV1owdURORWg3L1RJci9QQVdIREVTQ0psLysxNlVqNlYw?=
- =?utf-8?B?ejl4UUNyVG13VUVVRjBzSnIzemRYMkVlMGlKWVZMN3hJdXdzVDlNQT09?=
-X-OriginatorOrg: atomlin.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: df527df6-e282-4fea-db81-08df248c9b58
-X-MS-Exchange-CrossTenant-AuthSource: CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Oct 2026 16:04:03.1295
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: e6a32402-7d7b-4830-9a2b-76945bbbcb57
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 1uSUg5bXaWFBCFiLs0ruLG/MycthLd3+fYn+lYkcdZ9H0M+LDAqWVrgpFNE1G0EcWFdwa/hF14lm4yaESE3X5g==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: LO4P123MB6693
+References: <20261005201010.36493-1-yzhao62@ncsu.edu> <asZtHmjHDA--hXVM@google.com>
+In-Reply-To: <asZtHmjHDA--hXVM@google.com>
+From: Yanbo Zhao <yzhao62@ncsu.edu>
+Date: Wed, 7 Oct 2026 12:13:56 -0400
+X-Gm-Features: AclHuK8WLqUQRQdipFXa86JF-X-263W7GTyonNnwLbJjjvdD0ud2BwBbpNpZiYA
+Message-ID: <CA+J8viZkWZy=UfDg1aX9KDGmkJp_+V6MCWP8UZ9zYPU89+cSLA@mail.gmail.com>
+Subject: Re: [PATCH v3 0/3] perf annotate: Data type profiling support for C++
+ classes and virtual calls
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Ian Rogers <irogers@google.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, James Clark <james.clark@linaro.org>, 
+	Zecheng Li <zli94@ncsu.edu>, Xu Liu <xliuprof@google.com>, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Oct 06, 2026 at 11:37:04PM +0000, sashiko-bot@kernel.org wrote:
-> Thank you for your contribution! Sashiko AI review found 1 potential issue(s) to consider:
-> - [Medium] perf/ftrace: memory leak of trace buffer on error paths in __cmd_ftrace()
-> --
-> 
-> commit 473e334ba892f3b7d5261168be5e86956a4de438
-> Author: Aaron Tomlin <atomlin@atomlin.com>
-> 
-> perf ftrace: Support filtering return address comments
-> 
-> This commit introduces a feature to filter out return address comments from
-> the function graph tracer output in perf ftrace. It implements parsing and
-> filtering logic, adds a --filter-retaddr command-line option, and includes
-> unit tests for validation.
-> 
-> > diff --git a/tools/perf/builtin-ftrace.c b/tools/perf/builtin-ftrace.c
-> > --- a/tools/perf/builtin-ftrace.c
-> > +++ b/tools/perf/builtin-ftrace.c
-> > @@ -827,6 +827,8 @@ static int __cmd_ftrace(struct perf_ftrace *ftrace)
-> >  				break;
-> >  			for (int i = 0; i < n; i++) {
-> >  				if (buf[i] == '\n') {
-> > +					if (ftrace->filter_retaddr)
-> > +						ftrace_filter_retaddr(linebuf.buf);
-> >  					fprintf(stdout, "%s\n", linebuf.buf);
-> >  					strbuf_setlen(&linebuf, 0);
-> 
-> [Severity: Medium]
-> Does __cmd_ftrace() in tools/perf/builtin-ftrace.c leak the allocated buf
-> and linebuf on error paths?
-> 
-> Looking at the initialization sequence, buf is dynamically allocated and
-> linebuf is initialized:
-> 
-> 	buf = malloc(TRACE_BUF_SIZE);
-> 	if (!buf) {
-> 		pr_err("failed to allocate trace buffer\n");
-> 		goto out_reset;
-> 	}
-> 	strbuf_init(&linebuf, 512);
-> 
-> However, if get_tracing_instance_file() fails or trace_fd fails to open,
-> the code jumps to out_reset:
-> 
-> 	if (!trace_file) {
-> 		pr_err("failed to open trace_pipe\n");
-> 		goto out_reset;
-> 	}
-> 
-> The out_reset label is located after the cleanup for buf and linebuf:
-> 
-> out_close_fd:
-> 	free(buf);
-> 	strbuf_release(&linebuf);
-> 	close(trace_fd);
-> out_reset:
-> 	exit_tracing_instance();
-> 
-> Will this bypass the free(buf) and strbuf_release(&linebuf) calls, causing
-> a regression where these resources are leaked when early error paths are
-> taken?
+Hi Namhyung,
 
-This will be addressed in patch 1/4.
+Thanks very much for your review and help!
 
-> -- 
-> Sashiko AI review · https://sashiko.dev/#/patchset/20261006232756.65620-1-atomlin@atomlin.com?part=2
+Best,
+Yanbo
 
--- 
-Aaron Tomlin
+On Wed, Oct 7, 2026 at 12:02=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> =
+wrote:
+>
+> Hello Yanbo,
+>
+> On Mon, Oct 05, 2026 at 04:10:07PM -0400, Yanbo Zhao wrote:
+> > Hello,
+> >
+> > Data type profiling currently only understands C struct/union types.
+> > For C++ workloads, member accesses through base class subobjects
+> > cannot be resolved, and virtual function calls (indirect calls through
+> > the vtable) lose the return type of the callee: the register holding
+> > the returned value becomes unknown, which matters when it's used
+> > directly to access memory like 'p->next()->val' where no DWARF
+> > variable describes the temporary.
+> >
+> > This series extends data type profiling to C++:
+> >
+> > Patch 1 introduces die_is_compound_type() covering DW_TAG_class_type
+> > as well and accepts DW_TAG_inheritance in the offset-based member
+> > lookup so that it descends into base class subobjects.  It handles
+> > empty base classes, members placed in the tail padding of a base and
+> > virtual base classes.
+> >
+> > Patch 2 adds the DWARF helpers for virtual calls: the vtable slot index
+> > of a virtual function, the virtual function at a slot of a class
+> > (following the primary base class chain), and the class of the vtable
+> > pointer at an offset of a type.
+> >
+> > Patch 3 tracks the vtable pointer and the virtual function pointer
+> > loaded from it in the x86 instruction tracking, and resolves the
+> > return type of 'call *N(%reg)' and 'call *%reg' through them.
+> >
+> > Tested on x86-64 with GCC 15 (-O2 -g) using small programs covering
+> > single/multiple inheritance, empty base optimization, tail padding
+> > reuse, virtual inheritance, direct calls through the vtable and the
+> > speculatively devirtualized form.  In all cases the access to the
+> > returned pointer after a virtual call is annotated with the right type
+> > and member, e.g.:
+> >
+> >   movq    (%rbp), %rax           # data-type: struct Node +0 (_vptr.Nod=
+e)
+> >   movq    (%rax), %rax
+> >   cmpq    %r14, %rax
+> >   je      0x1240
+> >   movq    %rbp, %rdi
+> >   callq   *%rax
+> >   addq    8(%rax), %r12          # data-type: struct Node +0x8 (val)
+> >
+> > The existing results for C code are unchanged and the added cost on
+> > the common path (a pointer dereference) is a tag check on the resolved
+> > member type.
+>
+> Thanks for working on this!
+>
+> Reviewed-by: Namhyung Kim <namhyung@kernel.org>
+>
+> Thanks,
+> Namhyung
+>
+> >
+> > Changes in v3:
+> > - Rebased onto the current perf-tools-next.
+> >
+> > Patch 1:
+> > - No change.
+> >
+> > Patch 2:
+> > - Check the value of DW_AT_virtuality instead of its presence (Sashiko,
+> >   Namhyung).
+> > - Bound the base class walks in die_find_virtual_func() and
+> >   die_get_vptr_class() with MAX_TYPE_CHASE (Sashiko, Namhyung).
+> >
+> > Patch 3:
+> > - Check !src->multi_regs when loading a function pointer from the
+> >   vtable and when marking a register as the vtable pointer (Sashiko,
+> >   Namhyung).
+> > - Set ops->target.multi_regs in call__parse() so that an indirect call
+> >   with an index register is not resolved by the displacement alone.
+> >
+> > The recursion depth limit in __die_find_member_offset_cb() reported
+> > for the patch 1 will be sent as a separate patch on top of this series
+> > as discussed.
+> >
+> > Changes in v2:
+> >
+> > Patch 1:
+> > - Explain DW_TAG_inheritance with an example DWARF in the commit
+> >   message (Namhyung).
+> > - Skip virtual base classes whose location is a runtime expression
+> >   instead of falling back to offset 0 (Sashiko).
+> > - Match a base class in the offset lookup only if it actually has a
+> >   member at the offset, to handle empty base optimization and tail
+> >   padding reuse where a member of the derived class shares the offset
+> >   with the base (Sashiko).
+> > - Keep looking at the next sibling in fill_member_name() when an
+> >   anonymous child (base class) has nothing at the offset.
+> >
+> > Patch 2:
+> > - Drop the non-existent DW_AT_vtable_elem_index and the DW_LANG_*
+> >   fallback macros (Namhyung).
+> > - Drop cu_get_language(), cu_is_cplusplus(), die_get_base_class(),
+> >   die_get_parent() and die_find_member_by_offset() which are not
+> >   needed anymore (Namhyung).
+> > - Document that die_get_vtable_index() returns the vtable slot index
+> >   and that GCC and Clang both emit the index as DW_OP_constu
+> >   (Namhyung, Sashiko).
+> > - Fix die_find_virtual_func() to return the function DIE instead of
+> >   the DW_TAG_inheritance DIE when found in a base class (Sashiko).
+> > - Follow only the primary base class chain in die_find_virtual_func()
+> >   since non-primary bases have their own secondary vtables, and skip
+> >   an empty base at offset 0 which is not the primary base.
+> > - Add die_get_vptr_class() to find the class of the vtable pointer
+> >   through base class subobjects, and die_is_vtbl_ptr_type() to
+> >   identify the vtable pointer by its type ('__vtbl_ptr_type').
+> >
+> > Patch 3:
+> > - Remove the receiver ('this' pointer) register update after the call
+> >   which was dead code and not needed, and the arg0_reg field (Sashiko,
+> >   Namhyung).  The 'this' pointer lives in a callee-saved register or
+> >   on the stack across the call and DWARF location lists cover it.
+> > - Handle 'call *%reg' by tracking the function pointer loaded from the
+> >   vtable as TSR_KIND_VFUNC_PTR with its return type (Sashiko).  This
+> >   form is common due to speculative devirtualization by GCC.
+> > - Strip the leading '*' of an indirect call operand in call__parse()
+> >   instead of extract_reg_offset() so that both forms are parsed.
+> > - Ignore void virtual functions instead of aborting (Namhyung).
+> > - Keep the existing pointer dereference branch and its fall-through
+> >   intact; the vtable pointer is detected from the resolved member
+> >   type there instead of a separate lookup before it.
+> > - Treat the new register kinds as pointers when saved to the stack.
+> >
+> > v2: https://lore.kernel.org/r/20260930210038.196928-1-yzhao62@ncsu.edu
+> > v1: https://lore.kernel.org/r/20260821050207.4517-1-yzhao62@ncsu.edu
+> >
+> > Thanks,
+> > Yanbo
+> >
+> > Yanbo Zhao (3):
+> >   perf dwarf-aux: Add die_is_compound_type() to handle C++ class types
+> >   perf dwarf-aux: Add C++ vtable helpers
+> >   perf annotate: Resolve C++ virtual function calls in x86 insn trackin=
+g
+> >
+> >  tools/perf/util/annotate-arch/annotate-x86.c |  77 ++++-
+> >  tools/perf/util/annotate-data.c              |  61 ++--
+> >  tools/perf/util/annotate-data.h              |   4 +
+> >  tools/perf/util/disasm.c                     |   7 +
+> >  tools/perf/util/dwarf-aux.c                  | 282 ++++++++++++++++++-
+> >  tools/perf/util/dwarf-aux.h                  |  21 ++
+> >  6 files changed, 426 insertions(+), 26 deletions(-)
+> >
+> > base-commit: 1dc462fc214907671600172280c2e79ef9fe6fcf
+> > --
+> > 2.53.0
+> >
