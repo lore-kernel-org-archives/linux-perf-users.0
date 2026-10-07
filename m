@@ -1,63 +1,56 @@
-Received: from CH4PR04CU002.outbound.protection.outlook.com (mail-northcentralusazon11013040.outbound.protection.outlook.com [40.107.201.40])
+Received: from LO0P265CU003.outbound.protection.outlook.com (mail-uksouthazon11022096.outbound.protection.outlook.com [52.101.96.96])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16C1141D629
-	for <linux-perf-users@vger.kernel.org>; Wed,  7 Oct 2026 16:04:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.201.40
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A87538B158
+	for <linux-perf-users@vger.kernel.org>; Wed,  7 Oct 2026 16:04:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.96.96
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791389043; cv=fail; b=P5+Y4gC79EowX+WXSxmvZVOc159c7eRUCkl+JSEfAk9bq6B1voYJvi4+Jh69lu2UOZumoAhto76BgJDWHtq530IZqW5YU8WLqG4dLyQrf22oZrPpinczDPGEpLui20Mk7faN2MMmLRI66wqjr7unkJ5ZHRXTvkfiwViiJ2i0PfM=
+	t=1791389048; cv=fail; b=jZp657pPsztqsv0EC3400MdyubxGcSxFXH+1q2Le5yhp47JvMDmuBiCOguZakzgjFWjkydpdzyny+smbuxNKDLtwEX6qjTnFJmkNm2XBhjLGWsJl4bb/uBnWASKKV84a/BWCidpVe8FJhJEofu9CfQNidq6zbderokWP7SyE0X8=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791389043; c=relaxed/simple;
-	bh=A1EhJNPX7OMeplvHF88xUc+5qdM8HxbUwJDrXBLBC6g=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=mpVNtSLg+PtlH1lqgCzq4G2qH5aKIrcGdDgk6oBh9v1tDXsi/x34cwwFnJ64c8V1ezXs4bHKaETUKP1IBSiYz9UE3eT8hy5QZpoz5bbFxPPhC7x9rOmr32GwhYMa//UK9nyDEeYweNmxHJ7RqRIePC0O/y8AWTOZhdwb3J70Bvw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=vT8CtAXl; arc=fail smtp.client-ip=40.107.201.40
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="vT8CtAXl"
+	s=arc-20240116; t=1791389048; c=relaxed/simple;
+	bh=94WPvwOF5+LzjXJCgHgPzCwIoF3pXDK60JYv82u1Q4I=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=I/w0+VYhIj0L8WhQXbuJXein7E0LGDI/L6+BjrzYRNr63lcz+hp54XCU26B4oFoz1dL4A9PdP99/iE5Sb+pLnYca4Id5ci+Qr0Mnt+e6pGTe4vtUk9k7toVi0UogFUUtw8t0NzOQgIIF49EH7/PtGiBVxqDWMITDOob78wRrI+U=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=atomlin.com; spf=pass smtp.mailfrom=atomlin.com; arc=fail smtp.client-ip=52.101.96.96
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=atomlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=atomlin.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=QB1zxWp/aCyuW/zM2DWmUHXfomQUiUzggBtSfcRm9CRaw8Jduqcvd8psUXTSqkZO6Sv7oStTwJDqGbMc2qlzYCq3lv1oSTFammzgNzLMm3erBbX8kUtUO/lVcvyOgeFldOrYHkSlKV3pSPOO3gQJ0UkkFzt0oKhlHG3u7dwMa3jHf7wvRPI46Us5aKuARVlFAIUQHVdc7eBwpdAx7/dBBSRM6NbW2mHPolo6xH8qfi8PBqgTCD0N2f+/EAYlyJNJRw6sZh8pNcTfOzy7cy0r68MYQAclk2HiKxfHLhCOGd/nqOIECd0eoECu9cgm2BxecO2RdfC6yWtXE3u+90E+xw==
+ b=e38WV8XyPSIRVpD3Zo15PKIMknsvPcD4aHV1FZbJ33M1Wwg0knrLVKsZ1NWBzBJwkff/rSmWJKhfT1kCZrBGB5usfZI+qhSVR3Ex0cb8Bs+RkaTzgyyC3TU2juebJTcbnx/OTeCBOtQHurJ+82k8/frEMLxuJduzRxM6ateVjq0MgwOqd/ywzHhfXriShgsLAGR+ijI6qRiwXZwXV+tHJl5k3zq6Ofvc84H3bbHvARa4UyqD21TOjoHwgCntaXRnQbs9tRCzYQxRLCgKP0Lk0jYgOXRfKLxsjyJ5oEvmKCGpTC9sj4xMk7exJJoYAEfRjl9KqQpgB52lfBHaV+b9aQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=GiU54Xwzzyz9TNTKxWelIBs6buw35ZcAOju1Yr7GMxM=;
- b=nf1c4kBJnue/sydwA0syCvqkVeYYR7mEK/ArbH4qS0x9d1qg0+w3kgTZcDHs5ZBHY146EIhKy/3DUbKvyh5rGCTwtvhEjnfabqp+Qv0c0NGJH7b5sdWTuOZdHOcnAE3k6evbttw1xGGUqFjigLino0+II5Xg/wTXUY+21VOmKcp6YWE0CRlVZ2G7CvYg10EF3XrZUuSd7GwRITzoSW0MBOzCy+iRTK29cNpKYjYpPLWbWJMcGyNzbXsrf9D9IdzYVjjjLLAulnKAUr3vF5szTkwQdAeThBJcnZUE4a5b69tSUW4nXzFxEeiGv7n5biJ08jN+m6dNG4F8hdrUHk17sw==
+ s=arcselector10001; h=From:Date:Subject:Message-ID:MIME-Version;
+ bh=covI2A1UaID/n6cFQFvhWfRxCv2W1Qm6pSqxz2oMuV8=;
+ b=Ve/u5MiCbl72d0BwL5TGq7tx9UOksZkJ/hP4Cc1KCqn0gYEmdvTu71nkDICS6MjDrmwh2D+8HtBRYiGPu91u0BUmjQRnzfsiQNevD2mdInVe5TY5fsh2wboSbpLpzyy3yRzgbiWXj23j004xw/CKM3d+4ViE1J0g9ppSLtp5H/wdVi7uzj4jJozJ18y5b4oNICKxichntSK3/0dqASOEWjMViwP9xeG3iGp0JkZJiwBc41JkqgC2ISxqmOqQNsRpwGB15fYelTCRPUBYDts41FA8Lfle08mCCytl60L8aZ/wy18E/x4y4SGFZvZM+mAmkAVGxUktqrdgBx70ptRlYw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=GiU54Xwzzyz9TNTKxWelIBs6buw35ZcAOju1Yr7GMxM=;
- b=vT8CtAXlJOGun2NmeWImoScfbp/vNRBb61+Hk0DSy0rNAN3V1Xz3F8OvzxXxXAMoltl14kCg6UPqWOTjKJDim+uLtJGazWG5n7epgKN/UTVmmYh6RyEphhwihDDKjJgNaMi53+YVCKkQMrddFCaRDboZgETXyFsq8aiEDolQPOg=
+ smtp.mailfrom=atomlin.com; dmarc=pass action=none header.from=atomlin.com;
+ dkim=pass header.d=atomlin.com; arc=none
 Authentication-Results: mx.microsoft.com 1; dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from DM4PR12MB5721.namprd12.prod.outlook.com (2603:10b6:8:5c::10) by
- CC6PR12MB283837.namprd12.prod.outlook.com (2603:10b6:170:209::18) with
+ header.d=none;dmarc=none action=none header.from=atomlin.com;
+Received: from CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM (2603:10a6:400:183::5)
+ by LO4P123MB6693.GBRP123.PROD.OUTLOOK.COM (2603:10a6:600:2e0::11) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.496.16; Wed, 7 Oct
- 2026 16:03:57 +0000
-Received: from DM4PR12MB5721.namprd12.prod.outlook.com
- ([fe80::8fe3:c3d1:a057:fd24]) by DM4PR12MB5721.namprd12.prod.outlook.com
- ([fe80::8fe3:c3d1:a057:fd24%4]) with mapi id 15.21.0496.015; Wed, 7 Oct 2026
- 16:03:57 +0000
-Message-ID: <38529f6b-448d-443b-bbc2-182a379cf590@amd.com>
-Date: Wed, 7 Oct 2026 21:33:51 +0530
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] perf/x86/amd/uncore: Extend num_umc_pmc to fix UMC
- discovery
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.472.20; Wed, 7 Oct
+ 2026 16:04:03 +0000
+Received: from CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM
+ ([fe80::cec4:77ab:262e:d230]) by CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM
+ ([fe80::cec4:77ab:262e:d230%4]) with mapi id 15.21.0496.015; Wed, 7 Oct 2026
+ 16:04:03 +0000
+Date: Wed, 7 Oct 2026 12:04:01 -0400
+From: Aaron Tomlin <atomlin@atomlin.com>
 To: sashiko-reviews@lists.linux.dev
 Cc: linux-perf-users@vger.kernel.org
-References: <20261007152746.3658877-1-sandipan.das@amd.com>
- <sashiko-outbox-163154@kernel.org>
-Content-Language: en-US
-From: Sandipan Das <sandipan.das@amd.com>
-In-Reply-To: <sashiko-outbox-163154@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: MA5PR01CA0098.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:a01:1a8::10) To PH7PR12MB5712.namprd12.prod.outlook.com
- (2603:10b6:510:1e3::13)
+Subject: Re: [PATCH perf-tools-next v2 2/4] perf ftrace: Support filtering
+ return address comments
+Message-ID: <ern7gdkhtfndho45foktcia7anawej353v27wxbiauod3f2jaf@nnbhzgwjxmsq>
+References: <20261006232756.65620-1-atomlin@atomlin.com>
+ <20261006232756.65620-3-atomlin@atomlin.com>
+ <sashiko-outbox-162514@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <sashiko-outbox-162514@kernel.org>
+X-ClientProxiedBy: VIUP296CA0043.AUTP296.PROD.OUTLOOK.COM
+ (2603:10a6:800:34b::19) To CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM
+ (2603:10a6:400:183::5)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -65,134 +58,135 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM4PR12MB5721:EE_|CC6PR12MB283837:EE_
-X-MS-Office365-Filtering-Correlation-Id: bfb95308-211c-4de5-a799-08df248c9748
+X-MS-TrafficTypeDiagnostic: CWLP123MB6607:EE_|LO4P123MB6693:EE_
+X-MS-Office365-Filtering-Correlation-Id: df527df6-e282-4fea-db81-08df248c9b58
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|1800799024|366016|23010399003|6133799003|22082099003|10067099003|18002099003|4143699003|11063799006|56012099006|5023799004;
+	BCL:0;ARA:13230040|23010399003|376014|1800799024|366016|6133799003|18002099003|22082099003|10067099003|3023799007|56012099006|4143699003|27256017;
 X-Microsoft-Antispam-Message-Info:
-	XvcXm9m50394h0iSG2eDFWb84yd3QRa/OU2ogCs8D00jmTidU1EpyhJIVXyfJtuAXIyWtWUnU9uHwoFdSIXOk2wh+50mFzGXTy4j4ufGejb0RkWvkfpDtpni/zsnbDzzLzKRnB0pE1llKf3JYFocd5tUtTLKLtcLJ5nTQ5l82/hvNfRnBRFUG99jr8KDIR9l7dMdxUnK7UqTDJYzkqxpsjqWZj5aToFc5QkKEPSDH9tbpi1ZXx8QGKaSnMzUkEJ628EuZ1FxLLCgiS9vO+15bbMJPQNzmIuO108T7Vku9rGhGrr+ldFhx6yuJQDVdctVSFk85FutZ2ndKt7XdwDMIlAsEVtcf5L8klrVhnP838p+u+t23+zphaD7YkubNyTFN2x9hXOZxkjU3cREDrC4Tbh2Memac+Uxh61trwzwJSgDqFtXBYBC1PJpWxPpsSwjEp+4KtsjwMVzqcpB3eLeDE0+yoq6JYFzI2N2uh3KHyFobu0t0icB3Xexaxwme5pY5ogvcuufDJ4xHCMyZ/uW09LBfmQUoIj/M77T9UxszejSdytl77bq57XUPhrBSRi8lLoTmyzlP8K9bGorLHTV9G1yjVTmt1kPyOBGGV0qVBN9URrPAptegMvCvcSigt31Xlr5kaPiHJ5eokMos6qtbi2Wrcjf/tORpEP7X8eXsIE=
+	XOz5nvmEsa9W2CGPoTCHhVy+t2VZ3bezep0lmBWbvUZ6MZyUV8hFRK/+VRKRqyywemlMcJt7SSJd8ZPh+8u9ml8UsRgCEGKMY62G3PuR5Wp8Gw5MDLNTEUttBca/Y6OVtAWS7vO0/SoNyxVTkzejKtKjdA9FP4QakY0cgzYUiRn8LRFJmopjWKFq3wqbwlrQTQ9AjNrbypNIkecdaTv+8h1bPNkIMKIsh+OH3KNRsBpq8fqMqg5z4JbUQXRTR5TzNc43/pAUFfoLhXKwAUrYucfoWnxQLhUK80UsxfnnSlw9Fyvjn9eMl2xo/Vm0dlLYeD6uI1En6ySbOcuxXnvw32Xi3gGHwKlXjtvbFW/zkscec37WUnaKtPxQeGSA3/9B3EVxX4unYwD+aZjGzli6tf2BZTIL7vmzIioOeUvtnqpIBc53aAnzHj+uHq9MdbieT8gRpH3e9PDA/J6mOuHxK+Zv+sHP7236U9xa9k5PVOVD37JCgdGNQQ08ZnzlWTCt7oq7iONnnt3MXCwQYH38PlS79rEhGZ0Dfa6gu5CHnr/XQW6euLDcgPqrg+W2ORRBai7bBbKIqf6deUm4+LnnxwB04fDAzFUjAG1YGyF9Nm7etLVcuA7q3taaXcpI2vMfRcqwnR8N9CQWbX7rIaoF67pNcdMvun6B60+t19BxrYM=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR12MB5721.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016)(23010399003)(6133799003)(22082099003)(10067099003)(18002099003)(4143699003)(11063799006)(56012099006)(5023799004);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(23010399003)(376014)(1800799024)(366016)(6133799003)(18002099003)(22082099003)(10067099003)(3023799007)(56012099006)(4143699003)(27256017);DIR:OUT;SFP:1102;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?M1diU216UndVUWlkYzJDQXh0MzNDby8yR1FXNzhRVnpiZVZuN0owK2pqMWZO?=
- =?utf-8?B?dnE4MWtrWnozcVRnNVpBVFFEd1NJSHFpRVhVMFhtNyttQlI0RUR6R0EzbVJx?=
- =?utf-8?B?OEU2djdLajNQNlBVMjdPWkx1N1dKaUREUnJRdzduTmNoTDVjMThJTkwzZkwx?=
- =?utf-8?B?T1ZicWM3ZlRENFBQYlhhMjhpUHlHajZWbjh5d2tNRUhwTEhQT2RIWXlvUC9T?=
- =?utf-8?B?RU1obnV2YjhNK1R6NVZKQXkxQlFEMFdqbGpMSU0vWHRIU2RnSkhLUXV3VmRZ?=
- =?utf-8?B?dVh5UU8vUUZWT3FySWU1ODExUXRIVEV2QmR4d3JBNzVSS1VSbkVsZEdFaGJ5?=
- =?utf-8?B?aFU3M1lXUUVsSktOaTFrOXNqcWVWL1hSc3JmYnFqd05DSkY5YXJhYXdtNllX?=
- =?utf-8?B?WVN1WXVFNTNreHdvOEdEUEpUKzF1MzhtZDA5QzRaRVVqSE15empTU1ovTXZ4?=
- =?utf-8?B?R1FyWWVXSEpycEd4cXFQY1BIYlJpZ1JBYU14cG1iUGhHUVEzMjFwTHE4YVBk?=
- =?utf-8?B?QVJNYW9TREh4ZExvWHBSUDl1a0k1aisvYS85WktvRTYzeEZlVkdUVSs5cCtt?=
- =?utf-8?B?MnhtckZybDBPNVVCL2wrc3FVbkJRRWtJcGxNanN3eVR2TllhRFVydkNGMlUx?=
- =?utf-8?B?dllhd3A5RS9JT1kzcUs1TWtFdng2RTQ1OUNRYlF4b3hyaTQxOGNTOHBYR2gv?=
- =?utf-8?B?T2NrNi8wTVlkRWhJN3laZFpkSExiRHdLMnNMdXdQVXJIYVh4cm9UVS9nSVY1?=
- =?utf-8?B?cVVsQVM3UFVZYlI1L09wZVJRbkxYWWZoMUYvb1B0dDVGOS9paEliNVAyQWRr?=
- =?utf-8?B?UUc4RllENWV4OCtoWUdKMHE1ak54T05EOGNjdjl0N3J3VDlzYkp3QXdCRzJO?=
- =?utf-8?B?TTdYNndnKzllb1p3aE85aVpxRE9UUG1rSlRGdEVXS3hWWWhXdExGT2QzeXJQ?=
- =?utf-8?B?c3lsM0ZITlRSQWlTZlJQbFNnS0FHVGpidkxWckNwR3B2a2JYREdPbEhqMWpj?=
- =?utf-8?B?Z2o5UFdYQjdIT2Q2MHY0UHQrOGNFcXZKczlCNmlZdjFzblRXSFpVRS8rNmJZ?=
- =?utf-8?B?WEgzOFBJUGtnQU55aklnem5DT01DbzRvTHZGVExFb1NJQUY1MTZ0Y2FoSlBy?=
- =?utf-8?B?VzRsSlpFOGtDZHY5bmQ3bnJ6amVyNUVLb3FKMy91NThFUnFEYmExQ1JVVDFv?=
- =?utf-8?B?WGlDbkV1bGJmZVRBMytoSmN0Z0FUQ1JBeG5oeE5NVjc0TzRVcWt5VFpvM3V3?=
- =?utf-8?B?d0pPQzhLQmRLM3o3OHVISGxVbjFscWJHd0lWTnRNWDJsby9mQXJqVVhvbFM4?=
- =?utf-8?B?Y1J0clduYWsxeFhxSGoxckl0eVJhZFdwbkRJSzlVajc1MElXQkpHTjIzb0Jy?=
- =?utf-8?B?enh5MzlwWmh1SG9ENkJXTEZHbUxFclJoejN4dmZSVzhJV21nQlZ4VWlWVmw1?=
- =?utf-8?B?Z00xR0VRRGNrR1ZrU3gvQm50U0ZCa2JLYlV0NXJIc1VKVWV4a3dtaXFqazRh?=
- =?utf-8?B?MWZIZDZWWkh2NHV2eXk5MENVVnJvTnltNi95c3VaTzFUQ09abloyd2luUWpV?=
- =?utf-8?B?alV6YjRySDd1ZTQ4SWV4SEJaNmFkZzIxNlNLY1RSdFlacUVrc1MzV1Q1aHJa?=
- =?utf-8?B?Z0xaZkFqL3pGdEFta2libTFtUjV0MmsvdHl4R1gzaEJQK3BqS3laMmk0allZ?=
- =?utf-8?B?YTRUcXNobk9mMGkrQnpOOS9RUDZ2TzFUT0ZNTnM0RnhlSy9vc0JkWW1Xd29O?=
- =?utf-8?B?clZYVXVxUGtsNlVOUDFOVWVLcGRESWpIemVrcFhTdElaR00weVdRK3oxek4z?=
- =?utf-8?B?bGVhZ1hrcWJmYXkvazJNL1g1dSt2VmJSTVRZTm1pUVVoa1pXZlNpelY2RUwr?=
- =?utf-8?B?aUNFeldJcVErYVZyb25oVUFBZDZaSXdoN3JiczFCaTd2dTF6VEw3M2FNd01M?=
- =?utf-8?B?TXpWekcvNzdBUzN3Z0pFSUxSSGcyTG1ub0RiaUdxUTMzVUdMYjlMUWNHM3Rt?=
- =?utf-8?B?ZVBGZEZRSnZoVi9IVGpoanZkUmtpcVJwTzBIWFg2SzBFQjVNZjgvRExHVWxV?=
- =?utf-8?B?VFhNeVJvTHZSQ3Z6aFBqNWJTODZreko1RUd2N1F3NzlTQUZvMlJobVNkM0Ni?=
- =?utf-8?B?S0d5RVVuRGUyek54QnhPVmQxaHlJU3NYd0o2WkVlUWxDMWczMUxNZzA3VzIy?=
- =?utf-8?B?TXh2cXFqUXY2akFRRzZmVlBVMHY1dmhHbnhYaVpqMWdibk1Uand4TCtaK0dz?=
- =?utf-8?B?RTRmeTlJbnU4TEtrZFBsUFlJb25mZFp4T3hKK0xVWUNnM1VDV2h6ZFRhUjhx?=
- =?utf-8?Q?Wx132ECyn8WyLEfEWJ?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: bfb95308-211c-4de5-a799-08df248c9748
-X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB5712.namprd12.prod.outlook.com
+	=?utf-8?B?Wk9jdUNKdTdFcjA5dFBuOEU3RGxXTGpDUXNuWHNtSmJVSFA3REdsd2J6N3hH?=
+ =?utf-8?B?TTRyNk9jV1pQL1dScmN3MGx1aklnanEyZUFaNHJwcmxQUi8wMHJHR2UvcEND?=
+ =?utf-8?B?czhsMzMybzhURllxYjd6dnRtTk8vUk82b1QvQWlYTHErTjJvbW9OS1dhbjZo?=
+ =?utf-8?B?SWlQY1RCc2E0aFgxem9XM003M01GNUtUZlpCenBaZ2NqRkNXZFptUHlCTGM1?=
+ =?utf-8?B?V0JhY1hPd1NIbGh5d2g5emJ0RkpxR0xwZ0pENDVoY2tKN2g1dmxkOHZtY01C?=
+ =?utf-8?B?QWtDUytxSUs0d3BKZGdpbms5Q0xzQVNUTWRxSlUvU1VaeEF0QmpoN3FkVmYw?=
+ =?utf-8?B?OTFZcWdiNWdFQklEc09OTDJHSnpqam9TVEIwMkZGN09nK2tmeGE3T2xaZ0N6?=
+ =?utf-8?B?RHE1Sjk4dVBxWVkrMnQ2MDlLc1FmTTZicXJHRjJEWTMwOHF2R0pCVWJjMElB?=
+ =?utf-8?B?THd2WmdkUy83azJmaVlXbk90U3RCT2FKYmpVRVlhcTRXeDhzTUdiS01MeE9w?=
+ =?utf-8?B?MWJPNHlxZnBsZHIyZzBMOGZibVBWUTBES3pKRHlLdklPQWN1THdGMkxuVGVM?=
+ =?utf-8?B?Skd5R05NdWFaWjEza3RRSzZaQUxwdE1zeVluS290THFjRThOc01MQWM0R0ZX?=
+ =?utf-8?B?ZUxzNVRoL2tqSG05RGl4ZUV0b3Z5RURIcmNCYmp1TGo1V0hiUWZWUEFxMTky?=
+ =?utf-8?B?QzY1M3R0MHU2eXlPdWtOZndhZ1JBYzAzSU05a1RRU0ppNHEzQzJ4TDVld3ly?=
+ =?utf-8?B?R2FXWm9EdW80VVA1L3NOVUZjRDkwbkZFOG1jWTVTR3QxdXYrTzREZ1ZIdy9u?=
+ =?utf-8?B?UitGSWZBeWxGcTg5ZVY5cjlNOGZSUlRVa2U5ejlvSFdGN3k0VkpKSlNtLytz?=
+ =?utf-8?B?V21jSGQxZXcyTkxYaTIzck5NMGlyRE10TG9MV0NZbndhYi91VGpGZTZtYksr?=
+ =?utf-8?B?ZVlHOHNhVXI2aHlNSTZyUFpUUkM4LzVmRGtPV0hRNFVocTMxUjl4bXhRUEYx?=
+ =?utf-8?B?d1hiVWpDSEViY241aWpJSWhBYm81YysrTk16SnhXVERBejJaekc4MkxOSU5F?=
+ =?utf-8?B?dFRCYlU4UFJVY1V0Z00xbGM0K2JKQmQ0RmpKT0owSXpVRUVQdUxWaXhQUEJv?=
+ =?utf-8?B?Vk5mZ0NSMnM3Sisvdm5IWUdUZzJzU1JzaEhjektwbzFLZGZoTTJrbHNLdGR0?=
+ =?utf-8?B?Vy9pcEtPZk5mU0puNzc0OUc5R1l2ZGhwd09xU2p1aERYOXJwVi9OYUFCM2hr?=
+ =?utf-8?B?UDNBQ3U0TDJjRDVwNG1QMzFmN24rTkErMGlYY3I2TS9RNWpldDV5TDF6Kzg5?=
+ =?utf-8?B?UVZkK0xLUktrZzYrelpsL29BSnRYMlpUMUpTNXpNTHBjMWhQYlJnM2NDckJC?=
+ =?utf-8?B?dFVDRzhFUURQYUZieE9CNytzdVZpM2s1bWVEY1R4ZjYzMHRoQVRkWlpaMmR3?=
+ =?utf-8?B?WERKeUtCNHRMMlRaT212MWRmR2dSWFdSbTNac093M2NmbEQyZFlCOWhoVW42?=
+ =?utf-8?B?Y2NOT2hxSzZPcXhzbW1qd1pJVkZjc0VpZWt2MDBUUUg1L0hMdldhREVVYWJi?=
+ =?utf-8?B?VnFHL0c5bUZpZnBVck03c3g4VGlXa09qQm5FTS9hZmE5cEpWWG0zclBldHRn?=
+ =?utf-8?B?akpqRk1GeVZGck8vUlU2NDdTK2VPdGtTK3hRVnhCbXVldUp6dHZJSnVPSUZC?=
+ =?utf-8?B?K09IUysvTVd3WTBNdTVzamxTcTJtdWd0Z1AyckVFbW9JL2dyWEZuSmFvOUVP?=
+ =?utf-8?B?bmc4SjBwZzBTMlJ2K05TYktrTTRhS2UvemZnWGVxQnRTYkxNKzZCOE9ZWGxO?=
+ =?utf-8?B?NGdydDBld3Y5M1diL3VZTFd3Qmh2bk1KaytuQktRUmJMVm1XMjM1UDlQS3lS?=
+ =?utf-8?B?VlpwN1p0bERiMmRFV2VtRDhjV0daeXJhN3RqdTh6Y0tXVlIxWTdnWU5qZFRi?=
+ =?utf-8?B?UVhTaHFndE91UG92OG5rZ3lIQW5rWGhvYUdWcVM1TjdEOXk2eEFwZWVzb3dJ?=
+ =?utf-8?B?clZiV2pCMGpXYkFScmRURjdRaGRLR2VsSG9maE9WQzliUndPQ3ZKTnlKZStl?=
+ =?utf-8?B?K0c2UE5UbFg3ZzBSZmp0ZFMvcHk4VFZDdTgwNEgydCtvRXZUUG9KT0t1SjVR?=
+ =?utf-8?B?N0JKZmp2a3NEV0I5cmRCNUdXSmVHcUJiWUxPak93a0cyT0F1SURJUXhwNzRx?=
+ =?utf-8?B?T0ovUnhST0Z3ZHZyTjlNaC9PODFwZjhiYVJqbTBnTnNRN09iTVY0ckJjaHZB?=
+ =?utf-8?B?SG5xTHJMaVBOcCtYV1owdURORWg3L1RJci9QQVdIREVTQ0psLysxNlVqNlYw?=
+ =?utf-8?B?ejl4UUNyVG13VUVVRjBzSnIzemRYMkVlMGlKWVZMN3hJdXdzVDlNQT09?=
+X-OriginatorOrg: atomlin.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: df527df6-e282-4fea-db81-08df248c9b58
+X-MS-Exchange-CrossTenant-AuthSource: CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Oct 2026 16:03:57.5877
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Oct 2026 16:04:03.1295
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-Id: e6a32402-7d7b-4830-9a2b-76945bbbcb57
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: G3s4ILnIiof6bDfRAr0U32MlbW8OdrjmWsJPVnE6UdoK96P7EyK06OY3xEMPmpp8J6tFetfopF8za1offHgMzg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CC6PR12MB283837
+X-MS-Exchange-CrossTenant-UserPrincipalName: 1uSUg5bXaWFBCFiLs0ruLG/MycthLd3+fYn+lYkcdZ9H0M+LDAqWVrgpFNE1G0EcWFdwa/hF14lm4yaESE3X5g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: LO4P123MB6693
 
-On 07-10-2026 21:10, sashiko-bot@kernel.org wrote:
+On Tue, Oct 06, 2026 at 11:37:04PM +0000, sashiko-bot@kernel.org wrote:
 > Thank you for your contribution! Sashiko AI review found 1 potential issue(s) to consider:
-> - [High] perf/x86/amd: OOB write on active_mask via unvalidated CPUID
+> - [Medium] perf/ftrace: memory leak of trace buffer on error paths in __cmd_ftrace()
 > --
 > 
-> commit 00612d17a5d2f57d4e77167b7e9d6303f0e776ac
-> Author: Sandipan Das <sandipan.das@amd.com>
+> commit 473e334ba892f3b7d5261168be5e86956a4de438
+> Author: Aaron Tomlin <atomlin@atomlin.com>
 > 
-> perf/x86/amd/uncore: Extend num_umc_pmc to fix UMC discovery
+> perf ftrace: Support filtering return address comments
 > 
-> The commit extends the width of the num_umc_pmc bitfield from six bits
-> to eight bits to match Zen 5 documentation. This allows discovery of
-> Unified Memory Controller (UMC) counters up to 64 in fully-populated
-> Zen 6 configurations.
+> This commit introduces a feature to filter out return address comments from
+> the function graph tracer output in perf ftrace. It implements parsing and
+> filtering logic, adds a --filter-retaddr command-line option, and includes
+> unit tests for validation.
 > 
->> diff --git a/arch/x86/include/asm/perf_event.h b/arch/x86/include/asm/perf_event.h
->> index 1eb13673e889f..d419b26086b22 100644
->> --- a/arch/x86/include/asm/perf_event.h
->> +++ b/arch/x86/include/asm/perf_event.h
->> @@ -293,7 +293,7 @@ union cpuid_0x80000022_ebx {
->>  		/* Number of Data Fabric Counters */
->>  		unsigned int	num_df_pmc:6;
->>  		/* Number of Unified Memory Controller Counters */
->> -		unsigned int	num_umc_pmc:6;
->> +		unsigned int	num_umc_pmc:8;
+> > diff --git a/tools/perf/builtin-ftrace.c b/tools/perf/builtin-ftrace.c
+> > --- a/tools/perf/builtin-ftrace.c
+> > +++ b/tools/perf/builtin-ftrace.c
+> > @@ -827,6 +827,8 @@ static int __cmd_ftrace(struct perf_ftrace *ftrace)
+> >  				break;
+> >  			for (int i = 0; i < n; i++) {
+> >  				if (buf[i] == '\n') {
+> > +					if (ftrace->filter_retaddr)
+> > +						ftrace_filter_retaddr(linebuf.buf);
+> >  					fprintf(stdout, "%s\n", linebuf.buf);
+> >  					strbuf_setlen(&linebuf, 0);
 > 
-> [Severity: High]
-> Does this expansion allow values up to 255 from CPUID to propagate unchecked?
+> [Severity: Medium]
+> Does __cmd_ftrace() in tools/perf/builtin-ftrace.c leak the allocated buf
+> and linebuf on error paths?
 > 
-> When the field was 6 bits, the natural boundary limited it to 63, which fit
-> safely inside NUM_COUNTERS_MAX (64). With an 8-bit width, a hypervisor could
-> supply a value greater than 64 in EBX.NumPerfCtrUmc.
+> Looking at the initialization sequence, buf is dynamically allocated and
+> linebuf is initialized:
 > 
+> 	buf = malloc(TRACE_BUF_SIZE);
+> 	if (!buf) {
+> 		pr_err("failed to allocate trace buffer\n");
+> 		goto out_reset;
+> 	}
+> 	strbuf_init(&linebuf, 512);
+> 
+> However, if get_tracing_instance_file() fails or trace_fd fails to open,
+> the code jumps to out_reset:
+> 
+> 	if (!trace_file) {
+> 		pr_err("failed to open trace_pipe\n");
+> 		goto out_reset;
+> 	}
+> 
+> The out_reset label is located after the cleanup for buf and linebuf:
+> 
+> out_close_fd:
+> 	free(buf);
+> 	strbuf_release(&linebuf);
+> 	close(trace_fd);
+> out_reset:
+> 	exit_tracing_instance();
+> 
+> Will this bypass the free(buf) and strbuf_release(&linebuf) calls, causing
+> a regression where these resources are leaked when early error paths are
+> taken?
 
-Uncore counters are generally not visible to guests.
+This will be addressed in patch 1/4.
 
-> This value gets propagated down during initialization without validation:
-> 
-> arch/x86/events/amd/uncore.c:amd_uncore_umc_ctx_init() {
->     ...
->     pmu->num_counters = group_num_pmcs[gid] / group_num_pmus[gid];
->     ...
-> }
-> 
-> If pmu->num_counters exceeds NUM_COUNTERS_MAX, can it cause an
-> out-of-bounds write when starting the event?
-> 
+> -- 
+> Sashiko AI review · https://sashiko.dev/#/patchset/20261006232756.65620-1-atomlin@atomlin.com?part=2
 
-Not for real hardware since each UMC PMU has at most 4 PMCs.
-
-> arch/x86/events/amd/uncore.c:amd_uncore_umc_start() {
->     ...
->     __set_bit(hwc->idx, ctx->active_mask);
->     ...
-> }
-> 
-> Since ctx->active_mask is sized by BITS_TO_LONGS(NUM_COUNTERS_MAX), writing
-> a bit greater than 63 might overflow into the adjacent nr_active and
-> hrtimer fields in struct amd_uncore_ctx.
-> 
-> Should we cap pmu->num_counters against NUM_COUNTERS_MAX during
-> initialization to prevent this regression?
-> 
->>  	} split;
->>  	unsigned int		full;
->>  };
-> 
-
+-- 
+Aaron Tomlin
