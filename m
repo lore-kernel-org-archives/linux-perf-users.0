@@ -1,79 +1,112 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09AA42D9797;
-	Wed,  7 Oct 2026 15:31:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 765324B0C8B
+	for <linux-perf-users@vger.kernel.org>; Wed,  7 Oct 2026 15:40:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791387113; cv=none; b=TgUnambzhbUidBB/o0sLof442HJ0OBxrbMoQudSCkDDUzm5xAg01yiGLWyDMqExhNkxLswFtpuYRKJVQYVm8BK6ZExZUmq7PbxdYO44v6oegELN5ZMXSDYmg5inAdioP5YatfiIGT4bg3Be+5k+DfgtMXl8H8COMFuHsMowVq8Y=
+	t=1791387608; cv=none; b=jTms6tsONn5e2cONdwKfhVT7Sp4tQgYoQk4VyBzPWtSKYmb8B+4nfqI68G29NKkKWjWEV1L1WN6eZRlvlSa3rezqsCiemnz24RP8GQfBUuxucdTJv4IFRzp46xBVxT6qMtkFGwGX0stKfUTd9a7gEU2p/ZM/30n8AJ6Njw2CWzs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791387113; c=relaxed/simple;
-	bh=LPOEcdHq2apy1mUIcV7DDDIun01AlQm1IXhnJZ00uIQ=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=oAarNTou3vwxbWmgOi+VwVpmUaF1goPZgzH0Gy+izT90dszRttea500K6gRRGIG6CFxYZIY4CJpAmVYwARZIXT1T2NpCUETfZfqGoQsX0l0FkIRbY3y5zTN0q8ZRGtEO3t9eJ66FGRTct5wV2g4CmIFfgJBuYETzDHhV7FcF2p8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RCz9UumV; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1791387608; c=relaxed/simple;
+	bh=FAK2DXWlatX+iA7xEjYpXF5lOj7ejmhr2wGsTuT8T4Y=;
+	h=Message-ID:From:Subject:To:Cc:In-Reply-To:References:Content-Type:
+	 Date; b=To9s71uFY9q7EBrdy/5353On+AU1fPnpb7n2NPMPK3Upzv5bQ/cEHpFUMgah0Woid9DcWiikmO+0iOsbxUWX63o2NASabQV51jAMu4WwbJ5oe9jEwy3ZXthpeSdy3GboV45bw6FJBtgHtGZcP0HNH1uj9GeLVC4zJORNgBdy8Ok=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SMUOoeWw; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RCz9UumV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A2FF21F000FF;
-	Wed,  7 Oct 2026 15:31:37 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SMUOoeWw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7D2561F000FF;
+	Wed,  7 Oct 2026 15:40:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1791387102;
-	bh=NeSUlDsVo1s6+AYYrQ/dOA7YcHXnvKye1ADL9d8nv6w=;
-	h=Date:From:To:cc:Subject:In-Reply-To:References;
-	b=RCz9UumVg7MCcfX/YLxNtqhItlWET/Z1k3RTfAdRoaVqQs3a3NbcouYkfoRa6pqRa
-	 jwfkKjqQFvJme9MJKzccjiWaBIYZnIQSr30tk3sN4Oj/ENR3fiTTmnTFWWwKGQFoeb
-	 x9MjmhgJ0kmmNmAq7/tqTt3LsMeN1sIUKC0DCxHLXLAtieAlsD1mwQnpdmG5vQOb9x
-	 gKl7THQ6pA6fWIQSfzbdAEF4m5wwnmOXtTZPUxHiS3kdutQ2LiJefIBqdvg40dMq37
-	 aGslvNm0CR4bws0xNVP1YK9frHlVIP5ANSZZpLjn1VMDryR0iTmV1KpEpZDZdQ/QN0
-	 RS+2rsBgM/2fw==
-Date: Wed, 7 Oct 2026 09:31:36 -0600 (MDT)
-From: Paul Walmsley <pjw@kernel.org>
-To: Adrian Hunter <adrian.hunter@intel.com>
-cc: Chen Pei <cp0613@linux.alibaba.com>, acme@kernel.org, peterz@infradead.org, 
-    mingo@redhat.com, namhyung@kernel.org, mark.rutland@arm.com, 
-    alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com, 
-    james.clark@linaro.org, leo.yan@linux.dev, john.g.garry@oracle.com, 
-    will@kernel.org, mike.leach@arm.com, pjw@kernel.org, palmer@dabbelt.com, 
-    guoren@kernel.org, linux-perf-users@vger.kernel.org, 
-    linux-arm-kernel@lists.infradead.org, linux-riscv@lists.infradead.org, 
-    linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/2] perf tsc: Declare TSC support from the build
- system
-In-Reply-To: <66136aa8-adbe-4fdf-9b7c-d44ea0e5cf1e@intel.com>
-Message-ID: <d58889fc-71a1-0144-dc5a-4eb354536748@kernel.org>
-References: <20260929034133.2153-1-cp0613@linux.alibaba.com> <20260929034133.2153-3-cp0613@linux.alibaba.com> <66136aa8-adbe-4fdf-9b7c-d44ea0e5cf1e@intel.com>
+	s=k20260515; t=1791387602;
+	bh=GhB6pb+7Sx9YeCuj9GRSGaC44hOj0+X3P02t8wIsx1o=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=SMUOoeWwRNKZL+B4qsgT7QYSV9wc2dHduR3XEr1I+EmKlK0ke+KqwzB2NyHKwtTWN
+	 JmFV2IdtS4iHGW+pjCuDQgsedOSXR6DyOZ/NkuvfgHwvM94s0ba4CfV16DYFNDYHMS
+	 /eBS4MvD0agjp7sxfOxCLNWpj1u3+SmobhLczM1Yt8fCXsO4fr/v5SXRWlzh3KU9Tk
+	 sB1F6JB9VB0Px2MdMcGmLrOGx2th194YjCvCoA4Is7WxfQ6yM7nysz0znn9fZewXZ1
+	 PwMDTva6TPcAXvivtOgI+EIRJRifaQI6W4KHbjreBHL3WlYNXYZj0s6SejwxA+YYwz
+	 B58c44KxVLmXg==
+Message-ID: <sashiko-outbox-163154@kernel.org>
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH] perf/x86/amd/uncore: Extend num_umc_pmc to fix UMC
+ discovery
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Sandipan Das" <sandipan.das@amd.com>
+Cc: linux-perf-users@vger.kernel.org
+In-Reply-To: <20261007152746.3658877-1-sandipan.das@amd.com>
+References: <20261007152746.3658877-1-sandipan.das@amd.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Wed, 07 Oct 2026 15:40:02 +0000
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
 
-On Tue, 6 Oct 2026, Adrian Hunter wrote:
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+s) to consider:
+- [High] perf/x86/amd: OOB write on active_mask via unvalidated CPUID
+--
 
-> On 29/09/2026 06:41, Chen Pei wrote:
-> > The "TSC support" subtest of the "Convert perf time to TSC" test decides
-> > whether the architecture is covered by matching compiler macros for
-> > x86_64, i386 and arm64.  That list has to be edited for every new
-> > architecture and can drift apart from the set of architectures that really
-> > provide a counter.
-> > 
-> > Declare the capability where the implementation is, following the
-> > PERF_HAVE_JITDUMP pattern: an architecture with a usable counter sets
-> > PERF_HAVE_RDTSC in its arch Makefile, Makefile.config turns it into
-> > -DHAVE_RDTSC, and the test keys off that.
-> > 
-> > x86 and arm64 keep the same behaviour, riscv starts running the subtest
-> > where the previous patch defines rdtsc().
-> > 
-> > Signed-off-by: Chen Pei <cp0613@linux.alibaba.com>
-> 
-> One minor style comment below.  In any case:
-> 
-> Reviewed-by: Adrian Hunter <adrian.hunter@intel.com>
+commit 00612d17a5d2f57d4e77167b7e9d6303f0e776ac
+Author: Sandipan Das <sandipan.das@amd.com>
 
-Reviewed-by: Paul Walmsley <pjw@kernel.org> 
+perf/x86/amd/uncore: Extend num_umc_pmc to fix UMC discovery
 
+The commit extends the width of the num_umc_pmc bitfield from six bits
+to eight bits to match Zen 5 documentation. This allows discovery of
+Unified Memory Controller (UMC) counters up to 64 in fully-populated
+Zen 6 configurations.
 
-- Paul
+> diff --git a/arch/x86/include/asm/perf_event.h b/arch/x86/include/asm/per=
+f_event.h
+> index 1eb13673e889f..d419b26086b22 100644
+> --- a/arch/x86/include/asm/perf_event.h
+> +++ b/arch/x86/include/asm/perf_event.h
+> @@ -293,7 +293,7 @@ union cpuid_0x80000022_ebx {
+>  		/* Number of Data Fabric Counters */
+>  		unsigned int	num_df_pmc:6;
+>  		/* Number of Unified Memory Controller Counters */
+> -		unsigned int	num_umc_pmc:6;
+> +		unsigned int	num_umc_pmc:8;
+
+[Severity: High]
+Does this expansion allow values up to 255 from CPUID to propagate unchecke=
+d?
+
+When the field was 6 bits, the natural boundary limited it to 63, which fit
+safely inside NUM_COUNTERS_MAX (64). With an 8-bit width, a hypervisor could
+supply a value greater than 64 in EBX.NumPerfCtrUmc.
+
+This value gets propagated down during initialization without validation:
+
+arch/x86/events/amd/uncore.c:amd_uncore_umc_ctx_init() {
+    ...
+    pmu->num_counters =3D group_num_pmcs[gid] / group_num_pmus[gid];
+    ...
+}
+
+If pmu->num_counters exceeds NUM_COUNTERS_MAX, can it cause an
+out-of-bounds write when starting the event?
+
+arch/x86/events/amd/uncore.c:amd_uncore_umc_start() {
+    ...
+    __set_bit(hwc->idx, ctx->active_mask);
+    ...
+}
+
+Since ctx->active_mask is sized by BITS_TO_LONGS(NUM_COUNTERS_MAX), writing
+a bit greater than 63 might overflow into the adjacent nr_active and
+hrtimer fields in struct amd_uncore_ctx.
+
+Should we cap pmu->num_counters against NUM_COUNTERS_MAX during
+initialization to prevent this regression?
+
+>  	} split;
+>  	unsigned int		full;
+>  };
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261007152746.3658=
+877-1-sandipan.das@amd.com?part=3D1
