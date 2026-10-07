@@ -1,233 +1,247 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86FAA17D6
-	for <linux-perf-users@vger.kernel.org>; Wed,  7 Oct 2026 00:04:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3A6113DBBD;
+	Wed,  7 Oct 2026 00:07:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791331493; cv=none; b=Nio4nte+QWvMbI4DfrPWF/eapTrg20jyTypNtJzgB9KpyTuaZfmDzZvcB/CUJevUEYaDJVanUnbIt496HtCl133+NSG2eAXd2M26GPVaA+uMKwvEVD4SrJHw1Kb9VOZ0zZugToA63Km95vWqk/Hkxc6TUc8gwNRsGvDk5RHZeZE=
+	t=1791331652; cv=none; b=O1YQQ2zMPJHirE1PSszGUqx+4QU3YoKGVB3UMl/8Jq8QniuU2TyYVr0Yk/Kdq5p/1nv4KWaXP82Ayy45UdC+MutPAtthAg9rEeGNkuqBPnT0wmwumFdWmSRMSgsuSl4TJE5x8Lq0Xks6pNJ1m6CMaXuSEKwoJbo1iyTb29UGXuU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791331493; c=relaxed/simple;
-	bh=2+gBwrBetNZ2zlRRWy5gH5sfom0EpDxFjq3iu3WFvJs=;
-	h=Message-ID:From:Subject:To:Cc:In-Reply-To:References:Content-Type:
-	 Date; b=B/fscUlbhyavc086mVusQU8JXMlB7xH5HNs9ADU3jaEQuFv2BXu0FFYfCx+Z7JDsUFu+wdqhHYwoq7AJKem+Z9hSiXmTHQ4hnvPLSFziLYxufgJ6d0A6pp+l4HkZXZtGWL/gt5LpHQ3Fk9Vg5dEGnzF3S4V6RO7L00PHjnyAENw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OmIG9x2i; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1791331652; c=relaxed/simple;
+	bh=dtNhLMkF/zgvFqJCURZXVBTlAw67fzVf6wl54nOiIfU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LLXD2z43PugQT8uw/PKO8OxOXQM9IYAI/jBlW3kj/AtKSvv0RMD/2p+TkvP4vdOdvjs3fNvi2qrswd99ngptKDM1KJYvA/YL6bh/5M26rVDRYAKhV3TwMOsPntMUvDJljmX02rQ5lC8i7M1/Y3M1VIehjE8aShIM/rwZNYS1Rro=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZJg7N0Af; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OmIG9x2i"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3B3C61F0089B;
-	Wed,  7 Oct 2026 00:04:52 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZJg7N0Af"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 044D51F0089B;
+	Wed,  7 Oct 2026 00:07:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1791331492;
-	bh=z1scd8Vk08PbxUAiT+VkB2vUXUnlJ+vUyw71eOJ1bpY=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=OmIG9x2iLiJBCdAsky0LJd2UZqdaZrJaRR1lifLUG8KD/yNY4fLI6IWnkM9/T8nbm
-	 m9BsIkqFGHwT325iMHVXWlZ6Ydo1n84KJynjbs0B4vjHj+s6GGktzaPiXXfNUdpUJe
-	 vYc8Coaai0LDZq3aC4nUmKhgLjXdNXznIt52pYLaw8CR+U5wlyXCcbmEgYsz2RoD3Q
-	 rFVH95RMnkAKuOR7+wtyf31pONoLePxHi9iJAB9RbNGn1VFBXzcXEq56pPI9bkKcvW
-	 vnRV9x3T2WZU/w0+vWPG7/LKTcf+vPFWdb/blHv9KjnuUmw+ZByaShUmZeYQdNmP90
-	 rleJZ6IgfdgHg==
-Message-ID: <sashiko-outbox-162548@kernel.org>
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v2 06/10] perf tools: Factor out dso__find_binary_type()
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Namhyung Kim" <namhyung@kernel.org>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20261006234315.920817-7-namhyung@kernel.org>
-References: <20261006234315.920817-1-namhyung@kernel.org>
- <20261006234315.920817-7-namhyung@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Wed, 07 Oct 2026 00:04:51 +0000
+	s=k20260515; t=1791331651;
+	bh=E9Jq0STvFwAswAqbthZnRem4rZFpZDkqPBhEZMJ2MaE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=ZJg7N0Afja6whTUxuM9DD8jVYQLaZdDy7pHfqBpvWz/7w5jh1WJhUUv7Rm5egYI9r
+	 7rG0lwHOdQ+5FGgy3Xx2wnl1S6DfAhGJ4QGCt9B6iiircc6LqKtd9+E7gdpRGEOAKX
+	 VikDMVe1STcuBxwxka7JheLj8fE9RSQ0TP6gqXGEOtRsiDcrANpPAvJNCUnDSR7hQU
+	 OrdhwA7vcTLX9XRHAbDixpsIRpG2S3hQxVzVjxx8oJXfD9Q1F7XhknF+mp1TkmSiKE
+	 2pYsqZCBZLrbfgJnDIA/J6GeWjCAECHi8teptQLLTUhKSkSaxO6H+zC6PSMs2Yp9Sv
+	 f9IvdyLgnhygA==
+Date: Tue, 6 Oct 2026 17:07:29 -0700
+From: Namhyung Kim <namhyung@kernel.org>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
+	James Clark <james.clark@linaro.org>, Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH v12 0/8] perf tools: Add progress diagnostics and a
+ false-sharing workload
+Message-ID: <asWNQWokyx9F6iRq@google.com>
+References: <20261006145729.3028247-1-acme@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20261006145729.3028247-1-acme@kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 7 potential issue(=
-s) to consider:
-- [High] perf: Guest kernel modules fail to open due to hardcoded root_dir
-- [High] perf: Strict .text section check breaks data-only DSOs and NO_LIBE=
-LF builds
-- [High] perf: Concurrent Read-Modify-Write data race on struct dso bitfiel=
-ds
-- [High] perf: Use-After-Free of dso->nsinfo in __dso__find_binary_type due=
- to missing dso__lock
-- [Medium] perf: Explicitly resolved binary types are unconditionally overw=
-ritten
-- [Medium] perf: Bypassing do_open() permanently caches EMFILE failures as =
-NOT_FOUND
-- [Low] perf: Redundant double decompression of compressed kernel modules
---
+On Tue, Oct 06, 2026 at 04:57:21PM +0200, Arnaldo Carvalho de Melo wrote:
+> Hi,
+> 
+> This series adds progress diagnostics to perf, and a workload that makes
+> false sharing visible to data type profiling.
+> 
+> The changes are:
+> 
+>   - move perf_config__set_variable() to util/config.c and serialize config
+>     parser and read-modify-write state, so non-builtin perf code can persist
+>     configuration changes safely;
+> 
+>   - add 'perf report --progress' for stdio users, showing the current phase,
+>     percentage, and counts while a session is processed;
+> 
+>   - wire up 'perf report --no-progress', the counterpart of the option
+>     above, for the TUI and GTK browsers, whose progress there is no other
+>     way to turn off;
+> 
+>   - add 'perf test -w false_sharing', a synthetic TCP-shaped workload with
+>     identity and packet counters sharing a cacheline, and include it in the
+>     data type profiling shell test.
+> 
+> Follow up work: the DO_ONCE() one-time init primitive added here mirrors
+> what the eight pre-existing raw pthread_once() users in util/ (annotate.c,
+> callchain.c, comm.c, dso.c, fncache.c, intel-tpebs.c, libbfd.c, pmus.c)
+> need, conversions that will also exercise the DEFINE_MUTEX() static
+> initializer; converting them is left for after this series.
+> Best regards,
 
-commit 8b41de1355b0e2f1d37b604c80238237fc833f0f
-Author: Namhyung Kim <namhyung@kernel.org>
+Reviewed-by: Namhyung Kim <namhyung@kernel.org>
 
-perf tools: Factor out dso__find_binary_type()
+Thanks,
+Namhyung
 
-Separate out the logic to detect binary type of a DSO.  It checks if the
-candidate file contains ".text" section.  It should be called under the
-_dso__data_open_lock.
-
-Introduce bintype_searched flag and it accessors to prevent repeated
-(failed) search.
-
-> diff --git a/tools/perf/util/dso.c b/tools/perf/util/dso.c
-> index 913877b84b2d4..f5054c18a2e93 100644
-> --- a/tools/perf/util/dso.c
-> +++ b/tools/perf/util/dso.c
-> @@ -833,7 +833,7 @@ void dso__data_close(struct dso *dso)
->  	mutex_unlock(dso__data_open_lock());
->  }
-> =20
-> -static void try_to_open_dso(struct dso *dso, struct machine *machine)
-> +static enum dso_binary_type __dso__find_binary_type(struct dso *dso)
->  	EXCLUSIVE_LOCKS_REQUIRED(_dso__data_open_lock)
->  {
->  	enum dso_binary_type binary_type_data[] =3D {
-> @@ -842,25 +842,103 @@ static void try_to_open_dso(struct dso *dso, struc=
-t machine *machine)
->  		DSO_BINARY_TYPE__NOT_FOUND,
->  	};
->  	int i =3D 0;
-> -	struct dso_data *dso_data =3D dso__data(dso);
-> +	char *path;
-> +	bool found =3D false;
-> +	bool decomp =3D false;
-> =20
-> -	if (dso_data->fd >=3D 0)
-> -		return;
-> +	if (dso__bintype_searched(dso))
-> +		return dso__binary_type(dso);
-> +	dso__set_bintype_searched(dso);
-
-[Severity: High]
-Does this code introduce a data race on the struct dso bitfields?
-
-The dso__set_bintype_searched() function modifies the bintype_searched
-bitfield under the global _dso__data_open_lock. However, adjacent bitfields
-like debuginfo_searched and long_name_allocated share the same memory
-location and are modified under different locks (dso__lock(dso) and
-dsos->lock).
-
-Concurrent execution could cause compiler-generated read-modify-write
-operations to overlap, resulting in dropped flags or memory leaks if
-long_name_allocated is clobbered.
-
-[ ... ]
-
-> +	case DSO_BINARY_TYPE__SYSTEM_PATH_DSO:
-> +	case DSO_BINARY_TYPE__BUILD_ID_CACHE:
-> +		/* We don't expect these are set; fall through */
-> +	case DSO_BINARY_TYPE__NOT_FOUND:
-> +		/* Let's find it out (for user DSOs or kernel modules) */
-> +		break;
-
-[Severity: Medium]
-Does this fall-through discard valid binary types that have already been
-resolved elsewhere in the system?
-
-When symbol.c successfully resolves and sets the binary type (such as
-DSO_BINARY_TYPE__SYSTEM_PATH_DSO or DSO_BINARY_TYPE__BUILD_ID_CACHE),
-this switch statement deliberately falls through. The loop below then
-unconditionally overwrites the previously valid binary type.
-
-If the fallback types lack a .text section (such as data-only DSOs), the
-state is permanently left as NOT_FOUND, preventing perf from reading them.
-
-[ ... ]
-
->  	do {
->  		dso__set_binary_type(dso, binary_type_data[i++]);
-> =20
-> -		dso_data->fd =3D open_dso(dso, machine);
-> -		if (dso_data->fd >=3D 0)
-> -			goto out;
-> +		path =3D dso__get_filename(dso, "", &decomp, dso__binary_type(dso));
-
-[Severity: High]
-Does hardcoding the root directory to an empty string break path resolution
-for guest kernel modules?
-
-When the fallback logic looks up types like DSO_BINARY_TYPE__GUEST_KMODULE,
-it passes "" to dso__get_filename() instead of machine->root_dir.
-
-This causes dso__get_filename() to construct an invalid path missing the
-guest's root directory. The file cannot be found, filename__has_section()
-fails, and subsequent calls to open_dso() will fail.
-
-[Severity: High]
-Does calling dso__get_filename() without holding dso__lock(dso) cause a
-use-after-free of dso->nsinfo?
-
-The new __dso__find_binary_type() helper executes with only the global
-_dso__data_open_lock held. It calls dso__get_filename(), which invokes
-dso__filename_with_chroot() and dereferences dso->nsinfo to read the
-process ID.
-
-Concurrently, another thread could call dso__set_nsinfo() (which acquires
-dso__lock(dso)), replacing the nsinfo pointer and freeing the old one via
-nsinfo__put(). Since this read path ignores dso__lock(dso), it can read
-the freed pointer.
-
-> +		if (path =3D=3D NULL)
-> +			continue;
-> +
-> +		found =3D filename__has_section(path, ".text");
-
-[Severity: High]
-Does this strict .text section check break data-only DSOs and NO_LIBELF
-builds?
-
-Prior to this patch, try_to_open_dso() discovered the DSO by calling
-open_dso(). If the file existed and was readable, the open succeeded. This
-patch introduces a strict requirement that a DSO must contain a .text
-section.
-
-Perf commonly profiles memory data accesses (like perf mem or perf c2c)
-hitting data-only DSOs. For these files, filename__has_section() evaluates
-to false, forcing the binary type to NOT_FOUND. Furthermore, if perf is
-compiled without libelf (NO_LIBELF=3D1), filename__has_section() is stubbed
-to unconditionally return false, breaking user DSO loading entirely.
-
-[Severity: Medium]
-Can this bypass of do_open() permanently cache EMFILE failures as NOT_FOUND?
-
-The filename__has_section() function uses a raw open() without the FD limit
-(EMFILE) handling and LRU eviction logic normally provided by do_open() and
-close_first_dso().
-
-If perf hits RLIMIT_NOFILE, open() returns -1, and filename__has_section()
-silently returns false. __dso__find_binary_type() then assumes the binary
-is invalid, sets bintype_searched =3D 1, and permanently caches
-DSO_BINARY_TYPE__NOT_FOUND, breaking data access to the DSO for the rest
-of the execution.
-
-[ ... ]
-
-> +static void try_to_open_dso(struct dso *dso, struct machine *machine)
-> +	EXCLUSIVE_LOCKS_REQUIRED(_dso__data_open_lock)
-> +{
-> +	struct dso_data *dso_data =3D dso__data(dso);
-> +
-> +	if (dso_data->fd >=3D 0)
-> +		return;
-> +
-> +	__dso__find_binary_type(dso);
-> +	dso_data->fd =3D open_dso(dso, machine);
-
-[Severity: Low]
-Does this result in redundant double decompression of compressed kernel
-modules?
-
-The call to dso__get_filename() in __dso__find_binary_type() decompresses
-a compressed kernel module to a temporary file. After checking for a .text
-section, dso__put_filename() unlinks this temporary file.
-
-Immediately after returning, try_to_open_dso() calls open_dso(), which
-ultimately calls dso__get_filename() again, forcing a second decompression
-of the exact same kernel module.
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261006234315.9208=
-17-1-namhyung@kernel.org?part=3D6
+> 
+> - Arnaldo
+> 
+> What changed from v11:
+> 
+>   - The 'perf-stuck' patch is removed for the time being, to be submitted
+>     separately later on;
+> 
+> What changed from v10:
+> 
+>   - tools/perf/scripts/perf-stuck.sh: pin the watched process by its start
+>     time, so a recycled PID can't get samples or gdb; Sashiko, v10;
+> 
+>   - tools/perf/scripts/perf-stuck.sh: drop the control characters from the
+>     shown progress updates, no terminal escape injection; Sashiko, v10;
+> 
+>   - tools/perf/tests/shell/perf_stuck.sh: test the script, from option
+>     validation to the gdb DIE chain runs on stand-in workloads;
+> 
+> What changed from v9:
+> 
+>   - tools/perf/ui/stdio/progress.c: progress updates now work well with
+>     the pager, printed to /dev/tty so they update in place;
+> 
+>   - tools/perf/scripts/perf-stuck.sh: take the last progress update
+>     from a bounded tail window, dropping the \r's.  Sashiko, v9;
+> 
+> What changed from v8:
+> 
+>   - tools/perf/util/mutex.h: DEFINE_MUTEX() statics keep mutex_init()'s
+>     !NDEBUG errorcheck type;
+> 
+>   - patch 4/9 commit log: clarify the acquire/release pairing, what the
+>     dropped static key used to guarantee.
+> 
+> What changed from v7:
+> 
+>   - tools/perf/util/mutex.h: the DO_ONCE() lockless fast path pairs its
+>     __ATOMIC_ACQUIRE load with the __ATOMIC_RELEASE store.  sashiko, v7;
+> 
+> What changed from v6:
+> 
+>   - patch 1/5 split into four: the move, perf_etc_perfconfig() never
+>     returning NULL, the DEFINE_MUTEX() prep and the serialization.
+>     Namhyung Kim asked, v6;
+> 
+>   - tools/perf/util/{config.c,mutex.h}: perf's own mutex type, adding
+>     the DEFINE_MUTEX() initializer it lacked.  Namhyung Kim, v6;
+> 
+>   - tools/perf/util/mutex.h: add DO_ONCE() one-time init, from the
+>     kernel's once.h, moving the lazy inits in config.c to it;
+> 
+>   - tools/perf/builtin-report.c: drop the option negation and stdio
+>     hook comments Namhyung Kim asked to drop, reviewing v6;
+> 
+>   - tools/perf/scripts/perf-stuck.gdb: break the long printf() line.
+>     Namhyung Kim, reviewing v6;
+> 
+>   - the false_sharing cset now carries the data type profiling output
+>     with cacheline info.  Namhyung Kim asked for it, reviewing v6.
+> 
+> What changed from v5:
+> 
+>   - tools/perf/util/config.c: drop the config_file_name read in
+>     bad_config(), locking would buy a consistent NULL.  Sashiko, v5;
+> 
+>   - tools/perf/util/config.c: new config_set_mutex around the shared
+>     set's init/teardown, home init via pthread_once.  Sashiko, v5;
+> 
+>   - tools/perf/builtin-report.c, perf-report.txt: --no-progress is
+>     --progress's auto negation, last wins.  Namhyung Kim, reviewing v5.
+> 
+> What changed from v4:
+> 
+>   - tools/perf/builtin-report.c: mark --progress PARSE_OPT_NOAUTONEG,
+>     parse_long_opt() claimed --no-progress first.  Sashiko, v4;
+> 
+>   - tools/perf/util/config.c: format the path buffer inside the critical
+>     section.  Sashiko pointed out the window, reviewing v4;
+> 
+>   - tools/perf/tests/workloads/false_sharing.c: walk every bit of the
+>     affinity mask, not _SC_NPROCESSORS_CONF.  Sashiko, reviewing v4.
+> 
+> What changed from v3:
+> 
+>   - tools/perf/util/config.c: keep the buffer handed to the parser in
+>     static storage.  Sashiko, reviewing v3;
+> 
+>   - tools/perf/scripts/perf-stuck.gdb: perf-dso walks each dso candidate
+>     until one evaluates, for REFCNT_CHECKING builds.  Sashiko, v3;
+> 
+>   - tools/perf/tests/workloads/false_sharing.c: sum before cpu in struct
+>     fs_reader, the padding after cpu rounded it to 128.  Sashiko, v3;
+> 
+>   - tools/perf/builtin-report.c: --quiet wins over --progress, the phases
+>     stay uncounted, documented next to it.  Namhyung Kim, v3;
+> 
+>   - tools/perf/builtin-report.c, tools/perf/ui/progress.c: --no-progress
+>     installs the no-op ops.  Suggested by Namhyung Kim, reviewing v3;
+> 
+>   - tools/perf/scripts/perf-stuck.sh: check gdb is there before
+>     watching.  Namhyung Kim, reviewing v3.
+> 
+> What changed from v2:
+> 
+>   - tools/perf/util/config.c: make perf_etc_perfconfig() total, falling
+>     back to the unresolved path.  Sashiko, reviewing v2;
+> 
+>   - tools/perf/scripts/perf-stuck.gdb: don't deref map_symbol.sym without
+>     a NULL check.  Sashiko, reviewing v2;
+> 
+>   - tools/perf/scripts/perf-stuck.gdb: note the REFCNT_CHECKING proxy
+>     next to the structure walks;
+> 
+>   - tools/perf/scripts/perf-stuck.sh: count samples with no progress to
+>     look at, an empty log never fired -g;
+> 
+>   - tools/perf/scripts/perf-stuck.sh: `--` for pgrep and tail against
+>     names starting with a hyphen;
+> 
+>   - tools/perf/scripts/perf-stuck.sh: bound the gdb run with
+>     `timeout --signal=INT 30`.
+> 
+> What changed from v1:
+> 
+>   - avoid calling CPU_SET() with -1 when false_sharing runs with only one
+>     CPU available in its affinity mask.
+> 
+>   tools/perf/Documentation/perf-report.txt      |  19 ++
+>   tools/perf/builtin-config.c                   |  70 +----
+>   tools/perf/builtin-report.c                   |   9 +
+>   tools/perf/tests/builtin-test.c               |   1 +
+>   tools/perf/tests/shell/data_type_profiling.sh |   9 +-
+>   tools/perf/tests/tests.h                      |   1 +
+>   tools/perf/tests/workloads/Build              |   2 +
+>   tools/perf/tests/workloads/false_sharing.c    | 251 ++++++++++++++++++
+>   tools/perf/ui/Build                           |   1 +
+>   tools/perf/ui/progress.c                      |   6 +
+>   tools/perf/ui/progress.h                      |   4 +
+>   tools/perf/ui/stdio/progress.c                | 170 ++++++++++++
+>   tools/perf/util/config.c                      | 166 ++++++++++--
+>   tools/perf/util/config.h                      |   2 +
+>   tools/perf/util/mutex.h                       |  36 +++
+>   tools/perf/util/ordered-events.c              |  16 +-
+>   tools/perf/util/session.c                     |  12 +-
+>   17 files changed, 675 insertions(+), 100 deletions(-)
+>   create mode 100644 tools/perf/tests/workloads/false_sharing.c
+>   create mode 100644 tools/perf/ui/stdio/progress.c
+> base-commit: 705da5b15ab89ba9
+> v1-head: 45d7917f7e05e8a29828ed5f0bbdc94fc938f79f
+> v2-head: d4f84e4de8890194924ccd897a8e6773e7d4240b
+> v3-head: 485532296710225862daf8ffb19802ae327efe2a
+> v4-head: 38193635508e0a5f04a6ebf70db27534b68b2d5b
+> v5-head: e99bc48f6c72b9cc67b4e4143a0364acac5523bb
+> v6-head: 7dc99dbb6504f199c3c39487d91370d1bbb7a827
+> v7-head: b357a76666d08f74eb99c755cca41855a96f6169
+> v8-head: 257b5ea6115ad5126d2c881523ea6c660cf5d28c
+> v9-head: 70235104c6cf7d18d91f46de1a233abbeb65893a
+> v10-head: 1ecf850c2694d20ca9cd0014f2a42528ef4dbfec
+> v11-head: a3ddbaab18aa24fba520927f71d0ea66edfc5593
+> --
