@@ -1,163 +1,233 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E62091F16B
-	for <linux-perf-users@vger.kernel.org>; Wed,  7 Oct 2026 00:01:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86FAA17D6
+	for <linux-perf-users@vger.kernel.org>; Wed,  7 Oct 2026 00:04:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791331302; cv=none; b=n14a++TS8nStBibQsemfSwBdboAyLW+Lsu4sttxHvTxSCdOfqMdtILwebQU+VdlgGUNvSp17gYSlyWSnYQRUsg7wysIScdgLFmTkYNSy10syl4F0vqLSA3uSCOxU7D+GdLsb30Sxl6LST1UHTtKHbcxV843gdeCa3GA2jK/bBJ0=
+	t=1791331493; cv=none; b=Nio4nte+QWvMbI4DfrPWF/eapTrg20jyTypNtJzgB9KpyTuaZfmDzZvcB/CUJevUEYaDJVanUnbIt496HtCl133+NSG2eAXd2M26GPVaA+uMKwvEVD4SrJHw1Kb9VOZ0zZugToA63Km95vWqk/Hkxc6TUc8gwNRsGvDk5RHZeZE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791331302; c=relaxed/simple;
-	bh=Sbhck6UIp099WxQ1c3eJdeEp3CC0B9Y+NL5R1Dh2GDY=;
+	s=arc-20240116; t=1791331493; c=relaxed/simple;
+	bh=2+gBwrBetNZ2zlRRWy5gH5sfom0EpDxFjq3iu3WFvJs=;
 	h=Message-ID:From:Subject:To:Cc:In-Reply-To:References:Content-Type:
-	 Date; b=ctJzaq3CfnyhLM8JuBnOvK0fxoxIAkCemrv3mRkEIzdDZkFvvva/+3Yf+X1Fp32A9F+MfVabKuYgeIr4Ko5mjn3CSfPtAY8nvaSg9s2SIQK1I4LGo0p3vS9yjDf09KQqMw2Tl1HvfS4R6fmdnaIBnmz7z3wvemwzf5k3DG2S1L4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Mc3iGfuC; arc=none smtp.client-ip=100.103.45.18
+	 Date; b=B/fscUlbhyavc086mVusQU8JXMlB7xH5HNs9ADU3jaEQuFv2BXu0FFYfCx+Z7JDsUFu+wdqhHYwoq7AJKem+Z9hSiXmTHQ4hnvPLSFziLYxufgJ6d0A6pp+l4HkZXZtGWL/gt5LpHQ3Fk9Vg5dEGnzF3S4V6RO7L00PHjnyAENw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OmIG9x2i; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Mc3iGfuC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 66E4C1F0089B;
-	Wed,  7 Oct 2026 00:01:40 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OmIG9x2i"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3B3C61F0089B;
+	Wed,  7 Oct 2026 00:04:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1791331300;
-	bh=HgPA0U7epKjd0jIvHG5vQAseIXjWHnWhxsaR68TBBTM=;
+	s=k20260515; t=1791331492;
+	bh=z1scd8Vk08PbxUAiT+VkB2vUXUnlJ+vUyw71eOJ1bpY=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=Mc3iGfuCdpxRSuPwKAgJeT6sIlRNsbrj2n6CHRGzoR7P1oH5jKT9/VI6bwFezyWC7
-	 gtCX0ApB+fcAIwRrW8T8fl3CuiLKliu6wnPGvIanDB/lOy9oFWE0eKgriTKWITFxYl
-	 MSahe+fu1HiSTnsvhSSctDVfi/nildr/pPhiMzNOXTex8wMBG0yzI0E2xTIR6/JUzN
-	 iDeESRZXBODyjqw8y6j/I7mXHTgJoxysvTbt0EJzb+wYt+Du28R5IkfuSuZ0zSR77i
-	 j4hS6zWoJb+IkciEmayyK6l+14Sf38Ts1kCEeCaOyAgtHcgRN0jTwiUQVv8pxnqWdI
-	 1A1aNgfUdGxqQ==
-Message-ID: <sashiko-outbox-162546@kernel.org>
+	b=OmIG9x2iLiJBCdAsky0LJd2UZqdaZrJaRR1lifLUG8KD/yNY4fLI6IWnkM9/T8nbm
+	 m9BsIkqFGHwT325iMHVXWlZ6Ydo1n84KJynjbs0B4vjHj+s6GGktzaPiXXfNUdpUJe
+	 vYc8Coaai0LDZq3aC4nUmKhgLjXdNXznIt52pYLaw8CR+U5wlyXCcbmEgYsz2RoD3Q
+	 rFVH95RMnkAKuOR7+wtyf31pONoLePxHi9iJAB9RbNGn1VFBXzcXEq56pPI9bkKcvW
+	 vnRV9x3T2WZU/w0+vWPG7/LKTcf+vPFWdb/blHv9KjnuUmw+ZByaShUmZeYQdNmP90
+	 rleJZ6IgfdgHg==
+Message-ID: <sashiko-outbox-162548@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v2 09/10] perf annotate: Simplify symbol__disassemble()
- with dso binary_type
+Subject: Re: [PATCH v2 06/10] perf tools: Factor out dso__find_binary_type()
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Namhyung Kim" <namhyung@kernel.org>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20261006234315.920817-10-namhyung@kernel.org>
+In-Reply-To: <20261006234315.920817-7-namhyung@kernel.org>
 References: <20261006234315.920817-1-namhyung@kernel.org>
- <20261006234315.920817-10-namhyung@kernel.org>
+ <20261006234315.920817-7-namhyung@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Wed, 07 Oct 2026 00:01:39 +0000
+Date: Wed, 07 Oct 2026 00:04:51 +0000
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 3 potential issue(=
+Thank you for your contribution! Sashiko AI review found 7 potential issue(=
 s) to consider:
-- [High] perf: string truncation in symbol__disassemble() due to sizeof(poi=
-nter)
-- [High] perf: NULL pointer dereference in LLVM disassembly backend for BPF
-- [High] perf annotate: UAF in dso__get_filename due to missing dso__lock
+- [High] perf: Guest kernel modules fail to open due to hardcoded root_dir
+- [High] perf: Strict .text section check breaks data-only DSOs and NO_LIBE=
+LF builds
+- [High] perf: Concurrent Read-Modify-Write data race on struct dso bitfiel=
+ds
+- [High] perf: Use-After-Free of dso->nsinfo in __dso__find_binary_type due=
+ to missing dso__lock
+- [Medium] perf: Explicitly resolved binary types are unconditionally overw=
+ritten
+- [Medium] perf: Bypassing do_open() permanently caches EMFILE failures as =
+NOT_FOUND
+- [Low] perf: Redundant double decompression of compressed kernel modules
 --
 
-commit b52fe9a1d630e0d03a547c6ca49efe1679043beb
+commit 8b41de1355b0e2f1d37b604c80238237fc833f0f
 Author: Namhyung Kim <namhyung@kernel.org>
-Subject: perf annotate: Simplify symbol__disassemble() with dso binary_type
 
-Now it should set the binary type of a DSO properly.  No need to figure
-out a filename suitable for disassembly.
+perf tools: Factor out dso__find_binary_type()
 
-Just call dso__find_binary_type() and dso__get_filename() for that type.
+Separate out the logic to detect binary type of a DSO.  It checks if the
+candidate file contains ".text" section.  It should be called under the
+_dso__data_open_lock.
 
-> diff --git a/tools/perf/util/disasm.c b/tools/perf/util/disasm.c
-> index 5478c134e7e3b..07a345beb6250 100644
-> --- a/tools/perf/util/disasm.c
-> +++ b/tools/perf/util/disasm.c
+Introduce bintype_searched flag and it accessors to prevent repeated
+(failed) search.
+
+> diff --git a/tools/perf/util/dso.c b/tools/perf/util/dso.c
+> index 913877b84b2d4..f5054c18a2e93 100644
+> --- a/tools/perf/util/dso.c
+> +++ b/tools/perf/util/dso.c
+> @@ -833,7 +833,7 @@ void dso__data_close(struct dso *dso)
+>  	mutex_unlock(dso__data_open_lock());
+>  }
+> =20
+> -static void try_to_open_dso(struct dso *dso, struct machine *machine)
+> +static enum dso_binary_type __dso__find_binary_type(struct dso *dso)
+>  	EXCLUSIVE_LOCKS_REQUIRED(_dso__data_open_lock)
+>  {
+>  	enum dso_binary_type binary_type_data[] =3D {
+> @@ -842,25 +842,103 @@ static void try_to_open_dso(struct dso *dso, struc=
+t machine *machine)
+>  		DSO_BINARY_TYPE__NOT_FOUND,
+>  	};
+>  	int i =3D 0;
+> -	struct dso_data *dso_data =3D dso__data(dso);
+> +	char *path;
+> +	bool found =3D false;
+> +	bool decomp =3D false;
+> =20
+> -	if (dso_data->fd >=3D 0)
+> -		return;
+> +	if (dso__bintype_searched(dso))
+> +		return dso__binary_type(dso);
+> +	dso__set_bintype_searched(dso);
+
+[Severity: High]
+Does this code introduce a data race on the struct dso bitfields?
+
+The dso__set_bintype_searched() function modifies the bintype_searched
+bitfield under the global _dso__data_open_lock. However, adjacent bitfields
+like debuginfo_searched and long_name_allocated share the same memory
+location and are modified under different locks (dso__lock(dso) and
+dsos->lock).
+
+Concurrent execution could cause compiler-generated read-modify-write
+operations to overlap, resulting in dropped flags or memory leaks if
+long_name_allocated is clobbered.
+
 [ ... ]
-> @@ -1566,24 +1488,30 @@ int symbol__disassemble(struct symbol *sym, struc=
-t annotate_args *args)
->  	struct annotation_options *options =3D args->options;
->  	struct map *map =3D args->ms->map;
->  	struct dso *dso =3D map__dso(map);
-> -	char symfs_filename[PATH_MAX];
-> +	char *symfs_filename;
->  	bool delete_extract =3D false;
->  	struct kcore_extract kce;
-> +	enum dso_binary_type dbt;
->  	bool decomp =3D false;
-> -	int err =3D dso__disassemble_filename(dso, symfs_filename, sizeof(symfs=
-_filename));
-> +	int err;
+
+> +	case DSO_BINARY_TYPE__SYSTEM_PATH_DSO:
+> +	case DSO_BINARY_TYPE__BUILD_ID_CACHE:
+> +		/* We don't expect these are set; fall through */
+> +	case DSO_BINARY_TYPE__NOT_FOUND:
+> +		/* Let's find it out (for user DSOs or kernel modules) */
+> +		break;
+
+[Severity: Medium]
+Does this fall-through discard valid binary types that have already been
+resolved elsewhere in the system?
+
+When symbol.c successfully resolves and sets the binary type (such as
+DSO_BINARY_TYPE__SYSTEM_PATH_DSO or DSO_BINARY_TYPE__BUILD_ID_CACHE),
+this switch statement deliberately falls through. The loop below then
+unconditionally overwrites the previously valid binary type.
+
+If the fallback types lack a .text section (such as data-only DSOs), the
+state is permanently left as NOT_FOUND, preventing perf from reading them.
+
+[ ... ]
+
+>  	do {
+>  		dso__set_binary_type(dso, binary_type_data[i++]);
 > =20
-> -	if (err)
-> -		return err;
-> +	dbt =3D dso__find_binary_type(dso);
+> -		dso_data->fd =3D open_dso(dso, machine);
+> -		if (dso_data->fd >=3D 0)
+> -			goto out;
+> +		path =3D dso__get_filename(dso, "", &decomp, dso__binary_type(dso));
+
+[Severity: High]
+Does hardcoding the root directory to an empty string break path resolution
+for guest kernel modules?
+
+When the fallback logic looks up types like DSO_BINARY_TYPE__GUEST_KMODULE,
+it passes "" to dso__get_filename() instead of machine->root_dir.
+
+This causes dso__get_filename() to construct an invalid path missing the
+guest's root directory. The file cannot be found, filename__has_section()
+fails, and subsequent calls to open_dso() will fail.
+
+[Severity: High]
+Does calling dso__get_filename() without holding dso__lock(dso) cause a
+use-after-free of dso->nsinfo?
+
+The new __dso__find_binary_type() helper executes with only the global
+_dso__data_open_lock held. It calls dso__get_filename(), which invokes
+dso__filename_with_chroot() and dereferences dso->nsinfo to read the
+process ID.
+
+Concurrently, another thread could call dso__set_nsinfo() (which acquires
+dso__lock(dso)), replacing the nsinfo pointer and freeing the old one via
+nsinfo__put(). Since this read path ignores dso__lock(dso), it can read
+the freed pointer.
+
+> +		if (path =3D=3D NULL)
+> +			continue;
 > +
-> +	if (dbt =3D=3D DSO_BINARY_TYPE__KALLSYMS)
-> +		return SYMBOL_ANNOTATE_ERRNO__NO_VMLINUX;
+> +		found =3D filename__has_section(path, ".text");
+
+[Severity: High]
+Does this strict .text section check break data-only DSOs and NO_LIBELF
+builds?
+
+Prior to this patch, try_to_open_dso() discovered the DSO by calling
+open_dso(). If the file existed and was readable, the open succeeded. This
+patch introduces a strict requirement that a DSO must contain a .text
+section.
+
+Perf commonly profiles memory data accesses (like perf mem or perf c2c)
+hitting data-only DSOs. For these files, filename__has_section() evaluates
+to false, forcing the binary type to NOT_FOUND. Furthermore, if perf is
+compiled without libelf (NO_LIBELF=3D1), filename__has_section() is stubbed
+to unconditionally return false, breaking user DSO loading entirely.
+
+[Severity: Medium]
+Can this bypass of do_open() permanently cache EMFILE failures as NOT_FOUND?
+
+The filename__has_section() function uses a raw open() without the FD limit
+(EMFILE) handling and LRU eviction logic normally provided by do_open() and
+close_first_dso().
+
+If perf hits RLIMIT_NOFILE, open() returns -1, and filename__has_section()
+silently returns false. __dso__find_binary_type() then assumes the binary
+is invalid, sets bintype_searched =3D 1, and permanently caches
+DSO_BINARY_TYPE__NOT_FOUND, breaking data access to the DSO for the rest
+of the execution.
+
+[ ... ]
+
+> +static void try_to_open_dso(struct dso *dso, struct machine *machine)
+> +	EXCLUSIVE_LOCKS_REQUIRED(_dso__data_open_lock)
+> +{
+> +	struct dso_data *dso_data =3D dso__data(dso);
 > +
-> +	symfs_filename =3D dso__get_filename(dso, "", &decomp, dbt);
+> +	if (dso_data->fd >=3D 0)
+> +		return;
+> +
+> +	__dso__find_binary_type(dso);
+> +	dso_data->fd =3D open_dso(dso, machine);
 
-[Severity: High]
-Does this call to dso__get_filename() need to be protected by dso__lock()?
+[Severity: Low]
+Does this result in redundant double decompression of compressed kernel
+modules?
 
-The previous code had an explicit mutex_lock(dso__lock(dso)) around the
-access to dso__nsinfo(dso). dso__get_filename() reads and uses
-dso__nsinfo(dso) via dso__filename_with_chroot(), but lacks internal
-locking.
+The call to dso__get_filename() in __dso__find_binary_type() decompresses
+a compressed kernel module to a temporary file. After checking for a .text
+section, dso__put_filename() unlinks this temporary file.
 
-If another thread concurrently processes an MMAP event and calls
-dso__set_nsinfo(), could the nsinfo pointer be freed between the check and
-its use, leading to a use-after-free?
-
-> +	if (symfs_filename =3D=3D NULL && dbt !=3D DSO_BINARY_TYPE__BPF_PROG_IN=
-FO &&
-> +	    dbt !=3D DSO_BINARY_TYPE__BPF_IMAGE)
-> +		return SYMBOL_ANNOTATE_ERRNO__COULDNT_DETERMINE_FILE_TYPE;
-
-[Severity: High]
-When annotating BPF programs, this explicitly allows symfs_filename to be
-NULL. However, could this NULL pointer be passed down to the LLVM
-disassembly backend?
-
-In the LLVM backend:
-symbol__disassemble_llvm()
-  llvm_name_for_code(..., filename, ...)
-
-Inside llvm-c-helpers.cpp, symbolizer->symbolizeCode(dso_name, ...)
-implicitly constructs an llvm::StringRef from the dso_name pointer.
-
-If the pointer is NULL, won't this perform a strlen(NULL) and cause a
-segmentation fault? Similarly, on PowerPC, could symbol__disassemble_raw()
-invoke pr_debug("%s", filename) or open(filename, ...) with the NULL pointe=
-r,
-triggering undefined behavior?
-
-> =20
->  	pr_debug("%s: filename=3D%s, sym=3D%s, start=3D%#" PRIx64 ", end=3D%#" =
-PRIx64 "\n", __func__,
-> -		 symfs_filename, sym->name, map__unmap_ip(map, sym->start),
-> -		 map__unmap_ip(map, sym->end));
-> +		 symfs_filename ?: dso__long_name(dso), sym->name,
-> +		 map__unmap_ip(map, sym->start), map__unmap_ip(map, sym->end));
-> =20
->  	pr_debug("annotating [%p] %30s : [%p] %30s\n", dso, dso__long_name(dso)=
-, sym, sym->name);
-> =20
-> -	if (dso__binary_type(dso) =3D=3D DSO_BINARY_TYPE__NOT_FOUND) {
-> -		return SYMBOL_ANNOTATE_ERRNO__COULDNT_DETERMINE_FILE_TYPE;
-> -	} else if (dso__is_kcore(dso)) {
-> +	if (dso__is_kcore(dso)) {
->  		kce.addr =3D map__rip_2objdump(map, sym->start);
->  		kce.kcore_filename =3D symfs_filename;
->  		kce.len =3D sym->end - sym->start;
-> @@ -1593,17 +1521,6 @@ int symbol__disassemble(struct symbol *sym, struct=
- annotate_args *args)
->  			delete_extract =3D true;
->  			strlcpy(symfs_filename, kce.extract_filename, sizeof(symfs_filename));
-
-[Severity: High]
-Since symfs_filename is now a char * pointer rather than an array of size
-PATH_MAX, doesn't sizeof(symfs_filename) evaluate to 8 (on 64-bit systems)?
-
-Will this cause strlcpy() to truncate the kcore extraction path to 7
-characters, leading to ENOENT failures in the downstream disassemblers?
-
->  		}
+Immediately after returning, try_to_open_dso() calls open_dso(), which
+ultimately calls dso__get_filename() again, forcing a second decompression
+of the exact same kernel module.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261006234315.9208=
-17-1-namhyung@kernel.org?part=3D9
+17-1-namhyung@kernel.org?part=3D6
