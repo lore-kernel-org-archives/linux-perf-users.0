@@ -1,125 +1,74 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C50AA361640
-	for <linux-perf-users@vger.kernel.org>; Wed,  7 Oct 2026 14:56:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 929884B1CEB;
+	Wed,  7 Oct 2026 15:29:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791384969; cv=none; b=BO7fZQOMyo7S4nH6SMzC2gnmLvokUm7aXki15MIFxhW+qFGR5zTb/I5/7T4vJZfaYkR4qSOklS2suz+NNvX8uRuB4CdxO2j/sUjMXd/YBEKYCAgvnwq84e9wkNmLnpfL9p75SQ4Kyx54hodQXpT2MeHniJkmU7je0LqEajwKLkU=
+	t=1791386954; cv=none; b=Vjekp966Quyoko+AX/n8kq+C3HjsFuAlfK3bHKq4JCMpV96PgS8IEVgG3vO6lCDhUEMQuiZPbtvUIOYiaqCWhIKRnAiRgvgNWUh7TbdxmMSan716/PFFHeI8J9vXaimb92G1imNWP4dvAGxxYXhSMrBLmMux3I5mbMlGIGsL/Lk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791384969; c=relaxed/simple;
-	bh=BVm7fr6EUOsMHRqoRCndhkMaModTQtoxffqSxj9qBE8=;
-	h=Message-ID:From:Subject:To:Cc:In-Reply-To:References:Content-Type:
-	 Date; b=a/Pecye7AEEcCKrWYDUBEUnzgJ9Hz95/Z+B4VPRrv9E9f4ip7xRvhH/krGqQpcEi6EawP4kQlrGvY+X+pHzJvosdbZKxvUYEVyGiki6r23tq1Plm1d/C8MHpClcJb6Oz3C8dL6GI1RurNUr5xBHGBzEqFIYJ1B2+6PP5v990BMY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZwzMWOjV; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1791386954; c=relaxed/simple;
+	bh=17JWSCb1bGSp01DKeEIMZvohDg/s3Nfn8z1pUMci9rw=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=HngyH6t0vu9G9Y84zQD0+BvyEavd5xoCJL/RkFZYHq6ztDFlfp6ixPvZ33F0zEJ93yeX2gexChmZuo1CScrp3cd2XcigiM0ZstKaP3KYwSKaQQYO9ELfvsYfsFKXwASmOVCkveyJYfEj6fUV+vtbWiYiSeF+EiuTwvvCvtsjr8U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MTxUV4JO; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZwzMWOjV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 10F1E1F000FF;
-	Wed,  7 Oct 2026 14:56:06 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MTxUV4JO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BDA991F000FF;
+	Wed,  7 Oct 2026 15:29:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1791384966;
-	bh=zuwUbZtQ3/7yB+/MEhrhslE3sHlxHVyvfzGZ6CYH7GM=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=ZwzMWOjVpinESvJKRMPieHdC+fiGcWUwAItZ+a63b+KDLyemK+QvOfHPvn1HtzJCq
-	 BgS5oEoPMCo7afsPZzug9XpHrpIn5bhghDYLyx0n3WK5g0vXaViN1zFkqzGr4F9KX2
-	 AdOUDqA/V2MB1ZAplBOM0dwuTphyULi/Bt7Ezae8QCz3BqeN7hXoWntp5X0CjYB6E3
-	 x7TW8KR3abQ9UwZ0VA/ZhqzjGxoRX+sGzPKtUO0DLz+6Skn4mW2Atpe83eb0Y9etHa
-	 SMcqkv8UzFxJrN84nhtvpjoecK+A2fOirhJQrJ6Ya9SA90QqH1G1N6dyo91CfntC8v
-	 6cBEF8GndfGkQ==
-Message-ID: <sashiko-outbox-163130@kernel.org>
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH] perf/x86/amd/lbr: Compress branch stack in a single
- pass
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Sandipan Das" <sandipan.das@amd.com>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20261007144416.3446108-1-sandipan.das@amd.com>
-References: <20261007144416.3446108-1-sandipan.das@amd.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Wed, 07 Oct 2026 14:56:05 +0000
+	s=k20260515; t=1791386950;
+	bh=LqN60BuPJ3IrOHfbBCAENpTxaEXAkkkwVCSec+5Hnw0=;
+	h=Date:From:To:cc:Subject:In-Reply-To:References;
+	b=MTxUV4JO/OyZ8FpkpRpFW7BCTaGXKSVyT5L8zuhfruHSmwE6wVUOj3rC7bf4hG8wg
+	 eneBfutJBjkWkn23+L3F0bzueMh23Usv2pN4hzBKCE+wTmeoZzu7nqoV6UkScr5PpO
+	 A0rxq8Opa2Fe96e34C8NQtaIX+ssrKqnG5iirmoyfzbU+yu0S9qNbMLwvrNVY0K4q3
+	 oNELiSeEDkFCCqWZzDqgdYZ6MYxE0+vJI6Z7h/aTGMFdNMRGAlYJ3+WwUrKAM55Hx3
+	 pmn6swzsxt31nTyj0RpXJBt3HD/LEBtUutIYZ8/Z0Npyev6ol8jsNAAgxeeXLEy/mU
+	 oPXRBdIOycnwA==
+Date: Wed, 7 Oct 2026 09:28:59 -0600 (MDT)
+From: Paul Walmsley <pjw@kernel.org>
+To: Chen Pei <cp0613@linux.alibaba.com>
+cc: acme@kernel.org, peterz@infradead.org, mingo@redhat.com, 
+    namhyung@kernel.org, mark.rutland@arm.com, 
+    alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com, 
+    adrian.hunter@intel.com, james.clark@linaro.org, leo.yan@linux.dev, 
+    john.g.garry@oracle.com, will@kernel.org, mike.leach@arm.com, 
+    pjw@kernel.org, palmer@dabbelt.com, guoren@kernel.org, 
+    linux-perf-users@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+    linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, 
+    Anup Patel <anup@brainfault.org>
+Subject: Re: [PATCH v2 1/2] perf riscv: Implement rdtsc()
+In-Reply-To: <20260929034133.2153-2-cp0613@linux.alibaba.com>
+Message-ID: <7a32beb7-27e9-1805-d23a-590ad7fa05b3@kernel.org>
+References: <20260929034133.2153-1-cp0613@linux.alibaba.com> <20260929034133.2153-2-cp0613@linux.alibaba.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
-s) to consider:
-- [Medium] bpf: info leak of uncleared LBR tail entries via branch snapshot=
- API
---
+On Tue, 29 Sep 2026, Chen Pei wrote:
 
-commit ed8227763c0f1dd19117eba0f7a4a321639e9390
-Author: Sandipan Das <sandipan.das@amd.com>
+> Perf has no riscv implementation of rdtsc(), so it links against the weak
+> stub in util/tsc.c and every caller reads a constant 0 that cannot be
+> told apart from a counter standing still.
+> 
+> Implement rdtsc() over the time CSR with rdtime.  The time CSR is a TSC
+> equivalent on riscv: readable from user mode, constant frequency, and the
+> same counter riscv's arch_perf_update_userpage() builds the user page
+> conversion fields from, so the counter and perf time share a timebase.
+> 
+> Define it for RV64 only.  Reading the counter whole on RV32 takes time and
+> timeh in a loop, and no RV32 user in tools/perf needs it that much, so
+> RV32 keeps the weak stub.
+> 
+> Reviewed-by: Anup Patel <anup@brainfault.org>
+> Signed-off-by: Chen Pei <cp0613@linux.alibaba.com>
 
-perf/x86/amd/lbr: Compress branch stack in a single pass
+Acked-by: Paul Walmsley <pjw@kernel.org> # arch/riscv
 
-This commit optimizes the software filtering of branch records by packing t=
-he
-remaining valid entries towards the front of the array in a single pass,
-rather than shifting the tail down for each dropped entry.
 
-> diff --git a/arch/x86/events/amd/lbr.c b/arch/x86/events/amd/lbr.c
-> index 9d9c961989d51..abb636d48df09 100644
-> --- a/arch/x86/events/amd/lbr.c
-> +++ b/arch/x86/events/amd/lbr.c
-> @@ -141,17 +141,14 @@ static void amd_pmu_lbr_filter(void)
->  		return;
-> =20
->  	/* Remove all invalid entries */
-> -	for (i =3D 0; i < cpuc->lbr_stack.nr; ) {
-> -		if (!cpuc->lbr_entries[i].from) {
-> -			j =3D i;
-> -			while (++j < cpuc->lbr_stack.nr)
-> -				cpuc->lbr_entries[j - 1] =3D cpuc->lbr_entries[j];
-> -			cpuc->lbr_stack.nr--;
-> -			if (!cpuc->lbr_entries[i].from)
-> -				continue;
-> -		}
-> -		i++;
-> +	for (i =3D 0, j =3D 0; i < cpuc->lbr_stack.nr; i++) {
-> +		if (!cpuc->lbr_entries[i].from)
-> +			continue;
-> +		if (j !=3D i)
-> +			cpuc->lbr_entries[j] =3D cpuc->lbr_entries[i];
-> +		j++;
->  	}
-> +	cpuc->lbr_stack.nr =3D j;
-
-[Severity: Medium]
-Does this code leave stale entries at the tail of the cpuc->lbr_entries arr=
-ay?
-
-When a privileged BPF program calls bpf_get_branch_snapshot(), it invokes
-perf_snapshot_branch_stack(), which calls amd_pmu_v2_snapshot_branch_stack(=
-).
-
-Looking at amd_pmu_v2_snapshot_branch_stack() in arch/x86/events/amd/core.c,
-it unconditionally copies cnt (up to x86_pmu.lbr_nr) entries instead of
-cpuc->lbr_stack.nr:
-
-	memcpy(entries, cpuc->lbr_entries, sizeof(struct perf_branch_entry) * cnt);
-
-Since amd_pmu_lbr_filter() drops invalid entries and shrinks
-cpuc->lbr_stack.nr but doesn't clear the tail elements, will these uncleared
-tail elements (which could contain filtered branches or branches from other
-contexts) be leaked to BPF programs?
-
-Additionally, if cpuc->lbr_users =3D=3D 0, the LBRs are not read and the en=
-tire
-stale array from a previous task could be leaked.
-
-Should the remaining entries from j to the original cpuc->lbr_stack.nr be
-zeroed out here, or should the snapshot APIs be updated to only copy
-cpuc->lbr_stack.nr entries?
-
-Note that Intel's BPF snapshot implementation
-(__intel_pmu_snapshot_branch_stack in arch/x86/events/intel/core.c) and LBR
-filter (intel_pmu_lbr_filter in arch/x86/events/intel/lbr.c) appear to have=
- a
-similar behavior where nr is shrunk without clearing tail elements.
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261007144416.3446=
-108-1-sandipan.das@amd.com?part=3D1
+- Paul
