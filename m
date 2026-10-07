@@ -1,146 +1,163 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D73437E2E2;
-	Wed,  7 Oct 2026 00:00:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E62091F16B
+	for <linux-perf-users@vger.kernel.org>; Wed,  7 Oct 2026 00:01:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791331229; cv=none; b=TVtxBaGPEfewGJHxTmNF2QT62GZ/FSqqFkjcIRisAj+zyVpI+WXYLTfrU2zq5HpaAYIltCJ1/HZS836pDFrJZBAWih1c5piXL8wuoOrp0JKhGqNN/xSFh8A0S4Q5nO5IS4mWDRkGTJqyL0hsBNWKqy+iqTo42LG16+kbjlg+uZ0=
+	t=1791331302; cv=none; b=n14a++TS8nStBibQsemfSwBdboAyLW+Lsu4sttxHvTxSCdOfqMdtILwebQU+VdlgGUNvSp17gYSlyWSnYQRUsg7wysIScdgLFmTkYNSy10syl4F0vqLSA3uSCOxU7D+GdLsb30Sxl6LST1UHTtKHbcxV843gdeCa3GA2jK/bBJ0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791331229; c=relaxed/simple;
-	bh=O8cjTq4VeULJjq0zHalstFo9Np73snipNdj7AQn6teE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WOEQ1goSyWfrSI5vODFp/vCt0RUMYgBVA2DXqwmWX69ib74otcCUaIqtD53Fb77Kpl77DWLeQ1fhSAaZt0uYA/My92GrzQ9dEM0K8t5DHBT/AEJdXskcjXjLEllxPy3OqVTQpxOH+hOP53V0qQWZpFOGDl92YszB8Y2oRD1g5vE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WSduVHKq; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1791331302; c=relaxed/simple;
+	bh=Sbhck6UIp099WxQ1c3eJdeEp3CC0B9Y+NL5R1Dh2GDY=;
+	h=Message-ID:From:Subject:To:Cc:In-Reply-To:References:Content-Type:
+	 Date; b=ctJzaq3CfnyhLM8JuBnOvK0fxoxIAkCemrv3mRkEIzdDZkFvvva/+3Yf+X1Fp32A9F+MfVabKuYgeIr4Ko5mjn3CSfPtAY8nvaSg9s2SIQK1I4LGo0p3vS9yjDf09KQqMw2Tl1HvfS4R6fmdnaIBnmz7z3wvemwzf5k3DG2S1L4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Mc3iGfuC; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WSduVHKq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C61FF1F0089B;
-	Wed,  7 Oct 2026 00:00:27 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Mc3iGfuC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 66E4C1F0089B;
+	Wed,  7 Oct 2026 00:01:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1791331228;
-	bh=DJ5e6p3gSH3PMxt48dwVWIWVlP69WqN7ftz9vaqSN9c=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=WSduVHKqC+5HP0TI2IaWUo+Ok8wHRpr63cvmfWVIEuMz/eUpUPxgg/8pVIt/sdBqQ
-	 k+whirIH+ghKH+ld5UMYgtYKXjFHkn0yfXnRc/sIKyGyMZQW9OB9ZbROMhv4d+kmLu
-	 4ilSkqFitCeZGszKGXZIj9cXDMsUBI9QcIa8OWgkRkbLQrvXzQQM7k0p/1bn1FSv9s
-	 21xg0R8WcqFZ4htRoFZ46RHv9pTizctg5FOhHyL66JN/LefQoqb33CM9/51xg/Hbcm
-	 m3lozTjkcEKJbxHa7rY+elieXKOFkSMrh/xUiCN7eAyosVHzbt9XOg47oaH1Ue+9kP
-	 MQ9byiyE24dkQ==
-Date: Tue, 6 Oct 2026 17:00:26 -0700
-From: Namhyung Kim <namhyung@kernel.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
-	James Clark <james.clark@linaro.org>, Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: Re: [PATCH 0/6 v1] perf test attr: Fix the re-enabled test
-Message-ID: <asWLmvF-3YtoKJ7j@google.com>
-References: <20261006161309.3078488-1-acme@kernel.org>
+	s=k20260515; t=1791331300;
+	bh=HgPA0U7epKjd0jIvHG5vQAseIXjWHnWhxsaR68TBBTM=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=Mc3iGfuCdpxRSuPwKAgJeT6sIlRNsbrj2n6CHRGzoR7P1oH5jKT9/VI6bwFezyWC7
+	 gtCX0ApB+fcAIwRrW8T8fl3CuiLKliu6wnPGvIanDB/lOy9oFWE0eKgriTKWITFxYl
+	 MSahe+fu1HiSTnsvhSSctDVfi/nildr/pPhiMzNOXTex8wMBG0yzI0E2xTIR6/JUzN
+	 iDeESRZXBODyjqw8y6j/I7mXHTgJoxysvTbt0EJzb+wYt+Du28R5IkfuSuZ0zSR77i
+	 j4hS6zWoJb+IkciEmayyK6l+14Sf38Ts1kCEeCaOyAgtHcgRN0jTwiUQVv8pxnqWdI
+	 1A1aNgfUdGxqQ==
+Message-ID: <sashiko-outbox-162546@kernel.org>
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v2 09/10] perf annotate: Simplify symbol__disassemble()
+ with dso binary_type
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Namhyung Kim" <namhyung@kernel.org>
+Cc: linux-perf-users@vger.kernel.org
+In-Reply-To: <20261006234315.920817-10-namhyung@kernel.org>
+References: <20261006234315.920817-1-namhyung@kernel.org>
+ <20261006234315.920817-10-namhyung@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Wed, 07 Oct 2026 00:01:39 +0000
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20261006161309.3078488-1-acme@kernel.org>
 
-On Tue, Oct 06, 2026 at 06:13:03PM +0200, Arnaldo Carvalho de Melo wrote:
-> From: Arnaldo Carvalho de Melo <acme@redhat.com>
-> 
-> Hello all,
-> 
-> This series fixes the "Perf attribute expectations test" (perf test 82,
-> formerly "Setup struct perf_event_attr").
-> 
-> Patches 1-2 are Michael Petlan's prerequisite fixes that make the shell
-> wrapper propagate attr.py's return value and correct the
-> perf_event_attr size expectation after struct config4 was added.  They
-> are included at the start of the series so that it applies cleanly on
-> the current perf-tools-next (and for the review bots to verify the new
-> patches); the new fixes are patches 3-6.
-> 
-> With the test reporting failures again, several stale expectations
-> surfaced and are addressed here:
-> 
-> - test-record-graph-dwarf still expected PERF_SAMPLE_ADDR and
->   PERF_SAMPLE_DATA_SRC for --call-graph dwarf.  Those were dropped by
->   bdd051e249141c79 ("perf record: Split --data-mmap option"), which
->   decoupled data MMAP recording from the sample address bits.
-> 
-> - The record and stat group tests expected cache-misses and
->   instructions to be the legacy PERF_TYPE_HARDWARE events, but since
->   b1c5efbfd92eb84d ("perf parse-events: Remove hard coded legacy
->   hardware and cache parsing") they resolve to the core PMU sysfs/JSON
->   events, so request the legacy encodings explicitly with the
->   legacy-hardware-config term.
-> 
-> - The perf stat default metrics open their events in groups and the
->   raw encodings of instructions, branch-misses, cpu-cycles and
->   stalled-cycles-frontend/backend differ between Intel and AMD, so
->   base-stat now accepts the standalone and group variants and
->   test-stat-default/detailed-{1,2,3} gained the per-vendor raw
->   encodings.
-> 
-> - attr.py no longer requires a recorded event to be in a group when
->   the matching expectation does not declare one, allowing the stat
->   tests to verify event attributes without encoding the metric
->   grouping.  Expectations that declare a group are still verified in
->   both directions.
-> 
-> The test passes with 'perf test -vv attribute' on x86_64.  The AMD
-> encodings come from the amd_pmu_event_map tables in
-> arch/x86/events/amd/core.c.
+Thank you for your contribution! Sashiko AI review found 3 potential issue(=
+s) to consider:
+- [High] perf: string truncation in symbol__disassemble() due to sizeof(poi=
+nter)
+- [High] perf: NULL pointer dereference in LLVM disassembly backend for BPF
+- [High] perf annotate: UAF in dso__get_filename due to missing dso__lock
+--
 
-On my machine, the current tmp.perf-tools-next which contains these
-changes fails like this.
+commit b52fe9a1d630e0d03a547c6ca49efe1679043beb
+Author: Namhyung Kim <namhyung@kernel.org>
+Subject: perf annotate: Simplify symbol__disassemble() with dso binary_type
 
-  $ tools/perf/perf test -v 82
-  ---- start ----
-  test child forked, pid 931585
-  /home/namhyung/project/linux/tools/perf/tests/shell/attr.sh: line 20: python: command not found
-  ---- end(-1) ----
-   82: Perf attribute expectations test                                                 : FAILED!
-  
-  === Test Summary ===
-  Passed main tests : 0
-  Passed subtests   : 0
-  Skipped tests     : 0
-  Failed tests      : 1
-  List of failed tests:
-     82: Perf attribute expectations test
+Now it should set the binary type of a DSO properly.  No need to figure
+out a filename suitable for disassembly.
 
-The below patch fixes the problem.
+Just call dso__find_binary_type() and dso__get_filename() for that type.
 
-Thanks,
-Namhyung
+> diff --git a/tools/perf/util/disasm.c b/tools/perf/util/disasm.c
+> index 5478c134e7e3b..07a345beb6250 100644
+> --- a/tools/perf/util/disasm.c
+> +++ b/tools/perf/util/disasm.c
+[ ... ]
+> @@ -1566,24 +1488,30 @@ int symbol__disassemble(struct symbol *sym, struc=
+t annotate_args *args)
+>  	struct annotation_options *options =3D args->options;
+>  	struct map *map =3D args->ms->map;
+>  	struct dso *dso =3D map__dso(map);
+> -	char symfs_filename[PATH_MAX];
+> +	char *symfs_filename;
+>  	bool delete_extract =3D false;
+>  	struct kcore_extract kce;
+> +	enum dso_binary_type dbt;
+>  	bool decomp =3D false;
+> -	int err =3D dso__disassemble_filename(dso, symfs_filename, sizeof(symfs=
+_filename));
+> +	int err;
+> =20
+> -	if (err)
+> -		return err;
+> +	dbt =3D dso__find_binary_type(dso);
+> +
+> +	if (dbt =3D=3D DSO_BINARY_TYPE__KALLSYMS)
+> +		return SYMBOL_ANNOTATE_ERRNO__NO_VMLINUX;
+> +
+> +	symfs_filename =3D dso__get_filename(dso, "", &decomp, dbt);
 
+[Severity: High]
+Does this call to dso__get_filename() need to be protected by dso__lock()?
 
-diff --git a/tools/perf/tests/shell/attr.sh b/tools/perf/tests/shell/attr.sh
-index 307e1535795a34dc..ca3ca4a193971ec1 100755
---- a/tools/perf/tests/shell/attr.sh
-+++ b/tools/perf/tests/shell/attr.sh
-@@ -4,6 +4,10 @@
- 
- err=0
- 
-+shelldir=$(dirname "$0")
-+# shellcheck source=lib/setup_python.sh
-+. "${shelldir}"/lib/setup_python.sh
-+
- cleanup() {
-   trap - EXIT TERM INT
- }
-@@ -17,7 +21,7 @@ trap trap_cleanup EXIT TERM INT
- 
- shelldir=$(dirname "$0")
- perf_path=$(which perf)
--python "${shelldir}"/lib/attr.py -d "${shelldir}"/attr -v -p "$perf_path"
-+$PYTHON "${shelldir}"/lib/attr.py -d "${shelldir}"/attr -v -p "$perf_path"
- err=$?
- cleanup
- exit $err
+The previous code had an explicit mutex_lock(dso__lock(dso)) around the
+access to dso__nsinfo(dso). dso__get_filename() reads and uses
+dso__nsinfo(dso) via dso__filename_with_chroot(), but lacks internal
+locking.
+
+If another thread concurrently processes an MMAP event and calls
+dso__set_nsinfo(), could the nsinfo pointer be freed between the check and
+its use, leading to a use-after-free?
+
+> +	if (symfs_filename =3D=3D NULL && dbt !=3D DSO_BINARY_TYPE__BPF_PROG_IN=
+FO &&
+> +	    dbt !=3D DSO_BINARY_TYPE__BPF_IMAGE)
+> +		return SYMBOL_ANNOTATE_ERRNO__COULDNT_DETERMINE_FILE_TYPE;
+
+[Severity: High]
+When annotating BPF programs, this explicitly allows symfs_filename to be
+NULL. However, could this NULL pointer be passed down to the LLVM
+disassembly backend?
+
+In the LLVM backend:
+symbol__disassemble_llvm()
+  llvm_name_for_code(..., filename, ...)
+
+Inside llvm-c-helpers.cpp, symbolizer->symbolizeCode(dso_name, ...)
+implicitly constructs an llvm::StringRef from the dso_name pointer.
+
+If the pointer is NULL, won't this perform a strlen(NULL) and cause a
+segmentation fault? Similarly, on PowerPC, could symbol__disassemble_raw()
+invoke pr_debug("%s", filename) or open(filename, ...) with the NULL pointe=
+r,
+triggering undefined behavior?
+
+> =20
+>  	pr_debug("%s: filename=3D%s, sym=3D%s, start=3D%#" PRIx64 ", end=3D%#" =
+PRIx64 "\n", __func__,
+> -		 symfs_filename, sym->name, map__unmap_ip(map, sym->start),
+> -		 map__unmap_ip(map, sym->end));
+> +		 symfs_filename ?: dso__long_name(dso), sym->name,
+> +		 map__unmap_ip(map, sym->start), map__unmap_ip(map, sym->end));
+> =20
+>  	pr_debug("annotating [%p] %30s : [%p] %30s\n", dso, dso__long_name(dso)=
+, sym, sym->name);
+> =20
+> -	if (dso__binary_type(dso) =3D=3D DSO_BINARY_TYPE__NOT_FOUND) {
+> -		return SYMBOL_ANNOTATE_ERRNO__COULDNT_DETERMINE_FILE_TYPE;
+> -	} else if (dso__is_kcore(dso)) {
+> +	if (dso__is_kcore(dso)) {
+>  		kce.addr =3D map__rip_2objdump(map, sym->start);
+>  		kce.kcore_filename =3D symfs_filename;
+>  		kce.len =3D sym->end - sym->start;
+> @@ -1593,17 +1521,6 @@ int symbol__disassemble(struct symbol *sym, struct=
+ annotate_args *args)
+>  			delete_extract =3D true;
+>  			strlcpy(symfs_filename, kce.extract_filename, sizeof(symfs_filename));
+
+[Severity: High]
+Since symfs_filename is now a char * pointer rather than an array of size
+PATH_MAX, doesn't sizeof(symfs_filename) evaluate to 8 (on 64-bit systems)?
+
+Will this cause strlcpy() to truncate the kcore extraction path to 7
+characters, leading to ENOENT failures in the downstream disassemblers?
+
+>  		}
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261006234315.9208=
+17-1-namhyung@kernel.org?part=3D9
