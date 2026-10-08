@@ -1,33 +1,32 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E6B303BB12C;
-	Thu,  8 Oct 2026 10:43:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from out30-100.freemail.mail.aliyun.com (out30-100.freemail.mail.aliyun.com [115.124.30.100])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27216443C34;
+	Thu,  8 Oct 2026 11:47:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.100
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791456216; cv=none; b=bq0QsBMe7wLCFt3WPwUYXzqMAM9UwFA3WsWTuYTjE2NhUINywwpvaBhfqaNkMTQ01eRvpZ+i0ns4MTaXshShrx7xYqiLt/24w/kDlUN29Cr8rbnOsgONcJ6xDIPAgL4Q/Lsej3o82h3AIunaYMj8e0obkNcHS/2ZSxNEKiko4qA=
+	t=1791460071; cv=none; b=k8Pv6uw8ifoqIIEJOzIoYgmmo5AopaSZYlzJSP2DAeO3Y+1XTmRfwplCc/Vn62+vuNRpvsDy7IqOLput02xyvIdEa/5SixvVPXmzbp/82zx2ebMgztGqOd9iAbyawjgE2LotRQ8lf2FpS84LQeNbAqEGC7BdjCTt9eSqyXGy1fk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791456216; c=relaxed/simple;
-	bh=T1jAqfIwowtrRpbeSKznwNXaX6VAkYHfAylhGBiLNqM=;
+	s=arc-20240116; t=1791460071; c=relaxed/simple;
+	bh=OUNZ/VZ8OrrRrCTA8+5HB6ElWjtVTJ5aPjr31lVAvcA=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=lOC11cvxLLnYOfvqBN2MdyARzwSNzA+gsb3esc+QrUxp9EsMGmDis0NaASbvlhuFZGZSgNuIyNgscsy507NOjvvm0fq4fbEhSHsaek3UBNMQQu2xcnY6To3Z/itIq/TAMH2yVx+KObfRF5ikFUytm/MLWHMZ8X30N9Qmd4yqkW0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=c6lbfw7B; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+	 In-Reply-To:Content-Type; b=u7BN8Ue3ZXfPAHP4kAHtQcl4N/6zfCbhw4zCycXWzPHWApjOG+sEJhKCJ5LvuXIJBDTuzHuUaciMi8jDubHuanlxDZEJvBcArVt/UUTigE6Mldg1LQJYlMQ5NKKoTrQBS+8ucrYm1J1g7kZL/k3F1mU/4WNfpI/N1wAUFm/GwT0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=d9SfD7/i; arc=none smtp.client-ip=115.124.30.100
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="c6lbfw7B"
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D2BD31477;
-	Thu,  8 Oct 2026 03:43:30 -0700 (PDT)
-Received: from [10.164.19.54] (unknown [10.164.19.54])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id F18733F763;
-	Thu,  8 Oct 2026 03:43:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
-	t=1791456214; bh=T1jAqfIwowtrRpbeSKznwNXaX6VAkYHfAylhGBiLNqM=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=c6lbfw7BRGiHAsotaazKMSDqa7nfF1pbMeub5xVs9+6i/0D/qjKph1DkIM3I85eFx
-	 8iiGTsONeKOr8+3zBI66ryFcEAtnfUI+6MVDuvEsOuutmWyXcAaVtR3szW5dlkMD2r
-	 P9o31AX7oelqTLFdse90tnM69G7GIhzbwwwh7Jz8=
-Message-ID: <7c35e399-bc64-43c3-9588-672200758ea5@arm.com>
-Date: Thu, 8 Oct 2026 16:13:27 +0530
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="d9SfD7/i"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1791460059; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=2uRUiMGM/3kM5oFgvWkstit41ISjJ8dKFkmnjBOgzTY=;
+	b=d9SfD7/i3F8/7mhWPtNs4PbENsPzHePZ1tusqOfNzF5OEb5MFFoyDHTotZ1yhdHWLAPcOqQcJ7vrppp+F7wUyLx6J0Kmq+NKypSW6hYOV3xee4wMei9wClqocofEV3QaqZCjRJjxL3enc1nYpJX9r9cQ+T9pDtH57kKkJMPiO58=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R191e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037009110;MF=xueshuai@linux.alibaba.com;NM=1;PH=DS;RN=34;SR=0;TI=SMTPD_---0XCP.Q2W_1791459729;
+Received: from 30.246.161.100(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0XCP.Q2W_1791459729 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Thu, 08 Oct 2026 19:42:10 +0800
+Message-ID: <fbdb7b4c-0f80-41b0-b6d8-a4501ff3e820@linux.alibaba.com>
+Date: Thu, 8 Oct 2026 19:42:08 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -35,97 +34,122 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] perf: arm_spe: Prefer large AUX mappings
-To: Leo Yan <leo.yan@arm.com>, Will Deacon <will@kernel.org>
-Cc: Suzuki K Poulose <suzuki.poulose@arm.com>,
- Peter Zijlstra <peterz@infradead.org>, Mike Leach <mike.leach@arm.com>,
- James Clark <james.clark@linaro.org>,
- Anshuman Khandual <anshuman.khandual@arm.com>,
- Mark Rutland <mark.rutland@arm.com>, Tamas Petz <tamas.petz@arm.com>,
- Tamas Zsoldos <tamas.zsoldos@arm.com>,
- Michiel van Tol <michiel.vantol@arm.com>,
- David Hildenbrand <david@kernel.org>, Yabin Cui <yabinc@google.com>,
- coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-References: <20260810-perf_aux_trace_large_granule-v1-0-03306c9339e3@arm.com>
- <20260810-perf_aux_trace_large_granule-v1-2-03306c9339e3@arm.com>
- <annp-BdTviQoH6vy@willie-the-truck> <20260810174159.GC15499@e132581.arm.com>
-Content-Language: en-US
-From: Dev Jain <dev.jain@arm.com>
-In-Reply-To: <20260810174159.GC15499@e132581.arm.com>
-Content-Type: text/plain; charset=UTF-8
+Subject: Re: [PATCH v6 0/7] riscv: Add reliable stack unwinding for livepatch
+To: Martin Kaiser <martin@kaiser.cx>, Palmer Dabbelt <palmer@dabbelt.com>,
+ Paul Walmsley <pjw@kernel.org>
+Cc: pjw@kernel.org, aou@eecs.berkeley.edu, alex@ghiti.fr,
+ linux-riscv@lists.infradead.org, oleg@redhat.com, rostedt@goodmis.org,
+ mhiramat@kernel.org, mark.rutland@arm.com, peterz@infradead.org,
+ mingo@redhat.com, acme@kernel.org, namhyung@kernel.org,
+ alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com,
+ adrian.hunter@intel.com, james.clark@linaro.org, jpoimboe@kernel.org,
+ jikos@kernel.org, mbenes@suse.cz, pmladek@suse.com, joe.lawrence@redhat.com,
+ shuah@kernel.org, mpdesouza@suse.com, oliver.yang@linux.alibaba.com,
+ zhuo.song@linux.alibaba.com, jkchen@linux.alibaba.com,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ linux-perf-users@vger.kernel.org, live-patching@vger.kernel.org,
+ linux-kselftest@vger.kernel.org
+References: <20260914092648.51254-1-xueshuai@linux.alibaba.com>
+ <artojcJftbMIgPrj@akranes.kaiser.cx>
+From: Shuai Xue <xueshuai@linux.alibaba.com>
+In-Reply-To: <artojcJftbMIgPrj@akranes.kaiser.cx>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
 
 
-On 10/08/26 11:11 pm, Leo Yan wrote:
-> On Mon, Aug 10, 2026 at 04:10:48PM +0100, Will Deacon wrote:
->> On Mon, Aug 10, 2026 at 03:44:42PM +0100, Leo Yan wrote:
->>> Commit 18049c8cff9c ("perf/aux: Allocate non-contiguous AUX pages by
->>> default") made the AUX allocator use order-0 pages by default unless a
->>> PMU explicitly asks for contiguous allocations.
->>
->> But that commit specifically calls out SPE as benefitting from
->> non-contiguous pages:
->>
->>   "For instance, ARM SPE and TRBE operate with virtual pages, and
->>    Coresight ETR allocates a separate buffer. For these PMUs,
->>    allocating contiguous AUX pages unnecessarily exacerbates memory
->>    fragmentation. This fragmentation can prevent their use on
->>    long-running devices."
->>
->> so why doesn't passing PERF_PMU_CAP_AUX_PREFER_LARGE reintroduce the
->> problems that 18049c8cff9c was trying to solve?
+On 9/29/26 3:28 PM, Martin Kaiser wrote:
+> Thus wrote Shuai Xue (xueshuai@linux.alibaba.com):
 > 
-> The question is how "allocating contiguous AUX pages unnecessarily
-> exacerbates memory fragmentation." The relevant information I could find
-> is [1]:
+>> Hi,
 > 
->  "On Android, we collect ETM data periodically on internal user devices
->   for AutoFDO optimization (for both userspace libraries and the
->   kernel). Allocating a large chunk of contiguous AUX pages (4M for each
->   CPU) periodically is almost unbearable. The kernel may need to kill
->   many processes to fulfill the request. It affects user experience even
->   after using PMU."
+>> This is v6 of the RISC-V reliable stack unwinding series for livepatch.
+>> Wang Han has left our team, so I am taking over this series from now on.
 > 
-> We might have missed chance to clarify how the fragmentation issue
-> occurs in the first place. Let's say, a phone with 8 CPUs, allocating
-> 4MB per CPU requires 32MB in total, which is a relatively small
-> portion of 4GiB or 8GiB of RAM commonly found in phones. Moreover, once
-> contiguous pages are freed, the buddy allocator can coalesce them
-> again into buddy list. It is not obvious to me that PREFER_LARGE
-> directly causes fragmentation.
+>> The series adds explicit frame-record metadata, preserves the frame
+>> pointer through dynamic ftrace, and replaces the open-coded stack walker
+>> with a conservative frame-pointer based unwinder. It then enables the
+>> RISC-V livepatch capability and adds the syscall-wrapper selftest prefix.
 > 
-> One case where AUX allocation could exacerbate fragmentation is when the
-> system is already fragmented. If a high-order allocation fails and the
-> allocator falls back to smaller-order blocks, those allocations may
-> consume free blocks scattered across different buddy regions and make
-> subsequent high-order allocations more difficult.
+>> Changes since v5:
+>> * Rebase onto the current riscv/for-next; no functional changes.
+>> * Fold in the tags collected from the v5 thread:
+>>    - Reviewed-by: Shuai Xue on 2/7, 3/7, 4/7 and 6/7
+>>    - Acked-by: Miroslav Benes on 7/7
+>> * Add my sign-off as the new sender.
 > 
-> If this is the main concern, I'd suggest using a smaller AUX buffer
-> (e.g. 1MB or even 512KB) for TRBE/SPE to reduce memory pressure.
-> Snapshot mode '-S' could also be considered, as it allows the buffer to
-> be allocated once and reused for subsequent recordings by signals.
+>> Since the patches are otherwise identical to v5, the v5 validation
+>> results still apply. For reference, from the v5 cover letter:
+>> * Built Linux 7.2.0-rc6 with riscv64-unknown-linux-gnu-gcc 15.2.0
+>>    and binutils 2.46.
+>> * Standard livepatch configuration built successfully, including
+>>    Image, vmlinux, modules, compile_commands.json and GDB scripts.
+>> * CONFIG_IRQ_STACKS=n variant linked successfully with GCC.
+>> * QEMU 8.2.2, 1 CPU: livepatch selftests PASS: 7, SKIP: 1,
+>>    FAIL: 0; ftrace function graph 3 passed, 0 failed, 3 unsupported.
+>> * QEMU 8.2.2, 4 CPUs: livepatch selftests PASS: 7, SKIP: 1,
+>>    FAIL: 0; ftrace function graph 3 passed, 0 failed, 3 unsupported.
+>> * No BUG, WARNING, Oops, panic, unreliable stack or Call Trace found
+>>    by the validation log scans. Expected negative livepatch errors are
+>>    part of the selftests.
 > 
-> OTOH, using only order-0 pages can significantly increase TTW overhead
-> on the trace path and lead to overflows, we observe this causes huge
-> trace discontinuity. In the end, we need to trace-off the fragmentation
-> concern against the trace discontinuity.
+>> v5 was posted in early August and has been quiet since then. I would
+>> appreciate it if the series could be considered for the upcoming merge
+>> window. Happy to address any remaining feedback.
 > 
-> Thanks,
-> Leo
-
-I don't have the full context here (can look in detail later) so drive-by comment:
-
-In general, doing large order allocations should *reduce* fragmentation. If you allocate
-16 order-0 pages as opposed to an order-4 compound page, you may end up spreading your
-allocations across different blocks, thus preventing them from merging later.
-
-A recent example can be found in vmalloc [1].
-
-[1] https://lore.kernel.org/all/aPjrRkjiIt6HmXmT@casper.infradead.org/
+>> Base:
+>> riscv/for-next 77ae27fd98f3 ("Merge tag 'printk-for-7.3' of git://git.kernel.org/pub/scm/linux/kernel/git/printk/linux")
+> 
+>> Previous versions:
+>> v5: https://lore.kernel.org/r/20260804103626.2803112-1-wanghan@linux.alibaba.com
+>> v4 RESEND: https://lore.kernel.org/r/20260629072713.3273743-1-wanghan@linux.alibaba.com
+>> v3: https://lore.kernel.org/r/cover.194d76e3a15b.v3.riscv-livepatch.wanghan@linux.alibaba.com
+>> v2: https://lore.kernel.org/r/20260528082310.1994388-1-wanghan@linux.alibaba.com
+>> v1: https://lore.kernel.org/r/20260527123530.2593918-1-wanghan@linux.alibaba.com
+> 
+>> Assisted-by: Qoder:Qwen-3.8-MAX-Preview
+> 
+> Thanks for these patches.
+> 
+> I tried them on a standard rv64 qemu and on a rv64 cheri system
+> (cheri-linux.org). The latter needed some minor tweaks, but in
+> both cases, I could get livepatch to work.
+> 
+> Reviewed-by: Martin Kaiser <martin@kaiser.cx>
+> Tested-by: Martin Kaiser <martin@kaiser.cx>
 
 
-> 
-> [1] https://lore.kernel.org/lkml/CALJ9ZPNLgEBxOmDim-vztUknEETwdL-Z2gJ8K9s44TiPgKZgHg@mail.gmail.com/
+Hi Martin,
+
+Thank you very much for testing the series and for the tags!
+
+It is great to hear that livepatch works both on a standard rv64 QEMU
+and on the rv64 CHERI system. Could you share what the minor tweaks
+for CHERI were? If any of them are generic -- for example frame-record
+size/alignment or pointer-width assumptions in the unwinder -- it may
+be worth folding them into this series, so the cheri-linux tree has
+less to carry downstream. If they are purely CHERI-specific, a pointer
+to your tree would still be a useful reference.
+
++Palmer, Paul, gentle ping on this series.
+
+It has been under review since late May (v1 on May 27, now in its sixth
+revision) and the tags collected so far are:
+
+   * Acked-by: Miroslav Benes <mbenes@suse.cz>             (7/7, livepatch)
+   * Reviewed-by: Marcos Paulo de Souza <mpdesouza@suse.com> (7/7)
+   * Reviewed-by: Martin Kaiser <martin@kaiser.cx>         (whole series)
+   * Tested-by: Martin Kaiser <martin@kaiser.cx>           (whole series,
+     rv64 QEMU and rv64 CHERI, livepatch working on both)
+   * Reviewed-by: Shuai Xue <xueshuai@linux.alibaba.com>   (2/7, 3/7, 4/7, 6/7)
+
+v6 still applies cleanly onto the current riscv/for-next
+(52318cf0fa6e). If it helps, I can send a v7 that folds in Martin's
+Reviewed-by/Tested-by tags.
+
+Could the series be considered for the upcoming 7.4 merge window?
+
+Thanks,
+Shuai Xue
+
 
