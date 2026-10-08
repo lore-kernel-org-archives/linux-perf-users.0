@@ -1,32 +1,50 @@
-Received: from out30-100.freemail.mail.aliyun.com (out30-100.freemail.mail.aliyun.com [115.124.30.100])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27216443C34;
-	Thu,  8 Oct 2026 11:47:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 019264CB8D7;
+	Thu,  8 Oct 2026 15:12:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791460071; cv=none; b=k8Pv6uw8ifoqIIEJOzIoYgmmo5AopaSZYlzJSP2DAeO3Y+1XTmRfwplCc/Vn62+vuNRpvsDy7IqOLput02xyvIdEa/5SixvVPXmzbp/82zx2ebMgztGqOd9iAbyawjgE2LotRQ8lf2FpS84LQeNbAqEGC7BdjCTt9eSqyXGy1fk=
+	t=1791472382; cv=none; b=C6wFuCuTv2aUp/PmElDzYjqj58vFiPC07TjcVHEnx6nt5zxjF9KS6kpPVtf7/e6hSUWp1IJ+Z0vrm61YOiQGesmaaBQuodqFJn+fkVHiowC/mwOMXZwk7d20eTOlDLcCKttvrVzON5V+aG1pLsjfag9GZk0QlyD+fDjW+JQV9b4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791460071; c=relaxed/simple;
-	bh=OUNZ/VZ8OrrRrCTA8+5HB6ElWjtVTJ5aPjr31lVAvcA=;
+	s=arc-20240116; t=1791472382; c=relaxed/simple;
+	bh=S8Qj4JiVGmSAKNEHAdb2Qw61sB9GI38imUB2dF/Oqjo=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=u7BN8Ue3ZXfPAHP4kAHtQcl4N/6zfCbhw4zCycXWzPHWApjOG+sEJhKCJ5LvuXIJBDTuzHuUaciMi8jDubHuanlxDZEJvBcArVt/UUTigE6Mldg1LQJYlMQ5NKKoTrQBS+8ucrYm1J1g7kZL/k3F1mU/4WNfpI/N1wAUFm/GwT0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=d9SfD7/i; arc=none smtp.client-ip=115.124.30.100
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	 In-Reply-To:Content-Type; b=JweDmZET5oBMC9fN7djeedgd4a1F3WI39nEjfSRYeBPHkQLecbDXcl/I+Tw9nyGeZYTdIDKh4jDfbHIIgjhtxDD5ZiJNmUfxf+oaWyECZp1h4zk31BpRp0cwJLPEH7l4xgWiK00rTJOXWjXwBBeg1+qn2kGcGGWLpSvcUgfEv5A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=m2dIpx99; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="d9SfD7/i"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1791460059; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=2uRUiMGM/3kM5oFgvWkstit41ISjJ8dKFkmnjBOgzTY=;
-	b=d9SfD7/i3F8/7mhWPtNs4PbENsPzHePZ1tusqOfNzF5OEb5MFFoyDHTotZ1yhdHWLAPcOqQcJ7vrppp+F7wUyLx6J0Kmq+NKypSW6hYOV3xee4wMei9wClqocofEV3QaqZCjRJjxL3enc1nYpJX9r9cQ+T9pDtH57kKkJMPiO58=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R191e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037009110;MF=xueshuai@linux.alibaba.com;NM=1;PH=DS;RN=34;SR=0;TI=SMTPD_---0XCP.Q2W_1791459729;
-Received: from 30.246.161.100(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0XCP.Q2W_1791459729 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Thu, 08 Oct 2026 19:42:10 +0800
-Message-ID: <fbdb7b4c-0f80-41b0-b6d8-a4501ff3e820@linux.alibaba.com>
-Date: Thu, 8 Oct 2026 19:42:08 +0800
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="m2dIpx99"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1791472375; x=1823008375;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=S8Qj4JiVGmSAKNEHAdb2Qw61sB9GI38imUB2dF/Oqjo=;
+  b=m2dIpx9936NO7BOs0z9l1uDVhZgMvEYBstCI5PwzFzv83up6lq9mQXxN
+   7g2h5mtTmgUj8ldcSaTUK2eF53XL8/2MeWTIlvk6qK1Wi97Bl4pPxcXYl
+   F0wD1CRhzbYFi3cbuYcj4cVlh5tlIqPUKq0gFf37NwfSNukco04VRvkLv
+   Fp5sBlmIIY3mANtR66SreObyI/jOi4wIH2yYbkhXNrSgZnFmEnZD5Cte/
+   rCtU7LQkikNrW0+3rkdK5tJ6DEEP8muyOf3l33s4onhcyGwMGz/5rCDmQ
+   34uG7vZ/1Esg+AsVm7lxs4MMHrOlpESIOmnXSIEFdQsDJhFy5pWjeq58L
+   A==;
+X-CSE-ConnectionGUID: GGW6VyVvTJiihNEhIG2I8w==
+X-CSE-MsgGUID: GCpKoEq4Qe6ItmZEqrYRiw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11928"; a="256629"
+X-IronPort-AV: E=Sophos;i="6.27,146,1787036400"; 
+   d="scan'208";a="256629"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Oct 2026 08:12:50 -0700
+X-CSE-ConnectionGUID: jijYxYCQSB2qODj8Eg8ZTg==
+X-CSE-MsgGUID: 71MFXqMrTqevPhNcx3GKZQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.27,146,1787036400"; 
+   d="scan'208";a="427414"
+Received: from soc-cp83kr3.clients.intel.com (HELO [10.122.184.228]) ([10.122.184.228])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Oct 2026 08:12:48 -0700
+Message-ID: <bcb837c5-8a8d-4cba-9c14-73275c5a7bb0@intel.com>
+Date: Thu, 8 Oct 2026 10:12:40 -0500
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -34,122 +52,72 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 0/7] riscv: Add reliable stack unwinding for livepatch
-To: Martin Kaiser <martin@kaiser.cx>, Palmer Dabbelt <palmer@dabbelt.com>,
- Paul Walmsley <pjw@kernel.org>
-Cc: pjw@kernel.org, aou@eecs.berkeley.edu, alex@ghiti.fr,
- linux-riscv@lists.infradead.org, oleg@redhat.com, rostedt@goodmis.org,
- mhiramat@kernel.org, mark.rutland@arm.com, peterz@infradead.org,
- mingo@redhat.com, acme@kernel.org, namhyung@kernel.org,
- alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com,
- adrian.hunter@intel.com, james.clark@linaro.org, jpoimboe@kernel.org,
- jikos@kernel.org, mbenes@suse.cz, pmladek@suse.com, joe.lawrence@redhat.com,
- shuah@kernel.org, mpdesouza@suse.com, oliver.yang@linux.alibaba.com,
- zhuo.song@linux.alibaba.com, jkchen@linux.alibaba.com,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- linux-perf-users@vger.kernel.org, live-patching@vger.kernel.org,
- linux-kselftest@vger.kernel.org
-References: <20260914092648.51254-1-xueshuai@linux.alibaba.com>
- <artojcJftbMIgPrj@akranes.kaiser.cx>
-From: Shuai Xue <xueshuai@linux.alibaba.com>
-In-Reply-To: <artojcJftbMIgPrj@akranes.kaiser.cx>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Subject: Re: [PATCH] perf/x86/intel/uncore: Fix DMR CXL CM invert filter
+To: Guixiong Wei <weiguixiong@bytedance.com>, peterz@infradead.org
+Cc: Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo
+ <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>, James Clark
+ <james.clark@linaro.org>, Thomas Gleixner <tglx@kernel.org>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
+ linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20261008051953.6293-2-weiguixiong@bytedance.com>
+Content-Language: en-US
+From: "Chen, Zide" <zide.chen@intel.com>
+In-Reply-To: <20261008051953.6293-2-weiguixiong@bytedance.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 
 
-On 9/29/26 3:28 PM, Martin Kaiser wrote:
-> Thus wrote Shuai Xue (xueshuai@linux.alibaba.com):
+On 10/8/2026 12:19 AM, Guixiong Wei wrote:
+> The DMR CXL CM PMU places its invert filter at config bit 21 and its
+> 9-bit threshold at bits 23-31. However, dmr_uncore_cxlcm uses
+> GENERIC_PMON_RAW_EVENT_MASK, which covers the threshold through the
+> generic bit 23 invert field and bits 24-31 threshold field, but does not
+> include the relocated invert bit. As a result, uncore_pmu_event_init()
+> silently clears bit 21 and inv=1 programs the same configuration as
+> inv=0.
 > 
->> Hi,
+> Add bit 21 to a DMR CXL CM-specific event mask so the requested invert
+> filter reaches hardware.
 > 
->> This is v6 of the RISC-V reliable stack unwinding series for livepatch.
->> Wang Han has left our team, so I am taking over this series from now on.
+> Fixes: 6daf2c35b835 ("perf/x86/intel/uncore: Add IMH PMON support for Diamond Rapids")
+> Signed-off-by: Guixiong Wei <weiguixiong@bytedance.com>
+> ---
+>  arch/x86/events/intel/uncore_snbep.c | 5 ++++-
+>  1 file changed, 4 insertions(+), 1 deletion(-)
 > 
->> The series adds explicit frame-record metadata, preserves the frame
->> pointer through dynamic ftrace, and replaces the open-coded stack walker
->> with a conservative frame-pointer based unwinder. It then enables the
->> RISC-V livepatch capability and adds the syscall-wrapper selftest prefix.
-> 
->> Changes since v5:
->> * Rebase onto the current riscv/for-next; no functional changes.
->> * Fold in the tags collected from the v5 thread:
->>    - Reviewed-by: Shuai Xue on 2/7, 3/7, 4/7 and 6/7
->>    - Acked-by: Miroslav Benes on 7/7
->> * Add my sign-off as the new sender.
-> 
->> Since the patches are otherwise identical to v5, the v5 validation
->> results still apply. For reference, from the v5 cover letter:
->> * Built Linux 7.2.0-rc6 with riscv64-unknown-linux-gnu-gcc 15.2.0
->>    and binutils 2.46.
->> * Standard livepatch configuration built successfully, including
->>    Image, vmlinux, modules, compile_commands.json and GDB scripts.
->> * CONFIG_IRQ_STACKS=n variant linked successfully with GCC.
->> * QEMU 8.2.2, 1 CPU: livepatch selftests PASS: 7, SKIP: 1,
->>    FAIL: 0; ftrace function graph 3 passed, 0 failed, 3 unsupported.
->> * QEMU 8.2.2, 4 CPUs: livepatch selftests PASS: 7, SKIP: 1,
->>    FAIL: 0; ftrace function graph 3 passed, 0 failed, 3 unsupported.
->> * No BUG, WARNING, Oops, panic, unreliable stack or Call Trace found
->>    by the validation log scans. Expected negative livepatch errors are
->>    part of the selftests.
-> 
->> v5 was posted in early August and has been quiet since then. I would
->> appreciate it if the series could be considered for the upcoming merge
->> window. Happy to address any remaining feedback.
-> 
->> Base:
->> riscv/for-next 77ae27fd98f3 ("Merge tag 'printk-for-7.3' of git://git.kernel.org/pub/scm/linux/kernel/git/printk/linux")
-> 
->> Previous versions:
->> v5: https://lore.kernel.org/r/20260804103626.2803112-1-wanghan@linux.alibaba.com
->> v4 RESEND: https://lore.kernel.org/r/20260629072713.3273743-1-wanghan@linux.alibaba.com
->> v3: https://lore.kernel.org/r/cover.194d76e3a15b.v3.riscv-livepatch.wanghan@linux.alibaba.com
->> v2: https://lore.kernel.org/r/20260528082310.1994388-1-wanghan@linux.alibaba.com
->> v1: https://lore.kernel.org/r/20260527123530.2593918-1-wanghan@linux.alibaba.com
-> 
->> Assisted-by: Qoder:Qwen-3.8-MAX-Preview
-> 
-> Thanks for these patches.
-> 
-> I tried them on a standard rv64 qemu and on a rv64 cheri system
-> (cheri-linux.org). The latter needed some minor tweaks, but in
-> both cases, I could get livepatch to work.
-> 
-> Reviewed-by: Martin Kaiser <martin@kaiser.cx>
-> Tested-by: Martin Kaiser <martin@kaiser.cx>
+> diff --git a/arch/x86/events/intel/uncore_snbep.c b/arch/x86/events/intel/uncore_snbep.c
+> index a97cd029db366..1b460cf27a10f 100644
+> --- a/arch/x86/events/intel/uncore_snbep.c
+> +++ b/arch/x86/events/intel/uncore_snbep.c
+> @@ -474,6 +474,9 @@
+>  /* DMR */
+>  #define DMR_IMH1_HIOP_MMIO_BASE			0x1ffff6ae7000
+>  #define DMR_HIOP_MMIO_SIZE			0x8000
+> +#define DMR_CXLCM_PMON_CTL_INVERT		BIT(21)
+> +#define DMR_CXLCM_PMON_RAW_EVENT_MASK		(GENERIC_PMON_RAW_EVENT_MASK | \
+> +						 DMR_CXLCM_PMON_CTL_INVERT)
+>  #define DMR_CXLCM_EVENT_MASK_EXT		0xf
+>  #define DMR_HAMVF_EVENT_MASK_EXT		0xffffffff
+>  #define DMR_PCIE4_EVENT_MASK_EXT		0xffffff
+> @@ -6696,7 +6699,7 @@ static struct event_constraint dmr_uncore_cxlcm_constraints[] = {
+>  
+>  static struct intel_uncore_type dmr_uncore_cxlcm = {
+>  	.name			= "cxlcm",
+> -	.event_mask		= GENERIC_PMON_RAW_EVENT_MASK,
+> +	.event_mask		= DMR_CXLCM_PMON_RAW_EVENT_MASK,
+
+Thanks for the fix!
+
+Reviewed-by: Zide Chen <zide.chen@intel.com>
 
 
-Hi Martin,
-
-Thank you very much for testing the series and for the tags!
-
-It is great to hear that livepatch works both on a standard rv64 QEMU
-and on the rv64 CHERI system. Could you share what the minor tweaks
-for CHERI were? If any of them are generic -- for example frame-record
-size/alignment or pointer-width assumptions in the unwinder -- it may
-be worth folding them into this series, so the cheri-linux tree has
-less to carry downstream. If they are purely CHERI-specific, a pointer
-to your tree would still be a useful reference.
-
-+Palmer, Paul, gentle ping on this series.
-
-It has been under review since late May (v1 on May 27, now in its sixth
-revision) and the tags collected so far are:
-
-   * Acked-by: Miroslav Benes <mbenes@suse.cz>             (7/7, livepatch)
-   * Reviewed-by: Marcos Paulo de Souza <mpdesouza@suse.com> (7/7)
-   * Reviewed-by: Martin Kaiser <martin@kaiser.cx>         (whole series)
-   * Tested-by: Martin Kaiser <martin@kaiser.cx>           (whole series,
-     rv64 QEMU and rv64 CHERI, livepatch working on both)
-   * Reviewed-by: Shuai Xue <xueshuai@linux.alibaba.com>   (2/7, 3/7, 4/7, 6/7)
-
-v6 still applies cleanly onto the current riscv/for-next
-(52318cf0fa6e). If it helps, I can send a v7 that folds in Martin's
-Reviewed-by/Tested-by tags.
-
-Could the series be considered for the upcoming 7.4 merge window?
-
-Thanks,
-Shuai Xue
-
+>  	.event_mask_ext		= DMR_CXLCM_EVENT_MASK_EXT,
+>  	.constraints		= dmr_uncore_cxlcm_constraints,
+>  	.format_group		= &dmr_cxlcm_uncore_format_group,
 
