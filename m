@@ -1,80 +1,182 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f51.google.com (mail-pj1-f51.google.com [209.85.216.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D1EF3793D3
-	for <linux-perf-users@vger.kernel.org>; Wed,  7 Oct 2026 23:57:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4398391845
+	for <linux-perf-users@vger.kernel.org>; Thu,  8 Oct 2026 04:03:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791417460; cv=none; b=kPf9kq1YAefpaiVPVpaKvETzzP8xYJTjhfMaSbdxCCHwbpVjGb79DsvUt8OjIbFVY9Mp7Do4aqaqyROneyTyXT0h7GaQ4egYdSguZpWSywvM+9tq4gugBokYp3dLoPl2AiBgk+RZmfpPyhGc3b7lYo0ej9ygWXD68KHnQq6SJRk=
+	t=1791432182; cv=none; b=PQ1tIA5+VpLElDTAa8E//lO51VqRmKCSVGJVnkd+Suuxm8udnJAtRnIIhJ4gShVVrWwdpOTlmRz53PzI+kTHfcBgcmqk89Hoht5pM3RX8wxePEPe+xuST/DNOfj0fdY6DOwVNAIFN81dnNK/jhageWc9u+FiDPYKtijPINS57CI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791417460; c=relaxed/simple;
-	bh=j+DMxe7PTqMGNAqhrnEKRRKLpqm7fgwKAcGyKMOcla8=;
-	h=Message-ID:From:Subject:To:Cc:In-Reply-To:References:Content-Type:
-	 Date; b=IG67wVFmzEW0OG2l+gM7/JVBJXcjwUyb4nYw0I8mgZyas2xRPvEKt6YRISnwJUJ+n7fywaDiPjVbifRnQO1luviOfqXCb5+1kfgSXrxah3BNiIJ4rAHziEH+VhuVbSqPHHeVtn4QTVF98iJXcGiTFeWFc9+FX+BYMXyX8D1P48s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ToWeEZ47; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1791432182; c=relaxed/simple;
+	bh=vTYCcf0wAf+8haG2OrJz2MEtgGTUmq4EVtDo+7uotEs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ugBGN6BDv68nfxKgPtsy95JfJdkHUM3h7KHN0VT9Bki5RZrcsZOqhE/QVNT2kdcBjrPCooAzhj0o02Nx1GKpCbd1GVq7ycG7uYR6m2r/KzOorkz0GWqdvoQ8iKRLjLZz+HyR8pdFdVXavFmkuyUkgw08YavMS4FPNIrbfGoc73w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QnMmdm1T; arc=none smtp.client-ip=209.85.216.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ToWeEZ47"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 837671F000FF;
-	Wed,  7 Oct 2026 23:57:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1791417459;
-	bh=+26pYvrMWXQUMEHOxZCgx6rZ3vD7liSsyRy4gTvrfIw=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=ToWeEZ47eVwrARL67aAMfN2cSE+tW/modeADALnGeBlgJCQGLfmC0QensF3clrLUP
-	 tnjURilACxPlVkX6BtUIsLiAWD/X6TdPr7uC4ASHI5MJojh73Capv3wvlF+LjCG7iE
-	 NPqYFpKKQokPWcLFKU2F1S9BzgS03pHLJpjYGbzJ8buIDThOfdkG/SqeQptEog16r3
-	 /Vevi4F/fL7LoMrwCNOF5P8lybx0Ja2gEzqLX135Y9hRwHglxYB0I3yGcCMNsFPmjV
-	 uH+w0Z3l3O55X64pnJCWbm81kKzP51COK69ZyDFZOSwVtIXdjSi7dAbmaUdCxdHNXL
-	 MDvljMCg5GBBg==
-Message-ID: <sashiko-outbox-163444@kernel.org>
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH] perf/amd/ibs: Clear stale IBS_{FETCH|OP}_CTL in
- perf_ibs_start() with CTL2[Dis]
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Jim Mattson" <jmattson@google.com>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20261007234815.4026028-1-jmattson@google.com>
-References: <20261007234815.4026028-1-jmattson@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Wed, 07 Oct 2026 23:57:39 +0000
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QnMmdm1T"
+Received: by mail-pj1-f51.google.com with SMTP id 98e67ed59e1d1-3aacde0cc0fso202898a91.2
+        for <linux-perf-users@vger.kernel.org>; Wed, 07 Oct 2026 21:03:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1791432180; x=1792036980; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :content-type:mime-version:references:message-id:subject:cc:to:from
+         :date:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=LvRoOScbaY6pOmwJ9M2q65FEL0FaRp9KXeXeqjl1z2k=;
+        b=QnMmdm1THRQW9Cgla6AwziHOZbrZ7Qak0Psb2yxldN1U20gbI2LeXkF7zxris/UpyR
+         SC4bRTUijzjv3P9NyEqb+rmXkaO4F3bOoEivovjvmPqNAbXiN8QA1gHAxXRFxlKix9gI
+         fbvFU6kOwNusOkPXMS+8shLSJAMEgMVrJuzt+PzrPXfx/CwzvtzXDuyeBGqxohxpA15N
+         +Nxy/wtyt7zK5ZBHSzwUKihwU85F8zTcHuVGbygXFxWGF16L7t8EmGvo8yKGPWCr/44Y
+         26oY7n30UAXg6HX1uxaaYG0GdtXYhj0CapDKZy0d1UOBAasEXQTFasDhrQYcE6bdiL2E
+         2uvw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1791432180; x=1792036980;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :content-type:mime-version:references:message-id:subject:cc:to:from
+         :date:x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to:content-type;
+        bh=LvRoOScbaY6pOmwJ9M2q65FEL0FaRp9KXeXeqjl1z2k=;
+        b=WKwi+5VCvBh0zfKHi/9rh3xtz2cOjnik9Hnbi5lbyv69l9OLXoSuZzR4H15WMXUZr3
+         WYTB6iObEdjmQYLawaKE/hpvYtlph1QYZjXcGWczKbMLrXF5X4wn/sL/teuTRg5rytDf
+         WkC7AQjWXHUGcH1Y4tgpEONvGOk/IjgJxcJXEvE0TYKpRiZmzYglFd18wgKjZYScuLqI
+         SWFZOEyIBle9usaYT7yQX1ookWJS74KaTkflji4jdJCOYGjDtuJSDAgyILTQj2D7WUGA
+         Je1KxvP8fNijScJhUPfmEB6Wn3DWKNSSAaovEs+7nOkjHj5TLqwkThew1mBu/DY+3Dkv
+         0/kQ==
+X-Forwarded-Encrypted: i=1; AKwUvBx8Pr2CqqhNop6bYIATw1SbBZJxv/CdOlu4Hom2RvJQ7iO7keJDLSB+UUKB1QkSLzFcbYwSOMTPxHXJYFZUzSYO@vger.kernel.org
+X-Gm-Message-State: AFq9FYK0lY88CEIPL1sVu987NEa6oQupNdaPusgYhTyssZXdSiRk/sEy
+	3r5EElWeschHxTC2OTc6H3PS4V33iNK/B4hBnrrdTeoDNDealgn8BTS9onXeQHwCSFE=
+X-Gm-Gg: AYBFou1gxgzO+WhVhNaXFziKV24kV+7/Jpu3SCsUGI3AE7Y/nde/WyGrjanAXeWa/Qf
+	T5GWzIt1LPp6eYkFrxJFAZqYv/Z7RTOEdhvz15f58FIpAbIbTkYLsABcwoJPrQ7Q5CQvwGrfRxe
+	QidAGR/DmbdsNgo+sKSoA+D+KdypgJkuDiHpJ1LvPwFSu0hImtGzehlC5QreIpqrRDVbqN+u92Q
+	qeNgsrLR4YkS8WclzVgrfCvH/zc66TOPlFZga0iFPTQWTRdIk96eneUgCW6WNHY6HaQ+XoWOrZf
+	3h+ERVW1YHO3evo7d3ozbcW7gBbCGTzIZbdnI0zI7ttfp5fGYmQW7qy/cQFj9gNORzCCXs1HNJh
+	UmEqYNubuBf6Of/W+loYATK5ro7dUHtwUznmajDsUxLqSUqwsHdwgmjw6eSOMrOCXiHBo0nPYVM
+	a5Yq5jd7n352CFQvMXuedkYm3htyHbS/F9/7XhS6w879Ka2m0zFELRcpR2dHXU659VIl3jGvOhd
+	Q==
+X-Received: by 2002:a17:90b:134d:b0:3a4:ee64:b880 with SMTP id 98e67ed59e1d1-3a8a0dfb941mr3122084a91.32.1791432179787;
+        Wed, 07 Oct 2026 21:02:59 -0700 (PDT)
+Received: from mail.google.com ([5.34.221.10])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3a9d94ef876sm2306775a91.0.2026.10.07.21.02.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 07 Oct 2026 21:02:59 -0700 (PDT)
+Date: Thu, 8 Oct 2026 12:02:52 +0800
+From: Changbin Du <changbin.du@gmail.com>
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: sashiko-reviews@lists.linux.dev, Changbin Du <changbin.du@gmail.com>, 
+	linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH v2] perf bench: Add atomic operations benchmark
+Message-ID: <ascVxPSLiALhI8iz@mail.google.com>
+References: <20261007053027.1738402-1-changbin.du@gmail.com>
+ <sashiko-outbox-162645@kernel.org>
+ <asa7RZ3NNwpogn8M@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <asa7RZ3NNwpogn8M@google.com>
 
-> Commit 1b044ff3c17e ("perf/amd/ibs: Avoid race between event add and
-> NMI") makes perf_ibs_start() reset IBS_{FETCH|OP}_CTL before it sets
-> IBS_STARTED. Thus, an NMI from another source that arrives before the
-> event is enabled finds Val=3D0 and does not process a stale sample or
-> enable the event too early.
->=20
-> The reset is a call to perf_ibs_disable_event() with config=3D0. A later
-> commit changed perf_ibs_disable_event():
->=20
->   commit efa5700ec0da ("perf/amd/ibs: Support IBS_{FETCH|OP}_CTL2[Dis] to=
- eliminate RMW race")
->=20
-> When IBS_CAPS_DIS is set, the function now writes only
-> IBS_{FETCH|OP}_CTL2 and returns. It does not write IBS_{FETCH|OP}_CTL.
-> On hardware with IBS_CAPS_DIS, the reset does nothing, and the race is
-> possible again: CTL still holds the previous sample, with Val=3D1, when
-> IBS_STARTED is set.
->=20
-> Clear IBS_{FETCH|OP}_CTL explicitly when IBS_CAPS_DIS is set, as
-> perf_ibs_disable_event() did before CTL2 support. Everything in CTL is
-> stale at this point, so it does not matter if this write discards a
-> Val that the hardware sets late.
->=20
-> Fixes: efa5700ec0da ("perf/amd/ibs: Support IBS_{FETCH|OP}_CTL2[Dis] to e=
-liminate RMW race")
-> Assisted-by: LLM
-> Signed-off-by: Jim Mattson <jmattson@google.com>
+On Wed, Oct 07, 2026 at 02:36:05PM -0700, Namhyung Kim wrote:
+> On Wed, Oct 07, 2026 at 05:39:22AM +0000, sashiko-bot@kernel.org wrote:
+> > Thank you for your contribution! Sashiko AI review found 2 potential issue(s) to consider:
+> > - [High] perf: 64-bit atomic builtins on u64 cause link errors on 32-bit
+> > - [Low] perf: Missing explicit inclusion of <stdint.h> for UINT64_MAX
+> > --
+> > 
+> > commit 1f5903d48b4529edce94275c5756879218402332
+> > Author: Changbin Du <changbin.du@intel.com>
+> > 
+> > perf bench: Add atomic operations benchmark
+> > 
+> > Add a new atomic collection to perf bench for benchmarking atomic
+> > read-modify-write operations with multi-threaded contention testing.
+> > 
+> > > diff --git a/tools/perf/bench/atomic.c b/tools/perf/bench/atomic.c
+> > > new file mode 100644
+> > > index 0000000000000..08497910b563f
+> > > --- /dev/null
+> > > +++ b/tools/perf/bench/atomic.c
+> > [ ... ]
+> > > +static void *worker(void *arg)
+> > > +{
+> > > +	struct worker_stats *ws = (struct worker_stats *)arg;
+> > > +	struct timespec tstart, tend;
+> > > +	u64 i;
+> > > +
+> > > +	pthread_barrier_wait(&start_barrier);
+> > > +
+> > > +	clock_gettime(CLOCK_MONOTONIC, &tstart);
+> > > +	switch (bench_op) {
+> > > +	case OP_CAS:
+> > > +		for (i = 0; i < iterations; i++) {
+> > > +			u64 old_val, new_val;
+> > > +
+> > > +			old_val = __atomic_load_n(&shared_counter, __ATOMIC_RELAXED);
+> > 
+> > [Severity: High]
+> > Does the use of 64-bit atomic builtins on a u64 variable in worker() in
+> > tools/perf/bench/atomic.c break compilation on 32-bit architectures?
+> > 
+> > Without 32-bit fallback definitions or omitting 64-bit atomics entirely,
+> > calls like __atomic_load_n, __atomic_compare_exchange_n, and
+> > __atomic_fetch_add on the shared_counter might generate unresolved
+> > __atomic_*_8 library calls on 32-bit systems.
+> 
+> Probably it's ok to go with unsigned long.
+> 
+Yes, just fixed it by using the native word size for the shared counter — 
+unsigned long instead of u64.
 
-Sashiko has reviewed this patch and found no issues. It looks great!
+> Thanks,
+> Namhyung
+> 
+> > 
+> > > +			do {
+> > > +				new_val = old_val + 1;
+> > > +			} while (!__atomic_compare_exchange_n(&shared_counter,
+> > > +							      &old_val, new_val,
+> > > +							      false,
+> > > +							      __ATOMIC_RELAXED,
+> > > +							      __ATOMIC_RELAXED));
+> > > +		}
+> > > +		break;
+> > > +	case OP_INC:
+> > > +		for (i = 0; i < iterations; i++)
+> > > +			__atomic_fetch_add(&shared_counter, 1, __ATOMIC_RELAXED);
+> > > +		break;
+> > > +	default:
+> > > +		break;
+> > > +	}
+> > [ ... ]
+> > > +static void print_default_format(struct worker_stats *wstats,
+> > > +				 struct stats *time_stats)
+> > > +{
+> > [ ... ]
+> > > +	/*
+> > > +	 * Per-thread statistics from the last measured repeat show
+> > > +	 * fairness / imbalance in CPU scheduling.
+> > > +	 */
+> > > +	if (threads > 1) {
+> > > +		u64 min_ns = UINT64_MAX, max_ns = 0, total_ns = 0;
+> > 
+> > [Severity: Low]
+> > Does the usage of UINT64_MAX in print_default_format() in
+> > tools/perf/bench/atomic.c require the explicit inclusion of <stdint.h>?
+> > 
+> > This might violate strict musl compatibility header guidelines, which require
+> > explicitly including <stdint.h> for this constant.
+> > 
+> > > +		double min_thru, max_thru, avg_thru;
+> > > +
+> > 
+> > -- 
+> > Sashiko AI review · https://sashiko.dev/#/patchset/20261007053027.1738402-1-changbin.du@gmail.com?part=1
 
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261007234815.4026=
-028-1-jmattson@google.com?part=3D1
-
+-- 
+Cheers,
+Changbin Du
