@@ -1,99 +1,66 @@
-Received: from va-2-113.ptr.blmpb.com (va-2-113.ptr.blmpb.com [209.127.231.113])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FF5831F99A
-	for <linux-perf-users@vger.kernel.org>; Thu,  8 Oct 2026 05:22:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.127.231.113
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 827433B14C9
+	for <linux-perf-users@vger.kernel.org>; Thu,  8 Oct 2026 05:33:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791436963; cv=none; b=KheWRuJC9jbU6PqstlWDUq09TOUubphXFNK6qpE84jpyEcz7CQ3eYmxT5QlNln6fGJ1MMFbMVIVIKyw0nOon2RV7di8Qx2dLVdBeP8f8fbQFE+0Y+mrqt6r9D14IgnVKRyvEvLr69lrLZGkcFJ2uvG3p68yYCcCL0qq7HJXa7G0=
+	t=1791437627; cv=none; b=l9omJm8eONkXwwrLVOASAeIdo1NfA/2vpUxSoSDD2pF/iaa04szluSMpU/xi1pO75F4p/P/lBVUrQ8rbRP4uiLztIpeafAAZD0jslMXorTboMdmEjcv6nNfZUpz2nSmMDNNKJuz4rf8OwbJX/xd1T5RCOQVQA8ZsyOfXg+aad5E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791436963; c=relaxed/simple;
-	bh=fskBAk7DodstGk6bvofIn3sTwHBA47U6PTjs/Rg4jto=;
-	h=Content-Type:To:From:Message-Id:Mime-Version:Date:Cc:Subject; b=ZWaucpa/nmFW9eCjUsJje4V7+Gj+K6ibtTwTGwLq//dn2PDviuxKMEEWlsKFW6TVl7ETYj9Kv8UnOuvNVhQ+Ka2ytOFB6Re+9pm7XledAsONVf3m06Sex6JIaxWDMm/F9GIfaCDaLfUJSKA6CyZBJS42bUHoE/WqPhLghq4GTRM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=afQDiwwL; arc=none smtp.client-ip=209.127.231.113
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
+	s=arc-20240116; t=1791437627; c=relaxed/simple;
+	bh=fEw6FpN8iVBT/W/14qB3xSxttZVgI8K0hrjAFmSB6Nk=;
+	h=Message-ID:From:Subject:To:Cc:In-Reply-To:References:Content-Type:
+	 Date; b=NITHK6jMergh9DZ1Ocm43Rq6zyFaWfqvHf0VDc4p/6wWQXIWpf4WUifXHgReuuclYOmi/9roMzcT4zt5QrpZoklX2Z31EWu9qpEEQ3zy1abNVvYgYb7rCEIYRyCcivU9KV027Pk8wTQAH6ZKxVGObkSP1SQzG/WjClYFvXnwOQo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gW91C5j7; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="afQDiwwL"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
- s=2212171451; d=bytedance.com; t=1791436949; h=from:subject:
- mime-version:from:date:message-id:subject:to:cc:reply-to:content-type:
- mime-version:in-reply-to:message-id;
- bh=OC/8gcm378zdCLGBCsxZGDMgTVsIaJlN9sB1GbVS2X4=;
- b=afQDiwwLVUn0sX3WReZyjPPyqLDqub819hocoTBz2+LrQwDlWVwxjyvoE+tnm5w5cZi2Nx
- ZXflCWe7Zl7omd9Fk4VcYM1wehtpVMikbkaPTX88aCRF5XYleNChRkSQCCwTIrtDR0nqtr
- +d74dQ5RfAAnlwfBtfZGFRyNDrNATaEy4gv3xUtBtdGFyciSLPts5WEMZnqQU26b1vRTMW
- sq/OBvpfYUNRRE3IBc2+26hiCF9urEH7ktXrzhf0o7Li5HBhPV9lMnWfBz73ZeVlIZTU55
- VHzCUZobWrd+sy8h+x7qKXgsyNBwQNpLiFqyeVb/fk1ZHnsrKXevJzTJhoQtew==
-Content-Type: text/plain; charset=UTF-8
-To: <peterz@infradead.org>
-From: "Guixiong Wei" <weiguixiong@bytedance.com>
-X-Mailer: git-send-email 2.55.0
-X-Lms-Return-Path: <lba+26ac72893+334426+vger.kernel.org+weiguixiong@bytedance.com>
-Message-Id: <20261008051953.6293-2-weiguixiong@bytedance.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gW91C5j7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0247F1F00898;
+	Thu,  8 Oct 2026 05:33:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1791437626;
+	bh=fEw6FpN8iVBT/W/14qB3xSxttZVgI8K0hrjAFmSB6Nk=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=gW91C5j7HON5B+aktcW45wg9wJgcuVjhA4EMkfc49YE1LNeKgtTZ2ZfVH8knDP+Nu
+	 hh/GYjl7ctkgioZMWQRmZ3EwsN1O1SQpqTMGAALAINkbEImf8LFV49pOFoFX7fRoyk
+	 hgWO5EDFnWsplR+GndU0p9GA01zlwtUpC3B0/E6sQZCX1UX7Yv3n7D9MC/x3XXU7wV
+	 KNpdP+EB1B/ILglgYbRX35jXUmSahM9w7osbHjF+ubZ7o131e95XGdy16HcbYfUHn5
+	 7pvAjV/n0VE95aFO4ybT4mSiw7yLlWNxp25B9kwQIWHj2Cg2jRjbtdBJuZ0hNjr5N/
+	 CesnPwkO6bh9w==
+Message-ID: <sashiko-outbox-163628@kernel.org>
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH] perf/x86/intel/uncore: Fix DMR CXL CM invert filter
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Guixiong Wei" <weiguixiong@bytedance.com>
+Cc: linux-perf-users@vger.kernel.org
+In-Reply-To: <20261008051953.6293-2-weiguixiong@bytedance.com>
+References: <20261008051953.6293-2-weiguixiong@bytedance.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Thu, 08 Oct 2026 05:33:45 +0000
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Date: Thu,  8 Oct 2026 13:19:54 +0800
-Content-Transfer-Encoding: 7bit
-X-Original-From: Guixiong Wei <weiguixiong@bytedance.com>
-Cc: "Guixiong Wei" <weiguixiong@bytedance.com>, 
-	"Ingo Molnar" <mingo@redhat.com>, 
-	"Arnaldo Carvalho de Melo" <acme@kernel.org>, 
-	"Namhyung Kim" <namhyung@kernel.org>, 
-	"Mark Rutland" <mark.rutland@arm.com>, 
-	"Alexander Shishkin" <alexander.shishkin@linux.intel.com>, 
-	"Jiri Olsa" <jolsa@kernel.org>, "Ian Rogers" <irogers@google.com>, 
-	"Adrian Hunter" <adrian.hunter@intel.com>, 
-	"James Clark" <james.clark@linaro.org>, 
-	"Thomas Gleixner" <tglx@kernel.org>, "Borislav Petkov" <bp@alien8.de>, 
-	"Dave Hansen" <dave.hansen@linux.intel.com>, <x86@kernel.org>, 
-	"H. Peter Anvin" <hpa@zytor.com>, "Zide Chen" <zide.chen@intel.com>, 
-	<linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH] perf/x86/intel/uncore: Fix DMR CXL CM invert filter
 
-The DMR CXL CM PMU places its invert filter at config bit 21 and its
-9-bit threshold at bits 23-31. However, dmr_uncore_cxlcm uses
-GENERIC_PMON_RAW_EVENT_MASK, which covers the threshold through the
-generic bit 23 invert field and bits 24-31 threshold field, but does not
-include the relocated invert bit. As a result, uncore_pmu_event_init()
-silently clears bit 21 and inv=1 programs the same configuration as
-inv=0.
+> The DMR CXL CM PMU places its invert filter at config bit 21 and its
+> 9-bit threshold at bits 23-31. However, dmr_uncore_cxlcm uses
+> GENERIC_PMON_RAW_EVENT_MASK, which covers the threshold through the
+> generic bit 23 invert field and bits 24-31 threshold field, but does not
+> include the relocated invert bit. As a result, uncore_pmu_event_init()
+> silently clears bit 21 and inv=3D1 programs the same configuration as
+> inv=3D0.
+>=20
+> Add bit 21 to a DMR CXL CM-specific event mask so the requested invert
+> filter reaches hardware.
+>=20
+> Fixes: 6daf2c35b835 ("perf/x86/intel/uncore: Add IMH PMON support for Dia=
+mond Rapids")
+> Signed-off-by: Guixiong Wei <weiguixiong@bytedance.com>
 
-Add bit 21 to a DMR CXL CM-specific event mask so the requested invert
-filter reaches hardware.
+Sashiko has reviewed this patch and found no issues. It looks great!
 
-Fixes: 6daf2c35b835 ("perf/x86/intel/uncore: Add IMH PMON support for Diamond Rapids")
-Signed-off-by: Guixiong Wei <weiguixiong@bytedance.com>
----
- arch/x86/events/intel/uncore_snbep.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261008051953.6293=
+-2-weiguixiong@bytedance.com?part=3D1
 
-diff --git a/arch/x86/events/intel/uncore_snbep.c b/arch/x86/events/intel/uncore_snbep.c
-index a97cd029db366..1b460cf27a10f 100644
---- a/arch/x86/events/intel/uncore_snbep.c
-+++ b/arch/x86/events/intel/uncore_snbep.c
-@@ -474,6 +474,9 @@
- /* DMR */
- #define DMR_IMH1_HIOP_MMIO_BASE			0x1ffff6ae7000
- #define DMR_HIOP_MMIO_SIZE			0x8000
-+#define DMR_CXLCM_PMON_CTL_INVERT		BIT(21)
-+#define DMR_CXLCM_PMON_RAW_EVENT_MASK		(GENERIC_PMON_RAW_EVENT_MASK | \
-+						 DMR_CXLCM_PMON_CTL_INVERT)
- #define DMR_CXLCM_EVENT_MASK_EXT		0xf
- #define DMR_HAMVF_EVENT_MASK_EXT		0xffffffff
- #define DMR_PCIE4_EVENT_MASK_EXT		0xffffff
-@@ -6696,7 +6699,7 @@ static struct event_constraint dmr_uncore_cxlcm_constraints[] = {
- 
- static struct intel_uncore_type dmr_uncore_cxlcm = {
- 	.name			= "cxlcm",
--	.event_mask		= GENERIC_PMON_RAW_EVENT_MASK,
-+	.event_mask		= DMR_CXLCM_PMON_RAW_EVENT_MASK,
- 	.event_mask_ext		= DMR_CXLCM_EVENT_MASK_EXT,
- 	.constraints		= dmr_uncore_cxlcm_constraints,
- 	.format_group		= &dmr_cxlcm_uncore_format_group,
--- 
-2.50.1 (Apple Git-155)
