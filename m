@@ -1,69 +1,72 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBECE3A83BF
-	for <linux-perf-users@vger.kernel.org>; Fri,  9 Oct 2026 03:31:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FCB739B944
+	for <linux-perf-users@vger.kernel.org>; Fri,  9 Oct 2026 03:42:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791516694; cv=none; b=CDbHHsiiaKzjBa3otT2LRvbSFN34A6Ln6m2z53l8ntmHwtjhFmKem1saa75ilQn3iHlAo7XKP8RWrfwytL7lQlWFoyeA5ORWaqfAUeem+Mx6I2brziHE0+jOGP/pY1gFBbtbjBvogOKY9gQapYO9y/w2pJz0Ky5Uv9rROGTKapI=
+	t=1791517334; cv=none; b=Edg9hxovk3LGDKBbj8dGzR/hCMFVDcI8tyBGpa8IaGPHYK8n3WkUodmiazUCBOUKmXOlj6su9bp2LG9yRv98KEF9zeqqP8eHhw+AMXUSPlhkhWsJJ9/gQphCxjj3gLDy/HCW7tGvW/KkswNJUmbuWpT+pOlymJhiesHn1TnPdcE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791516694; c=relaxed/simple;
-	bh=MyzwYERjjmbMBfpfDVnL0qkVqRb6INn7y4BLiSdOz00=;
+	s=arc-20240116; t=1791517334; c=relaxed/simple;
+	bh=H+1LiaMVUbWHan40ERfhYAx2md4DMOM54CU0x8Jjhqw=;
 	h=Message-ID:From:Subject:To:Cc:In-Reply-To:References:Content-Type:
-	 Date; b=LqnPl1lwcMAo14hCXDyxbRl1h/9tDXKMer8hETYhg6areFiSokpkYzbMObTvfdzjlM4b9nG2qcvpYbB0o94e17JSMLaSV8D6iJmumE5G3kyCqNjxPluZ4NHWs0lbNKsImHBTQo/bT+gtw513ElOiJEDqpLMld4O4IdcwbV/bD3Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SCNI60Oc; arc=none smtp.client-ip=100.103.45.18
+	 Date; b=s3pgBlnyDxsE2UZzgBVuWON/22O+AAe43Y+XXGUzP9rLdC5tDudPdEDudr3j2mU5ljcTOZRQImBB1g/hF7gNgDDj/DaPYCCrDldLt8EhtNQYZNxpvzOX+iUD3EEGliUy2KkycFvOtJ3reWm6OTtJlfV8hKu9/RBvh9QDz19EMV4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hL4gM5zx; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SCNI60Oc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 464AF1F00893;
-	Fri,  9 Oct 2026 03:31:18 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hL4gM5zx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9583B1F000FF;
+	Fri,  9 Oct 2026 03:42:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1791516678;
-	bh=I6nl/kj655iizsJgRRWBxrdv8/TEPvrXP4kDQkXdjM4=;
+	s=k20260515; t=1791517321;
+	bh=6l9Vc0lMK5IWBuJa0GCz8jL/vaZg2nlJrBKgw1fjFuI=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=SCNI60Oc+mHLBIQfGmecUgA8IIWZQSEMeTmc4y3msdPDQBlxUmMKzx/PJyO32lAA4
-	 h9++/r9LzF9pxelq43AtDnrxwkkiZjqiebD3WKgjaKs6+wll5RRKBgQpgaeW0htmiP
-	 P0CuNSkWdBBf8EkUsKD31v+ha9HXoGZ4Y0oUzRiHAapoRUXVhvha+9IUpROYu6eaUC
-	 r4kTbBeNKzG4+wn7DgeRawKrmJk4g/J2hfVQ8AE+as+I6Vw3VfTXzmdRBnMAdcT35z
-	 1784Vjb8xe9r9D1SkNtrt6sJsBcYgbHBXx9XebqxnzUuhcrDtjy3NszFJds1hIrgkt
-	 X0+gtwXE/gpDg==
-Message-ID: <sashiko-outbox-164767@kernel.org>
+	b=hL4gM5zxOg66pJBVyiKvGbTcBmlLFSa0WYQdDn976a0p4AYLiYF5KOuQ8cVknF43i
+	 sOfrejLzBxedCRaE80xLztMQ4i8eAJ9bI7pmrENlqUxfhkc+jTQuqeBZ9i7Mb2zsuv
+	 +pjMPZMoWlQMZDv8cbAk5NPBIgluJaOV5a3RZjD04sdLL5/OwHl2X3jCNO8xpO9n7N
+	 2+gdFmi9mU1Km6Ku4h6Q4EXaCdbCAKPHwis0hTp2mKanF72ChC5s6nmAk1diKIq9En
+	 hxQNNu9RYCeqeciSKnFcp0zxbuG/mcK0qQwhHjUE6n/mGq+JsCbb6wJD9D/Y1Xn1tX
+	 L0/8Z0TA+zasA==
+Message-ID: <sashiko-outbox-164784@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v3 1/2] perf riscv: Implement rdtsc()
+Subject: Re: [PATCH v3 2/2] perf tsc: Declare TSC support from the build
+ system
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Chen Pei" <cp0613@linux.alibaba.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20261009032715.2841-2-cp0613@linux.alibaba.com>
+In-Reply-To: <20261009032715.2841-3-cp0613@linux.alibaba.com>
 References: <20261009032715.2841-1-cp0613@linux.alibaba.com>
- <20261009032715.2841-2-cp0613@linux.alibaba.com>
+ <20261009032715.2841-3-cp0613@linux.alibaba.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Fri, 09 Oct 2026 03:31:17 +0000
+Date: Fri, 09 Oct 2026 03:42:01 +0000
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-> Perf has no riscv implementation of rdtsc(), so it links against the weak
-> stub in util/tsc.c and every caller reads a constant 0 that cannot be
-> told apart from a counter standing still.
+> The "TSC support" subtest of the "Convert perf time to TSC" test decides
+> whether the architecture is covered by matching compiler macros for
+> x86_64, i386 and arm64.  That list has to be edited for every new
+> architecture and can drift apart from the set of architectures that really
+> provide a counter.
 >=20
-> Implement rdtsc() over the time CSR with rdtime.  The time CSR is a TSC
-> equivalent on riscv: readable from user mode, constant frequency, and the
-> same counter riscv's arch_perf_update_userpage() builds the user page
-> conversion fields from, so the counter and perf time share a timebase.
+> Declare the capability where the implementation is, following the
+> PERF_HAVE_JITDUMP pattern: an architecture with a usable counter sets
+> PERF_HAVE_RDTSC in its arch Makefile, Makefile.config turns it into
+> -DHAVE_RDTSC, and the test keys off that.
 >=20
-> Define it for RV64 only.  Reading the counter whole on RV32 takes time and
-> timeh in a loop, and no RV32 user in tools/perf needs it that much, so
-> RV32 keeps the weak stub.
+> x86 and arm64 keep the same behaviour, riscv starts running the subtest
+> where the previous patch defines rdtsc().
 >=20
-> Reviewed-by: Anup Patel <anup@brainfault.org>
-> Acked-by: Paul Walmsley <pjw@kernel.org> # arch/riscv
+> Reviewed-by: Adrian Hunter <adrian.hunter@intel.com>
+> Reviewed-by: Paul Walmsley <pjw@kernel.org>
+> Tested-by: Leo Yan <leo.yan@arm.com>
 > Signed-off-by: Chen Pei <cp0613@linux.alibaba.com>
 
 Sashiko has reviewed this patch and found no issues. It looks great!
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261009032715.2841=
--1-cp0613@linux.alibaba.com?part=3D1
+-1-cp0613@linux.alibaba.com?part=3D2
 
