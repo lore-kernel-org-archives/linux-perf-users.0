@@ -1,41 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC7FE363C43;
-	Sat, 10 Oct 2026 19:01:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C9CB363C43;
+	Sat, 10 Oct 2026 19:02:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791658906; cv=none; b=LdvPbqpo97byshWL47PNwVNr3GKsK2sTFidyqPi4N3PerKCyuljOEoyFQfRIUZ1xxZx7qTMuVJss8RdhyG9wCPuBXb1FKKN/I3s0PKNJC+V8i2DJH4iWA4NT2qhc40CXqqQ6gojxbGd/9sHefkecF28CPayzgFyRRhPLWX66urM=
+	t=1791658965; cv=none; b=QFU1dMxIyrTs1wz2DAze/scLnoCh4AX2ZKTHDfP091L4Cy6dgizt6ODuF9DEGzGwEaBui6fZ0R82MNpjEC+vlS2eZTYY2Hwv0A4qlGn+HIZtOogrcjxWDV5CXcEgWTWDMa8ymrmb4lV6PDwy9HR+M3/LB1bE0JiOXI94+Gmxnnk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791658906; c=relaxed/simple;
-	bh=25JVAP/UW2dJ5YAe9ajdXuBBXqQBC7/QAFQxhO4xl9A=;
+	s=arc-20240116; t=1791658965; c=relaxed/simple;
+	bh=/VMte0ffuAZ1bosOQRduKeracz6dH8KUEQKvDmnfsDw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qcYOfBbKREvWGgsb9JSBm6mMySHC9CwMDDdtFprazVaivVH15pqRfDTrwSsDvHZKJlpabCKGv1VvepitYi1s/l4UO70gFnFg+qHX1+iDD+TwfmmkAdZ2wmXPVF+DklWgQwKkl6RwuammMF2XNofdylfMHPT3YqapfM4q3vDSoYQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DnA9J6bY; arc=none smtp.client-ip=100.103.45.18
+	 Content-Type:Content-Disposition:In-Reply-To; b=VmQwGCOKmHLwqUMtxn8Ca+4iVrx/tnqC7f48vsrbtKxe1corkfZqxJdQXmHYJXSMxwnBP3FUgSRmmxYV/DgvdaQMAnTF7yrjlNe1syVdJJxgLnWJWC7hLhFPVlqqZwgc8rVTIEoz36EIF0e4Z7WJEjrJFtqVU/Yx5Nb8U2CN/5s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hGAf1a1O; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DnA9J6bY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6B5BC1F000FF;
-	Sat, 10 Oct 2026 19:01:45 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hGAf1a1O"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 26FF91F000FF;
+	Sat, 10 Oct 2026 19:02:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1791658905;
-	bh=Itkos3/Vh5tyxsYrO8J7NNRS45742Z89YQlBQ2I7jYc=;
+	s=k20260515; t=1791658964;
+	bh=ZBD94Bjwda+F367RH96wAT8/ImLjLZBk225gVxmnTPY=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=DnA9J6bYECmeoFzs+T3m4W4KFKAedulhdQnrUlnKhD1fWEEenzEKvyPh7CvdEdkIp
-	 BWBcXi9mSpXwVHLgG9EFGrY5HldVLdKLq13r1IayJf5dupgzgf0caV891DiuZ8CTXL
-	 B4P2AKhhah4Rer1jdVWjX/vd+U9NKyY5EiTVYZEZGx7UmaW40z1RoIl0WY0tn00BMu
-	 S1hPi/GzUWw81vULavdlm8o+wOlqF0p7RspTr8uembBxYsDTsigan0mIA/YeO3mQv3
-	 L3ULvUO8a7pekE/uWQDWxpgaQuoqH+BYtq1d12aQQ3hRcJxCihME4xKDIkgk+H9U9+
-	 wWZywprTdNb1g==
-Date: Sat, 10 Oct 2026 12:01:44 -0700
+	b=hGAf1a1OViU/NTMk1uWwjJpCfe7JWVgvsC7BcZ4nOK81r5MaCPeGcJJiiNO6uQe9p
+	 LLffCn3PHnb61Qx14lgDoH2c88eB+ZdwTeklT5UwRaMhM4WWiv/rEUMOQ8a9o9yfT9
+	 1jtIID7cnrc/IRp0wGMMxyORVhFA/2KmXPsk0f97sxAVfzUXZ7GVwL+SFrablFvk3k
+	 tqvkcIFA6Cr7pAx/s10WBaXcLTf3O+Bskeu+bVWczj0WmGXvjNxRqVBTUZqwHmjAhf
+	 TAhL1nVDbtfvxDgbyYJwHDpA2WTvIvMjoZgGiCkjWTru6DYwpjVAct+126FK7R520h
+	 6OxSQbzOJAOEg==
+Date: Sat, 10 Oct 2026 12:02:42 -0700
 From: Namhyung Kim <namhyung@kernel.org>
 To: sashiko-reviews@lists.linux.dev
 Cc: linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v2 2/3] perf symbol: Add missing symsrc__destroy() for
- libbfd
-Message-ID: <asqLmOna3bCigzTG@z2>
+Subject: Re: [PATCH v2 3/3] perf symbol: Set dso symtab type for libbfd
+Message-ID: <asqL0l19OLRbQ6VG@z2>
 References: <20261010182439.9732-1-namhyung@kernel.org>
- <20261010182439.9732-2-namhyung@kernel.org>
- <sashiko-outbox-166826@kernel.org>
+ <20261010182439.9732-3-namhyung@kernel.org>
+ <sashiko-outbox-166825@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -45,74 +44,73 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <sashiko-outbox-166826@kernel.org>
+In-Reply-To: <sashiko-outbox-166825@kernel.org>
 
-On Sat, Oct 10, 2026 at 06:34:56PM +0000, sashiko-bot@kernel.org wrote:
+On Sat, Oct 10, 2026 at 06:34:40PM +0000, sashiko-bot@kernel.org wrote:
 > Thank you for your contribution! Sashiko AI review found 1 potential issue(s) to consider:
-> - [High] perf: double free and UAF in libbfd fallback logic
+> - [High] perf: double-free and state confusion in libbfd fallback path
 > --
 > 
-> commit 27e7b4b66a3038201c422641092c060f7b466328
+> commit 8791c82124897f35132a0fe029d993b2dcd4a6bc
 > Author: Namhyung Kim <namhyung@kernel.org>
 > 
-> perf symbol: Add missing symsrc__destroy() for libbfd
+> perf symbol: Set dso symtab type for libbfd
 > 
-> This commit aims to prevent memory leaks and symbol overwrites by destroying
-> any pending syms_ss when libbfd successfully loads symbols.
-> 
-> Closes: https://lore.kernel.org/r/sashiko-outbox-162540@kernel.org
+> It missed to set the dso symtab type when the symbols are loaded by
+> libbfd.  When it happens both syms_ss and runtime_ss may not be set
+> and won't call dso__load_sym().
 > 
 > > diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
-> > index 6e327eaec8c0e..5e63c3477570c 100644
+> > index 5e63c3477570c..debd0a66f9669 100644
 > > --- a/tools/perf/util/symbol.c
 > > +++ b/tools/perf/util/symbol.c
-> > @@ -1925,6 +1925,10 @@ int dso__load(struct dso *dso, struct map *map)
-> >  			nsinfo__mountns_enter(dso__nsinfo(dso), &nsc);
-> >  
-> >  		if (bfdrc > 0) {
-> > +			if (syms_ss) {
-> > +				symsrc__destroy(syms_ss);
-> > +				syms_ss = NULL;
-> > +			}
+> > @@ -1929,6 +1929,7 @@ int dso__load(struct dso *dso, struct map *map)
+> >  				symsrc__destroy(syms_ss);
+> >  				syms_ss = NULL;
+> >  			}
+> > +			dso__set_symtab_type(dso, symtab_type);
+> >  			ret = 1;
+> >  			break;
+> >  		}
 > 
 > [Severity: High]
-> Can this sequence lead to a use-after-free and double free later in the
-> function?
+> When dso__load_bfd_symbols() succeeds and sets ret = 1, this explicit
+> destruction of syms_ss does not remove the struct from the ss_ array because
+> ss_pos remains unmodified.
 > 
-> If syms_ss and runtime_ss were both set to point to the same symsrc object
-> in an earlier iteration of the candidate debug images loop, this block
-> destroys the object and clears syms_ss, but leaves runtime_ss pointing to
-> the now freed memory. The object also remains tracked in the ss_ array.
+> Does this lead to a double-free later in the cleanup loop?
 > 
-> After the loop breaks, could the fallback logic in dso__load() resurrect the
-> destroyed object:
-> 
-> 	if (runtime_ss && !syms_ss) {
-> 		syms_ss = runtime_ss;
-> 	}
-> 
-> This appears to lead to dso__load_sym() being called with the destroyed 
-> syms_ss object, which would cause a use-after-free and overwrite the 
-> successful ret = 1 result from BFD:
-> 
-> 	if (syms_ss)
-> 		ret = dso__load_sym(dso, map, syms_ss, runtime_ss, kmod);
-> 
-> Finally, since the destroyed object was never removed from the ss_ array, 
-> would the cleanup block at the end of the function trigger a double-free?
-> 
+> tools/perf/util/symbol.c:dso__load() {
+>     ...
 > 	for (; ss_pos > 0; ss_pos--)
 > 		symsrc__destroy(&ss_[ss_pos - 1]);
+>     ...
+> }
+> 
+> Additionally, since runtime_ss is not cleared here, can execution incorrectly
+> fall through to dso__load_sym() and overwrite the successful ret = 1 value
+> from libbfd?
 
-Right, I'll fix.
+I don't expect it sets runtime_ss, but I'll make sure it's cleared.
 
 Thanks,
 Namhyung
 
 > 
-> >  			ret = 1;
-> >  			break;
-> >  		}
+> tools/perf/util/symbol.c:dso__load() {
+>     ...
+> 	if (runtime_ss && !syms_ss) {
+> 		syms_ss = runtime_ss;
+> 	}
+> 
+> 	/* We'll have to hope for the best */
+> 	if (!runtime_ss && syms_ss)
+> 		runtime_ss = syms_ss;
+> 
+> 	if (syms_ss)
+> 		ret = dso__load_sym(dso, map, syms_ss, runtime_ss, kmod);
+>     ...
+> }
 > 
 > -- 
-> Sashiko AI review · https://sashiko.dev/#/patchset/20261010182439.9732-1-namhyung@kernel.org?part=2
+> Sashiko AI review · https://sashiko.dev/#/patchset/20261010182439.9732-1-namhyung@kernel.org?part=3
