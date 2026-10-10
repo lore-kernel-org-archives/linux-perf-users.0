@@ -1,86 +1,137 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from out30-97.freemail.mail.aliyun.com (out30-97.freemail.mail.aliyun.com [115.124.30.97])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62AB7375F88;
-	Fri,  9 Oct 2026 23:30:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06B9F382387;
+	Sat, 10 Oct 2026 03:38:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.97
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791588638; cv=none; b=H1Bnwbhtk/t4ydbY9RI32VSAmMYeGOo3dcNEZhHWL/7bvkPsW1gQGGfTMtl3JCCdOOru4AEB+y2OqpgCYyagfAIFCo4OgY4gP9mtDgi53e2jMnxVxhu4xgTH09zaQjIuq7m5aD57VUDN77t2dgIegMaIZJ2QxtdkVgTpg2dZoYw=
+	t=1791603545; cv=none; b=MNYBfbInpfBxPO9PDVQ22ae7pngN/5deQAWaodkgjuXhp50KJkFb0+W8Xw1pgF9sH3JTDRqXECAtKaOmUlhM2wXleQ0wPcAa3YMuNhBZhQul9iISbw2NRQJp568lmqp2XU1OTupEMr8zDXvSPAhb5VK+GiZk3ovcsQVI3+i04lo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791588638; c=relaxed/simple;
-	bh=Ui+pJiIf6ODUpwnOUJCAfkOOuZNXRdd+cdULx5GvP3Q=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=ajKuz7Ob/xAdQeA497F4tmE5vqp1Y93fhjrIfedY8XSGofrR1JpWWQVSDFX3/QgfJV/ZDQg+VrFMooYaIdV7DuYNzYt5eOgR5C6GN2ruu5ybVvSLPvxGFZjEESXYetSljrE48P7oVQKtw9FadaBUqC9NZU304GDQbHjMIE+L4BQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FsYy+t4f; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1791603545; c=relaxed/simple;
+	bh=ypmEU6kQKeao3mRXaldZjjVkM83muqmZMU5NsPKJLR0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=G4lj2eSq8wvwOW2P2zyvwTcT2Xm9dGBcuu1RmhPv6NQ2MWcLzqgOxrZDfy1lcft6tOneM+udU1vU7gwaUa5mA6ZS+8zFA99rIgo/AVHhEPuO/N+oEglN3edvyoYmtwHLKhyj4o9atACUBVTBkp41t/dTPF8UzoU1nEsV0HjQGvg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=A7q/o2Av; arc=none smtp.client-ip=115.124.30.97
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FsYy+t4f"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 439A11F000FF;
-	Fri,  9 Oct 2026 23:30:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1791588637;
-	bh=eVBpGjj/Jlkd2yrNXwwpugFB3j4a+yN2/7IAtizgYmQ=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc;
-	b=FsYy+t4fJofhgiKBJmTYeXAKkqeNEtwZ14KKBAF7ZpaKYS3bMdHEm0WeRoA3sVx6c
-	 y/jFA36p7dT978pALW0su9wBGGqNIVQ59zBKkKVd7ddSnAujV4e7vVh4l3LvFE0Z6u
-	 1FwP7avgNoP0huMKLsuqG90LcIFbDM1e4k+JwntKLS6GOt8hXlig3UMQsDwgOYbbvW
-	 xp4/G9LjSZqs/m1l/fWn9kq7Gj50uIAlhwR2TNm3rAqV0ZWECdi5D8gghTVf+QVd53
-	 czzaMACRSPtujhFyLZogqqq/oqqgDrWCF944+a+C+O6V+jKvvWj6xEg9jWlw3TEeY+
-	 5xHJypv7zBERg==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 3A5E639263A7;
-	Fri,  9 Oct 2026 23:30:37 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="A7q/o2Av"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1791603530; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=SBB6AWvERMNQNcnv8IpcOyFkUIlmwIKsnK5k1h4Id5s=;
+	b=A7q/o2AvOzEhw+XVOO+FKT/EhKev/5wGvR/VpaRI9XdOIHZBcd1UW+dbdK0h45sB7wCUdNjd3SXx/jaB6FwkBHmtKKkp6k1TZG4AnvnuTJJwNPdAnAUOyeJ09kfc++FAYP5CM51jh3dlCAMgIHK6CpzBoaulHpYCWiupwm3Y4Yc=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R161e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037033178;MF=xueshuai@linux.alibaba.com;NM=1;PH=DS;RN=35;SR=0;TI=SMTPD_---0XCUukT6_1791603526;
+Received: from 30.246.161.155(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0XCUukT6_1791603526 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Sat, 10 Oct 2026 11:38:47 +0800
+Message-ID: <2650577a-a359-495c-a6bf-47a825e9282a@linux.alibaba.com>
+Date: Sat, 10 Oct 2026 11:38:45 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH v1] perf/core: Replace perf_event_header__init_id with
- full
- header init
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <179158863578.1046271.12901337121214907544.git-patchwork-notify@kernel.org>
-Date: Fri, 09 Oct 2026 23:30:35 +0000
-References: <20260929222332.973435-1-irogers@google.com>
-In-Reply-To: <20260929222332.973435-1-irogers@google.com>
-To: Ian Rogers <irogers@google.com>
-Cc: acme@kernel.org, adrian.hunter@intel.com,
- alexander.shishkin@linux.intel.com, ast@kernel.org, bpf@vger.kernel.org,
- james.clark@linaro.org, jolsa@kernel.org, linux-kernel@vger.kernel.org,
- linux-perf-users@vger.kernel.org, mark.rutland@arm.com, mingo@redhat.com,
- namhyung@kernel.org, peterz@infradead.org, song@kernel.org,
- stable@vger.kernel.org
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 5/7] riscv: stacktrace: switch to frame-pointer based
+ unwinder
+To: Karl Mehltretter <kmehltretter@gmail.com>
+Cc: palmer@dabbelt.com, pjw@kernel.org, aou@eecs.berkeley.edu, alex@ghiti.fr,
+ linux-riscv@lists.infradead.org, oleg@redhat.com, rostedt@goodmis.org,
+ mhiramat@kernel.org, mark.rutland@arm.com, peterz@infradead.org,
+ mingo@redhat.com, acme@kernel.org, namhyung@kernel.org,
+ alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com,
+ adrian.hunter@intel.com, james.clark@linaro.org, jpoimboe@kernel.org,
+ jikos@kernel.org, mbenes@suse.cz, pmladek@suse.com, joe.lawrence@redhat.com,
+ shuah@kernel.org, mpdesouza@suse.com, oliver.yang@linux.alibaba.com,
+ zhuo.song@linux.alibaba.com, jkchen@linux.alibaba.com, martin@kaiser.cx,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ linux-perf-users@vger.kernel.org, live-patching@vger.kernel.org,
+ linux-kselftest@vger.kernel.org
+References: <20260914092648.51254-1-xueshuai@linux.alibaba.com>
+ <20260914092648.51254-6-xueshuai@linux.alibaba.com>
+ <20261009185904.82385-1-kmehltretter@gmail.com>
+From: Shuai Xue <xueshuai@linux.alibaba.com>
+In-Reply-To: <20261009185904.82385-1-kmehltretter@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hello:
 
-This patch was applied to netdev/net.git (main)
-by Peter Zijlstra <peterz@infradead.org>:
 
-On Tue, 29 Sep 2026 15:23:32 -0700 you wrote:
-> perf_iterate_sb() invokes its callback for each matching perf_event on
-> the CPU and task context, passing a shared caller-allocated event
-> structure.
+On 10/10/26 2:59 AM, Karl Mehltretter wrote:
+> On Mon, Sep 14, 2026 at 05:26:46PM +0800, Shuai Xue wrote:
+>> +noinline noinstr void arch_stack_walk(stack_trace_consume_fn consume_entry,
+>> +				      void *cookie, struct task_struct *task,
+>> +				      struct pt_regs *regs)
+>> +{
+>> +	struct kunwind_consume_entry_data data = {
+>> +		.consume_entry = consume_entry,
+>> +		.cookie = cookie,
+>> +	};
+>> +
+>> +	kunwind_stack_walk(arch_kunwind_consume_entry, &data, task, regs);
+>> +}
 > 
-> perf_event_header__init_id() mutated header->size in place by adding
-> event->id_header_size, requiring sideband output callbacks to save and
-> restore header fields across iterations. Three sideband callbacks failed
-> to save and restore header.size around perf_event_header__init_id():
-> - perf_event_ksymbol_output()
-> - perf_event_bpf_output()
-> - perf_event_text_poke_output()
+> Hi Shuai Xue,
 > 
-> [...]
+> With this patch and FRAME_POINTER enabled, return_address() returns the
+> caller one level further up than asked for.
+> 
+> return_address() in arch/riscv/kernel/return_address.c skips level + 3
+> entries from arch_stack_walk(). The arm64 original skips level + 2. The
+> third entry exists on mainline because the walk starts inside
+> walk_stackframe() and first reports the return into arch_stack_walk().
+> With 5/7 the walk starts at the caller of arch_stack_walk(), so
+> level + 3 now skips a real caller. CALLER_ADDR1 and up are built on
+> return_address(). The irqsoff tracer and the preemptirq tracepoints use
+> them.
+> 
+> A KUnit test that calls ftrace_return_address() from
+> leaf() <- middle() <- outer() <- check() returns:
+> 
+>               af32da41b032   with series   with series, level + 2
+>    level 0    middle         outer         middle
+>    level 1    outer          check         outer
+> 
+> The change to level + 2 has to depend on FRAME_POINTER. Without it the
+> series keeps walk_stackframe() and the result is the same as on
+> mainline. There, level + 2 makes return_address(0) return an address
+> inside return_address().
 
-Here is the summary with links:
-  - [v1] perf/core: Replace perf_event_header__init_id with full header init
-    https://git.kernel.org/netdev/net/c/b9d1fdc6f4ac
+Hi, Karl,
 
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
+Nice point. Thank you for the thorough review and the KUnit test.
+The analysis is spot on, and your table matches my reading of the code
+exactly.
+
+> 
+> The same extra entry makes stack_trace_save() start one frame too early
+> on mainline. 5/7 fixes that. I have a small fix for it on mainline,
+> meant for stable kernels, which conflicts with 5/7. I would post it with
+> you in Cc. Tell me if you would rather take the return_address.c change
+> into 5/7 first.
+
+Please go ahead with your mainline/stable fix for the
+stack_trace_save() off-by-one as an independent patch. You are right
+that this is a separate mainline bug: stack_trace_save() hardcodes
+.skip = skipnr + 1, i.e. it expects the first entry reported by
+arch_stack_walk() to be the return into stack_trace_save() itself, and
+mainline's walk_stackframe() breaks that contract by reporting the
+return into arch_stack_walk() first. A 7-patch series is not a vehicle
+for stable, so the minimal fix is the right approach there.
+
+Please keep me in Cc when you post it, I will review and test it.
+
+> 
+> Tested with clang 22 and the series applied on 52318cf0fa6e. The
+> "with series" column is the same on QEMU's virt machine and on a
+> BeagleV Ahead (TH1520). Everything else ran on QEMU only.
+
+Thanks again for testing on real hardware (BeagleV Ahead) in addition
+to QEMU, that is much appreciated.
+
+Best regards,
+Shuai Xue
 
 
