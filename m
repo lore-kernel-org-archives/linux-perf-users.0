@@ -1,110 +1,97 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D615E37E5F5;
-	Sat, 10 Oct 2026 06:48:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 823E2341057;
+	Sat, 10 Oct 2026 07:58:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791614910; cv=none; b=G8FSry6oZLWpFK3VaWapFWPHGR3U1pKemJyS0SqSBMf3IEjVIqq1Iq4VdzW4veg50oPcSthvPxE7dIVnQZ6ADNVvS82pDIv0++7kGTzzBKyAvMvr0UTLdMIHnEkB/ZZ+yJGBE8x3q/Mx0fqLNkqUAj0AcznSyGCn0KXh1MBH8/M=
+	t=1791619090; cv=none; b=Gnefj+1uK1RkGxcw4gcxP/S9/L8azF89QXK0+pID8ZxWzM08VsOjQuCYsb6gFezs69brban5bwkNfaCJXtlq3s4/+yLb4hEy3jm9JeLg89GgzsyVhjTQj8/pRXM9hV4YBt/dkkefzQN9g7sEyPaClEdeiX8YSNL0oTVn8W2qHGQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791614910; c=relaxed/simple;
-	bh=basHzKR+/RnPodebMmWqG+h/lGSwn8ytoY9AJr/s4UY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AWye6tMAUW10UcuAKX9H3rE7X9fIjCXGoNUxvyoW6f++u2xZg7oB0yShZE8GlUTcDAbnWa4MiR9YHTCUEDGQaa7SiBUEVmusbElbomS6YT4ts981NchDkYBRYb5XwgcKPHR0YOT3beCduaj+mfctMysy9Q7BSTtcWYisHYnGrBc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LA3rhHmH; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1791619090; c=relaxed/simple;
+	bh=5GfVGCGwoCCpX5T0M8pQ9DG44BzKzNiT/t4tdF2gPDY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=cFanB3upybM2SevV3wUilFYm7eLJQShMOaoJMsQ5SojbVo9/oOSXn4J0rw7UDY2+g5UPmZcA00rjYtFKmr5VAoNADHB9w28lo9fnIksO31TTucnJ3SIiQIMYtR+j2xhT0GfV1gMSfeFY9Ft6bclFqefSxnBCzhahAz/MhUF4Iqo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jBep84uz; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LA3rhHmH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5D78E1F000FF;
-	Sat, 10 Oct 2026 06:48:29 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jBep84uz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9D7BD1F000FF;
+	Sat, 10 Oct 2026 07:58:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1791614909;
-	bh=SUpvYjfMaJ0M6jrxLoqe10JiFY1JZNHO4uSBagTyRfc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=LA3rhHmHigZQGYrlK2TzeVrQN70m5o+/Ec5f0kLftt7oYdxPpd/tgalG2RI76chMU
-	 r7FCEAgzRI19rt9+TtWzLP8S0Bt47Z0/I+qSDgKXEQXf2kCvxVrvQSceEvuW/CHqW1
-	 ovwmWtiDWcPguJ4JBReXrZQerfXi31wxygVsjnCkCfIqDriaI1gy30mpehoRmo7JGI
-	 0o/VNPP3ZXM8MgENW79FhGemqy3E32/nFdoDS3+Wres0FQKZJ5fFCsYil/MnyYSigV
-	 5VgLTcEYs/VR25C70hG8mbLACY3H8QOBRcQeRt/Si/KCM+mzJNzzWJbAeNOc2acfJ1
-	 OshtePCrK616Q==
-Date: Fri, 9 Oct 2026 23:48:28 -0700
+	s=k20260515; t=1791619089;
+	bh=VmjZk25X57G2fa60zsfj1f6r04JNhjNp/z5dODCsypI=;
+	h=From:To:Cc:Subject:Date;
+	b=jBep84uzXwH9AsDjMV1PaqZGo5gDiirYqc4MmiDl9As9f8L7eXLGpZ+OefzXXaecf
+	 ZNxbGRgtGy8sFY/zG+WNM+Ra8SzIuKASkE++d9RpFWygxfzdQcKLrhFzo5NbcI2Yal
+	 /2WL/amjNvq/jerkSeOoAyTCzP+HXJP+d0XHd8NMO+phVh8QgENJMLzPUkzrONSbsX
+	 LFxLrSGwHdIOSlmEdqa5t6T2ktu2mZ4Nlosao59JjBnQGVBQw31y64g3DQak2SaMOl
+	 4eANzYYkHrZ4LH1442Xqclaoejpoocn0EdCbFQmUZ6Jrfpr6Bv+04185966v2bBHeT
+	 /rj2++yVFBVMw==
 From: Namhyung Kim <namhyung@kernel.org>
-To: sashiko-reviews@lists.linux.dev
-Cc: linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v2 10/10] perf test: Fix dso data tests
-Message-ID: <asnfvJYJzV7DqNaL@z2>
-References: <20261006234315.920817-1-namhyung@kernel.org>
- <20261006234315.920817-11-namhyung@kernel.org>
- <sashiko-outbox-162544@kernel.org>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	James Clark <james.clark@linaro.org>
+Cc: Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org,
+	Sashiko <sashiko-bot@kernel.org>
+Subject: [PATCH v1 1/2] perf symbol: Fix symbol loading from libbfd
+Date: Sat, 10 Oct 2026 00:57:59 -0700
+Message-ID: <20261010075800.41638-1-namhyung@kernel.org>
+X-Mailer: git-send-email 2.55.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <sashiko-outbox-162544@kernel.org>
+Content-Transfer-Encoding: 8bit
 
-On Tue, Oct 06, 2026 at 11:59:03PM +0000, sashiko-bot@kernel.org wrote:
-> Thank you for your contribution! Sashiko AI review found 2 potential issue(s) to consider:
-> - [Medium] perf test: NULL pointer dereference on dso__new() failure
-> - [Medium] perf: NULL pointer dereference when dso__new() fails
-> --
-> 
-> commit 2688b984099e76fca1d46c74193628a04bf63e97
-> Author: Namhyung Kim <namhyung@kernel.org>
-> 
-> perf test: Fix dso data tests
-> 
-> This commit fixes the dso data tests by bypassing the ELF check for binary
-> types so that read/write operations on the test file can proceed properly.
-> 
-> > diff --git a/tools/perf/tests/dso-data.c b/tools/perf/tests/dso-data.c
-> > index 46bc3f5972600..5a027ffab541b 100644
-> > --- a/tools/perf/tests/dso-data.c
-> > +++ b/tools/perf/tests/dso-data.c
-> > @@ -138,6 +138,9 @@ static int test__dso_data(struct test_suite *test __maybe_unused, int subtest __
-> >  	dsos__init(&machine.dsos);
-> >  
-> >  	dso = dso__new(file);
-> > +	/* override the binary type for dso data access */
-> > +	dso__set_binary_type(dso, DSO_BINARY_TYPE__SYSTEM_PATH_DSO);
-> > +	dso__set_bintype_searched(dso);
-> 
-> [Severity: Medium]
-> Will this crash if dso__new() fails?
-> 
-> If memory allocation fails and dso__new() returns NULL, these newly added
-> calls will unconditionally dereference the pointer, causing a segmentation
-> fault instead of allowing dsos__add() to handle the NULL safely and fail
-> the test gracefully.
+The dso__load() should return a positive number (number of symbols
+loaded) when it succeded to load symbols.  But dso__load_bfd_symbols()
+only returns 0 and it's hard to check if it actually loaded symbols or
+not.  Let's return the value of dso__has_symbol() and check it in
+dso__load() so that it can return 1 for success.
 
-Ok, will check the return value.
+Reported-by: Sashiko <sashiko-bot@kernel.org>
+Closes: https://lore.kernel.org/r/sashiko-outbox-162540@kernel.org
+Fixes: eac9a4342e5447cad ("perf symbols: Try reading the symbol table with libbfd")
+Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+---
+ tools/perf/util/libbfd.c | 2 +-
+ tools/perf/util/symbol.c | 4 ++--
+ 2 files changed, 3 insertions(+), 3 deletions(-)
 
-> 
-> >  	TEST_ASSERT_VAL("Failed to add dso", !dsos__add(&machine.dsos, dso));
-> >  	TEST_ASSERT_VAL("Failed to access to dso",
-> >  			dso__data_fd(dso, &machine) >= 0);
-> 
-> [ ... ]
-> 
-> > @@ -225,6 +228,9 @@ static int dsos__create(int cnt, int size, struct dsos *dsos)
-> >  
-> >  		TEST_ASSERT_VAL("failed to get dso file", file);
-> >  		dso = dso__new(file);
-> > +		/* override the binary type for dso data access */
-> > +		dso__set_binary_type(dso, DSO_BINARY_TYPE__SYSTEM_PATH_DSO);
-> > +		dso__set_bintype_searched(dso);
-> 
-> [Severity: Medium]
-> Similarly, does this bypass the subsequent NULL check for dso?
-> 
-> By unconditionally dereferencing dso, a failure from dso__new() will cause
-> a crash before reaching the explicit TEST_ASSERT_VAL() check intended to safely
-> handle this exact allocation failure.
-
-Ditto.
-
-Thanks,
-Namhyung
+diff --git a/tools/perf/util/libbfd.c b/tools/perf/util/libbfd.c
+index a907d7c1ac948808..a4dcb406c79e9cee 100644
+--- a/tools/perf/util/libbfd.c
++++ b/tools/perf/util/libbfd.c
+@@ -463,7 +463,7 @@ int dso__load_bfd_symbols(struct dso *dso, const char *debugfile)
+ 	symbols__fixup_duplicate(dso__symbols(dso));
+ 	dso__set_adjust_symbols(dso, true);
+ 
+-	err = 0;
++	err = dso__has_symbols(dso);
+ out_free:
+ 	free(symbols);
+ out_close:
+diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
+index 1175cb60f8206757..4d6c5d60cbaa693f 100644
+--- a/tools/perf/util/symbol.c
++++ b/tools/perf/util/symbol.c
+@@ -1933,9 +1933,9 @@ int dso__load(struct dso *dso, struct map *map)
+ 		if (nsexit)
+ 			nsinfo__mountns_enter(dso__nsinfo(dso), &nsc);
+ 
+-		if (bfdrc == 0) {
++		if (bfdrc > 0) {
+ 			dso__set_symtab_type(dso, symtab_type);
+-			ret = 0;
++			ret = 1;
+ 			break;
+ 		}
+ 
+-- 
+2.55.0
 
