@@ -1,269 +1,133 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yx1-f42.google.com (mail-yx1-f42.google.com [74.125.224.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5DD91A683D;
-	Sat, 10 Oct 2026 22:00:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDB03350A05
+	for <linux-perf-users@vger.kernel.org>; Sun, 11 Oct 2026 20:16:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.224.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791669627; cv=none; b=pvoSx4+58RJt/pZ3LW/aDh8aVfcXnvuIsCVf4SMHeUqU03UIF60qOlHr2fBnANy53S5xaYPwrwCaK9vVXDrbYfWO5AZ3riFu3LwKYe/ymIgpa8AJsQtPAcajJPMkUj30jqmLPhKLkSP4AthoXZGWHZoifKuhq5mOzXwjoAht/Q8=
+	t=1791749808; cv=none; b=iTrgSrKznhxw09O0Lq+YnWq01Lm73KTJtBa2imbrMVdy811TwCTnLRr6zB8+SNUYS1zoEEsKvHRwU4BBPm9Me2ndlta+W2I8iNBopRLPEx2W2nEWLO4RGQedf3Ni6B8ta9acn8zuUaaK6tJlF/s/i0q/rNzHP6Nd62xQ1l1iUpE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791669627; c=relaxed/simple;
-	bh=uTIIgXvNGRKidYtT9y9d/j9O/uWBWM1pGuwQpiO4cmw=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=LxMbN4FMd8LTIFjiPea+nzZKCbl9pWue4MSjHuNEHXw8edbBTn5aa++6NGrRpEtSCEfwX13SoWeZ2wNQ3RrWp5xUIhhJ+2XPHi7ITvpMZa1z5TZgNagyttUk0wpBrTgKFuexBZfsUQWi2ziBmDZ6ZWxse3V+cxAJqVpfdWWVHLc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=ffP+TPLt; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1791749808; c=relaxed/simple;
+	bh=mUa5JfPytUIBNId27ct+pI+y+lXe6dkBu7TtmZ2Okr0=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=EdSyO17M+MjCZBJWTYCJu8lQz4S8KPkX+OujRgk5Z27ZlLBZzRIqrTI36gZC37gNZsKVu3oZDuNIbp/3OCb5dzpM5J3avk7AbzS9Na3tJ3lKRobj5zF9lfKDJs+ZxNaKzldAXbjQv22heA/WqP5Jouh7Aupe5L4zUA3JZO5Hwyc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fxG8KF6k; arc=none smtp.client-ip=74.125.224.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="ffP+TPLt"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4AADC1F000FF;
-	Sat, 10 Oct 2026 22:00:21 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fxG8KF6k"
+Received: by mail-yx1-f42.google.com with SMTP id 956f58d0204a3-66fca0709caso894663d50.1
+        for <linux-perf-users@vger.kernel.org>; Sun, 11 Oct 2026 13:16:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux-foundation.org; s=korg; t=1791669625;
-	bh=N2jYfqmPt2es1xuCkTol8NOahRHgRnTcTOUiwhGzkTU=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References;
-	b=ffP+TPLt1hBG2zdntJGpA4a6eo1Kktyl63gUdmTPWoDV5PB8j6QZDH7O5pu6DND18
-	 83jrFOWryJ2h63yrCPBw+Uh9wavAQ633twrY1q8Eu4fcsINr1B1dFygd9ev9/B+B/N
-	 PiED0VbjIV4o5yPrrgsINTWJg6/2ZfXlko4ls4sM=
-Date: Sat, 10 Oct 2026 15:00:20 -0700
-From: Andrew Morton <akpm@linux-foundation.org>
-To: "Lorenzo Stoakes (ARM)" <ljs@kernel.org>
-Cc: "Liam R. Howlett" <liam@infradead.org>, Vlastimil Babka
- <vbabka@kernel.org>, Jann Horn <jannh@google.com>, Pedro Falcato
- <pfalcato@suse.de>, David Hildenbrand <david@kernel.org>, Mike Rapoport
- <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, Michal Hocko
- <mhocko@suse.com>, Jonathan Corbet <corbet@lwn.net>, Greg Kroah-Hartman
- <gregkh@linuxfoundation.org>, Dennis Dalessandro
- <dennis.dalessandro@cornelisnetworks.com>, Jason Gunthorpe <jgg@ziepe.ca>,
- Leon Romanovsky <leon@kernel.org>, Paul Moore <paul@paul-moore.com>,
- Stephen Smalley <stephen.smalley.work@gmail.com>, Jaroslav Kysela
- <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, Alexei Starovoitov
- <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko
- <andrii@kernel.org>, Eduard Zingerman <eddyz87@gmail.com>, Kumar Kartikeya
- Dwivedi <memxor@gmail.com>, Zi Yan <ziy@nvidia.com>, Baolin Wang
- <baolin.wang@linux.alibaba.com>, Nico Pache <nico.pache@linux.dev>, Ryan
- Roberts <ryan.roberts@arm.com>, Dev Jain <dev.jain@arm.com>, Barry Song
- <baohua@kernel.org>, Lance Yang <lance.yang@linux.dev>, Usama Arif
- <usama.arif@linux.dev>, Kiryl Shutsemau <kas@kernel.org>, Doug Gilbert
- <dgilbert@interlog.com>, "James E.J. Bottomley"
- <James.Bottomley@HansenPartnership.com>, "Martin K. Petersen"
- <mkp@kernel.org>, Simona Vetter <simona@ffwll.ch>, Helge Deller
- <deller@gmx.de>, Sebastian Reichel <sre@kernel.org>, John Hubbard
- <jhubbard@nvidia.com>, Peter Xu <peterx@redhat.com>, Masami Hiramatsu
- <mhiramat@kernel.org>, Oleg Nesterov <oleg@redhat.com>, Peter Zijlstra
- <peterz@infradead.org>, Thomas Gleixner <tglx@kernel.org>, Ingo Molnar
- <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave Hansen
- <dave.hansen@linux.intel.com>, x86@kernel.org, Arnaldo Carvalho de Melo
- <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Mark Rutland
- <mark.rutland@arm.com>, Rik van Riel <riel@surriel.com>, Harry Yoo
- <harry@kernel.org>, Juri Lelli <juri.lelli@redhat.com>, Vincent Guittot
- <vincent.guittot@linaro.org>, Maarten Lankhorst
- <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>,
- Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>,
- Will Deacon <will@kernel.org>, "Aneesh Kumar K.V"
- <aneesh.kumar@kernel.org>, Nick Piggin <npiggin@gmail.com>, Arnd Bergmann
- <arnd@arndb.de>, Muchun Song <muchun.song@linux.dev>, Oscar Salvador
- <osalvador@suse.de>, "Matthew Wilcox (Oracle)" <willy@infradead.org>, Jan
- Kara <jack@suse.cz>, Marc Zyngier <maz@kernel.org>, Oliver Upton
- <oupton@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Madhavan
- Srinivasan <maddy@linux.ibm.com>, Anup Patel <anup@brainfault.org>, Paul
- Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou
- <aou@eecs.berkeley.edu>, Christian Borntraeger <borntraeger@linux.ibm.com>,
- Janosch Frank <frankja@linux.ibm.com>, Claudio Imbrenda
- <imbrenda@linux.ibm.com>, Alexander Gordeev <agordeev@linux.ibm.com>,
- Gerald Schaefer <gerald.schaefer@linux.ibm.com>, Heiko Carstens
- <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, "David S. Miller"
- <davem@davemloft.net>, Andreas Larsson <andreas@gaisler.com>, Alexander
- Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>,
- Matthew Brost <matthew.brost@intel.com>, Joshua Hahn
- <joshua.hahnjy@gmail.com>, Rakie Kim <rakie.kim@sk.com>, Byungchul Park
- <byungchul@sk.com>, Gregory Price <gourry@gourry.net>, Ying Huang
- <ying.huang@linux.alibaba.com>, Alistair Popple <apopple@nvidia.com>, Chris
- Li <chrisl@kernel.org>, Kairui Song <kasong@tencent.com>, Kemeng Shi
- <shikemeng@huaweicloud.com>, Nhat Pham <nphamcs@gmail.com>, Baoquan He
- <baoquan.he@linux.dev>, Youngjun Park <youngjun.park@lge.com>, Johannes
- Weiner <hannes@cmpxchg.org>, Qi Zheng <qi.zheng@linux.dev>, Shakeel Butt
- <shakeel.butt@linux.dev>, Axel Rasmussen <axelrasmussen@google.com>,
- Yuanchu Xie <yuanchu@google.com>, Wei Xu <weixugc@google.com>, Chengming
- Zhou <chengming.zhou@linux.dev>, Michal Hocko <mhocko@kernel.org>, Miklos
- Szeredi <miklos@szeredi.hu>, Xu Xin <xu.xin@linux.dev>, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-usb@vger.kernel.org, linux-rdma@vger.kernel.org,
- selinux@vger.kernel.org, linux-sound@vger.kernel.org, bpf@vger.kernel.org,
- linux-scsi@vger.kernel.org, linux-fbdev@vger.kernel.org,
- dri-devel@lists.freedesktop.org, linux-trace-kernel@vger.kernel.org,
- linux-perf-users@vger.kernel.org, linux-arch@vger.kernel.org,
- linux-fsdevel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- kvmarm@lists.linux.dev, linuxppc-dev@lists.ozlabs.org, kvm@vger.kernel.org,
- kvm-riscv@lists.infradead.org, linux-riscv@lists.infradead.org,
- linux-s390@vger.kernel.org, sparclinux@vger.kernel.org,
- fuse-devel@lists.linux.dev, Ihor Solodrai <ihor.solodrai@linux.dev>, Bert
- Karwatzki <spasswolf@web.de>, Takashi Iwai <tiwai@suse.de>, Emil Tsalapatis
- <emil@etsalapatis.com>
-Subject: Re: [PATCH v5 00/38] mm: make VMA flag semantics explicit,
- eliminate VM_SPECIAL
-Message-Id: <20261010150020.cbd6ce3038e3b6d72e2c92c9@linux-foundation.org>
-In-Reply-To: <20261009-b4-mmap-prepare-vma-flag-sanify-v5-0-923b70125b1e@kernel.org>
-References: <20261009-b4-mmap-prepare-vma-flag-sanify-v5-0-923b70125b1e@kernel.org>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+        d=gmail.com; s=20251104; t=1791749806; x=1792354606; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:content-type:mime-version
+         :message-id:date:subject:from:from:to:cc:subject:date:message-id
+         :reply-to:content-type;
+        bh=LMIFt4Dv9YYDb9vJ6+cJXhs5xmH9sVe/KBqI/bov4Ps=;
+        b=fxG8KF6k5+mW6gdTNTG4F67fBO+eA4n5qdO34dC9x5APqsqi4uaQ8CyYedrMMEiBWt
+         UAo/sFIm2V1ZmlPWeWJr1CdOyWs+WZjnBCyihF3bRTIy3klYKMd9ceBGWF+/i4DxDMBe
+         SBWvTI0CVPSSS73Obasmzh+SkbTwl9TaWx+xPLFU+suSQNmYCglKIU6LBN3kD+Chq2ic
+         PvmWkQHj1UTFyMb0TPAv0Ru4zFIzAsWg/6dEQhTWsNR91niQvCmFY/csPLNlqTE2zc6e
+         uAhyBNm410MaLyAxeqEQ3gCkY3o8COIIu6va8k/deJghbt9MtvlmHYmmxh8Q8+lyM2fD
+         s1tA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1791749806; x=1792354606;
+        h=cc:to:content-transfer-encoding:content-type:mime-version
+         :message-id:date:subject:from:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to:content-type;
+        bh=LMIFt4Dv9YYDb9vJ6+cJXhs5xmH9sVe/KBqI/bov4Ps=;
+        b=CFSAK32sfLfNSblGzLIqOlEcCxu9ljBahYu/6oRDuZyQEQzqHHJP1I8NSNmdjN8tV8
+         pz5GFEhXMG6Db4kH1PKQa5KVEfjsrKMbBr8zG6J++70kFUsFQRvwxjLHff5OTf1tMvYS
+         XB2C/KnEvDQiJheZub/EliG7YQAMuDH3lY8XGMyURgfr7EX6Vh0vs4JsE7vR+RjucK6S
+         ocGyg1cO44Iybn+aXbYsYsHwI1pI2wDCR5ONMG9IeN49CUdoZOZCxnDq5Xd2kwy8ikJq
+         CiaaNLap763NpLj2+Y3BI2fUyEku4N0vXKwAIxVFqGCu/v08TwGC5NRs1tMy506jyAI6
+         iM9w==
+X-Forwarded-Encrypted: i=1; AKwUvBzVfdLlScKj4r+GJyFhJwMbRQT5iVw9SIetX28MAJIQA/CpiAUKLo1nuPaJ6BgbOtoGavuY7cGnz4tVLCz72noE@vger.kernel.org
+X-Gm-Message-State: AFq9FYJmikJbbP8fNS973vV7b0OFsJhx41H4BA+OWR3mEsHm9yun1nWq
+	sPeE6/5peUcDCDnEFMvcTKTeHbH5r71mgBnXlAAfMVPObUR2/ogg6gp7
+X-Gm-Gg: AYBFou3ZZG43RQZD7XsdM9uSpoWGeiXuMnXN9Vb0iwMaNOQjv/ueLOmrvmByqL6m5Yz
+	fU5OdCUdlIr2ci/DDp8mbpTnAYS2Vrr8bCuwkpC0vbwGmlCDGSh4Ae0N/+x9PBVHGiNUXiFvcHt
+	nZEyv+pXi+ddN7+BYUpPEZ85MrjFSqaSCbzUn47SGpg5SY7mv2tFQgRtLEoBpdziZIjUTaGQG6n
+	BpUslPmQE+WlZiIVbrZgcfyRMTJw3yQ1Nd6uMJJbGhKA/egBRWwexiiIbyWphYfzzAxZdumE2c2
+	PTiFhPPMdxlyu6jv6dHS9Hm3tWrbYUWowG9PhZc+h20FDjsxtPYxcVLPlQ3s16bROwh5TdgZtZn
+	u3rqncraBdT9+ok5XbbaCz5eHvr2LnO0xRUn00Dqqtx39jgYjIr8OnDmkPi+IfZQCzuhof32xfE
+	tuzTEOcpmgccZUK+NQw8DqRJfBXnJeYJwMc/MnfZXMVEGyxozjaXujxmpTlMRRraKQb67lAaB5E
+	OoWjPfapQS0LBYOhiKkceBwJHAfLOT9HznzVMBfRpeoJzcR5uO7HAZA
+X-Received: by 2002:a05:690c:6e85:b0:8b0:a352:f96d with SMTP id 00721157ae682-8b0a352fd2bmr4001297b3.11.1791749805566;
+        Sun, 11 Oct 2026 13:16:45 -0700 (PDT)
+Received: from localhost ([2600:1702:7a90:6f9f:8bc4:8aec:108d:7a04])
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-8b07f1ea845sm28267397b3.24.2026.10.11.13.16.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 11 Oct 2026 13:16:43 -0700 (PDT)
+From: Matt Turner <mattst88@gmail.com>
+Subject: [PATCH 0/4] alpha: perf register sampling and user stack dumps
+Date: Sun, 11 Oct 2026 16:16:40 -0400
+Message-Id: <20261011-alpha-perf-regs-v3-v1-0-eaa625a39712@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAAAAAAAC/x3MSQqAMAxA0auUrA10wAGvIi5KjRoQLSkUofTuF
+ pdv8X+BRMKUYFYFhDInfu4G0ykIp78PQt6awWo7GK0N+iueHiPJjkJHwuxwJOt6PQUTvIUWRqG
+ d33+6rLV+S01NGGQAAAA=
+X-Change-ID: 20261001-alpha-perf-regs-v3-7e23508c1ca2
+To: Richard Henderson <richard.henderson@linaro.org>, 
+ Magnus Lindholm <linmag7@gmail.com>
+Cc: linux-alpha@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-doc@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+ Matt Turner <mattst88@gmail.com>
+X-Mailer: b4 0.14.3
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1840; i=mattst88@gmail.com;
+ h=from:subject:message-id; bh=mUa5JfPytUIBNId27ct+pI+y+lXe6dkBu7TtmZ2Okr0=;
+ b=owGbwMvMwCW25rVmCc8sv+mMp9WSGLJOv1uptCh8YuRrwxtOx3f+klebfddBfEKC3JNCEUmFt
+ ctMreJNOz6yMIhxMcwUU2SJW6/IMqttx1Kf09K/YOawMoEMkRZpYAACFga+3MS8UiMdIz1TbUM9
+ QyBDxygeIqfHoJFZXFyaWqSbVlDkkJdfkliSmZ9XrJdfkJpXkF6gl5aZVpKRkV9UnAo0Qi8vtcT
+ U1dHNyNDAxNLRwszJwtHUxNnZydDJzdHR2dXJyNLcxMDZ0tHE1dKcgYtTAOaaa4sZGXo7mf1+B+
+ z12/Eu/shBuwOFs9f1RPd5T66Yfn13a9Os2HJGhkel4i1b+KpcHhzx1so9zvd5YZnmqdYzFw/NM
+ lGfOpWvgBsA
+X-Developer-Key: i=mattst88@gmail.com; a=openpgp;
+ fpr=3BB639E56F861FA2E86505690FDD682D974CA72A
 
-On Fri, 09 Oct 2026 19:03:54 +0100 "Lorenzo Stoakes (ARM)" <ljs@kernel.org> wrote:
+This lets perf sample registers and dump the user stack on alpha, which
+perf record --call-graph dwarf needs to unwind user space.
 
-> The VM_SPECIAL / VMA_SPECIAL_FLAGS mask conflates several unrelated
-> properties:
-> 
-> * Is this managed by core mm, or by a driver mapping MMIO, kernel-allocated
->   pages, or even ordinary pages itself?
-> * Can it be expanded or merged?
-> * Is this a 'weird' case like mlock where migration might race and we
->   'have' to set invalid flags to notify?
-> * Is it another 'weird' case where we just want to stop GUP from touching
->   it?
-> 
-> Driver writers have often been confused about this, and who can blame them?
-> 
-> It also interacts badly with the eternal edgecase known as hugetlb - which
-> sets VMA_DONTEXPAND_BIT but doesn't also want to be treated like a
-> 'special' flag.
-> 
-> Another issue is that we cannot make sensible assumptions about flag
-> use. It's not possible to assume VMA_IO_BIT means iommu because drivers
-> abuse it and mlock abuses it.
-> 
-> Special is also an overloaded term in mm. VDSO and VVAR mappings are also
-> called 'special' but they're special in a... special way.
-> 
-> Sometimes things are called special that are a subset of
-> VMA_SPECIAL_FLAGS (VMA_PFNMAP_BIT and VMA_MIXEDMAP_BIT for instance when it
-> comes to zapping or vm_normal_folio()).
-> 
-> There's a specific kind of special for THP too, which considers
-> PFN map, mixed map 'special' but DAX not.
-> 
-> It's all rather a mess.
-> 
-> This series brings some order to things by both limiting what drivers can
-> do with VMA flags and switching to using predicates that describe
-> behaviour, not arbitrary flags.
+r9-r15 are not in pt_regs, so they cannot be sampled. An unwinder
+therefore cannot get past a first frame that uses $15 as its frame
+pointer (-O0 code or alloca).
 
-Thanks, I've updated mm-unstable to this version.
+The perf tool side is a separate patch for perf-tools-next. libdw also
+needs alpha unwinding support, which I am sending to elfutils-devel.
 
-For some reason, new versions of this series aren't applying when I
-drop the new series in place of the old.  I made the same old bunch of
-reject-fixups, so the below interdiff will show if I messed any of them up.
+---
+Matt Turner (4):
+      alpha: fix stale user_stack_pointer()
+      alpha: stop storing the user stack pointer in pt_regs
+      alpha: use user_stack_pointer() in KSTK_ESP() and dump_elf_thread()
+      alpha: add HAVE_PERF_REGS and HAVE_PERF_USER_STACK_DUMP support
 
-> v5:
-> * Applied tags (thanks everybody!)
-> * Updated 3/38 to fix a bug in __mmap_new_file_vma() by zapping + closing
->   the VMA before setting vma->vm_file NULL to avoid an i_mmap_writable
->   imbalance. A repro was tested before/after and confirmed fixed.
-> * Updated 7/38 to make __map_kernel_pages_prepare() use
->   mmap_assert_write_locked() rather than the weird
->   assert-on-mmap_read_trylock() pattern, as per Suren.
-> * Also update vm_insert_page(), vm_insert_pages() to fix the same pattern
->   and to use the new VMA API, and converted a BUG_ON to a
->   VM_WARN_ON_ONCE().
+ .../features/perf/perf-regs/arch-support.txt       |  2 +-
+ .../features/perf/perf-stackdump/arch-support.txt  |  2 +-
+ arch/alpha/Kconfig                                 |  2 +
+ arch/alpha/include/asm/processor.h                 |  3 +-
+ arch/alpha/include/asm/ptrace.h                    |  7 +--
+ arch/alpha/include/uapi/asm/perf_regs.h            | 45 +++++++++++++++++
+ arch/alpha/include/uapi/asm/ptrace.h               |  2 +-
+ arch/alpha/kernel/Makefile                         |  1 +
+ arch/alpha/kernel/asm-offsets.c                    |  1 -
+ arch/alpha/kernel/entry.S                          |  5 --
+ arch/alpha/kernel/perf_regs.c                      | 56 ++++++++++++++++++++++
+ arch/alpha/kernel/process.c                        |  2 +-
+ arch/alpha/kernel/ptrace.c                         | 12 +++++
+ arch/alpha/kernel/traps.c                          |  8 ----
+ 14 files changed, 122 insertions(+), 26 deletions(-)
+---
+base-commit: 8f5dbfb93440d1aba216a1a34369a65654b94be9
+change-id: 20261001-alpha-perf-regs-v3-7e23508c1ca2
 
-Here's how v5 altered mm.git:
-
- mm/memory.c                       |   20 +++++++++++---------
- mm/vma.c                          |   16 ++++++++--------
- tools/testing/vma/include/stubs.h |    4 ++++
- 3 files changed, 23 insertions(+), 17 deletions(-)
-
---- a/mm/memory.c~b
-+++ a/mm/memory.c
-@@ -2611,10 +2611,11 @@ int vm_insert_pages(struct vm_area_struc
- 
- 	if (!range_in_vma(vma, addr, end))
- 		return -EFAULT;
--	if (!(vma->vm_flags & VM_MIXEDMAP)) {
--		VM_WARN_ON_ONCE(mmap_read_trylock(vma->vm_mm));
--		VM_WARN_ON_ONCE(vma->vm_flags & VM_PFNMAP);
--		vm_flags_set(vma, VM_MIXEDMAP);
-+	if (!vma_test(vma, VMA_MIXEDMAP_BIT)) {
-+		mmap_assert_write_locked(vma->vm_mm);
-+		VM_WARN_ON_ONCE(vma_test(vma, VMA_PFNMAP_BIT));
-+		vma_start_write(vma);
-+		vma_set_flags(vma, VMA_MIXEDMAP_BIT);
- 	}
- 	/* Defer page refcount checking till we're about to map that page. */
- 	return insert_pages(vma, addr, pages, num, vma->vm_page_prot);
-@@ -2626,7 +2627,7 @@ static void __map_kernel_pages_prepare(s
- 	if (vma_desc_test(desc, VMA_MIXEDMAP_BIT))
- 		return;
- 
--	VM_WARN_ON_ONCE(mmap_read_trylock(desc->mm));
-+	mmap_assert_write_locked(desc->mm);
- 	VM_WARN_ON_ONCE(vma_desc_test(desc, VMA_PFNMAP_BIT));
- 	vma_desc_set_flags(desc, VMA_MIXEDMAP_BIT);
- }
-@@ -2785,10 +2786,11 @@ int vm_insert_page(struct vm_area_struct
- {
- 	if (addr < vma->vm_start || addr >= vma->vm_end)
- 		return -EFAULT;
--	if (!(vma->vm_flags & VM_MIXEDMAP)) {
--		BUG_ON(mmap_read_trylock(vma->vm_mm));
--		BUG_ON(vma->vm_flags & VM_PFNMAP);
--		vm_flags_set(vma, VM_MIXEDMAP);
-+	if (!vma_test(vma, VMA_MIXEDMAP_BIT)) {
-+		mmap_assert_write_locked(vma->vm_mm);
-+		VM_WARN_ON_ONCE(vma_test(vma, VMA_PFNMAP_BIT));
-+		vma_start_write(vma);
-+		vma_set_flags(vma, VMA_MIXEDMAP_BIT);
- 	}
- 	return insert_page(vma, addr, page, vma->vm_page_prot, false);
- }
---- a/mm/vma.c~b
-+++ a/mm/vma.c
-@@ -2631,21 +2631,21 @@ static int __mmap_new_file_vma(struct mm
- 	map->vm_file = vma->vm_file;
- 
- 	if (error) {
--		struct file *file = vma->vm_file;
- 		UNMAP_STATE(unmap, vmi, vma, vma->vm_start, vma->vm_end,
- 			    map->prev, map->next);
- 
-+		if (vma->vm_ops->close) {
-+			zap_vma(vma);
-+			/* Safe, because VMA zapped. */
-+			vma_close(vma);
-+		}
-+		if (map_same_file(map))
-+			fput(map->vm_file);
-+
- 		vma->vm_file = NULL;
- 		vma_iter_set(vmi, vma->vm_end);
- 		/* Undo any partial mapping done by a device driver. */
- 		unmap_region(&unmap);
--		vma->vm_file = file;
--		/* Only safe once unmapped. */
--		vma_close(vma);
--
--		if (map_same_file(map))
--			fput(map->vm_file);
--		vma->vm_file = NULL;
- 		return error;
- 	}
- 
---- a/tools/testing/vma/include/stubs.h~b
-+++ a/tools/testing/vma/include/stubs.h
-@@ -329,6 +329,10 @@ static inline void vma_close(struct vm_a
- {
- }
- 
-+static inline void zap_vma(struct vm_area_struct *vma)
-+{
-+}
-+
- static inline int mmap_file(struct file *file, struct vm_area_struct *vma)
- {
- 	return 0;
-_
+Best regards,
+-- 
+Matt Turner <mattst88@gmail.com>
 
