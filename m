@@ -1,63 +1,59 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37E5930ACF1
-	for <linux-perf-users@vger.kernel.org>; Mon, 12 Oct 2026 05:37:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15F3C2DECD3
+	for <linux-perf-users@vger.kernel.org>; Mon, 12 Oct 2026 05:37:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791783431; cv=none; b=NHfJgBhnd3txPk5zpPafUe6lKWpgneGzEUGCnJv3iJq2ofl5wd7Gz6VUlwk6toN3CQPXxjUWHgqMmMNbLad5fFNbd1wkf4x9J7Jebw3avm99I1d3nigtdqC+dY+ni/2ExqbeZP5dfils6hcV6TdR578GVbO34plxqE0eU/RhYRQ=
+	t=1791783471; cv=none; b=n6x92nYqH8pr4mMY3PRUcBICpwa6EiioOJXAelImMl/ckn8OKxpHVp7wbpAuaDk/TuLvqX872Ivq8i5PY4I4sGspKzo5bSfPP4HrZgGvbyr7CRUBco177xQv2KXLPHbGzb9h7wSeLKSkO06z6VGXlreUJVvVk00hMmEnpJ25b3A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791783431; c=relaxed/simple;
-	bh=XQNwFnPFDH1XnFQefk485+TQoZuEBZBqKXGag+DfNhQ=;
+	s=arc-20240116; t=1791783471; c=relaxed/simple;
+	bh=Yj2X9sCw/ussk+NZc1zjHm+pCKSQ5eE/21Rj0vC09b8=;
 	h=Message-ID:From:Subject:To:Cc:In-Reply-To:References:Content-Type:
-	 Date; b=s//E7ne9AIsUsWTXMWE9vtFsslbGHdGosl2hf7fEQRBg1jjfHpetUZFP9zIH+N/1BzofzaAZMgCJW1va0FEq+nMLnJMGjMVfXKhvreUCi4nf1lGwZGSiCqV972dWxeN4m2AKyMdrOA7mUoMNqLkLMx1EVTx20Dd+On+YhVxf4Yw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fHyoheDI; arc=none smtp.client-ip=100.103.45.18
+	 Date; b=GkYiqU5fr4cZcgp7p4x+ROlDPyTZHzzUOtqRpoWMlVbWPkvkyTv7TbUOEe3e6ZvGZcG2SxARpYKwrKcvyXJTIHHPlhtuqnX2ZH3g92ldo02S+KMZIxH8wGxdttpXi7DsU/cHwJa6vOCRtPHbG+IogKu5EB7/07TtOgkh9an6rkc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZGAqgVAL; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fHyoheDI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9F8021F0089C;
-	Mon, 12 Oct 2026 05:37:09 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZGAqgVAL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6C2621F0089B;
+	Mon, 12 Oct 2026 05:37:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1791783429;
-	bh=gk4KilkV4s9VomvGeQyP7beGds69+TVgkO/qLDlq/Ho=;
+	s=k20260515; t=1791783470;
+	bh=HBBh9I4Fh8j5ciqaBGFKbkeNRE7TJ15/XxFg6Nya/4s=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=fHyoheDIC+fLhq+SvaPE38BerdIG0WzCWy7eZaIv9/Kt+F97XUyk6z7v2dbe7kaTq
-	 +aWcro1cApjE0M24uPA1uw9767M026PIDB0l1OxWRwbR9R+aR+zTkZFQ7nyP0kXgy5
-	 5vDwgEPHrnnlnFmV2z5ScUjQYWhkcUaHjCTCTj3dwgrvV3PKEICR9FWI4qFmfc2zIJ
-	 E0iTrGDDXK3/ONqREyFRHHrv6btrlqsoGz0dRFeH/J+eMFKrx08GvXG9tRGc0s7whB
-	 cgT+WxUlXvfNLFhFlnFeUgWRXgyn+G0F1D1VW9SosFmxo0K1rXos8k0Ga8nSc/dpM6
-	 oLP86Vx95UE/Q==
-Message-ID: <sashiko-outbox-167677@kernel.org>
+	b=ZGAqgVALZSGGWdrihkUtZq5Z/YGGltwobeQmYMfj93BqAlYQQlvSB+WZarwIRc+eM
+	 kLTZTSYNdCKS6g76PcyctUqvQtc3X2JB+ihO1rtDdzWUxDqWt9PjmNKM1Pp3yZTY52
+	 yoUOOmvzQUxPtYX7xh6RP4wyVzpPK7/HCGgATVAFs4/QXUlKYRDxd/3s4hAO0V0Tvy
+	 +jh6Ha6zIt+MLQi6/LV/6S1BpIvru/lphFiesWoNzFRjTy3jO4GgfyqE3KzNG8qXyt
+	 GLxORkT3O/EtanqayX1DG0T+llaFLpZHml2ttQMpml+dGui406B58lKUPqwdamj32o
+	 CrrQqd9bzKM9Q==
+Message-ID: <sashiko-outbox-167678@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v2 1/4] perf symbol: Fix symbol loading from libbfd
+Subject: Re: [PATCH v3 10/10] perf test: Fix dso data tests
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Namhyung Kim" <namhyung@kernel.org>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20261012053013.14378-1-namhyung@kernel.org>
-References: <20261012053013.14378-1-namhyung@kernel.org>
+In-Reply-To: <20261012052601.13920-11-namhyung@kernel.org>
+References: <20261012052601.13920-1-namhyung@kernel.org>
+ <20261012052601.13920-11-namhyung@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Mon, 12 Oct 2026 05:37:09 +0000
+Date: Mon, 12 Oct 2026 05:37:49 +0000
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-> The dso__load() should return a positive number (number of symbols
-> loaded) when it succeded to load symbols.  But dso__load_bfd_symbols()
-> only returns 0 and it's hard to check if it actually loaded symbols or
-> not.  Let's return the value of dso__has_symbol() and check it in
-> dso__load() so that it can return 1 for success.
+> Now dso__binary_type() requires that the target file is a valid ELF file
+> containing ".text" section.  But the test only checks cached read/write
+> operation on a file.  Let's set the binary type to bypass the ELF check
+> to read/write the file properly.
 >=20
-> Reported-by: Sashiko <sashiko-bot@kernel.org>
-> Closes: https://lore.kernel.org/r/sashiko-outbox-162540@kernel.org
-> Fixes: eac9a4342e5447cad ("perf symbols: Try reading the symbol table wit=
-h libbfd")
 > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 
 Sashiko has reviewed this patch and found no issues. It looks great!
 
 --=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261012053013.1437=
-8-1-namhyung@kernel.org?part=3D1
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261012052601.1392=
+0-1-namhyung@kernel.org?part=3D10
 
