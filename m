@@ -1,44 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB6C537F75D
-	for <linux-perf-users@vger.kernel.org>; Mon, 12 Oct 2026 23:56:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B30D397694
+	for <linux-perf-users@vger.kernel.org>; Mon, 12 Oct 2026 23:58:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791849413; cv=none; b=dulsKSIeiTdlB5nlf3sFNqN9+eswt0lf6s+F3nC5LGetzyBJrd1sVTX2feN5irjs9RcmExp6JBV3yzAyASDXZKycdkz+dngfePRo/MpVQjyQTgm4y1w0dNxjsQ1csfczaGSq2E626aFm8Y3gXEo3TTSh3Elg7oMhxwOwDMig7Ak=
+	t=1791849530; cv=none; b=I1I4Jnobc41BlP+qU1bXcb/yA/aWnOPLRXuoMkZjGcz/4/QVrZt9vF9kRml+LcS5ZiZxhPvRheunazOuVL8dWv7S8sR30wUF+uBCiwB9WVtNdhcmdh37AEVArPrPv5daUJmwo4uDo5RqMCYJKambV+b87VVOZlJeV/jJyaEfJX0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791849413; c=relaxed/simple;
-	bh=JqUlZAyW6+2LWheeMjNj2na7sG0ywNzz6U+5VKiRg8k=;
+	s=arc-20240116; t=1791849530; c=relaxed/simple;
+	bh=3dbLkPBP8KdbilF1AB/TgqaMqWJs4SvlBnrGIBDRZOE=;
 	h=Message-ID:From:Subject:To:Cc:In-Reply-To:References:Content-Type:
-	 Date; b=DA8hHEvV8UmvUHbKTvB3m6aMk6xmcDljvK/v7HYxUKgpsXiuMv3xsEMfuafcF1qP0pobfCz/CMJCGbttL8SuIJyf3DhbeavHDd3XRifSh8rcS1n1xzqTV5Cv3keK5vcmgs793mk5FlUTbtkDZqsOGyW6Gh9WqftPMAzceoVRFB4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bTGlz5Rz; arc=none smtp.client-ip=100.103.45.18
+	 Date; b=tA14XpeHzMMGcrLO04TeMkBDqt5c9JnSG7/gWO6pArAQnpD1EMn/t4sXPaeUFRrlsTcaQh539va6TSqcFaidthnrj8aZ50Q3QUZR+mYll99XnMk+VlfCEkQTGgUAB4do5UYiM88yvSlV+B556G+H0I3efiYutr97XJBpJEy6OKo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HvCUz8hR; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bTGlz5Rz"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 769321F0089B;
-	Mon, 12 Oct 2026 23:56:52 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HvCUz8hR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E1A0C1F0089B;
+	Mon, 12 Oct 2026 23:58:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1791849412;
-	bh=HA3WSrjtrqt3ilXXy4AfciscmtzifBikRAXPuFZseh4=;
+	s=k20260515; t=1791849529;
+	bh=zUAatOomjs26hKdEhD7wECtZtYr1ANvBDvExXZLWWcw=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=bTGlz5Rz0TeLU5Jla9fxYpt4xdj1wh3AlW4YAIGTXobfZB8rN4clgw89cjB5seIVW
-	 ldjcnJ+uvA03/apgACX8H5rP7fcePlG62tlvE1Wy7L68VanZS4KBx320NdhxWHwk+j
-	 v3kYBCvh7fYztplGyy8FI9aCrnn5avcGjthK8mb0ZIqWhfrltqRkW2dJ3lyXc+BwdV
-	 i//3XHrvIb3Xd6Ac4kEirZLJWCI5AmtkaD3cwj5Vkt0/F8jUgMyYGmdWvlx0zp06Z8
-	 huZRWq1OGYy6LtIfeK7j/negYLHh50VgAjH57E+4CNI/ZAODKwR10xohti8S5N1rD9
-	 E1tSht6eTeUcg==
-Message-ID: <sashiko-outbox-168757@kernel.org>
+	b=HvCUz8hRXetI18QYzyODnb3tdb2a1AV6pSJSdNZvDlP0XTNT4r6r0Um0f7UAWTxWh
+	 kp+TTJV1yp+Ezf8YRfVE+Z1N1d4a8tgFosZPlkHtMsFx24xEGPk9HuSGA/wIsNqbVc
+	 dA2YfWwAi3HozOh4PnDMdZJbAIxnquYR4vZed/RRXDo7SSIsmS7/2AEnSmrXt1VIIz
+	 /4+lU4v7SCusEB6UsaYX2sqVWWqRo4VWG8Vgcp6y20i3M3ySmAJFPqwkj0LrHYrnRe
+	 4rIbB9Vx+Mko6YSN0P9p+eQDFXxhiWBKYqqS0sG4nbbaFi0HIHe9CYvDv8N/wquFB+
+	 1+KqSUHTdE+Yw==
+Message-ID: <sashiko-outbox-168759@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v4 02/10] perf tools: Try linked debug files for DSO
- debug info
+Subject: Re: [PATCH v4 06/10] perf tools: Factor out dso__find_binary_type()
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Namhyung Kim" <namhyung@kernel.org>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20261012234654.60666-3-namhyung@kernel.org>
+In-Reply-To: <20261012234654.60666-7-namhyung@kernel.org>
 References: <20261012234654.60666-1-namhyung@kernel.org>
- <20261012234654.60666-3-namhyung@kernel.org>
+ <20261012234654.60666-7-namhyung@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Mon, 12 Oct 2026 23:56:52 +0000
+Date: Mon, 12 Oct 2026 23:58:48 +0000
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -47,79 +46,59 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
 Thank you for your contribution! Sashiko AI review found 1 potential issue(=
 s) to consider:
-- [Medium] perf dso: DEBUGLINK path resolution flaws in dso__read_binary_ty=
-pe_filename
+- [Medium] perf: spurious FD-eviction and DSO failure due to uninitialized =
+errno
 --
 
-commit 0c61bd07a4d26ed6f7bfc347b3ec0fe6ffc13ca0
+commit 00af7deeab2857b031fe6b82dcee452b2fe4afb8
 Author: Namhyung Kim <namhyung@kernel.org>
 
-perf tools: Try linked debug files for DSO debug info
+perf tools: Factor out dso__find_binary_type()
 
-This commit modifies dso__find_dbginfo_type() to include
-DSO_BINARY_TYPE__DEBUGLINK in its search array. This allows perf to follow
-.gnu_debuglink to locate debug information in separate files.
+This commit separates out the logic to detect the binary type of a DSO by
+checking if the candidate file contains a .text section. It ignores
+data-only DSOs and adds handling to retry with the DSO data open lock if the
+search fails due to hitting the open file limit.
 
 > diff --git a/tools/perf/util/dso.c b/tools/perf/util/dso.c
-> index df03f84c97235..913877b84b2d4 100644
+> index 913877b84b2d4..c42ad0c5c66a7 100644
 > --- a/tools/perf/util/dso.c
 > +++ b/tools/perf/util/dso.c
-> @@ -2111,6 +2111,7 @@ void dso__find_dbginfo_type(struct dso *dso)
->  		DSO_BINARY_TYPE__OPENEMBEDDED_DEBUGINFO,
->  		DSO_BINARY_TYPE__BUILDID_DEBUGINFO,
->  		DSO_BINARY_TYPE__SYSTEM_PATH_DSO,
-> +		DSO_BINARY_TYPE__DEBUGLINK,
+[ ... ]
+> +	do {
+> +		dso__set_binary_type(dso, binary_type_data[i++]);
+> =20
+> -		dso_data->fd =3D open_dso(dso, machine);
+> -		if (dso_data->fd >=3D 0)
+> -			goto out;
+> +		path =3D dso__get_filename(dso, "", &decomp, dso__binary_type(dso));
+> +		if (path =3D=3D NULL) {
+> +			if (errno =3D=3D EMFILE)
+> +				goto open_err;
 
 [Severity: Medium]
-Enabling DSO_BINARY_TYPE__DEBUGLINK here exposes path resolution regression=
-s in
-dso__read_binary_type_filename().
+Could this lead to spurious FD evictions and failure to find the binary type
+if errno is already EMFILE from a prior, unrelated operation?
 
-If the filename lacks slashes, does this logic create an empty string for
-dso_dir, breaking relative paths?
+If dso__get_filename() returns NULL for a normal reason (such as a missing
+build-id cache) without touching errno, it appears a stale EMFILE would cau=
+se
+an early abort to the open_err label.
 
-tools/perf/util/dso.c:dso__read_binary_type_filename() {
-	...
-	last_slash =3D filename + len;
-	while (last_slash !=3D filename && *last_slash !=3D '/')
-		last_slash--;
+Since the caller __dso__find_binary_type() evicts a DSO and retries up to 3
+times, and errno would remain EMFILE across those retries, it seems this mi=
+ght
+permanently mark the DSO binary type as NOT_FOUND.
 
-	strncpy(dso_dir, filename, last_slash - filename);
-	dso_dir[last_slash-filename] =3D '\0';
-	...
-}
+Would it make sense to clear errno before calling dso__get_filename()?
 
-Additionally, does this direct host filesystem I/O bypass the container mou=
-nt
-namespace (/proc/<pid>/root/) fallback context?
-
-tools/perf/util/dso.c:dso__read_binary_type_filename() {
-	...
-	if (!is_regular_file(filename)) {
-		ret =3D -1;
-		break;
-	}
-
-	ret =3D filename__read_debuglink(filename, symfile, PATH_MAX);
-	...
-}
-
-Finally, does this inject the symfs-prefixed dso_dir into the middle of the
-/usr/lib/debug path, searching the host filesystem instead of the symfs
-chroot?
-
-tools/perf/util/dso.c:dso__read_binary_type_filename() {
-	...
-	for (i =3D 0; i < ARRAY_SIZE(debuglink_paths); i++) {
-		snprintf(filename, size,
-				debuglink_paths[i], dso_dir, symfile);
-	...
-}
-
->  		DSO_BINARY_TYPE__NOT_FOUND,
->  	};
->  	const enum dso_binary_type *type;
+> +			continue;
+> +		}
+> +
+> +		errno =3D 0;
+> +		found =3D filename__has_section(path, ".text");
+[ ... ]
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261012234654.6066=
-6-1-namhyung@kernel.org?part=3D2
+6-1-namhyung@kernel.org?part=3D6
