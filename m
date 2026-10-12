@@ -1,167 +1,172 @@
-Received: from mail-qt1-f182.google.com (mail-qt1-f182.google.com [209.85.160.182])
+Received: from mail-qt1-f179.google.com (mail-qt1-f179.google.com [209.85.160.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D39E837C115
-	for <linux-perf-users@vger.kernel.org>; Mon, 12 Oct 2026 21:52:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.160.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 336F92C3768
+	for <linux-perf-users@vger.kernel.org>; Mon, 12 Oct 2026 21:52:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.160.179
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791841927; cv=pass; b=Y7FfXbwEHN3uI2nbw1IcW1mBDh+9s48ioG4fUxrRRRbgtb8OZ8QYnMVkVh/S3PXS/ytn2cjIpJQfMcbVFjqCQ8o6cvCpgQrs8WiqNQhdtcQs33rvZ30hB78MPvmEVa2HB6IzBuNKy+hiXG00bS+tQkMNx3w0qqG9jKRVfCbGP6g=
+	t=1791841981; cv=pass; b=gwGomABipSf3ucYDWASmRbBV/kt92x4dcI4RkmfqPKPwLBkK+XhFdLawGLb7sKusgKXobvTALjza0PiPoMcNTLRbJHU4xvA2bZELNlCAOepXw09q387nz7GB7ZvrXuY4yTuGjSyQtWw0Q4oyhO2AxXRnuF78GKFri3WPZBktfW4=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791841927; c=relaxed/simple;
-	bh=DIL5UuZhGTA2pRNXRbjhs4HWRHo7MrRLOSBM7IepAYU=;
+	s=arc-20240116; t=1791841981; c=relaxed/simple;
+	bh=+m4ZBdotMUSKmqKLmogc7IfuZS7nj6qS7eFUrB6XmnM=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=W09eLhUzFnzKCqFY7ltxKCSRA79FnUIZhZOM5cj5lINc6GRQnbW82u2f6tKVPgExm5KiPZKbcoPMQMYqwXb1BqOouoxit5Y2sjvzkoXc0Uv5AaaFwDqMP5kPQZRDHCV+rIIbkr+LdaOfYPGmwqu63qYrG/Q/XB4xW1voD4f0tuY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Vaiuofci; arc=pass smtp.client-ip=209.85.160.182
+	 To:Cc:Content-Type; b=jdSmTMqLvSLnZ6o1FAME2CXLyRjHbNiTpZS9Af5x/fFp8UYh/kx0OYyvm5Pe6xwGs6+rA3JpAK9Q5iZO2n9M6Yyn3+61WHS3VZdaCoezKucqeOCaJgrG9TvuN9BWxKl7ztxdDqZtzLHXGMPLiybUAE3jHBsFJgRb+MrS8/uFIfg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=JblO7gB7; arc=pass smtp.client-ip=209.85.160.179
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Vaiuofci"
-Received: by mail-qt1-f182.google.com with SMTP id d75a77b69052e-533202fe429so543891cf.0
-        for <linux-perf-users@vger.kernel.org>; Mon, 12 Oct 2026 14:52:05 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1791841925; cv=none;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JblO7gB7"
+Received: by mail-qt1-f179.google.com with SMTP id d75a77b69052e-53584e7c349so562731cf.1
+        for <linux-perf-users@vger.kernel.org>; Mon, 12 Oct 2026 14:52:59 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1791841978; cv=none;
         d=google.com; s=arc-20260327;
-        b=ay6v1oHMo3nu+MlTKV79bLgiEP6FauT8u2Xx41cgU4jAz5Q7pzg1rGcTT7lJ8RaeOr
-         YQUBxZ1MxD3Pyh72ADYZ73aQ4cqpvowlyO5rMn/ehqCWD+H3/a79ponZej4mD2RTH3Eu
-         7myMGJuiEao0Ip/UCxieGn/tfoWpEZTCx2CfTRlFeskCvpg/Z6pTlUyZRf3qImXpLfw2
-         Tna00hgS0WXv6l8Js4PYo6BU98L5tIvARiRs2mK6R9fQTpugfR8FOgInOX7ZgYwP5zra
-         O7IiTpkPC36d8CA5f2MYIYrUJsr9lYsjao3GZnKNj7NsqgkQLDMEFPnCFCHO//KLgjKY
-         9SrQ==
+        b=bNE9tfkjcPgomY1byVGywR1DtfAEJVZ/dEThfAh3+0ZnhuwGVuD5tWTVJBLCUoWsVc
+         iATtyTlNwdrdtIv0e7841ZSsPO2+4rZHY4E6n61dWJOF45LOup+aoUtpdmymhlLHtH8I
+         z4fKWThvNvJXGFb+OZjVXHfpiNJC0XZDOftYVdPhYfMPv87Ceo4yBXIwb7d2SgVhDKRH
+         p7Fa0+oojKAaYprmIekXJ2el1PAfKlgD/DSCz3GASPJzeBsPcAjvv+Y15yoBVPZf0FHv
+         /N0EIVGefL6AsWGKLxRXGGB/KkECkOI5E2/Jv8NaTqdkDXGDOnqqOF0iKhIE01yjki22
+         ZrJQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:dkim-signature;
-        bh=YLoAoEeE0ibBzPThB0BLma4hgq+eUQQ3jaPTysHvBC0=;
-        fh=x5JtiLXzRQftxplt72MPwtwSOxBMAqjsO8qC2E58asA=;
-        b=oYsospcdcOJXFNEeD2sodbOoV2qRTVk4OvKE72vF5Kfo2N2UrMVfCE4OteeFcSwmTo
-         oG+J2WsuIWICAAAR3m5C+YyzsYpVoDXSGwlZQz2Yc5of6l7n78nA6Zm58W0tisl8yium
-         kzBOmMcmpdvIjksqWnevKpUBu2l1GD1W5ivXk3ABkZGPszvYn6w/7WOAvcUgnPIBrmYk
-         nvxPKqMhF/EncdpUUB80mVcyX23v9NVTCWmYS+yZBTlFnAWbd8WuT3lpZTQurn4s1nzR
-         GmvWiOSmrUlyUnj0CzOxPsInnpAbwENpt+iUOoq8QSD2TmSV/tK2G0CrK0086YWx8ZFp
-         j8Zw==;
+        bh=im/gThKmBHzXcSbSs0s0PybtI1TA+tD6SJs96QN0Goo=;
+        fh=J0lUKXl/a6dHbR1n8R7OMTDPmliwCBrdl0FxV/3GQIo=;
+        b=ixJB/ym9zTzcpCqNBq+yJ+ad8z3N8OY8jnA7ZTobylN4wQffPjPpNFT+cklOx1VE+4
+         Z8DYyl3m3/MUUpR6+DDak8mTVftOWeC3jvaQm0uf6lLM60ET+JIoNRvTBehNOPWZiFxN
+         r00WBcCgHYktuizt9kLeAfOG2k+QLZ8H6XxbLqbCegkz62IcZaSM0q+YzaX8foyxd+gv
+         dOckQh+31gOpzMKnLBLdgFoz9KJbqVnNG35dZUdcAyhQFnJtcKnqeISM746aFhqE4bQN
+         xnVR0o0rYNCy5Fm0cZD0m3z7p4h5h+RC3pfcZgpDVUGfxAN5tnbDhMvjq1oIvxh7n6nu
+         4H1A==;
         darn=vger.kernel.org
 ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1791841925; x=1792446725; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1791841978; x=1792446778; darn=vger.kernel.org;
         h=content-transfer-encoding:content-type:cc:to:subject:message-id
          :date:from:in-reply-to:references:mime-version:from:to:cc:subject
          :date:message-id:reply-to:content-type;
-        bh=YLoAoEeE0ibBzPThB0BLma4hgq+eUQQ3jaPTysHvBC0=;
-        b=VaiuofciM1NPp/ND4T0HN6N92O1EY4zQZrZ5VmQbuV7GqZMSiKFsj0LVq8tWIyhdUH
-         IepGmxX75BmT5g1TkHEI7AQj4ZIddR0m8++ndvpbaeyZ10mR7hW58Jko4q6ga3+OpBvX
-         T4HyEIu2fscD5r51TgUVZ3bZQM9wmoLNlE5Xj8bcztg16g+BdYH4j4T7+20vE34GR4Nr
-         b23bYajCDA5skuwvcyWVBJ2zGGcaQGp7F736F4SOty/tKGm303/izuwwLZrgB/Z0ouO4
-         UX6HGYSfSQKeJC65z8JXDdENqlro6e/zUvjtweyoKNvRVNX4Ipg7wx9KSZ3RE4EMywZt
-         i6IA==
+        bh=im/gThKmBHzXcSbSs0s0PybtI1TA+tD6SJs96QN0Goo=;
+        b=JblO7gB7VN8zQztJPp5ER3V6gozhmXuDF33y8omJcsnlVSbJ3wESaOCOGz2sWXNCAk
+         51nvHBYNjNpcYUro2nNJbTrdUIGKknprCXd/LQ5/U6q9FW16Au/IvnUm0V8Z87hBzUpN
+         tW785xneJDlGNqglTfLePC51ocGYbvFMXsHNtdIDJuEmdCzEOnJGCNjjbCp2Hh8+UXZI
+         P/Jbxnssb1YCLI70WicWIfJEnzfXcdK45pMG4XSHKt4xaQw6vPkJSzJvwERys0KPCkSg
+         QWai4/rL6mEuL9cqH+F4lEgttxRJ6mccirkloSFHL8jm8n1dFBZW6v6vQRysgN9MmXDQ
+         Z1ug==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1791841925; x=1792446725;
+        d=1e100.net; s=20260707; t=1791841978; x=1792446778;
         h=content-transfer-encoding:content-type:cc:to:subject:message-id
          :date:from:in-reply-to:references:mime-version:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=YLoAoEeE0ibBzPThB0BLma4hgq+eUQQ3jaPTysHvBC0=;
-        b=IyTtgc4lV4Jl/rVmWzEkeijTAnRv2v6Teiod6mjviajqokGCfnPHIpqjRzwAjZSotP
-         hQ4A1/86+svNPeYZjc0Tqwh39LzN5eYLjoy6AK1GPoogpxsWsvyUZ24gXA311fy+XEX0
-         nw0CI5ATsyM7mwOaTVgqAhojD5mfvtBxFZdYFz1NgL0TDWmNSUfw63/QVUvMsbwIx9xm
-         bJExVjEVve5/DNYIIOrOhICb6QP+fbdQlmH5px+Vs4ePN1QTusIk0mpy7wFgIhEFJXgk
-         rS9X0w4oCEgGLSr9yY5zbSyQPY+uihHH5pH28tmn2jzfoNoya0EVqsrG+wDesgb0W1GY
-         hmFg==
-X-Forwarded-Encrypted: i=1; AKwUvByEKqJS8izFOBhysEuI3hI9Xd3PdDN0xFbutJmDLrBomUkJeLr61j1KHP+t+bzsL4CHycQOoG6akds8YZUiC5gq@vger.kernel.org
-X-Gm-Message-State: AFq9FYKIRVk7n+RjnhhdkCvEWmP9rccAaNANrHuZiLFHegwberGL8AhA
-	fhivRExPqvABPEb86UaTNxzptq+Fz2qJscTk9Dkas2cOpDAPtQ+YtsOsduIbtp+Hc184qOvVYNR
-	OYr6TfnM6UBnhjXX2lYTp+E6axmlyBhfuRedhkGRC
-X-Gm-Gg: AYBFou2d4EvgMCUo8Z0D02Mx84s5aMlHZ7hrVZ2TC3jIH9JaAT1+E/Lns19JJxSxIwn
-	BeCp8L5F8tENhMwqnHPw6D/dftw1pQ9NIw+HlbMzJNA2XWAPcBcHOJUmbBLiP3IoTiQR8kWFd1/
-	1wG+eR47D/U+/rCjU7/aGYqYF/Ym4pcyxI+vvUwSu2MSjKCcKbaUr1ZM+PcvZxO5+vr9eVtwQtK
-	PLiF8Xz6vylMP9PoitCwHbi8+wQfdlBgn+nmCIE69u54ghBkyIfBbmQ0VmMhr52sd7k6zPQ7qSc
-	PhjO9JL6/CIeiPL83npk0VPSa7BQbxfH1YVvqM9t731pv7tMAdyrMndu5d/zEEHmfHq+msLD4BR
-	cuOQDbdoYOg==
-X-Received: by 2002:a05:622a:345:b0:532:eff8:3491 with SMTP id
- d75a77b69052e-535b4f9b8d1mr34243711cf.14.1791841923948; Mon, 12 Oct 2026
- 14:52:03 -0700 (PDT)
+        bh=im/gThKmBHzXcSbSs0s0PybtI1TA+tD6SJs96QN0Goo=;
+        b=eQVb1vPGuJYDNwK9Z+E3DlfmLZCxAZaxe/ICqhqMounCfCKJc12US0HINMff2OzNri
+         KmRRTpM5Fqk32zvb7RuyavbpjLe/qfnnNkkWuF3PhgOugLNL2CExQP49XZhgrAh3rhIu
+         RRFDt75bMADl5t/OqG57I6avPzaAAldI/dEZWnv5XqmkOjbsxbdPG4CDFtbWnapRLMbI
+         pMZvxJBsYiRbLVLqu5KDV72/T5kE6X4C3E1Xx87422qYxOJ9SVrDPFUznnxB+dAtz0wW
+         4NsgARneJc5JEt7ikJX9bWKqtSdRl6WDFWuP+HEL0VM5oEID1Wz3o1Oylr8OIKnidkrV
+         ezhg==
+X-Forwarded-Encrypted: i=1; AKwUvBxUJXbnx5DtDwRqblkdrre4RUqKombgg+xxppHHDDvG3FDBOHhscXkKNaIUvMRa1xX9rKNzLuqy6RIRRKkI+Mgg@vger.kernel.org
+X-Gm-Message-State: AFq9FYIh+Z51dic829TbbmsD0v3N4gl0/8tnO1JSbxH50TN9Hk7QoEh0
+	NJ7t1alrm8+GCSNkWsGDVR8p/8rT23DysAB5l2GhmskMQdniBbYu9U7s8Ge/DJaPH03ota59zZX
+	xrcpDBt8Vq75ufzOJNqi3xzxaX143eOJddVPSN8Bw
+X-Gm-Gg: AYBFou2IRcpuapcoSsyiYdPsugXBgNrbvAMGxOcmJc89NVdpIpJ9nUsGLL6Koo9RqiQ
+	p8zy29c8BnKEdxn2JW3hk8LnRBRbQ1/iDeh30MncigOGzS47Hr3T5+HeXVVzXAhwqxYxviIj3uA
+	7+Bi5MR61aOuiE7VKNXgYW8ij2kZ97RxNCbq9xQ7kvOkwtWRoVG7pg6SGQtVIDdXDL8p2UFLw67
+	notrbWkncktmnsy6CiHCqx2hCktQN8FhmwaUlYxo60jcIDIIaL7hEBu4cHCkcHelU+kJ9m9XTgN
+	x6h5DHEEmDOAxxjFqmw6o8NMWVBWyGiYH9JaewIQYihl4I20DmiQWUpcYkgYBnyOMmF/ajgkyuy
+	ClS2u2XA7Ew==
+X-Received: by 2002:a05:622a:180d:b0:531:34b9:2532 with SMTP id
+ d75a77b69052e-535b320372fmr38054141cf.4.1791841977467; Mon, 12 Oct 2026
+ 14:52:57 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20261012053013.14378-1-namhyung@kernel.org> <20261012053013.14378-4-namhyung@kernel.org>
-In-Reply-To: <20261012053013.14378-4-namhyung@kernel.org>
+References: <20261012053013.14378-1-namhyung@kernel.org>
+In-Reply-To: <20261012053013.14378-1-namhyung@kernel.org>
 From: Ian Rogers <irogers@google.com>
-Date: Mon, 12 Oct 2026 14:51:52 -0700
-X-Gm-Features: AclHuK8fSmSW9prYIWpNexYiVkZwA9i8SN5Rf1NNY9lV-sUOfaw0J3zWzFUeo0c
-Message-ID: <CAP-5=fW1SSoyGKjaujZewF=b3rJ-0vp4kJ-friWNzOQWk+ki5A@mail.gmail.com>
-Subject: Re: [PATCH v2 4/4] perf test: Update PE file test for other locations
+Date: Mon, 12 Oct 2026 14:52:44 -0700
+X-Gm-Features: AclHuK9GIcDDu7m2aY1N0pJVCrUWg_SSeJzS9Uh8FwFp_eHcRQ5Z4QcHRhA07OM
+Message-ID: <CAP-5=fVztdzY2MVwM+9fAW0HoDBKA=KbAzN_fBBHi4M8i8eZMw@mail.gmail.com>
+Subject: Re: [PATCH v2 1/4] perf symbol: Fix symbol loading from libbfd
 To: Namhyung Kim <namhyung@kernel.org>
 Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, James Clark <james.clark@linaro.org>, 
 	Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
 	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, 
-	LKML <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org
+	LKML <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org, 
+	Sashiko <sashiko-bot@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
 On Sun, Oct 11, 2026 at 10:30=E2=80=AFPM Namhyung Kim <namhyung@kernel.org>=
  wrote:
 >
-> The test__pe_file_parsing() expects the test is in the tools/perf
-> directory, but it could be root or a separate build directory.  Let's
-> update the logic to try other paths like in the shell_tests__dir_fd().
+> The dso__load() should return a positive number (number of symbols
+> loaded) when it succeded to load symbols.  But dso__load_bfd_symbols()
+> only returns 0 and it's hard to check if it actually loaded symbols or
+> not.  Let's return the value of dso__has_symbol() and check it in
+> dso__load() so that it can return 1 for success.
 >
-> Also add some debug messages to inform users why it's skipped.
->
+> Reported-by: Sashiko <sashiko-bot@kernel.org>
+> Closes: https://lore.kernel.org/r/sashiko-outbox-162540@kernel.org
+> Fixes: eac9a4342e5447cad ("perf symbols: Try reading the symbol table wit=
+h libbfd")
 > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-> ---
->  tools/perf/tests/pe-file-parsing.c | 13 +++++++++++--
->  1 file changed, 11 insertions(+), 2 deletions(-)
->
-> diff --git a/tools/perf/tests/pe-file-parsing.c b/tools/perf/tests/pe-fil=
-e-parsing.c
-> index 3979f38bf127c218..78dae7e43603b9f8 100644
-> --- a/tools/perf/tests/pe-file-parsing.c
-> +++ b/tools/perf/tests/pe-file-parsing.c
-> @@ -74,10 +74,17 @@ static int test__pe_file_parsing(struct test_suite *t=
-est __maybe_unused,
->  {
->         struct stat st;
->         char path_dir[PATH_MAX];
-> +       static const char * const tests_dirs[] =3D {
-> +               "./tools/perf/tests",
-> +               "./tests",
-> +               "./source/tests"
 
-I'm not sure where "source/tests" comes from?
-nit: could we add the exec_path case to the list?
+Reviewed-by: Ian Rogers <irogers@google.com>
 
 Thanks,
 Ian
 
-> +       };
+> ---
+>  tools/perf/tests/pe-file-parsing.c | 2 +-
+>  tools/perf/util/libbfd.c           | 2 +-
+>  tools/perf/util/symbol.c           | 4 ++--
+>  3 files changed, 4 insertions(+), 4 deletions(-)
 >
->         /* First try development tree tests. */
-> -       if (!lstat("./tests", &st))
-> -               return run_dir("./tests");
-> +       for (size_t i =3D 0; i < ARRAY_SIZE(tests_dirs); ++i) {
-> +               if (!lstat(tests_dirs[i], &st))
-> +                       return run_dir(tests_dirs[i]);
-> +       }
+> diff --git a/tools/perf/tests/pe-file-parsing.c b/tools/perf/tests/pe-fil=
+e-parsing.c
+> index 30c7da79e109b480..3979f38bf127c218 100644
+> --- a/tools/perf/tests/pe-file-parsing.c
+> +++ b/tools/perf/tests/pe-file-parsing.c
+> @@ -59,7 +59,7 @@ static int run_dir(const char *d)
+>         TEST_ASSERT_VAL("Failed to get dso", dso);
 >
->         /* Then installed path. */
->         snprintf(path_dir, PATH_MAX, "%s/tests", get_argv_exec_path());
-> @@ -85,6 +92,7 @@ static int test__pe_file_parsing(struct test_suite *tes=
-t __maybe_unused,
->         if (!lstat(path_dir, &st))
->                 return run_dir(path_dir);
+>         ret =3D dso__load_bfd_symbols(dso, debugfile);
+> -       TEST_ASSERT_VAL("Failed to load symbols", ret =3D=3D 0);
+> +       TEST_ASSERT_VAL("Failed to load symbols", ret > 0);
 >
-> +       pr_debug("cannot find the tests directory\n");
->         return TEST_SKIP;
->  }
+>         dso__sort_by_name(dso);
+>         sym =3D dso__find_symbol_by_name(dso, "main", &idx);
+> diff --git a/tools/perf/util/libbfd.c b/tools/perf/util/libbfd.c
+> index a907d7c1ac948808..a4dcb406c79e9cee 100644
+> --- a/tools/perf/util/libbfd.c
+> +++ b/tools/perf/util/libbfd.c
+> @@ -463,7 +463,7 @@ int dso__load_bfd_symbols(struct dso *dso, const char=
+ *debugfile)
+>         symbols__fixup_duplicate(dso__symbols(dso));
+>         dso__set_adjust_symbols(dso, true);
 >
-> @@ -93,6 +101,7 @@ static int test__pe_file_parsing(struct test_suite *te=
-st __maybe_unused,
->  static int test__pe_file_parsing(struct test_suite *test __maybe_unused,
->                           int subtest __maybe_unused)
->  {
-> +       pr_debug("libbfd is not available\n");
->         return TEST_SKIP;
->  }
+> -       err =3D 0;
+> +       err =3D dso__has_symbols(dso);
+>  out_free:
+>         free(symbols);
+>  out_close:
+> diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
+> index 5d98888d068c741a..a394e742f9b18812 100644
+> --- a/tools/perf/util/symbol.c
+> +++ b/tools/perf/util/symbol.c
+> @@ -1930,8 +1930,8 @@ int dso__load(struct dso *dso, struct map *map)
+>                 if (nsexit)
+>                         nsinfo__mountns_enter(dso__nsinfo(dso), &nsc);
+>
+> -               if (bfdrc =3D=3D 0) {
+> -                       ret =3D 0;
+> +               if (bfdrc > 0) {
+> +                       ret =3D 1;
+>                         break;
+>                 }
 >
 > --
 > 2.55.0
