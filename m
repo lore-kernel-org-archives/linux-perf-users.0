@@ -1,447 +1,412 @@
-Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C33DB4C2257
-	for <linux-perf-users@vger.kernel.org>; Mon, 12 Oct 2026 17:37:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.208.53
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791826658; cv=pass; b=UWLlKLmCv2eNk60BxJW+spfuhq9n/lHXp29s2rq+7kd2GjsxYk/e8YUJSqnFcLh4UmLDaxJZtEykVKm2mkG+eXPUA6rwNNE9fBT198bDb4Xeo6Wi6k1Q/W8I7YqRGw8JbQ5HcIWQwKl9yOZsKQXXRJfK62qXYjGBiIsi/38zIog=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791826658; c=relaxed/simple;
-	bh=1N5n/3zz0Zjp7sSY6i6LkRUv7L4iz47nLVlNIW4/+SQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Q11gygTRb1tAWruc80juHaYOIGzRgM9hnFJ6mfBNqEyUUNQklIqe2ITNKFr15yu+lGbGwkG5vmRthJkIB6Tp5Wscnn5bxsvdx3SKuzYyDBrMyq1M35b/h90gjCp892H4wvmamvKkHZ47WslQ6/PPer2iFqGHoZmPQ8+m+C4ssgg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JUUSbhQu; arc=pass smtp.client-ip=209.85.208.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EB184BD352;
+	Mon, 12 Oct 2026 17:47:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1791827221; cv=none; b=afROOSm+ddecHhYi9NE9VUjJOfWoYrxvGb3mdXiA+HSm9JuUM7sxCdNf9OelHnR6pi/0ZYf9zeQ4OO4MMqbbwfnz4g7wjyYHYuVWyquNsBUgLlFBtaY8rUpkYPMx6QJrlxneMYwMAIJcoooqBG+xlLLbNv1Daic2elaVt5dxi/o=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1791827221; c=relaxed/simple;
+	bh=nyKRRiQ3JiVmpS6jWZ8zWDpKiRl2pYCyNlDukVaFLMI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=K73chFCi7fOwlOF+mwk9IWwERPxU/PfWyAviVYaF86RqClDPMC70tFiyrVdSFWVEBAzCtMz53EgU5hPhjDur2DnTAcIk/BPrCoVRRw1JCSh9S4/JokMnV8oXxPKLEcqyrHwQ+cn2OVHknRXYZ59L3eLThURkvtpWPq9kC8CshXg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ihX6vADg; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JUUSbhQu"
-Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-6b1aa27963eso1652598a12.1
-        for <linux-perf-users@vger.kernel.org>; Mon, 12 Oct 2026 10:37:35 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1791826654; cv=none;
-        d=google.com; s=arc-20260327;
-        b=fvzIE6qwXL0bWeDJQaHTrvvAkvoEsLJbs1yeacCuQFDTIWL2Qy7q207qArZ/d4lsr/
-         ycerFbuVWsPed/995vRlu2iwGqG30+f7BbnvHc66VMrw/4p1KivAaINQsv6RerJnqfHv
-         ywRmmBVMosatwe28vWa/uaVOkoWMHXU90OZeLg4HSiDcviTClF1jljcEQyt0AXBXTPik
-         Z4w2GKuEf/LmUsDTY3VwMNmQ2mCrvfpMI5+FgIs2r8Tlj/Zr++wz/90Ofk11pOz2KyOL
-         hxr7bXCvxtY/tOVZqGrQonwEJyUHPZ/4mQV26xdfSowngdqvH6K6dsztxmLeXhtlAG0H
-         5LhA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=6oJugGejJ2qNu0yOjeAxPdT/Eyn7Sp/D3cJTxP3vaC8=;
-        fh=YQ+1sxKK2M/1rHMgHq0Hm4xb+LUHDOPgMTe6wC9DEQQ=;
-        b=dCOlL5ckoaP4rWN5/o0hoI2TaNiBXmsBCQDU5nkiVC4ijOCcamc1pD7KMuhHzjm7xI
-         Zd83h7lBOeJaVUAHgXPUjxXeAUdYLWz0nPuStV4eXs5XJrr/NmcI6fsJhBfk2b+JQHxy
-         Lh58aI5mmpvlEJ8jRoP76ZvXtnkkTDmor6QFQ4U0DtUlGJB/rbO+N5a0GCpmOy+kES64
-         gjNxzR+3o8TfbvuwJvZ9Nr/EYzxStOdAJ6IoxYwHRyWBy0d0jjUO8n1FPwP3ibYglwao
-         hktQqgtkVRwh/soLGZ33uFaReTfuy2bC3R0pB5P9z7+whdZF9uPRXro5lRaEZQwJgslm
-         dr5w==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1791826654; x=1792431454; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=6oJugGejJ2qNu0yOjeAxPdT/Eyn7Sp/D3cJTxP3vaC8=;
-        b=JUUSbhQuZ/p3RWcMjlBJEWP8NcIzr7ZvT6w367GYmbwsEhGYPKiVuEQwLBxaCpedkv
-         AQYAo+Cz1qynQISoe9XYwD3+hXhMwzuqpfZM6FUEqC9XznLX663lMai9cb95ySlkb8hG
-         x/PbcjV7SQizXVJNYHpkRdjfAzXupMWvccAWTL/+0OWKoBh7rD3SHXQrUnK0DFuSN5/q
-         j3Z3O2og+SXu6MsTsMwhvK8XqSvm/iiu9UBD3zELvu6M1USnK3mBEOxm2/TMXM4CBU0M
-         SwIz4aSmxdxsoY9w+bmYaVfi9MpSRPq/gOrJrRouZe9wBrjHNhuBbhubBmBPt3GIiZkX
-         t1Zg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1791826654; x=1792431454;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=6oJugGejJ2qNu0yOjeAxPdT/Eyn7Sp/D3cJTxP3vaC8=;
-        b=MOo8QmD2UbAQho3W05fvbOSIBonzNqXYZ9d23dzjO6w8F+UzDqR81s5OOOgL7CCDWU
-         Bf9c2NOVyYCULkaLGJT+3m4Yg2Bb+saVtUi091c4KQBLparLq95X3TTiBTA5fT3SmwG2
-         1IeLXhEa/ueDyarjiVnvSQkwf5h9shN1hWbxblKhzzpC0urTfxiLvTl3arKONXOI3lBj
-         ouU6A1dis3ISQ0vJCPiYxyf/2C4PwuvRS0mtYK+lSrkK0YLrA9GYjSVjaM3FhRyEn+Nb
-         uZXQYvQNSK2TBf7U9cX7CuaqAXOUhh0Yt/iJiGG9t4+xdw6bt0Z+8YB9gNZeZrTBHakm
-         1naw==
-X-Forwarded-Encrypted: i=1; AKwUvBz4wqseKQ4/AZWhXOKey7i/cX43VVw9CQ/atQqeJMmYAx2HTbON2fZMt3VP3L3PzeHzW/pLWrvWdkNCO6h6Kly8@vger.kernel.org
-X-Gm-Message-State: AFq9FYLnCmrzwLN8QjmnqbjP+snV3+zXZnNzujzrhI3ld3EYIEJKDdr1
-	Je5IcTMhJeZUFbTQUH+080huZTdP1D/7Zgp5JbdmI9f/YRagf3O6z9z6p1sBCAr+uQTSIAeuEcu
-	eW4EAj29vml189eF9bTnaw7MibNOh8Do=
-X-Gm-Gg: AYBFou0UXB0N7nZ0re9ILwfHgCaiM1PP1vnWiestfl8/p1B0PTnj6Xtk/XM/P1Fx/jB
-	D4XFb4dQ7EyYO0sUoMnW7jKsYIScsSKAtl/OU8rRa+QKnfFvmDyjIjUhu13xrWvqdf6FMVD7tKc
-	wuxa88oZ3cy2kVEv85/nAOssLIUv5fDP1tyLIxph77u8/RbRlgEDInwg2GbdFW+64T6aOdqi7Yw
-	qRp2jKwaMFas12FGRY+m6yrly7wXZP8xc2F2yz61AWQHPN0id51Xv9nVd50JX4O3mx7RHgyt87H
-	dEFkjeNJqC4RyopJSOKG46qys25UcTUJMrYuTuZDK19mn2N6ufTm0kws6zA9lgB0U7L2gPLw7s5
-	unWKOfXU3WXwvgWYJpwFFC1HBnkZDCWmdSQ78BDxoVj7lq63eSMZg
-X-Received: by 2002:a17:907:3f10:b0:c2e:204d:9490 with SMTP id
- a640c23a62f3a-c31a704c117mr1087014266b.17.1791826653858; Mon, 12 Oct 2026
- 10:37:33 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ihX6vADg"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 67E231F0089B;
+	Mon, 12 Oct 2026 17:46:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1791827219;
+	bh=+g5TXryhSnKPgSPaqVMSsv6/T+/UMkqlwUebHC3VUds=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=ihX6vADgFuOE35cu0zGAhteEVahYq066vTf05uMn2wQqi0hmjfZuiiGTMFMR9hWXh
+	 xnW7REmcc8e1p3/WcFwjupa8SppqNwX/y9mIjcYy3VHazi7OTmaWgP2V5vUwjHi9I5
+	 kNk8dToyKFzBYNV18fU2ztlaDEJQ6Y1VLVwZP7qX7OVegsucIsOL5qeLI+kOAMdpKI
+	 5hOyy90zfW/wGKFCnCd4rlbFF+e0fhiASRsSS4s5sjVjyqospM0EHf5F1QM381KtzM
+	 1dGRP+bV4orEz850LW6SfHDrkY7tFGGxMVHygnSeQy06A/xo4vxVoddJq6QQzB1LU7
+	 8DAZLz8edumdA==
+Date: Mon, 12 Oct 2026 18:46:20 +0100
+From: "Lorenzo Stoakes (ARM)" <ljs@kernel.org>
+To: "David Hildenbrand (Arm)" <david@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>, 
+	"Liam R. Howlett" <liam@infradead.org>, Vlastimil Babka <vbabka@kernel.org>, 
+	Jann Horn <jannh@google.com>, Pedro Falcato <pfalcato@suse.de>, 
+	Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, 
+	Michal Hocko <mhocko@suse.com>, Jonathan Corbet <corbet@lwn.net>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>, 
+	Jason Gunthorpe <jgg@ziepe.ca>, Leon Romanovsky <leon@kernel.org>, 
+	Paul Moore <paul@paul-moore.com>, Stephen Smalley <stephen.smalley.work@gmail.com>, 
+	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
+	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	Andrii Nakryiko <andrii@kernel.org>, Eduard Zingerman <eddyz87@gmail.com>, 
+	Kumar Kartikeya Dwivedi <memxor@gmail.com>, Zi Yan <ziy@nvidia.com>, 
+	Baolin Wang <baolin.wang@linux.alibaba.com>, Nico Pache <nico.pache@linux.dev>, 
+	Ryan Roberts <ryan.roberts@arm.com>, Dev Jain <dev.jain@arm.com>, Barry Song <baohua@kernel.org>, 
+	Lance Yang <lance.yang@linux.dev>, Usama Arif <usama.arif@linux.dev>, 
+	Kiryl Shutsemau <kas@kernel.org>, Doug Gilbert <dgilbert@interlog.com>, 
+	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>, "Martin K. Petersen" <mkp@kernel.org>, 
+	Simona Vetter <simona@ffwll.ch>, Helge Deller <deller@gmx.de>, Sebastian Reichel <sre@kernel.org>, 
+	John Hubbard <jhubbard@nvidia.com>, Peter Xu <peterx@redhat.com>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Oleg Nesterov <oleg@redhat.com>, 
+	Peter Zijlstra <peterz@infradead.org>, Thomas Gleixner <tglx@kernel.org>, 
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, Arnaldo Carvalho de Melo <acme@kernel.org>, 
+	Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Rik van Riel <riel@surriel.com>, Harry Yoo <harry@kernel.org>, Juri Lelli <juri.lelli@redhat.com>, 
+	Vincent Guittot <vincent.guittot@linaro.org>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+	David Airlie <airlied@gmail.com>, Will Deacon <will@kernel.org>, 
+	"Aneesh Kumar K.V" <aneesh.kumar@kernel.org>, Nick Piggin <npiggin@gmail.com>, Arnd Bergmann <arnd@arndb.de>, 
+	Muchun Song <muchun.song@linux.dev>, Oscar Salvador <osalvador@suse.de>, 
+	"Matthew Wilcox (Oracle)" <willy@infradead.org>, Jan Kara <jack@suse.cz>, Marc Zyngier <maz@kernel.org>, 
+	Oliver Upton <oupton@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, 
+	Madhavan Srinivasan <maddy@linux.ibm.com>, Anup Patel <anup@brainfault.org>, Paul Walmsley <pjw@kernel.org>, 
+	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
+	Christian Borntraeger <borntraeger@linux.ibm.com>, Janosch Frank <frankja@linux.ibm.com>, 
+	Claudio Imbrenda <imbrenda@linux.ibm.com>, Alexander Gordeev <agordeev@linux.ibm.com>, 
+	Gerald Schaefer <gerald.schaefer@linux.ibm.com>, Heiko Carstens <hca@linux.ibm.com>, 
+	Vasily Gorbik <gor@linux.ibm.com>, "David S. Miller" <davem@davemloft.net>, 
+	Andreas Larsson <andreas@gaisler.com>, Alexander Viro <viro@zeniv.linux.org.uk>, 
+	Christian Brauner <brauner@kernel.org>, Matthew Brost <matthew.brost@intel.com>, 
+	Joshua Hahn <joshua.hahnjy@gmail.com>, Rakie Kim <rakie.kim@sk.com>, Byungchul Park <byungchul@sk.com>, 
+	Gregory Price <gourry@gourry.net>, Ying Huang <ying.huang@linux.alibaba.com>, 
+	Alistair Popple <apopple@nvidia.com>, Chris Li <chrisl@kernel.org>, Kairui Song <kasong@tencent.com>, 
+	Kemeng Shi <shikemeng@huaweicloud.com>, Nhat Pham <nphamcs@gmail.com>, Baoquan He <baoquan.he@linux.dev>, 
+	Youngjun Park <youngjun.park@lge.com>, Johannes Weiner <hannes@cmpxchg.org>, 
+	Qi Zheng <qi.zheng@linux.dev>, Shakeel Butt <shakeel.butt@linux.dev>, 
+	Axel Rasmussen <axelrasmussen@google.com>, Yuanchu Xie <yuanchu@google.com>, Wei Xu <weixugc@google.com>, 
+	Chengming Zhou <chengming.zhou@linux.dev>, Michal Hocko <mhocko@kernel.org>, 
+	Miklos Szeredi <miklos@szeredi.hu>, Xu Xin <xu.xin@linux.dev>, linux-mm@kvack.org, 
+	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, linux-usb@vger.kernel.org, 
+	linux-rdma@vger.kernel.org, selinux@vger.kernel.org, linux-sound@vger.kernel.org, 
+	bpf@vger.kernel.org, linux-scsi@vger.kernel.org, linux-fbdev@vger.kernel.org, 
+	dri-devel@lists.freedesktop.org, linux-trace-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, linux-arch@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, linuxppc-dev@lists.ozlabs.org, 
+	kvm@vger.kernel.org, kvm-riscv@lists.infradead.org, linux-riscv@lists.infradead.org, 
+	linux-s390@vger.kernel.org, sparclinux@vger.kernel.org, fuse-devel@lists.linux.dev, 
+	Ihor Solodrai <ihor.solodrai@linux.dev>, Bert Karwatzki <spasswolf@web.de>
+Subject: Re: [PATCH v5 07/38] mm: add mmap action for discontiguous kernel
+ page mapping
+Message-ID: <as0S-4wDLCJGEItq@gremlin>
+References: <20261009-b4-mmap-prepare-vma-flag-sanify-v5-0-923b70125b1e@kernel.org>
+ <20261009-b4-mmap-prepare-vma-flag-sanify-v5-7-923b70125b1e@kernel.org>
+ <56cc2787-134b-48f0-a9e2-840f57b28607@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20261011-alpha-perf-tools-regs-v1-1-2a5940e22548@gmail.com>
-In-Reply-To: <20261011-alpha-perf-tools-regs-v1-1-2a5940e22548@gmail.com>
-From: Magnus Lindholm <linmag7@gmail.com>
-Date: Mon, 12 Oct 2026 19:37:22 +0200
-X-Gm-Features: AclHuK9g9AjouZu8VFnD7j552Sv2MfVOhv4e0ioBX4Vimz9VINM2CAtbUgrfDCc
-Message-ID: <CA+=Fv5SDnzQQDzyhaQ37kWJMjTOHP0NHuAS6kJHwT8_Zqyjd-w@mail.gmail.com>
-Subject: Re: [PATCH] perf regs: Add alpha support
-To: Matt Turner <mattst88@gmail.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	James Clark <james.clark@linaro.org>, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, 
-	Richard Henderson <richard.henderson@linaro.org>, linux-alpha@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <56cc2787-134b-48f0-a9e2-840f57b28607@kernel.org>
 
-Hi Matt,
+On Mon, Oct 12, 2026 at 05:03:02PM +0200, David Hildenbrand (Arm) wrote:
+> On 10/9/26 20:04, Lorenzo Stoakes (ARM) wrote:
+> > The existing kernel page mapping mmap actions allow for partial and full
+> > mapping of an array of struct page pointers.
+> >
+> > However some drivers require the mapping of discontiguous ranges. Permit
+> > this by providing discontig_kernel_page_ops which allows a driver to
+> > specify how the operation should begin and how batches of pages should be
+> > retrieved.
+> >
+> > It uses the minimum exposed interface to do so, providing address, page
+> > offset and both vm_private_data state and a local private state object.
+> >
+> > ops->init can establish state for the operation, and ops->get outputs the
+> > pages to map and their count. Should an error arise the core unmaps the
+> > VMA, invoking vm_ops->close, which is therefore where any state established
+> > by ops->init is released.
+> >
+> > Also update the compatibility layer to do this too via
+> > compat_mmap_action_abort().
+> >
+> > Batches may not exceed the VMA, but may map less than its full range in
+> > case the driver wishes to allow the user to map an area larger than the
+> > available data.
+> >
+> > To use it, users invoke mmap_action_map_discontig_kernel_pages() with
+> > initial local private state and a set of operations.
+> >
+> > Users can then use one of the provided helper functions to perform an
+> > action:
+> >
+> > * discontig_kernel_map_abort() - Abort and leave the mapping as it has
+> >   been accumulated so far.
+> > * discontig_kernel_map_page() - Map a single page, or a compound page given
+> >   its head page.
+> > * discontig_kernel_map_page_range() - Maps a struct page ** array of a
+> >   specified count, mapping only those pages which fit in the VMA.
+> >
+> > While here, update vm_insert_page() and vm_insert_pages() to assert the
+> > mmap write lock is held rather than the bizarre assert !mmap_read_trylock()
+> > and use the new VMA API so all code paths are consistent.
+> >
+> > Also convert a BUG_ON() to a VM_WARN_ON_ONCE() in vm_insert_page().
+> >
+> > The userland VMA tests are updated accordingly.
+> >
+> > Acked-by: Zi Yan <ziy@nvidia.com>
+> > Signed-off-by: Lorenzo Stoakes (ARM) <ljs@kernel.org>
+>
+>
+> Finally finding time to go over this. In the future I want to have more time to
+> review such massive series, as it causes severe stress to be forced to review
+> this last minute before it goes upstream.
+>
+> So if I push back in order to give me some more room to breathe in the future
+> it's nothing personal, I just have to keep my sanity somehow.
+>
+> I hate being forced to review because we pick up stuff way to early. There is
+> just way too much other stuff going on.
+>
+> I'm planning on picking up most stuff I maintain in the next cycle. For
+> cross-component stuff (esp. VMA) I expect Andrew to pick stuff up until we
+> tackle this once cycle later.
 
-On Sun, Oct 11, 2026 at 10:37=E2=80=AFPM Matt Turner <mattst88@gmail.com> w=
-rote:
+OK I understand, sorry for sending such a large series.
+
+I already delayed it from last cycle and sent early in rc2, but I understand
+there's been a lot of volume in this one.
+
+I've been working evenings and weekends myself to keep up with review (and
+failing), so I get how thankless it can be (LPC was also unhelpfully timed!)
+
+I will try to split things out more in future, this had a lot of dependencies so
+it wasn't clear that made sense + wouldn't just cause more stress over a longer
+period otherwise.
+
 >
-> Add the alpha perf register tables so that -I/--user-regs and
-> --call-graph dwarf work.
 >
-> r9-r15 cannot be sampled and are left out of the mask. Perf register
-> numbers 0-30 are the DWARF numbers. The pc is DWARF 64, the column GCC
-> uses as the alternate return address column on alpha, so libdw's
-> frame_nregs is 65.
+> > +static inline
+> > +void mmap_action_map_discontig_kernel_pages(struct vm_area_desc *desc,
+> > +		void *init_private, const struct discontig_kernel_page_ops *ops)
+> > +{
+> > +	struct mmap_action *action = &desc->action;
+> > +
+> > +	action->type = MMAP_DISCONTIG_KERNEL_PAGES;
+> > +	action->map_kernel_discontig.init_private = init_private;
+> > +	action->map_kernel_discontig.ops = ops;
+> > +}
+> > +
+> >  int mmap_action_prepare(struct vm_area_desc *desc);
+> >  int mmap_action_complete(struct vm_area_struct *vma,
+> >  			 struct mmap_action *action, bool is_compat);
 >
-> Assisted-by: Claude:claude-opus-5-5
-> Signed-off-by: Matt Turner <mattst88@gmail.com>
-> ---
-> This depends on the kernel side, "alpha: add HAVE_PERF_REGS and
-> HAVE_PERF_USER_STACK_DUMP support", posted as part of:
+> There is a mixture of two tab vs. different in your changes.
+
+OK. mm is fairly inconsistent about this, I will convert all to 2 tabs.
+
 >
-> https://lore.kernel.org/r/20261011-alpha-perf-regs-v3-v1-0-3354d135d972@g=
-mail.com
+> >
+> > +static inline void
+> > +discontig_kernel_map_abort(struct discontig_kernel_page_state *state)
+> > +{
+> > +	state->action = DISCONTIG_KERNEL_PAGE_ABORT;
+> > +}
+> > +
+> > +static inline void
+> > +discontig_kernel_map_page(struct discontig_kernel_page_state *state,
+> > +			  struct page *page)
+> > +{
+> > +	struct folio *folio = page_folio(page);
+> > +
+> > +	if (folio_test_large(folio)) {
+> > +		VM_WARN_ON_ONCE(page != folio_page(folio, 0));
+> > +		state->action = DISCONTIG_KERNEL_PAGE_MAP_COMPOUND_PAGE;
+> > +		state->__folio = folio;
+> > +		state->__nr_pages = min(state->nr_pages_remain,
+> > +					folio_nr_pages(folio));
+> > +	} else {
+> > +		state->action = DISCONTIG_KERNEL_PAGE_MAP_PAGE;
+> > +		state->__page = page;
+> > +		state->__nr_pages = 1;
+> > +	}
 >
-> --call-graph dwarf also needs libdw alpha unwinding support (abi_cfi
-> and frame_nregs), which I am sending to elfutils-devel separately.
-> Without it, libdw rejects the thread and perf reports the error;
-> -I/--user-regs work regardless.
-> ---
->  tools/arch/alpha/include/uapi/asm/perf_regs.h      | 45 ++++++++++++++++=
-++++++
->  tools/perf/arch/alpha/include/perf_regs.h          | 16 ++++++++
->  tools/perf/check-headers.sh                        |  1 +
->  tools/perf/util/dwarf-regs-arch/Build              |  1 +
->  tools/perf/util/dwarf-regs-arch/dwarf-regs-alpha.c | 14 +++++++
->  tools/perf/util/dwarf-regs.c                       |  5 +++
->  tools/perf/util/include/dwarf-regs.h               |  2 +
->  tools/perf/util/perf-regs-arch/Build               |  1 +
->  tools/perf/util/perf-regs-arch/perf_regs_alpha.c   | 34 ++++++++++++++++
->  tools/perf/util/perf_regs.c                        | 13 +++++++
->  tools/perf/util/perf_regs.h                        |  5 +++
->  11 files changed, 137 insertions(+)
+> Why are both separate? Isn't it sufficient to represent that through _page +
+> _nr_pages > 1 ? See below.
+
+Ack yup that works.
+
 >
-> diff --git a/tools/arch/alpha/include/uapi/asm/perf_regs.h b/tools/arch/a=
-lpha/include/uapi/asm/perf_regs.h
-> new file mode 100644
-> index 000000000000..da96a31b12fb
-> --- /dev/null
-> +++ b/tools/arch/alpha/include/uapi/asm/perf_regs.h
-> @@ -0,0 +1,45 @@
-> +/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
-> +#ifndef _UAPI_ASM_ALPHA_PERF_REGS_H
-> +#define _UAPI_ASM_ALPHA_PERF_REGS_H
-> +
-> +/*
-> + * Indices 0-30 match the hardware (and DWARF) register numbers.
-> + * r9-r15 are not saved in pt_regs and cannot be sampled.
-> + */
-> +enum perf_event_alpha_regs {
-> +       PERF_REG_ALPHA_R0,
-> +       PERF_REG_ALPHA_R1,
-> +       PERF_REG_ALPHA_R2,
-> +       PERF_REG_ALPHA_R3,
-> +       PERF_REG_ALPHA_R4,
-> +       PERF_REG_ALPHA_R5,
-> +       PERF_REG_ALPHA_R6,
-> +       PERF_REG_ALPHA_R7,
-> +       PERF_REG_ALPHA_R8,
-> +       PERF_REG_ALPHA_R9,
-> +       PERF_REG_ALPHA_R10,
-> +       PERF_REG_ALPHA_R11,
-> +       PERF_REG_ALPHA_R12,
-> +       PERF_REG_ALPHA_R13,
-> +       PERF_REG_ALPHA_R14,
-> +       PERF_REG_ALPHA_R15,
-> +       PERF_REG_ALPHA_R16,
-> +       PERF_REG_ALPHA_R17,
-> +       PERF_REG_ALPHA_R18,
-> +       PERF_REG_ALPHA_R19,
-> +       PERF_REG_ALPHA_R20,
-> +       PERF_REG_ALPHA_R21,
-> +       PERF_REG_ALPHA_R22,
-> +       PERF_REG_ALPHA_R23,
-> +       PERF_REG_ALPHA_R24,
-> +       PERF_REG_ALPHA_R25,
-> +       PERF_REG_ALPHA_R26,
-> +       PERF_REG_ALPHA_R27,
-> +       PERF_REG_ALPHA_R28,
-> +       PERF_REG_ALPHA_GP,
-> +       PERF_REG_ALPHA_SP,
-> +       PERF_REG_ALPHA_PC,
-> +       PERF_REG_ALPHA_MAX,
-> +};
-> +
-> +#endif /* _UAPI_ASM_ALPHA_PERF_REGS_H */
-> diff --git a/tools/perf/arch/alpha/include/perf_regs.h b/tools/perf/arch/=
-alpha/include/perf_regs.h
-> new file mode 100644
-> index 000000000000..409f3a08af9b
-> --- /dev/null
-> +++ b/tools/perf/arch/alpha/include/perf_regs.h
-> @@ -0,0 +1,16 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +#ifndef ARCH_PERF_REGS_H
-> +#define ARCH_PERF_REGS_H
-> +
-> +#include <stdlib.h>
-> +#include <linux/types.h>
-> +#include <linux/bits.h>
-> +#include "../../../../arch/alpha/include/uapi/asm/perf_regs.h"
-> +
-> +#define PERF_REGS_MAX PERF_REG_ALPHA_MAX
-> +
-> +/* The kernel rejects r9-r15. */
-> +#define PERF_REGS_MASK (GENMASK_ULL(PERF_REG_ALPHA_MAX - 1, 0) & \
-> +                       ~GENMASK_ULL(PERF_REG_ALPHA_R15, PERF_REG_ALPHA_R=
-9))
-> +
-> +#endif /* ARCH_PERF_REGS_H */
-> diff --git a/tools/perf/check-headers.sh b/tools/perf/check-headers.sh
-> index 531c0e0e84df..9baf83f79e23 100755
-> --- a/tools/perf/check-headers.sh
-> +++ b/tools/perf/check-headers.sh
-> @@ -36,6 +36,7 @@ declare -a FILES=3D(
->    "arch/x86/include/asm/msr-index.h"
->    "arch/x86/lib/x86-opcode-map.txt"
->    "arch/x86/tools/gen-insn-attr-x86.awk"
-> +  "arch/alpha/include/uapi/asm/perf_regs.h"
->    "arch/arm/include/uapi/asm/perf_regs.h"
->    "arch/arm64/include/uapi/asm/perf_regs.h"
->    "arch/loongarch/include/uapi/asm/perf_regs.h"
-> diff --git a/tools/perf/util/dwarf-regs-arch/Build b/tools/perf/util/dwar=
-f-regs-arch/Build
-> index ceb68ae86fd8..026b7b5ca895 100644
-> --- a/tools/perf/util/dwarf-regs-arch/Build
-> +++ b/tools/perf/util/dwarf-regs-arch/Build
-> @@ -1,3 +1,4 @@
-> +perf-util-$(CONFIG_LIBDW) +=3D dwarf-regs-alpha.o
->  perf-util-$(CONFIG_LIBDW) +=3D dwarf-regs-arm64.o
->  perf-util-$(CONFIG_LIBDW) +=3D dwarf-regs-arm.o
->  perf-util-$(CONFIG_LIBDW) +=3D dwarf-regs-csky.o
-> diff --git a/tools/perf/util/dwarf-regs-arch/dwarf-regs-alpha.c b/tools/p=
-erf/util/dwarf-regs-arch/dwarf-regs-alpha.c
-> new file mode 100644
-> index 000000000000..50fd17096597
-> --- /dev/null
-> +++ b/tools/perf/util/dwarf-regs-arch/dwarf-regs-alpha.c
-> @@ -0,0 +1,14 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +#include <errno.h>
-> +#include <dwarf-regs.h>
-> +#include "../../../arch/alpha/include/uapi/asm/perf_regs.h"
-> +
-> +int __get_dwarf_regnum_for_perf_regnum_alpha(int perf_regnum)
-> +{
-> +       if (perf_regnum >=3D PERF_REG_ALPHA_R0 && perf_regnum <=3D PERF_R=
-EG_ALPHA_SP)
-> +               return perf_regnum;
-> +       if (perf_regnum =3D=3D PERF_REG_ALPHA_PC)
-> +               return 64;
-> +
-> +       return -ENOENT;
-> +}
-> diff --git a/tools/perf/util/dwarf-regs.c b/tools/perf/util/dwarf-regs.c
-> index 09aca6304002..3fd71787c658 100644
-> --- a/tools/perf/util/dwarf-regs.c
-> +++ b/tools/perf/util/dwarf-regs.c
-> @@ -185,6 +185,8 @@ static int get_libdw_frame_nregs(unsigned int machine=
-, unsigned int flags __mayb
->                 return 74;
->         case EM_MIPS:
->                 return 71;
-> +       case EM_ALPHA:
-> +               return 65;
->         default:
->                 return 0;
->         }
-> @@ -228,6 +230,9 @@ int get_dwarf_regnum_for_perf_regnum(int perf_regnum,=
- unsigned int machine,
->         case EM_MIPS:
->                 reg =3D __get_dwarf_regnum_for_perf_regnum_mips(perf_regn=
-um);
->                 break;
-> +       case EM_ALPHA:
-> +               reg =3D __get_dwarf_regnum_for_perf_regnum_alpha(perf_reg=
-num);
-> +               break;
->         default:
->                 pr_err("ELF MACHINE %x is not supported.\n", machine);
->                 return -ENOENT;
-> diff --git a/tools/perf/util/include/dwarf-regs.h b/tools/perf/util/inclu=
-de/dwarf-regs.h
-> index 1da915c2683a..8d1a981ab8aa 100644
-> --- a/tools/perf/util/include/dwarf-regs.h
-> +++ b/tools/perf/util/include/dwarf-regs.h
-> @@ -105,6 +105,8 @@ int __get_dwarf_regnum_x86_64(const char *name);
->  int __get_dwarf_regnum_for_perf_regnum_i386(int perf_regnum);
->  int __get_dwarf_regnum_for_perf_regnum_x86_64(int perf_regnum, int abi);
+> > +}
+> > +
+> > +static inline void
+> > +discontig_kernel_map_page_range(struct discontig_kernel_page_state *state,
+> > +				struct page **page_arr, unsigned long nr_pages)
 >
-> +int __get_dwarf_regnum_for_perf_regnum_alpha(int perf_regnum);
-> +
->  int __get_dwarf_regnum_arm64(const char *name);
->  int __get_dwarf_regnum_for_perf_regnum_arm(int perf_regnum);
->  int __get_dwarf_regnum_for_perf_regnum_arm64(int perf_regnum);
-> diff --git a/tools/perf/util/perf-regs-arch/Build b/tools/perf/util/perf-=
-regs-arch/Build
-> index be95402aa540..1fbc299775f7 100644
-> --- a/tools/perf/util/perf-regs-arch/Build
-> +++ b/tools/perf/util/perf-regs-arch/Build
-> @@ -1,4 +1,5 @@
->  perf-util-y +=3D perf_regs_aarch64.o
-> +perf-util-y +=3D perf_regs_alpha.o
->  perf-util-y +=3D perf_regs_arm.o
->  perf-util-y +=3D perf_regs_csky.o
->  perf-util-y +=3D perf_regs_loongarch.o
-> diff --git a/tools/perf/util/perf-regs-arch/perf_regs_alpha.c b/tools/per=
-f/util/perf-regs-arch/perf_regs_alpha.c
-> new file mode 100644
-> index 000000000000..cb9c8a1cd74b
-> --- /dev/null
-> +++ b/tools/perf/util/perf-regs-arch/perf_regs_alpha.c
-> @@ -0,0 +1,34 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +
-> +#include "../perf_regs.h"
-> +#include "../../arch/alpha/include/perf_regs.h"
-> +
-> +static const char * const alpha_reg_names[PERF_REG_ALPHA_MAX] =3D {
-> +       "r0", "r1", "r2", "r3", "r4", "r5", "r6", "r7",
-> +       "r8", "r9", "r10", "r11", "r12", "r13", "r14", "r15",
-> +       "r16", "r17", "r18", "r19", "r20", "r21", "r22", "r23",
-> +       "r24", "r25", "r26", "r27", "r28", "gp", "sp", "pc",
-> +};
-> +
-> +uint64_t __perf_reg_mask_alpha(bool intr __maybe_unused)
-> +{
-> +       return PERF_REGS_MASK;
-> +}
-> +
-> +const char *__perf_reg_name_alpha(int id)
-> +{
-> +       if (id < 0 || id >=3D PERF_REG_ALPHA_MAX)
-> +               return NULL;
-> +
-> +       return alpha_reg_names[id];
-> +}
-> +
-> +uint64_t __perf_reg_ip_alpha(void)
-> +{
-> +       return PERF_REG_ALPHA_PC;
-> +}
-> +
-> +uint64_t __perf_reg_sp_alpha(void)
-> +{
-> +       return PERF_REG_ALPHA_SP;
-> +}
-> diff --git a/tools/perf/util/perf_regs.c b/tools/perf/util/perf_regs.c
-> index c8242b7e1db5..6eb5824f5521 100644
-> --- a/tools/perf/util/perf_regs.c
-> +++ b/tools/perf/util/perf_regs.c
-> @@ -43,6 +43,9 @@ uint64_t perf_intr_reg_mask(uint16_t e_machine, int *ab=
-i /*inout*/)
->         uint64_t mask =3D 0;
+> Is this actually "map_pages"? A range is rather a number of consectuive pages
+> part of the same folio/compound page, no?
 >
->         switch (e_machine) {
-> +       case EM_ALPHA:
-> +               mask =3D __perf_reg_mask_alpha(/*intr=3D*/true);
-> +               break;
->         case EM_ARM:
->                 mask =3D __perf_reg_mask_arm(/*intr=3D*/true);
->                 break;
-> @@ -86,6 +89,9 @@ uint64_t perf_user_reg_mask(uint16_t e_machine, int *ab=
-i /*inout*/)
->         uint64_t mask =3D 0;
+> (we call insert_pages() later ... )
+
+Sure, can change.
+
 >
->         switch (e_machine) {
-> +       case EM_ALPHA:
-> +               mask =3D __perf_reg_mask_alpha(/*intr=3D*/false);
-> +               break;
->         case EM_ARM:
->                 mask =3D __perf_reg_mask_arm(/*intr=3D*/false);
->                 break;
-> @@ -129,6 +135,9 @@ const char *perf_reg_name(int id, uint16_t e_machine,=
- uint32_t e_flags, int abi)
->         const char *reg_name =3D NULL;
+> > +{
+> > +	state->action = DISCONTIG_KERNEL_PAGE_MAP_PAGE_RANGE;
+> > +	state->__page_arr = page_arr;
+> > +	state->__nr_pages = min(nr_pages, state->nr_pages_remain);
 >
->         switch (e_machine) {
-> +       case EM_ALPHA:
-> +               reg_name =3D __perf_reg_name_alpha(id);
-> +               break;
->         case EM_ARM:
->                 reg_name =3D __perf_reg_name_arm(id);
->                 break;
-> @@ -198,6 +207,8 @@ int perf_reg_value(u64 *valp, struct regs_dump *regs,=
- int id)
->  uint64_t perf_arch_reg_ip(uint16_t e_machine)
->  {
->         switch (e_machine) {
-> +       case EM_ALPHA:
-> +               return __perf_reg_ip_alpha();
->         case EM_ARM:
->                 return __perf_reg_ip_arm();
->         case EM_AARCH64:
-> @@ -227,6 +238,8 @@ uint64_t perf_arch_reg_ip(uint16_t e_machine)
->  uint64_t perf_arch_reg_sp(uint16_t e_machine)
->  {
->         switch (e_machine) {
-> +       case EM_ALPHA:
-> +               return __perf_reg_sp_alpha();
->         case EM_ARM:
->                 return __perf_reg_sp_arm();
->         case EM_AARCH64:
-> diff --git a/tools/perf/util/perf_regs.h b/tools/perf/util/perf_regs.h
-> index c9f461b6f11f..4134e4eed802 100644
-> --- a/tools/perf/util/perf_regs.h
-> +++ b/tools/perf/util/perf_regs.h
-> @@ -34,6 +34,11 @@ const char *__perf_reg_name_arm64(int id);
->  uint64_t __perf_reg_ip_arm64(void);
->  uint64_t __perf_reg_sp_arm64(void);
+> So we expect all of them to be non-compound?
+
+Yup this matches existing insert_pages() behaviour.
+
 >
-> +uint64_t __perf_reg_mask_alpha(bool intr);
-> +const char *__perf_reg_name_alpha(int id);
-> +uint64_t __perf_reg_ip_alpha(void);
-> +uint64_t __perf_reg_sp_alpha(void);
-> +
->  uint64_t __perf_reg_mask_arm(bool intr);
->  const char *__perf_reg_name_arm(int id);
->  uint64_t __perf_reg_ip_arm(void);
 >
-> ---
-> base-commit: bc01105ed65d15787b2eb93ac26e8624a2139e35
-> change-id: 20261001-alpha-perf-tools-regs-c206a84dec7f
+> [...]
 >
-> Best regards,
+> > diff --git a/mm/internal.h b/mm/internal.h
+> > index fc4e249e2343..557e629db8c5 100644
+> > --- a/mm/internal.h
+> > +++ b/mm/internal.h
+> > @@ -1515,6 +1515,9 @@ int simple_ioremap_prepare(struct vm_area_desc *desc);
+> >  int map_kernel_pages_prepare(struct vm_area_desc *desc);
+> >  int map_kernel_pages_complete(struct vm_area_struct *vma,
+> >  			      struct mmap_action *action);
+> > +int map_discontig_kernel_pages_prepare(struct vm_area_desc *desc);
+> > +int map_discontig_kernel_pages_complete(struct vm_area_struct *vma,
+> > +					struct mmap_action *action);
+> >
+> >  static inline int io_remap_pfn_range_prepare(struct vm_area_desc *desc)
+> >  {
+> > diff --git a/mm/memory.c b/mm/memory.c
+> > index 448342883e9d..e5c1d1c35bc7 100644
+> > --- a/mm/memory.c
+> > +++ b/mm/memory.c
+> > @@ -2599,27 +2599,34 @@ int vm_insert_pages(struct vm_area_struct *vma, unsigned long addr,
+> >
+> >  	if (!range_in_vma(vma, addr, end))
+> >  		return -EFAULT;
+> > -	if (!(vma->vm_flags & VM_MIXEDMAP)) {
+> > -		VM_WARN_ON_ONCE(mmap_read_trylock(vma->vm_mm));
+> > -		VM_WARN_ON_ONCE(vma->vm_flags & VM_PFNMAP);
+> > -		vm_flags_set(vma, VM_MIXEDMAP);
+> > +	if (!vma_test(vma, VMA_MIXEDMAP_BIT)) {
+> > +		mmap_assert_write_locked(vma->vm_mm);
+> > +		VM_WARN_ON_ONCE(vma_test(vma, VMA_PFNMAP_BIT));
+>
+> I would prefer to have these changes in a separate patch. Or is it strictly
+> required to have this in this very patch?
+
+That was because Suren raised the 'assert on mmap_read_trylock()' thing and I
+wanted to get the other cases here to be consistent.
+
+I will split it out into another patch.
+
+>
+>
+> > +		vma_start_write(vma);
+> > +		vma_set_flags(vma, VMA_MIXEDMAP_BIT);
+> >  	}
+> >  	/* Defer page refcount checking till we're about to map that page. */
+> >  	return insert_pages(vma, addr, pages, num, vma->vm_page_prot);
+> >  }
+> >  EXPORT_SYMBOL(vm_insert_pages);
+> >
+> > +static void __map_kernel_pages_prepare(struct vm_area_desc *desc)
+> > +{
+> > +	if (vma_desc_test(desc, VMA_MIXEDMAP_BIT))
+> > +		return;
+> > +
+> > +	mmap_assert_write_locked(desc->mm);
+> > +	VM_WARN_ON_ONCE(vma_desc_test(desc, VMA_PFNMAP_BIT));
+> > +	vma_desc_set_flags(desc, VMA_MIXEDMAP_BIT);
+> > +}
+> > +
+> >  int map_kernel_pages_prepare(struct vm_area_desc *desc)
+> >  {
+> >  	const struct mmap_action *action = &desc->action;
+> >  	const unsigned long addr = action->map_kernel.start;
+> >  	unsigned long nr_pages, end;
+> >
+> > -	if (!vma_desc_test(desc, VMA_MIXEDMAP_BIT)) {
+> > -		VM_WARN_ON_ONCE(mmap_read_trylock(desc->mm));
+> > -		VM_WARN_ON_ONCE(vma_desc_test(desc, VMA_PFNMAP_BIT));
+> > -		vma_desc_set_flags(desc, VMA_MIXEDMAP_BIT);
+> > -	}
+> > +	__map_kernel_pages_prepare(desc);
+> >
+> >  	nr_pages = action->map_kernel.nr_pages;
+> >  	end = addr + PAGE_SIZE * nr_pages;
+> > @@ -2640,6 +2647,98 @@ int map_kernel_pages_complete(struct vm_area_struct *vma,
+> >  			    &nr_pages, vma->vm_page_prot);
+> >  }
+> >
+> > +int map_discontig_kernel_pages_prepare(struct vm_area_desc *desc)
+> > +{
+> > +	const struct mmap_action *action = &desc->action;
+> > +	const struct discontig_kernel_page_ops *ops =
+> > +		action->map_kernel_discontig.ops;
+> > +
+> > +	/* At minimum need to be able to get pages. */
+> > +	if (WARN_ON_ONCE(!ops || !ops->get))
+> > +		return -EINVAL;
+> > +
+> > +	__map_kernel_pages_prepare(desc);
+> > +	return 0;
+> > +}
+> > +
+> > +static int apply_discontig_action(struct vm_area_struct *vma,
+> > +				  struct discontig_kernel_page_state *state)
+> > +{
+> > +	unsigned long nr_pages = state->__nr_pages;
+> > +	unsigned long addr = state->addr;
+> > +	unsigned long i;
+> > +
+> > +	if (state->action == DISCONTIG_KERNEL_PAGE_MAP_PAGE)
+> > +		return insert_page(vma, addr, state->__page,
+> > +				   vma->vm_page_prot, /*mkwrite=*/false);
+> > +	if (state->action == DISCONTIG_KERNEL_PAGE_MAP_PAGE_RANGE)
+> > +		return insert_pages(vma, addr, state->__page_arr,
+> > +				    &nr_pages, vma->vm_page_prot);
+> > +
+> > +	/* Compound folio - have to iterate through each page. */
+> > +	for (i = 0; i < nr_pages; i++, addr += PAGE_SIZE) {
+> > +		struct page *page = folio_page(state->__folio, i);
+> > +		int err;
+> > +
+> > +		err = insert_page(vma, addr, page, vma->vm_page_prot,
+> > +				  /*mkwrite=*/false);
+> > +		if (err)
+> > +			return err;
+> > +	}
+>
+> Summarizing some of my comments below, I wonder if this could be:
+>
+> DISCONTIG_KERNEL_PAGE_MAP_PAGES - array of individual apges
+> DISCONTIG_KERNEL_PAGE_MAP_CONTIG_PAGES - 1..N contiguous pages
+
+OK.
+
+>
+>
+> if (state->action == DISCONTIG_KERNEL_PAGE_MAP_PAGES)
+> 	return insert_pages(vma, addr, state->__page_arr,
+> 			    &nr_pages, vma->vm_page_prot);
+>
+> VM_WARN_ON_ONCE(state->action != DISCONTIG_KERNEL_PAGE_MAP_CONTIG_PAGES)
+> for (i = 0; i < nr_pages; i++, addr += PAGE_SIZE) {
+> 	struct page *page = state->__page + i;
+> 	int err;
+>
+> 	err = insert_page(vma, addr, page, vma->vm_page_prot,
+> 			  /*mkwrite=*/false);
+> 	if (err)
+> 		return err;
+> }
+> ...
+
+OK. Will respin for v6.
+
+>
 > --
-> Matt Turner <mattst88@gmail.com>
+> Cheers,
 >
+> David
 
-Thanks for doing this!
-
-Register selection, recording, decoding and user stack dumps tested
-on my ES40. End-to-end DWARF unwinding remains unverified because the
-installed elfutils 0.195 lacks Alpha unwinding support.
-
-Tested-by: Magnus Lindholm <linmag7@gmail.com>
+--
+Cheers, Lorenzo
