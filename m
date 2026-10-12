@@ -1,178 +1,146 @@
-Received: from mail-qt1-f175.google.com (mail-qt1-f175.google.com [209.85.160.175])
+Received: from mail-qt1-f178.google.com (mail-qt1-f178.google.com [209.85.160.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8A063AAF56
-	for <linux-perf-users@vger.kernel.org>; Mon, 12 Oct 2026 21:41:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.160.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 906BC4BA1F3
+	for <linux-perf-users@vger.kernel.org>; Mon, 12 Oct 2026 21:45:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.160.178
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791841302; cv=pass; b=U4ddmd9v5QADaazxonHf9Iu9NVTQamR+rWcg5IN6J20QULv9MezLMXmOyBk+bbGVBO4i9C+LtAbj9GdqFmTtzHnTBUug9GhcUyk8Wg1i4emTOU04VPOGVVkeNNS1qVIg7dr4ziZCDugWnztBN9LNU9TEi8Snl4xgBSIurvfpYa8=
+	t=1791841556; cv=pass; b=fHLfMjSdlK7ZJM/iLe9+BoOzPljBI1UBWTEhnkOGpLTqrLqwEKvQ8B37ghTp59XRdKUL134mJIr5rchQ8tXH9Ah929labqShy9hQkaB/W8tuXpGUplQtbU8iNewK8JOUyDIHrj6xGDXYkIZ193/6VoJkuSI98dFzYODUhfmYpvk=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791841302; c=relaxed/simple;
-	bh=UjiMOoGqKl1AFGTKXUXfK6wWEi45TqjVJvcBDz0JCew=;
+	s=arc-20240116; t=1791841556; c=relaxed/simple;
+	bh=w0qc2CZd4Oa/lsOFggfocUkyp5cgiPaQh1jfXgSkSQA=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=W28mIdHiZXCimM7mJ8iSqG0q4Y16bipj86HPB660RV+jPjVUEgDFHoYRUOnAilJkpkSjuT6TcO5V5x3zsGv25YInd+Ko7M6qJGhVcvnM81jmE/lfM0aHc9rn+KEO0TSl0WIw2gDTrUNfwytKf8APVHo3mbYWvosVm56TTnSLhrA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ebogoDtX; arc=pass smtp.client-ip=209.85.160.175
+	 To:Cc:Content-Type; b=by2RjVOsk2QkD+pT8piwXcsokNi+74ZifKFaVr6jsu13hj2togc0vgsWqPd53fv15h+wZ2SVWJCeeeUZaA6DshPMhQQNz6XdYQEdBywHD50i6USqF+peYY9YR+G6GfnkPzVn3b1Z7Yk6/FOgz+3JfEIC9BjX1aCj7e1+SnioVVs=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Cb9Msbdq; arc=pass smtp.client-ip=209.85.160.178
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ebogoDtX"
-Received: by mail-qt1-f175.google.com with SMTP id d75a77b69052e-53584e7c349so559671cf.1
-        for <linux-perf-users@vger.kernel.org>; Mon, 12 Oct 2026 14:41:41 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1791841300; cv=none;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Cb9Msbdq"
+Received: by mail-qt1-f178.google.com with SMTP id d75a77b69052e-5337c7b9937so541531cf.0
+        for <linux-perf-users@vger.kernel.org>; Mon, 12 Oct 2026 14:45:55 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1791841554; cv=none;
         d=google.com; s=arc-20260327;
-        b=CFsF/uKHMHw7OdMDmLSNFp2BKHdckRVazHoJg8KcEO9GZlAz58Gx9q3lf+D1heyUh5
-         sMqzru2ZplV4TGTh4UPOFtiuOpPIfMTNnqURFPLfA4eCVJ7KokWZvqDi7yoVctJusfr3
-         ifi9vDmFjGEGEuE59hogJtJMw+R4R5WN0Ky651X+57Zxk7XfJ9RGEkgWOgXeuetkb0/m
-         pvBVbUR0fHlPNwcLCcZz/KXVGLrfOjl3N7MYXCSOB6i1IR/h3tOSu8IdlAVjUK/Fg0Gj
-         ZIkCRNwZh3tqfHnKvYsAVX8NONfXIvNYSQDeUbaWOAPt7dTvAeZ/FzlRoDlCJ/nJ0NB6
-         ZhAA==
+        b=Caug0vGzxKO65Kg/0+hpTbuIziSHq+0SflvqqQBHRQhB81ckHge+AFdSRP4H3Nx9t8
+         xGnhgKC0BLtcVCsommDHiaKk73OUDxABHqQRyMUhkppMjYQTNI+fZYtEa3KP58Wk/Oha
+         PuEU4wHobKHZT7MCp4rFnreG88NbKwQdvjpwclT3m+s5do/wan0ORrcCRGHsIQe80kdz
+         1ZaYQS09W0dXvc1LA+JjHWwc8p09U9zR86Cv6pQ+/RnzBbA28j/kxyp8Ut0ymxQX4xzz
+         KHla5SrVFlqUbXYw2dZAeS4K5piPrqA6XMdYgKP5u+Rpa656imsRnJzb+O/16fEwhKkI
+         1Img==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:dkim-signature;
-        bh=ujfOyylHH0+Qcr6VmePM6uJ1Ba5lYDsIUszcZYvjorY=;
-        fh=jp4BuBAJ28AWHdtfVtCTu8SdBohRLvQ2iNjJKpspToY=;
-        b=Ursv27RiEWQ7eCg/DCuRUctNBttnFv5xMx77MDiL48JEXL4Ovs78yltayX5n04fVhp
-         /Ni0i8XWNCoqOTlc4h9F85ofxmO8R8oVyp597RXVHs3HVoqxhHjLnCQsMld+B5MjZRlJ
-         Yu2AW1r4aoQYYuHtCADKH5mHLBRoiJM3FY9rlLYULG6SIk0dJs8Zx6I6yYFl2nmz+pLW
-         JaQf0XnxHxAwulMvOvwoFQ99KI/pe0hdQc6wDB4qlAi0VHgDKIjXWKr4KmwtxMMiswGq
-         tJ99D2p6YPye/EgUw8H3pP4mCaA3VaKyIDuUj0exkoRn9I6QP0BBRhh5Q+3c5dSBJZLp
-         FmIA==;
+        bh=w0qc2CZd4Oa/lsOFggfocUkyp5cgiPaQh1jfXgSkSQA=;
+        fh=NcE49uiX+r6NMGNCwUYp7PEobMne2qUbu6O3Pf4s99U=;
+        b=nf3Qrszx07qTMu1h0wyYEbQ66NU/OE4pAIHHR7M8StlTDOd8bnoIlNFUivVMLWmkvC
+         1z81LPsZSpHrVfxAiEztkval8oXFaCZ8L5mePsgGz1vIn/XX1CLZQnb2QB16zvonkCA5
+         x9pegAtBhDdX0U1LPt0N2qYpbNYHg/JYtcYpZjY2BGUt1QjOVzTfoZbupG+0UQdp7ANQ
+         K2iYNGm4vYVCVFZR3ZhhfH0BIHx2PKSoWbh2Yiz02g2RIyU/obHennlbp6x+Nt5U8RMr
+         b/vk6vm0hytAwW5rmV2iPy9GkCsLyZ2eyrwPL8hnhv9qeP/ax+3w3An/vA9u7wRLEJ/3
+         64bw==;
         darn=vger.kernel.org
 ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1791841300; x=1792446100; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1791841554; x=1792446354; darn=vger.kernel.org;
         h=content-transfer-encoding:content-type:cc:to:subject:message-id
          :date:from:in-reply-to:references:mime-version:from:to:cc:subject
          :date:message-id:reply-to:content-type;
-        bh=ujfOyylHH0+Qcr6VmePM6uJ1Ba5lYDsIUszcZYvjorY=;
-        b=ebogoDtXueGu03DiiTO/MvfzhNYgIEnoPnsGcSSxH5uamob88pA6mKu3djve5VRdbJ
-         abM8DWkAwT2Qlp6CDWGh3wTIK47ywaq3DR2G7ZPqk0810UXmIo4ISrnNComp/KojFQ/6
-         oo6HOgwo/yp2ePaFqsSH1wQrxCBKbPM7IS9icqPlnujRDPq9sN/FRyYPix3z+UHPQKzC
-         BPWfNtZFzuc54mpfao7l6gd5gMLOlXHi2o17Pb9lUAsBhxG9zMZFDaKpZonkQuGlbjKf
-         XIlEiM2pWsISBAHskKdnEFKj0OpP9Wd8MKdz5Co6NdFBUIaRroFN/83JEBeR3adKHy20
-         KZPA==
+        bh=w0qc2CZd4Oa/lsOFggfocUkyp5cgiPaQh1jfXgSkSQA=;
+        b=Cb9MsbdqZseVKss4qKjrRHqmyH/0yT0HG/9h0rVLI249Thyclm7QQeYchd1NPIhs/k
+         DPRrvsokjYPw4lZWztWA8O8n/NI5NHrsLEsRLi+CYIG+niX+JLP1VeTYr+88dyx44YvW
+         NLj5jhJWdKBh+doOsW0qDtSIrlFa8zFfmwaerjmzU4xq+6JeVVEqhNLX1466yEvFNs99
+         r8AJp/3mvH/63o9GGe9NqLcdpkGfeJJmDV6Lr8w+GCwksHaxlVWJBH/HKILnTQdZqC5P
+         ov099KLBxFTvmL2R4I10m4vNP/78XkNVNO/65N7i8uJR2J4sxfStkJFPyaq0KeyGQFSa
+         VutA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1791841300; x=1792446100;
+        d=1e100.net; s=20260707; t=1791841554; x=1792446354;
         h=content-transfer-encoding:content-type:cc:to:subject:message-id
          :date:from:in-reply-to:references:mime-version:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=ujfOyylHH0+Qcr6VmePM6uJ1Ba5lYDsIUszcZYvjorY=;
-        b=QTwLpc+gtiN7ehWW6ZCugMTcdB/ECHENN8YlN578QY01Q+aRd1ndLwdGv22D7679GE
-         smungiTt3ALDNpQIsr9sjKazimwWBLC3tWvB3adlc8TaXg2dcPrflwsvDITaoONDSfA1
-         oTWi6LmN+TkHLe92FrX2S839UqP/wi990PhYENHYjQPP9/SZntWWjj7D4joNW4Z45T/9
-         ZsVSHSYZba+2yGmamcDQbT3g7TF5946qF9zIAQeXoYLXmBE5EET6BVz7dcJPqUPv9ik/
-         YJbf/Wxhz7Sk0IrSNGMqbdyzzzyEybB0hqLPbKxEf69Vz8Kn0yq5C+GRtR0CtZpgn+a8
-         VC2w==
-X-Forwarded-Encrypted: i=1; AKwUvBx3QT5gTcWnw1nFlXNTdxMlAAy15MlmFtPZY8S5zaPUtll88F7HkzJeTDBcKEmlAsF9h/AZUdS8clnk/DTX9MA2@vger.kernel.org
-X-Gm-Message-State: AFq9FYKUJuevKUAB2bqmMzTZlRid83XjftCKAFwJVrRW80wTO1Zw1tET
-	YYNwGG/sVffaH4yFi7GdIH5Ly1DwNdXBdzujQ7tE7L9BPJtx83jYEgYfOhwDLdWe43nVzUGgS3v
-	SCbS5lHu1G+RYq6Vi1t0KKRxkzrYuB8YNi4rzHgsv
-X-Gm-Gg: AYBFou0eWA3oH5I4htoqtqXlcDx4fD1rWUQmxNuIb8L0H5wLa5SWte0Kif8ReH9jiXf
-	q6SPKGO2rm/YNAjgcXMGOyse9fK2d/FpnK1WCUFwGaDZoY/RyGreOpNvvMrWa6HLQqoprOTGcbJ
-	ZNoG5jaWGwPisvvPmNHlcZUPjPNGcS4DsJE00PNoMCjqvOPyxPzg6QbzmNAFRsdR81c0tvEeKro
-	dIfv7koYxwSscp/oNW81Rlsneld4/q0WL+7P0ABzW3vbf485zxnjsiFMJuSkXF8IQiwG/EBQRFZ
-	xz0nnDlg9Mt3tsO+CxVw8EuiL7doR4KHv/BKzG56giJfPalvIViuBnONfqaQuXXGxBrw2wVWGkg
-	WOpKRJSeN9w==
-X-Received: by 2002:a05:622a:2b05:b0:531:16a:5a3d with SMTP id
- d75a77b69052e-535b4f41d7amr34879941cf.12.1791841299643; Mon, 12 Oct 2026
- 14:41:39 -0700 (PDT)
+        bh=w0qc2CZd4Oa/lsOFggfocUkyp5cgiPaQh1jfXgSkSQA=;
+        b=l7k80mWad1NIo/wWzladulVavvhKN0LQgrPlzUqPETI7KklKIGIsXfabhjmXTgwpvb
+         7Fx8DM+FLGNTBUP9yCihWtsK1T1THw2k45siB0R68dHrxdXVX5qNlpbaS8prW7I8lE/2
+         Idzajxij71pWHttS0dyGasr4+e3k50l/gHOXLmL599f5bcBb6ft/dI/ieTKPAiZRuzpj
+         Ju+UZLS58X3++2CXZ4udDepnDI0R8Jf+znA2nekD7y64j1La7lteXxeI0Y72mP+AgxIl
+         3sniY/IiQL+NkB8pZCK2R95AUbWeuGnqL3DAX6jUpK2uxYmkX39yqvCX/hwYTmNGNyXW
+         Z9Og==
+X-Forwarded-Encrypted: i=1; AKwUvBwpzp2glYzetr2Ai81ifwQl9xD08mtYX3KezE80NUwMHVNoee/EeNPWuz0JdPFSlTGdvqpspHrA860Zs7iV78Bo@vger.kernel.org
+X-Gm-Message-State: AFq9FYJUJKyuogMVKaLypnjZyGx+NxT1E269BidNcvDBD6oe4czUOayK
+	6by37ohewGAClgb+nnycss7azedZlCfHaxB82f4xpR2uTlTxkJ14pL5Xxoh3OZSdmjvbZ6DG4/Q
+	KW1G05/6IEtGe3+iYTJtskN69IFnwodQJTYNwd6TK
+X-Gm-Gg: AYBFou3YuhfIm9T4Y7u0f45SZKHNxWTO3zVG6DdiDAMXtQKjaQMqPCwxoHkX+hB0X7A
+	WUE3ZYpGKiy4wUr/xk1Kq6cPe8WsgsuDh85390ztDozPykyu83ctz4lLZNi85QeDVX3yQAGjNyw
+	NjwmzBL4TBpni23Fr+/V5af8xGoaVctXdRGAFMA/V2cwvWziJbdu0qNQ/0bAYoHKEtVyWckZDDm
+	fL22qTj6nc9r92M/tgd3el2LGb98ingwqlk4HWp8SzcBe7QlV/MiY1tS3AuK7QbmsNlaLrEZ3b2
+	0vM44AXPgCDdldptISfv5AH76Nm31JCFE6gaNjHvN8lyBMds+wyoxhkBvAJxhVaswy/nqyfYbGy
+	toyz5zBSvnshOGzSYklCh
+X-Received: by 2002:ac8:5a95:0:b0:535:9aa3:5ebb with SMTP id
+ d75a77b69052e-535b4ecdaa4mr34353401cf.8.1791841553813; Mon, 12 Oct 2026
+ 14:45:53 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20261012052601.13920-1-namhyung@kernel.org>
-In-Reply-To: <20261012052601.13920-1-namhyung@kernel.org>
+References: <20261011-alpha-perf-tools-regs-v1-1-2a5940e22548@gmail.com>
+ <CA+=Fv5SDnzQQDzyhaQ37kWJMjTOHP0NHuAS6kJHwT8_Zqyjd-w@mail.gmail.com> <CA+=Fv5RGr2NQs=gnErAWXfSZgMcWB1q-_-BNQ5X5DyzqkV-bmQ@mail.gmail.com>
+In-Reply-To: <CA+=Fv5RGr2NQs=gnErAWXfSZgMcWB1q-_-BNQ5X5DyzqkV-bmQ@mail.gmail.com>
 From: Ian Rogers <irogers@google.com>
-Date: Mon, 12 Oct 2026 14:41:27 -0700
-X-Gm-Features: AclHuK_xa6jARGF19pV0rzh8vArCUJVzxFb883MZyiwMHhKkagyeLFaZzXoCBXs
-Message-ID: <CAP-5=fXg3LYS0ftt1WjDXgEh6DLjZcYQiVNv=ym7CAA9PyiQ1A@mail.gmail.com>
-Subject: Re: [PATCH v3 00/10] perf symbol: Properly set DSO binary/symtab types
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, James Clark <james.clark@linaro.org>, 
-	Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, 
-	LKML <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org
+Date: Mon, 12 Oct 2026 14:45:41 -0700
+X-Gm-Features: AclHuK-KhF7SQQ_cSO4Vi6bo7ImPeruAfj2YPIigck0H0gWHJJaIzIY69ZpCKsw
+Message-ID: <CAP-5=fXFYbuV9MtJsVX5hUPKDOxcjtNTHM4-qR7Q+ncsPq59UQ@mail.gmail.com>
+Subject: Re: [PATCH] perf regs: Add alpha support
+To: Magnus Lindholm <linmag7@gmail.com>
+Cc: Matt Turner <mattst88@gmail.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, James Clark <james.clark@linaro.org>, 
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+	Richard Henderson <richard.henderson@linaro.org>, linux-alpha@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Sun, Oct 11, 2026 at 10:26=E2=80=AFPM Namhyung Kim <namhyung@kernel.org>=
+On Mon, Oct 12, 2026 at 2:41=E2=80=AFPM Magnus Lindholm <linmag7@gmail.com>=
  wrote:
 >
-> Hello,
+> Hi again,
 >
-> Currently we have 3 types for a DSO.
+> On Mon, Oct 12, 2026 at 7:37=E2=80=AFPM Magnus Lindholm <linmag7@gmail.co=
+m> wrote:
+> > > base-commit: bc01105ed65d15787b2eb93ac26e8624a2139e35
+> > > change-id: 20261001-alpha-perf-tools-regs-c206a84dec7f
+> > >
+> > > Best regards,
+> > > --
+> > > Matt Turner <mattst88@gmail.com>
+> > >
+> >
+> > Thanks for doing this!
+> >
+> > Register selection, recording, decoding and user stack dumps tested
+> > on my ES40. End-to-end DWARF unwinding remains unverified because the
+> > installed elfutils 0.195 lacks Alpha unwinding support.
+> >
+> > Tested-by: Magnus Lindholm <linmag7@gmail.com>
 >
-> * binary type: determines where to read binary instruction or data of the
->   DSO.  Basically used by annotate.  Some (special) DSOs like kallsyms or
->   JIT may not have the data though.
+> I just pulled your elfutils patches and ran some more tests.
+> With your elfutils patches, DWARF unwinding now works on my ES40.
+> Both existing and fresh perf recordings recovered the expected
+> leaf -> middle -> outer -> main call chain.
 >
-> * symtab type: determines where to read symbol tables.  Set when symbols
->   in the DSO are loaded.
->
-> * debug info type: determines where to read debug info.  Used by srcline,
->   DWARF unwinding, data type profiling and so on.  Often debug info is
->   saved in a separate file.
->
-> Some DSOs may have the same type for 3 and others can have all different.
-> Previously it generally assumed binary type would be same as symtab type
-> but now I think we should not and only set the binary type as it's used.
->
-> Also it should make sure that symtab type is set properly after loading
-> symbols in the DSO.
->
-> Probably this patchset won't make any practical difference in runtime
-> behaviors but I think it's good to track them accurately.
+> As documented, samples whose CFA depends on r15 stopped at the
+> sampled frame, since r15 is unavailable. Tested-by tag already given
+> to this series.
 
-Except for nits and resolving the remaining Sashiko feedback on patch 6.
+I'm finding this fantastic and exciting to follow! Being greedy, does
+the cross-platform DWARF unwinding work? perf record on an alpha and
+perf report on, say, an x86. It would in no way block this work, but
+I'm keen to check Matt/I wired this up properly :-)
 
-Reviewed-by: Ian Rogers <irogers@google.com>
-
-Thanks!
+Thanks,
 Ian
 
-> v3 changes)
->
->  * set KALLSYM type for split kallsyms DSOs
->  * take dso lock in dso__find_binary_type()
->  * handle EMFILE failures in dso__find_binary_type()
->  * drop the libbfd change as it need a separate patchset
->  * lookup binary type in dso__e_machine_endian()
->  * get rid of machine_or_dso_e_machine() due to a lock problem
->  * fixed a bug symbol__disassemble() for BPF and kcore
->
-> v2: https://lore.kernel.org/r/20261006234315.920817-1-namhyung@kernel.org
->
->  * add dso__find_binary_type() for checking ".text" section
->  * make perf annotate use the dso's binary type directly
->
-> v1: https://lore.kernel.org/r/20261005063411.114244-1-namhyung@kernel.org
->
 > Thanks,
-> Namhyung
->
->
-> Namhyung Kim (10):
->   perf tools: Remove redundant dso data init
->   perf tools: Try linked debug files for DSO debug info
->   perf symbol: Update symtab type of vmlinux from build-id cache
->   perf symbol: Set binary/symtab type for split kallsyms
->   perf symbol: Get rid of machine_or_dso_e_machine()
->   perf tools: Factor out dso__find_binary_type()
->   perf symbol: Set binary type for JIT map DSOs
->   perf symbol: Do not set binary type from symtab type
->   perf annotate: Simplify symbol__disassemble() with dso binary_type
->   perf test: Fix dso data tests
->
->  tools/perf/tests/dso-data.c |   7 ++
->  tools/perf/util/disasm.c    | 124 +++++++-------------------------
->  tools/perf/util/dso.c       | 138 ++++++++++++++++++++++++++++++++----
->  tools/perf/util/dso.h       |  13 ++++
->  tools/perf/util/symbol.c    |  50 ++++---------
->  5 files changed, 182 insertions(+), 150 deletions(-)
->
-> --
-> 2.55.0
->
+> Magnus
