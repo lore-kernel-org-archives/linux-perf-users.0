@@ -1,91 +1,135 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-dy1-f198.google.com (mail-dy1-f198.google.com [74.125.82.198])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 176E03F929C;
-	Mon, 12 Oct 2026 23:47:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6927F3BED42
+	for <linux-perf-users@vger.kernel.org>; Mon, 12 Oct 2026 23:47:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791848824; cv=none; b=QbNZNRr451o5uFbcDG7Qrt00k0+F7MhvUuKHD25DDK0OmgjnPmuWRJWUyLRftcutAsRRiw3ycILdd/VP4vsKJRDPCssues6svW4gXt2usOOv3Q0SR/CQwwfFKXaIIaOrzpNZSKSG82jgjKJE91wlYKW+m5kgwiWwJbAtGvsUSO8=
+	t=1791848858; cv=none; b=A36gAhKkE9jZkHKCYiWoU/iiYZABf4YLvhABJD9Y9eY6Y6LRA7UBdDohkbld9qOWg6fP62Ly+XHeYhi4TkCpUHcC616utuWItCA8H4WyzZrAHYjtt3HxhK8Rt/KLG6x5Dt8xDJBHcprZ+s5Yo7fjVEAAaZ13Wc/8S+fBC0oD/mU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791848824; c=relaxed/simple;
-	bh=1bHuMsrEsQD5wEmz06IFmkb1QgZXlOqLPr0G6/eia1s=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=S5kj5NayKWIT0h6vIQLr1MYEe5KA3gpbLDCSSI9k8QikCLWFf7sTckDj4v3ZzOvtjxEry+Uggo3u6V8fJmDfZLY7W0xFQsA/eKtPre7aj6wYZQDB60onleyulTrZaOEAVeQMVg4+qsbTY3KOXjhGeZUv04snHr+e+INUa7nnBrA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kPWMv201; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1791848858; c=relaxed/simple;
+	bh=BS+7adD6JaJlx+m/q9r6uvUaMPyQ0CEfgoa5rcMuGfY=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=pglU7LhuQbDmxIkxsBCoQ6x+mRVY8U3/9ULhKqwEue8EoQz3GHcANwDcaJliwB/r010snDksIU4oZRL1uG1QyIso8pNpBsbgpnpoPmU1t/KQ/f5rL5r5lIP4Wu0eAZMIxt/6P2se1uyV2ld2lqoM6tjjwwygeNTvCdwqPdeW/ZI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=tJ07bbVb; arc=none smtp.client-ip=74.125.82.198
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kPWMv201"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B672C1F008A4;
-	Mon, 12 Oct 2026 23:47:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1791848822;
-	bh=0HHVkRhgsPcJzdQTEl7ApOCJ4ty0rF61qluUNEmc2qM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=kPWMv201r58rpp/5YQo7tPeefXM/Z6rQYb+zNpVdJAv4O4jZoUbSmsHAa3opr9184
-	 Dh6IlBg1583ELxhMMnygUyGSJRSFf7jWmQHc8LAONDmw9GGCdNPneTuF9AEnVSOEWz
-	 cBNCCRYwqxm6lOlR/FcN8oHv3h8tTSggt3CqLdVHUOQYlRDGRpe1RhlsUWAfsKwx5f
-	 LXtEq6V+1TXLZ8nN3TYevBFdyXgzwTrJ/hYDqL3kvfNu/eq4ideQ8KrA5Z/aUr1Fog
-	 VmkxsMUSbLmTDYgh2ZY1TXONzWTmtGVXHVA+eVUXBrV4Sm64zxEZDmA/EQE48LGbzZ
-	 UnOH9vn2l++tw==
-From: Namhyung Kim <namhyung@kernel.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Ian Rogers <irogers@google.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	James Clark <james.clark@linaro.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>,
-	LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org
-Subject: [PATCH v4 10/10] perf test: Fix dso data tests
-Date: Mon, 12 Oct 2026 16:46:54 -0700
-Message-ID: <20261012234654.60666-11-namhyung@kernel.org>
-X-Mailer: git-send-email 2.56.0.385.gd3acb90ef8-goog
-In-Reply-To: <20261012234654.60666-1-namhyung@kernel.org>
-References: <20261012234654.60666-1-namhyung@kernel.org>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="tJ07bbVb"
+Received: by mail-dy1-f198.google.com with SMTP id 5a478bee46e88-341eff9e381so6806216eec.1
+        for <linux-perf-users@vger.kernel.org>; Mon, 12 Oct 2026 16:47:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1791848856; x=1792453656; darn=vger.kernel.org;
+        h=content-type:cc:to:from:subject:message-id:references:mime-version
+         :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=ZhoKAKgW2UnYHdcBLKjBFWI63vcozY1ag7JKlvjpeLU=;
+        b=tJ07bbVbHn9glEYr9/QEm2mdnTiBLNePknd3zhIevAQ3DNYu3xfW0tpVeNGlyjpf3u
+         hjv099B8xnjGhPvECEVPtYmLEoUpqibDvzxPQaQD2RyftXEkWjZIWp3hfrQ3NWeUr68U
+         MX+hwc1mVtD43D7ct77D+za0D/HP1uWb6CVSMqCJy+xPiN+Aa6pIuneSkG/DAiuCNlRf
+         NgFeBy9hpd+qPPuZGUzmcPSAoJsfs2zsZVVX94A2NW+u6wbR1HQW4lZ+qKUdeNq786c6
+         WpNawzFnDQCb3Bh1KwmZb2+QDiP4Ki2k1b4/ick3Y2EWAZilCwxF+FkjxsQNBbN8zV/3
+         cP9g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1791848856; x=1792453656;
+        h=content-type:cc:to:from:subject:message-id:references:mime-version
+         :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=ZhoKAKgW2UnYHdcBLKjBFWI63vcozY1ag7JKlvjpeLU=;
+        b=MwJ2eQmLKcLc17aVtE6RRUuu9KBlPl1UzhrCeSEIMGm8xH9RexlPiAuBMgSdsPcq6F
+         upCKCS3CrD6ZKCsiJusAEmM5GpsjPhoxzzXjx8hBwNvcD3PpcuAbNuMgq7OqgQbjX83+
+         jf6SEIzhHH+yVa535ta7QDwcHwmMGmAOLmDUGlPArygd/8YkaKJE+5dPEUdNPa7PTTUq
+         516tAiDA91w9UTDV5NZeoqGD1CMreTeimhXDnC3jZR15FcVlX2raEhefghhL9gkjbQsk
+         dGwNd/fkRuJ9940teNxZ1wlpUvNflOcGTNjw+yuTJWsX2nhl6spP9AFfyQIak/4y1Ech
+         hniA==
+X-Forwarded-Encrypted: i=1; AKwUvBz7/97DMTTJZ/SClkO6Mmd4R+d4E3Eoqt4dttOxi2zd7cYvnUn/vYi6dnM9PK1SFqB+ZoUCPD8bc8TlxSPcoA1C@vger.kernel.org
+X-Gm-Message-State: AFq9FYK7e7IZa7oDAOCeHQX3D5RO9AMcRqtceW/39ELec7NshnNtfvt8
+	BEM9nUP0HFKbQOXcUHZQrzs7z+JTmWDRsHPMerZaOLmOdcVGYG5b337/wmyJU5sSv4+GdssYXhj
+	BSMqhHa1swg==
+X-Received: from dyz18.prod.google.com ([2002:a05:693c:4092:b0:34d:46b2:7513])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:693c:88c9:20b0:34c:79d4:ba0d
+ with SMTP id 5a478bee46e88-3537dffd5b2mr17464604eec.14.1791848855765; Mon, 12
+ Oct 2026 16:47:35 -0700 (PDT)
+Date: Mon, 12 Oct 2026 16:47:21 -0700
+In-Reply-To: <20260929025345.88829-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+References: <20260929025345.88829-1-irogers@google.com>
+X-Mailer: git-send-email 2.56.0.385.gd3acb90ef8-goog
+Message-ID: <20261012234724.721224-1-irogers@google.com>
+Subject: [PATCH v4 0/3] perf test: Per-test timeouts, JUnit XML compliance,
+ and snippet improvements
+From: Ian Rogers <irogers@google.com>
+To: acme@kernel.org, namhyung@kernel.org
+Cc: irogers@google.com, 9erthalion6@gmail.com, adrian.hunter@intel.com, 
+	james.clark@linaro.org, jolsa@kernel.org, leo.yan@arm.com, 
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+	mingo@redhat.com, peterz@infradead.org
+Content-Type: text/plain; charset="UTF-8"
 
-Now dso__binary_type() requires that the target file is a valid ELF file
-containing ".text" section.  But the test only checks cached read/write
-operation on a file.  Let's set the binary type to bypass the ELF check
-to read/write the file properly.
+This series adds per-test timeout support to 'perf test', improves JUnit
+XML output to validate against strict JUnit schemas, and refines the
+verbose=1 failure snippet output when tests fail with a signal or time
+out:
 
-Reviewed-by: Ian Rogers <irogers@google.com>
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
----
- tools/perf/tests/dso-data.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+1. Add a per-test timeout (default 60s, configurable via '-t'/'--timeout',
+   0 to disable, disabled with '-F'/'--dont-fork'). Forked tests run in
+   their own process groups and the existing polling loops in
+   finish_test() and finish_tests_parallel() check elapsed runtimes,
+   sending SIGTERM on timeout and escalating to SIGKILL after 1 second.
+   Timed out tests are reported as 'TIMEOUT!', listed in the summary,
+   and recorded as '<error message="TIMEOUT" type="timeout">' in JUnit
+   XML output.
 
-diff --git a/tools/perf/tests/dso-data.c b/tools/perf/tests/dso-data.c
-index 46bc3f59726004fa..18b7052a2dc575c2 100644
---- a/tools/perf/tests/dso-data.c
-+++ b/tools/perf/tests/dso-data.c
-@@ -138,6 +138,10 @@ static int test__dso_data(struct test_suite *test __maybe_unused, int subtest __
- 	dsos__init(&machine.dsos);
- 
- 	dso = dso__new(file);
-+	TEST_ASSERT_VAL("Failed to get dso", dso);
-+	/* override the binary type for dso data access */
-+	dso__set_binary_type(dso, DSO_BINARY_TYPE__SYSTEM_PATH_DSO);
-+	dso__set_bintype_searched(dso);
- 	TEST_ASSERT_VAL("Failed to add dso", !dsos__add(&machine.dsos, dso));
- 	TEST_ASSERT_VAL("Failed to access to dso",
- 			dso__data_fd(dso, &machine) >= 0);
-@@ -226,6 +230,9 @@ static int dsos__create(int cnt, int size, struct dsos *dsos)
- 		TEST_ASSERT_VAL("failed to get dso file", file);
- 		dso = dso__new(file);
- 		TEST_ASSERT_VAL("failed to get dso", dso);
-+		/* override the binary type for dso data access */
-+		dso__set_binary_type(dso, DSO_BINARY_TYPE__SYSTEM_PATH_DSO);
-+		dso__set_bintype_searched(dso);
- 		TEST_ASSERT_VAL("failed to add dso", !dsos__add(dsos, dso));
- 		dso__put(dso);
- 	}
+2. Update 'perf test -j' output to validate cleanly against both the
+   Apache Ant/Windy Road JUnit schema (JUnit.xsd) and the Jenkins
+   xUnit/Maven Surefire schema (junit-10.xsd), including required
+   '<testsuite>' attributes, '<properties>' from uname, '<system-out/>'
+   and '<system-err/>', self-closing tags, apostrophe escaping, and
+   UTF-8/XML 1.0 codepoint validation.
+
+3. Improve verbose=1 failure snippet selection in
+   print_test_failure_snippet() to skip blank and stack trace lines
+   when selecting context and scanning backwards from the end of the
+   log, and prioritize the test output line immediately preceding
+   '---- unexpected signal' so trailing test progress is shown instead
+   of outermost stack frames.
+
+v4:
+ - Drop the ITIMER_REAL timer and SIGALRM handler in patch 1, relying on
+   the existing 10ms/100ms polling loops in finish_test() and
+   finish_tests_parallel() to detect timeouts.
+ - Only fall back to kill(pid, sig) when kill(-pid, sig) fails, and
+   ignore SIGTERM/SIGINT while waiting for subprocesses in
+   run_test_child().
+ - Add patch 3 to avoid stack trace noise in verbose=1 failure snippets.
+
+v3:
+ - Block SIGINT/SIGTERM while a test process may be reaped and until its
+   pid is cleared, and skip already reaped tests in the signal path.
+
+v2:
+ - Reset SIGALRM to SIG_DFL in the forked test child.
+ - Replace the blocking waitpid(-1) loop with a bounded, non-blocking
+   wait that only runs when interrupted by SIGTERM/SIGINT.
+ - Ensure the SIGKILL escalation reaches the whole process group before
+   the zombie is reaped.
+ - Factor out timespec_diff_secs() and TEST_KILL_GRACE_SECS.
+
+Ian Rogers (3):
+  perf test: Add per-test timeout support
+  perf test: Improve JUnit XML schema compliance and completeness
+  perf test: Avoid stack trace noise in verbose=1 failure snippets
+
+ tools/perf/Documentation/perf-test.txt |  12 +-
+ tools/perf/tests/builtin-test.c        | 668 +++++++++++++++++++------
+ tools/perf/tests/tests.h               |   7 +-
+ 3 files changed, 543 insertions(+), 144 deletions(-)
+
 -- 
 2.56.0.385.gd3acb90ef8-goog
 
