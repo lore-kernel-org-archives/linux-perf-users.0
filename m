@@ -1,95 +1,95 @@
-Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
+Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0ADD1323417
-	for <linux-perf-users@vger.kernel.org>; Mon, 12 Oct 2026 16:21:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.218.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AF7B2EEE7C
+	for <linux-perf-users@vger.kernel.org>; Mon, 12 Oct 2026 17:12:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.218.54
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791822071; cv=pass; b=Uq5S7uqdA6T4lsx/5/MIsdXSeRNQL3PjiaBkhiZdOQL0ddp1nVuFhijlqORBMlc3plX4eE5XUrGNv1U+QNm+NLf9iZ/2ZQMENMc9Z+wXTJ/ltxjjm3yLPDIRg3+kR+ieDxzAA0kXZv7VEZ/KMMAso+vERZe/7sFzNtBFIpf6nDk=
+	t=1791825153; cv=pass; b=Cemq95n2OZ9tVEXOIRHcu1uoVeceiwSnq+ry0uEngpk5sq8oBZkTQsZGihEHKIhYT9PIl6icbu9Y+olje3YPS8ELI6546lGM0e8DwSFo/Zl4I+b7TOGn9gKBBx9UxjuCpaiu0tDUy82VhUdb9TJi6s1hRNWbkgp349K16wfJMC0=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791822071; c=relaxed/simple;
-	bh=ZtJuy+UREce1sg1peUoIDUZxf72qfaMwDaVEPJG8eTw=;
+	s=arc-20240116; t=1791825153; c=relaxed/simple;
+	bh=dpW2g/OHhp1bd+k/Wa9Z4WycLX07oh4uMIjONrgblWU=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=s3TulAPI9m1auqKYOxvoAy2KdXvFtveXCTosu/cLtl/glmS5wbF34jYA21KU/UDzGzmytkeFbxolDrJSOdvWjFzgB2uOHd4UNG2kshbIvnaXKu5VZDZQwXLfEnnzrEX/dfc8xs5kp7Bb/sz0PXJ09m/MZ+0LrefTP9MXMpf/ua4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mlQe5Rq1; arc=pass smtp.client-ip=209.85.218.41
+	 To:Cc:Content-Type; b=jPrRSUpO7dTraNWj5+BeEcRylZAUaWkMnZX7SIi64e+lgaRQb6sIvl6jKxuYfuayOsT/8nrpOh/O0LPMXHVNUneEa39fSnql7ZQNHkPwj6BtOSuuBAG6+2BXpd4PnVama+NbO+0lHkBMvEOa+/wU8O1OHRQZ5CWoAD19afuONGo=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LNtkXBU+; arc=pass smtp.client-ip=209.85.218.54
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mlQe5Rq1"
-Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-c2533d83e3bso328723966b.2
-        for <linux-perf-users@vger.kernel.org>; Mon, 12 Oct 2026 09:21:09 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1791822068; cv=none;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LNtkXBU+"
+Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-c34bff61551so192880766b.2
+        for <linux-perf-users@vger.kernel.org>; Mon, 12 Oct 2026 10:12:31 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1791825149; cv=none;
         d=google.com; s=arc-20260327;
-        b=aLCy0E6NkBmmAlp3SCylx4OODidX0B1+2zfMGxhd+UP83TitDdFAeSCDnoRefPY2AA
-         Y1sDsdrZBZYdvAtXMzZVcZjeL9vTqeYgRpllPec4unKb9FSOd6EDlcbD+yApAkFF1qIp
-         cq2eFviedyD1Ab49OFVQ3XlIdNeDHpB5cw1VRjrtAbkzd+pjyrQs34iGi0iueMpS+Ndq
-         il0rt5uXkynpy9tW1glnUMfwr+WK+C2zF4usK2KO3AJuAOPZV2yib1GTLp7EQ7fx5GcO
-         NmKRhnFN8zRInLqdQlvWNqR3Id+Ta6S07xhHzqHkQpUQUF91bFlfnNzsXlS0/2ixfq4E
-         49Yw==
+        b=APmv4PNXhiaOubbVJeWeMgCbdx+rzmPGHjphgmXn52fOt3wkzEU18C2WCl9OubQzFG
+         DcrJxW7+wfnFuBom8R9h7wk8XsNI347lEHdVpHXbia4jJij7iLsuacArsxacOSQLS+IX
+         0z9TcM+VJnGbxk3c6tMzNkHR/f1Ja4QktoKgYX9Npr9HwGiGG6Q48VIULsldcdB3+mFZ
+         Je0rB6WHKUww5bWIVsEku0Um+zAIcboaHMLG9tbpDCMF0hGucaduvH9dP09FgvV24lbV
+         UUnPPaJpPebkhxfo7ThFwV1JTH7LOuWX+h49EFWDJylEbkD+Jjm9mMf60q+MrHsxQyGh
+         6fmQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:dkim-signature;
-        bh=rtrJmGwBJ7fFDAdke9R1Vl4DtHEPSg3jl6Ch4LlMUAA=;
-        fh=4hcjO894OUYy9DKUxXxQBO8K+3d3VqqXjWj+++Xo1sM=;
-        b=dmak7HHqdWRP2oPHCbJD83eGwZvqVp3Wkj9gPTz901afsPzJgRQPsrQDDNRnYIOOMs
-         5GweWIyiP5QAw1HuySoODqBXno619xQuaMHGNijvJRv8ja6Mb4JxfSidRx893Zxje1g+
-         6Jd71Rp2l5JVhCMSH1HRhCmg7EL3/dqwcQcJuuSGH+qmbiqobmu3r9kHpPRr0GhfGqBL
-         9C7aAkcZX1fUcEcQx53vP8egv5a//JzYPVgGDQFWmZj4NsdupzSuDdJSlYp0sgL+ohYl
-         3Vlk1z/fp3RYqdhS7w2+I3E4SnilvuPPnUCfvwmnEF3W2vuZ4tPaVStpPP7uycKmUCzG
-         4ZEQ==;
+        bh=UhieV+/eJrwJW2//RDtEPeUp5XItWunJ/DM2B+e/f0M=;
+        fh=yphOl0Pg4Fa2SYdo5EIXP+oDxw1AgC4cjhCmGSz1ROQ=;
+        b=BxwSYK7kb/JiMb4uMp9S1e3mwuR6f4F5UNeFcDrKyV1Xf7OZeVqw2cWPH5Hr2XHi+i
+         37A0oCZBS8LnDaK548Ot2A7LHHstkYiYz39w0YUeZZudGhYlgSXxQUMLXLKgDtv/jWAl
+         uLHCdrw172tUqAPSecW/KGxw4Sik96OJ89kSnxIQO6zP6oA2Tao6fxAHrm6m9m8xyQi8
+         YcXxjh/lg4y9/4Rm4TI7d8SObm+l8P+54RwoVS6M89qB/dBvZEqtejtCPEaJnrxHMpzc
+         rn44VG03EnPwkjMVmYi7/guttkmvPmMKIrc/l5c0rtikeNP0ylZqY1K2wDnh8vnWZTsv
+         NTyQ==;
         darn=vger.kernel.org
 ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1791822068; x=1792426868; darn=vger.kernel.org;
+        d=gmail.com; s=20251104; t=1791825149; x=1792429949; darn=vger.kernel.org;
         h=content-transfer-encoding:content-type:cc:to:subject:message-id
          :date:from:in-reply-to:references:mime-version:from:to:cc:subject
          :date:message-id:reply-to:content-type;
-        bh=rtrJmGwBJ7fFDAdke9R1Vl4DtHEPSg3jl6Ch4LlMUAA=;
-        b=mlQe5Rq1SzCNDLgbX91+TwnsTuHGb9Q1PNka/WwZ1b4omFf2cviF0DCRzMFQTxS/Cp
-         4kvi7eFoR2FXsAiQmzTBclVr20+xw9pf8erRlMoTnC6EOa6Nb0URMMYvwUdnax46HppO
-         MJattmjMAg9RomV8fBUTBVcfuqu2tohO/rFrE7PceK0NuWZP3XUib4YiXDwTNVOXJgNf
-         XDOD9IhgTmgK0dh1bR8BhZs+rS3AgOjEkgC5LyPj+grjMYHwj5KSZMTg4ASrcWpvAT3f
-         4UclTyagrWBXPz1Kz5qTpJwadd/mXeLakp6skbKaqbrPR6JSyJuSxmboPM5QmFYGbWUL
-         nGjA==
+        bh=UhieV+/eJrwJW2//RDtEPeUp5XItWunJ/DM2B+e/f0M=;
+        b=LNtkXBU+ki5e5hfXUbOYJgoqmVPmvvlOv6aE8TeGaObQVrMEhK5SMDzl2vxRDv3w9a
+         Y9wMRqWUrUzIgVfOB2QeS1wDoxLAVUOmRoz+jmQZ2FJr+w3MAOm2EhDw6RbyRXdE8+sd
+         EFFSjzf7S6eyHBu/Eheio/8fEREfXEZSFvjEZ4TJCeXfBVO6s1iEXjBDMbRGtGf9lMhI
+         uTRs9DRO+EAWbu993mr/8EBwNvBG2f3wYG4vQXxzFlixvQJSNrsYkgQNH/kDlVbbtugm
+         v2p3/8lgQ1Lu1aQtanuQOuwjI6Zru14CSDwomS76o3l499/Be5ER+5B517veqwwcEpiM
+         ZJIw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1791822068; x=1792426868;
+        d=1e100.net; s=20260707; t=1791825149; x=1792429949;
         h=content-transfer-encoding:content-type:cc:to:subject:message-id
          :date:from:in-reply-to:references:mime-version:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=rtrJmGwBJ7fFDAdke9R1Vl4DtHEPSg3jl6Ch4LlMUAA=;
-        b=YhNJhuDKRe7Y2maoOs6uPQPUsZixGBH8B0JlWiGQFTLXyd3XXPvZk8NEtk3BBtg99C
-         oOJEtvv7Db77XNrBUbLspnGqT5M/sKyqkj7ueCD0TGNhSfliJPcLJBtRNoyrUXDmxDJw
-         zDJJ/lBlRMCWf/tPThOQz3s5K0x2BRp6OD+kVwc7wOQqgf3MBaNeLpY2CleKupq0g8Nl
-         XBCtXJrSmnM5sIMR+sDmHCP0rJM4DOdPfA5VY0dOxuBHZy9RNpc4w9b853S6HxUtBM7N
-         umP456PbJPvmaA8WIJzpuzXWepT5iyuvuLqVj6BJ+mWazKEGBst6iE0swRxu0a44pRdj
-         VKow==
-X-Forwarded-Encrypted: i=1; AKwUvBwv2uoxyAjcgHJM9dyEImq7cL4huAhVK3qbz5TR3d7b28UhJo5SHbgzUgWnwKgeCsIdMLq0BGKQnJiLwhiQdw38@vger.kernel.org
-X-Gm-Message-State: AFq9FYJEe7WDfmQxSQVWEits58KfFG/SFcwfjQz70eLJ5quXIErhGBg6
-	LidwoUCvUtiiXLK0Wl06MHA6znyZ00IaDimFJnAoOB+npcacApaomOoFkYcVpAEvgcXsgcQDWSi
-	osGlnuuNJIicUP7C1tnsqRpdn9cmRbH6U0lT0bBY=
-X-Gm-Gg: AYBFou3BGlwEhrEDN4GYuIoVQk/qO74IrSd7ZeTlmOu1cwLSCik6D72nnIf8qkfzEAO
-	UzUiVglcxXqiJJEpWVc0AyupGB2hoZyn3uKfanEDQcgUBj2qxjTC7GUIaKb9HPk67xJVNq7aYic
-	i4ms/cnEKpy9WsTZmLV3T7g7e1SOA0Ubpk47DXB8Q8GbpBmcNi1Prd0TCS2z4jvDYqAvaEOFaxo
-	eRAOQ5G8GcP9QNBkVej3uww6em8WXjaCAW+5jNlaEW3qDXs9DRpHUmEqHaNYAR3auwhDH1QAkzE
-	rIOsj6C1dRhD+qEtxSru3/Q47D78Qe4ShTgV7CrVWdhZ+vzoHwBjqEnnkJdiyoLhbpEL0eOP/Pk
-	J0wLznn8L1tbhEMzVd0d9GgdShYaY7BuwoW7GbZJ1O0M=
-X-Received: by 2002:a17:907:d92:b0:c2e:7daa:2399 with SMTP id
- a640c23a62f3a-c31aa0b59aamr1021227866b.42.1791822068206; Mon, 12 Oct 2026
- 09:21:08 -0700 (PDT)
+        bh=UhieV+/eJrwJW2//RDtEPeUp5XItWunJ/DM2B+e/f0M=;
+        b=G0V9rxi7RRUr+rgntlbRFxOkTNQjJNKTcs/AhnzAljb2dTBl6tYTJb4sR8xaxMD+51
+         cDPqCYO7QWZru/Qky6o9f6jBgPltR+kzp3lEZcEfvm/vWK9JwDLtTWeQ4O2gPJP7DrJq
+         v7FcI4ooJqlv/OBThQBE5KQ6BUf+ATVraFWfV8mKTGClCi32JWU83b1vLHnVc5oYI25b
+         cyu9vEP8ObpQK1ESgUsHtvaqIWuMIh1LOVp2J9N1PgaF5SVBqb5X/mKcnb7xxjVCF3+v
+         bXcfrVEKOquTAEQB6XhuvAA2mDKxbebjtNQxVUbUvA8/66zvzzlBCMSDpfOEUaWHt3df
+         7O/g==
+X-Forwarded-Encrypted: i=1; AKwUvBwBpD7bqTRn1myGxpDYbvOlRqXiroeaZJE8Vgmxr/IKS50ln79zoX67Tgf5eO8+yGsG2R56F/cntQd0HsipidgM@vger.kernel.org
+X-Gm-Message-State: AFq9FYIalZU0fw3lGXUvH1Ec/wPTF0BeeuS0C8fPWjjbAqpCaGJAL4Pg
+	mzb82UEZfWhttI5fTXSlp3wzWl7wYRi5sjGVJqXY9gnN3thS2CFVgm68WQKGTCDTnvce2Q9v8eL
+	LakckoIutVuM8czCc1TMbFgJQVxrDEug=
+X-Gm-Gg: AYBFou0Kf94/CwSrXmPOiBa1KhoANytkXnWbR0rGaijAyo5aJkGhlY89fdz9/IugBVN
+	IDnV2jcWYvTRS1jfl56Wsv5URoZiFosf4jlokLT69dsHw/soL03xqJ1sBBaZXs8Xg+7iO4k2Hf5
+	dDKTfb3C+Vsk3TeatikjNYYYaA2ylyopTH/UkfrlKD8yLdYyBK8E1vfDmf5ZYIY6kmgExhm9IA3
+	BrqJOSuubs+Xcx3nffbM3DL/MES7r4Xcu/zopC6CZxGBjNfQE0NsiHX+5Ps+6WMQX+tiMImaZOi
+	6D1NjizjUhFIMl1MpJIYCiwLmO7yYIaBWu3Uz1XshRtg++zr/UuU5Hr7fhnkxZDvzX0WFB+FCZT
+	ApdGukja/9NhrhdByklpewVVwH/5yHT6V98bWoLyJ8A==
+X-Received: by 2002:a17:907:2d24:b0:c2d:bcf7:37f9 with SMTP id
+ a640c23a62f3a-c31aa07a9d9mr992370766b.26.1791825149332; Mon, 12 Oct 2026
+ 10:12:29 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20261011-alpha-perf-regs-v3-v1-0-eaa625a39712@gmail.com> <20261011-alpha-perf-regs-v3-v1-2-eaa625a39712@gmail.com>
-In-Reply-To: <20261011-alpha-perf-regs-v3-v1-2-eaa625a39712@gmail.com>
+References: <20261011-alpha-perf-regs-v3-v1-0-eaa625a39712@gmail.com> <20261011-alpha-perf-regs-v3-v1-3-eaa625a39712@gmail.com>
+In-Reply-To: <20261011-alpha-perf-regs-v3-v1-3-eaa625a39712@gmail.com>
 From: Magnus Lindholm <linmag7@gmail.com>
-Date: Mon, 12 Oct 2026 18:20:56 +0200
-X-Gm-Features: AclHuK8ctq3ag-qDSt__fyD9TouOLhL0ONKOVT2c6PAyBUOuhZ4oNrOZClMtffw
-Message-ID: <CA+=Fv5R05SLcLkHRfVhqLbjWfp29gpR=R8JDktjOKkYw83Xwig@mail.gmail.com>
-Subject: Re: [PATCH 2/4] alpha: stop storing the user stack pointer in pt_regs
+Date: Mon, 12 Oct 2026 19:12:17 +0200
+X-Gm-Features: AclHuK_IfbO80biMKT5u2j2yFp2FuPhLw89IvxvMZVpINwN-IiFIyIRGdYMzWGo
+Message-ID: <CA+=Fv5RW+ju5weuhDMLjEFcWvg0G0RnWXiqTr-0HmCnWhcaQUA@mail.gmail.com>
+Subject: Re: [PATCH 3/4] alpha: use user_stack_pointer() in KSTK_ESP() and dump_elf_thread()
 To: Matt Turner <mattst88@gmail.com>
 Cc: Richard Henderson <richard.henderson@linaro.org>, linux-alpha@vger.kernel.org, 
 	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
@@ -99,111 +99,54 @@ Content-Transfer-Encoding: quoted-printable
 
 Hi Matt,
 
-
 On Sun, Oct 11, 2026 at 10:16=E2=80=AFPM Matt Turner <mattst88@gmail.com> w=
 rote:
 >
-> Nothing reads pt_regs->usp now that user_stack_pointer() uses the PCB.
-> Drop the stores, which saves a PAL_rdusp call on every syscall, and
-> give the field back its old name.
+> Both open-code the same PCB lookup.
 >
 > Assisted-by: Claude:claude-opus-5-5
 > Signed-off-by: Matt Turner <mattst88@gmail.com>
 > ---
->  arch/alpha/include/uapi/asm/ptrace.h | 2 +-
->  arch/alpha/kernel/asm-offsets.c      | 1 -
->  arch/alpha/kernel/entry.S            | 5 -----
->  arch/alpha/kernel/traps.c            | 8 --------
->  4 files changed, 1 insertion(+), 15 deletions(-)
+>  arch/alpha/include/asm/processor.h | 3 +--
+>  arch/alpha/kernel/process.c        | 2 +-
+>  2 files changed, 2 insertions(+), 3 deletions(-)
 >
-> diff --git a/arch/alpha/include/uapi/asm/ptrace.h b/arch/alpha/include/ua=
-pi/asm/ptrace.h
-> index 9d86b2a1526e..72ed913a910f 100644
-> --- a/arch/alpha/include/uapi/asm/ptrace.h
-> +++ b/arch/alpha/include/uapi/asm/ptrace.h
-> @@ -43,7 +43,7 @@ struct pt_regs {
->         unsigned long trap_a1;
->         unsigned long trap_a2;
->  /* This makes the stack 16-byte aligned as GCC expects */
-> -       unsigned long usp;
-> +       unsigned long __pad0;
->  /* These are saved by PAL-code: */
->         unsigned long ps;
->         unsigned long pc;
-> diff --git a/arch/alpha/kernel/asm-offsets.c b/arch/alpha/kernel/asm-offs=
-ets.c
-> index c89792c86044..22ed3c975b1c 100644
-> --- a/arch/alpha/kernel/asm-offsets.c
-> +++ b/arch/alpha/kernel/asm-offsets.c
-> @@ -30,7 +30,6 @@ static void __used foo(void)
+> diff --git a/arch/alpha/include/asm/processor.h b/arch/alpha/include/asm/=
+processor.h
+> index c461a26d47b3..73251cd671e0 100644
+> --- a/arch/alpha/include/asm/processor.h
+> +++ b/arch/alpha/include/asm/processor.h
+> @@ -43,8 +43,7 @@ unsigned long __get_wchan(struct task_struct *p);
 >
->         DEFINE(HAE_CACHE, offsetof(struct alpha_machine_vector, hae_cache=
-));
->         DEFINE(HAE_REG, offsetof(struct alpha_machine_vector, hae_registe=
-r));
-> -       DEFINE(PT_REGS_USP, offsetof(struct pt_regs, usp));
+>  #define KSTK_EIP(tsk) (task_pt_regs(tsk)->pc)
 >
->         DEFINE(TI_FLAGS,        offsetof(struct thread_info, flags));
->         DEFINE(TI_SYSCALL_WORK, offsetof(struct thread_info, syscall_work=
-));
-> diff --git a/arch/alpha/kernel/entry.S b/arch/alpha/kernel/entry.S
-> index bfa116d455fb..790389a15c3c 100644
-> --- a/arch/alpha/kernel/entry.S
-> +++ b/arch/alpha/kernel/entry.S
-> @@ -476,11 +476,6 @@ entSys:
->         ldq     $1, 0($sp)      /* syscall nr from saved r0 */
->         stq     $1, 8($sp)      /* regs->r1 =3D shadow syscall nr */
+> -#define KSTK_ESP(tsk) \
+> -  ((tsk) =3D=3D current ? rdusp() : task_thread_info(tsk)->pcb.usp)
+> +#define KSTK_ESP(tsk) user_stack_pointer(task_pt_regs(tsk))
 >
-> -       mov     $0, $8
-> -       call_pal PAL_rdusp
-> -       stq     $0, PT_REGS_USP($sp)
-> -       mov     $8, $0
-> -
->         lda     $8, 0x3fff
->         bic     $sp, $8, $8
+>  #define cpu_relax()    barrier()
 >
-> diff --git a/arch/alpha/kernel/traps.c b/arch/alpha/kernel/traps.c
-> index cfaef96c4ce8..5882c65b7ef1 100644
-> --- a/arch/alpha/kernel/traps.c
-> +++ b/arch/alpha/kernel/traps.c
-> @@ -30,12 +30,6 @@
+> diff --git a/arch/alpha/kernel/process.c b/arch/alpha/kernel/process.c
+> index 06522451f018..7861c9e767b7 100644
+> --- a/arch/alpha/kernel/process.c
+> +++ b/arch/alpha/kernel/process.c
+> @@ -318,7 +318,7 @@ dump_elf_thread(elf_greg_t *dest, struct pt_regs *pt,=
+ struct thread_info *ti)
+>         dest[27] =3D pt->r27;
+>         dest[28] =3D pt->r28;
+>         dest[29] =3D pt->gp;
+> -       dest[30] =3D ti =3D=3D current_thread_info() ? rdusp() : ti->pcb.=
+usp;
+> +       dest[30] =3D user_stack_pointer(pt);
+>         dest[31] =3D pt->pc;
 >
->  #include "proto.h"
->
-> -static __always_inline void alpha_snapshot_usp(struct pt_regs *regs)
-> -{
-> -       if (user_mode(regs))
-> -               regs->usp =3D rdusp();
-> -}
-> -
->  void
->  dik_show_regs(struct pt_regs *regs, unsigned long *r9_15)
->  {
-> @@ -186,7 +180,6 @@ do_entArith(unsigned long summary, unsigned long writ=
-e_mask,
->  {
->         long si_code =3D FPE_FLTINV;
->
-> -       alpha_snapshot_usp(regs);
->         if (summary & 1) {
->                 /* Software-completion summary bit is set, so try to
->                    emulate the instruction.  If the processor supports
-> @@ -208,7 +201,6 @@ do_entIF(unsigned long type, struct pt_regs *regs)
->  {
->         int signo, code;
->
-> -       alpha_snapshot_usp(regs);
->         if (type =3D=3D 3) { /* FEN fault */
->                 /* Irritating users can call PAL_clrfen to disable the
->                    FPU for the process.  The kernel will then trap in
+>         /* Once upon a time this was the PS value.  Which is stupid
 >
 > --
 > 2.55.0
 >
 
-Looks good to me, I see the __pad0 is back again in pt_regs
-brings back memories from tracking down the stack alignment
-issues a while back.
+Looks good to me.
 
-Reviewed-by: Magnus Lindholm <linmag7@gmail.com>
 Tested-by: Magnus Lindholm <linmag7@gmail.com>
+Reviewed-by: Magnus Lindholm <linmag7@gmail.com>
