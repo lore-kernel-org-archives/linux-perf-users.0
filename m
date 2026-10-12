@@ -1,45 +1,46 @@
-Received: from CH1PR05CU001.outbound.protection.outlook.com (mail-northcentralusazon11010016.outbound.protection.outlook.com [52.101.193.16])
+Received: from BYAPR05CU005.outbound.protection.outlook.com (mail-westusazon11010018.outbound.protection.outlook.com [52.101.85.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8099B4457B8;
-	Mon, 12 Oct 2026 07:55:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.193.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A165935A38C;
+	Mon, 12 Oct 2026 07:55:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.85.18
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791791752; cv=fail; b=bgD7MWnRPRYmiNON0vMlF5JnBOsONkAtqU9VM3ojxKpS/qh1gS69O3X0hbMSmys7AhFolQs/KkpHeVPLJJ1uUrTAINIP1LVN23pv7w1B7p63VvVva4BPmPoZ7nRVBGc6bpsoQObGOqnBsYASDBA39qPM6dmRp1PAjn/P5MYU16c=
+	t=1791791759; cv=fail; b=ndhdjH4BgzDDs0eMJsmin56Bkm4SYEUgxHm9Hv4OFVQGf4192Q01qrwQRPFeMueTb4TS/fM3GTQxhVWDXdQlxUYa2PYYQ1g4vnOhDkwybtb4hJCJWKKhyVdbo0NtVrk4SKBCpICEQb8caJntznP4m20gDbbyjcSMH44Q4heKjiY=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791791752; c=relaxed/simple;
-	bh=UHE1uVB3bTMZVP79nX8LMIaJt1UF64+BcjzHLvCtbhk=;
+	s=arc-20240116; t=1791791759; c=relaxed/simple;
+	bh=X+uvvrduCGQzCFhQgfFz9GeKGp5mjSQRqO7pweDgb60=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Tk94njcwns0DzfmDhm/brW9rSP0T6xU7IDTwJYccNZUYlzqjysF5rpqUrFQmOj1P6DWhQcmT3ejDrm9BjwHxdZ40aYMoCh+UT56kxAa3xKnfu172XpiTRF6aEgx/ItoccYTmxglIvduDlX2j8bbBRAvLEPKPEnoJnLwUz3jEhGI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=JQ09VXL2; arc=fail smtp.client-ip=52.101.193.16
+	 MIME-Version:Content-Type; b=elT6ipNYnOLnkbW7woPeU44Q8+Tqpmxs7x6hC4FEdKfWnGPdHa2TYmAfFKaCY0U6aGFGKBQJcLExwH7D3Ii5KwKsfODFsb526xl0Qk2txQ/F+Bu7ih8LrojFr9c3/nUkmhMA0UtpU9UfaWspV+iFJDB2bivo+3hKRa/5HjAZgIE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=LDXlSDJH; arc=fail smtp.client-ip=52.101.85.18
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="JQ09VXL2"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="LDXlSDJH"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=INUVtsS7O7KRefAX85WOYomW7LgvY4glYN0UlA7UY9yL8pJyF93TZn8mFHaxOdx3n4SoA6dnT+eMZas/jqYMUlagdmb+A9MzAFNHjNH8GjF+QqPPJ6UwhPiPvYga1x11l0twFZvM7opYjx2R2oNcCtYv3r75Makng90SToNabec7kQlYR5YlqWQI9/0LJZotF7KpYJyhYC9ViQl6wlnhR1row3KM1XeHvmODs4/HKJ+4+aRCx+9kYEATSPwkO3z4IdXmT5ySmB/vp0kLLfXuABlk2TkT966hUn+IxdXQmO1SFQS/tXubWLFUlvVoKKBtrGAzON0SqK1PuLVZmkeTOQ==
+ b=SAxzmwafqbTtRhzJTLEio+HVwkigHA5uRlIsO+fnNmZOx5nItw3MjQJ+GwsZJFz4+36YfNNMeyFRcZMyr66F45HriVuujmnWKHk5o5tcW7UAay3V2rgDqNRfs69H2Ms4IpZW44giXJnGBzqB566+C2bBRvAJPk+YcHrsK91/DFV7Um/sfX+k3BH8vZX3GGkIg9qMYtWK+0+ujJJmBL2OmHxRuWKwM861LzNpv5h1DQZvDY/fOPZ4Lhm2AvNRj8laa6lcJpipIMndMRwcrsu1oQtrLHFhRSyi2rzu64G3X0ZJavj5eWFDNbcCY6+viVOQ7DeHOjDD67Mqy7IVeZixag==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=ehVIziCtPzjpqKVnEVHCYuGMTcfpiCnAOtkplBjdvco=;
- b=ZHYt/EtwcjbkA6aeLbNkkLdE1jg+UyRJWNubLIt43dFBTyNnrtNU1LX2iePhCoD9TLFwRfqWHJqXKDgKim7SdSYoNH/xAB4Vgkvz8lo7skJy8lWkUWggOIdjq79Vq85Ak5UhMIRtQH3BUSvZuFNveVcPALivDuciW0QfeLVeFzXQCmHFmIXvypMYrzKuKG2LvWDkMeOse0VYn8IvPoLyLOG83qLg/LqlaBo65Gz+yDOlImdpht8e2Kz8+1mqU4nSLc+aTejQT/D1fH86RLorw/2ZKFrHCGHFfjHe8m2Jy4aHCH6U4gzc+tpbmwwBsH4TUar8PKEt+8v9BOBnALASbQ==
+ bh=W8oHOphYB5eXZHsO0cHzOZz8k1wxTr1uCeyMZZzyT5k=;
+ b=ZQusdB+bfc37XKckZTRWVfkjLUHiQh+x02MN7wAfnT9PW1+m7t79rGA+mQzDWmT9XmeXm2TVlscTZuzv4TUQSqy8/SAV9gUAXdY2/4Hza2EvBKW37J9PMYgt35D/3GCtqccwI14hWGRSzC08FfMBpTmJyq8nbRHN7konzHHGyiboKymkxQvcTOL2kRafc/R7Y24daVUXFCAPMPWg76OU8tBj08awEiro+cDF5W8UhniIXtpDwVSkdaoXGxnnKcKqA2VHpShbR3/ExAYhc/qM8YPbIbDFSagXEL/ndje/BNJFp/gE8SyvAfIqTRFBRQiUaKi0s9ghRHLuwhnzTTL15A==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
  dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
  header.from=amd.com; dkim=none (message not signed); arc=none (0)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ehVIziCtPzjpqKVnEVHCYuGMTcfpiCnAOtkplBjdvco=;
- b=JQ09VXL2Bai4ZgErrW0XaAvWUZpE7LneVwbwFxYKBAhDa5xoVfPEvC+LjUfHbpXKMkEJlDSvhZAzFQ331SWQBQpN9df4p5jqRLeI1t4/LRGqWkhUs2DCzik/lWKkTpuYgQDd3i1yiM+sTF1IGimHetzxgJgkSCvL1Cg12WxGLxU=
-Received: from BN9PR03CA0580.namprd03.prod.outlook.com (2603:10b6:408:10d::15)
- by DM4PR12MB5795.namprd12.prod.outlook.com (2603:10b6:8:62::9) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.21.496.21; Mon, 12 Oct 2026 07:55:37 +0000
-Received: from BL6PEPF00020E61.namprd04.prod.outlook.com
- (2603:10b6:408:10d:cafe::13) by BN9PR03CA0580.outlook.office365.com
- (2603:10b6:408:10d::15) with Microsoft SMTP Server (version=TLS1_3,
+ bh=W8oHOphYB5eXZHsO0cHzOZz8k1wxTr1uCeyMZZzyT5k=;
+ b=LDXlSDJHn0VgHPxu/xbymjG5OLky+fOh34B/udDFkP35E8UQ+fsd0LEMH1Y2gYFEZtlId62zl3l+CIc9volwpWtaJlZrGrxEL9fl6px4c+436LoJAEfy/aNeve6tPPN0GUX0s5fesMgLQXzNyYpGawBY3tV8FqBjaMdjYF6VbyM=
+Received: from BN0PR04CA0159.namprd04.prod.outlook.com (2603:10b6:408:eb::14)
+ by DS4PR12MB9682.namprd12.prod.outlook.com (2603:10b6:8:27f::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.496.21; Mon, 12 Oct
+ 2026 07:55:53 +0000
+Received: from BL6PEPF00020E62.namprd04.prod.outlook.com
+ (2603:10b6:408:eb:cafe::6) by BN0PR04CA0159.outlook.office365.com
+ (2603:10b6:408:eb::14) with Microsoft SMTP Server (version=TLS1_3,
  cipher=TLS_AES_256_GCM_SHA384) id 15.21.496.5 via Frontend Transport; Mon, 12
- Oct 2026 07:55:36 +0000
+ Oct 2026 07:55:52 +0000
 X-MS-Exchange-Authentication-Results: mx.microsoft.com 1; spf=pass (sender IP
  is 165.204.84.17) smtp.mailfrom=amd.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=amd.com;
@@ -47,13 +48,13 @@ Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
  165.204.84.17 as permitted sender) receiver=protection.outlook.com;
  client-ip=165.204.84.17; helo=satlexmb07.amd.com; pr=C
 Received: from satlexmb07.amd.com (165.204.84.17) by
- BL6PEPF00020E61.mail.protection.outlook.com (10.167.249.22) with Microsoft
+ BL6PEPF00020E62.mail.protection.outlook.com (10.167.249.23) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.21.522.6 via Frontend Transport; Mon, 12 Oct 2026 07:55:36 +0000
+ 15.21.522.6 via Frontend Transport; Mon, 12 Oct 2026 07:55:52 +0000
 Received: from sindhu.amdval.net (10.180.168.240) by satlexmb07.amd.com
  (10.181.42.216) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.53; Mon, 12 Oct
- 2026 02:55:25 -0500
+ 2026 02:55:43 -0500
 From: Sandipan Das <sandipan.das@amd.com>
 To: <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>
 CC: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
@@ -63,9 +64,9 @@ CC: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>,
 	James Clark <james.clark@linaro.org>, Ravi Bangoria <ravi.bangoria@amd.com>,
 	Ananth Narayan <ananth.narayan@amd.com>, Sandipan Das <sandipan.das@amd.com>
-Subject: [PATCH 2/3] perf vendor events amd: Add Zen 6 data fabric metrics
-Date: Mon, 12 Oct 2026 13:23:31 +0530
-Message-ID: <6f975087e56e652ae49e8a410ad31b3e76a34b9a.1791791463.git.sandipan.das@amd.com>
+Subject: [PATCH 3/3] perf vendor events amd: Remove "PerPkg" from Zen 6 memory controller metrics
+Date: Mon, 12 Oct 2026 13:23:32 +0530
+Message-ID: <8f22b9814dbe0014a1486a9510da3bb48ba8aeb1.1791791463.git.sandipan.das@amd.com>
 X-Mailer: git-send-email 2.53.0
 In-Reply-To: <cover.1791791463.git.sandipan.das@amd.com>
 References: <cover.1791791463.git.sandipan.das@amd.com>
@@ -81,153 +82,123 @@ X-ClientProxiedBy: satlexmb07.amd.com (10.181.42.216) To satlexmb07.amd.com
  (10.181.42.216)
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BL6PEPF00020E61:EE_|DM4PR12MB5795:EE_
-X-MS-Office365-Filtering-Correlation-Id: e8cf92bc-0c13-49bc-8e75-08df28363382
+X-MS-TrafficTypeDiagnostic: BL6PEPF00020E62:EE_|DS4PR12MB9682:EE_
+X-MS-Office365-Filtering-Correlation-Id: a00e64b1-b090-4780-ab35-08df28363d14
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|82310400026|376014|7416014|36860700016|1800799024|23010399003|11063799006|56012099006|18002099003|22082099003|6133799003|261009223027099003|10067099003|13003099007;
+	BCL:0;ARA:13230040|376014|7416014|82310400026|36860700016|1800799024|23010399003|11063799006|56012099006|18002099003|22082099003|6133799003|261009223027099003|3023799007|10067099003;
 X-Microsoft-Antispam-Message-Info:
-	cI5Eyr1Xvl26QiZR7HemW/r6ocw9D9/YvXeCoBgee0yyLMn09aoX98CbNJw6sQUly9ldjHrvPguerUjewFLIm/sTZik3Rdx5c4qCEGmONzl/BqQiIPHhSAbN+G8lEwzwwbdNeG0K86oZdhMBxCdlmLUR793/GKO4Kb/BxkKuNkHNRIeqcyi/HLHxMvGqteBuAwaGgUew+CqZIyeUvDPoTzena5sIdeA8KvORMBYkgZtOh1NrTCifXByuc9Nz9/MF+6IIxUm0cN7RJYKb8AnL887WcIMYpU0oKnMqGyeMukAkBvkoHo0Qu4ISeFGtMd3s9odGjDwsrcirZhRzXLJDBPbc5M8cMNGdhod5uDq7netnjK0mQ3w7FpaFlbQ0oSjsUSzv5svTVhL+9c+1RhIm+f1w0rchTLX1fm+KU35j6p1QbbscvDAMsi7hETXGsTZJ3WwscS5GYZKZflXct1d1+yW8UKs/iYvVqSH/FMl+aR2KE7s9U1r5DvDke/OwQpx+eERU1QQqL80gDcf9OsGVMOYeZqxdxUwo2DELt7M1s8MQ9g2OXV5ZB+bW+4D/N0nEuwrIq8AbWjW/bGPnVZ2PmWNSNCoRtCk1XzbHxlyBibwHPlMwWJjp1muUmgiEQPDtZCGHQOWv30cC1o/fXy0vdQ==
+	6CS/lzQVwuXEMIzx0JSXujR/DPQkA0V33UE+ITtlGkWByj3bfHT3xyJQLR6miCtnxDfQb1ai9mq7CzWMieNYHrZ2CrOG13xvHwiI1zBaaTp7C8q4H85SYHsmflPgoiY/TaFqXpYpGzET8/uJdi1kv8X2JsW7E/k+3zZwev9wndX7xuAbmKzcPbhd0A+mp4TjcLnoY+2QNFIcX80rEMDrf496rRFJGvHq7niZ5u6ZyJhh6o90PQ7T2+fdV6jtMzs+EJbdjd5VbTa65WTd738Oyr9gPygi/LsUdUqP4jf9x0VMdJooVLMJ3oBhfsA1sCKLgITsIvWflr5L7ImojJnWk4gFnUH0f6FpnnEv2M/dt+BW3lsheM6Vj0IGIXeXp2EQNlCkTcFfK8ggfIL5X1KAjO+eFuxQd9WQY3dssl+oLAoXQOzJ/3huwXfMAtkWUXipUi2TInCaTy3nX5DW/McZlNSvSOIMnfZjDUM2/oz6/G031i853w7NV/EdoaTa35/I8zZGKRpwpTD0NglRcU8SPwI2jT6jovGCQg5g9HhbBnQd6h2rdgB5v6wR3nZ8jKIVlI+R9YI6bBMN+1ZfdKAWCFjhkIhV2T4Qf65yFU1hR0nwjcUWli8vEaiEQLELx8OO0iYEjUHD4Hae/Erc45pF0rE5/OdClR6WjA5WjQyj0Hd14MtyH0TquguBBhTHOHOZs9d+RVPXAvUbjEA3joY+mA==
 X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(376014)(7416014)(36860700016)(1800799024)(23010399003)(11063799006)(56012099006)(18002099003)(22082099003)(6133799003)(261009223027099003)(10067099003)(13003099007);DIR:OUT;SFP:1101;
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(376014)(7416014)(82310400026)(36860700016)(1800799024)(23010399003)(11063799006)(56012099006)(18002099003)(22082099003)(6133799003)(261009223027099003)(3023799007)(10067099003);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	0DieL2+vHYbD6wk3dn1NWFZTGINsIENfjXaR61Ivu0HpPSNdr1+qIr7M6aR0Bg/9jls6LE6bovTGc7bGJLCTjdWooweuRllnJx/cuo5dgNrELLfURkv6anZOvaQuuBmJtj0Bpytb9MCOnYBUijXXzj5QqkoFcZJTfg2dR2n1LS/d3fvIvie26zDCxJjXmDF2/LsT3eCmmzRcy+m+zwGl4l2aiuJmC35ebfFZyH3Lnff8Xzzdo251ARo+sqNpoE7/Emi/wDm33/Lnu+YF89DTW0lDsdvEhfiIKpBs8RUUYoQMNsWq+P7VUV3NYuT6iT6dhKOUlUuCLotcLK2c0LveYSQ57Von+3bXKgq5VRG49PcLNnJsSz9SOd6F1VtgBSwQgV/bk2OLLUW1KooVJoqNbXUEkHgu4gMBagIUNTi3gGBFpXyMP/26s3KCob26vvtL
+	kwdwEq9WDO8k+kVP8Gm4q7udQSz/Ady+zOADqIynya/E1QYX9mrywsq4j1rZIZN2kmINLVheqZFFFvoZAlxJlhyDBddVUWx8CxWG48fd6BDC0i1yFlBDZkXQ3F4zwH9upibZv2Zav8kwgYefsOc01/DBLKdW+9qjUxAMWPRS/2Q5aavikvBkPKXB6JYsxUnkaea7hjxAFZuvJo97CgZPD7z+mSeC2R8sXsACfU3Vi9gVqJKpp6dhpiO6PF7q/0E2FAupSryxntaHpNu8c8g0upKQKhZLZW4iaGa7QL9ZN+LC8V2EBxM9Gor+ogIVqDKi8vjKJDPrUUldXan6E55esMn6yOxlK3d67kP7hORTSUoP63RIsiHh5+5bcGZ97Uiw+DRtkdpeg0QpkJW6mWe8BQqL/Dmc2L/dp9zv0zewqDj+aPC7/95IF3ER01UvqSTG
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Oct 2026 07:55:36.7000
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Oct 2026 07:55:52.7558
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: e8cf92bc-0c13-49bc-8e75-08df28363382
+X-MS-Exchange-CrossTenant-Network-Message-Id: a00e64b1-b090-4780-ab35-08df28363d14
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb07.amd.com]
 X-MS-Exchange-CrossTenant-AuthSource:
-	BL6PEPF00020E61.namprd04.prod.outlook.com
+	BL6PEPF00020E62.namprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB5795
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS4PR12MB9682
 
-Add Zen 6 data fabric metrics sourced from Table 193 in Section 9.1
-titled "Guidance for Common DF Performance Statistics" of the Processor
-Programming Reference (PPR) for AMD Family 1Ah Model 51h Revision B0
-processors, available at the link below.
+"PerPkg" is an event attribute and has no effect on metrics. Remove it
+from the Zen 6 memory controller metrics for consistency with the data
+fabric metrics, which do not set it.
 
-The metrics are primarily meant to monitor data bandwidth at various
-links and interfaces within the Data Fabric.
+The "PerPkg" setting on the underlying events remains correct on Zen 6.
+perf de-duplicates "PerPkg" counts by socket and die, and on AMD
+processors these are the same domain. Each UMC PMU instance belongs to
+a single IOD, so the CPUs it counts on always share the same socket and
+die. De-duplication therefore never merges counts from different IODs,
+unlike the single Data Fabric PMU, which spans both IODs in a socket.
 
-Link: https://bugzilla.kernel.org/attachment.cgi?id=311021
 Signed-off-by: Sandipan Das <sandipan.das@amd.com>
 ---
- .../arch/x86/amdzen6/recommended.json         | 98 +++++++++++++++++++
- 1 file changed, 98 insertions(+)
+ tools/perf/pmu-events/arch/x86/amdzen6/recommended.json | 9 ---------
+ 1 file changed, 9 deletions(-)
 
 diff --git a/tools/perf/pmu-events/arch/x86/amdzen6/recommended.json b/tools/perf/pmu-events/arch/x86/amdzen6/recommended.json
-index 2849a8c159f6..853700a3a0de 100644
+index 853700a3a0de..1bc397f933f2 100644
 --- a/tools/perf/pmu-events/arch/x86/amdzen6/recommended.json
 +++ b/tools/perf/pmu-events/arch/x86/amdzen6/recommended.json
-@@ -335,5 +335,103 @@
+@@ -269,7 +269,6 @@
+     "BriefDescription": "Memory controller data bus utilization.",
+     "MetricExpr": "d_ratio(umc_data_slot_clks.all / 2, umc_mem_clk)",
      "MetricGroup": "memory_controller",
-     "PerPkg": "1",
+-    "PerPkg": "1",
+     "ScaleUnit": "100%"
+   },
+   {
+@@ -277,7 +276,6 @@
+     "BriefDescription": "Memory controller CAS command rate.",
+     "MetricExpr": "d_ratio(umc_cas_cmd.all * 1000, umc_mem_clk)",
+     "MetricGroup": "memory_controller",
+-    "PerPkg": "1",
      "ScaleUnit": "1per_memclk"
-+  },
-+  {
-+    "MetricName": "df_fclk",
-+    "BriefDescription": "Average Fabric Clock (FCLK) frequency.",
-+    "MetricExpr": "pie_general.fclk / aggr_nr(pie_general.fclk) / duration_time / 1e9",
-+    "MetricGroup": "data_fabric",
-+    "ScaleUnit": "1GHz"
-+  },
-+  {
-+    "MetricName": "df_dram_data_bw.rd_local",
-+    "BriefDescription": "Local DRAM read data bandwidth.",
-+    "MetricExpr": "(data_beats_cs_0.rd_local + data_beats_cs_1.rd_local + data_beats_cs_2.rd_local + data_beats_cs_3.rd_local + data_beats_cs_4.rd_local + data_beats_cs_5.rd_local + data_beats_cs_6.rd_local + data_beats_cs_7.rd_local + data_beats_cs_8.rd_local + data_beats_cs_9.rd_local + data_beats_cs_10.rd_local + data_beats_cs_11.rd_local + data_beats_cs_12.rd_local + data_beats_cs_13.rd_local + data_beats_cs_14.rd_local + data_beats_cs_15.rd_local) / duration_time",
-+    "MetricGroup": "data_fabric",
-+    "ScaleUnit": "6.4e-5MB/s"
-+  },
-+  {
-+    "MetricName": "df_dram_data_bw.wr_local",
-+    "BriefDescription": "Local DRAM write data bandwidth.",
-+    "MetricExpr": "(data_beats_cs_0.wr_local + data_beats_cs_1.wr_local + data_beats_cs_2.wr_local + data_beats_cs_3.wr_local + data_beats_cs_4.wr_local + data_beats_cs_5.wr_local + data_beats_cs_6.wr_local + data_beats_cs_7.wr_local + data_beats_cs_8.wr_local + data_beats_cs_9.wr_local + data_beats_cs_10.wr_local + data_beats_cs_11.wr_local + data_beats_cs_12.wr_local + data_beats_cs_13.wr_local + data_beats_cs_14.wr_local + data_beats_cs_15.wr_local) / duration_time",
-+    "MetricGroup": "data_fabric",
-+    "ScaleUnit": "6.4e-5MB/s"
-+  },
-+  {
-+    "MetricName": "df_dram_data_bw.rd_remote",
-+    "BriefDescription": "Remote DRAM read data bandwidth.",
-+    "MetricExpr": "(data_beats_cs_0.rd_remote + data_beats_cs_1.rd_remote + data_beats_cs_2.rd_remote + data_beats_cs_3.rd_remote + data_beats_cs_4.rd_remote + data_beats_cs_5.rd_remote + data_beats_cs_6.rd_remote + data_beats_cs_7.rd_remote + data_beats_cs_8.rd_remote + data_beats_cs_9.rd_remote + data_beats_cs_10.rd_remote + data_beats_cs_11.rd_remote + data_beats_cs_12.rd_remote + data_beats_cs_13.rd_remote + data_beats_cs_14.rd_remote + data_beats_cs_15.rd_remote) / duration_time",
-+    "MetricGroup": "data_fabric",
-+    "ScaleUnit": "6.4e-5MB/s"
-+  },
-+  {
-+    "MetricName": "df_dram_data_bw.wr_remote",
-+    "BriefDescription": "Remote DRAM write data bandwidth.",
-+    "MetricExpr": "(data_beats_cs_0.wr_remote + data_beats_cs_1.wr_remote + data_beats_cs_2.wr_remote + data_beats_cs_3.wr_remote + data_beats_cs_4.wr_remote + data_beats_cs_5.wr_remote + data_beats_cs_6.wr_remote + data_beats_cs_7.wr_remote + data_beats_cs_8.wr_remote + data_beats_cs_9.wr_remote + data_beats_cs_10.wr_remote + data_beats_cs_11.wr_remote + data_beats_cs_12.wr_remote + data_beats_cs_13.wr_remote + data_beats_cs_14.wr_remote + data_beats_cs_15.wr_remote) / duration_time",
-+    "MetricGroup": "data_fabric",
-+    "ScaleUnit": "6.4e-5MB/s"
-+  },
-+  {
-+    "MetricName": "df_cpu_data_bw.in_local",
-+    "BriefDescription": "Local CPU inbound data bandwidth.",
-+    "MetricExpr": "(data_beats_ccm_0.rd_local + data_beats_ccm_1.rd_local + data_beats_ccm_2.rd_local + data_beats_ccm_3.rd_local + data_beats_ccm_4.rd_local + data_beats_ccm_5.rd_local + data_beats_ccm_6.rd_local + data_beats_ccm_7.rd_local + data_beats_ccm_8.rd_local + data_beats_ccm_9.rd_local + data_beats_ccm_10.rd_local + data_beats_ccm_11.rd_local + data_beats_ccm_12.rd_local + data_beats_ccm_13.rd_local + data_beats_ccm_14.rd_local + data_beats_ccm_15.rd_local) / duration_time",
-+    "MetricGroup": "data_fabric",
-+    "ScaleUnit": "3.2e-5MB/s"
-+  },
-+  {
-+    "MetricName": "df_cpu_data_bw.out_local",
-+    "BriefDescription": "Local CPU outbound data bandwidth.",
-+    "MetricExpr": "(data_beats_ccm_0.wr_local + data_beats_ccm_1.wr_local + data_beats_ccm_2.wr_local + data_beats_ccm_3.wr_local + data_beats_ccm_4.wr_local + data_beats_ccm_5.wr_local + data_beats_ccm_6.wr_local + data_beats_ccm_7.wr_local + data_beats_ccm_8.wr_local + data_beats_ccm_9.wr_local + data_beats_ccm_10.wr_local + data_beats_ccm_11.wr_local + data_beats_ccm_12.wr_local + data_beats_ccm_13.wr_local + data_beats_ccm_14.wr_local + data_beats_ccm_15.wr_local) / duration_time",
-+    "MetricGroup": "data_fabric",
-+    "ScaleUnit": "6.4e-5MB/s"
-+  },
-+  {
-+    "MetricName": "df_cpu_data_bw.in_remote",
-+    "BriefDescription": "Remote CPU inbound data bandwidth.",
-+    "MetricExpr": "(data_beats_ccm_0.rd_remote + data_beats_ccm_1.rd_remote + data_beats_ccm_2.rd_remote + data_beats_ccm_3.rd_remote + data_beats_ccm_4.rd_remote + data_beats_ccm_5.rd_remote + data_beats_ccm_6.rd_remote + data_beats_ccm_7.rd_remote + data_beats_ccm_8.rd_remote + data_beats_ccm_9.rd_remote + data_beats_ccm_10.rd_remote + data_beats_ccm_11.rd_remote + data_beats_ccm_12.rd_remote + data_beats_ccm_13.rd_remote + data_beats_ccm_14.rd_remote + data_beats_ccm_15.rd_remote) / duration_time",
-+    "MetricGroup": "data_fabric",
-+    "ScaleUnit": "3.2e-5MB/s"
-+  },
-+  {
-+    "MetricName": "df_cpu_data_bw.out_remote",
-+    "BriefDescription": "Remote CPU outbound data bandwidth.",
-+    "MetricExpr": "(data_beats_ccm_0.wr_remote + data_beats_ccm_1.wr_remote + data_beats_ccm_2.wr_remote + data_beats_ccm_3.wr_remote + data_beats_ccm_4.wr_remote + data_beats_ccm_5.wr_remote + data_beats_ccm_6.wr_remote + data_beats_ccm_7.wr_remote + data_beats_ccm_8.wr_remote + data_beats_ccm_9.wr_remote + data_beats_ccm_10.wr_remote + data_beats_ccm_11.wr_remote + data_beats_ccm_12.wr_remote + data_beats_ccm_13.wr_remote + data_beats_ccm_14.wr_remote + data_beats_ccm_15.wr_remote) / duration_time",
-+    "MetricGroup": "data_fabric",
-+    "ScaleUnit": "6.4e-5MB/s"
-+  },
-+  {
-+    "MetricName": "df_io_data_bw.rd_local",
-+    "BriefDescription": "Local I/O read data bandwidth.",
-+    "MetricExpr": "(data_beats_iom_0.rd_local + data_beats_iom_1.rd_local + data_beats_iom_2.rd_local + data_beats_iom_3.rd_local) / duration_time",
-+    "MetricGroup": "data_fabric",
-+    "ScaleUnit": "6.4e-5MB/s"
-+  },
-+  {
-+    "MetricName": "df_io_data_bw.wr_local",
-+    "BriefDescription": "Local I/O write data bandwidth.",
-+    "MetricExpr": "(data_beats_iom_0.wr_local + data_beats_iom_1.wr_local + data_beats_iom_2.wr_local + data_beats_iom_3.wr_local) / duration_time",
-+    "MetricGroup": "data_fabric",
-+    "ScaleUnit": "6.4e-5MB/s"
-+  },
-+  {
-+    "MetricName": "df_io_data_bw.rd_remote",
-+    "BriefDescription": "Remote I/O read data bandwidth.",
-+    "MetricExpr": "(data_beats_iom_0.rd_remote + data_beats_iom_1.rd_remote + data_beats_iom_2.rd_remote + data_beats_iom_3.rd_remote) / duration_time",
-+    "MetricGroup": "data_fabric",
-+    "ScaleUnit": "6.4e-5MB/s"
-+  },
-+  {
-+    "MetricName": "df_io_data_bw.wr_remote",
-+    "BriefDescription": "Remote I/O write data bandwidth.",
-+    "MetricExpr": "(data_beats_iom_0.wr_remote + data_beats_iom_1.wr_remote + data_beats_iom_2.wr_remote + data_beats_iom_3.wr_remote) / duration_time",
-+    "MetricGroup": "data_fabric",
-+    "ScaleUnit": "6.4e-5MB/s"
-+  },
-+  {
-+    "MetricName": "df_link_data_bw.out_local",
-+    "BriefDescription": "Local inter-socket outbound data bandwidth.",
-+    "MetricExpr": "(data_beats_link_0.out_local + data_beats_link_1.out_local + data_beats_link_2.out_local) / duration_time",
-+    "MetricGroup": "data_fabric",
-+    "ScaleUnit": "6.4e-5MB/s"
-   }
- ]
+   },
+   {
+@@ -285,7 +283,6 @@
+     "BriefDescription": "Ratio of memory controller CAS commands for reads.",
+     "MetricExpr": "d_ratio(umc_cas_cmd.rd, umc_cas_cmd.all)",
+     "MetricGroup": "memory_controller",
+-    "PerPkg": "1",
+     "ScaleUnit": "100%"
+   },
+   {
+@@ -293,7 +290,6 @@
+     "BriefDescription": "Ratio of memory controller CAS commands for writes.",
+     "MetricExpr": "d_ratio(umc_cas_cmd.wr, umc_cas_cmd.all)",
+     "MetricGroup": "memory_controller",
+-    "PerPkg": "1",
+     "ScaleUnit": "100%"
+   },
+   {
+@@ -301,7 +297,6 @@
+     "BriefDescription": "Estimated memory read bandwidth.",
+     "MetricExpr": "(umc_cas_cmd.rd * 64) / 1e6 / duration_time",
+     "MetricGroup": "memory_controller",
+-    "PerPkg": "1",
+     "ScaleUnit": "1MB/s"
+   },
+   {
+@@ -309,7 +304,6 @@
+     "BriefDescription": "Estimated memory write bandwidth.",
+     "MetricExpr": "(umc_cas_cmd.wr * 64) / 1e6 / duration_time",
+     "MetricGroup": "memory_controller",
+-    "PerPkg": "1",
+     "ScaleUnit": "1MB/s"
+   },
+   {
+@@ -317,7 +311,6 @@
+     "BriefDescription": "Estimated combined memory bandwidth.",
+     "MetricExpr": "(umc_cas_cmd.all * 64) / 1e6 / duration_time",
+     "MetricGroup": "memory_controller",
+-    "PerPkg": "1",
+     "ScaleUnit": "1MB/s"
+   },
+   {
+@@ -325,7 +318,6 @@
+     "BriefDescription": "Memory controller ACTIVATE command rate.",
+     "MetricExpr": "d_ratio(umc_act_cmd.all * 1000, umc_mem_clk)",
+     "MetricGroup": "memory_controller",
+-    "PerPkg": "1",
+     "ScaleUnit": "1per_memclk"
+   },
+   {
+@@ -333,7 +325,6 @@
+     "BriefDescription": "Memory controller PRECHARGE command rate.",
+     "MetricExpr": "d_ratio(umc_pchg_cmd.all * 1000, umc_mem_clk)",
+     "MetricGroup": "memory_controller",
+-    "PerPkg": "1",
+     "ScaleUnit": "1per_memclk"
+   },
+   {
 -- 
 2.53.0
 
