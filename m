@@ -1,101 +1,109 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51EA23F9263;
-	Mon, 12 Oct 2026 10:21:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E928A3E6DF4;
+	Mon, 12 Oct 2026 10:42:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791800522; cv=none; b=Wxh6CagJMaS3cElPpK9U1d3GLOX2ODceEZC/N+qAGRzrvQ6Owq0hLAKs41+3lbJ3dNQplL4dXXoKwkbnasmk6ZhRMJUWOP3GHfL6lI8AGWGZk1aZxEgjuEqHEtg+sDx0GsWuSpbPLWYiLE8oK/TWw73bY4KhRBBO9z4RMCs3mJE=
+	t=1791801747; cv=none; b=K+3oDY8km+KpO2PvFo6eYQ8BcHWyPzuSh0jOv0wQaTZQV2pJDWm/irNrAvgAI8Kr1miS9Vp5JEcwUre6jCb7WztwT/QOhtlM0CAO6f4gPMKQxCLemWI1/4BME08WD2uxhc8AWeejQgFQNZ3AAP2JABl+B6Gr0TYYK3yKaiQaGRk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791800522; c=relaxed/simple;
-	bh=ryGcQFkXrp4eIh5B0BOLKz7Mmz9rcgC99kX3em/qqoU=;
+	s=arc-20240116; t=1791801747; c=relaxed/simple;
+	bh=g17MXktF2GmX0zJd05Qf+GdkiWrqsJ8LPSoQLvkRA98=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dsqrTBUIWL5mSoEGpb2JZMF8BhFFA9RkTCiUfBSkg1K4epSXfwkUAqGyf+DnuCldFua2RvNmGK6ft9GGpM3aOUsP0rPDNrbrniXDps26Fv2VW5D5L+ou0G3U8OmZc4EEcYCSRO4DjA8B4PM1v8LaOq+cQ+ducQnpD5/33vJ1cXU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=EPf2wkUn; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ROIpfpfC; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	 Content-Type:Content-Disposition:In-Reply-To; b=JvrAjTA5T3W+o4kcYEsTEHj+Xp18f80a/b2aLKlYFBLE7fDxKHX6mtXBfyrB7OEwfNMw5YrigX+Qk144Er7fovBxjccM3TDvdz1lrfFJN8R2ILCwgh8y37bREvFkFRVPz5W7S4mI1g13tlRz/f209lxvJWEv53DItWzwRM0aIT4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=pass smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=vMGFuu61; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="EPf2wkUn";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ROIpfpfC"
-Date: Mon, 12 Oct 2026 12:21:43 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1791800504;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=HeExXDFsSsDXoVieXWwNbhti6P2jB2qH9KovDmOCgIU=;
-	b=EPf2wkUnii4Bo6dKs624vNS73b09GrSNLdGYyDpW8TTFlt+I3vg50rqcK66Z+B0Xqvsg7/
-	rtm8ja4Pn/az0KHpP7T9zLU+Y1Lk+fdeTdyU0Blb0xk1SL0X6sl6bMsZm6SPg32//uiczM
-	2CQg/3IwPk/xTwLdgikv+XBgQJSx8turDYA0O/EpAq6jixkW+MM9SuoJ7TbYbISzWRmpdW
-	LmNm17RXcwDrrwi7lzDd3yOLPA2Qj+Th7k9yRza/vNswvrADCYTCZS3bnsmgIvu7wKx1hF
-	3zEGZt50Fza13LP08QkyAi+NsyYqJQAq5BOHY4j2c7P+vcDJwP6J7ZmdP+A9lA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1791800504;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=HeExXDFsSsDXoVieXWwNbhti6P2jB2qH9KovDmOCgIU=;
-	b=ROIpfpfCZfohTWgaJ0XyH+2DOhlGL3FnkcnWoK1JRg6wmtUiJxJd4vKQozbPb15q0KBOpJ
-	p8kkqcZa0DX1EeBA==
-From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-rt-devel@lists.linux.dev, linux-perf-users@vger.kernel.org,
-	loongarch@lists.linux.dev, Mark Rutland <mark.rutland@arm.com>,
-	Ian Rogers <irogers@google.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Oleg Nesterov <oleg@redhat.com>, WANG Xuerui <kernel@xen0n.name>,
-	Will Deacon <will@kernel.org>, Russell King <linux@armlinux.org.uk>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Ingo Molnar <mingo@redhat.com>, Waiman Long <longman@redhat.com>,
-	Clark Williams <clrkwllms@kernel.org>,
-	"Luis Claudio R. Goncalves" <lgoncalv@redhat.com>,
-	James Clark <james.clark@linaro.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>, Chris Zankel <chris@zankel.net>,
-	Max Filippov <jcmvbkbc@gmail.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Jiri Olsa <jolsa@kernel.org>
-Subject: Re: [PATCH v4] ARM, ARM64, LONGARCH, XTENSA: Delay HW BP
- notification to task_work()
-Message-ID: <20261012102143.lpVrHb9R@linutronix.de>
-References: <20261012090431.TF3iVDsk@linutronix.de>
- <CAAhV-H4=nnhbJS4srmt7dNdgpkEZ8_RQ5Z+0baYMiXF1UrJ3KA@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="vMGFuu61"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=d6ADhB5BJ6rgYWInDuDWi+047e4zYVau+QWZM7M+Y50=; b=vMGFuu614SZZfq5TH+UQelPyIf
+	hh7EWQHdaWai5c1I9lUD7tDzd4TUCw8ipNXDfB8XZ2xkvNhrUllHvZPVr0QdB3Qw1XjDztwE7IB1k
+	4UZmz3aiNjExhvStzLNE1ykTkBBrOVTeSTpbrCKcTBDSly7/wMJHWfTWR+iV6U8dpYK2kQu1mvSWM
+	RQl/IiOAi3WnFbJOzdafRRjcuPe1MjJrwNXSTIh9Mgrq3V+xjSn9hrVzDuThCMhXCK0u7O0ocOVRD
+	pOcDNAAtH9/jqwplmjDX20mbsvc+WMeP+fJcbnhpL6od48Ubr5nq4eAhHurUmrGuRdHb9D+CA0TUg
+	1V4iSong==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.99.1 #2 (Red Hat Linux))
+	id 1xGDTt-00000004NDI-3XU4;
+	Mon, 12 Oct 2026 10:42:09 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id C58A430063F; Mon, 12 Oct 2026 12:42:08 +0200 (CEST)
+Date: Mon, 12 Oct 2026 12:42:08 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Kunwu Chan <kunwu.chan@gmail.com>
+Cc: mingo@redhat.com, acme@kernel.org, namhyung@kernel.org, sj@kernel.org,
+	corbet@lwn.net, skhan@linuxfoundation.org, rdunlap@infradead.org,
+	mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com,
+	james.clark@linaro.org, akpm@linux-foundation.org,
+	lianux.mm@gmail.com, linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+	linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH v2 1/5] perf/core: add AUX buffer ownership for kernel
+ events
+Message-ID: <20261012104208.GQ4121339@noisy.programming.kicks-ass.net>
+References: <20261009160010.1829642-1-kunwu.chan@gmail.com>
+ <20261009160010.1829642-2-kunwu.chan@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAAhV-H4=nnhbJS4srmt7dNdgpkEZ8_RQ5Z+0baYMiXF1UrJ3KA@mail.gmail.com>
+In-Reply-To: <20261009160010.1829642-2-kunwu.chan@gmail.com>
 
-On 2026-10-12 18:15:51 [+0800], Huacai Chen wrote:
-> Hi, Sebastian,
-Hi Huacai,
+On Fri, Oct 09, 2026 at 11:59:48PM +0800, Kunwu Chan wrote:
+> Add an in-kernel AUX owner reference and setup/release helpers for
+> kernel-created perf events that need an AUX buffer without a userspace
+> mmap.  The setup path validates that the event is a kernel event with
+> no parent, rejects non-power-of-two page counts and negative watermark
+> values, allocates the perf buffer and AUX pages, records the kernel
+> owner, and attaches the buffer under the same lock.
+> 
+> perf_event_release_aux() stops AUX writers, frees AUX storage, and
+> detaches the buffer, in that order, matching the AUX teardown ordering
+> of perf_mmap_close(): perf_pmu_output_stop() walks event->rb->event_list
+> and rb_free_aux() must run while the buffer is still referenced by the
+> event.  The single event->rb reference is dropped by
+> ring_buffer_attach(event, NULL) itself, so the release path does not
+> put it again.
+> 
+> Both functions run under event->mmap_mutex, the lock that already
+> serialises ring-buffer attach/detach transitions for an event:
+> perf_mmap(), perf_mmap_close(), _perf_event_set_output() and
+> _free_event() all hold it around ring_buffer_attach().  Concurrent
+> perf_event_release_aux() callers therefore go through the same
+> serialisation point, and a second release call, or a release of a
+> buffer this API does not own, is a no-op.
+> 
+> Keep aux_mmap_count dedicated to userspace mappings.
+> perf_aux_output_begin() accepts a writer while either a userspace or kernel
+> owner remains, preserving the existing teardown ordering.
+> 
 
-> > diff --git a/include/linux/hw_breakpoint.h b/include/linux/hw_breakpoint.h
-> > index db199d653dd1a..91e8d80220c54 100644
-> > --- a/include/linux/hw_breakpoint.h
-> > +++ b/include/linux/hw_breakpoint.h
-> > @@ -85,6 +85,9 @@ extern int register_perf_hw_breakpoint(struct perf_event *bp);
-> >  extern void unregister_hw_breakpoint(struct perf_event *bp);
-> >  extern void unregister_wide_hw_breakpoint(struct perf_event * __percpu *cpu_events);
-> >  extern bool hw_breakpoint_is_used(void);
-> > +extern void perf_arch_hwbp_send_sig(struct perf_event *bp);
-> > +extern void perf_hwbp_notify(struct perf_event *bp, struct perf_sample_data *data,
-> > +                            struct pt_regs *regs);
-> Maybe this declaration can be put in one line because there is no 80
-> characters limit now.
+> diff --git a/kernel/events/internal.h b/kernel/events/internal.h
+> index c03c4f2eea57..760b7659ad87 100644
+> --- a/kernel/events/internal.h
+> +++ b/kernel/events/internal.h
+> @@ -48,6 +48,12 @@ struct perf_buffer {
+>  	int				aux_nr_pages;
+>  	int				aux_overwrite;
+>  	refcount_t			aux_mmap_count;
+> +	/*
+> +	 * In-kernel AUX owner reference, set by perf_event_setup_aux():
+> +	 * admits writers and ties the AUX teardown to
+> +	 * perf_event_release_aux() when no userspace mmap holds the buffer.
+> +	 */
+> +	refcount_t			aux_kernel_count;
+>  	unsigned long			aux_mmap_locked;
+>  	void				(*free_aux)(void *);
+>  	refcount_t			aux_refcount;
 
-We don't save much, do we? It looks more readable. Maybe if the perf
-maintainer requests it. Looks like waste to repost it just for that.
-
-Any comments on the looong bits?
-
-> Huacai
-
-Sebastian
+This doesn't make sense to me. If the even is a kernel event, then there
+cannot be mmap users, so adding another refcount is just for giggles?
