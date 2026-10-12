@@ -1,44 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CC5823C51D
-	for <linux-perf-users@vger.kernel.org>; Mon, 12 Oct 2026 00:39:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95A7D1E5207
+	for <linux-perf-users@vger.kernel.org>; Mon, 12 Oct 2026 00:41:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791765562; cv=none; b=lOKkHtUhNW+p8qHaHLgOVwFrKffSA4TOvKiijlGBtxRhm+mkPyUKVWfo8HyY1J2HEdXFyi+vHaghaPHWCJk7y7Z86hP97yQh4+g+b+chhyyztKY61vbNVCEE5BWGugPLkRauiIns9rLl4YRIjkDi5f2kDiIK7ntTOGrhfXqz/1s=
+	t=1791765698; cv=none; b=FWv2TM+qn4ca8RKvSrqtYiLDeCyfKmUKkQsKNzbPedK3ZBzcV407v3R9xqvGWWZkZIHQuRYpgaLPORNqQ/TkqdTYLQ6j5Zq17CK9AGkUqeSb+ttvVAVqSneTaMDcklq9KdNVaXNdDjumoOJILhmxerzKPpBKNI2v3fgULJEpgFw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791765562; c=relaxed/simple;
-	bh=9Y23mIU5qvyJKO8zKInGpwOKw71ImmGBfegLaINW+QM=;
+	s=arc-20240116; t=1791765698; c=relaxed/simple;
+	bh=caDJXdgvIdpu8RiImwLcGrvoGAJXLNhddF4GFfr0PAI=;
 	h=Message-ID:From:Subject:To:Cc:In-Reply-To:References:Content-Type:
-	 Date; b=tBkBTc5Hy4p+f4yWpsryyZLXZ7WnPwD3eBSHQdvQn/GtA3pXap7oiyW5e8ejJsPUoZWzzRacfnIpHqkmnRDU5Geg0MpMRXHx72nJD42+Qh+h4TJBIjZ2beT1dKOeBJ2F4KBemi9z5vB29TvWVh/QgeBkOpcwpLgtNFG6OiFO+8Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=F+T28zle; arc=none smtp.client-ip=100.103.45.18
+	 Date; b=apr+PtHmQMJUJSUpSy2t2SwuwKitIVj62a/gF/zr+aENHMElYhuiLK5jA3a+pd6x5ACcxhRBhrj0WbHpslcLTanl5L/raNfuUY4eCgvtgozil0x7qr07fYRDVdX7mCShT+6dZPxJ81hCNIIsVl6TR+/msBmV8HLmXgvmwIpk+qQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TDUKHu5d; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="F+T28zle"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1E05F1F0089B;
-	Mon, 12 Oct 2026 00:39:21 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TDUKHu5d"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4EBE31F0089B;
+	Mon, 12 Oct 2026 00:41:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1791765561;
-	bh=wwMQwT9k0f6L77MlUasiaXnhJUVetNOzLo41fKUhAw8=;
+	s=k20260515; t=1791765697;
+	bh=XjbPtTdXsIprglmfp6OCFFPQyxveJp/o9U5v5In/swA=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=F+T28zleJRx5WQ5+/F0P8wBpy3a8l1Sp0d4Lc9qXOMK/n9Zi+CnNh7k6bcLGGINuy
-	 FWRbsZVaqiTuk+ZaIYGTyBCUlj6RvtkdEhgosCiZ409eewWdrZbwtaQdwCDeHY0iyP
-	 qsg0zUa9xxPCqnVuGrMN6z/z6g5ridQfh2OHaP7nZiZzoPw4zJRekEK7aWN92Ozek7
-	 K2muFHLNKMl4e/IBlcgSnoEwn1fvs2KyOcOyL7v5b7SUDFXeBMYBw2JZ3yevM08g97
-	 rCBK+9gpicTgFUUQgigeCOnK8z6OPWVpiSovs9ZsNYbp8JCVPtxFywkPjrw4GS7tU5
-	 4w5j/i54Ywzjw==
-Message-ID: <sashiko-outbox-167528@kernel.org>
+	b=TDUKHu5dd1y2co9llTGmrBk1GR2wG5+MgC8fSTbxKgisJuiruvzbMwatZ3ZRtGoRF
+	 Z3ZfOefTYaG+ThO9qjgeImxZMzdnlAT2iWM0HT0fyxnjAkiU95AuGjFRJVeJDjxpOA
+	 cWmN6rhcPJpxy5rry3JbX5E3bBNSmZYy2GTMy64Z5BskMQ6Co+Um8wPW7v/STeyHi7
+	 co98Oe2FfhpeEHnEMTT+Ar1qS/iHNkmpc5D4UXO/uW2/fENLg8MreMVdg2nDtiVNJo
+	 rdYVK7gNOd62MUGq/Ff581UvE5FptdY/M3Nssj3Nrw4Nulibolx7o8aLbYmjTuEDOf
+	 vWHd+/STjGRGg==
+Message-ID: <sashiko-outbox-167529@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH perf-tools-next v3 4/5] perf ftrace: Support omitting
- execution duration in function graph tracer
+Subject: Re: [PATCH perf-tools-next v3 1/5] perf ftrace: Optimise
+ __cmd_ftrace() stack frame with strbuf streaming
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Aaron Tomlin" <atomlin@atomlin.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20261012003016.263063-5-atomlin@atomlin.com>
+In-Reply-To: <20261012003016.263063-2-atomlin@atomlin.com>
 References: <20261012003016.263063-1-atomlin@atomlin.com>
- <20261012003016.263063-5-atomlin@atomlin.com>
+ <20261012003016.263063-2-atomlin@atomlin.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Mon, 12 Oct 2026 00:39:20 +0000
+Date: Mon, 12 Oct 2026 00:41:36 +0000
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -47,115 +47,118 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
 Thank you for your contribution! Sashiko AI review found 2 potential issue(=
 s) to consider:
-- [Low] perf: formatting corruption in make_blank_prefix() with verbose ena=
-bled
-- [Low] perf: profile subcommand silently drops records with noduration
+- [Medium] perf: dropped stdout error check causes infinite loop on EPIPE
+- [Medium] perf: uninitialized heap memory read in __cmd_ftrace() strbuf
 --
 
-commit d0f3a0ada6164d2372b897fe5b75d0f425aca5e4
+commit 0a06afad8e6a1e6bf21a4b8a3c19582ed3d99cd1
 Author: Aaron Tomlin <atomlin@atomlin.com>
 
-perf ftrace: Support omitting execution duration in function graph tracer
+perf ftrace: Optimise __cmd_ftrace() stack frame with strbuf streaming
 
-The Linux kernel's function graph tracer displays the execution duration
-of completed functions by default via the funcgraph-duration trace
-option. Whilst informative, in scenarios where the user is solely
-interested in the call graph topology, call flow sequence, or inlined
-hierarchy, the duration column can add visual clutter and widen each
-trace line.
-
-[ ... ]
+This commit refactors __cmd_ftrace() to use dynamic heap allocation
+for the read buffer and a strbuf to accumulate streamed characters
+into lines. This reduces the stack frame size by over 96%.
 
 > diff --git a/tools/perf/builtin-ftrace.c b/tools/perf/builtin-ftrace.c
-> index 504007064e240..926726c5d9a88 100644
+> index 6017493ff1797..d6604be593a34 100644
 > --- a/tools/perf/builtin-ftrace.c
 > +++ b/tools/perf/builtin-ftrace.c
 
 [ ... ]
 
-> @@ -1754,6 +1780,7 @@ static int parse_graph_tracer_opts(const struct opt=
-ion *opt,
->  		{ .name =3D "retaddr",		.value_ptr =3D &ftrace->graph_retaddr },
->  		{ .name =3D "nosleep-time",	.value_ptr =3D &ftrace->graph_nosleep_time=
- },
->  		{ .name =3D "noirqs",		.value_ptr =3D &ftrace->graph_noirqs },
-> +		{ .name =3D "noduration",		.value_ptr =3D &ftrace->graph_noduration },
+> @@ -810,11 +821,19 @@ static int __cmd_ftrace(struct perf_ftrace *ftrace)
+>  			break;
+> =20
+>  		if (pollfd.revents & POLLIN) {
+> -			int n =3D read(trace_fd, buf, sizeof(buf));
+> -			if (n < 0)
+> -				break;
+> -			if (fwrite(buf, n, 1, stdout) !=3D 1)
+> +			int n =3D read(trace_fd, buf, TRACE_BUF_SIZE);
+> +
+> +			if (n <=3D 0)
+>  				break;
+> +			for (int i =3D 0; i < n; i++) {
+> +				if (buf[i] =3D=3D '\n') {
+> +					fprintf(stdout, "%s\n", linebuf.buf);
 
-[Severity: Low]
-Does adding noduration here allow it to be used with the profile subcommand?
+[Severity: Medium]
+Can this print uninitialized heap memory?
 
-The profile subcommand inherently requires function duration to compute
-statistics. When the duration column is omitted, parse_func_duration()
-sees no " us" suffix and silently drops the record:
+Earlier in this function, strbuf_init() allocates the buffer but does not
+explicitly null-terminate it:
 
-tools/perf/builtin-ftrace.c:parse_func_duration() {
+tools/perf/util/strbuf.c:strbuf_grow() {
     ...
-	if (strncmp(p, " us", 3)) {
-		pr_debug("non-usec time found.. ignoring\n");
-		return 0;
-	}
-    ...
+    buf =3D realloc(sb->alloc ? sb->buf : NULL, nr * sizeof(*buf));
+    if (!buf)
+        return -ENOMEM;
+
+    sb->buf =3D buf;
+    sb->alloc =3D nr;
+    return 0;
 }
 
-This results in an empty output instead of rejecting the invalid option
-combination. Should the option be rejected when used with profile?
+If the very first character read from trace_pipe is '\n' (for example, from=
+ an
+empty trace line), linebuf.buf is passed to fprintf() as a string before any
+null byte has been written to it.
 
->  		{ .name =3D "verbose",		.value_ptr =3D &ftrace->graph_verbose },
->  		{ .name =3D "thresh",		.value_ptr =3D &ftrace->graph_thresh },
->  		{ .name =3D "depth",		.value_ptr =3D &ftrace->graph_depth },
+[Severity: Medium]
+Does the removal of the stdout error check cause an infinite loop?
+
+The original code explicitly checked if fwrite() failed to gracefully exit
+the polling loop if stdout closes (for example, when the pager exits or
+when piped to head).
+
+Because trace_pipe provides endless continuous data while tracing is active,
+ignoring the fprintf() error forces the tool to endlessly read trace data
+and discard it, never terminating.
+
+> +					strbuf_setlen(&linebuf, 0);
+> +				} else {
+> +					if (strbuf_addch(&linebuf, buf[i]) < 0)
+> +						goto out_close_fd;
+> +				}
+> +			}
+>  			/* flush output since stdout is in full buffering mode due to pager */
+>  			fflush(stdout);
+>  		}
 
 [ ... ]
 
-> diff --git a/tools/perf/util/ftrace.c b/tools/perf/util/ftrace.c
-> index 8737bb52921e1..5cae01a28529f 100644
-> --- a/tools/perf/util/ftrace.c
-> +++ b/tools/perf/util/ftrace.c
-
-[ ... ]
-
-> @@ -346,9 +348,14 @@ static const char *find_func_column(const struct per=
-f_ftrace *ftrace,
->  			return NULL;
->  	}
+> @@ -832,15 +851,31 @@ static int __cmd_ftrace(struct perf_ftrace *ftrace)
 > =20
-> -	p =3D strchr(p + 1, '|');
-> -	if (!p)
-> +	if (!ftrace->graph_noduration) {
-> +		p =3D strchr(p + 1, '|');
-> +		if (!p)
-> +			return NULL;
-> +	} else if (strstr(p, " =3D> ")) {
-> +		/* Context switch marker: " CPU) comm-pid =3D> comm-pid" */
->  		return NULL;
+>  	/* read remaining buffer contents */
+>  	while (true) {
+> -		int n =3D read(trace_fd, buf, sizeof(buf));
+> +		int n =3D read(trace_fd, buf, TRACE_BUF_SIZE);
+> +
+>  		if (n <=3D 0)
+>  			break;
+> -		if (fwrite(buf, n, 1, stdout) !=3D 1)
+> -			break;
+> +		for (int i =3D 0; i < n; i++) {
+> +			if (buf[i] =3D=3D '\n') {
+> +				fprintf(stdout, "%s\n", linebuf.buf);
+
+[Severity: Medium]
+Does the lack of a return value check on fprintf() also cause an infinite
+loop here on a broken pipe?
+
+The previous code broke out of the loop if fwrite() failed. Without
+checking the return value of fprintf(), an error writing to stdout is
+ignored.
+
+> +				strbuf_setlen(&linebuf, 0);
+> +			} else {
+> +				if (strbuf_addch(&linebuf, buf[i]) < 0)
+> +					goto out_close_fd;
+> +			}
+> +		}
 > +	}
-
-[Severity: Low]
-Will this corrupt the comm-pid column when verbose is enabled alongside
-noduration?
-
-When both verbose and noduration are enabled, find_func_column() returns
-the CPU ')' or the separator after it. make_blank_prefix() uses the final
-pipe_char and overwrites everything after the ')' with spaces:
-
-tools/perf/util/ftrace.c:make_blank_prefix() {
-    ...
-	/* Replace duration between ')' and '|' with spaces */
-	if (paren && paren < line + len) {
-		char *end =3D buf + (pipe_char - line);
-    ...
-		for (c =3D buf + (paren - line) + 1; c < end; c++)
-			*c =3D ' ';
-	}
-    ...
-}
-
-Since there is no duration field, does this blindly overwrite the comm-pid
-column and its trailing separator?
-
-> =20
->  	*cpu =3D (int)val;
->  	return p;
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261012003016.2630=
-63-1-atomlin@atomlin.com?part=3D4
+63-1-atomlin@atomlin.com?part=3D1
