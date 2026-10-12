@@ -1,107 +1,65 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 997863403E7
-	for <linux-perf-users@vger.kernel.org>; Mon, 12 Oct 2026 05:40:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96D79391517
+	for <linux-perf-users@vger.kernel.org>; Mon, 12 Oct 2026 05:44:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791783610; cv=none; b=SvuFIwty8InN3ELs/fIIIZpf7/WxVLIpI0324P6dYAgLR0jz6B5KevodiqzTfV3gZT3NS75yeYEQJdAS0dTFDJA49oty18AXqjZZrSa69zh4h1IL9KF202f5Cfi4Ut2iiMCB10Z8UOFkYBnUfeUWn8kZ+jY6Kkfya5mMRYDrKyg=
+	t=1791783858; cv=none; b=XKvg5Xtp8YGvUlDxtoJgnT61+F93p7Pb/pQabhBR/by/6M+/T/uKHyVCJtfujzKaylYPxsJTSh0NQ+ehq5a73NCszfLGgfbwNtwWXnZvzMwE7uTpIZn2RHdzDOvCadqcOkOqay6uR5bjtMutNAvZanpOujbBiqAu1eiBaUAHvQg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791783610; c=relaxed/simple;
-	bh=RLitzP3Htm3v6mor6i6Bg+0e5DojeBqE8N4JHRuTB2A=;
+	s=arc-20240116; t=1791783858; c=relaxed/simple;
+	bh=a6wqjkHguvDgpnp23lBU56TZkcnMPyFxv6i42MU7d3Y=;
 	h=Message-ID:From:Subject:To:Cc:In-Reply-To:References:Content-Type:
-	 Date; b=inekKVcZOHzcNW+WhNzfatYihV/p47DrOy1BUnxhpFYK+ZqJUA+sM8nV2hqXakpUotypB1JGxmOaA/HQU2TkZE7PPRTeJ67h8ahohb2JuQtMzTbpz2QM4hSYEW1Qk5YD9aaui+WLE97Uh5KlnSPxzX2PbwZQ0aCLXV/mffjVrtk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LZgPsKeY; arc=none smtp.client-ip=100.103.45.18
+	 Date; b=Xh+/Y0PKbUZnvIureZJarPRFlRaETLz2WYXFY1AcFA1UuHKGDTHj47NAiFcaa+hpHLT40XvScU/c0X4yhYIkwpdx7cSOI7c76ivBPbJX00XLm+fmpxs+aTmGNxoaC9zDhjRouDcrs0YXa6wvWHoHuFibfaw1R4z2UFbpoiZgTKw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Y3eyJ04s; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LZgPsKeY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0FF711F0089B;
-	Mon, 12 Oct 2026 05:40:09 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Y3eyJ04s"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3C2611F0089B;
+	Mon, 12 Oct 2026 05:44:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1791783609;
-	bh=9h8EVjrqtSM0p4w6XfruH6jVLm+jwyMz9gYlaImMbE4=;
+	s=k20260515; t=1791783857;
+	bh=7F02IzMIJAO8MUkINAHBNtEusE3gJB0YChbFUTS6KMk=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=LZgPsKeYsULCe90l0JQjjZn1Z5WSDZ0FOe5T9AmhpOws0jwYPnxVpvETR0ibkcjzA
-	 HPd4Os8eYxjsYd0OMqN/nk7mWDTd/6r30YQyNLM1VIy+fyucwi/jwDCUOw7T+UtfwK
-	 E783zfcW4g72gr+WWW7C84qgsPoxombn1czkAOwfcQyLhU4PPqlCBWMiXzHWgSaCuR
-	 xnDhy8hB+r0LVKIaZ7b/PKBHmsNBkdALQIPUS+Y93dl0eRCJjVKBqv5uUHrjjpHxD6
-	 PoWCcF9rjdOTaEgrug9PxvJSIbeNdPhXCYo9G3Qjss2OnrJVygRTwoGjSY7P5VG//4
-	 6sQnfHbwrIxRQ==
-Message-ID: <sashiko-outbox-167684@kernel.org>
+	b=Y3eyJ04s7hBE/57XttNgIz+v8yEBoe7m6s3Hf1O/MCQhxX7ueGT2TskPVnqi2jD88
+	 nUz7EyCDO6tdfVEzRQXAZ4BJ+0Ayz6dv3J3J84of0Y8+VHATTPDqKAw3gd0wA6tcXP
+	 6CZlZyHj7gTVCNkvitaDnIsVhSLfkSDhFqgzXvqzP0xjadKSqMKTYl5dmljhhfYsNF
+	 Zuksz7vx7izdRwcJhHo8HmZBAJAmAwGoIJVs06b9HYiN52oN/90nW9DOq6WeLgrcri
+	 AN9XRv63MSEfRRHLSRasgui24H5qJLTJY+zSYzF013xh0VwrVwkKKMXRPJXYW4mYFl
+	 t1I2NpAPkaG5A==
+Message-ID: <sashiko-outbox-167685@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v2 3/4] perf symbol: Set dso symtab type for libbfd
+Subject: Re: [PATCH v3 05/10] perf symbol: Get rid of
+ machine_or_dso_e_machine()
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Namhyung Kim" <namhyung@kernel.org>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20261012053013.14378-3-namhyung@kernel.org>
-References: <20261012053013.14378-1-namhyung@kernel.org>
- <20261012053013.14378-3-namhyung@kernel.org>
+In-Reply-To: <20261012052601.13920-6-namhyung@kernel.org>
+References: <20261012052601.13920-1-namhyung@kernel.org>
+ <20261012052601.13920-6-namhyung@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Mon, 12 Oct 2026 05:40:08 +0000
+Date: Mon, 12 Oct 2026 05:44:16 +0000
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
-s) to consider:
-- [Medium] perf symbol: incomplete dso state initialization for libbfd caus=
-ing annotate/unwind failure
---
+> The function tries to get e_machine from a DSO (preferred) or env from
+> the machine.  But currently it's only used for kernel DSO's during the
+> load which refers to /proc/kallsyms most likely and it doesn't have an
+> ELF header.
+>=20
+> Also machine->env would have proper information about the kernel so no
+> need to check DSO in this case.  Actually check DSO's e_machine requires
+> a correct binary type to be set but it'd cause a recursive locking
+> problem.  I think it's ok to use machine->env info for the kernel.
+>=20
+> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 
-commit 5475c2801d673496a1fee31f44ca921eca39f20c
-Author: Namhyung Kim <namhyung@kernel.org>
-
-perf symbol: Set dso symtab type for libbfd
-
-It missed to set the dso symtab type when the symbols are loaded by
-libbfd.  When it happens both syms_ss and runtime_ss may not be set
-and won't call dso__load_sym().
-
-> diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
-> index 4878d4292eb85..a90ce714b174b 100644
-> --- a/tools/perf/util/symbol.c
-> +++ b/tools/perf/util/symbol.c
-> @@ -1925,6 +1925,7 @@ int dso__load(struct dso *dso, struct map *map)
->  			nsinfo__mountns_enter(dso__nsinfo(dso), &nsc);
-> =20
->  		if (bfdrc > 0) {
-> +			dso__set_symtab_type(dso, symtab_type);
-
-[Severity: Medium]
-When dso__load() takes this early exit to out_destroy, it bypasses the rest
-of the loop which normally initializes symsrc_filename and binary_type:
-
-		if (!syms_ss && symsrc__has_symtab(ss)) {
-			syms_ss =3D ss;
-			next_slot =3D true;
-			if (!dso__symsrc_filename(dso))
-				dso__set_symsrc_filename(dso, strdup(name));
-		}
-...
-		if (next_slot) {
-...
-			if (dso__binary_type(dso) =3D=3D DSO_BINARY_TYPE__NOT_FOUND || ... )
-				dso__set_binary_type(dso, symtab_type);
-
-Does skipping these initializations leave the DSO's binary_type as
-DSO_BINARY_TYPE__NOT_FOUND?
-
-If so, could this cause perf annotate to fail later on, since
-symbol__disassemble() checks for this exact condition and returns an error?
-
-tools/perf/util/disasm.c:symbol__disassemble()
-...
-	if (dso__binary_type(dso) =3D=3D DSO_BINARY_TYPE__NOT_FOUND) {
-		return SYMBOL_ANNOTATE_ERRNO__COULDNT_DETERMINE_FILE_TYPE;
-	}
-...
-
->  			ret =3D 1;
->  			goto out_destroy;
->  		}
+Sashiko has reviewed this patch and found no issues. It looks great!
 
 --=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261012053013.1437=
-8-1-namhyung@kernel.org?part=3D3
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261012052601.1392=
+0-1-namhyung@kernel.org?part=3D5
+
