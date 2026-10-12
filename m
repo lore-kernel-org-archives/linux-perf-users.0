@@ -1,53 +1,53 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B52382ECE86
-	for <linux-perf-users@vger.kernel.org>; Mon, 12 Oct 2026 05:34:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7A881FC0
+	for <linux-perf-users@vger.kernel.org>; Mon, 12 Oct 2026 05:35:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791783246; cv=none; b=BplnrvU1Qpl5qPltdppBZ95+5LaAblxr1olCtxAfZ/i1OdNckKkBpLrIRo/zYvGzyd3JblM8AOVYVVyNhDPTi3r6Mh1BGfphgW9CfrvWpxLbu4+szEupa1YaBQ90SGs/axqHdAlHc2hPZiaHxexS4J3LBHOIP5trVClNwGdqvNA=
+	t=1791783318; cv=none; b=VPPSUXTy7hLqfLCKpLQEvRJNk6kDWt+BOKVnpOzkS3+5y8Miix87RC58BFBXB/OCMCrNMyt2IlULg8T0/0Xbyt27P+LBgbju9DVanrOCqlj2gxVsrYGrhi4lH++2sZNFCoAGfkgUn5CUtok+uhWjEUieThHsELnsVryrlw+GMmU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791783246; c=relaxed/simple;
-	bh=K1RVkCg7tfiIEzSJFGrNEHah3Npwe0uIVuFFM6MPiP8=;
+	s=arc-20240116; t=1791783318; c=relaxed/simple;
+	bh=httQejLgpAzMwZN73ObDq2lnPS5hc2VYffmHEakJO9A=;
 	h=Message-ID:From:Subject:To:Cc:In-Reply-To:References:Content-Type:
-	 Date; b=eZaxFnXv0DNPaO+EV3t8cZz89T8UAzhahqMmKTfIIjdW2TUj1Qv6zDI6O7G8GFecsbld/N9D2sq31ULKSgnv/U2WpAvd2P2BgSOX5RWcJUzgArGiJhIceReyYEFD/oKrbyruKKmTcJyMxhb9YpUM55Bx5Pq5O6MLno0dVMmaoAQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RfiI4tNY; arc=none smtp.client-ip=100.103.45.18
+	 Date; b=lgO91sy3sb6LihC062dBCLHwDVJP8nCVAhs0Al5VwUwQ+X2RCDaPNv0YdPKxaPZ9xJ1HiM2MZsaXIk5Xk/9SKMbJ3FNef/T49XlTiPbm9/qZdBmUNqq/gwoSmo4EsSYJh0l+w5BVT54FT9DSvlP3WVJG1izYz4tOAiebQdUCLTg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AGcmjIN9; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RfiI4tNY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 38C871F0089B;
-	Mon, 12 Oct 2026 05:34:05 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AGcmjIN9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 342261F0089B;
+	Mon, 12 Oct 2026 05:35:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1791783245;
-	bh=4Zo6S2IvDESHHm5WOsSZWL7qLPTjD9JkLHydc9Hg+1w=;
+	s=k20260515; t=1791783317;
+	bh=httQejLgpAzMwZN73ObDq2lnPS5hc2VYffmHEakJO9A=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=RfiI4tNYx92UfgcTf4alQbEua95zzR7T1ZAgGMk9iET4jIs6QSRGYfX/42Fq3sK3L
-	 7DPs1eevcHuJgV+BYAzlKat+rK/k9uuA+z/aDbEa37grpEYUhvHP1RncjC3h+j3KN8
-	 L9R1kdAoSTDdwquGb+bZ80ipm5vrQgKDx3RTqIVoEs3B/ruS6rflvoYYCCnbiF1lvj
-	 l+DDfslKoUF53qDVHJa8MU0+m8o0EPFZsMacn54k9D4Iiij3/8I/E/G5+l0PRh97dh
-	 uLjoxwoS8xkZgzgeh02eNVbYczQMAYUIvpnkIdi4CALJnSUkVkNV4UPEw9VEdGI2GE
-	 YUka2G1pKVJPw==
-Message-ID: <sashiko-outbox-167673@kernel.org>
+	b=AGcmjIN9iQWIzZXoyjfkCnMMjZpttMs75jm3sDn6wsZY+CIvxJrYby9k5d54yJkCi
+	 lwZtQUinE8nCpdsH6iwjtaP4IhVnhQbMziNdbfxgzGdIwLVaGoQU4QP7Uk/Cm3ksAN
+	 oigx9PFgRAJeBbM4017BIq6B7lE4GQH1XahJuAnmPWWddJmmwtpZLMjevtI3dYo4LV
+	 bXN5quqJ6gwQCyZPyCegaKIUqn6GzsEvPZeU4lSXuVj2bHRePG4r4ASQzwDJIEmlCz
+	 P7cMywWgN7rvZBDJmDTFulFMpa6rQu8p7hAdmGnZN/VcUEhBAGH8OYP4JYpCnFQLtp
+	 JX8AG0cGkukXg==
+Message-ID: <sashiko-outbox-167674@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v3 07/10] perf symbol: Set binary type for JIT map DSOs
+Subject: Re: [PATCH v3 02/10] perf tools: Try linked debug files for DSO
+ debug info
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Namhyung Kim" <namhyung@kernel.org>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20261012052601.13920-8-namhyung@kernel.org>
+In-Reply-To: <20261012052601.13920-3-namhyung@kernel.org>
 References: <20261012052601.13920-1-namhyung@kernel.org>
- <20261012052601.13920-8-namhyung@kernel.org>
+ <20261012052601.13920-3-namhyung@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Mon, 12 Oct 2026 05:34:04 +0000
+Date: Mon, 12 Oct 2026 05:35:16 +0000
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-> The perf-<pid>.map files contain symbol name of JIT functions.
-> As they don't have the binary data (instructions) no need to try
-> for dso_data.  Let's set the binary type regardless of the result
-> of symbol loading so that it can be ignored.
+> The dso__find_dbginfo_type() should try DSO_BINARY_TYPE__DEBUGLINK so it
+> can follow the .gnu_debuglink and find the debug information in the
+> separate file.
 >=20
 > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 
@@ -55,5 +55,5 @@ Sashiko has reviewed this patch and found no issues. It looks great!
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261012052601.1392=
-0-1-namhyung@kernel.org?part=3D7
+0-1-namhyung@kernel.org?part=3D2
 
