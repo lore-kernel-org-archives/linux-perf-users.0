@@ -1,146 +1,168 @@
-Received: from mail-qt1-f178.google.com (mail-qt1-f178.google.com [209.85.160.178])
+Received: from mail-qt1-f182.google.com (mail-qt1-f182.google.com [209.85.160.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 906BC4BA1F3
-	for <linux-perf-users@vger.kernel.org>; Mon, 12 Oct 2026 21:45:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.160.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D39E837C115
+	for <linux-perf-users@vger.kernel.org>; Mon, 12 Oct 2026 21:52:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.160.182
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791841556; cv=pass; b=fHLfMjSdlK7ZJM/iLe9+BoOzPljBI1UBWTEhnkOGpLTqrLqwEKvQ8B37ghTp59XRdKUL134mJIr5rchQ8tXH9Ah929labqShy9hQkaB/W8tuXpGUplQtbU8iNewK8JOUyDIHrj6xGDXYkIZ193/6VoJkuSI98dFzYODUhfmYpvk=
+	t=1791841927; cv=pass; b=Y7FfXbwEHN3uI2nbw1IcW1mBDh+9s48ioG4fUxrRRRbgtb8OZ8QYnMVkVh/S3PXS/ytn2cjIpJQfMcbVFjqCQ8o6cvCpgQrs8WiqNQhdtcQs33rvZ30hB78MPvmEVa2HB6IzBuNKy+hiXG00bS+tQkMNx3w0qqG9jKRVfCbGP6g=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791841556; c=relaxed/simple;
-	bh=w0qc2CZd4Oa/lsOFggfocUkyp5cgiPaQh1jfXgSkSQA=;
+	s=arc-20240116; t=1791841927; c=relaxed/simple;
+	bh=DIL5UuZhGTA2pRNXRbjhs4HWRHo7MrRLOSBM7IepAYU=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=by2RjVOsk2QkD+pT8piwXcsokNi+74ZifKFaVr6jsu13hj2togc0vgsWqPd53fv15h+wZ2SVWJCeeeUZaA6DshPMhQQNz6XdYQEdBywHD50i6USqF+peYY9YR+G6GfnkPzVn3b1Z7Yk6/FOgz+3JfEIC9BjX1aCj7e1+SnioVVs=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Cb9Msbdq; arc=pass smtp.client-ip=209.85.160.178
+	 To:Cc:Content-Type; b=W09eLhUzFnzKCqFY7ltxKCSRA79FnUIZhZOM5cj5lINc6GRQnbW82u2f6tKVPgExm5KiPZKbcoPMQMYqwXb1BqOouoxit5Y2sjvzkoXc0Uv5AaaFwDqMP5kPQZRDHCV+rIIbkr+LdaOfYPGmwqu63qYrG/Q/XB4xW1voD4f0tuY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Vaiuofci; arc=pass smtp.client-ip=209.85.160.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Cb9Msbdq"
-Received: by mail-qt1-f178.google.com with SMTP id d75a77b69052e-5337c7b9937so541531cf.0
-        for <linux-perf-users@vger.kernel.org>; Mon, 12 Oct 2026 14:45:55 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1791841554; cv=none;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Vaiuofci"
+Received: by mail-qt1-f182.google.com with SMTP id d75a77b69052e-533202fe429so543891cf.0
+        for <linux-perf-users@vger.kernel.org>; Mon, 12 Oct 2026 14:52:05 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1791841925; cv=none;
         d=google.com; s=arc-20260327;
-        b=Caug0vGzxKO65Kg/0+hpTbuIziSHq+0SflvqqQBHRQhB81ckHge+AFdSRP4H3Nx9t8
-         xGnhgKC0BLtcVCsommDHiaKk73OUDxABHqQRyMUhkppMjYQTNI+fZYtEa3KP58Wk/Oha
-         PuEU4wHobKHZT7MCp4rFnreG88NbKwQdvjpwclT3m+s5do/wan0ORrcCRGHsIQe80kdz
-         1ZaYQS09W0dXvc1LA+JjHWwc8p09U9zR86Cv6pQ+/RnzBbA28j/kxyp8Ut0ymxQX4xzz
-         KHla5SrVFlqUbXYw2dZAeS4K5piPrqA6XMdYgKP5u+Rpa656imsRnJzb+O/16fEwhKkI
-         1Img==
+        b=ay6v1oHMo3nu+MlTKV79bLgiEP6FauT8u2Xx41cgU4jAz5Q7pzg1rGcTT7lJ8RaeOr
+         YQUBxZ1MxD3Pyh72ADYZ73aQ4cqpvowlyO5rMn/ehqCWD+H3/a79ponZej4mD2RTH3Eu
+         7myMGJuiEao0Ip/UCxieGn/tfoWpEZTCx2CfTRlFeskCvpg/Z6pTlUyZRf3qImXpLfw2
+         Tna00hgS0WXv6l8Js4PYo6BU98L5tIvARiRs2mK6R9fQTpugfR8FOgInOX7ZgYwP5zra
+         O7IiTpkPC36d8CA5f2MYIYrUJsr9lYsjao3GZnKNj7NsqgkQLDMEFPnCFCHO//KLgjKY
+         9SrQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:dkim-signature;
-        bh=w0qc2CZd4Oa/lsOFggfocUkyp5cgiPaQh1jfXgSkSQA=;
-        fh=NcE49uiX+r6NMGNCwUYp7PEobMne2qUbu6O3Pf4s99U=;
-        b=nf3Qrszx07qTMu1h0wyYEbQ66NU/OE4pAIHHR7M8StlTDOd8bnoIlNFUivVMLWmkvC
-         1z81LPsZSpHrVfxAiEztkval8oXFaCZ8L5mePsgGz1vIn/XX1CLZQnb2QB16zvonkCA5
-         x9pegAtBhDdX0U1LPt0N2qYpbNYHg/JYtcYpZjY2BGUt1QjOVzTfoZbupG+0UQdp7ANQ
-         K2iYNGm4vYVCVFZR3ZhhfH0BIHx2PKSoWbh2Yiz02g2RIyU/obHennlbp6x+Nt5U8RMr
-         b/vk6vm0hytAwW5rmV2iPy9GkCsLyZ2eyrwPL8hnhv9qeP/ax+3w3An/vA9u7wRLEJ/3
-         64bw==;
+        bh=YLoAoEeE0ibBzPThB0BLma4hgq+eUQQ3jaPTysHvBC0=;
+        fh=x5JtiLXzRQftxplt72MPwtwSOxBMAqjsO8qC2E58asA=;
+        b=oYsospcdcOJXFNEeD2sodbOoV2qRTVk4OvKE72vF5Kfo2N2UrMVfCE4OteeFcSwmTo
+         oG+J2WsuIWICAAAR3m5C+YyzsYpVoDXSGwlZQz2Yc5of6l7n78nA6Zm58W0tisl8yium
+         kzBOmMcmpdvIjksqWnevKpUBu2l1GD1W5ivXk3ABkZGPszvYn6w/7WOAvcUgnPIBrmYk
+         nvxPKqMhF/EncdpUUB80mVcyX23v9NVTCWmYS+yZBTlFnAWbd8WuT3lpZTQurn4s1nzR
+         GmvWiOSmrUlyUnj0CzOxPsInnpAbwENpt+iUOoq8QSD2TmSV/tK2G0CrK0086YWx8ZFp
+         j8Zw==;
         darn=vger.kernel.org
 ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1791841554; x=1792446354; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1791841925; x=1792446725; darn=vger.kernel.org;
         h=content-transfer-encoding:content-type:cc:to:subject:message-id
          :date:from:in-reply-to:references:mime-version:from:to:cc:subject
          :date:message-id:reply-to:content-type;
-        bh=w0qc2CZd4Oa/lsOFggfocUkyp5cgiPaQh1jfXgSkSQA=;
-        b=Cb9MsbdqZseVKss4qKjrRHqmyH/0yT0HG/9h0rVLI249Thyclm7QQeYchd1NPIhs/k
-         DPRrvsokjYPw4lZWztWA8O8n/NI5NHrsLEsRLi+CYIG+niX+JLP1VeTYr+88dyx44YvW
-         NLj5jhJWdKBh+doOsW0qDtSIrlFa8zFfmwaerjmzU4xq+6JeVVEqhNLX1466yEvFNs99
-         r8AJp/3mvH/63o9GGe9NqLcdpkGfeJJmDV6Lr8w+GCwksHaxlVWJBH/HKILnTQdZqC5P
-         ov099KLBxFTvmL2R4I10m4vNP/78XkNVNO/65N7i8uJR2J4sxfStkJFPyaq0KeyGQFSa
-         VutA==
+        bh=YLoAoEeE0ibBzPThB0BLma4hgq+eUQQ3jaPTysHvBC0=;
+        b=VaiuofciM1NPp/ND4T0HN6N92O1EY4zQZrZ5VmQbuV7GqZMSiKFsj0LVq8tWIyhdUH
+         IepGmxX75BmT5g1TkHEI7AQj4ZIddR0m8++ndvpbaeyZ10mR7hW58Jko4q6ga3+OpBvX
+         T4HyEIu2fscD5r51TgUVZ3bZQM9wmoLNlE5Xj8bcztg16g+BdYH4j4T7+20vE34GR4Nr
+         b23bYajCDA5skuwvcyWVBJ2zGGcaQGp7F736F4SOty/tKGm303/izuwwLZrgB/Z0ouO4
+         UX6HGYSfSQKeJC65z8JXDdENqlro6e/zUvjtweyoKNvRVNX4Ipg7wx9KSZ3RE4EMywZt
+         i6IA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1791841554; x=1792446354;
+        d=1e100.net; s=20260707; t=1791841925; x=1792446725;
         h=content-transfer-encoding:content-type:cc:to:subject:message-id
          :date:from:in-reply-to:references:mime-version:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=w0qc2CZd4Oa/lsOFggfocUkyp5cgiPaQh1jfXgSkSQA=;
-        b=l7k80mWad1NIo/wWzladulVavvhKN0LQgrPlzUqPETI7KklKIGIsXfabhjmXTgwpvb
-         7Fx8DM+FLGNTBUP9yCihWtsK1T1THw2k45siB0R68dHrxdXVX5qNlpbaS8prW7I8lE/2
-         Idzajxij71pWHttS0dyGasr4+e3k50l/gHOXLmL599f5bcBb6ft/dI/ieTKPAiZRuzpj
-         Ju+UZLS58X3++2CXZ4udDepnDI0R8Jf+znA2nekD7y64j1La7lteXxeI0Y72mP+AgxIl
-         3sniY/IiQL+NkB8pZCK2R95AUbWeuGnqL3DAX6jUpK2uxYmkX39yqvCX/hwYTmNGNyXW
-         Z9Og==
-X-Forwarded-Encrypted: i=1; AKwUvBwpzp2glYzetr2Ai81ifwQl9xD08mtYX3KezE80NUwMHVNoee/EeNPWuz0JdPFSlTGdvqpspHrA860Zs7iV78Bo@vger.kernel.org
-X-Gm-Message-State: AFq9FYJUJKyuogMVKaLypnjZyGx+NxT1E269BidNcvDBD6oe4czUOayK
-	6by37ohewGAClgb+nnycss7azedZlCfHaxB82f4xpR2uTlTxkJ14pL5Xxoh3OZSdmjvbZ6DG4/Q
-	KW1G05/6IEtGe3+iYTJtskN69IFnwodQJTYNwd6TK
-X-Gm-Gg: AYBFou3YuhfIm9T4Y7u0f45SZKHNxWTO3zVG6DdiDAMXtQKjaQMqPCwxoHkX+hB0X7A
-	WUE3ZYpGKiy4wUr/xk1Kq6cPe8WsgsuDh85390ztDozPykyu83ctz4lLZNi85QeDVX3yQAGjNyw
-	NjwmzBL4TBpni23Fr+/V5af8xGoaVctXdRGAFMA/V2cwvWziJbdu0qNQ/0bAYoHKEtVyWckZDDm
-	fL22qTj6nc9r92M/tgd3el2LGb98ingwqlk4HWp8SzcBe7QlV/MiY1tS3AuK7QbmsNlaLrEZ3b2
-	0vM44AXPgCDdldptISfv5AH76Nm31JCFE6gaNjHvN8lyBMds+wyoxhkBvAJxhVaswy/nqyfYbGy
-	toyz5zBSvnshOGzSYklCh
-X-Received: by 2002:ac8:5a95:0:b0:535:9aa3:5ebb with SMTP id
- d75a77b69052e-535b4ecdaa4mr34353401cf.8.1791841553813; Mon, 12 Oct 2026
- 14:45:53 -0700 (PDT)
+        bh=YLoAoEeE0ibBzPThB0BLma4hgq+eUQQ3jaPTysHvBC0=;
+        b=IyTtgc4lV4Jl/rVmWzEkeijTAnRv2v6Teiod6mjviajqokGCfnPHIpqjRzwAjZSotP
+         hQ4A1/86+svNPeYZjc0Tqwh39LzN5eYLjoy6AK1GPoogpxsWsvyUZ24gXA311fy+XEX0
+         nw0CI5ATsyM7mwOaTVgqAhojD5mfvtBxFZdYFz1NgL0TDWmNSUfw63/QVUvMsbwIx9xm
+         bJExVjEVve5/DNYIIOrOhICb6QP+fbdQlmH5px+Vs4ePN1QTusIk0mpy7wFgIhEFJXgk
+         rS9X0w4oCEgGLSr9yY5zbSyQPY+uihHH5pH28tmn2jzfoNoya0EVqsrG+wDesgb0W1GY
+         hmFg==
+X-Forwarded-Encrypted: i=1; AKwUvByEKqJS8izFOBhysEuI3hI9Xd3PdDN0xFbutJmDLrBomUkJeLr61j1KHP+t+bzsL4CHycQOoG6akds8YZUiC5gq@vger.kernel.org
+X-Gm-Message-State: AFq9FYKIRVk7n+RjnhhdkCvEWmP9rccAaNANrHuZiLFHegwberGL8AhA
+	fhivRExPqvABPEb86UaTNxzptq+Fz2qJscTk9Dkas2cOpDAPtQ+YtsOsduIbtp+Hc184qOvVYNR
+	OYr6TfnM6UBnhjXX2lYTp+E6axmlyBhfuRedhkGRC
+X-Gm-Gg: AYBFou2d4EvgMCUo8Z0D02Mx84s5aMlHZ7hrVZ2TC3jIH9JaAT1+E/Lns19JJxSxIwn
+	BeCp8L5F8tENhMwqnHPw6D/dftw1pQ9NIw+HlbMzJNA2XWAPcBcHOJUmbBLiP3IoTiQR8kWFd1/
+	1wG+eR47D/U+/rCjU7/aGYqYF/Ym4pcyxI+vvUwSu2MSjKCcKbaUr1ZM+PcvZxO5+vr9eVtwQtK
+	PLiF8Xz6vylMP9PoitCwHbi8+wQfdlBgn+nmCIE69u54ghBkyIfBbmQ0VmMhr52sd7k6zPQ7qSc
+	PhjO9JL6/CIeiPL83npk0VPSa7BQbxfH1YVvqM9t731pv7tMAdyrMndu5d/zEEHmfHq+msLD4BR
+	cuOQDbdoYOg==
+X-Received: by 2002:a05:622a:345:b0:532:eff8:3491 with SMTP id
+ d75a77b69052e-535b4f9b8d1mr34243711cf.14.1791841923948; Mon, 12 Oct 2026
+ 14:52:03 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20261011-alpha-perf-tools-regs-v1-1-2a5940e22548@gmail.com>
- <CA+=Fv5SDnzQQDzyhaQ37kWJMjTOHP0NHuAS6kJHwT8_Zqyjd-w@mail.gmail.com> <CA+=Fv5RGr2NQs=gnErAWXfSZgMcWB1q-_-BNQ5X5DyzqkV-bmQ@mail.gmail.com>
-In-Reply-To: <CA+=Fv5RGr2NQs=gnErAWXfSZgMcWB1q-_-BNQ5X5DyzqkV-bmQ@mail.gmail.com>
+References: <20261012053013.14378-1-namhyung@kernel.org> <20261012053013.14378-4-namhyung@kernel.org>
+In-Reply-To: <20261012053013.14378-4-namhyung@kernel.org>
 From: Ian Rogers <irogers@google.com>
-Date: Mon, 12 Oct 2026 14:45:41 -0700
-X-Gm-Features: AclHuK-KhF7SQQ_cSO4Vi6bo7ImPeruAfj2YPIigck0H0gWHJJaIzIY69ZpCKsw
-Message-ID: <CAP-5=fXFYbuV9MtJsVX5hUPKDOxcjtNTHM4-qR7Q+ncsPq59UQ@mail.gmail.com>
-Subject: Re: [PATCH] perf regs: Add alpha support
-To: Magnus Lindholm <linmag7@gmail.com>
-Cc: Matt Turner <mattst88@gmail.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, James Clark <james.clark@linaro.org>, 
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
-	Richard Henderson <richard.henderson@linaro.org>, linux-alpha@vger.kernel.org
+Date: Mon, 12 Oct 2026 14:51:52 -0700
+X-Gm-Features: AclHuK8fSmSW9prYIWpNexYiVkZwA9i8SN5Rf1NNY9lV-sUOfaw0J3zWzFUeo0c
+Message-ID: <CAP-5=fW1SSoyGKjaujZewF=b3rJ-0vp4kJ-friWNzOQWk+ki5A@mail.gmail.com>
+Subject: Re: [PATCH v2 4/4] perf test: Update PE file test for other locations
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, James Clark <james.clark@linaro.org>, 
+	Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, 
+	LKML <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Oct 12, 2026 at 2:41=E2=80=AFPM Magnus Lindholm <linmag7@gmail.com>=
+On Sun, Oct 11, 2026 at 10:30=E2=80=AFPM Namhyung Kim <namhyung@kernel.org>=
  wrote:
 >
-> Hi again,
+> The test__pe_file_parsing() expects the test is in the tools/perf
+> directory, but it could be root or a separate build directory.  Let's
+> update the logic to try other paths like in the shell_tests__dir_fd().
 >
-> On Mon, Oct 12, 2026 at 7:37=E2=80=AFPM Magnus Lindholm <linmag7@gmail.co=
-m> wrote:
-> > > base-commit: bc01105ed65d15787b2eb93ac26e8624a2139e35
-> > > change-id: 20261001-alpha-perf-tools-regs-c206a84dec7f
-> > >
-> > > Best regards,
-> > > --
-> > > Matt Turner <mattst88@gmail.com>
-> > >
-> >
-> > Thanks for doing this!
-> >
-> > Register selection, recording, decoding and user stack dumps tested
-> > on my ES40. End-to-end DWARF unwinding remains unverified because the
-> > installed elfutils 0.195 lacks Alpha unwinding support.
-> >
-> > Tested-by: Magnus Lindholm <linmag7@gmail.com>
+> Also add some debug messages to inform users why it's skipped.
 >
-> I just pulled your elfutils patches and ran some more tests.
-> With your elfutils patches, DWARF unwinding now works on my ES40.
-> Both existing and fresh perf recordings recovered the expected
-> leaf -> middle -> outer -> main call chain.
+> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+> ---
+>  tools/perf/tests/pe-file-parsing.c | 13 +++++++++++--
+>  1 file changed, 11 insertions(+), 2 deletions(-)
 >
-> As documented, samples whose CFA depends on r15 stopped at the
-> sampled frame, since r15 is unavailable. Tested-by tag already given
-> to this series.
+> diff --git a/tools/perf/tests/pe-file-parsing.c b/tools/perf/tests/pe-fil=
+e-parsing.c
+> index 3979f38bf127c218..78dae7e43603b9f8 100644
+> --- a/tools/perf/tests/pe-file-parsing.c
+> +++ b/tools/perf/tests/pe-file-parsing.c
+> @@ -74,10 +74,17 @@ static int test__pe_file_parsing(struct test_suite *t=
+est __maybe_unused,
+>  {
+>         struct stat st;
+>         char path_dir[PATH_MAX];
+> +       static const char * const tests_dirs[] =3D {
+> +               "./tools/perf/tests",
+> +               "./tests",
+> +               "./source/tests"
 
-I'm finding this fantastic and exciting to follow! Being greedy, does
-the cross-platform DWARF unwinding work? perf record on an alpha and
-perf report on, say, an x86. It would in no way block this work, but
-I'm keen to check Matt/I wired this up properly :-)
+I'm not sure where "source/tests" comes from?
+nit: could we add the exec_path case to the list?
 
 Thanks,
 Ian
 
-> Thanks,
-> Magnus
+> +       };
+>
+>         /* First try development tree tests. */
+> -       if (!lstat("./tests", &st))
+> -               return run_dir("./tests");
+> +       for (size_t i =3D 0; i < ARRAY_SIZE(tests_dirs); ++i) {
+> +               if (!lstat(tests_dirs[i], &st))
+> +                       return run_dir(tests_dirs[i]);
+> +       }
+>
+>         /* Then installed path. */
+>         snprintf(path_dir, PATH_MAX, "%s/tests", get_argv_exec_path());
+> @@ -85,6 +92,7 @@ static int test__pe_file_parsing(struct test_suite *tes=
+t __maybe_unused,
+>         if (!lstat(path_dir, &st))
+>                 return run_dir(path_dir);
+>
+> +       pr_debug("cannot find the tests directory\n");
+>         return TEST_SKIP;
+>  }
+>
+> @@ -93,6 +101,7 @@ static int test__pe_file_parsing(struct test_suite *te=
+st __maybe_unused,
+>  static int test__pe_file_parsing(struct test_suite *test __maybe_unused,
+>                           int subtest __maybe_unused)
+>  {
+> +       pr_debug("libbfd is not available\n");
+>         return TEST_SKIP;
+>  }
+>
+> --
+> 2.55.0
+>
