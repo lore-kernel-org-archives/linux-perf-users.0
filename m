@@ -1,163 +1,188 @@
-Received: from mail-qt1-f182.google.com (mail-qt1-f182.google.com [209.85.160.182])
+Received: from mail-qt1-f169.google.com (mail-qt1-f169.google.com [209.85.160.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0B4C3403EA
-	for <linux-perf-users@vger.kernel.org>; Mon, 12 Oct 2026 22:40:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.160.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7EB02BFC7B
+	for <linux-perf-users@vger.kernel.org>; Mon, 12 Oct 2026 22:46:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.160.169
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791844823; cv=pass; b=a5oe/wbnAd5CLqhER64ud0j51iWYDX8m08pcfwGS8lSEQJ6Ye+Pf/daM3Jq8aNaMa5jAPw5JlYt104l4woQ/QxzrJuDi9xSsF3F+uukHqFxo+QGE7w0v9ZDmyKoullb8boqTpTDAcRPUf2RO6GyGuqx3sL5J/dxAloukde1btI8=
+	t=1791845220; cv=pass; b=sBeRihHnB1TNXrxtxROFc8zeZvHz1PUZ7DpEbc3BqWk4uCq9v9cRZkXPl/c/E2b9j874fSocWDatSog7TlfTBPFkYzcfpx05VdJ08MKK5ajGI2eW+SEZrLsZjs7k4JUzjwQR2Gkgo8DhT1NBe072ouExLnQpRHVRF6ahvIoBDAM=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791844823; c=relaxed/simple;
-	bh=CFhoFjD7GvPxBDPjUjStqpBpMojlj/Tky/SlADcDkcs=;
+	s=arc-20240116; t=1791845220; c=relaxed/simple;
+	bh=RhPTPbxOil0nNbcCTe++QZ3I591tZ3jVFSRYtTAyr8w=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=TSckkSSV3gbTiaMld8U5go1bxWWbrnUvUFesKn3Mn2tbRRVWqyqtfsUkjXFHomq+TNsk7DTHWm2/pXEn2UIJzsuaf6pGm37kaRmNsi66EaE/RxnLaoLF9JrNlzmf2SzZFAp44c2dU26m+UnsdQP61HJQbgM02rXa4sdh9I/bwqI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=B50bR23g; arc=pass smtp.client-ip=209.85.160.182
+	 To:Cc:Content-Type; b=iS/E8PFsvbC48B6VtBFTPM62vmiL/tdMfTFbGw0clQCatyPP/TUotPK4emRvVlICt4ww5zoznTfTHAQgmHJm/JH3Cfk9DIO/kQ3hfwXZCwWsFV8wY6yAnYW0jNxr4RGEXCTBvqVv+4DmsUrvTETRSjaDqHcSHf0hGZ/V31klvWw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=lhJ0/cwF; arc=pass smtp.client-ip=209.85.160.169
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="B50bR23g"
-Received: by mail-qt1-f182.google.com with SMTP id d75a77b69052e-5337c7b9937so553421cf.0
-        for <linux-perf-users@vger.kernel.org>; Mon, 12 Oct 2026 15:40:21 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1791844820; cv=none;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lhJ0/cwF"
+Received: by mail-qt1-f169.google.com with SMTP id d75a77b69052e-5337c7b9937so555141cf.0
+        for <linux-perf-users@vger.kernel.org>; Mon, 12 Oct 2026 15:46:58 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1791845217; cv=none;
         d=google.com; s=arc-20260327;
-        b=k4M7sMO1387L1zSB31om74oADL2BspjxndNtNQmvSgxXoIlUYbTh6IWPL4jD7b2ZHW
-         3ZS93UEW9GnMDx4LnvbC7TB7xvSy7bctSq9Xmjc1MWbDxY2sHrYi2cBwo/LI7w/rXkJe
-         rQeX3QnrxsiGIUAcN0VjD2UmB9HAer2jqcUT/J41xQVXnUWG1GKCTIR9DsOlUEQu5m1J
-         MWPnM2tzBpWCVSekpBKh2VM9CIi2BmM/S3b5RFugQtI2DyJCESykrNeRtOYKNoF7uyvz
-         qjDt40S2vKJTgIizl/97vH9GOm0c+C/QDn0k9M0YEkwt0a8ie2Xg/euCSTWgmMWwIA26
-         lO9g==
+        b=k/Mym9dtzsiLMlmKkFfzeQkAtMPmTEn9ul26GF8jVgHWEKAMI+nJw+r9uezg3u/CG0
+         MByZc5NBQmUY0khgl91ijaasXrJlNdZ7YQbT1e5ai50dWZUknijvUWW0PQ9UtI7yTq8e
+         nwGN7MJlHahBfz9neXnyEUFMVlbPqcSmiANar2SC6ryOL82vm0e3ZsY5bQ87nBSGLd8S
+         lFS2t2Nk606l8z2cXSRFT7Tj45U6Fxy5vT6kCKsYyHGmbk76X7or05hiCIFUNCpL7tFW
+         +ncwl8XHlblJxUnBYNF3+6UEeF+jNqeZmUVdcFweRIE1Uyqv6WQ6zYzKKQpgtgSYSQgw
+         /Uuw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:dkim-signature;
-        bh=bNGYidXZtaytiL7v98iVEO9jLb4pnmAyRJWu+GLbhwc=;
-        fh=69e+w7jSy3hq8JCe21uL+fY5eitoZRnXyidRGQZMH70=;
-        b=rjCBwWci17ts8OPNbc7zqlavGBbJNTXqk6N5k48ch1srvy/0MzJeVKmE22F5in8yLD
-         pjpcDLq/bP9cWkvP5Oucvz92tM0KDL7s4OPojFLgK0O1Ghfj4YG+FBLM7dJk2H4/Gc7f
-         rq+ozeg9cVnlarZyZAr87ppoZi76dHbj5DbX1esqeXb6yoi1A9pu48lJF59vR8jufynQ
-         TuawLsl2GlLmsJlNvQUKSJWBBF+rnpgfFEpsGyjIPZUGDdFbmTefbJXXEtGajmKMgyi9
-         0wWewKXbahlYdNFhmoX7NvVu6EssER87GTxjuAafYeQOGYEwIhrfST5+PaHRlGm+RGTw
-         xSqA==;
+        bh=RhPTPbxOil0nNbcCTe++QZ3I591tZ3jVFSRYtTAyr8w=;
+        fh=zSK7VzGSh8IM0xV7DqWR+dDuSjZlti9BxCNPZ2GeVTk=;
+        b=dUPvTHBfcxipQZvSfQjj6UK7UyHFEWrfPmAH6PenVX9Vinhfp3lwRRiSht/IvRuZ/1
+         h0YUBCJrMGFDAxwWv9W1ExrFDNhTbB5Dpz/dpQmWHCz66BJno0qP+VOrq5+CSM0Xiww+
+         8+R0D3kb8gcnTAF0afwOLTyjK4VBUg2dyRLHW6E8PwJCWIlbxf9YjBvYrO520H1UvsYk
+         IJ/lya1kJBZn7/RuyS1S/Rh9p8xBxCl18SHRiOlImAkXzlQu6kTe/ez87m7KPYBdSWFH
+         ituyPyIEcPMrV7f+h8eLtbHPdplE7MDtGyT6BnBeYgv1jUOxDW5sKzDkcEOIVGpBWBEQ
+         XPQg==;
         darn=vger.kernel.org
 ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1791844820; x=1792449620; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1791845217; x=1792450017; darn=vger.kernel.org;
         h=content-transfer-encoding:content-type:cc:to:subject:message-id
          :date:from:in-reply-to:references:mime-version:from:to:cc:subject
          :date:message-id:reply-to:content-type;
-        bh=bNGYidXZtaytiL7v98iVEO9jLb4pnmAyRJWu+GLbhwc=;
-        b=B50bR23gJkaUih23V1httXSI+5wMU7zt8eUxQczEsaCSv6V8AIlHUVzvrGDHEIYEKG
-         fUi4B1ycR5ATrXroCrUsY+vffsYVU+WkAW0z2mNV54NlFJMm/6L11tOm5zpDhjUVnztg
-         QD9EdiZRiFi9dCZ6UZbETU8Wv88xij7qCC6wY04Jjqx43CM0S5YZOGCk5GVfIThDU85p
-         5c6suovmb9XtDFDCh4hv5ZM2nrVfh0HWOws5elH9hTQHjcmZ2EFPaIqdn7qXSDAD38DL
-         E0v3e1PXxeD0aVSDG/n+NQGRGsNCTb0cc0mZo0HUpd8LiBtkhk4j8Cxujs1cmcF8mptb
-         V9Eg==
+        bh=RhPTPbxOil0nNbcCTe++QZ3I591tZ3jVFSRYtTAyr8w=;
+        b=lhJ0/cwFdQWf/2bVpInNeLDhUOQEPN6t6y74mzPuTbwYM+UgFz6JtDLvGRy1rR6Jgl
+         cu73rNvLL1FPRpVN16q0h7KmP9notVAbJJ2hiLzeXPiK4s9QiC1dw64NVWaDPIukNXad
+         Mp7CrTjkpZnNcJ/Oefmkl43J6LpJx30Cv1w4je9ezMFE6uyBIeRNJsxlkqDmKYwk3rux
+         kF9QeG5EdEjrls+fK1jM0ULhiNlIoPgJ1niF2AfPPct8HtbyXTeqZNOuemWLGKJ6Bkik
+         e2VMVBBYYVmAhGBy2miI2ATfmR8VvoPoq0vWIhCPfGLQIm6pTK8+RHog+JYY82YeP0IE
+         4q/g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1791844820; x=1792449620;
+        d=1e100.net; s=20260707; t=1791845217; x=1792450017;
         h=content-transfer-encoding:content-type:cc:to:subject:message-id
          :date:from:in-reply-to:references:mime-version:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=bNGYidXZtaytiL7v98iVEO9jLb4pnmAyRJWu+GLbhwc=;
-        b=Mzf10C8ZBMw+7jGEW1HVU/agM4h5Ae6Xvyt6+Fy2vQOnsqw/OIM6zcIU4LBUdXjdis
-         1UQU7CP5HgXvTkymenpuCeeuo65R33hQ57eXyDDAV5znc/fM1GeTs2T6FVGl10wiXW0B
-         qS+zcQlZd840Qo942H8TROp0ZSMeZ8WYYYIUY0Iz060YgCDXGCkiq4m5T0t3qMb6NUzJ
-         bKarLU0Oz673/lcgrBvj319iTvbYNSQbtunvezg5MxvA1emmnzFxOi+iz8GwRNhHRcB0
-         Y86WjybvLmVmuOUpreKQP4Djp5xxrJvJ5B55uZMseSkO30spby0TtcjTwId6Lc3P4JrL
-         13iA==
-X-Forwarded-Encrypted: i=1; AKwUvBzp95FUJoFOplQ3OeLZ0EOIkWZuZwGGtQBSSkFOTIq91xNO6Jn0/8g5id5EoOV+LZ/WoBMQdi4kLtUW5X+m+30O@vger.kernel.org
-X-Gm-Message-State: AFq9FYIUUfGFybNr+ihqh8Z4IGE8zKVOE+Fw0IE3/OEApWda4di71S1T
-	4O4G1La7bFhgt+lhIbWGUwfYP9Fnt6C/jYaX43rjCbZEg42yENiPn4I3lxuTbM6BTapGT1XOVzx
-	pRVxYAj8247hkU3dTzl8z+H+CTAkwEnQrJ0P7mpRZOPfz6Pe1AdXLugl1
-X-Gm-Gg: AYBFou35eVE0gmqfqErxqfAyFM1VhtqxyZ2BrvmqZqbBe0zCkbs33nuBemLLaZ1ieQ4
-	Oq3fo+PhT1pxSEMWszBS2F4rxVFktcwnEnIx8tvWoja/YMbKJ78HYlbk7jpXFtL+2ji7DlDNtMp
-	Eq7YY5EZ6ClEmCNJvnnIN2gMyHsoDDwAOuuW4TDJ40tBLnNRxj4ns1bI8dn1k+zv+mrafY5uxkq
-	1Limqa78AsIqzNlShK4YPrmPJcc8K3r26dNnNyGAIeNjiDfL98uIpb8rDwmyAWdoVttT2jQDhTq
-	fE+urOU3M9SXtkmioCG5b6WzuKgbDIGa9k2ph/wi27HXupJLKGdeeq3EMBjL8p0ynO7OEZDbaqx
-	j5e31UFi1Aw==
-X-Received: by 2002:ac8:5a0f:0:b0:50f:af60:3496 with SMTP id
- d75a77b69052e-535b2d9b1e9mr37970391cf.1.1791844819458; Mon, 12 Oct 2026
- 15:40:19 -0700 (PDT)
+        bh=RhPTPbxOil0nNbcCTe++QZ3I591tZ3jVFSRYtTAyr8w=;
+        b=jgV5or0PtFgjMzg1Ne7Iv48oXNt1D5rL44XavoVRmGtC2gzZNYG1cbVAg6UFOIpRw7
+         1kleE1u0KYadhpXntT8Xd0SDZLwDYvdjR0hjgdohVOUYgWFNrDLP4lwcT228ePX9Fpg2
+         dMzPeZyfcsX5cyUfrEmczEcx1ioxZkG6x30RMo/BeYWqnAKldbJQqHn+yM/ObzSIKqg3
+         G9U8X7oJPWUV5uA99gs6D/mevwN9d/XAAJngmjqE4sypNhiHxTweMr7xX5m3PvcXZHwR
+         vbQkLNF2336/g7vn2VXdhrUstpkKXqO4Ux9T7z03ZioaXZmtvGXSTv1iwKYOplkuj3mJ
+         8jEA==
+X-Forwarded-Encrypted: i=1; AKwUvBx3oM1HW5TguM0N9UNBnCrsNTAz6Iyb0QnTVXAkkGVpOG+a0HRNI22kbBGYgJtAWrq+4NbWhh6q9T4X967PxQl3@vger.kernel.org
+X-Gm-Message-State: AFq9FYI2ZiV+xkmZpGmeYly+v2m00o75LR2X4zzbXnoZRRTaJPrVdM26
+	XDMtBGMnzGpJg6A8EXz9lfyxsNnrJoQP6y1lX8sQt9YtT65jRd7FNb77kc5zNCB3Z8VcaD0dqPG
+	gn2zrsHt0Qcrlw8xgVbrRhauPa8g9ag3G9keN8qIN
+X-Gm-Gg: AYBFou1JSYLfdWVBeJkUCjXmUGuPD2VE+dyMohrR5gHX3YmdxiDwP3vk4Li/HrXxnMn
+	vEklXxiqp3X3kbCMhUZjQabTLokPLcTUW+ANpJt3gLf1G543JMyU+pc4VLWmFy1U7ksiIpqkRXf
+	ZFw0rah02yAu+rATH/q/3v2IZo8M1fHRpYwYC7vmDA9pccNP7he6jK7CxPWyzCmcrY5BoZtV+XG
+	xpxJ7ACqR/qJAq+ZXVhlTZiMbBv40dkz1o8gZdvuR9JjjhnzQ76paZQYLfg+kQRcb3q5Ui+XbSv
+	8Fi9iQ5XUj9XytFwgjfaMm0aajhN961YZQof5WTrFeMawRL8Jok5Yppv7nWC+4X15QPhEiSzBpo
+	/nE6iIR+zFLIwWsGaBHai
+X-Received: by 2002:a05:622a:1ba0:b0:534:313:9b4e with SMTP id
+ d75a77b69052e-535b321298dmr38673911cf.5.1791845216797; Mon, 12 Oct 2026
+ 15:46:56 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20261006161309.3078488-1-acme@kernel.org> <asWLmvF-3YtoKJ7j@google.com>
- <asYDREqTrh9ZDUhm@localhost>
-In-Reply-To: <asYDREqTrh9ZDUhm@localhost>
+References: <20261011-alpha-perf-tools-regs-v1-1-2a5940e22548@gmail.com>
+ <CA+=Fv5SDnzQQDzyhaQ37kWJMjTOHP0NHuAS6kJHwT8_Zqyjd-w@mail.gmail.com>
+ <CA+=Fv5RGr2NQs=gnErAWXfSZgMcWB1q-_-BNQ5X5DyzqkV-bmQ@mail.gmail.com>
+ <CAP-5=fXFYbuV9MtJsVX5hUPKDOxcjtNTHM4-qR7Q+ncsPq59UQ@mail.gmail.com> <CA+=Fv5QHzus2HUPJNFeWMCFSrOjvr8xhkPie2CLSbdjgK=+j8g@mail.gmail.com>
+In-Reply-To: <CA+=Fv5QHzus2HUPJNFeWMCFSrOjvr8xhkPie2CLSbdjgK=+j8g@mail.gmail.com>
 From: Ian Rogers <irogers@google.com>
-Date: Mon, 12 Oct 2026 15:40:07 -0700
-X-Gm-Features: AclHuK-H8y7Po0uJuwabFCXT24Vopb_793VT6i4gOliUNjQZCmpiBVVeoFB13og
-Message-ID: <CAP-5=fURC_-ez2eNXjcT378ttO7iKMHhjrexxekqDEDU-suRpQ@mail.gmail.com>
-Subject: Re: [PATCH 0/6 v1] perf test attr: Fix the re-enabled test
-To: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-Cc: Namhyung Kim <namhyung@kernel.org>, Ingo Molnar <mingo@kernel.org>, 
-	Thomas Gleixner <tglx@linutronix.de>, James Clark <james.clark@linaro.org>, 
-	Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>
+Date: Mon, 12 Oct 2026 15:46:45 -0700
+X-Gm-Features: AclHuK-ozzc1SZ1dDdK3H95QIDfp6Kr1nmKiVr9Y7a1gGwdz5GDz1Mrtu83sdx8
+Message-ID: <CAP-5=fUk=me0TYTyyHojzrGzW2ZF2Jyu14QezdjdN=Z=siwmrQ@mail.gmail.com>
+Subject: Re: [PATCH] perf regs: Add alpha support
+To: Magnus Lindholm <linmag7@gmail.com>
+Cc: Matt Turner <mattst88@gmail.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, James Clark <james.clark@linaro.org>, 
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+	Richard Henderson <richard.henderson@linaro.org>, linux-alpha@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Oct 7, 2026 at 1:31=E2=80=AFAM Arnaldo Carvalho de Melo
-<arnaldo.melo@gmail.com> wrote:
+On Mon, Oct 12, 2026 at 3:38=E2=80=AFPM Magnus Lindholm <linmag7@gmail.com>=
+ wrote:
 >
-> On Tue, Oct 06, 2026 at 05:00:26PM -0700, Namhyung Kim wrote:
-> > On Tue, Oct 06, 2026 at 06:13:03PM +0200, Arnaldo Carvalho de Melo wrot=
-e:
-> > > From: Arnaldo Carvalho de Melo <acme@redhat.com>
->  > The test passes with 'perf test -vv attribute' on x86_64.  The AMD
-> > > encodings come from the amd_pmu_event_map tables in
-> > > arch/x86/events/amd/core.c.
+> Hi Ian,
+>
+> On Mon, Oct 12, 2026 at 11:45=E2=80=AFPM Ian Rogers <irogers@google.com> =
+wrote:
 > >
-> > On my machine, the current tmp.perf-tools-next which contains these
-> > changes fails like this.
+> > On Mon, Oct 12, 2026 at 2:41=E2=80=AFPM Magnus Lindholm <linmag7@gmail.=
+com> wrote:
+> > >
+> > > Hi again,
+> > >
+> > > On Mon, Oct 12, 2026 at 7:37=E2=80=AFPM Magnus Lindholm <linmag7@gmai=
+l.com> wrote:
+> > > > > base-commit: bc01105ed65d15787b2eb93ac26e8624a2139e35
+> > > > > change-id: 20261001-alpha-perf-tools-regs-c206a84dec7f
+> > > > >
+> > > > > Best regards,
+> > > > > --
+> > > > > Matt Turner <mattst88@gmail.com>
+> > > > >
+> > > >
+> > > > Thanks for doing this!
+> > > >
+> > > > Register selection, recording, decoding and user stack dumps tested
+> > > > on my ES40. End-to-end DWARF unwinding remains unverified because t=
+he
+> > > > installed elfutils 0.195 lacks Alpha unwinding support.
+> > > >
+> > > > Tested-by: Magnus Lindholm <linmag7@gmail.com>
+> > >
+> > > I just pulled your elfutils patches and ran some more tests.
+> > > With your elfutils patches, DWARF unwinding now works on my ES40.
+> > > Both existing and fresh perf recordings recovered the expected
+> > > leaf -> middle -> outer -> main call chain.
+> > >
+> > > As documented, samples whose CFA depends on r15 stopped at the
+> > > sampled frame, since r15 is unavailable. Tested-by tag already given
+> > > to this series.
 > >
-> >   $ tools/perf/perf test -v 82
-> >   ---- start ----
-> >   test child forked, pid 931585
-> >   /home/namhyung/project/linux/tools/perf/tests/shell/attr.sh: line 20:=
- python: command not found
-> >   ---- end(-1) ----
-> >    82: Perf attribute expectations test                                =
-                 : FAILED!
+> > I'm finding this fantastic and exciting to follow! Being greedy, does
+> > the cross-platform DWARF unwinding work? perf record on an alpha and
+> > perf report on, say, an x86. It would in no way block this work, but
+> > I'm keen to check Matt/I wired this up properly :-)
 > >
-> >   =3D=3D=3D Test Summary =3D=3D=3D
-> >   Passed main tests : 0
-> >   Passed subtests   : 0
-> >   Skipped tests     : 0
-> >   Failed tests      : 1
-> >   List of failed tests:
-> >      82: Perf attribute expectations test
-> >
-> > The below patch fixes the problem.
 >
-> still without your patch:
+> Tested recording on the ES40 and reporting on x86-64 with patched
+> perf and elfutils. I hit an existing offline architecture-detection
+> issue in my for-next-based perf tree: it selected x86 registers for
+> the Alpha samples.
 >
-> root@number:~# perf test attribute
->  82: Perf attribute expectations t: Ok
+> After two local corrections, both perf report and perf script
+> recovered identical seven-frame chains for all 391 optimized samples.
+> The r15-dependent workload stopped at the leaf, just as on Alpha.
 >
->  =3D=3D=3D Test Summary =3D=3D=3D
->  Passed main tests : 1
->  Passed subtests   : 0
->  Skipped tests     : 0
->  Failed tests      : 0
->  root@number:~# grep "model name" -m1 /proc/cpuinfo
->  model name      : AMD Ryzen 9 9950X3D 16-Core Processor
->  root@number:~# uname -a
->  Linux number 7.2.7-200.fc44.x86_64 #1 SMP PREEMPT_DYNAMIC Mon Sep 21
->  18:25:57 UTC 2026 x86_64 GNU/Linux
->  root@number:~#
+> Both issues predate Matt's patch in this tree. The places to look
+> are machines__init() in tools/perf/util/machine.c, where the host's
+> machines pointer is left unset, and thread__e_machine_endian() in
+> tools/perf/util/thread.c, where the session->data check for is_live
+> appears, to me, inverted?
 >
->  I reproduced the build failure in an ARM64 Debian Trixie machine,
->  applying your patch to try again.
+> Locally, setting machines->host.machines =3D machines and changing
+> is_live =3D !!session->data to is_live =3D !session->data resolved this.
+> These changes still need broader review, but the Alpha cross-platform
+> unwinding itself looks good.
 
-For the change to use PYTHON:
-Reviewed-by: Ian Rogers <irogers@google.com>
-I think we can fix the attribute test expectations separately.
+That's great news! I think the is_live issue was addressed here:
+https://lore.kernel.org/linux-perf-users/20260905-perf-alpha-annotate-v1-1-=
+97380433ccb6@gmail.com/
+and the machines issue maybe in:
+https://lore.kernel.org/linux-perf-users/20260918062620.2145220-1-irogers@g=
+oogle.com/
+Both these fixes are already queued up in perf-tools-next:
+https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.gi=
+t/
 
-Thanks,
+Thanks!
 Ian
 
->  - Arnaldo
+> Thanks,
+> Magnus
