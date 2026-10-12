@@ -1,164 +1,192 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95A7D1E5207
-	for <linux-perf-users@vger.kernel.org>; Mon, 12 Oct 2026 00:41:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49B141C84D0
+	for <linux-perf-users@vger.kernel.org>; Mon, 12 Oct 2026 00:43:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791765698; cv=none; b=FWv2TM+qn4ca8RKvSrqtYiLDeCyfKmUKkQsKNzbPedK3ZBzcV407v3R9xqvGWWZkZIHQuRYpgaLPORNqQ/TkqdTYLQ6j5Zq17CK9AGkUqeSb+ttvVAVqSneTaMDcklq9KdNVaXNdDjumoOJILhmxerzKPpBKNI2v3fgULJEpgFw=
+	t=1791765820; cv=none; b=DVgfX7nrtlW9gtDWmF8su0czkBf3qniRacI4AO3cq0LF46Iuxu+vHta1kLti+XIeik65RZdnU8eXQX/gV+o/51iXfwOYBhKIYP0hTzF3Ns8qb4DNT+CZXkXr+gPMuRcOsvAyTRJyOkl/ktxUjxED8UrXTPu2Ph5Djeog7eHCdk8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791765698; c=relaxed/simple;
-	bh=caDJXdgvIdpu8RiImwLcGrvoGAJXLNhddF4GFfr0PAI=;
+	s=arc-20240116; t=1791765820; c=relaxed/simple;
+	bh=xKdEDpobRdpEthp8O2+KtItEjeJ9pR+7O/fB7tS2WV0=;
 	h=Message-ID:From:Subject:To:Cc:In-Reply-To:References:Content-Type:
-	 Date; b=apr+PtHmQMJUJSUpSy2t2SwuwKitIVj62a/gF/zr+aENHMElYhuiLK5jA3a+pd6x5ACcxhRBhrj0WbHpslcLTanl5L/raNfuUY4eCgvtgozil0x7qr07fYRDVdX7mCShT+6dZPxJ81hCNIIsVl6TR+/msBmV8HLmXgvmwIpk+qQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TDUKHu5d; arc=none smtp.client-ip=100.103.45.18
+	 Date; b=X7le9kYro+vE5gwgzaQ9ClVQYO5fL7nKDWfzM7oREZeYNPEuiKtnS00f5VgajOvPqjFAmEH052++opdClYUgYmCm+zW4F7boyG9cG/ccUMpx+RMlKBR5jh5pUW9fMZnPY1ds4yzyenk9yWeC9aYGt1V3t6ixmjWnnvdJMe82ZPI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MIfNfwah; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TDUKHu5d"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4EBE31F0089B;
-	Mon, 12 Oct 2026 00:41:37 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MIfNfwah"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B10AC1F0089B;
+	Mon, 12 Oct 2026 00:43:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1791765697;
-	bh=XjbPtTdXsIprglmfp6OCFFPQyxveJp/o9U5v5In/swA=;
+	s=k20260515; t=1791765818;
+	bh=56/9ViECNplUY0sgbkQWE8xXVF1DnAPqPemiicynoLE=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=TDUKHu5dd1y2co9llTGmrBk1GR2wG5+MgC8fSTbxKgisJuiruvzbMwatZ3ZRtGoRF
-	 Z3ZfOefTYaG+ThO9qjgeImxZMzdnlAT2iWM0HT0fyxnjAkiU95AuGjFRJVeJDjxpOA
-	 cWmN6rhcPJpxy5rry3JbX5E3bBNSmZYy2GTMy64Z5BskMQ6Co+Um8wPW7v/STeyHi7
-	 co98Oe2FfhpeEHnEMTT+Ar1qS/iHNkmpc5D4UXO/uW2/fENLg8MreMVdg2nDtiVNJo
-	 rdYVK7gNOd62MUGq/Ff581UvE5FptdY/M3Nssj3Nrw4Nulibolx7o8aLbYmjTuEDOf
-	 vWHd+/STjGRGg==
-Message-ID: <sashiko-outbox-167529@kernel.org>
+	b=MIfNfwahxO/a/d0k2IE6bWh2v7OsNPBC4Q9fUYvLvvyle0hf03PYjSNxNzCj0XeUf
+	 eHD9g7e0GpXPYtf6VfolRHo3M/fIda4eC2z2NynW3H3jjCYHKtjqTDW23vV5iQecj/
+	 KPu9a1w+WlapVHM33MjOBLoYcX+HArijtdQbCOnV+0rOvvjPl3izsYBBZjzJL+oltQ
+	 aCIs6SvYLp/ZQyGhec69KNU7/NsTXudDXuXbV1BbR2j8JKHamwiAHLY2FR8OY+A5Hi
+	 SecyZH//h1phZU4lSdvIeb6kV6Jkr7xt6QlH6hjQe/XWiLI2nLjWUkL/xxrrT0NAjJ
+	 Vxlzq8rB12yIA==
+Message-ID: <sashiko-outbox-167530@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH perf-tools-next v3 1/5] perf ftrace: Optimise
- __cmd_ftrace() stack frame with strbuf streaming
+Subject: Re: [PATCH perf-tools-next v3 3/5] perf ftrace: Support display of
+ inlined functions in function graph tracer
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Aaron Tomlin" <atomlin@atomlin.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20261012003016.263063-2-atomlin@atomlin.com>
+In-Reply-To: <20261012003016.263063-4-atomlin@atomlin.com>
 References: <20261012003016.263063-1-atomlin@atomlin.com>
- <20261012003016.263063-2-atomlin@atomlin.com>
+ <20261012003016.263063-4-atomlin@atomlin.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Mon, 12 Oct 2026 00:41:36 +0000
+Date: Mon, 12 Oct 2026 00:43:38 +0000
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 2 potential issue(=
+Thank you for your contribution! Sashiko AI review found 3 potential issue(=
 s) to consider:
-- [Medium] perf: dropped stdout error check causes infinite loop on EPIPE
-- [Medium] perf: uninitialized heap memory read in __cmd_ftrace() strbuf
+- [Medium] perf: machine__delete() used instead of machine__put() violating=
+ refcount API
+- [Low] perf: missing explicit POSIX libc headers in tools/perf/tests/ftrac=
+e.c
+- [Low] perf ftrace: make_blank_prefix clobbers comm-pid column in verbose =
+mode
 --
 
-commit 0a06afad8e6a1e6bf21a4b8a3c19582ed3d99cd1
+commit 9964df54e91214dc84e330cbac056548e3af8bc4
 Author: Aaron Tomlin <atomlin@atomlin.com>
 
-perf ftrace: Optimise __cmd_ftrace() stack frame with strbuf streaming
+perf ftrace: Support display of inlined functions in function graph tracer
 
-This commit refactors __cmd_ftrace() to use dynamic heap allocation
-for the read buffer and a strbuf to accumulate streamed characters
-into lines. This reduces the stack frame size by over 96%.
+This commit introduces the --inline option to perf ftrace for the function
+graph tracer. It utilizes DWARF debug information to dynamically resolve and
+synthesize inlined function frames directly into the streamed call graph.
 
-> diff --git a/tools/perf/builtin-ftrace.c b/tools/perf/builtin-ftrace.c
-> index 6017493ff1797..d6604be593a34 100644
-> --- a/tools/perf/builtin-ftrace.c
-> +++ b/tools/perf/builtin-ftrace.c
-
-[ ... ]
-
-> @@ -810,11 +821,19 @@ static int __cmd_ftrace(struct perf_ftrace *ftrace)
->  			break;
-> =20
->  		if (pollfd.revents & POLLIN) {
-> -			int n =3D read(trace_fd, buf, sizeof(buf));
-> -			if (n < 0)
-> -				break;
-> -			if (fwrite(buf, n, 1, stdout) !=3D 1)
-> +			int n =3D read(trace_fd, buf, TRACE_BUF_SIZE);
-> +
-> +			if (n <=3D 0)
->  				break;
-> +			for (int i =3D 0; i < n; i++) {
-> +				if (buf[i] =3D=3D '\n') {
-> +					fprintf(stdout, "%s\n", linebuf.buf);
-
-[Severity: Medium]
-Can this print uninitialized heap memory?
-
-Earlier in this function, strbuf_init() allocates the buffer but does not
-explicitly null-terminate it:
-
-tools/perf/util/strbuf.c:strbuf_grow() {
-    ...
-    buf =3D realloc(sb->alloc ? sb->buf : NULL, nr * sizeof(*buf));
-    if (!buf)
-        return -ENOMEM;
-
-    sb->buf =3D buf;
-    sb->alloc =3D nr;
-    return 0;
-}
-
-If the very first character read from trace_pipe is '\n' (for example, from=
- an
-empty trace line), linebuf.buf is passed to fprintf() as a string before any
-null byte has been written to it.
-
-[Severity: Medium]
-Does the removal of the stdout error check cause an infinite loop?
-
-The original code explicitly checked if fwrite() failed to gracefully exit
-the polling loop if stdout closes (for example, when the pager exits or
-when piped to head).
-
-Because trace_pipe provides endless continuous data while tracing is active,
-ignoring the fprintf() error forces the tool to endlessly read trace data
-and discard it, never terminating.
-
-> +					strbuf_setlen(&linebuf, 0);
-> +				} else {
-> +					if (strbuf_addch(&linebuf, buf[i]) < 0)
-> +						goto out_close_fd;
-> +				}
-> +			}
->  			/* flush output since stdout is in full buffering mode due to pager */
->  			fflush(stdout);
->  		}
+> diff --git a/tools/perf/tests/ftrace.c b/tools/perf/tests/ftrace.c
+> index 596cecee844e3..e856bed00700a 100644
+> --- a/tools/perf/tests/ftrace.c
+> +++ b/tools/perf/tests/ftrace.c
+> @@ -7,6 +7,10 @@
+>  #include <unistd.h>
+>  #include "tests.h"
+>  #include "debug.h"
+> +#include "dso.h"
+> +#include "machine.h"
+> +#include "map.h"
+> +#include "symbol.h"
+>  #include "util/ftrace.h"
 
 [ ... ]
 
-> @@ -832,15 +851,31 @@ static int __cmd_ftrace(struct perf_ftrace *ftrace)
-> =20
->  	/* read remaining buffer contents */
->  	while (true) {
-> -		int n =3D read(trace_fd, buf, sizeof(buf));
-> +		int n =3D read(trace_fd, buf, TRACE_BUF_SIZE);
+> +static int test_inline_processing(void)
+> +{
+> +	static const char line_entry[] =3D " 0)               |  wake_up_new_ta=
+sk() {";
+
+[ ... ]
+
+> +	struct perf_ftrace ftrace;
+> +	char *out_buf =3D NULL;
+> +	size_t out_len =3D 0;
+> +	FILE *out;
+> +	const char *unmatched_pos;
+> +	const char *inline_exit_pos;
+> +	int ret =3D TEST_OK;
 > +
->  		if (n <=3D 0)
->  			break;
-> -		if (fwrite(buf, n, 1, stdout) !=3D 1)
-> -			break;
-> +		for (int i =3D 0; i < n; i++) {
-> +			if (buf[i] =3D=3D '\n') {
-> +				fprintf(stdout, "%s\n", linebuf.buf);
+> +	memset(&ftrace, 0, sizeof(ftrace));
+> +	ftrace.use_inline =3D true;
+> +	ftrace.filter_retaddr =3D 1; /* Default when --graph-opts retaddr is no=
+t specified */
+> +	ftrace.tracer =3D "function_graph";
 
-[Severity: Medium]
-Does the lack of a return value check on fprintf() also cause an infinite
-loop here on a broken pipe?
+[ ... ]
 
-The previous code broke out of the loop if fwrite() failed. Without
-checking the return value of fprintf(), an error writing to stdout is
-ignored.
+> +		out =3D open_memstream(&out_buf, &out_len);
 
-> +				strbuf_setlen(&linebuf, 0);
-> +			} else {
-> +				if (strbuf_addch(&linebuf, buf[i]) < 0)
-> +					goto out_close_fd;
-> +			}
-> +		}
+[Severity: Low]
+Is it possible that test_inline_processing() and other functions in this te=
+st
+file will fail to compile under musl libc?
+The perf subsystem guidelines require files using POSIX standard libc funct=
+ions,
+constants, or variables to directly include the corresponding headers. This=
+ code
+makes heavy use of string/memory functions like memset() and file streams l=
+ike
+open_memstream(), but the file does not include <string.h> or <stdio.h>. Co=
+uld
+these headers be explicitly included to avoid relying on implicit glibc
+namespace pollution?
+
+[ ... ]
+
+> diff --git a/tools/perf/util/ftrace.c b/tools/perf/util/ftrace.c
+> index 344d36293f5ca..8737bb52921e1 100644
+> --- a/tools/perf/util/ftrace.c
+> +++ b/tools/perf/util/ftrace.c
+> @@ -1,13 +1,82 @@
+
+[ ... ]
+
+> +static void make_blank_prefix(const char *line, const char *pipe_char, c=
+har *buf, size_t size)
+> +{
+> +	size_t len =3D pipe_char - line + 1;
+> +	const char *paren =3D strchr(line, ')');
+> +	char *c;
+> +
+> +	if (len >=3D size)
+> +		len =3D size - 1;
+> +
+> +	memcpy(buf, line, len);
+> +	buf[len] =3D '\0';
+> +
+> +	/* Replace duration between ')' and '|' with spaces */
+> +	if (paren && paren < line + len) {
+> +		char *end =3D buf + (pipe_char - line);
+> +
+> +		if (end > buf + len)
+> +			end =3D buf + len;
+> +		for (c =3D buf + (paren - line) + 1; c < end; c++)
+> +			*c =3D ' ';
 > +	}
+> +}
+
+[Severity: Low]
+Does make_blank_prefix() inadvertently erase the comm-pid string when in
+verbose mode?
+In function_graph verbose mode (--graph-opts verbose), the trace output
+includes a comm-pid column and a duration column between the CPU number and
+the function name. This loop overwrites everything between the closing
+parenthesis of the CPU number and the final pipe delimiter before the funct=
+ion
+name with spaces. While this correctly blanks out the duration column, it
+looks like it might unintentionally clobber the task comm-pid string and its
+pipe delimiter as well, breaking visual alignment.
+
+[ ... ]
+
+> +void perf_ftrace__cleanup_inlines(struct perf_ftrace *ftrace)
+> +{
+> +	if (ftrace->machine) {
+> +		machine__delete(ftrace->machine);
+> +		ftrace->machine =3D NULL;
+> +	}
+> +	ftrace_cpu_states__clear();
+> +}
+
+[Severity: Medium]
+Should machine__put() be used here instead of machine__delete()?
+The machine reference is allocated using machine__new_host() earlier in
+perf_ftrace__setup_inlines(). The perf subsystem guidelines mandate strict
+reference count checking, stating that every reference handle allocated via
+_new() must be strictly paired with a matching _put(). Bypassing the refcou=
+nt
+API by calling machine__delete() directly can lead to memory leaks,
+use-after-free traps, and LSAN failures.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261012003016.2630=
-63-1-atomlin@atomlin.com?part=3D1
+63-1-atomlin@atomlin.com?part=3D3
