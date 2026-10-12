@@ -1,99 +1,102 @@
-Received: from akranes.kaiser.cx (akranes.kaiser.cx [152.53.16.207])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E6D846EF9B;
-	Mon, 12 Oct 2026 09:06:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=152.53.16.207
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06F062BD09;
+	Mon, 12 Oct 2026 09:18:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791795969; cv=none; b=rCUnugnJlu1C78iv0J7uMFBbayWhgpUsPTCOdkfmL32DbHp44fL/+IfjQmY8H/5vYIHQugHWR3O/akrbxFzkOBZ3uUDUFsEvg6ib1t+i0LwK3DzxyptNN1oBiHD+xnotnRSpuRfypS0dM3sqURKp48yt39H+Ff8X2N3Qi4n/XWg=
+	t=1791796713; cv=none; b=hpMi+x9azWyVqt5xSfhOM7QJroJSuOkqFrWPulNHUjk9tVyuN/XTkH6whOEjXdVnniTpZDPc3t1GtzSRi9cvZPKdCsQYDMiHToQR5AHlUybS6h8ftRPP04IY7uA4JLUuEOB+UyxGiJcK7k7486prIE38Pyt+FRaOSoFbDGp5bjA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791795969; c=relaxed/simple;
-	bh=YtH4w+hmlWfzXcIEUofEsOogUN5x6fIlGU/dD0EI/5c=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YlFESnV2A1Vt3c06frMo9SDWta7g6Jp8ykXeVD2xR967B5RKV2QVTWvjXXoJS69AH3fb2yCFo4drNiy9Gd2i0rM7QwfkES9NwSpFa15U8uCYMPYRD0cLyb6kgSm50KTWNh36jQ6HLVvYT9IRdEG5jFQ9J/LvNLGZFHBws9E9R6s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kaiser.cx; spf=pass smtp.mailfrom=kaiser.cx; arc=none smtp.client-ip=152.53.16.207
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kaiser.cx
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kaiser.cx
-Received: from martin by akranes.kaiser.cx with local (Exim 4.98.2)
-	(envelope-from <martin@akranes.kaiser.cx>)
-	id 1xGBeS-00000001fgc-3r88;
-	Mon, 12 Oct 2026 10:44:56 +0200
-Date: Mon, 12 Oct 2026 10:44:56 +0200
-From: Martin Kaiser <martin@kaiser.cx>
-To: Shuai Xue <xueshuai@linux.alibaba.com>
-Cc: Palmer Dabbelt <palmer@dabbelt.com>, Paul Walmsley <pjw@kernel.org>,
-	aou@eecs.berkeley.edu, alex@ghiti.fr,
-	linux-riscv@lists.infradead.org, oleg@redhat.com,
-	rostedt@goodmis.org, mhiramat@kernel.org, mark.rutland@arm.com,
-	peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
-	namhyung@kernel.org, alexander.shishkin@linux.intel.com,
-	jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com,
-	james.clark@linaro.org, jpoimboe@kernel.org, jikos@kernel.org,
-	mbenes@suse.cz, pmladek@suse.com, joe.lawrence@redhat.com,
-	shuah@kernel.org, mpdesouza@suse.com, oliver.yang@linux.alibaba.com,
-	zhuo.song@linux.alibaba.com, jkchen@linux.alibaba.com,
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org, live-patching@vger.kernel.org,
-	linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH v6 0/7] riscv: Add reliable stack unwinding for livepatch
-Message-ID: <asyeCD1xaIuKv3nl@akranes.kaiser.cx>
-References: <20260914092648.51254-1-xueshuai@linux.alibaba.com>
- <artojcJftbMIgPrj@akranes.kaiser.cx>
- <fbdb7b4c-0f80-41b0-b6d8-a4501ff3e820@linux.alibaba.com>
+	s=arc-20240116; t=1791796713; c=relaxed/simple;
+	bh=vqjizv+JTC7L8G/nTAjgrqUUHGL6gFbVw2GUatial3k=;
+	h=Message-ID:From:Subject:To:Cc:In-Reply-To:References:Content-Type:
+	 Date; b=Jzjb2EHFHMmGnI5JaJ8Xa6JGnBcXeb5in3fFjsMeURGisEVwSnQ1zfTL3AtbvwBSLgE21FeZbvMyiGYTIasQvaUrYPFQvrna2lOEQj7MAyjXEeTJGvLaOin+p3Z8XdsNe0WBL5i9vcsGaN4q2RNKF1vlYG89cUtyXtdkGdFmaYE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RXQ6xZX1; arc=none smtp.client-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RXQ6xZX1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5C7D71F0089B;
+	Mon, 12 Oct 2026 09:18:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1791796711;
+	bh=zGiNKDai4F6KNR5S5mdzaymXVKj523hVp03egq68vWs=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=RXQ6xZX1mXThb4Wy/oQJz5UDOVOTTwUQDsYNgwXF2M/PumWhspPe36mN1Y5y8PYD0
+	 qr4DXzmNaFnVOghtixRfh6vVCzw9zXa9QQXz+7qAR8AlBcE1ax7b04YjLV1U/sPBiz
+	 rLYCCrFAQJUJlGFEBFEK7W+q2xhFNnZWTJxgNwsiz91DxZJWwT95/OTln/MKXVsBkg
+	 X1iq2VOqKOmxXtgkfH4D06kRWAmJ0ftOke0OZwImbxLQTK6OXYfV5jwQl5SF+Z8u3j
+	 eaypGH2e7yjS4/+WADplnAVx2Ps4p2W45+gTojcdduNs+RV33t1LbZgnlktuOkADxx
+	 rMysso0fKYNlQ==
+Message-ID: <sashiko-outbox-167891@kernel.org>
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v4] ARM, ARM64, LONGARCH, XTENSA: Delay HW BP
+ notification to task_work()
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Sebastian Andrzej Siewior" <bigeasy@linutronix.de>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, linux-rt-devel@lists.linux.dev
+In-Reply-To: <20261012090431.TF3iVDsk@linutronix.de>
+References: <20261012090431.TF3iVDsk@linutronix.de>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Mon, 12 Oct 2026 09:18:30 +0000
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <fbdb7b4c-0f80-41b0-b6d8-a4501ff3e820@linux.alibaba.com>
-Sender: "Martin Kaiser,,," <martin@akranes.kaiser.cx>
 
-Hi Shuai,
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+s) to consider:
+- [Critical] perf: ODR violation and ABI mismatch in struct perf_event due =
+to unexported macro
+--
 
-Thus wrote Shuai Xue (xueshuai@linux.alibaba.com):
+commit fc15e8519a12261f55ee613e302041c25e4218d0
+Author: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 
-> It is great to hear that livepatch works both on a standard rv64 QEMU
-> and on the rv64 CHERI system. Could you share what the minor tweaks
-> for CHERI were? If any of them are generic -- for example frame-record
-> size/alignment or pointer-width assumptions in the unwinder -- it may
-> be worth folding them into this series, so the cheri-linux tree has
-> less to carry downstream. If they are purely CHERI-specific, a pointer
-> to your tree would still be a useful reference.
+ARM, ARM64, LONGARCH, XTENSA: Delay HW BP notification to task_work()
 
-the cheri changes are simple fixups of data types and assembly instructions.
-This isn't something that can be upstreamed at this point.
+This commit delays the hardware event delivery callback to task_work() to
+fix sleeping while atomic warnings on PREEMPT_RT. It implements a generic
+perf callback perf_hwbp_notify() and adds ARCH_NEED_PERF_HW_NOTIFY to
+supported architectures.
 
-Eventually, it'll end up in the cheri linux tree at
-https://github.com/CHERI-Alliance/linux
-but there's more cleanup to do first.
+Closes: https://lore.kernel.org/all/aho0eqjMESuHxECr@redhat.com/
 
-I just wanted to show my interest in getting your patches merged.
+> diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
+> --- a/include/linux/perf_event.h
+> +++ b/include/linux/perf_event.h
+> @@ -215,6 +215,10 @@ struct hw_perf_event {
+> =20
+>  	/* Last sync'ed generation of filters */
+>  	unsigned long			addr_filters_gen;
+> +#ifdef ARCH_NEED_PERF_HW_NOTIFY
+> +	struct callback_head		arch_hw_notif;
+> +	int				arch_hw_notif_busy;
+> +#endif
 
-Thanks,
-Martin
+[Severity: Critical]
+Does this cause an ABI mismatch and One Definition Rule violation across
+the kernel?
 
-> +Palmer, Paul, gentle ping on this series.
+The ARCH_NEED_PERF_HW_NOTIFY macro is defined in architecture-specific
+headers like arch/arm64/include/asm/hw_breakpoint.h, but it is used here
+in the generic include/linux/perf_event.h header.
 
-> It has been under review since late May (v1 on May 27, now in its sixth
-> revision) and the tags collected so far are:
+Because linux/perf_event.h does not universally include asm/hw_breakpoint.h,
+translation units that include linux/perf_event.h without previously
+including the architecture hardware breakpoint header will evaluate
+struct hw_perf_event without these fields. Since struct hw_perf_event
+is embedded in struct perf_event, this alters the size and member offsets
+of struct perf_event across different subsystems.
 
->   * Acked-by: Miroslav Benes <mbenes@suse.cz>             (7/7, livepatch)
->   * Reviewed-by: Marcos Paulo de Souza <mpdesouza@suse.com> (7/7)
->   * Reviewed-by: Martin Kaiser <martin@kaiser.cx>         (whole series)
->   * Tested-by: Martin Kaiser <martin@kaiser.cx>           (whole series,
->     rv64 QEMU and rv64 CHERI, livepatch working on both)
->   * Reviewed-by: Shuai Xue <xueshuai@linux.alibaba.com>   (2/7, 3/7, 4/7, 6/7)
+Can this lead to memory corruption when perf_event objects are passed
+between translation units with mismatched struct definitions? Should these
+conditional fields be driven by a globally visible Kconfig symbol instead?
 
-> v6 still applies cleanly onto the current riscv/for-next
-> (52318cf0fa6e). If it helps, I can send a v7 that folds in Martin's
-> Reviewed-by/Tested-by tags.
+> =20
+>  /*
+>   * hw_perf_event::state flags; used to track the PERF_EF_* state.
 
-> Could the series be considered for the upcoming 7.4 merge window?
-
-> Thanks,
-> Shuai Xue
-
-
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261012090431.TF3i=
+VDsk@linutronix.de?part=3D1
