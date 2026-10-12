@@ -1,147 +1,161 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F022B17A586
-	for <linux-perf-users@vger.kernel.org>; Mon, 12 Oct 2026 00:38:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CC5823C51D
+	for <linux-perf-users@vger.kernel.org>; Mon, 12 Oct 2026 00:39:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791765507; cv=none; b=eEGXMnEVi9x2m5KUWnrHptfSWafiWM68So1mrqjfUwYGyRw5gjH5rAulcpIeCTncx6lICf2ow3tO1kNoC8Jakbrb+EI2uQ+BustlJ6eRRPqUOajWnSR5DpmlMKNdQocL9G3aRizzJOuDO19rBMn/hZdVPJLyZzlAqsnX0RUyx68=
+	t=1791765562; cv=none; b=lOKkHtUhNW+p8qHaHLgOVwFrKffSA4TOvKiijlGBtxRhm+mkPyUKVWfo8HyY1J2HEdXFyi+vHaghaPHWCJk7y7Z86hP97yQh4+g+b+chhyyztKY61vbNVCEE5BWGugPLkRauiIns9rLl4YRIjkDi5f2kDiIK7ntTOGrhfXqz/1s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791765507; c=relaxed/simple;
-	bh=sVzCb7fveuFGKH+MpeULQXzeKKC6k9UzmafBx+wovzM=;
+	s=arc-20240116; t=1791765562; c=relaxed/simple;
+	bh=9Y23mIU5qvyJKO8zKInGpwOKw71ImmGBfegLaINW+QM=;
 	h=Message-ID:From:Subject:To:Cc:In-Reply-To:References:Content-Type:
-	 Date; b=DHOBjsIAsdxNpfiKMFhvQ4QxWr4RrPKZdZ8MVi8DwXOputLPqv9VYw2xVOaPPGFYnVUVO25PCAy4Xn1SAS+j+lEnepfrptcuHRo8XVwNS9M8yb0KRKi3uHuMA1IRDsZtpJIm/05DviBlAKDanwjnomO5t/nqW/9CsPzY/GVuxdw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZaMC5pAo; arc=none smtp.client-ip=100.103.45.18
+	 Date; b=tBkBTc5Hy4p+f4yWpsryyZLXZ7WnPwD3eBSHQdvQn/GtA3pXap7oiyW5e8ejJsPUoZWzzRacfnIpHqkmnRDU5Geg0MpMRXHx72nJD42+Qh+h4TJBIjZ2beT1dKOeBJ2F4KBemi9z5vB29TvWVh/QgeBkOpcwpLgtNFG6OiFO+8Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=F+T28zle; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZaMC5pAo"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5D16D1F0089B;
-	Mon, 12 Oct 2026 00:38:25 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="F+T28zle"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1E05F1F0089B;
+	Mon, 12 Oct 2026 00:39:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1791765505;
-	bh=LWrFYB5tp2e32G1i0yDHer37DKCcqX/1ordekB6QMMg=;
+	s=k20260515; t=1791765561;
+	bh=wwMQwT9k0f6L77MlUasiaXnhJUVetNOzLo41fKUhAw8=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=ZaMC5pAoNd8yEbDRfPhncG1rnO+rcDx/Z0Ygfy9WRQxjbBQ+91glKrhcgDZ2at4Rr
-	 Oxt6WR93QYdSPrnDI6+2xkq85J2TaCQZo+mowi3sqS3dApktwn9Kwirn6dlwpmENdF
-	 TpnWfJWEtMf9XCez8MApqgVxleOrH/6FOqm+TvNxFtLD3HlNiNzUnXfEX8Z3JT14PO
-	 88uSOY/XvOFdGB8g518ME6J2TK6PLaAX+urhf3tMJAk+bzK5DzQqNkDIAM3jwos5//
-	 sQtKeHJUudpjSiAUpWqPo4S6U8qD0d+LHPhsSj3/hWBIP+b/lkzLB5XlcgnQPBEX8F
-	 MQTuRG6RMYcBg==
-Message-ID: <sashiko-outbox-167527@kernel.org>
+	b=F+T28zleJRx5WQ5+/F0P8wBpy3a8l1Sp0d4Lc9qXOMK/n9Zi+CnNh7k6bcLGGINuy
+	 FWRbsZVaqiTuk+ZaIYGTyBCUlj6RvtkdEhgosCiZ409eewWdrZbwtaQdwCDeHY0iyP
+	 qsg0zUa9xxPCqnVuGrMN6z/z6g5ridQfh2OHaP7nZiZzoPw4zJRekEK7aWN92Ozek7
+	 K2muFHLNKMl4e/IBlcgSnoEwn1fvs2KyOcOyL7v5b7SUDFXeBMYBw2JZ3yevM08g97
+	 rCBK+9gpicTgFUUQgigeCOnK8z6OPWVpiSovs9ZsNYbp8JCVPtxFywkPjrw4GS7tU5
+	 4w5j/i54Ywzjw==
+Message-ID: <sashiko-outbox-167528@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH perf-tools-next v3 2/5] perf ftrace: Support filtering
- return address comments
+Subject: Re: [PATCH perf-tools-next v3 4/5] perf ftrace: Support omitting
+ execution duration in function graph tracer
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Aaron Tomlin" <atomlin@atomlin.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20261012003016.263063-3-atomlin@atomlin.com>
+In-Reply-To: <20261012003016.263063-5-atomlin@atomlin.com>
 References: <20261012003016.263063-1-atomlin@atomlin.com>
- <20261012003016.263063-3-atomlin@atomlin.com>
+ <20261012003016.263063-5-atomlin@atomlin.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Mon, 12 Oct 2026 00:38:24 +0000
+Date: Mon, 12 Oct 2026 00:39:20 +0000
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 3 potential issue(=
+Thank you for your contribution! Sashiko AI review found 2 potential issue(=
 s) to consider:
-- [Low] perf: build failure in cmd_ftrace() due to extra OPT_CALLBACK argum=
-ent
-- [Low] perf: ftrace_parse_retaddr() is dead code and never used for filter=
-ing
-- [Low] perf: missing document title underline breaks asciidoc generation
+- [Low] perf: formatting corruption in make_blank_prefix() with verbose ena=
+bled
+- [Low] perf: profile subcommand silently drops records with noduration
 --
 
-commit 5dab431981f96da9cbf4caa8e862a4c0e461a1ff
+commit d0f3a0ada6164d2372b897fe5b75d0f425aca5e4
 Author: Aaron Tomlin <atomlin@atomlin.com>
 
-perf ftrace: Support filtering return address comments
+perf ftrace: Support omitting execution duration in function graph tracer
 
-This commit introduces support for filtering out return address comments fr=
-om
-function graph trace output via a standalone --filter-retaddr flag. It adds
-parsing and filtering logic, updates the command-line interface, and includ=
-es
-a dedicated unit test suite.
-
-> diff --git a/tools/perf/Documentation/perf-ftrace.txt b/tools/perf/Docume=
-ntation/perf-ftrace.txt
-> index 3f3808e513fe8..3dbb7e8e783e9 100644
-> --- a/tools/perf/Documentation/perf-ftrace.txt
-> +++ b/tools/perf/Documentation/perf-ftrace.txt
-> @@ -1,5 +1,4 @@
->  perf-ftrace(1)
-> -=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-
-[Severity: Low]
-Does removing the document title underline break the asciidoc generation?
-
-Asciidoctor strictly requires the document title to be underlined with equal
-signs of at least the same length as the text. Removing it renders the
-document malformed.
+The Linux kernel's function graph tracer displays the execution duration
+of completed functions by default via the funcgraph-duration trace
+option. Whilst informative, in scenarios where the user is solely
+interested in the call graph topology, call flow sequence, or inlined
+hierarchy, the duration column can add visual clutter and widen each
+trace line.
 
 [ ... ]
 
 > diff --git a/tools/perf/builtin-ftrace.c b/tools/perf/builtin-ftrace.c
-> index d6604be593a34..f3221089a4793 100644
+> index 504007064e240..926726c5d9a88 100644
 > --- a/tools/perf/builtin-ftrace.c
 > +++ b/tools/perf/builtin-ftrace.c
+
 [ ... ]
-> @@ -1827,11 +1833,14 @@ int cmd_ftrace(int argc, const char **argv)
->  		     "Set nograph filter on given functions", parse_filter_func),
->  	OPT_CALLBACK(0, "graph-opts", &ftrace, "options",
->  		     "Graph tracer options, available options: args,retval,retval-hex,=
-retaddr,nosleep-time,noirqs,verbose,thresh=3D<n>,depth=3D<n>",
-> +		     "Graph tracer options, available options: args,retval,retval-hex,=
-retaddr,nosleep-time,noirqs,noduration,verbose,thresh=3D<n>,depth=3D<n>,tai=
-l",
->  		     parse_graph_tracer_opts),
+
+> @@ -1754,6 +1780,7 @@ static int parse_graph_tracer_opts(const struct opt=
+ion *opt,
+>  		{ .name =3D "retaddr",		.value_ptr =3D &ftrace->graph_retaddr },
+>  		{ .name =3D "nosleep-time",	.value_ptr =3D &ftrace->graph_nosleep_time=
+ },
+>  		{ .name =3D "noirqs",		.value_ptr =3D &ftrace->graph_noirqs },
+> +		{ .name =3D "noduration",		.value_ptr =3D &ftrace->graph_noduration },
 
 [Severity: Low]
-Does this extra string literal cause a build failure?
+Does adding noduration here allow it to be used with the profile subcommand?
 
-The OPT_CALLBACK macro for graph-opts was modified by adding a new help
-string literal without removing the old one. Because they are separated by a
-comma, the C preprocessor treats them as two distinct arguments, causing the
-macro to be invoked with 7 arguments instead of 6.
+The profile subcommand inherently requires function duration to compute
+statistics. When the duration column is omitted, parse_func_duration()
+sees no " us" suffix and silently drops the record:
+
+tools/perf/builtin-ftrace.c:parse_func_duration() {
+    ...
+	if (strncmp(p, " us", 3)) {
+		pr_debug("non-usec time found.. ignoring\n");
+		return 0;
+	}
+    ...
+}
+
+This results in an empty output instead of rejecting the invalid option
+combination. Should the option be rejected when used with profile?
+
+>  		{ .name =3D "verbose",		.value_ptr =3D &ftrace->graph_verbose },
+>  		{ .name =3D "thresh",		.value_ptr =3D &ftrace->graph_thresh },
+>  		{ .name =3D "depth",		.value_ptr =3D &ftrace->graph_depth },
 
 [ ... ]
 
 > diff --git a/tools/perf/util/ftrace.c b/tools/perf/util/ftrace.c
-> new file mode 100644
-> index 0000000000000..344d36293f5ca
-> --- /dev/null
+> index 8737bb52921e1..5cae01a28529f 100644
+> --- a/tools/perf/util/ftrace.c
 > +++ b/tools/perf/util/ftrace.c
+
 [ ... ]
-> +bool ftrace_parse_retaddr(const char *str, char *sym_name, size_t sym_le=
-n, u64 *offset)
-> +{
+
+> @@ -346,9 +348,14 @@ static const char *find_func_column(const struct per=
+f_ftrace *ftrace,
+>  			return NULL;
+>  	}
+> =20
+> -	p =3D strchr(p + 1, '|');
+> -	if (!p)
+> +	if (!ftrace->graph_noduration) {
+> +		p =3D strchr(p + 1, '|');
+> +		if (!p)
+> +			return NULL;
+> +	} else if (strstr(p, " =3D> ")) {
+> +		/* Context switch marker: " CPU) comm-pid =3D> comm-pid" */
+>  		return NULL;
+> +	}
 
 [Severity: Low]
-Is ftrace_parse_retaddr() ever used outside of the test suite?
+Will this corrupt the comm-pid column when verbose is enabled alongside
+noduration?
 
-The commit message claims this function is implemented to robustly match
-return address comments before stripping them. However, looking at the
-implementation of ftrace_filter_retaddr() below:
+When both verbose and noduration are enabled, find_func_column() returns
+the CPU ')' or the separator after it. make_blank_prefix() uses the final
+pipe_char and overwrites everything after the ')' with spaces:
 
-[ ... ]
+tools/perf/util/ftrace.c:make_blank_prefix() {
+    ...
+	/* Replace duration between ')' and '|' with spaces */
+	if (paren && paren < line + len) {
+		char *end =3D buf + (pipe_char - line);
+    ...
+		for (c =3D buf + (paren - line) + 1; c < end; c++)
+			*c =3D ' ';
+	}
+    ...
+}
 
-> +void ftrace_filter_retaddr(char *str)
-> +{
-> +	char *start =3D strstr(str, "/* <-");
-> +	char *end;
-> +
-> +	if (!start)
-> +		return;
-> +
-> +	end =3D strstr(start, "*/");
+Since there is no duration field, does this blindly overwrite the comm-pid
+column and its trailing separator?
 
-It appears ftrace_filter_retaddr() performs string replacement using strstr
-and memmove directly, bypassing ftrace_parse_retaddr() entirely. This leaves
-the parsing function unused in the actual execution path.
+> =20
+>  	*cpu =3D (int)val;
+>  	return p;
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261012003016.2630=
-63-1-atomlin@atomlin.com?part=3D2
+63-1-atomlin@atomlin.com?part=3D4
