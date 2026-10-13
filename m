@@ -1,115 +1,69 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33DAC4A99D5
-	for <linux-perf-users@vger.kernel.org>; Tue, 13 Oct 2026 18:43:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F3295349D3;
+	Tue, 13 Oct 2026 18:48:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791916997; cv=none; b=pTkqSHFb6PzNL9AvCwRrQzqlMakH0HcFLRDLoWlbq3vWVWC7GdVxT0bciPTd+PCoW5Fh4TsQVkSISW5kLPtRpdKiubuPHPdhZnD9uBJEwHYIXiU03xqVYsGZkyHZu5LstRMEGu6tCPG5SJxXhQF/Nkk/xXPhroPtFpBe5qn1BZQ=
+	t=1791917295; cv=none; b=cXp5Ye8BJTFQBRnDmPR+iGPhhL5uEH3pCGH33i8iBWbNfvWRKXlrTN2aQlBx3UCzc3932sZLv8yNgSyGzzyjT/ddZERTJfoQHqhX+tuWRtBxSNUC50vvIJnyBmwruhLfcGhBqWIS/XHxfcq8R/5CyApWej3lDg9Sy1UL+pO7/NM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791916997; c=relaxed/simple;
-	bh=abqUKJ5zA4VPu7PMzxKv1XTDTyqV/hXyafE7tr827W0=;
+	s=arc-20240116; t=1791917295; c=relaxed/simple;
+	bh=KGkiSUEm7T+M2QpqIbPQYgCZZ4RLPI9BusTdgCNEPe8=;
 	h=Message-ID:From:Subject:To:Cc:In-Reply-To:References:Content-Type:
-	 Date; b=WPD7gZ1fIWRTDRbNmojmCXJ3bfP8zCqqC7b5h5nKsMsBUzw2hmT1CNaYyc1q9U8wJMwoEpdrcoTvBXusS93JbhmxdzIGt5FAchFvEOI+84Jd/4dcFltGa7kyQcCKwIeGQSFoJ3t2vGizQ5CPsSR1MDbhPBrAc/vDh4NJTu/ixdU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UVzXNtg4; arc=none smtp.client-ip=100.103.45.18
+	 Date; b=JT90qknp9Ptx1/GPVlTYlCRADCDAea6mSVskgO0bD5wRMB7BpeLeWG8nhlhJIwMERX7I3Qj8Uv5TC3xAeW3s3o2oKTvlJ5gKwOsLkfy/BOZ33LI5aw0WcdVqio9+TeNJOokGPTSAkyFiFLayZJGJdUF0DTc52FtPdC8SYjZ3EqE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=l8cyxV+2; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UVzXNtg4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BE1151F000FF;
-	Tue, 13 Oct 2026 18:43:15 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="l8cyxV+2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F0EBA1F000FF;
+	Tue, 13 Oct 2026 18:48:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1791916995;
-	bh=dGheKe58XgIkF8gtvHidtlT5Yf3jnrejrTIXw8ZZ/OU=;
+	s=k20260515; t=1791917293;
+	bh=KGkiSUEm7T+M2QpqIbPQYgCZZ4RLPI9BusTdgCNEPe8=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=UVzXNtg4nk7dt67WQ2VWGzdGew6E5cuaVZfe9r0ufmTIqnM8gaKyXsp6PWPMVOhqW
-	 07Bv16Qn+e7UiREl5hKCcJkLleMuWvZysTXiml15jGdjIkcAgDFlskJALNmbmJHEOy
-	 KmeIHyVBI56YckKYZQHalQCyGxRL+7kD0SUedReu8PfPqM6aotvCLQOvGaA4Vb4qkf
-	 O3bSlJdG93JsHu8+EepIkMb1IxBD+ye7tciI7IKw+KJLRpQUTHOvBGKEcA7na1Tgun
-	 TB4nHZOM31Vp2wganiYYVEUnZ9gGgsjhISodwii5bU4ABWGaFt2tQxPvkySI5O+nBL
-	 XlkiboTxSx7rw==
-Message-ID: <sashiko-outbox-170347@kernel.org>
+	b=l8cyxV+2kNgbFvRUGUgrXY3dGyxuxmmqRyr4kz/rES9NNx0Fs7BbMXB8uDpVgyEpo
+	 OEwBNmlM4p/aD1WHnTtiIWOmC88bRinVPFOgiHsFaJcBv+Iz8E2CFLiy85YMzk1zR0
+	 YvJJ2CBzZSvLOdXOBmkmZIWLSd8o0ug0n3WRI9d9Doa6pVZgwgg5NQuK+JzrfrZ9yJ
+	 IHcmOQUaxwMKH4ri9XYMY1yA6e+kxPqISWjR/cuNXIfzjBTx0tW08IVYucSFH6g43V
+	 I4cpj2olHCHKb8kMAA9/uVcUC+rI+VkW9bcAu9WdWwqc8kb5UkBxNs7awODr/YngzA
+	 k0Nu7Ef/jt45w==
+Message-ID: <sashiko-outbox-170352@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v1 10/10] perf maps: Add context analysis annotations
+Subject: Re: [PATCH v6 20/39] HSI: cmt_speech: convert mmap hook to
+ mmap_prepare, refactor
 Reply-To: sashiko-reviews@lists.linux.dev
-To: "Ian Rogers" <irogers@google.com>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20261013182458.1234616-11-irogers@google.com>
-References: <20261013182458.1234616-1-irogers@google.com>
- <20261013182458.1234616-11-irogers@google.com>
+To: =?utf-8?b?TG9yZW56byBTdG9ha2VzIChBUk0p?= <ljs@kernel.org>
+Cc: linux-usb@vger.kernel.org, linux-rdma@vger.kernel.org, selinux@vger.kernel.org, linux-perf-users@vger.kernel.org, linux-s390@vger.kernel.org, "Heiko
+ Carstens" <hca@linux.ibm.com>, "Vasily Gorbik" <gor@linux.ibm.com>, "Alexander
+ Gordeev" <agordeev@linux.ibm.com>, "Christian Borntraeger" <borntraeger@linux.ibm.com>
+In-Reply-To: <20261013-b4-mmap-prepare-vma-flag-sanify-v6-20-1aa3c9b139f9@kernel.org>
+References: <20261013-b4-mmap-prepare-vma-flag-sanify-v6-0-1aa3c9b139f9@kernel.org>
+ <20261013-b4-mmap-prepare-vma-flag-sanify-v6-20-1aa3c9b139f9@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Tue, 13 Oct 2026 18:43:15 +0000
+Date: Tue, 13 Oct 2026 18:48:12 +0000
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
-s) to consider:
-- [Medium] perf maps: Recursive read-to-write deadlock in maps__load_first()
---
+> Use the mmap_prepare in favour of the deprecated mmap hook as part of the
+> work to convert one to another.
+>=20
+> Since this is simply a refcounted kernel page that has been allocated, it
+> should not be marked VM_IO and should be inserted using the kernel page
+> insertion mechanism, so convert it to do this instead.
+>=20
+> Use the VMA descriptor's private data field as a scratch buffer to store
+> the page in - this stays valid throughout the kernel page mapping
+> operation.
+>=20
+> Reviewed-by: Suren Baghdasaryan <surenb@google.com>
+> Signed-off-by: Lorenzo Stoakes (ARM) <ljs@kernel.org>
 
-commit a66bec7dd23ce4df0be90007a645d5cd9c4e05dc
-Author: Ian Rogers <irogers@google.com>
-
-perf maps: Add context analysis annotations
-
-This commit adds compiler context analysis annotations to the perf maps
-subsystem. It annotates map struct fields and internal helper functions
-to verify locking invariants at compile time.
-
-> diff --git a/tools/perf/util/maps.c b/tools/perf/util/maps.c
-> --- a/tools/perf/util/maps.c
-> +++ b/tools/perf/util/maps.c
-
-[ ... ]
-
-> @@ -1495,7 +1495,7 @@ void maps__load_first(struct maps *maps)
->  {
->  	down_read(maps__lock(maps));
-> =20
-> -	if (maps__nr_maps(maps) > 0)
-> +	if (__maps__nr_maps(maps) > 0)
->  		map__load(maps__maps_by_address(maps)[0]);
-
-[Severity: Medium]
-Can this lead to a recursive read-to-write deadlock on maps__lock?
-
-Here in maps__load_first(), maps__lock is acquired in read mode via
-down_read() before calling map__load(). For kernel maps on x86_64,
-map__load() triggers the x86_64 entry trampolines mapping:
-
-map__load()
-  -> dso__load()
-    -> machine__map_x86_64_entry_trampolines()
-      -> machine__create_extra_kernel_map()
-
-The machine__create_extra_kernel_map() function then inserts a new map into
-the same kernel maps array:
-
-tools/perf/util/machine.c:machine__create_extra_kernel_map() {
-    ...
-    err =3D maps__insert(machine__kernel_maps(machine), map);
-    ...
-}
-
-And maps__insert() attempts to acquire the exact same lock in write mode:
-
-tools/perf/util/maps.c:maps__insert() {
-    ...
-    down_write(maps__lock(maps));
-    ...
-}
-
-Since maps__load_first() still holds the read lock when map__load()
-is called, wouldn't the down_write() in maps__insert() cause a
-self-deadlock? Other APIs like maps__load_maps() copy the map array
-and drop the read lock before loading to explicitly prevent this scenario.
-
-> =20
->  	up_read(maps__lock(maps));
->  }
+Sashiko has reviewed this patch and found no issues. It looks great!
 
 --=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261013182458.1234=
-616-1-irogers@google.com?part=3D10
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261013-b4-mmap-pr=
+epare-vma-flag-sanify-v6-0-1aa3c9b139f9@kernel.org?part=3D20
+
