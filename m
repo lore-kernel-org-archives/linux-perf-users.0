@@ -1,52 +1,52 @@
 Received: from pdx-out-013.esa.us-west-2.outbound.mail-perimeter.amazon.com (pdx-out-013.esa.us-west-2.outbound.mail-perimeter.amazon.com [34.218.115.239])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDA57539784;
-	Tue, 13 Oct 2026 18:56:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD41A539763;
+	Tue, 13 Oct 2026 18:56:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=34.218.115.239
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791917793; cv=none; b=On37ox0/rFucVNnQusD9nErUgICZvIIfPNWAcHX+EL7DR1m8x2UTWTOtYIiMpX5QgsrLF0QQhs6ebfo6upJjhE6BWwk2hzCBKsk6DIJqTLpXihwZ7hbxgbkl4K01UY78o9mziMc5l6fMANldyWrZkFN4a7v5fAKQK3We+FnsUA0=
+	t=1791917801; cv=none; b=bC5pqRagqNlPwM+Hm/T+VJVnCwaihnYGsJ3rVSozUQAJBooszGNZZeT2LT9hhrRjW3lTE4zdXtXsN4lSa3IGMFjld/q4wRf8hK360WJQGQlWD3IcqfFWuNMnkruf+DS696Cpm6VI0wdDjRe9bH88vH05ue6u87lBJCp7f0pOeXo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791917793; c=relaxed/simple;
-	bh=SBmfHvescppxYHF6Yu13IkWqB0NiMsQC56M2Ujr6Onw=;
+	s=arc-20240116; t=1791917801; c=relaxed/simple;
+	bh=xx7Bblt8qiKvgcx0nKyJwYc/tFIgAQ9Hbe1NWoBcKzA=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=PKTJ5bzroWCBurHESvyYt01bBPoDBO2JaqhEPIkHrAG+SypFX/t+2PbP2S0BXqmq3NuWtk/eZG0H3bBFbwULCIImU6p4KHsU2e0yjAKoh8SKMfX6on1x/9659sDudBSo6eQo5xUHpBnAaJk5snCFhIAsf313r9LZrLe+nYM/jcg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.com; dkim=pass (2048-bit key) header.d=amazon.com header.i=@amazon.com header.b=YYzc+pmn; arc=none smtp.client-ip=34.218.115.239
+	 MIME-Version:Content-Type; b=XLRnE2NcWk19WEvnNZrs/rDAvFncphYSqUIVYpaUymVoyLrY2kfpk4puenYCFhdAm9bROj6atKoY42457xcXVY7l1ilHcJ0teOeYYWlXlKuDwaancZiVm/xUPexMQ5Fc/SznbSZp0huHoh+nzD2ykDAvEARoW1Ov0t7FWESRNvI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.com; dkim=pass (2048-bit key) header.d=amazon.com header.i=@amazon.com header.b=Rdr7SzH8; arc=none smtp.client-ip=34.218.115.239
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=amazon.com header.i=@amazon.com header.b="YYzc+pmn"
+	dkim=pass (2048-bit key) header.d=amazon.com header.i=@amazon.com header.b="Rdr7SzH8"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
   d=amazon.com; i=@amazon.com; q=dns/txt; s=amazoncorp2;
-  t=1791917791; x=1823453791;
+  t=1791917799; x=1823453799;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=AJNG0UrFCFv1GRwghywdpAHlw28VEEGBTW5U88mg4A4=;
-  b=YYzc+pmnoCSlndwMYFOq2bDF1JxTlxm+Dv4lZDmW3YGcdVaIGH8ArBZs
-   axvoqLVM0sTSzJeaI8ukOXa9a2e1SZel3zoknLDOaT9gTRQ1gD3wnzD7D
-   qWhHMTCcFo1/ot1yjjrNgMfULQ0lsUSSttq2beTm/x2cKSIfYz0a84yTX
-   Z43Kx4Rh0tWVdtXVjYOk1WSMViajudWIJBFb/vY6Y6uzZKTJSIbUrysb9
-   LzjoBXCHmj66tX8LJRZpPz2nw9c23jh/2MuXxLomMb6BQelKk5J9KQTQw
-   NVCMSbx6t4RVEY278FKV4uXbEVrs0sA3ZF7DvTo552KhyJ6wjIxMDPYhb
-   A==;
-X-CSE-ConnectionGUID: jwqJiJxfQkq3KiWE2Ehf2Q==
-X-CSE-MsgGUID: U4+NN1JVRU20vMdsp3he8g==
+  bh=19JxaAG8/HI6lbc9IVe7CO4geNuRT0i/vZopAR0ANuU=;
+  b=Rdr7SzH8ca1O1QD9P15AxyxspdNVdC/VGx181Oynm8v4f7kF1FPqrxKN
+   MU6RJwRxkx56Pa9REv+T9KNXpv6uN2h5oO8YfB6dPq+dRS+MzztOcisUd
+   6jiCQqVUGB9TW59Euj6q4lXEZAzjJvnK4fM+sdxBADdPUow0yOgnd3I0L
+   MWb5V8SvMH5cCdq3pInJBhVk/6Y9CrQJnMIVT94gOiMqefiTpIQmSQMIz
+   u18SNE/qpBCmm0QyI+NaBzdgpp2y8vhfYA29lP0O1oQp+77g7bzC1Xcgh
+   8YLpXD3AMtv58BlP4+mUhgzB6PvhzGqyfVUh1iWYr7LqdmnsoVlPWuJKM
+   Q==;
+X-CSE-ConnectionGUID: IP7drwJ6TR6VbYrPP3OiCA==
+X-CSE-MsgGUID: ITnK4KjjR9m0aQE1cBlYvg==
 X-IronPort-AV: E=Sophos;i="6.27,156,1787011200"; 
-   d="scan'208";a="30939237"
+   d="scan'208";a="30939256"
 Received: from ip-10-5-0-115.us-west-2.compute.internal (HELO smtpout.naws.us-west-2.prod.farcaster.email.amazon.dev) ([10.5.0.115])
-  by internal-pdx-out-013.esa.us-west-2.outbound.mail-perimeter.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Oct 2026 18:56:31 +0000
-Received: from EX19MTAUWA001.ant.amazon.com [205.251.233.236:16021]
+  by internal-pdx-out-013.esa.us-west-2.outbound.mail-perimeter.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Oct 2026 18:56:39 +0000
+Received: from EX19MTAUWB002.ant.amazon.com [205.251.233.111:5287]
  by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.56.108:2525] with esmtp (Farcaster)
- id a2151c72-2e3a-458a-9a1a-02cb0192d0a7; Tue, 13 Oct 2026 18:56:30 +0000 (UTC)
-X-Farcaster-Flow-ID: a2151c72-2e3a-458a-9a1a-02cb0192d0a7
+ id fe19b1d2-d3af-451c-9f56-1f65b7499215; Tue, 13 Oct 2026 18:56:39 +0000 (UTC)
+X-Farcaster-Flow-ID: fe19b1d2-d3af-451c-9f56-1f65b7499215
 Received: from EX19D001UWA001.ant.amazon.com (10.13.138.214) by
- EX19MTAUWA001.ant.amazon.com (10.250.64.217) with Microsoft SMTP Server
+ EX19MTAUWB002.ant.amazon.com (10.250.64.231) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.2562.49;
- Tue, 13 Oct 2026 18:56:30 +0000
+ Tue, 13 Oct 2026 18:56:39 +0000
 Received: from u34cccd802f2d52.amazon.com (10.187.170.30) by
  EX19D001UWA001.ant.amazon.com (10.13.138.214) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.2562.53;
- Tue, 13 Oct 2026 18:56:29 +0000
+ Tue, 13 Oct 2026 18:56:37 +0000
 From: Haris Okanovic <harisokn@amazon.com>
 To: Robin Murphy <robin.murphy@arm.com>, Will Deacon <will@kernel.org>, "Mark
  Rutland" <mark.rutland@arm.com>, Peter Zijlstra <peterz@infradead.org>, "Ingo
@@ -57,9 +57,9 @@ CC: Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa
 	<adrian.hunter@intel.com>, James Clark <james.clark@linaro.org>,
 	<linux-arm-kernel@lists.infradead.org>, <linux-perf-users@vger.kernel.org>,
 	<linux-kernel@vger.kernel.org>, <harisokn@amazon.com>
-Subject: [PATCH 2/4] perf/core: Add PERF_PMU_SCOPE_DEVICE
-Date: Tue, 13 Oct 2026 13:56:01 -0500
-Message-ID: <20261013185603.1347265-3-harisokn@amazon.com>
+Subject: [PATCH 4/4] perf/arm-cmn: Convert to PERF_PMU_SCOPE_DEVICE
+Date: Tue, 13 Oct 2026 13:56:03 -0500
+Message-ID: <20261013185603.1347265-5-harisokn@amazon.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20261013185603.1347265-1-harisokn@amazon.com>
 References: <20261013185603.1347265-1-harisokn@amazon.com>
@@ -74,388 +74,238 @@ Content-Type: text/plain
 X-ClientProxiedBy: EX19D031UWA003.ant.amazon.com (10.13.139.47) To
  EX19D001UWA001.ant.amazon.com (10.13.138.214)
 
-Add a "device" pmu::scope for PMUs counted on a single CPU drawn
-from a driver-supplied set instead of a fixed topology.
+Set pmu::scope to PERF_PMU_SCOPE_DEVICE and remove the driver-tracked cpu,
+hotplug hooks, and the 'cpumask' attribute, since perf core does this
+for device scope PMUs.
 
-This mechanism is implemented by new callbacks: filter_allowed_cpus()
-is invoked to constrain the running CPU set to an allowed set for a
-particular device; migrate_cpu() is used to perform any device specific
-migration steps. Both are optional, e.g. for devices that can run on
-any CPU or have no additional migration steps.
-
-Placement initially happens in perf_pmu_register() before the PMU
-becomes visible, and is subsequently re-evaluated on hotplug events.
-A new CPU selection is made by cpumask_any_distribute() to spread out
-load from multiple devices, but only when the previous CPU selection is
-offline or no longer allowed by filter_allowed_cpus().
-
-PMU events of these devices follow the chosen CPU. They are initially
-bound to a CPU in perf_try_init_event() then reassigned by
-perf_pmu_migrate_context() when a new CPU is selected.
-
-The initial CPU assignment can race with migration, leaving a stranded
-event. A sequence counter is added to close this gap without additional
-locks. A count in struct pmu increments on each migration and is copied
-to struct perf_event on init. The copied count is checked again before
-the event is installed, under the same context mutex, which causes
-perf_event_open() and perf_event_create_kernel_counter() to return -EBUSY
-during migration periods.
+Define a filter_allowed_cpus() callback to keep preference for CPUs local
+to the interconnect's NUMA node, and a migrate_cpu() callback to update
+DTC interrupt affinity on migration.
 
 Signed-off-by: Haris Okanovic <harisokn@amazon.com>
 ---
- include/linux/perf_event.h |  26 ++++++
- kernel/events/core.c       | 181 ++++++++++++++++++++++++++++++++++++-
- 2 files changed, 202 insertions(+), 5 deletions(-)
+ drivers/perf/arm-cmn.c | 104 +++++++++--------------------------------
+ 1 file changed, 22 insertions(+), 82 deletions(-)
 
-diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
-index 2d5e7687875b0..99c88ec99b786 100644
---- a/include/linux/perf_event.h
-+++ b/include/linux/perf_event.h
-@@ -317,6 +317,7 @@ enum perf_pmu_scope {
- 	PERF_PMU_SCOPE_CLUSTER,
- 	PERF_PMU_SCOPE_PKG,
- 	PERF_PMU_SCOPE_SYS_WIDE,
-+	PERF_PMU_SCOPE_DEVICE,
- 	PERF_PMU_MAX_SCOPE,
+diff --git a/drivers/perf/arm-cmn.c b/drivers/perf/arm-cmn.c
+index 5378fba916cf5..997ee5adf3f8e 100644
+--- a/drivers/perf/arm-cmn.c
++++ b/drivers/perf/arm-cmn.c
+@@ -388,17 +388,12 @@ struct arm_cmn {
+ 	struct arm_cmn_dtc *dtc;
+ 	unsigned int num_dtcs;
+ 
+-	int cpu;
+-	struct hlist_node cpuhp_node;
+-
+ 	struct pmu pmu;
+ 	struct dentry *debug;
  };
  
-@@ -351,6 +352,15 @@ struct pmu {
- 	 */
- 	unsigned int			scope;
+ #define to_cmn(p)	container_of(p, struct arm_cmn, pmu)
  
-+	/* The CPU this PMU counts on for PERF_PMU_SCOPE_DEVICE */
-+	int				cpu;
-+
-+	/*
-+	 * Ticks before and after changes to pmu::cpu, so that an event
-+	 * being created can tell whether the PMU moved under it.
-+	 */
-+	unsigned int			migrate_seq;
-+
- 	struct perf_cpu_pmu_context * __percpu *cpu_pmu_context;
- 	atomic_t			exclusive_cnt; /* < 0: cpu; > 0: tsk */
- 	int				task_ctx_nr;
-@@ -589,6 +599,16 @@ struct pmu {
- 	 * Check period value for PERF_EVENT_IOC_PERIOD ioctl.
- 	 */
- 	int (*check_period)		(struct perf_event *event, u64 value); /* optional */
-+
-+	/*
-+	 * Narrow @allowed_cpus (a set of candidate CPUs) down to the ones this
-+	 * PMU can be counted on. Called on PERF_PMU_SCOPE_DEVICE PMUs when CPU
-+	 * assignment needs to be reconsidered.
-+	 */
-+	int (*filter_allowed_cpus)(struct pmu *pmu, struct cpumask *allowed_cpus); /* optional */
-+
-+	/* Called when a PERF_PMU_SCOPE_DEVICE PMU is assigned a different CPU */
-+	void (*migrate_cpu)(struct pmu *pmu, unsigned int cpu); /* optional */
+-static int arm_cmn_hp_state;
+-
+ struct arm_cmn_nodeid {
+ 	u8 port;
+ 	u8 dev;
+@@ -1511,17 +1506,6 @@ static const struct attribute_group arm_cmn_format_attrs_group = {
+ 	.attrs = arm_cmn_format_attrs,
  };
  
- enum perf_addr_filter_action_t {
-@@ -855,6 +875,12 @@ struct perf_event {
- 	int				oncpu;
- 	int				cpu;
- 
-+	/*
-+	 * Copy of pmu::migrate_seq on event init to detect migration of PMU
-+	 * under PERF_PMU_SCOPE_DEVICE.
-+	 */
-+	unsigned int			pmu_migrate_seq;
-+
- 	struct list_head		owner_entry;
- 	struct task_struct		*owner;
- 
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 7caba4d528301..0d4e2c6d71584 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -470,6 +470,7 @@ static cpumask_var_t perf_online_die_mask;
- static cpumask_var_t perf_online_cluster_mask;
- static cpumask_var_t perf_online_pkg_mask;
- static cpumask_var_t perf_online_sys_mask;
-+static cpumask_var_t perf_device_scope_mask;
- static struct kmem_cache *perf_event_cache;
- 
- #ifdef CONFIG_PERF_GUEST_MEDIATED_PMU
-@@ -12684,12 +12685,93 @@ static inline struct cpumask *perf_scope_cpumask(unsigned int scope)
- 	return NULL;
- }
- 
-+/*
-+ * Move a PERF_PMU_SCOPE_DEVICE PMU to one of @requested_cpus.
-+ *
-+ * Uses the pre-allocated perf_device_scope_mask global to avoid
-+ * allocation during hotplug; protected by pmus_lock.
-+ */
-+static int perf_pmu_set_cpu(struct pmu *pmu,
-+			    const struct cpumask *requested_cpus)
-+{
-+	struct cpumask *allowed_cpus = perf_device_scope_mask;
-+	int new_cpu, ret;
-+
-+	lockdep_assert_held(&pmus_lock);
-+
-+	/* A PMU can only be counted on a CPU that perf has online. */
-+	cpumask_and(allowed_cpus, requested_cpus, perf_online_mask);
-+	if (cpumask_empty(allowed_cpus))
-+		return -ENODEV;
-+
-+	if (pmu->filter_allowed_cpus) {
-+		ret = pmu->filter_allowed_cpus(pmu, allowed_cpus);
-+		if (ret)
-+			return ret;
-+
-+		if (cpumask_empty(allowed_cpus))
-+			return -ENODEV;
-+	}
-+
-+	/* Stay where we are for as long as that CPU is still allowed. */
-+	if ((unsigned int)pmu->cpu < nr_cpu_ids &&
-+	    cpumask_test_cpu(pmu->cpu, allowed_cpus))
-+		return 0;
-+
-+	/* Spreads PMUs across allowed CPUs. */
-+	new_cpu = cpumask_any_distribute(allowed_cpus);
-+
-+	WRITE_ONCE(pmu->migrate_seq, pmu->migrate_seq + 1);
-+	smp_wmb(); /* pairs with the smp_rmb() in perf_try_init_event() */
-+
-+	/*
-+	 * A PMU being placed for the first time (pmu->cpu = -1) has no events
-+	 * yet, and no CPU to migrate them from.
-+	 */
-+	if ((unsigned int)pmu->cpu < nr_cpu_ids)
-+		perf_pmu_migrate_context(pmu, pmu->cpu, new_cpu);
-+
-+	if (pmu->migrate_cpu)
-+		pmu->migrate_cpu(pmu, new_cpu);
-+
-+	pmu->cpu = new_cpu;
-+
-+	smp_wmb(); /* pairs with the smp_rmb() in perf_try_init_event() */
-+	WRITE_ONCE(pmu->migrate_seq, pmu->migrate_seq + 1);
-+
-+	return 0;
-+}
-+
-+/* Did the PMU move after event was initialized? */
-+static bool perf_event_pmu_moved(struct perf_event *event)
-+{
-+	struct pmu *pmu = event->pmu;
-+
-+	if (pmu->scope != PERF_PMU_SCOPE_DEVICE)
-+		return false;
-+
-+	/*
-+	 * An odd seq means the event was created during a move, so treat it
-+	 * as moved.
-+	 */
-+	return (event->pmu_migrate_seq & 1) ||
-+	       READ_ONCE(pmu->migrate_seq) != event->pmu_migrate_seq;
-+}
-+
- static ssize_t cpumask_show(struct device *dev, struct device_attribute *attr,
- 			    char *buf)
+-static ssize_t arm_cmn_cpumask_show(struct device *dev,
+-				    struct device_attribute *attr, char *buf)
+-{
+-	struct arm_cmn *cmn = to_cmn(dev_get_drvdata(dev));
+-
+-	return sysfs_emit(buf, "%*pbl\n", cpumask_pr_args(cpumask_of(cmn->cpu)));
+-}
+-
+-static struct device_attribute arm_cmn_cpumask_attr =
+-		__ATTR(cpumask, 0444, arm_cmn_cpumask_show, NULL);
+-
+ static ssize_t arm_cmn_identifier_show(struct device *dev,
+ 				       struct device_attribute *attr, char *buf)
  {
- 	struct pmu *pmu = dev_get_drvdata(dev);
--	struct cpumask *mask = perf_scope_cpumask(pmu->scope);
-+	struct cpumask *mask;
+@@ -1534,7 +1518,6 @@ static struct device_attribute arm_cmn_identifier_attr =
+ 		__ATTR(identifier, 0444, arm_cmn_identifier_show, NULL);
  
-+	/* These PMU devices count on a single CPU, see pmu::cpu. */
-+	if (pmu->scope == PERF_PMU_SCOPE_DEVICE) {
-+		if ((unsigned int)pmu->cpu >= nr_cpu_ids)
-+			return 0;
-+		return sysfs_emit(buf, "%*pbl\n", cpumask_pr_args(cpumask_of(pmu->cpu)));
-+	}
-+
-+	mask = perf_scope_cpumask(pmu->scope);
- 	if (mask)
- 		return sysfs_emit(buf, "%*pbl\n", cpumask_pr_args(mask));
- 	return 0;
-@@ -12846,6 +12928,12 @@ int perf_pmu_register(struct pmu *_pmu, const char *name, int type)
- 		      "Can not register a pmu with an invalid scope.\n"))
+ static struct attribute *arm_cmn_other_attrs[] = {
+-	&arm_cmn_cpumask_attr.attr,
+ 	&arm_cmn_identifier_attr.attr,
+ 	NULL,
+ };
+@@ -1981,11 +1964,7 @@ static int arm_cmn_event_init(struct perf_event *event)
+ 	if (event->attr.type != event->pmu->type)
+ 		return -ENOENT;
+ 
+-	if (is_sampling_event(event) || event->attach_state & PERF_ATTACH_TASK)
+-		return -EINVAL;
+-
+-	event->cpu = cmn->cpu;
+-	if (event->cpu < 0)
++	if (is_sampling_event(event))
  		return -EINVAL;
  
-+	if (WARN_ONCE(pmu->scope != PERF_PMU_SCOPE_DEVICE &&
-+		      (pmu->filter_allowed_cpus || pmu->migrate_cpu),
-+		      "Can not register a pmu with CPU callbacks outside device scope.\n"))
-+		return -EINVAL;
-+
-+	pmu->cpu = -1; /* chosen below for PERF_PMU_SCOPE_DEVICE */
- 	pmu->name = name;
- 
- 	if (type >= 0)
-@@ -12915,6 +13003,14 @@ int perf_pmu_register(struct pmu *_pmu, const char *name, int type)
- 	INIT_LIST_HEAD(&pmu->events);
- 	spin_lock_init(&pmu->events_lock);
- 
-+	/* Pick the initial CPU to count on */
-+	if (pmu->scope == PERF_PMU_SCOPE_DEVICE) {
-+		int ret = perf_pmu_set_cpu(pmu, perf_online_mask);
-+
-+		if (ret)
-+			return ret;
-+	}
-+
- 	/*
- 	 * Now that the PMU is complete, make it visible to perf_try_init_event().
- 	 */
-@@ -13120,7 +13216,18 @@ static int perf_try_init_event(struct pmu *pmu, struct perf_event *event)
- 		goto err_destroy;
- 	}
- 
--	if (pmu->scope != PERF_PMU_SCOPE_NONE && event->cpu >= 0) {
-+	if (pmu->scope == PERF_PMU_SCOPE_DEVICE) {
-+		/* A device is not per-task; its counters cannot follow one. */
-+		if (event->attach_state & PERF_ATTACH_TASK) {
-+			ret = -EINVAL;
-+			goto err_destroy;
-+		}
-+
-+		event->pmu_migrate_seq = READ_ONCE(pmu->migrate_seq);
-+		smp_rmb(); /* pairs with the smp_wmb()s in perf_pmu_set_cpu() */
-+
-+		event->cpu = pmu->cpu;
-+	} else if (pmu->scope != PERF_PMU_SCOPE_NONE && event->cpu >= 0) {
- 		const struct cpumask *cpumask;
- 		struct cpumask *pmu_cpumask;
- 		int cpu;
-@@ -14072,6 +14179,12 @@ SYSCALL_DEFINE5(perf_event_open,
- 		}
- 	}
- 
-+	/* The PMU may have moved since it was picked, retry if so. */
-+	if (perf_event_pmu_moved(event)) {
-+		err = -EBUSY;
-+		goto err_locked;
-+	}
-+
- 	if (group_leader) {
- 		err = -EINVAL;
- 
-@@ -14369,6 +14482,12 @@ perf_event_create_kernel_counter(struct perf_event_attr *attr, int cpu,
- 		}
- 	}
- 
-+	/* The PMU may have moved since it was picked, retry if so. */
-+	if (perf_event_pmu_moved(event)) {
-+		err = -EBUSY;
-+		goto err_pmu_ctx;
-+	}
-+
- 	if (!exclusive_event_installable(event, ctx)) {
- 		err = -EBUSY;
- 		goto err_pmu_ctx;
-@@ -15129,6 +15248,7 @@ static void __init perf_event_init_all_cpus(void)
- 	zalloc_cpumask_var(&perf_online_cluster_mask, GFP_KERNEL);
- 	zalloc_cpumask_var(&perf_online_pkg_mask, GFP_KERNEL);
- 	zalloc_cpumask_var(&perf_online_sys_mask, GFP_KERNEL);
-+	zalloc_cpumask_var(&perf_device_scope_mask, GFP_KERNEL);
- 
- 
- 	for_each_possible_cpu(cpu) {
-@@ -15165,6 +15285,36 @@ static void perf_swevent_init_cpu(unsigned int cpu)
- 	mutex_unlock(&swhash->hlist_mutex);
+ 	type = CMN_EVENT_TYPE(event);
+@@ -2243,48 +2222,26 @@ static int arm_cmn_commit_txn(struct pmu *pmu)
+ 	return 0;
  }
  
-+static void perf_pmu_rebind(struct pmu *pmu)
-+{
-+	int ret;
-+
-+	/*
-+	 * An empty mask legitimately happens for the last CPU in the
-+	 * perf_reboot() teardown, when there is nothing left to migrate to.
-+	 */
-+	if (cpumask_empty(perf_online_mask))
-+		return;
-+
-+	/* Failing to pick out of every online CPU is a PMU bug. */
-+	ret = perf_pmu_set_cpu(pmu, perf_online_mask);
-+	WARN_ON_ONCE(ret);
-+}
-+
-+static void perf_pmu_rebind_all(void)
-+{
-+	struct pmu *pmu;
-+
-+	lockdep_assert_held(&pmus_lock);
-+
-+	list_for_each_entry(pmu, &pmus, entry) {
-+		if (pmu->scope != PERF_PMU_SCOPE_DEVICE)
-+			continue;
-+
-+		perf_pmu_rebind(pmu);
-+	}
-+}
-+
- #if defined CONFIG_HOTPLUG_CPU || defined CONFIG_KEXEC_CORE
- static void __perf_event_exit_context(void *__info)
+-static void arm_cmn_migrate(struct arm_cmn *cmn, unsigned int cpu)
++static int arm_cmn_filter_allowed_cpus(struct pmu *pmu, struct cpumask *allowed_cpus)
  {
-@@ -15188,10 +15338,17 @@ static void perf_event_clear_cpumask(unsigned int cpu)
- 	cpumask_clear_cpu(cpu, perf_online_mask);
+-	unsigned int i;
++	struct arm_cmn *cmn = to_cmn(pmu);
++	int node = dev_to_node(cmn->dev);
  
- 	for (scope = PERF_PMU_SCOPE_NONE + 1; scope < PERF_PMU_MAX_SCOPE; scope++) {
--		const struct cpumask *cpumask = perf_scope_cpu_topology_cpumask(scope, cpu);
--		struct cpumask *pmu_cpumask = perf_scope_cpumask(scope);
-+		const struct cpumask *cpumask;
-+		struct cpumask *pmu_cpumask;
+-	perf_pmu_migrate_context(&cmn->pmu, cmn->cpu, cpu);
+-	for (i = 0; i < cmn->num_dtcs; i++)
+-		irq_set_affinity(cmn->dtc[i].irq, cpumask_of(cpu));
+-	cmn->cpu = cpu;
+-}
++	/* Any CPU can drive the CMN, but prefer local ones */
++	if (node != NUMA_NO_NODE &&
++	    cpumask_intersects(allowed_cpus, cpumask_of_node(node)))
++		cpumask_and(allowed_cpus, allowed_cpus, cpumask_of_node(node));
  
- 		target[scope] = -1;
-+
-+		if (scope == PERF_PMU_SCOPE_DEVICE)
-+			continue;
-+
-+		cpumask = perf_scope_cpu_topology_cpumask(scope, cpu);
-+		pmu_cpumask = perf_scope_cpumask(scope);
-+
- 		if (WARN_ON_ONCE(!pmu_cpumask || !cpumask))
- 			continue;
+-static int arm_cmn_pmu_online_cpu(unsigned int cpu, struct hlist_node *cpuhp_node)
+-{
+-	struct arm_cmn *cmn;
+-	int node;
+-
+-	cmn = hlist_entry_safe(cpuhp_node, struct arm_cmn, cpuhp_node);
+-	node = dev_to_node(cmn->dev);
+-	if (cpu_to_node(cmn->cpu) != node && cpu_to_node(cpu) == node)
+-		arm_cmn_migrate(cmn, cpu);
+-	return 0;
++	return cpumask_empty(allowed_cpus) ? -ENODEV : 0;
+ }
  
-@@ -15208,6 +15365,12 @@ static void perf_event_clear_cpumask(unsigned int cpu)
- 		    WARN_ON_ONCE(pmu->scope >= PERF_PMU_MAX_SCOPE))
- 			continue;
+-static int arm_cmn_pmu_offline_cpu(unsigned int cpu, struct hlist_node *cpuhp_node)
++static void arm_cmn_migrate_cpu(struct pmu *pmu, unsigned int cpu)
+ {
+-	struct arm_cmn *cmn;
+-	unsigned int target;
+-	int node;
+-
+-	cmn = hlist_entry_safe(cpuhp_node, struct arm_cmn, cpuhp_node);
+-	if (cpu != cmn->cpu)
+-		return 0;
+-
+-	node = dev_to_node(cmn->dev);
+-
+-	target = cpumask_any_and_but(cpumask_of_node(node), cpu_online_mask, cpu);
+-	if (target >= nr_cpu_ids)
+-		target = cpumask_any_but(cpu_online_mask, cpu);
+-
+-	if (target < nr_cpu_ids)
+-		arm_cmn_migrate(cmn, target);
++	struct arm_cmn *cmn = to_cmn(pmu);
++	unsigned int i;
  
-+		if (pmu->scope == PERF_PMU_SCOPE_DEVICE) {
-+			if (pmu->cpu == (int)cpu)
-+				perf_pmu_rebind(pmu);
-+			continue;
-+		}
-+
- 		if (target[pmu->scope] >= 0 && target[pmu->scope] < nr_cpu_ids)
- 			perf_pmu_migrate_context(pmu, cpu, target[pmu->scope]);
+-	return 0;
++	for (i = 0; i < cmn->num_dtcs; i++)
++		WARN_ON_ONCE(irq_set_affinity(cmn->dtc[i].irq, cpumask_of(cpu)));
+ }
+ 
+ static irqreturn_t arm_cmn_handle_irq(int irq, void *dev_id)
+@@ -2341,10 +2298,6 @@ static int arm_cmn_init_irqs(struct arm_cmn *cmn)
+ 				       dev_name(cmn->dev), &cmn->dtc[i]);
+ 		if (err)
+ 			return err;
+-
+-		err = irq_set_affinity(irq, cpumask_of(cmn->cpu));
+-		if (err)
+-			return err;
+ 	next:
+ 		; /* isn't C great? */
  	}
-@@ -15253,6 +15416,9 @@ static void perf_event_setup_cpumask(unsigned int cpu)
- 	 */
- 	if (cpumask_empty(perf_online_mask)) {
- 		for (scope = PERF_PMU_SCOPE_NONE + 1; scope < PERF_PMU_MAX_SCOPE; scope++) {
-+			if (scope == PERF_PMU_SCOPE_DEVICE)
-+				continue;
+@@ -2843,7 +2796,6 @@ static int arm_cmn_probe(struct platform_device *pdev)
+ 
+ 	cmn->dev = &pdev->dev;
+ 	cmn->part = (unsigned long)device_get_match_data(cmn->dev);
+-	cmn->cpu = cpumask_local_spread(0, dev_to_node(cmn->dev));
+ 	platform_set_drvdata(pdev, cmn);
+ 
+ 	cfg = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+@@ -2877,6 +2829,7 @@ static int arm_cmn_probe(struct platform_device *pdev)
+ 		.attr_groups = arm_cmn_attr_groups,
+ 		.capabilities = PERF_PMU_CAP_NO_EXCLUDE,
+ 		.task_ctx_nr = perf_invalid_context,
++		.scope = PERF_PMU_SCOPE_DEVICE,
+ 		.pmu_enable = arm_cmn_pmu_enable,
+ 		.pmu_disable = arm_cmn_pmu_disable,
+ 		.event_init = arm_cmn_event_init,
+@@ -2888,6 +2841,8 @@ static int arm_cmn_probe(struct platform_device *pdev)
+ 		.start_txn = arm_cmn_start_txn,
+ 		.commit_txn = arm_cmn_commit_txn,
+ 		.cancel_txn = arm_cmn_end_txn,
++		.filter_allowed_cpus = arm_cmn_filter_allowed_cpus,
++		.migrate_cpu = arm_cmn_migrate_cpu,
+ 	};
+ 
+ 	this_id = atomic_fetch_inc(&id);
+@@ -2895,17 +2850,13 @@ static int arm_cmn_probe(struct platform_device *pdev)
+ 	if (!name)
+ 		return -ENOMEM;
+ 
+-	err = cpuhp_state_add_instance(arm_cmn_hp_state, &cmn->cpuhp_node);
++	err = perf_pmu_register(&cmn->pmu, name, -1);
+ 	if (err)
+ 		return err;
+ 
+-	err = perf_pmu_register(&cmn->pmu, name, -1);
+-	if (err)
+-		cpuhp_state_remove_instance_nocalls(arm_cmn_hp_state, &cmn->cpuhp_node);
+-	else
+-		arm_cmn_debugfs_init(cmn, this_id);
++	arm_cmn_debugfs_init(cmn, this_id);
+ 
+-	return err;
++	return 0;
+ }
+ 
+ static void arm_cmn_remove(struct platform_device *pdev)
+@@ -2915,7 +2866,6 @@ static void arm_cmn_remove(struct platform_device *pdev)
+ 	writel_relaxed(0, cmn->dtc[0].base + CMN_DT_DTC_CTL);
+ 
+ 	perf_pmu_unregister(&cmn->pmu);
+-	cpuhp_state_remove_instance_nocalls(arm_cmn_hp_state, &cmn->cpuhp_node);
+ 	debugfs_remove(cmn->debug);
+ }
+ 
+@@ -2958,28 +2908,18 @@ static int __init arm_cmn_init(void)
+ {
+ 	int ret;
+ 
+-	ret = cpuhp_setup_state_multi(CPUHP_AP_ONLINE_DYN,
+-				      "perf/arm/cmn:online",
+-				      arm_cmn_pmu_online_cpu,
+-				      arm_cmn_pmu_offline_cpu);
+-	if (ret < 0)
+-		return ret;
+-
+-	arm_cmn_hp_state = ret;
+ 	arm_cmn_debugfs = debugfs_create_dir("arm-cmn", NULL);
+ 
+ 	ret = platform_driver_register(&arm_cmn_driver);
+-	if (ret) {
+-		cpuhp_remove_multi_state(arm_cmn_hp_state);
++	if (ret)
+ 		debugfs_remove(arm_cmn_debugfs);
+-	}
 +
- 			pmu_cpumask = perf_scope_cpumask(scope);
- 			if (WARN_ON_ONCE(!pmu_cpumask))
- 				continue;
-@@ -15262,8 +15428,12 @@ static void perf_event_setup_cpumask(unsigned int cpu)
- 	}
+ 	return ret;
+ }
  
- 	for (scope = PERF_PMU_SCOPE_NONE + 1; scope < PERF_PMU_MAX_SCOPE; scope++) {
--		const struct cpumask *cpumask = perf_scope_cpu_topology_cpumask(scope, cpu);
-+		const struct cpumask *cpumask;
-+
-+		if (scope == PERF_PMU_SCOPE_DEVICE)
-+			continue;
+ static void __exit arm_cmn_exit(void)
+ {
+ 	platform_driver_unregister(&arm_cmn_driver);
+-	cpuhp_remove_multi_state(arm_cmn_hp_state);
+ 	debugfs_remove(arm_cmn_debugfs);
+ }
  
-+		cpumask = perf_scope_cpu_topology_cpumask(scope, cpu);
- 		pmu_cpumask = perf_scope_cpumask(scope);
- 
- 		if (WARN_ON_ONCE(!pmu_cpumask || !cpumask))
-@@ -15292,6 +15462,7 @@ int perf_event_init_cpu(unsigned int cpu)
- 	mutex_lock(&ctx->mutex);
- 	cpuctx->online = 1;
- 	mutex_unlock(&ctx->mutex);
-+	perf_pmu_rebind_all();
- 	mutex_unlock(&pmus_lock);
- 
- 	return 0;
 -- 
 Haris Okanovic
 AWS Graviton
