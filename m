@@ -1,128 +1,124 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f177.google.com (mail-qt1-f177.google.com [209.85.160.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D3F749BD63
-	for <linux-perf-users@vger.kernel.org>; Tue, 13 Oct 2026 23:24:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791933889; cv=none; b=gBKONPmUxG+Q6zTYpYppLsa1iUaiE8XxP8R51QiNjlZTOD7wDjCC0uo65upyl58GEK4kSYuMzZoi3mmEtBxzr2cSyUjFoZNKdS8WW4xfJcvcSeXGp1UCQ88muDB8NccsI2DmyK/z0AYCQKMIje4eWr0VWaxkkn9m0NAwtdrePYo=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791933889; c=relaxed/simple;
-	bh=4Q0GT8t2a3z+ADXVsj23qQRdepqXzY4nsiFSuGwZxWQ=;
-	h=Message-ID:From:Subject:To:Cc:In-Reply-To:References:Content-Type:
-	 Date; b=SqaMn/KqvJPr3/AHccjyptdtfegE882lpW/4j4zP8rpGMy9c3YF+TxN1Qt2KVXLRmvK3WzDC65bP0m+bvo8teqHsjyYxr/IfNKwhNrP3xAxZkiPqer38wYQoLWNrFfozs/W7KAr/3zRk5zJlT+ZTH0m0J/Ijx8SE6AqI5PY0KG0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VgxjHv6t; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6156D4BA1D3
+	for <linux-perf-users@vger.kernel.org>; Tue, 13 Oct 2026 23:27:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.160.177
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1791934032; cv=pass; b=eFWT5IOHycPvdo8l85D/OeJv8JGFOcyyd3nUSbotSbuUkNGf95iCC8ZrV0Om1THL5/2OTa0ofgW4PaDuYoRD39DHKj1lZQvfvNDQYocpo32v10QVPjgd+VRZnMCnpnl76fp4LFF2Q4T5St4gPkMnjiMy9JQOnL3G1nyJOGxWHF4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1791934032; c=relaxed/simple;
+	bh=HR5rFeE26T8rIbxjxi43O+NmdV5BLspRJkUtyz+T3+U=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=nfW5SG8SoGDIZLYF4RuRk2FergNs5k3w5tGLeiaYPU4VTRY72BuUFNcefyPhSsX05JWK2M0aQpegJDPALe2xP8qYnQiFLUyBqJA4DHLOwi9+WWQYl2tcqBNjVXnUJvBxNiLOl+UbRImg12nTJ0jMfScw9aY9WqPFJI3TDllqPVo=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=f4SXfJlP; arc=pass smtp.client-ip=209.85.160.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VgxjHv6t"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BA1A91F000FF;
-	Tue, 13 Oct 2026 23:24:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1791933887;
-	bh=YXMRwH0zuCRcuq5DbIYDWKYOCAdHwVEkn8UQnDYdTSA=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=VgxjHv6tuQsqjYy0By01PqDrVF2MN5ljVkVXqjaQyZEln24HHpyKPtBeU2mbTNO3r
-	 Y7dSTBqiAXePr0bjpmCl5IdSOU+iMfvp2vjpFHmZYAB2GxhgsgIMV5YU9Ecv+Rc27p
-	 GVAh0rdJ8XkThFJBD1ThExPJlVk+X6WyevA2TIJS3Wcukf2CeRyvUM0S8IQ+k+ENi0
-	 BcCH0GoFtM83UuFA+Ev6g7EqaEfCOkXl9w5Qnkodwoi1pX+p93z+ecDtlQn7gABm8V
-	 aYhX0QBUaKFp8VGjHlLwXieBT6UVAMbY2YP8D8oHOEmDFay7bfLPrS+e4IHQV4ORii
-	 FhmNLSHBmgILw==
-Message-ID: <sashiko-outbox-170636@kernel.org>
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v2 2/2] perf test make: Add BPF skeleton build tests for
- clang and bpf-gcc
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Ian Rogers" <irogers@google.com>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20261013231430.2163505-3-irogers@google.com>
-References: <20261013221643.1815686-1-irogers@google.com>
- <20261013231430.2163505-1-irogers@google.com>
- <20261013231430.2163505-3-irogers@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Tue, 13 Oct 2026 23:24:47 +0000
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="f4SXfJlP"
+Received: by mail-qt1-f177.google.com with SMTP id d75a77b69052e-533202fe429so970551cf.0
+        for <linux-perf-users@vger.kernel.org>; Tue, 13 Oct 2026 16:27:11 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1791934030; cv=none;
+        d=google.com; s=arc-20260327;
+        b=G3OobN2ZUnHgr4cN+brNVJhkgi8JA5/h1zkjE2rlS51r4DIZxtaDPzVRuTGjlvn9Fz
+         ubMdVHX8xsrAvGpaN0eUusjG4BQRZSlHZn4SLuROZXqQTKQoPnAc4m0zA2Kvq2tbqwrZ
+         flme/mDg2MFOjwi8HGGnDkVnj2dWTG6dGEOMABQlZr0SCDtKi4HFH4b8Y8rAbBfE/vx+
+         u374ylwZRm62t8XWe7XfG2FHbMUkgZ/neGiRkdBEPp+fB4I7hqNy39gwUJIhwOa1zHT5
+         V9miGOJXj6FEAE+9Prr8k9Hfn7MNqn5QlOUv+F/0t2/2ZaoFcjqQdF+pBnLmsOf61q5A
+         8QRA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=HR5rFeE26T8rIbxjxi43O+NmdV5BLspRJkUtyz+T3+U=;
+        fh=yyQtgsPbBqzzMzJqYlg5InmqhH2SplDtELzqwFczAhE=;
+        b=R/o5HHEyNVucmecNnrr7mvtvZ4kiqL4hx7WhAAbaSj6KC/1s+bqE1rdolNp+GklBC+
+         E2CSrmlPy/GvY/Y7VPXY3U4HoMumB5K2cHz+yUxTq39XRSfCmMKD04ISe35P3Onbt1wD
+         Eb7lvVn8uaOd6WycnjMaZy5gKxpYUpWXqP9ICZDq1utFI6ybmkV+XKzxkYtAMP3RRBXs
+         ROkH/w0K8E2W1FsFT7nFuSIEfi+MLr6evoPWLZjcGejIzi/oFEl6l5l5rX/lB1Au3fjh
+         QjOs34Kcj++8RsRv0hEbd18HS6fUpN3bNeRFfkllfxo1UbNIOf0e5J8YsSSmBvkwVdjm
+         hZPA==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1791934030; x=1792538830; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=HR5rFeE26T8rIbxjxi43O+NmdV5BLspRJkUtyz+T3+U=;
+        b=f4SXfJlPlI3xhqq3Jjh7JlCygqK2mWqQSKkVHtSk01+iLYp1sxXAZpY7KaWWn4nqKW
+         5dKPgoraCKoeCcXTnno7PKJ3kULZ/fuQeNCnOXgoXBYKz4HCbE+X4xT3kGy3IniL/CbV
+         fOtluK1LBwlr+lFMd/SrhykiM3zFOfjK4rH0EsCnjXb+a+D+ROv7yOfGJSzlLfJkMxW4
+         PMqPKczfYIq5Do/xz85SUHolWl8aYV4VhqiVCQUj50/3t939URoSbnR2srQWt9mreEXR
+         SQ/Kq6VOWjSalKdQ8+GCuGlQfCUNJlKsqsa/KkGi2vrPn5LXj1JnsrP+C9BmQQW5Fxid
+         tGmg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1791934030; x=1792538830;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=HR5rFeE26T8rIbxjxi43O+NmdV5BLspRJkUtyz+T3+U=;
+        b=bvW6gTYc2bhxOqqyBnKOeTRI5uZFDMXFUwCxXgVMFzHHlNFbwxSadSMKDS1zBnv4u7
+         mb/1Bgor0XQGzGqEjyRlJh8i6sZF5wVxMZZ+LAID/iDgbyf3HCSypxJyVcRzsMsxeSbT
+         NJd+HzwMGPGPRCLgjeJw/9ImW04T4V4s29RQ6/ynUy6ds6UsnQPVODMkUDev2luwba7y
+         ZvE9O7UXT8S2tCwpBtwbRKcRVJwJ3N4OXd+LLGeYMFuW2Kno/3nmne6GEUbl3SY/1vTY
+         SRWHV1+rDvAtF3n5o6u131Yi+0KBRarWxJllOEqZ+GYt3p816RGgj60QJWtF2qyrpc+q
+         i7dg==
+X-Forwarded-Encrypted: i=1; AKwUvBxw579SvMEDd5vGir/AWs9sGEUziEQIvL4m1kzT/amW4hJEKI66Ve2U7xUH61F31oDR+u1caBCSfbThJzSgxzfG@vger.kernel.org
+X-Gm-Message-State: AFq9FYKD8Si2vXQHC06UgTB/BNjjlcUNArkaM7pLbcLaL37Y0QubGtUL
+	jVs1QURpqWYskzFtbzcK6mhqfTQkPOG2u/sp3ExB45iGon4grW4e1iXMCL2vDHJpk4xXKmQP3Yg
+	E29qcRfh5zpXf20eRgJ1GTB9zj+rQAAAggYJ4QSdP
+X-Gm-Gg: AYBFou1ObPrQycYtx/8cFTa8E8NhPaU181mMjvNJyJcAzG0Y5zqn4tcmDCuJecV0NDo
+	/NSuV508Nr7DYdgnfejlvIHmEo6+cvvEaIAjpcopkrBIp5blEv7WWRHtN/dMO9BvJoSlQkxL4TY
+	5MvTZTHM0kWNIRy/V9WJZavnH520ZbDVcbSUHu68JQfhZzAVnAyKgoAs9LOdxx/ilx3VHz+oxQl
+	qTv5l06cEFpOoX9Cg8ermdE9OcGZ5qhZz59wRUyLPBEHjBZTMeMOcqHwwzNNamMW+dR903v9lFr
+	LmpPSA8aDwkaEMpYb1ZBskzWXeZ/pL2ITZNRlzoqbX0D2fDutHE/beJKJGsvJo1S3njfpmY3gzG
+	xUvKwDEPKCA==
+X-Received: by 2002:a05:622a:6f02:20b0:535:cee9:78ee with SMTP id
+ d75a77b69052e-535cee97b65mr42500541cf.15.1791934029392; Tue, 13 Oct 2026
+ 16:27:09 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+References: <20261013182458.1234616-1-irogers@google.com> <20261013222622.1822619-1-irogers@google.com>
+ <3f57ddf4-b1a7-4c91-8983-c8cd83d0f25c@acm.org> <CAP-5=fX3e4HRaLXxQhCwEHRuXZdpC0zEEh2pozEEegQBxgc5xw@mail.gmail.com>
+ <0e572032-5e5a-4a4f-a362-16ad48f2f02b@acm.org>
+In-Reply-To: <0e572032-5e5a-4a4f-a362-16ad48f2f02b@acm.org>
+From: Ian Rogers <irogers@google.com>
+Date: Tue, 13 Oct 2026 16:26:56 -0700
+X-Gm-Features: AclHuK9h2b1Y8G06GgB2ybKX-XOEXTLg3GZrEG0Jt72282bAd9ESSyQw9mVDFQE
+Message-ID: <CAP-5=fUmMQgxUqP3tCb694yG7V8PN-Uf_=subMDk+WuAiPJeeQ@mail.gmail.com>
+Subject: Re: [PATCH v2 00/10] tools/perf: Adopt kernel compiler-context-analysis.h
+ annotations
+To: Bart Van Assche <bvanassche@acm.org>
+Cc: acme@kernel.org, elver@google.com, namhyung@kernel.org, 
+	adrian.hunter@intel.com, james.clark@linaro.org, jolsa@kernel.org, 
+	justinstitt@google.com, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, ljs@kernel.org, llvm@lists.linux.dev, 
+	mingo@redhat.com, morbo@google.com, nathan@kernel.org, 
+	ndesaulniers@google.com, peterz@infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Thank you for your contribution! Sashiko AI review found 2 potential issue(=
-s) to consider:
-- [Low] perf: bpf_skel test skipped due to missing pkg-config for OpenSSL
-- [Low] perf/tests: bash negation operator ! masks test framework crashes
---
+On Tue, Oct 13, 2026 at 4:18=E2=80=AFPM Bart Van Assche <bvanassche@acm.org=
+> wrote:
+>
+> On 10/13/26 4:09 PM, Ian Rogers wrote:
+> > Which mailing list is objecting to the frequent emails?
+> This is a policy that applies to all Linux kernel related mailing
+> lists. From Documentation/process/submitting-patches.rst: "Wait for a
+> minimum of one week before resubmitting or pinging reviewers - possibly
+> longer during busy times like merge windows."
 
-commit b1fbd7e0bcb15ba961fd484277db525d4021ba13
-Author: Ian Rogers <irogers@google.com>
+That's a nice try, but you misquoted the documentation. As the cover
+letter explaining the fixes makes clear, these are different versions
+of the patch series, not resubmissions of the same one.
 
-perf test make: Add BPF skeleton build tests for clang and bpf-gcc
+Thanks,
+Ian
 
-Add make_bpf_skel_clang (CLANG=3Dclang BPF_GCC=3D) and make_bpf_skel_bpf_gcc
-(BPF_GCC=3Dbpf-gcc CLANG=3D) targets to tools/perf/tests/make when the
-corresponding compiler and BPF skeleton dependencies are available on
-the host.
-
-> diff --git a/tools/perf/tests/make b/tools/perf/tests/make
-> index 7524de5228029..4e66b93cf12c9 100644
-> --- a/tools/perf/tests/make
-> +++ b/tools/perf/tests/make
-
-[ ... ]
-
-> @@ -142,6 +144,20 @@ have_libllvm :=3D $(shell printf '#include <llvm/Sup=
-port/ManagedStatic.h>\n#includ
->  		$(shell $(LLVM_CONFIG) --system-libs 2>/dev/null) >/dev/null 2>&1 && e=
-cho y)
->  endif
-> =20
-> +have_bpf_skel_deps :=3D $(shell printf '#include <libelf.h>\n#include <z=
-lib.h>\n#include <linux/bpf.h>\n#include <openssl/opensslv.h>\nint main(){r=
-eturn 0;}\n' | \
-> +	$(CC) -x c -I$(srctree)/tools/include/uapi - -o /dev/null -lelf -lz -lc=
-rypto >/dev/null 2>&1 && echo y)
-
-[Severity: Low]
-Does this hardcoded check fail to find OpenSSL on systems that require expl=
-icit
-paths via pkg-config?
-
-Unlike tools/build/feature/Makefile which correctly utilizes pkg-config, it
-looks like missing pkg-config usage here could lead to silent test evasion =
-on
-environments where OpenSSL is not in the default compiler search path.
-
-> +
-> +ifneq ($(have_bpf_skel_deps),)
-
-[ ... ]
-
-> @@ -313,6 +335,13 @@ test_make_clang_nondistro     :=3D $(test_make_clang)
->  test_make_clang_nondistro_O   :=3D $(test_make_clang_O)
->  endif
-> =20
-> +test_make_no_bpf_skel         :=3D test -x $(PERF_O)/perf && ! $(PERF_O)=
-/perf check -q feature bpf_skeletons
-> +test_make_no_bpf_skel_O       :=3D test -x $$TMP_O/perf && ! $$TMP_O/per=
-f check -q feature bpf_skeletons
-
-[Severity: Low]
-By using the shell negation operator !, does this prevent the framework from
-distinguishing between a graceful exit 1 (feature correctly absent) and a
-catastrophic crash (exit code >128)?
-
-Would using an explicit exit code validation (e.g., ; test $? -eq 1) avoid
-masking crashes in the built perf check utility?
-
-> +test_make_bpf_skel_clang      :=3D test -x $(PERF_O)/perf && $(PERF_O)/p=
-erf check -q feature bpf_skeletons
-> +test_make_bpf_skel_clang_O    :=3D test -x $$TMP_O/perf && $$TMP_O/perf =
-check -q feature bpf_skeletons
-> +test_make_bpf_skel_bpf_gcc    :=3D test -x $(PERF_O)/perf && $(PERF_O)/p=
-erf check -q feature bpf_skeletons
-> +test_make_bpf_skel_bpf_gcc_O  :=3D test -x $$TMP_O/perf && $$TMP_O/perf =
-check -q feature bpf_skeletons
-> +
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261013231430.2163=
-505-1-irogers@google.com?part=3D2
+> Bart.
+>
