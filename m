@@ -1,119 +1,85 @@
-Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D9A63F164E
-	for <linux-perf-users@vger.kernel.org>; Tue, 13 Oct 2026 14:23:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.218.42
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791901387; cv=pass; b=LvpeYpaxRfjnhg1Hjpz1HxgPzSHDb8vOtrodhwNRNOR+5OmGWoR770lofDWNL7aki8fe6Ylsqvksonz4usMrDjCcHtByOf5h6THG9/F8eDhw5AYK3xQdwYl8PPSvh8jeCdYflMV/U8MZH8yAV2IAfUtdyu40O3olwGtElWo3aO4=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791901387; c=relaxed/simple;
-	bh=yj1sNd5vfDwsYGQAjFz2BvWzyxLrHMu95FMIsFy9jGQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=S3de+U78nHRYkvHQmbnT2kw32QH+H0miuZcq3RJVYDtG9nmXc6ZQGJ9GMlkRLzIbo3mzs6b7jHxanzraS1E6DYcEQLboLxdfNx2f4vYuUzXG/GTSX58exL+IDOEnlEJmblMByh6u7cnMGGH0Fl9H+dS8w1ls2I8HExJBQC23MPU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ionos.com; spf=pass smtp.mailfrom=ionos.com; dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b=QwcrkcG2; arc=pass smtp.client-ip=209.85.218.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ionos.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ionos.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45E7B1386C9;
+	Tue, 13 Oct 2026 14:56:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1791903376; cv=none; b=CJ3jDnzLF/3nwGEIESzduLlZU+6siuH0HmwQNYj0uWPz3zV9kq9V7loFDS9nMpsegMbSRkUBQ50tMPG8qemNRSz7JidnWCQvQ+M2ED0lKiKXfNyr3w6hj2bzv2ETr+1zbBw9BF8nwwArzBXFBt9+Lir1o7JNJu21xJb499gOCJg=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1791903376; c=relaxed/simple;
+	bh=YF2VkmBRsOzuoyFTDhFxGgzmei/0DrD0kJUmCM8GHXo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rJjAcbsrYF0LVyCuggFMKgIc/aNKm+HNRS8F1Kwezkgyu3nBiB9+5KS4xia74JFjuURTOhORecRF3RwmzK8ZrDynKttO2U0e/wW4Fllt3Bhz1zWt1c19HHU9+JNJ8xtiEJgzoNAaKiyhf3apP9L1T4gR0QnPgf9OBq17QP73x0o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=L2cAR/jg; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b="QwcrkcG2"
-Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-c2e7131b94eso264349766b.1
-        for <linux-perf-users@vger.kernel.org>; Tue, 13 Oct 2026 07:23:04 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1791901383; cv=none;
-        d=google.com; s=arc-20260327;
-        b=QQy0MSK2ZBRBH778D6oX+tRbxc6DBqsFdixW0tH0SxDvQpVuH2ln6BCpirwzktGtAh
-         zziJpIJOMG7dkmDkPssIXDqTNmRQjdzjNt/Qv4iRd0HXsNBCBgiQiHrrZeLASDjTKrlI
-         +c5o26aMzNxFuTDbu4guYwhDKL/TvvIMnGAS2bSXcCBbSfGq63Zw0Eyjw8vufMiqnGO7
-         4lx5WnlL6fbLVacsLhr8JLW+wJ9vaOe/+JTzxHd7Rg9MLnLpeIzrft1J5DQzQCqLT9jp
-         PpKzVeGkKg+tPeBoxTE1p2NsiVh3yW25AM9Jghm1IE3SUfz+vmGQ+XSzZHhxr+9fcXdx
-         AsLA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=yj1sNd5vfDwsYGQAjFz2BvWzyxLrHMu95FMIsFy9jGQ=;
-        fh=Wn3p6i9lZP8mCeEoATi505Rq8zp7oZqrkHJf04IoQNQ=;
-        b=hdZE+OCMDHHk+KWxp8OOCzFf8X709+M8zwJAj6PeNru3jJtVx6OW1Minvhh9Byh/yb
-         0nHKgWBW5sshT4S9WoJMeBf1rpoqLgNzylvL2rdLfjSGTK7h4U9p06H3o4MClbc3xeDJ
-         RFRKaVU3I/BPgBgZzCGqZmMXMAR2daiMVemDrn4+2jInU+bIac3i0n7iJUCib268V5j5
-         TyE2jMcRaScjJpANFMxyHZuhU3adPg6tQ7usLwzJjBFsI/GJd5fTGcmxHW4Vn90JJhO4
-         RwFuJl7yBuJjrJGtQiYet8OEdwdGDS8hYqG7yyJMJHlskbbGhAClghYUwFfBIp0j2Kgf
-         Zkuw==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ionos.com; s=google; t=1791901383; x=1792506183; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=yj1sNd5vfDwsYGQAjFz2BvWzyxLrHMu95FMIsFy9jGQ=;
-        b=QwcrkcG2qPqojWS8zrmYqjetEMN/XCmC1Cl4IH9j8p4MWaKhPsNhEVONdUInsqHDWR
-         7aO+YJwuoCWNOs1GhADMB5Gm9Xa9nU0+F1ALQwHy5G/9+8bRuafsD/Yp4TrenJOovLTv
-         hOA9n0wfnIyrZE6MZrOSiFItSDkFcGYH/cUwtvB7Y8t2o+JsvPEPjujfYsJrjHQ8w1oi
-         p/nOBq0UY5msy45MvU0aOumovMJf7ep1JoCSIR5ywPd4/0nl0cMjEJMz+ISfrOsPiTJH
-         SZuEbRONEXjgavXVCuIsFHLmrU4u5bXpRjrgpRgknreUkjs4bMcR6BSky2Wzn4c3er3m
-         N0qw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1791901383; x=1792506183;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=yj1sNd5vfDwsYGQAjFz2BvWzyxLrHMu95FMIsFy9jGQ=;
-        b=kIxzPigeXOG0d3pyellbvUIriTuv1txanNDhcB3kGcyBwzQpZKnlruquFYh6D0tWeH
-         aafFNe2Z78zx9HPuB3MZXJNk0WCXzoB7zWT5n7Sa67SyVIh1uA4ctcVu/nDc39fIRqNl
-         UPbMpYMD/Wl7ItaLS1wZykXPgxq3eZApzqYGKauvUOQbRS/rfBN99duVk+8zIFSAokpk
-         YfIxFXJ3Y4UojeblI/AZWAFpiu1lorZZ+3CjqHpN/NnD9gzGkczKHLriVlDOJr0/ZCaP
-         ktNy8sO3JpoxFHexUAjAJeY1VDb+s1XWZKJa+wR4ihWj3PPVXDKT15Y+UxYWviAyfa87
-         3gew==
-X-Forwarded-Encrypted: i=1; AKwUvBwyCxv8sU30nvtAP3eESgqZ/6fItLnw6O2XJSG3z1Wl3DyfIVrjRUCFUAziZxARhKq3Mss77eSP/v3rTrrwJ80y@vger.kernel.org
-X-Gm-Message-State: AFq9FYL1uHNxev17ykd3pWFbD6VRcai7LHE3ZNEVMfasoKCmjbPNd2Sx
-	0nEeki7gcmXoovvOLRNao6CR7wbOpWWFZTpfpKh96p2ECG/zsOU6RTHm+AI/gOIdMFi1N9EHnao
-	/6AYjgV3Wf9uZZEAS7pHIEI8oSRgLHGTzReTIJ9LYCPXxjtNw5xm/eqQ=
-X-Gm-Gg: AYBFou3qy4OSr46P7+l7RHerGi0U+aYk/1GkS9lHgcTG1Hn6K/NMLH1Cy6YmMS8Yl8q
-	ZUsqbJ4taoveywCV98HYjbBT/4NX0sjYk7ClMK6pKlRLiwQO0JbFJKEq+4lFyHirv+iXUuGWt/S
-	jConDfEjqU+NU2QhaBqER/RTr4WcvrGbhNd/pScLf2IgO4QZ9SvZ2Hq5hMyegI9bXPHIpVd6q0t
-	3+c+b08P/u4q0/xqKX1tv04z7KkNGyNp9XQVo6uEiwRJJSAzvhzFhpVCFjMOvt59tPmXEdNPwWB
-	wWTl8g6fKE9jdG/4N/A43uzmmvbAJ8IXb0tbbXgkgs2ULOpBE5CqBlL7FEC/JdDZLlrNAeRM+p3
-	UawssycOj
-X-Received: by 2002:a17:907:3e9e:b0:c31:5918:86d1 with SMTP id
- a640c23a62f3a-c31a9d3cfbbmr1362282966b.10.1791901383415; Tue, 13 Oct 2026
- 07:23:03 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="L2cAR/jg"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 014B71F000FF;
+	Tue, 13 Oct 2026 14:56:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1791903374;
+	bh=YF2VkmBRsOzuoyFTDhFxGgzmei/0DrD0kJUmCM8GHXo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=L2cAR/jgaFvnqz/+ml4gBaPFTnsa5gwroTiOohvWU86l/GfUyk6Z6537Lqoy5lZz4
+	 uALtttTrmkEn1wiXh2Hyq6rRithWs2EXI9NxdtPammlZW/rv6JIUMMDbD5vPpcbB9b
+	 dHHf60eNDwATIIjbht6BbUQzJbWt9PhSq50EzSpK4Ftafq3nyMhyKH1IUXPNr+I4dX
+	 /xSG/Ak9PzF3BKhbIFKZoPW5CTZY6jSjeDz2fc1Ze3aoPG6Q8YNxnp+NaZeBCWOcNO
+	 Po4nr0oXW1DGpxdJDn0yB/exYR6eY2O4Rsj2/MQmw4w0z0JQWrtoauJA9OfX6Abi8t
+	 5ve6Av9oCu/AA==
+Date: Tue, 13 Oct 2026 15:56:09 +0100
+From: Mark Brown <broonie@kernel.org>
+To: Fuad Tabba <fuad.tabba@linux.dev>
+Cc: Will Deacon <will@kernel.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Mark Rutland <mark.rutland@arm.com>, Marc Zyngier <maz@kernel.org>,
+	Oliver Upton <oupton@kernel.org>, Joey Gouly <joey.gouly@arm.com>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Zenghui Yu <yuzenghui@huawei.com>,
+	Steffen Eiden <seiden@linux.ibm.com>, Fuad Tabba <tabba@google.com>,
+	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/4] arm64: sysreg: Fix the names of two misspelt fields
+Message-ID: <a2e3bd65-f374-4d37-af0f-893308d06892@sirena.org.uk>
+References: <20261013130247.4135515-1-fuad.tabba@linux.dev>
+ <20261013130247.4135515-3-fuad.tabba@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20261013130052.3012773-1-max.kellermann@ionos.com> <CAP-5=fVPtjkxcjEkR9r6QZGsoKe=_rZssjZp1FcJ7rCgntpPng@mail.gmail.com>
-In-Reply-To: <CAP-5=fVPtjkxcjEkR9r6QZGsoKe=_rZssjZp1FcJ7rCgntpPng@mail.gmail.com>
-From: Max Kellermann <max.kellermann@ionos.com>
-Date: Tue, 13 Oct 2026 16:22:50 +0200
-X-Gm-Features: AclHuK_BqQBC6qCTnYjJ1k0Yihq79IRdPnmJUUQAMz5lu8h5Keu2RPYrrqjpsQQ
-Message-ID: <CAKPOu+8NB8sGv__CazGPYY_uEmg84-+YHbS-VOw=4woAZcRKAw@mail.gmail.com>
-Subject: Re: [PATCH] perf: skip unnecessary userspace map synthesis
-To: Ian Rogers <irogers@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, James Clark <james.clark@linaro.org>, 
-	Dapeng Mi <dapeng1.mi@linux.intel.com>, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="Sv3KlJBOQ6zDEouw"
+Content-Disposition: inline
+In-Reply-To: <20261013130247.4135515-3-fuad.tabba@linux.dev>
+X-Cookie: Some equipment shown is optional.
 
-On Tue, Oct 13, 2026 at 3:29=E2=80=AFPM Ian Rogers <irogers@google.com> wro=
-te:
-> Why do the empty list and dummy case need the
-> user mmap events?
 
-I guess that's a corner case I missed indeed. I'll fix that for v2.
+--Sv3KlJBOQ6zDEouw
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
---=20
-Max Kellermann
-Principal Architect
-Hosting Technology
+On Tue, Oct 13, 2026 at 02:02:45PM +0100, Fuad Tabba wrote:
+> Two fields in the sysreg file have the wrong name. In DDI0601 2026-09,
+> bit 10 of HFGRTR2_EL2 and HFGWTR2_EL2, which traps SCTLR2ALIAS_EL1, is
+> nSCTLR2ALIAS_EL1, not nSCTLRALIAS2_EL1, and bits [39:36] of SMPRIMAP_EL2
+> are P9, between P8 and P10, not F9.
 
-cm4all | Im Mediapark 6a | 50670 K=C3=B6ln | Germany
-General information about the company can be found here:
-https://www.cm4all.com/impressum
-A member of the IONOS Group
+Reviewed-by: Mark Brown <broonie@kernel.org>
+
+--Sv3KlJBOQ6zDEouw
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmrORogACgkQJNaLcl1U
+h9BU1wf7BE2VjyOr8aFe2QuONbWs8JFIHDIapTog3Nkys38qJkUOPcdiY8BGlq1J
+7ygK94Z+FHYVx6oOoQQNcPASntkrde2wYxRzHOqPD/IfpljcPO1JfaLLH04N+F83
+9BYsZbxdnZLNBCzks2jSAPSKN4e3GLu7YpehOrwnlx80hm7gLQ8fwp/T1l39zwx0
+vIoqMM96mB03rMTmQTbmqTK7XCpyWn1iMcaXG9YPywDLZHgzqG/893p2zvsGvXEP
+esx7M5MVnVWLqySDkd503wNp6lfT7WOhtDFmjRRBuG0N3HkJUuMzUU0T6acRPj89
+gWqE0kIZQbs3r8/iiSS/F1bo1W98Zg==
+=P7Fn
+-----END PGP SIGNATURE-----
+
+--Sv3KlJBOQ6zDEouw--
