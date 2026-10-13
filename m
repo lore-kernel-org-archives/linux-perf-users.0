@@ -1,58 +1,61 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA8B135CB9C
-	for <linux-perf-users@vger.kernel.org>; Tue, 13 Oct 2026 13:09:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 879302DECC2
+	for <linux-perf-users@vger.kernel.org>; Tue, 13 Oct 2026 13:11:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791896963; cv=none; b=meV8s40T1iYAnqbvvO2+M0VjwhJt9bum2AbSjJ0dCq7/tRjAseEBzseG6+3CB+nob0UDBEtEoeH3dix3YwmjvgPbA5G+cWnTkqdSxoKwgz3t3XafrTqLiLxSlKKgIy2so8YMI4TrFESbuaScCNrSMivM6Y9/tW/l/WQHy4TJSBs=
+	t=1791897065; cv=none; b=jQbgvsXuvokGUH+Oi7U3JKPI88rlTxzXP5qxaByTS1lsiqMgAxw+mWUMee+PU8zkm8kZF1+4GTLFlUm7eXvppRrHCu0Yfd7hkwMRBxl/z4y1UhhOBdnrnpslI9DCxcVZ5Oj1yh0o/Rg+0/xe68O1viSeDsq9eTvAurMm1DJgovo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791896963; c=relaxed/simple;
-	bh=Zdc8gSjpfDa17AUP+0hcV94VmRzeY0F8lJnkdtggkTE=;
+	s=arc-20240116; t=1791897065; c=relaxed/simple;
+	bh=a43nG8pp3Hmg6hzQVlXmM3VA2ljOC30Z8CGBFsaC7jA=;
 	h=Message-ID:From:Subject:To:Cc:In-Reply-To:References:Content-Type:
-	 Date; b=OiK1gyq0mcx95rLszlgazo2yhjn5j23/f42nsqkwSbcqu4MD0PDyAXdBFuYZb/FTHwoIqfixK0hcb+cLNPmwgJwEuj7voSroxDdWRe4BjDMu0j0G5DiSJ4lA2iAUJMMMT6kD3GxeKOXu6uVt13gVSIy8QGQtRsXiiMdyYufVMMY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nBU9bk1H; arc=none smtp.client-ip=100.103.45.18
+	 Date; b=cxElfn+cNXejJU7VMQsZ2JJ9lBxsXxJQMrQU7jRsNYbM1QL0/ZFohTpO/PCIeAr7ST1MUzcU5qFJcx9uvCeCPHmGTB7rUFNeaggSZh7eA1ZiduTflLWCcj9xsdgxIk+TP9iME1x51erNjRxYnJKf49WefetNLJdMJyp95WF+h2w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bOFxssBl; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nBU9bk1H"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 46D9B1F000FF;
-	Tue, 13 Oct 2026 13:09:22 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bOFxssBl"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 190581F00893;
+	Tue, 13 Oct 2026 13:11:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1791896962;
-	bh=Zdc8gSjpfDa17AUP+0hcV94VmRzeY0F8lJnkdtggkTE=;
+	s=k20260515; t=1791897064;
+	bh=a43nG8pp3Hmg6hzQVlXmM3VA2ljOC30Z8CGBFsaC7jA=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=nBU9bk1HAEufRbuDJBQHuc8OstFCKWzlE9R2myzPa4gQBUmJU10yoa8eylUVZl7lq
-	 IOjKWVXEPEOrhsmd9+HJEsAMUPGTYNCTT9fo0Y2YVenTfWIDJAPNxf8pIRnmq4hYgl
-	 y85b8Hc3NSwAN3cFBLWtMwBzF8TVb/ShP8GYORv3RJEpvyVlFP0pdDRltjkC5WB5p+
-	 Cf+QduZAoJ7RFDmowg44V8SrQAK31FpYdJLUgzttNE5JVEdQcWKVUsYnO4RxZ+4Ib1
-	 4SSGQTm6qR55qHpbD5QArfOZ+SqAnD7jxrhyhMCjFM/qWz9aLKqtGjY5Ul2dYbvw9h
-	 swMdwWrf/85+g==
-Message-ID: <sashiko-outbox-169775@kernel.org>
+	b=bOFxssBlnTNjFylPi5ZbhZkpa6urhfAmpYmOhLT7ePXOZj0714ugXf0d1NPFoQiEN
+	 LWtL48kWQT6h0RSlQP4yvcO4FH/cicNxwL8jN0ROzp1Dwg3V/CuJuZsQicW942Fycz
+	 7RXGRYyING5fjaFFjgeBsSBVxaX8Xro5Hgk6Ta/KWTGsCZf69eXJx7NYMIKwPfZOJV
+	 WnSjefGV5f7J7MYfLJIPZQoTuhPte0getDs7mYmyrp89rjynS0fWU1Hb1pyG2EtI2C
+	 iP6UMLSMyEDw0jO+ewFOCkj1SDBBWGiyrBaf3g+OnYWRrSEyfhJ40/8Ms1vO4jxsej
+	 PJkM2LG0Quq7w==
+Message-ID: <sashiko-outbox-169779@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 2/4] arm64: sysreg: Fix the names of two misspelt fields
+Subject: Re: [PATCH 1/4] arm64: sysreg: Fix three incorrect enum values
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Fuad Tabba" <fuad.tabba@linux.dev>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20261013130247.4135515-3-fuad.tabba@linux.dev>
+In-Reply-To: <20261013130247.4135515-2-fuad.tabba@linux.dev>
 References: <20261013130247.4135515-1-fuad.tabba@linux.dev>
- <20261013130247.4135515-3-fuad.tabba@linux.dev>
+ <20261013130247.4135515-2-fuad.tabba@linux.dev>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Tue, 13 Oct 2026 13:09:21 +0000
+Date: Tue, 13 Oct 2026 13:11:03 +0000
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-> Two fields in the sysreg file have the wrong name. In DDI0601 2026-09,
-> bit 10 of HFGRTR2_EL2 and HFGWTR2_EL2, which traps SCTLR2ALIAS_EL1, is
-> nSCTLR2ALIAS_EL1, not nSCTLRALIAS2_EL1, and bits [39:36] of SMPRIMAP_EL2
-> are P9, between P8 and P10, not F9.
+> Three enum values in the sysreg file don't match DDI0601 2026-09.
+> Outer Shareable in VTCR_EL2.SH0 is 0b10, not 0b01, as TCR_EL1.SH0 in
+> the same file already has it. Thumb-2 in ID_PFR0_EL1.State1 is 0b0011,
+> not 0b0010, and the M-profile model in ID_PFR1_EL1.MProgMod is 0b0010,
+> not 0b0001. The spec lists all three old values as reserved.
 >=20
-> Rename both, along with the three KVM users of the first. The second
-> has no users.
->=20
-> No functional change intended.
+> There are currently no users of these values. The VTCR_EL2 one came in
+> with commit a035001dea37 ("arm64: Convert VTCR_EL2 to sysreg
+> infratructure"), the ID_PFR0_EL1 one with commit fb0b8d1a24d8
+> ("arm64/sysreg: Convert ID_PFR0_EL1 to automatic generation") and the
+> ID_PFR1_EL1 one with commit 1224308075f1 ("arm64/sysreg: Convert
+> ID_PFR1_EL1 to automatic generation").
 >=20
 > Signed-off-by: Fuad Tabba <fuad.tabba@linux.dev>
 
@@ -60,5 +63,5 @@ Sashiko has reviewed this patch and found no issues. It looks great!
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261013130247.4135=
-515-1-fuad.tabba@linux.dev?part=3D2
+515-1-fuad.tabba@linux.dev?part=3D1
 
