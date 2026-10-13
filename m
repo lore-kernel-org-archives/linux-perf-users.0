@@ -1,136 +1,64 @@
-Received: from mta1.migadu.com (out-89.mta1.migadu.com [95.215.58.89])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15A004FD786
-	for <linux-perf-users@vger.kernel.org>; Tue, 13 Oct 2026 13:03:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.89
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA8B135CB9C
+	for <linux-perf-users@vger.kernel.org>; Tue, 13 Oct 2026 13:09:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791896597; cv=none; b=Vh3F0KcSmBaI0YGcUSFNIH+QiyE1LzQBzRmFc1HwNKf6AZTPjujfrRFu8CJRsEhJ2eHi6aa66MjJwVZX+cTerrlO9GCA8KOjrhq9p8FMyv2SJ30rxIrtpjuBMrRrnOVXIZLhAYFbBMujTMXPj6B6nmen+Lg+l7vH9voZQ22wnfY=
+	t=1791896963; cv=none; b=meV8s40T1iYAnqbvvO2+M0VjwhJt9bum2AbSjJ0dCq7/tRjAseEBzseG6+3CB+nob0UDBEtEoeH3dix3YwmjvgPbA5G+cWnTkqdSxoKwgz3t3XafrTqLiLxSlKKgIy2so8YMI4TrFESbuaScCNrSMivM6Y9/tW/l/WQHy4TJSBs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791896597; c=relaxed/simple;
-	bh=CaYuksYIH3T9mue+o25Jw5LFw402j/q0Agp5Li01cWU=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=huXP8YSRkS+YZqm+qL6ish1BAVtHAZI7vFtyutmsEhoP3adnW+dM7fnJMNIoTjqJXsLxHTW85OgZGYOscNpRtbDXG9CoWF2lUFIo3eCrShh2pCLDNNw2RzShCaVzDLax16a524prZX9L7fZm/KD+GTNrI8qJbu60roZaNad4HbI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=IG3Zvy60; arc=none smtp.client-ip=95.215.58.89
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1791896963; c=relaxed/simple;
+	bh=Zdc8gSjpfDa17AUP+0hcV94VmRzeY0F8lJnkdtggkTE=;
+	h=Message-ID:From:Subject:To:Cc:In-Reply-To:References:Content-Type:
+	 Date; b=OiK1gyq0mcx95rLszlgazo2yhjn5j23/f42nsqkwSbcqu4MD0PDyAXdBFuYZb/FTHwoIqfixK0hcb+cLNPmwgJwEuj7voSroxDdWRe4BjDMu0j0G5DiSJ4lA2iAUJMMMT6kD3GxeKOXu6uVt13gVSIy8QGQtRsXiiMdyYufVMMY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nBU9bk1H; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="IG3Zvy60"
-X-Envelope-To: linux-perf-users@vger.kernel.org
-DKIM-Signature: a=rsa-sha256; bh=CaYuksYIH3T9mue+o25Jw5LFw402j/q0Agp5Li01cWU=;
- c=simple/simple; d=linux.dev;
- h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
- t=1791896594; v=1; x=1792501394;
- b=IG3Zvy601YEUx85CV0MJ+ThtPVQyiTOp0mg35T0kjYR1Cm6RQ7t01K2+F4JkQ86558rWwmdP
- 6TayDZw7/hN+7N/+ZABN8GGk6n6bRgZL3y+o+nD+4MXSgNOYLc6oVGtkUBLOX38LFwTqMKzBe3C
- RHS2YH+V2MU2Y+pv0YOLQ8aw=
-X-Envelope-To: linux-perf-users@vger.kernel.org
-Received: by smtp.migadu.com with ESMTPS id 5fed7ca6c3443aa9;
-	Tue, 13 Oct 2026 13:03:13 +0000
-X-Mizu-Trace-ID: 5fed7ca6c3443aa9
-X-Migadu-Flow: FLOW_OUT
-From: Fuad Tabba <fuad.tabba@linux.dev>
-To: Will Deacon <will@kernel.org>,
-	Catalin Marinas <catalin.marinas@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>,
-	Marc Zyngier <maz@kernel.org>,
-	Oliver Upton <oupton@kernel.org>,
-	Joey Gouly <joey.gouly@arm.com>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Zenghui Yu <yuzenghui@huawei.com>,
-	Steffen Eiden <seiden@linux.ibm.com>,
-	Mark Brown <broonie@kernel.org>,
-	Fuad Tabba <tabba@google.com>,
-	linux-arm-kernel@lists.infradead.org,
-	kvmarm@lists.linux.dev,
-	linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 4/4] perf: arm_brbe: Remove the check for TME transaction states
-Date: Tue, 13 Oct 2026 14:02:47 +0100
-Message-Id: <20261013130247.4135515-5-fuad.tabba@linux.dev>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20261013130247.4135515-1-fuad.tabba@linux.dev>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nBU9bk1H"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 46D9B1F000FF;
+	Tue, 13 Oct 2026 13:09:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1791896962;
+	bh=Zdc8gSjpfDa17AUP+0hcV94VmRzeY0F8lJnkdtggkTE=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=nBU9bk1HAEufRbuDJBQHuc8OstFCKWzlE9R2myzPa4gQBUmJU10yoa8eylUVZl7lq
+	 IOjKWVXEPEOrhsmd9+HJEsAMUPGTYNCTT9fo0Y2YVenTfWIDJAPNxf8pIRnmq4hYgl
+	 y85b8Hc3NSwAN3cFBLWtMwBzF8TVb/ShP8GYORv3RJEpvyVlFP0pdDRltjkC5WB5p+
+	 Cf+QduZAoJ7RFDmowg44V8SrQAK31FpYdJLUgzttNE5JVEdQcWKVUsYnO4RxZ+4Ib1
+	 4SSGQTm6qR55qHpbD5QArfOZ+SqAnD7jxrhyhMCjFM/qWz9aLKqtGjY5Ul2dYbvw9h
+	 swMdwWrf/85+g==
+Message-ID: <sashiko-outbox-169775@kernel.org>
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH 2/4] arm64: sysreg: Fix the names of two misspelt fields
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Fuad Tabba" <fuad.tabba@linux.dev>
+Cc: linux-perf-users@vger.kernel.org
+In-Reply-To: <20261013130247.4135515-3-fuad.tabba@linux.dev>
 References: <20261013130247.4135515-1-fuad.tabba@linux.dev>
+ <20261013130247.4135515-3-fuad.tabba@linux.dev>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Tue, 13 Oct 2026 13:09:21 +0000
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-When an event samples branch flags, the BRBE driver warns once if a
-branch record has BRBINFx_EL1.T or LASTFAILED set, which its comment
-calls TME-related information. FEAT_TME has been withdrawn from the
-architecture, and both fields are RES0 in DDI0601 2026-09, so the check
-tests fields that no longer exist.
+> Two fields in the sysreg file have the wrong name. In DDI0601 2026-09,
+> bit 10 of HFGRTR2_EL2 and HFGWTR2_EL2, which traps SCTLR2ALIAS_EL1, is
+> nSCTLR2ALIAS_EL1, not nSCTLRALIAS2_EL1, and bits [39:36] of SMPRIMAP_EL2
+> are P9, between P8 and P10, not F9.
+>=20
+> Rename both, along with the three KVM users of the first. The second
+> has no users.
+>=20
+> No functional change intended.
+>=20
+> Signed-off-by: Fuad Tabba <fuad.tabba@linux.dev>
 
-Remove the check and its two accessors, which were the only users of
-the fields' defines, and mark both fields RES0 in the sysreg file.
+Sashiko has reviewed this patch and found no issues. It looks great!
 
-Signed-off-by: Fuad Tabba <fuad.tabba@linux.dev>
----
- arch/arm64/tools/sysreg |  5 +----
- drivers/perf/arm_brbe.c | 18 ------------------
- 2 files changed, 1 insertion(+), 22 deletions(-)
-
-diff --git a/arch/arm64/tools/sysreg b/arch/arm64/tools/sysreg
-index 99af1c39478be..b15a59b9e95dd 100644
---- a/arch/arm64/tools/sysreg
-+++ b/arch/arm64/tools/sysreg
-@@ -1338,10 +1338,7 @@ Res0	63:47
- Field	46	CCU
- Field	45:40	CC_EXP
- Field	39:32	CC_MANT
--Res0	31:18
--Field	17	LASTFAILED
--Field	16	T
--Res0	15:14
-+Res0	31:14
- Enum	13:8		TYPE
- 	0b000000	DIRECT_UNCOND
- 	0b000001	INDIRECT
-diff --git a/drivers/perf/arm_brbe.c b/drivers/perf/arm_brbe.c
-index 254be4da8ae29..073d145847417 100644
---- a/drivers/perf/arm_brbe.c
-+++ b/drivers/perf/arm_brbe.c
-@@ -166,21 +166,11 @@ static bool brbe_record_is_target_only(u64 brbinf)
- 	return brbe_record_valid(brbinf) == BRBINFx_EL1_VALID_TARGET;
- }
- 
--static int brbinf_get_in_tx(u64 brbinf)
--{
--	return FIELD_GET(BRBINFx_EL1_T_MASK, brbinf);
--}
--
- static int brbinf_get_mispredict(u64 brbinf)
- {
- 	return FIELD_GET(BRBINFx_EL1_MPRED_MASK, brbinf);
- }
- 
--static int brbinf_get_lastfailed(u64 brbinf)
--{
--	return FIELD_GET(BRBINFx_EL1_LASTFAILED_MASK, brbinf);
--}
--
- static u16 brbinf_get_cycles(u64 brbinf)
- {
- 	u32 exp, mant, cycles;
-@@ -627,14 +617,6 @@ static bool perf_entry_from_brbe_regset(int index, struct perf_branch_entry *ent
- 			entry->mispred = brbinf_get_mispredict(brbinf);
- 			entry->predicted = !entry->mispred;
- 		}
--
--		/*
--		 * Currently TME feature is neither implemented in any hardware
--		 * nor it is being supported in the kernel. Just warn here once
--		 * if TME related information shows up rather unexpectedly.
--		 */
--		if (brbinf_get_lastfailed(brbinf) || brbinf_get_in_tx(brbinf))
--			pr_warn_once("Unknown transaction states\n");
- 	}
- 
- 	/*
--- 
-2.39.5
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261013130247.4135=
+515-1-fuad.tabba@linux.dev?part=3D2
 
