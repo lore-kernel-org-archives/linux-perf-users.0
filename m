@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C350548571;
-	Tue, 13 Oct 2026 20:15:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7152A54DAEF;
+	Tue, 13 Oct 2026 20:15:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791922505; cv=none; b=rk02qXhY3/h5Lm8wnoz192vyEU4JuqGX8NJ3oNpqbLQGCp1qSWikmSc1FZV81PKdHwgn03K8DM7KK4kVfp/hIRtPXpBDSqdSTGiDC5nT8KNpQTfHYfvRy+iXboEAOI29mg3rG/rtY5xrEPdbPrTq0Z8+VtcHYhL8DgElw1JAgB8=
+	t=1791922505; cv=none; b=NSjad+alPenVUew9/rR0AX8+seH+Y9VUFpkWe7AvzIFkKFOzfuUklhq2ea/rnQTxPOnRrQmi1dC2k+phlVBCP+iPWFBlYR+BpqXoRnjzUKZ6TNO1U2fsdOLpoY63uOYYd8o8j2RZKf6y2AFkZQEEt1X83x9K7/APM+PrXcWFdTI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1791922505; c=relaxed/simple;
-	bh=WovNExGZiFzdFWR7F1M30yfO6VJBw8v7D7zHTHoSSk8=;
+	bh=qeBg26zOYqqdxzz+45miObF1TeX5Y9NjWl3YDA5Jq5A=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=DbpN2RCdtn4VtvG0UFdKIIgyaR4btgAtaGeDWoaelaUSG4RmGWhq/R9jyKbSQqTWZUdYp7cVKVGIAI0e3daddAV8OWIFjd0CjmiSp6Gy7oKEh8F09b2M9Yl1sCz3Y8dOL0MdjParUg8stHUzNEfRx8reWkhpeBgjJU9Fj9TCROQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RTooHdI/; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version; b=k3YE4mNJl+DkoejPm2zBWGyIzi68Oea4PJs5OQVwfLaqA6EHAqJE4SWGenwA6gGCUCD1vhgUKuHF3B1bJWslaXdMvckcIWcd09otEgxcfC7ACFNM6GzyH57t2xMfw7ggcZAc5hTUPaVs/82N/JpLUsNeZO2WDZ9AA/0Yk/0AXrs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=orRaOkjO; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RTooHdI/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 937D21F000FF;
-	Tue, 13 Oct 2026 20:15:01 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="orRaOkjO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BD1541F00893;
+	Tue, 13 Oct 2026 20:14:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1791922504;
-	bh=Zgi7YhpIR7wMSAazs7tO3pTqYAeCHrzL1I8KPI2OwcU=;
+	s=k20260515; t=1791922501;
+	bh=ztKLYD6iVWRJBLvTv/2UKAv5bmFBL2HBxANZbtkkpTE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=RTooHdI/Jw6GPAzDVn34C2uV/8URh++lV/pA1dB/plZtzfUtpoc8DLu43/OFTaZIO
-	 llndZ7Q5YyhoeTAgDJ+636N+WQvrPQ/yuHRQ96tJ9DtcuQ5NuYR1StU3AgqVd6LAJ+
-	 UsgeuJyanxKUudYgvzySCos6t12tB651y8pmt9dkLTtsQCOB9qPfYj5zVIGQwUeTd+
-	 25Gvmhv4lM3v4AOOfOT1Cm+/vpoWCBiS50DU/v+P7QCJTlir/cywSL5qKLD4LYatzv
-	 qksQ9Mf3kW7hT4c8iTgBNEPkRDfE5JmNsLZdwZlTACT/qnZYFr/AYdfqZhSw9vcq8A
-	 /pIvl0oNDP5jg==
+	b=orRaOkjOQ1cB6JtRFF1kK4AI6bI/HQ/RE3tuop7wZwaMGHvDqSSrBGtv/1uzbBf/q
+	 A1WFqV3tIFY2GpTC+SlnjgRsMcXQTgb0bDuOo206Uh9ieGnD6Y1fDP8RWA66y/fils
+	 Cf3yPVU7SdCieUb5g0Ih32QVN2OejgTPFkOjGt72ua45l6FKwUpY+pfQ2vIhbLBW1P
+	 8RabtSmu34HZZMbCK/aFHeBCWAZcmIDbojjj6lOD8tEMgBqTLQr9lV0Y5i6Plsy0sV
+	 CQR/auM+1uoD3L09+oeYdjlyWrfT339Fe3fcjpZGJt8GQcS6hh57GmiQaUiyfC3R2W
+	 jtbrwsRn8Fn4w==
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Namhyung Kim <namhyung@kernel.org>
 Cc: Ingo Molnar <mingo@kernel.org>,
@@ -38,9 +38,9 @@ Cc: Ingo Molnar <mingo@kernel.org>,
 	linux-kernel@vger.kernel.org,
 	linux-perf-users@vger.kernel.org,
 	Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH v2 13/19] perf test attr: Ignore the group read_format bit the PMU count can remove
-Date: Tue, 13 Oct 2026 17:14:08 -0300
-Message-ID: <20261013201415.36428-14-acme@kernel.org>
+Subject: [PATCH v2 12/19] perf test attr: Leave out the events of the other core PMUs
+Date: Tue, 13 Oct 2026 17:14:07 -0300
+Message-ID: <20261013201415.36428-13-acme@kernel.org>
 X-Mailer: git-send-email 2.55.0
 In-Reply-To: <20261013201415.36428-1-acme@kernel.org>
 References: <20261013201415.36428-1-acme@kernel.org>
@@ -54,108 +54,85 @@ Content-Transfer-Encoding: 8bit
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-read_format's PERF_FORMAT_GROUP bit asks for the group members to be read
-along with the leader, which aside from this bit is verified with the
-fd/group_fd based group checking in Test.compare(), and with more than
-one core PMU a group whose members are pinned to one of them, say
-'default_core', leaves the clones for the other core PMUs without any
-members:
+On a hybrid machine the default stat metrics are opened on each core PMU,
+and the events of the other one have their own encodings: on an i7-14700K
+cpu_atom (type 10) opens UOPS_RETIRED.ALL, config 194, which the
+expectations, written for cpu_core (type 4), don't name:
 
-  $ perf stat -e '{cycles,default_core/legacy-hardware-config=3/}:S'
-  ... the A53 leader keeps its cohort, both A73 cycles clones are alone,
-      read_format 20 instead of 28
+  expected type=4, got 10
+  expected config=209|391, got 194
 
-so that bit isn't there: whether it is there is a consequence of how the
-evlist got expanded to more than one core PMU, not of the groupness the
-expectations say about, which is verified structurally, so take it out on
-both sides.
-
-That leaves the A73 leader clones, now with:
-
-  expected read_format=28|31, got 20
-
-matching the base event expectations again.
-
-With a single core PMU there is nothing to expand, so there is nothing to
-explain away: count the core PMUs when the script starts, from what perf
-makes of 'cycles', see parse_events_multi_pmu_add(), and take the bit out
-only when there is more than one, leaving the machines with a single core
-PMU verifying what the expectations say about it.  That count is 2 on the
-Amlogic A311D, where its A53 and A73 PMUs both answer for 'cycles', and 1
-on a machine with a single core PMU.  Where there is no binding to ask,
-as when attr.py runs without setup_python.sh, the count isn't available
-and the bit is taken out as well.
+The test already masks the core PMU type out of 'config' for the legacy
+events, but raw events keep their type and encoding, so leave out the
+events of the core PMUs no expectation names, like the dummy tracking
+event.  Core PMUs are found as perf finds them: 'cpu' or 'cpum_cf', or a
+PMU with a 'cpus' file in sysfs.  Nothing is left out unless an
+expectation names a core PMU, so single core PMU machines and the tests
+with only legacy expectations are not affected.
 
 Assisted-by: LLM
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/tests/shell/lib/attr.py | 46 ++++++++++++++++++++++++++++++
- 1 file changed, 46 insertions(+)
+ tools/perf/tests/shell/lib/attr.py | 39 ++++++++++++++++++++++++++++++
+ 1 file changed, 39 insertions(+)
 
 diff --git a/tools/perf/tests/shell/lib/attr.py b/tools/perf/tests/shell/lib/attr.py
-index 65b1e655a2bcb505..3bf07d4df95987d8 100644
+index 222ce6f598831e3f..65b1e655a2bcb505 100644
 --- a/tools/perf/tests/shell/lib/attr.py
 +++ b/tools/perf/tests/shell/lib/attr.py
-@@ -115,6 +115,50 @@ SAMPLE_ID_BITS = PERF_SAMPLE_ID | PERF_SAMPLE_IDENTIFIER
- # sample id bits" when comparing the two sides.
- SAMPLE_ID_EITHER = 1 << 40
+@@ -532,6 +532,44 @@ class Test(object):
+         for event in self.result.values():
+             event.tracking_moved_to_dummy = True
  
-+PERF_FORMAT_GROUP = 1 << 3
++    def drop_other_core_pmu_events(self, devices='/sys/bus/event_source/devices'):
++        """
++        Leave out the events of the other core PMUs, which have their own
++        encodings, when the expectations name one of the core PMUs.
++        """
++        asked = set()
++        for event in self.expect.values():
++            types = event.get('type', '').split('|')
++            if '*' in types:
++                return
++            asked.update(types)
 +
-+def core_pmu_count():
-+    """
-+    How many core PMUs does perf see?  An event with no PMU named in it
-+    becomes one event per core PMU, see parse_events_multi_pmu_add(), and
-+    that is the expansion that leaves the clones for the other core PMUs
-+    without any group members and that makes the kernel qualify 'config'
-+    with the type of the PMU it is for, so this is the number of events perf
-+    makes of 'cycles'.  None when there is no binding to ask, as in
-+    core_pmu_available().
-+    """
-+    try:
-+        import perf
-+        parse_events = perf.parse_events
-+    except (ImportError, AttributeError):
-+        return None
++        try:
++            names = os.listdir(devices)
++        except OSError:
++            return
 +
-+    try:
-+        return len(parse_events('cycles'))
-+    except OSError:
-+        # No PMU that can count it, see core_pmu_available().
-+        return None
++        core = set()
++        for name in names:
++            path = os.path.join(devices, name)
++            has_cpus = os.path.exists(os.path.join(path, 'cpus'))
++            if name not in ('cpu', 'cpum_cf') and not has_cpus:
++                continue
++            try:
++                with open(os.path.join(path, 'type'), encoding='utf-8') as f:
++                    core.add(f.read().strip())
++            except OSError:
++                pass
 +
-+SINGLE_CORE_PMU = core_pmu_count() == 1
++        if not core & asked:
++            return
 +
-+def hide_group_format(expected, recorded):
-+    """
-+    read_format's PERF_FORMAT_GROUP bit asks for the group members to be read
-+    along with the leader, which aside from this bit is verified with the
-+    fd/group_fd based group checking, and with more than one core PMU a group
-+    whose members are pinned to one of them, say 'default_core', leaves the
-+    clones for the other core PMUs without any members, so that bit isn't
-+    there: whether it is there is a consequence of how the evlist got
-+    expanded to more than one core PMU, not of what the expectations are
-+    about, so take it out on both sides.  On a machine with a single core PMU
-+    there is nothing to expand, so the expectations keep verifying it.
-+    """
-+    if SINGLE_CORE_PMU:
-+        return expected, recorded
++        others = core - asked
++        for name, event in list(self.result.items()):
++            if event.get('type') in others:
++                log.debug("      dropping other core PMU event [%s]", name)
++                del self.result[name]
 +
-+    return (mask_bits(expected, PERF_FORMAT_GROUP),
-+            mask_bits(recorded, PERF_FORMAT_GROUP))
-+
- def hide_sample_id(expected, recorded):
-     """
-     perf asks for a way to tell the samples apart, PERF_SAMPLE_IDENTIFIER where
-@@ -245,6 +289,8 @@ class Event(dict):
-     def hide_event_count_dependent_terms(self, term, expected, recorded):
-         if term == 'sample_type':
-             return hide_sample_id(expected, recorded)
-+        if term == 'read_format':
-+            return hide_group_format(expected, recorded)
+     def compare(self, expect, result, strict_groups=True):
+         match = {}
  
-         return expected, recorded
+@@ -614,6 +652,7 @@ class Test(object):
+                 event.recorded = True
  
+             self.drop_dummy_tracking_events()
++            self.drop_other_core_pmu_events()
+ 
+             # resolve group_fd to event names
+             self.resolve_groups(self.expect)
 -- 
 2.55.0
 
