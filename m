@@ -1,192 +1,124 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F6E14A6CE4
-	for <linux-perf-users@vger.kernel.org>; Tue, 13 Oct 2026 18:41:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2FEA474262
+	for <linux-perf-users@vger.kernel.org>; Tue, 13 Oct 2026 18:42:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791916870; cv=none; b=cM7fwA9AChRIi7HSpuZSUFHnzqG4ICr4EXBUuuunCCdeq1ie/QRgSnqYzUaS+19u4PxmUPFwO3jkhb4/NMa0hSN5PRLQbSNZCulOVzdKQ/mlJERD8cWBOMsah+LhsG3vYrddPhlmYk+hGMVd7zSXHJy6Ske/g/f/iYj69b0/nYY=
+	t=1791916926; cv=none; b=g0tN+bvnwPDH3zP8npV3QLVKzivb2iMBCh6EictA4ZdB7/06oLb17hm6htJ0tBv2mh0qotldHfa/A/qOtMfqFjONlrs1m4H7RIpPNdKB/hJ4xIWUPWRHwgk6C3Xoc5fhpw7fW6ig1/BZ7L02U4vQBCVvhI40u12MVScDUMOMj9s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791916870; c=relaxed/simple;
-	bh=zDpc1Owxit19bPDHanhgcEFGk2NI4FyBYqQLlSOO68k=;
+	s=arc-20240116; t=1791916926; c=relaxed/simple;
+	bh=E1LAFe5ivKgo7XJ71HBo7eNGvqCq3TfCbcJoVMqdug4=;
 	h=Message-ID:From:Subject:To:Cc:In-Reply-To:References:Content-Type:
-	 Date; b=QamkLL1N1pwbf52KapLr2OeZHU90RBL9xSSk7rAvM0M7NGocfXPTqMuwGEQDWBPqxNluMOsPWb9GB7YorMYrIzCNlESL4yS2EMNIq5bxd95Yz/td/Vr8XCyqdQDY0g+496wsnUShtKhzP0iLD28mbCnjGpVl9EQrtrlWCrU6bRU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KxNQVqFp; arc=none smtp.client-ip=100.103.45.18
+	 Date; b=MGUkPuno1OyMPuVbffnYpcxvhm6qjZgw1Ob78E824DUR7nrPA8a7II6jV70u6T1B9rlrfDRh/ndIDbBsgyda7XH7+RsEJBLAz8LBOBE74NAPeCHQpnNmnIOJxEEp7P9eiskjCQ/jt+pn2N2/SoL/WrDozLHbK2ulodhg2AmtvLw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FRzZgVqo; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KxNQVqFp"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CA53A1F000FF;
-	Tue, 13 Oct 2026 18:41:08 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FRzZgVqo"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0E75D1F000FF;
+	Tue, 13 Oct 2026 18:42:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1791916868;
-	bh=Dz0vZIAvDDmHEonbrhyG7KyzRG0fHjauwwKzbaezJGY=;
+	s=k20260515; t=1791916925;
+	bh=m3MVo0OghEFsYM4NayrvKPvs6uFxSLqeoaKlsEjpUmU=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=KxNQVqFpWFYti7Xqub+N5MCb6kla9ToSX/rOfuWVim8abofJ9ueaDLVItURioi7zU
-	 LzEzUrI9VF7wVD82KJRbZXVxvv2usC4f9kbFXG0q6kzNri0MAuQxZvtVBt2SMj9FL/
-	 xfazYoBnS8r7plvtiteRk2LMimxW/YyjiLXlSa1HZdCkxbaDXZU0+sx1iM5u9u5D2e
-	 W3L2cxSIa/42DnIQEDq+i/0AJtzdYL2kDblZMeeK2jbkxYCA/IGzTwuwe9mFyQuKGV
-	 mpRLqQAX7npOuF2xD6E81WXwO2a5IAHiGT8XGtET2nhDKNNHlqQ4tfUnT21vt2u9+l
-	 dr1TPTncFeG6w==
-Message-ID: <sashiko-outbox-170345@kernel.org>
+	b=FRzZgVqoMa99Ppfvm3Gk+8zWdKXLAuTD5KTrkMM0airzpHDocDeycraYYRakpen8v
+	 b2G93TpsnMGYMiDOW4SWsVMo3HEgrM/JARbQQRBQW4mWiGKj/TNfaU23cavKNq9Vpj
+	 DyjR+h66vOYN63C5x062lbSWG5xOIYzfnhnpAUeXL7A55TvFdFWfTIqKJlHS/xvNFS
+	 4UIR5YC1MqzERs16UO6j4t2EgmGoA80LVVD34CamMFYMvHer7XqpbEzjYsnF5NZ3MA
+	 sLTneXp0OLsrpIKyIxIt9JWBHSGuZ6VCIakGgtUoeYi0waaC0syDkndI68LFZbJgtl
+	 Nct06/r08TPig==
+Message-ID: <sashiko-outbox-170346@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v1 07/10] perf dso: Fix unlocked __dsos__add() in vdso
- and expand lock annotations
+Subject: Re: [PATCH v1 09/10] perf config, intel-tpebs, env: Add
+ __guarded_by and __must_hold annotations
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Ian Rogers" <irogers@google.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20261013182458.1234616-8-irogers@google.com>
+In-Reply-To: <20261013182458.1234616-10-irogers@google.com>
 References: <20261013182458.1234616-1-irogers@google.com>
- <20261013182458.1234616-8-irogers@google.com>
+ <20261013182458.1234616-10-irogers@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Tue, 13 Oct 2026 18:41:08 +0000
+Date: Tue, 13 Oct 2026 18:42:04 +0000
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 3 potential issue(=
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
 s) to consider:
-- [High] perf dso: AB-BA lock inversion deadlock between dso__data_open_loc=
-k and dso->lock during fd eviction
-- [High] perf dso: Out-of-bounds list access and crash due to dropped lock =
-desyncing open count
-- [Medium] perf vdso: TOCTOU race in machine__findnew_vdso allows duplicate=
- VDSO dso insertion
+- [High] perf: double close of tpebs_cmd.out file descriptor
 --
 
-commit 8889b552b9a0b44cdbc90055b9073e8918dcfc00
+commit 6138e7835465a4c85543c9abbf52c07f583bbb7a
 Author: Ian Rogers <irogers@google.com>
 
-perf dso: Fix unlocked __dsos__add() in vdso and expand lock annotations
+perf config, intel-tpebs, env: Add __guarded_by and __must_hold annotations
 
-This commit expands lock annotations for the struct dsos lock and struct
-dso data structures, updating locking primitives to ensure proper=20
-concurrency tracking. It also switches VDSO addition to use the=20
-locked dsos__add function.
+Add thread safety annotations to the static parser and config state,
+the TPEBS state, and the bpf_progs and cgroups trees. It also fixes some
+unlocked reads and modernizes mutex initialization.
 
-> diff --git a/tools/perf/util/dso.c b/tools/perf/util/dso.c
-> index ff5b30a3d4240..87a92238d25ba 100644
-> --- a/tools/perf/util/dso.c
-> +++ b/tools/perf/util/dso.c
-[ ... ]
-> @@ -552,13 +539,13 @@ static void dso__list_add(struct dso *dso) __must_h=
-old(&_dso__data_open_lock)
->  	dso__data_open_cnt++;
->  }
+> diff --git a/tools/perf/util/intel-tpebs.c b/tools/perf/util/intel-tpebs.c
+> --- a/tools/perf/util/intel-tpebs.c
+> +++ b/tools/perf/util/intel-tpebs.c
+> @@ -331,13 +317,15 @@ static int tpebs_stop(void) __must_hold(tpebs_mtx_g=
+et())
+>  	/* Like tpebs_start, we should only run tpebs_end once. */
+>  	if (tpebs_cmd.pid !=3D 0) {
+>  		pid_t actual_pid =3D tpebs_cmd.pid;
+> +		pthread_t reader_thread;
 > =20
-> -static void dso__list_del(struct dso *dso) __must_hold(&_dso__data_open_=
-lock)
-> +static void dso__list_del(struct dso *dso) __must_hold(&dso__data_open_l=
-ock)
->  {
->  	list_del_init(&dso__data(dso)->open_entry);
->  #ifdef REFCNT_CHECKING
-> -	mutex_unlock(dso__data_open_lock());
-> +	mutex_unlock(&dso__data_open_lock);
->  	dso__put(dso__data(dso)->dso);
-> -	mutex_lock(dso__data_open_lock());
-> +	mutex_lock(&dso__data_open_lock);
->  #endif
+>  		tpebs_stopping =3D true;
+>  		tpebs_send_record_cmd(EVLIST_CTL_CMD_STOP_TAG);
+>  		tpebs_cmd.pid =3D 0;
+> -		mutex_unlock(tpebs_mtx_get());
+> -		pthread_join(tpebs_reader_thread, NULL);
+> -		mutex_lock(tpebs_mtx_get());
+> +		reader_thread =3D tpebs_reader_thread;
+> +		mutex_unlock(&tpebs_mtx);
+> +		pthread_join(reader_thread, NULL);
+> +		mutex_lock(&tpebs_mtx);
+>  		if (control_fd[0] >=3D 0) {
 
 [Severity: High]
-Does dropping the lock before decrementing the count open a window for an
-out-of-bounds access?
+Could this sequence result in a double close of the tpebs_cmd.out file
+descriptor?
 
-In dso__list_del(), the entry is removed from the list via list_del_init()
-before dso__data_open_lock is dropped under REFCNT_CHECKING. However,
-dso__data_open_cnt is not decremented until after the lock is reacquired.
+The reader thread __sample_reader() assigns tpebs_cmd.out to data.file.fd
+and passes it to perf_session__new(). When the thread finishes, it calls
+perf_session__delete(), which invokes perf_data__close() and closes the
+underlying file descriptor:
 
-If the list had exactly one element, it is now empty, but the count remains
-positive during the unlocked window.
+tools/perf/util/data.c:perf_data_file__close() {
+...
+	} else {
+		close(file->fd);
+		file->fd =3D -1;
+	}
+...
+}
 
-If another thread calls do_open() and hits EMFILE during this window, it
-checks dso__data_open_cnt. Seeing a positive count, it will call
-close_first_dso(), which blindly executes list_first_entry() on the empty
-dso__data_open list. This results in an invalid pointer and subsequent memo=
-ry
-corruption.
+Meanwhile, after pthread_join() completes here in tpebs_stop(), the global
+tpebs_cmd.out variable is still >=3D 0 because the reader thread only closed
+its local struct copy without updating the global state.
 
->  	WARN_ONCE(dso__data_open_cnt <=3D 0,
->  		  "DSO data fd counter out of bounds.");
-> @@ -567,7 +554,7 @@ static void dso__list_del(struct dso *dso) __must_hol=
-d(&_dso__data_open_lock)
-> =20
->  static void close_first_dso(void);
-> =20
-> -static int do_open(char *name) __must_hold(&_dso__data_open_lock)
-> +static int do_open(char *name) __must_hold(&dso__data_open_lock)
->  {
->  	do {
->  		int fd =3D open(name, O_RDONLY|O_CLOEXEC);
-[ ... ]
-> @@ -670,7 +657,7 @@ void dso__put_filename(struct dso *dso __maybe_unused=
-, char *filename, bool deco
->  }
-> =20
->  static int __open_dso(struct dso *dso, struct machine *machine)
-> -	__must_hold(&_dso__data_open_lock)
-> +	__must_hold(&dso__data_open_lock)
->  {
->  	int fd =3D -EINVAL;
->  	char *name;
-> @@ -703,7 +690,7 @@ static void check_data_close(void);
->   * list/count of open DSO objects.
->   */
->  static int open_dso(struct dso *dso, struct machine *machine)
-> -	__must_hold(&_dso__data_open_lock)
-> +	__must_hold(&dso__data_open_lock)
+This causes tpebs_stop() to explicitly call close() a second time just
+below this block:
 
-[Severity: High]
-Could this sequence lead to an AB-BA lock inversion deadlock between
-dso__data_open_lock and dso->lock?
+tools/perf/util/intel-tpebs.c:tpebs_stop() {
+...
+		if (tpebs_cmd.out >=3D 0) {
+			close(tpebs_cmd.out);
+			tpebs_cmd.out =3D -1;
+		}
+...
+}
 
-When a thread opens a DSO via __open_dso(), it first acquires dso->lock.
-If it calls do_open() and hits the open file limit (EMFILE), do_open() calls
-close_first_dso() to evict an older DSO.
-
-This leads to dso__list_del() being called for the evicted DSO. As seen
-above, under REFCNT_CHECKING, dso__list_del() temporarily drops the global
-dso__data_open_lock and calls dso__put(). At this moment, the current
-thread still holds dso->lock for the DSO it was trying to open.
-
-A concurrent thread can now acquire the uncontended dso__data_open_lock,
-attempt to open the same DSO the first thread is processing, and block
-waiting for dso->lock. When the first thread finishes dso__put(), it will
-attempt to reacquire dso__data_open_lock, creating a classic AB-BA deadlock.
-
-[ ... ]
-> diff --git a/tools/perf/util/vdso.c b/tools/perf/util/vdso.c
-> index c12f5d8c4bf69..862ca172ab59a 100644
-> --- a/tools/perf/util/vdso.c
-> +++ b/tools/perf/util/vdso.c
-> @@ -131,7 +131,7 @@ static struct dso *__machine__addnew_vdso(struct mach=
-ine *machine, const char *s
-> =20
->  	dso =3D dso__new(short_name);
->  	if (dso !=3D NULL) {
-> -		__dsos__add(&machine->dsos, dso);
-> +		dsos__add(&machine->dsos, dso);
->  		dso__set_long_name(dso, long_name, false);
->  	}
-> =20
-
-[Severity: Medium]
-Does this missing double-check create a TOCTOU race that allows duplicate
-VDSO entries to be inserted?
-
-In machine__findnew_vdso(), there is an initial read-locked lookup via
-dsos__find(). If the DSO is not found, it calls __machine__addnew_vdso()
-which allocates a new DSO and delegates to dsos__add().
-
-Because dsos__add() acquires the write lock and blindly appends the DSO
-without verifying if another thread already inserted it, concurrent
-threads calling map__new() can race. They can both miss the initial
-read-locked lookup, both allocate new DSO objects, and both insert them.
-
-This violates the unique DSO invariant and leaks the memory allocated
-for the duplicate VDSO dso.
+If another thread is assigned the same fd number in the window between the
+first close in __sample_reader() and this second close in tpebs_stop(),
+the second close could silently destroy an unrelated resource.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261013182458.1234=
-616-1-irogers@google.com?part=3D7
+616-1-irogers@google.com?part=3D9
