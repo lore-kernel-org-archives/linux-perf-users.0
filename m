@@ -1,114 +1,91 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C74BE51B167;
-	Tue, 13 Oct 2026 17:04:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A7B428850E;
+	Tue, 13 Oct 2026 17:08:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791911088; cv=none; b=Q7/V90y4LM4BlrCeCSwy5/xw4nvHVOO2CVaonduf3HbYSGzisSCgORRlXxbTQLCXPsDChWV6Kvw3ToPSzsp32StG/ObYBJHxLIXFbG3lVWcMgJjUXU4tphTSzsMIg7KyFWxgiBsRT/ozvOsWF6/poLdH5LHQSmHq8pJm2nZMDdU=
+	t=1791911338; cv=none; b=dGi0XANc4Ec+GrMrF9zl6L7yOB17d5OuuBPCTt4nnl6AOEnMd5tDXej8/OG0fIjQVu656Ruw5qVwqZeSK8fti0jFV9R+LK7OVlSCnguBJjXZ70Y9RhcMflDEIrqZBx3/JiHeuZ0nIHrCD3wiJHQNlsJgqFvE4jiFtvPDBI6Q6TA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791911088; c=relaxed/simple;
-	bh=9dNcM9X5XKBcssjruktIrFoEkKYg65GWxWsBlvWUxao=;
-	h=Message-ID:From:Subject:To:Cc:In-Reply-To:References:Content-Type:
-	 Date; b=iutp1eTAaLxKVFdQtQwCp/MMF1b3oEMQf2MhKV9B0ngHVu/R/tWcVhSkE2TgTE29iAi64miwPQK8FHv70oKNbLIYBcCEy+NW0e1mOnm9KgnGwU6kMtnd7qck3TtztujvqwAtva1h7LDL3AcF+cyGzEzCd/LU2X9FB6WpW6vrGmc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MHhpxNma; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1791911338; c=relaxed/simple;
+	bh=uaY9LdUlrOVEVoZvqU+C9jMuThSOjyJeRSnjm9MDqLw=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=EM1RKNOwqyi9MyZVQVvPYPZ+xK6JXZJ7p7BUsEFK6IcmDeBkoNcwViuJldRO1p16Y1tJJLMVTgxAsV9CYRDCYW7DYL8BJKJcoiDauGX9iXQoqTLpfEYkViN5R6PB/7N77HGLJrnUZ/BQbCctDp6yd0HfJPAHF0E2FYu7UfgZ1xY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AgYU6yL8; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MHhpxNma"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B1B671F000FF;
-	Tue, 13 Oct 2026 17:04:45 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AgYU6yL8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 884541F000FF;
+	Tue, 13 Oct 2026 17:08:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1791911087;
-	bh=trYYkzD1fUs2CPyc6avA9Aj89H9HqMjaP7lJEkleLw0=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=MHhpxNma2+XUsPMVZHnq8rTIQWBMavytXojW7y5vd4gUuugEqYGxdRuV8qU3XwwYP
-	 AZIcUXMjujc/YsJgY2YU2XxNRApLORzKbQf/yHrrteWGOgGShuuyE6iQIMpclWNS3w
-	 iBu8BkqypB5Qp8HrYKusRxuaM9ENB7F1tMjDaVI9D9tXByX9d20zvGote51RlW3ZIi
-	 puL/us9LlgbOPGp9XUjcvtSCKVw6sfSHlid6LvnpsM8NjjNsDZn5IcPWGiXUKAclZ6
-	 WZeLj0Pe2LX9+pKUcFKBE9SkSrg/kSXHF+dOQAhq42r5Jv3UV3/GL4QA4TIm7aopsI
-	 8Ju3bft2ogs+g==
-Message-ID: <sashiko-outbox-170187@kernel.org>
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v6 11/39] infiniband: update hfi1 to use
- remap_vmalloc_range()
-Reply-To: sashiko-reviews@lists.linux.dev
-To: =?utf-8?b?TG9yZW56byBTdG9ha2VzIChBUk0p?= <ljs@kernel.org>
-Cc: linux-usb@vger.kernel.org, linux-rdma@vger.kernel.org, selinux@vger.kernel.org, bpf@vger.kernel.org, linux-scsi@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-trace-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, kvmarm@lists.linux.dev, kvm@vger.kernel.org, linux-s390@vger.kernel.org, "Oliver
- Upton" <oupton@kernel.org>, "Marc Zyngier" <maz@kernel.org>, "Heiko
- Carstens" <hca@linux.ibm.com>, "Vasily Gorbik" <gor@linux.ibm.com>, "Alexander
- Gordeev" <agordeev@linux.ibm.com>, "Christian Borntraeger" <borntraeger@linux.ibm.com>
-In-Reply-To: <20261013-b4-mmap-prepare-vma-flag-sanify-v6-11-1aa3c9b139f9@kernel.org>
-References: <20261013-b4-mmap-prepare-vma-flag-sanify-v6-0-1aa3c9b139f9@kernel.org>
- <20261013-b4-mmap-prepare-vma-flag-sanify-v6-11-1aa3c9b139f9@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Tue, 13 Oct 2026 17:04:45 +0000
+	s=k20260515; t=1791911336;
+	bh=EAAQkl/PQrM64YDACwAftRUqMELY+9ZC0tas3R5d+jk=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=AgYU6yL8xC7LrmxDj+yjIAYWeulA7NM0jkJK/lSQES9E20v9bodHS3CmPT5i7gDmR
+	 DMW2o5Tb4TovwsGEr1ZooGgHNVQvck1vvB7axYs0FjuzVVEmhTX4IdOGyWORFV44wC
+	 Zax4oAiH73TnUmfoDcjM1CCuJUkQ17LncsTCqVdNU+siUPvY2B28/vW7SBdr9Zw2vn
+	 Zh4HNtihcmPc/wr4PqkTiHX3ftLz7Q3MiIUMQEV9wlLeTLP54Ycodni8rnT0+xHQxv
+	 pkQD3JwkXNaA+1gqz3YJg04YM+bGFPEUqYQHo1HotKk/QKQu62wb3a0+DUdHP3LaZQ
+	 f0MfP1y+MN3ag==
+From: Sasha Levin <sashal@kernel.org>
+To: Ian Rogers <irogers@google.com>
+Cc: linux-perf-users@vger.kernel.org,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nicolas Schier <nsc@kernel.org>,
+	linux-kbuild@vger.kernel.org,
+	Shuah Khan <shuah@kernel.org>,
+	linux-kselftest@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH 3/6] tools: build perf in tools_build
+Date: Tue, 13 Oct 2026 13:08:53 -0400
+Message-ID: <20261013170854.647305-1-sashal@kernel.org>
+X-Mailer: git-send-email 2.53.0
+In-Reply-To: <CAP-5=fWFY-tpJz2vcBZvurwdZY5gwd8cuTemE9q1rtZ0Vi0dng@mail.gmail.com>
+References: <20261011233647.2454648-1-sashal@kernel.org> <20261011233647.2454648-4-sashal@kernel.org> <CAP-5=fWFY-tpJz2vcBZvurwdZY5gwd8cuTemE9q1rtZ0Vi0dng@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
-s) to consider:
-- [Medium] mm: VM_WARN_ON_ONCE triggered by vm_flags_reset() in mmap hook
---
+On Mon, Oct 12, 2026 at 03:07:10PM -0700, Ian Rogers wrote:
+> On Sun, Oct 11, 2026 at 4:36 PM Sasha Levin <sashal@kernel.org> wrote:
+> > +# Every optional feature off, so the result does not depend on which
+> > +# libraries are installed
+> > +perf-flags-$(CONFIG_TOOLS_BUILD_PERF_MINIMAL) += \
+> > +       NO_LIBELF=1 NO_LIBTRACEEVENT=1 NO_JEVENTS=1 NO_LIBPYTHON=1 NO_LIBDW=1 \
+> > +       NO_LIBBPF=1 BUILD_BPF_SKEL=0 NO_SLANG=1 NO_GTK2=1 NO_AIO=1 \
+> > +       NO_BACKTRACE=1 NO_DEMANGLE=1 NO_LZMA=1 NO_LIBZSTD=1 NO_ZLIB=1 \
+> > +       NO_LIBNUMA=1 NO_LIBUNWIND=1 NO_LIBLLVM=1 NO_CAPSTONE=1 NO_LIBPFM4=1 \
+> > +       NO_SDT=1 NO_JVMTI=1 NO_LIBDEBUGINFOD=1 NO_BABELTRACE2=1 NO_RUST=1 \
+> > +       NO_SHELLCHECK=1 NO_PERF_READ_VDSO32=1 NO_PERF_READ_VDSOX32=1
+>
+> It seems unfortunate to maintain this list here, we also have a
+> minimal target as a build test here:
+> https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tree/tools/perf/tests/make?h=perf-tools-next#n123
+> I wonder we should just add support for a MINIMAL=1 variable in
+> tools/perf/Makefile.config and have that set these other variables.
 
-commit a356d47e4beede9d3e032c777130976d06dd5dd8
-Author: Lorenzo Stoakes (ARM) <ljs@kernel.org>
+Yup :(
 
-    infiniband: update hfi1 to use remap_vmalloc_range()
-   =20
-    In cases which map chip memory from vmalloc()'d ranges, the hfi1 infini=
-band
-    drivers currently installs a fault handler, and then smuggles the kernel
-    virtual address of this range in vma->vm_pgoff.
+What allmodconfig really wants from perf is what allmodconfig already does for
+the kernel: build everything the environment supports and skip the rest. A
+kernel option that needs something the toolchain lacks just ends up off rather
+than breaking the build.
 
-> diff --git a/drivers/infiniband/hw/hfi1/file_ops.c b/drivers/infiniband/h=
-w/hfi1/file_ops.c
-> index dc548e6802e24..b02d1f1dbb27b 100644
-> --- a/drivers/infiniband/hw/hfi1/file_ops.c
-> +++ b/drivers/infiniband/hw/hfi1/file_ops.c
-[ ... ]
-> @@ -422,7 +418,7 @@ static int hfi1_file_mmap(struct file *fp, struct vm_=
-area_struct *vma)
->  			ret =3D -EPERM;
->  			goto done;
->  		}
-> -		vm_flags_clear(vma, VM_MAYWRITE);
-> +		vm_flags_mod(vma, VM_DONTEXPAND, VM_MAYWRITE);
->  		/*
->  		 * Mmap multiple separate allocations into a single vma.  From
->  		 * here, dma_mmap_coherent() calls dma_direct_mmap(), which
-[ ... ]
-> @@ -559,12 +546,10 @@ static int hfi1_file_mmap(struct file *fp, struct v=
-m_area_struct *vma)
->  	}
-> =20
->  	vm_flags_reset(vma, flags);
-> -	mmap_cdbg(ctxt, subctxt, type, mapio, vmf, memaddr, memvirt, memdma,=20
-> +	mmap_cdbg(ctxt, subctxt, type, mapio, is_vmalloc, memaddr, memvirt, mem=
-dma,
->  		  memlen, vma);
-> -	if (vmf) {
-> -		vma->vm_pgoff =3D PFN_DOWN(memaddr);
-> -		vma->vm_ops =3D &vm_ops;
-> -		ret =3D 0;
-> +	if (is_vmalloc) {
-> +		ret =3D remap_vmalloc_range(vma, memvirt, 0);
+perf has no mode like that I think? A default build fails when libelf,
+libtraceevent or python is missing, so an arm64 cross build, or a native build
+without libtraceevent-dev, breaks. Turning everything off was the only way I
+found around that.
 
-[Severity: Medium]
-Will this trigger a lockdep warning due to the VMA not being write-locked?
+Would it make sense to add such a mode to perf instead of MINIMAL=1?  A missing
+library would disable its feature with a warning rather than fail the build,
+and the mode could skip shellcheck, mypy and pylint too. allmodconfig would
+then build as much of perf as the host allows.
 
-In hfi1_file_mmap(), modifying the VMA flags using vm_flags_reset() (and
-the newly introduced vm_flags_mod() earlier in this function) enforces=20
-write-lock assertions via vma_assert_write_locked().=20
-
-Because the VMA is not yet inserted into the tree and is not write-locked=20
-during the mmap callback, its vm_lock_seq is uninitialized (UINT_MAX) and=20
-will not match the mm lock sequence. This triggers a VM_WARN_ON_ONCE_VMA.
-
-Should vm_flags_init() be used instead?
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261013-b4-mmap-pr=
-epare-vma-flag-sanify-v6-0-1aa3c9b139f9@kernel.org?part=3D11
+-- 
+Thanks,
+Sasha
