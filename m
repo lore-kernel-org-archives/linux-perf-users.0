@@ -1,91 +1,76 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A7B428850E;
-	Tue, 13 Oct 2026 17:08:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01377522695;
+	Tue, 13 Oct 2026 17:13:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791911338; cv=none; b=dGi0XANc4Ec+GrMrF9zl6L7yOB17d5OuuBPCTt4nnl6AOEnMd5tDXej8/OG0fIjQVu656Ruw5qVwqZeSK8fti0jFV9R+LK7OVlSCnguBJjXZ70Y9RhcMflDEIrqZBx3/JiHeuZ0nIHrCD3wiJHQNlsJgqFvE4jiFtvPDBI6Q6TA=
+	t=1791911588; cv=none; b=piWl3lx039p/0OwdFYgoIonbhsYh5FcrNxPIPc6GAsDdfEl6TiLxMvbWgNS65D5bk5vrVmb5mu5ldA8Jwz18GuVdDtAJ9thn3MIIOiYHIVPD0+6nq/hUXnA/DgBRr2Y+pNGWNaj3vDltfDhkKpZgQpE8XOq6zI5W0XfnToYHlno=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791911338; c=relaxed/simple;
-	bh=uaY9LdUlrOVEVoZvqU+C9jMuThSOjyJeRSnjm9MDqLw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=EM1RKNOwqyi9MyZVQVvPYPZ+xK6JXZJ7p7BUsEFK6IcmDeBkoNcwViuJldRO1p16Y1tJJLMVTgxAsV9CYRDCYW7DYL8BJKJcoiDauGX9iXQoqTLpfEYkViN5R6PB/7N77HGLJrnUZ/BQbCctDp6yd0HfJPAHF0E2FYu7UfgZ1xY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AgYU6yL8; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1791911588; c=relaxed/simple;
+	bh=xG/7/HfmonOV22Af1a0Cj6sHLtZxxJjdfDnawV8SIHs=;
+	h=Message-ID:From:Subject:To:Cc:In-Reply-To:References:Content-Type:
+	 Date; b=gKiHQBFI3Erpz+uquNdJBnSo8XrUY769i6gYI0K+jFmGwfY2YasXLVdNYSc5GsePjm103+MNA54Fn+1WHgbSaIl+Kz6bKN8S/jSHQHICt5g+KW4XVqi/Gr0K272IuPWl8jlmtITq3CYESQFYGHR254DfJoVLcnyaL5Zke/5K4d8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aRmqcyPm; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AgYU6yL8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 884541F000FF;
-	Tue, 13 Oct 2026 17:08:55 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aRmqcyPm"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1454F1F000FF;
+	Tue, 13 Oct 2026 17:13:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1791911336;
-	bh=EAAQkl/PQrM64YDACwAftRUqMELY+9ZC0tas3R5d+jk=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=AgYU6yL8xC7LrmxDj+yjIAYWeulA7NM0jkJK/lSQES9E20v9bodHS3CmPT5i7gDmR
-	 DMW2o5Tb4TovwsGEr1ZooGgHNVQvck1vvB7axYs0FjuzVVEmhTX4IdOGyWORFV44wC
-	 Zax4oAiH73TnUmfoDcjM1CCuJUkQ17LncsTCqVdNU+siUPvY2B28/vW7SBdr9Zw2vn
-	 Zh4HNtihcmPc/wr4PqkTiHX3ftLz7Q3MiIUMQEV9wlLeTLP54Ycodni8rnT0+xHQxv
-	 pkQD3JwkXNaA+1gqz3YJg04YM+bGFPEUqYQHo1HotKk/QKQu62wb3a0+DUdHP3LaZQ
-	 f0MfP1y+MN3ag==
-From: Sasha Levin <sashal@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: linux-perf-users@vger.kernel.org,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nicolas Schier <nsc@kernel.org>,
-	linux-kbuild@vger.kernel.org,
-	Shuah Khan <shuah@kernel.org>,
-	linux-kselftest@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH 3/6] tools: build perf in tools_build
-Date: Tue, 13 Oct 2026 13:08:53 -0400
-Message-ID: <20261013170854.647305-1-sashal@kernel.org>
-X-Mailer: git-send-email 2.53.0
-In-Reply-To: <CAP-5=fWFY-tpJz2vcBZvurwdZY5gwd8cuTemE9q1rtZ0Vi0dng@mail.gmail.com>
-References: <20261011233647.2454648-1-sashal@kernel.org> <20261011233647.2454648-4-sashal@kernel.org> <CAP-5=fWFY-tpJz2vcBZvurwdZY5gwd8cuTemE9q1rtZ0Vi0dng@mail.gmail.com>
+	s=k20260515; t=1791911586;
+	bh=xG/7/HfmonOV22Af1a0Cj6sHLtZxxJjdfDnawV8SIHs=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=aRmqcyPmx8r3MNXAIW/5F6d9Ts5mtqovBoH+GmENAtrKY8cRwKw5nR1ve4bo+uvd2
+	 t+UrdLhYiqVm4MkXAPJyHlktjVYVlixpY7t6+IWKEUB3GkYUmMuws5tNYobEVpT4uY
+	 WRa/BGp7gkc3l1u++XsXnQLbkReE0rqhf/HzgtMzWH84MMHh99WAuMEzPtnAIE3jET
+	 HKlb8Po+aIGLrSeVvF5KiGPh0hf8TgRaFnyvSdAV9hIQEODQnlIh2nH+LO3bq8eveA
+	 GSh+F2wvS79jbNDbI75I6by45vS2togNzjV4ZyqRBuZQUQLS8TSc4Q7lVSiq/Vr8Ii
+	 0cfxw/7v+4STA==
+Message-ID: <sashiko-outbox-170195@kernel.org>
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v6 12/39] selinux: reject writable opens of policy file,
+ drop mmap shared/write check
+Reply-To: sashiko-reviews@lists.linux.dev
+To: =?utf-8?b?TG9yZW56byBTdG9ha2VzIChBUk0p?= <ljs@kernel.org>
+Cc: linux-usb@vger.kernel.org, linux-rdma@vger.kernel.org, selinux@vger.kernel.org, linux-perf-users@vger.kernel.org, linux-s390@vger.kernel.org, "Heiko
+ Carstens" <hca@linux.ibm.com>, "Vasily Gorbik" <gor@linux.ibm.com>, "Alexander
+ Gordeev" <agordeev@linux.ibm.com>, "Christian Borntraeger" <borntraeger@linux.ibm.com>
+In-Reply-To: <20261013-b4-mmap-prepare-vma-flag-sanify-v6-12-1aa3c9b139f9@kernel.org>
+References: <20261013-b4-mmap-prepare-vma-flag-sanify-v6-0-1aa3c9b139f9@kernel.org>
+ <20261013-b4-mmap-prepare-vma-flag-sanify-v6-12-1aa3c9b139f9@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Tue, 13 Oct 2026 17:13:05 +0000
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-On Mon, Oct 12, 2026 at 03:07:10PM -0700, Ian Rogers wrote:
-> On Sun, Oct 11, 2026 at 4:36 PM Sasha Levin <sashal@kernel.org> wrote:
-> > +# Every optional feature off, so the result does not depend on which
-> > +# libraries are installed
-> > +perf-flags-$(CONFIG_TOOLS_BUILD_PERF_MINIMAL) += \
-> > +       NO_LIBELF=1 NO_LIBTRACEEVENT=1 NO_JEVENTS=1 NO_LIBPYTHON=1 NO_LIBDW=1 \
-> > +       NO_LIBBPF=1 BUILD_BPF_SKEL=0 NO_SLANG=1 NO_GTK2=1 NO_AIO=1 \
-> > +       NO_BACKTRACE=1 NO_DEMANGLE=1 NO_LZMA=1 NO_LIBZSTD=1 NO_ZLIB=1 \
-> > +       NO_LIBNUMA=1 NO_LIBUNWIND=1 NO_LIBLLVM=1 NO_CAPSTONE=1 NO_LIBPFM4=1 \
-> > +       NO_SDT=1 NO_JVMTI=1 NO_LIBDEBUGINFOD=1 NO_BABELTRACE2=1 NO_RUST=1 \
-> > +       NO_SHELLCHECK=1 NO_PERF_READ_VDSO32=1 NO_PERF_READ_VDSOX32=1
->
-> It seems unfortunate to maintain this list here, we also have a
-> minimal target as a build test here:
-> https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tree/tools/perf/tests/make?h=perf-tools-next#n123
-> I wonder we should just add support for a MINIMAL=1 variable in
-> tools/perf/Makefile.config and have that set these other variables.
+> The policy file has no write method and is exposed read-only (S_IRUGO in
+> selinux_files[]), yet sel_open_policy() performs no open mode check, so a
+> CAP_DAC_OVERRIDE caller can open it O_RDWR. Reject FMODE_WRITE at open, as
+> kernfs does.
+>=20
+> The file can then never be mapped with FMODE_WRITE, so do_mmap() always
+> clears VM_MAYWRITE and VM_SHARED for MAP_SHARED mappings and the VM_SHARED
+> check in sel_mmap_policy() cannot be reached. Remove it.
+>=20
+> This also stops sel_mmap_policy() clearing VM_MAYWRITE on a mapping that =
+is
+> neither a PFN map nor a mixed map, ahead of the core enforcing that only
+> such mappings may do so.
+>=20
+> Acked-by: Stephen Smalley <stephen.smalley.work@gmail.com>
+> Reviewed-by: Jann Horn <jannh@google.com>
+> Acked-by: Paul Moore <paul@paul-moore.com>
+> Reviewed-by: Suren Baghdasaryan <surenb@google.com>
+> Acked-by: David Hildenbrand (Arm) <david@kernel.org>
+> Signed-off-by: Lorenzo Stoakes (ARM) <ljs@kernel.org>
 
-Yup :(
+Sashiko has reviewed this patch and found no issues. It looks great!
 
-What allmodconfig really wants from perf is what allmodconfig already does for
-the kernel: build everything the environment supports and skip the rest. A
-kernel option that needs something the toolchain lacks just ends up off rather
-than breaking the build.
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261013-b4-mmap-pr=
+epare-vma-flag-sanify-v6-0-1aa3c9b139f9@kernel.org?part=3D12
 
-perf has no mode like that I think? A default build fails when libelf,
-libtraceevent or python is missing, so an arm64 cross build, or a native build
-without libtraceevent-dev, breaks. Turning everything off was the only way I
-found around that.
-
-Would it make sense to add such a mode to perf instead of MINIMAL=1?  A missing
-library would disable its feature with a warning rather than fail the build,
-and the mode could skip shellcheck, mypy and pylint too. allmodconfig would
-then build as much of perf as the host allows.
-
--- 
-Thanks,
-Sasha
