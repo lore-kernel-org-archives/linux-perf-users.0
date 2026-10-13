@@ -1,65 +1,77 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 323B8499F20
-	for <linux-perf-users@vger.kernel.org>; Tue, 13 Oct 2026 18:33:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A023949AA4E;
+	Tue, 13 Oct 2026 18:34:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791916404; cv=none; b=VYB5euzQLveouio2QHhH3thqrkyo1Tcs+a1kOfrpIbmIUf/vKgHp9HppUIn6VSmNtMz6eIj5IhBWlxXFaXvSvH09LNs1cATjkR6ejTWME2yfiPRe+nDe3F5RficiM1dosIFSt4Q3wpYOT24gekSnAFwesCvKoBb441nd73JOl3I=
+	t=1791916446; cv=none; b=LiRn2KSTvAoQsochtXiKWSZ5kvn4AHBcS2qjrhc6Wfqh45zBSQ44cocaxfw22xJrpmTgRd+bMifnxP78k5BSbN77VPXEJAtsII++yFxSuF476NH2qce/8S+Sf1sS69qJ4VN6QRFfwP3g6EzaK4ZWGkX/xbtzHVPCxhjYRuUC7Z0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791916404; c=relaxed/simple;
-	bh=5Vc4Q76XHicvlZFK2BoH6N71ZffkxO6m5w71uTGdF6Q=;
+	s=arc-20240116; t=1791916446; c=relaxed/simple;
+	bh=dMGTN5mN0JWgXMdT2pBrEcUif2Y/jvLE76mI/Fmy0iM=;
 	h=Message-ID:From:Subject:To:Cc:In-Reply-To:References:Content-Type:
-	 Date; b=Ckz8DpVBz0vHeTCiOMNfHyzp4o1fkEjzk76jJW2kldI9bJCDw7sQdkjpS8pyuFAeA7kEQfuxYDdHTI4PaQsx3ez5CYRdpKCwVV1UtndhqLYuZK4bLOIa7Hl74ZZvpWmFb7nrhgGbmuwfZLyRnyaXYjsgZ8R6L9rx5aUYvG/mjuA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XPtDwr60; arc=none smtp.client-ip=100.103.45.18
+	 Date; b=GwC24EOlzmzpOEpRsASvT3UkHq7XMxmCJxe5ORIjRAkP6pPYVJyIeGkgvivLcEvnZ05TIUrPD+7LnrAlpAEvOX17TxjvMg5O0NopvDcuGQTcxOZCHA3N5wND95GqpO62YvqkGzYFJWfgRNs5g1f22At5XayF3GoDefyrL+0AZFU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=A6V6YmIR; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XPtDwr60"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A5E081F000FF;
-	Tue, 13 Oct 2026 18:33:22 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="A6V6YmIR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 036011F000FF;
+	Tue, 13 Oct 2026 18:34:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1791916402;
-	bh=5Vc4Q76XHicvlZFK2BoH6N71ZffkxO6m5w71uTGdF6Q=;
+	s=k20260515; t=1791916444;
+	bh=dMGTN5mN0JWgXMdT2pBrEcUif2Y/jvLE76mI/Fmy0iM=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=XPtDwr60o1bwXDL+FtCA+finaZwtx4XcIBjQ+/Mh066BUYmAGOlSUqSlltlrpx6XP
-	 L1U81NscCWi6XKLTUdelgKKVHenivqf/7EXxwT2YKYad5JwgxHr7I6mkHHLokK1dJr
-	 3RC2196pQsGyMEwjcqYxuK0qvkvWiMLDRZTy3vYBQoloEuQ6rLdrn/PAp1D0hClPed
-	 8190rKzwXl8SBLE5NzWciuEXrEP8Ly9OWmp+AMCL1xVImCn/gzuV6Pl1LjpCgP/UON
-	 QzKBP84Q6S6g65SarmctN6smmpMNSi0meli+keQ1o18MDD2qjLNxB3mmCnm/hm0Cvv
-	 5oPMbpYGjZz0A==
-Message-ID: <sashiko-outbox-170333@kernel.org>
+	b=A6V6YmIRHW+lbrtNjwQ1jbhHJjZKJwKeRjpHste9KRVLZoFB/Gd/36Oa9kS1dE00a
+	 bJDNOtBbG0TT6RAl9vi5EACXIM+mikzSoMiLgmpdA4HhvSqj3APlDqj5LOG3iL7sA0
+	 JXnoiBTg94X0z2e380G4TnIqND6emzptYlPTDqh/ItZ92sbD2aUg84hRIaZ8wFt/hh
+	 GgljVLWcQT6x8KSszkZMigNZB67NpgpfZrmwGmcikKpyx8V3an0n7l+40Sx+26TCw6
+	 hkvmEc0lizz/jEyHasaTiCXIt1aoMTadAj9bWyTnpbqj5ZILYbnd1LVfT2r4FJ2FXX
+	 BY29H/yu3mueA==
+Message-ID: <sashiko-outbox-170334@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v1 02/10] tools headers compiler: Synchronize
- compiler_types.h with the kernel sources
+Subject: Re: [PATCH v6 19/39] fbdev: defio: assert FBINFO_VIRTFB, drop
+ VM_IO, add VM_MIXEDMAP
 Reply-To: sashiko-reviews@lists.linux.dev
-To: "Ian Rogers" <irogers@google.com>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20261013182458.1234616-3-irogers@google.com>
-References: <20261013182458.1234616-1-irogers@google.com>
- <20261013182458.1234616-3-irogers@google.com>
+To: =?utf-8?b?TG9yZW56byBTdG9ha2VzIChBUk0p?= <ljs@kernel.org>
+Cc: linux-usb@vger.kernel.org, linux-rdma@vger.kernel.org, selinux@vger.kernel.org, linux-perf-users@vger.kernel.org, linux-s390@vger.kernel.org, "Heiko
+ Carstens" <hca@linux.ibm.com>, "Vasily Gorbik" <gor@linux.ibm.com>, "Alexander
+ Gordeev" <agordeev@linux.ibm.com>, "Christian Borntraeger" <borntraeger@linux.ibm.com>
+In-Reply-To: <20261013-b4-mmap-prepare-vma-flag-sanify-v6-19-1aa3c9b139f9@kernel.org>
+References: <20261013-b4-mmap-prepare-vma-flag-sanify-v6-0-1aa3c9b139f9@kernel.org>
+ <20261013-b4-mmap-prepare-vma-flag-sanify-v6-19-1aa3c9b139f9@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Tue, 13 Oct 2026 18:33:22 +0000
+Date: Tue, 13 Oct 2026 18:34:03 +0000
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-> Synchronize the non-__KERNEL__ sections of
-> tools/include/linux/compiler_types.h and
-> tools/include/linux/compiler-gcc.h with the kernel sources (including
-> ___PASTE/__PASTE, BTF_TYPE_TAG, object-size helpers, asm_goto_output,
-> ASM_INPUT_*, asm_inline, __typeof_unqual__/__unqual_scalar_typeof,
-> __signed_scalar_typeof, __native_word, compiletime_assert, and the
-> __diag pragma helpers required by compiler-context-analysis.h), and
-> remove the duplicated definitions from tools/include/linux/compiler.h.
+> Currently all drivers which use defio allocate system memory. All of them
+> also set FBINFO_VIRTFB, other than ssd1307fb, however this driver allocat=
+es
+> system RAM, so simply failed to set this flag when it ought to.
 >=20
-> Assisted-by: Antigravity:gemini-3.1-pro
-> Signed-off-by: Ian Rogers <irogers@google.com>
+> This patch sets FBINFO_VIRTFB on ssd1307fb probe, then drops setting VM_IO
+> in fb_deferred_io_mmap() and instead requires FBINFO_VIRTFB to be set,
+> erroring out with a kernel warning if not.
+>=20
+> The logic requires a page from the driver and since commit 1ecbc7dd2902
+> ("fbdev/deferred-io: Always call get_page() for framebuffer pages") has
+> always required it to be refcounted, so this was implicitly already the
+> case.
+>=20
+> Finally this patch sets VM_MIXEDMAP, as the logic is mapping
+> kernel-allocated memory so this is appropriate.
+>=20
+> Reviewed-by: Thomas Zimmermann <tzimmermann@suse.de>
+> Reviewed-by: Suren Baghdasaryan <surenb@google.com>
+> Acked-by: David Hildenbrand (Arm) <david@kernel.org>
+> Signed-off-by: Lorenzo Stoakes (ARM) <ljs@kernel.org>
 
 Sashiko has reviewed this patch and found no issues. It looks great!
 
 --=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261013182458.1234=
-616-1-irogers@google.com?part=3D2
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261013-b4-mmap-pr=
+epare-vma-flag-sanify-v6-0-1aa3c9b139f9@kernel.org?part=3D19
 
