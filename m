@@ -1,115 +1,107 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 428B350276
-	for <linux-perf-users@vger.kernel.org>; Tue, 13 Oct 2026 00:08:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56966357D09
+	for <linux-perf-users@vger.kernel.org>; Tue, 13 Oct 2026 02:47:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791850136; cv=none; b=V9vQL9IQW98B9IDcDUc3j1CHmAsMAuUeQ3HNCEEqXSvkDrUoWyUE6rTk0Np0xHmSQLcGV+JY3FoKw1JCCOXMcHHM0JB9mkKf+YIFOYqR2XUyGBjxIcfpIplEvIeGAD5F0EuQrfOGnoYKsiaOhjUXWiwYD+PmRbWfntOqQbUsCzg=
+	t=1791859633; cv=none; b=Vg+ZVPm6iOemNe92nkN9L6fBoavo23U7loWWpjqfrnoe3/axcaXjy2kPNPDnpnmaDC2kcq/W6KDHn476QQ3lZeItJBbDSiAaDAvKsT8RyUG7DGd2HfihXhugshnS28oviuQntiBvlo5vL23bSTKOHT/5/WW6HttAQ0g01psQh4U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791850136; c=relaxed/simple;
-	bh=qSRAbtrV2DhRompV/Ss6tnE5oAQbkv1uYQX6Sh7wSis=;
-	h=Message-ID:From:Subject:To:Cc:In-Reply-To:References:Content-Type:
-	 Date; b=bH1nnbY5GJcgnI84XBiWQXNarsxAquphTFjoSjytQjgbzrxLjZCcq0C4ZOBFjjQtkE3sfM4QoSwp2G9o+OV+V+ibll/OoC0zJQ5+CuJZZYA5VHtZ3ddgSBDR4g1v5A7JqcHikXKGKvS+th6sLJriN2itAV+PfmXJQPfNCcD3L7c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VW9sPCRW; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1791859633; c=relaxed/simple;
+	bh=e5qJ7/cHRftpI/ExivZm6EQbTQ/U1hWJ1r+cnnvzTAQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=SUZhAxfMBhGvMjR0QRjLGEXt7q8Szwh4yMdqZk6LfcQvwy63FiZBBaZXEbqBIZB5oGCZmy8e0KFz+Be29mkYLZoEWWZ/0KCwb81vU4oIOlBIJphnOr26hUj8NE66xLgEjEpz7vqApEn/qmzug54rVpJ55MLN5r3UVl76c3i62pQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HbLdQSZ7; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VW9sPCRW"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BBD671F0089B;
-	Tue, 13 Oct 2026 00:08:54 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HbLdQSZ7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E166B1F008A1
+	for <linux-perf-users@vger.kernel.org>; Tue, 13 Oct 2026 02:47:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1791850134;
-	bh=JLXwwifOAr/Rx+FFAFM9/3lYbWkVombXcfQffP0XDB4=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=VW9sPCRWfi7KFpGbb8qrS0/rMRnGUJ4txkbo6Lpe61aR0weS06PT744oVedUMEWqp
-	 J3o3VuXb7efJ7Y0sRUexA5QYf5rtiw33ZKgNHm6YwUTUwBOJITmJbBQu0euGnR4Yw1
-	 boo99cCfUHZGNeINwGqS4beyYFOCH8BTgV9oRHoND3b0zU8o7DTMWSoKpFvQ5XLbZ3
-	 Nt7RUDNam0m3bpkBMDyEW3jxeeKxJnNzDeFjewjVed5/fC2GrrBfGc7Iqu3jRFKIYY
-	 O44psC6tYmzeOx3rIu9Kff14PZ8iCWki3NeJyDxoNAdrZ1neiNWSaca1aiEVaicIkG
-	 00bQtBZiQK9cw==
-Message-ID: <sashiko-outbox-168781@kernel.org>
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v3 4/4] perf test: Update PE file test for other
- locations
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Namhyung Kim" <namhyung@kernel.org>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20261012235938.87912-4-namhyung@kernel.org>
-References: <20261012235938.87912-1-namhyung@kernel.org>
- <20261012235938.87912-4-namhyung@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Tue, 13 Oct 2026 00:08:54 +0000
+	s=k20260515; t=1791859631;
+	bh=Py5W+zOf8jcv9SphAVIYRIsYaiROXNPiORfkJ1reQcA=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc;
+	b=HbLdQSZ7lUz9oL05RWz6k+V6Qv3JS5sb152wnuh9/C7fqzhiLnol9W4Zo/AYHud5+
+	 G9kAB19LQKv+cDKB7IHLRfqSBGQmXA5Zjuv8mZFFEkFrZaCX93O2qHj9diPwd7wT/o
+	 iQxSjMRoHzmyMWaMQng0yWVlJzy3frz4iMdaiYe0qKzQcNccon0pYeugOwWqt63NKk
+	 CvskBZhjH7jFs18BsTCEE/HnXlyziHvOoW2FIvNg/52GfWxYuRgsYprVUK5/LSneiD
+	 nUyyAsuRweVt25aLYJHkWXWRZ6RYIZ/Ppmq8Ce0nTi6sOXlUmqso/KpyfuXJcscrNw
+	 d9zzw0VVzbABw==
+Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-6b1aa377c61so2619003a12.3
+        for <linux-perf-users@vger.kernel.org>; Mon, 12 Oct 2026 19:47:11 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AKwUvBxq6YhegO6bTXVebhcB17Wn0YzV191fUmoqogBcVvrEfuTD+HLSTpXvyHQZX6sKhY8FaW0pzhhQA7zbmeQMrPBF@vger.kernel.org
+X-Gm-Message-State: AFq9FYLcEzbKX+JGZ9g/lHS0tRsSuX5g5Tvnv2z2j2FRE7e+HS6VW99d
+	nyojqeY4e+tw7e/kIQ8ue9DsIx+GcOcgdcGJUwIg3QjOoeevMNF9MLJnVfFI8etxaRmN9I5hbJL
+	HV9i4+FIcD6LlHocMwZ4qSbLb8nlIe+0=
+X-Received: by 2002:a05:6402:1d49:b0:6b1:c327:a9d0 with SMTP id
+ 4fb4d7f45d1cf-6b1c327b8acmr3296104a12.40.1791859630439; Mon, 12 Oct 2026
+ 19:47:10 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+References: <20261012090431.TF3iVDsk@linutronix.de> <CAAhV-H4=nnhbJS4srmt7dNdgpkEZ8_RQ5Z+0baYMiXF1UrJ3KA@mail.gmail.com>
+ <20261012102143.lpVrHb9R@linutronix.de>
+In-Reply-To: <20261012102143.lpVrHb9R@linutronix.de>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Tue, 13 Oct 2026 10:46:59 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H7xME-UrgMHcfY41793yxWyvgEMAufwgcboEL2q3Jg+VA@mail.gmail.com>
+X-Gm-Features: AclHuK-5nGNIjnalns2TTYeuiR7MEop7yTmsqLsf4e42_RR9QXEQZeMe2PdFpnw
+Message-ID: <CAAhV-H7xME-UrgMHcfY41793yxWyvgEMAufwgcboEL2q3Jg+VA@mail.gmail.com>
+Subject: Re: [PATCH v4] ARM, ARM64, LONGARCH, XTENSA: Delay HW BP notification
+ to task_work()
+To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	linux-rt-devel@lists.linux.dev, linux-perf-users@vger.kernel.org, 
+	loongarch@lists.linux.dev, Mark Rutland <mark.rutland@arm.com>, 
+	Ian Rogers <irogers@google.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Catalin Marinas <catalin.marinas@arm.com>, Oleg Nesterov <oleg@redhat.com>, 
+	WANG Xuerui <kernel@xen0n.name>, Will Deacon <will@kernel.org>, 
+	Russell King <linux@armlinux.org.uk>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Ingo Molnar <mingo@redhat.com>, 
+	Waiman Long <longman@redhat.com>, Clark Williams <clrkwllms@kernel.org>, 
+	"Luis Claudio R. Goncalves" <lgoncalv@redhat.com>, James Clark <james.clark@linaro.org>, 
+	Steven Rostedt <rostedt@goodmis.org>, Arnaldo Carvalho de Melo <acme@kernel.org>, 
+	Namhyung Kim <namhyung@kernel.org>, Chris Zankel <chris@zankel.net>, 
+	Max Filippov <jcmvbkbc@gmail.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Jiri Olsa <jolsa@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
-s) to consider:
-- [Low] perf test: unconditional leak of get_argv_exec_path() and NULL deref
---
+On Mon, Oct 12, 2026 at 6:21=E2=80=AFPM Sebastian Andrzej Siewior
+<bigeasy@linutronix.de> wrote:
+>
+> On 2026-10-12 18:15:51 [+0800], Huacai Chen wrote:
+> > Hi, Sebastian,
+> Hi Huacai,
+>
+> > > diff --git a/include/linux/hw_breakpoint.h b/include/linux/hw_breakpo=
+int.h
+> > > index db199d653dd1a..91e8d80220c54 100644
+> > > --- a/include/linux/hw_breakpoint.h
+> > > +++ b/include/linux/hw_breakpoint.h
+> > > @@ -85,6 +85,9 @@ extern int register_perf_hw_breakpoint(struct perf_=
+event *bp);
+> > >  extern void unregister_hw_breakpoint(struct perf_event *bp);
+> > >  extern void unregister_wide_hw_breakpoint(struct perf_event * __perc=
+pu *cpu_events);
+> > >  extern bool hw_breakpoint_is_used(void);
+> > > +extern void perf_arch_hwbp_send_sig(struct perf_event *bp);
+> > > +extern void perf_hwbp_notify(struct perf_event *bp, struct perf_samp=
+le_data *data,
+> > > +                            struct pt_regs *regs);
+> > Maybe this declaration can be put in one line because there is no 80
+> > characters limit now.
+>
+> We don't save much, do we? It looks more readable. Maybe if the perf
+> maintainer requests it. Looks like waste to repost it just for that.
+>
+> Any comments on the looong bits?
+Others look good to me.
+Reviewed-by: Huacai Chen <chenhuacai@loongson.cn>
 
-commit 9107444f4267d3db60d0e4c357f3b28957bdb1bc
-Author: Namhyung Kim <namhyung@kernel.org>
-
-perf test: Update PE file test for other locations
-
-This commit updates the PE file parsing test to check multiple directory pa=
-ths
-for the test data. The logic is modified to try other paths similar to the
-shell_tests__dir_fd() fallback mechanism.
-
-> diff --git a/tools/perf/tests/pe-file-parsing.c b/tools/perf/tests/pe-fil=
-e-parsing.c
-> index 3979f38bf127c..190520ffc3ad6 100644
-> --- a/tools/perf/tests/pe-file-parsing.c
-> +++ b/tools/perf/tests/pe-file-parsing.c
-> @@ -74,17 +74,20 @@ static int test__pe_file_parsing(struct test_suite *t=
-est __maybe_unused,
->  {
->  	struct stat st;
->  	char path_dir[PATH_MAX];
-> -
-> -	/* First try development tree tests. */
-> -	if (!lstat("./tests", &st))
-> -		return run_dir("./tests");
-> -
-> -	/* Then installed path. */
-> +	const char * const tests_dirs[] =3D {
-> +		"./tools/perf/tests",
-> +		"./tests",
-> +		"./source/tests",
-> +		path_dir,
-> +	};
->  	snprintf(path_dir, PATH_MAX, "%s/tests", get_argv_exec_path());
-
-[Severity: Low]
-Can this code in test__pe_file_parsing() lead to a memory leak and a potent=
-ial
-NULL pointer dereference?
-
-The get_argv_exec_path() function returns a dynamically allocated string th=
-at
-must be freed by the caller. Passing it directly to snprintf() inline causes
-the pointer to be permanently lost.
-
-Additionally, since the patch moved this snprintf() call before the directo=
-ry
-search loop, it now unconditionally allocates this string even if an earlier
-directory in the tests_dirs array would have succeeded.
-
-Furthermore, if get_argv_exec_path() fails under memory pressure and returns
-NULL, snprintf("%s") could crash on strictly compliant libcs like musl.
-
-> =20
-> -	if (!lstat(path_dir, &st))
-> -		return run_dir(path_dir);
-> +	for (size_t i =3D 0; i < ARRAY_SIZE(tests_dirs); ++i) {
-> +		if (!lstat(tests_dirs[i], &st))
-> +			return run_dir(tests_dirs[i]);
-> +	}
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261012235938.8791=
-2-1-namhyung@kernel.org?part=3D4
+>
+> > Huacai
+>
+> Sebastian
