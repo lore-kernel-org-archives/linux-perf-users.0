@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FED75437F1;
-	Tue, 13 Oct 2026 20:15:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7DA1550DA3;
+	Tue, 13 Oct 2026 20:15:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791922514; cv=none; b=qX3IyKdFBCkjFjjunkWXubk2TzUuVK3jiXGhSf01C5JgXLHk+QSyWgJClofIFb1LzsHAJ/CtalUxKQ0m0qh+W5Yk+sDUiYWLvV6wMgkTHcRex4xZaQ+Fi2OQ9qDiMdqRfjL1GmfGUvYLjzjmugeY0oYKW83wfyarcypc60uboTU=
+	t=1791922518; cv=none; b=gDlwcR0cNMDCLZEVC69/luA0MiEsuMOG49OniG00s8cnBEWo4a3lehx5O1CaOI2taeUBQbCZOR61yCcusKsSzC2RkiuDal5lgprZeL39RjruiAMYwoI6XcAby6MBf9eeewaoqwyANpE6Ns8+/j7POb5RkE35gCyQj4IuH8lOiAM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791922514; c=relaxed/simple;
-	bh=v4ExAQ1ys6sFCnFEXdwWFegUC+svoGuSzL/Juygp1O0=;
+	s=arc-20240116; t=1791922518; c=relaxed/simple;
+	bh=LvIIektRJ6zWQgpnDbNNAGO7y+H0AlXggVtf1PrEIr8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=W1pR+RG06RLDVEUql9FCCHBtDG9KfmO4hFhEbSKnQ9z0irESCXZPrxBwACv9B7DhePCoUYTpDLolRdXDs5V+c2glChhpYyMB6s/HtvDvpnX99mArJbZloaTY6NjHgrgOScM1fg/hEL8T6iZoV+6IcExI8NzVtIc6yaxnw/g4IHc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GptN9f0R; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version; b=sCJSOecg6+3Ue8dg+XSrR4EmAkkyYuQeMPh2OI4EdS+SeEfM83Yw4LQ5HWD++vtLPCTpgLeQGPypT+DMKJL7pb86GsRFDEJwk4/fk/FdynUtfXPC2XOZVInu7GpgZ6tcT6m1Gq4g3yhdwmQwoCRcq9RUi2ee7G+ICzxu62ghkNU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mkQ8rIt6; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GptN9f0R"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 18A7D1F00893;
-	Tue, 13 Oct 2026 20:15:09 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mkQ8rIt6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E35DD1F00898;
+	Tue, 13 Oct 2026 20:15:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1791922512;
-	bh=je6B2bmfWa+j+yEFsXQ/4UZ8t6eGtjdyakVUMjvqZJs=;
+	s=k20260515; t=1791922515;
+	bh=4AkBF9FQzFUndSNeNoNZVnCsbgmV4lpHBU2ylSj82H0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=GptN9f0R37BxJw5GlW9XAjIfuPTr7hV9Zrct9wyxNBQWTnO99O+QEW17AQ4a1Uvce
-	 Rc2xEBCrOrmI7UycDKt2SovD/xcV50ORAQB9ZcV+n1ZHo7tJGJlsUm3IHGhHOmXM23
-	 tBveTVkrG2z2fge8zorBAxE5enn4fy9xam34axqu7EcpGcgJn8t8HNLIe5YCfm/AjT
-	 RO2O46pd+RZuNneqiX2+iPR3n4diXhgIuEnOO5prGyOBYJHe5BW8YvZ2iPt9nSIx7C
-	 UE8G+ed1PpQDCMEJHdAVgAEEnXUjvLFPNJaekivaJpVV98YuQWrpKEARr4OCrexM2y
-	 mhpcwYDxwbf6Q==
+	b=mkQ8rIt6u6IPoAOpLtPDE8r6GQBSTXqJfD+U2TRpSzDc8M+4Yz8nKKpPGf370yo0z
+	 pvJ7WKlkLK9QliOZRSOZhY1LF9RnW7hF5owGWvLZ5hpANDGNcpSAy+8pwHAzriBmu+
+	 LUWjQbW9ntz3Xd1ldQ9Vg4tgKnF2gimadGOB4Lbh2mTESGJxcHtdCnRgQtKoWo/KTM
+	 PJVCXZvW9I5ZOxDsZ8Z/2EYOG1O3zDylwTNIyL5DzwDMVflw5hvGH4Wash/MgE4eIk
+	 UfqVv47h1D5o9zOU6d8elcFqK77T9hfWHB/4R7C6kfK0d/qxH2N4IecJ45ea98j5kO
+	 6/yG9Kr/8YVAw==
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Namhyung Kim <namhyung@kernel.org>
 Cc: Ingo Molnar <mingo@kernel.org>,
@@ -38,9 +38,9 @@ Cc: Ingo Molnar <mingo@kernel.org>,
 	linux-kernel@vger.kernel.org,
 	linux-perf-users@vger.kernel.org,
 	Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH v2 16/19] perf mutex: Add a robust, process-shared mutex initializer
-Date: Tue, 13 Oct 2026 17:14:11 -0300
-Message-ID: <20261013201415.36428-17-acme@kernel.org>
+Subject: [PATCH v2 17/19] perf test: Take turns using the perf mlock budget in the mmaping tests
+Date: Tue, 13 Oct 2026 17:14:12 -0300
+Message-ID: <20261013201415.36428-18-acme@kernel.org>
 X-Mailer: git-send-email 2.55.0
 In-Reply-To: <20261013201415.36428-1-acme@kernel.org>
 References: <20261013201415.36428-1-acme@kernel.org>
@@ -54,274 +54,211 @@ Content-Transfer-Encoding: 8bit
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-A mutex held by a process that can die before unlocking it, like the
-tests forked by 'perf test' that will take turns using the per user
-budget set in kernel.perf_event_mlock_kb, has to be taken over by the
-next locker instead of staying locked forever.
+The mmap size used when none is asked for is derived from
+kernel.perf_event_mlock_kb itself (see perf_event_mlock_kb_in_pages()),
+that after rounding down to a power of two number of pages ends up being
+about all of a single CPU's share of that per user budget, so with 'perf
+test' starting all the selected tests at once, any further mapping done
+while another test still has its ring buffers mapped fails with:
 
-Robust mutexes, on top of the kernel's robust futexes, do that: when an
-owner dies while holding it the kernel marks the futex word owner-died
-and the next pthread_mutex_lock() returns EOWNERDEAD, then mutex_lock()
-makes it consistent and takes it over.
+  Permission error mapping pages.
+  Consider increasing /proc/sys/kernel/perf_event_mlock_kb,
+  or try again with a smaller value of -m/--mmap_pages.
 
-Add mutex_init_pshared_robust(), returning false when robust mutexes
-aren't available: from libcs without the API, gated by a feature check,
-to musl and glibc refusing them at runtime, when get_robust_list(2) or
-set_robust_list(2) aren't usable.  glibc only sets a flag in
-pthread_mutexattr_setrobust(), refusing the mutex itself in
-pthread_mutex_init() with ENOTSUP instead.  Neither is an error, so
-nothing is printed about them.
+that then shows up as a failure or, worse, as an "unsupp" skip in tests
+like the attr ones, i.e. as a false pass.
+
+Instead of making those tests exclusive, which would serialize them
+against every other test, keep them running in parallel with the tests
+that don't map ring buffers and have them take turns using the budget,
+via a robust, process-shared mutex (see mutex_init_pshared_robust()) in
+a MAP_SHARED|MAP_ANONYMOUS area that is inherited by the forked test
+processes: a test killed by a signal doesn't leave the budget locked,
+the kernel marks the mutex owner-died and the next locker takes it over.
+
+Perf's struct mutex is used, so the lock discipline is checked in clang
+builds via -Wthread-safety; as the thread safety analysis can't verify
+conditionally held locks, the tests that map ring buffers run through a
+helper taking the mutex unconditionally around the test function call.
+
+Robust mutexes aren't always available, at build time or, as glibc and
+musl can do when get_robust_list(2)/set_robust_list(2) aren't usable, at
+run time: in that case the budget is not shared and the tests run as
+before, failing or skipping on starvation instead of hanging on a lock
+left behind by a test killed by a signal.
+
+The area is shared by the tests of one 'perf test' invocation only: a
+second invocation running at the same time maps its own, so the two
+don't take turns with each other.
+
+The sysctl is left alone.  Growing it, to leave room for whatever else
+the user has running, would need the original value shared between the
+invocations, so that the last one out puts it back, and it only helps a
+user who can write the sysctl but lacks CAP_IPC_LOCK, the one capability
+that lifts the limit.
+
+None of this is done when just one of the selected tests maps ring
+buffers, as there is nothing to share the budget with in that case.
 
 Assisted-by: LLM
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/build/Makefile.feature                  |  1 +
- tools/build/feature/Makefile                  |  4 +
- tools/build/feature/test-all.c                |  5 ++
- .../build/feature/test-pthread-mutex-robust.c | 19 ++++
- tools/perf/Makefile.config                    |  4 +
- tools/perf/util/mutex.c                       | 86 ++++++++++++++++---
- tools/perf/util/mutex.h                       |  5 ++
- 7 files changed, 112 insertions(+), 12 deletions(-)
- create mode 100644 tools/build/feature/test-pthread-mutex-robust.c
+ tools/perf/tests/builtin-test.c | 94 ++++++++++++++++++++++++++++++++-
+ 1 file changed, 93 insertions(+), 1 deletion(-)
 
-diff --git a/tools/build/Makefile.feature b/tools/build/Makefile.feature
-index dbef5b6c4e43c857..4d37d11f674c5bd5 100644
---- a/tools/build/Makefile.feature
-+++ b/tools/build/Makefile.feature
-@@ -85,6 +85,7 @@ FEATURE_TESTS_BASIC :=                  \
-         libcpupower                     \
-         pthread-attr-setaffinity-np     \
-         pthread-barrier     		\
-+        pthread-mutex-robust		\
-         reallocarray                    \
-         stackprotector-all              \
-         timerfd                         \
-diff --git a/tools/build/feature/Makefile b/tools/build/feature/Makefile
-index 62f9cbf3dee97936..10340a5372242e05 100644
---- a/tools/build/feature/Makefile
-+++ b/tools/build/feature/Makefile
-@@ -41,6 +41,7 @@ FILES=                                          \
-          $(foreach arch,$(LIBUNWIND_ARCHS),test-libunwind-$(arch).bin test-libunwind-debug-frame-$(arch).bin) \
-          test-pthread-attr-setaffinity-np.bin   \
-          test-pthread-barrier.bin		\
-+         test-pthread-mutex-robust.bin		\
-          test-stackprotector-all.bin            \
-          test-timerfd.bin                       \
-          test-babeltrace2-ctf-writer.bin        \
-@@ -128,6 +129,9 @@ $(OUTPUT)test-pthread-attr-setaffinity-np.bin:
- $(OUTPUT)test-pthread-barrier.bin:
- 	$(BUILD) -lpthread
+diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-test.c
+index acffa0d0d33d6d30..8d6e652d3af25afe 100644
+--- a/tools/perf/tests/builtin-test.c
++++ b/tools/perf/tests/builtin-test.c
+@@ -32,6 +32,9 @@
+ #include <subcmd/parse-options.h>
+ #include <subcmd/run-command.h>
  
-+$(OUTPUT)test-pthread-mutex-robust.bin:
-+	$(BUILD) -lpthread
++#include <signal.h>
++#include <sys/mman.h>
 +
- $(OUTPUT)test-stackprotector-all.bin:
- 	$(BUILD) -fstack-protector-all
- 
-diff --git a/tools/build/feature/test-all.c b/tools/build/feature/test-all.c
-index 0ee16eccd9e05788..4a6890290f7462a7 100644
---- a/tools/build/feature/test-all.c
-+++ b/tools/build/feature/test-all.c
-@@ -90,6 +90,10 @@
- # include "test-pthread-barrier.c"
- #undef main
- 
-+#define main main_test_pthread_mutex_robust
-+# include "test-pthread-mutex-robust.c"
-+#undef main
-+
- #define main main_test_scandirat
- # include "test-scandirat.c"
- #undef main
-@@ -167,6 +171,7 @@ int main(int argc, char *argv[])
- 	main_test_zlib();
- 	main_test_pthread_attr_setaffinity_np();
- 	main_test_pthread_barrier();
-+	main_test_pthread_mutex_robust();
- 	main_test_lzma();
- 	main_test_bpf();
- 	main_test_scandirat();
-diff --git a/tools/build/feature/test-pthread-mutex-robust.c b/tools/build/feature/test-pthread-mutex-robust.c
-new file mode 100644
-index 0000000000000000..33241fbde3eab87f
---- /dev/null
-+++ b/tools/build/feature/test-pthread-mutex-robust.c
-@@ -0,0 +1,19 @@
-+// SPDX-License-Identifier: GPL-2.0
-+#include <stdint.h>
-+#include <pthread.h>
-+
-+int main(void)
-+{
-+	pthread_mutexattr_t attr;
-+	pthread_mutex_t mtx;
-+
-+	pthread_mutexattr_init(&attr);
-+	pthread_mutexattr_setpshared(&attr, PTHREAD_PROCESS_SHARED);
-+	pthread_mutexattr_setrobust(&attr, PTHREAD_MUTEX_ROBUST);
-+	pthread_mutex_init(&mtx, &attr);
-+	pthread_mutex_consistent(&mtx);
-+	pthread_mutex_destroy(&mtx);
-+	pthread_mutexattr_destroy(&attr);
-+
-+	return 0;
-+}
-diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
-index cafc7be79643b26c..b4764f69f47f4d8c 100644
---- a/tools/perf/Makefile.config
-+++ b/tools/perf/Makefile.config
-@@ -417,6 +417,10 @@ ifeq ($(feature-pthread-barrier), 1)
-   CFLAGS += -DHAVE_PTHREAD_BARRIER
- endif
- 
-+ifeq ($(feature-pthread-mutex-robust), 1)
-+  CFLAGS += -DHAVE_PTHREAD_MUTEX_ROBUST
-+endif
-+
- ifndef NO_BIONIC
-   $(call feature_check,bionic)
-   ifeq ($(feature-bionic), 1)
-diff --git a/tools/perf/util/mutex.c b/tools/perf/util/mutex.c
-index 7aa1f3f55a7d4089..712fbf839d59085f 100644
---- a/tools/perf/util/mutex.c
-+++ b/tools/perf/util/mutex.c
-@@ -17,37 +17,84 @@ static void check_err(const char *fn, int err)
- 
- #define CHECK_ERR(err) check_err(__func__, err)
- 
--static void __mutex_init(struct mutex *mtx, bool pshared, bool recursive)
-+static bool __mutex_init(struct mutex *mtx, bool pshared, bool recursive, bool robust)
- {
- 	pthread_mutexattr_t attr;
-+	bool ok = false;
-+	int err;
- 
--	CHECK_ERR(pthread_mutexattr_init(&attr));
-+	err = pthread_mutexattr_init(&attr);
-+	if (err)
-+		goto out;
- 
- #ifndef NDEBUG
- 	/* In normal builds enable error checking, such as recursive usage. */
--	CHECK_ERR(pthread_mutexattr_settype(&attr, PTHREAD_MUTEX_ERRORCHECK));
-+	err = pthread_mutexattr_settype(&attr, PTHREAD_MUTEX_ERRORCHECK);
-+	if (err)
-+		goto out_destroy;
- #endif
--	if (recursive)
--		CHECK_ERR(pthread_mutexattr_settype(&attr, PTHREAD_MUTEX_RECURSIVE));
--	if (pshared)
--		CHECK_ERR(pthread_mutexattr_setpshared(&attr, PTHREAD_PROCESS_SHARED));
--	CHECK_ERR(pthread_mutex_init(&mtx->lock, &attr));
--	CHECK_ERR(pthread_mutexattr_destroy(&attr));
-+	if (recursive) {
-+		err = pthread_mutexattr_settype(&attr, PTHREAD_MUTEX_RECURSIVE);
-+		if (err)
-+			goto out_destroy;
-+	}
-+	if (pshared) {
-+		err = pthread_mutexattr_setpshared(&attr, PTHREAD_PROCESS_SHARED);
-+		if (err)
-+			goto out_destroy;
-+	}
-+	if (robust) {
-+#ifdef HAVE_PTHREAD_MUTEX_ROBUST
-+		err = pthread_mutexattr_setrobust(&attr, PTHREAD_MUTEX_ROBUST);
-+		if (err)
-+			goto out_unavailable;
-+#else
-+		goto out_unavailable;
-+#endif
-+	}
-+
-+	err = pthread_mutex_init(&mtx->lock, &attr);
-+	if (!err)
-+		ok = true;
-+	else if (robust && pshared)
-+		/*
-+		 * glibc refuses a robust process shared mutex with ENOTSUP when
-+		 * set_robust_list(2) isn't usable, i.e. when the machine provides
-+		 * no robust mutexes for the process shared case: an unavailable
-+		 * API, not a bad request.
-+		 */
-+		err = 0;
-+out_destroy:
-+	pthread_mutexattr_destroy(&attr);
-+out:
-+	if (err)
-+		CHECK_ERR(err);
-+
-+	return ok;
-+
-+out_unavailable:
-+	pthread_mutexattr_destroy(&attr);
-+	return false;
- }
- 
- void mutex_init(struct mutex *mtx)
- {
--	__mutex_init(mtx, /*pshared=*/false, /*recursive=*/false);
-+	__mutex_init(mtx, /*pshared=*/false, /*recursive=*/false, /*robust=*/false);
- }
- 
- void mutex_init_pshared(struct mutex *mtx)
- {
--	__mutex_init(mtx, /*pshared=*/true, /*recursive=*/false);
-+	__mutex_init(mtx, /*pshared=*/true, /*recursive=*/false, /*robust=*/false);
- }
- 
- void mutex_init_recursive(struct mutex *mtx)
- {
--	__mutex_init(mtx, /*pshared=*/false, /*recursive=*/true);
-+	__mutex_init(mtx, /*pshared=*/false, /*recursive=*/true, /*robust=*/false);
-+}
-+
-+bool mutex_init_pshared_robust(struct mutex *mtx)
-+{
-+	return __mutex_init(mtx, /*pshared=*/true, /*recursive=*/false, /*robust=*/true);
- }
- 
- void mutex_destroy(struct mutex *mtx)
-@@ -58,7 +105,22 @@ void mutex_destroy(struct mutex *mtx)
- void mutex_lock(struct mutex *mtx)
- 	NO_THREAD_SAFETY_ANALYSIS
- {
-+#ifdef HAVE_PTHREAD_MUTEX_ROBUST
-+	int err = pthread_mutex_lock(&mtx->lock);
-+
-+	/*
-+	 * A robust mutex whose owner died while holding it comes back as
-+	 * EOWNERDEAD, marked by the kernel: take it over.
-+	 */
-+	if (err == EOWNERDEAD) {
-+		pr_debug("mutex: taking over one left by a dead owner\n");
-+		CHECK_ERR(pthread_mutex_consistent(&mtx->lock));
-+	} else {
-+		CHECK_ERR(err);
-+	}
-+#else
- 	CHECK_ERR(pthread_mutex_lock(&mtx->lock));
-+#endif
- }
- 
- void mutex_unlock(struct mutex *mtx)
-diff --git a/tools/perf/util/mutex.h b/tools/perf/util/mutex.h
-index 5554937675886ef3..fcac92d307fb7dad 100644
---- a/tools/perf/util/mutex.h
-+++ b/tools/perf/util/mutex.h
-@@ -142,6 +142,11 @@ void mutex_init(struct mutex *mtx);
- void mutex_init_pshared(struct mutex *mtx);
- /* Initializes a mutex that may be recursively held on the same thread. */
- void mutex_init_recursive(struct mutex *mtx);
+ #include "builtin.h"
+ #include "color.h"
+ #include "config.h"
+@@ -42,6 +45,7 @@
+ #include "symbol.h"
+ #include "tests-scripts.h"
+ #include "tests.h"
++#include "util/mutex.h"
+ #include "util/rlimit.h"
+ #include "util/strbuf.h"
+ #include "util/term.h"
+@@ -62,6 +66,17 @@ static bool list_requisites;
+ static unsigned int runs_per_test = 1;
+ /* Number of lines to include in failure snippet. */
+ static unsigned int failure_snippet_lines = 10;
 +/*
-+ * As mutex_init_pshared(), plus the robust attribute: a process dying while
-+ * holding it doesn't leave it locked.  Returns false when not available.
++ * The tests mapping ring buffers take turns using their share of
++ * kernel.perf_event_mlock_kb via this mutex, shared with the forked test
++ * processes and robust so that a test killed while holding it doesn't leave
++ * the budget locked, see mutex_init_pshared_robust().
 + */
-+bool mutex_init_pshared_robust(struct mutex *mtx);
- void mutex_destroy(struct mutex *mtx);
++struct mlock_budget {
++	struct mutex lock;
++};
++
++static struct mlock_budget *mlock_budget;
+ const char *dso_to_test;
+ const char *test_objdump_path = "objdump";
+ static const char *workload_control;
+@@ -378,12 +393,30 @@ static void child_test_sig_handler(int sig)
+ 	siglongjmp(run_test_jmp_buf, sig);
+ }
  
- void mutex_lock(struct mutex *mtx) EXCLUSIVE_LOCK_FUNCTION(*mtx);
++static int run_test_case(struct child_test *child)
++{
++	return test_function(child->test, child->test_case_num)(child->test, child->test_case_num);
++}
++
++/* The thread safety analysis can't express a lock held conditionally. */
++static int run_test_case_mlocked(struct child_test *child)
++{
++	int err;
++
++	mutex_lock(&mlock_budget->lock);
++	err = run_test_case(child);
++	mutex_unlock(&mlock_budget->lock);
++
++	return err;
++}
++
+ static int run_test_child(struct child_process *process)
+ {
+ 	const int signals[] = {
+ 		SIGABRT, SIGBUS, SIGFPE, SIGILL, SIGINT, SIGPIPE, SIGQUIT, SIGSEGV, SIGTERM,
+ 	};
+ 	struct child_test *child = container_of(process, struct child_test, process);
++	bool needs_mlock = mlock_budget && child->test->needs_mlock;
+ 	int err;
+ 
+ 	close_parent_fds();
+@@ -400,7 +433,12 @@ static int run_test_child(struct child_process *process)
+ 
+ 	pr_debug("---- start ----\n");
+ 	pr_debug("test child forked, pid %d\n", getpid());
+-	err = test_function(child->test, child->test_case_num)(child->test, child->test_case_num);
++
++	if (needs_mlock)
++		err = run_test_case_mlocked(child);
++	else
++		err = run_test_case(child);
++
+ 	pr_debug("---- end(%d) ----\n", err);
+ 
+ 	check_leaks();
+@@ -1776,6 +1814,59 @@ static struct test_suite **build_suites(void)
+ #undef for_each_suite
+ }
+ 
++static bool perf_test__shares_mlock_budget(struct test_suite **suites, int argc,
++					   const char *argv[], struct intlist *skiplist)
++{
++	int sharing = 0;
++
++	/* Nothing to share the budget with if just one test maps ring buffers. */
++	for (int curr_suite = 0; suites[curr_suite]; curr_suite++) {
++		struct test_suite *t = suites[curr_suite];
++		int curr_test_case;
++		bool suite_matched;
++
++		if (!t->needs_mlock || intlist__find(skiplist, curr_suite + 1))
++			continue;
++
++		suite_matched = perf_test__matches(test_description(t, /*test_case=*/-1),
++						   curr_suite, argc, argv);
++		test_suite__for_each_test_case(t, curr_test_case) {
++			if (test_exclusive(t, curr_test_case))
++				continue;
++
++			if (suite_matched ||
++			    perf_test__matches(test_description(t, curr_test_case),
++					       curr_suite, argc, argv))
++				sharing += runs_per_test;
++		}
++		if (sharing > 1)
++			return true;
++	}
++	return false;
++}
++
++static void perf_test__setup_mlock_budget(struct test_suite **suites, int argc,
++					  const char *argv[], struct intlist *skiplist)
++{
++	/* Nothing runs at the same time, nothing to share the budget with. */
++	if (sequential || !perf_test__shares_mlock_budget(suites, argc, argv, skiplist))
++		return;
++
++	mlock_budget = mmap(NULL, sizeof(*mlock_budget), PROT_READ | PROT_WRITE,
++			    MAP_SHARED | MAP_ANONYMOUS, /*fd=*/-1, /*offset=*/0);
++	if (mlock_budget == MAP_FAILED) {
++		mlock_budget = NULL;
++		pr_err("Failed to map the shared area used to take turns using the perf mlock budget\n");
++		return;
++	}
++
++	if (!mutex_init_pshared_robust(&mlock_budget->lock)) {
++		munmap(mlock_budget, sizeof(*mlock_budget));
++		mlock_budget = NULL;
++		pr_debug("Robust mutexes aren't available, not taking turns using the perf mlock budget\n");
++	}
++}
++
+ int cmd_test(int argc, const char **argv)
+ {
+ 	const char *test_usage[] = {
+@@ -1884,6 +1975,7 @@ int cmd_test(int argc, const char **argv)
+ 		intlist__delete(skiplist);
+ 		return err ? -err : -ENOMEM;
+ 	}
++	perf_test__setup_mlock_budget(suites, argc, argv, skiplist);
+ 	ret = __cmd_test(suites, argc, argv, skiplist);
+ 	free(suites);
+ 	intlist__delete(skiplist);
 -- 
 2.55.0
 
