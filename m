@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E891054DAC6;
-	Tue, 13 Oct 2026 20:15:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27F9E54CF68;
+	Tue, 13 Oct 2026 20:15:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791922508; cv=none; b=ELSvQTuVJSn3f5aCt778LjUYB0vcqln5LZiFtSBXuyn0GhD3joTrxhNtBDTDXjHQPrPzD/Wo/7sOmX7FEYMJTiod5ev6s7VS14OSGmp+OzyMMcNVMqy97jS0UurxtXdH2QpEjHPEM1igvRmiS9NKPaFvl/oK10pUAkaq/HcIyjg=
+	t=1791922513; cv=none; b=lACf+SnQptRtLPX1+O6dyKS8ZTiPTE+DYv9GW2P4OtTvXeKuZbRul+yEimxFHfmCHdnUpXMDzr1IAwAIWv3jpeNBHXk670s7QvIm2AVGbtCIBx+Nyu00lAsa2U9Z43j4hoHaHqDcW/8ba671N9xOEHjMFrTZym4A70bpqZQ1Syg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791922508; c=relaxed/simple;
-	bh=Yz2dmoOCyMhhyb1jkTvK1YDB4vwtjGpP40luxUcEbkc=;
+	s=arc-20240116; t=1791922513; c=relaxed/simple;
+	bh=hB2DB9kzoRBu9oabdQ9udatPxaLJPNfl4WMCwmPilQA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=cAwq9ZPtBJ5Jx3htAME5ZTwi1Onfe4RLOg1v/digg0GrfZmNASF/WzUwOOyoRjr9f+aMuQfdt2Sz201rAzigzEUN8Hfoig0ALpTQ7UeJwvP3gAPvS+zPojfr0oyXewZMnha25IpCTzhdJiZ0kCjPseE29ZiNXt2Sv8w9d6cQPh8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Hazwejyu; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version; b=Hk7IA9XTG8+Emk4qrAIW5SyMh7HlkLlhZloQiLoWZzIHvqRb3xZH2oVKWCJvwK2xPusxy6+8AbtRhCzhVOzMk7Ic+Qfz3AGPMTEj6hP9Z+aAXTcnSm0wZPNBjTBoDj3kBT3UW5NODULtCwGPCjgifqU5xAAJuoIbGpCWR9ARKdw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lUVpjsbB; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Hazwejyu"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6C7F81F00898;
-	Tue, 13 Oct 2026 20:15:04 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lUVpjsbB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 433501F000FF;
+	Tue, 13 Oct 2026 20:15:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1791922506;
-	bh=zwVkzWIz7ImtwZ79BPj6vRspH/7+ok6opbJ9nHtR8+s=;
+	s=k20260515; t=1791922509;
+	bh=SUOrTUSolageUUp0dKPh8t9keZKbictt5j8UHY6pocI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=Hazwejyugri7i2S7eFoqWstTESWyU57TyKxsPZVQUiJbYuIYoOXZQu3I7hHkAjUJ/
-	 yLHx/nwFzKdLJCqpc/HitUIzu1DkF7IyGY35I3APoCSHg3z5IO2Pfg5/ECVPj5N8pl
-	 T4bl+aiYJksZEIaH+mLCVLWYk78ck47Ahqsyg/35JPGt5tP2tz3MkXA96oaBNAay9I
-	 f1NCX4JyvD0QY+LHblotdA30CL2iIwge8fPyJvg8zfGIXSsvlUgZteZs+Q1L7Muoxn
-	 s26M6263Jx9geRnn8ny3ceZH1vVeT+0hmO8Rv1tX+GjpAPRq0mYxh8WJMzBDyOXGWV
-	 Mj9ncbIGDzRRw==
+	b=lUVpjsbBSYh0N+xU6klsGxWN/vH1057aFgopJJQ9cNEggKEBCKqTwBx8jHksqlrMz
+	 wWRvnR2s0onSUjAJ8OYHLfixNEPdFK8TOT0mT+0HX2rnuWp+eDRDFCQQ5aP61rbHGn
+	 NcZEY4aBlLcRRxZV3bwW4ffEnil3lfpp+3c+GknblnisZ8K2juHbx4UjlHW85Eq+gy
+	 +cTj3jVWlo2wrTIWSm3FCjUQ5lt3PH6Lw5c7zix6cb3Y8z5OhiXxhojk2O0CC3EWlh
+	 y5efzrE+gzv7c+JThT6xOhJlnjYdTBIHSIBAPmAV+7Kr62MBzItHnVUpVX5gsGOVlG
+	 NNHfgso4P6c2Q==
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Namhyung Kim <namhyung@kernel.org>
 Cc: Ingo Molnar <mingo@kernel.org>,
@@ -38,9 +38,9 @@ Cc: Ingo Molnar <mingo@kernel.org>,
 	linux-kernel@vger.kernel.org,
 	linux-perf-users@vger.kernel.org,
 	Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH v2 14/19] perf test attr: State, spelled out in a line, why a test is skipped
-Date: Tue, 13 Oct 2026 17:14:09 -0300
-Message-ID: <20261013201415.36428-15-acme@kernel.org>
+Subject: [PATCH v2 15/19] perf tests: Introduce a 'needs_mlock' suite flag
+Date: Tue, 13 Oct 2026 17:14:10 -0300
+Message-ID: <20261013201415.36428-16-acme@kernel.org>
 X-Mailer: git-send-email 2.55.0
 In-Reply-To: <20261013201415.36428-1-acme@kernel.org>
 References: <20261013201415.36428-1-acme@kernel.org>
@@ -54,205 +54,308 @@ Content-Transfer-Encoding: 8bit
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-Per skip the default output shows a self contained one liner:
+Each perf instance maps one ring buffer per CPU, all charged to the same
+per user budget set in kernel.perf_event_mlock_kb, so suites that map
+them need to be told apart from the ones that don't, to later have them
+take turns using that budget while the other tests keep running in
+parallel.
 
-  unsupp  'test-record-branch-filter-any' exit 255, expected 1, likely a missing capability
-  skipped [kernel newer than 6.12] 'test-record-group-sampling'
-  skipped [arch = !aarch64, machine = aarch64] 'test-record-graph-default'
+Add the flag to 'struct test_suite' and a DEFINE_SUITE_NEEDS_MLOCK()
+variant for the suites using the DEFINE_SUITE() form.
 
-The extra notes explaining the reason, with a copy pasteable command to
-observe the failure, come in the very same stream when the verbosity is
-bumped, at -vvv, nothing is written to a separate place for later
-consultation, it is just the logging ladder:
+Shell tests run perf, that maps ring buffers, so they are taken to need
+room in that budget by default; the ones that don't map them waive it in
+the requisites, a comma separated list in the parens ending their
+description line, e.g.:
 
-  detail: '/root/bin/perf record --no-bpf-event -j any kill' exited with
-  255, the expectations want the workload's 1 exit, so there are no attrs
-  recorded to verify; this is normally a capability problem, run
-  '/root/bin/perf record --no-bpf-event -j any kill' to see why
+  # perf stat tests (no_mlock)
 
-Note that 'perf test -v/-vv/-vvv attribute' appends a single -v to the
-shell test entry (shell_test__run()), so to see the notes one runs the
-python module directly, f.i.:
+"exclusive" is the catch-all that keeps a test from running alongside
+any other, so it runs alone, in sequence, and implies every other
+requisite, "no_mlock" waives the default, and more keywords are to come,
+each stating what a test needs, till the catch-all isn't needed anymore.
 
-  python3 tests/shell/lib/attr.py -vvv -d tests/shell/attr -p ./perf
-
-The skip functions now return the reason fragment when they want to skip
-and None when the test can go on.
+'perf test requisites' lists what each test needs, reusing the listing
+routine and taking the same test name fragments and numbers as 'list'.
 
 Assisted-by: LLM
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/tests/shell/lib/attr.py | 96 ++++++++++++++++++++----------
- 1 file changed, 63 insertions(+), 33 deletions(-)
+ tools/perf/Documentation/perf-test.txt | 28 +++++++++++++--
+ tools/perf/tests/builtin-test.c        | 44 +++++++++++++++++++++---
+ tools/perf/tests/tests-scripts.c       | 47 ++++++++++++++++++++++----
+ tools/perf/tests/tests.h               | 17 ++++++++++
+ 4 files changed, 122 insertions(+), 14 deletions(-)
 
-diff --git a/tools/perf/tests/shell/lib/attr.py b/tools/perf/tests/shell/lib/attr.py
-index 3bf07d4df95987d8..ee78c912d94693dd 100644
---- a/tools/perf/tests/shell/lib/attr.py
-+++ b/tools/perf/tests/shell/lib/attr.py
-@@ -209,10 +209,13 @@ class Notest(Exception):
-         return '[%s] \'%s\'' % (self.arch, self.test.path)
+diff --git a/tools/perf/Documentation/perf-test.txt b/tools/perf/Documentation/perf-test.txt
+index 859df74e62efc4b1..d3a7f7efaec705ed 100644
+--- a/tools/perf/Documentation/perf-test.txt
++++ b/tools/perf/Documentation/perf-test.txt
+@@ -8,7 +8,7 @@ perf-test - Runs sanity tests.
+ SYNOPSIS
+ --------
+ [verse]
+-'perf test [<options>] [{list <test-name-fragment>|[<test-name-fragments>|<test-numbers>]}]'
++'perf test [<options>] [{list|requisites} [<test-name-fragment>]|[<test-name-fragments>|<test-numbers>]]'
  
- class Unsup(Exception):
--    def __init__(self, test):
-+    def __init__(self, test, ret, expected):
-         self.test = test
-+        self.ret = ret
-+        self.expected = expected
-     def getMsg(self):
--        return '\'%s\'' % self.test.path
-+        return '\'%s\' exit %d, expected %s, likely a missing capability' % (
-+            self.test.path, self.ret, self.expected)
+ DESCRIPTION
+ -----------
+@@ -18,9 +18,31 @@ also will look for a directory with more tests in the form of scripts.
+ To get a list of available tests use 'perf test list', specifying a test name
+ fragment will show all tests that have it.
  
- class Event(dict):
-     terms = [
-@@ -425,13 +428,17 @@ class Test(object):
- 
-     def skip_test_kernel_since(self):
-         if not self.kernel_since:
--            return False
--        return not self.kernel_since <= parse_version(platform.release())
-+            return None
-+        if self.kernel_since <= parse_version(platform.release()):
-+            return None
-+        return "kernel older than %d.%d" % tuple(self.kernel_since)
- 
-     def skip_test_kernel_until(self):
-         if not self.kernel_until:
--            return False
--        return not parse_version(platform.release()) < self.kernel_until
-+            return None
-+        if parse_version(platform.release()) < self.kernel_until:
-+            return None
-+        return "kernel newer than %d.%d" % tuple(self.kernel_until)
- 
-     def skip_test_auxv(self):
-         def new_auxv(a, pattern):
-@@ -447,18 +454,20 @@ class Test(object):
-             return (items[0], value)
- 
-         if not self.auxv:
--            return False
-+            return None
-         auxv = subprocess.check_output("LD_SHOW_AUXV=1 sleep 0", shell=True) \
-                .decode(sys.stdout.encoding)
-         pattern = re.compile(r"[: ]+")
-         auxv = dict([new_auxv(a, pattern) for a in auxv.splitlines()])
--        return not eval(self.auxv)
-+        if eval(self.auxv):
-+            return None
++To get a list of what the tests need, i.e. of their requisites (see below), use
++'perf test requisites', that takes the same test name fragments and numbers as
++'list'.
 +
-+        return "the auxv condition doesn't hold here"
+ To run just specific tests, inform test name fragments or the numbers obtained
+ from 'perf test list'.
  
-     def skip_test_arch(self, myarch):
-         # If architecture not set always run test
-         if self.arch == '':
--            # log.warning("test for arch %s is ok" % myarch)
--            return False
-+            return None
- 
-         # Allow multiple values in assignment separated by ','
-         arch_list = self.arch.split(',')
-@@ -468,24 +477,23 @@ class Test(object):
-             arch_list[0] = arch_list[0][1:]
-             log.warning("excluded architecture list %s", arch_list)
-             for arch_item in arch_list:
--                # log.warning("test for %s arch is %s" % (arch_item, myarch))
-                 if arch_item == myarch:
--                    return True
--            return False
-+                    return "arch = %s, machine = %s" % (self.arch, myarch)
-+            return None
- 
-         for arch_item in arch_list:
--            # log.warning("test for architecture '%s' current '%s'" % (arch_item, myarch))
-             if arch_item == myarch:
--                return False
--        return True
-+                return None
++REQUISITES
++----------
++Shell tests run perf, that maps ring buffers, so they are taken to need room
++in the per user budget set in kernel.perf_event_mlock_kb, shared by the tests
++running at the same time, that take turns using it.  Tests state what they
++need, or waive, in a comma separated list in the parens ending their
++description line, e.g.:
 +
-+        return "arch = %s, machine = %s" % (self.arch, myarch)
- 
-     def skip_test_requires(self):
-         for requirement in filter(None, map(str.strip, self.requires.split(','))):
-             if requirement == 'core-pmu' and not core_pmu_available():
-                 log.warning("test limitation 'requires %s'", requirement)
--                return True
-+                return "needs a core PMU, none here"
- 
--        return False
-+        return None
- 
-     def restore_sample_rate(self, value=10000):
-         try:
-@@ -529,20 +537,36 @@ class Test(object):
-     def run_cmd(self, tempdir):
-         _junk1, _junk2, _junk3, _junk4, myarch = (os.uname())
- 
--        if self.skip_test_arch(myarch):
--            raise Notest(self, myarch)
--
--        if self.skip_test_auxv():
--            raise Notest(self, "auxv skip")
--
--        if self.skip_test_kernel_since():
--            raise Notest(self, "old kernel skip")
--
--        if self.skip_test_kernel_until():
--            raise Notest(self, "new kernel skip")
--
--        if self.skip_test_requires():
--            raise Notest(self, "requirements skip")
-+        arch = self.skip_test_arch(myarch)
-+        if arch:
-+            log.debug("  detail: the test file has arch = %s, the machine reports %s",
-+                     self.arch, myarch)
-+            raise Notest(self, arch)
++	# perf stat tests (no_mlock)
 +
-+        auxv = self.skip_test_auxv()
-+        if auxv:
-+            log.debug("  detail: the auxv condition %s doesn't hold, the bits come "
-+                     "from the LD_SHOW_AUXV=1 output", self.auxv)
-+            raise Notest(self, auxv)
++"exclusive" is a catch-all: the test can't run alongside any other one, so
++it runs alone, in sequence, and implies every other requisite.  "no_mlock"
++waives the default, for tests that don't map ring buffers.  More keywords
++are to come, each stating what a test needs, till the catch-all isn't needed
++anymore.
 +
-+        kernel = self.skip_test_kernel_since()
-+        if kernel:
-+            log.debug("  detail: the test file's kernel_since = %d.%d, this kernel is %s",
-+                     self.kernel_since[0], self.kernel_since[1], platform.release())
-+            raise Notest(self, kernel)
++Use 'perf test requisites' to list what each test needs.
 +
-+        kernel = self.skip_test_kernel_until()
-+        if kernel:
-+            log.debug("  detail: the test file's kernel_until = %d.%d, this kernel is %s",
-+                     self.kernel_until[0], self.kernel_until[1], platform.release())
-+            raise Notest(self, kernel)
+ OPTIONS
+ -------
+ -s::
+@@ -36,8 +58,8 @@ OPTIONS
+ 
+ -S::
+ --sequential::
+-	Run all tests one after the other. By default "exclusive"
+-	tests are run sequentially, but other tests are run in
++	Run all tests one after the other. By default the tests asking to be
++	"exclusive" (see REQUISITES) run sequentially, but other tests run in
+ 	parallel to speed execution.
+ 
+ -r::
+diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-test.c
+index 98134b1c74cf80f4..acffa0d0d33d6d30 100644
+--- a/tools/perf/tests/builtin-test.c
++++ b/tools/perf/tests/builtin-test.c
+@@ -56,6 +56,8 @@ static struct strbuf junit_xml_buf = STRBUF_INIT;
+ static bool dont_fork;
+ /* Fork the tests in parallel and wait for their completion. */
+ static bool sequential;
++/* List what each test needs, set by the "requisites" subcommand. */
++static bool list_requisites;
+ /* Number of times each test is run. */
+ static unsigned int runs_per_test = 1;
+ /* Number of lines to include in failure snippet. */
+@@ -283,6 +285,30 @@ static const char *test_description(const struct test_suite *t, int test_case)
+ 	return t->desc;
+ }
+ 
++static void requisites__fprintf(FILE *fp, const struct test_suite *t, int test_case)
++{
++	bool needs_mlock = t->needs_mlock, exclusive;
 +
-+        requirement = self.skip_test_requires()
-+        if requirement:
-+            log.debug("  detail: requires core-pmu, nothing countable here, check "
-+                     "kernel.perf_event_paranoid and the PMU nodes under "
-+                     "/sys/bus/event_source/")
-+            raise Notest(self, requirement)
++	if (test_case < 0)
++		test_case = test_suite__num_test_cases(t) == 1 ? 0 : -1;
++
++	if (test_case >= 0) {
++		exclusive = t->test_cases[test_case].exclusive;
++		/* The catch-all implies every other requisite. */
++		needs_mlock = needs_mlock || exclusive;
++	} else {
++		exclusive = false;
++	}
++
++	if (!exclusive && !needs_mlock)
++		return;
++
++	fprintf(fp, " (");
++	if (exclusive)
++		fprintf(fp, "exclusive, ");
++	fprintf(fp, "mlock)");
++}
++
+ static test_fnptr test_function(const struct test_suite *t, int test_case)
+ {
+ 	if (test_case <= 0)
+@@ -1450,14 +1476,20 @@ static int perf_test__list(FILE *fp, struct test_suite **suites, int argc, const
+ 		if (!perf_test__matches(test_description(*t, -1), curr_suite, argc, argv))
+ 			continue;
  
-         self.restore_sample_rate()
-         cmd = "PERF_TEST_ATTR=%s %s %s -o %s/perf.data %s" % (tempdir,
-@@ -552,10 +576,16 @@ class Test(object):
-         log.info("  '%s' ret '%s', expected '%s'", cmd, str(ret), str(self.ret))
+-		fprintf(fp, "%3d: %s\n", curr_suite + 1, test_description(*t, -1));
++		fprintf(fp, "%3d: %s", curr_suite + 1, test_description(*t, -1));
++		if (list_requisites)
++			requisites__fprintf(fp, *t, /*test_case=*/-1);
++		fprintf(fp, "\n");
  
-         if not data_equal(str(ret), str(self.ret)):
-+            plain_cmd = "%s %s %s" % (self.perf, self.command,
-+                                      self.args.split('>/dev/null')[0].rstrip())
-             if self.test_ret:
-                 raise Fail(self, "Perf exit code failure")
-             else:
--                raise Unsup(self)
-+                log.debug("  detail: '%s' exited with %d, the expectations want the "
-+                         "workload's %s exit, so there are no attrs recorded to "
-+                         "verify; this is normally a capability problem, run '%s' "
-+                         "to see why", plain_cmd, ret, self.ret, plain_cmd)
-+                raise Unsup(self, ret, str(self.ret))
+ 		if (test_suite__num_test_cases(*t) <= 1)
+ 			continue;
  
-     def drop_dummy_tracking_events(self):
-         """
+ 		test_suite__for_each_test_case(*t, curr_test_case) {
+-			fprintf(fp, "%3d.%1d: %s\n", curr_suite + 1, curr_test_case + 1,
++			fprintf(fp, "%3d.%1d: %s", curr_suite + 1, curr_test_case + 1,
+ 				test_description(*t, curr_test_case));
++			if (list_requisites)
++				requisites__fprintf(fp, *t, curr_test_case);
++			fprintf(fp, "\n");
+ 		}
+ 	}
+ 	return 0;
+@@ -1747,7 +1779,8 @@ static struct test_suite **build_suites(void)
+ int cmd_test(int argc, const char **argv)
+ {
+ 	const char *test_usage[] = {
+-	"perf test [<options>] [{list <test-name-fragment>|[<test-name-fragments>|<test-numbers>]}]",
++	"perf test [<options>] [{list|requisites} [<test-name-fragment>]|"
++	"[<test-name-fragments>|<test-numbers>]]",
+ 	NULL,
+ 	};
+ 	const char *skip = NULL;
+@@ -1776,7 +1809,7 @@ int cmd_test(int argc, const char **argv)
+ 			  "Generate junit XML output, default test.xml", "test.xml"),
+ 	OPT_END()
+ 	};
+-	const char * const test_subcommands[] = { "list", NULL };
++	const char * const test_subcommands[] = { "list", "requisites", NULL };
+ 	struct intlist *skiplist = NULL;
+ 	struct test_suite **suites;
+ 	int ret;
+@@ -1808,10 +1841,11 @@ int cmd_test(int argc, const char **argv)
+ 	setvbuf(stdout, NULL, _IONBF, 0);
+ 
+ 	argc = parse_options_subcommand(argc, argv, test_options, test_subcommands, test_usage, 0);
+-	if (argc >= 1 && !strcmp(argv[0], "list")) {
++	if (argc >= 1 && (!strcmp(argv[0], "list") || !strcmp(argv[0], "requisites"))) {
+ 		suites = build_suites();
+ 		if (!suites)
+ 			return errno ? -errno : -ENOMEM;
++		list_requisites = !strcmp(argv[0], "requisites");
+ 		ret = perf_test__list(stdout, suites, argc - 1, argv + 1);
+ 		free(suites);
+ 		return ret;
+diff --git a/tools/perf/tests/tests-scripts.c b/tools/perf/tests/tests-scripts.c
+index 0370bc7013737e31..03430cdb9a5cc14c 100644
+--- a/tools/perf/tests/tests-scripts.c
++++ b/tools/perf/tests/tests-scripts.c
+@@ -179,6 +179,42 @@ static int shell_test__run(struct test_suite *test, int subtest __maybe_unused)
+ 	return WEXITSTATUS(err) == 2 ? TEST_SKIP : TEST_FAIL;
+ }
+ 
++/*
++ * The requisites are a comma separated list in the parens ending the
++ * description line, e.g. "perf stat tests (no_mlock)": "exclusive" is the
++ * catch-all, implying every other requisite, "no_mlock" waives the default of
++ * needing room in the per user budget set in kernel.perf_event_mlock_kb.
++ */
++static void shell_test__requisites(char *desc, bool *exclusive, bool *needs_mlock)
++{
++	char *lparen, *rparen, *requisites;
++
++	/* Only a list closing the description line is taken for requisites. */
++	rparen = strrchr(desc, ')');
++	if (rparen == NULL || rparen[1] != '\0')
++		return;
++
++	lparen = strrchr(desc, '(');
++	if (lparen == NULL || lparen > rparen)
++		return;
++
++	requisites = lparen + 1;
++	*exclusive = strstr(requisites, "exclusive") != NULL;
++	if (*exclusive) {
++		/* The catch-all implies every other requisite. */
++		*needs_mlock = true;
++	} else if (strstr(requisites, "no_mlock")) {
++		*needs_mlock = false;
++	} else if (!strstr(requisites, "mlock")) {
++		/* Unknown requisite: leave the parens in the description. */
++		return;
++	}
++
++	*lparen = '\0';
++	if (lparen > desc && isspace(lparen[-1]))
++		lparen[-1] = '\0';
++}
++
+ static void append_script(int dir_fd, const char *name, char *desc,
+ 			  struct test_suite ***result,
+ 			  size_t *result_sz)
+@@ -187,7 +223,8 @@ static void append_script(int dir_fd, const char *name, char *desc,
+ 	struct test_suite *test_suite, **result_tmp;
+ 	struct test_case *tests;
+ 	ssize_t len;
+-	char *exclusive;
++	/* Shell tests run perf, that maps ring buffers, so they need the budget. */
++	bool exclusive = false, needs_mlock = true;
+ 
+ 	snprintf(link, sizeof(link), "/proc/%d/fd/%d", getpid(), dir_fd);
+ 	len = readlink(link, filename, sizeof(filename) - 1);
+@@ -204,11 +241,8 @@ static void append_script(int dir_fd, const char *name, char *desc,
+ 		return;
+ 	}
+ 	tests[0].name = strdup_check(name);
+-	exclusive = strstr(desc, " (exclusive)");
+-	if (exclusive != NULL) {
+-		tests[0].exclusive = true;
+-		exclusive[0] = '\0';
+-	}
++	shell_test__requisites(desc, &exclusive, &needs_mlock);
++	tests[0].exclusive = exclusive;
+ 	tests[0].desc = strdup_check(desc);
+ 	tests[0].run_case = shell_test__run;
+ 	test_suite = zalloc(sizeof(*test_suite));
+@@ -220,6 +254,7 @@ static void append_script(int dir_fd, const char *name, char *desc,
+ 	test_suite->desc = desc;
+ 	test_suite->test_cases = tests;
+ 	test_suite->priv = strdup_check(filename);
++	test_suite->needs_mlock = needs_mlock;
+ 	/* Realloc is good enough, though we could realloc by chunks, not that
+ 	 * anyone will ever measure performance here */
+ 	result_tmp = realloc(*result, (*result_sz + 1) * sizeof(*result_tmp));
+diff --git a/tools/perf/tests/tests.h b/tools/perf/tests/tests.h
+index f379620069d34f3a..5982c4e62cd37206 100644
+--- a/tools/perf/tests/tests.h
++++ b/tools/perf/tests/tests.h
+@@ -46,6 +46,12 @@ struct test_suite {
+ 	struct test_case *test_cases;
+ 	void *priv;
+ 	int (*setup)(struct test_suite *suite);
++	/*
++	 * Set for the suites mapping perf ring buffers, that need room in the
++	 * per user budget set in kernel.perf_event_mlock_kb, see
++	 * shell_test__requisites() for the shell suites.
++	 */
++	bool needs_mlock;
+ };
+ 
+ #define DECLARE_SUITE(name) \
+@@ -103,6 +109,17 @@ struct test_suite {
+ 		.test_cases = tests__##_name,		\
+ 	}
+ 
++#define DEFINE_SUITE_NEEDS_MLOCK(description, _name)	\
++	struct test_case tests__##_name[] = {           \
++		TEST_CASE(description, _name),		\
++		{	.name = NULL, }			\
++	};						\
++	struct test_suite suite__##_name = {		\
++		.desc = description,			\
++		.test_cases = tests__##_name,		\
++		.needs_mlock = true,			\
++	}
++
+ /* Tests */
+ DECLARE_SUITE(vmlinux_matches_kallsyms);
+ DECLARE_SUITE(openat_syscall_event);
 -- 
 2.55.0
 
