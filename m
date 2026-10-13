@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C78154CF68;
-	Tue, 13 Oct 2026 20:14:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C350548571;
+	Tue, 13 Oct 2026 20:15:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791922500; cv=none; b=fJJRSftInjdIJGGAULO/GUDrWNnG5wGUKokVtTu14waJFsrkuLiMW0JUdXU5W/T76BkSORpSowJJeVuCF6whvBd91xY1YDAtWezNuNUK42SM0s0OcVB+rntbi6FR4DQRzimNm9HsqrBEPLU9nX9yVQyMJgXm48oaOiuugr8RISA=
+	t=1791922505; cv=none; b=rk02qXhY3/h5Lm8wnoz192vyEU4JuqGX8NJ3oNpqbLQGCp1qSWikmSc1FZV81PKdHwgn03K8DM7KK4kVfp/hIRtPXpBDSqdSTGiDC5nT8KNpQTfHYfvRy+iXboEAOI29mg3rG/rtY5xrEPdbPrTq0Z8+VtcHYhL8DgElw1JAgB8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791922500; c=relaxed/simple;
-	bh=FuNzl/Ax4aG0F9wbAmJxt+kk8IzBqbXyqPXwHo38Lec=;
+	s=arc-20240116; t=1791922505; c=relaxed/simple;
+	bh=WovNExGZiFzdFWR7F1M30yfO6VJBw8v7D7zHTHoSSk8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=JnPMT/xzXbDNnsMoCWRR+9Ng02gA4drrXFwvghdtsO7vJWafsTKKgKdXGYwj7SBzXuGLGcSnKbYQIUVGs23okGEK8m8WkXuuQ1MS/lFeP8q2N9f6C4I4KHMZXUAb15IOCucS1UbL/H/MoUdmtLdj96FBEZYUU7Edg6VHI9YoNr4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AD9XNVW0; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version; b=DbpN2RCdtn4VtvG0UFdKIIgyaR4btgAtaGeDWoaelaUSG4RmGWhq/R9jyKbSQqTWZUdYp7cVKVGIAI0e3daddAV8OWIFjd0CjmiSp6Gy7oKEh8F09b2M9Yl1sCz3Y8dOL0MdjParUg8stHUzNEfRx8reWkhpeBgjJU9Fj9TCROQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RTooHdI/; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AD9XNVW0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E8C981F000FF;
-	Tue, 13 Oct 2026 20:14:55 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RTooHdI/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 937D21F000FF;
+	Tue, 13 Oct 2026 20:15:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1791922498;
-	bh=XEuA9LYQZKS/oSR/ys9cZ6R+I7hy6Yt5O2XsZifO0+0=;
+	s=k20260515; t=1791922504;
+	bh=Zgi7YhpIR7wMSAazs7tO3pTqYAeCHrzL1I8KPI2OwcU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=AD9XNVW0pdZOxqjmDV2QbOHR1mVKDbJT+uiujeuUjG7UTGF7HZpmQhSQVa+MeXq6T
-	 Qw+b001aewGVRpyTf1TZXLEU52xDxCdcTh6cL7i3jDg5RN0nMGBm6KuJLvrZmsSDHL
-	 VUn8xnMXbv5nfEtunR0/FMUYqvAyfzanowDW+dtrWLsuTLdzECx2i/9Fed3xXPfInQ
-	 9BQq5FDcTfzghNYozfT/XSRTVNd26PQPXZu9XWhYxqzOiPBYZurNgrDStULPJTLaa7
-	 zQIXGpNiR5jkAajPBZ9DjgykceZ3fnd8iDG9NJOcPmOp/N7MvfpyyiSQswurj65kRG
-	 PPgQC1qYm0dEA==
+	b=RTooHdI/Jw6GPAzDVn34C2uV/8URh++lV/pA1dB/plZtzfUtpoc8DLu43/OFTaZIO
+	 llndZ7Q5YyhoeTAgDJ+636N+WQvrPQ/yuHRQ96tJ9DtcuQ5NuYR1StU3AgqVd6LAJ+
+	 UsgeuJyanxKUudYgvzySCos6t12tB651y8pmt9dkLTtsQCOB9qPfYj5zVIGQwUeTd+
+	 25Gvmhv4lM3v4AOOfOT1Cm+/vpoWCBiS50DU/v+P7QCJTlir/cywSL5qKLD4LYatzv
+	 qksQ9Mf3kW7hT4c8iTgBNEPkRDfE5JmNsLZdwZlTACT/qnZYFr/AYdfqZhSw9vcq8A
+	 /pIvl0oNDP5jg==
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Namhyung Kim <namhyung@kernel.org>
 Cc: Ingo Molnar <mingo@kernel.org>,
@@ -38,9 +38,9 @@ Cc: Ingo Molnar <mingo@kernel.org>,
 	linux-kernel@vger.kernel.org,
 	linux-perf-users@vger.kernel.org,
 	Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH v2 11/19] perf test attr: Ignore the dummy tracking event and the terms it carries
-Date: Tue, 13 Oct 2026 17:14:06 -0300
-Message-ID: <20261013201415.36428-12-acme@kernel.org>
+Subject: [PATCH v2 13/19] perf test attr: Ignore the group read_format bit the PMU count can remove
+Date: Tue, 13 Oct 2026 17:14:08 -0300
+Message-ID: <20261013201415.36428-14-acme@kernel.org>
 X-Mailer: git-send-email 2.55.0
 In-Reply-To: <20261013201415.36428-1-acme@kernel.org>
 References: <20261013201415.36428-1-acme@kernel.org>
@@ -54,128 +54,108 @@ Content-Transfer-Encoding: 8bit
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-With more than one core PMU the requested events can't cover all the
-CPUs, each cluster has its own PMU, so perf opens the software dummy
-event to carry the tracking terms (mmap, comm, task, mmap_data), leaving
-the requested events without them:
+read_format's PERF_FORMAT_GROUP bit asks for the group members to be read
+along with the leader, which aside from this bit is verified with the
+fd/group_fd based group checking in Test.compare(), and with more than
+one core PMU a group whose members are pinned to one of them, say
+'default_core', leaves the clones for the other core PMUs without any
+members:
 
-  expected mmap=1, got 0
-  expected comm=1, got 0
-  expected task=1, got 0
+  $ perf stat -e '{cycles,default_core/legacy-hardware-config=3/}:S'
+  ... the A53 leader keeps its cohort, both A73 cycles clones are alone,
+      read_format 20 instead of 28
 
-That dummy event is not part of what the expectations are about, so
-leave it out of the comparison, unless the expectations ask for one,
-like system-wide-dummy and test-record-dummy-C0 do.
+so that bit isn't there: whether it is there is a consequence of how the
+evlist got expanded to more than one core PMU, not of the groupness the
+expectations say about, which is verified structurally, so take it out on
+both sides.
 
-And when perf used it to carry the tracking terms, those terms can't be
-matched on the requested events, leave them out of the match as well.
+That leaves the A73 leader clones, now with:
+
+  expected read_format=28|31, got 20
+
+matching the base event expectations again.
+
+With a single core PMU there is nothing to expand, so there is nothing to
+explain away: count the core PMUs when the script starts, from what perf
+makes of 'cycles', see parse_events_multi_pmu_add(), and take the bit out
+only when there is more than one, leaving the machines with a single core
+PMU verifying what the expectations say about it.  That count is 2 on the
+Amlogic A311D, where its A53 and A73 PMUs both answer for 'cycles', and 1
+on a machine with a single core PMU.  Where there is no binding to ask,
+as when attr.py runs without setup_python.sh, the count isn't available
+and the bit is taken out as well.
 
 Assisted-by: LLM
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/tests/shell/lib/attr.py | 56 ++++++++++++++++++++++++++++++
- 1 file changed, 56 insertions(+)
+ tools/perf/tests/shell/lib/attr.py | 46 ++++++++++++++++++++++++++++++
+ 1 file changed, 46 insertions(+)
 
 diff --git a/tools/perf/tests/shell/lib/attr.py b/tools/perf/tests/shell/lib/attr.py
-index e911684428b1b74b..222ce6f598831e3f 100644
+index 65b1e655a2bcb505..3bf07d4df95987d8 100644
 --- a/tools/perf/tests/shell/lib/attr.py
 +++ b/tools/perf/tests/shell/lib/attr.py
-@@ -61,6 +61,21 @@ PERF_TYPE_HARDWARE = 0
- PERF_TYPE_HW_CACHE = 3
- PERF_SAMPLE_ID = 1 << 6
- PERF_SAMPLE_IDENTIFIER = 1 << 16
-+PERF_TYPE_SOFTWARE = 1
-+PERF_COUNT_SW_DUMMY = 9
+@@ -115,6 +115,50 @@ SAMPLE_ID_BITS = PERF_SAMPLE_ID | PERF_SAMPLE_IDENTIFIER
+ # sample id bits" when comparing the two sides.
+ SAMPLE_ID_EITHER = 1 << 40
+ 
++PERF_FORMAT_GROUP = 1 << 3
 +
-+def is_dummy_tracking_event(event):
++def core_pmu_count():
 +    """
-+    Is this the dummy event perf opens to carry the tracking events (mmap,
-+    comm, task) when the requested ones can't, like when there is more than one
-+    core PMU and each core PMU's events run on only part of the CPUs?
++    How many core PMUs does perf see?  An event with no PMU named in it
++    becomes one event per core PMU, see parse_events_multi_pmu_add(), and
++    that is the expansion that leaves the clones for the other core PMUs
++    without any group members and that makes the kernel qualify 'config'
++    with the type of the PMU it is for, so this is the number of events perf
++    makes of 'cycles'.  None when there is no binding to ask, as in
++    core_pmu_available().
 +    """
-+    return (event.get('type') == str(PERF_TYPE_SOFTWARE) and
-+            event.get('config') == str(PERF_COUNT_SW_DUMMY))
++    try:
++        import perf
++        parse_events = perf.parse_events
++    except (ImportError, AttributeError):
++        return None
 +
-+# With more than one core PMU the tracking terms go to the dummy tracking event,
-+# leaving the requested events without them, so they can't be matched there.
-+TRACKING_TERMS = ['mmap', 'comm', 'task', 'mmap_data']
++    try:
++        return len(parse_events('cycles'))
++    except OSError:
++        # No PMU that can count it, see core_pmu_available().
++        return None
++
++SINGLE_CORE_PMU = core_pmu_count() == 1
++
++def hide_group_format(expected, recorded):
++    """
++    read_format's PERF_FORMAT_GROUP bit asks for the group members to be read
++    along with the leader, which aside from this bit is verified with the
++    fd/group_fd based group checking, and with more than one core PMU a group
++    whose members are pinned to one of them, say 'default_core', leaves the
++    clones for the other core PMUs without any members, so that bit isn't
++    there: whether it is there is a consequence of how the evlist got
++    expanded to more than one core PMU, not of what the expectations are
++    about, so take it out on both sides.  On a machine with a single core PMU
++    there is nothing to expand, so the expectations keep verifying it.
++    """
++    if SINGLE_CORE_PMU:
++        return expected, recorded
++
++    return (mask_bits(expected, PERF_FORMAT_GROUP),
++            mask_bits(recorded, PERF_FORMAT_GROUP))
++
+ def hide_sample_id(expected, recorded):
+     """
+     perf asks for a way to tell the samples apart, PERF_SAMPLE_IDENTIFIER where
+@@ -245,6 +289,8 @@ class Event(dict):
+     def hide_event_count_dependent_terms(self, term, expected, recorded):
+         if term == 'sample_type':
+             return hide_sample_id(expected, recorded)
++        if term == 'read_format':
++            return hide_group_format(expected, recorded)
  
- # The legacy event types, where perf may qualify 'config' with the core PMU
- # type in its top 32 bits when there is more than one core PMU.
-@@ -243,11 +258,26 @@ class Event(dict):
+         return expected, recorded
  
-         return self if getattr(self, 'recorded', False) else None
- 
-+    def hide_tracking_via_dummy(self, term, other):
-+        """
-+        The tracking terms are set on the tracking event, which is the dummy
-+        event when there is more than one core PMU, leaving the requested
-+        events without them, nothing to match on then.
-+        """
-+        if term not in TRACKING_TERMS:
-+            return False
-+
-+        return (getattr(self, 'tracking_moved_to_dummy', False) or
-+                getattr(other, 'tracking_moved_to_dummy', False))
-+
-     def equal(self, other):
-         for t in Event.terms:
-             log.debug("      [%s] %s %s", t, self[t], other[t])
-             if t not in self or t not in other:
-                 return False
-+            if self.hide_tracking_via_dummy(t, other):
-+                continue
-+
-             recorded = self.recorded_side(other)
-             expected = other if recorded is self else self
-             exp = self.hide_core_pmu_type(t, expected[t], recorded or expected)
-@@ -267,6 +297,9 @@ class Event(dict):
-         for t in Event.terms:
-             if t not in self or t not in other:
-                 continue
-+            if self.hide_tracking_via_dummy(t, other):
-+                continue
-+
-             recorded = self.recorded_side(other)
-             expected = other if recorded is self else self
-             exp = self.hide_core_pmu_type(t, expected[t], recorded or expected)
-@@ -478,6 +511,27 @@ class Test(object):
-             else:
-                 raise Unsup(self)
- 
-+    def drop_dummy_tracking_events(self):
-+        """
-+        Leave out the dummy event perf itself opened, see
-+        is_dummy_tracking_event(), unless the expectations ask for one.
-+        """
-+        if any(is_dummy_tracking_event(e) for e in self.expect.values()):
-+            return
-+
-+        if not any(is_dummy_tracking_event(e) for e in self.result.values()):
-+            return
-+
-+        for name, event in list(self.result.items()):
-+            if is_dummy_tracking_event(event):
-+                log.debug("      dropping dummy tracking event [%s]", name)
-+                del self.result[name]
-+
-+        # The tracking terms got carried by the dropped dummies, flag the
-+        # remaining events so that the match leaves those terms out.
-+        for event in self.result.values():
-+            event.tracking_moved_to_dummy = True
-+
-     def compare(self, expect, result, strict_groups=True):
-         match = {}
- 
-@@ -559,6 +613,8 @@ class Test(object):
-             for event in self.result.values():
-                 event.recorded = True
- 
-+            self.drop_dummy_tracking_events()
-+
-             # resolve group_fd to event names
-             self.resolve_groups(self.expect)
-             self.resolve_groups(self.result)
 -- 
 2.55.0
 
