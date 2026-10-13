@@ -1,97 +1,124 @@
-Received: from 011.lax.mailroute.net (011.lax.mailroute.net [199.89.1.14])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71F2752D2A9;
-	Tue, 13 Oct 2026 19:44:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=199.89.1.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A004A542EEF;
+	Tue, 13 Oct 2026 19:49:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791920668; cv=none; b=MruZuR3A+nk9kd3LuX6pg9htPt3it5vJJqaopAOqweHYfcHP0YlZ7IxeTR9P1ltW3j+6ZF/UpEm1pZd1RQo88K+LQeVYOLRESgBIbpVnnwJ8PeSLi+eavuopjSPA/tzj3asu6voIS5wdF3QZAoyzYmQcxv7ITiVnyZJy72Jh6Ho=
+	t=1791920969; cv=none; b=tnNHwRsiBCydC4BxriQhz4GVCjcSibkVrE1BwI7yB5SE5zsHDNovYaW4D6Lyd3xLeuJLNYbve/0m8rJsTXYtX60DjbwBYsPLAGbvBTD5WpKo6GasLsIAUxdzm/cPPqyYWP1IQcs30zpAERh6um4h+wbwNHDnMkZebispxxBSEY0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791920668; c=relaxed/simple;
-	bh=ptTajPdsrvmZAZ2xebbOEy+6rvk7RQNZ7oxzHgevJ5c=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=lPGOc8mdVHSEaiXF1+JwzqFWXWK/+Mg8odC0XxR7rwYTaMYzdCj/Pfnmmo9dhBO6Bh2FdiEL1Shpp1f+7JLtjIQK2cCBPKVqXbDPoQAqGaVtWuNXN+QpL3TGodhvDQN5/DOjhkCLa8YM9kNssBt57daN6phhgqEaj1haLkyPuOM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org; spf=pass smtp.mailfrom=acm.org; dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b=T9wFIICG; arc=none smtp.client-ip=199.89.1.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=acm.org
+	s=arc-20240116; t=1791920969; c=relaxed/simple;
+	bh=ldwO3cFm64bnrynDvOBlQj8COmsGNqU+riOvCs2Dhm8=;
+	h=Message-ID:From:Subject:To:Cc:In-Reply-To:References:Content-Type:
+	 Date; b=dP7dZFDWT8dfcdM95yrnbIO1377WotIl0scmQ61UEZ+t7qMIL8X9WcDJnSUFrrZiuzqArxLDiCfbrNjNhvz6BP0ZdTi/PpguWq9jZUYKEu8MYN5EHjqDQbXr5PB9AP4kUvJP0m1n1/v1paR1EJoF5lQ9gtoPzGoD09KYNOcc0sI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Yd5yQsQe; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b="T9wFIICG"
-Received: from localhost (localhost [127.0.0.1])
-	by 011.lax.mailroute.net (Postfix) with ESMTP id 4j44Xg0nHgz1XM4Tn;
-	Tue, 13 Oct 2026 19:44:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=acm.org; h=
-	content-transfer-encoding:content-type:content-type:in-reply-to
-	:from:from:content-language:references:subject:subject
-	:user-agent:mime-version:date:date:message-id:received:received;
-	 s=mr01; t=1791920653; x=1794512654; bh=fXCRJRuu6VOintnUsKBn3m9y
-	AP8nYruoeFPSSmmenmw=; b=T9wFIICGEEqubaSrLn+Qqp/TPsa/Ti29rHkiBbwY
-	TDpVneY1mg38OmfLjbElwn2tUW+Ac6DhbcNB/sqn7Q6P8SuD02Ox4BUP+0CYeWQ4
-	Aq1Yne/HTfLX5g+plUdzahPwUWiYUAEcMVmSPARoFGSOGzv1EmoJXTjNmc69uMev
-	cXcH2i5Wd8P3sE2UvPu3GmJ5dfeT9a8XU8NqVvTwuO019iN26Bww/CqWdEZrxakD
-	ulqLjkWFkDnrrqX55E2ZGCABrY71T8aprU+hBE4hzpMXm4sdNwaCzuszaKkUemj0
-	86b1VABp70cMFdUB9q/V3J5dtFWOiyJnJ4c/GewWqccKsw==
-X-Virus-Scanned: by MailRoute
-Received: from 011.lax.mailroute.net ([127.0.0.1])
- by localhost (011.lax [127.0.0.1]) (mroute_mailscanner, port 10029) with LMTP
- id uaSxp4M5S670; Tue, 13 Oct 2026 19:44:13 +0000 (UTC)
-Received: from [IPV6:2a00:79e0:2ed2:d:46f9:948:aeed:5df3] (unknown [104.135.182.43])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: bvanassche@acm.org)
-	by 011.lax.mailroute.net (Postfix) with ESMTPSA id 4j44XX3420z1XM4Tl;
-	Tue, 13 Oct 2026 19:44:12 +0000 (UTC)
-Message-ID: <871bf440-5b43-4d63-83f8-15ba96719fa6@acm.org>
-Date: Tue, 13 Oct 2026 12:44:11 -0700
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Yd5yQsQe"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 431CE1F000FF;
+	Tue, 13 Oct 2026 19:49:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1791920967;
+	bh=gSwdcBHqW0LbgQKT6nKt95Qv/QKLGxf35n8p5/QHy1g=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=Yd5yQsQePlyWQ/7DLdU6gH+StuyrPQD/dKoim7jIAFNeoMUy3B7UL9iJ3AQNFMk9R
+	 w/PDX3tvsPkuGZDSwA7BXuCgV5kgKR/ws+ak53JxTGzPV908Xte+SAQMscXAzWBvGa
+	 t60g1PLpyOhbcS6O6G9pSKexEk1CvckJECT4sMCGZjsrDcPVgPZKB208rKYdWL/MXe
+	 SpBzZSyfLEYrYOOyx52CXlkgdJ+Vh2KF+6Z9mZe+f96pkhBqUiRPwWule9auoGCYvR
+	 1sr7n5atIA6NUr5bIuEDLyANGMGNPeRZbKbMCPzE7sg56p8sFAioFBqQGdv0G3tgMW
+	 VCqZBhWZh/sgw==
+Message-ID: <sashiko-outbox-170428@kernel.org>
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v6 24/39] mm/mlock: eliminate weird VMA_IO_BIT abuse and
+ simplify
+Reply-To: sashiko-reviews@lists.linux.dev
+To: =?utf-8?b?TG9yZW56byBTdG9ha2VzIChBUk0p?= <ljs@kernel.org>
+Cc: linux-usb@vger.kernel.org, linux-rdma@vger.kernel.org, selinux@vger.kernel.org, bpf@vger.kernel.org, linux-scsi@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-trace-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, kvmarm@lists.linux.dev, kvm@vger.kernel.org, linux-s390@vger.kernel.org, "Oliver
+ Upton" <oupton@kernel.org>, "Marc Zyngier" <maz@kernel.org>, "Heiko
+ Carstens" <hca@linux.ibm.com>, "Vasily Gorbik" <gor@linux.ibm.com>, "Alexander
+ Gordeev" <agordeev@linux.ibm.com>, "Christian Borntraeger" <borntraeger@linux.ibm.com>
+In-Reply-To: <20261013-b4-mmap-prepare-vma-flag-sanify-v6-24-1aa3c9b139f9@kernel.org>
+References: <20261013-b4-mmap-prepare-vma-flag-sanify-v6-0-1aa3c9b139f9@kernel.org>
+ <20261013-b4-mmap-prepare-vma-flag-sanify-v6-24-1aa3c9b139f9@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Tue, 13 Oct 2026 19:49:25 +0000
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 01/10] compiler-context-analysis: Avoid unused
- parameter warning in _context_unsafe_alias()
-To: Ian Rogers <irogers@google.com>, Peter Zijlstra <peterz@infradead.org>,
- Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Marco Elver <elver@google.com>
-Cc: Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
- James Clark <james.clark@linaro.org>, Nathan Chancellor <nathan@kernel.org>,
- Nick Desaulniers <ndesaulniers@google.com>, Bill Wendling
- <morbo@google.com>, Justin Stitt <justinstitt@google.com>,
- Lorenzo Stoakes <ljs@kernel.org>, linux-perf-users@vger.kernel.org,
- linux-kernel@vger.kernel.org, llvm@lists.linux.dev
-References: <20261013182458.1234616-1-irogers@google.com>
- <20261013182458.1234616-2-irogers@google.com>
-Content-Language: en-US
-From: Bart Van Assche <bvanassche@acm.org>
-In-Reply-To: <20261013182458.1234616-2-irogers@google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
 
-On 10/13/26 11:24 AM, Ian Rogers wrote:
-> _context_unsafe_alias() does not use its parameter 'p', which triggers
-> -Wunused-parameter when building code that enables -Wextra (such as
-> tools/perf, tools/lib/perf, tools/lib/subcmd, and tools/lib/symbol).
-> Explicitly cast 'p' to void to silence the warning, matching
-> __assume_ctx_lock() and __assume_shared_ctx_lock().
-> 
-> Assisted-by: Antigravity:gemini-3.1-pro
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+s) to consider:
+- [Low] mm: TOCTOU race in try_to_migrate_one leaves folio pinned in mlock =
+batch
+--
 
-I think this should be changed into Gemini 3.1 Pro. I don't think that
-the "Antigravity" part should occur in the Assisted-by tag.
+commit cc15ce19ca95992151b61de2cedb165e4684ba4f
+Author: Lorenzo Stoakes (ARM) <ljs@kernel.org>
 
-> diff --git a/include/linux/compiler-context-analysis.h b/include/linux/compiler-context-analysis.h
-> index 8302ebc2ea8c..024e303188ad 100644
-> --- a/include/linux/compiler-context-analysis.h
-> +++ b/include/linux/compiler-context-analysis.h
-> @@ -243,7 +243,7 @@
->    * alias as a function argument).
->    */
->   #define context_unsafe_alias(p) _context_unsafe_alias((void **)&(p))
-> -static inline void _context_unsafe_alias(void **p) { }
-> +static inline void _context_unsafe_alias(void **p) { (void)p; }
+mm/mlock: eliminate weird VMA_IO_BIT abuse and simplify
 
-Why a void cast instead of __attribute__((unused))?
+This commit simplifies mlock VMA flag handling by eliminating the use of
+VMA_IO_BIT during mlock operations. It relies on VMA_LOCKONFAULT_BIT to mark
+walks and updates mlock and unmap code paths to test appropriate VMA lock
+flags instead.
 
-Bart.
+> diff --git a/mm/rmap.c b/mm/rmap.c
+> index 5332c52909be1..b4a4b3929044c 100644
+> --- a/mm/rmap.c
+> +++ b/mm/rmap.c
+
+[ ... ]
+
+> @@ -2395,7 +2397,7 @@ static bool try_to_unmap_one(struct folio *folio, s=
+truct vm_area_struct *vma,
+>  		}
+>  finish_unmap:
+>  		folio_remove_rmap_ptes(folio, page, nr_pages, vma);
+> -		if (vma->vm_flags & VM_LOCKED)
+> +		if (vma_test_any_mask(vma, VMA_LOCKED_MASK))
+>  			mlock_drain_local();
+
+[Severity: Low]
+Can this double-check of VMA_LOCKED_MASK lead to a TOCTOU race?
+
+folio_remove_rmap_ptes() calls munlock_vma_folio() internally, which checks
+vma_test_any_mask(vma, VMA_LOCKED_MASK) to decide whether to queue the folio
+in the local CPU's mlock batch.
+
+Immediately after, try_to_unmap_one() re-evaluates the same mask to decide
+whether to call mlock_drain_local(). A concurrent munlock() can clear the
+VMA's locked flags exactly between these two checks.
+
+If this happens, the folio is queued in the batch, but the local drain is
+skipped. The local batch retains a reference to the folio, which permanently
+pins it and can force best-effort migration like compaction to fail for this
+page in a tight loop.
+
+>  		folio_put_refs(folio, nr_pages);
+
+[ ... ]
+
+> @@ -2770,7 +2772,7 @@ static bool try_to_migrate_one(struct folio *folio,=
+ struct vm_area_struct *vma,
+>  			hugetlb_remove_rmap(folio);
+>  		else
+>  			folio_remove_rmap_pte(folio, subpage, vma);
+> -		if (vma->vm_flags & VM_LOCKED)
+> +		if (vma_test_any_mask(vma, VMA_LOCKED_MASK))
+>  			mlock_drain_local();
+
+[Severity: Low]
+Does this path suffer from the same TOCTOU vulnerability?
+
+Like the unmap path above, if the VMA flags are cleared concurrently between
+folio_remove_rmap_pte() and the check for mlock_drain_local(), the folio
+could remain pinned in the local mlock batch.
+
+>  		folio_put(folio);
+>  	}
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261013-b4-mmap-pr=
+epare-vma-flag-sanify-v6-0-1aa3c9b139f9@kernel.org?part=3D24
