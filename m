@@ -1,39 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 123F954774
-	for <linux-perf-users@vger.kernel.org>; Tue, 13 Oct 2026 00:08:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A417B61FCE
+	for <linux-perf-users@vger.kernel.org>; Tue, 13 Oct 2026 00:08:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791850093; cv=none; b=I4XZrxFE4hWELqTRlIQCit685wOhJk6nNtod9hleHMvoZAjNVk3uqamK/JKCh6SeVLrWVdGbpKd9PivOp2d6y8vaMklw9/PNy8EfNQq7ljdwgdCSofU4ryYvJt9tQeBPUHE2bFz8VveEAefr5+3OFlsuVLXqHqFBPbQmGAKiWvg=
+	t=1791850094; cv=none; b=aYqFyzUGrSevwrXgMQkv6W7wcryxRqNMXV4aSogPNGKAusgyWmCvZzfcKigZbBGQvWrVfqmfO79r+kBoeHNl0adQY6qGxD/PfJyDLSXbUApYSv/x+JYSfgTlWGAOyVTsiZ2DnP+dGeKIfWCes8wo6hMx/v/5TAct4q8DmPF+xek=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791850093; c=relaxed/simple;
-	bh=DWZWmw457MwYtkIyDFkh71Sp1JLCQsfFDf3bRb5kRXE=;
+	s=arc-20240116; t=1791850094; c=relaxed/simple;
+	bh=WQ1YZ5t55gEQhgQBy+9LC2xLLYxgJ66m0kT6akYwnCQ=;
 	h=Message-ID:From:Subject:To:Cc:In-Reply-To:References:Content-Type:
-	 Date; b=E/FOBV0ozKyfbly3Jl99tl1DPLZGG7+TARObIpYl3e6GNqZMfPB9AByoTtSyEUrY+wwusudgECv5Xam4Jggk1/Flr2gnzwUafy7LI8gJl6hbu0IMiowIxcZNGKpTwg4UnO3rrUwpkaDgP6FQxxGLlvz/ZRkMo8ipcnOc6Gm5rXE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UbXETeYC; arc=none smtp.client-ip=100.103.45.18
+	 Date; b=gVAEUobTv7FmmO+A5st8/ip/X3xuNOD+Dv/Ff+LAgKFNiFA63wG+YQkU5Up4diWDE7h0mTJ1ZePXV3TSeaK/z253nK3m6ixVog9enwgn1RLE6tJOlIGPGa1o8XcYDpNUCOhmDNuQQ3lUnhsTR9Tty6F19osapgg4lXovDUrYlQg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LF2Wdn7x; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UbXETeYC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7BD081F0089B;
-	Tue, 13 Oct 2026 00:08:12 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LF2Wdn7x"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 371101F008A1;
+	Tue, 13 Oct 2026 00:08:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1791850092;
-	bh=IhhRcsglx7FF13uBG7vOTaCTLp7CAWm5RSeLDsk1bM4=;
+	s=k20260515; t=1791850093;
+	bh=/PzsziUn78xrQmnfV8x6tMCVZL/wfrAHvufhDtnTnFc=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=UbXETeYCzivxdr0DXpc2ohmuoyRT8SJ0QI0Y9sAfJEDghW7HrIJ0QC3SmAehXG4WO
-	 wZFSP1o8wViqSAjcIqr+dT289w0x/sMehZoznBVlFTM1cWynsAbmIULy5SKEf8/ze1
-	 LRXlcyoY3xJmdr8ep7EolqriCiJl4a9TWxoWTqfLcI/+S4BscInutEJ41U4D93E4B/
-	 pHp8RWbirQ4eSh2HK0Z3tvN64/AhcSNmYGOF/mrD1eNS68BLarPnWCuekZZrk+81P3
-	 KZX2fphE8U+JG04l6IAiBcOk01dyS7VBw0GDHeBiAFqDkTqJm7IIe8utmxC0KHNiDW
-	 UsSRIA5ASUR2A==
-Message-ID: <sashiko-outbox-168777@kernel.org>
+	b=LF2Wdn7x3NSnVTAUktm42lJI/tSdMjfAi/5YSkLSvhBdt6SW48mr4CEp9ZRt4oob5
+	 9k5Ri0dIu5z9tvIsbWMU4y38R/L701PBXhBlvhFTYQCjJtt5Wx8XozyIMta6v+Herm
+	 X0C1NgNAcqSCtYIqherFd1F5JCorzba5OPBn9n3bueyTSx4+z3O+K+83tF5iUjkDIp
+	 TsKMmjvbtO5WLFsjloBNSIJwkNWlPgPNu+TV2M7BqtDFhJed9jGxrGNeKa+XsbQ7JQ
+	 yVZJdV4RZrNaSHx85dg6Zs91mlVV/KYaOkxwVXIAA4QywT3bSClpTCZ3QF2pPC4H0r
+	 xWnFQApnV5zBg==
+Message-ID: <sashiko-outbox-168778@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v3 1/4] perf symbol: Fix symbol loading from libbfd
+Subject: Re: [PATCH v4 08/10] perf symbol: Do not set binary type from
+ symtab type
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Namhyung Kim" <namhyung@kernel.org>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20261012235938.87912-1-namhyung@kernel.org>
-References: <20261012235938.87912-1-namhyung@kernel.org>
+In-Reply-To: <20261012234654.60666-9-namhyung@kernel.org>
+References: <20261012234654.60666-1-namhyung@kernel.org>
+ <20261012234654.60666-9-namhyung@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
 Date: Tue, 13 Oct 2026 00:08:12 +0000
@@ -43,22 +45,76 @@ List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-> The dso__load() should return a positive number (number of symbols
-> loaded) when it succeded to load symbols.  But dso__load_bfd_symbols()
-> only returns 0 and it's hard to check if it actually loaded symbols or
-> not.  Let's return the value of dso__has_symbol() and check it in
-> dso__load() so that it can return 1 for success.
->=20
-> Reported-by: Sashiko <sashiko-bot@kernel.org>
-> Closes: https://lore.kernel.org/r/sashiko-outbox-162540@kernel.org
-> Fixes: eac9a4342e5447cad ("perf symbols: Try reading the symbol table wit=
-h libbfd")
-> Reviewed-by: Ian Rogers <irogers@google.com>
-> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+s) to consider:
+- [Medium] perf: fully stripped executables falsely rejected for data access
+--
 
-Sashiko has reviewed this patch and found no issues. It looks great!
+commit 6b9e46855d4e0d8df1dcaaed600da2f693471adb
+Author: Namhyung Kim <namhyung@kernel.org>
+
+perf symbol: Do not set binary type from symtab type
+
+This commit separates tracking of the DSO binary type from the symtab type.
+It removes the explicit setting of the binary type during symbol loading,
+deferring it until the DSO is actually opened.
+
+> diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
+> index 4a8c298039447..116870595f75c 100644
+> --- a/tools/perf/util/symbol.c
+> +++ b/tools/perf/util/symbol.c
+> @@ -1943,19 +1943,6 @@ int dso__load(struct dso *dso, struct map *map)
+> =20
+>  		if (next_slot) {
+>  			ss_pos++;
+> -
+> -			/*
+> -			 * The binary type is used to find the file containing
+> -			 * the executed instructions, so prefer the types that
+> -			 * refer to the actual object over debug-only files such
+> -			 * as DSO_BINARY_TYPE__DEBUGLINK.
+> -			 */
+> -			if (dso__binary_type(dso) =3D=3D DSO_BINARY_TYPE__NOT_FOUND ||
+> -			    symtab_type =3D=3D DSO_BINARY_TYPE__BUILD_ID_CACHE ||
+> -			    (symtab_type =3D=3D DSO_BINARY_TYPE__SYSTEM_PATH_DSO &&
+> -			     dso__binary_type(dso) !=3D DSO_BINARY_TYPE__BUILD_ID_CACHE))
+> -				dso__set_binary_type(dso, symtab_type);
+> -
+
+[Severity: Medium]
+Will removing this explicit assignment cause fully stripped executables to =
+be
+falsely rejected during data access operations like perf annotate?
+
+By leaving the DSO binary type as NOT_FOUND here, disassembly paths are for=
+ced
+to fall back to dso__find_binary_type_locked() to identify the file type.
+That logic attempts to verify the file using filename__has_section() for the
+.text section:
+
+tools/perf/util/dso.c:dso__find_binary_type_locked() {
+    ...
+    found =3D filename__has_section(path, ".text");
+    ...
+}
+
+For stripped executables (which have had their section headers removed but
+still have valid PT_LOAD segments), this check returns false. Previously,
+because dso__load() set the binary type directly when locating the system
+path DSO, it bypassed the strict .text check.
+
+Consequently, tools like objdump that can parse PT_LOAD segments are never
+invoked, and operations fail with COULDNT_DETERMINE_FILE_TYPE.
+
+Additionally, could this cause debuginfo files to be incorrectly selected f=
+or
+data reads, since their SHT_NOBITS .text sections might falsely satisfy the
+check?
+
+>  			if (syms_ss && runtime_ss)
+>  				break;
+>  		} else {
 
 --=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261012235938.8791=
-2-1-namhyung@kernel.org?part=3D1
-
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261012234654.6066=
+6-1-namhyung@kernel.org?part=3D8
