@@ -1,100 +1,75 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB1A555408F;
-	Tue, 13 Oct 2026 20:49:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C762E558203;
+	Tue, 13 Oct 2026 20:50:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791924581; cv=none; b=BnV3+wN3pwfHPEOlIXdvyTeIaRQvqr0PFzSL3aehBoEkVmlHRL3Xg08QJhFFioEe+CEps+87hJhpkiWM7IlI0q635MD207BUPlw+KGFCB7FtmixMXxGjPKDw5tty79pD7jukyJstyvlHyd/KNwzfL08zMvUNBqex7erS5Wywnu4=
+	t=1791924617; cv=none; b=X83XDiZGg6rAotvcYMsQu4dPOIWAGUx0Yj6nuEa80riaPleF4snJ0ZAfW4/ze/G7FkDz8jRcebZGkcoLG9pyBjx+zATQm4j6QulmP2cv4DEoJ/ZpMFRi7uqNvTXIuqvbfXlzjjIRnFAHHSyTAximrRSKCL1w/Z6V4ryKj1I1YrI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791924581; c=relaxed/simple;
-	bh=Abvg6add0/5i7xKTQmCMWUrzZ7UJf0kB51c5bxF0hlA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qhAkYtQvUiscR9dqxQAd6VUA0pVK/QGmoBqz6feG3ndx+MGSTm3vHLafay1pfFgyQ3jtADnTyj8kzZTRKE7rkPj1Gi3IgGEyqPTFv+XCPVsTfQ/IiaCW0UvLdJOWwILvlp9v/f6xuIR8N7FR9T5vhGnZ892CYEU5gFFXCUNrAME=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NoeYufws; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1791924617; c=relaxed/simple;
+	bh=46iadmMBynpiFNDGNr9uRc/wisQwT12baHH7CdskpOM=;
+	h=Message-ID:From:Subject:To:Cc:In-Reply-To:References:Content-Type:
+	 Date; b=J/JizWhn/9djBIIRps7jk432X1a29gBGoYabGLMujfYc1MeWu98GneUixxLbZmL17+dlxXy0lxMAr7Z3TUhheN/XVHZLNn3noPfpV/v3V1JAKFwcQU00q9pah+Oh4YuA3SuFMFC1peLUcehdQz530pE5ez0XD+5ps3hsvSUpw2Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LiJDthA+; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NoeYufws"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6A8EB1F000FF;
-	Tue, 13 Oct 2026 20:49:39 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LiJDthA+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2C4401F00893;
+	Tue, 13 Oct 2026 20:50:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1791924579;
-	bh=mocG94rIykU+JVCHV3KlPT9EwN6iySKYcHDI9bsbA/U=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=NoeYufwsN1r/utXl+j3JSf5ORbZVK9XCenf30reyiXTyBwINWWquK0xOlJ9JCYdxm
-	 e8A7DIhwRzIdZ1yOlIixu4mIu+0nhuPrMWuDKiNnSjpp4CsD8XapYonKaeim4MLD0o
-	 ZhPmKlwq6L01sgwLjhplQXg/T9aKcmgMmYhq0CwCtfpL+iaAXPXEL/l/LzJbLI65EI
-	 +9wCvBXYKf8yBbja2vUGGWg5N9EOn6a+2jzj9dmNulYdWulJKp27CcOwF/mhyZ8sZ4
-	 d500VWDeKRCxmgEV0fKSQOHDb/KQk09X0edxpssBjZJjXaikrbCWfUp/IkcPDS8xUn
-	 H8sNvqxaVCoDA==
-Date: Tue, 13 Oct 2026 13:49:38 -0700
-From: Namhyung Kim <namhyung@kernel.org>
-To: sashiko-reviews@lists.linux.dev
-Cc: linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v5 02/11] perf tools: Check ELF section type with name
-Message-ID: <as6ZYu8YcVjKB1YQ@google.com>
-References: <20261013172155.160869-1-namhyung@kernel.org>
- <20261013172155.160869-3-namhyung@kernel.org>
- <sashiko-outbox-170233@kernel.org>
+	s=k20260515; t=1791924615;
+	bh=46iadmMBynpiFNDGNr9uRc/wisQwT12baHH7CdskpOM=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=LiJDthA+DXIyYaMSx6pLGAdi3n5sZbMF28klJpoQ7V4wVRM6L6hmNUOieDpxsk+XK
+	 5hRrVk/PzT6kyWE5TXa3GTxL4OPpJN1iEqcW+CMPMyscveFPyLhdePQkZPOWloYV4S
+	 39HkLzGomSd+ERd+BrEDFY6+yp+Fl/li5EHB7CWp5Zi8G9FIc4MAbmc4QvgxmBC5tW
+	 MXqBwPJiA8789Fx6YkMcbdJL2szZhAsTIdyjgH0Hn0xOJeW/5EzMquSXP4oD0BMT9U
+	 6xCsDJUKi9v/gaiN6mYyQZCA/EtKWwgHph3ZQcY8krEr7H8jiVjNV/kewDtTuk/XlJ
+	 u+p3mMCzb/zoA==
+Message-ID: <sashiko-outbox-170488@kernel.org>
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v6 32/39] mm/uffd: use predicates for userfaultfd checks
+Reply-To: sashiko-reviews@lists.linux.dev
+To: =?utf-8?b?TG9yZW56byBTdG9ha2VzIChBUk0p?= <ljs@kernel.org>
+Cc: linux-usb@vger.kernel.org, linux-rdma@vger.kernel.org, selinux@vger.kernel.org, linux-perf-users@vger.kernel.org, linux-s390@vger.kernel.org, "Heiko
+ Carstens" <hca@linux.ibm.com>, "Vasily Gorbik" <gor@linux.ibm.com>, "Alexander
+ Gordeev" <agordeev@linux.ibm.com>, "Christian Borntraeger" <borntraeger@linux.ibm.com>
+In-Reply-To: <20261013-b4-mmap-prepare-vma-flag-sanify-v6-32-1aa3c9b139f9@kernel.org>
+References: <20261013-b4-mmap-prepare-vma-flag-sanify-v6-0-1aa3c9b139f9@kernel.org>
+ <20261013-b4-mmap-prepare-vma-flag-sanify-v6-32-1aa3c9b139f9@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Tue, 13 Oct 2026 20:50:14 +0000
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <sashiko-outbox-170233@kernel.org>
 
-On Tue, Oct 13, 2026 at 05:31:14PM +0000, sashiko-bot@kernel.org wrote:
-> Thank you for your contribution! Sashiko AI review found 1 potential issue(s) to consider:
-> - [Medium] perf symbol-elf: uninitialized memory read on gelf_getshdr failure
-> --
-> 
-> commit f2750bf0f2a1c49778b5a9d0173f02f48eb9e193
-> Author: Namhyung Kim <namhyung@kernel.org>
-> 
-> perf tools: Check ELF section type with name
-> 
-> This commit updates filename__has_section() to verify that a section
-> has the SHT_PROGBITS type instead of just checking its name. This prevents
-> empty sections with SHT_NOBITS from being incorrectly identified as present.
-> 
-> > diff --git a/tools/perf/util/symbol-elf.c b/tools/perf/util/symbol-elf.c
-> > --- a/tools/perf/util/symbol-elf.c
-> > +++ b/tools/perf/util/symbol-elf.c
-> > @@ -228,7 +228,8 @@ bool filename__has_section(const char *filename, const char *sec)
-> >  	if (gelf_getehdr(elf, &ehdr) == NULL)
-> >  		goto elf_out;
-> >  
-> > -	found = !!elf_section_by_name(elf, &ehdr, &shdr, sec, NULL);
-> > +	found = !!elf_section_by_name(elf, &ehdr, &shdr, sec, NULL) &&
-> > +		shdr.sh_type == SHT_PROGBITS;
-> 
-> [Severity: Medium]
-> Can this lead to an uninitialized memory read of shdr.sh_type if the ELF
-> file is malformed?
-> 
-> Looking at elf_section_by_name(), it does not check the return value of
-> gelf_getshdr():
-> 
-> tools/perf/util/symbol-elf.c:elf_section_by_name() {
->     ...
->     gelf_getshdr(sec, shp);
->     str = elf_strptr(elf, ep->e_shstrndx, shp->sh_name);
->     ...
-> }
-> 
-> If gelf_getshdr() fails, it returns NULL and leaves the shp struct unmodified.
-> Because shp points to the stack-allocated shdr in filename__has_section(),
-> a failure in gelf_getshdr() leaves shdr potentially uninitialized.
-> 
-> Since this patch adds a direct read of shdr.sh_type after elf_section_by_name()
-> returns, does this new check risk reading uninitialized stack memory?
+> Rather than directly checking VMA flags, use the newly introduced
+> vma_is_mm_managed() and vma_is_mm_backed() helpers in userfaultfd
+> when assessing VMA suitability for userfaultfd and UFFDIO_MOVE.
+>=20
+> The droppable check is kept explicit, as userfaultfd cannot function
+> correctly with droppable mappings.
+>=20
+> Update vma_move_compatible() so it's expressed in terms of VMA
+> characteristics rather than arbitrary flags.
+>=20
+> Additionally, update the use of the deprecated VMA flag API when checking
+> VMA_SHADOW_STACK_BIT.
+>=20
+> A VMA_IO_BIT check is no longer required but that is fine as a hard
+> invariant has been established that mm-managed mappings may not set
+> VMA_IO_BIT so the check is now redundant.
+>=20
+> Acked-by: Zi Yan <ziy@nvidia.com>
+> Acked-by: David Hildenbrand (Arm) <david@kernel.org>
+> Signed-off-by: Lorenzo Stoakes (ARM) <ljs@kernel.org>
 
-Well.. it's already checked shp->sh_name is valid so I think it's ok.
+Sashiko has reviewed this patch and found no issues. It looks great!
 
-But probably safer to check the return value.  It's also a separate
-change though.
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261013-b4-mmap-pr=
+epare-vma-flag-sanify-v6-0-1aa3c9b139f9@kernel.org?part=3D32
 
-Thanks,
-Namhyung
