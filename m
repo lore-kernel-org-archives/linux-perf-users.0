@@ -1,75 +1,63 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1348F501F2F
-	for <linux-perf-users@vger.kernel.org>; Tue, 13 Oct 2026 13:38:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC7D1501F34
+	for <linux-perf-users@vger.kernel.org>; Tue, 13 Oct 2026 13:39:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791898731; cv=none; b=DICtSCrCNlox9tbNFhc86pXzcadOEwzFt7IBk5oSmTbqlV8iKBb3aO1Tw1fa+LcaCbrxgrhM6QsDyvU23OnoHsuMwKCyIlBCn2VwYeup4yP7dlUlnG5231j5xEe4JqLaZ8YncCJeu7N1PO67rMVvL0bn1UzSoNrDjaQb5wyVCig=
+	t=1791898741; cv=none; b=MBWHn/WeUtmPffHjUrCjaIBg5bZ5ni4EfXPMeXt3yiVkxvVfmvvQOD8dnQ/ipFjK9yMXt+w6cWnUz4+DM8dfczLvybfJVzMhRJOWBEZKmd41ze0szYKVyjRTHeW02aRPEG2jQhKzppILBL5sKDx5shBjjRthcAJtxI6aETnln44=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791898731; c=relaxed/simple;
-	bh=4Y5GYOCiKkX4J5iCw3CxGDBtB7BITDFbh1AgTFwCF0k=;
+	s=arc-20240116; t=1791898741; c=relaxed/simple;
+	bh=0dozks8jXApp4+41y8r66bQgCrxDqI0F/oH+ZCDE+E0=;
 	h=Message-ID:From:Subject:To:Cc:In-Reply-To:References:Content-Type:
-	 Date; b=V4Kd+Xad3myaSay0P+I58IvI9WsAcw0mWLoyPv8rqMu/mTCY/xm9OhURoxwCffYZJUj1sdHfY8+0Bp0zG0Jc8kS3UDDk8MNPIdcOoEe3Yb8cKqMZHrLQzCtp4L6/lgnkBLg91WdUrcJ1ujUZSQ5ConsFKF4wfRGEOBiNKqSQz34=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Wk81kJUU; arc=none smtp.client-ip=100.103.45.18
+	 Date; b=u5lJsc5z6z2+8d+p/zc2Nzs8vxHb9jVy3WLCRqS5xtUurqCZnISPa9UqYZyfbFB0EneWvqqP+3GNSAvPlciB+jLs7zAV8Dm5J9g7lTRvhxPe/bdsTJW8xhuDmk5o03vpI6l9azmo5NLzS6Hk9qwYs0+Q8U3KMyEE1oSnOyrn4EA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kpriS8oU; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Wk81kJUU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AA2CB1F000FF;
-	Tue, 13 Oct 2026 13:38:49 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kpriS8oU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 67D4E1F000FF;
+	Tue, 13 Oct 2026 13:39:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1791898729;
-	bh=D5paWtLERyVm/KTNzxqt4YSbmp8bb8GJ6RtHC3CJScM=;
+	s=k20260515; t=1791898740;
+	bh=0dozks8jXApp4+41y8r66bQgCrxDqI0F/oH+ZCDE+E0=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=Wk81kJUUZolC86XZPdp7FRyz25NjjAfAH7DxKHXCBUeCNJAPI5ptRKGS5Nlbex8OH
-	 F2SXlRIEdpLwCX3sunJ7CGQ8Q2qFTpka3VDGBJLmaDuYyew3R0tA99PCCq6rJZsdtB
-	 A/hC5R+G44jsLHBCaW9bQ/FUIduuZAssBIB84Lrd6ru+Pny5XfeVwpvli7bLGNz0ix
-	 GQYd3GRPbhT6cPtQp6MlmzFIMeMMZDiWmuPI+JorfmVDYzqQUmPHK/09Wjng6H+HyS
-	 1RVFO2F7HtPiQ2QJvZLSHYqbkqui2HBQrnc/Tp4nLtszPwFVAtfJkLXu0FEQE1IXFE
-	 h1bGUTI+LFF2w==
-Message-ID: <sashiko-outbox-169834@kernel.org>
+	b=kpriS8oUuTTmiEh9JZJp6qBdn2MDIsX3t7nLsenB/OqwNQLRNewBRvZ69QeuBdDKD
+	 USfMTPJAu3gPU93YyQ2np4Y+vOCEzwbzV0HOg7jEdIDwdWZuyQECOTFyYQ+0yfN9WB
+	 ZRS4Zcu77rWDNeclWXL+BRz3UWiu380ed85LNHt1cRh8p8AIgTiBM17zNDuvABzuXp
+	 wgYf3wxOiwRq67ejTuWxYjoK0K4gR5qGfemP152UArfPl+8dyGMhE6mBd+AVS4eWAr
+	 vYcKfZz6ZGqCT/kS9fDVFiqLMc2kpg3AO63S4y98SXkwx83LvHvctlT8KKozzSRtrB
+	 ZvrG1YIOO4BJg==
+Message-ID: <sashiko-outbox-169836@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v7 02/15] perf annotate-arm64: Enable instruction
- tracking support
+Subject: Re: [PATCH v7 03/15] perf annotate-data: Add arch_get_reg_offset
+ helper
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Tengda Wu" <wutengda@huaweicloud.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <4980703a94ddadb06b3df925aacd2efc7d7c3308.1791629326.git.wutengda@huaweicloud.com>
+In-Reply-To: <f5639b97bb0aa19662cb1c230db8dc73fc00d986.1791629326.git.wutengda@huaweicloud.com>
 References: <cover.1791629326.git.wutengda@huaweicloud.com>
- <4980703a94ddadb06b3df925aacd2efc7d7c3308.1791629326.git.wutengda@huaweicloud.com>
+ <f5639b97bb0aa19662cb1c230db8dc73fc00d986.1791629326.git.wutengda@huaweicloud.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Tue, 13 Oct 2026 13:38:49 +0000
+Date: Tue, 13 Oct 2026 13:38:59 +0000
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-> Enable basic instruction tracking for arm64 by implementing three
-> essential functions in the find_data_type_block() call path:
+> Add a helper to compute the effective offset from a base register
+> for instruction operands. Currently handles arm64 addressing modes
+> including post-indexed, single-register, SIB-style indexed with
+> shift/extension, and constant-offset register pairs.
 >=20
->   find_data_type_block
->     -> arch_supports_insn_tracking  (1)
->     -> find_data_type_insn
->          -> init_type_state         (2)
->          -> update_var_state
->          -> update_insn_state       (3)
->=20
-> Changes:
->=20
-> * arch_supports_insn_tracking(): add arm64 to the list of supported
->   architectures, allowing find_data_type_block() to proceed with data
->   type analysis.
-> [ ... ]
-> inference during instruction tracking.
+> Fallback to instruction's raw offset for other architectures.
 >=20
 > Reviewed-by: Ian Rogers <irogers@google.com>
-> Signed-off-by: Li Huafei <lihuafei1@huawei.com>
 > Signed-off-by: Tengda Wu <wutengda@huaweicloud.com>
 
 Sashiko has reviewed this patch and found no issues. It looks great!
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/cover.1791629326.gi=
-t.wutengda@huaweicloud.com?part=3D2
+t.wutengda@huaweicloud.com?part=3D3
 
