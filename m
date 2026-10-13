@@ -1,124 +1,235 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A004A542EEF;
-	Tue, 13 Oct 2026 19:49:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC67D390615;
+	Tue, 13 Oct 2026 19:50:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791920969; cv=none; b=tnNHwRsiBCydC4BxriQhz4GVCjcSibkVrE1BwI7yB5SE5zsHDNovYaW4D6Lyd3xLeuJLNYbve/0m8rJsTXYtX60DjbwBYsPLAGbvBTD5WpKo6GasLsIAUxdzm/cPPqyYWP1IQcs30zpAERh6um4h+wbwNHDnMkZebispxxBSEY0=
+	t=1791921042; cv=none; b=fREzjomJtZL3ZfF3Sn/tC2WNCPMj78BfphxArPRH2LLJMtKzm1HM9quJK4T82rl8VoKj5yeACxXSS0BOo8tR9vu8cvRP6FPEAkmjl3OPkz9ka7y9YadZxM92rXonGK0IoE8CSRyKjwGjUE4KkoeutNQlOLYDLsfwgnJ8v6cafnc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791920969; c=relaxed/simple;
-	bh=ldwO3cFm64bnrynDvOBlQj8COmsGNqU+riOvCs2Dhm8=;
-	h=Message-ID:From:Subject:To:Cc:In-Reply-To:References:Content-Type:
-	 Date; b=dP7dZFDWT8dfcdM95yrnbIO1377WotIl0scmQ61UEZ+t7qMIL8X9WcDJnSUFrrZiuzqArxLDiCfbrNjNhvz6BP0ZdTi/PpguWq9jZUYKEu8MYN5EHjqDQbXr5PB9AP4kUvJP0m1n1/v1paR1EJoF5lQ9gtoPzGoD09KYNOcc0sI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Yd5yQsQe; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1791921042; c=relaxed/simple;
+	bh=zfp3QTAVDB7Us/Tj3COiXiTe0bsauGFQmFOWT9PU0hA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=BRInRXPvUbzOQGRwt54BxKAtf7ZvoWQPDFW9u67jodJQWhoGc9nH5igOZhtrINdlu3K8qrEEKI5/x65M3/6lZVz6cauVWHMuKFIEjCsfKSa5G6JDTavHQ/T9nRkBD6NDmO5tkjs1IXnqIFrInw4+Ka0qfdekhQ7rHhzOfTDDvXU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cDs0LkBZ; arc=none smtp.client-ip=192.198.163.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Yd5yQsQe"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 431CE1F000FF;
-	Tue, 13 Oct 2026 19:49:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1791920967;
-	bh=gSwdcBHqW0LbgQKT6nKt95Qv/QKLGxf35n8p5/QHy1g=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=Yd5yQsQePlyWQ/7DLdU6gH+StuyrPQD/dKoim7jIAFNeoMUy3B7UL9iJ3AQNFMk9R
-	 w/PDX3tvsPkuGZDSwA7BXuCgV5kgKR/ws+ak53JxTGzPV908Xte+SAQMscXAzWBvGa
-	 t60g1PLpyOhbcS6O6G9pSKexEk1CvckJECT4sMCGZjsrDcPVgPZKB208rKYdWL/MXe
-	 SpBzZSyfLEYrYOOyx52CXlkgdJ+Vh2KF+6Z9mZe+f96pkhBqUiRPwWule9auoGCYvR
-	 1sr7n5atIA6NUr5bIuEDLyANGMGNPeRZbKbMCPzE7sg56p8sFAioFBqQGdv0G3tgMW
-	 VCqZBhWZh/sgw==
-Message-ID: <sashiko-outbox-170428@kernel.org>
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v6 24/39] mm/mlock: eliminate weird VMA_IO_BIT abuse and
- simplify
-Reply-To: sashiko-reviews@lists.linux.dev
-To: =?utf-8?b?TG9yZW56byBTdG9ha2VzIChBUk0p?= <ljs@kernel.org>
-Cc: linux-usb@vger.kernel.org, linux-rdma@vger.kernel.org, selinux@vger.kernel.org, bpf@vger.kernel.org, linux-scsi@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-trace-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, kvmarm@lists.linux.dev, kvm@vger.kernel.org, linux-s390@vger.kernel.org, "Oliver
- Upton" <oupton@kernel.org>, "Marc Zyngier" <maz@kernel.org>, "Heiko
- Carstens" <hca@linux.ibm.com>, "Vasily Gorbik" <gor@linux.ibm.com>, "Alexander
- Gordeev" <agordeev@linux.ibm.com>, "Christian Borntraeger" <borntraeger@linux.ibm.com>
-In-Reply-To: <20261013-b4-mmap-prepare-vma-flag-sanify-v6-24-1aa3c9b139f9@kernel.org>
-References: <20261013-b4-mmap-prepare-vma-flag-sanify-v6-0-1aa3c9b139f9@kernel.org>
- <20261013-b4-mmap-prepare-vma-flag-sanify-v6-24-1aa3c9b139f9@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Tue, 13 Oct 2026 19:49:25 +0000
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cDs0LkBZ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1791921039; x=1823457039;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=zfp3QTAVDB7Us/Tj3COiXiTe0bsauGFQmFOWT9PU0hA=;
+  b=cDs0LkBZq+k06Lr3+lR20gYhJs4M77ixjEY6EnQIwezut8uAAg4jopSM
+   HNUCeoyZ5dVEr8nYIh+uP2MxlRLBzey/kynYKQpumNqF5rYiV0gNhahiJ
+   n0uX8NM5o/hIyJA5PVHLeMOuyhTluFEo58iSkW8vjibQLGsidIdl3xClN
+   msGvtKz4n0t5AGPzuuoz/XU+QBTpFM8xoXI0S2upNIyz3srpZHqItyTxM
+   XbqTZAiJ0b/3Ui7UACI+m6aYYjrJ1k62RoLfFCPT9kO8HYAuLp9o7K1aq
+   /R2dM4mDPKhxM8cnvfuJpo2FGG66BilKoMIISiJ1QOHRThrlzuIPAWX4k
+   w==;
+X-CSE-ConnectionGUID: KreLLAqyTwyBRXqtrrMFHA==
+X-CSE-MsgGUID: 1YBZlFODSsi2aIuRjDvYVw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11934"; a="668006"
+X-IronPort-AV: E=Sophos;i="6.27,156,1787036400"; 
+   d="scan'208";a="668006"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Oct 2026 12:50:39 -0700
+X-CSE-ConnectionGUID: 8nzlnYWzTi6zDH6pY1AN/A==
+X-CSE-MsgGUID: xUAcx0OIR2eYoWsPcNYmCg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.27,156,1787036400"; 
+   d="scan'208";a="1608135"
+Received: from 9cc2c43eec6b.jf.intel.com ([10.54.77.29])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Oct 2026 12:50:39 -0700
+From: Zide Chen <zide.chen@intel.com>
+To: Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Andi Kleen <ak@linux.intel.com>,
+	Eranian Stephane <eranian@google.com>
+Cc: linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	stable@vger.kernel.org,
+	Dapeng Mi <dapeng1.mi@linux.intel.com>,
+	Zide Chen <zide.chen@intel.com>
+Subject: [PATCH] perf/x86/intel/uncore: Add Granite Rapids CMS PMU support
+Date: Tue, 13 Oct 2026 12:40:05 -0700
+Message-ID: <20261013194005.96615-1-zide.chen@intel.com>
+X-Mailer: git-send-email 2.55.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
-s) to consider:
-- [Low] mm: TOCTOU race in try_to_migrate_one leaves folio pinned in mlock =
-batch
---
+Add support for the CMS (Common Mesh Stop) uncore PMON unit, shared by
+GNR, SRF, GRR, and CWF. One CMS box exists per CHA box, at a fixed MSR
+address: 0x3400 + 0x10 * unit_no + <reg offset>.
 
-commit cc15ce19ca95992151b61de2cedb165e4684ba4f
-Author: Lorenzo Stoakes (ARM) <ljs@kernel.org>
+CMS is not enumerated in the discovery table, so it is added as an
+extra MSR uncore type instead of going through the normal gnr_uncores[]
+array. Since the CMS unit numbering matches the CHA unit numbering,
+build the CMS box rb-tree by mirroring the discovered CHA (die, id)
+pairs, ensuring CMS boxes only appear where a corresponding CHA exists.
 
-mm/mlock: eliminate weird VMA_IO_BIT abuse and simplify
+Make generic_uncore_msr_ops global so the CMS type can reuse it.
+Opportunistically add the intel_ prefix to match the naming convention.
 
-This commit simplifies mlock VMA flag handling by eliminating the use of
-VMA_IO_BIT during mlock operations. It relies on VMA_LOCKONFAULT_BIT to mark
-walks and updates mlock and unmap code paths to test appropriate VMA lock
-flags instead.
+Cc: stable@vger.kernel.org
+Signed-off-by: Zide Chen <zide.chen@intel.com>
+---
+ arch/x86/events/intel/uncore_discovery.c |  4 +-
+ arch/x86/events/intel/uncore_discovery.h |  1 +
+ arch/x86/events/intel/uncore_snbep.c     | 81 +++++++++++++++++++++++-
+ 3 files changed, 82 insertions(+), 4 deletions(-)
 
-> diff --git a/mm/rmap.c b/mm/rmap.c
-> index 5332c52909be1..b4a4b3929044c 100644
-> --- a/mm/rmap.c
-> +++ b/mm/rmap.c
+diff --git a/arch/x86/events/intel/uncore_discovery.c b/arch/x86/events/intel/uncore_discovery.c
+index 0a22edf4d509..170f299385a0 100644
+--- a/arch/x86/events/intel/uncore_discovery.c
++++ b/arch/x86/events/intel/uncore_discovery.c
+@@ -532,7 +532,7 @@ static void intel_generic_uncore_msr_disable_event(struct intel_uncore_box *box,
+ 	wrmsrq(hwc->config_base, 0);
+ }
+ 
+-static struct intel_uncore_ops generic_uncore_msr_ops = {
++struct intel_uncore_ops intel_generic_uncore_msr_ops = {
+ 	.init_box		= intel_generic_uncore_msr_init_box,
+ 	.disable_box		= intel_generic_uncore_msr_disable_box,
+ 	.enable_box		= intel_generic_uncore_msr_enable_box,
+@@ -743,7 +743,7 @@ static bool uncore_update_uncore_type(enum uncore_access_type type_id,
+ 
+ 	switch (type_id) {
+ 	case UNCORE_ACCESS_MSR:
+-		uncore->ops = &generic_uncore_msr_ops;
++		uncore->ops = &intel_generic_uncore_msr_ops;
+ 		break;
+ 	case UNCORE_ACCESS_PCI:
+ 		uncore->ops = &generic_uncore_pci_ops;
+diff --git a/arch/x86/events/intel/uncore_discovery.h b/arch/x86/events/intel/uncore_discovery.h
+index 142e1b56cfc2..cececf6ecdc5 100644
+--- a/arch/x86/events/intel/uncore_discovery.h
++++ b/arch/x86/events/intel/uncore_discovery.h
+@@ -151,6 +151,7 @@ void intel_uncore_generic_uncore_mmio_init(void);
+ int intel_generic_uncore_msr_init_box(struct intel_uncore_box *box);
+ void intel_generic_uncore_msr_disable_box(struct intel_uncore_box *box);
+ void intel_generic_uncore_msr_enable_box(struct intel_uncore_box *box);
++extern struct intel_uncore_ops intel_generic_uncore_msr_ops;
+ 
+ int intel_generic_uncore_mmio_init_box(struct intel_uncore_box *box);
+ void intel_generic_uncore_mmio_disable_box(struct intel_uncore_box *box);
+diff --git a/arch/x86/events/intel/uncore_snbep.c b/arch/x86/events/intel/uncore_snbep.c
+index a97cd029db36..3abbc1bbf577 100644
+--- a/arch/x86/events/intel/uncore_snbep.c
++++ b/arch/x86/events/intel/uncore_snbep.c
+@@ -6492,6 +6492,32 @@ int gnr_uncore_units_ignore[] = {
+ 	UNCORE_IGNORE_END
+ };
+ 
++/*
++ * One CMS box exists per CHA box, at a fixed MSR address:
++ * 0x3400 + 0x10 * unit_no + <reg offset>.
++ */
++#define GNR_CMS_MSR_PMON_BOX_CTL	0x3400
++#define GNR_CMS_MSR_PMON_CTL0		0x02
++#define GNR_CMS_MSR_PMON_CTR0		0x08
++#define GNR_CMS_MSR_OFFSET		0x10
++/* Type ID for CMS */
++#define UNCORE_GNR_CMS			50
++
++static struct intel_uncore_type gnr_uncore_cms = {
++	/* Keep the PMU name aligned with the published CHACMS event list. */
++	.name			= "chacms",
++	.type_id		= UNCORE_GNR_CMS,
++	.event_mask		= SNBEP_PMON_RAW_EVENT_MASK,
++	.num_counters		= 4,
++	.perf_ctr_bits		= 48,
++	.event_ctl		= GNR_CMS_MSR_PMON_CTL0,
++	.perf_ctr		= GNR_CMS_MSR_PMON_CTR0,
++	.ops			= &intel_generic_uncore_msr_ops,
++	.format_group		= &snbep_uncore_format_group,
++	.attr_update		= uncore_alias_groups,
++	.cleanup_extra_boxes	= spr_extra_boxes_cleanup,
++};
++
+ static struct intel_uncore_type gnr_uncore_ubox = {
+ 	.name			= "ubox",
+ 	.attr_update		= uncore_alias_groups,
+@@ -6595,15 +6621,66 @@ static struct freerunning_counters gnr_iio_freerunning[] = {
+ 	[SPR_IIO_MSR_BW_OUT]	= { 0x2e0e, 0x10, 0x80, 8, 48 },
+ };
+ 
++/*
++ * Neither the free-running IIO counters nor CMS are covered by the
++ * discovery table, so both are added as "extra" MSR uncore types, in
++ * addition to the ones enumerated in gnr_uncores[].
++ */
++#define UNCORE_GNR_MSR_EXTRA_UNCORES	2
++
++static struct intel_uncore_type *gnr_msr_uncores[UNCORE_GNR_MSR_EXTRA_UNCORES] = {
++	&spr_uncore_iio_free_running,
++	&gnr_uncore_cms,
++};
++
++/* Build the CMS boxes rb-tree by mirroring CHA's discovered boxes. */
++static void gnr_uncore_cms_init_boxes(struct intel_uncore_type **uncores)
++{
++	struct intel_uncore_discovery_unit *cha_unit, *cms_unit;
++	struct intel_uncore_type *cha;
++	struct rb_root *root;
++	struct rb_node *node;
++	u16 num_units = 0;
++
++	cha = uncore_find_type_by_id(uncores, UNCORE_SPR_CHA);
++	if (!cha || !cha->boxes)
++		return;
++
++	root = kzalloc_obj(*root);
++	if (!root)
++		return;
++	*root = RB_ROOT;
++
++	for (node = rb_first(cha->boxes); node; node = rb_next(node)) {
++		cha_unit = rb_entry(node, struct intel_uncore_discovery_unit, node);
++
++		cms_unit = kzalloc_obj(*cms_unit);
++		if (!cms_unit)
++			break;
++
++		cms_unit->id   = cha_unit->id;
++		cms_unit->die  = cha_unit->die;
++		cms_unit->addr = GNR_CMS_MSR_PMON_BOX_CTL +
++				 cha_unit->id * GNR_CMS_MSR_OFFSET;
++
++		uncore_find_add_unit(cms_unit, root, &num_units);
++	}
++
++	gnr_uncore_cms.boxes = root;
++	gnr_uncore_cms.num_boxes = num_units;
++}
++
+ void gnr_uncore_cpu_init(void)
+ {
+ 	uncore_msr_uncores = uncore_get_uncores(UNCORE_ACCESS_MSR,
+-						UNCORE_SPR_MSR_EXTRA_UNCORES,
+-						spr_msr_uncores,
++						UNCORE_GNR_MSR_EXTRA_UNCORES,
++						gnr_msr_uncores,
+ 						UNCORE_GNR_NUM_UNCORE_TYPES,
+ 						gnr_uncores);
+ 	spr_uncore_iio_free_running.num_boxes = uncore_type_max_boxes(uncore_msr_uncores, UNCORE_SPR_IIO);
+ 	spr_uncore_iio_free_running.freerunning = gnr_iio_freerunning;
++
++	gnr_uncore_cms_init_boxes(uncore_msr_uncores);
+ }
+ 
+ int gnr_uncore_pci_init(void)
+-- 
+2.55.0
 
-[ ... ]
-
-> @@ -2395,7 +2397,7 @@ static bool try_to_unmap_one(struct folio *folio, s=
-truct vm_area_struct *vma,
->  		}
->  finish_unmap:
->  		folio_remove_rmap_ptes(folio, page, nr_pages, vma);
-> -		if (vma->vm_flags & VM_LOCKED)
-> +		if (vma_test_any_mask(vma, VMA_LOCKED_MASK))
->  			mlock_drain_local();
-
-[Severity: Low]
-Can this double-check of VMA_LOCKED_MASK lead to a TOCTOU race?
-
-folio_remove_rmap_ptes() calls munlock_vma_folio() internally, which checks
-vma_test_any_mask(vma, VMA_LOCKED_MASK) to decide whether to queue the folio
-in the local CPU's mlock batch.
-
-Immediately after, try_to_unmap_one() re-evaluates the same mask to decide
-whether to call mlock_drain_local(). A concurrent munlock() can clear the
-VMA's locked flags exactly between these two checks.
-
-If this happens, the folio is queued in the batch, but the local drain is
-skipped. The local batch retains a reference to the folio, which permanently
-pins it and can force best-effort migration like compaction to fail for this
-page in a tight loop.
-
->  		folio_put_refs(folio, nr_pages);
-
-[ ... ]
-
-> @@ -2770,7 +2772,7 @@ static bool try_to_migrate_one(struct folio *folio,=
- struct vm_area_struct *vma,
->  			hugetlb_remove_rmap(folio);
->  		else
->  			folio_remove_rmap_pte(folio, subpage, vma);
-> -		if (vma->vm_flags & VM_LOCKED)
-> +		if (vma_test_any_mask(vma, VMA_LOCKED_MASK))
->  			mlock_drain_local();
-
-[Severity: Low]
-Does this path suffer from the same TOCTOU vulnerability?
-
-Like the unmap path above, if the VMA flags are cleared concurrently between
-folio_remove_rmap_pte() and the check for mlock_drain_local(), the folio
-could remain pinned in the local mlock batch.
-
->  		folio_put(folio);
->  	}
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261013-b4-mmap-pr=
-epare-vma-flag-sanify-v6-0-1aa3c9b139f9@kernel.org?part=3D24
