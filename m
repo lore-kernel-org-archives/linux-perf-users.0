@@ -1,61 +1,66 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F9AA48D862
-	for <linux-perf-users@vger.kernel.org>; Tue, 13 Oct 2026 18:35:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB2D54A1DFB;
+	Tue, 13 Oct 2026 18:35:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791916502; cv=none; b=BsQJbkLnoXXZVIjbM3z8M9nisWholn4Fe5INaSK0kEWdKt39N+ZFLP31zNtF/SaVs9FbK3x/kpsejwbZIbtRuUwlkXtBOVboaAZarfBE5XQzZhOGOyga26ue27JSHzdm6bVsETlw0oEueqt+EstiEIiisgH8bBa1zgGNBPuQpeE=
+	t=1791916529; cv=none; b=CrqWD0fT3S6vIS/hT9BoqdSfqCF3SNsRGV27rluG0qRglcsw97uivt9h2+4+FsHs2u2SfDXr0FWF6T8xkF8CKunqw/R18BrXvgfnIr9VwrlJrIPDNUfvENFk7ColUD+DZlsaEUONODRZGDJs2DtP8sd3gf90sZa/Qk4KCjJGVQo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791916502; c=relaxed/simple;
-	bh=4GAAc2kWp3VvKaQ0dKZj47TYLro3SH7yA2IbLwjYe0g=;
-	h=Message-ID:From:Subject:To:Cc:In-Reply-To:References:Content-Type:
-	 Date; b=h3kECFcIe+rTqiJ0aJurTsK0rOkH0P4MZaji3FPJxDn089ZyQO8uQgL3pXmSpFBkldTiNuQkIUmTaSjWeMvC+WzP3iv39SOgEcK2t5DNhlDZueORNCyYCV2EB+IFLZAwdfoYStJJiAX2eqGGSd6wrqV3CpCGLikP8TjI+e+CRp4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=f/o4/pNz; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1791916529; c=relaxed/simple;
+	bh=o4bkfPWTq+VZX0h2ofx+xLsUEl1BSyC/15o6TUAqLs0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=prMTew1i2Da1Wbfy1JYc3C2JWJzTqJ7glQj45WfI1Gvqx5mQiHtASlCrBkvK7Xt1PoQUXcN4Z7ZjyApVGt23TLKvP2PNRT3+1Px44Y7dmG/hFrqFkr4nsI1rRdTIGyEM12f4WCxgxmS6/Fj8CGpuX6w6Hu7OtSI7zhxbE7QbZNY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OCkx+Blu; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="f/o4/pNz"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BC9CF1F000FF;
-	Tue, 13 Oct 2026 18:35:00 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OCkx+Blu"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DE3DB1F000FF;
+	Tue, 13 Oct 2026 18:35:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1791916500;
-	bh=4GAAc2kWp3VvKaQ0dKZj47TYLro3SH7yA2IbLwjYe0g=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=f/o4/pNzszYKw9kk+7ulXWKTzg5KJsNv+RfVaxoJvgPttqcluoIlCd1PXHH/nRn3p
-	 KE3iQTWYekX/ZHCK4x3OCcpYZbGj7CdAEQ0/uMxXZbyZoIdcECO79ZPQrdmi51rEj5
-	 klNc8wUehXSd86ZIbj9Z8KV+l/WaujaalmwQ3OXgwge349ZmY1sYBAdSi+dQ+DOuSP
-	 c6VszNabOlTfUQwIsZLST86ULTmztVCgfsqnDC7WdLWvDYwwJgjhRzB9E6j5wlWYMK
-	 kGxa5NnVkEJUJJw09zyFjDVneKK4/Ux2n8ajfRaRvtvt/3Qzn6lugSzeXnw82wES8w
-	 hIOHxS9WYTyIg==
-Message-ID: <sashiko-outbox-170337@kernel.org>
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v1 06/10] perf comm: Add __guarded_by annotations to
- struct comm_strs
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Ian Rogers" <irogers@google.com>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20261013182458.1234616-7-irogers@google.com>
-References: <20261013182458.1234616-1-irogers@google.com>
- <20261013182458.1234616-7-irogers@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Tue, 13 Oct 2026 18:35:00 +0000
+	s=k20260515; t=1791916528;
+	bh=TSfufczw2wfRitYypoeS1SIbbxgdZ15alxWA3QjQSXg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=OCkx+BluuFnpj4QEEiO1g7m72VgLQQ4H9bU9uBR5LQ1EZdmvV0EqXCUnkFKAMsSyc
+	 /MoPafSDrittiXMZe05WbbhhCihn9yP78whDvysY5HSHfOHQqO6iBZQNkwFwbnPyA8
+	 JUOb8ZtulYimdbZZk3WrEIi/A5lTtXwwHS4R4bfOY7W7biBzLxM8m8dPVouQTskGS4
+	 03YgN03xeraTrtQ5g35DpoiVrGdtfPvls0XBHoIufBxBE8//4A29BG8tpPFyf9Kr9y
+	 TzkLniJHUYwY06gnSzoNj54knviJ9qNEYJohuEZ3XauGeFug0Vy4us9eO/T4lYLIME
+	 eW1zGK6dYM4lQ==
+Date: Tue, 13 Oct 2026 15:35:24 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	James Clark <james.clark@linaro.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org, Sashiko <sashiko-bot@kernel.org>
+Subject: Re: [PATCH v3 1/4] perf symbol: Fix symbol loading from libbfd
+Message-ID: <as557LTNwiigXk0O@x2>
+References: <20261012235938.87912-1-namhyung@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20261012235938.87912-1-namhyung@kernel.org>
 
-> Annotate strs, num_strs, and capacity in struct comm_strs with
-> __guarded_by(&lock) and __pt_guarded_by(&lock) so Clang verifies all
-> accesses hold comm_strs->lock.
->=20
-> Assisted-by: Antigravity:gemini-3.1-pro
->=20
-> Signed-off-by: Ian Rogers <irogers@google.com>
+On Mon, Oct 12, 2026 at 04:59:34PM -0700, Namhyung Kim wrote:
+> The dso__load() should return a positive number (number of symbols
+> loaded) when it succeded to load symbols.  But dso__load_bfd_symbols()
+> only returns 0 and it's hard to check if it actually loaded symbols or
+> not.  Let's return the value of dso__has_symbol() and check it in
+> dso__load() so that it can return 1 for success.
+> 
+> Reported-by: Sashiko <sashiko-bot@kernel.org>
+> Closes: https://lore.kernel.org/r/sashiko-outbox-162540@kernel.org
+> Fixes: eac9a4342e5447cad ("perf symbols: Try reading the symbol table with libbfd")
+> Reviewed-by: Ian Rogers <irogers@google.com>
+> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 
-Sashiko has reviewed this patch and found no issues. It looks great!
+Thanks, applied to perf-tools-next, for v7.4.
 
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261013182458.1234=
-616-1-irogers@google.com?part=3D6
-
+- Arnaldo
