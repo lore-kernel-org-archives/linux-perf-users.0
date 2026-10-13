@@ -1,74 +1,101 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from 011.lax.mailroute.net (011.lax.mailroute.net [199.89.1.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9EA45476D8;
-	Tue, 13 Oct 2026 22:14:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EB7955199D;
+	Tue, 13 Oct 2026 22:14:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=199.89.1.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791929650; cv=none; b=tXLnKCf8WQi7vJbL46QG189j6pum3leqeTjKJ7LPYb2Ts8gf3etDmd8baYpnD7LNpjk/NexznlG4ID7JzeXcCNGZu3260s0XhB/zXy81fjdwrUNbZSveAS5Rkkd+JzO8IaT5Y21EkkfvuRpXIOTuOMWOzbVHTs8Oldl0lVO7olQ=
+	t=1791929699; cv=none; b=fep5RCZZKhmKPvgHJcutMIILoUKOoow+Lj0efawmCu/Cz+0ysdvFiXB9uhtAFS3xOc0x8as8GAnrRFswLSzbtjNGqSHglMZ1fOL4fdHMYy1y6UtTWkDSqnYlbweyNTZlEY2rKWXCNi5m81rWrPHGjnhOx26q7YiyV7lO+qI4a6A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791929650; c=relaxed/simple;
-	bh=3WIdtLgclVaK30MySg7pBCiuy8t/rYZzOGp8vyC6W08=;
-	h=Message-ID:From:Subject:To:Cc:In-Reply-To:References:Content-Type:
-	 Date; b=fkjLmcbSO1ICKEKf1+11fy+q0r+T9yg9OnkMGS6ln+6Drd9pkIZ1d7slrp5Jk9r3tuBxyr2I3eDXevNaAaB38QrdcQY6IXHH74AbKc7NeSLVwNY8fTfmfCsHda+UTKbDKpFkkNSu3QAkXkaCq6U5mlTlz7jBBhHKXuDjVTbpZc8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JibyuJMG; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1791929699; c=relaxed/simple;
+	bh=v+Px2b//cyjC1k/A3Zmm/at+F5i/PNpfcr/2vmN4mK4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=PQCrAc+73/RyXN7r+6jCDz6SKrbL2E5e4+tn19Ocx690Y2OdnX9HyavK7yQLvvnwBy4dkXHKnFu54uiHLPtk6udZmQrsWzjqWlTUfPgd4KAZJDY7tvMpiL8PiQ6sANIWkz20QcrmgI1WMTXUyaKIMHf6UzeW4H9mdmPYTZmS8bk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org; spf=pass smtp.mailfrom=acm.org; dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b=BRuWmY7A; arc=none smtp.client-ip=199.89.1.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=acm.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JibyuJMG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6B5BF1F00898;
-	Tue, 13 Oct 2026 22:14:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1791929649;
-	bh=3WIdtLgclVaK30MySg7pBCiuy8t/rYZzOGp8vyC6W08=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=JibyuJMGb8U14pqi7xirdrc55v4AmelO89eC1DEsPdrfGXenLfFsrhjxmXv61rsdI
-	 aq/1eix9bUtqL2KcEndWeMmgPybARghWfSiP11QUOTxZ0+wDiO9PuA+R9tE5mV0qXq
-	 JM/0Kf1keS1X6Y1v0XkdbL83UfqltieMYAaWqhOdCrWAreFcSP5hzqdFBRqn9V8eP9
-	 1caNZ1f699n/kkPg8ljz/Lza9U92dHtj9dPNGhajqrh5n/t7plOPoGej5pbnYsHlv2
-	 298DTXswULnesTpJiDhWReZMgTgJrx2pyik4qauUO0t7ZiD5HquZFrOJ6WqrQFdr+S
-	 NfNLWh4BQRtCQ==
-Message-ID: <sashiko-outbox-170566@kernel.org>
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v6 39/39] mm/huge_memory: remove vma_is_special_huge()
-Reply-To: sashiko-reviews@lists.linux.dev
-To: =?utf-8?b?TG9yZW56byBTdG9ha2VzIChBUk0p?= <ljs@kernel.org>
-Cc: linux-usb@vger.kernel.org, linux-rdma@vger.kernel.org, selinux@vger.kernel.org, linux-perf-users@vger.kernel.org, linux-s390@vger.kernel.org, "Heiko
- Carstens" <hca@linux.ibm.com>, "Vasily Gorbik" <gor@linux.ibm.com>, "Alexander
- Gordeev" <agordeev@linux.ibm.com>, "Christian Borntraeger" <borntraeger@linux.ibm.com>
-In-Reply-To: <20261013-b4-mmap-prepare-vma-flag-sanify-v6-39-1aa3c9b139f9@kernel.org>
-References: <20261013-b4-mmap-prepare-vma-flag-sanify-v6-0-1aa3c9b139f9@kernel.org>
- <20261013-b4-mmap-prepare-vma-flag-sanify-v6-39-1aa3c9b139f9@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Tue, 13 Oct 2026 22:14:09 +0000
+	dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b="BRuWmY7A"
+Received: from localhost (localhost [127.0.0.1])
+	by 011.lax.mailroute.net (Postfix) with ESMTP id 4j47tV0D7Hz1XM4Tn;
+	Tue, 13 Oct 2026 22:14:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=acm.org; h=
+	content-transfer-encoding:content-type:content-type:in-reply-to
+	:from:from:content-language:references:subject:subject
+	:user-agent:mime-version:date:date:message-id:received:received;
+	 s=mr01; t=1791929692; x=1794521693; bh=LF8e975hmkkpUELtZzipsuJe
+	haJkDu9CcLyUa+VJf5U=; b=BRuWmY7Ahf/chBnwoWAm+JlB3U8+rlr3HSvKQRTR
+	yk9kYJD0uSw2oqChvhphmy6OITQaM8JRLUrRauIu17ZuoewoED4nTvpLVGx2CV5P
+	o2XaufdjfuZk70/w7ZP1UaVTkpyDAk83BmKSpxCmixsIZekl44RvdjkTwfzP9Jtn
+	CSiCCXOcRSAgiTfuXPtYMI619enQzL7zShxeeAbjHgsB7/ONiMsge8F58D6uV+Lm
+	P9l7V6dYUdNtkzPA9wZ0Uu8EfdfQ3r5bhCKeKUHnFk1HVbiFR9FdvTJE8PGOfdph
+	BTmxKG/c0+/SVr6vOHNc7845HKN1+ozGv7Z3rXPLd7JVtw==
+X-Virus-Scanned: by MailRoute
+Received: from 011.lax.mailroute.net ([127.0.0.1])
+ by localhost (011.lax [127.0.0.1]) (mroute_mailscanner, port 10029) with LMTP
+ id 2mKJGpWtbxMd; Tue, 13 Oct 2026 22:14:52 +0000 (UTC)
+Received: from [192.168.51.14] (c-24-6-239-25.hsd1.ca.comcast.net [24.6.239.25])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: bvanassche@acm.org)
+	by 011.lax.mailroute.net (Postfix) with ESMTPSA id 4j47tM0NxMz1XM4Tl;
+	Tue, 13 Oct 2026 22:14:50 +0000 (UTC)
+Message-ID: <56cea1ea-a4a5-4c26-a15d-732415986ede@acm.org>
+Date: Tue, 13 Oct 2026 15:14:49 -0700
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 01/10] compiler-context-analysis: Avoid unused
+ parameter warning in _context_unsafe_alias()
+To: Ian Rogers <irogers@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Marco Elver <elver@google.com>,
+ Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
+ James Clark <james.clark@linaro.org>, Nathan Chancellor <nathan@kernel.org>,
+ Nick Desaulniers <ndesaulniers@google.com>, Bill Wendling
+ <morbo@google.com>, Justin Stitt <justinstitt@google.com>,
+ Lorenzo Stoakes <ljs@kernel.org>, linux-perf-users@vger.kernel.org,
+ linux-kernel@vger.kernel.org, llvm@lists.linux.dev
+References: <20261013182458.1234616-1-irogers@google.com>
+ <20261013182458.1234616-2-irogers@google.com>
+ <871bf440-5b43-4d63-83f8-15ba96719fa6@acm.org>
+ <CAP-5=fX1XZu=3scB1-hA2ppcM0+sR7t_3=C7fFx=kGikm=dLqA@mail.gmail.com>
+Content-Language: en-US
+From: Bart Van Assche <bvanassche@acm.org>
+In-Reply-To: <CAP-5=fX1XZu=3scB1-hA2ppcM0+sR7t_3=C7fFx=kGikm=dLqA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
 
-> vma_is_special_huge() tests whether either the VMA_PFNMAP_BIT or
-> VMA_MIXEDMAP_BIT is set (i.e. whether the VMA is not mm-managed),
-> but with a DAX carve-out.
+On 10/13/26 3:10 PM, Ian Rogers wrote:
+> On Tue, Oct 13, 2026 at 12:44=E2=80=AFPM Bart Van Assche <bvanassche@ac=
+m.org> wrote:
+>> On 10/13/26 11:24 AM, Ian Rogers wrote:
+>>> diff --git a/include/linux/compiler-context-analysis.h b/include/linu=
+x/compiler-context-analysis.h
+>>> index 8302ebc2ea8c..024e303188ad 100644
+>>> --- a/include/linux/compiler-context-analysis.h
+>>> +++ b/include/linux/compiler-context-analysis.h
+>>> @@ -243,7 +243,7 @@
+>>>     * alias as a function argument).
+>>>     */
+>>>    #define context_unsafe_alias(p) _context_unsafe_alias((void **)&(p=
+))
+>>> -static inline void _context_unsafe_alias(void **p) { }
+>>> +static inline void _context_unsafe_alias(void **p) { (void)p; }
+>>
+>> Why a void cast instead of __attribute__((unused))?
 >=20
-> DAX however no longer sets VMA_MIXEDMAP_BIT, so this carve-out is no long=
-er
-> required.
->=20
-> Therefore test for !vma_is_mm_managed() instead and also drop the
-> VMA_IO_BIT check, as it is now redundant since it is enforced that
-> mm-managed mappings may not set VMA_IO_BIT.
->=20
-> This also eliminates another overloaded use of 'special' within mm.
->=20
-> No functional change intended.
->=20
-> Acked-by: Zi Yan <ziy@nvidia.com>
-> Acked-by: David Hildenbrand (Arm) <david@kernel.org>
-> Signed-off-by: Lorenzo Stoakes (ARM) <ljs@kernel.org>
+> I agree; unfortunately, the macro isn't declared before this header
+> change needs it and I wanted to minimize the change.
 
-Sashiko has reviewed this patch and found no issues. It looks great!
+Hmm ... as far as I know __attribute__() is not a macro.
 
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261013-b4-mmap-pr=
-epare-vma-flag-sanify-v6-0-1aa3c9b139f9@kernel.org?part=3D39
+Thanks,
 
+Bart.
