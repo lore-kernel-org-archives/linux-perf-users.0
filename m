@@ -1,132 +1,67 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4AB5545D93
-	for <linux-perf-users@vger.kernel.org>; Tue, 13 Oct 2026 20:28:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9214554DAF5;
+	Tue, 13 Oct 2026 20:32:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791923296; cv=none; b=UmmOwZaFrv3FQ4pSjJX7KQzPl0uRutxtF4sAeChD/PecDxcxdqeifiKUu/i+yv197W2U7B/DlDTK3gkPYmnKj5QGjqiqxJB4H9fac7+LzBTfqtD5BBHoXrxanmnhpdpmNWe5LH5SGEN26IVQTLrecLI80xL1U3GTIp87fT5Zeu8=
+	t=1791923524; cv=none; b=eU9iFV3c+PMTEMNY9tnbcqAphkDflgE0p8OGwi3phBiCR9VoRS4TdqAumElK9XaPtAv/jrK6kuEtZZyhcaMTwN821vona1hkBwAe2wPVL15siwEMHdtYuucPvJQ9KNNFguS9uFyoHClPaYiCob8ZixhBV7+zY9e6OfBmV+FWuTw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791923296; c=relaxed/simple;
-	bh=3f/f4sYmnVzwWvI+x/qNY5CLacTo2ilt6BkyZwpoz/w=;
-	h=Message-ID:From:Subject:To:Cc:In-Reply-To:References:Content-Type:
-	 Date; b=rQQkzjJUcAdRhQulkw/SxUjlCgzrqYYY42aS8KdJYBLBO5onzc9eAMYTDsSNwj0ebtQZ519dykz9TckUjV/R5ax8w6UNZ9zFDorv6VNuqK6YxrlEOGwIlvRKpl2h54CRq+cCUFr7lV5oQVx05n5OpcJV5noxuI8mDu/6bZbx9ao=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jXbig3hl; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1791923524; c=relaxed/simple;
+	bh=zB1bYAP7BlE3kghgTbTWzukoIkZ0zPngPL3n5uFA4l4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JgZ0dd9Gy+PEzmV07B1IbkhDgMexQ/adIg4e8r1h/tIK0ycZ0Jg+bJJxGqCidDvzECD1em1VXEgWe1ws3H5KgeUUx9vP749ejIwdsCANoz03rAfppRzRoqDk0OhKq5FHC0589d6BBU0GvQlIlNcWBKr2h7jd9CmtT8BPPMZQI44=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=t-8ch.de; spf=pass smtp.mailfrom=t-8ch.de; dkim=pass (1024-bit key) header.d=t-8ch.de header.i=@t-8ch.de header.b=OzOTAYrO; arc=none smtp.client-ip=159.69.126.157
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=t-8ch.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=t-8ch.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jXbig3hl"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9F1641F000FF;
-	Tue, 13 Oct 2026 20:28:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1791923294;
-	bh=ooW3aMQS+jrKjz/51IjhQRqjZ9bgXIa98Nk6sAJJFj8=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=jXbig3hlo5kVf/z2MCNZijPgCSw3o3Knu1DD85a98JOj17gSC9za0OtclHG6/KyTF
-	 3LTuU6P33/PlUoO3X0IZTDAk3Mt84a+ykwQwUPIsuCzp9xhIMGKbAbgZBgXkmIFU9w
-	 SN6G1Kww6pj7Ick+ZLGemb/xZ7LYolfrOp0ExepOvKyqnf2yqgVppHFWcrgWyt+QFU
-	 N4YdIRsqIV7VoFtkuBj/KL4R2TIJW0QYppz3yjlRLHppqZkW+AmtgAyK4mLLJgiowV
-	 gjcFzhGXO8bZMo6QneIxQZP/XxuDsNIXRrgLqpej9KiET35tXaPDVJQBB4xTnfzpI+
-	 CS+M6XEV8DQuQ==
-Message-ID: <sashiko-outbox-170463@kernel.org>
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v2 02/19] perf test attr: Allow tests to require a core
- PMU
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Arnaldo Carvalho de Melo" <acme@kernel.org>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20261013201415.36428-3-acme@kernel.org>
-References: <20261013201415.36428-1-acme@kernel.org>
- <20261013201415.36428-3-acme@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Tue, 13 Oct 2026 20:28:14 +0000
+	dkim=pass (1024-bit key) header.d=t-8ch.de header.i=@t-8ch.de header.b="OzOTAYrO"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=t-8ch.de; s=mail;
+	t=1791923517; bh=zB1bYAP7BlE3kghgTbTWzukoIkZ0zPngPL3n5uFA4l4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=OzOTAYrOsNXdT7HaUIlD1URf/tUABcu0MwYaT22Ws/35IVkul3E+7ETsojrEaUzXx
+	 qsoVSwiMbfkYJ+3NLvhFmXaWQmDn9XFle2xnhBLO56tRpQSd4V7e1vC7M0sv9dfnZP
+	 0Rvg4JRNePLtXuIl9Kx6sUKwI7Ber97YFUXUJ9Tg=
+Date: Tue, 13 Oct 2026 22:31:57 +0200
+From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas@t-8ch.de>
+To: Sasha Levin <sashal@kernel.org>
+Cc: Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nsc@kernel.org>, 
+	linux-kbuild@vger.kernel.org, Shuah Khan <shuah@kernel.org>, linux-kselftest@vger.kernel.org, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Ian Rogers <irogers@google.com>, linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH 1/6] kbuild: factor the userspace ABI flags out into
+ KBUILD_USERABI
+Message-ID: <e92f7acf-a8fa-4138-9703-8feb3cd55499@t-8ch.de>
+References: <20261011233647.2454648-1-sashal@kernel.org>
+ <20261011233647.2454648-2-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20261011233647.2454648-2-sashal@kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
-s) to consider:
-- [Medium] perf python: memory leak of parse_events_error in pyrf__parse_ev=
-ents()
---
+On 2026-10-11 19:36:40-0400, Sasha Levin wrote:
+> KBUILD_USERCFLAGS and KBUILD_USERLDFLAGS pick up the flags that select
+> the target ABI for userspace programs: --target= under clang, -m32/-m64,
+> or CONFIG_ARCH_USERFLAGS. Collect those in KBUILD_USERABI and export it,
+> so programs built outside of kbuild's userprogs can be compiled for the
+> same ABI without also inheriting kbuild's warning and language flags.
+> 
+> No functional change: KBUILD_USERCFLAGS and KBUILD_USERLDFLAGS keep the
+> same value.
+> 
+> Assisted-by: LLM
+> Signed-off-by: Sasha Levin <sashal@kernel.org>
 
-commit f47ff7c9fc4b5bf17c150eab6410f6c98f01cb7c
-Author: Arnaldo Carvalho de Melo <acme@redhat.com>
+Reviewed-by: Thomas Weißschuh <linux@weissschuh.net>
 
-perf test attr: Allow tests to require a core PMU
+> ---
+>  Makefile | 12 +++++++-----
+>  1 file changed, 7 insertions(+), 5 deletions(-)
 
-On machines without a usable core PMU, like an aarch64 box with no DT
-node for the ARM PMU, the expectations that pin the legacy hardware
-encoding can't be checked: without a core PMU at all 'cycles' doesn't
-even resolve, and with one that can't be opened 'perf record' takes the
-software fallback and records attributes they can never match.
-
-> diff --git a/tools/perf/tests/shell/lib/attr.py b/tools/perf/tests/shell/=
-lib/attr.py
-> index 68f06df9565a0..b55c9b881e598 100644
-> --- a/tools/perf/tests/shell/lib/attr.py
-> +++ b/tools/perf/tests/shell/lib/attr.py
-
-[ ... ]
-
-> @@ -28,6 +29,34 @@ def data_equal(a, b):
-> =20
->      return False
-> =20
-> +def core_pmu_available():
-> +    """
-> +    Is there a core PMU on this machine? Without one hardware events are=
-n't
-> +    supported and get replaced by the software fallback, so there's no w=
-ay to
-> +    check the expectations that pin their legacy encodings.
-> +    """
-> +    try:
-> +        import perf
-> +        parse_events =3D perf.parse_events
-> +    except (ImportError, AttributeError):
-> +        # Nothing to ask about it, let the expectations speak.
-> +        return True
-> +
-> +    try:
-> +        evlist =3D parse_events('cycles')
-> +    except OSError:
-> +        # No PMU that can count it, the same as the ENOENT below.
-> +        return False
-> +
-
-[Severity: Medium]
-Does this expected failure trigger a memory leak of the parse_events_error
-structure in the underlying C extension?
-
-When parse_events() fails or generates warnings, it dynamically allocates
-memory for error strings. However, looking at the python bindings in
-tools/perf/util/python.c:
-
-tools/perf/util/python.c:pyrf__parse_events() {
-	...
-	parse_events_error__init(&err);
-	perf_evlist__set_maps(evlist__core(evlist), cpus, threads);
-	if (parse_events(evlist, input, &err)) {
-		parse_events_error__print(&err, input);
-		PyErr_SetFromErrno(PyExc_OSError);
-		evlist__put(evlist);
-		return NULL;
-	}
-	result =3D pyrf_evlist__from_evlist(evlist);
-	evlist__put(evlist);
-	return result;
-}
-
-The err structure is dynamically populated but parse_events_error__exit(&er=
-r)
-is never called on either the success or error paths, leaking memory whenev=
-er
-errors or warnings are generated.
-
-Could pyrf__parse_events() be updated to clean up the error structure?
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261013201415.3642=
-8-1-acme@kernel.org?part=3D2
+(...)
