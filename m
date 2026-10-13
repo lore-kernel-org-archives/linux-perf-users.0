@@ -1,187 +1,267 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com [209.85.208.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA957501299;
-	Tue, 13 Oct 2026 12:53:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41041344D91
+	for <linux-perf-users@vger.kernel.org>; Tue, 13 Oct 2026 13:01:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791895999; cv=none; b=Hnly0BchmUp8zc/3mR+3Bi6m7qzJftty4hTO3G2aKY/LKpCUy1e224RThf7QEwd+8/b/py5IYG3u+Mdnl+obdh7r6+hGEO6wJ9OUzQ+sEF3j2+MT+p7UdYRlpB1+p5h70nuIQXZ6fTj8FWbK1NJgEzYrGDeRypImUSC9GMXRQyA=
+	t=1791896463; cv=none; b=LW40XEMa2VX4f8yS0IIkTWyMdgroDbDXPdx4k2a4px/wUiB8DZnzAqxRM3IguUx8pmf4v1sux0CJ0lvzE+4uynSmwIic4a/Zn5992Fdh8q6aX7v1ikaLIxFJ5DGzZ54ipEf+7TukcrU5y2yCHKrNvlFbx764Fv1bdYIrygq6n+0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791895999; c=relaxed/simple;
-	bh=axOM5j3vOY7t9ZLps+wPbthA9ApS1l0Pw7wVAlogkDc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Dri7Miz8Ojdf45I7lBjuQQi813p5/hRUTXnACRRD9UPxQDxi1czxEmIM3TaVTFZzlC2A/6aVXX3QAWTZ0ya/kDFxH805/gJ6dXJeZIH1bwML4aqnV+nkNMV98nhPQBZEmTv3LrNIk7eC0XNXCL5iw45CLnX+0PoaSLMxRZBaxXM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KHGkjZku; arc=none smtp.client-ip=192.198.163.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1791896463; c=relaxed/simple;
+	bh=AduMkvx1n0zCcP0NUjw003W54t5BWrn3PN0GPRnxgQo=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version; b=TyoS7C61eNErMtXiM79OFBduPJJoer4SG8zJ/mwavicrzf5cZK6u03xCqP1rkkAjMlanzlr3f4f6SyTushGvVjLkVsrAu/ZmRjefkbq3vaz48ou1Sm8kWkS7ymRnDN79jZr+6iYsmYEJE4plS8KXM07nXCV3QJZqCHVYnU8fjYU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ionos.com; spf=pass smtp.mailfrom=ionos.com; dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b=OxhKAcNL; arc=none smtp.client-ip=209.85.208.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ionos.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ionos.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KHGkjZku"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1791895998; x=1823431998;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=axOM5j3vOY7t9ZLps+wPbthA9ApS1l0Pw7wVAlogkDc=;
-  b=KHGkjZkuLRAYuiI/EhiyzJTJ7dptm1DvbYj9gScAffWtvU/nBsyxKq3R
-   /ihUq9NutsqIcXjBL2/fpy8/Bhel/KFfCKrHpoe6l9ry/TLlGPbIraZN0
-   tR0ia5gOJFmENT3mtfAfphyS0grcX6vc9avpIKERtn7iYYpPZ2hbNUGjX
-   M4MI2/E/0Ryy+0+saxe0KP8p+sHIq0HdSWR1NXRvsLkpTkvjnVHZnrorK
-   0b9azZDGfc9nXXWHxEIdewRYoO1m2Qm8+qyVGb98DwuCSrEUSe7skqVjm
-   6Rz5xDQ4AiNVWof7cosXx/dRohooSXHuoY8ytIa8u12I+3MOEzLqRotLI
-   A==;
-X-CSE-ConnectionGUID: IWaWJgvPSOeiINzu+RUoZA==
-X-CSE-MsgGUID: 3w53d/FMQQK2qu3+nATHIw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11933"; a="721127"
-X-IronPort-AV: E=Sophos;i="6.27,155,1787036400"; 
-   d="scan'208";a="721127"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Oct 2026 05:53:17 -0700
-X-CSE-ConnectionGUID: rkZEuAPGSFixoIRqexWFAQ==
-X-CSE-MsgGUID: jtkGNHzqTl20mhueRPt3oA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.27,155,1787036400"; 
-   d="scan'208";a="1229565"
-Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.241.239]) ([10.124.241.239])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Oct 2026 05:53:11 -0700
-Message-ID: <becc5593-69ef-4800-bc2b-0fb217165910@linux.intel.com>
-Date: Tue, 13 Oct 2026 20:53:08 +0800
+	dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b="OxhKAcNL"
+Received: by mail-lj1-f169.google.com with SMTP id 38308e7fff4ca-3a9787a15bdso24707751fa.1
+        for <linux-perf-users@vger.kernel.org>; Tue, 13 Oct 2026 06:01:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ionos.com; s=google; t=1791896458; x=1792501258; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=xhpGL6YoccSJtK8h84NFPxYwPN/7uQF8oIdoEiXDADE=;
+        b=OxhKAcNLqWtvtgPqMkjlBLYibLQizYfzmYyEN34lh4gqrDxEGBzrcGxAoa6SQMOK0x
+         OLJb8aHjXAUemhi9lXE/T2tNqOIkGKHhTEOwXLKqrcIXF7djhSoOOQ1179YXaQOUD/wi
+         ib1g7a3RQsfyCyTvcdLVxUd6zGI54oP/ko6tYlNBQUVVtMo3xjr+lEkzJlHZlsO7vIqF
+         Z8YvvzsqYP90YTfLfuDSL7+VpslrOuPM4fzdYqaEOLvh1ePLSms+cnNLAmwrd3GbAbA4
+         Nad0uZZrOFGLFarNU6aXmU2bHMwzBOpZRbnlarYV5zl6kwpXcxNMxHtxjd0hPU2xFDk8
+         A0fw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1791896458; x=1792501258;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to:content-type;
+        bh=xhpGL6YoccSJtK8h84NFPxYwPN/7uQF8oIdoEiXDADE=;
+        b=AVhxxfPnX6XRXplYQR2F1jVzGa5Qy8eP9YM/k9QjRnTuSudhoH9Naf4ELbaZdOyLew
+         +T0p52ci0Vx953FhktsU4P/Yiicu0HsCNS9u3+eyFKaS+Hb0mDE5TYOzqOKwfPIDkLXZ
+         hcGq1IAlTXmftNC+80orn36SzIdfyn5Rxglq6WqtAYOlLdQW48KGxpZSSsBMMrdksTmp
+         8O+zqBvp+NXhZE7ZwujBy02Q//or+R1lMqY+NUat948TRYj/+3+NEEoh3pNiU6iHJsKK
+         Dsb6Gy0K39JKdpR4a1NLJi7OsmLulkzoW1mII7vie+Yl1ipTCXRAZKvrMjq/o3ZAkvS+
+         ljfw==
+X-Forwarded-Encrypted: i=1; AKwUvBzMg0kNsTO5zLvTaO8j29jXIhFplQg+vQDWrFH9kukRfN4DyX0RwZ+wyuQAUmL2QevaM+6HbGGl6xdxFvd5cdTJ@vger.kernel.org
+X-Gm-Message-State: AFq9FYL7xgIb8g3xODBSpBj96geWqSo5n6SiwkmPkqkLEWaOSEaykVdw
+	7uagVDlewBBnetbAovD/sa3k1XUPvXIGmwjSKAMwFBt8R1FI9BazMSMFFu7n8VrNhIw=
+X-Gm-Gg: AYBFou0gW8QZLHs0RCNnFK/Ce6eI7vXXndPNJHkBoQvyyRqE5gOBpizNWCvMILqZiMu
+	NSfo1X7H6Xwkdp51l59g48K/eDflt0h7BP2PyCq3VVwW6ctr1NZDMcX+fFqHT+rv99TjZPuqPsi
+	/nBIdILNQ35Fs2wLE3+ixRmv2HZTK8+E5H0QYfvkpulS3rNWKZCVpx7FPf0xO+onsELlsr6CsU6
+	Rtg0DCSPsys+T9VUhqNhO/TUNMp70k/EbYN0FtlChGRqWPadQ6mB9+aPXtKxmHrsC3aWfFJmyhi
+	x8JAiTgsF/3dS6m2haGQjCX2j0MB+xFMLGd7ca5QacUAXDZluym0r4fN9fTv+RvCgbEgOZ9ADdV
+	KCfAxdpUV1s0wcl/cJuOKrFoZ6ACA5dlXQQ5xi3+jG8rs16szMUAmR0dIsc7cK6pmUPutD8Rhpo
+	qEty0KGvDWzbVB58Gsc8qeBEZTVqv0gDXYngN+AKpMhdHtzPV7rBPpxLjkdmVyP8CJItV7w3l0N
+	l0J/6LZY6McJzqPipSXjGbZX/ZWPNmLOacacAxDfYe3yFqIFgdbcXLtUIVZD1Kpum5vU2DKPw==
+X-Received: by 2002:a05:6512:1193:b0:5b8:c147:f363 with SMTP id 2adb3069b0e04-5bcde8d4381mr4067679e87.64.1791896456820;
+        Tue, 13 Oct 2026 06:00:56 -0700 (PDT)
+Received: from raven.intern.cm-ag (p200300dc6f04b700023064fffe740809.dip0.t-ipconnect.de. [2003:dc:6f04:b700:230:64ff:fe74:809])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-48de0bc50e0sm6549692f8f.49.2026.10.13.06.00.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 13 Oct 2026 06:00:56 -0700 (PDT)
+From: Max Kellermann <max.kellermann@ionos.com>
+To: Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	James Clark <james.clark@linaro.org>,
+	Max Kellermann <max.kellermann@ionos.com>,
+	Dapeng Mi <dapeng1.mi@linux.intel.com>,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] perf: skip unnecessary userspace map synthesis
+Date: Tue, 13 Oct 2026 15:00:43 +0200
+Message-ID: <20261013130052.3012773-1-max.kellermann@ionos.com>
+X-Mailer: git-send-email 2.47.3
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] perf/x86/amd/lbr: Limit branch snapshots to valid entries
-To: Peter Zijlstra <peterz@infradead.org>, Sandipan Das <sandipan.das@amd.com>
-Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
- bpf@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>, James Clark
- <james.clark@linaro.org>, Thomas Gleixner <tglx@kernel.org>,
- Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
- x86@kernel.org, "H . Peter Anvin" <hpa@zytor.com>,
- Andrii Nakryiko <andrii@kernel.org>, Song Liu <song@kernel.org>,
- Ravi Bangoria <ravi.bangoria@amd.com>,
- Ananth Narayan <ananth.narayan@amd.com>
-References: <20261007181002.4005262-1-sandipan.das@amd.com>
- <20261012153014.GU4121339@noisy.programming.kicks-ass.net>
- <94d387f2-ff07-4895-a722-e8ded4203309@amd.com>
- <20261013074625.GC2009045@noisy.programming.kicks-ass.net>
-Content-Language: en-US
-From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-In-Reply-To: <20261013074625.GC2009045@noisy.programming.kicks-ass.net>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
+Reading `/proc/PID/task/PID/maps` for existing processes is expensive
+on systems with many processes.  `perf record` already allows skipping
+these reads with the `--synth=` option, but `perf top` has no
+equivalent option.
 
-On 10/13/2026 3:46 PM, Peter Zijlstra wrote:
-> On Tue, Oct 13, 2026 at 12:14:58PM +0530, Sandipan Das wrote:
->> On 12-10-2026 21:00, Peter Zijlstra wrote:
->>> On Wed, Oct 07, 2026 at 11:40:02PM +0530, Sandipan Das wrote:
->>>> The branch snapshot callback used by bpf_get_branch_snapshot() copies
->>>> up to x86_pmu.lbr_nr entries from cpuc->lbr_entries[], even when the
->>>> last LBR read kept fewer branches. The entries past lbr_stack.nr are
->>>> invalid, but they end up reaching BPF programs.
->>>>
->>>> Limit copying to lbr_stack.nr entries and also reset lbr_stack.nr when
->>>> amd_pmu_lbr_read() skips reading the registers, so that a stale count
->>>> is never reused.
->>>>
->>>> Fixes: a4d18112e531 ("perf/x86/amd: Support capturing LBR from software events")
->>>> Reported-by: Sashiko <sashiko-bot@kernel.org>
->>>> Closes: https://lore.kernel.org/all/sashiko-outbox-163130@kernel.org/
->>>> Signed-off-by: Sandipan Das <sandipan.das@amd.com>
->>>> ---
->>>>  arch/x86/events/amd/core.c | 2 +-
->>>>  arch/x86/events/amd/lbr.c  | 4 +++-
->>>>  2 files changed, 4 insertions(+), 2 deletions(-)
->>>>
->>>> diff --git a/arch/x86/events/amd/core.c b/arch/x86/events/amd/core.c
->>>> index 49b6b8fce566..bf631f60757c 100644
->>>> --- a/arch/x86/events/amd/core.c
->>>> +++ b/arch/x86/events/amd/core.c
->>>> @@ -944,7 +944,7 @@ static int amd_pmu_v2_snapshot_branch_stack(struct perf_branch_entry *entries, u
->>>>  	cpuc = this_cpu_ptr(&cpu_hw_events);
->>>>  
->>>>  	amd_pmu_lbr_read();
->>>> -	cnt = min(cnt, x86_pmu.lbr_nr);
->>>> +	cnt = min(cnt, cpuc->lbr_stack.nr);
->>>>  	memcpy(entries, cpuc->lbr_entries, sizeof(struct perf_branch_entry) * cnt);
->>>>  
->>>>  	amd_pmu_v2_enable_all(0);
->>>> diff --git a/arch/x86/events/amd/lbr.c b/arch/x86/events/amd/lbr.c
->>>> index 1e1b2f08cb51..a00d3850c4a8 100644
->>>> --- a/arch/x86/events/amd/lbr.c
->>>> +++ b/arch/x86/events/amd/lbr.c
->>>> @@ -165,8 +165,10 @@ void amd_pmu_lbr_read(void)
->>>>  	struct branch_entry entry;
->>>>  	int out = 0, idx, i;
->>>>  
->>>> -	if (!cpuc->lbr_users)
->>>> +	if (!cpuc->lbr_users) {
->>>> +		cpuc->lbr_stack.nr = 0;
->>>>  		return;
->>>> +	}
->>>>  
->>>>  	for (i = 0; i < x86_pmu.lbr_nr; i++) {
->>>>  		entry.from.full	= amd_pmu_lbr_get_from(i);
->>> You now seem to deviate from what the Intel code does. Please clarify.
->> Yes, it is a deviation. I thought of proposing the following but didn't
->> proceed because I was not sure about the if condition in the second hunk
->> which considers things other than cpuc->lbr_users for an early return.
-> Dapeng, can you look into this? I would really like to keep behaviour
-> consistent where possible.
+Skip userspace map synthesis by default in `record` and `top` when all
+events exclude userspace and no sample feature needs user mappings.
 
-Sure.
+Signed-off-by: Max Kellermann <max.kellermann@ionos.com>
+---
+ tools/perf/Documentation/perf-record.txt |  4 +++
+ tools/perf/builtin-record.c              |  8 +++++
+ tools/perf/builtin-top.c                 | 19 +++++------
+ tools/perf/util/evlist.c                 | 40 ++++++++++++++++++++++++
+ tools/perf/util/evlist.h                 |  1 +
+ tools/perf/util/record.h                 |  1 +
+ 6 files changed, 64 insertions(+), 9 deletions(-)
 
+diff --git a/tools/perf/Documentation/perf-record.txt b/tools/perf/Documentation/perf-record.txt
+index 178f483140ed..cdef14f22df3 100644
+--- a/tools/perf/Documentation/perf-record.txt
++++ b/tools/perf/Documentation/perf-record.txt
+@@ -696,6 +696,10 @@ Available types are:
+   - 'all'     - synthesize all events (default)
+   - 'no'      - do not synthesize any of the above events
+ 
++By default, userspace MMAP synthesis is skipped if all events exclude
++userspace (for example, with --all-kernel or -e cycles:k) and their
++samples do not need userspace maps.
++
+ --tail-synthesize::
+ Instead of collecting non-sample events (for example, fork, comm, mmap) at
+ the beginning of record, collect them during finalizing an output file.
+diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+index a57987851cf0..f8b4e5279fca 100644
+--- a/tools/perf/builtin-record.c
++++ b/tools/perf/builtin-record.c
+@@ -2574,6 +2574,13 @@ static int __cmd_record(struct record *rec, int argc, const char **argv)
+ 
+ 	evlist__config(rec->evlist, opts, &callchain_param);
+ 
++	if (!opts->synth_set && !opts->full_auxtrace &&
++	    !opts->auxtrace_sample_mode && !rec->off_cpu && !rec->buildid_all &&
++	    !evlist__needs_user_mmaps(rec->evlist)) {
++		opts->synth &= ~PERF_SYNTH_MMAP;
++		pr_debug("Skipping synthesis of userspace maps for kernel-only recording\n");
++	}
++
+ 	/* Debug message used by test scripts */
+ 	pr_debug3("perf record opening and mmapping events\n");
+ 	if (record__open(rec) != 0) {
+@@ -3412,6 +3419,7 @@ static int parse_record_synth_option(const struct option *opt,
+ 		pr_err("Invalid synth option: %s\n", str);
+ 		return -1;
+ 	}
++	opts->synth_set = true;
+ 	return 0;
+ }
+ 
+diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
+index 570410599f1b..d85ecc140eda 100644
+--- a/tools/perf/builtin-top.c
++++ b/tools/perf/builtin-top.c
+@@ -1017,14 +1017,6 @@ static int perf_top__start_counters(struct perf_top *top)
+ 	struct evlist *evlist = top->evlist;
+ 	struct record_opts *opts = &top->record_opts;
+ 
+-	if (perf_top__overwrite_check(top)) {
+-		ui__error("perf top only support consistent per-event "
+-			  "overwrite setting for all events\n");
+-		goto out_err;
+-	}
+-
+-	evlist__config(evlist, opts, &callchain_param);
+-
+ 	evlist__for_each_entry(evlist, counter) {
+ try_again:
+ 		if (evsel__open(counter, counter->core.cpus,
+@@ -1265,6 +1257,14 @@ static int __cmd_top(struct perf_top *top)
+ 	if (ret)
+ 		return ret;
+ 
++	if (perf_top__overwrite_check(top)) {
++		ui__error("perf top only support consistent per-event "
++			  "overwrite setting for all events\n");
++		return -1;
++	}
++
++	evlist__config(top->evlist, opts, &callchain_param);
++
+ 	if (perf_session__register_idle_thread(top->session) < 0)
+ 		return ret;
+ 
+@@ -1296,7 +1296,8 @@ static int __cmd_top(struct perf_top *top)
+ 		pr_debug("Couldn't synthesize cgroup events.\n");
+ 
+ 	machine__synthesize_threads(&top->session->machines.host, &opts->target,
+-				    evlist__core(top->evlist)->threads, true, false,
++				    evlist__core(top->evlist)->threads,
++				    evlist__needs_user_mmaps(top->evlist), false,
+ 				    top->nr_threads_synthesize);
+ 
+ 	perf_set_multithreaded();
+diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
+index c3d784727810..6636edee0d2b 100644
+--- a/tools/perf/util/evlist.c
++++ b/tools/perf/util/evlist.c
+@@ -1990,6 +1990,46 @@ bool evlist__exclude_kernel(struct evlist *evlist)
+ 	return true;
+ }
+ 
++bool evlist__needs_user_mmaps(struct evlist *evlist)
++{
++	struct evsel *evsel;
++	bool has_kernel_event = false;
++
++	evlist__for_each_entry(evlist, evsel) {
++		struct perf_event_attr *attr = &evsel->core.attr;
++
++		/* Tracking events do not produce samples, regardless of modifiers. */
++		if (evsel__is_dummy_event(evsel))
++			continue;
++
++		if (!attr->exclude_user)
++			return true;
++
++		/* Kernel samples can still contain a userspace callchain. */
++		if ((attr->sample_type & PERF_SAMPLE_CALLCHAIN) &&
++		    !attr->exclude_callchain_user)
++			return true;
++
++		/*
++		 * These may reference userspace even when the sampled
++		 * IP is in the kernel.  Keep maps for opaque trace
++		 * payloads and AUX trace decoding too, whose address
++		 * requirements are PMU specific.
++		 */
++		if (attr->sample_type & (PERF_SAMPLE_ADDR | PERF_SAMPLE_RAW |
++					 PERF_SAMPLE_REGS_USER | PERF_SAMPLE_STACK_USER |
++					 PERF_SAMPLE_BRANCH_STACK | PERF_SAMPLE_AUX))
++			return true;
++
++		if (evsel__is_aux_event(evsel))
++			return true;
++
++		has_kernel_event = true;
++	}
++
++	return !has_kernel_event;
++}
++
+ /*
+  * Events in data file are not collect in groups, but we still want
+  * the group display. Set the artificial group and set the leader's
+diff --git a/tools/perf/util/evlist.h b/tools/perf/util/evlist.h
+index 838e263b76f3..b208bf7211e8 100644
+--- a/tools/perf/util/evlist.h
++++ b/tools/perf/util/evlist.h
+@@ -631,6 +631,7 @@ struct evsel *evlist__find_evsel_by_str(struct evlist *evlist, const char *str);
+ struct evsel *evlist__event2evsel(struct evlist *evlist, union perf_event *event);
+ 
+ bool evlist__exclude_kernel(struct evlist *evlist);
++bool evlist__needs_user_mmaps(struct evlist *evlist);
+ 
+ void evlist__force_leader(struct evlist *evlist);
+ 
+diff --git a/tools/perf/util/record.h b/tools/perf/util/record.h
+index 93627c9a7338..1317ddce3cf0 100644
+--- a/tools/perf/util/record.h
++++ b/tools/perf/util/record.h
+@@ -80,6 +80,7 @@ struct record_opts {
+ 	int	      ctl_fd_ack;
+ 	bool	      ctl_fd_close;
+ 	int	      synth;
++	bool	      synth_set;
+ 	int	      threads_spec;
+ 	const char    *threads_user_spec;
+ 	u64	      off_cpu_thresh_ns;
+-- 
+2.47.3
 
->
->> diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
->> index 0a34d674df59..5dfb9e9156e8 100644
->> --- a/arch/x86/events/intel/core.c
->> +++ b/arch/x86/events/intel/core.c
->> @@ -2822,7 +2822,7 @@ __intel_pmu_snapshot_branch_stack(struct perf_branch_entry *entries,
->>         struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
->>
->>         intel_pmu_lbr_read();
->> -       cnt = min_t(unsigned int, cnt, x86_pmu.lbr_nr);
->> +       cnt = min_t(unsigned int, cnt, cpuc->lbr_stack.nr);
->>
->>         memcpy(entries, cpuc->lbr_entries, sizeof(struct perf_branch_entry) * cnt);
->>         intel_pmu_enable_all(0);
->> diff --git a/arch/x86/events/intel/lbr.c b/arch/x86/events/intel/lbr.c
->> index 0b446d8912e4..6b070490f461 100644
->> --- a/arch/x86/events/intel/lbr.c
->> +++ b/arch/x86/events/intel/lbr.c
->> @@ -1026,8 +1026,10 @@ void intel_pmu_lbr_read(void)
->>          * but this simple approach seems to work for now.
->>          */
->>         if (!cpuc->lbr_users || vlbr_exclude_host() ||
->> -           cpuc->lbr_users == cpuc->lbr_pebs_users)
->> +           cpuc->lbr_users == cpuc->lbr_pebs_users) {
->> +               cpuc->lbr_stack.nr = 0;
-I checked the code, and it looks safe to clear cpuc->lbr_stack.nr here. For
-PEBS events with the LBR group, the LBR stack is populated again for each
-PEBS record, so this should not affect the LBR trace for PEBS events.
-
-But I’m not fully sure if it's intentional for the
-bpf_get_branch_snapshot() helper. Clearing lbr_stack.nr to 0 prevents the
-BPF helper from reading LBR data from PEBS although the LBR data could be
-stale since it comes from the past PEBS record instead of the runtime
-hardware LBR state. That seems reasonable and correct, but the side effect
-is that the BPF helper can't read the LBR stack when all LBR events are
-PEBS events. Not sure if it's intentional and expected. 
-
-I’d like to run some tests for this change tomorrow to confirm the
-behavior. Thanks.
-
-
->>                 return;
->> +       }
->>
->>         x86_pmu.lbr_read(cpuc);
->>
