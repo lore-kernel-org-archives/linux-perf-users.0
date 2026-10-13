@@ -1,80 +1,77 @@
-Received: from 013.lax.mailroute.net (013.lax.mailroute.net [199.89.1.16])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81D2F372EDB;
-	Tue, 13 Oct 2026 23:18:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=199.89.1.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9E0344F565
+	for <linux-perf-users@vger.kernel.org>; Tue, 13 Oct 2026 23:22:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791933537; cv=none; b=bZBW1K4Xi9ps7T6IWvkvQV+Pqn90yUQUWqa3IgsayAaqIGUBOsni3yj+enWVWIDJR3+E+FAAi9GUSUpLan99Nw9y7Um6QN2doTXT68Z6rMZyTYS7wOOpstLS94Cd6Gr3a553MrvVc2D7x1hm10kASRehJjg3trRVvozqd49Idz4=
+	t=1791933757; cv=none; b=TPWdKC7myhggJi7D7zekxWTewEd9k5/5d6OSN9AvBQ6G/A4d7g7RZNIxx1wNumC3ET2sCln2bd/1wtU2l+rJXCAKmHbsnHSmPcPwlAB4w6Z7yokx2eKfR/Ub3+ZPDuhbmaX2b1G4wETAYRxBIJLS82L3X1+ikGXcJA45neVOO2Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791933537; c=relaxed/simple;
-	bh=gaxZAFGU6xceCJLiStkWFMvFEc8zbfPX9b1tRC31zMM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=hOvneRHHZv87YJn52SuA8b+Qty3p0gIftOxgd10tBjfbAV/UmxJs9v0DQviUOwGJeqoO5itK5ULueaeAG5alSX3LnaIjjor/6wZprU5NzGxvGEeAAbqHKEmT5NyESJlY5KA86vlyGyI3Lwn2EV7xZ0D6L96+OoVLzTeFJv3m6bw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org; spf=pass smtp.mailfrom=acm.org; dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b=TLVi7u7b; arc=none smtp.client-ip=199.89.1.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=acm.org
+	s=arc-20240116; t=1791933757; c=relaxed/simple;
+	bh=UEGWUKksUpGeFiOY70Wg0WeZSPQyEf4hI9y9TBW//3g=;
+	h=Message-ID:From:Subject:To:Cc:In-Reply-To:References:Content-Type:
+	 Date; b=aUK8IiCl4OftLAgf8xtjukjdQNRW9Jc/27sKbHULpwXC/7KdGS38/zx+LOz41rzhH9txPjo5y1V12RMuZha+Z1azFHoMkrEqNolonXqyuxkL5n/3d7NM+9M5ZtbYfnNWbXB43pu7B1je6cGz/RbDuSbNOcUxRw08XlIRKaM3W68=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NALsaevc; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b="TLVi7u7b"
-Received: from localhost (localhost [127.0.0.1])
-	by 013.lax.mailroute.net (Postfix) with ESMTP id 4j49JH71d4zlfvpK;
-	Tue, 13 Oct 2026 23:18:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=acm.org; h=
-	content-transfer-encoding:content-type:content-type:in-reply-to
-	:from:from:content-language:references:subject:subject
-	:user-agent:mime-version:date:date:message-id:received:received;
-	 s=mr01; t=1791933531; x=1794525532; bh=gaxZAFGU6xceCJLiStkWFMvF
-	Ec8zbfPX9b1tRC31zMM=; b=TLVi7u7bAnPOjzOutrFS95RLd382MwV1NyEr9vi6
-	jeR41qJN2cjaXXGxNWaS7WJ7Agtm5BB3qQnBOcC+MveTiKP5pYj7AShWVZw1vtGM
-	PbjmqbhGWFSwOzl5l7xN68Qgd4cFyhL4ARs4MS2/uu/IXFjoC+4SuV+7mYhW0D/a
-	9v9TbsUsnu2OGZYXAyufCOlwdOFlG9j3AORTh8q9nj50exRa6aoFFozvQ/VKhVAh
-	dmirKqWb2WHOgaxaSZrYK8lawRPWEFC2Iu8lCUr1z4vLR/ae1Vz5FBFmCLdacVfx
-	3j8Pr3QO1GZTokEU2yD+EoOn4TVk9sVkJUscGy6ka8dwcw==
-X-Virus-Scanned: by MailRoute
-Received: from 013.lax.mailroute.net ([127.0.0.1])
- by localhost (013.lax [127.0.0.1]) (mroute_mailscanner, port 10029) with LMTP
- id mPbmFxJa9yDL; Tue, 13 Oct 2026 23:18:51 +0000 (UTC)
-Received: from [192.168.51.14] (c-24-6-239-25.hsd1.ca.comcast.net [24.6.239.25])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: bvanassche@acm.org)
-	by 013.lax.mailroute.net (Postfix) with ESMTPSA id 4j49J94k4XzlfvpH;
-	Tue, 13 Oct 2026 23:18:49 +0000 (UTC)
-Message-ID: <0e572032-5e5a-4a4f-a362-16ad48f2f02b@acm.org>
-Date: Tue, 13 Oct 2026 16:18:48 -0700
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NALsaevc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2FE0E1F000FF;
+	Tue, 13 Oct 2026 23:22:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1791933756;
+	bh=UEGWUKksUpGeFiOY70Wg0WeZSPQyEf4hI9y9TBW//3g=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=NALsaevcAT4xgKTE8t13igVYIBylAW2dlLYk04V3i9DR02z3c18ZRXXSRPOc2u9Qg
+	 /7k1Mur1Evejwt7P9DvNLYEticejAqsVvt5J7RQJPWZpG6HlZCPjOl/xZJ8O9bUeQ4
+	 Y3xgrP7sLpYseWsjGCVej/yp/m7d3j9XXXNjr/ebmdso4ACQ2yTJTkQl1Pgc19tXcp
+	 nIKaU9IKQvD0woTC9hBJHCn0x4Mgr9xcycaOOe22c3/Y68KKautbBzKpJN4+fxlk0l
+	 UQKxhsDF1iRi4KFFsXFvkre0TKQBloiS5BFiKQmcuaXlYqUL1CpzBtukByfJIPkslc
+	 UtdJP6QZlemeA==
+Message-ID: <sashiko-outbox-170633@kernel.org>
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v2 1/2] perf build: Support building BPF skeletons with
+ bpf-gcc
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Ian Rogers" <irogers@google.com>
+Cc: linux-perf-users@vger.kernel.org
+In-Reply-To: <20261013231430.2163505-2-irogers@google.com>
+References: <20261013221643.1815686-1-irogers@google.com>
+ <20261013231430.2163505-1-irogers@google.com>
+ <20261013231430.2163505-2-irogers@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Tue, 13 Oct 2026 23:22:35 +0000
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 00/10] tools/perf: Adopt kernel
- compiler-context-analysis.h annotations
-To: Ian Rogers <irogers@google.com>
-Cc: acme@kernel.org, elver@google.com, namhyung@kernel.org,
- adrian.hunter@intel.com, james.clark@linaro.org, jolsa@kernel.org,
- justinstitt@google.com, linux-kernel@vger.kernel.org,
- linux-perf-users@vger.kernel.org, ljs@kernel.org, llvm@lists.linux.dev,
- mingo@redhat.com, morbo@google.com, nathan@kernel.org,
- ndesaulniers@google.com, peterz@infradead.org
-References: <20261013182458.1234616-1-irogers@google.com>
- <20261013222622.1822619-1-irogers@google.com>
- <3f57ddf4-b1a7-4c91-8983-c8cd83d0f25c@acm.org>
- <CAP-5=fX3e4HRaLXxQhCwEHRuXZdpC0zEEh2pozEEegQBxgc5xw@mail.gmail.com>
-Content-Language: en-US
-From: Bart Van Assche <bvanassche@acm.org>
-In-Reply-To: <CAP-5=fX3e4HRaLXxQhCwEHRuXZdpC0zEEh2pozEEegQBxgc5xw@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
 
-On 10/13/26 4:09 PM, Ian Rogers wrote:
-> Which mailing list is objecting to the frequent emails?
-This is a policy that applies to all Linux kernel related mailing
-lists. From Documentation/process/submitting-patches.rst: "Wait for a
-minimum of one week before resubmitting or pinging reviewers - possibly
-longer during busy times like merge windows."
+> Support building perf BPF skeletons with bpf-gcc (>=3D 14.0.0) in addition
+> to clang (>=3D 12.0.1), similar to tools/testing/selftests/bpf/Makefile.
+>=20
+> When building perf with GCC (CC_NO_CLANG=3D1), prefer bpf-gcc and fall
+> back to clang if bpf-gcc is unavailable or too old. When building with
+> Clang/LLVM (CC_NO_CLANG=3D0), prefer clang and fall back to bpf-gcc.
+> Explicit command-line overrides via BPF_GCC=3D... or CLANG=3D... are
+> respected, and setting BPF_GCC=3D or CLANG=3D to empty disables that
+> compiler.
+>=20
+> In bpf_skel.mak, pass the bpf-gcc flags (-mcpu=3Dv3, -fno-ident,
+> -DBPF_NO_PRESERVE_ACCESS_INDEX, -Wno-attributes,
+> -D__TARGET_ARCH_$(SRCARCH), and target endianness) and query system
+> include paths from $(CC).
+>=20
+> Also update version-ge3 and version-lt3 in tools/scripts/utilities.mak
+> to split the two version arguments separately in awk so empty or
+> fewer-than-3-component version strings do not shift fields across
+> arguments.
+>=20
+> Assisted-by: Antigravity:gemini-3.1-pro
+> Signed-off-by: Ian Rogers <irogers@google.com>
 
-Bart.
+Sashiko has reviewed this patch and found no issues. It looks great!
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261013231430.2163=
+505-1-irogers@google.com?part=3D1
 
