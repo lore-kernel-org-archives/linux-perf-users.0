@@ -1,79 +1,142 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2161349CF0;
-	Tue, 13 Oct 2026 22:05:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791929143; cv=none; b=E+iTJGZWqUY9auBEQSLiVYdGh0F7dq5YlpoKzWoQTa9Mof5ND3C1BcbgjvVS4OMGmI01CrpiJymuK+NjIyFRCUzLqVFd09BxmhomN0T4mVNgOqxXq2CtHgoxBIRtrkATUq12WY/3bODN5nDaUx6MfcsW5HfwJEClo0tQ8N0Dqlo=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791929143; c=relaxed/simple;
-	bh=c7Gip3vKfecZa8bmhM+oThxGTsLgpcB0MI8dJan+45A=;
-	h=Message-ID:From:Subject:To:Cc:In-Reply-To:References:Content-Type:
-	 Date; b=eyHj6sohmrSeTEgdb0pwhS/R4ReJMfMuIMn+JqJL1zTedIH4xMW7ssG8u5VgphfJar39zpAe5uTU0mr9S3pMzwn3n9ARb16jb/PnTUtUApdvBY8PgEOc7kYJ7V0zaOM48jOjgALbUGlZSHV1D6/YMyaSSmPzkHJ8OlPPOU3YG3o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PyzeVsii; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7BEF52E046
+	for <linux-perf-users@vger.kernel.org>; Tue, 13 Oct 2026 22:11:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.173
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1791929473; cv=pass; b=I2+1+GpR+SWH/TSmBZwwNH5YxYtrG5ND20J8LSmpINss7n4TDc9rH2kVpzc8JeARRqIUE5oUCKzyNG0L7txleYWPMynDxBkKIZpqxYRHlTpjjllushBC0Oy7vZJ/YoIN46JROY5Irm0id9qprrFZiKgkLvITxKhhNbZf+0IDvAA=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1791929473; c=relaxed/simple;
+	bh=FYTV9FNBFSb9ojtmdwQPjMX2y3qFMZRTL6lxs4fSGMw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=A+FHDSrtWUaN2n0Jr7AFR+KoHioqfjPAYgnInWapcpqq/J55LgJcKnJcZGv/YJuniEKJoWNOS/3BCXdStUsGF+jmuIsBj6S6cbZUyK6hkSxY0Fr8Z/MO8unLeN8VBhdcehQD6fm6nmULY551StfOILJ76kG1pB04cfc5QqfBa18=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Mr6PaSgn; arc=pass smtp.client-ip=209.85.214.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PyzeVsii"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DF1EE1F000FF;
-	Tue, 13 Oct 2026 22:05:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1791929142;
-	bh=c7Gip3vKfecZa8bmhM+oThxGTsLgpcB0MI8dJan+45A=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=PyzeVsiix0P6Jr6/ooPLK9qF/tIdE64m1XRoNiUMCw6BmoOUcl5hYKntOT93Ap27w
-	 3Vts3yC7v8YU/05M3qvbJz8OtOipH4TL48FVuixGd/+e1rwLxJfLtFF9LgSeJh4Kfz
-	 RzdPa1WjaFlluDCZRpZ+1ZCxApWCCoqY/GrHiv3/vWPP8LdBcXvGq8rOMk8U8p0gpl
-	 k3WAiIuVJC2OP5DV4CGrrqwhOUZe6L4HZZ7QxhlFx+V1ERDMxyLAO9tIagO2i0VHxu
-	 6BuRUGpDC4AWgRoUOZpkwKD34opANJz4Jkw+NxSi//Ork1TpKMtflCjTYUlpMHfPvp
-	 DhL96jrop/1OQ==
-Message-ID: <sashiko-outbox-170553@kernel.org>
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v6 38/39] fuse: dax: do not set VM_MIXEDMAP
-Reply-To: sashiko-reviews@lists.linux.dev
-To: =?utf-8?b?TG9yZW56byBTdG9ha2VzIChBUk0p?= <ljs@kernel.org>
-Cc: linux-usb@vger.kernel.org, linux-rdma@vger.kernel.org, selinux@vger.kernel.org, linux-perf-users@vger.kernel.org, linux-s390@vger.kernel.org, "Heiko
- Carstens" <hca@linux.ibm.com>, "Vasily Gorbik" <gor@linux.ibm.com>, "Alexander
- Gordeev" <agordeev@linux.ibm.com>, "Christian Borntraeger" <borntraeger@linux.ibm.com>
-In-Reply-To: <20261013-b4-mmap-prepare-vma-flag-sanify-v6-38-1aa3c9b139f9@kernel.org>
-References: <20261013-b4-mmap-prepare-vma-flag-sanify-v6-0-1aa3c9b139f9@kernel.org>
- <20261013-b4-mmap-prepare-vma-flag-sanify-v6-38-1aa3c9b139f9@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Tue, 13 Oct 2026 22:05:41 +0000
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Mr6PaSgn"
+Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-2e8623790f8so180865ad.0
+        for <linux-perf-users@vger.kernel.org>; Tue, 13 Oct 2026 15:11:12 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1791929472; cv=none;
+        d=google.com; s=arc-20260327;
+        b=TTM28u72SkhlbAdllSCSkObi/eu3DmS955p6tjTk7hraziJq/JfNzhD++2ccc9CfaW
+         WfaZae7wEShegR7CKOS8dI9R7p+6xINsqMWBRwyiPe7LnP5YgEjG16XcYpB9C90vxxqJ
+         4BURF9Jj34QjDI+N4GJ0LTMmwHM6a2SZW6lJpDc9TbZoRggmnAqJpN/Fb8LBiku/iKmF
+         3XnPwA08iNnm80BCAozyE93hjaBhkNpWQn9HwmlyAUr8IJMng1mCSFq0VEk9rwzKlu6H
+         rQWfsm3CLq2+LhmHz4dUz+fhLLGNoLswAE3c7JkCM8DPzXk72RuKbbRTdUKixlf8ORkX
+         6PBw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=I/HmaWIj5cIrehfzfKKvA+54cdWoeGQYgmlrlmSSeWo=;
+        fh=hZhQ/68KfdFdZTQ9mfoADI/4f8Qa3aEx2XRviSu+/bw=;
+        b=jCG0gl36nv+9snNy6RK/7Hux+3mJRB8JfLC2LxoU/JzHBojO+W4ESWOP4UZfbFQGLB
+         AW3eEgH1mUxuQ9qgqB5xmk3ZZDnGyZB040zdKnyE6WdDYHiuB8jm52YeTBjy+e0QmjPC
+         ivdZdC5J1it2IzihVxXB/C8SwRke2NgefFf6r71kEYDWIMLGTLsfhYOFP72LwMyinyUk
+         1PtivmUjCo5+nctfGAY+6axEmr/fK0rrX2emviC2TgIM/r/Eb0cyh9Xci0Q7k3WWsRqi
+         b6qP4TDkJOVaTyhc6NVUYxmO/Pxy/xxFYBDK1XV6k4F9s5ASOCwE/kIRDtwMVmY8slw+
+         j+iA==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1791929472; x=1792534272; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=I/HmaWIj5cIrehfzfKKvA+54cdWoeGQYgmlrlmSSeWo=;
+        b=Mr6PaSgn62Uz2fYQ3vRqWrnK8ggrLb9QlTS2HRhzhJlh/5cwuNHowT5rmnFVaYSqtM
+         /1T464omC4gElp93jq+FlW3XgoR6lrAyT9UqypPJXnmfgNAPQqhMnYb/AuxgZlRslBBb
+         eSH+DlCsHAwnSUY9aNyEKj4dOtjVVEMPXCf6SnZHHh7W1As1DMvGVkm2/1H3Bm9Ll4zY
+         Ay5pEhKx8FCcmvtXBqPc1lCB2yRiaoLAUH1jevRpYbk9wLUpsuUmmJL/lXJ8HtigO5mz
+         eW5Mqo30ccwEKI9Q9C2xMg5J20dPloYSzUD4dSGg/M/JBKfAC+bj8h6RI1V5UT1aspIc
+         0m4g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1791929472; x=1792534272;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=I/HmaWIj5cIrehfzfKKvA+54cdWoeGQYgmlrlmSSeWo=;
+        b=oc7OkwYu6ZUQ2VXVjCxxYl2MInMnmCeqRL97oOQEg6Xc4qQ7g+DQoLcDMQz16EBR84
+         C1CcfTibWA/yePggXG3Z0kH6dZVvyC0wOwr3mv22OQ05iinVqA/C3jHd+ldubakQlyVp
+         YO1jVuzxb9aSu2CBZd1Z17fVXYTJdwIa3ZjjZA8WM3EPZL+L30Jb9mKO0hyjovxbwxX6
+         EMo9OMjtBPOMLW4e65gA8NAy67TcEBsTdZ6o3XpU++4vR3TMPoV5Te8M17mpXEccPs8E
+         VNPidvlKCZH5ySJKuu6YBDKMlhD0grVhXrgSb8ynEn+z0EyktsopNvBL8QM+A/CAhiCC
+         E4JA==
+X-Forwarded-Encrypted: i=1; AKwUvBz0t5Offt0qkYN7o0XPvtbZI/KdyLuoYWJVL5FIfsQCRBuUPUf5ieX0c8rVXdKW1m+GMfX85zheWjXnCN8qtJOB@vger.kernel.org
+X-Gm-Message-State: AFq9FYIK76seuTrn00OM1SrLSZ8QsbFIRIGVRfeLWm1PItMBBGRnvkcl
+	G4KqwSH/9ZJ9VMh47m4GtvnZQ0FYlub3Asd/7ybXVrJZ06soX5N94hAQTdXc3Su2huOO/uUrC+c
+	J3LFo4sKkpJDRT+9v66T/tgxGADHfxZ9x8du8eZDv
+X-Gm-Gg: AYBFou3Hr30DHsH3M78DAhsOCsJ0eQ/koA12IuriygbREHb1igb6AyBCRrfAc6I0LKK
+	RtFGOQyaMPw7dFVbo0fLbzSJDrJtEO7wprIAaZAL71DarfmfdyktbDvvF3e7jpuFzq00bcxB/tV
+	sejExjr/TAtEXYaegiW1aZlBLrnSVpWertFCaSUrZxAdfiQUQJp0uJ/EbT8IVMYdaOnjc4YlkdQ
+	4AFke5Jl9IIr1QmIlEt8QJ3cu2G+wwFcQTkGwOJyy3SbrAARVQBZUSG/2UP73mNBrt+U/abPTQ6
+	5Ek4e+h/A/YgNP3igMRaEtZc1WhHhwr/Zob/f2OhQrv76MgdwXM4kHLJFNo1pWv0MNOg3u6+Yzo
+	egqn0p90h
+X-Received: by 2002:a17:903:2b07:b0:2df:96ca:d7c7 with SMTP id
+ d9443c01a7336-2e939abd25bmr287505ad.10.1791929471359; Tue, 13 Oct 2026
+ 15:11:11 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+References: <20261013182458.1234616-1-irogers@google.com> <20261013182458.1234616-2-irogers@google.com>
+ <871bf440-5b43-4d63-83f8-15ba96719fa6@acm.org>
+In-Reply-To: <871bf440-5b43-4d63-83f8-15ba96719fa6@acm.org>
+From: Ian Rogers <irogers@google.com>
+Date: Tue, 13 Oct 2026 15:10:58 -0700
+X-Gm-Features: AclHuK9zqPxbei3yiEwT_Je-bqqvc_vKWZJxCFnB8AYrF-IAVVVXSXOd4HXS8b0
+Message-ID: <CAP-5=fX1XZu=3scB1-hA2ppcM0+sR7t_3=C7fFx=kGikm=dLqA@mail.gmail.com>
+Subject: Re: [PATCH v1 01/10] compiler-context-analysis: Avoid unused
+ parameter warning in _context_unsafe_alias()
+To: Bart Van Assche <bvanassche@acm.org>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Marco Elver <elver@google.com>, 
+	Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
+	James Clark <james.clark@linaro.org>, Nathan Chancellor <nathan@kernel.org>, 
+	Nick Desaulniers <ndesaulniers@google.com>, Bill Wendling <morbo@google.com>, 
+	Justin Stitt <justinstitt@google.com>, Lorenzo Stoakes <ljs@kernel.org>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	llvm@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-> Commit e1fb4a086495 ("dax: remove VM_MIXEDMAP for fsdax and device dax")
-> prevented fsdax and device-dax from setting VM_MIXEDMAP, as DAX no longer
-> relies on it to direct core mm paths.
->=20
-> The fuse DAX implementation, added later, copied the old pattern and still
-> sets it.
->=20
-> Fuse DAX maps pages the same way fsdax does, via dax_iomap_fault() and
-> ultimately vmf_insert_page_mkwrite() and vmf_insert_folio_pmd(), which
-> insert ordinary refcounted pages and so do not require VM_MIXEDMAP.
->=20
-> Setting it only serves to mark the mapping as not mm-managed, making fuse
-> DAX the sole DAX implementation whose mappings are unmergeable, cannot be
-> mlock()'d, eagerly copy page tables on fork and reject MADV_DOFORK and
-> MADV_DODUMP.
->=20
-> It also requires vma_is_special_huge() in mm/huge_memory.c to carve DAX o=
-ut
-> of its check for mappings not managed by core mm explicitly.
->=20
-> There is no reason for fuse DAX to keep on using this flag so drop it.
->=20
-> Acked-by: David Hildenbrand (Arm) <david@kernel.org>
-> Signed-off-by: Lorenzo Stoakes (ARM) <ljs@kernel.org>
+On Tue, Oct 13, 2026 at 12:44=E2=80=AFPM Bart Van Assche <bvanassche@acm.or=
+g> wrote:
+>
+> On 10/13/26 11:24 AM, Ian Rogers wrote:
+> > _context_unsafe_alias() does not use its parameter 'p', which triggers
+> > -Wunused-parameter when building code that enables -Wextra (such as
+> > tools/perf, tools/lib/perf, tools/lib/subcmd, and tools/lib/symbol).
+> > Explicitly cast 'p' to void to silence the warning, matching
+> > __assume_ctx_lock() and __assume_shared_ctx_lock().
+> >
+> > Assisted-by: Antigravity:gemini-3.1-pro
+>
+> I think this should be changed into Gemini 3.1 Pro. I don't think that
+> the "Antigravity" part should occur in the Assisted-by tag.
+>
+> > diff --git a/include/linux/compiler-context-analysis.h b/include/linux/=
+compiler-context-analysis.h
+> > index 8302ebc2ea8c..024e303188ad 100644
+> > --- a/include/linux/compiler-context-analysis.h
+> > +++ b/include/linux/compiler-context-analysis.h
+> > @@ -243,7 +243,7 @@
+> >    * alias as a function argument).
+> >    */
+> >   #define context_unsafe_alias(p) _context_unsafe_alias((void **)&(p))
+> > -static inline void _context_unsafe_alias(void **p) { }
+> > +static inline void _context_unsafe_alias(void **p) { (void)p; }
+>
+> Why a void cast instead of __attribute__((unused))?
 
-Sashiko has reviewed this patch and found no issues. It looks great!
+I agree; unfortunately, the macro isn't declared before this header
+change needs it and I wanted to minimize the change.
 
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261013-b4-mmap-pr=
-epare-vma-flag-sanify-v6-0-1aa3c9b139f9@kernel.org?part=3D38
+Thanks,
+Ian
 
+> Bart.
