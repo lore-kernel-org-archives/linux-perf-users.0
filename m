@@ -1,65 +1,48 @@
-Received: from mail-oo1-f41.google.com (mail-oo1-f41.google.com [209.85.161.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from 011.lax.mailroute.net (011.lax.mailroute.net [199.89.1.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7284E51E421
-	for <linux-perf-users@vger.kernel.org>; Tue, 13 Oct 2026 19:29:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71F2752D2A9;
+	Tue, 13 Oct 2026 19:44:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=199.89.1.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791919768; cv=none; b=BsRvuLYacbwe+FyiJB2Sy+U3C/eNckou4jJeqAJu2/NQaP6o4qW6geV1rPcMItSwNllzPxCIllvpMR1HrAE2TVDrSNDL9+Zn5q7dneNowlrxVeF3NobzqQGaXi7P/0tJITA+mCtkZwVBMM+j8LuXnQq0QpOgRiB+IFhG8grxstM=
+	t=1791920668; cv=none; b=MruZuR3A+nk9kd3LuX6pg9htPt3it5vJJqaopAOqweHYfcHP0YlZ7IxeTR9P1ltW3j+6ZF/UpEm1pZd1RQo88K+LQeVYOLRESgBIbpVnnwJ8PeSLi+eavuopjSPA/tzj3asu6voIS5wdF3QZAoyzYmQcxv7ITiVnyZJy72Jh6Ho=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791919768; c=relaxed/simple;
-	bh=HFB6DyseJTdbQfG1DZ6MXg0hnr9XmayZmDxutEscNow=;
+	s=arc-20240116; t=1791920668; c=relaxed/simple;
+	bh=ptTajPdsrvmZAZ2xebbOEy+6rvk7RQNZ7oxzHgevJ5c=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=pA38dcBaQ6rXm1XV9DTWy/t3gXG8WfjtVufKGn4uONlrD0yDWA3NJy0a+C2pkw1+2A7W9Sxs3tkvAcZLL33T0mN58hTVJjnfQlp6TAO+I1SaoKh4nQogqylV8Zye5Q84d7XufvZ3g9xLFBnsbfMq6X+uEm8WVA0Y3oi+aLGBoSs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=SkTvqIiA; arc=none smtp.client-ip=209.85.161.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	 In-Reply-To:Content-Type; b=lPGOc8mdVHSEaiXF1+JwzqFWXWK/+Mg8odC0XxR7rwYTaMYzdCj/Pfnmmo9dhBO6Bh2FdiEL1Shpp1f+7JLtjIQK2cCBPKVqXbDPoQAqGaVtWuNXN+QpL3TGodhvDQN5/DOjhkCLa8YM9kNssBt57daN6phhgqEaj1haLkyPuOM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org; spf=pass smtp.mailfrom=acm.org; dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b=T9wFIICG; arc=none smtp.client-ip=199.89.1.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=acm.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="SkTvqIiA"
-Received: by mail-oo1-f41.google.com with SMTP id 006d021491bc7-6df5e315bd1so2291496eaf.2
-        for <linux-perf-users@vger.kernel.org>; Tue, 13 Oct 2026 12:29:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1791919765; x=1792524565; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:in-reply-to:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=FOxgkNuwHKNgVFVQaM+OBUUFEqO0M0muHBMxUHjrBmQ=;
-        b=SkTvqIiA7vr8JdA7bRhOV0Ijo+RNsveUSQpUJqUqmTESqBbZfENP2lD88rRRillW15
-         ys2GG5hsB9vHt97BdHz1tW9LWRvwEOUPVKEfgXonYSTYSs4zZ8/h6ww8ZLBIo4CM+1i0
-         rTS6kswASnjWNcuXNpBD8nI+kll1UZ7FC7Ka4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1791919765; x=1792524565;
-        h=content-transfer-encoding:content-type:in-reply-to:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=FOxgkNuwHKNgVFVQaM+OBUUFEqO0M0muHBMxUHjrBmQ=;
-        b=waoZm73C6ev7GiXrnJ2etW46tPfdXruA/IHQsMDlOo0DFM47GBBORKyVsoa+UUYlGh
-         8ckMcO5DndWYxEazCKxKl9L/poRGJS2LFfcLzfC/wseXuvy/c9h/E3mVNyp1vfCAKxUq
-         jCAJ/m3dgIu5rCepk98+XSAThVhwpl1g845yUQZrUyYqPb3n75U3Y78FFlIURYJPVaxt
-         FoYcLNOZm4YYbj35WQ8ALsre1IiGNyWWNCmA59oV6b3ZffYyOU2liY8XU4Y1dwNE4dk5
-         +17xl5av5yC5RFosUXz9jTLpwFBdpRiQ9MGVOAcbHf6aIG77U/EBS33uFxnx9DpZYpnq
-         rZ2Q==
-X-Forwarded-Encrypted: i=1; AKwUvBzmWnPxe+Oukum1owrmhWf559aP4b9fcEjB2U/P6N0NXyz12Fzh2TTJNqBA0itd8MEImFa0TwC41yVtQ8ob7Iot@vger.kernel.org
-X-Gm-Message-State: AFq9FYIgV7nUkvMH8hSTYmNdwrx7oSh3NHDkVT1BAwVCBAGmbTLwJTjU
-	ZWO+LNlbTl+Z+P5U2xdPMIQNLqALuceTYCbKDjmT11y0iL2o62pVK4QdMPoArwC8r1c=
-X-Gm-Gg: AYBFou2ynILNN8VaA3DJa/3Wv584y7huSOmaAqSMOxNJNEYFpDJzQD+CHj1frUYQawi
-	/Zyd/gEGJEiQ+2T9PJ2q8Ghrui64cYOTrjmzlJj0BbzMI+meQispGW+KsDpzwOOVWLflTpYcj35
-	fePKWp8NS1OKMbgG/LlEHG23lOGNh2AnggNSfq0/hu1L5O//ZBGTCuYwzGhyYWXMAa/vE5dSYj/
-	flIQ6SnJenJoGDE48YKdlU5gCPekUto80OVPdJrHVptzipr4bszV5/DwyzokYr2UsRpe7vd2h2X
-	FvmfdnozJ4zegsWvUqLPGvSDCLiaUfJnL5X0DOiYUNfI63wqz4I/Q3C4KrWxgHabOeXBUrZGACZ
-	3d/CqaptoUs08i7dHH8/lKbAhV8ftMfX7ctywNY85yUfALswLWwTP1oqV5KUNWOHLarY8iqz82i
-	ABgbkKnnB32n2XrK2RAUnvK4/XghF6qa/1QcIdS7X8QTY5fQGIqFWlI3/P9mQFNWwnh4DxriFd2
-	Wqmo0ZX
-X-Received: by 2002:a05:6820:198a:b0:6ca:3ce1:ed36 with SMTP id 006d021491bc7-6ef100968e7mr11004632eaf.47.1791919765182;
-        Tue, 13 Oct 2026 12:29:25 -0700 (PDT)
-Received: from [192.168.1.128] ([38.15.57.99])
-        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-4a6dfd0b149sm437488fac.18.2026.10.13.12.29.23
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 13 Oct 2026 12:29:24 -0700 (PDT)
-Message-ID: <08e8e221-4e46-41a1-baa5-bade8ee20730@linuxfoundation.org>
-Date: Tue, 13 Oct 2026 13:29:22 -0600
+	dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b="T9wFIICG"
+Received: from localhost (localhost [127.0.0.1])
+	by 011.lax.mailroute.net (Postfix) with ESMTP id 4j44Xg0nHgz1XM4Tn;
+	Tue, 13 Oct 2026 19:44:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=acm.org; h=
+	content-transfer-encoding:content-type:content-type:in-reply-to
+	:from:from:content-language:references:subject:subject
+	:user-agent:mime-version:date:date:message-id:received:received;
+	 s=mr01; t=1791920653; x=1794512654; bh=fXCRJRuu6VOintnUsKBn3m9y
+	AP8nYruoeFPSSmmenmw=; b=T9wFIICGEEqubaSrLn+Qqp/TPsa/Ti29rHkiBbwY
+	TDpVneY1mg38OmfLjbElwn2tUW+Ac6DhbcNB/sqn7Q6P8SuD02Ox4BUP+0CYeWQ4
+	Aq1Yne/HTfLX5g+plUdzahPwUWiYUAEcMVmSPARoFGSOGzv1EmoJXTjNmc69uMev
+	cXcH2i5Wd8P3sE2UvPu3GmJ5dfeT9a8XU8NqVvTwuO019iN26Bww/CqWdEZrxakD
+	ulqLjkWFkDnrrqX55E2ZGCABrY71T8aprU+hBE4hzpMXm4sdNwaCzuszaKkUemj0
+	86b1VABp70cMFdUB9q/V3J5dtFWOiyJnJ4c/GewWqccKsw==
+X-Virus-Scanned: by MailRoute
+Received: from 011.lax.mailroute.net ([127.0.0.1])
+ by localhost (011.lax [127.0.0.1]) (mroute_mailscanner, port 10029) with LMTP
+ id uaSxp4M5S670; Tue, 13 Oct 2026 19:44:13 +0000 (UTC)
+Received: from [IPV6:2a00:79e0:2ed2:d:46f9:948:aeed:5df3] (unknown [104.135.182.43])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: bvanassche@acm.org)
+	by 011.lax.mailroute.net (Postfix) with ESMTPSA id 4j44XX3420z1XM4Tl;
+	Tue, 13 Oct 2026 19:44:12 +0000 (UTC)
+Message-ID: <871bf440-5b43-4d63-83f8-15ba96719fa6@acm.org>
+Date: Tue, 13 Oct 2026 12:44:11 -0700
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -67,49 +50,48 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH 4/6] tools: build kernel selftests in tools_build
-To: Sasha Levin <sashal@kernel.org>, Nathan Chancellor <nathan@kernel.org>,
- Nicolas Schier <nsc@kernel.org>, linux-kbuild@vger.kernel.org
-Cc: Shuah Khan <shuah@kernel.org>, linux-kselftest@vger.kernel.org,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
- linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
- Shuah Khan <skhan@linuxfoundation.org>
-References: <20261011233647.2454648-1-sashal@kernel.org>
- <20261011233647.2454648-5-sashal@kernel.org>
+Subject: Re: [PATCH v1 01/10] compiler-context-analysis: Avoid unused
+ parameter warning in _context_unsafe_alias()
+To: Ian Rogers <irogers@google.com>, Peter Zijlstra <peterz@infradead.org>,
+ Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Marco Elver <elver@google.com>
+Cc: Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
+ James Clark <james.clark@linaro.org>, Nathan Chancellor <nathan@kernel.org>,
+ Nick Desaulniers <ndesaulniers@google.com>, Bill Wendling
+ <morbo@google.com>, Justin Stitt <justinstitt@google.com>,
+ Lorenzo Stoakes <ljs@kernel.org>, linux-perf-users@vger.kernel.org,
+ linux-kernel@vger.kernel.org, llvm@lists.linux.dev
+References: <20261013182458.1234616-1-irogers@google.com>
+ <20261013182458.1234616-2-irogers@google.com>
 Content-Language: en-US
-From: Shuah Khan <skhan@linuxfoundation.org>
-In-Reply-To: <20261011233647.2454648-5-sashal@kernel.org>
+From: Bart Van Assche <bvanassche@acm.org>
+In-Reply-To: <20261013182458.1234616-2-irogers@google.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On 10/11/26 17:36, Sasha Levin wrote:
-> Add a "Kernel selftests" sub-menu with one entry per selftests directory
-> that builds with only a C library and does not write into the source
-> tree. Each is built as "make kselftest-all" builds it, with KHDR_INCLUDES
-> pointing at the UAPI headers installed in the object tree, but by its own
-> make, so the selected ones build in parallel. Selftests whose Makefile
-> does not use KHDR_INCLUDES still build against the C library's copy of
-> the UAPI headers.
+On 10/13/26 11:24 AM, Ian Rogers wrote:
+> _context_unsafe_alias() does not use its parameter 'p', which triggers
+> -Wunused-parameter when building code that enables -Wextra (such as
+> tools/perf, tools/lib/perf, tools/lib/subcmd, and tools/lib/symbol).
+> Explicitly cast 'p' to void to silence the warning, matching
+> __assume_ctx_lock() and __assume_shared_ctx_lock().
 > 
-> The selftests do not track header dependencies, so a selftest is built
-> again from scratch when its own directory, a header or makefile any
-> selftest may share, or a kernel source it includes directly (the vDSO
-> test includes the architecture's vDSO code) is newer than its last
-> build.
+> Assisted-by: Antigravity:gemini-3.1-pro
 
-Is there a way you can fold in kselftest_deps.sh run into this
-so users know why some tests didn't build. Also we want to make
-sure kselftest build doesn't fail if a test fails to build to
-keep the current kselftest build behavior.
+I think this should be changed into Gemini 3.1 Pro. I don't think that
+the "Antigravity" part should occur in the Assisted-by tag.
 
-tools/testing/selftests/kselftest_deps.sh
+> diff --git a/include/linux/compiler-context-analysis.h b/include/linux/compiler-context-analysis.h
+> index 8302ebc2ea8c..024e303188ad 100644
+> --- a/include/linux/compiler-context-analysis.h
+> +++ b/include/linux/compiler-context-analysis.h
+> @@ -243,7 +243,7 @@
+>    * alias as a function argument).
+>    */
+>   #define context_unsafe_alias(p) _context_unsafe_alias((void **)&(p))
+> -static inline void _context_unsafe_alias(void **p) { }
+> +static inline void _context_unsafe_alias(void **p) { (void)p; }
 
-> 
-> Selftests that need libraries beyond the C library, a vmlinux with BTF,
-> or a sanitizer runtime are left out for now.
+Why a void cast instead of __attribute__((unused))?
 
-Great. That is good for this round.
-
-thanks,
--- Shuah
+Bart.
