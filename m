@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 210DF522EF0;
-	Tue, 13 Oct 2026 17:21:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C97A522EF3;
+	Tue, 13 Oct 2026 17:21:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791912119; cv=none; b=plbXP0IBOaSxxppr0UcUp6bMEbXQYAHQPvMWEMj2FD1C5cF7WHew7xy5P0ti91mpCYBSdyPAq9zo7WZ/GK6pQbPIMxyrYoAdce1SkjtdQV4vESjvH6EfJ39SIffTMSiGBqsrgfoQSAx7yHImylSi577JgoRayx+sNLBbrcxH5HM=
+	t=1791912120; cv=none; b=Xg8x8FYNh4v3TMunJNFsPf2QTJkqcUvq9zFzNDJ0CtMeLwQCpqVZQ30qHcg+gZhoEG71rmqNTnexgmNpQh03VwGUMyyPP0dEIFQkwn4L3SlQlLlIGzkkaohVoo3v3ngdu2p7O5s7Kwi+6ozuhHCq8lutkRhp3AgaEG0Q77qHX6c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791912119; c=relaxed/simple;
-	bh=s36LHh8gKa9HmJq5UT53os6RPOEgo0Yu9yMYdcbU14Q=;
+	s=arc-20240116; t=1791912120; c=relaxed/simple;
+	bh=oMmNREBvVmBO0/mEPJUg9On1yLv01/4+ACmr7DvrnbI=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=aaPSLsdxZYePtrkp7NPIXUIFPqHItys065DPwr9Jb54/Kyf/dfqc66U3v23MrWBaGKf7iWC/1B+4fD4zI/pPABuyIFHqvU/TjbCzy66aHYY6gn5tn60/SJo5DgDpjiYKG3FJeJ9OwpvM+QOEDEUL7t5IDpyeZ9Jh5KvUb7FCKbs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Qbc+Btbo; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version; b=Vukx3fkDEK1yhGdzwz9FXD4bvMbfXCjYJxJnSgtQO473Fe2Ay6A2M7VTWFye8cKYT7/tbREWX6Eho8FHFvFk4gAR6CN41VcG1ExScPzOGmc4HcnrHpZtxVLiQORfkC4yRV606/W56c2tZFkJebMbzkkGPq2YIg8CorswCr/qJCE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jit2o7/D; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Qbc+Btbo"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 82D0C1F00893;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jit2o7/D"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EDA0A1F00898;
 	Tue, 13 Oct 2026 17:21:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1791912117;
-	bh=EvfKAlmfLmTZWjmnC1MQzCa9C3gTY0EOiVM6ZpYM8Qg=;
+	s=k20260515; t=1791912118;
+	bh=j5QiqEgvgLVvNmfVIL+5I/L7kDNsnJsFEC8hvU+v54I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=Qbc+BtbojmynnLPi09tdOeTEbPrj3hE8zSzwXcm9E8S4Tcbrc/XPH3zZNrlWKpLje
-	 q2zG0VIo3+F5/OECMDc+vn7h27l0eW7c92beEGyNB0Lcq5wIf4Xo4BFvTKjnUYVmC8
-	 S7uij05jAKMj4Si+oSUyS3dn1LHQXAuiAHesb3vE14yTSE07Ndzwd2E36ynOLJvuTW
-	 nG0vgIkuIT5Nhlvcv94jowNUoOp5qRI3PS1EcDGnE9u5N4wrCEIV2gVJ4p3YQfvnZN
-	 1mynmddOPed/mJj+bw8sp1o+rAs7Vn6TLJnUmBGv7aB2DO1zhkuxX6alfHr1ikozb5
-	 jtjsoNCA3BGsg==
+	b=jit2o7/DNKJ/GXvG+3Gp7aty94JCHP4n/H9WDDsC50lgxGVTrH2vGwBvibEupHn6b
+	 4e5iuyH3b8AWZAVI2ZioPAiRhYwP4BGNCl6ACpnxyLHXLL63k+pSdV17PudDIhjOC8
+	 mU//SLcym2PEcF7EgYRP932ETsFf3jZhHGYz9Z7PaekCNtG66jPw1OxjLVyqyTghWL
+	 Wmc9HP09EKDWtA5cOnLb3QYgfyUrE6/BgC7XthnF2nCxTuAnaS7ku8JV9UsZH/Q+2/
+	 ObCj5aNuhkLXvzZiLZy8AFQtuL9+Q6nY3ClIMknND8pLTaoJmbAtC5v0sEUhAGqTBR
+	 mvrJ5lw4iP6EQ==
 From: Namhyung Kim <namhyung@kernel.org>
 To: Arnaldo Carvalho de Melo <acme@kernel.org>
 Cc: Ian Rogers <irogers@google.com>,
@@ -36,9 +36,9 @@ Cc: Ian Rogers <irogers@google.com>,
 	Ingo Molnar <mingo@kernel.org>,
 	LKML <linux-kernel@vger.kernel.org>,
 	linux-perf-users@vger.kernel.org
-Subject: [PATCH v5 01/11] perf tools: Remove redundant dso data init
-Date: Tue, 13 Oct 2026 10:21:45 -0700
-Message-ID: <20261013172155.160869-2-namhyung@kernel.org>
+Subject: [PATCH v5 02/11] perf tools: Check ELF section type with name
+Date: Tue, 13 Oct 2026 10:21:46 -0700
+Message-ID: <20261013172155.160869-3-namhyung@kernel.org>
 X-Mailer: git-send-email 2.56.0.385.gd3acb90ef8-goog
 In-Reply-To: <20261013172155.160869-1-namhyung@kernel.org>
 References: <20261013172155.160869-1-namhyung@kernel.org>
@@ -50,27 +50,34 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The fd and status are initialized later with cache.
+In filename__has_section(), it just checks the name of the section but
+it's possible that the section header is present without actual data.
+In that case, it'll have SHT_NOBITS type and can confuse the result.
 
-Reviewed-by: Ian Rogers <irogers@google.com>
+Update the function to check the section type as well.  Normally we
+want to check if the section content is present in the file so it'd
+have SHT_PROGBITS.  All the current callers of the function expect
+the section with SHT_PROGBITS type (even for debug info).
+
 Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 ---
- tools/perf/util/dso.c | 2 --
- 1 file changed, 2 deletions(-)
+ tools/perf/util/symbol-elf.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/util/dso.c b/tools/perf/util/dso.c
-index d3017c82ffb5f4b1..df03f84c9723560e 100644
---- a/tools/perf/util/dso.c
-+++ b/tools/perf/util/dso.c
-@@ -1722,8 +1722,6 @@ struct dso *dso__new_id(const char *name, const struct dso_id *id)
- 		dso->srclines = RB_ROOT_CACHED;
- 		dso->data_types = RB_ROOT;
- 		dso->global_vars = RB_ROOT;
--		dso->data.fd = -1;
--		dso->data.status = DSO_DATA_STATUS_UNKNOWN;
- 		dso->symtab_type = DSO_BINARY_TYPE__NOT_FOUND;
- 		dso->binary_type = DSO_BINARY_TYPE__NOT_FOUND;
- 		dso->dbginfo_type = DSO_BINARY_TYPE__NOT_FOUND;
+diff --git a/tools/perf/util/symbol-elf.c b/tools/perf/util/symbol-elf.c
+index e955c3feddcd62d0..1e2716c6af45712a 100644
+--- a/tools/perf/util/symbol-elf.c
++++ b/tools/perf/util/symbol-elf.c
+@@ -228,7 +228,8 @@ bool filename__has_section(const char *filename, const char *sec)
+ 	if (gelf_getehdr(elf, &ehdr) == NULL)
+ 		goto elf_out;
+ 
+-	found = !!elf_section_by_name(elf, &ehdr, &shdr, sec, NULL);
++	found = !!elf_section_by_name(elf, &ehdr, &shdr, sec, NULL) &&
++		shdr.sh_type == SHT_PROGBITS;
+ 
+ elf_out:
+ 	elf_end(elf);
 -- 
 2.56.0.385.gd3acb90ef8-goog
 
