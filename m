@@ -1,87 +1,150 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA9E1526ABA
-	for <linux-perf-users@vger.kernel.org>; Tue, 13 Oct 2026 20:37:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05B3654EEBD;
+	Tue, 13 Oct 2026 20:38:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791923856; cv=none; b=BZoH0bp3/0LWZsdJy/TDlxV0lzXeAFHOsropqkZ0ks/Fwzf/7cRqmRL2tJoBeFlTXdq0uxB9c3XnJ8JtCjhn1ppo2+iLqvs12VSlU09IzmgcZj9YH5hDbF5ulfurqT59ntph9p23rVqTJPYxcb+ljkkKnbZjj2YVRyiMgPLBFOs=
+	t=1791923925; cv=none; b=SyXIYgM9W1ul3ccrJ48vj/i+MFCpY3yaBVHPd35gGs7k0czMmSNpj9h4quikfHAr6/iqvfx5ZHQ5fXe2WWzGskLoVrCETTTr0VQ+fi9EWXNHj+vHKx7TghIC9fdZZp8581+LPd02A7toz11xHZdhil8PsDVw0BhHFfjPi9EuN1Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791923856; c=relaxed/simple;
-	bh=mIPCWTTX1r54jKNtTBY5BPkDlJNI9MiY/KyQlettD3M=;
-	h=Message-ID:From:Subject:To:Cc:In-Reply-To:References:Content-Type:
-	 Date; b=E3akseY4VK2J4skr/KWq45TldiJQIoocivlBpvRITb6qVxzntpxdn230LDAfL8Ls8nCCbQ08Z3aVAZyaGFc7Ek6fV3otA0+QnQVn7xr1IsTNcJt2UNtgseM1fwSV2yBcC4+izWbd7ugAY7kxrgPqEJ/kNT7Rm4cY8tyX06gAm4s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mJCwLb2j; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1791923925; c=relaxed/simple;
+	bh=t+rv9DZjlHa1AnpVnE5Lh7gvgLdHD5mWAXOsSnLe2jw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=szemTQTBIh19XclaWTHT7Hrgsh8kru0OoIORS2Ks2RxgZ28yNijwzU71iBi3tLWqQab/QzdBRL66k3/JIeCbl0RHLK4qCyq8L8bnY8u3q1ogYf8+kwhUIcaFR7QnriXacoeJ/HK+l4WOc+39vtMDeujVFqTSSnbm3suJZdy1QXg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=t-8ch.de; spf=pass smtp.mailfrom=t-8ch.de; dkim=pass (1024-bit key) header.d=t-8ch.de header.i=@t-8ch.de header.b=Xp7PgWmv; arc=none smtp.client-ip=159.69.126.157
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=t-8ch.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=t-8ch.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mJCwLb2j"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 633D41F000FF;
-	Tue, 13 Oct 2026 20:37:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1791923854;
-	bh=YnUZGZAIZsfBomhQ+sy41S2lKH71z/1FFdoaUBqLDn0=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=mJCwLb2jJ1m4SanDufFoJ1hLp8kVleWyhitSZNgcPI6J8V11DfZhAlpxnV6HLbjdc
-	 oOekOIUuUAX3a2q35pSZBUOuphvxoNd9c4h4IFSw5X119yD6hqAjwFKSXZwLMhwO64
-	 +ATz6SvwTn8BRZmDUdk3JEEkku3vXQlM+0BBzPyQeXjE8IWL6q5C3PcGkQ25uk5FxG
-	 vXBLf8QEF69j9jKdO7/GdNC6w5HCkP5tB9QgJBN1czH6ztA9IjAwxRJJuv0GphfbfY
-	 T13DPkMGwJL6yfj6su8SE7m1fOv91KgM0rmeeZ+USWw1MIeiPIqfyj9HKxHOpCbYP1
-	 KYv6nKZqgdpMw==
-Message-ID: <sashiko-outbox-170470@kernel.org>
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v2 04/19] perf test attr: Fix default stat metrics
- expectations
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Arnaldo Carvalho de Melo" <acme@kernel.org>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20261013201415.36428-5-acme@kernel.org>
-References: <20261013201415.36428-1-acme@kernel.org>
- <20261013201415.36428-5-acme@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Tue, 13 Oct 2026 20:37:33 +0000
+	dkim=pass (1024-bit key) header.d=t-8ch.de header.i=@t-8ch.de header.b="Xp7PgWmv"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=t-8ch.de; s=mail;
+	t=1791923918; bh=t+rv9DZjlHa1AnpVnE5Lh7gvgLdHD5mWAXOsSnLe2jw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Xp7PgWmvcUnUxiRG7k4cmWjIb/dtqkaf+8bccLc4jw8XeSC7i2CkINMmDYWaP3NwO
+	 IVK4Ibxeg/KAKky6w6RCNILKdFDEQgrxZofozyqB5qitTsCNh9XeZ56ODEr3Np6AVQ
+	 OdAtM/flgKnVOiy221T9w8WAjRz37YLOa4c1EPDg=
+Date: Tue, 13 Oct 2026 22:38:37 +0200
+From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas@t-8ch.de>
+To: Sasha Levin <sashal@kernel.org>
+Cc: Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nsc@kernel.org>, 
+	linux-kbuild@vger.kernel.org, Shuah Khan <shuah@kernel.org>, linux-kselftest@vger.kernel.org, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Ian Rogers <irogers@google.com>, linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [RFC PATCH 2/6] kbuild: add "make tools_build" to build
+ userspace tools from tools/
+Message-ID: <b0fa30a6-9f41-4c9a-a3fb-2634322e2bd1@t-8ch.de>
+References: <20261011233647.2454648-1-sashal@kernel.org>
+ <20261011233647.2454648-3-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20261011233647.2454648-3-sashal@kernel.org>
 
-> From: Arnaldo Carvalho de Melo <acme@redhat.com>
->=20
-> Since commit c7adeb0974f1 ("perf jevents: Add set of common metrics based
-> on default ones") and commit 2dfc0cab3da4 ("perf stat: Add detail -d,-dd,=
--ddd
-> metrics") the perf stat default metrics open their events in groups, so
-> group leaders and members have read_format=3D15 and members are enabled
-> without enable_on_exec, while standalone events keep read_format=3D3 and
-> are disabled until exec.
->=20
-> Also, since commit b1c5efbfd92e ("perf parse-events: Remove hard coded
-> legacy hardware and cache parsing") bare hardware events resolve to the
-> core PMU sysfs/JSON events (type 4), so add the raw encodings seen on
-> Intel and AMD for instructions, branch-misses, cpu-cycles and
-> stalled-cycles-frontend/backend to test-stat-default and
-> test-stat-detailed-1/2/3.
->=20
-> Add base-stat-group, that accepts both the standalone and the group
-> variants of read_format, disabled and enable_on_exec, and point the four
-> default/detailed expectations at it.  test-stat-basic, test-stat-C0 and
-> test-stat-no-inherit keep base-stat, whose events aren't opened in a
-> group: for those, a change that groups or enables them differently is
-> still something to catch.  test-stat-group1 does open its events in a
-> group, but pins read_format, disabled and enable_on_exec itself, the very
-> terms base-stat-group loosens, so it doesn't need it either.
->=20
-> Fixes: b1c5efbfd92eb84d ("perf parse-events: Remove hard coded legacy har=
-dware and cache parsing")
-> Fixes: c7adeb0974f18da4 ("perf jevents: Add set of common metrics based o=
-n default ones")
-> Fixes: 2dfc0cab3da4a205 ("perf stat: Add detail -d,-dd,-ddd metrics")
+On 2026-10-11 19:36:41-0400, Sasha Levin wrote:
+(...)
+
 > Assisted-by: LLM
-> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+> Signed-off-by: Sasha Levin <sashal@kernel.org>
+> ---
+>  .gitignore            |  5 +++
+>  Makefile              |  8 ++++-
+>  lib/Kconfig.debug     |  2 ++
+>  tools/Kconfig         | 72 +++++++++++++++++++++++++++++++++++++++
+>  tools/Makefile.kbuild | 79 +++++++++++++++++++++++++++++++++++++++++++
+>  5 files changed, 165 insertions(+), 1 deletion(-)
+>  create mode 100644 tools/Kconfig
+>  create mode 100644 tools/Makefile.kbuild
 
-Sashiko has reviewed this patch and found no issues. It looks great!
+(...)
 
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261013201415.3642=
-8-1-acme@kernel.org?part=3D4
+> diff --git a/tools/Kconfig b/tools/Kconfig
+> new file mode 100644
+> index 0000000000000..bf0643b39b86e
+> --- /dev/null
+> +++ b/tools/Kconfig
+> @@ -0,0 +1,72 @@
+> +# SPDX-License-Identifier: GPL-2.0-only
+> +
+> +config TOOLS_BUILD_ABI
+> +	def_bool X86_64 || ARM64
+> +
+> +config TOOLS_BUILD_GLIBC
+> +	def_bool $(success,echo '#include <features.h>' | $(CC) $(CLANG_FLAGS) $(USERCFLAGS) -E -dM -x c - | grep -q __GLIBC__)
+> +
+> +menuconfig TOOLS_BUILD
+> +	bool "Build userspace tools from tools/"
+> +	depends on CC_CAN_LINK && !UML
 
+Why !UML?
+
+> +	depends on TOOLS_BUILD_ABI && TOOLS_BUILD_GLIBC
+
+These dependencies could be on separate lines, it will reduce churn when
+they get modified.
+
+> +	help
+> +	  Build the selected programs under tools/ for the target together
+> +	  with the kernel, as part of "make all", or alone with
+> +	  "make tools_build". Each program is built by its own build system
+> +	  into tools-build/ in the object tree. The tools then always match
+> +	  the kernel they were built with, and a change that breaks one of
+> +	  them shows up in the same build that compiles the kernel.
+> +
+> +	  This needs a compiler that can link glibc programs for the target,
+> +	  and is currently limited to x86_64 and arm64.
+> +
+> +	  If unsure, say N.
+
+(...)
+
+> diff --git a/tools/Makefile.kbuild b/tools/Makefile.kbuild
+> new file mode 100644
+> index 0000000000000..820a2d9a3893b
+> --- /dev/null
+> +++ b/tools/Makefile.kbuild
+> @@ -0,0 +1,79 @@
+> +# SPDX-License-Identifier: GPL-2.0-only
+> +#
+> +# Builds the userspace programs selected in tools/Kconfig for the target.
+> +# Invoked by "make tools_build", which "make all" runs when CONFIG_TOOLS_BUILD
+> +# is set. Each program is built by its own build system, the way it is built
+> +# standalone, into $(objtree)/tools-build/.
+> +
+> +PHONY := __tools_build
+> +__tools_build:
+> +
+> +include include/config/auto.conf
+> +
+> +abs_srctree := $(realpath $(srctree))
+> +toolsdir := $(abs_srctree)/tools
+> +outdir := $(CURDIR)/tools-build
+> +
+> +# kbuild's state and the user's compiler flags, from the environment or the
+> +# command line, would change how these build
+> +unexport srctree objtree srcroot VPATH building_out_of_srctree sub_make_done
+> +unexport CLANG_FLAGS INSTALL_HDR_PATH O
+> +unexport CFLAGS CPPFLAGS LDFLAGS EXTRA_CFLAGS EXTRA_LDFLAGS USERCFLAGS USERLDFLAGS
+> +space := $(subst ,, )
+> +overrides := $(subst \$(space),\@space@,$(MAKEOVERRIDES))
+> +MAKEOVERRIDES := $(subst \@space@,\$(space),$(filter-out O=% CFLAGS=% CPPFLAGS=% \
+> +	LDFLAGS=% EXTRA_CFLAGS=% EXTRA_LDFLAGS=% USERCFLAGS=% USERLDFLAGS=%,$(overrides)))
+> +
+> +# Keep Python's bytecode caches out of the source tree
+> +export PYTHONDONTWRITEBYTECODE := 1
+
+This should just be done in the toplevel Makefile IMO.
+
+> +# The compiler CONFIG_CC_CAN_LINK was tested with. The tools take linker
+> +# flags from LDFLAGS.
+> +tools-cc := $(CC) $(USERCFLAGS) $(KBUILD_USERABI)
+> +ifneq ($(USERLDFLAGS),)
+> +override LDFLAGS := $(USERLDFLAGS)
+> +export LDFLAGS
+> +endif
+
+(...)
