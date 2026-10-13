@@ -1,44 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A417B61FCE
-	for <linux-perf-users@vger.kernel.org>; Tue, 13 Oct 2026 00:08:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 428B350276
+	for <linux-perf-users@vger.kernel.org>; Tue, 13 Oct 2026 00:08:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791850094; cv=none; b=aYqFyzUGrSevwrXgMQkv6W7wcryxRqNMXV4aSogPNGKAusgyWmCvZzfcKigZbBGQvWrVfqmfO79r+kBoeHNl0adQY6qGxD/PfJyDLSXbUApYSv/x+JYSfgTlWGAOyVTsiZ2DnP+dGeKIfWCes8wo6hMx/v/5TAct4q8DmPF+xek=
+	t=1791850136; cv=none; b=V9vQL9IQW98B9IDcDUc3j1CHmAsMAuUeQ3HNCEEqXSvkDrUoWyUE6rTk0Np0xHmSQLcGV+JY3FoKw1JCCOXMcHHM0JB9mkKf+YIFOYqR2XUyGBjxIcfpIplEvIeGAD5F0EuQrfOGnoYKsiaOhjUXWiwYD+PmRbWfntOqQbUsCzg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791850094; c=relaxed/simple;
-	bh=WQ1YZ5t55gEQhgQBy+9LC2xLLYxgJ66m0kT6akYwnCQ=;
+	s=arc-20240116; t=1791850136; c=relaxed/simple;
+	bh=qSRAbtrV2DhRompV/Ss6tnE5oAQbkv1uYQX6Sh7wSis=;
 	h=Message-ID:From:Subject:To:Cc:In-Reply-To:References:Content-Type:
-	 Date; b=gVAEUobTv7FmmO+A5st8/ip/X3xuNOD+Dv/Ff+LAgKFNiFA63wG+YQkU5Up4diWDE7h0mTJ1ZePXV3TSeaK/z253nK3m6ixVog9enwgn1RLE6tJOlIGPGa1o8XcYDpNUCOhmDNuQQ3lUnhsTR9Tty6F19osapgg4lXovDUrYlQg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LF2Wdn7x; arc=none smtp.client-ip=100.103.45.18
+	 Date; b=bH1nnbY5GJcgnI84XBiWQXNarsxAquphTFjoSjytQjgbzrxLjZCcq0C4ZOBFjjQtkE3sfM4QoSwp2G9o+OV+V+ibll/OoC0zJQ5+CuJZZYA5VHtZ3ddgSBDR4g1v5A7JqcHikXKGKvS+th6sLJriN2itAV+PfmXJQPfNCcD3L7c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VW9sPCRW; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LF2Wdn7x"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 371101F008A1;
-	Tue, 13 Oct 2026 00:08:13 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VW9sPCRW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BBD671F0089B;
+	Tue, 13 Oct 2026 00:08:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1791850093;
-	bh=/PzsziUn78xrQmnfV8x6tMCVZL/wfrAHvufhDtnTnFc=;
+	s=k20260515; t=1791850134;
+	bh=JLXwwifOAr/Rx+FFAFM9/3lYbWkVombXcfQffP0XDB4=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=LF2Wdn7x3NSnVTAUktm42lJI/tSdMjfAi/5YSkLSvhBdt6SW48mr4CEp9ZRt4oob5
-	 9k5Ri0dIu5z9tvIsbWMU4y38R/L701PBXhBlvhFTYQCjJtt5Wx8XozyIMta6v+Herm
-	 X0C1NgNAcqSCtYIqherFd1F5JCorzba5OPBn9n3bueyTSx4+z3O+K+83tF5iUjkDIp
-	 TsKMmjvbtO5WLFsjloBNSIJwkNWlPgPNu+TV2M7BqtDFhJed9jGxrGNeKa+XsbQ7JQ
-	 yVZJdV4RZrNaSHx85dg6Zs91mlVV/KYaOkxwVXIAA4QywT3bSClpTCZ3QF2pPC4H0r
-	 xWnFQApnV5zBg==
-Message-ID: <sashiko-outbox-168778@kernel.org>
+	b=VW9sPCRWfi7KFpGbb8qrS0/rMRnGUJ4txkbo6Lpe61aR0weS06PT744oVedUMEWqp
+	 J3o3VuXb7efJ7Y0sRUexA5QYf5rtiw33ZKgNHm6YwUTUwBOJITmJbBQu0euGnR4Yw1
+	 boo99cCfUHZGNeINwGqS4beyYFOCH8BTgV9oRHoND3b0zU8o7DTMWSoKpFvQ5XLbZ3
+	 Nt7RUDNam0m3bpkBMDyEW3jxeeKxJnNzDeFjewjVed5/fC2GrrBfGc7Iqu3jRFKIYY
+	 O44psC6tYmzeOx3rIu9Kff14PZ8iCWki3NeJyDxoNAdrZ1neiNWSaca1aiEVaicIkG
+	 00bQtBZiQK9cw==
+Message-ID: <sashiko-outbox-168781@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v4 08/10] perf symbol: Do not set binary type from
- symtab type
+Subject: Re: [PATCH v3 4/4] perf test: Update PE file test for other
+ locations
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Namhyung Kim" <namhyung@kernel.org>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20261012234654.60666-9-namhyung@kernel.org>
-References: <20261012234654.60666-1-namhyung@kernel.org>
- <20261012234654.60666-9-namhyung@kernel.org>
+In-Reply-To: <20261012235938.87912-4-namhyung@kernel.org>
+References: <20261012235938.87912-1-namhyung@kernel.org>
+ <20261012235938.87912-4-namhyung@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Tue, 13 Oct 2026 00:08:12 +0000
+Date: Tue, 13 Oct 2026 00:08:54 +0000
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -47,74 +47,69 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
 Thank you for your contribution! Sashiko AI review found 1 potential issue(=
 s) to consider:
-- [Medium] perf: fully stripped executables falsely rejected for data access
+- [Low] perf test: unconditional leak of get_argv_exec_path() and NULL deref
 --
 
-commit 6b9e46855d4e0d8df1dcaaed600da2f693471adb
+commit 9107444f4267d3db60d0e4c357f3b28957bdb1bc
 Author: Namhyung Kim <namhyung@kernel.org>
 
-perf symbol: Do not set binary type from symtab type
+perf test: Update PE file test for other locations
 
-This commit separates tracking of the DSO binary type from the symtab type.
-It removes the explicit setting of the binary type during symbol loading,
-deferring it until the DSO is actually opened.
+This commit updates the PE file parsing test to check multiple directory pa=
+ths
+for the test data. The logic is modified to try other paths similar to the
+shell_tests__dir_fd() fallback mechanism.
 
-> diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
-> index 4a8c298039447..116870595f75c 100644
-> --- a/tools/perf/util/symbol.c
-> +++ b/tools/perf/util/symbol.c
-> @@ -1943,19 +1943,6 @@ int dso__load(struct dso *dso, struct map *map)
+> diff --git a/tools/perf/tests/pe-file-parsing.c b/tools/perf/tests/pe-fil=
+e-parsing.c
+> index 3979f38bf127c..190520ffc3ad6 100644
+> --- a/tools/perf/tests/pe-file-parsing.c
+> +++ b/tools/perf/tests/pe-file-parsing.c
+> @@ -74,17 +74,20 @@ static int test__pe_file_parsing(struct test_suite *t=
+est __maybe_unused,
+>  {
+>  	struct stat st;
+>  	char path_dir[PATH_MAX];
+> -
+> -	/* First try development tree tests. */
+> -	if (!lstat("./tests", &st))
+> -		return run_dir("./tests");
+> -
+> -	/* Then installed path. */
+> +	const char * const tests_dirs[] =3D {
+> +		"./tools/perf/tests",
+> +		"./tests",
+> +		"./source/tests",
+> +		path_dir,
+> +	};
+>  	snprintf(path_dir, PATH_MAX, "%s/tests", get_argv_exec_path());
+
+[Severity: Low]
+Can this code in test__pe_file_parsing() lead to a memory leak and a potent=
+ial
+NULL pointer dereference?
+
+The get_argv_exec_path() function returns a dynamically allocated string th=
+at
+must be freed by the caller. Passing it directly to snprintf() inline causes
+the pointer to be permanently lost.
+
+Additionally, since the patch moved this snprintf() call before the directo=
+ry
+search loop, it now unconditionally allocates this string even if an earlier
+directory in the tests_dirs array would have succeeded.
+
+Furthermore, if get_argv_exec_path() fails under memory pressure and returns
+NULL, snprintf("%s") could crash on strictly compliant libcs like musl.
+
 > =20
->  		if (next_slot) {
->  			ss_pos++;
-> -
-> -			/*
-> -			 * The binary type is used to find the file containing
-> -			 * the executed instructions, so prefer the types that
-> -			 * refer to the actual object over debug-only files such
-> -			 * as DSO_BINARY_TYPE__DEBUGLINK.
-> -			 */
-> -			if (dso__binary_type(dso) =3D=3D DSO_BINARY_TYPE__NOT_FOUND ||
-> -			    symtab_type =3D=3D DSO_BINARY_TYPE__BUILD_ID_CACHE ||
-> -			    (symtab_type =3D=3D DSO_BINARY_TYPE__SYSTEM_PATH_DSO &&
-> -			     dso__binary_type(dso) !=3D DSO_BINARY_TYPE__BUILD_ID_CACHE))
-> -				dso__set_binary_type(dso, symtab_type);
-> -
-
-[Severity: Medium]
-Will removing this explicit assignment cause fully stripped executables to =
-be
-falsely rejected during data access operations like perf annotate?
-
-By leaving the DSO binary type as NOT_FOUND here, disassembly paths are for=
-ced
-to fall back to dso__find_binary_type_locked() to identify the file type.
-That logic attempts to verify the file using filename__has_section() for the
-.text section:
-
-tools/perf/util/dso.c:dso__find_binary_type_locked() {
-    ...
-    found =3D filename__has_section(path, ".text");
-    ...
-}
-
-For stripped executables (which have had their section headers removed but
-still have valid PT_LOAD segments), this check returns false. Previously,
-because dso__load() set the binary type directly when locating the system
-path DSO, it bypassed the strict .text check.
-
-Consequently, tools like objdump that can parse PT_LOAD segments are never
-invoked, and operations fail with COULDNT_DETERMINE_FILE_TYPE.
-
-Additionally, could this cause debuginfo files to be incorrectly selected f=
-or
-data reads, since their SHT_NOBITS .text sections might falsely satisfy the
-check?
-
->  			if (syms_ss && runtime_ss)
->  				break;
->  		} else {
+> -	if (!lstat(path_dir, &st))
+> -		return run_dir(path_dir);
+> +	for (size_t i =3D 0; i < ARRAY_SIZE(tests_dirs); ++i) {
+> +		if (!lstat(tests_dirs[i], &st))
+> +			return run_dir(tests_dirs[i]);
+> +	}
 
 --=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261012234654.6066=
-6-1-namhyung@kernel.org?part=3D8
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261012235938.8791=
+2-1-namhyung@kernel.org?part=3D4
