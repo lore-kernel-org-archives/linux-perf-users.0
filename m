@@ -1,56 +1,56 @@
-Received: from mail-dy1-f200.google.com (mail-dy1-f200.google.com [74.125.82.200])
+Received: from mail-dy1-f197.google.com (mail-dy1-f197.google.com [74.125.82.197])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22ED95328B0
-	for <linux-perf-users@vger.kernel.org>; Tue, 13 Oct 2026 18:26:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F9D8539763
+	for <linux-perf-users@vger.kernel.org>; Tue, 13 Oct 2026 18:26:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791916017; cv=none; b=d6ltz3abjMmGk+0WaLT3urzFVbzqLMM06ligWtakQrDnfLHIO87mktyzyMNv7Y6ajOwdkBPKAWNdfFEmpvDkV6yfmYgudbt4gL4Ho2w80r0xd7g5LXAUbA9q+p4/MlocYTu+HCLf4vzHKd5BrM613r7dv6cOzDxZwyPTJUEG16w=
+	t=1791916022; cv=none; b=Emzci8lRBsHZsSkm0xKyg3VxutOrRtvIHkSYi3MYiSn7rXCDlBq9vl4UqjC8iYTjn0I18smMJf5xvHmCji1PDmVfy61a6MiQbePxY/SooaXl4w7rEuzFyl7y3MRt6ZDLsYFC2Zp6wsDU3DAjyQYnONQGFDSRteDn5kzH0l6Fcho=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791916017; c=relaxed/simple;
-	bh=4CQuvwofgHcG83OG69LxU4ukzKN7LsPez0gi6cp7I+g=;
+	s=arc-20240116; t=1791916022; c=relaxed/simple;
+	bh=U0LVYrsjOhCuX5dewl7Cw+Whp2dL+e/N7jb/m8VCaAo=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=hLwkvc3bUFFGF56Wi+QoGm1anIvL4n++rkv39UQPL0omLVRY4T31M5rfFRq8K579IXW1nL8HouUSwA/HiL8tXjA8KHUN0SgoWLjITiyeBP0pWFSzXHUbnhAIYhSNYSwEmKmYuK9nIK31cZxoxz86O3fXqjCx5PHVfiSSOJ0SDFI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=t0eo0mpk; arc=none smtp.client-ip=74.125.82.200
+	 To:Cc:Content-Type; b=uVA+1nhu8tc8MfAWP18W8/SGCdEup0yhMBaW1OAEG26/Z1OKPLmKOhBnxij0pfk73X0zouh56b3zPmB+86P5Lii52ubf7ILJKp3+M2pr0/htv5SdFvRjc6fyp5fEMRFopNDc4BxnEU/qRKT+0Ps/+33yHOkXWj89IS8vNnVWpe8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=YOu8mO8m; arc=none smtp.client-ip=74.125.82.197
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="t0eo0mpk"
-Received: by mail-dy1-f200.google.com with SMTP id 5a478bee46e88-30bcb065bfdso6340364eec.0
-        for <linux-perf-users@vger.kernel.org>; Tue, 13 Oct 2026 11:26:54 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="YOu8mO8m"
+Received: by mail-dy1-f197.google.com with SMTP id 5a478bee46e88-3548cdfd2fbso5208982eec.1
+        for <linux-perf-users@vger.kernel.org>; Tue, 13 Oct 2026 11:26:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1791916014; x=1792520814; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1791916017; x=1792520817; darn=vger.kernel.org;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=Rxnd0zNui4b9FhnSzHnnD6pCFtdl3q4FWfdc0yDThig=;
-        b=t0eo0mpkSW6L4wdZp9px9cq4rvpDbBAI9vYwv2ggA830x1cijRQXm3k3f0ptZAeRf2
-         0FoochKaTUFZWbWiUrBVi3H2ZKeuvFPMp40O01/BJHwijTjAdjS+/66XKjWn5nUxQEx5
-         MflRDyYorbMG4OTAsrsq+h0JFiWavqsBbeo8Qm2jPd2E6rrsImpdpZSTxnHJ+UfegL3E
-         jgbELvhGD/R6uYp2DxaKwa4OYRntYD6kVBelmAHjgI+6VfTwID+pYnQMtXAU/zr479CD
-         ScU1JlEYyfzq+WoPz5vgKig00ooKFJhof+fR9qPgiGmLgELqA74BU87XKHyfWc4YXEEJ
-         oZfw==
+        bh=uLX2MWhtq5GCu3dY8VwmYs6yACC/NfE7NR8TUX/w2xA=;
+        b=YOu8mO8mOZKpoJzUy9FhipCoJsD+A2JZvAm++rCU1crXyfFsSRp5A/BjkhgsBvQiif
+         wlWKdrLPgUdcZQFc4LuYqtULaX+kTHHbvp51udyoE9YmoZ/XqKsX6IWOh/UZYRiZa4Ph
+         ZLrn19T/4Lxm7fkQNoPJe8vxj++mD/YlfHGIWPl3xBCvdRr3UWfvv9ENsw/MPABL4iXb
+         nFUrKRU63oDrG92CKwb8kOn4AD7BRQlt+Y+oVdgO4zzXI2Dmz4ywvcBy0x2tC+UdSc67
+         1JtI+Skr/PrxK8IcmkPZl8DgS77IzAhEJWFFpKt+jXCUu7zy+qxgZ4NoP9ksXuqfZcH+
+         tqAA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1791916014; x=1792520814;
+        d=1e100.net; s=20260707; t=1791916017; x=1792520817;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=Rxnd0zNui4b9FhnSzHnnD6pCFtdl3q4FWfdc0yDThig=;
-        b=qCN8OC5fz6Xol3gpBRDF0MPsSrWJXI5J82IXCCJNdRZLziE5o/bsBTCoZljFb6SAqA
-         3N+X20hyeLUpasB557LDK3ejGLpNCcNuAEKiCE2HDjtxMxMe1l4rHQfJCAaB507jUHt9
-         OakV8A0HAE5FEv0KAOJSo24NnZ/VLLXOdopZKjT7PjtwhBhm8mJrKlgJO3iJ5OdkktAM
-         K+CXejAXL48k6x8f5iOymytcydD9QIVHFjT+B2cmRMXNSB45enU+Rqa939XytNNbCjds
-         etVL6tCuMlxZICxr53AecJHeNnqqP6aETM/20+9McmfBmv86s/5PwXw5vFhDgtrNTLmm
-         1lBw==
-X-Forwarded-Encrypted: i=1; AKwUvBwDHeW5JQqFTnI54hy0/QmF4/d5SOE+b+X3gyTWEpna1Mlkjf6gTJw8qGxD0W1n7YRjuybKtxwOwJ1UjFxT2o/O@vger.kernel.org
-X-Gm-Message-State: AFq9FYKqK58dG3r+iajDitvVrJCSSnagylwohbySrHgrIcwCmSkDuWoo
-	kp1e/1huRKw32LDSziy27jhGmRNpVic1USPd0y9APBaOIUtbVn1Gm1Oup9nFkB7BwBK2yomwLV5
-	RXi1vJoC9AA==
-X-Received: from dycmo10.prod.google.com ([2002:a05:693c:26ca:b0:351:7e08:a414])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:693c:83dc:20b0:359:2433:2717
- with SMTP id 5a478bee46e88-359243328f6mr13315609eec.20.1791916013436; Tue, 13
- Oct 2026 11:26:53 -0700 (PDT)
-Date: Tue, 13 Oct 2026 11:24:57 -0700
+        bh=uLX2MWhtq5GCu3dY8VwmYs6yACC/NfE7NR8TUX/w2xA=;
+        b=qJ57pBG/pHa40sZi75b9Dt6Trzwast9qY7qrf1seh1KljtqFtEZxWh8PZgZsdnpxww
+         PMCJSlwRpD+tnklgaqOJ7RiTfC2E1ZsRsY9dSGWuVf3JZCpYm6Pq5XFM4ohMXjW/lKk0
+         f0M5OIzbjQsEa5ym4jIpkoiPPT+NoxZZPYYyPAbxw1airVIxTUBzRizOB5dkZPqzO7qd
+         nk8kRQMJLCsT8tFAq4og0V5x4w7i3emnHwsHKeEHEYKuw3GVhTt4i4pVMvxYhIqJViXq
+         T/ELsfg12Ht8U1tRIKFPwmcOuW3n3R8tk199YVVzzOy1FfRAnzXNcuxEhVaIi3CCUFVn
+         pM3w==
+X-Forwarded-Encrypted: i=1; AKwUvBxcdG+JY/VjRG+GdR8oi2gkDjVBIwvJS2T8jEwZo638EwX0FVVzp75oLPMuHst4fAJMviuc+zyJVPFLKjjNSHa2@vger.kernel.org
+X-Gm-Message-State: AFq9FYJVZ9p7ZvXogbOlTsICwy6TKea34Xh0fP+qdDZE/1SrvIbPe0Qr
+	/EY5Vg82+E83Kp6MrGYfBXG5OVLhwqZJpn/k/1na2v13mmOf0xhQQtnt1JH5e/tAfsXdCXtCYMB
+	xt7DYYCTv0A==
+X-Received: from dydr19.prod.google.com ([2002:a05:7300:50f3:b0:33e:5767:2163])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:693c:8954:20b0:351:8cc4:e18b
+ with SMTP id 5a478bee46e88-3537dfb8632mr16972398eec.20.1791916016121; Tue, 13
+ Oct 2026 11:26:56 -0700 (PDT)
+Date: Tue, 13 Oct 2026 11:24:58 -0700
 In-Reply-To: <20261013182458.1234616-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -60,9 +60,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20261013182458.1234616-1-irogers@google.com>
 X-Mailer: git-send-email 2.56.0.385.gd3acb90ef8-goog
-Message-ID: <20261013182458.1234616-10-irogers@google.com>
-Subject: [PATCH v1 09/10] perf config, intel-tpebs, env: Add __guarded_by and
- __must_hold annotations
+Message-ID: <20261013182458.1234616-11-irogers@google.com>
+Subject: [PATCH v1 10/10] perf maps: Add context analysis annotations
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Marco Elver <elver@google.com>
@@ -75,481 +74,501 @@ Cc: Bart Van Assche <bvanassche@acm.org>, Jiri Olsa <jolsa@kernel.org>,
 	llvm@lists.linux.dev
 Content-Type: text/plain; charset="UTF-8"
 
-Add __guarded_by() and __must_hold() annotations to static parser and
-config state in util/config.c, TPEBS state in util/intel-tpebs.c
-(replacing tpebs_mtx_get() and its pthread_once() init with
-DEFINE_MUTEX(tpebs_mtx) and fixing an unlocked read of
-tpebs_reader_thread in tpebs_stop()), and bpf_progs and cgroups trees in
-struct perf_env.
+Add __returns_ctx_lock() to maps__lock(), annotate DECLARE_RC_STRUCT(maps)
+members protected by lock with __guarded_by(&lock), and annotate
+internal maps helpers with __must_hold() and __must_hold_shared().
 
 Assisted-by: Antigravity:gemini-3.1-pro
+
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/bpf-event.h   |  5 +-
- tools/perf/util/config.c      | 39 +++++++++-------
- tools/perf/util/env.c         |  1 +
- tools/perf/util/env.h         | 19 ++++----
- tools/perf/util/intel-tpebs.c | 86 +++++++++++++++--------------------
- 5 files changed, 75 insertions(+), 75 deletions(-)
+ tools/perf/util/maps.c | 122 ++++++++++++++++++++++++++---------------
+ 1 file changed, 78 insertions(+), 44 deletions(-)
 
-diff --git a/tools/perf/util/bpf-event.h b/tools/perf/util/bpf-event.h
-index da4eeb4a1a73..3f3323f98f49 100644
---- a/tools/perf/util/bpf-event.h
-+++ b/tools/perf/util/bpf-event.h
-@@ -6,11 +6,11 @@
- #include <linux/rbtree.h>
- #include <api/fd/array.h>
- #include <stdio.h>
-+#include "env.h"
- 
- struct bpf_prog_info;
- struct machine;
- union perf_event;
--struct perf_env;
- struct perf_sample;
- struct perf_session;
- struct record_opts;
-@@ -42,7 +42,8 @@ int machine__process_bpf(struct machine *machine, union perf_event *event,
- int evlist__add_bpf_sb_event(struct evlist *evlist, struct perf_env *env);
- void __bpf_event__print_bpf_prog_info(struct perf_bpil *info_linear,
- 				      struct perf_env *env,
--				      FILE *fp);
-+				      FILE *fp)
-+	__must_hold_shared(&env->bpf_progs.lock);
- void bpf_metadata_free(struct bpf_metadata *metadata);
- #else
- static inline int machine__process_bpf(struct machine *machine __maybe_unused,
-diff --git a/tools/perf/util/config.c b/tools/perf/util/config.c
-index 287401f159e6..bbf4940ffd02 100644
---- a/tools/perf/util/config.c
-+++ b/tools/perf/util/config.c
-@@ -64,15 +64,25 @@ struct perf_stat_config stat_config = {
- 
- char buildid_dir[MAXPATHLEN]; /* root dir for buildid, binary cache */
- 
--static FILE *config_file;
--static const char *config_file_name;
--static int config_linenr;
--static int config_file_eof;
--static struct perf_config_set *config_set;
-+/* Parsing and rewriting share the static parser state. */
-+static DEFINE_MUTEX(config_mutex);
-+
-+/* Serializes whole perf_config__set_variable() updates. */
-+static DEFINE_MUTEX(config_update_mutex);
-+
-+/* Not config_mutex: building the set parses the config files, which takes it. */
-+static DEFINE_MUTEX(config_set_mutex);
-+
-+static FILE *config_file __guarded_by(&config_mutex);
-+static const char *config_file_name __guarded_by(&config_mutex);
-+static int config_linenr __guarded_by(&config_mutex);
-+static int config_file_eof __guarded_by(&config_mutex);
-+static struct perf_config_set *config_set __guarded_by(&config_set_mutex);
- 
- const char *config_exclusive_filename;
- 
- static int get_next_char(void)
-+	__must_hold(&config_mutex)
- {
- 	int c;
- 	FILE *f;
-@@ -99,6 +109,7 @@ static int get_next_char(void)
- }
- 
- static char *parse_value(void)
-+	__must_hold(&config_mutex)
- {
- 	static char value[1024];
- 	int quote = 0, comment = 0, space = 0;
-@@ -170,6 +181,7 @@ static inline int iskeychar(int c)
- }
- 
- static int get_value(config_fn_t fn, void *data, char *name, unsigned int len)
-+	__must_hold(&config_mutex)
- {
- 	int c;
- 	char *value;
-@@ -201,6 +213,7 @@ static int get_value(config_fn_t fn, void *data, char *name, unsigned int len)
- }
- 
- static int get_extended_base_var(char *name, int baselen, int c)
-+	__must_hold(&config_mutex)
- {
- 	do {
- 		if (c == '\n')
-@@ -237,6 +250,7 @@ static int get_extended_base_var(char *name, int baselen, int c)
- }
- 
- static int get_base_var(char *name)
-+	__must_hold(&config_mutex)
- {
- 	int baselen = 0;
- 
-@@ -257,6 +271,7 @@ static int get_base_var(char *name)
- }
- 
- static int perf_parse_file(config_fn_t fn, void *data)
-+	__must_hold(&config_mutex)
- {
- 	int comment = 0;
- 	int baselen = 0;
-@@ -549,12 +564,6 @@ int perf_default_config(const char *var, const char *value,
- 	return 0;
- }
- 
--/* Parsing and rewriting share the static parser state. */
--static DEFINE_MUTEX(config_mutex);
--
--/* Serializes whole perf_config__set_variable() updates. */
--static DEFINE_MUTEX(config_update_mutex);
--
- static int perf_config_from_file(config_fn_t fn, const char *filename, void *data)
- {
- 	int ret;
-@@ -737,6 +746,7 @@ static int set_value(struct perf_config_item *item, const char *value)
- 
- static int collect_config(const char *var, const char *value,
- 			  void *perf_config_set)
-+	__must_hold(&config_mutex)
- {
- 	int ret = -1;
- 	char *ptr, *key;
-@@ -853,11 +863,8 @@ struct perf_config_set *perf_config_set__load_file(const char *file)
- 	return set;
- }
- 
--/* Not config_mutex: building the set parses the config files, which takes it. */
--static DEFINE_MUTEX(config_set_mutex);
--
--/* Called with config_set_mutex held. */
- static int perf_config__init(void)
-+	__must_hold(&config_set_mutex)
- {
- 	if (config_set == NULL)
- 		config_set = perf_config_set__new();
-@@ -975,7 +982,7 @@ int perf_config__set_variable(const char *var, const char *value)
- 
- 	/* Static: the parser publishes it as config_file_name. */
- 	{
--		static char path[PATH_MAX];
-+		static char path[PATH_MAX] __guarded_by(&config_update_mutex);
- 		char *user_config = mkpath(path, sizeof(path), "%s/.perfconfig", getenv("HOME"));
- 
- 		config_filename = config_exclusive_filename ?: user_config;
-diff --git a/tools/perf/util/env.c b/tools/perf/util/env.c
-index 50993b0dedc5..9e8e5d1d822a 100644
---- a/tools/perf/util/env.c
-+++ b/tools/perf/util/env.c
-@@ -302,6 +302,7 @@ void perf_env__exit(struct perf_env *env)
- }
- 
- void perf_env__init(struct perf_env *env)
-+	__context_unsafe(/* initialization */)
- {
- 	memset(env, 0, sizeof(*env));
- #ifdef HAVE_LIBBPF_SUPPORT
-diff --git a/tools/perf/util/env.h b/tools/perf/util/env.h
-index 23d35425efe3..6b2083e3640c 100644
---- a/tools/perf/util/env.h
-+++ b/tools/perf/util/env.h
-@@ -139,16 +139,16 @@ struct perf_env {
+diff --git a/tools/perf/util/maps.c b/tools/perf/util/maps.c
+index f808df2fe77b..d87732f72aa6 100644
+--- a/tools/perf/util/maps.c
++++ b/tools/perf/util/maps.c
+@@ -30,12 +30,12 @@ DECLARE_RC_STRUCT(maps) {
+ 	 * @maps_by_address: array of maps sorted by their starting address if
+ 	 * maps_by_address_sorted is true.
  	 */
- 	struct {
- 		struct rw_semaphore	lock;
--		struct rb_root		infos;
--		u32			infos_cnt;
--		struct rb_root		btfs;
--		u32			btfs_cnt;
-+		struct rb_root		infos __guarded_by(&lock);
-+		u32			infos_cnt __guarded_by(&lock);
-+		struct rb_root		btfs __guarded_by(&lock);
-+		u32			btfs_cnt __guarded_by(&lock);
- 	} bpf_progs;
- #endif // HAVE_LIBBPF_SUPPORT
- 	/* same reason as above (for perf-top) */
- 	struct {
- 		struct rw_semaphore	lock;
--		struct rb_root		tree;
-+		struct rb_root		tree __guarded_by(&lock);
- 	} cgroups;
- 
- 	/* For fast cpu to numa node lookup via perf_env__numa_node */
-@@ -223,7 +223,8 @@ int perf_env__nr_cpus_avail(struct perf_env *env);
- void perf_env__init(struct perf_env *env);
- #ifdef HAVE_LIBBPF_SUPPORT
- bool __perf_env__insert_bpf_prog_info(struct perf_env *env,
--				      struct bpf_prog_info_node *info_node);
-+				      struct bpf_prog_info_node *info_node)
-+	__must_hold(&env->bpf_progs.lock);
- bool perf_env__insert_bpf_prog_info(struct perf_env *env,
- 				    struct bpf_prog_info_node *info_node);
- struct bpf_prog_info_node *perf_env__find_bpf_prog_info(struct perf_env *env,
-@@ -233,9 +234,11 @@ void perf_env__iterate_bpf_prog_info(struct perf_env *env,
- 						void *data),
- 				     void *data);
- bool perf_env__insert_btf(struct perf_env *env, struct btf_node *btf_node);
--bool __perf_env__insert_btf(struct perf_env *env, struct btf_node *btf_node);
-+bool __perf_env__insert_btf(struct perf_env *env, struct btf_node *btf_node)
-+	__must_hold(&env->bpf_progs.lock);
- struct btf_node *perf_env__find_btf(struct perf_env *env, __u32 btf_id);
--struct btf_node *__perf_env__find_btf(struct perf_env *env, __u32 btf_id);
-+struct btf_node *__perf_env__find_btf(struct perf_env *env, __u32 btf_id)
-+	__must_hold_shared(&env->bpf_progs.lock);
- #endif // HAVE_LIBBPF_SUPPORT
- 
- int perf_env__numa_node(struct perf_env *env, struct perf_cpu cpu);
-diff --git a/tools/perf/util/intel-tpebs.c b/tools/perf/util/intel-tpebs.c
-index 7c0b8b15bd10..3547496ee041 100644
---- a/tools/perf/util/intel-tpebs.c
-+++ b/tools/perf/util/intel-tpebs.c
-@@ -32,12 +32,12 @@
- 
- bool tpebs_recording;
- enum tpebs_mode tpebs_mode;
--static LIST_HEAD(tpebs_results);
--static pthread_t tpebs_reader_thread;
-+static DEFINE_MUTEX(tpebs_mtx);
-+static struct list_head tpebs_results __guarded_by(&tpebs_mtx) = LIST_HEAD_INIT(tpebs_results);
-+static pthread_t tpebs_reader_thread __guarded_by(&tpebs_mtx);
- static struct child_process tpebs_cmd;
--static int control_fd[2], ack_fd[2];
--static struct mutex tpebs_mtx;
--static bool tpebs_stopping;
-+static int control_fd[2] = { -1, -1 }, ack_fd[2] = { -1, -1 };
-+static bool tpebs_stopping __guarded_by(&tpebs_mtx);
- 
- struct tpebs_retire_lat {
- 	struct list_head nd;
-@@ -53,25 +53,11 @@ struct tpebs_retire_lat {
- 	bool started;
+-	struct map	 **maps_by_address;
++	struct map	 **maps_by_address __guarded_by(&lock);
+ 	/**
+ 	 * @maps_by_name: optional array of maps sorted by their dso name if
+ 	 * maps_by_name_sorted is true.
+ 	 */
+-	struct map	 **maps_by_name;
++	struct map	 **maps_by_name __guarded_by(&lock);
+ 	struct machine	 *machine;
+ #ifdef HAVE_LIBUNWIND_SUPPORT
+ 	void		*addr_space;
+@@ -50,26 +50,33 @@ DECLARE_RC_STRUCT(maps) {
+ 	 * @nr_maps: number of maps_by_address, and possibly maps_by_name,
+ 	 * entries that contain maps.
+ 	 */
+-	unsigned int	 nr_maps;
++	unsigned int	 nr_maps __guarded_by(&lock);
+ 	/**
+ 	 * @nr_maps_allocated: number of entries in maps_by_address and possibly
+ 	 * maps_by_name.
+ 	 */
+-	unsigned int	 nr_maps_allocated;
++	unsigned int	 nr_maps_allocated __guarded_by(&lock);
+ 	/**
+ 	 * @last_search_by_name_idx: cache of last found by name entry's index
+ 	 * as frequent searches for the same dso name are common.
+ 	 */
+ 	unsigned int	 last_search_by_name_idx;
+ 	/** @maps_by_address_sorted: is maps_by_address sorted. */
+-	bool		 maps_by_address_sorted;
++	bool		 maps_by_address_sorted __guarded_by(&lock);
+ 	/** @maps_by_name_sorted: is maps_by_name sorted. */
+-	bool		 maps_by_name_sorted;
++	bool		 maps_by_name_sorted __guarded_by(&lock);
+ 	/** @ends_broken: does the map contain a map where end values are unset/unsorted? */
+-	bool		 ends_broken;
++	bool		 ends_broken __guarded_by(&lock);
  };
  
--static void tpebs_init(void)
++static struct rw_semaphore *maps__lock(const struct maps *maps)
++	__returns_ctx_lock(&RC_CHK_ACCESS(maps)->lock)
++{
++	return (struct rw_semaphore *)&RC_CHK_ACCESS(maps)->lock;
++}
++
+ static void check_invariants(const struct maps *maps __maybe_unused)
++	__must_hold_shared(maps__lock(maps))
+ {
+ #ifndef NDEBUG
+ 	assert(RC_CHK_ACCESS(maps)->nr_maps <= RC_CHK_ACCESS(maps)->nr_maps_allocated);
+@@ -119,55 +126,65 @@ static void check_invariants(const struct maps *maps __maybe_unused)
+ }
+ 
+ static struct map **maps__maps_by_address(const struct maps *maps)
++	__must_hold_shared(maps__lock(maps))
+ {
+ 	return RC_CHK_ACCESS(maps)->maps_by_address;
+ }
+ 
+ static void maps__set_maps_by_address(struct maps *maps, struct map **new)
++	__must_hold(maps__lock(maps))
+ {
+ 	RC_CHK_ACCESS(maps)->maps_by_address = new;
+ 
+ }
+ 
+ static void maps__set_nr_maps_allocated(struct maps *maps, unsigned int nr_maps_allocated)
++	__must_hold(maps__lock(maps))
+ {
+ 	RC_CHK_ACCESS(maps)->nr_maps_allocated = nr_maps_allocated;
+ }
+ 
+ static void maps__set_nr_maps(struct maps *maps, unsigned int nr_maps)
++	__must_hold(maps__lock(maps))
+ {
+ 	RC_CHK_ACCESS(maps)->nr_maps = nr_maps;
+ }
+ 
+ /* Not in the header, to aid reference counting. */
+ static struct map **maps__maps_by_name(const struct maps *maps)
++	__must_hold_shared(maps__lock(maps))
+ {
+ 	return RC_CHK_ACCESS(maps)->maps_by_name;
+ 
+ }
+ 
+ static void maps__set_maps_by_name(struct maps *maps, struct map **new)
++	__must_hold(maps__lock(maps))
+ {
+ 	RC_CHK_ACCESS(maps)->maps_by_name = new;
+ 
+ }
+ 
+ static bool maps__maps_by_address_sorted(const struct maps *maps)
++	__must_hold_shared(maps__lock(maps))
+ {
+ 	return RC_CHK_ACCESS(maps)->maps_by_address_sorted;
+ }
+ 
+ static void maps__set_maps_by_address_sorted(struct maps *maps, bool value)
++	__must_hold(maps__lock(maps))
+ {
+ 	RC_CHK_ACCESS(maps)->maps_by_address_sorted = value;
+ }
+ 
+ static bool maps__maps_by_name_sorted(const struct maps *maps)
++	__must_hold_shared(maps__lock(maps))
+ {
+ 	return RC_CHK_ACCESS(maps)->maps_by_name_sorted;
+ }
+ 
+ static void maps__set_maps_by_name_sorted(struct maps *maps, bool value)
++	__must_hold(maps__lock(maps))
+ {
+ 	RC_CHK_ACCESS(maps)->maps_by_name_sorted = value;
+ }
+@@ -177,11 +194,22 @@ struct machine *maps__machine(const struct maps *maps)
+ 	return RC_CHK_ACCESS(maps)->machine;
+ }
+ 
+-unsigned int maps__nr_maps(const struct maps *maps)
++static unsigned int __maps__nr_maps(const struct maps *maps)
++	__must_hold_shared(maps__lock(maps))
+ {
+ 	return RC_CHK_ACCESS(maps)->nr_maps;
+ }
+ 
++unsigned int maps__nr_maps(const struct maps *maps)
++{
++	unsigned int nr;
++
++	down_read(maps__lock(maps));
++	nr = __maps__nr_maps(maps);
++	up_read(maps__lock(maps));
++	return nr;
++}
++
+ refcount_t *maps__refcnt(struct maps *maps)
+ {
+ 	return &RC_CHK_ACCESS(maps)->refcnt;
+@@ -220,12 +248,8 @@ void maps__set_libdw_addr_space_dwfl(struct maps *maps, void *dwfl)
+ }
+ #endif
+ 
+-static struct rw_semaphore *maps__lock(struct maps *maps)
 -{
--	mutex_init(&tpebs_mtx);
--	control_fd[0] = control_fd[1] = -1;
--	ack_fd[0] = ack_fd[1] = -1;
+-	return &RC_CHK_ACCESS(maps)->lock;
 -}
 -
--static struct mutex *tpebs_mtx_get(void)
--{
--	static pthread_once_t tpebs_once = PTHREAD_ONCE_INIT;
--
--	pthread_once(&tpebs_once, tpebs_init);
--	return &tpebs_mtx;
--}
--
- static struct tpebs_retire_lat *tpebs_retire_lat__find(struct evsel *evsel)
--	__must_hold(tpebs_mtx_get());
-+	__must_hold(&tpebs_mtx);
- 
- static int evsel__tpebs_start_perf_record(struct evsel *evsel)
-+	__must_hold(&tpebs_mtx)
+ static void maps__init(struct maps *maps, struct machine *machine)
++	__context_unsafe(/* initialization */)
  {
- 	const char **record_argv;
- 	int tpebs_event_size = 0, i = 0, ret;
-@@ -194,19 +180,19 @@ static int process_sample_event(const struct perf_tool *tool __maybe_unused,
- {
- 	struct tpebs_retire_lat *t;
+ 	init_rwsem(maps__lock(maps));
+ 	RC_CHK_ACCESS(maps)->maps_by_address = NULL;
+@@ -247,11 +271,12 @@ static void maps__init(struct maps *maps, struct machine *machine)
+ }
  
--	mutex_lock(tpebs_mtx_get());
-+	mutex_lock(&tpebs_mtx);
- 	if (tpebs_cmd.pid == 0) {
- 		/* Record has terminated. */
--		mutex_unlock(tpebs_mtx_get());
-+		mutex_unlock(&tpebs_mtx);
- 		return 0;
- 	}
- 	t = tpebs_retire_lat__find(sample->evsel);
- 	if (!t) {
--		mutex_unlock(tpebs_mtx_get());
-+		mutex_unlock(&tpebs_mtx);
- 		return -EINVAL;
- 	}
- 	if (should_ignore_sample(sample, t)) {
--		mutex_unlock(tpebs_mtx_get());
-+		mutex_unlock(&tpebs_mtx);
- 		return 0;
- 	}
+ static void maps__exit(struct maps *maps)
++	__context_unsafe(/* teardown */)
+ {
+ 	struct map **maps_by_address = maps__maps_by_address(maps);
+ 	struct map **maps_by_name = maps__maps_by_name(maps);
+ 
+-	for (unsigned int i = 0; i < maps__nr_maps(maps); i++) {
++	for (unsigned int i = 0; i < __maps__nr_maps(maps); i++) {
+ 		map__zput(maps_by_address[i]);
+ 		if (maps_by_name)
+ 			map__zput(maps_by_name[i]);
+@@ -300,6 +325,7 @@ void maps__put(struct maps *maps)
+ }
+ 
+ static void __maps__free_maps_by_name(struct maps *maps)
++	__must_hold(maps__lock(maps))
+ {
+ 	if (!maps__maps_by_name(maps))
+ 		return;
+@@ -307,7 +333,7 @@ static void __maps__free_maps_by_name(struct maps *maps)
  	/*
-@@ -216,7 +202,7 @@ static int process_sample_event(const struct perf_tool *tool __maybe_unused,
+ 	 * Free everything to try to do it from the rbtree in the next search
  	 */
- 	t->last = sample->weight3;
- 	update_stats(&t->stats, sample->weight3);
--	mutex_unlock(tpebs_mtx_get());
-+	mutex_unlock(&tpebs_mtx);
- 	return 0;
+-	for (unsigned int i = 0; i < maps__nr_maps(maps); i++)
++	for (unsigned int i = 0; i < __maps__nr_maps(maps); i++)
+ 		map__put(maps__maps_by_name(maps)[i]);
+ 
+ 	zfree(&RC_CHK_ACCESS(maps)->maps_by_name);
+@@ -340,12 +366,13 @@ static int map__start_cmp(const void *a, const void *b)
  }
  
-@@ -244,7 +230,7 @@ static void *__sample_reader(void *arg __maybe_unused)
- 	return NULL;
- }
- 
--static int tpebs_send_record_cmd(const char *msg) __must_hold(tpebs_mtx_get())
-+static int tpebs_send_record_cmd(const char *msg) __must_hold(&tpebs_mtx)
+ static void __maps__sort_by_address(struct maps *maps)
++	__must_hold(maps__lock(maps))
  {
- 	struct pollfd pollfd = { .events = POLLIN, };
- 	int ret, len, retries = 0;
-@@ -258,7 +244,7 @@ static int tpebs_send_record_cmd(const char *msg) __must_hold(tpebs_mtx_get())
- 	 * Let go of the lock while sending/receiving as blocking can starve the
- 	 * sample reading thread.
- 	 */
--	mutex_unlock(tpebs_mtx_get());
-+	mutex_unlock(&tpebs_mtx);
+ 	if (maps__maps_by_address_sorted(maps))
+ 		return;
  
- 	/* Send perf record command.*/
- 	len = strlen(msg);
-@@ -314,14 +300,14 @@ static int tpebs_send_record_cmd(const char *msg) __must_hold(tpebs_mtx_get())
- 		pr_err("tpebs: perf record control ack failed\n");
- out:
- 	/* Re-take lock as expected by caller. */
--	mutex_lock(tpebs_mtx_get());
-+	mutex_lock(&tpebs_mtx);
- 	return ret;
+ 	qsort(maps__maps_by_address(maps),
+-		maps__nr_maps(maps),
++		__maps__nr_maps(maps),
+ 		sizeof(struct map *),
+ 		map__start_cmp);
+ 	maps__set_maps_by_address_sorted(maps, true);
+@@ -388,7 +415,7 @@ static int maps__sort_by_name(struct maps *maps)
+ 				err = -ENOMEM;
+ 			else {
+ 				struct map **maps_by_address = maps__maps_by_address(maps);
+-				unsigned int n = maps__nr_maps(maps);
++				unsigned int n = __maps__nr_maps(maps);
+ 
+ 				maps__set_maps_by_name(maps, maps_by_name);
+ 				for (unsigned int i = 0; i < n; i++)
+@@ -397,7 +424,7 @@ static int maps__sort_by_name(struct maps *maps)
+ 		}
+ 		if (!err) {
+ 			qsort(maps_by_name,
+-				maps__nr_maps(maps),
++				__maps__nr_maps(maps),
+ 				sizeof(struct map *),
+ 				map__strcmp);
+ 			maps__set_maps_by_name_sorted(maps, true);
+@@ -409,18 +436,19 @@ static int maps__sort_by_name(struct maps *maps)
  }
  
- /*
-  * tpebs_stop - stop the sample data read thread and the perf record process.
+ static unsigned int maps__by_address_index(const struct maps *maps, const struct map *map)
++	__must_hold_shared(maps__lock(maps))
+ {
+ 	struct map **maps_by_address = maps__maps_by_address(maps);
+ 
+ 	if (maps__maps_by_address_sorted(maps)) {
+ 		struct map **mapp =
+-			bsearch(&map, maps__maps_by_address(maps), maps__nr_maps(maps),
++			bsearch(&map, maps__maps_by_address(maps), __maps__nr_maps(maps),
+ 				sizeof(*mapp), map__start_cmp);
+ 
+ 		if (mapp)
+ 			return mapp - maps_by_address;
+ 	} else {
+-		for (unsigned int i = 0; i < maps__nr_maps(maps); i++) {
++		for (unsigned int i = 0; i < __maps__nr_maps(maps); i++) {
+ 			if (RC_CHK_ACCESS(maps_by_address[i]) == RC_CHK_ACCESS(map))
+ 				return i;
+ 		}
+@@ -430,18 +458,19 @@ static unsigned int maps__by_address_index(const struct maps *maps, const struct
+ }
+ 
+ static unsigned int maps__by_name_index(const struct maps *maps, const struct map *map)
++	__must_hold_shared(maps__lock(maps))
+ {
+ 	struct map **maps_by_name = maps__maps_by_name(maps);
+ 
+ 	if (maps__maps_by_name_sorted(maps)) {
+ 		struct map **mapp =
+-			bsearch(&map, maps_by_name, maps__nr_maps(maps),
++			bsearch(&map, maps_by_name, __maps__nr_maps(maps),
+ 				sizeof(*mapp), map__strcmp);
+ 
+ 		if (mapp)
+ 			return mapp - maps_by_name;
+ 	} else {
+-		for (unsigned int i = 0; i < maps__nr_maps(maps); i++) {
++		for (unsigned int i = 0; i < __maps__nr_maps(maps); i++) {
+ 			if (RC_CHK_ACCESS(maps_by_name[i]) == RC_CHK_ACCESS(map))
+ 				return i;
+ 		}
+@@ -470,10 +499,11 @@ static void map__set_kmap_maps(struct map *map, struct maps *maps)
+ }
+ 
+ static int __maps__insert(struct maps *maps, struct map *new)
++	__must_hold(maps__lock(maps))
+ {
+ 	struct map **maps_by_address = maps__maps_by_address(maps);
+ 	struct map **maps_by_name = maps__maps_by_name(maps);
+-	unsigned int nr_maps = maps__nr_maps(maps);
++	unsigned int nr_maps = __maps__nr_maps(maps);
+ 	unsigned int nr_allocate = RC_CHK_ACCESS(maps)->nr_maps_allocated;
+ 
+ 	if (nr_maps + 1 > nr_allocate) {
+@@ -540,10 +570,11 @@ int maps__insert(struct maps *maps, struct map *map)
+ }
+ 
+ static void __maps__remove(struct maps *maps, struct map *map)
++	__must_hold(maps__lock(maps))
+ {
+ 	struct map **maps_by_address = maps__maps_by_address(maps);
+ 	struct map **maps_by_name = maps__maps_by_name(maps);
+-	unsigned int nr_maps = maps__nr_maps(maps);
++	unsigned int nr_maps = __maps__nr_maps(maps);
+ 	unsigned int address_idx;
+ 
+ 	/* Slide later mappings over the one to remove */
+@@ -623,7 +654,7 @@ bool maps__empty(struct maps *maps)
+ 	bool res;
+ 
+ 	down_read(maps__lock(maps));
+-	res = maps__nr_maps(maps) == 0;
++	res = __maps__nr_maps(maps) == 0;
+ 	up_read(maps__lock(maps));
+ 
+ 	return res;
+@@ -651,7 +682,7 @@ int maps__for_each_map(struct maps *maps, int (*cb)(struct map *map, void *data)
+ 			 * the array - this may cause maps to be skipped or
+ 			 * repeated.
+ 			 */
+-			for (unsigned int i = 0; i < maps__nr_maps(maps); i++) {
++			for (unsigned int i = 0; i < __maps__nr_maps(maps); i++) {
+ 				struct map **maps_by_address = maps__maps_by_address(maps);
+ 				struct map *map = maps_by_address[i];
+ 
+@@ -678,7 +709,7 @@ int maps__load_maps(struct maps *maps)
+ 		return 0;
+ 
+ 	down_read(maps__lock(maps));
+-	nr_maps = maps__nr_maps(maps);
++	nr_maps = __maps__nr_maps(maps);
+ 	if (nr_maps == 0) {
+ 		up_read(maps__lock(maps));
+ 		return 0;
+@@ -711,7 +742,7 @@ void maps__remove_maps(struct maps *maps, bool (*cb)(struct map *map, void *data
+ 	down_write(maps__lock(maps));
+ 
+ 	maps_by_address = maps__maps_by_address(maps);
+-	for (unsigned int i = 0; i < maps__nr_maps(maps);) {
++	for (unsigned int i = 0; i < __maps__nr_maps(maps);) {
+ 		if (cb(maps_by_address[i], data)) {
+ 			__maps__remove(maps, maps_by_address[i]);
+ 			removed = true;
+@@ -765,7 +796,7 @@ struct symbol *maps__find_symbol_by_name(struct maps *maps, const char *name, st
+ 	 * This prevents deadlocking if iteration triggers further map insertions.
+ 	 */
+ 	down_read(maps__lock(maps));
+-	nr_maps = maps__nr_maps(maps);
++	nr_maps = __maps__nr_maps(maps);
+ 	maps_copy = calloc(nr_maps, sizeof(*maps_copy));
+ 	if (maps_copy) {
+ 		for (unsigned int i = 0; i < nr_maps; i++) {
+@@ -850,9 +881,10 @@ size_t maps__fprintf(struct maps *maps, FILE *fp)
+  * Same as find_vma() in kernel.
   */
--static int tpebs_stop(void) __must_hold(tpebs_mtx_get())
-+static int tpebs_stop(void) __must_hold(&tpebs_mtx)
+ static unsigned int first_ending_after(struct maps *maps, const struct map *map)
++	__must_hold_shared(maps__lock(maps))
  {
- 	int ret = 0;
+ 	struct map **maps_by_address = maps__maps_by_address(maps);
+-	int low = 0, high = (int)maps__nr_maps(maps) - 1, first = high + 1;
++	int low = 0, high = (int)__maps__nr_maps(maps) - 1, first = high + 1;
  
-@@ -331,13 +317,15 @@ static int tpebs_stop(void) __must_hold(tpebs_mtx_get())
- 	/* Like tpebs_start, we should only run tpebs_end once. */
- 	if (tpebs_cmd.pid != 0) {
- 		pid_t actual_pid = tpebs_cmd.pid;
-+		pthread_t reader_thread;
+ 	assert(maps__maps_by_address_sorted(maps));
+ 	if (low <= high && map__end(maps_by_address[0]) > map__start(map))
+@@ -877,10 +909,11 @@ static unsigned int first_ending_after(struct maps *maps, const struct map *map)
  
- 		tpebs_stopping = true;
- 		tpebs_send_record_cmd(EVLIST_CTL_CMD_STOP_TAG);
- 		tpebs_cmd.pid = 0;
--		mutex_unlock(tpebs_mtx_get());
--		pthread_join(tpebs_reader_thread, NULL);
--		mutex_lock(tpebs_mtx_get());
-+		reader_thread = tpebs_reader_thread;
-+		mutex_unlock(&tpebs_mtx);
-+		pthread_join(reader_thread, NULL);
-+		mutex_lock(&tpebs_mtx);
- 		if (control_fd[0] >= 0) {
- 			close(control_fd[0]);
- 			control_fd[0] = -1;
-@@ -473,20 +461,20 @@ static int evsel__tpebs_prepare(struct evsel *evsel)
- 	struct evsel *pos;
- 	struct tpebs_retire_lat *tpebs_event;
+ static int __maps__insert_sorted(struct maps *maps, unsigned int first_after_index,
+ 				 struct map *new1, struct map *new2)
++	__must_hold(maps__lock(maps))
+ {
+ 	struct map **maps_by_address = maps__maps_by_address(maps);
+ 	struct map **maps_by_name = maps__maps_by_name(maps);
+-	unsigned int nr_maps = maps__nr_maps(maps);
++	unsigned int nr_maps = __maps__nr_maps(maps);
+ 	unsigned int nr_allocate = RC_CHK_ACCESS(maps)->nr_maps_allocated;
+ 	unsigned int to_add = new2 ? 2 : 1;
  
--	mutex_lock(tpebs_mtx_get());
-+	mutex_lock(&tpebs_mtx);
- 	tpebs_event = tpebs_retire_lat__find(evsel);
- 	if (tpebs_event) {
- 		/* evsel, or an identically named one, was already prepared. */
--		mutex_unlock(tpebs_mtx_get());
-+		mutex_unlock(&tpebs_mtx);
- 		return 0;
- 	}
- 	tpebs_event = tpebs_retire_lat__new(evsel);
- 	if (!tpebs_event) {
--		mutex_unlock(tpebs_mtx_get());
-+		mutex_unlock(&tpebs_mtx);
- 		return -ENOMEM;
- 	}
- 	list_add_tail(&tpebs_event->nd, &tpebs_results);
--	mutex_unlock(tpebs_mtx_get());
-+	mutex_unlock(&tpebs_mtx);
- 
- 	/*
- 	 * Eagerly prepare all other evsels on the list to try to ensure that by
-@@ -520,9 +508,9 @@ int evsel__tpebs_open(struct evsel *evsel)
- 	if (!tpebs_recording)
- 		return 0;
- 
--	mutex_lock(tpebs_mtx_get());
-+	mutex_lock(&tpebs_mtx);
- 	if (tpebs_stopping) {
--		mutex_unlock(tpebs_mtx_get());
-+		mutex_unlock(&tpebs_mtx);
- 		return -EBUSY;
- 	}
- 	/* Only start the events once. */
-@@ -532,17 +520,17 @@ int evsel__tpebs_open(struct evsel *evsel)
- 
- 		t = tpebs_retire_lat__find(evsel);
- 		valid = t && t->started;
--		mutex_unlock(tpebs_mtx_get());
-+		mutex_unlock(&tpebs_mtx);
- 		/* May fail as the event wasn't started. */
- 		return valid ? 0 : -EBUSY;
- 	}
--	mutex_unlock(tpebs_mtx_get());
-+	mutex_unlock(&tpebs_mtx);
- 
- 	ret = evsel__tpebs_prepare(evsel);
- 	if (ret)
- 		return ret;
- 
--	mutex_lock(tpebs_mtx_get());
-+	mutex_lock(&tpebs_mtx);
- 	if (tpebs_stopping || tpebs_cmd.pid != 0) {
- 		ret = -EBUSY;
- 		goto out;
-@@ -612,7 +600,7 @@ int evsel__tpebs_open(struct evsel *evsel)
- 			}
- 		}
- 	}
--	mutex_unlock(tpebs_mtx_get());
-+	mutex_unlock(&tpebs_mtx);
- 	return ret;
- }
- 
-@@ -632,7 +620,7 @@ int evsel__tpebs_read(struct evsel *evsel, int cpu_map_idx, int thread)
- 
- 	count = perf_counts(evsel->counts, cpu_map_idx, thread);
- 
--	mutex_lock(tpebs_mtx_get());
-+	mutex_lock(&tpebs_mtx);
- 	t = tpebs_retire_lat__find(evsel);
- 	/*
- 	 * If reading the first tpebs result, send a ping to the record
-@@ -641,10 +629,10 @@ int evsel__tpebs_read(struct evsel *evsel, int cpu_map_idx, int thread)
+@@ -937,6 +970,7 @@ static int __maps__insert_sorted(struct maps *maps, unsigned int first_after_ind
+  * adjusted or removed so that new fits without overlapping any entries.
+  */
+ static int __maps__fixup_overlap_and_insert(struct maps *maps, struct map *new)
++	__must_hold(maps__lock(maps))
+ {
+ 	int err = 0;
+ 	unsigned int i, ni = INT_MAX; // Some gcc complain, but depends on maps_by_name...
+@@ -948,7 +982,7 @@ static int __maps__fixup_overlap_and_insert(struct maps *maps, struct map *new)
+ 	 * Iterate through entries where the end of the existing entry is
+ 	 * greater-than the new map's start.
  	 */
- 	if (t && &t->nd == tpebs_results.next) {
- 		ret = tpebs_send_record_cmd(EVLIST_CTL_CMD_PING_TAG);
--		mutex_unlock(tpebs_mtx_get());
-+		mutex_unlock(&tpebs_mtx);
- 		if (ret)
- 			return ret;
--		mutex_lock(tpebs_mtx_get());
-+		mutex_lock(&tpebs_mtx);
- 	}
- 	if (t == NULL || t->stats.n == 0) {
- 		/* No sample data, use default. */
-@@ -683,7 +671,7 @@ int evsel__tpebs_read(struct evsel *evsel, int cpu_map_idx, int thread)
- 			break;
- 		}
- 	}
--	mutex_unlock(tpebs_mtx_get());
-+	mutex_unlock(&tpebs_mtx);
+-	for (i = first_ending_after(maps, new); i < maps__nr_maps(maps); ) {
++	for (i = first_ending_after(maps, new); i < __maps__nr_maps(maps); ) {
+ 		struct map **maps_by_address = maps__maps_by_address(maps);
+ 		struct map **maps_by_name = maps__maps_by_name(maps);
+ 		struct map *pos = maps_by_address[i];
+@@ -1059,7 +1093,7 @@ static int __maps__fixup_overlap_and_insert(struct maps *maps, struct map *new)
+ 			return err;
+ 		} else {
+ 			struct map *next = NULL;
+-			unsigned int nr_maps = maps__nr_maps(maps);
++			unsigned int nr_maps = __maps__nr_maps(maps);
  
- 	if (old_count) {
- 		count->val = old_count->val + val;
-@@ -708,7 +696,7 @@ void evsel__tpebs_close(struct evsel *evsel)
+ 			if (i + 1 < nr_maps)
+ 				next = maps_by_address[i + 1];
+@@ -1143,8 +1177,8 @@ int maps__copy_from(struct maps *dest, struct maps *parent)
+ 	}
+ #endif
+ 	parent_maps_by_address = maps__maps_by_address(parent);
+-	n = maps__nr_maps(parent);
+-	if (maps__nr_maps(dest) == 0) {
++	n = __maps__nr_maps(parent);
++	if (__maps__nr_maps(dest) == 0) {
+ 		/* No existing mappings so just copy from parent to avoid reallocs in insert. */
+ 		unsigned int nr_maps_allocated = RC_CHK_ACCESS(parent)->nr_maps_allocated;
+ 		struct map **dest_maps_by_address =
+@@ -1228,7 +1262,7 @@ struct map *maps__find(struct maps *maps, u64 ip)
+ 		if (maps__maps_by_address_sorted(maps)) {
+ 			struct map **mapp = NULL;
+ 			struct map **maps_by_address = maps__maps_by_address(maps);
+-			unsigned int nr_maps = maps__nr_maps(maps);
++			unsigned int nr_maps = __maps__nr_maps(maps);
+ 
+ 			if (maps_by_address && nr_maps)
+ 				mapp = bsearch(&ip, maps_by_address, nr_maps, sizeof(*mapp),
+@@ -1264,7 +1298,7 @@ struct map *maps__find_by_name(struct maps *maps, const char *name)
+ 
+ 		/* First check last found entry. */
+ 		i = RC_CHK_ACCESS(maps)->last_search_by_name_idx;
+-		if (i < maps__nr_maps(maps) && maps__maps_by_name(maps)) {
++		if (i < __maps__nr_maps(maps) && maps__maps_by_name(maps)) {
+ 			struct dso *dso = map__dso(maps__maps_by_name(maps)[i]);
+ 
+ 			if (dso && strcmp(dso__short_name(dso), name) == 0) {
+@@ -1276,7 +1310,7 @@ struct map *maps__find_by_name(struct maps *maps, const char *name)
+ 		/* Second search sorted array. */
+ 		if (!done && maps__maps_by_name_sorted(maps)) {
+ 			struct map **mapp =
+-				bsearch(name, maps__maps_by_name(maps), maps__nr_maps(maps),
++				bsearch(name, maps__maps_by_name(maps), __maps__nr_maps(maps),
+ 					sizeof(*mapp), map__strcmp_name);
+ 
+ 			if (mapp) {
+@@ -1299,7 +1333,7 @@ struct map *maps__find_by_name(struct maps *maps, const char *name)
+ 
+ 				down_read(maps__lock(maps));
+ 				maps_by_address =  maps__maps_by_address(maps);
+-				n = maps__nr_maps(maps);
++				n = __maps__nr_maps(maps);
+ 				for (i = 0; i < n; i++) {
+ 					struct map *pos = maps_by_address[i];
+ 					struct dso *dso = map__dso(pos);
+@@ -1329,7 +1363,7 @@ struct map *maps__find_next_entry(struct maps *maps, struct map *map)
+ 		down_read(maps__lock(maps));
+ 	}
+ 	i = maps__by_address_index(maps, map);
+-	if (++i < maps__nr_maps(maps))
++	if (++i < __maps__nr_maps(maps))
+ 		result = map__get(maps__maps_by_address(maps)[i]);
+ 
+ 	up_read(maps__lock(maps));
+@@ -1346,7 +1380,7 @@ void maps__fixup_end(struct maps *maps)
+ 		__maps__sort_by_address(maps);
+ 
+ 	maps_by_address = maps__maps_by_address(maps);
+-	n = maps__nr_maps(maps);
++	n = __maps__nr_maps(maps);
+ 	for (unsigned int i = 1; i < n; i++) {
+ 		struct map *prev = maps_by_address[i - 1];
+ 		struct map *curr = maps_by_address[i];
+@@ -1393,7 +1427,7 @@ int maps__merge_in(struct maps *kmaps, struct map *new_map)
+ 	first_after_ = first_ending_after(kmaps, new_map);
+ 	kmaps_maps_by_address = maps__maps_by_address(kmaps);
+ 
+-	if (first_after_ >= maps__nr_maps(kmaps) ||
++	if (first_after_ >= __maps__nr_maps(kmaps) ||
+ 	    map__start(kmaps_maps_by_address[first_after_]) >= map__end(new_map)) {
+ 		/* No overlap so regular insert suffices. */
+ 		up_read(maps__lock(kmaps));
+@@ -1408,7 +1442,7 @@ int maps__merge_in(struct maps *kmaps, struct map *new_map)
+ 
+ 	first_after_ = first_ending_after(kmaps, new_map);
+ 	kmaps_maps_by_address = maps__maps_by_address(kmaps);
+-	kmaps__nr_maps = maps__nr_maps(kmaps);
++	kmaps__nr_maps = __maps__nr_maps(kmaps);
+ 
+ 	if (first_after_ >= kmaps__nr_maps ||
+ 	    map__start(kmaps_maps_by_address[first_after_]) >= map__end(new_map)) {
+@@ -1461,7 +1495,7 @@ void maps__load_first(struct maps *maps)
  {
- 	struct tpebs_retire_lat *t;
+ 	down_read(maps__lock(maps));
  
--	mutex_lock(tpebs_mtx_get());
-+	mutex_lock(&tpebs_mtx);
- 	t = tpebs_retire_lat__find(evsel);
- 	if (t) {
- 		list_del_init(&t->nd);
-@@ -717,5 +705,5 @@ void evsel__tpebs_close(struct evsel *evsel)
- 		if (list_empty(&tpebs_results))
- 			tpebs_stop();
- 	}
--	mutex_unlock(tpebs_mtx_get());
-+	mutex_unlock(&tpebs_mtx);
- }
+-	if (maps__nr_maps(maps) > 0)
++	if (__maps__nr_maps(maps) > 0)
+ 		map__load(maps__maps_by_address(maps)[0]);
+ 
+ 	up_read(maps__lock(maps));
 -- 
 2.56.0.385.gd3acb90ef8-goog
 
