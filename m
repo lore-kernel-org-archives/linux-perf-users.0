@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EF3D548554;
-	Tue, 13 Oct 2026 20:14:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 010D954A7C5;
+	Tue, 13 Oct 2026 20:14:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791922478; cv=none; b=fw9ViLfl6z3mOZ6KLWhKNiCDl+w8D1Wtl+wcGTe2TCqImqd5nYH6RBE1N8Bzp5xRzFmZLEk+m+DEsPQpyNm2mM0plH5HNtLJg375WTt+BICbLrK7q/ac662aBVQufLwQOfiVs7KX6P7MXRjsWWcBnT1yeHSUMIOEJzKGGyyV118=
+	t=1791922483; cv=none; b=kIn61/tlekJfE9LSJj/DFKyZoEM1TsW3MBk9ZaLgIBQfzevpaCrALO6ihRPk3GH8j2U6CG3EaWO+TrbQJRv7uYNvKHVZaNG+ElftPkxfFlnoYyM64VaGZJU2SrRw2pLD7l+FeuOI4fpPrPm360AKI2FIS3Lk2Xz/rShT/oNswPo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791922478; c=relaxed/simple;
-	bh=t+E4tfGih3vpPFUBNIItrMqIS5ICE/llhm1+MlVKsK0=;
+	s=arc-20240116; t=1791922483; c=relaxed/simple;
+	bh=shb+X9RZhGe2vFdaniacTlJ0uA+vvD5eiiv7TT/79to=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=tyf7luTwUN+7QC5fcDjQSdHP3//iki8zBjCQou05R9gnr/WThEtANhxmOh1t29IfRqkd0TXOWiUgvQG3JOzW6zxS5GA5pQ8Lu/jzdM0dCjYzkvpqcGESPyUB9Z1JHjYKI3wxe9OFk/k0snCufla2VT79mzKGWMm+Alm3sSVWZQQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YWztGbTe; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version; b=j4ZGXCIMroBCmCJhVV5O4ryjsBoZcwA44hcFhPExojNc3Tw8hy2ogDtGa/MnQwLw2qBvgkbGj7jk+w/w1EJqsnMx2ewacU299B3UbDT8hh5ZtIQ63UnZp0wYtP36ZtOPHgVQbT8DaurKkxipcyWLQCyb86UOOD4Sq+mHSmBeSSk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YlDJ3/wZ; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YWztGbTe"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2D4771F00893;
-	Tue, 13 Oct 2026 20:14:33 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YlDJ3/wZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0492E1F000FF;
+	Tue, 13 Oct 2026 20:14:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1791922475;
-	bh=ThfGu+E8dYc3sCcwVfn5sEvFJjR1zE67fI30NdxP95g=;
+	s=k20260515; t=1791922481;
+	bh=J75Rf2aefD1rmdHAa8hpd0EVTtpLGr2UwPu74f/0Na8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=YWztGbTeHZ8ZsEtvrrYLg2cgsY0+r1sB7wnLek1f5ame0JbAr9vxaj3TICpMx6cg7
-	 mn4BzQQJDSx+ojgaB1lGA2fo1mx/vJhQ8S5Gob8LWqKuOy1trrGZRFOaA3KXeewpXo
-	 JjPO4S9msJowJEnVQBFB2MuN0XvhjlI297Qj1OwlG+XHF67Zp51WZVTmrOBc4hb/0S
-	 NrOXIjB9zhyBIPCHIfOgW5hZP9R+X9m17N5Ev5i7LGlbYVxGMG0xHIqWf/09UuU6dp
-	 z9Y80M1ulznYDGDdZCgaVOWCFNDAgCAxw8FWfpBH0cjHY3RBdO3k5cXqfqPEIL0cVv
-	 lC/RIEAZ0K+bQ==
+	b=YlDJ3/wZIa3SE8jIq5xPy6g9pi2e9+WO5+WJ4MArw3zaNO63gBZl2XoXfoACSLO+Y
+	 KWZgsrHeWQrGjWIV7ObHZ3fwwAfrcV20GI6jUErSI2+OV3x0xO/hD/yYNcAjok2A8X
+	 vmb2uqrcsv+XpOKUNF2DWzAgTzu9GGnibHU5fmW7qifwPjMuoIGRea85oxXYP28bHX
+	 2eS0iH0dCWyx94gDs7b/8asyLadUZcitOiFO2Wyn2diZym3wU3607lZnzgJQ/m/gJJ
+	 mwNzcvTmYrIsFVme2esG6d6DA5/czKXlf1EMEIAhnPn2N/cmGmJWcMb0R6Hwy5NUaL
+	 uKbz7sXPNfSYA==
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Namhyung Kim <namhyung@kernel.org>
 Cc: Ingo Molnar <mingo@kernel.org>,
@@ -38,9 +38,9 @@ Cc: Ingo Molnar <mingo@kernel.org>,
 	linux-kernel@vger.kernel.org,
 	linux-perf-users@vger.kernel.org,
 	Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH v2 03/19] perf test attr: Fix legacy event encodings in group tests
-Date: Tue, 13 Oct 2026 17:13:58 -0300
-Message-ID: <20261013201415.36428-4-acme@kernel.org>
+Subject: [PATCH v2 05/19] perf test attr: Relax group checking for ungrouped expectations
+Date: Tue, 13 Oct 2026 17:14:00 -0300
+Message-ID: <20261013201415.36428-6-acme@kernel.org>
 X-Mailer: git-send-email 2.55.0
 In-Reply-To: <20261013201415.36428-1-acme@kernel.org>
 References: <20261013201415.36428-1-acme@kernel.org>
@@ -54,191 +54,69 @@ Content-Transfer-Encoding: 8bit
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-Since commit b1c5efbfd92e ("perf parse-events: Remove hard coded legacy
-hardware and cache parsing"), event names are resolved with sysfs/JSON
-priority over the legacy encodings, so bare cache-misses and
-instructions now become the core PMU sysfs/JSON events (on x86 type 4,
-configs 0x412e and 0xc0) rather than the legacy
-PERF_TYPE_HARDWARE/config=3 and config=1 events the tests expect, e.g.:
+When matching the recorded events back against the expectations,
+attr.py requires every event opened in a group to match an expectation
+that declares the same group.  The perf stat default metrics open the
+events of each metric in groups, but the test expectations only verify
+the event attributes, so test-stat-default fails with:
 
-  expected config=3, got 0
-  expected disabled=0, got 1
-  expected mmap=0, got 1
-  expected comm=0, got 1
-  expected freq=0, got 1
-  expected enable_on_exec=0, got 1
-  expected task=0, got 1
-  FAILED '.../test-record-group-sampling1' - match failure
+  FAILED '.../test-stat-default' - group failure
 
-The shown diff is against the cycles group leader, as no result event
-matches the expected cache-misses member anymore.
+Only enforce the group of a recorded event when the expectation it
+matches declares one.  Expectations that ask for a group are still
+verified in both directions.
 
-Request the legacy encodings explicitly with the legacy-hardware-config
-term, introduced for this purpose, keeping the original attribute
-expectations unchanged, in:
-
-  test-record-group1
-  test-record-group2
-  test-record-group3
-  test-record-group-sampling
-  test-record-group-sampling1
-  test-record-group-sampling2
-  test-stat-group1
-
-This went unnoticed until tests/attr.sh stopped ignoring attr.py's
-return value.
-
-Fixes: b1c5efbfd92eb84d ("perf parse-events: Remove hard coded legacy hardware and cache parsing")
+Fixes: c7adeb0974f18da4 ("perf jevents: Add set of common metrics based on default ones")
+Fixes: 2dfc0cab3da4a205 ("perf stat: Add detail -d,-dd,-ddd metrics")
 Assisted-by: LLM
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/tests/shell/attr/README                     | 10 +++++-----
- tools/perf/tests/shell/attr/test-record-group-sampling |  4 ++--
- .../perf/tests/shell/attr/test-record-group-sampling1  |  4 ++--
- .../perf/tests/shell/attr/test-record-group-sampling2  |  4 ++--
- tools/perf/tests/shell/attr/test-record-group1         |  2 +-
- tools/perf/tests/shell/attr/test-record-group2         |  2 +-
- tools/perf/tests/shell/attr/test-record-group3         |  2 +-
- tools/perf/tests/shell/attr/test-stat-group1           |  2 +-
- 8 files changed, 15 insertions(+), 15 deletions(-)
+ tools/perf/tests/shell/lib/attr.py | 11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
 
-diff --git a/tools/perf/tests/shell/attr/README b/tools/perf/tests/shell/attr/README
-index 67c4ca76b85d5611..c7b49cdf87297177 100644
---- a/tools/perf/tests/shell/attr/README
-+++ b/tools/perf/tests/shell/attr/README
-@@ -49,10 +49,10 @@ Following tests are defined (with perf commands):
-   perf record --call-graph dwarf kill		(test-record-graph-dwarf)
-   perf record --call-graph fp kill              (test-record-graph-fp)
-   perf record --call-graph fp kill              (test-record-graph-fp-aarch64)
--  perf record -e '{cycles,instructions}' kill   (test-record-group1)
--  perf record -e '{cycles/period=1/,instructions/period=2/}:S' kill (test-record-group2)
--  perf record -e '{cycles,cache-misses}:S' kill (test-record-group-sampling1)
--  perf record -c 10000 -e '{cycles,cache-misses}:S' kill (test-record-group-sampling2)
-+  perf record -e '{cycles,default_core/legacy-hardware-config=1/}' kill (test-record-group1)
-+  perf record -e '{cycles/period=1234000/,default_core/legacy-hardware-config=1,period=6789000/}:S' kill (test-record-group2)
-+  perf record -e '{cycles,default_core/legacy-hardware-config=3/}:S' kill (test-record-group-sampling1)
-+  perf record -c 10000 -e '{cycles,default_core/legacy-hardware-config=3/}:S' kill (test-record-group-sampling2)
-   perf record -D kill                           (test-record-no-delay)
-   perf record -i kill                           (test-record-no-inherit)
-   perf record -n kill                           (test-record-no-samples)
-@@ -67,5 +67,5 @@ Following tests are defined (with perf commands):
-   perf stat -d kill                             (test-stat-detailed-1)
-   perf stat -dd kill                            (test-stat-detailed-2)
-   perf stat -ddd kill                           (test-stat-detailed-3)
--  perf stat -e '{cycles,instructions}' kill     (test-stat-group1)
-+  perf stat -e '{cycles,default_core/legacy-hardware-config=1/}' kill (test-stat-group1)
-   perf stat -i -e cycles kill                   (test-stat-no-inherit)
-diff --git a/tools/perf/tests/shell/attr/test-record-group-sampling b/tools/perf/tests/shell/attr/test-record-group-sampling
-index b43d9fe3af75c096..ed47dd1e5984535b 100644
---- a/tools/perf/tests/shell/attr/test-record-group-sampling
-+++ b/tools/perf/tests/shell/attr/test-record-group-sampling
-@@ -1,6 +1,6 @@
- [config]
- command = record
--args    = --no-bpf-event -e '{cycles,cache-misses}:S' kill >/dev/null 2>&1
-+args    = --no-bpf-event -e '{cycles,default_core/legacy-hardware-config=3/}:S' kill >/dev/null 2>&1
- ret     = 1
- kernel_until = 6.12
- requires = core-pmu
-@@ -16,7 +16,7 @@ inherit=0
- fd=2
- group_fd=1
+diff --git a/tools/perf/tests/shell/lib/attr.py b/tools/perf/tests/shell/lib/attr.py
+index b55c9b881e59852f..f254d03c1b253c7a 100644
+--- a/tools/perf/tests/shell/lib/attr.py
++++ b/tools/perf/tests/shell/lib/attr.py
+@@ -353,7 +353,7 @@ class Test(object):
+             else:
+                 raise Unsup(self)
  
--# cache-misses
-+# cache-misses, explicitly requested with the legacy hardware encoding
- type=0
- config=3
+-    def compare(self, expect, result):
++    def compare(self, expect, result, strict_groups=True):
+         match = {}
  
-diff --git a/tools/perf/tests/shell/attr/test-record-group-sampling1 b/tools/perf/tests/shell/attr/test-record-group-sampling1
-index 3def72161820dca3..9cf013dc03dd0309 100644
---- a/tools/perf/tests/shell/attr/test-record-group-sampling1
-+++ b/tools/perf/tests/shell/attr/test-record-group-sampling1
-@@ -1,6 +1,6 @@
- [config]
- command = record
--args    = --no-bpf-event -e '{cycles,cache-misses}:S' kill >/dev/null 2>&1
-+args    = --no-bpf-event -e '{cycles,default_core/legacy-hardware-config=3/}:S' kill >/dev/null 2>&1
- ret     = 1
- kernel_since = 6.12
- requires = core-pmu
-@@ -31,7 +31,7 @@ inherit=1
- fd=2
- group_fd=1
+         log.debug("  compare")
+@@ -387,8 +387,9 @@ class Test(object):
  
--# cache-misses
-+# cache-misses, explicitly requested with the legacy hardware encoding
- type=0
- config=3
+             match[exp_name] = exp_list
  
-diff --git a/tools/perf/tests/shell/attr/test-record-group-sampling2 b/tools/perf/tests/shell/attr/test-record-group-sampling2
-index 227c18bb221c4b2f..bd1eb4161e4aee46 100644
---- a/tools/perf/tests/shell/attr/test-record-group-sampling2
-+++ b/tools/perf/tests/shell/attr/test-record-group-sampling2
-@@ -1,6 +1,6 @@
- [config]
- command = record
--args    = --no-bpf-event -c 10000 -e '{cycles,cache-misses}:S' kill >/dev/null 2>&1
-+args    = --no-bpf-event -c 10000 -e '{cycles,default_core/legacy-hardware-config=3/}:S' kill >/dev/null 2>&1
- ret     = 1
- kernel_since = 6.12
- requires = core-pmu
-@@ -37,7 +37,7 @@ write_backward=0
- fd=2
- group_fd=1
+-        # For each defined group in the expected events
+-        # check we match the same group in the result.
++        # Check that each expected group is matched in the result; an event
++        # opened in a group may match an expectation that doesn't declare
++        # one, as those only verify the event attributes.
+         for exp_name, exp_event in expect.items():
+             group = exp_event.group
  
--# cache-misses
-+# cache-misses, explicitly requested with the legacy hardware encoding
- type=0
- config=3
+@@ -397,6 +398,8 @@ class Test(object):
  
-diff --git a/tools/perf/tests/shell/attr/test-record-group1 b/tools/perf/tests/shell/attr/test-record-group1
-index a57c7ee8aaa4f9c9..5fdd5288555f32ea 100644
---- a/tools/perf/tests/shell/attr/test-record-group1
-+++ b/tools/perf/tests/shell/attr/test-record-group1
-@@ -1,6 +1,6 @@
- [config]
- command = record
--args    = --no-bpf-event -e '{cycles,instructions}' kill >/dev/null 2>&1
-+args    = --no-bpf-event -e '{cycles,default_core/legacy-hardware-config=1/}' kill >/dev/null 2>&1
- ret     = 1
- requires = core-pmu
+             for res_name in match[exp_name]:
+                 res_group = result[res_name].group
++                if res_group == '' and not strict_groups:
++                    continue
+                 if res_group not in match[group]:
+                     raise Fail(self, 'group failure')
  
-diff --git a/tools/perf/tests/shell/attr/test-record-group2 b/tools/perf/tests/shell/attr/test-record-group2
-index fb6e664eeacc10ef..e7274108f5fd7e7b 100644
---- a/tools/perf/tests/shell/attr/test-record-group2
-+++ b/tools/perf/tests/shell/attr/test-record-group2
-@@ -1,6 +1,6 @@
- [config]
- command = record
--args    = --no-bpf-event -e '{cycles/period=1234000/,instructions/period=6789000/}:S' kill >/dev/null 2>&1
-+args    = --no-bpf-event -e '{cycles/period=1234000/,default_core/legacy-hardware-config=1,period=6789000/}:S' kill >/dev/null 2>&1
- ret     = 1
- kernel_until = 6.12
- requires = core-pmu
-diff --git a/tools/perf/tests/shell/attr/test-record-group3 b/tools/perf/tests/shell/attr/test-record-group3
-index 7b90b4411d8f4b90..e74fd3a48ac9094f 100644
---- a/tools/perf/tests/shell/attr/test-record-group3
-+++ b/tools/perf/tests/shell/attr/test-record-group3
-@@ -1,6 +1,6 @@
- [config]
- command = record
--args    = --no-bpf-event -e '{cycles/period=1234000/,instructions/period=6789000/}:S' kill >/dev/null 2>&1
-+args    = --no-bpf-event -e '{cycles/period=1234000/,default_core/legacy-hardware-config=1,period=6789000/}:S' kill >/dev/null 2>&1
- ret     = 1
- kernel_since = 6.12
- requires = core-pmu
-diff --git a/tools/perf/tests/shell/attr/test-stat-group1 b/tools/perf/tests/shell/attr/test-stat-group1
-index 3d8b44ba42d6ae19..7a31b27933f11959 100644
---- a/tools/perf/tests/shell/attr/test-stat-group1
-+++ b/tools/perf/tests/shell/attr/test-stat-group1
-@@ -1,6 +1,6 @@
- [config]
- command = stat
--args    = -e '{cycles,instructions}' kill >/dev/null 2>&1
-+args    = -e '{cycles,default_core/legacy-hardware-config=1/}' kill >/dev/null 2>&1
- ret     = 1
- requires = core-pmu
+@@ -435,7 +438,7 @@ class Test(object):
  
+             # do the expectation - results matching - both ways
+             self.compare(self.expect, self.result)
+-            self.compare(self.result, self.expect)
++            self.compare(self.result, self.expect, strict_groups=False)
+ 
+         finally:
+             # cleanup
 -- 
 2.55.0
 
