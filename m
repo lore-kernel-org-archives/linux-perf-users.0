@@ -1,140 +1,119 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34E803EB819
-	for <linux-perf-users@vger.kernel.org>; Tue, 13 Oct 2026 14:03:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791900201; cv=none; b=NltO5DqhBa+c0hHRca+yGzpxHcF0solaue0edvHNNATubeIq25MC73bM1bhN59QbnBD/8wDVZ2jFTm9u8Lz9Hyt6JRJnlylGnFfA32TplcqOhYBHc1+xnNMhdLYNCP9pXs1AGiFJEbBsF4gYWgu+nCVeEWqXtPTgodYm4j+le4w=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791900201; c=relaxed/simple;
-	bh=0csidmcJHabXvg7LAuSucrVHfrrrn68bn04MFXtKcbI=;
-	h=Message-ID:From:Subject:To:Cc:In-Reply-To:References:Content-Type:
-	 Date; b=m/4qacBXpUOMK8vBiGntkOsORTGPkOiEKvZCNy3ojV4Q8B8UL1IGxFbWx4bkoxfbV+igNkcHHEPVPtlrHOliypyCJBJEkwtzWRkFDDQlmVN3ookwroETsOXO/1jJ32dSykNTE+iHfh5IXpc2bvavjZWNXVzC4tTV+NvSElc8Uf0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bPbvSXxm; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D9A63F164E
+	for <linux-perf-users@vger.kernel.org>; Tue, 13 Oct 2026 14:23:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.218.42
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1791901387; cv=pass; b=LvpeYpaxRfjnhg1Hjpz1HxgPzSHDb8vOtrodhwNRNOR+5OmGWoR770lofDWNL7aki8fe6Ylsqvksonz4usMrDjCcHtByOf5h6THG9/F8eDhw5AYK3xQdwYl8PPSvh8jeCdYflMV/U8MZH8yAV2IAfUtdyu40O3olwGtElWo3aO4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1791901387; c=relaxed/simple;
+	bh=yj1sNd5vfDwsYGQAjFz2BvWzyxLrHMu95FMIsFy9jGQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=S3de+U78nHRYkvHQmbnT2kw32QH+H0miuZcq3RJVYDtG9nmXc6ZQGJ9GMlkRLzIbo3mzs6b7jHxanzraS1E6DYcEQLboLxdfNx2f4vYuUzXG/GTSX58exL+IDOEnlEJmblMByh6u7cnMGGH0Fl9H+dS8w1ls2I8HExJBQC23MPU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ionos.com; spf=pass smtp.mailfrom=ionos.com; dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b=QwcrkcG2; arc=pass smtp.client-ip=209.85.218.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ionos.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ionos.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bPbvSXxm"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 38D4F1F000FF;
-	Tue, 13 Oct 2026 14:03:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1791900199;
-	bh=r2iF9lIESHNjLIAJ/aTn5dlVzijdSc0keYGL+WXHEII=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=bPbvSXxmSwj4AcNVPjXInv/6f7MI0rUUFI4D93te9I5LFlIyWa2pdAwCG11OudR18
-	 1juDl0EaiwhsUd8QR/6oiAQYH4bUqXAI33xRQOaWyIG/ygd7iG1Ify3V7UZ13fR3zI
-	 8QFlzKGZ3QkkY9uRnWYxK/eCnu1FoEUi1rnrFyHnk/CgGF5DlwZlAqu1f222xiNauh
-	 gsMAVCLno28vaiA5b4XeXLLD/WpAQE5yc98e8f4OnR8cFBmUmBTpvF6r8giaevJpjf
-	 xESMHS+ddsX6sJzluS7SurAWerOyq6FfyAssu0V2Aroz2VCjV4xMZ0IUICU2GXIb5E
-	 QnUFS7P+AdbpA==
-Message-ID: <sashiko-outbox-169878@kernel.org>
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v7 15/15] perf annotate-arm64: Support 'mrs' instruction
- to track 'current' pointer
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Tengda Wu" <wutengda@huaweicloud.com>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <0615c314accfce4f3db561db1b1e02efcc5fd66b.1791629326.git.wutengda@huaweicloud.com>
-References: <cover.1791629326.git.wutengda@huaweicloud.com>
- <0615c314accfce4f3db561db1b1e02efcc5fd66b.1791629326.git.wutengda@huaweicloud.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Tue, 13 Oct 2026 14:03:17 +0000
+	dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b="QwcrkcG2"
+Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-c2e7131b94eso264349766b.1
+        for <linux-perf-users@vger.kernel.org>; Tue, 13 Oct 2026 07:23:04 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1791901383; cv=none;
+        d=google.com; s=arc-20260327;
+        b=QQy0MSK2ZBRBH778D6oX+tRbxc6DBqsFdixW0tH0SxDvQpVuH2ln6BCpirwzktGtAh
+         zziJpIJOMG7dkmDkPssIXDqTNmRQjdzjNt/Qv4iRd0HXsNBCBgiQiHrrZeLASDjTKrlI
+         +c5o26aMzNxFuTDbu4guYwhDKL/TvvIMnGAS2bSXcCBbSfGq63Zw0Eyjw8vufMiqnGO7
+         4lx5WnlL6fbLVacsLhr8JLW+wJ9vaOe/+JTzxHd7Rg9MLnLpeIzrft1J5DQzQCqLT9jp
+         PpKzVeGkKg+tPeBoxTE1p2NsiVh3yW25AM9Jghm1IE3SUfz+vmGQ+XSzZHhxr+9fcXdx
+         AsLA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=yj1sNd5vfDwsYGQAjFz2BvWzyxLrHMu95FMIsFy9jGQ=;
+        fh=Wn3p6i9lZP8mCeEoATi505Rq8zp7oZqrkHJf04IoQNQ=;
+        b=hdZE+OCMDHHk+KWxp8OOCzFf8X709+M8zwJAj6PeNru3jJtVx6OW1Minvhh9Byh/yb
+         0nHKgWBW5sshT4S9WoJMeBf1rpoqLgNzylvL2rdLfjSGTK7h4U9p06H3o4MClbc3xeDJ
+         RFRKaVU3I/BPgBgZzCGqZmMXMAR2daiMVemDrn4+2jInU+bIac3i0n7iJUCib268V5j5
+         TyE2jMcRaScjJpANFMxyHZuhU3adPg6tQ7usLwzJjBFsI/GJd5fTGcmxHW4Vn90JJhO4
+         RwFuJl7yBuJjrJGtQiYet8OEdwdGDS8hYqG7yyJMJHlskbbGhAClghYUwFfBIp0j2Kgf
+         Zkuw==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ionos.com; s=google; t=1791901383; x=1792506183; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=yj1sNd5vfDwsYGQAjFz2BvWzyxLrHMu95FMIsFy9jGQ=;
+        b=QwcrkcG2qPqojWS8zrmYqjetEMN/XCmC1Cl4IH9j8p4MWaKhPsNhEVONdUInsqHDWR
+         7aO+YJwuoCWNOs1GhADMB5Gm9Xa9nU0+F1ALQwHy5G/9+8bRuafsD/Yp4TrenJOovLTv
+         hOA9n0wfnIyrZE6MZrOSiFItSDkFcGYH/cUwtvB7Y8t2o+JsvPEPjujfYsJrjHQ8w1oi
+         p/nOBq0UY5msy45MvU0aOumovMJf7ep1JoCSIR5ywPd4/0nl0cMjEJMz+ISfrOsPiTJH
+         SZuEbRONEXjgavXVCuIsFHLmrU4u5bXpRjrgpRgknreUkjs4bMcR6BSky2Wzn4c3er3m
+         N0qw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1791901383; x=1792506183;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=yj1sNd5vfDwsYGQAjFz2BvWzyxLrHMu95FMIsFy9jGQ=;
+        b=kIxzPigeXOG0d3pyellbvUIriTuv1txanNDhcB3kGcyBwzQpZKnlruquFYh6D0tWeH
+         aafFNe2Z78zx9HPuB3MZXJNk0WCXzoB7zWT5n7Sa67SyVIh1uA4ctcVu/nDc39fIRqNl
+         UPbMpYMD/Wl7ItaLS1wZykXPgxq3eZApzqYGKauvUOQbRS/rfBN99duVk+8zIFSAokpk
+         YfIxFXJ3Y4UojeblI/AZWAFpiu1lorZZ+3CjqHpN/NnD9gzGkczKHLriVlDOJr0/ZCaP
+         ktNy8sO3JpoxFHexUAjAJeY1VDb+s1XWZKJa+wR4ihWj3PPVXDKT15Y+UxYWviAyfa87
+         3gew==
+X-Forwarded-Encrypted: i=1; AKwUvBwyCxv8sU30nvtAP3eESgqZ/6fItLnw6O2XJSG3z1Wl3DyfIVrjRUCFUAziZxARhKq3Mss77eSP/v3rTrrwJ80y@vger.kernel.org
+X-Gm-Message-State: AFq9FYL1uHNxev17ykd3pWFbD6VRcai7LHE3ZNEVMfasoKCmjbPNd2Sx
+	0nEeki7gcmXoovvOLRNao6CR7wbOpWWFZTpfpKh96p2ECG/zsOU6RTHm+AI/gOIdMFi1N9EHnao
+	/6AYjgV3Wf9uZZEAS7pHIEI8oSRgLHGTzReTIJ9LYCPXxjtNw5xm/eqQ=
+X-Gm-Gg: AYBFou3qy4OSr46P7+l7RHerGi0U+aYk/1GkS9lHgcTG1Hn6K/NMLH1Cy6YmMS8Yl8q
+	ZUsqbJ4taoveywCV98HYjbBT/4NX0sjYk7ClMK6pKlRLiwQO0JbFJKEq+4lFyHirv+iXUuGWt/S
+	jConDfEjqU+NU2QhaBqER/RTr4WcvrGbhNd/pScLf2IgO4QZ9SvZ2Hq5hMyegI9bXPHIpVd6q0t
+	3+c+b08P/u4q0/xqKX1tv04z7KkNGyNp9XQVo6uEiwRJJSAzvhzFhpVCFjMOvt59tPmXEdNPwWB
+	wWTl8g6fKE9jdG/4N/A43uzmmvbAJ8IXb0tbbXgkgs2ULOpBE5CqBlL7FEC/JdDZLlrNAeRM+p3
+	UawssycOj
+X-Received: by 2002:a17:907:3e9e:b0:c31:5918:86d1 with SMTP id
+ a640c23a62f3a-c31a9d3cfbbmr1362282966b.10.1791901383415; Tue, 13 Oct 2026
+ 07:23:03 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+References: <20261013130052.3012773-1-max.kellermann@ionos.com> <CAP-5=fVPtjkxcjEkR9r6QZGsoKe=_rZssjZp1FcJ7rCgntpPng@mail.gmail.com>
+In-Reply-To: <CAP-5=fVPtjkxcjEkR9r6QZGsoKe=_rZssjZp1FcJ7rCgntpPng@mail.gmail.com>
+From: Max Kellermann <max.kellermann@ionos.com>
+Date: Tue, 13 Oct 2026 16:22:50 +0200
+X-Gm-Features: AclHuK_BqQBC6qCTnYjJ1k0Yihq79IRdPnmJUUQAMz5lu8h5Keu2RPYrrqjpsQQ
+Message-ID: <CAKPOu+8NB8sGv__CazGPYY_uEmg84-+YHbS-VOw=4woAZcRKAw@mail.gmail.com>
+Subject: Re: [PATCH] perf: skip unnecessary userspace map synthesis
+To: Ian Rogers <irogers@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, James Clark <james.clark@linaro.org>, 
+	Dapeng Mi <dapeng1.mi@linux.intel.com>, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
-s) to consider:
-- [Medium] perf annotate-arm64: missing lifetime cleanup in update_mrs_insn=
-_state()
---
+On Tue, Oct 13, 2026 at 3:29=E2=80=AFPM Ian Rogers <irogers@google.com> wro=
+te:
+> Why do the empty list and dummy case need the
+> user mmap events?
 
-commit 084f7875323701c8124c43b96de264a478df7634
-Author: Tengda Wu <wutengda@huaweicloud.com>
-
-perf annotate-arm64: Support 'mrs' instruction to track 'current' pointer
-
-This patch extends update_insn_state_arm64() to handle the mrs instruction.
-It enables tracking the current task pointer in the kernel, which is
-typically accessed via the sp_el0 system register.
-
-> diff --git a/tools/perf/util/annotate-arch/annotate-arm64.c b/tools/perf/=
-util/annotate-arch/annotate-arm64.c
-> index 5683215f07708..6da558f7e8648 100644
-> --- a/tools/perf/util/annotate-arch/annotate-arm64.c
-> +++ b/tools/perf/util/annotate-arch/annotate-arm64.c
-[ ... ]
-> @@ -1030,6 +1032,71 @@ static void update_adrp_insn_state(struct type_sta=
-te *state,
->  		     insn_offset, tsr->imm_value, dreg);
->  }
-> =20
-> +static void update_mrs_insn_state(struct type_state *state,
-> +				  struct data_loc_info *dloc, Dwarf_Die *cu_die,
-> +				  struct disasm_line *dl,
-> +				  struct annotated_op_loc *dst)
-> +{
-> +	struct type_state_reg *tsr;
-> +	Dwarf_Die type_die;
-> +	u32 insn_offset =3D dl->al.offset;
-> +	int dreg =3D dst->reg1;
-> +	Dwarf_Die func_die;
-> +	Dwarf_Attribute attr;
-> +	u64 ip, pc;
-> +	struct strbuf sb;
-> +	char *type_name;
-> +
-> +	if (!has_reg_type(state, dreg))
-> +		return;
-> +
-> +	tsr =3D &state->regs[dreg];
-> +	tsr->copied_from =3D -1;
-> +
-> +	/* Handle case difference: LLVM (SP_EL0) vs objdump (sp_el0) */
-> +	if (!dso__kernel(map__dso(dloc->ms->map)) ||
-> +	    strcasecmp(dl->ops.source.raw, "sp_el0")) {
-> +		invalidate_reg_state(tsr);
-> +		return;
-> +	}
-[ ... ]
-> +	if (!type_name || strcmp(type_name, "struct task_struct*")) {
-> +		invalidate_reg_state(tsr);
-> +		goto out_free;
-> +	}
-> +
-> +	tsr->type =3D type_die;
-> +	tsr->kind =3D TSR_KIND_TYPE;
-> +	tsr->offset =3D 0;
-> +	tsr->imm_value =3D 0;
-> +	tsr->ok =3D true;
-
-[Severity: Medium]
-Are we missing a cleanup of the previous lifetime state for the destination
-register here?
-
-If the target register previously held a variable with an active Dwarf
-lifetime, the lifetime_active flag remains true. Upon a subsequent function
-call, the register tracking logic skips invalidating caller-saved registers
-that have an active lifetime.
-
-This could cause the target register (e.g., x0 holding current) to
-incorrectly survive the function call in the analysis state, even though
-the hardware register is clobbered by the callee.
-
-Should this path clear tsr->lifetime_active and tsr->lifetime_end, or
-perhaps call invalidate_reg_state() earlier before assigning the new
-properties?
-
-> +
-> +	pr_debug_dtp("mrs [%x] sp_el0 -> reg%d", insn_offset, dreg);
-> +	pr_debug_type_name(&type_die, tsr->kind);
-> +
-> +out_free:
-> +	free(type_name);
-> +}
+I guess that's a corner case I missed indeed. I'll fix that for v2.
 
 --=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/cover.1791629326.gi=
-t.wutengda@huaweicloud.com?part=3D15
+Max Kellermann
+Principal Architect
+Hosting Technology
+
+cm4all | Im Mediapark 6a | 50670 K=C3=B6ln | Germany
+General information about the company can be found here:
+https://www.cm4all.com/impressum
+A member of the IONOS Group
