@@ -1,148 +1,80 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2053048663E;
-	Tue, 13 Oct 2026 20:59:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8570B511E99;
+	Tue, 13 Oct 2026 21:01:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791925162; cv=none; b=EKxZxhNNTqI+rbyJQEaC8+A4XkvpZ5i8qP/JwvjjikVX6G71M/s4rLyD3r5LBFWMyThxT0YLE3jD6bksOUQoOBF85e3SPNedh5Ltcm/5z+TklOC8qKDWfZvzZyi3Dh8bPcMd02xnKDY1Ra1ftAJpfU/8/tc85O8UP5iEIIDDU4E=
+	t=1791925290; cv=none; b=Mbo5I8w20XIUICh/5xlay94odRaJkOusO8q33ua22RW1CsUZy1g9iYPgjDWio4YXUummkw2virNqiAJ62XuK7YtlM21qlt2dj19nJguxUxkvvnwj9TGMnIGJDfnuYMD+XdbgNycgeYUur+fArnpKBKZpEng8S6c72rG6hEOIsEM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791925162; c=relaxed/simple;
-	bh=nN2Mw3MkYM+Ufl/ZCR8hREwPPKJwTVFQU1HVr7u5gpM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kPJVAZSyjh5Gb/PvvvhjPZt8tmFmaXiyuA9Wfpn2Z+iM3LIBfGhzitX5F4IH3XMwIKPCi2CDzKy4FYgz3vMSaFDrvlK8pLP+GtWZuAqpQasVMIRWkbUO9yEFefJ9gk1UxgSe52FhzIrA+mat+cvAMDmrlGXnIk+q+0cbf7B3gBw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QvethXeA; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1791925290; c=relaxed/simple;
+	bh=sZBpQpUadceoBMH/ZvndmIicfOcoKzSaD702QVr/ELg=;
+	h=Message-ID:From:Subject:To:Cc:In-Reply-To:References:Content-Type:
+	 Date; b=gAUOOxXzDszn4FFauV/Vq/rA0hwtvsa63BhnK91zylhBonWeKqK+TM5k89rKBKYFQhMU7Jow478Q86B+v1ydfs1HvHCKrrwXKWcu/yj8SJDgJi3VWwHJfayM5ioRJhP/C5AeB6pYLyLTgryMezKqheaiEYm/L9Jr1PWnZRDD8k0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=I5iyKOEG; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QvethXeA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8FDEF1F000FF;
-	Tue, 13 Oct 2026 20:59:20 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="I5iyKOEG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9B3AC1F000FF;
+	Tue, 13 Oct 2026 21:01:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1791925160;
-	bh=h9+B3H8DbXs2WE6Q2dd7O0bh3Z8eqB8w1jkQFMHi5kM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=QvethXeAp+uWp8xYkCX6ryVkGZjSN7FqTK+NrKE5REi21s9D1otLAbv3WiKwXyHUQ
-	 u6YO+uUUo0WssMgpQbUpUZ0qY4R89V05Zaf7a8CAc7fw1+JfYhhWsRm7BG/MliMFFa
-	 zygD2yioGj23+QwuF4WVsVigtJhDXS+/WbOC8kQH1uCTG6G6aswBYwiOd3dALCh0Ys
-	 7kfx9ESMsQnzusIEe160i2RpedsOHZgdMlVsnBfRODdLoyZKY2nOhCFOJp5iuIYDYO
-	 PoViuOBb3PuLHN8SSO7bFsHo4uwX2B4VqP1FIBYjnhYkJ1NhxMIvjIjD2fwVixsuGh
-	 uW0k0UjpLpzCw==
-Date: Tue, 13 Oct 2026 13:59:19 -0700
-From: Namhyung Kim <namhyung@kernel.org>
-To: sashiko-reviews@lists.linux.dev
-Cc: linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v5 03/11] perf tools: Try linked debug files for DSO
- debug info
-Message-ID: <as6bp9RN5We7fquf@google.com>
-References: <20261013172155.160869-1-namhyung@kernel.org>
- <20261013172155.160869-4-namhyung@kernel.org>
- <sashiko-outbox-170238@kernel.org>
+	s=k20260515; t=1791925289;
+	bh=sZBpQpUadceoBMH/ZvndmIicfOcoKzSaD702QVr/ELg=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=I5iyKOEGDVO1a6Vo0mVKxSPizNMG81SiH8SYBx0pmjMVzO3El1dqQAabweqHcyfZB
+	 hl3uPuOGx5XVdBOsABwAn+r9u1ypBHUh2lepFtUKppIg6taJmaT96teJRo70st8I3t
+	 h9G1L6EaCJ5DrXL9BscLwdljlCJ/O7s3B1uVodPrvWKPzll397ce5v9ACJgfOCYg69
+	 /PGAzIHJEbA8fQ4VQjgbvR/5Oj1EWdQnYpaZkfKge2NDFxfwa1Wz+Fj1rqwolYgX7/
+	 aNCqAnOlDYctuOP33BKm7QjQeGNj/WUdknx4AeZVUaMVxOevxx2MwX1cIe9vZsriee
+	 oXsXoigbrc80Q==
+Message-ID: <sashiko-outbox-170502@kernel.org>
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v6 33/39] mm/madvise: use predicates for madvise(...,
+ MADV_DOFORK)
+Reply-To: sashiko-reviews@lists.linux.dev
+To: =?utf-8?b?TG9yZW56byBTdG9ha2VzIChBUk0p?= <ljs@kernel.org>
+Cc: linux-usb@vger.kernel.org, linux-rdma@vger.kernel.org, selinux@vger.kernel.org, linux-perf-users@vger.kernel.org, linux-s390@vger.kernel.org, "Heiko
+ Carstens" <hca@linux.ibm.com>, "Vasily Gorbik" <gor@linux.ibm.com>, "Alexander
+ Gordeev" <agordeev@linux.ibm.com>, "Christian Borntraeger" <borntraeger@linux.ibm.com>
+In-Reply-To: <20261013-b4-mmap-prepare-vma-flag-sanify-v6-33-1aa3c9b139f9@kernel.org>
+References: <20261013-b4-mmap-prepare-vma-flag-sanify-v6-0-1aa3c9b139f9@kernel.org>
+ <20261013-b4-mmap-prepare-vma-flag-sanify-v6-33-1aa3c9b139f9@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Tue, 13 Oct 2026 21:01:28 +0000
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <sashiko-outbox-170238@kernel.org>
 
-On Tue, Oct 13, 2026 at 05:34:34PM +0000, sashiko-bot@kernel.org wrote:
-> Thank you for your contribution! Sashiko AI review found 2 potential issue(s) to consider:
-> - [Medium] perf tools: DEBUGLINK debuginfo resolution fails for containerized binaries
-> - [Medium] perf: Uninitialized stack read when parsing malformed .gnu_debuglink
-> --
-> 
-> commit 58954c9ee50dda18b6aba714c1a631c8845bc3e0
-> Author: Namhyung Kim <namhyung@kernel.org>
-> 
-> perf tools: Try linked debug files for DSO debug info
-> 
-> The dso__find_dbginfo_type() should try DSO_BINARY_TYPE__DEBUGLINK so it
-> can follow the .gnu_debuglink and find the debug information in the
-> separate file.
-> 
-> > diff --git a/tools/perf/util/dso.c b/tools/perf/util/dso.c
-> > index df03f84c97235..913877b84b2d4 100644
-> > --- a/tools/perf/util/dso.c
-> > +++ b/tools/perf/util/dso.c
-> > @@ -2111,6 +2111,7 @@ void dso__find_dbginfo_type(struct dso *dso)
-> >  		DSO_BINARY_TYPE__OPENEMBEDDED_DEBUGINFO,
-> >  		DSO_BINARY_TYPE__BUILDID_DEBUGINFO,
-> >  		DSO_BINARY_TYPE__SYSTEM_PATH_DSO,
-> > +		DSO_BINARY_TYPE__DEBUGLINK,
-> 
-> [Severity: Medium]
-> Will this break debuginfo resolution for containerized binaries?
-> 
-> When DSO_BINARY_TYPE__DEBUGLINK is attempted, dso__get_filename() calls
-> dso__read_binary_type_filename(). That function performs an early check
-> on the host namespace:
-> 
-> tools/perf/util/dso.c:dso__read_binary_type_filename() {
-> 	...
-> 		if (!is_regular_file(filename)) {
-> 			ret = -1;
-> 			break;
-> 		}
-> 	...
-> }
-> 
-> If the binary is inside a mount namespace, is_regular_file() fails and
-> returns -1. This causes dso__get_filename() to abort early:
-> 
-> tools/perf/util/dso.c:dso__get_filename() {
-> 	...
-> 	if (dso__read_binary_type_filename(dso, type, root_dir, name, PATH_MAX))
-> 		goto out;
-> 	...
-> }
-> 
-> Will this bypass the subsequent dso__filename_with_chroot() fallback logic,
-> causing the tool to miss debuginfo for containerized applications?
+> Make it clear what we're blocking in MADV_DOFORK. Previously we simply
+> disallowed VM_SPECIAL i.e. mappings not managed by core mm, fixed mappings
+> and VMA_IO_BIT.
+>=20
+> Now the invariant is established that mm-managed mappings may not set
+> VMA_IO_BIT, the VMA_IO_BIT check is redundant.
+>=20
+> The rest is equivalent to testing for a fixed or non-mm-managed mapping,
+> i.e. a mapping which is not mm-backed, or hugetlb, which is specifically
+> excluded.
+>=20
+> This was established by commit 0b2758f48f22 ("Require (reasonably) normal
+> mappings for MADV_DOFORK") containing my hands-down favourite call out of
+> all time.
+>=20
+> Express the same thing using the predicates - only mm-backed mappings may
+> have their copy-on-fork behaviour changed, retaining the eternal exception
+> to all rules, hugetlb.
+>=20
+> No functional change intended.
+>=20
+> Acked-by: Zi Yan <ziy@nvidia.com>
+> Acked-by: David Hildenbrand (Arm) <david@kernel.org>
+> Signed-off-by: Lorenzo Stoakes (ARM) <ljs@kernel.org>
 
-This is a known problem and I think it's in a broken state.  Let me
-work on a fix after landing this series.
+Sashiko has reviewed this patch and found no issues. It looks great!
 
-> 
-> 
-> [Severity: Medium]
-> Could this lead to an uninitialized stack read with malformed ELF files?
-> 
-> When resolving DSO_BINARY_TYPE__DEBUGLINK, dso__read_binary_type_filename()
-> allocates an uninitialized stack buffer:
-> 
-> tools/perf/util/dso.c:dso__read_binary_type_filename() {
-> 	...
-> 		char symfile[PATH_MAX];
-> 		...
-> 		ret = filename__read_debuglink(filename, symfile, PATH_MAX);
-> 	...
-> }
-> 
-> If libbfd handles the read, it copies the section directly:
-> 
-> tools/perf/util/libbfd.c:libbfd_filename__read_debuglink() {
-> 	...
-> 	if (!bfd_get_section_contents(abfd, section, debuglink, 0,
-> 				      section->size))
-> 		goto out_close;
-> 	...
-> }
-> 
-> Since BFD does not append a null terminator, if the .gnu_debuglink section
-> is malformed and lacks a null byte, could the subsequent snprintf() in
-> dso__read_binary_type_filename() read uninitialized stack memory?
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261013-b4-mmap-pr=
+epare-vma-flag-sanify-v6-0-1aa3c9b139f9@kernel.org?part=3D33
 
-This is a pre-existing issue.  Let's fix it separately.
-
-Thanks,
-Namhyung
-
-> 
-> >  		DSO_BINARY_TYPE__NOT_FOUND,
-> >  	};
-> >  	const enum dso_binary_type *type;
-> 
-> -- 
-> Sashiko AI review · https://sashiko.dev/#/patchset/20261013172155.160869-1-namhyung@kernel.org?part=3
