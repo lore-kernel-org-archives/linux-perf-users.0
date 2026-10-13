@@ -1,76 +1,131 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01377522695;
-	Tue, 13 Oct 2026 17:13:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46F9D5187F3;
+	Tue, 13 Oct 2026 17:21:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791911588; cv=none; b=piWl3lx039p/0OwdFYgoIonbhsYh5FcrNxPIPc6GAsDdfEl6TiLxMvbWgNS65D5bk5vrVmb5mu5ldA8Jwz18GuVdDtAJ9thn3MIIOiYHIVPD0+6nq/hUXnA/DgBRr2Y+pNGWNaj3vDltfDhkKpZgQpE8XOq6zI5W0XfnToYHlno=
+	t=1791912118; cv=none; b=hClo10dy6C4S5A7Una9fc/3b3MI1kndyOwi1R083RrC0C3Y2/I9LfW33PrYiUhLDFy6cwZPySuP+R0Tc/b/HCAwJSdkvR0Zo8BBAWNqR+HL1Z7NcPMNJD7Gcvx4kH0YEvS2cx1ONJz6dQn5kB/zDeGI4yFWMkW4qLDfznE20U8I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791911588; c=relaxed/simple;
-	bh=xG/7/HfmonOV22Af1a0Cj6sHLtZxxJjdfDnawV8SIHs=;
-	h=Message-ID:From:Subject:To:Cc:In-Reply-To:References:Content-Type:
-	 Date; b=gKiHQBFI3Erpz+uquNdJBnSo8XrUY769i6gYI0K+jFmGwfY2YasXLVdNYSc5GsePjm103+MNA54Fn+1WHgbSaIl+Kz6bKN8S/jSHQHICt5g+KW4XVqi/Gr0K272IuPWl8jlmtITq3CYESQFYGHR254DfJoVLcnyaL5Zke/5K4d8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aRmqcyPm; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1791912118; c=relaxed/simple;
+	bh=h2j9cdyCalzptlI9fywQQWTHEudkQc6Gy0ew04rRn2I=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=LTGWLotp7R9xzrnrTR99rvixrCZostEXh6SDqM+VOSa7ZME49Uz55DhFYBGGcXU4wj+WWU0EQdMKWa8r5M80YAqzJwt0FIJBotekTLeBFih4lGiTa4EHXOLVT/CcfYg4rq53imMF02u5YeUWchv2YzuYaTcdrajfYkPgfo14ZEQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EmdkMT53; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aRmqcyPm"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1454F1F000FF;
-	Tue, 13 Oct 2026 17:13:06 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EmdkMT53"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 71F711F000FF;
+	Tue, 13 Oct 2026 17:21:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1791911586;
-	bh=xG/7/HfmonOV22Af1a0Cj6sHLtZxxJjdfDnawV8SIHs=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=aRmqcyPmx8r3MNXAIW/5F6d9Ts5mtqovBoH+GmENAtrKY8cRwKw5nR1ve4bo+uvd2
-	 t+UrdLhYiqVm4MkXAPJyHlktjVYVlixpY7t6+IWKEUB3GkYUmMuws5tNYobEVpT4uY
-	 WRa/BGp7gkc3l1u++XsXnQLbkReE0rqhf/HzgtMzWH84MMHh99WAuMEzPtnAIE3jET
-	 HKlb8Po+aIGLrSeVvF5KiGPh0hf8TgRaFnyvSdAV9hIQEODQnlIh2nH+LO3bq8eveA
-	 GSh+F2wvS79jbNDbI75I6by45vS2togNzjV4ZyqRBuZQUQLS8TSc4Q7lVSiq/Vr8Ii
-	 0cfxw/7v+4STA==
-Message-ID: <sashiko-outbox-170195@kernel.org>
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v6 12/39] selinux: reject writable opens of policy file,
- drop mmap shared/write check
-Reply-To: sashiko-reviews@lists.linux.dev
-To: =?utf-8?b?TG9yZW56byBTdG9ha2VzIChBUk0p?= <ljs@kernel.org>
-Cc: linux-usb@vger.kernel.org, linux-rdma@vger.kernel.org, selinux@vger.kernel.org, linux-perf-users@vger.kernel.org, linux-s390@vger.kernel.org, "Heiko
- Carstens" <hca@linux.ibm.com>, "Vasily Gorbik" <gor@linux.ibm.com>, "Alexander
- Gordeev" <agordeev@linux.ibm.com>, "Christian Borntraeger" <borntraeger@linux.ibm.com>
-In-Reply-To: <20261013-b4-mmap-prepare-vma-flag-sanify-v6-12-1aa3c9b139f9@kernel.org>
-References: <20261013-b4-mmap-prepare-vma-flag-sanify-v6-0-1aa3c9b139f9@kernel.org>
- <20261013-b4-mmap-prepare-vma-flag-sanify-v6-12-1aa3c9b139f9@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Tue, 13 Oct 2026 17:13:05 +0000
+	s=k20260515; t=1791912116;
+	bh=MMZSJiTNLJpppWBHzjLGwa4PYqwp+jaksqe3VF/qBLQ=;
+	h=From:To:Cc:Subject:Date;
+	b=EmdkMT53xrmRvo2eq+7fqTtTy4vlZWGR/BRGVoVP5bAUQ5ggIlFZ2zyK3FXgVdnX0
+	 s5qMX2fB/xkNWZs0ndNml+f7Zkd0JEsiusWSfhZ049WYtyuf7bKOk5JT3tBlA4aHho
+	 DSRHaXtgZnIYMAFJ/dovDxRh6N0JQMsF6Wbhiv6BZJKAfRQwg+v87+qa2JfSIh/fH2
+	 sXnvJb0J/t583g3PhfCxkpLFpl37RvMKARxHcve5CC8WDQ/GNKgF22ZDdGjewxJB+e
+	 ep73xH5o59uBrmzeW7ulFgkpQEPztpo5OluLabIRtbkZHMTxd6iS+8bC3ihl9BxQdJ
+	 cpcbyHbOh7WLw==
+From: Namhyung Kim <namhyung@kernel.org>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Ian Rogers <irogers@google.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	James Clark <james.clark@linaro.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org
+Subject: [PATCH v5 00/11] perf symbol: Properly seto DSO binary/symtab types
+Date: Tue, 13 Oct 2026 10:21:44 -0700
+Message-ID: <20261013172155.160869-1-namhyung@kernel.org>
+X-Mailer: git-send-email 2.56.0.385.gd3acb90ef8-goog
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-> The policy file has no write method and is exposed read-only (S_IRUGO in
-> selinux_files[]), yet sel_open_policy() performs no open mode check, so a
-> CAP_DAC_OVERRIDE caller can open it O_RDWR. Reject FMODE_WRITE at open, as
-> kernfs does.
->=20
-> The file can then never be mapped with FMODE_WRITE, so do_mmap() always
-> clears VM_MAYWRITE and VM_SHARED for MAP_SHARED mappings and the VM_SHARED
-> check in sel_mmap_policy() cannot be reached. Remove it.
->=20
-> This also stops sel_mmap_policy() clearing VM_MAYWRITE on a mapping that =
-is
-> neither a PFN map nor a mixed map, ahead of the core enforcing that only
-> such mappings may do so.
->=20
-> Acked-by: Stephen Smalley <stephen.smalley.work@gmail.com>
-> Reviewed-by: Jann Horn <jannh@google.com>
-> Acked-by: Paul Moore <paul@paul-moore.com>
-> Reviewed-by: Suren Baghdasaryan <surenb@google.com>
-> Acked-by: David Hildenbrand (Arm) <david@kernel.org>
-> Signed-off-by: Lorenzo Stoakes (ARM) <ljs@kernel.org>
+Hello,
 
-Sashiko has reviewed this patch and found no issues. It looks great!
+Currently we have 3 types for a DSO.
 
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261013-b4-mmap-pr=
-epare-vma-flag-sanify-v6-0-1aa3c9b139f9@kernel.org?part=3D12
+* binary type: determines where to read binary instruction or data of the
+  DSO.  Basically used by annotate.  Some (special) DSOs like kallsyms or
+  JIT may not have the data though.
+
+* symtab type: determines where to read symbol tables.  Set when symbols
+  in the DSO are loaded.
+
+* debug info type: determines where to read debug info.  Used by srcline,
+  DWARF unwinding, data type profiling and so on.  Often debug info is
+  saved in a separate file.
+
+Some DSOs may have the same type for 3 and others can have all different.
+Previously it generally assumed binary type would be same as symtab type
+but now I think we should not and only set the binary type as it's used.
+
+Also it should make sure that symtab type is set properly after loading
+symbols in the DSO.
+
+Probably this patchset won't make any practical difference in runtime
+behaviors but I think it's good to track them accurately.
+
+v5 changes)
+
+ * reset errno before dso__get_filename()
+ * check ELF section type being SHT_PROGBITS
+
+v4: https://lore.kernel.org/r/20261012234654.60666-1-namhyung@kernel.org
+
+ * add Ian's Reviewed-by tags
+ * make sure to grab _dso__data_open_lock only once
+ * check open file count before closing the cache
+ * clear errno so that it won't have a stale value
+
+v3: https://lore.kernel.org/r/20261012052601.13920-1-namhyung@kernel.org
+
+ * set KALLSYM type for split kallsyms DSOs
+ * take dso lock in dso__find_binary_type()
+ * handle EMFILE failures in dso__find_binary_type()
+ * drop the libbfd change as it need a separate patchset
+ * lookup binary type in dso__e_machine_endian()
+ * get rid of machine_or_dso_e_machine() due to a lock problem
+ * fixed a bug symbol__disassemble() for BPF and kcore
+
+v2: https://lore.kernel.org/r/20261006234315.920817-1-namhyung@kernel.org
+
+ * add dso__find_binary_type() for checking ".text" section
+ * make perf annotate use the dso's binary type directly
+
+v1: https://lore.kernel.org/r/20261005063411.114244-1-namhyung@kernel.org
+
+Thanks,
+Namhyung
+
+
+Namhyung Kim (11):
+  perf tools: Remove redundant dso data init
+  perf tools: Check ELF section type with name
+  perf tools: Try linked debug files for DSO debug info
+  perf symbol: Update symtab type of vmlinux from build-id cache
+  perf symbol: Set binary/symtab type for split kallsyms
+  perf symbol: Get rid of machine_or_dso_e_machine()
+  perf tools: Factor out dso__find_binary_type()
+  perf symbol: Set binary type for JIT map DSOs
+  perf symbol: Do not set binary type from symtab type
+  perf annotate: Simplify symbol__disassemble() with dso binary_type
+  perf test: Fix dso data tests
+
+ tools/perf/tests/dso-data.c  |   7 ++
+ tools/perf/util/disasm.c     | 124 ++++++------------------------
+ tools/perf/util/dso.c        | 144 +++++++++++++++++++++++++++++++----
+ tools/perf/util/dso.h        |  13 ++++
+ tools/perf/util/symbol-elf.c |   3 +-
+ tools/perf/util/symbol.c     |  50 ++++--------
+ 6 files changed, 190 insertions(+), 151 deletions(-)
+
+-- 
+2.56.0.385.gd3acb90ef8-goog
 
