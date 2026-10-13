@@ -1,142 +1,187 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D9934D7D4D;
-	Tue, 13 Oct 2026 11:46:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA957501299;
+	Tue, 13 Oct 2026 12:53:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791892015; cv=none; b=ZSlTsb2a4eWTRL0lOGXyAQLn5+BxjTCak8i7wB+RQTUnDU6XQBTpflXpHCcvTO7oB+Ydy6ydrAvnxre9BdpAze2X8yGRySyS1odVTCFenAWbxrA7BAXU6m6QQaJFjE9WKjClRb4GqsqwThF1J95esSXVBGD0sEGE82CD1mW6HSY=
+	t=1791895999; cv=none; b=Hnly0BchmUp8zc/3mR+3Bi6m7qzJftty4hTO3G2aKY/LKpCUy1e224RThf7QEwd+8/b/py5IYG3u+Mdnl+obdh7r6+hGEO6wJ9OUzQ+sEF3j2+MT+p7UdYRlpB1+p5h70nuIQXZ6fTj8FWbK1NJgEzYrGDeRypImUSC9GMXRQyA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791892015; c=relaxed/simple;
-	bh=o5iE1cDO1gBt+uh4eIByivuwm67StlAGtlYV2hAA2DM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cTh8O7ZwzavUmyWDSCmfn9pNhWdKnYBenj1z0Mmmhlu/OFqED3sDlKy2V0gPQ7DsOnbSdk6gtYjls1TZBhHUMkS6u8A0RZ8Yl5nMuJeXcQZs9DYJp+G5oyT+4Dv52LJe3EPuoF0gD+HWKj7GI2vv8NU//O/2ww2+7jzALhilBwQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JsNwWiGG; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1791895999; c=relaxed/simple;
+	bh=axOM5j3vOY7t9ZLps+wPbthA9ApS1l0Pw7wVAlogkDc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Dri7Miz8Ojdf45I7lBjuQQi813p5/hRUTXnACRRD9UPxQDxi1czxEmIM3TaVTFZzlC2A/6aVXX3QAWTZ0ya/kDFxH805/gJ6dXJeZIH1bwML4aqnV+nkNMV98nhPQBZEmTv3LrNIk7eC0XNXCL5iw45CLnX+0PoaSLMxRZBaxXM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KHGkjZku; arc=none smtp.client-ip=192.198.163.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JsNwWiGG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E65921F00898;
-	Tue, 13 Oct 2026 11:46:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1791892013;
-	bh=1nnF4ZhcdJUlBWxekcjOronR2NcHp1dKz5EHoMfEfXk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=JsNwWiGGPLpQBTVRJ0pxyv5sreFzDIh4DL9er2BIPqypmeADQ3+kGufnoG9MayGsG
-	 Ow2kvpxaWsj31kCiNI6YI1xtxB6jAuvoFeSUehIJRSSr8PvPf39/J2JL8+Q8gZNKpw
-	 hpaiLridC4NDmbtWtYCSXMnVcXUvRVpYaXF7fuyaM4cd4pfx2vv7Fp6hIZ2715U51o
-	 41ifwXQLKGxBc/H0/rQD53V5RTXy4cc2VVaIpPP3J14KY9KrW96ntrahOMVdTN4KO/
-	 TSAFtr+2bjHgQH5lauCoZ5P/rczb+ytBLkrNPZZt6Dfwz5bTKu9NMmntqhvn+1eShm
-	 h0kZ4EeW1vuHA==
-Date: Tue, 13 Oct 2026 12:46:21 +0100
-From: "Lorenzo Stoakes (ARM)" <ljs@kernel.org>
-To: "David Hildenbrand (Arm)" <david@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>, 
-	"Liam R. Howlett" <liam@infradead.org>, Vlastimil Babka <vbabka@kernel.org>, 
-	Jann Horn <jannh@google.com>, Pedro Falcato <pfalcato@suse.de>, 
-	Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, 
-	Michal Hocko <mhocko@suse.com>, Jonathan Corbet <corbet@lwn.net>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>, 
-	Jason Gunthorpe <jgg@ziepe.ca>, Leon Romanovsky <leon@kernel.org>, 
-	Paul Moore <paul@paul-moore.com>, Stephen Smalley <stephen.smalley.work@gmail.com>, 
-	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
-	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
-	Andrii Nakryiko <andrii@kernel.org>, Eduard Zingerman <eddyz87@gmail.com>, 
-	Kumar Kartikeya Dwivedi <memxor@gmail.com>, Zi Yan <ziy@nvidia.com>, 
-	Baolin Wang <baolin.wang@linux.alibaba.com>, Nico Pache <nico.pache@linux.dev>, 
-	Ryan Roberts <ryan.roberts@arm.com>, Dev Jain <dev.jain@arm.com>, Barry Song <baohua@kernel.org>, 
-	Lance Yang <lance.yang@linux.dev>, Usama Arif <usama.arif@linux.dev>, 
-	Kiryl Shutsemau <kas@kernel.org>, Doug Gilbert <dgilbert@interlog.com>, 
-	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>, "Martin K. Petersen" <mkp@kernel.org>, 
-	Simona Vetter <simona@ffwll.ch>, Helge Deller <deller@gmx.de>, Sebastian Reichel <sre@kernel.org>, 
-	John Hubbard <jhubbard@nvidia.com>, Peter Xu <peterx@redhat.com>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Oleg Nesterov <oleg@redhat.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Thomas Gleixner <tglx@kernel.org>, 
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, Arnaldo Carvalho de Melo <acme@kernel.org>, 
-	Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Rik van Riel <riel@surriel.com>, Harry Yoo <harry@kernel.org>, Juri Lelli <juri.lelli@redhat.com>, 
-	Vincent Guittot <vincent.guittot@linaro.org>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
-	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
-	David Airlie <airlied@gmail.com>, Will Deacon <will@kernel.org>, 
-	"Aneesh Kumar K.V" <aneesh.kumar@kernel.org>, Nick Piggin <npiggin@gmail.com>, Arnd Bergmann <arnd@arndb.de>, 
-	Muchun Song <muchun.song@linux.dev>, Oscar Salvador <osalvador@suse.de>, 
-	"Matthew Wilcox (Oracle)" <willy@infradead.org>, Jan Kara <jack@suse.cz>, Marc Zyngier <maz@kernel.org>, 
-	Oliver Upton <oupton@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, 
-	Madhavan Srinivasan <maddy@linux.ibm.com>, Anup Patel <anup@brainfault.org>, Paul Walmsley <pjw@kernel.org>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
-	Christian Borntraeger <borntraeger@linux.ibm.com>, Janosch Frank <frankja@linux.ibm.com>, 
-	Claudio Imbrenda <imbrenda@linux.ibm.com>, Alexander Gordeev <agordeev@linux.ibm.com>, 
-	Gerald Schaefer <gerald.schaefer@linux.ibm.com>, Heiko Carstens <hca@linux.ibm.com>, 
-	Vasily Gorbik <gor@linux.ibm.com>, "David S. Miller" <davem@davemloft.net>, 
-	Andreas Larsson <andreas@gaisler.com>, Alexander Viro <viro@zeniv.linux.org.uk>, 
-	Christian Brauner <brauner@kernel.org>, Matthew Brost <matthew.brost@intel.com>, 
-	Joshua Hahn <joshua.hahnjy@gmail.com>, Rakie Kim <rakie.kim@sk.com>, Byungchul Park <byungchul@sk.com>, 
-	Gregory Price <gourry@gourry.net>, Ying Huang <ying.huang@linux.alibaba.com>, 
-	Alistair Popple <apopple@nvidia.com>, Chris Li <chrisl@kernel.org>, Kairui Song <kasong@tencent.com>, 
-	Kemeng Shi <shikemeng@huaweicloud.com>, Nhat Pham <nphamcs@gmail.com>, Baoquan He <baoquan.he@linux.dev>, 
-	Youngjun Park <youngjun.park@lge.com>, Johannes Weiner <hannes@cmpxchg.org>, 
-	Qi Zheng <qi.zheng@linux.dev>, Shakeel Butt <shakeel.butt@linux.dev>, 
-	Axel Rasmussen <axelrasmussen@google.com>, Yuanchu Xie <yuanchu@google.com>, Wei Xu <weixugc@google.com>, 
-	Chengming Zhou <chengming.zhou@linux.dev>, Michal Hocko <mhocko@kernel.org>, 
-	Miklos Szeredi <miklos@szeredi.hu>, Xu Xin <xu.xin@linux.dev>, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, linux-usb@vger.kernel.org, 
-	linux-rdma@vger.kernel.org, selinux@vger.kernel.org, linux-sound@vger.kernel.org, 
-	bpf@vger.kernel.org, linux-scsi@vger.kernel.org, linux-fbdev@vger.kernel.org, 
-	dri-devel@lists.freedesktop.org, linux-trace-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, linux-arch@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, linuxppc-dev@lists.ozlabs.org, 
-	kvm@vger.kernel.org, kvm-riscv@lists.infradead.org, linux-riscv@lists.infradead.org, 
-	linux-s390@vger.kernel.org, sparclinux@vger.kernel.org, fuse-devel@lists.linux.dev, 
-	Ihor Solodrai <ihor.solodrai@linux.dev>, Bert Karwatzki <spasswolf@web.de>
-Subject: Re: [PATCH v5 35/38] mm: avoid use of VMA_SPECIAL_FLAGS in
- migrate_vma_setup()
-Message-ID: <as4Z_ASrMbQ-eMTn@gremlin>
-References: <20261009-b4-mmap-prepare-vma-flag-sanify-v5-0-923b70125b1e@kernel.org>
- <20261009-b4-mmap-prepare-vma-flag-sanify-v5-35-923b70125b1e@kernel.org>
- <214514be-a935-485b-8925-07d84c1063f9@kernel.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KHGkjZku"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1791895998; x=1823431998;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=axOM5j3vOY7t9ZLps+wPbthA9ApS1l0Pw7wVAlogkDc=;
+  b=KHGkjZkuLRAYuiI/EhiyzJTJ7dptm1DvbYj9gScAffWtvU/nBsyxKq3R
+   /ihUq9NutsqIcXjBL2/fpy8/Bhel/KFfCKrHpoe6l9ry/TLlGPbIraZN0
+   tR0ia5gOJFmENT3mtfAfphyS0grcX6vc9avpIKERtn7iYYpPZ2hbNUGjX
+   M4MI2/E/0Ryy+0+saxe0KP8p+sHIq0HdSWR1NXRvsLkpTkvjnVHZnrorK
+   0b9azZDGfc9nXXWHxEIdewRYoO1m2Qm8+qyVGb98DwuCSrEUSe7skqVjm
+   6Rz5xDQ4AiNVWof7cosXx/dRohooSXHuoY8ytIa8u12I+3MOEzLqRotLI
+   A==;
+X-CSE-ConnectionGUID: IWaWJgvPSOeiINzu+RUoZA==
+X-CSE-MsgGUID: 3w53d/FMQQK2qu3+nATHIw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11933"; a="721127"
+X-IronPort-AV: E=Sophos;i="6.27,155,1787036400"; 
+   d="scan'208";a="721127"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Oct 2026 05:53:17 -0700
+X-CSE-ConnectionGUID: rkZEuAPGSFixoIRqexWFAQ==
+X-CSE-MsgGUID: jtkGNHzqTl20mhueRPt3oA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.27,155,1787036400"; 
+   d="scan'208";a="1229565"
+Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.241.239]) ([10.124.241.239])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Oct 2026 05:53:11 -0700
+Message-ID: <becc5593-69ef-4800-bc2b-0fb217165910@linux.intel.com>
+Date: Tue, 13 Oct 2026 20:53:08 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <214514be-a935-485b-8925-07d84c1063f9@kernel.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] perf/x86/amd/lbr: Limit branch snapshots to valid entries
+To: Peter Zijlstra <peterz@infradead.org>, Sandipan Das <sandipan.das@amd.com>
+Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+ bpf@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>, James Clark
+ <james.clark@linaro.org>, Thomas Gleixner <tglx@kernel.org>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ x86@kernel.org, "H . Peter Anvin" <hpa@zytor.com>,
+ Andrii Nakryiko <andrii@kernel.org>, Song Liu <song@kernel.org>,
+ Ravi Bangoria <ravi.bangoria@amd.com>,
+ Ananth Narayan <ananth.narayan@amd.com>
+References: <20261007181002.4005262-1-sandipan.das@amd.com>
+ <20261012153014.GU4121339@noisy.programming.kicks-ass.net>
+ <94d387f2-ff07-4895-a722-e8ded4203309@amd.com>
+ <20261013074625.GC2009045@noisy.programming.kicks-ass.net>
+Content-Language: en-US
+From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
+In-Reply-To: <20261013074625.GC2009045@noisy.programming.kicks-ass.net>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Mon, Oct 12, 2026 at 08:52:07PM +0200, David Hildenbrand (Arm) wrote:
-> On 10/9/26 20:04, Lorenzo Stoakes (ARM) wrote:
 
-> > diff --git a/mm/migrate_device.c b/mm/migrate_device.c
-> > index b9c453c28795..289d7b08ace4 100644
-> > --- a/mm/migrate_device.c
-> > +++ b/mm/migrate_device.c
+On 10/13/2026 3:46 PM, Peter Zijlstra wrote:
+> On Tue, Oct 13, 2026 at 12:14:58PM +0530, Sandipan Das wrote:
+>> On 12-10-2026 21:00, Peter Zijlstra wrote:
+>>> On Wed, Oct 07, 2026 at 11:40:02PM +0530, Sandipan Das wrote:
+>>>> The branch snapshot callback used by bpf_get_branch_snapshot() copies
+>>>> up to x86_pmu.lbr_nr entries from cpuc->lbr_entries[], even when the
+>>>> last LBR read kept fewer branches. The entries past lbr_stack.nr are
+>>>> invalid, but they end up reaching BPF programs.
+>>>>
+>>>> Limit copying to lbr_stack.nr entries and also reset lbr_stack.nr when
+>>>> amd_pmu_lbr_read() skips reading the registers, so that a stale count
+>>>> is never reused.
+>>>>
+>>>> Fixes: a4d18112e531 ("perf/x86/amd: Support capturing LBR from software events")
+>>>> Reported-by: Sashiko <sashiko-bot@kernel.org>
+>>>> Closes: https://lore.kernel.org/all/sashiko-outbox-163130@kernel.org/
+>>>> Signed-off-by: Sandipan Das <sandipan.das@amd.com>
+>>>> ---
+>>>>  arch/x86/events/amd/core.c | 2 +-
+>>>>  arch/x86/events/amd/lbr.c  | 4 +++-
+>>>>  2 files changed, 4 insertions(+), 2 deletions(-)
+>>>>
+>>>> diff --git a/arch/x86/events/amd/core.c b/arch/x86/events/amd/core.c
+>>>> index 49b6b8fce566..bf631f60757c 100644
+>>>> --- a/arch/x86/events/amd/core.c
+>>>> +++ b/arch/x86/events/amd/core.c
+>>>> @@ -944,7 +944,7 @@ static int amd_pmu_v2_snapshot_branch_stack(struct perf_branch_entry *entries, u
+>>>>  	cpuc = this_cpu_ptr(&cpu_hw_events);
+>>>>  
+>>>>  	amd_pmu_lbr_read();
+>>>> -	cnt = min(cnt, x86_pmu.lbr_nr);
+>>>> +	cnt = min(cnt, cpuc->lbr_stack.nr);
+>>>>  	memcpy(entries, cpuc->lbr_entries, sizeof(struct perf_branch_entry) * cnt);
+>>>>  
+>>>>  	amd_pmu_v2_enable_all(0);
+>>>> diff --git a/arch/x86/events/amd/lbr.c b/arch/x86/events/amd/lbr.c
+>>>> index 1e1b2f08cb51..a00d3850c4a8 100644
+>>>> --- a/arch/x86/events/amd/lbr.c
+>>>> +++ b/arch/x86/events/amd/lbr.c
+>>>> @@ -165,8 +165,10 @@ void amd_pmu_lbr_read(void)
+>>>>  	struct branch_entry entry;
+>>>>  	int out = 0, idx, i;
+>>>>  
+>>>> -	if (!cpuc->lbr_users)
+>>>> +	if (!cpuc->lbr_users) {
+>>>> +		cpuc->lbr_stack.nr = 0;
+>>>>  		return;
+>>>> +	}
+>>>>  
+>>>>  	for (i = 0; i < x86_pmu.lbr_nr; i++) {
+>>>>  		entry.from.full	= amd_pmu_lbr_get_from(i);
+>>> You now seem to deviate from what the Intel code does. Please clarify.
+>> Yes, it is a deviation. I thought of proposing the following but didn't
+>> proceed because I was not sure about the if condition in the second hunk
+>> which considers things other than cpuc->lbr_users for an early return.
+> Dapeng, can you look into this? I would really like to keep behaviour
+> consistent where possible.
 
-> >  int migrate_vma_setup(struct migrate_vma *args)
-> >  {
-> > +	const struct vm_area_struct *vma = args->vma;
-> >  	long nr_pages = (args->end - args->start) >> PAGE_SHIFT;
-> >
-> >  	args->start &= PAGE_MASK;
-> >  	args->end &= PAGE_MASK;
-> > -	if (!args->vma || vma_test_any_mask(args->vma, VMA_SPECIAL_FLAGS) ||
-> > -	    vma_is_dax(args->vma))
-> > +	if (!vma)
-> > +		return -EINVAL;
-> > +	if (!vma_is_mm_managed(vma) || vma_is_fixed_mapping(vma) ||
-> > +	    vma_is_dax(vma))
+Sure.
+
+
 >
-> Same here, with the droppable thing changed this would be
->
-> !vma_is_mm_backed() || vma_is_dax(vma)
->
-> I guess.
+>> diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
+>> index 0a34d674df59..5dfb9e9156e8 100644
+>> --- a/arch/x86/events/intel/core.c
+>> +++ b/arch/x86/events/intel/core.c
+>> @@ -2822,7 +2822,7 @@ __intel_pmu_snapshot_branch_stack(struct perf_branch_entry *entries,
+>>         struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
+>>
+>>         intel_pmu_lbr_read();
+>> -       cnt = min_t(unsigned int, cnt, x86_pmu.lbr_nr);
+>> +       cnt = min_t(unsigned int, cnt, cpuc->lbr_stack.nr);
+>>
+>>         memcpy(entries, cpuc->lbr_entries, sizeof(struct perf_branch_entry) * cnt);
+>>         intel_pmu_enable_all(0);
+>> diff --git a/arch/x86/events/intel/lbr.c b/arch/x86/events/intel/lbr.c
+>> index 0b446d8912e4..6b070490f461 100644
+>> --- a/arch/x86/events/intel/lbr.c
+>> +++ b/arch/x86/events/intel/lbr.c
+>> @@ -1026,8 +1026,10 @@ void intel_pmu_lbr_read(void)
+>>          * but this simple approach seems to work for now.
+>>          */
+>>         if (!cpuc->lbr_users || vlbr_exclude_host() ||
+>> -           cpuc->lbr_users == cpuc->lbr_pebs_users)
+>> +           cpuc->lbr_users == cpuc->lbr_pebs_users) {
+>> +               cpuc->lbr_stack.nr = 0;
+I checked the code, and it looks safe to clear cpuc->lbr_stack.nr here. For
+PEBS events with the LBR group, the LBR stack is populated again for each
+PEBS record, so this should not affect the LBR trace for PEBS events.
 
-I think we need a hugetlb carveout too (ugh), will update in v6!
+But I’m not fully sure if it's intentional for the
+bpf_get_branch_snapshot() helper. Clearing lbr_stack.nr to 0 prevents the
+BPF helper from reading LBR data from PEBS although the LBR data could be
+stale since it comes from the past PEBS record instead of the runtime
+hardware LBR state. That seems reasonable and correct, but the side effect
+is that the BPF helper can't read the LBR stack when all LBR events are
+PEBS events. Not sure if it's intentional and expected. 
 
->
-> Acked-by: David Hildenbrand (Arm) <david@kernel.org>
+I’d like to run some tests for this change tomorrow to confirm the
+behavior. Thanks.
 
-Thanks!
 
---
-Cheers, Lorenzo
+>>                 return;
+>> +       }
+>>
+>>         x86_pmu.lbr_read(cpuc);
+>>
