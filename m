@@ -1,40 +1,38 @@
 Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05B3654EEBD;
-	Tue, 13 Oct 2026 20:38:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B97654CF76;
+	Tue, 13 Oct 2026 20:41:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791923925; cv=none; b=SyXIYgM9W1ul3ccrJ48vj/i+MFCpY3yaBVHPd35gGs7k0czMmSNpj9h4quikfHAr6/iqvfx5ZHQ5fXe2WWzGskLoVrCETTTr0VQ+fi9EWXNHj+vHKx7TghIC9fdZZp8581+LPd02A7toz11xHZdhil8PsDVw0BhHFfjPi9EuN1Y=
+	t=1791924063; cv=none; b=Uk9wr1VRVmxf5UD1nQI41bJBLLZ1426Sg/7kOV5c6IbhhImd1W0bOAQitqmWjSsvdqRahjqh1uEyywDng3MDq9+xiSEwX5psmTP61orolHgyRbD1Qae+oG3uUKVTbGwgYxIEYlClkzzEM9dZAynNSkCBEXSO6tOEupbjAer82E0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791923925; c=relaxed/simple;
-	bh=t+rv9DZjlHa1AnpVnE5Lh7gvgLdHD5mWAXOsSnLe2jw=;
+	s=arc-20240116; t=1791924063; c=relaxed/simple;
+	bh=uclqN8RJfyf8Rv9TDvNHTiHrO9mdVmgptS3BIIH+DWc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=szemTQTBIh19XclaWTHT7Hrgsh8kru0OoIORS2Ks2RxgZ28yNijwzU71iBi3tLWqQab/QzdBRL66k3/JIeCbl0RHLK4qCyq8L8bnY8u3q1ogYf8+kwhUIcaFR7QnriXacoeJ/HK+l4WOc+39vtMDeujVFqTSSnbm3suJZdy1QXg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=t-8ch.de; spf=pass smtp.mailfrom=t-8ch.de; dkim=pass (1024-bit key) header.d=t-8ch.de header.i=@t-8ch.de header.b=Xp7PgWmv; arc=none smtp.client-ip=159.69.126.157
+	 Content-Type:Content-Disposition:In-Reply-To; b=OGmMyJ8ZSUoTtp0Oy9bLItCQhhZdWHW0KjkhgE81muY1d7lvo2dyV+LYxUUEDXapxu2e3qYP1wX/nBcoSjLGd1uh3AJur9k/DxjdtF2SZaAeEyAJfJ5dMypNvoszYl1tFD8YuKV2Xt5oiev2f5VPSyy6muAPzR/4qWtHOiHVIBM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=t-8ch.de; spf=pass smtp.mailfrom=t-8ch.de; dkim=pass (1024-bit key) header.d=t-8ch.de header.i=@t-8ch.de header.b=WTpxCQku; arc=none smtp.client-ip=159.69.126.157
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=t-8ch.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=t-8ch.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=t-8ch.de header.i=@t-8ch.de header.b="Xp7PgWmv"
+	dkim=pass (1024-bit key) header.d=t-8ch.de header.i=@t-8ch.de header.b="WTpxCQku"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=t-8ch.de; s=mail;
-	t=1791923918; bh=t+rv9DZjlHa1AnpVnE5Lh7gvgLdHD5mWAXOsSnLe2jw=;
+	t=1791924060; bh=uclqN8RJfyf8Rv9TDvNHTiHrO9mdVmgptS3BIIH+DWc=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Xp7PgWmvcUnUxiRG7k4cmWjIb/dtqkaf+8bccLc4jw8XeSC7i2CkINMmDYWaP3NwO
-	 IVK4Ibxeg/KAKky6w6RCNILKdFDEQgrxZofozyqB5qitTsCNh9XeZ56ODEr3Np6AVQ
-	 OdAtM/flgKnVOiy221T9w8WAjRz37YLOa4c1EPDg=
-Date: Tue, 13 Oct 2026 22:38:37 +0200
+	b=WTpxCQkuSUfT4AOK+1RAJ6+JYlpvb/k4yKU3iqZ1dbaW/6JaE0CciXJtlD0hqDXgk
+	 PHalu4j1+CI1QtWxUfex2bJgKIxv8qn9bKqL1FdYehLM1pOrkRtnhhMy0U4QhoJcvv
+	 hr8cw62xouS04vpQ0wJzOtV4iANQORFz2XTfIbQ0=
+Date: Tue, 13 Oct 2026 22:41:00 +0200
 From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas@t-8ch.de>
 To: Sasha Levin <sashal@kernel.org>
 Cc: Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nsc@kernel.org>, 
 	linux-kbuild@vger.kernel.org, Shuah Khan <shuah@kernel.org>, linux-kselftest@vger.kernel.org, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Ian Rogers <irogers@google.com>, linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [RFC PATCH 2/6] kbuild: add "make tools_build" to build
- userspace tools from tools/
-Message-ID: <b0fa30a6-9f41-4c9a-a3fb-2634322e2bd1@t-8ch.de>
+	Ian Rogers <irogers@google.com>, linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH 4/6] tools: build kernel selftests in tools_build
+Message-ID: <8ee33f00-bd8f-4cf2-90c4-2961f443af60@t-8ch.de>
 References: <20261011233647.2454648-1-sashal@kernel.org>
- <20261011233647.2454648-3-sashal@kernel.org>
+ <20261011233647.2454648-5-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -43,108 +41,54 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20261011233647.2454648-3-sashal@kernel.org>
+In-Reply-To: <20261011233647.2454648-5-sashal@kernel.org>
 
-On 2026-10-11 19:36:41-0400, Sasha Levin wrote:
-(...)
-
+On 2026-10-11 19:36:43-0400, Sasha Levin wrote:
+> Add a "Kernel selftests" sub-menu with one entry per selftests directory
+> that builds with only a C library and does not write into the source
+> tree. Each is built as "make kselftest-all" builds it, with KHDR_INCLUDES
+> pointing at the UAPI headers installed in the object tree, but by its own
+> make, so the selected ones build in parallel. Selftests whose Makefile
+> does not use KHDR_INCLUDES still build against the C library's copy of
+> the UAPI headers.
+> 
+> The selftests do not track header dependencies, so a selftest is built
+> again from scratch when its own directory, a header or makefile any
+> selftest may share, or a kernel source it includes directly (the vDSO
+> test includes the architecture's vDSO code) is newer than its last
+> build.
+> 
+> Selftests that need libraries beyond the C library, a vmlinux with BTF,
+> or a sanitizer runtime are left out for now.
+> 
 > Assisted-by: LLM
 > Signed-off-by: Sasha Levin <sashal@kernel.org>
 > ---
->  .gitignore            |  5 +++
->  Makefile              |  8 ++++-
->  lib/Kconfig.debug     |  2 ++
->  tools/Kconfig         | 72 +++++++++++++++++++++++++++++++++++++++
->  tools/Makefile.kbuild | 79 +++++++++++++++++++++++++++++++++++++++++++
->  5 files changed, 165 insertions(+), 1 deletion(-)
->  create mode 100644 tools/Kconfig
->  create mode 100644 tools/Makefile.kbuild
-
-(...)
-
-> diff --git a/tools/Kconfig b/tools/Kconfig
-> new file mode 100644
-> index 0000000000000..bf0643b39b86e
-> --- /dev/null
-> +++ b/tools/Kconfig
-> @@ -0,0 +1,72 @@
-> +# SPDX-License-Identifier: GPL-2.0-only
-> +
-> +config TOOLS_BUILD_ABI
-> +	def_bool X86_64 || ARM64
-> +
-> +config TOOLS_BUILD_GLIBC
-> +	def_bool $(success,echo '#include <features.h>' | $(CC) $(CLANG_FLAGS) $(USERCFLAGS) -E -dM -x c - | grep -q __GLIBC__)
-> +
-> +menuconfig TOOLS_BUILD
-> +	bool "Build userspace tools from tools/"
-> +	depends on CC_CAN_LINK && !UML
-
-Why !UML?
-
-> +	depends on TOOLS_BUILD_ABI && TOOLS_BUILD_GLIBC
-
-These dependencies could be on separate lines, it will reduce churn when
-they get modified.
-
-> +	help
-> +	  Build the selected programs under tools/ for the target together
-> +	  with the kernel, as part of "make all", or alone with
-> +	  "make tools_build". Each program is built by its own build system
-> +	  into tools-build/ in the object tree. The tools then always match
-> +	  the kernel they were built with, and a change that breaks one of
-> +	  them shows up in the same build that compiles the kernel.
-> +
-> +	  This needs a compiler that can link glibc programs for the target,
-> +	  and is currently limited to x86_64 and arm64.
-> +
-> +	  If unsure, say N.
+>  tools/Kconfig         | 239 ++++++++++++++++++++++++++++++++++++++++++
+>  tools/Makefile.kbuild | 100 ++++++++++++++++++
+>  2 files changed, 339 insertions(+)
 
 (...)
 
 > diff --git a/tools/Makefile.kbuild b/tools/Makefile.kbuild
-> new file mode 100644
-> index 0000000000000..820a2d9a3893b
-> --- /dev/null
+> index 62fd494253eca..c31347258d0a9 100644
+> --- a/tools/Makefile.kbuild
 > +++ b/tools/Makefile.kbuild
-> @@ -0,0 +1,79 @@
-> +# SPDX-License-Identifier: GPL-2.0-only
-> +#
-> +# Builds the userspace programs selected in tools/Kconfig for the target.
-> +# Invoked by "make tools_build", which "make all" runs when CONFIG_TOOLS_BUILD
-> +# is set. Each program is built by its own build system, the way it is built
-> +# standalone, into $(objtree)/tools-build/.
-> +
-> +PHONY := __tools_build
-> +__tools_build:
-> +
-> +include include/config/auto.conf
-> +
-> +abs_srctree := $(realpath $(srctree))
-> +toolsdir := $(abs_srctree)/tools
-> +outdir := $(CURDIR)/tools-build
-> +
-> +# kbuild's state and the user's compiler flags, from the environment or the
-> +# command line, would change how these build
-> +unexport srctree objtree srcroot VPATH building_out_of_srctree sub_make_done
-> +unexport CLANG_FLAGS INSTALL_HDR_PATH O
-> +unexport CFLAGS CPPFLAGS LDFLAGS EXTRA_CFLAGS EXTRA_LDFLAGS USERCFLAGS USERLDFLAGS
-> +space := $(subst ,, )
-> +overrides := $(subst \$(space),\@space@,$(MAKEOVERRIDES))
-> +MAKEOVERRIDES := $(subst \@space@,\$(space),$(filter-out O=% CFLAGS=% CPPFLAGS=% \
-> +	LDFLAGS=% EXTRA_CFLAGS=% EXTRA_LDFLAGS=% USERCFLAGS=% USERLDFLAGS=%,$(overrides)))
-> +
-> +# Keep Python's bytecode caches out of the source tree
-> +export PYTHONDONTWRITEBYTECODE := 1
+> @@ -92,6 +92,106 @@ PHONY += perf
+>  perf: FORCE
+>  	$(call build,$(outdir)/perf,-C $(toolsdir)/perf -f Makefile.perf O=$(outdir)/perf $(perf-flags) $(perf-flags-y),,TOOLS_BUILD_PERF)
 
-This should just be done in the toplevel Makefile IMO.
+(...)
 
-> +# The compiler CONFIG_CC_CAN_LINK was tested with. The tools take linker
-> +# flags from LDFLAGS.
-> +tools-cc := $(CC) $(USERCFLAGS) $(KBUILD_USERABI)
-> +ifneq ($(USERLDFLAGS),)
-> +override LDFLAGS := $(USERLDFLAGS)
-> +export LDFLAGS
-> +endif
+> +# Unlike tools/build, the selftests do not track header dependencies. A
+> +# selftest is built again from scratch when its own directory, a header or
+> +# makefile any selftest may share, or a kernel source it includes directly
+> +# is newer than its last build.
+> +selftest-shared := $(outdir)/selftests/.shared
+> +selftest-extra-vDSO := $(abs_srctree)/arch/$(SRCARCH)
+
+Can we not fix the selftests to properly track header dependencies?
+That has been an annoyance of mine for quite some time.
+It would also get rid of a whole bunch of hackery here.
 
 (...)
