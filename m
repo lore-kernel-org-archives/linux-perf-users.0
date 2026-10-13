@@ -1,101 +1,102 @@
-Received: from 011.lax.mailroute.net (011.lax.mailroute.net [199.89.1.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-dy1-f200.google.com (mail-dy1-f200.google.com [74.125.82.200])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EB7955199D;
-	Tue, 13 Oct 2026 22:14:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=199.89.1.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2F0D5616A1
+	for <linux-perf-users@vger.kernel.org>; Tue, 13 Oct 2026 22:16:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.200
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791929699; cv=none; b=fep5RCZZKhmKPvgHJcutMIILoUKOoow+Lj0efawmCu/Cz+0ysdvFiXB9uhtAFS3xOc0x8as8GAnrRFswLSzbtjNGqSHglMZ1fOL4fdHMYy1y6UtTWkDSqnYlbweyNTZlEY2rKWXCNi5m81rWrPHGjnhOx26q7YiyV7lO+qI4a6A=
+	t=1791929816; cv=none; b=dS6crAEwJypWSs1/J7vNzX+50R4AzpU+r4OmkriDJvkISnAA9eadLg4L0+APYsusVRsCrPFXAbBFJSPB5KXa0nOpNmL3NNnX8q8QGRFw5m1zQ5/snykuN/eWScgx1TJd6qfstycImMyrzbP9bpIUnN4YAFYUXPHpcGhTSYGKec4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791929699; c=relaxed/simple;
-	bh=v+Px2b//cyjC1k/A3Zmm/at+F5i/PNpfcr/2vmN4mK4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=PQCrAc+73/RyXN7r+6jCDz6SKrbL2E5e4+tn19Ocx690Y2OdnX9HyavK7yQLvvnwBy4dkXHKnFu54uiHLPtk6udZmQrsWzjqWlTUfPgd4KAZJDY7tvMpiL8PiQ6sANIWkz20QcrmgI1WMTXUyaKIMHf6UzeW4H9mdmPYTZmS8bk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org; spf=pass smtp.mailfrom=acm.org; dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b=BRuWmY7A; arc=none smtp.client-ip=199.89.1.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=acm.org
+	s=arc-20240116; t=1791929816; c=relaxed/simple;
+	bh=tEhLim5A500urqt1lAsV59rNTXfwXqQgACfSlBnwcu4=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=Kv2ZlNN7YeET9FWy428uTuLnLPTSu4ZmuhnmAEVe2lfrmyuFU6VkP5977TN0IxH/YcVO0L2XDLtxiDOghsqZ8+C4FPferrSjmn3Cj7nA59CRyXJQ2tA6vD4KZ6zk6BsL0n83u7QZTkzCFDSxsuhMfGzEFUdF9bFrz/E+VnrBdKs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=JM5tAotT; arc=none smtp.client-ip=74.125.82.200
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b="BRuWmY7A"
-Received: from localhost (localhost [127.0.0.1])
-	by 011.lax.mailroute.net (Postfix) with ESMTP id 4j47tV0D7Hz1XM4Tn;
-	Tue, 13 Oct 2026 22:14:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=acm.org; h=
-	content-transfer-encoding:content-type:content-type:in-reply-to
-	:from:from:content-language:references:subject:subject
-	:user-agent:mime-version:date:date:message-id:received:received;
-	 s=mr01; t=1791929692; x=1794521693; bh=LF8e975hmkkpUELtZzipsuJe
-	haJkDu9CcLyUa+VJf5U=; b=BRuWmY7Ahf/chBnwoWAm+JlB3U8+rlr3HSvKQRTR
-	yk9kYJD0uSw2oqChvhphmy6OITQaM8JRLUrRauIu17ZuoewoED4nTvpLVGx2CV5P
-	o2XaufdjfuZk70/w7ZP1UaVTkpyDAk83BmKSpxCmixsIZekl44RvdjkTwfzP9Jtn
-	CSiCCXOcRSAgiTfuXPtYMI619enQzL7zShxeeAbjHgsB7/ONiMsge8F58D6uV+Lm
-	P9l7V6dYUdNtkzPA9wZ0Uu8EfdfQ3r5bhCKeKUHnFk1HVbiFR9FdvTJE8PGOfdph
-	BTmxKG/c0+/SVr6vOHNc7845HKN1+ozGv7Z3rXPLd7JVtw==
-X-Virus-Scanned: by MailRoute
-Received: from 011.lax.mailroute.net ([127.0.0.1])
- by localhost (011.lax [127.0.0.1]) (mroute_mailscanner, port 10029) with LMTP
- id 2mKJGpWtbxMd; Tue, 13 Oct 2026 22:14:52 +0000 (UTC)
-Received: from [192.168.51.14] (c-24-6-239-25.hsd1.ca.comcast.net [24.6.239.25])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: bvanassche@acm.org)
-	by 011.lax.mailroute.net (Postfix) with ESMTPSA id 4j47tM0NxMz1XM4Tl;
-	Tue, 13 Oct 2026 22:14:50 +0000 (UTC)
-Message-ID: <56cea1ea-a4a5-4c26-a15d-732415986ede@acm.org>
-Date: Tue, 13 Oct 2026 15:14:49 -0700
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JM5tAotT"
+Received: by mail-dy1-f200.google.com with SMTP id 5a478bee46e88-3515266f6eeso574110eec.0
+        for <linux-perf-users@vger.kernel.org>; Tue, 13 Oct 2026 15:16:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1791929812; x=1792534612; darn=vger.kernel.org;
+        h=content-type:cc:to:from:subject:message-id:mime-version:date:from
+         :to:cc:subject:date:message-id:reply-to:content-type;
+        bh=4Ws4vCGngu/b3dWygSTRZXb/I2QSHif31v7Ru1h3tj4=;
+        b=JM5tAotTqgeAqx2IcGzFoEwosvBdxlmMyTMb5cV1L/8beS/DQyUHtShCMZMHVyLSb3
+         KI3fkIcML5KOZ/qRHkn8v5SzrPnFfr4bOjyXiAnisY5TeybF5+Iz7TD4y9OCFoG5k0Aj
+         bwfvmslTk6hco+JGq2OxQTC2dzG/fl6U8/hQIPcS9MY1p88823VG+nuocXbgdWOSo77r
+         1AYkFz+cDVfX1chJvaF4OgPd74OgLpH0JyqymlqEvBilHyaja5k9nFy39cuocr4X4OMD
+         Dyy7RlhqtVP0i1SMuyJeA3fDpP7ne74Z8B4vogDwESSRNcR707J+YHq1zY1U2E8jc+7i
+         ZNtw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1791929812; x=1792534612;
+        h=content-type:cc:to:from:subject:message-id:mime-version:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=4Ws4vCGngu/b3dWygSTRZXb/I2QSHif31v7Ru1h3tj4=;
+        b=vEGq+tOUxQ7K1vr24FbC05p5Z6Znm/WZ0dBfyIqHzC8Pbko2JNdc+Xxk4xeIzDNl3H
+         0ubY38Jp6ZXs7y7fJfVqGQARruMGGBOzxrOGuPoL2FRhYzEz55n2HTMVlHqV//I3NTGo
+         ZQRmwRc4F6X6KHavbRYvtqVCgo6jK8DqMEG8GIL3lI/qMZs7+2L3YvZYg7mgat9n0nx1
+         zTDq3GGHqfjY7Ylu/mLeuCGDsFkfOslJXG8IqXYzI7j86b4ufX6BHAFqnk0PnLBMcxhz
+         ss5u/+Y0n0/ZgDdby7KWkEb7vvgdnbHOBmTHcm5DOXDNCukkoKKxX3tcqwyAM8PLS20u
+         er2A==
+X-Forwarded-Encrypted: i=1; AKwUvBz5kDdrlb6xcCowPciI61pRoY969qYRTXVjEdFxKMF6a6XOIKJaBJD9BTiUU0xZz5UcEGY4iwvOz5lnGF5NTKdW@vger.kernel.org
+X-Gm-Message-State: AFq9FYI0D4SFCjQBf8w8XVzDblAahDaFclRx0GaYQ+m82RZJtiVloisS
+	WK7YB4R99aO65efK71mRBCzGw9koI+vkQaazTgI+Y+UAH7q3UmTX31QG5Zana2XnKEI+GLGvHca
+	KhvlXrRze0Q==
+X-Received: from dleb11-n1.prod.google.com ([2002:a05:701b:424b:10b0:15e:e836:268e])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:1608:b0:143:4450:e1e6
+ with SMTP id a92af1059eb24-16a60de3193mr16143549c88.35.1791929811242; Tue, 13
+ Oct 2026 15:16:51 -0700 (PDT)
+Date: Tue, 13 Oct 2026 15:16:41 -0700
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 01/10] compiler-context-analysis: Avoid unused
- parameter warning in _context_unsafe_alias()
-To: Ian Rogers <irogers@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Marco Elver <elver@google.com>,
- Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
- James Clark <james.clark@linaro.org>, Nathan Chancellor <nathan@kernel.org>,
- Nick Desaulniers <ndesaulniers@google.com>, Bill Wendling
- <morbo@google.com>, Justin Stitt <justinstitt@google.com>,
- Lorenzo Stoakes <ljs@kernel.org>, linux-perf-users@vger.kernel.org,
- linux-kernel@vger.kernel.org, llvm@lists.linux.dev
-References: <20261013182458.1234616-1-irogers@google.com>
- <20261013182458.1234616-2-irogers@google.com>
- <871bf440-5b43-4d63-83f8-15ba96719fa6@acm.org>
- <CAP-5=fX1XZu=3scB1-hA2ppcM0+sR7t_3=C7fFx=kGikm=dLqA@mail.gmail.com>
-Content-Language: en-US
-From: Bart Van Assche <bvanassche@acm.org>
-In-Reply-To: <CAP-5=fX1XZu=3scB1-hA2ppcM0+sR7t_3=C7fFx=kGikm=dLqA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.56.0.385.gd3acb90ef8-goog
+Message-ID: <20261013221643.1815686-1-irogers@google.com>
+Subject: [PATCH v1 0/2] perf build: Support building BPF skeletons with bpf-gcc
+From: Ian Rogers <irogers@google.com>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	"Jose E . Marchesi" <jose.marchesi@oracle.com>, David Faust <david.faust@oracle.com>, 
+	Cupertino Miranda <cupertino.miranda@oracle.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	James Clark <james.clark@linaro.org>, Andrii Nakryiko <andrii@kernel.org>, 
+	Eduard Zingerman <eddyz87@gmail.com>, Yonghong Song <yonghong.song@linux.dev>, 
+	linux-perf-users@vger.kernel.org, bpf@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On 10/13/26 3:10 PM, Ian Rogers wrote:
-> On Tue, Oct 13, 2026 at 12:44=E2=80=AFPM Bart Van Assche <bvanassche@ac=
-m.org> wrote:
->> On 10/13/26 11:24 AM, Ian Rogers wrote:
->>> diff --git a/include/linux/compiler-context-analysis.h b/include/linu=
-x/compiler-context-analysis.h
->>> index 8302ebc2ea8c..024e303188ad 100644
->>> --- a/include/linux/compiler-context-analysis.h
->>> +++ b/include/linux/compiler-context-analysis.h
->>> @@ -243,7 +243,7 @@
->>>     * alias as a function argument).
->>>     */
->>>    #define context_unsafe_alias(p) _context_unsafe_alias((void **)&(p=
-))
->>> -static inline void _context_unsafe_alias(void **p) { }
->>> +static inline void _context_unsafe_alias(void **p) { (void)p; }
->>
->> Why a void cast instead of __attribute__((unused))?
->=20
-> I agree; unfortunately, the macro isn't declared before this header
-> change needs it and I wanted to minimize the change.
+Currently the perf build requires clang (>= 12.0.1) to compile BPF
+skeleton programs (.bpf.c -> .bpf.o). bpf-gcc (>= 14.0.0) also supports
+BPF CO-RE and BTF generation and is already supported in
+tools/testing/selftests/bpf/Makefile.
 
-Hmm ... as far as I know __attribute__() is not a macro.
+This series updates the perf build to support both clang and bpf-gcc:
+- Patch 1 updates Makefile.config, Makefile.perf, and bpf_skel.mak to
+  prefer bpf-gcc when building perf with GCC (CC_NO_CLANG=1) and clang
+  when building with Clang/LLVM (CC_NO_CLANG=0), while respecting
+  explicit BPF_GCC=... or CLANG=... command-line overrides and falling
+  back to whichever compiler is available.
+- Patch 2 adds make_bpf_skel_clang and make_bpf_skel_bpf_gcc build-test
+  targets to tools/perf/tests/make and verifies with
+  'perf check -q feature bpf_skeletons' that BPF skeleton support is
+  enabled (or disabled for make_no_bpf_skel) as expected.
 
-Thanks,
+Ian Rogers (2):
+  perf build: Support building BPF skeletons with bpf-gcc
+  perf test make: Add BPF skeleton build tests for clang and bpf-gcc
 
-Bart.
+ tools/perf/Makefile.config     | 81 +++++++++++++++++++++++++++-------
+ tools/perf/Makefile.perf       |  8 +++-
+ tools/perf/bpf_skel.mak        | 36 ++++++++++-----
+ tools/perf/tests/make          | 29 ++++++++++++
+ tools/scripts/Makefile.include |  1 +
+ 5 files changed, 126 insertions(+), 29 deletions(-)
+
+-- 
+2.56.0.385.gd3acb90ef8-goog
+
