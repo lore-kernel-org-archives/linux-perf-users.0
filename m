@@ -1,142 +1,167 @@
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+Received: from mail-pf1-f200.google.com (mail-pf1-f200.google.com [209.85.210.200])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C927518143
-	for <linux-perf-users@vger.kernel.org>; Tue, 13 Oct 2026 22:26:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.176
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791930377; cv=pass; b=ONHifrblrBGZC3SRsQdP+UoB+iw4ZQTvUrW2y4S/EemVkj8ZbnGPPzmYyIf9VF716SEssMALdHkSaHi2HSdpZjscCYxDPSitUYNeK7rMuUw9hixU1O4QOnLCY7NhPRa7/3lDOHy7YclIcOAA9H8dq4ligWXoRhFAvact39Ko2q4=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791930377; c=relaxed/simple;
-	bh=e97obOSaBF5A+CDMxcrni6hxHYCVamGCzvFlkP2JwH8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=cukSiJg5KJ0M924gpTQf9gnPgWsTuGO9uXz+dUcmcm9+Mft5ptqNwDUJrbQL6keoTSKWgnIhxxCp2rgJV8UMUl87X/FeWo16oRmyjzHHcUKxyVBkfCigedALMMOQYIn2NUaGlxoE3MlQ8znAQNc1R9gJIxlE4jf8+UrqUNlR3sE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Gx5cY/0n; arc=pass smtp.client-ip=209.85.214.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFB2E52FE4E
+	for <linux-perf-users@vger.kernel.org>; Tue, 13 Oct 2026 22:26:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.200
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1791930398; cv=none; b=HA6WAejnStWcmraE2sn1xXARaCZPaTBuvi/6PKTi0LsoBMP51HkQnpfCaCxFHQNJOqnuEutahbw1Or/QGziBpUOcnUYkrU3FKiBO+8AxR3xb+Crk/bgLQjdRX7dsJXZRJI7827SyLGKGsvJwMVNggq7122H1jFMaDyEnxty/fm0=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1791930398; c=relaxed/simple;
+	bh=8nHhekRIt27cGPBv7t/KpeDStZPq//tmFcDkgjIS0M8=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=qRGCKo+g3uMvs2E8Bg0k9JNBaHIAgCnpCoB4gwakdoAHBTSzY/NMUi3ZjD8QrGDv2sOJNxXxuwT+yrIGWsgjq74zvQol9YeaIIBPAFZ4eFfhWro+1t9LmdOHvoKnwvu3eF2GHPzDPXwES3ngPPZeKwMeIh9Buc+Iu2qdSzwr0nQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=mzcJCNBn; arc=none smtp.client-ip=209.85.210.200
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Gx5cY/0n"
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-2e8d6fcbba0so164195ad.1
-        for <linux-perf-users@vger.kernel.org>; Tue, 13 Oct 2026 15:26:15 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1791930375; cv=none;
-        d=google.com; s=arc-20260327;
-        b=IewiFzL5MTutO+DN6JJlWjQHIWKVx4iyQivJBXwyD2lQpaTtCkn/Jm5D2DUmS5kr9y
-         DIN+PayGe1ahQqlvrY5CKmYfEX+NSlUX5ubNqKpo4cxUuYR91Vs4TBK2JlI/fivLpvTn
-         h25Ti50DcIe+90PcTi9OVYEAsfSYGIvJgQubsXMNnNONzhvmLH7ILCok5QlvfyXAPHZZ
-         HaRrbNEHJyUdRvvVHFYU0KzvwTIB77LS85ogXvHO59PSDwsOsH+M0nZXsjNbol5D3qXY
-         3yXnweeItgnRkPJBxpbicXM86kbVPLt8VPsl2FDDJitrs5fqLeJazMvkK+ig17a/20PT
-         7iig==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=o4Q09YSNA5+tLu9OvcCxqGnBvUFwTFzGq4mB2ylO5ZY=;
-        fh=IoLA1qW4qBApjJT0jXG0oERxbGO8DqX0njNnl7Fhnp4=;
-        b=ngy6G+w4ldDyzK3FrjCoksUyMQi4iKRrQZtGb/M2Zy0Vm20A21J+9nLbip1cvvXOhE
-         bhDWRQ6WkwtIIwrRy5xoEpCh4DQhY7F5JN81xvqt//XdjBZyVFIyBHWiyYjTv5iMwkeV
-         vItOREI14NCSe697eyYJqu7AOXAikFTmeSTX2Sl3iho3loBxoEHYufjZJWCnxxE5m2mB
-         CA9NXTEFTqbHAt5cNzE947/DauJX+eg7rdpKLUlNX2cApmfV5l/WvPcQvNn7WF7kdLj7
-         5GyT3f9PBn5UU9sM+KZ9pETQ0tgiFuYx06NL3pTNGidalsV6xExrrJvqhJjTHk9NF6wg
-         VjBg==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="mzcJCNBn"
+Received: by mail-pf1-f200.google.com with SMTP id d2e1a72fcca58-887e45c7063so2758752b3a.1
+        for <linux-perf-users@vger.kernel.org>; Tue, 13 Oct 2026 15:26:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1791930375; x=1792535175; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=o4Q09YSNA5+tLu9OvcCxqGnBvUFwTFzGq4mB2ylO5ZY=;
-        b=Gx5cY/0n2T+TX1Jjci9abHdU5GkifM4O2FaGpSduj2vDdLlu/72ZX2mrV05+GNjeYH
-         A9uTy734iEekvblnCy2+/QI/EKfyjKWqDMU6ZMFB3ZZgowtKKT7X+xJLBut1AnZeJKuU
-         avD1TfwrOOIX2XuGYBvPjhIMGNmgXgbxXc5twtFLCqc3Kv+wxeVmG/4OAbIYIaliC0/Y
-         T3YzyscW9qUJPgqeyRNgPruECQvT0RmGwyFMEpEbMRx/mEFUThHRC4TcDHL12nSnUxL4
-         Q+0RJccrTOSKDpUW3NZG2d+RN0fZby8fEMXOXLaTAA/KA69/9zV3rbasrN7PXvWF7eay
-         vN7g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1791930375; x=1792535175;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+        d=google.com; s=20251104; t=1791930396; x=1792535196; darn=vger.kernel.org;
+        h=content-type:cc:to:from:subject:message-id:references:mime-version
+         :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=o4Q09YSNA5+tLu9OvcCxqGnBvUFwTFzGq4mB2ylO5ZY=;
-        b=tDW/UWVB0cT1dpE4MEPBR+UwnWPGpOv0lZggai0s3XwfbEAy4y6MfB/MV2wfwksVX5
-         RnP1bw8ClRDDiFLKoEmJ88G8d+T3p+It8fiABy30C+WYJr22OU8HOefegqoxe92biZR6
-         a8CJeDxNEy4yjZOR7IYU2s/xP7VOU9Yei7Kku2U+Ksw8y3SlgkvyIJJqyquzg8R8xfD5
-         olAoq4G/Kinz19z9LUYdH7PTWKcE3J5XkoPI5CqRYqXL+om5vK/bkP5uzN86oFuXuJ/T
-         9Q2URvb7O5OK16+PZf5Tch8xY9OAOKrEG0NQDRL7YEUFNZwf41zy856UwH2dEOcyZWkV
-         j7mQ==
-X-Forwarded-Encrypted: i=1; AKwUvBwVTLO1BuwPyaEeVQmIHALojYjqBlNN5UQFOYwUFafXhiPGz+afHgaRh1aLBIjHcK9V0W4Izn11hV8bnvJ3jHlN@vger.kernel.org
-X-Gm-Message-State: AFq9FYKA6LotDPPGgfLYxsVzLlICMiLSFxd20gAkMWNwVvTIEO73mv1u
-	L0SeJhNPAiYmRHfJxGM45/rT0XKb4vPLI4Nijy6cKsM47O3yenlo9beAyPx3LlbspAQW+Lp6PPq
-	uxabdei5dQabOef5YJZU3DUCnYF1op8wplBSh9h13
-X-Gm-Gg: AYBFou0teHjuwSDjQDxNoHrU7v9SSLwF6k1c2M0UjNRYM/wXbwP9xV6ahWRwXNMk6SG
-	tljoT/cMNsDWHuk+qWf9m5JPQLgLHVaL7KTVo19p96xjVTeKug5o9FLzfUg+U3vZMppMmVM7Obb
-	CYDjQRRbRrl0eChojLcuVoEo78QrBGPM3vkyUwQ1tr23f9xs8oIlhzgPaTxtQImQlL3vqCvqpXE
-	Odvapg0djpEsFo0SzIvctI97S1i/whg4gi0zVps4ojXRdb7irSnCRCAirqHhH9C/p41q2qVj66h
-	n/n5nMjwkW6/q0E9mQYRwUwim/9yRAhv/q1mM4WOXBly5dPw+xICy1XlFniby+7oIBW66DjfHeP
-	KJc2sHUk028Z8lytHOHc=
-X-Received: by 2002:a17:903:124d:b0:2bd:3bfd:74f1 with SMTP id
- d9443c01a7336-2e939438b27mr346965ad.2.1791930374188; Tue, 13 Oct 2026
- 15:26:14 -0700 (PDT)
+        bh=NWC+YbIRwL39Ia+o8sJ3o3jnTmOu9eXYgwdijYxRdc0=;
+        b=mzcJCNBnFhTLyckekpubvxP23A7ENaspfPTT/BdG0F1kM9y3GtmW47vgGT04sNSnYQ
+         a/s1vAj5oyXeThWjUoN9dRruUl5mJcE8Wcpowx2gYnzvFaM8n1SySfPjDal8DfdqhVYw
+         Y5473Q5RHq+cpVs30PjAnnm2E6Gg2ka0s2uiRrPUqIllDs3dn9u8oYkga8y9yrBSLWJ7
+         aogGc1Bmkv/9/seMGfHWZd7xZVX+3e+fQzw1rwBHtiNU8PI7k1pg2M7KW8vd4qzVT9yc
+         lVWVcH5lDgjtRBe1yEyM6gYUARf4hNUsVmIoCfZ/mmP0yA/zerjH2Gzx3dtOO7Kcp9z1
+         hCRg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1791930396; x=1792535196;
+        h=content-type:cc:to:from:subject:message-id:references:mime-version
+         :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=NWC+YbIRwL39Ia+o8sJ3o3jnTmOu9eXYgwdijYxRdc0=;
+        b=T+ddNP6CybXZCHNDzlAp+VRh31Atvp1bCZjSLsiREX507UMleiBV5+N5HfRr6VyJpJ
+         /RYbeqiFWhmSnX4A2E6xbJBEsRgHRGsWk5wRHSmmIhrii4TBV6sTy5nb8f0woYv3DvkQ
+         t0gtUB3E8xXpSn2zflXzUGAwtshEthd8oUNLVPE+ECIJrfL0NVbOtT8PnmH4q3wqj1FP
+         SnCUE6bgojhASLKvTnQeuv+OWSXMakmDRnL1I2vpsDM53ad3Lei9yeq1mpMOiaadWUAr
+         DtVKEWzEwI3FZ6bRdYsTzDWnTsSF6HsDpDuh1ca/5uOhkRJui4ig2RWXi5OxzaHtmggV
+         5m/Q==
+X-Forwarded-Encrypted: i=1; AKwUvBw1K2oz8CaxjgFkB4xclMlk4rd1xmALa6qXJWkXQwpJ/FbyJSq+Qlaf+TVEgpIaL5jCdTeGRMqKclZprAbdWLpN@vger.kernel.org
+X-Gm-Message-State: AFq9FYLcfV3oDBH0dwHYFt6jnNE1nVyrn/iVwhrwx2DwZwJhMCtd1saq
+	lWJt6O2jXijJ3Lvv/AQAyVN5pUuDvLpYIp4L/FGSlapTV/JMFWknSdsDTofDbcsfwChdKNSNXpM
+	qNwuuEXvtUQ==
+X-Received: from pgby3-n2.prod.google.com ([2002:a05:6a02:6503:20b0:cc7:982c:320f])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6300:2287:b0:3dd:a195:dd56
+ with SMTP id adf61e73a8af0-3e16bfc2d17mr12433915637.56.1791930395398; Tue, 13
+ Oct 2026 15:26:35 -0700 (PDT)
+Date: Tue, 13 Oct 2026 15:26:12 -0700
+In-Reply-To: <20261013182458.1234616-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20261013182458.1234616-1-irogers@google.com> <20261013182458.1234616-2-irogers@google.com>
- <871bf440-5b43-4d63-83f8-15ba96719fa6@acm.org> <CAP-5=fX1XZu=3scB1-hA2ppcM0+sR7t_3=C7fFx=kGikm=dLqA@mail.gmail.com>
- <56cea1ea-a4a5-4c26-a15d-732415986ede@acm.org>
-In-Reply-To: <56cea1ea-a4a5-4c26-a15d-732415986ede@acm.org>
+Mime-Version: 1.0
+References: <20261013182458.1234616-1-irogers@google.com>
+X-Mailer: git-send-email 2.56.0.385.gd3acb90ef8-goog
+Message-ID: <20261013222622.1822619-1-irogers@google.com>
+Subject: [PATCH v2 00/10] tools/perf: Adopt kernel compiler-context-analysis.h annotations
 From: Ian Rogers <irogers@google.com>
-Date: Tue, 13 Oct 2026 15:26:01 -0700
-X-Gm-Features: AclHuK-gmtH3OisE1f-Puo1s8QVH6C5PZ7oWuzSB3BanVBcur38Q_IjsKLcry1A
-Message-ID: <CAP-5=fU1fBNwnMWjjzqz+SNW2n5NWsEYeEbXd8QGBXfoCTADYA@mail.gmail.com>
-Subject: Re: [PATCH v1 01/10] compiler-context-analysis: Avoid unused
- parameter warning in _context_unsafe_alias()
-To: Bart Van Assche <bvanassche@acm.org>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Marco Elver <elver@google.com>, 
-	Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
-	James Clark <james.clark@linaro.org>, Nathan Chancellor <nathan@kernel.org>, 
-	Nick Desaulniers <ndesaulniers@google.com>, Bill Wendling <morbo@google.com>, 
-	Justin Stitt <justinstitt@google.com>, Lorenzo Stoakes <ljs@kernel.org>, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	llvm@lists.linux.dev
+To: irogers@google.com, acme@kernel.org, elver@google.com, namhyung@kernel.org
+Cc: adrian.hunter@intel.com, bvanassche@acm.org, james.clark@linaro.org, 
+	jolsa@kernel.org, justinstitt@google.com, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, ljs@kernel.org, llvm@lists.linux.dev, 
+	mingo@redhat.com, morbo@google.com, nathan@kernel.org, 
+	ndesaulniers@google.com, peterz@infradead.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Tue, Oct 13, 2026 at 3:15=E2=80=AFPM Bart Van Assche <bvanassche@acm.org=
-> wrote:
->
-> On 10/13/26 3:10 PM, Ian Rogers wrote:
-> > On Tue, Oct 13, 2026 at 12:44=E2=80=AFPM Bart Van Assche <bvanassche@ac=
-m.org> wrote:
-> >> On 10/13/26 11:24 AM, Ian Rogers wrote:
-> >>> diff --git a/include/linux/compiler-context-analysis.h b/include/linu=
-x/compiler-context-analysis.h
-> >>> index 8302ebc2ea8c..024e303188ad 100644
-> >>> --- a/include/linux/compiler-context-analysis.h
-> >>> +++ b/include/linux/compiler-context-analysis.h
-> >>> @@ -243,7 +243,7 @@
-> >>>     * alias as a function argument).
-> >>>     */
-> >>>    #define context_unsafe_alias(p) _context_unsafe_alias((void **)&(p=
-))
-> >>> -static inline void _context_unsafe_alias(void **p) { }
-> >>> +static inline void _context_unsafe_alias(void **p) { (void)p; }
-> >>
-> >> Why a void cast instead of __attribute__((unused))?
-> >
-> > I agree; unfortunately, the macro isn't declared before this header
-> > change needs it and I wanted to minimize the change.
->
-> Hmm ... as far as I know __attribute__() is not a macro.
+The perf tool previously added Clang thread-safety annotations in
+tools/perf/util/mutex.h (GUARDED_BY, LOCKABLE, EXCLUSIVE_LOCK_FUNCTION,
+UNLOCK_FUNCTION, etc.). Since then, the Linux kernel has adopted a
+unified set of static context analysis macros and attributes in
+include/linux/compiler-context-analysis.h (context_lock_struct,
+__guarded_by, __acquires, __releases, __must_hold, etc.).
 
-The kernel use generally comes from the macros in
-include/linux/compiler_attributes.h. You can see similar unused
-variable warnings being avoided in the  __assume_ctx_lock and
-__assume_shared_ctx_lock macros declared in this file for the
-!WARN_CONTEXT_ANALYSIS case.
+This series makes tools/include/linux/compiler-context-analysis.h
+functional by synchronizing it and the required compiler_types.h helpers
+with the kernel headers, converts tools/perf from its custom mutex.h
+macros to the kernel-style compiler-context-analysis.h annotations, and
+expands context analysis coverage across comm, dso/dsos, thread/threads,
+config, intel-tpebs, env, and maps. In the process, it fixes an unlocked
+__dsos__add() call and TOCTOU race in __machine__addnew_vdso(), avoids
+dropping dso__data_open_lock in dso__list_del() under REFCNT_CHECKING,
+fixes an unlocked read of tpebs_reader_thread and double-close of
+tpebs_cmd.out in intel-tpebs, avoids a potential read-to-write deadlock
+in maps__load_first(), and adds a read-lock fast path to
+dsos__findnew_id().
 
-Thanks,
-Ian
+v2:
+  - Use -c rather than -E when probing for
+    -fexperimental-late-parse-attributes in Makefile.config to avoid
+    -Werror,-Wunused-command-line-argument (patch 5).
+  - Acquire machine->dsos.lock in write mode across duplicate checking,
+    dso__set_long_name(), and __dsos__add() in __machine__addnew_vdso()
+    (patch 7).
+  - Release the REFCNT_CHECKING reference in dso__list_del() without
+    dropping dso__data_open_lock, avoiding an unlocked window and AB-BA
+    deadlock with dso->lock, and check dso__data(dso)->dso in dso__put()
+    (patch 7).
+  - Pass tpebs_cmd.out directly to __sample_reader() and set
+    tpebs_cmd.out = -1 in evsel__tpebs_open() to avoid a double-close in
+    tpebs_stop(), and clarify the config_set_mutex comment (patch 9).
+  - Drop maps__lock before calling map__load() in maps__load_first() to
+    avoid a read-to-write self-deadlock when loading kernel maps inserts
+    additional trampoline maps (patch 10).
+
+Ian Rogers (10):
+  compiler-context-analysis: Avoid unused parameter warning in
+    _context_unsafe_alias()
+  tools headers compiler: Synchronize compiler_types.h with the kernel
+    sources
+  tools headers: Synchronize linux/compiler-context-analysis.h with the
+    kernel sources
+  perf mutex: Use kernel style compiler-context-analysis.h annotations
+  perf build: Enable additional Clang thread-safety flags
+  perf comm: Add __guarded_by annotations to struct comm_strs
+  perf dso: Fix unlocked __dsos__add() in vdso and expand lock
+    annotations
+  perf thread: Expand context analysis annotations to threads and
+    namespaces_lock
+  perf config, intel-tpebs, env: Add __guarded_by and __must_hold
+    annotations
+  perf maps: Add context analysis annotations
+
+ include/linux/compiler-context-analysis.h     |   2 +-
+ .../include/linux/compiler-context-analysis.h | 518 ++++++++++++++++--
+ tools/include/linux/compiler-gcc.h            |  55 +-
+ tools/include/linux/compiler.h                |  50 +-
+ tools/include/linux/compiler_types.h          | 206 ++++++-
+ tools/perf/Makefile.config                    |   5 +-
+ tools/perf/builtin-sched.c                    |  16 +-
+ tools/perf/builtin-top.c                      |   4 +-
+ tools/perf/check-headers.sh                   |   1 +
+ tools/perf/tests/dso-data.c                   |   4 +
+ tools/perf/util/annotate.c                    |   4 +-
+ tools/perf/util/annotate.h                    |   8 +-
+ tools/perf/util/bpf-event.h                   |   5 +-
+ tools/perf/util/comm.c                        |  10 +-
+ tools/perf/util/config.c                      |  43 +-
+ tools/perf/util/dso.c                         |  93 ++--
+ tools/perf/util/dso.h                         |  12 +-
+ tools/perf/util/dsos.c                        |  35 +-
+ tools/perf/util/dsos.h                        |  12 +-
+ tools/perf/util/env.c                         |   1 +
+ tools/perf/util/env.h                         |  19 +-
+ tools/perf/util/intel-tpebs.c                 |  98 ++--
+ tools/perf/util/libbfd.c                      |   4 +-
+ tools/perf/util/maps.c                        | 133 +++--
+ tools/perf/util/mutex.c                       |   4 +-
+ tools/perf/util/mutex.h                       |  90 +--
+ tools/perf/util/rwsem.c                       |   8 +-
+ tools/perf/util/rwsem.h                       |  10 +-
+ tools/perf/util/thread.c                      |  10 +-
+ tools/perf/util/thread.h                      |  30 +-
+ tools/perf/util/threads.c                     |   4 +
+ tools/perf/util/threads.h                     |   6 +-
+ tools/perf/util/vdso.c                        |  17 +-
+ 33 files changed, 1095 insertions(+), 422 deletions(-)
+
+-- 
+2.56.0.385.gd3acb90ef8-goog
+
