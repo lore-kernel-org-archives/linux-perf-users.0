@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D616525A8C;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0F88526A84;
 	Tue, 13 Oct 2026 17:22:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791912123; cv=none; b=DFGL6oYG78j4TZBIOhRGdrB1cP8Z1YJnV8/C3Ak0P2WVTgKnlopHO5TN+A9NNoA6WIW9JNeU2aXIoXJg1H9ynAMm7J52MKgTMJBtPpfxaZJF2p+0clmxf/b9Gzkr40CjwQ6vPMkXIJnKEakXnljRUjmeecb4e/l02mpSBPQ/jN8=
+	t=1791912123; cv=none; b=bYbjGfOy+8rMVPCyvsRBZYT/QRG8wWHAPg+TgvAVatnaUt0SYaLeYl/59cMY7SVAtwsnEyT/ZAVDLeJNsTrF4ZRvThtponlIeqvFuzUwqvQy2jTPsbTW8VIZ1niXOSV0t1pBDFgjqfAAspQMdk9dSFyYoUEJjaTWFURJqQhdrr4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1791912123; c=relaxed/simple;
-	bh=yU+IuLum0EhshCvoU2fSFEy2wdHpcbGdoVmlaIsdQRM=;
+	bh=pRgKuzltqTP5qq1iYZ9yMeN36SmF92IJPhyTgPfkC/g=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=clFISVsNfxqXHopgNp1LyHu555BmK+Kw7I0BAPd0wNR+J55pviytKjzNzVfl1RmMkVuLo2r/FQpKh8w3UU8ZccE7+nIAKwPKeafl4ndHl+W+9Evm3MueszDr1TOKD5gerUM988cM/Zwmy79GQLJ0vZLIXC+MTlB3FrL81GmAA9k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SZzuojoa; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version; b=F3XRXodN4xE/r5A6+lOzcE137dxIN/JWOxioAr5ZiGlaZ6ZCdwuYvSGU/KT6+CA7vf6XEGbHrXnhgw/m7WHgEu0MXzG4/n709cqhPjwftz4VAE95DnFk1HKAuE0pRnNCj09nRWlH4QTr3Zmtt/2G4j/dikiFdp6uaF7J5CnlWzI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PU03vraH; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SZzuojoa"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 144A31F00893;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PU03vraH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 798161F0089B;
 	Tue, 13 Oct 2026 17:22:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
 	s=k20260515; t=1791912121;
-	bh=mIAqTHoeg8uGwxo/TJzpHP8yh7LXLsB4Unu125bcb9k=;
+	bh=3O2IenCH6/sxzWAWX9Q8FmEqaJVAZBedcZz7xsAkbgI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=SZzuojoaYrdke50r8GT4TGcvmLCyp1MVijDDpJfNCJasMsayXD7C8L5t160/lwjdn
-	 RIFHl37Z7xnpYNyq2AP0dc4yS0ZB/E9myHIKKI+/M7U3UNaZSpOCHnG1KkcjolcMv5
-	 HTlaeHp+qMawpw2B1paSn0KlGd9ZzmJbxv4H+RIZOeyxYD0ZyLNjhI7rBTnrW9O/Qd
-	 maBLo0mBKfzrUGwoYrzl4NDJYpxquOFCkR6+3Vy62CVdxLAqXs0J69WRunr8IZzSt5
-	 +HC58iaT7BuB0ovLbh8EOM107HNthZJY0IjusRjAZOAi7Qru5nayylsxt5yv149aCp
-	 lkEs40qKdSd+Q==
+	b=PU03vraHXg0QJugqD2lokCDsJzRLkWqjWtJY7LMWQqvVpyCwGvnprU1zcDRDtvCFf
+	 N7mfDxv7VZyhyU3XYE419FpQCsbAegAVVkBS3a3jOwydOrSMzZsWZdYDQCrloQFyz7
+	 oKgFwB0rvvtYAgkCL+ZSiiJT/5265XN17anpG6KnY87gL8TtM5EmdBr2Zk69xlcmUB
+	 EsomMgdlgsngwnFmQB4k80MAzGAIbQ2S1s0X21kahoSxOWbW/XtAr2nMdVban6BYqC
+	 wQi9Qr2SQG2GRq90uwVsgK6Ka84BWnuFntEA2Wth/Pmr8IgRmhvZA1DKmiER7wAX30
+	 +cGSCG+7udqsQ==
 From: Namhyung Kim <namhyung@kernel.org>
 To: Arnaldo Carvalho de Melo <acme@kernel.org>
 Cc: Ian Rogers <irogers@google.com>,
@@ -36,9 +36,9 @@ Cc: Ian Rogers <irogers@google.com>,
 	Ingo Molnar <mingo@kernel.org>,
 	LKML <linux-kernel@vger.kernel.org>,
 	linux-perf-users@vger.kernel.org
-Subject: [PATCH v5 09/11] perf symbol: Do not set binary type from symtab type
-Date: Tue, 13 Oct 2026 10:21:53 -0700
-Message-ID: <20261013172155.160869-10-namhyung@kernel.org>
+Subject: [PATCH v5 10/11] perf annotate: Simplify symbol__disassemble() with dso binary_type
+Date: Tue, 13 Oct 2026 10:21:54 -0700
+Message-ID: <20261013172155.160869-11-namhyung@kernel.org>
 X-Mailer: git-send-email 2.56.0.385.gd3acb90ef8-goog
 In-Reply-To: <20261013172155.160869-1-namhyung@kernel.org>
 References: <20261013172155.160869-1-namhyung@kernel.org>
@@ -50,60 +50,186 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The DSO binary type is to access the binary (e.g. instruction) data
-while symtab type is for the symbol table.  They may or may not be in
-the same file.  We should track them separately and correctly.
+Now it should set the binary type of a DSO properly.  No need to figure
+out a filename suitable for disassembly.
 
-As special binaries already set their type before loading symbols, leave
-the binary type info and only update it when actually opening the DSO.
+Just call dso__find_binary_type() and dso__get_filename() for that type.
 
 Reviewed-by: Ian Rogers <irogers@google.com>
 Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 ---
- tools/perf/util/dso.c    |  3 ++-
- tools/perf/util/symbol.c | 13 -------------
- 2 files changed, 2 insertions(+), 14 deletions(-)
+ tools/perf/util/disasm.c | 124 ++++++++-------------------------------
+ 1 file changed, 24 insertions(+), 100 deletions(-)
 
-diff --git a/tools/perf/util/dso.c b/tools/perf/util/dso.c
-index 47241077ad260744..1ca4cc5ec7db027a 100644
---- a/tools/perf/util/dso.c
-+++ b/tools/perf/util/dso.c
-@@ -1491,9 +1491,10 @@ uint16_t dso__e_machine_endian(struct dso *dso, struct machine *machine, uint32_
- 			       bool *is_big_endian)
+diff --git a/tools/perf/util/disasm.c b/tools/perf/util/disasm.c
+index 5478c134e7e3b8df..7c289b67b5bde899 100644
+--- a/tools/perf/util/disasm.c
++++ b/tools/perf/util/disasm.c
+@@ -1176,84 +1176,6 @@ int symbol__strerror_disassemble(struct map_symbol *ms, int errnum, char *buf, s
+ 	return 0;
+ }
+ 
+-static int dso__disassemble_filename(struct dso *dso, char *filename, size_t filename_size)
+-{
+-	char linkname[PATH_MAX];
+-	char *build_id_filename;
+-	char *build_id_path = NULL;
+-	char *pos;
+-	int len;
+-
+-	if (dso__symtab_type(dso) == DSO_BINARY_TYPE__KALLSYMS &&
+-	    !dso__is_kcore(dso))
+-		return SYMBOL_ANNOTATE_ERRNO__NO_VMLINUX;
+-
+-	build_id_filename = dso__build_id_filename(dso, NULL, 0, false);
+-	if (build_id_filename) {
+-		/*
+-		 * This is a path in perf's own build id cache, not a path on
+-		 * the profiled system, so the symfs layout does not apply.
+-		 */
+-		path__join(filename, filename_size, symbol_conf.symfs,
+-			   build_id_filename);
+-		free(build_id_filename);
+-	} else {
+-		if (dso__has_build_id(dso))
+-			return ENOMEM;
+-		goto fallback;
+-	}
+-
+-	build_id_path = strdup(filename);
+-	if (!build_id_path)
+-		return ENOMEM;
+-
+-	/*
+-	 * old style build-id cache has name of XX/XXXXXXX.. while
+-	 * new style has XX/XXXXXXX../{elf,kallsyms,vdso}.
+-	 * extract the build-id part of dirname in the new style only.
+-	 */
+-	pos = strrchr(build_id_path, '/');
+-	if (pos && strlen(pos) < SBUILD_ID_SIZE - 2)
+-		dirname(build_id_path);
+-
+-	if (dso__is_kcore(dso))
+-		goto fallback;
+-
+-	len = readlink(build_id_path, linkname, sizeof(linkname) - 1);
+-	if (len < 0)
+-		goto fallback;
+-
+-	linkname[len] = '\0';
+-	if (strstr(linkname, DSO__NAME_KALLSYMS) ||
+-		access(filename, R_OK)) {
+-fallback:
+-		/*
+-		 * If we don't have build-ids or the build-id file isn't in the
+-		 * cache, or is just a kallsyms file, well, lets hope that this
+-		 * DSO is the same as when 'perf record' ran.
+-		 */
+-		if (dso__kernel(dso) && dso__long_name(dso)[0] == '/')
+-			snprintf(filename, filename_size, "%s", dso__long_name(dso));
+-		else
+-			__symbol__join_symfs(filename, filename_size, dso__long_name(dso));
+-
+-		mutex_lock(dso__lock(dso));
+-		if (access(filename, R_OK) && errno == ENOENT && dso__nsinfo(dso)) {
+-			char *new_name = dso__filename_with_chroot(dso, filename);
+-			if (new_name) {
+-				strlcpy(filename, new_name, filename_size);
+-				free(new_name);
+-			}
+-		}
+-		mutex_unlock(dso__lock(dso));
+-	} else if (dso__binary_type(dso) == DSO_BINARY_TYPE__NOT_FOUND) {
+-		dso__set_binary_type(dso, DSO_BINARY_TYPE__BUILD_ID_CACHE);
+-	}
+-
+-	free(build_id_path);
+-	return 0;
+-}
+-
+ static int symbol__disassemble_raw(char *filename, struct symbol *sym,
+ 					struct annotate_args *args)
  {
- 	uint16_t e_machine = EM_NONE;
-+	enum dso_binary_type dbt = dso__find_binary_type(dso);
- 	int fd;
+@@ -1566,14 +1488,29 @@ int symbol__disassemble(struct symbol *sym, struct annotate_args *args)
+ 	struct annotation_options *options = args->options;
+ 	struct map *map = args->ms->map;
+ 	struct dso *dso = map__dso(map);
+-	char symfs_filename[PATH_MAX];
++	char *symfs_filename;
+ 	bool delete_extract = false;
+ 	struct kcore_extract kce;
++	enum dso_binary_type dbt;
+ 	bool decomp = false;
+-	int err = dso__disassemble_filename(dso, symfs_filename, sizeof(symfs_filename));
++	int err;
  
--	switch (dso__binary_type(dso)) {
-+	switch (dbt) {
- 	case DSO_BINARY_TYPE__KALLSYMS:
- 	case DSO_BINARY_TYPE__GUEST_KALLSYMS:
- 	case DSO_BINARY_TYPE__VMLINUX:
-diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
-index 4a8c298039447cec..116870595f75c7dd 100644
---- a/tools/perf/util/symbol.c
-+++ b/tools/perf/util/symbol.c
-@@ -1943,19 +1943,6 @@ int dso__load(struct dso *dso, struct map *map)
+-	if (err)
+-		return err;
++	dbt = dso__find_binary_type(dso);
++
++	if (dbt == DSO_BINARY_TYPE__KALLSYMS)
++		return SYMBOL_ANNOTATE_ERRNO__NO_VMLINUX;
++
++	mutex_lock(dso__lock(dso));
++	symfs_filename = dso__get_filename(dso, "", &decomp, dbt);
++	mutex_unlock(dso__lock(dso));
++
++	if (symfs_filename == NULL) {
++		if (dbt == DSO_BINARY_TYPE__BPF_PROG_INFO ||
++		    dbt == DSO_BINARY_TYPE__BPF_IMAGE)
++			symfs_filename = (char *)dso__long_name(dso);
++		else
++			return SYMBOL_ANNOTATE_ERRNO__COULDNT_DETERMINE_FILE_TYPE;
++	}
  
- 		if (next_slot) {
- 			ss_pos++;
+ 	pr_debug("%s: filename=%s, sym=%s, start=%#" PRIx64 ", end=%#" PRIx64 "\n", __func__,
+ 		 symfs_filename, sym->name, map__unmap_ip(map, sym->start),
+@@ -1581,9 +1518,7 @@ int symbol__disassemble(struct symbol *sym, struct annotate_args *args)
+ 
+ 	pr_debug("annotating [%p] %30s : [%p] %30s\n", dso, dso__long_name(dso), sym, sym->name);
+ 
+-	if (dso__binary_type(dso) == DSO_BINARY_TYPE__NOT_FOUND) {
+-		return SYMBOL_ANNOTATE_ERRNO__COULDNT_DETERMINE_FILE_TYPE;
+-	} else if (dso__is_kcore(dso)) {
++	if (dso__is_kcore(dso)) {
+ 		kce.addr = map__rip_2objdump(map, sym->start);
+ 		kce.kcore_filename = symfs_filename;
+ 		kce.len = sym->end - sym->start;
+@@ -1591,18 +1526,8 @@ int symbol__disassemble(struct symbol *sym, struct annotate_args *args)
+ 
+ 		if (!kcore_extract__create(&kce)) {
+ 			delete_extract = true;
+-			strlcpy(symfs_filename, kce.extract_filename, sizeof(symfs_filename));
+-		}
+-	} else if (dso__needs_decompress(dso)) {
+-		char tmp[KMOD_DECOMP_LEN];
 -
--			/*
--			 * The binary type is used to find the file containing
--			 * the executed instructions, so prefer the types that
--			 * refer to the actual object over debug-only files such
--			 * as DSO_BINARY_TYPE__DEBUGLINK.
--			 */
--			if (dso__binary_type(dso) == DSO_BINARY_TYPE__NOT_FOUND ||
--			    symtab_type == DSO_BINARY_TYPE__BUILD_ID_CACHE ||
--			    (symtab_type == DSO_BINARY_TYPE__SYSTEM_PATH_DSO &&
--			     dso__binary_type(dso) != DSO_BINARY_TYPE__BUILD_ID_CACHE))
--				dso__set_binary_type(dso, symtab_type);
+-		if (dso__decompress_kmodule_path(dso, symfs_filename, tmp, sizeof(tmp)) < 0)
+-			return -1;
 -
- 			if (syms_ss && runtime_ss)
- 				break;
- 		} else {
+-		/* empty pathname means file wasn't actually compressed */
+-		if (tmp[0] != '\0') {
+-			decomp = true;
+-			strcpy(symfs_filename, tmp);
++			dso__put_filename(dso, symfs_filename, decomp);
++			symfs_filename = kce.extract_filename;
+ 		}
+ 	}
+ 
+@@ -1660,11 +1585,10 @@ int symbol__disassemble(struct symbol *sym, struct annotate_args *args)
+ 			pr_debug("Disassembled with %s\n", perf_disassembler__strs[dis]);
+ 	}
+ out_remove_tmp:
+-	if (decomp)
+-		unlink(symfs_filename);
+-
+ 	if (delete_extract)
+ 		kcore_extract__delete(&kce);
++	else if (dbt != DSO_BINARY_TYPE__BPF_PROG_INFO && dbt != DSO_BINARY_TYPE__BPF_IMAGE)
++		dso__put_filename(dso, symfs_filename, decomp);
+ 
+ 	return err;
+ }
 -- 
 2.56.0.385.gd3acb90ef8-goog
 
