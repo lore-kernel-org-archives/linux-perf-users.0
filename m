@@ -1,76 +1,100 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 270FD5505C2;
-	Tue, 13 Oct 2026 20:42:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB1A555408F;
+	Tue, 13 Oct 2026 20:49:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791924165; cv=none; b=eLx7KIeAfhBxu4aaMuxyYSetsbgmTsYsFCbOBvPd1VrW1tAv9g1YKJEfKHgtaKbgWSog0DHTYSAZC6d90FPLGxXu6iDnsvDDNpxE5Jy1iH0Z7BJAGvaiqtAt4hLmqScVUEPn5apeTb0GkYXZVUtAzslqNDu+gsN/xk6FJihotVY=
+	t=1791924581; cv=none; b=BnV3+wN3pwfHPEOlIXdvyTeIaRQvqr0PFzSL3aehBoEkVmlHRL3Xg08QJhFFioEe+CEps+87hJhpkiWM7IlI0q635MD207BUPlw+KGFCB7FtmixMXxGjPKDw5tty79pD7jukyJstyvlHyd/KNwzfL08zMvUNBqex7erS5Wywnu4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791924165; c=relaxed/simple;
-	bh=FdGHR8ErbiEOINE6M6o1dmXEFsXIKVwWDks+iAHQu40=;
-	h=Message-ID:From:Subject:To:Cc:In-Reply-To:References:Content-Type:
-	 Date; b=XdF8wTrz+u7tMtTHS7PQXYVLSpjiOzAWevWmeEYkmzSpCR2lJ5XEIJVzb/XDvsCXUiJLyO44yytAUt0BI+YAyVH8pkfwnZNc8Zl2ZFFPJkwrdQFNkWt0hKS5jawQGe7ASTwUgWGODNmNVSsCgf9SqhqmdXq+m14V4B0lW59TAwo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=O0WNNCzs; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1791924581; c=relaxed/simple;
+	bh=Abvg6add0/5i7xKTQmCMWUrzZ7UJf0kB51c5bxF0hlA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qhAkYtQvUiscR9dqxQAd6VUA0pVK/QGmoBqz6feG3ndx+MGSTm3vHLafay1pfFgyQ3jtADnTyj8kzZTRKE7rkPj1Gi3IgGEyqPTFv+XCPVsTfQ/IiaCW0UvLdJOWwILvlp9v/f6xuIR8N7FR9T5vhGnZ892CYEU5gFFXCUNrAME=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NoeYufws; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="O0WNNCzs"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3B9CA1F000FF;
-	Tue, 13 Oct 2026 20:42:43 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NoeYufws"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6A8EB1F000FF;
+	Tue, 13 Oct 2026 20:49:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1791924163;
-	bh=FdGHR8ErbiEOINE6M6o1dmXEFsXIKVwWDks+iAHQu40=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=O0WNNCzsBLimk1XmmRIFQpDcW9UMZhafGQ+Zw64av0VYJ3QaMddTnLvPNl+TKNQF8
-	 06BNg92Hn0qc7fHJi/bMVFcfls1trcCQE7PyfFoPJ+SSIMU/VkjNo9UEQq4zl0Rs3A
-	 Ikjw91wVwTxSddvYG6o5OZQGZbtUZ39QqQN4SBjBU+UIKmQ2uJ14n6RX6daY4cg+3k
-	 ZAFu3f4qKJCNQ/RkA187WRMRq53eOKDOhZs5tsYQHRAxYdaRsK6TVo7B7nkbgsg9Jm
-	 6JACrrlijH07rauWG/FXPkWSd9G9+rp1YGPla/bHRl3WvLszf2YtCNfhGA6pCQ5Amx
-	 08HkzQ9XJskRA==
-Message-ID: <sashiko-outbox-170481@kernel.org>
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v6 31/39] mm/madvise: update is_valid_guard_vma() to use
- vma_is_mm_backed()
-Reply-To: sashiko-reviews@lists.linux.dev
-To: =?utf-8?b?TG9yZW56byBTdG9ha2VzIChBUk0p?= <ljs@kernel.org>
-Cc: linux-usb@vger.kernel.org, linux-rdma@vger.kernel.org, selinux@vger.kernel.org, linux-perf-users@vger.kernel.org, linux-s390@vger.kernel.org, "Heiko
- Carstens" <hca@linux.ibm.com>, "Vasily Gorbik" <gor@linux.ibm.com>, "Alexander
- Gordeev" <agordeev@linux.ibm.com>, "Christian Borntraeger" <borntraeger@linux.ibm.com>
-In-Reply-To: <20261013-b4-mmap-prepare-vma-flag-sanify-v6-31-1aa3c9b139f9@kernel.org>
-References: <20261013-b4-mmap-prepare-vma-flag-sanify-v6-0-1aa3c9b139f9@kernel.org>
- <20261013-b4-mmap-prepare-vma-flag-sanify-v6-31-1aa3c9b139f9@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Tue, 13 Oct 2026 20:42:42 +0000
+	s=k20260515; t=1791924579;
+	bh=mocG94rIykU+JVCHV3KlPT9EwN6iySKYcHDI9bsbA/U=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=NoeYufwsN1r/utXl+j3JSf5ORbZVK9XCenf30reyiXTyBwINWWquK0xOlJ9JCYdxm
+	 e8A7DIhwRzIdZ1yOlIixu4mIu+0nhuPrMWuDKiNnSjpp4CsD8XapYonKaeim4MLD0o
+	 ZhPmKlwq6L01sgwLjhplQXg/T9aKcmgMmYhq0CwCtfpL+iaAXPXEL/l/LzJbLI65EI
+	 +9wCvBXYKf8yBbja2vUGGWg5N9EOn6a+2jzj9dmNulYdWulJKp27CcOwF/mhyZ8sZ4
+	 d500VWDeKRCxmgEV0fKSQOHDb/KQk09X0edxpssBjZJjXaikrbCWfUp/IkcPDS8xUn
+	 H8sNvqxaVCoDA==
+Date: Tue, 13 Oct 2026 13:49:38 -0700
+From: Namhyung Kim <namhyung@kernel.org>
+To: sashiko-reviews@lists.linux.dev
+Cc: linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH v5 02/11] perf tools: Check ELF section type with name
+Message-ID: <as6ZYu8YcVjKB1YQ@google.com>
+References: <20261013172155.160869-1-namhyung@kernel.org>
+ <20261013172155.160869-3-namhyung@kernel.org>
+ <sashiko-outbox-170233@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <sashiko-outbox-170233@kernel.org>
 
-> We currently disallow the installation of lightweight guard regions in VM=
-As
-> whose flags intersect VMA_SPECIAL_FLAGS or VMA_HUGETLB_BIT, or
-> VMA_LOCKED_BIT unless allow_locked is set.
->=20
-> hugetlb VMAs set VMA_DONTEXPAND_BIT so this was already redundant,
-> VMA_SPECIAL_FLAGS already sufficed.
->=20
-> However, now that VMA_IO_BIT is only set if VMA_PFNMAP or VMA_MIXEDMAP_BIT
-> is set, this check collapses to being the equivalent of
-> !vma_is_mm_backed(), excluding hugetlb mappings in which guard markers
-> cannot be installed.
->=20
-> Update is_valid_guard_vma() to reflect this.
->=20
-> No functional change intended.
->=20
-> Acked-by: Zi Yan <ziy@nvidia.com>
-> Acked-by: David Hildenbrand (Arm) <david@kernel.org>
-> Signed-off-by: Lorenzo Stoakes (ARM) <ljs@kernel.org>
+On Tue, Oct 13, 2026 at 05:31:14PM +0000, sashiko-bot@kernel.org wrote:
+> Thank you for your contribution! Sashiko AI review found 1 potential issue(s) to consider:
+> - [Medium] perf symbol-elf: uninitialized memory read on gelf_getshdr failure
+> --
+> 
+> commit f2750bf0f2a1c49778b5a9d0173f02f48eb9e193
+> Author: Namhyung Kim <namhyung@kernel.org>
+> 
+> perf tools: Check ELF section type with name
+> 
+> This commit updates filename__has_section() to verify that a section
+> has the SHT_PROGBITS type instead of just checking its name. This prevents
+> empty sections with SHT_NOBITS from being incorrectly identified as present.
+> 
+> > diff --git a/tools/perf/util/symbol-elf.c b/tools/perf/util/symbol-elf.c
+> > --- a/tools/perf/util/symbol-elf.c
+> > +++ b/tools/perf/util/symbol-elf.c
+> > @@ -228,7 +228,8 @@ bool filename__has_section(const char *filename, const char *sec)
+> >  	if (gelf_getehdr(elf, &ehdr) == NULL)
+> >  		goto elf_out;
+> >  
+> > -	found = !!elf_section_by_name(elf, &ehdr, &shdr, sec, NULL);
+> > +	found = !!elf_section_by_name(elf, &ehdr, &shdr, sec, NULL) &&
+> > +		shdr.sh_type == SHT_PROGBITS;
+> 
+> [Severity: Medium]
+> Can this lead to an uninitialized memory read of shdr.sh_type if the ELF
+> file is malformed?
+> 
+> Looking at elf_section_by_name(), it does not check the return value of
+> gelf_getshdr():
+> 
+> tools/perf/util/symbol-elf.c:elf_section_by_name() {
+>     ...
+>     gelf_getshdr(sec, shp);
+>     str = elf_strptr(elf, ep->e_shstrndx, shp->sh_name);
+>     ...
+> }
+> 
+> If gelf_getshdr() fails, it returns NULL and leaves the shp struct unmodified.
+> Because shp points to the stack-allocated shdr in filename__has_section(),
+> a failure in gelf_getshdr() leaves shdr potentially uninitialized.
+> 
+> Since this patch adds a direct read of shdr.sh_type after elf_section_by_name()
+> returns, does this new check risk reading uninitialized stack memory?
 
-Sashiko has reviewed this patch and found no issues. It looks great!
+Well.. it's already checked shp->sh_name is valid so I think it's ok.
 
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261013-b4-mmap-pr=
-epare-vma-flag-sanify-v6-0-1aa3c9b139f9@kernel.org?part=3D31
+But probably safer to check the return value.  It's also a separate
+change though.
 
+Thanks,
+Namhyung
