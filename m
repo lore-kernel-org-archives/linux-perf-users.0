@@ -1,74 +1,78 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C77535476F1
-	for <linux-perf-users@vger.kernel.org>; Tue, 13 Oct 2026 20:21:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81CEA5427FF;
+	Tue, 13 Oct 2026 20:21:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791922904; cv=none; b=AT8ywIoX3ZTN40fOp9cDrh9WzbMBxRRoKnXYVQ1uf/rs3kWI4q+zKducgHMcOgfIluj8SVqDumlDiisHsM3r0ZcYMhAoQDcyWRepwaAU63QO/333VszD1p1s8k+K3WCQTE0xzSZTm27939cjGLdxAhFNgeeDurg4dNrBuuS/ZCA=
+	t=1791922909; cv=none; b=cCyJWfhTnefuUD3dK1BQMWLdSaLjWtyYSKJXz/xLPHQV2Hm22PqjaeRxkhG+KA3FBEMdh2OZmWgG65oyxOV5vmlbW/WcJfb8U3vfAQFcPxmyjhEklJT4edvMyCWa+mWrlY2b0scjcEeoJtJzivrXdkwP2VY8Y3JUXRoJBRUqzKo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791922904; c=relaxed/simple;
-	bh=AZBdUf4V8+iw85J0Y/qZfKAtWdqOqEPRw32MXV8GI1c=;
+	s=arc-20240116; t=1791922909; c=relaxed/simple;
+	bh=eA9VirkcFHLEx/i/r5oniinu7vAbSaMLW2lhOS1T6U4=;
 	h=Message-ID:From:Subject:To:Cc:In-Reply-To:References:Content-Type:
-	 Date; b=Sw7k1EKs6i21qHIPM+jIdvScZ6FZqLHXxyXSfUdl7HVWUCEg+zqK4UoeLpXZBQnGYiW82fQo0C9yF5bV6MrNihh2JL+sMHHlCSOSvYLDbU8mFKv7zIeOGTO2bGCi1xW7GP3MfzKLIufKxV04fOR68d5khxOtBBse2jlkc7hJxNU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TpHGv/eS; arc=none smtp.client-ip=100.103.45.18
+	 Date; b=eavhQkun7eabPbV6RoERGD9pAk2f8xj1QU1oQjEFUcdctgKnOF9mGKTiHea741mskHRwWc4OfCyplIYceWV2gCnfrFi/6aCFzKcEh4ggOUIyV+uuBoVVPmU8tLTdr3R1k9ZttxeNvwqbKEz8YX9OYIW9yQXoMqGrncZ1Lh3mO8s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fFdNt49G; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TpHGv/eS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E60E41F00893;
-	Tue, 13 Oct 2026 20:21:35 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fFdNt49G"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9537D1F000FF;
+	Tue, 13 Oct 2026 20:21:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1791922896;
-	bh=Wu25UOa92jhW0TGVk0UPMNF8cpJ3GRnIl1vbNeF6tFM=;
+	s=k20260515; t=1791922907;
+	bh=BfGjPbQzAAmcVRFzQREf0xWg92scQMV5S8yw/1yzbGA=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=TpHGv/eS8pdQjGPV52oO/VaPeUDsNrbcHFfLLKkNow3RsBWPE92ShTBKZ7ZdJfFBq
-	 HMvo1zNVliMq1oQXQrEy1NeKl8APY7XeO0M9wIm2ZVLYUObl79W9VmF3GC88OLjkbe
-	 Cwtkm8+yORDAA+dgFFc5iQMiqwtJtrtYsfaVVCQ4zQl/2CETivLiVtxD3kz6i9G7Gk
-	 0wBjx6l5X/LdrHZF1C1TRk/dTRsF79TQLz2LCyx6VPen3FxvrM7dLElT+GYUBGdkO+
-	 V//+z99F5E/WnWbtcc1DLR/Q0IobDk1E0Hb3x8a5u6nNkmJlLAv8Akt+cF/Euj2XRS
-	 lh6raDe2mv6tQ==
-Message-ID: <sashiko-outbox-170447@kernel.org>
+	b=fFdNt49GVCBCQUwT6VB7SNUJDLa5vXBJBn6JIyh8nVQA7jMmU7sMGGESbLWY0Vb9f
+	 JhrzpiZbPBKDjikdLeDm/RYOISkPaF9xgTG+2o9ZVvJw9d1MSWE7dk5YH8PCCcsGxG
+	 oOqxxRGYeePAz+0stbkwdq09hAnzUFa1gFTxhFqsJvj2P3VlpkUVQARhlUUOW13Do1
+	 qBDebDQ9Os+HiOyz5Zg+OxF8a47hrYStWFH+zJQCubxEHryNv36yVjw0xsTT6oovEJ
+	 qEb7oAbPMcOiAErD6AClQh4V/PhR3u5y/PeOYu34YEMZaEn4oikzN7RxEIJm3PkQGm
+	 SUZxr6LOCvLMg==
+Message-ID: <sashiko-outbox-170448@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v2 12/19] perf test attr: Leave out the events of the
- other core PMUs
+Subject: Re: [PATCH v6 29/39] mm: drop some redundant checks around hugetlb
+ VMAs
 Reply-To: sashiko-reviews@lists.linux.dev
-To: "Arnaldo Carvalho de Melo" <acme@kernel.org>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20261013201415.36428-13-acme@kernel.org>
-References: <20261013201415.36428-1-acme@kernel.org>
- <20261013201415.36428-13-acme@kernel.org>
+To: =?utf-8?b?TG9yZW56byBTdG9ha2VzIChBUk0p?= <ljs@kernel.org>
+Cc: linux-usb@vger.kernel.org, linux-rdma@vger.kernel.org, selinux@vger.kernel.org, linux-perf-users@vger.kernel.org, linux-s390@vger.kernel.org, "Heiko
+ Carstens" <hca@linux.ibm.com>, "Vasily Gorbik" <gor@linux.ibm.com>, "Alexander
+ Gordeev" <agordeev@linux.ibm.com>, "Christian Borntraeger" <borntraeger@linux.ibm.com>
+In-Reply-To: <20261013-b4-mmap-prepare-vma-flag-sanify-v6-29-1aa3c9b139f9@kernel.org>
+References: <20261013-b4-mmap-prepare-vma-flag-sanify-v6-0-1aa3c9b139f9@kernel.org>
+ <20261013-b4-mmap-prepare-vma-flag-sanify-v6-29-1aa3c9b139f9@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Tue, 13 Oct 2026 20:21:35 +0000
+Date: Tue, 13 Oct 2026 20:21:46 +0000
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-> From: Arnaldo Carvalho de Melo <acme@redhat.com>
+> Adjust code which inadvertently perform redundant checks on hugetlb VMAs
+> and clean them up:
 >=20
-> On a hybrid machine the default stat metrics are opened on each core PMU,
-> and the events of the other one have their own encodings: on an i7-14700K
-> cpu_atom (type 10) opens UOPS_RETIRED.ALL, config 194, which the
-> expectations, written for cpu_core (type 4), don't name:
+> * hugetlb VMAs have VMA_DONTEXPAND_BIT set so a VMA_SPECIAL_FLAGS check
+>   suffices. (migrate_vma_setup() regains an explicit hugetlb test later in
+>   the series, once VMA_SPECIAL_FLAGS is removed.)
 >=20
->   expected type=3D4, got 10
->   expected config=3D209|391, got 194
+> * hugetlb VMAs unconditionally set vma->vm_ops, so they are never
+>   anonymous.
 >=20
-> The test already masks the core PMU type out of 'config' for the legacy
-> events, but raw events keep their type and encoding, so leave out the
-> events of the core PMUs no expectation names, like the dummy tracking
-> event.  Core PMUs are found as perf finds them: 'cpu' or 'cpum_cf', or a
-> PMU with a 'cpus' file in sysfs.  Nothing is left out unless an
-> expectation names a core PMU, so single core PMU machines and the tests
-> with only legacy expectations are not affected.
+> * hugetlb VMAs do not set VMA_PFNMAP_BIT so checking for this is redundan=
+t.
 >=20
-> Assisted-by: LLM
-> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+> While we're here also drop a VM_BUG_ON() which the simplified check above
+> makes unreachable, and use the new VMA flag API.
+>=20
+> No functional change intended.
+>=20
+> Acked-by: Marc Zyngier <maz@kernel.org>
+> Reviewed-by: Zi Yan <ziy@nvidia.com>
+> Acked-by: David Hildenbrand (Arm) <david@kernel.org>
+> Signed-off-by: Lorenzo Stoakes (ARM) <ljs@kernel.org>
 
 Sashiko has reviewed this patch and found no issues. It looks great!
 
 --=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261013201415.3642=
-8-1-acme@kernel.org?part=3D12
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261013-b4-mmap-pr=
+epare-vma-flag-sanify-v6-0-1aa3c9b139f9@kernel.org?part=3D29
 
