@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 091E3524B14;
-	Tue, 13 Oct 2026 17:22:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D218B51DE15;
+	Tue, 13 Oct 2026 17:22:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791912122; cv=none; b=sTOWC7vbJrOMwPRX6ew9jrDg4wNnvZJJ0nIlI6vhuKa49Gw5UIe9PcBeUI1nTtkyuJoUJwA21Ff57NCe4xN6mgDzKjX2+yCGhN9doIhb1z3mcENbkeJ8oy5EEy9wl/xyn4QIhGivSec9GnA3ldxACFlmsGwo5mZ89Iv/1mMyu0M=
+	t=1791912122; cv=none; b=V54AvK09z31QH/j2g0XGoMnHxcxqwrZw4yjA+HRLJfKYRMmffho9fHpFZbN7meEo4iIyq6h7npl288jMMPaorWVPGRe/BNJ4k1iuCY1qMYnUeP8UiNuLEfc001YGCyxWNhe2RM8xRw27bk/UjEo4EzfZ98rMr26KCGNeVBj4zJQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1791912122; c=relaxed/simple;
-	bh=ud4WWh8RUuNJmjMxj9NMd03ppEn0qDJz9Tqkf06RD0s=;
+	bh=b9UON7E4XnG8We36uofD0WykyS9dcG8tJ4rcsE3o0+c=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=GWAO8TMrJFu2uk/RwO9GKQo0SN86DUPh/O+MWyWZAdnFgT3B89pKduvH28PB3ZABzNv/4vmuYN66BAcl9+sjcSUra27ih3/n8yig59ERU+uEe6XVzm1iURxLWL+rKLUml1ryFrSgvXkEUQIXKYTKnYmiemTF8B9xeVz3iprFJjQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=A+yaTVuY; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version; b=Zc1QEbBppmBO2NVhTf/zy/0j7GmObBHLsW1+hID4nMlx/Qt9KLhzCuYeEG1UM6OXJcLq0qVi5tKu7UyYVo+w7Du7hj3tyPOlTpx3/6XlBHs1YZZREPQbnMTyvX8tmbcuomj3Bf8LYXBOG3wmbh+9VptHYUiO+o+74hE39jRX0VU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=A22GcnpD; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="A+yaTVuY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A7F8E1F00899;
-	Tue, 13 Oct 2026 17:22:00 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="A22GcnpD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3EB251F000FF;
+	Tue, 13 Oct 2026 17:21:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
 	s=k20260515; t=1791912120;
-	bh=nlNWeB+9FkyeYzISPfZxDiG41XzV77zEy8rHeT2l9uk=;
+	bh=sviM3N8cS4oFJtgY/ReXmfGf5liWnFNI8o5Nvig/i8Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=A+yaTVuYykZng+OzeMwt9xMzXxTsrqreq93T3OaBUPEk9fNKlEzo7ii1dVpr4FXtG
-	 U7Mf42dS78p2NM0p+7S/Es9OiaoYEeQE09oVsFSaXWYJzEuxxr0UAOvwX1CBNvNZyP
-	 0x7uZ9oMQ60Wx7MskXI54o9aXNlzi3fK2OBQXySE6SfQHbaJXogSfMV+5pc8lEjW7u
-	 L3nL/ab1hugT2fbzB+sBpQLDK76jKyLoEyU5LRh/JCtC+E5eRQHpuRsHY6zV5J1HXC
-	 mGWOAgLdMyBdNwkb80DWwM8AsLTXQ+g2Pm3BxBuNPRsdoW/7l/4hgZUQNxLztsJWlu
-	 qfRG/gDSJXomg==
+	b=A22GcnpD2wfQI0tUN/Eh9XquNXmj52ymqTM/p16UqpcuLrOlIvU7A8U3Ua24pVyDV
+	 HKYdndvMsXyy2XH08PpRO5HmAbgF0ZYIhsE7Vmd5gLW3N9RTRxoKFBrf8x04b7UyFZ
+	 sUUrjzWdLQZh+sjRIQR0kOI9Gc1PMt38DsXO/9Z4ZuLNnQC13+olYOaLpNKeW2bNuc
+	 9WNVL579BH4sC+0qF6g0zklncw3jusf6TeJC76SrAsvafmhiB5ZhMKHdR3hzHP8+Hj
+	 CfbXws6FIdaz366gstZrbKI1Xd1snrC8F/w93013yPz8zWNbAJKZ5mG32IJewUo9+7
+	 J/YcophvIpW0g==
 From: Namhyung Kim <namhyung@kernel.org>
 To: Arnaldo Carvalho de Melo <acme@kernel.org>
 Cc: Ian Rogers <irogers@google.com>,
@@ -36,9 +36,9 @@ Cc: Ian Rogers <irogers@google.com>,
 	Ingo Molnar <mingo@kernel.org>,
 	LKML <linux-kernel@vger.kernel.org>,
 	linux-perf-users@vger.kernel.org
-Subject: [PATCH v5 08/11] perf symbol: Set binary type for JIT map DSOs
-Date: Tue, 13 Oct 2026 10:21:52 -0700
-Message-ID: <20261013172155.160869-9-namhyung@kernel.org>
+Subject: [PATCH v5 07/11] perf tools: Factor out dso__find_binary_type()
+Date: Tue, 13 Oct 2026 10:21:51 -0700
+Message-ID: <20261013172155.160869-8-namhyung@kernel.org>
 X-Mailer: git-send-email 2.56.0.385.gd3acb90ef8-goog
 In-Reply-To: <20261013172155.160869-1-namhyung@kernel.org>
 References: <20261013172155.160869-1-namhyung@kernel.org>
@@ -50,29 +50,227 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The perf-<pid>.map files contain symbol name of JIT functions.
-As they don't have the binary data (instructions) no need to try
-for dso_data.  Let's set the binary type regardless of the result
-of symbol loading so that it can be ignored.
+Separate out the logic to detect binary type of a DSO.  It checks if
+the candidate file contains ".text" section.  There could be data-only
+DSOs but as our use cases focus on the code (perf annotate or intel
+PT), we can ignore them for now.
+
+But it also can fail due to open file limit.  Handle the case by
+retrying with _dso__data_open_lock.
+
+Introduce bintype_searched flag and it accessors to prevent repeated
+(failed) search.
 
 Reviewed-by: Ian Rogers <irogers@google.com>
 Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 ---
- tools/perf/util/symbol.c | 1 +
- 1 file changed, 1 insertion(+)
+ tools/perf/util/dso.c | 138 ++++++++++++++++++++++++++++++++++++++----
+ tools/perf/util/dso.h |  13 ++++
+ 2 files changed, 139 insertions(+), 12 deletions(-)
 
-diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
-index a7afecb5816c25f8..4a8c298039447cec 100644
---- a/tools/perf/util/symbol.c
-+++ b/tools/perf/util/symbol.c
-@@ -1847,6 +1847,7 @@ int dso__load(struct dso *dso, struct map *map)
+diff --git a/tools/perf/util/dso.c b/tools/perf/util/dso.c
+index 913877b84b2d437e..47241077ad260744 100644
+--- a/tools/perf/util/dso.c
++++ b/tools/perf/util/dso.c
+@@ -833,34 +833,148 @@ void dso__data_close(struct dso *dso)
+ 	mutex_unlock(dso__data_open_lock());
+ }
  
- 	if (perfmap) {
- 		ret = dso__load_perf_map(map_path, dso);
-+		dso__set_binary_type(dso, DSO_BINARY_TYPE__JAVA_JIT);
- 		dso__set_symtab_type(dso, ret > 0
- 				? DSO_BINARY_TYPE__JAVA_JIT
- 				: DSO_BINARY_TYPE__NOT_FOUND);
+-static void try_to_open_dso(struct dso *dso, struct machine *machine)
+-	EXCLUSIVE_LOCKS_REQUIRED(_dso__data_open_lock)
++static int dso__find_binary_type_locked(struct dso *dso)
++	EXCLUSIVE_LOCKS_REQUIRED(dso__lock(dso))
+ {
+ 	enum dso_binary_type binary_type_data[] = {
+ 		DSO_BINARY_TYPE__BUILD_ID_CACHE,
+ 		DSO_BINARY_TYPE__SYSTEM_PATH_DSO,
++		dso__symtab_type(dso),
+ 		DSO_BINARY_TYPE__NOT_FOUND,
+ 	};
+ 	int i = 0;
+-	struct dso_data *dso_data = dso__data(dso);
++	char *path;
++	bool found = false;
++	bool decomp = false;
++	int saved_errno;
+ 
+-	if (dso_data->fd >= 0)
+-		return;
++	if (dso__bintype_searched(dso))
++		return dso__binary_type(dso);
++	dso__set_bintype_searched(dso);
+ 
+-	if (dso__binary_type(dso) != DSO_BINARY_TYPE__NOT_FOUND) {
+-		dso_data->fd = open_dso(dso, machine);
+-		goto out;
++	switch (dso__binary_type(dso)) {
++	case DSO_BINARY_TYPE__KALLSYMS:
++	case DSO_BINARY_TYPE__GUEST_KALLSYMS:
++	case DSO_BINARY_TYPE__VMLINUX:
++	case DSO_BINARY_TYPE__GUEST_VMLINUX:
++	case DSO_BINARY_TYPE__KCORE:
++	case DSO_BINARY_TYPE__GUEST_KCORE:
++		/* Nothing to do with kernel images */
++		WARN_ON(!dso__kernel(dso));
++		return dso__binary_type(dso);
++	case DSO_BINARY_TYPE__BPF_PROG_INFO:
++	case DSO_BINARY_TYPE__BPF_IMAGE:
++	case DSO_BINARY_TYPE__OOL:
++	case DSO_BINARY_TYPE__JAVA_JIT:
++		/* Same for the special DSOs */
++		return dso__binary_type(dso);
++	case DSO_BINARY_TYPE__GUEST_KMODULE:
++	case DSO_BINARY_TYPE__GUEST_KMODULE_COMP:
++	case DSO_BINARY_TYPE__SYSTEM_PATH_KMODULE:
++	case DSO_BINARY_TYPE__SYSTEM_PATH_KMODULE_COMP:
++	case DSO_BINARY_TYPE__SYSTEM_PATH_DSO:
++	case DSO_BINARY_TYPE__BUILD_ID_CACHE:
++		/* We don't expect these are set; fall through */
++	case DSO_BINARY_TYPE__NOT_FOUND:
++		/* Let's find it out (for user DSOs or kernel modules) */
++		break;
++	case DSO_BINARY_TYPE__FEDORA_DEBUGINFO:
++	case DSO_BINARY_TYPE__UBUNTU_DEBUGINFO:
++	case DSO_BINARY_TYPE__MIXEDUP_UBUNTU_DEBUGINFO:
++	case DSO_BINARY_TYPE__OPENEMBEDDED_DEBUGINFO:
++	case DSO_BINARY_TYPE__BUILD_ID_CACHE_DEBUGINFO:
++	case DSO_BINARY_TYPE__BUILDID_DEBUGINFO:
++	case DSO_BINARY_TYPE__GNU_DEBUGDATA:
++	case DSO_BINARY_TYPE__DEBUGLINK:
++	default:
++		/* Unexpected binary types (usually debug only) */
++		break;
+ 	}
+ 
+ 	do {
+ 		dso__set_binary_type(dso, binary_type_data[i++]);
+ 
+-		dso_data->fd = open_dso(dso, machine);
+-		if (dso_data->fd >= 0)
+-			goto out;
++		errno = 0;
++		path = dso__get_filename(dso, "", &decomp, dso__binary_type(dso));
++		if (path == NULL) {
++			if (errno == EMFILE)
++				goto open_err;
++			continue;
++		}
++
++		errno = 0;
++		found = filename__has_section(path, ".text");
++		if (!found)
++			saved_errno = errno;
++		dso__put_filename(dso, path, decomp);
++
++		if (found)
++			return dso__binary_type(dso);
++		else if (saved_errno == EMFILE)
++			goto open_err;
+ 
+ 	} while (dso__binary_type(dso) != DSO_BINARY_TYPE__NOT_FOUND);
+-out:
++
++	return dso__binary_type(dso);
++
++open_err:
++	/* Too many open files.  Allow retry after closing one. */
++	RC_CHK_ACCESS(dso)->bintype_searched = 0;
++	dso__set_binary_type(dso, DSO_BINARY_TYPE__NOT_FOUND);
++	return -1;
++}
++
++#define FIND_MAX_RETRY  3
++static int __dso__find_binary_type(struct dso *dso, bool needs_open_lock)
++{
++	int ret;
++	int retry = 0;
++
++again:
++	mutex_lock(dso__lock(dso));
++	ret = dso__find_binary_type_locked(dso);
++	mutex_unlock(dso__lock(dso));
++
++	if (ret == -1 && retry++ < FIND_MAX_RETRY) {
++		if (needs_open_lock && retry == 1)
++			mutex_lock(dso__data_open_lock());
++
++		if (dso__data_open_cnt) {
++			close_first_dso();
++			goto again;
++		}
++	}
++
++	if (retry > 0 && needs_open_lock)
++		mutex_unlock(dso__data_open_lock());
++
++	if (ret == -1) {
++		mutex_lock(dso__lock(dso));
++		ret = dso__binary_type(dso);
++		dso__set_bintype_searched(dso);
++		mutex_unlock(dso__lock(dso));
++	}
++
++	return ret;
++}
++#undef FIND_MAX_RETRY
++
++enum dso_binary_type dso__find_binary_type(struct dso *dso)
++{
++	return __dso__find_binary_type(dso, /*needs_open_lock=*/true);
++}
++
++static void try_to_open_dso(struct dso *dso, struct machine *machine)
++	EXCLUSIVE_LOCKS_REQUIRED(_dso__data_open_lock)
++{
++	struct dso_data *dso_data = dso__data(dso);
++
++	if (dso_data->fd >= 0)
++		return;
++
++	__dso__find_binary_type(dso, /*needs_open_lock=*/false);
++	dso_data->fd = open_dso(dso, machine);
++
+ 	if (dso_data->fd >= 0)
+ 		dso_data->status = DSO_DATA_STATUS_OK;
+ 	else
+diff --git a/tools/perf/util/dso.h b/tools/perf/util/dso.h
+index 3f08d45e7f53a508..3329f417810c25a4 100644
+--- a/tools/perf/util/dso.h
++++ b/tools/perf/util/dso.h
+@@ -349,6 +349,7 @@ DECLARE_RC_STRUCT(dso) {
+ 	u8		 short_name_allocated:1;
+ 	u8		 long_name_allocated:1;
+ 	u8		 is_64_bit:1;
++	u8		 bintype_searched:1;
+ 	u8		 debuginfo_searched:1;
+ 	bool		 sorted_by_name;
+ 	bool		 loaded;
+@@ -957,6 +958,8 @@ void dso__reset_find_symbol_cache(struct dso *dso);
+ size_t dso__fprintf_symbols_by_name(struct dso *dso, FILE *fp);
+ size_t dso__fprintf(struct dso *dso, FILE *fp);
+ 
++enum dso_binary_type dso__find_binary_type(struct dso *dso);
++
+ static inline enum dso_binary_type dso__binary_type(const struct dso *dso)
+ {
+ 	return RC_CHK_ACCESS(dso)->binary_type;
+@@ -967,6 +970,16 @@ static inline void dso__set_binary_type(struct dso *dso, enum dso_binary_type bt
+ 	RC_CHK_ACCESS(dso)->binary_type = bt;
+ }
+ 
++static inline bool dso__bintype_searched(const struct dso *dso)
++{
++	return RC_CHK_ACCESS(dso)->bintype_searched;
++}
++
++static inline void dso__set_bintype_searched(struct dso *dso)
++{
++	RC_CHK_ACCESS(dso)->bintype_searched = 1;
++}
++
+ static inline bool dso__is_vmlinux(const struct dso *dso)
+ {
+ 	enum dso_binary_type bt = dso__binary_type(dso);
 -- 
 2.56.0.385.gd3acb90ef8-goog
 
