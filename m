@@ -1,44 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2FEA474262
-	for <linux-perf-users@vger.kernel.org>; Tue, 13 Oct 2026 18:42:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33DAC4A99D5
+	for <linux-perf-users@vger.kernel.org>; Tue, 13 Oct 2026 18:43:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791916926; cv=none; b=g0tN+bvnwPDH3zP8npV3QLVKzivb2iMBCh6EictA4ZdB7/06oLb17hm6htJ0tBv2mh0qotldHfa/A/qOtMfqFjONlrs1m4H7RIpPNdKB/hJ4xIWUPWRHwgk6C3Xoc5fhpw7fW6ig1/BZ7L02U4vQBCVvhI40u12MVScDUMOMj9s=
+	t=1791916997; cv=none; b=pTkqSHFb6PzNL9AvCwRrQzqlMakH0HcFLRDLoWlbq3vWVWC7GdVxT0bciPTd+PCoW5Fh4TsQVkSISW5kLPtRpdKiubuPHPdhZnD9uBJEwHYIXiU03xqVYsGZkyHZu5LstRMEGu6tCPG5SJxXhQF/Nkk/xXPhroPtFpBe5qn1BZQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791916926; c=relaxed/simple;
-	bh=E1LAFe5ivKgo7XJ71HBo7eNGvqCq3TfCbcJoVMqdug4=;
+	s=arc-20240116; t=1791916997; c=relaxed/simple;
+	bh=abqUKJ5zA4VPu7PMzxKv1XTDTyqV/hXyafE7tr827W0=;
 	h=Message-ID:From:Subject:To:Cc:In-Reply-To:References:Content-Type:
-	 Date; b=MGUkPuno1OyMPuVbffnYpcxvhm6qjZgw1Ob78E824DUR7nrPA8a7II6jV70u6T1B9rlrfDRh/ndIDbBsgyda7XH7+RsEJBLAz8LBOBE74NAPeCHQpnNmnIOJxEEp7P9eiskjCQ/jt+pn2N2/SoL/WrDozLHbK2ulodhg2AmtvLw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FRzZgVqo; arc=none smtp.client-ip=100.103.45.18
+	 Date; b=WPD7gZ1fIWRTDRbNmojmCXJ3bfP8zCqqC7b5h5nKsMsBUzw2hmT1CNaYyc1q9U8wJMwoEpdrcoTvBXusS93JbhmxdzIGt5FAchFvEOI+84Jd/4dcFltGa7kyQcCKwIeGQSFoJ3t2vGizQ5CPsSR1MDbhPBrAc/vDh4NJTu/ixdU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UVzXNtg4; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FRzZgVqo"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0E75D1F000FF;
-	Tue, 13 Oct 2026 18:42:05 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UVzXNtg4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BE1151F000FF;
+	Tue, 13 Oct 2026 18:43:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1791916925;
-	bh=m3MVo0OghEFsYM4NayrvKPvs6uFxSLqeoaKlsEjpUmU=;
+	s=k20260515; t=1791916995;
+	bh=dGheKe58XgIkF8gtvHidtlT5Yf3jnrejrTIXw8ZZ/OU=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=FRzZgVqoMa99Ppfvm3Gk+8zWdKXLAuTD5KTrkMM0airzpHDocDeycraYYRakpen8v
-	 b2G93TpsnMGYMiDOW4SWsVMo3HEgrM/JARbQQRBQW4mWiGKj/TNfaU23cavKNq9Vpj
-	 DyjR+h66vOYN63C5x062lbSWG5xOIYzfnhnpAUeXL7A55TvFdFWfTIqKJlHS/xvNFS
-	 4UIR5YC1MqzERs16UO6j4t2EgmGoA80LVVD34CamMFYMvHer7XqpbEzjYsnF5NZ3MA
-	 sLTneXp0OLsrpIKyIxIt9JWBHSGuZ6VCIakGgtUoeYi0waaC0syDkndI68LFZbJgtl
-	 Nct06/r08TPig==
-Message-ID: <sashiko-outbox-170346@kernel.org>
+	b=UVzXNtg4nk7dt67WQ2VWGzdGew6E5cuaVZfe9r0ufmTIqnM8gaKyXsp6PWPMVOhqW
+	 07Bv16Qn+e7UiREl5hKCcJkLleMuWvZysTXiml15jGdjIkcAgDFlskJALNmbmJHEOy
+	 KmeIHyVBI56YckKYZQHalQCyGxRL+7kD0SUedReu8PfPqM6aotvCLQOvGaA4Vb4qkf
+	 O3bSlJdG93JsHu8+EepIkMb1IxBD+ye7tciI7IKw+KJLRpQUTHOvBGKEcA7na1Tgun
+	 TB4nHZOM31Vp2wganiYYVEUnZ9gGgsjhISodwii5bU4ABWGaFt2tQxPvkySI5O+nBL
+	 XlkiboTxSx7rw==
+Message-ID: <sashiko-outbox-170347@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v1 09/10] perf config, intel-tpebs, env: Add
- __guarded_by and __must_hold annotations
+Subject: Re: [PATCH v1 10/10] perf maps: Add context analysis annotations
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Ian Rogers" <irogers@google.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20261013182458.1234616-10-irogers@google.com>
+In-Reply-To: <20261013182458.1234616-11-irogers@google.com>
 References: <20261013182458.1234616-1-irogers@google.com>
- <20261013182458.1234616-10-irogers@google.com>
+ <20261013182458.1234616-11-irogers@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Tue, 13 Oct 2026 18:42:04 +0000
+Date: Tue, 13 Oct 2026 18:43:15 +0000
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -47,78 +46,70 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
 Thank you for your contribution! Sashiko AI review found 1 potential issue(=
 s) to consider:
-- [High] perf: double close of tpebs_cmd.out file descriptor
+- [Medium] perf maps: Recursive read-to-write deadlock in maps__load_first()
 --
 
-commit 6138e7835465a4c85543c9abbf52c07f583bbb7a
+commit a66bec7dd23ce4df0be90007a645d5cd9c4e05dc
 Author: Ian Rogers <irogers@google.com>
 
-perf config, intel-tpebs, env: Add __guarded_by and __must_hold annotations
+perf maps: Add context analysis annotations
 
-Add thread safety annotations to the static parser and config state,
-the TPEBS state, and the bpf_progs and cgroups trees. It also fixes some
-unlocked reads and modernizes mutex initialization.
+This commit adds compiler context analysis annotations to the perf maps
+subsystem. It annotates map struct fields and internal helper functions
+to verify locking invariants at compile time.
 
-> diff --git a/tools/perf/util/intel-tpebs.c b/tools/perf/util/intel-tpebs.c
-> --- a/tools/perf/util/intel-tpebs.c
-> +++ b/tools/perf/util/intel-tpebs.c
-> @@ -331,13 +317,15 @@ static int tpebs_stop(void) __must_hold(tpebs_mtx_g=
-et())
->  	/* Like tpebs_start, we should only run tpebs_end once. */
->  	if (tpebs_cmd.pid !=3D 0) {
->  		pid_t actual_pid =3D tpebs_cmd.pid;
-> +		pthread_t reader_thread;
+> diff --git a/tools/perf/util/maps.c b/tools/perf/util/maps.c
+> --- a/tools/perf/util/maps.c
+> +++ b/tools/perf/util/maps.c
+
+[ ... ]
+
+> @@ -1495,7 +1495,7 @@ void maps__load_first(struct maps *maps)
+>  {
+>  	down_read(maps__lock(maps));
 > =20
->  		tpebs_stopping =3D true;
->  		tpebs_send_record_cmd(EVLIST_CTL_CMD_STOP_TAG);
->  		tpebs_cmd.pid =3D 0;
-> -		mutex_unlock(tpebs_mtx_get());
-> -		pthread_join(tpebs_reader_thread, NULL);
-> -		mutex_lock(tpebs_mtx_get());
-> +		reader_thread =3D tpebs_reader_thread;
-> +		mutex_unlock(&tpebs_mtx);
-> +		pthread_join(reader_thread, NULL);
-> +		mutex_lock(&tpebs_mtx);
->  		if (control_fd[0] >=3D 0) {
+> -	if (maps__nr_maps(maps) > 0)
+> +	if (__maps__nr_maps(maps) > 0)
+>  		map__load(maps__maps_by_address(maps)[0]);
 
-[Severity: High]
-Could this sequence result in a double close of the tpebs_cmd.out file
-descriptor?
+[Severity: Medium]
+Can this lead to a recursive read-to-write deadlock on maps__lock?
 
-The reader thread __sample_reader() assigns tpebs_cmd.out to data.file.fd
-and passes it to perf_session__new(). When the thread finishes, it calls
-perf_session__delete(), which invokes perf_data__close() and closes the
-underlying file descriptor:
+Here in maps__load_first(), maps__lock is acquired in read mode via
+down_read() before calling map__load(). For kernel maps on x86_64,
+map__load() triggers the x86_64 entry trampolines mapping:
 
-tools/perf/util/data.c:perf_data_file__close() {
-...
-	} else {
-		close(file->fd);
-		file->fd =3D -1;
-	}
-...
+map__load()
+  -> dso__load()
+    -> machine__map_x86_64_entry_trampolines()
+      -> machine__create_extra_kernel_map()
+
+The machine__create_extra_kernel_map() function then inserts a new map into
+the same kernel maps array:
+
+tools/perf/util/machine.c:machine__create_extra_kernel_map() {
+    ...
+    err =3D maps__insert(machine__kernel_maps(machine), map);
+    ...
 }
 
-Meanwhile, after pthread_join() completes here in tpebs_stop(), the global
-tpebs_cmd.out variable is still >=3D 0 because the reader thread only closed
-its local struct copy without updating the global state.
+And maps__insert() attempts to acquire the exact same lock in write mode:
 
-This causes tpebs_stop() to explicitly call close() a second time just
-below this block:
-
-tools/perf/util/intel-tpebs.c:tpebs_stop() {
-...
-		if (tpebs_cmd.out >=3D 0) {
-			close(tpebs_cmd.out);
-			tpebs_cmd.out =3D -1;
-		}
-...
+tools/perf/util/maps.c:maps__insert() {
+    ...
+    down_write(maps__lock(maps));
+    ...
 }
 
-If another thread is assigned the same fd number in the window between the
-first close in __sample_reader() and this second close in tpebs_stop(),
-the second close could silently destroy an unrelated resource.
+Since maps__load_first() still holds the read lock when map__load()
+is called, wouldn't the down_write() in maps__insert() cause a
+self-deadlock? Other APIs like maps__load_maps() copy the map array
+and drop the read lock before loading to explicitly prevent this scenario.
+
+> =20
+>  	up_read(maps__lock(maps));
+>  }
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261013182458.1234=
-616-1-irogers@google.com?part=3D9
+616-1-irogers@google.com?part=3D10
