@@ -1,77 +1,68 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0B1C48C3FA;
-	Tue, 13 Oct 2026 19:54:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75D375437FB
+	for <linux-perf-users@vger.kernel.org>; Tue, 13 Oct 2026 20:02:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791921260; cv=none; b=fAaMsVJGsK8HIctS0zAq8NQNWHgbxbwlOWjZtHiMn4AOXCHuu57OUHNLYZtjks9fNhlKqo/fvIBYgeOP9xbxrJFPU8tOcm15XvPeMS0hWa7GqswlIyOutXzIhp638dcoiRFdtpFfbOo7g93TgCTnnreQfdC0lLj7X0IDYd3HtL4=
+	t=1791921729; cv=none; b=gaR0PxCdT5Z1cgyHXnga2ONQOFL1Zu5Q5krLwuVsEBtiPRn4XfdEfOKr/Xk7StdW4BXCYl9Boaib9Xf0GNacVh++zRHY+qDTAScuh4MP/3nUn4/pig4ecwAB477Qd1FnsnDXPcGk/WkIf5+1vv24ljpOLT/GAp93LycLt7+XaJw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791921260; c=relaxed/simple;
-	bh=Cbj8NzlF+5kjRQBTI+TSH8CrJMO6RrXxcAfJbaCmfoA=;
+	s=arc-20240116; t=1791921729; c=relaxed/simple;
+	bh=ftFzQFHCbjrZNiPleOQP4MGOXX7BY30wZozFURSN4Eg=;
 	h=Message-ID:From:Subject:To:Cc:In-Reply-To:References:Content-Type:
-	 Date; b=BCd9+gy+JbXdhsJmEt5SDqmHHAFcROIkuH+skTvf03APeryirO9LGkhe4KWUQlO6DzO19KZHzCGJ11sj83qgltvh0vWzswj9dfPeg8SK5f8Zv+GihxvBUuuGFljqxJTHLJPSFSKpKKH4QMz1/XeG1r7vokNJJ/Rz+alNlhweiDI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aaI7POjc; arc=none smtp.client-ip=100.103.45.18
+	 Date; b=u/QdoB89UGSsbxh7sQDX9hiptgTxB1fLk5PZksaCNaN/bIxDui+WH92mhsAnlqmqVzlbO6DNOXDdD1jg3i0yeGlgFIIMsqdqcH0WePrmM2HJHonaRhxA6h21W0W/Q0f6mjofPEJYw5cSeh6wjNT4VSbCbgaZzv+ug7CUj08JkkM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lMxGEOFM; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aaI7POjc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E25511F000FF;
-	Tue, 13 Oct 2026 19:54:16 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lMxGEOFM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DF3761F000FF;
+	Tue, 13 Oct 2026 20:02:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1791921257;
-	bh=Cbj8NzlF+5kjRQBTI+TSH8CrJMO6RrXxcAfJbaCmfoA=;
+	s=k20260515; t=1791921728;
+	bh=ftFzQFHCbjrZNiPleOQP4MGOXX7BY30wZozFURSN4Eg=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=aaI7POjclTNGJ12FAZEVQxYHh/N/iZoDRas3G3OBUCUzSvXeqZAoTPijQvHPRLAwL
-	 3+w8VgfhGlBB2JyViFpILFDk8hlGkMyWolIRsEgdHAx0xmVmDNRnbBTDM0tnPj58nA
-	 9CMTWOCTTu9+9dAcShi8OdoajbIE3vXvVxuPqqUpO+82Ke7v4JrZppH7PU4YSZ6YaP
-	 6Y7pVZCLKKYvxNAfM1SGj3NgfNXAJk75tYWASJEDCqF06Zh1HCacyKIN5gQdDd2dT7
-	 h8WF1L9bGRQcRAPCu/YI24rcIXYFXIlJyOU95ngE5bw8Jm7+1Ekb1H+Gr08Iof/6Cp
-	 z8HG+lIllysew==
-Message-ID: <sashiko-outbox-170431@kernel.org>
+	b=lMxGEOFMRCuA3OMiZkE8L+P1zFoTuGthrP05y+G3Px1XappMO9McOfyu5xoRlw17g
+	 olpG0f8wRUbUiHyQbHGmTcHmFmksRHZM3T4TXR0DEGVeOS5s2fAetR0AwxLCSY7RCO
+	 qAdkE5CRC24LyK4vTqa5yEbUGdjOdFIiJomxGhZhFnJhEBbCAE2d99N72nUzkh6Xoo
+	 VJStWB1kPzjEBK/dSwdVKL/xwgw/Pd9Qxz6Yg7RIKYJfIvakyq0D3ysgswuRyNxYgE
+	 rETvar8A+hlZGAGXKDzMOekLVDyMMH1EmSwsRUyLpOWVBq4+lnk1HLYnLqdtiw8sR+
+	 rMJZDencRWOgg==
+Message-ID: <sashiko-outbox-170434@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v6 25/39] mm/vma: enforce that mm-managed mappings may
- not set VMA_IO_BIT
+Subject: Re: [PATCH] perf/x86/intel/uncore: Add Granite Rapids CMS PMU
+ support
 Reply-To: sashiko-reviews@lists.linux.dev
-To: =?utf-8?b?TG9yZW56byBTdG9ha2VzIChBUk0p?= <ljs@kernel.org>
-Cc: linux-usb@vger.kernel.org, linux-rdma@vger.kernel.org, selinux@vger.kernel.org, linux-perf-users@vger.kernel.org, linux-s390@vger.kernel.org, "Heiko
- Carstens" <hca@linux.ibm.com>, "Vasily Gorbik" <gor@linux.ibm.com>, "Alexander
- Gordeev" <agordeev@linux.ibm.com>, "Christian Borntraeger" <borntraeger@linux.ibm.com>
-In-Reply-To: <20261013-b4-mmap-prepare-vma-flag-sanify-v6-25-1aa3c9b139f9@kernel.org>
-References: <20261013-b4-mmap-prepare-vma-flag-sanify-v6-0-1aa3c9b139f9@kernel.org>
- <20261013-b4-mmap-prepare-vma-flag-sanify-v6-25-1aa3c9b139f9@kernel.org>
+To: "Zide Chen" <zide.chen@intel.com>
+Cc: linux-perf-users@vger.kernel.org
+In-Reply-To: <20261013194005.96615-1-zide.chen@intel.com>
+References: <20261013194005.96615-1-zide.chen@intel.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Tue, 13 Oct 2026 19:54:16 +0000
+Date: Tue, 13 Oct 2026 20:02:07 +0000
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-> It makes no sense for a mapping whose contents the kernel does not own to
-> specify that the range is MMIO.
+> Add support for the CMS (Common Mesh Stop) uncore PMON unit, shared by
+> GNR, SRF, GRR, and CWF. One CMS box exists per CHA box, at a fixed MSR
+> address: 0x3400 + 0x10 * unit_no + <reg offset>.
 >=20
-> Prior to this patch, all in-tree drivers which did so have been updated
-> such that they are marked as not being mm-managed. The check WARNs and
-> fails the mmap for any out-of-tree driver that still sets VMA_IO_BIT
-> without a kernel mapping.
+> CMS is not enumerated in the discovery table, so it is added as an
+> extra MSR uncore type instead of going through the normal gnr_uncores[]
+> array. Since the CMS unit numbering matches the CHA unit numbering,
+> build the CMS box rb-tree by mirroring the discovered CHA (die, id)
+> pairs, ensuring CMS boxes only appear where a corresponding CHA exists.
 >=20
-> Here VMA_PFNMAP_BIT, VMA_MIXEDMAP are tested individually rather than usi=
-ng
-> vma_flags_is_mm_managed().
+> Make generic_uncore_msr_ops global so the CMS type can reuse it.
+> Opportunistically add the intel_ prefix to match the naming convention.
 >=20
-> This is because vma_flags_is_mm_managed() still checks for VMA_IO_BIT.
->=20
-> The very next commit in this series removes this, and the check is then
-> converted to use vma_flags_is_mm_managed().
->=20
-> No functional change intended for in-tree code.
->=20
-> Reviewed-by: Zi Yan <ziy@nvidia.com>
-> Signed-off-by: Lorenzo Stoakes (ARM) <ljs@kernel.org>
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Zide Chen <zide.chen@intel.com>
 
 Sashiko has reviewed this patch and found no issues. It looks great!
 
 --=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261013-b4-mmap-pr=
-epare-vma-flag-sanify-v6-0-1aa3c9b139f9@kernel.org?part=3D25
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261013194005.9661=
+5-1-zide.chen@intel.com?part=3D1
 
