@@ -1,67 +1,77 @@
-Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9214554DAF5;
-	Tue, 13 Oct 2026 20:32:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 300293ED13E;
+	Tue, 13 Oct 2026 20:34:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791923524; cv=none; b=eU9iFV3c+PMTEMNY9tnbcqAphkDflgE0p8OGwi3phBiCR9VoRS4TdqAumElK9XaPtAv/jrK6kuEtZZyhcaMTwN821vona1hkBwAe2wPVL15siwEMHdtYuucPvJQ9KNNFguS9uFyoHClPaYiCob8ZixhBV7+zY9e6OfBmV+FWuTw=
+	t=1791923686; cv=none; b=f528EwrQbuT94ATHYWa4lL5VY8HbUoiH0ctcN24F/FdFLlXw4gvktN5YUYXnRy9LxoJAAgOfrw50qquBx3KD1runMV961ygnx7Wl0ZiYIEtWt1d2nKmKrnQXsqoWtYwjOiouGTJR+Zr9SU/u+59s4AFo/2ZClzCY+rGEgN4+xZ4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791923524; c=relaxed/simple;
-	bh=zB1bYAP7BlE3kghgTbTWzukoIkZ0zPngPL3n5uFA4l4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JgZ0dd9Gy+PEzmV07B1IbkhDgMexQ/adIg4e8r1h/tIK0ycZ0Jg+bJJxGqCidDvzECD1em1VXEgWe1ws3H5KgeUUx9vP749ejIwdsCANoz03rAfppRzRoqDk0OhKq5FHC0589d6BBU0GvQlIlNcWBKr2h7jd9CmtT8BPPMZQI44=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=t-8ch.de; spf=pass smtp.mailfrom=t-8ch.de; dkim=pass (1024-bit key) header.d=t-8ch.de header.i=@t-8ch.de header.b=OzOTAYrO; arc=none smtp.client-ip=159.69.126.157
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=t-8ch.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=t-8ch.de
+	s=arc-20240116; t=1791923686; c=relaxed/simple;
+	bh=D4dBQMVImij6FKBPDznpNCmWqLg4JEmdsPgP2iwQHM4=;
+	h=Message-ID:From:Subject:To:Cc:In-Reply-To:References:Content-Type:
+	 Date; b=Ybbrv1mCWfBSg22DrIs2xLLHt0WG55utr3gRDoZEHSI0qVdgkcBUeCMYBKxWJgMRFFILp2MtDVkKMVxELmguxcxxFSYuwpA/zULriQytoBhBSZQCMy7KfklbEd5Nqo5kLC51PKHJd9EOZyeAWMmsxd7g05zCP8fsd+GbBktVzc8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SRUooKs6; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=t-8ch.de header.i=@t-8ch.de header.b="OzOTAYrO"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=t-8ch.de; s=mail;
-	t=1791923517; bh=zB1bYAP7BlE3kghgTbTWzukoIkZ0zPngPL3n5uFA4l4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=OzOTAYrOsNXdT7HaUIlD1URf/tUABcu0MwYaT22Ws/35IVkul3E+7ETsojrEaUzXx
-	 qsoVSwiMbfkYJ+3NLvhFmXaWQmDn9XFle2xnhBLO56tRpQSd4V7e1vC7M0sv9dfnZP
-	 0Rvg4JRNePLtXuIl9Kx6sUKwI7Ber97YFUXUJ9Tg=
-Date: Tue, 13 Oct 2026 22:31:57 +0200
-From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas@t-8ch.de>
-To: Sasha Levin <sashal@kernel.org>
-Cc: Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nsc@kernel.org>, 
-	linux-kbuild@vger.kernel.org, Shuah Khan <shuah@kernel.org>, linux-kselftest@vger.kernel.org, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Ian Rogers <irogers@google.com>, linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH 1/6] kbuild: factor the userspace ABI flags out into
- KBUILD_USERABI
-Message-ID: <e92f7acf-a8fa-4138-9703-8feb3cd55499@t-8ch.de>
-References: <20261011233647.2454648-1-sashal@kernel.org>
- <20261011233647.2454648-2-sashal@kernel.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SRUooKs6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 741571F000FF;
+	Tue, 13 Oct 2026 20:34:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1791923683;
+	bh=D4dBQMVImij6FKBPDznpNCmWqLg4JEmdsPgP2iwQHM4=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=SRUooKs6k7A+dtjFZGuGv+yjOn5xNzQf2t6vE7DDerxgIa9euXfAEzKZqgGriGaKV
+	 iQvcWOGMznCnDqzHXR8HagxFpsqutkK1wSrbinn+IlCE8Le+sv47zj3OG6T64BGuXT
+	 TeIkz3jwPPl1KlwvFqh8kTFamJZzIGoc0rtK86TsZfRRCWjj6jlCpO83WS8JKkGQu6
+	 4U9KCvdyc9towrVxcx90TePCnk1mIW/aXn4kL7nH6JXziM2s8HtS1RYXA7slhyQts4
+	 5Liz87vraRfEIN8b62GFKsORidsI9B2pCO/ZQSHWxTvUKjWEWHzef/PiLj4neu7C5E
+	 UhGoOtzVpjsRw==
+Message-ID: <sashiko-outbox-170467@kernel.org>
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v6 30/39] mm/vma: introduce vma[_flags]_is_mm_backed()
+Reply-To: sashiko-reviews@lists.linux.dev
+To: =?utf-8?b?TG9yZW56byBTdG9ha2VzIChBUk0p?= <ljs@kernel.org>
+Cc: linux-usb@vger.kernel.org, linux-rdma@vger.kernel.org, selinux@vger.kernel.org, linux-perf-users@vger.kernel.org, linux-s390@vger.kernel.org, "Heiko
+ Carstens" <hca@linux.ibm.com>, "Vasily Gorbik" <gor@linux.ibm.com>, "Alexander
+ Gordeev" <agordeev@linux.ibm.com>, "Christian Borntraeger" <borntraeger@linux.ibm.com>
+In-Reply-To: <20261013-b4-mmap-prepare-vma-flag-sanify-v6-30-1aa3c9b139f9@kernel.org>
+References: <20261013-b4-mmap-prepare-vma-flag-sanify-v6-0-1aa3c9b139f9@kernel.org>
+ <20261013-b4-mmap-prepare-vma-flag-sanify-v6-30-1aa3c9b139f9@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Tue, 13 Oct 2026 20:34:43 +0000
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20261011233647.2454648-2-sashal@kernel.org>
 
-On 2026-10-11 19:36:40-0400, Sasha Levin wrote:
-> KBUILD_USERCFLAGS and KBUILD_USERLDFLAGS pick up the flags that select
-> the target ABI for userspace programs: --target= under clang, -m32/-m64,
-> or CONFIG_ARCH_USERFLAGS. Collect those in KBUILD_USERABI and export it,
-> so programs built outside of kbuild's userprogs can be compiled for the
-> same ABI without also inheriting kbuild's warning and language flags.
-> 
-> No functional change: KBUILD_USERCFLAGS and KBUILD_USERLDFLAGS keep the
-> same value.
-> 
-> Assisted-by: LLM
-> Signed-off-by: Sasha Levin <sashal@kernel.org>
+> Introduce vma[_flags]_is_mm_backed() for the purposes of identifying
+> mappings which are mm-managed and whose contents were placed there by core
+> mm's own fault path - rather than a custom ->fault handler.
+>=20
+> Mappings not managed by core mm do not fall into this category, as they a=
+re
+> populated by their owner, and nor of course does memory-mapped I/O.
+>=20
+> We exclude fixed mappings as these have a layout core mm cannot assume
+> ordinary fault semantics over.
+>=20
+> hugetlb mappings are fixed mappings, but core mm owns them entirely, so
+> they are explicitly carved out as mm-backed, as the MADV_DODUMP check
+> already does.
+>=20
+> Use this functionality to update the madvise MADV_DODUMP check to test for
+> [ ... ]
+>=20
+> No functional change intended.
+>=20
+> Acked-by: Zi Yan <ziy@nvidia.com>
+> Signed-off-by: Lorenzo Stoakes (ARM) <ljs@kernel.org>
 
-Reviewed-by: Thomas Weißschuh <linux@weissschuh.net>
+Sashiko has reviewed this patch and found no issues. It looks great!
 
-> ---
->  Makefile | 12 +++++++-----
->  1 file changed, 7 insertions(+), 5 deletions(-)
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261013-b4-mmap-pr=
+epare-vma-flag-sanify-v6-0-1aa3c9b139f9@kernel.org?part=3D30
 
-(...)
