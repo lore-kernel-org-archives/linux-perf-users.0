@@ -1,67 +1,67 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 527C75111A4
-	for <linux-perf-users@vger.kernel.org>; Tue, 13 Oct 2026 13:38:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1348F501F2F
+	for <linux-perf-users@vger.kernel.org>; Tue, 13 Oct 2026 13:38:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791898720; cv=none; b=l3wTuNWslUyOD+nvWWLmWc8ojId3B66X/m1BW7pan+GbSzhB9eZ06UQtiPZPz5fAifXum2JwFT5Jeuc4n7xbPJ4Xza8LVIM323DmN4/BoZ79pZ3eWn8qazrXToh6ATJh9j3G38LUtqq497FYV9r2c4Jth4MxNOC3l+5RUn7J+OY=
+	t=1791898731; cv=none; b=DICtSCrCNlox9tbNFhc86pXzcadOEwzFt7IBk5oSmTbqlV8iKBb3aO1Tw1fa+LcaCbrxgrhM6QsDyvU23OnoHsuMwKCyIlBCn2VwYeup4yP7dlUlnG5231j5xEe4JqLaZ8YncCJeu7N1PO67rMVvL0bn1UzSoNrDjaQb5wyVCig=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791898720; c=relaxed/simple;
-	bh=bToorqi+il41P6bp3e0ejNeT4xFYu+nbRjmhjegzx2Q=;
+	s=arc-20240116; t=1791898731; c=relaxed/simple;
+	bh=4Y5GYOCiKkX4J5iCw3CxGDBtB7BITDFbh1AgTFwCF0k=;
 	h=Message-ID:From:Subject:To:Cc:In-Reply-To:References:Content-Type:
-	 Date; b=aGuMH1U2jkwvNY3fa0tCV0yzmosX61aLzux1tiBUoVmGxMx/evr4YQX+6bULDhs+WGdncaTrBcGUlD12vUx71cFzexsjuAATg9pXLXQZJ6P6ezVUnzPbBwVzzae3m3WNnk81WchSXOe2Gsw31Z/+sKEkZZBdro4G1NBtVt8heC0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BsfBqtxO; arc=none smtp.client-ip=100.103.45.18
+	 Date; b=V4Kd+Xad3myaSay0P+I58IvI9WsAcw0mWLoyPv8rqMu/mTCY/xm9OhURoxwCffYZJUj1sdHfY8+0Bp0zG0Jc8kS3UDDk8MNPIdcOoEe3Yb8cKqMZHrLQzCtp4L6/lgnkBLg91WdUrcJ1ujUZSQ5ConsFKF4wfRGEOBiNKqSQz34=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Wk81kJUU; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BsfBqtxO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F193F1F000FF;
-	Tue, 13 Oct 2026 13:38:38 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Wk81kJUU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AA2CB1F000FF;
+	Tue, 13 Oct 2026 13:38:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1791898719;
-	bh=EaLxKHKzKrrycim4y0DKeiCYq3gAbX0MfiD6rkAYvGU=;
+	s=k20260515; t=1791898729;
+	bh=D5paWtLERyVm/KTNzxqt4YSbmp8bb8GJ6RtHC3CJScM=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=BsfBqtxOdP3R+6YhxIRzx9aw84N4wJ35h+FGhWSZM6fugmj5m9x7s3LyH2bT8V44n
-	 9+l/bwLGsXgEG/+oo03fxjIB01xPFtQJRIlkUPlfJyAAlttmB8s1jUnlV49huuz8Lx
-	 ZhGHWsxfPS2t/CsY74z8z0OMLI38zrZwfJtkYqHIzBZ+S5GoWzpU94hv+2o8syLg4T
-	 0OtGJyAXeHUTEIMgt4FT2Nd7FAaZohGI08yjSTdBwQ0WzA1niOKqKlIyjWrBBQEJeK
-	 FoYAIW02LCE9FOxbUWEV+lT9pX+pht4Mvd7ciGJ4pcq+RUEFIaWNGxzHvJHPR6dIgF
-	 kC3u78O/6NKOQ==
-Message-ID: <sashiko-outbox-169833@kernel.org>
+	b=Wk81kJUUZolC86XZPdp7FRyz25NjjAfAH7DxKHXCBUeCNJAPI5ptRKGS5Nlbex8OH
+	 F2SXlRIEdpLwCX3sunJ7CGQ8Q2qFTpka3VDGBJLmaDuYyew3R0tA99PCCq6rJZsdtB
+	 A/hC5R+G44jsLHBCaW9bQ/FUIduuZAssBIB84Lrd6ru+Pny5XfeVwpvli7bLGNz0ix
+	 GQYd3GRPbhT6cPtQp6MlmzFIMeMMZDiWmuPI+JorfmVDYzqQUmPHK/09Wjng6H+HyS
+	 1RVFO2F7HtPiQ2QJvZLSHYqbkqui2HBQrnc/Tp4nLtszPwFVAtfJkLXu0FEQE1IXFE
+	 h1bGUTI+LFF2w==
+Message-ID: <sashiko-outbox-169834@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v7 05/15] perf annotate-arm64: Support load instruction
- tracking
+Subject: Re: [PATCH v7 02/15] perf annotate-arm64: Enable instruction
+ tracking support
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Tengda Wu" <wutengda@huaweicloud.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <e5891f8bef0563681bf49300cef50dd66e3e78ca.1791629326.git.wutengda@huaweicloud.com>
+In-Reply-To: <4980703a94ddadb06b3df925aacd2efc7d7c3308.1791629326.git.wutengda@huaweicloud.com>
 References: <cover.1791629326.git.wutengda@huaweicloud.com>
- <e5891f8bef0563681bf49300cef50dd66e3e78ca.1791629326.git.wutengda@huaweicloud.com>
+ <4980703a94ddadb06b3df925aacd2efc7d7c3308.1791629326.git.wutengda@huaweicloud.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Tue, 13 Oct 2026 13:38:38 +0000
+Date: Tue, 13 Oct 2026 13:38:49 +0000
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-> Extend update_insn_state_arm64() to handle load instructions, tracking
-> register state changes when data is loaded from memory to registers.
+> Enable basic instruction tracking for arm64 by implementing three
+> essential functions in the find_data_type_block() call path:
 >=20
-> Two main categories are considered: standard load (e.g, ldr variants)
-> and load pair (ldp), for example:
+>   find_data_type_block
+>     -> arch_supports_insn_tracking  (1)
+>     -> find_data_type_insn
+>          -> init_type_state         (2)
+>          -> update_var_state
+>          -> update_insn_state       (3)
 >=20
->   ldr dst, [src, #imm]
->   ldp dst1, dst2, [src, #imm]
+> Changes:
 >=20
-> For data type propagation, a load pair can be treated as two standard
-> loads combined, first loading dst1 and then dst2. The difference is
-> that when loading dst2, an additional memory spacing 'mem_spacing' after
-> the first load must be added. This mem_spacing can be derived from the
-> instruction mnemonic and the size of the dst register. Each load operation
-> is handled by introducing propagate_load_reg_state().
+> * arch_supports_insn_tracking(): add arm64 to the list of supported
+>   architectures, allowing find_data_type_block() to proceed with data
+>   type analysis.
 > [ ... ]
->   final result: type=3D'struct task_struct'
+> inference during instruction tracking.
 >=20
 > Reviewed-by: Ian Rogers <irogers@google.com>
 > Signed-off-by: Li Huafei <lihuafei1@huawei.com>
@@ -71,5 +71,5 @@ Sashiko has reviewed this patch and found no issues. It looks great!
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/cover.1791629326.gi=
-t.wutengda@huaweicloud.com?part=3D5
+t.wutengda@huaweicloud.com?part=3D2
 
