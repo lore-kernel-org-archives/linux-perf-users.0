@@ -1,160 +1,266 @@
-Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from PH0PR06CU001.outbound.protection.outlook.com (mail-westus3azon11011023.outbound.protection.outlook.com [40.107.208.23])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C2EA387346
-	for <linux-perf-users@vger.kernel.org>; Wed, 14 Oct 2026 09:29:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.221.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C1614F7CA6;
+	Wed, 14 Oct 2026 09:39:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.208.23
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791970146; cv=pass; b=rxc53gK9TUv7h9f7ItOywM/XCCUzdbLrN4jLFBRRbQS2eywSnBEUu3Qkoz0er+bRsfNgzIyxn86ICDtsY34IGqghAlbP1kh1pIHNe8iT643kKJ45HoMxNhowutIpvT4adrZYvxm6NiTjZNUXmCPGzhFyY2/RqwSz6TRKPIvxGFw=
+	t=1791970766; cv=fail; b=rUJtJh+eLqjkGE+YM8QsoT+MZUZETbSVXLb2lYZ3ocl5x+dTsW3EhSzdArcBm5nmXFgWhjS3pv11S2n/am6OYncnMVAzwEXdVtYerAz3NjcAI+8PDpdYEtQJL5RJo1X3mvb8FRvZ/hBQVrC5oyMlHGdQ3D+TO7ZNuOjvOK+Nybc=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791970146; c=relaxed/simple;
-	bh=WN/D2DKkPkAtwoVdUzfYLsH4nQOGe29u3pPkyYp+9Rk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=VuKn3HWzzIK75IuC+W0HhSzrht8F8I/ZnGxkw6MIkbGysHbDixTboplSsQYQmuZYpB+h/4DnjQC5V49IpDUuIX+0Pwge45P6NzqSSFimO6oSLPZGZzNaqgd8NPs3Yxp7tO7VUIGy+zoXCl8Y+KAI79Y9K1C2z9U43hCWv7YaY6E=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XESQWpec; arc=pass smtp.client-ip=209.85.221.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1791970766; c=relaxed/simple;
+	bh=g6Nj/FVtLRv/F3u7s/eDj8rsMoHFcrkpz681nDMCN94=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=WORoddHa+IayHLAdxfPx9C5XUp4Z3khmb3DJHfXyCPizLjKsdKm36VaoscEcYUIciXoslv8jH/bvRwZTDCuf/RK4gR1ujuer76HO8GdIB3SMiUCX0l5ZuUuJhFM+rZcGu7RlXDFDu96Kd4ykgwz95wzTOO1QMyAWXW1Bo3YKpsk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=4LgGMq8k; arc=fail smtp.client-ip=40.107.208.23
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XESQWpec"
-Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-48b060ec084so2521942f8f.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 14 Oct 2026 02:29:05 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1791970143; cv=none;
-        d=google.com; s=arc-20260327;
-        b=OXJMp4EmXkNhXxjRUf1sMHfWZ7J2w/VfVoGokJu6z0rueVrNSLSk7qgk49iLgc4IBn
-         6P6GqLq+YdBsUpAZ9tRZd8Zb2tC4KPmXpxm/gw3LkJOIU93RctESo0KdadFRk6vBBj/Y
-         oYDl1+1WjvQPesyJHQ5NRWM40XLg1xYja6WC2jMX+S9q8tkVsv/qJiWjmKYJ/J9h5f1e
-         EYvcwey+gyjMgjSoSInUYsbsvNjEcyysxIF5R2apLQraTdyEGTTCEJrHuy8izqRu4Ot9
-         1uX+sqUqaLOOCrLEai6FBJ1GZW4aTIOFlTXMT+wZ4ZLFzS7VwUxxcttQuFFy995vi3ps
-         q6Fw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=UM4snv3HyBXCnT4o3yFHC4lEa74fiilyetDqdq6lntg=;
-        fh=zb10hnEz5bqyS9o38ISB9NbEg5eVRAbYkN7pD9+kov8=;
-        b=Z2PsVCbny2BMMxmzpgbjs3W0NWCiEMngldE6WFs749eU/fiq4kDuUzwjEghxinyFB7
-         +WrLh3PFj3PSpEXCSzf5Pih5rEqs7lkoQ/wygGY49G6eYcsH3SFfRPrn4F75uq/d8A7M
-         HBo6ly4A3xypjmuOJl+90VCS/jClRzsXDO15L0GTU9UW5tcfrwWK/FyMOBSwd8D/hrEw
-         y3KWA93KneiHook84iixeRx//kPPTks2ugv43yHeUsI3mNXNPWP4MZo0C0TmEQmvymgB
-         MR9qkxB0OqUquvs9ZnXdkuTuj4RHoiwCC9NsT/Vl0xrT+HKzDbqdqPZsvJyAuzrL785O
-         9wRQ==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1791970143; x=1792574943; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=UM4snv3HyBXCnT4o3yFHC4lEa74fiilyetDqdq6lntg=;
-        b=XESQWpecQ1oE77q85jd7V07GxvA9TIdihTc+fZdR/N0Eja6i+3XLI9t+PS+fwAdZi4
-         nbjT9oOMPJ5vPjoYrvueGYNYn9i8ePRypPbpQUVKlFpKrsgy0Mj+ZIYqAnGuGz6GhzQ3
-         T6gdr2ywAMG+lvUt7ahcYlRWlSFO9TxJKCDQc+SN8tv6iTJmPsFSVQkvRTiL47Jt95j8
-         81psHBadDQeZPY7IJUTfFljPpV1yz01QLJAVj3LcCsNyQNejzSAxGtI5uQteoTD/U925
-         Eia+Yb3Ip9bRbUSe0U6JRCdMbhcBcbzPqO20sTTjO++jQxJzavd8vC79w76SYUzRM6Wy
-         NTjw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1791970143; x=1792574943;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=UM4snv3HyBXCnT4o3yFHC4lEa74fiilyetDqdq6lntg=;
-        b=rmJJv1tNtHu4ROaVl2j+WjTfIR+8Zr1EzTH8wNKc2gX31b42v5yBzkZZgIP+GrJBKj
-         eBzC1pe5G5SDLDwPwhyGvpMUD0o7n+OnnYUpAlVklcpgdLU3kbo4y1sELJSs6KF5XrQN
-         W5PjnQmXxNbNebZl1irzXezK6nvYXFQI8kMtn2Km1d3kkiK48lCa+2kx2mjRZk9AlY8v
-         dCoggm+0uHUI8F8Sokzg3nwJyI91UvUOl2AzecV4yp56YbkyGZK/t0+UVeTXE14T/AOS
-         izPEg3ZV3unTcNsogkBu6CA1G8V/SV63jECsbtqO/d42hUdy1AcG0+UPx4NvU8AA8ZhB
-         ujHw==
-X-Forwarded-Encrypted: i=1; AKwUvByQrW5GdSTRk6CQ7uZrVHNc5kIqAB05eZzGWQZa24yY5Ia6L8gcwmhz9n757gwxTIK2QGL/8BK6e87nvNgCWjfu@vger.kernel.org
-X-Gm-Message-State: AFq9FYIWrOzQb/pzefcgFjuqXaabR5eiUodwUkUu68poNb6zM0J2nUp7
-	OEb0nnRL0nMsZdh2zY3EfMZF1c6u+/iwvHcSymNTFdqp+WNUu8tsf37fq3kWzdI0aw4a3wOyhHf
-	gUkX/lUicBwqTvpZMVSmM2mCU/2aYuHA=
-X-Gm-Gg: AYBFou3u++Jaq4SG+b/Y7nAXMYjpumk/my/7lVatwkTSYyWmKzHR7QVXw36ssxigBRt
-	E6ap6NxErVR1v0b05pXn/a2rP6Pr4c3YNsnxSrqnAfbqafBDmYOSdRY0PbZA+IV10K4aeOm1V6K
-	rZ4XYvR6BTAB2lC1r0Rpe+XATV4da4tW1rZD/0XUIo0BD3zL268xxYHsSrtEYMegBGJhX5qVBxb
-	No8Gxrd7iNdbRG58oKd+8LQ7AvKzjbs+QnonC9qI90xPrqFLEGpwX9IQY0kYjW0hRXY98AWDK/n
-	DPYqbftS7jiKMmCPNw3PBfCemCnRQjUYpDwN2kVi8II7mLjgLqZd09excroAKhdyZwixRT5CyLc
-	mz4qCWT2zR+1os9UnEKuhVaafwBhHgHkIGw15xy04Ys8=
-X-Received: by 2002:a05:6000:41db:b0:487:1c89:f158 with SMTP id
- ffacd0b85a97d-48dca3433dfmr21443506f8f.14.1791970143295; Wed, 14 Oct 2026
- 02:29:03 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="4LgGMq8k"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=sylyMZSENdm4guVBmAkEze69SaMml2EsupuxQB+EtNSDsjrVAQwqYoQcRcOhuH9bbKcVgLk+MpvMFPXH4oc3xuazXufuW5mOpSzNWP5nQ4Nm1s2IIwzO9msSvUO1SHocpcys59uCEaegtuDtKKTIUG16NOc4L1121F+hSjnFaNCvfFdVbV6KtdcZ6Q2L+fL9MwLEoz4bJI6fZnabPlf45h/Lave5xOkCRuC0ihnec9+edskM+aoo5G3GH9bkmR8qz79H7WTAcSWlDRKI4N9cUB3BTsSTSv4l0ejNUdhnmXm3F1EXo8TGrxCdK5rVo+cYPRA6EEwcbzkTPHuv/crUeA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=l9Qm5uFFNL+7H+fbSWI9CCJfVeIL/5xNCzzUW7EDV3M=;
+ b=Ire5HB9Te+VhNaLsbMHMMxjeEYYsLj5cxVGJdcqyTlYSwhTuGgca7i2+Kk3oYLyDFBlkgXH7K6huC+l7Tr9hkmcM8SeFPnqUMgELFGvynEPiGx7vDh9bQGetLplTUre7MbTZ3ie1d6unPczajtilNbfDSdKmGLfRDnEwKtl71k+PojnEfMQTjN7v7m5dGiKlDXtUwlVGi3oruXp11e+yucnOuLnmS2BxSg6iTmXE1rQOI34qEmCN+2NwnaCSatzbT4Mz9dBVerfdlgKXxq5+qb4s9R1Q7E+WmTgo+K/ybdfWJJcrhz+GMPheAKmdhIhDIjv0lqRmIVJ4uUYPMKT5sw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=l9Qm5uFFNL+7H+fbSWI9CCJfVeIL/5xNCzzUW7EDV3M=;
+ b=4LgGMq8k2ZXQ3TqR81IXlnubORHiSVhIlLxvrlZ8ZiQ6Ny2tsgv0wkWCws5oM/VL7jCtncR4PIIHDanhqBFkpaRShaNM6eRk60DfjP+X1TKf1z4XQ82wGl6O7xjvgtbqEuxlxdzAWDgAPIJa90cmQ0qBYpms3ns7d0jMpaiMWNE=
+Authentication-Results: mx.microsoft.com 1; dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from PH7PR12MB5712.namprd12.prod.outlook.com (2603:10b6:510:1e3::13)
+ by DM4PR12MB6351.namprd12.prod.outlook.com (2603:10b6:8:a2::6) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.21.522.13; Wed, 14 Oct 2026 09:39:19 +0000
+Received: from PH7PR12MB5712.namprd12.prod.outlook.com
+ ([fe80::afe1:7dd0:ea71:b7e7]) by PH7PR12MB5712.namprd12.prod.outlook.com
+ ([fe80::afe1:7dd0:ea71:b7e7%4]) with mapi id 15.21.0522.012; Wed, 14 Oct 2026
+ 09:39:18 +0000
+Message-ID: <fb15e9e2-5d3b-42c6-aabd-3bd2553c5c78@amd.com>
+Date: Wed, 14 Oct 2026 15:09:07 +0530
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] perf/x86/amd/lbr: Limit branch snapshots to valid entries
+To: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>,
+ Peter Zijlstra <peterz@infradead.org>
+Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+ bpf@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>, James Clark
+ <james.clark@linaro.org>, Thomas Gleixner <tglx@kernel.org>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ x86@kernel.org, "H . Peter Anvin" <hpa@zytor.com>,
+ Andrii Nakryiko <andrii@kernel.org>, Song Liu <song@kernel.org>,
+ Ravi Bangoria <ravi.bangoria@amd.com>,
+ Ananth Narayan <ananth.narayan@amd.com>
+References: <20261007181002.4005262-1-sandipan.das@amd.com>
+ <20261012153014.GU4121339@noisy.programming.kicks-ass.net>
+ <94d387f2-ff07-4895-a722-e8ded4203309@amd.com>
+ <20261013074625.GC2009045@noisy.programming.kicks-ass.net>
+ <becc5593-69ef-4800-bc2b-0fb217165910@linux.intel.com>
+ <eb6c7bda-0dcf-4fac-ad69-9f5b24abc21b@linux.intel.com>
+Content-Language: en-US
+From: Sandipan Das <sandipan.das@amd.com>
+In-Reply-To: <eb6c7bda-0dcf-4fac-ad69-9f5b24abc21b@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: PN5PR01CA0004.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:c01:261::10) To PH7PR12MB5712.namprd12.prod.outlook.com
+ (2603:10b6:510:1e3::13)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <fe117dd44728fe7c96f3e4b3ec88c6ca83c5da9b.1791880574.git.geert+renesas@glider.be>
-In-Reply-To: <fe117dd44728fe7c96f3e4b3ec88c6ca83c5da9b.1791880574.git.geert+renesas@glider.be>
-From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date: Wed, 14 Oct 2026 10:28:36 +0100
-X-Gm-Features: AclHuK_hpJt3R0zDHjAZL75ikzTNtzzFWfnolY7PI7Bi35zqbWZzmjfcVJRiUWc
-Message-ID: <CA+V-a8tpVEqJTKr4JS2aEcgr6yXzmh8j==x=+54o-rAyBwLrRQ@mail.gmail.com>
-Subject: Re: [PATCH] perf/renesas: Remove remaining RISCV_ALTERNATIVE references
-To: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>, 
-	Conor Dooley <conor.dooley@microchip.com>, Jisheng Zhang <jszhang@kernel.org>, 
-	Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Magnus Damm <magnus.damm@gmail.com>, linux-riscv@lists.infradead.org, 
-	linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org, 
-	linux-renesas-soc@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH7PR12MB5712:EE_|DM4PR12MB6351:EE_
+X-MS-Office365-Filtering-Correlation-Id: cec8d9b0-6adb-40e6-c9f4-08df29d704af
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|366016|23010399003|376014|7416014|56012099006|11063799006|4143699003|261009223027099003|10067099003|22082099003|18002099003;
+X-Microsoft-Antispam-Message-Info:
+	r6OaZbzZ+kTtW1CrYrhnvNCHmZ4IqRzbrgRiOJL4OUakXVqdxGaWYDWYlmVwweRFrnhWq9+HOWoz8kXeM3WmM5hiyxTSIVs5xlNz+kN5Lah1XJSQ9gqmDOKd2xXa5RuPcA/C5VxuilJ5X0Gcpk/IW+lEV+mbz5yU+nlo4PvCzkHKYM1De9EI3pfuQk/n7RSGDzLqQfP/G7ylDUQ/F0wA4rRwXmQNEkmQ8xOt6OqA5+j/AyGS+Zr1PTE1cRmTmZC08OJ4OfOuU5U0DNSwLZ5rU4+728lSrnM/Ifq3eZK3S0r9Ug+91SkSkpyEEXi5VMMT2JkBlfF1UQozZvKKfuSCv5ikiw705xHPc8I4NTreUBei0RY4ql+UNr2bH9ioQqqAvPHVq+jG3/Uw1j6AFoucHBsdC1yDOWVc9tpHMy31ektmZDMGJtbjlNIYNuLPeHguNajCaaOE6ffVMBeNEJzMH8WxMmEOJJb13wJbS1WTvCFZAKKDHcaIQf0H1RO35TGUJivgeHhaVi/CRxYduit14+HxB3CpJ0zyozkJuemH5UP9Bc3BYBV6r7hV45AbkaUBEeSzWRxXU9oAlrmq9QLnYcZefBFJWyiJbTBsDpdg8ZnaOrY4gIqMwvKq4EpLWmVC
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB5712.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(23010399003)(376014)(7416014)(56012099006)(11063799006)(4143699003)(261009223027099003)(10067099003)(22082099003)(18002099003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?NU5nOFZXdTRDS1EzZUhMeHB2QW9aWml2cGVKSFBTQWFFTEtyYU1VTXhYQ1ky?=
+ =?utf-8?B?SGdTWGhLd0R4TEFIZHNtYzZodHJzaC9wc29lZXJabWFpdENkdUZoQVRRbzRu?=
+ =?utf-8?B?UXVaVzhKN2JtNFF1L2NMSDFMSFFhSTFtM3JDdldUcWNlaUZseG82d0NCUmY5?=
+ =?utf-8?B?M210Q1NybGFFOEQydW0wY1BsdDNoMUFWbWFSaVZGbCtDYytkV21pWVIraUV2?=
+ =?utf-8?B?TEVpNFVFeTFJMEExdll4ak1Fb2VSOGhzV1VLUUdzWXdpV08xdklSUDB3QlRC?=
+ =?utf-8?B?UU9hM3o0RkNsZkFkQXZGb0hXRTE1cjhPOVEwUWR1MnJhcEpTdUxHeXp5bmwx?=
+ =?utf-8?B?cVZHdkUwektvcTkrMWdoQ0JHK0pyalhURWk0ZTR2eThsSU13N0FQdmhVVHhh?=
+ =?utf-8?B?TFNlTGs2SytTMWNKK3I3T3RJRmcvZURMYWVmV1lwOHZaMFR1RnFlN3pMVTRT?=
+ =?utf-8?B?KzRKcVkzYnRHTnBhN2xpdWY4K1g1VDNySGtYSENnTFhpK0ptR1Z6aURXY2gy?=
+ =?utf-8?B?M0tEdkhUSFcxa2NRMGtGU3FHUHd1ekZoSlgreitHN2lJYU1HeXoyT2U0TG9K?=
+ =?utf-8?B?cWR3RnJUSmc0Z0pxa2JISnk3M3FBZW4wdGxnaERkZW1GTUJBejBkeWR4dnhX?=
+ =?utf-8?B?VGdlampTWVpvekYxSTFZeGhWUStWSVNuWEM3TzJ4QjlrTUszNENUNDRISVQz?=
+ =?utf-8?B?SU9Iam90dEVhR0tHTHlNQUJUbTFDT0lOa3VuTTN6L0l5cFhvbjAybW4zVm93?=
+ =?utf-8?B?VW0ybEt6SjBTbW02WEp5Q3Z1NVo0OEF6ZXBRUFJoMnNsYThQZmVzR21yUWhm?=
+ =?utf-8?B?OEJGQTZ0SWhVVmNBS2N5RmxWV2xhSTFqeDkxZDNpVTNsVmNHNkdWMm5SZDVv?=
+ =?utf-8?B?Q253dWV6QURrcnMwdzVxUVd1TGt6ZTBucDRvWUhkR0FqbFhwYXRNVnV5V3dp?=
+ =?utf-8?B?OExyWW4zNlA3Q21pdkhkdnpidTh0eURPc1E0MkJ2TTFLdC9MWUs5bkZIbGlI?=
+ =?utf-8?B?QW15RUlzdXFDZGJIdkJpa3QrZlU3amx5MkwxdXBtejFBOWpnSnFUdTVRWjVC?=
+ =?utf-8?B?TVB0UnlhVk5oRFEwT1NieWNPWXQ5SE43aWpjMXVnWjc2MWZGVjRSdnJlSlVa?=
+ =?utf-8?B?RFlmT2Vsa0dwOFBrUk1mMFUyQ0VkdFhBNzFLTkVOR21OWkdST1czRE43bU94?=
+ =?utf-8?B?SktZaEpKbUdNOWxndmdjdi83elpIdmVZVW1KeEdaY3BuZFNGbnpZYXJBRlNO?=
+ =?utf-8?B?OVl3RTBRU3ZRMFFhYzFQbFRUdVZJdnQ5TmdmTkZNWUJsS1NXcjh3cUdwTmND?=
+ =?utf-8?B?YXpnMnJSVlh3aUZFRkFBUnZVajEzSXEvZVJBbXJZcXNCUVdnM1JDUkZnR2VF?=
+ =?utf-8?B?NEUrTU9YNWpDUDByYmlrKzhiaVdJTHFMVDQ0MlJFNThJKy9rUFEwMmVJczFT?=
+ =?utf-8?B?SlJYbkp5NEZlYUszVXB3SHVjRG1lOE9RR0l6UEFyOXdlL0dKZDFQRWJNTXlo?=
+ =?utf-8?B?QVIveFU2OVJBZHpmUndqSFA1RlRSUzhFUEVCQWhYcW1UekZIMVF3YXdsblpl?=
+ =?utf-8?B?c1RpcHp4NGpnQWtLdWZ3dE5tRVRQUVZ3eE1UQktxeENPeTRYWkl6T3hMaEtj?=
+ =?utf-8?B?bEM2MjYvZWN0RkFMUnRqc2VoeDI2TmJaNVpsbndmWWQzd0t3NEZJdDI0dFc3?=
+ =?utf-8?B?MUhwTDgyMEo0RE5SN1BSRU93d2xmSzZuMHJ2Ri9mcmFOamI0a2N5YjF6UWk1?=
+ =?utf-8?B?OWhHMGVMYllpbW9qd3V0UjNpQjljSU92RS9HekFHNVprdGpvVjZNeldFdTB4?=
+ =?utf-8?B?Q2d6T00ybUJaeUFyWjNWeGJnbzBRTnN5Umw1Y1g3NlNrcXRhT0I1MjJsOXF4?=
+ =?utf-8?B?Y084SmNlRWNTRmhST2psYzlsTzNSZmFMcVdVamU2UE52WE8zRjR2UUVxVDZQ?=
+ =?utf-8?B?cWJBR3JjZWs4NGNJMmFOcHYycVRyQ2VxRVh3alAyQkpDOEx4RmdHU3A1aUIx?=
+ =?utf-8?B?blYxc0ltUmJXUmNHTG1yaFB5ODk1eVFuS25wcnU5dUZsNmJYbCtOZmxYd05E?=
+ =?utf-8?B?MFh3V2VmRDhPbm1Yc202bXNVaEZ4YTNxODhIa2pyai94NVd5N1NCRGtrU3JU?=
+ =?utf-8?B?RndITVltNkRTTFoyZnFOc29lV1NxaktFL05ad05qQnZaK1lYN0tFTEoyOTJh?=
+ =?utf-8?B?dWJXMWQrSWtlTUhZR0tHeGwwMkpGajd2aVN0L2xid1VaSElvb21tblNpLzBk?=
+ =?utf-8?B?STJqa2N5aVZUSllmcWtQQzM4aUZiZTZFNVBiampRZ3I2Rm1pL0FsYnRHRkZT?=
+ =?utf-8?Q?NHGLWjgEzdU6oJpn+w?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: cec8d9b0-6adb-40e6-c9f4-08df29d704af
+X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB5712.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Oct 2026 09:39:18.7329
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 6GpePr7p2CO4pVA5N4E+zfK48WtMBaGEXwsa+hll+sZctKR6zou0I/6spac2Sq+37qpEPKVt5ASq7wQN7ZZQPQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB6351
 
-On Tue, Oct 13, 2026 at 9:40=E2=80=AFAM Geert Uytterhoeven
-<geert+renesas@glider.be> wrote:
->
-> As riscv always selects RISCV_ALTERNATIVE, the option was removed.
-> However, a few references were left, making it impossible to enable
-> RZ/Five support (ARCH_R9A07G043).
->
-> Fix this by removing all remaining references.
->
-> Fixes: b924210f542e13c7 ("riscv: remove RISCV_ALTERNATIVE Kconfig option"=
-)
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> ---
-> To be applied to riscv/for-next, or folded into the original commit.
-> ---
->  drivers/perf/Kconfig        | 2 +-
->  drivers/soc/renesas/Kconfig | 1 -
->  2 files changed, 1 insertion(+), 2 deletions(-)
->
-Reviewed-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+On 14-10-2026 14:31, Mi, Dapeng wrote:
+> 
+> On 10/13/2026 8:53 PM, Mi, Dapeng wrote:
+>> On 10/13/2026 3:46 PM, Peter Zijlstra wrote:
+>>> On Tue, Oct 13, 2026 at 12:14:58PM +0530, Sandipan Das wrote:
+>>>> On 12-10-2026 21:00, Peter Zijlstra wrote:
+>>>>> On Wed, Oct 07, 2026 at 11:40:02PM +0530, Sandipan Das wrote:
+>>>>>> The branch snapshot callback used by bpf_get_branch_snapshot() copies
+>>>>>> up to x86_pmu.lbr_nr entries from cpuc->lbr_entries[], even when the
+>>>>>> last LBR read kept fewer branches. The entries past lbr_stack.nr are
+>>>>>> invalid, but they end up reaching BPF programs.
+>>>>>>
+>>>>>> Limit copying to lbr_stack.nr entries and also reset lbr_stack.nr when
+>>>>>> amd_pmu_lbr_read() skips reading the registers, so that a stale count
+>>>>>> is never reused.
+>>>>>>
+>>>>>> Fixes: a4d18112e531 ("perf/x86/amd: Support capturing LBR from software events")
+>>>>>> Reported-by: Sashiko <sashiko-bot@kernel.org>
+>>>>>> Closes: https://lore.kernel.org/all/sashiko-outbox-163130@kernel.org/
+>>>>>> Signed-off-by: Sandipan Das <sandipan.das@amd.com>
+>>>>>> ---
+>>>>>>  arch/x86/events/amd/core.c | 2 +-
+>>>>>>  arch/x86/events/amd/lbr.c  | 4 +++-
+>>>>>>  2 files changed, 4 insertions(+), 2 deletions(-)
+>>>>>>
+>>>>>> diff --git a/arch/x86/events/amd/core.c b/arch/x86/events/amd/core.c
+>>>>>> index 49b6b8fce566..bf631f60757c 100644
+>>>>>> --- a/arch/x86/events/amd/core.c
+>>>>>> +++ b/arch/x86/events/amd/core.c
+>>>>>> @@ -944,7 +944,7 @@ static int amd_pmu_v2_snapshot_branch_stack(struct perf_branch_entry *entries, u
+>>>>>>  	cpuc = this_cpu_ptr(&cpu_hw_events);
+>>>>>>  
+>>>>>>  	amd_pmu_lbr_read();
+>>>>>> -	cnt = min(cnt, x86_pmu.lbr_nr);
+>>>>>> +	cnt = min(cnt, cpuc->lbr_stack.nr);
+>>>>>>  	memcpy(entries, cpuc->lbr_entries, sizeof(struct perf_branch_entry) * cnt);
+>>>>>>  
+>>>>>>  	amd_pmu_v2_enable_all(0);
+>>>>>> diff --git a/arch/x86/events/amd/lbr.c b/arch/x86/events/amd/lbr.c
+>>>>>> index 1e1b2f08cb51..a00d3850c4a8 100644
+>>>>>> --- a/arch/x86/events/amd/lbr.c
+>>>>>> +++ b/arch/x86/events/amd/lbr.c
+>>>>>> @@ -165,8 +165,10 @@ void amd_pmu_lbr_read(void)
+>>>>>>  	struct branch_entry entry;
+>>>>>>  	int out = 0, idx, i;
+>>>>>>  
+>>>>>> -	if (!cpuc->lbr_users)
+>>>>>> +	if (!cpuc->lbr_users) {
+>>>>>> +		cpuc->lbr_stack.nr = 0;
+>>>>>>  		return;
+>>>>>> +	}
+>>>>>>  
+>>>>>>  	for (i = 0; i < x86_pmu.lbr_nr; i++) {
+>>>>>>  		entry.from.full	= amd_pmu_lbr_get_from(i);
+>>>>> You now seem to deviate from what the Intel code does. Please clarify.
+>>>> Yes, it is a deviation. I thought of proposing the following but didn't
+>>>> proceed because I was not sure about the if condition in the second hunk
+>>>> which considers things other than cpuc->lbr_users for an early return.
+>>> Dapeng, can you look into this? I would really like to keep behaviour
+>>> consistent where possible.
+>> Sure.
+>>
+>>
+>>>> diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
+>>>> index 0a34d674df59..5dfb9e9156e8 100644
+>>>> --- a/arch/x86/events/intel/core.c
+>>>> +++ b/arch/x86/events/intel/core.c
+>>>> @@ -2822,7 +2822,7 @@ __intel_pmu_snapshot_branch_stack(struct perf_branch_entry *entries,
+>>>>         struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
+>>>>
+>>>>         intel_pmu_lbr_read();
+>>>> -       cnt = min_t(unsigned int, cnt, x86_pmu.lbr_nr);
+>>>> +       cnt = min_t(unsigned int, cnt, cpuc->lbr_stack.nr);
+>>>>
+>>>>         memcpy(entries, cpuc->lbr_entries, sizeof(struct perf_branch_entry) * cnt);
+>>>>         intel_pmu_enable_all(0);
+>>>> diff --git a/arch/x86/events/intel/lbr.c b/arch/x86/events/intel/lbr.c
+>>>> index 0b446d8912e4..6b070490f461 100644
+>>>> --- a/arch/x86/events/intel/lbr.c
+>>>> +++ b/arch/x86/events/intel/lbr.c
+>>>> @@ -1026,8 +1026,10 @@ void intel_pmu_lbr_read(void)
+>>>>          * but this simple approach seems to work for now.
+>>>>          */
+>>>>         if (!cpuc->lbr_users || vlbr_exclude_host() ||
+>>>> -           cpuc->lbr_users == cpuc->lbr_pebs_users)
+>>>> +           cpuc->lbr_users == cpuc->lbr_pebs_users) {
+>>>> +               cpuc->lbr_stack.nr = 0;
+>> I checked the code, and it looks safe to clear cpuc->lbr_stack.nr here. For
+>> PEBS events with the LBR group, the LBR stack is populated again for each
+>> PEBS record, so this should not affect the LBR trace for PEBS events.
+> 
+> I test the changes on SPR for the 3 cases, pure LBR PEBS sampling, pure LBR
+> non-PEBS sampling and the PEBS/non-PEBS mixed LBR sampling. No issue is
+> found for the LBR stack sampling.
+> 
+> Sandipan, would you mind to post the fixes for Intel LBR with the AMD fixes
+> together? Thanks.
+> 
 
-Cheers,
-Prabhakar
+Will post the fixes together. Thanks for testing this.
 
-> diff --git a/drivers/perf/Kconfig b/drivers/perf/Kconfig
-> index 245e7bb763b9947a..8cef4bdef76aecab 100644
-> --- a/drivers/perf/Kconfig
-> +++ b/drivers/perf/Kconfig
-> @@ -117,7 +117,7 @@ config STARFIVE_STARLINK_PMU
->
->  config ANDES_CUSTOM_PMU
->         bool "Andes custom PMU support"
-> -       depends on ARCH_RENESAS && RISCV_ALTERNATIVE && RISCV_PMU_SBI
-> +       depends on ARCH_RENESAS && RISCV_PMU_SBI
->         default y
->         help
->           The Andes cores implement the PMU overflow extension very
-> diff --git a/drivers/soc/renesas/Kconfig b/drivers/soc/renesas/Kconfig
-> index a63df28df3b5e7c7..0b6876ef6dca228b 100644
-> --- a/drivers/soc/renesas/Kconfig
-> +++ b/drivers/soc/renesas/Kconfig
-> @@ -461,7 +461,6 @@ config ARCH_R9A07G043
->         bool "RISC-V Platform support for R9A07G043F (RZ/Five)"
->         depends on NONPORTABLE
->         depends on !DMA_DIRECT_REMAP
-> -       depends on RISCV_ALTERNATIVE
->         depends on !RISCV_ISA_ZICBOM
->         depends on RISCV_SBI
->         select ARCH_RZG2L
-> --
-> 2.43.0
->
->
-> _______________________________________________
-> linux-riscv mailing list
-> linux-riscv@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-riscv
+> 
+>>
+>> But I’m not fully sure if it's intentional for the
+>> bpf_get_branch_snapshot() helper. Clearing lbr_stack.nr to 0 prevents the
+>> BPF helper from reading LBR data from PEBS although the LBR data could be
+>> stale since it comes from the past PEBS record instead of the runtime
+>> hardware LBR state. That seems reasonable and correct, but the side effect
+>> is that the BPF helper can't read the LBR stack when all LBR events are
+>> PEBS events. Not sure if it's intentional and expected. 
+>>
+>> I’d like to run some tests for this change tomorrow to confirm the
+>> behavior. Thanks.
+>>
+>>
+>>>>                 return;
+>>>> +       }
+>>>>
+>>>>         x86_pmu.lbr_read(cpuc);
+>>>>
+
