@@ -1,131 +1,96 @@
-Received: from mail-qt1-f180.google.com (mail-qt1-f180.google.com [209.85.160.180])
+Received: from mail-dy1-f200.google.com (mail-dy1-f200.google.com [74.125.82.200])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43B953E9C1E
-	for <linux-perf-users@vger.kernel.org>; Wed, 14 Oct 2026 04:21:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.160.180
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791951687; cv=pass; b=FrbQOeSnxZu6hgCHQVEOADoEiVOehoMvhT16qNDCLj4e86HDeBZxdhS6mWfylin8me53ec0iRYT629PWb5qL7G+vSZpYbhLX6omnDXT1gE71Of1O7sLTVuvT6kmQXPFnBy281z4De6m2dWKJ8zUOmR/WmcjYUZ3+Cl21xSYTMCA=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791951687; c=relaxed/simple;
-	bh=cn63L5SFcW4uv11BCKaKFb7NgF9TokUcHR2wfHkyl4U=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=gGj+Eg3rbvjW3RHuNYUGuAjJnvWx8ucJ9Kso3Vov9dGi047vmCb6n+DXDRPl4e20qrMw8gSVl3mxBIpOdLeROMCCns5x2+baSwQOLxCNnsaBjH83oXKG01XyfcMCpXz4NfEnloSjYoHdbpxD7yLLw/iq2jErZxf16mzNRdoXYXo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ckamKxOS; arc=pass smtp.client-ip=209.85.160.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 277E1223DFF
+	for <linux-perf-users@vger.kernel.org>; Wed, 14 Oct 2026 04:22:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.200
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1791951778; cv=none; b=gGWrZVQ78XlvFsgbrK8qDjeFbpWVZplzIiHliLX/jjBS7iWR8qSXCKwN5xnQdavdN65XuM9SBnqazW3Xd2IOc0dQbHlQy+JTNNX15W6jzzac8Baz9euvifzxgaqrGMARecQTHs3RAj0biweWgF4efhvmltnf+A9ASwqkPWojhok=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1791951778; c=relaxed/simple;
+	bh=pthNk02sT5MhtNVGjPzZDe3I9Gl6nBSMh/U26T0qcFc=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=MyODwk6GKrisIveAiOq/AhZQ0TmAg3vfvtgOMMLQ/TOLqrYlQW3wRc96A8atDrQI1ozwXscQS4urxkEej4W/OyczIq997/qY8/Gc4r7j/nVtAM8QGGwF/Ipnu7WnoparMrXST15HeCPVcr8EolwZxqCQV7UGymXy5yG1S1LxMQA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=PT0XI4dL; arc=none smtp.client-ip=74.125.82.200
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ckamKxOS"
-Received: by mail-qt1-f180.google.com with SMTP id d75a77b69052e-535f598d126so389221cf.1
-        for <linux-perf-users@vger.kernel.org>; Tue, 13 Oct 2026 21:21:25 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1791951684; cv=none;
-        d=google.com; s=arc-20260327;
-        b=mYX4xwH5tYFfLgWNCycV6KmUM5UrOo7pmUOFDItzrrWKXmiAn4U7bQyniuzREpVRUc
-         KrQkuc/3fA7bEfZOPaTooTxinP6URKDZnZGq+z0YMha8zbqiHXkxGP+ZP5NC+ee9x4qY
-         NI5jaH1GNw7PKW8OovPgZey6aSOEaWR0dtvnc2noFbgr34xt0v7s9T+M5q9ShgrgNEHM
-         rC30z2DnpBsX7SYgO540v5oJ4UWt1mr/y8Me4iXaFkbyTnqnLPG1/BX7/ZieBuRp+WIT
-         1L5CQIw2M4kpAy0ooamHu9UPEoNeIPFxhZv21Qffx8TcJE8a3b0nX50VhUp2Llf2M1LQ
-         hrmg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=2grbJw/Issi66ell9ynhnVcAT71hGUf9xcfUvHsRTPI=;
-        fh=QpXAQNgx3iPo/MBQlXG/U49jvdHKKn2o36XKkDt+AiE=;
-        b=Dj7eAhyb4FFx/j0m8fbO1Zhcmo9jBi1c/WYjejTyQAKd+YYPpfiHldpmp1BvxqpK27
-         iVOM2BBfHCB2it/g/MhRIC+90ZRVX6zQueo5TxC5rWXic4sQ/PxDfK9r1AS4AHJd113B
-         mW53TPXuLkCn35JY9f8Ox+1hpZOp+Thv1cD3vfhTYHINNI6PgP/L5qmFKy1hpX2KXToX
-         cCr74D4AhHQJ9ckJZrcNqEzhQ+pUamZDbFpGQ8CryM9shyn3ju+RZPPsJmDcQoc6s4Xi
-         QXeg+1nF/RmpvsPgU3zLBCJxGQB/22/S+0b6V/mmDOHAE4i1mbyPlzMH4OMPNhmv9g0i
-         uXGg==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="PT0XI4dL"
+Received: by mail-dy1-f200.google.com with SMTP id 5a478bee46e88-351788121cfso5877021eec.0
+        for <linux-perf-users@vger.kernel.org>; Tue, 13 Oct 2026 21:22:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1791951684; x=1792556484; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=2grbJw/Issi66ell9ynhnVcAT71hGUf9xcfUvHsRTPI=;
-        b=ckamKxOSS5ZVtXVHuveq7kbmhD7Qt8WJ8Uz3xyC39ype1k2EXlMS0MNODY3n5qf5Y9
-         Ok524oLIvlOHC8coZJJs84BnbCbwFMtU3Z8Q8GtJLtAKGauwU3JXowqGgMr7RCJglBnF
-         ZCzVsTkeWyzGxVo/2H2U74scwQbkbHivz/hXZC3H1aj0SYV6eH4dpTal8Q+jkyOJWpwY
-         txSANywoEhEYX5dpvCCDHm7HQRgJLhK1vnjdXYcYmu0BP7jJPsWmfi6z7XF5hpWDhDYo
-         gsSQmpdu1vSMjQBeK/soP2rXjFJo4Z0eyOmTaIedSVl6OPx1O02TmGkA4p7QJzzETq2E
-         EaIA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1791951684; x=1792556484;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+        d=google.com; s=20251104; t=1791951775; x=1792556575; darn=vger.kernel.org;
+        h=content-type:cc:to:from:subject:message-id:references:mime-version
+         :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=2grbJw/Issi66ell9ynhnVcAT71hGUf9xcfUvHsRTPI=;
-        b=HcNRqK7wxELmJqa0JAVsQ36wNZNnGXpQ5lK7bJzX0tX2VYOjEwd54+v6FiLe4uPCp/
-         9v2N8cWRh2Bva5QC6gAK0cPDuc+5Fcql+gLdVQFsjeJvAHYPLETp6fLiBhE6Xod0SX7a
-         OCcfvbGjW9/8Sm9D+XpXT1J7e/FHJZMr0LSikUJRFGLHqeeh0Ck5ciLuPTJr9BVrrnHr
-         tWxPtzmCFIkr2+On4DRbusmwaMKU4nk1tKz49ci/dNP1OXOlN7jZPENuSQ4KCHDE/yu7
-         +2PFpLeTLhXCM3DZuDSMw5b/2EPI4a5qeFX8u6bB2HoyxEfGiZEW/YtLYfCE7hv8o8No
-         8eJw==
-X-Forwarded-Encrypted: i=1; AKwUvBzX5Xsgdy2eUCLLINwcbqwXJcIjM63QmrpkdSFooYsYidpo0g66j7NXl64Sesp6adXd7cto786SOq4Afkyru7kc@vger.kernel.org
-X-Gm-Message-State: AFq9FYKzFeV1vn/ekcJ8KOzubdaeBdOqWHNVR6GeY6PuW7mwARw4sSuU
-	Nd6aQ1t8oBLM6ZjvW6wVmfyWHHJRLHT9zGzVBv/qq3yehRcvjHssfw4BBt/uYQJFdOxN0+35yPY
-	jT2gdLPr3o2UG/J39dVCPd9iD9L9vt6BA3IsVM3SE
-X-Gm-Gg: AYBFou2a4ejtDtSGF6EcIpjgGWHf3LIlC1GtHLetoe7bjam7DUxAOtczAGF6URqqYAg
-	rmAIxsqem5Or+MkzB/NXJ6jkvSs3S6kEBR6qjxC2JbAvx3EwyfIHGyMG3qviQrfhkJYLF9ax9Nl
-	4FaapZ0jELG8axbhhugr8ZqFPODaHmSruPiiBWVbAmf6xzW/44mm4pIl/hhLlJf6CvDjIRijLxH
-	T+xssqlAopnJPJ3bdA5AhfUEB6LqH37W95Rjcp16MfhiMM2tAJmClKbKEUnToP/+nk8caBxCcTP
-	Gq4dgrLM0GcB19WHhg/S2to2BuIPQb1sfJb9feWTouAy+MhkzXVj9lQ=
-X-Received: by 2002:a05:622a:4cca:b0:535:852e:a94a with SMTP id
- d75a77b69052e-53602372601mr6443441cf.7.1791951683567; Tue, 13 Oct 2026
- 21:21:23 -0700 (PDT)
+        bh=yE9kiZyHPWW8D6z0CBqVP5Y77+hh44cVozCo1RtidPE=;
+        b=PT0XI4dLQY95nC3BkiyQ+H2t/z+hs0MMUvzfZnRESLguI4Oq+xOu2iXbVwusSGdDgP
+         TILmpvdUy/SwSjy2bmepUxK4TJSIqs8rMW2RkfhQ+2arr4sPu3UvgqGoRb8y+Y+EiNEk
+         vuz/ZJZ3zKUAkmA7XntH7L4iDlwnRXl1rjUuo9m3PEkQRwcYYa8FY3GQ90kjsCVt+hYv
+         oYKNT8eKxnY3HlVQlRA6b5x+PLqYHdpFN4rFbkrr4Spfob1Ggu7NCVigVYqSJWE1eSoS
+         4D99JlvakOyElsE+18wdVIVjjHH3Xq/otAFeiuTw7jJeQNUnwOFNOc9WKkHghdZqUTlK
+         UrHw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1791951775; x=1792556575;
+        h=content-type:cc:to:from:subject:message-id:references:mime-version
+         :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=yE9kiZyHPWW8D6z0CBqVP5Y77+hh44cVozCo1RtidPE=;
+        b=F0oA3qszUluULrwjJTXd9Kk2u3PDsMc1o0ksexbrInGJApaaZ6j8dGIGEN09b+IQrZ
+         P13IJo5zZ1Oz4gWau8lrU6nxS64i6a+p6AyABYqox7TcOGMgIwiH9ZzjLpqf/q2vm97f
+         73qC6hPU3+VMpfQY3S530PI7PprVSlaOVSJ+frcNTjTk/cpw/YmvEfuSNZvZ9/Ry+idS
+         QRcgvBuwHdC689lCgrFaiJ+oGaWWmxaAwpgZPR1MznLe4d64/scdhW+p5eOrbTUrrSHA
+         Y0X0yTnaGPiEnlCEQ/FLUHzIejc6iq4QR0yoGWXT3bSY1bhiKWDXq8nj690chF5WGDzv
+         JxUg==
+X-Forwarded-Encrypted: i=1; AKwUvBzybSyMvsXajLYT2oPpxcRZ6nh+DVZscfoWTLpQ2n9iBgz4jU7p4wY8B3r5TuRLn6JRSgxOjKt9G2pemkDa1OJV@vger.kernel.org
+X-Gm-Message-State: AFq9FYKaUIuP7VoEMpXr/cKVK4RVRu43hBMnK6wyV865pQVKI4b6aiMs
+	k7I3aHxdWq5iLsu+Dq99rY+sx7Tyn/lTXGCOLO47Hy+LoTPjjn3kSHB26hepJFgTJxY1D7QNwgS
+	qHqPL4HwQog==
+X-Received: from dyr27.prod.google.com ([2002:a05:693c:401b:b0:35a:be33:bab0])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7300:fd03:b0:351:4866:255c
+ with SMTP id 5a478bee46e88-3537e058277mr26818915eec.32.1791951774700; Tue, 13
+ Oct 2026 21:22:54 -0700 (PDT)
+Date: Tue, 13 Oct 2026 21:22:45 -0700
+In-Reply-To: <asDHqdVt4CKq_EoL@x2>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20261006-james-perf-timechart-mypy-v1-0-e2c7edf4dd31@linaro.org>
-In-Reply-To: <20261006-james-perf-timechart-mypy-v1-0-e2c7edf4dd31@linaro.org>
+Mime-Version: 1.0
+References: <asDHqdVt4CKq_EoL@x2>
+X-Mailer: git-send-email 2.56.0.385.gd3acb90ef8-goog
+Message-ID: <20261014042249.2379829-1-irogers@google.com>
+Subject: [PATCH v2 0/2] perf timechart: Add --live mode to the TUI and test
 From: Ian Rogers <irogers@google.com>
-Date: Tue, 13 Oct 2026 21:21:12 -0700
-X-Gm-Features: AclHuK9WIXj2sByPsg3xQovB10FYGg7q3yTP2FKnRU4saVxapsfo9MvVb8B-joc
-Message-ID: <CAP-5=fVypGeXuKw1vJMaqGhpUtF3vqPcdKpo+Q61qZHGKSj2Ew@mail.gmail.com>
-Subject: Re: [PATCH 0/2] perf timechart/treport: Fix mypy errors
-To: James Clark <james.clark@linaro.org>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Alice Rogers <alice.mei.rogers@gmail.com>, 
-	Arnaldo Carvalho de Melo <acme@redhat.com>, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
+To: acme@kernel.org, alice.mei.rogers@gmail.com, namhyung@kernel.org
+Cc: adrian.hunter@intel.com, atrajeev@linux.ibm.com, changbin.du@huawei.com, 
+	dapeng1.mi@linux.intel.com, irogers@google.com, james.clark@linaro.org, 
+	jolsa@kernel.org, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, mingo@redhat.com, peterz@infradead.org, 
+	tanze@kylinos.cn, thomas.falcon@intel.com, wutengda@huaweicloud.com
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Tue, Oct 6, 2026 at 6:03=E2=80=AFAM James Clark <james.clark@linaro.org>=
- wrote:
->
-> Two small adjustments to silence Mypy static checks.
->
-> Signed-off-by: James Clark <james.clark@linaro.org>
+Add a '--live' option to 'perf timechart' and 'ttimechart.py' that streams
+live scheduler, power, or I/O (-I/--io-only) events from a 'perf record'
+subprocess over a pipe and displays them in the Textual TUI with a rolling
+time window (--window, default 10s), pause/resume via the control pipe, an
+optional workload after '--', and optional output recording (-o), along
+with headless shell tests in test_ttimechart_python.sh.
 
-Reviewed-by: Ian Rogers <irogers@google.com>
+v2: Rebase the remaining 2 patches onto perf-tools-next after patches 1-11
+    of v1 were merged.
 
-Thanks!
-Ian
+Alice Rogers (2):
+  perf timechart: Add a --live mode to the TUI
+  perf test: Test perf timechart --live
 
-> ---
-> James Clark (2):
->       perf timechart: Fix task row type narrowing in goto_task()
->       perf treport: Fix profile builder type narrowing in progress callba=
-ck
->
->  tools/perf/python/treport.py    | 5 +++--
->  tools/perf/python/ttimechart.py | 5 ++---
->  2 files changed, 5 insertions(+), 5 deletions(-)
-> ---
-> base-commit: 1dc462fc214907671600172280c2e79ef9fe6fcf
-> change-id: 20261006-james-perf-timechart-mypy-e0069393c0ef
->
-> Best regards,
-> --
-> James Clark <james.clark@linaro.org>
->
+ tools/perf/Documentation/perf-timechart.txt   |  20 +-
+ tools/perf/builtin-timechart.c                |  80 +-
+ tools/perf/python/ttimechart.py               | 786 ++++++++++++++++--
+ .../tests/shell/test_ttimechart_python.sh     | 300 +++++++
+ 4 files changed, 1111 insertions(+), 75 deletions(-)
+
+-- 
+2.56.0.385.gd3acb90ef8-goog
+
