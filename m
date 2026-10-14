@@ -1,196 +1,160 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4CFC4B26F8;
-	Wed, 14 Oct 2026 09:01:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1791968500; cv=none; b=S9tbZT4fuKqMJ1UWgMbVgsGkcgxDDt20ESGzhBylLaYsj3ccEFraQgaj+4h60IYq6HAYJdDxkWREca+xlMeJ9ixbz7XrJOZD/QHs9bfHHWYeznTtC9O+N5dRiNYYIavvJMA4nWgeyO3gQHy8JqP+6270sdRTBNVDAUUura8hXNI=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1791968500; c=relaxed/simple;
-	bh=nrXWFJqDvnKa+L3lKJ12jqTvm6csARDqXZ85Q9WA68E=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=gStIug3HjUXcpB7NpuWyoR1/u7e7FWRkOfNKLOhUR+9Uh4MbUNw5XnE9akbtKD0hAcM85ypq+drEx3Veo3cTlweEnkqnMCC4GRkPigZ1WwWNfcxsGqCl0xPd/SGWeeKZVx80GYhybNTnCDfS4/caR7lNDPlFdOqDLwYQa3kMi9o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MeFlV/pr; arc=none smtp.client-ip=192.198.163.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C2EA387346
+	for <linux-perf-users@vger.kernel.org>; Wed, 14 Oct 2026 09:29:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.221.46
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1791970146; cv=pass; b=rxc53gK9TUv7h9f7ItOywM/XCCUzdbLrN4jLFBRRbQS2eywSnBEUu3Qkoz0er+bRsfNgzIyxn86ICDtsY34IGqghAlbP1kh1pIHNe8iT643kKJ45HoMxNhowutIpvT4adrZYvxm6NiTjZNUXmCPGzhFyY2/RqwSz6TRKPIvxGFw=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1791970146; c=relaxed/simple;
+	bh=WN/D2DKkPkAtwoVdUzfYLsH4nQOGe29u3pPkyYp+9Rk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=VuKn3HWzzIK75IuC+W0HhSzrht8F8I/ZnGxkw6MIkbGysHbDixTboplSsQYQmuZYpB+h/4DnjQC5V49IpDUuIX+0Pwge45P6NzqSSFimO6oSLPZGZzNaqgd8NPs3Yxp7tO7VUIGy+zoXCl8Y+KAI79Y9K1C2z9U43hCWv7YaY6E=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XESQWpec; arc=pass smtp.client-ip=209.85.221.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MeFlV/pr"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1791968497; x=1823504497;
-  h=message-id:date:mime-version:subject:from:to:cc:
-   references:in-reply-to:content-transfer-encoding;
-  bh=nrXWFJqDvnKa+L3lKJ12jqTvm6csARDqXZ85Q9WA68E=;
-  b=MeFlV/pr2EZJytj7gxlVpuLgqCqoNCirnK8lyevSbUOCcWe85LeVq3+p
-   RHu0z455vlDM3H3HwhBwHDCHfW8wc5WxxEAsnUGTO7t9CMWHB7s859VlZ
-   X1hFPjFwPkXSpiLQbAussixnBAnoVz8c964tiBH/VpovW01t+iVFKj6wv
-   fKdzvTAWATCY6lkcsaELC3a7opjlRTfJgwoJriYKeU47Xts+6122YchXI
-   1W1biQfy8sbmVrStbEzfhISS4q6p9yyDQWOAUBbdJHdaqaxU4OtN6zD33
-   fXlBjyE9xp5pKYiA55ENIBOWe4rtf7ItTiVWjXntOHOXvjvSDbJ5qHT+E
-   g==;
-X-CSE-ConnectionGUID: ugK7h37+R5GXh1IMaoTspQ==
-X-CSE-MsgGUID: 8ZE0/iJvRk6B4AOsVd03OQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11934"; a="609193"
-X-IronPort-AV: E=Sophos;i="6.27,157,1787036400"; 
-   d="scan'208";a="609193"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Oct 2026 02:01:35 -0700
-X-CSE-ConnectionGUID: zqhIqvLzQcy6BxXW1mPqwA==
-X-CSE-MsgGUID: l6hnnZDtR/yQ+9aP4Gym2w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.27,157,1787036400"; 
-   d="scan'208";a="1307833"
-Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.241.239]) ([10.124.241.239])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Oct 2026 02:01:31 -0700
-Message-ID: <eb6c7bda-0dcf-4fac-ad69-9f5b24abc21b@linux.intel.com>
-Date: Wed, 14 Oct 2026 17:01:27 +0800
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XESQWpec"
+Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-48b060ec084so2521942f8f.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 14 Oct 2026 02:29:05 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1791970143; cv=none;
+        d=google.com; s=arc-20260327;
+        b=OXJMp4EmXkNhXxjRUf1sMHfWZ7J2w/VfVoGokJu6z0rueVrNSLSk7qgk49iLgc4IBn
+         6P6GqLq+YdBsUpAZ9tRZd8Zb2tC4KPmXpxm/gw3LkJOIU93RctESo0KdadFRk6vBBj/Y
+         oYDl1+1WjvQPesyJHQ5NRWM40XLg1xYja6WC2jMX+S9q8tkVsv/qJiWjmKYJ/J9h5f1e
+         EYvcwey+gyjMgjSoSInUYsbsvNjEcyysxIF5R2apLQraTdyEGTTCEJrHuy8izqRu4Ot9
+         1uX+sqUqaLOOCrLEai6FBJ1GZW4aTIOFlTXMT+wZ4ZLFzS7VwUxxcttQuFFy995vi3ps
+         q6Fw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=UM4snv3HyBXCnT4o3yFHC4lEa74fiilyetDqdq6lntg=;
+        fh=zb10hnEz5bqyS9o38ISB9NbEg5eVRAbYkN7pD9+kov8=;
+        b=Z2PsVCbny2BMMxmzpgbjs3W0NWCiEMngldE6WFs749eU/fiq4kDuUzwjEghxinyFB7
+         +WrLh3PFj3PSpEXCSzf5Pih5rEqs7lkoQ/wygGY49G6eYcsH3SFfRPrn4F75uq/d8A7M
+         HBo6ly4A3xypjmuOJl+90VCS/jClRzsXDO15L0GTU9UW5tcfrwWK/FyMOBSwd8D/hrEw
+         y3KWA93KneiHook84iixeRx//kPPTks2ugv43yHeUsI3mNXNPWP4MZo0C0TmEQmvymgB
+         MR9qkxB0OqUquvs9ZnXdkuTuj4RHoiwCC9NsT/Vl0xrT+HKzDbqdqPZsvJyAuzrL785O
+         9wRQ==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1791970143; x=1792574943; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=UM4snv3HyBXCnT4o3yFHC4lEa74fiilyetDqdq6lntg=;
+        b=XESQWpecQ1oE77q85jd7V07GxvA9TIdihTc+fZdR/N0Eja6i+3XLI9t+PS+fwAdZi4
+         nbjT9oOMPJ5vPjoYrvueGYNYn9i8ePRypPbpQUVKlFpKrsgy0Mj+ZIYqAnGuGz6GhzQ3
+         T6gdr2ywAMG+lvUt7ahcYlRWlSFO9TxJKCDQc+SN8tv6iTJmPsFSVQkvRTiL47Jt95j8
+         81psHBadDQeZPY7IJUTfFljPpV1yz01QLJAVj3LcCsNyQNejzSAxGtI5uQteoTD/U925
+         Eia+Yb3Ip9bRbUSe0U6JRCdMbhcBcbzPqO20sTTjO++jQxJzavd8vC79w76SYUzRM6Wy
+         NTjw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1791970143; x=1792574943;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=UM4snv3HyBXCnT4o3yFHC4lEa74fiilyetDqdq6lntg=;
+        b=rmJJv1tNtHu4ROaVl2j+WjTfIR+8Zr1EzTH8wNKc2gX31b42v5yBzkZZgIP+GrJBKj
+         eBzC1pe5G5SDLDwPwhyGvpMUD0o7n+OnnYUpAlVklcpgdLU3kbo4y1sELJSs6KF5XrQN
+         W5PjnQmXxNbNebZl1irzXezK6nvYXFQI8kMtn2Km1d3kkiK48lCa+2kx2mjRZk9AlY8v
+         dCoggm+0uHUI8F8Sokzg3nwJyI91UvUOl2AzecV4yp56YbkyGZK/t0+UVeTXE14T/AOS
+         izPEg3ZV3unTcNsogkBu6CA1G8V/SV63jECsbtqO/d42hUdy1AcG0+UPx4NvU8AA8ZhB
+         ujHw==
+X-Forwarded-Encrypted: i=1; AKwUvByQrW5GdSTRk6CQ7uZrVHNc5kIqAB05eZzGWQZa24yY5Ia6L8gcwmhz9n757gwxTIK2QGL/8BK6e87nvNgCWjfu@vger.kernel.org
+X-Gm-Message-State: AFq9FYIWrOzQb/pzefcgFjuqXaabR5eiUodwUkUu68poNb6zM0J2nUp7
+	OEb0nnRL0nMsZdh2zY3EfMZF1c6u+/iwvHcSymNTFdqp+WNUu8tsf37fq3kWzdI0aw4a3wOyhHf
+	gUkX/lUicBwqTvpZMVSmM2mCU/2aYuHA=
+X-Gm-Gg: AYBFou3u++Jaq4SG+b/Y7nAXMYjpumk/my/7lVatwkTSYyWmKzHR7QVXw36ssxigBRt
+	E6ap6NxErVR1v0b05pXn/a2rP6Pr4c3YNsnxSrqnAfbqafBDmYOSdRY0PbZA+IV10K4aeOm1V6K
+	rZ4XYvR6BTAB2lC1r0Rpe+XATV4da4tW1rZD/0XUIo0BD3zL268xxYHsSrtEYMegBGJhX5qVBxb
+	No8Gxrd7iNdbRG58oKd+8LQ7AvKzjbs+QnonC9qI90xPrqFLEGpwX9IQY0kYjW0hRXY98AWDK/n
+	DPYqbftS7jiKMmCPNw3PBfCemCnRQjUYpDwN2kVi8II7mLjgLqZd09excroAKhdyZwixRT5CyLc
+	mz4qCWT2zR+1os9UnEKuhVaafwBhHgHkIGw15xy04Ys8=
+X-Received: by 2002:a05:6000:41db:b0:487:1c89:f158 with SMTP id
+ ffacd0b85a97d-48dca3433dfmr21443506f8f.14.1791970143295; Wed, 14 Oct 2026
+ 02:29:03 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] perf/x86/amd/lbr: Limit branch snapshots to valid entries
-From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-To: Peter Zijlstra <peterz@infradead.org>, Sandipan Das <sandipan.das@amd.com>
-Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
- bpf@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>, James Clark
- <james.clark@linaro.org>, Thomas Gleixner <tglx@kernel.org>,
- Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
- x86@kernel.org, "H . Peter Anvin" <hpa@zytor.com>,
- Andrii Nakryiko <andrii@kernel.org>, Song Liu <song@kernel.org>,
- Ravi Bangoria <ravi.bangoria@amd.com>,
- Ananth Narayan <ananth.narayan@amd.com>
-References: <20261007181002.4005262-1-sandipan.das@amd.com>
- <20261012153014.GU4121339@noisy.programming.kicks-ass.net>
- <94d387f2-ff07-4895-a722-e8ded4203309@amd.com>
- <20261013074625.GC2009045@noisy.programming.kicks-ass.net>
- <becc5593-69ef-4800-bc2b-0fb217165910@linux.intel.com>
-Content-Language: en-US
-In-Reply-To: <becc5593-69ef-4800-bc2b-0fb217165910@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <fe117dd44728fe7c96f3e4b3ec88c6ca83c5da9b.1791880574.git.geert+renesas@glider.be>
+In-Reply-To: <fe117dd44728fe7c96f3e4b3ec88c6ca83c5da9b.1791880574.git.geert+renesas@glider.be>
+From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date: Wed, 14 Oct 2026 10:28:36 +0100
+X-Gm-Features: AclHuK_hpJt3R0zDHjAZL75ikzTNtzzFWfnolY7PI7Bi35zqbWZzmjfcVJRiUWc
+Message-ID: <CA+V-a8tpVEqJTKr4JS2aEcgr6yXzmh8j==x=+54o-rAyBwLrRQ@mail.gmail.com>
+Subject: Re: [PATCH] perf/renesas: Remove remaining RISCV_ALTERNATIVE references
+To: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>, 
+	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>, 
+	Conor Dooley <conor.dooley@microchip.com>, Jisheng Zhang <jszhang@kernel.org>, 
+	Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Magnus Damm <magnus.damm@gmail.com>, linux-riscv@lists.infradead.org, 
+	linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org, 
+	linux-renesas-soc@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Tue, Oct 13, 2026 at 9:40=E2=80=AFAM Geert Uytterhoeven
+<geert+renesas@glider.be> wrote:
+>
+> As riscv always selects RISCV_ALTERNATIVE, the option was removed.
+> However, a few references were left, making it impossible to enable
+> RZ/Five support (ARCH_R9A07G043).
+>
+> Fix this by removing all remaining references.
+>
+> Fixes: b924210f542e13c7 ("riscv: remove RISCV_ALTERNATIVE Kconfig option"=
+)
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> ---
+> To be applied to riscv/for-next, or folded into the original commit.
+> ---
+>  drivers/perf/Kconfig        | 2 +-
+>  drivers/soc/renesas/Kconfig | 1 -
+>  2 files changed, 1 insertion(+), 2 deletions(-)
+>
+Reviewed-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 
-On 10/13/2026 8:53 PM, Mi, Dapeng wrote:
-> On 10/13/2026 3:46 PM, Peter Zijlstra wrote:
->> On Tue, Oct 13, 2026 at 12:14:58PM +0530, Sandipan Das wrote:
->>> On 12-10-2026 21:00, Peter Zijlstra wrote:
->>>> On Wed, Oct 07, 2026 at 11:40:02PM +0530, Sandipan Das wrote:
->>>>> The branch snapshot callback used by bpf_get_branch_snapshot() copies
->>>>> up to x86_pmu.lbr_nr entries from cpuc->lbr_entries[], even when the
->>>>> last LBR read kept fewer branches. The entries past lbr_stack.nr are
->>>>> invalid, but they end up reaching BPF programs.
->>>>>
->>>>> Limit copying to lbr_stack.nr entries and also reset lbr_stack.nr when
->>>>> amd_pmu_lbr_read() skips reading the registers, so that a stale count
->>>>> is never reused.
->>>>>
->>>>> Fixes: a4d18112e531 ("perf/x86/amd: Support capturing LBR from software events")
->>>>> Reported-by: Sashiko <sashiko-bot@kernel.org>
->>>>> Closes: https://lore.kernel.org/all/sashiko-outbox-163130@kernel.org/
->>>>> Signed-off-by: Sandipan Das <sandipan.das@amd.com>
->>>>> ---
->>>>>  arch/x86/events/amd/core.c | 2 +-
->>>>>  arch/x86/events/amd/lbr.c  | 4 +++-
->>>>>  2 files changed, 4 insertions(+), 2 deletions(-)
->>>>>
->>>>> diff --git a/arch/x86/events/amd/core.c b/arch/x86/events/amd/core.c
->>>>> index 49b6b8fce566..bf631f60757c 100644
->>>>> --- a/arch/x86/events/amd/core.c
->>>>> +++ b/arch/x86/events/amd/core.c
->>>>> @@ -944,7 +944,7 @@ static int amd_pmu_v2_snapshot_branch_stack(struct perf_branch_entry *entries, u
->>>>>  	cpuc = this_cpu_ptr(&cpu_hw_events);
->>>>>  
->>>>>  	amd_pmu_lbr_read();
->>>>> -	cnt = min(cnt, x86_pmu.lbr_nr);
->>>>> +	cnt = min(cnt, cpuc->lbr_stack.nr);
->>>>>  	memcpy(entries, cpuc->lbr_entries, sizeof(struct perf_branch_entry) * cnt);
->>>>>  
->>>>>  	amd_pmu_v2_enable_all(0);
->>>>> diff --git a/arch/x86/events/amd/lbr.c b/arch/x86/events/amd/lbr.c
->>>>> index 1e1b2f08cb51..a00d3850c4a8 100644
->>>>> --- a/arch/x86/events/amd/lbr.c
->>>>> +++ b/arch/x86/events/amd/lbr.c
->>>>> @@ -165,8 +165,10 @@ void amd_pmu_lbr_read(void)
->>>>>  	struct branch_entry entry;
->>>>>  	int out = 0, idx, i;
->>>>>  
->>>>> -	if (!cpuc->lbr_users)
->>>>> +	if (!cpuc->lbr_users) {
->>>>> +		cpuc->lbr_stack.nr = 0;
->>>>>  		return;
->>>>> +	}
->>>>>  
->>>>>  	for (i = 0; i < x86_pmu.lbr_nr; i++) {
->>>>>  		entry.from.full	= amd_pmu_lbr_get_from(i);
->>>> You now seem to deviate from what the Intel code does. Please clarify.
->>> Yes, it is a deviation. I thought of proposing the following but didn't
->>> proceed because I was not sure about the if condition in the second hunk
->>> which considers things other than cpuc->lbr_users for an early return.
->> Dapeng, can you look into this? I would really like to keep behaviour
->> consistent where possible.
-> Sure.
+Cheers,
+Prabhakar
+
+> diff --git a/drivers/perf/Kconfig b/drivers/perf/Kconfig
+> index 245e7bb763b9947a..8cef4bdef76aecab 100644
+> --- a/drivers/perf/Kconfig
+> +++ b/drivers/perf/Kconfig
+> @@ -117,7 +117,7 @@ config STARFIVE_STARLINK_PMU
+>
+>  config ANDES_CUSTOM_PMU
+>         bool "Andes custom PMU support"
+> -       depends on ARCH_RENESAS && RISCV_ALTERNATIVE && RISCV_PMU_SBI
+> +       depends on ARCH_RENESAS && RISCV_PMU_SBI
+>         default y
+>         help
+>           The Andes cores implement the PMU overflow extension very
+> diff --git a/drivers/soc/renesas/Kconfig b/drivers/soc/renesas/Kconfig
+> index a63df28df3b5e7c7..0b6876ef6dca228b 100644
+> --- a/drivers/soc/renesas/Kconfig
+> +++ b/drivers/soc/renesas/Kconfig
+> @@ -461,7 +461,6 @@ config ARCH_R9A07G043
+>         bool "RISC-V Platform support for R9A07G043F (RZ/Five)"
+>         depends on NONPORTABLE
+>         depends on !DMA_DIRECT_REMAP
+> -       depends on RISCV_ALTERNATIVE
+>         depends on !RISCV_ISA_ZICBOM
+>         depends on RISCV_SBI
+>         select ARCH_RZG2L
+> --
+> 2.43.0
 >
 >
->>> diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
->>> index 0a34d674df59..5dfb9e9156e8 100644
->>> --- a/arch/x86/events/intel/core.c
->>> +++ b/arch/x86/events/intel/core.c
->>> @@ -2822,7 +2822,7 @@ __intel_pmu_snapshot_branch_stack(struct perf_branch_entry *entries,
->>>         struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
->>>
->>>         intel_pmu_lbr_read();
->>> -       cnt = min_t(unsigned int, cnt, x86_pmu.lbr_nr);
->>> +       cnt = min_t(unsigned int, cnt, cpuc->lbr_stack.nr);
->>>
->>>         memcpy(entries, cpuc->lbr_entries, sizeof(struct perf_branch_entry) * cnt);
->>>         intel_pmu_enable_all(0);
->>> diff --git a/arch/x86/events/intel/lbr.c b/arch/x86/events/intel/lbr.c
->>> index 0b446d8912e4..6b070490f461 100644
->>> --- a/arch/x86/events/intel/lbr.c
->>> +++ b/arch/x86/events/intel/lbr.c
->>> @@ -1026,8 +1026,10 @@ void intel_pmu_lbr_read(void)
->>>          * but this simple approach seems to work for now.
->>>          */
->>>         if (!cpuc->lbr_users || vlbr_exclude_host() ||
->>> -           cpuc->lbr_users == cpuc->lbr_pebs_users)
->>> +           cpuc->lbr_users == cpuc->lbr_pebs_users) {
->>> +               cpuc->lbr_stack.nr = 0;
-> I checked the code, and it looks safe to clear cpuc->lbr_stack.nr here. For
-> PEBS events with the LBR group, the LBR stack is populated again for each
-> PEBS record, so this should not affect the LBR trace for PEBS events.
-
-I test the changes on SPR for the 3 cases, pure LBR PEBS sampling, pure LBR
-non-PEBS sampling and the PEBS/non-PEBS mixed LBR sampling. No issue is
-found for the LBR stack sampling.
-
-Sandipan, would you mind to post the fixes for Intel LBR with the AMD fixes
-together? Thanks.
-
-
->
-> But I’m not fully sure if it's intentional for the
-> bpf_get_branch_snapshot() helper. Clearing lbr_stack.nr to 0 prevents the
-> BPF helper from reading LBR data from PEBS although the LBR data could be
-> stale since it comes from the past PEBS record instead of the runtime
-> hardware LBR state. That seems reasonable and correct, but the side effect
-> is that the BPF helper can't read the LBR stack when all LBR events are
-> PEBS events. Not sure if it's intentional and expected. 
->
-> I’d like to run some tests for this change tomorrow to confirm the
-> behavior. Thanks.
->
->
->>>                 return;
->>> +       }
->>>
->>>         x86_pmu.lbr_read(cpuc);
->>>
+> _______________________________________________
+> linux-riscv mailing list
+> linux-riscv@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-riscv
