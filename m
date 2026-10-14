@@ -1,205 +1,584 @@
-Received: from mail-qt1-f173.google.com (mail-qt1-f173.google.com [209.85.160.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6572E36BCED
-	for <linux-perf-users@vger.kernel.org>; Wed, 14 Oct 2026 21:03:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.160.173
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792011836; cv=pass; b=X/5iE5RSspl8uQF99/gJgVTaAnDoyflf55JwqTBxH0uw2j1EOaSxj0sO8C44CRIbT83NgAwgUuliudYF7DP/tZyp+1Y70jFQf8dzyRnehkJ0J/Rr0OJRb0X9qg0drNxc2oUTxsPHxA3CMvMePlc45ZojcTn0egSTnLja5B29cmE=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792011836; c=relaxed/simple;
-	bh=+N4TyOpk6OjtO3aVhfd+KaWfqvmnkMh9n+1ySaFToUM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Uuq9ThMKiQJudS7y2gCtF8q3l+g6xCkfc0/0IJ8fmh7KkYg379+t1uo35QPLnqkmd42jcyC9Ixwu2y41oSHogiJuonKOnQnPT+79LQd743HbgMwDe6S0LtbKPY/GnISg13B01cjxEBIMqbJ4vSDkBuLMDy8+cZBeLFiXG6iSd0U=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=PPd3/bnX; arc=pass smtp.client-ip=209.85.160.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E3B93D7A01;
+	Wed, 14 Oct 2026 21:28:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1792013286; cv=none; b=oclnRQAIFlmrOrJKnrHvdJvaIIDGhOQy7Wosf+9x0NSXg3ZtY0CTFD62ZTXYOrwq4W0Ecdgno/ZKhwpj80WcnfGxuUBh0+PSVAibZIRBCi/CXKMX7Sm1RUcnT4XgINPAp8Neq0Qmoduvox26EZC/ho5OLD7brAQdJbPr1VgrofE=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1792013286; c=relaxed/simple;
+	bh=aQig4N2xfmlRsaa/N0/8aa4FiWF4o63+0/+9xvd7Vks=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=kZjTR2GKYUH+YCRQ0rdfJzEfcCmT0uXcCdY875n7hrFtC1P/cRSKnyn+zK+NFV8N2gpQMF9u1ZfFRp6XdkFaVB0P2l06yxcdsyJOdhb/03dnq0BQtBFIRvIZkWHbTV4T6DLLf37PT/thoTCtbz3nLxg5Hd2c7eidlNoNiVqLD7w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XzbjU+HB; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="PPd3/bnX"
-Received: by mail-qt1-f173.google.com with SMTP id d75a77b69052e-535f598d126so691911cf.1
-        for <linux-perf-users@vger.kernel.org>; Wed, 14 Oct 2026 14:03:55 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1792011834; cv=none;
-        d=google.com; s=arc-20260327;
-        b=RyM2hE/e9aFVXfR02qClOuyLJ0fUc++oKFRSgg8Pe0Tqv7v9AXKMoGcdXcHAZ5Njlk
-         9skpFKJTIUqFF8nwp+E79I59m/jl1+6JV4XtpnP3N86PoC4qRXg/B9OCozC9bDqPpt9/
-         +U01xR1en6j+Kq+7735bkAOPsSYqOKMmN58o45Z/IxoZahqq8y0cpn60RgIiwFCZUWOj
-         NNbOH9I5gxuAdJ6EoUE/I+NYbCk5BXjZ7UMQFj+ilAavOgNYtYfG/Dlk0J9sU67sV1ZD
-         65p/dM5GZHAJsgq8kF0dmFKPe1lqiliszVlqVfwohaFl7Qnm1aR+2V4KU6LZA8SJKeet
-         Rmrw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=Mxyz86H6TMMGtX9yyjeKonm2O61SvjPIdjz2IY2AyDw=;
-        fh=S5VrdHzgQ4ggvMJS9aocnb+urLNTifb7YzAVFzpMRto=;
-        b=cbvExQOTtHBIjYthaRTE5hyfoGlAhn55hClv/wf67dAZRYOBvSgW8+HsFkAA26BB5I
-         yvKyis2+zegobNZ8hfxmQirvBWpHMh5p5o6qJVNomjD957JSjYdfb9KnAG71CUzSoTdq
-         UXjhdezs0Rq/h1SwtAUo55gaAQeYs8ZjK99FFuxCshL//5tNOaxSJ4oFdfrZVFEcwD+7
-         7HJ8hts+HFaJ3eYcLlULWDL0QazqkTbooKJ7948I/HpvShK7hl1M2PO3SxrPcYppSFjH
-         cZ2XRZrZeTwCHjIuhC3tkKOGSmKfIAwxsABiQvvqbV9hyQEV95mpLf/0YKQIxWQilmPT
-         HFVQ==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1792011834; x=1792616634; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=Mxyz86H6TMMGtX9yyjeKonm2O61SvjPIdjz2IY2AyDw=;
-        b=PPd3/bnXF2yiKN00l47JVM1UumEWV4siuVPQFALlITnJZvgcSTYFgtJf0V9rkgAv3d
-         O7mzumP/XgDSynuSrh8wJRB2mEjMhrG+dq+BR9uEPq281j7qlpgUc3YYOBtSqyQ8VlvE
-         9ecICbNnS2DH1BGkH48j9L5g9O+37aYKppvIxa0jPkxMYGLH6IX28e+K85EF4Un5hPO3
-         6ROeaed0F7Db3EFczkxdQlz6LdDDeOuLkCRgfgG61mK2vVDiNXGvLZfvHJdiHY1HCvwu
-         6IaolXVst7RgPTvJDz53sW2CJbF5VB1AesGMGlnZnrv+o1vQ/66RibQoVz3omoP57OYf
-         oHxw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1792011834; x=1792616634;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=Mxyz86H6TMMGtX9yyjeKonm2O61SvjPIdjz2IY2AyDw=;
-        b=G5qCOdyR/in/kuEnTntLKTGwDfFortAerI0U/K4Ly4Vn5XPOS7yGBV1XciS4/vbtK9
-         lpMRyzHfSgVdg5RLA0n//rIdhtavrQ3ANZhe/yNJit0TdIwfsjeH/TPmBEvFYULV867s
-         fuknjAGn5goaJJbZaQjY/bVwsXxnZCaU0rzqq+HisMSkdNYfocsGBjPNQ29569bQotnO
-         4yU4GX7FJdRsUAONdnSNhSFH9b4pbzvMfLNPVh7Dk3vlFs5cbKRJ+ECZvuzdGcM9cmV/
-         I5jdSXYDsZNH7ne6gT5kxHMJ8biE6namNwwvjLOvkugUWPOFa5y8zAwebkrzGLU8iihX
-         0kwQ==
-X-Forwarded-Encrypted: i=1; AKwUvBzYDKfK9nmo6viz5UrjxRt1apwp/3C515QZ+M9QQRYIl0qSwuha4AsXDR/djIggDRGye7PaDFzujgxIHwNHObvD@vger.kernel.org
-X-Gm-Message-State: AFq9FYL6rZyiMXI77OKByxBk2uE69E66cTIgQ83dZRvWZyfZ5JJfM3R6
-	FStOEnvIjC5yqIEnIsBwq72k4nionY+CoW38nMn8A2+SsUuTu6KZnfv415E/rVY/2YOBQxT/D/W
-	C0xYh4lhJ+JVZ2oEVwsEk+o46KvzHiX6MeGCqI6MP
-X-Gm-Gg: AYBFou3T4K7aYzSmLQ2g3Uyn73ZGXrVmJvKc5zI3RbuCwPUKNlzrBvLhIzs+PRGeeXY
-	5fiayLWRk8zLznMf5Y+8ZmiDIoJqALyihw03zeEuZ0C4KA/JHGFBiqwESNx6BS9EOzCLScwQ5RN
-	X3jWjEnr88u8SvSBcvb52EMgAh9OrneuXkVRHqSe0eUhDTGFwpAp7OoyuG5d0hjKN7W0++xx0Jc
-	Zp/SywHS1dyvAypcXwAoIFffQk3PbU8F0XoH6EeI0egrl+DJBiUblWvf4lZKoGXmWwzCHNdNlxT
-	OjF5V4NAzY+dzDFdF0I1ApvEVpG34afrSkuZxbe12FDjB7zM6RWI6tRv6vxb1rhnonH08FuBvoN
-	JU0R+pLUPYQ==
-X-Received: by 2002:a05:622a:4019:b0:530:e00f:7768 with SMTP id
- d75a77b69052e-536161386camr525391cf.0.1792011833044; Wed, 14 Oct 2026
- 14:03:53 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XzbjU+HB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8833C1F000C4;
+	Wed, 14 Oct 2026 21:28:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1792013283;
+	bh=FKZH0us2Zujglnx4VyL4YCvCAGYcpqLAKyu9Q12YHnY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=XzbjU+HBBlqURUbKwJ80sJ/kifxc61xRosbYCw8uQ9QVFWpy6DGYUQqBAdvg54Ixl
+	 PiMEJ5Jpi5fQAVPr/4XioeRL4jukix9bA/QD/2o1T9oijCGEQLDumPH6DIXT0OASgi
+	 3D+o5E04kN3IbtfFBA4+InWVw9jAcaeOeexnXTrDUCxWkuiEvsyCOaZIpcivzOuB6g
+	 X6moeo48mXFiM7G6XTSdn7yUGpExFMAdJ6ET7v62PYfNpHSnmIfhpJgsOkV8GW6zj/
+	 jekiePt5HMGqh78hx3DCTYxTtruXgOh3ZFq7TVmQnaBSERhQYbvKn3PwxQBWOHG8k8
+	 IGRwaCtuYNMIQ==
+Date: Wed, 14 Oct 2026 14:28:02 -0700
+From: Namhyung Kim <namhyung@kernel.org>
+To: Changbin Du <changbin.du@gmail.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	James Clark <james.clark@linaro.org>, linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	David Laight <david.laight.linux@gmail.com>
+Subject: Re: [PATCH v4] perf bench: Add atomic operations benchmark
+Message-ID: <as_z4g6CZTObWm2H@google.com>
+References: <20261013085648.976819-1-changbin.du@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20261014151326.4142140-1-thepacketgeek@gmail.com>
-In-Reply-To: <20261014151326.4142140-1-thepacketgeek@gmail.com>
-From: Ian Rogers <irogers@google.com>
-Date: Wed, 14 Oct 2026 14:03:40 -0700
-X-Gm-Features: AclHuK9gTJfGJVM2K8qZN8FxeTus_TXC4iuYsvQ-4FcRysqXiGbnxGrJtCFgToY
-Message-ID: <CAP-5=fXtuEX9zJ0U-a62REgfAXG2z05XCi1f6HB4hhUEfT969w@mail.gmail.com>
-Subject: Re: [PATCH v1] perf machine: Don't unwind the arm64 leaf frame caller
- without symbols
-To: Matthew Wood <thepacketgeek@gmail.com>, James Clark <james.clark@linaro.org>, 
-	Leo Yan <leo.yan@arm.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Puranjay Mohan <puranjay@kernel.org>, 
-	Breno Leitao <leitao@debian.org>, Arnaldo Carvalho de Melo <acme@redhat.com>, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20261013085648.976819-1-changbin.du@gmail.com>
 
-On Wed, Oct 14, 2026 at 8:13=E2=80=AFAM Matthew Wood <thepacketgeek@gmail.c=
-om> wrote:
->
-> On arm64, 'perf record --call-graph fp' also samples LR so that
-> thread__resolve_callchain_sample() can recover the leaf function's
-> caller, which is missing from the frame pointer chain. It does so via
-> get_leaf_frame_caller_aarch64(), which runs a DWARF unwind. The
-> unwinder looks up the symbol of every frame it visits, so the first
-> lookup in a DSO loads its full symbol table and demangles every symbol
-> in it.
->
-> Commit 02b2705017d2 ("perf callchain: Allow symbols to be optional when
-> resolving a callchain") added the symbols argument so that callers which
-> only need maps can avoid loading symbols, and passed it down to every
-> add_callchain_ip() call. The leaf frame unwind was missed and still runs
-> for symbols=3Dfalse, so 'perf inject' on arm64 has been loading symbols i=
-t
-> doesn't need ever since.
->
-> Commit 29be60c93d2d ("perf build-id: Mark DSO in sample callchains")
-> compounded the issue: process_buildids() now walks the callchain of
-> every sample at the end of 'perf record' to mark DSOs hit. With -a, that
-> loads and demangles the symbol tables of every user binary sampled on
-> the system. This can send things into exponential time and memory
-> (over 1GB of heap growth in 5 seconds), so
->
->   perf record -a -e cycles:u --call-graph fp -- sleep 2
->
-> never finishes writing perf.data after the workload exits.
->
-> Callers that pass symbols=3Dfalse only want the maps that callchain IPs
-> fall in, and add_callchain_ip() already honours that by using
-> thread__find_map() instead of thread__find_symbol(). Skip the leaf
-> frame unwind for them as well. The leaf frame caller is almost always
-> in the same DSO as the sampled IP or the next frame in the chain, so
-> build-id marking loses nothing in practice.
->
-> Fixes: 02b2705017d2 ("perf callchain: Allow symbols to be optional when r=
-esolving a callchain")
-> Signed-off-by: Matthew Wood <thepacketgeek@gmail.com>
+On Tue, Oct 13, 2026 at 04:56:48PM +0800, Changbin Du wrote:
+> Add a new 'atomic' collection to perf bench for benchmarking
+> atomic read-modify-write operations with multi-threaded
+> contention testing. It provides two subcommands:
+> 
+>   - atomic cas: contended compare-and-swap operations
+>     (__atomic_compare_exchange_n)
+>   - atomic inc: contended fetch-add operations (__atomic_fetch_add)
+> 
+> Both support a configurable thread count and runtime to measure
+> atomic contention effects.
+> 
+> Why this benchmark is needed:
+> - Atomic read-modify-write operations are fundamental to lock-free
+>   algorithms and data structures. Understanding their performance
+>   characteristics under contention is critical for designing
+>   high-performance concurrent applications.
+> - The benchmark helps identify atomic operation latency and
+>   scalability issues across different thread counts, revealing
+>   contention patterns that are not visible in single-threaded tests.
+> - Useful for evaluating atomic implementation quality on different
+>   architectures and for regression testing after changes to atomic
+>   primitives or memory ordering.
+> 
+> Measurement methodology:
+> - By default two threads contend for the counter, enough to expose
+>   the contention effect; use -t to scale the count.
+> - Each thread starts a private timer (clock_gettime CLOCK_MONOTONIC)
+>   after synchronizing on a pthread_barrier, ensuring all threads
+>   begin simultaneously.
+> - Each thread performs a hot loop of the selected atomic operation
+>   (compare-and-swap or fetch-add) on a shared unsigned long counter
+>   for a fixed runtime. It counts its own completed operations in a
+>   local variable, and the loop runs in batches so the termination
+>   flag is only polled between batches.
+> - The main thread sleeps for the runtime and then sets the flag; the
+>   throughput of a repeat is the total operation count divided by the
+>   measured wall time (the max per-thread runtime).
+> - The shared counter is cache-line aligned (64 bytes) to isolate
+>   contention to the target cache line and avoid false sharing.
+> - The per-thread operation counts of the last repeat show whether
+>   any thread failed to make progress under contention.
+> - The first repeat is excluded from statistics as a warmup phase
+>   to avoid cache-cold effects.
+> 
+> Example usage:
+>   $ perf bench atomic all
+>   # Running atomic/cas benchmark...
+>     Threads: 2, runtime: 2 sec, repeats: 10 (warmup: 1)
+>     Avg throughput: 68,599,954 ops/sec (+- 0.13%)
+>     Per-thread ops (last repeat):
+>       fastest:  74,842,112 ops
+>       slowest:  63,176,704 ops
+>       avg:      69,009,408 ops
+> 
+>   # Running atomic/inc benchmark...
+>     Threads: 2, runtime: 2 sec, repeats: 10 (warmup: 1)
+>     Avg throughput: 128,428,772 ops/sec (+- 0.54%)
+>     Per-thread ops (last repeat):
+>       fastest:  146,230,272 ops
+>       slowest:  112,825,344 ops
+>       avg:      129,527,808 ops
+> 
+> Output fields explained:
+> - Threads: number of contending threads
+> - runtime: seconds each thread runs per repeat
+> - repeats: number of test runs (first is warmup)
+> - Avg throughput: mean aggregate ops/sec across repeats
+> - +- %: relative standard error of the mean throughput across repeats
+> - Per-thread ops: fastest/slowest/avg operations per thread in the
+>   last repeat (shows scheduling imbalance and lack of progress)
+> 
+> Assisted-by: opencode:DeepSeek-V4-Pro
+> Signed-off-by: Changbin Du <changbin.du@gmail.com>
 > ---
->  tools/perf/util/machine.c | 8 +++++++-
->  1 file changed, 7 insertions(+), 1 deletion(-)
->
-> diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
-> index f86b3b7df742..51597cddd239 100644
-> --- a/tools/perf/util/machine.c
-> +++ b/tools/perf/util/machine.c
-> @@ -2989,7 +2989,13 @@ static int thread__resolve_callchain_sample(struct=
- thread *thread,
->
->                 usr_idx =3D callchain_param.order =3D=3D ORDER_CALLEE ? j=
--2 : j-1;
->
-> -               if (usr_idx >=3D 0 && chain->ips[usr_idx] =3D=3D PERF_CON=
-TEXT_USER) {
-> +               /*
-> +                * Finding the leaf frame caller needs a DWARF unwind, an=
-d the
-> +                * unwinder looks up the symbol of every frame it visits.=
- Skip
-> +                * it when the caller asked for maps only, as for build-i=
-d
-> +                * marking, so that no symbol tables are loaded.
-> +                */
-> +               if (symbols && usr_idx >=3D 0 && chain->ips[usr_idx] =3D=
-=3D PERF_CONTEXT_USER) {
+> Changes in v4:
+> - Default to 2 threads (1 on a single-CPU machine).
+> - Replace the iteration count with a fixed runtime per repeat.
+> - Report per-thread operation counts to show lack of progress.
+> 
+> Changes in v3:
+> - Use native word size (unsigned long) for the shared counter instead
+>   of u64 to avoid libatomic on 32-bit targets.
+> - Include <stdint.h> explicitly for UINT64_MAX.
+> 
+> Changes in v2:
+> - Add an 'atomic inc' subcommand for contended __atomic_fetch_add.
+> - Hoist the load out of the CAS retry loop; the failed
+>   __atomic_compare_exchange_n already returns the current value.
+> - Cast the seconds delta to u64 before multiplying by NSEC_PER_SEC to
+>   avoid 32-bit overflow.
+> ---
+>  tools/perf/Documentation/perf-bench.txt |  38 +++
+>  tools/perf/bench/Build                  |   1 +
+>  tools/perf/bench/atomic.c               | 295 ++++++++++++++++++++++++
+>  tools/perf/bench/bench.h                |   2 +
+>  tools/perf/builtin-bench.c              |   9 +
+>  5 files changed, 345 insertions(+)
+>  create mode 100644 tools/perf/bench/atomic.c
+> 
+> diff --git a/tools/perf/Documentation/perf-bench.txt b/tools/perf/Documentation/perf-bench.txt
+> index c5913cf59c98..2a1206fea0c9 100644
+> --- a/tools/perf/Documentation/perf-bench.txt
+> +++ b/tools/perf/Documentation/perf-bench.txt
+> @@ -58,6 +58,9 @@ SUBSYSTEM
+>  'numa'::
+>  	NUMA scheduling and MM benchmarks.
+>  
+> +'atomic'::
+> +	Atomic operation benchmarks.
+> +
+>  'futex'::
+>  	Futex stressing benchmarks.
+>  
+> @@ -283,6 +286,41 @@ SUITES FOR 'numa'
+>  *mem*::
+>  Suite for evaluating NUMA workloads.
+>  
+> +SUITES FOR 'atomic'
+> +~~~~~~~~~~~~~~~~~~~
+> +*cas*::
+> +Suite for evaluating compare-and-swap (CAS) atomic operations under
+> +multi-threaded contention.
+> +
+> +*inc*::
+> +Suite for evaluating atomic fetch-add (increment) operations under
+> +multi-threaded contention.
+> +
+> +Options of *cas* and *inc*
+> +^^^^^^^^^^^^^^^^^^^^^^^^^^
+> +-t::
+> +--threads=::
+> +Number of threads contending for the shared counter (default: 2, or
+> +1 on a single-CPU machine).
+> +
+> +-r::
+> +--runtime=::
+> +Runtime of each repeat in seconds (default: 2).
+> +
+> +The per-thread fastest/slowest/avg ops summary is only printed when
+> +running with more than one thread.
+> +
+> +The average throughput is annotated with its relative deviation
+> +("+- x%"), i.e. the standard error of the mean over the measured
+> +repeats. A small value means the average is reproducible; it does not
+> +reflect per-thread fairness, which the per-thread ops summary shows.
+> +
+> +Note that the cas benchmark counts successful compare-and-swap
+> +operations only; retries and the loads between them are additional
+> +atomic instructions not included in the ops/sec count, so cas and
+> +inc throughputs are not directly comparable at the instruction
+> +level.
+> +
+>  SUITES FOR 'futex'
+>  ~~~~~~~~~~~~~~~~~~
+>  *hash*::
+> diff --git a/tools/perf/bench/Build b/tools/perf/bench/Build
+> index 67b76fe20ba6..c64c52468d3d 100644
+> --- a/tools/perf/bench/Build
+> +++ b/tools/perf/bench/Build
+> @@ -3,6 +3,7 @@ perf-bench-y += sched-pipe.o
+>  perf-bench-y += sched-seccomp-notify.o
+>  perf-bench-y += syscall.o
+>  perf-bench-y += mem-functions.o
+> +perf-bench-y += atomic.o
+>  perf-bench-y += futex.o
+>  perf-bench-y += futex-hash.o
+>  perf-bench-y += futex-wake.o
+> diff --git a/tools/perf/bench/atomic.c b/tools/perf/bench/atomic.c
+> new file mode 100644
+> index 000000000000..2da74bf078bc
+> --- /dev/null
+> +++ b/tools/perf/bench/atomic.c
+> @@ -0,0 +1,295 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (C) 2026 Changbin Du <changbin.du@gmail.com>
+> + *
+> + * Benchmarks for atomic read-modify-write operations.
+> + *
+> + * Measures throughput (ops/sec) of contended atomic operations on a
+> + * single shared counter across multiple threads. Each thread performs
+> + * a hot loop of the selected operation -- compare-and-swap (cas) or
+> + * fetch-add (inc) -- competing with all other threads for the same
+> + * cache line. Threads run for a fixed runtime, so a system that
+> + * cannot make progress under heavy contention reports a low (or
+> + * zero) throughput instead of hanging.
+> + */
+> +#include "bench.h"
+> +#include <linux/compiler.h>
+> +#include "../util/debug.h"
+> +
+> +#ifndef HAVE_PTHREAD_BARRIER
+> +int bench_atomic_cas(int argc __maybe_unused, const char **argv __maybe_unused)
+> +{
+> +	pr_err("%s: pthread_barrier_t unavailable, disabling this test...\n", __func__);
+> +	return 0;
+> +}
+> +
+> +int bench_atomic_inc(int argc __maybe_unused, const char **argv __maybe_unused)
+> +{
+> +	pr_err("%s: pthread_barrier_t unavailable, disabling this test...\n", __func__);
+> +	return 0;
+> +}
+> +#else /* HAVE_PTHREAD_BARRIER */
+> +#include <stdlib.h>
+> +#include <stdio.h>
+> +#include <stdbool.h>
+> +#include <stdint.h>
+> +#include <unistd.h>
+> +#include <pthread.h>
+> +#include <time.h>
+> +#include <inttypes.h>
+> +#include <err.h>
+> +#include <linux/types.h>
+> +#include <linux/kernel.h>
+> +#include <linux/time64.h>
+> +#include <perf/cpumap.h>
+> +#include <subcmd/parse-options.h>
+> +#include "../util/stat.h"
+> +
+> +static unsigned int threads;		/* 0: default to min(2, online CPUs) */
+> +static unsigned int runtime	= 2;	/* seconds per repeat */
+> +
+> +static const struct option options[] = {
+> +	OPT_UINTEGER('t', "threads", &threads,
+> +		     "Number of contending threads (default: 2, or 1 on single CPU)"),
+> +	OPT_UINTEGER('r', "runtime", &runtime,
 
-Hi Matthew, I'm not sure if this is a serious patch or a bug report
-about the slowness of DSO marking. Broadly DSO marking is known to be
-slow and many perf tests run with -B and -N for this reason. I believe
-the intent behind DSO marking as a default is to ensure that perf
-provides the best profiling experience. This comes at a cost, but this
-fix looks like it will break things because IPs will be lost.
+Can you please pick a different short option than 'r'?  perf bench
+itself has -r/--repeat option so it would be confusing.  It doesn't
+clash for now, but I think it's better to use perf bench options from
+'perf bench atomic ...' later.
 
-Trying to look a little more at the ARM64 performance problem, I see
-that we're trying to unwind 2 frames:
-https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.gi=
-t/tree/tools/perf/util/arm64-frame-pointer-unwind-support.c?h=3Dperf-tools-=
-next#n70
-but often just 1 is read. For libunwind the 1 frame case has a special case=
-:
-https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.gi=
-t/tree/tools/perf/util/unwind-libunwind.c?h=3Dperf-tools-next#n671
-I wonder if we could replicate the 1 frame case with libdw to avoid
-processing the DSO, and update the caller to be:
-```
-ret =3D unwind__get_entries(add_entry, &entries, thread, sample,
-callchain_param.order =3D=3D ORDER_CALLER ? 1 : 2, true);
-```
+Otherwise, looks good to me.
 
 Thanks,
-Ian
+Namhyung
 
->
->                         leaf_frame_caller =3D get_leaf_frame_caller(sampl=
-e, thread, usr_idx);
->
-> --
-> 2.53.0-Meta
+
+> +		     "Runtime of each repeat in seconds (default: 2)"),
+> +	OPT_END()
+> +};
+> +
+> +static const char * const cas_usage[] = {
+> +	"perf bench atomic cas <options>",
+> +	NULL
+> +};
+> +
+> +static const char * const inc_usage[] = {
+> +	"perf bench atomic inc <options>",
+> +	NULL
+> +};
+> +
+> +enum atomic_op {
+> +	OP_CAS,
+> +	OP_INC,
+> +};
+> +
+> +static int bench_op = OP_CAS;
+> +
+> +/*
+> + * The termination flag is polled between batches only, so that the
+> + * check does not perturb the measured loop.
+> + */
+> +#define BATCH_OPS	1024
+> +
+> +static unsigned long shared_counter __aligned(64);
+> +static pthread_barrier_t start_barrier __aligned(64);
+> +static bool done;
+> +
+> +struct worker_stats {
+> +	u64	runtime_ns;
+> +	u64	ops;
+> +};
+> +
+> +static void cas_batch(void)
+> +{
+> +	unsigned long i;
+> +
+> +	for (i = 0; i < BATCH_OPS; i++) {
+> +		unsigned long old_val, new_val;
+> +
+> +		old_val = __atomic_load_n(&shared_counter, __ATOMIC_RELAXED);
+> +		do {
+> +			new_val = old_val + 1;
+> +		} while (!__atomic_compare_exchange_n(&shared_counter, &old_val,
+> +						      new_val, false,
+> +						      __ATOMIC_RELAXED,
+> +						      __ATOMIC_RELAXED));
+> +	}
+> +}
+> +
+> +static void inc_batch(void)
+> +{
+> +	unsigned long i;
+> +
+> +	for (i = 0; i < BATCH_OPS; i++)
+> +		__atomic_fetch_add(&shared_counter, 1, __ATOMIC_RELAXED);
+> +}
+> +
+> +static void *worker(void *arg)
+> +{
+> +	struct worker_stats *ws = (struct worker_stats *)arg;
+> +	struct timespec tstart, tend;
+> +	u64 ops = 0;
+> +
+> +	pthread_barrier_wait(&start_barrier);
+> +
+> +	clock_gettime(CLOCK_MONOTONIC, &tstart);
+> +	while (!__atomic_load_n(&done, __ATOMIC_RELAXED)) {
+> +		switch (bench_op) {
+> +		case OP_CAS:
+> +			cas_batch();
+> +			break;
+> +		case OP_INC:
+> +			inc_batch();
+> +			break;
+> +		default:
+> +			BUG_ON(1);
+> +			break;
+> +		}
+> +		ops += BATCH_OPS;
+> +	}
+> +	clock_gettime(CLOCK_MONOTONIC, &tend);
+> +
+> +	ws->runtime_ns	= (u64)(tend.tv_sec - tstart.tv_sec) * NSEC_PER_SEC +
+> +			  (tend.tv_nsec - tstart.tv_nsec);
+> +	ws->ops		= ops;
+> +
+> +	return NULL;
+> +}
+> +
+> +static void print_default_format(struct worker_stats *wstats,
+> +				 struct stats *throughput_stats)
+> +{
+> +	double thru_avg, thru_stddev;
+> +
+> +	printf("  Threads: %u, runtime: %u sec, repeats: %u (warmup: 1)\n",
+> +	       threads, runtime, bench_repeat);
+> +
+> +	thru_avg    = avg_stats(throughput_stats);
+> +	thru_stddev = stddev_stats(throughput_stats);
+> +
+> +	printf("  Avg throughput: %'.0f ops/sec (+- %.2f%%)\n",
+> +	       thru_avg, rel_stddev_stats(thru_stddev, thru_avg));
+> +
+> +	/*
+> +	 * Per-thread operation counts from the last measured repeat show
+> +	 * whether any thread failed to make progress under contention.
+> +	 */
+> +	if (threads > 1) {
+> +		u64 min_ops = UINT64_MAX, max_ops = 0, total_ops = 0;
+> +
+> +		for (unsigned int t = 0; t < threads; t++) {
+> +			if (wstats[t].ops < min_ops)
+> +				min_ops = wstats[t].ops;
+> +			if (wstats[t].ops > max_ops)
+> +				max_ops = wstats[t].ops;
+> +			total_ops += wstats[t].ops;
+> +		}
+> +
+> +		printf("  Per-thread ops (last repeat):\n");
+> +		printf("    fastest:  %'" PRIu64 " ops\n", max_ops);
+> +		printf("    slowest:  %'" PRIu64 " ops\n", min_ops);
+> +		printf("    avg:      %'" PRIu64 " ops\n", total_ops / threads);
+> +	}
+> +}
+> +
+> +static int run_benchmark(void)
+> +{
+> +	pthread_t *thread_ids;
+> +	struct worker_stats *wstats;
+> +	struct stats throughput_stats;
+> +	unsigned int r, t;
+> +
+> +	thread_ids = calloc(threads, sizeof(pthread_t));
+> +	if (!thread_ids)
+> +		err(EXIT_FAILURE, "calloc");
+> +
+> +	wstats = calloc(threads, sizeof(struct worker_stats));
+> +	if (!wstats)
+> +		err(EXIT_FAILURE, "calloc");
+> +
+> +	init_stats(&throughput_stats);
+> +
+> +	for (r = 0; r < bench_repeat + 1; r++) {
+> +		u64 max_runtime_ns = 0, total_ops = 0;
+> +		double throughput;
+> +
+> +		shared_counter = 0;
+> +		__atomic_store_n(&done, false, __ATOMIC_RELAXED);
+> +		pthread_barrier_init(&start_barrier, NULL, threads);
+> +
+> +		for (t = 0; t < threads; t++) {
+> +			if (pthread_create(&thread_ids[t], NULL,
+> +					   worker, &wstats[t]))
+> +				err(EXIT_FAILURE, "pthread_create");
+> +		}
+> +
+> +		sleep(runtime);
+> +		__atomic_store_n(&done, true, __ATOMIC_RELAXED);
+> +
+> +		for (t = 0; t < threads; t++)
+> +			pthread_join(thread_ids[t], NULL);
+> +
+> +		pthread_barrier_destroy(&start_barrier);
+> +
+> +		for (t = 0; t < threads; t++) {
+> +			total_ops += wstats[t].ops;
+> +			if (wstats[t].runtime_ns > max_runtime_ns)
+> +				max_runtime_ns = wstats[t].runtime_ns;
+> +		}
+> +
+> +		/*
+> +		 * Exclude the first repeat (warmup) from statistics so
+> +		 * that cache-cold and lazy-init effects are not counted.
+> +		 */
+> +		if (r > 0 && max_runtime_ns) {
+> +			throughput = (double)total_ops /
+> +				     ((double)max_runtime_ns / NSEC_PER_SEC);
+> +			update_stats(&throughput_stats, (u64)throughput);
+> +		}
+> +	}
+> +
+> +	switch (bench_format) {
+> +	case BENCH_FORMAT_DEFAULT:
+> +		print_default_format(wstats, &throughput_stats);
+> +		break;
+> +
+> +	case BENCH_FORMAT_SIMPLE:
+> +		printf("%.0f\n", avg_stats(&throughput_stats));
+> +		break;
+> +
+> +	default:
+> +		fprintf(stderr, "Unknown format: %d\n", bench_format);
+> +		exit(EXIT_FAILURE);
+> +	}
+> +
+> +	free(thread_ids);
+> +	free(wstats);
+> +
+> +	return 0;
+> +}
+> +
+> +static int run_atomic_bench(int argc, const char **argv,
+> +			    const char * const *usage)
+> +{
+> +	struct perf_cpu_map *cpu;
+> +
+> +	if (parse_options(argc, argv, options, usage, 0)) {
+> +		usage_with_options(usage, options);
+> +		exit(EXIT_FAILURE);
+> +	}
+> +
+> +	if (!threads) {	/* default to 2 threads (1 on a single-CPU machine) */
+> +		cpu = perf_cpu_map__new_online_cpus();
+> +		threads = (cpu && perf_cpu_map__nr(cpu) > 1) ? 2 : 1;
+> +		perf_cpu_map__put(cpu);
+> +	}
+> +
+> +	if (runtime < 1) {
+> +		fprintf(stderr, "Invalid runtime: %u\n", runtime);
+> +		return 1;
+> +	}
+> +
+> +	return run_benchmark();
+> +}
+> +
+> +int bench_atomic_cas(int argc, const char **argv)
+> +{
+> +	bench_op = OP_CAS;
+> +	return run_atomic_bench(argc, argv, cas_usage);
+> +}
+> +
+> +int bench_atomic_inc(int argc, const char **argv)
+> +{
+> +	bench_op = OP_INC;
+> +	return run_atomic_bench(argc, argv, inc_usage);
+> +}
+> +#endif /* HAVE_PTHREAD_BARRIER */
+> diff --git a/tools/perf/bench/bench.h b/tools/perf/bench/bench.h
+> index 8519eb5a42fa..85e3ac471875 100644
+> --- a/tools/perf/bench/bench.h
+> +++ b/tools/perf/bench/bench.h
+> @@ -30,6 +30,8 @@ int bench_mem_memcpy(int argc, const char **argv);
+>  int bench_mem_memset(int argc, const char **argv);
+>  int bench_mem_mmap(int argc, const char **argv);
+>  int bench_mem_find_bit(int argc, const char **argv);
+> +int bench_atomic_cas(int argc, const char **argv);
+> +int bench_atomic_inc(int argc, const char **argv);
+>  int bench_futex_hash(int argc, const char **argv);
+>  int bench_futex_wake(int argc, const char **argv);
+>  int bench_futex_wake_parallel(int argc, const char **argv);
+> diff --git a/tools/perf/builtin-bench.c b/tools/perf/builtin-bench.c
+> index 02d47913cc6a..62bebdedd3b8 100644
+> --- a/tools/perf/builtin-bench.c
+> +++ b/tools/perf/builtin-bench.c
+> @@ -14,6 +14,7 @@
+>   *  syscall ... System call performance
+>   *  mem   ... memory access performance
+>   *  numa  ... NUMA scheduling and MM performance
+> + *  atomic ... Atomic operation performance
+>   *  futex ... Futex performance
+>   *  epoll ... Event poll performance
+>   */
+> @@ -115,6 +116,13 @@ static const struct bench uprobe_benchmarks[] = {
+>  	{ NULL,	NULL, NULL },
+>  };
+>  
+> +static const struct bench atomic_benchmarks[] = {
+> +	{ "cas",	"Benchmark CAS (compare-and-swap) operations",	bench_atomic_cas	},
+> +	{ "inc",	"Benchmark atomic fetch-add operations",	bench_atomic_inc	},
+> +	{ "all",	"Run all atomic benchmarks",			NULL			},
+> +	{ NULL,		NULL,						NULL			}
+> +};
+> +
+>  struct collection {
+>  	const char		*name;
+>  	const char		*summary;
+> @@ -128,6 +136,7 @@ static const struct collection collections[] = {
+>  #ifdef HAVE_LIBNUMA_SUPPORT
+>  	{ "numa",	"NUMA scheduling and MM benchmarks",		numa_benchmarks		},
+>  #endif
+> +	{ "atomic",	"Atomic operation benchmarks",			atomic_benchmarks	},
+>  	{"futex",       "Futex stressing benchmarks",                   futex_benchmarks        },
+>  #ifdef HAVE_EVENTFD_SUPPORT
+>  	{"epoll",       "Epoll stressing benchmarks",                   epoll_benchmarks        },
+> -- 
+> 2.53.0
+> 
