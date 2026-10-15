@@ -1,44 +1,44 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86DBE3B6366;
-	Thu, 15 Oct 2026 14:15:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 335A352E042;
+	Thu, 15 Oct 2026 14:19:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792073727; cv=none; b=kDwJ106uN1amiP7GsSwY6sEP3YKF0uu6mLIFJq72gZjdjSED8PL1xCC9I5/d2ZEEejT66SVJabfvtwtJFrZ21Q0N3IdPepulhoEIFfO6BaBOwxmjNtJYusatCCssyY1bkqf7m7BqPth85jnpOJ6PwAdQlHmGedmomo/XCSOhjfs=
+	t=1792073972; cv=none; b=SDxndLL3yzriFUH5OF47hVPXb2D0W0K3vOmB4Ej1WAg/feXC2oQauNM8F9juYYSw4KmqmQZU4r87lplkG2jIIuElLWsGj3rigr7IrOHFSY4UYpTJikYxx7GmuvsbdZFIgkIpbQ86t1gv6s2jYpmwhMEmjFP3xIZJ6qPn+m4Rxhs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792073727; c=relaxed/simple;
-	bh=RYbrulCqMy6C+PL5BosdihUElVmnBxRoDEQa4rkaPrY=;
+	s=arc-20240116; t=1792073972; c=relaxed/simple;
+	bh=toY2d+nKnmDfOpFRB7kB9FTOmrbPE2iy1wkw0IypruA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=B3FHsI/VN9kBKJfwLZ61KnXq6lyj3CrpF6Z3qo19eRxrY7B18R8WfBiwb3lXHr1h0kNG+M3pfmzj4o9/eIx9tbU4kX/+PdSbdyMdWeDVJyLGI7n8ZieM4v/G3d24NLUsbIERrMJUkWiP+nHWp6EpOmTUKMIOYZUgTGgoqBUhWXo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=X4imKHXQ; arc=none smtp.client-ip=100.103.45.18
+	 Content-Type:Content-Disposition:In-Reply-To; b=Ogloy8ELoCI0edWtMJJvLmFirZ7BFaDWeTS3uEZKassyF2BE4eO6D4vvS4cZ4kiSksSZOLeZuJ1Hfb43ZjiR8p37EwI/xK9AKPA0IhyXzGjMkZBiEvDftuCiKJ0BZpc7P1vPhzRVYcJOQnoSnGmri7VMzAgwRFI5m4TBtLM1SG0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=Y3vi/qaG; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="X4imKHXQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AF5F61F000C4;
-	Thu, 15 Oct 2026 14:15:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1792073726;
-	bh=hQDHOplHUGv77hfd0oQ4n9tB9YO6bJ+Eq2WryDRF/Ms=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=X4imKHXQU3mX+G+97i7d9YoI/2vFiBhh0JQYSQKFsOwO2eicg91lXDJH8PiED+5er
-	 limSY8Ce5fa1JofCh0RSo/iBQlHhnJL210tZ2mEedz5IdhT554maeW0L8YVY7YK0iJ
-	 RVwkA5/IuVdekUztByKBWESMPgDPpX62VXUZaMVV4GtMai4jpWCFrXmYuZ5u1EVQOq
-	 zvcV2RJRV+GE9Yz/PxxQ6Wae449E+F1AeUGPQg+0S01CihYkNPiqaaIwBZABKxeWz0
-	 kIiUxZ6Q97Y4HpfZFr+qHYEvNTU4+RZ7XwQkCUfFo53Qy12FzR8zl9W6D2lp0iyrEn
-	 +FCQpqL0l6xRg==
-Date: Thu, 15 Oct 2026 15:15:18 +0100
-From: "Lorenzo Stoakes (ARM)" <ljs@kernel.org>
-To: Alexandru Elisei <alexandru.elisei@arm.com>
-Cc: maz@kernel.org, oupton@kernel.org, fuad.tabba@linux.dev, 
-	joey.gouly@arm.com, seiden@linux.ibm.com, suzuki.poulose@arm.com, 
-	yuzenghui@huawei.com, linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, 
-	will@kernel.org, mark.rutland@arm.com, linux-perf-users@vger.kernel.org, 
-	catalin.marinas@arm.com, james.clark@linaro.org
-Subject: Re: [RFC PATCH v7 03/28] KVM: arm64: Add CONFIG_KVM_ARM_SPE Kconfig
- option
-Message-ID: <atDa-BSF3RMzJSdE@gremlin>
-References: <20260903160623.315525-1-alexandru.elisei@arm.com>
- <20260903160623.315525-4-alexandru.elisei@arm.com>
+	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="Y3vi/qaG"
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id ABE2F1477;
+	Thu, 15 Oct 2026 07:19:25 -0700 (PDT)
+Received: from localhost (unknown [10.2.196.114])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7C8BF3F871;
+	Thu, 15 Oct 2026 07:19:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
+	t=1792073968; bh=toY2d+nKnmDfOpFRB7kB9FTOmrbPE2iy1wkw0IypruA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Y3vi/qaGwlAMS6V2VrtigNi/Q0VFTsR5SvFAE1qOc5LJDFUg0KwzQ5o4ZY7d7aoXX
+	 c6oCRN7lw7xuowVJbfbIVt4snSN2EfAzZVhhsM1O1xgdggk2ZbjoUtMYtaebVcBZFd
+	 PVaIFnaZCRoisRwYZpfOTVYNcRuljdGFUMaL+nB4=
+Date: Thu, 15 Oct 2026 15:19:26 +0100
+From: Leo Yan <leo.yan@arm.com>
+To: Marc Zyngier <maz@kernel.org>
+Cc: "Johnny.Fan" <johnny.fan@cixtech.com>, will@kernel.org,
+	mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	james.clark@linaro.org, jeremy.linton@arm.com,
+	cix-kernel-upstream@cixtech.com, bob.zhang@cixtech.com,
+	jie.fu@cixtech.com, Fugang Duan <fugang.duan@cixtech.com>
+Subject: Re: [PATCH] perf: arm_spe: Support heterogeneous ACPI systems
+Message-ID: <20261015141926.GC26205@e132581.arm.com>
+References: <20261015062908.3565761-1-johnny.fan@cixtech.com>
+ <86mrsf1bnv.wl-maz@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -47,66 +47,72 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260903160623.315525-4-alexandru.elisei@arm.com>
+In-Reply-To: <86mrsf1bnv.wl-maz@kernel.org>
 
-On Thu, Sep 03, 2026 at 05:05:58PM +0100, Alexandru Elisei wrote:
-> Add a new configuration option that will be used for KVM SPE emulation.
-> CONFIG_KVM_ARM_SPE depends on the SPE driver being loaded because:
->
-> 1. The SPE driver maintains a cpumask of physical CPUs that support SPE,
->    and that will be used by KVM to emulate SPE on heterogeneous systems.
+On Thu, Oct 15, 2026 at 11:49:24AM +0100, Marc Zyngier wrote:
 
-I guess e.g. big.LITTLE?
+[...]
 
->
-> 2. KVM will rely on the SPE driver enabling the SPE interrupt at the GIC
->    level.
->
-> The option will become user selectable after SPE support in KVM is
-> implemented.
->
-> Signed-off-by: Alexandru Elisei <alexandru.elisei@arm.com>
+> > The CPUs without SPE are trimmed from the PMU supported CPUs by
+> > probing PMSVer on each CPU, both at probe time (for online CPUs) and
+> > from the hotplug callback (for CPUs that were offline at probe), as
+> > ACPI conveys no affinity information and the PPI otherwise defaults
+> > to all possible CPUs.
+> 
+> This is a bit odd: at the beginning, you are stating that the SPE
+> interrupt being 0 is an indication of SPE not being supported. Then
+> you check for PMSVer for the same properly. This seems pretty wrong.
+> 
+> It should be possible to build the mask of SPE-enabled CPUs without
+> IPI-ing the other CPUs, and only rely on the firmware table.
 
-With nit addressed the redundant dependency removed (both noted below),
-LGTM and:
+Agreed.
 
-Reviewed-by: Lorenzo Stoakes (ARM) <ljs@kernel.org>
+The SPE driver probes its capabilities on one CPU selected by
+smp_call_function_any(), then performs local setup on every CPU in
+supported_cpus. It therefore relies on that mask being accurate;
+including a CPU without SPE could lead to accesses to unimplemented
+SPE system registers.
 
-> ---
->  arch/arm64/kvm/Kconfig | 9 +++++++++
->  1 file changed, 9 insertions(+)
->
-> diff --git a/arch/arm64/kvm/Kconfig b/arch/arm64/kvm/Kconfig
-> index 449154f9a485..fece4c02b97c 100644
-> --- a/arch/arm64/kvm/Kconfig
-> +++ b/arch/arm64/kvm/Kconfig
-> @@ -103,5 +103,14 @@ config PKVM_STACKTRACE
->  	  If unsure, or not using protected nVHE (pKVM), say N.
->
->  endif # NVHE_EL2_DEBUG
-> +
-> +config KVM_ARM_SPE
+> > @@ -97,6 +100,20 @@ arm_acpi_register_pmu_device(struct platform_device *pdev, u8 len,
+> >  			return gsi ? -ENXIO : 0;
+> >  
+> >  		this_gsi = parse_gsi(gicc);
+> > +
+> > +		if (optional) {
+> > +			if (!this_gsi)
+> > +				continue;
+> > +
+> > +			if (gsi && gsi != this_gsi) {
+> > +				pr_warn("ACPI: %s: CPU%d: inconsistent interrupt %u/%u\n",
+> > +					pdev->name, cpu, gsi, this_gsi);
+> > +				return -ENXIO;
+> > +			}
+> > +			gsi = this_gsi;
+> > +			continue;
+> > +		}
+> > +
+> 
+> This "optional" parameter feels very wrong. We now have an
+> infrastructure to get a set of affinities for an interrupt (see
+> 5324fe21ba9b7 and following patches). What this needs is ACPI to be
+> plumbed into this.
+> 
+> Unfortunately, ACPI is awkward and very badly abstracted in this area,
+> but that doesn't mean we should make the driver code more bizarre.
+> 
+> Treating SPE and TRBE differently is just as odd, and there is no
+> reason to do other than suiting your particular platform.
 
-NIT: Nothing else in the file has the _ARM_ prefix, so is that redundant
-here?
+Yes, SPE and TRBE should be consistent.
 
-> +	bool
-> +	depends on KVM && ARM_SPE_PMU
+There is also a grouping question for SPE and TRBE. If all participating
+CPUs implement the feature, but have different capabilities, should ACPI
+registration create separate platform devices for the compatible CPU
+groups? DT can describe separate CPU subsets using PPI partitions [1].
 
-I think KVM should be removed here, this is within an 'if KVM' block
-already, and nothing else here depends on it either so not a convention.
+Thanks,
+Leo
 
-> +	default n
-> +	help
-> +	  Adds support for Statistical Profiling Extension (SPE) in virtual
-> +	  machines.
-> +
->  endif # KVM
->  endif # VIRTUALIZATION
-> --
-> 2.43.0
->
->
-
---
-Cheers, Lorenzo
+[1] https://github.com/torvalds/linux/blob/0fcb05b72344f40806cbe810de8872f1698bf053/Documentation/devicetree/bindings/interrupt-controller/arm,gic-v3.yaml#L139
+[2] https://git.trustedfirmware.org/plugins/gitiles/TF-A/trusted-firmware-a.git/+/refs/heads/master/fdts/tc-base.dtsi#328
