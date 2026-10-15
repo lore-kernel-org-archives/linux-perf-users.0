@@ -1,205 +1,406 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f176.google.com (mail-pf1-f176.google.com [209.85.210.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E08C31E82B
-	for <linux-perf-users@vger.kernel.org>; Thu, 15 Oct 2026 01:24:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AE023DD873
+	for <linux-perf-users@vger.kernel.org>; Thu, 15 Oct 2026 02:38:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792027491; cv=none; b=QbBFESLjPBSn3vzORQw1vQxhvsI3lk/03jUm/HK4Iz7M+OZcuo4tX35wEF83XPvg95yMmGJL7QPxxrDlA8pZ8psJ+4zLa91uPi3uip4AHeF/p2MIMsoGouzLuSDcTkctF4XMU9dginhEPyAuq1w2+pJsby+OFPRiUcKFKh0q3sU=
+	t=1792031919; cv=none; b=TwoYo4yZzrVs48lpnJEyeykTSf6UX6ETwK2318ySahLu90BZc5UNFFvTybfgPMnM/6Jmgfo02b9KpOngK+gM276VikGxFmLhCREVTuG5v6cY4oar0oPXMlUntZAHoZ+vVo9nop1V4g6IaVSCAsxZ1o918pScTZU5OatNyzhdinw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792027491; c=relaxed/simple;
-	bh=fiMr2Xyg4raSy7wBl9rmCp6sv+zQKxEVnZ8rSyTxv64=;
-	h=Message-ID:From:Subject:To:Cc:In-Reply-To:References:Content-Type:
-	 Date; b=kRAqO6m9NQ7jDdWNrblcFB+plz/DXj+yz3IsZ73+SUYPeZcy9btKr0rfQ3YzvEIh6WYnbhcmd4WRhz+0VqqzeaWNQEa8Zm39qMa89hkfbqzyawY7SJEuTXA5P96qT8/qIvRC9T5hYaosrkX+QC63XYG5Qi8zp+7lKkvxztAve3o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eY0EkNBk; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1792031919; c=relaxed/simple;
+	bh=pySb2jiABzgDr1vxTY8i/AMiAl0D3YFu788ZEmjnvpk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=O+dmCrKnOi2fDDrcbMEVPHr1Co2KKNfbTY3k2yQGcDCPP1Jdo4PHjiW9YXf20iGm3wmAbforJBI/uJXMVcjx50+K7qZK76GkmPW8nY1lML2Ae7Hfuz5j5K8U/j9UOKUJ9o13Ra0uasmEu6aaBoWu+LDz1pOVllgmTlaMqmcp2Ro=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TINHuo2C; arc=none smtp.client-ip=209.85.210.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eY0EkNBk"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0EFF21F000C4;
-	Thu, 15 Oct 2026 01:24:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1792027490;
-	bh=Wy6jmBElFCcR+4miO1qQkqS6pslcqb9LZqUk40peoZU=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=eY0EkNBkc7bmyhW0225BZmUdnI+pvxDCIFwf0aNeLUaVkVcrZAfn1rf0mRvHxNudp
-	 x2O4ZqaJgvYb7DHj/j2x9svpOaNgmEcOs0rOj0Xay6AiaqL9G1UDSxpYLZt03VnNW1
-	 WjAiHV6mhZkhPOG+4dPDX8o4blvxN9t0LuY869mzUqet+aDUK2w5NCKeaGA523tN4H
-	 4+F7hHNyGwz8Bksj+mJUMwztBGUuukmfLEeBl1C2sGPLZ48ev0fOrGZaNHNyTgcUyW
-	 JAYYfy2j2v3Dw90cqlaiSzl/QXeiv3eYl5+250yFr8vK6DjbCFcD7KAF09+WdXzkwE
-	 65FJ/wgU9EPiQ==
-Message-ID: <sashiko-outbox-172088@kernel.org>
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH perf-tools-next v5 5/5] perf ftrace: Filter extraneous
- functions in function graph tracer
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Aaron Tomlin" <atomlin@atomlin.com>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20261015011155.414667-6-atomlin@atomlin.com>
-References: <20261015011155.414667-1-atomlin@atomlin.com>
- <20261015011155.414667-6-atomlin@atomlin.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Thu, 15 Oct 2026 01:24:49 +0000
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TINHuo2C"
+Received: by mail-pf1-f176.google.com with SMTP id d2e1a72fcca58-8875d220446so2476569b3a.3
+        for <linux-perf-users@vger.kernel.org>; Wed, 14 Oct 2026 19:38:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1792031909; x=1792636709; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:from:date:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=VjToYZTxn2Bougr/b4/7DSjFqkkGdfdtJzQcTgHaBLY=;
+        b=TINHuo2CvJy29eD7UtG+JKQotr3eT4k04CqniCvJ+BPHRlOtGVNH+FhjPp7nuTZVXb
+         9MrVgfesrbEXDhMrwC+ZyJfSdXynhb7PuLLALWV21QIvIV9zHRGIsdfvt5Yy7Add8GQw
+         ZeEqaGbhK6kSSWIKkR+01UrDq3SudlmckIl+qRRKbcOXrbxjeDp4RV42k/4Jn8uQOXL/
+         wEgDx5Mt+qjZ2GwiEvHuKuhZ3YXN0rRwn4zL+ykv+Xs6pwj05rTOA+6G3ekZXtNP+G9y
+         5kzJAAF9LZ/c1u6AY1SPN3nllqFKWwMlRPjmL6dmHA25em+RDwwlJ5XDomAAXTrhqDuu
+         6TZw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1792031909; x=1792636709;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:from:date:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=VjToYZTxn2Bougr/b4/7DSjFqkkGdfdtJzQcTgHaBLY=;
+        b=yFgPGtkd1Z9Q8VfVKH0YUVtoM43Eb6/v03tY+484ZYPhMusuqqMiTn8+567z8nfGZf
+         I9LhC65dFU5Qna24ySP/oQ2Ev/qiXLoBPg0WbRaO9BgCI6bLbKco6Fx1z2rTgngKI2wp
+         fUJl+yoEKMJJkoOrldOUCcDzKWMlmQ6XnyoIHETRyaMCML9a0rkUz5r57qcXJ72QjX9V
+         +vAZ2Fkhf+jxKiV6t705lXFcy0Jn7+5esr9TWPLvT6XVwNKnw65/S9NS/qH1J0Vxv0Ul
+         XrLj1Kat5BLy5SUhTbwm4wc/ZKejhS+hWNwHEAJTcQLmo4wLR07rMff3D1ItAhAMGEGw
+         cThw==
+X-Forwarded-Encrypted: i=1; AKwUvBy6UkJEhxtlt7010p8H19Wfdt2YkriD7jhHsJKxtKrxYYfqr3/W0m+rTIU3pQazjYChacmFhVSb+B8Am2C9DVMB@vger.kernel.org
+X-Gm-Message-State: AFq9FYIyfGVJbHPQ6unMjia4uOLwpv0RXA4ASfAnNzhwye7NuWnqCb8A
+	8VhPC/LHN40AfSfkqua6uUSQZloKNwSCBQeTBeNVlGMDxGw8KvO0fC69
+X-Gm-Gg: AYBFou1XxoK7mW+Hj1iEeFNVcGmv5Dky6gYIUeMTYAastTGX9aegUn1CO1INqaBN6Hf
+	E7kQNYrIGPpWz35LIQQ8EgIgLFKsCiB7sedjAkzSZhaX8DBHc9sEXtl31VexkKxZ/4Fbw5QjwfP
+	sDKV/7W3cp1gCouAo1YqkN8s8gtexOF6srSj3yzYuMpAi8/X9q2NCbYIkDh3kftxO715R/F8Hk2
+	p/CGx4n2QtSRrjB1g7e48pd25/nhDIC38dmfCttHQ8z9KH4LW/lMSYgoF2yF2stwTYciutj0dX4
+	b9aCb5r0TDWDYXlHvLJBZGhrQlaN3OgUJLGLupm2PswPcxQC3QShP6wMb6XZ6rQwNdCdOksnwj8
+	rVcS4RO+pXddeEm1VcEixvOBtfX8SQA5NLO5oJvRdXLV9WI1zOywfESGUBQs7ofi10H44u6HgQB
+	fOzPPYEawto5A1qZ0gwVNqauwwjmSYm1R4YBIvdCWz+pKHYGiGPfKZ3QDWJ/jZ+p+YSqzWO/Mcu
+	Q==
+X-Received: by 2002:a05:6a00:2986:b0:88d:3f61:20f3 with SMTP id d2e1a72fcca58-897c77da353mr14168411b3a.54.1792031908992;
+        Wed, 14 Oct 2026 19:38:28 -0700 (PDT)
+Received: from mail.google.com ([5.34.221.10])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-89d803d6410sm1724095b3a.33.2026.10.14.19.38.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 14 Oct 2026 19:38:28 -0700 (PDT)
+Date: Thu, 15 Oct 2026 10:38:17 +0800
+From: Changbin Du <changbin.du@gmail.com>
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Changbin Du <changbin.du@gmail.com>, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
+	Adrian Hunter <adrian.hunter@intel.com>, James Clark <james.clark@linaro.org>, 
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+	David Laight <david.laight.linux@gmail.com>
+Subject: Re: [PATCH v4] perf bench: Add atomic operations benchmark
+Message-ID: <atA7Mgrupnil4Jcv@mail.google.com>
+References: <20261013085648.976819-1-changbin.du@gmail.com>
+ <as_z4g6CZTObWm2H@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <as_z4g6CZTObWm2H@google.com>
 
-Thank you for your contribution! Sashiko AI review found 3 potential issue(=
-s) to consider:
-- [Medium] perf ftrace: inaccurate target_root_depth capture causes prematu=
-re filter termination
-- [Medium] perf ftrace: deep target subtrees suppressed as orphans on stack=
- overflow
-- [Medium] perf ftrace: permanent stack desynchronization on dropped orphan=
- exit
---
+On Wed, Oct 14, 2026 at 02:28:02PM -0700, Namhyung Kim wrote:
+> On Tue, Oct 13, 2026 at 04:56:48PM +0800, Changbin Du wrote:
+[..]
+> > +
+> > +static const struct option options[] = {
+> > +	OPT_UINTEGER('t', "threads", &threads,
+> > +		     "Number of contending threads (default: 2, or 1 on single CPU)"),
+> > +	OPT_UINTEGER('r', "runtime", &runtime,
+> 
+> Can you please pick a different short option than 'r'?  perf bench
+> itself has -r/--repeat option so it would be confusing.  It doesn't
+> clash for now, but I think it's better to use perf bench options from
+> 'perf bench atomic ...' later.
+> 
 
-commit bc1ceece5244de5f3fd5ae63daec2de2ddd1eee0
-Author: Aaron Tomlin <atomlin@atomlin.com>
+Agreed -- I'll drop the short options; --threads and --runtime
+stay long-only so no bench option (e.g. -r/--repeat) is shadowed
+at perf bench atomic .... Will send an updated patch.
 
-perf ftrace: Filter extraneous functions in function graph tracer
-   =20
-When tracing with the function graph tracer using a targeted filter
-(-G or --graph-funcs), users occasionally observe unrelated functions in
-the trace output:
+> Otherwise, looks good to me.
+> 
+> Thanks,
+> Namhyung
+> 
+> 
+> > +		     "Runtime of each repeat in seconds (default: 2)"),
+> > +	OPT_END()
+> > +};
+> > +
+> > +static const char * const cas_usage[] = {
+> > +	"perf bench atomic cas <options>",
+> > +	NULL
+> > +};
+> > +
+> > +static const char * const inc_usage[] = {
+> > +	"perf bench atomic inc <options>",
+> > +	NULL
+> > +};
+> > +
+> > +enum atomic_op {
+> > +	OP_CAS,
+> > +	OP_INC,
+> > +};
+> > +
+> > +static int bench_op = OP_CAS;
+> > +
+> > +/*
+> > + * The termination flag is polled between batches only, so that the
+> > + * check does not perturb the measured loop.
+> > + */
+> > +#define BATCH_OPS	1024
+> > +
+> > +static unsigned long shared_counter __aligned(64);
+> > +static pthread_barrier_t start_barrier __aligned(64);
+> > +static bool done;
+> > +
+> > +struct worker_stats {
+> > +	u64	runtime_ns;
+> > +	u64	ops;
+> > +};
+> > +
+> > +static void cas_batch(void)
+> > +{
+> > +	unsigned long i;
+> > +
+> > +	for (i = 0; i < BATCH_OPS; i++) {
+> > +		unsigned long old_val, new_val;
+> > +
+> > +		old_val = __atomic_load_n(&shared_counter, __ATOMIC_RELAXED);
+> > +		do {
+> > +			new_val = old_val + 1;
+> > +		} while (!__atomic_compare_exchange_n(&shared_counter, &old_val,
+> > +						      new_val, false,
+> > +						      __ATOMIC_RELAXED,
+> > +						      __ATOMIC_RELAXED));
+> > +	}
+> > +}
+> > +
+> > +static void inc_batch(void)
+> > +{
+> > +	unsigned long i;
+> > +
+> > +	for (i = 0; i < BATCH_OPS; i++)
+> > +		__atomic_fetch_add(&shared_counter, 1, __ATOMIC_RELAXED);
+> > +}
+> > +
+> > +static void *worker(void *arg)
+> > +{
+> > +	struct worker_stats *ws = (struct worker_stats *)arg;
+> > +	struct timespec tstart, tend;
+> > +	u64 ops = 0;
+> > +
+> > +	pthread_barrier_wait(&start_barrier);
+> > +
+> > +	clock_gettime(CLOCK_MONOTONIC, &tstart);
+> > +	while (!__atomic_load_n(&done, __ATOMIC_RELAXED)) {
+> > +		switch (bench_op) {
+> > +		case OP_CAS:
+> > +			cas_batch();
+> > +			break;
+> > +		case OP_INC:
+> > +			inc_batch();
+> > +			break;
+> > +		default:
+> > +			BUG_ON(1);
+> > +			break;
+> > +		}
+> > +		ops += BATCH_OPS;
+> > +	}
+> > +	clock_gettime(CLOCK_MONOTONIC, &tend);
+> > +
+> > +	ws->runtime_ns	= (u64)(tend.tv_sec - tstart.tv_sec) * NSEC_PER_SEC +
+> > +			  (tend.tv_nsec - tstart.tv_nsec);
+> > +	ws->ops		= ops;
+> > +
+> > +	return NULL;
+> > +}
+> > +
+> > +static void print_default_format(struct worker_stats *wstats,
+> > +				 struct stats *throughput_stats)
+> > +{
+> > +	double thru_avg, thru_stddev;
+> > +
+> > +	printf("  Threads: %u, runtime: %u sec, repeats: %u (warmup: 1)\n",
+> > +	       threads, runtime, bench_repeat);
+> > +
+> > +	thru_avg    = avg_stats(throughput_stats);
+> > +	thru_stddev = stddev_stats(throughput_stats);
+> > +
+> > +	printf("  Avg throughput: %'.0f ops/sec (+- %.2f%%)\n",
+> > +	       thru_avg, rel_stddev_stats(thru_stddev, thru_avg));
+> > +
+> > +	/*
+> > +	 * Per-thread operation counts from the last measured repeat show
+> > +	 * whether any thread failed to make progress under contention.
+> > +	 */
+> > +	if (threads > 1) {
+> > +		u64 min_ops = UINT64_MAX, max_ops = 0, total_ops = 0;
+> > +
+> > +		for (unsigned int t = 0; t < threads; t++) {
+> > +			if (wstats[t].ops < min_ops)
+> > +				min_ops = wstats[t].ops;
+> > +			if (wstats[t].ops > max_ops)
+> > +				max_ops = wstats[t].ops;
+> > +			total_ops += wstats[t].ops;
+> > +		}
+> > +
+> > +		printf("  Per-thread ops (last repeat):\n");
+> > +		printf("    fastest:  %'" PRIu64 " ops\n", max_ops);
+> > +		printf("    slowest:  %'" PRIu64 " ops\n", min_ops);
+> > +		printf("    avg:      %'" PRIu64 " ops\n", total_ops / threads);
+> > +	}
+> > +}
+> > +
+> > +static int run_benchmark(void)
+> > +{
+> > +	pthread_t *thread_ids;
+> > +	struct worker_stats *wstats;
+> > +	struct stats throughput_stats;
+> > +	unsigned int r, t;
+> > +
+> > +	thread_ids = calloc(threads, sizeof(pthread_t));
+> > +	if (!thread_ids)
+> > +		err(EXIT_FAILURE, "calloc");
+> > +
+> > +	wstats = calloc(threads, sizeof(struct worker_stats));
+> > +	if (!wstats)
+> > +		err(EXIT_FAILURE, "calloc");
+> > +
+> > +	init_stats(&throughput_stats);
+> > +
+> > +	for (r = 0; r < bench_repeat + 1; r++) {
+> > +		u64 max_runtime_ns = 0, total_ops = 0;
+> > +		double throughput;
+> > +
+> > +		shared_counter = 0;
+> > +		__atomic_store_n(&done, false, __ATOMIC_RELAXED);
+> > +		pthread_barrier_init(&start_barrier, NULL, threads);
+> > +
+> > +		for (t = 0; t < threads; t++) {
+> > +			if (pthread_create(&thread_ids[t], NULL,
+> > +					   worker, &wstats[t]))
+> > +				err(EXIT_FAILURE, "pthread_create");
+> > +		}
+> > +
+> > +		sleep(runtime);
+> > +		__atomic_store_n(&done, true, __ATOMIC_RELAXED);
+> > +
+> > +		for (t = 0; t < threads; t++)
+> > +			pthread_join(thread_ids[t], NULL);
+> > +
+> > +		pthread_barrier_destroy(&start_barrier);
+> > +
+> > +		for (t = 0; t < threads; t++) {
+> > +			total_ops += wstats[t].ops;
+> > +			if (wstats[t].runtime_ns > max_runtime_ns)
+> > +				max_runtime_ns = wstats[t].runtime_ns;
+> > +		}
+> > +
+> > +		/*
+> > +		 * Exclude the first repeat (warmup) from statistics so
+> > +		 * that cache-cold and lazy-init effects are not counted.
+> > +		 */
+> > +		if (r > 0 && max_runtime_ns) {
+> > +			throughput = (double)total_ops /
+> > +				     ((double)max_runtime_ns / NSEC_PER_SEC);
+> > +			update_stats(&throughput_stats, (u64)throughput);
+> > +		}
+> > +	}
+> > +
+> > +	switch (bench_format) {
+> > +	case BENCH_FORMAT_DEFAULT:
+> > +		print_default_format(wstats, &throughput_stats);
+> > +		break;
+> > +
+> > +	case BENCH_FORMAT_SIMPLE:
+> > +		printf("%.0f\n", avg_stats(&throughput_stats));
+> > +		break;
+> > +
+> > +	default:
+> > +		fprintf(stderr, "Unknown format: %d\n", bench_format);
+> > +		exit(EXIT_FAILURE);
+> > +	}
+> > +
+> > +	free(thread_ids);
+> > +	free(wstats);
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +static int run_atomic_bench(int argc, const char **argv,
+> > +			    const char * const *usage)
+> > +{
+> > +	struct perf_cpu_map *cpu;
+> > +
+> > +	if (parse_options(argc, argv, options, usage, 0)) {
+> > +		usage_with_options(usage, options);
+> > +		exit(EXIT_FAILURE);
+> > +	}
+> > +
+> > +	if (!threads) {	/* default to 2 threads (1 on a single-CPU machine) */
+> > +		cpu = perf_cpu_map__new_online_cpus();
+> > +		threads = (cpu && perf_cpu_map__nr(cpu) > 1) ? 2 : 1;
+> > +		perf_cpu_map__put(cpu);
+> > +	}
+> > +
+> > +	if (runtime < 1) {
+> > +		fprintf(stderr, "Invalid runtime: %u\n", runtime);
+> > +		return 1;
+> > +	}
+> > +
+> > +	return run_benchmark();
+> > +}
+> > +
+> > +int bench_atomic_cas(int argc, const char **argv)
+> > +{
+> > +	bench_op = OP_CAS;
+> > +	return run_atomic_bench(argc, argv, cas_usage);
+> > +}
+> > +
+> > +int bench_atomic_inc(int argc, const char **argv)
+> > +{
+> > +	bench_op = OP_INC;
+> > +	return run_atomic_bench(argc, argv, inc_usage);
+> > +}
+> > +#endif /* HAVE_PTHREAD_BARRIER */
+> > diff --git a/tools/perf/bench/bench.h b/tools/perf/bench/bench.h
+> > index 8519eb5a42fa..85e3ac471875 100644
+> > --- a/tools/perf/bench/bench.h
+> > +++ b/tools/perf/bench/bench.h
+> > @@ -30,6 +30,8 @@ int bench_mem_memcpy(int argc, const char **argv);
+> >  int bench_mem_memset(int argc, const char **argv);
+> >  int bench_mem_mmap(int argc, const char **argv);
+> >  int bench_mem_find_bit(int argc, const char **argv);
+> > +int bench_atomic_cas(int argc, const char **argv);
+> > +int bench_atomic_inc(int argc, const char **argv);
+> >  int bench_futex_hash(int argc, const char **argv);
+> >  int bench_futex_wake(int argc, const char **argv);
+> >  int bench_futex_wake_parallel(int argc, const char **argv);
+> > diff --git a/tools/perf/builtin-bench.c b/tools/perf/builtin-bench.c
+> > index 02d47913cc6a..62bebdedd3b8 100644
+> > --- a/tools/perf/builtin-bench.c
+> > +++ b/tools/perf/builtin-bench.c
+> > @@ -14,6 +14,7 @@
+> >   *  syscall ... System call performance
+> >   *  mem   ... memory access performance
+> >   *  numa  ... NUMA scheduling and MM performance
+> > + *  atomic ... Atomic operation performance
+> >   *  futex ... Futex performance
+> >   *  epoll ... Event poll performance
+> >   */
+> > @@ -115,6 +116,13 @@ static const struct bench uprobe_benchmarks[] = {
+> >  	{ NULL,	NULL, NULL },
+> >  };
+> >  
+> > +static const struct bench atomic_benchmarks[] = {
+> > +	{ "cas",	"Benchmark CAS (compare-and-swap) operations",	bench_atomic_cas	},
+> > +	{ "inc",	"Benchmark atomic fetch-add operations",	bench_atomic_inc	},
+> > +	{ "all",	"Run all atomic benchmarks",			NULL			},
+> > +	{ NULL,		NULL,						NULL			}
+> > +};
+> > +
+> >  struct collection {
+> >  	const char		*name;
+> >  	const char		*summary;
+> > @@ -128,6 +136,7 @@ static const struct collection collections[] = {
+> >  #ifdef HAVE_LIBNUMA_SUPPORT
+> >  	{ "numa",	"NUMA scheduling and MM benchmarks",		numa_benchmarks		},
+> >  #endif
+> > +	{ "atomic",	"Atomic operation benchmarks",			atomic_benchmarks	},
+> >  	{"futex",       "Futex stressing benchmarks",                   futex_benchmarks        },
+> >  #ifdef HAVE_EVENTFD_SUPPORT
+> >  	{"epoll",       "Epoll stressing benchmarks",                   epoll_benchmarks        },
+> > -- 
+> > 2.53.0
+> > 
 
-[ ... ]
-
-> diff --git a/tools/perf/util/ftrace.c b/tools/perf/util/ftrace.c
-> index 71f00d393349e..90d0e3c9f8b5b 100644
-> --- a/tools/perf/util/ftrace.c
-> +++ b/tools/perf/util/ftrace.c
-
-[ ... ]
-
-> @@ -476,12 +514,23 @@ int ftrace_process_fgraph_line(struct perf_ftrace *=
-ftrace, const char *line, FIL
->  	if (is_exit) {
->  		char exit_name[128];
-> =20
-> +		if (cs->orphan_depth > 0) {
-> +			cs->orphan_depth--;
-> +			return 0;
-> +		}
-
-[Severity: Medium]
-If an orphan call executes and increments cs->orphan_depth, but its
-corresponding exit event is dropped by the kernel ring buffer,
-cs->orphan_depth will remain > 0.
-
-Will the next valid exit event (belonging to the target callgraph) hit this
-block and be blindly consumed without popping its frame from cs->stack?
-
-Could this lead to permanent desynchronization of the tracked call stack?
-
-[ ... ]
-
-> @@ -539,6 +601,98 @@ int ftrace_process_fgraph_line(struct perf_ftrace *f=
-trace, const char *line, FIL
->  	has_open_brace =3D (strchr(func_start, '{') !=3D NULL);
->  	has_semicolon =3D (strchr(func_start, ';') !=3D NULL);
-> =20
-> +	if (cs->orphan_depth > 0) {
-> +		if (has_open_brace && !has_semicolon)
-> +			cs->orphan_depth++;
-> +		return 0;
-> +	}
-> +
-> +	if (has_filter) {
-> +		if (cs->depth =3D=3D 0 || !cs->in_target) {
-> +			char entry_name[128];
-> +
-> +			extract_entry_func_name(func_start, entry_name, sizeof(entry_name));
-> +			if (ftrace_is_graph_func(ftrace, entry_name)) {
-> +				cs->in_target =3D true;
-> +				cs->target_root_depth =3D cs->depth;
-
-[Severity: Medium]
-Since cs->target_root_depth is captured here as the current cs->depth, what
-happens if the --inline option is used?
-
-Can subsequent inline resolution logic pop stale inline frames from previous
-sibling calls, decrementing cs->depth before the target root itself is push=
-ed?
-
-If so, could the target root end up being pushed at a depth lower than the
-captured target_root_depth, causing the target filter to prematurely
-terminate when a child of the target root exits (since
-cs->depth <=3D cs->target_root_depth would evaluate to true)?
-
-> +				cs->orphan_depth =3D 0;
-> +				is_target_root =3D true;
-> +			} else if (cs->depth =3D=3D 0) {
-> +				cs->in_target =3D false;
-> +				cs->orphan_depth =3D 0;
-> +			}
-> +		}
-
-[ ... ]
-
-> +	if (!ftrace->use_inline) {
-> +		if (has_filter && cs->in_target && cs->depth > cs->target_root_depth) {
-> +			if (ftrace_parse_retaddr(func_start, caller_sym,
-> +						 sizeof(caller_sym), &caller_offset)) {
-> +				caller_idx =3D -1;
-> +				for (i =3D cs->depth - 1; i >=3D 0; i--) {
-> +					if (!cs->stack[i].inlined && cs->stack[i].name &&
-> +					    strcmp(cs->stack[i].name, caller_sym) =3D=3D 0) {
-> +						caller_idx =3D i;
-> +						break;
-> +					}
-> +				}
-> +				if (caller_idx < cs->target_root_depth) {
-> +					if (has_open_brace && !has_semicolon)
-> +						cs->orphan_depth =3D 1;
-> +					return 0;
-> +				}
-
-[Severity: Medium]
-If the call stack depth exceeds FTRACE_MAX_STACK, cs->overflow_depth is
-incremented instead of pushing new frames to cs->stack.
-
-When a subsequent legitimate child call is processed, its caller won't be
-found in the stack, leaving caller_idx as -1.
-
-Will this cause caller_idx < cs->target_root_depth to evaluate to true,
-incorrectly flagging the valid child as an orphan and suppressing it and
-all its subtrees?
-
-[ ... ]
-
-> @@ -565,6 +719,21 @@ int ftrace_process_fgraph_line(struct perf_ftrace *f=
-trace, const char *line, FIL
->  		}
->  	}
-> =20
-> +	/*
-> +	 * When inside a target graph filter, child functions must descend
-> +	 * from an active frame on the target stack. Suppress detached
-> +	 * calls originating outside the target hierarchy.
-> +	 */
-> +	if (has_filter && cs->in_target && cs->depth > cs->target_root_depth) {
-> +		if (has_retaddr && caller_idx < cs->target_root_depth) {
-> +			if (has_open_brace && !has_semicolon)
-> +				cs->orphan_depth =3D 1;
-> +			for (i =3D 0; i < num_inlines; i++)
-> +				free((void *)inlined_names[i]);
-> +			return 0;
-> +		}
-> +	}
-
-[Severity: Medium]
-Similar to the non-inline case, if the stack has overflowed FTRACE_MAX_STAC=
-K,
-caller_idx will be -1 because the parent frame was never pushed to the stac=
-k.
-
-Does this mean caller_idx < cs->target_root_depth will incorrectly evaluate
-to true, wrongly classifying deep legitimate subtrees as orphans and droppi=
-ng
-them?
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261015011155.4146=
-67-1-atomlin@atomlin.com?part=3D5
+-- 
+Cheers,
+Changbin Du
