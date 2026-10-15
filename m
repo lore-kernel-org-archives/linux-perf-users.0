@@ -1,34 +1,34 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 95F92367295;
-	Thu, 15 Oct 2026 15:52:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 833A23290AA;
+	Thu, 15 Oct 2026 15:52:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792079546; cv=none; b=anNeboXuioWoA8eD7SOk2RDDIohspSNJXEHt7AbmA6uNtmgZt9DT37axgko+lk/dPytUO8l1lub+PxeCYlW5HQ1VJJj+uh9jOjMsW6Y3TDZp2tkKrwS24ZuHLwcTD1Udd+6bRVV4Xy/IJcAFcbjL418IvAUCPs7bVXUXNoEIpNY=
+	t=1792079552; cv=none; b=cKGl/Q7hsuwPgdZHRq5QJ1AS7+MubaD7Y07g7eFbPeFPZXwigasi7ncj8iWh1O9wrJRer4oVeQrsN5pKAf758TLPFpqQlTyzocUBuz8tFg95/31jP2YY3fM2CIPhRUHxagOW28Dq1pa0x5ByzGHl4mD1h3/2CSuCSzghuuv6Zf4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792079546; c=relaxed/simple;
-	bh=UsCucnKFbKHlnk/F6TLrWSk1K2rkrN5p17L2rucxR3s=;
+	s=arc-20240116; t=1792079552; c=relaxed/simple;
+	bh=CHzi+P9m5petahE5T3ggExjx5Ji6RcvGl9WKuhEkeQI=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=VL9t5aIoW/ZX616FKKF0sDFeaWYm7AmGC8IzIykY5tMVozle1ivH+mEmV501NBX7aju7TDmLFieFKqfTgoM3WmSRm6E5CaeW/JkLOrTiWGMyo1qCgCSiLhtYRu6KHPHb/F2iU1jl+E0KQJ6drSMpak1jPkO1sLJMp3oI8RUiz1E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=WhjEwxub; arc=none smtp.client-ip=217.140.110.172
+	 In-Reply-To:To:Cc; b=MLIzV4VzuGKq0bD5qaoEOsTbo3sXhORkazkW8df+y9Esdh6LwbiwCd6azXkzNbMNGGnLHFe7OAeBTo8kXUQm4XFBHtexSk9CUOoBG0HKa3+m7x7vxJHcYIe2Mpi+CnOR6EbuCAwa7y3x074QWvSmlZzwtFJxtFwBstZBzvaAf/w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=Zt6XUBe/; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="WhjEwxub"
+	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="Zt6XUBe/"
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 50D2C1576;
-	Thu, 15 Oct 2026 08:52:09 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7400D1516;
+	Thu, 15 Oct 2026 08:52:07 -0700 (PDT)
 Received: from e132581.arm.com (unknown [10.2.196.114])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0EB783F7B4;
-	Thu, 15 Oct 2026 08:52:10 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 33BFD3F7B4;
+	Thu, 15 Oct 2026 08:52:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
-	t=1792079532; bh=UsCucnKFbKHlnk/F6TLrWSk1K2rkrN5p17L2rucxR3s=;
+	t=1792079530; bh=CHzi+P9m5petahE5T3ggExjx5Ji6RcvGl9WKuhEkeQI=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=WhjEwxub1G+PVPhg1zi/d1OtUzMMy7qscvqNVR6KMwWueipE8B4+N/UmcaYhPoHIa
-	 00tnBxL3UkhC1lQ6gcVZiXbD6bSiV5pHMpTUg2HeSmXEJsXFYl7LyzuFwujos+6wJu
-	 fquc4F0tqJzlRm7OP4hEeEd3Am872iuCs0q6gtUg=
+	b=Zt6XUBe/ci7svn8AnMsCYgze34uLuwspaJxCWAaahd+8F8pQ40o0imSWtreKsk4/z
+	 uT06yYE30jceNQ3//fFVGQIdIGz5pTWlg5dfIeMe6/yBHaiUUEwqHxihKoWazeMVm8
+	 sWesWbxEDr1NDjPkt+srP3cT33eM9IKm3afn21rw=
 From: Leo Yan <leo.yan@arm.com>
-Date: Thu, 15 Oct 2026 16:51:59 +0100
-Subject: [PATCH 2/2] coresight: trbe: Order padding before publishing AUX
+Date: Thu, 15 Oct 2026 16:51:58 +0100
+Subject: [PATCH 1/2] perf: arm_spe: Order padding before publishing AUX
  head
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -38,7 +38,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20261015-add_barriers_for_perf_aux_output_skip-v1-2-5847d0578859@arm.com>
+Message-Id: <20261015-add_barriers_for_perf_aux_output_skip-v1-1-5847d0578859@arm.com>
 References: <20261015-add_barriers_for_perf_aux_output_skip-v1-0-5847d0578859@arm.com>
 In-Reply-To: <20261015-add_barriers_for_perf_aux_output_skip-v1-0-5847d0578859@arm.com>
 To: Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
@@ -51,42 +51,45 @@ Cc: linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org,
  linux-kernel@vger.kernel.org, coresight@lists.linaro.org, 
  Leo Yan <leo.yan@arm.com>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1792079527; l=1351;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1792079527; l=1283;
  i=leo.yan@arm.com; s=20250604; h=from:subject:message-id;
- bh=UsCucnKFbKHlnk/F6TLrWSk1K2rkrN5p17L2rucxR3s=;
- b=gsloEepkVMtNNVQxOuyaX8g3lCODtKFXXcVigyk6awxiHlk2ZhtSAsvT3+ZV2vqvTxD88hV7d
- UrzDuPHy3rHCNDzJ9dbwX3PuXAN87mSg/TXtPdKHCOhEJqZG+jzmiTL
+ bh=CHzi+P9m5petahE5T3ggExjx5Ji6RcvGl9WKuhEkeQI=;
+ b=zjQfriJA5axeJt3hkdUHMD+NbBgSFhhvyzlc1ouUkDmp0XbsuJi5uivH3qQil2SWGU2ywrKzt
+ /q7Scx5oclzBit9UHnzjuYylGs7J9REnu73XWohJINkUXuCCmBwcUA9
 X-Developer-Key: i=leo.yan@arm.com; a=ed25519;
  pk=k4BaDbvkCXzBFA7Nw184KHGP5thju8lKqJYIrOWxDhI=
 
-TRBE fills gaps in the AUX buffer before advancing aux_head. Neither
-perf_aux_output_skip() nor perf_aux_output_end() guarantees ordering of
-these CPU stores before publishing the new head.
+The driver fills alignment gaps and calls perf_aux_output_skip(), which
+publishes the new aux_head without a memory barrier. A userspace
+consumer on another CPU can therefore observe the new head before the
+padding stores become visible.
 
-Add smp_wmb() after memset() in __trbe_pad_buf(). This covers alignment
-padding published by perf_aux_output_skip() and the overwrite erratum
-padding written by trbe_get_trace_size() before perf_aux_output_end().
+Add smp_wmb() between the padding stores and perf_aux_output_skip().
 
-Fixes: 3fbf7f011f24 ("coresight: sink: Add TRBE driver")
+Fixes: d5d9696b0380 ("drivers/perf: Add support for ARMv8.2 Statistical Profiling Extension")
 Assisted-by: LLM
 Signed-off-by: Leo Yan <leo.yan@arm.com>
 ---
- drivers/hwtracing/coresight/coresight-trbe.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/perf/arm_spe_pmu.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/hwtracing/coresight/coresight-trbe.c b/drivers/hwtracing/coresight/coresight-trbe.c
-index c7cbca45f2debd4047b93283ea9fe5dd9e1f2ebf..b605121b1dcfed9837c15cd92ff4c42515f39eaf 100644
---- a/drivers/hwtracing/coresight/coresight-trbe.c
-+++ b/drivers/hwtracing/coresight/coresight-trbe.c
-@@ -362,6 +362,8 @@ static void trbe_stop_and_truncate_event(struct perf_output_handle *handle)
- static void __trbe_pad_buf(struct trbe_buf *buf, u64 offset, int len)
- {
- 	memset((void *)buf->trbe_base + offset, ETE_IGNORE_PACKET, len);
-+	/* Order the padding stores before publishing the new aux_head. */
-+	smp_wmb();
+diff --git a/drivers/perf/arm_spe_pmu.c b/drivers/perf/arm_spe_pmu.c
+index b70f3fedf0282baba1395ce1116272ec5f961ea8..e105462ec5f38eab4776b0a654ba7c8a84f70f71 100644
+--- a/drivers/perf/arm_spe_pmu.c
++++ b/drivers/perf/arm_spe_pmu.c
+@@ -487,8 +487,11 @@ static void arm_spe_pmu_pad_buf(struct perf_output_handle *handle, int len)
+ 	u64 head = PERF_IDX2OFF(handle->head, buf);
+ 
+ 	memset(buf->base + head, ARM_SPE_BUF_PAD_BYTE, len);
+-	if (!buf->snapshot)
++	if (!buf->snapshot) {
++		/* Order the padding stores before publishing the new aux_head. */
++		smp_wmb();
+ 		perf_aux_output_skip(handle, len);
++	}
  }
  
- static void trbe_pad_buf(struct perf_output_handle *handle, int len)
+ static u64 arm_spe_pmu_next_snapshot_off(struct perf_output_handle *handle)
 
 -- 
 2.34.1
