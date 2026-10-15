@@ -1,39 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68426328B75
-	for <linux-perf-users@vger.kernel.org>; Thu, 15 Oct 2026 12:45:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48286521889;
+	Thu, 15 Oct 2026 12:50:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792068350; cv=none; b=PLjAjafwYdakv3zMpzG+Hf5uHJi9WRLxXhOPVp1PDd+3B1PVZF/8UOXVaB8haEnCn2Hp3sHY0Oom0BU5VldGPC4iBqMvsOkUF78QEEpn94C4aDBxMWR7CO2Bvpdg7CL/UGXm9Eqc/3tftWgaukxhiFdON4RbY2PTRDGqJruAlN0=
+	t=1792068617; cv=none; b=YUdsPuyWCn8RZ1z2eYqOGbnjT0Oyg2OLDyksjK9paM81w8o9eRJG4sFvLhiCLNM6Bjt9G54JwLMYlM1MbszcHVZkagJVf2YdcoNYIJ084OEUn/MC2Fp5x1wkwaVurOhqXjTVXpxRaW+k7aw7UIjcczPwgEV8JyFKe4oMIcTdQYc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792068350; c=relaxed/simple;
-	bh=HyNU6uS/DbqGMGn1JagN/67xhjrwaq81mLqgDMkXQP0=;
+	s=arc-20240116; t=1792068617; c=relaxed/simple;
+	bh=4R6C3otfPSRMB7sLJWxWEvrFS4WjHRVB+TeXnhUt7Q4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=B3rrbuxLt9JiuYXnMRvoktshGlG0POE4E9qZMiiE5+pOoc2ujs/Fvb0lQ6Mn+snv+9puKeQEhPIL4UcpTzNqAg1xkilsjs0B5C3OP+kNpj5+DIalTGxg178DFxSv2/HYSAODskukgXqtLNH2FkpzXngbAPolgFtz+rBGIDwyls4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=le6uPVll; arc=none smtp.client-ip=100.103.45.18
+	 Content-Type:Content-Disposition:In-Reply-To; b=sxxpSc7GfNQvUHgEizhWyaNVj8oJQKO02mMiioengHvCvJ7xQgpx09+PmQKZE3uzTG5ydjqLEZdsTqmLsEMpK7fQFnHoaHiXX/J0QIkI06oVsHp9mTwWoSr2boqpMDb1KpGQk8EHuia58D30rQC5vrGaBwcimoXvmQmSZBrThOo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VvGzkhkX; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="le6uPVll"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1743F1F000C4;
-	Thu, 15 Oct 2026 12:45:47 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VvGzkhkX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 245CE1F000C4;
+	Thu, 15 Oct 2026 12:50:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1792068349;
-	bh=W12XDrvw7f+AKX3qBwyOQ7szCXeUEBebRu6XXPPodDI=;
+	s=k20260515; t=1792068616;
+	bh=4R6C3otfPSRMB7sLJWxWEvrFS4WjHRVB+TeXnhUt7Q4=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=le6uPVllewTN5EAXowJ8xOcxIlFmLfrEKnM516I8nrvzPao8bCK2e37+CtcQOsl4/
-	 k8bW9nNY5M7YnHMBZVzcPr2bZi4YwV3FhwZKQ3s2CYPrIPvv3ZiRzL/M6I8vuzyQHL
-	 FIz/KBhwqKcgiAPbu6ZlJwmOUvz+3eZOdEeHCZFZzs/Lyr7PQGsstQAaqq1cisNXqT
-	 6iitL6D7/H12m1qFZLcTxKyhHt1hNm2QJPT+MQBze2+1X/sDC6EqADMmKpr7vLbZUb
-	 kCcrp1HnFk/IooaG9cfXJ+Wtg+b4we+SfjCDbVAYYt/zJ+XiXx5j82UUR7h5G040yh
-	 E9Fp29B444Icg==
-Date: Thu, 15 Oct 2026 13:45:44 +0100
-From: Will Deacon <will@kernel.org>
-To: Robin Murphy <robin.murphy@arm.com>
-Cc: mark.rutland@arm.com, linux-perf-users@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v3] perf/arm_cspmu: Add Arm system PMU
-Message-ID: <atDK-H_Qrufjc2WW@willie-the-truck>
-References: <222d98feab5ca2836fdef69fee9113f6f860167d.1791209460.git.robin.murphy@arm.com>
+	b=VvGzkhkXPC+gUqSIhDNIhuCk0U83Pnahsv8JWnqIZ3WPyxMgOfEb+v3pExjdpYNxe
+	 W/DFwGWQw5PbXO5XkdnRnOfsq6fsX2h7zN6IbOl3Dv3OyhcLvvRchrsRr89oj7iBLb
+	 ZpcdNGsIzKQzNngva2sZwFCck9DPcqkhDTGxN5BwUI+DuCS94HpNk5CyyRb81p0kLb
+	 8Fi3S5FvPc9kIbhpwu2GLI1IO0sRIuJuHevOB6krAS18ddMyqvrQh4dhqljaWzkHod
+	 SkVW+AnFQjrwb175AzOTl3IC51i8mb0xSa7+Y5X3jAleab7bsU3ETmJZmPs6JZVczB
+	 ZxvRVUKkg4gfA==
+Date: Thu, 15 Oct 2026 13:50:09 +0100
+From: "Lorenzo Stoakes (ARM)" <ljs@kernel.org>
+To: Alexandru Elisei <alexandru.elisei@arm.com>
+Cc: maz@kernel.org, oupton@kernel.org, fuad.tabba@linux.dev, 
+	joey.gouly@arm.com, seiden@linux.ibm.com, suzuki.poulose@arm.com, 
+	yuzenghui@huawei.com, linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, 
+	will@kernel.org, mark.rutland@arm.com, linux-perf-users@vger.kernel.org, 
+	catalin.marinas@arm.com, james.clark@linaro.org
+Subject: Re: [RFC PATCH v7 00/28] KVM: arm64: Add Statistical Profiling
+ Extension (SPE) support
+Message-ID: <atDLgcMeh7kizHGt@gremlin>
+References: <20260903160623.315525-1-alexandru.elisei@arm.com>
+ <atCqFRdGzFq5dOdT@raptor>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -42,35 +47,20 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <222d98feab5ca2836fdef69fee9113f6f860167d.1791209460.git.robin.murphy@arm.com>
+In-Reply-To: <atCqFRdGzFq5dOdT@raptor>
 
-Hi Robin,
+On Thu, Oct 15, 2026 at 11:25:25AM +0100, Alexandru Elisei wrote:
+> Hi Oliver, Marc,
+>
+> Gentle ping regarding this series. Is there something you want me to do to make
+> reviewing easier? Do you want me to rebase it on top of v7.4-rc1 when it comes
+> out? Something else?
+>
+> Thanks,
+> Alex
 
-On Mon, Oct 05, 2026 at 03:11:00PM +0100, Robin Murphy wrote:
-> Arm's latest Compute Subsystems and SoCs are using a common PMU block
-> in various places which can mostly just be driven as a generic 64-bit
-> CoreSight PMU, but does have an IMP-DEF register for additional
-> filtering. The details of event and filter encodings depend on the
-> particular PMU instance, so are left to the higher level Arm Telemetry
-> Solution tooling.
-> 
-> Signed-off-by: Robin Murphy <robin.murphy@arm.com>
-> ---
-> 
-> v3: Fix 32-bit COMPILE_TEST to match arm_cspmu.c
-> 
->  drivers/perf/arm_cspmu/Kconfig      |  7 +++
->  drivers/perf/arm_cspmu/Makefile     |  1 +
->  drivers/perf/arm_cspmu/arm_cspmu.c  |  7 +++
->  drivers/perf/arm_cspmu/arm_cspmu.h  |  1 +
->  drivers/perf/arm_cspmu/arm_syspmu.c | 67 +++++++++++++++++++++++++++++
->  5 files changed, 83 insertions(+)
->  create mode 100644 drivers/perf/arm_cspmu/arm_syspmu.c
+Just to say that I'm planning to go through this series myself and can hopefully
+help with the review workload here! :)
 
-Sorry, but with LPC last week and us now being at -rc7, this finalised
-just a little too late for 7.4. I'll pick it up next cycle (but please
-resend at -rc1 so I don't forget!).
-
-Cheers,
-
-Will
+--
+Cheers, Lorenzo
