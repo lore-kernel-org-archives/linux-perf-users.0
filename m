@@ -1,137 +1,147 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from BL2PR02CU003.outbound.protection.outlook.com (mail-eastusazon11011024.outbound.protection.outlook.com [52.101.52.24])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3B6D27057D;
-	Thu, 15 Oct 2026 06:48:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792046937; cv=none; b=eFbp4QvOCQkJBEc/Tn5E+5upGaPdNHsF5d2vgpTYfxhQE9KUqYxVncuXuElLIacTTi5Py534zqaCTlZFjS7D8kA3NVH+14iwxApmd1mcWnkD4bA3WTS8h18WWi7Ovc6WpFTWFKMitAS430v1baFARrqWMXaH+uGXajP5LljpD2U=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792046937; c=relaxed/simple;
-	bh=Vx4WNBNl7SOPDEKnt7RVr9r9XrczH2ZC8K4MYPdXKYw=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=BpDVWx65jW3RAr41ylE75/Nu0TT8Qomdf7fpm+5VXsji+dEaUeA8J4YbbzzUOr1YUPuJ75CcCsUV/MGseCshhdCdoZWawjFrwQtOLm6NWrSxDaeYsGh2FqnH1LretU1arT1m7+VFJQVfTvkhfb99Ft+imaWlMs4zHSODzu3t9XM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aSvZh6T6; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 610DA4908B2
+	for <linux-perf-users@vger.kernel.org>; Thu, 15 Oct 2026 06:49:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.52.24
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1792047001; cv=fail; b=usuF3Qbeyi/0ofDW8qUxkQ/a1qnnsYoyH+45cRrLCii72HyZWxCNrEqjSThinJDki3hmVjMK9DXF/MgAg4r/YySSZqFJBErnm90/zZkysS0bpUeUEkRsQzHzpKYjngVXlcDl92reS7uGk30X5/OKIY4fgjjsiisbNW3MrJBQPz8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1792047001; c=relaxed/simple;
+	bh=SoRAG7tArVJRlNF06mQzIBWuHSvnzpv/GyoxTHNiXqQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=AKuYkE/kj/INB87jbgBdU8Na+Hoq1JwbvDx9udMOKy30+Je4QlMeZxWfmQNaywrwFMHTTF+ljNpiJOMydtcUcLgeg7funhFkvJ5lAl1W8UmUABarX4uINAEdeAVdzu1D99U9EaAiPXHdIhN2ceNb9FLxl7jQck5VoN/b5N9B42Q=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=g5Ro4YAf; arc=fail smtp.client-ip=52.101.52.24
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aSvZh6T6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 110961F000C4;
-	Thu, 15 Oct 2026 06:48:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1792046936;
-	bh=INoA3eVpkm2e3ROHdK2qniT1eVroY4hUq1eYZv5DCfk=;
-	h=From:To:Cc:Subject:Date;
-	b=aSvZh6T6xahyGHhC0EW9wxXhrWhpEM8b0kFruRKRwBYOVP7S7kbkaxdvUzakZEpcq
-	 R97WKRNx7PsoGU0GHXd3u9Bh00VCMBH37GUFgMt2cv54NKgXpdLIx9wp3XlacVH8dW
-	 iRrLRizPNdWSu+WFto1NOfHCKjnXmbUU3um/WMU1MlSR3fxH3VvBx9MqjbKw0vRiEC
-	 BlOSA0bXcvzUP/XgOZ0sWYq/YGxlyWycdudy8TIVU92zBaPy+S08OG5a7PoiTJYibO
-	 0BhM4ZCzpyaGd4RBPQtemEVN3Mj9HsyuYFHJXWn30XtonSCYhMsA15GxWyMe+ddUmi
-	 Bqo44S6hc5wQQ==
-From: Namhyung Kim <namhyung@kernel.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	James Clark <james.clark@linaro.org>
-Cc: Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>,
-	LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org
-Subject: [PATCH] perf c2c: Fix memory leaks on output fields
-Date: Wed, 14 Oct 2026 23:48:50 -0700
-Message-ID: <20261015064850.43366-1-namhyung@kernel.org>
-X-Mailer: git-send-email 2.56.0
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="g5Ro4YAf"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=Q0XSaCyto1TUu34wigpFdijSFLJ3qKSyAZjMZQzce/rdbXN75yZ8DUIKBPFmoliA3QN4TXw63lYhwqvcLaK/ycP1j7dtF4YRLiGh1UQ8KJUcxMFfkIH2f7E/smMdEd3O/a/A8LsFMzEI72MApej2gnXoFpFeA1W0cOsRDkHRiJpm/hE6vd6K6GrErNO70oQDLR8tthLuJzfLD+YhNxpfVTrWCwo5odIW8n95JmMAWJF/3m+Csc14KXrTEq7HcIuXPKAX/FvRFf1RHB8EUy/3uPkTlnUaRg/GG0Vy95hpIqoPFyvd07lboLUK3lIWwQoQfWRntbkWMWpEmgVD7Xxc0Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=5/E3fURLtIzRugzOWyI3bQWFPtXvs9O3C6x7QwmnB3c=;
+ b=hYc8U01RXQEUM/E5t49zKAkw1l9FXj22zX1xuiJk4Y8TAcBJRimWsFcOKgr3EF4B0kL2VyhzidlQ2CRZ8+oAyT7zGIKucvfhmcRn43fPjlA0mFbmmjcJO6UieNK9k2lmwbF2ZUN2j2CctUmLaoAktnkYpiOalyPsMETZ7op2BQgz970raP+v6yPUvz44ci4yVegZbhg4I33EqvyJ+1HXw94IdMkLjJzeZxlUxmEQmsjaSML/UY9YtvQ64ZuoTbYKx0Ga6+n4fbBN3exHo3aCyVcv+lEYPisTaZ45PvcTR9L2dbitBrm/FaYMbvHnqbPhPryFdtzvkVdnMcwMg0DrFg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=lists.linux.dev smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=5/E3fURLtIzRugzOWyI3bQWFPtXvs9O3C6x7QwmnB3c=;
+ b=g5Ro4YAf2PsfpTCuGnYpb4PXRVD79dmoMmlDX1mHyt42TZBKUCcRZLcpZ8k3EPRm+P0DudvBsT+dGg8qlr9TitHUAyTYuWo8d1QlNOFWnPuZ2TOaQA7oDJOtb3zoxReCWGR6lQBqaPbTovctpGJyS7UCsIukrbT7+acJ8TnKUaI=
+Received: from BN9PR03CA0866.namprd03.prod.outlook.com (2603:10b6:408:13d::31)
+ by CH3PR12MB8936.namprd12.prod.outlook.com (2603:10b6:610:179::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.522.14; Thu, 15 Oct
+ 2026 06:49:54 +0000
+Received: from LV8PEPF00000066.namprd03.prod.outlook.com
+ (2603:10b6:408:13d:cafe::e) by BN9PR03CA0866.outlook.office365.com
+ (2603:10b6:408:13d::31) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.21.522.4 via Frontend Transport; Thu, 15
+ Oct 2026 06:49:54 +0000
+X-MS-Exchange-Authentication-Results: mx.microsoft.com 1; spf=pass (sender IP
+ is 165.204.84.17) smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=satlexmb07.amd.com; pr=C
+Received: from satlexmb07.amd.com (165.204.84.17) by
+ LV8PEPF00000066.mail.protection.outlook.com (10.167.248.38) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.21.522.6 via Frontend Transport; Thu, 15 Oct 2026 06:49:53 +0000
+Received: from Satlexmb09.amd.com (10.181.42.218) by satlexmb07.amd.com
+ (10.181.42.216) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.53; Thu, 15 Oct
+ 2026 01:49:47 -0500
+Received: from satlexmb08.amd.com (10.181.42.217) by satlexmb09.amd.com
+ (10.181.42.218) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.53; Thu, 15 Oct
+ 2026 01:49:47 -0500
+Received: from [192.168.0.101] (10.180.168.240) by satlexmb08.amd.com
+ (10.181.42.217) with Microsoft SMTP Server id 15.2.2562.53 via Frontend
+ Transport; Thu, 15 Oct 2026 01:49:45 -0500
+Message-ID: <b65d8983-aedc-46c3-986c-6353b56e472f@amd.com>
+Date: Thu, 15 Oct 2026 12:19:39 +0530
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 3/3] perf/amd/ibs: Simplify event state handling with
+ IBS_CAPS_DIS
+To: <sashiko-reviews@lists.linux.dev>
+CC: <linux-perf-users@vger.kernel.org>, Ravi Bangoria <ravi.bangoria@amd.com>
+References: <20261015060430.5877-1-ravi.bangoria@amd.com>
+ <20261015060430.5877-4-ravi.bangoria@amd.com>
+ <sashiko-outbox-172339@kernel.org>
+Content-Language: en-US
+From: Ravi Bangoria <ravi.bangoria@amd.com>
+In-Reply-To: <sashiko-outbox-172339@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: LV8PEPF00000066:EE_|CH3PR12MB8936:EE_
+X-MS-Office365-Filtering-Correlation-Id: 924ba1a6-4c45-4cff-a2a5-08df2a8884af
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|23010399003|82310400026|36860700016|1800799024|376014|18002099003|22082099003|10067099003|4143699003|11063799006|56012099006;
+X-Microsoft-Antispam-Message-Info:
+	muQjZ6fe1ba8C11ev9uDUHjK/j7Djr7YiySv/bwfnsUOJf/YdSDZDRSQT9C36ygrgTdQTSsqgGovXuNtwxxO+3D24X6d4kKAetWq0chjoNL9ICBlAMJGG0I7gxaZtMflAfyW5kSrVUEnRJNktjs16noDtXvcTn/fpuPHiiRIK1qEE5roEukLqEkg0NKMlCb1otYNUzk/CD6MTiKnfPHjNCoIxyynyBccRHpOuVes1oSWQJ0oYz3MmK/AtY7FjowNRxFsEprtpdmcc1LjmAOWsfeHEair1/Ww/VZ6AKvEfsCeWS/1f+IfzxihG7x/OBMgEEg5lN9v4SZ2lHyqHqZo9MIVuvJlgjXgQN4AvQEkjhRXIkMGw7tJh3kp2iyhzy1YoJzbplFaEwLEHg8xpnQf89tWhwvkzvT3+BFPfJDkPKsqmKcLkIrhewvUoa6u0GdM+UtW97Kt5D9atMqozC9r6Rnt7MtNEBasjsFA/7mfPuk6FR3yGQpmoqRJ9OubxzhaU+nUEwPR2QUlrqg7eTtjqTMpdYqEGWlNJA1zgpmlpY3HhBgnK4UnvG7+Q77r0wXA3Q9VOEMTpJsTkXvgxeFIM0PvIOMdfMmLED3Xu1acZlr9EXKs7xcqM3RIVwYAT+27HZjbdB8xGgOtfZiFWNtmGrCmfLdAnS72ppkknWSKhW+4PCFtQ0YEzc3kX6b7yNRqTgISYLUExF08ay4HGUzO1g==
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(23010399003)(82310400026)(36860700016)(1800799024)(376014)(18002099003)(22082099003)(10067099003)(4143699003)(11063799006)(56012099006);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	zsl+zBf7SIKTXZQ7qO9fxTwstRWWe+oDhbERKPEHBPMbfpAEJT49OwuxHhYb9heEtFrdxe3d2yi38sSZv8ckjBzbXQJme7PugwsjH8HM50z04tXkN2BqgXL7+MbgjhJmU6+otM0tVDhWlHRiUgm9sqnNDqiOrhSEOeVMxruPCiydVlZadzskVIRcBWw7VeD2LGauMFixVB3ECamAf/nA4tIIdub2kxSprWH44G5aSvvT/sRqNomZEmYkRc0wZ7XmrwroHxxiNrsUHtk6CTB1BicyGi2HodrpF5Vqot503N60rqrQQ1zLlFgjYqf904K7hJv54xmyknLN77jwuFvns1O1DTsc06yhTIEFs7lKMn3kPApkt6w5wPOA+el8mhJEkMv3yWttdyXjTBkBpZ8iI8ssKvHg7R4nvwkw37fpoOz3ySFQUmegdm+vlP+hSSyD
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Oct 2026 06:49:53.9538
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 924ba1a6-4c45-4cff-a2a5-08df2a8884af
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb07.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	LV8PEPF00000066.namprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR12MB8936
 
-The perf_hpp_list was not freed after use.  Let's add it for the main
-c2c hists list in perf c2c report and a local list in print_pareto().
+>> +     if (ibs_caps & IBS_CAPS_DIS) {
+>> +             /*
+>> +              *      IBS HW                     SW
+>> +              *
+>> +              *  o Capture sample       o ->stop()
+>> +              *  o Set VAL bit            CTL2[Dis] = 1
+>> +              *  o Raise NMI --.        o ...
+>> +              *                 \       o ->start()
+>> +              *                  \        wrmsr(IBS_{FETCH|OP}_CTL, new value);
+>> +              *                   \       (wrmsr clears the VAL bit)
+>> +              *                    `--> o Receives delayed NMI
+>> +              *                           (Unknown NMI since VAL bit is cleared)
+>> +              *
+>> +              * Handle this with induced delay.
+>> +              */
+>> +             rdmsrq(hwc->config_base, ctl);
+>> +             while ((ctl & perf_ibs->valid_mask) && delay--) {
+>> +                     udelay(1);
+>> +                     rdmsrq(hwc->config_base, ctl);
+>> +             }
+> 
+> [Severity: High]
+> What happens if the delayed NMI takes longer than 50us to arrive, for
+> example due to hypervisor scheduling, nested virtualization, or SMIs?
+> 
+> If this delay loop expires, the code proceeds to call
+> perf_ibs_enable_event() which clears the VAL and CTL2[Dis] bits. When the
+> delayed NMI eventually arrives, it appears it will be treated as an
+> unhandled NMI.
 
-Previously it was detected by ASAN like below.
+A delay exceeding 50us is highly unlikely in practice, and even if it
+occurs, the consequence is "Unknown NMI", which is not fatal.
 
-  =================================================================
-  ==42183==ERROR: LeakSanitizer: detected memory leaks
-
-  Indirect leak of 1064 byte(s) in 7 object(s) allocated from:
-      #0 0x7f17334ef24f in calloc (/lib64/libasan.so.8+0xef24f) (BuildId: 61e8165ca90f7a4f06b73f064a938c76deaae079)
-      #1 0x0000005fa099 in zalloc  ../../lib/zalloc.c:8
-      #2 0x0000004faf6d in get_format  tools/perf/builtin-c2c.c:1978
-      #3 0x0000004fb45e in c2c_hists__init_output  tools/perf/builtin-c2c.c:2004
-      #4 0x0000004fb7de in __hpp_list__parse  tools/perf/builtin-c2c.c:2047
-      #5 0x0000004fbae9 in hpp_list__parse  tools/perf/builtin-c2c.c:2085
-      #6 0x0000004fee13 in print_pareto  tools/perf/builtin-c2c.c:2563
-      #7 0x0000004ffcd7 in perf_c2c__hists_fprintf  tools/perf/builtin-c2c.c:2708
-      #8 0x000000500ab5 in perf_c2c_display  tools/perf/builtin-c2c.c:2949
-      #9 0x0000005045c3 in perf_c2c__report  tools/perf/builtin-c2c.c:3522
-      #10 0x000000505caa in cmd_c2c  tools/perf/builtin-c2c.c:3676
-      #11 0x0000005df50e in run_builtin  tools/perf/perf.c:383
-      #12 0x0000005df9b1 in handle_internal_command  tools/perf/perf.c:436
-      #13 0x0000005dfd7f in run_argv  tools/perf/perf.c:480
-      #14 0x0000005e02d6 in main  tools/perf/perf.c:581
-      #15 0x7f1729450680 in __libc_start_call_main (/lib64/libc.so.6+0x3680) (BuildId: 85075e2ae2e13352a1413d41c327dacf6461526c)
-      #16 0x7f1729450797 in __libc_start_main@GLIBC_2.2.5 (/lib64/libc.so.6+0x3797) (BuildId: 85075e2ae2e13352a1413d41c327dacf6461526c)
-      #17 0x000000409c34 in _start (tools/perf/perf+0x409c34) (BuildId: 36a64600776d92e4ab7dfd5ca20c92280d72a645)
-
-  SUMMARY: AddressSanitizer: 1064 byte(s) leaked in 7 allocation(s).
-
-Fixes: c75540e3160f ("perf c2c report: Add dimension support")
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
----
- tools/perf/builtin-c2c.c | 13 +++++++++++--
- 1 file changed, 11 insertions(+), 2 deletions(-)
-
-diff --git a/tools/perf/builtin-c2c.c b/tools/perf/builtin-c2c.c
-index 4222ac784fabef6b..b2b07e6a2a717466 100644
---- a/tools/perf/builtin-c2c.c
-+++ b/tools/perf/builtin-c2c.c
-@@ -2155,6 +2155,11 @@ static int c2c_hists__reinit(struct c2c_hists *c2c_hists,
- 	return ret;
- }
- 
-+static void c2c_hists__exit(struct c2c_hists *c2c_hists)
-+{
-+	perf_hpp__reset_output_field(&c2c_hists->list);
-+}
-+
- #define DISPLAY_LINE_LIMIT  0.001
- 
- static u8 filter_display(u32 val, u32 sum)
-@@ -2577,6 +2582,8 @@ static void print_pareto(FILE *out, struct perf_env *env)
- 		c2c_he = container_of(he, struct c2c_hist_entry, he);
- 		print_cacheline(c2c_he->hists, he, &hpp_list, out);
- 	}
-+
-+	perf_hpp__reset_output_field(&hpp_list);
- }
- 
- static void print_c2c_info(FILE *out, struct perf_session *session)
-@@ -3378,12 +3385,12 @@ static int perf_c2c__report(int argc, const char **argv)
- 	err = setup_nodes(session);
- 	if (err) {
- 		pr_err("Failed setup nodes\n");
--		goto out_session;
-+		goto out_hists;
- 	}
- 
- 	err = mem2node__init(&c2c.mem2node, env);
- 	if (err)
--		goto out_session;
-+		goto out_hists;
- 
- 	err = setup_callchain(session->evlist);
- 	if (err)
-@@ -3525,6 +3532,8 @@ static int perf_c2c__report(int argc, const char **argv)
- 	free(output_str);
- out_mem2node:
- 	mem2node__exit(&c2c.mem2node);
-+out_hists:
-+	c2c_hists__exit(&c2c.hists);
- out_session:
- 	perf_session__delete(session);
- out:
--- 
-2.56.0
-
+Thanks,
+Ravi
