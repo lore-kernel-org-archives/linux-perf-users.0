@@ -1,175 +1,146 @@
-Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
+Received: from mail-dy1-f179.google.com (mail-dy1-f179.google.com [74.125.82.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E711A30C637
-	for <linux-perf-users@vger.kernel.org>; Thu, 15 Oct 2026 21:32:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.208.41
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792099966; cv=pass; b=J10L3Cbqvef2Vf6AMBvusE97D/YIt10vNLLy7YS0iZuRs2eIe1GvNbhhmDi4SoRf4LlnSZH1sybqiAXS7SB75+ojLJLlc7opxCV2ZN1bywgGkdZ0fKpOWF8glYQ+k/JIhI0n+CKrMc5pMQZ2fkdzFOuFaJMrivyRdRo8R0Uowj0=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792099966; c=relaxed/simple;
-	bh=YjXK6BgOQPsgC6R00beChvNdVm49sWujUHpCNdRld+c=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=W2+YdBNgWehTQKA4IrejfB14z+XjMPx4egawdxNw/6yLOvAoaV/q2o07qeCTEqV6u5ke85sLfho9aGmuNx3TlfDMzJ1JPiPGo55ssE5UK/PiegPfYp8n/PPvO0ZzQ/ZreRVufo7ai/CkWBtHZihAbrwpzzZ0oBPcPt/nfkMSntA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=rwfwhj4V; arc=pass smtp.client-ip=209.85.208.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1C0B4AB3C8
+	for <linux-perf-users@vger.kernel.org>; Thu, 15 Oct 2026 22:35:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.179
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1792103760; cv=none; b=ojyZAZftfwvhNU9w/hixGFZOC3vAkLyIXuRjyz+qVHiiJAInqQpNRuTYCuUNjxpcisOLB5cssboH1ZuIbtexLzv4473oKxNZzxjR9bCPfQ6yfedPDGVAEKHXAhdo/XqY6uf7Wjd/eLSEIlnB6/INt3yf+gBkPIW4uS9+sjT+NVk=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1792103760; c=relaxed/simple;
+	bh=cNb2599aisLf9N4nv6csEEr4VxPSgmqchakmgV0DaH8=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
+	 MIME-Version:Content-Type; b=bwq7FX7XE7ii4N56bk20aPgenPws9f1xigdvmno8fs7M1XK9dGDiTNIKwg2k7arrRWaE8rmeGH3dNuaV+4ciJ2HQR+D2F+23OqfGuEEHOYvEA2pJMaFmvvo2SU+eJFXEJwWMvj2FBLBHNNAEmCJL8SCRT8o9lQXu/fZ2IYaCcC4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EjIqj7pC; arc=none smtp.client-ip=74.125.82.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rwfwhj4V"
-Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-6afac79b3a3so1448a12.1
-        for <linux-perf-users@vger.kernel.org>; Thu, 15 Oct 2026 14:32:43 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1792099962; cv=none;
-        d=google.com; s=arc-20260327;
-        b=pvARTkyM8MpbQPKNbLiX5M6T5TmgGkTWbWhdzYehxU6vU688fRcXvkoXzsaegtyyq0
-         f31tAAMM/cPevIbyBAZ/E0PIqsy0f+UaiIzpZn43ISdH3LelFNPAzQJ6qPC+A+Z3Ms2Q
-         eR90mW5Mq3fOezMYqGExWDGexIhKv235eTQLlHWLgq1G4IUX2It5oBkAcCwvepCzUSCB
-         sBECufSLQG65N/DQqtbITLuY+rmV0rp7oDckFLzbRGR3IH4b/6w/zOhWkSK19wjq9UMv
-         TfINaCdPh6ckfa22DiwlLO/Wnvhq5hXQBXNuz05gDA2KHl5W4d/vU/90aQBkOkLovNh9
-         N6DA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=F9EW3y40s5N/1pz2rYlIzPCqkKsyouo5NVLiPakQV0A=;
-        fh=Jm8Ne0WrGT6SYbxil3csRRMDybVGMpJPPnuT82v0oQY=;
-        b=OcCFRlrn+YPzEpffVsJaYCszvvYcI5M7w9rsEOhBT6mASqw7gItkErigebsktmo+xw
-         jnJyb/tPhFSkU8hvXxiQZ08SVlxYMwGL9N/7iCP8qqF+NvtleRZZF9Q+9+5nrmJoaYfs
-         wPPZU/c36QQVBB5qoDqg7o8Bf3og2sngDbhIPewlXIk0F9h8dY8d/EeR7qSWL04KhAYM
-         KKQn1pbwf2bcLHeWWImGXuziEeYR7/5Nb2BEM03tK0ufuLak9Z/Rr2iqwtEEJF3kawRl
-         aw2ZP43tVHFudioD/XJv2xG/+sa5NU0wXBC91wzd3x0BrP4GQRbvsWQBjOQ0OJ2iDJtu
-         jC1A==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EjIqj7pC"
+Received: by mail-dy1-f179.google.com with SMTP id 5a478bee46e88-35943f55c06so564351eec.0
+        for <linux-perf-users@vger.kernel.org>; Thu, 15 Oct 2026 15:35:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1792099962; x=1792704762; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=F9EW3y40s5N/1pz2rYlIzPCqkKsyouo5NVLiPakQV0A=;
-        b=rwfwhj4VJCsrL5qvq66Wlr2SQg8D1u671ODcpczPQNa5EXT9QwgjLTc8MGEJboftze
-         CzH7YgLJDpsRdiwOVO0fw1qmvY2DjZGSCAiI/ZRFAdry4YmInfjvzntmhh5QMt4F3l4G
-         UtXVtMLVZVX6p833RG/WbYbKiYqABPCKH84Qnt/Zg/dnqTM1W8ErxPQF76DflDzREFi6
-         fDZhAJsJIHYz1P+3+OiEh1sct0zKVYkzv90QrAzPhQt7t1VWomAHnUwNTRIqpIO8boGl
-         mccZKco4YV92piRvaToAWeNHjn2IGQzcYwPlhVKxKuyyjg20Kt4cvliKaH/rsMLzQvFE
-         Dq+Q==
+        d=gmail.com; s=20251104; t=1792103758; x=1792708558; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:mime-version:message-id
+         :references:in-reply-to:user-agent:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to:content-type;
+        bh=xXSyEv36jnn0UrqVwNj52XhE8B6xeFQj285n9/QUz+4=;
+        b=EjIqj7pCoK4+nk0gU9MX14g+breJOxcXlm0yFKr5EaiA8aq7vDFzKWKqk+IoaAcvMV
+         mSk4mZuF73BmDubLI/kgjeBIyCTSOxz0+xTMAhHUnQy+xx/mhI9FpSqXCtR1GsB/HQ/K
+         BfGvBbOB5qbbVG/vRaSijI7V088bcrEaSPx+mfU4LsS5YTmPXTAFdGc30M8xHlIR56zG
+         Es7oHusr7nahKY3iRvXOTKZYXuBp/VBr++bBzCfjFl929eJRLbEmlP/94yn/pOgGzBkS
+         h5EXmNuXi41gSBA+oH/q0PCluQzF70hc4fFgENnEBxbpR86TLZRDtN80ggq4m5Ay3lsG
+         OqMw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1792099962; x=1792704762;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
+        d=1e100.net; s=20260707; t=1792103758; x=1792708558;
+        h=content-transfer-encoding:content-type:mime-version:message-id
+         :references:in-reply-to:user-agent:subject:cc:to:from:date:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=F9EW3y40s5N/1pz2rYlIzPCqkKsyouo5NVLiPakQV0A=;
-        b=bfpR9axb4wyJqW7X/MF6GGomR66pUdN8FGouIgCn71oci/tB6YutdAKlXpQvWZSVpl
-         Q9UlBaBwRsEK5jV6XGtO5DpNcMX07P/EC+Ew+KXR5orlQBJWL5iTjmJkANkTCkzFzAXc
-         fvB5cwc7e36E5fhdP72UCvxpu2yULnT67Nfycc2yUFadDP2uxYIXEoeLPgDR75JlXKga
-         Asw0UXEBznsV0onms2IRV3Szx44mqBKLH1RD8GT2TwljPPu2A7bw8PFqr6pWRqoZXMPz
-         ssXzE4Lme4djtv6iWYGXR1sZZbaMR3mJQt1bl0ctnY0rPW3veBCCLd2cQw00VJtFeWSj
-         djyQ==
-X-Forwarded-Encrypted: i=1; AKwUvBzlSvg8ZVRaadyTQZjf7nc9XsWzDaPVto3UUkwRGNtFc+km3x1SUnxdd4uUWO71IEG/1SgMioZzlVQRG+m67p4h@vger.kernel.org
-X-Gm-Message-State: AFq9FYIY7dBNr7iLfvfnnZSGvSR3g7aCPDEzkmHBmnL6HFd/A06gRv7j
-	Rf6G8xvqhKiG5QuWBby/aQo+uw24CAVDfzyvEBD/KevIoJv8l1dLmhiVgX8AxlB/0R/QStdDKEy
-	1YDiq2MOA06GY0P4keSoX+FYu3vPcZYxHPaGK6xFC
-X-Gm-Gg: AYBFou32C6OAQPymvT9Cgl++Nj8TpLpgnv2Ak5GlWe4VJkJKcIOBzksh35hHJ4Per2M
-	l5zxNtZE6L9Q9Q8xtmg9IU7xCwSnn7duYSpyk7EhR5fhdRUeXfIT5bTVYEKUkdfGLG882xIQde3
-	xXzodTQi5U38GH5OGx8pfYau0reI4P1XoIdDYVP4X+siDhyp6PN4dKyGH1K6EKN6xJ2o/XxPC4j
-	bUPC92yqCQFtIsqQZMaMqoMv8EgF9qAZ78L+5wZ/htePQmv/5e9JHd2J2DKUGr53cvGo8/2HQfU
-	Tx8k+WReL9FXYoDibWnOVIRF/erazjjuJgsMoxB0F0vhWFMbZgiF1zw=
-X-Received: by 2002:aa7:cccd:0:b0:6a6:8513:7e14 with SMTP id
- 4fb4d7f45d1cf-6b389316e80mr23741a12.9.1792099961542; Thu, 15 Oct 2026
- 14:32:41 -0700 (PDT)
+        bh=xXSyEv36jnn0UrqVwNj52XhE8B6xeFQj285n9/QUz+4=;
+        b=Kb87T/Dtzr06KWJl//ebm1mQYNlOHVdLUtEKZtpq0OJXf3JERTzD6Ab7t4QWh+4oWo
+         9M4saTWiM2C3WqVWkfYmIlPc7wBRe3utIGUeZWsbiHJInmWXGKF/TAh4yTXL0HdH5LQF
+         c+ilJBzP1xUZq4KP5Je3JrjH+OfTkc7FXGOO/5LwAOlOLhIfnQ50CMpqiXiYp/CBZeyP
+         hT+BkmtazViVycwdXVKWvbNtqVJARtR7P1PFe8Run1+GygEPXzbHHFII33WlvdefHmC4
+         Qz7Wg942+wBa5D4Ffc4t7oBpezLpL062gD08VOMZzZeqmB/Wqts8YWxAARSeHPWNIp9B
+         BWbA==
+X-Forwarded-Encrypted: i=1; AKwUvBw/8sJFYhFIRzoky1ekHD17c+VEgD42wL6s7pjugz/beQEof8Op+AZWZRbRmUtIcHfrCbShmGK3UkpwITO1Wr6J@vger.kernel.org
+X-Gm-Message-State: AFq9FYK5N7r2rarGQsqbLQD7WeBDlaC88dSFN6evLXTjXkYS9vJXz+wB
+	yVCV5ib2D4F+hqhId8BylDtJtG0hkcos7av2Df8l93rbYQREWVm4iGhQ
+X-Gm-Gg: AYBFou0nBcvIJQ44gYV1Iz6Q84yungSXlL+QjxFk8wioaKjQP79gGgKf6pubmVkKX++
+	EqeFf4tGXR+mK4f3kEbmaV55puVse4hr5f1niqSirgGbYap9ukSMQtci7OgGQSG/Yw6EcqTMOR8
+	X0km+1Hi8JNIuHkYx5pMiBH5N/FO1B5NTMSbIoKxi7NMdmsX0xV1nSC89NO83zDHksDwbKOwuhm
+	cB4OoztSL13qfRzHV14qiUYcJUSAcvEcFXhIZLqXJzntFIl44TzhZ3xMeEA78KfvAMGKjfspzun
+	8o6UFnoTxNW67qbMXty8RXSsWwVBNHgErasX6O2JRbGCZyZZ1PS34qDKEq8aPNt4K+ocRCIkdSG
+	Gn5rXtKsCRw+MtHshgVxwtSbRXJIGqiesq/JIFVCiLDatUPhXpaYSRmqOI5wA9b9+naKwzeLpx/
+	FcqYYUknS0cAmeEORLWu3s0HwAE06ss966MOsGTlSxFkoFCYTQdYFDAYTQ8lpWzBsN1vTXybzcw
+	XEGMLwjnDeGrHc=
+X-Received: by 2002:a05:7300:50f0:b0:35c:eb2a:8c2a with SMTP id 5a478bee46e88-3602ae5f83emr1712774eec.8.1792103757626;
+        Thu, 15 Oct 2026 15:35:57 -0700 (PDT)
+Received: from ehlo.thunderbird.net ([2804:2bf0:60e7:ae00:5bc5:e41d:2ee5:2023])
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-3607ee0cab0sm1155305eec.3.2026.10.15.15.35.55
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 15 Oct 2026 15:35:56 -0700 (PDT)
+Date: Thu, 15 Oct 2026 19:35:50 -0300
+From: Arnaldo Melo <arnaldo.melo@gmail.com>
+To: Sasha Levin <sashal@kernel.org>, Arnaldo Carvalho de Melo <acme@kernel.org>
+CC: Ian Rogers <irogers@google.com>, linux-perf-users@vger.kernel.org,
+ Namhyung Kim <namhyung@kernel.org>, Nathan Chancellor <nathan@kernel.org>,
+ Nicolas Schier <nsc@kernel.org>, linux-kbuild@vger.kernel.org,
+ Shuah Khan <shuah@kernel.org>, linux-kselftest@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH 3/6] tools: build perf in tools_build
+User-Agent: Thunderbird for Android
+In-Reply-To: <atEo6aIQbgww4G0y@laps>
+References: <20261011233647.2454648-1-sashal@kernel.org> <20261011233647.2454648-4-sashal@kernel.org> <CAP-5=fWFY-tpJz2vcBZvurwdZY5gwd8cuTemE9q1rtZ0Vi0dng@mail.gmail.com> <20261013170854.647305-1-sashal@kernel.org> <as6SxXELnoIJenIX@x2> <atEo6aIQbgww4G0y@laps>
+Message-ID: <C62E88C6-52AF-4F68-95FC-310A84DDF8FC@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20261015060430.5877-1-ravi.bangoria@amd.com> <20261015060430.5877-4-ravi.bangoria@amd.com>
-In-Reply-To: <20261015060430.5877-4-ravi.bangoria@amd.com>
-From: Jim Mattson <jmattson@google.com>
-Date: Thu, 15 Oct 2026 14:32:27 -0700
-X-Gm-Features: AclHuK_p27UYc0NrEirae72lDoPwVkg8nyO4-1bdkKyLQyhcreyw4plaer2PY6E
-Message-ID: <CALMp9eRTG=uLkAWohYW0HOoS1xvNc_0brovYsfbCUS_mf4H3Kw@mail.gmail.com>
-Subject: Re: [PATCH 3/3] perf/amd/ibs: Simplify event state handling with IBS_CAPS_DIS
-To: Ravi Bangoria <ravi.bangoria@amd.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Jayapal Ashwin Nair <janair@amd.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Ian Rogers <irogers@google.com>, x86@kernel.org, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Santosh Shukla <santosh.shukla@amd.com>, 
-	Ananth Narayan <ananth.narayan@amd.com>, Sandipan Das <sandipan.das@amd.com>, 
-	Manali Shukla <manali.shukla@amd.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain;
+ charset=utf-8
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Oct 14, 2026 at 11:05=E2=80=AFPM Ravi Bangoria <ravi.bangoria@amd.c=
-om> wrote:
+
+
+On October 15, 2026 4:26:33 PM GMT-03:00, Sasha Levin <sashal@kernel=2Eorg=
+> wrote:
+>On Tue, Oct 13, 2026 at 05:21:25PM -0300, Arnaldo Carvalho de Melo wrote:
+>> Why is that difficult to run:
+>>=20
+>> make -C tools/perf install-build-deps
+>>=20
+>> To do a recommended perf build deps install?
+>>=20
+>> That would be useful as it is what we expect users to do=2E
 >
-> The IBS_{FETCH|OP}_CTL2[Dis] bit allows IBS sampling to be stopped withou=
-t
-> a RMW of IBS_{FETCH,OP}_CTL. Systems providing this bit therefore do not
-> require the IBS_STARTED and IBS_STOPPED states used to coordinate control
-> MSR updates with late NMIs.
-
-CTL2[Dis] doesn't make late NMIs go away. Hence, this patch needs a
-50us poll. With the two-line fix in my original patch, the existing
-scheme handles late NMIs indefinitely: IBS_STOPPED remains set until a
-late NMI consumes it, even if the event has been restarted in the
-meantime. This patch trades that for a 50us window, after which a late
-NMI is unknown (which *is* fatal with unknown_nmi_panic). Moreover,
-since we still have to handle hardware without IBS_CAPS_DIS, we now
-have two state machines instead of one.
-
-> Add a separate stop path for these systems. Preserve Val while disabling
-> the event so that a delayed NMI can be identified and consumed, and wait
-> briefly for such an NMI before restarting the event.
+>That's what users do, but it wants to install packages=2E
 >
-> Leave the existing handling unchanged on systems without IBS_CAPS_DIS.
->
-> Reported-by: Jim Mattson <jmattson@google.com>
-> Closes: https://lore.kernel.org/r/20261007234815.4026028-1-jmattson@googl=
-e.com
-> Fixes: efa5700ec0da ("perf/amd/ibs: Support IBS_{FETCH|OP}_CTL2[Dis] to e=
-liminate RMW race")
-> Signed-off-by: Ravi Bangoria <ravi.bangoria@amd.com>
-> ---
->  arch/x86/events/amd/ibs.c | 145 ++++++++++++++++++++++++++++++++------
->  1 file changed, 122 insertions(+), 23 deletions(-)
+>We need a path for unprivileged builds on bots and CI machines that can't
+>install packages, and many of those builds are cross builds, where perf n=
+eeds
+>the target's libelf and libtraceevent rather than the host's=2E
 
- [ ... ]
+I see=2E It's unfortunate as the end result will not be that useful, as it=
+ will not be testing what people use=2E
 
-> +/* ->stop() for platforms with additional CTL2[Dis] bit. */
-> +static void perf_ibs_stop_dis(struct perf_event *event, int flags)
-> +{
-> +       struct hw_perf_event *hwc =3D &event->hw;
-> +       struct perf_ibs *perf_ibs =3D container_of(event->pmu, struct per=
-f_ibs, pmu);
-> +       struct cpu_perf_ibs *pcpu =3D this_cpu_ptr(perf_ibs->pcpu);
-> +       u64 config;
-> +       u64 ctl2;
-> +
-> +       WARN_ON_ONCE(test_bit(IBS_STOPPING, pcpu->state));
-> +
-> +       set_bit(IBS_STOPPING, pcpu->state);
+Maybe use make MINIMAL=3D1 when doing cross builds?=20
 
-This function needs to be reentrant. If an IBS event is a sibling in a
-group led by a core PMU event, and the leader is throttled,
-perf_event_throttle_group() will stop the IBS sibling from the core
-PMU's NMI handler:
+I think we can make this easier for you somehow, like disabling libtraceev=
+ent when not available instead of asking for it to be explicitly  opted out=
+?
 
-    amd_pmu_v2_handle_irq() ->
-      perf_event_overflow() ->
-        __perf_event_overflow() ->
-          __perf_event_account_interrupt() ->
-            perf_event_throttle_group() ->
-              perf_event_throttle() ->
-                perf_ibs_stop() ->
-                  perf_ibs_stop_dis()
+>> If that is too difficult, for some reason, there is a minimal build in
+>> tools/perf/tests/make, that is tested since forever:
+>>=20
+>> # all the NO_* variable combined
+>> make_minimal        :=3D NO_PYTHON_MODULE=3D1
+>> make_minimal        +=3D NO_DEMANGLE=3D1 NO_LIBELF=3D1 NO_BACKTRACE=3D1
+>> make_minimal        +=3D NO_LIBNUMA=3D1 NO_LIBBIONIC=3D1 NO_LIBDW=3D1
+>> make_minimal        +=3D NO_LIBBPF=3D1
+>> make_minimal        +=3D NO_SDT=3D1 NO_JVMTI=3D1 NO_LIBZSTD=3D1
+>> make_minimal        +=3D NO_CAPSTONE=3D1
 
-[ .. ]
+>I tried make_minimal on perf-tools-next=2E It still requires libtraceeven=
+t, so an
+>arm64 cross build without the arm64 libtraceevent installed stops at that
+>check=2E With NO_LIBTRACEEVENT=3D1 added, it then fails building the Rust=
+ test
+>workload=2E
 
-> +       if (in_nmi())
-> +               wrmsrq(hwc->config_base, config);
+I'll fix that, make_minimal wasn't updated when libtraceevent was made opt=
+imal, IIRC when it was removed from the kernel sources=20
 
-As we saw above, in_nmi() doesn't mean that we're in
-perf_ibs_handle_irq() for this sample. If IBS Val=3D1 and the IBS NMI is
-still pending, this clears Val. When the IBS NMI arrives,
-perf_ibs_handle_irq() finds CTL2[Dis]=3D1 and Val=3D0, and therefore
-returns 0, leading to an unknown NMI.
+> Natively it still enables aio, libLLVM, libslang, libtraceevent,
+>lzma, zlib and Rust when they are installed, so the result depends on the
+>machine=2E
+> I'd like to go with Ian's suggestion then: a MINIMAL=3D1 knob in perf th=
+at turns
+>off every optional feature, which tests/make can use for make_minimal as =
+well=2E
+
+Sure, for your use case it makes sense=2E
+
+- Arnaldo 
