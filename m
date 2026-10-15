@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE6F44CEE52;
-	Thu, 15 Oct 2026 13:23:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92807502790;
+	Thu, 15 Oct 2026 13:52:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792070635; cv=none; b=odKQn5kHbB1/a9xj08C8e4iAZ3gRzTRejunEpulconsHsUDYFjvQxGmj9aB/DxJi+9et6D7v9P+y8O8xlGZFfKN/uiaPw2NlMOIlUocjzINIGdody2AMNWBESM5HF+y/OqKRMLNdf5WugAujTKvg9Ea0EHirNVSI5k8AJMAWq5o=
+	t=1792072361; cv=none; b=jyBXK3qUJYreMw2LrHa5qMtKsVnRnfPoPOz39splazlebznpmMV/XG18ua50YYWcSoFhJetoG+AAgBhNFB+krc2yibi/qUi9bqAH2baW2bTkj9gJK++0rULa7KQBU8OhQZLboYQc47tnTPHj0irzIL7mFqyWO62g87WdCjrgb9s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792070635; c=relaxed/simple;
-	bh=W7dmmoeYfXU9p7GmPCCSxg8VG0+Bfz4uridye7MlSN8=;
+	s=arc-20240116; t=1792072361; c=relaxed/simple;
+	bh=lM8I6XMgtga5rEJHpuQE8iYplL3DUg/t6mdAX+UUjTI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WEaAdIzaIUYIUgXvnHSswAxsVMC91u+gI0IlXVHPk1x54tivd0jwK37d1LVmIOPIMKcwWvTC9wAuD6qhyFfCqnWjCuMntWS+I24ReWHyjXj9V23iOffkf7dG8K2gZq6hE0dDL9iw3zuyJe5vtIYzogS1jheTMICcE7MWrTK6Q00=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VA/+0ZyT; arc=none smtp.client-ip=100.103.45.18
+	 Content-Type:Content-Disposition:In-Reply-To; b=plboAfeVIuUP2sxnfAoFhO88rQ6ZZXB77Yz6bwu5z4l2H/LQJuQHThbmyaEAGcN2kHjRz2/P2GpI7o1VuBLmozOfd2l/dSItNiw9pYq3lXoW0AZApIJAa0j3O6Py+BOrCZk5I53PoGaZuQXeyl6sOVDuxQhrk42BTaTlNxT1lTQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JBlTG4fc; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VA/+0ZyT"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 920001F000C4;
-	Thu, 15 Oct 2026 13:23:50 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JBlTG4fc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 34DA31F000C4;
+	Thu, 15 Oct 2026 13:52:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1792070634;
-	bh=+eY/8SzCL1ecc1E0dSwRAQE+0x44i8QCx5GpklEFvyk=;
+	s=k20260515; t=1792072360;
+	bh=WexMx0NdQtACdoNVOcVRGmD1v7W6mupsTgB/BNVDo3Y=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=VA/+0ZyT1W/3GVjxBq/7MbPKIu8VyMVho+se3aTX141PFcM5oRFgngzOxri2VltNG
-	 unQOfMVuVV5vlGLFeHUJ7hMTAiAnRVeQg6Wucwn5hGIpwLntLb+zTwpjpQSzUO66VJ
-	 z0AP1U+H/PZBgS8EDZMGZn46xuncawpSQ7l3euLYagD8thprcM9jJoHkzXGaeZwSUT
-	 zZZilFktQbjJGGoITO7eDDdq12O+aXr9/XFfKvjRJ2VmQk9PELyoYI4rqhnFqrkNRE
-	 +eZUfj3YjybTTZN5JO661blh7+kSnrFuccsXZLWyfaFw4TAOHwnpDKUvczs0V1zYzS
-	 j1+9h6bgp+Vbw==
-Date: Thu, 15 Oct 2026 14:23:47 +0100
+	b=JBlTG4fcR8atMqAzu6ODrsR+hmw5RneGrNwKtdbF2X4w0yqrJXK2TF1Ui1NJCKV4i
+	 ODLQscogYLzxf+qF7LX7O4LU1Yf47VVOn5O838jzd03qS0sTI7me74v9ohSjBpaBfx
+	 6KftC/0NtIuJTTTW3FlQIPWkXc1DDXwJikPl02nS+hXr4OAwzgvVWt/UWOdz8ok6ly
+	 LOR7f4Ldmvjtc8PJb1sl/xJ3xQw4USYXSbeJAj+PBmeNtB/gSwkJ5zXRGiC5Euvt39
+	 zKGclzfv/VyIHh1etV/kyg8lqiyHxRudsnb5LOtu8EnjStkaIQphgVHUcmu+JWHm0X
+	 78k62krQfKYqQ==
+Date: Thu, 15 Oct 2026 14:52:32 +0100
 From: "Lorenzo Stoakes (ARM)" <ljs@kernel.org>
 To: Alexandru Elisei <alexandru.elisei@arm.com>
 Cc: maz@kernel.org, oupton@kernel.org, fuad.tabba@linux.dev, 
@@ -34,11 +34,10 @@ Cc: maz@kernel.org, oupton@kernel.org, fuad.tabba@linux.dev,
 	yuzenghui@huawei.com, linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, 
 	will@kernel.org, mark.rutland@arm.com, linux-perf-users@vger.kernel.org, 
 	catalin.marinas@arm.com, james.clark@linaro.org
-Subject: Re: [RFC PATCH v7 01/28] arm64/sysreg: Add the nVM field to
- PMBLIMITR_EL1
-Message-ID: <atDOmDNrAwLNC8_h@gremlin>
+Subject: Re: [RFC PATCH v7 02/28] arm64/sysreg: Define MDCR_EL2.E2PB values
+Message-ID: <atDUMAe0QGP_4swk@gremlin>
 References: <20260903160623.315525-1-alexandru.elisei@arm.com>
- <20260903160623.315525-2-alexandru.elisei@arm.com>
+ <20260903160623.315525-3-alexandru.elisei@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -47,59 +46,106 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260903160623.315525-2-alexandru.elisei@arm.com>
+In-Reply-To: <20260903160623.315525-3-alexandru.elisei@arm.com>
 
-On Thu, Sep 03, 2026 at 05:05:56PM +0100, Alexandru Elisei wrote:
-> Define PMBLIMITR_EL1.nVM, to be used by KVM.
+On Thu, Sep 03, 2026 at 05:05:57PM +0100, Alexandru Elisei wrote:
+> KVM will make use of the different values for MDCR_EL2.E2PB, document them.
 
-I see that is defined in [0].
+As with 1/28, using [0] to check the definition of the register.
 
 >
+> Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
 > Signed-off-by: Alexandru Elisei <alexandru.elisei@arm.com>
 
-LGTM, matches the hardware spec and in line with other entries in the file,
-so:
+Looks correct, a couple small nits below, with those addressed:
 
 Reviewed-by: Lorenzo Stoakes (ARM) <ljs@kernel.org>
 
 > ---
->  arch/arm64/tools/sysreg | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
+>  arch/arm64/tools/sysreg | 7 ++++++-
+>  1 file changed, 6 insertions(+), 1 deletion(-)
 >
 > diff --git a/arch/arm64/tools/sysreg b/arch/arm64/tools/sysreg
-> index 94bf065c8ac7..a11a968eb707 100644
+> index a11a968eb707..4485736a4f49 100644
 > --- a/arch/arm64/tools/sysreg
 > +++ b/arch/arm64/tools/sysreg
-> @@ -3106,7 +3106,9 @@ EndSysreg
->
->  Sysreg	PMBLIMITR_EL1	3	0	9	10	0
->  Field	63:12	LIMIT
-> -Res0	11:6
-> +Res0	11:8
+> @@ -4045,7 +4045,12 @@ Field	17	HPMD
+>  Res0	16
+>  Field	15	EnSPM
+>  Field	14	TPMS
+> -Field	13:12	E2PB
+> +UnsignedEnum	13:12 E2PB
 
-I can see from the diagram in the field descriptions section of [0] that 11->8
-is res0...
+MEGA NIT: Shouldn't there be a tab rather than a space after '13:12'? :)
 
-> +Field	7	nVM
+> +	0b00	EL2
 
-...and nVM is defined at bit 7...
+So broadly - this means EL2 owns the profiling buffer right?
 
-> +Res0	6
+This seems to align with the document (which is very verbose, obviously :):
 
-...and res0 is at 6.
+"If EL2 is implemented and enabled in the Profiling Buffer owning Security
+state, then the Profiling Buffer owning Exception level is EL2. Otherwise,
+the Profiling Buffer owning Exception level is EL1 and, Profiling is
+prohibited at EL2."
 
->  Field	5	PMFZ
->  Res0	4:3
->  Enum	2:1	FM
+"If EL2 is implemented and enabled in the current Security state, then
+accesses to Profiling Buffer System registers at EL1 are trapped to EL2,
+unless the access generates a higher priority exception."
 
-I also confirmed the existing fields are all correct too.
+> +	0b01	RESERVED
 
+NIT: Hmm, it seems to be the convention to just omit entries that are
+missing from the definition in the docs? So is this needed?
+
+I see a couple named ones, e.g. in CTR_EL0.L1Ip:
+
+	# This was named as VPIPT in the ARM but now documented as reserved
+	0b00	RESERVED_VPIPT
+	# This is named as AIVIVT in the ARM but documented as reserved
+	0b01	RESERVED_AIVIVT
+
+Which have comments explaining why, i.e. they were defined before but are
+now reserved.
+
+> +	0b10	EL1_TRAP
+
+Again my understanding - EL1 owns the profiling buffer, but EL1 sysreg
+accesses trap to EL2?
+
+Seems to align with docs:
+
+"Profiling Buffer owning Exception level is EL1. Profiling is prohibited at
+EL2."
+
+"If EL2 is implemented and enabled in the current Security state, then
+accesses to Profiling Buffer System registers at EL1 are trapped to EL2,
+unless the access generates a higher priority exception."
+
+> +	0b11	EL1
+
+And finally - EL1, traps to EL1 too right?
+
+Again seems to align with docs:
+
+"Profiling Buffer owning Exception level is EL1. Profiling is prohibited at
+EL2."
+
+"Accesses to Profiling Buffer System registers at EL1 are not trapped by
+this mechanism."
+
+> +EndEnum
+>  Field	11	TDRA
+>  Field	10	TDOSA
+>  Field	9	TDA
 > --
 > 2.43.0
 >
 >
 
+All LGTM!
+
 --
 Cheers, Lorenzo
 
-[0]:https://support.arm.com/documentation/ddi0601/2026-09/AArch64-Registers/PMBLIMITR-EL1--Profiling-Buffer-Limit-Address-Register?lang=en
+[0]:https://support.arm.com/documentation/ddi0601/2026-09/AArch64-Registers/MDCR-EL2--Monitor-Debug-Configuration-Register--EL2-?lang=en
