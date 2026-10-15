@@ -1,175 +1,137 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4162B34F247
-	for <linux-perf-users@vger.kernel.org>; Thu, 15 Oct 2026 06:42:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3B6D27057D;
+	Thu, 15 Oct 2026 06:48:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792046539; cv=none; b=P1CAzrBdydbbR7GkcX4EK21K7ETYx1OuPTfwH7lYR4Yso6t1GVFXcFA9I38Z+lLKSkWmB6MSOo3wRYjEEiXWTzHRv2s4fjcA6Ihlt6aKojBIzluho+O4LY7M9b0Ixq+sGei+kc9WkGTpYEmZkr+lu1W3lp+K9kWBSboSbzTgVtQ=
+	t=1792046937; cv=none; b=eFbp4QvOCQkJBEc/Tn5E+5upGaPdNHsF5d2vgpTYfxhQE9KUqYxVncuXuElLIacTTi5Py534zqaCTlZFjS7D8kA3NVH+14iwxApmd1mcWnkD4bA3WTS8h18WWi7Ovc6WpFTWFKMitAS430v1baFARrqWMXaH+uGXajP5LljpD2U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792046539; c=relaxed/simple;
-	bh=o+DI2ATmHmmMShZsrAW5XTL+OqcZWl5OjU5wQ7YREJs=;
-	h=Message-ID:From:Subject:To:Cc:In-Reply-To:References:Content-Type:
-	 Date; b=DXqwDVlmorWiaHdMefM+LeHR4wujMQQf4/Krtm8rQUVxgi/Yi0mb5/iyCITiMAJyqNLm9vctrCQEGMN02zpYopPKnpQ7MBfRx91hGrgjkUEUfPx8ZpJKXfCFZt6s1PJnhJ1RbomvYjFfwMPz7e1ocn3cLkZIYB5F1MoSqB4GUOU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WXt0Z5pG; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1792046937; c=relaxed/simple;
+	bh=Vx4WNBNl7SOPDEKnt7RVr9r9XrczH2ZC8K4MYPdXKYw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=BpDVWx65jW3RAr41ylE75/Nu0TT8Qomdf7fpm+5VXsji+dEaUeA8J4YbbzzUOr1YUPuJ75CcCsUV/MGseCshhdCdoZWawjFrwQtOLm6NWrSxDaeYsGh2FqnH1LretU1arT1m7+VFJQVfTvkhfb99Ft+imaWlMs4zHSODzu3t9XM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aSvZh6T6; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WXt0Z5pG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B61841F000C4;
-	Thu, 15 Oct 2026 06:42:17 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aSvZh6T6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 110961F000C4;
+	Thu, 15 Oct 2026 06:48:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1792046537;
-	bh=WARS0vPHNwwx/EAvLS/qEiEmnNgMVZNIOkPrG3QfCQw=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=WXt0Z5pGH++N6wLzb7AhIeyV1l1Tp4jeOeDOdywWbrbojRg7RGrUyzbOHi/oX4ji1
-	 oMN1hMLDDGceTK9OogJjSEIa8JfE/9bm6tGvxCLPtAcGetviEj4/aCHjqkH7+Vc5m/
-	 hHO3gr0iExvXEbQj06lMTXLCBrVBp/bwFNynVqDwWPGnMu8HANBwdxS6zmnMKJG2SG
-	 BIFGxVTBq6Lj1JuWGkkfwRiYFoqtlsKfACPL1gncnlPN3kVVUn/oZiLxny3lpkN+IA
-	 T7gvA/6dh/S7+GWG9PnFoe6K090zrExfJ6dC04Ogw9+HeSwH+CdEhQrx4GnO1mWpuG
-	 rkUaKx7c67jkA==
-Message-ID: <sashiko-outbox-172355@kernel.org>
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH] perf: arm_spe: Support heterogeneous ACPI systems
-Reply-To: sashiko-reviews@lists.linux.dev
-To: Johnny.Fan <johnny.fan@cixtech.com>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20261015062908.3565761-1-johnny.fan@cixtech.com>
-References: <20261015062908.3565761-1-johnny.fan@cixtech.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Thu, 15 Oct 2026 06:42:17 +0000
+	s=k20260515; t=1792046936;
+	bh=INoA3eVpkm2e3ROHdK2qniT1eVroY4hUq1eYZv5DCfk=;
+	h=From:To:Cc:Subject:Date;
+	b=aSvZh6T6xahyGHhC0EW9wxXhrWhpEM8b0kFruRKRwBYOVP7S7kbkaxdvUzakZEpcq
+	 R97WKRNx7PsoGU0GHXd3u9Bh00VCMBH37GUFgMt2cv54NKgXpdLIx9wp3XlacVH8dW
+	 iRrLRizPNdWSu+WFto1NOfHCKjnXmbUU3um/WMU1MlSR3fxH3VvBx9MqjbKw0vRiEC
+	 BlOSA0bXcvzUP/XgOZ0sWYq/YGxlyWycdudy8TIVU92zBaPy+S08OG5a7PoiTJYibO
+	 0BhM4ZCzpyaGd4RBPQtemEVN3Mj9HsyuYFHJXWn30XtonSCYhMsA15GxWyMe+ddUmi
+	 Bqo44S6hc5wQQ==
+From: Namhyung Kim <namhyung@kernel.org>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	James Clark <james.clark@linaro.org>
+Cc: Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org
+Subject: [PATCH] perf c2c: Fix memory leaks on output fields
+Date: Wed, 14 Oct 2026 23:48:50 -0700
+Message-ID: <20261015064850.43366-1-namhyung@kernel.org>
+X-Mailer: git-send-email 2.56.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-Thank you for your contribution! Sashiko AI review found 2 potential issue(=
-s) to consider:
-- [High] perf: arm_spe: missing heterogeneity check for optional PMUs
-- [Medium] perf/arm_spe: spurious probe failure due to CPU hotplug race
---
+The perf_hpp_list was not freed after use.  Let's add it for the main
+c2c hists list in perf c2c report and a local list in print_pareto().
 
-commit 9ac6f1b22e8955b2543af029311236c9a14923ec
-Author: Johnny.Fan <Johnny.Fan@cixtech.com>
+Previously it was detected by ASAN like below.
 
-perf: arm_spe: Support heterogeneous ACPI systems
+  =================================================================
+  ==42183==ERROR: LeakSanitizer: detected memory leaks
 
-The ACPI MADT describes the SPE overflow interrupt on a per-CPU basis
-in the GICC structure, where a CPU that does not implement SPE simply
-reports 0. Heterogeneous systems therefore only report the interrupt
-on the CPUs that implement SPE, but arm_pmu_acpi.c rejects this as a
-non-homogeneous mapping and never creates the SPE platform device.
+  Indirect leak of 1064 byte(s) in 7 object(s) allocated from:
+      #0 0x7f17334ef24f in calloc (/lib64/libasan.so.8+0xef24f) (BuildId: 61e8165ca90f7a4f06b73f064a938c76deaae079)
+      #1 0x0000005fa099 in zalloc  ../../lib/zalloc.c:8
+      #2 0x0000004faf6d in get_format  tools/perf/builtin-c2c.c:1978
+      #3 0x0000004fb45e in c2c_hists__init_output  tools/perf/builtin-c2c.c:2004
+      #4 0x0000004fb7de in __hpp_list__parse  tools/perf/builtin-c2c.c:2047
+      #5 0x0000004fbae9 in hpp_list__parse  tools/perf/builtin-c2c.c:2085
+      #6 0x0000004fee13 in print_pareto  tools/perf/builtin-c2c.c:2563
+      #7 0x0000004ffcd7 in perf_c2c__hists_fprintf  tools/perf/builtin-c2c.c:2708
+      #8 0x000000500ab5 in perf_c2c_display  tools/perf/builtin-c2c.c:2949
+      #9 0x0000005045c3 in perf_c2c__report  tools/perf/builtin-c2c.c:3522
+      #10 0x000000505caa in cmd_c2c  tools/perf/builtin-c2c.c:3676
+      #11 0x0000005df50e in run_builtin  tools/perf/perf.c:383
+      #12 0x0000005df9b1 in handle_internal_command  tools/perf/perf.c:436
+      #13 0x0000005dfd7f in run_argv  tools/perf/perf.c:480
+      #14 0x0000005e02d6 in main  tools/perf/perf.c:581
+      #15 0x7f1729450680 in __libc_start_call_main (/lib64/libc.so.6+0x3680) (BuildId: 85075e2ae2e13352a1413d41c327dacf6461526c)
+      #16 0x7f1729450797 in __libc_start_main@GLIBC_2.2.5 (/lib64/libc.so.6+0x3797) (BuildId: 85075e2ae2e13352a1413d41c327dacf6461526c)
+      #17 0x000000409c34 in _start (tools/perf/perf+0x409c34) (BuildId: 36a64600776d92e4ab7dfd5ca20c92280d72a645)
 
-> diff --git a/drivers/perf/arm_pmu_acpi.c b/drivers/perf/arm_pmu_acpi.c
-> index ca6bf8f86cfe9..4ece1070827b9 100644
-> --- a/drivers/perf/arm_pmu_acpi.c
-> +++ b/drivers/perf/arm_pmu_acpi.c
-[ ... ]
-> @@ -97,6 +100,20 @@ arm_acpi_register_pmu_device(struct platform_device *=
-pdev, u8 len,
->  			return gsi ? -ENXIO : 0;
-> =20
->  		this_gsi =3D parse_gsi(gicc);
-> +
-> +		if (optional) {
-> +			if (!this_gsi)
-> +				continue;
-> +
-> +			if (gsi && gsi !=3D this_gsi) {
-> +				pr_warn("ACPI: %s: CPU%d: inconsistent interrupt %u/%u\n",
-> +					pdev->name, cpu, gsi, this_gsi);
-> +				return -ENXIO;
-> +			}
-> +			gsi =3D this_gsi;
-> +			continue;
-> +		}
-> +
->  		this_hetid =3D find_acpi_cpu_topology_hetero_id(cpu);
->  		if (!gsi) {
->  			hetid =3D this_hetid;
+  SUMMARY: AddressSanitizer: 1064 byte(s) leaked in 7 allocation(s).
 
-[Severity: High]
-Does skipping find_acpi_cpu_topology_hetero_id() allow grouping CPUs from
-different microarchitectural clusters into a single PMU device?
+Fixes: c75540e3160f ("perf c2c report: Add dimension support")
+Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+---
+ tools/perf/builtin-c2c.c | 13 +++++++++++--
+ 1 file changed, 11 insertions(+), 2 deletions(-)
 
-The SPE PMU driver (arm_spe_pmu_dev_init()) assumes a single PMU device is
-homogeneous. It probes SPE parameters (e.g., align, max_record_sz, features)
-on a single CPU via smp_call_function_any() and applies them to all CPUs in
-spe_pmu->supported_cpus.
+diff --git a/tools/perf/builtin-c2c.c b/tools/perf/builtin-c2c.c
+index 4222ac784fabef6b..b2b07e6a2a717466 100644
+--- a/tools/perf/builtin-c2c.c
++++ b/tools/perf/builtin-c2c.c
+@@ -2155,6 +2155,11 @@ static int c2c_hists__reinit(struct c2c_hists *c2c_hists,
+ 	return ret;
+ }
+ 
++static void c2c_hists__exit(struct c2c_hists *c2c_hists)
++{
++	perf_hpp__reset_output_field(&c2c_hists->list);
++}
++
+ #define DISPLAY_LINE_LIMIT  0.001
+ 
+ static u8 filter_display(u32 val, u32 sum)
+@@ -2577,6 +2582,8 @@ static void print_pareto(FILE *out, struct perf_env *env)
+ 		c2c_he = container_of(he, struct c2c_hist_entry, he);
+ 		print_cacheline(c2c_he->hists, he, &hpp_list, out);
+ 	}
++
++	perf_hpp__reset_output_field(&hpp_list);
+ }
+ 
+ static void print_c2c_info(FILE *out, struct perf_session *session)
+@@ -3378,12 +3385,12 @@ static int perf_c2c__report(int argc, const char **argv)
+ 	err = setup_nodes(session);
+ 	if (err) {
+ 		pr_err("Failed setup nodes\n");
+-		goto out_session;
++		goto out_hists;
+ 	}
+ 
+ 	err = mem2node__init(&c2c.mem2node, env);
+ 	if (err)
+-		goto out_session;
++		goto out_hists;
+ 
+ 	err = setup_callchain(session->evlist);
+ 	if (err)
+@@ -3525,6 +3532,8 @@ static int perf_c2c__report(int argc, const char **argv)
+ 	free(output_str);
+ out_mem2node:
+ 	mem2node__exit(&c2c.mem2node);
++out_hists:
++	c2c_hists__exit(&c2c.hists);
+ out_session:
+ 	perf_session__delete(session);
+ out:
+-- 
+2.56.0
 
-If heterogeneous CPUs with different SPE capabilities are grouped together,
-scheduling a perf event on a CPU from a different cluster could program the
-hardware with mismatched constraints or feature flags. Could the this_hetid
-check be preserved for the CPUs that actually implement the optional PMU?
-
-> diff --git a/drivers/perf/arm_spe_pmu.c b/drivers/perf/arm_spe_pmu.c
-> index 604ae6ba3b076..c1ff875be9577 100644
-> --- a/drivers/perf/arm_spe_pmu.c
-> +++ b/drivers/perf/arm_spe_pmu.c
-[ ... ]
-> @@ -1277,6 +1291,12 @@ static int arm_spe_pmu_cpu_startup(unsigned int cp=
-u, struct hlist_node *node)
->  	if (!cpumask_test_cpu(cpu, &spe_pmu->supported_cpus))
->  		return 0;
-> =20
-> +	/* The CPU was offline during probe; trim it if it lacks SPE */
-> +	if (!arm_spe_pmu_pmsver()) {
-> +		cpumask_clear_cpu(cpu, &spe_pmu->supported_cpus);
-> +		return 0;
-> +	}
-> +
->  	__arm_spe_pmu_setup_one(spe_pmu);
-
-[Severity: High]
-Is it possible for the newly online CPU to have a different version of SPE
-than what was cached during the initial probe?
-
-This startup check only verifies that the CPU has some version of SPE
-(checking pmsver !=3D 0), but does not verify that the SPE parameters match
-the ones cached from the initial probe.
-
-[ ... ]
-> @@ -1346,6 +1366,21 @@ static int arm_spe_pmu_irq_probe(struct arm_spe_pm=
-u *spe_pmu)
-> =20
->  	cpumask_copy(&spe_pmu->supported_cpus, affinity);
-> =20
-> +	/*
-> +	 * Heterogeneous systems may only implement SPE on a subset of the
-> +	 * CPUs covered by the interrupt affinity (ACPI in particular has
-> +	 * no affinity information and falls back to cpu_possible_mask).
-> +	 * SPE is self-describing through PMSVer, so drop the online CPUs
-> +	 * that do not implement it. CPUs that are offline at probe time
-> +	 * are checked when they come up.
-> +	 */
-> +	for_each_cpu(cpu, &spe_pmu->supported_cpus) {
-> +		if (cpu_online(cpu))
-> +			smp_call_function_single(cpu,
-> +						 __arm_spe_pmu_trim_supported_cpus,
-> +						 spe_pmu, 1);
-> +	}
-> +
->  	spe_pmu->irq =3D irq;
->  	return 0;
->  }
-
-[Severity: Medium]
-Could this cpu_online(cpu) check without holding cpus_read_lock() lead to a
-race condition with CPU hotplug?
-
-If an offline CPU lacking SPE comes online immediately after this loop, it
-could remain in supported_cpus because the hotplug callback is not yet
-registered.
-
-Later, arm_spe_pmu_dev_init() consumes this mask:
-
-	ret =3D smp_call_function_any(mask,  __arm_spe_pmu_dev_probe, spe_pmu, 1);
-	if (ret || !(spe_pmu->features & SPE_PMU_FEAT_DEV_PROBED))
-		return -ENXIO;
-
-This could select the newly online CPU that lacks SPE, causing the driver
-probe to spuriously fail.
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261015062908.3565=
-761-1-johnny.fan@cixtech.com?part=3D1
