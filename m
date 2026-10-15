@@ -1,155 +1,165 @@
-Received: from mail-qt1-f180.google.com (mail-qt1-f180.google.com [209.85.160.180])
+Received: from mail-qt1-f173.google.com (mail-qt1-f173.google.com [209.85.160.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F7064C9E06
-	for <linux-perf-users@vger.kernel.org>; Thu, 15 Oct 2026 20:43:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.160.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AD76488232
+	for <linux-perf-users@vger.kernel.org>; Thu, 15 Oct 2026 21:26:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.160.173
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792096991; cv=pass; b=KmuXYKRhs/Ng/x8DGm1lbiC6uiY7wah4MfU1PKzTTUeGgvu1fIeLe7htVkZ4IDi7PBuRvR/AWx4WNAEXcP+ZoGsXzRWTAzwzxgB7AaOU/9e8xq9CWl2v7xTDv0JuRKtx76JBdj+Ozwz0fPFNKfJCIR5yXpUnY4dwjZ2YQGo70dM=
+	t=1792099601; cv=pass; b=DjOPjOvLuk7z1cFckPbPU0reJlb6mtHJ2rMVZCvoDyX3ywXZXPBLYe5R/ByoCnRApALhd14AXjdLXYBdP3xLEX4iLjBhcetx7g0S1/lV9hYAa86xRluQS7AN31LxdRdDDfkHjiXdm869DhxdHNs7zMhMqECp8YfLwWFkWZgKuNY=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792096991; c=relaxed/simple;
-	bh=fpQgL7zqW+wNr1zIyUSG2tROxfP1ReOgDcM5sZbvmzM=;
+	s=arc-20240116; t=1792099601; c=relaxed/simple;
+	bh=S24dOVcDoMu01ibSOw1+bNFyN8uZ1WIV5X5lG+8sUTM=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=RB69jeEujwUVwMiFGZDnqF46Zyr3+lWNoGDR5rowMF0zr/KHbSaXUF/CCfChwDhS3s8KgNvXHv5NyFzycrT16kdWMzaHFbTaJB6YPANnGJQ+4BNsxPkaugt08L/w/nUyIGI9/O7TCv5Gl9K1nUwCjFrjEHdSixwKM3tb3cCiTdc=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=eJzmuXgH; arc=pass smtp.client-ip=209.85.160.180
+	 To:Cc:Content-Type; b=ttcNj5MKmK9ioM+ErZyGhu6/6/7pjgwvPFo3IMP+c18/j1a3Y5OO/kuzFejVG9tinsiOjx9c6lK9+f0XTwowo6kd6o7ch0l0Uidrjy6/CYpX/BW1jWY6a4lE2jqnwVkaHPjQnkKIuGoq11HS/PTYQ2d8paaWkTVEXLT+PD8Ju1g=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=oKrckloV; arc=pass smtp.client-ip=209.85.160.173
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="eJzmuXgH"
-Received: by mail-qt1-f180.google.com with SMTP id d75a77b69052e-535f598d126so25101cf.1
-        for <linux-perf-users@vger.kernel.org>; Thu, 15 Oct 2026 13:43:08 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1792096988; cv=none;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="oKrckloV"
+Received: by mail-qt1-f173.google.com with SMTP id d75a77b69052e-535f598d126so38671cf.1
+        for <linux-perf-users@vger.kernel.org>; Thu, 15 Oct 2026 14:26:39 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1792099598; cv=none;
         d=google.com; s=arc-20260327;
-        b=Pvuf9maj9429pVvbxPJndwktFNwUPNPnml/vUm7FVReYpOxCrWW15FKugYuzySbHi9
-         9aes9BUC2+SdY8fcfWoqOugjSwq/0djqZoUIPl0dqzHLq/G/kfP2xHCQBp/mtqt6Tl05
-         OmyGBtgwOS8+a04rxXDR0KE7C829z7HhZgVeTzdmxOghXZZRmke9HA6EGu5wIWCIlxMG
-         Zm0DABPISaWBqb2i4p3sAlmFU4qm3xKFU2K0cEOFEYEi6gKk5Z063TW4Z/XNqaO2qRF8
-         cqGFhIwPrt0mm+qpUU4a+/SB/tw7c+On6jPYq01vJpVYR/NJ2kVeXiVReP+r8znJUpBd
-         kI0w==
+        b=dkUqgM0uLah+G11Nz0qUReIOcCB34CR3VMwal8JsuyQtkQui5F440hLB6FynRPyrxI
+         fB9JCcboRkYMo3r4hZWrROXyVPsnJ5hk5d4VKPCLRZ1bDR8rhZ7nvLJ1OThx3Mqvi4Ox
+         oksXuozDNsnGy97Nqb1dRWGY81+kYYVE0zPYbPtbCBAaeBD7ohzxzTUy4067b3VhWFo7
+         Gi5xThYiMYDuWgk/hI2oIaeRE5ckSNOIB3Hitqm7fTfN9gxrY3BGkjB96lagWdbJghWy
+         2RhZKHc0w+2RnAKTWoZY5fJgVKvW6XqvFV9M213U4RDx44+5cXmNy6qr3kRX608/5ARh
+         1blQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:dkim-signature;
-        bh=sAB5wPUHGamwdatU6DxOtAu/ueiZHFunUW7sP3JUzxI=;
-        fh=iImiLdKM2pLRhIGwB0mWNZH5HQ496L/OMNmlFmKqwPc=;
-        b=WWoqCtK50Rq0HQrCbmAoIoqx/mmzsbZB0wpT9ciDH1e5+4qYP9u+vl0tr1bl7gU3Vv
-         KHJoZSUA/4TQSIa5UJYUJvjE2otjXCy8fH5RhzeYaDHuLekDP2wzklU4ho6o1Z34bROB
-         e9VEz7qw9MgwFUW+6+G2nhjGeBsFCr+TNpk6xowdLdi9S0/U/KjOwnxsjYrf5IG1BfRd
-         px7HcaBfHxCLa1jrHNs0/UBRFg1q+gO9gny70xcm3nWSkbXAFJ//IJcIi11CopDQFRGJ
-         PNHiaORt6LxeO98bTVhTj2VG7YvwUOX7qzg3XFChtiFO8EIJNpEXW5KHzqXYzN7ExP+7
-         3ViA==;
+        bh=OgcgdziUoCAQVTSOyr0xkG5j6Rc5FznnZ78bB8A0JZM=;
+        fh=jPYKDKMl0vNAoWkmcmh39JhRjAhIo2f+whASGRP5zLA=;
+        b=Yc7WF0EFt76wd/2VbQKSzA3iGMHmtPmSmoWy5gsiYAqv1muWnX5dPL96YykvmoNrmg
+         21SlQ76GHuYBSiPtDNfPh8z34keZwzduhHWPco1Alil1t/J0KNvbW5kz72cRTGKmXeVx
+         7g3TOJ68C4AHOBIWcCXlNP8NerecHr0Dkuz7WsiOt0tYpFovIRV+yKiXCIuAQYFm9JI7
+         jXrZxdKFuBwHxGv+rGlY6XZYaivV0yiRA0w3jwd/7U/ei3UVk7SjJ97ugNUVkBt4fYml
+         ynTdO7g6FuCv9Kvw2dblFav58vdi803tuCNhYOtpp+S6F12w1scPANRIPNYDvWvQx03G
+         QAgg==;
         darn=vger.kernel.org
 ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1792096988; x=1792701788; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1792099598; x=1792704398; darn=vger.kernel.org;
         h=content-transfer-encoding:content-type:cc:to:subject:message-id
          :date:from:in-reply-to:references:mime-version:from:to:cc:subject
          :date:message-id:reply-to:content-type;
-        bh=sAB5wPUHGamwdatU6DxOtAu/ueiZHFunUW7sP3JUzxI=;
-        b=eJzmuXgHVsVJWdEzr6eJY1f1yEEfSevLZHYDp3A6vdFEhxjxqgGVO6HDf28uwgoEAl
-         DkRxf24y8sSBFCE8pIZlKvisz+HjHv1pjhhCzMgjN98hD8gHdeRTMo//qkDGK9KE4B7r
-         ulMruHgZLnaADzPO+3OOt/RWEVUxKctd0W4M3oYvWsagZNsCSKaVrJbhH6LSI0+Nq4Yt
-         ulwookpra3JOSg47L5HbRdDVa8ujGQP437KqZgF98Niu16ddhkqnJ4AW8MOlV8oacTSS
-         jmxcHZ/RAetb5PCSAw2+mwb02+HLdKOIbEidOA4Hty6+opEyMdzSjff86AwVIwzvzOv+
-         HACg==
+        bh=OgcgdziUoCAQVTSOyr0xkG5j6Rc5FznnZ78bB8A0JZM=;
+        b=oKrckloVPBkqU275fV0Dp0vswVpn9xI3pbBF0luDu5tSShg5dkG2YFZkgn8FRW6zce
+         SC6ce0/U2RwBMT7UdzqImKj7Zwk5S0nhq6OPLHt7tgXeMAaz7CD4ePFHyCr43fJxXA0Y
+         2jw5Oyrx7g+KPlc3TkA9w3oG2VFtEizziz3jHzVGNBWpDorHwNjHlbHymuYcu8CVQyzI
+         mvaz+FJ/xCsHJnZ4uSZEhOWijfOu6wwnL3wJ1s+dxyrL6peIWJod70X2U1Wzemtm1L0N
+         CFqg8wwGGvxXUvAYmKzgnxuDknpyeEjx5L1091lujDB82PDgTH1VZb4IgR3IDFsb64PI
+         K/BA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1792096988; x=1792701788;
+        d=1e100.net; s=20260707; t=1792099598; x=1792704398;
         h=content-transfer-encoding:content-type:cc:to:subject:message-id
          :date:from:in-reply-to:references:mime-version:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=sAB5wPUHGamwdatU6DxOtAu/ueiZHFunUW7sP3JUzxI=;
-        b=Acy89WAfMB7KDDSEj5qu4f+1UbUCHa1cSfn/qw5xOr4OS05JG3PbL+RCr+IYPoKJQb
-         e0ZaewzxEIyeOIoUKmLzEPrPwkjftanVUuk5+GvdQYKmk7UidnjYPpLu5V7AROI2U+1W
-         yWKPTaiS0va9PlBpw779jcYCF4grk0InwvnjvOqM27nir5WudHelOYpYJBhErnAgdDCP
-         1adNcKGPqTMy8O5jJT8/0MS2k7b4nQISxRxfLWw8hlHHmmLJIDHTpnbUgqFi/fS6X2X7
-         HpLr9bIOKcU3Lj3fakodj8A4lwsupWtE1NpzgNwkzEj7ATQ9m7UsaZQHskJA13TCNAF9
-         fcXA==
-X-Forwarded-Encrypted: i=1; AKwUvBxaOaiSVU5M43hqWFqH6QgyNITfE2BoOWVo+7LMwJlr+bPuDOb3Zpmmd7yGD/e1tKXQ/SkvR6DbGixSZ/YegyWJ@vger.kernel.org
-X-Gm-Message-State: AFq9FYKsEIBLNGZs0toLa8whNXgUzJHuhFvQUwbKnQVldY4CGamgzz6D
-	1lWtUj39jZ/9lQULu7EuEUu+BioAx9vHR26aZtINT0r/CDcxqBUl+yeXWt6tlKsEQCDBP5t6sHS
-	lcldnJwNPLORCkHJXZEYlD3CjvrqeBXgnYM2Qli5t
-X-Gm-Gg: AYBFou3hIB3vASbPHWB7hwt6OMigu7b6zFUjIc4dwSxOf4KQgBBMkjzO59fra09eI9u
-	+20BjGCdtRrWTlGdYQTETj3Y4krvrs+ZOICUj6CFQOp0Rufw1rBW8bR5rPTd515/SBa1OT4DIyb
-	Fjyj4qs8ibKO6LK/e3+1Kw+pqC3ygChuvBlfbnoKmrb2MStr8Q3Y4WVpkfCjFWEmkHXIGLWrJwo
-	wIvc62qFbpem+4ShyWZ5EPgnCKVo+0hQDZ2KwAiAt4jnfoZ4ZaAJzj3BlYoCiK00TW1ZykMbeTj
-	KXPXRPeh2hk/HsBOHHS7XpqKDvaAdhm0jbaiQi1KCtUpf0N9fstg3GIn
-X-Received: by 2002:a05:622b:da:10b0:532:9003:35b1 with SMTP id
- d75a77b69052e-536296751d7mr3921681cf.2.1792096987506; Thu, 15 Oct 2026
- 13:43:07 -0700 (PDT)
+        bh=OgcgdziUoCAQVTSOyr0xkG5j6Rc5FznnZ78bB8A0JZM=;
+        b=X1iuLN3vYIjpRHGUiWx0e59pU9ehQ32fn8UQm8sTXv4sX/2jnrlZ1snZa455VQUdt1
+         iGbeh+pXB3IPIwuMzV6jpvml9kXba45uMBzlRdgk2x68HAlipKXWqcnxoujog/uiwSe2
+         79ufQ9nP7LwTbqFZig/zlTXZQT18xiFaE6AAWYUs2RLgc5F9HShYns0L0KtuCrRO5Qfy
+         UuGxIaqKrmC8fn/8MFum2Hr1CPyByOIRphwkxxevvSVgGunkU1tL1ccZgSyiKen1GCkd
+         CuD0V19gWabYqWlb2IAxy3v3WP/QQ256A9lbPqTazRifDNEHZOckyXM+1jGLe6+DMQDK
+         DQbg==
+X-Forwarded-Encrypted: i=1; AKwUvBwsC62ZsI/6w6JHMnvYztichKe2mBJiHaqsb0fkwMOGxolhiD2s7qjfKr04d34ksHxAhhkjFvQctwrx21gSymh5@vger.kernel.org
+X-Gm-Message-State: AFq9FYI2vfveFo06aY6vOWHmRdPGoCJAmUFIO7gnWP9pkPPl9fR9CKSM
+	eQDczHoBQcz14FFv0cEEOu1RJBQq/VaLWgeGbdNhZTzKv5qUyFO79l7SSliK34wPbcoS/UP4eHt
+	0+ftAFJBnUrKytWFixcB2RNkOjE0PP7OUsiAumJvS
+X-Gm-Gg: AYBFou3V3wCO7FCSlDdk2EtffPyh4rf7cBm8SnjYpNUUkXgg/py8dHxw5ySLdAMcbSE
+	N5GpYx8djAN90/gutAhK9+e3sVwfZrr7jEzOiwwZuYWZogl+TRsk9dbSj7QLm7Ajl6BhptlL59m
+	OF5wBtKMEGT00t66ICG8PQQbMTjDxLs/HW40JHAKxChxSjYqWwCPCwAYTLhDyrEnxGOMiyorB/j
+	PQBcpwQFfQ/9YXT1a4nSUc4COYnUG9oaJb/YVdY+ROpkyiEbJ0yRj5qLkT+n9+48aRl9IINFMwT
+	U3/obarPNlYO6oTPhZ0ZTEpxFTDzrFPPktHS09D28W+WaElJxVQT+zwv92le69Mdbm/+Y1dLU5J
+	L0rUMXNuxuQ==
+X-Received: by 2002:a05:622a:580a:b0:535:cee9:78ee with SMTP id
+ d75a77b69052e-5362b4d91b9mr2154821cf.15.1792099597789; Thu, 15 Oct 2026
+ 14:26:37 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20261015060430.5877-1-ravi.bangoria@amd.com> <20261015060430.5877-3-ravi.bangoria@amd.com>
-In-Reply-To: <20261015060430.5877-3-ravi.bangoria@amd.com>
-From: Jim Mattson <jmattson@google.com>
-Date: Thu, 15 Oct 2026 13:42:51 -0700
-X-Gm-Features: AclHuK-iC84TxLC2NgPzRKp_ipyKQ7WfTjp-m6hssJeqnP_I8D-Eg3EHFWYlDEQ
-Message-ID: <CALMp9eR7BFGU0zOwTmLF571t-ZcuY5NjkD2nNXWNJoa=cEitTw@mail.gmail.com>
-Subject: Re: [PATCH 2/3] perf/amd/ibs: Fix kernel address leak via REGS_USER
-To: Ravi Bangoria <ravi.bangoria@amd.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Jayapal Ashwin Nair <janair@amd.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Ian Rogers <irogers@google.com>, x86@kernel.org, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Santosh Shukla <santosh.shukla@amd.com>, 
-	Ananth Narayan <ananth.narayan@amd.com>, Sandipan Das <sandipan.das@amd.com>, 
-	Manali Shukla <manali.shukla@amd.com>
+References: <20261011233647.2454648-1-sashal@kernel.org> <20261011233647.2454648-4-sashal@kernel.org>
+ <CAP-5=fWFY-tpJz2vcBZvurwdZY5gwd8cuTemE9q1rtZ0Vi0dng@mail.gmail.com>
+ <20261013170854.647305-1-sashal@kernel.org> <as6SxXELnoIJenIX@x2> <atEo6aIQbgww4G0y@laps>
+In-Reply-To: <atEo6aIQbgww4G0y@laps>
+From: Ian Rogers <irogers@google.com>
+Date: Thu, 15 Oct 2026 14:26:26 -0700
+X-Gm-Features: AclHuK-FmTfmnNngMCTHGyBJ-W37rLbDe_VKRvUNDuHeCzq-aOwVNF9WYcEKmR8
+Message-ID: <CAP-5=fVq9rpDm2v8EjrQBVz6aV7SLaYzAwncQBwut0QDnFJ-kA@mail.gmail.com>
+Subject: Re: [RFC PATCH 3/6] tools: build perf in tools_build
+To: Sasha Levin <sashal@kernel.org>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, linux-perf-users@vger.kernel.org, 
+	Namhyung Kim <namhyung@kernel.org>, Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nsc@kernel.org>, 
+	linux-kbuild@vger.kernel.org, Shuah Khan <shuah@kernel.org>, 
+	linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Oct 14, 2026 at 11:05=E2=80=AFPM Ravi Bangoria <ravi.bangoria@amd.c=
-om> wrote:
+On Thu, Oct 15, 2026 at 12:26=E2=80=AFPM Sasha Levin <sashal@kernel.org> wr=
+ote:
 >
-> IBS hardware captures a sample and raises an NMI. Since the NMI can be
-> delivered with a delay, a privilege change may occur between sample
-> capture and NMI delivery. Because IBS only provides the sample RIP, the
-> kernel records GPRs from the NMI pt_regs, which may reflect kernel mode
-> if a privilege switch occurred in the interim. This can leak kernel
-> addresses to unprivileged users through PERF_SAMPLE_REGS_USER.
+> On Tue, Oct 13, 2026 at 05:21:25PM -0300, Arnaldo Carvalho de Melo wrote:
+> >Why is that difficult to run:
+> >
+> >make -C tools/perf install-build-deps
+> >
+> >To do a recommended perf build deps install?
+> >
+> >That would be useful as it is what we expect users to do.
 >
-> Fix this by discarding samples where the NMI arrives in kernel mode and
-> the user has set exclude_kernel.
+> That's what users do, but it wants to install packages.
+>
+> We need a path for unprivileged builds on bots and CI machines that can't
+> install packages, and many of those builds are cross builds, where perf n=
+eeds
+> the target's libelf and libtraceevent rather than the host's.
+>
+> >If that is too difficult, for some reason, there is a minimal build in
+> >tools/perf/tests/make, that is tested since forever:
+> >
+> ># all the NO_* variable combined
+> >make_minimal        :=3D NO_PYTHON_MODULE=3D1
+> >make_minimal        +=3D NO_DEMANGLE=3D1 NO_LIBELF=3D1 NO_BACKTRACE=3D1
+> >make_minimal        +=3D NO_LIBNUMA=3D1 NO_LIBBIONIC=3D1 NO_LIBDW=3D1
+> >make_minimal        +=3D NO_LIBBPF=3D1
+> >make_minimal        +=3D NO_SDT=3D1 NO_JVMTI=3D1 NO_LIBZSTD=3D1
+> >make_minimal        +=3D NO_CAPSTONE=3D1
+>
+> I tried make_minimal on perf-tools-next. It still requires libtraceevent,=
+ so an
+> arm64 cross build without the arm64 libtraceevent installed stops at that
+> check. With NO_LIBTRACEEVENT=3D1 added, it then fails building the Rust t=
+est
+> workload. Natively it still enables aio, libLLVM, libslang, libtraceevent=
+,
+> lzma, zlib and Rust when they are installed, so the result depends on the
+> machine.
+>
+> I'd like to go with Ian's suggestion then: a MINIMAL=3D1 knob in perf tha=
+t turns
+> off every optional feature, which tests/make can use for make_minimal as =
+well.
 
-This will systematically under-sample instructions just before a
-transition to the kernel. For this special case, perhaps the GPRs
-could be obtained from task_pt_regs(current) instead of the NMI
-pt_regs?
+I can put a patch together for that. Just for discussion, I did do
+some work to break perf dependencies with libraries using dlopen/dlsym
+like:
+https://lore.kernel.org/linux-perf-users/20260130233439.647447-1-irogers@go=
+ogle.com/
+An area of controbversy with this approach is that it is still nice to
+use the header files for the library as library authors are bad and
+will do things like change function APIs over time. If the build uses
+the header files, why use dlopen when you can just link against the
+library? I could imagine using dlopen/dlsym for libtraceevent, but it
+would end up repeating this header file and library argument.
 
-> Reported-by: Jayapal Ashwin Nair <janair@amd.com>
-> Fixes: d29e744c7167 ("perf/x86: Relax privilege filter restriction on AMD=
- IBS")
-> Signed-off-by: Ravi Bangoria <ravi.bangoria@amd.com>
-> ---
->  arch/x86/events/amd/ibs.c | 9 ++++++---
->  1 file changed, 6 insertions(+), 3 deletions(-)
->
-> diff --git a/arch/x86/events/amd/ibs.c b/arch/x86/events/amd/ibs.c
-> index bfb51f8e184f..3cb46c775eaa 100644
-> --- a/arch/x86/events/amd/ibs.c
-> +++ b/arch/x86/events/amd/ibs.c
-> @@ -1373,12 +1373,15 @@ static bool perf_ibs_is_kernel_br_target(struct p=
-erf_event *event,
->  }
->
->  static bool perf_ibs_discard_sample(struct perf_ibs *perf_ibs, struct pe=
-rf_event *event,
-> -                                   struct pt_regs *regs, struct perf_ibs=
-_data *ibs_data,
-> -                                   int br_target_idx)
-> +                                   struct pt_regs *regs, struct pt_regs =
-*iregs,
-> +                                   struct perf_ibs_data *ibs_data, int b=
-r_target_idx)
->  {
->         if (perf_exclude_event(event, regs))
->                 return true;
->
-> +       if (perf_exclude_event(event, iregs))
-> +               return true;
+Thanks,
+Ian
 
-This excludes events with an NMI skid past a privilege change in both
-directions. Do you want to omit a kernel sample taken just before
-returning to userspace if the NMI arrives in userspace and
-exclude_user is set?
+> --
+> Thanks,
+> Sasha
