@@ -1,156 +1,198 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oi1-f178.google.com (mail-oi1-f178.google.com [209.85.167.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81CCC3D3334;
-	Thu, 15 Oct 2026 15:12:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA9A053F6B6
+	for <linux-perf-users@vger.kernel.org>; Thu, 15 Oct 2026 15:20:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792077155; cv=none; b=g6ifBimThlOIw0SVlv9Jg1mb+haH24x11EfeHTA4zi6V1i196+6bIcbIKoOnOx9e6bwb7fC8g9EVp9CLDEXHwLyQc0sLN/E8jvJuLXDBTPZUtCbuOYAxMGTlEV4hCgV6za5Ck8rrhuU5AxGAMuH+gGZV8iRt5VmsvN3bHyMCusE=
+	t=1792077621; cv=none; b=eNK/VYbp+nxv6e1heSp9Q+brambHBXtUKzi9l4CyytB2fHZow3wjZYr9iNyI541uE7DIHwddVodKSZu9qdSA8NIAY7HmCv82Zo3+dDNdgcE3u9QhP4p+t7VlQ2cwei00nSBZD443YbkW87KO6dD48zoHf4rrKH2xBFlwykAW6mo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792077155; c=relaxed/simple;
-	bh=iRqFUSfucGkRKagxk4DNzWp4TjCjOWGnYfw0KuL7EVE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=X6Wsf8huVlJt/W4Wg4AugUwPGStQZ2+lHl6NQTmXYYXnbh6I935AwCUWgWxEpF0fKyqgJJwI3pMOA0LnQTcxn7abZQUMg/7CH+vZz10/4lENA/YcGs8VdobqEj7sAwCLqIKKjkjV/ArRYGTYrVKQv4nFNQgAxjO13ZK/wc06pns=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mdfkOMDJ; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1792077621; c=relaxed/simple;
+	bh=OjX1ssYSRgIYegjZbrTmi9PNdcpPB0TQFrmlThWg5lI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=iFDdJXwUf87MDoKrJpzHfvCrA5lYDCVrnG4BudCvGh6zpoJ9pVbdcMaoFrI7vU4twEJsYYLRHLVWi+2rkoiYwEU/py/AFAJR/el6mDrPkaEEUvipvObsM3/F9XS9DzCkoXIXPHCUG3GnqfeSSZP99VH6onZsE2N6Hl0AX/TVE+I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nb9Byiin; arc=none smtp.client-ip=209.85.167.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mdfkOMDJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D5BEE1F000C4;
-	Thu, 15 Oct 2026 15:12:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1792077154;
-	bh=pDysuJEmkn56+CM/E4w11SG7z498s3kgZNwLNIegyhA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=mdfkOMDJ373ZTRSsel6xAqKp56bgKqPc74+HCWaRsr/BXshNIg0+BI0N5ct5cSy4f
-	 EYfiY1qumnhTtQrTKSyZ0UBEzfv7OPUy9cdZlhoioRbvqh3UUdomLdb3Jr//K5EMAP
-	 4BKZW4/rrP0Je1eeMmflj4iCl0P0LsmnrbLU/1URiXeEgStp6tXlfOSANV3Qd9LhAY
-	 nTP7Vq7SFkn3okOzi4t1+PAJnMD8DhJCgHXXm8SoMzKpoHJrQK2cbay9/z4vLlbUZM
-	 3wjeqTan05GLzTkPEYGDSdhg3gHFzhFXvu3Q+hStVmineVko+EbmVyvoUpc3YoVwKp
-	 ZopVDUvC6lKLw==
-Date: Thu, 15 Oct 2026 16:12:27 +0100
-From: "Lorenzo Stoakes (ARM)" <ljs@kernel.org>
-To: Alexandru Elisei <alexandru.elisei@arm.com>
-Cc: maz@kernel.org, oupton@kernel.org, fuad.tabba@linux.dev, 
-	joey.gouly@arm.com, seiden@linux.ibm.com, suzuki.poulose@arm.com, 
-	yuzenghui@huawei.com, linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, 
-	will@kernel.org, mark.rutland@arm.com, linux-perf-users@vger.kernel.org, 
-	catalin.marinas@arm.com, james.clark@linaro.org
-Subject: Re: [RFC PATCH v7 05/28] perf: arm_spe_pmu: Add PMBIDR_EL1 and
- PMSIDR_EL1 to struct arm_spe_pmu
-Message-ID: <atDmDRSNDllpJtmL@gremlin>
-References: <20260903160623.315525-1-alexandru.elisei@arm.com>
- <20260903160623.315525-6-alexandru.elisei@arm.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nb9Byiin"
+Received: by mail-oi1-f178.google.com with SMTP id 5614622812f47-4f48d91ba7dso3940429b6e.2
+        for <linux-perf-users@vger.kernel.org>; Thu, 15 Oct 2026 08:20:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1792077617; x=1792682417; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=mha7gBqe+FHTzNhXa015mlIzphM9boxhmgV8ZQMkPHE=;
+        b=nb9ByiincjtpQVbIh/uv1EeMty5ujEoaChNT0evUyWx2pshiKDjXrOQM1PDxv92NUu
+         YwQk0GKyREgAHVyAFLRvk8MJJNx8GIB62Jx+9iji+iSTBLFS2aq/pHglzf2BbxQWg1qL
+         bmoFg3O5ccfcggYSSRln4Vg4Fakv1VEH/N0nFT5n4+Z4SAxGQIzOSr9z/7fBzFcZOTDp
+         fnN5OT7H/bAqrH9c1013hob/lhJ3Xr8zG+S9Fj6XPTcpwGJM6fI331GcqMMZigIdB9Nh
+         ZgrHLHo0OSVhgnzD3keu2BZziwvCx2IGbD5rMjZvzYgWTsaoBAOcIs62/KPRve1l+dOy
+         is6w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1792077617; x=1792682417;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=mha7gBqe+FHTzNhXa015mlIzphM9boxhmgV8ZQMkPHE=;
+        b=lCLiiDFB2T2hVTKILaAh3J2Q/vowwLjkwyNSW/rYb99pOa7SOJBFsLSwwTxq0gz/yI
+         523J+Bf7AAWVgYCI8X4x6hBMQzu4bgdETIji7JoR2A4rJxRqn3T+bjF23szMgBXIDvaV
+         k86m5JIS6aXOhjJ5UJW3ODH3vlohbQCAVCW/whVDuJdSaNGtWTk5CQQ7+vp6IR+Q2+IX
+         yIhx1yg0Vz4XvuxfMct0OvB5Eaan5oNgra2wNotQE6yjLXTEkcWKuDJ+58iMg9cqG7v+
+         T0bkGnpyn1mhRmoiQcZa7pdtGdL/x2W/TP6DooMfjLp4LZ9vrM2KjdsmE1hNMtl9FfwZ
+         fTLA==
+X-Forwarded-Encrypted: i=1; AKwUvBzVUdb0Jkq0XFsuctnOX5eRb2n1zuSBeGw7PhGXl0uzagkyRZjWfVhc4x6xMSipr7qu/HMC95nlzFsh8hqcB5jd@vger.kernel.org
+X-Gm-Message-State: AFq9FYJMPemAcEm3iv7nV+8F8m269sw6BODI6f/f0pVi7hNfjbq6hFP4
+	kJ48jJwo+YfaaPuWEqkQ5J0ig6eO6yGTGQ5ZCoOMQTfEqNHIqkZvbqPp
+X-Gm-Gg: AYBFou0Wm+JUdE7YVZKARuD1Xt/c1f3EyjtZPylTZzqRA3xP/Pti09ZnOlVWaSzKX4I
+	GvtWGM4ejpL2vpXyyI0kcc0morNiPF5Ur8S3R2DxJ18B2B9Vb7zqUQxXyup0QrWDD+lnupfU5mN
+	CzGAxJA2m1+vBwgnawdekKMk/yKl4dWCsn6Yfj6AekJqiB2hSoMs6zlrdsebjGE1EbiyFkRDp7H
+	eHMUp3+roL/2IpRNm+kxwFDJdR7SBRG6ZTZDay8D1F4zi40gv65ml26EEkd4r3ruXFo1XcSVKIq
+	KCfsf5Lb1Wfk+9ddMLXPC3sDXDa4swDek9CrluDRDwvE/aHBKVwHh+GiYvt3d40P4Eg/dHis73i
+	lNYccHRbmjl50yIIDuZSi4Sj5Aee1k4NhIX040ezRxRiLV+7tkyMNmgC0axf7f2+Hj5U7NDd0AK
+	yuRT0b5QL01WaO40zg30qchA6X6mI/ibAe39Jro4HTTK+wuEu3EWggpYXKLMhwcMhMqdD/jX2zR
+	AAgM8fqlODZ6X89I+IISwsv2gJp1ETlRhdQHIp9XiTeKFFojXU=
+X-Received: by 2002:a05:6808:4f28:b0:4b3:7b31:8df7 with SMTP id 5614622812f47-50c524711f0mr21604940b6e.14.1792077616511;
+        Thu, 15 Oct 2026 08:20:16 -0700 (PDT)
+Received: from archlinux.lan ([136.34.156.120])
+        by smtp.gmail.com with ESMTPSA id 5614622812f47-50c0c5fe916sm20246124b6e.1.2026.10.15.08.20.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 15 Oct 2026 08:20:14 -0700 (PDT)
+From: Danish Khateeb <danishkhateeb03@gmail.com>
+To: Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	James Clark <james.clark@linaro.org>,
+	Marco Elver <elver@google.com>,
+	Dmitry Vyukov <dvyukov@google.com>,
+	Frederic Weisbecker <frederic@kernel.org>,
+	Luo Gengkun <luogengkun2@huawei.com>,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Danish Khateeb <danishkhateeb03@gmail.com>,
+	stable@vger.kernel.org
+Subject: [PATCH v3] perf/core: Don't send SIGTRAP after exec removed the event
+Date: Thu, 15 Oct 2026 10:20:13 -0500
+Message-ID: <20261015152013.106040-1-danishkhateeb03@gmail.com>
+X-Mailer: git-send-email 2.56.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260903160623.315525-6-alexandru.elisei@arm.com>
+Content-Transfer-Encoding: 8bit
 
-I think probably some kind of commit message would be good even for a
-trivial change :)
+A sigtrap event must also set remove_on_exec, so that its SIGTRAP never
+reaches a program after exec. But the signal is sent from task work,
+which only runs on the way back to user space. If the event overflows
+shortly before execve(), the task work can still be pending when the
+task enters execve(), and then runs when execve() returns. By then
+perf_event_exec() has removed the event and the new program has default
+signal handlers, so the SIGTRAP kills it.
 
-On Thu, Sep 03, 2026 at 05:06:00PM +0100, Alexandru Elisei wrote:
-> Signed-off-by: Alexandru Elisei <alexandru.elisei@arm.com>
-> ---
->  drivers/perf/arm_spe_pmu.c       | 3 +++
->  include/linux/perf/arm_spe_pmu.h | 2 ++
->  2 files changed, 5 insertions(+)
->
-> diff --git a/drivers/perf/arm_spe_pmu.c b/drivers/perf/arm_spe_pmu.c
-> index 79c571a649d5..42ba0924bd02 100644
-> --- a/drivers/perf/arm_spe_pmu.c
-> +++ b/drivers/perf/arm_spe_pmu.c
-> @@ -1095,6 +1095,7 @@ static void __arm_spe_pmu_dev_probe(void *info)
->  			"profiling buffer owned by higher exception level\n");
->  		return;
->  	}
-> +	spe_pmu->pmbidr_el1 = reg;
+The exec_stress test in the remove_on_exec selftest catches this and
+fails about half the time in a VM. A process that opens a sigtrap event
+on itself and then calls execve() is killed by SIGTRAP in 15% to 50% of
+runs, both on an AMD machine running v7.2 and in a VM, with or without
+close-on-exec on the event fd.
 
-This doesn't seem to be used anywhere in the series?
+Commit ffb684f2aa14 ("perf: Fix race between perf_event_exit_task() and
+perf_pending_task()") made perf_sigtrap() return once
+perf_event_exit_task() has set ctx->task to TASK_TOMBSTONE. Exec only
+calls perf_event_exit_task() when the new program is not dumpable, such
+as a setuid one. An ordinary exec keeps the context and only removes the
+remove_on_exec events, so the SIGTRAP is still sent.
 
->
->  	/* Minimum alignment. If it's out-of-range, then fail the probe */
->  	fld = FIELD_GET(PMBIDR_EL1_ALIGN, reg);
-> @@ -1107,6 +1108,8 @@ static void __arm_spe_pmu_dev_probe(void *info)
->
->  	/* It's now safe to read PMSIDR and figure out what we've got */
->  	reg = read_sysreg_s(SYS_PMSIDR_EL1);
-> +	spe_pmu->pmsidr_el1 = reg;
-> +
->  	if (FIELD_GET(PMSIDR_EL1_FE, reg))
->  		spe_pmu->features |= SPE_PMU_FEAT_FILT_EVT;
->
-> diff --git a/include/linux/perf/arm_spe_pmu.h b/include/linux/perf/arm_spe_pmu.h
-> index af86fd184050..97b14e236fcd 100644
-> --- a/include/linux/perf/arm_spe_pmu.h
-> +++ b/include/linux/perf/arm_spe_pmu.h
-> @@ -21,6 +21,8 @@ struct arm_spe_pmu {
->  	cpumask_t				supported_cpus;
->  	struct hlist_node			hotplug_node;
->
-> +	u64					pmbidr_el1;
+perf_event_exit_event() sets PERF_EVENT_STATE_EXIT when exec removes the
+event. If the event fd is close-on-exec and was the last reference to
+the file, exec also queues the file release as task work. Task work runs
+newest first, so perf_release() runs before the SIGTRAP work and moves
+the event on to PERF_EVENT_STATE_DEAD. So don't send the signal when the
+event state is PERF_EVENT_STATE_EXIT or lower, which means the event has
+been removed. That also covers PERF_EVENT_STATE_REVOKED, where the PMU
+is gone.
 
-Equally, this doesn't seem to be used anywhere in the series, maybe drop?
+Fixes: 97ba62b27867 ("perf: Add support for SIGTRAP on perf events")
+Cc: stable@vger.kernel.org
+Assisted-by: LLM
+Signed-off-by: Danish Khateeb <danishkhateeb03@gmail.com>
+---
 
-> +	u64					pmsidr_el1;
+Notes:
+    Changes in v3:
+    - Rebased onto v7.3-rc7, which has ffb684f2aa14. That commit replaced
+      the PF_EXITING check that v2 was placed after, so the new check now
+      follows its TASK_TOMBSTONE check.
+    - Peter asked on v2 if this is the same problem as Luo Gengkun's patch:
+      it isn't. ffb684f2aa14 covers an exec that calls
+      perf_event_exit_task(), which only happens when the new program isn't
+      dumpable. With it applied, an ordinary exec still kills the new
+      program, see the numbers below. The changelog now says this.
+    - Read event->state with READ_ONCE(), since it is read without locks.
+      Suggested by Sashiko.
+    - v2: https://lore.kernel.org/all/20260930144248.59858-1-danishkhateeb03@gmail.com/
+    
+    Changes in v2:
+    - Skip the signal for every state at or below PERF_EVENT_STATE_EXIT, not
+      only EXIT. With a close-on-exec event fd the file release runs first
+      and moves the event to PERF_EVENT_STATE_DEAD, so v1 still killed 360
+      of 2000 children. Reported by Sashiko.
+    - v1: https://lore.kernel.org/all/20260929182935.355892-1-danishkhateeb03@gmail.com/
+    
+    Tested on v7.3-rc7 x86_64 under virtme-ng (KASAN, lockdep, 8 vCPUs on an
+    AMD Zen 3 host):
+    
+    - selftests/perf_events/remove_on_exec: exec_stress failed in 11 of 20
+      runs before, all 20 pass after.
+    - The exec_stress pattern in a loop (50 rounds of 30 inheriting
+      children): 24 children in 19 rounds were killed by SIGTRAP before,
+      none after.
+    - Each child opens its own sigtrap + remove_on_exec event and execs:
+      342 of 2000 children were killed before, none after. With
+      PERF_FLAG_FD_CLOEXEC: 1004 of 2000 before, none after.
+      On the bare-metal host running v7.2.6 the same program kills 297 to
+      1033 of 2000 children across runs, and 1012 of 2000 with
+      PERF_FLAG_FD_CLOEXEC.
+    - The same program as an execute-only binary run as nobody, so that
+      exec calls perf_event_exit_task() (the ffb684f2aa14 case): no child
+      killed and no warning, before or after.
+    - sigtrap_threads, watermark_signal and mmap pass before and after. No
+      new kernel warnings.
+    
+    v7.2 fails the same way in the VM. I did not test kernels older than
+    v7.2. gcc W=1 and sparse show no new warnings.
 
-This field is used in kvm_spe_has_feat_spe_fds() and
-kvm_spe_has_feat_spe_fne():
+ kernel/events/core.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-bool kvm_spe_has_feat_spe_fds(struct kvm *kvm)
-{
-	...
-	return kvm_has_feat(kvm, ID_AA64DFR0_EL1, PMSVer, V1P4) &&
-	       FIELD_GET(PMSIDR_EL1_FDS, spe_pmu->pmsidr_el1);
-}
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index 7846d70be57f..61e9a88adca8 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -7633,6 +7633,15 @@ static void perf_sigtrap(struct perf_event *event)
+ 	if (event->ctx->task == TASK_TOMBSTONE)
+ 		return;
+ 
++	/*
++	 * The event was removed after this signal was queued, e.g. by exec()
++	 * (remove_on_exec), which may also have closed its fd (close-on-exec).
++	 * The new program has default signal handlers, so a SIGTRAP would
++	 * kill it.
++	 */
++	if (READ_ONCE(event->state) <= PERF_EVENT_STATE_EXIT)
++		return;
++
+ 	/*
+ 	 * We'd expect this to only occur if the irq_work is delayed and either
+ 	 * ctx->task or current has changed in the meantime. This can be the
 
-bool kvm_spe_has_feat_spe_fne(struct kvm *kvm)
-{
-	...
-	return kvm_has_feat(kvm, ID_AA64DFR0_EL1, PMSVer, V1P2) &&
-	       FIELD_GET(PMSIDR_EL1_FnE, spe_pmu->pmsidr_el1);
-}
+base-commit: 24a19b953e2a3d0ea5a8c4951a0ab8f32720c907
+-- 
+2.56.0
 
-So checking for FDS and FnE, but these are available as feature flags as
-__arm_spe_pmu_dev_probe() gets these:
-
-static void __arm_spe_pmu_dev_probe(void *info)
-{
-	...
-	if (FIELD_GET(PMSIDR_EL1_FnE, reg))
-		spe_pmu->features |= SPE_PMU_FEAT_INV_FILT_EVT;
-	...
-	if (FIELD_GET(PMSIDR_EL1_FDS, reg))
-		spe_pmu->features |= SPE_PMU_FEAT_FDS;
-	...
-}
-
-And then kvm_spe_has_feat_spe_fds() and kvm_spe_has_feat_spe_fne() can be:
-
-bool kvm_spe_has_feat_spe_fds(struct kvm *kvm)
-{
-	...
-	return kvm_has_feat(kvm, ID_AA64DFR0_EL1, PMSVer, V1P4) &&
-	       (spe_pmu->features & SPE_PMU_FEAT_FDS);
-}
-
-bool kvm_spe_has_feat_spe_fne(struct kvm *kvm)
-{
-	...
-	return kvm_has_feat(kvm, ID_AA64DFR0_EL1, PMSVer, V1P2) &&
-	       (spe_pmu->features & SPE_PMU_FEAT_INV_FILT_EVT);
-}
-
-Right?
-
-So it seems you could drop this patch from the series in general? Is there
-another reason to get these fields?
-
-Also - there seems to be a divergence in the naming there between FnE and
-INV_FILT_EVT, is that intentional?
-
---
-Cheers, Lorenzo
