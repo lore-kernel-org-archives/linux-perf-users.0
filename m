@@ -1,174 +1,134 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1E3C4A68A4;
-	Thu, 15 Oct 2026 10:49:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BA784A7CA7;
+	Thu, 15 Oct 2026 10:58:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792061368; cv=none; b=eXmCEjptSdV8jhYp0NI/33JKEbgYNwgjP+TOyN0PWIy0BUErJH24BrOZaJC6TbJCT6S1tiJXnnYZW9aNDFrRnXc3/Il1vxRw0T9fZPvqrSAzJRqRG1+NnZPzvh84ODzmwxIoEu2O8RfaLlyfNyhsT8o4X1gF3/fLoMF3gKxgGOM=
+	t=1792061914; cv=none; b=GPD4e+ZCRKhpayaLBmdUDsYo34QPp5nPUIrZJswnTFavP3PJZfGj1BpD74W0dt8DXsD4+89hEVd2BJ8SGQk8fNbJ8TCqFHCb+Cm+lIhtRd4+hLs8gIuYlpeYe0z1ViX7bA3cQz56zFUl+IfhvyT3TXWwXGvMCSGITiADV3QxG9Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792061368; c=relaxed/simple;
-	bh=M2aLTKL4TVzR/0wELrO8Jzd79cG96V1GTXib1AxvoWs=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Dc6/4FtG/fu+cty1iakf6rvlAEW3rJiAlWpMBh29nQiRqTrz+ZUdGuHqSE9vc1Cfbjx0P/IRjN6F335B2YoImsai7H2doeszjMF7BmvwUIw1YD8N2wEUnA52LNCEDTxl9jN/n3Gj6v2kICq9ho/VM4baTqsttkoG6S/rYohmxOs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gN6L7L5g; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1792061914; c=relaxed/simple;
+	bh=YscGmbcN3nNKIyT1JAHk3lBrqqw/zMhCCrWmt7pyH7A=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=HXJwp6Kmsq2s1rHjcD94OC4++P1mbcGyxQwq8dXqPj5SILgBpzoAbI81pia+xbOw1vMYviiIyPK1i6Dz1jzz8W6vFZPWdY9ehq4KiJwapFY2rZ0dJs7tzOqFwfOdm0BXWzdlG517uGVXFG0/5KnMRIUHFomjT3SiE0Rm7cPxOvE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=J4Mki8A7; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gN6L7L5g"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D7C4D1F000C4;
-	Thu, 15 Oct 2026 10:49:26 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="J4Mki8A7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 86BDB1F000C4;
+	Thu, 15 Oct 2026 10:58:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1792061366;
-	bh=eS5dgKRrqB5G6xJ5ae/At6FZ/Fbw4j2g/klkldfI5mg=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References;
-	b=gN6L7L5gFoctGU9ho+DbAeF1+o7pakdSBsfk1oFhs1RO8TZTYf5TZvaylaBgDj041
-	 koJVxR33c6hXhI7EjtG/zY+KGOnE9GDDyI0flrc3MPev+f/R6T6d4PnxIBXZoBzsS6
-	 rteD4tUdeYGqZeGN+aVjM3R0zHxaFiQb3VP8owujSHhTKlMDlNnT0eNH7MBsBSVDMR
-	 Gx5000xkq8AGiE5EboSz/fcPeWV9sZbOra8dbn9jX8z7X1zHvSKoGJlq500i5nLFqc
-	 7/x87dbIR61vizFKHDxQpOLyZFkqg7486FIBrZsSoMCE/Zh3gpo3yg8KjVrvv9RyeA
-	 MfIcNZ6fei3sw==
-Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
-	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.98.2)
-	(envelope-from <maz@kernel.org>)
-	id 1xHJ1Y-00000003G8o-38kc;
-	Thu, 15 Oct 2026 10:49:24 +0000
-Date: Thu, 15 Oct 2026 11:49:24 +0100
-Message-ID: <86mrsf1bnv.wl-maz@kernel.org>
-From: Marc Zyngier <maz@kernel.org>
-To: "Johnny.Fan" <johnny.fan@cixtech.com>
-Cc: will@kernel.org,
-	mark.rutland@arm.com,
-	linux-arm-kernel@lists.infradead.org,
-	linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	james.clark@linaro.org,
-	leo.yan@arm.com,
-	jeremy.linton@arm.com,
-	cix-kernel-upstream@cixtech.com,
-	bob.zhang@cixtech.com,
-	jie.fu@cixtech.com,
-	"Johnny.Fan" <Johnny.Fan@cixtech.com>,
-	Fugang Duan <fugang.duan@cixtech.com>
-Subject: Re: [PATCH] perf: arm_spe: Support heterogeneous ACPI systems
-In-Reply-To: <20261015062908.3565761-1-johnny.fan@cixtech.com>
-References: <20261015062908.3565761-1-johnny.fan@cixtech.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/30.1
- (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+	s=k20260515; t=1792061913;
+	bh=525X9fRw3wVF943fAkOiBymkjHE2iaJQ8GGeeoS6trg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=J4Mki8A7cHla3ZIiYgF8fE5u9sHRkT45HlWip9lnGlgNnn4wVTMun8me0jvJSt3Gm
+	 cmMhdnHnhLxG8Hp+kbf6qD2N/xQhjoGcoCXYMVjkqPVIovCoZSmtnh9FMpxPguw82D
+	 cJIwae6Y8UpMTjIIOjTSCM+4Etqh7x2Ntt0lA9UzUhwtLJijvutQgn1TO5Qd/zaC3j
+	 wZiHn98w0KxgKp207XFG39bB3wZg385C2LTtbC/zheueFurs2AK4LTea7ZXwZZlxmJ
+	 XEHr1kHcvCS6II70lFvB7x3iXJzc/BWT1YWLg/0GWVJxK7C3Ddk64jWTcGKVBy9Wwy
+	 HVTW4tBN5CmyA==
+Date: Thu, 15 Oct 2026 07:58:29 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	James Clark <james.clark@linaro.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org, Sashiko <sashiko-bot@kernel.org>
+Subject: Re: [PATCH v3 1/4] perf symbol: Fix symbol loading from libbfd
+Message-ID: <atCx1cPi4g0hpxRi@x2>
+References: <20261012235938.87912-1-namhyung@kernel.org>
+ <as557LTNwiigXk0O@x2>
+ <as6cV-cm6dgTtzet@google.com>
+ <as__f7LjG4GckkBj@x2>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: johnny.fan@cixtech.com, will@kernel.org, mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, james.clark@linaro.org, leo.yan@arm.com, jeremy.linton@arm.com, cix-kernel-upstream@cixtech.com, bob.zhang@cixtech.com, jie.fu@cixtech.com, Johnny.Fan@cixtech.com, fugang.duan@cixtech.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <as__f7LjG4GckkBj@x2>
 
-On Thu, 15 Oct 2026 07:29:08 +0100,
-"Johnny.Fan" <johnny.fan@cixtech.com> wrote:
+On Wed, Oct 14, 2026 at 07:17:39PM -0300, Arnaldo Carvalho de Melo wrote:
+> On Tue, Oct 13, 2026 at 02:02:15PM -0700, Namhyung Kim wrote:
+> > On Tue, Oct 13, 2026 at 03:35:24PM -0300, Arnaldo Carvalho de Melo wrote:
+> > > On Mon, Oct 12, 2026 at 04:59:34PM -0700, Namhyung Kim wrote:
+> > > > The dso__load() should return a positive number (number of symbols
+> > > > loaded) when it succeded to load symbols.  But dso__load_bfd_symbols()
+> > > > only returns 0 and it's hard to check if it actually loaded symbols or
+> > > > not.  Let's return the value of dso__has_symbol() and check it in
+> > > > dso__load() so that it can return 1 for success.
+> > > > 
+> > > > Reported-by: Sashiko <sashiko-bot@kernel.org>
+> > > > Closes: https://lore.kernel.org/r/sashiko-outbox-162540@kernel.org
+> > > > Fixes: eac9a4342e5447cad ("perf symbols: Try reading the symbol table with libbfd")
+> > > > Reviewed-by: Ian Rogers <irogers@google.com>
+> > > > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+> > > 
+> > > Thanks, applied to perf-tools-next, for v7.4.
+> > 
+> > Thanks Arnaldo!
+> > 
+> > As you may know, this is from my other series on cleaning up symtab and
+> > binary types.  I'd like to land it as well so that I can continue
+> > working on the related issues.  There are some Sashiko feedback left,
+> > but I think they are either pre-existing bugs or known issues.
 > 
-> From: "Johnny.Fan" <Johnny.Fan@cixtech.com>
-> 
-> The ACPI MADT describes the SPE overflow interrupt on a per-CPU basis
-> in the GICC structure, where a CPU that does not implement SPE simply
-> reports 0. Heterogeneous systems therefore only report the interrupt
-> on the CPUs that implement SPE, but arm_pmu_acpi.c rejects this as a
-> non-homogeneous mapping and never creates the SPE platform device.
-> 
-> Treat the SPE interrupt as optional when walking the MADT: skip the
-> GICCs that report 0 and only require that the CPUs which do report it
-> agree on the number.
-> 
-> Note that the CPUs reporting the interrupt must still share a single
-> GSI, as the platform device only exposes one IRQ resource. A system
-> that assigns a different PPI per cluster cannot be described by this
-> single-device model.
-> 
-> The CPUs without SPE are trimmed from the PMU supported CPUs by
-> probing PMSVer on each CPU, both at probe time (for online CPUs) and
-> from the hotplug callback (for CPUs that were offline at probe), as
-> ACPI conveys no affinity information and the PPI otherwise defaults
-> to all possible CPUs.
+> Right, its now at tmp.perf-tools-next, while I test build in my
+> container set, will push it to perf-tools-next next.
 
-This is a bit odd: at the beginning, you are stating that the SPE
-interrupt being 0 is an indication of SPE not being supported. Then
-you check for PMSVer for the same properly. This seems pretty wrong.
+Building it with CC=clang I get:
 
-It should be possible to build the mask of SPE-enabled CPUs without
-IPI-ing the other CPUs, and only rely on the firmware table.
+  LD      /tmp/build/perf-tools-next/tests/perf-test-in.o
+util/dso.c:942:7: error: mutex '_dso__data_open_lock' is not held on every path through here [-Werror,-Wthread-safety-analysis]
+  942 |                 if (dso__data_open_cnt) {
+      |                     ^
+util/dso.c:940:4: note: mutex acquired here
+  940 |                         mutex_lock(dso__data_open_lock());
+      |                         ^
+util/dso.c:942:7: error: reading variable 'dso__data_open_cnt' requires holding mutex '_dso__data_open_lock'   CC      /tmp/build/perf-tools-next/util/maps.o
+[-Werror,-Wthread-safety-analysis]
+  942 |                 if (dso__data_open_cnt) {
+      |                     ^
+util/dso.c:943:4: error: calling function 'close_first_dso' requires holding mutex '_dso__data_open_lock' exclusively [-Werror,-Wthread-safety-analysis]
+  943 |                         close_first_dso();
+      |                         ^
+util/dso.c:949:3: error: releasing mutex '_dso__data_open_lock' that was not held [-Werror,-Wthread-safety-analysis]
+  949 |                 mutex_unlock(dso__data_open_lock());
+      |                 ^
+4 errors generated.
+make[4]: *** [/home/acme/git/perf-tools-next/tools/build/Makefile.build:95: /tmp/build/perf-tools-next/util/dso.o] Error 1
+  CC      /tmp/build/perf-tools-next/util/thread.o
 
-> 
-> Tested on a CIX sky1 SoC with heterogeneous SPE support.
-> 
-> Signed-off-by: Johnny.Fan <Johnny.Fan@cixtech.com>
-> 
-> Reviewed-by: Fugang Duan <fugang.duan@cixtech.com>
-> ---
->  drivers/perf/arm_pmu_acpi.c | 34 +++++++++++++++++++++++-------
->  drivers/perf/arm_spe_pmu.c  | 41 ++++++++++++++++++++++++++++++++++---
->  2 files changed, 65 insertions(+), 10 deletions(-)
-> 
-> diff --git a/drivers/perf/arm_pmu_acpi.c b/drivers/perf/arm_pmu_acpi.c
-> index ca6bf8f86cfe..4ece1070827b 100644
-> --- a/drivers/perf/arm_pmu_acpi.c
-> +++ b/drivers/perf/arm_pmu_acpi.c
-> @@ -70,7 +70,8 @@ static void arm_pmu_acpi_unregister_irq(int cpu)
->  
->  static int __maybe_unused
->  arm_acpi_register_pmu_device(struct platform_device *pdev, u8 len,
-> -			     u16 (*parse_gsi)(struct acpi_madt_generic_interrupt *))
-> +			     u16 (*parse_gsi)(struct acpi_madt_generic_interrupt *),
-> +			     bool optional)
->  {
->  	int cpu, this_hetid, hetid, irq, ret;
->  	u16 this_gsi = 0, gsi = 0;
-> @@ -87,7 +88,9 @@ arm_acpi_register_pmu_device(struct platform_device *pdev, u8 len,
->  
->  	/*
->  	 * Sanity check all the GICC tables for the same interrupt
-> -	 * number. For now, only support homogeneous ACPI machines.
-> +	 * number. For now, only support homogeneous ACPI machines,
-> +	 * unless the interrupt is optional, in which case a CPU that
-> +	 * does not implement the feature simply reports 0.
->  	 */
->  	for_each_possible_cpu(cpu) {
->  		struct acpi_madt_generic_interrupt *gicc;
-> @@ -97,6 +100,20 @@ arm_acpi_register_pmu_device(struct platform_device *pdev, u8 len,
->  			return gsi ? -ENXIO : 0;
->  
->  		this_gsi = parse_gsi(gicc);
-> +
-> +		if (optional) {
-> +			if (!this_gsi)
-> +				continue;
-> +
-> +			if (gsi && gsi != this_gsi) {
-> +				pr_warn("ACPI: %s: CPU%d: inconsistent interrupt %u/%u\n",
-> +					pdev->name, cpu, gsi, this_gsi);
-> +				return -ENXIO;
-> +			}
-> +			gsi = this_gsi;
-> +			continue;
-> +		}
-> +
+Bisected to:
 
-This "optional" parameter feels very wrong. We now have an
-infrastructure to get a set of affinities for an interrupt (see
-5324fe21ba9b7 and following patches). What this needs is ACPI to be
-plumbed into this.
+⬢ [acme@tb-phoenix2-perf perf-tools-next]$ git bisect good
+3759ca226d57d06c4c52a1e64890faf58a29ebf1 is the first 'bad' commit
+commit 3759ca226d57d06c4c52a1e64890faf58a29ebf1
+Author: Namhyung Kim <namhyung@kernel.org>
+Date:   Tue Oct 13 10:21:51 2026 -0700
 
-Unfortunately, ACPI is awkward and very badly abstracted in this area,
-but that doesn't mean we should make the driver code more bizarre.
+    perf tools: Factor out dso__find_binary_type()
 
-Treating SPE and TRBE differently is just as odd, and there is no
-reason to do other than suiting your particular platform.
+    Separate out the logic to detect binary type of a DSO.  It checks if
+    the candidate file contains ".text" section.  There could be data-only
+    DSOs but as our use cases focus on the code (perf annotate or intel
+    PT), we can ignore them for now.
 
-Thanks,
+    But it also can fail due to open file limit.  Handle the case by
+    retrying with _dso__data_open_lock.
 
-	M.
+    Introduce bintype_searched flag and it accessors to prevent repeated
+    (failed) search.
 
--- 
-Without deviation from the norm, progress is not possible.
+    Reviewed-by: Ian Rogers <irogers@google.com>
+    Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+    Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+
+ tools/perf/util/dso.c | 138 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++------------
+ tools/perf/util/dso.h |  13 +++++++++++++
+ 2 files changed, 139 insertions(+), 12 deletions(-)
+⬢ [acme@tb-phoenix2-perf perf-tools-next]$
