@@ -1,198 +1,350 @@
-Received: from mail-qt1-f174.google.com (mail-qt1-f174.google.com [209.85.160.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from CWXP265CU010.outbound.protection.outlook.com (mail-ukwestazon11022088.outbound.protection.outlook.com [52.101.101.88])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 234FB846A
-	for <linux-perf-users@vger.kernel.org>; Thu, 15 Oct 2026 00:05:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.160.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DB002BEC2B;
+	Thu, 15 Oct 2026 01:12:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.101.88
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792022716; cv=pass; b=YjnqWk3wX39dVPBwi8eHg1uFb8aphsj0gf2JplTER8Rk5JQfMJhNw/yw1cqm3YM0NuLeI+hDkQgIxxvhQaa5pL+GX1q5cfnPSaqQ3Lwn1TB1et5G0eYUMYpx2BWoNH8ApGq/vEcO1YIG7wWULchEXuTGwd2zBgcKbuS+vYtMXVQ=
+	t=1792026726; cv=fail; b=KmXAcDYXxF89Z7vx4lTthDZrSVFuzi53rWz9oGd5H18jGQb3Yx6QHHVpO3wu2boxAGy0lmYco31XQKxoTIs10km56XTspMbd5dGi1udIEQWXiKHB3JFqSvWU4Hrr5Kde7N4s6Tsjt9TFMtrO1VYDV6iE4w9vVHuYmdvWg5LCGrU=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792022716; c=relaxed/simple;
-	bh=IsumSsX68ned4I+XN6qD7vJuuH/AEcDulEb+H0uATVU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Zj3tTxoKt228+VZc27tdOmDSbEgXHfegmORH8Z9IWPy2cwWwIKTTR+BKbm+kLQuikaIT9NlDFQSfZ2ILZcj8Mqr2QOzX8YdVhsFOPNYREjWubJXWiRMeHUX0vwXceIYOHM2JQ72gqtU3iq2lRB9jmBhvdcUeyUITN2+ip6phOjo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mWySo1kZ; arc=pass smtp.client-ip=209.85.160.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mWySo1kZ"
-Received: by mail-qt1-f174.google.com with SMTP id d75a77b69052e-5339381b46eso47421281cf.1
-        for <linux-perf-users@vger.kernel.org>; Wed, 14 Oct 2026 17:05:14 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1792022714; cv=none;
-        d=google.com; s=arc-20260327;
-        b=Os+BWCBlV24Q+J05GqjgAHpJOu+T8uQ8CGcBmAGdrqO4Ulg1mh6a9mLp7shOJMegIV
-         lP9Ja4Y7/1Q/8lk0PhjTp7txWAOp/HbjqskTm6HuAq6+yfij79NgpJ6APB1jVPNoTufM
-         EtwWyve8rK1KZR5y2YKeUqfjVyIrV7SoE51H98P9bMZX7/9Ly047j7naD4sQkaXlwW2A
-         TRX8eYJcJm9MHOMyQGTCHXc0VoXz7k3ssWOxN/ELXz7ifVim1+cynYfA1EXML4If2Ge+
-         OI7NVuG2xLoRTVcpIsWby5ubM1LgokE9Nm1UDknKM4pIBqiJME/Qqiz/yINU56kA7/QH
-         5yZQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=W2i4ePvZhKbDvNIgqM9w1XHeVFGw/Fx59ZBhSBmCD14=;
-        fh=U8ZNhETrVsCu68yknX+Jy1ehkpw9LH5OUPXNjJcb4sM=;
-        b=fIQiqeexweZti2/sbdbq32D7AksEGk4RoLRNXWsQNkDDeJGGrvWKf30FwqASEWIjVR
-         b3ygJeJ7fikvQvtvCx4qzBReb+0cdNX7a30WD9X1zv7jwJhdRomCIZ8enTlTIyLx59aL
-         3HRNf9WUOzecMzQH5nAEbN7xgaW66VBs0xIyynrvN0PZ/EbeRPYFSbQUEE8b40C3o0Eb
-         XGC+H72qbLpnpr5q7NTATHVI5Ctbuzmq1bbviZeaPw4Fk26iHu8w2lWuKru7GH8o2PUp
-         YzzF3rkoypEwWm+ST7ZHgkRKqyOmFIKlRTsYeO3rZ1ZESGVXBXD4ou0MaGudDloYjkM0
-         hk2w==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1792022714; x=1792627514; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=W2i4ePvZhKbDvNIgqM9w1XHeVFGw/Fx59ZBhSBmCD14=;
-        b=mWySo1kZJjySESsIerkLouhQvMgeJlOcPLo4kmSTKcmhIlrwBBb/X/pUk1RWYmoGDp
-         bBf7WNBQXaDoEJLif/8btOjKVV8ICJb2TNJWKbKMFtdDNen0tkqiOPzSDKtjj6gI1nb1
-         MNcjDwUz9+QcU2/51hHUCSBsm025kFiD9+PVy6Qsv4oLaBCUZxW26ytHKIdREF620N8J
-         mfk4IBA8SdW9IniQLj3/IswEQlyLb+JLIDDr9kHZPeVnv6tAR5LGbvZbKhD63OZmq0DZ
-         y6p8Uumxz94nOBS7nCBSPS6jgZg14nTlH9+PxqqbJgQUrYuaeXOUdw3k2v8ubb5opXj1
-         BIeg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1792022714; x=1792627514;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=W2i4ePvZhKbDvNIgqM9w1XHeVFGw/Fx59ZBhSBmCD14=;
-        b=K45fV3uMH0FkR46C/lOPVD08KoTpLIsYGHWkhsguCxg7qqEFI5ZZOriCK3jEHGqRZ6
-         3BSKWpq9xIrP2GDSBeMBcrba8otL8WkKeI37zG3FYfIFVN8g+qjDXuxLsFLJIdRLICYQ
-         ANX0w4WxPrUZYEWIFx+PkfbCh3KSZyyfOMFWywFYZ/fziS59/1Q5vtTo1/UkaOS3bv4W
-         4cGPcuX6ZU0Av53Se2wTcAIOXthoLIMJtE/SqiJugHqqVovbXec0zWA+oA/BjFyBpyX0
-         VG6rCRXBy1eZZZGJhrjXp9APjfAfIJG3UQaAN2Yb0txSwTjRZl9HG052P+i2ZgzMczEX
-         SHmg==
-X-Forwarded-Encrypted: i=1; AKwUvBxSW2NgSDtjrHAonlSH1ey/Bv+H/zSekQNe+T5lwlIVz0p6TOkIogxwQF/VdbZoNbMySNd3KXxH93vm1ayUGfzQ@vger.kernel.org
-X-Gm-Message-State: AFq9FYL/BW6LNrWj9w/Lf5f34UCOsH0zdZ92VWSvwGQaJ5+RMG50yn53
-	kMQpPjOPa3HqlBJNEU8k+cIuFWtBd7xW5xM6ghKVFE4oh90KaamVyNxOFpcc76V70mFJXgRg0Tj
-	IBka//7XhH0rQxuOC7+Lhz0Zgft4vRrQ=
-X-Gm-Gg: AYBFou3p0K2dYpxKCCzDWTeu31i8k+gk1PsY1zeYGSIhX3EONpFLxS7sXCfk+vcgRr+
-	bILivSHMaOaq4IvP4NN+ECm6/BjhcyDY8dPoa7tVI6/AcwZmPLdApVO2LmBk4zvHNo6ojwmdFHk
-	24V2x22xPsUCE/SURNjs2hRs6+7sD37M9qfYkozClUYttMESrBgG0CH+XDLM/m/d1qT+f5a0M7N
-	GvCSErL3HK9HUf+uq4w5S+YU92o8BKv+6a54lcyeuXDxFk9L1eRkJmvKc8SRgP4vI3xJytkJDTd
-	HLhtdUfXANCDsqNcHjGYgoqv+FGj0+MdhM4bDSb9xuZ1aUbjgZd+C4hceFOd1l/6Bo40aqs=
-X-Received: by 2002:a05:622a:1a81:b0:535:a5fb:6454 with SMTP id
- d75a77b69052e-535a5fb6988mr279210731cf.63.1792022713852; Wed, 14 Oct 2026
- 17:05:13 -0700 (PDT)
+	s=arc-20240116; t=1792026726; c=relaxed/simple;
+	bh=kXq4F9rbSVC36D9bvx9blpUscET2bkZdrbZWHT0dY14=;
+	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=hSuUU4FZuXU+IJ1GYvpUUoD4n+1tzYpDcOaM6zKEylKdcSC6e05Sv2rJp95IZIZ6mdsP/o9Km3gsa8bdccVL74H8GGlRgpgTaYvAb9ooe1xRUuEmvhLKEw8UK3xO6LUbH/OX3D6YdfHs43M8m61ky/7hFIAjVDPVgJKXGnEtnQo=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=atomlin.com; spf=pass smtp.mailfrom=atomlin.com; arc=fail smtp.client-ip=52.101.101.88
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=atomlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=atomlin.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=KBPUqVg0P4fIPqKakU4e6Qv3ixNw4Fx46hUCppGZ+A+k2wQHEJbyvM8Mcw1nT20ukazA8SLIP8L/Izm15GNz9z8Y+BYyrcuPoQ+rRICdVrfJewqsKwOLBwIe0g8MZHF0m1PJ+mTxLwplcj+wJu+jtjJiI0RHY5MsKmLjk5SLpFMYC4h2uQskr9H0szzT/5QK/e7MsHobgXH3L2DUd6HY1LV1FlVNQ7+hn7QqO6qSfZ/lQ425ceWlVdnjlYz7ZOCeMF/P3tRXR3uaj4HCIPtk+Sel10b//xkApWGoPTQ1ZuYi2nLu2AOroqW2zbIvtsZFZn/y0XKRoR3+6T7bRlxtfg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001; h=From:Date:Subject:Message-ID:MIME-Version;
+ bh=JxRM6U4dqpJi+tSAPZgfzDvXhePJXYEyyocCTGROJ/I=;
+ b=Xe6XAR7VSaXArPGh8zGglPWCcIvguBZl3VAB33ps1zMhGTsWzNCt0ngmGp/W8TdPbbTo5jHHwCe76cVEy6Q/KLVSyR2hNx1EpI8ORlHeoTWLHEQ/4XO61N911AMujjDI38040X0adSLU1sxjL/Ev06at9hmTmzjUaKwmcDWBXl9lvbE3ijW/mqwq1F224uk5W5OX3yebzctKCvnRI36gU47rV97p8xnmDQDzrAhepyr/mfKuij9GdWqbSFJS+OdSFkxlq4ue2MU9OFKEPe+4vw6wjsiYGjnejYALklUxC4gadMM57SPLFzYz4katHN2bq0VYxi4CJRhYnajysu3hGw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=atomlin.com; dmarc=pass action=none header.from=atomlin.com;
+ dkim=pass header.d=atomlin.com; arc=none
+Authentication-Results: mx.microsoft.com 1; dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=atomlin.com;
+Received: from CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM (2603:10a6:400:183::5)
+ by CWXP123MB3927.GBRP123.PROD.OUTLOOK.COM (2603:10a6:400:ac::6) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.522.13; Thu, 15 Oct
+ 2026 01:12:00 +0000
+Received: from CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM
+ ([fe80::cec4:77ab:262e:d230]) by CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM
+ ([fe80::cec4:77ab:262e:d230%4]) with mapi id 15.21.0522.012; Thu, 15 Oct 2026
+ 01:11:59 +0000
+From: Aaron Tomlin <atomlin@atomlin.com>
+To: peterz@infradead.org,
+	mingo@redhat.com,
+	acme@kernel.org,
+	namhyung@kernel.org
+Cc: mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org,
+	irogers@google.com,
+	adrian.hunter@intel.com,
+	atomlin@atomlin.com,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH perf-tools-next v5 0/5] perf ftrace: Support inlined functions and display enhancements in function graph tracer
+Date: Wed, 14 Oct 2026 21:11:50 -0400
+Message-ID: <20261015011155.414667-1-atomlin@atomlin.com>
+X-Mailer: git-send-email 2.55.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: BN9P221CA0001.NAMP221.PROD.OUTLOOK.COM
+ (2603:10b6:408:10a::16) To CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM
+ (2603:10a6:400:183::5)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20261014151326.4142140-1-thepacketgeek@gmail.com> <CAP-5=fXtuEX9zJ0U-a62REgfAXG2z05XCi1f6HB4hhUEfT969w@mail.gmail.com>
-In-Reply-To: <CAP-5=fXtuEX9zJ0U-a62REgfAXG2z05XCi1f6HB4hhUEfT969w@mail.gmail.com>
-From: Matthew Wood <thepacketgeek@gmail.com>
-Date: Wed, 14 Oct 2026 17:05:00 -0700
-X-Gm-Features: AclHuK9tPEGCU4rCb0cbubedkPvYOaYtyB9MSzjYpq1TtLkAodyqOy6iHOW3PAQ
-Message-ID: <CADvopvbhQL3VAza4jybWq90fOm4n3QjGm_=MXruzxxXZPODgAA@mail.gmail.com>
-Subject: Re: [PATCH v1] perf machine: Don't unwind the arm64 leaf frame caller
- without symbols
-To: Ian Rogers <irogers@google.com>
-Cc: James Clark <james.clark@linaro.org>, Leo Yan <leo.yan@arm.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Puranjay Mohan <puranjay@kernel.org>, 
-	Breno Leitao <leitao@debian.org>, Arnaldo Carvalho de Melo <acme@redhat.com>, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CWLP123MB6607:EE_|CWXP123MB3927:EE_
+X-MS-Office365-Filtering-Correlation-Id: 14288966-f096-445e-317c-08df2a594fec
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|366016|376014|7416014|23010399003|56012099006|261009223027099003|5023799004|10067099003|18002099003|6133799003|3023799007;
+X-Microsoft-Antispam-Message-Info:
+	hl6GmX38JVhBzFGFPOdBgCuJENJ3InbbiPtRTf+tSF0fbJXwz9VgDWrjJ7dDZeYh8uLqk4Xd4YljJ7B09PKCu3ykbuaSaSODCHEsMvacjYnDjJMF8ccehr373zhTaZaL7Zt6M8dP1MAzB/WVL3i1OZpP/75lUdj5M5fildfeyZCUpldL+qKVsbeQ0AwvWRXKbLXt3+Ll0VUba/a8/b/AVhZzoMmf4qvlMFmnuNoHOYVLHG5XSy6PE38jhJrEObQfQ/AojmyfMc0ZZhGyG/YkgTNHsR5NcQRiLoBGquIDnnfkHD+AfE2cH5DLP8VDMzAdQtDhv+MY0D821xJdU/U0CJGuMCfzP5gWplhSs3vNv+TrenHWvgfDRUn3cZM34oBNna6O/sPtp10gC5hSOtjdfd1lpAlZJh/xmFMHsuebzsDsplLbrw/3CAliR2+zAYF2q4Ewl6MeN+MuKnyAds4VwYXbh+R99hQ7mWFpF0IuWTaeMz/gocK6GdwWa9i493uBsvAp5JHRAukI8iSv+Zw64p4euUvFMUixdfwuXG2aF5hlOPk5sz1D8ZoYkIXK4k2L9QNgWqS36El1Calp3RSF/rKfWhjxyVJXbpUIZOu3FlVQhQxczESOqOf/H0Zkw1sB
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(7416014)(23010399003)(56012099006)(261009223027099003)(5023799004)(10067099003)(18002099003)(6133799003)(3023799007);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?sMeaLBgDgYHBlwV3bnG7YHGF2aOQ1joysimIwVRR8/YR0g2SIb+hAGArF1dA?=
+ =?us-ascii?Q?YgB0dci2mNojC0VC5CkfFsPvLrpbjG8KaPPI+ptT4E6dieuwxmcNdOZWUgDN?=
+ =?us-ascii?Q?GnqkKL2Ozjjbml9YJYWlVM1bx31iEK9b5SW4ySYXpq04iSCTQZfOVE1+x/7Q?=
+ =?us-ascii?Q?ENrr014xz4gKPaw9MHwFlpyLoejM1pdnbXyso8zclP83DjYBOnhgAFkvAJWh?=
+ =?us-ascii?Q?SFElCr4tk2KDHP+MnCEiVCV9sbawlQB3D79fpeagIPJ/v3FqoBbl1ufOpCLc?=
+ =?us-ascii?Q?PZuFyCNaU0Kr31aawlJoye5IjK8aKtAjlBa5i3O4vJqmBRGYa8kS9hBEHGot?=
+ =?us-ascii?Q?w6ui9RJC5NITpE6ofpYHxfcBFCTJJIKQRSdq1F+vipQYK9TxyVEtFCiPtR20?=
+ =?us-ascii?Q?1/nPAYl4jVaYyZfVJ+DGFwmsyGLnxgpN6sBoKwtbuJlKjqSRaCyg8d2AilCp?=
+ =?us-ascii?Q?sw82AirmpfnDf6abKsUQRq+yyt6el7mUIXC7KR23zRfqbgi+orGCLf9Qrq0G?=
+ =?us-ascii?Q?gRH2JFov+zOiGUz5TIMrHtxsOAvseHhsjqdKQp3ashb4+CBvuMHOy458BZZn?=
+ =?us-ascii?Q?/aGjqA1mqncZesHHkRmNnk/qp2L9agGBQ15c1ih1856KmdwxV4SezCa3dpKd?=
+ =?us-ascii?Q?jmuY6mwgAzMoStQpwmHWUbYudkqFBgCxiXeefV4+8IXWAseWhWqTrnEiVbWD?=
+ =?us-ascii?Q?FcZzbJDLjweOw5lxsYKCxbQaQOlDdjFXcM4e5g+TXO86gNqcICspeHmboyTH?=
+ =?us-ascii?Q?WS+o82bLE3Y83LDwoLaArG0kH9kQ0Apz9Sm9x4yh1EmL9FNUhOCJKW/aGxYT?=
+ =?us-ascii?Q?admul2uv+KgczzwEt+Uv8og4aZfQ7fbeUdk7wV2lmXs500l9AQYyiUvP3xlL?=
+ =?us-ascii?Q?/aCFz7mdodD4YMTqdF4F5aBdKxrZsUUt/1XFfN0RYegmnvaXh321AIbqCUzB?=
+ =?us-ascii?Q?nGfdxkyLMRwcmllkQoTxPbj0PlzNcJKP75C88oqICrXneJOm2ZvumXmKOFmz?=
+ =?us-ascii?Q?JsLTmjvlzu+rChMKNRLvg8iwLzxN6KqEykWJzdgg6kPXR8XoAuAS0n12UM/+?=
+ =?us-ascii?Q?VCcUokhlKCMpyGhtfjZ+JQ9aqMa3C7MOAnYC48rpEbR09dZIrLMApPheA7Qe?=
+ =?us-ascii?Q?jOwRUgPe0zcOJyQuu7E1qjjAHtpeZlSBN92I9U547WJR4htlmqsXmJ0cy/mU?=
+ =?us-ascii?Q?YVFC/m94Dr0AHScvqPG1PiKJFscpG05XxxgLxB+MRCe5VdR7oAKlz/qh8lyC?=
+ =?us-ascii?Q?h+8VG/q/o4c7kdN+84hOgR+uZXXEip6+ZxjARnyKSpIaqzxXkHunduXHAXMB?=
+ =?us-ascii?Q?1X5ZSDsQirw00JCagognvfT1J6JBvdo2CJLuJkElHzo3IVhaXxIkG0p7fH3t?=
+ =?us-ascii?Q?1yXfOAlf+b5Fwrz+NsOqx52N4jIvLnZdi5l3615OKlKgsTCiAsyNxVuJKdyp?=
+ =?us-ascii?Q?gxaKhcWWRBTsDG3yS/12kADRoWNrSYrzHCWevHTtUqHovoKl9cxDfI2vB1lW?=
+ =?us-ascii?Q?cBsjNq3x04bSBdJhRgN/YYpkiJ53KLx+O/mC4BPqpht+3PNi1KD0WBeM8t3V?=
+ =?us-ascii?Q?JibqvRQVhlN/7TK12YWWihOvpTeRqN2SI+fhOpdMLtVF64NjMA/qJFXWn4JQ?=
+ =?us-ascii?Q?A9TcpichJAtJynyuLLjoZa7e1IXsvDtvgMjm8PJ6ujz8UNqUjDHieIVDWBy9?=
+ =?us-ascii?Q?MhIWq9NEe2QNeVA3+MkGfGeXITeQGnXJ1knf75bKSTZx7MfcjV/j3e9+/I4o?=
+ =?us-ascii?Q?/DEgdo66Ow=3D=3D?=
+X-OriginatorOrg: atomlin.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 14288966-f096-445e-317c-08df2a594fec
+X-MS-Exchange-CrossTenant-AuthSource: CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Oct 2026 01:11:59.3390
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: e6a32402-7d7b-4830-9a2b-76945bbbcb57
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: DEQz0k8UfIb4E4z7sMR7mB8v1+Vf50xKSS5eqdj0Sk2XyWDP0JxlCbuqu7c9/eDCBR69z6bJP8Mkq1YlVlxY/Q==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CWXP123MB3927
 
-On Wed, Oct 14, 2026 at 2:03=E2=80=AFPM Ian Rogers <irogers@google.com> wro=
-te:
->
-> Hi Matthew, I'm not sure if this is a serious patch or a bug report
-> about the slowness of DSO marking. Broadly DSO marking is known to be
-> slow and many perf tests run with -B and -N for this reason. I believe
-> the intent behind DSO marking as a default is to ensure that perf
-> provides the best profiling experience. This comes at a cost, but this
-> fix looks like it will break things because IPs will be lost.
->
+The Linux kernel's function graph tracer operates at the machine
+instruction level via compiler instrumentation
+(-fpatchable-function-entry), recording entry and return events for
+physical function calls. Consequently, functions inlined by the compiler
+are invisible in the resulting call graph, as no discrete call or return
+instructions are emitted for them. While technically expected, this
+omission frequently obscures the logical execution flow when analysing
+kernel subsystems heavily reliant upon inlining (such as the scheduler,
+memory management, locking primitives, and RCU).
 
-Hi Ian,
+When the kernel is configured with CONFIG_FUNCTION_GRAPH_RETADDR=y, the
+funcgraph-retaddr trace option records the caller's return address on each
+function entry, manifested in the trace stream as a comment
+(e.g. /* <-wake_up_new_task+0x1d1/0x3e0 */). By interrogating DWARF debug
+information from the kernel image (vmlinux) utilising libdw, perf ftrace
+resolves this return address to its inlined callchain and synthesises the
+intermediate inlined frames directly into the streamed call graph.
 
-Thanks for looking. It is definitely meant as an attempted fix. On a
-128-CPU arm64 host, 'perf record -a -e cycles:u --call-graph fp -- sleep 2'
-never finishes writing perf.data, and I'm trying to save some unnecessary w=
-ork
-to solve that. perf sits in __cxa_demangle() on one C++ symbol, with heap
-growing by over 1GB every 5 seconds.
+This patch series addresses these challenges through five focused commits:
 
-You're right about the lost IPs, thanks for mentioning. v1 drops the leaf
-frame caller for symbols=3Dfalse so a DSO that is only reached through that
-frame wouldn't be marked.
+    1.  Stack frame optimisation in __cmd_ftrace()
 
-> Trying to look a little more at the ARM64 performance problem, I see
-> that we're trying to unwind 2 frames:
-> https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.=
-git/tree/tools/perf/util/arm64-frame-pointer-unwind-support.c?h=3Dperf-tool=
-s-next#n70
-> but often just 1 is read. For libunwind the 1 frame case has a special ca=
-se:
-> https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.=
-git/tree/tools/perf/util/unwind-libunwind.c?h=3Dperf-tools-next#n671
-> I wonder if we could replicate the 1 frame case with libdw to avoid
-> processing the DSO, and update the caller to be:
-> ```
-> ret =3D unwind__get_entries(add_entry, &entries, thread, sample,
-> callchain_param.order =3D=3D ORDER_CALLER ? 1 : 2, true);
-> ```
+        Replaces the 4096-byte stack array in __cmd_ftrace() with
+        dynamic heap allocation alongside struct strbuf streaming,
+        reducing the stack frame footprint by over 96% (down to
+        ~160 bytes) whilst ensuring complete line-delimited records,
+        explicit NUL termination, and robust error unwind and EOF
+        handling.
 
-I looked at this but I don't think it would avoid the hang, unless I'm
-misreading the code:
+    2.  Return address comment filtering
 
-- The cost is in loading symbols, not in the DWARF unwind itself.
-  libunwind's 1 frame case still goes through entry(), which calls
-  thread__find_symbol(). libdw's __report_module() does the same for
-  every frame. Either way, the DSO's symbol table gets loaded and every
-  name in it demangled.
+        Introduces ftrace_parse_retaddr() and ftrace_filter_retaddr()
+        with --filter-retaddr and --graph-opts filter-retaddr to strip
+        caller comments from trace output, accompanied by an initial
+        unit test suite in tools/perf/tests/ftrace.c.
 
-- callchain_param.order defaults to ORDER_CALLEE so process_buildids()
-  would still ask for 2 frames.
+    3.  Inlined function call graph reconstruction
 
-- The 1 frame case returns only the sample PC. That's the IP we already
-  have, not its caller, and get_leaf_frame_caller_aarch64() needs
-  entries.length =3D=3D 2. So in caller order I think it would stop
-  recovering the leaf frame caller altogether.
+        Introduces --inline and -k/--vmlinux, dynamically synthesising
+        inlined frames marked with /* (inline) */. Correctly matches
+        bare closing braces when funcgraph-tail is disabled, clamps stack
+        depth to prevent indentation drift, and expands the automated test
+        suite to verify inline resolution, comment filtering, and stack
+        saturation recovery.
 
-I'm working on and testing a v2 that instead keeps the unwind and frames
-as they are, but passes a symbols flag down to unwind__get_entries().
-When it's false, libdw and libunwind look up only the map of each frame.
-The leaf frame code only uses the addresses, so it never asks for symbols,
-and thread__resolve_callchain_unwind() passes its symbols argument through.
-That also removes the "Not resolving symbols with an unwinder isn't
-currently supported" limitation for 'perf inject' with DWARF
-callchains.
+    4.  Execution duration suppression
 
-On the arm64 host, the 'perf record -a' command above now finishes. To
-check that no IPs are lost, I used a small program where one DSO can
-only be reached through the leaf frame caller:
+        Introduces --graph-opts noduration (accepting noduration=[0|1])
+        to toggle the kernel's funcgraph-duration tracing option,
+        omitting the duration column when the user is focused purely on
+        call graph topology and inlined hierarchy. Rejects noduration
+        when invoked under 'perf ftrace profile'.
 
-  app -> libmid.so:mid() -> libleaf.so:leaf_spin()
+    5.  Extraneous function filtering in function graph tracer
 
-leaf_spin() has no frame record, so the kernel's frame pointer chain
-goes straight from leaf_spin() to main(). No samples land in mid()
-itself, so libmid.so is only marked hit if the leaf frame caller is
-kept. Running 'perf record --call-graph fp' without -N and checking
-which DSOs end up in the build-id cache:
+        Introduces userspace call graph filtering when targeted
+        tracing (-G or --graph-funcs) is active. Suppresses transient
+        unrelated entries arriving before filter activation as well
+        as detached callee trees (such as ring-buffer wakeups)
+        originating outside the target hierarchy.
 
-  unpatched: libmid.so cached
-  v1:        libmid.so missing
-  v2:        libmid.so cached
+Synthesised inlined functions are rendered with an explicit /* (inline) */
+annotation at both entry and exit:
 
-'perf script' output is identical between the unpatched perf and v2,
-with mid() recovered in the same 2053 samples.
+    # tracer: function_graph
+    #
+    # CPU               FUNCTION CALLS
+    # |                 |   |   |   |
+     3) activate_task() {
+     3)   enqueue_task() {
+     3)     psi_enqueue() { /* (inline) */
+     3)       arch_static_branch_jump() { /* (inline) */
+     3)         enqueue_task_fair() {
+     3)           enqueue_hierarchy() { /* (inline) */
+     3)             update_curr();
+     3)             enqueue_entity() {
+     3)               account_entity_enqueue() { /* (inline) */
+     3)                 account_llc_enqueue();
+     3)               } /* account_entity_enqueue (inline) */
+     3)             }
+     3)           } /* enqueue_hierarchy (inline) */
+     3)           place_entity() {
+     3)             avg_vruntime();
+     3)           }
+     3)           __enqueue_entity();
+     3)           dl_server_start();
+     3)         }
+     3)       } /* arch_static_branch_jump (inline) */
+     3)     } /* psi_enqueue (inline) */
+     3)     sched_info_enqueue() { /* (inline) */
+     3)       psi_task_change() {
+     3)         psi_write_begin() { /* (inline) */
+     3)           psi_flags_change();
+     3)         } /* psi_write_begin (inline) */
+     3)         psi_group_change() {
+     3)           record_times();
+     3)         }
+     3)       }
+     3)     } /* sched_info_enqueue (inline) */
+     3)   }
+     3) }
 
-On x86 with libdw, 'perf inject -b' on a --call-graph dwarf profile goes
-from 0.24s and 58.5MB max RSS to 0.04s and 15.5MB, with the same
-build-ids injected. 'perf report' output and the dwarf unwind test are
-unchanged.
+Changes since v4:
 
-I'll send v2 shortly.
+ - Handled non-fatal EAGAIN, EWOULDBLOCK, and EINTR in __cmd_ftrace()
+   polling and draining loops to prevent premature session termination on
+   non-blocking reads or signal interruptions
 
-Thanks,
-Matthew
+ - Eliminated an unused local variable endptr in ftrace_parse_retaddr() by
+   passing NULL to strtoull()
+
+ - Prevented stack buffer overflows in make_blank_prefix() by clamping the
+   blanking loop bounds and end pointer to the destination buffer length
+   when processing trace records with exceptionally long prefixes
+
+ - Tracked call stack saturation with overflow_depth to prevent untracked
+   function exits with bare closing braces from prematurely popping tracked
+   frames from the parser stack on deep call chains exceeding
+   FTRACE_MAX_STACK
+
+ - Ensured stale non-inlined callee frames resulting from dropped function
+   exits do not block inactive inlined frames from being closed upon
+   subsequent entries by unwinding the stack down to caller_idx + 1 +
+   common
+
+ - Fixed filter state not resetting for targeted leaf calls when --inline
+   is active: synthesised inline frames inflated cs->depth beyond
+   cs->target_root_depth, causing subsequent sibling functions to be
+   falsely classified as detached orphans and bypassing inline unwinding;
+   resolved by tracking target root entries (is_target_root), explicitly
+   unwinding all synthesised inlines, and resetting filter state upon leaf
+   completion
+
+ - Expanded unit test coverage to verify recovery across dropped exit
+   events and bare closing braces, and to verify that targeted leaf calls
+   with synthesised inlined frames properly close inlines and reset filter
+   state
+
+ - Link to v4: https://lore.kernel.org/lkml/20261014161457.373253-1-atomlin@atomlin.com/
+
+Changes since v3:
+
+ - Explicitly rejected the noduration option when invoked under the profile
+   subcommand, since profiling inherently requires function duration to
+   compute timing statistics
+
+ - Fixed make_blank_prefix() clobbering the comm-pid column in verbose mode
+   by searching backwards for the preceding "|" delimiter, and returning
+   early when graph_noduration is active
+
+ - Fixed filter state not resetting for targeted leaf calls at non-zero
+   call stack depths by checking cs->depth <= cs->target_root_depth and
+   clearing cs->target_root_depth, preventing subsequent non-targeted
+   sibling functions within the parent frame from leaking into trace output
+
+ - Expanded unit test coverage to verify comm-pid preservation under
+   verbose and verbose-noduration inline modes, and to verify that targeted
+   leaf calls at depth > 0 properly reset the target filter state.
+
+ - Link to v3: https://lore.kernel.org/lkml/20261012003016.263063-1-atomlin@atomlin.com/
+
+Changes since v2:
+
+ - Expanded the series from 4 to 5 patches by adding a dedicated commit
+   ("perf ftrace: Filter extraneous functions in function graph tracer") to
+   enforce strict target callgraph boundaries when -G or --graph-funcs is
+   specified
+  
+ - Suppressed unrelated top-level functions that leak through the transient
+   tracefs filter initialisation window before RCU synchronisation
+   completes
+  
+ - Filtered detached/orphan calls from appearing as nested children within
+   the target graph by validating caller return addresses against the
+   active target stack
+  
+ - Tracked nested orphan scope depth (cs->orphan_depth) to cleanly suppress
+   child calls and closing delimiters of detached subtrees without
+   desynchronising the target stack
+  
+ - Added automated unit test coverage in tools/perf/tests/ftrace.c
+   (test_graph_target_filter()) validating top-level suppression (both with
+   and without --inline) and detached orphan wakeup suppression
+
+ - Link to v2: https://lore.kernel.org/lkml/20261006232756.65620-1-atomlin@atomlin.com/
+
+Changes since v1:
+
+ - Modularised the implementation into a 4-patch bisectable series rather
+   than a monolithic commit
+
+ - Resolved potential infinite loop on poll() upon trace_pipe EOF
+
+ - Fixed stuck call stack frames when funcgraph-tail is disabled by
+   supporting bare closing delimiters matching LIFO stack frames
+
+ - Prevented unbounded indentation growth on deep call trees by clamping
+   inline expansion and synchronising cs->inlined_depth to frames
+   successfully pushed onto cs->stack
+
+ - Added dedicated unit tests covering bare closing braces and stack
+   saturation recovery
+
+ - Refined option documentation in perf-ftrace.txt
+
+ - Link to v1: https://lore.kernel.org/lkml/20261005211518.26786-1-atomlin@atomlin.com/
+
+Aaron Tomlin (5):
+  perf ftrace: Optimise __cmd_ftrace() stack frame with strbuf streaming
+  perf ftrace: Support filtering return address comments
+  perf ftrace: Support display of inlined functions in function graph
+    tracer
+  perf ftrace: Support omitting execution duration in function graph
+    tracer
+  perf ftrace: Filter extraneous functions in function graph tracer
+
+ tools/perf/Documentation/perf-ftrace.txt |  20 +
+ tools/perf/builtin-ftrace.c              | 156 +++-
+ tools/perf/tests/Build                   |   1 +
+ tools/perf/tests/builtin-test.c          |   1 +
+ tools/perf/tests/ftrace.c                | 837 ++++++++++++++++++++
+ tools/perf/tests/tests.h                 |   1 +
+ tools/perf/util/Build                    |   1 +
+ tools/perf/util/ftrace.c                 | 930 +++++++++++++++++++++++
+ tools/perf/util/ftrace.h                 |  17 +
+ 9 files changed, 1948 insertions(+), 16 deletions(-)
+ create mode 100644 tools/perf/tests/ftrace.c
+ create mode 100644 tools/perf/util/ftrace.c
+
+-- 
+2.55.0
+
