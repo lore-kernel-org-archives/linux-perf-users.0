@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 459EF457E4F;
-	Fri, 16 Oct 2026 21:21:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09DAC44470C;
+	Fri, 16 Oct 2026 21:21:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792185700; cv=none; b=qz8Ox0rpSNvqFTT8UqpAeiEESPGab8GSYZGEBtCrbB8D5S97vow6th0Qems7DVsBvXUFYNmCOkVrhMrhGChGsQNJRDcN1ATylXjhz25CcxRXlBbt5dfhLTEWShEQDtEnPTPwEdvl+vhN5QUiOB71/E3q0BHGZcbTrs4J6EwzK6A=
+	t=1792185704; cv=none; b=suODhe4SvvD+X/4/X9aIFV/vyQ/GwVJk0Dvx/I/dfGCPoZLmKax7ZcyMQ/m9ScZvCo9RznZ/UeWxYMG75aROz5JO/7Id1xQqy1POiWLvRfZrdSRquf+Y1YH2bG8pCT9ouazSARYMM1oJgud1Tuoc4ZFEHsM4zi3pWY5asJkCPM0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792185700; c=relaxed/simple;
-	bh=qNHb1CLjTtMHqgMCXUwp0cCKIIKt9WNSlisl2evFjMA=;
+	s=arc-20240116; t=1792185704; c=relaxed/simple;
+	bh=LRq8J5VI/c5F4mdl9yO6INb5fMccOMFyxeFMLCWierg=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=SkgTMbPzo5SRYCLvUaOg3kJ9UnPb7oiDh0ewaKbj6mAwsY+ewAF9vhsyg1gn4S4PyefviDKt0TU6nA7yGtaB5ppFO8wHyk3MFJeRdNUwC7vaseeRYvp0bcIvirzUKnpyDNwz63R1RFxANVjjN1TOJFQ2soYFQ3xSU/ddizHNIAg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UymbWPdv; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version; b=Mm/wFsH5TW+vM67i1tvVs0kL7lE1K8mOgwIo+qsPXT21gaXEs/elBnJs3AOHFiv/6MHDlHHdHpztcqWex/8o42ij9G0UjhiLMNt9g4GenUKVohKOsJHxS+Md4+EzYyNGPVkWu5H2PwK7xKcFj/bcx7BqZRsUMHg1P2ykfNj8wkI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hl+J3gmh; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UymbWPdv"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7C6AA1F000C5;
-	Fri, 16 Oct 2026 21:21:36 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hl+J3gmh"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A57B91F000C4;
+	Fri, 16 Oct 2026 21:21:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1792185699;
-	bh=eXXSCiITuXuvwb3zfcXD2NXYropFwuSwM81SLh+Zg28=;
+	s=k20260515; t=1792185702;
+	bh=92DCjrzrW+PZSmkPKLfzePb6H6t+YqDZbYECatKavO8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=UymbWPdvv+9WzmNaZulbZG/LBbWY5IQ9OMXNeBOsQISJ02UxKlTo8yw2URYV+qqzD
-	 ZE8gPV85wc71VxkoqejvMUtZ/nJGg8EMdlf6eDlPYlJ8oEr8mptJ9xVJEJYbhJDt6f
-	 XC6uJ1ONPMCpR3vJmjtffWwOkvZuY3RcmYuumAPfCNvf7CvGfdLM0Wc0A/V18QfWUG
-	 dnLgWjSuE8yxIYbZCJIxuwjzJzWqYTjv09WIUyNJT6Ch2p/h/LMdveuXlNFbUvKW1+
-	 J3kccY/9FXRZUp3xRsMwDCPcnwsoIhREOMGyJRF8dN13ivaNBSkqb7F2kV2xqgZiCf
-	 Gqkx2zUyR96GQ==
+	b=hl+J3gmh4rwaWVZ1f/17Jk1JJ1SU78I0R6YEbETkhAVFuEJYB0aD6JkaNWa7JxW62
+	 XZOiuaKIPr7e7P2Xe4W6Cwbc6QklHgo/9JP3V87kr0glcPieVPO72KUzPr1/tIZaeh
+	 v/13vYp8ZNV/bDwHJUD2cv/0p4zyGKNbuodNM2/TG8R8RM0gxmwHQqNjW5KL3Z8s1R
+	 gcJQAuilNKbnYeBN7lg5qL5i2ISMoVHYcWA7GaIksSREilHZx8p822xh8jkMhsB6R1
+	 aZkfzVnr/0zo+s+hgQmbGnJMg7JCcAfUuWKbkifZtoiyl71SEi881LDMpYVESoZ2d+
+	 UdZjKr+58NVRQ==
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Namhyung Kim <namhyung@kernel.org>
 Cc: Ingo Molnar <mingo@kernel.org>,
@@ -37,10 +37,12 @@ Cc: Ingo Molnar <mingo@kernel.org>,
 	Clark Williams <williams@redhat.com>,
 	linux-kernel@vger.kernel.org,
 	linux-perf-users@vger.kernel.org,
-	Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH v4 09/21] perf evsel: Don't dump probe events to PERF_TEST_ATTR
-Date: Fri, 16 Oct 2026 18:20:50 -0300
-Message-ID: <20261016212102.76550-10-acme@kernel.org>
+	Arnaldo Carvalho de Melo <acme@redhat.com>,
+	Sashiko <sashiko-bot@kernel.org>,
+	stable@vger.kernel.org
+Subject: [PATCH v4 10/21] perf evsel: Close the fds opened so far when disabling missing features
+Date: Fri, 16 Oct 2026 18:20:51 -0300
+Message-ID: <20261016212102.76550-11-acme@kernel.org>
 X-Mailer: git-send-email 2.56.0
 In-Reply-To: <20261016212102.76550-1-acme@kernel.org>
 References: <20261016212102.76550-1-acme@kernel.org>
@@ -54,101 +56,82 @@ Content-Transfer-Encoding: 8bit
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-Events opened just to ask if they are supported, i.e. the ones in
-is_event_supported() and is_libpfm_event_supported(), go through the
-regular evsel__open() path and thus end up in the event files written to
-$PERF_TEST_ATTR, with everything but type, config and disabled zeroed:
+evsel__open_cpu() opens the events one by one and, when an open fails
+with EINVAL and evsel__detect_missing_features() has a feature to leave
+out, goes back to fallback_missing_features to open them all again from
+start_cpu_map_idx, without closing what the abandoned attempt opened:
+the fd of every CPU or thread that was opened before the failing one is
+overwritten in the FD() array, leaking it.
 
-  [event-0-38654705664-3]
-  fd=3
-  cpu=-1
-  pid=0
-  type=0
-  size=0
-  config=38654705664
-  sample_type=0
-  ...
+Close them first, the same way out_close does when returning an error,
+leaving the entries at -1 for the retry.
 
-which 'perf test attr' then takes as one of the events that were asked
-for, failing with:
-
-  expected cpu=0, got -1
-  expected size=176, got 0
-  expected sample_type=65927, got 0
-  expected freq=1, got 0
-
-This started showing up when there is more than one core PMU, as
-perf_pmus__supports_extended_type() probes one such event per core PMU,
-but these records were always bogus: nothing asked for them.
-
-Flag those evsels as support probes, keeping the name clear of the
-kprobe/uprobe meaning probe already has in evsel, and leave them out of
-the dump.
-
-Reported-by: Namhyung Kim <namhyung@kernel.org>
-Link: https://lore.kernel.org/linux-perf-users/asWQvXRdqp_RK85c@google.com/
+Fixes: af954f76eea5 ("perf tools: Check fallback error and order")
+Reported-by: Sashiko <sashiko-bot@kernel.org>
+Closes: https://lore.kernel.org/r/sashiko-outbox-173532@kernel.org
+Cc: stable@vger.kernel.org
 Assisted-by: LLM
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/evsel.c        | 6 +++++-
- tools/perf/util/evsel.h        | 1 +
- tools/perf/util/pfm.c          | 1 +
- tools/perf/util/print-events.c | 1 +
- 4 files changed, 8 insertions(+), 1 deletion(-)
+ tools/perf/util/evsel.c | 30 +++++++++++++++++++++---------
+ 1 file changed, 21 insertions(+), 9 deletions(-)
 
 diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index e61f309e93dccc7f..59318fef03cb17ff 100644
+index 59318fef03cb17ff..d060fca8090f6e26 100644
 --- a/tools/perf/util/evsel.c
 +++ b/tools/perf/util/evsel.c
-@@ -3104,7 +3104,11 @@ static int evsel__open_cpu(struct evsel *evsel, struct perf_cpu_map *cpus,
+@@ -3005,6 +3005,19 @@ static bool evsel__detect_missing_features(struct evsel *evsel, struct perf_cpu
+ 	return false;
+ }
  
- 			bpf_counter__install_pe(evsel, idx, fd);
++static void evsel__close_fds(struct evsel *evsel, int start_cpu_map_idx,
++			     int cpu_map_idx, int thread, int nthreads)
++{
++	do {
++		while (--thread >= 0) {
++			if (FD(evsel, cpu_map_idx, thread) >= 0)
++				close(FD(evsel, cpu_map_idx, thread));
++			FD(evsel, cpu_map_idx, thread) = -1;
++		}
++		thread = nthreads;
++	} while (--cpu_map_idx >= start_cpu_map_idx);
++}
++
+ static int evsel__open_cpu(struct evsel *evsel, struct perf_cpu_map *cpus,
+ 		struct perf_thread_map *threads,
+ 		int start_cpu_map_idx, int end_cpu_map_idx)
+@@ -3150,8 +3163,14 @@ static int evsel__open_cpu(struct evsel *evsel, struct perf_cpu_map *cpus,
+ 	if (err == -EMFILE && rlimit__increase_nofile(&set_rlimit))
+ 		goto retry_open;
  
--			if (unlikely(test_attr__enabled())) {
-+			/*
-+			 * Support probes aren't what was asked for, leave them
-+			 * out of the PERF_TEST_ATTR dump.
-+			 */
-+			if (unlikely(test_attr__enabled() && !evsel->support_probe)) {
- 				test_attr__open(&evsel->core.attr, pid, cpu,
- 						fd, group_fd, evsel->open_flags);
- 			}
-diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
-index 174f3414fd3cfa0d..53f3641b66e18674 100644
---- a/tools/perf/util/evsel.h
-+++ b/tools/perf/util/evsel.h
-@@ -120,6 +120,7 @@ struct evsel {
- 	u64			db_id;
- 	bool			uniquified_name;
- 	bool 			supported;
-+	bool			support_probe;	/* Opened just to check for support. */
- 	bool 			needs_swap;
- 	bool 			disabled;
- 	bool			no_aux_samples;
-diff --git a/tools/perf/util/pfm.c b/tools/perf/util/pfm.c
-index f80d6b0df47ae64d..ad9bc481da70604e 100644
---- a/tools/perf/util/pfm.c
-+++ b/tools/perf/util/pfm.c
-@@ -141,6 +141,7 @@ static bool is_libpfm_event_supported(const char *name, struct perf_cpu_map *cpu
- 		return false;
+-	if (err == -EINVAL && evsel__detect_missing_features(evsel, cpu))
++	if (err == -EINVAL && evsel__detect_missing_features(evsel, cpu)) {
++		/*
++		 * The restart opens the events again, so close what this
++		 * attempt opened before its entries are overwritten.
++		 */
++		evsel__close_fds(evsel, start_cpu_map_idx, idx, thread, nthreads);
+ 		goto fallback_missing_features;
++	}
  
- 	evsel->is_libpfm_event = true;
-+	evsel->support_probe = true;
+ 	if (evsel__precise_ip_fallback(evsel))
+ 		goto retry_open;
+@@ -3161,14 +3180,7 @@ static int evsel__open_cpu(struct evsel *evsel, struct perf_cpu_map *cpus,
+ 		threads->err_thread = thread;
  
- 	ret = evsel__open(evsel, cpus, threads);
- 	if (ret == -EACCES) {
-diff --git a/tools/perf/util/print-events.c b/tools/perf/util/print-events.c
-index 0242243681b6b6f9..77428d9e73c4f1b6 100644
---- a/tools/perf/util/print-events.c
-+++ b/tools/perf/util/print-events.c
-@@ -147,6 +147,7 @@ bool is_event_supported(u8 type, u64 config)
- 
- 	evsel = evsel__new(&attr);
- 	if (evsel) {
-+		evsel->support_probe = true;
- 		ret = evsel__open(evsel, NULL, tmap) >= 0;
- 
- 		if (!ret) {
+ 	old_errno = errno;
+-	do {
+-		while (--thread >= 0) {
+-			if (FD(evsel, idx, thread) >= 0)
+-				close(FD(evsel, idx, thread));
+-			FD(evsel, idx, thread) = -1;
+-		}
+-		thread = nthreads;
+-	} while (--idx >= start_cpu_map_idx);
++	evsel__close_fds(evsel, start_cpu_map_idx, idx, thread, nthreads);
+ 	errno = old_errno;
+ out:
+ 	if (err)
 -- 
 2.55.0
 
