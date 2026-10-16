@@ -1,129 +1,87 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E74E25B0BD;
-	Fri, 16 Oct 2026 00:21:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF77F22D7A1
+	for <linux-perf-users@vger.kernel.org>; Fri, 16 Oct 2026 00:21:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792110081; cv=none; b=Eheu1l6mfHlLgtvg8UQpuG/BC/v6ieWgDJrUGMcqwMPYhDWXtb7148NPGCEzkaE82iRUzXnN6prf7B58aisRr9SttVDQrf+oE7M8AABEtTm4ruTnxLvq6cpKWC56y97Jdb6jae04ondhguxNORj4cPglu5yHoXo0Kmzyjg21c6A=
+	t=1792110113; cv=none; b=N4cIOQHlk7r+5+FbCHsOM78erytruDkAaFYSlwCvTJJ14D8kVxsrcXs+APFhhoWpsj10PlZ5oUar2a7HqrluyhuW8zkfqIFoMzELbg8Yu/NYZGeng6ll1IZSg5Y5msvceP3uMvQhL7dKgUhsbWcXklBXWR8sBVeZZT6Dhc9YDD0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792110081; c=relaxed/simple;
-	bh=0N7/MGPm/18++p920/0/dH+k0mxW5aoBjt1LcCYGDhs=;
-	h=Content-Type:MIME-Version:Message-Id:In-Reply-To:References:
-	 Subject:From:To:Cc:Date; b=Nz8s7Z5Omejt9oQ31GqYoSxlkvSGfI2U85gKp7iVafAwn7L0bfixSzhdVIR68QJuwEtKNzy5HRf3Tss4xcs4obGZHUTUzet+U1AtThD7nZQuf4h/T3YfWJfVhAdZ1iRRKKgjpw0pHgiJJUI1TebM8JltMCWrKtLzlyxjVn5LdnA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JJk+V2GR; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1792110113; c=relaxed/simple;
+	bh=q/PbyuYkzkKDJXPM+oyNjj8jp/3hyl0nyeK3my19XSQ=;
+	h=Message-ID:From:Subject:To:Cc:In-Reply-To:References:Content-Type:
+	 Date; b=fmhu+xBSQyDHNL1+04blF5rVXdHyZN8YmwsEMW5JJHa/eHMk+buqqONiHVAs5gq13Xh81G6mSwpVfAuG8fBnoWb3ZsoPh3w3TyzdK9l1IMraHCdvh+6qMXzOb7BaUZVmemhPsNeN5GYDnBXQtPnKaB3mLucvXyrOzhkyiKSqj/k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SHtNcrrL; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JJk+V2GR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 40E621F000C4;
-	Fri, 16 Oct 2026 00:21:17 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SHtNcrrL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7DBD11F000C4;
+	Fri, 16 Oct 2026 00:21:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1792110079;
-	bh=XeyTc9n/9HfHLJ3yCVcyJ8dfyeOw0NBSEeSIkVV0MyM=;
-	h=In-Reply-To:References:Subject:From:To:Cc:Date;
-	b=JJk+V2GR2y9HWcercu95PciZJHqFaDUCh/wNqcROeKls+DBSpLV5gSiwMTZmPDyAC
-	 uv+R1IHvxd7lQtv2/BPSAybUXr4XiBrEKgmGb8Jlu33wTUUFd2WcAXknG2g6dgZOx9
-	 AftMVC0bwVp/p9Vx/iAcW0JS9VvR2AmJnH52wB3uVEdLltRFrabFVcBN0WthrvugJE
-	 Uizqz11W+CiTTTkmhYoyvUUm2zdABjhE8EYUu567Fc6W3+QZjmxyibusAxQ2xYBXY7
-	 foHIqPT8P0cosHZZuUz9YWC//8FC5uMqyOlaj42LMufigp80czSQV56329h2NhRtGN
-	 mMuDRlH1AmUNg==
-Content-Type: multipart/mixed; boundary="===============2096954798088473371=="
+	s=k20260515; t=1792110112;
+	bh=amoL3aBU93ztiizxOwAKog5V98TxCD3/Jk0b0/VqRvk=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=SHtNcrrLzzRfEfu8tc4sAm496Y8WdDxN7ap5Qxr/eeJ/HaBQI8IEhKX+9d7ZpzH/j
+	 VAIoSR9QW1ytpy/jQiwFe/NYPwqMjHqE936C5fvEwLxLsjCrgjDC/85h86/9R4/g0w
+	 SDfXulM6NynYH90Y0fcw6Kgj+zD3XiSVJxuY1rqQfP2vteKQlL0gPAG8/UEoXm+D/U
+	 GGWU4M9EZ7kcz3p+JZ5kj/0H5N+TFOLZ0ZLxVZEs3Qc43gD6+tPVcY/BxOKerVIN0+
+	 2ydMmggAcL7zhdvHogglhvecS2w57d8ASwh8hgp4YcvJZJH85+sEJYfi6HD5jps53+
+	 Ke5B9nF57oSDQ==
+Message-ID: <sashiko-outbox-173512@kernel.org>
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v3 04/19] perf test attr: Fix default stat metrics
+ expectations
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Arnaldo Carvalho de Melo" <acme@kernel.org>
+Cc: linux-perf-users@vger.kernel.org
+In-Reply-To: <20261016001843.71978-5-acme@kernel.org>
+References: <20261016001843.71978-1-acme@kernel.org>
+ <20261016001843.71978-5-acme@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Fri, 16 Oct 2026 00:21:52 +0000
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Message-Id: <9ef8c1f496a9dca33792c7c3978e24208fe67d87688d5356b5e54e77eb009747@mail.kernel.org>
-In-Reply-To: <7f611dcd599d6d65325d8c40566a1fc35b447ea2.1792064123.git.sandipan.das@amd.com>
-References: <7f611dcd599d6d65325d8c40566a1fc35b447ea2.1792064123.git.sandipan.das@amd.com>
-Subject: Re: [PATCH v2 2/2] perf/x86/intel/lbr: Limit branch snapshots to valid entries
-From: bot+bpf-ci@kernel.org
-To: sandipan.das@amd.com,linux-perf-users@vger.kernel.org,linux-kernel@vger.kernel.org,bpf@vger.kernel.org
-Cc: peterz@infradead.org,mingo@redhat.com,acme@kernel.org,namhyung@kernel.org,mark.rutland@arm.com,alexander.shishkin@linux.intel.com,jolsa@kernel.org,irogers@google.com,adrian.hunter@intel.com,james.clark@linaro.org,tglx@kernel.org,bp@alien8.de,dave.hansen@linux.intel.com,x86@kernel.org,hpa@zytor.com,dapeng1.mi@linux.intel.com,andrii@kernel.org,song@kernel.org,ravi.bangoria@amd.com,ananth.narayan@amd.com,sandipan.das@amd.com,ast@kernel.org,andrii@kernel.org,daniel@iogearbox.net,martin.lau@kernel.org,eddyz87@gmail.com,yonghong.song@linux.dev,mason@kernel.org,ihor.solodrai@linux.dev
-Date: Fri, 16 Oct 2026 00:21:17 +0000 (UTC)
 
---===============2096954798088473371==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+> From: Arnaldo Carvalho de Melo <acme@redhat.com>
+>=20
+> Since commit c7adeb0974f1 ("perf jevents: Add set of common metrics based
+> on default ones") and commit 2dfc0cab3da4 ("perf stat: Add detail -d,-dd,=
+-ddd
+> metrics") the perf stat default metrics open their events in groups, so
+> group leaders and members have read_format=3D15 and members are enabled
+> without enable_on_exec, while standalone events keep read_format=3D3 and
+> are disabled until exec.
+>=20
+> Also, since commit b1c5efbfd92e ("perf parse-events: Remove hard coded
+> legacy hardware and cache parsing") bare hardware events resolve to the
+> core PMU sysfs/JSON events (type 4), so add the raw encodings the Intel
+> and AMD core PMUs use for instructions, branch-misses, cpu-cycles and
+> stalled-cycles-frontend/backend to test-stat-default and
+> test-stat-detailed-1/2/3.
+>=20
+> Add base-stat-group, that accepts both the standalone and the group
+> variants of read_format, disabled and enable_on_exec, and point the four
+> default/detailed expectations at it.  test-stat-basic, test-stat-C0 and
+> test-stat-no-inherit keep base-stat, whose events aren't opened in a
+> group: for those, a change that groups or enables them differently is
+> still something to catch.  test-stat-group1 does open its events in a
+> group, but pins read_format, disabled and enable_on_exec itself, the very
+> terms base-stat-group loosens, so it doesn't need it either.
+>=20
+> Fixes: b1c5efbfd92eb84d ("perf parse-events: Remove hard coded legacy har=
+dware and cache parsing")
+> Fixes: c7adeb0974f18da4 ("perf jevents: Add set of common metrics based o=
+n default ones")
+> Fixes: 2dfc0cab3da4a205 ("perf stat: Add detail -d,-dd,-ddd metrics")
+> Assisted-by: LLM
+> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-> perf/x86/intel/lbr: Limit branch snapshots to valid entries
+Sashiko has reviewed this patch and found no issues. It looks great!
 
-TL;DR: Resetting cpuc->lbr_stack.nr in intel_pmu_lbr_read() may clobber an
-in-flight adaptive PEBS sample if a BPF program calls
-bpf_get_branch_snapshot(), possibly yielding a PERF_RECORD_SAMPLE without
-branch records and with leftover bytes.
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261016001843.7197=
+8-1-acme@kernel.org?part=3D4
 
-> diff --git a/arch/x86/events/intel/lbr.c b/arch/x86/events/intel/lbr.c
-> index 22e2a06d5786..2fe858d99979 100644
-> --- a/arch/x86/events/intel/lbr.c
-> +++ b/arch/x86/events/intel/lbr.c
-
-[ ... ]
-
-> @@ -1026,8 +1026,10 @@ void intel_pmu_lbr_read(void)
->  	 * but this simple approach seems to work for now.
->  	 */
->  	if (!cpuc->lbr_users || vlbr_exclude_host() ||
-> -	    cpuc->lbr_users == cpuc->lbr_pebs_users)
-> +	    cpuc->lbr_users == cpuc->lbr_pebs_users) {
-> +		cpuc->lbr_stack.nr = 0;
-                 ^^^^
-Can this clobber the branch stack of a PEBS sample that is still being
-built?
-
-Before this patch the early return had no side effects.  Now it writes to
-cpuc->lbr_stack, which is shared with the adaptive PEBS path.
-
-If every LBR user on the CPU is an adaptive PEBS event, then
-cpuc->lbr_users == cpuc->lbr_pebs_users, and the PEBS drain points the
-sample at the per-CPU stack:
-
-setup_pebs_adaptive_sample_data()
-    intel_pmu_store_pebs_lbrs(lbr);         /* cpuc->lbr_stack.nr = N */
-    intel_pmu_lbr_save_brstack(data, cpuc, event);
-        perf_sample_save_brstack(data, event, &cpuc->lbr_stack, ...);
-            data->br_stack = brs;           /* points at cpuc->lbr_stack */
-            data->dyn_size += ... + brs->nr * sizeof(struct perf_branch_entry);
-
-__intel_pmu_pebs_last_event() then calls perf_event_overflow(), and
-__perf_event_overflow() runs bpf_overflow_handler() before the sample is
-written.  A perf event BPF program attached to that event can call
-bpf_get_branch_snapshot(), which is in bpf_base_func_proto:
-
-intel_pmu_snapshot_branch_stack()
-    __intel_pmu_snapshot_branch_stack()
-        intel_pmu_lbr_read()
-            /* lbr_users == lbr_pebs_users, early return taken */
-            cpuc->lbr_stack.nr = 0;
-
-When the program returns, data->br_stack still points at cpuc->lbr_stack,
-but nr is now 0.  A later bpf_read_branch_records() in the same program
-reads ctx->data->br_stack->nr and returns 0 bytes.
-
-perf_output_sample() then writes nr = 0 and no entries, while header.size was
-already computed by perf_prepare_header() from data->dyn_size, which counted
-N entries.  Doesn't that leave the PERF_RECORD_SAMPLE without its branch
-records and followed by N * sizeof(struct perf_branch_entry) bytes of
-leftover ring buffer content?
-
-Before the patch, the early return left cpuc->lbr_stack untouched and this
-sample came out intact.
-
-Would it be better to leave cpuc->lbr_stack alone in the snapshot path, for
-example by checking the skip condition in __intel_pmu_snapshot_branch_stack()
-and returning 0 there, instead of resetting the shared nr inside
-intel_pmu_lbr_read() for every caller?
-
->  		return;
-> +	}
->
->  	x86_pmu.lbr_read(cpuc);
-
-
----
-AI reviewed your patch. Please fix the bug or email reply why it's not a bug.
-See: https://github.com/kernel-patches/vmtest/blob/master/ci/claude/README.md
-
-CI run summary: https://github.com/kernel-patches/bpf/actions/runs/38827450009
---===============2096954798088473371==--
