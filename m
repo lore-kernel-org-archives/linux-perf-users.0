@@ -1,56 +1,74 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3908E46AA9F
-	for <linux-perf-users@vger.kernel.org>; Fri, 16 Oct 2026 10:03:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6C24447A0B5;
+	Fri, 16 Oct 2026 10:05:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792144999; cv=none; b=chGPSv5HbzwjGDPUbd3ygEP5tYAytEVqU1pe1vnnDmAGDr0xfqVLxUi/mZ3xXvlwl7Gud+QA7VgVzWU5G/RysREKpT4X2yuOQvP6rUQHw6eKDYtfpk/L1Inq6UtCAmd01vWVEHM7zR5nyFM9Rfw3sDDpYRrJqUYe6lgiVgOiq3o=
+	t=1792145145; cv=none; b=QZIpGRck18rQ1EpokHQIySi079KMQBnBFDVK/nzmLJczzKxnfiNYZ8Kz3rJUEJGxuSppKEgc1Z4ctvOBNpVa/LMZDQCSQGNTR84gv/qmA1zgKi/OUt74KOzeNLGpSiMncjdy6eaAyl0u6/tl19LKiB9Clq2Re/mh/P0rbDOXBV8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792144999; c=relaxed/simple;
-	bh=f3nPrypFj/eQwXvEdhm81pnT5o84SvjplVE9J81TB1U=;
-	h=Message-ID:From:Subject:To:Cc:In-Reply-To:References:Content-Type:
-	 Date; b=fG9T9XGFcjTsMBYx18EF9LilnwbK+O+HTG870kfMVNLPo475ykGDw0QQVmK8PMdKE4rpBS4N0icAb2LJPSe2G/2K7oAYp4V4mbWjv/XV4ORm9uWu0AoPT0fSe7W0btcQ50LIMAbSZLiw7+LevMpcMqVtkScZ7fGUCS2A9cyp3Ao=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jtBqL2hM; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1792145145; c=relaxed/simple;
+	bh=Lr4z80TttA9CAj46C7TTaxQIkqHJjPbuCEYVhj/R2RE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=eeyM1TtjqwqXIVeX/199wlPa826BqW+T2jeBsQfMEGGscfjgOPyjf/j+fhzwwLdDjy8Uv7TjSpYjB6/Z+m/12ZuPFOMp62AbvebHuGbuQNpB2m3Iub5uB1c1XbvSbkRNaM0xQTAOiZkKQcBsAS0mXpETZI1z91wGYhY87vjRh2I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=lIBC6cNj; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jtBqL2hM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 64DD21F000C5;
-	Fri, 16 Oct 2026 10:03:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1792144995;
-	bh=f3nPrypFj/eQwXvEdhm81pnT5o84SvjplVE9J81TB1U=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=jtBqL2hMnOfeIEHs7ITqU1fU2BbbHU2/BDUhwiIuBhudnRx+jdht0F0CGmRQkDV8N
-	 YMc26gE2/cTuIIjnW49njL8p7eSJL/MuLKtXq1d7SIM3YYheTs6kWAuuMzCx7On9tR
-	 zMEBQTjLMdzMhX2GDDreJFodVyUV2FFNQbSduIgOe73nSNAVG4nW9jCX4yZAjTJ0BB
-	 yUIMPziHdZxico6cwO3G09lbT78ebFACEGy++hJX+3tR+hNmfFTVjTa/1U1mZr74wm
-	 bcrFk0ohho3cz6deT/7CTmRkklCSDnhb+vhO25CfGUW+RCKLD1lzvkcbyL8eWKklYz
-	 p01tIoPBOpN8A==
-Message-ID: <sashiko-outbox-174119@kernel.org>
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v2 1/4] arm64: cputype: Add FUJITSU MONAKA definition
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Tomohiro Misono" <misono.tomohiro@fujitsu.com>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20261016-monaka-fix-for-upstream-v2-1-fc7ede7f9f48@fujitsu.com>
-References: <20261016-monaka-fix-for-upstream-v2-0-fc7ede7f9f48@fujitsu.com>
- <20261016-monaka-fix-for-upstream-v2-1-fc7ede7f9f48@fujitsu.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Fri, 16 Oct 2026 10:03:14 +0000
+	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="lIBC6cNj"
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4A56614BF;
+	Fri, 16 Oct 2026 03:05:39 -0700 (PDT)
+Received: from localhost (unknown [10.2.196.114])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D9E7D3F871;
+	Fri, 16 Oct 2026 03:05:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
+	t=1792145142; bh=Lr4z80TttA9CAj46C7TTaxQIkqHJjPbuCEYVhj/R2RE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=lIBC6cNjFrf2xJ3onlfJxxXZJso7mCRvMSP5GGPQHeVUbtaYLIBKPoOsOZ8fQMWCt
+	 WPNzABduNKk3UA8BO3A7cMpnYyKSwCRjqtydQrHkcSWAKt6kvQiz5SW0mVLA19OFfw
+	 YoJHrsnBJWxKR2yAZQrq5H9sOkVv7nE904yPJ4ls=
+Date: Fri, 16 Oct 2026 11:05:38 +0100
+From: Leo Yan <leo.yan@arm.com>
+To: Johnny Fan <johnny.fan@cixtech.com>
+Cc: Marc Zyngier <maz@kernel.org>, will@kernel.org, mark.rutland@arm.com,
+	linux-arm-kernel@lists.infradead.org,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	james.clark@linaro.org, jeremy.linton@arm.com,
+	cix-kernel-upstream@cixtech.com, bob.zhang@cixtech.com,
+	jie.fu@cixtech.com, Fugang Duan <fugang.duan@cixtech.com>
+Subject: Re: [PATCH] perf: arm_spe: Support heterogeneous ACPI systems
+Message-ID: <20261016100538.GE26205@e132581.arm.com>
+References: <20261015062908.3565761-1-johnny.fan@cixtech.com>
+ <86mrsf1bnv.wl-maz@kernel.org>
+ <20261015141926.GC26205@e132581.arm.com>
+ <atGY5+kzQggCZboX@JohnnyFan>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <atGY5+kzQggCZboX@JohnnyFan>
 
-> Add cpu part definition for FUJITSU-MONAKA.
->=20
-> Signed-off-by: Tomohiro Misono <misono.tomohiro@fujitsu.com>
+On Fri, Oct 16, 2026 at 11:24:23AM +0800, Johnny Fan wrote:
+> On Thu, Oct 15, 2026 at 03:19:26PM +0100, Leo Yan wrote:
+> > The SPE driver probes its capabilities on one CPU selected by
+> > smp_call_function_any(), then performs local setup on every CPU in
+> > supported_cpus. It therefore relies on that mask being accurate;
+> > including a CPU without SPE could lead to accesses to unimplemented
+> > SPE system registers.
+> 
+> Right. On ACPI the driver gets no affinity information for this
+> device, so supported_cpus falls back to cpu_possible_mask. That only
+> works today because registration is limited to homogeneous systems.
+> The PMSVer trimming in this patch works around the heterogeneous case;
+> with the mask taken from the MADT walk, both go away.
 
-Sashiko has reviewed this patch and found no issues. It looks great!
+SPE driver supports heterogeneous systems. If firmware creates proper
+devices based on CPU topology, the driver can probe multiple instances.
 
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261016-monaka-fix=
--for-upstream-v2-0-fc7ede7f9f48@fujitsu.com?part=3D1
+So "registration is limited to homogeneous systems" is not quite right.
 
+Thanks,
+Leo
