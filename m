@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FFC02472B8;
-	Fri, 16 Oct 2026 00:18:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5272E261B8D;
+	Fri, 16 Oct 2026 00:19:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792109939; cv=none; b=p1IDKFkpjO6HZuyoWTqtlOgI9c7xsbbCUskDKN3agSJSfU/5jgueoi19Hzb6pQuyODSpBlfUvX3B0n8QtilFpGgC8Je8HR8XABH8VWDo4HRWpkwsa6PYrTASThNbeMM8JhBY3dxg8aJGZU2KRQVXOTHJl/X8FUeA3fGrwgL/TP4=
+	t=1792109943; cv=none; b=E+5EJ2rXJlrv2CNfahE9VXmmMCBnGYcJ0j8gbcjWxsErMqI55UonpBMIFqgDCfpBNPFgZ2HozLzn+E4RIwwhnvnaNz6IjX0YjMUUQVLhmkaFq3bX3f27oePFtuENT9F2OhDfy0mh0Q+yV0uze/igdrNfjd3w8NfV/KnsDr3X8gs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792109939; c=relaxed/simple;
-	bh=c0Wc6C+H0sLY5GZTZ0RUO+0ZzwlvinqvM5m6XvDNFrY=;
+	s=arc-20240116; t=1792109943; c=relaxed/simple;
+	bh=mlAKoqAp47ElnH31vfykevsPzubHUuT2atLPg+Msfyc=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=uo5IioG7j1e0y1YmSqU8ajPuxtHp0WNfeM8MAgflg8XetZdIH+weTg1/N1PUXbbRB8nxjlUwHm8EwonO/iS8U3jhyqv1Z60qCB/dMNbR6N0jC7b+9XFIO4aiRkn2ruhrn5DR3DZGfXeg21Y9qPDZcd3t6A0JV7gOXxFkzPZ64f0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=g2u1Atln; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version; b=H6/eReC8vONO2rsLwM24oF3ap40PxK8rv+zbPRG0OPgflGfU2rafAUuOX2K/XA7cOdbSZuAH6l7ppz2+Vo7VcztCB0HnM+UWct26XQK+gzhGsF57Y4Y2ERHIa9oMyaoUWySZtKuBne94eU4GulyF8s/Ksl7nAi2ii/sQXNTiLz4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=X2WSGEou; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="g2u1Atln"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CF7211F000C5;
-	Fri, 16 Oct 2026 00:18:55 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="X2WSGEou"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8917E1F000C4;
+	Fri, 16 Oct 2026 00:18:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1792109938;
-	bh=vMYYLi56bfKOjPdfh16BHCEItjVED7x3a04Vd3ap6kc=;
+	s=k20260515; t=1792109941;
+	bh=G2bRHw/WsY7tZExKOOh+6/MPF3Mg3H1POOxEkYjx+zw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=g2u1Atln0+OATTzdaTVhrZlF7ZWZuYV334k5CocU3dbM4QmKqXCDcbuU5uT/Fxyqi
-	 18oI11KjL0CeDRc66McH6m2syySczGO6r2WN4O5yK+AzOYqFsEAVpxJcs/UXBvCeFd
-	 BCaQaWWrI218RKskPmp1wtte7VZMDClN5hWnHq+hwyG9mJJVhMC9gjN4xUPNENnYRr
-	 pCsghwEQafRNUwIJ+aEuONiLejxWCn0GEjQMSjrH+mDZzp5LTyy8Sy2mkYuT7ZEkZq
-	 ZrRIvYzSQ0kNwvIfOJZT0n4qGSGjDkICZBMK6ZmuC7HPrh2MC/8ZVVeFONTJoFNlI7
-	 +J3cwub6XXd7A==
+	b=X2WSGEouAcTCrrj4DzoLxebPpn1WUygl7XTzUlBuYnyyXL4ibjValjgr2NTVC9Td4
+	 if6qapIpTCSppp/X1BqnAyPmT8Z+zvCTp+KccGEGNx5CBL+IuO/3cN6sxB+mlqdArY
+	 cN/E4JemDL8WmCvRfZxN3OG2P6rhYuOQZlmZxcC+/1QRTb+/ARNDGRP4L+Q1I1vyMU
+	 1FehMBSEhN7CPXP2/XyXiweKHEfoGD8k7hhh23l9vcNEE29yo0+yKU+Zh8UEfYFBfY
+	 zgxKWzviTKbq0oDztWrBGdBEbI3OUH8w4jeQ4XPyx006BoJi1WZqkbZtpTB4nb6NeH
+	 u7fcka/s21nSA==
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Namhyung Kim <namhyung@kernel.org>
 Cc: Ingo Molnar <mingo@kernel.org>,
@@ -38,9 +38,9 @@ Cc: Ingo Molnar <mingo@kernel.org>,
 	linux-kernel@vger.kernel.org,
 	linux-perf-users@vger.kernel.org,
 	Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH v3 03/19] perf test attr: Fix legacy event encodings in group tests
-Date: Thu, 15 Oct 2026 21:18:27 -0300
-Message-ID: <20261016001843.71978-4-acme@kernel.org>
+Subject: [PATCH v3 04/19] perf test attr: Fix default stat metrics expectations
+Date: Thu, 15 Oct 2026 21:18:28 -0300
+Message-ID: <20261016001843.71978-5-acme@kernel.org>
 X-Mailer: git-send-email 2.56.0
 In-Reply-To: <20261016001843.71978-1-acme@kernel.org>
 References: <20261016001843.71978-1-acme@kernel.org>
@@ -54,192 +54,1423 @@ Content-Transfer-Encoding: 8bit
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-Since commit b1c5efbfd92e ("perf parse-events: Remove hard coded legacy
-hardware and cache parsing"), event names are resolved with sysfs/JSON
-priority over the legacy encodings, so bare cache-misses and
-instructions now become the core PMU sysfs/JSON events (on x86 type 4,
-configs 0x412e and 0xc0) rather than the legacy
-PERF_TYPE_HARDWARE/config=3 and config=1 events the tests expect, e.g.:
+Since commit c7adeb0974f1 ("perf jevents: Add set of common metrics based
+on default ones") and commit 2dfc0cab3da4 ("perf stat: Add detail -d,-dd,-ddd
+metrics") the perf stat default metrics open their events in groups, so
+group leaders and members have read_format=15 and members are enabled
+without enable_on_exec, while standalone events keep read_format=3 and
+are disabled until exec.
 
-  expected config=3, got 0
-  expected disabled=0, got 1
-  expected mmap=0, got 1
-  expected comm=0, got 1
-  expected freq=0, got 1
-  expected enable_on_exec=0, got 1
-  expected task=0, got 1
-  FAILED '.../test-record-group-sampling1' - match failure
+Also, since commit b1c5efbfd92e ("perf parse-events: Remove hard coded
+legacy hardware and cache parsing") bare hardware events resolve to the
+core PMU sysfs/JSON events (type 4), so add the raw encodings the Intel
+and AMD core PMUs use for instructions, branch-misses, cpu-cycles and
+stalled-cycles-frontend/backend to test-stat-default and
+test-stat-detailed-1/2/3.
 
-The shown diff is against the cycles group leader, as no result event
-matches the expected cache-misses member anymore.
-
-Request the legacy encodings explicitly with the legacy-hardware-config
-term, added in commit 0012e0fa221bf9cc ("perf jevents: Add
-legacy-hardware and legacy-cache json"), keeping the original
-attribute expectations unchanged, in:
-
-  test-record-group1
-  test-record-group2
-  test-record-group3
-  test-record-group-sampling
-  test-record-group-sampling1
-  test-record-group-sampling2
-  test-stat-group1
-
-This went unnoticed until tests/attr.sh stopped ignoring attr.py's
-return value.
+Add base-stat-group, that accepts both the standalone and the group
+variants of read_format, disabled and enable_on_exec, and point the four
+default/detailed expectations at it.  test-stat-basic, test-stat-C0 and
+test-stat-no-inherit keep base-stat, whose events aren't opened in a
+group: for those, a change that groups or enables them differently is
+still something to catch.  test-stat-group1 does open its events in a
+group, but pins read_format, disabled and enable_on_exec itself, the very
+terms base-stat-group loosens, so it doesn't need it either.
 
 Fixes: b1c5efbfd92eb84d ("perf parse-events: Remove hard coded legacy hardware and cache parsing")
+Fixes: c7adeb0974f18da4 ("perf jevents: Add set of common metrics based on default ones")
+Fixes: 2dfc0cab3da4a205 ("perf stat: Add detail -d,-dd,-ddd metrics")
 Assisted-by: LLM
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/tests/shell/attr/README                     | 10 +++++-----
- tools/perf/tests/shell/attr/test-record-group-sampling |  4 ++--
- .../perf/tests/shell/attr/test-record-group-sampling1  |  4 ++--
- .../perf/tests/shell/attr/test-record-group-sampling2  |  4 ++--
- tools/perf/tests/shell/attr/test-record-group1         |  2 +-
- tools/perf/tests/shell/attr/test-record-group2         |  2 +-
- tools/perf/tests/shell/attr/test-record-group3         |  2 +-
- tools/perf/tests/shell/attr/test-stat-group1           |  2 +-
- 8 files changed, 15 insertions(+), 15 deletions(-)
+ tools/perf/tests/shell/attr/base-stat-group   |  45 +++++++
+ tools/perf/tests/shell/attr/test-stat-default |  90 +++++++++-----
+ .../tests/shell/attr/test-stat-detailed-1     |  98 +++++++++------
+ .../tests/shell/attr/test-stat-detailed-2     | 110 ++++++++++-------
+ .../tests/shell/attr/test-stat-detailed-3     | 114 +++++++++++-------
+ 5 files changed, 307 insertions(+), 150 deletions(-)
+ create mode 100644 tools/perf/tests/shell/attr/base-stat-group
 
-diff --git a/tools/perf/tests/shell/attr/README b/tools/perf/tests/shell/attr/README
-index 67c4ca76b85d5611..c7b49cdf87297177 100644
---- a/tools/perf/tests/shell/attr/README
-+++ b/tools/perf/tests/shell/attr/README
-@@ -49,10 +49,10 @@ Following tests are defined (with perf commands):
-   perf record --call-graph dwarf kill		(test-record-graph-dwarf)
-   perf record --call-graph fp kill              (test-record-graph-fp)
-   perf record --call-graph fp kill              (test-record-graph-fp-aarch64)
--  perf record -e '{cycles,instructions}' kill   (test-record-group1)
--  perf record -e '{cycles/period=1/,instructions/period=2/}:S' kill (test-record-group2)
--  perf record -e '{cycles,cache-misses}:S' kill (test-record-group-sampling1)
--  perf record -c 10000 -e '{cycles,cache-misses}:S' kill (test-record-group-sampling2)
-+  perf record -e '{cycles,default_core/legacy-hardware-config=1/}' kill (test-record-group1)
-+  perf record -e '{cycles/period=1234000/,default_core/legacy-hardware-config=1,period=6789000/}:S' kill (test-record-group2)
-+  perf record -e '{cycles,default_core/legacy-hardware-config=3/}:S' kill (test-record-group-sampling1)
-+  perf record -c 10000 -e '{cycles,default_core/legacy-hardware-config=3/}:S' kill (test-record-group-sampling2)
-   perf record -D kill                           (test-record-no-delay)
-   perf record -i kill                           (test-record-no-inherit)
-   perf record -n kill                           (test-record-no-samples)
-@@ -67,5 +67,5 @@ Following tests are defined (with perf commands):
-   perf stat -d kill                             (test-stat-detailed-1)
-   perf stat -dd kill                            (test-stat-detailed-2)
-   perf stat -ddd kill                           (test-stat-detailed-3)
--  perf stat -e '{cycles,instructions}' kill     (test-stat-group1)
-+  perf stat -e '{cycles,default_core/legacy-hardware-config=1/}' kill (test-stat-group1)
-   perf stat -i -e cycles kill                   (test-stat-no-inherit)
-diff --git a/tools/perf/tests/shell/attr/test-record-group-sampling b/tools/perf/tests/shell/attr/test-record-group-sampling
-index b43d9fe3af75c096..ed47dd1e5984535b 100644
---- a/tools/perf/tests/shell/attr/test-record-group-sampling
-+++ b/tools/perf/tests/shell/attr/test-record-group-sampling
-@@ -1,6 +1,6 @@
- [config]
- command = record
--args    = --no-bpf-event -e '{cycles,cache-misses}:S' kill >/dev/null 2>&1
-+args    = --no-bpf-event -e '{cycles,default_core/legacy-hardware-config=3/}:S' kill >/dev/null 2>&1
- ret     = 1
- kernel_until = 6.12
+diff --git a/tools/perf/tests/shell/attr/base-stat-group b/tools/perf/tests/shell/attr/base-stat-group
+new file mode 100644
+index 0000000000000000..9bcb8ab3687ff9fb
+--- /dev/null
++++ b/tools/perf/tests/shell/attr/base-stat-group
+@@ -0,0 +1,45 @@
++[event]
++fd=1
++group_fd=-1
++# 0 or PERF_FLAG_FD_CLOEXEC flag
++flags=0|8
++cpu=*
++type=0
++size=176
++config=0
++sample_period=0
++sample_type=65536
++# The default and -d/-dd/-ddd metrics open part of their events in groups:
++# the members get read_format=15 and are enabled right away, the standalone
++# ones keep read_format=3 and wait for the exec, and the leaders get 15 when
++# their group has members, 3 when alone, as create_perf_stat_counter() goes.
++read_format=3|15
++disabled=0|1
++inherit=1
++pinned=0
++exclusive=0
++exclude_user=0
++exclude_kernel=0|1
++exclude_hv=0|1
++exclude_idle=0
++mmap=0
++comm=0
++freq=0
++inherit_stat=0
++enable_on_exec=0|1
++task=0
++watermark=0
++precise_ip=0
++mmap_data=0
++sample_id_all=0
++exclude_host=0|1
++exclude_guest=0|1
++exclude_callchain_kernel=0
++exclude_callchain_user=0
++wakeup_events=0
++bp_type=0
++config1=0
++config2=0
++branch_sample_type=0
++sample_regs_user=0
++sample_stack_user=0
+diff --git a/tools/perf/tests/shell/attr/test-stat-default b/tools/perf/tests/shell/attr/test-stat-default
+index 74691188e859a169..6a0c0c43f23347d8 100644
+--- a/tools/perf/tests/shell/attr/test-stat-default
++++ b/tools/perf/tests/shell/attr/test-stat-default
+@@ -5,72 +5,72 @@ ret     = 1
  requires = core-pmu
-@@ -16,7 +16,7 @@ inherit=0
- fd=2
- group_fd=1
  
--# cache-misses
-+# cache-misses, explicitly requested with the legacy hardware encoding
- type=0
+ # PERF_TYPE_SOFTWARE / PERF_COUNT_SW_TASK_CLOCK
+-[event1:base-stat]
++[event1:base-stat-group]
+ fd=1
+ type=1
+ config=1
+ 
+ # PERF_TYPE_SOFTWARE / PERF_COUNT_SW_CONTEXT_SWITCHES
+-[event2:base-stat]
++[event2:base-stat-group]
+ fd=2
+ type=1
  config=3
  
-diff --git a/tools/perf/tests/shell/attr/test-record-group-sampling1 b/tools/perf/tests/shell/attr/test-record-group-sampling1
-index 3def72161820dca3..9cf013dc03dd0309 100644
---- a/tools/perf/tests/shell/attr/test-record-group-sampling1
-+++ b/tools/perf/tests/shell/attr/test-record-group-sampling1
-@@ -1,6 +1,6 @@
- [config]
- command = record
--args    = --no-bpf-event -e '{cycles,cache-misses}:S' kill >/dev/null 2>&1
-+args    = --no-bpf-event -e '{cycles,default_core/legacy-hardware-config=3/}:S' kill >/dev/null 2>&1
- ret     = 1
- kernel_since = 6.12
- requires = core-pmu
-@@ -31,7 +31,7 @@ inherit=1
- fd=2
- group_fd=1
+ # PERF_TYPE_SOFTWARE / PERF_COUNT_SW_CPU_MIGRATIONS
+-[event3:base-stat]
++[event3:base-stat-group]
+ fd=3
+ type=1
+ config=4
  
--# cache-misses
-+# cache-misses, explicitly requested with the legacy hardware encoding
+ # PERF_TYPE_SOFTWARE / PERF_COUNT_SW_PAGE_FAULTS
+-[event4:base-stat]
++[event4:base-stat-group]
+ fd=4
+ type=1
+ config=2
+ 
+ # PERF_TYPE_HARDWARE / PERF_COUNT_HW_CPU_CYCLES
+-[event5:base-stat]
++[event5:base-stat-group]
+ fd=5
  type=0
+ config=0
+ optional=1
+ 
+ # PERF_TYPE_HARDWARE / PERF_COUNT_HW_STALLED_CYCLES_FRONTEND
+-[event6:base-stat]
++[event6:base-stat-group]
+ fd=6
+ type=0
+ config=7
+ optional=1
+ # PERF_TYPE_HARDWARE / PERF_COUNT_HW_STALLED_CYCLES_BACKEND
+-[event7:base-stat]
++[event7:base-stat-group]
+ fd=7
+ type=0
+ config=8
+ optional=1
+ 
+ # PERF_TYPE_HARDWARE / PERF_COUNT_HW_INSTRUCTIONS
+-[event8:base-stat]
++[event8:base-stat-group]
+ fd=8
+ type=0
+ config=1
+ optional=1
+ 
+ # PERF_TYPE_HARDWARE / PERF_COUNT_HW_BRANCH_INSTRUCTIONS
+-[event9:base-stat]
++[event9:base-stat-group]
+ fd=9
+ type=0
+ config=4
+ optional=1
+ 
+ # PERF_TYPE_HARDWARE / PERF_COUNT_HW_BRANCH_MISSES
+-[event10:base-stat]
++[event10:base-stat-group]
+ fd=10
+ type=0
+ config=5
+ optional=1
+ 
+ # PERF_TYPE_RAW / slots (0x400)
+-[event11:base-stat]
++[event11:base-stat-group]
+ fd=11
+ group_fd=-1
+ type=4
+@@ -79,7 +79,7 @@ read_format=15
+ optional=1
+ 
+ # PERF_TYPE_RAW / topdown-retiring (0x8000)
+-[event12:base-stat]
++[event12:base-stat-group]
+ fd=12
+ group_fd=11
+ type=4
+@@ -90,7 +90,7 @@ read_format=15
+ optional=1
+ 
+ # PERF_TYPE_RAW / topdown-bad-spec (0x8100)
+-[event13:base-stat]
++[event13:base-stat-group]
+ fd=13
+ group_fd=11
+ type=4
+@@ -101,7 +101,7 @@ read_format=15
+ optional=1
+ 
+ # PERF_TYPE_RAW / topdown-fe-bound (0x8200)
+-[event14:base-stat]
++[event14:base-stat-group]
+ fd=14
+ group_fd=11
+ type=4
+@@ -112,7 +112,7 @@ read_format=15
+ optional=1
+ 
+ # PERF_TYPE_RAW / topdown-be-bound (0x8300)
+-[event15:base-stat]
++[event15:base-stat-group]
+ fd=15
+ group_fd=11
+ type=4
+@@ -123,7 +123,7 @@ read_format=15
+ optional=1
+ 
+ # PERF_TYPE_RAW / topdown-heavy-ops (0x8400)
+-[event16:base-stat]
++[event16:base-stat-group]
+ fd=16
+ group_fd=11
+ type=4
+@@ -134,7 +134,7 @@ read_format=15
+ optional=1
+ 
+ # PERF_TYPE_RAW / topdown-br-mispredict (0x8500)
+-[event17:base-stat]
++[event17:base-stat-group]
+ fd=17
+ group_fd=11
+ type=4
+@@ -145,7 +145,7 @@ read_format=15
+ optional=1
+ 
+ # PERF_TYPE_RAW / topdown-fetch-lat (0x8600)
+-[event18:base-stat]
++[event18:base-stat-group]
+ fd=18
+ group_fd=11
+ type=4
+@@ -156,7 +156,7 @@ read_format=15
+ optional=1
+ 
+ # PERF_TYPE_RAW / topdown-mem-bound (0x8700)
+-[event19:base-stat]
++[event19:base-stat-group]
+ fd=19
+ group_fd=11
+ type=4
+@@ -167,71 +167,99 @@ read_format=15
+ optional=1
+ 
+ # PERF_TYPE_RAW / INT_MISC.UOP_DROPPING
+-[event20:base-stat]
++[event20:base-stat-group]
+ fd=20
+ type=4
+ config=4109
+ optional=1
+ 
+ # PERF_TYPE_RAW / cpu/INT_MISC.RECOVERY_CYCLES,cmask=1,edge/
+-[event21:base-stat]
++[event21:base-stat-group]
+ fd=21
+ type=4
+ config=17039629
+ optional=1
+ 
+-# PERF_TYPE_RAW / CPU_CLK_UNHALTED.THREAD
+-[event22:base-stat]
++# PERF_TYPE_RAW / cpu-cycles (core PMU sysfs event; Intel 0x3c, AMD 0x76)
++[event22:base-stat-group]
+ fd=22
+ type=4
+-config=60
++config=60|118
+ optional=1
+ 
+ # PERF_TYPE_RAW / INT_MISC.RECOVERY_CYCLES_ANY
+-[event23:base-stat]
++[event23:base-stat-group]
+ fd=23
+ type=4
+ config=2097421
+ optional=1
+ 
+ # PERF_TYPE_RAW / CPU_CLK_UNHALTED.REF_XCLK
+-[event24:base-stat]
++[event24:base-stat-group]
+ fd=24
+ type=4
+ config=316
+ optional=1
+ 
+ # PERF_TYPE_RAW / IDQ_UOPS_NOT_DELIVERED.CORE
+-[event25:base-stat]
++[event25:base-stat-group]
+ fd=25
+ type=4
+ config=412
+ optional=1
+ 
+ # PERF_TYPE_RAW / CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE
+-[event26:base-stat]
++[event26:base-stat-group]
+ fd=26
+ type=4
+ config=572
+ optional=1
+ 
+ # PERF_TYPE_RAW / UOPS_RETIRED.RETIRE_SLOTS
+-[event27:base-stat]
++[event27:base-stat-group]
+ fd=27
+ type=4
+ config=706
+ optional=1
+ 
+ # PERF_TYPE_RAW / UOPS_ISSUED.ANY
+-[event28:base-stat]
++[event28:base-stat-group]
+ fd=28
+ type=4
+ config=270
+ optional=1
+ 
+ # PERF_TYPE_RAW / INT_MISC.UOP_DROPPING
+-[event29:base-stat]
++[event29:base-stat-group]
+ fd=29
+ type=4
+ config=4269
++optional=1
++
++# PERF_TYPE_RAW / instructions (core PMU sysfs event)
++[event30:base-stat-group]
++fd=30
++type=4
++config=192
++optional=1
++
++# PERF_TYPE_RAW / branch-misses (core PMU sysfs event; Intel 0xc5, AMD 0xc3)
++[event31:base-stat-group]
++fd=31
++type=4
++config=197|195
++optional=1
++
++# PERF_TYPE_RAW / stalled-cycles-frontend (core PMU sysfs event; Intel 0x180010e, AMD 0xd0/0x287/0xa9)
++[event32:base-stat-group]
++fd=32
++type=4
++config=25166094|208|647|169
++optional=1
++
++# PERF_TYPE_RAW / stalled-cycles-backend (core PMU sysfs event; Intel 0x18001b1/0x1803fb1, AMD 0xd1/0x187)
++[event33:base-stat-group]
++fd=33
++type=4
++config=25166257|25182129|209|391
+ optional=1
+\ No newline at end of file
+diff --git a/tools/perf/tests/shell/attr/test-stat-detailed-1 b/tools/perf/tests/shell/attr/test-stat-detailed-1
+index d9a6236054f2dfb1..3d47dc6f815ff0a6 100644
+--- a/tools/perf/tests/shell/attr/test-stat-detailed-1
++++ b/tools/perf/tests/shell/attr/test-stat-detailed-1
+@@ -6,73 +6,73 @@ requires = core-pmu
+ 
+ 
+ # PERF_TYPE_SOFTWARE / PERF_COUNT_SW_TASK_CLOCK
+-[event1:base-stat]
++[event1:base-stat-group]
+ fd=1
+ type=1
+ config=1
+ 
+ # PERF_TYPE_SOFTWARE / PERF_COUNT_SW_CONTEXT_SWITCHES
+-[event2:base-stat]
++[event2:base-stat-group]
+ fd=2
+ type=1
  config=3
  
-diff --git a/tools/perf/tests/shell/attr/test-record-group-sampling2 b/tools/perf/tests/shell/attr/test-record-group-sampling2
-index 227c18bb221c4b2f..bd1eb4161e4aee46 100644
---- a/tools/perf/tests/shell/attr/test-record-group-sampling2
-+++ b/tools/perf/tests/shell/attr/test-record-group-sampling2
-@@ -1,6 +1,6 @@
- [config]
- command = record
--args    = --no-bpf-event -c 10000 -e '{cycles,cache-misses}:S' kill >/dev/null 2>&1
-+args    = --no-bpf-event -c 10000 -e '{cycles,default_core/legacy-hardware-config=3/}:S' kill >/dev/null 2>&1
- ret     = 1
- kernel_since = 6.12
- requires = core-pmu
-@@ -37,7 +37,7 @@ write_backward=0
- fd=2
- group_fd=1
+ # PERF_TYPE_SOFTWARE / PERF_COUNT_SW_CPU_MIGRATIONS
+-[event3:base-stat]
++[event3:base-stat-group]
+ fd=3
+ type=1
+ config=4
  
--# cache-misses
-+# cache-misses, explicitly requested with the legacy hardware encoding
+ # PERF_TYPE_SOFTWARE / PERF_COUNT_SW_PAGE_FAULTS
+-[event4:base-stat]
++[event4:base-stat-group]
+ fd=4
+ type=1
+ config=2
+ 
+ # PERF_TYPE_HARDWARE / PERF_COUNT_HW_CPU_CYCLES
+-[event5:base-stat]
++[event5:base-stat-group]
+ fd=5
  type=0
+ config=0
+ optional=1
+ 
+ # PERF_TYPE_HARDWARE / PERF_COUNT_HW_STALLED_CYCLES_FRONTEND
+-[event6:base-stat]
++[event6:base-stat-group]
+ fd=6
+ type=0
+ config=7
+ optional=1
+ 
+ # PERF_TYPE_HARDWARE / PERF_COUNT_HW_STALLED_CYCLES_BACKEND
+-[event7:base-stat]
++[event7:base-stat-group]
+ fd=7
+ type=0
+ config=8
+ optional=1
+ 
+ # PERF_TYPE_HARDWARE / PERF_COUNT_HW_INSTRUCTIONS
+-[event8:base-stat]
++[event8:base-stat-group]
+ fd=8
+ type=0
+ config=1
+ optional=1
+ 
+ # PERF_TYPE_HARDWARE / PERF_COUNT_HW_BRANCH_INSTRUCTIONS
+-[event9:base-stat]
++[event9:base-stat-group]
+ fd=9
+ type=0
+ config=4
+ optional=1
+ 
+ # PERF_TYPE_HARDWARE / PERF_COUNT_HW_BRANCH_MISSES
+-[event10:base-stat]
++[event10:base-stat-group]
+ fd=10
+ type=0
+ config=5
+ optional=1
+ 
+ # PERF_TYPE_RAW / slots (0x400)
+-[event11:base-stat]
++[event11:base-stat-group]
+ fd=11
+ group_fd=-1
+ type=4
+@@ -81,7 +81,7 @@ read_format=15
+ optional=1
+ 
+ # PERF_TYPE_RAW / topdown-retiring (0x8000)
+-[event12:base-stat]
++[event12:base-stat-group]
+ fd=12
+ group_fd=11
+ type=4
+@@ -92,7 +92,7 @@ read_format=15
+ optional=1
+ 
+ # PERF_TYPE_RAW / topdown-bad-spec (0x8100)
+-[event13:base-stat]
++[event13:base-stat-group]
+ fd=13
+ group_fd=11
+ type=4
+@@ -103,7 +103,7 @@ read_format=15
+ optional=1
+ 
+ # PERF_TYPE_RAW / topdown-fe-bound (0x8200)
+-[event14:base-stat]
++[event14:base-stat-group]
+ fd=14
+ group_fd=11
+ type=4
+@@ -114,7 +114,7 @@ read_format=15
+ optional=1
+ 
+ # PERF_TYPE_RAW / topdown-be-bound (0x8300)
+-[event15:base-stat]
++[event15:base-stat-group]
+ fd=15
+ group_fd=11
+ type=4
+@@ -125,7 +125,7 @@ read_format=15
+ optional=1
+ 
+ # PERF_TYPE_RAW / topdown-heavy-ops (0x8400)
+-[event16:base-stat]
++[event16:base-stat-group]
+ fd=16
+ group_fd=11
+ type=4
+@@ -136,7 +136,7 @@ read_format=15
+ optional=1
+ 
+ # PERF_TYPE_RAW / topdown-br-mispredict (0x8500)
+-[event17:base-stat]
++[event17:base-stat-group]
+ fd=17
+ group_fd=11
+ type=4
+@@ -147,7 +147,7 @@ read_format=15
+ optional=1
+ 
+ # PERF_TYPE_RAW / topdown-fetch-lat (0x8600)
+-[event18:base-stat]
++[event18:base-stat-group]
+ fd=18
+ group_fd=11
+ type=4
+@@ -158,7 +158,7 @@ read_format=15
+ optional=1
+ 
+ # PERF_TYPE_RAW / topdown-mem-bound (0x8700)
+-[event19:base-stat]
++[event19:base-stat-group]
+ fd=19
+ group_fd=11
+ type=4
+@@ -169,63 +169,63 @@ read_format=15
+ optional=1
+ 
+ # PERF_TYPE_RAW / INT_MISC.UOP_DROPPING
+-[event20:base-stat]
++[event20:base-stat-group]
+ fd=20
+ type=4
+ config=4109
+ optional=1
+ 
+ # PERF_TYPE_RAW / cpu/INT_MISC.RECOVERY_CYCLES,cmask=1,edge/
+-[event21:base-stat]
++[event21:base-stat-group]
+ fd=21
+ type=4
+ config=17039629
+ optional=1
+ 
+-# PERF_TYPE_RAW / CPU_CLK_UNHALTED.THREAD
+-[event22:base-stat]
++# PERF_TYPE_RAW / cpu-cycles (core PMU sysfs event; Intel 0x3c, AMD 0x76)
++[event22:base-stat-group]
+ fd=22
+ type=4
+-config=60
++config=60|118
+ optional=1
+ 
+ # PERF_TYPE_RAW / INT_MISC.RECOVERY_CYCLES_ANY
+-[event23:base-stat]
++[event23:base-stat-group]
+ fd=23
+ type=4
+ config=2097421
+ optional=1
+ 
+ # PERF_TYPE_RAW / CPU_CLK_UNHALTED.REF_XCLK
+-[event24:base-stat]
++[event24:base-stat-group]
+ fd=24
+ type=4
+ config=316
+ optional=1
+ 
+ # PERF_TYPE_RAW / IDQ_UOPS_NOT_DELIVERED.CORE
+-[event25:base-stat]
++[event25:base-stat-group]
+ fd=25
+ type=4
+ config=412
+ optional=1
+ 
+ # PERF_TYPE_RAW / CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE
+-[event26:base-stat]
++[event26:base-stat-group]
+ fd=26
+ type=4
+ config=572
+ optional=1
+ 
+ # PERF_TYPE_RAW / UOPS_RETIRED.RETIRE_SLOTS
+-[event27:base-stat]
++[event27:base-stat-group]
+ fd=27
+ type=4
+ config=706
+ optional=1
+ 
+ # PERF_TYPE_RAW / UOPS_ISSUED.ANY
+-[event28:base-stat]
++[event28:base-stat-group]
+ fd=28
+ type=4
+ config=270
+@@ -235,7 +235,7 @@ optional=1
+ #  PERF_COUNT_HW_CACHE_L1D                <<  0  |
+ # (PERF_COUNT_HW_CACHE_OP_READ            <<  8) |
+ # (PERF_COUNT_HW_CACHE_RESULT_ACCESS      << 16)
+-[event29:base-stat]
++[event29:base-stat-group]
+ fd=29
+ type=3
+ config=0
+@@ -245,7 +245,7 @@ optional=1
+ #  PERF_COUNT_HW_CACHE_L1D                <<  0  |
+ # (PERF_COUNT_HW_CACHE_OP_READ            <<  8) |
+ # (PERF_COUNT_HW_CACHE_RESULT_MISS        << 16)
+-[event30:base-stat]
++[event30:base-stat-group]
+ fd=30
+ type=3
+ config=65536
+@@ -255,7 +255,7 @@ optional=1
+ #  PERF_COUNT_HW_CACHE_LL                 <<  0  |
+ # (PERF_COUNT_HW_CACHE_OP_READ            <<  8) |
+ # (PERF_COUNT_HW_CACHE_RESULT_ACCESS      << 16)
+-[event31:base-stat]
++[event31:base-stat-group]
+ fd=31
+ type=3
+ config=2
+@@ -265,15 +265,43 @@ optional=1
+ #  PERF_COUNT_HW_CACHE_LL                 <<  0  |
+ # (PERF_COUNT_HW_CACHE_OP_READ            <<  8) |
+ # (PERF_COUNT_HW_CACHE_RESULT_MISS        << 16)
+-[event32:base-stat]
++[event32:base-stat-group]
+ fd=32
+ type=3
+ config=65538
+ optional=1
+ 
+ # PERF_TYPE_RAW / INT_MISC.UOP_DROPPING
+-[event33:base-stat]
++[event33:base-stat-group]
+ fd=33
+ type=4
+ config=4269
++optional=1
++
++# PERF_TYPE_RAW / instructions (core PMU sysfs event)
++[event34:base-stat-group]
++fd=34
++type=4
++config=192
++optional=1
++
++# PERF_TYPE_RAW / branch-misses (core PMU sysfs event; Intel 0xc5, AMD 0xc3)
++[event35:base-stat-group]
++fd=35
++type=4
++config=197|195
++optional=1
++
++# PERF_TYPE_RAW / stalled-cycles-frontend (core PMU sysfs event; Intel 0x180010e, AMD 0xd0/0x287/0xa9)
++[event36:base-stat-group]
++fd=36
++type=4
++config=25166094|208|647|169
++optional=1
++
++# PERF_TYPE_RAW / stalled-cycles-backend (core PMU sysfs event; Intel 0x18001b1/0x1803fb1, AMD 0xd1/0x187)
++[event37:base-stat-group]
++fd=37
++type=4
++config=25166257|25182129|209|391
+ optional=1
+\ No newline at end of file
+diff --git a/tools/perf/tests/shell/attr/test-stat-detailed-2 b/tools/perf/tests/shell/attr/test-stat-detailed-2
+index 582a30289ccfa6df..ebe1f9e2736ddd68 100644
+--- a/tools/perf/tests/shell/attr/test-stat-detailed-2
++++ b/tools/perf/tests/shell/attr/test-stat-detailed-2
+@@ -6,73 +6,73 @@ requires = core-pmu
+ 
+ 
+ # PERF_TYPE_SOFTWARE / PERF_COUNT_SW_TASK_CLOCK
+-[event1:base-stat]
++[event1:base-stat-group]
+ fd=1
+ type=1
+ config=1
+ 
+ # PERF_TYPE_SOFTWARE / PERF_COUNT_SW_CONTEXT_SWITCHES
+-[event2:base-stat]
++[event2:base-stat-group]
+ fd=2
+ type=1
  config=3
  
-diff --git a/tools/perf/tests/shell/attr/test-record-group1 b/tools/perf/tests/shell/attr/test-record-group1
-index a57c7ee8aaa4f9c9..5fdd5288555f32ea 100644
---- a/tools/perf/tests/shell/attr/test-record-group1
-+++ b/tools/perf/tests/shell/attr/test-record-group1
-@@ -1,6 +1,6 @@
- [config]
- command = record
--args    = --no-bpf-event -e '{cycles,instructions}' kill >/dev/null 2>&1
-+args    = --no-bpf-event -e '{cycles,default_core/legacy-hardware-config=1/}' kill >/dev/null 2>&1
- ret     = 1
- requires = core-pmu
+ # PERF_TYPE_SOFTWARE / PERF_COUNT_SW_CPU_MIGRATIONS
+-[event3:base-stat]
++[event3:base-stat-group]
+ fd=3
+ type=1
+ config=4
  
-diff --git a/tools/perf/tests/shell/attr/test-record-group2 b/tools/perf/tests/shell/attr/test-record-group2
-index fb6e664eeacc10ef..e7274108f5fd7e7b 100644
---- a/tools/perf/tests/shell/attr/test-record-group2
-+++ b/tools/perf/tests/shell/attr/test-record-group2
-@@ -1,6 +1,6 @@
- [config]
- command = record
--args    = --no-bpf-event -e '{cycles/period=1234000/,instructions/period=6789000/}:S' kill >/dev/null 2>&1
-+args    = --no-bpf-event -e '{cycles/period=1234000/,default_core/legacy-hardware-config=1,period=6789000/}:S' kill >/dev/null 2>&1
- ret     = 1
- kernel_until = 6.12
- requires = core-pmu
-diff --git a/tools/perf/tests/shell/attr/test-record-group3 b/tools/perf/tests/shell/attr/test-record-group3
-index 7b90b4411d8f4b90..e74fd3a48ac9094f 100644
---- a/tools/perf/tests/shell/attr/test-record-group3
-+++ b/tools/perf/tests/shell/attr/test-record-group3
-@@ -1,6 +1,6 @@
- [config]
- command = record
--args    = --no-bpf-event -e '{cycles/period=1234000/,instructions/period=6789000/}:S' kill >/dev/null 2>&1
-+args    = --no-bpf-event -e '{cycles/period=1234000/,default_core/legacy-hardware-config=1,period=6789000/}:S' kill >/dev/null 2>&1
- ret     = 1
- kernel_since = 6.12
- requires = core-pmu
-diff --git a/tools/perf/tests/shell/attr/test-stat-group1 b/tools/perf/tests/shell/attr/test-stat-group1
-index 3d8b44ba42d6ae19..7a31b27933f11959 100644
---- a/tools/perf/tests/shell/attr/test-stat-group1
-+++ b/tools/perf/tests/shell/attr/test-stat-group1
-@@ -1,6 +1,6 @@
- [config]
- command = stat
--args    = -e '{cycles,instructions}' kill >/dev/null 2>&1
-+args    = -e '{cycles,default_core/legacy-hardware-config=1/}' kill >/dev/null 2>&1
- ret     = 1
- requires = core-pmu
+ # PERF_TYPE_SOFTWARE / PERF_COUNT_SW_PAGE_FAULTS
+-[event4:base-stat]
++[event4:base-stat-group]
+ fd=4
+ type=1
+ config=2
  
+ # PERF_TYPE_HARDWARE / PERF_COUNT_HW_CPU_CYCLES
+-[event5:base-stat]
++[event5:base-stat-group]
+ fd=5
+ type=0
+ config=0
+ optional=1
+ 
+ # PERF_TYPE_HARDWARE / PERF_COUNT_HW_STALLED_CYCLES_FRONTEND
+-[event6:base-stat]
++[event6:base-stat-group]
+ fd=6
+ type=0
+ config=7
+ optional=1
+ 
+ # PERF_TYPE_HARDWARE / PERF_COUNT_HW_STALLED_CYCLES_BACKEND
+-[event7:base-stat]
++[event7:base-stat-group]
+ fd=7
+ type=0
+ config=8
+ optional=1
+ 
+ # PERF_TYPE_HARDWARE / PERF_COUNT_HW_INSTRUCTIONS
+-[event8:base-stat]
++[event8:base-stat-group]
+ fd=8
+ type=0
+ config=1
+ optional=1
+ 
+ # PERF_TYPE_HARDWARE / PERF_COUNT_HW_BRANCH_INSTRUCTIONS
+-[event9:base-stat]
++[event9:base-stat-group]
+ fd=9
+ type=0
+ config=4
+ optional=1
+ 
+ # PERF_TYPE_HARDWARE / PERF_COUNT_HW_BRANCH_MISSES
+-[event10:base-stat]
++[event10:base-stat-group]
+ fd=10
+ type=0
+ config=5
+ optional=1
+ 
+ # PERF_TYPE_RAW / slots (0x400)
+-[event11:base-stat]
++[event11:base-stat-group]
+ fd=11
+ group_fd=-1
+ type=4
+@@ -81,7 +81,7 @@ read_format=15
+ optional=1
+ 
+ # PERF_TYPE_RAW / topdown-retiring (0x8000)
+-[event12:base-stat]
++[event12:base-stat-group]
+ fd=12
+ group_fd=11
+ type=4
+@@ -92,7 +92,7 @@ read_format=15
+ optional=1
+ 
+ # PERF_TYPE_RAW / topdown-bad-spec (0x8100)
+-[event13:base-stat]
++[event13:base-stat-group]
+ fd=13
+ group_fd=11
+ type=4
+@@ -103,7 +103,7 @@ read_format=15
+ optional=1
+ 
+ # PERF_TYPE_RAW / topdown-fe-bound (0x8200)
+-[event14:base-stat]
++[event14:base-stat-group]
+ fd=14
+ group_fd=11
+ type=4
+@@ -114,7 +114,7 @@ read_format=15
+ optional=1
+ 
+ # PERF_TYPE_RAW / topdown-be-bound (0x8300)
+-[event15:base-stat]
++[event15:base-stat-group]
+ fd=15
+ group_fd=11
+ type=4
+@@ -125,7 +125,7 @@ read_format=15
+ optional=1
+ 
+ # PERF_TYPE_RAW / topdown-heavy-ops (0x8400)
+-[event16:base-stat]
++[event16:base-stat-group]
+ fd=16
+ group_fd=11
+ type=4
+@@ -136,7 +136,7 @@ read_format=15
+ optional=1
+ 
+ # PERF_TYPE_RAW / topdown-br-mispredict (0x8500)
+-[event17:base-stat]
++[event17:base-stat-group]
+ fd=17
+ group_fd=11
+ type=4
+@@ -147,7 +147,7 @@ read_format=15
+ optional=1
+ 
+ # PERF_TYPE_RAW / topdown-fetch-lat (0x8600)
+-[event18:base-stat]
++[event18:base-stat-group]
+ fd=18
+ group_fd=11
+ type=4
+@@ -158,7 +158,7 @@ read_format=15
+ optional=1
+ 
+ # PERF_TYPE_RAW / topdown-mem-bound (0x8700)
+-[event19:base-stat]
++[event19:base-stat-group]
+ fd=19
+ group_fd=11
+ type=4
+@@ -169,63 +169,63 @@ read_format=15
+ optional=1
+ 
+ # PERF_TYPE_RAW / INT_MISC.UOP_DROPPING
+-[event20:base-stat]
++[event20:base-stat-group]
+ fd=20
+ type=4
+ config=4109
+ optional=1
+ 
+ # PERF_TYPE_RAW / cpu/INT_MISC.RECOVERY_CYCLES,cmask=1,edge/
+-[event21:base-stat]
++[event21:base-stat-group]
+ fd=21
+ type=4
+ config=17039629
+ optional=1
+ 
+-# PERF_TYPE_RAW / CPU_CLK_UNHALTED.THREAD
+-[event22:base-stat]
++# PERF_TYPE_RAW / cpu-cycles (core PMU sysfs event; Intel 0x3c, AMD 0x76)
++[event22:base-stat-group]
+ fd=22
+ type=4
+-config=60
++config=60|118
+ optional=1
+ 
+ # PERF_TYPE_RAW / INT_MISC.RECOVERY_CYCLES_ANY
+-[event23:base-stat]
++[event23:base-stat-group]
+ fd=23
+ type=4
+ config=2097421
+ optional=1
+ 
+ # PERF_TYPE_RAW / CPU_CLK_UNHALTED.REF_XCLK
+-[event24:base-stat]
++[event24:base-stat-group]
+ fd=24
+ type=4
+ config=316
+ optional=1
+ 
+ # PERF_TYPE_RAW / IDQ_UOPS_NOT_DELIVERED.CORE
+-[event25:base-stat]
++[event25:base-stat-group]
+ fd=25
+ type=4
+ config=412
+ optional=1
+ 
+ # PERF_TYPE_RAW / CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE
+-[event26:base-stat]
++[event26:base-stat-group]
+ fd=26
+ type=4
+ config=572
+ optional=1
+ 
+ # PERF_TYPE_RAW / UOPS_RETIRED.RETIRE_SLOTS
+-[event27:base-stat]
++[event27:base-stat-group]
+ fd=27
+ type=4
+ config=706
+ optional=1
+ 
+ # PERF_TYPE_RAW / UOPS_ISSUED.ANY
+-[event28:base-stat]
++[event28:base-stat-group]
+ fd=28
+ type=4
+ config=270
+@@ -235,7 +235,7 @@ optional=1
+ #  PERF_COUNT_HW_CACHE_L1D                <<  0  |
+ # (PERF_COUNT_HW_CACHE_OP_READ            <<  8) |
+ # (PERF_COUNT_HW_CACHE_RESULT_ACCESS      << 16)
+-[event29:base-stat]
++[event29:base-stat-group]
+ fd=29
+ type=3
+ config=0
+@@ -245,7 +245,7 @@ optional=1
+ #  PERF_COUNT_HW_CACHE_L1D                <<  0  |
+ # (PERF_COUNT_HW_CACHE_OP_READ            <<  8) |
+ # (PERF_COUNT_HW_CACHE_RESULT_MISS        << 16)
+-[event30:base-stat]
++[event30:base-stat-group]
+ fd=30
+ type=3
+ config=65536
+@@ -255,7 +255,7 @@ optional=1
+ #  PERF_COUNT_HW_CACHE_LL                 <<  0  |
+ # (PERF_COUNT_HW_CACHE_OP_READ            <<  8) |
+ # (PERF_COUNT_HW_CACHE_RESULT_ACCESS      << 16)
+-[event31:base-stat]
++[event31:base-stat-group]
+ fd=31
+ type=3
+ config=2
+@@ -265,7 +265,7 @@ optional=1
+ #  PERF_COUNT_HW_CACHE_LL                 <<  0  |
+ # (PERF_COUNT_HW_CACHE_OP_READ            <<  8) |
+ # (PERF_COUNT_HW_CACHE_RESULT_MISS        << 16)
+-[event32:base-stat]
++[event32:base-stat-group]
+ fd=32
+ type=3
+ config=65538
+@@ -275,7 +275,7 @@ optional=1
+ #  PERF_COUNT_HW_CACHE_L1I                <<  0  |
+ # (PERF_COUNT_HW_CACHE_OP_READ            <<  8) |
+ # (PERF_COUNT_HW_CACHE_RESULT_ACCESS      << 16)
+-[event33:base-stat]
++[event33:base-stat-group]
+ fd=33
+ type=3
+ config=1
+@@ -285,7 +285,7 @@ optional=1
+ #  PERF_COUNT_HW_CACHE_L1I                <<  0  |
+ # (PERF_COUNT_HW_CACHE_OP_READ            <<  8) |
+ # (PERF_COUNT_HW_CACHE_RESULT_MISS        << 16)
+-[event34:base-stat]
++[event34:base-stat-group]
+ fd=34
+ type=3
+ config=65537
+@@ -295,7 +295,7 @@ optional=1
+ #  PERF_COUNT_HW_CACHE_DTLB               <<  0  |
+ # (PERF_COUNT_HW_CACHE_OP_READ            <<  8) |
+ # (PERF_COUNT_HW_CACHE_RESULT_ACCESS      << 16)
+-[event35:base-stat]
++[event35:base-stat-group]
+ fd=35
+ type=3
+ config=3
+@@ -305,7 +305,7 @@ optional=1
+ #  PERF_COUNT_HW_CACHE_DTLB               <<  0  |
+ # (PERF_COUNT_HW_CACHE_OP_READ            <<  8) |
+ # (PERF_COUNT_HW_CACHE_RESULT_MISS        << 16)
+-[event36:base-stat]
++[event36:base-stat-group]
+ fd=36
+ type=3
+ config=65539
+@@ -315,7 +315,7 @@ optional=1
+ #  PERF_COUNT_HW_CACHE_ITLB               <<  0  |
+ # (PERF_COUNT_HW_CACHE_OP_READ            <<  8) |
+ # (PERF_COUNT_HW_CACHE_RESULT_ACCESS      << 16)
+-[event37:base-stat]
++[event37:base-stat-group]
+ fd=37
+ type=3
+ config=4
+@@ -325,15 +325,43 @@ optional=1
+ #  PERF_COUNT_HW_CACHE_ITLB               <<  0  |
+ # (PERF_COUNT_HW_CACHE_OP_READ            <<  8) |
+ # (PERF_COUNT_HW_CACHE_RESULT_MISS        << 16)
+-[event38:base-stat]
++[event38:base-stat-group]
+ fd=38
+ type=3
+ config=65540
+ optional=1
+ 
+ # PERF_TYPE_RAW / INT_MISC.UOP_DROPPING
+-[event39:base-stat]
++[event39:base-stat-group]
+ fd=39
+ type=4
+ config=4269
++optional=1
++
++# PERF_TYPE_RAW / instructions (core PMU sysfs event)
++[event40:base-stat-group]
++fd=40
++type=4
++config=192
++optional=1
++
++# PERF_TYPE_RAW / branch-misses (core PMU sysfs event; Intel 0xc5, AMD 0xc3)
++[event41:base-stat-group]
++fd=41
++type=4
++config=197|195
++optional=1
++
++# PERF_TYPE_RAW / stalled-cycles-frontend (core PMU sysfs event; Intel 0x180010e, AMD 0xd0/0x287/0xa9)
++[event42:base-stat-group]
++fd=42
++type=4
++config=25166094|208|647|169
++optional=1
++
++# PERF_TYPE_RAW / stalled-cycles-backend (core PMU sysfs event; Intel 0x18001b1/0x1803fb1, AMD 0xd1/0x187)
++[event43:base-stat-group]
++fd=43
++type=4
++config=25166257|25182129|209|391
+ optional=1
+\ No newline at end of file
+diff --git a/tools/perf/tests/shell/attr/test-stat-detailed-3 b/tools/perf/tests/shell/attr/test-stat-detailed-3
+index 2d0fca8b5020f504..e7eef828245c5d6c 100644
+--- a/tools/perf/tests/shell/attr/test-stat-detailed-3
++++ b/tools/perf/tests/shell/attr/test-stat-detailed-3
+@@ -6,73 +6,73 @@ requires = core-pmu
+ 
+ 
+ # PERF_TYPE_SOFTWARE / PERF_COUNT_SW_TASK_CLOCK
+-[event1:base-stat]
++[event1:base-stat-group]
+ fd=1
+ type=1
+ config=1
+ 
+ # PERF_TYPE_SOFTWARE / PERF_COUNT_SW_CONTEXT_SWITCHES
+-[event2:base-stat]
++[event2:base-stat-group]
+ fd=2
+ type=1
+ config=3
+ 
+ # PERF_TYPE_SOFTWARE / PERF_COUNT_SW_CPU_MIGRATIONS
+-[event3:base-stat]
++[event3:base-stat-group]
+ fd=3
+ type=1
+ config=4
+ 
+ # PERF_TYPE_SOFTWARE / PERF_COUNT_SW_PAGE_FAULTS
+-[event4:base-stat]
++[event4:base-stat-group]
+ fd=4
+ type=1
+ config=2
+ 
+ # PERF_TYPE_HARDWARE / PERF_COUNT_HW_CPU_CYCLES
+-[event5:base-stat]
++[event5:base-stat-group]
+ fd=5
+ type=0
+ config=0
+ optional=1
+ 
+ # PERF_TYPE_HARDWARE / PERF_COUNT_HW_STALLED_CYCLES_FRONTEND
+-[event6:base-stat]
++[event6:base-stat-group]
+ fd=6
+ type=0
+ config=7
+ optional=1
+ 
+ # PERF_TYPE_HARDWARE / PERF_COUNT_HW_STALLED_CYCLES_BACKEND
+-[event7:base-stat]
++[event7:base-stat-group]
+ fd=7
+ type=0
+ config=8
+ optional=1
+ 
+ # PERF_TYPE_HARDWARE / PERF_COUNT_HW_INSTRUCTIONS
+-[event8:base-stat]
++[event8:base-stat-group]
+ fd=8
+ type=0
+ config=1
+ optional=1
+ 
+ # PERF_TYPE_HARDWARE / PERF_COUNT_HW_BRANCH_INSTRUCTIONS
+-[event9:base-stat]
++[event9:base-stat-group]
+ fd=9
+ type=0
+ config=4
+ optional=1
+ 
+ # PERF_TYPE_HARDWARE / PERF_COUNT_HW_BRANCH_MISSES
+-[event10:base-stat]
++[event10:base-stat-group]
+ fd=10
+ type=0
+ config=5
+ optional=1
+ 
+ # PERF_TYPE_RAW / slots (0x400)
+-[event11:base-stat]
++[event11:base-stat-group]
+ fd=11
+ group_fd=-1
+ type=4
+@@ -81,7 +81,7 @@ read_format=15
+ optional=1
+ 
+ # PERF_TYPE_RAW / topdown-retiring (0x8000)
+-[event12:base-stat]
++[event12:base-stat-group]
+ fd=12
+ group_fd=11
+ type=4
+@@ -92,7 +92,7 @@ read_format=15
+ optional=1
+ 
+ # PERF_TYPE_RAW / topdown-bad-spec (0x8100)
+-[event13:base-stat]
++[event13:base-stat-group]
+ fd=13
+ group_fd=11
+ type=4
+@@ -103,7 +103,7 @@ read_format=15
+ optional=1
+ 
+ # PERF_TYPE_RAW / topdown-fe-bound (0x8200)
+-[event14:base-stat]
++[event14:base-stat-group]
+ fd=14
+ group_fd=11
+ type=4
+@@ -114,7 +114,7 @@ read_format=15
+ optional=1
+ 
+ # PERF_TYPE_RAW / topdown-be-bound (0x8300)
+-[event15:base-stat]
++[event15:base-stat-group]
+ fd=15
+ group_fd=11
+ type=4
+@@ -125,7 +125,7 @@ read_format=15
+ optional=1
+ 
+ # PERF_TYPE_RAW / topdown-heavy-ops (0x8400)
+-[event16:base-stat]
++[event16:base-stat-group]
+ fd=16
+ group_fd=11
+ type=4
+@@ -136,7 +136,7 @@ read_format=15
+ optional=1
+ 
+ # PERF_TYPE_RAW / topdown-br-mispredict (0x8500)
+-[event17:base-stat]
++[event17:base-stat-group]
+ fd=17
+ group_fd=11
+ type=4
+@@ -147,7 +147,7 @@ read_format=15
+ optional=1
+ 
+ # PERF_TYPE_RAW / topdown-fetch-lat (0x8600)
+-[event18:base-stat]
++[event18:base-stat-group]
+ fd=18
+ group_fd=11
+ type=4
+@@ -158,7 +158,7 @@ read_format=15
+ optional=1
+ 
+ # PERF_TYPE_RAW / topdown-mem-bound (0x8700)
+-[event19:base-stat]
++[event19:base-stat-group]
+ fd=19
+ group_fd=11
+ type=4
+@@ -169,63 +169,63 @@ read_format=15
+ optional=1
+ 
+ # PERF_TYPE_RAW / INT_MISC.UOP_DROPPING
+-[event20:base-stat]
++[event20:base-stat-group]
+ fd=20
+ type=4
+ config=4109
+ optional=1
+ 
+ # PERF_TYPE_RAW / cpu/INT_MISC.RECOVERY_CYCLES,cmask=1,edge/
+-[event21:base-stat]
++[event21:base-stat-group]
+ fd=21
+ type=4
+ config=17039629
+ optional=1
+ 
+-# PERF_TYPE_RAW / CPU_CLK_UNHALTED.THREAD
+-[event22:base-stat]
++# PERF_TYPE_RAW / cpu-cycles (core PMU sysfs event; Intel 0x3c, AMD 0x76)
++[event22:base-stat-group]
+ fd=22
+ type=4
+-config=60
++config=60|118
+ optional=1
+ 
+ # PERF_TYPE_RAW / INT_MISC.RECOVERY_CYCLES_ANY
+-[event23:base-stat]
++[event23:base-stat-group]
+ fd=23
+ type=4
+ config=2097421
+ optional=1
+ 
+ # PERF_TYPE_RAW / CPU_CLK_UNHALTED.REF_XCLK
+-[event24:base-stat]
++[event24:base-stat-group]
+ fd=24
+ type=4
+ config=316
+ optional=1
+ 
+ # PERF_TYPE_RAW / IDQ_UOPS_NOT_DELIVERED.CORE
+-[event25:base-stat]
++[event25:base-stat-group]
+ fd=25
+ type=4
+ config=412
+ optional=1
+ 
+ # PERF_TYPE_RAW / CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE
+-[event26:base-stat]
++[event26:base-stat-group]
+ fd=26
+ type=4
+ config=572
+ optional=1
+ 
+ # PERF_TYPE_RAW / UOPS_RETIRED.RETIRE_SLOTS
+-[event27:base-stat]
++[event27:base-stat-group]
+ fd=27
+ type=4
+ config=706
+ optional=1
+ 
+ # PERF_TYPE_RAW / UOPS_ISSUED.ANY
+-[event28:base-stat]
++[event28:base-stat-group]
+ fd=28
+ type=4
+ config=270
+@@ -235,7 +235,7 @@ optional=1
+ #  PERF_COUNT_HW_CACHE_L1D                <<  0  |
+ # (PERF_COUNT_HW_CACHE_OP_READ            <<  8) |
+ # (PERF_COUNT_HW_CACHE_RESULT_ACCESS      << 16)
+-[event29:base-stat]
++[event29:base-stat-group]
+ fd=29
+ type=3
+ config=0
+@@ -245,7 +245,7 @@ optional=1
+ #  PERF_COUNT_HW_CACHE_L1D                <<  0  |
+ # (PERF_COUNT_HW_CACHE_OP_READ            <<  8) |
+ # (PERF_COUNT_HW_CACHE_RESULT_MISS        << 16)
+-[event30:base-stat]
++[event30:base-stat-group]
+ fd=30
+ type=3
+ config=65536
+@@ -255,7 +255,7 @@ optional=1
+ #  PERF_COUNT_HW_CACHE_LL                 <<  0  |
+ # (PERF_COUNT_HW_CACHE_OP_READ            <<  8) |
+ # (PERF_COUNT_HW_CACHE_RESULT_ACCESS      << 16)
+-[event31:base-stat]
++[event31:base-stat-group]
+ fd=31
+ type=3
+ config=2
+@@ -265,7 +265,7 @@ optional=1
+ #  PERF_COUNT_HW_CACHE_LL                 <<  0  |
+ # (PERF_COUNT_HW_CACHE_OP_READ            <<  8) |
+ # (PERF_COUNT_HW_CACHE_RESULT_MISS        << 16)
+-[event32:base-stat]
++[event32:base-stat-group]
+ fd=32
+ type=3
+ config=65538
+@@ -275,7 +275,7 @@ optional=1
+ #  PERF_COUNT_HW_CACHE_L1I                <<  0  |
+ # (PERF_COUNT_HW_CACHE_OP_READ            <<  8) |
+ # (PERF_COUNT_HW_CACHE_RESULT_ACCESS      << 16)
+-[event33:base-stat]
++[event33:base-stat-group]
+ fd=33
+ type=3
+ config=1
+@@ -285,7 +285,7 @@ optional=1
+ #  PERF_COUNT_HW_CACHE_L1I                <<  0  |
+ # (PERF_COUNT_HW_CACHE_OP_READ            <<  8) |
+ # (PERF_COUNT_HW_CACHE_RESULT_MISS        << 16)
+-[event34:base-stat]
++[event34:base-stat-group]
+ fd=34
+ type=3
+ config=65537
+@@ -295,7 +295,7 @@ optional=1
+ #  PERF_COUNT_HW_CACHE_DTLB               <<  0  |
+ # (PERF_COUNT_HW_CACHE_OP_READ            <<  8) |
+ # (PERF_COUNT_HW_CACHE_RESULT_ACCESS      << 16)
+-[event35:base-stat]
++[event35:base-stat-group]
+ fd=35
+ type=3
+ config=3
+@@ -305,7 +305,7 @@ optional=1
+ #  PERF_COUNT_HW_CACHE_DTLB               <<  0  |
+ # (PERF_COUNT_HW_CACHE_OP_READ            <<  8) |
+ # (PERF_COUNT_HW_CACHE_RESULT_MISS        << 16)
+-[event36:base-stat]
++[event36:base-stat-group]
+ fd=36
+ type=3
+ config=65539
+@@ -315,7 +315,7 @@ optional=1
+ #  PERF_COUNT_HW_CACHE_ITLB               <<  0  |
+ # (PERF_COUNT_HW_CACHE_OP_READ            <<  8) |
+ # (PERF_COUNT_HW_CACHE_RESULT_ACCESS      << 16)
+-[event37:base-stat]
++[event37:base-stat-group]
+ fd=37
+ type=3
+ config=4
+@@ -325,7 +325,7 @@ optional=1
+ #  PERF_COUNT_HW_CACHE_ITLB               <<  0  |
+ # (PERF_COUNT_HW_CACHE_OP_READ            <<  8) |
+ # (PERF_COUNT_HW_CACHE_RESULT_MISS        << 16)
+-[event38:base-stat]
++[event38:base-stat-group]
+ fd=38
+ type=3
+ config=65540
+@@ -335,7 +335,7 @@ optional=1
+ #  PERF_COUNT_HW_CACHE_L1D                <<  0  |
+ # (PERF_COUNT_HW_CACHE_OP_PREFETCH        <<  8) |
+ # (PERF_COUNT_HW_CACHE_RESULT_ACCESS      << 16)
+-[event39:base-stat]
++[event39:base-stat-group]
+ fd=39
+ type=3
+ config=512
+@@ -345,15 +345,43 @@ optional=1
+ #  PERF_COUNT_HW_CACHE_L1D                <<  0  |
+ # (PERF_COUNT_HW_CACHE_OP_PREFETCH        <<  8) |
+ # (PERF_COUNT_HW_CACHE_RESULT_MISS        << 16)
+-[event40:base-stat]
++[event40:base-stat-group]
+ fd=40
+ type=3
+ config=66048
+ optional=1
+ 
+ # PERF_TYPE_RAW / INT_MISC.UOP_DROPPING
+-[event41:base-stat]
++[event41:base-stat-group]
+ fd=41
+ type=4
+ config=4269
++optional=1
++
++# PERF_TYPE_RAW / instructions (core PMU sysfs event)
++[event42:base-stat-group]
++fd=42
++type=4
++config=192
++optional=1
++
++# PERF_TYPE_RAW / branch-misses (core PMU sysfs event; Intel 0xc5, AMD 0xc3)
++[event43:base-stat-group]
++fd=43
++type=4
++config=197|195
++optional=1
++
++# PERF_TYPE_RAW / stalled-cycles-frontend (core PMU sysfs event; Intel 0x180010e, AMD 0xd0/0x287/0xa9)
++[event44:base-stat-group]
++fd=44
++type=4
++config=25166094|208|647|169
++optional=1
++
++# PERF_TYPE_RAW / stalled-cycles-backend (core PMU sysfs event; Intel 0x18001b1/0x1803fb1, AMD 0xd1/0x187)
++[event45:base-stat-group]
++fd=45
++type=4
++config=25166257|25182129|209|391
+ optional=1
+\ No newline at end of file
 -- 
 2.55.0
 
