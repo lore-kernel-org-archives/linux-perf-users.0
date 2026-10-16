@@ -1,44 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F0FE2D5C8E
-	for <linux-perf-users@vger.kernel.org>; Fri, 16 Oct 2026 00:26:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED9EE547041
+	for <linux-perf-users@vger.kernel.org>; Fri, 16 Oct 2026 00:27:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792110385; cv=none; b=ZA/tEmO9aSjZt4WFFX24UVbIZCCOQWUo4GwJ/WLsnI8tegNT1rOjTewp2t0y/05XRJNfJuKSxZ+/OKVkgG+eTeBCY1S0cSzL12ykcYA4JDY9p7Chkh7CAaDOzUufMbW+qeHq3ai/hucej7ihMEFwqoG9uhu8w9GSqYvDwVlW9Wc=
+	t=1792110448; cv=none; b=DDQtXfL28JygavQs2xIWLZrjmU+/hzX/KFa6ZC6cGmCiK8PTTFaEaALL3PBCT6Gy2raMzHQ303uxtA2jhXbl+nuHyufkcVWL1T+Kkk5jeSzxSprR40VWu68KDrlWpSvjAl2b1xKEA+5L6k8IfEJPIK8iz63+HFLgKmpdTi7qlzM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792110385; c=relaxed/simple;
-	bh=mWJYy3heEa/PgV9wxrmbo/B0lxDSgJ8W/Lo3nSwhO54=;
+	s=arc-20240116; t=1792110448; c=relaxed/simple;
+	bh=2/zSyCVb18wefTU+I5fE3w69yI9HdQBuVw6xEEK4PjE=;
 	h=Message-ID:From:Subject:To:Cc:In-Reply-To:References:Content-Type:
-	 Date; b=KBTzLSMTyP4HcYCVOtzHv6vxAGAwAc4YQySULqoh1ZpMiiZvcrR/AeHhw1rNRV51FJ1ZxOY439CZ/srhV46t9RsZz5zNKyHSEw/0n/UU1fmJOEYqSH7/8FVzBpyhm7eVDDel9S2TK+hYtD+aCUbswlntlv8KPONZVMBQBYPnWsI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ad+cgpob; arc=none smtp.client-ip=100.103.45.18
+	 Date; b=RfpTJsUxa2jEPTWZxQUY8qtEGjxKW/f0vi0KaCwJ2sUlaH+4ukcctzRE19O2oi0Wpwf/bfRqEQ0ASA0bEdErUDw8faRlTU4EkX2EcK7KHilxebXuTcrJzH/OfuRok2pnlvLsG4jiqkKnPPpZTX/51LaXw3oJ+zU289oDDEIswDY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Qp2qfZCA; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ad+cgpob"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 975C31F000C4;
-	Fri, 16 Oct 2026 00:26:21 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Qp2qfZCA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5CF611F000C4;
+	Fri, 16 Oct 2026 00:27:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1792110381;
-	bh=u4Wm4WzmFIgbTks8i//SoG+9skN8ql8thwwiKLy9qI8=;
+	s=k20260515; t=1792110447;
+	bh=xAbJo6DNO1GJgsvP0sGMG2l9V4UrZcPbOEWFD7kIXDY=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=ad+cgpoboSWVakWNJtyx9gAL/zl+qnk9Ajs6YcOBnQsZ1ag+zOW6ktgLfecGmZ1uX
-	 VTo7RrOtQ2JzKenuERyxZQlPW3Vjq2qRpR9xw5RcXHop7FZ34vazSN39bV4FooPJax
-	 RpbBs+cFKVUBt08PNNLk4OBAlCKOXWkoQ7jGQzghpP985OPbqwdPTzuqYTU1YPvhPR
-	 m52EJXvNI4vyKCKxmudZZSMpL0bMJfQjMNPMCOMBH0oJIW1XEmKEnWBGe4+sFpYcas
-	 lFVW/tYyleewrU8TA/P9sBlCLOnVBiZ03hagfgaeWr8/XrMaOfAfq4UbcaomgRs3dJ
-	 1t8YDPD30yBsg==
-Message-ID: <sashiko-outbox-173525@kernel.org>
+	b=Qp2qfZCAy4xrx2T6wh4vTa4YdxBlnHM7OAuqsFjMJardnp7wtd1worsuSkF4eGEuC
+	 E5nL2w1OStmjShqhh4UpxonIveDnoDt/0dqM2fzZmI7f2AjsvgKks/Oiy5C9eejVHn
+	 LGH5uSb/T0ciWrdT6fqY5JL47CFgt6wjmTFIF4b+DouvSFT/izG6COZKnAiQKzlVzn
+	 pKjN1fmHg7KvW76oHVE8PrObKmA109RsDNBRGDqzLji7NeaC7WJqqphFXCAXuqYH7g
+	 CoAUdEbGsN9RfOLUiQmxAauU/BSU9QuH/ld0kqVORJNFoASvvW+6nwZZU2KXuFgRiE
+	 Lg0HTFPlfveOA==
+Message-ID: <sashiko-outbox-173527@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v3 02/19] perf test attr: Allow tests to require a core
- PMU
+Subject: Re: [PATCH v3 15/19] perf tests: Introduce a 'needs_mlock' suite
+ flag
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Arnaldo Carvalho de Melo" <acme@kernel.org>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20261016001843.71978-3-acme@kernel.org>
+In-Reply-To: <20261016001843.71978-16-acme@kernel.org>
 References: <20261016001843.71978-1-acme@kernel.org>
- <20261016001843.71978-3-acme@kernel.org>
+ <20261016001843.71978-16-acme@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Fri, 16 Oct 2026 00:26:21 +0000
+Date: Fri, 16 Oct 2026 00:27:26 +0000
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -47,83 +47,70 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
 Thank you for your contribution! Sashiko AI review found 1 potential issue(=
 s) to consider:
-- [Low] perf python: memory leak in pyrf__parse_events() on error path
+- [Low] perf test: missing stdio.h inclusion for musl libc compatibility
 --
 
-commit 8f696c0054607fd944b69ffbf9d282950abfb382
+commit 0cd49c7e0c286b9d1bb7377465b008f3b907a53c
 Author: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-perf test attr: Allow tests to require a core PMU
+perf tests: Introduce a 'needs_mlock' suite flag
 
-This commit introduces a 'requires' limitation for perf tests to skip
-execution if a core PMU is not available. It checks for a core PMU by using
-the perf python binding to parse and open the 'cycles' event.
+This commit adds a 'needs_mlock' flag to 'struct test_suite' to distinguish
+test suites that map ring buffers from those that do not, allowing them to
+take turns using the kernel.perf_event_mlock_kb budget. It also introduces
+a 'requisites' subcommand to list test requirements.
 
-> diff --git a/tools/perf/tests/shell/lib/attr.py b/tools/perf/tests/shell/=
-lib/attr.py
-> index 68f06df9565a0..2d7dd26a57377 100644
-> --- a/tools/perf/tests/shell/lib/attr.py
-> +++ b/tools/perf/tests/shell/lib/attr.py
-
+> diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-t=
+est.c
+> index 98134b1c74cf8..acffa0d0d33d6 100644
+> --- a/tools/perf/tests/builtin-test.c
+> +++ b/tools/perf/tests/builtin-test.c
 [ ... ]
-
-> @@ -28,6 +29,50 @@ def data_equal(a, b):
+> @@ -283,6 +285,30 @@ static const char *test_description(const struct tes=
+t_suite *t, int test_case)
+>  	return t->desc;
+>  }
 > =20
->      return False
-> =20
-> +CORE_PMU_AVAILABLE =3D None
-> +
-> +def core_pmu_available():
-
-[ ... ]
-
-> +def core_pmu_probe():
-> +    """
-> +    Ask perf itself, through its python binding, to parse and open 'cycl=
-es':
-> +    a parse failure or an ENOENT means no PMU can count it, any other er=
-ror
-> +    means we can't tell whether there is one.
-> +    """
-> +    try:
-> +        import perf
-> +        parse_events =3D perf.parse_events
-> +    except (ImportError, AttributeError):
-> +        # Nothing to ask about it, let the expectations speak.
-> +        return True
-> +
-> +    try:
-> +        evlist =3D parse_events('cycles')
+> +static void requisites__fprintf(FILE *fp, const struct test_suite *t, in=
+t test_case)
+> +{
+> +	bool needs_mlock =3D t->needs_mlock, exclusive;
 
 [Severity: Low]
-Does this trigger a memory leak when parse_events() fails?
+Since this newly added function explicitly uses the FILE type and fprintf(),
+should <stdio.h> be explicitly included at the top of the file to ensure
+compatibility with musl libc?
 
-The python C wrapper pyrf__parse_events() in tools/perf/util/python.c
-appears to omit the required cleanup call on its error path:
+> +
+> +	if (test_case < 0)
+> +		test_case =3D test_suite__num_test_cases(t) =3D=3D 1 ? 0 : -1;
+[ ... ]
+> diff --git a/tools/perf/tests/tests-scripts.c b/tools/perf/tests/tests-sc=
+ripts.c
+> index 0370bc7013737..0bc84372eae09 100644
+> --- a/tools/perf/tests/tests-scripts.c
+> +++ b/tools/perf/tests/tests-scripts.c
+[ ... ]
+> @@ -187,7 +260,8 @@ static void append_script(int dir_fd, const char *nam=
+e, char *desc,
+>  	struct test_suite *test_suite, **result_tmp;
+>  	struct test_case *tests;
+>  	ssize_t len;
+> -	char *exclusive;
+> +	/* Shell tests run perf, that maps ring buffers, so they need the budge=
+t. */
+> +	bool exclusive =3D false, needs_mlock =3D true;
+> =20
+>  	snprintf(link, sizeof(link), "/proc/%d/fd/%d", getpid(), dir_fd);
 
-tools/perf/util/python.c:pyrf__parse_events() {
-	...
-	if (parse_events(evlist, input, &err)) {
-		parse_events_error__print(&err, input);
-		PyErr_SetFromErrno(PyExc_OSError);
-		evlist__put(evlist);
-		return NULL;
-	}
-	...
-}
+[Severity: Low]
+This isn't a bug in the patch logic, but the code relies on snprintf() here.
+Would it make sense to explicitly include <stdio.h> in this file as well to
+prevent potential build failures on systems using musl libc?
 
-While this leak was not introduced by this patch, this new core_pmu_probe()
-function actively relies on and triggers this error path to detect the PMU
-absence.
-
-Could we clean up the dynamically allocated error strings within the
-parse_events_error structure by calling parse_events_error__exit(&err) when
-parsing fails?
-
-> +    except OSError:
-> +        # No PMU that can count it, the same as the ENOENT below.
-> +        return False
+>  	len =3D readlink(link, filename, sizeof(filename) - 1);
+[ ... ]
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261016001843.7197=
-8-1-acme@kernel.org?part=3D2
+8-1-acme@kernel.org?part=3D15
