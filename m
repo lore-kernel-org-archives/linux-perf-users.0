@@ -1,63 +1,61 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7978D4E01E5
-	for <linux-perf-users@vger.kernel.org>; Fri, 16 Oct 2026 17:36:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC67B53C3C7
+	for <linux-perf-users@vger.kernel.org>; Fri, 16 Oct 2026 17:37:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792172204; cv=none; b=s1uJpWwvSJECmG0mgV5tIN7CtTW3fdw0RCgWdx6/976r4iZf/pfwxhoasiLedqE4vH1JoP2j7jYV2/qzs5giWdhva2bkBftet/aILzWqlsB4a8DtC4EM1bwATu6rGC7vQgetSPRD2oNkYdd6Wgdl1voXJgby5navHUgp2E0z9X8=
+	t=1792172277; cv=none; b=I6B5AGVRdqDF1eBVGdqHk49FUEIGzgVKJf3gvsNClN2XKNflj7JpbfEqRJ7/TZ/4uO5tQk7C7wbCr/gLVIIfWw7ZljlD1ixB2ALjRK3s+U8Sb4YO48o7sXN58mMcDL76IO1VHRgpHXRcxv9+pWpgX8vVh3ZLxeDJgNx5PEKqGxM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792172204; c=relaxed/simple;
-	bh=Ve1JuoFfsBCapyzdDS7whAOikfDiNbpHwMC0BvrOQZ8=;
+	s=arc-20240116; t=1792172277; c=relaxed/simple;
+	bh=RojEQvma5TtED0HtxGMqMyD4hjexE8H0wyIt1w7HghU=;
 	h=Message-ID:From:Subject:To:Cc:In-Reply-To:References:Content-Type:
-	 Date; b=ezr+0PnYxYFYjKWxg8A+1LaToFrtxS9Hwrb7UIWyyuVxPttNM84CFUQ6uVHnxHruVzk+hmFrQEJ952EsBQlKbNr3zj/AAp6WixUOlyU3Ayj5IXvaB7U2zoqE79Krln21Vj5UeJ+HG53cvomi9mAri0jpdVm1TwAl8gg833NYlHU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WWzLoY+e; arc=none smtp.client-ip=100.103.45.18
+	 Date; b=PwGzTv5tUa8aw8ih3MUElQWn2rj3ghIoGTSNiAinGabPxRcqs6FA8ueK51OU7aM7MFP3bz4drzaQOQrwNNphV4emt3205zKl5uJgUVttkvuJ4L9hRnxwbQdybLCY4tyKV6jBjXQyEIa9L3v3QX0+uZSOAqDw5mdcgJ3PUOxrL8g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dCE4i18g; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WWzLoY+e"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F23441F000C4;
-	Fri, 16 Oct 2026 17:36:42 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dCE4i18g"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 438DA1F000C4;
+	Fri, 16 Oct 2026 17:37:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1792172203;
-	bh=Ve1JuoFfsBCapyzdDS7whAOikfDiNbpHwMC0BvrOQZ8=;
+	s=k20260515; t=1792172276;
+	bh=RojEQvma5TtED0HtxGMqMyD4hjexE8H0wyIt1w7HghU=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=WWzLoY+eS0dBtCJ39At0sYRHcJRsmz/9qTPyloTEg46CqoPFq7gyLM17QLvQ7f7Kh
-	 NY9HXHmZzKie8QEYau8A3oUekyAEJjKwM5UX4NBQU0lBN58t0oQaT1IqTLU527HnF0
-	 CZd+TS8xsV1/7oI2Rv4qW1OLdn0cVPG9FdBiDkshWu23OubxelPckPfZrFFr2TH3Ia
-	 nG2KTyTVrZJ15XUvJSrQcZm+ElzprE65vEhMNzZGZ4PmTfbX2h1HEvcK3q6P0BBB7d
-	 fklQdEwyaJcXe/elJ+NLM0nLzuTZ34O40LYO4BPPl8/+qMHDdBznWYn6sM7w0FtbU2
-	 2meShm8J3cbVA==
-Message-ID: <sashiko-outbox-174727@kernel.org>
+	b=dCE4i18gVX9RucYvzotWES8gKlAm9ItAWsGbkKWK7fs9B9GzOhsbYFB2xspk4zBZM
+	 TjS7azZlskIWSkjkCTSsZcBXGXC68UOeeLZpLlzJ66eXPUoL/7nRuic6/g8O14K7kM
+	 YhqPDieXtAeWbZovTntRFgPPpUeMev1fAsXJQBJ2gvNbBk+WFLo949ckrb2kjTO5yS
+	 xG8kc6YPd6UgWX8HK5/YpSRfU4xb9B+kvFqNox+1NZ+hb0qDht1pgah0Y7k74HRjg7
+	 vSwrp1MBp99h3Ive5gQkbXGfqoynlGdQOeQ/oUsnuYNd/mfmxIkWw8V6pRgll31S92
+	 Cj+O9i+BGEVCg==
+Message-ID: <sashiko-outbox-174728@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v3 01/17] compiler-context-analysis: Avoid unused
- parameter warning in _context_unsafe_alias()
+Subject: Re: [PATCH v3 05/17] perf build: Enable additional Clang
+ thread-safety flags
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Ian Rogers" <irogers@google.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20261016173106.679725-2-irogers@google.com>
+In-Reply-To: <20261016173106.679725-6-irogers@google.com>
 References: <20261013222622.1822619-1-irogers@google.com>
  <20261016173106.679725-1-irogers@google.com>
- <20261016173106.679725-2-irogers@google.com>
+ <20261016173106.679725-6-irogers@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Fri, 16 Oct 2026 17:36:42 +0000
+Date: Fri, 16 Oct 2026 17:37:55 +0000
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-> _context_unsafe_alias() does not use its parameter 'p', which triggers
-> -Wunused-parameter when building code that enables -Wextra (such as
-> tools/perf, tools/lib/perf, tools/lib/subcmd, and tools/lib/symbol).
-> Explicitly cast 'p' to void to silence the warning, matching
-> __assume_ctx_lock() and __assume_shared_ctx_lock().
+> Align tools/perf's Clang thread-safety flags with the kernel's
+> scripts/Makefile.context-analysis by adding -Wthread-safety-pointer,
+> -Wthread-safety-beta, and (when supported by the compiler)
+> -fexperimental-late-parse-attributes.
 >=20
-> Reviewed-by: Marco Elver <elver@google.com>
 > Signed-off-by: Ian Rogers <irogers@google.com>
 
 Sashiko has reviewed this patch and found no issues.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261016173106.6797=
-25-1-irogers@google.com?part=3D1
+25-1-irogers@google.com?part=3D5
 
