@@ -1,54 +1,53 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EF3035C69F
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 123CA3DB311
 	for <linux-perf-users@vger.kernel.org>; Fri, 16 Oct 2026 22:20:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792189252; cv=none; b=MAaF4z0SvhApFwtb8itIaJknvQhqXPDBDIuMazG8HjUatbaUEwIL9uYd9hPytAIhFGw6yzhI4vRndESK0wmXdYOWmVitqKbmC7KZgRhgUgDOJPl92+6ukMeFnwjWn1/8Y80w442UgvmYhlOHWEg9R9ZxhijXl/0ginqvbsdt/6M=
+	t=1792189253; cv=none; b=sDLxD/WnBfkWR8qXHHImHNWxipqBiguRCe+zAapPqPOHJIhaTXKklPslRgkUezFrYb+w/xpwx9tfh6EanIfUSgakGYA5i7nmmdneU8SY3f5O0nnw6rMn/bNzBB97UIK8EgLpjFLQCtMVvG0gQmbdg1GFRcDYlAoXNlBzxiVPicA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792189252; c=relaxed/simple;
-	bh=y+YMe9y4HuCnLLynJECyhkO1+x2idP0QGfTkLwCJDlk=;
+	s=arc-20240116; t=1792189253; c=relaxed/simple;
+	bh=jW32xss5U6jQXKS6tWtruVCulAfNXSpsddIy3NJl8vs=;
 	h=Message-ID:From:Subject:To:Cc:In-Reply-To:References:Content-Type:
-	 Date; b=GQxBdYDPC/LLcOqTgvxaziRTTtk3ZhM1o1mDPUtokDBOwaDIURjYgkTguLsBKWfyGyr/FNGc8fzM5OdEJuq4g8pn+2m/IQkgpdQDysAN6OtQY61Yga/Pv3rK0STRi61kPjRnxmrdN+o9lbnxwcTPGQMTzd5qvDA4TNOS1KVdOTs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XmiSz73v; arc=none smtp.client-ip=100.103.45.18
+	 Date; b=Th1O7r/E0VfeGzndYdR1pFXSvyLtTLTK+P0YfoqkbjjuZnq7JMQkywgAU9L1F25I2Qfg38UoL3cbdtIchPn0hjYQAWg2jtTzyL5I7LhZ69F1wbbts80geD+U5MFQphVPqcRu8T1oETeNPeBh8ZJG7dZ7/cRldUT8F5RiqKAKpvw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NW/ojil7; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XmiSz73v"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E09581F000C4;
-	Fri, 16 Oct 2026 22:20:50 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NW/ojil7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 936711F000C5;
+	Fri, 16 Oct 2026 22:20:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
 	s=k20260515; t=1792189251;
-	bh=y+YMe9y4HuCnLLynJECyhkO1+x2idP0QGfTkLwCJDlk=;
+	bh=jW32xss5U6jQXKS6tWtruVCulAfNXSpsddIy3NJl8vs=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=XmiSz73vb6M7u5+OdFSm/NjCI3eSrvMJ9YylppklHXOi0sbrYUS/W+3dPk9C3wfEy
-	 upae4bnNcK09pFyrFzHG1FS4h7QqHJlDj4H4V70Xc7mfPvO+rhfL3v+H780gViqLtM
-	 cmnYqFNODZ0AsOdvaJlE/x8p8ZMuJ9pSF+gj1Y2Ri5poWYVkgJ3dGfKc0XTLilDs8Q
-	 IghAHiekQUGXv2rHKx2874SFRKSQgKfF5cTgXQxhIZCLPNP/5paI1FZcGgPJ08QdL2
-	 o3W8vi3zHojy37vBISin9KfFVpkOFJ+VeNcXwi2FP5bTmeF0lGr2UQq+Ilz0Mm485k
-	 XsdsIbf8lXxpg==
-Message-ID: <sashiko-outbox-175001@kernel.org>
+	b=NW/ojil7VORWiOHM8Z1vHMLaxiF9YejLJzWDDFlCrtS8L2EvTaSK4yqqhTLrGRjHG
+	 nswkMImyA2t8jKW7OeoqksgilSvu1Glxs6mXgNptF+800lLrw05cfNyewCgzyQOipP
+	 nOnN048oQsOXoVUQeDpjjAitJtjyto2f6dQQ6rAFk7LCbjVZKlG38ynI9ilcVflu/4
+	 1FbTt9ii0NR7ZGViFF8Nu/OpDKXC0c6DrtuhQIXN9Lg2reRQaXjymqPC5n15rhIDWS
+	 13s/RhrshONfNqVoXna8hGuY5gklgu+yHvH6YE8cYWtvRPY8igNfrWnQebDrsIKPIl
+	 y+6pQ+5dH+B/Q==
+Message-ID: <sashiko-outbox-175002@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v4 06/17] perf comm: Add __guarded_by annotations to
- struct comm_strs
+Subject: Re: [PATCH v4 09/17] perf dso: Use DEFINE_MUTEX for
+ dso__data_open_lock
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Ian Rogers" <irogers@google.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20261016221700.1282659-7-irogers@google.com>
+In-Reply-To: <20261016221700.1282659-10-irogers@google.com>
 References: <20261016173106.679725-1-irogers@google.com>
  <20261016221700.1282659-1-irogers@google.com>
- <20261016221700.1282659-7-irogers@google.com>
+ <20261016221700.1282659-10-irogers@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Fri, 16 Oct 2026 22:20:50 +0000
+Date: Fri, 16 Oct 2026 22:20:51 +0000
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-> Annotate strs, num_strs, and capacity in struct comm_strs with
-> __guarded_by(&lock) and __pt_guarded_by(&lock) so Clang verifies all
-> accesses hold comm_strs->lock.
+> Replace _dso__data_open_lock and its pthread_once() initialization
+> wrapper dso__data_open_lock() with DEFINE_MUTEX(dso__data_open_lock).
 >=20
 > Signed-off-by: Ian Rogers <irogers@google.com>
 
@@ -56,5 +55,5 @@ Sashiko has reviewed this patch and found no issues.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261016221700.1282=
-659-1-irogers@google.com?part=3D6
+659-1-irogers@google.com?part=3D9
 
