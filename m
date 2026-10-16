@@ -1,44 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BC0F3EFD3D
-	for <linux-perf-users@vger.kernel.org>; Fri, 16 Oct 2026 21:24:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4122A3B42D9
+	for <linux-perf-users@vger.kernel.org>; Fri, 16 Oct 2026 21:24:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792185873; cv=none; b=WpOen1xaHQN8HfY497XbSrlH1wOMbjGB59+zs43ZqB0eZumNxrvAQ4XCoYgvycaXqe6wRe58C2/Tt9rRPkX6/JLUiy/B8F/uKUb+/qvq3JE6jGkJssrjTcqRfv2dMapSZqoj9wQeY+BkK8WZ9zt1jaEWFj5xoaCkIzA5xG7G8a0=
+	t=1792185894; cv=none; b=J2bNBFduvuu3LToKVQHsc5m5CUKBvPQAS/8WLS+btuUkiSoSQKMnBmcf/7VY8We1lFECqPn9mr0gynCZtB/Ofbknad7ODsfEa23r5zrDVjh94+0Bc3X/hS9ZHwOpl0uvZKXc8gN+wwkmcynSl6M9KqtTQ1slPwXbvmkqWANAUtw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792185873; c=relaxed/simple;
-	bh=+jeUC+6D+uJtQMcU+dEVGXpvgnjj5oV+gnmlQZ37VWU=;
+	s=arc-20240116; t=1792185894; c=relaxed/simple;
+	bh=cA/PKmGKWHxcm49IkbhFqBwLYek/JR1mnYusm2aa/L8=;
 	h=Message-ID:From:Subject:To:Cc:In-Reply-To:References:Content-Type:
-	 Date; b=K3wJeQ6zsYRkOpH1E8KV2WutUQpeWjOu12ZGAriwTl6hUiTtC28Lbu5bV5mjSvPvM7KQDVbNnwuXVSGsWlBOrqlqCri3t1egnWpKwayUS5+dvR7Ni9L/STjFx8sPlnc9zutcr4xqreDEjPZytY0Ry2FWrlQUvhRsf1yz+SC8zMI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OvwQwT9Y; arc=none smtp.client-ip=100.103.45.18
+	 Date; b=M8xagkHKlu1/jx5i0tqeOgW9Dk9eUayxVU+5q9JIDzEPX8OnVLDwSythzG7ayuV+lP1yz++PfVdjsdvdcRiN0TmsOJ8wzpwYgGs4sSKzztSJBsbVFq/IJZ9F2hAY+fuo2Mil1Gl6l7swSpa884WDsHkh/ErZicSxJlvzZ4dkQes=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EoTeSGGS; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OvwQwT9Y"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 64E9D1F000C4;
-	Fri, 16 Oct 2026 21:24:32 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EoTeSGGS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 037281F000C4;
+	Fri, 16 Oct 2026 21:24:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1792185872;
-	bh=9zhtu8yAjB6YmLNuXecN9TCnyXgG3A0SuuOMtmRz7eM=;
+	s=k20260515; t=1792185893;
+	bh=QN9q77dRAnw0DVhiebGcfjK95h0aZRTLw+zPTGQ3vgM=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=OvwQwT9Y8CuYJ7Hv8fWf74N4m+onM9ve3rOn/RjQywrwt3la+QAETt51txHGILVeJ
-	 p7TMTwVMO/Cj7Xw3ToVDvqIiqGrx7O2uMvdhrZDIzv9sZhbMi0iuk9KiwmagJ0aVMB
-	 YoruY7jlLaKxFDZtgfiCGt2VyYbO4rUB76Y1RN/zjKm398ZcMCB59LlNKrySmKz/gj
-	 F4uViyNTLfAktzw4D6q3mCBN9f1H7+3EYdX4o4LeXnqitI4WivPFrPVaPNYUV6ujYA
-	 fEP7JBNK2cIPRhSq24B+VU8uP5bN/JHzicYddUDtpCi4Jl9r22jQgZkjYm1D/NrY4D
-	 DA82gIf40wLDw==
-Message-ID: <sashiko-outbox-174958@kernel.org>
+	b=EoTeSGGSJlc5W4Jci6q7YKOqrDam7mLhRZB3/eh6eFnIBA/L8HAHBgMu31cOW9ctb
+	 W0IK6oCd55tO0Os9lGutuSWEbHdLJ1PPmYhxtmlv8KvsihlpBsN6iKsAvSOFDmHKMt
+	 ShkKXquKLrAQjPTNYYG6VTXjJvI8YqDqj8u6+p1nHTHGwa07Cy2d9K6ML5LQ1qwcbD
+	 agjIkF2j8T9QKN59jJM4IYoOcr8acOlveGKfu29Y6NUHvDdUIwl/KTFW9oYqWrrd+j
+	 n+ca3dPRLLZxwvG7ZgU+h/w7r0Mgs8wS4AMDEifDgvT16ydANJ148WgGaZoWpJg/Su
+	 Y+gMxLWAFULsA==
+Message-ID: <sashiko-outbox-174959@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v4 06/21] perf test attr: Relax group checking for
- ungrouped expectations
+Subject: Re: [PATCH v4 12/21] perf test attr: Accept either sample id bit
+ perf asks for
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Arnaldo Carvalho de Melo" <acme@kernel.org>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20261016212102.76550-7-acme@kernel.org>
+In-Reply-To: <20261016212102.76550-13-acme@kernel.org>
 References: <20261016212102.76550-1-acme@kernel.org>
- <20261016212102.76550-7-acme@kernel.org>
+ <20261016212102.76550-13-acme@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Fri, 16 Oct 2026 21:24:32 +0000
+Date: Fri, 16 Oct 2026 21:24:52 +0000
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -47,21 +47,23 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
 > From: Arnaldo Carvalho de Melo <acme@redhat.com>
 >=20
-> When matching the recorded events back against the expectations,
-> attr.py requires every event opened in a group to match an expectation
-> that declares the same group.  The perf stat default metrics open the
-> events of each metric in groups, but the test expectations only verify
-> the event attributes, so test-stat-default fails with:
+> evlist__config() asks for a way to tell the samples apart,
+> PERF_SAMPLE_IDENTIFIER where available, PERF_SAMPLE_ID otherwise:
 >=20
->   FAILED '.../test-stat-default' - group failure
+>   bool sample_id =3D opts->sample_id;
+>   ...
+>   if (opts->full_auxtrace || opts->sample_identifier) {
+>         ...
+>         use_sample_identifier =3D perf_can_sample_identifier();
+>         sample_id =3D true;
+>   } else if (evlist__nr_entries(evlist) > 1) {
+>         ...
+>         use_sample_identifier =3D perf_can_sample_identifier();
+>         sample_id =3D true;
+> [ ... ]
+> values as they are, nothing to un-mask by hand to see what is being
+> complained about.
 >=20
-> Only enforce the group of a recorded event when the expectation it
-> matches declares one.  Expectations that ask for a group are still
-> verified in both directions.
->=20
-> Fixes: c7adeb0974f18da4 ("perf jevents: Add set of common metrics based o=
-n default ones")
-> Fixes: 2dfc0cab3da4a205 ("perf stat: Add detail -d,-dd,-ddd metrics")
 > Assisted-by: LLM
 > Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 
@@ -69,5 +71,5 @@ Sashiko has reviewed this patch and found no issues.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261016212102.7655=
-0-1-acme@kernel.org?part=3D6
+0-1-acme@kernel.org?part=3D12
 
