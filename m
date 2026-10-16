@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D14B3E7179;
-	Fri, 16 Oct 2026 21:21:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7C40447240;
+	Fri, 16 Oct 2026 21:21:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792185681; cv=none; b=NWcozZENXjNh8z9S2CBeafZ6gcVXFOS7tTpiGoAy3FBJmbRz0CRcBiw6RVGX/+xBApe2LK+gan+nrqozsONK7PZ9kDQv698am01fSfd+yzdkSo3mraJ+ooNnmHxIt9kcLdwlyPMM8RjkR0qV3ut5gDLSsY8Yr3OaRJog7scY4BQ=
+	t=1792185685; cv=none; b=UAvskv4lDD4LflrulIJR7t0+5vbX7EYlIgMWKMsfv3Yeb24wymepf5pXgUV9fUF7gFNWORMLGLXm96lk+UoFuGIL8nAaQwM7trUdAPRMJ1aH4OshDsW+PpqrehB+F54MJX1/drKVotZ8H0m+7wuDwZtYc8PfM0U+eB4mafRaPTE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792185681; c=relaxed/simple;
-	bh=xGB/n90vHnG+ioo5rQMlD23mUdaCxIjk2IyxBgfYqpM=;
+	s=arc-20240116; t=1792185685; c=relaxed/simple;
+	bh=c0Wc6C+H0sLY5GZTZ0RUO+0ZzwlvinqvM5m6XvDNFrY=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=frYCHw/Xcudm4gKuabzcsN734/OS1KN7i2yEZFEaRDZPbEBq+HYpM3PFHMD0j+4xkGnMyJ3P4pFW57Isg4qysLSmqqw7ppIExtFuln+RyuX+PI9MpbY0MN3boPvjWGAyBrW7mWegjEB82SFNEibNKPTRb4I9zB6v5Zu3/fAX9iY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fAsW+MwF; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version; b=G2RmbP+YNkGFFDTLLlTKaHDxMU7lYia0YHJ8DOB2DiKpZ5CVLZAihwpFrZZ9GhtEXI/ZLezZ1EWfV5r9XejflX0OfP4z4z9E86PF7Ng49bHNf8qfUx9XBaAvjbPRy7xTseIh1lH1nw9tbDAaqa/pjaqNqrGX/CB0xM4a8RsvN5E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=okyuR7ad; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fAsW+MwF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 476491F000C7;
-	Fri, 16 Oct 2026 21:21:17 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="okyuR7ad"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 714741F000C4;
+	Fri, 16 Oct 2026 21:21:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1792185680;
-	bh=vu2dxBhtjOX32mukUGPMQr+WNAc4H6EvEK2F/8Ip1nM=;
+	s=k20260515; t=1792185683;
+	bh=vMYYLi56bfKOjPdfh16BHCEItjVED7x3a04Vd3ap6kc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=fAsW+MwFPSFuk0lAqI1uVfbUdVu5Nk5RAN50wl0HXN3RpYAJ86ZDQsMOhUbOeIKpy
-	 xNYNoK0agvfvrvawgVZWwmMdc7Ql5z1cSwgMYlI+S7gBx52iB8k+y32/c1EgxDIsEp
-	 YruvI2C5sQYI9vfaJA2mrXwQMa9UaPbBJTfxzM+NWSZF7okGz834B4JuFRruu/dr/t
-	 MDjRUlL6Wx3JGRjPLdYG4ecPYoQKNfGfit0i2mjskR52g3frPg9bVbwaCNFZmUDGq/
-	 MIefhknPx/3eBIkVfjYnXaKNqIqDvbRc6P9pKpOxgM/4OgQ1diZ4vc8KcJTHgg7sDK
-	 PgwF8f5n+DJ0w==
+	b=okyuR7adqbYZfJSW7URr5PAOAI5FS1TSVdcAHQJIutPxDvQJhClQPmWkgp6vjGAgi
+	 LJo4X165QEQ2ocyOHp/UDQm3DvCjkLjYlJehlmKGHkoxboQShejZuav7C8/r1Bj7MU
+	 kYASUmN5vFFf5wBr8z0SCfwAJmFyBwMaTouB3Ti0D3N2BFx3FpjmLMVKc91IaOL+M+
+	 Dl9oR7x6rSE+V3pKxFzkje7eERrHewjDpBffJ5/qRqaNUN3lBaHIVYDvSQhrmgCSfX
+	 ZJ/2NPMQqSmA7Mj62dyGy2ANNGhtIAAsCadgQpR4tryUF3jo3cSpXV17aF0fPxFv1b
+	 y9/H2ZcRv5eBQ==
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Namhyung Kim <namhyung@kernel.org>
 Cc: Ingo Molnar <mingo@kernel.org>,
@@ -38,9 +38,9 @@ Cc: Ingo Molnar <mingo@kernel.org>,
 	linux-kernel@vger.kernel.org,
 	linux-perf-users@vger.kernel.org,
 	Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH v4 03/21] perf test attr: Allow tests to require a core PMU
-Date: Fri, 16 Oct 2026 18:20:44 -0300
-Message-ID: <20261016212102.76550-4-acme@kernel.org>
+Subject: [PATCH v4 04/21] perf test attr: Fix legacy event encodings in group tests
+Date: Fri, 16 Oct 2026 18:20:45 -0300
+Message-ID: <20261016212102.76550-5-acme@kernel.org>
 X-Mailer: git-send-email 2.56.0
 In-Reply-To: <20261016212102.76550-1-acme@kernel.org>
 References: <20261016212102.76550-1-acme@kernel.org>
@@ -54,340 +54,192 @@ Content-Transfer-Encoding: 8bit
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-On machines without a usable core PMU, like an aarch64 box with no DT
-node for the ARM PMU, the expectations that pin the legacy hardware
-encoding can't be checked: without a core PMU at all 'cycles' doesn't
-even resolve, and with one that can't be opened 'perf record' takes the
-software fallback and records attributes they can never match:
+Since commit b1c5efbfd92e ("perf parse-events: Remove hard coded legacy
+hardware and cache parsing"), event names are resolved with sysfs/JSON
+priority over the legacy encodings, so bare cache-misses and
+instructions now become the core PMU sysfs/JSON events (on x86 type 4,
+configs 0x412e and 0xc0) rather than the legacy
+PERF_TYPE_HARDWARE/config=3 and config=1 events the tests expect, e.g.:
 
-  expected type=0, got 1
-  expected config=0, got 1
-  FAILED '.../attr/test-record-group-sampling1' - match failure
+  expected config=3, got 0
+  expected disabled=0, got 1
+  expected mmap=0, got 1
+  expected comm=0, got 1
+  expected freq=0, got 1
+  expected enable_on_exec=0, got 1
+  expected task=0, got 1
+  FAILED '.../test-record-group-sampling1' - match failure
 
-And since attr.py stops at the first failure, every expectation that
-would come after that one ends up not being run at all.
+The shown diff is against the cycles group leader, as no result event
+matches the expected cache-misses member anymore.
 
-Add a 'requires' limitation, modelled after the existing 'arch', 'auxv'
-and 'kernel_since/until' ones, with 'core-pmu' as its first value, that
-is checked by asking perf itself to open 'cycles' via its python
-binding: a parse failure or an ENOENT means there is no PMU that can
-count it, hence nothing to check and the test gets skipped, while any
-other error means we can't tell, so the test keeps running as it does
-today, where there is no binding to ask either.
+Request the legacy encodings explicitly with the legacy-hardware-config
+term, added in commit 0012e0fa221bf9cc ("perf jevents: Add
+legacy-hardware and legacy-cache json"), keeping the original
+attribute expectations unchanged, in:
 
-When there is no core PMU, asking the binding fails and prints a parse
-error, once for every test that asks, so the answer is kept: it is asked
-once per run.  A value other than 'core-pmu' is warned about, not
-silently ignored, so a typo can't turn the skip into a no-op.
+  test-record-group1
+  test-record-group2
+  test-record-group3
+  test-record-group-sampling
+  test-record-group-sampling1
+  test-record-group-sampling2
+  test-stat-group1
 
-An old distro python package may have a 'perf' module without
-parse_events(), i.e. there is nothing to ask with, so that
-AttributeError gets the same treatment as the ImportError: let the
-expectations speak.
+This went unnoticed until tests/attr.sh stopped ignoring attr.py's
+return value.
 
-The expectations that have a strict 'type=0', plus the group tests,
-where the fallback drops a member and leaves nothing to compare the
-group leader attributes with, now state that they require a core PMU.
-They are marked here, before the commit that has the group tests ask for
-the legacy encodings, so the requisite comes with that dependency.
-
+Fixes: b1c5efbfd92eb84d ("perf parse-events: Remove hard coded legacy hardware and cache parsing")
 Assisted-by: LLM
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- .../shell/attr/test-record-group-sampling     |  1 +
- .../shell/attr/test-record-group-sampling1    |  1 +
- .../shell/attr/test-record-group-sampling2    |  1 +
- .../perf/tests/shell/attr/test-record-group1  |  1 +
- .../perf/tests/shell/attr/test-record-group2  |  1 +
- .../perf/tests/shell/attr/test-record-group3  |  1 +
- tools/perf/tests/shell/attr/test-stat-C0      |  1 +
- tools/perf/tests/shell/attr/test-stat-basic   |  1 +
- tools/perf/tests/shell/attr/test-stat-default |  1 +
- .../tests/shell/attr/test-stat-detailed-1     |  1 +
- .../tests/shell/attr/test-stat-detailed-2     |  1 +
- .../tests/shell/attr/test-stat-detailed-3     |  1 +
- tools/perf/tests/shell/attr/test-stat-group1  |  1 +
- .../tests/shell/attr/test-stat-no-inherit     |  1 +
- tools/perf/tests/shell/lib/attr.py            | 63 +++++++++++++++++++
- 15 files changed, 77 insertions(+)
+ tools/perf/tests/shell/attr/README                     | 10 +++++-----
+ tools/perf/tests/shell/attr/test-record-group-sampling |  4 ++--
+ .../perf/tests/shell/attr/test-record-group-sampling1  |  4 ++--
+ .../perf/tests/shell/attr/test-record-group-sampling2  |  4 ++--
+ tools/perf/tests/shell/attr/test-record-group1         |  2 +-
+ tools/perf/tests/shell/attr/test-record-group2         |  2 +-
+ tools/perf/tests/shell/attr/test-record-group3         |  2 +-
+ tools/perf/tests/shell/attr/test-stat-group1           |  2 +-
+ 8 files changed, 15 insertions(+), 15 deletions(-)
 
+diff --git a/tools/perf/tests/shell/attr/README b/tools/perf/tests/shell/attr/README
+index 67c4ca76b85d5611..c7b49cdf87297177 100644
+--- a/tools/perf/tests/shell/attr/README
++++ b/tools/perf/tests/shell/attr/README
+@@ -49,10 +49,10 @@ Following tests are defined (with perf commands):
+   perf record --call-graph dwarf kill		(test-record-graph-dwarf)
+   perf record --call-graph fp kill              (test-record-graph-fp)
+   perf record --call-graph fp kill              (test-record-graph-fp-aarch64)
+-  perf record -e '{cycles,instructions}' kill   (test-record-group1)
+-  perf record -e '{cycles/period=1/,instructions/period=2/}:S' kill (test-record-group2)
+-  perf record -e '{cycles,cache-misses}:S' kill (test-record-group-sampling1)
+-  perf record -c 10000 -e '{cycles,cache-misses}:S' kill (test-record-group-sampling2)
++  perf record -e '{cycles,default_core/legacy-hardware-config=1/}' kill (test-record-group1)
++  perf record -e '{cycles/period=1234000/,default_core/legacy-hardware-config=1,period=6789000/}:S' kill (test-record-group2)
++  perf record -e '{cycles,default_core/legacy-hardware-config=3/}:S' kill (test-record-group-sampling1)
++  perf record -c 10000 -e '{cycles,default_core/legacy-hardware-config=3/}:S' kill (test-record-group-sampling2)
+   perf record -D kill                           (test-record-no-delay)
+   perf record -i kill                           (test-record-no-inherit)
+   perf record -n kill                           (test-record-no-samples)
+@@ -67,5 +67,5 @@ Following tests are defined (with perf commands):
+   perf stat -d kill                             (test-stat-detailed-1)
+   perf stat -dd kill                            (test-stat-detailed-2)
+   perf stat -ddd kill                           (test-stat-detailed-3)
+-  perf stat -e '{cycles,instructions}' kill     (test-stat-group1)
++  perf stat -e '{cycles,default_core/legacy-hardware-config=1/}' kill (test-stat-group1)
+   perf stat -i -e cycles kill                   (test-stat-no-inherit)
 diff --git a/tools/perf/tests/shell/attr/test-record-group-sampling b/tools/perf/tests/shell/attr/test-record-group-sampling
-index 86a940d7895d7404..b43d9fe3af75c096 100644
+index b43d9fe3af75c096..ed47dd1e5984535b 100644
 --- a/tools/perf/tests/shell/attr/test-record-group-sampling
 +++ b/tools/perf/tests/shell/attr/test-record-group-sampling
-@@ -3,6 +3,7 @@ command = record
- args    = --no-bpf-event -e '{cycles,cache-misses}:S' kill >/dev/null 2>&1
+@@ -1,6 +1,6 @@
+ [config]
+ command = record
+-args    = --no-bpf-event -e '{cycles,cache-misses}:S' kill >/dev/null 2>&1
++args    = --no-bpf-event -e '{cycles,default_core/legacy-hardware-config=3/}:S' kill >/dev/null 2>&1
  ret     = 1
  kernel_until = 6.12
-+requires = core-pmu
+ requires = core-pmu
+@@ -16,7 +16,7 @@ inherit=0
+ fd=2
+ group_fd=1
  
- [event-1:base-record]
- fd=1
+-# cache-misses
++# cache-misses, explicitly requested with the legacy hardware encoding
+ type=0
+ config=3
+ 
 diff --git a/tools/perf/tests/shell/attr/test-record-group-sampling1 b/tools/perf/tests/shell/attr/test-record-group-sampling1
-index 4748ab7bf68437c7..3def72161820dca3 100644
+index 3def72161820dca3..9cf013dc03dd0309 100644
 --- a/tools/perf/tests/shell/attr/test-record-group-sampling1
 +++ b/tools/perf/tests/shell/attr/test-record-group-sampling1
-@@ -3,6 +3,7 @@ command = record
- args    = --no-bpf-event -e '{cycles,cache-misses}:S' kill >/dev/null 2>&1
+@@ -1,6 +1,6 @@
+ [config]
+ command = record
+-args    = --no-bpf-event -e '{cycles,cache-misses}:S' kill >/dev/null 2>&1
++args    = --no-bpf-event -e '{cycles,default_core/legacy-hardware-config=3/}:S' kill >/dev/null 2>&1
  ret     = 1
  kernel_since = 6.12
-+requires = core-pmu
+ requires = core-pmu
+@@ -31,7 +31,7 @@ inherit=1
+ fd=2
+ group_fd=1
  
- [event-1:base-record]
- fd=1
+-# cache-misses
++# cache-misses, explicitly requested with the legacy hardware encoding
+ type=0
+ config=3
+ 
 diff --git a/tools/perf/tests/shell/attr/test-record-group-sampling2 b/tools/perf/tests/shell/attr/test-record-group-sampling2
-index e0432244a0eb7f6c..227c18bb221c4b2f 100644
+index 227c18bb221c4b2f..bd1eb4161e4aee46 100644
 --- a/tools/perf/tests/shell/attr/test-record-group-sampling2
 +++ b/tools/perf/tests/shell/attr/test-record-group-sampling2
-@@ -3,6 +3,7 @@ command = record
- args    = --no-bpf-event -c 10000 -e '{cycles,cache-misses}:S' kill >/dev/null 2>&1
+@@ -1,6 +1,6 @@
+ [config]
+ command = record
+-args    = --no-bpf-event -c 10000 -e '{cycles,cache-misses}:S' kill >/dev/null 2>&1
++args    = --no-bpf-event -c 10000 -e '{cycles,default_core/legacy-hardware-config=3/}:S' kill >/dev/null 2>&1
  ret     = 1
  kernel_since = 6.12
-+requires = core-pmu
+ requires = core-pmu
+@@ -37,7 +37,7 @@ write_backward=0
+ fd=2
+ group_fd=1
  
- [event-1:base-record]
- fd=1
+-# cache-misses
++# cache-misses, explicitly requested with the legacy hardware encoding
+ type=0
+ config=3
+ 
 diff --git a/tools/perf/tests/shell/attr/test-record-group1 b/tools/perf/tests/shell/attr/test-record-group1
-index eeb1db392bc9ceac..a57c7ee8aaa4f9c9 100644
+index a57c7ee8aaa4f9c9..5fdd5288555f32ea 100644
 --- a/tools/perf/tests/shell/attr/test-record-group1
 +++ b/tools/perf/tests/shell/attr/test-record-group1
-@@ -2,6 +2,7 @@
+@@ -1,6 +1,6 @@
+ [config]
  command = record
- args    = --no-bpf-event -e '{cycles,instructions}' kill >/dev/null 2>&1
+-args    = --no-bpf-event -e '{cycles,instructions}' kill >/dev/null 2>&1
++args    = --no-bpf-event -e '{cycles,default_core/legacy-hardware-config=1/}' kill >/dev/null 2>&1
  ret     = 1
-+requires = core-pmu
+ requires = core-pmu
  
- [event-1:base-record]
- fd=1
 diff --git a/tools/perf/tests/shell/attr/test-record-group2 b/tools/perf/tests/shell/attr/test-record-group2
-index 891d41a7bddf785a..fb6e664eeacc10ef 100644
+index fb6e664eeacc10ef..e7274108f5fd7e7b 100644
 --- a/tools/perf/tests/shell/attr/test-record-group2
 +++ b/tools/perf/tests/shell/attr/test-record-group2
-@@ -3,6 +3,7 @@ command = record
- args    = --no-bpf-event -e '{cycles/period=1234000/,instructions/period=6789000/}:S' kill >/dev/null 2>&1
+@@ -1,6 +1,6 @@
+ [config]
+ command = record
+-args    = --no-bpf-event -e '{cycles/period=1234000/,instructions/period=6789000/}:S' kill >/dev/null 2>&1
++args    = --no-bpf-event -e '{cycles/period=1234000/,default_core/legacy-hardware-config=1,period=6789000/}:S' kill >/dev/null 2>&1
  ret     = 1
  kernel_until = 6.12
-+requires = core-pmu
- 
- [event-1:base-record]
- fd=1
+ requires = core-pmu
 diff --git a/tools/perf/tests/shell/attr/test-record-group3 b/tools/perf/tests/shell/attr/test-record-group3
-index 249be884959eaaba..7b90b4411d8f4b90 100644
+index 7b90b4411d8f4b90..e74fd3a48ac9094f 100644
 --- a/tools/perf/tests/shell/attr/test-record-group3
 +++ b/tools/perf/tests/shell/attr/test-record-group3
-@@ -3,6 +3,7 @@ command = record
- args    = --no-bpf-event -e '{cycles/period=1234000/,instructions/period=6789000/}:S' kill >/dev/null 2>&1
+@@ -1,6 +1,6 @@
+ [config]
+ command = record
+-args    = --no-bpf-event -e '{cycles/period=1234000/,instructions/period=6789000/}:S' kill >/dev/null 2>&1
++args    = --no-bpf-event -e '{cycles/period=1234000/,default_core/legacy-hardware-config=1,period=6789000/}:S' kill >/dev/null 2>&1
  ret     = 1
  kernel_since = 6.12
-+requires = core-pmu
- 
- [event-1:base-record]
- fd=1
-diff --git a/tools/perf/tests/shell/attr/test-stat-C0 b/tools/perf/tests/shell/attr/test-stat-C0
-index a2c76d10b2bb2a15..9d242e93e3a92009 100644
---- a/tools/perf/tests/shell/attr/test-stat-C0
-+++ b/tools/perf/tests/shell/attr/test-stat-C0
-@@ -2,6 +2,7 @@
- command = stat
- args    = -e cycles -C 0 kill >/dev/null 2>&1
- ret     = 1
-+requires = core-pmu
- 
- [event:base-stat]
- # events are disabled by default when attached to cpu
-diff --git a/tools/perf/tests/shell/attr/test-stat-basic b/tools/perf/tests/shell/attr/test-stat-basic
-index 69867d049fda926f..277897bd2626a41f 100644
---- a/tools/perf/tests/shell/attr/test-stat-basic
-+++ b/tools/perf/tests/shell/attr/test-stat-basic
-@@ -2,6 +2,7 @@
- command = stat
- args    = -e cycles kill >/dev/null 2>&1
- ret     = 1
-+requires = core-pmu
- 
- [event:base-stat]
- optional=1
-diff --git a/tools/perf/tests/shell/attr/test-stat-default b/tools/perf/tests/shell/attr/test-stat-default
-index 8dd27c1fb661fb77..74691188e859a169 100644
---- a/tools/perf/tests/shell/attr/test-stat-default
-+++ b/tools/perf/tests/shell/attr/test-stat-default
-@@ -2,6 +2,7 @@
- command = stat
- args    = kill >/dev/null 2>&1
- ret     = 1
-+requires = core-pmu
- 
- # PERF_TYPE_SOFTWARE / PERF_COUNT_SW_TASK_CLOCK
- [event1:base-stat]
-diff --git a/tools/perf/tests/shell/attr/test-stat-detailed-1 b/tools/perf/tests/shell/attr/test-stat-detailed-1
-index 12a2ebf4e64a0077..d9a6236054f2dfb1 100644
---- a/tools/perf/tests/shell/attr/test-stat-detailed-1
-+++ b/tools/perf/tests/shell/attr/test-stat-detailed-1
-@@ -2,6 +2,7 @@
- command = stat
- args    = -d kill >/dev/null 2>&1
- ret     = 1
-+requires = core-pmu
- 
- 
- # PERF_TYPE_SOFTWARE / PERF_COUNT_SW_TASK_CLOCK
-diff --git a/tools/perf/tests/shell/attr/test-stat-detailed-2 b/tools/perf/tests/shell/attr/test-stat-detailed-2
-index 66ea25b7d38f8d59..582a30289ccfa6df 100644
---- a/tools/perf/tests/shell/attr/test-stat-detailed-2
-+++ b/tools/perf/tests/shell/attr/test-stat-detailed-2
-@@ -2,6 +2,7 @@
- command = stat
- args    = -dd kill >/dev/null 2>&1
- ret     = 1
-+requires = core-pmu
- 
- 
- # PERF_TYPE_SOFTWARE / PERF_COUNT_SW_TASK_CLOCK
-diff --git a/tools/perf/tests/shell/attr/test-stat-detailed-3 b/tools/perf/tests/shell/attr/test-stat-detailed-3
-index 4a27bbfb9f87a538..2d0fca8b5020f504 100644
---- a/tools/perf/tests/shell/attr/test-stat-detailed-3
-+++ b/tools/perf/tests/shell/attr/test-stat-detailed-3
-@@ -2,6 +2,7 @@
- command = stat
- args    = -ddd kill >/dev/null 2>&1
- ret     = 1
-+requires = core-pmu
- 
- 
- # PERF_TYPE_SOFTWARE / PERF_COUNT_SW_TASK_CLOCK
+ requires = core-pmu
 diff --git a/tools/perf/tests/shell/attr/test-stat-group1 b/tools/perf/tests/shell/attr/test-stat-group1
-index 1746751123dcb2c4..3d8b44ba42d6ae19 100644
+index 3d8b44ba42d6ae19..7a31b27933f11959 100644
 --- a/tools/perf/tests/shell/attr/test-stat-group1
 +++ b/tools/perf/tests/shell/attr/test-stat-group1
-@@ -2,6 +2,7 @@
+@@ -1,6 +1,6 @@
+ [config]
  command = stat
- args    = -e '{cycles,instructions}' kill >/dev/null 2>&1
+-args    = -e '{cycles,instructions}' kill >/dev/null 2>&1
++args    = -e '{cycles,default_core/legacy-hardware-config=1/}' kill >/dev/null 2>&1
  ret     = 1
-+requires = core-pmu
+ requires = core-pmu
  
- [event-1:base-stat]
- fd=1
-diff --git a/tools/perf/tests/shell/attr/test-stat-no-inherit b/tools/perf/tests/shell/attr/test-stat-no-inherit
-index 924fbb9300d16259..38f746855b1b3e11 100644
---- a/tools/perf/tests/shell/attr/test-stat-no-inherit
-+++ b/tools/perf/tests/shell/attr/test-stat-no-inherit
-@@ -2,6 +2,7 @@
- command = stat
- args    = -i -e cycles kill >/dev/null 2>&1
- ret     = 1
-+requires = core-pmu
- 
- [event:base-stat]
- inherit=0
-diff --git a/tools/perf/tests/shell/lib/attr.py b/tools/perf/tests/shell/lib/attr.py
-index 68f06df9565a0811..2d7dd26a5737777c 100644
---- a/tools/perf/tests/shell/lib/attr.py
-+++ b/tools/perf/tests/shell/lib/attr.py
-@@ -1,6 +1,7 @@
- # SPDX-License-Identifier: GPL-2.0
- 
- import configparser
-+import errno
- import os
- import sys
- import glob
-@@ -28,6 +29,50 @@ def data_equal(a, b):
- 
-     return False
- 
-+CORE_PMU_AVAILABLE = None
-+
-+def core_pmu_available():
-+    """
-+    Is there a core PMU on this machine? Without one hardware events aren't
-+    supported and get replaced by the software fallback, so there's no way to
-+    check the expectations that pin their legacy encodings.  The answer can't
-+    change while the tests run, so probe the binding only once.
-+    """
-+    global CORE_PMU_AVAILABLE
-+
-+    if CORE_PMU_AVAILABLE is None:
-+        CORE_PMU_AVAILABLE = core_pmu_probe()
-+
-+    return CORE_PMU_AVAILABLE
-+
-+def core_pmu_probe():
-+    """
-+    Ask perf itself, through its python binding, to parse and open 'cycles':
-+    a parse failure or an ENOENT means no PMU can count it, any other error
-+    means we can't tell whether there is one.
-+    """
-+    try:
-+        import perf
-+        parse_events = perf.parse_events
-+    except (ImportError, AttributeError):
-+        # Nothing to ask about it, let the expectations speak.
-+        return True
-+
-+    try:
-+        evlist = parse_events('cycles')
-+    except OSError:
-+        # No PMU that can count it, the same as the ENOENT below.
-+        return False
-+
-+    try:
-+        evlist.open()
-+    except OSError as err:
-+        # Anything else is a permission problem or alike, not our business here.
-+        return err.errno != errno.ENOENT
-+    evlist.close()
-+
-+    return True
-+
- class Fail(Exception):
-     def __init__(self, test, msg):
-         self.msg = msg
-@@ -138,6 +183,9 @@ def parse_version(version):
- #     'arch'    - architecture specific test (optional)
- #                 comma separated list, ! at the beginning
- #                 negates it.
-+#     'requires' - Comma separated list of things the test needs, it is
-+#                 skipped when any of them isn't there, currently:
-+#                   core-pmu - the machine can count hardware events.
- #     'auxv'    - Truthy statement that is evaled in the scope of the auxv map. When false,
- #                 the test is skipped. For example 'auxv["AT_HWCAP"] == 10'. (optional)
- #     'kernel_since' - Inclusive kernel version from which the test will start running. Only the
-@@ -173,6 +221,7 @@ class Test(object):
-             self.arch  = ''
- 
-         self.auxv = parser.get('config', 'auxv', fallback=None)
-+        self.requires = parser.get('config', 'requires', fallback='')
-         self.kernel_since = parse_version(parser.get('config', 'kernel_since', fallback=None))
-         self.kernel_until = parse_version(parser.get('config', 'kernel_until', fallback=None))
-         self.expect   = {}
-@@ -242,6 +291,17 @@ class Test(object):
-                 return False
-         return True
- 
-+    def skip_test_requires(self):
-+        for requirement in filter(None, map(str.strip, self.requires.split(','))):
-+            if requirement == 'core-pmu':
-+                if not core_pmu_available():
-+                    log.warning("test limitation 'requires %s'", requirement)
-+                    return True
-+            else:
-+                log.warning("unknown requirement '%s', ignored", requirement)
-+
-+        return False
-+
-     def restore_sample_rate(self, value=10000):
-         try:
-             # Check value of sample_rate
-@@ -296,6 +356,9 @@ class Test(object):
-         if self.skip_test_kernel_until():
-             raise Notest(self, "new kernel skip")
- 
-+        if self.skip_test_requires():
-+            raise Notest(self, "requirements skip")
-+
-         self.restore_sample_rate()
-         cmd = "PERF_TEST_ATTR=%s %s %s -o %s/perf.data %s" % (tempdir,
-               self.perf, self.command, tempdir, self.args)
 -- 
 2.55.0
 
