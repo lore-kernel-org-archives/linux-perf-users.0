@@ -1,129 +1,87 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FE5B4F85D0;
-	Fri, 16 Oct 2026 14:32:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD72A44236A;
+	Fri, 16 Oct 2026 14:44:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792161122; cv=none; b=DN4IF532GT9z4n5LmvbdWWSuW8b+d9LWj+mE7vP223o2n1fMYr+Exc3mZ4JUpMrOYxqSe4Vsn5PlBTsINzxYT0EO0YQorXZZT63Kz0D3n5tPNSW8E5JD1lUp4ksgM0VmmgIitRaf4PkpvEZmFFINjSCNh4qBwIHGZFYEAKvbwn8=
+	t=1792161881; cv=none; b=MMZHKCMc2qCzz3DJ4Xeg0Xr6GJ73+X0y7xDxMpz+/PyRmuo76csFNXfmuTDf7+l4+lJpqRXSheA+jf/ovyZWG1gZfm2asIxOMj/wnI17uQfJkqwXsnPMmV9i2vvHhRE4XNisF0AD9FcP4B8SSYu7B72tm6tXYYSbLcb2pC+1T3k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792161122; c=relaxed/simple;
-	bh=DKg0vClEQiXw3JhhcDZ2p/iKrKj7KxrJ/WWyyMYftbk=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=RcuihDXMThTFpBCoEvuQpYGlEMSvZmyFigl4Kr7s9K2BuWdaDOoee2VOr6383at/V7KM+pVXWWN8kCuH6aio4LOObhPGd6G28afGux0gL56zNaVZFUSsv8cv9HJ65UcXY4IZ118aHDo1/ydV0rOwBZFUopTyk+VzpU7jckQeKLE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BXJXsPip; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1792161881; c=relaxed/simple;
+	bh=j0xW1ECQl1jI0BL+wij76Qj8jsOKsICj1DWAClibVrE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=tl6DhmqgNigX/U5eFB0BcvipT9e8Uj82K+BsU8LwdG6iQalUDNBxaN1aWfUUxKUd4HomXGJnfgxDbLY7B6J+iFFKf782K3e/IyLIjNK0XRAph4pH+zAFdgym/9xlVkor4X2+yYJ7KCu3+PYxK1p/Cc0DumOLZsQRCVTp9FQ4AGY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bwr/nzag; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BXJXsPip"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1D2E21F000C5;
-	Fri, 16 Oct 2026 14:31:59 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bwr/nzag"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 652B01F000C4;
+	Fri, 16 Oct 2026 14:44:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1792161121;
-	bh=kd/73Q9Hgd2llB+WLK9Lex9iXlTyPC+WwzSuKxv5YwY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=BXJXsPipB61XtIRlj8v6GY/3wTjBT7VhrltR45hNLRNpErr4vmAWJzMMfwc9bvXYN
-	 15yO+oCZJxNLcRMGuqyzR93Gon9pbevS+e9oXtg3awyKLPQMK/bebi1YyvPH4e4kS5
-	 oPaI8yMGddfrNBMmrvYc4AViNC/0WNwwZNVIUxojaF8Zx35C/VZRQb5/RRPelo5nnV
-	 t+5G2ZNVZasjB5OdmG/blzLAoXH06IH03GcZ68CYIhjcu5EWBTHsChcrOpjpqxtPdO
-	 4uG7iOrLPEUBAwqGsZ/+01/mpgKzurJ2VsLR5geliOzx4AQEe2q7aXiS3nZApLN8+v
-	 9zIxdbmqvz3xA==
-From: Sasha Levin <sashal@kernel.org>
-To: Nathan Chancellor <nathan@kernel.org>,
-	Nicolas Schier <nsc@kernel.org>,
-	linux-kbuild@vger.kernel.org
-Cc: Sasha Levin <sashal@kernel.org>,
-	Shuah Khan <shuah@kernel.org>,
-	linux-kselftest@vger.kernel.org,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	James Clark <james.clark@linaro.org>,
-	linux-perf-users@vger.kernel.org,
-	=?UTF-8?q?Thomas=20Wei=C3=9Fschuh?= <linux@weissschuh.net>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	linux-kernel@vger.kernel.org
-Subject: [RFC PATCH v2 7/7] Documentation: describe building tools with the kernel
-Date: Fri, 16 Oct 2026 10:31:43 -0400
-Message-ID: <20261016143143.3613501-8-sashal@kernel.org>
-X-Mailer: git-send-email 2.53.0
-In-Reply-To: <20261016143143.3613501-1-sashal@kernel.org>
-References: <20261016143143.3613501-1-sashal@kernel.org>
+	s=k20260515; t=1792161880;
+	bh=j0xW1ECQl1jI0BL+wij76Qj8jsOKsICj1DWAClibVrE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=bwr/nzaglzAmR+wBeAZmq2eOT7MEcrWX2lvXEGeDyhE51bVxI3SgaShKfUBiYf95g
+	 PmPSn2XhibSE4eN8cv06IVMobz4lNmloGh/vbUBPQPMRA+LsYlBo0nz0c8vJpFUK3C
+	 slQkDPLs6z92+ufgm/Fa8TFMhnbV0q/2Z/dJ3rGmonEBvA+JaJN11IxFe7clZgUeDJ
+	 miRiBu7BSUf9kZeip6s4AfA6WfKCbpjIzAdzbyD93F2r8xbjiTsSds49Lsg9YIgyxO
+	 f38Mt2XTtZuhAtxAIKtCr2LRW0txknrlpTenmZXyjebLSbgcK/6JId8DQ/Ooshdf9D
+	 JLjwJt40G4clA==
+Date: Fri, 16 Oct 2026 15:44:33 +0100
+From: "Lorenzo Stoakes (ARM)" <ljs@kernel.org>
+To: Alexandru Elisei <alexandru.elisei@arm.com>
+Cc: maz@kernel.org, oupton@kernel.org, fuad.tabba@linux.dev, 
+	joey.gouly@arm.com, seiden@linux.ibm.com, suzuki.poulose@arm.com, 
+	yuzenghui@huawei.com, linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, 
+	will@kernel.org, mark.rutland@arm.com, linux-perf-users@vger.kernel.org, 
+	catalin.marinas@arm.com, james.clark@linaro.org, Sudeep Holla <sudeep.holla@arm.com>
+Subject: Re: [RFC PATCH v7 11/28] KVM: arm64: Add a new VCPU device control
+ group for SPE
+Message-ID: <atI1NfqxWsPOhvBX@gremlin>
+References: <20260903160623.315525-1-alexandru.elisei@arm.com>
+ <20260903160623.315525-12-alexandru.elisei@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260903160623.315525-12-alexandru.elisei@arm.com>
 
-Mention CONFIG_TOOLS_BUILD and "make tools_build" in the submit
-checklist, ask for libc-only selftests to be added to tools/Kconfig,
-and note that USERCFLAGS and USERLDFLAGS also apply to the tools.
+On Thu, Sep 03, 2026 at 05:06:06PM +0100, Alexandru Elisei wrote:
+> From: Sudeep Holla <sudeep.holla@arm.com>
+>
+> Add a new VCPU device control group to control various aspects of KVM's SPE
+> emulation. Functionality will be added in later patches.
 
-Assisted-by: LLM
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- Documentation/dev-tools/kselftest.rst      | 4 ++++
- Documentation/kbuild/kbuild.rst            | 4 +++-
- Documentation/process/submit-checklist.rst | 5 +++++
- 3 files changed, 12 insertions(+), 1 deletion(-)
+Again fairly thin commit message, be useful to provide more details.
 
-diff --git a/Documentation/dev-tools/kselftest.rst b/Documentation/dev-tools/kselftest.rst
-index 64c0ec7428a27..407d539e49b01 100644
---- a/Documentation/dev-tools/kselftest.rst
-+++ b/Documentation/dev-tools/kselftest.rst
-@@ -315,6 +315,10 @@ Contributing new tests (details)
- 
-     TARGETS += android
- 
-+ * If the test builds with only a C library, add an entry for it to the
-+   "Kernel selftests" menu in tools/Kconfig and to tools/Makefile.kbuild,
-+   so that it is built together with the kernel.
-+
-  * All changes should pass::
- 
-     kselftest-{all,install,clean,gen_tar}
-diff --git a/Documentation/kbuild/kbuild.rst b/Documentation/kbuild/kbuild.rst
-index 5a9013bacfb75..84da035fc66f6 100644
---- a/Documentation/kbuild/kbuild.rst
-+++ b/Documentation/kbuild/kbuild.rst
-@@ -114,12 +114,14 @@ Additional libraries to link against when building host programs.
- 
- USERCFLAGS
- ----------
--Additional options used for $(CC) when compiling userprogs.
-+Additional options used for $(CC) when compiling userprogs and the tools
-+selected in tools/Kconfig.
- 
- USERLDFLAGS
- -----------
- Additional options used for $(LD) when linking userprogs. userprogs are linked
- with CC, so $(USERLDFLAGS) should include "-Wl," prefix as applicable.
-+The tools selected in tools/Kconfig get these options in LDFLAGS.
- 
- KBUILD_KCONFIG
- --------------
-diff --git a/Documentation/process/submit-checklist.rst b/Documentation/process/submit-checklist.rst
-index beb7f94279fdb..9857b05824c2d 100644
---- a/Documentation/process/submit-checklist.rst
-+++ b/Documentation/process/submit-checklist.rst
-@@ -91,6 +91,11 @@ Build your code
-      Use ``make htmldocs`` or ``make pdfdocs`` to check the build and
-      fix any issues.
- 
-+  e) Changes to tools/ or to UAPI headers do not break the userspace tools
-+     selected by ``CONFIG_TOOLS_BUILD``. ``allmodconfig`` turns it on when
-+     the compiler can link glibc programs for the target (currently x86_64
-+     and arm64), and ``make tools_build`` builds only the tools.
-+
- 2) Builds on multiple CPU architectures by using local cross-compile tools
-    or some other build farm.
-    Note that testing against architectures of different word sizes
--- 
-2.53.0
+I'd also explicitly say you're adding stubs and the foundations for this but the
+actual implementation isn't in place yet.
 
+>
+> [ Alexandru E: Major rework ]
+
+Generally [] stuff is for small fixups done to a patch, so a major rework isn't
+really suited to this form.
+
+The done thing for this kind of thing I think is something like:
+
+Co-developed-by: Sudeep Holla <sudeep.holla@arm.com>
+Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
+Signed-off-by: Alexandru Elisei <alexandru.elisei@arm.com>
+
+Note that you require Sudeep's explicit permission to do this though! :)
+
+>
+> Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
+> Signed-off-by: Alexandru Elisei <alexandru.elisei@arm.com>
+
+Overall this looks obviously correct (TM), so with the commit message +
+authorship stuff addressed:
+
+Reviewed-by: Lorenzo Stoakes (ARM) <ljs@kernel.org>
+
+--
+Cheers, Lorenzo
