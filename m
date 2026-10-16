@@ -1,68 +1,68 @@
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EA734B1CEB
-	for <linux-perf-users@vger.kernel.org>; Fri, 16 Oct 2026 13:53:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AD6A47A0A6
+	for <linux-perf-users@vger.kernel.org>; Fri, 16 Oct 2026 13:59:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792158791; cv=none; b=O8FUJi+vtSgbZgXu1v/cnVORnBO4NNmn520tzhFVZ49h9Sgacog0lAARP3gWOnB3UbV6k5AU32ZeehLTq6GAy/smPdZrzGjGSeTqXcJsuNwm5QG8XXJJZEV8aKV7jx0R9iyPl9+pAFLWLd5yI9aIzGX8IRfc8qqc/iTj6zDilVE=
+	t=1792159164; cv=none; b=HGqSbKOjv1fAFD0QqzqY+JqG/Hejtk+uHugJTW1WZhuLzq/e1eVTikwI5awIFFkBfpSkhdlKwFElOCBvD02pAtpETF7Q8XuXk9ymc21AbhBCYSVA25EtJLLl5toV/+50SaAAh2Vli84ZfqMrTjgguD6aHaqJOCFHvp4Q3mPsYPQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792158791; c=relaxed/simple;
-	bh=oNZoC/1XfNmiFXh0Vy39LTZxHGERleLuLCyxabvzoWc=;
+	s=arc-20240116; t=1792159164; c=relaxed/simple;
+	bh=HlxxOX9hc1IcZ7vS0lzEwAlAmQp50vCCaoHbS431348=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=OyhQUTeBseAb9YgfOCjgmlJ2gwwp0LtpNNRa3PzIq1r0/2jyQoL3q73ID1p6tGnjNVls8z5jzq+GRV3O3Np6ECQ20kSTubjy9CtjaCLbRGYr64YrtvNBmkTsfo39w/2rPD/bvPldyPFH1pqzWp0VBPc8uon4hRlnbskStXUAoTg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=B36rcz9t; arc=none smtp.client-ip=209.85.128.54
+	 In-Reply-To:Content-Type; b=OSNUh1kx65rv7BD3UgVqsOcnzwVUOgo9HMaEyGxx0mAYCmvzDSIOuZheujCi6Z8v6vO17AU4AHKirN7LxFv327v3mZimECE9un7g1sDmcJ9qrW/P+51VEbC6B5AMHIDQ5vP28wuwrismQe2lFEGB+zriZHZT7ZVMbVa9D6WAUms=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=WAbEK4fb; arc=none smtp.client-ip=209.85.221.49
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="B36rcz9t"
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-4a16bc2278aso46949695e9.1
-        for <linux-perf-users@vger.kernel.org>; Fri, 16 Oct 2026 06:53:09 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WAbEK4fb"
+Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-48b042c0759so4710654f8f.2
+        for <linux-perf-users@vger.kernel.org>; Fri, 16 Oct 2026 06:59:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1792158788; x=1792763588; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1792159161; x=1792763961; darn=vger.kernel.org;
         h=content-transfer-encoding:content-type:in-reply-to:from
          :content-language:references:cc:to:subject:user-agent:mime-version
          :date:message-id:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=5u1hd3MVH4854Wnbwnw1BZQepD7XiDLggdf6oqUpphg=;
-        b=B36rcz9tosqcvMwRjZlWNJEugPuiP1/Vv11WHCTKzQPcBx2bck5/+9HD3aBgCFWR5b
-         4OzHSE1LaWCQ0qNslA9cZVPTTK67KvuTW2gd3yF4qj74X8fUdcov9gd4GGmHxkN97xYV
-         wyns4yjJkb6X+tl68GbxwUbzc7n29c09aJtEXCh/OkTUIjTFAXDIoLkAJBxqXqUH3PAw
-         E1X08r1+HeeIJvHikozl7fZnl7FFkbjZED/R5m/dnDLnmB8oiQCm6mV6vom/pBV/PBo7
-         htd09EEyBTxG9mkLKUjKakb9VzFW3Ts10uJe+uGGBetspL2Ve1gd8Ja6lgp8dnPEaWTd
-         ZCRg==
+        bh=kZ7aNbjQZUrQzNKHssers5+AZqgNNYh0ssOAYLIZWvc=;
+        b=WAbEK4fbM2OLOIDmTSsQde5j74EB0KJCUymGGjE2s08OXXpAI1vX4j5VKvXVFvn6iW
+         6hK1ElX0WWWuXtgjKRQBz7HlK035F+Spprg1O40zu4LpdNpZH4v3AmSxmgUr82/BW/B3
+         MPCgEHBp5lGUGYnTGFI8oRtUaoGgpwjlAokjFZKyFC/nDYjnDoUw03I/nImeQnKq7mIc
+         ETLeBpjgQfoos/qjopbXvMCinlsEn4C9FEWnBPUVz7U9mgPt7P/L6dCgyM/6afncodlI
+         7EL4mj5McxrbK1cccX4t1U2SJmUtaYLcl/5SLb7XIilxCzhhOnkSzZIZWmzsGl8dRj5P
+         7eUg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1792158788; x=1792763588;
+        d=1e100.net; s=20260707; t=1792159161; x=1792763961;
         h=content-transfer-encoding:content-type:in-reply-to:from
          :content-language:references:cc:to:subject:user-agent:mime-version
          :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=5u1hd3MVH4854Wnbwnw1BZQepD7XiDLggdf6oqUpphg=;
-        b=A7iM+RbY9Z0+xrNeWVVLQs0HUYMoX9dlrxgqao1CR0vG3MmF9+vhf7Ircgzq5Tw6kx
-         N8hBVjXBxW3LrCByPPIHi96BysFpgk2RYpx3ncTSRz0gDiQ/lINmvbJJl8tyW3pIfAkq
-         K4inxxCWqwquQLxJzLnNje6tQKtVqYWNuDP+rTRxZKvSqfoYJFKwEjRYoLLe4oox5CSB
-         P8HMgYS2k62A+edg0NLOrZT8xhGmQaeO5h+Y4GvK7cw/WQaF7+4Mo8oVDPacrMvWqtQP
-         qyY+hl45B1CGbtD6gNRM0hr9iPIpMXy/ErhBmvNMY7tafodBgBhKLy2yBDiFX7Opym0D
-         S1fA==
-X-Forwarded-Encrypted: i=1; AKwUvBwVLJn6KW/Pk27/WJpmPE4g8rLJ7Gh9sOkhl+XjTcp8bE+6BAmScHXvVwd64A3BVUhMQTVg6uk6qBDsjGsCCU49@vger.kernel.org
-X-Gm-Message-State: AFq9FYJKE7PHDexJlbYvpTdia7DXr0k2OM6rJs+oun4o5YaPb83a0D5a
-	ySgDNjRZ/cxFzveFzuMFH5M846xbSXyTNGgSbbPWkEKMnZwWVJqlIy8yRX/4EOA1v9U=
-X-Gm-Gg: AYBFou0EbQtHFWMyNydMKbMc2+38yDADKiLSM9KVi+isI1qgCnvLmiwckbYmBSTxnYf
-	S2NjdZnqsGwG0nOjlVPy/nSx3b5cnXA7CCbzOllQY6CKx4Da65OfjTKYxOnWNf9w/Xbd8vNF/2R
-	SwLFRzvzAjMceZnm3EWpLgOdjguRAdrw8WIWBZwbPUtrfNHIH23gRuP2SGx3FiD348yZbYx9oSj
-	jSK6UIjb3umdrY1O+w/K+k64+NVXMG58s+URLbmSG5qK5Pdu9/bDWP1OXiKBCtzn/bLjITY3Dnb
-	fiYWCNbhf8w/rpU92j37MSfsHmL+xoBmWTXGmjVka4Jc/Z+3LgeqgaxRANkGy/BWmIraxh/U8+6
-	ji+Dr/IyyI9UXCOYV1Y6ieeLxoAegHi/oS3RliynXFe5Vq3oiAb5yJBC4RqoHD+fEbLJl5z7f8B
-	SwjUBaHriKK97Z+ppplfAGTt6o9Vqd71tC5vuDqj5HCDT8umQlMThinH/GM1QmrgyvqyfzhBTnt
-	cU=
-X-Received: by 2002:a05:600c:6388:b0:4a1:ac66:5ffe with SMTP id 5b1f17b1804b1-4a1ac666396mr241877715e9.15.1792158787676;
-        Fri, 16 Oct 2026 06:53:07 -0700 (PDT)
+        bh=kZ7aNbjQZUrQzNKHssers5+AZqgNNYh0ssOAYLIZWvc=;
+        b=kE0AyXgq1/FkKsJUtT9ePhjq2366x7PyiodWhZCqn4KSJ/LN1UHDONXjPua4JXuzKv
+         9mH7VfTyx0CldAqjZyDDmPsQOpL9rdPd0hgS2BPFV8nZDcP/oWcglvVxgbiEGP0GkY5h
+         /VrMiUMdHT4JIC8d3CIMQ/Tpt2yjsqn2r8hkVhodTIggq6AZEvJ2yp/IWW2+4gxCnTEw
+         TMrezvBfilOPcbhTQfXfXxsGS57RA1RjVFbgHx8XYfYzzzRRTIQSdJuikhkvoRtrI+ip
+         3efK9fux19Dd12W+jEH+a6JxyGONgjDhnl709/vH1q2xSEZz3gK7vs5REayVKpqapzny
+         2jNA==
+X-Forwarded-Encrypted: i=1; AKwUvBzFUDGjlek6Z35VyW0XIBvRoRSTs6d/hn3dLqTPem05OuU56HbWaUYB5A/X6Qi4D00uB2K4RYjW1GzFvWoup/HG@vger.kernel.org
+X-Gm-Message-State: AFq9FYKdbbACR2DTQXoS0F/v/HmKxkiP9vXzl9Nd2hM613y9gb/BGF6R
+	uEhLJ/iyOG0PlDAQTk2H4QE1Sbm9dbXeVuOkGM/E6GqW2A/yhvYQ4K9pXaFdzKCcp7U=
+X-Gm-Gg: AYBFou20l/ChcEnioDBjlxgMZQRFuQv8MrzzbxPKeLEJtbVdvkypE6zwawnCVvWWTal
+	QXZF2B8eaGSVvJ+f2Qzo8WrN3JSc8Dz4FE4epyTM/TC7FEEc3aIc8ItQgvMXwJOcuGwEYGMppfz
+	+uSyLGHg5H33sYx6HzLoMHRFPAlGBs38f3Rs44q8ue1tPrHLunqbjVoGaXEPhid46Sl/ZFvpTGA
+	Kph9A8MlbrqWCWRP8sZ/yLk+e31BqmLydNAJQtdZKZU0KIlEb3Z/h9fN4drHb22x0keUhsy2+et
+	CBHGIE1Ep2ehOw1PSBXeg4oPgRFQWoVLWqp6LHkEJH4yf6s9VuLEoCdTFIntijVCjocaXAnablq
+	ssLhbZMAlmjsw+7psSL+0EKuXCfG+oXGoW/yaU3ynoPyxy+PqbzXH0GTViSzrfMowkgdcCJxEpY
+	49SDE09ZjIQoxtGHUz9x2TELIFDAut7FWJCUUAf5j7OZy1sXiadko9wiKYTY2xPGh78XQNoVTX6
+	a9emmRxPJCxjlO+1cNhpJ6pnG8pkv44LIGjeIzCrmZU+YMhafMQ2o6ACp10fA==
+X-Received: by 2002:a5d:5f82:0:b0:48d:ff0b:9b52 with SMTP id ffacd0b85a97d-48dff0b9cf2mr4016547f8f.19.1792159160653;
+        Fri, 16 Oct 2026 06:59:20 -0700 (PDT)
 Received: from [192.168.1.3] ([37.18.141.193])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4a1d0e2bb8dsm35630445e9.2.2026.10.16.06.53.04
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-48dfd500e75sm5181686f8f.42.2026.10.16.06.59.19
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 16 Oct 2026 06:53:06 -0700 (PDT)
-Message-ID: <43db2ca6-27be-416b-83f8-131676e5d444@linaro.org>
-Date: Fri, 16 Oct 2026 14:53:03 +0100
+        Fri, 16 Oct 2026 06:59:20 -0700 (PDT)
+Message-ID: <73a053af-9c07-4d09-be30-66778b5f433d@linaro.org>
+Date: Fri, 16 Oct 2026 14:59:18 +0100
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -70,7 +70,8 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 05/25] coresight: perf: Extract AUX buffer update helper
+Subject: Re: [PATCH 06/25] coresight: perf: Simplify flow for CPUs without a
+ path
 To: Leo Yan <leo.yan@arm.com>
 Cc: Ingo Molnar <mingo@kernel.org>, linux-perf-users@vger.kernel.org,
  linux-kernel@vger.kernel.org, coresight@lists.linaro.org,
@@ -84,159 +85,114 @@ Cc: Ingo Molnar <mingo@kernel.org>, linux-perf-users@vger.kernel.org,
  Yeoreum Yun <yeoreum.yun@arm.com>, Jonathan Corbet <corbet@lwn.net>,
  Suyash Mahar <smahar@meta.com>, Amir Ayupov <aaupov@fb.com>
 References: <20260915-arm_cs_support_aux_sample-v1-0-35cf6f297d20@arm.com>
- <20260915-arm_cs_support_aux_sample-v1-5-35cf6f297d20@arm.com>
+ <20260915-arm_cs_support_aux_sample-v1-6-35cf6f297d20@arm.com>
 Content-Language: en-US
 From: James Clark <james.clark@linaro.org>
-In-Reply-To: <20260915-arm_cs_support_aux_sample-v1-5-35cf6f297d20@arm.com>
+In-Reply-To: <20260915-arm_cs_support_aux_sample-v1-6-35cf6f297d20@arm.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
 
 
 On 15/09/2026 16:48, Leo Yan wrote:
-> The pause and stop callbacks duplicate the sequence that updates a sink
-> buffer and finishes the current AUX output transaction. Move the common
-> sequence into etm_event_update_buffer() for a single implementation.
+> etm_setup_aux() removes a CPU from the event mask when it cannot build a
+> path from that CPU's ETM to the selected sink. The start nevertheless
+> allocates buffer handle and keeps event data active until the
+> corresponding stop callback.
 > 
-> The helper first verifies that perf handle is active. It updates the
-> buffer when PERF_EF_UPDATE is requested and otherwise ends the
-> transaction without data. The pause callback can then start a new perf
-> handle for resuming trace.
+> End the newly acquired handle immediately when the current CPU is not in
+> the mask, and do not publish event data in the per-CPU context. The
+> event remains logically active so that a task event can trace after
+> migrating to an eligible CPU. A stop on the unsupported CPU then has no
+> CoreSight modules to disable or trace data to synchronize. Mark its
+> hardware state stopped and up to date.
 > 
 > Assisted-by: Codex:gpt-6
 > Signed-off-by: Leo Yan <leo.yan@arm.com>
 > ---
->   drivers/hwtracing/coresight/coresight-etm-perf.c | 89 ++++++++++--------------
->   1 file changed, 36 insertions(+), 53 deletions(-)
+>   drivers/hwtracing/coresight/coresight-etm-perf.c | 38 +++++++++++-------------
+>   1 file changed, 17 insertions(+), 21 deletions(-)
 > 
 > diff --git a/drivers/hwtracing/coresight/coresight-etm-perf.c b/drivers/hwtracing/coresight/coresight-etm-perf.c
-> index a45f69f39f175f3044322b25fe5413fb97154496..13d865ca86f1161b2e21174f096473c4829afc8c 100644
+> index 13d865ca86f1161b2e21174f096473c4829afc8c..afd22fd4a851e600ab69fd5b6883e6f8518b2cab 100644
 > --- a/drivers/hwtracing/coresight/coresight-etm-perf.c
 > +++ b/drivers/hwtracing/coresight/coresight-etm-perf.c
-> @@ -637,6 +637,38 @@ static void etm_event_start(struct perf_event *event, int flags)
->   	return;
->   }
->   
-> +static void etm_event_update_buffer(struct perf_output_handle *handle,
-> +				    struct etm_event_data *event_data,
-> +				    struct coresight_device *sink,
-> +				    int mode)
-> +{
-> +	unsigned long size;
-> +
-> +	/*
-> +	 * Make sure the handle is still valid, as the sink may close it from
-> +	 * the IRQ handler. E.g., the sink driver may fail to restart the
-> +	 * handle during interrupt handling due to insufficient buffer space.
-> +	 * The sink driver must serialize update_buffer() with IRQ handling,
-> +	 * so this should return either a valid handle with a valid size
-> +	 * (which may be 0), or no handle at all.
-> +	 */
-> +	if (!perf_get_aux(handle))
-> +		return;
-> +
-> +	if (!sink_ops(sink)->update_buffer)
-> +		goto out;
-> +
-> +	if (mode & PERF_EF_UPDATE) {
-> +		size = sink_ops(sink)->update_buffer(sink, handle,
-> +						     event_data->snk_config);
-> +		perf_aux_output_end(handle, size);
+> @@ -572,13 +572,15 @@ static void etm_event_start(struct perf_event *event, int flags)
+>   	 * the sink was specified or hinted to the driver. For
+>   	 * now, simply don't record anything on this ETM.
+>   	 *
+> -	 * As such we pretend that everything is fine, and let
+> -	 * it continue without actually tracing. The event could
+> -	 * continue tracing when it moves to a CPU where it is
+> -	 * reachable to a sink.
+> +	 * In that case, leave the event logically active but stop AUX
+> +	 * output on this CPU. The event could continue tracing when
+> +	 * it moves to a CPU where it is reachable to a sink.
+>   	 */
+> -	if (!cpumask_test_cpu(cpu, &event_data->mask))
+> -		goto out;
+> +	if (!cpumask_test_cpu(cpu, &event_data->mask)) {
+> +		perf_aux_output_end(handle, 0);
+> +		event->hw.state = 0;
 > +		return;
 > +	}
-> +
-> +out:
-> +	perf_aux_output_end(handle, 0);
-> +}
-> +
->   static void etm_event_pause(struct coresight_path *path,
->   			    struct perf_event *event,
->   			    struct etm_ctxt *ctxt)
-> @@ -644,7 +676,6 @@ static void etm_event_pause(struct coresight_path *path,
->   	struct perf_output_handle *handle = &ctxt->handle;
->   	struct coresight_device *source, *sink;
->   	struct etm_event_data *event_data;
-> -	unsigned long size;
 >   
->   	if (!path)
->   		return;
-> @@ -669,27 +700,16 @@ static void etm_event_pause(struct coresight_path *path,
->   	if (WARN_ON_ONCE(handle->event != event))
->   		return;
+>   	path = etm_event_cpu_path(event_data, cpu);
+>   	path->handle = handle;
+> @@ -613,7 +615,6 @@ static void etm_event_start(struct perf_event *event, int flags)
+>   		perf_report_aux_output_id(event, hw_id);
+>   	}
 >   
-> -	if (!sink_ops(sink)->update_buffer)
-> -		return;
-> -
->   	event_data = READ_ONCE(ctxt->event_data);
-> -	size = sink_ops(sink)->update_buffer(sink, handle,
-> -					     event_data->snk_config);
-> -	if (READ_ONCE(handle->event)) {
-> -		if (!size)
-> -			return;
-> +	etm_event_update_buffer(handle, event_data, sink, PERF_EF_UPDATE);
->   
-> -		perf_aux_output_end(handle, size);
-> -		perf_aux_output_begin(handle, event);
-> -	} else {
-> -		WARN_ON_ONCE(size);
-> -	}
-> +	/* Prepare the handle for resuming trace */
-> +	perf_aux_output_begin(handle, event);
->   }
+> -out:
+>   	/* Tell the perf core the event is alive */
+>   	event->hw.state = 0;
+>   	/* Save the event_data for this ETM */
+> @@ -709,7 +710,6 @@ static void etm_event_pause(struct coresight_path *path,
 >   
 >   static void etm_event_stop(struct perf_event *event, int mode)
 >   {
->   	int cpu = smp_processor_id();
-> -	unsigned long size;
+> -	int cpu = smp_processor_id();
 >   	struct coresight_device *source, *sink;
 >   	struct etm_ctxt *ctxt = this_cpu_ptr(&etm_ctxt);
 >   	struct perf_output_handle *handle = &ctxt->handle;
-> @@ -742,45 +762,8 @@ static void etm_event_stop(struct perf_event *event, int mode)
->   	/* tell the core */
->   	event->hw.state = PERF_HES_STOPPED;
+> @@ -719,6 +719,15 @@ static void etm_event_stop(struct perf_event *event, int mode)
+>   	if (mode & PERF_EF_PAUSE)
+>   		return etm_event_pause(path, event, ctxt);
+>   
+> +	/*
+> +	 * With no path enabled, there is no hardware to stop or trace data
+> +	 * to synchronize. Mark the event stopped and up to date.
+> +	 */
+> +	if (!path) {
+> +		event->hw.state = PERF_HES_STOPPED | PERF_HES_UPTODATE;
+> +		return;
+> +	}
+> +
+>   	/*
+>   	 * If we still have access to the event_data via handle,
+>   	 * confirm that we haven't messed up the tracking.
+> @@ -738,19 +747,6 @@ static void etm_event_stop(struct perf_event *event, int mode)
+>   	if (WARN_ON(!event_data))
+>   		return;
 >   
 > -	/*
-> -	 * If the handle is not bound to an event anymore
-> -	 * (e.g, the sink driver was unable to restart the
-> -	 * handle due to lack of buffer space), we don't
-> -	 * have to do anything here.
+> -	 * Check if this ETM was allowed to trace, as decided at
+> -	 * etm_setup_aux(). If it wasn't allowed to trace, then
+> -	 * nothing needs to be torn down other than outputting a
+> -	 * zero sized record.
 > -	 */
-> -	if (!handle->event)
-> -		goto out;
-> -
-> -	if (mode & PERF_EF_UPDATE) {
-> -		if (WARN_ON_ONCE(handle->event != event))
-> -			goto out;
-> -
-> -		/* update trace information */
-> -		if (!sink_ops(sink)->update_buffer)
-> -			goto out;
-> +	etm_event_update_buffer(handle, event_data, sink, mode);
->   
-> -		size = sink_ops(sink)->update_buffer(sink, handle,
-> -					      event_data->snk_config);
-> -		/*
-> -		 * Make sure the handle is still valid as the
-> -		 * sink could have closed it from an IRQ.
-> -		 * The sink driver must handle the race with
-> -		 * update_buffer() and IRQ. Thus either we
-> -		 * should get a valid handle and valid size
-> -		 * (which may be 0).
-> -		 *
-> -		 * But we should never get a non-zero size with
-> -		 * an invalid handle.
-> -		 */
-> -		if (READ_ONCE(handle->event))
-> -			perf_aux_output_end(handle, size);
-> -		else
-> -			WARN_ON(size);
-> -	} else {
+> -	if (handle->event && (mode & PERF_EF_UPDATE) &&
+> -	    !cpumask_test_cpu(cpu, &event_data->mask)) {
+> -		event->hw.state = PERF_HES_STOPPED;
 > -		perf_aux_output_end(handle, 0);
+> -		return;
 > -	}
 > -
-> -out:
->   	/* Disabling the path make its elements available to other sessions */
->   	coresight_disable_path(path);
->   }
+>   	source = coresight_get_source(path);
+>   	sink = coresight_get_sink(path);
+>   	if (!source || !sink)
 > 
+
 Reviewed-by: James Clark <james.clark@linaro.org>
+
+
