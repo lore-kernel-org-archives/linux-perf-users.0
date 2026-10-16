@@ -1,44 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF77F22D7A1
-	for <linux-perf-users@vger.kernel.org>; Fri, 16 Oct 2026 00:21:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87A7522D7A1
+	for <linux-perf-users@vger.kernel.org>; Fri, 16 Oct 2026 00:22:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792110113; cv=none; b=N4cIOQHlk7r+5+FbCHsOM78erytruDkAaFYSlwCvTJJ14D8kVxsrcXs+APFhhoWpsj10PlZ5oUar2a7HqrluyhuW8zkfqIFoMzELbg8Yu/NYZGeng6ll1IZSg5Y5msvceP3uMvQhL7dKgUhsbWcXklBXWR8sBVeZZT6Dhc9YDD0=
+	t=1792110174; cv=none; b=lPAL0bRdvD1K/hPhgJTjojKg9ObYFz8roF2tK0n+Rcu4YfyzsMoe5N80vtIeDuyyHIvQyUWaolCKEROcuLIwPhP2bXg7T/16Pg9htRxoCjiV4VRhQVCOyNCb0SdY1CrJG3LW4v5VHPHpm0i1dNIPtU3Px2sQH4kYx0Rz8Ets5Bg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792110113; c=relaxed/simple;
-	bh=q/PbyuYkzkKDJXPM+oyNjj8jp/3hyl0nyeK3my19XSQ=;
+	s=arc-20240116; t=1792110174; c=relaxed/simple;
+	bh=MJrA/EsU8HfV0Z7QYjvUErqvEvRV1yFx/X3U4LSCFdM=;
 	h=Message-ID:From:Subject:To:Cc:In-Reply-To:References:Content-Type:
-	 Date; b=fmhu+xBSQyDHNL1+04blF5rVXdHyZN8YmwsEMW5JJHa/eHMk+buqqONiHVAs5gq13Xh81G6mSwpVfAuG8fBnoWb3ZsoPh3w3TyzdK9l1IMraHCdvh+6qMXzOb7BaUZVmemhPsNeN5GYDnBXQtPnKaB3mLucvXyrOzhkyiKSqj/k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SHtNcrrL; arc=none smtp.client-ip=100.103.45.18
+	 Date; b=ufWXgND1pworoAAwphFta33utlpTKkU6Urz6cMe++3Tcnv1z/zbVPlIVMJaaThdtDDuuxQyIr4x9obiXjnJ5bK1lFpH4V0Svj/A5Nui1Bug6h0Rr1fczAR7TwjUYqHDs2RjUcxambSx4Z1tcvBBwBMeGeZm9cOtx4k4548Gs0Ig=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eLqu8eg6; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SHtNcrrL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7DBD11F000C4;
-	Fri, 16 Oct 2026 00:21:52 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eLqu8eg6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 593EE1F000C4;
+	Fri, 16 Oct 2026 00:22:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1792110112;
-	bh=amoL3aBU93ztiizxOwAKog5V98TxCD3/Jk0b0/VqRvk=;
+	s=k20260515; t=1792110173;
+	bh=NTnTZJqXFOrl1Zq5Y3URpVdm7ZYyYDU4rapoqlrCumo=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=SHtNcrrLzzRfEfu8tc4sAm496Y8WdDxN7ap5Qxr/eeJ/HaBQI8IEhKX+9d7ZpzH/j
-	 VAIoSR9QW1ytpy/jQiwFe/NYPwqMjHqE936C5fvEwLxLsjCrgjDC/85h86/9R4/g0w
-	 SDfXulM6NynYH90Y0fcw6Kgj+zD3XiSVJxuY1rqQfP2vteKQlL0gPAG8/UEoXm+D/U
-	 GGWU4M9EZ7kcz3p+JZ5kj/0H5N+TFOLZ0ZLxVZEs3Qc43gD6+tPVcY/BxOKerVIN0+
-	 2ydMmggAcL7zhdvHogglhvecS2w57d8ASwh8hgp4YcvJZJH85+sEJYfi6HD5jps53+
-	 Ke5B9nF57oSDQ==
-Message-ID: <sashiko-outbox-173512@kernel.org>
+	b=eLqu8eg6nxH6UMTnsBPiVhNN6bjmAO66/WjK8g2Ka/ZEm40c4P4SwMFxdtWqx9DY0
+	 zTqUD8MO8qJzl4Cf0Iww+WPHkkQLj7yBt8D8PZRukpHUiS+Bk9lfjc2CbAUW4Kt2tq
+	 01te3Oya49djYhqYvOnM27yaFgzYeCCwCL2UVsYZ1fA3A5+YjAohC1kOqOW8mVC42x
+	 H9T4kP0EE6HfFXhnqWhY0OPkp3/rYt2hRMm/7Q6r033yKJPfppfQ00jEhKN4Q2nm97
+	 f4eMS50gUoBfekwXKNpIBeLAljDjC6SAhKjcAglZ4/M1r9IrW7T+l9VIx2jXHCt2PV
+	 eErsphCW7xDEw==
+Message-ID: <sashiko-outbox-173513@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v3 04/19] perf test attr: Fix default stat metrics
- expectations
+Subject: Re: [PATCH v3 01/19] perf test attr: Fix record dwarf sample_type
+ expectation
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Arnaldo Carvalho de Melo" <acme@kernel.org>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20261016001843.71978-5-acme@kernel.org>
+In-Reply-To: <20261016001843.71978-2-acme@kernel.org>
 References: <20261016001843.71978-1-acme@kernel.org>
- <20261016001843.71978-5-acme@kernel.org>
+ <20261016001843.71978-2-acme@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Fri, 16 Oct 2026 00:21:52 +0000
+Date: Fri, 16 Oct 2026 00:22:52 +0000
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -47,35 +47,32 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
 > From: Arnaldo Carvalho de Melo <acme@redhat.com>
 >=20
-> Since commit c7adeb0974f1 ("perf jevents: Add set of common metrics based
-> on default ones") and commit 2dfc0cab3da4 ("perf stat: Add detail -d,-dd,=
--ddd
-> metrics") the perf stat default metrics open their events in groups, so
-> group leaders and members have read_format=3D15 and members are enabled
-> without enable_on_exec, while standalone events keep read_format=3D3 and
-> are disabled until exec.
+> Since commit bdd051e24914 ("perf record: Split --data-mmap option"),
+> record_opts__parse_callchain() sets record_data_mmap instead of
+> record->sample_address for the DWARF unwind mode, so -d/--data and its
+> implied PERF_SAMPLE_DATA_SRC are not enabled implicitly anymore.
 >=20
-> Also, since commit b1c5efbfd92e ("perf parse-events: Remove hard coded
-> legacy hardware and cache parsing") bare hardware events resolve to the
-> core PMU sysfs/JSON events (type 4), so add the raw encodings the Intel
-> and AMD core PMUs use for instructions, branch-misses, cpu-cycles and
-> stalled-cycles-frontend/backend to test-stat-default and
-> test-stat-detailed-1/2/3.
+> As a result, --call-graph dwarf no longer sets PERF_SAMPLE_ADDR and
+> PERF_SAMPLE_DATA_SRC, making the test fail:
 >=20
-> Add base-stat-group, that accepts both the standalone and the group
-> variants of read_format, disabled and enable_on_exec, and point the four
-> default/detailed expectations at it.  test-stat-basic, test-stat-C0 and
-> test-stat-no-inherit keep base-stat, whose events aren't opened in a
-> group: for those, a change that groups or enables them differently is
-> still something to catch.  test-stat-group1 does open its events in a
-> group, but pins read_format, disabled and enable_on_exec itself, the very
-> terms base-stat-group loosens, so it doesn't need it either.
+>   expected sample_type=3D45359, got 12583
 >=20
-> Fixes: b1c5efbfd92eb84d ("perf parse-events: Remove hard coded legacy har=
-dware and cache parsing")
-> Fixes: c7adeb0974f18da4 ("perf jevents: Add set of common metrics based o=
-n default ones")
-> Fixes: 2dfc0cab3da4a205 ("perf stat: Add detail -d,-dd,-ddd metrics")
+> where 45359 (0xb12f) is:
+>=20
+>   IP|TID|TIME|ADDR|CALLCHAIN|PERIOD|REGS_USER|STACK_USER|DATA_SRC
+>=20
+> and 12583 (0x3127) is:
+>=20
+>   IP|TID|TIME|CALLCHAIN|PERIOD|REGS_USER|STACK_USER
+>=20
+> i.e. the values differ exactly by PERF_SAMPLE_ADDR (0x8) and
+> PERF_SAMPLE_DATA_SRC (0x8000).  The mmap_data=3D1 expectation is still
+> correct as DWARF now enables record_data_mmap.
+>=20
+> This went unnoticed until tests/attr.sh stopped ignoring attr.py's
+> return value.
+>=20
+> Fixes: bdd051e249141c79 ("perf record: Split --data-mmap option")
 > Assisted-by: LLM
 > Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 
@@ -83,5 +80,5 @@ Sashiko has reviewed this patch and found no issues. It looks great!
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261016001843.7197=
-8-1-acme@kernel.org?part=3D4
+8-1-acme@kernel.org?part=3D1
 
