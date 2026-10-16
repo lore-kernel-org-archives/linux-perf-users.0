@@ -1,45 +1,54 @@
-Received: from mail.ilvokhin.com (mail.ilvokhin.com [178.62.254.231])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D63C835CB6B;
-	Fri, 16 Oct 2026 11:28:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.62.254.231
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 78D36470EA0;
+	Fri, 16 Oct 2026 11:50:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792150118; cv=none; b=C3u8U30v1qgWQEumDXteH7UhGInkxZiNyN1qcrWRb7oeriI/lrp1iz38QF/4H2octpH6qJKRGFjHSYp/gJL6sTA9CdIDaT+0XszpvZDmKFXWfjl6dUvP3LXodV5qG9bdBgQ7YelctvQzHMQa7yHzVstQ7keujLoYvTMGZ4s2d6o=
+	t=1792151434; cv=none; b=siThiF8ZK7q1so3XciEYcwb6Zw7bt/squipIdZdRYVLKAjsCcg8PwWWFTL9KVUJkUVarIvUi5ZJLawDsSONjls5WBMEHg0c3mJFeC4swbe5lwcheaJFjt3YA0Z8ZWkpwd543zksCaPXVwbzRFYr3vyAmRfgQyjrQznL0PjWeK4w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792150118; c=relaxed/simple;
-	bh=Ur1oPaD8LRczsarB1wT8feo/Dghof+BJ3vmBEhzAEl8=;
+	s=arc-20240116; t=1792151434; c=relaxed/simple;
+	bh=7eDJICq300beGRALQlJrXpadKotDns99R6Gkf0Dn3K0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mWczBb+sZUeuGpIku9HjKDMruqCo0IFjKtMMxIVZAXq1dXfhpfQRsH2K3zZ0sRVvjRHTYFH4165/FlVZAKt5guGQ9rKA9TwFCdheZ9158Ia2gRSrnZAVX1yhtONCl+FrPHimRp0jQ3WOiM33sNnau4+ntHVclc9eaTwD4SRBGRM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ilvokhin.com; spf=pass smtp.mailfrom=ilvokhin.com; dkim=pass (1024-bit key) header.d=ilvokhin.com header.i=@ilvokhin.com header.b=EYCUaFKo; arc=none smtp.client-ip=178.62.254.231
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ilvokhin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ilvokhin.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=oF2haVkhZemKPi2ZhDdT7es1zrFOv46dJgyoOz06omeGvMG+5HwBWPhLxf7WmzcjN7JfLNeaJaBvLRgUEnc5bH/MtnwMHrLHIokHvsar/wOEYLHsdWoPrmw5cr7dTtVo3SiefudbPKdl9N845Ivi3/WxcB7gCMxLoPFGPsFskyM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=b6aCiRzy; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ilvokhin.com header.i=@ilvokhin.com header.b="EYCUaFKo"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ilvokhin.com;
-	s=mail; t=1792149662;
-	bh=eBxHgvw1bnsluoyWzXeY/eOCvQ6gAdG+35WYGC0Ze7c=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=EYCUaFKoTMp0TvU3zfDhqCONxeK7m9S/MlyX0epIq2OOvQUuqldhSECiLInTGmnX7
-	 Jt0mSNTy4PhFUezlKwW/EmUSnCJNMsfQnmPa/KxrDdqnd7vv8vsvl2QGat2He0Pl7+
-	 /DJ7VCnt78xxH4A97H2Ge0fzyMx758GtZSk4ozP4=
-Received: from shell.ilvokhin.com (shell.ilvokhin.com [138.68.190.75])
-	(Authenticated sender: d@ilvokhin.com)
-	by mail.ilvokhin.com (Postfix) with ESMTPSA id 9B7E5FB63C;
-	Fri, 16 Oct 2026 11:21:02 +0000 (UTC)
-Date: Fri, 16 Oct 2026 11:20:58 +0000
-From: Dmitry Ilvokhin <d@ilvokhin.com>
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	James Clark <james.clark@linaro.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v2] perf c2c: Fix memory leaks on output fields
-Message-ID: <atIImjxxXKUO2os8@shell.ilvokhin.com>
-References: <20261015233237.542258-1-namhyung@kernel.org>
+	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="b6aCiRzy"
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 143D814BF;
+	Fri, 16 Oct 2026 04:50:27 -0700 (PDT)
+Received: from J2N7QTR9R3.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 11CB43F673;
+	Fri, 16 Oct 2026 04:50:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
+	t=1792151430; bh=7eDJICq300beGRALQlJrXpadKotDns99R6Gkf0Dn3K0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=b6aCiRzyo8Ricc4Cu/UQrCIx5RdmoRJA/N8urMfg+lfcww7o1ATQzA3vnzny9Vd/i
+	 hrA3iQrIfOQolHhNl9JwGaP9OkclDKp64NhP5DggjXbIY6GSq+HFlhxbrD9Q3AHUjU
+	 9sPBj8fWR3ig8Cr3FOOmD7yCEQUB1lrFmjLZrJ+E=
+Date: Fri, 16 Oct 2026 12:50:17 +0100
+From: Mark Rutland <mark.rutland@arm.com>
+To: Tomohiro Misono <misono.tomohiro@fujitsu.com>,
+	Marc Zyngier <maz@kernel.org>
+Cc: Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
+	Shuah Khan <skhan@linuxfoundation.org>,
+	Randy Dunlap <rdunlap@infradead.org>,
+	Thomas Gleixner <tglx@kernel.org>, Radu Rendec <radu@rendec.net>,
+	Oliver Upton <oupton@kernel.org>, Fuad Tabba <fuad.tabba@linux.dev>,
+	Joey Gouly <joey.gouly@arm.com>,
+	Steffen Eiden <seiden@linux.ibm.com>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Zenghui Yu <yuzenghui@huawei.com>,
+	Kohei Enju <enju.kohei@fujitsu.com>,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org, linux-perf-users@vger.kernel.org,
+	kvmarm@lists.linux.dev
+Subject: Re: [PATCH v2 2/4] arm64: tlb: Add tlbi workaround for
+ FUJITSU-MONAKA Erratum E#030001
+Message-ID: <atIPeT7SLSLjQIcl@J2N7QTR9R3.cambridge.arm.com>
+References: <20261016-monaka-fix-for-upstream-v2-0-fc7ede7f9f48@fujitsu.com>
+ <20261016-monaka-fix-for-upstream-v2-2-fc7ede7f9f48@fujitsu.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -48,40 +57,292 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20261015233237.542258-1-namhyung@kernel.org>
+In-Reply-To: <20261016-monaka-fix-for-upstream-v2-2-fc7ede7f9f48@fujitsu.com>
 
-On Thu, Oct 15, 2026 at 04:32:37PM -0700, Namhyung Kim wrote:
-> The perf_hpp_list was not freed after use.  Let's add it for the main
-> c2c hists list in perf c2c report and a local list in print_pareto().
+On Fri, Oct 16, 2026 at 07:00:46PM +0900, Tomohiro Misono wrote:
+> FUJITSU-MONAKA Erratum E#030001 affects FUJITSU-MONAKA CPU
+> when using TLBI range operations.
 > 
-> Previously it was detected by ASAN like below.
+> On affected FUJITSU-MONAKA CPUs, range-based TLBI operations
+> targeting a VA or IPA may fail to invalidate TLB entries when
+> addr[34:29] == all 1 && addr[28:0] == 0 for 512MB mappings.
+> The affected instructions are:
+>   RVA[L]E{1,2,3}*, RVAA[L]E1*, and RIPAS2[L]E1*.
 > 
->   =================================================================
->   ==42183==ERROR: LeakSanitizer: detected memory leaks
+> Work around the erratum by issuing additional non-range
+> TLBI instructions corresponding to the affected VA or IPA
+> range-based TLBI operations.
 > 
->   Indirect leak of 1064 byte(s) in 7 object(s) allocated from:
->       #0 0x7f17334ef24f in calloc (/lib64/libasan.so.8+0xef24f) (BuildId: 61e8165ca90f7a4f06b73f064a938c76deaae079)
->       #1 0x0000005fa099 in zalloc  ../../lib/zalloc.c:8
->       #2 0x0000004faf6d in get_format  tools/perf/builtin-c2c.c:1978
->       #3 0x0000004fb45e in c2c_hists__init_output  tools/perf/builtin-c2c.c:2004
->       #4 0x0000004fb7de in __hpp_list__parse  tools/perf/builtin-c2c.c:2047
->       #5 0x0000004fbae9 in hpp_list__parse  tools/perf/builtin-c2c.c:2085
->       #6 0x0000004fee13 in print_pareto  tools/perf/builtin-c2c.c:2563
->       #7 0x0000004ffcd7 in perf_c2c__hists_fprintf  tools/perf/builtin-c2c.c:2708
->       #8 0x000000500ab5 in perf_c2c_display  tools/perf/builtin-c2c.c:2949
->       #9 0x0000005045c3 in perf_c2c__report  tools/perf/builtin-c2c.c:3522
->       #10 0x000000505caa in cmd_c2c  tools/perf/builtin-c2c.c:3676
->       #11 0x0000005df50e in run_builtin  tools/perf/perf.c:383
->       #12 0x0000005df9b1 in handle_internal_command  tools/perf/perf.c:436
->       #13 0x0000005dfd7f in run_argv  tools/perf/perf.c:480
->       #14 0x0000005e02d6 in main  tools/perf/perf.c:581
->       #15 0x7f1729450680 in __libc_start_call_main (/lib64/libc.so.6+0x3680) (BuildId: 85075e2ae2e13352a1413d41c327dacf6461526c)
->       #16 0x7f1729450797 in __libc_start_main@GLIBC_2.2.5 (/lib64/libc.so.6+0x3797) (BuildId: 85075e2ae2e13352a1413d41c327dacf6461526c)
->       #17 0x000000409c34 in _start (tools/perf/perf+0x409c34) (BuildId: 36a64600776d92e4ab7dfd5ca20c92280d72a645)
-> 
->   SUMMARY: AddressSanitizer: 1064 byte(s) leaked in 7 allocation(s).
-> 
-> Fixes: c75540e3160f ("perf c2c report: Add dimension support")
-> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+> Signed-off-by: Tomohiro Misono <misono.tomohiro@fujitsu.com>
 
-Reviewed-by: Dmitry Ilvokhin <d@ilvokhin.com>
+As Will and I suggested last time, we'd prefer to disable range
+operations on these parts (and ensure that the relevant ID field is
+hidden from KVM guests).
+
+Regardless of whether eventually accept the approach you propose here,
+we first need something simple to backport to stable trees (as I assume
+you'll want to run standard Linux distributions on this hardware). The
+TLB invalidation code has changed a lot over time, and I don't think
+it's practical or sensible to backport this patch.
+
+As a first step, I think we should simply disable the use of range
+operations on these parts, and ensure that KVM hides the relevant ID
+field. After that, we can consider optimizing the workaround, as you
+propose here.
+
+Marc, does that align with your expectations? Is there an existing
+pattern to follow for hiding the ID field?
+
+Mark.
+
+> 
+> ---
+> Changes in v2:
+>  - remove page size restrictions as this errata affects both S1 and S2 tables
+>  - use __always_inline instead of inline
+>  - call workaround from NV TLBI operations too (comment by sashiko)
+>   - TODO: test using NV
+> ---
+> ---
+>  Documentation/arch/arm64/silicon-errata.rst |  2 ++
+>  arch/arm64/Kconfig                          | 19 +++++++++++++
+>  arch/arm64/include/asm/cpucaps.h            |  2 ++
+>  arch/arm64/include/asm/tlbflush.h           | 35 +++++++++++++++++++++++
+>  arch/arm64/kernel/cpu_errata.c              | 10 +++++++
+>  arch/arm64/kvm/hyp/vhe/tlb.c                | 44 +++++++++++++++++++++++++++++
+>  arch/arm64/tools/cpucaps                    |  1 +
+>  7 files changed, 113 insertions(+)
+> 
+> diff --git a/Documentation/arch/arm64/silicon-errata.rst b/Documentation/arch/arm64/silicon-errata.rst
+> index 99a1eb4b833dd..527af20b26468 100644
+> --- a/Documentation/arch/arm64/silicon-errata.rst
+> +++ b/Documentation/arch/arm64/silicon-errata.rst
+> @@ -375,6 +375,8 @@ stable kernels.
+>  +----------------+-----------------+-----------------+-----------------------------+
+>  | Fujitsu        | A64FX           | E#010001        | FUJITSU_ERRATUM_010001      |
+>  +----------------+-----------------+-----------------+-----------------------------+
+> +| Fujitsu        | MONAKA          | E#030001        | FUJITSU_ERRATUM_030001      |
+> ++----------------+-----------------+-----------------+-----------------------------+
+>  +----------------+-----------------+-----------------+-----------------------------+
+>  | ASR            | ASR8601         | #8601001        | N/A                         |
+>  +----------------+-----------------+-----------------+-----------------------------+
+> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+> index cab741a695f52..5d1a17ab0f593 100644
+> --- a/arch/arm64/Kconfig
+> +++ b/arch/arm64/Kconfig
+> @@ -1342,6 +1342,25 @@ config FUJITSU_ERRATUM_010001
+>  
+>  	  If unsure, say Y.
+>  
+> +config FUJITSU_ERRATUM_030001
+> +	bool "FUJITSU-MONAKA erratum E#030001: Range TLBI may fail to invalidate some entries"
+> +	default y
+> +	help
+> +	  This option adds a workaround for FUJITSU-MONAKA erratum E#030001.
+> +	  On affected FUJITSU-MONAKA CPUs, range-based TLBI operation
+> +	  targeting a VA or IPA may fail to invalidate some TLB entries
+> +	  when hugepage is used in a certain condition. The affected
+> +	  instructions are RVA[L]E{1,2,3}*, RVAA[L]E1*, and RIPAS2[L]E1*
+> +	  and this affects on both S1 and S2 tables.
+> +
+> +	  Work around the erratum by issuing additional non-range TLBI
+> +	  instructions corresponding to the affected VA or IPA range-based
+> +	  TLBI operations.
+> +
+> +	  The erratum only affects the FUJITSU-MONAKA.
+> +
+> +	  If unsure, say Y.
+> +
+>  config HISILICON_ERRATUM_161600802
+>  	bool "Hip07 161600802: Erroneous redistributor VLPI base"
+>  	default y
+> diff --git a/arch/arm64/include/asm/cpucaps.h b/arch/arm64/include/asm/cpucaps.h
+> index 76350b38f0d7a..9220b917ec207 100644
+> --- a/arch/arm64/include/asm/cpucaps.h
+> +++ b/arch/arm64/include/asm/cpucaps.h
+> @@ -66,6 +66,8 @@ cpucap_is_possible(const unsigned int cap)
+>  		return IS_ENABLED(CONFIG_ARM64_ERRATUM_3194386);
+>  	case ARM64_WORKAROUND_4193714:
+>  		return IS_ENABLED(CONFIG_ARM64_ERRATUM_4193714);
+> +	case ARM64_WORKAROUND_FUJITSU_030001:
+> +		return IS_ENABLED(CONFIG_FUJITSU_ERRATUM_030001);
+>  	case ARM64_MPAM:
+>  		/*
+>  		 * KVM MPAM support doesn't rely on the host kernel supporting MPAM.
+> diff --git a/arch/arm64/include/asm/tlbflush.h b/arch/arm64/include/asm/tlbflush.h
+> index 14a78ac0f8009..2636c273b8111 100644
+> --- a/arch/arm64/include/asm/tlbflush.h
+> +++ b/arch/arm64/include/asm/tlbflush.h
+> @@ -487,6 +487,39 @@ static __always_inline void __tlbi_range(tlbi_op op, u64 addr,
+>  	op(arg);
+>  }
+>  
+> +#ifdef CONFIG_FUJITSU_ERRATUM_030001
+> +static __always_inline void fujitsu_erratum_wa(tlbi_op lop, u64 start, u64 end, u16 asid)
+> +{
+> +	u64 addr;
+> +
+> +	if (!alternative_has_cap_unlikely(ARM64_WORKAROUND_FUJITSU_030001))
+> +		return;
+> +
+> +	/*
+> +	 * The erratum fails to invalidate TLBI entries in the range when
+> +	 * addr[34:29] == all 1 && addr[28:0] == all 0 for 512M hugepage.
+> +	 * This affects both on S1 and S2 tables and 4k guest may be affected
+> +	 * if host uses 64k page size. Therefore it cannot be determined
+> +	 * reliably if the target entry is affected or not here. So, always
+> +	 * assume hugepage is used.
+> +	 * The workaround is to issue extra non-range TLBI ops corresponding
+> +	 * to the affected VA or IPA range-based ops in the range.
+> +	 */
+> +	addr = (start & GENMASK_ULL(63, 35)) | GENMASK_ULL(34, 29);
+> +	while (addr < end) {
+> +		__tlbi_level_asid(lop, addr, TLBI_TTL_UNKNOWN, asid);
+> +		if (addr + BIT_ULL(35) < addr)
+> +			/* overflow */
+> +			break;
+> +		addr += BIT_ULL(35);
+> +	}
+> +}
+> +#else
+> +static __always_inline void fujitsu_erratum_wa(tlbi_op lop, u64 start, u64 end, u16 asid)
+> +{
+> +}
+> +#endif /* CONFIG_FUJITSU_ERRATUM_030001 */
+> +
+>  static __always_inline void __flush_tlb_range_op(tlbi_op lop, tlbi_op rop,
+>  						 u64 start, size_t pages,
+>  						 u64 stride, u16 asid,
+> @@ -518,6 +551,8 @@ static __always_inline void __flush_tlb_range_op(tlbi_op lop, tlbi_op rop,
+>  		__tlbi_level_asid(lop, addr, level, asid);
+>  		addr += stride;
+>  	}
+> +
+> +	fujitsu_erratum_wa(lop, start, end, asid);
+>  }
+>  
+>  #define __flush_s1_tlb_range_op(op, start, pages, stride, asid, tlb_level) \
+> diff --git a/arch/arm64/kernel/cpu_errata.c b/arch/arm64/kernel/cpu_errata.c
+> index e0c09402540ce..a11135f83e858 100644
+> --- a/arch/arm64/kernel/cpu_errata.c
+> +++ b/arch/arm64/kernel/cpu_errata.c
+> @@ -1039,6 +1039,16 @@ const struct arm64_cpu_capabilities arm64_errata[] = {
+>  		.matches = has_impdef_pmuv3,
+>  		.cpu_enable = cpu_enable_impdef_pmuv3_traps,
+>  	},
+> +#ifdef CONFIG_FUJITSU_ERRATUM_030001
+> +	{
+> +		.desc = "FUJITSU-MONAKA Erratum E#030001",
+> +		.capability = ARM64_WORKAROUND_FUJITSU_030001,
+> +		ERRATA_MIDR_RANGE_LIST(((const struct midr_range[]) {
+> +					MIDR_ALL_VERSIONS(MIDR_FUJITSU_MONAKA),
+> +					{}
+> +				})),
+> +	},
+> +#endif
+>  	{
+>  		.desc = "Known broken GICv3 SEIS implementation",
+>  		.capability = ARM64_WORKAROUND_GICv3_BROKEN_SEIS,
+> diff --git a/arch/arm64/kvm/hyp/vhe/tlb.c b/arch/arm64/kvm/hyp/vhe/tlb.c
+> index c386d9f1c1016..2f1a7fab5eb97 100644
+> --- a/arch/arm64/kvm/hyp/vhe/tlb.c
+> +++ b/arch/arm64/kvm/hyp/vhe/tlb.c
+> @@ -8,6 +8,7 @@
+>  
+>  #include <asm/kvm_hyp.h>
+>  #include <asm/kvm_mmu.h>
+> +#include <asm/kvm_nested.h>
+>  #include <asm/tlbflush.h>
+>  
+>  struct tlb_inv_context {
+> @@ -218,6 +219,45 @@ void __kvm_flush_vm_context(void)
+>  	__tlbi_sync_s1ish_hyp();
+>  }
+>  
+> +#ifdef CONFIG_FUJITSU_ERRATUM_030001
+> +static __always_inline void __vae1is(u64 arg)
+> +{
+> +	__tlbi(vae1is, arg);
+> +}
+> +static __always_inline void __vale1is(u64 arg)
+> +{
+> +	__tlbi(vale1is, arg);
+> +}
+> +static __always_inline void __vaae1is(u64 arg)
+> +{
+> +	__tlbi(vaae1is, arg);
+> +}
+> +static __always_inline void __fujitsu_erratum_wa(tlbi_op op, u64 va)
+> +{
+> +	u64 start, size;
+> +	u16 asid;
+> +
+> +	if (!alternative_has_cap_unlikely(ARM64_WORKAROUND_FUJITSU_030001))
+> +		return;
+> +
+> +	start = decode_range_tlbi(va, &size, &asid);
+> +	fujitsu_erratum_wa(op, start, start + size, asid);
+> +}
+> +#else
+> +static __always_inline void __vae1is(u64 arg)
+> +{
+> +}
+> +static __always_inline void __vale1is(u64 arg)
+> +{
+> +}
+> +static __always_inline void __vaae1is(u64 arg)
+> +{
+> +}
+> +static __always_inline void __fujitsu_erratum_wa(tlbi_op op, u64 va)
+> +{
+> +}
+> +#endif
+> +
+>  /*
+>   * TLB invalidation emulation for NV. For any given instruction, we
+>   * perform the following transformtions:
+> @@ -322,6 +362,7 @@ int __kvm_tlbi_s1e2(struct kvm_s2_mmu *mmu, u64 va, u64 sys_encoding)
+>  	case OP_TLBI_RVAE1ISNXS:
+>  	case OP_TLBI_RVAE1OSNXS:
+>  		__tlbi(rvae1is, va);
+> +		__fujitsu_erratum_wa(__vae1is, va);
+>  		break;
+>  	case OP_TLBI_RVALE2:
+>  	case OP_TLBI_RVALE2IS:
+> @@ -336,6 +377,7 @@ int __kvm_tlbi_s1e2(struct kvm_s2_mmu *mmu, u64 va, u64 sys_encoding)
+>  	case OP_TLBI_RVALE1ISNXS:
+>  	case OP_TLBI_RVALE1OSNXS:
+>  		__tlbi(rvale1is, va);
+> +		__fujitsu_erratum_wa(__vale1is, va);
+>  		break;
+>  	case OP_TLBI_RVAAE1:
+>  	case OP_TLBI_RVAAE1IS:
+> @@ -344,6 +386,7 @@ int __kvm_tlbi_s1e2(struct kvm_s2_mmu *mmu, u64 va, u64 sys_encoding)
+>  	case OP_TLBI_RVAAE1ISNXS:
+>  	case OP_TLBI_RVAAE1OSNXS:
+>  		__tlbi(rvaae1is, va);
+> +		__fujitsu_erratum_wa(__vaae1is, va);
+>  		break;
+>  	case OP_TLBI_RVAALE1:
+>  	case OP_TLBI_RVAALE1IS:
+> @@ -352,6 +395,7 @@ int __kvm_tlbi_s1e2(struct kvm_s2_mmu *mmu, u64 va, u64 sys_encoding)
+>  	case OP_TLBI_RVAALE1ISNXS:
+>  	case OP_TLBI_RVAALE1OSNXS:
+>  		__tlbi(rvaale1is, va);
+> +		__fujitsu_erratum_wa(vaale1is, va);
+>  		break;
+>  	default:
+>  		ret = -EINVAL;
+> diff --git a/arch/arm64/tools/cpucaps b/arch/arm64/tools/cpucaps
+> index 58b6c084f9f25..1e57a0105395b 100644
+> --- a/arch/arm64/tools/cpucaps
+> +++ b/arch/arm64/tools/cpucaps
+> @@ -132,3 +132,4 @@ WORKAROUND_SPECULATIVE_AT
+>  WORKAROUND_SPECULATIVE_SSBS
+>  WORKAROUND_SPECULATIVE_UNPRIV_LOAD
+>  WORKAROUND_BROKEN_AMU_CONSTCNT
+> +WORKAROUND_FUJITSU_030001
+> 
+> -- 
+> 2.43.0
+> 
