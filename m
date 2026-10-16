@@ -1,132 +1,171 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F5D1547041;
-	Fri, 16 Oct 2026 00:14:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 631DF1AC44D;
+	Fri, 16 Oct 2026 00:18:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792109701; cv=none; b=XZV75PicJE/RhjlDmJVH29DeI3WdLAaJCEoyzqv4/rYoRm3Gs1lXh3BicI9/b6KA6npTCRxUtrIYldkZdETuuPatuNRWD3wY98BQjlT2OP/lbDrSXehuoF06Qd52MUx3CDa/2YODO6xFYFNr+P55WUYiH1NuNDq7YMoiqzMW35E=
+	t=1792109931; cv=none; b=WGTm+x6q9pM4tZ1W12fEgKBeV+938i1568BhNuOQA14sfSv3L+IHEoZCCPSlwf3ZuVW2hYm/W/NcBkW3VWNcrGfUlN5fKD40o/UG2uDxKziCZt7VrkDpKIkYDf4LioFel/ChLuZVnojO30b7sYFUB6EBe3IFJydQ+WXXm4EXxuA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792109701; c=relaxed/simple;
-	bh=fy69AAMcJX03lii5T+qTQCtH4QPcsQAjuMAkSFSkNyk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=gYrWzc8oHRogZK1l19lsbYfB4HGMMDFrK9gNYHqi6AOqv/MFOG5vEPeem5QcLlTt2GRMHNGxkcR72lRk03QzSUmbBwCojlNXkPV9SSLpzxMDo2+fi3UhZlfIPXQZZI+UcAoYF0mknMgV8+27AvXt00OVIt+bLttj7ElcnnK2ojc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FNezQp6R; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1792109931; c=relaxed/simple;
+	bh=Crezj6kWzeD7Kmx3gaNGEPbL4unBLBvUL8Emj3YuVmg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=KmfkVufYKHuyNLagpGEUt7zShB++P/UCQ55QS4uXP7+IUPgmhtb5z+o5R0t1CXLYTcyqmD/gXDD001XgU4nHGIDbVhZ2fJu3mgsJYeisnSZAJbWrLxHRJZQm3KonQAvMJBx+ESupKpQYuxr36aLdtjw2nLFzUSwt2iYPbwQZ3KI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YgzHGDWk; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FNezQp6R"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1792109699; x=1823645699;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=fy69AAMcJX03lii5T+qTQCtH4QPcsQAjuMAkSFSkNyk=;
-  b=FNezQp6ReImjtCetwkjhIWUi56y9oHyZACDOgfIvM3lTB7ReBYMb5mlx
-   gvkXeOQRnUY8OY2D2dFpuUrItunl97mVdv58d+ACnS5zEz6jMeNRBxKEI
-   yCKpWufAAe5NT3d9etotfO/oCZfajfQ/eKLdmSTJVtLYRHHpdunr37qED
-   qhEO14ojChO7oGiuVFIg+wyxTNU8Q3j2Rsc/raSY+UhWT7u48uBKF1j46
-   8BAbRr9t9XOlLo3H3zEyKzLvqe759k4FBxqJUbF2yrLJbmwXdUvDERRGK
-   Ux+mQ7o98MT/Ab89Vc0KGY4u/SKMOzjTRtTeFXf1Y1kpBMmxrEdIRnk+8
-   Q==;
-X-CSE-ConnectionGUID: Nrfx2uuNQ2S3P7RaUrnRcg==
-X-CSE-MsgGUID: wxJ5fsVuTzqBCSB5fIN9Zw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11936"; a="790330"
-X-IronPort-AV: E=Sophos;i="6.27,160,1787036400"; 
-   d="scan'208";a="790330"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Oct 2026 17:14:58 -0700
-X-CSE-ConnectionGUID: 4zmvJ/B9QhaY79nNg1vkfQ==
-X-CSE-MsgGUID: ZzcxkFMSQuSTjokrU5rx0A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.27,160,1787036400"; 
-   d="scan'208";a="1752012"
-Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.241.239]) ([10.124.241.239])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Oct 2026 17:14:54 -0700
-Message-ID: <df6ef8c1-a283-4ef7-9c49-1265a1b96788@linux.intel.com>
-Date: Fri, 16 Oct 2026 08:14:52 +0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YgzHGDWk"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 85EF11F000C4;
+	Fri, 16 Oct 2026 00:18:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1792109930;
+	bh=lr5o6iH1N3MpaHE03Oe5L/R7ev2BlIlKxgAjDKnkGRE=;
+	h=From:To:Cc:Subject:Date;
+	b=YgzHGDWkD6HvaLz00eEemhVNzN/EdQwdLHLLJVhlqcqDzOhjeXV5sh4VDnfy15xIw
+	 I7QLwaFVEo5Eig10WPJwavC8nWEGpvJhFVqOMsJ7nuHHLOL3SnNhDG/ffq5Th1lICL
+	 n6F5S4sfmdYVSxGQfhgTSrk/rusYfNVkyL/LOSy5K3ukDoE0cte6mtzYZJe6kWkEaN
+	 ZHnkL3tHhduKdNY2vKrRpbmDh67aTQWqh9vCWU0jz3NaYmjKpdYLSQfBdBcX6zDqVG
+	 f/R9Y8Muf6ZV2qTNt+Cq3KeYF/Q6KxwMTXVoy/+BUgUjkF+j+3BtZRhga6Q5UY3r3Z
+	 kreWD3XKfWxhg==
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Ingo Molnar <mingo@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	James Clark <james.clark@linaro.org>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Clark Williams <williams@redhat.com>,
+	linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	Arnaldo Carvalho de Melo <acme@redhat.com>,
+	Michael Petlan <mpetlan@redhat.com>
+Subject: [PATCH v3 0/19] perf test attr: Report the failures again and cope with more than one core PMU
+Date: Thu, 15 Oct 2026 21:18:24 -0300
+Message-ID: <20261016001843.71978-1-acme@kernel.org>
+X-Mailer: git-send-email 2.56.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/2] perf/x86/intel/lbr: Limit branch snapshots to
- valid entries
-To: Sandipan Das <sandipan.das@amd.com>, linux-perf-users@vger.kernel.org,
- linux-kernel@vger.kernel.org, bpf@vger.kernel.org
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>, James Clark
- <james.clark@linaro.org>, Thomas Gleixner <tglx@kernel.org>,
- Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
- x86@kernel.org, "H . Peter Anvin" <hpa@zytor.com>,
- Andrii Nakryiko <andrii@kernel.org>, Song Liu <song@kernel.org>,
- Ravi Bangoria <ravi.bangoria@amd.com>,
- Ananth Narayan <ananth.narayan@amd.com>
-References: <cover.1792064123.git.sandipan.das@amd.com>
- <7f611dcd599d6d65325d8c40566a1fc35b447ea2.1792064123.git.sandipan.das@amd.com>
-Content-Language: en-US
-From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-In-Reply-To: <7f611dcd599d6d65325d8c40566a1fc35b447ea2.1792064123.git.sandipan.das@amd.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-LGTM. Thanks.
+From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-Reviewed-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
+Hello all,
 
+perf test 82 stopped reporting failures when it got its shell wrapper
+(8519e4f44c2af722), so expectations that no longer match perf went
+unverified.  The prerequisite fixes are upstream now, so they are not
+repeated here.
 
-On 10/15/2026 7:46 PM, Sandipan Das wrote:
-> The branch snapshot callback used by bpf_get_branch_snapshot() always
-> copies x86_pmu.lbr_nr entries from cpuc->lbr_entries[], even when the
-> last LBR read kept fewer branches. The entries past lbr_stack.nr hold
-> invalid branches which end up reaching BPF programs.
->
-> Limit copying to lbr_stack.nr entries and also reset lbr_stack.nr when
-> intel_pmu_lbr_read() skips reading the registers so that a stale count
-> is never reused.
->
-> Fixes: c22ac2a3d4bd ("perf: Enable branch record for software events")
-> Reported-by: Sashiko <sashiko-bot@kernel.org>
-> Closes: https://lore.kernel.org/all/sashiko-outbox-163130@kernel.org/
-> Signed-off-by: Sandipan Das <sandipan.das@amd.com>
-> Tested-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
-> ---
->  arch/x86/events/intel/core.c | 2 +-
->  arch/x86/events/intel/lbr.c  | 4 +++-
->  2 files changed, 4 insertions(+), 2 deletions(-)
->
-> diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
-> index 0a34d674df59..5dfb9e9156e8 100644
-> --- a/arch/x86/events/intel/core.c
-> +++ b/arch/x86/events/intel/core.c
-> @@ -2822,7 +2822,7 @@ __intel_pmu_snapshot_branch_stack(struct perf_branch_entry *entries,
->  	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
->  
->  	intel_pmu_lbr_read();
-> -	cnt = min_t(unsigned int, cnt, x86_pmu.lbr_nr);
-> +	cnt = min_t(unsigned int, cnt, cpuc->lbr_stack.nr);
->  
->  	memcpy(entries, cpuc->lbr_entries, sizeof(struct perf_branch_entry) * cnt);
->  	intel_pmu_enable_all(0);
-> diff --git a/arch/x86/events/intel/lbr.c b/arch/x86/events/intel/lbr.c
-> index 0b446d8912e4..6b070490f461 100644
-> --- a/arch/x86/events/intel/lbr.c
-> +++ b/arch/x86/events/intel/lbr.c
-> @@ -1026,8 +1026,10 @@ void intel_pmu_lbr_read(void)
->  	 * but this simple approach seems to work for now.
->  	 */
->  	if (!cpuc->lbr_users || vlbr_exclude_host() ||
-> -	    cpuc->lbr_users == cpuc->lbr_pebs_users)
-> +	    cpuc->lbr_users == cpuc->lbr_pebs_users) {
-> +		cpuc->lbr_stack.nr = 0;
->  		return;
-> +	}
->  
->  	x86_pmu.lbr_read(cpuc);
->  
+This series updates those expectations and makes the test cope with
+machines with no core PMU, or with more than one.  Asking for one event
+on the latter gives one event per core PMU.  The expectations ignore
+what that adds; the commit messages say what and why.
+
+The tests that map ring buffers take turns on the per user mlock budget
+(kernel.perf_event_mlock_kb) through a robust, process-shared mutex.
+The sysctl is left alone.  A test killed while holding the budget does
+not leave the next one waiting.
+
+Tested: 'perf test -vv attribute' Ok on an Amlogic A311D (aarch64, as
+root), an Intel i7-14700K (hybrid, two core PMUs), x86_64 (AMD Ryzen 9
+9950X3D, kernel 7.2.7) and riscv64 (Orange Pi RV).  On riscv64 the stat
+tests run and the record tests report unsupp, as sampling is not
+available there (no Sscofpmf).
+
+Best regards,
+
+- Arnaldo
+
+What changed from v2:
+
+  - sashiko-bot's v2 review: a one-component kernel_since or
+    kernel_until (f.i. kernel_until = 6) no longer crashes attr.py.
+  - sashiko-bot's v2 review: mutex_trylock() and cond_wait() now take
+    over a robust mutex left behind by a dead owner, as mutex_lock().
+
+What changed from v1:
+
+  - Namhyung's python fix and Michael Petlan's two fixes are upstream
+    now, so they are dropped from the series.
+  - Namhyung's v1 report (test-record-branch-filter-any_call): probe
+    events are no longer dumped, and the core PMU fallout is masked.
+  - New, not from review: the 'requires = core-pmu' skip, the skip
+    reasons and the mlock budget part.
+  - New, not from review: the events of the other core PMUs are left
+    out, when the expectations name a core PMU.
+
+ tools/build/Makefile.feature                       |   1 +
+ tools/build/feature/Makefile                       |   4 +
+ tools/build/feature/test-all.c                     |   5 +
+ tools/build/feature/test-pthread-mutex-robust.c    |  18 +
+ tools/perf/Documentation/perf-test.txt             |  36 +-
+ tools/perf/Makefile.config                         |   4 +
+ tools/perf/tests/backward-ring-buffer.c            |   2 +-
+ tools/perf/tests/builtin-test.c                    | 173 +++++++-
+ tools/perf/tests/code-reading.c                    |   2 +-
+ tools/perf/tests/keep-tracking.c                   |   2 +-
+ tools/perf/tests/mmap-basic.c                      |   1 +
+ tools/perf/tests/openat-syscall-tp-fields.c        |   1 +
+ tools/perf/tests/perf-record.c                     |   1 +
+ tools/perf/tests/perf-time-to-tsc.c                |   1 +
+ tools/perf/tests/shell/attr/README                 |  10 +-
+ tools/perf/tests/shell/attr/base-stat-group        |  45 ++
+ .../perf/tests/shell/attr/test-record-graph-dwarf  |   2 +-
+ .../tests/shell/attr/test-record-group-sampling    |   5 +-
+ .../tests/shell/attr/test-record-group-sampling1   |   5 +-
+ .../tests/shell/attr/test-record-group-sampling2   |   5 +-
+ tools/perf/tests/shell/attr/test-record-group1     |   3 +-
+ tools/perf/tests/shell/attr/test-record-group2     |   3 +-
+ tools/perf/tests/shell/attr/test-record-group3     |   3 +-
+ tools/perf/tests/shell/attr/test-stat-C0           |   1 +
+ tools/perf/tests/shell/attr/test-stat-basic        |   1 +
+ tools/perf/tests/shell/attr/test-stat-default      |  91 +++--
+ tools/perf/tests/shell/attr/test-stat-detailed-1   |  99 +++--
+ tools/perf/tests/shell/attr/test-stat-detailed-2   | 111 +++--
+ tools/perf/tests/shell/attr/test-stat-detailed-3   | 115 ++++--
+ tools/perf/tests/shell/attr/test-stat-group1       |   3 +-
+ tools/perf/tests/shell/attr/test-stat-no-inherit   |   1 +
+ tools/perf/tests/shell/drm_pmu.sh                  |   2 +-
+ tools/perf/tests/shell/ftrace.sh                   |   2 +-
+ tools/perf/tests/shell/kallsyms.sh                 |   2 +-
+ tools/perf/tests/shell/lib/attr.py                 | 455 +++++++++++++++++++--
+ tools/perf/tests/shell/list.sh                     |   2 +-
+ tools/perf/tests/shell/perf_sched_stats.sh         |   2 +-
+ tools/perf/tests/shell/probe_vfs_getname.sh        |   2 +-
+ tools/perf/tests/shell/python-use.sh               |   2 +-
+ tools/perf/tests/shell/schedstat_snapshots.sh      |   2 +-
+ tools/perf/tests/shell/stat+csv_output.sh          |   2 +-
+ tools/perf/tests/shell/stat+csv_summary.sh         |   2 +-
+ tools/perf/tests/shell/stat+event_uniquifying.sh   |   2 +-
+ tools/perf/tests/shell/stat+json_output.sh         |   2 +-
+ tools/perf/tests/shell/stat+shadow_stat.sh         |   2 +-
+ tools/perf/tests/shell/stat+std_output.sh          |   2 +-
+ tools/perf/tests/shell/stat.sh                     |   2 +-
+ tools/perf/tests/shell/stat_all_metricgroups.sh    |   2 +-
+ tools/perf/tests/shell/stat_all_metrics.sh         |   2 +-
+ tools/perf/tests/shell/stat_all_pfm.sh             |   2 +-
+ tools/perf/tests/shell/stat_bpf_counters_cgrp.sh   |   2 +-
+ tools/perf/tests/shell/stat_metrics_cgrp.sh        |   2 +-
+ tools/perf/tests/shell/stat_metrics_values.sh      |   2 +-
+ tools/perf/tests/shell/test_ilist_python.sh        |   2 +-
+ tools/perf/tests/shell/test_stat_cpi_python.sh     |   2 +-
+ tools/perf/tests/shell/test_test_junit_output.sh   |   5 +-
+ .../tests/shell/test_uprobe_from_different_cu.sh   |   2 +-
+ tools/perf/tests/sw-clock.c                        |   2 +-
+ tools/perf/tests/task-exit.c                       |   1 +
+ tools/perf/tests/tests-scripts.c                   |  84 +++-
+ tools/perf/tests/tests.h                           |  17 +
+ tools/perf/util/evsel.c                            |  12 +-
+ tools/perf/util/evsel.h                            |   1 +
+ tools/perf/util/mutex.c                            | 101 ++++-
+ tools/perf/util/mutex.h                            |   6 +
+ tools/perf/util/pfm.c                              |   1 +
+ tools/perf/util/print-events.c                     |   1 +
+ 67 files changed, 1225 insertions(+), 263 deletions(-)
+
+base-commit: cb9dba6f4764fc68ab75c36e332887332339f9c3
+v1-head: b1300831ecc4503d
+v2-head: da166ef7a002
