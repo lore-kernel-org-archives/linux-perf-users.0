@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFD6D274B53;
-	Fri, 16 Oct 2026 00:19:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4D122C026C;
+	Fri, 16 Oct 2026 00:19:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792109978; cv=none; b=t3dLC2ww71dIhMKMBp1m6KOR1FRGuAftZfAfpbDq2JO1IYAjOk7OVasKiX7prfG55nSByjWqDTUFkCZIcdMbQgtzoUD6gyirr4Yen11bEE0vpHVoZI2Qh7PX8KNSpo4lD2mUXbskYsIyjCsQEprYfUZZ7+4eVGp/uQTeYBk4UP4=
+	t=1792109981; cv=none; b=WgIelgtBLp5y/BnM24+ZxU134O4s0yDOSfDGhwlMDAaHhfIQXWX18d8+n+qQvcSjieUQCJ/QLoohFXn59wLX1HRlMuXislKnJghFfHv7+7tdPsjjmbtYLWiB1CLRrBOn3Eq6dH++LNEdx1+YeqcMCRoYn56cWYNPiJ2L4GOpbLQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792109978; c=relaxed/simple;
-	bh=3Kb9em5FMFYZuE5472BeV4xNe+VYBgnd1Wzf3UTQtfM=;
+	s=arc-20240116; t=1792109981; c=relaxed/simple;
+	bh=mOgM/f/qnDsKW6XdMSTXIRaN6C4wdEUudWVcYzIPz7U=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Z1gV0gBpbAzULxZs0jDqF35/ifHPRdT91JGQb6qTEITBfVh/SmphN2PC4zCZTaJgz074+pvpFjEMnIkt1Q9BqGaH9yKsTEpuhiR8BOWxRX6o4ENzZPu25ct55wN/qpiYLABCcrkLKJLfin2c2rUsodvThl2SXnJFT+bQhGM/130=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MV95/EKh; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version; b=pu5CLU7D25b0v+FycuxRVP4t59Tz6iekjP0WEmM7/PZZdQCDZBn57+YHbyY0G4YrlYCIWmaxwmxbzkzUtZGqXubjnmDrHvXa9o5OfMgVNUuuY7vRcbTekjGyJTkxTHwVXEr0ptBZOEIhe1lCsVjFg9mChtceY7f0kYcf78vu2S4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XAflB4ns; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MV95/EKh"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 548341F000C5;
-	Fri, 16 Oct 2026 00:19:34 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XAflB4ns"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0D6D21F000C4;
+	Fri, 16 Oct 2026 00:19:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1792109976;
-	bh=hSL1j5xAyoTslHpt3OLlOBt1Mfp8Stg5mYSfwvg6/xA=;
+	s=k20260515; t=1792109979;
+	bh=iVUpMp1ZNqzgMx/GKdnUJ/dt5nzO2iLIlc6Czzamges=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=MV95/EKhcEHKKLmQsM+JWlpyVzfWZeT8s+URqnFHIMVox1cfCVo+PsWAvkNT72nEn
-	 toy4aOrOdtphDLgCt/4kVxaTRzjtmBwS7DVD78JS2F1BCMbAB3bCjdNGNLN2TwxhMk
-	 hWnVBEaa2w5oQU2Qwi6iNKnxKMmJo6tMK9iyxAGw0rm22pir/byTgpdXqKPQoWky5C
-	 vuchi+fdLvuyq7FNxWHKhItvbnfmrJmVgO6MRgCC4NRnDU5U5wiW3+MqOsN7nsROB9
-	 c+v3Oe+dh+0BrOg3wdX9BX86SJ+bHGEF3p0WgZ3Y284cAEcin+O3NaTxHa1oTwQa60
-	 IN7YCdosHPPFg==
+	b=XAflB4nsRufx5DY/GMFSmmKVLbNt4cPIhvMFrh/bxPT70uz80HimlbJm62fnpj2tx
+	 DTfgYNJUWxqUp3+GqoFli7zrkgdyTmnnD2VV5MaVV+obEG03ogTSpptzlu5oxZrEUz
+	 bmdLgWwKJyhTl1RDYq5En5EopIEWLeWPMhCTZ0uZ0+F6FlD9dzJKONYseX1EtAqylT
+	 /fFsSg2epXsoO0qCk3CAVhJ8UNbp/lH3GsWQuy693wsvAx8HAEc0aWn+UTeUL38jnU
+	 XEGzzlKTt/Geoz9aKVAVRrqoUW7q9Y05QHnmsynbOz43g3Ej2tLL8PItz9Fpnu8oeU
+	 VC9Hw/e8V9wUw==
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Namhyung Kim <namhyung@kernel.org>
 Cc: Ingo Molnar <mingo@kernel.org>,
@@ -38,9 +38,9 @@ Cc: Ingo Molnar <mingo@kernel.org>,
 	linux-kernel@vger.kernel.org,
 	linux-perf-users@vger.kernel.org,
 	Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH v3 17/19] perf tests: Mark the shell tests not mapping perf ring buffers
-Date: Thu, 15 Oct 2026 21:18:41 -0300
-Message-ID: <20261016001843.71978-18-acme@kernel.org>
+Subject: [PATCH v3 18/19] perf mutex: Add a robust, process-shared mutex initializer
+Date: Thu, 15 Oct 2026 21:18:42 -0300
+Message-ID: <20261016001843.71978-19-acme@kernel.org>
 X-Mailer: git-send-email 2.56.0
 In-Reply-To: <20261016001843.71978-1-acme@kernel.org>
 References: <20261016001843.71978-1-acme@kernel.org>
@@ -54,327 +54,307 @@ Content-Transfer-Encoding: 8bit
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-Shell tests run perf, that maps ring buffers, so they take a turn using
-the per user budget in kernel.perf_event_mlock_kb by default; the ones
-that don't map them, like the ones running just 'perf stat', say
-" (no_mlock)" in their description line and thus keep running in parallel
-with the ones taking turns.
+A mutex held by a process that can die before unlocking it, like the
+tests forked by 'perf test' that will take turns using the per user
+budget set in kernel.perf_event_mlock_kb, has to be taken over by the
+next locker instead of staying locked forever.
 
-The 'perf sched stats' tests are among them, they synthesize the samples
-from /proc/schedstat without mapping a ring buffer, and the tests already
-marked " (exclusive)" don't need it, exclusive implies every other
-requisite and keeps them running alone.
+Robust mutexes, on top of the kernel's robust futexes, do that: when an
+owner dies while holding it the kernel marks the futex word owner-died
+and the next pthread_mutex_lock() returns EOWNERDEAD, then mutex_lock()
+makes it consistent and takes it over; mutex_trylock() and cond_wait()
+come back with EOWNERDEAD too, so they take it over the same way, with
+mutex_trylock() giving the mutex back when it can't be taken over: it
+is held all the same, and a failed trylock must not leak it.
+
+Add mutex_init_pshared_robust(), returning false when robust mutexes
+aren't available: from libcs without the API, gated by a feature check,
+to musl and glibc refusing them at runtime, when get_robust_list(2) or
+set_robust_list(2) aren't usable.  glibc only sets a flag in
+pthread_mutexattr_setrobust(), refusing the mutex itself in
+pthread_mutex_init() with ENOTSUP instead, other errors from it still
+being reported.  Robust mutexes being unavailable isn't an error, just a
+debug message for whoever then falls back.
 
 Assisted-by: LLM
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/tests/shell/drm_pmu.sh                       | 2 +-
- tools/perf/tests/shell/ftrace.sh                        | 2 +-
- tools/perf/tests/shell/kallsyms.sh                      | 2 +-
- tools/perf/tests/shell/list.sh                          | 2 +-
- tools/perf/tests/shell/perf_sched_stats.sh              | 2 +-
- tools/perf/tests/shell/probe_vfs_getname.sh             | 2 +-
- tools/perf/tests/shell/python-use.sh                    | 2 +-
- tools/perf/tests/shell/schedstat_snapshots.sh           | 2 +-
- tools/perf/tests/shell/stat+csv_output.sh               | 2 +-
- tools/perf/tests/shell/stat+csv_summary.sh              | 2 +-
- tools/perf/tests/shell/stat+event_uniquifying.sh        | 2 +-
- tools/perf/tests/shell/stat+json_output.sh              | 2 +-
- tools/perf/tests/shell/stat+shadow_stat.sh              | 2 +-
- tools/perf/tests/shell/stat+std_output.sh               | 2 +-
- tools/perf/tests/shell/stat.sh                          | 2 +-
- tools/perf/tests/shell/stat_all_metricgroups.sh         | 2 +-
- tools/perf/tests/shell/stat_all_metrics.sh              | 2 +-
- tools/perf/tests/shell/stat_all_pfm.sh                  | 2 +-
- tools/perf/tests/shell/stat_bpf_counters_cgrp.sh        | 2 +-
- tools/perf/tests/shell/stat_metrics_cgrp.sh             | 2 +-
- tools/perf/tests/shell/stat_metrics_values.sh           | 2 +-
- tools/perf/tests/shell/test_ilist_python.sh             | 2 +-
- tools/perf/tests/shell/test_stat_cpi_python.sh          | 2 +-
- tools/perf/tests/shell/test_test_junit_output.sh        | 5 ++++-
- tools/perf/tests/shell/test_uprobe_from_different_cu.sh | 2 +-
- 25 files changed, 28 insertions(+), 25 deletions(-)
+ tools/build/Makefile.feature                  |   1 +
+ tools/build/feature/Makefile                  |   4 +
+ tools/build/feature/test-all.c                |   5 +
+ .../build/feature/test-pthread-mutex-robust.c |  18 ++++
+ tools/perf/Makefile.config                    |   4 +
+ tools/perf/util/mutex.c                       | 101 +++++++++++++++---
+ tools/perf/util/mutex.h                       |   6 ++
+ 7 files changed, 125 insertions(+), 14 deletions(-)
+ create mode 100644 tools/build/feature/test-pthread-mutex-robust.c
 
-diff --git a/tools/perf/tests/shell/drm_pmu.sh b/tools/perf/tests/shell/drm_pmu.sh
-index e629fe0e8463d6cc..c827e613fc66ee0f 100755
---- a/tools/perf/tests/shell/drm_pmu.sh
-+++ b/tools/perf/tests/shell/drm_pmu.sh
-@@ -1,5 +1,5 @@
- #!/bin/bash
--# DRM PMU
-+# DRM PMU (no_mlock)
- # SPDX-License-Identifier: GPL-2.0
+diff --git a/tools/build/Makefile.feature b/tools/build/Makefile.feature
+index dbef5b6c4e43c857..4d37d11f674c5bd5 100644
+--- a/tools/build/Makefile.feature
++++ b/tools/build/Makefile.feature
+@@ -85,6 +85,7 @@ FEATURE_TESTS_BASIC :=                  \
+         libcpupower                     \
+         pthread-attr-setaffinity-np     \
+         pthread-barrier     		\
++        pthread-mutex-robust		\
+         reallocarray                    \
+         stackprotector-all              \
+         timerfd                         \
+diff --git a/tools/build/feature/Makefile b/tools/build/feature/Makefile
+index 62f9cbf3dee97936..10340a5372242e05 100644
+--- a/tools/build/feature/Makefile
++++ b/tools/build/feature/Makefile
+@@ -41,6 +41,7 @@ FILES=                                          \
+          $(foreach arch,$(LIBUNWIND_ARCHS),test-libunwind-$(arch).bin test-libunwind-debug-frame-$(arch).bin) \
+          test-pthread-attr-setaffinity-np.bin   \
+          test-pthread-barrier.bin		\
++         test-pthread-mutex-robust.bin		\
+          test-stackprotector-all.bin            \
+          test-timerfd.bin                       \
+          test-babeltrace2-ctf-writer.bin        \
+@@ -128,6 +129,9 @@ $(OUTPUT)test-pthread-attr-setaffinity-np.bin:
+ $(OUTPUT)test-pthread-barrier.bin:
+ 	$(BUILD) -lpthread
  
- set -e
-diff --git a/tools/perf/tests/shell/ftrace.sh b/tools/perf/tests/shell/ftrace.sh
-index 9f6e590f6437b2d9..84d6126bf94d1e61 100755
---- a/tools/perf/tests/shell/ftrace.sh
-+++ b/tools/perf/tests/shell/ftrace.sh
-@@ -1,5 +1,5 @@
- #!/bin/bash
--# perf ftrace tests
-+# perf ftrace tests (no_mlock)
- # SPDX-License-Identifier: GPL-2.0
++$(OUTPUT)test-pthread-mutex-robust.bin:
++	$(BUILD) -lpthread
++
+ $(OUTPUT)test-stackprotector-all.bin:
+ 	$(BUILD) -fstack-protector-all
  
- set -e
-diff --git a/tools/perf/tests/shell/kallsyms.sh b/tools/perf/tests/shell/kallsyms.sh
-index d0eb99753f477f57..e3674cc52b30983f 100755
---- a/tools/perf/tests/shell/kallsyms.sh
-+++ b/tools/perf/tests/shell/kallsyms.sh
-@@ -1,5 +1,5 @@
- #!/bin/bash
--# perf kallsyms tests
-+# perf kallsyms tests (no_mlock)
- # SPDX-License-Identifier: GPL-2.0
+diff --git a/tools/build/feature/test-all.c b/tools/build/feature/test-all.c
+index 0ee16eccd9e05788..4a6890290f7462a7 100644
+--- a/tools/build/feature/test-all.c
++++ b/tools/build/feature/test-all.c
+@@ -90,6 +90,10 @@
+ # include "test-pthread-barrier.c"
+ #undef main
  
- err=0
-diff --git a/tools/perf/tests/shell/list.sh b/tools/perf/tests/shell/list.sh
-index 14a03e0290ed1b4d..d4a0b04154d636f0 100755
---- a/tools/perf/tests/shell/list.sh
-+++ b/tools/perf/tests/shell/list.sh
-@@ -1,5 +1,5 @@
- #!/bin/bash
--# perf list tests
-+# perf list tests (no_mlock)
- # SPDX-License-Identifier: GPL-2.0
++#define main main_test_pthread_mutex_robust
++# include "test-pthread-mutex-robust.c"
++#undef main
++
+ #define main main_test_scandirat
+ # include "test-scandirat.c"
+ #undef main
+@@ -167,6 +171,7 @@ int main(int argc, char *argv[])
+ 	main_test_zlib();
+ 	main_test_pthread_attr_setaffinity_np();
+ 	main_test_pthread_barrier();
++	main_test_pthread_mutex_robust();
+ 	main_test_lzma();
+ 	main_test_bpf();
+ 	main_test_scandirat();
+diff --git a/tools/build/feature/test-pthread-mutex-robust.c b/tools/build/feature/test-pthread-mutex-robust.c
+new file mode 100644
+index 0000000000000000..d8409074713d172b
+--- /dev/null
++++ b/tools/build/feature/test-pthread-mutex-robust.c
+@@ -0,0 +1,18 @@
++// SPDX-License-Identifier: GPL-2.0
++#include <pthread.h>
++
++int main(void)
++{
++	pthread_mutexattr_t attr;
++	pthread_mutex_t mtx;
++
++	pthread_mutexattr_init(&attr);
++	pthread_mutexattr_setpshared(&attr, PTHREAD_PROCESS_SHARED);
++	pthread_mutexattr_setrobust(&attr, PTHREAD_MUTEX_ROBUST);
++	pthread_mutex_init(&mtx, &attr);
++	pthread_mutex_consistent(&mtx);
++	pthread_mutex_destroy(&mtx);
++	pthread_mutexattr_destroy(&attr);
++
++	return 0;
++}
+diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
+index cafc7be79643b26c..b4764f69f47f4d8c 100644
+--- a/tools/perf/Makefile.config
++++ b/tools/perf/Makefile.config
+@@ -417,6 +417,10 @@ ifeq ($(feature-pthread-barrier), 1)
+   CFLAGS += -DHAVE_PTHREAD_BARRIER
+ endif
  
- set -e
-diff --git a/tools/perf/tests/shell/perf_sched_stats.sh b/tools/perf/tests/shell/perf_sched_stats.sh
-index f13eb0a75b76ef5a..4ede9d701630c719 100755
---- a/tools/perf/tests/shell/perf_sched_stats.sh
-+++ b/tools/perf/tests/shell/perf_sched_stats.sh
-@@ -1,5 +1,5 @@
- #!/bin/sh
--# perf sched stats tests
-+# perf sched stats tests (no_mlock)
- # SPDX-License-Identifier: GPL-2.0
++ifeq ($(feature-pthread-mutex-robust), 1)
++  CFLAGS += -DHAVE_PTHREAD_MUTEX_ROBUST
++endif
++
+ ifndef NO_BIONIC
+   $(call feature_check,bionic)
+   ifeq ($(feature-bionic), 1)
+diff --git a/tools/perf/util/mutex.c b/tools/perf/util/mutex.c
+index 7aa1f3f55a7d4089..df3b7cce3d5a6a35 100644
+--- a/tools/perf/util/mutex.c
++++ b/tools/perf/util/mutex.c
+@@ -17,37 +17,106 @@ static void check_err(const char *fn, int err)
  
- set -e
-diff --git a/tools/perf/tests/shell/probe_vfs_getname.sh b/tools/perf/tests/shell/probe_vfs_getname.sh
-index c40e5f3f0825b051..43bdd693076b408c 100755
---- a/tools/perf/tests/shell/probe_vfs_getname.sh
-+++ b/tools/perf/tests/shell/probe_vfs_getname.sh
-@@ -1,5 +1,5 @@
- #!/bin/bash
--# Add vfs_getname probe to get syscall args filenames
-+# Add vfs_getname probe to get syscall args filenames (no_mlock)
- # SPDX-License-Identifier: GPL-2.0
- # Arnaldo Carvalho de Melo <acme@kernel.org>, 2017
+ #define CHECK_ERR(err) check_err(__func__, err)
  
-diff --git a/tools/perf/tests/shell/python-use.sh b/tools/perf/tests/shell/python-use.sh
-index 2d6017d5dd9d9eab..ece4d306869ae48e 100755
---- a/tools/perf/tests/shell/python-use.sh
-+++ b/tools/perf/tests/shell/python-use.sh
-@@ -1,5 +1,5 @@
- #!/bin/bash
--# 'import perf' in python
-+# 'import perf' in python (no_mlock)
- # SPDX-License-Identifier: GPL-2.0
- # Just test if we can load the python binding.
- set -e
-diff --git a/tools/perf/tests/shell/schedstat_snapshots.sh b/tools/perf/tests/shell/schedstat_snapshots.sh
-index a4bdf2673d43ccc0..2050478e3f1a682f 100755
---- a/tools/perf/tests/shell/schedstat_snapshots.sh
-+++ b/tools/perf/tests/shell/schedstat_snapshots.sh
-@@ -1,5 +1,5 @@
- #!/bin/sh
--# Validate CPU and domain pairing in perf sched stats snapshots
-+# Validate CPU and domain pairing in perf sched stats snapshots (no_mlock)
- # SPDX-License-Identifier: GPL-2.0
+-static void __mutex_init(struct mutex *mtx, bool pshared, bool recursive)
++#ifdef HAVE_PTHREAD_MUTEX_ROBUST
++/*
++ * A robust mutex whose owner died while holding it comes back as EOWNERDEAD,
++ * with the caller holding it: make it consistent, which takes it over; failing
++ * that, a give_up caller unlocks it, leaving it ENOTRECOVERABLE, not leaked.
++ */
++static int mutex_take_over(struct mutex *mtx, int err, bool give_up)
++{
++	if (err != EOWNERDEAD)
++		return err;
++
++	pr_debug("mutex: taking over one left by a dead owner\n");
++	err = pthread_mutex_consistent(&mtx->lock);
++	if (err && give_up)
++		CHECK_ERR(pthread_mutex_unlock(&mtx->lock));
++
++	return err;
++}
++#else
++#define mutex_take_over(mtx, err, give_up) ((void)(mtx), (void)(give_up), (err))
++#endif
++
++static bool __mutex_init(struct mutex *mtx, bool pshared, bool recursive, bool robust)
+ {
+ 	pthread_mutexattr_t attr;
++	bool ok = false, robust_unavailable = false;
++	int err;
  
- set -e
-diff --git a/tools/perf/tests/shell/stat+csv_output.sh b/tools/perf/tests/shell/stat+csv_output.sh
-index a5b34c42e8d72aff..8beb6c674d055a52 100755
---- a/tools/perf/tests/shell/stat+csv_output.sh
-+++ b/tools/perf/tests/shell/stat+csv_output.sh
-@@ -1,5 +1,5 @@
- #!/bin/bash
--# perf stat CSV output linter
-+# perf stat CSV output linter (no_mlock)
- # SPDX-License-Identifier: (LGPL-2.1 OR BSD-2-Clause)
- # Tests various perf stat CSV output commands for the
- # correct number of fields and the CSV separator set to ','.
-diff --git a/tools/perf/tests/shell/stat+csv_summary.sh b/tools/perf/tests/shell/stat+csv_summary.sh
-index 9a4353db3825ede9..6d8beb88fb6f300a 100755
---- a/tools/perf/tests/shell/stat+csv_summary.sh
-+++ b/tools/perf/tests/shell/stat+csv_summary.sh
-@@ -1,5 +1,5 @@
- #!/bin/bash
--# perf stat csv summary test
-+# perf stat csv summary test (no_mlock)
- # SPDX-License-Identifier: GPL-2.0
+-	CHECK_ERR(pthread_mutexattr_init(&attr));
++	err = pthread_mutexattr_init(&attr);
++	if (err)
++		goto out;
  
- set -e
-diff --git a/tools/perf/tests/shell/stat+event_uniquifying.sh b/tools/perf/tests/shell/stat+event_uniquifying.sh
-index b5dec6b6da369382..f5c6fa30d8db38d1 100755
---- a/tools/perf/tests/shell/stat+event_uniquifying.sh
-+++ b/tools/perf/tests/shell/stat+event_uniquifying.sh
-@@ -1,5 +1,5 @@
- #!/bin/bash
--# perf stat events uniquifying
-+# perf stat events uniquifying (no_mlock)
- # SPDX-License-Identifier: GPL-2.0
+ #ifndef NDEBUG
+ 	/* In normal builds enable error checking, such as recursive usage. */
+-	CHECK_ERR(pthread_mutexattr_settype(&attr, PTHREAD_MUTEX_ERRORCHECK));
++	err = pthread_mutexattr_settype(&attr, PTHREAD_MUTEX_ERRORCHECK);
++	if (err)
++		goto out_destroy;
+ #endif
+-	if (recursive)
+-		CHECK_ERR(pthread_mutexattr_settype(&attr, PTHREAD_MUTEX_RECURSIVE));
+-	if (pshared)
+-		CHECK_ERR(pthread_mutexattr_setpshared(&attr, PTHREAD_PROCESS_SHARED));
+-	CHECK_ERR(pthread_mutex_init(&mtx->lock, &attr));
++	if (recursive) {
++		err = pthread_mutexattr_settype(&attr, PTHREAD_MUTEX_RECURSIVE);
++		if (err)
++			goto out_destroy;
++	}
++	if (pshared) {
++		err = pthread_mutexattr_setpshared(&attr, PTHREAD_PROCESS_SHARED);
++		if (err)
++			goto out_destroy;
++	}
++	if (robust) {
++#ifdef HAVE_PTHREAD_MUTEX_ROBUST
++		err = pthread_mutexattr_setrobust(&attr, PTHREAD_MUTEX_ROBUST);
++		if (err)
++			robust_unavailable = true;
++#else
++		robust_unavailable = true;
++#endif
++		if (robust_unavailable)
++			goto out_destroy;
++	}
++
++	err = pthread_mutex_init(&mtx->lock, &attr);
++	if (!err)
++		ok = true;
++	else if (robust && pshared && err == ENOTSUP)
++		/*
++		 * glibc refuses a robust process shared mutex with ENOTSUP when
++		 * set_robust_list(2) isn't usable, i.e. when the machine provides
++		 * no robust mutexes for the process shared case: an unavailable
++		 * API, not a bad request.
++		 */
++		robust_unavailable = true;
++out_destroy:
+ 	CHECK_ERR(pthread_mutexattr_destroy(&attr));
++out:
++	if (robust_unavailable)
++		pr_debug("mutex: robust mutexes aren't available\n");
++	else if (err)
++		CHECK_ERR(err);
++
++	return ok;
+ }
  
- set -e
-diff --git a/tools/perf/tests/shell/stat+json_output.sh b/tools/perf/tests/shell/stat+json_output.sh
-index 4969ad70b67b6196..cbf7a4ffd7e8ab4f 100755
---- a/tools/perf/tests/shell/stat+json_output.sh
-+++ b/tools/perf/tests/shell/stat+json_output.sh
-@@ -1,5 +1,5 @@
- #!/bin/bash
--# perf stat JSON output linter
-+# perf stat JSON output linter (no_mlock)
- # SPDX-License-Identifier: (LGPL-2.1 OR BSD-2-Clause)
- # Checks various perf stat JSON output commands for the
- # correct number of fields.
-diff --git a/tools/perf/tests/shell/stat+shadow_stat.sh b/tools/perf/tests/shell/stat+shadow_stat.sh
-index cabbbf17c662df23..7a58e1507ce27957 100755
---- a/tools/perf/tests/shell/stat+shadow_stat.sh
-+++ b/tools/perf/tests/shell/stat+shadow_stat.sh
-@@ -1,5 +1,5 @@
- #!/bin/bash
--# perf stat metrics (shadow stat) test
-+# perf stat metrics (shadow stat) test (no_mlock)
- # SPDX-License-Identifier: GPL-2.0
+ void mutex_init(struct mutex *mtx)
+ {
+-	__mutex_init(mtx, /*pshared=*/false, /*recursive=*/false);
++	__mutex_init(mtx, /*pshared=*/false, /*recursive=*/false, /*robust=*/false);
+ }
  
- set -e
-diff --git a/tools/perf/tests/shell/stat+std_output.sh b/tools/perf/tests/shell/stat+std_output.sh
-index 64c2b81f02deb18b..b915656a20f69d68 100755
---- a/tools/perf/tests/shell/stat+std_output.sh
-+++ b/tools/perf/tests/shell/stat+std_output.sh
-@@ -1,5 +1,5 @@
- #!/bin/bash
--# perf stat STD output linter
-+# perf stat STD output linter (no_mlock)
- # SPDX-License-Identifier: GPL-2.0
- # Tests various perf stat STD output commands for
- # default event and metricgroup
-diff --git a/tools/perf/tests/shell/stat.sh b/tools/perf/tests/shell/stat.sh
-index 1f5d4cc05807a247..ac9e031831daca9c 100755
---- a/tools/perf/tests/shell/stat.sh
-+++ b/tools/perf/tests/shell/stat.sh
-@@ -1,5 +1,5 @@
- #!/bin/bash
--# perf stat tests
-+# perf stat tests (no_mlock)
- # SPDX-License-Identifier: GPL-2.0
+ void mutex_init_pshared(struct mutex *mtx)
+ {
+-	__mutex_init(mtx, /*pshared=*/true, /*recursive=*/false);
++	__mutex_init(mtx, /*pshared=*/true, /*recursive=*/false, /*robust=*/false);
+ }
  
- set -e
-diff --git a/tools/perf/tests/shell/stat_all_metricgroups.sh b/tools/perf/tests/shell/stat_all_metricgroups.sh
-index 81bc7070b5ab0d5c..074a437da0ae3dce 100755
---- a/tools/perf/tests/shell/stat_all_metricgroups.sh
-+++ b/tools/perf/tests/shell/stat_all_metricgroups.sh
-@@ -1,5 +1,5 @@
- #!/bin/bash
--# perf all metricgroups test
-+# perf all metricgroups test (no_mlock)
- # SPDX-License-Identifier: GPL-2.0
+ void mutex_init_recursive(struct mutex *mtx)
+ {
+-	__mutex_init(mtx, /*pshared=*/false, /*recursive=*/true);
++	__mutex_init(mtx, /*pshared=*/false, /*recursive=*/true, /*robust=*/false);
++}
++
++bool mutex_init_pshared_robust(struct mutex *mtx)
++{
++	return __mutex_init(mtx, /*pshared=*/true, /*recursive=*/false, /*robust=*/true);
+ }
  
- ParanoidAndNotRoot()
-diff --git a/tools/perf/tests/shell/stat_all_metrics.sh b/tools/perf/tests/shell/stat_all_metrics.sh
-index df5fa27b21ae28d8..9d0d4b8a217e6730 100755
---- a/tools/perf/tests/shell/stat_all_metrics.sh
-+++ b/tools/perf/tests/shell/stat_all_metrics.sh
-@@ -1,5 +1,5 @@
- #!/bin/bash
--# perf all metrics test
-+# perf all metrics test (no_mlock)
- # SPDX-License-Identifier: GPL-2.0
+ void mutex_destroy(struct mutex *mtx)
+@@ -58,7 +127,8 @@ void mutex_destroy(struct mutex *mtx)
+ void mutex_lock(struct mutex *mtx)
+ 	NO_THREAD_SAFETY_ANALYSIS
+ {
+-	CHECK_ERR(pthread_mutex_lock(&mtx->lock));
++	CHECK_ERR(mutex_take_over(mtx, pthread_mutex_lock(&mtx->lock),
++				  /*give_up=*/false));
+ }
  
- ParanoidAndNotRoot()
-diff --git a/tools/perf/tests/shell/stat_all_pfm.sh b/tools/perf/tests/shell/stat_all_pfm.sh
-index c08c186af2c42e84..78d8006fb729c8f4 100755
---- a/tools/perf/tests/shell/stat_all_pfm.sh
-+++ b/tools/perf/tests/shell/stat_all_pfm.sh
-@@ -1,5 +1,5 @@
- #!/bin/bash
--# perf all libpfm4 events test
-+# perf all libpfm4 events test (no_mlock)
- # SPDX-License-Identifier: GPL-2.0
+ void mutex_unlock(struct mutex *mtx)
+@@ -69,7 +139,8 @@ void mutex_unlock(struct mutex *mtx)
  
- if perf version --build-options | grep HAVE_LIBPFM | grep -q OFF
-diff --git a/tools/perf/tests/shell/stat_bpf_counters_cgrp.sh b/tools/perf/tests/shell/stat_bpf_counters_cgrp.sh
-index febe3af0644157f3..d1b4632c17a3e8e1 100755
---- a/tools/perf/tests/shell/stat_bpf_counters_cgrp.sh
-+++ b/tools/perf/tests/shell/stat_bpf_counters_cgrp.sh
-@@ -1,5 +1,5 @@
- #!/bin/bash
--# perf stat --bpf-counters --for-each-cgroup test
-+# perf stat --bpf-counters --for-each-cgroup test (no_mlock)
- # SPDX-License-Identifier: GPL-2.0
+ bool mutex_trylock(struct mutex *mtx)
+ {
+-	int ret = pthread_mutex_trylock(&mtx->lock);
++	int ret = mutex_take_over(mtx, pthread_mutex_trylock(&mtx->lock),
++				  /*give_up=*/true);
  
- set -e
-diff --git a/tools/perf/tests/shell/stat_metrics_cgrp.sh b/tools/perf/tests/shell/stat_metrics_cgrp.sh
-index 0728f48f21fa971d..75b8e01d11cc7ff3 100755
---- a/tools/perf/tests/shell/stat_metrics_cgrp.sh
-+++ b/tools/perf/tests/shell/stat_metrics_cgrp.sh
-@@ -1,5 +1,5 @@
- #!/bin/bash
--# perf stat metrics --for-each-cgroup test
-+# perf stat metrics --for-each-cgroup test (no_mlock)
- # SPDX-License-Identifier: GPL-2.0
+ 	if (ret == 0)
+ 		return true; /* Lock acquired. */
+@@ -111,7 +182,9 @@ void cond_destroy(struct cond *cnd)
  
- set -e
-diff --git a/tools/perf/tests/shell/stat_metrics_values.sh b/tools/perf/tests/shell/stat_metrics_values.sh
-index 0982f6b9737a780f..3e073a0e5b9f9b99 100755
---- a/tools/perf/tests/shell/stat_metrics_values.sh
-+++ b/tools/perf/tests/shell/stat_metrics_values.sh
-@@ -1,5 +1,5 @@
- #!/bin/bash
--# perf metrics value validation
-+# perf metrics value validation (no_mlock)
- # SPDX-License-Identifier: GPL-2.0
+ void cond_wait(struct cond *cnd, struct mutex *mtx)
+ {
+-	CHECK_ERR(pthread_cond_wait(&cnd->cond, &mtx->lock));
++	CHECK_ERR(mutex_take_over(mtx,
++				  pthread_cond_wait(&cnd->cond, &mtx->lock),
++				  /*give_up=*/false));
+ }
  
- shelldir=$(dirname "$0")
-diff --git a/tools/perf/tests/shell/test_ilist_python.sh b/tools/perf/tests/shell/test_ilist_python.sh
-index 83048474710d2857..a235539c01767ee5 100755
---- a/tools/perf/tests/shell/test_ilist_python.sh
-+++ b/tools/perf/tests/shell/test_ilist_python.sh
-@@ -1,5 +1,5 @@
- #!/bin/bash
--# perf script ilist and perf list --tui test
-+# perf script ilist and perf list --tui test (no_mlock)
- # SPDX-License-Identifier: GPL-2.0
+ void cond_signal(struct cond *cnd)
+diff --git a/tools/perf/util/mutex.h b/tools/perf/util/mutex.h
+index 5554937675886ef3..5de1065ea2b94bbb 100644
+--- a/tools/perf/util/mutex.h
++++ b/tools/perf/util/mutex.h
+@@ -142,6 +142,12 @@ void mutex_init(struct mutex *mtx);
+ void mutex_init_pshared(struct mutex *mtx);
+ /* Initializes a mutex that may be recursively held on the same thread. */
+ void mutex_init_recursive(struct mutex *mtx);
++/*
++ * As mutex_init_pshared(), plus the robust attribute: a process dying while
++ * holding it doesn't leave it locked, but the takeover isn't reported and the
++ * data it protects may be mid update.  Returns false when not available.
++ */
++bool mutex_init_pshared_robust(struct mutex *mtx);
+ void mutex_destroy(struct mutex *mtx);
  
- set -e
-diff --git a/tools/perf/tests/shell/test_stat_cpi_python.sh b/tools/perf/tests/shell/test_stat_cpi_python.sh
-index 6cb376c92e2f13a7..d1571a20f4683d73 100755
---- a/tools/perf/tests/shell/test_stat_cpi_python.sh
-+++ b/tools/perf/tests/shell/test_stat_cpi_python.sh
-@@ -1,6 +1,6 @@
- #!/bin/bash
- # SPDX-License-Identifier: GPL-2.0
--# stat-cpi python test
-+# stat-cpi python test (no_mlock)
- 
- set -e
- 
-diff --git a/tools/perf/tests/shell/test_test_junit_output.sh b/tools/perf/tests/shell/test_test_junit_output.sh
-index 38a29e646906e3aa..8fc92e083c342a5c 100755
---- a/tools/perf/tests/shell/test_test_junit_output.sh
-+++ b/tools/perf/tests/shell/test_test_junit_output.sh
-@@ -1,6 +1,9 @@
- #!/bin/bash
- # SPDX-License-Identifier: GPL-2.0
--# perf test junit XML output validation
-+# perf test junit XML output validation (no_mlock)
-+#
-+# Waiving the mlock requisite this way holds only while the 'perf test'
-+# runs below keep picking tests that don't map ring buffers.
- 
- set -e
- 
-diff --git a/tools/perf/tests/shell/test_uprobe_from_different_cu.sh b/tools/perf/tests/shell/test_uprobe_from_different_cu.sh
-index 33bf36c4037e45ae..0a02ff9b86d6f326 100755
---- a/tools/perf/tests/shell/test_uprobe_from_different_cu.sh
-+++ b/tools/perf/tests/shell/test_uprobe_from_different_cu.sh
-@@ -1,5 +1,5 @@
- #!/bin/bash
--# test perf probe of function from different CU
-+# test perf probe of function from different CU (no_mlock)
- # SPDX-License-Identifier: GPL-2.0
- 
- set -e
+ void mutex_lock(struct mutex *mtx) EXCLUSIVE_LOCK_FUNCTION(*mtx);
 -- 
 2.55.0
 
