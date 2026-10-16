@@ -1,108 +1,154 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FDBF599A35
-	for <linux-perf-users@vger.kernel.org>; Fri, 16 Oct 2026 17:44:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C3C458B6D8
+	for <linux-perf-users@vger.kernel.org>; Fri, 16 Oct 2026 17:45:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792172659; cv=none; b=cPsArvBL4bXdTJBSE6vsw/NGnZ6jZ8fMW1QNmhQyQkm7/2UxWLCq2Fsnj+5hnaF4hmLNTlx193c8zzlnrVFDAA5ZE/ASSIvEEz/h+W2IgzUPnxzlXT65QGk8eKgADDPunUBK1ol6c/mErYM8WpDM1zLdz4OjosXubrj3wggZrSE=
+	t=1792172725; cv=none; b=RbkT+a5jpsddcjqhPF5A7Bbedxa4Uv6QJaEn0Glp4UI3Q2BTq9+VGdCdvw9lIZSU6sCpo7+lKiS1JStdgDhZUoP0V1uMbCHy+1lOBa5Y7pxlrGPfiXJw+fCJ/b3pGwqNlzLjqSGqZrh5L4+fkQRCEwG5B482yLJllR32ribHDa8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792172659; c=relaxed/simple;
-	bh=2Km5Aem/hdpPwXeJFqtXX7CsrIXI4BgpK/SpNTV5xRA=;
+	s=arc-20240116; t=1792172725; c=relaxed/simple;
+	bh=HqYq5XkJ8Hh/5ni8iQr6DV5GJgFDJJvXwkHXeWMKaYU=;
 	h=Message-ID:From:Subject:To:Cc:In-Reply-To:References:Content-Type:
-	 Date; b=YyxO/XBELZR7hMIiZH2AvR7uKUOxmwuKBoGP45qV3ULLGurZ8euuYRxDW5WqyWEgIsFjJUY/lSbaAnx7VVwvqGRCCNFuVT4bB1w7EcPbYCjCmUMjcPtOcpsOBgMguC3LVQHeZxdztsDrRM6JfcXgtn1/tnuZ05XkVoczjWKxRE8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LmY2UmBc; arc=none smtp.client-ip=100.103.45.18
+	 Date; b=QYoxI9BlaBOEKO9WVY59MNvZ+cOz2IqjC5CfCepiFL5p3Xdda3BaHOmHiiF0vCsoGKGo+pnC0qAvc1iEkOaknfQ5AFlpmfGcx6eLgOz2IUe1sFu+VK8orbInQPqSdjdZ1nLwfJaS/5QHhG5F10WU0ZJuRhPM81HFJzECuCt/c3Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=n0ngb7rD; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LmY2UmBc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ABEF41F000C4;
-	Fri, 16 Oct 2026 17:44:13 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="n0ngb7rD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 67E4E1F000C4;
+	Fri, 16 Oct 2026 17:45:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1792172655;
-	bh=ehL8wmQ3kd2o5jZLbmM30PNzsfPM1d/SZy75+KovhcA=;
+	s=k20260515; t=1792172721;
+	bh=x/9E3fSDkl8COIV4NTVmX3NsMdRImrd4d28gm6f7Pqs=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=LmY2UmBcFrfzGNYNdYrLGPxkYl6TOCl2/OPW7SpxMNd8cMxxhJbSZWM/ZbNob6D8g
-	 Ua+EHDd8kxBPz/hdFgwPw5ujYhXUsF28n3trkinJM3VVAbii99gtjc8QcNs7Ti4Nkk
-	 mBVZgIDHgm4OIhY48MnC0jkWoq49+NCtG2KObDVEf0dG46bVx2rmasYFot3y5ac0Nl
-	 LGuIGLp+EUtl3rOJ+GNpKF0vadsNphthITF/1Sk9iHkypBGdDJ7izeYJLlVqqT9Uv6
-	 jnPUQ5YcTr2uuT1IAvhVYIVeSojpe55vVKR8RBvJyOKf9JB2tXRrGIt3FG3rSHpOlQ
-	 kMHRRjRqQo/CA==
-Message-ID: <sashiko-outbox-174743@kernel.org>
+	b=n0ngb7rDPMOIHtPxd7hwNZ9LcKv6RdIgd/Y//ULnHlZPciYYIXegQ7C8aPNx2QG1Q
+	 tbd4jacJi+r9/JhCJK3JQzK914AcMJx0Q/yaC+TTGzmwJjmb/nCfdhMBC+TYPUM0Ba
+	 H2Lk2lR0vWupTkV2xXC1L0ozORHeF89MmzLR8qYXnMkBQ+DE+AdImumqgzNiecUrhP
+	 Iu86vKLsDaSIUW7TNeUKd4DrPT/RH3VnA8znTc7bjGGiryigMl3OGGLwtPEtJapw2B
+	 NKstq4Y9B+mnJPwbiQCHaGVwP2TI47PJIJYrpTLWutYx+jp0CwLE0ltMqOyVZR6Tgs
+	 fQsglz+FBZwTQ==
+Message-ID: <sashiko-outbox-174744@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v3 16/17] perf maps: Fix lock inversion in
- maps__load_first() and bounds check in __maps__remove()
+Subject: Re: [PATCH v3 13/17] perf intel-tpebs: Fix race in tpebs_stop() and
+ tpebs_cmd.out fd handling
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Ian Rogers" <irogers@google.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20261016173106.679725-17-irogers@google.com>
+In-Reply-To: <20261016173106.679725-14-irogers@google.com>
 References: <20261013222622.1822619-1-irogers@google.com>
  <20261016173106.679725-1-irogers@google.com>
- <20261016173106.679725-17-irogers@google.com>
+ <20261016173106.679725-14-irogers@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Fri, 16 Oct 2026 17:44:13 +0000
+Date: Fri, 16 Oct 2026 17:45:20 +0000
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+Thank you for your contribution! Sashiko AI review found 2 potential issue(=
 s) to consider:
-- [Low] perf: missing <string.h> inclusion for string operations
+- [High] perf: Samples dropped during teardown due to premature tpebs_cmd.p=
+id clearance
+- [Medium] perf: thread leak on tpebs_send_record_cmd error path
 --
 
-commit ea7ae95649777ad210584a0f4110f0b3b715c591
+commit 12668ca70c2a83aae9686820143aafd887a3a879
 Author: Ian Rogers <irogers@google.com>
 
-perf maps: Fix lock inversion in maps__load_first() and bounds check in __m=
-aps__remove()
+perf intel-tpebs: Fix race in tpebs_stop() and tpebs_cmd.out fd handling
 
-This commit addresses a read-to-write self-deadlock in maps__load_first()
-and adds bounds checking in __maps__remove() to handle concurrent map
-removals.
+This commit fixes a race by releasing tpebs_mtx before calling
+pthread_join() in tpebs_stop(). It also transfers ownership of the
+tpebs_cmd.out file descriptor to the sample reader thread to prevent
+a double-close.
 
-> diff --git a/tools/perf/util/maps.c b/tools/perf/util/maps.c
-> index f808df2fe77b4..c0fccb776bede 100644
-> --- a/tools/perf/util/maps.c
-> +++ b/tools/perf/util/maps.c
-
+> diff --git a/tools/perf/util/intel-tpebs.c b/tools/perf/util/intel-tpebs.c
+> index 7c0b8b15bd10e..b81831f5e5a42 100644
+> --- a/tools/perf/util/intel-tpebs.c
+> +++ b/tools/perf/util/intel-tpebs.c
 [ ... ]
-
-> @@ -556,10 +558,14 @@ static void __maps__remove(struct maps *maps, struc=
-t map *map)
->  	if (maps_by_name) {
->  		unsigned int name_idx =3D maps__by_name_index(maps, map);
+> @@ -331,12 +339,14 @@ static int tpebs_stop(void) __must_hold(tpebs_mtx_g=
+et())
+>  	/* Like tpebs_start, we should only run tpebs_end once. */
+>  	if (tpebs_cmd.pid !=3D 0) {
+>  		pid_t actual_pid =3D tpebs_cmd.pid;
+> +		pthread_t reader_thread;
 > =20
-> -		map__put(maps_by_name[name_idx]);
-> -		memmove(&maps_by_name[name_idx],
-> -			&maps_by_name[name_idx + 1],
-> -			(nr_maps - name_idx - 1) *  sizeof(*maps_by_name));
-> +		if (name_idx < nr_maps) {
-> +			map__put(maps_by_name[name_idx]);
-> +			memmove(&maps_by_name[name_idx],
-> +				&maps_by_name[name_idx + 1],
-> +				(nr_maps - name_idx - 1) * sizeof(*maps_by_name));
+>  		tpebs_stopping =3D true;
+>  		tpebs_send_record_cmd(EVLIST_CTL_CMD_STOP_TAG);
+>  		tpebs_cmd.pid =3D 0;
+> +		reader_thread =3D tpebs_reader_thread;
+>  		mutex_unlock(tpebs_mtx_get());
+> -		pthread_join(tpebs_reader_thread, NULL);
+> +		pthread_join(reader_thread, NULL);
 
-[Severity: Low]
-Does this file need an explicit #include <string.h>?
+[Severity: High]
+Does clearing tpebs_cmd.pid before waiting for the reader thread to finish
+cause valid samples to be silently dropped?
 
-The perf subsystem guidelines require developers to explicitly include the
-POSIX-specified headers for any libc functions used (specifically citing
-<string.h>) to ensure musl compatibility.
+When tpebs_stop() clears the PID and releases tpebs_mtx, the reader thread
+can run concurrently and drain the pipe. Because process_sample_event()
+acquires the mutex and checks if tpebs_cmd.pid is 0, it may erroneously
+assume the record has entirely terminated:
 
-This file invokes memmove() but lacks an explicit #include <string.h>. Since
-the patch directly modifies a block invoking memmove() without adding the
-requisite header, could this cause build failures on musl libc where standa=
-rd
-headers are not implicitly included?
+tools/perf/util/intel-tpebs.c:process_sample_event() {
+    ...
+	mutex_lock(tpebs_mtx_get());
+	if (tpebs_cmd.pid =3D=3D 0) {
+		/* Record has terminated. */
+		mutex_unlock(tpebs_mtx_get());
+		return 0;
+	}
+    ...
+}
 
-> +		} else {
-> +			__maps__free_maps_by_name(maps);
-> +		}
+Should tpebs_cmd.pid remain set until after the reader thread is joined so
+flushed samples are fully processed?
+
+>  		mutex_lock(tpebs_mtx_get());
+>  		if (control_fd[0] >=3D 0) {
+[ ... ]
+> @@ -567,12 +577,14 @@ int evsel__tpebs_open(struct evsel *evsel)
+>  			goto out;
+> =20
+>  		if (pthread_create(&tpebs_reader_thread, /*attr=3D*/NULL, __sample_rea=
+der,
+> -				   /*arg=3D*/NULL)) {
+> +				   (void *)(intptr_t)tpebs_cmd.out)) {
+>  			kill(tpebs_cmd.pid, SIGTERM);
+>  			pr_err("Could not create thread to process sample data.\n");
+>  			ret =3D -1;
+>  			goto out;
+>  		}
+> +		/* __sample_reader now owns and closes the output fd. */
+> +		tpebs_cmd.out =3D -1;
+>  		ret =3D tpebs_send_record_cmd(EVLIST_CTL_CMD_ENABLE_TAG);
 >  	}
-> =20
->  	--RC_CHK_ACCESS(maps)->nr_maps;
+>  out:
+
+[Severity: Medium]
+If tpebs_send_record_cmd() fails, execution jumps to the "out:" error clean=
+up
+block without joining the newly created thread.
+
+In the error path, tpebs_cmd.pid is cleared:
+
+tools/perf/util/intel-tpebs.c:evsel__tpebs_open() {
+    ...
+		if (started_process) {
+			if (tpebs_cmd.pid > 0) {
+				kill(tpebs_cmd.pid, SIGTERM);
+				finish_command(&tpebs_cmd);
+				tpebs_cmd.pid =3D 0;
+			}
+    ...
+}
+
+Since the error cleanup fails to join tpebs_reader_thread, and sets
+tpebs_cmd.pid to 0 (which prevents tpebs_stop() from ever joining it later),
+does this leak the thread resources?
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261016173106.6797=
-25-1-irogers@google.com?part=3D16
+25-1-irogers@google.com?part=3D13
