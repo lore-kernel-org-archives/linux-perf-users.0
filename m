@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF4A423E330;
-	Fri, 16 Oct 2026 00:19:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5CF6274B53;
+	Fri, 16 Oct 2026 00:19:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792109959; cv=none; b=tb2Z2FCMB9aJHnh0d55mXlhrwYGm5KOAaZ1EnkHBje0sVxcudvtyH0lCJd7c4wVXRJYmb5TVJeRyzmFMEr31aSYSmGMWAgJ/+doSTK2m0r/YOVp0ZhmS7etUEUdzwJwAopxYE8I0H6a6Or+H1v7U1IFRqb/Yw0dxjdynvCeIFQY=
+	t=1792109961; cv=none; b=C7pqubptB5Teeeg7Pi9QgeZexYJkSce53JM2h2EpkF4Oqoyd1nxxo8b8v+C0odKzF02aLFIbt7JW2ppRMyktAakRrVhbvOj5ysllbW/9PkzFk5oZ7vT382wCUfC0rI+4pWKpMO8rtUs+TT4d5VgHd0rhn39u073jy3s7egWtW4I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792109959; c=relaxed/simple;
-	bh=LPi/4S/ximBzDhKKOIAbzNoZgwRbLStPp6HwkoENirk=;
+	s=arc-20240116; t=1792109961; c=relaxed/simple;
+	bh=ZFNUKZlxoeMEDwC1FgW+LkwUFqKx68wvS4gqQEuefLk=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=o9wd5CiPuQh2Q3/IKcaMHL+e816v6wKswpkHKFWjWSsa6R8JGQooV92KGM6u9rlTJsEWQu1GUSsE1O8BVTnqSbNfQEZZwVY85aEul/Ua+k2p8kg4fgRqvUUQbb0bkpXVnqwq9Tom9Rl3Jj0qmdjBV8s8CTskrzK2ooj12SFPtPs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mHalfb3y; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version; b=psGb8z0xemtAnNc7OIdtt1ZF6k2w/N+gQdSLD+6j4Jut2qRj2QTaafJTWEKUPTeXKJMX+kZRIgrS1cYn37LoQzENt5mNiELA6nd3H4BDdi2TDZUByuG1oJ5wsyt+Ztxa2WKbQnSBeroEp+ee9qjQYeh+3HWrAHTllt9i9lV/YuE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=V/Hf4fXb; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mHalfb3y"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5DEF31F000C4;
-	Fri, 16 Oct 2026 00:19:15 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="V/Hf4fXb"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 173411F000C5;
+	Fri, 16 Oct 2026 00:19:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1792109957;
-	bh=jUlm5FDHjfSbeD70IUl2mfhHCD5Etr5t45T8zRpgY+w=;
+	s=k20260515; t=1792109960;
+	bh=LOlJPiFs1nB95zh7JhmjLdEJl42RhOfbS/7B/uL7Hfs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=mHalfb3yYgdfnXVTaZHIXj6nhI4hhNBrrixS1xc4lbBSKdHIcCN5q14SA0t1j9HZy
-	 IHefVA017bObwqXIcR+/q4r1ATrmTtqeN6F939VuZGc9W+dpDGfE4wPm6fBXbVGYQR
-	 t6L+Dizx6oQmjvjDC/evVUfRFoAHsPVc2tDLCm6PVbH0Wr8PUQimAFWCLUkjSn2u6s
-	 fTTOgFFglGJdfWyPOG3X0rqPs9b5tMW+DECpbXuMlZ0lvb06FzptqL2MROdz3eHx2l
-	 fOXkvvVdw220h1vSMYSqCc5/OkLoFMYePey7Qj5INUr0+vCuoJDoUMeKtUhm7vDJm2
-	 AgCPFuwhH5gmg==
+	b=V/Hf4fXb2Ml49+vi0VbRcg9yVs3LJoyqxJUimSHRRbK8kDTs/zArusU6QpK/zKXkZ
+	 G4NOWI0Sx9p2vf0FO3ThnbZL9kddC6FFl7zmu4Uyx5NRDSdf53kVNb4aEKmf1MVbWH
+	 z39EAnHjvC2GY57qEKFKvu7sRtliZpZtDjoz+VoZDt6DSwcDABdGJnejE0yS5xc4Xf
+	 PKBYUGTJpVZUMSsEFbq0qz8yPmBBeENAFFUzZIThWjtMJq7lIedAaRahUvUItRublG
+	 s2VsOnhUo6F0sLnAV2G+G1uxYeVQ/mnQ1FS0EwLXdommU0TmHiGp1Sm79BzPWr0Lc7
+	 JpykczpsJtokg==
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Namhyung Kim <namhyung@kernel.org>
 Cc: Ingo Molnar <mingo@kernel.org>,
@@ -38,9 +38,9 @@ Cc: Ingo Molnar <mingo@kernel.org>,
 	linux-kernel@vger.kernel.org,
 	linux-perf-users@vger.kernel.org,
 	Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH v3 10/19] perf test attr: Accept either sample id bit perf asks for
-Date: Thu, 15 Oct 2026 21:18:34 -0300
-Message-ID: <20261016001843.71978-11-acme@kernel.org>
+Subject: [PATCH v3 11/19] perf test attr: Ignore the dummy tracking event and the terms it carries
+Date: Thu, 15 Oct 2026 21:18:35 -0300
+Message-ID: <20261016001843.71978-12-acme@kernel.org>
 X-Mailer: git-send-email 2.56.0
 In-Reply-To: <20261016001843.71978-1-acme@kernel.org>
 References: <20261016001843.71978-1-acme@kernel.org>
@@ -54,186 +54,137 @@ Content-Transfer-Encoding: 8bit
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-evlist__config() asks for a way to tell the samples apart,
-PERF_SAMPLE_IDENTIFIER where available, PERF_SAMPLE_ID otherwise:
+With more than one core PMU the requested events can't cover all the
+CPUs, each cluster has its own PMU, so perf opens the software dummy
+event to carry the tracking terms (mmap, comm, task, mmap_data), leaving
+the requested events without them:
 
-  bool sample_id = opts->sample_id;
-  ...
-  if (opts->full_auxtrace || opts->sample_identifier) {
-        ...
-        use_sample_identifier = perf_can_sample_identifier();
-        sample_id = true;
-  } else if (evlist__nr_entries(evlist) > 1) {
-        ...
-        use_sample_identifier = perf_can_sample_identifier();
-        sample_id = true;
-  }
+  expected mmap=1, got 0
+  expected comm=1, got 0
+  expected task=1, got 0
 
-so the id is asked for whenever the evlist has more than one event, and
-also when asked to outright, with --sample-identifier or by an auxtrace
-session, or by record__config() for a pipe run, through opts->sample_id,
-none of which depends on the sample types: 'perf record
---sample-identifier -e cycles' and the arm SPE expectations in this very
-directory ask for it with a single event.
+That dummy event is not part of what the expectations are about, so
+leave it out of the comparison, unless the expectations ask for one,
+like system-wide-dummy and test-record-dummy-C0 do.
 
-Which one it asks for depends on the composition of the evlist: with
-more than one core PMU a request for 'cycles' becomes one event per core
-PMU, the extra dummy tracking events then make the sample types differ and
-perf goes for IDENTIFIER, while the expectations were written on machines
-with a single core PMU, where perf asks for ID:
+And when perf used it to carry the tracking terms, those terms can't be
+matched on the requested events, leave them out of the match as well.
 
-  expected sample_type=263, got 65799    # 263 | (1 << 16)
-  expected sample_type=343, got 65815    # (343 & ~(1 << 6)) | (1 << 16), group-sampling
-
-Both bits mean the same thing here, how the samples get associated with the
-event that produced them, so when the expectation asks for one of them, ask
-for "an id of some sort" on both sides, and when the expectation doesn't
-ask for any, take the bits out of what got recorded: whether they are there
-and which one it is are consequences of what was asked for and of how the
-request got expanded, none of that is what these expectations are about.
-
-Since Test.compare() looks at both directions, expectations matching the
-recorded events and recorded events matching the expectations, keep track
-of which side is the one perf recorded to take the bits out of the right
-side.
-
-The masking is only for the comparison: the warnings keep showing the
-values as they are, nothing to un-mask by hand to see what is being
-complained about.
+The terms are left out only where the dropped dummy actually carried them,
+from the sample_type it was opened with, a dummy that didn't is no reason
+to stop verifying them.
 
 Assisted-by: LLM
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/tests/shell/lib/attr.py | 82 ++++++++++++++++++++++++++++--
- 1 file changed, 77 insertions(+), 5 deletions(-)
+ tools/perf/tests/shell/lib/attr.py | 61 ++++++++++++++++++++++++++++++
+ 1 file changed, 61 insertions(+)
 
 diff --git a/tools/perf/tests/shell/lib/attr.py b/tools/perf/tests/shell/lib/attr.py
-index ee55fbe6f07bd7b5..da4614068772eaec 100644
+index da4614068772eaec..c39f2603ec077b2c 100644
 --- a/tools/perf/tests/shell/lib/attr.py
 +++ b/tools/perf/tests/shell/lib/attr.py
-@@ -75,6 +75,8 @@ def core_pmu_probe():
- 
- PERF_TYPE_HARDWARE = 0
+@@ -77,6 +77,21 @@ PERF_TYPE_HARDWARE = 0
  PERF_TYPE_HW_CACHE = 3
-+PERF_SAMPLE_ID = 1 << 6
-+PERF_SAMPLE_IDENTIFIER = 1 << 16
+ PERF_SAMPLE_ID = 1 << 6
+ PERF_SAMPLE_IDENTIFIER = 1 << 16
++PERF_TYPE_SOFTWARE = 1
++PERF_COUNT_SW_DUMMY = 9
++
++def is_dummy_tracking_event(event):
++    """
++    Is this the dummy event perf opens to carry the tracking events (mmap,
++    comm, task) when the requested ones can't, like when there is more than one
++    core PMU and each core PMU's events run on only part of the CPUs?
++    """
++    return (event.get('type') == str(PERF_TYPE_SOFTWARE) and
++            event.get('config') == str(PERF_COUNT_SW_DUMMY))
++
++# With more than one core PMU the tracking terms go to the dummy tracking event,
++# leaving the requested events without them, so they can't be matched there.
++TRACKING_TERMS = ['mmap', 'comm', 'task', 'mmap_data']
  
  # The legacy event types, where perf may qualify 'config' with the core PMU
  # type in its top 32 bits when there is more than one core PMU.
-@@ -106,6 +108,49 @@ def hide_core_pmu_type(value):
-     """
-     return mask_bits(value, 0xffffffff00000000)
+@@ -259,11 +274,29 @@ class Event(dict):
  
-+# The two sample id bits mean the same thing here: how the samples of the
-+# events in the evlist get associated with the event that produced them.
-+SAMPLE_ID_BITS = PERF_SAMPLE_ID | PERF_SAMPLE_IDENTIFIER
-+
-+# No real sample_type bit is this high, so it can stand for "either of the
-+# sample id bits" when comparing the two sides.
-+SAMPLE_ID_EITHER = 1 << 40
-+
-+def hide_sample_id(expected, recorded):
-+    """
-+    perf asks for a way to tell the samples apart, PERF_SAMPLE_IDENTIFIER where
-+    available, PERF_SAMPLE_ID otherwise, see evlist__config(): whenever the
-+    evlist has more than one event, and when asked to outright, with
-+    --sample-identifier, by an auxtrace session, or by record__config() for a
-+    pipe run, none of which depends on the sample types, as those only choose
-+    between the two bits:
-+    with more than one core PMU the dummy tracking events make the sample types
-+    differ, so IDENTIFIER is asked for even for events whose expectations ask
-+    for ID, written on a machine with a single core PMU.
-+
-+    So treat the two as the same thing: when the expectation asks for either
-+    of them, ask for "an id of some sort" on both sides, and when the
-+    expectation doesn't ask for any, take the bits out of what got recorded.
-+    """
-+    try:
-+        asked = int(expected, 0) & SAMPLE_ID_BITS
-+    except ValueError:
-+        # The expectation is a wildcard or a set of alternatives.
-+        return expected, recorded
-+
-+    try:
-+        recorded_id_bits = int(recorded, 0) & SAMPLE_ID_BITS
-+    except ValueError:
-+        # The recorded side is a wildcard or a set of alternatives.
-+        return expected, mask_bits(recorded, SAMPLE_ID_BITS)
-+
-+    if not asked:
-+        return expected, mask_bits(recorded, SAMPLE_ID_BITS)
-+
-+    return (str(int(expected, 0) & ~SAMPLE_ID_BITS | SAMPLE_ID_EITHER),
-+            str(int(recorded, 0) & ~SAMPLE_ID_BITS |
-+                (SAMPLE_ID_EITHER if recorded_id_bits else 0)))
-+
- class Fail(Exception):
-     def __init__(self, test, msg):
-         self.msg = msg
-@@ -198,13 +243,33 @@ class Event(dict):
+         return self if getattr(self, 'recorded', False) else None
  
-         return value
- 
-+    def hide_event_count_dependent_terms(self, term, expected, recorded):
-+        if term == 'sample_type':
-+            return hide_sample_id(expected, recorded)
-+
-+        return expected, recorded
-+
-+    def recorded_side(self, other):
++    def hide_tracking_via_dummy(self, term, other):
 +        """
-+        Which one is what perf recorded? Both directions get compared, see
-+        Test.compare(), so this can't be taken from the arguments' order.
++        The tracking terms are set on the tracking event, which is the dummy
++        event when there is more than one core PMU, leaving the requested
++        events without them, nothing to match on then.
 +        """
-+        if getattr(other, 'recorded', False):
-+            return other
++        if term not in TRACKING_TERMS:
++            return False
 +
-+        return self if getattr(self, 'recorded', False) else None
++        for event in (self, other):
++            if term in getattr(event, 'tracking_moved_to_dummy', ()):
++                return True
++
++        return False
 +
      def equal(self, other):
          for t in Event.terms:
              log.debug("      [%s] %s %s", t, self[t], other[t])
              if t not in self or t not in other:
                  return False
--            exp = self.hide_core_pmu_type(t, self[t], other)
--            got = self.hide_core_pmu_type(t, other[t], other)
-+            recorded = self.recorded_side(other)
-+            expected = other if recorded is self else self
-+            exp = self.hide_core_pmu_type(t, expected[t], recorded or expected)
-+            got = self.hide_core_pmu_type(t, (recorded or self)[t], expected)
-+            if recorded is not None:
-+                exp, got = self.hide_event_count_dependent_terms(t, exp, got)
-             if not data_equal(exp, got):
-                 return False
-         return True
-@@ -218,10 +283,15 @@ class Event(dict):
++            if self.hide_tracking_via_dummy(t, other):
++                continue
++
+             recorded = self.recorded_side(other)
+             expected = other if recorded is self else self
+             exp = self.hide_core_pmu_type(t, expected[t], recorded or expected)
+@@ -283,6 +316,9 @@ class Event(dict):
          for t in Event.terms:
              if t not in self or t not in other:
                  continue
--            exp = self.hide_core_pmu_type(t, self[t], other)
--            got = self.hide_core_pmu_type(t, other[t], other)
-+            recorded = self.recorded_side(other)
-+            expected = other if recorded is self else self
-+            exp = self.hide_core_pmu_type(t, expected[t], recorded or expected)
-+            got = self.hide_core_pmu_type(t, (recorded or self)[t], expected)
-+            if recorded is not None:
-+                exp, got = self.hide_event_count_dependent_terms(t, exp, got)
-             if not data_equal(exp, got):
--                log.warning("expected %s=%s, got %s", t, self[t], other[t])
-+                log.warning("expected %s=%s, got %s", t, expected[t],
-+                            (recorded or self)[t])
++            if self.hide_tracking_via_dummy(t, other):
++                continue
++
+             recorded = self.recorded_side(other)
+             expected = other if recorded is self else self
+             exp = self.hide_core_pmu_type(t, expected[t], recorded or expected)
+@@ -498,6 +534,29 @@ class Test(object):
+             else:
+                 raise Unsup(self)
  
- def parse_version(version):
-     if not version:
-@@ -506,6 +576,8 @@ class Test(object):
-             log.debug("  loading result events")
-             for f in glob.glob(tempdir + '/event*'):
-                 self.load_events(f, self.result)
-+            for event in self.result.values():
-+                event.recorded = True
++    def drop_dummy_tracking_events(self):
++        """
++        Leave out the dummy event perf itself opened, see
++        is_dummy_tracking_event(), unless the expectations ask for one.
++        """
++        if any(is_dummy_tracking_event(e) for e in self.expect.values()):
++            return
++
++        if not any(is_dummy_tracking_event(e) for e in self.result.values()):
++            return
++
++        moved = set()
++        for name, event in list(self.result.items()):
++            if is_dummy_tracking_event(event):
++                log.debug("      dropping dummy tracking event [%s]", name)
++                moved.update(t for t in TRACKING_TERMS if event.get(t) == '1')
++                del self.result[name]
++
++        # The tracking terms the dropped dummies carried, flag the remaining
++        # events so that the match leaves only those out.
++        for event in self.result.values():
++            event.tracking_moved_to_dummy = moved
++
+     def compare(self, expect, result, strict_groups=True):
+         match = {}
  
+@@ -579,6 +638,8 @@ class Test(object):
+             for event in self.result.values():
+                 event.recorded = True
+ 
++            self.drop_dummy_tracking_events()
++
              # resolve group_fd to event names
              self.resolve_groups(self.expect)
+             self.resolve_groups(self.result)
 -- 
 2.55.0
 
