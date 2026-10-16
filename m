@@ -1,122 +1,77 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F2543C1A
-	for <linux-perf-users@vger.kernel.org>; Fri, 16 Oct 2026 00:31:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA2564A21
+	for <linux-perf-users@vger.kernel.org>; Fri, 16 Oct 2026 00:32:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792110675; cv=none; b=FAALT9olGv1EmKh2/lZrjCHz0R5QMVqrAIZwlu8nl8aDqJc5xxadyc9nBROSkFXR9e4FsJ6ZoIcGmrDWjz90wuHRH4fm6Uy9xCv8yOEORr+QV1zP2LRCCz1nIZOQh4aW18X6z8YAypIE6WhszgBgHfaEw8jkjiq2urXbCVLjpBU=
+	t=1792110761; cv=none; b=n6cqThKhctz+jkLywgSFRD4deudt2rYFPtIVYyCIU18hsL9IPacARaKpM6vT1M8LU/elI6SGcLeFvpZ7EdoZlrjgyfrIukV/UWNnktaB/TWOc8q7KCfGfnst6QWiCTwJJig8Mzj0XkyHIP0GichTGzKGJu1SDtVFOQ//ULiZfDI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792110675; c=relaxed/simple;
-	bh=6kJyIpPc8nSM2AfHFqk184Rqn2v0QZqN/PJEaoLu9AI=;
+	s=arc-20240116; t=1792110761; c=relaxed/simple;
+	bh=dTKA9z18ahs8ULJ3LquxBV+UoBW3iB9kTn6IbbnMHeA=;
 	h=Message-ID:From:Subject:To:Cc:In-Reply-To:References:Content-Type:
-	 Date; b=CaxHDTCtrh7iFHGtaZ+wp8Sse1qUgBWBq6D0R646sZkUXDOMO75E1tb0alwr+P+zJt2WOIjz3nGZR+/zKXNXM2BT6DoGAEHrTAtg4gll2J6u8YNEr3MzvCXZ70aVkxedQ7djW/MU+OG/RGsvIZroRdZtykQFJGm0YTeksarafP0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BQpmiuYW; arc=none smtp.client-ip=100.103.45.18
+	 Date; b=UfljvfdSrC+e5RoMnZCBZFRF835Zxh5G1sVQqpWuBHv2OIk9ADnWti6W6mLspJYcb7Kxsfkc5cFHywSTrYg3IncjmxVR0Lsv7TGyXGGhsblKPtbYg/HE9i8/D7ttseFQPBNKAmZvFotkPs/jtPaB/BuSyqtvcBNHjgDiHkXUVls=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YAplx2CK; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BQpmiuYW"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E73CE1F000C4;
-	Fri, 16 Oct 2026 00:31:13 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YAplx2CK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4B04B1F000C4;
+	Fri, 16 Oct 2026 00:32:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1792110674;
-	bh=ZqEjDTvc73wVklY3RafMM7ntxG59gtRMAnVHYJsr5yk=;
+	s=k20260515; t=1792110760;
+	bh=llhszl6rZ+ii7CF0NGa+u5lcCwjqQANzfrx54VE/i+Y=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=BQpmiuYW409K1d93ObxWzvQwiVCKHIr4/FIm6MO9z4cxr9XVwIkCk/RUMmX+K1N8D
-	 HfmKD+d/CYI1qADJxQrCClNF8KL6hFBIez/UWVp1UKGFtj2ICEuBW1Tsh5rWKhSbLP
-	 fX68dG+78RuNe51Z1/rGBczoCFbQ7MHtw0Exh17geZNvpIqKvSNHXznkPWn8uHe2aa
-	 5wj8jQPRQIJDTTYgnidRcSwgpnjMIgQxjIYam/qQIra2Eqk1hVDjWBnrqFMAQpdbYp
-	 QPABPg6v0BOxoQVmhYrnuCMcjBL6ufT7LktJw2sgBe3KbO97xMfMClDwez6lC/6GM8
-	 lB5QqvN6Pg8DQ==
-Message-ID: <sashiko-outbox-173532@kernel.org>
+	b=YAplx2CKKNiEFUk7tmVIEahaAeaQKJrI/pWsntENuwb80KkTx+BQ1ZoDCuaNQyD79
+	 1AFhB62aiX1XdPcQiIH39Aqp/iD6alfLuBcMlgKIwnfr/Yi7aLEEgEJpyxgnqn8bb5
+	 mHw1KzfRZwwLFd8Bt1f7i+jiq49uHFSnjDKm2iCwmIo2J3mrpjXEvCX1slOLwhiZcm
+	 y45ac0bEQ8/a9Etzjtwhrbf+0ySjPoTrAqCmPOjMH2TG6StAwJQ7EqX5dRCbyyOvZN
+	 Htjlqa4BmfGOPaSBVDUU53TnljVHdUs0KAffJcTXaX3zuVImMGlTusIkFDoDo3XCqm
+	 Z4nAjghSTK9wA==
+Message-ID: <sashiko-outbox-173533@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v3 08/19] perf evsel: Don't dump probe events to
- PERF_TEST_ATTR
+Subject: Re: [PATCH v3 03/19] perf test attr: Fix legacy event encodings in
+ group tests
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Arnaldo Carvalho de Melo" <acme@kernel.org>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20261016001843.71978-9-acme@kernel.org>
+In-Reply-To: <20261016001843.71978-4-acme@kernel.org>
 References: <20261016001843.71978-1-acme@kernel.org>
- <20261016001843.71978-9-acme@kernel.org>
+ <20261016001843.71978-4-acme@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Fri, 16 Oct 2026 00:31:13 +0000
+Date: Fri, 16 Oct 2026 00:32:39 +0000
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
-s) to consider:
-- [Medium] perf: fd leak in evsel__open_cpu() on missing feature fallback
---
+> From: Arnaldo Carvalho de Melo <acme@redhat.com>
+>=20
+> Since commit b1c5efbfd92e ("perf parse-events: Remove hard coded legacy
+> hardware and cache parsing"), event names are resolved with sysfs/JSON
+> priority over the legacy encodings, so bare cache-misses and
+> instructions now become the core PMU sysfs/JSON events (on x86 type 4,
+> configs 0x412e and 0xc0) rather than the legacy
+> PERF_TYPE_HARDWARE/config=3D3 and config=3D1 events the tests expect, e.g=
+.:
+>=20
+>   expected config=3D3, got 0
+>   expected disabled=3D0, got 1
+>   expected mmap=3D0, got 1
+>   expected comm=3D0, got 1
+>   expected freq=3D0, got 1
+>   expected enable_on_exec=3D0, got 1
+> [ ... ]
+> return value.
+>=20
+> Fixes: b1c5efbfd92eb84d ("perf parse-events: Remove hard coded legacy har=
+dware and cache parsing")
+> Assisted-by: LLM
+> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-commit 4b54c2ca3d287fefa4e358bd15bc06b547bbe8da
-Author: Arnaldo Carvalho de Melo <acme@redhat.com>
-
-perf evsel: Don't dump probe events to PERF_TEST_ATTR
-
-This commit prevents support probe events from being dumped into the
-$PERF_TEST_ATTR event files. It introduces a support_probe flag to identify
-events opened strictly to query supported features.
-
-Link: https://lore.kernel.org/linux-perf-users/asWQvXRdqp_RK85c@google.com/
-
-> diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-> index e61f309e93dcc..59318fef03cb1 100644
-> --- a/tools/perf/util/evsel.c
-> +++ b/tools/perf/util/evsel.c
-> @@ -3104,7 +3104,11 @@ static int evsel__open_cpu(struct evsel *evsel, st=
-ruct perf_cpu_map *cpus,
-> =20
->  			bpf_counter__install_pe(evsel, idx, fd);
-> =20
-> -			if (unlikely(test_attr__enabled())) {
-> +			/*
-> +			 * Support probes aren't what was asked for, leave them
-> +			 * out of the PERF_TEST_ATTR dump.
-> +			 */
-> +			if (unlikely(test_attr__enabled() && !evsel->support_probe)) {
-
-[Severity: Medium]
-Does this code leak file descriptors when a missing feature fallback is
-triggered on a subsequent loop iteration?
-
-If sys_perf_event_open() succeeds on a capable CPU and records the file
-descriptor, but then fails on an incapable CPU, the code jumps to restart
-the loop:
-
-evsel__open_cpu() {
-    ...
-fallback_missing_features:
-    evsel__disable_missing_features(evsel);
-    ...
-    for (idx =3D start_cpu_map_idx; idx < end_cpu_map_idx; idx++) {
-        ...
-        for (thread =3D 0; thread < nthreads; thread++) {
-            ...
-            fd =3D sys_perf_event_open(...);
-            FD(evsel, idx, thread) =3D fd;
-            if (fd < 0) {
-                err =3D -errno;
-                goto try_fallback;
-            }
-            ...
-try_fallback:
-    ...
-    if (err =3D=3D -EINVAL && evsel__detect_missing_features(evsel, cpu))
-        goto fallback_missing_features;
-}
-
-When evsel__detect_missing_features() triggers the jump back to
-fallback_missing_features, it appears the loop restarts from
-start_cpu_map_idx without routing through out_close to clean up the
-previously opened file descriptors. Can this leak the file descriptors when
-the array entries are overwritten?
-
->  				test_attr__open(&evsel->core.attr, pid, cpu,
->  						fd, group_fd, evsel->open_flags);
->  			}
+Sashiko has reviewed this patch and found no issues. It looks great!
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261016001843.7197=
-8-1-acme@kernel.org?part=3D8
+8-1-acme@kernel.org?part=3D3
+
