@@ -1,77 +1,122 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6604A46C4B2
-	for <linux-perf-users@vger.kernel.org>; Fri, 16 Oct 2026 10:09:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EBBE392811;
+	Fri, 16 Oct 2026 10:12:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792145365; cv=none; b=oWPVv1wto3jposSxILATeWXCdUKrrpmHRkyxRfaOwzMcaQfPAKFFtSYcWCnUpZ/LLJWR01CNd1ene6d2Rggk43IbjZbQJ9KQYJTUb6lb+NGpY9N0uOhSw25fA3WUuBQ+sXODcZP0qYgTjWeYX5m3i71LDga5gJUe/QS6Gh3bOvk=
+	t=1792145549; cv=none; b=fCtm1vJqix19cONzD58VDiq+LgxZ5QXsjhYWEubT0pzSsuC023zjRGwrVLgPvDu0pCuIo0P8wqMNpeXGY1F7l7zQ0m+MHCm3wAzQxRMw364yUc3rtOvR0/MScaaBIAv5z9sXT51NF9E6RnX43fOVR/JCQ5/2vuzUJkw9MXG0MhA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792145365; c=relaxed/simple;
-	bh=PVtIIVoRqvaL4J89yZeEwseaf7vioVsLPGhWpQCxDbo=;
+	s=arc-20240116; t=1792145549; c=relaxed/simple;
+	bh=t1louuqsRdcHdBR+jzhfii8trXrcGgQ1nit0V9wK+Nw=;
 	h=Message-ID:From:Subject:To:Cc:In-Reply-To:References:Content-Type:
-	 Date; b=iJslRE1bOKSiRZybJzbRhLnT3mzaY6xfGU1d/g112KDECi1nw24QiQ1oRFNNRXAasVQXB/Taaoi6D5Afb2rTXmwf9JlWAT8BNjA7iEYVMJRUe0qhqNvzt4zcRPnBEAzLYcFyingCm68i+gvBvIxEkr7+bYlK8sCertH/MBd3PPI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RDntheMn; arc=none smtp.client-ip=100.103.45.18
+	 Date; b=iQDpR9pdK3omQTOEwdxKxvG04H8A6zbwhxL0rhgPZ+bgpqtYsXi2Eh2Efb6JVQExRBi+W52/EsO3B0jupUeUSi3IfCjblWWMTCmPDZVTg1/FS1Wa8QByxytffEN+1KQ4imsBIduDepL157ZOENA5FARsGTcWq0349bNIsOQIfOk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=l2hMQFkw; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RDntheMn"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CEFB71F000C6;
-	Fri, 16 Oct 2026 10:09:23 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="l2hMQFkw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8F0751F000C4;
+	Fri, 16 Oct 2026 10:12:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1792145364;
-	bh=wr+WEDDYBvyeNYvuIGi4+RpQb/r5OjkoigJFCtwdyps=;
+	s=k20260515; t=1792145547;
+	bh=6XWGSGz8Vg6vuz0nSsziqkCdd0FRq8W5K11qLvpM3Aw=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=RDntheMnwiXYpz9tqR538gPSxCTurm95FnG+INu1KX0pNO8Z5u83bgvie83BfjlhI
-	 SGN3nl0lDFDkDhEcTL8i32XSqc+GygkNOtPTUinG0RLRkUoLZCenJr1KU/xElcKdMu
-	 8jQsU/NpIPJe2QYmOtrIxJLjWnsWbWjzsb1n4vDdPUlzvxSSLJmi5YKAMLSb3vvLuR
-	 +DPgXFA4EEJ1xR5OpVuUVNcPQ/n0YhMd3GhDyWwYb9GnZj+feNQCiTM6ycd/YHoziI
-	 Ikkhqa/7aWyYoAz8aW9BA3gHoa5BQ+mXwqisIetRtJ9NC3f2UkQxhx9u5qIkic3yLG
-	 oIXUnq4Qt1ruQ==
-Message-ID: <sashiko-outbox-174124@kernel.org>
+	b=l2hMQFkwXufdhGUpmmvOXoh+3SnBzv+3i/Ji1IFIXrg2/SMiPo3MBJ9oYZaN2j4Km
+	 8CaGVMumsq2s4+8YlgT/RwrblryjEvRu5b5azdVOUnz5aIdYXk/K4GNUTg+4gE1WcM
+	 QOlv6JlKF990ZiVWCCbtnivx5tMu+T3Eya81CM4QE2ajN5GSE3JEeubqQkZ8l1NZ5a
+	 OdcDXeld/TLJS41WE+m+oWfd6qHjh+uAps16nQ0IV+2pIZnMOeVdEzGieX2HOcIIlf
+	 s9RwXI3fJitif69bjgRQn1d06n8FYdc5ZnQsoXo9h+yfRD3QrGR1pEhh9tsnwlQjAt
+	 wFzDKLsb3SJtA==
+Message-ID: <sashiko-outbox-174127@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v2 3/4] perf: arm_pmu: Add workaround for FUJITSU-MONAKA
- Erratum E#030002
+Subject: Re: [PATCH v2 4/4] irqchip/gicv3: Add workaround for FUJITSU-MONAKA
+ erratum E#030003
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Tomohiro Misono" <misono.tomohiro@fujitsu.com>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20261016-monaka-fix-for-upstream-v2-3-fc7ede7f9f48@fujitsu.com>
+Cc: linux-perf-users@vger.kernel.org, kvmarm@lists.linux.dev, "Oliver Upton" <oupton@kernel.org>, "Marc
+ Zyngier" <maz@kernel.org>
+In-Reply-To: <20261016-monaka-fix-for-upstream-v2-4-fc7ede7f9f48@fujitsu.com>
 References: <20261016-monaka-fix-for-upstream-v2-0-fc7ede7f9f48@fujitsu.com>
- <20261016-monaka-fix-for-upstream-v2-3-fc7ede7f9f48@fujitsu.com>
+ <20261016-monaka-fix-for-upstream-v2-4-fc7ede7f9f48@fujitsu.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Fri, 16 Oct 2026 10:09:23 +0000
+Date: Fri, 16 Oct 2026 10:12:26 +0000
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-> FUJITSU-MONAKA Erratum E#030002 affects FUJITSU-MONAKA CPU.
->=20
-> On affected FUJITSU-MONAKA CPUs, after a PMU event counter is
-> stopped at a value just before overflow, an overflow might still
-> be incorrectly detected, resulting interrupt storm in some case.
->=20
-> For example, if the following conditions are met:
->   1) Running perf to count an event in user space only
->   2) The event can also occur in kernel space
->   3) The counter value is set just before the overflow
->      (when using the -F option, initial counter value is -1)
->=20
-> when the kernel is about to return to user space after enabling
-> the count, an overflow interrupt is incorrectly triggered by an
-> event that occurred in kernel space. Since the counter value is
-> not updated (correctly), the interrupt handler does nothing and
-> returns with the same condition. This leads to another wrong interrupt
-> and results in an interrupt storm and eventually a softlockup.
->=20
-> Work around the erratum by avoiding programming PMU event counters
-> with values within five counts of overflow.
->=20
-> Signed-off-by: Tomohiro Misono <misono.tomohiro@fujitsu.com>
+Thank you for your contribution! Sashiko AI review found 2 potential issue(=
+s) to consider:
+- [High] irqchip/gic-v3: IPI via GICR_ISPENDR0 targets sleeping redistribut=
+or
+- [High] irqchip/gicv3: missing NULL check on rd_base causes IPI sender cra=
+sh
+--
 
-Sashiko has reviewed this patch and found no issues. It looks great!
+commit 98989a1fb6fe6471377f9b9c4a24e0097c1639a3
+Author: Kohei Enju <enju.kohei@fujitsu.com>
+
+irqchip/gicv3: Add workaround for FUJITSU-MONAKA erratum E#030003
+
+This patch works around a FUJITSU-MONAKA erratum where SGIs are lost if an
+SGI generation races with CPU interface processing. It addresses the issue
+by bypassing the affected system registers and directly writing to the targ=
+et
+CPU's GICR_ISPENDR0 over MMIO.
+
+> diff --git a/drivers/irqchip/irq-gic-v3.c b/drivers/irqchip/irq-gic-v3.c
+> --- a/drivers/irqchip/irq-gic-v3.c
+> +++ b/drivers/irqchip/irq-gic-v3.c
+[ ... ]
+> @@ -1386,6 +1391,17 @@ static void gic_ipi_send_mask(struct irq_data *d, =
+const struct cpumask *mask)
+>  	 */
+>  	dsb(ishst);
+> =20
+> +	if (static_branch_unlikely(&gic_fujitsu_030003_erratum)) {
+> +		for_each_cpu(cpu, mask) {
+> +			void __iomem *base =3D gic_data_rdist_sgi_base_cpu(cpu);
+
+[Severity: High]
+Could this cause a fatal page fault on the CPU sending the IPI if the target
+CPU failed to initialize its redistributor?
+
+If a secondary CPU fails to initialize its GIC redistributor due to a buggy
+ACPI MADT or missing DT entry, rd_base remains NULL. However, the CPU can
+still come online because gic_starting_cpu() returns 0 on failure.
+
+When another CPU later broadcasts an IPI, this workaround will derive base
+from a NULL rd_base, resulting in an unmapped address (0x10000). The sender
+CPU will then crash when attempting the writel_relaxed().
+
+Should we validate that the target CPU actually has an initialized
+redistributor base before bypassing the architected SGI system registers?
+
+> +
+> +			writel_relaxed(BIT(d->hwirq), base + GICR_ISPENDR0);
+
+[Severity: High]
+Is it safe to write to a target CPU's GICR_ISPENDR0 directly over MMIO when
+that CPU might be in deep idle?
+
+During deep idle, such as via PSCI, the target CPU's redistributor is put
+to sleep (ProcessorSleep=3D1 either via gic_cpu_pm_notifier or firmware).
+According to the GICv3 architecture, writing to a redistributor register
+(other than GICR_WAKER or GICR_TYPER) when ProcessorSleep=3D1 is constrained
+unpredictable.
+
+Normal kernel operations, like the scheduler sending smp_send_reschedule()
+to an idle CPU, will hit this path. If the hardware ignores the write, the
+IPI is dropped, which can lead to deadlocks in smp_call_function() or lost
+wakeups.
+
+> +		}
+> +
+> +		dsb(st);
+> +		return;
+> +	}
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261016-monaka-fix=
--for-upstream-v2-0-fc7ede7f9f48@fujitsu.com?part=3D3
-
+-for-upstream-v2-0-fc7ede7f9f48@fujitsu.com?part=3D4
