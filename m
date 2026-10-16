@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7D0D25B0BB;
-	Fri, 16 Oct 2026 00:19:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB20B27B343;
+	Fri, 16 Oct 2026 00:19:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792109967; cv=none; b=OVVaPw2w1EuS63Mx1PdvyWN3SPW2UdWX6oUDpYsCxx8cZzez9eZU4mNYL+nbk/6u2/ltbAzQgfaVN3yCrivzTS9kMhgGHV32+9FVCbDA6A/WgBolnSPCm23YhTLD93sXCHSWIBMJ6rGMkGaOmuuNgIoN3dNWYGTbgfcOyh0wzA0=
+	t=1792109970; cv=none; b=QeD7NNSIHVxPpX8LYjlE7BkpG2ffEG/yf6tYeFnGurjZUXYdFs00JV9I3MkideMqiSsrbTmihWNkMQ2FB+c+ZjgQ8vnYxkO9I5vZ+br8LcUygJwrV53uXyomi+BpY0SYTn5jxxXpUMxMhIEGVtMs+re6/EgtyGWUp3e4U0VxGgc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792109967; c=relaxed/simple;
-	bh=tk8J21TjNvOco/5ATmp1OSYgWsf3wslmBbtLAiXDrUs=;
+	s=arc-20240116; t=1792109970; c=relaxed/simple;
+	bh=AJRC/EJP26R7GP9341+2au/mlOjOmKMx+JihA0+IYZQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=V2YCq0UVjdvktYVWelclIzde9okUPC6XpOrXUxJ+iKLLKQpxZz9Z7TBq4Jrizd7D111IaQW6npRJmwzfgAMuckrmVjGchJ6KXmVwm4kg1ZzR1zNOofURPVPmjp52YcqDuPYDWJ2eHmtcjeGhrwEijxzkqWPjKeRSTluUUNxXwiw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UgcsakQp; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version; b=YnEqjK7H/Z4jeobtjtMoiw7CIwMAJXJmDRFI+46SVtw9TsdqnZq8ZSrzY3cpWq4/bTcz0lMcBSOAeGEJnz7QpBh3NnJpMhoHvQFfG24OD2TJvNPjPLfLhhykrvQxyVYK0fLYzUvAKjYIt3aOSrDlfKRyJAUhUC37cY1kwS9UvL0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iQ25lL5R; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UgcsakQp"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7D21B1F000C5;
-	Fri, 16 Oct 2026 00:19:23 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iQ25lL5R"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 360E01F000C4;
+	Fri, 16 Oct 2026 00:19:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1792109965;
-	bh=SC9apzX7pnKvZ5lUL0g6aBcrFBTGcAtWk/AK9VtUA+w=;
+	s=k20260515; t=1792109968;
+	bh=kFW/ZHgq36LhTL8ozzccEPjsajTBwUO3CppyGfOhoxM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=UgcsakQp5eviCTaOzE6quZs+1Sa4ap6BzMQVrdrQyMY3LAI21pQ0SIhH8tGurzu5e
-	 S2nGuytGxf/852r/yGtGYERCfke7RgMo6Kw/naaRplHJQiKwa7w0LVs54X4tsqPNz4
-	 efDL2PmkesUO2rVpcBcLY2c4+VxAZixgRzAtIk9oEmQfCgJfBFaYdtnQFyAWXWy6BK
-	 zEwxcOJKC9AjW5OuWvTeo2uNwarEjO/5bdr2QCxbBNDTCe6Vbf+SXuGDKZQrpALmwG
-	 U1zBTDzxpp2ryY2QcmmOxks36a7GFFS51gx9XSpzrS6NZC4A8f6ikGO4t/Kd9WqzZz
-	 bJjT59WJbTMRw==
+	b=iQ25lL5RQVYzCbRd/hctoausG2FDzrBl/yLIgiVqQw5ME9JznXcy0Rwi6uGRPMbRi
+	 wDmJLtNainVBG4BRGAKT5b8FVTwfOlgQ7VNxhdPaqcy3QyzWOwpKmy9D8cwSZgUBzv
+	 snoMTZO9RlEru3lpzl0V1qR6d8QZwwZiiu2s8/uEvKs9T6kABC8ABPFWOnPanZienu
+	 /+llyIp+E56Pp2/ISzoM9/ue/9/2sdZKVDTv3FU5tZhVnzD0lBi3+XNbifRTgTJiu9
+	 QhsqUrhauEV1/U2M3avaxodeFvV27UgmOpiBfSkrdsFW854yxC0XjVWeswFxk2z74X
+	 aMQ2CbYj3X2mQ==
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Namhyung Kim <namhyung@kernel.org>
 Cc: Ingo Molnar <mingo@kernel.org>,
@@ -38,9 +38,9 @@ Cc: Ingo Molnar <mingo@kernel.org>,
 	linux-kernel@vger.kernel.org,
 	linux-perf-users@vger.kernel.org,
 	Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH v3 13/19] perf test attr: Ignore the group read_format bit the PMU count can remove
-Date: Thu, 15 Oct 2026 21:18:37 -0300
-Message-ID: <20261016001843.71978-14-acme@kernel.org>
+Subject: [PATCH v3 14/19] perf test attr: State, spelled out in a line, why a test is skipped
+Date: Thu, 15 Oct 2026 21:18:38 -0300
+Message-ID: <20261016001843.71978-15-acme@kernel.org>
 X-Mailer: git-send-email 2.56.0
 In-Reply-To: <20261016001843.71978-1-acme@kernel.org>
 References: <20261016001843.71978-1-acme@kernel.org>
@@ -54,190 +54,233 @@ Content-Transfer-Encoding: 8bit
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-read_format's PERF_FORMAT_GROUP bit asks for the group members to be read
-along with the leader, which aside from this bit is verified with the
-fd/group_fd based group checking in Test.compare(), and with more than
-one core PMU a group whose members are pinned to one of them, say
-'default_core', leaves the clones for the other core PMUs without any
-members:
+Per skip the default output shows a self contained one liner:
 
-  $ perf stat -e '{cycles,default_core/legacy-hardware-config=3/}:S'
-  ... the A53 leader keeps its cohort, both A73 cycles clones are alone,
-      read_format 20 instead of 28
+  unsupp  'test-record-branch-filter-any' exit 255, expected 1, no attrs recorded to verify
+  skipped [kernel newer than 6.12] 'test-record-group-sampling'
+  skipped [arch = !aarch64, machine = aarch64] 'test-record-graph-default'
 
-so that bit isn't there: whether it is there is a consequence of how the
-evlist got expanded to more than one core PMU, not of the groupness the
-expectations say about, which is verified structurally, so take it out on
-both sides.
+The extra notes explaining the reason, with a copy pasteable command to
+observe the failure, come in the very same stream when the verbosity is
+bumped, at -vvv, nothing is written to a separate place for later
+consultation, it is just the logging ladder:
 
-That leaves the A73 leader clones, now with:
+  detail: '/root/bin/perf record -o /dev/null --no-bpf-event -j any kill'
+  exited with 255, the expectations want the workload's 1 exit, so there
+  are no attrs recorded to verify; this is normally a capability problem,
+  run '/root/bin/perf record -o /dev/null --no-bpf-event -j any kill' to
+  see why
 
-  expected read_format=28|31, got 20
+Note that 'perf test -v/-vv/-vvv attribute' appends a single -v to the
+shell test entry (shell_test__run()), so to see the notes one runs the
+python module directly, f.i.:
 
-matching the base event expectations again.
+  python3 tests/shell/lib/attr.py -vvv -d tests/shell/attr -p ./perf
 
-With a single core PMU there is nothing to expand, so there is nothing to
-explain away: count the core PMUs when the script starts, from what perf
-makes of 'cycles', see parse_events_multi_pmu_add(), and take the bit out
-only when there is more than one, leaving the machines with a single core
-PMU verifying what the expectations say about it.  That count is 2 on the
-Amlogic A311D, where its A53 and A73 PMUs both answer for 'cycles', and 1
-on a machine with a single core PMU.  Where there is no binding to ask,
-as when attr.py runs without setup_python.sh, the count isn't available
-and the bit is taken out as well.
+The skip functions now return the reason fragment when they want to skip
+and None when the test can go on.
 
-core_pmu_count() takes the count from the same probe core_pmu_available()
-uses, so the binding is asked once, and only when a comparison needs the
-answer, not at import time.
-
-The sample id bits hide_sample_id() takes out when the expectations ask
-for none are another consequence of having more than one core PMU, so the
-same single core PMU gate covers them; equating the two id bits, needed
-when the evlist has more than one event even with a single core PMU, keeps
-applying.
+The command suggested to observe the failure writes to /dev/null, so it
+doesn't leave a perf.data in the directory it is run from.
 
 Assisted-by: LLM
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/tests/shell/lib/attr.py | 75 +++++++++++++++++++++++++-----
- 1 file changed, 63 insertions(+), 12 deletions(-)
+ tools/perf/tests/shell/lib/attr.py | 106 +++++++++++++++++++----------
+ 1 file changed, 70 insertions(+), 36 deletions(-)
 
 diff --git a/tools/perf/tests/shell/lib/attr.py b/tools/perf/tests/shell/lib/attr.py
-index 260e3ec077932cab..ef1e29f96cc418e4 100644
+index ef1e29f96cc418e4..a42e890ed73efc90 100644
 --- a/tools/perf/tests/shell/lib/attr.py
 +++ b/tools/perf/tests/shell/lib/attr.py
-@@ -30,6 +30,7 @@ def data_equal(a, b):
-     return False
+@@ -223,17 +223,20 @@ class Fail(Exception):
+         return '\'%s\' - %s' % (self.test.path, self.msg)
  
- CORE_PMU_AVAILABLE = None
-+CORE_PMU_COUNT = None
+ class Notest(Exception):
+-    def __init__(self, test, arch):
+-        self.arch = arch
++    def __init__(self, test, reason):
++        self.reason = reason
+         self.test = test
+     def getMsg(self):
+-        return '[%s] \'%s\'' % (self.arch, self.test.path)
++        return '[%s] \'%s\'' % (self.reason, self.test.path)
  
- def core_pmu_available():
-     """
-@@ -38,40 +39,47 @@ def core_pmu_available():
-     check the expectations that pin their legacy encodings.  The answer can't
-     change while the tests run, so probe the binding only once.
-     """
--    global CORE_PMU_AVAILABLE
--
--    if CORE_PMU_AVAILABLE is None:
--        CORE_PMU_AVAILABLE = core_pmu_probe()
--
-+    core_pmu_probe()
-     return CORE_PMU_AVAILABLE
+ class Unsup(Exception):
+-    def __init__(self, test):
++    def __init__(self, test, ret, expected):
+         self.test = test
++        self.ret = ret
++        self.expected = expected
+     def getMsg(self):
+-        return '\'%s\'' % self.test.path
++        return '\'%s\' exit %d, expected %s, no attrs recorded to verify' % (
++            self.test.path, self.ret, self.expected)
  
- def core_pmu_probe():
-     """
--    Ask perf itself, through its python binding, to parse and open 'cycles':
--    a parse failure or an ENOENT means no PMU can count it, any other error
--    means we can't tell whether there is one.
-+    Ask perf itself, through its python binding, to parse and open 'cycles'
-+    once: a parse failure or an ENOENT means no PMU can count it, any other
-+    error means we can't tell whether there is one, and the number of events
-+    it expanded to is the number of core PMUs, see
-+    parse_events_multi_pmu_add(), which is what core_pmu_count() asks for.
-     """
-+    global CORE_PMU_AVAILABLE, CORE_PMU_COUNT
+ class Event(dict):
+     terms = [
+@@ -385,6 +388,9 @@ def parse_version(version):
+         return None
+     return [int(v) for v in version.split(".")[0:2]]
+ 
++def format_version(version):
++    return ".".join(str(v) for v in version)
 +
-+    if CORE_PMU_AVAILABLE is not None:
-+        return
+ # Test file description needs to have following sections:
+ # [config]
+ #   - just single instance in file
+@@ -450,13 +456,17 @@ class Test(object):
+ 
+     def skip_test_kernel_since(self):
+         if not self.kernel_since:
+-            return False
+-        return not self.kernel_since <= parse_version(platform.release())
++            return None
++        if self.kernel_since <= parse_version(platform.release()):
++            return None
++        return "kernel older than %s" % format_version(self.kernel_since)
+ 
+     def skip_test_kernel_until(self):
+         if not self.kernel_until:
+-            return False
+-        return not parse_version(platform.release()) < self.kernel_until
++            return None
++        if parse_version(platform.release()) < self.kernel_until:
++            return None
++        return "kernel newer than %s" % format_version(self.kernel_until)
+ 
+     def skip_test_auxv(self):
+         def new_auxv(a, pattern):
+@@ -472,18 +482,20 @@ class Test(object):
+             return (items[0], value)
+ 
+         if not self.auxv:
+-            return False
++            return None
+         auxv = subprocess.check_output("LD_SHOW_AUXV=1 sleep 0", shell=True) \
+                .decode(sys.stdout.encoding)
+         pattern = re.compile(r"[: ]+")
+         auxv = dict([new_auxv(a, pattern) for a in auxv.splitlines()])
+-        return not eval(self.auxv)
++        if eval(self.auxv):
++            return None
 +
-     try:
-         import perf
-         parse_events = perf.parse_events
-     except (ImportError, AttributeError):
-         # Nothing to ask about it, let the expectations speak.
++        return "the auxv condition doesn't hold here"
+ 
+     def skip_test_arch(self, myarch):
+         # If architecture not set always run test
+         if self.arch == '':
+-            # log.warning("test for arch %s is ok" % myarch)
+-            return False
++            return None
+ 
+         # Allow multiple values in assignment separated by ','
+         arch_list = self.arch.split(',')
+@@ -493,27 +505,26 @@ class Test(object):
+             arch_list[0] = arch_list[0][1:]
+             log.warning("excluded architecture list %s", arch_list)
+             for arch_item in arch_list:
+-                # log.warning("test for %s arch is %s" % (arch_item, myarch))
+                 if arch_item == myarch:
+-                    return True
+-            return False
++                    return "arch = %s, machine = %s" % (self.arch, myarch)
++            return None
+ 
+         for arch_item in arch_list:
+-            # log.warning("test for architecture '%s' current '%s'" % (arch_item, myarch))
+             if arch_item == myarch:
+-                return False
 -        return True
-+        CORE_PMU_AVAILABLE = True
-+        return
++                return None
++
++        return "arch = %s, machine = %s" % (self.arch, myarch)
  
-     try:
-         evlist = parse_events('cycles')
-     except OSError:
-         # No PMU that can count it, the same as the ENOENT below.
+     def skip_test_requires(self):
+         for requirement in filter(None, map(str.strip, self.requires.split(','))):
+             if requirement == 'core-pmu':
+                 if not core_pmu_available():
+                     log.warning("test limitation 'requires %s'", requirement)
+-                    return True
++                    return "needs a core PMU, none here"
+             else:
+                 log.warning("unknown requirement '%s', ignored", requirement)
+ 
 -        return False
-+        CORE_PMU_AVAILABLE = False
-+        return
++        return None
  
-+    CORE_PMU_COUNT = len(evlist)
-     try:
-         evlist.open()
-     except OSError as err:
-         # Anything else is a permission problem or alike, not our business here.
--        return err.errno != errno.ENOENT
-+        CORE_PMU_AVAILABLE = err.errno != errno.ENOENT
-+        return
-     evlist.close()
+     def restore_sample_rate(self, value=10000):
+         try:
+@@ -557,20 +568,36 @@ class Test(object):
+     def run_cmd(self, tempdir):
+         _junk1, _junk2, _junk3, _junk4, myarch = (os.uname())
  
--    return True
-+    CORE_PMU_AVAILABLE = True
- 
- PERF_TYPE_HARDWARE = 0
- PERF_TYPE_HW_CACHE = 3
-@@ -131,6 +139,45 @@ SAMPLE_ID_BITS = PERF_SAMPLE_ID | PERF_SAMPLE_IDENTIFIER
- # sample id bits" when comparing the two sides.
- SAMPLE_ID_EITHER = 1 << 40
- 
-+PERF_FORMAT_GROUP = 1 << 3
+-        if self.skip_test_arch(myarch):
+-            raise Notest(self, myarch)
+-
+-        if self.skip_test_auxv():
+-            raise Notest(self, "auxv skip")
+-
+-        if self.skip_test_kernel_since():
+-            raise Notest(self, "old kernel skip")
+-
+-        if self.skip_test_kernel_until():
+-            raise Notest(self, "new kernel skip")
+-
+-        if self.skip_test_requires():
+-            raise Notest(self, "requirements skip")
++        arch = self.skip_test_arch(myarch)
++        if arch:
++            log.debug("  detail: the test file has arch = %s, the machine reports %s",
++                     self.arch, myarch)
++            raise Notest(self, arch)
 +
-+def core_pmu_count():
-+    """
-+    How many core PMUs does perf see?  An event with no PMU named in it
-+    becomes one event per core PMU, see parse_events_multi_pmu_add(), and
-+    that is the expansion that leaves the clones for the other core PMUs
-+    without any group members and that makes perf qualify 'config' with the
-+    type of the PMU it is for, so this is the number of events perf makes of
-+    'cycles', from the probe core_pmu_available() shares.
-+    """
-+    core_pmu_probe()
-+    return CORE_PMU_COUNT
++        auxv = self.skip_test_auxv()
++        if auxv:
++            log.debug("  detail: the auxv condition %s doesn't hold, the bits come "
++                     "from the LD_SHOW_AUXV=1 output", self.auxv)
++            raise Notest(self, auxv)
 +
-+def single_core_pmu():
-+    """
-+    Does perf see only one core PMU?  Asked for by the comparisons that need
-+    it, not at import time, as a run may never get to one.
-+    """
-+    return core_pmu_count() == 1
++        kernel = self.skip_test_kernel_since()
++        if kernel:
++            log.debug("  detail: the test file's kernel_since = %s, this kernel is %s",
++                     format_version(self.kernel_since), platform.release())
++            raise Notest(self, kernel)
 +
-+def hide_group_format(expected, recorded):
-+    """
-+    read_format's PERF_FORMAT_GROUP bit asks for the group members to be read
-+    along with the leader, which aside from this bit is verified with the
-+    fd/group_fd based group checking, and with more than one core PMU a group
-+    whose members are pinned to one of them, say 'default_core', leaves the
-+    clones for the other core PMUs without any members, so that bit isn't
-+    there: whether it is there is a consequence of how the evlist got
-+    expanded to more than one core PMU, not of what the expectations are
-+    about, so take it out on both sides.  On a machine with a single core PMU
-+    there is nothing to expand, so the expectations keep verifying it.
-+    """
-+    if single_core_pmu():
-+        return expected, recorded
++        kernel = self.skip_test_kernel_until()
++        if kernel:
++            log.debug("  detail: the test file's kernel_until = %s, this kernel is %s",
++                     format_version(self.kernel_until), platform.release())
++            raise Notest(self, kernel)
 +
-+    return (mask_bits(expected, PERF_FORMAT_GROUP),
-+            mask_bits(recorded, PERF_FORMAT_GROUP))
-+
- def hide_sample_id(expected, recorded):
-     """
-     perf asks for a way to tell the samples apart, PERF_SAMPLE_IDENTIFIER where
-@@ -160,6 +207,8 @@ def hide_sample_id(expected, recorded):
-         return expected, mask_bits(recorded, SAMPLE_ID_BITS)
++        requirement = self.skip_test_requires()
++        if requirement:
++            log.debug("  detail: requires core-pmu, nothing countable here, check "
++                     "kernel.perf_event_paranoid and the PMU nodes under "
++                     "/sys/bus/event_source/")
++            raise Notest(self, requirement)
  
-     if not asked:
-+        if single_core_pmu():
-+            return expected, recorded
-         return expected, mask_bits(recorded, SAMPLE_ID_BITS)
+         self.restore_sample_rate()
+         cmd = "PERF_TEST_ATTR=%s %s %s -o %s/perf.data %s" % (tempdir,
+@@ -580,10 +607,17 @@ class Test(object):
+         log.info("  '%s' ret '%s', expected '%s'", cmd, str(ret), str(self.ret))
  
-     return (str(int(expected, 0) & ~SAMPLE_ID_BITS | SAMPLE_ID_EITHER),
-@@ -261,6 +310,8 @@ class Event(dict):
-     def hide_event_count_dependent_terms(self, term, expected, recorded):
-         if term == 'sample_type':
-             return hide_sample_id(expected, recorded)
-+        if term == 'read_format':
-+            return hide_group_format(expected, recorded)
+         if not data_equal(str(ret), str(self.ret)):
++            plain_cmd = "%s %s -o /dev/null %s" % (
++                self.perf, self.command,
++                self.args.split('>/dev/null')[0].rstrip())
+             if self.test_ret:
+                 raise Fail(self, "Perf exit code failure")
+             else:
+-                raise Unsup(self)
++                log.debug("  detail: '%s' exited with %d, the expectations want the "
++                         "workload's %s exit, so there are no attrs recorded to "
++                         "verify; this is normally a capability problem, run '%s' "
++                         "to see why", plain_cmd, ret, self.ret, plain_cmd)
++                raise Unsup(self, ret, str(self.ret))
  
-         return expected, recorded
- 
+     def drop_dummy_tracking_events(self):
+         """
 -- 
 2.55.0
 
