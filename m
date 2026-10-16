@@ -1,44 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 607C73C10A9
-	for <linux-perf-users@vger.kernel.org>; Fri, 16 Oct 2026 21:24:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EC863EFD3D
+	for <linux-perf-users@vger.kernel.org>; Fri, 16 Oct 2026 21:24:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792185852; cv=none; b=lcQKcaQRsECL5Lzs8JufzJRYoS6oZUa8tevvc00dJraO8dXAnjEgZqAD2i2zobPU/9xiuGAt6nNncCPYtvh1NnP7T55CBY0iVhuSkFBaCZmQZmKWH82Cnuao7TMtpGisiYeNt5zpNT3VLHv0hlb3DbxqEBzU3YIX8E1YvATZWxA=
+	t=1792185853; cv=none; b=Iap4RD1R7OeTU1qcdncyYpI8BE4rUA907q9m+HVMCrrxC8Z+/VXLU9Vfi/du6IO6XOHKjnLZ10/BPc3zlmwEfrwfVMcTDwz+IN/7pvLOhR8814YpINmDEHztwt3F9Da8yAZhL0vIk8Y1XcT1vZStm3aBFBjwp5rVyQSclHtZSB4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792185852; c=relaxed/simple;
-	bh=cklO0UqgU8N/WydPKV61va2F5VMUdnFfREY+Gg9t+xo=;
+	s=arc-20240116; t=1792185853; c=relaxed/simple;
+	bh=p4VWPGuV3sBXN9xqK1EIGaKnmpU8kh53fcBcyauuRmM=;
 	h=Message-ID:From:Subject:To:Cc:In-Reply-To:References:Content-Type:
-	 Date; b=MnVSr770b0ybXXQXP2zb8XGOJV8SclUxv8pBpXlzE+CgtSi77aethOe7qsl+TQMwYTYFuKuJkRM/scuCooSQ8wl9aiWpjSCHbW0qmUOX2pEw4ayk+E5ALYlKf72YoVGfJ3BLtrGJB8Shgn/X/sgesERy+INhiat5nBEu+jzZxFw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=neXXLquv; arc=none smtp.client-ip=100.103.45.18
+	 Date; b=Ji9FkfBg6qPyLtKOehZoMCzpVjbtoZuh28DxxgoilXhyAFHoUlV+QQ5GpiV6MNrNb50fO2flMpbCZsiDOFQWjzag7yhj+xcloRO8nBbknlpXSpva2fODQDlgY8yUkta763/S3JJSj2Ewx+P5B+pyWADX9VEByDf9svARc8p9yZE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LZbRZj/B; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="neXXLquv"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1C5871F000C5;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LZbRZj/B"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C54421F000C7;
 	Fri, 16 Oct 2026 21:24:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
 	s=k20260515; t=1792185851;
-	bh=cklO0UqgU8N/WydPKV61va2F5VMUdnFfREY+Gg9t+xo=;
+	bh=wWYnhCOCGRGniHlzMztldLrQKPaWkt53x9VY26aGxHg=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=neXXLquvUyuQRqz8Wi5rd2JIqXnXDclEHhGKjYeWgzOMhIYGWmyNC7fo6E1V7AM/Q
-	 4rwVUom/wd/lrXPGE+5wiAzz0m4B6D5xL2CxyWaRoNX++ichmUuZPrvj2TmA5MVb9T
-	 Des/Uvk21Nw/jAC0U8wQ5MJWCZo/5NwfWYZ//9T2hC5f23LR3BqV8tNsj3WLV3ur1T
-	 n8eWtkwVVyVyKZanpt3GU4eoShuijU0JzaXnZ9ePg+BXw7kHnMTutah2q+7WYTfcyI
-	 +iMOeOZeM2HbXHhWXDKjFR3P28Ib6dPrl8JzedJbh5d6EzoniXaSxcFVXNY6iQvpuz
-	 ee303Keuf2MGw==
-Message-ID: <sashiko-outbox-174956@kernel.org>
+	b=LZbRZj/B9v1sWYe9TXB7XV7uysTcBYvp+ttDLJUeMPpR6puGLXRQeL3ypAdDc1ytp
+	 RcsO8DyDsBSDNxKokK5/bX9m1x6AgxZ1p+3vvY5i9W7yQf8cf0Jq2+2uSFLZG5WlAf
+	 tifkWku8QEQEw6tVZ9okIYFO9HlxFYDUT7+7D13JsUdR54bmbZ1EGyW+o1v5Ncqe7N
+	 jJC+1q9UDncvTaCT3AfXWdopOayesGWTv6m/4HevIBaO5UbBfcuHGf2sx90/djG06v
+	 ASqTTL5s/C99Tj/NQqX1rgVIKhZIzNfpjUYkluIOwGDn8HO9OGJhD+YVOxAaEbXQmL
+	 MjGZqfLwbC2fw==
+Message-ID: <sashiko-outbox-174957@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v4 11/21] perf test attr: Introduce mask_bits(),
- generalizing hide_core_pmu_type()
+Subject: Re: [PATCH v4 15/21] perf test attr: Ignore the group read_format
+ bit the PMU count can remove
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Arnaldo Carvalho de Melo" <acme@kernel.org>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20261016212102.76550-12-acme@kernel.org>
+In-Reply-To: <20261016212102.76550-16-acme@kernel.org>
 References: <20261016212102.76550-1-acme@kernel.org>
- <20261016212102.76550-12-acme@kernel.org>
+ <20261016212102.76550-16-acme@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Fri, 16 Oct 2026 21:24:10 +0000
+Date: Fri, 16 Oct 2026 21:24:11 +0000
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -47,14 +47,22 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
 > From: Arnaldo Carvalho de Melo <acme@redhat.com>
 >=20
-> What hide_core_pmu_type() does is take a set of bits out of each of the
-> '|'-separated alternatives in a value, wildcards included, keeping the
-> rest of the expression: extract that as mask_bits() and implement
-> hide_core_pmu_type() in terms of it, a prep for using the same thing to
-> ignore, when comparing expectations, the sample id bit perf ends up
-> asking for and the read_format group bit that a PMU count can remove.
+> read_format's PERF_FORMAT_GROUP bit asks for the group members to be read
+> along with the leader, which aside from this bit is verified with the
+> fd/group_fd based group checking in Test.compare(), and with more than
+> one core PMU a group whose members are pinned to one of them, say
+> 'default_core', leaves the clones for the other core PMUs without any
+> members:
 >=20
-> No change in behaviour.
+>   $ perf stat -e '{cycles,default_core/legacy-hardware-config=3D3/}:S'
+>   ... the A53 leader keeps its cohort, both A73 cycles clones are alone,
+>       read_format 20 instead of 28
+>=20
+> so that bit isn't there: whether it is there is a consequence of how the
+> evlist got expanded to more than one core PMU, not of the groupness the
+> [ ... ]
+> when the evlist has more than one event even with a single core PMU, keeps
+> applying.
 >=20
 > Assisted-by: LLM
 > Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
@@ -63,5 +71,5 @@ Sashiko has reviewed this patch and found no issues.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261016212102.7655=
-0-1-acme@kernel.org?part=3D11
+0-1-acme@kernel.org?part=3D15
 
