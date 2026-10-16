@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 487303E7179;
-	Fri, 16 Oct 2026 21:21:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D4B04477E0;
+	Fri, 16 Oct 2026 21:21:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792185694; cv=none; b=OJ7qnLg4TYAjiNBQgiu9NdgNbiivyYt9gDJGKdFQQczDDG6XQsT9m1QRzERHMhvePpUzhViplaGTcif40kHsiuf6xlANiKco07WGWBFz8YhYvFTL3Jjmbk5WzA/He7fX35uCRVto2S4Tbh/3TwN8S2cUdzEpD2dHFscid8IWH4c=
+	t=1792185697; cv=none; b=IYq3/92Iuv5WSlYtPBrrcbv838UomW7APANzLFWh6BeprTxJ1D5cukFNRkqN0LN6HujmYgYPvFutoN9Kmr+6xF+uErUZtCLMXisCsBeEJCkNxnTrcX+cs3qbiikNE7eNo7AzNylwLJm1bwsM/HVG2tQ386tjJVWJXGCmGp9geSE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792185694; c=relaxed/simple;
-	bh=D6gBH4rzn9ofW182vOzOgRcRuc+ozHzrNi9DP0nNdXg=;
+	s=arc-20240116; t=1792185697; c=relaxed/simple;
+	bh=UbJdWg4cMwwUCnOcNbUXuoZNU8T2tVtOEqWqfQQpDNg=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=qD4HNHLtNckKkAsEyF5+rrZTCyRjweGzhZb6ebHiOJ72/D7g1XjE6gXyd3igyUldPzrV1g+KeHXTcJoIAdtsakiuD47KsPp10XTApjj/JTNBLbpG4J8WtGWJEGcOnEaL59W+LsV3vy42BUPosbRftMjznW+fuBZEQbFZ33bMSFU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=n8IGA6mX; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version; b=o3J5Q9lykFC8MZUn+qFNhC3H7FL2Pt/0qjfd7Mb3OdtDFVVDSH+h1qfpbtOrU7Wkv7l6LAWVreP2wJXTIA7BbUFzudkv6KYJ4ExJMMmgyPqNHGitpj279Sd71VqOVPWH7nPrEELfV9y61DliYcEb2Yp3lLnKnZQv5AgmkdTj51Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SZJViSF0; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="n8IGA6mX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2B6771F000C5;
-	Fri, 16 Oct 2026 21:21:29 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SZJViSF0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 542221F000C4;
+	Fri, 16 Oct 2026 21:21:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1792185692;
-	bh=wS0fg57Vpynd21ZO3GmtvsnsHKdxN1CGGQHPTIoEj6E=;
+	s=k20260515; t=1792185696;
+	bh=youFpWWKwQRdiiolqh8PN2/x33e4xnhU7tr3jliOsPM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=n8IGA6mX3QU2ewSxkP6D/ZgnsN1K6HPGn3DrR0ozWd9QZuCr4i+k0NXPfVBlyZBG2
-	 jDXsyKgjb5y9F+c/UlBeLmphzir50hdXPegeeyw8KcD0pkQ+OwFxWGb2IxjnKCvlt6
-	 3pN6bCChy/nfGjvsiyuL2MAJUwmU2+4Sf3Gjqir2Bk2LOsiwpedyVT5P+kSvjxEGpj
-	 qHQLnlh4YnOjLqiZO0GYkGCB92G7gD49diI78Sb8BrZYyGC3E/ES0Q2NJQG/a3NJtZ
-	 bwvSI0gGdk8Pt9CBgsN3Tyxds/2X2b5e0Xu3JhCZt5zcuxciGDVdNx2G2C53LXosBt
-	 kPoVfMqapUktw==
+	b=SZJViSF0c1gtIrS2MfhZ/nnabYBquUKOIQEgKCbarzBU/dkUKmNdEpcWREyj5Ck91
+	 vBza9DWWn47tiibMhK0l8TMNjJL5zwQoNu5mOj5h5DH9RTC02qkISzG0v4F3FW65zU
+	 nHv5ob67FYqWfMH45gGMm74+2CW9WXmY6HiK4bI2vkCw/IRkzKjq3kePcg8XmEdbW4
+	 E8I3wz4bHJAvuXV0bLOViKESKqZ/cBVqjLu20KTAFEjNRm6FlYxeb/dYzboei8U1xm
+	 5hHnyOeq5KqLP0zMzubgbKdDHfbVmUdsEgV57K8W+70PbWSnnbAvQxc5gY2bFYIA34
+	 i0rx1GjLAnerA==
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Namhyung Kim <namhyung@kernel.org>
 Cc: Ingo Molnar <mingo@kernel.org>,
@@ -38,9 +38,9 @@ Cc: Ingo Molnar <mingo@kernel.org>,
 	linux-kernel@vger.kernel.org,
 	linux-perf-users@vger.kernel.org,
 	Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH v4 07/21] perf evsel: Mark the event as supported when retrying an open
-Date: Fri, 16 Oct 2026 18:20:48 -0300
-Message-ID: <20261016212102.76550-8-acme@kernel.org>
+Subject: [PATCH v4 08/21] perf test attr: Ignore the core PMU type perf puts in 'config'
+Date: Fri, 16 Oct 2026 18:20:49 -0300
+Message-ID: <20261016212102.76550-9-acme@kernel.org>
 X-Mailer: git-send-email 2.56.0
 In-Reply-To: <20261016212102.76550-1-acme@kernel.org>
 References: <20261016212102.76550-1-acme@kernel.org>
@@ -54,52 +54,128 @@ Content-Transfer-Encoding: 8bit
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-Opening a group with perf record on a machine with perf_event_paranoid >
-1 and no CAP_PERFMON fails the first perf_event_open() with EACCES, after
-which evsel__open_cpu() clears evsel->supported; evsel__fallback() then
-adds exclude_kernel and record__open() retries, and the retry succeeds
-with supported left false.  get_group_fd() treats unsupported events as
-ungroupable, so the retry opens the group members without their leader:
+Since
+commit 55bcf6ef314a ("perf: Extend PERF_TYPE_HARDWARE and PERF_TYPE_HW_CACHE")
+in v5.13, and arm_pmu opted in with
+commit 5c816728651a ("arm_pmu: Add PERF_PMU_CAP_EXTENDED_HW_TYPE capability")
+in v6.6, the kernel can
+be told which core PMU a legacy type event is meant for, with its type in
+the top 32 bits of 'config', see
+perf_pmus__supports_extended_type(), which __parse_events_add_numeric()
+does for HARDWARE and HW_CACHE events, but only when there is more than
+one core PMU, i.e. on heterogeneous machines, where asking for one event
+ends up being one event per core PMU:
 
-  sys_perf_event_open: pid 12345 cpu 0 group_fd -1
-  FAILED '.../test-record-group-sampling1' - group failure
+  $ perf stat -e cycles -a -- sleep 1
+     20,520,998      armv8_cortex_a53/cycles/
+     13,029,350      armv8_cortex_a73/cycles/
 
-which fails the group subtests of "perf test 82", the Perf attribute
-expectations test, when it is run as a regular user, while it passes as
-root or with CAP_PERFMON, where the first open doesn't fail.
+and what lands in PERF_TEST_ATTR is the extended encoding:
 
-commit 2cc7aa995ce9 ("perf stat: Refactor retry/skip/fatal error handling")
-dropped the pos->supported = true that record__open() did after a
-successful open and moved the resets into the stat code only, while
-saying "When an event is tried the supported is set to true again".  Do
-that in evsel__open_cpu(), which every open entry point funnels through,
-so that a retry describes its own try instead of the previous failure.
+  type=0
+  config=38654705664    # core PMU type 9, PERF_COUNT_HW_CPU_CYCLES
 
-Fixes: 2cc7aa995ce9ecd8 ("perf stat: Refactor retry/skip/fatal error handling")
-Cc: Ian Rogers <irogers@google.com>
+so the expectations written for the single core PMU case fail with:
+
+  expected config=0|1, got 38654705664
+  expected config=0, got 38654705664    # 'perf stat -d' L1-dcache events
+
+which is what now happens on an Amlogic A311D (2 Cortex-A53 + 4
+Cortex-A73), a machine that just got the CPU PMU nodes it was missing.
+
+Take those bits out when comparing the 'config' of legacy type events,
+keeping what these expectations mean on machines with a single core PMU:
+which of the PMUs is counting is not what we're asking here.
+
 Assisted-by: LLM
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/evsel.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ tools/perf/tests/shell/lib/attr.py | 53 ++++++++++++++++++++++++++++--
+ 1 file changed, 51 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index 9c5e7510f0c019c3..e61f309e93dccc7f 100644
---- a/tools/perf/util/evsel.c
-+++ b/tools/perf/util/evsel.c
-@@ -3014,6 +3014,12 @@ static int evsel__open_cpu(struct evsel *evsel, struct perf_cpu_map *cpus,
- 	enum rlimit_action set_rlimit = NO_CHANGE;
- 	struct perf_cpu cpu;
+diff --git a/tools/perf/tests/shell/lib/attr.py b/tools/perf/tests/shell/lib/attr.py
+index 087bfa4532b69c58..fb866fb75175dc95 100644
+--- a/tools/perf/tests/shell/lib/attr.py
++++ b/tools/perf/tests/shell/lib/attr.py
+@@ -73,6 +73,32 @@ def core_pmu_probe():
  
-+	/*
-+	 * A failed attempt being retried after evsel__fallback() would
-+	 * otherwise keep group members out of their group in get_group_fd().
-+	 */
-+	evsel->supported = true;
+     return True
+ 
++PERF_TYPE_HARDWARE = 0
++PERF_TYPE_HW_CACHE = 3
 +
- 	if (evsel__is_retire_lat(evsel)) {
- 		err = evsel__tpebs_open(evsel);
- 		goto out;
++# The legacy event types, where perf may qualify 'config' with the core PMU
++# type in its top 32 bits when there is more than one core PMU.
++LEGACY_TYPES = (str(PERF_TYPE_HARDWARE), str(PERF_TYPE_HW_CACHE))
++
++def hide_core_pmu_type(value):
++    """
++    The kernel can be told which core PMU a legacy type event is meant for by
++    putting its type in the top 32 bits of 'config', which perf only does when
++    there is more than one core PMU, so take those bits out to keep the
++    expectations written for the single core PMU case matching on
++    heterogeneous machines.
++    """
++    hidden = []
++
++    for alternative in value.split('|'):
++        try:
++            alternative = str(int(alternative, 0) & 0xffffffff)
++        except ValueError:
++            pass
++        hidden.append(alternative)
++
++    return '|'.join(hidden)
++
+ class Fail(Exception):
+     def __init__(self, test, msg):
+         self.msg = msg
+@@ -146,12 +172,33 @@ class Event(dict):
+         self.add(base)
+         self.add(data)
+ 
++    def hide_core_pmu_type_terms(self, other):
++        """
++        Is this a legacy type event? Then the core PMU type that perf may have
++        put in the top 32 bits of 'config' to tell the kernel which core PMU it
++        wants isn't part of what we asked for, see hide_core_pmu_type().
++        """
++        for event in (self, other):
++            for type in event.get('type', '').split('|'):
++                if type in LEGACY_TYPES:
++                    return True
++
++        return False
++
++    def hide_core_pmu_type(self, term, value, other):
++        if term == 'config' and self.hide_core_pmu_type_terms(other):
++            return hide_core_pmu_type(value)
++
++        return value
++
+     def equal(self, other):
+         for t in Event.terms:
+             log.debug("      [%s] %s %s", t, self[t], other[t])
+             if t not in self or t not in other:
+                 return False
+-            if not data_equal(self[t], other[t]):
++            exp = self.hide_core_pmu_type(t, self[t], other)
++            got = self.hide_core_pmu_type(t, other[t], other)
++            if not data_equal(exp, got):
+                 return False
+         return True
+ 
+@@ -164,7 +211,9 @@ class Event(dict):
+         for t in Event.terms:
+             if t not in self or t not in other:
+                 continue
+-            if not data_equal(self[t], other[t]):
++            exp = self.hide_core_pmu_type(t, self[t], other)
++            got = self.hide_core_pmu_type(t, other[t], other)
++            if not data_equal(exp, got):
+                 log.warning("expected %s=%s, got %s", t, self[t], other[t])
+ 
+ def parse_version(version):
 -- 
 2.55.0
 
