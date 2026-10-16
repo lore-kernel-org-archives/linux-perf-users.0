@@ -1,45 +1,45 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFD2245EF55
-	for <linux-perf-users@vger.kernel.org>; Fri, 16 Oct 2026 22:28:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A523C367B98
+	for <linux-perf-users@vger.kernel.org>; Fri, 16 Oct 2026 22:29:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792189726; cv=none; b=QiISZXEZ08w4y0iavkPvezhGchMzHeLY2a0+Sfd1etgdDixgUA7TpMfDYP4lUHrN8HilCM5ElbtdtPl7n3luD+kxPV7ToZFYeB8Eqrhw8bZc3eidj0SzGw/PnXwKqBoa8rf+mc5tVBalCBqmjFB4QoZJBER1WOHSUxiurQGBqmY=
+	t=1792189761; cv=none; b=Lf7hc5KtojuSA8wXBixSi7frZJ7VmG5HeGCFVVJq9JomdZQjeJTtd4M3dUTqU/T7eXBduS1Rxf9O5uRTCrA95nL/mI48LPw/seGgoiDcAeG8n+b7oXN/OtqOAQVe9WuVKZYOCONhIwPJKKxbm6bvyDtHLGf66T8GVMKPJoS0EN0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792189726; c=relaxed/simple;
-	bh=Pgt/ut5kWM3Wch4aUB09lewXSymvHVlxrogWV+keGxc=;
+	s=arc-20240116; t=1792189761; c=relaxed/simple;
+	bh=GEW0seDegkduedoNn6fGF7pwjM3U/zAStEHntMBNnUw=;
 	h=Message-ID:From:Subject:To:Cc:In-Reply-To:References:Content-Type:
-	 Date; b=EcNQ4fsQLwYwyQUDIXAf46vr5b/0Wg1xvDyTp0x+/ykCnVEIceYyBUBL+65H1j+kzXJPrKcAJVm1vi43YAc5y/F1gRbo28BI4CKZfoqFGik2G0CVyFOX8+WvBRnhgMjvgca8JBvEthAJt9Ggxj7yyWPtTLSLOm5qY6tWckjc20U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UuRDubGr; arc=none smtp.client-ip=100.103.45.18
+	 Date; b=Km/foFV00WV25eEfWlYRmd8updacSSB+L5vQxGBFh6tQQbAdOBxC2eORJyTBldZ9waII/7WYZVEU4L+5RS5Lcz82Zv8TeCPK3yINMcrRoYwnF2iAaeZpBQa7cX62aJOm5rKzTMihyDqGsxB7pfcxXL6CvPsigCI+/itWVntpOvo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oEWjEriE; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UuRDubGr"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5F90B1F000C4;
-	Fri, 16 Oct 2026 22:28:44 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oEWjEriE"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 276DA1F000C4;
+	Fri, 16 Oct 2026 22:29:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1792189724;
-	bh=g+5lLoRJmRIaUcXICwyH3aDmtWYCjSFjXouuqpWiUQg=;
+	s=k20260515; t=1792189760;
+	bh=mBdT3I5DiDa3zJic0jU/5Jc4Q3SVnHl+ex/95RIjECg=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=UuRDubGr7n7TYI/Y3dQtjOECrOQjsv+rly3BydCtMBa477mnGtkEySZ93h9So6Acd
-	 PwpK7qP/vgyKIYzdnrsGT9SLbHxAhPWfmrVsDGdOTVzL2dlIf5YftfwHe9oRr0ArAg
-	 5qzj6N4CR4UVHveUz1y2jZYNYiUqMltqKVbnWXHwoYMZYr5Qx4VxfS0QZzX67055gS
-	 eixSr55X6HOLMX4IcjWqlOUbu4xNM3bVJlOI+dwC7WuE5+mXYMsp389I5hf8McID5o
-	 P0eutRyEupYxtru3AX2wKeh2K8zfrxkDYelr8lz+CuEYKIXgH4WAFZbuektTuMTvdK
-	 CRKNJUPiO2GdQ==
-Message-ID: <sashiko-outbox-175019@kernel.org>
+	b=oEWjEriEx1Ub95uk3u/0Z5tCzYRr8gHftiXvpjTu/zJcvFku7GDzs7LCDCdb5qI8w
+	 /MkqHq0eonvhIJRcW1SGN9KByY2I+6oMz24BwPwndeM7FyY4/LCjfsFarDfYWXN6lb
+	 EMPRvcTN1CA0+LP8KgK624dZroOtXYjpTP64JbwjWWtu8lFFbRsuFJmCtkrSUWw54H
+	 ZQI/1GJNf4uZvcv/4XawiF5TNSSztbXYstmMlvT78g3lQSHHmVubHhUwoDo3eXNMOw
+	 FQ0cSIVDtQJJHKpvMaftmgGQlADOrxDLpq5UbOdlGQGnOaRO9WAytqeck65S1yj3y1
+	 Io6AtwDtrqiWw==
+Message-ID: <sashiko-outbox-175020@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v4 13/17] perf intel-tpebs: Fix race in tpebs_stop() and
- tpebs_cmd.out fd handling
+Subject: Re: [PATCH v4 07/17] perf vdso: Fix unlocked __dsos__add() and race
+ in __machine__addnew_vdso()
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Ian Rogers" <irogers@google.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20261016221700.1282659-14-irogers@google.com>
+In-Reply-To: <20261016221700.1282659-8-irogers@google.com>
 References: <20261016173106.679725-1-irogers@google.com>
  <20261016221700.1282659-1-irogers@google.com>
- <20261016221700.1282659-14-irogers@google.com>
+ <20261016221700.1282659-8-irogers@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Fri, 16 Oct 2026 22:28:43 +0000
+Date: Fri, 16 Oct 2026 22:29:19 +0000
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -48,127 +48,125 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
 Thank you for your contribution! Sashiko AI review found 1 potential issue(=
 s) to consider:
-- [Medium] perf intel-tpebs: tpebs_cmd.pid left as -1 on start_command() fa=
-ilure
+- [Medium] perf vdso: unlocked vdso_info and get_file() race in machine__fi=
+ndnew_vdso()
 --
 
-commit b2fed373fbeb105d8b92b7db69497b84b98deb1e
+commit a9b1f4c5120b2f5d63a8c9e9ad23dc250184a018
 Author: Ian Rogers <irogers@google.com>
 
-perf intel-tpebs: Fix race in tpebs_stop() and tpebs_cmd.out fd handling
+perf vdso: Fix unlocked __dsos__add() and race in __machine__addnew_vdso()
 
-This commit fixes a race on tpebs_reader_thread in tpebs_stop(), transfers
-ownership of tpebs_cmd.out to __sample_reader() to prevent a double-close,
-and updates error handling in evsel__tpebs_start_perf_record() and
-evsel__tpebs_open().
+This commit acquires machine->dsos.lock in write mode in
+__machine__addnew_vdso(), double-checks __dsos__find() to avoid inserting
+duplicate VDSO entries when racing with another thread, and sets the DSO
+long name before calling __dsos__add().
 
-> diff --git a/tools/perf/util/intel-tpebs.c b/tools/perf/util/intel-tpebs.c
-> index 7c0b8b15bd10e..5954811a94dfe 100644
-> --- a/tools/perf/util/intel-tpebs.c
-> +++ b/tools/perf/util/intel-tpebs.c
-
-[ ... ]
-
-> @@ -119,6 +125,8 @@ static int evsel__tpebs_start_perf_record(struct evse=
-l *evsel)
->  	tpebs_cmd.argv =3D record_argv;
->  	tpebs_cmd.out =3D -1;
->  	ret =3D start_command(&tpebs_cmd);
-> +	if (ret)
-> +		tpebs_cmd.out =3D -1;
->  	zfree(&tpebs_cmd.argv);
->  	list_for_each_entry(t, &tpebs_results, nd)
->  		t->started =3D true;
+> diff --git a/tools/perf/util/vdso.c b/tools/perf/util/vdso.c
+> index c12f5d8c4bf69..dca4f683be9b7 100644
+> --- a/tools/perf/util/vdso.c
+> +++ b/tools/perf/util/vdso.c
+> @@ -127,13 +127,26 @@ void machine__exit_vdso(struct machine *machine)
+>  static struct dso *__machine__addnew_vdso(struct machine *machine, const=
+ char *short_name,
+>  					  const char *long_name)
+>  {
+> -	struct dso *dso;
+> +	struct dso *dso, *existing;
+> +
+> +	down_write(&machine->dsos.lock);
+> +	existing =3D __dsos__find(&machine->dsos, short_name, true, /*write_loc=
+ked=3D*/true);
+> +	if (existing) {
+> +		up_write(&machine->dsos.lock);
+> +		return existing;
+> +	}
 
 [Severity: Medium]
-Should tpebs_cmd.pid also be reset to 0 when start_command() fails (and
-should setting t->started =3D true be skipped)?
+Can concurrent callers of machine__findnew_vdso() still race on
+machine->vdso_info and vdso_file before reaching __machine__addnew_vdso()?
 
-In tools/lib/subcmd/run-command.c:start_command(), when fork() fails after
-pipe(fdout) succeeds, cmd->pid is left set to -1:
+The callers of __machine__addnew_vdso() are machine__findnew_vdso() and
+__machine__findnew_compat():
 
-tools/lib/subcmd/run-command.c:start_command() {
-    ...
-	cmd->pid =3D fork();
-	if (!cmd->pid) {
-        ...
-	}
-	if (cmd->pid < 0) {
-		int err =3D errno;
-        ...
-		if (need_out)
-			close_pair(fdout);
-		else if (cmd->out)
-			close(cmd->out);
-        ...
-		return err =3D=3D ENOENT ?
-			-ERR_RUN_COMMAND_EXEC :
-			-ERR_RUN_COMMAND_FORK;
-	}
+tools/perf/util/vdso.c:machine__findnew_vdso() {
+	if (!machine->vdso_info)
+		machine->vdso_info =3D vdso_info__new();
+
+	vdso_info =3D machine->vdso_info;
+	if (!vdso_info)
+		return NULL;
+	...
+	file =3D get_file(&vdso_info->vdso);
+	if (!file)
+		return NULL;
+
+	return __machine__addnew_vdso(machine, DSO__NAME_VDSO, file);
 }
 
-On the error path in evsel__tpebs_open(), tpebs_cmd.pid is only cleared when
-tpebs_cmd.pid > 0, leaving tpebs_cmd.pid =3D=3D -1 and any remaining entrie=
-s added
-by evsel__tpebs_prepare() on tpebs_results marked with t->started =3D true.
+tools/perf/util/vdso.c:__machine__findnew_compat() {
+	...
+	file_name =3D vdso__get_compat_file(vdso_file);
+	if (!file_name)
+		return NULL;
 
-Because tpebs_stop() and the entry checks in evsel__tpebs_open() test
-tpebs_cmd.pid !=3D 0, a subsequent evsel__tpebs_close() -> tpebs_stop() on =
-the
-remaining prepared evsels will see tpebs_cmd.pid !=3D 0 (-1) and call
-pthread_join() on tpebs_reader_thread even though pthread_create() was never
-called:
+	return __machine__addnew_vdso(machine, vdso_file->dso_name, file_name);
+}
 
-> @@ -331,12 +341,19 @@ static int tpebs_stop(void) __must_hold(tpebs_mtx_g=
-et())
->  	/* Like tpebs_start, we should only run tpebs_end once. */
->  	if (tpebs_cmd.pid !=3D 0) {
->  		pid_t actual_pid =3D tpebs_cmd.pid;
-> +		pthread_t reader_thread;
-> =20
->  		tpebs_stopping =3D true;
->  		tpebs_send_record_cmd(EVLIST_CTL_CMD_STOP_TAG);
+When two threads enter machine__findnew_vdso() while machine->vdso_info is
+NULL, both can call vdso_info__new() and overwrite machine->vdso_info,
+leaking the first struct vdso_info allocation and any temporary file it
+creates.
+
+Even if both threads see the same machine->vdso_info while vdso_file->found
+is still false, both can enter get_file() (or vdso__get_compat_file())
+before acquiring machine->dsos.lock:
+
+tools/perf/util/vdso.c:get_file() {
+	if (vdso_file->found)
+		return vdso_file->temp_file_name;
+	...
+	fd =3D mkstemp(vdso_file->temp_file_name);
+	if (fd < 0)
+		goto out;
+	...
+ out:
+	free(buf);
+
+	vdso_file->found =3D (vdso !=3D NULL);
+	vdso_file->error =3D !vdso_file->found;
+	return vdso;
+}
+
+Because mkstemp() mutates vdso_file->temp_file_name in place (replacing the
+trailing "XXXXXX"), the second thread's mkstemp() call on the same buffer
+fails with EINVAL, sets vdso_file->found =3D false and vdso_file->error =3D
+true, and returns NULL before ever reaching the double-check in
+__machine__addnew_vdso().
+
+Should the machine->vdso_info initialization and temporary file creation in
+get_file() and vdso__get_compat_file() also be synchronized under the lock?
+
+>  	dso =3D dso__new(short_name);
+>  	if (dso !=3D NULL) {
+> -		__dsos__add(&machine->dsos, dso);
 > +		/*
-> +		 * tpebs_results is empty when stopping; clear pid so
-> +		 * process_sample_event() ignores any late samples while
-> +		 * draining the pipe.
+> +		 * Set the long name before adding to machine->dsos so that
+> +		 * __dsos__add() inserts it in sorted order without needing to
+> +		 * re-take machine->dsos.lock.
 > +		 */
->  		tpebs_cmd.pid =3D 0;
-> +		reader_thread =3D tpebs_reader_thread;
->  		mutex_unlock(tpebs_mtx_get());
-> -		pthread_join(tpebs_reader_thread, NULL);
-> +		pthread_join(reader_thread, NULL);
->  		mutex_lock(tpebs_mtx_get());
-
-[ ... ]
-
-> @@ -586,9 +607,22 @@ int evsel__tpebs_open(struct evsel *evsel)
+>  		dso__set_long_name(dso, long_name, false);
+> +		__dsos__add(&machine->dsos, dso);
+>  	}
+> +	up_write(&machine->dsos.lock);
 > =20
->  		if (started_process) {
->  			if (tpebs_cmd.pid > 0) {
-> -				kill(tpebs_cmd.pid, SIGTERM);
-> +				pid_t actual_pid =3D tpebs_cmd.pid;
-> +
-> +				tpebs_stopping =3D true;
-> +				kill(actual_pid, SIGTERM);
-> +				tpebs_cmd.pid =3D 0;
-> +				if (started_thread) {
-> +					pthread_t reader_thread =3D tpebs_reader_thread;
-> +
-> +					mutex_unlock(tpebs_mtx_get());
-> +					pthread_join(reader_thread, NULL);
-> +					mutex_lock(tpebs_mtx_get());
-> +				}
-> +				tpebs_cmd.pid =3D actual_pid;
->  				finish_command(&tpebs_cmd);
->  				tpebs_cmd.pid =3D 0;
-> +				tpebs_stopping =3D false;
->  			}
->  			if (tpebs_cmd.out >=3D 0) {
->  				close(tpebs_cmd.out);
+>  	return dso;
+>  }
 
-[ ... ]
+=E5=AE=8C=E7=BE=8E=E7=BB=93=E6=9D=9F=EF=BC=8CWait=E2=80=94remove non-ASCII =
+text at the end! Let me make sure I don't output anything after the blank l=
+ine.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261016221700.1282=
-659-1-irogers@google.com?part=3D13
+659-1-irogers@google.com?part=3D7
