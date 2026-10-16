@@ -1,270 +1,128 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+Received: from TYPPR03CU001.outbound.protection.outlook.com (mail-japaneastazon11022104.outbound.protection.outlook.com [52.101.126.104])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6F352853FD;
-	Fri, 16 Oct 2026 03:11:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792120303; cv=none; b=M/t9/8No3GwJIVkqEYAiKoRnjH3HckgDqYDVz0zT1ZVNn24AGN91HRUX06EwJXicuapZrC8FpzUi8gS9hlGfCOryou2A+udHEnCPLqFCDHX7tOfAsUpgyd8F+xBo3uJWf1yGlPGtp9h2+Aaf8LJuTfUuFLN5268f/+mdxPzYkOw=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792120303; c=relaxed/simple;
-	bh=sdnaONkbtC5AWH295B8Q1LbDEsh1f7mIxFFEsoKw9H0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=bZgPoWwKeUfnSDRkW2XPaeUgZ2dtlUOWHYHdeQcxWzXlMjtg8x8D/144xTOUQ13sVRK4OMMX7Lt+9naJ9oh1Vrac1xMDlxeMfgDpc5EBCf1olyVlkFOmdn6MoQ6vH5lQAbMbDF+mkzo2mlyA6CLEOdIAZ0FmDFy7dUWT6Lvqnbc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GLTtIAmx; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GLTtIAmx"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1792120301; x=1823656301;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=sdnaONkbtC5AWH295B8Q1LbDEsh1f7mIxFFEsoKw9H0=;
-  b=GLTtIAmxmxVTNmxVlp3kl6/2pLqidnIPORGEqNDfeweqpKQB6NcbSFIk
-   pwiVw93/YNjaR3szpGVrNcvmknzUjAwZFnn9a/n6hqAi8FRrV6sHJlXkW
-   a9t7vPbGNy93RthZdZUf+vDsZ71hJNMfdTqcoqB28aldX/RQbqQZNjNTL
-   KmjKfYPlwFF+rEMi+aNDvC9jbHCN+uQug3aym91vXv32f8/jLGZSgZx1T
-   raq6u07VQ3yMHocay3gtPgRzNukQGPyR5fA+X0OnYYnGTkrIJQ545gAum
-   6NQJqKmpQcs4Kwa0ENihq/ZHBsXWdKXPJxjWSyfIlqWIZT8gKAGQUYjbB
-   A==;
-X-CSE-ConnectionGUID: pTEwuz3NT3Cgx8ipivUIpQ==
-X-CSE-MsgGUID: jpEFTAkTQtOkJK9892qGKg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11936"; a="781821"
-X-IronPort-AV: E=Sophos;i="6.27,161,1787036400"; 
-   d="scan'208";a="781821"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Oct 2026 20:11:40 -0700
-X-CSE-ConnectionGUID: 6ywES729QEm5/80oo1fpOw==
-X-CSE-MsgGUID: fUNJ7nYDQaqEssfFFjYzhg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.27,161,1787036400"; 
-   d="scan'208";a="1738755"
-Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.241.239]) ([10.124.241.239])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Oct 2026 20:11:33 -0700
-Message-ID: <4ef25c08-ac66-4734-abd1-2d50bebcd94f@linux.intel.com>
-Date: Fri, 16 Oct 2026 11:11:30 +0800
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CECC36654C;
+	Fri, 16 Oct 2026 03:24:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.126.104
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1792121072; cv=fail; b=p/HQ2myHVLBVOYPowHsuyLaI+47SAV/uwNUyN17WcpqBbL1R7UabyFoFCBPwHtmUSX0gH0zGoXJVIi7Txs5bRsB/7pUFs73c7FalUYkNwOMY9aV0cuBmhAAtUTF6UAQWsqmtYz+CPE9BqtjjeAcQYy8V7gfloaO+qLc9nB03S5M=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1792121072; c=relaxed/simple;
+	bh=Y3+92d6jmWCcnIBw8vt6hb0eUdVIwF+ZZafLIfxU19U=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=k2YzeQlyPv7JOvpSa150FMNB+BBgPxtfueJeBy81Qza5ll7QQfrR4U03El+INDhm+cJPc5i4FfhLIn77CCtYy7mnbgypDfdECG/5gqTS05YbnEA95OjFgRZ9datoYeO+jwBSa1kc3jVQTmUzESM11HfjK1/juNb5v7Y2ubGBtcI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cixtech.com; spf=pass smtp.mailfrom=cixtech.com; arc=fail smtp.client-ip=52.101.126.104
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cixtech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cixtech.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=Sa4j5FltquGwrH+HJbjEQRvvthFZxVwjk/kfvNVI9K7NQGvOhkfeBlGsNiajVGL/nRszEgK/x0/i4XGRDroVSDJ24H7Z+UNtRYshtIwgPwdQ+u2g6EPqIPASeYJvxoCJl5MmFWS9jM6tTpruwXngm/6Xqr7pXuwiIYVaKgQa63CRgyTZJNaWge5znW5HAZ1cE/4YVOze8fwo90MI33nsGOJqzxoDdm9Sufz7WK4Mg6vvVhvgkGSVWRZqlI8y8w9oMPe+qnKUXRy3kt0EuPws6mNljYKjPtq1vEHwM0kca7BQQQifqppk54VUSuQhGeGDcvQxwokFH89mZMk77M2j/g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=e0Mp+FT2y1w5C2fg2cvV9czSHeE6CvbZI3w2HRIlyUM=;
+ b=vNBpKyW+qCqBCqScMrMd4ZYV5dr407cG0DEjk5d7HeestRWPGn5tN8/GoWA6Fo94odteOl6Qw7z7fYm3k+AdJwzUdR680TxZKStdGKlh+JDEjsApXmd7wcDkSkYu5vG0rAAwo85iqH5flujmu+stVySeo1YMHXeubxEa4djHsL3QKzDYNwObdd1Pa9JhwaAj24GaA3xLvQZjnB/D8zjB+LH9pHv45YXkUB6bPlvWjzEh+vw9TZxEuYrM4qvGe5dIEKIP83kyyXHiMUEucZfJ6UbZ+J/MR1eXJIs7XpnzU1XHkXJkGEmm/X/fpWVUuTn4eG75C9AqJwt4wCfRJpxAaw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 222.71.101.198) smtp.rcpttodomain=arm.com smtp.mailfrom=cixtech.com;
+ dmarc=bestguesspass action=none header.from=cixtech.com; dkim=none (message
+ not signed); arc=none (0)
+Received: from JH0PR06CA0008.apcprd06.prod.outlook.com (2603:1096:990:77::27)
+ by TYNPR06MB8452.apcprd06.prod.outlook.com (2603:1096:405:3b4::6) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.522.13; Fri, 16 Oct
+ 2026 03:24:26 +0000
+Received: from SG2PEPF000B66CB.apcprd03.prod.outlook.com
+ (2603:1096:990:77:cafe::13) by JH0PR06CA0008.outlook.office365.com
+ (2603:1096:990:77::27) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.21.472.20 via Frontend Transport; Fri,
+ 16 Oct 2026 03:24:25 +0000
+X-MS-Exchange-Authentication-Results: mx.microsoft.com 1; spf=pass (sender IP
+ is 222.71.101.198) smtp.mailfrom=cixtech.com; dkim=none (message not signed)
+ header.d=none;dmarc=bestguesspass action=none header.from=cixtech.com;
+Received-SPF: Pass (protection.outlook.com: domain of cixtech.com designates
+ 222.71.101.198 as permitted sender) receiver=protection.outlook.com;
+ client-ip=222.71.101.198; helo=smtprelay.cixcomputing.com; pr=C
+Received: from smtprelay.cixcomputing.com (222.71.101.198) by
+ SG2PEPF000B66CB.mail.protection.outlook.com (10.167.240.24) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.21.522.6 via Frontend Transport; Fri, 16 Oct 2026 03:24:25 +0000
+Received: from JohnnyFan (unknown [172.21.64.24])
+	by smtprelay.cixcomputing.com (Postfix) with ESMTPSA id 9604C42C6441;
+	Fri, 16 Oct 2026 11:24:24 +0800 (CST)
+Date: Fri, 16 Oct 2026 11:24:23 +0800
+From: Johnny Fan <johnny.fan@cixtech.com>
+To: Leo Yan <leo.yan@arm.com>
+Cc: Marc Zyngier <maz@kernel.org>, will@kernel.org, mark.rutland@arm.com,
+	linux-arm-kernel@lists.infradead.org,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	james.clark@linaro.org, jeremy.linton@arm.com,
+	cix-kernel-upstream@cixtech.com, bob.zhang@cixtech.com,
+	jie.fu@cixtech.com, Fugang Duan <fugang.duan@cixtech.com>
+Subject: Re: [PATCH] perf: arm_spe: Support heterogeneous ACPI systems
+Message-ID: <atGY5+kzQggCZboX@JohnnyFan>
+References: <20261015062908.3565761-1-johnny.fan@cixtech.com>
+ <86mrsf1bnv.wl-maz@kernel.org>
+ <20261015141926.GC26205@e132581.arm.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/2] perf/x86/intel/lbr: Limit branch snapshots to
- valid entries
-To: bot+bpf-ci@kernel.org, sandipan.das@amd.com,
- linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
- bpf@vger.kernel.org
-Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
- namhyung@kernel.org, mark.rutland@arm.com,
- alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com,
- adrian.hunter@intel.com, james.clark@linaro.org, tglx@kernel.org,
- bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
- andrii@kernel.org, song@kernel.org, ravi.bangoria@amd.com,
- ananth.narayan@amd.com, ast@kernel.org, daniel@iogearbox.net,
- martin.lau@kernel.org, eddyz87@gmail.com, yonghong.song@linux.dev,
- mason@kernel.org, ihor.solodrai@linux.dev
-References: <7f611dcd599d6d65325d8c40566a1fc35b447ea2.1792064123.git.sandipan.das@amd.com>
- <9ef8c1f496a9dca33792c7c3978e24208fe67d87688d5356b5e54e77eb009747@mail.kernel.org>
-Content-Language: en-US
-From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-In-Reply-To: <9ef8c1f496a9dca33792c7c3978e24208fe67d87688d5356b5e54e77eb009747@mail.kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20261015141926.GC26205@e132581.arm.com>
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SG2PEPF000B66CB:EE_|TYNPR06MB8452:EE_
+X-MS-Office365-Filtering-Correlation-Id: 5281a5df-c820-4092-1d64-08df2b34fac8
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|376014|82310400026|23010399003|36860700016|56012099006|4143699003|22082099003|18002099003|6133799003|10067099003;
+X-Microsoft-Antispam-Message-Info:
+	A8rze1UTN9RXIAH1b2zgozfkkpgDPuMA82zfeDAqYxepQDyG7hMi2q8pOonovqdAwrcizrRmplcPSeCH+J1+wVpSCV2JmlOW2l+sEcaMVkFDowkTv9MbTp/PcasZ+dk9za5dhNtoAiYKnTo0tZ5t4zJuHtC5/2DNOhKTlPTN4qFFYIiiuXKPTGAj93MBfuFeY++VjZT0I5OmcDIPulexg1NvsCFEQToJh3dc9E+Aqg+oavuyLaRQTwWwflH1ES6msupZaFyhEV8yyY5RwFiQgcD2YN0WlHgSrE85+bhv6OI3cUPJwe6BPvMe8jjHc77V91YFfrrMxTA68xEo1nz46JvhpqtdaS/Sk2u8dyBkO3qoPHn3QBgECj0rMD+mjR6J/hC0anWUO0AET8jvbaMn7zU8P5fyX+ZKRkdrAVtz3MFi9szq+Pz0txRK9ttHJbrg6THZ5DcxnPYtRIsFkI1g/q8Fl34Zum2UGNH73uNy0D1Zw1b30FSvpRx+zMWDiZtwCK5jmQtcZ5J6kqKnAwNtjTZc83ZAI3nCIqgqDgEUH9g41R51IHP+h/6hc+b/Zdujh3J8Uk0NtYl1fkQmgZSuP+mwl2OTVEVplBYaqO3YL+ZRihm+Dg+a2m1bBIj+vzZNlDwa2+1zYBUV3/9ARH+dQBi1qNGFkWM6q/68SKTIv/X2I4fYTHUK0IzU+BAtnZmR
+X-Forefront-Antispam-Report:
+	CIP:222.71.101.198;CTRY:CN;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:smtprelay.cixcomputing.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(376014)(82310400026)(23010399003)(36860700016)(56012099006)(4143699003)(22082099003)(18002099003)(6133799003)(10067099003);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	rJYUZ3idnNMj/tdlf8TF85dZusqIeAaRFtUIF5X7feIrn+80s3XIcdf0/AD/90pbIDkY/rzqI9ZmEtecRjhoKe0/NWUxh954lNJsb8IF/H7EMd10MJ6L6hjCxCT981mjINss8d43wGiOmXfVQ7SVrItNxf9DG0i/62Z22YvCY46J8Ir5eTPwFN8QgbAvtpBiuBsU0NO8JGcIQaMTZCGfzREymxG5V78J9IEzcUaBwL+L9s53Xp85JMKNddaCloKqUqImtM6Jc9auK9Ob/wU3UOuHE0vxXLom3bLn03DPtYu4/LoEi3X/wVU5enmI22F4m9ae8N1WTk0vzu2B5prcUiQ5a4dm1JLNVfREwKdcbG8wTrA37O+2gajXbTJJGbLGoQ5zdhm6MmWIECzvM3/d8W6bpNg2BjVrPgqYtceXeQ1LEENpMnIC0HKIw3IBhHGw
+X-OriginatorOrg: cixtech.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Oct 2026 03:24:25.3806
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5281a5df-c820-4092-1d64-08df2b34fac8
+X-MS-Exchange-CrossTenant-Id: 0409f77a-e53d-4d23-943e-ccade7cb4811
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=0409f77a-e53d-4d23-943e-ccade7cb4811;Ip=[222.71.101.198];Helo=[smtprelay.cixcomputing.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	SG2PEPF000B66CB.apcprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYNPR06MB8452
 
+On Thu, Oct 15, 2026 at 03:19:26PM +0100, Leo Yan wrote:
+> The SPE driver probes its capabilities on one CPU selected by
+> smp_call_function_any(), then performs local setup on every CPU in
+> supported_cpus. It therefore relies on that mask being accurate;
+> including a CPU without SPE could lead to accesses to unimplemented
+> SPE system registers.
 
-On 10/16/2026 8:21 AM, bot+bpf-ci@kernel.org wrote:
->> perf/x86/intel/lbr: Limit branch snapshots to valid entries
-> TL;DR: Resetting cpuc->lbr_stack.nr in intel_pmu_lbr_read() may clobber an
-> in-flight adaptive PEBS sample if a BPF program calls
-> bpf_get_branch_snapshot(), possibly yielding a PERF_RECORD_SAMPLE without
-> branch records and with leftover bytes.
->
->> diff --git a/arch/x86/events/intel/lbr.c b/arch/x86/events/intel/lbr.c
->> index 22e2a06d5786..2fe858d99979 100644
->> --- a/arch/x86/events/intel/lbr.c
->> +++ b/arch/x86/events/intel/lbr.c
-> [ ... ]
->
->> @@ -1026,8 +1026,10 @@ void intel_pmu_lbr_read(void)
->>  	 * but this simple approach seems to work for now.
->>  	 */
->>  	if (!cpuc->lbr_users || vlbr_exclude_host() ||
->> -	    cpuc->lbr_users == cpuc->lbr_pebs_users)
->> +	    cpuc->lbr_users == cpuc->lbr_pebs_users) {
->> +		cpuc->lbr_stack.nr = 0;
->                  ^^^^
-> Can this clobber the branch stack of a PEBS sample that is still being
-> built?
->
-> Before this patch the early return had no side effects.  Now it writes to
-> cpuc->lbr_stack, which is shared with the adaptive PEBS path.
->
-> If every LBR user on the CPU is an adaptive PEBS event, then
-> cpuc->lbr_users == cpuc->lbr_pebs_users, and the PEBS drain points the
-> sample at the per-CPU stack:
->
-> setup_pebs_adaptive_sample_data()
->     intel_pmu_store_pebs_lbrs(lbr);         /* cpuc->lbr_stack.nr = N */
->     intel_pmu_lbr_save_brstack(data, cpuc, event);
->         perf_sample_save_brstack(data, event, &cpuc->lbr_stack, ...);
->             data->br_stack = brs;           /* points at cpuc->lbr_stack */
->             data->dyn_size += ... + brs->nr * sizeof(struct perf_branch_entry);
->
-> __intel_pmu_pebs_last_event() then calls perf_event_overflow(), and
-> __perf_event_overflow() runs bpf_overflow_handler() before the sample is
-> written.  A perf event BPF program attached to that event can call
-> bpf_get_branch_snapshot(), which is in bpf_base_func_proto:
+Right. On ACPI the driver gets no affinity information for this
+device, so supported_cpus falls back to cpu_possible_mask. That only
+works today because registration is limited to homogeneous systems.
+The PMSVer trimming in this patch works around the heterogeneous case;
+with the mask taken from the MADT walk, both go away.
 
-Yeah, it's a possible risk. After thinking twice about this issue, the
-issue seems much more complex than I ever thought.
+> There is also a grouping question for SPE and TRBE. If all participating
+> CPUs implement the feature, but have different capabilities, should ACPI
+> registration create separate platform devices for the compatible CPU
+> groups? DT can describe separate CPU subsets using PPI partitions [1].
+> 
 
-intel_pmu_lbr_read() could be called in two paths, one is from the perf PMI
-handler, the other is from the bpf_get_branch_snapshot() bpf helper. Which
-makes the thing more complicated is that bpf_get_branch_snapshot() helper
-could be called in the PMI handler as well, where is just before the
-default event overflow handler. In this case, intel_pmu_lbr_read() could be
-called twice in PMI handler.
+That ACPI cannot describe: the GICC only carries a per-CPU interrupt
+number, so CPUs with different capabilities reporting the same GSI
+cannot be told apart, short of probing PMSVer. Such a split would have
+to come from hardware wiring each group to a distinct PPI. For now I'd
+keep it to a single GSI, and leave grouping to be revisited if hardware
+that needs it ever shows up.
 
-So there could be 3 scenarios for the intel_pmu_lbr_read() calling.
-
-1. bpf_get_branch_snapshot() is not attached to any event, then
-bpf_get_branch_snapshot() won't be called in anywhere, current LBR stack
-update in PMI handler is good for both PEBS and non-PEBS events.
-
-2. bpf_get_branch_snapshot() is attached to a software tracepoint, then
-bpf_get_branch_snapshot() is called out of PMI handler,
-the intel_pmu_lbr_read() is called to get the current LBR stack data in
-bpf_get_branch_snapshot(), it's fine as well.
-
-3. bpf_get_branch_snapshot() is attached to a perf hardware event, then
-bpf_get_branch_snapshot() is called in the PMI handler, it leads to LBR
-stack could be updated twice in the PMI handler. In this scenario, since
-perf has already read the latest LBR stack data before calling
-bpf_get_branch_snapshot() helper, bpf_get_branch_snapshot() is unnecessary
-to read the LBR stack again, and worse it could overwrite the cache PEBS
-LBR stack data if PMI is triggered by PEBS event.
-
-Roughly we could need below changes to thoroughly fix this issue.
-
-diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
-index 442be0639414..d2cbb5ade003 100644
---- a/arch/x86/events/intel/core.c
-+++ b/arch/x86/events/intel/core.c
-@@ -2869,8 +2869,8 @@ __intel_pmu_snapshot_branch_stack(struct
-perf_branch_entry *entries,
- {
-        struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
-
--       intel_pmu_lbr_read();
--       cnt = min_t(unsigned int, cnt, x86_pmu.lbr_nr);
-+       intel_pmu_lbr_read(true);
-+       cnt = min_t(unsigned int, cnt, cpuc->lbr_stack.nr);
-
-        memcpy(entries, cpuc->lbr_entries, sizeof(struct perf_branch_entry)
-* cnt);
-        intel_pmu_enable_all(0);
-@@ -4090,7 +4090,7 @@ static int intel_pmu_handle_irq(struct pt_regs *regs)
-
-        loops = 0;
- again:
--       intel_pmu_lbr_read();
-+       intel_pmu_lbr_read(false);
-        intel_pmu_ack_status(status);
-        if (++loops > 100) {
-                static bool warned;
-diff --git a/arch/x86/events/intel/lbr.c b/arch/x86/events/intel/lbr.c
-index 2218469be644..c651b94a893f 100644
---- a/arch/x86/events/intel/lbr.c
-+++ b/arch/x86/events/intel/lbr.c
-@@ -1008,18 +1008,31 @@ static void intel_pmu_arch_lbr_read_xsave(struct
-cpu_hw_events *cpuc)
-        intel_pmu_store_lbr(cpuc, xsave->state.lbr.entries);
- }
-
--void intel_pmu_lbr_read(void)
-+void intel_pmu_lbr_read(bool from_bpf)
- {
-        struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
-
-+       if (!cpuc->lbr_users || vlbr_exclude_host()) {
-+               /* Reset lbr_stack.nr to prevent stale data leakage. */
-+               cpuc->lbr_stack.nr = 0;
-+               return;
-+       }
-+
-        /*
-         * Don't read when all LBRs users are using adaptive PEBS.
-         *
-         * This could be smarter and actually check the event,
-         * but this simple approach seems to work for now.
-         */
--       if (!cpuc->lbr_users || vlbr_exclude_host() ||
--           cpuc->lbr_users == cpuc->lbr_pebs_users)
-+       if (cpuc->lbr_users == cpuc->lbr_pebs_users)
-+               return;
-+
-+       /*
-+        * Don't read LBRs from BPF context if we're in an PMI handler
-+        * since the LBR stack has been updated previously and new LBR
-+        * stack update could overwrite the cached PEBS LBR stack.
-+        */
-+       if (from_bpf && in_nmi())
-                return;
-
-        x86_pmu.lbr_read(cpuc);
-diff --git a/arch/x86/events/perf_event.h b/arch/x86/events/perf_event.h
-index 60038d329518..4738b40288a4 100644
---- a/arch/x86/events/perf_event.h
-+++ b/arch/x86/events/perf_event.h
-@@ -2006,7 +2006,7 @@ void intel_pmu_lbr_enable_all(bool pmi);
-
- void intel_pmu_lbr_disable_all(void);
-
--void intel_pmu_lbr_read(void);
-+void intel_pmu_lbr_read(bool from_bpf);
-
- void intel_pmu_lbr_read_32(struct cpu_hw_events *cpuc);
-
-Sandipan, would you mind I take this series? I need to do fully validation
-for the Intel side changes. Once the validation passes, I would send a new
-patch series to fix the issue for both AMD and Intel side. Thanks.
-
-
->
-> intel_pmu_snapshot_branch_stack()
->     __intel_pmu_snapshot_branch_stack()
->         intel_pmu_lbr_read()
->             /* lbr_users == lbr_pebs_users, early return taken */
->             cpuc->lbr_stack.nr = 0;
->
-> When the program returns, data->br_stack still points at cpuc->lbr_stack,
-> but nr is now 0.  A later bpf_read_branch_records() in the same program
-> reads ctx->data->br_stack->nr and returns 0 bytes.
->
-> perf_output_sample() then writes nr = 0 and no entries, while header.size was
-> already computed by perf_prepare_header() from data->dyn_size, which counted
-> N entries.  Doesn't that leave the PERF_RECORD_SAMPLE without its branch
-> records and followed by N * sizeof(struct perf_branch_entry) bytes of
-> leftover ring buffer content?
->
-> Before the patch, the early return left cpuc->lbr_stack untouched and this
-> sample came out intact.
->
-> Would it be better to leave cpuc->lbr_stack alone in the snapshot path, for
-> example by checking the skip condition in __intel_pmu_snapshot_branch_stack()
-> and returning 0 there, instead of resetting the shared nr inside
-> intel_pmu_lbr_read() for every caller?
->
->>  		return;
->> +	}
->>
->>  	x86_pmu.lbr_read(cpuc);
->
-> ---
-> AI reviewed your patch. Please fix the bug or email reply why it's not a bug.
-> See: https://github.com/kernel-patches/vmtest/blob/master/ci/claude/README.md
->
-> CI run summary: https://github.com/kernel-patches/bpf/actions/runs/38827450009
+Thanks,
+Johnny
