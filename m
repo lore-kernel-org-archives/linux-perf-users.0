@@ -1,137 +1,135 @@
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D6444ACC7F
-	for <linux-perf-users@vger.kernel.org>; Fri, 16 Oct 2026 13:14:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1C3714D98E6;
+	Fri, 16 Oct 2026 13:27:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792156479; cv=none; b=JIwtwz3tHcOo3GiYaJrZS5KSKOsd7BCx2uS6HSfejpCcrD75pX0rrrK86L864xQEWfUkTtrw7bdm44l/sg94qQQg59P7YGbV1Rl/2/HIODg0nb+BZYrFxdLgrg6TswEqxJig7gycqVGhdA1b0Yq60DuPxMPyyBQjvOi0ekoZkEw=
+	t=1792157252; cv=none; b=kQ0qiOhEZaIfHqvQWX+TGC32cTMXeJia134PteHRoT+J3ySjw8yE6JCPJBd1fWmq8ppSmXnC7bVHgUBnlxnuS/Nr3qZVOFR4wC2dveTjhaq3x3BCx/Pg2Eojdz22/6XHHcOvNmOhFHpYLCaheprtiUulHJZ8+GP8ah9dqE/2N18=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792156479; c=relaxed/simple;
-	bh=/NqlYCkwEDnx+3z9fm1ChPu+6B52abvScuA7rF51W+g=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Ddp+yqiYODNnS5QoW9bLvpHL1/MCooqOttZUCo/3i1VgLMdkXNR6zf2+zm9Q6TxWhDy1SF8T78AIWwCiuCI3sSbGkRL+EZcvaRc/J+cIIzZ+8B6Wygl/7wSfxL8pKRWd+CnnyfEO6RS2ThEkTF5o0wY6gqyvbYelYaVfGFbSmTE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=bHp+X4Hj; arc=none smtp.client-ip=209.85.128.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1792157252; c=relaxed/simple;
+	bh=gJL+Ig+PnJG4Ys4tk6ii6Z0DhYNYqk+8QqkSxXfINF8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=acCo4LNLqMxGXucz4a7tUkXysfZUv4/LJNGEfwP5+GiH0i60RkdsErsC4bRRf6mtnY8Oq7wemQCN1MradI1icoKKpGTaGBmkA9FXd4R5G90SWKfh/apSBfPa/w8EGNbG4g3D/qL8AzqkGANz5yO2NB1KFWQZhToptsQHRaq9w1c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=Hlz+sTX/; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="bHp+X4Hj"
-Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-4a0286c981dso30036805e9.2
-        for <linux-perf-users@vger.kernel.org>; Fri, 16 Oct 2026 06:14:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1792156474; x=1792761274; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:in-reply-to:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=tsX0Fx1Vu5oxDkz2SE9XCwKJJhLzTUajSbyoGIgpXkI=;
-        b=bHp+X4HjM2aDZUEFiKJhGIOw2ggxHGI10dBWExn21NBPT++/Q9xNCdYULAwZiCtZbt
-         vaPvYYnqEQQBHRsdO78/EJ3Wt7v+lgw7YTWgf+ue0Pf+USQ3rW8ZG4J92ePwR2N6BH+A
-         GdVCFK4tJtC72SQ5ekTWNiKLiqwr6xQSQYhdS3BBeWLmfrFGtRbpa3X4XZItAWuBIRCi
-         hv6bQGNa2SxJ4q0V/y97/I/yG3v6zbdYb+Ku1htuL6RHtX8MrNtWxdfUS/AKBqPB7vYq
-         2IiEh9uxWNPc1f+eU9U05J6RCdzIlJclPQRx3QpqA3udvKWSPXdBkvH4m6/fD3D1T8Vx
-         bFQA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1792156474; x=1792761274;
-        h=content-transfer-encoding:content-type:in-reply-to:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=tsX0Fx1Vu5oxDkz2SE9XCwKJJhLzTUajSbyoGIgpXkI=;
-        b=oK5tRzAuNHvUCCNU3bsmt6WnAo63kK3dax+Vz65nI2+3HTkHgHw2lQJ60ytaW2j8c4
-         ZgBY+yeD4VNRKOjeR63EVOuXo50+sJNBcVqteTGb2Mcj8Is5HYdYdW44N520b1DEjWBe
-         YCrW4yOioDoL98vLcbvT3ppgDpTQz5cQII2uLN28m2XwtDCbCqPU2BA2gYQ3p+4zSkPA
-         BvFSyULLhDefuv8qrKfyBGtm7kNS/7Q9jSVPsYVTYsEwSZwgpNdTjNdkDGd6mIUPXYVV
-         OkoJS2TnVga3pXO5Bmu44rapeFdR4TdYz5C6XlvagdAKFSWp3svuam6y1fltfqDEMF3r
-         ImPw==
-X-Forwarded-Encrypted: i=1; AKwUvBxzUxSuULWjybVmSbkxS5KkZ9MWGSgJk9No5eeNtg1vJ8fymOBv/ncyvRbXQ1rCh7jma/eQSL5gdYFowMPuQkTZ@vger.kernel.org
-X-Gm-Message-State: AFq9FYLmX8+T2zzwDTU3EU7KTUjC6jtSjdpEj/qnJ/iE2c71mDn/45L+
-	qcxxDYzZr66jT4EG9xOoAwZVPB5G8pqMQAWq7y1M4SNDMhfZCRYQU8GyQZ69Ad4Q9eU=
-X-Gm-Gg: AYBFou3AWgKwOFY6/+XX+z2FOTmCZyzTqrAL90Rma5MKrS18HZ1Dityp2nmQvPhEL6B
-	lKMQv0c0vpQqZWWAtmHzEvp+i3q7lC8NhxmrymAKZDfEDWR0ng7vj0MTrA6ygJWo9njWyz+IIxF
-	gk0UWEI8Hl6BBLSVrWLMUu5EjE705RSGPZRGcSA9SeFt8a+XujLtvflaQXLw/B/dgd3AA7i0jW1
-	qunk0uIDaFwNS7nEE8qMdQSnIdCadsGNVSCzDD5xxQHVIzqKoQNWiAywYPygxn6q3EeyvbRXgAy
-	1t99Oc95JU+U0P1SbrY26fRuPwxCWlaGy60drX4JOrtO/Anlrdrlyyu1WlVRjXi17DD18q38t63
-	wNX6/4nBQfFrnD6tJYM8DNZHCAkLX3xFjAwkYsp2mZRIdCG4vNDddN/6bx/ZxY7huijM5fFUbhl
-	/eLk7dupGjgVLDn7uz5bCQpsJGxxvagOmxbm/Co6pnNIVNFdXHLO/nkG0+TDCaqeoJICPEyvZBl
-	RE=
-X-Received: by 2002:a05:600c:3144:b0:4a1:70b2:8dbb with SMTP id 5b1f17b1804b1-4a18e4b0347mr432306165e9.19.1792156474596;
-        Fri, 16 Oct 2026 06:14:34 -0700 (PDT)
-Received: from [192.168.1.3] ([37.18.141.193])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4a1c8ac4c70sm45400235e9.2.2026.10.16.06.14.33
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 16 Oct 2026 06:14:34 -0700 (PDT)
-Message-ID: <13ac34bc-fc8e-43b8-8976-05e91ae46e71@linaro.org>
-Date: Fri, 16 Oct 2026 14:14:32 +0100
+	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="Hlz+sTX/"
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E07A714BF;
+	Fri, 16 Oct 2026 06:27:25 -0700 (PDT)
+Received: from J2N7QTR9R3.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 26FFA3F673;
+	Fri, 16 Oct 2026 06:27:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
+	t=1792157249; bh=gJL+Ig+PnJG4Ys4tk6ii6Z0DhYNYqk+8QqkSxXfINF8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Hlz+sTX/WZBD14pDUSYYkKwmv8GmcUxwHxVccqYoVMhG3esxdy6A3JvJgOwBi2JA6
+	 ieAN1ymj8V+r0tdA69+KXVWQXF5ZKVBpDodL3Eko6E/WFPrI/moIeUIVupT+KvSRHv
+	 64botKz15g5rDwrSMbdkTCYJidJSwkBlrGJXasS4=
+Date: Fri, 16 Oct 2026 14:27:14 +0100
+From: Mark Rutland <mark.rutland@arm.com>
+To: "Tomohiro Misono (Fujitsu)" <misono.tomohiro@fujitsu.com>
+Cc: 'Catalin Marinas' <catalin.marinas@arm.com>,
+	'Will Deacon' <will@kernel.org>, 'Jonathan Corbet' <corbet@lwn.net>,
+	'Shuah Khan' <skhan@linuxfoundation.org>,
+	'Randy Dunlap' <rdunlap@infradead.org>,
+	'Marc Zyngier' <maz@kernel.org>,
+	'Thomas Gleixner' <tglx@kernel.org>,
+	'Radu Rendec' <radu@rendec.net>, 'Oliver Upton' <oupton@kernel.org>,
+	'Fuad Tabba' <fuad.tabba@linux.dev>,
+	'Joey Gouly' <joey.gouly@arm.com>,
+	'Steffen Eiden' <seiden@linux.ibm.com>,
+	'Suzuki K Poulose' <suzuki.poulose@arm.com>,
+	'Zenghui Yu' <yuzenghui@huawei.com>,
+	"Kohei Enju (Fujitsu)" <enju.kohei@fujitsu.com>,
+	"'linux-arm-kernel@lists.infradead.org'" <linux-arm-kernel@lists.infradead.org>,
+	"'linux-kernel@vger.kernel.org'" <linux-kernel@vger.kernel.org>,
+	"'linux-doc@vger.kernel.org'" <linux-doc@vger.kernel.org>,
+	"'linux-perf-users@vger.kernel.org'" <linux-perf-users@vger.kernel.org>,
+	"'kvmarm@lists.linux.dev'" <kvmarm@lists.linux.dev>
+Subject: Re: [PATCH v2 3/4] perf: arm_pmu: Add workaround for FUJITSU-MONAKA
+ Erratum E#030002
+Message-ID: <atImMmlBmOYlY5T2@J2N7QTR9R3.cambridge.arm.com>
+References: <20261016-monaka-fix-for-upstream-v2-0-fc7ede7f9f48@fujitsu.com>
+ <20261016-monaka-fix-for-upstream-v2-3-fc7ede7f9f48@fujitsu.com>
+ <atIT0dmeqAXLoThW@J2N7QTR9R3.cambridge.arm.com>
+ <OSCPR01MB1573944ED57DC682897594F06E59B2@OSCPR01MB15739.jpnprd01.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 01/25] perf/core: Reject non-positive AUX snapshot sizes
-To: Leo Yan <leo.yan@arm.com>
-Cc: Ingo Molnar <mingo@kernel.org>, linux-perf-users@vger.kernel.org,
- linux-kernel@vger.kernel.org, coresight@lists.linaro.org,
- linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org,
- Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>,
- Suzuki K Poulose <suzuki.poulose@arm.com>, Mike Leach <mike.leach@arm.com>,
- Anshuman Khandual <anshuman.khandual@arm.com>,
- Yeoreum Yun <yeoreum.yun@arm.com>, Jonathan Corbet <corbet@lwn.net>,
- Suyash Mahar <smahar@meta.com>, Amir Ayupov <aaupov@fb.com>
-References: <20260915-arm_cs_support_aux_sample-v1-0-35cf6f297d20@arm.com>
- <20260915-arm_cs_support_aux_sample-v1-1-35cf6f297d20@arm.com>
-Content-Language: en-US
-From: James Clark <james.clark@linaro.org>
-In-Reply-To: <20260915-arm_cs_support_aux_sample-v1-1-35cf6f297d20@arm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <OSCPR01MB1573944ED57DC682897594F06E59B2@OSCPR01MB15739.jpnprd01.prod.outlook.com>
 
-
-
-On 15/09/2026 16:48, Leo Yan wrote:
-> The existing validation rejects negative copy errors but allows a zero
-> return. In that case no AUX data was copied, but it is incorrectly
-> passed to the alignment-padding check.
+On Fri, Oct 16, 2026 at 01:00:13PM +0000, Tomohiro Misono (Fujitsu) wrote:
+> > Subject: Re: [PATCH v2 3/4] perf: arm_pmu: Add workaround for FUJITSU-MONAKA Erratum E#030002
+> > 
+> > On Fri, Oct 16, 2026 at 07:00:47PM +0900, Tomohiro Misono wrote:
+> > > FUJITSU-MONAKA Erratum E#030002 affects FUJITSU-MONAKA CPU.
+> > >
+> > > On affected FUJITSU-MONAKA CPUs, after a PMU event counter is
+> > > stopped at a value just before overflow, an overflow might still
+> > > be incorrectly detected, resulting interrupt storm in some case.
+> > >
+> > > For example, if the following conditions are met:
+> > >   1) Running perf to count an event in user space only
+> > >   2) The event can also occur in kernel space
+> > >   3) The counter value is set just before the overflow
+> > >      (when using the -F option, initial counter value is -1)
+> > >
+> > > when the kernel is about to return to user space after enabling
+> > > the count, an overflow interrupt is incorrectly triggered by an
+> > > event that occurred in kernel space. Since the counter value is
+> > > not updated (correctly), the interrupt handler does nothing and
+> > > returns with the same condition. This leads to another wrong interrupt
+> > > and results in an interrupt storm and eventually a softlockup.
+> > 
+> > I don't fully understand this.
+> > 
+> > Surely the relevant PMOVS{CLR,SET}[n] bit set as if the counter n
+> > overflowed?
+> > 
+> > If that bit is set, the handler will certainly do *something*.
+> > 
+> > If that bit is not set, the interrupt shouldn't be asserted at all. When
+> > does it get de-asserted?
 > 
-> Reject zero together with negative errors before calculating the padding.
-> This reports the invalid snapshot result and avoids treating a missing
-> AUX payload as alignment padding.
-> 
-> Fixes: a4faf00d994c ("perf/aux: Allow using AUX data in perf samples")
-> Assisted-by: Codex:gpt-6
-> Signed-off-by: Leo Yan <leo.yan@arm.com>
-> ---
->   kernel/events/core.c | 9 ++++-----
->   1 file changed, 4 insertions(+), 5 deletions(-)
-> 
-> diff --git a/kernel/events/core.c b/kernel/events/core.c
-> index fe33fe15689d077e7f445c0b17d9c2e638c884a1..17355e4b8b7c6c106117153c9eb8509e6f9a41e3 100644
-> --- a/kernel/events/core.c
-> +++ b/kernel/events/core.c
-> @@ -8058,12 +8058,11 @@ static void perf_aux_sample_output(struct perf_event *event,
->   	size = perf_pmu_snapshot_aux(rb, sampler, handle, data->aux_size);
->   
->   	/*
-> -	 * An error here means that perf_output_copy() failed (returned a
-> -	 * non-zero surplus that it didn't copy), which in its current
-> -	 * enlightened implementation is not possible. If that changes, we'd
-> -	 * like to know.
-> +	 * A negative return means that perf_output_copy() failed, while zero
-> +	 * means that no AUX data was copied despite a non-zero request. Neither
-> +	 * can be treated as alignment padding below.
->   	 */
-> -	if (WARN_ON_ONCE(size < 0))
-> +	if (WARN_ON_ONCE(size <= 0))
->   		goto out_put;
->   
->   	/*
-> 
+> Sorry, my explanation wasn't clear. The interrupt will be de-asserted
+> as usual.
 
-Reviewed-by: James Clark <james.clark@linaro.org>
+I'm trying to work out which of the following happens due to the
+erratum:
 
+(a) When the erratum occurs, the HW sets a bit in PMOVS*. An overflow
+    interrupt is asserted because PMOVS* is non-zero. The overflow
+    handler will see that bit was set in PMOVS*. Clearing PMOVS*
+    de-asserts the interrupt as usual.
 
+(b) When the erratum occurs, the HW does not set a bit in PMOVS*, and
+    asserts an overflow interrupt even if PMOVS* is clear.  The overflow
+    handler might not see a bit set in PMOVS*.
+
+(c) Something else.
+
+Can you pleaes confirm what HW does with PMOVS* when the erratum occurs?
+I assume (a), but you haven't explicitly stated that so far.
+
+> The problem is that armpmu_event_set_period() will not update the counter
+> value if, for example, the counter is -1. Therefore, false overflow detection will continue.
+> With this patch, armpmu_event_set_period() will force the counter to -6 so that
+> false overflow detection won't occur in the kernel, since the maximum event
+> count at a time is 5.
+
+I expected that were this to occur a number of times in quick
+succession, the core perf code would throttle the event, and adjust the
+period.
+
+I am presumably missing some detail that prevents that.
+
+I assume you've seen the issue in practice? i.e. you've actucally
+triggered this with the perf tool on real hardware?
+
+Mark.
