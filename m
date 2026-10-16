@@ -1,44 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAAA2274B53
-	for <linux-perf-users@vger.kernel.org>; Fri, 16 Oct 2026 00:25:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5825118DB26
+	for <linux-perf-users@vger.kernel.org>; Fri, 16 Oct 2026 00:25:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792110325; cv=none; b=KH0j9VigWSYmSwlsetxCFt+CnHGj3hQ+7V9DcEMgyLOe7A3//gnOAO/4TVB4INtdnS8ael31HzC9D+onaR9/tPqOmvmB3qDsBi0hnpTNOaBixe/nvQBTur/amPYXDSxP8ICPPufzCV0zh6wTTEZWtlJ3Am7Y5jS4zuic8O+lZ5o=
+	t=1792110351; cv=none; b=A1/5mIJnjzYfuZNtOtxVrHQjTHXB1A7IGfhJJBzcI5j7/ai0RuEBkNYPLBkxAn+2puoOS8bzpxgCR+8HWi+x+58iTfs6XyWIsbhOZnPxgIBgf932t0wiHKGJ8ylAn0cuvQFCYmtidAHc7NxuQ+gHpsP0xt4du+vybZifiGSa5IQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792110325; c=relaxed/simple;
-	bh=AZ4IXdCpqGLhHLLc2LIaz1tOxsxV/6YWAweEkY0MJVY=;
+	s=arc-20240116; t=1792110351; c=relaxed/simple;
+	bh=QqeWvjHY2yELjg9ZaWd38bTy0l0QMYp/UoPUFjc6RuM=;
 	h=Message-ID:From:Subject:To:Cc:In-Reply-To:References:Content-Type:
-	 Date; b=Z2OTyeVa7JY/vhrXlrw2JiBSy2nYAqFELD8+1Q2uC1K9bN18xluapL5n75Ydg5SzAC0eZHNK+aNdfiCXudVP/F9PXdTxV63FEkxwD/bZkfmDQ6XZBxDWmm4eCpqwCHxc9anHjNUk/EVSdpS5hlOWDuy1FkE+xjP02GmlwsEVqRo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZRjNEYGJ; arc=none smtp.client-ip=100.103.45.18
+	 Date; b=uNBti6HS8RS9O2M8maItMuUtg3c035dyztvETK+aUIkRPxIJcLZsX/zEKFjUn5YCiUfob544wC4vUmcTIbe+svOTwfE+cjAyi2ngwz1e0Rjfo5141g/DPCIvG7ItkS8fHl74PGkO0sXitaV+besTPm/V4LmWyYfG71Y4Mjak/hA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UltysZOb; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZRjNEYGJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5C58F1F000C4;
-	Fri, 16 Oct 2026 00:25:24 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UltysZOb"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1DF641F000C4;
+	Fri, 16 Oct 2026 00:25:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1792110324;
-	bh=9uK/ptsP70dHRp8C4WBis5xW3LrB9h6jmEyLZ1O1jPg=;
+	s=k20260515; t=1792110350;
+	bh=Q/zI0TWA5TGJA5J5hbxpXSPiKxUO0hPtON+BXqlUZ1c=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=ZRjNEYGJAaTtJQLxVkQrR3sIzPUJSiLsEr4cVA9PyRKBA3KVvn7Nb46FjPyZuX3Ii
-	 ba56AmoWKHuQf437hBBJmEl6DCf7CRpLdO8soTi2hP4MbSt6gDkN2yXUYjruJdADq7
-	 j7zHZvh/RKM5yehmxjy+lgkH54MFpxgdXi9JMM9EqAVYf2ktiV2if4wDKq81h5PI00
-	 ydRLAFEuaif4ziFQqfW99cq0TWdUVahqCP1T6IKtdP4PU3VItifvP89kpERWYoU3AJ
-	 aS/3A8GiT2gaWCJ7IlbapjWzd2Zm6mHcNnvFnv5OO04DgQPZBX6TYWo9jK8lQETmrs
-	 V0DbNQSV5NZjQ==
-Message-ID: <sashiko-outbox-173522@kernel.org>
+	b=UltysZObyHP0n8fCuaakwksMqWTMyD6vxsndPgkU6apy/gsXNtCm6082tXmDL/f37
+	 FYe4vCe5X5vCHKyvwzEXG7yuojQ8QsRg+IbcNPCJDcLNm0w9o/3DZ1GxjXzngpEz6V
+	 j53Ek0TRGqnIcH6TjLH0QH8QU6L4js32wdGWDOg7InhVjih5widWFifsa4FN64eTR1
+	 8daWYkXcYOa3HXmkhgwpwj+8ySGRgDFCJ6o+1izi3JjRub+9za751+v2oxUU8TXosa
+	 7O6l+bossi1URRu0z0EZO1TyMtvuAOciVUrHh9sOGepGHhKoxmwr0sg9F2AGpIg7nw
+	 rv8dxE2noPuug==
+Message-ID: <sashiko-outbox-173523@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v3 11/19] perf test attr: Ignore the dummy tracking
- event and the terms it carries
+Subject: Re: [PATCH v3 06/19] perf evsel: Mark the event as supported when
+ retrying an open
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Arnaldo Carvalho de Melo" <acme@kernel.org>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20261016001843.71978-12-acme@kernel.org>
+In-Reply-To: <20261016001843.71978-7-acme@kernel.org>
 References: <20261016001843.71978-1-acme@kernel.org>
- <20261016001843.71978-12-acme@kernel.org>
+ <20261016001843.71978-7-acme@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Fri, 16 Oct 2026 00:25:23 +0000
+Date: Fri, 16 Oct 2026 00:25:49 +0000
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -47,26 +47,31 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
 > From: Arnaldo Carvalho de Melo <acme@redhat.com>
 >=20
-> With more than one core PMU the requested events can't cover all the
-> CPUs, each cluster has its own PMU, so perf opens the software dummy
-> event to carry the tracking terms (mmap, comm, task, mmap_data), leaving
-> the requested events without them:
+> Opening a group with perf record on a machine with perf_event_paranoid >
+> 1 and no CAP_PERFMON fails the first perf_event_open() with EACCES, after
+> which evsel__open_cpu() clears evsel->supported; evsel__fallback() then
+> adds exclude_kernel and record__open() retries, and the retry succeeds
+> with supported left false.  get_group_fd() treats unsupported events as
+> ungroupable, so the retry opens the group members without their leader:
 >=20
->   expected mmap=3D1, got 0
->   expected comm=3D1, got 0
->   expected task=3D1, got 0
+>   sys_perf_event_open: pid 12345 cpu 0 group_fd -1
+>   FAILED '.../test-record-group-sampling1' - group failure
 >=20
-> That dummy event is not part of what the expectations are about, so
-> leave it out of the comparison, unless the expectations ask for one,
-> like system-wide-dummy and test-record-dummy-C0 do.
+> which fails the group subtests of "perf test 82", the Perf attribute
+> expectations test, when it is run as a regular user, while it passes as
+> root or with CAP_PERFMON, where the first open doesn't fail.
 >=20
-> And when perf used it to carry the tracking terms, those terms can't be
-> matched on the requested events, leave them out of the match as well.
+> commit 2cc7aa995ce9 ("perf stat: Refactor retry/skip/fatal error handling=
+")
+> dropped the pos->supported =3D true that record__open() did after a
+> successful open and moved the resets into the stat code only, while
+> saying "When an event is tried the supported is set to true again".  Do
+> that in evsel__open_cpu(), which every open entry point funnels through,
+> so that a retry describes its own try instead of the previous failure.
 >=20
-> The terms are left out only where the dropped dummy actually carried them,
-> from the sample_type it was opened with, a dummy that didn't is no reason
-> to stop verifying them.
->=20
+> Fixes: 2cc7aa995ce9ecd8 ("perf stat: Refactor retry/skip/fatal error hand=
+ling")
+> Cc: Ian Rogers <irogers@google.com>
 > Assisted-by: LLM
 > Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 
@@ -74,5 +79,5 @@ Sashiko has reviewed this patch and found no issues. It looks great!
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261016001843.7197=
-8-1-acme@kernel.org?part=3D11
+8-1-acme@kernel.org?part=3D6
 
