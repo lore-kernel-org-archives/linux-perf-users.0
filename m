@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9780529ACC5;
-	Fri, 16 Oct 2026 00:19:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61572274B53;
+	Fri, 16 Oct 2026 00:19:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792109953; cv=none; b=m5beaqMueGt1nmlECR6oOqrFhzje1+rgC8fbLgxgcsXcYSwDRAYKPfBN78yEUW8qosSMVNBdG8e6pUYu2bA5lV6qEFWz/D+G9HUGMS6Rqq6Oe2H0aDV51bYcLY42pq6WjDnh21snimrDxi7YKjzTqHjKcg7UfvI94u4gvmz018w=
+	t=1792109956; cv=none; b=KBgibz9ssovVDpPYoAF0aQXBq8ZH1L3Op1DdkoY4C0uNOIFAyrWXaFRH+RPdnnneHIO1NyJhJBcf+4JXmFHfGK3XNL9z8ngD/0ieYWx3Vqpx1O++s0IFASwPBRVy4mwg1YnhnjYfBsmtnD3rlnQS5uDoPjZkYd+bWPNkuCEMvsM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792109953; c=relaxed/simple;
-	bh=qNHb1CLjTtMHqgMCXUwp0cCKIIKt9WNSlisl2evFjMA=;
+	s=arc-20240116; t=1792109956; c=relaxed/simple;
+	bh=J1ANDjFW3B/OVcU+v+e7FHQc8GZMSZ+NJ3zYi4+AsuU=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=iM47Tpfk7Tv8fJSI1qFQLlTiahy8DTw4vC9sA22YT7EyCmxJEfjh61h+oQyiVzZOAz3iEHWCP1h9hN+2BaAk5/FOr81iTGMVQ3qtKIpJmBjpaODtn7/dthPw6YMrfKlD/CU2Jd/0lAISjKFlkdSpAB7sTd14InO7Zm4Oo03PzTI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=elTj+mNJ; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version; b=UIMYT88eaeTJXTc7Mv7WCFTJbAgCAa0Z211/FXY5/4x7RG5AMwmOYOldLmqcSAjZoz32Ctif8UmvIHCSoIN7Gw7nUfm4Fy4UDoqgAOK9VJUfjd/NCPL5vMm38E7YCDLdaNQbVXHuvbLTJddX8EzrrbkkH4MV8DCEKDZ1A649tjk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=i4U+V0x9; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="elTj+mNJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EC8021F000C4;
-	Fri, 16 Oct 2026 00:19:09 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="i4U+V0x9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A58E81F000C5;
+	Fri, 16 Oct 2026 00:19:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1792109952;
-	bh=eXXSCiITuXuvwb3zfcXD2NXYropFwuSwM81SLh+Zg28=;
+	s=k20260515; t=1792109954;
+	bh=xh/fOWK01/mrtVy7URa7Zle8xiDCJNDmcmJINOhtI4Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=elTj+mNJgHFGrvZzkeKcwzg599CuSPNvrgvBn75UjPaodcZmjOondof8BSDWmkTHT
-	 Jx0nNlCh3qUyY0HCooX+D/LLdgkFVyx5rOOjicf34v2vTK8pmmgbUFarYa5Lkn52mF
-	 LP9/LZRrZHfbbwkR4VEksYKe0lmiqs3CDxRMPmanzi1e+sPttUYAuPynuUs0DOQGmf
-	 OePNp5XClLB2lQh6eTMajstPef/sW2Hxr8coo8RGx5y0DUVgQ6cTdGDTCRomdBgSo2
-	 B4Tmj/Pi2SyGNL0xsAFRtVOyhDIV6uXhz7ItOTleKDjqY/O7LgcIElT9aJ0VKwIz9K
-	 9SoSAmctMKOEg==
+	b=i4U+V0x93r+l3t7sf9SZvlbgkpuEp0nA1JK4sWHox2yem1cWH6T0BTB+EdTASR/Mi
+	 RhWu/ZtbnQI5y47RVz+qua0k0WTP2JlFbbZFBCITUKGrTDXoHnIwZRmOFNnTlKMJhX
+	 B8LeF8R4Jyk1Hqr+2eQOFxarjdx+AANb9Ctxla8kZ0tB3sHuoDqhenApqbLdoTSc7F
+	 HXYtY7B1Wgd26Lcmkrt2SsC0Dz+SnHiEuYV4ZvUHGQT8ntJsXcr8syIBZUoup5TqsA
+	 seLM/Dyz3Hq97ebVIzsnV6xGZpp/P2FfJt+8m4WOVY2tbgjlHITP7xQoMnYe1xcc5z
+	 tZrQk+VsS8YcQ==
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Namhyung Kim <namhyung@kernel.org>
 Cc: Ingo Molnar <mingo@kernel.org>,
@@ -38,9 +38,9 @@ Cc: Ingo Molnar <mingo@kernel.org>,
 	linux-kernel@vger.kernel.org,
 	linux-perf-users@vger.kernel.org,
 	Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH v3 08/19] perf evsel: Don't dump probe events to PERF_TEST_ATTR
-Date: Thu, 15 Oct 2026 21:18:32 -0300
-Message-ID: <20261016001843.71978-9-acme@kernel.org>
+Subject: [PATCH v3 09/19] perf test attr: Introduce mask_bits(), generalizing hide_core_pmu_type()
+Date: Thu, 15 Oct 2026 21:18:33 -0300
+Message-ID: <20261016001843.71978-10-acme@kernel.org>
 X-Mailer: git-send-email 2.56.0
 In-Reply-To: <20261016001843.71978-1-acme@kernel.org>
 References: <20261016001843.71978-1-acme@kernel.org>
@@ -54,101 +54,67 @@ Content-Transfer-Encoding: 8bit
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-Events opened just to ask if they are supported, i.e. the ones in
-is_event_supported() and is_libpfm_event_supported(), go through the
-regular evsel__open() path and thus end up in the event files written to
-$PERF_TEST_ATTR, with everything but type, config and disabled zeroed:
+What hide_core_pmu_type() does is take a set of bits out of each of the
+'|'-separated alternatives in a value, wildcards included, keeping the
+rest of the expression: extract that as mask_bits() and implement
+hide_core_pmu_type() in terms of it, a prep for using the same thing to
+ignore, when comparing expectations, the sample id bit perf ends up
+asking for and the read_format group bit that a PMU count can remove.
 
-  [event-0-38654705664-3]
-  fd=3
-  cpu=-1
-  pid=0
-  type=0
-  size=0
-  config=38654705664
-  sample_type=0
-  ...
+No change in behaviour.
 
-which 'perf test attr' then takes as one of the events that were asked
-for, failing with:
-
-  expected cpu=0, got -1
-  expected size=176, got 0
-  expected sample_type=65927, got 0
-  expected freq=1, got 0
-
-This started showing up when there is more than one core PMU, as
-perf_pmus__supports_extended_type() probes one such event per core PMU,
-but these records were always bogus: nothing asked for them.
-
-Flag those evsels as support probes, keeping the name clear of the
-kprobe/uprobe meaning probe already has in evsel, and leave them out of
-the dump.
-
-Reported-by: Namhyung Kim <namhyung@kernel.org>
-Link: https://lore.kernel.org/linux-perf-users/asWQvXRdqp_RK85c@google.com/
 Assisted-by: LLM
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/evsel.c        | 6 +++++-
- tools/perf/util/evsel.h        | 1 +
- tools/perf/util/pfm.c          | 1 +
- tools/perf/util/print-events.c | 1 +
- 4 files changed, 8 insertions(+), 1 deletion(-)
+ tools/perf/tests/shell/lib/attr.py | 27 +++++++++++++++++----------
+ 1 file changed, 17 insertions(+), 10 deletions(-)
 
-diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index e61f309e93dccc7f..59318fef03cb17ff 100644
---- a/tools/perf/util/evsel.c
-+++ b/tools/perf/util/evsel.c
-@@ -3104,7 +3104,11 @@ static int evsel__open_cpu(struct evsel *evsel, struct perf_cpu_map *cpus,
+diff --git a/tools/perf/tests/shell/lib/attr.py b/tools/perf/tests/shell/lib/attr.py
+index fb866fb75175dc95..ee55fbe6f07bd7b5 100644
+--- a/tools/perf/tests/shell/lib/attr.py
++++ b/tools/perf/tests/shell/lib/attr.py
+@@ -80,24 +80,31 @@ PERF_TYPE_HW_CACHE = 3
+ # type in its top 32 bits when there is more than one core PMU.
+ LEGACY_TYPES = (str(PERF_TYPE_HARDWARE), str(PERF_TYPE_HW_CACHE))
  
- 			bpf_counter__install_pe(evsel, idx, fd);
+-def hide_core_pmu_type(value):
++def mask_bits(value, bits):
+     """
+-    The kernel can be told which core PMU a legacy type event is meant for by
+-    putting its type in the top 32 bits of 'config', which perf only does when
+-    there is more than one core PMU, so take those bits out to keep the
+-    expectations written for the single core PMU case matching on
+-    heterogeneous machines.
++    Take the bits in 'bits' out of each of the '|'-separated alternatives in
++    'value', keeping the rest of the expression, wildcards included.
+     """
+-    hidden = []
++    masked = []
  
--			if (unlikely(test_attr__enabled())) {
-+			/*
-+			 * Support probes aren't what was asked for, leave them
-+			 * out of the PERF_TEST_ATTR dump.
-+			 */
-+			if (unlikely(test_attr__enabled() && !evsel->support_probe)) {
- 				test_attr__open(&evsel->core.attr, pid, cpu,
- 						fd, group_fd, evsel->open_flags);
- 			}
-diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
-index 174f3414fd3cfa0d..53f3641b66e18674 100644
---- a/tools/perf/util/evsel.h
-+++ b/tools/perf/util/evsel.h
-@@ -120,6 +120,7 @@ struct evsel {
- 	u64			db_id;
- 	bool			uniquified_name;
- 	bool 			supported;
-+	bool			support_probe;	/* Opened just to check for support. */
- 	bool 			needs_swap;
- 	bool 			disabled;
- 	bool			no_aux_samples;
-diff --git a/tools/perf/util/pfm.c b/tools/perf/util/pfm.c
-index f80d6b0df47ae64d..ad9bc481da70604e 100644
---- a/tools/perf/util/pfm.c
-+++ b/tools/perf/util/pfm.c
-@@ -141,6 +141,7 @@ static bool is_libpfm_event_supported(const char *name, struct perf_cpu_map *cpu
- 		return false;
+     for alternative in value.split('|'):
+         try:
+-            alternative = str(int(alternative, 0) & 0xffffffff)
++            alternative = str(int(alternative, 0) & ~bits)
+         except ValueError:
+             pass
+-        hidden.append(alternative)
++        masked.append(alternative)
  
- 	evsel->is_libpfm_event = true;
-+	evsel->support_probe = true;
+-    return '|'.join(hidden)
++    return '|'.join(masked)
++
++def hide_core_pmu_type(value):
++    """
++    The kernel can be told which core PMU a legacy type event is meant for by
++    putting its type in the top 32 bits of 'config', which perf only does when
++    there is more than one core PMU, so take those bits out to keep the
++    expectations written for the single core PMU case matching on
++    heterogeneous machines.
++    """
++    return mask_bits(value, 0xffffffff00000000)
  
- 	ret = evsel__open(evsel, cpus, threads);
- 	if (ret == -EACCES) {
-diff --git a/tools/perf/util/print-events.c b/tools/perf/util/print-events.c
-index 0242243681b6b6f9..77428d9e73c4f1b6 100644
---- a/tools/perf/util/print-events.c
-+++ b/tools/perf/util/print-events.c
-@@ -147,6 +147,7 @@ bool is_event_supported(u8 type, u64 config)
- 
- 	evsel = evsel__new(&attr);
- 	if (evsel) {
-+		evsel->support_probe = true;
- 		ret = evsel__open(evsel, NULL, tmap) >= 0;
- 
- 		if (!ret) {
+ class Fail(Exception):
+     def __init__(self, test, msg):
 -- 
 2.55.0
 
