@@ -1,30 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 631DF1AC44D;
-	Fri, 16 Oct 2026 00:18:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC7312472B8;
+	Fri, 16 Oct 2026 00:18:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792109931; cv=none; b=WGTm+x6q9pM4tZ1W12fEgKBeV+938i1568BhNuOQA14sfSv3L+IHEoZCCPSlwf3ZuVW2hYm/W/NcBkW3VWNcrGfUlN5fKD40o/UG2uDxKziCZt7VrkDpKIkYDf4LioFel/ChLuZVnojO30b7sYFUB6EBe3IFJydQ+WXXm4EXxuA=
+	t=1792109933; cv=none; b=c/HoNxeMqhwECnwq+t4898CVaoeoio0+9UMpeSZX0VxQR+QG6mT0IVVpKjYCeE6q1MjmS/We7iWkjmQSYaoNpID6qYgGIcnyGg8y+052S9xnaluw1X6EvjBPcIKU6VkzZ+bSyE2tV6B3DYQFRoMeQ1U9uc7Vguvd5eq32A4qJkw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792109931; c=relaxed/simple;
-	bh=Crezj6kWzeD7Kmx3gaNGEPbL4unBLBvUL8Emj3YuVmg=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=KmfkVufYKHuyNLagpGEUt7zShB++P/UCQ55QS4uXP7+IUPgmhtb5z+o5R0t1CXLYTcyqmD/gXDD001XgU4nHGIDbVhZ2fJu3mgsJYeisnSZAJbWrLxHRJZQm3KonQAvMJBx+ESupKpQYuxr36aLdtjw2nLFzUSwt2iYPbwQZ3KI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YgzHGDWk; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1792109933; c=relaxed/simple;
+	bh=SmxGbot7TR9HDni/Elet4vrkv/9q2gIcEau2siebyHQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=kBvpG6ZM2fzs/uujOadl0Q2XOCEJJVKIPJg6FH6XDaxWyfFnNeDgpQGSIfKQZr71rYXEhTFWbCmcfUNZikPzTak35BrRQ9xMJvszX3Jv5JPl3+zgn58INYe3q1UlbgHiAYFsyxR4IB4I0JnYKQXtTW3l3bvEbDpgDhn9+d0cYHw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=atAmCGG8; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YgzHGDWk"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 85EF11F000C4;
-	Fri, 16 Oct 2026 00:18:47 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="atAmCGG8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6881A1F000C5;
+	Fri, 16 Oct 2026 00:18:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1792109930;
-	bh=lr5o6iH1N3MpaHE03Oe5L/R7ev2BlIlKxgAjDKnkGRE=;
-	h=From:To:Cc:Subject:Date;
-	b=YgzHGDWkD6HvaLz00eEemhVNzN/EdQwdLHLLJVhlqcqDzOhjeXV5sh4VDnfy15xIw
-	 I7QLwaFVEo5Eig10WPJwavC8nWEGpvJhFVqOMsJ7nuHHLOL3SnNhDG/ffq5Th1lICL
-	 n6F5S4sfmdYVSxGQfhgTSrk/rusYfNVkyL/LOSy5K3ukDoE0cte6mtzYZJe6kWkEaN
-	 ZHnkL3tHhduKdNY2vKrRpbmDh67aTQWqh9vCWU0jz3NaYmjKpdYLSQfBdBcX6zDqVG
-	 f/R9Y8Muf6ZV2qTNt+Cq3KeYF/Q6KxwMTXVoy/+BUgUjkF+j+3BtZRhga6Q5UY3r3Z
-	 kreWD3XKfWxhg==
+	s=k20260515; t=1792109932;
+	bh=w5/BfkC1OceS3dX0jV7eo4MrwK7mpfm5mPAWRCk6F7M=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=atAmCGG8zv7EaBd+1S0qKP4YY3rk14E85PsDmrkyRtwlLTJ1b+7sFHWtBzZzyVH1i
+	 goP+WvQmzca2838GaIDLo/xWHErRizou6Qoc6zk7oyVAlmJKu3HNP57kKPCTlwf0yl
+	 FerXX5hhYd5mPG+ZvWV1CtqwcLjxLwMCICD5LX9lc2/za03TL9jMvhTuHmY0fpUC7s
+	 EmQVTZe/cPADe0FEvvSc3lqQvTcjyw0LK8YusP+7s+QAAHOzHGMY2fBB9qQcYtA4+U
+	 wBK8TCYgfaKr8ZUCHT4W8D529UBXelpf5K9W039HNrwztJXRQpvZDCahtB25RgC8wV
+	 DFZbfn+UCySLQ==
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Namhyung Kim <namhyung@kernel.org>
 Cc: Ingo Molnar <mingo@kernel.org>,
@@ -36,12 +37,13 @@ Cc: Ingo Molnar <mingo@kernel.org>,
 	Clark Williams <williams@redhat.com>,
 	linux-kernel@vger.kernel.org,
 	linux-perf-users@vger.kernel.org,
-	Arnaldo Carvalho de Melo <acme@redhat.com>,
-	Michael Petlan <mpetlan@redhat.com>
-Subject: [PATCH v3 0/19] perf test attr: Report the failures again and cope with more than one core PMU
-Date: Thu, 15 Oct 2026 21:18:24 -0300
-Message-ID: <20261016001843.71978-1-acme@kernel.org>
+	Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: [PATCH v3 01/19] perf test attr: Fix record dwarf sample_type expectation
+Date: Thu, 15 Oct 2026 21:18:25 -0300
+Message-ID: <20261016001843.71978-2-acme@kernel.org>
 X-Mailer: git-send-email 2.56.0
+In-Reply-To: <20261016001843.71978-1-acme@kernel.org>
+References: <20261016001843.71978-1-acme@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -52,120 +54,51 @@ Content-Transfer-Encoding: 8bit
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-Hello all,
+Since commit bdd051e24914 ("perf record: Split --data-mmap option"),
+record_opts__parse_callchain() sets record_data_mmap instead of
+record->sample_address for the DWARF unwind mode, so -d/--data and its
+implied PERF_SAMPLE_DATA_SRC are not enabled implicitly anymore.
 
-perf test 82 stopped reporting failures when it got its shell wrapper
-(8519e4f44c2af722), so expectations that no longer match perf went
-unverified.  The prerequisite fixes are upstream now, so they are not
-repeated here.
+As a result, --call-graph dwarf no longer sets PERF_SAMPLE_ADDR and
+PERF_SAMPLE_DATA_SRC, making the test fail:
 
-This series updates those expectations and makes the test cope with
-machines with no core PMU, or with more than one.  Asking for one event
-on the latter gives one event per core PMU.  The expectations ignore
-what that adds; the commit messages say what and why.
+  expected sample_type=45359, got 12583
 
-The tests that map ring buffers take turns on the per user mlock budget
-(kernel.perf_event_mlock_kb) through a robust, process-shared mutex.
-The sysctl is left alone.  A test killed while holding the budget does
-not leave the next one waiting.
+where 45359 (0xb12f) is:
 
-Tested: 'perf test -vv attribute' Ok on an Amlogic A311D (aarch64, as
-root), an Intel i7-14700K (hybrid, two core PMUs), x86_64 (AMD Ryzen 9
-9950X3D, kernel 7.2.7) and riscv64 (Orange Pi RV).  On riscv64 the stat
-tests run and the record tests report unsupp, as sampling is not
-available there (no Sscofpmf).
+  IP|TID|TIME|ADDR|CALLCHAIN|PERIOD|REGS_USER|STACK_USER|DATA_SRC
 
-Best regards,
+and 12583 (0x3127) is:
 
-- Arnaldo
+  IP|TID|TIME|CALLCHAIN|PERIOD|REGS_USER|STACK_USER
 
-What changed from v2:
+i.e. the values differ exactly by PERF_SAMPLE_ADDR (0x8) and
+PERF_SAMPLE_DATA_SRC (0x8000).  The mmap_data=1 expectation is still
+correct as DWARF now enables record_data_mmap.
 
-  - sashiko-bot's v2 review: a one-component kernel_since or
-    kernel_until (f.i. kernel_until = 6) no longer crashes attr.py.
-  - sashiko-bot's v2 review: mutex_trylock() and cond_wait() now take
-    over a robust mutex left behind by a dead owner, as mutex_lock().
+This went unnoticed until tests/attr.sh stopped ignoring attr.py's
+return value.
 
-What changed from v1:
+Fixes: bdd051e249141c79 ("perf record: Split --data-mmap option")
+Assisted-by: LLM
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+---
+ tools/perf/tests/shell/attr/test-record-graph-dwarf | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-  - Namhyung's python fix and Michael Petlan's two fixes are upstream
-    now, so they are dropped from the series.
-  - Namhyung's v1 report (test-record-branch-filter-any_call): probe
-    events are no longer dumped, and the core PMU fallout is masked.
-  - New, not from review: the 'requires = core-pmu' skip, the skip
-    reasons and the mlock budget part.
-  - New, not from review: the events of the other core PMUs are left
-    out, when the expectations name a core PMU.
+diff --git a/tools/perf/tests/shell/attr/test-record-graph-dwarf b/tools/perf/tests/shell/attr/test-record-graph-dwarf
+index ae92061d611ded68..fbe0faa8cdb6a8f4 100644
+--- a/tools/perf/tests/shell/attr/test-record-graph-dwarf
++++ b/tools/perf/tests/shell/attr/test-record-graph-dwarf
+@@ -4,7 +4,7 @@ args    = --no-bpf-event --call-graph dwarf -- kill >/dev/null 2>&1
+ ret     = 1
+ 
+ [event:base-record]
+-sample_type=45359
++sample_type=12583
+ exclude_callchain_user=1
+ sample_stack_user=8192
+ # TODO different for each arch, no support for that now
+-- 
+2.55.0
 
- tools/build/Makefile.feature                       |   1 +
- tools/build/feature/Makefile                       |   4 +
- tools/build/feature/test-all.c                     |   5 +
- tools/build/feature/test-pthread-mutex-robust.c    |  18 +
- tools/perf/Documentation/perf-test.txt             |  36 +-
- tools/perf/Makefile.config                         |   4 +
- tools/perf/tests/backward-ring-buffer.c            |   2 +-
- tools/perf/tests/builtin-test.c                    | 173 +++++++-
- tools/perf/tests/code-reading.c                    |   2 +-
- tools/perf/tests/keep-tracking.c                   |   2 +-
- tools/perf/tests/mmap-basic.c                      |   1 +
- tools/perf/tests/openat-syscall-tp-fields.c        |   1 +
- tools/perf/tests/perf-record.c                     |   1 +
- tools/perf/tests/perf-time-to-tsc.c                |   1 +
- tools/perf/tests/shell/attr/README                 |  10 +-
- tools/perf/tests/shell/attr/base-stat-group        |  45 ++
- .../perf/tests/shell/attr/test-record-graph-dwarf  |   2 +-
- .../tests/shell/attr/test-record-group-sampling    |   5 +-
- .../tests/shell/attr/test-record-group-sampling1   |   5 +-
- .../tests/shell/attr/test-record-group-sampling2   |   5 +-
- tools/perf/tests/shell/attr/test-record-group1     |   3 +-
- tools/perf/tests/shell/attr/test-record-group2     |   3 +-
- tools/perf/tests/shell/attr/test-record-group3     |   3 +-
- tools/perf/tests/shell/attr/test-stat-C0           |   1 +
- tools/perf/tests/shell/attr/test-stat-basic        |   1 +
- tools/perf/tests/shell/attr/test-stat-default      |  91 +++--
- tools/perf/tests/shell/attr/test-stat-detailed-1   |  99 +++--
- tools/perf/tests/shell/attr/test-stat-detailed-2   | 111 +++--
- tools/perf/tests/shell/attr/test-stat-detailed-3   | 115 ++++--
- tools/perf/tests/shell/attr/test-stat-group1       |   3 +-
- tools/perf/tests/shell/attr/test-stat-no-inherit   |   1 +
- tools/perf/tests/shell/drm_pmu.sh                  |   2 +-
- tools/perf/tests/shell/ftrace.sh                   |   2 +-
- tools/perf/tests/shell/kallsyms.sh                 |   2 +-
- tools/perf/tests/shell/lib/attr.py                 | 455 +++++++++++++++++++--
- tools/perf/tests/shell/list.sh                     |   2 +-
- tools/perf/tests/shell/perf_sched_stats.sh         |   2 +-
- tools/perf/tests/shell/probe_vfs_getname.sh        |   2 +-
- tools/perf/tests/shell/python-use.sh               |   2 +-
- tools/perf/tests/shell/schedstat_snapshots.sh      |   2 +-
- tools/perf/tests/shell/stat+csv_output.sh          |   2 +-
- tools/perf/tests/shell/stat+csv_summary.sh         |   2 +-
- tools/perf/tests/shell/stat+event_uniquifying.sh   |   2 +-
- tools/perf/tests/shell/stat+json_output.sh         |   2 +-
- tools/perf/tests/shell/stat+shadow_stat.sh         |   2 +-
- tools/perf/tests/shell/stat+std_output.sh          |   2 +-
- tools/perf/tests/shell/stat.sh                     |   2 +-
- tools/perf/tests/shell/stat_all_metricgroups.sh    |   2 +-
- tools/perf/tests/shell/stat_all_metrics.sh         |   2 +-
- tools/perf/tests/shell/stat_all_pfm.sh             |   2 +-
- tools/perf/tests/shell/stat_bpf_counters_cgrp.sh   |   2 +-
- tools/perf/tests/shell/stat_metrics_cgrp.sh        |   2 +-
- tools/perf/tests/shell/stat_metrics_values.sh      |   2 +-
- tools/perf/tests/shell/test_ilist_python.sh        |   2 +-
- tools/perf/tests/shell/test_stat_cpi_python.sh     |   2 +-
- tools/perf/tests/shell/test_test_junit_output.sh   |   5 +-
- .../tests/shell/test_uprobe_from_different_cu.sh   |   2 +-
- tools/perf/tests/sw-clock.c                        |   2 +-
- tools/perf/tests/task-exit.c                       |   1 +
- tools/perf/tests/tests-scripts.c                   |  84 +++-
- tools/perf/tests/tests.h                           |  17 +
- tools/perf/util/evsel.c                            |  12 +-
- tools/perf/util/evsel.h                            |   1 +
- tools/perf/util/mutex.c                            | 101 ++++-
- tools/perf/util/mutex.h                            |   6 +
- tools/perf/util/pfm.c                              |   1 +
- tools/perf/util/print-events.c                     |   1 +
- 67 files changed, 1225 insertions(+), 263 deletions(-)
-
-base-commit: cb9dba6f4764fc68ab75c36e332887332339f9c3
-v1-head: b1300831ecc4503d
-v2-head: da166ef7a002
