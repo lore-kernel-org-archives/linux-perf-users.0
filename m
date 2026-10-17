@@ -1,75 +1,198 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-dy1-f197.google.com (mail-dy1-f197.google.com [74.125.82.197])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B780317166
-	for <linux-perf-users@vger.kernel.org>; Sat, 17 Oct 2026 02:08:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 422803ADB92
+	for <linux-perf-users@vger.kernel.org>; Sat, 17 Oct 2026 05:46:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792202889; cv=none; b=Rs8fBhTg/I8EBsmritnK3lmUFYAX4cx9n+/4/4aPGtr26E3wfo4MZ//75gCVR71TN578jJf+DSsox8zMElfbyHKsOuU58POuuYdVBvKnuY5gGgh92etG5Gqa+sFfHGvo3f8mMidazpFbJKKFWGtDY2if/SGQoku4selWYPAQU6c=
+	t=1792215987; cv=none; b=ecxXpjVtjQLWEwXLeZPYE3dK5Ahi06oH7ZlmAVLl5mGJRuW4+QCmsWI1j5C2fk5Ywp9y5aQed68Mzi3VmqYXa9pMS6NGTulGyGOc1facS/VjO/IYqgrjgbeBB9prN78J+oTXbMjGJ95BHiycbVTdOKAnSK3ZmzNLKCgeoqJt1TM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792202889; c=relaxed/simple;
-	bh=v6VEfZnhRfdvxtCHL/12pkt3IFFllw2rmFTd6DTfo0w=;
-	h=Message-ID:From:Subject:To:Cc:In-Reply-To:References:Content-Type:
-	 Date; b=EDJwJ97/XK78g6NVygiVlYKWSQdmfhGb2SZ/K33PqgTtr+dennpaX+tgKkWx8uGbtiZdrBkvpbSlNxSBKfzGbORR1Fecb6e/VoIQh8Q2ftvjQDQp/IeOhVNpHvoPEPQhK3XfA6o9ATMNAQlXwfoYy5RQhFpO0igTYdcrSVlE0hg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Dr0Uq7Fe; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1792215987; c=relaxed/simple;
+	bh=oRoToiON3ZaD1lI1MPyxw1i6r2WmBIZ4K/66dw+svII=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=k93XbBq17TorGYQj/vCn/a2+AWbV1E63rZWUv0s8h0LSVY9EOn2O9Wms+YRp2SJeANXulzPF0DRgjj9zmkD3VYpH3f2Y7aEHznFsyH6eZtvQy5gWE9TY1PgLX2f7mrJWwyPEwLKcjYbPjbSDGghJ1EGzlJud+5A6AdrKJRh66Xg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=HutJpr3j; arc=none smtp.client-ip=74.125.82.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Dr0Uq7Fe"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1C6381F000C4;
-	Sat, 17 Oct 2026 02:08:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1792202888;
-	bh=v6VEfZnhRfdvxtCHL/12pkt3IFFllw2rmFTd6DTfo0w=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=Dr0Uq7FeFhZYLl5TwJ7/CvD7jOGiNp0DGQCNwQfjZBWxYg6oM1fS33cOcU6B8pce4
-	 uSCH6z+E2wZnp2j2neI/84CCXvGYzo/ncT+elpid8EPdZdNscc/GskbZeJcbXCd/9D
-	 jU1zKMIV+koEtC/i1PDdBEHhWF7gSOWDLLb0x7aZ36Pc+R7y6rRbpQNGVRS+diyK9X
-	 fUZjP1MBY69+W5Ynj0FQjxZirk5j3X89hFPWqSx4k833FC7kdClVwFbMBY5OQWqwde
-	 9e7LfzPf7NBPd2KPmw5VsZd2RkIXpWF3oHdQxG8y4hYmVE1q3SmrljLXrp0cDbA7li
-	 //n2mEEzoQJOw==
-Message-ID: <sashiko-outbox-175192@kernel.org>
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v2 4/5] alpha: add HAVE_PERF_REGS and
- HAVE_PERF_USER_STACK_DUMP support
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Matt Turner" <mattst88@gmail.com>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20261016-alpha-perf-regs-v3-v2-4-17654742226a@gmail.com>
-References: <20261016-alpha-perf-regs-v3-v2-0-17654742226a@gmail.com>
- <20261016-alpha-perf-regs-v3-v2-4-17654742226a@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Sat, 17 Oct 2026 02:08:06 +0000
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="HutJpr3j"
+Received: by mail-dy1-f197.google.com with SMTP id 5a478bee46e88-33c35f5ca6cso1058067eec.1
+        for <linux-perf-users@vger.kernel.org>; Fri, 16 Oct 2026 22:46:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1792215984; x=1792820784; darn=vger.kernel.org;
+        h=content-type:cc:to:from:subject:message-id:mime-version:date:from
+         :to:cc:subject:date:message-id:reply-to:content-type;
+        bh=K2jhVCppV5GQjYVL/RGnDCx4V2eYYpWesrsS42HkL+s=;
+        b=HutJpr3jf8WwlM23vnCv7Q8QNXwA8nIH7WxGGo2ulAwfBkWDkXrAtU7zju4lQ/KAuF
+         JNuc8wjAGKGyUyLuUOZAhAtpNNl0CBT63jUkmAW40C9kIhAkUxUcjpdGE3YsDc8Gfr1n
+         72rn2R0TjcJRWJFCpodgUAUGb6JG4UmxGIeDtiQOTNtWpObIbbs60bOPI5VfwbhJzl1L
+         fqWFKCuNDowMi9NivBeN6r9U7bNySEZjoyd3tE8ujqjGtAIb2pyhZPHh/Uciuu3mPA0q
+         ksup4tOvP6PryrsABbFsECnBeRfgKRFh04XhNELFAs9pEptdTXmVanoiWtQpmyHJdPID
+         tHdg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1792215984; x=1792820784;
+        h=content-type:cc:to:from:subject:message-id:mime-version:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=K2jhVCppV5GQjYVL/RGnDCx4V2eYYpWesrsS42HkL+s=;
+        b=ZZq6+XAEHsESlsOHZ2WJgO6hWTOVvtELSY4rAtzMBUZmxXj8dA2+GMk+H+VInxoZP8
+         NbScuGIcsfjicu4MG9H9mTThoJa36apP3ydARCXtwnOCH5fLhfc08VolacCpfjQed+w/
+         Kwfrb+imhQOGwG5IwxRLnvc26P0CKtvqxDw8mB6zIftqMqB2AKlm/g1ImBS/gKjk20tt
+         0MkOf4rI41wTtUfVOqnw1AmyPee20pQ7yiqWW2jL5BwVCjnEgVExSs37XL2oOO3XvYgd
+         iDUhgH4AWT6oHVAdBDaFWumygMigBlIjTwlAElPry5o2TK/acWnz8rDB6IXkNVe14COj
+         oZtw==
+X-Forwarded-Encrypted: i=1; AKwUvBze/kWb0KfZWVFM6/2Y4hsSethJTiO6sEJO7POU2OcDR9d1kjOCY5pb3x4jkn4SaKXBNDfUpx0ZR9j9U2MyI9ZN@vger.kernel.org
+X-Gm-Message-State: AFq9FYKGrNwxqdiABJoqXryvzC5WJyxiH2CSfw5HsAU3m++q6JqS5Wmu
+	zk+OcK/PK0n2A72DkHRg2wJM0eyZUxHFom5fpogFVVrxHfRCpHZT1UFckDUNf0DVNkrhCWySgXX
+	Gega8Jl/m8w==
+X-Received: from dyp23.prod.google.com ([2002:a05:693c:65d7:b0:343:520f:7a80])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7301:424a:b0:35b:9bd:1435
+ with SMTP id 5a478bee46e88-3619ea236e5mr2314060eec.2.1792215983849; Fri, 16
+ Oct 2026 22:46:23 -0700 (PDT)
+Date: Fri, 16 Oct 2026 22:45:50 -0700
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.56.0.212.g129ede20d9-goog
+Message-ID: <20261017054555.1655407-1-irogers@google.com>
+Subject: [PATCH v1 0/5] perf bpf-filter / lock contention: Add lock_held()
+ sample filter and RCU/SRCU support
+From: Ian Rogers <irogers@google.com>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	James Clark <james.clark@linaro.org>, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, rcu@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-> Let perf sample registers and dump the user stack, which is what the
-> perf tool needs for --call-graph dwarf.
->=20
-> The register indices follow the hardware numbering, so r0-r30 map
-> directly to DWARF register numbers, with pc after them. r9-r15
-> are callee-saved and live in switch_stack rather than pt_regs, so they
-> cannot be sampled. Without r15 an unwinder cannot recover the CFA of a
-> first frame that uses $15 as its frame pointer.
->=20
-> sp is not in pt_regs either: for user frames it comes from
-> user_stack_pointer(), and for kernel frames (PERF_SAMPLE_REGS_INTR) it
-> is the end of the trap frame, as in stacktrace.c.
->=20
-> Software events such as context switches and tracepoints hand perf a
-> per-CPU pt_regs filled in by perf_fetch_caller_regs() instead of a
-> trap frame. It is not on the stack and has no room for sp, so report
-> sp as 0 there rather than the address of the per-CPU buffer.
->=20
-> Assisted-by: Claude:claude-opus-5-5
-> Acked-by: Ian Rogers <irogers@google.com>
-> Signed-off-by: Matt Turner <mattst88@gmail.com>
+This series adds a new BPF sample filter predicate, `lock_held(<lock>)`
+(along with `lock_held_read(<lock>)` / `lock_held_shared(<lock>)`,
+`lock_held_write(<lock>)` / `lock_held_exclusive(<lock>)`, and `:R` / `:W`
+mode suffixes), to `perf record --filter`, allowing perf event samples to
+be recorded only when a specified kernel lock is held (or not held with
+`!`) by the running kernel thread or CPU. It also extends both
+`lock_held()` and `perf lock contention --use-bpf` to support RCU and
+SRCU.
 
-Sashiko has reviewed this patch and found no issues.
+For example:
 
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261016-alpha-perf=
--regs-v3-v2-0-17654742226a@gmail.com?part=3D4
+  # perf record -a -g -e cycles --filter 'lock_held(&cgroup_mutex)' -- ...
+  # perf record -a -g -e cycles --filter 'lock_held_read(&mmap_lock)' -- ...
+  # perf record -a -g -e cycles --filter 'lock_held(&mmap_lock:W)' -- ...
+  # perf record -a -g -e cycles --filter 'lock_held_read(rcu)' -- ...
+  # perf lock contention -a -b -Y rcu,srcu -- sleep 1
+
+Supported `<lock>` specifications match `perf lock contention`:
+- Global/static kernel lock symbols (with or without leading `&`, e.g.
+  `lock_held(&cgroup_mutex)` or `lock_held(cgroup_mutex)`)
+- Hexadecimal kernel lock addresses
+- Slab cache names prefixed with `&` (e.g. `lock_held(&dentry)`,
+  `lock_held_read(&dentry)`)
+- Well-known per-process, semi-global, and RCU locks: `mmap_lock`,
+  `siglock`, `rq_lock`, `zone_lock`, `rcu`, `rcu-trace`
+- Lock types and flags: `mutex`, `spinlock`, `rwsem`, `rwsem:R`,
+  `rwsem:W`, `rwlock`, `rwlock:R`, `rwlock:W`, `rt-mutex`,
+  `percpu-rwsem`, `pcpu-sem:W`, `srcu`, `srcu:R`, `srcu:W`, `rcu:R`,
+  `rcu:W`, `semaphore`
+
+Limitations and weaknesses in determining whether a lock is held:
+- Inlined lock/unlock operations:
+  - When the kernel is configured to inline spinlock or rwlock operations
+    (`CONFIG_INLINE_SPIN_LOCK`, `CONFIG_INLINE_READ_LOCK`,
+    `CONFIG_INLINE_WRITE_LOCK`, etc., which are enabled on many
+    `!CONFIG_PREEMPT_RT` / `!CONFIG_PROVE_LOCKING` builds unless
+    `CONFIG_UNINLINE_SPIN_UNLOCK` or lockdep/preemption forces them out of
+    line), `_raw_spin_lock*` / `_raw_spin_unlock*` and
+    `_raw_read_lock*` / `_raw_write_lock*` are inlined into callers and
+    have no BTF function entry points for `fentry`/`fexit` to attach to.
+  - Fast-path `percpu_down_read()` / `percpu_up_read()` and
+    `srcu_read_lock_fast()` / `srcu_read_unlock_fast()` are inlined
+    per-CPU counter increments without function calls, so only
+    `percpu_down_write()` / `percpu_up_write()` and out-of-line
+    `__srcu_read_lock*()` / `__srcu_read_unlock*()` can be hooked.
+  - On `!CONFIG_PREEMPT_RCU` kernels, `rcu_read_lock()` compiles to
+    `preempt_disable()` and does not maintain
+    `current->rcu_read_lock_nesting` in `task_struct`, so `lock_held(rcu)`
+    read-side inspection requires `CONFIG_PREEMPT_RCU`.
+- Lack of an inspectable owner field on non-exclusive / spinning locks:
+  - While `struct mutex`, `struct rt_mutex`, and write-locked
+    `struct rw_semaphore` store the owning `task_struct *` in `lock->owner`
+    (allowing `perf_sample_filter` to inspect kernel memory directly on
+    sample overflow when filtering by lock address), spinlocks, rwlocks,
+    semaphores, SRCU, and reader-locked `rw_semaphore`s (where
+    `__up_read()` does not clear `sem->owner` when `!CONFIG_DEBUG_RWSEMS`)
+    do not maintain an authoritative per-task owner pointer.
+  - Tracking these locks (as well as slab-cache and lock-type filters)
+    relies on `fexit` (acquire) and `fentry` (release) BPF hooks
+    maintaining the `held_locks` BPF hash map:
+    - Any such lock already held before `perf record` attaches its BPF
+      programs will not be present in `held_locks` until it is released
+      and re-acquired.
+    - The attached `fentry`/`fexit` hooks execute on every kernel lock
+      acquire and release for the hooked lock family across the system,
+      adding tracing overhead outside of perf sample handling.
+
+Patch overview:
+1. "perf lock contention: Share common BPF and lock type definitions in
+   lock_data.h": Moves `lock_type_table` to `util/lock-contention.c` and
+   `LCB_F_*` flags, CO-RE structs, and common BPF lock helpers
+   (`get_lock_owner`, `get_current_mmap_lock`, `get_current_siglock`,
+   `get_lock_addr`, `check_lock_type`, `do_collect_lock_syms`,
+   `do_slab_cache_iter`) into `tools/perf/util/bpf_skel/lock_data.h`.
+2. "perf bpf-filter: Add lock_held() sample filter": Implements
+   `lock_held()`, `lock_held_read()`/`lock_held_shared()`,
+   `lock_held_write()`/`lock_held_exclusive()`, and `:R`/`:W` mode
+   suffixes using direct lock owner inspection where possible (`mutex`,
+   `rt_mutex`, write-locked `rw_semaphore`) and a `held_locks` BPF map
+   updated by selectively attached `fentry`/`fexit` hooks.
+3. "perf test: Add tests for lock_held() BPF sample filter": Adds unit
+   tests in `tests/parse-events.c` and shell tests in
+   `tests/shell/record_bpf_filter.sh`.
+4. "perf bpf-filter: Extend lock_held() to support RCU, Tasks Trace RCU,
+   and SRCU": Supports `rcu` (`rcu:R` via direct
+   `current->rcu_read_lock_nesting` inspection with zero tracing hooks;
+   `rcu:W` via `synchronize_rcu*()` / `rcu_barrier()` hooks),
+   `rcu-trace` (via `current->trc_reader_nesting`), and `srcu`
+   (`srcu:R` via `__srcu_read_lock*` / `__srcu_read_unlock*`; `srcu:W`
+   via `synchronize_srcu*()` / `srcu_barrier()`).
+5. "perf lock contention: Extend BPF lock contention to RCU and SRCU":
+   Extends `perf lock contention --use-bpf` to track RCU and SRCU
+   grace-period and barrier waits (`-Y rcu`, `-Y srcu`, `-L rcu`).
+
+Assisted-by: Antigravity:gemini-3.1-pro
+
+Ian Rogers (5):
+  perf lock contention: Share common BPF and lock type definitions in
+    lock_data.h
+  perf bpf-filter: Add lock_held() sample filter
+  perf test: Add tests for lock_held() BPF sample filter
+  perf bpf-filter: Extend lock_held() to support RCU, Tasks Trace RCU,
+    and SRCU
+  perf lock contention: Extend BPF lock contention to RCU and SRCU
+
+ tools/perf/Documentation/perf-lock.txt        |    7 +-
+ tools/perf/Documentation/perf-record.txt      |   51 +-
+ tools/perf/builtin-lock.c                     |   27 -
+ tools/perf/tests/parse-events.c               |  121 ++
+ tools/perf/tests/shell/lock_contention.sh     |   14 +
+ tools/perf/tests/shell/record_bpf_filter.sh   |  119 ++
+ tools/perf/util/bpf-filter.c                  | 1070 ++++++++++++++++-
+ tools/perf/util/bpf-filter.h                  |   13 +
+ tools/perf/util/bpf-filter.l                  |   31 +-
+ tools/perf/util/bpf-filter.y                  |   46 +-
+ tools/perf/util/bpf_lock_contention.c         |  167 ++-
+ .../perf/util/bpf_skel/lock_contention.bpf.c  |  410 +++----
+ tools/perf/util/bpf_skel/lock_data.h          |  360 +++++-
+ tools/perf/util/bpf_skel/sample-filter.h      |   71 ++
+ tools/perf/util/bpf_skel/sample_filter.bpf.c  | 1051 ++++++++++++++++
+ tools/perf/util/bpf_skel/vmlinux/vmlinux.h    |    7 +
+ tools/perf/util/lock-contention.c             |   22 +
+ tools/perf/util/lock-contention.h             |   15 +
+ tools/perf/util/parse-events.c                |    3 +-
+ 19 files changed, 3273 insertions(+), 332 deletions(-)
+
+-- 
+2.56.0.212.g129ede20d9-goog
 
