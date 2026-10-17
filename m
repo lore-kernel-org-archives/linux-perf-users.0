@@ -1,45 +1,45 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7821637F01B
-	for <linux-perf-users@vger.kernel.org>; Sat, 17 Oct 2026 17:30:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 484C53A1686
+	for <linux-perf-users@vger.kernel.org>; Sat, 17 Oct 2026 17:31:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792258223; cv=none; b=RfsLrBkZV4ub3Bi8ZWc+Qt938vUH8Eo5nr5nk6hYNsieD6q/iQs7XKa/weXMWGMhuL1ceoAmW8pFgN/3jSWRSU2t49VIbo0mgfc9HPZTgz9Zqf+YQGAu9kKNTsPYANsC1doF38rGwFAYy76O1fCpFqkATfWbnuWwtM40Df9ZP2s=
+	t=1792258284; cv=none; b=OShVJwTgQfnsSP8ak/OUUlCpfVFHrcOYzEumn2yQc5Ypw+qeSs9xXBEoDkkoOZrI5deUGY5dqgDN6uoUpWTzBdh56d8D5MG6usCLTk5j1Gv1z52aOwLaRvAJccGVm66V5zWBi3OSnrfFhXKhxyuHjst3H4IBN5ABww8k26su+r8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792258223; c=relaxed/simple;
-	bh=4Kwa3Y7wGAqaqLdgccFfnmsFHjlcIdqyEgcY34IEbAg=;
+	s=arc-20240116; t=1792258284; c=relaxed/simple;
+	bh=FfdchEwt85GmpPxjQ32aMWYlTkMSwE8AqbT9MO3xQCA=;
 	h=Message-ID:From:Subject:To:Cc:In-Reply-To:References:Content-Type:
-	 Date; b=AUmLvOW2oZ71W/mMnrazCQSIIzrhx/93ZQW2xlVR8jlBIDrMiUOUMmFC3Vmkj5GOFxN9Z/KLHk+Rodfg3Y7o4AsT2i0EEC8a9UxrqOZhb/+RXRYfpAcAgQxcZADOBsDFO7tPLhMvOg/X0GUUr9PUOdWCJ00YgnFWR2a2+Z21Gac=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=J1UV+c14; arc=none smtp.client-ip=100.103.45.18
+	 Date; b=G1XI8cd5yblWLEo5OADrGWAMlPxNPjabzZwZiqQxiXGtrLkbfsAq3IMzLVQKZvz1zyAwLL0lv8s4eisABndBDJeRNuPKM2E8fLdWCPnwIbmRP7Zb6cdfLAnn2uzVkRIxPa3BE2ZtDMwDsml1mJoCKNw0MgBQt7z1LBBaAaqwMa0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iwLZfo8v; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="J1UV+c14"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1FB0F1F000C4;
-	Sat, 17 Oct 2026 17:30:22 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iwLZfo8v"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D27B41F000C4;
+	Sat, 17 Oct 2026 17:31:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1792258222;
-	bh=DiDl4kPscuK/8gn6KIXM0nKfNvev3QSLVQnWp+1eo08=;
+	s=k20260515; t=1792258283;
+	bh=lJe4huhoE6dlL72SOkVakG1eA2Ep01PoKybvAO8vpZM=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=J1UV+c14Rh60MQeVGl+JfR8aj6wnPA5IJu1A/l51wxuJgvt+J844a6xHFKpND6x8e
-	 onO8Ne85FDT7po2NJRnnJ3AYZnseMxOpzpr9eaiUyrVzzdJV7CzXFvc0GWtJIT0WGw
-	 spxR9kSsbiqRnk9rd042HDZD1fxgaODN5Uc8H637KQ0bDFIauQXQ9cpQxrMblm32VR
-	 V1rUTeKYF2wLGgqd7WUE61OoV2GGFsvpWQBJbQjs7PAJd8c+FhVCMZjs9a1cQwRugB
-	 hfVXp3NMKTEta0Kdl8QH9Owhqxt+/H+3by4nwS0i4fpAKD4RcmDv0yYmNmqx/UG5cO
-	 w4wQi+3kbP5nw==
-Message-ID: <sashiko-outbox-175708@kernel.org>
+	b=iwLZfo8vlALcKfYaWRY1QLUa9dclJXw62mItsGTbPPYkpQo6BjO3rtX8EoraJHiym
+	 LpsbF8H2uz8riC+ka5PVl8MGT5NFj9dDWkhvOVU7DSRvrsA/0/se1L++pDaTzlLv4m
+	 Qq/yrR5WaOnQHDa1VTCGpBUKcjivdAtT0t784UOI4Bhsz3WDMJRpevseLUkXlMUya8
+	 LtdNptcBYZaLNyi2b62CluH2WjmLDM1pRdSUxxX22bCGL0cKZDNKhxObiWMJRiDsYL
+	 06tWcXEA2M/B5LOH8f8PQyq+46FmIeFlWcR749oWbvSxyxhmXViLcdhT/uHf0A3CY8
+	 nLvyaOF3SdqLw==
+Message-ID: <sashiko-outbox-175709@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v2 5/6] perf lock contention: Extend BPF lock contention
- to RCU and SRCU
+Subject: Re: [PATCH v2 1/6] perf lock contention: Share common BPF and lock
+ type definitions in lock_data.h
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Ian Rogers" <irogers@google.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20261017171437.2066343-6-irogers@google.com>
+In-Reply-To: <20261017171437.2066343-2-irogers@google.com>
 References: <20261017054555.1655407-1-irogers@google.com>
  <20261017171437.2066343-1-irogers@google.com>
- <20261017171437.2066343-6-irogers@google.com>
+ <20261017171437.2066343-2-irogers@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Sat, 17 Oct 2026 17:30:21 +0000
+Date: Sat, 17 Oct 2026 17:31:22 +0000
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -48,174 +48,119 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
 Thank you for your contribution! Sashiko AI review found 1 potential issue(=
 s) to consider:
-- [Medium] perf lock: rcu_state_addr collides with rcu_state.node[0].lock i=
-n BPF
+- [Medium] perf lock: get_lock_owner() conflates waiter and owner rwsem fla=
+gs
 --
 
-commit 66aefea7c5ca7c7c5ee421770f454d75f5c24b84
+commit bc2b5a2f6b16ec842dcc1aeeebcdc72f657fd11b
 Author: Ian Rogers <irogers@google.com>
 
-perf lock contention: Extend BPF lock contention to RCU and SRCU
+perf lock contention: Share common BPF and lock type definitions in lock_da=
+ta.h
 
-This commit extends 'perf lock contention --use-bpf' to track RCU and SRCU
-grace-period and barrier waits using fentry/fexit BPF programs and adds
-support for filtering by RCU and SRCU lock types and names.
+This commit moves lock_type_table, LCB_F_* flags, CO-RE structs, and common
+BPF lock helpers into tools/perf/util/bpf_skel/lock_data.h so they can be
+shared with BPF sample filtering. It also extends get_lock_owner() to suppo=
+rt
+rt_mutex and check writer-ownership and handoff flags.
 
-> diff --git a/tools/perf/util/bpf_lock_contention.c b/tools/perf/util/bpf_=
-lock_contention.c
-> index c20bd075664e1..fa7df9187b08b 100644
-> --- a/tools/perf/util/bpf_lock_contention.c
-> +++ b/tools/perf/util/bpf_lock_contention.c
+> diff --git a/tools/perf/util/bpf_skel/lock_data.h b/tools/perf/util/bpf_s=
+kel/lock_data.h
+> index 652e114e6b877..bf39128e0be15 100644
+> --- a/tools/perf/util/bpf_skel/lock_data.h
+> +++ b/tools/perf/util/bpf_skel/lock_data.h
+> @@ -76,4 +84,320 @@ struct slab_cache_data {
+
 [ ... ]
-> @@ -180,6 +181,129 @@ static void init_numa_data(struct lock_contention *=
-con)
-[ ... ]
-> +static void configure_rcu_contention_progs(struct lock_contention *con,
-> +					   bool has_rcu_lock)
+
+> +static __always_inline struct task_struct *get_lock_owner(__u64 lock, __=
+u32 flags)
 > +{
-[ ... ]
-> +	sym =3D machine__find_kernel_symbol_by_name(con->machine, "rcu_state", =
-&kmap);
-> +	if (sym) {
-> +		skel->rodata->rcu_state_addr =3D map__unmap_ip(kmap, sym->start);
-> +		map__put(kmap);
-> +	} else {
-> +		skel->rodata->rcu_state_addr =3D 1ULL;
-> +	}
-[ ... ]
-> diff --git a/tools/perf/util/bpf_skel/lock_contention.bpf.c b/tools/perf/=
-util/bpf_skel/lock_contention.bpf.c
-> index 0f2118006005a..58d45c43150b5 100644
-> --- a/tools/perf/util/bpf_skel/lock_contention.bpf.c
-> +++ b/tools/perf/util/bpf_skel/lock_contention.bpf.c
-[ ... ]
-> @@ -613,14 +639,19 @@ int contention_end(u64 *ctx)
->  	 */
->  	pelem =3D bpf_map_lookup_elem(&tstamp_cpu, &idx);
->  	if (pelem && pelem->lock) {
-> -		if (pelem->lock !=3D ctx[0])
-> +		if (pelem->lock !=3D lock)
->  			return 0;
->  	} else {
->  		pid =3D bpf_get_current_pid_tgid();
->  		pelem =3D bpf_map_lookup_elem(&tstamp, &pid);
-> -		if (!pelem || pelem->lock !=3D ctx[0])
-> -			return 0;
-> -		need_delete =3D true;
-> +		if (pelem && pelem->lock =3D=3D lock) {
-> +			ts_map =3D &tstamp;
-> +		} else {
-> +			pelem =3D bpf_map_lookup_elem(&tstamp_rcu, &pid);
-> +			if (!pelem || pelem->lock !=3D lock)
-> +				return 0;
-> +			ts_map =3D &tstamp_rcu;
+> +	struct task_struct *task;
+> +	__u64 owner =3D 0;
+> +
+> +	if (flags & LCB_F_MUTEX) {
+> +		struct mutex *mutex =3D (void *)lock;
+> +
+> +		if (bpf_core_field_exists(mutex->owner.counter)) {
+> +			owner =3D BPF_CORE_READ(mutex, owner.counter);
+> +			if (owner & 0x4UL)
+> +				return NULL;
+> +		} else if (bpf_core_type_exists(struct rt_mutex_base)) {
+> +			struct rt_mutex_base *rtm =3D (void *)lock;
+> +
+> +			owner =3D (__u64)BPF_CORE_READ(rtm, owner);
+> +			return (void *)(owner & ~1UL);
 > +		}
->  	}
+> +	} else if (flags =3D=3D LCB_F_READ || flags =3D=3D LCB_F_WRITE) {
+> +		struct rw_semaphore___new *rwsem =3D (void *)lock;
+> +
+> +		if (flags =3D=3D LCB_F_WRITE && bpf_core_field_exists(rwsem->count.cou=
+nter)) {
+> +			__u64 count =3D BPF_CORE_READ(rwsem, count.counter);
+> +
+> +			/* Must have RWSEM_WRITER_LOCKED (bit 0) set */
+> +			if (!(count & 1UL))
+> +				return NULL;
+> +		}
+> +	/*
+> +	 * Support for the BPF_TYPE_MATCHES argument to the
+> +	 * __builtin_preserve_type_info builtin was added at some point during
+> +	 * development of clang 15 and it's what is needed for
+> +	 * bpf_core_type_matches.
+> +	 */
+> +#if __has_builtin(__builtin_preserve_type_info) && __clang_major__ >=3D =
+15
+> +		if (bpf_core_type_matches(struct rw_semaphore___old)) {
+> +			struct rw_semaphore___old *old =3D (void *)lock;
+> +
+> +			owner =3D (unsigned long)BPF_CORE_READ(old, owner);
+> +		} else if (bpf_core_type_matches(struct rw_semaphore___new)) {
+> +			owner =3D BPF_CORE_READ(rwsem, owner.counter);
+> +		}
+> +#else
+> +		/* assume new struct */
+> +		if (bpf_core_field_exists(rwsem->owner.counter))
+> +			owner =3D BPF_CORE_READ(rwsem, owner.counter);
+> +#endif
+> +		/* RWSEM_READER_OWNED is bit 0 of owner */
+> +		if (flags =3D=3D LCB_F_WRITE && (owner & 1UL))
+> +			return NULL;
 
 [Severity: Medium]
-Can setting rcu_state_addr to the start address of rcu_state and sharing
-do_contention_end() between tp_btf/contention_end and the RCU/SRCU fexit
-hooks cause lock address collisions and corrupted wait tracking?
+In tools/perf/util/bpf_skel/lock_contention.bpf.c, contention_begin() calls
+get_lock_owner(pelem->lock, pelem->flags) for both owner stack tracing and
+LOCK_AGGR_TASK owner PID attribution:
 
-In kernel/rcu/tree.h, struct rcu_state begins at offset 0 with
-node[NUM_RCU_NODES], and struct rcu_node begins at offset 0 with its
-raw_spinlock_t lock:
+tools/perf/util/bpf_skel/lock_contention.bpf.c:contention_begin() {
+	...
+	task =3D get_lock_owner(pelem->lock, pelem->flags);
+	if (!task)
+		goto skip_owner;
+	...
+	if (lock_owner) {
+		task =3D get_lock_owner(pelem->lock, pelem->flags);
+	...
+}
 
-kernel/rcu/tree.h:
-    struct rcu_node {
-        raw_spinlock_t __private lock;
-        ...
-    };
+Here pelem->flags comes from trace_contention_begin() and represents the
+contending waiter's mode (LCB_F_READ in rwsem_down_read_slowpath() or
+LCB_F_WRITE in rwsem_down_write_slowpath()), rather than the lock owner's
+mode.
 
-    struct rcu_state {
-        struct rcu_node node[NUM_RCU_NODES];
-        ...
-    };
+When a writer contends on a reader-owned rw_semaphore, pelem->flags is
+LCB_F_WRITE while rwsem->count does not have RWSEM_WRITER_LOCKED (bit 0) set
+and rwsem->owner has RWSEM_READER_OWNED (bit 0) set. Conversely, when a
+reader contends (flags =3D=3D LCB_F_READ), both checks are bypassed.
 
-Because of this layout, &rcu_state.node[0].lock has the exact same address
-as rcu_state (rcu_state_addr). Together with do_contention_end() not
-distinguishing whether its caller is tp_btf/contention_end or an RCU/SRCU
-fexit program, three issues can occur:
+Will checking flags =3D=3D LCB_F_WRITE in get_lock_owner() cause it to alwa=
+ys
+return NULL whenever a writer contends on a reader-owned rw_semaphore,
+dropping owner attribution and owner callstacks in perf lock contention -b =
+-o?
 
-1. When filtering for RCU (for example with '-Y rcu', '-Y rcu:W', or
-'-L rcu'), a task executing synchronize_rcu(), synchronize_rcu_expedited(),
-or rcu_barrier() records an active entry in tstamp_rcu[pid] with
-pelem->lock =3D=3D rcu_state_addr. If that task contends on
-&rcu_state.node[0].lock during grace-period initialization or waiting,
-tp_btf/contention_begin(lock =3D rcu_state_addr, flags =3D LCB_F_SPIN) is
-rejected by can_record(), leaving tstamp_cpu empty. When the spinlock is
-acquired and tp_btf/contention_end(lock =3D rcu_state_addr) fires,
-do_contention_end() falls through tstamp_cpu and tstamp into
-tstamp_rcu[pid], matches pelem->lock =3D=3D rcu_state_addr, records the sho=
-rt
-spinlock wait duration as the RCU wait, and deletes tstamp_rcu[pid] before
-the fexit hook runs.
-
-2. If an RCU or SRCU fexit program runs on a CPU where tstamp_cpu happens
-to have an active spinlock entry (pelem->lock !=3D 0 and pelem->lock !=3D l=
-ock),
-do_contention_end() returns 0 at the tstamp_cpu check without looking up or
-deleting tstamp_rcu[pid]. That leaves a stale entry in tstamp_rcu[pid] that
-blocks subsequent RCU/SRCU waits for that task in get_tstamp_elem() and
-charges end_ts - pelem->timestamp in account_end_timestamp().
-
-3. In LOCK_AGGR_ADDR mode ('perf lock con -a -b -l'), both
-do_contention_end() and lock_contention_read() key lock_stat entries by
-lock address:
-
-tools/perf/util/bpf_skel/lock_contention.bpf.c:do_contention_end()
-    case LOCK_AGGR_ADDR:
-        key.lock_addr_or_cgroup =3D pelem->lock;
-
-Because &rcu_state.node[0].lock and rcu_state_addr share the same address,
-root rcu_node spinlock contentions (LCB_F_SPIN) and RCU grace-period waits
-(LCB_F_RCU | LCB_F_WRITE) merge into a single lock_stat entry under
-whichever lock type was recorded first.
-
-Would it make sense to pass a distinct synthetic address or offset for RCU
-waits (or disambiguate the lock key), and pass an explicit flag to
-do_contention_end() so that RCU/SRCU fexit hooks only inspect tstamp_rcu
-while tp_btf/contention_end only inspects tstamp_cpu and tstamp?
-
-[ ... ]
-> @@ -795,11 +825,109 @@ int contention_end(u64 *ctx)
->  		check_lock_delay(pelem->lock);
-> =20
->  	pelem->lock =3D 0;
-> -	if (need_delete)
-> -		bpf_map_delete_elem(&tstamp, &pid);
-> +	if (ts_map)
-> +		bpf_map_delete_elem(ts_map, &pid);
->  	return 0;
->  }
-> =20
-> +SEC("tp_btf/contention_begin")
-> +int contention_begin(u64 *ctx)
-> +{
-> +	return do_contention_begin(ctx, (__u64)ctx[0], (__u32)ctx[1]);
-> +}
-> +
-> +SEC("tp_btf/contention_end")
-> +int contention_end(u64 *ctx)
-> +{
-> +	return do_contention_end((__u64)ctx[0], (__s32)ctx[1]);
-> +}
-> +
-> +/* RCU grace-period synchronize / barrier contention hooks */
-> +SEC("fentry/synchronize_rcu")
-> +int BPF_PROG(fentry_synchronize_rcu)
-> +{
-> +	return do_contention_begin(ctx, rcu_state_addr, LCB_F_RCU | LCB_F_WRITE=
-);
-> +}
-> +
-> +SEC("fexit/synchronize_rcu")
-> +int BPF_PROG(fexit_synchronize_rcu)
-> +{
-> +	return do_contention_end(rcu_state_addr, 0);
-> +}
 [ ... ]
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261017171437.2066=
-343-1-irogers@google.com?part=3D5
+343-1-irogers@google.com?part=3D1
