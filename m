@@ -1,63 +1,64 @@
-Received: from mail-yx1-f45.google.com (mail-yx1-f45.google.com [74.125.224.45])
+Received: from mail-yx1-f54.google.com (mail-yx1-f54.google.com [74.125.224.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDA644F5E0
-	for <linux-perf-users@vger.kernel.org>; Sat, 17 Oct 2026 00:02:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.224.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05BF572621
+	for <linux-perf-users@vger.kernel.org>; Sat, 17 Oct 2026 00:02:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.224.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792195329; cv=none; b=XSeMKqQdZ+r/oiPEnCe3jd1lOlvq3S5RYsjckfah5pvSftIGktsmrX9aWq+iqtLY+VNNTkEwupRj0L/+Ng+OpkVVcnUHOfamoarssg8aMKoLocIpstfSioVgFGAfx8vniJk0jEGRD4KDWbyspqp146MhptFXe3yKJrDwfto+/ws=
+	t=1792195331; cv=none; b=SgpbcoB+RNKOq6SQcKBf6vcdbDVGVEsQI/MuABvjONG4NEpPB62KjMkI7wnnCsXZp/l9BcgtDsyGOO3z4I6YNV7zCc5ei7i8l/h4NcsGKGW8AGQbysJEEi53h7ahdFu+0PXxcmqXj15Ei/HmtBmIYuM8B+kdO/ko7DOMcVovjpU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792195329; c=relaxed/simple;
-	bh=bpFNZaYuwTCMcr+uQiesvng45mUPfxfYKl8zKxZwNI8=;
+	s=arc-20240116; t=1792195331; c=relaxed/simple;
+	bh=k6r0AJR89YjyP0fjCZ1YgqwPxcvCPNj4qjuByXkwZIc=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=twpeTgNFcAx83Psyjjp2iAcaCyq+7H1/n6MbW6gxA0QNFKrMBbt1hrCkGzIrJcPG/Y2OSrpAOMhLatHONCTirrxzdOgrYhezEwQFx0yyQNZTFYUVfoXZArrksVnI6/XTuOlXvxYE+qNNbRcAL42vXnw+y0xyXWouj4EwtcaHCVA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nNq1Nn/0; arc=none smtp.client-ip=74.125.224.45
+	 MIME-Version; b=W3d0jTBdJnTJW98/J08XVcx5shrkiwfgnM0ASo+lsFjQAmEDsp2xGMu/KeqUmISu/tvTgyGxYCuHsS90Ao1ufbc+Bdr+YfTLfKu95dCdihqtc0N9UfFfrd+9rGgi4RZ2RHYquaOdpGQeF+xvk88xUiWZsADcmRBBl2Wz+c6kDM8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=D8zL8UHg; arc=none smtp.client-ip=74.125.224.54
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nNq1Nn/0"
-Received: by mail-yx1-f45.google.com with SMTP id 956f58d0204a3-67921b515a7so627115d50.2
-        for <linux-perf-users@vger.kernel.org>; Fri, 16 Oct 2026 17:02:07 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D8zL8UHg"
+Received: by mail-yx1-f54.google.com with SMTP id 956f58d0204a3-677d35fd1d2so615904d50.1
+        for <linux-perf-users@vger.kernel.org>; Fri, 16 Oct 2026 17:02:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1792195327; x=1792800127; darn=vger.kernel.org;
+        d=gmail.com; s=20251104; t=1792195329; x=1792800129; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=YMX1yKnizXoHYuUYwiXKhlsMcTLb0C4TkTtJpsCQmZc=;
-        b=nNq1Nn/04ZeGibXNKy2NxhLYvt9MPedMGfkskb3+mFmjHUiOWz2cnN3KI/2zQbFuY0
-         NMGmOIjx5rBcQLeMVAeBpLM/d/u9CmFBDm/9t7uC8PDqAS0KP8Lqem7aiYuC9ZYo7Eeq
-         Kw6e8Jq+a6tiL7cT9jr+tIvmBnYNMd1NUkI8AypALTcxIe46zNCyOAXidXrF33VromxD
-         XRmpbX1IKoyqrptYyqtVgX9xJ7rmCzEnnIfYYfj/PrMatkAFbwmUqJ5ZyVRVGhN6mZrz
-         1MczS5wN2W16twZECEQi0Qs3vQxFl/wdYGTcKlssT7ogIIu7MKwo9NBzKGgRf+7tygm5
-         Y2rg==
+        bh=rDzSuLlOZfzZXkkbQiHl90718fhT7blKGstRf1pHXhM=;
+        b=D8zL8UHgxOKhgM3EE/QiOjXs6vVCxYmk4U0nxIEfZMoSaqiuPcwEitkQT0YUr292Bf
+         tU3wrSmaVxBMpm02X7terfhfjcnwTG1RLnUJSDn2UDO/w/NKS4ihNbZ25hZQtSH8Mb3t
+         i6u2PTH30h0iUc8o/MDNwR9DrkYOq8yOIZHp2fScIy4oaAz0nFzkEVqszUaPvcAzooTX
+         mxzyZrc68BEcbyfVE5wici6qb9A0OPWn/v7TmuOKVwA3US2sCLedBpin14vQbtCgDjXs
+         wzr76L+0XzFGKuE5qPdS4Invm+6LvDg1516ts7FQ+JuunosrfEju2ORQ4aM3y6K54GYm
+         kkkg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1792195327; x=1792800127;
+        d=1e100.net; s=20260707; t=1792195329; x=1792800129;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=YMX1yKnizXoHYuUYwiXKhlsMcTLb0C4TkTtJpsCQmZc=;
-        b=yKKxLJJe5qpagWDz9hGUX6hn0kaOCiUNsTYATQiFpP0fPUkXalvMd00IO7xJ567zZa
-         lj5esM989i+Y/Isxq/dqFyJg14sj4oJS8RlLdbLt5WlZ0fabR/sRt14AjFmnxXzpaw/3
-         pSaOYOYtOkLUshS1+vqLXa6m4PTtTQ6f63zctlRWoz0Drdm2yAfjqBaHeeOKLNeR79as
-         YVn6mCybYD3CwziTP6i2Zn78p/4tsbNkYyw+K1lmBz7i9+GFeJbWCO7JOkpg7i9nx+7F
-         U1AMihY/2DESqtltyft7cbR0206Qf5dxZ0WYAbnceRWr2t8n6cYoUlF2C/e6RGw+YWtg
-         ZwpQ==
-X-Gm-Message-State: AFq9FYKjM5QxTmL8XwURarfD4Vcw96Uw8he4G0u+/XwSC+ffpjp+LykU
-	N9/Xfw3UXMGcaDnv+ClVQTLNEGuXICZojtAcVoiWEaFjElUaQEfeIJnb
-X-Gm-Gg: AYBFou0E+UVumVSlSVF5cbhzEzJ5lFUU7Ut422Hq2sA2aCu5HIeQR9owFIrKYO/wWls
-	buSrgpwwpGOcaRCqcB4gIJVSq7LPrVpVo14RAnCCklO4NPx6089pvGudll1RXrU+Of3ouC9EW+D
-	b6VAkCti/JpH9Lo61nHZnoecyT5JLxck5Pi5WxhuNN6i0NPBOsb2DloWnDti98hq7i7OZA2SyLs
-	Zjkwwaxpruq0lLN2TAnjsnX+G13wXctgaaeBnNXHFO/U0zmQd2uWAoSqjkPuxremo/FNtBSaQFx
-	02t4GYsEsCE4ppTP5t3scLBF4sAXCYN15NcpcWBq1uTzRgfHxrDRgBk5wn0UDyyi0TE7WQP3GPp
-	HgssXwqo8akKZaL2nlHWPUtxQ7RvHezmr5aqd6m/yYVFxPsKgHTFkAt4bIPeVTTYo4xsx5hbCM9
-	eI1sztA+Ket94m66bmwgQJqIuKDFBfM0IAlRoj4MPg56HF56QNnxm78eS4XriLgv6Y0FRmJTQNE
-	/cDKVoPbQ==
-X-Received: by 2002:a05:690c:c4e9:b0:8a8:6a39:37e0 with SMTP id 00721157ae682-8b0f21973f2mr5598407b3.42.1792195326755;
-        Fri, 16 Oct 2026 17:02:06 -0700 (PDT)
-Received: from gmail.com ([2a03:2880:1fff:46::])
-        by smtp.gmail.com with ESMTPSA id 00721157ae682-8b0e591c51bsm15065347b3.34.2026.10.16.17.02.06
+        bh=rDzSuLlOZfzZXkkbQiHl90718fhT7blKGstRf1pHXhM=;
+        b=qJNgEhap82q39t7e7TdXnnNe0RvAN/mCWbHQyVSZenB5//hXFP5wt/oXLJz/Vbub6x
+         zMpBlLmv84Eyu1WboIXDhCSdWB/3uvZIW3hOTc5QDlAW6cvYDrg+AQs5Yj2l963NptNk
+         ybBKY75eio9e50k1pobRlJDofZYJj3/T2MtstMcxFV82CYyEfVZl/8RV4qX8C6nuY4QW
+         j0gNJiB9Yxw5qdPb6SEgbocybVtBMV8vKj/o4WzDqu6/hWdqp3sgdsS5moJZl1aes3Rt
+         zj48Vy9/lGxcmrAYZo8P7lOfqwkaqnbJZSMOGEZfm+sdpuQx7NsaLLyoujiDIFhBbc7Q
+         ZTYQ==
+X-Gm-Message-State: AFq9FYL+4YrNTyYD3Zrav9pD8Zt1kZvdrDHLZZZalpj3NPqEZ5aOJLPP
+	s4XnVHSQeV8Xsc8covAp2uTjppJipWVqdo/qXpNNF+DBi+amIbsU0ZP3
+X-Gm-Gg: AYBFou3qoGlQLGVbpvnMLatQ+dZFHhN+eY5ACqYfMVFuJ6bV3Xc0BUVrbtVXiNW4DZ9
+	dEhFT5sigoXP8mRG+Jui1//PizzY+ILvd3mLiKeBplZyPGAGIV8fEJZXs3zNE2La1six/PU462F
+	GQsRDPGJZeGHckynVHZhwb6aT+rFY1lcft9b18JxBvOBSHQRU/38+M5Jxq/eWCozhertfpaYSv1
+	2B6bu7P7bx61loXvGWEgOS9QVBYxRdGh2rJ9/pcR9Zpzcuh/xqv3U0IuBgyHB4z9pquytkTkVLz
+	rEmMYCX4z9q6rnRNsdcWjwfz94nrmFrwRysu18hkUjnaEWHecc5RQziNYfLvl29LK4B/akHgpI2
+	Q40qkz7VakQSegmyfh4EeHGEAsBAOARNHo+vt8yYcbugPPiXiN2JNU3C32gMM2ngrA3omWEJ+/2
+	9YKb7yy48CPs+NxvkBFmNLy76GSX374q0fYCTaoEcdjVLyTKprCSY0tXi2VdSO7e0CSE5BGCdSA
+	usXXM4JdvdQPvbFbR6Xl+iSJcjr7+4XFPm3dS6Za+iAV1FHFb6nD8NZE7zFj7XRniRPwg9qYWOs
+	2Q==
+X-Received: by 2002:a05:690e:804:20b0:679:bad8:7dbf with SMTP id 956f58d0204a3-679ca4d6342mr190104d50.6.1792195328752;
+        Fri, 16 Oct 2026 17:02:08 -0700 (PDT)
+Received: from gmail.com ([2a03:2880:1fff:49::])
+        by smtp.gmail.com with ESMTPSA id 956f58d0204a3-679b1ed564fsm1675150d50.16.2026.10.16.17.02.08
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 16 Oct 2026 17:02:06 -0700 (PDT)
+        Fri, 16 Oct 2026 17:02:08 -0700 (PDT)
 From: Matthew Wood <thepacketgeek@gmail.com>
 To: Peter Zijlstra <peterz@infradead.org>,
 	Ingo Molnar <mingo@redhat.com>,
@@ -71,9 +72,9 @@ To: Peter Zijlstra <peterz@infradead.org>,
 	James Clark <james.clark@linaro.org>
 Cc: linux-perf-users@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 1/3] perf dso: Move dso__read_build_id() from perf inject to dso.c
-Date: Fri, 16 Oct 2026 17:01:52 -0700
-Message-ID: <20261017000158.1178269-2-thepacketgeek@gmail.com>
+Subject: [PATCH v2 2/3] perf unwind: Find separate debuginfo without loading symbols
+Date: Fri, 16 Oct 2026 17:01:53 -0700
+Message-ID: <20261017000158.1178269-3-thepacketgeek@gmail.com>
 X-Mailer: git-send-email 2.53.0
 In-Reply-To: <20261017000158.1178269-1-thepacketgeek@gmail.com>
 References: <20261017000158.1178269-1-thepacketgeek@gmail.com>
@@ -85,108 +86,191 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-dso__read_build_id() reads a DSO's build-id from inside its mount
-namespace when it isn't known yet. The libdw unwinder is going to need
-it, so move it out of builtin-inject.c and make it available to the rest
-of perf.
+Both DWARF unwinders find the .debug_frame in a separate debuginfo file
+through dso__symsrc_filename(), which only dso__load() sets, when it
+finds a file with a symbol table. libdw's __find_debuginfo() hands out
+nothing else, and libdw doesn't ask again for a module after a failed
+lookup. libunwind's read_unwind_spec_debug_frame() falls back to
+following .gnu_debuglink, which misses debuginfo that is only reachable
+by build-id, such as under /usr/lib/debug/.build-id/ or in perf's
+build-id cache.
 
-No functional change.
+The unwinders load the symbols of every frame they visit today, so this
+mostly works, although libunwind can't use such a debuginfo file until
+an earlier sample has loaded the DSO's symbols. A following patch lets
+callers that don't need symbols skip loading them, and then nothing
+would set dso__symsrc_filename().
+
+Add dso__find_debuginfo(), which looks for a separate debuginfo file in
+the places dso__load() would, reading the build-id first so that the
+build-id based locations can be checked, but without loading symbols.
+Use it in __find_debuginfo() when dso__symsrc_filename() isn't set, and
+in read_unwind_spec_debug_frame() instead of only following
+.gnu_debuglink. Don't open() a NULL dso__symsrc_filename(), which
+becomes the common case once symbols aren't loaded.
 
 Signed-off-by: Matthew Wood <thepacketgeek@gmail.com>
 ---
- tools/perf/builtin-inject.c | 25 -------------------------
- tools/perf/util/dso.c       | 29 +++++++++++++++++++++++++++++
- tools/perf/util/dso.h       |  1 +
- 3 files changed, 30 insertions(+), 25 deletions(-)
+ tools/perf/util/dso.c              | 31 ++++++++++++++++++++++++++++++
+ tools/perf/util/dso.h              |  1 +
+ tools/perf/util/unwind-libdw.c     | 16 ++++++++++++---
+ tools/perf/util/unwind-libunwind.c | 28 ++++++++++-----------------
+ 4 files changed, 55 insertions(+), 21 deletions(-)
 
-diff --git a/tools/perf/builtin-inject.c b/tools/perf/builtin-inject.c
-index 70bbfad5653e..7e4b45a5062c 100644
---- a/tools/perf/builtin-inject.c
-+++ b/tools/perf/builtin-inject.c
-@@ -892,31 +892,6 @@ static int perf_event__repipe_tracing_data(const struct perf_tool *tool,
- }
- #endif
- 
--static int dso__read_build_id(struct dso *dso)
--{
--	struct nscookie nsc;
--	struct build_id bid = { .size = 0, };
--
--	if (dso__has_build_id(dso))
--		return 0;
--
--	mutex_lock(dso__lock(dso));
--	nsinfo__mountns_enter(dso__nsinfo(dso), &nsc);
--	if (filename__read_build_id(dso__long_name(dso), &bid) > 0)
--		dso__set_build_id(dso, &bid);
--	else if (dso__nsinfo(dso)) {
--		char *new_name = dso__filename_with_chroot(dso, dso__long_name(dso));
--
--		if (new_name && filename__read_build_id(new_name, &bid) > 0)
--			dso__set_build_id(dso, &bid);
--		free(new_name);
--	}
--	nsinfo__mountns_exit(&nsc);
--	mutex_unlock(dso__lock(dso));
--
--	return dso__has_build_id(dso) ? 0 : -1;
--}
--
- static struct strlist *perf_inject__parse_known_build_ids(
- 	const char *known_build_ids_string)
- {
 diff --git a/tools/perf/util/dso.c b/tools/perf/util/dso.c
-index 42bfe30a3b51..e03e2cb9212b 100644
+index e03e2cb9212b..36f5ab94c7e7 100644
 --- a/tools/perf/util/dso.c
 +++ b/tools/perf/util/dso.c
-@@ -569,6 +569,35 @@ char *dso__filename_with_chroot(const struct dso *dso, const char *filename)
- 	return filename_with_chroot(nsinfo__pid(dso__nsinfo_const(dso)), filename);
+@@ -598,6 +598,37 @@ int dso__read_build_id(struct dso *dso)
+ 	return dso__has_build_id(dso) ? 0 : -1;
  }
  
 +/*
-+ * Read the build-id from the DSO's file, inside its mount namespace, if it
-+ * isn't known yet.
++ * Look for a separate debuginfo file for a user space DSO in the places
++ * dso__load() would, without loading its symbols. Returns an allocated path,
++ * or NULL if none was found.
 + */
-+int dso__read_build_id(struct dso *dso)
++char *dso__find_debuginfo(struct dso *dso)
 +{
-+	struct nscookie nsc;
-+	struct build_id bid = { .size = 0, };
++	static const enum dso_binary_type debuginfo_types[] = {
++		DSO_BINARY_TYPE__DEBUGLINK,
++		DSO_BINARY_TYPE__BUILD_ID_CACHE_DEBUGINFO,
++		DSO_BINARY_TYPE__FEDORA_DEBUGINFO,
++		DSO_BINARY_TYPE__UBUNTU_DEBUGINFO,
++		DSO_BINARY_TYPE__BUILDID_DEBUGINFO,
++		DSO_BINARY_TYPE__OPENEMBEDDED_DEBUGINFO,
++		DSO_BINARY_TYPE__MIXEDUP_UBUNTU_DEBUGINFO,
++	};
++	char filename[PATH_MAX];
 +
-+	if (dso__has_build_id(dso))
-+		return 0;
++	/* The build-id cache and /usr/lib/debug/.build-id need the build-id. */
++	dso__read_build_id(dso);
 +
-+	mutex_lock(dso__lock(dso));
-+	nsinfo__mountns_enter(dso__nsinfo(dso), &nsc);
-+	if (filename__read_build_id(dso__long_name(dso), &bid) > 0)
-+		dso__set_build_id(dso, &bid);
-+	else if (dso__nsinfo(dso)) {
-+		char *new_name = dso__filename_with_chroot(dso, dso__long_name(dso));
-+
-+		if (new_name && filename__read_build_id(new_name, &bid) > 0)
-+			dso__set_build_id(dso, &bid);
-+		free(new_name);
++	for (size_t i = 0; i < ARRAY_SIZE(debuginfo_types); i++) {
++		if (dso__read_binary_type_filename(dso, debuginfo_types[i], /*root_dir=*/"",
++						   filename, sizeof(filename)))
++			continue;
++		if (is_regular_file(filename))
++			return strdup(filename);
 +	}
-+	nsinfo__mountns_exit(&nsc);
-+	mutex_unlock(dso__lock(dso));
-+
-+	return dso__has_build_id(dso) ? 0 : -1;
++	return NULL;
 +}
 +
  static char *dso__get_filename(struct dso *dso, const char *root_dir,
  			       bool *decomp)
  {
 diff --git a/tools/perf/util/dso.h b/tools/perf/util/dso.h
-index 55c4aaa53c38..ece54b9b8552 100644
+index ece54b9b8552..88d8674f6247 100644
 --- a/tools/perf/util/dso.h
 +++ b/tools/perf/util/dso.h
-@@ -805,6 +805,7 @@ static inline bool dso__has_symbols(const struct dso *dso)
- }
+@@ -806,6 +806,7 @@ static inline bool dso__has_symbols(const struct dso *dso)
  
  char *dso__filename_with_chroot(const struct dso *dso, const char *filename);
-+int dso__read_build_id(struct dso *dso);
+ int dso__read_build_id(struct dso *dso);
++char *dso__find_debuginfo(struct dso *dso);
  
  bool dso__sorted_by_name(const struct dso *dso);
  void dso__set_sorted_by_name(struct dso *dso);
+diff --git a/tools/perf/util/unwind-libdw.c b/tools/perf/util/unwind-libdw.c
+index 63a5c2253174..a2e70e4f206f 100644
+--- a/tools/perf/util/unwind-libdw.c
++++ b/tools/perf/util/unwind-libdw.c
+@@ -5,6 +5,7 @@
+ #include <elfutils/libdwfl.h>
+ #include <inttypes.h>
+ #include <errno.h>
++#include <string.h>
+ #include "debug.h"
+ #include "dso.h"
+ #include <dwarf-regs.h>
+@@ -39,11 +40,20 @@ static int __find_debuginfo(Dwfl_Module *mod __maybe_unused, void **userdata,
+ 			    const char *file_name, const char *debuglink_file __maybe_unused,
+ 			    GElf_Word debuglink_crc __maybe_unused, char **debuginfo_file_name)
+ {
+-	const struct dso *dso = *userdata;
++	struct dso *dso = *userdata;
+ 
+ 	assert(dso);
+-	if (dso__symsrc_filename(dso) && strcmp(file_name, dso__symsrc_filename(dso)))
+-		*debuginfo_file_name = strdup(dso__symsrc_filename(dso));
++	if (dso__symsrc_filename(dso)) {
++		if (strcmp(file_name, dso__symsrc_filename(dso)))
++			*debuginfo_file_name = strdup(dso__symsrc_filename(dso));
++	} else {
++		char *debuginfo = dso__find_debuginfo(dso);
++
++		if (debuginfo && strcmp(file_name, debuginfo))
++			*debuginfo_file_name = debuginfo;
++		else
++			free(debuginfo);
++	}
+ 	return -1;
+ }
+ 
+diff --git a/tools/perf/util/unwind-libunwind.c b/tools/perf/util/unwind-libunwind.c
+index 73d191ce51a5..d92f1d485285 100644
+--- a/tools/perf/util/unwind-libunwind.c
++++ b/tools/perf/util/unwind-libunwind.c
+@@ -283,8 +283,9 @@ static int read_unwind_spec_debug_frame(struct dso *dso,
+ 	/* debug_frame can reside in:
+ 	 *  - dso
+ 	 *  - debug pointed by symsrc_filename
+-	 *  - gnu_debuglink, which doesn't necessary
+-	 *    has to be pointed by symsrc_filename
++	 *  - a separate debuginfo file, which symsrc_filename doesn't
++	 *    necessarily point to, or isn't set yet when the symbols
++	 *    haven't been loaded
+ 	 */
+ 	if (ofs == 0) {
+ 		if (dso__data_get_fd(dso, machine, &fd)) {
+@@ -292,7 +293,7 @@ static int read_unwind_spec_debug_frame(struct dso *dso,
+ 			dso__data_put_fd(dso);
+ 		}
+ 
+-		if (ofs <= 0) {
++		if (ofs <= 0 && dso__symsrc_filename(dso)) {
+ 			fd = open(dso__symsrc_filename(dso), O_RDONLY);
+ 			if (fd >= 0) {
+ 				ofs = elf_section_offset(fd, ".debug_frame");
+@@ -301,19 +302,10 @@ static int read_unwind_spec_debug_frame(struct dso *dso,
+ 		}
+ 
+ 		if (ofs <= 0) {
+-			char *debuglink = malloc(PATH_MAX);
+-			int ret = 0;
+-
+-			if (debuglink == NULL) {
+-				pr_err("unwind: Can't read unwind spec debug frame.\n");
+-				return -ENOMEM;
+-			}
++			char *debuginfo = dso__find_debuginfo(dso);
+ 
+-			ret = dso__read_binary_type_filename(
+-				dso, DSO_BINARY_TYPE__DEBUGLINK,
+-				machine->root_dir, debuglink, PATH_MAX);
+-			if (!ret) {
+-				fd = open(debuglink, O_RDONLY);
++			if (debuginfo) {
++				fd = open(debuginfo, O_RDONLY);
+ 				if (fd >= 0) {
+ 					ofs = elf_section_offset(fd,
+ 							".debug_frame");
+@@ -326,12 +318,12 @@ static int read_unwind_spec_debug_frame(struct dso *dso,
+ 						"%s: overwrite symsrc(%s,%s)\n",
+ 							__func__,
+ 							dso__symsrc_filename(dso),
+-							debuglink);
++							debuginfo);
+ 					dso__free_symsrc_filename(dso);
+ 				}
+-				dso__set_symsrc_filename(dso, debuglink);
++				dso__set_symsrc_filename(dso, debuginfo);
+ 			} else {
+-				free(debuglink);
++				free(debuginfo);
+ 			}
+ 		}
+ 
 -- 
 2.53.0-Meta
 
