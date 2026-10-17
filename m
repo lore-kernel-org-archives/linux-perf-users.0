@@ -1,173 +1,236 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-dy1-f197.google.com (mail-dy1-f197.google.com [74.125.82.197])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D625A375F80
-	for <linux-perf-users@vger.kernel.org>; Sat, 17 Oct 2026 15:25:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE4E33BD64A
+	for <linux-perf-users@vger.kernel.org>; Sat, 17 Oct 2026 17:14:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792250730; cv=none; b=i/GUT+pchEuIOkpSCfhxq8+wTUiv6RF8Gsaiszhpfnng7dKSxEl8P/DKal2PsSi3HCGalgka8KCW3N0W5Glkjcs1Kh/sMXR3DvpPR7xejDVemPO7c+7vlerbGUOM2MsO/cBNi3CeriqqOKV5u0vtpSKXvXsxl4NkTDOUchMqN4I=
+	t=1792257292; cv=none; b=Ngnvqq9F1t+mE+NxNSJm69ERVN3qcKvzfP1103fFTCqM7s/HpbVgZEDx3RyGXfG6qTFkrdKL8M6Zf7kU0WC+GsjbZWWl/3aO9ar2ZYvxQzbA3cImLoUDg4x7B4mHOmdK2m1z4bFs129Ijc4DJyKL5zAY5h9VKBbs4DtoRrvdxnc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792250730; c=relaxed/simple;
-	bh=HLmvtTSHT8vWIqh8BL2SaTqVeUVpCysaJmIhAqtifXY=;
-	h=Message-ID:From:Subject:To:Cc:In-Reply-To:References:Content-Type:
-	 Date; b=PU1L4Iiu8kFfWXpRLGPsxLEs+meWniZdC9gj/kSY6t/RnryF9f7LlUt4LuWvEebUrXmMMCfJ0BZocOHGt8T1USWip65z0TZvy/CCcnM+liynfpWDvkgsbP2OW6faDtNzM7EtLT09M9eU/+NgPxSk8hSccY1LVoisnesOfGE++eA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hT2D3J1F; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1792257292; c=relaxed/simple;
+	bh=RPqCQDxjE3n++2VgM6o+8e4cV0MBPujj1BtwrxM7pGg=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=Mb9AXDJzgZzPwCmDbEOsx8JsJwxV98XvZS5KzKpOM/hBcHSKvTjD5xqh/AaNo1WzJyq9lLKc55uOMhiWmMrMNseUgndGdmblLaq7qbD90Ia4gk7/LXgV6mAouUas+DOurPTBfgQ1ZcBja9ZMisxdm6tBiM5w21ZK+JQOLcxLoj8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=bG4KvOZX; arc=none smtp.client-ip=74.125.82.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hT2D3J1F"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 519141F000C4;
-	Sat, 17 Oct 2026 15:25:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1792250729;
-	bh=z5iMnu3sG7ag60IyJGL1xhZwrCmR0runEmYzEeoknxo=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=hT2D3J1FBkS3GChCxzXLtTzeORgKRVv2smpYihP8/DZ7Xu/iTWnKf1s5Bl7k7W12e
-	 UsTOEbd9Ge1UrUmZR2/8u+Pr/nv+NCvviOvB4xousCO6R+qnQDT1Wz/OztFfONb3l7
-	 BNYQmvBwzik5i+fQmgKkdFA/fbbwD/goWToHhjUkiZmISoaU3V0UrlV2fwIy1EZI02
-	 7uSAuxi8glvzijiBEhBom/9bvKMoArKUcUbUVgYH/1VlzNCARkA8tFt5jwQCczzENx
-	 x7gjWDOd9li/0orXMQbtC2sDnVlUsMVDivfnJa2oUFNPValqsJ2mHvZ/0Q6+P8GJUS
-	 ftezAUqzPEYwA==
-Message-ID: <sashiko-outbox-175581@kernel.org>
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v2] perf/core: Close owner-list publication race with
- remove-on-exec
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Daehyeon Ko" <4ncienth@gmail.com>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20261017150747.1119197-1-4ncienth@gmail.com>
-References: <20261015123416.795008-1-4ncienth@gmail.com>
- <20261016084508.GQ2009045@noisy.programming.kicks-ass.net>
- <20261017150747.1119197-1-4ncienth@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Sat, 17 Oct 2026 15:25:28 +0000
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="bG4KvOZX"
+Received: by mail-dy1-f197.google.com with SMTP id 5a478bee46e88-35fb6be0f9fso2406576eec.0
+        for <linux-perf-users@vger.kernel.org>; Sat, 17 Oct 2026 10:14:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1792257290; x=1792862090; darn=vger.kernel.org;
+        h=content-type:cc:to:from:subject:message-id:references:mime-version
+         :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=I0+uAxPvAKtTv0jimWUt+98k1pt+pzeo/v/v6OmosKA=;
+        b=bG4KvOZXJkeXG2FNGrfn6Kj7rv0bYfOOc1UL2zRI7508D9Gdpjv/xFjrcZUNHx0vgz
+         Tyb1cvkOJNkKpxmFBT80lZUqwuYKiV5LCIKqlFPdwwSDYQhrvzIJdHGYX2aTCY0FGmw9
+         lOsJflWj2nLojccwShUdUtYDzd00pBDtI8ty9tOua3zPuCan1LQ0V4GNPg0B6vWAEdEx
+         V2qIfrQ308nCI7FhhvRN/JS/xWV8CnJmSzwmaT0jXV5R6hZjOj+1gYm8vYBAd+KsOFw3
+         rcymIHY7Mnk66hzlz9xOLboylJb4SS5oCgZWwWcnUgUd+ksqS3ryyLXWW3M5thG4V6pd
+         NiNA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1792257290; x=1792862090;
+        h=content-type:cc:to:from:subject:message-id:references:mime-version
+         :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=I0+uAxPvAKtTv0jimWUt+98k1pt+pzeo/v/v6OmosKA=;
+        b=pDkiLzOu/Im4dwpVO0Qs4ClLrg/SwqeEZOFPqTkeAxubf3jHl1GPkRek0wEPTezbFS
+         1HEdbQG5YM/8nN3PWr8aSCd3NUxhYXzzAtEvsrSgvkYQ36zy2uuaGuGXkdIZuXpBejRi
+         eeyXpmteGwsmCK6PnU2mVQ2BZkLu7uVI17rh4ycKkUjT8Bhi5nLrw2QgTCx9oJBH5wOH
+         ACKYkqO+6+HfOfMZPHNRkalp2R0PnnK/0ufFAURSmD+ZD4osmvmbx/TUDi7X6fnF2zb6
+         XVmOGeGP88z7D8rLXQY4QsxI8ouqgRiOglNbp2jJbtN+qdUKRhp8vKEUSOqtpC7kR+l5
+         QeLQ==
+X-Forwarded-Encrypted: i=1; AKwUvBzvxsCSlfZ95n63KgJg99K3zk4W7t7KuzIaYE2oRlL9vO7G+wq4aGyhnUzm0ajJywS2s8wpsaefkyQEWvROh3Ne@vger.kernel.org
+X-Gm-Message-State: AFq9FYKIKr2nhcWCnnfDJeyd41EHtg82O8kKuSG/hV8c27+YpBorqwlV
+	Bgv9uxQcaG6u548m6hg7lCvYPdSDF/Mh6z6awnE6R25TrShgp7jY4j5GRSLv7m2jqhRq3l1I8eq
+	dK16UUeDplQ==
+X-Received: from dlbrn12.prod.google.com ([2002:a05:7022:150c:b0:15e:caa1:d304])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:701b:4281:20b0:145:152:b547
+ with SMTP id a92af1059eb24-1850c5f792emr4688826c88.1.1792257289477; Sat, 17
+ Oct 2026 10:14:49 -0700 (PDT)
+Date: Sat, 17 Oct 2026 10:14:31 -0700
+In-Reply-To: <20261017054555.1655407-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+Mime-Version: 1.0
+References: <20261017054555.1655407-1-irogers@google.com>
+X-Mailer: git-send-email 2.56.0.212.g129ede20d9-goog
+Message-ID: <20261017171437.2066343-1-irogers@google.com>
+Subject: [PATCH v2 0/6] perf bpf-filter / lock contention: Add lock_held()
+ sample filter and RCU/SRCU support
+From: Ian Rogers <irogers@google.com>
+To: irogers@google.com, acme@kernel.org, namhyung@kernel.org
+Cc: adrian.hunter@intel.com, james.clark@linaro.org, jolsa@kernel.org, 
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+	mingo@redhat.com, peterz@infradead.org, rcu@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
-s) to consider:
-- [Critical] perf/core: unpinning ctx before owner_entry link allows fork/s=
-wap exec race
---
+This series adds a new BPF sample filter predicate, `lock_held(<lock>)`
+(along with `lock_held_read(<lock>)` / `lock_held_shared(<lock>)`,
+`lock_held_write(<lock>)` / `lock_held_exclusive(<lock>)`, and `:R` / `:W`
+mode suffixes), to `perf record --filter`, allowing perf event samples to
+be recorded only when a specified kernel lock is held (or not held with
+`!`) by the running kernel thread or CPU. It also extends both
+`lock_held()` and `perf lock contention --use-bpf` to support RCU and
+SRCU, and fixes a pre-existing `lock_stat` filtering bug in `perf lock
+contention`.
 
-commit 32e21b1610ca28e8fe922d31bdbd5f0a4a31607c
-Author: Daehyeon Ko <4ncienth@gmail.com>
+For example:
 
-perf/core: Close owner-list publication race with remove-on-exec
+  # perf record -a -g -e cycles --filter 'lock_held(&cgroup_mutex)' -- ...
+  # perf record -a -g -e cycles --filter 'lock_held_read(&mmap_lock)' -- ...
+  # perf record -a -g -e cycles --filter 'lock_held(&mmap_lock:W)' -- ...
+  # perf record -a -g -e cycles --filter 'lock_held_read(rcu)' -- ...
+  # perf lock contention -a -b -Y rcu,srcu -- sleep 1
 
-This commit keeps the target task's exec_update_lock held in perf_event_ope=
-n()
-until event->owner_entry is added to current->perf_event_list, preventing a
-concurrent target exec from running perf_remove_from_owner() on an unlinked
-owner_entry.
+Supported `<lock>` specifications match `perf lock contention`:
+- Global/static kernel lock symbols (with or without leading `&`, e.g.
+  `lock_held(&cgroup_mutex)` or `lock_held(cgroup_mutex)`)
+- Hexadecimal kernel lock addresses
+- Slab cache names prefixed with `&` (e.g. `lock_held(&dentry)`,
+  `lock_held_read(&dentry)`)
+- Well-known per-process, semi-global, and RCU locks: `mmap_lock`,
+  `siglock`, `rq_lock`, `zone_lock`, `rcu`, `rcu-trace`
+- Lock types and flags: `mutex`, `spinlock`, `rwsem`, `rwsem:R`,
+  `rwsem:W`, `rwlock`, `rwlock:R`, `rwlock:W`, `rt-mutex`,
+  `percpu-rwsem`, `pcpu-sem:W`, `srcu`, `srcu:R`, `srcu:W`, `rcu:R`,
+  `rcu:W`, `semaphore`
 
-> diff --git a/kernel/events/core.c b/kernel/events/core.c
-> index 7846d70be57f6..2fdd8d71dcd55 100644
-> --- a/kernel/events/core.c
-> +++ b/kernel/events/core.c
-> @@ -14246,15 +14246,15 @@ SYSCALL_DEFINE5(perf_event_open,
-> =20
->  	mutex_unlock(&ctx->mutex);
-> =20
-> +	mutex_lock(&current->perf_event_mutex);
-> +	list_add_tail(&event->owner_entry, &current->perf_event_list);
-> +	mutex_unlock(&current->perf_event_mutex);
-> +
->  	if (task) {
->  		up_read(&task->signal->exec_update_lock);
->  		put_task_struct(task);
->  	}
-> =20
-> -	mutex_lock(&current->perf_event_mutex);
-> -	list_add_tail(&event->owner_entry, &current->perf_event_list);
-> -	mutex_unlock(&current->perf_event_mutex);
-> -
->  	/*
->  	 * File reference in group guarantees that group_leader has been
->  	 * kept alive until we place the new event on the sibling_list.
+Limitations and weaknesses in determining whether a lock is held:
+- Inlined lock/unlock operations:
+  - When the kernel is configured to inline spinlock or rwlock operations
+    (`CONFIG_INLINE_SPIN_LOCK`, `CONFIG_INLINE_READ_LOCK`,
+    `CONFIG_INLINE_WRITE_LOCK`, `!CONFIG_UNINLINE_SPIN_UNLOCK`,
+    `CONFIG_INLINE_*_UNLOCK*`, etc.), `_raw_spin_lock*` /
+    `_raw_spin_unlock*` and `_raw_read_lock*` / `_raw_write_lock*` are
+    inlined into callers and have no BTF function entry points for
+    `fentry`/`fexit` to attach to. `configure_lock_progs()` verifies that
+    both acquire and release entry points exist in BTF before enabling a
+    lock family.
+  - Fast-path `percpu_down_read()` / `percpu_up_read()` and
+    `srcu_read_lock_fast()` / `srcu_read_unlock_fast()` are inlined
+    per-CPU counter increments without function calls, so only
+    `percpu_down_write()` / `percpu_up_write()` and out-of-line
+    `__srcu_read_lock*()` / `__srcu_read_unlock*()` can be hooked.
+  - On `!CONFIG_PREEMPT_RCU` kernels, `rcu_read_lock()` compiles to
+    `preempt_disable()` and does not maintain
+    `current->rcu_read_lock_nesting` in `task_struct`, so `lock_held(rcu)`
+    read-side inspection requires `CONFIG_PREEMPT_RCU`.
+- Lack of an inspectable owner field on non-exclusive / spinning locks:
+  - While `struct mutex`, `struct rt_mutex`, and write-locked
+    `struct rw_semaphore` store the owning `task_struct *` in `lock->owner`
+    (allowing `perf_sample_filter` to inspect kernel memory directly on
+    sample overflow when filtering by lock address), spinlocks, rwlocks,
+    semaphores, SRCU, and reader-locked `rw_semaphore`s (where
+    `__up_read()` does not clear `sem->owner` when `!CONFIG_DEBUG_RWSEMS`)
+    do not maintain an authoritative per-task owner pointer.
+  - Tracking these locks (as well as slab-cache and lock-type filters)
+    relies on `fexit` (acquire) and `fentry` (release) BPF hooks
+    maintaining the `held_locks` BPF hash map:
+    - Any such lock already held before `perf record` attaches its BPF
+      programs will not be present in `held_locks` until it is released
+      and re-acquired.
+    - The attached `fentry`/`fexit` hooks execute on every kernel lock
+      acquire and release for the hooked lock family across the system,
+      adding tracing overhead outside of perf sample handling.
 
-[Severity: Critical]
-Can the same owner_entry race still happen if the target task forks and the
-child execs before list_add_tail() runs?
+Patch overview:
+1. "perf lock contention: Share common BPF and lock type definitions in
+   lock_data.h": Moves `lock_type_table` to `util/lock-contention.c` and
+   `LCB_F_*` flags, CO-RE structs, and common BPF lock helpers
+   (`get_lock_owner`, `get_current_mmap_lock`, `get_current_siglock`,
+   `get_lock_addr`, `check_lock_type`, `do_collect_lock_syms`,
+   `do_slab_cache_iter`) into `tools/perf/util/bpf_skel/lock_data.h`.
+2. "perf bpf-filter: Add lock_held() sample filter": Implements
+   `lock_held()`, `lock_held_read()`/`lock_held_shared()`,
+   `lock_held_write()`/`lock_held_exclusive()`, and `:R`/`:W` mode
+   suffixes using direct lock owner inspection where possible (`mutex`,
+   `rt_mutex`, write-locked `rw_semaphore`) and a `held_locks` BPF map
+   updated by selectively attached `fentry`/`fexit` hooks.
+3. "perf test: Add tests for lock_held() BPF sample filter": Adds unit
+   tests in `tests/parse-events.c` and shell tests in
+   `tests/shell/record_bpf_filter.sh`.
+4. "perf bpf-filter: Extend lock_held() to support RCU, Tasks Trace RCU,
+   and SRCU": Supports `rcu` (`rcu:R` via direct
+   `current->rcu_read_lock_nesting` inspection with zero tracing hooks;
+   `rcu:W` via `synchronize_rcu*()` / `rcu_barrier()` hooks),
+   `rcu-trace` (via `current->trc_reader_nesting`), and `srcu`
+   (`srcu:R` via `__srcu_read_lock*` / `__srcu_read_unlock*`; `srcu:W`
+   via `synchronize_srcu*()` / `srcu_barrier()`).
+5. "perf lock contention: Extend BPF lock contention to RCU and SRCU":
+   Extends `perf lock contention --use-bpf` to track RCU and SRCU
+   grace-period and barrier waits (`-Y rcu`, `-Y srcu`, `-L rcu`).
+6. "perf lock contention: Filter events before creating lock_stat":
+   Fixes `report_lock_contention_begin_event()` in `builtin-lock.c` to
+   apply `-Y`, `-L`, and `-S` filters before calling
+   `lock_stat_findnew()`.
 
-In SYSCALL_DEFINE5(perf_event_open) in kernel/events/core.c, ctx is unpinned
-and ctx->mutex is unlocked before event->owner_entry is linked onto
-current->perf_event_list:
+Changes in v2:
+- Guard `BPF_CORE_READ(mutex, owner.counter)` with `bpf_core_field_exists`
+  and fall back to `struct rt_mutex_base` in `get_lock_owner()` so CO-RE
+  relocation succeeds on `CONFIG_PREEMPT_RT=y` kernels.
+- Add `CONFIG_DEBUG_LOCK_ALLOC=y` lock entry points
+  (`_mutex_lock_nest_lock`, `_mutex_lock_killable`,
+  `_mutex_trylock_nest_lock`, `_down_write_nest_lock`,
+  `_raw_spin_lock_nest_lock`, `_rt_mutex_lock_nest_lock`) to
+  `sample_filter.bpf.c` and `lock_progs[]`.
+- Verify in `supported_lock_prog_groups()` that both acquire and all
+  unlock BTF entry points exist for a lock family before enabling its
+  tracing hooks, preventing acquire-only attachment when spinlock/rwlock
+  unlock functions are inlined.
+- Enable `LOCK_PROG_PERCPU_RWSEM` alongside `LOCK_PROG_RWSEM_WRITE` when
+  a symbol name ends in `rwsem` (such as `cgroup_threadgroup_rwsem`).
+- Gate `record_lock_acquired(ctx, LCB_F_READ)` in `fexit_downgrade_write`
+  on `track_rwsem_read` and verify non-zero read/write counts in
+  `record_lock_released_addr()` before decrementing aggregate slab/type
+  counts.
+- Adjust stack skip depth by 2 for `fentry` RCU/SRCU programs in
+  `lock_contention.bpf.c` and recognize `synchronize_rcu*`,
+  `synchronize_srcu*`, `rcu_barrier`, and `srcu_barrier` in
+  `machine__is_lock_function()`.
+- Add patch 6 fixing `report_lock_contention_begin_event()` to check
+  type, address, and callstack filters before creating `lock_stat`
+  entries.
 
-	event->owner =3D current;
+Assisted-by: Antigravity:gemini-3.1-pro
 
-	perf_install_in_context(ctx, event, event->cpu);
-	perf_unpin_context(ctx);
+Ian Rogers (6):
+  perf lock contention: Share common BPF and lock type definitions in
+    lock_data.h
+  perf bpf-filter: Add lock_held() sample filter
+  perf test: Add tests for lock_held() BPF sample filter
+  perf bpf-filter: Extend lock_held() to support RCU, Tasks Trace RCU,
+    and SRCU
+  perf lock contention: Extend BPF lock contention to RCU and SRCU
+  perf lock contention: Filter events before creating lock_stat
 
-	mutex_unlock(&ctx->mutex);
+ tools/perf/Documentation/perf-lock.txt        |    7 +-
+ tools/perf/Documentation/perf-record.txt      |   51 +-
+ tools/perf/builtin-lock.c                     |   88 +-
+ tools/perf/tests/parse-events.c               |  121 ++
+ tools/perf/tests/shell/lock_contention.sh     |   14 +
+ tools/perf/tests/shell/record_bpf_filter.sh   |  123 ++
+ tools/perf/util/bpf-filter.c                  | 1188 ++++++++++++++++-
+ tools/perf/util/bpf-filter.h                  |   13 +
+ tools/perf/util/bpf-filter.l                  |   31 +-
+ tools/perf/util/bpf-filter.y                  |   46 +-
+ tools/perf/util/bpf_lock_contention.c         |  167 ++-
+ .../perf/util/bpf_skel/lock_contention.bpf.c  |  427 +++---
+ tools/perf/util/bpf_skel/lock_data.h          |  368 ++++-
+ tools/perf/util/bpf_skel/sample-filter.h      |   71 +
+ tools/perf/util/bpf_skel/sample_filter.bpf.c  | 1096 +++++++++++++++
+ tools/perf/util/bpf_skel/vmlinux/vmlinux.h    |    7 +
+ tools/perf/util/lock-contention.c             |   22 +
+ tools/perf/util/lock-contention.h             |   15 +
+ tools/perf/util/machine.c                     |   11 +
+ tools/perf/util/parse-events.c                |    3 +-
+ 20 files changed, 3507 insertions(+), 362 deletions(-)
 
-	mutex_lock(&current->perf_event_mutex);
-	list_add_tail(&event->owner_entry, &current->perf_event_list);
-	mutex_unlock(&current->perf_event_mutex);
+-- 
+2.56.0.212.g129ede20d9-goog
 
-Holding task->signal->exec_update_lock only blocks execve() on task's own
-signal_struct. It does not prevent task from calling fork(), which runs
-copy_process() -> perf_event_init_task() -> perf_event_init_context() witho=
-ut
-taking task->signal->exec_update_lock and allocates a new signal_struct wit=
-h a
-separate unlocked exec_update_lock for the child.
-
-When an event is opened with attr.remove_on_exec =3D 1 and attr.inherit =3D=
- 1,
-perf_event_init_context() acquires ctx->mutex, inherits the event into
-child_ctx, and marks child_ctx as a clone of ctx. Because perf_unpin_contex=
-t()
-already dropped ctx->pin_count to 0, context_equiv() allows the context swap
-optimization:
-
-kernel/events/core.c:context_equiv() {
-	/* Pinning disables the swap optimization */
-	if (ctx1->pin_count || ctx2->pin_count)
-		return 0;
-}
-
-When switching from task to the newly forked child,
-perf_event_context_sched_out() can then swap the unpinned original ctx onto=
- the
-child task:
-
-kernel/events/core.c:perf_event_context_sched_out() {
-			WRITE_ONCE(ctx->task, next);
-			WRITE_ONCE(next_ctx->task, task);
-
-			perf_ctx_sched_task_cb(ctx, task, false);
-
-			perf_ctx_enable(ctx, 0);
-
-			RCU_INIT_POINTER(task->perf_event_ctxp, next_ctx);
-			RCU_INIT_POINTER(next->perf_event_ctxp, ctx);
-}
-
-At that point, the original ctx containing the parent event (with
-event->owner =3D=3D current and event->owner_entry still {NULL, NULL}) belo=
-ngs to
-the child process. If the child immediately calls execve() under its own
-child->signal->exec_update_lock, begin_new_exec() -> perf_event_exec() ->
-perf_event_remove_on_exec() iterates the swapped ctx->event_list:
-
-kernel/events/core.c:perf_event_remove_on_exec() {
-	list_for_each_entry_safe(event, next, &ctx->event_list, event_entry) {
-		if (!event->attr.remove_on_exec)
-			continue;
-
-		if (!is_kernel_event(event))
-			perf_remove_from_owner(event);
-}
-
-Wouldn't this allow perf_remove_from_owner(event) to run before the opener
-executes list_add_tail(&event->owner_entry, &current->perf_event_list), hit=
-ting
-the same list_del_init() corruption or use-after-free on
-current->perf_event_list?
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261017150747.1119=
-197-1-4ncienth@gmail.com?part=3D1
