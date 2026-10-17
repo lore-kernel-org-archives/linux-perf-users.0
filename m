@@ -1,54 +1,57 @@
-Received: from CWXP265CU009.outbound.protection.outlook.com (mail-ukwestazon11021097.outbound.protection.outlook.com [52.101.100.97])
+Received: from LO0P265CU003.outbound.protection.outlook.com (mail-uksouthazon11022129.outbound.protection.outlook.com [52.101.96.129])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6BB6351C17
-	for <linux-perf-users@vger.kernel.org>; Sat, 17 Oct 2026 13:42:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.100.97
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38034348C54;
+	Sat, 17 Oct 2026 13:56:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.96.129
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792244548; cv=fail; b=eNv2JG9smz4BfKuksmnbUF90S0oH6Gu+2Gd6YpYIGqSvV4UOfLJM/CgI508a9DUPNlv4zCgg9h1TnbtGDAkLRFQfbtth8xrnuVNylPQov5qbJyhWYzr90la0PvK9V6WtMYHOEpB56meAY9WoYRdvJjdmw60Hho9cehq+aQRRcMM=
+	t=1792245412; cv=fail; b=qrFVcuihr6YoQP3G5l4Yn64hyXMaZ2Bg2dmJpkkRp1KROu6WvNRtt/ilmJKw2ZS9Zm5x8o84iimgyowpA5pTgI/XwHWgtmweZhG3tthrL21aOhT19BuX5Tcw/B0VPjb8oWD5W4qsv6vgl/W7Wcwpm4bFfQuGf5nPceSwLEVgZMs=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792244548; c=relaxed/simple;
-	bh=jJYrexM4oUeKLOXF6EP0R/YwR55eQePJQLrCqLUkXHs=;
+	s=arc-20240116; t=1792245412; c=relaxed/simple;
+	bh=9LDomrDFyZlhGrj2Q37IQQ1ehQXk6OQpDYSr3HoCGc4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=TR9qHjrGGaqJM8/SVm5dacf0W3+a5qdJBiBz+R0XRr/Zeg1IulsqFTtO1kO/HYTqYShQZl/IYTS65nL5mZPzS25KAEtx6wqdxtRpZ02CgrBui57+/WzOCSP5BZzzImyGYreBI1sz/nT19cxkRmGmI7TtSdfvwCYyVnm8k2SV2ms=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=atomlin.com; spf=pass smtp.mailfrom=atomlin.com; arc=fail smtp.client-ip=52.101.100.97
+	 Content-Disposition:In-Reply-To:MIME-Version; b=YY9tgXiUc1puRYDzNTupdMI+I1K9ecRJf6ygnC7kGShTSNtmjTnYSZ4yYzeGaLyH1rr2PRDMd6/RnpM76l7WTXRyMealX/cRHD1affB42NM5R0J/pdj6l57HAEKG2R3YjSacE0/xtmpjQ1LxWU+QbHfsSqBfLqZiJrLFGSyZFJw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=atomlin.com; spf=pass smtp.mailfrom=atomlin.com; arc=fail smtp.client-ip=52.101.96.129
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=atomlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=atomlin.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=kWn4jLP7cDZDkK0EOpazKw8XnfH/TaLSbaAv3CAylEY4oa50eCritUgKmzN02uM98vaS4YWnCZ8lxjJPHqKHZ8BPcr2ZRIwWoSwGeKXIqN8ry9jFD+8JI/HA+rD429DMaWmf7HdofP27snFPAYv01OYbLq5UyqjY5DSPaAQSqs/j53gaoSXVpiBTYpFWYGIHwftEB6LjVWpVRfZ9CNelds5ZgtVyzb1IPTYxB2nb1ty7iER2EGa6gGXwv3KvwjyXyS7DaIDCV7Rr3+h68ilmzcwwVJYCt/1ADlHqEaiv7tKJTfrz99+oZrzOzmlX9tpA1pSoy9uohcaweHRj7OcDJg==
+ b=cK7MSfRLkML4p6sfbluHDl5rM+fzaFnzIRtziDpEmCuQrS6ameVuR+1/BYboRJCL0siZOFI1g7d8ROLxt4ZvbMTBbdJjNKqYVd/KVQfFHsL8sGS2VPmg4GHHF/Vo0SPYblTIc5k0LBTdfY5mfNDhjI0B4/Qpqs6jhm2t1c10nE3wXYzSlfnr2GHA62cEPQMtiVmtPuLWqgLaD+prOOipTws1rWX9WifDm4ZuqrXQV9GrYqbWZjkFVSMEhYVQN3gnx6ynQ3nX/q2oxufNek8gw1oKQ41CYfKxFUl5H+Ud45Qw0SMPMrvJWn179zdglN1gBltC8emwq9AYnzkir1PfGg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001; h=From:Date:Subject:Message-ID:MIME-Version;
- bh=rRBioUlT+MjITP94mE2CxXifEAB0QhJBnjy9Z4NpiO4=;
- b=My/cB8So64HHvypkYxaU+S4fhLOE87xa3AKL2wr7m+HWA3SHTjLh3AggX1K0smMcV8UOwz8DeskKZxaccvYDvbIWkdaMAWQLWvV8CPJACeAemLhVbthPOLbO52dvPD/l/ReTe7lfI/WbjTBYN6gFVTN7aZ/5yJQxphaIYtEHyi+0WWoSaueKWLSoDfgZgrJqP06lRnl+nWp2DgbNsfH3+5XhjNF/Q7GM++QEV0Yw4avdludhlPbrKCGsZaM9wJ00MWj4o+JH69nxxsPlLC7BWWxdS+cuIEm9RJ78d8HZfC/cm+ZPXf5N9ciS1wEe5NsBGTNWdmdq7njN8VVpY/04Hg==
+ bh=9efrS2GlkIWeg8Bbdl/nQ5JZsjU1DuwW1ROv0gSpktc=;
+ b=XKJKukeUUgvXSMuSb52OEqYDv/Mufw3qs7mp/gPAB1pqE27wjO5mnB6E0aya+/fJEoGUp+0nQTYaRWC6nlSCLUF0GwAN81u8mBD8xMbVCNAetB0g4Wim3KpJcAC0/z/+6Zpj59UK78jR9xulR6TNXJVTgGNN5PkuVqUE80vB/HZyqWxxU0GnyYJa8HMG2k12UTnrVKdLn/NOXS+YObw5usl9ACgz7xS9mfHKTQTKppjF/7vFqKx0ZvrBsurc8ZcRBLh3Pb6yh5CyHJUA4bwKJz4qqDoc2WglF4w/hNFuv4oCNXZ5lCMY1jjFRI+pJIB4esBVxXDbTbIZ9xvxlfHSCQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=atomlin.com; dmarc=pass action=none header.from=atomlin.com;
  dkim=pass header.d=atomlin.com; arc=none
 Authentication-Results: mx.microsoft.com 1; dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=atomlin.com;
 Received: from CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM (2603:10a6:400:183::5)
- by LO0P123MB3962.GBRP123.PROD.OUTLOOK.COM (2603:10a6:600:148::13) with
+ by LO0P123MB6172.GBRP123.PROD.OUTLOOK.COM (2603:10a6:600:261::6) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.522.18; Sat, 17 Oct
- 2026 13:42:22 +0000
+ 2026 13:56:47 +0000
 Received: from CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM
  ([fe80::cec4:77ab:262e:d230]) by CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM
  ([fe80::cec4:77ab:262e:d230%5]) with mapi id 15.21.0522.017; Sat, 17 Oct 2026
- 13:42:22 +0000
-Date: Sat, 17 Oct 2026 09:42:17 -0400
+ 13:56:47 +0000
+Date: Sat, 17 Oct 2026 09:56:43 -0400
 From: Aaron Tomlin <atomlin@atomlin.com>
-To: sashiko-reviews@lists.linux.dev
-Cc: linux-perf-users@vger.kernel.org
+To: Ian Rogers <irogers@google.com>
+Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org, 
+	namhyung@kernel.org, mark.rutland@arm.com, alexander.shishkin@linux.intel.com, 
+	jolsa@kernel.org, adrian.hunter@intel.com, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
 Subject: Re: [PATCH perf-tools-next v6 3/5] perf ftrace: Support display of
  inlined functions in function graph tracer
-Message-ID: <erftuvk52hiyir5j37pqay62v6qllij3ejrwh6ry4bwcvnvbha@5gp5nnd4dgbs>
+Message-ID: <2wkqzx2iiu5p4ghu6m6mtnlkoyzqwunasn27dj74p7aumi6u7g@xgxdayjv66sc>
 References: <20261016040310.482876-1-atomlin@atomlin.com>
  <20261016040310.482876-4-atomlin@atomlin.com>
- <sashiko-outbox-173772@kernel.org>
+ <CAP-5=fVcd0KRWFtfTj2BS=A7m-V_EsxmDRGca41qiT7H1B8zgw@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <sashiko-outbox-173772@kernel.org>
-X-ClientProxiedBy: BN9PR03CA0643.namprd03.prod.outlook.com
- (2603:10b6:408:13b::18) To CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM
+In-Reply-To: <CAP-5=fVcd0KRWFtfTj2BS=A7m-V_EsxmDRGca41qiT7H1B8zgw@mail.gmail.com>
+X-ClientProxiedBy: BN9PR03CA0990.namprd03.prod.outlook.com
+ (2603:10b6:408:109::35) To CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM
  (2603:10a6:400:183::5)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -57,153 +60,154 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CWLP123MB6607:EE_|LO0P123MB3962:EE_
-X-MS-Office365-Filtering-Correlation-Id: cd36928d-7908-409e-596d-08df2c54785d
+X-MS-TrafficTypeDiagnostic: CWLP123MB6607:EE_|LO0P123MB6172:EE_
+X-MS-Office365-Filtering-Correlation-Id: 73320f40-2184-4408-91ff-08df2c567c44
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|366016|1800799024|23010399003|4143699003|56012099006|10067099003|22082099003|18002099003|6133799003|3023799007;
+	BCL:0;ARA:13230040|366016|1800799024|23010399003|376014|7416014|56012099006|4143699003|261009223027099003|10067099003|22082099003|18002099003|6133799003;
 X-Microsoft-Antispam-Message-Info:
-	E1Kx6JTGDZrpfkh5QhoReNBDBd+uY8CDVdczAgrixQsH7zESCo6YdsfQm3tfRv2D9ERa076i56vgYXiUnR3KjH+MrRvaNY1MfUgRbPEzd1OHKg5Yd2rHp6kZAlvInuD2NmlUTKzRpLMIrRXbz2FKARdqfUhE7+cQb0ZFDa+srcBpKgxmjRR2XiTYfHanLuGcu2f0wz0duKDGJj9KOAM/oz8d6If489FVm38aCbGnpWX4frJlN/XCo6e0xe8X8fv4oGFBpAYWItXbcX/i3+2z3RZwuHpk+4Pv4N2eKpc9vxwdmNaTqDcWkEsbEJiKubj+rRaS+c+r0l4r+8BRcMzb/IRhd3HnHajW+qh/HDFzHCVAzqlV03aBA6vv/p3MgLWV9UWDfbOfV5Vsa79xk+L3vdEEKp2gxu7oMbGbZpGUMRVxGczstoHrh+afEsuwWStZav5vTcUOxQZRwc6fHshMuQg7aprOwChfu9CU2F6QuF3y/XjPzvH3KHK0kI1rwYU+HqJI/nwMwJIs+Diyd90AjLU23zwZqgdo70ujJIMtbxt3Vy5g72cwcY3Fh9jHsfgItxStU0p2GPH5Unu8+uvoyVpx48XJmP/I3BPrfnT8WLwbv6IgsSM608pR0UccsEdHFL1/jOMdTRXSe88JVH92E/OHMdbGehW117JbsM3Oik8=
+	/kK80PqPJzapbUtfSir8CdOjKcrsOJYKA7GhfpO9E2dAyaqRD1wCSXJVxrIekIYKIsBIpTqgpp9T2xLkZ4DxzAknSQ4FwRTw8qDIU6kKn6pucab8qKrnzbjjxqqZtZvAOYl6kZLTQkdR+5TG/sbr5j75cGvxnuv+pjmL6qJRXhoIEvB0xtjqPOq/3hU8e/yTQL7CmN+2hRV8L/gTZ2PhyHXfJpJCAwKcH9HB4Ta+nMYXrq0XSaKdqLyd1Wb1FHFY3iHDfta6ZBTDD7T81CRdLevtNSHT6jgZWr2L47izdRXAN5C/+8Lxt6dEpsKWJ30xPfdrcyHYKyG1p70Y7ED9gmk7KQU3UW3H5VE6/v1tqqxfWgGiedTrho1g7YJk9Z+I9a2ZfLxo8Pr9iSw8/XDnvV/35vjmaDX8Wc1MLwhq2JxXRK1GcEtDVI+ERdv9Y8U2FL51Qu9K1WNxb4km9+btmEPONyr7CAPiTKLwnzaoELXX0IKfZmARhBVglx31u6oyyjpdbHzPRT/+zHy1+eS0r0kUWWYCLYjP7rMXD2l8r/pV96Ei9nDwkYUw4obgd+I5+XqkAWUtwWHRecOtq4L3qSehFTTcdZuCMAWcHUa3XAXB/j+xbopC6NBQY8yAog4iV9y+J4OPoVE1PKZWuINEYFEpYtfukVEexy3FAzBzNX8=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024)(23010399003)(4143699003)(56012099006)(10067099003)(22082099003)(18002099003)(6133799003)(3023799007);DIR:OUT;SFP:1102;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(23010399003)(376014)(7416014)(56012099006)(4143699003)(261009223027099003)(10067099003)(22082099003)(18002099003)(6133799003);DIR:OUT;SFP:1102;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?OWgxclA1cnRRWndvaStrRGJ6Rk51emNnZmwwVWJPM2M3VHN5VXlCQnNXZng4?=
- =?utf-8?B?Z2RWMnlYYSthNU92bHpGdjljTEI0TEhNaHp2Nm5WOXJ6ZHU1NWJwRThwQnV4?=
- =?utf-8?B?TGZIUjJaanFRbnp1V0VlNElTUktLRm8xaG5JS3NvdlZLekY4OEdOdlU1STVM?=
- =?utf-8?B?N1RqL3FySk1UQlptRTN5MzhEd21URlNoZ3Bod1JPY00vaGVPSVM1NEVjNjJP?=
- =?utf-8?B?TWVJbktIby9VUG9Wc3NhSGZVVTI2Y0hpZDl6UUtBcWh1TTRRcWUvV3NBVzFE?=
- =?utf-8?B?VGhGQ3FPekt4OG1pYlBoZElxelZyRUtuY3hNTm5GR3NHZXNRdklQYTY4TStr?=
- =?utf-8?B?Ty9QTHk0eUhoeDZ0NzIvTGd1TWdQY3JubTNla05hRUYxSUhFMmZpRXNLZFZP?=
- =?utf-8?B?OThEbHNGa3ZqZ1dva0V3YmNDVVNaSVF4Znp5QktLVVArTUxRQ2xUOVdVa0Js?=
- =?utf-8?B?dG1IVm9ScWJFbnMzV1pMK0RJTzR3dXlPZVdTQ3ZsMkVWZzhvYU0raW85eVE1?=
- =?utf-8?B?Rm5jb0ZLSmgzcXJBVlBpYlUwNEptZGFiWTl0czc4NWdpMGZzenJITVgwTXNT?=
- =?utf-8?B?dkUzaTQvNW9TdTZkQWEvc05xQjg1cXRpQ255bDZvVHFPeE1vRkR4SGxMM1Jv?=
- =?utf-8?B?amVUUEJOZXgzN2tDNTBXNlZORkFnSmJoaGVTRDQvMG52Q1plMUxrZ0QzU2dN?=
- =?utf-8?B?cnA5SkFHQVBUdmNVTlZUNE5hOExYQU5ZUVV3YnZINWUrRE9tYnp5U3NieE1M?=
- =?utf-8?B?ZlR4dHpETWYwZ0hwK2tvWXNjVHhHVFJyNFJydFZFNkRZanRENE15cWxPUGpK?=
- =?utf-8?B?UnA2ZStqY0VjaGFiSGVVdUp0dno2czVyNk1ja3ZGY0cyM2FHYUFyY0hzNitN?=
- =?utf-8?B?WkFGUnA3SjdzWUpJOWRtNjk2RDJHVnVJWUdzUCt1a3hTcTBaSzdXeDc5UjFT?=
- =?utf-8?B?cXNvL2VQOUJCU1ZzTWhBUGY3U0lPZ1pHN3NZM2pRRXVOQ2xjcmk3TW5BQ0xL?=
- =?utf-8?B?UGRralhzd0xNVVd1bWpnSERlQTU4bitkTmx3aWRNcFY3UVVrSXlJOGJFTGN3?=
- =?utf-8?B?N0Y5dGtFZG8reW50cUdodWI2TlRtY1NQTlkxTHN5Zit2TElVbjViQ3htc3Jl?=
- =?utf-8?B?YjJMdWpOeVhDY2RaYmZSalIvSHcvalo5S1U3WmVhM3BYK2ZTRlZCZlZpRDRw?=
- =?utf-8?B?SG50emJQRSt1Qi82eVIwN3BDYnk2bUFVMGk0Y0VxT0RUMlYyRkdEaXBvOFE1?=
- =?utf-8?B?TjRpeG14djR1cGdGNmtRVUlBN3hFZ0VxeEs1QncrUW5PMDRITm92RkJzYWhK?=
- =?utf-8?B?K2VqandUUFJTV2haL0xNN0NlRXR1Yk1ZcDkyQjFlcWVPLzNNSThJQW4rUGFO?=
- =?utf-8?B?Y1dsRHl5bUxXaXR5a3RFNFpNVjExUlpuM1VmckIxdVZWSkZsdHZlMXlYZndu?=
- =?utf-8?B?ZFJ4ejUxbWdIQldsbnNwT0xpR1FRVG5RZlBTRTJmWkorMXlPSzByT3ExdTlv?=
- =?utf-8?B?ejUrd2lhWlhQUzlIQlhhRDN0TTdPY0wvK0xOVkhHTFRnYjhhdDdmeldtVnJT?=
- =?utf-8?B?ZUpUa0w2WGw0Nm9EYUg5b3ZRbTZYUU5rS0VEcWZ1YjJMRVBNMERTMkxVRE5u?=
- =?utf-8?B?djcxV2RUQlpXazBkcCtESHAvdVN2aDY0dnREMkUwaHk5QzFsWlU1ZGVVcGhj?=
- =?utf-8?B?TzdXSm5oc2M4eWlYSExhZVU2MlZsZ2tNc0lKQUg3dEFuUjRQTU1XOUhnd28v?=
- =?utf-8?B?akduVktwZ25CZklOUjdPc3lFcmo0U3ZGMzVITEc3cDh6ZHg5M0sxRWwyU2t0?=
- =?utf-8?B?L29KTGdBVkFXYk9zd2pjRUNMQ0p2WEI0Yk5tTGdTU3ZJZVFlc0JqK1NnckpR?=
- =?utf-8?B?T0VBWC9xTmNTeXBCNHpDVWhPSmJwdXhDNkpINm5ESy9NN2VSdDZ5cWZ2MzRn?=
- =?utf-8?B?SUk4bDhyTW8xMTViS0RyUDJTZllpSDBkdzRNSUJyaTBxWDIrcVNBMkQwaFVU?=
- =?utf-8?B?ckk4MEJ3ZTRFR1VBTlRVT1l6d0txRUlnMHFvUTlHMjNPa2R0RUEwNFprcDFs?=
- =?utf-8?B?Wm9NczIxczA3YlY2alBGRVYxN1FrdUd6c1l5RjU5N1pPemUrU1VMdk9HY01l?=
- =?utf-8?B?cVFxMUVnb243N0ZYMk9kWTlTNzJNSmZtMWpIUDg0OVh5M0V5L2tzRDRpT3Y1?=
- =?utf-8?B?SHphS0w5Q016Y1hlWERPOGIrSnFRMjlkV1dCbHJyZFRwZnNiQnlMUkc1NXdM?=
- =?utf-8?B?aGl4RGJEZ1hUbTJ4MlU5YVVmekpHVmlSaW8xOENQM2txaUd4eUxCK25XRXlX?=
- =?utf-8?B?aGpkNHhjYi9QdWVzV3BOVVhSZTBoZmxEN2Uwbk8xWWU2ZnVDTVd5QT09?=
+	=?utf-8?B?Nk9uekJGQlR4ZkxkL3RhTW9TWUFuLy9KajdTWkFxelNjdDFhd3dUeWEyQUhw?=
+ =?utf-8?B?NDBFSm51U1o0TGdKb1orY1VrUjhkWnlLemNlbjVJcmRvMWZRSVNKZUhKUHR4?=
+ =?utf-8?B?ZGE5ODZyZTFaUjltcjR4L3FJYmNXMVI1RGs0dFZYbnZVWlRWbW8raS80akY1?=
+ =?utf-8?B?eHZZa3REbHR3WFZxT1ZTUEZlN3pFeHYwTFEzczhhWGZuY0FUV3p1czBtSDhu?=
+ =?utf-8?B?ZnBVbG5FaVVhOGZ5U2FEMTR6MVpFV3p5bWV3MWlrRDhIVlA1NkpGejdHRXhj?=
+ =?utf-8?B?Zy84QTVvTWhqbUhvYzBGYjRZSzJHYUh5UG1FQnVQU2UyczV6UmFxdWRRbHZs?=
+ =?utf-8?B?STF2MjBGSmd5cm4vTVdaQ0FHLzY4VkVsMGRHWnE4KytBa1hlVEJadmlNbXlG?=
+ =?utf-8?B?UEhUNFMvRzBXdWN0bDU3N2xQa0JxenVkSXB6T2Rva3lreTBEcG9oVnRZYVI1?=
+ =?utf-8?B?U3VvVVlQVytYaUduVWJKZXBpMDdjMTl0bTNJWWJkc3pPeWdmSXNvR1VjQ3dI?=
+ =?utf-8?B?RmpTNnN3ODlpdjJmMXErNUtVRGdFZ0loYnY2djM3NlRCeThsMEQ3b291eFNm?=
+ =?utf-8?B?Ry8rMzBydlR5S2NWOTZVU3Q0ajF1OGMrQ0p3OVA4SUZJbFRCWUJVQk1yNytz?=
+ =?utf-8?B?Wmh1dGtjNU9YVUtCOUdTUy9XTjFHZGd3TURmWEdnelRjWXU1RWtmazhzTUh2?=
+ =?utf-8?B?d3pudTd4MHNQaGVjRHFHYjlrcDc0TzJZOGhxaGQ1ekhHTnRQbkJXNW5BNlJ5?=
+ =?utf-8?B?bUhzV1RWTndEelVRVU9Ddm4wUFhFOE9lMlJUMmMwTERqRHJKak9WdkppeVFm?=
+ =?utf-8?B?d2lWL3MwdGp2RGl1aDQ1REdCazJKekNPTm03UDgvaUNrdFgxSG5nVjNPaWdT?=
+ =?utf-8?B?eCtERXZvNVo3djRjdHdKZ1BYVjY3OWgvRkJIWEE1NWVTblNtdWFpWjBoTksw?=
+ =?utf-8?B?SThsck9nbDVjWGVRL0piNHZ0bVpPYU05ek9qaWJsUGhIU1NqTFZncTFtYTdl?=
+ =?utf-8?B?akxESHNmanpVV0RvbE1OZkc3NXZSUmJGOVo5a2xyenhBUFNxQU5XTGFUSXlX?=
+ =?utf-8?B?eFVvSjZXdmtIb3hTL1hzVFRJTDdlUGtyQ2tHTktxOWFTZ1RkQkV3QTRzS0Na?=
+ =?utf-8?B?LzhvWjNXNERXOWVqYkFNZFVuL1E4UDlhQjJVeWN3Zm41bWxHTFQyUEtTQlUx?=
+ =?utf-8?B?bGE3djlteFpzT0k5b00zVXBlL0k3czRHSStUN2RtdVVUK0pwNXRmcDgrcnFa?=
+ =?utf-8?B?NENrNjR4SVl3TTE0QjBkemRXR3JRSkVFbXhQajNKY0ZhRXpHSHo2V1BBOTRD?=
+ =?utf-8?B?ZGdlM3QrMWU3ZWxwMWZqcGZaYUIzRmJQTmxtSStPWU5ENFlSY0cyQ0tidWwv?=
+ =?utf-8?B?Rkxid2VaRFQvNTM5aVhTNXB6KytlYXhpRllNc1dUWVlqcTVjZWlzVjI1YnZH?=
+ =?utf-8?B?enhLcXZiQkE5akh2SWlQdkdMV2lDY0JXNzl5aVUzL1o3MnJEdFZlV2pINWRw?=
+ =?utf-8?B?Zk8rclNuQkYwNi8vWGM4dXlFeDQ0cEtVVWtVQ3czY0ZqSUZkSnpPOEFZZ0dN?=
+ =?utf-8?B?bUlDTnpvU1JjbGtUZFZNaHJ4N0hQeW1vdGhvc1hDc2V1b2JxTHd0OEVTV25O?=
+ =?utf-8?B?QlJFM2lKNU1OOUZObHVQeVNKY3lJVEo3TXkzOHREY212TGRyWDJWUVMvaVEw?=
+ =?utf-8?B?U2R2ay9QV2tNZ1ljWUQrazdsVlFtMm0rU3VqSFk0cWdOT2E3NWgxbm5TRklG?=
+ =?utf-8?B?U3BGUHBLcjlqVyt0OENnT3M4cXpVcjdlRklHeEplOWZQeEtpM1BpNUF4UU1M?=
+ =?utf-8?B?KzlYQ29uY1dhSGsxOTd3TElXWksrUG4yVEs4aWVTOE5nVEZFL3huaTVRV3pL?=
+ =?utf-8?B?bVdDOGtDZzJVYUZQQWlTMDl6RlV4eXcrbnhTRzEwb2ZoQXliQnE4ZU5KTEVE?=
+ =?utf-8?B?S0NsMTIwU0tUcVlhd21MdTZGbHFhaFk0RFJUVUhKUWM1d25XSnJwOE1MMktP?=
+ =?utf-8?B?czNUZEdOb3ZYTEpESWY4SXA3a2JZNkRJeFVVdStjWmRiYmpXTjk3Q0NZM1Vy?=
+ =?utf-8?B?THU2bUs0cVNheG82VCtGeWQ2U2RGK1VadSs1ZXhaOWFrdkxMTitqQ0wrS1Ur?=
+ =?utf-8?B?VmRhRzNSK2F3aXBuNTBNSFFVNE4rRkVuYzQ1U1EraUVSTGlRaDFEYmRQdllX?=
+ =?utf-8?B?aldBc1g1Sk9SNWE5ODZtK1JIMjEwVm1GQjQ4QWpOUzZSbGhhY2ZiUUpVdk9z?=
+ =?utf-8?B?REdnbW5tczBVTkYvV3d6Lytyc2JhMDhMYnYwaDZPTkJSNTk5OS81Q3lkdFIv?=
+ =?utf-8?B?YlNXa0VVQlNCLzU4RytTbXZXYWdBTlB0ZFI4YXR6ZHBoVis4eGJiQT09?=
 X-OriginatorOrg: atomlin.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: cd36928d-7908-409e-596d-08df2c54785d
+X-MS-Exchange-CrossTenant-Network-Message-Id: 73320f40-2184-4408-91ff-08df2c567c44
 X-MS-Exchange-CrossTenant-AuthSource: CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Oct 2026 13:42:22.0512
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Oct 2026 13:56:47.4549
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: e6a32402-7d7b-4830-9a2b-76945bbbcb57
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: yOev9gPeiN4ZPcZlbb8BoCCRjF4jwTh/Oc5NMG7gu6UjcSRHv6zPROxyKthCEpDqGSvoGbdTGXe/H9Rs2UmptA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: LO0P123MB3962
+X-MS-Exchange-CrossTenant-UserPrincipalName: sWfTe4cDjm+oENroqxXMRbmFqr/msY8r7FtnJApfjiSDrDvgCOoOD1I3NYpNbGfTvWqTCYnuLQd6ysyKzz47wQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: LO0P123MB6172
 
-On Fri, Oct 16, 2026 at 04:23:51AM +0000, sashiko-bot@kernel.org wrote:
-> [Severity: High]
-> Does this code handle context switches appropriately?
+On Fri, Oct 16, 2026 at 09:34:07AM -0700, Ian Rogers wrote:
+> > diff --git a/tools/perf/tests/ftrace.c b/tools/perf/tests/ftrace.c
+> > index 596cecee844e..ece7f4b73f44 100644
+> > --- a/tools/perf/tests/ftrace.c
+> > +++ b/tools/perf/tests/ftrace.c
+> > @@ -7,6 +7,10 @@
+> >  #include <unistd.h>
+> >  #include "tests.h"
+> >  #include "debug.h"
+> > +#include "dso.h"
+> > +#include "machine.h"
+> > +#include "map.h"
+> > +#include "symbol.h"
+> >  #include "util/ftrace.h"
+> >
+> >  static int test_parse_retaddr(void)
+> > @@ -62,6 +66,372 @@ static int test_filter_retaddr(void)
+> >         return TEST_OK;
+> >  }
+> >
+> > +#define TEST_CHECK(text, cond)                                 \
+> > +do {                                                           \
+> > +       if (!(cond)) {                                          \
+> > +               pr_debug("FAILED %s:%d %s\n", __FILE__, __LINE__, text); \
+> > +               ret = TEST_FAIL;                                \
+> > +               goto out_cleanup;                               \
+> > +       }                                                       \
+> > +} while (0)
+> > +
+> > +static int test_inline_processing(void)
+> > +{
+> > +       static const char line_entry[] = " 0)               |  wake_up_new_task() {";
+> > +       static const char line_enqueue[] =
+> > +               " 0)               |    enqueue_task() { /* <-wake_up_new_task+0x1d1/0x3e0 */";
+> > +       static const char line_exit_enqueue[] = " 0) + 10.000 us   |    } /* enqueue_task */";
+> > +       static const char line_exit_task[] = " 0) + 20.000 us   |  } /* wake_up_new_task */";
+> > +       static const char line_bare_enqueue[] = " 0) + 10.000 us   |    }";
+> > +       static const char line_bare_task[] = " 0) + 20.000 us   |  }";
+> > +       static const char line_unmatched[] = " 0) +  5.000 us   |    } /* unrelated_func */";
+> > +       static const char line_verbose_entry[] =
+> > +               " 1234.567890 |   0)   bash-1234    |               |  wake_up_new_task() {";
+> > +       static const char line_verbose_enqueue[] =
+> > +               " 1234.567890 |   0)   bash-1234    |               |    enqueue_task() { /* <-wake_up_new_task+0x1d1/0x3e0 */";
+> > +       static const char line_verbose_exit_enqueue[] =
+> > +               " 1234.567890 |   0)   bash-1234    |   1.234 us    |    } /* enqueue_task */";
+> > +       static const char line_verbose_exit_task[] =
+> > +               " 1234.567890 |   0)   bash-1234    |   2.567 us    |  } /* wake_up_new_task */";
+> > +       static const char line_verbose_inline_entry[] =
+> > +               " 1234.567890 |   0)   bash-1234    |               |    activate_task() { /* (inline) */";
+> > +       static const char line_verbose_inline_exit[] =
+> > +               " 1234.567890 |   0)   bash-1234    |               |    } /* activate_task (inline) */";
+> > +       struct perf_ftrace ftrace;
+> > +       char *out_buf = NULL;
+> > +       size_t out_len = 0;
+> > +       FILE *out;
+> > +       const char *unmatched_pos;
+> > +       const char *inline_exit_pos;
+> > +       int ret = TEST_OK;
+> > +
+> > +       memset(&ftrace, 0, sizeof(ftrace));
+> > +       ftrace.use_inline = true;
+> > +       ftrace.filter_retaddr = 1; /* Default when --graph-opts retaddr is not specified */
+> > +       ftrace.tracer = "function_graph";
+> > +
+> > +       /* If vmlinux is present, test resolving symbols */
+> > +       if (access("vmlinux", R_OK) == 0) {
 > 
-> When trace_pipe output is read, it contains context switch banners when tasks
-> change on a CPU. These banners cannot be parsed by find_func_column(), which
-> will return NULL, skipping the line without clearing the stack state.
-> 
-> Because the state is tracked strictly per-CPU without task awareness, could
-> this cause the newly scheduled task to erroneously inherit the preempted
-> task's call stack? Furthermore, an unmatched closing brace from the newly
-> scheduled task could incorrectly match and pop the stranded frames belonging
-> to the preempted task:
+> This series is great and I'm spotting nits. Could we try other vmlinux
+> paths here similar to the symbol code? It also seems an early return
+> could avoid indentation.
 
-Unfortunately, tracking the "synthetic" call stack strictly per-CPU causes
-preemption and CPU migration to corrupt the call hierarchy, either by
-polluting the newly scheduled task's indentation or by popping stranded
-frames from the preempted task.
+Hi Ian,
 
-To address this, I have transitioned from per-CPU stack tracking to
-per-task stacks keyed by PID:
-    1.  Per-task state storage (ftrace_task_hash)
+Thank you for your feedback.
 
-        Call stack states (struct ftrace_task_state) are maintained in a
-        1024-bucket hash table keyed by PID using hash_32(). Each task owns
-        its private call stack, inlined depth, and target filter state.
+I see. Looking at tools/perf/util/symbol.c, we can indeed utilise
+vmlinux_paths[] as per vmlinux_path__init().
 
-    2.  Context-switch dispatch
+    static const char * const vmlinux_paths[] = {
+        "vmlinux",
+        "/boot/vmlinux"
+    };
 
-        When find_func_column() encounters a context switch banner ("=>"),
-        a helper (parse_context_switch()) extracts the CPU number and
-        incoming task's PID, binding ftrace_cpu_tasks[cpu] to that task's
-        state in the hash table. Also, when --graph-opts verbose is used,
-        this binding is also corroborated on each line via the comm-PID
-        column.
+Acknowledged. I will make these changes.
 
-    3.  O(1) fast path for trace records
-
-        Normal trace lines only require indexing ftrace_cpu_tasks[cpu],
-        incurring zero per-line hash table overhead.
-
-    4.  Migration and preemption resilient
-
-        If task "foo" sleeps inside an inlined function on CPU 0 and later
-        wakes up on CPU 1, its stack is preserved and resumed on CPU 1,
-        ensuring synthesised inlined closing braces (} /* ... (inline) */)
-        match cleanly. Meanwhile, task "cat" on CPU 0 starts with its own
-        clean stack at base indentation.
-
-> [Severity: Medium]
-> When the function call depth exceeds FTRACE_MAX_STACK, the logic starts
-> incrementing cs->overflow_depth. If trace events are dropped, this recovery
-> loop pops stale tracked frames above the caller.
-> 
-> However, since the caller was found in the tracked stack, does this mean all
-> overflow frames logically must have exited? By only decrementing cs->depth
-> and failing to reset cs->overflow_depth to 0, could subsequent valid exit
-> events mistakenly decrement overflow_depth instead of popping their actual
-> frame from the tracked stack?
-
-Because the synthetic call stack tracks frames up to FTRACE_MAX_STACK and
-overflows are recorded beyond that depth, finding the caller in the tracked
-stack (caller_idx < FTRACE_MAX_STACK) proves that all child calls initiated
-by that caller have finished. Any frames previously in overflow_depth were
-descendants of caller_idx and must have logically returned while trace
-records were dropped.
-  
-Failing to reset cs->overflow_depth to 0 leaves a positive overflow_depth.
-When subsequent valid exit events arrive, the exit handler checks
-if (cs->overflow_depth > 0) and consumes those exit events to decrement the
-stale overflow counter instead of popping the active frames from cs->stack.
-This permanently desynchronizes the call stack tracking state and indents.
-  
-I have updated the recovery path so that whenever caller_idx >= 0 is found,
-cs->overflow_depth is reset to 0 alongside popping the stale tracked
-frames.
-
-> [Severity: Low]
-> Does this header file need to explicitly include <stdio.h> to provide the
-> declaration for the FILE type? Relying on implicit header inclusion can break
-> compilation under musl libc.
-
-I have added #include <stdio.h> to tools/perf/util/ftrace.h to ensure the
-header remains fully self-contained.
-
+Kind regards,
 -- 
 Aaron Tomlin
