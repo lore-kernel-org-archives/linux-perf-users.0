@@ -1,45 +1,45 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC5E331F9AC
-	for <linux-perf-users@vger.kernel.org>; Sat, 17 Oct 2026 19:15:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58B22391E51
+	for <linux-perf-users@vger.kernel.org>; Sat, 17 Oct 2026 19:18:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792264540; cv=none; b=azmud7ECDIoNoZ7qVpnoEtylQVFFiGOiJd7mh7pqGdKt36/oqtoSwKDrCVeN3/qWor8wzada1T3Kllb+rp4z/mfMa8aSBx5N7S9BsxEKbiQuYQXoJ5+MzWsP5V2HtzTpTuAB2YkjpxjA0lYFqpXFRodJlZG6b+a5ERZUtYEEE0g=
+	t=1792264697; cv=none; b=JNtSSRQeNeroY6nXgUVGYoRQAEb5kp5emsDwb28y0N+REwu8M5bbeA/92ACXNrnUUSKYK7Lftv0gCh2wjHQrpKuz0uovtNIEmmqVMdHDK9dstoI4fxlO3vLYkDhK8Q8y5igOCWhBzWrOmTkWvJVAh5pk7NoxBinkbFUljH4C/T0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792264540; c=relaxed/simple;
-	bh=DPdjGeNXauk8c4EfnPLvYhnTtHWnoKljZxBQsHphGeQ=;
+	s=arc-20240116; t=1792264697; c=relaxed/simple;
+	bh=EZSz/0y9hrDzc/K8DQFl2ftERlg/2x+wB773U9Yw6Rs=;
 	h=Message-ID:From:Subject:To:Cc:In-Reply-To:References:Content-Type:
-	 Date; b=ERDJ1vqzTS1BA1JO8F063cocmKFVNXOVHWkDlSyyKLqtze0B0PwAd3VjSmtA+/LLuIMAt05WsrpqWlhfxzcMBJqiK6suIBSktDpwQDx7p23T2CWBWCqQDjkLg1i7BZK7C45ahkdh6n3GVbhhpuvCSNxxHNfPdDLNsfl2dfbjMHM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=B6m9imGb; arc=none smtp.client-ip=100.103.45.18
+	 Date; b=jLHa/PY58aorJhi181L8+LT15BaSOPS8sauzc9A2tAHrnUxc8XoljV8AZMJtA+Ptn9/7Qutp3mf1HwrKPjK78pfWXGkC0Lgp6yJY2FZxjO9uoIxrzOdmX63Onf+5v+APl5uzPr9pHr46oOxmSGXmb1tjdVqPSYaQKcKF2+/JuN4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=L2YTHJDV; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="B6m9imGb"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 552B11F000C4;
-	Sat, 17 Oct 2026 19:15:39 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="L2YTHJDV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DA05B1F000C4;
+	Sat, 17 Oct 2026 19:18:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1792264539;
-	bh=ZNhriD+3X0xCPpHxJU9/SQa3f878Xrl9nXzC+OyLwWU=;
+	s=k20260515; t=1792264696;
+	bh=1gSSiCN2KZAcgZEwx0zhEQXXLvbTYJVmZ4gB5NV3ir4=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=B6m9imGbTrrAivAXISh0j3eYdbgEkDifpwxs5H91SZns5foAMXf4lGyyL89a13K51
-	 UlqEWIowi+OcofI+5DW7XLUorxiKmi0I8tRIjFQb/FK8t23EcX+3stiYYFFQf+AEu1
-	 qnWCsYA7VKP0uChLBiEUfqS1wqGqu0gnQeaCFF7J1OC6PFzF+s50FkVGNAHp6N4PtN
-	 +81AZvhm7bpbCOYiAa8jeLOByFw6YkuGzW0+bKMxo3c/PsI+9MjZE6DafF456W5z1/
-	 cuShTAwUV8ljO+bnWUr4OExUCaM4NMEFcrpP6p5BhECiY8d3U0EKga1REXW/Yte8/q
-	 OWAC1jsObrU5g==
-Message-ID: <sashiko-outbox-175775@kernel.org>
+	b=L2YTHJDV5tO2qW/vK3xODlguND5Pzo4TkiEYiXGAwxpXGRVxn8smaAS0byeanWIFW
+	 CY5dvSnrADcyMBdsUYl+TeRvSF5ADBYdBzhFW8F3D+5ojOiZewIJCw3Dn/dYr/IdnF
+	 atU2daKeiLaoIKxOH2jmfFgHLTqHQ4zdGaOYVYGFRm47ZK0lsJxruLLrQCMDJJhygf
+	 4CtUf3+yw4WsdMtHQtLnzNS1vzUt/y9p041auL2jRHeJUGNzGL56jpbY6pDMX/sqly
+	 yjY0qTebwMbuPSwCqJROoRDesVeTgfGE5Cc7UK1Lbd5S+hDgizUljjHDMVob0tvrCC
+	 KhFBByEnlWCaQ==
+Message-ID: <sashiko-outbox-175776@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [RFC PATCH v2 6/9] perf pmu: Probe registers, memory events,
- rdpmc, and branch skid
+Subject: Re: [RFC PATCH v2 5/9] perf pmu: Add perf_pmu__probe() for live
+ capability probing
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Ian Rogers" <irogers@google.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20261017185442.2137623-7-irogers@google.com>
+In-Reply-To: <20261017185442.2137623-6-irogers@google.com>
 References: <20261016213258.945737-1-irogers@google.com>
  <20261017185442.2137623-1-irogers@google.com>
- <20261017185442.2137623-7-irogers@google.com>
+ <20261017185442.2137623-6-irogers@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Sat, 17 Oct 2026 19:15:38 +0000
+Date: Sat, 17 Oct 2026 19:18:15 +0000
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -48,91 +48,134 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
 Thank you for your contribution! Sashiko AI review found 1 potential issue(=
 s) to consider:
-- [Low] perf pmu: 64-bit operand in rv32 asm constraint in run_skid_branch_=
-loop()
+- [Medium] perf pmu: select_probe_cpu() ignores task CPU affinity mask
 --
 
-commit 1d20e4dd9d51fee9a24330f6bf13bda0cca94b25
+commit a706bded05059ea05d5c1e851935d2f599c67616
 Author: Ian Rogers <irogers@google.com>
 
-perf pmu: Probe registers, memory events, rdpmc, and branch skid
+perf pmu: Add perf_pmu__probe() for live capability probing
 
-This commit extends perf_pmu__probe() in tools/perf/util/pmu.c to probe
-supported user and interrupt sampling register masks, memory profiling
-events and sample formats, user-space mmap counter reading (rdpmc) and PMC
-bit-width, and empirically measured branch instruction skid across
-precision levels.
+This commit adds struct perf_pmu::probed and perf_pmu__probe() to actively
+probe live PMU capabilities via perf_event_open(), covering counting and
+sampling modes, precise_ip levels, sample formats, privilege exclusion
+modifiers, execution features, and event group size limits.
 
 > diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
-> index 83c8d6f392ba9..15a21f8c65ed4 100644
+> index cd8211f872911..83c8d6f392ba9 100644
 > --- a/tools/perf/util/pmu.c
 > +++ b/tools/perf/util/pmu.c
-> @@ -3356,6 +3356,739 @@ static void probe_sample_types(struct perf_pmu *p=
-mu,
 
 [ ... ]
 
-> +static noinline bool run_skid_branch_loop(u64 iters, uintptr_t *out_s_ip,
-> +					  uintptr_t *out_b_ip,
-> +					  uintptr_t *out_e_ip,
-> +					  int *out_insn_sz, int *out_nop_cnt)
+> @@ -2832,9 +2847,1219 @@ void perf_pmu__delete(struct perf_pmu *pmu)
+
+[ ... ]
+
+> +static int select_probe_cpu(const struct perf_pmu *pmu)
 > +{
-
-[ ... ]
-
-> +#elif defined(__riscv)
-> +	uintptr_t s_ip, b_ip, e_ip;
+> +	struct perf_cpu_map *online =3D perf_cpu_map__new_online_cpus();
+> +	int cpu =3D 0;
 > +
-> +	asm volatile(
-> +		".option push\n\t"
-> +		".option norvc\n\t"
-> +		"la %[s_ip], 1f\n\t"
-> +		"la %[b_ip], 2f\n\t"
-> +		"la %[e_ip], 3f\n\t"
-> +		".balign 64\n"
-> +		"1:\n\t"
-> +		".rept 512\n\t"
-> +		"nop\n\t"
-> +		".endr\n\t"
-> +		"addi %[cnt], %[cnt], -1\n\t"
-> +		"2:\n\t"
-> +		"bnez %[cnt], 1b\n"
-> +		"3:\n\t"
-> +		".option pop\n\t"
-> +		: [cnt] "+r" (iters),
-
-[Severity: Low]
-Will this fail to build on 32-bit RISC-V (__riscv_xlen =3D=3D 32) when
-compiling with Clang?
-
-In run_skid_branch_loop(), the loop counter parameter iters is declared as
-a 64-bit u64. Unlike the x86 and ARM blocks which are guarded by 64-bit
-target macros (__x86_64__ and __aarch64__), #elif defined(__riscv) matches
-both 32-bit and 64-bit RISC-V targets.
-
-On 32-bit RISC-V, general-purpose registers are 32 bits wide, so binding
-the 64-bit u64 variable iters to the single-register constraint "+r"
-causes Clang to reject the inline assembly with a register size mismatch
-error.
-
-Should iters be changed to unsigned long (or uintptr_t), or should the
-preprocessor guard check defined(__riscv) && __riscv_xlen =3D=3D 64?
-
-> +		  [s_ip] "=3D&r" (s_ip),
-> +		  [b_ip] "=3D&r" (b_ip),
-> +		  [e_ip] "=3D&r" (e_ip)
-> +		:
-> +		: "memory"
-> +	);
-
-[ ... ]
-
+> +	if (pmu->cpus && !perf_cpu_map__is_empty(pmu->cpus)) {
+> +		int nr =3D perf_cpu_map__nr(pmu->cpus);
+> +
+> +		cpu =3D perf_cpu_map__cpu(pmu->cpus, 0).cpu;
+> +		if (online) {
+> +			for (int i =3D 0; i < nr; i++) {
+> +				struct perf_cpu c =3D perf_cpu_map__cpu(pmu->cpus, i);
+> +
+> +				if (perf_cpu_map__has(online, c)) {
+> +					cpu =3D c.cpu;
+> +					break;
+> +				}
+> +			}
+> +		}
+> +	} else if (online && !perf_cpu_map__is_empty(online)) {
+> +		cpu =3D perf_cpu_map__cpu(online, 0).cpu;
+> +	}
+> +
+> +	perf_cpu_map__put(online);
+> +	return cpu >=3D 0 ? cpu : 0;
 > +}
 
 [ ... ]
 
->
+> +static void probe_group_limits(const struct perf_event_attr *attrs, size=
+_t nr_attrs,
+> +			       pid_t pid, int cpu, unsigned long flags,
+> +			       int *max_open, bool *open_capped,
+> +			       int *max_active, bool *active_capped)
+> +{
+> +	struct perf_event_attr leader_attr;
+> +	int leader_fd;
+> +	int fds[MAX_PROBE_GROUP_SIZE];
+> +	int nr_followers =3D 0;
+> +	bool has_time_read =3D true;
+> +	bool active_ok =3D true;
+> +	enum rlimit_action set_rlimit =3D NO_CHANGE;
+> +	cpu_set_t saved_affinity, probe_affinity;
+> +	bool affinity_changed =3D false;
+> +
+> +	*max_open =3D 0;
+> +	*open_capped =3D false;
+> +	*max_active =3D 0;
+> +	*active_capped =3D false;
+> +
+> +	if (!attrs || nr_attrs =3D=3D 0)
+> +		return;
+> +
+> +	if (pid =3D=3D 0 && cpu >=3D 0 && cpu < CPU_SETSIZE) {
+> +		CPU_ZERO(&saved_affinity);
+> +		if (sched_getaffinity(0, sizeof(saved_affinity), &saved_affinity) =3D=
+=3D 0) {
+> +			CPU_ZERO(&probe_affinity);
+> +			CPU_SET(cpu, &probe_affinity);
+> +			if (sched_setaffinity(0, sizeof(probe_affinity), &probe_affinity) =3D=
+=3D 0)
+> +				affinity_changed =3D true;
+> +		}
+> +	}
+
+[Severity: Medium]
+What happens in probe_group_limits() when perf runs inside a cgroup cpuset
+(such as a container or a systemd unit with AllowedCPUs=3D) that excludes t=
+he
+first online CPU of a PMU?
+
+In select_probe_cpu(), the probe CPU is chosen as the first online CPU in
+pmu->cpus (or online) without checking whether that CPU is in the calling
+thread's allowed affinity mask via sched_getaffinity().
+
+For non-uncore PMUs, try_open_attr_variants() opens events with pid =3D 0 a=
+nd
+cpu =3D pmu_cpu, which sys_perf_event_open() allows even when pmu_cpu is
+outside the task's cpuset. However, when probe_group_limits() then tries to
+pin the calling thread to cpu with sched_setaffinity(), it fails with -EINV=
+AL.
+
+When check_group_active() subsequently enables the (pid =3D 0, cpu =3D pmu_=
+cpu)
+group via PERF_EVENT_IOC_ENABLE and spins in userspace on a different CPU,
+the kernel sets the event to PERF_EVENT_STATE_INACTIVE (incrementing
+TOTAL_TIME_ENABLED), while event_filter_match() prevents scheduling it onto
+the PMU because event->cpu !=3D smp_processor_id(). As a result,
+TOTAL_TIME_RUNNING stays 0 (delta_run !=3D delta_ena), check_group_active()
+returns false even for a single event, and max_active_group_size and
+max_active_gp_group_size are reported as 0.
+
+Should select_probe_cpu() prefer an online CPU that is also present in the
+calling thread's sched_getaffinity() mask when available?
+
+[ ... ]
+
+> +	leader_attr =3D attrs[0];
+> +	leader_attr.disabled =3D 1;
+> +	leader_attr.read_format =3D PERF_FORMAT_TOTAL_TIME_ENABLED | PERF_FORMA=
+T_TOTAL_TIME_RUNNING;
+
+[ ... ]
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261017185442.2137=
-623-1-irogers@google.com?part=3D6
+623-1-irogers@google.com?part=3D5
