@@ -1,135 +1,131 @@
-Received: from mail-yx1-f43.google.com (mail-yx1-f43.google.com [74.125.224.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 320874D37D9
-	for <linux-perf-users@vger.kernel.org>; Sun, 18 Oct 2026 16:23:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.224.43
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792340638; cv=pass; b=gfeYPmFai9coZJ0JRSkhytIKr0Y/aIhgcfQ0dlc4Rri90Lqogc8Z4GJETq3cup75XTl+djdD3pNY2dx1yaxaBxpDsAyQuXe90706W6mAhzLyNLDfM0sl0kvozbOtPpnH+griLhWyhWQCQ69nz7ePrBaC3l5tXcTWKjxAsqbu+As=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792340638; c=relaxed/simple;
-	bh=eXFnMrvjWhAjkzGsPW2qsKgsH1CfzHALxNzDTq3muFI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=XwGMQOp62yW+oqnAsHahKDxY8jjv5QLpusGhDLfsOxOHn912il8Yy6g56KSBTJO+uQG3tWBtXz3v1BXRZPIL9vYx4zfXDq+yAir6Ge0yzLFw8ajMW5cTc/5q04adF/5gdLDBvQX24E/S130sAm4SE5K8B28F1uJu9W1NP2bsZ+4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=uber.com; spf=fail smtp.mailfrom=uber.com; dkim=pass (1024-bit key) header.d=uber.com header.i=@uber.com header.b=47RJPdEs; arc=pass smtp.client-ip=74.125.224.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=uber.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=uber.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B9C54D4882;
+	Sun, 18 Oct 2026 16:26:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1792340800; cv=none; b=lWESyXEKwRNnvCrHfgBVZ8I7zPDnMiROedsGJybwUmG3iedRwY2D/P10AdSt0GaOrU319VeOHmqe5YF2GmTk6GATr5TzmyZCZPiFpJmwapvhIg7kOhBy0xONAMPPcIw8y+C9DPP8VBYlsCz32a8QtA6Mylrp+T6RGMYhJRUyxRo=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1792340800; c=relaxed/simple;
+	bh=OEEx0dlobv67lzd13O1rEYRQGAPQ98o8Kptz9a/PdS4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=gqWX05gyZC7D/5TPAvvxdUXVEfv4EOZbHv67zFvuQIoocqqveR2tHYTlR9HHiEH6wmBctW8G4x7sym2bgVdX0pRgIxhotlNJdbqWx34F0LFXcHoVkzBDiGWxatHrlFqQmsN2oIktsWbe3MKk0TRJF9bDwLsR0kzfqvSOvvUmWnY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cOGsMcZn; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=uber.com header.i=@uber.com header.b="47RJPdEs"
-Received: by mail-yx1-f43.google.com with SMTP id 956f58d0204a3-679e86015e2so120253d50.1
-        for <linux-perf-users@vger.kernel.org>; Sun, 18 Oct 2026 09:23:55 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1792340635; cv=none;
-        d=google.com; s=arc-20260327;
-        b=i+DSp+aLH0/SIkQZfpQ5dPrve8GsWhqe+AC3kz3niY0btPl68fTwK2NEsWU54NLEVL
-         ojC/fbHkKvcbFGckmFtrxP0DUCvYUoOabBG4VYjx5nLa0r3+5FmRlZelSWp6Cmhz1yk8
-         lNa1Snx/FT5kFhBHbbMIRN9zRgUWpwgEjYZVkqLgMvO+kub0CoGb4N2T6CTH8jJoEfei
-         /HS9DHqqkjYu7yp1AjpBId4hcPM0ck5380O0hP4SDH0k8DNqltXS0npieKxzANsKBKyS
-         gNs/r9JjwQBtPFD9OSGfK5p6FwleHj9r03wpeM9xb+j8KddIZfdAZHviE3r6+fd7V8lK
-         EWXw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:dkim-signature;
-        bh=+xrX/lMN1wewX+Usmtm5W37p8mKfEaBQAA+QF9DbflM=;
-        fh=4H9zWC6WbAquAVyXyxqHvwiro6uR0Phu3vj7ZWjn0cE=;
-        b=mcpRk18USoJb66209zgPxcwDGora5Gf2HOngLmOM7zRohENCDOgDfdAvJB4VoH845r
-         5H26wcHhQbFxnmuAjPfVt961ZlkZ6NmhXV8ByM8QaAsXUUflWtKvnKhwchSuPSrkMcC5
-         FDoJgIBz6Rj8OPhxMsmwYjOUjrhKyhVSC/mXiRhOUwVu5jiX3CnkeJdXE2VorHRGi4Ck
-         vKeb/PyJhPSbYlz9F073HXcXDgpuGboQownd/0ZTSmuNfhAUT+eFiQiRzaaZspIDhFJe
-         SYi6BZXUY8/Om/6p2ueFSorJVtvv8DhlF84n2qViEQaxys9fii21hkEQzOrJhS4cZW/k
-         jHOA==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=uber.com; s=google; t=1792340635; x=1792945435; darn=vger.kernel.org;
-        h=content-type:cc:to:subject:message-id:date:from:in-reply-to
-         :references:mime-version:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=+xrX/lMN1wewX+Usmtm5W37p8mKfEaBQAA+QF9DbflM=;
-        b=47RJPdEs8FI1V+UPrcJ93Z3HXwlkX2IVUsKKVOKXAPmfgv3PZ2VkH2v45Xeylybw1N
-         FjzUPkRsJTmY4GISW619L+q0dxEUxOpfAJ1+UcXacHpTUx/oq+LgyZTmWSm2PGvypmxL
-         5801Po1GVgVDmC3KwrP6NU5bIql8J3SgR1Iv4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1792340635; x=1792945435;
-        h=content-type:cc:to:subject:message-id:date:from:in-reply-to
-         :references:mime-version:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to:content-type;
-        bh=+xrX/lMN1wewX+Usmtm5W37p8mKfEaBQAA+QF9DbflM=;
-        b=GPH9utJi1XahfD1GObdx0cpLhATyDJAqHV1QP6qAgvqoOc94babe8NuIjbYyIuBmIO
-         eWOjT/XT0smHDlV8vaGlyywHz5k7JawDfDqXYZq/F9o9sLFj0zABuM1sURVp2VEufsc/
-         tkgaUsLBRu/CY1Ooo5HdoN4HWdeuyBUd5buIq3I2mMmcpC1Dk4fokdmlMoF/1iJJpXVM
-         cewksPYVGssWsjUYLaktX7CcqwOKDDzMtyMFIY1fwbddDgC08lFmTb/R8E7DWoecvNX9
-         bVAi58FRKw5hkwnQ2shU3L082sIxrYruKDWR5uhZVVXEFWDaygc0jSAIPh8Qa1vHEuV3
-         mn5Q==
-X-Forwarded-Encrypted: i=1; AKwUvByGpo3zGefO3crIC4/P0wEFfONAoFYR77ZP9ahaNxT6fXYQBDni8yvbuLS9Wu2IIP9SVR0fGqJG+Lk5cIExqa0/@vger.kernel.org
-X-Gm-Message-State: AFq9FYK94iyyCGSoUziCstoIcFLBqSPeeRhoS8Av2SmwB8YE7wdvn03/
-	o4rg2rcSiY2RW3mcXoxBBYoxAhtTB7l3Fpd+4MCLHERno2URjG5/j5H5VLJAqkCwqq/RWe2mVnx
-	W2vniPfyZ8fYI+Z/GIhivXpVxl5IcwNkzkoSAXrERrA==
-X-Gm-Gg: AYBFou0B4lSkVpmmU6Lq9wriLA2Thrj2KFzTW+Blbq1YRWnPOQevM/V5LuWMPMCNv5E
-	uFcdUvjapgdB5qMcqY5VS/NLaYtugw1kIpauyTpnT12Nt2cAJpjgVUJ8KTvlwL4FijXImlXyTnP
-	8hOEVOZHqdRkdmGV3QsbL3nnWMfNKgjP9s0TBad4HGnP0Hjk29yN9+evRvHWIQN4vEERTKOpN8G
-	spKsPy35gjcceUQ/Xn8ur2wcGBlW+26K2oERN9cmijttND/YVCmpKRqOeA8B+FzKcVKQwUZl68e
-	8tUepjAhBt6LSoygD/vbsUmQ+km8gxNCum2zgSXzI53uJ6bNVhtf2WAFFE3mISyZcaOPI+G5ilT
-	pWUa3A5hNclo=
-X-Received: by 2002:a53:bd09:0:b0:675:6330:caa3 with SMTP id
- 956f58d0204a3-679ca92e155mr989546d50.42.1792340634592; Sun, 18 Oct 2026
- 09:23:54 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cOGsMcZn"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 92F721F000C4;
+	Sun, 18 Oct 2026 16:26:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1792340799;
+	bh=gYsjcOuJ8RvseAN9vU8QaSbB2+GoxMgbSDabUxmiCWA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=cOGsMcZnBNAlfkRepca8DGGWX4PM6WzExH9LB8Y6/Uh5tDwoOoiJZ+mMbiHlrP5EQ
+	 eN8GAQa9WhYsQaRGw21NmpZ9tt9R9C5oXoOwcN7uv/1lNjVuOQ7RdBdvZBQtDX3IEk
+	 vvDFionoZbOg0Kby70+n2pwYjHz9gRN2qW3Sztj5QfR6iGdWdEw8X572GV27jrvnp+
+	 baKefuKvJi4BO4Z6apYr42cUu4Etcke/eW0LfkE0iYXpPtQqwxgnxjrbCY32Yxr6Z6
+	 G6QlKu4gDwjfVr2yp2WfGWyilZlYQ9PhaGcUYiWsrJFqmbsd/VNaV8hE9zYEwZr0KQ
+	 05PqQPlc/xm4g==
+Date: Sun, 18 Oct 2026 09:26:36 -0700
+From: Namhyung Kim <namhyung@kernel.org>
+To: Alireza Haghdoost <haghdoost@uber.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	James Clark <james.clark@linaro.org>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Andrii Nakryiko <andriin@fb.com>, linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 2/5] perf dso: Allow reading DSO data from an explicit
+ file
+Message-ID: <atTzPJJvR2-sqtJn@google.com>
+References: <20261005-perf-symbol-memory-send-v5-0-165dceb2b049@uber.com>
+ <20261005-perf-symbol-memory-send-v5-2-165dceb2b049@uber.com>
+ <asbDJrY97tRqoPaR@google.com>
+ <CA+w=M=TtAfiHVQqiwmchtsWwNeN5So5MxWW=82RRAUXHhg8D+A@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20261005-perf-symbol-memory-send-v5-0-165dceb2b049@uber.com>
- <20261005-perf-symbol-memory-send-v5-4-165dceb2b049@uber.com> <asbElicX1u_GZu_j@google.com>
-In-Reply-To: <asbElicX1u_GZu_j@google.com>
-From: Alireza Haghdoost <haghdoost@uber.com>
-Date: Sun, 18 Oct 2026 09:23:38 -0700
-X-Gm-Features: AclHuK8ZMynVps2Y3SLchlBdfZ3aE85BRwQupiiWxXwuxhVbCtV7qofBZTTpNlw
-Message-ID: <CA+w=M=SzevvR2XFU6O9bVv7wKoGXkNLaWSL4aOtHsvkkTDG+rA@mail.gmail.com>
-Subject: Re: [PATCH v5 4/5] perf script: Add --lazy-load-symbols for lazy
- symbol loading
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	James Clark <james.clark@linaro.org>, Alexei Starovoitov <ast@kernel.org>, 
-	Andrii Nakryiko <andriin@fb.com>, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CA+w=M=TtAfiHVQqiwmchtsWwNeN5So5MxWW=82RRAUXHhg8D+A@mail.gmail.com>
 
-Hi Namhyung,
+Hello Alireza,
 
-Sorry for the late reply.
+On Sun, Oct 18, 2026 at 08:09:41AM -0700, Alireza Haghdoost wrote:
+> Hi Namhyung,
+> 
+> Sorry for the late reply, and thank you for the clarification.
+> 
+> On Wed, Oct 7, 2026 at 3:09 PM Namhyung Kim <namhyung@kernel.org> wrote:
+> > I'm afraid it may confuse perf annotate where it needs to read binary
+> > data from a file as well as lazy-load symbols from another.  I'm working
+> > on cleaning up the relevant code and I'm reluctant to add 'path' to the
+> > dso.  We have too many names for a DSO already. :)
+> >
+> > For a short term solution, I'm afraid you need to use dso__get_filename()
+> > with symtab_type and read the file without using the data cache API.
+> 
+> I understand the concern about storing this path in the DSO. Perf
+> annotate and the lazy loader can read different files. I will drop this
+> patch in the next revision (v6).
+> 
+> For context, the v1 lazy loader kept one file descriptor open for each
+> DSO. In your v1 review, you asked me to use dso__data_read_offset().
+> This let the data cache control the open descriptors and close them
+> when necessary.
+> 
+> Using dso__data_read_offset() also showed a problem with split
+> debuginfo. The symbol name offsets refer to the symbol table file.
+> However, the data cache opens the runtime binary. The same offset in
+> these two files can contain different data. That is why I needed to
+> tell the data cache to open the symbol table file.
+> 
+> I put this support in a separate patch after your v2 review requested
+> that I split the exact-path DSO data-cache support into an independent
+> split-debuginfo fix.
+> 
+> For v6 revision, the lazy loader will call dso__get_filename() with the symtab
+> type. It will open the returned file, read the names with pread(), and
+> close the file. Thus, it will not keep one descriptor open for each
+> DSO. It will also not change the existing data cache.
+> 
+> This short-term solution can open the same file many times. It also
+> cannot use one DSO cache entry for nearby names. However, later reads
+> can usually use data that is still in the kernel page cache and avoid
+> storage I/O. Therefore, the main additional costs are the open, close,
+> and pread system calls.
+> 
+> The performance cost is small in the test profile. Eager loading takes
+> 3.2 seconds. v5 lazy loading takes 1.4 seconds. v6 lazy loading takes
+> 1.5 seconds. All three produce identical output.
 
-On Wed, Oct 7, 2026 at 3:15 PM Namhyung Kim <namhyung@kernel.org> wrote:
-> I thought we agreed to just use struct symbol and lazy-load the name
-> only.  With Ian's patch to remove the 'priv' part of symbol and
-> hopefully RB-tree node as well, the size of symbol would become
-> manageable, I guess.
+Thanks for checking this!
 
-Ack, in the next revision (v6), I will use struct symbol and load only its
-name lazily, as you suggested. I will replace the embedded name with a
-union of a name pointer and a file offset. A flag will indicate which
-union member is valid. An unresolved lazy symbol will store the file
-offset. After perf reads and demangles the name, it will replace the
-offset with the name pointer and clear the flag. This removes the
-separate index and most of the parity code from v5.
+> 
+> > In the long term, I think it needs to pass a binary type arguments to
+> > read data from the dso.  It'd clarify what users want to read and
+> > support different files at the same time.
+> 
+> Ack. Your recent cleanup keeps the binary type separate from the symtab
+> type during symbol loading. The DSO also has a separate debug-info type.
+> These fields identify the files that a caller wants to read. The data
+> cache does not use this information yet.
+> 
+> Unless you are already working on this part, I can send a separate
+> series to make the data cache type-aware. The series will add a type
+> argument to the read API and keep separate cache state for each backing
+> file. I can then change the lazy loader to use the data cache again. I
+> will keep this work separate from the lazy loader patch series.
 
-I tested this design on a cgroup profile of a large C++ service. The
-loader creates approximately one million symbols. The results are:
-
-                                      time    max RSS
-  perf-tools-next                     3.3 s   334 MiB
-  v5 --lazy-load-symbols              1.4 s   136 MiB
-  v6 --lazy-load-symbols              1.5 s   154 MiB
-
-All three produce identical output.
-
-The v6 design works with the current RB-tree and does not depend on
-Ian's series. Most of the remaining memory difference from v5 comes
-from the RB-tree node and one allocation for each symbol. Ian's array
-storage can remove the RB-tree node later.
+Sounds good.  Please go ahead!
 
 Thanks,
-Alireza
+Namhyung
+
