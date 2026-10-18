@@ -1,252 +1,130 @@
-Received: from MW6PR02CU001.outbound.protection.outlook.com (mail-westus2azon11012033.outbound.protection.outlook.com [52.101.48.33])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-dl1-f52.google.com (mail-dl1-f52.google.com [74.125.82.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CCC3486B80;
-	Sun, 18 Oct 2026 11:32:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.48.33
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792323142; cv=fail; b=UNi9i+lQfFk4UwuaXcViO9oRkbq3gNn/Mp73oAIpHNGHkY/SiaqSrfDdupvuVFidyEXU0EItOKHs7gImDdLhCCbmsOeqQ/t7x2IXQ6GqOBbZ7AyQEjZVj51zA3b1qkwgaDSu/PgeF2ogVSrOlcAoTWaE6cTLyi6uk3+jwLneN4E=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792323142; c=relaxed/simple;
-	bh=FDGq4t2dR0h0hQaG9zVfMki8AwKtoPszlXEMr2w3fRE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=A1MnNm83HQ2dLLNYmRE3c37uL+46O1biXghriIb4ow1joFtl+vIPX+NruIKWDrmp56j3Rk4NC/zlrPbQ8njjFNTeFFgKjKI26YeOYJp1m6dsIrx89YMh1xauRl9K5WwSibMjW38b5wy59V/WfudE1xiPhvbej4E+D/dJcfWEB94=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=UpaIW8tJ; arc=fail smtp.client-ip=52.101.48.33
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0B524A0933
+	for <linux-perf-users@vger.kernel.org>; Sun, 18 Oct 2026 12:56:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.52
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1792328211; cv=none; b=mxQL4JZ422yEhXm+WeAS9gaPAyc7QJp7hdWcwPIBHGxAbwr1RUxNQLtoAzJ1dYhm8LpkChnxOjFuJljbGPlbKAv+Q3+YWyMdJe5yXaqDhEoQZVaDtNaP45oSLqAzXBuioEQ7TgabTJ2m9EvXG+uRq0Hwir2ZuvAKxGV9FNppWys=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1792328211; c=relaxed/simple;
+	bh=2WJTSDjAEakWpXPC/NVEOZ+BPuvaLCgPchT0JxuXVV4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=UuEylJvp88cVExO6J6waeKHMwcCnO3fQi8mt21OWkxJExmYcyNHvtq02/51/+xug5KSD6Yv7aQm/h8DaIWkp5oiupTkWyIuFTjvgsXquH38C+l2gYL6gQZPIM/w9Zf5fo8Rp180u5AYBdSASiKW9wnG4XkulJU2qJbkvymCf26o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=sthafnpB; arc=none smtp.client-ip=74.125.82.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="UpaIW8tJ"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=YOyhwG8blIwbOxv/R7161ridgH9pPMPokkxTvpnf39soeXrZqttsdHazEsZ51u/8sT+x5w50+vU/y/RmFpzIT547CYIj4AwsE2n6dE5NZT4XLLtouPOLxzYo+BRjxZ5mGjViape8gmy9SLLYUIG9sIWbKcOvoUfzwgm1FtQH/DxggDe11LNeSlURp6KRi5sdh56/UV7lGio7AKdTa59QnJ4Rk7Mh+uYGWWM8jHtH888e3iHcqKbU7nq9xJJW3Sa2ZpznXR7O+0Tme+l0ISUjNzU+n5/DsTk1FQCZ8ieJyPYSD2HyikDB5w/dhmoLmfw6YLieR0y/vAnfJ2vgyb/LLQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Day0hymDiG5dr1uv67roBMwzP/6hkspVFG/LqT7Ocso=;
- b=ewiuOSf9/PABvPxI3O4mr0+Uv/Ud7g8ldYUse/m48HRtii1ONoWxWRudMXyRwCDDpFQ4LfpPmeinQMLRo1hKOYRRSiuKu1yscJu/ZaDB2OwipyD3ZbTJCL6oe2hj7fIJRLQXOo3R7vMKWIY1Tn7l7WGcRGNbJCTX8wGjYa05mLNUL4RlSLGqP6huRF4LDTe8AitgW+LLEPZtzfgwq1raxTJGK474fIpy5V9h000K1wtuEriRMss9rYlvNsl7qub2uqw6JKfyN5wXlaByly1BB11h4VY4Y/7aSuLxMSY7QaEz/JgzpqHRZdKHPkSAtE0QjpMGjMPt1QZQk56NNKXICQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=google.com smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Day0hymDiG5dr1uv67roBMwzP/6hkspVFG/LqT7Ocso=;
- b=UpaIW8tJKlnh8y6nkpEGNofQfGbHIxD6MG4atPFEVbjY+z9cUj2UTdjMgyFt82ATpBtDE3HIomhqRbLkTU77fqGwiNc476e6WEmIXI+oYoaE0yxh4aEVtsYwWsX7xnSmBVKDLm/QqSVRWf3AUruiw3XdBRquM5dBfdaDP+ughD0=
-Received: from CH0P223CA0011.NAMP223.PROD.OUTLOOK.COM (2603:10b6:610:116::26)
- by PH7PR12MB5974.namprd12.prod.outlook.com (2603:10b6:510:1d9::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.522.18; Sun, 18 Oct
- 2026 11:32:14 +0000
-Received: from CH1PEPF0000AD7E.namprd04.prod.outlook.com
- (2603:10b6:610:116:cafe::62) by CH0P223CA0011.outlook.office365.com
- (2603:10b6:610:116::26) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.21.522.19 via Frontend Transport; Sun,
- 18 Oct 2026 11:32:13 +0000
-X-MS-Exchange-Authentication-Results: mx.microsoft.com 1; spf=pass (sender IP
- is 165.204.84.17) smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=satlexmb07.amd.com; pr=C
-Received: from satlexmb07.amd.com (165.204.84.17) by
- CH1PEPF0000AD7E.mail.protection.outlook.com (10.167.244.87) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.21.522.6 via Frontend Transport; Sun, 18 Oct 2026 11:32:13 +0000
-Received: from satlexmb07.amd.com (10.181.42.216) by satlexmb07.amd.com
- (10.181.42.216) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.53; Sun, 18 Oct
- 2026 06:32:06 -0500
-Received: from [192.168.0.101] (10.180.168.240) by satlexmb07.amd.com
- (10.181.42.216) with Microsoft SMTP Server id 15.2.2562.53 via Frontend
- Transport; Sun, 18 Oct 2026 06:32:01 -0500
-Message-ID: <09e61c95-97bd-46c7-9d96-c3926e324c26@amd.com>
-Date: Sun, 18 Oct 2026 17:01:55 +0530
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sthafnpB"
+Received: by mail-dl1-f52.google.com with SMTP id a92af1059eb24-16079d54c17so3158896c88.0
+        for <linux-perf-users@vger.kernel.org>; Sun, 18 Oct 2026 05:56:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1792328209; x=1792933009; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=JERkWB0TDE76PWFJHk1bArxy1QoTkEsYgt43aA6L+iw=;
+        b=sthafnpB/g8QaQsUMmsJww5liZNrt3yXIg6uCJg+Ufq7UZQmYmmKIdKhp2UYatLF24
+         jwoootDi2Vj2WoFVKATyJTe/5TN6QVtyiGkew5UgWZzXdxw9sJFMNcNyi0ykZsoVYTG9
+         RgsNaP+s8bnCTrwHJ7JmVjyjL5B/DeYPgCm57VWL5SBH15zjitjWAIAcpFA9mHipVmhU
+         vlyvf9NyfnSbLY4pN4xfToTQFtYWu6DD4v5/eYgk6tAqDkibXrcf8CJ4I7h1aCY/9xfF
+         VbOvVEl0KieN2THUIVQzWmvCQfuZEaQa/6aQBhDLhulzIbXooyL5azaQRAntEjN7wSdY
+         MbJQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1792328209; x=1792933009;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=JERkWB0TDE76PWFJHk1bArxy1QoTkEsYgt43aA6L+iw=;
+        b=fWCMw4bPbEX3/hVkth94IH41tqBAlSkxyb9fdWo/vz3n5hHdVexvUAfVcEpt6mPNfg
+         cnTZ94/kI+P1u1KN+xov17AGk1EgpsU3OuzZZ17rQfhz17OpJ0akouBfc/E5rbPRuXJX
+         +yuxcEQwOvF2jzn7As1yCbpYdZ7tk3wKF6q56SGphxZrNYeIO7nM19JiTYaJh9qSFGIs
+         96JN1N08/k4nGFl3CeRt8VFl+MtLuZGvCCCzanLLqtCe+Q/QjcKRbuIXqWt1nTlOn8tl
+         VlAXI3QgV5mLGqbXrnqInqiWfmMVplPwF/3HtK1cyxry5+h3lA9wUmCrwVAFCrvgzZm9
+         vqdg==
+X-Forwarded-Encrypted: i=1; AKwUvByISHZSs921d1FhN060rOsjh4M6JAVI15si2PZkmlELB2Tnot5pODOj8jFjtXwkkM7Ka29iYc4zvXW9enMT3ltO@vger.kernel.org
+X-Gm-Message-State: AFq9FYL7pNYqlKD4FkSdXjlwt8bW4Wzimtiga7bseFPlyXBFf5ZTEJVb
+	EmqUdqxj/90zQvtWeCeL3iut4a9b4tJBwLPKlIfsRQDKYcxptGiCJkli
+X-Gm-Gg: AYBFou2iLWXRhvnPt4HOY0Q/cXO1W2GUfHB03JIxJwddAGvT1Og6Z++d4FKhV97LvnR
+	2kUNwPL8g/tG5jpnacqYYZAcZPgss3qr5ElUIMue8hUg6UfqyQnIgziGdpxQOuTBH/FRFw0HQIo
+	uO03pkZcY1v7Git5foJoKC0Vt1U8i2eAeH69mKrDrhcRvpr3ZTQQszg4bPU4Qw6lPwpTGLF0cvW
+	ynF+TjML9uiDXklFFRDJBIB63DzZiim0YSmeX3amR9mTH2sDIuyidXoo3QDD4FHGy7cmo25Ro5h
+	SnzpxK8r+tMMz8ufBoPU8YDRh2DAbOMxIqp3p4B5aO77gkHKkgb+grWRMAi0+h9FmmBz7tquWRX
+	xxesWtLp2wGUOpwEDGHmurnXLVkqegFK/O+vI39pFT8pcwk6FB0Mfw3E046jHBif6qQt0GHt5Be
+	FkY4Hu7L4IwM7iJBzqG8Yyil93LDNszSfaEL8kn3DR3rk6yF8ljCa/XDdGWUrzDpuW+BLVC31x+
+	xVImLcG4hzaQvgQMUV1ddMEvijEt4D6+Arw5xwjjg==
+X-Received: by 2002:a05:701b:2816:b0:151:d6e5:596b with SMTP id a92af1059eb24-18511ad88c3mr6664435c88.9.1792328208664;
+        Sun, 18 Oct 2026 05:56:48 -0700 (PDT)
+Received: from Biostar-A520MT.. ([187.94.15.112])
+        by smtp.gmail.com with ESMTPSA id a92af1059eb24-1831c4d4675sm20404082c88.21.2026.10.18.05.56.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 18 Oct 2026 05:56:46 -0700 (PDT)
+From: Breno Rodrigues Alves <breno3011alves@gmail.com>
+To: linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	linux-kselftest@vger.kernel.org
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Shuah Khan <shuah@kernel.org>,
+	Breno Rodrigues Alves <breno3011alves@gmail.com>
+Subject: [RFC PATCH 0/5] perf/tests: convert Perl test helpers to Python
+Date: Sun, 18 Oct 2026 09:56:36 -0300
+Message-ID: <20261018125641.23064-1-breno3011alves@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 3/3] perf/amd/ibs: Simplify event state handling with
- IBS_CAPS_DIS
-To: Jim Mattson <jmattson@google.com>
-CC: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Jayapal Ashwin Nair <janair@amd.com>, Arnaldo Carvalho de Melo
-	<acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Ian Rogers
-	<irogers@google.com>, <x86@kernel.org>, <linux-perf-users@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, Santosh Shukla <santosh.shukla@amd.com>,
-	Ananth Narayan <ananth.narayan@amd.com>, Sandipan Das <sandipan.das@amd.com>,
-	Manali Shukla <manali.shukla@amd.com>, Ravi Bangoria <ravi.bangoria@amd.com>
-References: <20261015060430.5877-1-ravi.bangoria@amd.com>
- <20261015060430.5877-4-ravi.bangoria@amd.com>
- <CALMp9eRTG=uLkAWohYW0HOoS1xvNc_0brovYsfbCUS_mf4H3Kw@mail.gmail.com>
-Content-Language: en-US
-From: Ravi Bangoria <ravi.bangoria@amd.com>
-In-Reply-To: <CALMp9eRTG=uLkAWohYW0HOoS1xvNc_0brovYsfbCUS_mf4H3Kw@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH1PEPF0000AD7E:EE_|PH7PR12MB5974:EE_
-X-MS-Office365-Filtering-Correlation-Id: f88bd5d7-57ec-4b8c-89a1-08df2d0b74a2
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|23010399003|36860700016|82310400026|1800799024|376014|22082099003|18002099003|10067099003|13003099007|4143699003|11063799006|261009223027099003|56012099006;
-X-Microsoft-Antispam-Message-Info:
-	KnLdpAzNK6Xgx51gqPmFYVQ5gr0HxhrXhqknC+9HRPuz9N9kVuGxcDVh3tDIgKwMFmbOrGhm/0Y1i5InkGE5EA9EGcsQWla8uDmjBgv/O9hI1JhdaIgBagkA8qsKA1jynzMOmK30qGG140zcWzY2WHBkFLv6zfkiPM9XVm/H/GX9ow7VMtOFif1PUJ5QjQkSTl6oP0mMm7Fazgv2s6aZEWu9MG35s5/PQ5dCibKsWtWoEvpZrK8l16hOymXL0tqijKhw1/P82WeiH/NPBBWQe3VBQouMN0DP6eJpwgOaJ/QQ50Ipdsm6tuEC0usc5bf+AYhu6Y0h0SZVfIGH89bjxw+UyYzwuYVe389vCFbDiPNxj9HMLvGOF0ncyrSaPN/WRT4eFFw1ezLxB45XQdbyNGgYsDdk/rVQ5ynQnhfMfUOt7HMox7R8nethuMOsWI6t409ZEGzQOUL+1oyEDn4iqlaw9iW9PLgAVRmYvENGE5rqrr/Mj71URV0FDsG98oSpVH28BJqosEJHFB+5zdvAUxZyOZA2gSMYTr0JWZnq0tnOGVa+2W9BOz2EifDSD73ZNr1H/I+QfkRVSPuj0elolex5P6BuSjf89B5EgYz09/HBjj5zGNx/+EWOJiuSuLij5+UBaCp5QmK0U4VHISIaaQtfRqQe7RugOnqTyQVUuZM=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(23010399003)(36860700016)(82310400026)(1800799024)(376014)(22082099003)(18002099003)(10067099003)(13003099007)(4143699003)(11063799006)(261009223027099003)(56012099006);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	35BY+ulZyBGMJAhbP2+B5qx3dex9npItPvltmYzfYkFc8qNbW6oLjFOnut6ZKAwW9Wb8kC5TeHBzgP2pfewPCnq5N5JzRilmYZEcdCEx6nZNWWJYhmqgvuRvhrnkObISIAxjKXIg3WelK/JOi4KrbgjDJK+HUxLs0EaxdPfPu4mV0LAs7fyHlE75lqcPN5UiA71mxR6/rNvkG+dXPoXtu4WRUAUw9OufIFBS63FKzu4PNCiC/Btp845Zui+L4BkSNPb2blWR/rNLa/QwAPgZ3WkUIW568oTG5ToLN4z8cNkxhQzfzEZrXifck7N8jdtw0TakT/4tX4uRw9j6QZJC84nirKBsNyaztfNiMfUSY+5+WgaFKONR0sKDkPMeCNHd3aQQmXd6Aa5Q/RyJ0ztZHvQzHfKJCkeECzJPgQn5AI3BI2oD/4OaMx5DCemg0Sku
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Oct 2026 11:32:13.4283
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: f88bd5d7-57ec-4b8c-89a1-08df2d0b74a2
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb07.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	CH1PEPF0000AD7E.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB5974
+Content-Transfer-Encoding: 8bit
 
-Jim,
+This series converts five Perl test helpers in tools/ to Python 3,
+continuing the Perl-to-Python conversion effort for the kernel's
+auxiliary scripts.
 
-Thanks for the detailed review.
+Each conversion is a faithful 1:1 port: same CLI, same output,
+same exit codes. All use only the Python standard library.
 
->> The IBS_{FETCH|OP}_CTL2[Dis] bit allows IBS sampling to be stopped without
->> a RMW of IBS_{FETCH,OP}_CTL. Systems providing this bit therefore do not
->> require the IBS_STARTED and IBS_STOPPED states used to coordinate control
->> MSR updates with late NMIs.
-> 
-> CTL2[Dis] doesn't make late NMIs go away. Hence, this patch needs a
-> 50us poll. With the two-line fix in my original patch, the existing
-> scheme handles late NMIs indefinitely: IBS_STOPPED remains set until a
-> late NMI consumes it, even if the event has been restarted in the
-> meantime. This patch trades that for a 50us window, after which a late
-> NMI is unknown (which *is* fatal with unknown_nmi_panic). Moreover,
-> since we still have to handle hardware without IBS_CAPS_DIS, we now
-> have two state machines instead of one.
+The five scripts are:
+  - prefix.pl                      -> prefix.py
+  - check_all_patterns_found.pl    -> check_all_patterns_found.py
+  - check_no_patterns_found.pl     -> check_no_patterns_found.py
+  - check_all_lines_matched.pl     -> check_all_lines_matched.py
+  - check_errors_whitelisted.pl    -> check_errors_whitelisted.py
 
-IBS_STOPPED only records that "a late NMI might exist". It can't tell
-whether the disable actually completed or whether that late NMI has
-already arrived. Trying to infer from software state is fundamentally
-broken, since the WRMSR and a software state transition can't be made
-atomic.
+All five were verified byte-for-byte identical to their Perl
+counterparts on synthetic inputs.
 
-Given that Zen6 provides a clear hardware state machine, I believe using
-it, rather than a software state machine, is the right approach.
+These files are used by perf test shell scripts to validate
+test output; they have no dependency on the perf binary or its
+Python bindings, so they can be converted independently.
 
-I ran a fuzzer for several hours with my patch (+Manali's patch [1]) and
-saw no Unknown NMIs on Zen6.
+Breno Rodrigues Alves (5):
+  perf/kselftest: convert prefix.pl to Python
+  perf/tests: convert check_all_patterns_found.pl to Python
+  perf/tests: convert check_no_patterns_found.pl to Python
+  perf/tests: convert check_all_lines_matched.pl to Python
+  perf/tests: convert check_errors_whitelisted.pl to Python
 
-However, With your patch[2] (+Manali's patch), the same fuzzer continued
-to produce quite a few Unknown NMIs on Zen6. One race I was able to
-identify (with your patch applied) is described below.
+Breno Rodrigues Alves (5):
+  perf/kselftest: convert prefix.pl to Python
+  perf/tests: convert check_all_patterns_found.pl to Python
+  perf/tests: convert check_no_patterns_found.pl to Python
+  perf/tests: convert check_all_lines_matched.pl to Python
+  perf/tests: convert check_errors_whitelisted.pl to Python
 
----
-  o FETCH and OP both are enabled.
+ .../shell/common/check_all_lines_matched.py   | 45 +++++++++++++++
+ .../shell/common/check_all_patterns_found.py  | 35 ++++++++++++
+ .../shell/common/check_errors_whitelisted.py  | 55 +++++++++++++++++++
+ .../shell/common/check_no_patterns_found.py   | 35 ++++++++++++
+ tools/testing/selftests/kselftest/prefix.py   | 24 ++++++++
+ 5 files changed, 194 insertions(+)
+ create mode 100755 tools/perf/tests/shell/common/check_all_lines_matched.py
+ create mode 100755 tools/perf/tests/shell/common/check_all_patterns_found.py
+ create mode 100755 tools/perf/tests/shell/common/check_errors_whitelisted.py
+ create mode 100755 tools/perf/tests/shell/common/check_no_patterns_found.py
+ create mode 100755 tools/testing/selftests/kselftest/prefix.py
 
-  perf_ibs_stop() /* For OP */
-  {
-       set IBS_STOPPED
-       op state: ENABLED | STARTED |
-                 STOPPING | STOPPED
+-- 
+2.43.0
 
-       OpVal is 0 in hardware
-
-                                               NMI due to FETCH
-                                               {
-                                                    FETCH: Val=1, sample handled,
-                                                    fetch re-armed
-
-                                                    OP: STARTED is set, OpVal is 0 so
-                                                    test_and_clear(IBS_STOPPED)
-                                                    clears the STOPPED state
-
-                                                    OP continues to run, it overflows,
-                                                    sets OpVal=1 and a new NMI is
-                                                    latched by the OP hardware
-
-                                                    return handled=2
-                                               }
-
-       op state: ENABLED | STARTED |
-                 STOPPING
-
-       WRMSR OpCtl2.Dis=1
-       leaves the valid sample in OpCtl
-
-       clear IBS_STARTED
-
-       op state: ENABLED | STOPPING
-
-                                               NMI (late) due to OP
-                                               {
-                                                    FETCH: Val=0 -> return 0
-
-                                                    OP: STARTED is clear and
-                                                    STOPPED is already clear.
-
-                                                    return 0 without reading
-                                                    IbsOpCtl
-
-                                                    return handled=0
-
-                                                    Unknown NMI
-                                               }
----
-
-[1]: https://lore.kernel.org/r/20260310060022.15120-2-manali.shukla@amd.com
-[2]: https://lore.kernel.org/r/20261007234815.4026028-1-jmattson@google.com
-
-[...]
-
->> +/* ->stop() for platforms with additional CTL2[Dis] bit. */
->> +static void perf_ibs_stop_dis(struct perf_event *event, int flags)
->> +{
->> +       struct hw_perf_event *hwc = &event->hw;
->> +       struct perf_ibs *perf_ibs = container_of(event->pmu, struct perf_ibs, pmu);
->> +       struct cpu_perf_ibs *pcpu = this_cpu_ptr(perf_ibs->pcpu);
->> +       u64 config;
->> +       u64 ctl2;
->> +
->> +       WARN_ON_ONCE(test_bit(IBS_STOPPING, pcpu->state));
->> +
->> +       set_bit(IBS_STOPPING, pcpu->state);
-> 
-> This function needs to be reentrant. If an IBS event is a sibling in a
-> group led by a core PMU event, and the leader is throttled,
-> perf_event_throttle_group() will stop the IBS sibling from the core
-> PMU's NMI handler:
-> 
->     amd_pmu_v2_handle_irq() ->
->       perf_event_overflow() ->
->         __perf_event_overflow() ->
->           __perf_event_account_interrupt() ->
->             perf_event_throttle_group() ->
->               perf_event_throttle() ->
->                 perf_ibs_stop() ->
->                   perf_ibs_stop_dis()
-
-Core and IBS, both are of hardware PMU type and thus can not be
-grouped together.
-
-[...]
-
->> +       if (in_nmi())
->> +               wrmsrq(hwc->config_base, config);
-> 
-> As we saw above, in_nmi() doesn't mean that we're in
-> perf_ibs_handle_irq() for this sample. If IBS Val=1 and the IBS NMI is
-> still pending, this clears Val. When the IBS NMI arrives,
-> perf_ibs_handle_irq() finds CTL2[Dis]=1 and Val=0, and therefore
-> returns 0, leading to an unknown NMI.
-
-The back-to-back NMI handling logic in the x86 generic NMI code should
-already handle this. No?
-
-Thanks,
-Ravi
