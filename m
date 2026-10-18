@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F18284CDDDB;
-	Sun, 18 Oct 2026 14:39:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32CA94CE662;
+	Sun, 18 Oct 2026 14:39:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792334386; cv=none; b=BxPnvBvfbEmTfvObBmpydEpttY8Z3Z/3lx2FG89eq8ipwdPqc8ITqsEXa9Ov7V7x1tR8Gn0k8+s0Bo6axeNliq9SZUGOY3njArqQBJWyo+lJD7nYv50x6zBDQxmFsLi/ZIWMRQ8boNt/LthGLAsFN81VFaPkJAtPiSrYPHj2gL0=
+	t=1792334390; cv=none; b=hvqlQZSabY0TENngOIbj8cDNKDqcp6Lnc5Y26BTRQCC6rJ5cSXxE5xDZAHQnFLuQqX4KfUNNOItJMjsnXz2DuDlpyJf2hk2NSL1SMPlYLPt5HztjA0pUyu166bUU5Qvn+azsfYcZt/NEIP5DciWkI4O1LnnvrdU0FQ+BQEH7fr8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792334386; c=relaxed/simple;
-	bh=MRJx1vIj2fP9MSobtQEAV6lsDe4NVAEkgaD+E81bajs=;
+	s=arc-20240116; t=1792334390; c=relaxed/simple;
+	bh=SuY4gLuyRj7+8bL8p9hnHJM2T5/YY0D+QZt4mhfexhc=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ijCZro+UguG70D5Tb2mAxvnz1IRCFHJogV29uVN9drq8/oi6nyEwKAZ9oYjuLFWfM1DJno+x+ouVJyr+OJ5yEVde6peIDlcQOQByCUXWzwJL7qBMeVYK9WwfgZE3SGVGpFZYOjRXHNVIPukCCK8isZVShJM7NwX1/cr8LK5hNeU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EN8uDjjP; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version; b=ey7axoshJcGGTkkqCV11KUDWSfPG/kG8v10lE2iIfMLAtFHKbrUN1kZd9ZnbmmrsmbZonul+lgiuvHWfv4VvUZawOgUYm2ctdVEv60XAteec7SeQtJ21F0a+jacgwB7FhStiBvNxNBqRb1egaIdYkJlWANIbXb6L290b0h23LuU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cIZQ38Pg; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EN8uDjjP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CB0FB1F000C4;
-	Sun, 18 Oct 2026 14:39:43 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cIZQ38Pg"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0C6FD1F000C4;
+	Sun, 18 Oct 2026 14:39:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1792334385;
-	bh=33NHgzl/lemSJ8wLisSuVgHWppVFEMT9N5u+0R13vPY=;
+	s=k20260515; t=1792334388;
+	bh=llN8vi4Rd5xdSPsVbEvXNlM9uyfBMT7kb9KNI9c+8DY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=EN8uDjjPFoy70Fm/b3K+gO21YFWARq9zMmVmOMvZ/K4T5ZeQp24K+6nYKZCYOSiiG
-	 ivgXnpJiyP9aSQfo1RmEF8SWgP0WoCPKzCx6OZenn5K73i9pA6v3mlYLt29zw4Hw29
-	 v6ru48DyqhuK0DBhXnQv+3KqYcYitqPlVbIhxSgviL3NzDou6HmhvsMnpWSB90Y+ex
-	 U2I8OjCzVLQSOxrOhZjjeyrzFksgQBKUyC/f/wn40Nqfhpgc9ogr6rKzvfkCreHF4Z
-	 dwCRSe5MToHP89idczVJ7M84Typ8YPHPq25KQP4dtecLXMm7cEvV5ykiy74AQe5SQD
-	 9xkbr5REeOo2g==
+	b=cIZQ38PgZijku0YKSp8HNx2PxsLxD0duQzxinPRcPi/eyqrAnsOLbxnasfQSTiigG
+	 UN19RsdSfl4tW+PPnihHCFr5wAVa793i+qPbd/w1H/9Bwe2Vo9W6upfO/rkYlaD48/
+	 GDAp0VSLyZqT3/tK9GRCfB7wSnzjJbI4RR4jT4qzTFiKJ9ukNGh8bFhoSZMrIbKktD
+	 Df0OJuMFA+qzwsPRu6Bqf6o+iU2ed1zcJYMlRGMYkCHShRzOcNpmIIpMQIHLv9brQm
+	 W8lrzBlOVgjISJ5wRkg9Rybu7UNLNgli3k5AslW5jLqpxQfRlnQdQfYrfIvhw++mVJ
+	 u2XE1y/E7OQRg==
 From: Sasha Levin <sashal@kernel.org>
 To: sashiko-reviews@lists.linux.dev
 Cc: Nathan Chancellor <nathan@kernel.org>,
@@ -47,12 +47,12 @@ Cc: Nathan Chancellor <nathan@kernel.org>,
 	=?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>,
 	Andrew Morton <akpm@linux-foundation.org>,
 	linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH v2 2/7] kbuild: add "make tools_build" to build userspace tools from tools/
-Date: Sun, 18 Oct 2026 10:39:42 -0400
-Message-ID: <20261018143942.4113179-1-sashal@kernel.org>
+Subject: Re: [RFC PATCH v2 5/7] tools: build kernel selftests in tools_build
+Date: Sun, 18 Oct 2026 10:39:45 -0400
+Message-ID: <20261018143945.4113338-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.53.0
-In-Reply-To: <sashiko-outbox-175553@kernel.org>
-References: <20261016143143.3613501-1-sashal@kernel.org> <20261016143143.3613501-3-sashal@kernel.org> <sashiko-outbox-175553@kernel.org>
+In-Reply-To: <sashiko-outbox-175556@kernel.org>
+References: <20261016143143.3613501-1-sashal@kernel.org> <20261016143143.3613501-6-sashal@kernel.org> <sashiko-outbox-175556@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -61,30 +61,55 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-On Sat, Oct 17, 2026 at 02:32:09PM +0000, sashiko-bot@kernel.org wrote:
->> +dry-run := $(findstring n,$(firstword -$(MAKEFLAGS)))
+On Sat, Oct 17, 2026 at 02:32:12PM +0000, sashiko-bot@kernel.org wrote:
+>> +config TOOLS_BUILD_SELFTESTS_KEXEC
+>> +	bool "kexec"
+>> +	depends on X86_64
 >
 >[Severity: Medium]
->Could this dry-run detection logic produce a false positive for common make
->arguments?
+>Does this unnecessarily restrict the kexec selftest to X86_64?
 >
->If MAKEFLAGS starts with a long option containing 'n' (such as Kbuild's
->frequent default --no-print-directory), -$(MAKEFLAGS) evaluates to something
->like ---no-print-directory, and findstring erroneously matches the letter 'n'.
+>Looking at tools/testing/selftests/kexec/Makefile, it explicitly supports both
+>x86 (32-bit and 64-bit) and ppc64le:
 [...]
->Is it possible to use the standard Kbuild idiom here, like
->$(findstring n,$(filter-out --%,$(MAKEFLAGS))), to properly check the flags?
+>Configuring the tools build on ppc64le or 32-bit x86 will not expose this
+>option, silently excluding the test from being built and installed on these
+>platforms.
 
-MAKEFLAGS does not start with a long option. With make 4.0 and later,
-which the kernel requires, its first word holds the single letter
-options and the long options follow after a space. With no single letter
-options, -$(MAKEFLAGS) starts with "- --no-print-directory" and the
-first word is "-". The top level Makefile detects -s the same way.
+TOOLS_BUILD is only available on x86_64 and arm64 for now
+(TOOLS_BUILD_ABI), so no entry can be selected on ppc64le or 32-bit x86.
+The kexec Makefile has no tests for arm64, which leaves x86_64.
 
-Under kbuild the first word is "-rR", as kbuild adds -rR to MAKEFLAGS. I
-checked with make 4.4.1, calling Makefile.kbuild from a parent that adds
--rR --no-print-directory: dry-run is empty for a plain, -j, -k and -s
-build, and is "n" only with -n.
+>> +$(selftest-shared): FORCE
+>> +	$(Q)mkdir -p $(@D); \
+>> +	newest=$$(find $(CURDIR)/usr/include $(toolsdir)/include $(toolsdir)/arch $(toolsdir)/testing/selftests \
+>> +		-type f \( -name '*.h' -o -name '*.mk' -o -name Makefile \) -printf '%T@\n' | \
+>> +		sort -n | tail -n 1); \
+>> +	touch -d "@$${newest:-0}" $@
+>
+>[Severity: Medium]
+>Will this miss rebuild dependencies on shared build scripts?
+[...]
+>Modifying core shared files like tools/scripts/Makefile.include,
+>tools/scripts/Makefile.arch, or scripts/subarch.include will not trigger a
+>rebuild of selftests that include them, which can lead to stale builds.
+
+Right. Of the selftests built here, kexec and vDSO include
+tools/scripts/Makefile.arch and rseq includes scripts/subarch.include,
+and neither file is checked. I'll add both in the next version.
+
+>[Severity: High]
+>Can this trigger a fatal Make syntax error if no selftests are selected?
+[...]
+>Since this rule uses two colons, it is a static pattern rule. While GNU Make
+>ignores empty targets for single-colon rules, an empty target list in a
+>double-colon static pattern rule evaluates to : selftest-%: ... and
+>triggers a fatal missing target pattern. Stop. build error.
+
+This is not a double-colon rule, and make ignores a static pattern rule
+whose target list is empty. With CONFIG_TOOLS_BUILD=y and no tool or
+selftest selected, Makefile.kbuild runs with make 4.4.1 and reports
+nothing to be done for __tools_build, with and without -n.
 
 -- 
 Thanks,
