@@ -1,81 +1,81 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8057D3A0E8D;
-	Sun, 18 Oct 2026 13:53:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 539BB4C2270
+	for <linux-perf-users@vger.kernel.org>; Sun, 18 Oct 2026 13:57:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792331616; cv=none; b=uo5pApkkLHHLNPWCj268fHmog9MVDbA1YgClqyGX3xLm0eWf4hsGKTwpN9yt8t62oTQXrLn2diQldx4gM37xmosl7ptKLvsishaQo8CUsq/xrbP5acLf3SzO4zHYtvVSdaUTztr94G21CFhPwS6YHc6IvDoyVCYocS+4TFCe0R0=
+	t=1792331875; cv=none; b=gINIrvqBdXCzK8gRt404EIg3JG4tkPT2Sp3hVlcDdVo59kjbpt4cxc5NGKbHa4dEQHGX82bKQzJnh3DHzCYQbX1ZOS1sPsvDNtaFnGEhwcnwCadGnrnl56OQNlqY1tZ84ZXf0mtMnKZz6QbiYFTUlTqpuR7AYUWGlsfWTXoMNnk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792331616; c=relaxed/simple;
-	bh=sgJectzh7qFFPO/UVGmk0Nh0g8lMaSPwNGmHiC1LsdU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=rQXsYKMoz/Sc9vFtVfar0beemIyTYp1HenbEYuiiJUgl72sGIINJQUEA5D8zFCJEc74L7A9Aqtsk0Y85xXJrFNJIXsE9DO8cfps7rGgTPeCoA8d8NdXxsRMphNntmhift44UfWQ4aXjTOkjWYQQVcjSOcRSHbxigd0m6HYnxVjM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jzZHOzqw; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1792331875; c=relaxed/simple;
+	bh=UkErHVQBNyPYwvnvk4nvM8RnG6rAa28MT0je6L5aj5E=;
+	h=Message-ID:From:Subject:To:Cc:In-Reply-To:References:Content-Type:
+	 Date; b=rpPYglq8fXoYpYsOh8wX3lH+Dtjni80LqqUy0OYrIFxq3cmmEIpO7A2cQ5NBBpuA/w1JxV7HBx7OO5DxuNkrOCiKv7Qq46em5QV9AQfwAb8n54ew5zWmlyROKfeA1AW3BDXzZxfvW1az6Tq1cbL540av6UGoe4bWmAFDUOv/kJ8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EGuCcE/A; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jzZHOzqw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 68CF61F000C4;
-	Sun, 18 Oct 2026 13:53:33 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EGuCcE/A"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C55AD1F000C4;
+	Sun, 18 Oct 2026 13:57:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1792331615;
-	bh=V/CwHlaGhnNmKVy9kiRkOmng0w9ivK3rMdXuyGEs5X8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=jzZHOzqwblo+CYkH31+bAL4Hi0+BD9GHgoljQou+VuQ8QpR6HLGPEgYom2vnL9zQO
-	 61wFwZZKA5vcopJdOgQNW3cJeY3D2GTU96vjcpvoFFxhG29ULBr+1a9rCqDb4aQVzb
-	 BdVpz9yJ4eQO5MjVtqj2J+L/EBhqmjWfdC2J+T0Gl04vUZybLB9rJXqtfTdkvbw78u
-	 t2drUA9tIFcT1Dg2PkSG+TZN7rGFgp36zEyO6YbLWiFfBSZ18+msP0vIRkOHkbZ8+z
-	 sQNMVlpLJ0o3D2AtUkL0rdYqt+MTsO+CmmyKcCq7bRrknO00Pytqmw3Fvm6xObU599
-	 U2Rknkzcu/88w==
-From: Sasha Levin <sashal@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Nathan Chancellor <nathan@kernel.org>,
-	Nicolas Schier <nsc@kernel.org>,
-	linux-kbuild@vger.kernel.org,
-	Shuah Khan <shuah@kernel.org>,
-	linux-kselftest@vger.kernel.org,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	James Clark <james.clark@linaro.org>,
-	linux-perf-users@vger.kernel.org,
-	=?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH v2 3/7] perf build: Add MINIMAL=1 to build without optional features
-Date: Sun, 18 Oct 2026 09:53:32 -0400
-Message-ID: <20261018135332.3987231-1-sashal@kernel.org>
-X-Mailer: git-send-email 2.53.0
-In-Reply-To: <CAP-5=fV_A+k-_g683q7n897YMudBwwvQPkS_cKRSdOxkEYFa0Q@mail.gmail.com>
-References: <20261016143143.3613501-1-sashal@kernel.org> <20261016143143.3613501-4-sashal@kernel.org> <CAP-5=fV_A+k-_g683q7n897YMudBwwvQPkS_cKRSdOxkEYFa0Q@mail.gmail.com>
+	s=k20260515; t=1792331873;
+	bh=UkErHVQBNyPYwvnvk4nvM8RnG6rAa28MT0je6L5aj5E=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=EGuCcE/AaMvbmOZkc9FEMyZ57WURqWq4YVrbXvU3k70huK3KKIP1eaa2D/bvDQvcH
+	 iYZEX3dC8Vfyy7cuTZ2QJJaB4n3Q/JV4eDZ+Pn9OMVFXSbFVkRzB1ygeBTXrjzp3ko
+	 4wfXbDUQYMJhKTa0QaKs4YkV8HoD/XoDD9UkDIkHM1E9ylrIzOFcOgFZikpb4DSgnd
+	 1CAkiVOxgHqGjp5oqZrDxcOgscOQnUOIK7u8ZyVkLN5OI4+cPvVduM1uYosY9IEqx4
+	 PoAiMteJMTuij924M58uQnyEP7OAAN0e87VKRfxMCg592D0g7BEO1iCRpyBgiVaNDp
+	 buXk2E0+NDU1w==
+Message-ID: <sashiko-outbox-176171@kernel.org>
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH] perf build: Add MINIMAL=1 to build without optional
+ features
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Sasha Levin" <sashal@kernel.org>
+Cc: linux-perf-users@vger.kernel.org
+In-Reply-To: <20261018135321.3986899-1-sashal@kernel.org>
+References: <20261018135321.3986899-1-sashal@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Sun, 18 Oct 2026 13:57:53 +0000
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-On Fri, Oct 16, 2026 at 08:41:29AM -0700, Ian Rogers wrote:
->In perf-tools-next/linux-next both LIBPYTHON and LIBPERL are gone
->(context in https://lore.kernel.org/linux-perf-users/20260926062029.800743-47-irogers@google.com/#t
->).
-[...]
->We should expand this with NO_MYPY and NO_PYLINT for the
->perf-tools-next version.
+> Turning off every optional feature takes a long list of NO_* variables,
+> and the list has to follow features as they are added and renamed. The
+> one in tests/make for make_minimal has fallen behind: it leaves
+> libtraceevent, jevents, slang, AIO, LZMA, zlib, libLLVM and Rust to be
+> detected, so a make_minimal build still needs libtraceevent and python.
+>=20
+> Add MINIMAL=3D1, which turns off every optional feature, the BPF
+> skeletons, and the shellcheck, mypy and pylint runs. perf then builds,
+> natively or cross, with no library beyond the C library and without
+> python, pkg-config, clang or rustc, and the result does not depend on
+> what is installed on the build machine.
+>=20
+> A MINIMAL=3D1 build also leaves out the notices that post unwind and
+> python support are disabled, which it asked for, and the one about the
+> pkg-config search path for cross builds, as pkg-config is not needed
+> then.
+>=20
+> It is handled in Makefile.perf rather than Makefile.config, as
+> Makefile.config is included after the pkg-config, shellcheck, mypy and
+> pylint setup.
+>=20
+> Use it for make_minimal in tests/make.
+>=20
+> Suggested-by: Ian Rogers <irogers@google.com>
+> Link: https://lore.kernel.org/r/CAP-5=3DfWFY-tpJz2vcBZvurwdZY5gwd8cuTemE9=
+q1rtZ0Vi0dng@mail.gmail.com
+> Assisted-by: LLM
+> Signed-off-by: Sasha Levin <sashal@kernel.org>
 
-The series is based on mainline, which still has NO_LIBPYTHON and runs mypy and
-pylint only when asked to, so 3/7 only covers those knobs.
+Sashiko has reviewed this patch and found no issues.
 
-I sent the perf-tools-next version on its own: it uses NO_PYTHON_MODULE and
-also sets NO_MYPY and NO_PYLINT.
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261018135321.3986=
+899-1-sashal@kernel.org?part=3D1
 
-https://lore.kernel.org/r/20261018135321.3986899-1-sashal@kernel.org
-
--- 
-Thanks,
-Sasha
