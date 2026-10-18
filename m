@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8B044C33F9;
-	Sun, 18 Oct 2026 14:39:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F18284CDDDB;
+	Sun, 18 Oct 2026 14:39:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792334383; cv=none; b=sTO9oZjNMrzJ9YDlVZL97b10aySzA9VW0osEh1X/OtytHOfi+KGq72iQqVNPH6HmFHunE2GyigLz5BOzjj+vPuAbKr8iG5iFIwwcWv39DdNocYV1RR1dRPe0qclW6wR4SiFrblhdzN5owWgZR9yK+Uw5mQMtax7ew9dvppVjtvc=
+	t=1792334386; cv=none; b=BxPnvBvfbEmTfvObBmpydEpttY8Z3Z/3lx2FG89eq8ipwdPqc8ITqsEXa9Ov7V7x1tR8Gn0k8+s0Bo6axeNliq9SZUGOY3njArqQBJWyo+lJD7nYv50x6zBDQxmFsLi/ZIWMRQ8boNt/LthGLAsFN81VFaPkJAtPiSrYPHj2gL0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792334383; c=relaxed/simple;
-	bh=PAfjW3xcpiCaHXV7/iUqTMYnxKrH/q5uQYs+RSCe+wQ=;
+	s=arc-20240116; t=1792334386; c=relaxed/simple;
+	bh=MRJx1vIj2fP9MSobtQEAV6lsDe4NVAEkgaD+E81bajs=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=eFeFn7jMKfiBr4zlnBPbIkLN9/4RRH5t4w7qcYJnuAGSLdT5+y+ZGCeQ+nPr2QH0gud3vWaBse7PKlMTHDooqUzTaav3Aj0fg3i/QgBqFKwhnR9PtljA51BzlEeCwCsjV3DfTGCaczd7RNfmn907TpaHByfgR6gMdA1/AFR8vWA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WuUYdnrR; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version; b=ijCZro+UguG70D5Tb2mAxvnz1IRCFHJogV29uVN9drq8/oi6nyEwKAZ9oYjuLFWfM1DJno+x+ouVJyr+OJ5yEVde6peIDlcQOQByCUXWzwJL7qBMeVYK9WwfgZE3SGVGpFZYOjRXHNVIPukCCK8isZVShJM7NwX1/cr8LK5hNeU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EN8uDjjP; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WuUYdnrR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 831F81F000C4;
-	Sun, 18 Oct 2026 14:39:40 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EN8uDjjP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CB0FB1F000C4;
+	Sun, 18 Oct 2026 14:39:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1792334382;
-	bh=ze4neFQXilKWVkV1JOWiiZvoobvoNiFOFy6OOiKZYSM=;
+	s=k20260515; t=1792334385;
+	bh=33NHgzl/lemSJ8wLisSuVgHWppVFEMT9N5u+0R13vPY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=WuUYdnrRY8wDlUtF/ZoukMeg7MH/2GbG3CAffRWphV7LzsETdchMvTcDXsZ1/jOKz
-	 izgTOvJSZM+LbG5kSjv/bDi34SkqmJwGnAClR7nyWo83tPVpOSNQNUCaIeBDOjqjCV
-	 2umv9Vc7NFHK5mb7qz9SFqQ4isGQTsIVxtad9uH0BujDfQe6Gn6LTXkbiP2E8Luh2X
-	 isZv3+kKBPDGIopNm4ee7eVTkYlCfB1qQODVa/9/fRadp+ODJvKEOdI6nMt9SPhJtD
-	 bhuc7ToHbEkXgE2TTWTPKjsYibR7/Esw3GVKAvpSygWN4xmMwKuc2HHUTnS0gqmygh
-	 mOvzaALCxkm9w==
+	b=EN8uDjjPFoy70Fm/b3K+gO21YFWARq9zMmVmOMvZ/K4T5ZeQp24K+6nYKZCYOSiiG
+	 ivgXnpJiyP9aSQfo1RmEF8SWgP0WoCPKzCx6OZenn5K73i9pA6v3mlYLt29zw4Hw29
+	 v6ru48DyqhuK0DBhXnQv+3KqYcYitqPlVbIhxSgviL3NzDou6HmhvsMnpWSB90Y+ex
+	 U2I8OjCzVLQSOxrOhZjjeyrzFksgQBKUyC/f/wn40Nqfhpgc9ogr6rKzvfkCreHF4Z
+	 dwCRSe5MToHP89idczVJ7M84Typ8YPHPq25KQP4dtecLXMm7cEvV5ykiy74AQe5SQD
+	 9xkbr5REeOo2g==
 From: Sasha Levin <sashal@kernel.org>
 To: sashiko-reviews@lists.linux.dev
 Cc: Nathan Chancellor <nathan@kernel.org>,
@@ -47,12 +47,12 @@ Cc: Nathan Chancellor <nathan@kernel.org>,
 	=?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>,
 	Andrew Morton <akpm@linux-foundation.org>,
 	linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH v2 1/7] kbuild: factor the userspace ABI flags out into KBUILD_USERABI
-Date: Sun, 18 Oct 2026 10:39:39 -0400
-Message-ID: <20261018143939.4113153-1-sashal@kernel.org>
+Subject: Re: [RFC PATCH v2 2/7] kbuild: add "make tools_build" to build userspace tools from tools/
+Date: Sun, 18 Oct 2026 10:39:42 -0400
+Message-ID: <20261018143942.4113179-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.53.0
-In-Reply-To: <sashiko-outbox-175552@kernel.org>
-References: <20261016143143.3613501-1-sashal@kernel.org> <20261016143143.3613501-2-sashal@kernel.org> <sashiko-outbox-175552@kernel.org>
+In-Reply-To: <sashiko-outbox-175553@kernel.org>
+References: <20261016143143.3613501-1-sashal@kernel.org> <20261016143143.3613501-3-sashal@kernel.org> <sashiko-outbox-175553@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -61,21 +61,30 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-On Sat, Oct 17, 2026 at 02:32:08PM +0000, sashiko-bot@kernel.org wrote:
->[Severity: Low]
->Does this new exported variable also need to be added to the SPDX SBOM
->environment allowlist?
+On Sat, Oct 17, 2026 at 02:32:09PM +0000, sashiko-bot@kernel.org wrote:
+>> +dry-run := $(findstring n,$(firstword -$(MAKEFLAGS)))
 >
->Currently, KBUILD_USERCFLAGS and KBUILD_USERLDFLAGS are explicitly tracked
->in KERNEL_BUILD_VARIABLES_ALLOWLIST in scripts/sbom/sbom/environment.py:
+>[Severity: Medium]
+>Could this dry-run detection logic produce a false positive for common make
+>arguments?
+>
+>If MAKEFLAGS starts with a long option containing 'n' (such as Kbuild's
+>frequent default --no-print-directory), -$(MAKEFLAGS) evaluates to something
+>like ---no-print-directory, and findstring erroneously matches the letter 'n'.
 [...]
->Leaving KBUILD_USERABI off this list means its value will not be captured
->in the SPDX SBOM generated by scripts/sbom, resulting in incomplete build
->metadata documentation for the userspace ABI configuration.
+>Is it possible to use the standard Kbuild idiom here, like
+>$(findstring n,$(filter-out --%,$(MAKEFLAGS))), to properly check the flags?
 
-KBUILD_USERABI is appended to both KBUILD_USERCFLAGS and
-KBUILD_USERLDFLAGS, which are on that list, so its flags are already in
-the SBOM. Listing it as well would only record the same flags again.
+MAKEFLAGS does not start with a long option. With make 4.0 and later,
+which the kernel requires, its first word holds the single letter
+options and the long options follow after a space. With no single letter
+options, -$(MAKEFLAGS) starts with "- --no-print-directory" and the
+first word is "-". The top level Makefile detects -s the same way.
+
+Under kbuild the first word is "-rR", as kbuild adds -rR to MAKEFLAGS. I
+checked with make 4.4.1, calling Makefile.kbuild from a parent that adds
+-rR --no-print-directory: dry-run is empty for a plain, -j, -k and -s
+build, and is "n" only with -n.
 
 -- 
 Thanks,
