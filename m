@@ -1,194 +1,185 @@
-Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
+Received: from mail-qt1-f180.google.com (mail-qt1-f180.google.com [209.85.160.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C17F3DAAB8
-	for <linux-perf-users@vger.kernel.org>; Sun, 18 Oct 2026 17:50:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.208.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C96C3DF01F
+	for <linux-perf-users@vger.kernel.org>; Sun, 18 Oct 2026 20:33:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.160.180
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792345849; cv=pass; b=t8qflNTGr8VjN1FnrIYeSXziGcJbQp9fLu8sT/rlobRVbPCAvPrhvEbGk0+sd3o7wn/Bk8VMLCSJqcf8g8Bpgxk8jf0bpsaix4SZq+IOBec2ZaTTkrIaCv0DZEl0rNR5uegYkzO6JoO8E3+Py0Q5H6qjn6Ag2U1ATU72eplIfN8=
+	t=1792355639; cv=pass; b=Y2PqWj1dQMDuWqaMlbhEPtgoKfbbEAJXMOSGb/L2eDFq//rHEOT3c7aEwFRHegengivoYcv8VWwS9w3DpPS5zXPJG6VwJGEDJLMqZ4NdXavONqf2jjg3IKSWb2PVr3JL4KtzFG2CCgUKKsLgieDsq+53SI05e3wJZdqV5RFrRwg=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792345849; c=relaxed/simple;
-	bh=WXv6UKA/9yuqwbZcgBBetRCfLJaa7efW2S21doIVN0U=;
+	s=arc-20240116; t=1792355639; c=relaxed/simple;
+	bh=RFgQrkdBBoSzqRJg6uyFYGy9xtoJxOpfXrhpBF3Bg9o=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=eNGtkRz9HLg1D62MTawjTVGvEhIK6P6t31ElFofI9HrKobjiVqn4g+DS4d5tLclAg6YO1XruunQT23+V1CdWcoLSSOla3+Qo3/M5k8FoTMAn5NodTYWsrMEF40WbC314tVCuWJbtx6pkuUIlMV/alB4SM+Yr2aMfL48/7QmQLt4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FhdeuN19; arc=pass smtp.client-ip=209.85.208.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 To:Cc:Content-Type; b=Cwk1TskfZLSGdbPWZ80eXcyKQNvK97b4lFyu0sAgVVNkxOoVu7aIpznJYg1Iqk7iov8FPSfoyYG4siDFfkHjxVP7rNZH5VG7diGAp+smjZ7rSOHsDV5v+TAQXDJTbERegQtSkWPttw2it7uMrJNPvVgClaoU+3mbvM17mbsx8rQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=LVZIIG+q; arc=pass smtp.client-ip=209.85.160.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FhdeuN19"
-Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-6afafc89b48so2071694a12.2
-        for <linux-perf-users@vger.kernel.org>; Sun, 18 Oct 2026 10:50:47 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1792345846; cv=none;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="LVZIIG+q"
+Received: by mail-qt1-f180.google.com with SMTP id d75a77b69052e-535f598d126so206071cf.1
+        for <linux-perf-users@vger.kernel.org>; Sun, 18 Oct 2026 13:33:58 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1792355637; cv=none;
         d=google.com; s=arc-20260327;
-        b=X6JjXxwayTCa3ra5TWJkxZE9soYws3ZDm6JjAUOgSe346g82PqyIToKXI9b6tiFBiG
-         5d68TqT2fXBsr2+PjmxdUioXaQlR66VP85t5x9UxpUBU36k6zOuWXuFBoeu4gIu3eP9t
-         vOxeGTjuvNbsK4QS2o8DE1zgWdKj0gfI/GEnlpAvZi9PF/pN11xMpe+iZLl9kUJBligb
-         Qiz3GqAhUanaQ1PoOfWmDw8c/Ok1WyMnBP8g5cYM48I9k1V3/CUscloiATDlLaAcoeYT
-         WGRSDje2WkUUTd0u1QYutGnxk1s63hohTluvlfElj0OYEXRMEqsYrIJ+yPOfp8sM8ul3
-         kUEA==
+        b=Ce8mVO9VPze0K+t5dbWujsdqri4IiSqtwA2LLX5GtfZhdbFaLPH1sThDDHIucyS/lg
+         d9nKpbWnbYW8rqNGIBYMDLXwaiI1qD75BFwWUvJ9DOo0OtlUlZOv0YV/fT/FqEaNcQ1i
+         pSsEclFXZUW9E78nWEKJEINUpRsX1IlE9vOsmi+MxFSFtxBf1gigiJC8iDEkDhoXVpJJ
+         mlc+t6rI4hIqCafbCQ971LQZZo2YYKEFUgH7CocO0sa83LTn6RslKJQ+2F1Tgx1Mqar2
+         iZ3R0kQ+DzLsj82O7QadBWekOuv8OaH9VLcgSnvIfvi3rYCQXH/EnZYcYb1oD2C8iru0
+         6SVg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:dkim-signature;
-        bh=UQ7W9KldKYkaSyjjE5daJncD2A0RYd8lziVm00Ic5Mo=;
-        fh=57Hb2vq0AQY4iwOWTm8DIkdsTrCInUrPF0B0Rja+S4w=;
-        b=coaG90Jrw3LscH3PNUcu1Chagqvv+uBFH8SP0t9nHkNx0XKpiq33Ub43QO9X0CB19w
-         C+EpQqprc1S+9ZRyV220NLqBInFEyzvctEv9J13lvPJa65gv5JswphpJer4mh48q+WeX
-         J1sWRajWN4dOvN9x6nItrS706S8TUcd2RzgJbqrMRrEhrH6Bv8/6GBbTc2h2SzHdHNhR
-         TPEB+S8gH8QKQ5HelCVj5ugbbfpwGDo9fQl6C/5OIwf4KVRoBGggSDEN56QDJe/wLfKY
-         nL9WUjoBoR8RVTJIQH1P5KW5JbNUoaCy4meIlZPGLPq/T7OR4Ht4GuCkHx6mLObQ+huU
-         /Y9g==;
+        bh=U0yEFYFRImHyutXHpD0puy2q2sce26+Y2mx28kTrK4Y=;
+        fh=XCFfzey97WbAZs6ZPG5O+My1Ie0KHLjKIwRNvW8ENVI=;
+        b=H/+/Oq7fgKJDVlqAuto/gmsa+rk3Ay6zzFXg31JdO8IJBEIAVew0Oa3bl6EmkQrKaZ
+         v5MLWxMGMs0kVzPqFtu5tWCxb3HVFbUNsIwqahPZldG/CKqIPAH9ZsKJCtp7XTeaYD1E
+         d+v500f5m0NV/MbAToYTJ7K0RV8WDA5l8r4CwE8BZUXYaPTq+eqHplu7FYKKFavBrKL0
+         alG/dyz7bYUkdjaMf0khgKGRdLovJhVT1zNTkUZQFF3DyiLjRCaKG7TNgq6432SbJfW7
+         luFDvBmfylbr7uwxaSjsfwI3FQI55Dcn4XOtUu0PhhFstf+fbC10vfkW7oBMEaXcS0XJ
+         W50A==;
         darn=vger.kernel.org
 ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1792345846; x=1792950646; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1792355637; x=1792960437; darn=vger.kernel.org;
         h=content-transfer-encoding:content-type:cc:to:subject:message-id
          :date:from:in-reply-to:references:mime-version:from:to:cc:subject
          :date:message-id:reply-to:content-type;
-        bh=UQ7W9KldKYkaSyjjE5daJncD2A0RYd8lziVm00Ic5Mo=;
-        b=FhdeuN19hmZwMH6SNxPtLNo3n5D2G+4Yfk8Huc7HsCL/lffihO3nLDtCvzv0oZ2441
-         TdntBLL9ZVXG4R8WrRtei/u+WNZ7J2tWzTacUrghbUOGqyhDTG/KVXSd0zg+pDil0R4c
-         8WEQ/5gtEJE0TL7e/KKNp+SS+c5FM/evaMNldk3Mjnv95C2vGu8pkEWlXf0cnKsu6P/m
-         IafNE5/+Zvx2QunzPM8UxMDNcVJouTGbMkg5D36W0e6eZKEv9yyEik6EeIV2DVqaLA1w
-         gQMAuwY1GnCnmKkFi5dckgtqOoxlOgebmqMiGxvpVTO4qvk0eNfe/aoUCwjHaoePOthR
-         qh8A==
+        bh=U0yEFYFRImHyutXHpD0puy2q2sce26+Y2mx28kTrK4Y=;
+        b=LVZIIG+qqnAcURfmMEeonWIDylU9U8tcAr+Wdd5p5JSTNgUlE28fOCnGufZuqr5xF7
+         tUv9CBXdcxVlvHTIdkVNgzpc2h055kF9YoYuwoi0qobCrABIayOesUpsltb8sU9r0/qV
+         PzQipiGAkEHN3ep+52S97/XhS0VFF4EBHr4g2op5xlLSuVwpUbc90dm0p9YO/wwuPvxG
+         kVkZWCEIHeXXjkdijauV8aEI0y011C51Rc4vJWkrfvZsSEAJ8Hpe04U4a03RSvR8I8Vz
+         fN9c8s5MwLQ8gxpIA91xDQW9tIYFSk6ICgGhsmdRsclTho/jzbzAkbgslbjHOBdcw9jA
+         0inQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1792345846; x=1792950646;
+        d=1e100.net; s=20260707; t=1792355637; x=1792960437;
         h=content-transfer-encoding:content-type:cc:to:subject:message-id
          :date:from:in-reply-to:references:mime-version:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=UQ7W9KldKYkaSyjjE5daJncD2A0RYd8lziVm00Ic5Mo=;
-        b=kLsza8klHIhvRxbTs+gebk0wTcUBk0jdlVz3LnVaZz5qdj8QObmUMkgAwuTiNs4wvJ
-         QI9sZ3Q+kz+f56Pj8Mc3J35jnL6Y/pSKOXrnZxFUgQOiR3rsISJaeeLVmZhgoIN9VhZ4
-         pHsxwYS7opihaD8HEYltAYNG0NprCmr4Z3h53GQi5bLgATLZBbw+GA+wXIoYDZ/WQcP5
-         Oj1ZdKiNZtgI6hvGdig9M1Aoa/GCw33ziJM94xyU8miuWF1MvD6dpVlnv0nvSgoE3NqB
-         HCzNJv9vngcLCzemn+bDST7i4FIMnsPTzVYO6WMg6Gu5dnIJCTFRRv3iqxzkRSvp+H3K
-         /ROw==
-X-Forwarded-Encrypted: i=1; AKwUvBy4bhOqc68h2yFjrPTGAOOR9KT3CurTLZooPmgmJ8RMDcuF2U3ERF6UswpZavhcg9D6G2A41cHOuwtDewA5G0Z4@vger.kernel.org
-X-Gm-Message-State: AFq9FYK2zecqLFw1e6zC8SczLvpw45kgIy8RnpXMRh1uZGoYD1pM/rsJ
-	CpO3RBLAq9giraQgiifPgrFrjCorb6pKhSvGbDYScvdBqFYzqzu2rwVr3sFMRnvyT98TIm535BJ
-	9BZJhNHi5w4vW4hUmTvcJDDtD+xsYELM=
-X-Gm-Gg: AYBFou3TU31EvDnNbXRdL7D7OtCZxy9M9X3x3hEXmYCrlSXV5UrMXA6D9Ipm4kOeFkW
-	l4tOXUXPHYLIn8Ve6p8Hmo7GG7QoqrTm4yviwJt+utT/5hXTPF42rKeC3nxDfMp6EDFSEmDtyym
-	r0P9QWWPLGBtla6whE0zmhNUv1FcIt+tqAMmhhQow6r4V1qgvxGO70mPzq/S2YovE006zxi4bBe
-	zqFfFn761F3j6XGBf8jWW+7ffg+XH5SUGNK8xnyUSWFEjebLF5pySXYuw5ZkSNpHdTjFxl552qK
-	KY1zd7TVU0B/W+ZXkPYgbqpuwEl/odfkrK6OwsfGIPRq3bV/k+nI+ehHoLm1QqCm8IzCu7HwrhJ
-	/i93D5VkYmDLcQPzdwxIbNMS4BerQmU7JVCGOeKOflA==
-X-Received: by 2002:a05:6402:4487:b0:6ac:a1e1:3f88 with SMTP id
- 4fb4d7f45d1cf-6b3a814b026mr3327488a12.14.1792345846166; Sun, 18 Oct 2026
- 10:50:46 -0700 (PDT)
+        bh=U0yEFYFRImHyutXHpD0puy2q2sce26+Y2mx28kTrK4Y=;
+        b=lCvqSjJXm9dSdchbjFkGCtbDIHcz1ORbwHKcq7d7ZNiwCMEGX3maIrg/pRp2WbzgcR
+         W9hcbCl6ZAgUFBGr9o49INsIQHwCzMMoD2bm9Aed1HYTJMRZJNk8ai9oxzJib2Rt9/Ma
+         hbyd+DMkEc0D8DatwoS2nqnUaPxV3PMbrHVduMTMO0MnKYdm8BY+lhoEzPr8a+Xd8ful
+         XHBnj9ob7nieNPSxHHDh1mPhoy0/DoPD5FZVFh9o972uUrG74s6yk8XiZWN4MFHatMqj
+         48+yvuMIVVEOh2DW/1XR0ulISg1wBhBozzOWhj7cdxeGRGNfGGKDU/LWK9Y2egBE/ugg
+         LDnw==
+X-Forwarded-Encrypted: i=1; AKwUvByALUNbh5w+LpraOnX2AsuQaomTYtIp/fwlU/YORQCvZ0//HXsSCRlC5WbEYCwipDHJd/wXQq3s1O4fRacwtUzM@vger.kernel.org
+X-Gm-Message-State: AFq9FYLnmDFQPaqSYri5EQiJnU4gvEP/NzNpl0LnmleideEyZHcaaDM9
+	WlcvkjjIdAmjjV71MbDKC8bUfDRu0MUbEFpnjSvOdqEvguc+9yzHLlUp+twuPUrU/Snw2IqAR0t
+	5fVNgvaUzxDJdamgdBkNQNEfuTwXjU7jbaAs4iEry
+X-Gm-Gg: AYBFou3A+OKH+GXmqV+DrlOltxAM5v1RrHqWAuH5Tv2MbxnmIpnyNy2EjH9gcj3uSty
+	6Q972WAR4ZuzJijoWlI1CeEKXSU1n8NVllZKEzqBWrLFcKFGFApAft+ejOL+2Ozfl9aSDCZ9G43
+	aNvM+fTBYZfcSw6PZbovjV6qaK9ByvdAZTO6QBa/OYaeZsd/BAOsdk4frjfBZXJgmo1y7gkO34x
+	1xJlQwUxgN6YO5d2z9uE3Wf8BKFVBoUb1ozfsrxyoeDQcxKwQ41KgAywLhRCWWZGT4BIsdTXuXW
+	1YrJwLTK8uZc3sPRdlBJB080QEeA+xko7Ethz6nXkg2J5yWlqqPgJKxn
+X-Received: by 2002:a05:622a:15c2:b0:534:d386:c3f1 with SMTP id
+ d75a77b69052e-53646271decmr27164221cf.9.1792355636727; Sun, 18 Oct 2026
+ 13:33:56 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20261018-alpha-perf-regs-v3-v3-0-52be85332c57@gmail.com> <20261018-alpha-perf-regs-v3-v3-5-52be85332c57@gmail.com>
-In-Reply-To: <20261018-alpha-perf-regs-v3-v3-5-52be85332c57@gmail.com>
-From: Magnus Lindholm <linmag7@gmail.com>
-Date: Sun, 18 Oct 2026 19:50:34 +0200
-X-Gm-Features: AclHuK-yU7tSzanPsDFTqgaSJETZpGEAojUlwTccllHoXkgRUI3VKv_elNnpC4I
-Message-ID: <CA+=Fv5SFFGtWj_Y8Y1Qe_W1ooDom97VHMiBhfF7b17+FYHL=3Q@mail.gmail.com>
-Subject: Re: [PATCH v3 5/5] alpha: fill in pc for software event samples
-To: Matt Turner <mattst88@gmail.com>
-Cc: Richard Henderson <richard.henderson@linaro.org>, linux-alpha@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, Ian Rogers <irogers@google.com>
+References: <20261018163741.850434-1-namhyung@kernel.org> <20261018163741.850434-2-namhyung@kernel.org>
+In-Reply-To: <20261018163741.850434-2-namhyung@kernel.org>
+From: Ian Rogers <irogers@google.com>
+Date: Sun, 18 Oct 2026 13:33:45 -0700
+X-Gm-Features: AclHuK8V4M0U4M5iq4S8ju7FIqL_Da28CgHw9_xNkRgcxcyq4pB9WpORoP3ni7Y
+Message-ID: <CAP-5=fWt5r++c1=BnM+459WsiZiwvihGpcjZ+j5_6Kr4P7sDUw@mail.gmail.com>
+Subject: Re: [PATCH v1 2/5] perf test: Make sure maps to have a machine
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, James Clark <james.clark@linaro.org>, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, 
+	LKML <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi Matt,
-
-On Sun, Oct 18, 2026 at 4:22=E2=80=AFPM Matt Turner <mattst88@gmail.com> wr=
-ote:
+On Sun, Oct 18, 2026 at 9:37=E2=80=AFAM Namhyung Kim <namhyung@kernel.org> =
+wrote:
 >
-> Context switch and tracepoint events have no trap frame, so perf builds
-> one with perf_fetch_caller_regs(). Alpha does not define
-> perf_arch_fetch_caller_regs(), which leaves that pt_regs zeroed, and
-> these samples report pc as 0.
+> It's be easier if we could guarantee that maps always have a machine.
+> IIUC this is true for all real use cases, but only the test code has
+> an exception.  Let's get rid of it and make sure they have machines.
 >
-> Record the caller's address as pc. The zero ps already marks the frame
-> as kernel mode, and pt_regs has nowhere to keep sp, so pc is all that
-> can be filled in.
->
-> perf_fetch_caller_regs() gets that address from CALLER_ADDR0, which
-> alpha defines as 0 when CONFIG_FRAME_POINTER is disabled. Finding the
-> level zero return address does not need a frame pointer, so make
-> alpha_ftrace_return_address0() available in both configurations. Only
-> ftrace_return_address(n) still depends on frame pointers.
->
-> Reported-by: Magnus Lindholm <linmag7@gmail.com>
-> Suggested-by: Magnus Lindholm <linmag7@gmail.com>
-> Closes: https://lore.kernel.org/all/CA%2B%3DFv5S8-Zk8-LUpZnWiBfTGSQXthepm=
-Rc_-a9O%2BpEPmVW0mRA@mail.gmail.com/
-> Assisted-by: Claude:claude-opus-5-5
-> Reviewed-by: Magnus Lindholm <linmag7@gmail.com>
-> Acked-by: Ian Rogers <irogers@google.com>
-> Signed-off-by: Matt Turner <mattst88@gmail.com>
+> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 > ---
->  arch/alpha/include/asm/ftrace.h     | 5 ++---
->  arch/alpha/include/asm/perf_event.h | 7 +++++++
->  2 files changed, 9 insertions(+), 3 deletions(-)
+>  tools/perf/tests/maps.c | 15 +++++++++++++--
+>  1 file changed, 13 insertions(+), 2 deletions(-)
 >
-> diff --git a/arch/alpha/include/asm/ftrace.h b/arch/alpha/include/asm/ftr=
-ace.h
-> index 7ec44134c804..5b75a294a7c9 100644
-> --- a/arch/alpha/include/asm/ftrace.h
-> +++ b/arch/alpha/include/asm/ftrace.h
-> @@ -2,8 +2,6 @@
->  #ifndef _ASM_ALPHA_FTRACE_H
->  #define _ASM_ALPHA_FTRACE_H
+> diff --git a/tools/perf/tests/maps.c b/tools/perf/tests/maps.c
+> index 2c05d62f40dcdf72..f40b68f5fa5fe2c1 100644
+> --- a/tools/perf/tests/maps.c
+> +++ b/tools/perf/tests/maps.c
+> @@ -1,5 +1,6 @@
+>  // SPDX-License-Identifier: GPL-2.0
+>  #include <inttypes.h>
+> +#include <unistd.h>
+>  #include <linux/compiler.h>
+>  #include <linux/kernel.h>
+>  #include "tests.h"
+> @@ -100,8 +101,12 @@ static int test__maps__merge_in(struct test_suite *t=
+ __maybe_unused, int subtest
+>         };
+>         struct map *map_kcore1, *map_kcore2, *map_kcore3;
+>         int ret;
+> -       struct maps *maps =3D maps__new(NULL);
+> +       struct machine *machine =3D machine__new_live(/*host_env=3D*/NULL=
+,
+> +                                                   /*kernel_maps=3D*/fal=
+se,
+> +                                                   getpid());
+> +       struct maps *maps =3D maps__new(machine);
 >
-> -#ifdef CONFIG_FRAME_POINTER
-> -
->  static void *alpha_ftrace_return_address0(void)
->         noinline notrace;
->  static void *alpha_ftrace_return_address0(void)
-> @@ -13,6 +11,8 @@ static void *alpha_ftrace_return_address0(void)
+> +       TEST_ASSERT_VAL("failed to create machine", machine);
+>         TEST_ASSERT_VAL("failed to create maps", maps);
 >
->  #define ftrace_return_address0 alpha_ftrace_return_address0()
+>         for (i =3D 0; i < ARRAY_SIZE(bpf_progs); i++) {
+> @@ -159,6 +164,7 @@ static int test__maps__merge_in(struct test_suite *t =
+__maybe_unused, int subtest
+>         map__zput(map_kcore1);
+>         map__zput(map_kcore2);
+>         map__zput(map_kcore3);
+> +       machine__delete(machine);
+>         return TEST_OK;
+>  }
 >
-> +#ifdef CONFIG_FRAME_POINTER
-> +
->  /*
->   * __builtin_return_address() requires a constant integer argument.
->   * Keep this as a macro so the value is seen at the callsite.
-> @@ -21,7 +21,6 @@ static void *alpha_ftrace_return_address0(void)
->
->  #else  /* !CONFIG_FRAME_POINTER */
->
-> -#define ftrace_return_address0 0UL
->  #define ftrace_return_address(n) ((void)(n), 0UL)
->
->  #endif /* CONFIG_FRAME_POINTER */
-> diff --git a/arch/alpha/include/asm/perf_event.h b/arch/alpha/include/asm=
-/perf_event.h
-> index 5996e7a6757e..72536566014a 100644
-> --- a/arch/alpha/include/asm/perf_event.h
-> +++ b/arch/alpha/include/asm/perf_event.h
-> @@ -1,4 +1,11 @@
->  #ifndef __ASM_ALPHA_PERF_EVENT_H
->  #define __ASM_ALPHA_PERF_EVENT_H
->
-> +/*
-> + * Software events have no trap frame, so perf_fetch_caller_regs() fills
-> + * in a zeroed pt_regs. A zero ps already means kernel mode; only pc is
-> + * missing.
-> + */
-> +#define perf_arch_fetch_caller_regs(regs, __ip)        ((regs)->pc =3D (=
-__ip))
-> +
->  #endif /* __ASM_ALPHA_PERF_EVENT_H */
->
-> --
-> 2.55.0
->
+> @@ -189,8 +195,12 @@ static int test__maps__fixup_overlap_and_insert(stru=
+ct test_suite *t __maybe_unu
+>         struct map *map_split, *map_eclipse;
+>         int ret;
+>         unsigned int i;
+> -       struct maps *maps =3D maps__new(NULL);
+> +       struct machine *machine =3D machine__new_live(/*host_env=3D*/NULL=
+,
+> +                                                   /*kernel_maps=3D*/fal=
+se,
+> +                                                   getpid());
 
-Tested on my AlphaServer ES40 with CONFIG_FRAME_POINTER disabled.
-Context-switch and sched_switch samples report valid PCs, with
-synthetic SP correctly remaining zero.
-
-Tested-by: Magnus Lindholm <linmag7@gmail.com>
+For completeness should we pass in a host_env like in builtin-top.c?
+https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.gi=
+t/tree/tools/perf/builtin-top.c?h=3Dperf-tools-next#n1661
 
 Thanks,
-Magnus
+Ian
+
+> +       struct maps *maps =3D maps__new(machine);
+>
+> +       TEST_ASSERT_VAL("failed to create machine", machine);
+>         TEST_ASSERT_VAL("failed to create maps", maps);
+>
+>         for (i =3D 0; i < ARRAY_SIZE(initial_maps); i++) {
+> @@ -230,6 +240,7 @@ static int test__maps__fixup_overlap_and_insert(struc=
+t test_suite *t __maybe_unu
+>         TEST_ASSERT_VAL("eclipse check failed", !ret);
+>
+>         maps__zput(maps);
+> +       machine__delete(machine);
+>         return TEST_OK;
+>  }
+>
+> --
+> 2.56.0.176.g3575e65682-goog
+>
