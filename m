@@ -1,30 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEA123E7BB2;
-	Sun, 18 Oct 2026 16:37:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAD9237A836;
+	Sun, 18 Oct 2026 16:37:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792341477; cv=none; b=BLYWxs7ojrszYr4QWRlCr7rJIZd8y5vvJl6WP3B1/d2jHYDAHUDDMVmNkYGstDEGARsw4JX5a68tu8WVD2hHCKhP5A+OekXIBMYWcPTJxfcrbxC6YRmCBl5EOz3ip3RNbIgNQ8UeKmM0bJowGtiVXJFTRTHo2b+Ob4u+goP3frk=
+	t=1792341477; cv=none; b=MXhlN1dgZRTY2IsH16hKUm3v0ET04tSwt/InUqKEErQ1qMjW9K7RugLRsQ2O8yXPOcEwYO9axgpjLOHX7EUJqwDRbga4UKb4POl5ppzRaaeSebBE5LDQjRJrvjDkNuYTYlTm47qjGUuD2FOQVz3bxVYoAWSWAfaHhEndUXjw+0g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1792341477; c=relaxed/simple;
-	bh=OL7XdJljnYykZ6cGJygqKILHqIpHMQsHB66PjADmr6g=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=AG01bNZocV/K81i/S3tCRzTMoQT9ap7fZh4NHNHTcAwfNd3iCUS6C797x7gtaDTYO+yHB5XuZYaTTIKQ1p9AvXcgg2H/cPY84KAR6eBFnwDvm5ksYc+f08HPfZ1e2bdsD7HIHxVg/BVNjTvVDwehakawlCl9b/6QTRTQ6TydTEs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Fj1YOlZA; arc=none smtp.client-ip=100.103.45.18
+	bh=WXTvV7rtvitdmFdQYM8qBVau54lx+3W88ZM1dFAyEN8=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=WDSVkJ+aMga0e1XdI5ZKMR0/lwZwTNU7QQ68tmUWI9RUNsktePJukh28yeHaiPvxtgqAe1QHkayNWeOpyeb57cA/Dr76XSvRSd4aX4uD2Jhz86V+9c8+EKyF9IC8PyUfG95Ev9jNxM2owsVUYl6bVbMRfX/dH1T+8DnDNpim+yg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Gtj1kCS3; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Fj1YOlZA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0C45D1F000C4;
-	Sun, 18 Oct 2026 16:37:44 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Gtj1kCS3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0FFF61F000CA;
+	Sun, 18 Oct 2026 16:37:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1792341464;
-	bh=nqhII2yqgaJn4OHee6C9EiqMArA3HDYaoMptyZzOhkg=;
-	h=From:To:Cc:Subject:Date;
-	b=Fj1YOlZAbMm5BLHyyNev/1uZF2pldGWKlyEJNTEJbEc5PiSOwK8aFVMXfJTOe/UCO
-	 eC+xJK8BGaIAuFhq4V6ldLIoLP+waa3Mcaelcjxqg6G/LGtZBlcEWegbR5la5IWwFu
-	 7/Xu6jP/EpKlUYNwkZ+RJBEV4DN4BSYeO+nS6VF9un/7F38wXG53z9dCdR3ehAogo+
-	 pqL0fjuLHg0B9t2qmFv0s6BPGjfkzyoa8iBZ/10Nj3zwaOzDWA5YxklhMhmMd+H1W3
-	 i0BCisO3TGP6jExwSQJFelnSnr8YAyawYY/ygBQAvi32dt5bcv1qMHW8Pz6GmmOSW1
-	 s1fwEeSzuTffg==
+	s=k20260515; t=1792341466;
+	bh=id7H27gAG6NLIv4PzMVHCvi+cAcd+4AflCH/SR3WRbk=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=Gtj1kCS3RKrkUWd7cYUU4oZtEGvG8Yt7Iv+FCunVenOme4JTJ/3VKnQmie71037TH
+	 cd/veCpREZ+2rnbrbnStSLwYpOABw8Yyu6b9FzFVRAbnoUTQXrnCFbCjvjyB/o/pn2
+	 pj8VmhJZANY3IHRB+a8S+CU8mnQnr+Y4Zwr5xb/jG1MzGovcoObfUfOj1NzWGswF9+
+	 TbDvsLBHXeXP6RcR8gT6sQ4frU5Q29049aYke6yd9uG7Z8Mxdn0C0tifwZVUsmr8Ig
+	 wqrxgNXH/2An8oZG6rZM0ybiugFqZcBDEcTEzdt89GiaMOjv/Z6NpItrYzopcIj7xN
+	 wcoBUUOaoxOgw==
 From: Namhyung Kim <namhyung@kernel.org>
 To: Arnaldo Carvalho de Melo <acme@kernel.org>
 Cc: Ian Rogers <irogers@google.com>,
@@ -36,10 +37,12 @@ Cc: Ian Rogers <irogers@google.com>,
 	LKML <linux-kernel@vger.kernel.org>,
 	linux-perf-users@vger.kernel.org,
 	Sashiko <sashiko-bot@kernel.org>
-Subject: [PATCH v1 1/5] perf test: Fix a memory leak in PE file parsing test
-Date: Sun, 18 Oct 2026 09:37:37 -0700
-Message-ID: <20261018163741.850434-1-namhyung@kernel.org>
+Subject: [PATCH v1 5/5] perf symbol: Ensure dso__set_is_64_bit() for libbfd
+Date: Sun, 18 Oct 2026 09:37:41 -0700
+Message-ID: <20261018163741.850434-5-namhyung@kernel.org>
 X-Mailer: git-send-email 2.56.0.176.g3575e65682-goog
+In-Reply-To: <20261018163741.850434-1-namhyung@kernel.org>
+References: <20261018163741.850434-1-namhyung@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -48,51 +51,27 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The get_argv_exec_path() returns a dynamically allocated string so it
-should be freed.  Let's check the return value first so that it
-doesn't crash snprintf().
+Otherwise it can confuse cross-platform analysis.
 
 Reported-by: Sashiko <sashiko-bot@kernel.org>
-Closes: https://lore.kernel.org/r/sashiko-outbox-168781@kernel.org
+Closes: https://lore.kernel.org/r/sashiko-outbox-168776@kernel.org
 Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 ---
- tools/perf/tests/pe-file-parsing.c | 13 ++++++++++---
- 1 file changed, 10 insertions(+), 3 deletions(-)
+ tools/perf/util/libbfd.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/tools/perf/tests/pe-file-parsing.c b/tools/perf/tests/pe-file-parsing.c
-index 190520ffc3ad6d0c..ed95aa5d8ca2af92 100644
---- a/tools/perf/tests/pe-file-parsing.c
-+++ b/tools/perf/tests/pe-file-parsing.c
-@@ -74,19 +74,26 @@ static int test__pe_file_parsing(struct test_suite *test __maybe_unused,
- {
- 	struct stat st;
- 	char path_dir[PATH_MAX];
--	const char * const tests_dirs[] = {
-+	static const char * const tests_dirs[] = {
- 		"./tools/perf/tests",
- 		"./tests",
- 		"./source/tests",
--		path_dir,
- 	};
--	snprintf(path_dir, PATH_MAX, "%s/tests", get_argv_exec_path());
-+	char *exec_path;
+diff --git a/tools/perf/util/libbfd.c b/tools/perf/util/libbfd.c
+index a4dcb406c79e9cee..9cc6216ce3adbcd0 100644
+--- a/tools/perf/util/libbfd.c
++++ b/tools/perf/util/libbfd.c
+@@ -462,6 +462,7 @@ int dso__load_bfd_symbols(struct dso *dso, const char *debugfile)
+ 	symbols__fixup_end(dso__symbols(dso), false);
+ 	symbols__fixup_duplicate(dso__symbols(dso));
+ 	dso__set_adjust_symbols(dso, true);
++	dso__set_is_64_bit(dso, bfd_get_arch_size(abfd) == 64);
  
- 	for (size_t i = 0; i < ARRAY_SIZE(tests_dirs); ++i) {
- 		if (!lstat(tests_dirs[i], &st))
- 			return run_dir(tests_dirs[i]);
- 	}
- 
-+	exec_path = get_argv_exec_path();
-+	TEST_ASSERT_VAL("Failed to allocate exec_path", exec_path);
-+	snprintf(path_dir, PATH_MAX, "%s/tests", exec_path);
-+	free(exec_path);
-+
-+	if (!lstat(path_dir, &st))
-+		return run_dir(path_dir);
-+
- 	pr_debug("cannot find the tests directory\n");
- 	return TEST_SKIP;
- }
+ 	err = dso__has_symbols(dso);
+ out_free:
 -- 
 2.56.0.176.g3575e65682-goog
 
