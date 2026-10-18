@@ -1,77 +1,82 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77BD3397935
-	for <linux-perf-users@vger.kernel.org>; Sun, 18 Oct 2026 14:36:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8B044C33F9;
+	Sun, 18 Oct 2026 14:39:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792334176; cv=none; b=OyRKHtE2P19w+TCkEpLfYOLWGBp5qmzRQYmKmeIWhNcEHQQU0xNwDuQJdlHoIUKdVdhqQ6huIMzJcMznf9zUwcAWQrlzxIOLRnJEbXzt+645LYcJ3a7I0LrKXqC+5BN6xnnWO6HpIu/fvqMpNdgHFABSYgYUjTiUjk/Z9xhntbY=
+	t=1792334383; cv=none; b=sTO9oZjNMrzJ9YDlVZL97b10aySzA9VW0osEh1X/OtytHOfi+KGq72iQqVNPH6HmFHunE2GyigLz5BOzjj+vPuAbKr8iG5iFIwwcWv39DdNocYV1RR1dRPe0qclW6wR4SiFrblhdzN5owWgZR9yK+Uw5mQMtax7ew9dvppVjtvc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792334176; c=relaxed/simple;
-	bh=fUAYll5gdguY3OwgaTGy2Q4lTTAI4gJB2GOYkJY/4XA=;
-	h=Message-ID:From:Subject:To:Cc:In-Reply-To:References:Content-Type:
-	 Date; b=PGbhMS/1ybXhy2/iOItSKbdSSkXoavoRnn560q/wSDCIEdL2j9KHGbluEYPDbBWo+BEzFcycMRTUYxWKcjm7bS3jeKzL9/oyhHA4iJmCVb2fj4hsnLzJoknpcBKI6QnkkoSO5RISww1lCkgFe8a4kGMNFF4SUhfYD7XLeNwoTM4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=elG4dPfZ; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1792334383; c=relaxed/simple;
+	bh=PAfjW3xcpiCaHXV7/iUqTMYnxKrH/q5uQYs+RSCe+wQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=eFeFn7jMKfiBr4zlnBPbIkLN9/4RRH5t4w7qcYJnuAGSLdT5+y+ZGCeQ+nPr2QH0gud3vWaBse7PKlMTHDooqUzTaav3Aj0fg3i/QgBqFKwhnR9PtljA51BzlEeCwCsjV3DfTGCaczd7RNfmn907TpaHByfgR6gMdA1/AFR8vWA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WuUYdnrR; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="elG4dPfZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C87A71F000C4;
-	Sun, 18 Oct 2026 14:36:14 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WuUYdnrR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 831F81F000C4;
+	Sun, 18 Oct 2026 14:39:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1792334174;
-	bh=fUAYll5gdguY3OwgaTGy2Q4lTTAI4gJB2GOYkJY/4XA=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=elG4dPfZHOMIaOIYCmo4qfjg7VHMWl/X9nX/s2lhTwkwpTcEfF/gnvlTSyb1f2WRQ
-	 ipL0wEgKAwo4mGsUn+Jm39zXxYunPiX3uZ5kfoVHP5wrL/vsfWj1GdImq5Byp0f2A7
-	 xciZ5AM2hZ7cNh5eC5qVVY/T6OPPibonEIrqSEjGK0aWKKl+eVRaWeS8RfSNk2L05S
-	 U9MRXFVzRakans0u6ZYC13qtrcft6TCApMaU9EHsUZKLvi/JJmge8IAOdcuzxDTxbm
-	 ZI/z45gjOEOoGmDSWUFVSAUnjoI96YieITcHYdBA4UqJ4Cm+7YwDZ4CRh+vjjl/TgU
-	 ihT9wbTJIX1XA==
-Message-ID: <sashiko-outbox-176205@kernel.org>
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v3 4/5] alpha: add HAVE_PERF_REGS and
- HAVE_PERF_USER_STACK_DUMP support
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Matt Turner" <mattst88@gmail.com>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20261018-alpha-perf-regs-v3-v3-4-52be85332c57@gmail.com>
-References: <20261018-alpha-perf-regs-v3-v3-0-52be85332c57@gmail.com>
- <20261018-alpha-perf-regs-v3-v3-4-52be85332c57@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Sun, 18 Oct 2026 14:36:14 +0000
+	s=k20260515; t=1792334382;
+	bh=ze4neFQXilKWVkV1JOWiiZvoobvoNiFOFy6OOiKZYSM=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=WuUYdnrRY8wDlUtF/ZoukMeg7MH/2GbG3CAffRWphV7LzsETdchMvTcDXsZ1/jOKz
+	 izgTOvJSZM+LbG5kSjv/bDi34SkqmJwGnAClR7nyWo83tPVpOSNQNUCaIeBDOjqjCV
+	 2umv9Vc7NFHK5mb7qz9SFqQ4isGQTsIVxtad9uH0BujDfQe6Gn6LTXkbiP2E8Luh2X
+	 isZv3+kKBPDGIopNm4ee7eVTkYlCfB1qQODVa/9/fRadp+ODJvKEOdI6nMt9SPhJtD
+	 bhuc7ToHbEkXgE2TTWTPKjsYibR7/Esw3GVKAvpSygWN4xmMwKuc2HHUTnS0gqmygh
+	 mOvzaALCxkm9w==
+From: Sasha Levin <sashal@kernel.org>
+To: sashiko-reviews@lists.linux.dev
+Cc: Nathan Chancellor <nathan@kernel.org>,
+	Nicolas Schier <nsc@kernel.org>,
+	linux-kbuild@vger.kernel.org,
+	Shuah Khan <shuah@kernel.org>,
+	linux-kselftest@vger.kernel.org,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	James Clark <james.clark@linaro.org>,
+	linux-perf-users@vger.kernel.org,
+	=?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH v2 1/7] kbuild: factor the userspace ABI flags out into KBUILD_USERABI
+Date: Sun, 18 Oct 2026 10:39:39 -0400
+Message-ID: <20261018143939.4113153-1-sashal@kernel.org>
+X-Mailer: git-send-email 2.53.0
+In-Reply-To: <sashiko-outbox-175552@kernel.org>
+References: <20261016143143.3613501-1-sashal@kernel.org> <20261016143143.3613501-2-sashal@kernel.org> <sashiko-outbox-175552@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-> Let perf sample registers and dump the user stack, which is what the
-> perf tool needs for --call-graph dwarf.
->=20
-> The register indices follow the hardware numbering, so r0-r30 map
-> directly to DWARF register numbers, with pc after them. r9-r15
-> are callee-saved and live in switch_stack rather than pt_regs, so they
-> cannot be sampled. Without r15 an unwinder cannot recover the CFA of a
-> first frame that uses $15 as its frame pointer.
->=20
-> sp is not in pt_regs either: for user frames it comes from
-> user_stack_pointer(), and for kernel frames (PERF_SAMPLE_REGS_INTR) it
-> is the end of the trap frame, as in stacktrace.c.
->=20
-> Software events such as context switches and tracepoints hand perf a
-> per-CPU pt_regs filled in by perf_fetch_caller_regs() instead of a
-> trap frame. It is not on the stack and has no room for sp, so report
-> sp as 0 there rather than the address of the per-CPU buffer.
->=20
-> Assisted-by: Claude:claude-opus-5-5
-> Acked-by: Ian Rogers <irogers@google.com>
-> Tested-by: Magnus Lindholm <linmag7@gmail.com>
-> Reviewed-by: Magnus Lindholm <linmag7@gmail.com>
-> Signed-off-by: Matt Turner <mattst88@gmail.com>
+On Sat, Oct 17, 2026 at 02:32:08PM +0000, sashiko-bot@kernel.org wrote:
+>[Severity: Low]
+>Does this new exported variable also need to be added to the SPDX SBOM
+>environment allowlist?
+>
+>Currently, KBUILD_USERCFLAGS and KBUILD_USERLDFLAGS are explicitly tracked
+>in KERNEL_BUILD_VARIABLES_ALLOWLIST in scripts/sbom/sbom/environment.py:
+[...]
+>Leaving KBUILD_USERABI off this list means its value will not be captured
+>in the SPDX SBOM generated by scripts/sbom, resulting in incomplete build
+>metadata documentation for the userspace ABI configuration.
 
-Sashiko has reviewed this patch and found no issues.
+KBUILD_USERABI is appended to both KBUILD_USERCFLAGS and
+KBUILD_USERLDFLAGS, which are on that list, so its flags are already in
+the SBOM. Listing it as well would only record the same flags again.
 
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261018-alpha-perf=
--regs-v3-v3-0-52be85332c57@gmail.com?part=3D4
-
+-- 
+Thanks,
+Sasha
