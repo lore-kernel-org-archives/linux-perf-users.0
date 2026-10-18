@@ -1,44 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EE0F342146
-	for <linux-perf-users@vger.kernel.org>; Sun, 18 Oct 2026 02:45:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D1AE29D291
+	for <linux-perf-users@vger.kernel.org>; Sun, 18 Oct 2026 02:46:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792291530; cv=none; b=EPtcT/qe0flKFUwaUg8LFbC7w0jMg2LkRo01XBbyZn9Opy/3wbd2vspBg8ZL4zuQn/PCfhjNIu8dYrEwcobP5RqlIZ2cX16xkb4ZqgaCQ9xRxl81oO3C2G+OXPZL02LkCxjsK53rSd7Oc/KqQlmkMdBGJOyhYNFvNyT7vg8eg6U=
+	t=1792291566; cv=none; b=IoxuQQZcAEqxj9H+TF8B4dblwl9i9+53exqtpxCPCrrDaMrzAcvyWhxzlhknpsCoJw98F8Bl1kuL5mldS5nlvbsvL+Ym9ExRaVyqg8BFgly1ivl/iV0EoGjxMBNCjhQ4keq22FW0hyvZD+DMMbg7L9yFwUbc4gjujQgmDgHDejQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792291530; c=relaxed/simple;
-	bh=dXTvM+w6KqSarfZQrcLL8O2O7+lfWE1VxG1SE7HXUFw=;
+	s=arc-20240116; t=1792291566; c=relaxed/simple;
+	bh=WqM6HbVJJHmfqO3celfuZfFq5vKg3tS2nTBa4HlawQg=;
 	h=Message-ID:From:Subject:To:Cc:In-Reply-To:References:Content-Type:
-	 Date; b=aPJ9LTmMEOKWAyxIi1zRbJxfEwswCJAnTZObRfBcVCiCLJevzD3b4aRqMYFVSnK2Q9YtwQtkJhJj2TfRfa/6AbsTkb5y7cjDw/UBSd2PC1AAV4qz+jmq4omABCcPLSS0R64BiXgIrpZ0El+r9v4AE0FC62wnzep9huTfgxnmZas=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SEVJSCeM; arc=none smtp.client-ip=100.103.45.18
+	 Date; b=YpGrOKApm2nOASGJUY7KlapzI71N2HKUQvjt2oEZzQkjB57LKyPjC58en7RWq44Xo3n2T6YliOWDQ/kzB7bKiGZRjuFf1Qo1JLIjE1fzVJYjUMX8+DQGj3Fri+kLTIcg+NHnP+uw24+bUd4p0BqVC+ec2f5kSk8vyutNhPTDngY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XGT2Yb0p; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SEVJSCeM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0E7A81F000C4;
-	Sun, 18 Oct 2026 02:45:29 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XGT2Yb0p"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A9D271F000C4;
+	Sun, 18 Oct 2026 02:46:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1792291529;
-	bh=dtCtAtEyCyFFQkErcP1+mrIKXR/vBcJVlf7pW2WIHTQ=;
+	s=k20260515; t=1792291564;
+	bh=fZ+ahQ+CU9vMyKhfVAKakFYN/sIAhhv4OgrXLkQXHcI=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=SEVJSCeMOPqsFDun8jLQlGZWE+n/fQIazosIeoZD2ly4PYruvV9L6RVL0N2eH5pnW
-	 b413XTrkXIPt5fooNhE+w0wXo7gUIOwYfGYBeLFKGM7vqUSAuLShhn4Vq4OaO7G3XA
-	 D5zFw3ns+fAON7KRZ9gBRgdcYjoaiNC03e6bTIhl1NpwUgX69o7sgTz8CiZcmmPlRO
-	 c5aydaIP/Ldkef+PYIY5jqUHe3K9idzrs/Q6L1I+AeoTfedoNmVNwt6LHQtgISLwOg
-	 1GC0MiEhwsoc8CrCVrbVYLzRIiGNsyqbHs0BnYn26Oz0DsfP+xiEh+z0yMpDwY0q3A
-	 C73AdgPyjG5qA==
-Message-ID: <sashiko-outbox-175888@kernel.org>
+	b=XGT2Yb0pYyCZtep1Ft+oOmA4DPQhGU1aBEiGp8QZFLJV0bKR3v9GoaiARmtrj9ASf
+	 ZODm+xScYIbFUFS+4/xbhHsRXd7mC16C5Y0tb7dhOvHYGETjeCejlyVg1NBbLEMfe9
+	 awD0PsYH+rBHjvEhYieR2vOlJRAHXP54nY7z6mT0kKJ4EY7nABsQulI1yuR3c6gf/K
+	 3FScuQqAeZ4gwVWc0kYy9hLWdVF1NakDKOKSgp+gdXJx9MPjxjp03PXlJC8MxCcrUg
+	 nVRiT40kZkip2ScDJ2paqMAxOoflSPSpoRz8vnkpBTzji9eOd2t/yQDGvSJFnS4xHU
+	 0j+NjOVC1H1CA==
+Message-ID: <sashiko-outbox-175890@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH perf-tools-next v8 3/6] perf symbol: Introduce
- vmlinux_path__find() helper
+Subject: Re: [PATCH perf-tools-next v8 2/6] perf ftrace: Support filtering
+ return address comments
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Aaron Tomlin" <atomlin@atomlin.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20261018023753.584873-4-atomlin@atomlin.com>
+In-Reply-To: <20261018023753.584873-3-atomlin@atomlin.com>
 References: <20261018023753.584873-1-atomlin@atomlin.com>
- <20261018023753.584873-4-atomlin@atomlin.com>
+ <20261018023753.584873-3-atomlin@atomlin.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Sun, 18 Oct 2026 02:45:28 +0000
+Date: Sun, 18 Oct 2026 02:46:04 +0000
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -47,135 +47,115 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
 Thank you for your contribution! Sashiko AI review found 1 potential issue(=
 s) to consider:
-- [Medium] perf symbol: heap overflow in vmlinux_path__init() after vmlinux=
-_path__find()
+- [Medium] perf ftrace: ftrace_filter_retaddr() strips leaf return values
 --
 
-commit 075bbaee1dd0bb499313531ce795ad3e9b4f107b
+commit bb5a10abc2299a6ae2ba0cbda70fab044e68ad36
 Author: Aaron Tomlin <atomlin@atomlin.com>
 
-perf symbol: Introduce vmlinux_path__find() helper
+perf ftrace: Support filtering return address comments
 
-This commit introduces vmlinux_path__find() to search through the configured
-vmlinux_path entries (or symbol_conf.vmlinux_name if set) and return the pa=
-th
-to the first readable vmlinux file.
+This commit introduces ftrace_parse_retaddr() and ftrace_filter_retaddr()
+along with a --filter-retaddr command-line option and unit tests to strip
+funcgraph-retaddr return address comments from function_graph trace output.
 
-> diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
-> index b61a574ce9a30..a0fc430be13ae 100644
-> --- a/tools/perf/util/symbol.c
-> +++ b/tools/perf/util/symbol.c
-> @@ -2372,6 +2372,36 @@ static int vmlinux_path__init(struct perf_env *env)
->  	return -1;
->  }
-> =20
-> +/**
-> + * vmlinux_path__find - Locate the first accessible vmlinux file
-> + *
-> + * Check symbol_conf.vmlinux_name first if set, then search through the
-> + * initialized paths in vmlinux_path.
-> + *
-> + * Return: A pointer to the path of the first readable vmlinux file, or =
-NULL if
-> + * none is accessible.
-> + */
-> +const char *vmlinux_path__find(void)
+> diff --git a/tools/perf/tests/ftrace.c b/tools/perf/tests/ftrace.c
+> new file mode 100644
+> index 0000000000000..596cecee844e3
+> --- /dev/null
+> +++ b/tools/perf/tests/ftrace.c
+> @@ -0,0 +1,80 @@
+
+[ ... ]
+
+> +static int test_filter_retaddr(void)
 > +{
-> +	int i;
+> +	char line1[] =3D "kernel_read() { /* <-load_elf_phdrs+0x6c/0xb0 */";
+> +	char line2[] =3D "__cond_resched(); /* <-load_elf_phdrs+0x6c/0xb0 ret=
+=3D0x0 */";
+> +	char line3[] =3D "do_filp_open();";
 > +
-> +	if (symbol_conf.vmlinux_name && access(symbol_conf.vmlinux_name, R_OK) =
-=3D=3D 0)
-> +		return symbol_conf.vmlinux_name;
+> +	ftrace_filter_retaddr(line1);
+> +	TEST_ASSERT_EQUAL("filter standard retaddr", strcmp(line1, "kernel_read=
+() {"), 0);
 > +
-> +	if (!vmlinux_path) {
-> +		symbol_conf.try_vmlinux_path =3D true;
-> +		if (vmlinux_path__init(NULL) < 0)
-> +			return NULL;
-> +	}
-
-[Severity: Medium]
-Can calling vmlinux_path__find() before symbol__init() cause
-vmlinux_path__init() to overflow vmlinux_path[] and leak memory?
-
-When vmlinux_path__find() is called prior to symbol__init(), vmlinux_path is
-NULL and symbol_conf.initialized is false. vmlinux_path__find() sets
-symbol_conf.try_vmlinux_path =3D true and calls vmlinux_path__init(NULL), w=
-hich
-allocates the 7-entry vmlinux_path array and populates it via
-vmlinux_path__add(), advancing vmlinux_path__nr_entries to 7 (or 2 if
-symbol_conf.symfs[0] !=3D 0):
-
-tools/perf/util/symbol.c:vmlinux_path__add() {
-	vmlinux_path[vmlinux_path__nr_entries] =3D strdup(new_entry);
-	if (vmlinux_path[vmlinux_path__nr_entries] =3D=3D NULL)
-		return -1;
-	++vmlinux_path__nr_entries;
-
-	return 0;
-}
-
-When symbol__init() is subsequently called, symbol_conf.initialized is still
-false and symbol_conf.try_vmlinux_path is true, so symbol__init() invokes
-vmlinux_path__init(env) a second time:
-
-tools/perf/util/symbol.c:symbol__init() {
-	...
-	if (symbol_conf.try_vmlinux_path && vmlinux_path__init(env) < 0)
-		return -1;
-	...
-}
-
-Because vmlinux_path__init() neither frees an existing vmlinux_path nor
-resets vmlinux_path__nr_entries to 0:
-
-tools/perf/util/symbol.c:vmlinux_path__init() {
-	...
-	vmlinux_path =3D malloc(sizeof(char *) * (ARRAY_SIZE(vmlinux_paths) +
-			      ARRAY_SIZE(vmlinux_paths_upd)));
-	if (vmlinux_path =3D=3D NULL)
-		return -1;
-
-	for (i =3D 0; i < ARRAY_SIZE(vmlinux_paths); i++)
-		if (vmlinux_path__add(vmlinux_paths[i]) < 0)
-			goto out_fail;
-	...
-}
-
-Doesn't the second call overwrite vmlinux_path with a new 7-entry buffer
-(leaking the initial array and its strdup() strings) and then write the new
-strdup() pointers starting at vmlinux_path[7] (or vmlinux_path[2]),
-overflowing the heap buffer while leaving vmlinux_path[0..6] uninitialized
-for dso__load_vmlinux_path() and vmlinux_path__exit()?
-
-Additionally, if a caller invokes vmlinux_path__find() and skips
-symbol__init(), symbol_conf.initialized remains false, so symbol__exit() wi=
-ll
-return early without calling vmlinux_path__exit() to free vmlinux_path:
-
-tools/perf/util/symbol.c:symbol__exit() {
-	if (!symbol_conf.initialized)
-		return;
-	...
-	vmlinux_path__exit();
-	...
-}
-
+> +	ftrace_filter_retaddr(line2);
+> +	TEST_ASSERT_EQUAL("filter retaddr with ret", strcmp(line2, "__cond_resc=
+hed();"), 0);
 > +
-> +	for (i =3D 0; i < vmlinux_path__nr_entries; ++i) {
-> +		if (access(vmlinux_path[i], R_OK) =3D=3D 0)
-> +			return vmlinux_path[i];
-> +	}
+> +	ftrace_filter_retaddr(line3);
+> +	TEST_ASSERT_EQUAL("filter line without retaddr unchanged",
+> +			  strcmp(line3, "do_filp_open();"), 0);
 > +
-> +	return NULL;
+> +	return TEST_OK;
 > +}
 
 [ ... ]
 
->
-> --=20
-> 2.51.2
->
+> diff --git a/tools/perf/util/ftrace.c b/tools/perf/util/ftrace.c
+> new file mode 100644
+> index 0000000000000..aaf108369c365
+> --- /dev/null
+> +++ b/tools/perf/util/ftrace.c
+> @@ -0,0 +1,86 @@
+
+[ ... ]
+
+> +/**
+> + * ftrace_filter_retaddr - Remove return address comment from trace line
+> + * @str: The trace line to modify
+> + *
+> + * Find and strip the funcgraph-retaddr comment from the trace line
+> + * in-place, removing trailing spaces where applicable.
+> + */
+> +void ftrace_filter_retaddr(char *str)
+> +{
+> +	char *start =3D strstr(str, "/* <-");
+> +	char *end;
+> +
+> +	if (!start)
+> +		return;
+> +
+> +	end =3D strstr(start, "*/");
+> +	if (!end)
+> +		return;
+> +
+> +	end +=3D 2; /* skip end-of-comment delimiter */
+> +
+> +	/* Also backtrack any spaces before comment */
+> +	while (start > str && *(start - 1) =3D=3D ' ')
+> +		start--;
+> +
+> +	memmove(start, end, strlen(end) + 1);
+> +}
+
+[Severity: Medium]
+Does ftrace_filter_retaddr() unintentionally strip return values from leaf
+functions when both funcgraph-retaddr and funcgraph-retval are enabled?
+
+In kernel/trace/trace_functions_graph.c:print_graph_retval(), when both
+TRACE_GRAPH_PRINT_RETADDR and TRACE_GRAPH_PRINT_RETVAL are active, the
+kernel combines the return address and return value into a single comment on
+leaf functions:
+
+    __cond_resched(); /* <-load_elf_phdrs+0x6c/0xb0 ret=3D0x0 */
+
+Non-leaf functions place the return address on the entry line and the return
+value on the closing brace line, so their return values are unaffected.
+However, on leaf functions, ftrace_filter_retaddr() removes the entire
+comment from "/* <-" through "*/", discarding "ret=3D0x0" as well (which
+test_filter_retaddr() also asserts).
+
+When running with "--graph-opts retaddr,retval --filter-retaddr" (or when a
+subsequent change such as "perf ftrace: Support display of inlined functions
+in function graph tracer" automatically enables funcgraph-retaddr and
+filter_retaddr alongside "--graph-opts retval"), shouldn't
+ftrace_filter_retaddr() preserve the "/* ret=3D... */" portion of the comme=
+nt
+on leaf functions instead of removing the whole comment block?
+
+([ ... ])
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261018023753.5848=
-73-1-atomlin@atomlin.com?part=3D3
+73-1-atomlin@atomlin.com?part=3D2
