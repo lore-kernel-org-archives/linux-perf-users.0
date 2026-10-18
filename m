@@ -1,158 +1,148 @@
-Received: from mail-yw1-f178.google.com (mail-yw1-f178.google.com [209.85.128.178])
+Received: from mail-yw1-f174.google.com (mail-yw1-f174.google.com [209.85.128.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 335B13DC871
-	for <linux-perf-users@vger.kernel.org>; Sun, 18 Oct 2026 08:15:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.178
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792311301; cv=none; b=Rps6XHlZiFaVx63s7xJ8f4q+cbLRiJ/RdBukbk1er3Axo/zb16ZXf3p3bANXn9BhS30HjjitIOT32ldlf3CTNbWB4aqsqsjKOA+gRMklk8uvg1Yy8AuImJSv7yzghw29O16mAQUtNActjiG4xueNhNDwe9/tP/9nUi46KjAyCEU=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792311301; c=relaxed/simple;
-	bh=w8wuXuqZRSwSM8fLbVAMsYoAfncMdUicO2+YtgOFGpA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=GlVMoHTY2T+DsAtIfa7we8cQACzDvTmgtdOlWwj7u8tBT7nXyLHp7P30wpRm72WNBKD5TEQXfo1CsxGzPGDeAJz6qwD12HptClZG8+ITPCJ5R3VslGW5dfHKN+saS7dacELWOwPA6aDXFUDm84dN+I14+B7DCWqrV4zSr1b5Jxs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cmg+6agx; arc=none smtp.client-ip=209.85.128.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0C75449EB8
+	for <linux-perf-users@vger.kernel.org>; Sun, 18 Oct 2026 08:18:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.128.174
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1792311496; cv=pass; b=IguARLyDY19sEpCA1dzbdpMQ1Yhm7aeunmJnJ2KyjeLAIjDnf9TAokJDFIypMZfjc96bm+cL6mUNkbWXRoLFblEOvfJql0mJO5wonOwJieSnqpjvIT11ZkMt8qAzdhMU3/nOi+pZS3cr5E1EgEoepskF397DfgNKrCLJi+KQZRQ=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1792311496; c=relaxed/simple;
+	bh=m9LovGZRm71Kz/26siQRqDNvtYfWBfw9Tv7L/BOcLq8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=DsAt6foMq08KKmZUk+pHbFbxo8vpviaTYXVrH0T+cjC8aPokxpUwVC2OczrGorhQW6JyZCbuu5pRhV3yVctx6UhoqV/7i1CVtDHF5KXcPp872vfkgxaMQ18uxY52JbiK/u+vbP1WdoiKOtDPSzZw0csUpyBYQkLAWGqWrnQIx3o=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BbB1coky; arc=pass smtp.client-ip=209.85.128.174
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cmg+6agx"
-Received: by mail-yw1-f178.google.com with SMTP id 00721157ae682-8b0f59a5fdaso5497237b3.3
-        for <linux-perf-users@vger.kernel.org>; Sun, 18 Oct 2026 01:15:00 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BbB1coky"
+Received: by mail-yw1-f174.google.com with SMTP id 00721157ae682-87ab6e5f91eso7028027b3.2
+        for <linux-perf-users@vger.kernel.org>; Sun, 18 Oct 2026 01:18:09 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1792311489; cv=none;
+        d=google.com; s=arc-20260327;
+        b=nfxPy/1nyRxNknbFgSDxrP85JFcnu+fhztnV49leWHp+4REg+qY+wvi5HWRN0v5/dF
+         IuB462Fm55BXOzwlegAnyvcaIEiVMkPpyUhksRuHSnxzCSkKUZ0PngZlw7CDQRSVp2VR
+         YKUbjoVtTYTg6fAOHWUUkOIQxLMajpN23/xMqP8XlTmzMEIQYdyGtcVbHMoXD+iSdd9l
+         rX/WPpGPOcYZw3Hl+Tak9e1b7jClVYAqAUKousGhLtuf1cpmOgpY401BzCxqB/X1y4jH
+         ZNhcmPyQhz8JuOWm+jKCByUTex/vddYvAef4gItGaLfzvCCVO8TVcJpWz2lZCY52KuaI
+         HUIQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=ZKQD7f8VncSnmQVt+FYovLRzFClXdtIOZ4L3tv3n0X0=;
+        fh=Qq+KP1SjnPtcc6fUGMYbj9qrRM0otgMoarulayPYCh0=;
+        b=Ec3eXf7k5g7fi5Qa/Juy5TrUxiyvnZWepn2XiGrfh5o5fjQ39QWqP9OMl4MEq2lyln
+         ZD63ffYT4b3DW2fU3xKbA07vCpSrgD1OKMRWJOaXiDe48FhLcf6hPzujHbE8k4HCZ2KJ
+         EsFBrk5sipoxr+JFq5fui28DZVFY3zfEhNxNNQ1znQj+BmWu5IdKge4dwK9R/8L//E/L
+         5fe7h0sislmJ+sKOIbkbUrKc1jUxJAGWpQeLdDDaIHZKcB2b3BvYFcmmgY4uGE5LVLif
+         r+mRHR6t/TYwq6eklvD7c8yBRrdKhzcufQu7mBSVsT18Wigs1V1RjX+i20gJLmWsGW/j
+         Bk0g==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1792311299; x=1792916099; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=QCXmkSF8Q00yNTDA7Iqi2j9t4mg42xgLViS6iyB+IxA=;
-        b=cmg+6agxX6nO2BEhZBcV8ArL1XG+U7Dl6mLgQn4s19QvsVD9SynTgLzSayEcqXQKRT
-         J/lPs0heS6fMlQ1hh6rQsZKmrKoDwvtwlfW3KBM6HJjYjAHc2BpZSQUH0M96mIt0l/88
-         MbWiSnCRbzpKsRLWC/NJt8YKA5nPgsslU5yIg/SbRlwF3GIu4LyjroHCfWPv2VLeBuuR
-         u0EZnZ2/S4wzULKmCx5tlKUKWreQ/TrafjnZ4sz+F+m1W+6cNyFuTDK3n1dQaoz5PAqn
-         Xw415CpcmP6McBYapc7tgsMoWNHwWtVzS/i+zg7/54OJ90UI4PgmD5SykDPqNAc5rTZw
-         N8IQ==
+        d=gmail.com; s=20251104; t=1792311489; x=1792916289; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=ZKQD7f8VncSnmQVt+FYovLRzFClXdtIOZ4L3tv3n0X0=;
+        b=BbB1cokyERZfK0hTfxQTtmwmvtFW/q2hmlF+irPUC/MDzL2O0/Pxenl+uXX7ayPMsA
+         oaqNS4//XDbeIKgq7EspM7Z+rZb2/O4hklyewBfMvczfAsMmNUDKiIWKgPPK1bPM8ej3
+         cBccKYLiMgbI4sEQ1r8LJL9amuuzd9RLa7YiZpyi7sZ6q9hAf/1VyMCSuMzeVThNBtj6
+         o9os4L3gEcv1FtYdqfqARbnb1Uc1d1C2MCkE/VdCDEfe9Fe/qDYRjMz71OScZt75ayF4
+         Edsop6C0EVZ3cXRB/6B3repVPVdKU6zgXKiT+dqYVaQv+ddpeUSqoumW8mO2C3HoaTrB
+         HTYg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1792311299; x=1792916099;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=QCXmkSF8Q00yNTDA7Iqi2j9t4mg42xgLViS6iyB+IxA=;
-        b=PD0rMQ5kObCyThAfO2JPG7DBT3twbua4w7q++zTU+0U8Uw9tTeWMIYwKbkPgyki4Ys
-         YQCTDjffNXEr5ZpRIe21kusWOXeOcawtTyCLB1rCFv8zFjqRuNoZgDJZT2XMnwsTkTF8
-         uv5Eg6msuLngttyAI9WgaffBSTfk+V0fhon8L7Tk7yj0L4bjBf3PIAWOBUwrD9DV/6id
-         vJuwj4OSY2CuPBKKVsxSYx8YU1Jnbc9dO5PuYByLIFO5VyMj44zwYa4RYI90K72JCD1X
-         6EejRcQ6QHhnqyvjGg4w8W7DlLRAUZTIl9C4FmNA3ZJaVzIGNKcYeUvnyZ8tVaEQag79
-         uHhA==
-X-Forwarded-Encrypted: i=1; AKwUvBzf9JvLmMm3oxXMHM3iPtAD8RRpGGBg67Yoh8MmrtwASiSudaZ8vDpWY53Ol/lHMjvrDzc3F2vEOcptSDUb/qqC@vger.kernel.org
-X-Gm-Message-State: AFq9FYKxppqJzUgydJ+Wrj1iPLfniZICy7ieJARDn/dU0pdReM8ysTu6
-	1w2bWorBD7dffkQLJWzvFdy4zllmmIwl/w9nc5Llz6ic1UGxaAzbXPkT
-X-Gm-Gg: AYBFou0ArJbiOFiUOpdsyx9V4FmxdVx4VP6fqasB63S18D+X3warV7BWW9zrefV4Xu1
-	cBYML1LH0PhzTVoaej7Ulk8ImCVqp2rgx/F9pLVb9zqHYf6gvhPDlsJmAAtGBWKPtq9eDmBGA4w
-	TNlWvpAq7QXl6jHRDQ5mPNaqvKm1mavekUI64ShCSsNJjjXLDWqhEJYKQyokaL/xILGdq3Ei9Wu
-	fhlQY6I1FRp/t6ZePg8kzbD8g2mCg11JFx3M5s0r2sKCz+9AyFkhUWa/kQkrzZ67uSfa1J399eH
-	a62PF3RPz6Zmb31af6ULg2l1+Mh3A3Fsv4AYQaS5OfQpkk7tEqpZTd+DLrW9oIJB1+bGkFWo40G
-	/e1kr5buClA6cdDb8sYHaTieevTYg8rc1wRWuBj7mxXcfl+DTNbVNGiaxNoDvzbnfQ+Wu8t8gz4
-	1ucEAeekLLHXnrSjt1K5WRmJ7uFbOQv9Igmim6LdHP8/5bDgdTnAvIZNtxCs/pf0nzEYyhIuDwk
-	stSyHjPS+L/DsaV2PRrP99+ig==
-X-Received: by 2002:a05:690c:a4c3:b0:8ad:bc2e:aad1 with SMTP id 00721157ae682-8b0f2147469mr11374857b3.17.1792311299113;
-        Sun, 18 Oct 2026 01:14:59 -0700 (PDT)
-Received: from codey.attlocal.net ([2600:1700:22f5:3930::a])
-        by smtp.gmail.com with ESMTPSA id 00721157ae682-8b0e594555dsm28611877b3.42.2026.10.18.01.14.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 18 Oct 2026 01:14:56 -0700 (PDT)
-From: Lalit Maganti <lalitmaganti@gmail.com>
-To: irogers@google.com,
-	acme@kernel.org,
-	namhyung@kernel.org
-Cc: james.clark@linaro.org,
-	leo.yan@linux.dev,
-	adrian.hunter@intel.com,
-	linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Lalit Maganti <lalitmaganti@gmail.com>
-Subject: [PATCH] perf python: Set up callchain parameters for sessions
-Date: Sun, 18 Oct 2026 09:14:52 +0100
-Message-ID: <20261018081452.1014460-1-lalitmaganti@gmail.com>
-X-Mailer: git-send-email 2.56.0
+        d=1e100.net; s=20260707; t=1792311489; x=1792916289;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=ZKQD7f8VncSnmQVt+FYovLRzFClXdtIOZ4L3tv3n0X0=;
+        b=YLW6ZSP/LzOhygqoHBm1z2xNOeSNm8YMYsHRt66aobSRUGA5rmJCdv2Q7DyB6IXmoo
+         rwVWM5cOQNYx7YUB6Y2TLNXEDDmT7aSQEs7U+kvvdizfHv/0eR3JNxWSVjNe46ePvGCe
+         5OtbbfyFYoA8z2R2chgcaYB8oLIDDirbprvm4p16E0yqTp/RGgPRWkPRTdloXXk9UiFq
+         7p+5dBj19+o6UH8mgWedPAD0hGp9qRCv03Jzh+8O1NmyRcEAnFJ/cxIdlT7rQXuZ8wig
+         zThj1nVTc7VP+bC1fA1JyjOC1UEq+UrqF8JHKnGhB0euMARVPcoQQXnGZrB6yKQQdCBR
+         o70g==
+X-Forwarded-Encrypted: i=1; AKwUvBwWIb71QWfFP8JFl776OvL9qEemLasoWshk4hLEOEIpr1Le6ulF9FehbYCQGy0YWIEjCVcM7bd05lCKtJ6Vyh9B@vger.kernel.org
+X-Gm-Message-State: AFq9FYK3VJE/yTVwAxkupp91C/CsuoW+PDS7yIgz80cPPCKimi3cQAOh
+	wWfZzBV57SwvoMmP0vWHkpWsX147/FZUjRsQfLAkWLOR6rB1mWojvOVs8ZbSX8Mp4KQYNKu7Wzg
+	Rj+xF6GsniQhRjlslLUfW0td2C3Eldp4=
+X-Gm-Gg: AYBFou3wuKmCxTqeJOGGi7E6r06/7ONvXfNuMbHHF8UZ6dwfd54oVINjkhdjeslkc5N
+	HszmAmlJsBdYlx0ElYMMP34aKSfia28zzw+RFHe+c5ltoRvVJO7cPRMH4dHs9PbqqxSHY8bEqqI
+	is3eKj+LrdTg59s2If1EWWM+q4qRxfuFzalCMXdzmVS1kMg0bIarXrqmDdAA+WGa34Uo/fBTJiH
+	yQDrfSrdnxySMmkr7Syt1zGqsbrPBNkwh3Row+n5PQDkXLVKgp8RfGqqPUzJexM0GE8HAjDZFEm
+	pH7hxwAqoBry+kG09XYldy2Vm6PVJKMD8B1CRFyMtggBGTopQPWpv9Y0zWy9CCJZIVxxVi2bf1y
+	KY/woIZqBRQmf4R3i4yi7FoBcnywUzCN/stV0V5RoDfPzyI1SAhuX
+X-Received: by 2002:a05:690c:f13:b0:8b0:89bc:92b4 with SMTP id
+ 00721157ae682-8b0f21bbb4bmr16206517b3.51.1792311488622; Sun, 18 Oct 2026
+ 01:18:08 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20261016-alpha-perf-regs-v3-v2-0-17654742226a@gmail.com> <20261016-alpha-perf-regs-v3-v2-5-17654742226a@gmail.com>
+In-Reply-To: <20261016-alpha-perf-regs-v3-v2-5-17654742226a@gmail.com>
+From: Magnus Lindholm <linmag7@gmail.com>
+Date: Sun, 18 Oct 2026 10:17:54 +0200
+X-Gm-Features: AclHuK_OPAh6roFXb_L2yR4ZCbLp7NUjn97i4r3orTmSL6OpqXmOnn6fpLIEIiY
+Message-ID: <CA+=Fv5Rmwd6pjs_MBo01Zvqo3CwufefqZvPCJeEvK60Ona0tJg@mail.gmail.com>
+Subject: Re: [PATCH v2 5/5] alpha: fill in pc for software event samples
+To: Matt Turner <mattst88@gmail.com>
+Cc: Richard Henderson <richard.henderson@linaro.org>, linux-alpha@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-perf.session never calls callchain_param_setup(), so callchains are
-resolved with callchain_param.record_mode left as CALLCHAIN_NONE rather
-than set from the sample type as in perf script and perf report.
+Hi Matt,
 
-On arm64 this loses frames: when a sample hits a function before it has
-pushed its frame record, its caller is only in the link register, and
-recovering it needs record_mode CALLCHAIN_FP. Comparing the callchain of
-every sample with perf script, on a frame pointer recording of a
-two-thread workload on arm64, 4 of 4494 samples miss a frame, e.g.:
+On Sat, Oct 17, 2026 at 3:56=E2=80=AFAM Matt Turner <mattst88@gmail.com> wr=
+ote:
+>
+> Context switch and tracepoint events have no trap frame, so perf builds
+> one with perf_fetch_caller_regs(). Alpha does not define
+> perf_arch_fetch_caller_regs(), which leaves that pt_regs zeroed, and
+> these samples report pc as 0.
+>
+> Record the caller's address as pc. The zero ps already marks the frame
+> as kernel mode, and pt_regs has nowhere to keep sp, so pc is all that
+> can be filled in.
+>
+> Reported-by: Magnus Lindholm <linmag7@gmail.com>
+> Closes: https://lore.kernel.org/all/CA%2B%3DFv5S8-Zk8-LUpZnWiBfTGSQXthepm=
+Rc_-a9O%2BpEPmVW0mRA@mail.gmail.com/
+> Assisted-by: Claude:claude-opus-5-5
+> Signed-off-by: Matt Turner <mattst88@gmail.com>
+> ---
+>  arch/alpha/include/asm/perf_event.h | 7 +++++++
+>  1 file changed, 7 insertions(+)
+>
+> diff --git a/arch/alpha/include/asm/perf_event.h b/arch/alpha/include/asm=
+/perf_event.h
+> index 5996e7a6757e..72536566014a 100644
+> --- a/arch/alpha/include/asm/perf_event.h
+> +++ b/arch/alpha/include/asm/perf_event.h
+> @@ -1,4 +1,11 @@
+>  #ifndef __ASM_ALPHA_PERF_EVENT_H
+>  #define __ASM_ALPHA_PERF_EVENT_H
+>
+> +/*
+> + * Software events have no trap frame, so perf_fetch_caller_regs() fills
+> + * in a zeroed pt_regs. A zero ps already means kernel mode; only pc is
+> + * missing.
+> + */
+> +#define perf_arch_fetch_caller_regs(regs, __ip)        ((regs)->pc =3D (=
+__ip))
+> +
+>  #endif /* __ASM_ALPHA_PERF_EVENT_H */
+>
+> --
+> 2.55.0
+>
 
-  perf script: clock_gettime@plt <- now <- spin <- other_path
-  perf.session: clock_gettime@plt <- spin <- other_path
+Thanks, this looks good to me.
 
-Call callchain_param_setup() once the session is created and, as perf
-script does, again as attrs are processed, for pipe mode. With that,
-all callchains match perf script on arm64, for frame pointer and DWARF
-recordings, from a file or a pipe. On x86 they matched before and still
-do.
-
-Assisted-by: LLM
-Signed-off-by: Lalit Maganti <lalitmaganti@gmail.com>
----
- tools/perf/util/python.c | 22 +++++++++++++++++++++-
- 1 file changed, 21 insertions(+), 1 deletion(-)
-
-diff --git a/tools/perf/util/python.c b/tools/perf/util/python.c
-index 60dbe2dad5eb..92d18e24049d 100644
---- a/tools/perf/util/python.c
-+++ b/tools/perf/util/python.c
-@@ -4842,6 +4842,24 @@ static int __pyrf_session_tool__stat_round(const struct perf_tool *tool,
-  */
- static struct pyrf_session *pyrf_session__active;
- 
-+/*
-+ * In pipe mode attrs are only known once processed, so set up callchains again,
-+ * as perf script does.
-+ */
-+static int pyrf_session__process_attr(const struct perf_tool *tool,
-+				      union perf_event *event,
-+				      struct evlist **pevlist)
-+{
-+	int err = perf_event__process_attr(tool, event, pevlist);
-+
-+	if (err)
-+		return err;
-+	callchain_param_setup(evlist__combined_sample_type(*pevlist),
-+			      perf_session__e_machine(evsel__session(evlist__last(*pevlist)),
-+						      /*e_flags=*/NULL));
-+	return 0;
-+}
-+
- static bool pyrf_session__check_not_busy(struct pyrf_session *psession)
- {
- 	if (pyrf_session__active == psession &&
-@@ -5061,7 +5079,7 @@ static PyObject *pyrf_session__new(PyTypeObject *type, PyObject *args, PyObject
- 	psession->tool.ksymbol          = perf_event__process_ksymbol;
- 	psession->tool.text_poke        = perf_event__process_text_poke;
- 	psession->tool.build_id         = perf_event__process_build_id;
--	psession->tool.attr		= perf_event__process_attr;
-+	psession->tool.attr		= pyrf_session__process_attr;
- 	psession->tool.event_update	= perf_event__process_event_update;
- 	psession->tool.feature		= perf_event__process_feature;
- #ifdef HAVE_LIBTRACEEVENT
-@@ -5139,6 +5157,8 @@ static PyObject *pyrf_session__new(PyTypeObject *type, PyObject *args, PyObject
- 		PyErr_SetString(PyExc_OSError, "perf: symbol__init failed");
- 		goto err_out;
- 	}
-+	callchain_param_setup(evlist__combined_sample_type(session->evlist),
-+			      perf_session__e_machine(session, /*e_flags=*/NULL));
- 	if (psession->symfs && !symbol_conf.symfs[0])
- 		zfree(&psession->symfs);
- 
-
-base-commit: 1c90f0a3c8a1c4e38f9edd97af9e20848805a7fb
--- 
-2.56.0
-
+Reviewed-by: Magnus Lindholm <linmag7@gmail.com>
