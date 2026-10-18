@@ -1,420 +1,484 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5C7334D915
-	for <linux-perf-users@vger.kernel.org>; Sun, 18 Oct 2026 02:55:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02525339395
+	for <linux-perf-users@vger.kernel.org>; Sun, 18 Oct 2026 03:00:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792292133; cv=none; b=sli6v4nk5ppsBXE8B5lDrZ5woUgm8Z5srkhpdidA0krIYJjykLGYTtZXGrE7KUmC1R825pFC3c+u5MOOoLeU5Z9Ro+LfRTfy4td+GoSJQGpXISvTFbbAbBw6Yf7ahLJpQDjnra429yQM/a9M/8AyY3Kqs9UT+CFLBto242La88g=
+	t=1792292417; cv=none; b=k6tKyMbM1mRxuAKnvn3ldDZscmUj3NevnLuxfyjZlKA0hKGq/C78GFfxkV/gN7FdwLi6/em+zqStoeH+ZikLvtrMibEiD66sCN0CUDjg3DkfsLSOE+N6Dv3TmOgNaHJlEXb4rvWsXxZi0IeMEIwr0VurDzdKsyV/5l3vuQyKbtM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792292133; c=relaxed/simple;
-	bh=9kxy4B5fptD06SHTehdiWRkEWDXTONMy1pcXElsh44Q=;
+	s=arc-20240116; t=1792292417; c=relaxed/simple;
+	bh=2nP5TPsNYTOK56jNseuQawFotI3MmwAPcuDVPxZauwE=;
 	h=Message-ID:From:Subject:To:Cc:In-Reply-To:References:Content-Type:
-	 Date; b=d6kVM9ymA6HgrtX0+WK03ZSH/yzPLor5Vx7MZ8no9/Qcb/dkTr01wkhsFJnBA51xMQH7r9cvLY0WNAIr9ROydTpZ6C5T/VznpwmWT5/v9ZMgEihgvX15KoDznbr/sX9gEHz+b1DN+RzxsnIKhNQXXDe3uL/AVemgnKwfFlt3MKY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=G8vKeLzb; arc=none smtp.client-ip=100.103.45.18
+	 Date; b=sKzlqlJuPwktg2EyP0d+hEA2UxI2cgfoL7Rw/KF2GdHqwjRVb2OTwtjK+8lsXyewZqXetPFW2JFiU1AKc6JISfpmB27HMnpBARJkJTW+zvxw3gT6w4rtZCs7vKYAgTQOd+if2q3Wz2NN9SAdDNmEoIErytJFhpfqyy2wvTXtuKk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=a8lBC6G6; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="G8vKeLzb"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 720C81F000C4;
-	Sun, 18 Oct 2026 02:55:31 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="a8lBC6G6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4129C1F000C4;
+	Sun, 18 Oct 2026 03:00:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1792292131;
-	bh=2PoRd5TcZd+g66nHHr+E83xUXSzlWFtcj7CatVVvkXc=;
+	s=k20260515; t=1792292415;
+	bh=5SaB7O8cA6ldc7QANa4Ik/rwID5WaWG+CZkBZYrm2Jg=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=G8vKeLzb3u2CtEbuct0Mo+tpkgoWf2tjmayu/OT3iPenxo8DSrwzcy8plWseEiaK/
-	 onQhYAc7S/Pp6ZxYYI1/3bZ+27X1ZkfookEm9RnzHEkwcf3NHx0jRBarhRjdB/OQLi
-	 efeE/6DAQ+2miRarAaTA/3P11vz23lhVD5+nn/V4mB091YeIDqX38ecqrWHOFF7rYJ
-	 UNIhk8+3gFggfayLTWjSwqkMAvpoXlOQ9OJ4MyVszh47kJFzlNYWUkd99fGRv+KPCt
-	 V0aEl8DjYQGaHpP5RIuthUQBjwrtW2pOq9aozl/FhajkHOpGZVz+9jODX4GXyjQp2n
-	 UEtpyeXoWOTNg==
-Message-ID: <sashiko-outbox-175897@kernel.org>
+	b=a8lBC6G67UKh8H6xeRBSogcKN+5Ao24F12OEt+TFse3HD3gmesF6CqiKtdyH9CRDK
+	 bXdptbLQL7zAP4Sp/h/uBwJ5PZt+4CTzfimJan2DxGPM7lerhkuF45plduqBhp+7Eu
+	 hq3VUI2advORogJZecVSC0+AqvVjpYqG7tFbDvdHB/yMhcCxjBfnCcUsbUfXKv5Xmo
+	 2yfECxBcTM76gcA3/KUWnlUf7yXEA4GWE+WMruOxixc7UEnzkARQmaM1TZzL5Ib5WN
+	 dG0iAUdQtBgA8CFIWBeF1sAHWyCAyMOsDUXN3ff1vTmYFN/+1wau8Zv5mE/KUuxVm1
+	 XpLYQCtaEGBlA==
+Message-ID: <sashiko-outbox-175899@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH perf-tools-next v8 6/6] perf ftrace: Filter extraneous
- functions in function graph tracer
+Subject: Re: [PATCH perf-tools-next v8 4/6] perf ftrace: Support display of
+ inlined functions in function graph tracer
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Aaron Tomlin" <atomlin@atomlin.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20261018023753.584873-7-atomlin@atomlin.com>
+In-Reply-To: <20261018023753.584873-5-atomlin@atomlin.com>
 References: <20261018023753.584873-1-atomlin@atomlin.com>
- <20261018023753.584873-7-atomlin@atomlin.com>
+ <20261018023753.584873-5-atomlin@atomlin.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Sun, 18 Oct 2026 02:55:31 +0000
+Date: Sun, 18 Oct 2026 03:00:14 +0000
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 6 potential issue(=
+Thank you for your contribution! Sashiko AI review found 5 potential issue(=
 s) to consider:
-- [Medium] perf ftrace: funcgraph-retaddr not enabled for -G in cmd_ftrace()
-- [Medium] perf ftrace: premature inline frame unwind in ftrace_process_fgr=
-aph_line()
-- [Medium] perf ftrace: inlines skew target_root_depth in ftrace_process_fg=
-raph_line()
-- [Medium] perf ftrace: non-target exit lines leaked in ftrace_process_fgra=
-ph_line()
-- [Medium] perf ftrace: ftrace_process_fgraph_line() treats ancestor caller=
-s as orphans
-- [Medium] perf tests ftrace: hardcoded vmlinux offset in test_graph_target=
-_filter()
+- [Medium] perf ftrace: find_func_column() misses latency-format column in =
+verbose mode
+- [Medium] perf ftrace: select_tracer() overrides function_graph tracer wit=
+h --inline
+- [Medium] perf ftrace: idle tasks across CPUs share a single ftrace_task_s=
+tate
+- [Medium] perf ftrace: perf_ftrace__setup_inlines() ignores vmlinux load f=
+ailures
+- [Medium] perf test ftrace: test_inline_processing() hardcodes build-speci=
+fic offset
 --
 
-commit eca2ef148505a6e43726e07f9ad0e28ae131e40c
+commit a1b712dfdc11c697976e8ccf628bd22443d5d421
 Author: Aaron Tomlin <atomlin@atomlin.com>
 
-perf ftrace: Filter extraneous functions in function graph tracer
+perf ftrace: Support display of inlined functions in function graph tracer
 
-This commit adds userspace callgraph tracking and return-address provenance
-filtering to perf ftrace so that top-level functions outside -G /
---graph-funcs targets and detached orphan subtrees inside target callgraphs
-are suppressed. It also switches the per-task call stack to grow
-dynamically and adds regression tests in tools/perf/tests/ftrace.c.
+This commit introduces the --inline option to perf ftrace to resolve caller
+return addresses via DWARF debug information in vmlinux and synthesize
+inlined function frames into the function_graph call stream. It also adds p=
+er-
+task call stack tracking, the -k/--vmlinux option, and unit tests in
+tools/perf/tests/ftrace.c.
+
+> diff --git a/tools/perf/builtin-ftrace.c b/tools/perf/builtin-ftrace.c
+> index c715cbebaabe9..cdacf5af14a65 100644
+> --- a/tools/perf/builtin-ftrace.c
+> +++ b/tools/perf/builtin-ftrace.c
+
+[ ... ]
+
+> @@ -1973,6 +1991,20 @@ int cmd_ftrace(int argc, const char **argv)
+> =20
+>  	switch (subcmd) {
+>  	case PERF_FTRACE_TRACE:
+> +		if (ftrace.use_inline) {
+> +			if (ftrace.tracer && strcmp(ftrace.tracer, "function_graph") !=3D 0) {
+> +				pr_err("Error: --inline option is only supported with function_graph=
+ tracer\n");
+> +				ret =3D -EINVAL;
+> +				goto out_delete_filters;
+> +			}
+> +			ftrace.tracer =3D "function_graph";
+> +		}
+
+[Severity: Medium]
+Can select_tracer() override ftrace.tracer back to "function" after this
+check runs?
+
+In cmd_ftrace(), ftrace.tracer defaults to DEFAULT_TRACER ("function_graph"=
+),
+so running perf ftrace -T <func> --inline (or -N <func> --inline) passes th=
+is
+validation. However, when __cmd_ftrace() starts, it calls select_tracer():
+
+tools/perf/builtin-ftrace.c:select_tracer() {
+	bool graph =3D !list_empty(&ftrace->graph_funcs) ||
+		     !list_empty(&ftrace->nograph_funcs);
+	bool func =3D !list_empty(&ftrace->filters) ||
+		    !list_empty(&ftrace->notrace);
+
+	/* The function_graph has priority over function tracer. */
+	if (graph)
+		ftrace->tracer =3D "function_graph";
+	else if (func)
+		ftrace->tracer =3D "function";
+    ...
+}
+
+Because filters or notrace is non-empty and graph_funcs/nograph_funcs are
+empty, select_tracer() overwrites ftrace->tracer to "function", causing
+__cmd_ftrace() to configure the function tracer while feeding its output in=
+to
+ftrace_process_fgraph_line(). Conversely, if ftrace.tracer is set to
+"function" in perfconfig and the user runs perf ftrace -G <func> --inline,
+cmd_ftrace() rejects it before select_tracer() can select "function_graph".
+
+Should the --inline tracer check or enforcement happen in integration with
+select_tracer()?
 
 > diff --git a/tools/perf/tests/ftrace.c b/tools/perf/tests/ftrace.c
-> index d83dee5a050dd..4c70951fd0c0c 100644
+> index 596cecee844e3..6e20a61860a9e 100644
 > --- a/tools/perf/tests/ftrace.c
 > +++ b/tools/perf/tests/ftrace.c
-> @@ -581,6 +581,939 @@ static int test_context_switch_handling(void)
+> @@ -62,6 +66,465 @@ static int test_filter_retaddr(void)
+>  	return TEST_OK;
+>  }
+> =20
+> +#define TEST_CHECK(text, cond)					\
+> +do {								\
+> +	if (!(cond)) {						\
+> +		pr_debug("FAILED %s:%d %s\n", __FILE__, __LINE__, text); \
+> +		ret =3D TEST_FAIL;				\
+> +		goto out_cleanup;				\
+> +	}							\
+> +} while (0)
+> +
+> +static int test_inline_processing(void)
+> +{
+> +	static const char line_entry[] =3D " 0)               |  wake_up_new_ta=
+sk() {";
+> +	static const char line_enqueue[] =3D
+> +		" 0)               |    enqueue_task() { /* <-wake_up_new_task+0x1d1/0=
+x3e0 */";
 
 [ ... ]
 
 > +	vmlinux =3D vmlinux_path__find();
 > +
-> +	/* 6. Test targeted leaf call with synthesized DWARF inlines closing an=
-d resetting filter */
+> +	/* If vmlinux is present, test resolving symbols */
 > +	if (vmlinux) {
 > +		symbol_conf.vmlinux_name =3D vmlinux;
 > +		symbol_conf.ignore_vmlinux_buildid =3D true;
-> +		if (perf_ftrace__setup_inlines(&ftrace) =3D=3D 0 && ftrace.machine) {
-> +			out =3D open_memstream(&out_buf, &out_len);
-> +			if (!out) {
-> +				perf_ftrace__cleanup_inlines(&ftrace);
-> +				ret =3D TEST_FAIL;
-> +				goto out_free_filter;
-> +			}
+> +		ret =3D perf_ftrace__setup_inlines(&ftrace);
+> +		if (ret < 0 || !ftrace.machine) {
+> +			ret =3D TEST_SKIP;
+> +			goto out_cleanup;
+> +		}
 > +
-> +			ftrace_process_fgraph_line(&ftrace,
-> +				" 0)               |  wake_up_new_task() {", out);
-> +			/* Targeted leaf with caller having inline activate_task */
-> +			ftrace_process_fgraph_line(&ftrace,
-> +				" 0)   1.500 us    |    enqueue_task(); /* <-wake_up_new_task+0x1d1/=
-0x3e0 */",
-> +				out);
-> +			/* Sibling call after targeted leaf */
-> +			ftrace_process_fgraph_line(&ftrace,
-> +				" 0)   1.000 us    |    check_preempt_curr(); /* <-wake_up_new_task+=
-0x0/0x3e0 */",
-> +				out);
-> +			ftrace_process_fgraph_line(&ftrace,
-> +				" 0)   2.500 us    |  } /* wake_up_new_task */", out);
+> +		out =3D open_memstream(&out_buf, &out_len);
+> +		if (!out) {
+> +			ret =3D TEST_FAIL;
+> +			goto out_cleanup;
+> +		}
 > +
-> +			fclose(out);
-> +			ftrace_cpu_states__clear();
-> +			perf_ftrace__cleanup_inlines(&ftrace);
+> +		/* Feed simulated function graph trace lines */
+> +		ftrace_process_fgraph_line(&ftrace, line_entry, out);
+> +		ftrace_process_fgraph_line(&ftrace, line_enqueue, out);
+> +		ftrace_process_fgraph_line(&ftrace, line_exit_enqueue, out);
+> +		ftrace_process_fgraph_line(&ftrace, line_exit_task, out);
 > +
-> +			if (!strstr(out_buf, "enqueue_task();")) {
-> +				pr_debug("FAILED: targeted leaf enqueue_task missing\n");
-> +				ret =3D TEST_FAIL;
-> +				goto out_free_filter;
-> +			}
-> +			if (!strstr(out_buf, "} /* activate_task (inline) */")) {
-> +				pr_debug("FAILED: inline activate_task not closed after leaf target\=
-n");
-> +				ret =3D TEST_FAIL;
-> +				goto out_free_filter;
-> +			}
+> +		fclose(out);
+> +		ftrace_cpu_states__clear();
+> +
+> +		pr_debug("Processed output:\n%s\n", out_buf);
+> +
+> +		/* Verify activate_task entry with inline hint */
+> +		TEST_CHECK("contains activate_task entry with inline hint",
+> +			   strstr(out_buf, "activate_task() { /* (inline) */") !=3D NULL);
 
 [Severity: Medium]
-In test_graph_target_filter(), when vmlinux_path__find() finds a host
-vmlinux image, perf_ftrace__setup_inlines() loads that binary regardless of
-architecture, compiler, Kconfig, or whether DWARF debug info is present.
+Will test_inline_processing() fail on systems where the host vmlinux does n=
+ot
+have an inlined activate_task() call specifically at wake_up_new_task+0x1d1?
 
-The test then passes the hardcoded return address offset
-wake_up_new_task+0x1d1/0x3e0 to ftrace_process_fgraph_line() and returns
-TEST_FAIL if out_buf does not contain "} /* activate_task (inline) */".
+When vmlinux_path__find() finds a host vmlinux file, the test feeds
+line_enqueue with the hardcoded offset wake_up_new_task+0x1d1/0x3e0 and
+requires DWARF resolution to produce "activate_task() { /* (inline) */". Be=
+cause
+the instruction offset +0x1d1 (and whether activate_task is inlined) depends
+on the architecture, compiler, optimization flags, and kernel configuration,
+as well as DWARF support in both vmlinux and the perf build, this check will
+return TEST_FAIL on other kernel builds.
 
-Won't this cause perf test to fail on any system with a readable vmlinux
-where wake_up_new_task+0x1d1 does not resolve via DWARF to an inlined
-activate_task() frame?
-
-[ ... ]
+Also, symbol_conf.vmlinux_name and symbol_conf.ignore_vmlinux_buildid are
+modified here without being restored in out_cleanup.
 
 > diff --git a/tools/perf/util/ftrace.c b/tools/perf/util/ftrace.c
-> index 66c19116ee64e..26fc5b83b7b41 100644
+> index aaf108369c365..020551a4d7e00 100644
 > --- a/tools/perf/util/ftrace.c
 > +++ b/tools/perf/util/ftrace.c
 
 [ ... ]
 
-> @@ -586,28 +675,49 @@ int ftrace_process_fgraph_line(struct perf_ftrace *=
-ftrace, const char *line, FIL
-> =20
->  		extract_exit_func_name(func_start, exit_name, sizeof(exit_name));
-> =20
-> -		/* Find matching frame on stack */
-> +		if (cs->orphan_depth > 0) {
-> +			/*
-> +			 * If an orphan exit was dropped by the kernel ring buffer,
-> +			 * and the target root function itself exits with its named
-> +			 * closing brace, the orphan has definitively ended. Clear
-> +			 * stale orphan_depth and proceed with matching the target root.
-> +			 * Otherwise, all exits (bare or callee names) belong to the orphan.
-> +			 */
-> +			if (has_filter && cs->in_target && exit_name[0] !=3D '\0' &&
-> +			    cs->target_root_depth < cs->depth &&
-> +			    cs->stack[cs->target_root_depth].name &&
-> +			    strcmp(cs->stack[cs->target_root_depth].name, exit_name) =3D=3D 0=
+> +static bool parse_context_switch(const char *line)
+> +{
+> +	const char *arrow =3D strstr(line, " =3D> ");
+> +	const char *p;
+> +	const char *next;
+> +	const char *hyphen;
+> +	char *endptr;
+> +	long cpu_val;
+> +	long pid_val;
+> +
+> +	if (!arrow)
+> +		return false;
+> +
+> +	/* Find CPU number before ')' */
+> +	p =3D skip_spaces(line);
+> +	cpu_val =3D strtol(p, &endptr, 10);
+> +	if (endptr =3D=3D p || *endptr !=3D ')')
+> +		return false;
+> +
+> +	if (cpu_val < 0 || cpu_val >=3D FTRACE_MAX_CPUS)
+> +		return false;
+> +
+> +	/* Parse the target task's PID after the arrow (" =3D> comm-pid") */
+> +	next =3D skip_spaces(arrow + 4);
+> +	hyphen =3D strrchr(next, '-');
+> +	if (!hyphen)
+> +		return false;
+> +
+> +	pid_val =3D strtol(hyphen + 1, &endptr, 10);
+> +	if (endptr =3D=3D hyphen + 1)
+> +		return false;
+> +
+> +	ftrace_cpu_tasks[cpu_val] =3D get_task_state((pid_t)pid_val);
+> +	return true;
+> +}
+
+[Severity: Medium]
+What happens in system-wide tracing when multiple CPUs switch to the idle
+task (<idle>-0)?
+
+Each CPU has its own swapper thread, all with PID 0, which ftrace formats as
+"<idle>-0" in context-switch banners and in the verbose comm-pid column. Wh=
+en
+parse_context_switch() or find_func_column() sees "<idle>-0", pid_val is 0 =
+and
+get_task_state(0) returns the same struct ftrace_task_state instance for all
+idle CPUs.
+
+If multiple CPUs are executing in idle simultaneously, won't their interlea=
+ved
+trace lines share and corrupt the same stack, depth, and inlined_depth? (No=
+te
+that get_cpu_state() uses -1 - cpu before a banner is seen; should pid_val =
+=3D=3D 0
+similarly map to a per-CPU state such as -1 - cpu_val?)
+
+[ ... ]
+
+> +static void make_blank_prefix(const struct perf_ftrace *ftrace, const ch=
+ar *line,
+> +			      const char *pipe_char, char *buf, size_t size)
+> +{
+> +	size_t len =3D pipe_char - line + 1;
+> +	const char *start_delim =3D NULL;
+> +	char *c;
+> +
+> +	if (!size)
+> +		return;
+> +
+> +	if (len >=3D size)
+> +		len =3D size - 1;
+> +
+> +	memcpy(buf, line, len);
+> +	buf[len] =3D '\0';
+> +
+> +	if (*pipe_char =3D=3D '|') {
+> +		if (ftrace->graph_verbose) {
+> +			/* In verbose mode, duration starts after the comm-pid '|' */
+> +			for (const char *p =3D pipe_char - 1; p >=3D line; p--) {
+> +				if (*p =3D=3D '|') {
+> +					start_delim =3D p;
+> +					break;
+> +				}
+> +			}
+> +		} else {
+> +			/* In default mode, duration starts after CPU ')' */
+> +			start_delim =3D strchr(line, ')');
+> +		}
+> +
+> +		if (start_delim && start_delim < pipe_char && start_delim < line + len=
 ) {
-> +				cs->orphan_depth =3D 0;
-> +			} else {
-> +				cs->orphan_depth--;
-> +				return 0;
-> +			}
-> +		}
-
-[Severity: Medium]
-In ftrace_process_fgraph_line(), this dropped-orphan exit recovery check
-compares exit_name against cs->stack[cs->target_root_depth].name.
-
-However, when a target root function enters at depth > 0 with
-ftrace->use_inline enabled and its caller has inlined frames,
-ftrace_process_fgraph_line() sets cs->target_root_depth before pushing the
-synthesized inlined frames onto cs->stack:
-
-	if (is_target_root)
-		cs->target_root_depth =3D cs->depth;
-
-	/* Open new inlined frames */
-	for (i =3D common; i < num_inlines; i++) {
-		...
-		cs->stack[cs->depth].name =3D strdup(inlined_names[i]);
-		...
-		cs->stack[cs->depth].inlined =3D true;
-		cs->stack[cs->depth].indent =3D entry_indent;
-		cs->depth++;
-		cs->inlined_depth++;
-	}
-
-The non-inlined target root frame is then pushed above those synthesized
-frames, leaving cs->stack[cs->target_root_depth].name holding the outermost
-inlined caller frame's name rather than the target root function's name.
-
-If an orphan call's exit event is dropped in this state and the target root
-subsequently exits with its named closing brace, won't this strcmp() fail to
-match exit_name, causing the target root's exit to be swallowed as part of
-the orphan?
-
-[ ... ]
-
-> @@ -639,9 +750,36 @@ int ftrace_process_fgraph_line(struct perf_ftrace *f=
-trace, const char *line, FIL
->  			extra_indent =3D 0;
->  		}
-> =20
-> -		fprintf(out, "%.*s%*s%s\n",
-> -			(int)(pipe_char - line + 1), line,
-> -			leading_spaces + extra_indent, "", func_start);
-> +		if (!has_filter || cs->in_target) {
-> +			if (!ftrace->use_inline) {
-> +				print_line(ftrace, line, out);
-> +			} else {
-> +				fprintf(out, "%.*s%*s%s\n",
-> +					(int)(pipe_char - line + 1), line,
-> +					leading_spaces + extra_indent, "", func_start);
-> +			}
-> +		}
-
-[Severity: Medium]
-Suppose an outer non-target function enters at depth 0 (stored in
-cs->stack[0] with its entry line suppressed) and calls a target function at
-depth 1 (cs->target_root_depth =3D 1, cs->in_target =3D true).
-
-If the target function's exit event is dropped by the ring buffer and the
-outer function exits with "} /* outer_func */", match_idx is 0 (which is
-less than cs->target_root_depth) and cs->depth is unwound to 0. Similarly,
-if an unmatched named exit arrives while cs->in_target is true, match_idx
-is -1.
-
-Because ftrace_process_fgraph_line() prints the exit line whenever
-cs->in_target is true before checking whether cs->depth <=3D
-cs->target_root_depth, won't this leak the closing brace line for the
-suppressed ancestor (or unmatched function) into the output?
-
+> +			char *end =3D buf + (pipe_char - line);
 > +
-> +		if (has_filter && cs->in_target) {
-> +			while (cs->depth > cs->target_root_depth &&
-> +			       cs->stack[cs->depth - 1].inlined) {
-> +				struct ftrace_stack_frame *top =3D &cs->stack[cs->depth - 1];
-> +				int exit_indent =3D top->indent;
-> +
-> +				if (cs->inlined_depth > 0)
-> +					cs->inlined_depth--;
-> +				fprintf(out, "%s%*s} /* %s (inline) */\n",
-> +					blank_prefix, exit_indent, "", top->name);
-> +				free(top->name);
-> +				cs->depth--;
-> +			}
-> +
-> +			if (cs->depth <=3D cs->target_root_depth) {
-> +				cs->in_target =3D false;
-> +				cs->target_root_depth =3D 0;
-> +				cs->orphan_depth =3D 0;
-> +			}
-> +		}
->  		return 0;
->  	}
-
-[Severity: Medium]
-When both -G (has_filter) and --inline (ftrace->use_inline) are active and a
-non-leaf child function is called from within a synthesized inlined scope
-inside the target callgraph, the stack holds the caller's .inlined =3D true
-frame(s) followed by the child callee's .inlined =3D false frame.
-
-When that child callee exits, its real frame is popped above, leaving the
-caller's still-active .inlined frame(s) at cs->stack[cs->depth - 1] with
-cs->depth > cs->target_root_depth.
-
-Doesn't this while loop run unconditionally on every exit event inside the
-target callgraph, prematurely popping and printing "} /* ... (inline) */"
-for the caller's active inlined frames whenever a child function returns
-(and then re-opening them on the next sibling call)?
-
-[ ... ]
-
-> +	if (!ftrace->use_inline) {
-> +		if (is_target_root) {
-> +			if (ftrace_parse_retaddr(func_start, caller_sym,
-> +						 sizeof(caller_sym), &caller_offset)) {
-> +				caller_idx =3D -1;
-> +				for (i =3D cs->depth - 1; i >=3D 0; i--) {
-> +					if (!cs->stack[i].inlined && cs->stack[i].name &&
-> +					    strcmp(cs->stack[i].name, caller_sym) =3D=3D 0) {
-> +						caller_idx =3D i;
-> +						break;
-> +					}
-> +				}
-> +				if (caller_idx >=3D 0) {
-> +					while (cs->depth > caller_idx + 1) {
-> +						free(cs->stack[cs->depth - 1].name);
-> +						cs->depth--;
-> +					}
-> +				}
-> +			}
-> +			cs->target_root_depth =3D cs->depth;
-> +		}
-> +
-> +		if (has_filter && cs->in_target && cs->depth > cs->target_root_depth) {
-> +			if (ftrace_parse_retaddr(func_start, caller_sym,
-> +						 sizeof(caller_sym), &caller_offset)) {
-> +				caller_idx =3D -1;
-> +				for (i =3D cs->depth - 1; i >=3D 0; i--) {
-> +					if (!cs->stack[i].inlined && cs->stack[i].name &&
-> +					    strcmp(cs->stack[i].name, caller_sym) =3D=3D 0) {
-> +						caller_idx =3D i;
-> +						break;
-> +					}
-> +				}
-> +				if (caller_idx < cs->target_root_depth) {
-> +					if (has_open_brace && !has_semicolon)
-> +						cs->orphan_depth =3D 1;
-> +					return 0;
-> +				}
-> +			}
-> +		}
-
-[Severity: Medium]
-In the !ftrace->use_inline path (as well as the dropped-orphan recovery
-above), ftrace_process_fgraph_line() relies on ftrace_parse_retaddr()
-finding return address comments in the trace stream to suppress detached
-orphan calls and synchronize target_root_depth.
-
-However, in tools/perf/builtin-ftrace.c, set_tracing_funcgraph_retaddr()
-only enables funcgraph-retaddr when ftrace->graph_retaddr or
-ftrace->use_inline is set:
-
-static int set_tracing_funcgraph_retaddr(struct perf_ftrace *ftrace)
-{
-	if (ftrace->graph_retaddr || ftrace->use_inline) {
-		if (write_tracing_option_file("funcgraph-retaddr", "1") < 0) {
-
-and cmd_ftrace() only sets ftrace.filter_retaddr =3D true when
-ftrace.use_inline && !ftrace.graph_retaddr:
-
-		if (!ftrace.filter_retaddr_set) {
-			if (ftrace.use_inline && !ftrace.graph_retaddr)
-				ftrace.filter_retaddr =3D true;
-			else
-				ftrace.filter_retaddr =3D false;
-		}
-
-When a user runs perf ftrace -G <func> without --inline or --graph-opts
-retaddr, funcgraph-retaddr is disabled in tracefs, so ftrace_parse_retaddr()
-always returns false. Should builtin-ftrace.c also enable funcgraph-retaddr
-(and filter_retaddr when !ftrace.graph_retaddr) when ftrace.graph_funcs is
-non-empty?
-
-[ ... ]
-
-> @@ -675,6 +950,21 @@ int ftrace_process_fgraph_line(struct perf_ftrace *f=
-trace, const char *line, FIL
->  		}
->  	}
-> =20
-> +	/*
-> +	 * When inside a target graph filter, child functions must descend
-> +	 * from an active frame on the target stack. Suppress detached
-> +	 * calls originating outside the target hierarchy.
-> +	 */
-> +	if (has_filter && cs->in_target && cs->depth > cs->target_root_depth) {
-> +		if (has_retaddr && caller_idx < cs->target_root_depth) {
-> +			if (has_open_brace && !has_semicolon)
-> +				cs->orphan_depth =3D 1;
-> +			for (i =3D 0; i < num_inlines; i++)
-> +				free((void *)inlined_names[i]);
-> +			return 0;
+> +			if (end > buf + len)
+> +				end =3D buf + len;
+> +			for (c =3D buf + (start_delim - line) + 1; c < end; c++)
+> +				*c =3D ' ';
 > +		}
 > +	}
+> +}
+> +
+> +/**
+> + * find_func_column - Locate the function call column in a trace record
+> + * @ftrace: Perf ftrace context
+> + * @line: The trace record to parse
+> + * @cpu: Pointer to store the CPU number
+> + *
+> + * Locate the context columns that precede the function call column of a
+> + * function_graph trace record. Depending on the funcgraph-* options set
+> + * up by perf, a record looks like:
+> + *
+> + *   [ abstime |]  CPU)  [ comm-pid |]  [ duration |]  func
+> + *
+> + * The abstime and comm-pid columns are only present with --graph-opts
+> + * verbose.
+> + *
+> + * Return: A pointer to the last character of the context columns (the f=
+inal
+> + * '|' delimiter). Returns NULL if @line is not a trace record.
+> + */
+> +static const char *find_func_column(const struct perf_ftrace *ftrace,
+> +				    const char *line, int *cpu)
+> +{
+> +	const char *p =3D line;
+> +	char *endptr;
+> +	long val;
+> +
+> +	if (ftrace->graph_verbose) {
+> +		p =3D strchr(p, '|');
+> +		if (!p)
+> +			return NULL;
+> +		p++;
+> +	}
+> +
+> +	p =3D skip_spaces(p);
+> +	val =3D strtol(p, &endptr, 10);
+> +	if (endptr =3D=3D p || *endptr !=3D ')')
+> +		return NULL;
+> +	p =3D endptr;
+> +
+> +	if (ftrace->graph_verbose) {
+> +		const char *proc_start =3D p;
+> +
+> +		p =3D strchr(p, '|');
+> +		if (!p)
+> +			return NULL;
+> +
+> +		if (val >=3D 0 && val < FTRACE_MAX_CPUS) {
+> +			const char *h =3D p - 1;
+> +
+> +			while (h >=3D proc_start && *h !=3D '-')
+> +				h--;
+> +			if (h >=3D proc_start && *h =3D=3D '-') {
+> +				long pid_val =3D strtol(h + 1, NULL, 10);
+> +				ftrace_cpu_tasks[(int)val] =3D get_task_state((pid_t)pid_val);
+> +			}
+> +		}
+> +	}
+> +
+> +	p =3D strchr(p + 1, '|');
+> +	if (!p)
+> +		return NULL;
+> +
+> +	*cpu =3D (int)val;
+> +	return p;
+> +}
 
 [Severity: Medium]
-What happens if a target function enters at a nested depth
-(cs->target_root_depth > 0, beneath a suppressed outer ancestor on
-cs->stack), and the target root's exit event is dropped by the ring buffer?
+Does find_func_column() account for the latency-format column when
+ftrace->graph_verbose is enabled?
 
-When the outer ancestor subsequently makes another function call,
-caller_idx resolves to that ancestor's frame on cs->stack (0 <=3D caller_id=
-x <
-cs->target_root_depth), proving the target root has already returned.
+In tools/perf/builtin-ftrace.c, set_tracing_funcgraph_verbose() enables thr=
+ee
+tracing options:
 
-Because both this check in the ftrace->use_inline path and the corresponding
-check in the !ftrace->use_inline path test caller_idx <
-cs->target_root_depth instead of caller_idx < 0, they treat the ancestor's
-subsequent call as a detached orphan and return early without unwinding the
-stale target frames or resetting cs->in_target.
+static int set_tracing_funcgraph_verbose(struct perf_ftrace *ftrace)
+{
+	if (!ftrace->graph_verbose)
+		return 0;
 
-Should 0 <=3D caller_idx < cs->target_root_depth unwind the completed target
-frames down to caller_idx + 1 and reset cs->in_target before evaluating the
-new entry?
+	if (write_tracing_option_file("funcgraph-proc", "1") < 0)
+		return -1;
+
+	if (write_tracing_option_file("funcgraph-abstime", "1") < 0)
+		return -1;
+
+	if (write_tracing_option_file("latency-format", "1") < 0)
+		return -1;
+
+	return 0;
+}
+
+When latency-format is enabled alongside funcgraph-abstime and funcgraph-pr=
+oc,
+the kernel's function_graph tracer emits four '|' delimiters before the
+function column:
+
+  <abstime> | <cpu>) <comm>-<pid> | <lat-fmt> | <duration> | <func>
+
+However, find_func_column() only advances past three '|' characters in
+verbose mode, returning a pointer to the '|' at the end of the latency-form=
+at
+column instead of the '|' at the end of the duration column.
+
+Consequently, in ftrace_process_fgraph_line():
+1. On entry lines with a blank duration column, func_start points to the
+   duration column's trailing "|  func() {", so extract_entry_func_name()
+   extracts "|" as the function name.
+2. On exit lines with a duration (e.g. "  1.234 us    |  }"), func_start
+   points to the duration value rather than '}', so is_exit is false and
+   function exits are never detected.
+3. make_blank_prefix() blanks out the latency-format column and truncates t=
+he
+   prefix before the duration column.
 
 [ ... ]
 
-> @@ -708,13 +995,17 @@ int ftrace_process_fgraph_line(struct perf_ftrace *=
-ftrace, const char *line, FIL
-> =20
->  			if (cs->inlined_depth > 0)
->  				cs->inlined_depth--;
-> -			fprintf(out, "%s%*s} /* %s (inline) */\n",
-> -				blank_prefix, exit_indent, "", top->name);
-> +			if (!has_filter || (cs->in_target && !is_target_root))
-> +				fprintf(out, "%s%*s} /* %s (inline) */\n",
-> +					blank_prefix, exit_indent, "", top->name);
->  		}
->  		free(top->name);
->  		cs->depth--;
->  	}
+> +int perf_ftrace__setup_inlines(struct perf_ftrace *ftrace)
+> +{
+> +	struct map *kmap;
+> +
+> +	if (!ftrace->use_inline)
+> +		return 0;
+> +
+> +	symbol_conf.try_vmlinux_path =3D (symbol_conf.vmlinux_name =3D=3D NULL);
+> +	symbol_conf.inline_name =3D true;
+> +	if (symbol_conf.vmlinux_name)
+> +		symbol_conf.ignore_vmlinux_buildid =3D true;
+> +
+> +	if (symbol__init(NULL) < 0) {
+> +		pr_warning("Failed to initialize symbols for inlined functions\n");
+> +		return -1;
+> +	}
+> +
+> +	ftrace->machine =3D machine__new_host(NULL);
+> +	if (!ftrace->machine) {
+> +		pr_warning("Failed to create host machine for symbols\n");
+> +		return -1;
+> +	}
+> +
+> +	if (symbol_conf.vmlinux_name) {
+> +		kmap =3D machine__kernel_map(ftrace->machine);
+> +		if (kmap)
+> +			dso__load_vmlinux(map__dso(kmap), kmap, symbol_conf.vmlinux_name, fal=
+se);
+> +	} else {
+> +		machine__load_vmlinux_path(ftrace->machine);
+> +	}
+> +
+> +	return 0;
+> +}
 
-[ ... ]
+[Severity: Medium]
+Should perf_ftrace__setup_inlines() check the return values of
+dso__load_vmlinux() and machine__load_vmlinux_path()?
+
+Both functions return <=3D 0 when loading vmlinux fails (for example, if the
+user passes a non-existent or invalid path via -k/--vmlinux, or if no vmlin=
+ux
+with symbols is found on the system). Because the return values are ignored
+and perf_ftrace__setup_inlines() unconditionally returns 0,perf ftrace
+--inline proceeds without a loaded vmlinux DSO (and test_inline_processing()
+does not skip when vmlinux cannot be loaded).
+
+If loading fails, should perf_ftrace__setup_inlines() clean up ftrace->mach=
+ine
+and return an error?
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261018023753.5848=
-73-1-atomlin@atomlin.com?part=3D6
+73-1-atomlin@atomlin.com?part=3D4
