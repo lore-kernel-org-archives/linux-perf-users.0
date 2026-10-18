@@ -1,80 +1,125 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB58E346A14
-	for <linux-perf-users@vger.kernel.org>; Sun, 18 Oct 2026 05:48:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 176F4277026
+	for <linux-perf-users@vger.kernel.org>; Sun, 18 Oct 2026 05:50:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792302507; cv=none; b=V/NXGF+bhi3YiJ7fqftq7z77wXo39p4jEGziT/KgDptuzYDSvElxgxvTD9h1n33eAq8GgcTVUAao7XkKXDFIeliVg0RztZ30kst1Cb8O5y39ZAcYcEjKS//li+kHVQYqKlsVQjMiL1bfRfhoPEafUXwABA8dzaO6ypv/KTR+Gkc=
+	t=1792302654; cv=none; b=RQsODoHdYHGLmrtcRKBgjyNwKGa0LviGq9nebYkTofc3TD26htbhvFlKGhnp5s2A9X7FuDBFPQaGQ5kH45oZI6O0c3WvDqOJhAFb3ywXVZ1OO3BYlzJeKnxWoegCakKtrWzoLuTXSbkwJL9GMKIPMut9QeVzr12Ap76DI9Wdaqg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792302507; c=relaxed/simple;
-	bh=dZZMq0yRJVzA+9cCt1iSHp454/O4vHXHH1lmm96/Dc8=;
+	s=arc-20240116; t=1792302654; c=relaxed/simple;
+	bh=UxVsrwKjiCWtj3vlfyP4GlNw+uGuIdWioIFd1Nhvpb0=;
 	h=Message-ID:From:Subject:To:Cc:In-Reply-To:References:Content-Type:
-	 Date; b=cGRCP3yhd+uOxxJ6o6eBfGMLBATbJpru/HY2fQo4PyHhLrMa26As5X6f90x4SUm0TSugrpXciNCSHIaSm4tKAYTWCsqcYHg7ztojwlzF/Y1ZWtuKVp99N8iHBrUJAWIuyoxEn45MojNhjv1ZQHasgYRVkaxUeW/nO4ggAVV7Ysw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=B3pzSwEL; arc=none smtp.client-ip=100.103.45.18
+	 Date; b=DJuHLgPOLB7X8EGPdLNcrYl6gCt3efhOF88ED4X2eVjzbW2YVjqfA02XARisTPRaT54SFHognexpBzSYfcYvV1IbCwsULxcEJwGWY1XDOJ/huXt1Xo+2NVAmnJytiSTl65WMF5YZLtq2MTlq0S+k5WvnbSD2+jvxM4rbF2utnlo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nKiwA9Mf; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="B3pzSwEL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 14C3F1F000C4;
-	Sun, 18 Oct 2026 05:48:26 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nKiwA9Mf"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8AAA21F000C4;
+	Sun, 18 Oct 2026 05:50:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1792302506;
-	bh=mmbjwOvdzl7UXiuGWe/767GomK7XKujNyqOIwRx5JN4=;
+	s=k20260515; t=1792302652;
+	bh=M7SQxm2Eo0PqD50qzb8EbQaHG3D00K113WIRBjWvEYY=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=B3pzSwEL3MyYxEDvlvMXgloh0xsJcYvh7yiZQiw8OqWGIKL2Y28QofMORgZklK/qR
-	 RvNEzUNPaoLjNheknaD9jjslNdjn85U7JF8xJvZnA37a5SVoK3nWwnitXNt4lTchwx
-	 s5m2opQ1ITs0opUptr2Kxr/ScnurVjYh0c5Vd7av+dJKO2m2BeWeMYBoUFqyISxtVF
-	 kU/kCcJ4PGNXOzFaCY0vezkdOu1Tj+A1se12MMBeNzxIwiiNtVDjI+Ld85XMY+012y
-	 R7tY5uv5Qa7EaBvcUc0E9/OexCBfRaWrOEo9ErhfQdPCF9k+j6M9mOXc7hZ9Zkc3Ne
-	 GyET3npkACZQA==
-Message-ID: <sashiko-outbox-175955@kernel.org>
+	b=nKiwA9MfXuI3zg8BBUYt7jFZEufxsY9M9A3bRNepmcw8afe++kpcPJfWcwoh76o3W
+	 nZqo9LbmqBiiQwMyGS4FCaFZCcSfiBi0JLP+dBpIAuDFRQnwYTDhHyxprXaL+VDSgg
+	 Ed214VkqEEo4pWAkTWanyIdNyKFZ8/ft9IMoSd4TvdWhGtjejMQSDDTZnNniP9++SU
+	 WfoVX2iXUxzHeLroI4pG8bMeiZFhmJ4Jl1jn6BBZhjU1AcpNfgj98ErZxwlZOfd6DJ
+	 xQnRCy5y1/Kdi/nJoL5yjZFwJqkMb2lR5c4bACC5bmFU0nE6FMBmRV93qh1iYPRSZl
+	 Axawd3bEczssA==
+Message-ID: <sashiko-outbox-175957@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v3 5/6] perf lock contention: Extend BPF lock contention
- to RCU and SRCU
+Subject: Re: [PATCH v3 1/6] perf lock contention: Share common BPF and lock
+ type definitions in lock_data.h
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Ian Rogers" <irogers@google.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20261018053710.2572636-6-irogers@google.com>
+In-Reply-To: <20261018053710.2572636-2-irogers@google.com>
 References: <20261017171437.2066343-1-irogers@google.com>
  <20261018053710.2572636-1-irogers@google.com>
- <20261018053710.2572636-6-irogers@google.com>
+ <20261018053710.2572636-2-irogers@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Sun, 18 Oct 2026 05:48:25 +0000
+Date: Sun, 18 Oct 2026 05:50:52 +0000
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-> Extend 'perf lock contention --use-bpf' to track RCU and SRCU
-> grace-period and barrier waits:
->=20
-> - Attach fentry/fexit programs to synchronize_rcu(),
->   synchronize_rcu_expedited(), synchronize_rcu_tasks(), rcu_barrier(),
->   synchronize_srcu(), synchronize_srcu_expedited(), and srcu_barrier()
->   when available in BTF.
-> - Support filtering by lock type ('-Y rcu', '-Y rcu:W', '-Y srcu',
->   '-Y srcu:W') and by lock name ('-L rcu' or specific srcu_struct
->   symbol names).
->=20
-> Example usage:
->=20
->   # perf lock con -a -b -Y rcu,srcu -F wait_total,avg_wait -- sleep 1
->      total wait     avg wait         type   caller
->=20
->        35.12 ms      8.78 ms        rcu:W   cleanup_net+0x284
->         7.84 ms      3.92 ms       srcu:W   __fsnotify_parent+0x114
->=20
->   # perf lock con -a -b -l -L rcu -F wait_total,avg_wait -- sleep 1
->      total wait     avg wait            address   symbol
->=20
->        35.12 ms      8.78 ms   ffffffff83754dc0   rcu (rcu)
->=20
-> Signed-off-by: Ian Rogers <irogers@google.com>
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+s) to consider:
+- [Low] perf lock: missing CO-RE flavor struct for mutex in get_lock_owner()
+--
 
-Sashiko has reviewed this patch and found no issues.
+commit 93be88d7858bcce932211b385210b6872f154e7a
+Author: Ian Rogers <irogers@google.com>
+
+perf lock contention: Share common BPF and lock type definitions in lock_da=
+ta.h
+
+This commit moves lock_type_table, LCB_F_* flags, common BPF lock helpers,
+and shared CO-RE structs into tools/perf/util/bpf_skel/lock_data.h so they
+can be reused by BPF sample filtering. It also extends get_lock_owner() to
+support rt_mutex and check the mutex handoff flag.
+
+> diff --git a/tools/perf/util/bpf_skel/lock_data.h b/tools/perf/util/bpf_s=
+kel/lock_data.h
+> index 652e114e6b877..8cf24f07204c5 100644
+> --- a/tools/perf/util/bpf_skel/lock_data.h
+> +++ b/tools/perf/util/bpf_skel/lock_data.h
+
+[ ... ]
+
+> +static __always_inline struct task_struct *get_lock_owner(__u64 lock, __=
+u32 flags)
+> +{
+> +	struct task_struct *task;
+> +	__u64 owner =3D 0;
+> +
+> +	if (flags & LCB_F_MUTEX) {
+> +		struct mutex *mutex =3D (void *)lock;
+> +
+> +		if (bpf_core_field_exists(mutex->owner.counter)) {
+> +			owner =3D BPF_CORE_READ(mutex, owner.counter);
+> +			if (owner & 0x4UL)
+> +				return NULL;
+> +		} else if (bpf_core_type_exists(struct rt_mutex_base)) {
+> +			struct rt_mutex_base *rtm =3D (void *)lock;
+> +
+> +			owner =3D (__u64)BPF_CORE_READ(rtm, owner);
+> +			return (void *)(owner & ~1UL);
+> +		}
+
+[Severity: Low]
+When building perf with GEN_VMLINUX_H=3D1 against a CONFIG_PREEMPT_RT=3Dy
+kernel, vmlinux.h is generated from the kernel BTF where struct mutex is
+defined as:
+
+include/linux/mutex_types.h:
+context_lock_struct(mutex) {
+	struct rt_mutex_base	rtmutex;
+#ifdef CONFIG_DEBUG_LOCK_ALLOC
+	struct lockdep_map	dep_map;
+#endif
+};
+
+Because struct mutex has no owner member in that configuration, and
+bpf_core_field_exists(mutex->owner.counter) and BPF_CORE_READ(mutex,
+owner.counter) expand to C member accesses on struct mutex, will this fail
+to compile?
+
+Should this use a CO-RE flavor struct (similar to struct rw_semaphore___new
+and struct mm_struct___new above) to access owner.counter?
+
+[ ... ]
+
+>
+>
+>
+>
+
+[]
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261018053710.2572=
-636-1-irogers@google.com?part=3D5
-
+636-1-irogers@google.com?part=3D1
