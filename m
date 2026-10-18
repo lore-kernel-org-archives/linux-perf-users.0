@@ -1,198 +1,363 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D490C3D16E4
-	for <linux-perf-users@vger.kernel.org>; Sun, 18 Oct 2026 05:51:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1291E37F006
+	for <linux-perf-users@vger.kernel.org>; Sun, 18 Oct 2026 06:12:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792302684; cv=none; b=tAdc1If/r+54zyxV2xy+sLospaa5TJEjtWAkwkCoVj3+0p3IiSoNDH9jlJuhc2pw+rwEOJdBwBKqUSjlngfTwQeZ1hi5FoSdy+YDh0oRrfEpkMCnxanDcYp/mM9eDgEi9/AJt0X2Pe3hR3awGIckPn2Ro3+/YLiOJTRJ8hQY77I=
+	t=1792303935; cv=none; b=gJuNwRjAYNa6cYlYybEN8jqwmIxsBzPRMkMelq2VcJx+iUGpsaRFmHI+sk+5gkHmkR8zfCCuH/p4EZzcPZ44xTcxCQ32vdeggmaabDyV19oSwFN2OyF99kaQPcPDpuEp3f+ZuSprqclqHAAnsp4nYMLws/qN8Y0UqynLUTz5GBw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792302684; c=relaxed/simple;
-	bh=UxWbXvhWoU77YdjY0dbwtKEwZrLoJh/2QFrL6rnkXt8=;
+	s=arc-20240116; t=1792303935; c=relaxed/simple;
+	bh=uhMc/5C6MCgprWSpYGaIJxvnU3Ym0dFjnyOiFJLn7YU=;
 	h=Message-ID:From:Subject:To:Cc:In-Reply-To:References:Content-Type:
-	 Date; b=fEGNP785y0RI1/NqLqg0RliOXeQtd49dtR/gXZP/AjI+Cz6XTI4XGJpIuEZglQbrnb6rXR2I408ncMx+6T5f0P0VhF8tx4oAHjxaYq9JY2zoYSJpbbG5Ibx16Ot+kIMiXk/y9MB9SxIZTv3ZQQJ6CJLZZwQnE19Zg1XMhPREFHA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RfxNT3oq; arc=none smtp.client-ip=100.103.45.18
+	 Date; b=oSHYhlRS9unHEBhkzpaCs/8LCkUUPWUU21dS/ssQUykDdkDlEfjXCWHEvzIjDQf0XCXqlGFPDf852Jlk9++D4UPJmKpZJBjGl4SDmamikya9qVaYaVJGB/Ky7Lr4m2ge2m8kF1SXtPfgPTF9RJaUXHswMscNncEPm69CYQ/MbMY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=V4gypw+G; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RfxNT3oq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4FD721F000C4;
-	Sun, 18 Oct 2026 05:51:23 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="V4gypw+G"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8D60C1F000C4;
+	Sun, 18 Oct 2026 06:12:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1792302683;
-	bh=Pmkx8sWwSMqOXUiKcJOMjxhVBpJv0HvNy4pdPmYlAiY=;
+	s=k20260515; t=1792303933;
+	bh=E5cWA2XFbpyK/WSsKh/jgpgHf/ilwu+s3TMgPpRDOEo=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=RfxNT3oqGeLs4XhQtcz+kBqDZ1SHfcsU0tJlJbYn69hzNSg4Z8Hl8/pnU421WpZXI
-	 5Kqr8ZYQ4M58TGjv/OKy+xXkp1P5o5Qa2vGfqjJUVKWzS0RV38N0kmh5WJ3w5Q9OCF
-	 0RWlHD5WN2nwqHl8Y/JdAvv4DhUiFzhBw9l/X2TEOyytrqdCLCUCEBSMCZoHLecZaF
-	 yIaGCmHsZi9XJ59aRE2CGLCnkR2K5A90fYUmWdNhTFcAxgaOHX48NRxsemZalX0yoN
-	 KNd6hhMeLyCP3zNVmAikdz/r4LBGgXEFc4w2Bwull94WGyz3Sa780ttiv+o4VAbTc6
-	 Ard8DGfe482aA==
-Message-ID: <sashiko-outbox-175958@kernel.org>
+	b=V4gypw+G/asnM0Bd/ZNfkMdG+Br4cDURLVGRHA+mxfuM6Gcw9U3YGDB0ymyhdjatK
+	 6UxG6+/ZFNNJcjXaGLfLUMpq/I7VrAWKvRL2acZkZExJf1PE/C+K9wFwDTXGTyVvnM
+	 2X4p/J3kBNymS4xM6BQuUVHrQfjQZMzcbzULx2Vk1wkz4jAlMRjijAhu3cynEI/TL6
+	 b3gXrNc6xSoi4Yz9ehVZUrwGNGuw8WfsXijRukf8rUvekXqaooweBMOhahfEDG5r3D
+	 KCaeHITwIkJ9XVxF5iP3mIx1XuvlYoHdLPBaIF5ThwefvRMeKBQtTIupMstPSPiH4R
+	 MuCx9NAAIEcsQ==
+Message-ID: <sashiko-outbox-175981@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v3 4/6] perf bpf-filter: Extend lock_held() to support
- RCU, Tasks Trace RCU, and SRCU
+Subject: Re: [PATCH v3 2/6] perf bpf-filter: Add lock_held() sample filter
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Ian Rogers" <irogers@google.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20261018053710.2572636-5-irogers@google.com>
+In-Reply-To: <20261018053710.2572636-3-irogers@google.com>
 References: <20261017171437.2066343-1-irogers@google.com>
  <20261018053710.2572636-1-irogers@google.com>
- <20261018053710.2572636-5-irogers@google.com>
+ <20261018053710.2572636-3-irogers@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Sun, 18 Oct 2026 05:51:22 +0000
+Date: Sun, 18 Oct 2026 06:12:13 +0000
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+Thank you for your contribution! Sashiko AI review found 4 potential issue(=
 s) to consider:
-- [Medium] perf bpf-filter: btf_has_task_field() misses anon struct under R=
-ANDSTRUCT
+- [Medium] perf bpf-filter: unreachable BTF check in configure_lock_progs()
+- [Medium] perf bpf-filter: read mode accepted for exclusive locks in resol=
+ve_lock_expr()
+- [Medium] perf bpf-filter: unhandled mutex:spin entry in parse_lock_type_n=
+ame()
+- [Medium] perf bpf-filter: leak of bpf_link in perf_bpf_filter__prepare()
 --
 
-commit 5ff446ff868169d426bb172f1b13dc459b646352
+commit 62241acfb0cf66852754002cba52ca231185bd12
 Author: Ian Rogers <irogers@google.com>
 
-perf bpf-filter: Extend lock_held() to support RCU, Tasks Trace RCU, and SR=
-CU
+perf bpf-filter: Add lock_held() sample filter
 
-This commit extends the lock_held(<lock>) BPF sample filter to support RCU,
-Tasks Trace RCU, and SRCU locks. For RCU and Tasks Trace RCU read-side
-critical sections, it inspects task_struct nesting fields via CO-RE, while
-attaching fentry/fexit hooks for SRCU and RCU synchronize/barrier waits.
+This commit adds BPF sample filter predicates lock_held(), lock_held_read(),
+lock_held_shared(), lock_held_write(), and lock_held_exclusive() to record
+perf event samples only when a specified kernel lock is held. It evaluates
+lock ownership by inspecting kernel lock owner fields directly where possib=
+le
+and falling back to a held_locks BPF hash map populated by fentry/fexit hoo=
+ks
+on kernel lock and unlock functions.
 
 > diff --git a/tools/perf/util/bpf-filter.c b/tools/perf/util/bpf-filter.c
-> index 0c133b31b5d54..4a5ef78e26900 100644
+> index 72e83ac1d6a4b..0c133b31b5d54 100644
 > --- a/tools/perf/util/bpf-filter.c
 > +++ b/tools/perf/util/bpf-filter.c
 
 [ ... ]
 
-> @@ -847,16 +913,54 @@ static bool find_slab_cache(struct sample_filter_bp=
-f *skel, const char *name,
->  	return false;
->  }
-> =20
-> +static u64 rcu_min_depth(struct evsel *evsel)
+> +static bool parse_lock_type_name(const char *name, unsigned int mode,
+> +				 struct sample_filter_bpf *skel,
+> +				 u64 *encoded_pair, unsigned int *prog_groups)
 > +{
-> +	if (evsel && evsel->core.attr.type =3D=3D PERF_TYPE_SOFTWARE &&
-> +	    evsel->core.attr.config !=3D PERF_COUNT_SW_CPU_CLOCK &&
-> +	    evsel->core.attr.config !=3D PERF_COUNT_SW_TASK_CLOCK)
-> +		return 2;
-> +	return 1;
-> +}
+> +	bool found =3D false;
+> +	u32 flag1 =3D 0xff, flag2 =3D 0xff;
+> +	unsigned int groups =3D 0;
+> +	const char *lookup =3D !strcmp(name, "pcpu-sem") ? "percpu-rwsem" : nam=
+e;
 > +
-> +static bool btf_has_task_field(struct btf *btf, const char *field_name)
-> +{
-> +	const struct btf_type *t;
-> +	const struct btf_member *m;
-> +	s32 id;
-> +	u16 i, vlen;
+> +	for (size_t i =3D 0; i < ARRAY_SIZE(lock_type_table); i++) {
+> +		u32 f =3D lock_type_table[i].flags;
+> +		bool is_read =3D (f & LCB_F_READ) !=3D 0;
 > +
-> +	if (!btf)
-> +		return false;
+> +		if (strcmp(lock_type_table[i].lock_name, lookup) &&
+> +		    strcmp(lock_type_table[i].flags_name, name))
+> +			continue;
 > +
-> +	id =3D btf__find_by_name_kind(btf, "task_struct", BTF_KIND_STRUCT);
-> +	if (id < 0)
-> +		return false;
+> +		/*
+> +		 * percpu_down_read() / percpu_up_read() fast paths are inlined
+> +		 * per-CPU counter increments without function entry points, so
+> +		 * only writer holding (percpu_down_write / percpu_up_write) can
+> +		 * be tracked for percpu-rwsem. rwlock-rt is also not hooked.
+> +		 */
+> +		if ((f & LCB_F_PERCPU) && is_read)
+> +			continue;
+> +		if ((f & LCB_F_RT) && (f & (LCB_F_READ | LCB_F_WRITE)))
+> +			continue;
 > +
-> +	t =3D btf__type_by_id(btf, id);
-> +	if (!t)
-> +		return false;
+> +		if (is_read && !(mode & PBF_LOCK_MODE_READ))
+> +			continue;
+> +		if (!is_read && !(mode & PBF_LOCK_MODE_WRITE))
+> +			continue;
 > +
-> +	m =3D btf_members(t);
-> +	vlen =3D btf_vlen(t);
-> +	for (i =3D 0; i < vlen; i++, m++) {
-> +		const char *name =3D btf__name_by_offset(btf, m->name_off);
-> +
-> +		if (name && !strcmp(name, field_name))
-> +			return true;
+> +		if (!found)
+> +			flag1 =3D f;
+> +		else if (f !=3D flag1)
+> +			flag2 =3D f;
+> +		if (skel && f < LCB_F_TYPE_MAX) {
+> +			skel->bss->has_lock_type =3D 1;
+> +			skel->bss->lock_type_filter[f] =3D 1;
+> +		}
+> +		groups |=3D lock_flags_to_prog_group(f);
+> +		found =3D true;
 > +	}
-> +	return false;
+
+[Severity: Medium]
+Should parse_lock_type_name() also skip the LCB_F_MUTEX | LCB_F_SPIN entries
+in lock_type_table?
+
+lock_type_table contains both { LCB_F_MUTEX | LCB_F_SPIN, "mutex", "mutex" }
+and { LCB_F_MUTEX | LCB_F_SPIN, "mutex:spin", "mutex-spin" }, whereas all
+mutex hooks in sample_filter.bpf.c record acquisitions with LCB_F_MUTEX:
+
+tools/perf/util/bpf_skel/sample_filter.bpf.c:
+    SEC("fexit/mutex_lock")
+    int BPF_PROG(fexit_mutex_lock, void *lock)
+    {
+        return record_lock_acquired(ctx, LCB_F_MUTEX);
+    }
+
+Because LCB_F_MUTEX | LCB_F_SPIN is never recorded in held_locks, filters
+like lock_held(mutex:spin) or lock_held(mutex-spin) are accepted and attach
+all mutex fentry/fexit hooks, but only set
+lock_type_filter[LCB_F_MUTEX | LCB_F_SPIN] =3D 1 and always evaluate to 0.
+Furthermore, lock_held(mutex) encodes flag2 =3D LCB_F_MUTEX | LCB_F_SPIN,
+causing is_lock_type_in_map() to perform two extra BPF map lookups on every
+sample whenever no mutex is held.
+
+[ ... ]
+
+> +static int configure_lock_progs(struct sample_filter_bpf *skel, struct b=
+tf *btf,
+> +				unsigned int needed_groups,
+> +				unsigned int required_groups,
+> +				bool needs_lock_syms, bool needs_slab_iter,
+> +				bool is_tracepoint)
+> +{
+> +	unsigned int supported_groups =3D supported_lock_prog_groups(btf);
+> +	unsigned int enabled_progs =3D 0;
+> +
+> +	bpf_program__set_autoload(skel->progs.perf_sample_filter, !is_tracepoin=
+t);
+> +	bpf_program__set_autoload(skel->progs.perf_tp_sample_filter, is_tracepo=
+int);
+> +
+> +	if ((required_groups & supported_groups) !=3D required_groups) {
+> +		pr_err("Error: Kernel BTF lacks required lock/unlock tracing entry poi=
+nts\n");
+> +		return -ENOTSUP;
+> +	}
+> +
+> +	needed_groups &=3D supported_groups;
+> +	if (skel)
+> +		skel->bss->track_rwsem_read =3D !!(needed_groups & LOCK_PROG_RWSEM_REA=
+D);
+> +
+> +	for (size_t i =3D 0; i < ARRAY_SIZE(lock_progs); i++) {
+> +		struct bpf_program **progp =3D (void *)skel + lock_progs[i].prog_offse=
+t;
+> +		struct bpf_program *prog =3D *progp;
+> +		bool enable =3D false;
+> +
+> +		if ((needed_groups & lock_progs[i].group) && btf &&
+> +		    lock_progs[i].btf_func) {
+> +			if (btf__find_by_name_kind(btf, lock_progs[i].btf_func,
+> +						   BTF_KIND_FUNC) > 0)
+> +				enable =3D true;
+> +		}
+> +
+> +		if (enable)
+> +			enabled_progs++;
+> +		bpf_program__set_autoload(prog, enable);
+> +	}
+> +
+> +	bpf_program__set_autoload(skel->progs.collect_lock_syms, needs_lock_sym=
+s);
+> +	if (needs_slab_iter && btf &&
+> +	    btf__find_by_name_kind(btf, "bpf_iter__kmem_cache", BTF_KIND_STRUCT=
+) > 0) {
+> +		bpf_program__set_autoload(skel->progs.slab_cache_iter, true);
+> +	} else {
+> +		bpf_program__set_autoload(skel->progs.slab_cache_iter, false);
+> +	}
+> +
+> +	if (needed_groups && !enabled_progs) {
+> +		pr_err("Error: Kernel BTF lacks required lock tracing entry points\n");
+> +		return -ENOTSUP;
+> +	}
+> +	return 0;
 > +}
 
 [Severity: Medium]
-In include/linux/sched.h, both rcu_read_lock_nesting and trc_reader_nesting
-are declared inside the randomized_struct_fields_start /
-randomized_struct_fields_end block of struct task_struct:
+Can this final check in configure_lock_progs() ever trigger?
 
-include/linux/sched.h:
-    struct task_struct {
-        ...
-        randomized_struct_fields_start
-        ...
-    #ifdef CONFIG_PREEMPT_RCU
-        int rcu_read_lock_nesting;
-        ...
-    #endif
-    #ifdef CONFIG_TASKS_TRACE_RCU
-        int trc_reader_nesting;
-        ...
-    #endif
-        ...
-        randomized_struct_fields_end
-    };
+Earlier in configure_lock_progs(), needed_groups is masked in-place via
+needed_groups &=3D supported_groups. Because every group bit set by
+supported_lock_prog_groups(btf) guarantees that its corresponding BTF
+functions exist in lock_progs[], enabled_progs will only be 0 when
+(needed_groups & supported_groups) is 0. However, in that case
+needed_groups &=3D supported_groups has already cleared needed_groups to 0,=
+ so
+if (needed_groups && !enabled_progs) always evaluates to false.
 
-When CONFIG_RANDSTRUCT is enabled, randomized_struct_fields_start wraps tho=
-se
-fields inside an anonymous struct member of task_struct, which appears in
-vmlinux BTF as a member with m->name_off =3D=3D 0 pointing to an inner
-BTF_KIND_STRUCT.
-
-While libbpf CO-RE in sample_filter.bpf.c recursively descends into anonymo=
-us
-structs and unions, btf_has_task_field() only iterates over the direct
-top-level members of task_struct.
-
-Will btf_has_task_field() return false on CONFIG_RANDSTRUCT kernels, causing
-resolve_lock_expr() to reject lock_held(rcu) and lock_held(rcu-trace) with
--EOPNOTSUPP?
+When a filter specifies a target with required_groups =3D=3D 0 and
+needed_groups =3D=3D LOCK_PROG_ALL (such as a hex lock address, a slab cach=
+e like
+&dentry, or a lock symbol without a recognized type suffix like
+&tasklist_lock) on a kernel without BTF or lacking the lock entry points,
+configure_lock_progs() will silently succeed with zero lock-tracking progra=
+ms
+enabled instead of returning -ENOTSUP.
 
 [ ... ]
 
-> @@ -929,6 +1033,48 @@ static int resolve_lock_expr(struct sample_filter_b=
-pf *skel,
->  		return 0;
->  	}
-> =20
-> +	if (!strcmp(base, "rcu_read_lock")) {
-> +		if (mode =3D=3D PBF_LOCK_MODE_WRITE) {
-> +			pr_err("Error: Lock '%s' only supports read/shared mode\n", name);
-> +			return -EINVAL;
+> +static int resolve_lock_expr(struct sample_filter_bpf *skel,
+> +			     struct perf_bpf_filter_expr *expr,
+> +			     struct perf_bpf_filter_entry *entry)
+> +{
+
+[ ... ]
+
+> +	ret =3D find_kernel_lock_sym(base, &addr);
+> +	if (ret =3D=3D 0) {
+> +		unsigned int direct_flag =3D 0;
+> +
+> +		if (strtailcmp(base, "rt_mutex") =3D=3D 0 || strtailcmp(base, "rtmutex=
+") =3D=3D 0)
+> +			direct_flag =3D PBF_LOCK_DIRECT_RTMUTEX;
+> +		else if (strtailcmp(base, "mutex") =3D=3D 0)
+> +			direct_flag =3D PBF_LOCK_DIRECT_MUTEX;
+> +		else if (strtailcmp(base, "rwsem") =3D=3D 0 &&
+> +			 strtailcmp(base, "percpu_rwsem") !=3D 0 &&
+> +			 strtailcmp(base, "pcpu_rwsem") !=3D 0)
+> +			direct_flag =3D PBF_LOCK_DIRECT_RWSEM;
+> +
+> +		entry->part =3D PBF_LOCK_ADDR | mode | direct_flag;
+> +		entry->target =3D addr;
+> +		if (skel) {
+> +			int fd =3D bpf_map__fd(skel->maps.lock_addr_filter);
+> +
+> +			bpf_map_update_elem(fd, &addr, &one, BPF_ANY);
+> +			skel->bss->has_lock_addr =3D 1;
 > +		}
-> +		if (btf && !btf_has_task_field(btf, "rcu_read_lock_nesting")) {
-> +			pr_err("Error: lock_held(rcu) requires CONFIG_PREEMPT_RCU\n");
-> +			return -EOPNOTSUPP;
-> +		}
-> +		entry->part =3D PBF_LOCK_RCU | PBF_LOCK_MODE_READ;
-> +		entry->target =3D rcu_min_depth(evsel);
 > +		return 0;
 > +	}
 
+[Severity: Medium]
+Should resolve_lock_expr() reject read-only mode (!(mode & PBF_LOCK_MODE_WR=
+ITE))
+when a global/static kernel lock symbol has an exclusive-only suffix?
+
+In prescan_one_lock_expr(), symbols ending in rt_mutex, rtmutex, mutex,
+percpu_rwsem, pcpu_rwsem, or spinlock only enable their respective exclusive
+BPF program groups, which only increment write_count.
+
+If a user specifies read/shared mode on such a symbol (for example,
+lock_held_read(&cgroup_mutex) or lock_held(&cgroup_mutex:R)),
+resolve_lock_expr() accepts it without returning -EINVAL, attaches the
+exclusive lock hooks, and sets mode to PBF_LOCK_MODE_READ. At runtime in
+check_lock_held(), is_direct_lock_owner() is skipped when
+mode =3D=3D PBF_LOCK_MODE_READ and match_held_val() checks val->read_count =
+> 0,
+which can never be non-zero.
+
 [ ... ]
 
-=E2=80=94
-=F0=9F=A4=96 Generated by Linux Kernel Patch Reviewer (Model: gemini-3.1-pr=
-o-preview)
+> @@ -501,23 +1434,44 @@ int perf_bpf_filter__prepare(struct evsel *evsel, =
+struct target *target)
+>  		goto err;
+>  	}
+> =20
+> -	prog =3D skel->progs.perf_sample_filter;
+> -	for (x =3D 0; x < xyarray__max_x(evsel->core.fd); x++) {
+> -		for (y =3D 0; y < xyarray__max_y(evsel->core.fd); y++) {
+> -			link =3D bpf_program__attach_perf_event_opts(prog, FD(evsel, x, y),
+> -								   &pe_opts);
+> -			if (IS_ERR(link)) {
+> -				pr_err("Failed to attach perf sample-filter program\n");
+> -				ret =3D PTR_ERR(link);
+> -				goto err;
+> +	if (is_tracepoint) {
+> +		/*
+> +		 * For PERF_TYPE_TRACEPOINT, PERF_EVENT_IOC_SET_BPF attaches the
+> +		 * BPF program to event->tp_event->prog_array on the shared
+> +		 * trace_event_call, which perf_trace_run_bpf_submit() executes
+> +		 * for all CPUs and tasks before iterating the per-CPU perf
+> +		 * events. Attach once on the first FD so tp_event->prog_array
+> +		 * does not get duplicate copies for each per-CPU FD.
+> +		 */
+> +		prog =3D skel->progs.perf_tp_sample_filter;
+> +		link =3D bpf_program__attach_perf_event_opts(prog, FD(evsel, 0, 0),
+> +							   &pe_opts);
+> +		ret =3D libbpf_get_error(link);
+> +		if (ret) {
+> +			pr_err("Failed to attach perf tracepoint sample-filter program\n");
+> +			goto err;
+> +		}
+> +	} else {
+> +		prog =3D skel->progs.perf_sample_filter;
+> +		for (x =3D 0; x < xyarray__max_x(evsel->core.fd); x++) {
+> +			for (y =3D 0; y < xyarray__max_y(evsel->core.fd); y++) {
+> +				link =3D bpf_program__attach_perf_event_opts(prog, FD(evsel, x, y),
+> +									   &pe_opts);
+> +				ret =3D libbpf_get_error(link);
+> +				if (ret) {
+> +					pr_err("Failed to attach perf sample-filter program\n");
+> +					goto err;
+> +				}
+>  			}
+>  		}
+>  	}
 
- Prompts used:
- - bpf.md (https://raw.githubusercontent.com/masoncl/review-prompts/main/bp=
-f.md)
- - btf.md (https://raw.githubusercontent.com/masoncl/review-prompts/main/bt=
-f.md)
- - inline-template.md (https://raw.githubusercontent.com/masoncl/review-pro=
-mpts/main/inline-template.md)
- - libbpf.md (https://raw.githubusercontent.com/masoncl/review-prompts/main=
-/libbpf.md)
- - perf.md (https://raw.githubusercontent.com/masoncl/review-prompts/main/p=
-erf.md)
- - rcu.md (https://raw.githubusercontent.com/masoncl/review-prompts/main/rc=
-u.md)
- - tracing.md (https://raw.githubusercontent.com/masoncl/review-prompts/mai=
-n/tracing.md)
+[Severity: Medium]
+Does perf_bpf_filter__prepare() leak the struct bpf_link returned by
+bpf_program__attach_perf_event_opts() in the new is_tracepoint branch (as
+well as in the existing per-FD loop)?
+
+bpf_program__attach_perf_event_opts() heap-allocates a struct bpf_link_perf,
+creates a kernel BPF_PERF_EVENT link fd holding references to the perf_event
+file and BPF program, and returns ownership of the struct bpf_link * to the
+caller without registering it in skel->links. Storing it in the local link
+variable without saving or destroying it in perf_bpf_filter__destroy() (or =
+on
+the err path) leaks both the struct bpf_link_perf allocation and the kernel
+link fd.
+
+Because the leaked link fd holds a reference to the underlying perf_event
+file, closing the evsel fds does not release the perf_event or detach
+perf_tp_sample_filter from tp_event->prog_array while the process remains
+alive (for example, across repeated runs in perf stat -r N).
+
+[ ... ]
+
+> @@ -532,6 +1486,21 @@ int perf_bpf_filter__prepare(struct evsel *evsel, s=
+truct target *target)
+>  	return ret;
+>  }
+> =20
+
+[ ... ]
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261018053710.2572=
-636-1-irogers@google.com?part=3D4
+636-1-irogers@google.com?part=3D2
