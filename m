@@ -1,69 +1,70 @@
-Received: from mail-yw1-f170.google.com (mail-yw1-f170.google.com [209.85.128.170])
+Received: from mail-yx1-f54.google.com (mail-yx1-f54.google.com [74.125.224.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F5624B0E3F
-	for <linux-perf-users@vger.kernel.org>; Sun, 18 Oct 2026 14:22:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35CBC4B0E3F
+	for <linux-perf-users@vger.kernel.org>; Sun, 18 Oct 2026 14:22:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.224.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792333337; cv=none; b=ZWijW/esWQu036fub0zG7woaSTn1LeMP4ii5xYGLLFUZfmiUgqsTJU7AZLTCf9GSdw3ng44ceOTnnlgLerHz93b7gmU2iPg+w4WBhKa5TmEfOs+B93BZx+8Wuy2KWTihBM2xW/YajBtjijlPKbkPDve6YbW+lESRzp6YedTRLg8=
+	t=1792333347; cv=none; b=iyEB7nzYvR0U7xJgr8z8O+X1DRitoXpGcsp49DTv0y9z96dP2e0x6U/GxLp2Htf2jRsv3zVij5BEbRcfoNXJJH+tvZxTBWiLgeS1xgUZRkRe5bRwQrLVurVDf/GPT0Vk5i12jydy1Qr3h5RWPn8XjZ4mneuZCQOFB8e0wZ6cRxc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792333337; c=relaxed/simple;
-	bh=3hBEoYmujIN/lIM+LWmpcdreauHJLGhIJOlga1pFDNU=;
+	s=arc-20240116; t=1792333347; c=relaxed/simple;
+	bh=VxOR/bCOVZkIw8KCvCXFIKKLhAZToFxwLD68oZ1t8k4=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=T+2UXayBVZjhkfvcPwO/d5yczZKBgIeicADHSQA1dS4tpBwYYJbRt9w/8Mcs551PfSOhQljC6OurPbwVt+s9/vOV7vS8UJ5xmWqn9kFTojHXYggq0/heOlhiOsLEGhH6NJn25UnLa9jUj8BxvWlI2i3bsq2BzBa46x7a712CDtQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eKuopU1I; arc=none smtp.client-ip=209.85.128.170
+	 In-Reply-To:To:Cc; b=pWEzxpIh3F8ZkzDllbtK/p+Mq+N0wKzu3Dyjb/acxO5ed2p+8PTiylXj/KbGMXzX5ZtX/xyuFSUaTvEN+d+L94ZcXtXpFOkHHqmwxckkmKhRrjtmE3s+sDvFDoADkuONqPKRP+42pM7i1/SLle+wRlMT/ajpLMsAQYWpilkhpRA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=rRs2J1mh; arc=none smtp.client-ip=74.125.224.54
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eKuopU1I"
-Received: by mail-yw1-f170.google.com with SMTP id 00721157ae682-87ab6e5f91eso7575137b3.2
-        for <linux-perf-users@vger.kernel.org>; Sun, 18 Oct 2026 07:22:16 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rRs2J1mh"
+Received: by mail-yx1-f54.google.com with SMTP id 956f58d0204a3-67992884b02so663532d50.3
+        for <linux-perf-users@vger.kernel.org>; Sun, 18 Oct 2026 07:22:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1792333335; x=1792938135; darn=vger.kernel.org;
+        d=gmail.com; s=20251104; t=1792333345; x=1792938145; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :content-type:mime-version:subject:date:from:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=d8OpYwKY4k0JzilSveCfUGKhXNAVuzUj6LeYu6BiAQs=;
-        b=eKuopU1IGP03p8Xua8yrk/AbfC5a0W/QZ/fCtFLWnnuF1xJUevvFV+cM8hKK3OA8lN
-         h3RFUfY4iuAEG0vko5PVQTddCc8eJhXYs0A3dscENbJ3KOeLg6Z/yYhnjqj/L/1wIKa9
-         xfz/B4rFxdbY7ris6EdrrOFFk0oVe0jizVURL39N5M032keW4MfNtOgSuCfPwDHMyOE0
-         +99HVF8sta9mgpXE6IP5XlBNykZtMPUi3uPIER7ANf6hicGU431OGh6vhOrK1Sy7/3hf
-         oHHjkiwi1ZZQn5eGcU7XmODwNwhxFdvSGezLMs2+UwXQT+NEv6lVrgk132UGzr6GmVLq
-         lNYw==
+        bh=UUlIHV3Y/eyAzB+bNbhTZ2vi/60rQRriQzgaW1YAFSU=;
+        b=rRs2J1mhqX5bwvPb6V4+pexg8CQt1Ndrl+2w8jGT1f/UgBbHjmuBChrRU1yjBWexBI
+         PCP8r76kksd7zais4alPXwAM3qz73W7QaJS2CQ9hivfH+XysG5M71gvNBeWUrO3MtZbC
+         1q2Prcsvo3n7sZa2j3HD7a0UMfHNqiGmg/hbpV7k9wD7yG84p2iSpaI+dGskxVknsJ9P
+         sHFJJa6o+dQNfR2Thhb7TQxk5dwHm03rcKhTP3sVMEeeUhcvLCFDhKUHwZ9H7RoIWGWd
+         uxsZIgVbrrHaza7AH18of/YR+I2aURtK7f94AYlO8Eudkym32j2hWJ3Dcs57xLcnKkWo
+         z2HQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1792333335; x=1792938135;
+        d=1e100.net; s=20260707; t=1792333345; x=1792938145;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :content-type:mime-version:subject:date:from:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=d8OpYwKY4k0JzilSveCfUGKhXNAVuzUj6LeYu6BiAQs=;
-        b=FBdubNeIsHGVcWkXUwMgcxrPN1C48isQxU0rVlvxFjzKOUOK4+iL1jX9HlxTSjRC+G
-         0fHOJ69ro5hB5l3vyrvW3alG2spCyS6f6mVu9u+pYrF/oqFVIrp9PqtzjGvxm5+iqiNm
-         f7fIWyYXQ6YaaV9d0zWXzY3ZXfKFQ+PkLlCbL851QeYZ2xeA/J22iCpOHiHnYGRZ3EmB
-         EHKuKy6v/T8lklSXF8HNj/Aarn5ldVohOAsRYp7FXyDUmnyUY9vuOTsK5nBJSlrXWbMn
-         FxsbE5Sg7EoX2zXLc9ya52k031j58PnNoxsbIYn9WfKYe75w5AhXTxqcKYhj9tyNQ5xY
-         iSRA==
-X-Forwarded-Encrypted: i=1; AKwUvByYXm1dFP3AW5YIEWK9F/ix9meWTrKmM7TBYH2Tkwa4TpIX1nvPpxAHcMxv7g3m0aCJg1NL16Wt4d5eTpngt5Si@vger.kernel.org
-X-Gm-Message-State: AFq9FYJmjIEtcbU7OAUFdmbChQsCX4B4CEBI9Dn24A09SIQNQaJiqigb
-	WgGB5xS1GAaU6L6ny8mehJWifbdhzkVJphSfzeUL/ainVYGnvM3PLxTiG6TB5Jvl
-X-Gm-Gg: AYBFou16+sWZEHcKcpNPGSUAGbP3f3b9QlnqyNuyS+LI2KW5lKwND1jsFqTsw3lXibo
-	UCevNppRZt3kIKo/r/7VOrUTk6vgGFackM4SrXGNTbgYt36TvQpIQHoG1QIcvFkobO2ut1U4pKU
-	04v4E28zOf1OpFZctaZkQGOEJsZRM36lUma6Ba1ZDChNDvaeIRH8AdFK6sOfMiFozhxAZ6CQ9a4
-	19koKjsuWjTNGwqxUHrCNfeNOcaEe1ySz1ssL00NzstOrs4TyuB9ZgqddRjVzDxfLZ2EK5Y3GSt
-	bYKS1V5Vof5hiT3ajQ/8iXzpdvNItai7inuDBqfOmR46iHYlB7bB8DJkzIGpg5+aC44kQjarxfV
-	oO9Pe9sADZI5sljyGl0qEhgLxYN/27wC9MPzqGWmIyeiVgoDrY8WBlB/C5BTE1DKsJ9LKzY+XX4
-	uLOCgZ8yXV0HlVpAK/TnUVi5ODxMOg43V3YN9/TBXmBUFO7Z2shFz5qX2jhGf4OQO6+RTy/wwYZ
-	BiOagX/EoO2OWA13IRRyeJoNl0bliWf96ktNBmAHx9AKD/XNgajW9WWxcc++1eIqHGlnh5sK7Zb
-	Q6e/I1G+zYk3jqSEL1PRi6eiEIKB
-X-Received: by 2002:a05:690c:4d84:b0:8b0:8a9c:fac9 with SMTP id 00721157ae682-8b0f2170e34mr16917187b3.28.1792333335205;
-        Sun, 18 Oct 2026 07:22:15 -0700 (PDT)
+        bh=UUlIHV3Y/eyAzB+bNbhTZ2vi/60rQRriQzgaW1YAFSU=;
+        b=kNbaafOJ3ykL0SqK03iEhhMd5TUPcRMA/qxYq3A5eyiWuL3oKTM3gslyT7NjWjrMsr
+         HZAHL5Puxo/k2IvJYVxNCEU3zu8RR/vvU6CUbB9RuHQn2Lsopk+hXwVuFeZCOCEaTAfF
+         uzvkVAZiaDGzRRugMVTB+59nu1MwsZeNA9YlJvmKegKMCNBJMaWzg1Gg9Nzdz9hwBJ9w
+         jK8FJ6EYD1rdxNK/HUZIGQUbbapst96nz0+I3aoM+b/2RlSHR+OyIGJgRJKD8jlDp4Rn
+         0J6bEUypLa+w3kRMvHPYXxvZERgGegxcATvJCeIshmY2m0NWD6P3T/I0x84X/fcbg+ff
+         JUCA==
+X-Forwarded-Encrypted: i=1; AKwUvByA9sLnqqGXx10RblgsuMTjdhMmYanN3HZtP17B5iMf/SjmSBGV/m7zfQxdqXmWCncvmBGRhbf7tWo5Thj33HFs@vger.kernel.org
+X-Gm-Message-State: AFq9FYKi63rTZ42GF6uKAzRqaF31fbPaQAJAhc0JfoXMfDdVvPOSikqX
+	Dt5qLe7JsJ71jZMvmbBJOfTuavhSl8xfl0P2ydCLp0K9cvwQdBL5qTLF
+X-Gm-Gg: AYBFou1B4kZtzOkBPPqzfgnZD2LvTn70iwjtU5dST0UxdVRQV7Axmfm/Z6npLbI83s7
+	dmoEgOGgH5LiVfnH+5hO5xPDWZ7kjyRCe4GhdC70GkrDFtYb9a+Tfcaf6Oza9b86mnPxAhxT3AE
+	ObDDmH/+0NYo5SKFPJey3Lb2lzB10r91ex/KpNe9reLLqwc0ZLlRUVLggcGHTmh+2L2Om+i7mmu
+	RabnbZYbHUNw4qGgEaX5qzUdsT5v1jOvNNktl8TiRnTyhTyvbXnSGRu8LOBOWc3y7A4+sxgjbXP
+	2UvkdN6YKXCCHRNnjnUY91nybSm1eh091vOFB/xD7p7eapfD4XcTgFRlAGvhlT8OPBM1u4Xngf1
+	AVJKkWgcIrK4A3CH9pOL5SiRrF/A8N+Tv9qvoCeCPEzUkRq4Ar1Xn0JgUkIEOBYxqXD4JG5Wbvh
+	xQrY6bnv/grECDHdvFTvePd3t2apSEO+CrE1qeM18aB8OW6DKf36Jhgqez4Y7dNBnL8rdSXM0oE
+	i67VycBZEVLtGl2I2ErahJ5KDDS2I21F2OlKNsmVYT32GGR/t6m2vevRLzVpSqzidtGJd7M+WH7
+	gvnH+fo1rYZv8Wi/yXNBwTd9o+zQfMwyxAPikHc=
+X-Received: by 2002:a05:690c:a75a:b0:8b0:b1dd:c09a with SMTP id 00721157ae682-8b0f21bbb9cmr11567547b3.64.1792333345125;
+        Sun, 18 Oct 2026 07:22:25 -0700 (PDT)
 Received: from localhost (108-93-236-139.lightspeed.chtnsc.sbcglobal.net. [108.93.236.139])
-        by smtp.gmail.com with ESMTPSA id 00721157ae682-8b0e58e0258sm30708737b3.26.2026.10.18.07.22.12
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-8b0e590b586sm29403807b3.31.2026.10.18.07.22.22
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 18 Oct 2026 07:22:13 -0700 (PDT)
+        Sun, 18 Oct 2026 07:22:24 -0700 (PDT)
 From: Matt Turner <mattst88@gmail.com>
-Date: Sun, 18 Oct 2026 10:22:01 -0400
-Subject: [PATCH v3 1/5] alpha: fix stale user_stack_pointer()
+Date: Sun, 18 Oct 2026 10:22:02 -0400
+Subject: [PATCH v3 2/5] alpha: stop storing the user stack pointer in
+ pt_regs
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -72,7 +73,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20261018-alpha-perf-regs-v3-v3-1-52be85332c57@gmail.com>
+Message-Id: <20261018-alpha-perf-regs-v3-v3-2-52be85332c57@gmail.com>
 References: <20261018-alpha-perf-regs-v3-v3-0-52be85332c57@gmail.com>
 In-Reply-To: <20261018-alpha-perf-regs-v3-v3-0-52be85332c57@gmail.com>
 To: Richard Henderson <richard.henderson@linaro.org>, 
@@ -81,79 +82,107 @@ Cc: linux-alpha@vger.kernel.org, linux-kernel@vger.kernel.org,
  linux-doc@vger.kernel.org, linux-perf-users@vger.kernel.org, 
  Ian Rogers <irogers@google.com>, Matt Turner <mattst88@gmail.com>
 X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2375; i=mattst88@gmail.com;
- h=from:subject:message-id; bh=3hBEoYmujIN/lIM+LWmpcdreauHJLGhIJOlga1pFDNU=;
- b=owGbwMvMwCW25rVmCc8sv+mMp9WSGLKuXON8d2G9rfORfxuXS0juvBia8u+1Q8d3Z6/TOn739
- V5ZBOQEdXxkYRDjYpgppsgSt16RZVbbjqU+p6V/wcxhZQIZIi3SwAAELAx8uYl5pUY6Rnqm2oZ6
- hkCGjlE8RE6PQSOzuLg0tUg3raDIIS+/JLEkMz+vWC+/IDWvIL1ALy0zrSQjI7+oOBVohF5eaom
- pq6ObkaGBiaWjhZmThaOpibOzk6GTm6Ojs6uTkaW5iYGzpaOJq6U5AxenAMw1278y/A+SvtLl9z
- F0zv32tf4NTo3/Db/wLqhsyA2X8tJQbu71qGL4XzA53prLtT2LN3Wpq+erVVfOa2ZNzfDySl38K
- Hd+p84nLgA=
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3175; i=mattst88@gmail.com;
+ h=from:subject:message-id; bh=VxOR/bCOVZkIw8KCvCXFIKKLhAZToFxwLD68oZ1t8k4=;
+ b=owGbwMvMwCW25rVmCc8sv+mMp9WSGLKuXOOs62SZ+eg+F3emovLvc1Mz5mwpdUi/ZRqwW6/3Q
+ fvLmRWbOj6yMIhxMcwUU2SJW6/IMqttx1Kf09K/YOawMoEMkRZpYAACFga+3MS8UiMdIz1TbUM9
+ QyBDxygeIqfHoJFZXFyaWqSbVlDkkJdfkliSmZ9XrJdfkJpXkF6gl5aZVpKRkV9UnAo0Qi8vtcT
+ U1dHNyNDAxNLRwszJwtHUxNnZydDJzdHR2dXJyNLcxMDZ0tHE1dKcgYtTAOYa2eOMDKfWPxaP0Y
+ lbXMtktYfl3XzliNrA1KyEX0bl71dap5yWm87IcLtcp+5uhnTgoZ3yfCy+iceVn847089z8XSCH
+ fNXphRlfgA=
 X-Developer-Key: i=mattst88@gmail.com; a=openpgp;
  fpr=3BB639E56F861FA2E86505690FDD682D974CA72A
 
-PALcode keeps the user stack pointer in the PCB, not the trap frame, so
-pt_regs->usp is only valid where entry code stores it: entSys,
-do_entArith() and do_entIF(). Interrupts, page faults and unaligned
-traps leave it stale, and ptrace and /proc/<pid>/syscall read it
-through user_stack_pointer().
+Nothing reads pt_regs->usp now that user_stack_pointer() uses the PCB.
+Drop the stores, which saves a PAL_rdusp call on every syscall, and
+give the field back its old name.
 
-A user-mode pt_regs is at the top of its task's stack, so find the
-thread_info from it and use rdusp() for current or pcb.usp otherwise,
-as KSTK_ESP() and the regset code already do.
-
-Fixes: 8a2857bc2b30 ("alpha: enable regset-based ptrace and core dumps")
 Assisted-by: Claude:claude-opus-5-5
 Reviewed-by: Magnus Lindholm <linmag7@gmail.com>
 Tested-by: Magnus Lindholm <linmag7@gmail.com>
 Acked-by: Ian Rogers <irogers@google.com>
 Signed-off-by: Matt Turner <mattst88@gmail.com>
 ---
- arch/alpha/include/asm/ptrace.h |  7 +------
- arch/alpha/kernel/ptrace.c      | 12 ++++++++++++
- 2 files changed, 13 insertions(+), 6 deletions(-)
+ arch/alpha/include/uapi/asm/ptrace.h | 2 +-
+ arch/alpha/kernel/asm-offsets.c      | 1 -
+ arch/alpha/kernel/entry.S            | 5 -----
+ arch/alpha/kernel/traps.c            | 8 --------
+ 4 files changed, 1 insertion(+), 15 deletions(-)
 
-diff --git a/arch/alpha/include/asm/ptrace.h b/arch/alpha/include/asm/ptrace.h
-index 430e8dc27ff7..45d1229344b6 100644
---- a/arch/alpha/include/asm/ptrace.h
-+++ b/arch/alpha/include/asm/ptrace.h
-@@ -26,12 +26,7 @@ static inline unsigned long regs_return_value(struct pt_regs *regs)
- 	return regs->r0;
- }
+diff --git a/arch/alpha/include/uapi/asm/ptrace.h b/arch/alpha/include/uapi/asm/ptrace.h
+index 9d86b2a1526e..72ed913a910f 100644
+--- a/arch/alpha/include/uapi/asm/ptrace.h
++++ b/arch/alpha/include/uapi/asm/ptrace.h
+@@ -43,7 +43,7 @@ struct pt_regs {
+ 	unsigned long trap_a1;
+ 	unsigned long trap_a2;
+ /* This makes the stack 16-byte aligned as GCC expects */
+-	unsigned long usp;
++	unsigned long __pad0;
+ /* These are saved by PAL-code: */
+ 	unsigned long ps;
+ 	unsigned long pc;
+diff --git a/arch/alpha/kernel/asm-offsets.c b/arch/alpha/kernel/asm-offsets.c
+index c89792c86044..22ed3c975b1c 100644
+--- a/arch/alpha/kernel/asm-offsets.c
++++ b/arch/alpha/kernel/asm-offsets.c
+@@ -30,7 +30,6 @@ static void __used foo(void)
  
--/* Helpers for working with the user stack pointer */
--static inline unsigned long user_stack_pointer(struct pt_regs *regs)
+ 	DEFINE(HAE_CACHE, offsetof(struct alpha_machine_vector, hae_cache));
+ 	DEFINE(HAE_REG, offsetof(struct alpha_machine_vector, hae_register));
+-	DEFINE(PT_REGS_USP, offsetof(struct pt_regs, usp));
+ 
+ 	DEFINE(TI_FLAGS,        offsetof(struct thread_info, flags));
+ 	DEFINE(TI_SYSCALL_WORK, offsetof(struct thread_info, syscall_work));
+diff --git a/arch/alpha/kernel/entry.S b/arch/alpha/kernel/entry.S
+index bfa116d455fb..790389a15c3c 100644
+--- a/arch/alpha/kernel/entry.S
++++ b/arch/alpha/kernel/entry.S
+@@ -476,11 +476,6 @@ entSys:
+ 	ldq	$1, 0($sp)	/* syscall nr from saved r0 */
+ 	stq	$1, 8($sp)	/* regs->r1 = shadow syscall nr */
+ 
+-	mov	$0, $8
+-	call_pal PAL_rdusp
+-	stq	$0, PT_REGS_USP($sp)
+-	mov	$8, $0
+-
+ 	lda	$8, 0x3fff
+ 	bic	$sp, $8, $8
+ 
+diff --git a/arch/alpha/kernel/traps.c b/arch/alpha/kernel/traps.c
+index cfaef96c4ce8..5882c65b7ef1 100644
+--- a/arch/alpha/kernel/traps.c
++++ b/arch/alpha/kernel/traps.c
+@@ -30,12 +30,6 @@
+ 
+ #include "proto.h"
+ 
+-static __always_inline void alpha_snapshot_usp(struct pt_regs *regs)
 -{
--	/* Valid for user-mode regs */
--	return regs->usp;
+-	if (user_mode(regs))
+-		regs->usp = rdusp();
 -}
-+unsigned long user_stack_pointer(struct pt_regs *regs);
- 
- static __always_inline bool regs_irqs_disabled(struct pt_regs *regs)
+-
+ void
+ dik_show_regs(struct pt_regs *regs, unsigned long *r9_15)
  {
-diff --git a/arch/alpha/kernel/ptrace.c b/arch/alpha/kernel/ptrace.c
-index e1d8c2f69688..dba7e9905cfa 100644
---- a/arch/alpha/kernel/ptrace.c
-+++ b/arch/alpha/kernel/ptrace.c
-@@ -440,6 +440,18 @@ ptrace_cancel_bpt(struct task_struct * child)
- 	return (nsaved != 0);
- }
- 
-+/*
-+ * PALcode keeps the user stack pointer in the PCB, not the trap frame.
-+ * A user-mode pt_regs sits at the top of its task's stack, so the
-+ * thread_info is at the base.
-+ */
-+unsigned long user_stack_pointer(struct pt_regs *regs)
-+{
-+	struct thread_info *ti = (void *)((unsigned long)regs & -THREAD_SIZE);
-+
-+	return ti == current_thread_info() ? rdusp() : ti->pcb.usp;
-+}
-+
- void user_enable_single_step(struct task_struct *child)
+@@ -186,7 +180,6 @@ do_entArith(unsigned long summary, unsigned long write_mask,
  {
- 	/* Mark single stepping.  */
+ 	long si_code = FPE_FLTINV;
+ 
+-	alpha_snapshot_usp(regs);
+ 	if (summary & 1) {
+ 		/* Software-completion summary bit is set, so try to
+ 		   emulate the instruction.  If the processor supports
+@@ -208,7 +201,6 @@ do_entIF(unsigned long type, struct pt_regs *regs)
+ {
+ 	int signo, code;
+ 
+-	alpha_snapshot_usp(regs);
+ 	if (type == 3) { /* FEN fault */
+ 		/* Irritating users can call PAL_clrfen to disable the
+ 		   FPU for the process.  The kernel will then trap in
 
 -- 
 2.55.0
