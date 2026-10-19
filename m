@@ -1,48 +1,48 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7234844725D;
-	Mon, 19 Oct 2026 07:16:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D5F42C1586;
+	Mon, 19 Oct 2026 07:16:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792394203; cv=none; b=r1S9C+bkAUuW9r3fDRxwo5AHIYDWuZrQivN84qSw/XK3s6q6v0Uwffo41ItXVQlRQDBnRob+Lx+AyCDBbsFam8g6+IriFV3vraokU1iubHDpnWowDaSZGO0yvFNiqWaXg9T5IzFXwAyi+hAHRT1UM0eIhojyVHCR5197IGYd59U=
+	t=1792394206; cv=none; b=mOincHTefYsqlw6n8u8skaowbLvU286PcQ62TUfYpSYGro/H2TXKkGa1icuMCm6os7arM5wtZvwTrqqkB7keCREzMkDjzdxh8ove9Xk/P9B975RkTv0hlnVLDzqX/wpDOOSROv56tZ/n4UllNrflhyFiKUCuwJs0ros9v/zg7yc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792394203; c=relaxed/simple;
-	bh=GjL0iO8AX8BpJxKRoFAVkDuzbdSOrmGP2Ya51fOw2Y4=;
+	s=arc-20240116; t=1792394206; c=relaxed/simple;
+	bh=hLC8ZGkwaTfu6ZnXT5i21CGE3UrgbMZUHhQ0ocJXqYo=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=ImpUB21Pe7UCskmJxQ46FBgn6NdksUSXsEBZpD3EvjhMBCu6CEH7K90P8+hNH02FEQIWSOMNtEDHl6wY48OnG5lkSgTvJGmvHTSwDvne/xowi0LgRqJ7w+8QORD2AyjrQ8AApXtUyfT3wd6skcSSncu5/CFnHQj0+uO/O0lqKEw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LfhbjHfP; arc=none smtp.client-ip=198.175.65.17
+	 MIME-Version; b=rs+2Fz346X+JO1NVNnJhBVV8zBNtfzPuU02H+OrqIBgKw0yjzuvpY/ip2P/Vr5N6DtdW+dvWke0BvZS0axh8qLBWGqPUOcx25PHNumZkAO5xvkagrVJEqkHgrwWJOKDR/IcTdmWQKbaPqxQ5u0G9UPus6okk8hvf8awMHuiNthY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=aJOYAohc; arc=none smtp.client-ip=198.175.65.17
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LfhbjHfP"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="aJOYAohc"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1792394201; x=1823930201;
+  t=1792394206; x=1823930206;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=GjL0iO8AX8BpJxKRoFAVkDuzbdSOrmGP2Ya51fOw2Y4=;
-  b=LfhbjHfPJF+nGJewbbnjdAMYs7Mb+oofP1eHYfXRKKOKSnNMOPmqyGAr
-   cn7+A7bdq/sHiPuKdQ0VZ9ToTpxiGigHGCoAJdrJmRh2bsYKjhFxx5smI
-   xsbTGtiXoDjUK9sVWsljBCrxWzzhQ6WrD1v+xNGW5LjFkoP5DYCBF0+9+
-   S2/kf9pW5rzOHF5EzppX4RLoxDltCfrwU1S5eWvR0qkxIcrTxq2Y3eEgA
-   yWszJNKJi3fEbcT28ndDcHvugj233zbsQwc29KLQAQs/oZi5LA2ymg0/H
-   He5+iZU4jDWmUQaywzDNkA26YxM4V05rYmBBCogj2/K2/q4MTKsmz1FPB
-   A==;
-X-CSE-ConnectionGUID: tz/cELbKTQavE+SP0i79dQ==
-X-CSE-MsgGUID: aNE7+xadSS27nFjWD1Ogig==
-X-IronPort-AV: E=McAfee;i="6800,10657,11939"; a="1085697"
+  bh=hLC8ZGkwaTfu6ZnXT5i21CGE3UrgbMZUHhQ0ocJXqYo=;
+  b=aJOYAohcSta19KcW/Se8bZIPoyF4CHFVbVt8kCVqGGs+3ftc6ZzU7QYF
+   5Vfal+IhWsamc9ipbn3yDWPzG9yzalUe66nfhWURHcBgQryn2Q3AY2hJ9
+   JkhfyeFmhhoOzzBvbhn1rqadMRmWoZNXNzO6FXRjogBV+h/j1G/RhZQgb
+   7ebbjrXg9jo580ycyFcb9CrBkL7KWt3GfeQnTThSfpEYcvcUGKhwOAPT5
+   P7WOQRoCdgrPNyw4I+JQsZxhwLU4ss5Ck1/ngM3fmEsDMB+21nJqq13KK
+   ytWinjVa4R8e2ZampS9WfTXVxYK41M4hLaNwkxK4s/sg4wu18leWAxumm
+   Q==;
+X-CSE-ConnectionGUID: ux3iYjNuS26XqPoEaVf25A==
+X-CSE-MsgGUID: ETMsEfaPQ+iksuaTQbdOuA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11939"; a="1085712"
 X-IronPort-AV: E=Sophos;i="6.27,167,1787036400"; 
-   d="scan'208";a="1085697"
+   d="scan'208";a="1085712"
 Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Oct 2026 00:16:40 -0700
-X-CSE-ConnectionGUID: jqWK7fxTRB+VIa0rgtOZNg==
-X-CSE-MsgGUID: i+PSbc07TWimza0yFRRX5w==
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Oct 2026 00:16:45 -0700
+X-CSE-ConnectionGUID: owzB0WIgSRWF0Y5FZHK3xA==
+X-CSE-MsgGUID: 3BG9jdATSv68t8XBWMAbUg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.27,167,1787036400"; 
-   d="scan'208";a="2807233"
+   d="scan'208";a="2807238"
 Received: from spr.sh.intel.com ([10.112.229.196])
-  by fmviesa007.fm.intel.com with ESMTP; 19 Oct 2026 00:16:36 -0700
+  by fmviesa007.fm.intel.com with ESMTP; 19 Oct 2026 00:16:40 -0700
 From: Dapeng Mi <dapeng1.mi@linux.intel.com>
 To: Peter Zijlstra <peterz@infradead.org>,
 	Ingo Molnar <mingo@redhat.com>,
@@ -65,10 +65,11 @@ Cc: linux-kernel@vger.kernel.org,
 	Zide Chen <zide.chen@intel.com>,
 	Falcon Thomas <thomas.falcon@intel.com>,
 	Xudong Hao <xudong.hao@intel.com>,
+	Sashiko <sashiko-bot@kernel.org>,
 	Dapeng Mi <dapeng1.mi@linux.intel.com>
-Subject: [Patch v3 1/4] perf/x86: Clamp x86_pmu.lbr_nr to MAX_LBR_ENTRIES
-Date: Mon, 19 Oct 2026 15:08:33 +0800
-Message-Id: <20261019070836.2972403-2-dapeng1.mi@linux.intel.com>
+Subject: [Patch v3 2/4] perf/x86/amd/lbr: Limit branch snapshots to valid entries
+Date: Mon, 19 Oct 2026 15:08:34 +0800
+Message-Id: <20261019070836.2972403-3-dapeng1.mi@linux.intel.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20261019070836.2972403-1-dapeng1.mi@linux.intel.com>
 References: <20261019070836.2972403-1-dapeng1.mi@linux.intel.com>
@@ -80,27 +81,57 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Ensure x86_pmu.lbr_nr never exceeds MAX_LBR_ENTRIES to avoid
-out-of-bounds access when handling the cached LBR stack.
+From: Sandipan Das <sandipan.das@amd.com>
 
+The branch snapshot callback used by bpf_get_branch_snapshot() copies
+up to x86_pmu.lbr_nr entries from cpuc->lbr_entries[], even when the
+last LBR read kept fewer branches. The entries past lbr_stack.nr are
+invalid, but they end up reaching BPF programs.
+
+Limit copying to lbr_stack.nr entries and also reset lbr_stack.nr when
+amd_pmu_lbr_read() skips reading the registers, so that a stale count
+is never reused.
+
+Fixes: a4d18112e531 ("perf/x86/amd: Support capturing LBR from software events")
+Reported-by: Sashiko <sashiko-bot@kernel.org>
+Closes: https://lore.kernel.org/all/sashiko-outbox-163130@kernel.org/
+Signed-off-by: Sandipan Das <sandipan.das@amd.com>
+Reviewed-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
 Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
 ---
- arch/x86/events/core.c | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/x86/events/amd/core.c | 2 +-
+ arch/x86/events/amd/lbr.c  | 4 +++-
+ 2 files changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
-index 4df792b139e0..82f6b66db7e2 100644
---- a/arch/x86/events/core.c
-+++ b/arch/x86/events/core.c
-@@ -2645,6 +2645,8 @@ static int __init init_hw_perf_events(void)
- 	if (!x86_pmu.config_mask)
- 		x86_pmu.config_mask = X86_RAW_EVENT_MASK;
+diff --git a/arch/x86/events/amd/core.c b/arch/x86/events/amd/core.c
+index 49b6b8fce566..bf631f60757c 100644
+--- a/arch/x86/events/amd/core.c
++++ b/arch/x86/events/amd/core.c
+@@ -944,7 +944,7 @@ static int amd_pmu_v2_snapshot_branch_stack(struct perf_branch_entry *entries, u
+ 	cpuc = this_cpu_ptr(&cpu_hw_events);
  
-+	x86_pmu.lbr_nr = min(x86_pmu.lbr_nr, MAX_LBR_ENTRIES);
-+
- 	perf_events_lapic_init();
- 	register_nmi_handler(NMI_LOCAL, perf_event_nmi_handler, 0, "PMI");
+ 	amd_pmu_lbr_read();
+-	cnt = min(cnt, x86_pmu.lbr_nr);
++	cnt = min(cnt, cpuc->lbr_stack.nr);
+ 	memcpy(entries, cpuc->lbr_entries, sizeof(struct perf_branch_entry) * cnt);
  
+ 	amd_pmu_v2_enable_all(0);
+diff --git a/arch/x86/events/amd/lbr.c b/arch/x86/events/amd/lbr.c
+index a55646fcb846..6c93b8042c73 100644
+--- a/arch/x86/events/amd/lbr.c
++++ b/arch/x86/events/amd/lbr.c
+@@ -168,8 +168,10 @@ void amd_pmu_lbr_read(void)
+ 	struct branch_entry entry;
+ 	int out = 0, idx, i;
+ 
+-	if (!cpuc->lbr_users)
++	if (!cpuc->lbr_users) {
++		cpuc->lbr_stack.nr = 0;
+ 		return;
++	}
+ 
+ 	for (i = 0; i < x86_pmu.lbr_nr; i++) {
+ 		entry.from.full	= amd_pmu_lbr_get_from(i);
 -- 
 2.34.1
 
