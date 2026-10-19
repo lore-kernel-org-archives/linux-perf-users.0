@@ -1,51 +1,46 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65BB75208B6;
-	Mon, 19 Oct 2026 13:55:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA2974FD79C;
+	Mon, 19 Oct 2026 13:58:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792418115; cv=none; b=gNTZ9yu4n6yIKJqr6/fCUVTDop9I1R4P4hfvnyvAyjXAzZNet0R4J47AvNgFSBvyG5FVGLiNYzfEilbHNyEo2Q27WBT8rI7AST2oPjNif5tF2VHClYPn8BiJAceN2d8eFDceZxr3NozzoUpUuWONPoPJKfEO6vcKm5f8Ze6Nj4I=
+	t=1792418298; cv=none; b=KwBzdgWpP5DJcF6lpWoQ+8N9h4Chmfw55lbyCDR1I/RoljBPi7n46VelyoXMH/lQT15ZHcHHU2B2ZVeMKUVSS1Mkr965rDMSjHAnFsOgEHJoUEAnNmJBD2PckXsYBRAt9ZWrcF393HcQXwunxqr26qoExBDhig+2zBtQewp74wg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792418115; c=relaxed/simple;
-	bh=U4koSAER90SeyEy0tNlP4fPNMDTpolOLeef99Vb0ERc=;
+	s=arc-20240116; t=1792418298; c=relaxed/simple;
+	bh=6sFnVbt2hLiO37r4MPLryBWnzrCgJnOWgVpC4ChUDCM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=gr9JUOMQkAGTV4XlYXt0uL2gHbl916nA4cWQk0ZXg6/C78A2n8T+JWlm57ZMl9iQkeajqHhIS3IxJR79wC4KETA5XrHosjhJccBT2D02y25iyfvVMzwYbqKqaE6Xnnd/lnkkxaUKoPAH2Hl+MpmK8IYYEK3oCVLvZx1MgUckXLs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Nk2HhtdZ; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version:Content-Type; b=Qe42/5dRnNPyYTU4/8+0w/1mFjn0r3F97In3WIAwj5OqU6UcWE09GcPSliHsIowcSJjrUqwb1btlOT6xu1vAC/hq4Ae6xdcU4vWVjWAM3TOwzkDSr+HusFKLWmLmhx7VAmeDEPX15xgE2YZvJjdXMw+azuDjmg9Si+46e3S0O7w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=U7PWeDm4; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Nk2HhtdZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6FFB51F000C9;
-	Mon, 19 Oct 2026 13:55:11 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="U7PWeDm4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A33B41F000C6;
+	Mon, 19 Oct 2026 13:58:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1792418113;
-	bh=l0Uk1/DpNZ6w/8m/csQtHlUf7Na9Gh7XbL1dzLVVlGQ=;
+	s=k20260515; t=1792418293;
+	bh=dVpi2Qt8rGDhkBJcCF1Rc3xlJf7dXV2WsmSTuQO/f0k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=Nk2HhtdZdyOcTnpPsWePcb/BYZjhgMdipMmeb3D7WEYggkLrA+coTSRRAlkiOUbYE
-	 efSrkIeqCzLoXFw0Sbw7AXAOSbLbpCidk/jQaxAO5c4XYzqEVZLSeewSCM9jkr88nW
-	 dtNOsgzBbcOnmF5ooQhWOF/u9b9wf52nCaJYPYyxPOLrGiIUTtOde07BxHO+uN/zR5
-	 L478eNskSnAoo3o2GT5RgL8VJi3taQRfpjp863yv6lZ7nUYw0h+PTjNgikSUIjakGO
-	 vztRYkK6KsnG2jVfPhgl5lT/6pnPufRr/RPApyEEt52TnMBvTcy4ZxpLI9v4g+BrQh
-	 aK72/TpFDFFYw==
+	b=U7PWeDm49kuuj4jBR9R+HXh1WOSqSKYKa8y/7DOG+QBxVOaWQ0K+qqIJ8PesY5Sjk
+	 goCBno4JTE/4RoRuor5OxrixqCUV83SBZZ2jFa2LSoseFtXI3Lym7TKLEBV1RL/51v
+	 ZDUEiZfTBzSP5t2P6DFijL20EPgKJ7IJt+Ioep1n27EagqR6UmEdRy3rIS/NhnKWc1
+	 Sy3hCn3PeE7ocdzWzbw+r1yxp3h+V1mQQbC4o3JVINaOOD4j3VwZKtWCMtjkRSTgaI
+	 Qo30+W37PeEZ/u3JmWhe6yJ3YhelEUBfhObQ+Ntb+HqD9x1HK/W0cYR+dIVGrVZwIG
+	 3x0feFihulq3Q==
 From: Sasha Levin <sashal@kernel.org>
 To: patches@lists.linux.dev,
 	stable@vger.kernel.org
-Cc: Dapeng Mi <dapeng1.mi@linux.intel.com>,
-	"Peter Zijlstra (Intel)" <peterz@infradead.org>,
-	Thomas Falcon <thomas.falcon@intel.com>,
-	Zide Chen <zide.chen@intel.com>,
+Cc: Aviv Bakal <avivb@amazon.com>,
+	Robin Murphy <robin.murphy@arm.com>,
+	Ilkka Koskinen <ilkka@os.amperecomputing.com>,
+	Will Deacon <will@kernel.org>,
 	Sasha Levin <sashal@kernel.org>,
-	mingo@redhat.com,
-	acme@kernel.org,
-	namhyung@kernel.org,
-	tglx@kernel.org,
-	bp@alien8.de,
-	dave.hansen@linux.intel.com,
-	x86@kernel.org,
+	mark.rutland@arm.com,
+	linux-arm-kernel@lists.infradead.org,
 	linux-perf-users@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.18-6.1] perf/x86: Free hybrid state on PMU init failure
-Date: Mon, 19 Oct 2026 09:45:11 -0400
-Message-ID: <20261019135441.1420968-20-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 6.18] perf/arm-cmn: Add workarounds for CMN-S3 on Graviton5
+Date: Mon, 19 Oct 2026 09:47:16 -0400
+Message-ID: <20261019135441.1420968-145-sashal@kernel.org>
 X-Mailer: git-send-email 2.53.0
 In-Reply-To: <20261019135441.1420968-1-sashal@kernel.org>
 References: <20261019135441.1420968-1-sashal@kernel.org>
@@ -61,455 +56,507 @@ X-stable-base: Linux 6.18.57
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-From: Dapeng Mi <dapeng1.mi@linux.intel.com>
+From: Aviv Bakal <avivb@amazon.com>
 
-[ Upstream commit 96746e731e1626545e343974ca4673739dceb31b ]
+[ Upstream commit 9d0b1714e1af16622a2d0f7317ddaa9a4b27f353 ]
 
-If PMU initialization fails, for example in check_hw_exists(), hybrid
-state can be left partially initialized: x86_pmu.hybrid_pmu is not freed
-and perf_is_hybrid remains set. This can leak memory and leave stale
-hybrid state reachable after a failed init path.
+Graviton5 uses a customised CMN-S3 implementation where certain
+discovery registers report zeroed fields. Add the following workarounds:
 
-Add x86_pmu_free_hybrid() and use it on PMU init failure paths so all
-hybrid-related state is consistently reset.
+ - Introduce a dedicated ACPI HID to identify the Graviton5 CMN variant.
+ - Derive the DTC domain from the XP node ID, since the unit info
+   register reports it as zero.
+ - Set the DTC logical ID from the XP's logical ID, since the node info
+   register's logical ID field is also zeroed.
 
-Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Reviewed-by: Thomas Falcon <thomas.falcon@intel.com>
-Reviewed-by: Zide Chen <zide.chen@intel.com>
-Link: https://patch.msgid.link/20260717080342.1879573-3-dapeng1.mi@linux.intel.com
+Signed-off-by: Aviv Bakal <avivb@amazon.com>
+Reviewed-by: Robin Murphy <robin.murphy@arm.com>
+Reviewed-by: Ilkka Koskinen <ilkka@os.amperecomputing.com>
+Signed-off-by: Robin Murphy <robin.murphy@arm.com>
+Signed-off-by: Will Deacon <will@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
 
 LLM Generated explanations, may be completely bogus:
 
-The local tree is **6.12.111** (`pending-6.12`). The hybrid PMU
-init/error path exists here, and this commit is a real error-path
-UAF/leak fix that belongs in this tree.
+The local tree is **v7.3-rc4** (kernel 7.3.0-rc4). The question is
+whether `9d0b1714e1af1` (`perf/arm-cmn: Add workarounds for CMN-S3 on
+Graviton5`) belongs in **this** tree on technical merit.
 
-===============================================================
-PHASE 1: COMMIT MESSAGE FORENSICS
-===============================================================
+---
+
+## PHASE 1: COMMIT MESSAGE FORENSICS
 
 **Step 1.1: PARSE THE SUBJECT LINE**
-Record: **[perf/x86] [Free] [release hybrid PMU state when PMU init
-fails]**
+
+Record: `[perf/arm-cmn] [Add] [workarounds for a customised CMN-S3 on
+Graviton5]`
 
 **Step 1.2: PARSE ALL COMMIT MESSAGE TAGS**
-Record:
-- No `Fixes:` tag (expected for this review pipeline)
-- No `Reported-by:` / syzbot
-- No `Tested-by:`
-- `Reviewed-by: Thomas Falcon <thomas.falcon@intel.com>`
-- `Reviewed-by: Zide Chen <zide.chen@intel.com>`
-- `Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>` (author)
-- `Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>` (perf
-  maintainer)
-- `Link: https://patch.msgid.link/20260717080342.1879573-3-
-  dapeng1.mi@linux.intel.com`
-- No `Cc: stable` (not a negative signal)
 
-SHA on `origin/master`: `96746e731e1626545e343974ca4673739dceb31b` (not
-an ancestor of HEAD).
+Record:
+- `Fixes:` — none (expected)
+- `Reported-by:` — none
+- `Tested-by:` — none
+- `Reviewed-by: Robin Murphy <robin.murphy@arm.com>` (arm-cmn
+  maintainer)
+- `Reviewed-by: Ilkka Koskinen <ilkka@os.amperecomputing.com>`
+- `Link:` — none in the commit
+- `Cc: stable@vger.kernel.org` — none (expected)
+- `Signed-off-by: Aviv Bakal <avivb@amazon.com>` (author)
+- `Signed-off-by: Robin Murphy <robin.murphy@arm.com>`
+- `Signed-off-by: Will Deacon <will@kernel.org>`
+- Ignored: any Sasha Levin SOB / Upstream-commit markers
 
 **Step 1.3: ANALYZE THE COMMIT BODY TEXT**
+
 Record:
-- **Bug:** On hybrid Intel PMU init failure (example:
-  `check_hw_exists()`), `x86_pmu.hybrid_pmu` is not freed and
-  `perf_is_hybrid` stays enabled.
-- **Symptom:** Memory leak plus leftover hybrid state after a failed
-  init.
-- **Root cause:** `intel_pmu_init_hybrid()` allocates `hybrid_pmu` and
-  enables the static key; `init_hw_perf_events()` error paths
-  `memset(&x86_pmu, 0, ...)` without freeing or disabling that key. The
-  hybrid `perf_pmu_register` fail path kfree's too early and still
-  leaves the static key set.
-- **Version:** Hybrid PMUs exist since 2021; this tree has them.
+- **Bug:** Graviton5’s CMN-S3 zeros some discovery fields (DTC domain in
+  unit info, logical ID in node info).
+- **Symptom:** Standard discovery cannot identify DTC domains or DTC
+  logical IDs; a 10×14 mesh also exceeds `CMN_MAX_DIMENSION` 12.
+- **Version info:** none in the message.
+- **Root cause:** custom silicon, not a kernel logic regression.
+  Identified via ACPI HID `AMZN0070`.
 
 **Step 1.4: DETECT HIDDEN BUG FIXES**
-Record: Not disguised. It is an explicit error-path leak/stale-state
-fix. The delayed `kfree` also removes a use-after-free on the hybrid
-register-fail path (see Phase 2/5).
 
-===============================================================
-PHASE 2: DIFF ANALYSIS - LINE BY LINE
-===============================================================
+Record: Not a disguised cleanup. It is an explicit hardware workaround
+plus ACPI ID. Cover letter language is “adds support”; the mechanism is
+a quirk for broken discovery registers.
+
+---
+
+## PHASE 2: DIFF ANALYSIS
 
 **Step 2.1: INVENTORY THE CHANGES**
+
 Record:
-- File: `arch/x86/events/core.c` (+12 / −3)
-- New helper: `x86_pmu_free_hybrid()`
-- Modified: `init_hw_perf_events()` (hybrid register-fail block and
-  `out_bad_pmu`)
-- Scope: single-file surgical error-path fix
+- File: `drivers/perf/arm-cmn.c` (+31 / −1)
+- Functions: `arm_cmn_graviton5_dtc_domain` (new), `arm_cmn_discover`
+  (workaround + DTC logid), `arm_cmn_acpi_match[]` (HID)
+- Also: `CMN_MAX_DIMENSION` 12→14, `PART_GRAVITON5`
+- Scope: single-file, surgical, driver-local
 
 **Step 2.2: UNDERSTAND THE CODE FLOW CHANGE**
+
 Record:
-- **Hunk 1:** Add `x86_pmu_free_hybrid()`: if `hybrid_pmu` is set,
-  disable `perf_is_hybrid`, `kfree` the array, NULL it, set
-  `num_hybrid_pmus = 0`.
-- **Hunk 2 (before):** Hybrid `perf_pmu_register` failure kfree's the
-  array, NULLs it, zeros the count, then `goto out2` (cpuhp teardown,
-  then `memset`).
-- **Hunk 2 (after):** Only unregister already-registered PMUs and `goto
-  out2`; free/reset happens later in `out_bad_pmu`.
-- **Hunk 3:** `out_bad_pmu` calls `x86_pmu_free_hybrid()` **before**
-  `memset(&x86_pmu, 0, ...)`.
+- Dimension cap 12→14 so a 10×14 mesh is not rejected.
+- ACPI `AMZN0070` → synthetic `PART_GRAVITON5`, then treated as
+  `PART_CMN_S3`.
+- DTC domain: from unit-info register → from XP node ID `(x/5)+(y/7)*2`
+  on the 10×14 mesh (domains 0–3).
+- DTC `logid`: from node info → XP `logid` so sort order matches
+  firmware IRQ order.
 
 **Step 2.3: IDENTIFY THE BUG MECHANISM**
-Record: **Error-path resource leak + UAF + stale static key**
 
-Verified in this tree (`init_hw_perf_events`, `intel_pmu_init_hybrid`,
-`intel_pmu_cpu_dead`):
-
-1. **Leak on early failure:** `intel_pmu_init_hybrid()` does `kcalloc` +
-   `static_branch_enable(&perf_is_hybrid)`. If `check_hw_exists()` then
-   fails, 6.12 jumps to `out_bad_pmu` and only `memset`s `x86_pmu`,
-   dropping the pointer without `kfree`. `perf_is_hybrid` stays enabled.
-
-2. **UAF on hybrid register failure:** By the time `perf_pmu_register`
-   runs, `CPUHP_AP_PERF_X86_STARTING` has already run
-   `intel_pmu_cpu_starting()` → `init_hybrid_pmu()`, which sets
-   `cpuc->pmu` into the `hybrid_pmu` array. Current 6.12 code `kfree`s
-   that array **then** `goto out2` →
-   `cpuhp_remove_state(CPUHP_PERF_X86_PREPARE)` → `x86_pmu_dead_cpu()` →
-   `intel_pmu_cpu_dead()`:
-
-```5209:5210:arch/x86/events/intel/core.c
-        if (is_hybrid() && cpuc->pmu)
-                cpumask_clear_cpu(cpu,
-&hybrid_pmu(cpuc->pmu)->supported_cpus);
-```
-
-`is_hybrid()` is still true and `cpuc->pmu` still points at freed
-memory. That is a use-after-free. Moving the free to after cpuhp
-teardown fixes it.
-
-3. **Stale static key:** The old register-fail path never called
-   `static_branch_disable(&perf_is_hybrid)`.
+Record: **Hardware workaround + ACPI device ID.** Zeroed discovery
+fields would map every XP to DTC domain 0 and every DTC logid to 0. Mesh
+10×14 fails `max(mesh_x,mesh_y) > CMN_MAX_DIMENSION` (`36c0de02575ce`,
+already in this tree).
 
 **Step 2.4: ASSESS THE FIX QUALITY**
-Record: Obviously correct and minimal. `static_branch_disable` + `kfree`
-+ NULL during `__init` teardown is low risk. Free-after-cpuhp is the
-right order. No API change. Regression risk is low.
 
-===============================================================
-PHASE 3: GIT HISTORY INVESTIGATION
-===============================================================
+Record:
+- Quality: small, gated on `AMZN0070` except the dimension bump.
+  Maintainer R-b’d after review (v1 used `xp->logid`; v2 used `xp->dtc`;
+  Robin required `xp->logid` because `cmn->dtc[]` is sorted by logid to
+  match firmware IRQ order). Committed code matches that.
+- Regression risk: low. Workaround is HID-gated. `CMN_MAX_DIMENSION` 14
+  only grows per-event bitmaps (`CMN_MAX_XPS` 144→196). Domain formula
+  is Graviton5-specific; x,y are 4-bit so theoretical max domain is 7,
+  but 10×14 yields 0–3 (`CMN_MAX_DTCS` is 4).
+
+---
+
+## PHASE 3: GIT HISTORY INVESTIGATION
 
 **Step 3.1: BLAME THE CHANGED LINES**
+
 Record:
-- Hybrid register/kfree block: `d9977c43bff89` (“perf/x86: Register
-  hybrid PMUs”, 2021-04-19) — present in 6.12.
-- `intel_pmu_init_hybrid()` alloc/static key: `97588df87b56e2` (Kan
-  Liang, 2023-08-29) — present in 6.12.
-- `out_bad_pmu` memset: `916e3a4f950eac` (Paolo Bonzini, 2022) — present
-  in 6.12.
+- Workaround and dimension bump introduced by `9d0b1714e1af1` itself
+  (Aviv Bakal, 2026-06-30; merged 2026-07-21).
+- Driver: long-standing. CMN-S3: `0dc2f4963f7ef` (2024-09-04). ACPI
+  `ARMHC003`: `8c138a189f6db` (2025-05-19). Mesh reject: `36c0de02575ce`
+  (2026-02-03, `Cc: stable`).
 
 **Step 3.2: FOLLOW THE FIXES: TAG**
-Record: No `Fixes:` tag. Bug was introduced with hybrid PMU support
-(2021/2023), well before 6.12.
+
+Record: No `Fixes:` tag. Not a regression from a specific kernel commit;
+hardware does not implement discovery as the driver expects.
 
 **Step 3.3: CHECK FILE HISTORY FOR RELATED CHANGES**
-Record: This is v3 **2/8** of Dapeng Mi’s “Miscellaneous PMU bug fixes
-and optimizations”.
-- Parent: `91787047b1dc5` “Unregister PMI handler on PMU init failure”
-  (adds `pmi_unregister:`) — **not** in this tree.
-- Next: `278a3731c9d08` “Guard intel_pmu_cpu_dead() against invalid
-  hybrid PMU casts” — separate OOB/`container_of` bug; not required for
-  this leak/UAF fix.
-This patch is standalone: the helper only needs to run before `memset`
-at `out_bad_pmu`.
+
+Record:
+- This is **v6 2/2**. Patch 1 is `56603c28d9169` (`Move DTM index data
+  out of hw_perf_event`) — **already an ancestor of HEAD**. Needed
+  because embedded `dtm_idx`/`wp_idx` in `hw_perf_event` were size-
+  capped; growing `CMN_MAX_DIMENSION` without that move would fail
+  `static_assert(sizeof(struct arm_cmn_hw_event) <= offsetof(struct
+  hw_perf_event, target))`.
+- Later 7.3 work (filter refactor, CMN S3 r2) does not revert the
+  workaround. No graviton-specific follow-up.
 
 **Step 3.4: CHECK THE AUTHOR'S OTHER COMMITS**
-Record: Dapeng Mi is an Intel perf contributor. Same series has several
-hybrid/error-path fixes. Applied by Peter Zijlstra.
+
+Record: Aviv Bakal (Amazon) — this is their only arm-cmn commit here.
+Robin Murphy is the driver author/maintainer and both reviewed and re-
+posted v6.
 
 **Step 3.5: CHECK FOR DEPENDENT/PREREQUISITE COMMITS**
-Record: Patch 1 is **not** a functional prerequisite. It only changes
-nearby labels (`pmi_unregister`, `goto pmi_unregister` instead of
-`return err`). `x86_pmu_free_hybrid()` can be added to 6.12’s existing
-`out_bad_pmu`. No new helpers or structs.
 
-===============================================================
-PHASE 4: MAILING LIST AND EXTERNAL RESEARCH
-===============================================================
+Record: Needs CMN-S3, ACPI table, mesh-size check, and the DTM-index
+move. **All are in this 7.3-rc4 tree.** Standalone on this tree.
+
+---
+
+## PHASE 4: MAILING LIST AND EXTERNAL RESEARCH
 
 **Step 4.1: FIND THE ORIGINAL PATCH DISCUSSION**
+
 Record:
-- `b4 dig -c 96746e731e162` → https://patch.msgid.link/20260717080342.18
-  79573-3-dapeng1.mi@linux.intel.com
-- Revisions: v1 (2026-07-10, 2/7), v2 (2026-07-13, 2/7), v3 (2026-07-17,
-  2/8). This hunk did not change across revisions.
-- Cover letter: bugs found in review (Sashiko) of a later SIMD/eGPR
-  sampling series, not from a production crash.
-- Zide Chen: `Reviewed-by` for the whole series. Author called the
-  series “low risky”. No NAKs found.
-- Merged to tip perf/core 2026-08-12, then Linus.
+- `b4 dig -c 9d0b1714e1af1` → https://patch.msgid.link/e9340d3a4385e6f1a
+  6e80bda944a3ba6435472b6.1782824005.git.robin.murphy@arm.com
+- Revisions: v1 (2026-05-03) → v2 → v3 (added DTM move) → v4 → v5 → **v6
+  applied** (Robin re-post, 2026-06-30)
+- Robin on v2: use `xp->logid` not `xp->dtc`; “surprisingly pleasant and
+  unobtrusive given that it's a pretty horrible hardware issue”
+- No NAK. Applied version is latest.
+- A sashiko-bot note about unbounded DTC domain / sort order is the
+  opposite of Robin’s requested `xp->logid` behaviour; not a NAK from
+  maintainers.
 
 **Step 4.2: CHECK WHO REVIEWED THE PATCH**
-Record (`b4 dig -w`): Peter Zijlstra, Ingo Molnar, Arnaldo Carvalho de
-Melo, Namhyung Kim, Ian Rogers, Adrian Hunter, Alexander Shishkin, Andi
-Kleen, Stephane Eranian, linux-kernel, linux-perf-users, Zide Chen,
-Thomas Falcon. Maintainer applied it.
+
+Record (`b4 dig -w`): Robin Murphy, Will Deacon, Mark Rutland, linux-
+arm-kernel, linux-perf-users, Amazon (zeev, blakgeof), Ilkka Koskinen.
+Right maintainers.
 
 **Step 4.3: SEARCH FOR THE BUG REPORT**
-Record: No syzbot/bugzilla. Found by code review of hybrid init error
-paths.
+
+Record: No syzbot/bugzilla. Amazon submitted from silicon bring-up.
 
 **Step 4.4: CHECK FOR RELATED PATCHES AND SERIES**
-Record: Standalone among 8 patches. Patch 1 (NMI unregister) and patch 3
-(cpu_dead hybrid cast) are related but independent.
+
+Record: Series is DTM-index move + this workaround. Patch 1 is in this
+tree. No extra ACPI docs/HID patch required (`AMZN0070` is only in `arm-
+cmn.c`).
 
 **Step 4.5: CHECK STABLE MAILING LIST HISTORY**
-Record: No stable-list discussion found for this subject. Not a reason
-to skip it.
 
-===============================================================
-PHASE 5: CODE SEMANTIC ANALYSIS
-===============================================================
+Record: lore.kernel.org/stable search returned 403. **UNVERIFIED:** no
+confirmed stable-list nomination or rejection.
 
-**Step 5.1: KEY FUNCTIONS**
-Record: `x86_pmu_free_hybrid()` (new), `init_hw_perf_events()`
-(modified). Related existing: `intel_pmu_init_hybrid()`,
-`intel_pmu_cpu_dead()`, `x86_pmu_dead_cpu()`.
+---
+
+## PHASE 5: CODE SEMANTIC ANALYSIS
+
+**Step 5.1: IDENTIFY KEY FUNCTIONS**
+
+Record: `arm_cmn_graviton5_dtc_domain`, `arm_cmn_discover`,
+`arm_cmn_acpi_match`, `arm_cmn_init_node_info` (unchanged, still source
+of zeroed logid).
 
 **Step 5.2: TRACE CALLERS**
-Record:
-- `init_hw_perf_events()`: `early_initcall`, once at boot.
-- `x86_pmu_free_hybrid()`: only `out_bad_pmu`.
-- `intel_pmu_cpu_dead()`: `x86_pmu.cpu_dead` from `x86_pmu_dead_cpu` on
-  CPUHP_PERF_X86_PREPARE teardown (init rollback and later CPU down).
-- `is_hybrid()` used in `get_possible_counter_mask()`, `is_x86_event()`,
-  `allocate_fake_cpuc()`, `x86_pmu_event_init()`,
-  `intel_pmu_cpu_starting()`, `intel_pmu_cpu_dead()`, and `hybrid()`
-  macros.
+
+Record: `arm_cmn_discover()` ← `arm_cmn_probe()` only. Probe runs when
+ACPI matches (including `AMZN0070`). Not IRQ/syscall hot path;
+boot/device-init.
 
 **Step 5.3: TRACE CALLEES**
-Record: `static_branch_disable()`, `kfree()`. No locks, no I/O.
+
+Record: `arm_cmn_init_node_info`, `arm_cmn_dtc_domain` / graviton5
+variant, `arm_cmn_init_dtm`, then `arm_cmn_init_dtcs` (sort by
+type+logid, `platform_get_irq` by sort index).
 
 **Step 5.4: FOLLOW THE CALL CHAIN**
-Record: Boot-time hybrid Intel PMU init (Alder/Raptor/Meteor/Lunar/Arrow
-Lake in this tree). Triggered by `check_hw_exists()` failure (broken
-PMU, hypervisor without PMU) or `perf_pmu_register()` failure. Not a
-normal syscall path; it is a boot/error path. Register-fail UAF runs in
-cpuhp teardown while the array is already freed.
+
+Record: ACPI `AMZN0070` → probe → discover (workaround) → init DTCs/IRQs
+→ register PMU. Userspace `perf` then uses the interconnect PMU.
+Reachable on Graviton5 with `CONFIG_ARM_CMN`.
 
 **Step 5.5: SEARCH FOR SIMILAR PATTERNS**
-Record: Same series cleans other hybrid error paths (NMI leak, invalid
-`hybrid_pmu()` cast). `01c153956b443` (“Validate the return value of
-intel_pmu_init_hybrid()”) is a related NULL-deref fix and is **not** in
-this tree; not required here.
 
-===============================================================
-PHASE 6: CROSS-REFERENCING AGAINST THE LOCAL TREE
-===============================================================
+Record: Same file already has AmpereOneX bogus-child-pointer handling
+and CMN-600AE aliasing. Same “quirks for broken discovery” pattern.
+
+---
+
+## PHASE 6: CROSS-REFERENCING AGAINST THE LOCAL TREE
 
 **Step 6.1: DOES THE BUGGY CODE EXIST IN THIS TREE?**
-Record: **Yes.**
-- Tree: `p-6.12-3-gc504cf0baa3d8`, `VERSION=6 PATCHLEVEL=12
-  SUBLEVEL=111`
-- `git merge-base --is-ancestor 96746e731e162 HEAD` → not an ancestor
-- 6.12 `init_hw_perf_events()` still kfree's on register fail, then
-  `memset`s at `out_bad_pmu` with no `x86_pmu_free_hybrid()` and no
-  `static_branch_disable`
-- `intel_pmu_init_hybrid()` still allocates and enables `perf_is_hybrid`
+
+Record: Yes. `drivers/perf/arm-cmn.c` has CMN-S3, ACPI match, mesh-size
+reject. Without this commit, `AMZN0070` would not bind; a 10×14 mesh
+would `-ENODEV`; zeroed DTC fields would mis-program the PMU. Introduced
+as hardware behaviour, not a post-7.3 commit.
+
+`git describe HEAD` = `v7.3-rc4-27-gf0100363d8c37`. Commit is in
+v7.3-rc1 (not in v7.2). That is **not** used as “already selected”; it
+only shows 7.3 has the prerequisites.
 
 **Step 6.2: CHECK FOR BACKPORT COMPLICATIONS**
-Record: **Minor conflicts, easy backport.**
-- `git apply --check` of the raw diff fails: `x86_pmu_show_pmu_cap()`
-  log strings differ, and mainline has `pmi_unregister:` from patch 1.
-- The real change is still: add the helper after
-  `x86_pmu_show_pmu_cap()`, drop the three-line kfree in the register-
-  fail block, call the helper just before `memset` at `out_bad_pmu`.
+
+Record: Clean on this tree. Context still matches (graviton5 flag, ACPI
+HID, dimension 14). Later S3 r2/filter refactors left the workaround in
+place.
 
 **Step 6.3: CHECK IF RELATED FIXES ARE ALREADY HERE**
-Record: No `x86_pmu_free_hybrid`, no “Free hybrid state” commit.
-Register-fail still does the early `kfree`.
 
-===============================================================
-PHASE 7: SUBSYSTEM AND MAINTAINER CONTEXT
-===============================================================
+Record: No alternate Graviton5 fix. No later graviton-specific patch in
+`9d0b1714e1af1..HEAD`.
 
-**Step 7.1: SUBSYSTEM AND CRITICALITY**
-Record: **arch/x86/events (x86 perf PMU)** — **IMPORTANT**. Hybrid Intel
-CPUs are common (ADL/RPL/MTL/LNL/ARL). Not core mm/VFS, but production
-x86 hardware.
+---
 
-**Step 7.2: SUBSYSTEM ACTIVITY**
-Record: Mature PMU core with ongoing hybrid work. Bug has been in hybrid
-support since it landed, not a last-month feature.
+## PHASE 7: SUBSYSTEM AND MAINTAINER CONTEXT
 
-===============================================================
-PHASE 8: IMPACT AND RISK ASSESSMENT
-===============================================================
+**Step 7.1: IDENTIFY THE SUBSYSTEM AND ITS CRITICALITY**
 
-**Step 8.1: WHO IS AFFECTED**
-Record: Intel hybrid x86 systems where PMU init fails (VMs without a
-usable PMU, broken BIOS/MSRs, or `perf_pmu_register` failure). Not
-universal; config `PERF_EVENTS` + hybrid CPU models.
+Record: `drivers/perf/` — Arm CMN uncore PMU. **PERIPHERAL/IMPORTANT:**
+ARM64 servers with CMN; Graviton5-specific for the HID path. Not
+mm/sched/VFS.
 
-**Step 8.2: TRIGGER CONDITIONS**
+**Step 7.2: ASSESS SUBSYSTEM ACTIVITY**
+
+Record: Active in 7.3 (S3 r2, filters, DTM layout). Driver itself is
+mature (~CMN-600 era).
+
+---
+
+## PHASE 8: IMPACT AND RISK ASSESSMENT
+
+**Step 8.1: DETERMINE WHO IS AFFECTED**
+
+Record: ACPI `AMZN0070` / Graviton5 only, plus a small extra bitmap size
+for all `CONFIG_ARM_CMN` users.
+
+**Step 8.2: DETERMINE THE TRIGGER CONDITIONS**
+
+Record: Probe on Graviton5. Not unprivileged-triggerable beyond normal
+perf. Not a race. Common on that platform at boot.
+
+**Step 8.3: DETERMINE THE FAILURE MODE SEVERITY**
+
+Record: Missing/wrong CMN PMU (no bind, `-ENODEV`, or events on the
+wrong DTC). Not panic/corruption/deadlock. **MEDIUM** for that hardware;
+still the documented quirk/ID exception.
+
+**Step 8.4: CALCULATE RISK-BENEFIT RATIO**
+
 Record:
-- `check_hw_exists()` false after `intel_pmu_init_hybrid()` — leak +
-  leftover `perf_is_hybrid`. Common-ish in hypervisors; uncommon on
-  healthy bare metal.
-- Hybrid `perf_pmu_register` failure after cpuhp STARTING — **UAF** in
-  `intel_pmu_cpu_dead()`. Rare (ENOMEM/name clash) but a real error
-  path.
-Not unprivileged-syscall triggered.
+- Benefit: Graviton5 CMN perf actually works (HID + discovery + 10×14
+  mesh).
+- Risk: low (~31 lines, HID-gated, maintainer-reviewed). Dimension bump
+  is small and already paired with the DTM-index move in this tree.
+- Ratio: favorable.
 
-**Step 8.3: FAILURE MODE SEVERITY**
-Record:
-- Register-fail + early kfree: **UAF** → crash/KASAN — **HIGH**
-- Early `check_hw_exists` fail: small one-time leak of `num_hybrid_pmus
-  * sizeof(struct x86_hybrid_pmu)` plus leftover `is_hybrid()` —
-  **MEDIUM** (leak) / **MEDIUM-HIGH** if later `hybrid()` users run with
-  a NULL/zeroed `x86_pmu`
-Overall: **HIGH** because of the UAF, not only the leak.
+---
 
-**Step 8.4: RISK-BENEFIT RATIO**
-Record:
-- Benefit: closes UAF + leak + stale static key on hybrid init failure.
-  High for those systems, zero for others.
-- Risk: ~12 lines, `__init` error path only, no locking/API change.
-  **Low**.
-- Ratio: **favor backport**.
-
-===============================================================
-PHASE 9: FINAL SYNTHESIS
-===============================================================
+## PHASE 9: FINAL SYNTHESIS
 
 **Step 9.1: COMPILE THE EVIDENCE**
 
-FOR:
-- Buggy code is in this 6.12 tree (hybrid since 2021).
-- Fixes a real leak (`memset` drops `hybrid_pmu` without `kfree`).
-- Fixes a real UAF: kfree of `hybrid_pmu` before `cpuhp_remove_state` →
-  `intel_pmu_cpu_dead()` → `hybrid_pmu(cpuc->pmu)`.
-- Also clears `perf_is_hybrid`, which the register-fail path never did.
-- Small (12/−3), obviously correct, reviewed by Intel and applied by
-  Peter Zijlstra.
-- Standalone; patch 1 is only context.
+**FOR:**
+- ACPI ID + hardware quirk on an existing driver (stable exception).
+- Real silicon: zeroed CMN-S3 discovery, 10×14 mesh.
+- Small, single-file, obviously correct after maintainer review.
+- Prerequisites present in 7.3-rc4.
+- Robin Murphy: use `xp->logid`; workaround is unobtrusive.
 
-AGAINST:
-- No production/syzbot report; found in review.
-- Register-fail UAF is a rare path.
-- Raw mainline diff does not apply cleanly (log text +
-  `pmi_unregister`).
-- One-time init leak alone would be weak; the UAF is what makes it
-  important.
+**AGAINST:**
+- Enablement/quirk, not a crash/security/corruption fix.
+- Cover letter is “add support”.
+- `CMN_MAX_DIMENSION` affects all CMN bitmap sizes (small).
+- Series 2/2 (patch 1 already here).
+- No `Reported-by` from production crashes.
 
-UNRESOLVED:
-- Could not fetch lore HTML (403); used `b4 dig` + Patchew instead.
-  Reviews/NAKs still verified.
-- Exact `sizeof(struct x86_hybrid_pmu)` not measured; leak is still a
-  bounded boot-time allocation.
+**UNRESOLVED:**
+- Stable list discussion (lore 403).
+- No public Tested-by (author is Amazon; hardware access is plausible
+  but unverified).
 
-**Step 9.2: STABLE RULES CHECKLIST**
-1. Obviously correct and tested? **PASS** — reviewed, tested (`perf
-   test` on Diamond Rapids/Nova Lake), merged via tip.
-2. Fixes a real bug that affects users? **PASS** — leak + UAF + stale
-   hybrid key on hybrid init failure.
-3. Important (crash/security/corruption/deadlock)? **PASS** — UAF on
-   cpuhp rollback after hybrid register failure; leftover hybrid key
-   after failed init.
-4. Small and contained? **PASS** — one file, ~15 lines.
-5. No new features or APIs? **PASS** — static helper on the existing
-   error path.
-6. Can apply to the local tree? **PASS** — needs a trivial backport
-   (insert helper, drop 3 lines, call before `memset`); no missing APIs.
+**Step 9.2: APPLY THE STABLE RULES CHECKLIST**
 
-**Step 9.3: EXCEPTION CATEGORIES**
-Record: Not a device-ID/quirk/DT/docs exception. Ordinary error-path
-memory-safety fix.
+1. Obviously correct and tested? **PASS** — maintainer R-b after v1–v6;
+   IRQ/logid issue addressed as Robin specified.
+2. Fixes a real bug that affects users? **PASS** — Graviton5 CMN PMU
+   cannot enumerate correctly without it.
+3. Important issue? **PASS** via quirk/ID exception (severity MEDIUM as
+   a PMU, not a panic).
+4. Small and contained? **PASS** — +31/−1, one file.
+5. No new features or APIs? **PASS** — no new uAPI; HID + discovery
+   workaround on existing PMU.
+6. Can apply to the local tree? **PASS** — driver, CMN-S3, DTM-index
+   move, mesh check all present.
 
-**Step 9.4: DECISION**
-This tree has the hybrid init bug. The patch is small, correct, and
-fixes UAF plus leak on failure. Context from later mainline
-(`pmi_unregister`) is not required. It should be backported to this 6.12
-tree.
+**Step 9.3: CHECK FOR EXCEPTION CATEGORIES**
 
-Verification:
-- [Phase 1] Tags: Reviewed-by Falcon/Chen; SOB Zijlstra; Link msgid
-  `...-3-dapeng1.mi@linux.intel.com`; no Fixes/syzbot
-- [Phase 1] SHA `96746e731e162` on origin/master; `merge-base --is-
-  ancestor` vs HEAD = not present
-- [Phase 2] Diff: +12/−3 in `arch/x86/events/core.c`; helper + delayed
-  free + `out_bad_pmu` call
-- [Phase 2] 6.12 `init_hw_perf_events` still early-kfrees at lines
-  2184–2186, then memset at 2200 with no static-key disable
-- [Phase 2/5] `intel_pmu_cpu_dead()` uses `hybrid_pmu(cpuc->pmu)` when
-  `is_hybrid()`; `x86_pmu_dead_cpu` is the PREPARE teardown
-- [Phase 3] Hybrid register path blamed to `d9977c43bff89` (2021);
-  alloc/key to `97588df87b56e2` (2023)
-- [Phase 3] Parent `91787047b1dc5` (NMI unregister) not in HEAD; not
-  required
-- [Phase 4] `b4 dig -c 96746e731e162` matched v3 2/8; v1→v3 hunk
-  unchanged; no NAK
-- [Phase 4] Cover letter: review-found bugs; Zide Chen Reviewed-by for
-  series
-- [Phase 4] lore.kernel.org HTTP 403; Patchew used instead
-- [Phase 5] `intel_pmu_init_hybrid()` enables `perf_is_hybrid` after
-  `kcalloc` (this tree, ~6360)
-- [Phase 6] `git describe HEAD` = p-6.12-3-gc504cf0baa3d8; `make
-  kernelversion` = 6.12.111
-- [Phase 6] `git apply --check` of raw commit fails on
-  `x86_pmu_show_pmu_cap` context; logic still maps onto 6.12
-  `out_bad_pmu`
-- [Phase 8] Failure mode: UAF in `intel_pmu_cpu_dead` after hybrid
-  register fail; leak on `check_hw_exists` fail
-- UNVERIFIED: live reproduction of `perf_pmu_register` failure; exact
-  leaked byte count
+Record: **ACPI device ID** (`AMZN0070`) **and hardware quirk** for
+customised CMN-S3.
 
-The fix is small, matches this tree’s hybrid init code, and closes a
-real UAF/leak on PMU init failure.
+**Step 9.4: MAKE YOUR DECISION**
+
+This tree is 7.3-rc4, which already contains CMN-S3 and the series
+prerequisite. The patch is the standard stable shape: ID + quirk so
+existing `arm-cmn` works on shipping Graviton5. Benefit is real for that
+platform; risk is low and mostly HID-gated.
+
+---
+
+## What the commit solves and why it matters here
+
+Graviton5 implements CMN-S3 with discovery registers that read as zero
+and a 10×14 mesh. In this tree, `arm_cmn_discover()` would then put
+every XP in DTC domain 0, leave DTC logids at 0 (breaking IRQ sort
+order), and reject the mesh as larger than 12. Adding `AMZN0070` and the
+three workarounds makes the existing CMN PMU usable on that hardware
+without new APIs.
+
+It meets stable rules as a quirk/ID exception: small, reviewed, no uAPI,
+applies cleanly here because `56603c28d9169` already moved DTM arrays
+out of `hw_perf_event`.
+
+Risk vs benefit: extra bitmap bytes for all CMN users vs a working
+interconnect PMU on Graviton5. Favorable.
+
+Concerns: not a panic-class bug; depends on the DTM-index move (already
+in this tree). No stable-list confirmation (fetch failed).
+
+---
+
+## Verification
+
+- [Phase 1] Parsed tags: R-b Robin Murphy + Ilkka Koskinen; SOB Aviv
+  Bakal, Robin Murphy, Will Deacon; no Fixes/Reported-by/Cc:stable
+- [Phase 2] Diff: `drivers/perf/arm-cmn.c` +31/−1; HID `AMZN0070`,
+  `CMN_MAX_DIMENSION` 14, DTC domain/logid workarounds
+- [Phase 2] Current tree still has graviton5 paths at `arm_cmn_discover`
+  / `arm_cmn_graviton5_dtc_domain` / ACPI table
+- [Phase 3] `git describe HEAD` = v7.3-rc4-27-gf0100363d8c37; `make
+  kernelversion` = 7.3.0-rc4
+- [Phase 3] `git merge-base --is-ancestor 9d0b1714e1af1 HEAD` — yes; in
+  v7.3-rc1, not v7.2
+- [Phase 3] CMN-S3 `0dc2f4963f7ef` (2024-09-04) in tree; ACPI S3
+  `8c138a189f6db` in tree
+- [Phase 3] Mesh reject `36c0de02575ce` in tree; DTM move
+  `56603c28d9169` in tree (series 1/2)
+- [Phase 3] `git blame` on workaround lines → `9d0b1714e1af1`
+- [Phase 3] No graviton follow-ups in `9d0b1714e1af1..HEAD`
+- [Phase 4] `b4 dig -c 9d0b1714e1af1` → v6 2/2 msgid `e9340d3a4385e6f1a6
+  e80bda944a3ba6435472b6.1782824005.git.robin.murphy@arm.com`
+- [Phase 4] `b4 dig -a`: v1–v6; applied is v6
+- [Phase 4] `b4 dig -w`: Will/Mark/Robin, linux-arm-kernel, linux-perf-
+  users
+- [Phase 4] Robin v2 review: must use `xp->logid` for firmware IRQ order
+  (committed code does)
+- [Phase 4] UNVERIFIED: lore.kernel.org/stable (403)
+- [Phase 5] `arm_cmn_discover` only from `arm_cmn_probe`; ACPI match
+  includes `AMZN0070`
+- [Phase 6] Buggy discovery path and mesh check exist in this checkout;
+  apply is clean
+- [Phase 7] `CONFIG_ARM_CMN` depends on ARM64 || COMPILE_TEST
+- [Phase 8] Failure: missing/wrong CMN PMU on Graviton5, not
+  oops/deadlock; severity MEDIUM + quirk exception
+- UNVERIFIED: Amazon Tested-by on silicon (not in tags)
 
 **YES**
 
- arch/x86/events/core.c | 15 ++++++++++++---
- 1 file changed, 12 insertions(+), 3 deletions(-)
+ drivers/perf/arm-cmn.c | 32 +++++++++++++++++++++++++++++++-
+ 1 file changed, 31 insertions(+), 1 deletion(-)
 
-diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
-index 2aa9270446634..7c37c228a88a4 100644
---- a/arch/x86/events/core.c
-+++ b/arch/x86/events/core.c
-@@ -2087,6 +2087,17 @@ void x86_pmu_show_pmu_cap(struct pmu *pmu)
- 	pr_info("... global_ctrl mask:          %016llx\n", hybrid(pmu, intel_ctrl));
+diff --git a/drivers/perf/arm-cmn.c b/drivers/perf/arm-cmn.c
+index 527a953bf4744..688a94ef81c22 100644
+--- a/drivers/perf/arm-cmn.c
++++ b/drivers/perf/arm-cmn.c
+@@ -31,7 +31,8 @@
+ #define CMN_CHILD_NODE_ADDR		GENMASK(29, 0)
+ #define CMN_CHILD_NODE_EXTERNAL		BIT(31)
+ 
+-#define CMN_MAX_DIMENSION		12
++/* Some implementations use a mesh larger than the architectural max of 12 */
++#define CMN_MAX_DIMENSION		14
+ #define CMN_MAX_XPS			(CMN_MAX_DIMENSION * CMN_MAX_DIMENSION)
+ #define CMN_MAX_DTMS			(CMN_MAX_XPS + (CMN_MAX_DIMENSION - 1) * 4)
+ 
+@@ -215,6 +216,8 @@ enum cmn_part {
+ 	PART_CMN700 = 0x43c,
+ 	PART_CI700 = 0x43a,
+ 	PART_CMN_S3 = 0x43e,
++	/* Synthetic part number, overridden to PART_CMN_S3 during discovery */
++	PART_GRAVITON5 = 0xa5,
+ };
+ 
+ /* CMN-600 r0px shouldn't exist in silicon, thankfully */
+@@ -2217,6 +2220,18 @@ static unsigned int arm_cmn_dtc_domain(struct arm_cmn *cmn, void __iomem *xp_reg
+ 	return FIELD_GET(CMN_DTM_UNIT_INFO_DTC_DOMAIN, readl_relaxed(xp_region + offset));
  }
  
-+static void x86_pmu_free_hybrid(void)
++static unsigned int arm_cmn_graviton5_dtc_domain(u16 xp_id)
 +{
-+	if (!x86_pmu.hybrid_pmu)
-+		return;
++	unsigned int x = (xp_id >> 7) & 0xf;
++	unsigned int y = (xp_id >> 3) & 0xf;
 +
-+	static_branch_disable(&perf_is_hybrid);
-+	kfree(x86_pmu.hybrid_pmu);
-+	x86_pmu.hybrid_pmu = NULL;
-+	x86_pmu.num_hybrid_pmus = 0;
++	/*
++	 * The unit info register reads as zero; derive the DTC domain from
++	 * the XP's mesh coordinates over the 10x14 mesh.
++	 */
++	return (x / 5) + (y / 7) * 2;
 +}
 +
- static int __init init_hw_perf_events(void)
+ static void arm_cmn_init_node_info(struct arm_cmn *cmn, u32 offset, struct arm_cmn_node *node)
  {
- 	struct x86_pmu_quirk *quirk;
-@@ -2214,9 +2225,6 @@ static int __init init_hw_perf_events(void)
- 			for (j = 0; j < i; j++)
- 				perf_pmu_unregister(&x86_pmu.hybrid_pmu[j].pmu);
- 			pr_warn("Failed to register hybrid PMUs\n");
--			kfree(x86_pmu.hybrid_pmu);
--			x86_pmu.hybrid_pmu = NULL;
--			x86_pmu.num_hybrid_pmus = 0;
- 			goto out2;
- 		}
- 	}
-@@ -2232,6 +2240,7 @@ static int __init init_hw_perf_events(void)
- pmi_unregister:
- 	unregister_nmi_handler(NMI_LOCAL, "PMI");
- out_bad_pmu:
-+	x86_pmu_free_hybrid();
- 	memset(&x86_pmu, 0, sizeof(x86_pmu));
- 	return err;
- }
+ 	int level;
+@@ -2262,6 +2277,7 @@ static int arm_cmn_discover(struct arm_cmn *cmn, unsigned int rgn_offset)
+ 	u64 reg;
+ 	int i, j;
+ 	size_t sz;
++	bool graviton5_workaround = false;
+ 
+ 	arm_cmn_init_node_info(cmn, rgn_offset, &cfg);
+ 	if (cfg.type != CMN_TYPE_CFG)
+@@ -2272,6 +2288,13 @@ static int arm_cmn_discover(struct arm_cmn *cmn, unsigned int rgn_offset)
+ 	reg = readq_relaxed(cfg_region + CMN_CFGM_PERIPH_ID_01);
+ 	part = FIELD_GET(CMN_CFGM_PID0_PART_0, reg);
+ 	part |= FIELD_GET(CMN_CFGM_PID1_PART_1, reg) << 8;
++
++	/* Graviton5 has a customised CMN-S3 which needs some fixups */
++	if (cmn->part == PART_GRAVITON5) {
++		cmn->part = PART_CMN_S3;
++		graviton5_workaround = true;
++	}
++
+ 	/* 600AE is close enough that it's not really worth more complexity */
+ 	if (part == PART_CMN600AE)
+ 		part = PART_CMN600;
+@@ -2361,6 +2384,8 @@ static int arm_cmn_discover(struct arm_cmn *cmn, unsigned int rgn_offset)
+ 
+ 		if (cmn->part == PART_CMN600)
+ 			xp->dtc = -1;
++		else if (graviton5_workaround)
++			xp->dtc = arm_cmn_graviton5_dtc_domain(xp->id);
+ 		else
+ 			xp->dtc = arm_cmn_dtc_domain(cmn, xp_region);
+ 
+@@ -2439,6 +2464,10 @@ static int arm_cmn_discover(struct arm_cmn *cmn, unsigned int rgn_offset)
+ 
+ 			switch (dn->type) {
+ 			case CMN_TYPE_DTC:
++				if (graviton5_workaround) {
++					/* Node info logical ID is zeroed; use the XP's */
++					dn->logid = xp->logid;
++				}
+ 				cmn->num_dtcs++;
+ 				dn++;
+ 				break;
+@@ -2671,6 +2700,7 @@ static const struct acpi_device_id arm_cmn_acpi_match[] = {
+ 	{ "ARMHC650" },
+ 	{ "ARMHC700" },
+ 	{ "ARMHC003" },
++	{ "AMZN0070", PART_GRAVITON5 },
+ 	{}
+ };
+ MODULE_DEVICE_TABLE(acpi, arm_cmn_acpi_match);
 -- 
 2.53.0
 
