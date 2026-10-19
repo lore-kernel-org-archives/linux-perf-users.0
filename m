@@ -1,46 +1,53 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A261B4FC35A;
-	Mon, 19 Oct 2026 13:10:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EE934F85C0;
+	Mon, 19 Oct 2026 13:10:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792415402; cv=none; b=ocxoicaVJdXdyrLrC+qk2ia0zcdpSjoEhv1ZUOaF99RQTgsvjPiuU1EH4fxwFHGLiNdOA/Ly5qnCzpvBqNVQlpVoJ5Rs7MMl6E3pA+e4jzskDcSmHFyWRZ7Iv9b3jLW6nKZg92jPY7LB1WtOdDQU71JewUfudzI9pRyrBKFl/Pw=
+	t=1792415406; cv=none; b=a4gFarMiXvZJ/yqR+N1Hj4WVcbgffkkKiSord3yBMLkkjz2w4QVEdG+2sciwyRpW4jzUPwvkvUl0l+zfhe+DKLp+2KQxFvMrZQf++H2Bh/LSMoPNbHll/PykvTYCukxydGlUVMJ1J/E/m92P4tNQoP5dSU4LdAR3yFtOTekUi2E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792415402; c=relaxed/simple;
-	bh=+FVcX8diseZGGhX2/sAOON5TiO6ws1KZs4OjOfONp/0=;
+	s=arc-20240116; t=1792415406; c=relaxed/simple;
+	bh=XOMLzrua8jW6fwKKzfLrHuCpk+XvYTexg4u3xo8uGb0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=rHJCS6NtIe7jnmC3QCiMnIkvHh9riugJ0Dtc4APtbqu3DLzHQ9tD8RVdFjjNXbZ5nNPXvvD+iT+KAbSdMdNHdlo2YG6uHocwppBm/mPZt2GJWJJRSSK+7lYHTaTbwBK9MFlfYG6wAlXvpEZkJ7M3G/Ur1v8ojgSkMTfTAxwbOrA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VmqdzGiC; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version; b=McKX2fpi4kHiAdGH6AkQn/SbXEa0+d8sxdzSR9t72hnB46zF7He4Csaiwg/5z4HBPFvQcpgqZ4ELfYexWN3e0JqPbmS1q3ww3k+nNYiXLs7sG2/qE4AE8KVySJtQVM7KpRCRzubivMShCmO//OzE/8OO+hVypb/SrAYHyiZ5nH8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oaj/uQ0x; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VmqdzGiC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 06C471F000C5;
-	Mon, 19 Oct 2026 13:09:58 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oaj/uQ0x"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BB22A1F000C4;
+	Mon, 19 Oct 2026 13:10:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1792415401;
-	bh=ViPzMqMMtYsXD2twtgRR0dhAxzp9lQPh6+izbO2fRX0=;
+	s=k20260515; t=1792415405;
+	bh=5KUzkwxT6B3k7iZO7xyoYKNfooeaFIjmsalL+8Yuh5g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=VmqdzGiCKgvstUEqVR2BglPOe5LKWWO9W9V/oXmhCRIV5E0DJnZJloDgfjzQWeNTy
-	 ChOBZ4eOFyPHTgN0pgLEBHSaSIwxiCQwtN0OOzHuUCbf+B82vPlbeof1hXjI3Ub+fz
-	 /Ej1WvwxSNpggi/xEQ8ehQyqE9OG1ZnPDhy/PrNPowdGY0Rt8X5BLWXX6MaOGdVZ3Z
-	 clXvyx47u2RFDip8O21nOI2lnpyYjO7Pu+E2mZJ+lz9/tKu2ksklUKrOPTvQgmJy+8
-	 HNGUTfOR5kxWQ8kASR5kF2b0LwjfIwc3HorGrfIYtMxOV2ctgl5KV+h+0r/Ml7phZx
-	 eItNbsi+dSV+g==
+	b=oaj/uQ0xpKpH+RbLxHdNBhU0cH4rJi/VrWI8reVtPQ1VmXDt57S4itU06PMtqTy33
+	 ul08ke7/hVuzuRe7tWsdSBPIxOv1mGIQCg6ESobCEJ3w94Hv9FoxUyStbZe+tBqLIb
+	 NnLQqczJfhVQupMFx2i+0YGj+ON+cQ0hyQy7jGudFAMs3mgMFD/7zpQjG4PLV3y4QF
+	 gLpgaaQMMxbcgZZ5yt584n13abXYrWYtxQkB6dFjAK2KPxFUYd8QhnOYwuQbeLHlbn
+	 HcTLGCGayeRAqsO/Qd69JerrzwbcUSgFESjuqrAhnekFWFQ94/tqQFy9SevwDgByip
+	 EGrXfK//znusQ==
 From: Frederic Weisbecker <frederic@kernel.org>
 To: LKML <linux-kernel@vger.kernel.org>
 Cc: Frederic Weisbecker <frederic@kernel.org>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Alexandre Ghiti <alex@ghiti.fr>,
+	Anup Patel <anup@brainfault.org>,
+	Atish Patra <atish.patra@linux.dev>,
 	Marco Crivellari <marco.crivellari@suse.com>,
 	Mark Rutland <mark.rutland@arm.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Paul Walmsley <pjw@kernel.org>,
 	Peter Zijlstra <peterz@infradead.org>,
 	Phil Auld <pauld@redhat.com>,
 	Thomas Gleixner <tglx@kernel.org>,
 	Waiman Long <longman@redhat.com>,
 	Will Deacon <will@kernel.org>,
 	linux-arm-kernel@lists.infradead.org,
-	linux-perf-users@vger.kernel.org
-Subject: [RFC PATCH 19/49] perf/arm_pmu: Move CPUHP_AP_PERF_ARM_STARTING post stop_machine()
-Date: Mon, 19 Oct 2026 15:08:26 +0200
-Message-ID: <20261019130856.49711-20-frederic@kernel.org>
+	linux-perf-users@vger.kernel.org,
+	linux-riscv@lists.infradead.org
+Subject: [RFC PATCH 20/49] perf: RISC-V: Move CPUHP_AP_PERF_RISCV_STARTING post stop_machine()
+Date: Mon, 19 Oct 2026 15:08:27 +0200
+Message-ID: <20261019130856.49711-21-frederic@kernel.org>
 X-Mailer: git-send-email 2.53.0
 In-Reply-To: <20261019130856.49711-1-frederic@kernel.org>
 References: <20261019130856.49711-1-frederic@kernel.org>
@@ -62,10 +69,16 @@ a new stop machine post function has been introduced to be executed
 after the main one with IRQs still disabled while other CPUs can exit
 stop_machine().
 
-The teardown callback here just disables the IRQs for each PMUs, which
-shouldn't expose any specific race while other CPUs are running.
+The teardown callback here:
 
-Move it to post stop_machine() accordingly.
+* Disables the per-cpu IRQ
+* Disables user-mode access to the CPU counter
+* Disables the shared memory snapshot of the CPU PMU.
+
+All these operations are local to the CPU and should be able to execute
+concurrently with other CPUs.
+
+Move this teardown callback to post stop_machine() accordingly.
 
 Signed-off-by: Frederic Weisbecker <frederic@kernel.org>
 ---
@@ -73,15 +86,15 @@ Signed-off-by: Frederic Weisbecker <frederic@kernel.org>
  1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/kernel/cpu.c b/kernel/cpu.c
-index 7d7e2d1eda9b..95cc6655cf7b 100644
+index 95cc6655cf7b..c69a265e4383 100644
 --- a/kernel/cpu.c
 +++ b/kernel/cpu.c
 @@ -1275,7 +1275,7 @@ void clear_tasks_mm_cpumask(int cpu)
  static int take_cpu_down(void *_param)
  {
  	struct cpuhp_cpu_state *st = this_cpu_ptr(&cpuhp_state);
--	enum cpuhp_state target = max((int)st->target, CPUHP_AP_PERF_ARM_ACPI_STARTING);
-+	enum cpuhp_state target = max((int)st->target, CPUHP_AP_PERF_ARM_STARTING);
+-	enum cpuhp_state target = max((int)st->target, CPUHP_AP_PERF_ARM_STARTING);
++	enum cpuhp_state target = max((int)st->target, CPUHP_AP_PERF_RISCV_STARTING);
  	int err, cpu = smp_processor_id();
  
  	/* Ensure this CPU doesn't handle any more interrupts. */
@@ -89,8 +102,8 @@ index 7d7e2d1eda9b..95cc6655cf7b 100644
  	enum cpuhp_state target = max((int)st->target, CPUHP_AP_OFFLINE);
  	int cpu = smp_processor_id();
  
--	WARN_ON(st->state != CPUHP_AP_PERF_ARM_ACPI_STARTING);
-+	WARN_ON(st->state != CPUHP_AP_PERF_ARM_STARTING);
+-	WARN_ON(st->state != CPUHP_AP_PERF_ARM_STARTING);
++	WARN_ON(st->state != CPUHP_AP_PERF_RISCV_STARTING);
  	/*
  	 * Invoke the former CPU_DYING callbacks. DYING must not fail!
  	 */
