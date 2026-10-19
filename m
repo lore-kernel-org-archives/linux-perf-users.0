@@ -1,51 +1,49 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E172162C0DB;
-	Mon, 19 Oct 2026 14:05:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 411E94FC330;
+	Mon, 19 Oct 2026 14:05:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792418716; cv=none; b=RM9ToqiZsoede9Na1hrEWfqzIfBEE5FBrrJRnuZwfiRfFiD7mWiURUbvQkyNSQFOKrR7xqwXZie2yc2VnZ5z2JtCAmG1wd8YqmJ32+oZSXPEzdRKXvviWU2+ffbjZsynqmmPPrg6W8PXmBvlMS93ruDDRwRC/B8scP7LHZNPMMc=
+	t=1792418745; cv=none; b=s5CqgDxMn6aTB1A9eYt7aBFqWoaBv4EBdrKEEtmUsU/FZHelg1lzASl48xG/GrcHrplwWmqmEcyECcHVhJYTyf9CwSOcLvoqycZvzARAn0pToo9SEdnbb3jFLVsl3H/fxIvg+zz5xtARwDgCFaEA+mQajzljDPkpSifD2eotglY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792418716; c=relaxed/simple;
-	bh=NS+dYxfyjC54yA8xF4W3zeUdqixq8YahZ/6nL88VUbU=;
+	s=arc-20240116; t=1792418745; c=relaxed/simple;
+	bh=/jn0gULFWbMrwJjmayeNpkDr63HxLyEcKNnDZCIm2Eg=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=C45aUY/Qpz07li8B1RfWKoHl8GNaFJTkRUda9/jHUyBbB/lb7yW6y7GQ4SX3ajbRDt1SNJkDci2r/IwHiwnWrGT8xzkRgAgLfiIR/jb1tF2p7YVjcHb8JDIIBviskxKssAjqWEQUz8SxF+5P25flivTa09wCuKA4Kd2Uj1qaaN8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bf/E01hj; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version:Content-Type; b=PrwiLz391RuQA6ikUOb6TLr/LF+X1zRqhtYvlhR5hwN9LapiDPUjaKJ6XyqI29ZFJ+xTwkF0hpNjplDZ3ms9AWM3JhYROfcuZtiKumsPigMMjNlKXGUdeNUU4NylZ58o7545EikiKdV0r1r5QqqHCGaTd3JiGRr26bRAoXS1apc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eRZ3wlGL; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bf/E01hj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 43C221F000C9;
-	Mon, 19 Oct 2026 14:05:12 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eRZ3wlGL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C8E901F000C5;
+	Mon, 19 Oct 2026 14:05:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1792418713;
-	bh=OJnDRXaD8MXKY+HfVAGx8ycJVEcnB4lWDfYJHPvkKb0=;
+	s=k20260515; t=1792418742;
+	bh=vAjPh0K/1xcc1UTcvd4vlu2Zj2eAFfcETHWsmqpxz3Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=bf/E01hjpu608+YAIXvBZ8sLKTH6wN4X6fCJ266yZXD9IUA84iZ5tHSbvtTkUThwg
-	 j7b75Zfd9bwTyHXiMvYncHq4rvcE65DsDqz/aIEmmci2ek9dbiCVmsmivlxi4rmXyd
-	 0hCF6sI/KvQuEynwTYJ3xs7j8KKiF54nWaVmGdVaTduzmV2qBJSfrnLNuFyQhPu7B0
-	 0DReVvYr6GaJMZb1Ucxw9mccPd0om2AQlljhVhl6eKiHMuvKaCcGbZ2BYq7EugqtFN
-	 7gGQJvbk6uaR63I2smHhQLXfeH4HjMUkcU7kYw8EBcxoGPlfWo7yzzg1aumaig8pA0
-	 2sqzRO8psMLCg==
+	b=eRZ3wlGLO3BU1O0vvlpNY8ddCzRqkBWvP/1jPaQHXSe8m8rs9pxaHRGyWskr7eIxn
+	 bQUbqeQLse0wDzV2lvnMe6vosEl+WtrMdxy9m/5JVVfRaXhjyw88qOMeT6iFGwxeTO
+	 6UM/Rg2aruyoIWGsWnmr8wa10bXaSbDFO5iXsDbDyRPvXey2JOm+zeYTTtVWzFXfcV
+	 QQ7KBMIBrlqVVSFSTI9c8v8BWrNQzbLNabyccFx2bV1NqfJ6KlKJMmgkHLI467vjX5
+	 NRd3TFCDliv7OjBlC3MKWD+LuuaqxkMzOFi9JhHA9eH0Yw+7j0AoFONpitaJgozpvB
+	 S+cRidOtSd90Q==
 From: Sasha Levin <sashal@kernel.org>
 To: patches@lists.linux.dev,
 	stable@vger.kernel.org
-Cc: Atish Patra <atishp@meta.com>,
-	Sashiko AI <sashiko-bot@kernel.org>,
-	Charlie Jenkins <thecharlesjenkins@gmail.com>,
-	Paul Walmsley <pjw@kernel.org>,
+Cc: Dapeng Mi <dapeng1.mi@linux.intel.com>,
+	"Peter Zijlstra (Intel)" <peterz@infradead.org>,
 	Sasha Levin <sashal@kernel.org>,
-	atish.patra@linux.dev,
-	will@kernel.org,
-	mark.rutland@arm.com,
-	palmer@dabbelt.com,
-	aou@eecs.berkeley.edu,
-	linux-riscv@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org,
+	mingo@redhat.com,
+	acme@kernel.org,
+	namhyung@kernel.org,
+	tglx@kernel.org,
+	bp@alien8.de,
+	dave.hansen@linux.intel.com,
+	x86@kernel.org,
 	linux-perf-users@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.18-6.12] RISC-V: perf: fix resource cleanup on driver probe failure
-Date: Mon, 19 Oct 2026 09:52:14 -0400
-Message-ID: <20261019135441.1420968-443-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 6.18-6.1] perf/x86/intel: Fallback to sw branch type decoding if no hw decoding
+Date: Mon, 19 Oct 2026 09:52:34 -0400
+Message-ID: <20261019135441.1420968-463-sashal@kernel.org>
 X-Mailer: git-send-email 2.53.0
 In-Reply-To: <20261019135441.1420968-1-sashal@kernel.org>
 References: <20261019135441.1420968-1-sashal@kernel.org>
@@ -61,589 +59,433 @@ X-stable-base: Linux 6.18.57
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-From: Atish Patra <atishp@meta.com>
+From: Dapeng Mi <dapeng1.mi@linux.intel.com>
 
-[ Upstream commit e24a1418e90beac2ef4384bc9b0b5a10f19b806e ]
+[ Upstream commit 170cc6b02e3d5203ccaa49ffea1ee5a7ab08c885 ]
 
-Sashiko pointed out various UAF and memory leak issues around
-pmu_sbi_device_probe() error paths.
+intel_pmu_lbr_filter() currently assumes arch-LBR provides hardware
+branch-type decoding and skips software decoding on that path.
 
-If the probe fails, here are list of cleanups needed.
-a. Already registered pmu must be freed
-b. per cpu IRQ must be released
-c. pmu_ctr_list data structure must be freed
-d. cpu hotplug state must be cleaned up only if added.
+However, arch-LBR may not always expose branch-type information. In
+that case, treating entries as hardware-decoded can misclassify sampled
+branches (for example, defaulting to JCC), which breaks branch-type
+filtering results.
 
-Fix the resource cleanup by reorganizing the code around probe failure.
+Fix this by using software branch-type decoding when hardware
+branch-type decoding is unavailable (that is, when x86_lbr_type is not
+enabled). This keeps branch classification and filtering behavior
+correct across arch-LBR configurations.
 
-Reported-by: Sashiko AI <sashiko-bot@kernel.org>
-Reviewed-by: Charlie Jenkins <thecharlesjenkins@gmail.com>
-Signed-off-by: Atish Patra <atishp@meta.com>
-Link: https://patch.msgid.link/20260807-counter_delegation-v9-1-58658104e487@meta.com
-Signed-off-by: Paul Walmsley <pjw@kernel.org>
+Since x86_lbr_type is only set to true when arch-LBR is supported,
+it's unnecessary to check if the CPU has the arch-LBR feature.
+
+Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Link: https://patch.msgid.link/20260616044654.3468742-4-dapeng1.mi@linux.intel.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
 
 LLM Generated explanations, may be completely bogus:
 
-This tree is **6.12.111** (`pending-6.12`). The buggy probe cleanup is
-present here, the patch applies, and it is a real UAF/leak/crash fix — a
-YES for this tree.
+I have enough to decide: the 6.18.53 tree still has the JCC
+misclassification, and this is a one-line, already-reviewed correction
+of that path.
 
----
+===============================================================
+PHASE 1: COMMIT MESSAGE FORENSICS
+===============================================================
 
-## PHASE 1: COMMIT MESSAGE FORENSICS
+Step 1.1: PARSE THE SUBJECT LINE
+Record: [perf/x86/intel] [Fallback] [Use software branch-type decoding
+when Arch LBR does not provide hardware type]
 
-**Step 1.1: PARSE THE SUBJECT LINE**
-
-Record: `[RISC-V perf / SBI PMU] [fix] [resource cleanup on driver probe
-failure]`
-
-**Step 1.2: PARSE ALL COMMIT MESSAGE TAGS**
-
+Step 1.2: PARSE ALL COMMIT MESSAGE TAGS
 Record:
-- `Reported-by: Sashiko AI <sashiko-bot@kernel.org>` — static-analysis
-  bot, not a user oops, but it named concrete UAF/leak paths
-- `Reviewed-by: Charlie Jenkins <thecharlesjenkins@gmail.com>` — RISC-V
-  reviewer
-- `Signed-off-by: Atish Patra <atishp@meta.com>` — original SBI PMU
-  driver author
-- `Link: https://patch.msgid.link/20260807-counter_delegation-v9-1-
-  58658104e487@meta.com` — **v9 01/20** of the counter-delegation series
-- `Signed-off-by: Paul Walmsley <pjw@kernel.org>` — RISC-V maintainer
-- No `Fixes:` tag (expected)
-- Ignore pipeline `Signed-off-by: Sasha Levin` / `[Upstream commit ...]`
-  — none on the real commit `e24a1418e90be`
+- Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com> (author, Intel)
+- Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org> (perf/x86
+  maintainer; applied to tip)
+- Link: https://patch.msgid.link/20260616044654.3468742-4-
+  dapeng1.mi@linux.intel.com
+- No Fixes: tag (expected)
+- No Reported-by / Tested-by / Reviewed-by / Acked-by / Cc: stable
+- Ignore pipeline tags: [Upstream commit
+  170cc6b02e3d5203ccaa49ffea1ee5a7ab08c885], Signed-off-by: Sasha Levin
 
-**Step 1.3: ANALYZE THE COMMIT BODY TEXT**
+Notable: msgid `-4` is patch 3/8 of “perf/x86: Miscellaneous PMU bug
+fixes” (cover letter is `-1`). Independent patches grouped for
+review/backport, not a tightly coupled series.
 
+Step 1.3: ANALYZE THE COMMIT BODY TEXT
 Record:
-- **Bug:** `pmu_sbi_device_probe()` error paths leak and leave live
-  references to freed objects
-- **Needed cleanups:** (a) unregister an already-registered PMU, (b)
-  release the per-CPU IRQ, (c) free `pmu_ctr_list`, (d) remove the CPU-
-  hotplug instance only if it was added
-- **Symptom:** UAF and memory leaks if probe fails after partial setup
-- **Root cause:** probe does `goto out_unregister` / `out_free` without
-  matching teardown
-- **Version info:** none in the message; code dates to 2022–2024
+- Bug: `intel_pmu_lbr_filter()` treats Arch LBR as always having
+  hardware branch-type decode and skips software decode.
+- Reality: Arch LBR CPUID leaf 28H ECX bit 2 (`lbr_br_type`) is
+  optional. If it is clear, `get_lbr_br_type()` returns 0.
+- Symptom: type 0 is `ARCH_LBR_BR_TYPE_JCC`, so sampled branches are
+  classified as JCC. Branch-type filters (`PERF_SAMPLE_BRANCH_*`) and
+  saved types are wrong (calls/returns dropped or shown as
+  conditionals).
+- Root cause: gate is `static_cpu_has(X86_FEATURE_ARCH_LBR)` instead of
+  “hardware type actually present”.
+- Fix: gate on `static_branch_likely(&x86_lbr_type)`, which is enabled
+  only when `x86_pmu.lbr_br_type` is set in `intel_pmu_arch_lbr_init()`.
+- Version info in message: none.
 
-**Step 1.4: DETECT HIDDEN BUG FIXES**
+Step 1.4: DETECT HIDDEN BUG FIXES
+Record: Not hidden. Explicit correctness fix for misclassification. Not
+style/cleanup.
 
-Record: Not disguised. It is an explicit error-path UAF/leak fix.
-“Reorganizing probe failure” is the usual `goto` cleanup pattern, not a
-refactor-for-its-own-sake.
+===============================================================
+PHASE 2: DIFF ANALYSIS - LINE BY LINE
+===============================================================
 
----
-
-## PHASE 2: DIFF ANALYSIS
-
-**Step 2.1: INVENTORY THE CHANGES**
-
+Step 2.1: INVENTORY THE CHANGES
 Record:
-- File: `drivers/perf/riscv_pmu_sbi.c` — **+27 / −6** (33 insertions, 6
-  deletions)
-- Functions: `pmu_sbi_setup_irqs()`, `riscv_pmu_destroy()`,
-  `pmu_sbi_device_probe()`
-- Scope: single-file surgical error-path fix
+- File: `arch/x86/events/intel/lbr.c` — 1 insertion, 1 deletion
+- Function: `intel_pmu_lbr_filter()`
+- Scope: single-file, one-line surgical change
 
-**Step 2.2: UNDERSTAND THE CODE FLOW CHANGE**
-
+Step 2.2: UNDERSTAND THE CODE FLOW CHANGE
 Record:
+- Before: if CPU has Arch LBR and `type <= ARCH_LBR_BR_TYPE_KNOWN_MAX`
+  (0–5), map via `arch_lbr_br_type_map[]`. Else `branch_type()` software
+  decode.
+- After: same hardware map only if `x86_lbr_type` is enabled (HW type
+  field present). Otherwise software decode.
+- Path: LBR sample filtering after PMI / branch-stack snapshot, not
+  probe/init-only.
 
-1. **`pmu_sbi_setup_irqs()`**
-   - Before: domain/mapping/request failures return immediately.
-     `riscv_pmu_use_irq` can stay **true** even though no IRQ was
-     installed. Mapping leaked if `request_percpu_irq()` failed.
-   - After: those paths `goto err`, dispose a created mapping, set
-     `riscv_pmu_use_irq = false`.
-
-2. **`riscv_pmu_destroy()`**
-   - Before: always `cpuhp_state_remove_instance()` even when the
-     instance was never added.
-   - After: only if `!hlist_unhashed(&pmu->node)`.
-
-3. **`pmu_sbi_device_probe()`**
-   - Before: `riscv_pm_pmu_register` / `perf_pmu_register` failures jump
-     to `out_unregister` (destroy + `kfree(pmu)` only). Snapshot-alloc
-     and cpuhp-add failures also skip `perf_pmu_unregister`. IRQ,
-     `hw_events`, and `pmu_ctr_list` never freed.
-   - After: `irq_requested` tracks a successful IRQ request. Failures
-     before PMU register go to `out_destroy`. Failures after register go
-     to `out_unregister` which now calls `perf_pmu_unregister`. Then
-     IRQ/percpu/`pmu_ctr_list`/`pmu` are freed.
-
-**Step 2.3: IDENTIFY THE BUG MECHANISM**
-
-Record: **Error-path resource leak + UAF + NULL deref**, with a logic
-fix on the IRQ fallback path.
-
-Verified mechanisms in **this** tree:
-
-| Bug | Mechanism |
-|---|---|
-| **UAF of registered PMU** | `perf_pmu_register()` then
-`pmu_sbi_snapshot_alloc()` or `cpuhp_state_add_instance()` fails →
-`kfree(pmu)` while the PMU stays in perf core |
-| **NULL deref / list corruption** | `riscv_pmu_destroy()` →
-`cpuhp_state_remove_instance()` → `hlist_del()` → `WRITE_ONCE(*pprev,
-next)` with `pprev == NULL` on a `kzalloc`’d node |
-| **IRQ + cookie UAF** | successful `request_percpu_irq(..., hw_events)`
-then later probe fail frees `pmu`/`hw_events` without `free_percpu_irq`
-|
-| **Leaks** | `alloc_percpu` `hw_events` and `kcalloc` `pmu_ctr_list`
-only freed on the new `out_free` |
-| **Wrong IRQ flag on success path** | IRQ setup failure is **non-
-fatal**; probe continues with `PERF_PMU_CAP_NO_INTERRUPT` but
-`riscv_pmu_use_irq` stayed true, so `pmu_sbi_starting_cpu()` can
-`enable_percpu_irq(0)` |
-
-**Step 2.4: ASSESS THE FIX QUALITY**
-
-Record: Obviously correct and minimal. `out_unregister` is only reached
-after a successful `perf_pmu_register`. `out_destroy` does not
-unregister. `hlist_unhashed` matches `cpuhp` (node is hashed only after
-successful add). IRQ free happens before `free_percpu(hw_events)`.
-
-Regression risk: **low**. Remaining gaps (sysctl not unregistered;
-`sbi_pmu_snapshot_available` static key not disabled) are pre-existing
-and not introduced here. They do not make this patch unsafe.
-
----
-
-## PHASE 3: GIT HISTORY INVESTIGATION
-
-**Step 3.1: BLAME THE CHANGED LINES**
-
+Step 2.3: IDENTIFY THE BUG MECHANISM
 Record:
-- IRQ error returns: `4905ec2fb7e642` (Atish Patra, 2022-02-18) —
-  sscofpmf
-- Destroy / `out_unregister`: `e9a023f2b73ac3` (Eric Lin, 2022-07-05) —
-  PM notifier
-- Snapshot + moving `cpuhp_state_add_instance` **after** register:
-  `a8625217a054ca` (Atish Patra, 2024-04-20) — **this is when the
-  registered-PMU UAF became real**
-- Original `kfree(pmu)`-only `out_free`: `e9991434596f53` (2022-02-18) —
-  driver introduction
+- Category: logic/correctness (wrong classifier when optional HW field
+  is absent)
+- Mechanism: `get_lbr_br_type()` is:
 
-All of these are ancestors of this 6.12 tree.
+```866:873:arch/x86/events/intel/lbr.c
+static __always_inline int get_lbr_br_type(u64 info)
+{
+        int type = 0;
 
-**Step 3.2: FOLLOW THE FIXES: TAG**
+        if (static_branch_likely(&x86_lbr_type))
+                type = (info & LBR_INFO_BR_TYPE) >>
+LBR_INFO_BR_TYPE_OFFSET;
 
-Record: No `Fixes:` tag. Buggy code is still in this checkout (see Phase
-6).
-
-**Step 3.3: CHECK FILE HISTORY FOR RELATED CHANGES**
-
-Record (this tree, `git log --oneline -20 --
-drivers/perf/riscv_pmu_sbi.c`): overflow-IRQ NULL check, bitmap cmask,
-errno/firmware-event fixes. None of those replace this cleanup. `git log
---oneline e24a1418e90be..origin/master -- drivers/perf/riscv_pmu_sbi.c`
-only shows later overflow-mask/bitmap work; they do not revert or redo
-this cleanup.
-
-**Step 3.4: CHECK THE AUTHOR'S OTHER COMMITS**
-
-Record: Atish Patra wrote the SBI PMU driver (`e9991434596f53`) and the
-snapshot code. This is a maintainer-area fix, not drive-by.
-
-**Step 3.5: CHECK FOR DEPENDENT/PREREQUISITE COMMITS**
-
-Record: Msgid is `counter_delegation-v9-1`. Patches 2–20 add
-Smcsrind/Ssccfg/Smcdeleg and a new PMU path. They are **features**, not
-prerequisites. This hunk only uses `hlist_unhashed`,
-`perf_pmu_unregister`, `free_percpu_irq`, `irq_dispose_mapping`,
-`free_percpu`, `pmu_ctr_list` — all already in 6.12. **Standalone.**
-`git show e24a1418e90be | git apply --check` succeeded (offsets only).
-
----
-
-## PHASE 4: MAILING LIST AND EXTERNAL RESEARCH
-
-**Step 4.1: FIND THE ORIGINAL PATCH DISCUSSION**
-
-Record:
-- `b4 dig -c e24a1418e90be`: matched patch-id; lore URL `https://patch.m
-  sgid.link/20260807-counter_delegation-v9-1-58658104e487@meta.com`
-- `b4 dig -a`: cleanup first appeared as **v7 01/22** (2026-06-22), then
-  **v9 01/20** (committed)
-- WebFetch of lore returned **403** (Anubis). Thread was recovered via
-  `b4 dig -m /tmp/riscv-pmu-cleanup.mbox`
-- No NAK on this patch. Paul Walmsley queued the first ten patches
-  (including this one) for `riscv/for-next`
-
-**Step 4.2: CHECK WHO REVIEWED THE PATCH**
-
-Record: Charlie Jenkins `Reviewed-by`. Paul Walmsley applied it.
-Recipients are the RISC-V list / maintainers (from msgid and SOBs). No
-`Cc: stable` in review.
-
-**Step 4.3: SEARCH FOR THE BUG REPORT**
-
-Record: Reporter is Sashiko, not syzbot. v9 review of **this** patch
-restates remaining **pre-existing** issues (snapshot disable without CPU
-pin, static key, sysctl leak, init-time cpuhp leak). It does **not** NAK
-the cleanup. The UAF it describes of a registered-then-freed PMU is
-exactly what `perf_pmu_unregister` addresses.
-
-**Step 4.4: CHECK FOR RELATED PATCHES AND SERIES**
-
-Record: Rest of v9 is new ISA / delegation code. Not needed for this
-cleanup. Later origin/master commits on this file do not change these
-error labels.
-
-**Step 4.5: CHECK STABLE MAILING LIST HISTORY**
-
-Record: lore.kernel.org/stable WebFetch also 403. **UNVERIFIED** whether
-stable@ already discussed this. Absence of `Cc: stable` is expected for
-this review queue.
-
----
-
-## PHASE 5: CODE SEMANTIC ANALYSIS
-
-**Step 5.1: KEY FUNCTIONS**
-
-Record: `pmu_sbi_setup_irqs`, `riscv_pmu_destroy`,
-`pmu_sbi_device_probe`. Related: `pmu_sbi_starting_cpu`,
-`riscv_pmu_alloc`, `pmu_sbi_get_ctrinfo`.
-
-**Step 5.2: TRACE CALLERS**
-
-Record:
-- `pmu_sbi_device_probe` — `.probe` of `pmu_sbi_driver`
-- Called from `pmu_sbi_devinit()` (`device_initcall`) via
-  `platform_device_register_simple(RISCV_PMU_SBI_PDEV_NAME, ...)`
-- `pmu_sbi_starting_cpu` / `pmu_sbi_dying_cpu` read `riscv_pmu_use_irq`
-  (the flag this patch clears on IRQ setup failure)
-
-**Step 5.3: TRACE CALLEES**
-
-Record: `riscv_pmu_alloc()` does `kzalloc` + `alloc_percpu_gfp` (this
-tree, `drivers/perf/riscv_pmu.c`). `pmu_sbi_get_ctrinfo()` `kcalloc`s
-`pmu_ctr_list`. `cpuhp_state_remove_instance()` always `hlist_del()`s.
-
-**Step 5.4: FOLLOW THE CALL CHAIN**
-
-Record: Boot/init on RISC-V with SBI PMU (`CONFIG_RISCV_PMU_SBI`
-**default y**). Trigger is probe failure after partial success:
-`snapshot_alloc` ENOMEM, `perf_pmu_register` failure,
-`cpuhp_state_add_instance` failure, or `cpu_pm_register_notifier`
-failure. After a successful `perf_pmu_register` and a later fail,
-userspace `perf` can touch a PMU whose `struct riscv_pmu` is already
-`kfree`d — **userspace-reachable UAF**.
-
-**Step 5.5: SEARCH FOR SIMILAR PATTERNS**
-
-Record: Same file’s `pmu_sbi_devinit()` still leaks
-`cpuhp_setup_state_multi` if `platform_driver_register` fails. Pre-
-existing, out of this patch’s scope.
-
----
-
-## PHASE 6: CROSS-REFERENCING AGAINST THE LOCAL TREE
-
-**Step 6.1: DOES THE BUGGY CODE EXIST IN THIS TREE?**
-
-Record: **Yes.** This checkout is 6.12.111; `e24a1418e90be` is **not**
-an ancestor (`git merge-base --is-ancestor` exit 1).
-
-Current probe error path (`drivers/perf/riscv_pmu_sbi.c`):
-
-```1462:1468:drivers/perf/riscv_pmu_sbi.c
-out_unregister:
-        riscv_pmu_destroy(pmu);
-
-out_free:
-        kfree(pmu);
-        return ret;
+        return type;
+}
 ```
 
-`riscv_pmu_destroy()` still unconditionally removes the cpuhp instance.
-`pmu_sbi_setup_irqs()` still returns without clearing
-`riscv_pmu_use_irq` or disposing a mapping.
+When `x86_lbr_type` is off, stored type is 0. Old filter still took the
+Arch LBR map because `0 <= ARCH_LBR_BR_TYPE_KNOWN_MAX`, so every entry
+became JCC. Fix uses the same static key as the reader.
 
-Bug introduced: leaks since v5.17-era driver; UAF of registered PMU
-since snapshot/cpuhp reorder in `a8625217a054ca` (in this tree).
-
-**Step 6.2: CHECK FOR BACKPORT COMPLICATIONS**
-
-Record: **Clean apply** (`git apply --check` — all 6 hunks succeeded
-with −54 line offset). Context differs (`bitmap_copy` vs mainline
-`pmu->cmask = cmask`) because 6.12 already has `143668c424772` (counter
-mask as bitmap). No rework required.
-
-**Step 6.3: CHECK IF RELATED FIXES ARE ALREADY HERE**
-
-Record: No equivalent cleanup. Bitmap and overflow-IRQ fixes in this
-tree are independent.
-
----
-
-## PHASE 7: SUBSYSTEM AND MAINTAINER CONTEXT
-
-**Step 7.1: SUBSYSTEM AND CRITICALITY**
-
-Record: `drivers/perf` / RISC-V SBI PMU. **IMPORTANT** for RISC-V
-(default-on perf), not core-mm/VFS. Not staging.
-
-**Step 7.2: SUBSYSTEM ACTIVITY**
-
-Record: Mature driver (2022) with ongoing RISC-V perf fixes. This is a
-long-standing error-path hole, not churn in brand-new code.
-
----
-
-## PHASE 8: IMPACT AND RISK ASSESSMENT
-
-**Step 8.1: WHO IS AFFECTED**
-
-Record: RISC-V systems with `CONFIG_RISCV_PMU_SBI` (default y) and SBI
-PMU (QEMU virt, most recent boards). Driver-specific, not universal.
-
-**Step 8.2: TRIGGER CONDITIONS**
-
+Step 2.4: ASSESS THE FIX QUALITY
 Record:
-- Common path: probe succeeds — no crash
-- Realistic fail: `pmu_sbi_snapshot_alloc()` ENOMEM (page alloc
-  GFP_ATOMIC per CPU) **after** `perf_pmu_register`
-- IRQ mapping fail with SSCOF/T-Head/Andes: probe **continues**,
-  `riscv_pmu_use_irq` wrongly stays true
-- Unprivileged user cannot force probe, but **can** open the registered
-  `"cpu"` PMU in the failure window
+- Obviously correct: one condition aligned with how type is populated.
+- Minimal; no unrelated edits.
+- Regression risk: low on CPUs with `lbr_br_type` (common Arch LBR) —
+  same HW path.
+- On Arch LBR without HW type: software decode in NMI (existing
+  `branch_type()` path). Sashiko flagged extra NMI cost because
+  `intel_pmu_setup_hw_lbr_filter()` always sets `X86_BR_TYPE_SAVE` for
+  Arch LBR, so the filter never early-returns. That is the cost of
+  correct types, not a change to already-correct behavior. Peter merged
+  this form anyway.
+- No public API / data-structure change.
 
-**Step 8.3: FAILURE MODE SEVERITY**
+===============================================================
+PHASE 3: GIT HISTORY INVESTIGATION
+===============================================================
 
+Step 3.1: BLAME THE CHANGED LINES
 Record:
-- Registered PMU then `kfree(pmu)` → **UAF** → HIGH
-- `hlist_del` on unhashed node → **oops** → HIGH
-- IRQ cookie UAF → HIGH
-- One-time leaks if probe dies before register → MEDIUM
-- `enable_percpu_irq(0)` on fallback success path → MEDIUM–HIGH
+- Buggy `if (static_cpu_has(X86_FEATURE_ARCH_LBR) &&` introduced in
+  `47125db27e47e9` (“perf/x86/intel/lbr: Support Architectural LBR”, Kan
+  Liang, 2020-07-08). Contained in `perf-core-2020-08-03` (~v5.9).
+  Present in this tree.
+- `x86_lbr_type` added in `6b19788ddc593` (“perf/x86/intel/lbr: Add
+  static_branch for LBR INFO flags”, 2022-01-18, ~v5.17). Present here.
+- `X86_BR_TYPE_SAVE` forced for Arch LBR in `32ba156df1b1c` (2022, Cc:
+  stable). Present here.
 
-**Step 8.4: RISK-BENEFIT RATIO**
+Step 3.2: FOLLOW THE FIXES: TAG
+Record: No Fixes: tag. Functionally this is a late correction of
+`47125db27e47e9`, which is in v6.18.53.
 
+Step 3.3: CHECK FILE HISTORY FOR RELATED CHANGES
 Record:
-- **Benefit:** high for RISC-V 6.12 — prevents oops/UAF on probe fail
-  and a wrong IRQ flag on a continued probe
-- **Risk:** low — ~27 net lines, error path + one flag clear, applies
-  cleanly
-- **Ratio:** favor backport
+- `3c492c8eba026` “Fix kernel address leakages in LBR stack” is already
+  in v6.18.53 (same series, patch 4/8). Surrounding filter already has
+  `from_plm` kernel-from dropping.
+- Candidate `906dbeecfa0ff` is this patch on autosel; **not** in
+  `v6.18.53` (`git merge-base --is-ancestor 906dbeecfa0ff v6.18.53`
+  failed).
+- v6.18.53 still has `static_cpu_has(X86_FEATURE_ARCH_LBR)` at the
+  filter. Bug is live on the baseline.
+- Standalone vs series: cover letter: “several independent PMU fixes to
+  simplify review and backporting.” This hunk does not need 1/8, 2/8,
+  5–8. 4/8 is already here.
 
----
+Step 3.4: CHECK THE AUTHOR'S OTHER COMMITS
+Record: Dapeng Mi is a regular Intel perf/x86 contributor. Peter
+Zijlstra applied it. Nearby same-series work: leakage fix already in
+this stable tree.
 
-## PHASE 9: FINAL SYNTHESIS
+Step 3.5: CHECK FOR DEPENDENT/PREREQUISITE COMMITS
+Record:
+- Needs `x86_lbr_type` — in this tree since ~v5.17.
+- Does not need other v4 patches.
+- Applies standalone: v6.18.53 already has the exact one-line context
+  (candidate applied as 1 line).
 
-**Step 9.1: EVIDENCE**
+===============================================================
+PHASE 4: MAILING LIST AND EXTERNAL RESEARCH
+===============================================================
 
-**FOR:**
-- Real UAF: perf-registered PMU freed without unregister (snapshot/cpuhp
-  fail after `perf_pmu_register`)
-- Real oops: `cpuhp_state_remove_instance` → `hlist_del` with NULL
-  `pprev`
-- Real IRQ leak/UAF and `pmu_ctr_list`/`hw_events` leaks
-- `riscv_pmu_use_irq` left true on non-fatal IRQ setup failure (success-
-  path bug)
-- Small, obviously correct, reviewed by Charlie Jenkins, authored by the
-  driver owner
-- Buggy code and helpers exist in 6.12; patch applies cleanly
-- Standalone despite being 01/20 of a feature series
+Step 4.1: FIND THE ORIGINAL PATCH DISCUSSION
+Record:
+- `b4 dig -c 170cc6b02e3d5203ccaa49ffea1ee5a7ab08c885` → https://patch.m
+  sgid.link/20260616044654.3468742-4-dapeng1.mi@linux.intel.com
+- Subject: `[Patch v4 3/8] perf/x86/intel: Fallback to sw branch type
+  decoding if no hw decoding`
+- Series: v1 2026-06-05, v2 2026-06-09, v3 2026-06-12, v4 2026-06-16;
+  tip-bot2 applied 2026-06-30.
+- v3→v4: unrelated patches; Peter asked to drop markdown in changelogs.
+- v2→v3: “Patch 3/8: Only keep x86_lbr_type check … (Peter).” Committed
+  form is what the maintainer asked for.
+- v1→v2: software fallback added after Sashiko review of v1.
+- Cover: “independent PMU fixes to simplify review and backporting.”
+- Human NAKs: none in the saved thread.
+- Sashiko AI on v4: High — always-on `X86_BR_TYPE_SAVE` plus software
+  decode can add NMI cost if HW type is missing. Not addressed in the
+  merged patch; maintainer still took it.
+- WebFetch to lore.kernel.org: 403. Thread recovered via `b4 dig -m`.
 
-**AGAINST:**
-- Probe-fail is uncommon (except IRQ-setup fallback, which is not fatal
-  and is common on some platforms)
-- Incomplete: sysctl, snapshot static key, init-time cpuhp still leak
-  (pre-existing)
-- RISC-V only
-- Reported by an AI bot, not a production oops
+Step 4.2: CHECK WHO REVIEWED THE PATCH
+Record (`b4 dig -w`): To/Cc included Peter Zijlstra, Ingo Molnar,
+Arnaldo Carvalho de Melo, Namhyung Kim, Ian Rogers, Adrian Hunter,
+Alexander Shishkin, Andi Kleen, Stephane Eranian, linux-perf-users, Zide
+Chen, Thomas Falcon, Xudong Hao. Peter signed off. No extra Reviewed-by
+on the commit.
 
-**UNRESOLVED:** stable@ thread (lore 403); whether Sashiko had a
-concrete reproducer beyond code review.
+Step 4.3: SEARCH FOR THE BUG REPORT
+Record: No Reported-by, bugzilla, or syzbot. Looks Intel-internal / code
+review. Unverified which SKU has Arch LBR without `lbr_br_type`; CPUID
+documents it as optional (`union cpuid28_ecx.lbr_br_type`).
 
-**Step 9.2: STABLE RULES CHECKLIST**
+Step 4.4: CHECK FOR RELATED PATCHES AND SERIES
+Record: v4 8 independent fixes. 4/8 (kernel LBR address leak) already in
+this tree. This 3/8 is self-contained.
 
-1. Obviously correct and tested? **PASS** — reviewed, applied by RISC-V
-   maintainer, logic matches the four listed holes
-2. Fixes a real bug that affects users? **PASS** — UAF/oops/leaks in the
-   default RISC-V PMU driver
-3. Important issue? **PASS** — UAF and NULL deref are HIGH; not a style
-   cleanup
-4. Small and contained? **PASS** — one file, +27/−6
-5. No new features or APIs? **PASS**
-6. Can apply to the local tree? **PASS** — `git apply --check` clean
+Step 4.5: CHECK STABLE MAILING LIST HISTORY
+Record: lore.kernel.org/stable search returned 403. Cover letter still
+states the series was meant to be easy to backport. UNVERIFIED: no
+stable-list NAK found (could not query the list).
 
-**Step 9.3: EXCEPTION CATEGORIES**
+===============================================================
+PHASE 5: CODE SEMANTIC ANALYSIS
+===============================================================
 
-Record: None. Ordinary bugfix.
+Step 5.1: IDENTIFY KEY FUNCTIONS IN THE DIFF
+Record: `intel_pmu_lbr_filter()` only. Uses `x86_lbr_type`,
+`arch_lbr_br_type_map`, `branch_type()`, `common_branch_type()`.
 
-**Step 9.4: DECISION**
+Step 5.2: TRACE CALLERS
+Record:
+- `intel_pmu_lbr_read()` → `intel_pmu_lbr_filter()`
+  - `__intel_pmu_snapshot_branch_stack()` (irq-off snapshot)
+  - Intel PMI handler in `intel/core.c` (~line 3375, NMI)
+- `intel_pmu_store_pebs_lbrs()` → store then filter (PEBS LBR)
 
-This 6.12 tree has the buggy probe path. The fix is small, applies, and
-closes UAF/oops/leak holes in a default-on RISC-V driver. Remaining
-cleanup gaps are not a reason to withhold the part that is correct.
+Step 5.3: TRACE CALLEES
+Record: `kernel_ip()`, `arch_lbr_br_type_map[]`, `branch_type()` (insn
+decode in `arch/x86/events/utils.c`), `common_branch_type()`.
+`branch_type()` already used for non-Arch LBR and OTHER_BRANCH.
 
----
+Step 5.4: FOLLOW THE CALL CHAIN
+Record: Userspace `perf_event_open` with `PERF_SAMPLE_BRANCH_STACK` →
+PMI/PEBS → LBR read → filter. Reachable from perf. Needs Intel PMU +
+Arch LBR without HW type to hit the bug; with HW type the new check
+matches old behavior.
 
-## What this means for 6.12 users
+Step 5.5: SEARCH FOR SIMILAR PATTERNS
+Record: AMD `arch/x86/events/amd/lbr.c` has its own filter; not this
+bug. Same file already uses `x86_lbr_type` in `get_lbr_br_type()`; the
+filter was the inconsistent check.
 
-On RISC-V with SBI PMU, a failed probe after `perf_pmu_register()`
-currently frees `struct riscv_pmu` while perf still holds it, and
-`riscv_pmu_destroy()` oopses by deleting an unhashed cpuhp node. The
-same path leaks the per-CPU IRQ cookie, `hw_events`, and `pmu_ctr_list`.
-IRQ setup failure is treated as non-fatal but leaves `riscv_pmu_use_irq`
-set, so hotplug can enable IRQ 0. The patch only rewires those gotos and
-frees; it does not pull in counter-delegation.
+===============================================================
+PHASE 6: CROSS-REFERENCING AGAINST THE LOCAL TREE
+===============================================================
 
-Risk is low relative to leaving a registered-PMU UAF in a long-term
-tree.
+Step 6.1: DOES THE BUGGY CODE EXIST IN THIS TREE?
+Record:
+- `git describe HEAD` → `v6.18.53-5049-g0f0bdc2b0dffb`; `make
+  kernelversion` → 6.18.53; branch `autosel`.
+- v6.18.53 `intel_pmu_lbr_filter()` still uses
+  `static_cpu_has(X86_FEATURE_ARCH_LBR)`.
+- Bug introduced ~v5.9; still present on this 6.18 baseline.
 
----
+Step 6.2: CHECK FOR BACKPORT COMPLICATIONS
+Record: Clean apply. Candidate is a 1-line replace on the v6.18.53 line.
+Leakage extra checks around it do not conflict.
 
-## Verification
+Step 6.3: CHECK IF RELATED FIXES ARE ALREADY HERE
+Record: No other fallback to `x86_lbr_type` in the filter on v6.18.53.
+Leakage fix is separate and already present.
 
-- **[Phase 1]** Parsed tags: Sashiko Reported-by, Charlie Jenkins
-  Reviewed-by, Atish Patra + Paul Walmsley SOBs, msgid v9 01/20; no
-  Fixes
-- **[Phase 2]** Diff: +27/−6 in `riscv_pmu_sbi.c`; IRQ err goto,
-  `hlist_unhashed` guard, `perf_pmu_unregister`,
-  `free_percpu_irq`/`free_percpu`/`kfree(pmu_ctr_list)`
-- **[Phase 2]** Read 6.12 `pmu_sbi_device_probe` lines 1367–1468:
-  destroy + `kfree(pmu)` only
-- **[Phase 2]** Read `kernel/cpu.c` `__cpuhp_state_remove_instance`:
-  always `hlist_del(node)`
-- **[Phase 2]** Read `include/linux/list.h` `__hlist_del`:
-  `WRITE_ONCE(*pprev, next)` NULL-derefs if never hashed
-- **[Phase 2]** Read `__cpuhp_state_add_instance_cpuslocked`:
-  `hlist_add_head` only on success
-- **[Phase 3]** `git blame` IRQ path `4905ec2fb7e642` (2022); destroy
-  `e9a023f2b73ac3` (2022); snapshot/cpuhp order `a8625217a054ca` (2024,
-  in this tree)
-- **[Phase 3]** `git merge-base --is-ancestor e24a1418e90be HEAD` → not
-  in this tree; `e9a023f2b73ac3` / `a8625217a054ca` / `e9991434596f53` →
-  in this tree
-- **[Phase 3]** Follow-ups on origin/master do not redo this cleanup
-- **[Phase 4]** `b4 dig -c e24a1418e90be` → patch.msgid.link v9-1; `-a`
-  shows v7 first, v9 applied
-- **[Phase 4]** `b4 dig -m`: 31-message mbox; Sashiko comments are pre-
-  existing leftovers; Paul queued first ten patches; no NAK
-- **[Phase 4]** WebFetch lore/stable: 403 — UNVERIFIED stable-list
-  discussion
-- **[Phase 5]** Probe from `device_initcall(pmu_sbi_devinit)`;
-  `riscv_pmu_alloc` allocates `hw_events`; `pmu_sbi_get_ctrinfo`
-  allocates `pmu_ctr_list`
-- **[Phase 5]** `pmu_sbi_starting_cpu` uses `riscv_pmu_use_irq` /
-  `riscv_pmu_irq`
-- **[Phase 6]** `git describe HEAD` → `p-6.12-4-gbf6fcdf761abd`; `make
-  kernelversion` → **6.12.111**
-- **[Phase 6]** `git apply --check` of `e24a1418e90be`: all hunks OK
-- **[Phase 7]** `CONFIG_RISCV_PMU_SBI` default y in
-  `drivers/perf/Kconfig`
-- **[Phase 8]** Failure mode: UAF of registered PMU + cpuhp oops → HIGH
-- **UNVERIFIED:** live user oops; stable@ nomination history
+===============================================================
+PHASE 7: SUBSYSTEM AND MAINTAINER CONTEXT
+===============================================================
+
+Step 7.1: IDENTIFY THE SUBSYSTEM AND ITS CRITICALITY
+Record: perf/x86 Intel LBR (`arch/x86/events/intel/lbr.c`). IMPORTANT:
+Intel PMU branch recording, not core mm/VFS. Widely used on x86 via
+perf.
+
+Step 7.2: ASSESS SUBSYSTEM ACTIVITY
+Record: Actively maintained (Kan Liang, Dapeng Mi, Peter Zijlstra). Arch
+LBR path is mature (since 2020), not brand-new.
+
+===============================================================
+PHASE 8: IMPACT AND RISK ASSESSMENT
+===============================================================
+
+Step 8.1: DETERMINE WHO IS AFFECTED
+Record: Intel x86 with Arch LBR (Ice Lake+) when CPUID leaf 28H does not
+set branch-type. Users of `perf record -j` / `PERF_SAMPLE_BRANCH_STACK`
+with type filters or type save. Not universal; driver/PMU-specific.
+
+Step 8.2: DETERMINE THE TRIGGER CONDITIONS
+Record: Normal LBR sampling when HW type is absent. Unprivileged users
+can open perf events if `perf_event_paranoid` allows; typically needs
+profiling access. Not a rare error-path-only bug.
+
+Step 8.3: DETERMINE THE FAILURE MODE SEVERITY
+Record:
+- Failure: wrong branch types; type filters drop real calls/returns or
+  keep everything as JCC; saved types lie.
+- Not oops, deadlock, or filesystem corruption.
+- Severity: MEDIUM (silent wrong samples). Important for perf
+  correctness; same class as other LBR type fixes that already went to
+  stable (e.g. `32ba156df1b1c`).
+
+Step 8.4: CALCULATE RISK-BENEFIT RATIO
+Record:
+- Benefit: correct LBR classification/filtering on Arch LBR without HW
+  type; no-op where HW type exists.
+- Risk: very low (1 line). Extra software decode only on the previously
+  wrong config; `branch_type()` is already used in NMI.
+- Ratio: favorable.
+
+===============================================================
+PHASE 9: FINAL SYNTHESIS
+===============================================================
+
+Step 9.1: COMPILE THE EVIDENCE
+FOR:
+- Real misclassification (all branches as JCC) when Arch LBR lacks HW
+  type.
+- Bug exists on this 6.18.53 baseline.
+- One-line, obviously correct, matches `get_lbr_br_type()`.
+- Maintainer (Peter Zijlstra) requested this check and signed off.
+- Independent of the rest of the series; cover letter aimed at
+  backporting.
+- Prerequisites (`x86_lbr_type`, Arch LBR filter) are in this tree.
+- Applies cleanly; sibling 4/8 already in 6.18.53.
+
+AGAINST:
+- Not a crash, UAF, or security hole (leak is a different commit already
+  here).
+- No user Reported-by / syzbot.
+- Sashiko NMI-overhead note not addressed; only matters if HW type is
+  missing.
+- Which production SKUs omit `lbr_br_type` is unverified.
+
+UNRESOLVED:
+- Exact CPU/VMM configs with Arch LBR and `lbr_br_type=0`.
+- Stable-list discussion (lore 403).
+
+Step 9.2: APPLY THE STABLE RULES CHECKLIST
+1. Obviously correct and tested? PASS — one-line, maintainer-shaped, in
+   tip/mainline.
+2. Fixes a real bug that affects users? PASS — wrong LBR types/filters.
+3. Important issue? PASS (MEDIUM) — silent wrong branch samples on Intel
+   LBR; not a panic, but user-visible PMU corruption.
+4. Small and contained? PASS — 1 line, one function.
+5. No new features or APIs? PASS.
+6. Can apply to the local tree? PASS — v6.18.53 has the buggy line and
+   `x86_lbr_type`.
+
+Step 9.3: CHECK FOR EXCEPTION CATEGORIES
+Record: None (not a device ID, quirk, DT, build, or doc fix). Qualifies
+as a normal small correctness fix.
+
+Step 9.4: MAKE YOUR DECISION
+This 6.18.53 tree still has the Arch LBR filter assuming hardware types
+whenever `X86_FEATURE_ARCH_LBR` is set. That is wrong when CPUID does
+not advertise the type field: types collapse to JCC and filters lie. The
+fix is the same static key already used to read the field, applies
+cleanly, and does not change the common HW-type path. That is
+appropriate for this stable tree.
+
+What it solves for stable users: Intel perf LBR branch-type
+filtering/classification on Arch LBR configs without hardware type,
+instead of silently tagging everything as conditional jumps.
+
+Risk vs benefit: one line vs wrong samples; remaining risk is extra
+software decode only on the previously broken config.
+
+Verification:
+- [Phase 1] Parsed tags: SOB Dapeng Mi + Peter Zijlstra; Link msgid
+  3468742-4; no Fixes/Reported-by/Cc stable
+- [Phase 1] Cover letter (mbox): independent PMU fixes “to simplify
+  review and backporting”; this is v4 3/8
+- [Phase 2] Diff: 1 line in `intel_pmu_lbr_filter()`,
+  `static_cpu_has(X86_FEATURE_ARCH_LBR)` →
+  `static_branch_likely(&x86_lbr_type)`
+- [Phase 2] Confirmed `get_lbr_br_type()` returns 0 when `x86_lbr_type`
+  is off; 0 maps to JCC
+- [Phase 3] `git blame` on parent: buggy check from `47125db27e47e9`
+  (2020 Arch LBR)
+- [Phase 3] `git merge-base --is-ancestor 47125db27e47e9 v6.18.53` →
+  yes; `6b19788ddc593` (x86_lbr_type) → yes
+- [Phase 3] `git merge-base --is-ancestor 906dbeecfa0ff v6.18.53` → no
+  (not in baseline)
+- [Phase 3] `git show v6.18.53:arch/x86/events/intel/lbr.c` still has
+  `static_cpu_has(X86_FEATURE_ARCH_LBR)` in the filter
+- [Phase 3] Leakage fix `3c492c8eba026` is already in v6.18.53
+- [Phase 4] `b4 dig -c 170cc6b02e3d5`: lore thread
+  20260616044654.3468742-4; v1–v4; Peter asked for x86_lbr_type-only
+  check in v3
+- [Phase 4] `b4 dig -w`: Peter, Ingo, acme, Namhyung, Eranian, linux-
+  perf-users CC’d
+- [Phase 4] Sashiko v4: NMI software-decode cost if TYPE_SAVE always
+  set; unverified product impact
+- [Phase 4] WebFetch lore/stable: 403; UNVERIFIED stable-list discussion
+- [Phase 5] Callers: `intel_pmu_lbr_read()` from PMI and snapshot;
+  `intel_pmu_store_pebs_lbrs()` from PEBS
+- [Phase 6] `git describe HEAD`: v6.18.53-5049-g0f0bdc2b0dffb; `make
+  kernelversion`: 6.18.53
+- [Phase 8] Failure: misclassified LBR samples, severity MEDIUM
+- UNVERIFIED: concrete CPUID dumps with Arch LBR and `lbr_br_type=0`
 
 **YES**
 
- drivers/perf/riscv_pmu_sbi.c | 33 +++++++++++++++++++++++++++------
- 1 file changed, 27 insertions(+), 6 deletions(-)
+ arch/x86/events/intel/lbr.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/perf/riscv_pmu_sbi.c b/drivers/perf/riscv_pmu_sbi.c
-index 25f3a45dd7869..10f64b7b60c53 100644
---- a/drivers/perf/riscv_pmu_sbi.c
-+++ b/drivers/perf/riscv_pmu_sbi.c
-@@ -1258,22 +1258,29 @@ static int pmu_sbi_setup_irqs(struct riscv_pmu *pmu, struct platform_device *pde
- 					  DOMAIN_BUS_ANY);
- 	if (!domain) {
- 		pr_err("Failed to find INTC IRQ root domain\n");
--		return -ENODEV;
-+		ret = -ENODEV;
-+		goto err;
- 	}
- 
- 	riscv_pmu_irq = irq_create_mapping(domain, riscv_pmu_irq_num);
- 	if (!riscv_pmu_irq) {
- 		pr_err("Failed to map PMU interrupt for node\n");
--		return -ENODEV;
-+		ret = -ENODEV;
-+		goto err;
- 	}
- 
- 	ret = request_percpu_irq(riscv_pmu_irq, pmu_sbi_ovf_handler, "riscv-pmu", hw_events);
- 	if (ret) {
- 		pr_err("registering percpu irq failed [%d]\n", ret);
--		return ret;
-+		irq_dispose_mapping(riscv_pmu_irq);
-+		riscv_pmu_irq = 0;
-+		goto err;
- 	}
- 
- 	return 0;
-+err:
-+	riscv_pmu_use_irq = false;
-+	return ret;
- }
- 
- #ifdef CONFIG_CPU_PM
-@@ -1340,7 +1347,8 @@ static void riscv_pmu_destroy(struct riscv_pmu *pmu)
- 		}
- 	}
- 	riscv_pm_pmu_unregister(pmu);
--	cpuhp_state_remove_instance(CPUHP_AP_PERF_RISCV_STARTING, &pmu->node);
-+	if (!hlist_unhashed(&pmu->node))
-+		cpuhp_state_remove_instance(CPUHP_AP_PERF_RISCV_STARTING, &pmu->node);
- }
- 
- static void pmu_sbi_event_init(struct perf_event *event)
-@@ -1462,6 +1470,7 @@ static int pmu_sbi_device_probe(struct platform_device *pdev)
- 	struct riscv_pmu *pmu = NULL;
- 	int ret = -ENODEV;
- 	int num_counters;
-+	bool irq_requested = false;
- 
- 	pr_info("SBI PMU extension is available\n");
- 	pmu = riscv_pmu_alloc();
-@@ -1490,6 +1499,7 @@ static int pmu_sbi_device_probe(struct platform_device *pdev)
- 		pmu->pmu.capabilities |= PERF_PMU_CAP_NO_INTERRUPT;
- 		pmu->pmu.capabilities |= PERF_PMU_CAP_NO_EXCLUDE;
- 	}
-+	irq_requested = (ret == 0);
- 
- 	pmu->pmu.attr_groups = riscv_pmu_attr_groups;
- 	pmu->pmu.parent = &pdev->dev;
-@@ -1508,11 +1518,11 @@ static int pmu_sbi_device_probe(struct platform_device *pdev)
- 
- 	ret = riscv_pm_pmu_register(pmu);
- 	if (ret)
--		goto out_unregister;
-+		goto out_destroy;
- 
- 	ret = perf_pmu_register(&pmu->pmu, "cpu", PERF_TYPE_RAW);
- 	if (ret)
--		goto out_unregister;
-+		goto out_destroy;
- 
- 	/* SBI PMU Snapsphot is only available in SBI v2.0 */
- 	if (sbi_v2_available) {
-@@ -1553,9 +1563,20 @@ static int pmu_sbi_device_probe(struct platform_device *pdev)
- 	return 0;
- 
- out_unregister:
-+	perf_pmu_unregister(&pmu->pmu);
-+
-+out_destroy:
- 	riscv_pmu_destroy(pmu);
-+	if (irq_requested) {
-+		free_percpu_irq(riscv_pmu_irq, pmu->hw_events);
-+		irq_dispose_mapping(riscv_pmu_irq);
-+		riscv_pmu_irq = 0;
-+	}
- 
- out_free:
-+	free_percpu(pmu->hw_events);
-+	kfree(pmu_ctr_list);
-+	pmu_ctr_list = NULL;
- 	kfree(pmu);
- 	return ret;
- }
+diff --git a/arch/x86/events/intel/lbr.c b/arch/x86/events/intel/lbr.c
+index 44f5556440223..bbfd6ffbdd68a 100644
+--- a/arch/x86/events/intel/lbr.c
++++ b/arch/x86/events/intel/lbr.c
+@@ -1230,7 +1230,7 @@ intel_pmu_lbr_filter(struct cpu_hw_events *cpuc)
+ 		 * Doesn't support OTHER_BRANCH decoding for now.
+ 		 * OTHER_BRANCH branch type still rely on software decoding.
+ 		 */
+-		if (static_cpu_has(X86_FEATURE_ARCH_LBR) &&
++		if (static_branch_likely(&x86_lbr_type) &&
+ 		    type <= ARCH_LBR_BR_TYPE_KNOWN_MAX) {
+ 			to_plm = kernel_ip(to) ? X86_BR_KERNEL : X86_BR_USER;
+ 			type = arch_lbr_br_type_map[type] | to_plm;
 -- 
 2.53.0
 
