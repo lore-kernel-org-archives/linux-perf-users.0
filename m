@@ -1,44 +1,45 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83419597F53;
-	Mon, 19 Oct 2026 13:59:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C67D5A463C;
+	Mon, 19 Oct 2026 13:59:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792418353; cv=none; b=lR1SO+rov8dVgT/CIXKNhH6E/rbDdfFUyjRgfbx6ZeFYnPAFDPXv8mX+UCA3xluYRUHSHzPkwI2vq5Q/9O4PiVH5P8SR4orydPPbb5p3LxRIGkvHA8iwBoJgkKzXL6JeKDujSq9pH6oxj9Ezs6IivpiI/CYVlgGPmh5pH7/IwVw=
+	t=1792418384; cv=none; b=Hx8N8mypoQfQMbZ9hq2rauQnkcs7oLmIayDEQ5UgCybpFnkX3FU3EXSzFwk4etqDdRiWPbMVsBURPaTPFFclyqKjfNUSSLC0VM4crQaQ3hLMZgRJ2b3O71tWEQFTJB2EWJhy2MiWUbo8WYivvbUNjSnZqyEDVkXLUsBpRXp2mrY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792418353; c=relaxed/simple;
-	bh=b+OMwOLcW33yq5gnsz2FawLSP8MWAZjLTP9XzueV1Hw=;
+	s=arc-20240116; t=1792418384; c=relaxed/simple;
+	bh=N64ofjkUpTGPkSvl3GDa1BCGYS9Nq0epO3Thd5wJkRQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=kNMmS44PYgbm9lUOPVEhpiBApBrMKcXG1yOReFYevFsARGI058YGbygPFMsYswfiTtlVQp/UDNkZ+xPZrJblgz7chQHBUtud16g6jVU5imHb3+G0lxmVXuc839i1hO9vfm7tkRI3UqUU5aLotJlvLvBsZStuqLHNnNKsNSEG8h4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hK+QrYeA; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version:Content-Type; b=cwAIQcOQ3PIOiOi5EV8Pgy8EsC+iCHcD9EJfzJO4V1+P2Ss7NEpVApLcWCaeGnBzbPjwyID+HDcXU746rySFQDtvFxOpgReLzlsyTQ1vfXJ5EmDsWzgQZiNzD8I+a5Ki0ZD+wbBdJgrSY2nR0zOV9aDYZXT47EU4QTxKD3LoeH4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Q4gOCc79; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hK+QrYeA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 80E081F000C4;
-	Mon, 19 Oct 2026 13:59:09 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Q4gOCc79"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0F9731F000C6;
+	Mon, 19 Oct 2026 13:59:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1792418350;
-	bh=QEfjg6P1FYqNYGIigcbrCtHbIVajWC/AZaOZAgOrtf4=;
+	s=k20260515; t=1792418381;
+	bh=u1Tf6MsgB65J8rRmT2HY3mDOWGviM+UbICT+94mEk8A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=hK+QrYeAlramjQFHe+Yn5NElxq+jbuQRMG3imO0F38+mEbOOJ67wMG4+90aFk9dC8
-	 Biv4VXIWbJidFUe0axu6xGimDSUjHWhlQS2J1n25ay28XIF46g02SkGucjRzT5GpZY
-	 KkTrwddFW1jRexvOyefnvqPpvBryzMCQ1TkVzHehgFfcerSoLhUZ7T2egWORqBdo5m
-	 JvQRpbPwPBwdhL+sFq6EMqpPJZ01q+ueoL7Zi9nL0eHH/FOeBHb9JTNRzBPyUw2JCW
-	 /A1TxPwzxAoD0icgIANIizFvrMMxWVGpT8mu4ciq2i38B8XGFSLA97flJ1PXFcdPQz
-	 W2uewv4EvJdGw==
+	b=Q4gOCc79QGcIY4EuWyLMDQDpSqvLa3rRhu5hw0Dq+1bkuBOfTu3yxHDUco9lbLZv7
+	 WDdxB2uPRz5tOQ4zWaFyeLWDwTaQn8gM/BC9rfhJZMVpXXgHoA5ZR45xBgreZkDqs/
+	 CuLnEhMRhpR0+8+cdb79UtWJTE+CrkvVrdC756SibJlz0+p6zui5VFgLx8NIolowyy
+	 mEEUeGShxVsIynxbqrYOo31MzJjcH1EcNM8CKoLmqU3n+QXgARE9o8jzBWy486tYzM
+	 HlC5UZjzqwZGxAO9L1a2ff8TzRd+EbYE5clc7gc1Y2WehBZQ7dqY/zZA2JqazytstN
+	 HmvjPHUlfOLbA==
 From: Sasha Levin <sashal@kernel.org>
 To: patches@lists.linux.dev,
 	stable@vger.kernel.org
-Cc: Geetha sowjanya <gakula@marvell.com>,
-	Will Deacon <will@kernel.org>,
+Cc: Dapeng Mi <dapeng1.mi@linux.intel.com>,
+	"Peter Zijlstra (Intel)" <peterz@infradead.org>,
 	Sasha Levin <sashal@kernel.org>,
-	mark.rutland@arm.com,
-	linux-arm-kernel@lists.infradead.org,
+	mingo@redhat.com,
+	acme@kernel.org,
+	namhyung@kernel.org,
 	linux-perf-users@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.18-6.1] perf: marvell: Cancel CN10K DDR PMU hrtimer on device remove
-Date: Mon, 19 Oct 2026 09:47:56 -0400
-Message-ID: <20261019135441.1420968-185-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 6.18] perf/core: Fix kernel register info leak via hardware skid
+Date: Mon, 19 Oct 2026 09:48:19 -0400
+Message-ID: <20261019135441.1420968-208-sashal@kernel.org>
 X-Mailer: git-send-email 2.53.0
 In-Reply-To: <20261019135441.1420968-1-sashal@kernel.org>
 References: <20261019135441.1420968-1-sashal@kernel.org>
@@ -54,512 +55,506 @@ X-stable-base: Linux 6.18.57
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-From: Geetha sowjanya <gakula@marvell.com>
+From: Dapeng Mi <dapeng1.mi@linux.intel.com>
 
-[ Upstream commit 7dbcb0268d1e2a1d3badb0c6e77ee70e550b1787 ]
+[ Upstream commit 166f10836a653dfa280d4335603b52f685b8b1ef ]
 
-cn10k_ddr_perf_remove() did not cancel the poll hrtimer before returning.
-If the device was unbound while perf events were still active the timer
-callback could run post-free.
+An unprivileged hardware perf event using exclude_kernel=1 can leak kernel
+register data to user space via PERF_SAMPLE_REGS_INTR or PERF_SAMPLE_IP.
+Due to hardware skid, a PMI may trigger after the CPU has already entered
+kernel space (Ring 0), bypassing the perf_allow_kernel() privilege
+barrier.
 
-To fix the issue by adding hrtimer_cancel() in remove().
+This security vulnerability is severely exacerbated by upcoming support
+for SIMD register sampling via XSAVES, which could expose sensitive kernel
+FPU states (such as active cryptographic keys).
 
-Signed-off-by: Geetha sowjanya <gakula@marvell.com>
-Signed-off-by: Will Deacon <will@kernel.org>
+Fix this by ensuring that sampled register data is dropped if the event's
+exclude_kernel attribute is set but the PMI catches the CPU in kernel mode.
+
+Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Link: https://lore.kernel.org/all/20260529085613.CCAFB1F00893@smtp.kernel.org/
+Link: https://patch.msgid.link/20260616044654.3468742-8-dapeng1.mi@linux.intel.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
 
 LLM Generated explanations, may be completely bogus:
 
-I have enough to decide: the UAF is in this 6.1 tree, the cancel is a
-standalone 6-line fix, and it does not need the CN20K series.
+I have enough to decide: this is a real unprivileged kernel-register
+leak on 6.18.53, and the fix is small enough to backport.
 
 ===============================================================
 PHASE 1: COMMIT MESSAGE FORENSICS
 ===============================================================
 
-**Step 1.1: PARSE THE SUBJECT LINE**
+Step 1.1: PARSE THE SUBJECT LINE
+Record: [perf/core] [Fix] [Stop unprivileged hardware sampling from
+leaking kernel IP/register state when PMI skid lands in Ring 0]
 
-Record: `[perf/marvell] [Cancel] Cancel CN10K DDR PMU hrtimer on device
-remove`
-
-Subsystem `perf: marvell:` is the Marvell CN10K DDR uncore PMU driver.
-Verb `Cancel` is a stop-the-timer safety action. Claimed intent: stop
-the poll hrtimer in the platform `remove()` path so it cannot fire after
-the device is torn down.
-
-**Step 1.2: PARSE ALL COMMIT MESSAGE TAGS**
-
-Record: tags present in the candidate message:
-- `Signed-off-by: Geetha sowjanya <gakula@marvell.com>` (author)
-- `Signed-off-by: Will Deacon <will@kernel.org>` (ARM perf maintainer
-  merge; pipeline `Signed-off-by: Sasha Levin` ignored per instructions)
-
-Tags **not** present (expected for this review queue, not treated as a
-negative):
-- No `Fixes:`
-- No `Reported-by:` / `Tested-by:` / `Reviewed-by:` / `Acked-by:`
-- No `Link:`
-- No `Cc: stable@vger.kernel.org`
-
-From mailing-list forensics (Phase 4): original submission was `[PATCH
-v8 3/3]` of a CN20K feature series, Message-ID
-`20260601073318.7098-4-gakula@marvell.com`. Will Deacon applied it to
-`arm64 (for-next/perf)` as `7dbcb0268d1e`. Krzysztof’s `Reviewed-by` is
-on patch 1/3 (dt-bindings) only, not on this UAF patch.
-
-**Step 1.3: ANALYZE THE COMMIT BODY TEXT**
-
+Step 1.2: PARSE ALL COMMIT MESSAGE TAGS
 Record:
-- **Bug:** `cn10k_ddr_perf_remove()` returned without cancelling the
-  overflow-poll hrtimer.
-- **Symptom / failure mode:** if the device is unbound while events (and
-  therefore the timer) are still active, `cn10k_ddr_pmu_timer_handler()`
-  can run after `devm` frees `struct cn10k_ddr_pmu` and unmaps MMIO —
-  use-after-free / MMIO-after-unmap.
-- **Version info:** cover letter for v8 says this is **pre-existing for
-  CN10K/Odyssey**, not a CN20K-only issue.
-- **Root cause (author):** missing `hrtimer_cancel()` in `remove()`.
+- Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com> (author)
+- Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+  (perf/core maintainer; merged into tip perf/core)
+- Link: https://lore.kernel.org/all/20260529085613.CCAFB1F00893@smtp.ker
+  nel.org/ (earlier discussion; lore fetch returned 403)
+- Link: https://patch.msgid.link/20260616044654.3468742-8-
+  dapeng1.mi@linux.intel.com (v4 series, this patch)
+- No Fixes: tag (expected)
+- No Cc: stable (expected)
+- No Reported-by / Tested-by / Reviewed-by / Acked-by besides SOBs
+- Ignore: Signed-off-by: Sasha Levin and "[Upstream commit
+  166f10836a653dfa280d4335603b52f685b8b1ef]" (pipeline markers)
 
-**Step 1.4: DETECT HIDDEN BUG FIXES**
+Step 1.3: ANALYZE THE COMMIT BODY TEXT
+Record:
+- Bug: An unprivileged hardware perf event with `exclude_kernel=1` can
+  still observe kernel register data through `PERF_SAMPLE_REGS_INTR` or
+  `PERF_SAMPLE_IP`.
+- Symptom/failure mode: Kernel IP and interrupt-time register state
+  (GPRs; on some Intel platforms PEBS XMM too) are copied into the
+  userspace mmap buffer. That is a KASLR / kernel-state info leak. The
+  message also warns that later XSAVES SIMD sampling would make this
+  worse (crypto-key material in FPU/SIMD state).
+- Trigger: Hardware PMI skid: the overflow interrupt is delivered after
+  the CPU has already entered kernel mode, so `perf_allow_kernel()` at
+  `perf_event_open()` time is bypassed.
+- Root cause: Sample preparation always dumps `regs` / IP from the PMI
+  frame, with no check that `exclude_kernel` is consistent with
+  `user_mode(regs)`.
+- Versions: No kernel-version range in the message. The REGS_INTR dump
+  path dates to 2014; guest IP helper to 2024.
 
-Record: Not a disguised cleanup. The message names a post-free timer
-callback. This is an explicit UAF fix. The series is mostly a CN20K
-feature add; **this patch was split out in v8 specifically as a pre-
-existing bug fix**.
+Step 1.4: DETECT HIDDEN BUG FIXES
+Record: Not a disguised cleanup. Subject and body state a security leak
+and a surgical filter. Not a hidden bug.
 
 ===============================================================
 PHASE 2: DIFF ANALYSIS - LINE BY LINE
 ===============================================================
 
-**Step 2.1: INVENTORY THE CHANGES**
-
+Step 2.1: INVENTORY THE CHANGES
 Record:
-- File: `drivers/perf/marvell_cn10k_ddr_pmu.c`
-- Scope: **+6 / -0**, single function `cn10k_ddr_perf_remove()`
-- Classification: **single-file surgical fix** (comment +
-  `hrtimer_cancel()`)
+- File: `kernel/events/core.c` (+30 / -7)
+- Functions: `perf_instruction_pointer()`, `perf_sample_regs_intr()`,
+  call site in `perf_prepare_sample()`
+- Scope: single-file surgical fix
 
-**Step 2.2: UNDERSTAND THE CODE FLOW CHANGE**
-
+Step 2.2: UNDERSTAND THE CODE FLOW CHANGE
 Record:
-- **Before:** `remove()` got drvdata, dropped the cpuhp instance,
-  unregistered the PMU, returned. Timer left live if it had been
-  started.
-- **After:** `hrtimer_cancel(&ddr_pmu->hrtimer)` **first**, then the
-  same teardown. `hrtimer_cancel()` also waits for a running callback,
-  so the handler cannot continue after `remove()` returns.
-- Path: **driver teardown / unbind / module unload**, not the normal
-  event add/del path (that already cancels on last `event_del`).
+- Hunk 1 (`perf_instruction_pointer`): Before, guest and host always
+  returned the captured IP. After, if `exclude_kernel` and the captured
+  context is not userspace (host `!user_mode(regs)`, or guest without
+  `PERF_GUEST_USER`), IP is replaced with 0.
+- Hunk 2 (`perf_sample_regs_intr`): Before, always `regs_intr->regs =
+  regs` and a real ABI. After, if `exclude_kernel && !user_mode(regs)`,
+  ABI is `PERF_SAMPLE_REGS_ABI_NONE` and `regs` is NULL so
+  `perf_output_sample()` writes a zero ABI and skips register payload.
+- Hunk 3 (`perf_prepare_sample`): Passes `event->attr.exclude_kernel`
+  into the new parameter. Sample header size already accounts for a NULL
+  `regs` pointer (`if (data->regs_intr.regs)`), so dyn_size stays
+  consistent.
 
-**Step 2.3: IDENTIFY THE BUG MECHANISM**
+Step 2.3: IDENTIFY THE BUG MECHANISM
+Record: Memory-safety / info-leak (unprivileged kernel-state
+disclosure), not UAF/leak-of-heap.
+- Mechanism: PMI skid + `exclude_kernel=1` still presents kernel
+  `pt_regs` to userspace.
+- Fix: Drop register payload and zero IP when the sample is kernel-mode
+  but the event asked to exclude the kernel.
+- Analogous to the 2017 attempt `cc1582c231ea0` ("Drop kernel samples
+  even though :u is specified"), which was reverted in `6a8a75f323572`
+  because dropping the whole sample broke rr overflow signals. This
+  patch keeps the sample/signal and only redacts contents.
 
-Record: **Use-after-free / lifetime bug (memory safety)**
-
-Mechanism verified in this tree:
-- `ddr_pmu` is `devm_kzalloc()`’d; MMIO is
-  `devm_platform_get_and_ioremap_resource()`. Both are released after
-  `remove()` returns.
-- Timer is started on first `event_add` (`hrtimer_start`,
-  `HRTIMER_MODE_REL_PINNED`) and cancelled only when `active_events ==
-  0` in `event_del`.
-- Handler always `return HRTIMER_RESTART` after
-  `cn10k_ddr_pmu_overflow_handler(pmu)`, which dereferences
-  `pmu->events[]` and `pmu->base`.
-- `perf_pmu_unregister()` in this tree (`kernel/events/core.c`) does
-  **not** stop events or cancel driver timers; it only unlists the PMU,
-  syncs RCU, and frees PMU context.
-
-**Step 2.4: ASSESS THE FIX QUALITY**
-
+Step 2.4: ASSESS THE FIX QUALITY
 Record:
-- **Quality:** obviously correct. `hrtimer_cancel()` on an already-idle
-  timer is a no-op; cancelling before cpuhp/PMU teardown is the right
-  order.
-- **Regression risk:** very low. Callback only does `local_irq_save` +
-  MMIO reads; it does not take locks `remove()` holds. No API/data-
-  structure change.
-- **Red flags:** none in the hunk itself. Series context (3/3 of CN20K)
-  is a packaging concern, not a correctness concern — this hunk does not
-  use CN20K code.
+- Obviously correct: the predicate matches the existing
+  `sample_is_allowed()` / `perf_exclude_event()` tests (`exclude_kernel
+  && !user_mode(regs)`).
+- Minimal: three related sites, no API/UAPI change (ABI_NONE is the
+  documented empty-regs encoding).
+- Regression risk: low for kernel correctness. Userspace profilers can
+  see IP=0 on skid samples; kernel test robot reported `perf-sanity-
+  tests.Object_code_reading.fail` for that. Author said the kernel
+  behavior is intended and the test should skip IP 0. rr is not broken
+  because overflow still fires. Privileged `exclude_kernel=0` events are
+  unchanged.
 
 ===============================================================
 PHASE 3: GIT HISTORY INVESTIGATION
 ===============================================================
 
-**Step 3.1: BLAME THE CHANGED LINES**
-
+Step 3.1: BLAME THE CHANGED LINES
 Record:
-- Buggy `cn10k_ddr_perf_remove()` (no timer cancel) introduced in
-  `7cf83e222bce0` (`perf/marvell: CN10k DDR performance monitor
-  support`, Bharat Bhushan, 2022-03-08).
-- `git merge-base --is-ancestor 7cf83e222bce0 HEAD` succeeded; `git
-  merge-base --is-ancestor 7cf83e222bce0 v6.1` succeeded.
-- Present in this tree from the 6.1 baseline (driver landed in v5.18).
+- `perf_sample_regs_intr()` introduced by `60e2364e60e86e` (Stephane
+  Eranian, 2014-11-16) "perf: Add ability to sample machine state on
+  interrupt".
+- `perf_instruction_pointer(event, regs)` guest split from
+  `2c47e7a74f4454` / `04782e63917dbc` (Colton Lewis, 2024-11-13)
+  "perf/core: Correct perf sampling with guest VMs".
+- The leak of kernel IP on `:u` sampling has been a known class since at
+  least 2017.
 
-**Step 3.2: FOLLOW THE FIXES: TAG**
+Step 3.2: FOLLOW THE FIXES: TAG
+Record: No Fixes: tag. Historical related commits:
+- `cc1582c231ea0` (2017): dropped entire skid kernel samples; Cc:
+  stable.
+- `6a8a75f323572` (2017): reverted that because rr depends on overflow
+  signals, not sample contents.
+- `030a976efae83` (2022): reintroduced `sample_is_allowed()` only for
+  sigtrap, not for sample output. In this tree it is used solely at
+  `kernel/events/core.c:10445`.
 
-Record: No `Fixes:` tag. The introducing commit is `7cf83e222bce0`,
-which **is** in this tree.
+Step 3.3: CHECK FILE HISTORY FOR RELATED CHANGES
+Record: Sibling security patches in the same Dapeng series (self-
+contained, not prerequisites of this hunk):
+- `perf/core: Check kernel access when kernel callchains are requested`
+  (callchain permission hole)
+- `perf/x86/intel: Fix kernel address leakages in LBR stack`
+This patch does not need those to compile or to close the IP/REGS_INTR
+hole.
 
-**Step 3.3: CHECK FILE HISTORY FOR RELATED CHANGES**
+Step 3.4: CHECK THE AUTHOR'S OTHER COMMITS
+Record: Dapeng Mi is an Intel PMU/perf contributor. Peter Zijlstra
+(subsystem maintainer) signed off and queued it on tip perf/core (commit
+166f10836a653dfa280d4335603b52f685b8b1ef, 2026-06-30). Author's other
+`kernel/events` work in this clone is unrelated cpu-clock fixes.
 
-Record: only four commits on this file in this tree:
-- `7cf83e222bce0` CN10k DDR perfmon support
-- `35a43326a9e3c` overflow handling
-- `68fa55f0e05ce` core ownership
-- `6676a42f1e4f1` `!CONFIG_OF` build fix
-
-No later refactor of `remove()`. **Standalone** relative to this tree.
-Does **not** need patches 1–2 of the CN20K series.
-
-Related but **separate** bug (v7 of the same series, in patch 2/3):
-`event_add` can `hrtimer_start()` then return `-EINVAL` from
-`ddr_perf_get_event_bitmap()` without rolling back. That leak is **not**
-this commit. This commit still stands alone.
-
-**Step 3.4: CHECK THE AUTHOR'S OTHER COMMITS**
-
-Record: `git log --author=Geetha -- drivers/perf/` is empty in this 6.1
-tree. Author is a Marvell engineer extending a Marvell driver originally
-by Bharat Bhushan. Will Deacon (ARM perf maintainer) merged it. That is
-sufficient maintainer vetting.
-
-**Step 3.5: CHECK FOR DEPENDENT/PREREQUISITE COMMITS**
-
-Record: **No functional prerequisites.** The only apply wrinkle is 6.1
-still has `static int cn10k_ddr_perf_remove(...)` returning `0`; later
-kernels converted platform `.remove` to `void`. The added
-`hrtimer_cancel()` line and comment apply unchanged.
+Step 3.5: CHECK FOR DEPENDENT/PREREQUISITE COMMITS
+Record: Standalone. All symbols used (`user_mode`,
+`PERF_SAMPLE_REGS_ABI_NONE`, `should_sample_guest`, `perf_guest_state`,
+`PERF_GUEST_USER`, `perf_guest_get_ip`) exist in v6.18.53. Signature
+change of static `perf_sample_regs_intr()` has a single call site in
+`core.c`.
 
 ===============================================================
 PHASE 4: MAILING LIST AND EXTERNAL RESEARCH
 ===============================================================
 
-**Step 4.1: FIND THE ORIGINAL PATCH DISCUSSION**
-
+Step 4.1: FIND THE ORIGINAL PATCH DISCUSSION
 Record:
-- `b4 dig -c HEAD` was the wrong SHA (this commit is not in the 6.1
-  checkout). Direct lore fetch returned 403.
-- `b4 am` on Message-ID `20260601073318.7098-4-gakula@marvell.com`
-  succeeded: v8 series, 3 patches, DKIM-signed, no newer revision
-  flagged.
-- Lore/mirrors:
-  https://patch.msgid.link/20260601073318.7098-1-gakula@marvell.com ,
-  openwall, lkml.iu.edu, patchew, ratatoskr.
-- Cover letter v8: “Cancel the poll hrtimer in `cn10k_ddr_perf_remove()`
-  before `devm` frees `struct cn10k_ddr_pmu` (pre-existing for
-  CN10K/Odyssey).”
-- **No NAK.** Will Deacon: “Applied to arm64 (for-next/perf)” with git
-  id `7dbcb0268d1e` for this patch.
-- **No reviewer `Cc: stable` found** (not treated as a negative).
+- b4 dig matched patch-id to lore; msgid
+  `20260616044654.3468742-8-dapeng1.mi@linux.intel.com`
+- Evolved from the v8 SIMD/XSAVES sampling series (2026-05-29) into a
+  standalone "miscellaneous PMU bug fixes" series:
+  - v1 2026-06-05: only `perf_sample_regs_intr` (no IP redaction)
+  - v2–v4: added `perf_instruction_pointer` host+guest IP redaction
+    (committed form)
+- Merged to tip perf/core 2026-06-30 by Peter Zijlstra; no NAK found.
+- Later (2026-09-15) kernel test robot: userspace `Object code reading`
+  test fails on IP 0. Dapeng: expected; test should filter IP 0. That is
+  not a kernel functional/security regression.
 
-**Step 4.2: CHECK WHO REVIEWED THE PATCH**
+Step 4.2: CHECK WHO REVIEWED THE PATCH
+Record: Recipients (b4 dig -w): Peter Zijlstra, Ingo Molnar, Arnaldo
+Carvalho de Melo, Namhyung Kim, Ian Rogers, Adrian Hunter, Alexander
+Shishkin, Andi Kleen, Stephane Eranian, Mark Rutland, linux-kernel,
+linux-perf-users. Maintainer SOB is the strongest review signal found.
+Lore HTML itself returned 403; discussion reconstructed from
+openwall/lkml mirrors.
 
-Record: To/Cc on the original mail: `linux-perf-users`, `linux-kernel`,
-`linux-arm-kernel`, `devicetree`, Mark Rutland, Will Deacon, Krzysztof
-Kozlowski. Will Deacon merged. No NAK on 3/3.
+Step 4.3: SEARCH FOR THE BUG REPORT
+Record: No syzbot/bugzilla. Motivated by analysis around SIMD register
+sampling. The IP leak is independently real: unprivileged `perf record
+-e cycles:u` is a common path, and 2017 already treated skid kernel
+samples as a security issue.
 
-**Step 4.3: SEARCH FOR THE BUG REPORT**
+Step 4.4: CHECK FOR RELATED PATCHES AND SERIES
+Record: Same series also has callchain permission and LBR address-leak
+fixes. Those are separate holes. This commit does not depend on
+SIMD/XSAVES patches; v6.18.53 has no XSAVES SIMD sampling (`git grep` of
+XSAVES SIMD sample paths on v6.18.53 was empty). XMM-via-PEBS already
+exists on Ice Lake+ (`PERF_REG_EXTENDED_MASK` in
+`arch/x86/events/core.c`).
 
-Record: No syzbot, bugzilla, or external user report. Bug was found
-during CN20K series review/development (added in v8). Still a concrete
-UAF, just not fuzzer-reported.
-
-**Step 4.4: CHECK FOR RELATED PATCHES AND SERIES**
-
-Record: Series is:
-1. dt-bindings CN20K — feature, not this decision
-2. CN20K driver support (+ event_add rollback) — feature / separate leak
-   fix
-3. **this UAF cancel** — independent 6-line fix
-
-Do **not** pull 1/3 or 2/3 into 6.1. This commit does not call CN20K
-pdata/helpers.
-
-**Step 4.5: CHECK STABLE MAILING LIST HISTORY**
-
-Record: lore.kernel.org/stable search returned 403. No evidence on the
-public v8 thread that stable rejected this. UNVERIFIED: whether
-`-stable` ever discussed this hash by name.
+Step 4.5: CHECK STABLE MAILING LIST HISTORY
+Record: lore.kernel.org/stable search returned 403. No evidence this was
+rejected for stable. Absence of Cc: stable is expected for this review
+pipeline.
 
 ===============================================================
 PHASE 5: CODE SEMANTIC ANALYSIS
 ===============================================================
 
-**Step 5.1: IDENTIFY KEY FUNCTIONS IN THE DIFF**
+Step 5.1: IDENTIFY KEY FUNCTIONS IN THE DIFF
+Record: `perf_instruction_pointer`, `perf_sample_regs_intr`,
+`perf_prepare_sample`. Related existing helpers: `sample_is_allowed`,
+`perf_allow_kernel`, `perf_output_sample`.
 
-Record: `cn10k_ddr_perf_remove()` only. Related existing functions:
-`cn10k_ddr_perf_event_add`, `cn10k_ddr_perf_event_del`,
-`cn10k_ddr_pmu_timer_handler`, `cn10k_ddr_pmu_overflow_handler`.
-
-**Step 5.2: TRACE CALLERS**
-
+Step 5.2: TRACE CALLERS
 Record:
-- `cn10k_ddr_perf_remove` is the platform driver’s `.remove`
-  (`cn10k_ddr_pmu_driver`). Callers: device unbind, parent device
-  teardown, `platform_driver_unregister()` from `cn10k_ddr_pmu_exit()`.
-- Timer handler is the hrtimer softirq/callback path, not a syscall.
+- `perf_instruction_pointer()`: only used from `perf_prepare_sample()`
+  (`data->ip = ...`) when `PERF_SAMPLE_IP` (or dependent
+  `PERF_SAMPLE_CODE_PAGE_SIZE`) is set.
+- `perf_sample_regs_intr()`: only called from `perf_prepare_sample()`
+  for `PERF_SAMPLE_REGS_INTR`.
+- `perf_prepare_sample()`: `__perf_event_output()` (normal mmap
+  samples), `bpf_overflow_handler()`, PEBS/BTS/s390 sampling paths.
+  Hardware PMI → `perf_event_overflow()` → overflow handler → output.
+  Confirmed `__perf_event_overflow()` does **not** drop skid kernel
+  samples today; `sample_is_allowed()` is sigtrap-only.
 
-**Step 5.3: TRACE CALLEES**
+Step 5.3: TRACE CALLEES
+Record: `user_mode(regs)`, `perf_arch_instruction_pointer()`,
+`perf_guest_get_ip()`, `perf_guest_state()`, `perf_reg_abi()`. Output
+path: `perf_output_sample()` already treats ABI 0 as "no regs".
 
-Record: `remove()` calls `platform_get_drvdata`, `hrtimer_cancel` (new),
-`cpuhp_state_remove_instance_nocalls`, `perf_pmu_unregister`. Handler
-calls overflow path which does MMIO `readq_relaxed` on `pmu->base`.
+Step 5.4: FOLLOW THE CALL CHAIN
+Record: Reachable from unprivileged `perf_event_open()`:
+- `sysctl_perf_event_paranoid > 1` requires `exclude_kernel=1`
+  (`perf_allow_kernel()` at `kernel/events/core.c:13553`).
+- `PERF_SAMPLE_IP` has no extra privilege check (default sample type).
+- `PERF_SAMPLE_REGS_INTR` is gated only by
+  `security_locked_down(LOCKDOWN_PERF)`, not paranoid. Without lockdown
+  (typical without Secure Boot), unprivileged REGS_INTR is allowed.
+Trigger is common: non-precise `cycles:u` around syscalls/page faults.
 
-**Step 5.4: FOLLOW THE CALL CHAIN**
-
-Record: Userspace can start the timer via `perf_event_open` on this
-uncore PMU (`event_add` when `active_events == 1`). Unbind/unload is
-admin-triggered (module unload, device teardown), not an unprivileged
-syscall by itself. `event_init` does **not** validate `attr.config`;
-`event_add` can start the timer then fail `ddr_perf_get_event_bitmap()`.
-`event_sched_in()` on add failure does **not** call `pmu->del()`
-(verified at `kernel/events/core.c:2591-2595`). That can leave a running
-timer even after a failed `perf_event_open`, after which `rmmod` can run
-`remove()` with the timer still live. Reachable from userspace + admin
-unload.
-
-**Step 5.5: SEARCH FOR SIMILAR PATTERNS**
-
-Record: In this tree, this driver only cancels the timer in `event_del`.
-`drivers/perf/thunderx2_pmu.c` also cancels on CPU offline. Sibling DDR
-PMU `fsl_imx8_ddr_perf.c` also does not cancel in `remove()` here —
-pattern exists, but that does not make this UAF fictional.
+Step 5.5: SEARCH FOR SIMILAR PATTERNS
+Record: Same `exclude_kernel && !user_mode(regs)` already used in
+`sample_is_allowed()`, `perf_exclude_event()`, and tracepoint matching.
+This patch extends that policy to sample payload. Remaining sibling
+holes (callchain, LBR) are other commits.
 
 ===============================================================
 PHASE 6: CROSS-REFERENCING AGAINST THE LOCAL TREE
 ===============================================================
 
-**Step 6.1: DOES THE BUGGY CODE EXIST IN THIS TREE?**
+Step 6.1: DOES THE BUGGY CODE EXIST IN THIS TREE?
+Record: Yes. Local tree is **6.18.53** (`git describe HEAD` =
+`v6.18.53-5049-g0f0bdc2b0dffb`, Makefile VERSION=6 PATCHLEVEL=18
+SUBLEVEL=53). At tag `v6.18.53`:
+- `perf_instruction_pointer` returns guest/host IP unconditionally.
+- `perf_sample_regs_intr(regs)` always assigns `regs`.
+- Call site is `perf_sample_regs_intr(&data->regs_intr, regs);`
+- `git merge-base --is-ancestor 166f10836a653dfa280d4335603b52f685b8b1ef
+  v6.18.53` is false.
 
-Record: **Yes.** Local tree is **6.1.188** (`pending-6.1`, `git
-describe` `p-6.1-10-g80966a5b14be4`).
+Step 6.2: CHECK FOR BACKPORT COMPLICATIONS
+Record: Clean apply expected. Pre-image of both functions and the call
+site on v6.18.53 matches the patch. `PERF_GUEST_USER` is in
+`include/linux/perf_event.h`. No conflicting refactor of these functions
+on 6.18.y.
 
-```700:710:drivers/perf/marvell_cn10k_ddr_pmu.c
-static int cn10k_ddr_perf_remove(struct platform_device *pdev)
-{
-        struct cn10k_ddr_pmu *ddr_pmu = platform_get_drvdata(pdev);
-
-        cpuhp_state_remove_instance_nocalls(
-CPUHP_AP_PERF_ARM_MARVELL_CN10K_DDR_ONLINE,
-                                &ddr_pmu->node);
-
-        perf_pmu_unregister(&ddr_pmu->pmu);
-        return 0;
-}
-```
-
-No `hrtimer_cancel()`. Introduced with the driver in `7cf83e222bce0`
-(v5.18), present for the whole 6.1 lifetime.
-
-**Step 6.2: CHECK FOR BACKPORT COMPLICATIONS**
-
-Record: **Minor context only.** 6.1 `remove` is `int` and returns `0`;
-later kernels use `void`. OF match table in 6.1 has no `.data` / CN20K
-entries. The added call does not depend on those. Expected apply:
-**minor conflict, trivial rework**.
-
-This tree still has `suppress_bind_attrs = true`, so **sysfs**
-bind/unbind is hidden. That does **not** skip `.remove` on parent
-teardown or `platform_driver_unregister()`.
-
-**Step 6.3: CHECK IF RELATED FIXES ARE ALREADY HERE**
-
-Record: No `hrtimer_cancel` in `remove()`. No event_add rollback (`goto
-err_free_counter`). Nothing already fixes this UAF.
+Step 6.3: CHECK IF RELATED FIXES ARE ALREADY HERE
+Record: The 2017 full-sample drop is **not** present (reverted).
+`sample_is_allowed()` does not redact IP/REGS_INTR. No other in-tree
+substitute for this leak on 6.18.53.
 
 ===============================================================
 PHASE 7: SUBSYSTEM AND MAINTAINER CONTEXT
 ===============================================================
 
-**Step 7.1: IDENTIFY THE SUBSYSTEM AND ITS CRITICALITY**
+Step 7.1: IDENTIFY THE SUBSYSTEM AND ITS CRITICALITY
+Record: [perf/core, `kernel/events/core.c`] [CORE for
+observability/security: `perf_event_open` is a common unprivileged
+syscall; leak is kernel-wide, not driver-specific]
 
-Record: `drivers/perf/` Marvell CN10K DDR PMU. **PERIPHERAL** (SoC-
-specific uncore PMU). Config `MARVELL_CN10K_DDR_PMU` depends on
-`ARCH_THUNDER || (COMPILE_TEST && 64BIT)` — Octeon 10 / Thunder-class
-ARM64.
-
-**Step 7.2: ASSESS SUBSYSTEM ACTIVITY**
-
-Record: File is mature and quiet in 6.1 (four commits total). Bug is
-old, not a last-month regression.
+Step 7.2: ASSESS SUBSYSTEM ACTIVITY
+Record: Actively maintained (Peter Zijlstra). File still receives
+UAF/deadlock fixes on 6.18.y; these two functions have been stable for
+years.
 
 ===============================================================
 PHASE 8: IMPACT AND RISK ASSESSMENT
 ===============================================================
 
-**Step 8.1: DETERMINE WHO IS AFFECTED**
+Step 8.1: DETERMINE WHO IS AFFECTED
+Record: Any unprivileged user who can open a hardware sampling event
+with `exclude_kernel=1` (default paranoid). Universal on systems with a
+hardware PMU. REGS_INTR extra impact depends on lockdown; IP leak does
+not.
 
-Record: **Driver-specific / config-specific:**
-`CONFIG_MARVELL_CN10K_DDR_PMU` on Marvell CN10K (`ARCH_THUNDER`). Not
-universal.
+Step 8.2: DETERMINE THE TRIGGER CONDITIONS
+Record: Common. Non-precise userspace-only sampling (`cycles:u`) plus
+kernel entry/exit. Unprivileged-triggerable. Timing-dependent (skid) but
+well documented and previously reproduced in 2017.
 
-**Step 8.2: DETERMINE THE TRIGGER CONDITIONS**
+Step 8.3: DETERMINE THE FAILURE MODE SEVERITY
+Record: [Kernel address / register info leak, KASLR bypass; on PEBS XMM
+also SIMD state] [Severity: HIGH / security. Not a panic. XSAVES full-
+SIMD crypto-key leak is **not** in 6.18; XMM PEBS already is.]
 
+Step 8.4: CALCULATE RISK-BENEFIT RATIO
 Record:
-- Timer starts when the first perf event is added; period default
-  **100s** (`poll_period_sec`).
-- Classic trigger: device `remove()` while the timer is queued (unbind /
-  parent removal / module exit).
-- Mitigations in **this** tree: `suppress_bind_attrs = true` (no sysfs
-  unbind); successful events `try_module_get` the module so `rmmod`
-  waits for last close, and last `event_del` already cancels the timer.
-- Remaining realistic triggers: platform device teardown with events
-  still open; **failed `event_add` after `hrtimer_start`** leaving a
-  live timer so `rmmod` can hit `remove()` without `event_del`.
-- Unprivileged user can start/leak the timer via `perf_event_open`;
-  teardown is typically admin. Failure mode is still kernel UAF.
-
-**Step 8.3: DETERMINE THE FAILURE MODE SEVERITY**
-
-Record: Timer callback uses freed `cn10k_ddr_pmu` and unmapped MMIO →
-**use-after-free / oops / memory corruption**. Severity: **HIGH** (UAF).
-Not a guaranteed panic on every boot; when it hits, it is a hard kernel
-memory-safety failure.
-
-**Step 8.4: CALCULATE RISK-BENEFIT RATIO**
-
-Record:
-- **Benefit:** HIGH for CN10K users who unload/unbind with a live poll
-  timer; prevents UAF. Population is small but the bug class is serious.
-- **Risk:** VERY LOW (6 lines, no-op if timer idle, no locking change).
-- **Ratio:** strongly in favor of backporting.
+- Benefit: HIGH — closes an unprivileged kernel-IP leak on a default
+  sampling path; also covers REGS_INTR.
+- Risk: LOW — ~30 lines, static helper, keeps overflow (rr-safe),
+  existing ABI_NONE encoding.
+- Residual: userspace tools may see IP=0 (test already did). That is the
+  security behavior, not a kernel crash.
+- Ratio: strongly favors backport.
 
 ===============================================================
 PHASE 9: FINAL SYNTHESIS
 ===============================================================
 
-**Step 9.1: COMPILE THE EVIDENCE**
+Step 9.1: COMPILE THE EVIDENCE
+FOR:
+- Real unprivileged info leak via PMI skid; same class previously sent
+  to stable in 2017.
+- Current code on 6.18.53 still emits kernel IP/regs;
+  `sample_is_allowed()` no longer drops samples.
+- Surgical, obviously correct, maintainer-signed, applies cleanly.
+- Avoids the rr regression by redacting payload instead of dropping the
+  event.
 
-**FOR:**
-- Real UAF: poll hrtimer can run after `devm` free of the PMU struct.
-- Bug exists in this 6.1 tree since the driver was added
-  (`7cf83e222bce0`).
-- Surgical, obviously correct (`hrtimer_cancel` before teardown).
-- Maintainer-merged (Will Deacon).
-- Author/cover letter call it a **pre-existing CN10K** bug, not
-  CN20K-only.
-- Independent of CN20K patches 1–2.
-- Failed `event_add` in this tree can leave the timer running;
-  `pmu->add` failure does not call `del()`.
-- `hrtimer_cancel` on idle timer is safe.
+AGAINST:
+- Userspace perf "object code reading" test can fail on IP 0 (author:
+  fix the test).
+- No Fixes:/Cc:stable (not a negative per rules).
+- XSAVES SIMD exacerbation is not in 6.18; the IP/GPR (and PEBS XMM)
+  leak still is.
 
-**AGAINST:**
-- Peripheral SoC PMU, not a core path.
-- No syzbot/user report.
-- `suppress_bind_attrs` hides sysfs unbind; happy-path `rmmod` after
-  clean event_del already cancels the timer.
-- Packaged as 3/3 of a feature series (but this hunk is independent).
-- Trivial `int` vs `void` `remove` context mismatch.
+UNRESOLVED:
+- Full lore HTML was 403; review reconstructed from mirrors and b4.
+  Peter Zijlstra SOB still verified.
+- Whether a userspace-only test fix later landed is unverified in this
+  clone; it does not block the kernel fix.
 
-**UNRESOLVED:**
-- Could not fetch lore.kernel.org (403) or git.kernel.org (Anubis);
-  discussion reconstructed via `b4 am`, patchew, and mirrors.
-- No `-stable` thread found (403).
-- Exact mainline SHA in Linus’s tree not in this checkout; arm64
-  application id `7dbcb0268d1e` from Will’s mail.
+Step 9.2: APPLY THE STABLE RULES CHECKLIST
+1. Obviously correct and tested? PASS — maintainer merged; robot only
+   hit expected IP=0.
+2. Fixes a real bug that affects users? PASS — unprivileged
+   `perf_event_open` + hardware sampling.
+3. Important issue (crash, security, corruption, deadlock)? PASS —
+   security info leak / KASLR.
+4. Small and contained? PASS — one file, +30/-7.
+5. No new features or APIs? PASS.
+6. Can apply to the local tree? PASS — v6.18.53 pre-image matches.
 
-**Step 9.2: APPLY THE STABLE RULES CHECKLIST**
+Step 9.3: CHECK FOR EXCEPTION CATEGORIES
+Record: Not a device-ID/quirk/DT/build/docs exception. Ordinary security
+bugfix.
 
-1. Obviously correct and tested? **PASS** — one `hrtimer_cancel()`,
-   merged by Will Deacon, idle-timer cancel is a no-op.
-2. Fixes a real bug that affects users? **PASS** — UAF on remove with a
-   live poll timer; code present here.
-3. Important issue? **PASS** — use-after-free / crash / memory
-   corruption (HIGH). Trigger is not every boot, but severity matches
-   stable’s crash/UAF bar.
-4. Small and contained? **PASS** — 6 lines, one function, one file.
-5. No new features or APIs? **PASS**.
-6. Can apply to the local tree? **PASS** — buggy `remove()` is here;
-   only `int` vs `void` `remove` needs a one-line context tweak.
+Step 9.4: MAKE YOUR DECISION
+This tree is 6.18.53. The buggy dump path is present. The patch is a
+small, rr-safe security fix with no missing prerequisites. It should be
+backported.
 
-**Step 9.3: CHECK FOR EXCEPTION CATEGORIES**
+------------------------------------------------
+What the commit solves for stable users
+Unprivileged hardware sampling with `exclude_kernel=1` can still capture
+kernel IP and interrupt registers when the PMI skids into Ring 0. On
+6.18 that includes default `PERF_SAMPLE_IP` and, unless lockdown,
+`PERF_SAMPLE_REGS_INTR` (including PEBS XMM on capable Intel CPUs). The
+fix redacts that payload without dropping the sample, so overflow-based
+tools keep working.
 
-Record: Not a device-ID / quirk / DT / build / docs exception. It is a
-normal small UAF fix.
+Risk vs benefit
+Benefit is a real KASLR/register leak on a common syscall path. Risk is
+low: tiny core.c change, existing empty-regs ABI, no locking/API change.
+The only observed fallout is userspace seeing IP 0, which is intended.
 
-**Step 9.4: MAKE YOUR DECISION**
+Concerns
+No series dependencies for this hunk. XSAVES SIMD is not in 6.18; that
+does not reduce the IP leak. A follow-up is only needed for the perf
+selftest, not for kernel correctness.
 
-This should be backported to **this** 6.1 tree. The CN20K feature
-patches must stay out; this cancel is self-contained and matches the
-code that has been in 6.1 from day one.
-
-===============================================================
-What the commit solves, and why it matters here
-===============================================================
-
-`cn10k_ddr_perf_remove()` tears down cpuhp and unregisters the PMU but
-never stops the overflow-poll hrtimer. The PMU object and MMIO are
-`devm`-managed, so they are freed as soon as `remove()` returns. If the
-timer is still queued, `cn10k_ddr_pmu_timer_handler()` can run on freed
-memory. That is a real UAF on Marvell CN10K systems that use this driver
-— exactly the hardware this 6.1 tree already supports.
-
-It meets stable rules: obviously correct, small, no new API, and the
-buggy function is in this checkout. Risk is negligible. Benefit is
-preventing a kernel UAF. The only backport edit is matching 6.1’s `int`
-`remove` callback.
-
-===============================================================
-Verification
-===============================================================
-
-- [Phase 1] Parsed subject/body/tags: UAF-on-remove; SOBs Geetha
-  sowjanya + Will Deacon; no Fixes/Reported-by/Cc-stable.
-- [Phase 2] Diff: +6 in `cn10k_ddr_perf_remove()` only; adds
-  `hrtimer_cancel()` before cpuhp/PMU teardown.
-- [Phase 2] `perf_pmu_unregister()` at `kernel/events/core.c:11587` does
-  not cancel driver timers or wait for `event_del`.
-- [Phase 2] Handler at lines 600–612 always `HRTIMER_RESTART` and uses
-  `pmu->base` / `pmu->events[]`.
-- [Phase 3] `git describe HEAD` → `p-6.1-10-g80966a5b14be4`; `make
-  kernelversion` → 6.1.188.
-- [Phase 3] `git merge-base --is-ancestor 7cf83e222bce0 HEAD` →
-  introducing driver commit is in this tree.
-- [Phase 3] `git blame` on `remove()` → `7cf83e222bce0` (no cancel) and
-  `68fa55f0e05ce` (cpuhp).
-- [Phase 3] File history: 4 commits; no existing remove-path timer fix.
-- [Phase 4] `b4 am` msgid `20260601073318.7098-4-gakula@marvell.com` →
-  v8 3/3; cover letter “pre-existing for CN10K/Odyssey”.
-- [Phase 4] Patchew: Will Deacon applied 3/3 as `7dbcb0268d1e`; no NAK.
-- [Phase 4] lore.kernel.org and git.kernel.org fetches: 403 / Anubis —
-  used b4/patchew/mirrors instead.
-- [Phase 5] `event_sched_in` add-failure path (`core.c:2591`) does not
-  call `pmu->del()`.
-- [Phase 5] Local `event_init` does not validate `attr.config`;
-  `event_add` can start the timer then return `-EINVAL`.
-- [Phase 6] Read local `cn10k_ddr_perf_remove()`: no `hrtimer_cancel`;
-  `devm_kzalloc` + `suppress_bind_attrs = true` confirmed.
-- [Phase 7] Kconfig `MARVELL_CN10K_DDR_PMU` depends on `ARCH_THUNDER`.
-- [Phase 8] Failure mode: UAF in hrtimer callback after `devm` free —
-  HIGH.
-- UNVERIFIED: `-stable` list discussion of this exact commit
-  (lore/stable 403).
-- UNVERIFIED: Linus-tree SHA beyond Will’s arm64 id `7dbcb0268d1e`.
+Verification:
+- [Phase 1] Parsed tags: Dapeng Mi author, Peter Zijlstra SOB, two
+  lore/msgid links; no Fixes/Reported-by
+- [Phase 2] Diff: `perf_instruction_pointer` zeros IP;
+  `perf_sample_regs_intr` uses ABI_NONE; `perf_prepare_sample` passes
+  `exclude_kernel`
+- [Phase 3] `git blame v6.18.53`: REGS_INTR dump from `60e2364e60e86e`
+  (2014); guest IP from `2c47e7a74f4454` (2024)
+- [Phase 3] `git log -S sample_is_allowed -- kernel/events/core.c`: 2017
+  drop reverted; current use is sigtrap-only
+- [Phase 3] `git show 6a8a75f323572`: revert because rr needs overflow
+  signals
+- [Phase 4] `b4 dig -c 7db4d13613f57`: matched v4 msgid
+  20260616044654.3468742-8; recipients include Peter Zijlstra et al.
+- [Phase 4] `b4 dig -a`: originated in SIMD series v8, then standalone
+  bugfix series v1–v4; IP redaction added after v1
+- [Phase 4] openwall 2026-09-15: author confirms IP=0 is the leak fix;
+  test should skip it
+- [Phase 5] grep: `perf_instruction_pointer` / `perf_sample_regs_intr`
+  only used from `perf_prepare_sample`; overflow path does not drop skid
+  samples
+- [Phase 5] `perf_allow_kernel()` at open requires `exclude_kernel` for
+  unprivileged users; REGS_INTR only checks lockdown
+- [Phase 6] `git describe HEAD` / Makefile: 6.18.53; v6.18.53 still has
+  the unfiltered dump; ancestor check of 166f10836a65 vs v6.18.53 is
+  false
+- [Phase 6] `PERF_GUEST_USER` present; function pre-image matches patch
+- [Phase 6] no XSAVES SIMD sampling in v6.18.53; XMM PEBS already
+  present
+- [Phase 8] Failure mode: unprivileged kernel IP/register disclosure,
+  HIGH security
+- UNVERIFIED: full lore.kernel.org thread body (HTTP 403); stable@ list
+  search (403)
 
 **YES**
 
- drivers/perf/marvell_cn10k_ddr_pmu.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ kernel/events/core.c | 37 ++++++++++++++++++++++++++++++-------
+ 1 file changed, 30 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/perf/marvell_cn10k_ddr_pmu.c b/drivers/perf/marvell_cn10k_ddr_pmu.c
-index 72ac17efd846a..9974b62541f0d 100644
---- a/drivers/perf/marvell_cn10k_ddr_pmu.c
-+++ b/drivers/perf/marvell_cn10k_ddr_pmu.c
-@@ -1088,6 +1088,12 @@ static void cn10k_ddr_perf_remove(struct platform_device *pdev)
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index 018a1e4ef5b0d..3b01c2853d681 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -7499,10 +7499,20 @@ unsigned long perf_misc_flags(struct perf_event *event,
+ unsigned long perf_instruction_pointer(struct perf_event *event,
+ 				       struct pt_regs *regs)
  {
- 	struct cn10k_ddr_pmu *ddr_pmu = platform_get_drvdata(pdev);
- 
+-	if (should_sample_guest(event))
+-		return perf_guest_get_ip();
 +	/*
-+	 * Cancel the poll timer before further teardown so the handler
-+	 * cannot run after this function returns.
++	 * Hardware skid can lead to a scenario where a PMI is
++	 * delivered after the CPU has already entered kernel mode.
++	 * In that case, user-space sampling must not expose kernel
++	 * register state.
 +	 */
-+	hrtimer_cancel(&ddr_pmu->hrtimer);
-+
- 	cpuhp_state_remove_instance_nocalls(
- 				CPUHP_AP_PERF_ARM_MARVELL_CN10K_DDR_ONLINE,
- 				&ddr_pmu->node);
++	if (should_sample_guest(event)) {
++		return event->attr.exclude_kernel &&
++		       !(perf_guest_state() & PERF_GUEST_USER) ?
++			0 : perf_guest_get_ip();
++	}
+ 
+-	return perf_arch_instruction_pointer(regs);
++	return event->attr.exclude_kernel && !user_mode(regs) ?
++		0 : perf_arch_instruction_pointer(regs);
+ }
+ 
+ static void
+@@ -7536,10 +7546,22 @@ static void perf_sample_regs_user(struct perf_regs *regs_user,
+ }
+ 
+ static void perf_sample_regs_intr(struct perf_regs *regs_intr,
+-				  struct pt_regs *regs)
++				  struct pt_regs *regs,
++				  bool exclude_kernel)
+ {
+-	regs_intr->regs = regs;
+-	regs_intr->abi  = perf_reg_abi(current);
++	/*
++	 * Hardware skid can lead to a scenario where a PMI is
++	 * delivered after the CPU has already entered kernel mode.
++	 * In that case, user-space sampling must not expose kernel
++	 * register state.
++	 */
++	if (exclude_kernel && !user_mode(regs)) {
++		regs_intr->abi = PERF_SAMPLE_REGS_ABI_NONE;
++		regs_intr->regs = NULL;
++	} else {
++		regs_intr->regs = regs;
++		regs_intr->abi = perf_reg_abi(current);
++	}
+ }
+ 
+ 
+@@ -8427,7 +8449,8 @@ void perf_prepare_sample(struct perf_sample_data *data,
+ 		/* regs dump ABI info */
+ 		int size = sizeof(u64);
+ 
+-		perf_sample_regs_intr(&data->regs_intr, regs);
++		perf_sample_regs_intr(&data->regs_intr, regs,
++				      event->attr.exclude_kernel);
+ 
+ 		if (data->regs_intr.regs) {
+ 			u64 mask = event->attr.sample_regs_intr;
 -- 
 2.53.0
 
