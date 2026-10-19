@@ -1,50 +1,68 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10F83357CEA;
-	Mon, 19 Oct 2026 09:31:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D956D3BCD2A
+	for <linux-perf-users@vger.kernel.org>; Mon, 19 Oct 2026 09:33:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792402294; cv=none; b=QMLBFAatJM0xY7tK0lSceHbQkg7A/2qnTN+d2khF0x3jEmLvAfBD/Sa1t899aJRSjGfKMIiPzi7CAaWI3UbHUqmiDUy9j4olEiuInBHeY6Vfavzq/bOAhHa5naYub3M1r3L0dwQSlD8UafAjE7wnbQG6SM01oN9SN77GqOY2NJE=
+	t=1792402409; cv=none; b=UTgBHRNb9U2gm8WnGwViK7wHmsMumggK5NogY9pxnURyyD0gbBGj3RxMJVRBnvctkZ1VOWChddyu4+uav+AJIVafSDk5e+eF0r+HzbL1iYqGyu0pNsx6qtlnwoaDhWS1Cq2sFZj4GxGsXHz2kBzPo5DT+y1Kz8XAUFpYG3hGVSg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792402294; c=relaxed/simple;
-	bh=9jnIGsfNtI3Ak6BEIcNPaxhBHE3+X+uso5UgAtnkWiE=;
+	s=arc-20240116; t=1792402409; c=relaxed/simple;
+	bh=YjWzbirDWLgeb8E0r2U0TDoM/eN47zJuQ3QNGq/Lxls=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=r0YnECMjT/9dOdJZOdMpKGXv5oIB7vXP0PKGOZwNG6AYUpO9N7Drw2kcmJh3sqc/OOWCZ9vPmnjMbtCnCK6dqA19pO5Zlq5cPYQPPYObJPOo8YIgD/im+oE6ruU9VvHiGVmwq/dlZWdUj8HG98KE+Nh5sJKcz7ulJcdfwtIT2/E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nSoc0oQA; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	 In-Reply-To:Content-Type; b=XSaRD52iWTQTYfgT3RNbLBftYQKJ1QLf+Rnued6NaHQO7oGWYxgVaZDZ4L0kz9doDffkGe9AZJ9Aw0MYgqZ6HU5tg2zUBfCJOYxys/jBHuy/3aSkdYEmhQYTa6epqhM6sOZaOyBnqk/bUyOxRniRxcDPJ1F6mTbHYL/j57t6dRg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=hhWVM3+p; arc=none smtp.client-ip=209.85.221.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nSoc0oQA"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1792402293; x=1823938293;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=9jnIGsfNtI3Ak6BEIcNPaxhBHE3+X+uso5UgAtnkWiE=;
-  b=nSoc0oQA2jra9110ZxCFN1xNJz5If1kPtuOhWw5cx/LLu7mvSjNZnyDc
-   RNXF8M3W3lDHIRXi0T5JFVlhqn5SOxFISFXngctcrgerO38NduSr1vI4W
-   QBY3LPWQW0XPV7t1y7QPnd+twHdvRh3LDTiz7ZHn/3BAMBzJIqe7GqxKR
-   Z4TAhn+Whe+cZzfHUwHv9SKkPUHaM71gis36ptsKwbopGruM2mX2BdDgo
-   3+0pLTTI9BHRN2FYWtTluZn3cTP3qrcxDIyqhafWffwoConBeNAHpQDH9
-   Htxw00XaV2XNmxZvIV0fbd23/HirEbEEhCv7EI/mcjUuvBRXAYdePyITP
-   g==;
-X-CSE-ConnectionGUID: kt6YBTk2QnWgxGUKVoXOfA==
-X-CSE-MsgGUID: IZTOxa64S76ESmk3/jqX7Q==
-X-IronPort-AV: E=McAfee;i="6800,10657,11939"; a="972598"
-X-IronPort-AV: E=Sophos;i="6.27,167,1787036400"; 
-   d="scan'208";a="972598"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Oct 2026 02:31:32 -0700
-X-CSE-ConnectionGUID: zLac+zmTQc+z7QkrFFHJ2Q==
-X-CSE-MsgGUID: kwB3FMjxRrGEQsqpd1shgQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.27,167,1787036400"; 
-   d="scan'208";a="2473212"
-Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.241.239]) ([10.124.241.239])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Oct 2026 02:31:27 -0700
-Message-ID: <1d56b889-0730-41cc-ac41-976f9ba543c5@linux.intel.com>
-Date: Mon, 19 Oct 2026 17:31:24 +0800
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hhWVM3+p"
+Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-48b060ec084so1221269f8f.0
+        for <linux-perf-users@vger.kernel.org>; Mon, 19 Oct 2026 02:33:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1792402406; x=1793007206; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:in-reply-to:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=okjHac9HA8yNuFEbyuUJm7e15weplnoREC6dmkLj8fw=;
+        b=hhWVM3+pg4lFr7LQuAocxcyqiTlb/XaiMSbdNuLDV3rmCUueDCE37GWKwD7hvpNh5q
+         Dl67pa9D0J9NnGS4cyRxgndVtF0Q7/10IlCODdhPNs3sF7AxLsMuG51eH6vPqFhPr5XR
+         D+m5oU3oQnYsIBLDT9JSoHxXLPIhMQUxGUNNw24reSNt0fwS2WUx1Y44dlObmBL1UZMQ
+         7dotvbC4XEn8hoGf3Z9eth3jWJXpjcqlXR4WLZ6Ui07EaFVNO8BexTP6RtQyUiOs7slY
+         e6iLEhJMtVZFVbPIIRERLuZVa5mY2u/Tf1GRsGjDGCVn88gKVTv54qm15y2MQvYNijcF
+         fhfA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1792402406; x=1793007206;
+        h=content-transfer-encoding:content-type:in-reply-to:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=okjHac9HA8yNuFEbyuUJm7e15weplnoREC6dmkLj8fw=;
+        b=v2gah3NeczE605xwHfsfWS5B1iNpjFMzlH+fbMOGQB0oCSIWTld+vexIgOA0/U0VIM
+         tgyjDNSwcUGqMNhe4m1gr6Ho0NJo4e/mD03WgDH8Slx7Qtlj20RX1XzH4XtyCN+O4ZAQ
+         XcRussUmeQGLrfL4SPuhDJsWpJu7PJDIC/O6ELsBh4kieODgl44w3K0AiYBe8yNQk8VN
+         DAcHM5FCGOqEnGt3Y8MTyEY/paLOPxY6G5y/wLDZyvvCRuSXVDgdaOjGOMfMtH5hzhSq
+         jSDqE8i002cyQl0ekqtkPBCyXWwUVCxAiVXxANrz1NMR/Kgre27ecedVGQLZGyHSKbSp
+         8ONg==
+X-Forwarded-Encrypted: i=1; AKwUvBwrLlLerWPx4N1wwrq15Whz363TXr8AfC96YGqvBzQ1L4c9AiksQq2xKNGQbeYG7aoxOhYmaTaPMZ3j8hTwfi83@vger.kernel.org
+X-Gm-Message-State: AFq9FYLNawmoU13x9657vs+P4Rb7CddCnfgNoZ5HaAMXhyaLBsISjNZF
+	Dgg/Gd512mavou4rP6ENXFYakebPnkK3uONeyRTnPY9M2PXPFRNemB34XrYAQQ8TTAc=
+X-Gm-Gg: AYBFou02abBvA9+7IQvK8y7GONOJi/xcugsvVnFUMXGIARVBSzgfxhlG1qfdNr/uyNO
+	3QLEF+lMiWLiG02FPcRhoTdta0NDHkIUuZJtF3ESn8iTxIYyt8gadj2TPYHPBY1NSiyXDvR7RcB
+	ttHU7cgtBwFw2h4AFkruYdFHH3y2DjzytDZ5yWVzVcl65eygwfehu81KT6hUWcs7DADgUQlYxBA
+	vxjgb0Go62qBhbeGW+Wl/3E3wPSO9iwNvPmZ/sbBqopEk2VXL6VX2pWdeXnpl7411Ys8XT4InI1
+	J2NdydjAQzZBNnee9qKAtzRfdYigoxIji053vvsuDzcAlzRAUEXx9p3jpxuiW8VSK4b3NRyvrYG
+	LouXEv85uclSViJuVcFT92DeX/RXc8iUIQ7lziyC1k7wKSQbsNbe+OF8LePjhHWZ11xoo0c8kQ5
+	Bbt765F4ByqBoQCj//26HziSzwwUOx4yRm893FplMVguFGECp1dkW1S6yPyeEiwLMVrSuDABTB4
+	tE=
+X-Received: by 2002:a05:6000:490f:b0:48b:9d80:53a5 with SMTP id ffacd0b85a97d-48e07bbe5d5mr13361426f8f.10.1792402405652;
+        Mon, 19 Oct 2026 02:33:25 -0700 (PDT)
+Received: from [192.168.1.3] ([37.18.141.193])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-48e1afbf534sm323988f8f.35.2026.10.19.02.33.24
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 19 Oct 2026 02:33:25 -0700 (PDT)
+Message-ID: <ebf74a45-f406-4502-99e3-434e19feef6e@linaro.org>
+Date: Mon, 19 Oct 2026 10:33:23 +0100
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -52,95 +70,218 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [Patch v3 4/4] perf/x86/intel/lbr: Limit branch snapshots to
- valid entries
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+Subject: Re: [PATCH 09/25] coresight: perf: Improve hardware state transitions
+To: Leo Yan <leo.yan@arm.com>
+Cc: Ingo Molnar <mingo@kernel.org>, linux-perf-users@vger.kernel.org,
+ linux-kernel@vger.kernel.org, coresight@lists.linaro.org,
+ linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org,
+ Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
  Arnaldo Carvalho de Melo <acme@kernel.org>,
  Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
  Adrian Hunter <adrian.hunter@intel.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Andi Kleen <ak@linux.intel.com>, Eranian Stephane <eranian@google.com>,
- Sandipan Das <sandipan.das@amd.com>, Andrii Nakryiko <andrii@kernel.org>,
- Song Liu <song@kernel.org>, Ravi Bangoria <ravi.bangoria@amd.com>,
- Ananth Narayan <ananth.narayan@amd.com>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
- bpf@vger.kernel.org, Dapeng Mi <dapeng1.mi@intel.com>,
- Zide Chen <zide.chen@intel.com>, Falcon Thomas <thomas.falcon@intel.com>,
- Xudong Hao <xudong.hao@intel.com>, Sashiko <sashiko-bot@kernel.org>
-References: <20261019070836.2972403-1-dapeng1.mi@linux.intel.com>
- <20261019070836.2972403-5-dapeng1.mi@linux.intel.com>
+ Suzuki K Poulose <suzuki.poulose@arm.com>, Mike Leach <mike.leach@arm.com>,
+ Anshuman Khandual <anshuman.khandual@arm.com>,
+ Yeoreum Yun <yeoreum.yun@arm.com>, Jonathan Corbet <corbet@lwn.net>,
+ Suyash Mahar <smahar@meta.com>, Amir Ayupov <aaupov@fb.com>
+References: <20260915-arm_cs_support_aux_sample-v1-0-35cf6f297d20@arm.com>
+ <20260915-arm_cs_support_aux_sample-v1-9-35cf6f297d20@arm.com>
 Content-Language: en-US
-From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-In-Reply-To: <20261019070836.2972403-5-dapeng1.mi@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8
+From: James Clark <james.clark@linaro.org>
+In-Reply-To: <20260915-arm_cs_support_aux_sample-v1-9-35cf6f297d20@arm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-Sashiko raises new comments about this patch,
-https://lore.kernel.org/all/sashiko-outbox-176751@kernel.org/
 
-It looks we need a new version to address the comments. Thanks.
 
-On 10/19/2026 3:08 PM, Dapeng Mi wrote:
-> The branch snapshot callback used by bpf_get_branch_snapshot() always
-> copies x86_pmu.lbr_nr entries from cpuc->lbr_entries[], even when the
-> last LBR read kept fewer branches. The entries past lbr_stack.nr hold
-> invalid branches which end up reaching BPF programs.
->
-> Limit copying to lbr_stack.nr entries and also reset lbr_stack.nr when
-> no active LBR events or LBR hardware is owned by guest. So the stale or
-> guest LBR stack data can't be leaked.
->
-> When all active LBR users are PEBS events, the LBR stack is already
-> updated from the PEBS records, so there is no need to read the LBR
-> hardware again.
->
-> Fixes: c22ac2a3d4bd ("perf: Enable branch record for software events")
-> Reported-by: Sashiko <sashiko-bot@kernel.org>
-> Closes: https://lore.kernel.org/all/sashiko-outbox-163130@kernel.org/
-> Co-developed-by: Sandipan Das <sandipan.das@amd.com>
-> Signed-off-by: Sandipan Das <sandipan.das@amd.com>
-> Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
+On 15/09/2026 16:48, Leo Yan wrote:
+> Keep hw.state consistent with event activation and AUX buffer updates.
+> Initialize events as stopped and up to date, clear both flags after a
+> successful start, and set UPTODATE after committing an AUX buffer
+> update. On resume, clear UPTODATE only on success. Preserve state on
+> resume failure and ignore duplicate stops.
+> 
+> Add helpers for setting and clearing state bits. Use READ_ONCE() and
+> WRITE_ONCE() to prevent compiler merging or refetching of state
+> accesses.
+> 
+> Assisted-by: Codex:gpt-6
+> Signed-off-by: Leo Yan <leo.yan@arm.com>
 > ---
->  arch/x86/events/intel/core.c | 2 +-
->  arch/x86/events/intel/lbr.c  | 9 +++++++--
->  2 files changed, 8 insertions(+), 3 deletions(-)
->
-> diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
-> index 0a34d674df59..5dfb9e9156e8 100644
-> --- a/arch/x86/events/intel/core.c
-> +++ b/arch/x86/events/intel/core.c
-> @@ -2822,7 +2822,7 @@ __intel_pmu_snapshot_branch_stack(struct perf_branch_entry *entries,
->  	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
->  
->  	intel_pmu_lbr_read();
-> -	cnt = min_t(unsigned int, cnt, x86_pmu.lbr_nr);
-> +	cnt = min_t(unsigned int, cnt, cpuc->lbr_stack.nr);
->  
->  	memcpy(entries, cpuc->lbr_entries, sizeof(struct perf_branch_entry) * cnt);
->  	intel_pmu_enable_all(0);
-> diff --git a/arch/x86/events/intel/lbr.c b/arch/x86/events/intel/lbr.c
-> index 249db12e927e..cc0300aba7de 100644
-> --- a/arch/x86/events/intel/lbr.c
-> +++ b/arch/x86/events/intel/lbr.c
-> @@ -1022,14 +1022,19 @@ void intel_pmu_lbr_read(void)
->  {
->  	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
->  
-> +	if (!cpuc->lbr_users || vlbr_exclude_host()) {
-> +		/* Reset lbr_stack.nr to prevent stale data leakage. */
-> +		cpuc->lbr_stack.nr = 0;
-> +		return;
-> +	}
+>   drivers/hwtracing/coresight/coresight-etm-perf.c | 58 ++++++++++++++++--------
+>   1 file changed, 40 insertions(+), 18 deletions(-)
+> 
+> diff --git a/drivers/hwtracing/coresight/coresight-etm-perf.c b/drivers/hwtracing/coresight/coresight-etm-perf.c
+> index e3c9d3cf84c502f357a430bc3bfa854a776618f1..f66c99b26e1862ab04105704276c901b21728207 100644
+> --- a/drivers/hwtracing/coresight/coresight-etm-perf.c
+> +++ b/drivers/hwtracing/coresight/coresight-etm-perf.c
+> @@ -150,6 +150,20 @@ etm_event_cpu_path(struct etm_event_data *data, int cpu)
+>   	return *etm_event_cpu_path_ptr(data, cpu);
+>   }
+>   
+> +static inline void etm_event_set_hw_state(struct perf_event *event, int mask)
+> +{
+> +	struct hw_perf_event *hwc = &event->hw;
 > +
->  	/*
->  	 * Don't read when all LBRs users are using adaptive PEBS.
->  	 *
->  	 * This could be smarter and actually check the event,
->  	 * but this simple approach seems to work for now.
->  	 */
-> -	if (!cpuc->lbr_users || vlbr_exclude_host() ||
-> -	    cpuc->lbr_users == cpuc->lbr_pebs_users)
-> +	if (cpuc->lbr_users == cpuc->lbr_pebs_users)
->  		return;
->  
->  	x86_pmu.lbr_read(cpuc);
+> +	WRITE_ONCE(hwc->state, READ_ONCE(hwc->state) | mask);
+> +}
+> +
+> +static inline void etm_event_clear_hw_state(struct perf_event *event, int mask)
+> +{
+> +	struct hw_perf_event *hwc = &event->hw;
+> +
+> +	WRITE_ONCE(hwc->state, READ_ONCE(hwc->state) & ~mask);
+> +}
+> +
+>   static void etm_event_read(struct perf_event *event) {}
+>   
+>   static int etm_addr_filters_alloc(struct perf_event *event)
+> @@ -520,6 +534,7 @@ static void *etm_setup_aux(struct perf_event *event, void **pages,
+>   static int etm_event_resume(struct etm_ctxt *ctxt)
+>   {
+>   	struct perf_output_handle *handle = &ctxt->handle;
+> +	struct perf_event *event = handle->event;
+>   	struct coresight_device *source;
+>   	struct coresight_path *path;
+>   	int ret;
+> @@ -536,10 +551,13 @@ static int etm_event_resume(struct etm_ctxt *ctxt)
+>   		return 0;
+>   
+>   	ret = coresight_resume_source(source);
+> -	if (ret < 0)
+> +	if (ret < 0) {
+>   		dev_err(&source->dev, "Failed to resume ETM event.\n");
+> +		return ret;
+> +	}
+>   
+> -	return ret;
+> +	etm_event_clear_hw_state(event, PERF_HES_UPTODATE);
+> +	return 0;
+>   }
+>   
+>   static void etm_event_start(struct perf_event *event, int flags)
+> @@ -553,8 +571,7 @@ static void etm_event_start(struct perf_event *event, int flags)
+>   	u64 hw_id;
+>   
+>   	if (flags & PERF_EF_RESUME) {
+> -		if (etm_event_resume(ctxt) < 0)
+> -			goto fail;
+> +		WARN_ON_ONCE(etm_event_resume(ctxt));
+>   		return;
+>   	}
+>   
+> @@ -583,7 +600,7 @@ static void etm_event_start(struct perf_event *event, int flags)
+>   	 */
+>   	if (!cpumask_test_cpu(cpu, &event_data->mask)) {
+>   		perf_aux_output_end(handle, 0);
+> -		event->hw.state = 0;
+> +		etm_event_clear_hw_state(event, PERF_HES_STOPPED);
+>   		return;
+>   	}
+>   
+> @@ -621,7 +638,7 @@ static void etm_event_start(struct perf_event *event, int flags)
+>   	}
+>   
+>   	/* Tell the perf core the event is alive */
+> -	event->hw.state = 0;
+> +	etm_event_clear_hw_state(event, PERF_HES_STOPPED | PERF_HES_UPTODATE);
+>   	/* Save the event_data for this ETM */
+>   	WRITE_ONCE(ctxt->event_data, event_data);
+>   	return;
+> @@ -639,11 +656,12 @@ static void etm_event_start(struct perf_event *event, int flags)
+>   		perf_aux_output_end(handle, 0);
+>   	}
+>   fail:
+> -	event->hw.state = PERF_HES_STOPPED;
+> +	etm_event_set_hw_state(event, PERF_HES_STOPPED);
+>   	return;
+>   }
+>   
+> -static void etm_event_update_buffer(struct perf_output_handle *handle,
+> +static void etm_event_update_buffer(struct perf_event *event,
+> +				    struct perf_output_handle *handle,
+>   				    struct etm_event_data *event_data,
+>   				    struct coresight_device *sink,
+>   				    int mode)
+> @@ -668,6 +686,7 @@ static void etm_event_update_buffer(struct perf_output_handle *handle,
+>   		size = sink_ops(sink)->update_buffer(sink, handle,
+>   						     event_data->snk_config);
+>   		perf_aux_output_end(handle, size);
+> +		etm_event_set_hw_state(event, PERF_HES_UPTODATE);
+>   		return;
+>   	}
+>   
+> @@ -704,7 +723,8 @@ static void etm_event_pause(struct coresight_path *path,
+>   		return;
+>   
+>   	event_data = READ_ONCE(ctxt->event_data);
+> -	etm_event_update_buffer(handle, event_data, sink, PERF_EF_UPDATE);
+> +	etm_event_update_buffer(event, handle, event_data, sink,
+> +				PERF_EF_UPDATE);
+>   
+>   	/* Prepare the handle for resuming trace */
+>   	perf_aux_output_begin(handle, event);
+> @@ -716,8 +736,13 @@ static void etm_event_stop(struct perf_event *event, int mode)
+>   	struct etm_ctxt *ctxt = this_cpu_ptr(&etm_ctxt);
+>   	struct perf_output_handle *handle = &ctxt->handle;
+>   	struct coresight_path *path = etm_event_get_ctxt_path(ctxt);
+> +	struct hw_perf_event *hwc = &event->hw;
+>   	struct etm_event_data *event_data;
+>   
+> +	/* If we're already stopped, then nothing to do */
+> +	if (READ_ONCE(hwc->state) & PERF_HES_STOPPED)
+> +		return;
+> +
+>   	if (mode & PERF_EF_PAUSE)
+>   		return etm_event_pause(path, event, ctxt);
+>   
+> @@ -726,7 +751,7 @@ static void etm_event_stop(struct perf_event *event, int mode)
+>   	 * to synchronize. Mark the event stopped and up to date.
+>   	 */
+>   	if (!path) {
+> -		event->hw.state = PERF_HES_STOPPED | PERF_HES_UPTODATE;
+> +		etm_event_set_hw_state(event, PERF_HES_STOPPED | PERF_HES_UPTODATE);
+>   		return;
+>   	}
+>   
+> @@ -734,9 +759,6 @@ static void etm_event_stop(struct perf_event *event, int mode)
+>   	/* Clear the event_data as this ETM is stopping the trace. */
+>   	WRITE_ONCE(ctxt->event_data, NULL);
+>   
+> -	if (event->hw.state == PERF_HES_STOPPED)
+> -		return;
+> -
+>   	source = coresight_get_source(path);
+>   	sink = coresight_get_sink(path);
+>   	if (!source || !sink)
+> @@ -746,9 +768,9 @@ static void etm_event_stop(struct perf_event *event, int mode)
+>   	coresight_disable_source(source, event);
+>   
+>   	/* tell the core */
+> -	event->hw.state = PERF_HES_STOPPED;
+> +	etm_event_set_hw_state(event, PERF_HES_STOPPED);
+>   
+> -	etm_event_update_buffer(handle, event_data, sink, mode);
+> +	etm_event_update_buffer(event, handle, event_data, sink, mode);
+>   
+>   	/* Disabling the path make its elements available to other sessions */
+>   	coresight_disable_path(path);
+> @@ -759,12 +781,12 @@ static int etm_event_add(struct perf_event *event, int mode)
+>   	int ret = 0;
+>   	struct hw_perf_event *hwc = &event->hw;
+>   
+> +	etm_event_set_hw_state(event, PERF_HES_STOPPED | PERF_HES_UPTODATE);
+> +
+>   	if (mode & PERF_EF_START) {
+>   		etm_event_start(event, 0);
+> -		if (hwc->state & PERF_HES_STOPPED)
+> +		if (READ_ONCE(hwc->state) & PERF_HES_STOPPED)
+>   			ret = -EINVAL;
+> -	} else {
+> -		hwc->state = PERF_HES_STOPPED;
+>   	}
+>   
+>   	return ret;
+> 
+
+Reviewed-by: James Clark <james.clark@linaro.org>
+
