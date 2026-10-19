@@ -1,250 +1,299 @@
-Received: from OS0P286CU011.outbound.protection.outlook.com (mail-japanwestazon11010011.outbound.protection.outlook.com [52.101.228.11])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C00DD36605E;
-	Mon, 19 Oct 2026 06:19:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.228.11
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792390785; cv=fail; b=f3GDLkVCx1ULKXHanQrvs1riwC1rOeu8HAQ7/8sFRDKji+qd50tuQbP8HcMpeEayMMWN07PE8afvNoRY2thZ85d8FmclsmBMU5W23eomh/rSr1Y4e9RQqfExKADZ4Xkpa2Qwys8VGt1jx0puMN4t2yihohCqOxQToQUd6pmqrP4=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792390785; c=relaxed/simple;
-	bh=x4lp3vz7k2dALzsz7Xifh/INIdl4+GWwu/Nhpwcnwpg=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=YeWP0v3fjj3P32edox7kAERDBB6ObLoNs0JikkqJXPrXDNzvnIrDiUa04CHRngg6BSkXVUs9jzfrFlq9Bq6EK5YFoMRwa859SeppXfnz2zgGl+IXXxECkhXRa4BrVilTWY/MH1GKqSOaxFtnLC5FTzS+Z1n55tr8WNapNC89yX4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fujitsu.com; spf=pass smtp.mailfrom=fujitsu.com; dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b=H/uKuep3; arc=fail smtp.client-ip=52.101.228.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fujitsu.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fujitsu.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B48CD47F2D1;
+	Mon, 19 Oct 2026 07:00:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1792393259; cv=none; b=VK5FJJY4cEZICOLkHO5N5/ciKwtbG1Z9IQAYvTcBIru0RcfOuTnltMGr3NmiX/6Sw/5QbbyFe6GoxaIaBcBvlieEjtfg8i2M5cgdEakIsdVNK/aLViURpt6XUAg8MaEcT4Tc+ahTXzTjMFOFFLdRdfi5Ok8nkAxyqLxQXp8P5ag=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1792393259; c=relaxed/simple;
+	bh=lmf1l6RMAuNPSACVzdfAOmPqOBgNn10PJwdnLs7abzc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=NFqOh+mWtovSW5V9IBUcF2XgDfkQs5gTPyaj5h9LopwkEGWy/rpPENkJ1n/JwnTL1OAK476EecvYsZ6YeRhWfXvE6co62UpuHn3yMWXxoqiSPpyJJKxS+CYvnLPCBZ1SRN/Y6CafTyKIlBueWH4uSW2BEDLiVEjZOCe1TyfjaNM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Vfrn5aK8; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b="H/uKuep3"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=H9tseiLn7acK/um7ZSOsz8PyXcVLdBGGMLmKI7l+rJ0k5+Rsf2+FqHYNi5b/rsw8v+bdBJhsQupRwZm3MABxC7jSpYOY/L7Y4+mmaEQwMyWWR3h58ESLX/DbtHudLliziCnL1G2lZAbyY30sOMcK4afYyHEpH12/LeR7XhDgyYFks4dzGeRlOVkpDuThg3L39LPsIJvsCuHbu6whRk/5DHX+rzO+3uFkuJshJoOiZR/5B0tr6dxYKfEWESlikcONdhPKf9ecQrqHAmfdYDq5zzcn/ht4JEo2uQlk8aZ6kA8QvO12Vd5vvR2KQeOaXjOQPVSZLqC4u6SsTatW00RTiw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=iQYtJj9pzuBEu8fqxXANYq6Z7GlZbDsPr4ZK5gqbZOA=;
- b=sP/+LDmSinAVEUK2rRnKHmFYvt/bhH7Gg6BHjuYlWQr6p3F5B4yTGV745EeYPSVv6Zr98dOcg61MNvv781uKMEPLPXlO+GB63+VTZT+orcnOyhyDaUEZDvydZYRrDg04Tma6ZPltFlcnc1w8GuAp2m41sUbmC3xhcbwGBa7wNU8TfWWieHGigfUu3HR28E9jXasvxKV3GIAVUSDfcjbRDCqzsAdV2HPHhqegWZMVMmhA2lZZHHsOIOj+veUdbMyCA1wFRbPasFWFMVu/wD+m55W7vQ+CVd/M/F5yJXXPEqSlEuLTgbhXQXujU/t4Jm4d+EOlCRt6zI5uG0ONcUE4rQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=fujitsu.com; dmarc=pass action=none header.from=fujitsu.com;
- dkim=pass header.d=fujitsu.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fujitsu.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=iQYtJj9pzuBEu8fqxXANYq6Z7GlZbDsPr4ZK5gqbZOA=;
- b=H/uKuep3RMTN00qMNBkm5ycjmsP25k9AZKFyPc4RbMR9odFvy8t310Y3mLpwGwDWv2la0HPAGxO6v5VEkCILtBME9ZkjmoVL/zlrptUZJK1WiAmu3fKXN5bHis9sWKOiaCrGrhw8sgB1meynKMx6ta/Bry6IIocDMBQmb1YwyQko3Ru9p51tasMG0clQamGxq1bfiuc8vyYOyWmedTtcTwcIQs8sKy6s/scF8aF7CfYchBHVY0RIVRiB/4IAoLkhKITQcv+SfXbdUW6vCApFo98jbQ0tapdrs42nWX7s3LS7DWQ7gVt1riKjtqPWDCpCIrhx7A9BV0/No16SilXHPQ==
-Received: from TY7PR01MB15746.jpnprd01.prod.outlook.com (2603:1096:405:290::6)
- by TYYPR01MB7998.jpnprd01.prod.outlook.com (2603:1096:400:ff::7) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.522.13; Mon, 19 Oct
- 2026 06:19:40 +0000
-Received: from TY7PR01MB15746.jpnprd01.prod.outlook.com
- ([fe80::bc79:d427:b0a9:a793]) by TY7PR01MB15746.jpnprd01.prod.outlook.com
- ([fe80::bc79:d427:b0a9:a793%5]) with mapi id 15.21.0522.017; Mon, 19 Oct 2026
- 06:19:40 +0000
-From: "Tomohiro Misono (Fujitsu)" <misono.tomohiro@fujitsu.com>
-To: 'Mark Rutland' <mark.rutland@arm.com>
-CC: 'Catalin Marinas' <catalin.marinas@arm.com>, 'Will Deacon'
-	<will@kernel.org>, 'Jonathan Corbet' <corbet@lwn.net>, 'Shuah Khan'
-	<skhan@linuxfoundation.org>, 'Randy Dunlap' <rdunlap@infradead.org>, 'Marc
- Zyngier' <maz@kernel.org>, 'Thomas Gleixner' <tglx@kernel.org>, 'Radu Rendec'
-	<radu@rendec.net>, 'Oliver Upton' <oupton@kernel.org>, 'Fuad Tabba'
-	<fuad.tabba@linux.dev>, 'Joey Gouly' <joey.gouly@arm.com>, 'Steffen Eiden'
-	<seiden@linux.ibm.com>, 'Suzuki K Poulose' <suzuki.poulose@arm.com>, 'Zenghui
- Yu' <yuzenghui@huawei.com>, "Kohei Enju (Fujitsu)" <enju.kohei@fujitsu.com>,
-	"'linux-arm-kernel@lists.infradead.org'"
-	<linux-arm-kernel@lists.infradead.org>, "'linux-kernel@vger.kernel.org'"
-	<linux-kernel@vger.kernel.org>, "'linux-doc@vger.kernel.org'"
-	<linux-doc@vger.kernel.org>, "'linux-perf-users@vger.kernel.org'"
-	<linux-perf-users@vger.kernel.org>, "'kvmarm@lists.linux.dev'"
-	<kvmarm@lists.linux.dev>
-Subject: RE: [PATCH v2 3/4] perf: arm_pmu: Add workaround for FUJITSU-MONAKA
- Erratum E#030002
-Thread-Topic: [PATCH v2 3/4] perf: arm_pmu: Add workaround for FUJITSU-MONAKA
- Erratum E#030002
-Thread-Index: AQHdXVVbzJOi/425oUyzsr9T2p9p/LcAE4mAgAADN9CAABKyAIAEOluQ
-Date: Mon, 19 Oct 2026 06:19:25 +0000
-Deferred-Delivery: Mon, 19 Oct 2026 06:18:41 +0000
-Message-ID:
- <TY7PR01MB15746F6C7CF8E021A0FBA5743E5982@TY7PR01MB15746.jpnprd01.prod.outlook.com>
-References: <20261016-monaka-fix-for-upstream-v2-0-fc7ede7f9f48@fujitsu.com>
- <20261016-monaka-fix-for-upstream-v2-3-fc7ede7f9f48@fujitsu.com>
- <atIT0dmeqAXLoThW@J2N7QTR9R3.cambridge.arm.com>
- <OSCPR01MB1573944ED57DC682897594F06E59B2@OSCPR01MB15739.jpnprd01.prod.outlook.com>
- <atImMmlBmOYlY5T2@J2N7QTR9R3.cambridge.arm.com>
-In-Reply-To: <atImMmlBmOYlY5T2@J2N7QTR9R3.cambridge.arm.com>
-Accept-Language: ja-JP, en-US
-Content-Language: ja-JP
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-msip_labels:
- MSIP_Label_1e92ef73-0ad1-40c5-ad55-46de3396802f_ActionId=969935b1-c26a-4e1f-90e2-a7a740456de3;MSIP_Label_1e92ef73-0ad1-40c5-ad55-46de3396802f_ContentBits=0;MSIP_Label_1e92ef73-0ad1-40c5-ad55-46de3396802f_Enabled=true;MSIP_Label_1e92ef73-0ad1-40c5-ad55-46de3396802f_Method=Privileged;MSIP_Label_1e92ef73-0ad1-40c5-ad55-46de3396802f_Name=FUJITSU-PUBLIC?;MSIP_Label_1e92ef73-0ad1-40c5-ad55-46de3396802f_SetDate=2026-10-19T06:16:17Z;MSIP_Label_1e92ef73-0ad1-40c5-ad55-46de3396802f_SiteId=a19f121d-81e1-4858-a9d8-736e267fd4c7;MSIP_Label_1e92ef73-0ad1-40c5-ad55-46de3396802f_Tag=10,
- 0, 1, 1;
-authentication-results: mx.microsoft.com 1; dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=fujitsu.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: TY7PR01MB15746:EE_|TYYPR01MB7998:EE_
-x-ms-office365-filtering-correlation-id: df24a1ae-4703-4b28-b54f-08df2da8f569
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam:
- BCL:0;ARA:13230040|23010399003|376014|1800799024|7416014|366016|38070700021|1580799027|6133799003|5023799004|11063799006|22082099003|18002099003|10067099003|4143699003|56012099006;
-x-microsoft-antispam-message-info:
- lYCLPfhW09tUtU5G2Jf06T8iKwXx4CwGqt9Ejb0JIU95rsxElTXZMGy9EC7f+CK73Up3Tq29+RhRERj37jqG+tFHstwo2Lhrg8QiQiaTNLoz6U6uBWMsLImTJqSMe08h9xQmoWEZMY1pFUyXDI5DFR+tXpmrfokpDO0pwdLn6g1vsMXr62fMTuYwcVsWsPf7OAxl9qQZytByz1hQo2MAbM1TNvVqUE92SDZczd331yJC+YQiKAEakCHE98XGyC2uGoztbNxaXoPpFHbV2JRFkCA2xuYllhnP97E0nDmShn+4nZGRuUrPCNidaiCg8S/fhjtdL08jGRboK6+PyIyihoVm/aPz17rfMRElpDo9qJAoPCZjCDDX0pqcMB2h3quIqUVivN2ZEv5SYsdeHZvIa5ef5vd0a7Ns47YDiyqCqxNv2uTtLPaYMCvgWQBFSq5mD+rl8lfaslJDWE2Mez2azzdNZkAevz7t/WKxtOPPD2fTzCcX/s7jcb6R3gLUR309D9z3YUIkGUltznsh3lLjMShki9slGMP/MedXnfOaFhh1jY4Iyt/M2fVWnXOZwuAQOfR5C+R3o9EE9INJXcbhpt86RYimHMyjfBNGOPRO964I0ckHbTbHUZB6UaQd0YuiE5cy/Xr5eC1RUUwXpXTYAHMM2qk0KFA9DuDAEaXpK7NmJFphu3Ba+1RfW1tahby7OSmIvNAnmXGTaszxff5pBsz16Hf8tCPSWCoWqQdfn//Lyj3LA5hc3Bmyr/ouBDpg
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:ja;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TY7PR01MB15746.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(23010399003)(376014)(1800799024)(7416014)(366016)(38070700021)(1580799027)(6133799003)(5023799004)(11063799006)(22082099003)(18002099003)(10067099003)(4143699003)(56012099006);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?iso-2022-jp?B?VlhianJXN1FTei9sTlBlMmN5QmQ3TDdGNlY2N1BWRndWM0JiSVJZOW9C?=
- =?iso-2022-jp?B?T1dPV2dhcnEwcVBnUlBHc0ZLbHU0STlzR0Uya0hzNi8rT2RBZVo3ZFV4?=
- =?iso-2022-jp?B?MjFESUJtNExwRGx6TncrRVFTQ1BBUDZVcVJQWm9qNnB0dUlFV2ZONDhY?=
- =?iso-2022-jp?B?V3JBWk5oczhtUXpEcndYMWozL0VxOEZtVnBGSytxRUFXTEd4ODIySjlZ?=
- =?iso-2022-jp?B?MlFXZ1ZNTjlpMU5BSkJ6TitlUk1WZlR1UklTWjdSRlg5N3pXN0JNVDVD?=
- =?iso-2022-jp?B?KzdUWm0vSGxTejFvVXJoSmRvM1pXbEFlclRZZnBTd1NLeEgwM1JTQmFI?=
- =?iso-2022-jp?B?bklQc2tyN29hQUZhV2NoRjZEZ2dsZHA3bzRkY0RCb2cvdHFKWXkvZUlv?=
- =?iso-2022-jp?B?cVN2OEJWY1plUExKZGtweVRkQnhqZklpbWo1ZlJydnZ5ZVdJRmN3WVB3?=
- =?iso-2022-jp?B?YThpa3g1d2Y3Z2E0QUc4TWplMENvZzYwSnZvenBtU1VnaGViRFNMQ0lH?=
- =?iso-2022-jp?B?WFFoTDFuc1h2UWRCVVNlQ2RZUHBBazN2d2IwUnBNZTBNSWdFWE5QN3pF?=
- =?iso-2022-jp?B?L1hTVnpiM1RxQWk5ZEtaV3VKdnQ5dFR1TlZQZUorc0FpUXluYy9pa0lU?=
- =?iso-2022-jp?B?a3U2WkhaOXFiMStSRUFhSXRsQ0NrNUpHT0dXbFFSSDBHcm50Z3U1NWFq?=
- =?iso-2022-jp?B?Um5DRXc2OTRMMWxTRG5WSnhBYTJtM2hsdGIxaDFPOHkzM1BKaThHNWh2?=
- =?iso-2022-jp?B?WE93RmZZUzBEckU5dENScXpXd05EaUtlMnR0VDZOS1EwMFp3eDBQSGJI?=
- =?iso-2022-jp?B?RGE4d2p6Rm9nN0crWDlYQW9iK3dvK2NlVHUrUnhscmxWd2QrY3p5ejhk?=
- =?iso-2022-jp?B?MUh1T2UxQVhPSFdubjFSWVY1MmdMTU52NC9YR0NZYkhHSGtRNHQ0MzdX?=
- =?iso-2022-jp?B?TWpHZnlvTjhvcU9qVFVwLzU4LzRmSXMzYVU5QjVzd0RtWXgrOStONy80?=
- =?iso-2022-jp?B?WkM4cWExaDNNdk9hUEhnVXdCdHhhRGV0eXZIKy9MNWhCSkRSZ3BSZ3VX?=
- =?iso-2022-jp?B?ek9mdldqdVVITVpmRWp3THJQMklRWHJ5MzZ0NHJzU243amJCdGFiZDdI?=
- =?iso-2022-jp?B?cDNzUDlaRmNvSGpsUDFOOGZLOWd5RG54K1RFTDM2YTZ4NVJET3R4cXNT?=
- =?iso-2022-jp?B?dnRJZEdGV09ZZjJWNXBlMFBtTjdHNUNkSVZWQmdWMmFwdHhaWms4WGNs?=
- =?iso-2022-jp?B?eGRqM3FaZENIOWFDWUUxS1IzR2VTaDFEQ2dsbkVCQU9NL2pTS3RrRUVn?=
- =?iso-2022-jp?B?MkpmdGl1UisrSjR0Mml5cklHSXlMb09MTzEvQmI4bi85TjBiQkZjeURk?=
- =?iso-2022-jp?B?c3Y1UDh0UHp1Q3FwTm1UT2FMTC9iQVFaWlVCK2F0Zk8xeXhBNVVSUE1v?=
- =?iso-2022-jp?B?bW1YcUlxRWJWQVdPMkZKdTZIZkNmUU9LbUhEWk4zY2RMTDZ4SVp4VFJW?=
- =?iso-2022-jp?B?QzF4aktQdFg0U2tMZjgxZWRqbUtaU09CbW1vb3hiTFlQbjVEd2VYRUgv?=
- =?iso-2022-jp?B?V1BjQWtuYkhTSVA5VXdBa1JWWlZMb0hwbDJiK3V3RkZVR3hXMWtBRC9I?=
- =?iso-2022-jp?B?SXBndXVvMWh6K0Jqd0VTU2xDajhoRzk0Skl0cTA2VVlLZ3o4L0F1N2ND?=
- =?iso-2022-jp?B?N1dMZWZkTUkwUTNhemQvTVUxMGpqMERvNjl4VktqR1A5TE5mRkZ0QTFO?=
- =?iso-2022-jp?B?Z1g2a0xxQ1o2SmRKeEM1N1Y4TGZmbDJOaE5OQXJtM3UrYTFCVnE5Nk94?=
- =?iso-2022-jp?B?L1ZZSTNUcDFYdlZFc28zVmNjMk9tbHVSWEtGbFdlV3dZMjBzYW9wVXFp?=
- =?iso-2022-jp?B?NGhmS2owdWpUYjV2dW0xUDA1eWMvQ0NJY2Vad1FPa3ZlUGxxanJEb29s?=
- =?iso-2022-jp?B?Z1h3V3d4VmFKcEFyZ1ZpQXhuMGlKVWdKbVAyVys5U25iQ0pSS0hXMWtU?=
- =?iso-2022-jp?B?cnFjSk9WWkZJNC9YeDhRcjZNNGpSR2pURnhraUUrS2hiTTNCNnltZU05?=
- =?iso-2022-jp?B?Vk9udVhVUW5wejRCSnNKMkRub2pCT2h1OU04Uzk2RE5TNXZ3ZlYvbWpN?=
- =?iso-2022-jp?B?U0NCSmhjdnlEZzlMTE1GdTRsRUc0Njl2eFE0MmlOa0c4SFlGY1ZQWno2?=
- =?iso-2022-jp?B?U2RzOGVZWGd5TDh5b1hpbXk1S1pwTUw1Zm1PQ3oxRVdVeEVWQ1J1VDVZ?=
- =?iso-2022-jp?B?UDM3UzhPalNpWmtMWE5NaFBFVGN3LzAyREIxV1pHZVQrQkFmdWhCTjdL?=
- =?iso-2022-jp?B?RGNyUEJOaU1zZ3hUZ2JqeXU0TSs2NkFHNXhoSWJYU29JKzZxdW1Idlh6?=
- =?iso-2022-jp?B?ZkxNaFE3K1BsZ3k5LzFJRkV1SHdZSmV4enNkV2JoQ1l5anUyYzY0c0hO?=
- =?iso-2022-jp?B?Zmw4cTQ0ay84M2dmcmRrSXJSNlpLYWdmVURuRzdRb1QxWWZWMDdMS0hI?=
- =?iso-2022-jp?B?eDN5M25PZ290VWZXR3NTREhjK3Zid08wREJXM2g3OGw3bjFhQmFSZ3hL?=
- =?iso-2022-jp?B?MVkySVFGOD0=?=
-Content-Type: text/plain; charset="iso-2022-jp"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Vfrn5aK8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D67BA1F000C4;
+	Mon, 19 Oct 2026 07:00:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1792393257;
+	bh=ioyI8Oq0pOeBpMOUrxgYFO/bGmu6pBTLTYcXOY5fj8k=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=Vfrn5aK89mCRaN7vRbtv96nso7z5YUmaKII6+jiZHmGc3fAsctjnC+tz1o6gfc4pW
+	 mc31CN3EMHrojkLkpaMlzy+6IdEiljJL+CLpgnWAjtm1RoxhIy+A1XmYJLv81RAlGv
+	 4GGqbBE7o2nYBpzeMQ0N0DMGkOXopExklsmigeVXKODBiLPs9n78HUNZvoSdwLy1GO
+	 qmK+hJR8GQI/2pIjKFW5nSSytziKblj9iyVBl1V/jkzFVBhGyBp27blj+t9i4XhJ0S
+	 4uOaLl+DGHHKK+EoRsLt4OSKOfFa5RIJ7hwnirk0Eh3T/aRb3RS+g03jzArCojy6MP
+	 EGsVhZplRttdw==
+Date: Mon, 19 Oct 2026 00:00:55 -0700
+From: Namhyung Kim <namhyung@kernel.org>
+To: Ian Rogers <irogers@google.com>
+Cc: acme@kernel.org, adrian.hunter@intel.com, james.clark@linaro.org,
+	jolsa@kernel.org, linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org, mingo@redhat.com,
+	peterz@infradead.org, rcu@vger.kernel.org
+Subject: Re: [PATCH v3 0/6] perf bpf-filter / lock contention: Add
+ lock_held() sample filter and RCU/SRCU support
+Message-ID: <atXAJ4FMCq21dPmn@z2>
+References: <20261017171437.2066343-1-irogers@google.com>
+ <20261018053710.2572636-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Exchange-RoutingPolicyChecked:
-	SXy04JchoOmfNp0YEc0XX4zGM5X1AJnhm/rBxj6RcdRkjf+F+O7toESSDSoXUCho/dyexFO6ca5Y47moZ+fsVKHkh8tELwGusrUCHnYGO15a1FMghlinZ5h87EssDZ1xLm4ORQL3d3EXFiAo8OH8H06xLyUA5exj6SR4X9V5VIoc8R4iBDQHzGobpqDhd7GCeyCLm7+w4IImNWZbQznJYUYhuls5PU3cB/XEP8KMiUaeIbauRhAWWGTdh2XhVLXB9iJ//00fj/7RtkfpvxHO+2TXe9nWU8n5Cw0/w2nukmY3igWPlZf56W/8f0fTCFextuqjUma9mFGOhrobm1QtTQ==
-X-OriginatorOrg: fujitsu.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: TY7PR01MB15746.jpnprd01.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: df24a1ae-4703-4b28-b54f-08df2da8f569
-X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Oct 2026 06:19:40.4424
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a19f121d-81e1-4858-a9d8-736e267fd4c7
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: LqAtKdOmz3S4uo1z6Zex/Hu9QKhJnaKmlgtgjCflLEyUvkmAKH3F1I1dEuhhOl/SDdc0M4uY+v4LEsFw/OhsXP9P7RwiLi0ScgejtSouqJ8=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYYPR01MB7998
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20261018053710.2572636-1-irogers@google.com>
 
-> Subject: Re: [PATCH v2 3/4] perf: arm_pmu: Add workaround for FUJITSU-MON=
-AKA Erratum E#030002
->=20
-> On Fri, Oct 16, 2026 at 01:00:13PM +0000, Tomohiro Misono (Fujitsu) wrote=
-:
-> > > Subject: Re: [PATCH v2 3/4] perf: arm_pmu: Add workaround for FUJITSU=
--MONAKA Erratum E#030002
-> > >
-> > > On Fri, Oct 16, 2026 at 07:00:47PM +0900, Tomohiro Misono wrote:
-> > > > FUJITSU-MONAKA Erratum E#030002 affects FUJITSU-MONAKA CPU.
-> > > >
-> > > > On affected FUJITSU-MONAKA CPUs, after a PMU event counter is
-> > > > stopped at a value just before overflow, an overflow might still
-> > > > be incorrectly detected, resulting interrupt storm in some case.
-> > > >
-> > > > For example, if the following conditions are met:
-> > > >   1) Running perf to count an event in user space only
-> > > >   2) The event can also occur in kernel space
-> > > >   3) The counter value is set just before the overflow
-> > > >      (when using the -F option, initial counter value is -1)
-> > > >
-> > > > when the kernel is about to return to user space after enabling
-> > > > the count, an overflow interrupt is incorrectly triggered by an
-> > > > event that occurred in kernel space. Since the counter value is
-> > > > not updated (correctly), the interrupt handler does nothing and
-> > > > returns with the same condition. This leads to another wrong interr=
-upt
-> > > > and results in an interrupt storm and eventually a softlockup.
-> > >
-> > > I don't fully understand this.
-> > >
-> > > Surely the relevant PMOVS{CLR,SET}[n] bit set as if the counter n
-> > > overflowed?
-> > >
-> > > If that bit is set, the handler will certainly do *something*.
-> > >
-> > > If that bit is not set, the interrupt shouldn't be asserted at all. W=
-hen
-> > > does it get de-asserted?
-> >
-> > Sorry, my explanation wasn't clear. The interrupt will be de-asserted
-> > as usual.
->=20
-> I'm trying to work out which of the following happens due to the
-> erratum:
->=20
-> (a) When the erratum occurs, the HW sets a bit in PMOVS*. An overflow
->     interrupt is asserted because PMOVS* is non-zero. The overflow
->     handler will see that bit was set in PMOVS*. Clearing PMOVS*
->     de-asserts the interrupt as usual.
->=20
-> (b) When the erratum occurs, the HW does not set a bit in PMOVS*, and
->     asserts an overflow interrupt even if PMOVS* is clear.  The overflow
->     handler might not see a bit set in PMOVS*.
->=20
-> (c) Something else.
->=20
-> Can you pleaes confirm what HW does with PMOVS* when the erratum occurs?
-> I assume (a), but you haven't explicitly stated that so far.
+Hi Ian,
 
-I confirmed that HW works as (a). I will update the comments in v3.
+On Sat, Oct 17, 2026 at 10:37:04PM -0700, Ian Rogers wrote:
+> This series adds a new BPF sample filter predicate, `lock_held(<lock>)`
+> (along with `lock_held_read(<lock>)` / `lock_held_shared(<lock>)`,
+> `lock_held_write(<lock>)` / `lock_held_exclusive(<lock>)`, and `:R` / `:W`
+> mode suffixes), to `perf record --filter`, allowing perf event samples to
+> be recorded only when a specified kernel lock is held (or not held with
+> `!`) by the running kernel thread or CPU. It also extends both
+> `lock_held()` and `perf lock contention --use-bpf` to support RCU and
+> SRCU, and fixes a pre-existing `lock_stat` filtering bug in `perf lock
+> contention`.
 
->=20
-> > The problem is that armpmu_event_set_period() will not update the count=
-er
-> > value if, for example, the counter is -1. Therefore, false overflow det=
-ection will continue.
-> > With this patch, armpmu_event_set_period() will force the counter to -6=
- so that
-> > false overflow detection won't occur in the kernel, since the maximum e=
-vent
-> > count at a time is 5.
->=20
-> I expected that were this to occur a number of times in quick
-> succession, the core perf code would throttle the event, and adjust the
-> period.
+Awesome!  Looks really useful!
 
-I didn't see that happen. I'll take a look at the core perf code.
+> 
+> For example:
+> 
+>   # perf record -a -g -e cycles --filter 'lock_held(&cgroup_mutex)' -- ...
+>   # perf record -a -g -e cycles --filter 'lock_held_read(&mmap_lock)' -- ...
+>   # perf record -a -g -e cycles --filter 'lock_held(&mmap_lock:W)' -- ...
+>   # perf record -a -g -e cycles --filter 'lock_held_read(rcu)' -- ...
+>   # perf lock contention -a -b -Y rcu,srcu -- sleep 1
+> 
+> An important use-case is detecting memory allocations or direct memory
+> reclaim occurring while kernel locks are held, which can stall lock
+> waiters for extended periods under memory pressure:
+> 
+>   # Direct memory reclaim triggered while holding any mutex or rwsem:
+>   # perf record -a -g -e vmscan:mm_vmscan_direct_reclaim_begin \
+>       --filter 'lock_held(mutex) || lock_held(rwsem)' -- ...
+> 
+>   # Page allocations permitted to enter direct reclaim (__GFP_DIRECT_RECLAIM)
+>   # while holding a mutex or rwsem:
+>   # perf record -a -g -e kmem:mm_page_alloc \
+>       --filter 'gfp_flags & 0x400' \
+>       --filter 'lock_held(mutex) || lock_held(rwsem)' -- ...
 
->=20
-> I am presumably missing some detail that prevents that.
-> I assume you've seen the issue in practice? i.e. you've actucally
-> triggered this with the perf tool on real hardware?
+It seems the first filter is processed by the kernel tracepoint
+filtering logic and the second is passed to the BPF filter, right?
+Does the ordering matter?
 
-Yes, I see this problem on real hardware when using perf with
-the -F 99 option or the -c 1 option, specifying counting in user space only=
-.
+> 
+>   # Major page faults occurring while holding a mutex or rwsem:
+>   # perf record -a -g -e major-faults \
+>       --filter 'lock_held(mutex) || lock_held(rwsem)' -- ...
+> 
+> Supported `<lock>` specifications match `perf lock contention`:
+> - Global/static kernel lock symbols (with or without leading `&`, e.g.
+>   `lock_held(&cgroup_mutex)` or `lock_held(cgroup_mutex)`)
 
-Best Regards,
-Tomohiro Misono
+It used to have no '&' for global locks.  While having it is more
+natural, I think it's better to leave it for slab locks so that we can
+distinguish them easily.
+
+
+> - Hexadecimal kernel lock addresses
+> - Slab cache names prefixed with `&` (e.g. `lock_held(&dentry)`,
+>   `lock_held_read(&dentry)`)
+> - Well-known per-process, semi-global, and RCU locks: `mmap_lock`,
+>   `siglock`, `rq_lock`, `zone_lock`, `rcu`, `rcu-trace`
+> - Lock types and flags: `mutex`, `spinlock`, `rwsem`, `rwsem:R`,
+>   `rwsem:W`, `rwlock`, `rwlock:R`, `rwlock:W`, `rt-mutex`,
+>   `percpu-rwsem`, `pcpu-sem:W`, `srcu`, `srcu:R`, `srcu:W`, `rcu:R`,
+>   `rcu:W`, `semaphore`
+> 
+> Limitations and weaknesses in determining whether a lock is held:
+> - Inlined lock/unlock operations:
+>   - When the kernel is configured to inline spinlock or rwlock operations
+>     (`CONFIG_INLINE_SPIN_LOCK`, `CONFIG_INLINE_READ_LOCK`,
+>     `CONFIG_INLINE_WRITE_LOCK`, `!CONFIG_UNINLINE_SPIN_UNLOCK`,
+>     `CONFIG_INLINE_*_UNLOCK*`, etc.), `_raw_spin_lock*` /
+>     `_raw_spin_unlock*` and `_raw_read_lock*` / `_raw_write_lock*` are
+>     inlined into callers and have no BTF function entry points for
+>     `fentry`/`fexit` to attach to. `configure_lock_progs()` verifies that
+>     both acquire and release entry points exist in BTF before enabling a
+>     lock family.
+>   - Fast-path `percpu_down_read()` / `percpu_up_read()` and
+>     `srcu_read_lock_fast()` / `srcu_read_unlock_fast()` are inlined
+>     per-CPU counter increments without function calls, so only
+>     `percpu_down_write()` / `percpu_up_write()` and out-of-line
+>     `__srcu_read_lock*()` / `__srcu_read_unlock*()` can be hooked.
+>   - On `!CONFIG_PREEMPT_RCU` kernels, `rcu_read_lock()` compiles to
+>     `preempt_disable()` and does not maintain
+>     `current->rcu_read_lock_nesting` in `task_struct`, so `lock_held(rcu)`
+>     read-side inspection requires `CONFIG_PREEMPT_RCU`.
+
+Looks ok.  What happens if user specified unsupported locks - e.g. rcu:R
+on !CONFIG_PREEMPT_RCU.
+
+
+> - Lack of an inspectable owner field on non-exclusive / spinning locks:
+>   - While `struct mutex`, `struct rt_mutex`, and write-locked
+>     `struct rw_semaphore` store the owning `task_struct *` in `lock->owner`
+>     (allowing `perf_sample_filter` to inspect kernel memory directly on
+>     sample overflow when filtering by lock address), spinlocks, rwlocks,
+>     semaphores, SRCU, and reader-locked `rw_semaphore`s (where
+>     `__up_read()` does not clear `sem->owner` when `!CONFIG_DEBUG_RWSEMS`)
+>     do not maintain an authoritative per-task owner pointer.
+
+So do you use the owner field for the supported locks?  Then maybe it
+can skip tracing mutex_lock() and mutex_unlock().  Does it already do?
+
+
+>   - Tracking these locks (as well as slab-cache and lock-type filters)
+>     relies on `fexit` (acquire) and `fentry` (release) BPF hooks
+>     maintaining the `held_locks` BPF hash map:
+>     - Any such lock already held before `perf record` attaches its BPF
+>       programs will not be present in `held_locks` until it is released
+>       and re-acquired.
+
+Right, but this can be mitigated when it runs for long.
+
+
+>     - The attached `fentry`/`fexit` hooks execute on every kernel lock
+>       acquire and release for the hooked lock family across the system,
+>       adding tracing overhead outside of perf sample handling.
+
+This is a real problem.  As it touches the fastpath it can cause a lot
+of overhead if locking is frequent.  But having this capability would be
+very useful anyway!
+
+Thanks,
+Namhyung
+
+> 
+> Patch overview:
+> 1. "perf lock contention: Share common BPF and lock type definitions in
+>    lock_data.h": Moves `lock_type_table` to `util/lock-contention.c` and
+>    `LCB_F_*` flags, CO-RE structs, and common BPF lock helpers
+>    (`get_lock_owner`, `get_current_mmap_lock`, `get_current_siglock`,
+>    `get_lock_addr`, `check_lock_type`, `do_collect_lock_syms`,
+>    `do_slab_cache_iter`) into `tools/perf/util/bpf_skel/lock_data.h`.
+> 2. "perf bpf-filter: Add lock_held() sample filter": Implements
+>    `lock_held()`, `lock_held_read()`/`lock_held_shared()`,
+>    `lock_held_write()`/`lock_held_exclusive()`, and `:R`/`:W` mode
+>    suffixes using direct lock owner inspection where possible (`mutex`,
+>    `rt_mutex`, write-locked `rw_semaphore`) and a `held_locks` BPF map
+>    updated by selectively attached `fentry`/`fexit` hooks, supporting
+>    both PMU/software events (`SEC("perf_event")`) and tracepoint events
+>    (`SEC("tracepoint")`).
+> 3. "perf test: Add tests for lock_held() BPF sample filter": Adds unit
+>    tests in `tests/parse-events.c` and shell tests in
+>    `tests/shell/record_bpf_filter.sh`.
+> 4. "perf bpf-filter: Extend lock_held() to support RCU, Tasks Trace RCU,
+>    and SRCU": Supports `rcu` (`rcu:R` via direct
+>    `current->rcu_read_lock_nesting` inspection with zero tracing hooks;
+>    `rcu:W` via `synchronize_rcu*()` / `rcu_barrier()` hooks),
+>    `rcu-trace` (via `current->trc_reader_nesting`), and `srcu`
+>    (`srcu:R` via `__srcu_read_lock*` / `__srcu_read_unlock*`; `srcu:W`
+>    via `synchronize_srcu*()` / `srcu_barrier()`).
+> 5. "perf lock contention: Extend BPF lock contention to RCU and SRCU":
+>    Extends `perf lock contention --use-bpf` to track RCU and SRCU
+>    grace-period and barrier waits (`-Y rcu`, `-Y srcu`, `-L rcu`).
+> 6. "perf lock contention: Filter events before creating lock_stat":
+>    Fixes `report_lock_contention_begin_event()` in `builtin-lock.c` to
+>    apply `-Y`, `-L`, and `-S` filters before calling
+>    `lock_stat_findnew()`.
+> 
+> Changes in v3:
+> - Move the writer-only `rw_semaphore` check out of `get_lock_owner()` in
+>   `lock_data.h` into `is_rwsem_writer_owner()` in `sample_filter.bpf.c`
+>   so `perf lock contention -b -o` still reports reader owners when a
+>   writer contends on a reader-owned `rw_semaphore`, and scope
+>   `is_direct_lock_owner()` by lock type (`PBF_LOCK_DIRECT_MUTEX`,
+>   `PBF_LOCK_DIRECT_RWSEM`, `PBF_LOCK_DIRECT_RTMUTEX`).
+> - Add `SEC("tracepoint") int perf_tp_sample_filter(void *ctx)` so BPF
+>   sample filters (`lock_held()`, `uid`, `gid`, etc.) can attach to
+>   `PERF_TYPE_TRACEPOINT` events (such as `kmem:mm_page_alloc` and
+>   `vmscan:mm_vmscan_direct_reclaim_begin`), check `libbpf_get_error()`
+>   when attaching, and document memory allocation / direct reclaim
+>   filtering with `lock_held()`.
+> - Return early in `init_numa_data()` in `bpf-filter.c` when `node_data`
+>   cannot be resolved and check `node_data_addr != 0` in
+>   `do_collect_zone_lock()`.
+> - Avoid double-counting `_raw_read_lock_irq` / `_raw_read_lock_bh` in
+>   `sample_filter.bpf.c` on `CONFIG_GENERIC_LOCKBREAK=y &&
+>   !CONFIG_DEBUG_LOCK_ALLOC` kernels where they call
+>   `_raw_read_lock_irqsave()`.
+> - Offset `rcu_state_addr` by 1 byte so it is distinct from
+>   `&rcu_state.node[0].lock` at offset 0 of `rcu_state`, and pass `bool
+>   is_rcu` to `do_contention_end()` in `lock_contention.bpf.c` so
+>   `tp_btf/contention_end` and RCU/SRCU `fexit` hooks never cross-match
+>   timestamp maps.
+> 
+> Changes in v2:
+> - Guard `BPF_CORE_READ(mutex, owner.counter)` with `bpf_core_field_exists`
+>   and fall back to `struct rt_mutex_base` in `get_lock_owner()` so CO-RE
+>   relocation succeeds on `CONFIG_PREEMPT_RT=y` kernels.
+> - Add `CONFIG_DEBUG_LOCK_ALLOC=y` lock entry points
+>   (`_mutex_lock_nest_lock`, `_mutex_lock_killable`,
+>   `_mutex_trylock_nest_lock`, `_down_write_nest_lock`,
+>   `_raw_spin_lock_nest_lock`, `_rt_mutex_lock_nest_lock`) to
+>   `sample_filter.bpf.c` and `lock_progs[]`.
+> - Verify in `supported_lock_prog_groups()` that both acquire and all
+>   unlock BTF entry points exist for a lock family before enabling its
+>   tracing hooks, preventing acquire-only attachment when spinlock/rwlock
+>   unlock functions are inlined.
+> - Enable `LOCK_PROG_PERCPU_RWSEM` alongside `LOCK_PROG_RWSEM_WRITE` when
+>   a symbol name ends in `rwsem` (such as `cgroup_threadgroup_rwsem`).
+> - Gate `record_lock_acquired(ctx, LCB_F_READ)` in `fexit_downgrade_write`
+>   on `track_rwsem_read` and verify non-zero read/write counts in
+>   `record_lock_released_addr()` before decrementing aggregate slab/type
+>   counts.
+> - Adjust stack skip depth by 2 for `fentry` RCU/SRCU programs in
+>   `lock_contention.bpf.c` and recognize `synchronize_rcu*`,
+>   `synchronize_srcu*`, `rcu_barrier`, and `srcu_barrier` in
+>   `machine__is_lock_function()`.
+> - Add patch 6 fixing `report_lock_contention_begin_event()` to check
+>   type, address, and callstack filters before creating `lock_stat`
+>   entries.
+> 
+> Assisted-by: Antigravity:gemini-3.1-pro
+> 
+> Ian Rogers (6):
+>   perf lock contention: Share common BPF and lock type definitions in
+>     lock_data.h
+>   perf bpf-filter: Add lock_held() sample filter
+>   perf test: Add tests for lock_held() BPF sample filter
+>   perf bpf-filter: Extend lock_held() to support RCU, Tasks Trace RCU,
+>     and SRCU
+>   perf lock contention: Extend BPF lock contention to RCU and SRCU
+>   perf lock contention: Filter events before creating lock_stat
+> 
+>  tools/perf/Documentation/perf-lock.txt        |    7 +-
+>  tools/perf/Documentation/perf-record.txt      |   64 +-
+>  tools/perf/builtin-lock.c                     |   88 +-
+>  tools/perf/tests/parse-events.c               |  121 ++
+>  tools/perf/tests/shell/lock_contention.sh     |   14 +
+>  tools/perf/tests/shell/record_bpf_filter.sh   |  134 ++
+>  tools/perf/util/bpf-filter.c                  | 1271 ++++++++++++++++-
+>  tools/perf/util/bpf-filter.h                  |   13 +
+>  tools/perf/util/bpf-filter.l                  |   31 +-
+>  tools/perf/util/bpf-filter.y                  |   46 +-
+>  tools/perf/util/bpf_lock_contention.c         |  171 ++-
+>  .../perf/util/bpf_skel/lock_contention.bpf.c  |  448 +++---
+>  tools/perf/util/bpf_skel/lock_data.h          |  360 ++++-
+>  tools/perf/util/bpf_skel/sample-filter.h      |   77 +
+>  tools/perf/util/bpf_skel/sample_filter.bpf.c  | 1225 ++++++++++++++++
+>  tools/perf/util/bpf_skel/vmlinux/vmlinux.h    |    7 +
+>  tools/perf/util/lock-contention.c             |   22 +
+>  tools/perf/util/lock-contention.h             |   15 +
+>  tools/perf/util/machine.c                     |   11 +
+>  tools/perf/util/parse-events.c                |    3 +-
+>  20 files changed, 3741 insertions(+), 387 deletions(-)
+> 
+> -- 
+> 2.56.0.212.g129ede20d9-goog
+> 
