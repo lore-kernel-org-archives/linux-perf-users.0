@@ -1,163 +1,100 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=52.101.61.30
+Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=74.125.82.45
 ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1792431831;
-	b=z7IwfSrnf17HrrlbDFXFLeHh5bpVVpPYPni2q3MTmy6ZhkMJMNR0dhV1kAvxJjxtrU+n
-	 EIS4410xAvtf4nFMIqFaigXigfEmYifANrYbLHdlBulR30FrEyLKhgFshC42NxqZAe8v8
-	 rOy22LQnwJ5bfhBx+dB/8MDj5RlCcl9qcbVyPxFIvWwWQPEq7MnWV5SRj/pfNNAFAtC/a
-	 7yJekuYTm1yI5tuzh1ZqHUE6Md/RSbGd9oVCDELYIGMw25CIewLujDWMmusR4+NMmMFmD
-	 B6PNZ5gEliFfQinueajIh+UGWz+Lv+iCTi5P1SUrxkY8QruDmxD5KkylywsNqX0gaRg==
+	t=1792432245;
+	b=eqL2mP1Bv9KJxt57jlOE5nb+tJ/IJV6ERHLGUxLK8mpTW7Xy4+6oCdJCgN0i6EJC6ipy
+	 fp0PVC/xZQV4NwMwG0VUrCEc3bWkHBxY6GZiL1fk87iv0i+D+mAT/AhJNNWV0oAuDxk0S
+	 75tnrnjQXkjPx8/dTEMwa+wzj0Gk/xB1+pU/EtOc1TGu77omBMMRJqysm845auobAG+9n
+	 sDfB9+LjU9jd/OkZVOFDBpOq7k2MzCWtol9GaB3fhyEpGYF4RBcMpbzf9MNs7lozTI6RZ
+	 LIh2cc3aWgz6owbXsIgW2AbsIzUgfBkQSYmA7ri8IcqvmuzGYcsDVLdOV+Lwu9phbSQ==
 ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792431831;
-	h=DMARC-Filter:DKIM-Signature:Received:Received:From:To:CC:Subject:
-	 Thread-Topic:Thread-Index:Date:Message-ID:References:In-Reply-To:
-	 Accept-Language:Content-Language:X-MS-Has-Attach:X-MS-TNEF-Correlator:
-	 x-ms-publictraffictype:x-ms-traffictypediagnostic:
-	 x-ms-office365-filtering-correlation-id:x-ms-exchange-senderadcheck:
-	 x-ms-exchange-antispam-relay:x-microsoft-antispam:
-	 x-microsoft-antispam-message-info:x-forefront-antispam-report:
-	 x-ms-exchange-antispam-messagedata-chunkcount:
-	 x-ms-exchange-antispam-messagedata-0:Content-Type:
-	 Content-Transfer-Encoding:MIME-Version:X-OriginatorOrg:
-	 X-MS-Exchange-CrossTenant-AuthAs:X-MS-Exchange-CrossTenant-AuthSource:
-	 X-MS-Exchange-CrossTenant-Network-Message-Id:
-	 X-MS-Exchange-CrossTenant-originalarrivaltime:
-	 X-MS-Exchange-CrossTenant-fromentityheader:
-	 X-MS-Exchange-CrossTenant-id:X-MS-Exchange-CrossTenant-mailboxtype:
-	 X-MS-Exchange-CrossTenant-userprincipalname:
-	 X-MS-Exchange-Transport-CrossTenantHeadersStamped;
-	bh=bjKAIEnp+hbDvZ6Yq9PGaVxecJ/JN0orkgHKHysK4d0=;
-	b=f5aQuiyWfu4zH387HaG+aViUQkgbtdlTpVHmov79aaovRA/I2WLdiZYrGznA2mp6mPFs
-	 BNpwOkEXhPLlkaid2IJhKHaZIN80BGWeWprxFq8jbYVFHX5cu8h1A/62/H/e1RKQFUTHU
-	 ijQEZzwr7X3O9uYUa5G/bMApG5WEkQWM2Aghbqy3qEy9IVSZtF9wuqHLPhl9+6jMFsdQ3
-	 CCkhlkgfzVdjEesw6cIfCrwAtMaGxzTMfkhTBYBoeYMQ1BQO6mNijn+/f+X2L0CenL1Dy
-	 mwJiOj9LHJelaSpqqqvcDmeD4WkPs9+rzyStx7DMOEd22g/pb91f3qm24RThUEBUrIg==
+	a=rsa-sha256; c=relaxed/relaxed; t=1792432245;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:
+	 MIME-Version:References:In-Reply-To:From:Date:X-Gm-Features:
+	 Message-ID:Subject:To:Cc:Content-Type:Content-Transfer-Encoding;
+	bh=yxr3yy5APwTjGC/8MQQ5vWLHB19nNrJrEZoaHSPj4Ms=;
+	b=PXLAScNgq+ppbhJpQqBBJnG4sjOlDJZY290pAS8ILQuUk0+2/qykicvLJRC0/AWDYLCe
+	 e89zCEcV2iTY5Vpp2ZgvW8oB0zMNOoO5kfG4Omjawn+tXoTAG1yb5jL+hejvR29E1O3k5
+	 Y7VYiH/ejiKzimIfj/oAHIBwBcjyrA602fT45iaRB2C0+T8pmKs2C5PGHmE/v2gGGM8BU
+	 QxBUeMBfngoyXOMoiNDJJVhkPeCc7u002Ynhdi3PbypOfaiFzctjQcI3kZnXwhfzoMYGY
+	 FKfY1e/MZE0MPvgymTjvaTG2ngOyeFglduimJQSC6QqaGNJQZK4+Oi4rp8RhqBkJABQ==
 ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=nvidia.com;
-	spf=fail smtp.mailfrom=nvidia.com;
-	dkim=pass header.d=Nvidia.com header.i=@Nvidia.com header.a=rsa-sha256 header.s=selector2 header.b=iwhQiKNz;
-	arc=pass header.oldest-pass=0 smtp.remote-ip=52.101.61.30
-Received: from DM1PR04CU001.outbound.protection.outlook.com (mail-centralusazon11010030.outbound.protection.outlook.com [52.101.61.30])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (secp384r1) server-signature ECDSA (prime256v1) server-digest SHA256)
+	dmarc=pass header.from=google.com;
+	spf=pass smtp.mailfrom=google.com;
+	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20251104 header.b=UUEQHwGR;
+	arc=pass header.oldest-pass=0 smtp.remote-ip=74.125.82.45
+Received: from mail-dl1-f45.google.com (mail-dl1-f45.google.com [74.125.82.45])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEDFE606A321;
-	Mon, 19 Oct 2026 17:43:50 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org DEDFE606A321
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75265606A31C
+	for <linux-perf-users@vger.kernel.org>; Mon, 19 Oct 2026 17:50:44 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 75265606A31C
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=Nvidia.com header.i=@Nvidia.com header.a=rsa-sha256 header.s=selector2 header.b=iwhQiKNz
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=xY/syWklVDb48Z8KlgyD+7uccgcLQVB8AT9g656E1yM2xpOLrno87oVa2FM3NV5Khl8DL+4fT8PbnRiV9r+NFa2yfKVGrPApdVpswSIqAAz/zTzUY5EATO2b+s88DrwfC4mpNXvMkxWyfTXDv29lSh0HsyDKPP4rmx1JCNloMUbQDwfwbAJLvEkjcA3AOmBouDkhYqdQeZFfeZATgUrwChlv5sLbWOvHNgizOesL9FTQjixlSvYFQCGUVXcms9Apge9IBjXj40kqQoY1P34zNT9bYg1UdGWi6+11VqY//flWlLA4AuTn7mN64hblq/T+Jiw4odmaUeNZ8JqFTgJgCg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=bjKAIEnp+hbDvZ6Yq9PGaVxecJ/JN0orkgHKHysK4d0=;
- b=o8mRmNJaLFFRmoPfvgM0g09qQOFsqi2a3bpQHX4hT6J8L6PxG9Y8NTZVL6oBPjkVgm7UEX1mJo2x152xsmcRMfUif8qg9cp/ciwmvlo7nPAEy1+K4fWkFVEsRcxuCjr7Dig8mk+BoBPWgtI5MPkFmhwUo02A5c7YUSoR2YNje39tw7IKYvwSsMI+SMhgED+GaIa2Xu0nD1m18HMGAwyruqjCLYpif7B/vMjLcdtFOVZETg40grMR/VzQNppH1D3U0T1D3DvKQq5h8jTyMfPzDmorrVmblUePsU/8YgKZ30FxOcZHyEjsKsHW9BLqweUwesSo7/Rz1x131GBheuGh8A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=bjKAIEnp+hbDvZ6Yq9PGaVxecJ/JN0orkgHKHysK4d0=;
- b=iwhQiKNzXIJeGALZlwfABgHbW/B2P7qMv8Tc8ePRAkThpOqGC4UCj45ETdaW0MbdhSxZdzpXiERDGRObvcui+BQOYGjZpYldquM5VCxQQM7bX3hMgP78Vp5wpbvYXbTF75dVrnvggg57oCHnuJHG7i+iZy2/I8xu+dR7T5ecm1ZF5Fa2yXZ1b8pQlU1rs5nxnKYavc0CtRofLT6H14MV8Z2ga9P3ZMLTgKYZ6+ZQbKr9Fo6SmOGwyJJ+DAl7wrZQD360DAn3qOAzloSwL5paYswjeihZ1iBZ3/KD1aXVxKwYLBuKztdiH7zhwn+JrH7GtzLcunmbzty04jLbgVfrSw==
-Received: from SA1PR12MB6773.namprd12.prod.outlook.com (2603:10b6:806:258::16)
- by BY5PR12MB4322.namprd12.prod.outlook.com (2603:10b6:a03:20a::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.522.19; Mon, 19 Oct
- 2026 17:43:33 +0000
-Received: from SA1PR12MB6773.namprd12.prod.outlook.com
- ([fe80::ba62:69e8:261f:1cdf]) by SA1PR12MB6773.namprd12.prod.outlook.com
- ([fe80::ba62:69e8:261f:1cdf%5]) with mapi id 15.21.0522.017; Mon, 19 Oct 2026
- 17:43:33 +0000
-From: Besar Wicaksono <bwicaksono@nvidia.com>
-To: Chun-Tse Shao <ctshao@google.com>
-CC: "acme@kernel.org" <acme@kernel.org>, "namhyung@kernel.org"
-	<namhyung@kernel.org>, "irogers@google.com" <irogers@google.com>,
-	"peterz@infradead.org" <peterz@infradead.org>, "mingo@redhat.com"
-	<mingo@redhat.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>,
-	"alexander.shishkin@linux.intel.com" <alexander.shishkin@linux.intel.com>,
-	"jolsa@kernel.org" <jolsa@kernel.org>, "adrian.hunter@intel.com"
-	<adrian.hunter@intel.com>, "james.clark@linaro.org" <james.clark@linaro.org>,
-	"linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Matt Ochs
-	<mochs@nvidia.com>, Sean Kelley <skelley@nvidia.com>, Rich Wiley
-	<rwiley@nvidia.com>, Vikram Sethi <vsethi@nvidia.com>, Raj Joshi
-	<rajjoshi@nvidia.com>
-Subject: RE: [PATCH 2/2] perf jevents: Add NVIDIA Tegra410 uncore PCIe metrics
-Thread-Topic: [PATCH 2/2] perf jevents: Add NVIDIA Tegra410 uncore PCIe
- metrics
-Thread-Index: AQHdT3ICEUSGCvByFk+sMdgtxE267rb7/KHAgASf2QCABKCrQA==
-Date: Mon, 19 Oct 2026 17:43:33 +0000
-Message-ID:
- <SA1PR12MB677381C72E598B0EEC4AA2AAA0982@SA1PR12MB6773.namprd12.prod.outlook.com>
-References: <20260928175127.1032535-1-ctshao@google.com>
- <20260928175127.1032535-3-ctshao@google.com>
- <SA1PR12MB6773C9DE93757D6B73C1E9B3A09E2@SA1PR12MB6773.namprd12.prod.outlook.com>
- <CAJpZYjWLRiyNbzoGpA-2KE0zHgQn2gc0V943WxJEr5K5aZtRYA@mail.gmail.com>
-In-Reply-To:
- <CAJpZYjWLRiyNbzoGpA-2KE0zHgQn2gc0V943WxJEr5K5aZtRYA@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: mx.microsoft.com 1; dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: SA1PR12MB6773:EE_|BY5PR12MB4322:EE_
-x-ms-office365-filtering-correlation-id: 6ccd6432-9dcf-492f-691c-08df2e087ef5
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam:
- BCL:0;ARA:13230040|366016|376014|1800799024|7416014|23010399003|38070700021|56012099006|4143699003|11063799006|261009223027099003|10067099003|18002099003|22082099003|6133799003|3023799007;
-x-microsoft-antispam-message-info:
- pMUTIgUbgmh4D+UAKrL1gi6/bqE8fWbrMWUSNGy91tx+uVGqP8KJUr6w8PS1rbFwM3Tf1X1Ngr5N3r46xF3+5KteAPd+69wXsS/nfcUQDWTOpQKrY2a7coTegpsSqGyjJD2HIksn9CFILPUga4L6y3q4PHosiCIxyFC4HjYmPazrdThdfq905Y3855miFKPJXcDK+0oecmEqSmFqfLIg7YemuZC/D9d4JxKbqHjKSYO2HD4+DOT//gdaEbMquNb0T0T7r3+Ufe0qodycbPf8f1wlOVLFrmyiGoeMa78nkkgXGZ09ctFutuRNqGW4i7avLMlrTeagU/I1wbUAAchWs5CwXzC6oQKTN/BYHhR0e8jZLOVUhF8TU9dE58lBnsRFAeaKEA9WQiybC8HFZcH9kukepUDHrJqFHgbSqDUInf0XshAmg9bfll0lw4LirfL6fuUW3EdbR7crIsk/tVTzsVUj+nxGMKVixkO0zWOSSVp/W1Z33+/nTQlr40DikMMVZXL4kL4ipMvsYxPf9PuiL5SYJfIBj3lmwX9juv1fMKnyqN2efd0H8+2LYok9gEg99XNWkrTAmsNwZM56u90yElmMNl1Qh4ixptgdBK7KEJ8OIbBeqx7OeuWFSJ2UNcjKB4LnvQo5Pgt9kjJq/VKOZd8y47G8KW6NU0tlefeIncUQqaYY2ho0aN8o7iZKRxHF9EXLJpbdajofXPQx6gFNPT6NmT32VkcnpUQSeHsBU9U=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR12MB6773.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024)(7416014)(23010399003)(38070700021)(56012099006)(4143699003)(11063799006)(261009223027099003)(10067099003)(18002099003)(22082099003)(6133799003)(3023799007);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?utf-8?B?MERaUW9taVp0Q01ia043NmFVcmJMa3FHVFp2djk2UmdZdDdTVkVNek9JK0Jn?=
- =?utf-8?B?NFJPZXUyZEdxYWNKcEd0TTRTMjdhWXVBbE82V3lDSGhFY3ZOQWpCTFNuWmNu?=
- =?utf-8?B?RDR1RVBGaktjU2dLTVpBbUd3c1NhOWFrRXcyTXo5NW1QZEtBUkVxSCtZYVRL?=
- =?utf-8?B?cjFuYTM3WldnRGFMZVBvRk9lcmEyeGZTYVAvVldvdUZTT2F2Tm12dkRnY0F6?=
- =?utf-8?B?SnBhUXRzZkpRdEwrUlFQTFh2VlRrNUNnZTZMdlhtdkdaUy9nRmhLeWVtYi9o?=
- =?utf-8?B?Ykl6MlF6M29JbDdjVWtuT0hxUnVOaUJyWFY0V3liZGxIKzIyQnNLSDRSUExG?=
- =?utf-8?B?bFN6UHZSc1pDWTh2ZUhMU0NNTzdzNUI2TUYxSmJiSXkxZzFaS09UN2JtSkNO?=
- =?utf-8?B?VXkrQUE2aS9Md0NDTWdyTWNwS3grRjZueEErdnpxYmE5WUFKYlZmN1BBM2k1?=
- =?utf-8?B?RXBHRzBmZzBzS2xUb3h4MlUxa3NRay80a1NUbitZT0ZoeEFla05PcjdEQjVu?=
- =?utf-8?B?dHN5UG9TNkxQYWoveCsyNTNoTW5jS1Arc01zaGdjZjZRRzlzNk5sbVk3d0J5?=
- =?utf-8?B?aHF2aFZSR1dFM1lHM0ZaQzVHVEhyNTdjQWdVSDRkWEVMQjhGZUNWOGhSU1pJ?=
- =?utf-8?B?MVB4RFJxT0NMUzg5elhGS0x4amVaQlZ2MmpXZTB1V082djJCNDdxZE90SGhj?=
- =?utf-8?B?Ym4ybG02N1NzNUY3a0J3Mnh2bS9pbGRsRTB3TVlpYlI2SEw0MFVhOEdqU0Ew?=
- =?utf-8?B?ZzZ5MVdyOHEyc0JyYzJMVXpkeG9ML0EyR3JmcXNKSkZrcEhnbmhNQWozMDBD?=
- =?utf-8?B?SUxWZE9vaXFzMGxBcTBIZW10ZzVRM1lzUXBDN0JVd0NYTVVxMlRuSXRSWUFr?=
- =?utf-8?B?eks2ejBNbVJHdFNBend0Y3NKb28vcHRGMk1zR3N2Q0NvWStqMVMxaFVxY2xW?=
- =?utf-8?B?eTlrVDQwWHBRUXhtUFppcUFkY2p3bllRd2N5Q2JlZzNCelZUMEJKWFlySnVB?=
- =?utf-8?B?Qzl5WGk4K2JBalJrR1hJUEpQYWQwM1E4SkhDS3d4dWxZVmhWbU0wd2FTcGN6?=
- =?utf-8?B?SFJDaEFiWFBuVkFpaXhCcHMzOGNQRGFuZEZDS1RsdzRIbGpGeCtidGZyYTVO?=
- =?utf-8?B?UEEzOWJSdkNOWmhRL3RCZFZRL3ZvMDhZaGdUNGdFQlZFbkIvdjNSNWJTc0pV?=
- =?utf-8?B?STRjdGxlSU1IalVjMkNyZms2QTBKQnJ5ZEJGQW0rbXU0L2JyY0UvSXlBNGxi?=
- =?utf-8?B?c3JPQjcxN1RXZUp3a2tuVm1DNWMyaHpzZG9wVkgvTnM3SE9hdUFwVTZrZGhI?=
- =?utf-8?B?aHBKVnJzZ2szY1RYN2NNV3lHbmJxdjY5dlR3TGVTZ2QyOU5ybUUvUzkxQjNv?=
- =?utf-8?B?R3FEVmZka2dueE1mRnRGZkxEQXdHR0Q3anZaZmhoK2EwUzNEeGoyYTF0VUtM?=
- =?utf-8?B?ZUg5bGtRSzFtWis4cU0yZWs0dGhxcmNuTEVPLzkyUnFUZmpWM016cmJibnp3?=
- =?utf-8?B?U1F4RkZTVzlPcXMxYkVCWkc3ZHU5Y0ltcUpERlNMd1kxRnFHbVdZZ290ZG5l?=
- =?utf-8?B?UHlwaDFoM1dRd3BKK3Vob1BaREd6L3d1eDA5UTF4cWFxVmpjc0dkMzdhYkJX?=
- =?utf-8?B?M2pNV2hiZk1CT3dWOUEwTENZMDZCL3JrTEJ2c3kwK2U1SVc0OGx6d3JVait3?=
- =?utf-8?B?VjZCTE9kZVZmT2NuOG5yZEF1alJYRnpRNHU1RUtjcU9MRWFmRzhFN21EUWNp?=
- =?utf-8?B?bWhIbWhmRkhGaDdmYS9UbTg2a3IyT29uOWtVZk5MSU5YTnRuaDh1VmV3VENh?=
- =?utf-8?B?LzE5L0REMDR5Ym9BdEtxTG1aMitFK2FiN0k3cmlpWEF6NXhyQUg0YkN6cWJi?=
- =?utf-8?B?TlNnZlUvSlRMUjBlU1lGd1ZPVjFDb1NsYlcvSnlJWlF3VGs2QnAxcUtjUWRn?=
- =?utf-8?B?aVVVbmF2YUZMU0RRMnh1Z1ZjVUM1czN1bmlLUEJvQko0ZmVSNGhkaGprdlln?=
- =?utf-8?B?VDFqU2hYRGZJWEpDU0dHRDRRaytTMytMK2RPZkRVUlRYYURzQnNaQ0YxQ29q?=
- =?utf-8?B?Wk9UQlBvbWd1ZDFPWTZzS3pkakxIMGtzSGt4TVc3VDVBUUp1ZmFMNTQzaXpN?=
- =?utf-8?B?UkpaMDkvSGEwZHI1d1FPeFpremttVGcwbFJuTnJkTit0SGlleW9oRFZPQi9T?=
- =?utf-8?B?SEVqYloybjQyMk14ZEhTb2dWb1d4ZnVqU3ZCT0ZDalRkM3dkcHAyRWFhTW5v?=
- =?utf-8?B?NVA5ajJreW5KS0I5MU9vbzVaRnBhdVlvUm5acGRyeWhBMEVkUDlNUjlaa1lO?=
- =?utf-8?Q?KLHJJd2Qf+60BOYm0N?=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+	dkim=pass (2048-bit key, unprotected) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20251104 header.b=UUEQHwGR
+Received: by mail-dl1-f45.google.com with SMTP id a92af1059eb24-14394530ec6so1306698c88.1
+        for <linux-perf-users@vger.kernel.org>; Mon, 19 Oct 2026 10:50:44 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1792432244; cv=none;
+        d=google.com; s=arc-20260327;
+        b=Lk/VbTdCcF88C/h+TtbLl+wNa0PAPSo8oL406qM+YrmIx7elduVB2/g3nQCxslqL/i
+         xEjUW9FA4SuE7vk4wdPOx0ikNuVwyyyxToh1YeJSL1oD5RVW0A6nQb0NQ2/bSHokxu6k
+         Coj09W+slXcq1PzG7XsmkKueyUaFZw7rQNPiBhl7s+MLOb8PYhDvCAP8mB66+GzFn9LJ
+         1gOvf/eW/ClS734WZyR//sD7FihwO9a8OFM1XJ5TAa2datksKzFArXCfrgqWg6R+BWjr
+         e0F0rZOKHwBWrg1Yd8MIWFBgS2inEWb6xvSN8nncc+5TLMLYfe7ELPeyaBEEPAKgzX3+
+         gmBg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=yxr3yy5APwTjGC/8MQQ5vWLHB19nNrJrEZoaHSPj4Ms=;
+        fh=u1+QsUnY1IUlNJGfa6I2JOWQFt07WlFDDl6C/eDSX2s=;
+        b=qQ7AKt1z16dAHK+wCjageRv2ZL1mvxxO6220W5HDcr9tTHYCrxrIgAY7U0mLPaMnr4
+         GLGZnIBZGP548OJP4covr63XmWoOS8edmWyIcfSboXM55MvEi9wYWXk1+2/PaJ9BAcyb
+         DYFIE265zHCyr6Qq8HfJLhq6ZXJdO8Y9EATcZ7PY5OxzSAfWuseYUM2sVFisSZqjAaFX
+         SEsPtmx3ButpBzGPjtU/y1vFLM2RX5lYdeZyOnFLVP3Cjjgm48AihJYLUy5QZ+eQOBPg
+         vr7cGbESePsAxSvdKxrnJctutH2ZW+71QzBTC5yx31+T+HAMC6+cvssLLLSXVRXpz4+A
+         rHTA==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1792432244; x=1793037044; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=yxr3yy5APwTjGC/8MQQ5vWLHB19nNrJrEZoaHSPj4Ms=;
+        b=UUEQHwGRh1o6+pisyuJZf3P9fduUvukVOX6CopUvQJ0bn1pVaj6lQMzmk2AtAW/5Dg
+         cehvFJRh5oS3VAGYWb2H5hTBS39E79QWUWA2SGoGn/dofmWqwfMSHtNhOQgYg4pUfqz2
+         vRRt5RGIyto3ALd03TopjtH8Tfw5yy/W3cazjXGt9GQGXQQKezVE2KLsDzAUL7Pq2yBM
+         3GRSzCxiiqrAUiCBrBuHIhGLlIOuQ8Gfl4atd+eYfqLfLq5W5jnVE+1ZGrst6OjKOKSZ
+         BDlFuuH6+icJwAtMaCj8r0O/Tf3upHWXgcaW1DbylRe2yLj3if8sOtsgdsZoplxhIF8B
+         fBDw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1792432244; x=1793037044;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=yxr3yy5APwTjGC/8MQQ5vWLHB19nNrJrEZoaHSPj4Ms=;
+        b=vEsnPti18UEu1UQwkiZqL3How9MOgIyygatdpQ34FjIr6RnG5JYwluyquJkSC4uLVk
+         YfIpDgh6BQlNugA6sjekch6x4bpY7C3UBrJbHfqwKUYsgsZfxdPjLY6uqO+SSEIGbVHu
+         pmT72+xeeLxvQ9oqtDz8jxljcgxrpOX+Wel7+7voZqrIX+L94xw75LS85wylysSHLU1P
+         901PpT//v5Wr856yZcw7Cz2E+94RcPJtPDnHOKzL2GT9/covZfL2i33iaanMiZllQXMd
+         bvILcbLdjw293HYWdT/pzhl74ij/grVoh4rWAGRcM8ISas3gInBvo7QBaClJmZe+625+
+         aQTQ==
+X-Forwarded-Encrypted: i=1; AKwUvBwi2pMOhxneO9FHP4a7Pwpb4tcNcd+RTM7MfORXOtPqjHkr4IZblVs9TdsC4bIR2fB0TAGKQOBd2nLS8sB84BB/@vger.kernel.org
+X-Gm-Message-State: AFq9FYLD0JwIIOZTXWrz6ehb9WDSzyew4FLtwmEjQMG29XAHYDK7PEd1
+	fwZViWPTljkMmi+5rXZJ8x7odQrbTH4RdVg9pGTXH6LRoBl3WJHwcbE3/lP/c9nII7+EAe4oAcH
+	wYifyeLQ5bpGjHhnhj5JqR9x95buOAn6AXila+Hnh
+X-Gm-Gg: AYBFou3ZXufcupaggLutNuiy+Bgen5i7bMjN5Ow6Js5HiPfk3Wc7k2plNhXdj/y2cER
+	xsG8mecRyScmc1B0pGGAHHcdZmx1wxgCA7GVBMxmHGuFc7swnpeiMPzB0biJmZgxUTtEy3mpA3O
+	ixuapNRUVjBWNEEAVCUxj9TGrIZwVSHb3VklosvcqCtoc2kG+eT/g4MZk2/fpjvdmCX2ikDGdZB
+	jvwHx9FYjYOUsQTJhvOUS17wVBJWiIipaj0ArU5si3hLTkJ8x8KUqB5I5cCAcIJDcrMERa7geR2
+	WcYtuu53SwcLTsWJdsfIMP/8MqyT24N3uzUfgAv7DQ/1HHCmRwaWi+oBpHy/zMUR02GP6HXdnVZ
+	2I4JYuRV3rg==
+X-Received: by 2002:a05:7023:901:b0:138:30b1:4c00 with SMTP id
+ a92af1059eb24-1850c40d8d0mr14069971c88.3.1792432242358; Mon, 19 Oct 2026
+ 10:50:42 -0700 (PDT)
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -167,235 +104,430 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SA1PR12MB6773.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6ccd6432-9dcf-492f-691c-08df2e087ef5
-X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Oct 2026 17:43:33.4438
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: u5yIO7Pg/QdbNQrPC2aHbK6CvzTjZqNqqWcFs6DAcYZ0VFqysPMqtB32jcj0XbnCOv/IprfA0ePJjD/rzrsW8w==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR12MB4322
+References: <20261019164241.403644-1-bwicaksono@nvidia.com> <20261019164241.403644-4-bwicaksono@nvidia.com>
+In-Reply-To: <20261019164241.403644-4-bwicaksono@nvidia.com>
+From: Chun-Tse Shao <ctshao@google.com>
+Date: Mon, 19 Oct 2026 10:50:03 -0700
+X-Gm-Features: AclHuK-k9em4UinzRLY1SwpkrF-Fn3v95lx1FapCdO9mAXeOsitZvqSqnBbEdcc
+Message-ID: <CAJpZYjURztEO088Z4ms01UmxST+OYD5-t9u4ymGe-iig9jO_jg@mail.gmail.com>
+Subject: Re: [PATCH 3/6] perf jevents: Add support for NVIDIA Tegra410 PCIE
+ PMU aliasing
+To: Besar Wicaksono <bwicaksono@nvidia.com>
+Cc: acme@kernel.org, namhyung@kernel.org, irogers@google.com, 
+	linux-tegra@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	vsethi@nvidia.com, rwiley@nvidia.com, skelley@nvidia.com, mochs@nvidia.com, 
+	rajjoshi@nvidia.com, treding@nvidia.com, jonathanh@nvidia.com, 
+	john.garry@linux.dev, will@kernel.org, james.clark@linaro.org, 
+	mike.leach@arm.com, leo.yan@linux.dev, mark.rutland@arm.com, 
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org, adrian.hunter@intel.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogQ2h1bi1Uc2UgU2hhbyA8
-Y3RzaGFvQGdvb2dsZS5jb20+DQo+IFNlbnQ6IEZyaWRheSwgT2N0b2JlciAxNiwgMjAyNiA2OjQw
-IFBNDQo+IFRvOiBCZXNhciBXaWNha3Nvbm8gPGJ3aWNha3Nvbm9AbnZpZGlhLmNvbT4NCj4gQ2M6
-IGFjbWVAa2VybmVsLm9yZzsgbmFtaHl1bmdAa2VybmVsLm9yZzsgaXJvZ2Vyc0Bnb29nbGUuY29t
-Ow0KPiBwZXRlcnpAaW5mcmFkZWFkLm9yZzsgbWluZ29AcmVkaGF0LmNvbTsgbWFyay5ydXRsYW5k
-QGFybS5jb207DQo+IGFsZXhhbmRlci5zaGlzaGtpbkBsaW51eC5pbnRlbC5jb207IGpvbHNhQGtl
-cm5lbC5vcmc7DQo+IGFkcmlhbi5odW50ZXJAaW50ZWwuY29tOyBqYW1lcy5jbGFya0BsaW5hcm8u
-b3JnOyBsaW51eC1wZXJmLQ0KPiB1c2Vyc0B2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWtlcm5lbEB2
-Z2VyLmtlcm5lbC5vcmc7IE1hdHQgT2Nocw0KPiA8bW9jaHNAbnZpZGlhLmNvbT47IFNlYW4gS2Vs
-bGV5IDxza2VsbGV5QG52aWRpYS5jb20+OyBSaWNoIFdpbGV5DQo+IDxyd2lsZXlAbnZpZGlhLmNv
-bT47IFZpa3JhbSBTZXRoaSA8dnNldGhpQG52aWRpYS5jb20+OyBSYWogSm9zaGkNCj4gPHJhampv
-c2hpQG52aWRpYS5jb20+DQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggMi8yXSBwZXJmIGpldmVudHM6
-IEFkZCBOVklESUEgVGVncmE0MTAgdW5jb3JlIFBDSWUNCj4gbWV0cmljcw0KPiANCj4gRXh0ZXJu
-YWwgZW1haWw6IFVzZSBjYXV0aW9uIG9wZW5pbmcgbGlua3Mgb3IgYXR0YWNobWVudHMNCj4gDQo+
-IA0KPiBPbiBUdWUsIE9jdCAxMywgMjAyNiBhdCAyOjA44oCvUE0gQmVzYXIgV2ljYWtzb25vDQo+
-IDxid2ljYWtzb25vQG52aWRpYS5jb20+IHdyb3RlOg0KPiA+DQo+ID4gSGkgQ2h1bi1Uc2UsDQo+
-ID4NCj4gPiBJIHRlc3RlZCB0aGlzIG9uIDItc29ja2V0cyBUZWdyYTQxMCBhbmQgZm91bmQgc29t
-ZSBpc3N1ZXMuDQo+ID4gMS4gV2l0aCAtLXBlci1zb2NrZXQgb3IgLUEsIGV2ZXJ5IGxwbV9wY2ll
-XyogbWV0cmljIGlzIG9ubHkgcmVwb3J0ZWQgZm9yDQo+ID4gICAgc29ja2V0IDAsIHNvIHNvY2tl
-dCAxJ3MgUENJZSB0cmFmZmljIG5ldmVyIHNob3dzIHVwLiBFeGFtcGxlIG91dHB1dDoNCj4gPg0K
-PiA+IHBlcmYgc3RhdCAtYSAtQSAtTSBscG1fcGNpZV9yYzFfYncgLS0gc2xlZXAgMQ0KPiA+DQo+
-ID4gIFBlcmZvcm1hbmNlIGNvdW50ZXIgc3RhdHMgZm9yICdzeXN0ZW0gd2lkZSc6DQo+ID4NCj4g
-PiBDUFUwICAgICAgICAgICAgICAgMTUsMjA0ICAgICAgbnZpZGlhX3BjaWVfcG11XzBfcmNfMS93
-cl9ieXRlcy8gIyAgICAgIDAuMCBNQi9zDQo+IGxwbV9wY2llX3dyX2J3XzENCj4gPiBDUFUwICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAjICAgICAzMy44IE1CL3MgIGxwbV9wY2llX2J3XzENCj4gPiBDUFUwICAgICAgICAg
-ICAzMyw5MTAsOTUyICAgICAgbnZpZGlhX3BjaWVfcG11XzBfcmNfMS9yZF9ieXRlcy8gIyAgICAg
-MzMuOA0KPiBNQi9zICBscG1fcGNpZV9yZF9id18xDQo+ID4gQ1BVODggICAgICAgICAgICAgICAg
-ICAgMCAgICAgIG52aWRpYV9wY2llX3BtdV8xX3JjXzEvd3JfYnl0ZXMvDQo+ID4gQ1BVODggICAg
-ICAgICAgICAgICAgICAgMCAgICAgIG52aWRpYV9wY2llX3BtdV8xX3JjXzEvcmRfYnl0ZXMvDQo+
-ID4gQ1BVMCAgICAgICAgMSwwMDIsMjg2LDYxNSAgICAgIHRvb2wvZHVyYXRpb25fdGltZS8NCj4g
-PiBDUFUwICAgICAgICAgICAgICAgICAgICAwICAgICAgbnZpZGlhX3BjaWVfcG11XzBfcmNfMS93
-cl9ieXRlcyxkc3RfcmVtPTB4MS8gIw0KPiAwLjAgTUIvcyAgbHBtX3BjaWVfcmVtX3dyX2J3XzEN
-Cj4gPiBDUFU4OCAgICAgICAgICAgICAgICAgICAwICAgICAgbnZpZGlhX3BjaWVfcG11XzFfcmNf
-MS93cl9ieXRlcyxkc3RfcmVtPTB4MS8NCj4gPiBDUFUwICAgICAgICAxLDAwMiwyNzUsMDU5ICAg
-ICAgdG9vbC9kdXJhdGlvbl90aW1lLw0KPiA+IENQVTAgICAgICAgICAgICAgICAgICAgIDAgICAg
-ICBudmlkaWFfcGNpZV9wbXVfMF9yY18xL3JkX2J5dGVzLGRzdF9yZW09MHgxLyAjDQo+IDAuMCBN
-Qi9zICBscG1fcGNpZV9yZW1fcmRfYndfMQ0KPiA+IENQVTg4ICAgICAgICAgICAgICAgICAgIDAg
-ICAgICBudmlkaWFfcGNpZV9wbXVfMV9yY18xL3JkX2J5dGVzLGRzdF9yZW09MHgxLw0KPiA+IDxz
-bmlwPg0KPiA+DQo+ID4gTm90ZSBDUFU4OCAoc29ja2V0IDFfIGhhcyBubyBscG1fcGNpZV8qIHZh
-bHVlcy4NCj4gPg0KPiA+IDIuIEluIHRoZSBkZWZhdWx0IG1vZGUsIGxwbV9wY2llXypfPGk+IGFk
-ZHMgUkMgaSBvZiBzb2NrZXQgMCBhbmQgUkMgaSBvZg0KPiA+ICAgIHNvY2tldCAxLiBUaGVzZSBh
-cmUgc2VwYXJhdGUgcm9vdCBjb21wbGV4ZXMgd2l0aCBkaWZmZXJlbnQgZGV2aWNlcywNCj4gPiAg
-ICBzbyB0aGUgIlJvb3QgQ29tcGxleCBpIiB2YWx1ZSBjYW4gY29tYmluZSB0cmFmZmljIGZyb20g
-dHdvIHVucmVsYXRlZA0KPiA+ICAgIGxpbmtzLg0KPiA+ICAgIENvdWxkIHRoZSBtZXRyaWNzIGZv
-bGxvdyB0aGUgaGFyZHdhcmUgaGllcmFyY2h5IGluc3RlYWQsIHN0YXJ0aW5nIGF0DQo+ID4gICAg
-dGhlIHNvY2tldCBhbmQgZHJpbGxpbmcgZG93biB0byB0aGUgUkMsIHdpdGggdGhlIHNhbWUgZGVz
-dGluYXRpb24NCj4gPiAgICBzcGxpdCBhdCBlYWNoIGxldmVsPw0KPiA+ICAgICAtIHBlciBzb2Nr
-ZXQsIGFsbCBSQ3MgKG52aWRpYV9wY2llX3BtdV88cz5fcmMpOg0KPiA+ICAgICAgICAgbHBtX3Bj
-aWVfczxzPl97YncscmRfYncsd3JfYnd9DQo+ID4gICAgICAgICBscG1fcGNpZV9zPHM+X3tsb2Ms
-cmVtfV97cmQsd3J9X2J3DQo+ID4gICAgIC0gcGVyIHNvY2tldCBhbmQgUkMgKG52aWRpYV9wY2ll
-X3BtdV88cz5fcmNfPGk+KToNCj4gPiAgICAgICAgIGxwbV9wY2llX3M8cz5fe2J3LHJkX2J3LHdy
-X2J3fV88aT4NCj4gPiAgICAgICAgIGxwbV9wY2llX3M8cz5fe2xvYyxyZW19X3tyZCx3cn1fYndf
-PGk+DQo+ID4gICAgICAgZ3JvdXBlZCBhcyBscG1fcGNpZV9zPHM+X3JjPGk+X2J3Lg0KPiANCj4g
-VGhhbmtzIGZvciB0ZXN0aW5nIGFuZCBmb3IgdGhlIHN1Z2dlc3Rpb24uIEkgdGhpbmsgYm90aCBw
-cm9ibGVtcyBjb21lDQo+IGZyb20gaG93IHBlcmYgZXhwZWN0cyBhIFBNVSB0byBleHBvc2UgaXRz
-IGNwdW1hc2suIElkZWFsbHkgcGVyZiB3YW50cw0KPiBhIHNpbmdsZSBQTVUgZm9yIGJvdGggc29j
-a2V0cywgd2l0aCBvbmUgQ1BVIHBlciBzb2NrZXQgaW4gaXRzIGNwdW1hc2ssDQo+IGUuZy46DQo+
-IA0KPiBgYGANCj4gL3N5cy9idXMvZXZlbnRfc291cmNlL2RldmljZXMvbnZpZGlhX3BjaWVfcmNf
-MC9jcHVtYXNrOiAwLDg4DQo+IGBgYA0KPiANCg0KSSBzZWUgdGhpcyBhcyBhIGRyaXZlciBkZXNp
-Z24gY2hvaWNlOiBleHBvc2UgZWFjaCBwaHlzaWNhbCBQTVUNCnNlcGFyYXRlbHksIG9yIGdyb3Vw
-IHNldmVyYWwgcGh5c2ljYWwgaW5zdGFuY2VzIHVuZGVyIG9uZSBsb2dpY2FsIFBNVS4NCkVpdGhl
-ciB3YXksIHRoZSBQTVUgbmFtZSBhbmQgY3B1bWFzayB0ZWxsIHVzZXJzcGFjZSB3aGljaCBDUFUo
-cykgYW5kDQpyb290IGNvbXBsZXggYXJlIGFzc29jaWF0ZWQgd2l0aCB0aGUgUE1VLiBXaXRoIHRo
-ZSBmaXJzdCBhcHByb2FjaCwgZWFjaA0KcGVyZiBQTVUgaGFzIGEgY3B1bWFzayBvZiBhIHNpbmds
-ZSBDUFUuIFRlZ3JhNDEwIGZvbGxvd3MgdGhlIGZpcnN0DQphcHByb2FjaCBhbmQgZXhwb3NlcyBl
-YWNoIHBoeXNpY2FsIFBNVSBhcyBhIHNlcGFyYXRlIHBlcmYgUE1VLg0KDQo+IFdlIGNhbiB3b3Jr
-IGFyb3VuZCB0aGUgb25lLVBNVS1wZXItc29ja2V0IGxheW91dCBpbiB0aGUgbWV0cmljcywgYnV0
-DQo+IHdvdWxkIGEgc2luZ2xlIFBNVSBwZXIgUkMgYmUgYSB2aWFibGUgcGxhbiBmb3IgeW91IHRv
-IGltcGxlbWVudD8NCj4gDQoNCkdyb3VwaW5nIGluc3RhbmNlcyBhY3Jvc3Mgc29ja2V0cyBpcyBh
-biBpbnRlcmVzdGluZyBhbHRlcm5hdGl2ZSwgYnV0IGl0DQp3b3VsZCByZXF1aXJlIGNoYW5nZXMg
-dG8gdGhlIGFybV9jc3BtdSBkcml2ZXIgZGVzaWduLiBXZSB3b3VsZCBhbHNvIG5lZWQNCnRvIGV2
-YWx1YXRlIGhvdyBzdWNoIGdyb3VwaW5nIGNvdWxkIGJlIHN1cHBvcnRlZCBnZW5lcmljYWxseSBp
-bg0KYXJtX2NzcG11LCBhbmQgd2hldGhlciB0aGUgQUNQSSBBUE1UIHdvdWxkIG5lZWQgY2hhbmdl
-cy4NCg0KRm9yIHRoaXMgcGF0Y2gsIEkgdGhpbmsgdXNlcnNwYWNlIGdpdmVzIHVzIG1vcmUgZmxl
-eGliaWxpdHkgaW4gaG93IHdlDQpwcmVzZW50IGFuZCBhZ2dyZWdhdGUgY291bnRzIGFjcm9zcyBz
-b2NrZXRzIGFuZCByb290IGNvbXBsZXhlcywgc28gSSdkDQpwcmVmZXIgdG8gYWRkcmVzcyBpdCB0
-aGVyZSBhbmQga2VlcCB0aGUgY3VycmVudCBkcml2ZXIgbW9kZWwuDQoNCkZZSSwgSSd2ZSBwb3N0
-ZWQgdGhlIFRlZ3JhNDEwIHVuY29yZSBKU09OIHNlcmllczoNCmh0dHBzOi8vbG9yZS5rZXJuZWwu
-b3JnL2FsbC8yMDI2MTAxOTE2NDI0MS40MDM2NDQtMS1id2ljYWtzb25vQG52aWRpYS5jb20vDQpJ
-dCBhZGRzIGV2ZW50cyBhbmQgbWV0cmljcyBmb3IgdGhlIHNhbWUgY291bnRlcnMgKGUuZy4gdWNm
-X2F2Z18qLA0KY21lbV9hdmdfcmRfbGF0ZW5jeSwgcGNpZV9hdmdfKiksIHNvIGl0IHdvdWxkIGJl
-IGdvb2QgdG8gYWxpZ24gdGhlIHR3bw0KYW5kIGF2b2lkIGR1cGxpY2F0ZSBtZXRyaWNzLg0KDQpU
-aGFua3MsDQpCZXNhcg0KDQo+IFRoYW5rcywNCj4gQ1QNCj4gDQo+ID4NCj4gPiBUaGFua3MsDQo+
-ID4gQmVzYXINCj4gPg0KPiA+ID4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gPiA+IEZy
-b206IENodW4tVHNlIFNoYW8gPGN0c2hhb0Bnb29nbGUuY29tPg0KPiA+ID4gU2VudDogTW9uZGF5
-LCBTZXB0ZW1iZXIgMjgsIDIwMjYgNTo1MSBQTQ0KPiA+ID4gVG86IGFjbWVAa2VybmVsLm9yZzsg
-bmFtaHl1bmdAa2VybmVsLm9yZzsgaXJvZ2Vyc0Bnb29nbGUuY29tDQo+ID4gPiBDYzogcGV0ZXJ6
-QGluZnJhZGVhZC5vcmc7IG1pbmdvQHJlZGhhdC5jb207DQo+IG1hcmsucnV0bGFuZEBhcm0uY29t
-Ow0KPiA+ID4gYWxleGFuZGVyLnNoaXNoa2luQGxpbnV4LmludGVsLmNvbTsgam9sc2FAa2VybmVs
-Lm9yZzsNCj4gPiA+IGFkcmlhbi5odW50ZXJAaW50ZWwuY29tOyBqYW1lcy5jbGFya0BsaW5hcm8u
-b3JnOyBCZXNhciBXaWNha3Nvbm8NCj4gPiA+IDxid2ljYWtzb25vQG52aWRpYS5jb20+OyBsaW51
-eC1wZXJmLXVzZXJzQHZnZXIua2VybmVsLm9yZzsgbGludXgtDQo+ID4gPiBrZXJuZWxAdmdlci5r
-ZXJuZWwub3JnOyBDaHVuLVRzZSBTaGFvIDxjdHNoYW9AZ29vZ2xlLmNvbT4NCj4gPiA+IFN1Ympl
-Y3Q6IFtQQVRDSCAyLzJdIHBlcmYgamV2ZW50czogQWRkIE5WSURJQSBUZWdyYTQxMCB1bmNvcmUg
-UENJZQ0KPiA+ID4gbWV0cmljcw0KPiA+ID4NCj4gPiA+IEV4dGVybmFsIGVtYWlsOiBVc2UgY2F1
-dGlvbiBvcGVuaW5nIGxpbmtzIG9yIGF0dGFjaG1lbnRzDQo+ID4gPg0KPiA+ID4NCj4gPiA+IEFk
-ZCBQQ0llIGJhbmR3aWR0aCBtZXRyaWNzIGZvciB0aGUgTlZJRElBIFRlZ3JhNDEwIFNvQy4gVGhl
-IGZvcm11bGFzDQo+ID4gPiBmb2xsb3cgRG9jdW1lbnRhdGlvbi9hZG1pbi1ndWlkZS9wZXJmL252
-aWRpYS10ZWdyYTQxMC1wbXUucnN0Og0KPiA+ID4NCj4gPiA+ICAgQVZHX1JEX0JBTkRXSURUSF9J
-Tl9HQlBTID0gUkRfQllURVMgLyBFTEFQU0VEX1RJTUVfSU5fTlMNCj4gPiA+ICAgQVZHX1dSX0JB
-TkRXSURUSF9JTl9HQlBTID0gV1JfQllURVMgLyBFTEFQU0VEX1RJTUVfSU5fTlMNCj4gPiA+DQo+
-ID4gPiBUaGVyZSBpcyBvbmUgUENJRSBQTVUgcGVyIHNvY2tldCBhbmQgUENJZSBSb290IENvbXBs
-ZXggKFJDKSwgbmFtZWQNCj4gPiA+IG52aWRpYV9wY2llX3BtdV88c29ja2V0LWlkPl9yY188cGNp
-ZS1yYy1pZD4sIHdpdGggUkNzIDAgdG8gNSBpbiBlYWNoDQo+ID4gPiBzb2NrZXQuIFRoZSBtZXRy
-aWNzIHN1bSB0aGUgcmRfYnl0ZXMvd3JfYnl0ZXMgZXZlbnRzIG9mIGJvdGggc29ja2V0czoNCj4g
-PiA+DQo+ID4gPiAgIGxwbV9wY2llX2J3LCBscG1fcGNpZV9yZF9idywgbHBtX3BjaWVfd3JfYnc6
-IGFsbCBSQ3MuDQo+ID4gPiAgIGxwbV9wY2llX2J3XzxyYz4sIGxwbV9wY2llX3JkX2J3XzxyYz4s
-IGxwbV9wY2llX3dyX2J3XzxyYz46IG9uZQ0KPiBSQy4NCj4gPiA+ICAgbHBtX3BjaWVfbG9jX3Jk
-X2J3XzxyYz4sIGxwbV9wY2llX2xvY193cl9id188cmM+OiBvbmUgUkMgdG8gbG9jYWwNCj4gPiA+
-ICAgICBDTUVNLCBHTUVNLCBQQ0llIHBlZXIgYW5kIENYTCBtZW1vcnkuDQo+ID4gPiAgIGxwbV9w
-Y2llX3JlbV9yZF9id188cmM+LCBscG1fcGNpZV9yZW1fd3JfYndfPHJjPjogb25lIFJDIHRvDQo+
-IHJlbW90ZQ0KPiA+ID4gICAgIG1lbW9yeS4NCj4gPiA+DQo+ID4gPiBUaGUgcGVyIFJDIG1ldHJp
-Y3MgYXJlIGluIHRoZSBscG1fcGNpZV9yYzxyYz5fYncgbWV0cmljIGdyb3Vwcy4NCj4gPiA+DQo+
-ID4gPiBBIHNvY2tldCdzIGV2ZW50IGNvdW50cyBhcyAwIGlmIGl0cyBQTVUgaXNuJ3QgcHJlc2Vu
-dCAoaGFzX2V2ZW50KCkgaXMNCj4gPiA+IDApLCBlLmcuIG9uIGEgc2luZ2xlIHNvY2tldCBzeXN0
-ZW0sIG9yIGlmIGl0IGlzbid0IGNvdW50ZWQgaW4gdGhlDQo+ID4gPiBhZ2dyZWdhdGlvbiAoc291
-cmNlX2NvdW50KCkgaXMgMCksIGUuZy4gdGhlIG90aGVyIHNvY2tldCdzIGV2ZW50IHdpdGgNCj4g
-PiA+IC0tcGVyLXNvY2tldC4gT3RoZXJ3aXNlIHRoZSBtZXRyaWMgZmFpbHMgdG8gcGFyc2Ugb3Ig
-aXMgbmFuLg0KPiA+ID4NCj4gPiA+IFNpZ25lZC1vZmYtYnk6IENodW4tVHNlIFNoYW8gPGN0c2hh
-b0Bnb29nbGUuY29tPg0KPiA+ID4gQXNzaXN0ZWQtYnk6IEdlbWluaTpnZW1pbmktMy4xLXByby1w
-cmV2aWV3DQo+ID4gPiAtLS0NCj4gPiA+ICB0b29scy9wZXJmL3BtdS1ldmVudHMvYXJtNjRfbWV0
-cmljcy5weSB8IDY4DQo+ID4gPiArKysrKysrKysrKysrKysrKysrKysrKystLQ0KPiA+ID4gIDEg
-ZmlsZSBjaGFuZ2VkLCA2NCBpbnNlcnRpb25zKCspLCA0IGRlbGV0aW9ucygtKQ0KPiA+ID4NCj4g
-PiA+IGRpZmYgLS1naXQgYS90b29scy9wZXJmL3BtdS1ldmVudHMvYXJtNjRfbWV0cmljcy5weSBi
-L3Rvb2xzL3BlcmYvcG11LQ0KPiA+ID4gZXZlbnRzL2FybTY0X21ldHJpY3MucHkNCj4gPiA+IGlu
-ZGV4IGIwZDA2NTFmZWMxMi4uMWNhM2Q4ZGRiNGI3IDEwMDc1NQ0KPiA+ID4gLS0tIGEvdG9vbHMv
-cGVyZi9wbXUtZXZlbnRzL2FybTY0X21ldHJpY3MucHkNCj4gPiA+ICsrKyBiL3Rvb2xzL3BlcmYv
-cG11LWV2ZW50cy9hcm02NF9tZXRyaWNzLnB5DQo+ID4gPiBAQCAtMiw5ICsyLDEwIEBADQo+ID4g
-PiAgIyBTUERYLUxpY2Vuc2UtSWRlbnRpZmllcjogKExHUEwtMi4xIE9SIEJTRC0yLUNsYXVzZSkN
-Cj4gPiA+ICBpbXBvcnQgYXJncGFyc2UNCj4gPiA+ICBpbXBvcnQgb3MNCj4gPiA+IC1mcm9tIHR5
-cGluZyBpbXBvcnQgT3B0aW9uYWwNCj4gPiA+IC1mcm9tIG1ldHJpYyBpbXBvcnQgKGFnZ3JfbnIs
-IGRfcmF0aW8sIEV2ZW50LCBKc29uRW5jb2RlTWV0cmljLA0KPiA+ID4gLSAgICAgICAgICAgICAg
-ICAgICAgSnNvbkVuY29kZU1ldHJpY0dyb3VwRGVzY3JpcHRpb25zLCBMb2FkRXZlbnRzLCBNZXRy
-aWMsDQo+ID4gPiBNZXRyaWNHcm91cCkNCj4gPiA+ICtmcm9tIHR5cGluZyBpbXBvcnQgTGlzdCwg
-T3B0aW9uYWwsIFVuaW9uDQo+ID4gPiArZnJvbSBtZXRyaWMgaW1wb3J0IChhZ2dyX25yLCBkX3Jh
-dGlvLCBoYXNfZXZlbnQsIHNvdXJjZV9jb3VudCwgRXZlbnQsDQo+ID4gPiBFeHByZXNzaW9uLA0K
-PiA+ID4gKyAgICAgICAgICAgICAgICAgICAgSnNvbkVuY29kZU1ldHJpYywgSnNvbkVuY29kZU1l
-dHJpY0dyb3VwRGVzY3JpcHRpb25zLA0KPiA+ID4gTG9hZEV2ZW50cywgTWV0cmljLA0KPiA+ID4g
-KyAgICAgICAgICAgICAgICAgICAgTWV0cmljR3JvdXAsIFNlbGVjdCkNCj4gPiA+ICBmcm9tIGNv
-bW1vbl9tZXRyaWNzIGltcG9ydCBDeWNsZXMNCj4gPiA+DQo+ID4gPiAgIyBHbG9iYWwgY29tbWFu
-ZCBsaW5lIGFyZ3VtZW50cy4NCj4gPiA+IEBAIC02Nyw3ICs2OCw2NiBAQCBkZWYgTnZpZGlhVDQx
-MFVuY29yZSgpIC0+DQo+IE9wdGlvbmFsW01ldHJpY0dyb3VwXToNCj4gPiA+ICAgICAgICAgICAg
-ICAgICAgICAgcmRfY3VtX291dHMgLSByZF9jdW1fb3V0cywgIjFucyIpLA0KPiA+ID4gICAgICAg
-ICAgXSwgZGVzY3JpcHRpb249Ik5WSURJQSBUZWdyYTQxMCBERFIgbGF0ZW5jeSIpDQo+ID4gPg0K
-PiA+ID4gLSAgICByZXR1cm4gTWV0cmljR3JvdXAoImxwbV91bmNvcmUiLCBbRGRyQncoKSwgRGRy
-TGF0KCldLA0KPiA+ID4gKyAgICBkZWYgUGNpZUJ3KCkgLT4gTWV0cmljR3JvdXA6DQo+ID4gPiAr
-ICAgICAgICAjIFBDSUUgUE1VLCBvbmUgcGVyIHNvY2tldCBhbmQgUENJZSBSb290IENvbXBsZXgg
-KFJDKToNCj4gPiA+ICsgICAgICAgICMgQVZHX3tSRCxXUn1fQkFORFdJRFRIID0ge1JELFdSfV9C
-WVRFUyAvIEVMQVBTRURfVElNRQ0KPiA+ID4gKyAgICAgICAgbG9jX2RzdCA9DQo+ID4gPg0KPiAi
-ZHN0X2xvY19jbWVtPTB4MSxkc3RfbG9jX2dtZW09MHgxLGRzdF9sb2NfcGNpZV9wMnA9MHgxLGRz
-dF9sb2NfcGNpDQo+ID4gPiBlX2N4bD0weDEiDQo+ID4gPiArICAgICAgICByZW1fZHN0ID0gImRz
-dF9yZW09MHgxIg0KPiA+ID4gKw0KPiA+ID4gKyAgICAgICAgZGVmIFNvY2tldFN1bShyYzogc3Ry
-LCBldmVudDogc3RyKSAtPiBFeHByZXNzaW9uOg0KPiA+ID4gKyAgICAgICAgICAgICMgU3VtIHRo
-ZSBldmVudCBvdmVyIGJvdGggc29ja2V0cy4gQSBQTVUgY291bnRzIGFzIDAgaWYgaXQgaXNuJ3QN
-Cj4gPiA+ICsgICAgICAgICAgICAjIHByZXNlbnQgKGhhc19ldmVudCgpIGlzIDApIG9yIGlzbid0
-IGNvdW50ZWQgaW4gdGhlIGFnZ3JlZ2F0aW9uLA0KPiA+ID4gKyAgICAgICAgICAgICMgZS5nLiB0
-aGUgb3RoZXIgc29ja2V0IHdpdGggLS1wZXItc29ja2V0IChzb3VyY2VfY291bnQoKSBpcyAwKS4N
-Cj4gPiA+ICsgICAgICAgICAgICBkZWYgQ291bnQoZTogRXZlbnQpIC0+IEV4cHJlc3Npb246DQo+
-ID4gPiArICAgICAgICAgICAgICAgIHJldHVybiBTZWxlY3QoU2VsZWN0KGUsIHNvdXJjZV9jb3Vu
-dChlKSwgMCksIGhhc19ldmVudChlKSwgMCkNCj4gPiA+ICsNCj4gPiA+ICsgICAgICAgICAgICBy
-ZXR1cm4gKENvdW50KEV2ZW50KGYibnZpZGlhX3BjaWVfcG11XzBfe3JjfS97ZXZlbnR9LyIpKSAr
-DQo+ID4gPiArICAgICAgICAgICAgICAgICAgICBDb3VudChFdmVudChmIm52aWRpYV9wY2llX3Bt
-dV8xX3tyY30ve2V2ZW50fS8iKSkpDQo+ID4gPiArDQo+ID4gPiArICAgICAgICAjIG52aWRpYV9w
-Y2llX3BtdV88c29ja2V0LWlkPl9yYyBtYXRjaGVzIHRoZSBQTVVzIG9mIGFsbCBSQ3MgaW4NCj4g
-dGhlDQo+ID4gPiBzb2NrZXQuDQo+ID4gPiArICAgICAgICByZCA9IFNvY2tldFN1bSgicmMiLCAi
-cmRfYnl0ZXMiKQ0KPiA+ID4gKyAgICAgICAgd3IgPSBTb2NrZXRTdW0oInJjIiwgIndyX2J5dGVz
-IikNCj4gPiA+ICsgICAgICAgIG1ldHJpY3M6IExpc3RbVW5pb25bTWV0cmljLCBNZXRyaWNHcm91
-cF1dID0gWw0KPiA+ID4gKyAgICAgICAgICAgIE1ldHJpYygibHBtX3BjaWVfYnciLCAiVG90YWwg
-UENJZSBiYW5kd2lkdGggYWNyb3NzIGFsbCBSb290DQo+ID4gPiBDb21wbGV4ZXMiLA0KPiA+ID4g
-KyAgICAgICAgICAgICAgICAgICBkX3JhdGlvKHJkICsgd3IsIGludGVydmFsX3NlYyksIG1iX3Bl
-cl9zZWMpLA0KPiA+ID4gKyAgICAgICAgICAgIE1ldHJpYygibHBtX3BjaWVfcmRfYnciLCAiVG90
-YWwgUENJZSByZWFkIGJhbmR3aWR0aCBhY3Jvc3MgYWxsDQo+ID4gPiBSb290IENvbXBsZXhlcyIs
-DQo+ID4gPiArICAgICAgICAgICAgICAgICAgIGRfcmF0aW8ocmQsIGludGVydmFsX3NlYyksIG1i
-X3Blcl9zZWMpLA0KPiA+ID4gKyAgICAgICAgICAgIE1ldHJpYygibHBtX3BjaWVfd3JfYnciLCAi
-VG90YWwgUENJZSB3cml0ZSBiYW5kd2lkdGggYWNyb3NzIGFsbA0KPiA+ID4gUm9vdCBDb21wbGV4
-ZXMiLA0KPiA+ID4gKyAgICAgICAgICAgICAgICAgICBkX3JhdGlvKHdyLCBpbnRlcnZhbF9zZWMp
-LCBtYl9wZXJfc2VjKSwNCj4gPiA+ICsgICAgICAgIF0NCj4gPiA+ICsgICAgICAgIGZvciBpIGlu
-IHJhbmdlKDYpOg0KPiA+ID4gKyAgICAgICAgICAgIHJjID0gZiJyY197aX0iDQo+ID4gPiArICAg
-ICAgICAgICAgcmNfcmQgPSBTb2NrZXRTdW0ocmMsICJyZF9ieXRlcyIpDQo+ID4gPiArICAgICAg
-ICAgICAgcmNfd3IgPSBTb2NrZXRTdW0ocmMsICJ3cl9ieXRlcyIpDQo+ID4gPiArICAgICAgICAg
-ICAgbG9jX3JkID0gU29ja2V0U3VtKHJjLCBmInJkX2J5dGVzLHtsb2NfZHN0fSIpDQo+ID4gPiAr
-ICAgICAgICAgICAgbG9jX3dyID0gU29ja2V0U3VtKHJjLCBmIndyX2J5dGVzLHtsb2NfZHN0fSIp
-DQo+ID4gPiArICAgICAgICAgICAgcmVtX3JkID0gU29ja2V0U3VtKHJjLCBmInJkX2J5dGVzLHty
-ZW1fZHN0fSIpDQo+ID4gPiArICAgICAgICAgICAgcmVtX3dyID0gU29ja2V0U3VtKHJjLCBmIndy
-X2J5dGVzLHtyZW1fZHN0fSIpDQo+ID4gPiArICAgICAgICAgICAgbWV0cmljcy5hcHBlbmQoTWV0
-cmljR3JvdXAoZiJscG1fcGNpZV9yY3tpfV9idyIsIFsNCj4gPiA+ICsgICAgICAgICAgICAgICAg
-TWV0cmljKGYibHBtX3BjaWVfYndfe2l9IiwgZiJQQ0llIHRvdGFsIGJhbmR3aWR0aCBvbiBSb290
-DQo+ID4gPiBDb21wbGV4IHtpfSIsDQo+ID4gPiArICAgICAgICAgICAgICAgICAgICAgICBkX3Jh
-dGlvKHJjX3JkICsgcmNfd3IsIGludGVydmFsX3NlYyksIG1iX3Blcl9zZWMpLA0KPiA+ID4gKyAg
-ICAgICAgICAgICAgICBNZXRyaWMoZiJscG1fcGNpZV9yZF9id197aX0iLCBmIlBDSWUgcmVhZCBi
-YW5kd2lkdGggb24gUm9vdA0KPiA+ID4gQ29tcGxleCB7aX0iLA0KPiA+ID4gKyAgICAgICAgICAg
-ICAgICAgICAgICAgZF9yYXRpbyhyY19yZCwgaW50ZXJ2YWxfc2VjKSwgbWJfcGVyX3NlYyksDQo+
-ID4gPiArICAgICAgICAgICAgICAgIE1ldHJpYyhmImxwbV9wY2llX3dyX2J3X3tpfSIsIGYiUENJ
-ZSB3cml0ZSBiYW5kd2lkdGggb24NCj4gUm9vdA0KPiA+ID4gQ29tcGxleCB7aX0iLA0KPiA+ID4g
-KyAgICAgICAgICAgICAgICAgICAgICAgZF9yYXRpbyhyY193ciwgaW50ZXJ2YWxfc2VjKSwgbWJf
-cGVyX3NlYyksDQo+ID4gPiArICAgICAgICAgICAgICAgIE1ldHJpYyhmImxwbV9wY2llX2xvY19y
-ZF9id197aX0iLA0KPiA+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgZiJQQ0llIGxvY2FsIHJl
-YWQgYmFuZHdpZHRoIG9uIFJvb3QgQ29tcGxleCB7aX0iLA0KPiA+ID4gKyAgICAgICAgICAgICAg
-ICAgICAgICAgZF9yYXRpbyhsb2NfcmQsIGludGVydmFsX3NlYyksIG1iX3Blcl9zZWMpLA0KPiA+
-ID4gKyAgICAgICAgICAgICAgICBNZXRyaWMoZiJscG1fcGNpZV9sb2Nfd3JfYndfe2l9IiwNCj4g
-PiA+ICsgICAgICAgICAgICAgICAgICAgICAgIGYiUENJZSBsb2NhbCB3cml0ZSBiYW5kd2lkdGgg
-b24gUm9vdCBDb21wbGV4IHtpfSIsDQo+ID4gPiArICAgICAgICAgICAgICAgICAgICAgICBkX3Jh
-dGlvKGxvY193ciwgaW50ZXJ2YWxfc2VjKSwgbWJfcGVyX3NlYyksDQo+ID4gPiArICAgICAgICAg
-ICAgICAgIE1ldHJpYyhmImxwbV9wY2llX3JlbV9yZF9id197aX0iLA0KPiA+ID4gKyAgICAgICAg
-ICAgICAgICAgICAgICAgZiJQQ0llIHJlbW90ZSByZWFkIGJhbmR3aWR0aCBvbiBSb290IENvbXBs
-ZXgge2l9IiwNCj4gPiA+ICsgICAgICAgICAgICAgICAgICAgICAgIGRfcmF0aW8ocmVtX3JkLCBp
-bnRlcnZhbF9zZWMpLCBtYl9wZXJfc2VjKSwNCj4gPiA+ICsgICAgICAgICAgICAgICAgTWV0cmlj
-KGYibHBtX3BjaWVfcmVtX3dyX2J3X3tpfSIsDQo+ID4gPiArICAgICAgICAgICAgICAgICAgICAg
-ICBmIlBDSWUgcmVtb3RlIHdyaXRlIGJhbmR3aWR0aCBvbiBSb290IENvbXBsZXgge2l9IiwNCj4g
-PiA+ICsgICAgICAgICAgICAgICAgICAgICAgIGRfcmF0aW8ocmVtX3dyLCBpbnRlcnZhbF9zZWMp
-LCBtYl9wZXJfc2VjKSwNCj4gPiA+ICsgICAgICAgICAgICBdLCBkZXNjcmlwdGlvbj1mIlBDSWUg
-YmFuZHdpZHRoIG9uIFJvb3QgQ29tcGxleCB7aX0iKSkNCj4gPiA+ICsNCj4gPiA+ICsgICAgICAg
-IHJldHVybiBNZXRyaWNHcm91cCgibHBtX3BjaWVfYnciLCBtZXRyaWNzLA0KPiA+ID4gKyAgICAg
-ICAgICAgICAgICAgICAgICAgICAgIGRlc2NyaXB0aW9uPSJOVklESUEgVGVncmE0MTAgUENJZSBS
-b290IENvbXBsZXgNCj4gPiA+IGJhbmR3aWR0aCIpDQo+ID4gPiArDQo+ID4gPiArICAgIHJldHVy
-biBNZXRyaWNHcm91cCgibHBtX3VuY29yZSIsIFtEZHJCdygpLCBEZHJMYXQoKSwgUGNpZUJ3KCld
-LA0KPiA+ID4gICAgICAgICAgICAgICAgICAgICAgICAgZGVzY3JpcHRpb249Ik5WSURJQSBUZWdy
-YTQxMCB1bmNvcmUgbWV0cmljcyIpDQo+ID4gPg0KPiA+ID4NCj4gPiA+IC0tDQo+ID4gPiAyLjU2
-LjAucmMxLjMxNS5nYzZlZDk5MzRiNy1nb29nDQo+ID4NCg==
+Hi Besar,
+
+Thanks for the series. I tested this on a 2-socket Tegra410. With
+--metric-only, each PCIe metric shows up once per socket, with `nan`
+("none" with -j) in the other socket's column, so -j has the same key
+twice in each row. "counters" is also 0 for socket 1, because it comes
+from the first event, which belongs to socket 0:
+
+```
+$ perf stat -a --per-socket -M pcie_avg_wr_bandwidth_to_all_dst -j
+--metric-only -- sleep 1
+{"socket" : "S268435456", "counters" : 6, "MB/s
+pcie_avg_wr_bandwidth_to_all_dst" : "0.1", "MB/s
+pcie_avg_wr_bandwidth_to_all_dst" : "none"}
+{"socket" : "S285212672", "counters" : 0, "MB/s
+pcie_avg_wr_bandwidth_to_all_dst" : "none", "MB/s
+pcie_avg_wr_bandwidth_to_all_dst" : "0.9"}
+```
+
+As in [1], a single PMU per RC with cpumask `0,88`, or the socket last
+in the PMU name, would fix this.
+
+[1] https://lore.kernel.org/linux-perf-users/CAJpZYjWLRiyNbzoGpA-2KE0zHgQn2=
+gc0V943WxJEr5K5aZtRYA@mail.gmail.com/
+
+Thanks,
+CT
+
+On Mon, Oct 19, 2026 at 9:45=E2=80=AFAM Besar Wicaksono <bwicaksono@nvidia.=
+com> wrote:
+>
+> Add alias support for NVIDIA Tegra410 PCIE PMU events and metrics.
+>
+> Signed-off-by: Besar Wicaksono <bwicaksono@nvidia.com>
+> ---
+>  .../arm64/nvidia/t410/sys/uncore-pcie.json    | 247 ++++++++++++++++++
+>  1 file changed, 247 insertions(+)
+>  create mode 100644 tools/perf/pmu-events/arch/arm64/nvidia/t410/sys/unco=
+re-pcie.json
+>
+> diff --git a/tools/perf/pmu-events/arch/arm64/nvidia/t410/sys/uncore-pcie=
+.json b/tools/perf/pmu-events/arch/arm64/nvidia/t410/sys/uncore-pcie.json
+> new file mode 100644
+> index 000000000000..37c3eac305e5
+> --- /dev/null
+> +++ b/tools/perf/pmu-events/arch/arm64/nvidia/t410/sys/uncore-pcie.json
+> @@ -0,0 +1,247 @@
+> +[
+> +    {
+> +        "EventCode": "0x100000000",
+> +        "EventName": "PCIE_CYCLES",
+> +        "BriefDescription": "Counts cycles at the PCIe interface to the =
+Tegra SoC data fabric.",
+> +        "PublicDescription": "Counts cycles at the PCIe interface to the=
+ Tegra SoC data fabric.",
+> +        "Compat": "1030136b",
+> +        "Unit": "nvidia_pcie_pmu_,rc_"
+> +    },
+> +    {
+> +        "EventCode": "0x2",
+> +        "EventName": "PCIE_RD_REQ",
+> +        "BriefDescription": "Counts read requests from PCIe devices unde=
+r this PCIe root complex to memory or another PCIe device.",
+> +        "PublicDescription": "Counts read requests from PCIe devices und=
+er this PCIe root complex to memory or another PCIe device, where the targe=
+t responds with data. Request size can be from 1 to 256 bytes. Filters: src=
+_rp_mask selects the requesting root ports. Alternatively, src_bdf with src=
+_bdf_en selects one requesting device (BDF); it cannot be combined with src=
+_rp_mask and applies to all counters of this PMU. Destination filters selec=
+t the memory type of the request address: dst_loc_cmem local CMEM, dst_loc_=
+gmem local GMEM, dst_loc_pcie_p2p local PCIe peer addresses, dst_loc_pcie_c=
+xl local CXL memory, dst_rem remote memory. This is the address's home type=
+, not where the data currently resides; local or remote is determined by th=
+e home socket of the address. An unset source filter counts all root ports;=
+ an unset destination filter counts all destinations.",
+> +        "Compat": "1030136b",
+> +        "Unit": "nvidia_pcie_pmu_,rc_"
+> +    },
+> +    {
+> +        "EventCode": "0x3",
+> +        "EventName": "PCIE_WR_REQ",
+> +        "BriefDescription": "Counts write requests from PCIe devices und=
+er this PCIe root complex to memory or another PCIe device.",
+> +        "PublicDescription": "Counts write requests from PCIe devices un=
+der this PCIe root complex to memory or another PCIe device, where the PCIe=
+ device sends data. Request size can be from 1 to 256 bytes. Filters: src_r=
+p_mask selects the requesting root ports. Alternatively, src_bdf with src_b=
+df_en selects one requesting device (BDF); it cannot be combined with src_r=
+p_mask and applies to all counters of this PMU. Destination filters select =
+the memory type of the request address: dst_loc_cmem local CMEM, dst_loc_gm=
+em local GMEM, dst_loc_pcie_p2p local PCIe peer addresses, dst_loc_pcie_cxl=
+ local CXL memory, dst_rem remote memory. This is the address's home type, =
+not where the data currently resides; local or remote is determined by the =
+home socket of the address. An unset source filter counts all root ports; a=
+n unset destination filter counts all destinations.",
+> +        "Compat": "1030136b",
+> +        "Unit": "nvidia_pcie_pmu_,rc_"
+> +    },
+> +    {
+> +        "EventCode": "0x0",
+> +        "EventName": "PCIE_RD_BYTES",
+> +        "BriefDescription": "Counts bytes transferred by the read reques=
+ts counted by PCIE_RD_REQ.",
+> +        "PublicDescription": "Counts bytes transferred by the read reque=
+sts counted by PCIE_RD_REQ. Source and destination filters work as describe=
+d for PCIE_RD_REQ.",
+> +        "Compat": "1030136b",
+> +        "Unit": "nvidia_pcie_pmu_,rc_"
+> +    },
+> +    {
+> +        "EventCode": "0x1",
+> +        "EventName": "PCIE_WR_BYTES",
+> +        "BriefDescription": "Counts bytes transferred by the write reque=
+sts counted by PCIE_WR_REQ.",
+> +        "PublicDescription": "Counts bytes transferred by the write requ=
+ests counted by PCIE_WR_REQ. Source and destination filters work as describ=
+ed for PCIE_WR_REQ.",
+> +        "Compat": "1030136b",
+> +        "Unit": "nvidia_pcie_pmu_,rc_"
+> +    },
+> +    {
+> +        "EventCode": "0x4",
+> +        "EventName": "PCIE_RD_CUM_OUTS",
+> +        "BriefDescription": "Accumulates the outstanding read requests c=
+ounted by PCIE_RD_REQ each cycle at the PCIe interface.",
+> +        "PublicDescription": "Accumulates the outstanding read requests =
+counted by PCIE_RD_REQ each cycle at the PCIe interface. Pair the two under=
+ the same filters for the average read latency. Source and destination filt=
+ers work as described for PCIE_RD_REQ.",
+> +        "Compat": "1030136b",
+> +        "Unit": "nvidia_pcie_pmu_,rc_"
+> +    },
+> +    {
+> +        "MetricName": "pcie_freq",
+> +        "MetricGroup": "PCIE_Frequency;PCIE_Read_Latency",
+> +        "MetricConstraint": "NO_GROUP_EVENTS",
+> +        "MetricExpr": "(PCIE_CYCLES / aggr_nr(PCIE_CYCLES)) / 1e9 / dura=
+tion_time",
+> +        "ScaleUnit": "1GHz",
+> +        "BriefDescription": "Frequency of the cycles at the PCIe interfa=
+ce to the Tegra SoC data fabric.",
+> +        "PublicDescription": "Average frequency of the cycles at the PCI=
+e interface to the Tegra SoC data fabric over the measurement interval.",
+> +        "Compat": "1030136b",
+> +        "Unit": "nvidia_pcie_pmu_,rc_"
+> +    },
+> +    {
+> +        "MetricName": "pcie_avg_rd_bandwidth_to_all_dst",
+> +        "MetricGroup": "PCIE_Bandwidth;PCIE_To_All_Destinations",
+> +        "MetricExpr": "PCIE_RD_BYTES@dst_loc_cmem=3D1,dst_loc_gmem=3D1,d=
+st_loc_pcie_p2p=3D1,dst_loc_pcie_cxl=3D1,dst_rem=3D1@ / 1e6 / duration_time=
+",
+> +        "ScaleUnit": "1MB/s",
+> +        "BriefDescription": "Average read bandwidth from PCIe devices un=
+der this PCIe root complex to all destinations.",
+> +        "PublicDescription": "Average read bandwidth of requests from al=
+l PCIe devices under this PCIe root complex to all destinations: local CMEM=
+, local GMEM, local PCIe peer addresses, local CXL memory and remote memory=
+.",
+> +        "Compat": "1030136b",
+> +        "Unit": "nvidia_pcie_pmu_,rc_"
+> +    },
+> +    {
+> +        "MetricName": "pcie_avg_wr_bandwidth_to_all_dst",
+> +        "MetricGroup": "PCIE_Bandwidth;PCIE_To_All_Destinations",
+> +        "MetricExpr": "PCIE_WR_BYTES@dst_loc_cmem=3D1,dst_loc_gmem=3D1,d=
+st_loc_pcie_p2p=3D1,dst_loc_pcie_cxl=3D1,dst_rem=3D1@ / 1e6 / duration_time=
+",
+> +        "ScaleUnit": "1MB/s",
+> +        "BriefDescription": "Average write bandwidth from PCIe devices u=
+nder this PCIe root complex to all destinations.",
+> +        "PublicDescription": "Average write bandwidth of requests from a=
+ll PCIe devices under this PCIe root complex to all destinations: local CME=
+M, local GMEM, local PCIe peer addresses, local CXL memory and remote memor=
+y.",
+> +        "Compat": "1030136b",
+> +        "Unit": "nvidia_pcie_pmu_,rc_"
+> +    },
+> +    {
+> +        "MetricName": "pcie_avg_rd_latency_to_all_dst",
+> +        "MetricGroup": "PCIE_Read_Latency;PCIE_To_All_Destinations",
+> +        "MetricConstraint": "NO_GROUP_EVENTS",
+> +        "MetricExpr": "(PCIE_RD_CUM_OUTS@dst_loc_cmem=3D1,dst_loc_gmem=
+=3D1,dst_loc_pcie_p2p=3D1,dst_loc_pcie_cxl=3D1,dst_rem=3D1@ / PCIE_RD_REQ@d=
+st_loc_cmem=3D1,dst_loc_gmem=3D1,dst_loc_pcie_p2p=3D1,dst_loc_pcie_cxl=3D1,=
+dst_rem=3D1@) / pcie_freq",
+> +        "ScaleUnit": "1ns/request",
+> +        "BriefDescription": "Average read latency from PCIe devices unde=
+r this PCIe root complex to all destinations.",
+> +        "PublicDescription": "Average latency of read requests from all =
+PCIe devices under this PCIe root complex to all destinations: local CMEM, =
+local GMEM, local PCIe peer addresses, local CXL memory and remote memory."=
+,
+> +        "Compat": "1030136b",
+> +        "Unit": "nvidia_pcie_pmu_,rc_"
+> +    },
+> +    {
+> +        "MetricName": "pcie_avg_rd_bandwidth_to_local_cmem",
+> +        "MetricGroup": "PCIE_Bandwidth;PCIE_Read;PCIE_To_Local_CMEM",
+> +        "MetricExpr": "PCIE_RD_BYTES@dst_loc_cmem=3D1@ / 1e6 / duration_=
+time",
+> +        "ScaleUnit": "1MB/s",
+> +        "BriefDescription": "Average read bandwidth from PCIe devices un=
+der this PCIe root complex to local CMEM.",
+> +        "PublicDescription": "Average read bandwidth of requests from al=
+l PCIe devices under this PCIe root complex to local CMEM.",
+> +        "Compat": "1030136b",
+> +        "Unit": "nvidia_pcie_pmu_,rc_"
+> +    },
+> +    {
+> +        "MetricName": "pcie_avg_wr_bandwidth_to_local_cmem",
+> +        "MetricGroup": "PCIE_Bandwidth;PCIE_Write;PCIE_To_Local_CMEM",
+> +        "MetricExpr": "PCIE_WR_BYTES@dst_loc_cmem=3D1@ / 1e6 / duration_=
+time",
+> +        "ScaleUnit": "1MB/s",
+> +        "BriefDescription": "Average write bandwidth from PCIe devices u=
+nder this PCIe root complex to local CMEM.",
+> +        "PublicDescription": "Average write bandwidth of requests from a=
+ll PCIe devices under this PCIe root complex to local CMEM.",
+> +        "Compat": "1030136b",
+> +        "Unit": "nvidia_pcie_pmu_,rc_"
+> +    },
+> +    {
+> +        "MetricName": "pcie_avg_rd_latency_to_local_cmem",
+> +        "MetricGroup": "PCIE_Read_Latency;PCIE_Read;PCIE_To_Local_CMEM",
+> +        "MetricConstraint": "NO_GROUP_EVENTS",
+> +        "MetricExpr": "(PCIE_RD_CUM_OUTS@dst_loc_cmem=3D1@ / PCIE_RD_REQ=
+@dst_loc_cmem=3D1@) / pcie_freq",
+> +        "ScaleUnit": "1ns/request",
+> +        "BriefDescription": "Average read latency from PCIe devices unde=
+r this PCIe root complex to local CMEM.",
+> +        "PublicDescription": "Average latency of read requests from all =
+PCIe devices under this PCIe root complex to local CMEM.",
+> +        "Compat": "1030136b",
+> +        "Unit": "nvidia_pcie_pmu_,rc_"
+> +    },
+> +    {
+> +        "MetricName": "pcie_avg_rd_bandwidth_to_local_gmem",
+> +        "MetricGroup": "PCIE_Bandwidth;PCIE_Read;PCIE_To_Local_GMEM",
+> +        "MetricExpr": "PCIE_RD_BYTES@dst_loc_gmem=3D1@ / 1e6 / duration_=
+time",
+> +        "ScaleUnit": "1MB/s",
+> +        "BriefDescription": "Average read bandwidth from PCIe devices un=
+der this PCIe root complex to local GMEM.",
+> +        "PublicDescription": "Average read bandwidth of requests from al=
+l PCIe devices under this PCIe root complex to local GMEM.",
+> +        "Compat": "1030136b",
+> +        "Unit": "nvidia_pcie_pmu_,rc_"
+> +    },
+> +    {
+> +        "MetricName": "pcie_avg_wr_bandwidth_to_local_gmem",
+> +        "MetricGroup": "PCIE_Bandwidth;PCIE_Write;PCIE_To_Local_GMEM",
+> +        "MetricExpr": "PCIE_WR_BYTES@dst_loc_gmem=3D1@ / 1e6 / duration_=
+time",
+> +        "ScaleUnit": "1MB/s",
+> +        "BriefDescription": "Average write bandwidth from PCIe devices u=
+nder this PCIe root complex to local GMEM.",
+> +        "PublicDescription": "Average write bandwidth of requests from a=
+ll PCIe devices under this PCIe root complex to local GMEM.",
+> +        "Compat": "1030136b",
+> +        "Unit": "nvidia_pcie_pmu_,rc_"
+> +    },
+> +    {
+> +        "MetricName": "pcie_avg_rd_latency_to_local_gmem",
+> +        "MetricGroup": "PCIE_Read_Latency;PCIE_Read;PCIE_To_Local_GMEM",
+> +        "MetricConstraint": "NO_GROUP_EVENTS",
+> +        "MetricExpr": "(PCIE_RD_CUM_OUTS@dst_loc_gmem=3D1@ / PCIE_RD_REQ=
+@dst_loc_gmem=3D1@) / pcie_freq",
+> +        "ScaleUnit": "1ns/request",
+> +        "BriefDescription": "Average read latency from PCIe devices unde=
+r this PCIe root complex to local GMEM.",
+> +        "PublicDescription": "Average latency of read requests from all =
+PCIe devices under this PCIe root complex to local GMEM.",
+> +        "Compat": "1030136b",
+> +        "Unit": "nvidia_pcie_pmu_,rc_"
+> +    },
+> +    {
+> +        "MetricName": "pcie_avg_rd_bandwidth_to_local_cxlmem",
+> +        "MetricGroup": "PCIE_Bandwidth;PCIE_Read;PCIE_To_Local_CXLMEM",
+> +        "MetricExpr": "PCIE_RD_BYTES@dst_loc_pcie_cxl=3D1@ / 1e6 / durat=
+ion_time",
+> +        "ScaleUnit": "1MB/s",
+> +        "BriefDescription": "Average read bandwidth from PCIe devices un=
+der this PCIe root complex to local CXL memory.",
+> +        "PublicDescription": "Average read bandwidth of requests from al=
+l PCIe devices under this PCIe root complex to local CXL memory.",
+> +        "Compat": "1030136b",
+> +        "Unit": "nvidia_pcie_pmu_,rc_"
+> +    },
+> +    {
+> +        "MetricName": "pcie_avg_wr_bandwidth_to_local_cxlmem",
+> +        "MetricGroup": "PCIE_Bandwidth;PCIE_Write;PCIE_To_Local_CXLMEM",
+> +        "MetricExpr": "PCIE_WR_BYTES@dst_loc_pcie_cxl=3D1@ / 1e6 / durat=
+ion_time",
+> +        "ScaleUnit": "1MB/s",
+> +        "BriefDescription": "Average write bandwidth from PCIe devices u=
+nder this PCIe root complex to local CXL memory.",
+> +        "PublicDescription": "Average write bandwidth of requests from a=
+ll PCIe devices under this PCIe root complex to local CXL memory.",
+> +        "Compat": "1030136b",
+> +        "Unit": "nvidia_pcie_pmu_,rc_"
+> +    },
+> +    {
+> +        "MetricName": "pcie_avg_rd_latency_to_local_cxlmem",
+> +        "MetricGroup": "PCIE_Read_Latency;PCIE_Read;PCIE_To_Local_CXLMEM=
+",
+> +        "MetricConstraint": "NO_GROUP_EVENTS",
+> +        "MetricExpr": "(PCIE_RD_CUM_OUTS@dst_loc_pcie_cxl=3D1@ / PCIE_RD=
+_REQ@dst_loc_pcie_cxl=3D1@) / pcie_freq",
+> +        "ScaleUnit": "1ns/request",
+> +        "BriefDescription": "Average read latency from PCIe devices unde=
+r this PCIe root complex to local CXL memory.",
+> +        "PublicDescription": "Average latency of read requests from all =
+PCIe devices under this PCIe root complex to local CXL memory.",
+> +        "Compat": "1030136b",
+> +        "Unit": "nvidia_pcie_pmu_,rc_"
+> +    },
+> +    {
+> +        "MetricName": "pcie_avg_rd_bandwidth_to_remote_mem",
+> +        "MetricGroup": "PCIE_Bandwidth;PCIE_Read;PCIE_To_Remote_Memory",
+> +        "MetricExpr": "PCIE_RD_BYTES@dst_rem=3D1@ / 1e6 / duration_time"=
+,
+> +        "ScaleUnit": "1MB/s",
+> +        "BriefDescription": "Average read bandwidth from PCIe devices un=
+der this PCIe root complex to remote memory.",
+> +        "PublicDescription": "Average read bandwidth of requests from al=
+l PCIe devices under this PCIe root complex to remote memory.",
+> +        "Compat": "1030136b",
+> +        "Unit": "nvidia_pcie_pmu_,rc_"
+> +    },
+> +    {
+> +        "MetricName": "pcie_avg_wr_bandwidth_to_remote_mem",
+> +        "MetricGroup": "PCIE_Bandwidth;PCIE_Write;PCIE_To_Remote_Memory"=
+,
+> +        "MetricExpr": "PCIE_WR_BYTES@dst_rem=3D1@ / 1e6 / duration_time"=
+,
+> +        "ScaleUnit": "1MB/s",
+> +        "BriefDescription": "Average write bandwidth from PCIe devices u=
+nder this PCIe root complex to remote memory.",
+> +        "PublicDescription": "Average write bandwidth of requests from a=
+ll PCIe devices under this PCIe root complex to remote memory.",
+> +        "Compat": "1030136b",
+> +        "Unit": "nvidia_pcie_pmu_,rc_"
+> +    },
+> +    {
+> +        "MetricName": "pcie_avg_rd_latency_to_remote_mem",
+> +        "MetricGroup": "PCIE_Read_Latency;PCIE_Read;PCIE_To_Remote_Memor=
+y",
+> +        "MetricConstraint": "NO_GROUP_EVENTS",
+> +        "MetricExpr": "(PCIE_RD_CUM_OUTS@dst_rem=3D1@ / PCIE_RD_REQ@dst_=
+rem=3D1@) / pcie_freq",
+> +        "ScaleUnit": "1ns/request",
+> +        "BriefDescription": "Average read latency from PCIe devices unde=
+r this PCIe root complex to remote memory.",
+> +        "PublicDescription": "Average latency of read requests from all =
+PCIe devices under this PCIe root complex to remote memory.",
+> +        "Compat": "1030136b",
+> +        "Unit": "nvidia_pcie_pmu_,rc_"
+> +    },
+> +    {
+> +        "MetricName": "pcie_avg_rd_bandwidth_to_local_pcie_peer",
+> +        "MetricGroup": "PCIE_Bandwidth;PCIE_Read;PCIE_To_Local_PCIE_Peer=
+",
+> +        "MetricExpr": "PCIE_RD_BYTES@dst_loc_pcie_p2p=3D1@ / 1e6 / durat=
+ion_time",
+> +        "ScaleUnit": "1MB/s",
+> +        "BriefDescription": "Average read bandwidth from PCIe devices un=
+der this PCIe root complex to local PCIe peer addresses.",
+> +        "PublicDescription": "Average read bandwidth of requests from al=
+l PCIe devices under this PCIe root complex to local PCIe peer addresses.",
+> +        "Compat": "1030136b",
+> +        "Unit": "nvidia_pcie_pmu_,rc_"
+> +    },
+> +    {
+> +        "MetricName": "pcie_avg_wr_bandwidth_to_local_pcie_peer",
+> +        "MetricGroup": "PCIE_Bandwidth;PCIE_Write;PCIE_To_Local_PCIE_Pee=
+r",
+> +        "MetricExpr": "PCIE_WR_BYTES@dst_loc_pcie_p2p=3D1@ / 1e6 / durat=
+ion_time",
+> +        "ScaleUnit": "1MB/s",
+> +        "BriefDescription": "Average write bandwidth from PCIe devices u=
+nder this PCIe root complex to local PCIe peer addresses.",
+> +        "PublicDescription": "Average write bandwidth of requests from a=
+ll PCIe devices under this PCIe root complex to local PCIe peer addresses."=
+,
+> +        "Compat": "1030136b",
+> +        "Unit": "nvidia_pcie_pmu_,rc_"
+> +    },
+> +    {
+> +        "MetricName": "pcie_avg_rd_latency_to_local_pcie_peer",
+> +        "MetricGroup": "PCIE_Read_Latency;PCIE_Read;PCIE_To_Local_PCIE_P=
+eer",
+> +        "MetricConstraint": "NO_GROUP_EVENTS",
+> +        "MetricExpr": "(PCIE_RD_CUM_OUTS@dst_loc_pcie_p2p=3D1@ / PCIE_RD=
+_REQ@dst_loc_pcie_p2p=3D1@) / pcie_freq",
+> +        "ScaleUnit": "1ns/request",
+> +        "BriefDescription": "Average read latency from PCIe devices unde=
+r this PCIe root complex to local PCIe peer addresses.",
+> +        "PublicDescription": "Average latency of read requests from all =
+PCIe devices under this PCIe root complex to local PCIe peer addresses.",
+> +        "Compat": "1030136b",
+> +        "Unit": "nvidia_pcie_pmu_,rc_"
+> +    }
+> +]
+> --
+> 2.43.0
+>
