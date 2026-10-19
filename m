@@ -1,61 +1,59 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05670339388
-	for <linux-perf-users@vger.kernel.org>; Mon, 19 Oct 2026 05:57:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 600DC339388
+	for <linux-perf-users@vger.kernel.org>; Mon, 19 Oct 2026 05:57:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792389432; cv=none; b=f4QTYe2zRkJi8X4YD/oSUnxlbJ6ZIjqCluSgGIHOFgF/MZurNWCU6dCeKZgGV6AITC+9VzN9B/VF3Mbf++NFjBLak2wUwoVIj688EDsEHuxaFUDJUDsieYG7t2VQw6XkJO92NqQRjzlLr6EBnFoQ8Pwus8YGaID5iwFmOLndsoU=
+	t=1792389438; cv=none; b=K937ucqeYT64xnjpXoKFSFGG06iVMi5Nscfe4gsihzvmW2L/4Y8EYnZFRjibVytwkw25KdGXl5UmvD3TCNpvG8P/P6NTOQQwg8CTIZgV0xHFbucuF4ge17beeU2hfQ1msbiyyVFlvSIH1THVeGaNZoEMxw4l5pIiPe9p1yRTztM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792389432; c=relaxed/simple;
-	bh=aMupW+meOb9f6N063TqI2vtCXR2nWJ3GkqgPJ8NftvU=;
+	s=arc-20240116; t=1792389438; c=relaxed/simple;
+	bh=FvXLdB6G0GN6kc6gadDMFdxk6HPc/i/YhmIJ61Xx0CM=;
 	h=Message-ID:From:Subject:To:Cc:In-Reply-To:References:Content-Type:
-	 Date; b=oD9me/TvSQ6DP5Eay/OmzKDA6oje0psLvtu/ZB04Leu/wafPjEXK0DIjrFDRsdyR8k9A5Pscrgz0gsnbC/RRnAjRob7oJT2TpAgkKlKGliNMU6yovb6OEd6GC0/R4b5hLRA8dltP5EBLtGLF5LYd6hLUAk2DJ/vyDz4z0cQJoFs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DC/rZ9Qm; arc=none smtp.client-ip=100.103.45.18
+	 Date; b=t6OiqjiQG+Z/Um5sZlbZf0rP5W45UP3ynUzs6QefdB9D6DVptL2SC9u9jEQc0Bt4Uoi+VKyfLV14PcLrig7QUYdDLgqRbLO841PfV2pd5q8H1Tpq2GKN26sXqbYqr0ArxsawM7IxEdqB3cmF48H/KsmBlJjw4k5foi6Tr0yZEOE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LH4cS8TX; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DC/rZ9Qm"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 656CA1F000C4;
-	Mon, 19 Oct 2026 05:57:11 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LH4cS8TX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1B95D1F000C4;
+	Mon, 19 Oct 2026 05:57:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1792389431;
-	bh=+s8aVSWDljISvRCV861MgzJAVJaddV320iLd4ysABeE=;
+	s=k20260515; t=1792389437;
+	bh=FvXLdB6G0GN6kc6gadDMFdxk6HPc/i/YhmIJ61Xx0CM=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=DC/rZ9Qm44UZRouB2TOxVPuE0CBzm64/t21BanHm94GHmT9alKBjxS6Zf/vqXBMeC
-	 tLMZ0l5HYDg2mz3iPs6wtYauFVV95lI9lRPqgbULGIGLeTTfo0qytTFB2Q9y89A14X
-	 0jAwcp7Uiph+zs31Mrzw3aY78TJWdd9FcomMtGpbgDbTzqY+gUIGCF8WT1s3SGV0Py
-	 q35Q2svpN7KvYLGrCsGb83lKHLHewhuSTtnHdjxKfzlX8LC+3cP+PUgo+F2YWC331P
-	 ogkWYylDnxBVJm+k+GqHzDuu1LvaBSGIkiuds9NE4R/5pJh4vK4UVi0l36q/iRjIuj
-	 qNYGCs6cWhgFg==
-Message-ID: <sashiko-outbox-176676@kernel.org>
+	b=LH4cS8TXUTCDlaCUJH1/jMo3Aa5x/IPTqxdlSv+kn2G3tt0JQayecr7Nq10nTBlxd
+	 Ab6fSuMofckl9AGTnVaEBKJ/I7xyl7SVDJQnZ3QcNtRsQS/K43O9WyArex68OXwgGs
+	 r03XcHw3zwxGNUmUEnPt04OGfx0JwRARCO3uHQPZrD+lrtMhQS4scAQPm5U+LaxDPE
+	 MImsNf6B5Nr/goxCswMY3wsP1Wzdo82Y1KOgqnnu8bW9GX/mxXrZIvGO7iaOAgO0o0
+	 hIWQ4zD56d95v7CoJsO23lsAG1VBqt9UsmQhJhR5+CAOr4RKE13UirHMzJgg8++Fz0
+	 Q5BzMorya8mVA==
+Message-ID: <sashiko-outbox-176677@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v2 1/5] perf test: Fix a memory leak in PE file parsing
- test
+Subject: Re: [PATCH v2 4/5] perf symbol: Check result when reading section
+ headers
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Namhyung Kim" <namhyung@kernel.org>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20261019055207.39325-2-namhyung@kernel.org>
+In-Reply-To: <20261019055207.39325-5-namhyung@kernel.org>
 References: <20261019055207.39325-1-namhyung@kernel.org>
- <20261019055207.39325-2-namhyung@kernel.org>
+ <20261019055207.39325-5-namhyung@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Mon, 19 Oct 2026 05:57:10 +0000
+Date: Mon, 19 Oct 2026 05:57:16 +0000
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-> The get_argv_exec_path() returns a dynamically allocated string so it
-> should be freed.  Let's check the return value first so that it
-> doesn't crash snprintf().
+> Otherwise it may access uninitialized section header struct.
 >=20
 > Reported-by: Sashiko <sashiko-bot@kernel.org>
-> Closes: https://lore.kernel.org/r/sashiko-outbox-168781@kernel.org
+> Closes: https://lore.kernel.org/r/sashiko-outbox-170233@kernel.org
 > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 
 Sashiko has reviewed this patch and found no issues.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261019055207.3932=
-5-1-namhyung@kernel.org?part=3D1
+5-1-namhyung@kernel.org?part=3D4
 
