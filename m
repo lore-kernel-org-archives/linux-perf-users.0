@@ -1,46 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A6F040D578;
-	Mon, 19 Oct 2026 05:36:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBF2944C64B;
+	Mon, 19 Oct 2026 05:38:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792388204; cv=none; b=qFoCczLgbpBxyeyTW7kwVb9sR4DSYGpx4Nci/jQ1rPpI3SV82aXO3gH8Jr7Uzmvo6q6tV0qypqneYkgypC1ZcDxR3l7PsORS3VKmUi2gHj21PGw0r2uZTRymBnQEvWiDRClHycXqYmSnunzkLDRnI/f6o0oarbb8sMDf5IXXsNo=
+	t=1792388314; cv=none; b=qlj0r0zyYL3bzayxzzYEMEqd6HCUfs53pxYiTqqMlKy92DHbeOIqBZKXBVbQcKZFS7sHahXxnj7ebSwDZsihSHvw6ZHUCl1hzrljKqWqSTQqinXws6zD2I0tLO/Jix6ZI81Sr3lpmWZNE1u5vyrOf2162vyz+Q262wP22NhofcA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792388204; c=relaxed/simple;
-	bh=7cTAtqR/fNjb5a7HOA/yH47DzrXspOLlHAN5OgayPDQ=;
+	s=arc-20240116; t=1792388314; c=relaxed/simple;
+	bh=2AHC1LCrnIejm9IbO8ghkZDmss6eRXzoL1vPVbk7/uI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Bc2bLBRkAAdS/mKjIEWlwH8KnZTMHbfLQWTSNy9HPRzPqK/kX6oq+BRYluJsQr6797qpA71q31UPbusP2Q5Q/2GXuZfQe6aJJiFdETzuHbEmJ2nC2+KYQkxeGVlE3TMvKqd16ku9RQREPVrD75w511fH04/q6mgBa7bCzDzUQuo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UY4+gcd+; arc=none smtp.client-ip=100.103.45.18
+	 Content-Type:Content-Disposition:In-Reply-To; b=Y+kMC1DRBK6icijmtZAhAFK4cki8lXYQuNGl7vrzyKzGqc1EIhizEiCs2N+/dac9pIxAbCcT55SyMb+hVnVb2CS5fojo3LFfAsvcRq+3N0Mz95VN07Uf2xsDrbE0NqsfnK1c+Y379fLpGhqs5gW9vvJXOhnI/l7GZraXfBXgy1A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gZJHFkfO; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UY4+gcd+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7284E1F000C4;
-	Mon, 19 Oct 2026 05:36:37 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gZJHFkfO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 44E5A1F000C5;
+	Mon, 19 Oct 2026 05:38:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1792388197;
-	bh=hGkFIVQy1NIS6CA2l0xjL8lS1QnEtcgLT+LqKtKlp38=;
+	s=k20260515; t=1792388312;
+	bh=OdicA64Gb+yy1LVueolJ9Qt8I2uMT6PXP+0m3ZmCWrQ=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=UY4+gcd+9ufRnaDrH/2WTrXwgteWq7OuceePVc2yALfejEOo8bbxJ0tcr16L2Ij5m
-	 spBz2D4+mg4xgtrsSuH5N7K6F1fWjUGTXZw4Y030MGUH0o+ewR80OPYcgqyD38QZL9
-	 PTtMOczXexTbn7pqnnf3OafGVya6ee4TFfzpRF/ZvY9bz2fzcfyi9WIzeR1SFvcEdO
-	 6AnQIrbIXak3UWNsDwTXaVokGGQi9xwVO12W3MDysDU/iNlyYWcbwCwRK4yfjynn6g
-	 rMGmYV2V6lbLTbwu61tJOVH14C19Zff0aTxK/SVCTcESGxRnvifqXveCvIqgInAkgw
-	 uRCu0qmieGJHA==
-Date: Sun, 18 Oct 2026 22:36:35 -0700
+	b=gZJHFkfOTAXHcy9Cb0RJSzLkeVxxygmNAM2Crx3P9ULg14InlR1SOuY2RGMYpIxWx
+	 edxQ8WPOYcf83jEFeFIw1q13kUIQScxnecQecqUDcLMih5xVBNurkjnZiGIf58YPWG
+	 RI+tXuyih6K1mP2TrxhJb9jZmGAqaYLv40Yp0sRMODtgkp1ZCPw3JMhiakfH60hDXY
+	 mOOEXuT+8lcVM3FfVX64aZHpVW9HDQo5gUeJEbPsQ4zihhjRT88q5jpg/t9jolTWkm
+	 01SokNRglWa69EPgdNfxDDwdLPrmhQhXTFx8lpa8k3bTqdixiTwtphkuGM8FHVn+tg
+	 j9soaBb4t7Y7Q==
+Date: Sun, 18 Oct 2026 22:38:30 -0700
 From: Namhyung Kim <namhyung@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	James Clark <james.clark@linaro.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v1 2/5] perf test: Make sure maps to have a machine
-Message-ID: <atWsYwyWGxPc9VcR@z2>
+To: sashiko-reviews@lists.linux.dev
+Cc: linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH v1 5/5] perf symbol: Ensure dso__set_is_64_bit() for
+ libbfd
+Message-ID: <atWs1maCdPluFX0o@z2>
 References: <20261018163741.850434-1-namhyung@kernel.org>
- <20261018163741.850434-2-namhyung@kernel.org>
- <CAP-5=fWt5r++c1=BnM+459WsiZiwvihGpcjZ+j5_6Kr4P7sDUw@mail.gmail.com>
+ <20261018163741.850434-5-namhyung@kernel.org>
+ <sashiko-outbox-176289@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -50,67 +45,63 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fWt5r++c1=BnM+459WsiZiwvihGpcjZ+j5_6Kr4P7sDUw@mail.gmail.com>
+In-Reply-To: <sashiko-outbox-176289@kernel.org>
 
-On Sun, Oct 18, 2026 at 01:33:45PM -0700, Ian Rogers wrote:
-> On Sun, Oct 18, 2026 at 9:37 AM Namhyung Kim <namhyung@kernel.org> wrote:
-> >
-> > It's be easier if we could guarantee that maps always have a machine.
-> > IIUC this is true for all real use cases, but only the test code has
-> > an exception.  Let's get rid of it and make sure they have machines.
-> >
-> > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-> > ---
-> >  tools/perf/tests/maps.c | 15 +++++++++++++--
-> >  1 file changed, 13 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/tools/perf/tests/maps.c b/tools/perf/tests/maps.c
-> > index 2c05d62f40dcdf72..f40b68f5fa5fe2c1 100644
-> > --- a/tools/perf/tests/maps.c
-> > +++ b/tools/perf/tests/maps.c
-> > @@ -1,5 +1,6 @@
-> >  // SPDX-License-Identifier: GPL-2.0
-> >  #include <inttypes.h>
-> > +#include <unistd.h>
-> >  #include <linux/compiler.h>
-> >  #include <linux/kernel.h>
-> >  #include "tests.h"
-> > @@ -100,8 +101,12 @@ static int test__maps__merge_in(struct test_suite *t __maybe_unused, int subtest
-> >         };
-> >         struct map *map_kcore1, *map_kcore2, *map_kcore3;
-> >         int ret;
-> > -       struct maps *maps = maps__new(NULL);
-> > +       struct machine *machine = machine__new_live(/*host_env=*/NULL,
-> > +                                                   /*kernel_maps=*/false,
-> > +                                                   getpid());
-> > +       struct maps *maps = maps__new(machine);
-> >
-> > +       TEST_ASSERT_VAL("failed to create machine", machine);
-> >         TEST_ASSERT_VAL("failed to create maps", maps);
-> >
-> >         for (i = 0; i < ARRAY_SIZE(bpf_progs); i++) {
-> > @@ -159,6 +164,7 @@ static int test__maps__merge_in(struct test_suite *t __maybe_unused, int subtest
-> >         map__zput(map_kcore1);
-> >         map__zput(map_kcore2);
-> >         map__zput(map_kcore3);
-> > +       machine__delete(machine);
-> >         return TEST_OK;
-> >  }
-> >
-> > @@ -189,8 +195,12 @@ static int test__maps__fixup_overlap_and_insert(struct test_suite *t __maybe_unu
-> >         struct map *map_split, *map_eclipse;
-> >         int ret;
-> >         unsigned int i;
-> > -       struct maps *maps = maps__new(NULL);
-> > +       struct machine *machine = machine__new_live(/*host_env=*/NULL,
-> > +                                                   /*kernel_maps=*/false,
-> > +                                                   getpid());
+On Sun, Oct 18, 2026 at 04:44:26PM +0000, sashiko-bot@kernel.org wrote:
+> Thank you for your contribution! Sashiko AI review found 1 potential issue(s) to consider:
+> - [Medium] perf symbol: bfd_get_arch_size() always returns -1 in dso__load_bfd_symbols()
+> --
 > 
-> For completeness should we pass in a host_env like in builtin-top.c?
-> https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tree/tools/perf/builtin-top.c?h=perf-tools-next#n1661
+> commit 6d3220ac244766831d73c524c0b8f5184af28a7b
+> Author: Namhyung Kim <namhyung@kernel.org>
+> 
+> perf symbol: Ensure dso__set_is_64_bit() for libbfd
+> 
+> This commit calls dso__set_is_64_bit() using bfd_get_arch_size() when
+> loading symbols via libbfd in dso__load_bfd_symbols().
+> 
+> > diff --git a/tools/perf/util/libbfd.c b/tools/perf/util/libbfd.c
+> > index a4dcb406c79e9..9cc6216ce3adb 100644
+> > --- a/tools/perf/util/libbfd.c
+> > +++ b/tools/perf/util/libbfd.c
+> > @@ -462,6 +462,7 @@ int dso__load_bfd_symbols(struct dso *dso, const char *debugfile)
+> >  	symbols__fixup_end(dso__symbols(dso), false);
+> >  	symbols__fixup_duplicate(dso__symbols(dso));
+> >  	dso__set_adjust_symbols(dso, true);
+> > +	dso__set_is_64_bit(dso, bfd_get_arch_size(abfd) == 64);
+> 
+> [Severity: Medium]
+> Will bfd_get_arch_size(abfd) always return -1 here?
+> 
+> Earlier in tools/perf/util/libbfd.c:dso__load_bfd_symbols(), ELF binaries
+> are rejected before reaching this point:
+> 
+> 	if (bfd_get_flavour(abfd) == bfd_target_elf_flavour)
+> 		goto out_close;
+> 
+> In GNU binutils libbfd, bfd_get_arch_size() only checks ELF targets and
+> returns -1 for any other BFD flavour:
+> 
+> 	if (abfd->xvec->flavour == bfd_target_elf_flavour)
+> 		return get_elf_backend_data (abfd)->s->arch_size;
+> 	return -1;
+> 
+> Because abfd is guaranteed to be non-ELF here (such as a 64-bit PE/COFF
+> binary), bfd_get_arch_size(abfd) == 64 always evaluates to false and
+> unconditionally sets dso->is_64_bit to false.
+> 
+> Should this use bfd_arch_bits_per_address(abfd) == 64 instead so that the
+> address size is queried across all BFD flavours?
 
-Sure, will add in v2.
+Looks good, will fix.
 
 Thanks,
 Namhyung
 
+> 
+> >  
+> >  	err = dso__has_symbols(dso);
+> >  out_free:
+> 
+> -- 
+> Sashiko AI review · https://sashiko.dev/#/patchset/20261018163741.850434-1-namhyung@kernel.org?part=5
