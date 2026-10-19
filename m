@@ -1,138 +1,119 @@
-Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02C9A3F6C2A
-	for <linux-perf-users@vger.kernel.org>; Mon, 19 Oct 2026 13:02:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C73AA4F96BE;
+	Mon, 19 Oct 2026 13:09:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792414950; cv=none; b=XRj+xKvNp7R9rfxk5TbkJE69cnltH5vn6wMuIiU8USxz/e2T3tA4g7Saag6DreX78QJ9yG9UfwZhz+FvxCO+OKh8yRbcRHTEnmGz9jv/64uuGj0y9xi3HARxoqE5f+Hd16tQ/ss/PatNXMxMUQ4ZjOU7CdcZSfnducifxn5cIg4=
+	t=1792415386; cv=none; b=cE213l0inrAYsu/AKyPVQjmmMtUlX5YYqeEVecb+1HA2W3FpG2bEYRJBruS5kDYTMg362bNPQQYg7Mp1cRfdDZ8IYIxuK+8v+ChRHZSVn69X76Xs6xq/p2cNCLvRDA1WUQNUPdR4Yq8s+2Zr3ZhK7Wc6cgfEvwA1PCVl8ceTbHU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792414950; c=relaxed/simple;
-	bh=ITGubtGNjSygiFFFgjcYQsMniq1IJVNmaGpLd6Hctno=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=CJyFALz2861RBNST/bwoR8sqXs+jOptYPcmBGkHgsAH9KlCHAtMG+dhmuh0PVc93jAofH7SAwH37fa9i/aQI5Oq5FG08Hzy0A5QWV1iU3IGaQIjRGC0sb8M+XNxzZbNOW/mbckIF3mVytLP9Dca2O/MlICQjXZvm1otKIizsXt4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Eu2K9O4V; arc=none smtp.client-ip=209.85.218.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1792415386; c=relaxed/simple;
+	bh=w1BrRRipaOkIbZu4fuKp4PSlvBlYXbfQrZNXQhM/Y2U=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=OH/DFDk01dmulbXSCzMxHuzxj91GA5oMnpjHd0XX+eZYKkPfIvlQ1HUB7x9aNmQTpVQS3pOHmwF8+jD82uYANUk53GVj2+Or/oruZe6Y3kAY5/N6D84p53a7zjUfCScAY9g0cZ0NxSOfNdcYoPAxCgfy3igqBVCa9eyt95pCEN0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=n0L9xKH2; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Eu2K9O4V"
-Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-c34bff61551so286953266b.2
-        for <linux-perf-users@vger.kernel.org>; Mon, 19 Oct 2026 06:02:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1792414947; x=1793019747; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:in-reply-to:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=O9/kdLN3peEHedgTST7BmoC/amAyj0eADKM6T0Uw2sA=;
-        b=Eu2K9O4VznZMFk1AXlGIlIYy4+kG7PLuf1qCQsfBF6nFMwvfyxX6J63U09xH4YfG7a
-         +xsrPTNgH2rDwGjiJBqYHUIqFsitoidIa03Bw67u8asMl03yueH9uRCqQ9zzkpJZEPyD
-         AkyuXgAUSzlvTT2Au3mi9AUmjUw37Qc7xKn6qbHPNA+HopblxbYruKhBiWFWfbnew/FN
-         EFAJ5idL0+iK+KDXdmLiS1cYsZSztvY1rc9q9KtTD8LhFT+dDXGu30nwUChuXz5q2Dqs
-         xY4Jo2vNyjVpCAlg9bK14Z8jKLxR9F5bktKR9BMqHoPlOHXJEu39+5cGbuCzwYot94av
-         liEw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1792414947; x=1793019747;
-        h=content-transfer-encoding:content-type:in-reply-to:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=O9/kdLN3peEHedgTST7BmoC/amAyj0eADKM6T0Uw2sA=;
-        b=FDfFUahg3M6/BJW0ho9sqTDUefOvlLAOcz8nFYdVVNhKgoTIrnXfz1xxxeLEyxi3C1
-         RYE9A6TEPNim9MWzd3Yu4FQwgJ44lusGArlNbGJG/WP1kva14qIKy6FVnYPJ4n55ykvk
-         rDpm81jINJx9kd7/Lrus6ld94+4OWsMmb9cYp8GqI6qDnFKQxUqFJFFjjJe/1lRDdT5f
-         g0bF20RWxBhUc7rW159vU5fBg0i9cgo5ZsKUbEuL+OtnZQwUDy6IVgMjHDbabqp6gI10
-         MMKKi4kMgw6qkFtuyMOXOUgokw2p2vxHSGt9cNn3oYQK+lPt6MtKNnOB089BE6duKCvM
-         Ctcw==
-X-Forwarded-Encrypted: i=1; AKwUvBwlBushuMsYSQ3A9tm9o1orcwrqIIm5i2P/5WseIilsA/JNP7zq/CUMVV/WBUvlVCoDzddoVK3+2wRWYKj4UOqg@vger.kernel.org
-X-Gm-Message-State: AFq9FYJU6/laNIPjszXZkQgOfmmbaKaoYDujxgTZ3jxURE8beBCsxvXK
-	lSD327c417ngZGtn083UVU7q3icK5wqp8NSZNLehF6/A/0XmC16jETCd0uW0tonST8o=
-X-Gm-Gg: AYBFou201g3FpYm/7xJK0I6ZwX1v0oDR1S1YVDeOAIUo/yEk0BWxcuB3nLJeJWNmRxT
-	sWqZS5tnauicES4ZLguLBnezFZFlhQ/9VscvLNiSRUqTNJKtAXq2grOWQFeHUq/rs+YZZCU8EHH
-	qC/RPc1AMIXhzSMWsuHAdFBT1FDjtoo4VgbOjMl4wfVfRCxozgkbu+hOJmiOfoCVY4DV4zmefYO
-	tjlKHvjolF2hclBjUlYzFWxBncKnWlZHqHFQEifE+lzrPhg48st/jAb1LqoFi9p8VHi3jDCmagP
-	9I1Epj+QXRTmCDS3+ksinsJk8r4YeztWtENqcvdqc5BGRrlVIcZw0U3vOf4Z59zrGNHKq6SjSmZ
-	w45axzBnf39y6OCuubGBeukuSM8UdC0WEGV6lM83OWhEU2d/f3Qkgb++J7aJPoyDzrXA4L1Yry6
-	2b8VUXd/7vd0U7zy6bhYW9grSHeyQLQx4YiH8t55GzhPaFOqF+2c2ZrvxE1SbG6vJu68OgTwoXD
-	Ic=
-X-Received: by 2002:a17:907:b046:20b0:c42:102f:15db with SMTP id a640c23a62f3a-c42102f3704mr293529366b.34.1792414946853;
-        Mon, 19 Oct 2026 06:02:26 -0700 (PDT)
-Received: from [192.168.1.3] ([37.18.141.193])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-48dfd510201sm24019139f8f.55.2026.10.19.06.02.24
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 19 Oct 2026 06:02:25 -0700 (PDT)
-Message-ID: <5a438ddf-4e6e-4c7e-b6e5-0434f9d9dbe8@linaro.org>
-Date: Mon, 19 Oct 2026 14:02:23 +0100
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="n0L9xKH2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3CB851F000C4;
+	Mon, 19 Oct 2026 13:09:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1792415385;
+	bh=ehQznJ1A7d3/2oa5IlIxaIerl/qML7ZXU0JTRcCKZcc=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=n0L9xKH2wgCvow6XotvkYeWctkk34LTYqAe//09SuPdqWBLgtYJC3QvzmnQx05Z1B
+	 mNOw8GJFlNDxvGj/gb49OKlnQjx0iedidMGGX6tchlBi/ayD+NZ7ATLihhm1De0Sii
+	 AEhqI8WQH0fjaziDwKUqdDvLfIlnuQLPp102dLUsP6ayyMx37joykKtNGA/UDp7K9R
+	 p7tm3TwH4HmimRjJuxTzSF/l0l8fk0rBGvm8CiFBih96vJ9h8SKhSuIrTzyjvdRjJb
+	 5fCNFtmCNvaTy5fU6OFVq0fBzQ+pNYDAQyK9Y+4EphqaId1c3Iomuj4s5I7vGGMpBQ
+	 sVeXRhvyvCgEw==
+From: Frederic Weisbecker <frederic@kernel.org>
+To: LKML <linux-kernel@vger.kernel.org>
+Cc: Frederic Weisbecker <frederic@kernel.org>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Ian Rogers <irogers@google.com>,
+	Ingo Molnar <mingo@redhat.com>,
+	James Clark <james.clark@linaro.org>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Marco Crivellari <marco.crivellari@suse.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Phil Auld <pauld@redhat.com>,
+	Thomas Gleixner <tglx@kernel.org>,
+	Waiman Long <longman@redhat.com>,
+	linux-perf-users@vger.kernel.org,
+	x86@kernel.org
+Subject: [RFC PATCH 14/49] perf/x86: Move CPUHP_AP_PERF_X86_STARTING post stop_machine()
+Date: Mon, 19 Oct 2026 15:08:21 +0200
+Message-ID: <20261019130856.49711-15-frederic@kernel.org>
+X-Mailer: git-send-email 2.53.0
+In-Reply-To: <20261019130856.49711-1-frederic@kernel.org>
+References: <20261019130856.49711-1-frederic@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 15/25] coresight: perf: Serialize AUX pause and resume
- with event stops
-To: Leo Yan <leo.yan@arm.com>
-Cc: Ingo Molnar <mingo@kernel.org>, linux-perf-users@vger.kernel.org,
- linux-kernel@vger.kernel.org, coresight@lists.linaro.org,
- linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org,
- Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>,
- Suzuki K Poulose <suzuki.poulose@arm.com>, Mike Leach <mike.leach@arm.com>,
- Anshuman Khandual <anshuman.khandual@arm.com>,
- Yeoreum Yun <yeoreum.yun@arm.com>, Jonathan Corbet <corbet@lwn.net>,
- Suyash Mahar <smahar@meta.com>, Amir Ayupov <aaupov@fb.com>
-References: <20260915-arm_cs_support_aux_sample-v1-0-35cf6f297d20@arm.com>
- <20260915-arm_cs_support_aux_sample-v1-15-35cf6f297d20@arm.com>
-Content-Language: en-US
-From: James Clark <james.clark@linaro.org>
-In-Reply-To: <20260915-arm_cs_support_aux_sample-v1-15-35cf6f297d20@arm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
+Between CPUHP_TEARDOWN_CPU and CPUHP_AP_OFFLINE, stop_machine executes
+all the teardown callbacks while stopping all CPUs in the system. This
+doesn't mix-up well with running RT or isolated tasks.
 
+In order to transition smoothly from global stop_machine to finer
+grained synchronization between teardown callbacks and the other CPUs,
+a new stop machine post function has been introduced to be executed
+after the main one with IRQs still disabled while other CPUs can exit
+stop_machine().
 
-On 15/09/2026 16:49, Leo Yan wrote:
-> A PMU NMI can throttle a group during an AUX pause or resume, stopping
-> its CoreSight event before the callback finishes. The callback can then
-> restart tracing or reopen an AUX output handle after teardown.
-> 
-> Use per-CPU atomic STOP and AUX bits to serialize these callbacks. Reject
-> AUX operations while a stop is pending and defer stops until an active
-> AUX operation finishes. Complete deferred stops through etm_event_stop()
-> and set PERF_HES_STOPPED only after disabling the source and path.
-> 
-> Assisted-by: Codex:gpt-6
-> Signed-off-by: Leo Yan <leo.yan@arm.com>
-> ---
->   drivers/hwtracing/coresight/coresight-etm-perf.c | 104 ++++++++++++++++++-----
->   1 file changed, 84 insertions(+), 20 deletions(-)
-> 
-> diff --git a/drivers/hwtracing/coresight/coresight-etm-perf.c b/drivers/hwtracing/coresight/coresight-etm-perf.c
-> index 8f803914e9abfb18e080ff68371ad8b32042f180..8020a4d8af18bb669441824cfdb687f4fa299eb4 100644
-> --- a/drivers/hwtracing/coresight/coresight-etm-perf.c
-> +++ b/drivers/hwtracing/coresight/coresight-etm-perf.c
-> @@ -4,6 +4,7 @@
->    * Author: Mathieu Poirier <mathieu.poirier@linaro.org>
->    */
->   
-> +#include <linux/atomic.h>
->   #include <linux/bitfield.h>
->   #include <linux/coresight.h>
->   #include <linux/coresight-pmu.h>
-> @@ -26,6 +27,9 @@
->   #include "coresight-syscfg.h"
->   #include "coresight-trace-id.h"
->   
-> +#define ETM_PERF_ACT_STOP		BIT(0)
-> +#define ETM_PERF_ACT_AUX		BIT(1)
+Here only intel has a dying callback (intel_pmu_cpu_dying()) which does:
 
-No comments other than naming. But would PAUSE_RESUME be better than 
-AUX, or at least add a comment? It's a bit ambiguous what AUX means, and 
-etm_event_aux_begin() is very close to perf_aux_output_begin(). Or maybe 
-ACTION?
+* Deallocate the per CPU DS structure on the MSR_IA32_DS_AREA. This is
+  already racy against offlining CPUs because all possible CPUs's MSR
+  are written on a hardware event initialization, which still can happen
+  before the CPU actually goes off.
 
-Reviewed-by: James Clark <james.clark@linaro.org>
+* Deallocate PEBS buffer. This is already well synchronized against
+  hotplug up callback.
+
+Therefore the related teardwown callback can run concurrently with other
+CPUs.
+
+Move it to post stop_machine() accordingly.
+
+Signed-off-by: Frederic Weisbecker <frederic@kernel.org>
+---
+ kernel/cpu.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/kernel/cpu.c b/kernel/cpu.c
+index 5ac2a925f7d6..c37fa1272d57 100644
+--- a/kernel/cpu.c
++++ b/kernel/cpu.c
+@@ -1275,7 +1275,7 @@ void clear_tasks_mm_cpumask(int cpu)
+ static int take_cpu_down(void *_param)
+ {
+ 	struct cpuhp_cpu_state *st = this_cpu_ptr(&cpuhp_state);
+-	enum cpuhp_state target = max((int)st->target, CPUHP_AP_PERF_X86_AMD_UNCORE_STARTING);
++	enum cpuhp_state target = max((int)st->target, CPUHP_AP_PERF_X86_STARTING);
+ 	int err, cpu = smp_processor_id();
+ 
+ 	/* Ensure this CPU doesn't handle any more interrupts. */
+@@ -1303,7 +1303,7 @@ static int take_cpu_down_post(void *_param)
+ 	enum cpuhp_state target = max((int)st->target, CPUHP_AP_OFFLINE);
+ 	int cpu = smp_processor_id();
+ 
+-	WARN_ON(st->state != CPUHP_AP_PERF_X86_AMD_UNCORE_STARTING);
++	WARN_ON(st->state != CPUHP_AP_PERF_X86_STARTING);
+ 	/*
+ 	 * Invoke the former CPU_DYING callbacks. DYING must not fail!
+ 	 */
+-- 
+2.53.0
 
