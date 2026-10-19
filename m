@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DCD03F8712;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DD8D47FB03;
 	Mon, 19 Oct 2026 05:52:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792389214; cv=none; b=JDGICDNhfwxcYJ5KFeXRNLvWVWUgL9QfC35XsVzxp/FUXdEV77fe2OoXOcySwiAw8dZMdD6JVvSz3q/9zo0AtUMuoYF2FfX3/SL5I3BeteYqJc3PEZuTZmGiFqJ91eMpDPqmQVKvQm58cv8/q1qdcpiGj/bWas8RQZo6pQ80BhI=
+	t=1792389215; cv=none; b=cxkKrgJWDvldbnVzoHXcMldrvu/iTO6Ytna/2Ox6Y/91SkU9KfoLr8jhG/KqK/qxfECxGVgJvsle3kTKLZskMLHMGuVUYgvJ5WkauBEFdS6AhpRLWvqymzifF+1FHHZBTLnuzKMnz+w64VHQASPoyvXJ/KP3BjzIesoUJAkD2tM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792389214; c=relaxed/simple;
-	bh=UL4Z/hxV31NMtqFRd4xUUuqEJlb4VaFqF6vQnKsO4bU=;
+	s=arc-20240116; t=1792389215; c=relaxed/simple;
+	bh=LMG43NqcQfJ148dhWlyjibA5KAuInktHbpK8fPMBNtY=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=MB9PjetsgSUBy5uqU9nKukYarcOHaSH+tkfOO3fWgK4z3UVYuiQBWtlWVjwdKevIjV2zCzzpCYq6Gy2XLsWJbfSjR5SA+9O2IWgpOgbZ0NM2Q220HmuUqP1e3+Lwr9P/UqSX2gZk2dGqRiQ4M27NI7k0g41f1HnBhOlnx1Q/hsg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MkGM/izE; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version; b=uNgopf6lYUax9lTAaMj3Xm/sYqLXbtMmn+cq38txy766FD5TSHcvXa8oAB12GerEZTHP2mlfb1FGx5fDV+BHNy8H/rM2nJzdFtj2dZR1sExUlzu1gOghGGSx9czlCWWZJNq09ASnDsxWFsXrW2XE8hHBR1FfAyZ6UeJV5sBF/SQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QVRabffd; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MkGM/izE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1FB6C1F000CB;
-	Mon, 19 Oct 2026 05:52:15 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QVRabffd"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 905EB1F000CA;
+	Mon, 19 Oct 2026 05:52:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
 	s=k20260515; t=1792389135;
-	bh=YhnBb+3XDTEAdov2rwlEXGMFNh/VYkxTntTKwyZ/RVE=;
+	bh=y5Wy01xpK8hobA0iInohLJNNLk/FC76Ixr2R8ArYJUM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=MkGM/izEbJ6Fogju4SVgHNEQoiKmahT2uHma8DsoKKN/ZVnzaDOvYwXtKFT23U28k
-	 0Xkr3XmqiLDBT52nNMiNod0nIsGuyIqXdn9zcS9z3BV1hkGdHLJn4/n/zdxHmh7tse
-	 BtA7qx24rnEE5zap3L3c2DcfwvfKGk4axJuDavHGVEfS9UjaPDUk3AE9E4kkHA+mIw
-	 qcFQANfMGePFYNBzWLfwdZqcgZ3o51LtMjuY8LgaTWkA49eOvYAKBreu+uIpgxudEg
-	 1i+i7H+k4XqAcH9LmzJpNA5TRrwNvHpO0eVOwcArJzOSx39eD1Y+hsNcQSTythGq1I
-	 v7xKq7OQPfi5g==
+	b=QVRabffdAbW1iF3OiTm7AYdCU7ErbCVa4hQCPiibRM0uTmsUtVppTcL/wzAKTHv1n
+	 lkBzquvUMzcT3k4/xq4NWne1vZh8e0c+z0pwxLmsg0Dv5scbn4cRBSW43kNIxidM/y
+	 j5qCT00xYxGZUKEpv9DW5wKB/PzI1ycadSlQdK7I9AyQ9P6rf/QBrr0gPATriA//8p
+	 xVhjXTZyVsuLl4IjwvT1PCBTsqcxzJfCJiyr+oVqutqz8GMA4CxYOsMvmmBxyhO5nC
+	 sQT54DuceW/dFAWiBwrAKpKVzDxbPJdFfM58rCy6CB+KWL6tx2IFqwSXDQ1cRR5xkn
+	 ThFUou+3+NO9g==
 From: Namhyung Kim <namhyung@kernel.org>
 To: Arnaldo Carvalho de Melo <acme@kernel.org>,
 	Ian Rogers <irogers@google.com>,
@@ -35,10 +35,11 @@ Cc: Jiri Olsa <jolsa@kernel.org>,
 	Peter Zijlstra <peterz@infradead.org>,
 	Ingo Molnar <mingo@kernel.org>,
 	LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org
-Subject: [PATCH v2 2/5] perf test: Make sure maps to have a machine
-Date: Sun, 18 Oct 2026 22:52:04 -0700
-Message-ID: <20261019055207.39325-3-namhyung@kernel.org>
+	linux-perf-users@vger.kernel.org,
+	Sashiko <sashiko-bot@kernel.org>
+Subject: [PATCH v2 1/5] perf test: Fix a memory leak in PE file parsing test
+Date: Sun, 18 Oct 2026 22:52:03 -0700
+Message-ID: <20261019055207.39325-2-namhyung@kernel.org>
 X-Mailer: git-send-email 2.56.0
 In-Reply-To: <20261019055207.39325-1-namhyung@kernel.org>
 References: <20261019055207.39325-1-namhyung@kernel.org>
@@ -50,89 +51,51 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-It's be easier if we could guarantee that maps always have a machine.
-IIUC this is true for all real use cases, but only the test code has
-an exception.  Let's get rid of it and make sure they have machines.
+The get_argv_exec_path() returns a dynamically allocated string so it
+should be freed.  Let's check the return value first so that it
+doesn't crash snprintf().
 
+Reported-by: Sashiko <sashiko-bot@kernel.org>
+Closes: https://lore.kernel.org/r/sashiko-outbox-168781@kernel.org
 Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 ---
- tools/perf/tests/maps.c | 30 +++++++++++++++++++++++++-----
- 1 file changed, 25 insertions(+), 5 deletions(-)
+ tools/perf/tests/pe-file-parsing.c | 13 ++++++++++---
+ 1 file changed, 10 insertions(+), 3 deletions(-)
 
-diff --git a/tools/perf/tests/maps.c b/tools/perf/tests/maps.c
-index 2c05d62f40dcdf72..ff6d25f9c043034b 100644
---- a/tools/perf/tests/maps.c
-+++ b/tools/perf/tests/maps.c
-@@ -1,12 +1,14 @@
- // SPDX-License-Identifier: GPL-2.0
- #include <inttypes.h>
-+#include <unistd.h>
- #include <linux/compiler.h>
- #include <linux/kernel.h>
--#include "tests.h"
-+#include "debug.h"
-+#include "dso.h"
-+#include "env.h"
- #include "map.h"
- #include "maps.h"
--#include "dso.h"
--#include "debug.h"
-+#include "tests.h"
- 
- struct map_def {
- 	const char *name;
-@@ -100,8 +102,15 @@ static int test__maps__merge_in(struct test_suite *t __maybe_unused, int subtest
+diff --git a/tools/perf/tests/pe-file-parsing.c b/tools/perf/tests/pe-file-parsing.c
+index 190520ffc3ad6d0c..ed95aa5d8ca2af92 100644
+--- a/tools/perf/tests/pe-file-parsing.c
++++ b/tools/perf/tests/pe-file-parsing.c
+@@ -74,19 +74,26 @@ static int test__pe_file_parsing(struct test_suite *test __maybe_unused,
+ {
+ 	struct stat st;
+ 	char path_dir[PATH_MAX];
+-	const char * const tests_dirs[] = {
++	static const char * const tests_dirs[] = {
+ 		"./tools/perf/tests",
+ 		"./tests",
+ 		"./source/tests",
+-		path_dir,
  	};
- 	struct map *map_kcore1, *map_kcore2, *map_kcore3;
- 	int ret;
--	struct maps *maps = maps__new(NULL);
-+	struct perf_env host_env;
-+	struct machine *machine;
-+	struct maps *maps;
+-	snprintf(path_dir, PATH_MAX, "%s/tests", get_argv_exec_path());
++	char *exec_path;
  
-+	perf_env__init(&host_env);
-+	machine = machine__new_live(&host_env, /*kernel_maps=*/false, getpid());
-+	maps = maps__new(machine);
+ 	for (size_t i = 0; i < ARRAY_SIZE(tests_dirs); ++i) {
+ 		if (!lstat(tests_dirs[i], &st))
+ 			return run_dir(tests_dirs[i]);
+ 	}
+ 
++	exec_path = get_argv_exec_path();
++	TEST_ASSERT_VAL("Failed to allocate exec_path", exec_path);
++	snprintf(path_dir, PATH_MAX, "%s/tests", exec_path);
++	free(exec_path);
 +
-+	TEST_ASSERT_VAL("failed to create machine", machine);
- 	TEST_ASSERT_VAL("failed to create maps", maps);
- 
- 	for (i = 0; i < ARRAY_SIZE(bpf_progs); i++) {
-@@ -159,6 +168,8 @@ static int test__maps__merge_in(struct test_suite *t __maybe_unused, int subtest
- 	map__zput(map_kcore1);
- 	map__zput(map_kcore2);
- 	map__zput(map_kcore3);
-+	machine__delete(machine);
-+	perf_env__exit(&host_env);
- 	return TEST_OK;
- }
- 
-@@ -189,8 +200,15 @@ static int test__maps__fixup_overlap_and_insert(struct test_suite *t __maybe_unu
- 	struct map *map_split, *map_eclipse;
- 	int ret;
- 	unsigned int i;
--	struct maps *maps = maps__new(NULL);
-+	struct perf_env host_env;
-+	struct machine *machine;
-+	struct maps *maps;
++	if (!lstat(path_dir, &st))
++		return run_dir(path_dir);
 +
-+	perf_env__init(&host_env);
-+	machine = machine__new_live(&host_env, /*kernel_maps=*/false, getpid());
-+	maps = maps__new(machine);
- 
-+	TEST_ASSERT_VAL("failed to create machine", machine);
- 	TEST_ASSERT_VAL("failed to create maps", maps);
- 
- 	for (i = 0; i < ARRAY_SIZE(initial_maps); i++) {
-@@ -230,6 +248,8 @@ static int test__maps__fixup_overlap_and_insert(struct test_suite *t __maybe_unu
- 	TEST_ASSERT_VAL("eclipse check failed", !ret);
- 
- 	maps__zput(maps);
-+	machine__delete(machine);
-+	perf_env__exit(&host_env);
- 	return TEST_OK;
+ 	pr_debug("cannot find the tests directory\n");
+ 	return TEST_SKIP;
  }
- 
 -- 
 2.56.0
 
