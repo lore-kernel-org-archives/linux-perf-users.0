@@ -1,157 +1,153 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
+	t=1792423532;
+	b=3GLPMOBwPOJPtgbz/k7fuwxsbKdMgBk+n2bRWq5ILcfFtuqnioXPn99NvFdjrMfEEv7t
+	 Yb30AyDSexecJBUULgDllw+ohtw1lM5jP7WZSxBuOVX/3BQTqxvnF9JweYc6AIOMjj4NJ
+	 UirguXSjJPy2wlp16nPyLF1KpqSvZTOUZdkh2Jd6YWDm70uYkE7yyzIpodUwQx8VhyD5u
+	 gxAQlSpd93tALn/Mm/oaQmM3HfZk2XgorVBK4HcxE12ZjFGsw/MX8nS2DYuLviJa4qw0P
+	 LrcjGvPDZLUminZMMMMDO2/SuTk7CQz3Gj1XNB5G6F/0kptM4hERw969imqa73TE+Xw==
+ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1792423532;
+	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
+	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
+	bh=u42YwYD4WN7MfD4Wa8fcG+850zCIboeTcTRkBWOE6ko=;
+	b=4xSeIwBNQx2UT83kSioJ+oVQjIhQNFbFKDI8D3k9JOOR2RdQr4E4G4rwp3NLeHN29U+V
+	 nXejiDVQ3shdQCEojKpAWX85qB+ArPuKPV5AMGd3/hhBcVl+z9TE8OJma+bBkphSodATj
+	 binPxRo/dChk2rQ5FzudBIZEeDZbibYbxmVqfYPicomWlmMsWYg05FP0GTckTj9G6gN6Q
+	 HghIEPsE3sc1471b54sjdRv8+FFtrdNSqhIt1WZpSjXiwQFmCa0uBVhAjhk1hvR3reezk
+	 sbv2tPaglYSfTG3b65xbjH7ihHZ7pL6iZ8lo8FI/XkCFlr0VgGlXczY2b4RkDu75INg==
+ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=eXE9hIAn;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 768075A358A
-	for <linux-perf-users@vger.kernel.org>; Mon, 19 Oct 2026 14:44:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1792421066; cv=none; b=prSsn0sPzrtXl6kfspqSSRhiwLbZvmk4GTw4VLDdfiAkKyXSJPibg2FgGnB+ch+GE24gvOqDY6H2XmMc1SkYsSkdVFlaYkFa10glvvmszRdViMZZdBUiY7dUAkhviXar1dked1pzmOg6dz5qJOHvXoOuTQtk9ng2PricXugulks=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1792421066; c=relaxed/simple;
-	bh=g6TZew8FM3MjfoeBphv//yG4iB/8Ep93uCbbURryM7E=;
-	h=Message-ID:From:Subject:To:Cc:In-Reply-To:References:Content-Type:
-	 Date; b=BQWY03zb+Azwg1TSxvkPKFeV0BgXx338BxUk2KNcE4gbbqmMvfNBtrximixMxbCBQIj96jvImNJwj62W1JlSpvhGWS4FzkJv7O4QIbiraI710m9qyvwi8ULFwoBzVm4dmNa3xW7zj77381hhN69+6rgcRqZ9NXnjJ6wBWnOTABI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ADbq8/A+; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0955860B0991
+	for <linux-perf-users@vger.kernel.org>; Mon, 19 Oct 2026 15:25:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ADbq8/A+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F1D781F000C4;
-	Mon, 19 Oct 2026 14:44:23 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=eXE9hIAn
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 684D51F000C4;
+	Mon, 19 Oct 2026 15:25:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1792421064;
-	bh=FL/7PJAAxp4VwhrcemgwAPEAFGeeWl3dEqliGSc0qYA=;
+	s=k20260515; t=1792423531;
+	bh=u42YwYD4WN7MfD4Wa8fcG+850zCIboeTcTRkBWOE6ko=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=ADbq8/A+DY7W+EuKC4qsXlGUebneYeaeIevLby8n0yUjXOlEZQqaCtChURin6NIE9
-	 9tY8cBmmxuMNZnKO06qpMa5sz4cxZTMGsTYGuvJpfOrO+6398j7fii95Xd2NxwOTo1
-	 U/IbxJETFSMtgVEflaR8/OC49M+wzWByA/x9CLcEwEnSxmgVCNvrzY5J7VLKQsTSAv
-	 tf0ZIDxHWIxh0zmpsYKBBGSVZXVkWNCNrWbWnawVX73Ub3kQjSQ+Kh20HC6y9IuASp
-	 K3UFdvZ0YWhtG5ZRDvBGIEeXAzcMrxNHbrAH0VcBRpLNU0xv7ZJE64FJ6a7RMXpnoa
-	 JOemQMl/aHiuA==
-Message-ID: <sashiko-outbox-177485@kernel.org>
+	b=eXE9hIAn+GGB7AocbZO7WLQIbnxYZv9LsO9XAo2a6nr+Oec7MQ7rUU7pLISTqW2/f
+	 4TpbkE78mzweynfIQI8eqRTqyER6Cv54ikS8+ZDk3IG8IxjILPXRr1p2hFXlTwkl6D
+	 LXqrIvsY7sRb/5zkamBvF1RpDopLqWuAxDHJuALReOqIxTI1hhAwSjLm07H5bPgUKw
+	 rCarhQR2LI/PLjxQBbb8KL4ghKyPEmDrIRcTG/VcpkaeHyuL8ROJLLR99Wgsb/Qx30
+	 CoZo2qwRYICA6br/xBHLy342oC9Kuw22W4B6a8i3DghhQbsb4TuUuAFPuHJiYup3Kk
+	 DK+NpBW7XmNmA==
+Message-ID: <sashiko-outbox-177718@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH AUTOSEL 6.18-6.1] perf: marvell: Cancel CN10K DDR PMU
- hrtimer on device remove
+Subject: Re: [PATCH AUTOSEL 6.18-6.1] perf/x86/intel: Fallback to sw branch
+ type decoding if no hw decoding
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Sasha Levin" <sashal@kernel.org>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20261019135441.1420968-185-sashal@kernel.org>
+In-Reply-To: <20261019135441.1420968-463-sashal@kernel.org>
 References: <20261019135441.1420968-1-sashal@kernel.org>
- <20261019135441.1420968-185-sashal@kernel.org>
+ <20261019135441.1420968-463-sashal@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Mon, 19 Oct 2026 14:44:23 +0000
-Precedence: bulk
+Date: Mon, 19 Oct 2026 15:25:30 +0000
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
+List-Post: <mailto:linux-perf-users@vger.kernel.org>
+List-Help: <mailto:linux-perf-users+help@vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
+Precedence: list
 
 Thank you for your contribution! Sashiko AI review found 1 potential issue(=
 s) to consider:
-- [High] perf: marvell: premature hrtimer_cancel() in cn10k_ddr_perf_remove=
-()
+- [Medium] perf/x86/intel: X86_BR_TYPE_SAVE forced in intel_pmu_setup_hw_lb=
+r_filter()
 --
 
-commit ee388a976febdb25de30edee55cec9fcf0a7184a
-Author: Geetha sowjanya <gakula@marvell.com>
+commit c34c39f861fe5e2bf440b3a3e6e92d35016fb9be
+Author: Dapeng Mi <dapeng1.mi@linux.intel.com>
 
-perf: marvell: Cancel CN10K DDR PMU hrtimer on device remove
+perf/x86/intel: Fallback to sw branch type decoding if no hw decoding
 
-This commit cancels the poll hrtimer in cn10k_ddr_perf_remove() so the
-timer callback cannot run after the device is unbound and its resources
-are freed.
+This commit updates intel_pmu_lbr_filter() to check the x86_lbr_type static
+branch instead of X86_FEATURE_ARCH_LBR, falling back to software branch-type
+decoding when hardware branch-type decoding is unavailable on arch-LBR CPUs.
 
-> diff --git a/drivers/perf/marvell_cn10k_ddr_pmu.c b/drivers/perf/marvell_=
-cn10k_ddr_pmu.c
-> index 72ac17efd846a..9974b62541f0d 100644
-> --- a/drivers/perf/marvell_cn10k_ddr_pmu.c
-> +++ b/drivers/perf/marvell_cn10k_ddr_pmu.c
-> @@ -1088,6 +1088,12 @@ static void cn10k_ddr_perf_remove(struct platform_=
-device *pdev)
->  {
->  	struct cn10k_ddr_pmu *ddr_pmu =3D platform_get_drvdata(pdev);
-> =20
-> +	/*
-> +	 * Cancel the poll timer before further teardown so the handler
-> +	 * cannot run after this function returns.
-> +	 */
-> +	hrtimer_cancel(&ddr_pmu->hrtimer);
-> +
->  	cpuhp_state_remove_instance_nocalls(
->  				CPUHP_AP_PERF_ARM_MARVELL_CN10K_DDR_ONLINE,
->  				&ddr_pmu->node);
+Link: https://patch.msgid.link/20260616044654.3468742-4-dapeng1.mi@linux.in=
+tel.com
 
-[Severity: High]
-Can ddr_pmu->hrtimer be re-armed after hrtimer_cancel() returns here?
+> diff --git a/arch/x86/events/intel/lbr.c b/arch/x86/events/intel/lbr.c
+> index 7aa59966e7c3e..896aeaac9e6a4 100644
+> --- a/arch/x86/events/intel/lbr.c
+> +++ b/arch/x86/events/intel/lbr.c
+> @@ -1230,7 +1230,7 @@ intel_pmu_lbr_filter(struct cpu_hw_events *cpuc)
+>  		 * Doesn't support OTHER_BRANCH decoding for now.
+>  		 * OTHER_BRANCH branch type still rely on software decoding.
+>  		 */
+> -		if (static_cpu_has(X86_FEATURE_ARCH_LBR) &&
+> +		if (static_branch_likely(&x86_lbr_type) &&
+>  		    type <=3D ARCH_LBR_BR_TYPE_KNOWN_MAX) {
+>  			to_plm =3D kernel_ip(to) ? X86_BR_KERNEL : X86_BR_USER;
+>  			type =3D arch_lbr_br_type_map[type] | to_plm;
 
-In cn10k_ddr_perf_remove(), hrtimer_cancel(&ddr_pmu->hrtimer) is called
-before cpuhp_state_remove_instance_nocalls() and perf_pmu_unregister():
+[Severity: Medium]
+Should intel_pmu_setup_hw_lbr_filter() also be updated to check
+static_branch_likely(&x86_lbr_type) before forcing X86_BR_TYPE_SAVE?
 
-drivers/perf/marvell_cn10k_ddr_pmu.c:cn10k_ddr_perf_remove() {
-	hrtimer_cancel(&ddr_pmu->hrtimer);
+Currently, intel_pmu_setup_hw_lbr_filter() checks X86_FEATURE_ARCH_LBR and
+unconditionally enables X86_BR_TYPE_SAVE under the assumption that hardware
+provides branch types without software disassembly:
 
-	cpuhp_state_remove_instance_nocalls(
-				CPUHP_AP_PERF_ARM_MARVELL_CN10K_DDR_ONLINE,
-				&ddr_pmu->node);
-
-	perf_pmu_unregister(&ddr_pmu->pmu);
-}
-
-Until cpuhp_state_remove_instance_nocalls() removes the hotplug instance
-and perf_pmu_unregister() finishes synchronize_srcu() / synchronize_rcu()
-and detaches events via pmu_detach_events(), PMU and CPU hotplug callbacks
-remain active:
-
-kernel/events/core.c:perf_pmu_unregister() {
+arch/x86/events/intel/lbr.c:intel_pmu_setup_hw_lbr_filter() {
 	...
-	synchronize_srcu(&pmus_srcu);
-	synchronize_rcu();
-	...
-	pmu_detach_events(pmu);
+	if (static_cpu_has(X86_FEATURE_ARCH_LBR)) {
+		reg->config =3D mask;
+
+		/*
+		 * The Arch LBR HW can retrieve the common branch types
+		 * from the LBR_INFO. It doesn't require the high overhead
+		 * SW disassemble.
+		 * Enable the branch type by default for the Arch LBR.
+		 */
+		reg->reg |=3D X86_BR_TYPE_SAVE;
+		return 0;
+	}
 	...
 }
 
-During that window, cn10k_ddr_perf_event_add() can still run on another
-CPU (via an in-flight perf_event_open(), ioctl(PERF_EVENT_IOC_ENABLE),
-perf_rotate_context(), or cn10k_ddr_pmu_offline_cpu() ->
-perf_pmu_migrate_context()) and call hrtimer_start() when
-pmu->active_events becomes 1:
+When an event is opened with PERF_SAMPLE_BRANCH_USER |
+PERF_SAMPLE_BRANCH_KERNEL | PERF_SAMPLE_BRANCH_ANY (without
+PERF_SAMPLE_BRANCH_TYPE_SAVE) on an arch-LBR CPU where x86_lbr_type is
+disabled, forcing X86_BR_TYPE_SAVE into cpuc->br_sel causes
+intel_pmu_lbr_filter() to bypass its fast-path return:
 
-drivers/perf/marvell_cn10k_ddr_pmu.c:cn10k_ddr_perf_event_add() {
-	...
-	pmu->active_events++;
-	hwc->idx =3D counter;
+arch/x86/events/intel/lbr.c:intel_pmu_lbr_filter() {
+	/* if sampling all branches, then nothing to filter */
+	if (((br_sel & X86_BR_ALL) =3D=3D X86_BR_ALL) &&
+	    ((br_sel & X86_BR_TYPE_SAVE) !=3D X86_BR_TYPE_SAVE))
+		return;
 
-	if (pmu->active_events =3D=3D 1)
-		hrtimer_start(&pmu->hrtimer, cn10k_ddr_pmu_timer_period(),
-			      HRTIMER_MODE_REL_PINNED);
+With this change in intel_pmu_lbr_filter(), every LBR entry then falls back
+to software disassembly via branch_type() in NMI context, and any entry whe=
+re
+branch_type() returns X86_BR_NONE (such as when copy_from_user_nmi() fails =
+on
+an unmapped user page) gets discarded even though the user asked to sample
+all branches without branch-type saving:
 
-	if (counter < DDRC_PERF_NUM_GEN_COUNTERS) {
-		/* Generic counters, configure event id */
-		reg_offset =3D DDRC_PERF_CFG(p_data->cfg_base, counter);
-		ret =3D ddr_perf_get_event_bitmap(config, &val, pmu);
-		if (ret)
-			return ret;
-	...
-}
+		/* if type does not correspond, then discard */
+		if (type =3D=3D X86_BR_NONE || (br_sel & type) !=3D type) {
+			cpuc->lbr_entries[i].from =3D 0;
+			compress =3D true;
+		}
 
-If ddr_perf_get_event_bitmap() then returns -EINVAL (or if
-pmu->active_events was previously skewed by a failed add),
-cn10k_ddr_perf_event_add() returns without decrementing pmu->active_events
-or stopping pmu->hrtimer. Because event_sched_in() leaves the event in
-PERF_EVENT_STATE_INACTIVE on add failure, pmu_detach_events() ->
-event_sched_out() never calls cn10k_ddr_perf_event_del() for that event
-(and even if other active events are detached, pmu->active_events never
-reaches 0 in cn10k_ddr_perf_event_del()).
-
-This leaves ddr_pmu->hrtimer armed when cn10k_ddr_perf_remove() returns,
-allowing cn10k_ddr_pmu_timer_handler() to run after devm frees struct
-cn10k_ddr_pmu and unmaps ddr_pmu->base.
-
-Should hrtimer_cancel(&ddr_pmu->hrtimer) be called after
-perf_pmu_unregister() and cpuhp_state_remove_instance_nocalls() have
-completed (matching the reverse of the setup order in
-cn10k_ddr_perf_probe())?
+Would it make sense to gate X86_BR_TYPE_SAVE in
+intel_pmu_setup_hw_lbr_filter() on static_branch_likely(&x86_lbr_type) as
+well?
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261019135441.1420=
-968-185-sashal@kernel.org?part=3D1
+968-463-sashal@kernel.org?part=3D1
