@@ -1,59 +1,102 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
-ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792475118;
-	b=KTY3zehVxVkcJtYq6tAmLMihk3VtNpBLd3NLMqUaJD9+LxsAEeJMAt4PQgzPuT4Nj2We
-	 Eoa2dovG42kPNkGUWFHb/iV9k05opqZsnzuMFIJ9dmuIe0P5hOVtlhJc8BZYB3WX7lhP0
-	 XjrTRNOcCdLickEKRhv2s/cQSfq8C5YLKKofMyjJtM/cZKcqximra8Py/tzbdhGPt5DnM
-	 vNaRJvC5YUBN5W4JvVgM/UHzq8cgHUmw+r04DPhmFasifii8/Fnw/XcTVoULGf+s06VZW
-	 aSTopwqb95RALOtNyM/zFyU5jwMx03COKevg4wDKz+6Ao+GIPsD6sPRqn40qqQUMxnA==
-ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792475118;
-	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
-	 References:MIME-Version:Content-Type:Content-Disposition:In-Reply-To;
-	bh=tEdN/iM1JPmtngUml9AOVZRoTPizOmSCQoltxjzcxPQ=;
-	b=E1KdyWn6PYbiahCJz0ZiEYEI56cZUyz+X9sqn5feOcdERJJCbYH6a8h26yomrQLLblgb
-	 4zqr0rSUEJa3TQ7XVsUhjEiGCfWNJC3h57rqP1KNJpXoRqZAxr+WV38d6Q+mXwWaw7Zvh
-	 aP7kIjrhmiQ+eaSDLTPBGNa1gAq52GAcrSrZgUtZyYdk5j4beIbZWvkaIvDePI8Ky4Mkg
-	 Q7vHIMXFSsLgt//CADawkmr5T2HEV5Tf9qaR6a0wJGfFlzGNULUjwP9MBV1ZLo1NCW+d1
-	 woxA9+6YRtgIciqDmLu8Ot8fyjsTQ3Wue3meuyii2nVuDqOhwbOMBvK2NXbQrACduJw==
-ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b="a/y7oxwa";
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=185.203.200.13
+ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
+	t=1792478769;
+	b=ReH5O4tlaP8iFkNtOklf41KtAUtRCjnbLlr1vTelgcg/yAagcFbetrFf3E/WKv95ce5n
+	 0O6kZqgxqWtEBxrhYxL6M5poKcY+iqv9QID8FSvp5PUBYD8L5PqRuHulcgW0BpDhNIWm0
+	 5YCjaZ4MYd4GVvejY+H4RAW1INcDuotKly2eOxt19rxCdUkGrQYDh6lgIEeShtu1VY78j
+	 CDfJ9OU0KGijjzcK65+Gzqw+GlTvv6IV/R8x691EmdJhTvzqWpfjyESbKX5/e2wymO9VN
+	 aynzdKHUo4PyLCLDayDUdteoW5Qy6GgiBAV586udVNKaTeKofIHX89mtP+xLPJHQ2ww==
+ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1792478769;
+	h=DMARC-Filter:Received:DKIM-Signature:Received:Received:Date:From:To:
+	 Cc:Subject:Message-ID:References:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To;
+	bh=DjJ6aF4EEfNV1D/BCrVjMeW97sw80s+KxqGk+wmMMMQ=;
+	b=ej7zT9P/JMJylu5itB8YTUsMdJZhMZjBc9X3R6W7g/fuyxNUUiqiZidgUWir/9T72n0E
+	 +iyAWNo6qO5ATida4cBnEZjrs15gUmRTmVj+qYuqPeeM7S60CP+Kgg3l4b07+nVq2En8g
+	 LE33KinKTjuN2YqX8tRYFa3QSA3BCjZmzHcMiM1+sm8UxbX2h1S8ZupActs0X8qvlF5Kf
+	 WPy0kLMPpSAO8lCwR8CjsshAYUI9Csgo2KoOSvT5MVNYQsIge5FjffbBSz3w3Uv7GrGuX
+	 u5z5aE/WWyA2v8R/6heCWykV+DxFJLWpYP3CDEUcQ3W/ArgkEsKgVabfYvF9vAXgEYw==
+ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
+	dmarc=none header.from=pengutronix.de;
+	spf=pass smtp.mailfrom=pengutronix.de;
+	dkim=pass header.d=pengutronix.de header.i=@pengutronix.de header.a=rsa-sha256 header.s=20260414 header.b=A4dqaE0B;
+	arc=pass header.oldest-pass=0 smtp.remote-ip=185.203.200.13
+Received: from mx1.white.stw.pengutronix.de (mx1.white.stw.pengutronix.de [185.203.200.13])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25762606A31C;
-	Tue, 20 Oct 2026 05:45:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EFA8606A32F;
+	Tue, 20 Oct 2026 06:46:06 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 3EFA8606A32F
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=a/y7oxwa
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3CF981F000C4;
-	Tue, 20 Oct 2026 05:45:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1792475117;
-	bh=tEdN/iM1JPmtngUml9AOVZRoTPizOmSCQoltxjzcxPQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=a/y7oxwaF5lWXyjb+VWiqy3bBCy3MOloj6Q51j0WN8raQPFht5u41qK6FMxkL0oWn
-	 HYzoJ9qo4mciwhbjziuLnuW4VivQoDg7BxmhJZVoLDgtjxYvpSE4OVFQi0cNmz9EQN
-	 sZ8nSYZ71e9CLxKqdUrfaQwLCtnYronJK/N1uvMyIDYFyPb3KR5Ai0Te8uKMXZ9Wfw
-	 9gm2zShOA4X3NWldsmW3pFzYrdZGXNW/2QQfC8aznoN1MZarOzHmac6qLe8VKMhuQO
-	 xkTs8pBqhr3Rxbe+ySYAsCQchKl8ZgDyayXKayqtFBj8vmoh8Co+GM0cl/X6gCntMj
-	 0R32KJv8VWiKg==
-Date: Mon, 19 Oct 2026 22:45:15 -0700
-From: Namhyung Kim <namhyung@kernel.org>
-To: Changbin Du <changbin.du@gmail.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	James Clark <james.clark@linaro.org>, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	David Laight <david.laight.linux@gmail.com>
-Subject: Re: [PATCH v5] perf bench: Add atomic operations benchmark
-Message-ID: <atb_6wO-BN_cklar@z2>
-References: <20261016075552.1759260-1-changbin.du@gmail.com>
+	dkim=pass (2048-bit key, unprotected) header.d=pengutronix.de header.i=@pengutronix.de header.a=rsa-sha256 header.s=20260414 header.b=A4dqaE0B
+Received: from drehscheibe.grey.stw.pengutronix.de (drehscheibe.grey.stw.pengutronix.de [IPv6:2a0a:edc0:0:c01:1d::a2])
+	(Authenticated sender: relay-from-drehscheibe.grey.stw.pengutronix.de)
+	by mx1.white.stw.pengutronix.de (Postfix) with ESMTPSA id 807A62017C1;
+	Tue, 20 Oct 2026 08:46:03 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pengutronix.de;
+	s=20260414; t=1792478763;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=DjJ6aF4EEfNV1D/BCrVjMeW97sw80s+KxqGk+wmMMMQ=;
+	b=A4dqaE0BC406CMyqi1KhvCehlKud1+GI/NyJ4gSCPHaEMReYeqh/9h7GbancwxlmWIECcq
+	8PHT5RtYEcpjavaNK9DDNpRQ4fWno2To0kXbAVvPzDYT+0W6poXflHoLlDvUyUC6xMDERq
+	UiLfaCc6In6Lqnms6sOfvVrlSl0SAmEjtp+mAk8D7CMfblc5MjGU8fHG9nebqDsAnQ6mA7
+	MS0u2rM+DMczgvm8bUUwy1Dn1XJsYGieqT1Q7Kai4f3OWusWXjnGVkIoGW7zwzfi8Gw/MT
+	Vwh2EW9tsVl5pfPFA30QmYa2QCke6lh1SXqHJfE61KHAW2TUDfRkyW6x+77AbA==
+ARC-Seal: i=1; s=20260414; d=pengutronix.de; t=1792478763; a=rsa-sha256;
+	cv=none;
+	b=PFNwBlpd7AofRpN/rO4FPQhyJfd3X4ew5j6h63qfWYJWXylD2TV8zgLH9vgW+5Pf7Y4D5h
+	fmNZshb3XO+BySsnnzbbL7rXxBTnJ9sm6KJRySQkpHJPVt0LcPp1bWCAAcYBmYYGGNRU6t
+	36F9V5kz7JGw2ItS6yhfGUgUFr/Sn2AaTWZLoBLXONlpikzPOttfBjtDIcXLTqljkpT5Ve
+	FYXBZbfgwHQnOY82b9nhAObD4wut40m/p+c9AfIKFmdMVVedWWPIT7gegU/YQh0Rv03622
+	LpBMwYZikROg6EMWpE0oeq0ILeP7Z2WJ2z/DMgLoyW318+PZ3/KC+8yYxJCx8w==
+ARC-Authentication-Results: i=1;
+	ORIGINATING;
+	auth=pass smtp.auth=relay-from-drehscheibe.grey.stw.pengutronix.de smtp.mailfrom=mkl@pengutronix.de
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=pengutronix.de;
+	s=20260414; t=1792478763;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=DjJ6aF4EEfNV1D/BCrVjMeW97sw80s+KxqGk+wmMMMQ=;
+	b=QXin73Z1/KIUpy0eqj0IXU6PiO0NoTvNldx+fnhl93+gW6Jz0yThXy/6OD5HGZMPhG7PDP
+	5lXwMonYyK5xdDzuKoZJBsbjq5uUZmXH9zo6vE/OHikUEmoKCZrv5LGI/gi5IaHVnU7dla
+	CdRR2O2fyEId3ivxS8WDE47GQbwvt/bbA2tDdelnrHR00yvFxFZLO2NNNHOwhHlSRIc/4+
+	cwgbFl6QZ44uwk1SSYiuHdSyJrqlknkgKHUEltC4MZFfmLgmPk254yuoIjvHwOQYlBpFBw
+	bS2cpQPAmocby3PLh6QNKitTZcw7/OnkE5tr7rv7dW0IPvLwg6/wQJrynEi5eg==
+Received: from moin.white.stw.pengutronix.de ([2a0a:edc0:0:b01:1d::7b] helo=bjornoya.blackshift.org)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <mkl@pengutronix.de>)
+	id 1xJ3bn-000KgQ-1G;
+	Tue, 20 Oct 2026 08:46:03 +0200
+Received: from pengutronix.de (p4ffb23c7.dip0.t-ipconnect.de [79.251.35.199])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange x25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	(Authenticated sender: mkl-all@blackshift.org)
+	by smtp.blackshift.org (Postfix) with ESMTPSA id E894A5C9BBF;
+	Tue, 20 Oct 2026 06:44:18 +0000 (UTC)
+Date: Tue, 20 Oct 2026 08:44:18 +0200
+From: Marc Kleine-Budde <mkl@pengutronix.de>
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Ian Rogers <irogers@google.com>, Thomas Gleixner <tglx@kernel.org>, 
+	Andy Lutomirski <luto@kernel.org>, Vincenzo Frascino <vincenzo.frascino@arm.com>, 
+	Stefan Kerkmann <s.kerkmann@pengutronix.de>, Christophe Leroy <chleroy@kernel.org>, 
+	David Laight <david.laight.linux@gmail.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, 
+	Namhyung Kim <namhyung@kernel.org>, Eric Biggers <ebiggers@google.com>, 
+	Alexander Viro <viro@zeniv.linux.org.uk>, "Jason A . Donenfeld" <Jason@zx2c4.com>, 
+	linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 1/2] vdso: Add VDSO_UNALIGNED_PACKED config option for
+ ARMv5
+Message-ID: <20261020-succinct-zebu-of-vigor-6cb2cd-mkl@pengutronix.de>
+References: <20261019201257.3805356-1-irogers@google.com>
+ <31fe09f6-0a14-40fc-8ad8-c03998fb1f5c@app.fastmail.com>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -63,86 +106,60 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="6qea3f7c45xlx244"
 Content-Disposition: inline
-In-Reply-To: <20261016075552.1759260-1-changbin.du@gmail.com>
+In-Reply-To: <31fe09f6-0a14-40fc-8ad8-c03998fb1f5c@app.fastmail.com>
 
-On Fri, Oct 16, 2026 at 03:55:52PM +0800, Changbin Du wrote:
-> Add a new 'atomic' collection to perf bench for benchmarking
-> atomic read-modify-write operations with multi-threaded
-> contention testing. It provides two subcommands:
-> 
->   - atomic cas: contended compare-and-swap operations
->     (__atomic_compare_exchange_n)
->   - atomic inc: contended fetch-add operations (__atomic_fetch_add)
-> 
-> Both support a configurable thread count and runtime to measure
-> atomic contention effects.
-> 
-> Why this benchmark is needed:
-> - Atomic read-modify-write operations are fundamental to lock-free
->   algorithms and data structures. Understanding their performance
->   characteristics under contention is critical for designing
->   high-performance concurrent applications.
-> - The benchmark helps identify atomic operation latency and
->   scalability issues across different thread counts, revealing
->   contention patterns that are not visible in single-threaded tests.
-> - Useful for evaluating atomic implementation quality on different
->   architectures and for regression testing after changes to atomic
->   primitives or memory ordering.
-> 
-> Measurement methodology:
-> - By default two threads contend for the counter, enough to expose
->   the contention effect; use -t to scale the count.
-> - Each thread starts a private timer (clock_gettime CLOCK_MONOTONIC)
->   after synchronizing on a pthread_barrier, ensuring all threads
->   begin simultaneously.
-> - Each thread performs a hot loop of the selected atomic operation
->   (compare-and-swap or fetch-add) on a shared unsigned long counter
->   for a fixed runtime. It counts its own completed operations in a
->   local variable, and the loop runs in batches so the termination
->   flag is only polled between batches.
-> - The main thread sleeps for the runtime and then sets the flag; the
->   throughput of a repeat is the total operation count divided by the
->   measured wall time (the max per-thread runtime).
-> - The shared counter is cache-line aligned (64 bytes) to isolate
->   contention to the target cache line and avoid false sharing.
-> - The per-thread operation counts of the last repeat show whether
->   any thread failed to make progress under contention.
-> - The first repeat is excluded from statistics as a warmup phase
->   to avoid cache-cold effects.
-> 
-> Example usage:
->   $ perf bench atomic all
->   # Running atomic/cas benchmark...
->     Threads: 2, runtime: 2 sec, repeats: 10 (warmup: 1)
->     Avg throughput: 68,599,954 ops/sec (+- 0.13%)
->     Per-thread ops (last repeat):
->       fastest:  74,842,112 ops
->       slowest:  63,176,704 ops
->       avg:      69,009,408 ops
-> 
->   # Running atomic/inc benchmark...
->     Threads: 2, runtime: 2 sec, repeats: 10 (warmup: 1)
->     Avg throughput: 128,428,772 ops/sec (+- 0.54%)
->     Per-thread ops (last repeat):
->       fastest:  146,230,272 ops
->       slowest:  112,825,344 ops
->       avg:      129,527,808 ops
-> 
-> Output fields explained:
-> - Threads: number of contending threads
-> - runtime: seconds each thread runs per repeat
-> - repeats: number of test runs (first is warmup)
-> - Avg throughput: mean aggregate ops/sec across repeats
-> - +- %: relative standard error of the mean throughput across repeats
-> - Per-thread ops: fastest/slowest/avg operations per thread in the
->   last repeat (shows scheduling imbalance and lack of progress)
-> 
-> Assisted-by: opencode:DeepSeek-V4-Pro
-> Signed-off-by: Changbin Du <changbin.du@gmail.com>
 
-Reviewed-by: Namhyung Kim <namhyung@kernel.org>
+--6qea3f7c45xlx244
+Content-Type: text/plain; protected-headers=v1; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v1 1/2] vdso: Add VDSO_UNALIGNED_PACKED config option for
+ ARMv5
+MIME-Version: 1.0
 
-Thanks,
-Namhyung
+On 20.10.2026 00:12:57, Arnd Bergmann wrote:
+> On Mon, Oct 19, 2026, at 22:12, Ian Rogers wrote:
+> > +
+> > +config VDSO_UNALIGNED_PACKED
+> > +	bool
+> > +	default CPU_32v5
+> > +	help
+> > +	  Use packed structs rather than memcpy() in include/vdso/unaligned.h
+> > +	  for unaligned memory accesses. Enabled on ARMv5 where GCC may emit
+> > +	  out-of-line memcpy() calls instead of inlining byte accesses.
+>
+> As explained, I think this misrepresents the problem as Arm specific and
+> isn't the correct method for -munaligned-access targets on Arm, which
+> include CPU_32v3, CPU_32v4 and CPU_32v4T along with CPU_32v5.
+>
+> I still hope we can use a version that just produces the intended code
+> on both -munaligned-access and -mno-unaligned-access targets like the
+> old version did.
+
+FYI: there is the kconfig Symbol HAVE_EFFICIENT_UNALIGNED_ACCESS. Can we
+make use of it?
+
+regards,
+Marc
+
+--=20
+Pengutronix e.K.                 | Marc Kleine-Budde          |
+Embedded Linux                   | https://www.pengutronix.de |
+Vertretung N=C3=BCrnberg              | Phone: +49-5121-206917-129 |
+Amtsgericht Hildesheim, HRA 2686 | Fax:   +49-5121-206917-9   |
+
+--6qea3f7c45xlx244
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQSl+MghEFFAdY3pYJLMOmT6rpmt0gUCatcNvwAKCRDMOmT6rpmt
+0jcxAP4+OJR4f1ri/sD2ri5ZdsCmwGcY28sq9qfO2yECm9kV/AD+LrphmAxqvEbJ
+Ma0FGykZK475iITqX2YOZ1BLSUr4dAM=
+=v2z9
+-----END PGP SIGNATURE-----
+
+--6qea3f7c45xlx244--
