@@ -1,60 +1,60 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=185.70.43.97
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=109.224.244.119
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792516867;
-	b=TZB0W15FXDI31iohxit5Y7DaeJTU9h8b201juLs4etgwd2fXI1N2y1Ak8m3NGUtcx3fw
-	 gR7+SBQGQOPjMaBXvUHzEo+HgGx9C+oqteooG4d5TI6RHxQnrQzFAVpfuLzMMyDtJUkxF
-	 iKeV38NjrqqWl0BJTUnrJ1FSJOGGFPtOu1WaUg6iSTb6w7/BNZ2jfSJblpLI5jxEb+0Tz
-	 c7SKXwbe+iUsmnwBuZXluX6HLJs0P9Dx3JdFBM6EB/qiC/m9wqb2499MVFCUPmNi+cO7o
-	 2t/gxX6drfJcI8CmP8ssyhUpQ+Oyp4KvA8xRALTU5KkmVIL6bWNMwkJsMlIKFvc9jWQ==
+	t=1792516876;
+	b=wL0W5xSENe0R9UY9PGd70hPQZrEMOYjLXxqWoF1JvwJvRa15YGyuNjPBEwZ4p8G+X1IR
+	 VLOrQjAWkUC13vOqIJisDt3mUhXbb1dg5k6kgGZW2q3Pb4xogkxBirQ2M3RKKSI2BhjAw
+	 6C4ANVIZVuubqlWCBxiVzgk7Z5WF/pjCogLhnhoVArnYz8HqpDU276EB3wmOhLUKR/83m
+	 Q4K7jEWkKkdGjzUA9JAsBLlWqlIpy/AZCvt7+992KtwS/2oEjepxFCo+fVZqH53Z/NB55
+	 VS1S2icy7F34bA2NCosyMqn7SV3PwaubLrUGy19yLSKo/c/F90uZGco9rprQMT8DOeg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792516867;
+	a=rsa-sha256; c=relaxed/relaxed; t=1792516876;
 	h=DMARC-Filter:DKIM-Signature:Date:To:From:Cc:Subject:Message-ID:
 	 In-Reply-To:References:Feedback-ID:X-Pm-Message-ID:MIME-Version:
 	 Content-Type:Content-Transfer-Encoding;
-	bh=GMpU3aRZu4tgyi6FvTaazs0i1w/2Ourk2Zax7nqmLrk=;
-	b=IZL03mjGmw/5V7c2aYRUvD1MPpIXiJ857//jN9yCliwpaK5i9x8zm+V4BUAIZTW1LIvC
-	 As8vBIYklyyI8DSZmATS+1TJ4FwVVKslWro0jVSrYxqrrW4X70vcujN2zKAsIHQwQTEoK
-	 vs7V1GEjD/KBYEYjQR4Ur/W//AJi89wYj6OtV7xbXeRu/mvb44q1yGS4lSIwovsk+Irrk
-	 5qCkkD6ele5Y1De6R3fMeY6F3gOd6DnMDfedVlAkCWMyB1ENdv0dVHK+gMztsNdsZEbG6
-	 MG04S4kT1FsqzYlnjqGR80R41tSlR0T2aOc6AAUbIzeSSPPo1Ha/3o/YzQpAACbBnxg==
+	bh=TbeuB1pI6Qx3cFqyT3E7YKcwCBIJAjWx9mje7M15GYk=;
+	b=UJ7llx5wvditeTJ61B1LmIDgUwoPEs/DUDGca/zlRwit5nr/JCHqB3J93dwreUr65L88
+	 0OUMjMpDFiE08yJejGDerZoEC0+jPbeyLHuPfzt8ol5nV+Nh+JK/f0LYxLb6e6AA2JQAc
+	 K96lB4SiAz1hqZsnC2fLUEOAGmRTeXCN9sNoodWfApf9ZY79K3YIZ8HNWhHsmuMwK0LqG
+	 4FFePmyGM7jlZrknTAiSPx+ush0UFxttHwiVr7VcHtkF+4nGqTGctkrGWrZ6pXmrYrig9
+	 fLdja0nkMLPdccRvpHx1haof92xztHvPa4RA8u338cfAiBYEj2X8I0rKfpTW0EelMCQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=1g4.org;
 	spf=pass smtp.mailfrom=1g4.org;
-	dkim=pass header.d=1g4.org header.i=@1g4.org header.a=rsa-sha256 header.s=protonmail header.b=YmfzJbCh;
-	arc=none smtp.remote-ip=185.70.43.97
-Received: from mail-4397.protonmail.ch (mail-4397.protonmail.ch [185.70.43.97])
+	dkim=pass header.d=1g4.org header.i=@1g4.org header.a=rsa-sha256 header.s=protonmail header.b="ngX/QL0B";
+	arc=none smtp.remote-ip=109.224.244.119
+Received: from mail-244119.protonmail.ch (mail-244119.protonmail.ch [109.224.244.119])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27E93606A326
-	for <linux-perf-users@vger.kernel.org>; Tue, 20 Oct 2026 17:21:04 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 27E93606A326
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E69F760A2601
+	for <linux-perf-users@vger.kernel.org>; Tue, 20 Oct 2026 17:21:15 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org E69F760A2601
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=1g4.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=1g4.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=1g4.org header.i=@1g4.org header.a=rsa-sha256 header.s=protonmail header.b=YmfzJbCh
+	dkim=pass (2048-bit key, unprotected) header.d=1g4.org header.i=@1g4.org header.a=rsa-sha256 header.s=protonmail header.b=ngX/QL0B
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=1g4.org;
-	s=protonmail; t=1792516863; x=1792776063;
-	bh=GMpU3aRZu4tgyi6FvTaazs0i1w/2Ourk2Zax7nqmLrk=;
+	s=protonmail; t=1792516873; x=1792776073;
+	bh=TbeuB1pI6Qx3cFqyT3E7YKcwCBIJAjWx9mje7M15GYk=;
 	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
 	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
 	 Message-ID:BIMI-Selector;
-	b=YmfzJbChsxGVZaPLl+OLhz+159ZvGibk4WajrPjg8/UY40jLt9X6kdpZ4pALcNogL
-	 ApafoWrqv5pMWlKZmWleNdgOE8Yhk/iTwm7YArB/r76EBxd//DwO8+hjj4TpThRebL
-	 uJqbjLtxskym5VsUV1b62rs4iNG2WCdbm01IaOJ2xXVsSD/6zSvz3QSDcKSydDU/Bh
-	 yVztnhdFBfcbUXqIhyit4WWPgBBVU0VCaUjWMzoldxR4TuUPZxRPxI1/Q/omIua+up
-	 BbbFy5wcr11q9TDwY38Mb4Kb61SyW5RG8cQL+cbsjhdg6s7/wjj/+pJZXWWHzT7raN
-	 21VN5FWZCaBpQ==
-Date: Tue, 20 Oct 2026 17:20:58 +0000
+	b=ngX/QL0ByKU3avZXFy3YLhi/qik667+r8aHht74+YoBtRgLyXYqj9YvDsBVbTdkD/
+	 dh6IgYdtkTFl1fImz532CUpidZTcWKerm+RjG3BMzwZdKLFMSQg71Z/QBaqpO9OXrA
+	 q/gvDO0HJjhx8wTf+gpigTjOBgSMstAeW8ElE4lLAtegY0uSfliOKBMCcIODEf2sqw
+	 lnhEROt0A/xxgOCletFyh9wqrblRXcga5foniSfX+ZstB5FaejuQuqMBlmYS4yU/N5
+	 SxmzYB7Zx8/qrhBgQYoabe8SCV+YmZe0llmp0XTfRbap8Xy4Lsyis7vU2B7INCvZB8
+	 bLphZFZX63B+A==
+Date: Tue, 20 Oct 2026 17:21:07 +0000
 To: linux-perf-users@vger.kernel.org, acme@kernel.org, namhyung@kernel.org
 From: Paul Moses <p@1g4.org>
 Cc: peterz@infradead.org, mingo@redhat.com, mark.rutland@arm.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com, james.clark@linaro.org, kan.liang@intel.com, linux-kernel@vger.kernel.org, Paul Moses <p@1g4.org>
-Subject: [PATCH 1/2] perf mmap: Use the head selected by read_init
-Message-ID: <20261020171946.3593127-2-p@1g4.org>
+Subject: [PATCH 2/2] perf mmap: Preserve the consumed cursor in forward mode
+Message-ID: <20261020171946.3593127-3-p@1g4.org>
 In-Reply-To: <20261020171946.3593127-1-p@1g4.org>
 References: <20261020171946.3593127-1-p@1g4.org>
 Feedback-ID: 8253658:user:proton
-X-Pm-Message-ID: 1c3fd64d557e55c70a4a5fc748b2dc802ff08482
+X-Pm-Message-ID: a07aa1e0e752fd93506ce82a31e4d75a620c6bbc
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -67,47 +67,43 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
 
-perf_mmap__push() reads the producer head before calling
-perf_mmap__read_init(), which reads it again to select the range to copy.
+perf_mmap__read_event() updates prev as it consumes forward-buffer
+records. perf_mmap__read_done() then overwrites prev with a fresh
+producer head, even when unread records remain.
 
-If the producer advances between those reads, push() copies through the
-newer head but stores the earlier head in prev. The next drain starts at
-that earlier position and can write the same records to perf.data again.
+perf_kvm__mmap_read_idx() stops after 25 records per mmap and calls
+read_done(). If more records are pending, prev advances past them. The
+next drain starts at that new position and skips the unread remainder.
 
-Use the head selected by read_init(): end for forward buffers and start
-for overwrite buffers. Save it before the copy loop advances start so
-prev matches the range that was copied.
+An event arriving after the last empty read_event() and before
+read_done() can also be skipped. read_done() does not itself update the
+kernel's data_tail.
 
-Fixes: 8872481bd048 ("perf mmap: Introduce perf_mmap__read_init()")
+Only refresh prev for overwrite buffers, which need the current head as
+the end of the next backward read. Leave the forward cursor at the
+consumed position.
+
+Fixes: 53172f9057e9 ("perf kvm: Switch to new perf_mmap__read_event() inter=
+face")
 Signed-off-by: Paul Moses <p@1g4.org>
 ---
- tools/perf/util/mmap.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ tools/lib/perf/mmap.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/perf/util/mmap.c b/tools/perf/util/mmap.c
-index 358e70c4f3edd077c9752115329f29040f1c2a76..6dcc4a9304b926c4a8d4f401e40=
-bfd79d18dd199 100644
---- a/tools/perf/util/mmap.c
-+++ b/tools/perf/util/mmap.c
-@@ -330,7 +330,7 @@ int mmap__mmap(struct mmap *map, struct mmap_params *mp=
-, int fd, struct perf_cpu
- int perf_mmap__push(struct mmap *md, void *to,
- =09=09    int push(struct mmap *map, void *to, void *buf, size_t size))
- {
--=09u64 head =3D perf_mmap__read_head(&md->core);
-+=09u64 head;
- =09unsigned char *data =3D md->core.base + page_size;
- =09unsigned long size;
- =09void *buf;
-@@ -340,6 +340,7 @@ int perf_mmap__push(struct mmap *md, void *to,
- =09if (rc < 0)
- =09=09return (rc =3D=3D -EAGAIN) ? 1 : -1;
+diff --git a/tools/lib/perf/mmap.c b/tools/lib/perf/mmap.c
+index ec124eb0ec0abbcc4a395eca7478129a74309965..ab3adf1d8baf933d5386faf743f=
+178b0a7da44c5 100644
+--- a/tools/lib/perf/mmap.c
++++ b/tools/lib/perf/mmap.c
+@@ -200,7 +200,7 @@ void perf_mmap__read_done(struct perf_mmap *map)
+ =09/*
+ =09 * Check if event was unmapped due to a POLLHUP/POLLERR.
+ =09 */
+-=09if (!refcount_read(&map->refcnt))
++=09if (!refcount_read(&map->refcnt) || !map->overwrite)
+ =09=09return;
 =20
-+=09head =3D md->core.overwrite ? md->core.start : md->core.end;
- =09size =3D md->core.end - md->core.start;
-=20
- =09if ((md->core.start & md->core.mask) + size !=3D (md->core.end & md->co=
-re.mask)) {
+ =09map->prev =3D perf_mmap__read_head(map);
 --=20
 2.56.GIT
 
