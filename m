@@ -1,58 +1,59 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792474873;
-	b=RunGC3q8FExiPZe5LYP23B1bkqsE74KeOIlKHiP36yO7oyvv49fayeysfnOnxeRIevFl
-	 D0Z1crRANDUtuBcVfrmlBjY6PEMFZip4mc2UkQ9s+BEwotkPzOcetKdC1GF6mgFmjU80k
-	 vEoPgrNBBLxyIbrp4m/BvXcPKW9vRa+FxiGhJVwzs+dpmlY2c897QPigW1XwVzBeKEScj
-	 SAYI02oW4RUO33NdI+4mk9nPzNeML50yr2TDmNsAod9dfxwBn+pSC5EknsH7bKJep0O/Q
-	 0NxLlL3tRZ+hXxXt4IpOljXBlctMmwPW0gEm1JSkmykkOhS5FxkIGKiZobUHmmuC0aA==
+	t=1792475118;
+	b=KTY3zehVxVkcJtYq6tAmLMihk3VtNpBLd3NLMqUaJD9+LxsAEeJMAt4PQgzPuT4Nj2We
+	 Eoa2dovG42kPNkGUWFHb/iV9k05opqZsnzuMFIJ9dmuIe0P5hOVtlhJc8BZYB3WX7lhP0
+	 XjrTRNOcCdLickEKRhv2s/cQSfq8C5YLKKofMyjJtM/cZKcqximra8Py/tzbdhGPt5DnM
+	 vNaRJvC5YUBN5W4JvVgM/UHzq8cgHUmw+r04DPhmFasifii8/Fnw/XcTVoULGf+s06VZW
+	 aSTopwqb95RALOtNyM/zFyU5jwMx03COKevg4wDKz+6Ao+GIPsD6sPRqn40qqQUMxnA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792474873;
+	a=rsa-sha256; c=relaxed/relaxed; t=1792475118;
 	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
 	 References:MIME-Version:Content-Type:Content-Disposition:In-Reply-To;
-	bh=uTLoMN4OPawg9FcCWDIerqTFK0G6Yu2FDRi+Pe3MEZU=;
-	b=2Kr7Jpeu9hDZjOfJpkfl+RGEyIJiReCSEAbcpA1Dai0yheNIrmFudb1FTeSpmIP7ZdaM
-	 6OFYhW0owgqbuichkLVk/P4/yFaRxke0A6rW93gjRF+/XOXzc6o1akF3mdQSHOdLnWEDp
-	 kivTCbRFFBWAP+/kU1Eq9KtZelztYgL4RR5am07snkAzxErcSgpvjtG6iM0X3bTwLqyNm
-	 rdhtj4qKrA359m7m6NnVvtTqVnNY0oH0ydbKWcK4jDdFHCp7By0z+fv9yYiS9+WaKySGV
-	 o18O1Vm0aqD6OWSqrK7PBccgooIczXFa9rwUFDGNfUN8euLAznuAKUYkGdww/081ggg==
+	bh=tEdN/iM1JPmtngUml9AOVZRoTPizOmSCQoltxjzcxPQ=;
+	b=E1KdyWn6PYbiahCJz0ZiEYEI56cZUyz+X9sqn5feOcdERJJCbYH6a8h26yomrQLLblgb
+	 4zqr0rSUEJa3TQ7XVsUhjEiGCfWNJC3h57rqP1KNJpXoRqZAxr+WV38d6Q+mXwWaw7Zvh
+	 aP7kIjrhmiQ+eaSDLTPBGNa1gAq52GAcrSrZgUtZyYdk5j4beIbZWvkaIvDePI8Ky4Mkg
+	 Q7vHIMXFSsLgt//CADawkmr5T2HEV5Tf9qaR6a0wJGfFlzGNULUjwP9MBV1ZLo1NCW+d1
+	 woxA9+6YRtgIciqDmLu8Ot8fyjsTQ3Wue3meuyii2nVuDqOhwbOMBvK2NXbQrACduJw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=XbssqYTY;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b="a/y7oxwa";
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3BC9606A319;
-	Tue, 20 Oct 2026 05:41:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25762606A31C;
+	Tue, 20 Oct 2026 05:45:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=XbssqYTY
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 981521F000C4;
-	Tue, 20 Oct 2026 05:41:11 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=a/y7oxwa
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3CF981F000C4;
+	Tue, 20 Oct 2026 05:45:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1792474872;
-	bh=uTLoMN4OPawg9FcCWDIerqTFK0G6Yu2FDRi+Pe3MEZU=;
+	s=k20260515; t=1792475117;
+	bh=tEdN/iM1JPmtngUml9AOVZRoTPizOmSCQoltxjzcxPQ=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=XbssqYTYNiiI3JbX1bPyppyWIF5K3GB9KLe7bjzi5TVykWVhEZOxKO1RJmR0EaDJa
-	 nzHO9qEjZZivErOr3gWAFm5IgJhHcxYEF0xd42v4gunZcKouMuHeVNGy48ZBEqeeux
-	 3XCxn95DFlvWEknmkl95/OkjfpfqcjVH90wHIQzfJMhyDinJL5ETVhHC48y8jIMhWN
-	 fqO9B6wsA8xny1aAJlOiKNc07Saj7aEUpQeqNkboHkoZaJqLe+OF7cDpjLpj12SYk1
-	 ilDPJJH+zO2G+HzDxhrnVxJxGY4E1NYHlY3LuziC/YrSWC5nm74F3CE6AaI1IDU7tv
-	 Q79B34Ae0ShuQ==
-Date: Mon, 19 Oct 2026 22:41:10 -0700
+	b=a/y7oxwaF5lWXyjb+VWiqy3bBCy3MOloj6Q51j0WN8raQPFht5u41qK6FMxkL0oWn
+	 HYzoJ9qo4mciwhbjziuLnuW4VivQoDg7BxmhJZVoLDgtjxYvpSE4OVFQi0cNmz9EQN
+	 sZ8nSYZ71e9CLxKqdUrfaQwLCtnYronJK/N1uvMyIDYFyPb3KR5Ai0Te8uKMXZ9Wfw
+	 9gm2zShOA4X3NWldsmW3pFzYrdZGXNW/2QQfC8aznoN1MZarOzHmac6qLe8VKMhuQO
+	 xkTs8pBqhr3Rxbe+ySYAsCQchKl8ZgDyayXKayqtFBj8vmoh8Co+GM0cl/X6gCntMj
+	 0R32KJv8VWiKg==
+Date: Mon, 19 Oct 2026 22:45:15 -0700
 From: Namhyung Kim <namhyung@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: acme@kernel.org, adrian.hunter@intel.com, james.clark@linaro.org,
-	jolsa@kernel.org, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org, mingo@redhat.com,
-	peterz@infradead.org, eranian@google.com, ddhariwal@google.com,
-	rcu@vger.kernel.org
-Subject: Re: [PATCH v4 2/7] perf bpf-filter: Support BPF sample filters on
- tracepoint events
-Message-ID: <atb-9j8tLZ2rFtOm@z2>
-References: <20261018053710.2572636-1-irogers@google.com>
- <20261019220915.3943592-1-irogers@google.com>
- <20261019220915.3943592-3-irogers@google.com>
+To: Changbin Du <changbin.du@gmail.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	James Clark <james.clark@linaro.org>, linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	David Laight <david.laight.linux@gmail.com>
+Subject: Re: [PATCH v5] perf bench: Add atomic operations benchmark
+Message-ID: <atb_6wO-BN_cklar@z2>
+References: <20261016075552.1759260-1-changbin.du@gmail.com>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -64,404 +65,84 @@ Precedence: list
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20261019220915.3943592-3-irogers@google.com>
+In-Reply-To: <20261016075552.1759260-1-changbin.du@gmail.com>
 
-On Mon, Oct 19, 2026 at 03:09:10PM -0700, Ian Rogers wrote:
-> Commit 466db4275edd ("perf parse-events: Add parse_uid_filter helper")
-> updated set_filter() to route non-tracepoint filter terms (such as uid
-> and gid) on PERF_TYPE_TRACEPOINT events to evsel->bpf_filters instead
-> of the ftrace tracepoint predicate filter.
+On Fri, Oct 16, 2026 at 03:55:52PM +0800, Changbin Du wrote:
+> Add a new 'atomic' collection to perf bench for benchmarking
+> atomic read-modify-write operations with multi-threaded
+> contention testing. It provides two subcommands:
 > 
-> However, in the kernel's __perf_event_set_bpf_prog()
-> (kernel/events/core.c), attaching a BPF program to a perf_event fd
-> branches on perf_event_is_tracing(event):
-> - Non-tracing events (hardware PMU, software events, breakpoints) call
->   perf_event_set_bpf_handler(), which requires BPF_PROG_TYPE_PERF_EVENT
->   (SEC("perf_event")).
-> - Tracepoint events (event->pmu == &perf_tracepoint) reject
->   BPF_PROG_TYPE_PERF_EVENT with -EINVAL and instead require
->   BPF_PROG_TYPE_TRACEPOINT (SEC("tracepoint")), which is attached to
->   event->tp_event->prog_array and executed in
->   perf_trace_run_bpf_submit() before perf_tp_event(), dropping the
->   sample if the BPF program returns 0. Furthermore, the
->   bpf_cast_to_kern_ctx() kfunc is only permitted in
->   BPF_PROG_TYPE_PERF_EVENT programs.
+>   - atomic cas: contended compare-and-swap operations
+>     (__atomic_compare_exchange_n)
+>   - atomic inc: contended fetch-add operations (__atomic_fetch_add)
 > 
-> Add SEC("tracepoint") int perf_tp_sample_filter(void *ctx) in
-> sample_filter.bpf.c to evaluate context-independent filter terms (uid,
-> gid, tid, cpu, time, cgroup) using BPF helpers without calling
-> bpf_cast_to_kern_ctx(). When preparing a BPF filter on a
-> PERF_TYPE_TRACEPOINT evsel, autoload perf_tp_sample_filter instead of
-> perf_sample_filter and attach it once to the shared trace_event_call.
+> Both support a configurable thread count and runtime to measure
+> atomic contention effects.
 > 
-> Before:
->   # perf record -e kmem:mm_page_alloc --filter 'uid == 0' -- true
->   libbpf: prog 'perf_sample_filter': failed to attach to perf_event FD 3: Invalid argument
->   Failed to attach perf sample-filter program
->   failed to set filter "BPF" on event kmem:mm_page_alloc with 22 (Invalid argument)
+> Why this benchmark is needed:
+> - Atomic read-modify-write operations are fundamental to lock-free
+>   algorithms and data structures. Understanding their performance
+>   characteristics under contention is critical for designing
+>   high-performance concurrent applications.
+> - The benchmark helps identify atomic operation latency and
+>   scalability issues across different thread counts, revealing
+>   contention patterns that are not visible in single-threaded tests.
+> - Useful for evaluating atomic implementation quality on different
+>   architectures and for regression testing after changes to atomic
+>   primitives or memory ordering.
 > 
-> After:
->   # perf record -e kmem:mm_page_alloc --filter 'uid == 0' -- true
->   [ perf record: Woken up 1 times to write data ]
->   [ perf record: Captured and wrote 0.024 MB perf.data (42 samples) ]
+> Measurement methodology:
+> - By default two threads contend for the counter, enough to expose
+>   the contention effect; use -t to scale the count.
+> - Each thread starts a private timer (clock_gettime CLOCK_MONOTONIC)
+>   after synchronizing on a pthread_barrier, ensuring all threads
+>   begin simultaneously.
+> - Each thread performs a hot loop of the selected atomic operation
+>   (compare-and-swap or fetch-add) on a shared unsigned long counter
+>   for a fixed runtime. It counts its own completed operations in a
+>   local variable, and the loop runs in batches so the termination
+>   flag is only polled between batches.
+> - The main thread sleeps for the runtime and then sets the flag; the
+>   throughput of a repeat is the total operation count divided by the
+>   measured wall time (the max per-thread runtime).
+> - The shared counter is cache-line aligned (64 bytes) to isolate
+>   contention to the target cache line and avoid false sharing.
+> - The per-thread operation counts of the last repeat show whether
+>   any thread failed to make progress under contention.
+> - The first repeat is excluded from statistics as a warmup phase
+>   to avoid cache-cold effects.
 > 
-> Fixes: 466db4275edd ("perf parse-events: Add parse_uid_filter helper")
-> Signed-off-by: Ian Rogers <irogers@google.com>
-> ---
->  tools/perf/util/bpf-filter.c                 | 136 ++++++++++++++++---
->  tools/perf/util/bpf_skel/sample_filter.bpf.c |  85 ++++++++++++
->  2 files changed, 201 insertions(+), 20 deletions(-)
+> Example usage:
+>   $ perf bench atomic all
+>   # Running atomic/cas benchmark...
+>     Threads: 2, runtime: 2 sec, repeats: 10 (warmup: 1)
+>     Avg throughput: 68,599,954 ops/sec (+- 0.13%)
+>     Per-thread ops (last repeat):
+>       fastest:  74,842,112 ops
+>       slowest:  63,176,704 ops
+>       avg:      69,009,408 ops
 > 
-> diff --git a/tools/perf/util/bpf-filter.c b/tools/perf/util/bpf-filter.c
-> index 72e83ac1d6a4..4e99af4764f1 100644
-> --- a/tools/perf/util/bpf-filter.c
-> +++ b/tools/perf/util/bpf-filter.c
-> @@ -123,15 +123,26 @@ static int check_sample_flags(struct evsel *evsel, struct perf_bpf_filter_expr *
->  {
->  	const struct perf_sample_info *info;
->  
-> -	if (expr->term >= PBF_TERM_SAMPLE_START && expr->term <= PBF_TERM_SAMPLE_END &&
-> -	    (evsel->core.attr.sample_type & (1 << (expr->term - PBF_TERM_SAMPLE_START))))
-> -		return 0;
-> -
->  	if (expr->term == PBF_TERM_UID || expr->term == PBF_TERM_GID) {
->  		/* Not dependent on the sample_type as computed from a BPF helper. */
->  		return 0;
->  	}
->  
-> +	if (evsel->core.attr.type == PERF_TYPE_TRACEPOINT) {
-> +		if (expr->term == PBF_TERM_TID || expr->term == PBF_TERM_CPU ||
-> +		    expr->term == PBF_TERM_TIME || expr->term == PBF_TERM_CGROUP)
-> +			return 0;
-> +		if (expr->op != PBF_OP_GROUP_BEGIN) {
-> +			pr_err("Error: %s tracepoint event does not support BPF sample term %d\n",
-> +			       evsel__name(evsel), expr->term);
-> +			return -1;
-> +		}
-> +	}
-> +
-> +	if (expr->term >= PBF_TERM_SAMPLE_START && expr->term <= PBF_TERM_SAMPLE_END &&
-> +	    (evsel->core.attr.sample_type & (1 << (expr->term - PBF_TERM_SAMPLE_START))))
-> +		return 0;
-> +
->  	if (expr->op == PBF_OP_GROUP_BEGIN) {
->  		struct perf_bpf_filter_expr *group;
->  
-> @@ -427,6 +438,7 @@ int perf_bpf_filter__prepare(struct evsel *evsel, struct target *target)
->  	struct bpf_link *link;
->  	struct perf_bpf_filter_entry *entry;
->  	bool needs_idx_hash = !target__has_cpu(target);
-> +	bool is_tracepoint = (evsel->core.attr.type == PERF_TYPE_TRACEPOINT);
->  #if LIBBPF_CURRENT_VERSION_GEQ(1, 7)
->  	DECLARE_LIBBPF_OPTS(bpf_perf_event_opts, pe_opts,
->  			    .dont_enable = true);
-> @@ -444,9 +456,15 @@ int perf_bpf_filter__prepare(struct evsel *evsel, struct target *target)
->  		goto err;
->  	}
->  
-> -	if (needs_idx_hash && geteuid() != 0) {
-> +	if (needs_idx_hash && geteuid() != 0 && !perf_cap__capable(CAP_BPF)) {
->  		int zero = 0;
->  
-> +		if (is_tracepoint) {
-> +			pr_err("Error: Tracepoint BPF filter requires CAP_BPF capability\n");
-> +			ret = -EPERM;
-> +			goto err;
-> +		}
-> +
->  		/* The filters map is shared among other processes */
->  		ret = create_idx_hash(evsel, entry);
->  		if (ret < 0)
-> @@ -484,8 +502,17 @@ int perf_bpf_filter__prepare(struct evsel *evsel, struct target *target)
->  		return 0;
->  	}
->  
-> -	skel = sample_filter_bpf__open_and_load();
-> +	skel = sample_filter_bpf__open();
->  	if (!skel) {
-> +		ret = -errno;
-> +		pr_err("Failed to open perf sample-filter BPF skeleton\n");
-> +		goto err;
-> +	}
-> +
-> +	bpf_program__set_autoload(skel->progs.perf_sample_filter, !is_tracepoint);
-> +	bpf_program__set_autoload(skel->progs.perf_tp_sample_filter, is_tracepoint);
-> +
-> +	if (sample_filter_bpf__load(skel) < 0) {
->  		ret = -errno;
->  		pr_err("Failed to load perf sample-filter BPF skeleton\n");
->  		goto err;
-> @@ -501,15 +528,35 @@ int perf_bpf_filter__prepare(struct evsel *evsel, struct target *target)
->  		goto err;
->  	}
->  
-> -	prog = skel->progs.perf_sample_filter;
-> -	for (x = 0; x < xyarray__max_x(evsel->core.fd); x++) {
-> -		for (y = 0; y < xyarray__max_y(evsel->core.fd); y++) {
-> -			link = bpf_program__attach_perf_event_opts(prog, FD(evsel, x, y),
-> -								   &pe_opts);
-> -			if (IS_ERR(link)) {
-> -				pr_err("Failed to attach perf sample-filter program\n");
-> -				ret = PTR_ERR(link);
-> -				goto err;
-> +	if (is_tracepoint) {
-> +		/*
-> +		 * For PERF_TYPE_TRACEPOINT, PERF_EVENT_IOC_SET_BPF attaches the
-> +		 * BPF program to event->tp_event->prog_array on the shared
-> +		 * trace_event_call, which perf_trace_run_bpf_submit() executes
-> +		 * for all CPUs and tasks before iterating the per-CPU perf
-> +		 * events. Attach once on the first FD so tp_event->prog_array
-> +		 * does not get duplicate copies for each per-CPU FD.
-> +		 */
-> +		prog = skel->progs.perf_tp_sample_filter;
-> +		link = bpf_program__attach_perf_event_opts(prog, FD(evsel, 0, 0),
-> +							   &pe_opts);
-> +		ret = libbpf_get_error(link);
-> +		if (ret) {
-> +			pr_err("Failed to attach perf tracepoint sample-filter program\n");
-> +			goto err;
-> +		}
-> +		skel->links.perf_tp_sample_filter = link;
-> +	} else {
-> +		prog = skel->progs.perf_sample_filter;
-> +		for (x = 0; x < xyarray__max_x(evsel->core.fd); x++) {
-> +			for (y = 0; y < xyarray__max_y(evsel->core.fd); y++) {
-> +				link = bpf_program__attach_perf_event_opts(prog, FD(evsel, x, y),
-> +									   &pe_opts);
+>   # Running atomic/inc benchmark...
+>     Threads: 2, runtime: 2 sec, repeats: 10 (warmup: 1)
+>     Avg throughput: 128,428,772 ops/sec (+- 0.54%)
+>     Per-thread ops (last repeat):
+>       fastest:  146,230,272 ops
+>       slowest:  112,825,344 ops
+>       avg:      129,527,808 ops
+> 
+> Output fields explained:
+> - Threads: number of contending threads
+> - runtime: seconds each thread runs per repeat
+> - repeats: number of test runs (first is warmup)
+> - Avg throughput: mean aggregate ops/sec across repeats
+> - +- %: relative standard error of the mean throughput across repeats
+> - Per-thread ops: fastest/slowest/avg operations per thread in the
+>   last repeat (shows scheduling imbalance and lack of progress)
+> 
+> Assisted-by: opencode:DeepSeek-V4-Pro
+> Signed-off-by: Changbin Du <changbin.du@gmail.com>
 
-This link should be saves somewhere.  I've sent a fix for it.
-
-
-> +				ret = libbpf_get_error(link);
-> +				if (ret) {
-> +					pr_err("Failed to attach perf sample-filter program\n");
-> +					goto err;
-> +				}
->  			}
->  		}
->  	}
-> @@ -641,6 +688,45 @@ int perf_bpf_filter__parse(struct list_head *expr_head, const char *str)
->  	return ret;
->  }
->  
-> +static int pin_filter_object(struct sample_filter_bpf *skel, const char *path)
-> +{
-> +	char *prog_path = NULL;
-> +	int ret;
-> +
-> +	ret = bpf_object__pin_maps(skel->obj, path);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	if (asprintf(&prog_path, "%s/perf_sample_filter", path) < 0) {
-> +		bpf_object__unpin_maps(skel->obj, path);
-> +		return -ENOMEM;
-> +	}
-> +
-> +	ret = bpf_program__pin(skel->progs.perf_sample_filter, prog_path);
-> +	if (ret < 0)
-> +		bpf_object__unpin_maps(skel->obj, path);
-> +
-> +	free(prog_path);
-> +	return ret;
-> +}
-> +
-> +static int unpin_filter_object(struct sample_filter_bpf *skel, const char *path)
-> +{
-> +	char *prog_path = NULL;
-> +	int ret, map_ret;
-> +
-> +	if (asprintf(&prog_path, "%s/perf_sample_filter", path) < 0) {
-> +		bpf_object__unpin_maps(skel->obj, path);
-> +		return -ENOMEM;
-> +	}
-> +
-> +	ret = bpf_program__unpin(skel->progs.perf_sample_filter, prog_path);
-> +	free(prog_path);
-> +
-> +	map_ret = bpf_object__unpin_maps(skel->obj, path);
-> +	return ret < 0 ? ret : map_ret;
-> +}
-> +
->  int perf_bpf_filter__pin(void)
->  {
->  	struct sample_filter_bpf *skel;
-> @@ -655,6 +741,7 @@ int perf_bpf_filter__pin(void)
->  	}
->  
->  	/* pinned program will use pid-hash */
-> +	bpf_program__set_autoload(skel->progs.perf_tp_sample_filter, false);
->  	bpf_map__set_max_entries(skel->maps.filters, MAX_FILTERS);
->  	bpf_map__set_max_entries(skel->maps.event_hash, MAX_EVT_HASH);
->  	bpf_map__set_max_entries(skel->maps.idx_hash, MAX_IDX_HASH);
-> @@ -674,7 +761,7 @@ int perf_bpf_filter__pin(void)
->  		goto err;
->  	}
->  
-> -	ret = bpf_object__pin(skel->obj, path);
-> +	ret = pin_filter_object(skel, path);
-
-Why is this change needed?
+Reviewed-by: Namhyung Kim <namhyung@kernel.org>
 
 Thanks,
 Namhyung
-
-
->  	if (ret < 0) {
->  		pr_err("Failed to pin BPF filter objects\n");
->  		goto err;
-> @@ -683,8 +770,8 @@ int perf_bpf_filter__pin(void)
->  	/* setup access permissions for the pinned objects */
->  	dir_fd = open(path, O_PATH);
->  	if (dir_fd < 0) {
-> -		bpf_object__unpin(skel->obj, path);
-> -		ret = dir_fd;
-> +		ret = -errno;
-> +		unpin_filter_object(skel, path);
->  		goto err;
->  	}
->  
-> @@ -727,6 +814,8 @@ int perf_bpf_filter__pin(void)
->  
->  err_close:
->  	close(dir_fd);
-> +	if (ret < 0)
-> +		unpin_filter_object(skel, path);
->  
->  err:
->  	free(path);
-> @@ -740,13 +829,20 @@ int perf_bpf_filter__unpin(void)
->  	char *path = NULL;
->  	int ret = -1;
->  
-> -	skel = sample_filter_bpf__open_and_load();
-> +	skel = sample_filter_bpf__open();
->  	if (!skel) {
->  		ret = -errno;
->  		pr_err("Failed to open perf sample-filter BPF skeleton\n");
->  		goto err;
->  	}
->  
-> +	bpf_program__set_autoload(skel->progs.perf_tp_sample_filter, false);
-> +	if (sample_filter_bpf__load(skel) < 0) {
-> +		ret = -errno;
-> +		pr_err("Failed to load perf sample-filter BPF skeleton\n");
-> +		goto err;
-> +	}
-> +
->  	if (asprintf(&path, "%s/fs/bpf/%s", sysfs__mountpoint(),
->  		     PERF_BPF_FILTER_PIN_PATH) < 0) {
->  		ret = -errno;
-> @@ -754,7 +850,7 @@ int perf_bpf_filter__unpin(void)
->  		goto err;
->  	}
->  
-> -	ret = bpf_object__unpin(skel->obj, path);
-> +	ret = unpin_filter_object(skel, path);
->  
->  err:
->  	free(path);
-> diff --git a/tools/perf/util/bpf_skel/sample_filter.bpf.c b/tools/perf/util/bpf_skel/sample_filter.bpf.c
-> index e5666d4c1722..576fbed270e5 100644
-> --- a/tools/perf/util/bpf_skel/sample_filter.bpf.c
-> +++ b/tools/perf/util/bpf_skel/sample_filter.bpf.c
-> @@ -192,6 +192,28 @@ static inline __u64 perf_get_sample(struct bpf_perf_event_data_kern *kctx,
->  	return 0;
->  }
->  
-> +static __always_inline __u64 perf_get_common_sample(struct perf_bpf_filter_entry *entry)
-> +{
-> +	switch (entry->term) {
-> +	case PBF_TERM_TID:
-> +		if (entry->part)
-> +			return bpf_get_current_pid_tgid() >> 32;
-> +		return (__u32)bpf_get_current_pid_tgid();
-> +	case PBF_TERM_CPU:
-> +		return bpf_get_smp_processor_id();
-> +	case PBF_TERM_TIME:
-> +		return bpf_ktime_get_ns();
-> +	case PBF_TERM_CGROUP:
-> +		return bpf_get_current_cgroup_id();
-> +	case PBF_TERM_UID:
-> +		return bpf_get_current_uid_gid() & 0xFFFFFFFF;
-> +	case PBF_TERM_GID:
-> +		return bpf_get_current_uid_gid() >> 32;
-> +	default:
-> +		return 0;
-> +	}
-> +}
-> +
->  #define CHECK_RESULT(data, op, val)			\
->  	if (!(data op val)) {				\
->  		if (!in_group)				\
-> @@ -295,4 +317,67 @@ int perf_sample_filter(void *ctx)
->  	return 0;
->  }
->  
-> +/* BPF program to be called for tracepoint perf events */
-> +SEC("tracepoint")
-> +int perf_tp_sample_filter(void *ctx)
-> +{
-> +	struct perf_bpf_filter_entry *entry;
-> +	__u64 sample_data;
-> +	int in_group = 0;
-> +	int group_result = 0;
-> +	int i, k = 0;
-> +	int *losts;
-> +
-> +	entry = bpf_map_lookup_elem(&filters, &k);
-> +	if (entry == NULL)
-> +		goto drop;
-> +
-> +	for (i = 0; i < MAX_FILTERS; i++) {
-> +		sample_data = perf_get_common_sample(&entry[i]);
-> +
-> +		switch (entry[i].op) {
-> +		case PBF_OP_EQ:
-> +			CHECK_RESULT(sample_data, ==, entry[i].value)
-> +			break;
-> +		case PBF_OP_NEQ:
-> +			CHECK_RESULT(sample_data, !=, entry[i].value)
-> +			break;
-> +		case PBF_OP_GT:
-> +			CHECK_RESULT(sample_data, >, entry[i].value)
-> +			break;
-> +		case PBF_OP_GE:
-> +			CHECK_RESULT(sample_data, >=, entry[i].value)
-> +			break;
-> +		case PBF_OP_LT:
-> +			CHECK_RESULT(sample_data, <, entry[i].value)
-> +			break;
-> +		case PBF_OP_LE:
-> +			CHECK_RESULT(sample_data, <=, entry[i].value)
-> +			break;
-> +		case PBF_OP_AND:
-> +			CHECK_RESULT(sample_data, &, entry[i].value)
-> +			break;
-> +		case PBF_OP_GROUP_BEGIN:
-> +			in_group = 1;
-> +			group_result = 0;
-> +			break;
-> +		case PBF_OP_GROUP_END:
-> +			if (group_result == 0)
-> +				goto drop;
-> +			in_group = 0;
-> +			break;
-> +		case PBF_OP_DONE:
-> +			return 1;
-> +		}
-> +	}
-> +	return 1;
-> +
-> +drop:
-> +	losts = bpf_map_lookup_elem(&dropped, &k);
-> +	if (losts != NULL)
-> +		__sync_fetch_and_add(losts, 1);
-> +
-> +	return 0;
-> +}
-> +
->  char LICENSE[] SEC("license") = "Dual BSD/GPL";
-> -- 
-> 2.56.0.212.g129ede20d9-goog
-> 
