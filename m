@@ -1,49 +1,58 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792452694;
-	b=ZQ4xGVNgfYZH2+L4CKonsLDwhG4PbdJqoUxI8cUxKNlrrS1HfsegLgqApqf09m6JYwAv
-	 d/YX1U3qnh4i979lwnO2nuK4iUBzRsH0r3RPatB9aVVb41aV5EWGBvdOp5rpXUf0ZtwB3
-	 ujC+4l4+j44ADuweVBz6BuzFLi0ypa6xrOApf9vt55gcjemXASbulUnqQpDS3/03dtjAZ
-	 2k6yPXV3O5wALuwQ+OkhbhB+OnzP9jmakZvQU3IgO/qk4HriFfXrAlS2MrPQqJSoUnrk7
-	 Q3LRqKnPRFABYmFpnV89G1O2tORjI7tlnJt/JoXt7azIcqUDWYJLz7trqrg4Np7KZaQ==
+	t=1792470847;
+	b=t1PwRVFG40IwdmWtgUc2U9tTNMbXkghK8TvXHZrmiivKINrXMQ/bvfnbTOUKKX5EMqt5
+	 eMpX9mRDAvjQz9Jh2YS/nZimVIGv8hzouoVxapu0vVdFanV7r91bld8MfAzSeQIY6ZSqB
+	 Tq0vkPggvaVRirz7mJZCj79RrsKhOV+sXvBCKZZJeM+ywmWItVG3GK6lWmbIaF9Nha4Q9
+	 403MZxgxOQ7WAwwzw58mqnkU7/DmwH4rnIZU3jJEjnYoxVLe4klUL541ar+dzuHBKNSFD
+	 qxtmR/f02KmAt5Wwl3Uvd+PNz/0fyLi1GtowkWopBW+U+nMfv1DdTfdkilF+lALc66A==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792452694;
-	h=DMARC-Filter:Received:Received:DKIM-Signature:Message-ID:Date:
-	 MIME-Version:User-Agent:Subject:To:Cc:References:Content-Language:
-	 From:In-Reply-To:Content-Type:Content-Transfer-Encoding;
-	bh=7TA+hrkPDDb8JZWxcPTsZ5GEG+PXQrcHlypH5xP8lCg=;
-	b=tZigxtkQjyrhakgRqEp+Ff2XAAzKTMA8KqM5K2T/2uV7hLCq7R/sWYr96tntmmzg+ho4
-	 WSRi0ZNlSEdyfZGTg7YrJnZoD7iew08LFoatYeKf1pLNDy2PqCbpnD6jQcwDTXJv951yM
-	 +2+KHsbvF1rZ7Y7w2vD5YJabKd7Z2Lh6lFWo+2blRhhNxLOdqrZ2MKtRXs7oycIxXvUiq
-	 t1rFySedgznMDn5U4WKoJ5gscViqSvwdv2q2RAexyPVJYfFfV6i+zx+HfExM7h936f6hN
-	 NJjyctDB+wdHxJmc34z1K14Q80c48d/INK6hUcB/ZPL2YBwaD6g7qzwz/nH7JW2HBzQ==
+	a=rsa-sha256; c=relaxed/relaxed; t=1792470847;
+	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
+	 References:MIME-Version:Content-Type:Content-Disposition:In-Reply-To;
+	bh=KU43JrB4sHceuJ7hxjxKyQGNGizWRpkp5MD2RPNgxy8=;
+	b=v68L/EoT6Ul7MbRpB95+e5NEKGAa5RjkgV0isbUJjvdYutm+xZnYYoeCa2DY+bIljt+b
+	 CRjBTuqAf3ssN0Fj9lfY3Ge6TVJip8y+8LCd4PGIY+AR/cDQlpxhI4Vp98f5iGj02j9QO
+	 rTJoobq8dmJbCdDYX3KC4YiRSY9UxAWeOEDsvv6IuuLR6JWC4wRca5K5PHlLE6haB1QEj
+	 qWBcQYUq7oxVX2fxk75sWURii+sQPfrBzw5bwhAe2sd6olALMF4KRckuT02cPXaE4bkeN
+	 zQav3cQCx9jg2I3v2E3aRD6i0VKt551muvg81B7MVt8P3gjIEACZm8GS39ZAE46h/dA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=arm.com;
-	spf=pass smtp.mailfrom=arm.com;
-	dkim=pass header.d=arm.com header.i=@arm.com header.a=rsa-sha256 header.s=foss header.b="bteBHr/k";
-	arc=none smtp.remote-ip=217.140.110.172
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 771D5606A319;
-	Mon, 19 Oct 2026 23:31:32 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 771D5606A319
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=HjknbsX7;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05CE1606A31B;
+	Tue, 20 Oct 2026 04:34:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=arm.com header.i=@arm.com header.a=rsa-sha256 header.s=foss header.b=bteBHr/k
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3DD70152B;
-	Mon, 19 Oct 2026 16:31:28 -0700 (PDT)
-Received: from [192.168.20.17] (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C539D3F7B4;
-	Mon, 19 Oct 2026 16:31:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
-	t=1792452691; bh=9CUwL2WVEd9WXW4yxmN0gNoDtRPpE6I8GkVOyVYsn34=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=bteBHr/kfSx/g9ZxGmYRvZkndSzSxUx//TzCZtREdgkrfzkw5eI+dW3ryNaQu2u1s
-	 KVSuPUEVfnHEe5Edm/1yHaiZ024N/60uIO4IKydxleXtH0Y1EqB2BnfPVFZmmEJwNd
-	 jEeBGh/97oF4u+/6r02BOD0ounY7kHowd68inuko=
-Message-ID: <6f0d3ab6-52ab-458a-b44d-0bce36320e94@arm.com>
-Date: Mon, 19 Oct 2026 18:31:07 -0500
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=HjknbsX7
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 190A81F000C4;
+	Tue, 20 Oct 2026 04:34:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1792470846;
+	bh=KU43JrB4sHceuJ7hxjxKyQGNGizWRpkp5MD2RPNgxy8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=HjknbsX7WUs2730NjTF+FkASFb1HE5scMTjwlwS3xpu2GtR2hFTEkP6zipg+HVIK7
+	 SvfJtz1MY4/gcVtXAR3fkhyYZZFP+Xj1nsDmjzT70hMjQj8/OgxzyO+jqvzxiUFl1W
+	 ehS7BQDgjPRnwDd5yzuHdEQZYF3p2UUZXny5RH+citp0KT1tA8saHIzRDTyzeIn72t
+	 VWkxtIjto6eyJqxeGCHVm4RZOY5gvllvpg41ng53x/YQ7tFUO8JXDOOZUP+N6ia6xu
+	 7o1phBOZeO13HkXtc/knb5RVuZBCt4Go8Ik/eDjeYGPkqLNY53vooeTSkqhI1SXiSK
+	 10JxyLONb98dw==
+Date: Mon, 19 Oct 2026 21:34:04 -0700
+From: Namhyung Kim <namhyung@kernel.org>
+To: Ian Rogers <irogers@google.com>
+Cc: acme@kernel.org, adrian.hunter@intel.com, james.clark@linaro.org,
+	jolsa@kernel.org, linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org, mingo@redhat.com,
+	peterz@infradead.org, eranian@google.com, ddhariwal@google.com,
+	rcu@vger.kernel.org
+Subject: Re: [PATCH v4 1/7] perf lock contention: Filter events before
+ creating lock_stat
+Message-ID: <atbvPNZcoxUtRxez@z2>
+References: <20261018053710.2572636-1-irogers@google.com>
+ <20261019220915.3943592-1-irogers@google.com>
+ <20261019220915.3943592-2-irogers@google.com>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -53,45 +62,132 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] perf: arm_spe: Support heterogeneous ACPI systems
-To: Johnny Fan <johnny.fan@cixtech.com>
-Cc: Marc Zyngier <maz@kernel.org>, linux-arm-kernel@lists.infradead.org,
- linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
- will@kernel.org, mark.rutland@arm.com, james.clark@linaro.org,
- leo.yan@arm.com, cix-kernel-upstream@cixtech.com, bob.zhang@cixtech.com,
- jie.fu@cixtech.com, fugang.duan@cixtech.com
-References: <20261015062908.3565761-1-johnny.fan@cixtech.com>
- <86mrsf1bnv.wl-maz@kernel.org> <atC+lsWALy6ueGAB@JohnnyFan>
- <14d16970-915b-4c86-afeb-bfc3058564df@arm.com> <atGl/ZTg49t/VfVj@JohnnyFan>
-Content-Language: en-US
-From: Jeremy Linton <jeremy.linton@arm.com>
-In-Reply-To: <atGl/ZTg49t/VfVj@JohnnyFan>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20261019220915.3943592-2-irogers@google.com>
 
-Hi,
-
-On 10/15/26 11:20 PM, Johnny Fan wrote:
-> On Thu, Oct 15, 2026 at 10:58:10AM -0500, Jeremy Linton wrote:
->> I don't think the GICC is sufficient, you have to consider actual
->> heterogeneous machines that have differing SPE implementations with the
->> same PMSVer, which mean you have to keep the PPTT hetid check, and set
->> the mask based on both it and the GSIV. Then, like DT create multiple
->> platform devices. Which is true with the current patch as well, the
->> hetid still needs to be there even if you have differing PPI's because
->> it could have more than two differing implementations.
+On Mon, Oct 19, 2026 at 03:09:09PM -0700, Ian Rogers wrote:
+> In report_lock_contention_begin_event(), lock_stat_findnew() was
+> called before checking filters.nr_types (-Y), filters.nr_addrs (-L),
+> and match_callstack_filter() (-S).
 > 
-> Following that direction, the question on ACPI is how each registered
-> SPE device gets its supported_cpus: the platform devices are created
-> without an fwnode, so platform_get_irq_affinity() falls back to
-> cpu_possible_mask today, regardless of which CPUs actually implement
-> SPE. That's the plumbing question I asked Marc about -- would be good
-> to know if you have a preference here too.
+> When a filtered-out lock event (such as a mutex contention when
+> running with -Y spinlock) shared the same aggregation key as a
+> subsequent matching event (for example, contention on the mutex's
+> internal wait_lock spinlock from the same caller), the first event
+> created the lock_stat entry with the filtered-out lock's flags and the
+> second event reused that entry, causing non-spinlock entries to appear
+> in -Y spinlock output.
+> 
+> Check the type, address, and callstack filters before looking up or
+> creating the lock_stat entry.
+> 
+> Fixes: b4a7eff93c39 ("perf lock contention: Add -Y/--type-filter option")
+> Signed-off-by: Ian Rogers <irogers@google.com>
 
+Reviewed-by: Namhyung Kim <namhyung@kernel.org>
 
-I may not be fully understanding what your asking, but you could just 
-attach a cpumask via platform_device_add_data(), or similar method, then 
-retrieve it in the driver(s) and use it to set the affinity.
+Thanks,
+Namhyung
 
-
+> ---
+>  tools/perf/builtin-lock.c | 61 +++++++++++++++++++++------------------
+>  1 file changed, 33 insertions(+), 28 deletions(-)
+> 
+> diff --git a/tools/perf/builtin-lock.c b/tools/perf/builtin-lock.c
+> index d5c0d55cb82d..778923c92f42 100644
+> --- a/tools/perf/builtin-lock.c
+> +++ b/tools/perf/builtin-lock.c
+> @@ -975,6 +975,7 @@ static int report_lock_contention_begin_event(struct perf_sample *sample)
+>  	struct machine *machine = &session->machines.host;
+>  	struct map *kmap;
+>  	struct symbol *sym;
+> +	u64 *callstack = NULL;
+>  
+>  	ret = get_key_by_aggr_mode(&key, addr, sample);
+>  	if (ret < 0)
+> @@ -1010,33 +1011,6 @@ static int report_lock_contention_begin_event(struct perf_sample *sample)
+>  		}
+>  	}
+>  
+> -	ls = lock_stat_find(key);
+> -	if (!ls) {
+> -		char buf[128];
+> -		const char *name = "";
+> -
+> -		switch (aggr_mode) {
+> -		case LOCK_AGGR_ADDR:
+> -			sym = machine__find_kernel_symbol(machine, key, &kmap);
+> -			if (sym)
+> -				name = sym->name;
+> -			break;
+> -		case LOCK_AGGR_CALLER:
+> -			name = buf;
+> -			if (lock_contention_caller(sample, buf, sizeof(buf)) < 0)
+> -				name = "Unknown";
+> -			break;
+> -		case LOCK_AGGR_CGROUP:
+> -		case LOCK_AGGR_TASK:
+> -		default:
+> -			break;
+> -		}
+> -
+> -		ls = lock_stat_findnew(key, name, flags);
+> -		if (!ls)
+> -			return -ENOMEM;
+> -	}
+> -
+>  	if (filters.nr_types) {
+>  		bool found = false;
+>  
+> @@ -1066,7 +1040,7 @@ static int report_lock_contention_begin_event(struct perf_sample *sample)
+>  	}
+>  
+>  	if (needs_callstack()) {
+> -		u64 *callstack = get_callstack(sample, max_stack_depth);
+> +		callstack = get_callstack(sample, max_stack_depth);
+>  		if (callstack == NULL)
+>  			return 0;
+>  
+> @@ -1074,7 +1048,38 @@ static int report_lock_contention_begin_event(struct perf_sample *sample)
+>  			free(callstack);
+>  			return 0;
+>  		}
+> +	}
+> +
+> +	ls = lock_stat_find(key);
+> +	if (!ls) {
+> +		char buf[128];
+> +		const char *name = "";
+> +
+> +		switch (aggr_mode) {
+> +		case LOCK_AGGR_ADDR:
+> +			sym = machine__find_kernel_symbol(machine, key, &kmap);
+> +			if (sym)
+> +				name = sym->name;
+> +			break;
+> +		case LOCK_AGGR_CALLER:
+> +			name = buf;
+> +			if (lock_contention_caller(sample, buf, sizeof(buf)) < 0)
+> +				name = "Unknown";
+> +			break;
+> +		case LOCK_AGGR_CGROUP:
+> +		case LOCK_AGGR_TASK:
+> +		default:
+> +			break;
+> +		}
+> +
+> +		ls = lock_stat_findnew(key, name, flags);
+> +		if (!ls) {
+> +			free(callstack);
+> +			return -ENOMEM;
+> +		}
+> +	}
+>  
+> +	if (callstack) {
+>  		if (ls->callstack == NULL)
+>  			ls->callstack = callstack;
+>  		else
+> -- 
+> 2.56.0.212.g129ede20d9-goog
+> 
