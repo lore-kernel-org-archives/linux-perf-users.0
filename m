@@ -1,102 +1,92 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=185.203.200.13
-ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1792478769;
-	b=ReH5O4tlaP8iFkNtOklf41KtAUtRCjnbLlr1vTelgcg/yAagcFbetrFf3E/WKv95ce5n
-	 0O6kZqgxqWtEBxrhYxL6M5poKcY+iqv9QID8FSvp5PUBYD8L5PqRuHulcgW0BpDhNIWm0
-	 5YCjaZ4MYd4GVvejY+H4RAW1INcDuotKly2eOxt19rxCdUkGrQYDh6lgIEeShtu1VY78j
-	 CDfJ9OU0KGijjzcK65+Gzqw+GlTvv6IV/R8x691EmdJhTvzqWpfjyESbKX5/e2wymO9VN
-	 aynzdKHUo4PyLCLDayDUdteoW5Qy6GgiBAV586udVNKaTeKofIHX89mtP+xLPJHQ2ww==
-ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792478769;
-	h=DMARC-Filter:Received:DKIM-Signature:Received:Received:Date:From:To:
-	 Cc:Subject:Message-ID:References:MIME-Version:Content-Type:
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=68.232.139.139
+ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
+	t=1792480830;
+	b=wTPBvlpDkin0WELvvZuduQokCWUjQrcj3gQ1nnf1chWhGC18FnuHv8RN8yA84MdJFQ/d
+	 k+NJzHhFhdK8srO429ugsYKm9NKjlkDsn/TomEk/mxnbu2PQVH9pkv1edkuhMlPrWEwZ7
+	 lWz0xlFGD9SWBug+GbpYX+6izf7csJQLTXw9zUmFfxXuCop+wGDbDZhA66NR28fwsPByD
+	 abwHtwC/R9aUt5qVvLsWVQny8hYD678tIhwdUg+TIU2LH2Z0YPsorBnWoj3n/dxNTnwiS
+	 epNp5MkRn2sPoYnWESFMwrKRrIsOV9VWFl0694W/XMb8VDDmwH/1bEBvctmfHlSaKIA==
+ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1792480830;
+	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
+	 X-IronPort-AV:X-IronPort-AV:Received:Received:Received:Received:Date:
+	 From:To:Cc:Subject:Message-ID:References:MIME-Version:Content-Type:
 	 Content-Disposition:In-Reply-To;
-	bh=DjJ6aF4EEfNV1D/BCrVjMeW97sw80s+KxqGk+wmMMMQ=;
-	b=ej7zT9P/JMJylu5itB8YTUsMdJZhMZjBc9X3R6W7g/fuyxNUUiqiZidgUWir/9T72n0E
-	 +iyAWNo6qO5ATida4cBnEZjrs15gUmRTmVj+qYuqPeeM7S60CP+Kgg3l4b07+nVq2En8g
-	 LE33KinKTjuN2YqX8tRYFa3QSA3BCjZmzHcMiM1+sm8UxbX2h1S8ZupActs0X8qvlF5Kf
-	 WPy0kLMPpSAO8lCwR8CjsshAYUI9Csgo2KoOSvT5MVNYQsIge5FjffbBSz3w3Uv7GrGuX
-	 u5z5aE/WWyA2v8R/6heCWykV+DxFJLWpYP3CDEUcQ3W/ArgkEsKgVabfYvF9vAXgEYw==
-ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
-	dmarc=none header.from=pengutronix.de;
-	spf=pass smtp.mailfrom=pengutronix.de;
-	dkim=pass header.d=pengutronix.de header.i=@pengutronix.de header.a=rsa-sha256 header.s=20260414 header.b=A4dqaE0B;
-	arc=pass header.oldest-pass=0 smtp.remote-ip=185.203.200.13
-Received: from mx1.white.stw.pengutronix.de (mx1.white.stw.pengutronix.de [185.203.200.13])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	bh=gTfcY3KbdiQmLNtrA7EgWSIO5XWoep6EANOAU6klbBo=;
+	b=RuJCzESweX6zJ5RJUNpDeWil8OcxAVZUkk7mljgFmFOGQ4y/EsaJKCix0bP/jznbhNXE
+	 is3eZCBZksZ0JTaPgylCY32YdwM/HyLNvS8UX2SxWTjU8CyhucCPThRaXIYh9rpj7g+et
+	 822gfprKbRPLz6825Pi4fEFna4MaR/pWPqZneDncQXDHv3pxY3h8x346G8wQFueKnxlw0
+	 wnERsF7wtHxJ65IEn1MN05WKKEtgoS59RLsbZi6lBEvNAN8QNMCzsYUqCGs7rUu7vDsDe
+	 /iyje3G0+FHQplfGroPqB6OWTrDYOhcBTbe5fhbZNPtNzmTuHJv5Igz3Q8M9y4y/S7Q==
+ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
+	dmarc=pass header.from=fujitsu.com;
+	spf=pass smtp.mailfrom=fujitsu.com;
+	dkim=pass header.d=fujitsu.com header.i=@fujitsu.com header.a=rsa-sha256 header.s=fj2 header.b=PYemcUmX;
+	arc=none smtp.remote-ip=68.232.139.139
+Received: from esa6.hc1455-7.c3s2.iphmx.com (esa6.hc1455-7.c3s2.iphmx.com [68.232.139.139])
+	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EFA8606A32F;
-	Tue, 20 Oct 2026 06:46:06 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 3EFA8606A32F
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F11E6606A31C;
+	Tue, 20 Oct 2026 07:20:28 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org F11E6606A31C
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fujitsu.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fujitsu.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=pengutronix.de header.i=@pengutronix.de header.a=rsa-sha256 header.s=20260414 header.b=A4dqaE0B
-Received: from drehscheibe.grey.stw.pengutronix.de (drehscheibe.grey.stw.pengutronix.de [IPv6:2a0a:edc0:0:c01:1d::a2])
-	(Authenticated sender: relay-from-drehscheibe.grey.stw.pengutronix.de)
-	by mx1.white.stw.pengutronix.de (Postfix) with ESMTPSA id 807A62017C1;
-	Tue, 20 Oct 2026 08:46:03 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pengutronix.de;
-	s=20260414; t=1792478763;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=DjJ6aF4EEfNV1D/BCrVjMeW97sw80s+KxqGk+wmMMMQ=;
-	b=A4dqaE0BC406CMyqi1KhvCehlKud1+GI/NyJ4gSCPHaEMReYeqh/9h7GbancwxlmWIECcq
-	8PHT5RtYEcpjavaNK9DDNpRQ4fWno2To0kXbAVvPzDYT+0W6poXflHoLlDvUyUC6xMDERq
-	UiLfaCc6In6Lqnms6sOfvVrlSl0SAmEjtp+mAk8D7CMfblc5MjGU8fHG9nebqDsAnQ6mA7
-	MS0u2rM+DMczgvm8bUUwy1Dn1XJsYGieqT1Q7Kai4f3OWusWXjnGVkIoGW7zwzfi8Gw/MT
-	Vwh2EW9tsVl5pfPFA30QmYa2QCke6lh1SXqHJfE61KHAW2TUDfRkyW6x+77AbA==
-ARC-Seal: i=1; s=20260414; d=pengutronix.de; t=1792478763; a=rsa-sha256;
-	cv=none;
-	b=PFNwBlpd7AofRpN/rO4FPQhyJfd3X4ew5j6h63qfWYJWXylD2TV8zgLH9vgW+5Pf7Y4D5h
-	fmNZshb3XO+BySsnnzbbL7rXxBTnJ9sm6KJRySQkpHJPVt0LcPp1bWCAAcYBmYYGGNRU6t
-	36F9V5kz7JGw2ItS6yhfGUgUFr/Sn2AaTWZLoBLXONlpikzPOttfBjtDIcXLTqljkpT5Ve
-	FYXBZbfgwHQnOY82b9nhAObD4wut40m/p+c9AfIKFmdMVVedWWPIT7gegU/YQh0Rv03622
-	LpBMwYZikROg6EMWpE0oeq0ILeP7Z2WJ2z/DMgLoyW318+PZ3/KC+8yYxJCx8w==
-ARC-Authentication-Results: i=1;
-	ORIGINATING;
-	auth=pass smtp.auth=relay-from-drehscheibe.grey.stw.pengutronix.de smtp.mailfrom=mkl@pengutronix.de
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=pengutronix.de;
-	s=20260414; t=1792478763;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=DjJ6aF4EEfNV1D/BCrVjMeW97sw80s+KxqGk+wmMMMQ=;
-	b=QXin73Z1/KIUpy0eqj0IXU6PiO0NoTvNldx+fnhl93+gW6Jz0yThXy/6OD5HGZMPhG7PDP
-	5lXwMonYyK5xdDzuKoZJBsbjq5uUZmXH9zo6vE/OHikUEmoKCZrv5LGI/gi5IaHVnU7dla
-	CdRR2O2fyEId3ivxS8WDE47GQbwvt/bbA2tDdelnrHR00yvFxFZLO2NNNHOwhHlSRIc/4+
-	cwgbFl6QZ44uwk1SSYiuHdSyJrqlknkgKHUEltC4MZFfmLgmPk254yuoIjvHwOQYlBpFBw
-	bS2cpQPAmocby3PLh6QNKitTZcw7/OnkE5tr7rv7dW0IPvLwg6/wQJrynEi5eg==
-Received: from moin.white.stw.pengutronix.de ([2a0a:edc0:0:b01:1d::7b] helo=bjornoya.blackshift.org)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <mkl@pengutronix.de>)
-	id 1xJ3bn-000KgQ-1G;
-	Tue, 20 Oct 2026 08:46:03 +0200
-Received: from pengutronix.de (p4ffb23c7.dip0.t-ipconnect.de [79.251.35.199])
+	dkim=pass (2048-bit key, unprotected) header.d=fujitsu.com header.i=@fujitsu.com header.a=rsa-sha256 header.s=fj2 header.b=PYemcUmX
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=fujitsu.com; i=@fujitsu.com; q=dns/txt; s=fj2;
+  t=1792480835; x=1824016835;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=refqq25nv2RRzQpG9iY5BlA9ExyL3HdRLNTWhTg6kFM=;
+  b=PYemcUmXPW0BmI/cgOEC8b9cnv25SyMurrhu+/pIeoUybZGGZBQvGjKR
+   ih6KTyHxlPs3cEuEgIWTz2ViwCx9jYowZcw+U/MLs9Ib8N/ihsdLw+g3E
+   Wbxb5pn1Bf2dXfcp8fcAssOJVNNUBWYfqtNqKaDtKShsPc07bZbAVDERo
+   es2s7NmqPTI0FLdbZaTRXqHNfBT62wA48sEjuBTqgvd27c4CBSzMQkk3R
+   8qz9PX03yyuU1sGSgfm2g/lxZ6D6P215A/AHIaly7IX+r2ZPLOBEjHRzg
+   RUDMV8YrmcqR0wrbr0xK8ttsEB2gKW+nXxI+oCExK+5jLUNNOrVzdgajq
+   g==;
+X-CSE-ConnectionGUID: w3yeoTuBQiii3Ruo/LeNdA==
+X-CSE-MsgGUID: JEFuNt0nR0ahm1t3B5Ftdg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11940"; a="262734108"
+X-IronPort-AV: E=Sophos;i="6.27,168,1786978800"; 
+   d="scan'208";a="262734108"
+Received: from gmgwnl01.global.fujitsu.com ([52.143.17.124])
+  by esa6.hc1455-7.c3s2.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Oct 2026 16:20:27 +0900
+Received: from az2nlsmgm3.fujitsu.com (unknown [10.150.26.205])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange x25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	(Authenticated sender: mkl-all@blackshift.org)
-	by smtp.blackshift.org (Postfix) with ESMTPSA id E894A5C9BBF;
-	Tue, 20 Oct 2026 06:44:18 +0000 (UTC)
-Date: Tue, 20 Oct 2026 08:44:18 +0200
-From: Marc Kleine-Budde <mkl@pengutronix.de>
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Ian Rogers <irogers@google.com>, Thomas Gleixner <tglx@kernel.org>, 
-	Andy Lutomirski <luto@kernel.org>, Vincenzo Frascino <vincenzo.frascino@arm.com>, 
-	Stefan Kerkmann <s.kerkmann@pengutronix.de>, Christophe Leroy <chleroy@kernel.org>, 
-	David Laight <david.laight.linux@gmail.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, 
-	Namhyung Kim <namhyung@kernel.org>, Eric Biggers <ebiggers@google.com>, 
-	Alexander Viro <viro@zeniv.linux.org.uk>, "Jason A . Donenfeld" <Jason@zx2c4.com>, 
-	linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 1/2] vdso: Add VDSO_UNALIGNED_PACKED config option for
- ARMv5
-Message-ID: <20261020-succinct-zebu-of-vigor-6cb2cd-mkl@pengutronix.de>
-References: <20261019201257.3805356-1-irogers@google.com>
- <31fe09f6-0a14-40fc-8ad8-c03998fb1f5c@app.fastmail.com>
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by gmgwnl01.global.fujitsu.com (Postfix) with ESMTPS id 1C53242A30A;
+	Tue, 20 Oct 2026 07:20:21 +0000 (UTC)
+Received: from az2nlsmom4.fujitsu.com (unknown [10.150.26.201])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by az2nlsmgm3.fujitsu.com (Postfix) with ESMTPS id C158B18026C6;
+	Tue, 20 Oct 2026 07:20:20 +0000 (UTC)
+Received: from FCCLS0092175.localdomain (unknown [10.8.226.149])
+	by az2nlsmom4.fujitsu.com (Postfix) with SMTP id A09772000281;
+	Tue, 20 Oct 2026 07:20:13 +0000 (UTC)
+Date: Tue, 20 Oct 2026 16:20:12 +0900
+From: Kohei Enju <enju.kohei@fujitsu.com>
+To: Marc Zyngier <maz@kernel.org>
+Cc: Tomohiro Misono <misono.tomohiro@fujitsu.com>, 
+	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, Jonathan Corbet <corbet@lwn.net>, 
+	Shuah Khan <skhan@linuxfoundation.org>, Randy Dunlap <rdunlap@infradead.org>, 
+	Thomas Gleixner <tglx@kernel.org>, Radu Rendec <radu@rendec.net>, Oliver Upton <oupton@kernel.org>, 
+	Fuad Tabba <fuad.tabba@linux.dev>, Joey Gouly <joey.gouly@arm.com>, 
+	Steffen Eiden <seiden@linux.ibm.com>, Suzuki K Poulose <suzuki.poulose@arm.com>, 
+	Zenghui Yu <yuzenghui@huawei.com>, linux-arm-kernel@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+	kvmarm@lists.linux.dev
+Subject: Re: [PATCH v2 4/4] irqchip/gicv3: Add workaround for FUJITSU-MONAKA
+ erratum E#030003
+Message-ID: <atcTtojPd1BSS8fr@FCCLS0092175.localdomain>
+References: <20261016-monaka-fix-for-upstream-v2-0-fc7ede7f9f48@fujitsu.com>
+ <20261016-monaka-fix-for-upstream-v2-4-fc7ede7f9f48@fujitsu.com>
+ <87wlrg8qc7.wl-maz@kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -106,60 +96,105 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="6qea3f7c45xlx244"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <31fe09f6-0a14-40fc-8ad8-c03998fb1f5c@app.fastmail.com>
+In-Reply-To: <87wlrg8qc7.wl-maz@kernel.org>
 
+On 10/17 13:27, Marc Zyngier wrote:
+> On Fri, 16 Oct 2026 11:00:48 +0100,
+> Tomohiro Misono <misono.tomohiro@fujitsu.com> wrote:
+> > 
+> > From: Kohei Enju <enju.kohei@fujitsu.com>
+> > 
+> > On affected FUJITSU-MONAKA CPUs, the erratum may occur when an SGI is
+> > generated by writing to ICC_SGI0R_EL1, ICC_SGI1R_EL1, or ICC_ASGI1R_EL1,
+> > if the operation races with CPU interface processing triggered by the
+> > arrival of a higher-priority interrupt, an update to a pending
+> > interrupt, or a transition of the PE to the Sleep state. When the
+> > erratum occurs, the SGI is lost and the system register write does not
+> > complete, causing the issuing core to hang.
+> > 
+> > Guest accesses to these registers are not affected by this erratum, as
+> > they are trapped to EL2 and handled without issuing the affected system
+> > register write.
+> > 
+> > Work around the erratum by writing 1 to the bit corresponding to the
+> > target SGI INTID in GICR_ISPENDR0 of each target PE's GIC Redistributor,
+> > instead of writing to the affected system registers.
+> > 
+> > Accessing a target PE's GICR_ISPENDR0 requires its Redistributor base to
+> > have been discovered. Affected platforms conform to SBBR, which requires
+> > PSCI for secondary CPU boot. They therefore do not use the ACPI Parking
+> > protocol, which sends an IPI before the secondary CPU has initialized
+> > its Redistributor. With PSCI, a secondary CPU discovers its
+> > Redistributor before becoming an IPI target.
+> > 
+> > Signed-off-by: Kohei Enju <enju.kohei@fujitsu.com>
+> 
+> You are posting a patch on behalf of someone else, you need to add
+> your own SoB:
+> 
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/process/submitting-patches.rst?h=v7.3-rc7#n448
 
---6qea3f7c45xlx244
-Content-Type: text/plain; protected-headers=v1; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v1 1/2] vdso: Add VDSO_UNALIGNED_PACKED config option for
- ARMv5
-MIME-Version: 1.0
+Thanks for pointing this out. I'll let Tomohiro know.
 
-On 20.10.2026 00:12:57, Arnd Bergmann wrote:
-> On Mon, Oct 19, 2026, at 22:12, Ian Rogers wrote:
+> 
+> > ---
+> > Changes in v2:
+> > - Clarify the erratum description and document that virtual accesses are
+> >   unaffected.
+> > - Remove the gic_send_sgi_via_rdist() helper.
+> > - Remove the write-count rationale.
+> > - Use the CPU MIDR instead of the SoC ID for filtering.
+> > 
+> > Note that I have left the dsb(st) after the GICR_ISPENDR0 writes
+> > unchanged, pending clarification of the required completion point. If
+> > the writes must be observed by a specific component before
+> > gic_ipi_send_mask() returns, I will use the appropriate mechanism to
+> > provide that guarantee.
+> 
+> See below.
+> 
+> [...]
+> 
+> > @@ -1386,6 +1391,17 @@ static void gic_ipi_send_mask(struct irq_data *d, const struct cpumask *mask)
+> >  	 */
+> >  	dsb(ishst);
+> >  
+> > +	if (static_branch_unlikely(&gic_fujitsu_030003_erratum)) {
+> > +		for_each_cpu(cpu, mask) {
+> > +			void __iomem *base = gic_data_rdist_sgi_base_cpu(cpu);
 > > +
-> > +config VDSO_UNALIGNED_PACKED
-> > +	bool
-> > +	default CPU_32v5
-> > +	help
-> > +	  Use packed structs rather than memcpy() in include/vdso/unaligned.h
-> > +	  for unaligned memory accesses. Enabled on ARMv5 where GCC may emit
-> > +	  out-of-line memcpy() calls instead of inlining byte accesses.
->
-> As explained, I think this misrepresents the problem as Arm specific and
-> isn't the correct method for -munaligned-access targets on Arm, which
-> include CPU_32v3, CPU_32v4 and CPU_32v4T along with CPU_32v5.
->
-> I still hope we can use a version that just produces the intended code
-> on both -munaligned-access and -mno-unaligned-access targets like the
-> old version did.
+> > +			writel_relaxed(BIT(d->hwirq), base + GICR_ISPENDR0);
+> > +		}
+> > +
+> > +		dsb(st);
+> 
+> What is this DSB achieving? As far as I can tell, not much. The memory
+> type is nGnRE, so DSB doesn't force writes to reach the end-point, and
+> only guarantee ordering that system register SGI generation doesn't
+> provide.
 
-FYI: there is the kconfig Symbol HAVE_EFFICIENT_UNALIGNED_ACCESS. Can we
-make use of it?
+Yes, you're right.
 
-regards,
-Marc
+> 
+> So either
+> 
+> (a) there is a functional requirement on this HW to have a DSB, and
+>     needs to be documented,
+> 
+> (b) or there is a need for end-point synchronisation, which needs to
+>     be enforced by a read back (knowing that the sysreg doesn't
+>     provide this guarantee), and this needs to be documented,
+> 
+> (c) or this is completely superfluous and can be dropped
+> 
+> Which case are we in?
 
---=20
-Pengutronix e.K.                 | Marc Kleine-Budde          |
-Embedded Linux                   | https://www.pengutronix.de |
-Vertretung N=C3=BCrnberg              | Phone: +49-5121-206917-129 |
-Amtsgericht Hildesheim, HRA 2686 | Fax:   +49-5121-206917-9   |
+I think this falls under (c). As far as I can tell, there is no
+requirement for ipi_send_mask() to wait for the writes to be observed by
+the hardware. I'm not aware of any hardware-specific requirements for
+this DSB either. I'll drop the DSB and test the change on our hardware.
 
---6qea3f7c45xlx244
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQSl+MghEFFAdY3pYJLMOmT6rpmt0gUCatcNvwAKCRDMOmT6rpmt
-0jcxAP4+OJR4f1ri/sD2ri5ZdsCmwGcY28sq9qfO2yECm9kV/AD+LrphmAxqvEbJ
-Ma0FGykZK475iITqX2YOZ1BLSUr4dAM=
-=v2z9
------END PGP SIGNATURE-----
-
---6qea3f7c45xlx244--
+Thanks,
+Kohei
