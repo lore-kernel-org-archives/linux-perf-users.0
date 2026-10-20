@@ -1,69 +1,87 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=188.68.61.107
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.221.42
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792502134;
-	b=pbqIg4lWL+etaozUdQAb5SeI7H0vHDnJj85f3ytP+mYSnc6TUn6VUw/B7id7F8DkCorr
-	 Kz8uFUtnJAB/57etfVcIDyYnjS7JtC+4w1MdH4b7pdjskO/m840n2YNYC1qK2fSJEGefO
-	 Ibm2aYyC8y3jH/I0gvS8wUcpdFGVpljTodHO+vPWg7OwXwEq2cI4rUwPMi0gs0GdyXeWe
-	 ct4f0uA37iEzhClwH1OlifOteYH+7jrW9n3taprIypo8s4fTFDxbRIKsrRrdxEnGDCg/X
-	 v76sdJpOp4gHZ/RJmxF3+z7E53rhuRRo+dZMI+a15fXQfijG/3C4dcEN+h9PbKkNqwA==
+	t=1792502522;
+	b=T/Fd9pwcY18ay3KeK0ghiPF/og46Kg5pjf+yB2/8tS53vlt8diiVKGPUkE0hP2hQupX8
+	 lF1gaXJ5Gq4jO8QGZ5pL0be9ymdTzMpaCycSib5G0iXG+cpTDZfTS3YkunCVq2eKR+0+d
+	 4NFl/YNP6AAT+6jpEoiXAgqtCXkcF7cXMRaWp8mNrqw28z6XyZGc7+h88zT161Xd3LmtV
+	 LFmL7Vjq7ph+NrVVdS6ZMDjiZZEwjqXC1UzXw8l8RfyWo6GP5o59G4MXak4s6m2CPcKfT
+	 UCS9ousUBxBB4xEv8amPTEP2uKTzn4b0ssjuzAk/vf4IoVJyFAk/CC+27Oq/yrQauDQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792502134;
-	h=DMARC-Filter:Received:DKIM-Signature:Received:Received:Received:
-	 Received-SPF:Message-ID:Date:MIME-Version:User-Agent:Subject:To:Cc:
-	 References:From:Content-Language:Autocrypt:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:X-PPP-Message-ID:X-NC-CID;
-	bh=FkEqMH8rGF7FoEDXomBXOVP2VcjecZfCWJRIeXoQMa8=;
-	b=rosTQSXq3Ak241DNUfkjDj2GoJNJf+euE5l/Gpz1QGJuAZ926l7LC6SWu8gYsAbcU0c5
-	 M5K4xRqyANNhDVj6xuWyefkG1AAts0Rm4MFno60AZqAkmAzbpv4h32QlvvDJnzDIjKIaE
-	 A+3LckxfcTxS3at7qd6Q8mzvqfSAIIJcLm7VSG7DIkl3IFNsSZHdVLIwZZACUDOuLcEws
-	 m3RlQNd57uBNIhHM/9ytg36gyTW0Y6YWl7AgoJx6384s2f55DYt2rbSULwuBSAMIoIlda
-	 RGAD9X4bdYMSnt0IC6IYHWJcaE3fyqZpyCxAXTIn0rLKu6WutVs6IFKsAQSTBLVPGkg==
+	a=rsa-sha256; c=relaxed/relaxed; t=1792502522;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
+	 Message-ID:Date:MIME-Version:User-Agent:Subject:To:Cc:References:
+	 Content-Language:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding;
+	bh=s0zAvqlmsB3t3287vk58YCfF/XdciYklX6cmGUHob6Y=;
+	b=SKa9sHAfWrTuZbsfJox6GNabDPLf2LeIv+TDq6M5N9Lp+NjO3O9E1/iVFQ0fenzmdUJ3
+	 EtrFDQJo7toAolTKvEzR5T23ZAwCdRS3kZyJ2cWsrqkowIgEBz3mYg6KxJzEedi6RxZH8
+	 S4DEQRW/c8Wue4k2JLvu51049O0yuNzrIJw/C97Ra/xSStx0VMAKgStjUkXe500f51Yg+
+	 xLDhX516zSTdreU9xh42uORMIl5IarSE9VY7SVFIA0NvOKIvpRSvVD9O+snmg468H42Ny
+	 D+8lefRgsMxV5iLr5seQAMyYgwktcNttNTe95zZh48OaGfMbKWhvEaAnRepLxXCrjDQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=leemhuis.info;
-	spf=pass smtp.mailfrom=leemhuis.info;
-	dkim=pass header.d=leemhuis.info header.i=@leemhuis.info header.a=rsa-sha256 header.s=key2 header.b=VMHrrMhy;
-	arc=none smtp.remote-ip=188.68.61.107
-Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.61.107])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	dmarc=pass header.from=linaro.org;
+	spf=pass smtp.mailfrom=linaro.org;
+	dkim=pass header.d=linaro.org header.i=@linaro.org header.a=rsa-sha256 header.s=google header.b=Dz90nzOK;
+	arc=none smtp.remote-ip=209.85.221.42
+Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C61C606A334;
-	Tue, 20 Oct 2026 13:15:33 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 7C61C606A334
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0614606A31D
+	for <linux-perf-users@vger.kernel.org>; Tue, 20 Oct 2026 13:22:01 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org F0614606A31D
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=leemhuis.info header.i=@leemhuis.info header.a=rsa-sha256 header.s=key2 header.b=VMHrrMhy
-Received: from mors-relay-8405.netcup.net (localhost [127.0.0.1])
-	by mors-relay-8405.netcup.net (Postfix) with ESMTPS id 4j8CZF5R90z742d;
-	Tue, 20 Oct 2026 15:15:01 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
-	s=key2; t=1792502101;
-	bh=i0m0djEN9tpxFXwokRqAZtDQ78W568BjJ13hug5Kqcs=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=VMHrrMhyyhivuc+B2jqlpNV8LJeJVnWyLtgm1OaTR9cUJvsw+E2yoVOXscI/vnGQ7
-	 9r2GVvZstWVZuuy9Z57NvpoO0+gz9s5MfDvc5KxAA5h7O2+YMmb4w8Ik4xj5WoRENN
-	 CNbbzNuKEZZ7Gz4SqqJgU8vaqURhRwKi72SxguSRRWAM5BzDHS8yVUWxyb2j6i63A9
-	 JaNEYRp5vklOSZHyL/kWVz8KBPf3c9BkrZ+p7anIovJc3/nej2r3xiQlXa9ZfsN1EQ
-	 m8XlbjGiK1ya9ifY/XJWETh7JE/YRycaIeQ6+Lhs+TkEQebpPlzJs8jysmpF7C/Drj
-	 NaWQCt8VXfeEQ==
-Received: from policy02-mors.netcup.net (unknown [46.38.225.35])
-	by mors-relay-8405.netcup.net (Postfix) with ESMTPS id 4j8CZF4kP0z741c;
-	Tue, 20 Oct 2026 15:15:01 +0200 (CEST)
-Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by policy02-mors.netcup.net (Postfix) with ESMTPS id 4j8CZC1HV0z8svZ;
-	Tue, 20 Oct 2026 15:14:59 +0200 (CEST)
-Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
-	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 3D3155F992;
-	Tue, 20 Oct 2026 15:14:41 +0200 (CEST)
-Authentication-Results: mxe9fb;
-        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=linux@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
-Received-SPF: pass (mxe9fb: connection is authenticated)
-Message-ID: <73460e00-f0fc-458e-8ea4-4b5ec4e04288@leemhuis.info>
-Date: Tue, 20 Oct 2026 15:14:39 +0200
+	dkim=pass (2048-bit key, unprotected) header.d=linaro.org header.i=@linaro.org header.a=rsa-sha256 header.s=google header.b=Dz90nzOK
+Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-48e011d370dso2643983f8f.0
+        for <linux-perf-users@vger.kernel.org>; Tue, 20 Oct 2026 06:22:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1792502520; x=1793107320; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:in-reply-to:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=s0zAvqlmsB3t3287vk58YCfF/XdciYklX6cmGUHob6Y=;
+        b=Dz90nzOKbiEOlwfKKlJaHRGcaWmgPWGgCnjEMv3IbSpXvbc6CP26OpKvlhfyO+zbpp
+         +vIzrjzZJuVr62zTG0P7CGju+e+znIimuTuGyeXNV4k4l/fBFa3prp+rOaQA0eZ74W15
+         H6our6ktLwrxG2P5q5aGckmGTZty/pgoQP8AjJte8UOW75ik9cP/jA8F+Lwkkr4qWdT7
+         G2fxx6b60QIXQFs/snDGgqu5Br+ULUcj7XaISNbW9agA0HhUQ2MdMaBP5Jk6YN6LY99p
+         NJVqToC7u3M1O6S5kbGXmKAG5AjAb0ZLiZE6IE+J5DBC5uDAMXFjKVd1Ny1uPRUq9D6k
+         hhzw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1792502520; x=1793107320;
+        h=content-transfer-encoding:content-type:in-reply-to:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=s0zAvqlmsB3t3287vk58YCfF/XdciYklX6cmGUHob6Y=;
+        b=2Rm4CcRjOfdKCUOyXyNWEFuraZ1byq3UEOs6MactcIqV/Hd22irrFwEUn/9BWb2alj
+         PthIMEphMZo5gYZUvMr0al46STJK430ZvtD/0mgv5OcWfOua8eAkVU+Zkr5Un+foc38N
+         ix1qGfxwZ6ZBn33bmr6IrRXTrH12q4geoX6iB1fXDpsohyM3JpkoFhpyMrNzSMZ338M0
+         bdD7twtVUxJqxDrgXU8LHWeOiXB7Mq3UNIXwwrnJEAqxdgu8o3cU0X2GecBQWl/nzc6e
+         M8zoUiUsjb+kTCsIR95tZwypfcKr8KHfmX9nOPIx7cc0uMx5flnYRCTNgLSHiM3ed98C
+         zZBw==
+X-Forwarded-Encrypted: i=1; AKwUvBxyqHo7TFzv5g+LUeVTbvfYYS9y6O3AlofTzAg677yCyFyQkIH1E6zVH4J3+W4TP2sgxNauqnfA1oUspkik3W6Z@vger.kernel.org
+X-Gm-Message-State: AFq9FYJ+hdLr/DGBbBagyAifY5Q2s3OWxfLNaeLOdSc4n91rc0gPLl1R
+	Bjp153C0nqhYo0A7tblRruUQYfkg8SxaVugUI4byAPYwjrb/jmmW8k8zp/glEpVS3/o=
+X-Gm-Gg: AYBFou36uSu68omGPmKJhQ/f22imYRH9wvsgLT3oS6DwYjSZLd55Lr/gPiSHMfUnct+
+	pL1D1LS5bXwGi6pOLZqh1wNBaYEIM7axM0LDyxCDiUBykFvghesTePOqkAFE8QMA+4xehgXp1D3
+	oa2Tq6Elcfi3Xll5x8G6J0QaCcM3llK2GFkkmIINdRyRRT0MVqgU+o4Zyjj2T8hD+S66DPIYKP9
+	fh0+pkMFzDZr3wLJ3XlNBtWD3zv591QOQ6r1Xgc0scAFbWjY3+3sqLUY7vw529m9mbrLqHYpEIn
+	pFS55AgkfEKC/iillZrHWpGY9sqvxv6uiLqx/FQ8M8aVuxGilyaxlfz8V0p7ceCm9Xk1FTDVbtJ
+	PnKQvVeBtYNCyntKaaAb6RXK7rpyl/CdGibimoj79Igw4FbliDX2mp37jPLLvXVYWjclFUCzSnj
+	5eRF3kfjmPEhyFQkQhthMd201Ssgw7ejcK3UiGo/bS/d3I+e5vPl7BhCyd479ZPGaRQU+BfvrbO
+	Ts=
+X-Received: by 2002:a5d:5f92:0:b0:488:7dc6:4e9 with SMTP id ffacd0b85a97d-48e07bb5a34mr23410881f8f.10.1792502520304;
+        Tue, 20 Oct 2026 06:22:00 -0700 (PDT)
+Received: from [192.168.1.3] ([37.18.141.193])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-48e1d81035csm6480943f8f.15.2026.10.20.06.21.59
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 20 Oct 2026 06:21:59 -0700 (PDT)
+Message-ID: <89e50eff-5ebc-428a-978c-82ff1fbd3f8f@linaro.org>
+Date: Tue, 20 Oct 2026 14:21:58 +0100
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -74,90 +92,221 @@ List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH v2 0/7] kbuild: build the userspace tools in tools/
- with the kernel
-To: Sasha Levin <sashal@kernel.org>
-Cc: Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nsc@kernel.org>,
- linux-kbuild@vger.kernel.org, Shuah Khan <shuah@kernel.org>,
- linux-kselftest@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>,
- Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>, James Clark
- <james.clark@linaro.org>, linux-perf-users@vger.kernel.org,
- =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>,
- Andrew Morton <akpm@linux-foundation.org>, linux-kernel@vger.kernel.org
-References: <20261016143143.3613501-1-sashal@kernel.org>
- <e77d6e7e-bc46-4363-8bea-d95ed521b5ab@leemhuis.info>
- <20261020124309.3022372-1-sashal@kernel.org>
-From: Thorsten Leemhuis <linux@leemhuis.info>
-Content-Language: de-DE, en-US
-Autocrypt: addr=linux@leemhuis.info; keydata=
- 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 MEK4
-In-Reply-To: <20261020124309.3022372-1-sashal@kernel.org>
-Content-Type: text/plain; charset=UTF-8
+Subject: Re: [PATCH 16/25] coresight: perf: Support AUX sampling with per-CPU
+ sinks
+To: Leo Yan <leo.yan@arm.com>
+Cc: Ingo Molnar <mingo@kernel.org>, linux-perf-users@vger.kernel.org,
+ linux-kernel@vger.kernel.org, coresight@lists.linaro.org,
+ linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org,
+ Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>,
+ Suzuki K Poulose <suzuki.poulose@arm.com>, Mike Leach <mike.leach@arm.com>,
+ Anshuman Khandual <anshuman.khandual@arm.com>,
+ Yeoreum Yun <yeoreum.yun@arm.com>, Jonathan Corbet <corbet@lwn.net>,
+ Suyash Mahar <smahar@meta.com>, Amir Ayupov <aaupov@fb.com>
+References: <20260915-arm_cs_support_aux_sample-v1-0-35cf6f297d20@arm.com>
+ <20260915-arm_cs_support_aux_sample-v1-16-35cf6f297d20@arm.com>
+Content-Language: en-US
+From: James Clark <james.clark@linaro.org>
+In-Reply-To: <20260915-arm_cs_support_aux_sample-v1-16-35cf6f297d20@arm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-PPP-Message-ID: <179250208210.540767.17395814278053043276@mxe9fb.netcup.net>
-X-NC-CID: ePy6a31AXuBk1UyrtA9FX3RTAP+OGclNKmwC22wt3LuEbVMcKVo=
 
-On 10/20/26 14:43, Sasha Levin wrote:
-> On Tue, Oct 20, 2026 at 01:52:17PM +0200, Thorsten Leemhuis wrote:
->
-> For allmodconfig the main reason is that perf's feature detection does not
-> always turn a feature off when its library is missing: [...]
+
+
+On 15/09/2026 16:49, Leo Yan wrote:
+> Add snapshot_aux() for per-CPU sinks with overwrite buffers. Shared
+> sinks can mix trace from multiple CPUs, making them unsuitable for
+> context-based profiling.
 > 
-> You remember it right. The difference is that Kconfig probes for those, so a
-> missing tool turns the option off rather than failing the build, and the result
-> is recorded in .config.
+> Pad missing trace with leading zeros, or zero-fill the requested AUX
+> payload when a snapshot is unavailable. This ensures that the decoder
+> can safely discard the zero-filled trace data.
 > 
-> That is how I'd like to add the selftests that need libraries: a Kconfig
-> probe per library, so allmodconfig builds them where the libraries are
-> installed and .config says which ones were built.
+> Reuse the AUX action guard to defer concurrent stops until the snapshot
+> finishes. Skip snapshots during sink interrupt handling. On copy or
+> restart failure, mark the AUX output truncated so perf core disables
+> the event.
+> 
+> Assisted-by: Codex:gpt-6
+> Signed-off-by: Leo Yan <leo.yan@arm.com>
 
-Okay, now this makes more sense to me, many thx for taking the time for
-a reply!
+Reviewed-by: James Clark <james.clark@linaro.org>
 
-Ciao, Thorsten
+> ---
+>   drivers/hwtracing/coresight/coresight-etm-perf.c | 123 +++++++++++++++++++++++
+>   drivers/hwtracing/coresight/coresight-etm-perf.h |   2 +
+>   2 files changed, 125 insertions(+)
+> 
+> diff --git a/drivers/hwtracing/coresight/coresight-etm-perf.c b/drivers/hwtracing/coresight/coresight-etm-perf.c
+> index 8020a4d8af18bb669441824cfdb687f4fa299eb4..5e90ed49562c117879780f573072e6b522d9d048 100644
+> --- a/drivers/hwtracing/coresight/coresight-etm-perf.c
+> +++ b/drivers/hwtracing/coresight/coresight-etm-perf.c
+> @@ -456,6 +456,7 @@ static void *etm_setup_aux(struct perf_event *event, void **pages,
+>   	if (!event_data)
+>   		return NULL;
+>   	INIT_WORK(&event_data->work, free_event_data);
+> +	event_data->overwrite = overwrite;
+>   
+>   	/* First get the selected sink from user space. */
+>   	sink_hash = ATTR_CFG_GET_FLD(&event->attr, sinkid);
+> @@ -863,6 +864,127 @@ static void etm_event_del(struct perf_event *event, int mode)
+>   	etm_event_stop(event, PERF_EF_UPDATE);
+>   }
+>   
+> +/* A zero trace size pads the sample without accessing the AUX handle. */
+> +static long etm_event_snapshot_aux_copy_data(struct perf_output_handle *aux_handle,
+> +					     struct perf_output_handle *handle,
+> +					     unsigned long trace_size,
+> +					     unsigned long size)
+> +{
+> +	unsigned long pad;
+> +	long ret;
+> +
+> +	trace_size = min(size, trace_size);
+> +
+> +	/* Pad the front with zeros to keep the latest trace data at the end */
+> +	pad = size - trace_size;
+> +	while (pad) {
+> +		unsigned long chunk = min(pad, PAGE_SIZE);
+> +
+> +		if (perf_output_copy(handle, page_address(ZERO_PAGE(0)), chunk))
+> +			return -EFAULT;
+> +		pad -= chunk;
+> +	}
+> +
+> +	/*
+> +	 * Skip an empty snapshot, as equal offsets would otherwise copy the
+> +	 * entire AUX ring.
+> +	 */
+> +	if (trace_size) {
+> +		unsigned long to = aux_handle->head;
+> +
+> +		ret = perf_output_copy_aux(aux_handle, handle, to - trace_size, to);
+> +		if (ret < 0)
+> +			return ret;
+> +	}
+> +
+> +	return size;
+> +}
+> +
+> +static long etm_event_snapshot_aux(struct perf_event *event,
+> +				   struct perf_output_handle *handle,
+> +				   unsigned long size)
+> +{
+> +	struct etm_ctxt *ctxt = this_cpu_ptr(&etm_ctxt);
+> +	struct perf_output_handle *aux_handle = &ctxt->handle;
+> +	struct etm_event_data *event_data;
+> +	struct coresight_device *source, *sink;
+> +	struct coresight_path *path;
+> +	unsigned long trace_size;
+> +	long ret = 0;
+> +
+> +	if (!etm_event_aux_begin(event, ctxt))
+> +		goto padding;
+> +
+> +	if (READ_ONCE(event->hw.aux_paused))
+> +		goto out;
+> +
+> +	event_data = perf_get_aux(aux_handle);
+> +	if (!event_data || !event_data->overwrite)
+> +		goto out;
+> +
+> +	path = etm_event_get_ctxt_path(ctxt);
+> +	if (!path)
+> +		goto out;
+> +
+> +	source = coresight_get_source(path);
+> +	sink = coresight_get_sink(path);
+> +	if (WARN_ON_ONCE(!source || !sink))
+> +		goto out;
+> +
+> +	if (!coresight_is_percpu_sink(sink)) {
+> +		dev_err_once(&sink->dev, "AUX sampling requires a per-CPU sink\n");
+> +		goto out;
+> +	}
+> +
+> +	/* Skip snapshots that preempt the sink's interrupt handler */
+> +	if (READ_ONCE(sink->in_interrupt))
+> +		goto out;
+> +
+> +	coresight_pause_source(source);
+> +	trace_size = sink_ops(sink)->update_buffer(sink, aux_handle,
+> +						   event_data->snk_config);
+> +	coresight_disable_path(path);
+> +
+> +	/*
+> +	 * If the AUX handle was closed or marked truncated, the sink is
+> +	 * expected to have notified perf core to disable the AUX event.
+> +	 */
+> +	if (!perf_get_aux(aux_handle) ||
+> +	    (aux_handle->aux_flags & PERF_AUX_FLAG_TRUNCATED))
+> +		goto fail;
+> +
+> +	ret = etm_event_snapshot_aux_copy_data(aux_handle, handle, trace_size, size);
+> +	if (ret < 0)
+> +		goto fail;
+> +
+> +	if (coresight_enable_path(path, CS_MODE_PERF))
+> +		goto fail;
+> +
+> +	if (coresight_resume_source(source)) {
+> +		coresight_disable_path(path);
+> +		goto fail;
+> +	}
+> +
+> +	goto out;
+> +
+> +fail:
+> +	/* Set the truncated AUX flag so perf core can disable the event */
+> +	if (perf_get_aux(aux_handle)) {
+> +		perf_aux_output_flag(aux_handle, PERF_AUX_FLAG_TRUNCATED);
+> +		perf_aux_output_end(aux_handle, 0);
+> +	}
+> +
+> +out:
+> +	etm_event_aux_end(event, ctxt);
+> +
+> +padding:
+> +	/* Pad the buffer with zeros on an early exit */
+> +	if (!ret)
+> +		ret = etm_event_snapshot_aux_copy_data(NULL, handle, 0, size);
+> +
+> +	return ret;
+> +}
+> +
+>   static int etm_addr_filters_validate(struct list_head *filters)
+>   {
+>   	bool range = false, address = false;
+> @@ -1109,6 +1231,7 @@ int __init etm_perf_init(void)
+>   	etm_pmu.free_aux		= etm_free_aux;
+>   	etm_pmu.start			= etm_event_start;
+>   	etm_pmu.stop			= etm_event_stop;
+> +	etm_pmu.snapshot_aux		= etm_event_snapshot_aux;
+>   	etm_pmu.add			= etm_event_add;
+>   	etm_pmu.del			= etm_event_del;
+>   	etm_pmu.addr_filters_sync	= etm_addr_filters_sync;
+> diff --git a/drivers/hwtracing/coresight/coresight-etm-perf.h b/drivers/hwtracing/coresight/coresight-etm-perf.h
+> index 24d929428633f56f24a114d5bb93b8ac4799ca11..a69eb04a597efcfe630342a410cbf8fea3c4501e 100644
+> --- a/drivers/hwtracing/coresight/coresight-etm-perf.h
+> +++ b/drivers/hwtracing/coresight/coresight-etm-perf.h
+> @@ -89,6 +89,7 @@ struct etm_filters {
+>    * @aux_hwid_done:	Whether a CPU has emitted the TraceID packet or not.
+>    * @snk_config:		The sink configuration.
+>    * @cfg_hash:		The hash id of any coresight config selected.
+> + * @overwrite:		Whether the AUX buffer uses overwrite mode.
+>    * @path:		An array of path, each slot for one CPU.
+>    */
+>   struct etm_event_data {
+> @@ -97,6 +98,7 @@ struct etm_event_data {
+>   	cpumask_t aux_hwid_done;
+>   	void *snk_config;
+>   	u32 cfg_hash;
+> +	bool overwrite;
+>   	struct coresight_path * __percpu *path;
+>   };
+>   
+> 
 
