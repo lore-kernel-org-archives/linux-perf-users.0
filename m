@@ -1,100 +1,100 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.214.172
+Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.160.177
 ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1792510242;
-	b=IUidEDlxBfQFcjI2lzetWXITloOuxLEdSWSA8Xrnm0QBpJ6vVhtL+kr31qezRKV077ar
-	 MKuXjkHE9WKkcCcu5jnx8RfddMhW6Vbfr0bOTc44KV1OK3j0TnULpK6WB6HbjA7sDplx9
-	 jE9Z2vrJ4IPfZ8J+8iqZO3j4Lx6sMA5scbxwEXY2Jrhhzu6neY2X+rG5ae/ULmk8mESw8
-	 SEr+N6dXZ73+fsg/HAMldHqF0HI0ASjhZrp2OYAs0xKyJMq1h8ry331+RJofQLioL7FG/
-	 FYCJfHJ0PIvy6ZCYcIGWWsKHFmPczWl7Eqgh8GqsjsjPFzHvyLXecqabeF3A3K5VRqA==
+	t=1792511281;
+	b=OGLOgOBGAwbkCIUPYNmOQCa/NzPbWR7uaikmmN3vVzDLO6PXJAyvZWSLaCH2NeDVlIgG
+	 M/9hjnQhawKh5Z8snkScI+26K02HVkaVXJju21MJ+E8++lpLal/rw99En/WvaIUxKOqRI
+	 Piw5GPZQgn0fpYYnu3IGXOUCQ8jS69NtzbFd4btD+6zYEzOyWRDJQYc8RE/vJrwNa5eG1
+	 oEW2jsCPnrEPgKSOQM28u8RXOD+sXL2C5azovLJomTyYMMFeBadfEFmsdhZndLE0NF+FW
+	 putVJc2QoWVsHe9gwFcQtV8EqmqyFbPcALWQDFnIYH+IiUC1LbT5KnEv1mdMZdBUT0Q==
 ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792510242;
+	a=rsa-sha256; c=relaxed/relaxed; t=1792511281;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:
 	 MIME-Version:References:In-Reply-To:From:Date:X-Gm-Features:
 	 Message-ID:Subject:To:Cc:Content-Type:Content-Transfer-Encoding;
-	bh=CJ/2JjOfv7jKYX1UxnOtzLnNxCxfLnpcbv11NxnLJuM=;
-	b=zZxEFuwkDzy2qm+nXd30GXaHisRCtA+yiDte5m0Qb+Vsq1zV7Ci17OOHkMaXVf0Vot98
-	 hpIakLWTHpgeJk0WpXAnJDkHTtTbl3b9winWkDAKf+ogBKtEDGJH9OUAZVjxQwHMKR3Hc
-	 C9q0rIyhP2EOEKUXO77dW2r3QFgsLQz9Va4QV1zC8jcJLR+TEIb5HthahIEKVWDsEee/p
-	 hkmIIFrTHuFQCpFBqL+4Pwt5hiTFgEQJOyAV1mE966+UVwhAKXtcJBVK+v4u/3XijvE5O
-	 yGRIXQLI2SUIvDvGEWMrO62QYQtTYV1PQbUOZ5G/kL8Sb9ZJqF+CFgxNirdKawrmnyg==
+	bh=yRC6FlkraK3/GX/G0Bv3qFOVKgUroYX1xrJ2PWq82C4=;
+	b=iIParBmPQWpC8sdBO0+hjA8cCMLpb1OnLcwN60V5ncy3dZFam4GvBe8dW0EhX8QVyD6M
+	 RWt6z9YTR03zt9dLzhdjO5J50YaxA3dpLk0E4MRvd5F4tHrFMIR1v9al8VbhdaSme5iX0
+	 U8R+SbhND8kwWEqEveK6AOG7RRwQqOEy+CbJcKJOCzUrRugbv1g7dDIUtBAXbXcqfE5ia
+	 oimjJkMWvY6jUNLVo5p9vlNCNssXPfoKvZOZN9Yx126Qql6n4q8XMIEcGziSNfNDC5sz/
+	 mDuKpILfU/veabvetcArgWdXGUSA4b215tuzaATssHAujtd2Zz5aisJYfVNXO46EEjg==
 ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=google.com;
 	spf=pass smtp.mailfrom=google.com;
-	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20251104 header.b=HHjx68Bd;
-	arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.214.172
-Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
+	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20251104 header.b=qSwuIXJA;
+	arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.160.177
+Received: from mail-qt1-f177.google.com (mail-qt1-f177.google.com [209.85.160.177])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73C15606A32E
-	for <linux-perf-users@vger.kernel.org>; Tue, 20 Oct 2026 15:30:41 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 73C15606A32E
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70C14606A32C
+	for <linux-perf-users@vger.kernel.org>; Tue, 20 Oct 2026 15:47:56 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 70C14606A32C
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20251104 header.b=HHjx68Bd
-Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-2e8623790f8so78515ad.0
-        for <linux-perf-users@vger.kernel.org>; Tue, 20 Oct 2026 08:30:41 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1792510241; cv=none;
+	dkim=pass (2048-bit key, unprotected) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20251104 header.b=qSwuIXJA
+Received: by mail-qt1-f177.google.com with SMTP id d75a77b69052e-5337c7b9937so364621cf.0
+        for <linux-perf-users@vger.kernel.org>; Tue, 20 Oct 2026 08:47:56 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1792511275; cv=none;
         d=google.com; s=arc-20260327;
-        b=ko0iMCxSlvSMWELGnqFh5q3/XELXEmwlPZtKKA8NnqsuPJxjZnzTSa41umCn6zsaDg
-         oT9vld6VmOU5M+nQU6vfUdFcm93Ak4D3dK6WB9ePm8TaEO+xSteFv+ntZb28iEMXVGTT
-         J5GBbCOA642O7sCzfvq1YCIIN9dUT+dWpg7nSsoawHUXarCghYuutUhslc2iuUBziYkS
-         f3jJJv3uzEo37WK3PKg5wWl7c048u827IGW13T54jcka3ssNGlV3F0u40iJJDpSagTTg
-         33sSyRbiAH8+Xm9//XCjLuFhG0g4Wj3y0qNvLEa9GG3CeV9jkbHSjIN4I0+mTihdyEwd
-         e1CA==
+        b=GodsGjqogAI5SBOtpvU5vyqjbKZ8dmD8cARwYZoTFo0zZU1xX03qYkHkl131TFhSOQ
+         Njv3EmxzWWsQKMh60wX9LGMFo2E3VAsNZCRI/tYw3+IX9mgwCtdKpEBAIV6jafq4yWSZ
+         VAodbAiTQ7p/B5Jj0wD16ZR2F0RlkNWevDZhdrobRUOX2PJC4ldOFpnxQu53F3RT8Pdx
+         NxkgSpmp+dcCXA4Ifuzo5mjoTrC+GooxVRaGsOKmS41VNwB9qiidmXY3IaqLtlAXBqXA
+         tvyxuEm/DyZ0l2Irg9tfY3WP5fc6J73+G7Te2aEHB6OVlAHAeAmNsi5Nhiw7SCG4aw/Z
+         /QAA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:dkim-signature;
-        bh=CJ/2JjOfv7jKYX1UxnOtzLnNxCxfLnpcbv11NxnLJuM=;
-        fh=9EuPkkAuFRjFBTvQg95a4ukG5iwfbS1aXUmOOT+iQsQ=;
-        b=TAjAPQuWFj+EFMnNPg5j7/KOkl+vIHd11eOoDl2KZf6v/LrRQl165VQK2u0iO9JG7V
-         dQuAesHqfPmMxSjjThmpvXTc03q5kvXqWJiYwlzg/DaYvZLQoGu+2zi6TDdYgSgp0P5O
-         n0uJO2dzhL8FUS56IeIEcjiMrIZtQUzWyutqgRsL12lASreovOZ6tFmnt1ALY8lXz+yX
-         oyjnIcCcSWc+WWpJpPeNuIMlvo5w/IjoH9GQ0F/qop1/iDSoyoHPQGhRfN33IhfTweDq
-         g9mp0aQPOMBSy4o7Pr4hEn7ZWung4t0mNQThlxYXzfMzGCxI6OpqQyRO5QihlvAoj3If
-         kkAA==;
+        bh=yRC6FlkraK3/GX/G0Bv3qFOVKgUroYX1xrJ2PWq82C4=;
+        fh=3x/euKzTv3iRkSgFzKnxJsFK844XCIXHKCAPlJ11b9Q=;
+        b=iM5uyu3LcIOCssbR1efMNVTqrRpzlC+rMl86zDdq783wgSU/YfnyBCDtI2a42mivXD
+         fsg31+EJCGph4sFJfQ+9KQ47oZ2Z6XTS5ejXSSnNCZ12+tHT1d5ThlMpS4LU3AI0eabh
+         Ts9cQXKlJmHi7OEFZ2yOjFIX+VQjep9LPnmsOaY8yfSwsXz6D1sj4C9Zf0L7jyflgxEh
+         9Cp3YrENIB8oocCcs2cQV7vbD2LOurGLSvN7KvhaZCYSegfEhlOKwsG5HZIB7FOiwDeF
+         X9cpuSXbpIdZJjMBxCwVz+Q3OPEFWHbORTRCXncBajwLLjbvrCtO0AkDJWaVT7p4W3zz
+         JKUg==;
         darn=vger.kernel.org
 ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1792510241; x=1793115041; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1792511275; x=1793116075; darn=vger.kernel.org;
         h=content-transfer-encoding:content-type:cc:to:subject:message-id
          :date:from:in-reply-to:references:mime-version:from:to:cc:subject
          :date:message-id:reply-to:content-type;
-        bh=CJ/2JjOfv7jKYX1UxnOtzLnNxCxfLnpcbv11NxnLJuM=;
-        b=HHjx68BdSfsUKb2Ijmp4YWBQ7qCb4HitJ4/z8W1s63pnmzFffQ22nOclBVMvPyYCqa
-         zlNfY1Men1BOjbZdq7SmDvpTGWSPC0LtSw12DtgmH3XUOrgjLdQ41WmJGS8Nqae36Okj
-         V61h0EBbqsxsfQ0/6uV0JvGS2Hi7XbhnkUCTQl7vkXEDoIDi7tHH32xk2iOJ7gWc6ioU
-         6+srm6N2ZguJZCy8hR0yHSKeRkpl5vN/pK96YvszDf49luFYXK+Aj5oopjFRbRih1L3k
-         15rZw7PU4yikKQkRQm6P9Rie5EBUpzl/YPlZnTXqBPWedxx8Pcxs+oHjgsywBYGW95ME
-         5b4A==
+        bh=yRC6FlkraK3/GX/G0Bv3qFOVKgUroYX1xrJ2PWq82C4=;
+        b=qSwuIXJAgpoCsSGWpxrRfhS5fWBq6K8db5yEtTkjsuxjI3mq2WGFEMDzMK6tA2Z8+p
+         4OIP+EzCO/ujp0lzITIRCfUz4P5IOGyKf5H/l1ShgJaWJndKaIg/m3t9J94hApwe4ly2
+         o+M66QL6zsNMonLk/cossqvHi/mTQaUqeI/ODFISttFIUFzotknj94R7xTfPgFqXBT9K
+         Ql8WPSf2kOmn3bzLzalp5l/bH2rPMZkRxh0TR2IwoErrWCtzq787xajSUJo80UPg98eF
+         pCGyfd/OiPHHYVUfmd2Zd50ZyRTfR6FPS8F1S47qVHhKWdW6PbBqDepiAFFTKBW6macL
+         gSDA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1792510241; x=1793115041;
+        d=1e100.net; s=20260707; t=1792511275; x=1793116075;
         h=content-transfer-encoding:content-type:cc:to:subject:message-id
          :date:from:in-reply-to:references:mime-version:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=CJ/2JjOfv7jKYX1UxnOtzLnNxCxfLnpcbv11NxnLJuM=;
-        b=QWem4lgkTn9z9vjfu6DfGwUf53yDw8RPF5mOUNSLa03KgDlSClfKhMCI+6tqsPVqEt
-         iJuE5EiDs0eP19fVdIhzFxANB0/3+riBCEcamZ9egbPH5mRVMj+TGmsjAE3QblOifw9E
-         IIoEWmN6Q16VvFyBlkerAnSUVKPQNSA2eMaT8SSzPv1Xh7nIyLF0ivC9hCyOmi+Tqxq4
-         RfybiuuHOHbilwVrxr8MPQfVvJ32eZKxxtk6bjDjuJFC1zOpOP4guH0/bGYdRfHV866c
-         BLXfXfGAjq4RdZ45Syd4DXr9GbsZ+GBIorSbGGZbWxlCkXMHfpnNbKdXOX08nZ+4cWCW
-         t37A==
-X-Forwarded-Encrypted: i=1; AKwUvBw+Y5Qjcf1EEZKDT9G4CapTcuTBgkjdzQ+utVC/FGg8rRorcVCI6RimalKRNckVQLqG4sRjfj71bofwoIVSdQUd@vger.kernel.org
-X-Gm-Message-State: AFq9FYIbNaCmXzM4wxtkKXDnKP2lwS5UZ3t0KaD5FFUz2hNAJLCg4ShA
-	rrciZIKnH54Ppvmm7f2SpiHnzdYeWZiA5FEaUKc3Ti9IQBSSX3DbwyZc1U+RYvCvmiq4AA7SpAZ
-	HAUDwYwe5b2VFdoFkWKf7glTAe2NR8Yearvn3X4go
-X-Gm-Gg: AYBFou0xZSYadZncyFiNQW5mn9b1KCd9lOjyQMqbUp7ZBmLpsvoyxrWWFsq+IyGrxgn
-	MkLTfoEhj7/LX/zuk0YuHfLxlm7WsHcaEuhVaucsOmuGtIe8aW3pKnRS0IWdZ8gYGlfcCyxuWvd
-	U5IBK+JeAITgLckGalx5vhOYLC4stGWulGuZoceteVHOlFoPcfZvtklrM+IoxT/gAtI3jGqOkbH
-	nIxs+4/H4d0iPlbM6elJCwW7FcCTpUnK4h0fkWKhIEVwiVvItLOU4qTLNY/YAszlpS8bAaL4mu9
-	tne+w4RszYLjGuzM9/4F0PlLW3FKXVfm/CVyflt2IvpmALIaaPHjGC6qCWD39rHz7GcKlW336NS
-	b6zS7v207Q65YO5ewHCP8As7Pp0urx7graG/NyHw5PI5tj8srpw1alOlhzsy6ErKj5Ak=
-X-Received: by 2002:a17:902:e810:b0:2d5:c090:3810 with SMTP id
- d9443c01a7336-2ea1acd888fmr5174455ad.2.1792510239970; Tue, 20 Oct 2026
- 08:30:39 -0700 (PDT)
+        bh=yRC6FlkraK3/GX/G0Bv3qFOVKgUroYX1xrJ2PWq82C4=;
+        b=gqTQNvlhK8b5o9+ZnpSaKvH2siJwczT2t26aFoBeoNE7KQPFWR7mYD0J+aGhVL2KKo
+         sAny5teGEsH9kQaABCBPXjOTDxQNjuPYvsyAhlHO2KZvLq+j3qlFN6IIFXpvLQFUXv4m
+         71H33VlLOKZ4mZ03n4mmpa+MmIUtEXB5OOPhTjAJ6swHjNssDX4xcJT6n5Or/0GlF9Hl
+         +uzIPMtNUT2ERVxnuBhL17BNOEWU/qP2KSXkc+52ynSbEy7i1RSH0soE39G4kB8Mrk2t
+         P8oIsWvg+SKRmnkBmnfHbwl9lqYmgicC/Vi4PQEdM6JrxwbY+vILlPUGxciPqCztqcEY
+         Cj4Q==
+X-Forwarded-Encrypted: i=1; AKwUvBzgdwfd1W2RjSL4/JdUElR4rsrO9Gnq1+G3PfiKNabqbVVv+jtAdDI/d1JXCBWCiZxTfJOQ6+OKv3w5C1sD9hW7@vger.kernel.org
+X-Gm-Message-State: AFq9FYI84IlChmg2BFNqJW2Idy6vaiWD3KtmViTu15Rf3LeAXLyqmRe7
+	83uDLIn3rUlEFhnk429q1E18k6ao5RH0SjJXxLW8rZhAVqYSUpX5D7F/7MXY91OQVAvo9n9JG6I
+	Da8PCFR7bVMYS54G1ewVQvwY1JArMJILYi+Q92xPL
+X-Gm-Gg: AYBFou02KfisWeD2kWVAFxv5kUcg7H5pB49agFWI21ecig5Op4nyqgeLFf+kguk8v36
+	TwnYEZMBH1/qK02hgPf2yI+oujd9BCmAzNctqZXbZRzvEcqaqW5UNwi4llpUACTz8WE2rH21z3T
+	15T1pWD57X00Kl5VU4my4JYDdZ7pOpTVA7qn6XaHceIPRj0CXL2FPHnDdccVlQ2mTIUGeY/KtaJ
+	q7+g1BHDCUkwOZdQHOuDzKQblIjZUVzuC5GU2jSQBrlPY/BhgIkpYZ2XFFYN6HWKsNlAvG1xVDw
+	oiQ/i0EkDcIvnKSiBysk06EFJSHShtfVL5J6dHWAnpsZDGvhdp5qq6ABehu7mPMHDqwnYpM6gJq
+	B1Ixp3uD+8Bg42cJdabKT
+X-Received: by 2002:a05:622a:408e:b0:536:353e:8d2a with SMTP id
+ d75a77b69052e-53684d0ca3fmr22835561cf.1.1792511274816; Tue, 20 Oct 2026
+ 08:47:54 -0700 (PDT)
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -104,509 +104,111 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-References: <20261018053710.2572636-1-irogers@google.com> <20261019220915.3943592-1-irogers@google.com>
- <20261019220915.3943592-3-irogers@google.com> <atb-9j8tLZ2rFtOm@z2>
-In-Reply-To: <atb-9j8tLZ2rFtOm@z2>
+References: <20261020053226.55936-1-namhyung@kernel.org>
+In-Reply-To: <20261020053226.55936-1-namhyung@kernel.org>
 From: Ian Rogers <irogers@google.com>
-Date: Tue, 20 Oct 2026 08:30:26 -0700
-X-Gm-Features: AclHuK98mcceTeTYd5_ymsTCReegYXkk62EobxKKHMTzqvXMKl2m3o9Szpose10
-Message-ID: <CAP-5=fUbsiir_4K1rhpy=TxWpgGLzuR7-fvMiiQ9htTUM3ibng@mail.gmail.com>
-Subject: Re: [PATCH v4 2/7] perf bpf-filter: Support BPF sample filters on
- tracepoint events
+Date: Tue, 20 Oct 2026 08:47:43 -0700
+X-Gm-Features: AclHuK-6g8Wi7TBC4FmkP0REbUcITyrib4F3WWwrmPcVPR9OBYT6u41SvbVECLM
+Message-ID: <CAP-5=fVmn-xYGdMVKq5b6at2oqagXhVrj7a=r65Z80dLGa_DGg@mail.gmail.com>
+Subject: Re: [PATCH] perf bpf-filter: Fix memory leak on bpf_link
 To: Namhyung Kim <namhyung@kernel.org>
-Cc: acme@kernel.org, adrian.hunter@intel.com, james.clark@linaro.org, 
-	jolsa@kernel.org, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, mingo@redhat.com, peterz@infradead.org, 
-	eranian@google.com, ddhariwal@google.com, rcu@vger.kernel.org
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, James Clark <james.clark@linaro.org>, 
+	Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, 
+	LKML <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Oct 19, 2026 at 10:41=E2=80=AFPM Namhyung Kim <namhyung@kernel.org>=
+On Mon, Oct 19, 2026 at 10:32=E2=80=AFPM Namhyung Kim <namhyung@kernel.org>=
  wrote:
 >
-> On Mon, Oct 19, 2026 at 03:09:10PM -0700, Ian Rogers wrote:
-> > Commit 466db4275edd ("perf parse-events: Add parse_uid_filter helper")
-> > updated set_filter() to route non-tracepoint filter terms (such as uid
-> > and gid) on PERF_TYPE_TRACEPOINT events to evsel->bpf_filters instead
-> > of the ftrace tracepoint predicate filter.
-> >
-> > However, in the kernel's __perf_event_set_bpf_prog()
-> > (kernel/events/core.c), attaching a BPF program to a perf_event fd
-> > branches on perf_event_is_tracing(event):
-> > - Non-tracing events (hardware PMU, software events, breakpoints) call
-> >   perf_event_set_bpf_handler(), which requires BPF_PROG_TYPE_PERF_EVENT
-> >   (SEC("perf_event")).
-> > - Tracepoint events (event->pmu =3D=3D &perf_tracepoint) reject
-> >   BPF_PROG_TYPE_PERF_EVENT with -EINVAL and instead require
-> >   BPF_PROG_TYPE_TRACEPOINT (SEC("tracepoint")), which is attached to
-> >   event->tp_event->prog_array and executed in
-> >   perf_trace_run_bpf_submit() before perf_tp_event(), dropping the
-> >   sample if the BPF program returns 0. Furthermore, the
-> >   bpf_cast_to_kern_ctx() kfunc is only permitted in
-> >   BPF_PROG_TYPE_PERF_EVENT programs.
-> >
-> > Add SEC("tracepoint") int perf_tp_sample_filter(void *ctx) in
-> > sample_filter.bpf.c to evaluate context-independent filter terms (uid,
-> > gid, tid, cpu, time, cgroup) using BPF helpers without calling
-> > bpf_cast_to_kern_ctx(). When preparing a BPF filter on a
-> > PERF_TYPE_TRACEPOINT evsel, autoload perf_tp_sample_filter instead of
-> > perf_sample_filter and attach it once to the shared trace_event_call.
-> >
-> > Before:
-> >   # perf record -e kmem:mm_page_alloc --filter 'uid =3D=3D 0' -- true
-> >   libbpf: prog 'perf_sample_filter': failed to attach to perf_event FD =
-3: Invalid argument
-> >   Failed to attach perf sample-filter program
-> >   failed to set filter "BPF" on event kmem:mm_page_alloc with 22 (Inval=
-id argument)
-> >
-> > After:
-> >   # perf record -e kmem:mm_page_alloc --filter 'uid =3D=3D 0' -- true
-> >   [ perf record: Woken up 1 times to write data ]
-> >   [ perf record: Captured and wrote 0.024 MB perf.data (42 samples) ]
-> >
-> > Fixes: 466db4275edd ("perf parse-events: Add parse_uid_filter helper")
-> > Signed-off-by: Ian Rogers <irogers@google.com>
-> > ---
-> >  tools/perf/util/bpf-filter.c                 | 136 ++++++++++++++++---
-> >  tools/perf/util/bpf_skel/sample_filter.bpf.c |  85 ++++++++++++
-> >  2 files changed, 201 insertions(+), 20 deletions(-)
-> >
-> > diff --git a/tools/perf/util/bpf-filter.c b/tools/perf/util/bpf-filter.=
-c
-> > index 72e83ac1d6a4..4e99af4764f1 100644
-> > --- a/tools/perf/util/bpf-filter.c
-> > +++ b/tools/perf/util/bpf-filter.c
-> > @@ -123,15 +123,26 @@ static int check_sample_flags(struct evsel *evsel=
-, struct perf_bpf_filter_expr *
-> >  {
-> >       const struct perf_sample_info *info;
-> >
-> > -     if (expr->term >=3D PBF_TERM_SAMPLE_START && expr->term <=3D PBF_=
-TERM_SAMPLE_END &&
-> > -         (evsel->core.attr.sample_type & (1 << (expr->term - PBF_TERM_=
-SAMPLE_START))))
-> > -             return 0;
-> > -
-> >       if (expr->term =3D=3D PBF_TERM_UID || expr->term =3D=3D PBF_TERM_=
-GID) {
-> >               /* Not dependent on the sample_type as computed from a BP=
-F helper. */
-> >               return 0;
-> >       }
-> >
-> > +     if (evsel->core.attr.type =3D=3D PERF_TYPE_TRACEPOINT) {
-> > +             if (expr->term =3D=3D PBF_TERM_TID || expr->term =3D=3D P=
-BF_TERM_CPU ||
-> > +                 expr->term =3D=3D PBF_TERM_TIME || expr->term =3D=3D =
-PBF_TERM_CGROUP)
-> > +                     return 0;
-> > +             if (expr->op !=3D PBF_OP_GROUP_BEGIN) {
-> > +                     pr_err("Error: %s tracepoint event does not suppo=
-rt BPF sample term %d\n",
-> > +                            evsel__name(evsel), expr->term);
-> > +                     return -1;
-> > +             }
-> > +     }
-> > +
-> > +     if (expr->term >=3D PBF_TERM_SAMPLE_START && expr->term <=3D PBF_=
-TERM_SAMPLE_END &&
-> > +         (evsel->core.attr.sample_type & (1 << (expr->term - PBF_TERM_=
-SAMPLE_START))))
-> > +             return 0;
-> > +
-> >       if (expr->op =3D=3D PBF_OP_GROUP_BEGIN) {
-> >               struct perf_bpf_filter_expr *group;
-> >
-> > @@ -427,6 +438,7 @@ int perf_bpf_filter__prepare(struct evsel *evsel, s=
-truct target *target)
-> >       struct bpf_link *link;
-> >       struct perf_bpf_filter_entry *entry;
-> >       bool needs_idx_hash =3D !target__has_cpu(target);
-> > +     bool is_tracepoint =3D (evsel->core.attr.type =3D=3D PERF_TYPE_TR=
-ACEPOINT);
-> >  #if LIBBPF_CURRENT_VERSION_GEQ(1, 7)
-> >       DECLARE_LIBBPF_OPTS(bpf_perf_event_opts, pe_opts,
-> >                           .dont_enable =3D true);
-> > @@ -444,9 +456,15 @@ int perf_bpf_filter__prepare(struct evsel *evsel, =
-struct target *target)
-> >               goto err;
-> >       }
-> >
-> > -     if (needs_idx_hash && geteuid() !=3D 0) {
-> > +     if (needs_idx_hash && geteuid() !=3D 0 && !perf_cap__capable(CAP_=
-BPF)) {
-> >               int zero =3D 0;
-> >
-> > +             if (is_tracepoint) {
-> > +                     pr_err("Error: Tracepoint BPF filter requires CAP=
-_BPF capability\n");
-> > +                     ret =3D -EPERM;
-> > +                     goto err;
-> > +             }
-> > +
-> >               /* The filters map is shared among other processes */
-> >               ret =3D create_idx_hash(evsel, entry);
-> >               if (ret < 0)
-> > @@ -484,8 +502,17 @@ int perf_bpf_filter__prepare(struct evsel *evsel, =
-struct target *target)
-> >               return 0;
-> >       }
-> >
-> > -     skel =3D sample_filter_bpf__open_and_load();
-> > +     skel =3D sample_filter_bpf__open();
-> >       if (!skel) {
-> > +             ret =3D -errno;
-> > +             pr_err("Failed to open perf sample-filter BPF skeleton\n"=
-);
-> > +             goto err;
-> > +     }
-> > +
-> > +     bpf_program__set_autoload(skel->progs.perf_sample_filter, !is_tra=
-cepoint);
-> > +     bpf_program__set_autoload(skel->progs.perf_tp_sample_filter, is_t=
-racepoint);
-> > +
-> > +     if (sample_filter_bpf__load(skel) < 0) {
-> >               ret =3D -errno;
-> >               pr_err("Failed to load perf sample-filter BPF skeleton\n"=
-);
-> >               goto err;
-> > @@ -501,15 +528,35 @@ int perf_bpf_filter__prepare(struct evsel *evsel,=
- struct target *target)
-> >               goto err;
-> >       }
-> >
-> > -     prog =3D skel->progs.perf_sample_filter;
-> > -     for (x =3D 0; x < xyarray__max_x(evsel->core.fd); x++) {
-> > -             for (y =3D 0; y < xyarray__max_y(evsel->core.fd); y++) {
-> > -                     link =3D bpf_program__attach_perf_event_opts(prog=
-, FD(evsel, x, y),
-> > -                                                                &pe_op=
-ts);
-> > -                     if (IS_ERR(link)) {
-> > -                             pr_err("Failed to attach perf sample-filt=
-er program\n");
-> > -                             ret =3D PTR_ERR(link);
-> > -                             goto err;
-> > +     if (is_tracepoint) {
-> > +             /*
-> > +              * For PERF_TYPE_TRACEPOINT, PERF_EVENT_IOC_SET_BPF attac=
-hes the
-> > +              * BPF program to event->tp_event->prog_array on the shar=
-ed
-> > +              * trace_event_call, which perf_trace_run_bpf_submit() ex=
-ecutes
-> > +              * for all CPUs and tasks before iterating the per-CPU pe=
-rf
-> > +              * events. Attach once on the first FD so tp_event->prog_=
-array
-> > +              * does not get duplicate copies for each per-CPU FD.
-> > +              */
-> > +             prog =3D skel->progs.perf_tp_sample_filter;
-> > +             link =3D bpf_program__attach_perf_event_opts(prog, FD(evs=
-el, 0, 0),
-> > +                                                        &pe_opts);
-> > +             ret =3D libbpf_get_error(link);
-> > +             if (ret) {
-> > +                     pr_err("Failed to attach perf tracepoint sample-f=
-ilter program\n");
-> > +                     goto err;
-> > +             }
-> > +             skel->links.perf_tp_sample_filter =3D link;
-> > +     } else {
-> > +             prog =3D skel->progs.perf_sample_filter;
-> > +             for (x =3D 0; x < xyarray__max_x(evsel->core.fd); x++) {
-> > +                     for (y =3D 0; y < xyarray__max_y(evsel->core.fd);=
- y++) {
-> > +                             link =3D bpf_program__attach_perf_event_o=
-pts(prog, FD(evsel, x, y),
-> > +                                                                      =
-  &pe_opts);
+> Attaching BPF program returns bpf_link but it leaked like following.
 >
-> This link should be saves somewhere.  I've sent a fix for it.
-
-Good catch! I'll follow up on that change.
-
-> > +                             ret =3D libbpf_get_error(link);
-> > +                             if (ret) {
-> > +                                     pr_err("Failed to attach perf sam=
-ple-filter program\n");
-> > +                                     goto err;
-> > +                             }
-> >                       }
-> >               }
-> >       }
-> > @@ -641,6 +688,45 @@ int perf_bpf_filter__parse(struct list_head *expr_=
-head, const char *str)
-> >       return ret;
-> >  }
-> >
-> > +static int pin_filter_object(struct sample_filter_bpf *skel, const cha=
-r *path)
-> > +{
-> > +     char *prog_path =3D NULL;
-> > +     int ret;
-> > +
-> > +     ret =3D bpf_object__pin_maps(skel->obj, path);
-> > +     if (ret < 0)
-> > +             return ret;
-> > +
-> > +     if (asprintf(&prog_path, "%s/perf_sample_filter", path) < 0) {
-> > +             bpf_object__unpin_maps(skel->obj, path);
-> > +             return -ENOMEM;
-> > +     }
-> > +
-> > +     ret =3D bpf_program__pin(skel->progs.perf_sample_filter, prog_pat=
-h);
-> > +     if (ret < 0)
-> > +             bpf_object__unpin_maps(skel->obj, path);
-> > +
-> > +     free(prog_path);
-> > +     return ret;
-> > +}
-> > +
-> > +static int unpin_filter_object(struct sample_filter_bpf *skel, const c=
-har *path)
-> > +{
-> > +     char *prog_path =3D NULL;
-> > +     int ret, map_ret;
-> > +
-> > +     if (asprintf(&prog_path, "%s/perf_sample_filter", path) < 0) {
-> > +             bpf_object__unpin_maps(skel->obj, path);
-> > +             return -ENOMEM;
-> > +     }
-> > +
-> > +     ret =3D bpf_program__unpin(skel->progs.perf_sample_filter, prog_p=
-ath);
-> > +     free(prog_path);
-> > +
-> > +     map_ret =3D bpf_object__unpin_maps(skel->obj, path);
-> > +     return ret < 0 ? ret : map_ret;
-> > +}
-> > +
-> >  int perf_bpf_filter__pin(void)
-> >  {
-> >       struct sample_filter_bpf *skel;
-> > @@ -655,6 +741,7 @@ int perf_bpf_filter__pin(void)
-> >       }
-> >
-> >       /* pinned program will use pid-hash */
-> > +     bpf_program__set_autoload(skel->progs.perf_tp_sample_filter, fals=
-e);
-> >       bpf_map__set_max_entries(skel->maps.filters, MAX_FILTERS);
-> >       bpf_map__set_max_entries(skel->maps.event_hash, MAX_EVT_HASH);
-> >       bpf_map__set_max_entries(skel->maps.idx_hash, MAX_IDX_HASH);
-> > @@ -674,7 +761,7 @@ int perf_bpf_filter__pin(void)
-> >               goto err;
-> >       }
-> >
-> > -     ret =3D bpf_object__pin(skel->obj, path);
-> > +     ret =3D pin_filter_object(skel, path);
+>   =3D=3D51328=3D=3DERROR: LeakSanitizer: detected memory leaks
 >
-> Why is this change needed?
+>   Direct leak of 1568 byte(s) in 28 object(s) allocated from:
+>       #0 0x7ffbe76ef24f in calloc (/lib64/libasan.so.8+0xef24f) (BuildId:=
+ 61e8165ca90f7a4f06b73f064a938c76deaae079)
+>       #1 0x000000625df7 in bpf_program__attach_perf_event_opts (tools/per=
+f/perf+0x625df7) (BuildId: 5e6309fda155e58708e92f1c76d44cadd585d0eb)
+>       #2 0x000000beddc0 in perf_bpf_filter__prepare util/bpf-filter.c:507
+>       #3 0x0000008f3def in evlist__apply_filters util/evlist.c:1421
+>       #4 0x00000044bbcf in record__open  tools/perf/builtin-record.c:1469
+>       #5 0x000000453f9e in __cmd_record  tools/perf/builtin-record.c:2594
+>       #6 0x00000045dadb in cmd_record  tools/perf/builtin-record.c:4427
+>       #7 0x0000005df56b in run_builtin  tools/perf/perf.c:383
+>       #8 0x0000005dfa0e in handle_internal_command  tools/perf/perf.c:436
+>       #9 0x0000005dfddc in run_argv  tools/perf/perf.c:480
+>       #10 0x0000005e0333 in main  tools/perf/perf.c:581
+>       #11 0x7ffbdd450680 in __libc_start_call_main (/lib64/libc.so.6+0x36=
+80) (BuildId: 85075e2ae2e13352a1413d41c327dacf6461526c)
+>       #12 0x7ffbdd450797 in __libc_start_main@GLIBC_2.2.5 (/lib64/libc.so=
+.6+0x3797) (BuildId: 85075e2ae2e13352a1413d41c327dacf6461526c)
+>       #13 0x000000409c54 in _start (tools/perf/perf+0x409c54) (BuildId: 5=
+e6309fda155e58708e92f1c76d44cadd585d0eb)
+>
+>   SUMMARY: AddressSanitizer: 1568 byte(s) leaked in 28 allocation(s).
+>
+> Let's add an xyarray of bpf_link for the filters and release them at the
+> end to fix the leaks.
 
-Before this patch, sample_filter.bpf.c only contained a single BPF
-program (perf_sample_filter), which was always loaded. This patch adds
-a second program (perf_tp_sample_filter) to the same skeleton (and
-patch 4 adds the lock-tracking programs to it as well), and uses
-bpf_program__set_autoload() before loading the skeleton so we can
-select only the program(s) needed for a given event.
+As Sashiko noted, libbpf's bpf_program__attach_perf_event_opts() is
+designed for callers that transfer ownership of the perf_event fd to
+the returned bpf_link (such as bpf_program__attach_kprobe(), which
+opens its own perf_event fd internally). When bpf_link__destroy() is
+called, bpf_link_perf_detach() unconditionally disables and closes
+perf_link->perf_event_fd:
 
-In perf_bpf_filter__pin() and perf_bpf_filter__unpin() (for 'perf
-record --setup-filter pin|unpin'), only perf_sample_filter is used,
-because the pinned filter mechanism shares a single program across
-privileged sessions by looking up kctx->event->id via
-bpf_cast_to_kern_ctx(), which is only available to SEC("perf_event")
-programs. So autoload is disabled for perf_tp_sample_filter (and in
-patch 4, for the lock-tracking programs) when pinning and unpinning.
+      static int bpf_link_perf_detach(struct bpf_link *link)
+      {
+              struct bpf_link_perf *perf_link =3D container_of(link,
+struct bpf_link_perf, link);
+              int err =3D 0;
 
-A consequence of disabling autoload on any program in the skeleton is
-that libbpf's bpf_object__pin() and bpf_object__unpin() fail:
-  - bpf_object__pin() calls bpf_object__pin_maps() and
-bpf_object__pin_programs().
-  - While bpf_object__pin_maps() skips maps that have autocreate
-disabled, bpf_object__pin_programs() and bpf_object__unpin_programs()
-iterate over every program in skel->obj without checking whether
-autoload was enabled.
-  - When bpf_program__pin() or bpf_program__unpin() is called on a
-program that wasn't loaded (prog->fd < 0), libbpf returns -EINVAL
-("prog 'perf_tp_sample_filter': can't pin/unpin program that wasn't
-loaded").
+              if (ioctl(perf_link->perf_event_fd,
+PERF_EVENT_IOC_DISABLE, 0) < 0)
+                      err =3D -errno;
 
-pin_filter_object() and unpin_filter_object() avoid this by calling
-bpf_object__pin_maps() / bpf_object__unpin_maps() for the maps and
-explicitly pinning/unpinning only the loaded perf_sample_filter
-program.
+              if (perf_link->perf_event_fd !=3D link->fd)
+                      close(perf_link->perf_event_fd);
+              close(link->fd);
+              ...
+
+Since evsel->core.fd owns FD(evsel, x, y) and evlist__close() closes
+those descriptors before evsel__exit() -> perf_bpf_filter__destroy()
+runs, calling bpf_link__destroy() ends up closing FD(evsel, x, y) a
+second time (and my v4 patch 2 has the same issue on FD(evsel, 0, 0)
+by assigning skel->links.perf_tp_sample_filter =3D link).
+
+Instead of using bpf_program__attach_perf_event_opts() and tracking
+bpf_links, how about attaching the program directly with
+ioctl(FD(evsel, x, y), PERF_EVENT_IOC_SET_BPF, fd), just like the
+pinned filter path right above it in perf_bpf_filter__prepare()
+already does?
+
+            fd =3D bpf_program__fd(skel->progs.perf_sample_filter);
+            for (x =3D 0; x < xyarray__max_x(evsel->core.fd); x++) {
+                    for (y =3D 0; y < xyarray__max_y(evsel->core.fd); y++) =
+{
+                            ret =3D ioctl(FD(evsel, x, y),
+PERF_EVENT_IOC_SET_BPF, fd);
+                            if (ret < 0) {
+                                    pr_err("Failed to attach perf
+sample-filter\n");
+                                    goto err;
+                            }
+                    }
+            }
+
+That avoids allocating struct bpf_link_perf and extra BPF_PERF_EVENT
+link fds altogether (fixing the leak without needing
+evsel->bpf_links), avoids the double-close on FD(evsel, x, y) since
+the kernel's _free_event() -> perf_event_free_bpf_prog() detaches the
+program when evlist__close() closes the perf_event fd, and also lets
+us drop pe_opts (.dont_enable =3D true) and the
+LIBBPF_CURRENT_VERSION_GEQ(1, 7) guard.
+
+For simplicity, I will include a patch doing this in v5 of my series.
 
 Thanks,
 Ian
-
-> Thanks,
-> Namhyung
->
->
-> >       if (ret < 0) {
-> >               pr_err("Failed to pin BPF filter objects\n");
-> >               goto err;
-> > @@ -683,8 +770,8 @@ int perf_bpf_filter__pin(void)
-> >       /* setup access permissions for the pinned objects */
-> >       dir_fd =3D open(path, O_PATH);
-> >       if (dir_fd < 0) {
-> > -             bpf_object__unpin(skel->obj, path);
-> > -             ret =3D dir_fd;
-> > +             ret =3D -errno;
-> > +             unpin_filter_object(skel, path);
-> >               goto err;
-> >       }
-> >
-> > @@ -727,6 +814,8 @@ int perf_bpf_filter__pin(void)
-> >
-> >  err_close:
-> >       close(dir_fd);
-> > +     if (ret < 0)
-> > +             unpin_filter_object(skel, path);
-> >
-> >  err:
-> >       free(path);
-> > @@ -740,13 +829,20 @@ int perf_bpf_filter__unpin(void)
-> >       char *path =3D NULL;
-> >       int ret =3D -1;
-> >
-> > -     skel =3D sample_filter_bpf__open_and_load();
-> > +     skel =3D sample_filter_bpf__open();
-> >       if (!skel) {
-> >               ret =3D -errno;
-> >               pr_err("Failed to open perf sample-filter BPF skeleton\n"=
-);
-> >               goto err;
-> >       }
-> >
-> > +     bpf_program__set_autoload(skel->progs.perf_tp_sample_filter, fals=
-e);
-> > +     if (sample_filter_bpf__load(skel) < 0) {
-> > +             ret =3D -errno;
-> > +             pr_err("Failed to load perf sample-filter BPF skeleton\n"=
-);
-> > +             goto err;
-> > +     }
-> > +
-> >       if (asprintf(&path, "%s/fs/bpf/%s", sysfs__mountpoint(),
-> >                    PERF_BPF_FILTER_PIN_PATH) < 0) {
-> >               ret =3D -errno;
-> > @@ -754,7 +850,7 @@ int perf_bpf_filter__unpin(void)
-> >               goto err;
-> >       }
-> >
-> > -     ret =3D bpf_object__unpin(skel->obj, path);
-> > +     ret =3D unpin_filter_object(skel, path);
-> >
-> >  err:
-> >       free(path);
-> > diff --git a/tools/perf/util/bpf_skel/sample_filter.bpf.c b/tools/perf/=
-util/bpf_skel/sample_filter.bpf.c
-> > index e5666d4c1722..576fbed270e5 100644
-> > --- a/tools/perf/util/bpf_skel/sample_filter.bpf.c
-> > +++ b/tools/perf/util/bpf_skel/sample_filter.bpf.c
-> > @@ -192,6 +192,28 @@ static inline __u64 perf_get_sample(struct bpf_per=
-f_event_data_kern *kctx,
-> >       return 0;
-> >  }
-> >
-> > +static __always_inline __u64 perf_get_common_sample(struct perf_bpf_fi=
-lter_entry *entry)
-> > +{
-> > +     switch (entry->term) {
-> > +     case PBF_TERM_TID:
-> > +             if (entry->part)
-> > +                     return bpf_get_current_pid_tgid() >> 32;
-> > +             return (__u32)bpf_get_current_pid_tgid();
-> > +     case PBF_TERM_CPU:
-> > +             return bpf_get_smp_processor_id();
-> > +     case PBF_TERM_TIME:
-> > +             return bpf_ktime_get_ns();
-> > +     case PBF_TERM_CGROUP:
-> > +             return bpf_get_current_cgroup_id();
-> > +     case PBF_TERM_UID:
-> > +             return bpf_get_current_uid_gid() & 0xFFFFFFFF;
-> > +     case PBF_TERM_GID:
-> > +             return bpf_get_current_uid_gid() >> 32;
-> > +     default:
-> > +             return 0;
-> > +     }
-> > +}
-> > +
-> >  #define CHECK_RESULT(data, op, val)                  \
-> >       if (!(data op val)) {                           \
-> >               if (!in_group)                          \
-> > @@ -295,4 +317,67 @@ int perf_sample_filter(void *ctx)
-> >       return 0;
-> >  }
-> >
-> > +/* BPF program to be called for tracepoint perf events */
-> > +SEC("tracepoint")
-> > +int perf_tp_sample_filter(void *ctx)
-> > +{
-> > +     struct perf_bpf_filter_entry *entry;
-> > +     __u64 sample_data;
-> > +     int in_group =3D 0;
-> > +     int group_result =3D 0;
-> > +     int i, k =3D 0;
-> > +     int *losts;
-> > +
-> > +     entry =3D bpf_map_lookup_elem(&filters, &k);
-> > +     if (entry =3D=3D NULL)
-> > +             goto drop;
-> > +
-> > +     for (i =3D 0; i < MAX_FILTERS; i++) {
-> > +             sample_data =3D perf_get_common_sample(&entry[i]);
-> > +
-> > +             switch (entry[i].op) {
-> > +             case PBF_OP_EQ:
-> > +                     CHECK_RESULT(sample_data, =3D=3D, entry[i].value)
-> > +                     break;
-> > +             case PBF_OP_NEQ:
-> > +                     CHECK_RESULT(sample_data, !=3D, entry[i].value)
-> > +                     break;
-> > +             case PBF_OP_GT:
-> > +                     CHECK_RESULT(sample_data, >, entry[i].value)
-> > +                     break;
-> > +             case PBF_OP_GE:
-> > +                     CHECK_RESULT(sample_data, >=3D, entry[i].value)
-> > +                     break;
-> > +             case PBF_OP_LT:
-> > +                     CHECK_RESULT(sample_data, <, entry[i].value)
-> > +                     break;
-> > +             case PBF_OP_LE:
-> > +                     CHECK_RESULT(sample_data, <=3D, entry[i].value)
-> > +                     break;
-> > +             case PBF_OP_AND:
-> > +                     CHECK_RESULT(sample_data, &, entry[i].value)
-> > +                     break;
-> > +             case PBF_OP_GROUP_BEGIN:
-> > +                     in_group =3D 1;
-> > +                     group_result =3D 0;
-> > +                     break;
-> > +             case PBF_OP_GROUP_END:
-> > +                     if (group_result =3D=3D 0)
-> > +                             goto drop;
-> > +                     in_group =3D 0;
-> > +                     break;
-> > +             case PBF_OP_DONE:
-> > +                     return 1;
-> > +             }
-> > +     }
-> > +     return 1;
-> > +
-> > +drop:
-> > +     losts =3D bpf_map_lookup_elem(&dropped, &k);
-> > +     if (losts !=3D NULL)
-> > +             __sync_fetch_and_add(losts, 1);
-> > +
-> > +     return 0;
-> > +}
-> > +
-> >  char LICENSE[] SEC("license") =3D "Dual BSD/GPL";
-> > --
-> > 2.56.0.212.g129ede20d9-goog
-> >
