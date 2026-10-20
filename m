@@ -1,87 +1,87 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.218.41
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.128.44
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792506375;
-	b=maUH3zTZ3U/efOjTRxbAzmLVnm1H29prd5qVPPxXZWTX5iMQBo3X/W7jftVBlt22SBA8
-	 GBQpNkYJkS6szFrAF0iEeWx+9EUtsrnRm/7Cdl4xuQq9agKxYth+3qj3Ix4iYQMKaQqtV
-	 QWi9OJTshAR4RgbvtfPIO5UswoHdxOTdZ/Z0azoi60dyie/GvZZt+nFa4Ch2eQCAGLeIg
-	 +LSsU42BOjKR8//QzIRnmrEinx7Ay6WPF0/s8RZl8pzS/X8lny+ALTMoHeuCGm/YZfAn3
-	 9ngb3baJqQykWqdbXgQvpjlHJvirO64R3c0HMJJ7jP0SOTGdC2P0L2fuKd4PYVGdUNw==
+	t=1792506945;
+	b=IF5KBbaBPZjaMdbovNjnW5a47HJzb8rTBYgJJ7gd2R8KLb+ekBFtNvvC75cxkgCciwq5
+	 56NThbpzhmzlzg8Xu0MU9V+MMZKm1sq2i/sCy2IvoJrQMyufTd61F+E2nzVGeSl6sj6Ra
+	 El7XVgmhMyw4LV/QoUHmGJJiIRRoEsQUeWYZueuM9Cj1mnvJZ4551hd4bgmczWMgFecP6
+	 P4yAIgN0cytI7ae3CufOmkgIzID+DO7t+2Wngc15a2AeuLaSLHAdre6sDBOTU4+Nzrl4M
+	 abvVFUtmkUAIGjKEtRuirjTqCWcfbSzZs3MLTpzAA3FWr9MReTCC1L7/cNGWwBBZX6g==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792506375;
+	a=rsa-sha256; c=relaxed/relaxed; t=1792506945;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
 	 Message-ID:Date:MIME-Version:User-Agent:Subject:To:Cc:References:
 	 Content-Language:From:In-Reply-To:Content-Type:
 	 Content-Transfer-Encoding;
-	bh=lKN2Kpy24qYXb++X9M24Ji7pq7TM4o+Umqf1AAgxfzE=;
-	b=f2vwnNYs09pLejc6ViuaBpoYZzsNXZ0wJh44sUu6Muy5pRud21pPb41Fh+dlvnziXR3W
-	 i3DnBQMVhj9frNspmXT1NskDW3ciQURNyH0IlAXr0MhU18t02jRjjwcNgFhHV78iKIEzR
-	 Mewa1yLcM0OpRRgeFQW/k//QqPZXXs5Wc6fczGr85y8kbwDXxjDx42x9RTno8wnnevCWo
-	 EajtreDgdwoGnGDPDXovWV1hlzIHOXaBbW3XDsk9M8OMygWyBqmZxxE3LMNEJHCTPAMY6
-	 Q81O2X2semiGZsVOlPhPAgnO3bJVOKXuFjAr+UJhDM5sCMI83d6xiQbHPpOYNQbSYdA==
+	bh=v4Iip/s7oVuzCnYoFEs3DZuJtsQZW95G7/pZOVyPUeg=;
+	b=u3XFuCVaic0LsLJdOYFQVpL1HvrYHxuCs4volzwIRSthBqPZjkbCOWh6ppMNYfdZqwxo
+	 Dabte043/M3wFdfxT3xrxglySinXV5Bir8ltcEyS86EiRPQHz7KelphVOxEdac2o4EXf7
+	 b3L8l/DVU00X5/bBfSIr3MuC68tpwVA8yvWFffbiERGV9QsRjyWkbn8gQ2nPiW8USfi80
+	 E8O0HDdn5INFK9lFuTn8+oD+1FedM00cRxBPetN1LIRilKxXB8g03k7oHM5kj/UHbKtPm
+	 XTtnSas8pcdQ6Lq6rDiGb2dVqvcr3TNsX3NvMBljNJuh3j5XIFfUnaeKQY5ZckKzmWQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=linaro.org;
 	spf=pass smtp.mailfrom=linaro.org;
-	dkim=pass header.d=linaro.org header.i=@linaro.org header.a=rsa-sha256 header.s=google header.b="m/9U24QS";
-	arc=none smtp.remote-ip=209.85.218.41
-Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
+	dkim=pass header.d=linaro.org header.i=@linaro.org header.a=rsa-sha256 header.s=google header.b=OXj8iiTn;
+	arc=none smtp.remote-ip=209.85.128.44
+Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 132EC606A321
-	for <linux-perf-users@vger.kernel.org>; Tue, 20 Oct 2026 14:26:14 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 132EC606A321
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 093E8606A31D
+	for <linux-perf-users@vger.kernel.org>; Tue, 20 Oct 2026 14:35:44 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 093E8606A31D
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=linaro.org header.i=@linaro.org header.a=rsa-sha256 header.s=google header.b=m/9U24QS
-Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-c43373ae89aso379149666b.3
-        for <linux-perf-users@vger.kernel.org>; Tue, 20 Oct 2026 07:26:14 -0700 (PDT)
+	dkim=pass (2048-bit key, unprotected) header.d=linaro.org header.i=@linaro.org header.a=rsa-sha256 header.s=google header.b=OXj8iiTn
+Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-4a1cef0439aso36554135e9.0
+        for <linux-perf-users@vger.kernel.org>; Tue, 20 Oct 2026 07:35:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1792506373; x=1793111173; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1792506943; x=1793111743; darn=vger.kernel.org;
         h=content-transfer-encoding:content-type:in-reply-to:from
          :content-language:references:cc:to:subject:user-agent:mime-version
          :date:message-id:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=lKN2Kpy24qYXb++X9M24Ji7pq7TM4o+Umqf1AAgxfzE=;
-        b=m/9U24QS2Bz/OBc7yLUW7ra9avWJTiDbw2N8OWcBxciX+hOnKDyxTX4KI9hZE4E+mr
-         JK1LaV9jQUJ09o6pP6JRKkhbT5jyFX4Z8Zlg3cXiQeeUHlFec5KoYWgdd6jZT2d93WuG
-         YxnqFvde23cuE8kQ1070EDs+wtduXbpSNpLE9kvNPHZ9TXAnEENbFp1+a79wLY3p5N/1
-         OcdtFrR40UO1342c69sfjiSkLRmshc9dutjX/u7f4Ab1dhEk3uA8sRc25K03afHnDJkQ
-         INhvsed/UNgSZYhjgC+H4w8CZjVB3cgdUc6lA3pS2IeA9B6vJ6HMUeiwBgEvRjCfX+0Z
-         pB7Q==
+        bh=v4Iip/s7oVuzCnYoFEs3DZuJtsQZW95G7/pZOVyPUeg=;
+        b=OXj8iiTnqnXMzCVHBB9sDkli8eLkiC+KnY8ep7iaeOHy86x6fHGQ+mgSz2JVg9F+X4
+         xMN/zQRyLclbxu4vDkYH9wiuGY0+nGsh7aqrd7TwdyvX3RI948Me2fVSe5pS+0P4Ntft
+         mRA1/WJp5Sx7A15uergYC8n+FW7CmkeRYvgNSkC3O3V6PJzQUuj6pPl9uS7W8zusxrOX
+         1AgPlqx9LibIlqAK4eLkp5soCe5pLdPpsi1tsj8uEYRsswah58OqgcrN9BtnChhlGvdb
+         x/Z7I2XXWqaBBBKt7R785Tc+F+sEnG0ZuBpp1/GbDdXXpSDAvveC2B42X8Wu7CUjGrDs
+         AxDA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1792506373; x=1793111173;
+        d=1e100.net; s=20260707; t=1792506943; x=1793111743;
         h=content-transfer-encoding:content-type:in-reply-to:from
          :content-language:references:cc:to:subject:user-agent:mime-version
          :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=lKN2Kpy24qYXb++X9M24Ji7pq7TM4o+Umqf1AAgxfzE=;
-        b=VbXcgRA8eWYQajsmwLwo/mcBvxkgLEutNrqt2UrAix3qf47Ix/aE/NJXd3Rz6uodLN
-         mh1W+Osr6gOjshiKkPfOc4B00j74wbRcRJ4thQk5CxB7H3lzg3tNkRofdP+6g4ia9YKH
-         KihvoNxkdImy79DSlFKjOmEzgHqK9JPpdbjhEw9vY2CqTG+Up2MJsPFm3HT/qqVYV8re
-         IBiDf5NwofgFfjs6KKfUKGE7+uCSKyVcaXP4loXyKHCgansv7ez1s+S9kO9asOP6QHH/
-         lTswBXsqmCVVe/MgVpBDOzKTLX+Ds8OD6z7iRBQbksmyz6CyWM2g78d3vseE5GULnLBr
-         WytQ==
-X-Forwarded-Encrypted: i=1; AKwUvBwwjUZi6bOw1/uD1311zljIarmMc4/6rDCNjc/Z/6gy9XRX3EfxGX6GNhj/AibU46Sgo+zxFzobGCdWSUb7aJrR@vger.kernel.org
-X-Gm-Message-State: AFq9FYLDs35mvJld3wt8LUILI6qLwzyXxcQ3tb0+PCOqA6pPeguCNSnS
-	5M3XMzpEK5ScHvQ6mCsDX/zb9UnaltP9VV2s7ADqBJeVGmQBXGpVr/9fgwqqJdqv0Tw=
-X-Gm-Gg: AYBFou0za3rO+PRN7zS1qeNhB+0DWLMKIhKToMvyTOX+k4ZAk3+x8TBcZU+n/OREPrv
-	xPrn2FND4OWQEeyiR94ZI1p1nJBtutifjjr7hFQyGC+3WvDsQMgc0gvyRAwCXm/WJSnbsdq8OVI
-	zsqbWhzAhGYllK8JK77optTKso8tB2TTH4uen0sbeJJbXY+OgBt/JAbjX7UI9BrMhWC0vJhwH49
-	Tzuxa9ddrvRMp93GgUpuxklKF9iKHNcTzw3j44aOceOEdpGdB38JkE++6MiSkeFyAi/Z6AGgotE
-	CxqoEy2SUBDiCGT2cuF5KHDQKig1Orpiw++0Yc+nWXz4qayOVRlTJBpbAlaPqJH0YOR0m8PBIXk
-	vHkiMgIsq+wwdSmBIZ9KRmvyATGYgvH0e7TRtyRmAT7bnkNYVqqi2sWIxuO9zQRJ0sYsPahlQAg
-	vzjjzfLxmTJLparKoP1m8RelHCCI+afdu8APDAbU13/PiIaKrfLiOkUxPcyaQ4VcWuti7wV0kLR
-	1D2
-X-Received: by 2002:a17:906:f5a8:b0:c38:ee33:2931 with SMTP id a640c23a62f3a-c419f709659mr789055466b.37.1792506372574;
-        Tue, 20 Oct 2026 07:26:12 -0700 (PDT)
+        bh=v4Iip/s7oVuzCnYoFEs3DZuJtsQZW95G7/pZOVyPUeg=;
+        b=0vD6OZEXhzkQsBVU4t7GGNNq9XgNN1n3NrXlLWPAaf/Fe6M4SaBTAk9mqASdU3R44O
+         XOePBcxkKUAkBnDvtWPLN5ZAUR1O9G/7dsB99TGT70zXG6H7pYzShWjGmVUelhiDpvmF
+         /NjHB7JCEq/2BEd1ZI2iU35ENc34KFA4tieZ09KZiKjEIk5KuYK0qJ6rM/IomTs5fGDK
+         ZydHTYFkjCDvvO+NKx/BKgNBHJVI0aSumjr2Fm7DbcuonxWKn4lEgIyro7p1o7+1l0mx
+         HeQUzJONeZYnRLVxPdHeyyw0eBB+8YCzTF8fowYzvqDiNhYDc7w7szuQlgc9KlKrnsfJ
+         mc4A==
+X-Forwarded-Encrypted: i=1; AKwUvByW/9vB/kab1Zz/2iTULx1+91sLjg9MrS4ExWbP2YD++HDSaa9aPJK5O1jcmfr2EaOpOyIQt3RDmlLN9of4P7Zk@vger.kernel.org
+X-Gm-Message-State: AFq9FYK1hNpoy+7Lj5Pdikmx3X67p3lQoTj5YCb+j+20DSKaO7Xknag6
+	0d9ywW2fvZjjkujnXDxJtbsdIOpMGbM3cqS15Z5mBCXhd/OgFHtZhdthki6bPeXD7do=
+X-Gm-Gg: AYBFou3OAJFkQCO5bq0uPfwy++K5dbicag61pNP81z3VNsqLDTQgA1WJoOC8545On4j
+	mSIGlpo+57dKcvJJW02HmO8hhjPSH1ydgF+S1GUhAGbA4mX0Ztgka2JsiiaxK7PFe55GV4sZMsU
+	57RvQAOlMoPJ8XLe/G/LaYNpVSkDg0zqjXWMEFz7VkX9aU4dTPINKYhXMR+n47L1ODEnklFenIl
+	rgA23fptXNMYlFOrT3yXjvGyN2BKoW63cOa4QS9THwPkQkKx4jphC1at+k+HS2rBwCmRRiSdr74
+	gFsx2LbS2usyPP7Wia75hahYeJwx1yQL6aXxpmQOatq2GG7A5yP/x12IlaXGRfo1IZ2xZ/g709b
+	NS9ZZmQgLugqxF9R/5p2cJ++1P7iWaSJ8Jeh00Kn2MTlzr2m6U28MWqqSi1PXsu3wEKF7litdEy
+	cq0Jyv7SLrnf2VpX56DYQY4XeH0PcTLjdbR2r3y+mWBka06Nx08eeMgmpx/5oaNBHO059UxMqQk
+	RXZ6QOZMHn5hw==
+X-Received: by 2002:a05:600c:8709:b0:4a1:7b05:3a6d with SMTP id 5b1f17b1804b1-4a1d75e6fa6mr206342555e9.8.1792506943206;
+        Tue, 20 Oct 2026 07:35:43 -0700 (PDT)
 Received: from [192.168.1.3] ([37.18.141.193])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-48e1d810035sm6911288f8f.13.2026.10.20.07.26.11
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4a1f2d6e2dbsm82506805e9.13.2026.10.20.07.35.41
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 20 Oct 2026 07:26:12 -0700 (PDT)
-Message-ID: <52dc152f-5417-4af4-b084-5ca5f821a6f4@linaro.org>
-Date: Tue, 20 Oct 2026 15:26:10 +0100
+        Tue, 20 Oct 2026 07:35:42 -0700 (PDT)
+Message-ID: <0792487e-b6fc-4b9d-8120-83281a15217c@linaro.org>
+Date: Tue, 20 Oct 2026 15:35:41 +0100
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -92,8 +92,7 @@ List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 25/25] Documentation: coresight: Document AUX sample
- decoding
+Subject: Re: [PATCH 24/25] perf test: Add CoreSight AUX sample decoding test
 To: Leo Yan <leo.yan@arm.com>
 Cc: Ingo Molnar <mingo@kernel.org>, linux-perf-users@vger.kernel.org,
  linux-kernel@vger.kernel.org, coresight@lists.linaro.org,
@@ -107,102 +106,250 @@ Cc: Ingo Molnar <mingo@kernel.org>, linux-perf-users@vger.kernel.org,
  Yeoreum Yun <yeoreum.yun@arm.com>, Jonathan Corbet <corbet@lwn.net>,
  Suyash Mahar <smahar@meta.com>, Amir Ayupov <aaupov@fb.com>
 References: <20260915-arm_cs_support_aux_sample-v1-0-35cf6f297d20@arm.com>
- <20260915-arm_cs_support_aux_sample-v1-25-35cf6f297d20@arm.com>
+ <20260915-arm_cs_support_aux_sample-v1-24-35cf6f297d20@arm.com>
 Content-Language: en-US
 From: James Clark <james.clark@linaro.org>
-In-Reply-To: <20260915-arm_cs_support_aux_sample-v1-25-35cf6f297d20@arm.com>
+In-Reply-To: <20260915-arm_cs_support_aux_sample-v1-24-35cf6f297d20@arm.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
 
 
 On 15/09/2026 16:49, Leo Yan wrote:
-> Describe recording AUX trace in PMU samples and generating callchains
-> and branch stacks with --itrace=G and --itrace=L.
+> Add a shell test that records the brstack workload with 8 KiB AUX
+> samples attached to cycle events. Pin the workload to a CPU with a TRBE
+> sink and use per-thread recording with trace timestamps and context IDs
+> disabled, exercising decoding with the owning sample's context.
 > 
-> Explain the default decoding behavior, preservation of recorded stacks,
-> context ID requirements and decoding limitations.
+> Check branch stacks and callchains with --itrace=L4, L64, G3 and G3L64.
+> Require at least one sample to reach both requested depths, with all
+> callchain frames belonging to the workload, and reject samples exceeding
+> either limit. Use a callchain depth of three to match the nested calls
+> in brstack.
+> 
+> Compare with AUX decoding enabled and disabled to verify that adding
+> history preserves the original PMU samples.
 > 
 > Assisted-by: Codex:gpt-6
 > Signed-off-by: Leo Yan <leo.yan@arm.com>
 > ---
->   Documentation/trace/coresight/coresight-perf.rst | 39 ++++++++++++++++++++++++
->   1 file changed, 39 insertions(+)
+>   tools/perf/tests/shell/coresight/aux_sample.sh | 189 +++++++++++++++++++++++++
+>   1 file changed, 189 insertions(+)
 > 
-> diff --git a/Documentation/trace/coresight/coresight-perf.rst b/Documentation/trace/coresight/coresight-perf.rst
-> index c0c82b3d26ea88dad7143afdb047c4d8f502b4a6..59eda2a5b6473ed1cb6bade5d281a12bdde76bb0 100644
-> --- a/Documentation/trace/coresight/coresight-perf.rst
-> +++ b/Documentation/trace/coresight/coresight-perf.rst
-> @@ -171,6 +171,45 @@ no branch history at all, for example samples from a thread that was never
->   traced, or samples recorded before the first or after the last trace window.
->   It is built and installed with perf's other dlfilters.
->   
-> +Decode branch stack and callchain from AUX samples
-> +--------------------------------------------------
+> diff --git a/tools/perf/tests/shell/coresight/aux_sample.sh b/tools/perf/tests/shell/coresight/aux_sample.sh
+> new file mode 100755
+> index 0000000000000000000000000000000000000000..887ad6a085eacdfd192db3863fbb61dae1aa19b5
+> --- /dev/null
+> +++ b/tools/perf/tests/shell/coresight/aux_sample.sh
+> @@ -0,0 +1,189 @@
+> +#!/bin/bash -e
+> +# SPDX-License-Identifier: GPL-2.0
+> +# CoreSight AUX samples with callchains and branch stacks (exclusive)
 > +
-> +With a kernel that supports CoreSight AUX sampling, record an AUX trace
-> +window inside each cycle sample::
+> +export LC_ALL=C
 > +
-> +  perf record --aux-sample=8192 -e '{cs_etm//u,cycles/period=100003/u}' \
-> +        -- ./workload
-> +  perf script --itrace=G16L64 -F comm,pid,tid,cpu,event,ip,brstack
+> +skip()
+> +{
+> +	echo "[Skip] $1"
+> +	exit 2
+> +}
 > +
-> +``G16`` adds a reconstructed callchain and ``L64`` adds up to 64 branches.
-> +Either option can be used alone. Existing callchains and branch stacks are
-> +preserved. Without an explicit ``--itrace`` option, both are enabled for AUX
-> +samples. Decoded history is available in ``perf script`` and ``perf report``.
+> +perf list pmu | grep -q 'cs_etm//' || skip "cs_etm is not available"
+> +perf check feature -q libopencsd || skip "perf was built without OpenCSD"
+> +[ "$(id -u)" = 0 ] || skip "No root permission"
+> +command -v taskset >/dev/null || skip "taskset is not available"
 > +
-> +AUX sampling supports unformatted, per-CPU sink (TRBE) trace. Each sample
+> +# AUX sample now supports per CPU sink (e.g., TRBE). Select a usable CPU
+> +# and name its sink explicitly to avoid a shared sink.
+> +sink=
+> +for dev in /sys/bus/coresight/devices/trbe[0-9]*; do
+> +	[ -d "$dev" ] || continue
+> +	name=${dev##*/}
+> +	cpu=${name#trbe}
+> +	[ -e "/sys/bus/event_source/devices/cs_etm/cpu$cpu" ] || continue
+> +	if taskset -c "$cpu" true 2>/dev/null; then
+> +		sink=$name
+> +		break
+> +	fi
+> +done
+> +[ -n "$sink" ] || skip "No usable TRBE CPU is available"
+> +
+> +tmpdir=$(mktemp -d /tmp/perf-cs-aux-sample.XXXXXX)
+> +
+> +cleanup()
+> +{
+> +	rm -rf "$tmpdir"
+> +}
+> +
+> +trap cleanup EXIT
+> +trap 'exit 1' TERM INT
+> +
+> +fail()
+> +{
+> +	echo "$1" >&2
+> +	cat "$tmpdir/stderr" >&2
+> +	exit 1
+> +}
+> +
+> +cf="$tmpdir/ctl"
+> +af="$tmpdir/ack"
+> +mkfifo "$cf" "$af"
+> +
+> +# Disable trace timestamps and context IDs to use the owning sample's context.
+> +# Use a per-thread mmap so the explicit sink is only used on the pinned CPU.
+> +if ! taskset -c "$cpu" perf record -o "$tmpdir/data" --aux-sample=8192 \
+> +	-e "{cs_etm/@$sink,timestamp=0,contextid=0/u,cycles/period=100003/u}" \
+> +	--per-thread -D -1 --control fifo:"$cf","$af" -- \
 
-Minor nit, but "per-CPU" in this context might be confusing for users. I 
-know we've used "percpu_sink" in the driver (unrelated, but maybe 
-"single_source" would be better there anyway), but from the point of 
-view of userspace, "per-CPU" and "per-thread" would be related to how 
-the event is opened. Which doesn't affect aux sampling.
+Minor nit, but on "[PATCH 00/14] perf cs-etm: Per-thread mode fixes and 
+snapshot wrap support" I just did:
 
-> +selects its CPU's decoder and starts a fresh trace window. The window already
-> +belongs to the sample, so ETM timestamps are not required for attribution.
-> +Samples without decodable history receive no reconstructed stack. CPU-wide
-> +recordings must enable context IDs to distinguish tasks within a window; the
-> +default recording setup enables them.
++if ! ls /sys/bus/coresight/devices/trbe* > /dev/null 2>&1; then
++	echo "No TRBE sinks, skipping output validation"
++	exit 0
++fi
+
+I know looking up the actual sink, passing it in and also using 
+--per-thread mode is "technically correct", but I think we can assume 
+that any normal record command will work on any system with TRBE.
+
+Otherwise, we should re-write all of the tests to only target CPUs with 
+known loaded ETM instances instead of hard coding CPU 0 etc.
+
+Other than that LGTM:
+
+Reviewed-by: James Clark <james.clark@linaro.org>
+
+> +	perf test --record-ctl fifo:"$cf","$af" -w brstack 1000000 \
+> +	>/dev/null 2>"$tmpdir/stderr"; then
+> +	# Kernels without snapshot_aux reject the sampling event at open time.
+> +	if grep -Eq 'sys_perf_event_open.*event \(.*cycles.*\): Invalid argument' \
+> +		"$tmpdir/stderr"; then
+> +		skip "Kernel does not accept CoreSight AUX sampling"
+> +	fi
+> +	fail "Failed to record CoreSight AUX samples"
+> +fi
 > +
-> +Callchains cover only calls visible in the captured window; callers before
-> +the first synchronization point cannot be recovered.
+> +perf evlist -v -i "$tmpdir/data" >"$tmpdir/evlist" 2>"$tmpdir/stderr" ||
+> +	fail "Failed to read AUX sample attributes"
+> +grep -Eq 'sample_type:.*\|AUX(,|\|).*aux_sample_size: 8192(,|$)' \
+> +	"$tmpdir/evlist" || fail "Missing AUX sample attributes"
 > +
-> +When kernel tracing is enabled, AUX samples can include PMU interrupt-handler
-> +execution before the trace source is paused. The late-sample helpers trim
-> +this using instruction addresses, which may not uniquely identify the sample
-> +boundary for kernel samples.
+> +check_history()
+> +{
+> +	local options=$1
+> +	local max_branches=$2
+> +	local max_callchains=$3
+> +	local output="$tmpdir/script-$options"
 > +
-> +Formatted sinks such as ETR are not supported. They can collect trace from
-> +sources on multiple CPUs in a shared buffer, mixing execution from unrelated
-> +threads into the AUX sample. Context IDs can distinguish these threads, but
-> +trace from other CPUs can consume the limited sample window, leaving little
-> +history for the sampled thread.
-
-This isn't really an issue if you are only tracing a single process 
-regardless of shared sinks. As the aux sampling driver implementation is 
-quite tied to the sink, it only makes sense to say we didn't implement 
-it because we think the main users only want TRBE, and it's extra 
-complexity to do it for ETR. But that doesn't really seem necessary to 
-mention here.
-
-TRBE also supports multiple threads anyway, because you haven't put a 
-hard limitation on using --per-thread.
-
-
+> +	perf script -i "$tmpdir/data" --itrace="$options" \
+> +		-F comm,pid,tid,cpu,event,ip,sym,brstack >"$output" \
+> +		2>"$tmpdir/stderr" || fail "Failed to decode AUX samples with $options"
 > +
-> +Guest samples, synthesizing instruction events, and saving reconstructed
-
-I don't think guest is working anyway even without aux sampling. There 
-is some structure left in the code for if we ever decide to support it. 
-But I don't think we should mention or do anything special for guest in 
-relation to aux sampling.
-
-> +callchains with ``perf inject`` are also unsupported.
+> +	# Some windows may contain incomplete trace. Require at least one cycle
+> +	# sample to reach both requested depths, and reject any that exceed them.
+> +	if ! awk -v max_branches="$max_branches" \
+> +		-v max_callchains="$max_callchains" '
+> +		function check_sample() {
+> +			if (in_sample == 0) {
+> +				return
+> +			}
 > +
->   Perf test - Verify kernel and userspace perf CoreSight work
->   -----------------------------------------------------------
->   
+> +			if (branch_entries > max_branches || callchain_frames > max_callchains) {
+> +				depth_exceeded = 1
+> +			}
+> +
+> +			# Both depths must be reached in the same sample, with all
+> +			# callchain frames belonging to the brstack workload.
+> +			if (branch_entries == max_branches &&
+> +			    callchain_frames == max_callchains &&
+> +			    workload_frames == max_callchains) {
+> +				found_sample = 1
+> +			}
+> +
+> +			branch_entries = 0
+> +			callchain_frames = 0
+> +			workload_frames = 0
+> +			in_sample = 0
+> +		}
+> +		{
+> +			# A blank line marks the end of a sample.
+> +			if (NF == 0) {
+> +				check_sample()
+> +				next
+> +			}
+> +
+> +			# Sample header: comm pid/tid [cpu] event ...
+> +			# The event may include a PMU prefix and configuration terms.
+> +			if ($4 ~ /(^|\/)cycles([,\/:]|$)/) {
+> +				check_sample()
+> +				in_sample = 1
+> +			}
+> +			if (in_sample == 0) {
+> +				next
+> +			}
+> +
+> +			# Each branch entry is a field in 0xFROM/0xTO/... form.
+> +			for (i = 1; i <= NF; i++) {
+> +				if ($i ~ /^0x[[:xdigit:]]+\/0x[[:xdigit:]]+\//) {
+> +					branch_entries++
+> +				}
+> +			}
+> +
+> +			# Callchain rows start with a hexadecimal IP, then a symbol.
+> +			if ($1 ~ /^[[:xdigit:]]+$/) {
+> +				callchain_frames++
+> +				if ($2 ~ /^brstack(_|$)/) {
+> +					workload_frames++
+> +				}
+> +			}
+> +		}
+> +		END {
+> +			# Account for the last sample even without a trailing blank line.
+> +			check_sample()
+> +
+> +			if (depth_exceeded != 0) {
+> +				print "AUX sample history exceeds the requested depth" > "/dev/stderr"
+> +				exit 1
+> +			}
+> +			if (found_sample == 0) {
+> +				printf "No sample has %d branches and %d workload callchain frames\n", \
+> +					max_branches, max_callchains > "/dev/stderr"
+> +				exit 1
+> +			}
+> +			exit 0
+> +		}
+> +	' "$output"; then
+> +		head -n 80 "$output" >&2
+> +		fail "Missing AUX sample history or incorrect depth with $options"
+> +	fi
+> +}
+> +
+> +check_sample_identity()
+> +{
+> +	local fields=comm,pid,tid,cpu,event,ip
+> +
+> +	# Hiding history must leave exactly the original PMU samples, including
+> +	# their PID/TID, CPU and sampled IP, with no synthesized events. Per-thread
+> +	# recording does not require sample timestamps.
+> +	perf script -i "$tmpdir/data" --no-itrace -F "$fields" \
+> +		>"$tmpdir/original" 2>"$tmpdir/stderr" || fail "Failed to read cycle samples"
+> +	perf script -i "$tmpdir/data" --itrace=L4 -F "$fields" \
+> +		>"$tmpdir/decoded" 2>"$tmpdir/stderr" || fail "Failed to decode cycle samples"
+> +	diff -u "$tmpdir/original" "$tmpdir/decoded" ||
+> +		fail "AUX decoding changed the original cycle samples"
+> +}
+> +
+> +check_history L4 4 0
+> +check_history L64 64 0
+> +
+> +# brstack -> brstack_bench -> brstack_foo -> brstack_bar provides three
+> +# nested calls whose caller frames can be reconstructed from an AUX window.
+> +check_history G3 0 3
+> +check_history G3L64 64 3
+> +
+> +check_sample_identity
+> +
+> +echo "CoreSight AUX sample decoding: PASS"
 > 
 
