@@ -1,55 +1,104 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
-ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792485211;
-	b=ADDUZNHSpCSbsG0XqR4U2SoXHyus8VDl3vkD0gn71vHmO+t8KiNXsTNbt+rPF4ZGcvGH
-	 y1bNauINQeBD/8dRXZMyKg13o4+bLPPM+M2W4jsQLsnB7/hT87kOIw8Cue8HM0ax87fSg
-	 llhAJONIAcfVnm2JvtZYN6ijI+JtpY0yVm/7hjoLmfGfyp04mwPBSPw6jrSAk+zTE/H+t
-	 tbCVZyS4XAxjqwgQ0gPNU/UVaTAR9K3puqP6t8+JcjHf8GFdfzmYWLaWc4nxvbSUkMqZd
-	 rtSNTo46Y47q4e2QPQzMVcJ4Xd6B5z3z/DqVEKZeeaVqfUyubFUKArJJd1J9ivHAkxQ==
-ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792485211;
-	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
-	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=/srvRsllgJK9NvouJ4AGy1/T8p1DtBULgSkRpNG0fvE=;
-	b=eqO4gclWKjigyTLavmy5MT3bvZp+TmQFUu6yc2TithqJ5sl7WGM1fb6ANWOH0bHPdGva
-	 apjt0OAPpi/dI1wRNExSqoJ41TiE5qkgPhksBRdcqcI0Ahv5aZ5Yj1jq6HUdMW2ivpMx3
-	 gThWDjsMsl8GHr19bjAqVjpcDpuzEVYJV7BtpsyqV3W3QycArkQ6HlbIuZho8IA5JB+5/
-	 MuSwLXE1tzRpjZUBKOY5YRZt9E+8ffT+pwSYHQOks7A5CsVWLfllIGNbs0pTwJeN9c+Qx
-	 pQf/7o/YEssOrzo8N2tWixpK58xhdtMjC6FqGStMay84izZw/6PsTB2JqHOuk/jALaQ==
-ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=HAPjsGHB;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=185.203.200.13
+ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
+	t=1792485681;
+	b=01UNkZDwuENwBMcXlFWeUIaYxVXl979VN1rLe1rey+ElfITja1ukOaPohG83qLZ4iEU2
+	 THFSjDDa0/R4QqU9y67xo5PCLr2MdqpcdXrwgDkqyZqpu7DdUSQjOuAZwPDtRhwAM6h+2
+	 UygATgg1ZuQxYV/AcAWkN/IEp7cYFukIMyjQb1eVRwVjyylQ52hhZoNvlAvVwSwjkJk9T
+	 owh7REVNLkRX1dOiBViRchMxOQkvhArGqqSL6DE0CEVpO2tvuVdxSGFSQQ12vUQEufPdN
+	 WZXL5Ly77iP1GQJLLB298S9HdN/gdmpewpb4x0PSHdzko9EBo/ZLIwFjnX4yw/qKjjA==
+ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1792485681;
+	h=DMARC-Filter:Received:DKIM-Signature:Received:Received:Date:From:To:
+	 Cc:Subject:Message-ID:References:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To;
+	bh=tny7OvfZ4AK+HPdIJjo94ed1DATTmzr6+AAk0DzJzv4=;
+	b=tnDg/fvC82BQ7n3brf+zjvdMN0qCu3rm1/L8O4Eb/zipbH6jUJ2r+SUXFxTlEXkeKcO1
+	 aKFMXTVpfpE12JmdFW+Nuw16su565vGj+seqjQU0auZgZN2rDmJRrXTzWwV/aJ3ygecUq
+	 0Wq1DTyPATrpYF49KU6xJdz+ohwTBJ+oFaob2upKDZANDtRfg998gN/xe7d/06ilPX8HZ
+	 R9AAIKSxFzdCeDANC87tMKSnEVWV/pedH7COp8OWVIj2cMzxoOAGlf9aNLAxCPONth9nX
+	 ROlNQe4yxiNCXdJK7kihoZFFUoEicS4X8kBnxGuOjIT7q6zzxxvjZmO86yzGYg6oA9g==
+ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
+	dmarc=none header.from=pengutronix.de;
+	spf=pass smtp.mailfrom=pengutronix.de;
+	dkim=pass header.d=pengutronix.de header.i=@pengutronix.de header.a=rsa-sha256 header.s=20260414 header.b=fdGRaKLZ;
+	arc=pass header.oldest-pass=0 smtp.remote-ip=185.203.200.13
+Received: from mx1.white.stw.pengutronix.de (mx1.white.stw.pengutronix.de [185.203.200.13])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E161606A31B
-	for <linux-perf-users@vger.kernel.org>; Tue, 20 Oct 2026 08:33:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1F79606A319;
+	Tue, 20 Oct 2026 08:41:19 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org E1F79606A319
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=HAPjsGHB
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AEB381F000C4;
-	Tue, 20 Oct 2026 08:33:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1792485210;
-	bh=/srvRsllgJK9NvouJ4AGy1/T8p1DtBULgSkRpNG0fvE=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=HAPjsGHBywpFZcofOZJ91cddaOVMFEQu7DR3JLzjIy0CEj1/PQsEv81hhTNVtLf1+
-	 6/D1rW/B9lJ0Rgh6xBDHnDolClbIY5xRO7Ce1jiHuX7BLUcDO3wl43h8aOwFBX3N2N
-	 JXsEKmp8O5bEBVlPAznmXKZdR11dic3ooC1H8sHPbFWSjqDbNjI2ate5hnDzIbH6kM
-	 y7ey+4bQ2h8jgXee0lVXyZRZIeryAICmUUv8nShrWs5qJV+Q4C0Mi6EgV7loBH70sm
-	 R4/ZzM+Kexxq3gLQ8yGI24lye62f6znTXuwhdaFBMAPYpJTXofxeyjTSlziO57LqPm
-	 /zvbFIlDJy1IQ==
-Message-ID: <sashiko-outbox-178566@kernel.org>
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH] perf bpf-filter: Fix memory leak on bpf_link
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Namhyung Kim" <namhyung@kernel.org>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20261020053226.55936-1-namhyung@kernel.org>
-References: <20261020053226.55936-1-namhyung@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Tue, 20 Oct 2026 08:33:30 +0000
+	dkim=pass (2048-bit key, unprotected) header.d=pengutronix.de header.i=@pengutronix.de header.a=rsa-sha256 header.s=20260414 header.b=fdGRaKLZ
+Received: from drehscheibe.grey.stw.pengutronix.de (drehscheibe.grey.stw.pengutronix.de [IPv6:2a0a:edc0:0:c01:1d::a2])
+	(Authenticated sender: relay-from-drehscheibe.grey.stw.pengutronix.de)
+	by mx1.white.stw.pengutronix.de (Postfix) with ESMTPSA id 1AC7C201709;
+	Tue, 20 Oct 2026 10:41:18 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pengutronix.de;
+	s=20260414; t=1792485678;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=tny7OvfZ4AK+HPdIJjo94ed1DATTmzr6+AAk0DzJzv4=;
+	b=fdGRaKLZ6XOADB8b8o9cx4rzIVtnPYghbZk4dNCqkx6R0YkXgDde1n6d78TjZDHKUUgi22
+	LFUS0a2JZH+s6PtSPx82aaHQsKoL33e6XQltVtT4ER+ZshH6xJqQe7h9bRWzvLIb6Oa5AK
+	IxcqkPM8hPrjcZgqc1ozVP3ZV8lB1RlqKtm+SNeoHY2fOo/ZIA6EcUgVBtBsl2CBNCvsBF
+	SmbkzkRjbBMAynHEEsFLhmTAtYA0mb3HJRBEmTMK4ivWL3irWN3Jvze14o/C9c/AhY/X7y
+	hOmmxz4ALfhAKeOEAdkbCJY3kozizepIvQ5JRon9oGp14Hm4pDmADdiwMuKHXg==
+ARC-Seal: i=1; s=20260414; d=pengutronix.de; t=1792485678; a=rsa-sha256;
+	cv=none;
+	b=hFUNyD65mMEE+FOmodiZBgkaZHMprqM+4OIEI6LAkfjBAutgQqhANkleskyPmuNJ8fYx7r
+	lHf2J8wNOQDjgfpO4FGXHFlSLH361LN2GgYOouw+bM0WzcouDsi3ZAWqxVt1YeG8zdHoKo
+	X7iv9B4X5QF5auAYPvTUQPMUrMOVYbFJKMiAI9OBT85eGuFx6izdQ0WQNdB0C0zppJJYKJ
+	N6PfB2HhwzxkO/Vc/eZVEMIQHrK00nDQGsBY+ou18eyZiSykSBpdB9D90fVR+7Vv1lHV1r
+	y+itxyJKGM0Iq2j7IgWV1XftO8s660GAEndKY3uAnjxlyHi34w8mCxwxT2gvrg==
+ARC-Authentication-Results: i=1;
+	ORIGINATING;
+	auth=pass smtp.auth=relay-from-drehscheibe.grey.stw.pengutronix.de smtp.mailfrom=mkl@pengutronix.de
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=pengutronix.de;
+	s=20260414; t=1792485678;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=tny7OvfZ4AK+HPdIJjo94ed1DATTmzr6+AAk0DzJzv4=;
+	b=XR4AFpiwrrHyYm13m4QucfD+w10YFL4/aZEJBSmS/6RqSAvftoOqdBqJktL89IFTOf4kn8
+	ZmWr5YXrr+93EJ1kWyZqwLCeb88SZUpiGZBX7idcbn/RKQTCcdgGmo51KCJTUSm6GG7A6u
+	1FzaTx0GmHFQi4aMQXowWwPBHTF5tSs0cmk6f4xkyyWJUlCzkva2w8jfBG/KYaOa1C2JW7
+	dXM1Fia0V2ruqvTCHBpY33aaXb4tdiQBanCjRaRW7Ubav4wZM9aUMNIAGX7JnOVl7V8Sn+
+	ac9htn+70QbN6d9jOc18qwAj4WhP5P5B+Wp/2X9wQYaiMSmhwzqlrV7obSiPOw==
+Received: from moin.white.stw.pengutronix.de ([2a0a:edc0:0:b01:1d::7b] helo=bjornoya.blackshift.org)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <mkl@pengutronix.de>)
+	id 1xJ5PJ-000LTr-3C;
+	Tue, 20 Oct 2026 10:41:18 +0200
+Received: from pengutronix.de (p4ffb23c7.dip0.t-ipconnect.de [79.251.35.199])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange x25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	(Authenticated sender: mkl-all@blackshift.org)
+	by smtp.blackshift.org (Postfix) with ESMTPSA id 9ECCA5C9D1B;
+	Tue, 20 Oct 2026 08:41:17 +0000 (UTC)
+Date: Tue, 20 Oct 2026 10:41:17 +0200
+From: Marc Kleine-Budde <mkl@pengutronix.de>
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Ian Rogers <irogers@google.com>, Thomas Gleixner <tglx@kernel.org>, 
+	Andy Lutomirski <luto@kernel.org>, Vincenzo Frascino <vincenzo.frascino@arm.com>, 
+	Stefan Kerkmann <s.kerkmann@pengutronix.de>, Christophe Leroy <chleroy@kernel.org>, 
+	David Laight <david.laight.linux@gmail.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, 
+	Namhyung Kim <namhyung@kernel.org>, Eric Biggers <ebiggers@google.com>, 
+	Alexander Viro <viro@zeniv.linux.org.uk>, "Jason A . Donenfeld" <Jason@zx2c4.com>, 
+	linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 1/2] vdso: Add VDSO_UNALIGNED_PACKED config option for
+ ARMv5
+Message-ID: <20261020-zealous-warping-quetzal-84479a-mkl@pengutronix.de>
+References: <20261019201257.3805356-1-irogers@google.com>
+ <31fe09f6-0a14-40fc-8ad8-c03998fb1f5c@app.fastmail.com>
+ <20261020-succinct-zebu-of-vigor-6cb2cd-mkl@pengutronix.de>
+ <d2afb4cb-145e-488b-8f6e-c83e38735526@app.fastmail.com>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -58,194 +107,96 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="j2a3snsm4elpgfy3"
+Content-Disposition: inline
+In-Reply-To: <d2afb4cb-145e-488b-8f6e-c83e38735526@app.fastmail.com>
 
-Thank you for your contribution! Sashiko AI review found 2 potential issue(=
-s) to consider:
-- [Medium] perf bpf-filter: double close of perf_event fd in bpf_link__dest=
-roy()
-- [Medium] perf bpf-filter: incorrect IS_ERR() check in perf_bpf_filter__pr=
-epare()
---
 
-commit 0bafd46f68639fd52d99226001cedebcf8838c32
-Author: Namhyung Kim <namhyung@kernel.org>
+--j2a3snsm4elpgfy3
+Content-Type: text/plain; protected-headers=v1; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v1 1/2] vdso: Add VDSO_UNALIGNED_PACKED config option for
+ ARMv5
+MIME-Version: 1.0
 
-perf bpf-filter: Fix memory leak on bpf_link
-
-This commit stores the bpf_link pointers returned when attaching BPF sample
-filters in an xyarray on the evsel and destroys them on cleanup and error
-paths to fix a memory leak.
-
-> diff --git a/tools/perf/util/bpf-filter.c b/tools/perf/util/bpf-filter.c
-> index bcd81084e3420..664484703fc3d 100644
-> --- a/tools/perf/util/bpf-filter.c
-> +++ b/tools/perf/util/bpf-filter.c
-> @@ -66,6 +66,7 @@
->  #include "bpf_skel/sample_filter.skel.h"
-> =20
->  #define FD(e, x, y) (*(int *)xyarray__entry(e->core.fd, x, y))
-> +#define LINK(e, x, y) (*(struct bpf_link **)xyarray__entry(e->bpf_links,=
- x, y))
-> =20
->  #define __PERF_SAMPLE_TYPE(tt, st, opt)	{ tt, #st, opt }
->  #define PERF_SAMPLE_TYPE(_st, opt)	__PERF_SAMPLE_TYPE(PBF_TERM_##_st, PE=
-RF_SAMPLE_##_st, opt)
-> @@ -526,6 +527,15 @@ int perf_bpf_filter__prepare(struct evsel *evsel, st=
-ruct target *target)
->  		goto err;
->  	}
-> =20
-> +	evsel->bpf_links =3D xyarray__new(xyarray__max_x(evsel->core.fd),
-> +					xyarray__max_y(evsel->core.fd),
-> +					sizeof(link));
-> +	if (evsel->bpf_links =3D=3D NULL) {
-> +		ret =3D -errno;
-> +		pr_err("Failed to allocate bpf links\n");
-> +		goto err;
-> +	}
-> +
->  	prog =3D skel->progs.perf_sample_filter;
->  	for (x =3D 0; x < xyarray__max_x(evsel->core.fd); x++) {
->  		for (y =3D 0; y < xyarray__max_y(evsel->core.fd); y++) {
-> @@ -536,6 +546,8 @@ int perf_bpf_filter__prepare(struct evsel *evsel, str=
-uct target *target)
->  				ret =3D PTR_ERR(link);
->  				goto err;
->  			}
-> +
-> +			LINK(evsel, x, y) =3D link;
->  		}
->  	}
->  	free(entry);
-> @@ -553,6 +565,15 @@ int perf_bpf_filter__prepare(struct evsel *evsel, st=
-ruct target *target)
->  			free(pfi);
->  		}
->  	}
-> +	if (evsel->bpf_links) {
-> +		for (x =3D 0; x < xyarray__max_x(evsel->bpf_links); x++) {
-> +			for (y =3D 0; y < xyarray__max_y(evsel->bpf_links); y++) {
-> +				bpf_link__destroy(LINK(evsel, x, y));
-> +			}
-> +		}
-> +		xyarray__delete(evsel->bpf_links);
-> +		evsel->bpf_links =3D NULL;
-> +	}
-
-[Severity: Medium]
-Can this error cleanup block ever be reached when attaching fails?
-
-In perf_bpf_filter__prepare(), the attachment loop checks the return value
-of bpf_program__attach_perf_event_opts() with IS_ERR(link):
-
-tools/perf/util/bpf-filter.c:perf_bpf_filter__prepare() {
-	...
-	for (x =3D 0; x < xyarray__max_x(evsel->core.fd); x++) {
-		for (y =3D 0; y < xyarray__max_y(evsel->core.fd); y++) {
-			link =3D bpf_program__attach_perf_event_opts(prog, FD(evsel, x, y),
-								   &pe_opts);
-			if (IS_ERR(link)) {
-				pr_err("Failed to attach perf sample-filter program\n");
-				ret =3D PTR_ERR(link);
-				goto err;
-			}
-
-			LINK(evsel, x, y) =3D link;
-		}
-	}
-}
-
-However, in tools/lib/bpf/libbpf.c, bpf_program__attach_perf_event_opts()
-returns libbpf_err_ptr(err) on failure, which sets errno and returns NULL
-rather than an error pointer:
-
-tools/lib/bpf/libbpf.c:bpf_program__attach_perf_event_opts() {
-	...
-	return &link->link;
-err_out:
-	if (link_fd >=3D 0)
-		close(link_fd);
-	free(link);
-	return libbpf_err_ptr(err);
-}
-
-Because IS_ERR(NULL) is false, an attachment failure stores NULL into
-LINK(evsel, x, y) and continues instead of jumping to err, leaving the
-evsel->bpf_links cleanup at err unreachable and returning 0.
-
->  	sample_filter_bpf__destroy(skel);
->  	return ret;
->  }
-> @@ -566,6 +587,17 @@ int perf_bpf_filter__destroy(struct evsel *evsel)
->  		list_del(&expr->list);
->  		free(expr);
->  	}
-> +
-> +	if (evsel->bpf_links) {
-> +		for (int x =3D 0; x < xyarray__max_x(evsel->bpf_links); x++) {
-> +			for (int y =3D 0; y < xyarray__max_y(evsel->bpf_links); y++) {
-> +				bpf_link__destroy(LINK(evsel, x, y));
-> +			}
-> +		}
-> +		xyarray__delete(evsel->bpf_links);
-> +		evsel->bpf_links =3D NULL;
-> +	}
-> +
-
-[Severity: Medium]
-Does calling bpf_link__destroy() here and in the error path of
-perf_bpf_filter__prepare() cause a double close on the perf_event file
-descriptors in evsel->core.fd?
-
-In perf_bpf_filter__prepare(), FD(evsel, x, y) is passed directly to
-bpf_program__attach_perf_event_opts(), which stores that descriptor in
-perf_link->perf_event_fd and sets the detach callback to
-bpf_link_perf_detach().
-
-When bpf_link__destroy() is later called, bpf_link_perf_detach() disables
-and closes perf_link->perf_event_fd in addition to link->fd:
-
-tools/lib/bpf/libbpf.c:bpf_link_perf_detach() {
-	...
-	if (ioctl(perf_link->perf_event_fd, PERF_EVENT_IOC_DISABLE, 0) < 0)
-		err =3D -errno;
-
-	if (perf_link->perf_event_fd !=3D link->fd)
-		close(perf_link->perf_event_fd);
-	close(link->fd);
-	...
-}
-
-During normal teardown in evlist__put(), evlist__close() closes all
-FD(evsel, x, y) descriptors before evlist__purge() -> evsel__put() ->
-evsel__exit() -> perf_bpf_filter__destroy() runs:
-
-tools/perf/util/evlist.c:evlist__put() {
-	...
-out_delete:
-	evlist__free_stats(evlist);
-	evlist__do_munmap(evlist);
-	evlist__close(evlist);
-	evlist__purge(evlist);
-	evlist__exit(evlist);
-	RC_CHK_FREE(evlist);
-}
-
-As a result, bpf_link__destroy() in perf_bpf_filter__destroy() performs
-ioctl() and close() on FD(evsel, x, y) after it has already been closed.
-Similarly, if perf_bpf_filter__prepare() fails partway through attaching
-and jumps to err, bpf_link__destroy() closes the attached FD(evsel, x, y)
-descriptors while leaving their positive FD numbers in evsel->core.fd, so
-a subsequent evlist__close() closes them a second time.
-
->  	sample_filter_bpf__destroy(evsel->bpf_skel);
-> =20
->  	list_for_each_entry_safe(pfi, pos, &pinned_filters, list) {
-
-[ ... ]
-
+On 20.10.2026 10:24:51, Arnd Bergmann wrote:
+> On Tue, Oct 20, 2026, at 08:44, Marc Kleine-Budde wrote:
+> > On 20.10.2026 00:12:57, Arnd Bergmann wrote:
+> >> On Mon, Oct 19, 2026, at 22:12, Ian Rogers wrote:
+> >> > +
+> >> > +config VDSO_UNALIGNED_PACKED
+> >> > +	bool
+> >> > +	default CPU_32v5
+> >> > +	help
+> >> > +	  Use packed structs rather than memcpy() in include/vdso/unaligne=
+d.h
+> >> > +	  for unaligned memory accesses. Enabled on ARMv5 where GCC may em=
+it
+> >> > +	  out-of-line memcpy() calls instead of inlining byte accesses.
+> >>
+> >> As explained, I think this misrepresents the problem as Arm specific a=
+nd
+> >> isn't the correct method for -munaligned-access targets on Arm, which
+> >> include CPU_32v3, CPU_32v4 and CPU_32v4T along with CPU_32v5.
+> >>
+> >> I still hope we can use a version that just produces the intended code
+> >> on both -munaligned-access and -mno-unaligned-access targets like the
+> >> old version did.
+> >
+> > FYI: there is the kconfig Symbol HAVE_EFFICIENT_UNALIGNED_ACCESS. Can we
+> > make use of it?
 >
+> That would be better, but I still hope we can just get back to the
+> portable code across all architectures for the in-kernel version.
+>
+> I have one more request for you: can you check /proc/cpu/alignment
+> on the system that shows the performance regression with and without
+> the patch?
+
+I asked Stefan Kerkmann (who wrote the original regression report) the
+same question, but we haven't had time for it yet. We'll get around to
+it.
+
+> In your original report, you have shown that Ian's patch
+> caused the drop in performance and that it caused the added function
+> calls, but I don't see any sufficiently hot code path that would
+> actually explain the scale of the regression,
+
+Don't underestimate the overhead of function calls on those old CPUs
+with tiny I-caches.
+
+Little side note: IIRC, even on ARMv7 you can measure the performance
+overhead of the built-in, but disabled, function tracer.
+
+> unless there is now
+> also a case where get_unaligned() ends up doing the wrong case and
+> running into a fixup handler. If this happens, you should see a
+> nontrivial number of fixups listed in /proc/cpu/alignment. On
+> a working system, the numbers should all be low but likely nonzero
+> because there tend to be callers that still lack get_unaligned()
+> wrappers and just access misaligned pointers directly.
+
+regards,
+Marc
 
 --=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261020053226.5593=
-6-1-namhyung@kernel.org?part=3D1
+Pengutronix e.K.                 | Marc Kleine-Budde          |
+Embedded Linux                   | https://www.pengutronix.de |
+Vertretung N=C3=BCrnberg              | Phone: +49-5121-206917-129 |
+Amtsgericht Hildesheim, HRA 2686 | Fax:   +49-5121-206917-9   |
+
+--j2a3snsm4elpgfy3
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQSl+MghEFFAdY3pYJLMOmT6rpmt0gUCatcpKwAKCRDMOmT6rpmt
+0vmOAP0Qt0ZaQ78TlzcyWX3vd+q7p7QlUCACekRD8ry/9YvhAQEAs7/KzykzEHyi
+2B+oU1GLoe1YHj2GBOq7Xs8gulmVxgk=
+=ODz3
+-----END PGP SIGNATURE-----
+
+--j2a3snsm4elpgfy3--
