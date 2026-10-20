@@ -1,74 +1,74 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.72
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.199
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792529958;
-	b=APkeGOyfL7e/dUHc2nhjXJ+z8NDB8afS1f98FuxGT/hDU20u8golHhzyd2nmlm9Qp6Wx
-	 rY4hqcbXzW9roZKytN6mDyEHs1GYPlbsNHvBVP8Q/ZlEZbgJu43gBJccajRrnfvEYpN40
-	 CkBCtFP9ua2BPH2qIw/EsTWlx959oOKuw4+6GbxLI2/06BaW4GUILjHTzMFN/TwIKjmGl
-	 fQV0/pOW1C/uLecl02wA0ikHDOBlwlnR5Dw/kb+rHvNt7wMH3Aa595EthLtse/B5HxBGF
-	 qrZCUpd3eRu+9Q7Bge01ZPa3njG88z4mHzJwmK7mL3YhtUVd1a8SW6oOo2LnN6o+nUQ==
+	t=1792529959;
+	b=rMQb7LmkqXvI6oPfFP6UfQOBHauVajMSYfLz3jMV5CzKvVQZJA+f+blor9aZu2nIxYoM
+	 RvKi7idFSbgHOznGe/I9yTF/dRohC+BDQWziWjGWmcbtnSlP3I+0Il/BQ1aXRObDpK1un
+	 MLeB9anq6ssaKBdJG5tMS4V4DHrHG6mWhHUZYVqhN7WsrZIUbhLOUmj9mGYZRXdis+UdW
+	 6ZArTWdGZePDmanThsOKEzhZJzkFMPZieqjjM6UFtzlAs6TlsgzT+mUMkB2K+r23JGt5V
+	 TmZvQ2VMy0Ei7mRKmPU5/E6ZsoB9LU9UWUzUBBQ4X6DplQbXY+6jkOMScal6uHgcR0A==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792529958;
+	a=rsa-sha256; c=relaxed/relaxed; t=1792529959;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Received:Date:In-Reply-To:
 	 Mime-Version:References:X-Mailer:Message-ID:Subject:From:To:Cc:
 	 Content-Type;
-	bh=N2qanCyCB4wF+VeUcB92quptg8ph71hHc9UNhycwS8A=;
-	b=q8wqGREDuNr+G/0+2NHwiXeJ/Evv9STL8EqNe12zEPB93YSk31PdjBoHXbHzOWvuBKXK
-	 BEDhfJTMJMT2h7FCyVNYBD0UdDCnYlKCgw1UHmuUO1YFBVWA0g6L6y6HcoboV19xHAX5f
-	 eaiPdsnbPotFDgEEQg4Z5VEQfOpuh45hKV4cK3ter0Xepq+FFUk5geD+cSWavIXFudgwo
-	 le0tzno03PJcdboJGdCdbbsulQzSDWWrtlP3TbQ3i2x+GRkWSNyc/KR+tgVR1WI36t3Ut
-	 GvuejXKX3MM9XKo5bP9vF7ooFA2fe73CVAW7Y52voCkjiAvfXhbjyOSyB8IBn/VG2mg==
+	bh=HzuMjlccNvnuPDgeaG26QeM44soaPjxCdKglKEDbd5g=;
+	b=v3bLfTYJ3K6sz4uH6FEBD4GhME4MWteJzSqfWYQyn1M499cZO1tGSdl+4q0ExKcXhA4/
+	 iJiOazaft5CLWFZzMH0pB/pOffuXGPkjg/TQo4kkvc6RHKw0AoqyiVYDLMFjzw8ercuN4
+	 FlKwx476pgP5FQ8ZqdoRZjfPQfa4oX35JqcNJH3qhxsQ6f7st6G0wyspuzhvyU2K3AGU5
+	 9FPb5oCaePhPBC4xDE+0Jd9v63wBNphxRRE1eT5VdBX8BMdZaLBQLVVeF6Cu9G+zSnJPN
+	 a1BAxoPtgaJEiJDCF+5ueL86yrUx4CUK4UpPVSVj3KoQNJI8wIsVDZkGsqZTd2n9sCA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=google.com;
 	spf=pass smtp.mailfrom=flex--irogers.bounces.google.com;
-	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20251104 header.b=AY8qpXwL;
-	arc=none smtp.remote-ip=74.125.82.72
-Received: from mail-dl1-f72.google.com (mail-dl1-f72.google.com [74.125.82.72])
+	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20251104 header.b=XdL1tzJL;
+	arc=none smtp.remote-ip=74.125.82.199
+Received: from mail-dy1-f199.google.com (mail-dy1-f199.google.com [74.125.82.199])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3F46606A319
-	for <linux-perf-users@vger.kernel.org>; Tue, 20 Oct 2026 20:59:16 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org E3F46606A319
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51C90606A32F
+	for <linux-perf-users@vger.kernel.org>; Tue, 20 Oct 2026 20:59:19 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 51C90606A32F
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20251104 header.b=AY8qpXwL
-Received: by mail-dl1-f72.google.com with SMTP id a92af1059eb24-186c1aae818so100101c88.0
-        for <linux-perf-users@vger.kernel.org>; Tue, 20 Oct 2026 13:59:16 -0700 (PDT)
+	dkim=pass (2048-bit key, unprotected) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20251104 header.b=XdL1tzJL
+Received: by mail-dy1-f199.google.com with SMTP id 5a478bee46e88-341eff9e381so10289027eec.1
+        for <linux-perf-users@vger.kernel.org>; Tue, 20 Oct 2026 13:59:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1792529956; x=1793134756; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1792529958; x=1793134758; darn=vger.kernel.org;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=N2qanCyCB4wF+VeUcB92quptg8ph71hHc9UNhycwS8A=;
-        b=AY8qpXwL36PexW/e1AxUNktCFLv+opVByRmFWFpezDMwVrRGpBgJBa+rIGtOd9A3Kx
-         +zmL+3J15aWqZIhlurvVna4Fq6NND4E90sAS3GRsUp0siz38WXWvw2WGm/kcwR3ZOIJR
-         wgNdf2ZRhVKmzS3jqmwwhyUgsxVztsd/ORNULc68Nasu9ZoAlYRITuxZRafk/mN4mc0X
-         9L7c65wxcNF/yKIM2kmVTq7a1ksE4D+IU1lyCFAEW3qzZXWW/M4ENdn4ukXImqz9tQ33
-         wSO1tuYsV/J1IimK1MWPRYxvtYjZGvmevlJ+hHDaOgO5sJBJAUUzdF7uifVebdf5Vd4u
-         Qf7g==
+        bh=HzuMjlccNvnuPDgeaG26QeM44soaPjxCdKglKEDbd5g=;
+        b=XdL1tzJLUKR2mKVRO3gU3jC164QPaJAvYfMOAidT5guifK/oqBlN/JkFjGR6aLjS+W
+         r9MwXq2jW1l29wY6gWB8YPxqkpFV67yJKeGxE4dedHRNNEpUyH/AJAkFR9IZlWUb0I6e
+         9f/FCORX7rTjR9Og6e6Jv1ie524M5EeVvdT3lPtXFkvhkcZgMaNx9xvo+xcpRxFUfMVP
+         0VCxxbDEy4c2nXKKH+4TDY6RHHkY5564BCY/q1T4FrmIIWjh7JYypDfP+JdsQdn+NliZ
+         SrcU08EsTXKN71EqirI75I+gj+bZUwEQw0A0qNIspQPZEYj/wjYLsR1g136xHlF1PPCu
+         UbQw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1792529956; x=1793134756;
+        d=1e100.net; s=20260707; t=1792529958; x=1793134758;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=N2qanCyCB4wF+VeUcB92quptg8ph71hHc9UNhycwS8A=;
-        b=D1+Ao+B0PF3pZZP1qmpzF9difDJ64gX6XwQfLLsyRAyObfyC8J2o6kGX1QdR5dPHVm
-         KjIshE/p07TaKb3/qzzMXAl2IX5F0kJiNtNti0sc/NovKGNvORSl6zhFv1WQi7jOmo0p
-         8mwwtPo2vXy/FPvUPzHVb+w1MtefqzU22ppoZGeNANlH/fCoCUDtF5O2O6UYxQcTy2sr
-         1Rx1hKcM2yu5rFH7BDzv5tAjnH0EWadTQvsYTm3e61fxxbgtFoaxZLRrJAoKH39y8sj7
-         ACyAp2UQ/2O2zRPoZ1g+Xm4C0oxUqB9WhamyyJvAjG06VtkskhRaDvLHXCmHD/fOMMpP
-         8/hA==
-X-Forwarded-Encrypted: i=1; AKwUvBzzRbj7P45di2Rmc01JLznizGosOjOEgY8bAqOwRHILtx00i6nkCPRMhMY5tTZq4uVpr6f9YL3VPO+CQFiVqpHl@vger.kernel.org
-X-Gm-Message-State: AFq9FYJNjdoPPMtT6SK6uuBl+O41zac3pixc2Ch72oW/muBevFm27JC5
-	tkpbVw5r7SH+3NtGsbalf7qqOMVz6MpUa5+c9vOb44tn3i0ZmGJG0M2vQBa9f0oBPBqxKOog2/Z
-	8t5S4AB57aQ==
-X-Received: from dlbvs4.prod.google.com ([2002:a05:7022:3f04:b0:17e:6ff3:49a4])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:eb45:10b0:16b:fdbf:4a9c
- with SMTP id a92af1059eb24-190a599a3c5mr19499c88.23.1792529955721; Tue, 20
- Oct 2026 13:59:15 -0700 (PDT)
-Date: Tue, 20 Oct 2026 13:58:51 -0700
+        bh=HzuMjlccNvnuPDgeaG26QeM44soaPjxCdKglKEDbd5g=;
+        b=hdnb2qwKVggEf2g3YPo20Soxugu+zP15pyYEjbEUYMtnDVp+M5d9+/S5ut0RzgWsLX
+         +6AkLN7feo9ok3XLTwtNBDcvKaWcJwM4rybGfCHWYRhdsV49j41W8hyktoxhASrrrqRC
+         wfZwDEpAM13laIikV9jxA/Pg/tZBcu0/4cH364PGwnYRBdyB9qEiBIR/XbHIAjpKi35e
+         vVCE1bC7QantJwFSEISOTexIwhPZ8Oy2vbUGG82vm/oXqN17b5mwua/2SRowy/sonBt1
+         0aAW58/hDzZ5wGDcmuddoQofR7qWJM6G3tyc5xDZLGFFVK4GzLJZAAlGffYpDApz30/g
+         WiPg==
+X-Forwarded-Encrypted: i=1; AKwUvByPYAi4qzK8aaH0O/sa6qep+EI3R5r2IqHd3fwUjaaVfrdaNQy3EbtXAUknH6j+k+8OKau5MhmrXRWbqCGnj7l6@vger.kernel.org
+X-Gm-Message-State: AFq9FYK1zZGYqZhmjG6V8istVBGxT9TBNzxl+bmb0vtZ65SBwMsqI9Ww
+	KwfzxX0VJ2Dv7MmkYHdafCR5J8awI6iueQqvLs22HsRUGDlS9rH9f8zIOCKusCMUyyLQgc+QjlJ
+	ZEJFvQFcMLg==
+X-Received: from dlbtp2.prod.google.com ([2002:a05:7022:3b82:b0:15b:797b:2b69])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:701a:c973:b0:17d:7b45:f907
+ with SMTP id a92af1059eb24-190a7380c5dmr9065c88.33.1792529958000; Tue, 20 Oct
+ 2026 13:59:18 -0700 (PDT)
+Date: Tue, 20 Oct 2026 13:58:52 -0700
 In-Reply-To: <20261020205859.1080743-1-irogers@google.com>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -81,8 +81,8 @@ Precedence: list
 Mime-Version: 1.0
 References: <20261019220915.3943592-1-irogers@google.com> <20261020205859.1080743-1-irogers@google.com>
 X-Mailer: git-send-email 2.56.0.212.g129ede20d9-goog
-Message-ID: <20261020205859.1080743-2-irogers@google.com>
-Subject: [PATCH v5 1/8] perf lock contention: Filter events before creating lock_stat
+Message-ID: <20261020205859.1080743-3-irogers@google.com>
+Subject: [PATCH v5 2/8] perf bpf-filter: Fix bpf_link leak by using PERF_EVENT_IOC_SET_BPF
 From: Ian Rogers <irogers@google.com>
 To: irogers@google.com, acme@kernel.org, namhyung@kernel.org
 Cc: adrian.hunter@intel.com, ddhariwal@google.com, eranian@google.com, 
@@ -91,121 +91,105 @@ Cc: adrian.hunter@intel.com, ddhariwal@google.com, eranian@google.com,
 	rcu@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-In report_lock_contention_begin_event(), lock_stat_findnew() was
-called before checking filters.nr_types (-Y), filters.nr_addrs (-L),
-and match_callstack_filter() (-S).
+In perf_bpf_filter__prepare(), the unpinned filter path attaches
+skel->progs.perf_sample_filter to each FD(evsel, x, y) using
+bpf_program__attach_perf_event_opts() and ignores the returned
+struct bpf_link *, leaking the allocated struct bpf_link_perf and its
+BPF_PERF_EVENT link fd.
 
-When a filtered-out lock event (such as a mutex contention when
-running with -Y spinlock) shared the same aggregation key as a
-subsequent matching event (for example, contention on the mutex's
-internal wait_lock spinlock from the same caller), the first event
-created the lock_stat entry with the filtered-out lock's flags and the
-second event reused that entry, causing non-spinlock entries to appear
-in -Y spinlock output.
+Furthermore, bpf_program__attach_perf_event_opts() is designed for
+callers that transfer ownership of the perf_event fd to the returned
+bpf_link: when bpf_link__destroy() is called, bpf_link_perf_detach()
+unconditionally disables and closes perf_link->perf_event_fd. Because
+evsel->core.fd owns FD(evsel, x, y) and closes them in evlist__close(),
+destroying the returned bpf_link would double-close the perf_event file
+descriptors.
 
-Check the type, address, and callstack filters before looking up or
-creating the lock_stat entry.
+Fix this by attaching the program directly with
+ioctl(FD(evsel, x, y), PERF_EVENT_IOC_SET_BPF, fd), matching the pinned
+filter path right above it in perf_bpf_filter__prepare(). In the
+kernel, PERF_EVENT_IOC_SET_BPF takes a reference on the BPF program and
+_free_event() -> perf_event_free_bpf_prog() automatically detaches and
+releases it when the perf_event fd is closed. This also avoids enabling
+the event prematurely, allowing pe_opts (.dont_enable = true) and the
+LIBBPF_CURRENT_VERSION_GEQ(1, 7) guard to be dropped.
 
-Fixes: b4a7eff93c39 ("perf lock contention: Add -Y/--type-filter option")
+Before (built with EXTRA_CFLAGS="-fsanitize=address"):
+  # perf record -e cycles --filter 'period > 1000' -- true
+  [ perf record: Woken up 1 times to write data ]
+  [ perf record: Captured and wrote 0.024 MB perf.data ]
+
+  =================================================================
+  ==51328==ERROR: LeakSanitizer: detected memory leaks
+
+  Direct leak of 1568 byte(s) in 28 object(s) allocated from:
+      #0 0x7ffbe76ef24f in calloc (/lib64/libasan.so.8+0xef24f)
+      #1 0x625df7 in bpf_program__attach_perf_event_opts (tools/perf/perf+0x625df7)
+      #2 0xbeddc0 in perf_bpf_filter__prepare util/bpf-filter.c:507
+      #3 0x8f3def in evlist__apply_filters util/evlist.c:1421
+      #4 0x44bbcf in record__open tools/perf/builtin-record.c:1469
+      #5 0x453f9e in __cmd_record tools/perf/builtin-record.c:2594
+      #6 0x45dadb in cmd_record tools/perf/builtin-record.c:4427
+      #7 0x5df56b in run_builtin tools/perf/perf.c:383
+      #8 0x5dfa0e in handle_internal_command tools/perf/perf.c:436
+      #9 0x5dfddc in run_argv tools/perf/perf.c:480
+      #10 0x5e0333 in main tools/perf/perf.c:581
+
+  SUMMARY: AddressSanitizer: 1568 byte(s) leaked in 28 allocation(s).
+
+After (built with EXTRA_CFLAGS="-fsanitize=address"):
+  # perf record -e cycles --filter 'period > 1000' -- true
+  [ perf record: Woken up 1 times to write data ]
+  [ perf record: Captured and wrote 0.024 MB perf.data ]
+
+Reported-by: Namhyung Kim <namhyung@kernel.org>
+Closes: https://lore.kernel.org/linux-perf-users/20261020053226.55936-1-namhyung@kernel.org/
+Fixes: 56ec9457a4a2 ("perf bpf filter: Implement event sample filtering")
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/builtin-lock.c | 61 +++++++++++++++++++++------------------
- 1 file changed, 33 insertions(+), 28 deletions(-)
+ tools/perf/util/bpf-filter.c | 17 ++++-------------
+ 1 file changed, 4 insertions(+), 13 deletions(-)
 
-diff --git a/tools/perf/builtin-lock.c b/tools/perf/builtin-lock.c
-index d5c0d55cb82d..778923c92f42 100644
---- a/tools/perf/builtin-lock.c
-+++ b/tools/perf/builtin-lock.c
-@@ -975,6 +975,7 @@ static int report_lock_contention_begin_event(struct perf_sample *sample)
- 	struct machine *machine = &session->machines.host;
- 	struct map *kmap;
- 	struct symbol *sym;
-+	u64 *callstack = NULL;
+diff --git a/tools/perf/util/bpf-filter.c b/tools/perf/util/bpf-filter.c
+index 72e83ac1d6a4..1596b08fe4e6 100644
+--- a/tools/perf/util/bpf-filter.c
++++ b/tools/perf/util/bpf-filter.c
+@@ -423,16 +423,8 @@ int perf_bpf_filter__prepare(struct evsel *evsel, struct target *target)
+ {
+ 	int i, x, y, fd, ret;
+ 	struct sample_filter_bpf *skel = NULL;
+-	struct bpf_program *prog;
+-	struct bpf_link *link;
+ 	struct perf_bpf_filter_entry *entry;
+ 	bool needs_idx_hash = !target__has_cpu(target);
+-#if LIBBPF_CURRENT_VERSION_GEQ(1, 7)
+-	DECLARE_LIBBPF_OPTS(bpf_perf_event_opts, pe_opts,
+-			    .dont_enable = true);
+-#else
+-	DECLARE_LIBBPF_OPTS(bpf_perf_event_opts, pe_opts);
+-#endif
  
- 	ret = get_key_by_aggr_mode(&key, addr, sample);
- 	if (ret < 0)
-@@ -1010,33 +1011,6 @@ static int report_lock_contention_begin_event(struct perf_sample *sample)
- 		}
+ 	entry = calloc(MAX_FILTERS, sizeof(*entry));
+ 	if (entry == NULL)
+@@ -501,14 +493,13 @@ int perf_bpf_filter__prepare(struct evsel *evsel, struct target *target)
+ 		goto err;
  	}
  
--	ls = lock_stat_find(key);
--	if (!ls) {
--		char buf[128];
--		const char *name = "";
--
--		switch (aggr_mode) {
--		case LOCK_AGGR_ADDR:
--			sym = machine__find_kernel_symbol(machine, key, &kmap);
--			if (sym)
--				name = sym->name;
--			break;
--		case LOCK_AGGR_CALLER:
--			name = buf;
--			if (lock_contention_caller(sample, buf, sizeof(buf)) < 0)
--				name = "Unknown";
--			break;
--		case LOCK_AGGR_CGROUP:
--		case LOCK_AGGR_TASK:
--		default:
--			break;
--		}
--
--		ls = lock_stat_findnew(key, name, flags);
--		if (!ls)
--			return -ENOMEM;
--	}
--
- 	if (filters.nr_types) {
- 		bool found = false;
- 
-@@ -1066,7 +1040,7 @@ static int report_lock_contention_begin_event(struct perf_sample *sample)
- 	}
- 
- 	if (needs_callstack()) {
--		u64 *callstack = get_callstack(sample, max_stack_depth);
-+		callstack = get_callstack(sample, max_stack_depth);
- 		if (callstack == NULL)
- 			return 0;
- 
-@@ -1074,7 +1048,38 @@ static int report_lock_contention_begin_event(struct perf_sample *sample)
- 			free(callstack);
- 			return 0;
+-	prog = skel->progs.perf_sample_filter;
++	fd = bpf_program__fd(skel->progs.perf_sample_filter);
+ 	for (x = 0; x < xyarray__max_x(evsel->core.fd); x++) {
+ 		for (y = 0; y < xyarray__max_y(evsel->core.fd); y++) {
+-			link = bpf_program__attach_perf_event_opts(prog, FD(evsel, x, y),
+-								   &pe_opts);
+-			if (IS_ERR(link)) {
++			ret = ioctl(FD(evsel, x, y), PERF_EVENT_IOC_SET_BPF, fd);
++			if (ret < 0) {
++				ret = -errno;
+ 				pr_err("Failed to attach perf sample-filter program\n");
+-				ret = PTR_ERR(link);
+ 				goto err;
+ 			}
  		}
-+	}
-+
-+	ls = lock_stat_find(key);
-+	if (!ls) {
-+		char buf[128];
-+		const char *name = "";
-+
-+		switch (aggr_mode) {
-+		case LOCK_AGGR_ADDR:
-+			sym = machine__find_kernel_symbol(machine, key, &kmap);
-+			if (sym)
-+				name = sym->name;
-+			break;
-+		case LOCK_AGGR_CALLER:
-+			name = buf;
-+			if (lock_contention_caller(sample, buf, sizeof(buf)) < 0)
-+				name = "Unknown";
-+			break;
-+		case LOCK_AGGR_CGROUP:
-+		case LOCK_AGGR_TASK:
-+		default:
-+			break;
-+		}
-+
-+		ls = lock_stat_findnew(key, name, flags);
-+		if (!ls) {
-+			free(callstack);
-+			return -ENOMEM;
-+		}
-+	}
- 
-+	if (callstack) {
- 		if (ls->callstack == NULL)
- 			ls->callstack = callstack;
- 		else
 -- 
 2.56.0.212.g129ede20d9-goog
 
