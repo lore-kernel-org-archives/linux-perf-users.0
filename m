@@ -1,87 +1,57 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.128.44
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792506945;
-	b=IF5KBbaBPZjaMdbovNjnW5a47HJzb8rTBYgJJ7gd2R8KLb+ekBFtNvvC75cxkgCciwq5
-	 56NThbpzhmzlzg8Xu0MU9V+MMZKm1sq2i/sCy2IvoJrQMyufTd61F+E2nzVGeSl6sj6Ra
-	 El7XVgmhMyw4LV/QoUHmGJJiIRRoEsQUeWYZueuM9Cj1mnvJZ4551hd4bgmczWMgFecP6
-	 P4yAIgN0cytI7ae3CufOmkgIzID+DO7t+2Wngc15a2AeuLaSLHAdre6sDBOTU4+Nzrl4M
-	 abvVFUtmkUAIGjKEtRuirjTqCWcfbSzZs3MLTpzAA3FWr9MReTCC1L7/cNGWwBBZX6g==
+	t=1792507010;
+	b=j6EjbWXrPvGREJrIx2t/bFcL85M1aqh3AS/aEWLsJ0vCEvYSZ8TqQiFm29iryhimgqAm
+	 +UvxfwfVXZwFZs+uVzAHaUKrn+IDZeIm6knuXA8qpQ6NxXeNt3RnsXLp+LTBr/i0Ll4Xh
+	 SIK28GsQVw/g9+0ddwqu+6sKm2NgIYpg9WLNwmPMLu2GrRLq1cfAUHPIpRkf9sQ/EUrbk
+	 1FGfbRgj7sS2YVL0ASZCJQOSCjOZemcyyDkdeU+x1j2A4E6M4ZOGzZUJi9xASvV2Lg/Dy
+	 QcYQcuaYxwW2GYDfbXL8uvW8t+jeDewxCFJitvkH8EbAVY7jBq8eu1xRLN/Y2uYKwvg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792506945;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
-	 Message-ID:Date:MIME-Version:User-Agent:Subject:To:Cc:References:
-	 Content-Language:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding;
-	bh=v4Iip/s7oVuzCnYoFEs3DZuJtsQZW95G7/pZOVyPUeg=;
-	b=u3XFuCVaic0LsLJdOYFQVpL1HvrYHxuCs4volzwIRSthBqPZjkbCOWh6ppMNYfdZqwxo
-	 Dabte043/M3wFdfxT3xrxglySinXV5Bir8ltcEyS86EiRPQHz7KelphVOxEdac2o4EXf7
-	 b3L8l/DVU00X5/bBfSIr3MuC68tpwVA8yvWFffbiERGV9QsRjyWkbn8gQ2nPiW8USfi80
-	 E8O0HDdn5INFK9lFuTn8+oD+1FedM00cRxBPetN1LIRilKxXB8g03k7oHM5kj/UHbKtPm
-	 XTtnSas8pcdQ6Lq6rDiGb2dVqvcr3TNsX3NvMBljNJuh3j5XIFfUnaeKQY5ZckKzmWQ==
+	a=rsa-sha256; c=relaxed/relaxed; t=1792507010;
+	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
+	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
+	bh=oHTMAbSWIJI4Zt/X9LmU8+AQqistdFpW3mH0+siWvag=;
+	b=3IsP46A65uZcUzFVz9NwtccBW/Swjh13GWvfyMUQo3oIIFUH8d3d4b3XJdUL8UoaEROf
+	 urauEO3lmn0La6OF3LSDgsUwOYs8KdXXIkoajtdkLlYBapkVPWF+qN/fPW+rnowgNjZEc
+	 /ibaqjeABVWdp8iqdKskU5MmsapUVsk9ykyOqkywRxz1ImBfmuE+kimUmqSXjXkcLO4lP
+	 zyEJ+E2VP2Euul3TnJlo+6fBPcZHGm6fMcG0hqVu6eAYdyUxTvzoaXxmNZQUANSy4Rxzj
+	 oCZVtP8jAgyKOEyAXoEaXp3F49hSxJlFoCl76yZrf775izZ1AIHW1lR5SR9PaukhOGA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=linaro.org;
-	spf=pass smtp.mailfrom=linaro.org;
-	dkim=pass header.d=linaro.org header.i=@linaro.org header.a=rsa-sha256 header.s=google header.b=OXj8iiTn;
-	arc=none smtp.remote-ip=209.85.128.44
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=hkzWgggi;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 093E8606A31D
-	for <linux-perf-users@vger.kernel.org>; Tue, 20 Oct 2026 14:35:44 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 093E8606A31D
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08F5E606A31A
+	for <linux-perf-users@vger.kernel.org>; Tue, 20 Oct 2026 14:36:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=linaro.org header.i=@linaro.org header.a=rsa-sha256 header.s=google header.b=OXj8iiTn
-Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-4a1cef0439aso36554135e9.0
-        for <linux-perf-users@vger.kernel.org>; Tue, 20 Oct 2026 07:35:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1792506943; x=1793111743; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:in-reply-to:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=v4Iip/s7oVuzCnYoFEs3DZuJtsQZW95G7/pZOVyPUeg=;
-        b=OXj8iiTnqnXMzCVHBB9sDkli8eLkiC+KnY8ep7iaeOHy86x6fHGQ+mgSz2JVg9F+X4
-         xMN/zQRyLclbxu4vDkYH9wiuGY0+nGsh7aqrd7TwdyvX3RI948Me2fVSe5pS+0P4Ntft
-         mRA1/WJp5Sx7A15uergYC8n+FW7CmkeRYvgNSkC3O3V6PJzQUuj6pPl9uS7W8zusxrOX
-         1AgPlqx9LibIlqAK4eLkp5soCe5pLdPpsi1tsj8uEYRsswah58OqgcrN9BtnChhlGvdb
-         x/Z7I2XXWqaBBBKt7R785Tc+F+sEnG0ZuBpp1/GbDdXXpSDAvveC2B42X8Wu7CUjGrDs
-         AxDA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1792506943; x=1793111743;
-        h=content-transfer-encoding:content-type:in-reply-to:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=v4Iip/s7oVuzCnYoFEs3DZuJtsQZW95G7/pZOVyPUeg=;
-        b=0vD6OZEXhzkQsBVU4t7GGNNq9XgNN1n3NrXlLWPAaf/Fe6M4SaBTAk9mqASdU3R44O
-         XOePBcxkKUAkBnDvtWPLN5ZAUR1O9G/7dsB99TGT70zXG6H7pYzShWjGmVUelhiDpvmF
-         /NjHB7JCEq/2BEd1ZI2iU35ENc34KFA4tieZ09KZiKjEIk5KuYK0qJ6rM/IomTs5fGDK
-         ZydHTYFkjCDvvO+NKx/BKgNBHJVI0aSumjr2Fm7DbcuonxWKn4lEgIyro7p1o7+1l0mx
-         HeQUzJONeZYnRLVxPdHeyyw0eBB+8YCzTF8fowYzvqDiNhYDc7w7szuQlgc9KlKrnsfJ
-         mc4A==
-X-Forwarded-Encrypted: i=1; AKwUvByW/9vB/kab1Zz/2iTULx1+91sLjg9MrS4ExWbP2YD++HDSaa9aPJK5O1jcmfr2EaOpOyIQt3RDmlLN9of4P7Zk@vger.kernel.org
-X-Gm-Message-State: AFq9FYK1hNpoy+7Lj5Pdikmx3X67p3lQoTj5YCb+j+20DSKaO7Xknag6
-	0d9ywW2fvZjjkujnXDxJtbsdIOpMGbM3cqS15Z5mBCXhd/OgFHtZhdthki6bPeXD7do=
-X-Gm-Gg: AYBFou3OAJFkQCO5bq0uPfwy++K5dbicag61pNP81z3VNsqLDTQgA1WJoOC8545On4j
-	mSIGlpo+57dKcvJJW02HmO8hhjPSH1ydgF+S1GUhAGbA4mX0Ztgka2JsiiaxK7PFe55GV4sZMsU
-	57RvQAOlMoPJ8XLe/G/LaYNpVSkDg0zqjXWMEFz7VkX9aU4dTPINKYhXMR+n47L1ODEnklFenIl
-	rgA23fptXNMYlFOrT3yXjvGyN2BKoW63cOa4QS9THwPkQkKx4jphC1at+k+HS2rBwCmRRiSdr74
-	gFsx2LbS2usyPP7Wia75hahYeJwx1yQL6aXxpmQOatq2GG7A5yP/x12IlaXGRfo1IZ2xZ/g709b
-	NS9ZZmQgLugqxF9R/5p2cJ++1P7iWaSJ8Jeh00Kn2MTlzr2m6U28MWqqSi1PXsu3wEKF7litdEy
-	cq0Jyv7SLrnf2VpX56DYQY4XeH0PcTLjdbR2r3y+mWBka06Nx08eeMgmpx/5oaNBHO059UxMqQk
-	RXZ6QOZMHn5hw==
-X-Received: by 2002:a05:600c:8709:b0:4a1:7b05:3a6d with SMTP id 5b1f17b1804b1-4a1d75e6fa6mr206342555e9.8.1792506943206;
-        Tue, 20 Oct 2026 07:35:43 -0700 (PDT)
-Received: from [192.168.1.3] ([37.18.141.193])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4a1f2d6e2dbsm82506805e9.13.2026.10.20.07.35.41
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 20 Oct 2026 07:35:42 -0700 (PDT)
-Message-ID: <0792487e-b6fc-4b9d-8120-83281a15217c@linaro.org>
-Date: Tue, 20 Oct 2026 15:35:41 +0100
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=hkzWgggi
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6A12F1F000C6;
+	Tue, 20 Oct 2026 14:36:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1792507009;
+	bh=oHTMAbSWIJI4Zt/X9LmU8+AQqistdFpW3mH0+siWvag=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=hkzWgggi0JQuOSmrf+c+iSGPG7l2qhXTfyzbgqWOSFtczz30+B25XcdcxFgjtqYhE
+	 5jq52WSWXnzJaWwoCXdOt083Gn0j/lus2DImci84NW5WQX2wSLI0sMemejWYaVYcay
+	 Y3Y1RhwUQAXWpz2ZGASKLukw9jnkOoXlLMNzoM+n1PY/OVDfcBJBRI98aFmXQrQbM6
+	 60iaz2kEh3htX5V2FRH92q/ENBk7cyCr0ohKglABo9wIPoUl9fXgS8aeGul+bBPFhW
+	 zXnuOgiRdPyUTrbywHD3HGtcQ7wygQsAcWY4Wk/b3efB/W2qmHYa1eDCvEN7bJZkxQ
+	 IUPbdJyIBS+sQ==
+Message-ID: <sashiko-outbox-179159@kernel.org>
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v8 05/15] perf annotate-arm64: Support load instruction
+ tracking
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Tengda Wu" <wutengda@huaweicloud.com>
+Cc: linux-perf-users@vger.kernel.org
+In-Reply-To: <a6085b6f08ba2ed533208ebe9227968770cd58ca.1792411435.git.wutengda@huaweicloud.com>
+References: <cover.1792411435.git.wutengda@huaweicloud.com>
+ <a6085b6f08ba2ed533208ebe9227968770cd58ca.1792411435.git.wutengda@huaweicloud.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Tue, 20 Oct 2026 14:36:34 +0000
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -90,266 +60,248 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 24/25] perf test: Add CoreSight AUX sample decoding test
-To: Leo Yan <leo.yan@arm.com>
-Cc: Ingo Molnar <mingo@kernel.org>, linux-perf-users@vger.kernel.org,
- linux-kernel@vger.kernel.org, coresight@lists.linaro.org,
- linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org,
- Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>,
- Suzuki K Poulose <suzuki.poulose@arm.com>, Mike Leach <mike.leach@arm.com>,
- Anshuman Khandual <anshuman.khandual@arm.com>,
- Yeoreum Yun <yeoreum.yun@arm.com>, Jonathan Corbet <corbet@lwn.net>,
- Suyash Mahar <smahar@meta.com>, Amir Ayupov <aaupov@fb.com>
-References: <20260915-arm_cs_support_aux_sample-v1-0-35cf6f297d20@arm.com>
- <20260915-arm_cs_support_aux_sample-v1-24-35cf6f297d20@arm.com>
-Content-Language: en-US
-From: James Clark <james.clark@linaro.org>
-In-Reply-To: <20260915-arm_cs_support_aux_sample-v1-24-35cf6f297d20@arm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
 
+Thank you for your contribution! Sashiko AI review found 2 potential issue(=
+s) to consider:
+- [Medium] perf annotate-arm64: unused type_die in propagate_load_reg_state=
+()
+- [Medium] perf annotate-arm64: missing reg2 extraction in ldp when reg1 is=
+ xzr/wzr
+--
 
+commit d4331cee155820a433821da388de2a7297699e0e
+Author: Tengda Wu <wutengda@huaweicloud.com>
 
-On 15/09/2026 16:49, Leo Yan wrote:
-> Add a shell test that records the brstack workload with 8 KiB AUX
-> samples attached to cycle events. Pin the workload to a CPU with a TRBE
-> sink and use per-thread recording with trace timestamps and context IDs
-> disabled, exercising decoding with the owning sample's context.
-> 
-> Check branch stacks and callchains with --itrace=L4, L64, G3 and G3L64.
-> Require at least one sample to reach both requested depths, with all
-> callchain frames belonging to the workload, and reject samples exceeding
-> either limit. Use a callchain depth of three to match the nested calls
-> in brstack.
-> 
-> Compare with AUX decoding enabled and disabled to verify that adding
-> history preserves the original PMU samples.
-> 
-> Assisted-by: Codex:gpt-6
-> Signed-off-by: Leo Yan <leo.yan@arm.com>
-> ---
->   tools/perf/tests/shell/coresight/aux_sample.sh | 189 +++++++++++++++++++++++++
->   1 file changed, 189 insertions(+)
-> 
-> diff --git a/tools/perf/tests/shell/coresight/aux_sample.sh b/tools/perf/tests/shell/coresight/aux_sample.sh
-> new file mode 100755
-> index 0000000000000000000000000000000000000000..887ad6a085eacdfd192db3863fbb61dae1aa19b5
-> --- /dev/null
-> +++ b/tools/perf/tests/shell/coresight/aux_sample.sh
-> @@ -0,0 +1,189 @@
-> +#!/bin/bash -e
-> +# SPDX-License-Identifier: GPL-2.0
-> +# CoreSight AUX samples with callchains and branch stacks (exclusive)
-> +
-> +export LC_ALL=C
-> +
-> +skip()
+perf annotate-arm64: Support load instruction tracking
+
+This commit extends update_insn_state_arm64() to track register state
+changes across standard load and load-pair instructions, including
+pre-index and post-index addressing modes.
+
+> diff --git a/tools/perf/util/annotate-arch/annotate-arm64.c b/tools/perf/=
+util/annotate-arch/annotate-arm64.c
+> index c4cc8bca85cc0..0b5d1abbc5755 100644
+> --- a/tools/perf/util/annotate-arch/annotate-arm64.c
+> +++ b/tools/perf/util/annotate-arch/annotate-arm64.c
+> @@ -527,11 +527,212 @@ static void invalidate_unhandled_insn_regs(struct =
+type_state *state,
+>  	/* TODO: Extend invalidation support to more special instructions. */
+>  }
+> =20
+> +static int arm64__reg_size(const char *reg)
 > +{
-> +	echo "[Skip] $1"
-> +	exit 2
+> +	if (!reg || !*reg || !arm64__is_reg(reg))
+> +		return -1;
+> +
+> +	if (reg[0] =3D=3D 'w')
+> +		return 4;
+> +
+> +	if (reg[0] =3D=3D 'x' || !strncmp(reg, "sp", 2))
+> +		return 8;
+> +
+> +	return -1;
+> +}
+
+[ ... ]
+
+> +static int propagate_load_reg_state(struct type_state *state,
+> +				    struct data_loc_info *dloc,
+> +				    struct disasm_line *dl, int dreg,
+> +				    struct annotated_op_loc *src,
+> +				    struct type_state_reg **src_states,
+> +				    int mem_spacing)
+> +{
+> +	struct type_state_reg *tsr;
+> +	struct type_state_reg *src_tsr =3D src_states[0];
+> +	Dwarf_Die type_die;
+> +	u32 insn_offset =3D dl->al.offset;
+> +	int sreg =3D src->reg1;
+> +	int reg_offset;
+> +
+> +	if (!has_reg_type(state, dreg))
+> +		return -1;
+> +
+> +	tsr =3D &state->regs[dreg];
+> +	tsr->copied_from =3D -1;
+> +	tsr->lifetime_active =3D false;
+> +	tsr->lifetime_end =3D 0;
+> +
+> +retry:
+> +	if (arch_get_reg_offset(dloc->arch, src, sreg, state, false, &reg_offse=
+t))
+> +		goto load_non_regoff;
+> +
+> +	reg_offset +=3D mem_spacing;
+> +
+> +	if (!src_tsr || !src_tsr->ok)
+> +		return -1;
+> +
+> +	/* Dereference the pointer if it has one */
+> +	if (src_tsr->kind =3D=3D TSR_KIND_TYPE &&
+> +	    die_deref_ptr_type(&src_tsr->type,
+> +			       src_tsr->offset + reg_offset, &type_die)) {
+> +		tsr->type =3D type_die;
+> +		tsr->kind =3D TSR_KIND_TYPE;
+> +		tsr->offset =3D 0;
+> +		tsr->ok =3D true;
+> +
+> +		pr_debug_dtp("%s [%x] %#x(reg%d) -> reg%d",
+> +			     dl->ins.name, insn_offset, reg_offset, sreg, dreg);
+> +		pr_debug_type_name(&tsr->type, tsr->kind);
+> +		return 0;
+> +	}
+> +
+> +	/* Handle dereference of TSR_KIND_POINTER registers */
+> +	if (src_tsr->kind =3D=3D TSR_KIND_POINTER &&
+> +	    die_get_member_type(&src_tsr->type,
+> +				src_tsr->offset + reg_offset, &type_die)) {
+> +		tsr->type =3D src_tsr->type;
+> +		tsr->kind =3D TSR_KIND_TYPE;
+> +		tsr->offset =3D src_tsr->offset + reg_offset;
+
+[Severity: Medium]
+Should tsr->type be assigned type_die and tsr->offset set to 0 here?
+
+When DWARF describes a struct variable via a register-based memory
+location (where var->is_reg_var_addr is true), update_var_state() sets
+the base register to TSR_KIND_POINTER with reg->type set to the struct
+DIE.
+
+When a load instruction reads a member from that struct into dreg,
+update_insn_state_arm64() -> update_load_insn_state() ->
+propagate_load_reg_state() calls die_get_member_type() to resolve the
+loaded member's type into type_die.
+
+However, type_die is left unused, and tsr->type is set to src_tsr->type
+(the outer struct DIE) with tsr->offset set to src_tsr->offset +
+reg_offset and tsr->kind set to TSR_KIND_TYPE. When a subsequent
+instruction dereferences dreg, check_matching_type() or
+die_deref_ptr_type() inspects dreg->type, sees the outer struct type
+instead of the member's pointer type, and fails with PERF_TMR_NO_POINTER.
+
+> +		tsr->imm_value =3D 0;
+> +		tsr->ok =3D true;
+> +
+> +		pr_debug_dtp("%s [%x] addr %#x(reg%d) -> reg%d",
+> +			     dl->ins.name, insn_offset, reg_offset, sreg, dreg);
+> +		pr_debug_type_name(&tsr->type, tsr->kind);
+> +		return 0;
+> +	}
+> +
+> +load_non_regoff:
+> +	/* Try another register if any */
+> +	if (src->multi_regs && src->reg1 !=3D src->reg2 && sreg !=3D src->reg2 =
+&&
+> +	    !(src->extend_type || src->shift_type)) {
+> +		sreg =3D src->reg2;
+> +		src_tsr =3D src_states[1];
+> +		goto retry;
+> +	}
+> +
+> +	return -1;
 > +}
 > +
-> +perf list pmu | grep -q 'cs_etm//' || skip "cs_etm is not available"
-> +perf check feature -q libopencsd || skip "perf was built without OpenCSD"
-> +[ "$(id -u)" = 0 ] || skip "No root permission"
-> +command -v taskset >/dev/null || skip "taskset is not available"
-> +
-> +# AUX sample now supports per CPU sink (e.g., TRBE). Select a usable CPU
-> +# and name its sink explicitly to avoid a shared sink.
-> +sink=
-> +for dev in /sys/bus/coresight/devices/trbe[0-9]*; do
-> +	[ -d "$dev" ] || continue
-> +	name=${dev##*/}
-> +	cpu=${name#trbe}
-> +	[ -e "/sys/bus/event_source/devices/cs_etm/cpu$cpu" ] || continue
-> +	if taskset -c "$cpu" true 2>/dev/null; then
-> +		sink=$name
-> +		break
-> +	fi
-> +done
-> +[ -n "$sink" ] || skip "No usable TRBE CPU is available"
-> +
-> +tmpdir=$(mktemp -d /tmp/perf-cs-aux-sample.XXXXXX)
-> +
-> +cleanup()
+> +static void update_load_insn_state(struct type_state *state,
+> +				   struct data_loc_info *dloc,
+> +				   struct disasm_line *dl,
+> +				   struct annotated_op_loc *src,
+> +				   struct annotated_op_loc *dst)
 > +{
-> +	rm -rf "$tmpdir"
+> +	struct type_state_reg snapshots[2];
+> +	struct type_state_reg *src_states[2] =3D {};
+> +	int mem_spacing =3D 0;
+> +
+> +	if (!src->mem_ref ||  /* exclude PC-relative loads */
+> +	    !has_reg_type(state, src->reg1)) {
+> +		/* Invalidate tracked destination registers */
+> +		if (has_reg_type(state, dst->reg1))
+> +			invalidate_reg_state(&state->regs[dst->reg1]);
+> +		if (dst->multi_regs && has_reg_type(state, dst->reg2))
+> +			invalidate_reg_state(&state->regs[dst->reg2]);
+> +		goto out_adjust;
+> +	}
+> +
+> +	/*
+> +	 * Snapshot source register states before updating destination register=
+s.
+> +	 * This preserves the original source state for aliased loads (e.g.,
+> +	 * ldp x0, x1, [x0]), where updating the first destination may overwrite
+> +	 * the source register.
+> +	 */
+> +	snapshots[0] =3D state->regs[src->reg1];
+> +	src_states[0] =3D &snapshots[0];
+> +	if (src->multi_regs && has_reg_type(state, src->reg2)) {
+> +		snapshots[1] =3D state->regs[src->reg2];
+> +		src_states[1] =3D &snapshots[1];
+> +	}
+> +
+> +	/* Handle the first destination register */
+> +	if (has_reg_type(state, dst->reg1)) {
+> +		if (propagate_load_reg_state(state, dloc, dl, dst->reg1,
+> +					     src, src_states, mem_spacing))
+> +			invalidate_reg_state(&state->regs[dst->reg1]);
+> +	}
+> +
+> +	if (!dst->multi_regs || !has_reg_type(state, dst->reg2))
+> +		goto out_adjust;
+
+[Severity: Medium]
+What happens here when an ldp instruction uses the zero register (xzr or
+wzr) as its first destination operand, such as "ldp xzr, x19, [sp], #16"
+or "ldp xzr, x1, [x0]"?
+
+In update_load_insn_state(), dst->reg1 is guarded by has_reg_type(state,
+dst->reg1) without returning early, and arm64__reg_size() recognizes
+xzr/wzr via arm64__is_reg() so dst->reg2 can still be updated or
+invalidated.
+
+However, when update_insn_state_arm64() calls
+annotate_get_insn_location() -> extract_op_location_arm64(),
+arch__dwarf_regnum() returns -1 for xzr and wzr, and
+extract_op_location_arm64() returns before parsing reg2:
+
+tools/perf/util/annotate-arch/annotate-arm64.c:extract_op_location_arm64() {
+	...
+	/* Extract the primary register */
+	op_loc->reg1 =3D arch__dwarf_regnum(arch, s);
+	if (op_loc->reg1 =3D=3D -1)
+		return;
+
+	s =3D next_operand_field(s);
+	if (s =3D=3D NULL)
+		return;
+
+	/* Extract secondary register or immediate offset */
+	if (op_loc->multi_regs) {
+		op_loc->reg2 =3D arch__dwarf_regnum(arch, s);
+	...
+}
+
+Doesn't this leave dst->reg2 as -1, causing update_load_insn_state() (and
+invalidate_unhandled_insn_regs()) to skip the second register instead of
+propagating its type or invalidating its previous state?
+
+> +
+> +	/* Handle the second destination register */
+> +	if (!strcmp(dl->ins.name, "ldpsw"))
+> +		mem_spacing =3D 4;  /* ldpsw loads two 32-bit signed words (4-byte spa=
+cing) */
+> +	else
+> +		mem_spacing =3D arm64__reg_size(dl->ops.target.raw);
+> +
+> +	if (mem_spacing < 0 ||
+> +	    propagate_load_reg_state(state, dloc, dl, dst->reg2,
+> +				     src, src_states, mem_spacing))
+> +		invalidate_reg_state(&state->regs[dst->reg2]);
+> +
+> +out_adjust:
+> +	adjust_reg_index_state(state, dloc, dl, src);
 > +}
-> +
-> +trap cleanup EXIT
-> +trap 'exit 1' TERM INT
-> +
-> +fail()
-> +{
-> +	echo "$1" >&2
-> +	cat "$tmpdir/stderr" >&2
-> +	exit 1
-> +}
-> +
-> +cf="$tmpdir/ctl"
-> +af="$tmpdir/ack"
-> +mkfifo "$cf" "$af"
-> +
-> +# Disable trace timestamps and context IDs to use the owning sample's context.
-> +# Use a per-thread mmap so the explicit sink is only used on the pinned CPU.
-> +if ! taskset -c "$cpu" perf record -o "$tmpdir/data" --aux-sample=8192 \
-> +	-e "{cs_etm/@$sink,timestamp=0,contextid=0/u,cycles/period=100003/u}" \
-> +	--per-thread -D -1 --control fifo:"$cf","$af" -- \
 
-Minor nit, but on "[PATCH 00/14] perf cs-etm: Per-thread mode fixes and 
-snapshot wrap support" I just did:
+[ ... ]
 
-+if ! ls /sys/bus/coresight/devices/trbe* > /dev/null 2>&1; then
-+	echo "No TRBE sinks, skipping output validation"
-+	exit 0
-+fi
+>
 
-I know looking up the actual sink, passing it in and also using 
---per-thread mode is "technically correct", but I think we can assume 
-that any normal record command will work on any system with TRBE.
-
-Otherwise, we should re-write all of the tests to only target CPUs with 
-known loaded ETM instances instead of hard coding CPU 0 etc.
-
-Other than that LGTM:
-
-Reviewed-by: James Clark <james.clark@linaro.org>
-
-> +	perf test --record-ctl fifo:"$cf","$af" -w brstack 1000000 \
-> +	>/dev/null 2>"$tmpdir/stderr"; then
-> +	# Kernels without snapshot_aux reject the sampling event at open time.
-> +	if grep -Eq 'sys_perf_event_open.*event \(.*cycles.*\): Invalid argument' \
-> +		"$tmpdir/stderr"; then
-> +		skip "Kernel does not accept CoreSight AUX sampling"
-> +	fi
-> +	fail "Failed to record CoreSight AUX samples"
-> +fi
-> +
-> +perf evlist -v -i "$tmpdir/data" >"$tmpdir/evlist" 2>"$tmpdir/stderr" ||
-> +	fail "Failed to read AUX sample attributes"
-> +grep -Eq 'sample_type:.*\|AUX(,|\|).*aux_sample_size: 8192(,|$)' \
-> +	"$tmpdir/evlist" || fail "Missing AUX sample attributes"
-> +
-> +check_history()
-> +{
-> +	local options=$1
-> +	local max_branches=$2
-> +	local max_callchains=$3
-> +	local output="$tmpdir/script-$options"
-> +
-> +	perf script -i "$tmpdir/data" --itrace="$options" \
-> +		-F comm,pid,tid,cpu,event,ip,sym,brstack >"$output" \
-> +		2>"$tmpdir/stderr" || fail "Failed to decode AUX samples with $options"
-> +
-> +	# Some windows may contain incomplete trace. Require at least one cycle
-> +	# sample to reach both requested depths, and reject any that exceed them.
-> +	if ! awk -v max_branches="$max_branches" \
-> +		-v max_callchains="$max_callchains" '
-> +		function check_sample() {
-> +			if (in_sample == 0) {
-> +				return
-> +			}
-> +
-> +			if (branch_entries > max_branches || callchain_frames > max_callchains) {
-> +				depth_exceeded = 1
-> +			}
-> +
-> +			# Both depths must be reached in the same sample, with all
-> +			# callchain frames belonging to the brstack workload.
-> +			if (branch_entries == max_branches &&
-> +			    callchain_frames == max_callchains &&
-> +			    workload_frames == max_callchains) {
-> +				found_sample = 1
-> +			}
-> +
-> +			branch_entries = 0
-> +			callchain_frames = 0
-> +			workload_frames = 0
-> +			in_sample = 0
-> +		}
-> +		{
-> +			# A blank line marks the end of a sample.
-> +			if (NF == 0) {
-> +				check_sample()
-> +				next
-> +			}
-> +
-> +			# Sample header: comm pid/tid [cpu] event ...
-> +			# The event may include a PMU prefix and configuration terms.
-> +			if ($4 ~ /(^|\/)cycles([,\/:]|$)/) {
-> +				check_sample()
-> +				in_sample = 1
-> +			}
-> +			if (in_sample == 0) {
-> +				next
-> +			}
-> +
-> +			# Each branch entry is a field in 0xFROM/0xTO/... form.
-> +			for (i = 1; i <= NF; i++) {
-> +				if ($i ~ /^0x[[:xdigit:]]+\/0x[[:xdigit:]]+\//) {
-> +					branch_entries++
-> +				}
-> +			}
-> +
-> +			# Callchain rows start with a hexadecimal IP, then a symbol.
-> +			if ($1 ~ /^[[:xdigit:]]+$/) {
-> +				callchain_frames++
-> +				if ($2 ~ /^brstack(_|$)/) {
-> +					workload_frames++
-> +				}
-> +			}
-> +		}
-> +		END {
-> +			# Account for the last sample even without a trailing blank line.
-> +			check_sample()
-> +
-> +			if (depth_exceeded != 0) {
-> +				print "AUX sample history exceeds the requested depth" > "/dev/stderr"
-> +				exit 1
-> +			}
-> +			if (found_sample == 0) {
-> +				printf "No sample has %d branches and %d workload callchain frames\n", \
-> +					max_branches, max_callchains > "/dev/stderr"
-> +				exit 1
-> +			}
-> +			exit 0
-> +		}
-> +	' "$output"; then
-> +		head -n 80 "$output" >&2
-> +		fail "Missing AUX sample history or incorrect depth with $options"
-> +	fi
-> +}
-> +
-> +check_sample_identity()
-> +{
-> +	local fields=comm,pid,tid,cpu,event,ip
-> +
-> +	# Hiding history must leave exactly the original PMU samples, including
-> +	# their PID/TID, CPU and sampled IP, with no synthesized events. Per-thread
-> +	# recording does not require sample timestamps.
-> +	perf script -i "$tmpdir/data" --no-itrace -F "$fields" \
-> +		>"$tmpdir/original" 2>"$tmpdir/stderr" || fail "Failed to read cycle samples"
-> +	perf script -i "$tmpdir/data" --itrace=L4 -F "$fields" \
-> +		>"$tmpdir/decoded" 2>"$tmpdir/stderr" || fail "Failed to decode cycle samples"
-> +	diff -u "$tmpdir/original" "$tmpdir/decoded" ||
-> +		fail "AUX decoding changed the original cycle samples"
-> +}
-> +
-> +check_history L4 4 0
-> +check_history L64 64 0
-> +
-> +# brstack -> brstack_bench -> brstack_foo -> brstack_bar provides three
-> +# nested calls whose caller frames can be reconstructed from an AUX window.
-> +check_history G3 0 3
-> +check_history G3L64 64 3
-> +
-> +check_sample_identity
-> +
-> +echo "CoreSight AUX sample decoding: PASS"
-> 
-
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/cover.1792411435.gi=
+t.wutengda@huaweicloud.com?part=3D5
