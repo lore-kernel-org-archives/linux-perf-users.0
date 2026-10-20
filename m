@@ -1,57 +1,44 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792507599;
-	b=oOvQmSAX2uHWx5bk2zqL+BzmL2jaeRUl617G1619IpylzJZlVUvrrKFVXSQ9gj898lJ0
-	 x0l5o1IeIO5quEa1I7+np6BJP7YDd6om4MUu+sXY6pfV2ersRi2k2et6bVlcctzZ4k5f8
-	 IJjQDQD2qD2DJVglR4+23704y2wms+MJ2qW3HwImLvB4k/jPylB0isa3YThKw+gGd1P+N
-	 4HkWNjLksWtAD6C3j7KK/gKmQc3Ohs5taNo31oS9n/8UZpIGlansoDj9IrM9jNsT946vq
-	 PkWft/KBQqlWkvhSmkGaEQBvcahx7UdjgBS78MKd5IVfsfyivo/Fd4T8w7ZE2KCFkAA==
+	t=1792507842;
+	b=TxnhuNNyu81IJ5j21SgL34Ula4O8jlevQmCL1mszyOD9xBCQHwy1bc3v3up+FYrY+jNm
+	 2sJyVMYpNxKaTkHjruk7/Dnqno8O8nG9MgJ3TUeeAVIBgWRmgWNQZY6x2heFzsBAXyPY9
+	 RTiaFtVirJCdICmW0d/6rFCGzqABZr4r687CPExper92BzpXlCHgz5t/4XiEra0H6HUwG
+	 cgovXKz9EepGY9Mlwr1Zp1j04o0Md7lvJp7tSOhH8HRKWApruao9s0N9FTtGhh4MXd9AW
+	 te9KybioyWHTGu9mdwVNE1pWOvED25PnjG14k94frWM4oPR1qQ4RBJDa3mIoaxX6Syg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792507599;
-	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
-	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=SpmDEedeopY9qjkqBs3RXQ1jOuy91q6hYTyIl4ZwMeQ=;
-	b=q1lrYLwMM5eOBpo7PamN8LOJk2d9Arptcjnl4OlT34xwju6Bv2XdkQJfVcRe/uORwPcY
-	 Gt88P2K5aJth1Aljp9u3ZgnXPZcLcBsI6RuVE4KJd4HXDyT5IeibvuoSS2EZxaSxG8NoV
-	 t/bY/8Pr7Omeon6IH5l70cx5cHIRkWBB4/aR6CQV26o6eMztS0n5UeT6XaN2f1Y6Xxmbl
-	 keWokUE4URSD158KUmnu+m0x7mWRu6Q7UUSVCK+URlVgnzANI518WoQfDW8zbm4pOtGPQ
-	 qNiVMlTI4pfLuXAToEOEtSvrX97M50fzdqgHlZ+kVPOsCdG/srWE/du0LhT0dWxeZgw==
+	a=rsa-sha256; c=relaxed/relaxed; t=1792507842;
+	h=Received:Message-ID:From:Subject:Reply-To:To:Cc:In-Reply-To:
+	 References:Content-Type:Content-Transfer-Encoding:Date;
+	bh=0lNZu9RnQ/LAIlXyikRcRXTYxuiKS//J60VvaWyqqTY=;
+	b=gRETH0oaHi0CqcD7lXw/S7ZuCkrIC74ymXiw5yqF6rVFgdyrTDOqdICPoQ1KNopz4eQ6
+	 ZyzmHkQflwgxYaqiyTBzmKMyy/7fSkBUhTMW2ide4IqJpQTNT/TLSg0qoBo3u5m01h6w5
+	 Vxj1Dm0JGXCJgjBEW5H0CQ6YGn++q/FXtm8K8H46BZnZY7Kpl5inVWUBfTCRad0xTYdUO
+	 kpVoS7/h4ZMnJt6AHis1UQkSWIQ7l/48adhr4h3HrYM/hbkIt4z1QdHEMDtbab4BadGg5
+	 n+6wiIhxTjpW1sz4xD+vmBRkW/dGEnMI0RT6KSW21Cc8URD9E2pLqolQAacyhjFj4Ag==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=dsqOxHyt;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36049606A31D
-	for <linux-perf-users@vger.kernel.org>; Tue, 20 Oct 2026 14:46:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=dsqOxHyt
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AFF501F000C4;
-	Tue, 20 Oct 2026 14:46:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1792507598;
-	bh=SpmDEedeopY9qjkqBs3RXQ1jOuy91q6hYTyIl4ZwMeQ=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=dsqOxHyt83J7xfgKA3bxPn1oP17uzx4PzV0wpi7koMi0xruR1bezvYz2rB/MUUvZd
-	 KeYvM4VnGvO9VtmT8theQxOdshEJNgnP+Za0i7g3Jdrc/EPvhlm1sQZ1BFBXaSs7e7
-	 XX5wFUb18bXufdTQjLhfRbI81t/fwyVGAi2fQrOPOi04GoEvgKmlSYeyUlOP+L6f8W
-	 d6M697OH0UpimPijrHFf0hwL5AxKye87CerHrAJ0BQ49PePBS64H+hfyr0PlreP0bp
-	 A0AO2KuyMLseR95tdlffkni+DKk6cjF2yVHBhzc7k+kpm78QRC18mt7qGUzyd/UqOC
-	 SON6/3jlz6fiQ==
-Message-ID: <sashiko-outbox-179191@kernel.org>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B7EC606A31C
+	for <linux-perf-users@vger.kernel.org>; Tue, 20 Oct 2026 14:50:41 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AC3301F000C8;
+	Tue, 20 Oct 2026 14:50:41 +0000 (UTC)
+Message-ID: <sashiko-outbox-179196@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v8 08/15] perf annotate-data: Track imm_value for stack
- variables
+Subject: Re: [PATCH v8 09/15] perf annotate-x86: Delete stale stack state on
+ store of untracked register
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Tengda Wu" <wutengda@huaweicloud.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <229d5b940a370daf47dfff23cc9e348093adc8eb.1792411435.git.wutengda@huaweicloud.com>
+In-Reply-To: <60c5fe1ce61fb79c9506516221deb18aa728b4c5.1792411435.git.wutengda@huaweicloud.com>
 References: <cover.1792411435.git.wutengda@huaweicloud.com>
- <229d5b940a370daf47dfff23cc9e348093adc8eb.1792411435.git.wutengda@huaweicloud.com>
+ <60c5fe1ce61fb79c9506516221deb18aa728b4c5.1792411435.git.wutengda@huaweicloud.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Tue, 20 Oct 2026 14:46:33 +0000
+Date: Tue, 20 Oct 2026 14:50:40 +0000
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -61,16 +48,22 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 
-> Currently, imm_value is tracked in registers but dropped when values
-> are saved to or loaded from stack variables during type profiling.
-> If a register of type TSR_KIND_CONST is stored to the stack, its value
-> will be lost.
+> When a register without a tracked type is stored to a stack slot that
+> previously held a valid type, the code currently performs an early return.
+> This leaves the old type information intact in the stack state.
 >=20
-> Add an imm_value field to struct type_state_stack and update
-> set_stack_state() and findnew_stack_state() to accept and preserve the
-> immediate value when updating stack state.
+> As a result, a stale type bug occurs:
+> 1. A tracked register is stored into a stack slot.
+> 2. The register becomes untracked/invalid (e.g., across a function call).
+> 3. The now-untracked register is stored into the same stack slot.
+> 4. Subsequent loads from that slot erroneously pick up the old stale type
+>    because the stack entry was never invalidated.
 >=20
-> Reviewed-by: Shuai Xue <xueshuai@linux.alibaba.com>
+> Fix this by introducing delete_stack_state() to search and free a stack
+> entry for a given offset. When storing an untracked or invalid source
+> register into a stack location, call delete_stack_state() to delete the
+> stale entry before returning.
+>=20
 > Reviewed-by: Ian Rogers <irogers@google.com>
 > Reviewed-by: Namhyung Kim <namhyung@kernel.org>
 > Signed-off-by: Tengda Wu <wutengda@huaweicloud.com>
@@ -79,5 +72,5 @@ Sashiko has reviewed this patch and found no issues.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/cover.1792411435.gi=
-t.wutengda@huaweicloud.com?part=3D8
+t.wutengda@huaweicloud.com?part=3D9
 
