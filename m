@@ -1,44 +1,44 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792622171;
-	b=Mq+yoDzm3ixMMTStR9M5JJlhpgq4ofNhYIf8EDXLRVPAVUh/nvA5oELXf+YafV2YeNtg
-	 vAvYB95X6vAbdi5w27uYqL5fIIPNbhVBFuqztynn/aaifdR2bCh5IlBbmnw9lUpHtKG5J
-	 Xe4uCq4V0UJ07lZOjdp3ADQKYyAGnQJRY8/3y3JtJBY/IMt/k9S135soId+t7lkPvo7SD
-	 m4lOFfWniNjzc9Mq4VHQNvNA8GcJTDqYUKGP1Mgpl51142i1zPneZcBss4748XQRPp6WB
-	 4RMDRackF67dTrdiKZZC7z9YOlrXXIZje9zX9u1qCHJu5viiYZbHbHf9h7ZXfGVwJsA==
+	t=1792622175;
+	b=pLhV6jJ79Re3AQJfltohQsQe+wxXotOwB4JbpbL8QMP/fuyGZrSBCJU9ECRdDI2C091X
+	 yD8djNh2LlxIAMQJugiBGgiMWXpWfVlMATrrnDrnwJ4qmX+lWWgUwNVMTkFjIKFKjNJL2
+	 hUj3CU+pXEJRKElGsnskAsRyRjCEe+bOZj17Jr39obiVXN01MossnPHSwPF4yiTEMpam4
+	 DX2WOdTf0J1Dw4+o4HtDiOXBuHdoR3s87fIanWH3btWLDITiWCSME4UQdzhimAWPCOxQS
+	 CpT71k7/3OelO4DU9PeLTQp55wQhGoqPH39MLNPdjp2yB8AezRTdkT6ws9yyT6q2ZBA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792622171;
+	a=rsa-sha256; c=relaxed/relaxed; t=1792622175;
 	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:X-Mailer:
 	 In-Reply-To:References:MIME-Version:Content-Transfer-Encoding;
-	bh=nBgZu/WpMhlQAHNw6DXQuLzGgFe97kd6nrjHkKz+GSo=;
-	b=hmdQwfsNkzwkQKXqzDAj1M0L4g7NzvTI4pA9oTykOYrWeSTdxEsgLhfY5XY/YiWwqFBT
-	 NRuXF1MrSFm8zRPFy1TDPfvmef+QL1tPl0ATGRLn+OYZqsLbUU15PnpWBwQpLJZx3z0IE
-	 XUdmscCNMWffMWem2Bs5iFFCYPudqczTRknJGLDG9AKqO8njze6K948cTvemo4ekIzIoO
-	 ekOs/Bshqgg/I6dk3oPiWWYHo/G51LlZ3vXoHoc45LptHSiMdeTZBO5ELW/TBkgNKiMVP
-	 qHvImfpafExpb/dqU7mcPRNok3VheDad5Csfkle+geCgnplTwy4Sr5iJgqWyLaOfhhQ==
+	bh=mCz5faZcAW52tJYBbukECioPM85ClEcij99Okwm51M0=;
+	b=n0990mRG+5dJlQyFtZX5nD5IBW32boRRKJFuV3xLEOh0oTTIpXggRPKKN1PCTdJHhnHR
+	 slnMIuUu9MSX+jreecsfMyPL+umGHtYG+c/8ZSygD+aj7JbjMK/cK6WOlq56ZZWLxnoju
+	 qInPVsl7b1HO0OuQXc4v6KLycWKuiKTQRj8NW27Oa4ZFHDAQuyzUncLxEtik9USKmurNx
+	 W5uNpUP2gSQ1yNp/mOl/U8PEj04jH2Lnq6KL0nCsvB6vaG6gWH37vvQynOg2BSuEfo5Yx
+	 SJ48/7gMOsrxaeHp8di2rkhWJixpANRXKmML9PwoybqEzn+ET/+/fo8KozMJtU6UAoA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b="D8Uxqp/n";
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b="WR/k/TqQ";
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C183606A319
-	for <linux-perf-users@vger.kernel.org>; Wed, 21 Oct 2026 22:36:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 339D1606A319
+	for <linux-perf-users@vger.kernel.org>; Wed, 21 Oct 2026 22:36:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=D8Uxqp/n
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BC55D1F000C1;
-	Wed, 21 Oct 2026 22:36:08 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=WR/k/TqQ
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F32851F000C1;
+	Wed, 21 Oct 2026 22:36:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1792622171;
-	bh=nBgZu/WpMhlQAHNw6DXQuLzGgFe97kd6nrjHkKz+GSo=;
+	s=k20260515; t=1792622174;
+	bh=mCz5faZcAW52tJYBbukECioPM85ClEcij99Okwm51M0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=D8Uxqp/n22qmI2oKNPAwQgajXYCqYqXk7zKzqAOzA1S9L7aFgTB4eugmGgGBKh0/8
-	 6fiyFlbhjqp8KL/TJwoRTEbUoJLlPRaYFijzxGMIkEWhuSZ3Y0TX7ZkbkQSi0BBRKa
-	 EQEtbaINbhP63Y1CT/YGgtA2BjHxkiKgzadTapv6jbknjFS9xL5YvFbjfTCMhRwfd/
-	 c07IJ4E+OXNSbD0hRb/5G9uqPArRb/Skb5NxXbz8u5OS0NwTpVVAhlfzw4aJsQ7nG1
-	 GV++83uJj0Yusz9/EVRRziBUu5byPA+60pRhMa0rLi/h/5zaSonAmh6eGQ9oc8fmSM
-	 Yvm33hW8s1cDw==
+	b=WR/k/TqQN9l4w9C7JGFWxcSWwgJFd5N/GY+vfBT4AadLtEEvnS1DKQcE0UwoxSyTR
+	 ia9afB81ytj8wVumuTokCBVvRCIhgbt/ScFtnGwdoiwfdLVzBi6NCzLOLhAmyIoK/O
+	 nnNtoHixNyNo4oWm1bydF/D7+ATol38vd/IahSdbu1vSq1fTZS6e7EAln3MZ5cMs4n
+	 orDUM3+SClcXDXb1BTxMyN9THhljUvqQW+LekBlZvX7SWh6CdsHPjdYIzlIpCOnaTE
+	 7k3q018WLSIDnPgmxa8FC9ciA0xPhZF2aGSInR8Pm2e9MiPOpP1JKWA2NBFggBaOPF
+	 v0MQs3IS232qA==
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Namhyung Kim <namhyung@kernel.org>
 Cc: Ingo Molnar <mingo@kernel.org>,
@@ -51,9 +51,9 @@ Cc: Ingo Molnar <mingo@kernel.org>,
 	linux-perf-users@vger.kernel.org,
 	Arnaldo Carvalho de Melo <acme@redhat.com>,
 	Yuyang Huang <sigefriedhyy@gmail.com>
-Subject: [PATCH v2 02/12] tools headers UAPI: Sync linux/if_addr.h with the kernel sources
-Date: Wed, 21 Oct 2026 19:35:41 -0300
-Message-ID: <20261021223555.28372-3-acme@kernel.org>
+Subject: [PATCH v2 03/12] tools headers UAPI: Sync linux/rtnetlink.h with the kernel sources
+Date: Wed, 21 Oct 2026 19:35:42 -0300
+Message-ID: <20261021223555.28372-4-acme@kernel.org>
 X-Mailer: git-send-email 2.54.0
 In-Reply-To: <20261021223555.28372-1-acme@kernel.org>
 References: <20261021223555.28372-1-acme@kernel.org>
@@ -72,35 +72,66 @@ From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
 To pick up the changes in:
 
-  7cb8198761e6 ("net: ipv4: report multicast group user count")
+  cc17e386f8a5 ("ipv6: add ip6_del_rt_reason()")
 
 That just rebuilds perf, silencing this build warning.
 
 This addresses this perf build warning:
 
   Warning: Kernel ABI header differences:
-    diff -u tools/include/uapi/linux/if_addr.h include/uapi/linux/if_addr.h
+    diff -u tools/include/uapi/linux/rtnetlink.h include/uapi/linux/rtnetlink.h
 
 Please see tools/include/uapi/README for further details.
 
 Cc: Yuyang Huang <sigefriedhyy@gmail.com>
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/include/uapi/linux/if_addr.h | 1 +
- 1 file changed, 1 insertion(+)
+ tools/include/uapi/linux/rtnetlink.h | 25 +++++++++++++++++++++++++
+ 1 file changed, 25 insertions(+)
 
-diff --git a/tools/include/uapi/linux/if_addr.h b/tools/include/uapi/linux/if_addr.h
-index aa7958b4e41d044b..7fb630b7fe311ab4 100644
---- a/tools/include/uapi/linux/if_addr.h
-+++ b/tools/include/uapi/linux/if_addr.h
-@@ -36,6 +36,7 @@ enum {
- 	IFA_RT_PRIORITY,	/* u32, priority/metric for prefix route */
- 	IFA_TARGET_NETNSID,
- 	IFA_PROTO,		/* u8, address protocol */
-+	IFA_MC_USERS,		/* u32, multicast group users */
- 	__IFA_MAX,
+diff --git a/tools/include/uapi/linux/rtnetlink.h b/tools/include/uapi/linux/rtnetlink.h
+index 27265fd31e5fc99c..3988b51db539fe4f 100644
+--- a/tools/include/uapi/linux/rtnetlink.h
++++ b/tools/include/uapi/linux/rtnetlink.h
+@@ -399,6 +399,7 @@ enum rtattr_type_t {
+ 	RTA_DPORT,
+ 	RTA_NH_ID,
+ 	RTA_FLOWLABEL,
++	RTA_DEL_REASON,
+ 	__RTA_MAX
  };
  
+@@ -407,6 +408,30 @@ enum rtattr_type_t {
+ #define RTM_RTA(r)  ((struct rtattr*)(((char*)(r)) + NLMSG_ALIGN(sizeof(struct rtmsg))))
+ #define RTM_PAYLOAD(n) NLMSG_PAYLOAD(n,sizeof(struct rtmsg))
+ 
++/* RTA_DEL_REASON: why the kernel deleted the route. u32.
++ * Emitted only on RTM_DELROUTE notifications, and only when the deletion
++ * path records a cause. Absence means either an older kernel or a
++ * deletion path that does not (yet) record its cause - consumers must
++ * treat "absent" and "unspec" identically. New causes may be appended.
++ * Currently only IPv6 deletion paths record a cause.
++ *
++ * The attribute is notification-only: the kernel rejects it in
++ * requests, so a notification must not be echoed back verbatim.
++ *
++ * The value space is family-agnostic: a value must never be
++ * reinterpreted per address family. A cause that only one family can
++ * produce still gets its own value rather than reusing another
++ * family's.
++ */
++enum rt_del_reason {
++	RT_DEL_REASON_UNSPEC,		/* cause not recorded */
++	RT_DEL_REASON_EXPIRED,		/* RTF_EXPIRES lifetime ran out (GC) */
++	RT_DEL_REASON_RA_WITHDRAWN,	/* zero-lifetime RA / PIO / RIO */
++	__RT_DEL_REASON_MAX
++};
++
++#define RT_DEL_REASON_MAX (__RT_DEL_REASON_MAX - 1)
++
+ /* RTM_MULTIPATH --- array of struct rtnexthop.
+  *
+  * "struct rtnexthop" describes all necessary nexthop information,
 -- 
 2.56.0
 
