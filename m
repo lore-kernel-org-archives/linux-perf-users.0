@@ -1,57 +1,57 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792622467;
-	b=et02PS4wQ3ntPcsdnxFBu4AShDrdysBuPGOTuxzyeFMvjlibqKEt3dby3K//lqM0adc5
-	 LJzjVro2pOG4dBsBQq1OsiCL598syg/nsDBQLeeYo+TN9GFRKN9T3ssEsRksL38dVxG9t
-	 HPuMGsNqwvm8ac4o1XYFBdLQmvoEjwthmAStreDiyvx+XgLXTLZGhyfkh6HNjhPY4hmrn
-	 kYjXYux9Oq3glHTexqrt+yf7XQIHBP6rbmTPmxFXALMtDS0388VMqDiudfBxFIDa25Q/I
-	 plAxiVILBgLHpAhKr/2HgG//yjglufGqYMbZC05zfIjHUbSFOwhk4tPDxAF8QqHxgzA==
+	t=1792622523;
+	b=N83kI2c/yiDSlQoweah9SLNTUDdHOxHG67zpJS87UV74UKO0y+f3UX0a774LCi38DjLr
+	 UXSLzGx7uuhcPmCW68T1FQB+RBQjwCD1HZ6pcuQJy9BEIeaWVXYtCjnzO5kzcntOv9Pfd
+	 E24EBTLe1AOe/LRsWxTr2qOEhJTk4KL9exhK2fAvi4aJJW1SjPt61wBiJ1aU/E67/qtsl
+	 4YiYpmyZ0ildLtgu3II/Q6EEd5kPMtjfG2E2iMLTlmma7ewSPfpxcSnf+blLTiH52ZraS
+	 DF5xruonWHRI8XOtzw1fzkFw+XHhmEC2Wrv9KS+UAZkEM6s7KZrNy+JIjXNMbhl9yYA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792622467;
+	a=rsa-sha256; c=relaxed/relaxed; t=1792622523;
 	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
 	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=KlriokFev1LbJ9H9N1+gCzj+Nd5WweKfX1wS9rj//6I=;
-	b=KdGGMCC1VSaM3h72z5cNvEmywZQ20v7CBUBvX9uCuehOusY8Xr95OLG7Hu82iwZRkagN
-	 CCSmMslOG+zJRnzvv4Bvkt6wP6rK4civW18j9ZarSEc6Cs/J35MdToDFK8YBQntNO6V02
-	 222ntBbviSz9xycHstTK+6ee+I1H6y/KH3lltfJCIfejfFvYhkHulrlmkIZFTzbFvxpxB
-	 AchiZouniOPXqCOowB2FWTyDH7hNVIimzP4ZdpKrd2fCVmOAFKcvAadwmKkG/d3bsj3cX
-	 fEYSuE1eVSHha7jdAaV27fbMX1hIIIeVMI63tJCDK0c2sg9C75L6l+CgwakL3juhT3w==
+	bh=2rEo8rsIFpPS8qPEI2rjlCACbRWn08nak2YgrPye4m8=;
+	b=Mp41Wg4F1ljUDq+d3XUy1N5t2J6Kx/KN0PIT3zzV1Hmd9OPp7CKJ0N3MBlwl44hMxG8n
+	 dDNIGJzNZMdY/cU0piTuGan0WtMdh3lbGlHNUVOFAKxfk2bf5t/BM+Um0LZ6kEjVXl3pu
+	 KeejtIIgItMXgcJMa35hcHa+pBDl4xuyLvtnzfGFkyZH6piB++a2u53ug4ry83tR/jUYG
+	 9D8DrsSvqBQzavu4J3kYA/9pxdd6RBhIStvDhmRxUNKHQA64aDWsqlXm9Qvqkk6/aV4vQ
+	 VhiS8HIvANwrjApBnyIPoZMvq+vqM09zwGONcT+MuXsTSBi9OgrRJBv1jZ/QdpeVkKg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=oHhX1Tla;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=bS+aq1VR;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4B35606A31A
-	for <linux-perf-users@vger.kernel.org>; Wed, 21 Oct 2026 22:41:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA4B6606A319
+	for <linux-perf-users@vger.kernel.org>; Wed, 21 Oct 2026 22:42:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=oHhX1Tla
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 833191F000C2;
-	Wed, 21 Oct 2026 22:41:06 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=bS+aq1VR
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 528201F000C1;
+	Wed, 21 Oct 2026 22:42:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1792622466;
-	bh=KlriokFev1LbJ9H9N1+gCzj+Nd5WweKfX1wS9rj//6I=;
+	s=k20260515; t=1792622522;
+	bh=2rEo8rsIFpPS8qPEI2rjlCACbRWn08nak2YgrPye4m8=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=oHhX1TlaVHtmoi+gtNP2397xxeg++ph0OsS44rVSk2vKvuQQ0Ag+5UdEfCNU5tlF7
-	 YIqtbLZIP36A4sJM9PtsGS5MEaEDPONglPGvGFWGBdtGuI4LWEkwmzggIaYKTmyWl+
-	 hZ55OFg1kyxrm0KnWxgXTWaKjq6s3BW+nz0oUW+gqtC1GmP59E4R++HlOpK/VMHh46
-	 MAzy6vuOF6MN98oWpDg2wfOcec6z1ZcuoqEawj3E0o/TPi9Oys+08UdcpY2wxNTnUb
-	 jrSZcSHhPLrsGqeKeGUF5O2Yo0U7r5remHP0yLaP+S26/ekRIrpqe+CJQgCeddA/KI
-	 qbR85ZFnzu9bA==
-Message-ID: <sashiko-outbox-180730@kernel.org>
+	b=bS+aq1VRR+DVFq326fovmiO0JQ3FVahxFYR3FMWzVE0ReGjSMsvBIPcRh5LlYQ/b0
+	 C939r8OOkWMJ1atJRCrFiGQA6Vpz3MRXNVQtu2YZvKr/2hZ8u0eu9dX3ma7EErs8Tb
+	 PqDdJkpLB1ysf4lAcSXHsHUDoPhZ6fx0P/lVYijk7rKrwn6qf4GDwLeZrYr273ANEk
+	 AGN797tPQ31mYarAzD8/U0co6fD4PaUclOgIeR3yUzqz0Y7RkVl57ZbqIMFFSVqFc2
+	 KW3nRuUCUh56GlblXU3LwspE++3DvKm8hJAtuk/Kd6O8O9ZHNdw2w+KJZ9esVsLWAC
+	 T7XKMWp1AV3Hg==
+Message-ID: <sashiko-outbox-180731@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v2 10/12] tools headers: Sync UAPI linux/mount.h with
- the kernel sources
+Subject: Re: [PATCH v2 05/12] tools headers x86 cpufeatures: Sync with the
+ kernel sources
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Arnaldo Carvalho de Melo" <acme@kernel.org>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20261021223555.28372-11-acme@kernel.org>
+In-Reply-To: <20261021223555.28372-6-acme@kernel.org>
 References: <20261021223555.28372-1-acme@kernel.org>
- <20261021223555.28372-11-acme@kernel.org>
+ <20261021223555.28372-6-acme@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Wed, 21 Oct 2026 22:41:06 +0000
+Date: Wed, 21 Oct 2026 22:42:01 +0000
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -65,25 +65,33 @@ Precedence: list
 >=20
 > To pick up the changes in:
 >=20
->   73b40395c71c ("mount: add OPEN_TREE_DROP_MNTNS_MOUNTS")
+>   87db7795cbaa ("x86/CPU/AMD: Fix AMD TLBI Erratum #1718")
+>   dcfb0f2c067a ("KVM: x86: Expose Zhaoxin RSA CPUID feature")
+>   54db9aaacc2a ("KVM: x86: Expose Zhaoxin PHE2 CPUID feature")
+>   93134f14106b ("KVM: x86: Expose Zhaoxin RNG2 CPUID feature")
+>   3ee865eb696f ("KVM: x86: Expose Zhaoxin CCS (SM3 + SM4) CPUID feature")
+>   d99fc2a7c5e2 ("KVM: x86: Expose Zhaoxin SM2 CPUID feature")
+>   ac5cc691eb4a ("x86/thermal: Add bit definitions for Intel Directed Pack=
+age Thermal Interrupt")
 >=20
-> That don't result in changes to the string tables generated from this hea=
-der.
+> That just rebuilds perf, silencing this build warning.
 >=20
 > This addresses this perf build warning:
 >=20
 >   Warning: Kernel ABI header differences:
->     diff -u tools/perf/trace/beauty/include/uapi/linux/mount.h include/ua=
-pi/linux/mount.h
+>     diff -u tools/arch/x86/include/asm/cpufeatures.h arch/x86/include/asm=
+/cpufeatures.h
 >=20
 > Please see tools/include/uapi/README for further details.
 >=20
-> Cc: Kir Kolyshkin <kolyshkin@gmail.com>
+> Cc: Borislav Petkov (AMD) <bp@alien8.de>
+> Cc: Ewan Hai-oc <ewanhai-oc@zhaoxin.com>
+> Cc: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
 > Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 
 Sashiko has reviewed this patch and found no issues.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261021223555.2837=
-2-1-acme@kernel.org?part=3D10
+2-1-acme@kernel.org?part=3D5
 
