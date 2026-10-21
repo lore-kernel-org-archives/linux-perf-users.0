@@ -1,74 +1,74 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.200
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.197
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792602739;
-	b=QrTLCiY1ftazKv8vyQi+9up4fo3f3iYgujupjLOVDiv/e1Z2BwMa89/GkxvT/Mt9hRys
-	 DN/5FRdYGrOi4LtNFEU/jf8aeA+EQE9GhN0P4l+2URAvwwHFfc7+Ut2hlWyp7uJU183Hx
-	 aADrFzYdrq3Vo0lFWDvBi0U1+QfcWDBCCC7GzyWWbCrRnxz6YoXIGafcXU56/5jginntQ
-	 z0TqIkCrcLCfEp5aieDo5KNiJplXI6/x1Qlh7jyXTAmM36I3LJTwOLAFA2JR7AJHXvZoL
-	 +GDyBDMxcRuvaF16mJVnp9Q9/SuYKMzvjjpQL6sHs0dju/OnORS3dyKKpnja140JSbw==
+	t=1792602742;
+	b=b/zaejZu6J5AJPwwYYQmybPiIw4ZC89b7tVYUkAW/kBFoUv8N+pt5izADPeG/M41KJWJ
+	 HKbkCbUxm2tbUSqW8QA8zikGFDHuV+qtrqcjKFijoFOxKXcKGWWCGyd8fyJgFWP2S7fUQ
+	 +d4VlkmlWpLurKK6iDGCSjO98j1r7TNReY9K2esOPMgqRhkoTFwq7MHQwCmgp6bikdUoZ
+	 KjlP+oVvpEf5xACr5Bq1Nlp+r2T1DRCDuZQ+gNjePLKjg43P4jhgrcXh1U4sOzpA1VLKn
+	 iZGYPZ46Zmit80Ebqcdi9OSxBb5wq/MGgDJy6qzN43LbbUvbyFgwWId+pK0+awxDVtQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792602739;
+	a=rsa-sha256; c=relaxed/relaxed; t=1792602742;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Received:Date:In-Reply-To:
 	 Mime-Version:References:X-Mailer:Message-ID:Subject:From:To:Cc:
 	 Content-Type;
-	bh=va0jPRyzS9qJUXCbRxN41MmkIP1NzQbKCEMrTZrHPo0=;
-	b=TCJQ58QoQ4LNo3wJSsvpPFMntD/C4L29rkLEOoKiaO47PwXRCyvY1XrTLXidWFIRA/3e
-	 J2SRcX/kWaDJZRXA7gWALDNC8mmbDEIAVpDC+fFR5y9fSpVQe9P/hcjWX166i9mnc8Ax+
-	 w3kmIUxuSKnE54rwzV1XXsoIC4BBkSTrek8OVSFd3g2myRDhcE2afrSKZfOUsMQLKN29G
-	 P0NVjc4c7LkShe2CCRgldj4YAhmtDN2Bd4uvqTOGLNUnprhYR1BnCn6K8/+mRiY/5Ot9I
-	 W7jnWtslSg2DBHd7f/TK6iciiLyy8BzjH5SUdKTc91EzXwq6+HxDkUy243j/6+m5cAw==
+	bh=AtfoIAnvU8I+8DMMjSILRGxBFiqLS4guAG/uPac9bQI=;
+	b=mgHHnhikbS70+Ib5RIT9EI589ncpqyKKfIZPIp88IwcVFWCHUUJuPXTzEXA/vBHrSJ36
+	 cN4Yta3XN2WuNLgbw5nQUE6OgNAxFtNvxQZU5JzByFYcs7GD6q6KGKBP1lu2jtKbnQh/1
+	 jJJdgCPX3Vj3QV9qXvlLPxqTfSOVPKZ+/Kuz8u0xVff6Awhh8U8R+xcyB5G9JlJIH9Rp7
+	 91VZoKDBVNutcin56IXPGiEQCZhjcN3bw1kPnj0K+ffEhDN8HRqJ+8ohxg42SWjxfK+Su
+	 HM3O7gau/sPfzZZpP4fdRsoFRadmnflB34cunfG0pA4SFBni+p/0Ox4YXHiOeXYNqWg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=google.com;
 	spf=pass smtp.mailfrom=flex--irogers.bounces.google.com;
-	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20251104 header.b=bGDOhXEd;
-	arc=none smtp.remote-ip=74.125.82.200
-Received: from mail-dy1-f200.google.com (mail-dy1-f200.google.com [74.125.82.200])
+	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20251104 header.b=DDqwIbT2;
+	arc=none smtp.remote-ip=74.125.82.197
+Received: from mail-dy1-f197.google.com (mail-dy1-f197.google.com [74.125.82.197])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFCB060A4AC4
-	for <linux-perf-users@vger.kernel.org>; Wed, 21 Oct 2026 17:12:18 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org EFCB060A4AC4
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C138460A4ADC
+	for <linux-perf-users@vger.kernel.org>; Wed, 21 Oct 2026 17:12:21 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org C138460A4ADC
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20251104 header.b=bGDOhXEd
-Received: by mail-dy1-f200.google.com with SMTP id 5a478bee46e88-359b81ad4e8so1628916eec.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 21 Oct 2026 10:12:18 -0700 (PDT)
+	dkim=pass (2048-bit key, unprotected) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20251104 header.b=DDqwIbT2
+Received: by mail-dy1-f197.google.com with SMTP id 5a478bee46e88-3552883bd19so3428527eec.1
+        for <linux-perf-users@vger.kernel.org>; Wed, 21 Oct 2026 10:12:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1792602738; x=1793207538; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1792602741; x=1793207541; darn=vger.kernel.org;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=va0jPRyzS9qJUXCbRxN41MmkIP1NzQbKCEMrTZrHPo0=;
-        b=bGDOhXEdaqPzP5cdnFiwy2WkgmwPpQoNggE6yuSKbh+c6tXCCJG1/xFsgJDQFHiIJR
-         t1f60ZBSCuqyBwVJaAZsZUoRlggTP5vFbPCn9/zLP/dbhJCzJxIIwe9huJc0ud1eD+sV
-         prfDGOIq0bw+RFhUFC954JTAbpoppeQUaLrcvlPnifo+js4X6LMBo8E6KrvTCtOi5WtB
-         5e0ly9mFCUZcZsqEfKKPaY2eYngxnF6M2YxaqHrzxZZcLr6x1nY6KFakkdluBgn2atmK
-         pVfd7B2eH4D3fpUUMu+anqTTTR0ncZKR4rCGSO8vMBnWDgS905rKj0qoVLO+lejUgkaW
-         FYXQ==
+        bh=AtfoIAnvU8I+8DMMjSILRGxBFiqLS4guAG/uPac9bQI=;
+        b=DDqwIbT2xR6sPQxvN5seKlCnoJrnVohQjLAaEIRUIWR8qABtBir+3f2chbnWXz0ebp
+         nRxWBGwN+u6RrdfGJ1tI++XKY35CMILbfTdJm9ysyOTxBhTpz3iH+k4FS5c1qe/38eYe
+         Pw865iqPQa97Uq6tpHuF9FOKX/d3kOz4OD/pYWKkgbiEwR/ksz72/W97+eUZse/SWbrg
+         NSz9bA5yCIc9+oGRB3PegonxVU6sxYw2M38ZfsibUtMfh1UjYuKmF5QPf1HE94g01l0G
+         T1dRdhh5oFeYy4cJN6hOIeIgmVJpB+zc0BML5MVNEtukPFecb530UsbS7+w5Qimb6sfq
+         MrhQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1792602738; x=1793207538;
+        d=1e100.net; s=20260707; t=1792602741; x=1793207541;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=va0jPRyzS9qJUXCbRxN41MmkIP1NzQbKCEMrTZrHPo0=;
-        b=JRaHhjYqKTsrsvNtqwnlyAlPvhTRT/GTZDG84hHuIetijJcMC3y3NvX2ix9rxSDXiP
-         0YlayD5kZ0hwvGyelRDGz46HtOyMwfoRMuxMwwAoduCBIGI7zZHnlojR/OXnoN1uMD1C
-         Tyk6vhhJmtvlTzLG+9gzu4T5aLw89fWx5A3GxhTTBAIVPIji48AGDCEybx67ZgKuTKew
-         BmGWDG6gYKmzZn2T/aQp9EL1eZ6u/POa5b/23zyK21wXP0X7JleLYRAT0tjvKgx0B9dq
-         +tLp7abKzNlaE11F4FJXFl5UYihRDVsWd/3UFdL9SpETJDhD0Sf2eWyMjaRKO12P2Psu
-         W8vg==
-X-Forwarded-Encrypted: i=1; AKwUvBwpW185NPeXgz/kZ5lpMw3l0gqTfWMdsUipEj3n027jHFTNg79uUtLeramaLuCzIjVlZbQdf1f1X9wbHpZ0G6U2@vger.kernel.org
-X-Gm-Message-State: AFq9FYKK3pMTK2H8Aw2cmwiAX7k83Y3LOt1OMJOQRFDfxphbaYkIkMwR
-	hzbQ5FV4syVu5Gu9rmEBrfxSX7OP1EC3FvBx7lsVwsBrzNsPaQFGIVKHNfiqwZsXafWAVlHppn3
-	xIweSEgeWrw==
-X-Received: from dldyr16-n2.prod.google.com ([2002:a05:701b:4510:20b0:191:1e8e:83d3])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:ea48:10b0:14d:ef19:246f
- with SMTP id a92af1059eb24-190a7756c63mr3346132c88.45.1792602737568; Wed, 21
- Oct 2026 10:12:17 -0700 (PDT)
-Date: Wed, 21 Oct 2026 10:10:42 -0700
+        bh=AtfoIAnvU8I+8DMMjSILRGxBFiqLS4guAG/uPac9bQI=;
+        b=WXQRz8NrUyZxzWIe59saACxoL8cDqOAnvL2oyz7NgWVLyRJaXFgQb3CEIxog6x9/oc
+         SbbD3B4A4aqjysrxpv0tnTXtkKBdG7nvtKs778F0jME9WzY26NyG0Ogv7qGwRrY2S7zw
+         Q4Dr+CK9+m3I6LczMUpfHuSg54s42aJ453fRB2mYmXDYed4Aur4AyR5hUMEo6bCLdjwf
+         wFHxXwzHsKxGiJIZ/sxy8miZM12g0POPqD9AMN5Q/oqG/op0ebbG2y8Au1iKdvybxQkB
+         8LifciVPlZ7aMyoQOrw8STfB5xtBZiXn7rjojYy7RzKAz+olaxgITq2rM6FM2/DaCPg1
+         leLQ==
+X-Forwarded-Encrypted: i=1; AKwUvBy8qxk1kCN9i4Db/5Sp3ADekoLUYZZuTSrOboP/1WiKqZQvXRSK5Pnd+2iS+MBA/PhZgy84EvgVVBK/3mj2L65Y@vger.kernel.org
+X-Gm-Message-State: AFq9FYI/D8tmfauyEnz3AVjl2b4RN2mD7fjii6i/Cew5K0+yQzLCcP9I
+	Ra6TGDu1/Yx/luGo75221HtEAkAPEB59X5ap7kC6Lrt9XbihmEoMwhDO0rxmP+mNd+e1zknyaQl
+	+0Tm1/YeUYA==
+X-Received: from dybmx13.prod.google.com ([2002:a05:7300:d40d:b0:343:c524:e6f8])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7300:e9c5:20b0:35d:f7f4:bc1c
+ with SMTP id 5a478bee46e88-3674d84d341mr4186825eec.6.1792602740284; Wed, 21
+ Oct 2026 10:12:20 -0700 (PDT)
+Date: Wed, 21 Oct 2026 10:10:43 -0700
 In-Reply-To: <20261021171044.155240-1-irogers@google.com>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -81,9 +81,8 @@ Precedence: list
 Mime-Version: 1.0
 References: <20261020163640.746159-1-irogers@google.com> <20261021171044.155240-1-irogers@google.com>
 X-Mailer: git-send-email 2.56.0.218.g1ec904b173-goog
-Message-ID: <20261021171044.155240-17-irogers@google.com>
-Subject: [PATCH v6 16/17] perf maps: Fix lock inversion in maps__load_first()
- and bounds check in __maps__remove()
+Message-ID: <20261021171044.155240-18-irogers@google.com>
+Subject: [PATCH v6 17/17] perf maps: Add context analysis annotations
 From: Ian Rogers <irogers@google.com>
 To: irogers@google.com, acme@kernel.org, elver@google.com, namhyung@kernel.org
 Cc: adrian.hunter@intel.com, james.clark@linaro.org, jolsa@kernel.org, 
@@ -93,79 +92,499 @@ Cc: adrian.hunter@intel.com, james.clark@linaro.org, jolsa@kernel.org,
 	ndesaulniers@google.com, peterz@infradead.org
 Content-Type: text/plain; charset="UTF-8"
 
-In maps__load_first(), take a reference to the first map and drop
-maps__lock(maps) before calling map__load() to avoid a read-to-write
-self-deadlock when loading kernel maps inserts extra trampoline maps.
-
-In __maps__remove(), check that the index returned by
-maps__by_address_index() and maps__by_name_index() is within nr_maps
-before indexing and removing the entry, in case a concurrent thread
-already removed the map.
+Add __returns_ctx_lock() to maps__lock(), annotate DECLARE_RC_STRUCT(maps)
+members protected by lock with __guarded_by(&lock), and annotate
+internal maps helpers with __must_hold() and __must_hold_shared().
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/maps.c | 26 +++++++++++++++++++-------
- 1 file changed, 19 insertions(+), 7 deletions(-)
+ tools/perf/util/maps.c | 122 ++++++++++++++++++++++++++---------------
+ 1 file changed, 78 insertions(+), 44 deletions(-)
 
 diff --git a/tools/perf/util/maps.c b/tools/perf/util/maps.c
-index f808df2fe77b..acaf93c7c206 100644
+index acaf93c7c206..75a766b3faa4 100644
 --- a/tools/perf/util/maps.c
 +++ b/tools/perf/util/maps.c
-@@ -1,6 +1,7 @@
- // SPDX-License-Identifier: GPL-2.0
- #include <errno.h>
- #include <stdlib.h>
-+#include <string.h>
- #include <linux/zalloc.h>
- #include "debug.h"
- #include "dso.h"
-@@ -548,6 +549,8 @@ static void __maps__remove(struct maps *maps, struct map *map)
+@@ -31,12 +31,12 @@ DECLARE_RC_STRUCT(maps) {
+ 	 * @maps_by_address: array of maps sorted by their starting address if
+ 	 * maps_by_address_sorted is true.
+ 	 */
+-	struct map	 **maps_by_address;
++	struct map	 **maps_by_address __guarded_by(&lock);
+ 	/**
+ 	 * @maps_by_name: optional array of maps sorted by their dso name if
+ 	 * maps_by_name_sorted is true.
+ 	 */
+-	struct map	 **maps_by_name;
++	struct map	 **maps_by_name __guarded_by(&lock);
+ 	struct machine	 *machine;
+ #ifdef HAVE_LIBUNWIND_SUPPORT
+ 	void		*addr_space;
+@@ -51,26 +51,33 @@ DECLARE_RC_STRUCT(maps) {
+ 	 * @nr_maps: number of maps_by_address, and possibly maps_by_name,
+ 	 * entries that contain maps.
+ 	 */
+-	unsigned int	 nr_maps;
++	unsigned int	 nr_maps __guarded_by(&lock);
+ 	/**
+ 	 * @nr_maps_allocated: number of entries in maps_by_address and possibly
+ 	 * maps_by_name.
+ 	 */
+-	unsigned int	 nr_maps_allocated;
++	unsigned int	 nr_maps_allocated __guarded_by(&lock);
+ 	/**
+ 	 * @last_search_by_name_idx: cache of last found by name entry's index
+ 	 * as frequent searches for the same dso name are common.
+ 	 */
+ 	unsigned int	 last_search_by_name_idx;
+ 	/** @maps_by_address_sorted: is maps_by_address sorted. */
+-	bool		 maps_by_address_sorted;
++	bool		 maps_by_address_sorted __guarded_by(&lock);
+ 	/** @maps_by_name_sorted: is maps_by_name sorted. */
+-	bool		 maps_by_name_sorted;
++	bool		 maps_by_name_sorted __guarded_by(&lock);
+ 	/** @ends_broken: does the map contain a map where end values are unset/unsorted? */
+-	bool		 ends_broken;
++	bool		 ends_broken __guarded_by(&lock);
+ };
+ 
++static struct rw_semaphore *maps__lock(const struct maps *maps)
++	__returns_ctx_lock(&RC_CHK_ACCESS(maps)->lock)
++{
++	return (struct rw_semaphore *)&RC_CHK_ACCESS(maps)->lock;
++}
++
+ static void check_invariants(const struct maps *maps __maybe_unused)
++	__must_hold_shared(maps__lock(maps))
+ {
+ #ifndef NDEBUG
+ 	assert(RC_CHK_ACCESS(maps)->nr_maps <= RC_CHK_ACCESS(maps)->nr_maps_allocated);
+@@ -120,55 +127,65 @@ static void check_invariants(const struct maps *maps __maybe_unused)
+ }
+ 
+ static struct map **maps__maps_by_address(const struct maps *maps)
++	__must_hold_shared(maps__lock(maps))
+ {
+ 	return RC_CHK_ACCESS(maps)->maps_by_address;
+ }
+ 
+ static void maps__set_maps_by_address(struct maps *maps, struct map **new)
++	__must_hold(maps__lock(maps))
+ {
+ 	RC_CHK_ACCESS(maps)->maps_by_address = new;
+ 
+ }
+ 
+ static void maps__set_nr_maps_allocated(struct maps *maps, unsigned int nr_maps_allocated)
++	__must_hold(maps__lock(maps))
+ {
+ 	RC_CHK_ACCESS(maps)->nr_maps_allocated = nr_maps_allocated;
+ }
+ 
+ static void maps__set_nr_maps(struct maps *maps, unsigned int nr_maps)
++	__must_hold(maps__lock(maps))
+ {
+ 	RC_CHK_ACCESS(maps)->nr_maps = nr_maps;
+ }
+ 
+ /* Not in the header, to aid reference counting. */
+ static struct map **maps__maps_by_name(const struct maps *maps)
++	__must_hold_shared(maps__lock(maps))
+ {
+ 	return RC_CHK_ACCESS(maps)->maps_by_name;
+ 
+ }
+ 
+ static void maps__set_maps_by_name(struct maps *maps, struct map **new)
++	__must_hold(maps__lock(maps))
+ {
+ 	RC_CHK_ACCESS(maps)->maps_by_name = new;
+ 
+ }
+ 
+ static bool maps__maps_by_address_sorted(const struct maps *maps)
++	__must_hold_shared(maps__lock(maps))
+ {
+ 	return RC_CHK_ACCESS(maps)->maps_by_address_sorted;
+ }
+ 
+ static void maps__set_maps_by_address_sorted(struct maps *maps, bool value)
++	__must_hold(maps__lock(maps))
+ {
+ 	RC_CHK_ACCESS(maps)->maps_by_address_sorted = value;
+ }
+ 
+ static bool maps__maps_by_name_sorted(const struct maps *maps)
++	__must_hold_shared(maps__lock(maps))
+ {
+ 	return RC_CHK_ACCESS(maps)->maps_by_name_sorted;
+ }
+ 
+ static void maps__set_maps_by_name_sorted(struct maps *maps, bool value)
++	__must_hold(maps__lock(maps))
+ {
+ 	RC_CHK_ACCESS(maps)->maps_by_name_sorted = value;
+ }
+@@ -178,11 +195,22 @@ struct machine *maps__machine(const struct maps *maps)
+ 	return RC_CHK_ACCESS(maps)->machine;
+ }
+ 
+-unsigned int maps__nr_maps(const struct maps *maps)
++static unsigned int __maps__nr_maps(const struct maps *maps)
++	__must_hold_shared(maps__lock(maps))
+ {
+ 	return RC_CHK_ACCESS(maps)->nr_maps;
+ }
+ 
++unsigned int maps__nr_maps(const struct maps *maps)
++{
++	unsigned int nr;
++
++	down_read(maps__lock(maps));
++	nr = __maps__nr_maps(maps);
++	up_read(maps__lock(maps));
++	return nr;
++}
++
+ refcount_t *maps__refcnt(struct maps *maps)
+ {
+ 	return &RC_CHK_ACCESS(maps)->refcnt;
+@@ -221,12 +249,8 @@ void maps__set_libdw_addr_space_dwfl(struct maps *maps, void *dwfl)
+ }
+ #endif
+ 
+-static struct rw_semaphore *maps__lock(struct maps *maps)
+-{
+-	return &RC_CHK_ACCESS(maps)->lock;
+-}
+-
+ static void maps__init(struct maps *maps, struct machine *machine)
++	__context_unsafe(/* initialization */)
+ {
+ 	init_rwsem(maps__lock(maps));
+ 	RC_CHK_ACCESS(maps)->maps_by_address = NULL;
+@@ -248,11 +272,12 @@ static void maps__init(struct maps *maps, struct machine *machine)
+ }
+ 
+ static void maps__exit(struct maps *maps)
++	__context_unsafe(/* teardown */)
+ {
+ 	struct map **maps_by_address = maps__maps_by_address(maps);
+ 	struct map **maps_by_name = maps__maps_by_name(maps);
+ 
+-	for (unsigned int i = 0; i < maps__nr_maps(maps); i++) {
++	for (unsigned int i = 0; i < __maps__nr_maps(maps); i++) {
+ 		map__zput(maps_by_address[i]);
+ 		if (maps_by_name)
+ 			map__zput(maps_by_name[i]);
+@@ -301,6 +326,7 @@ void maps__put(struct maps *maps)
+ }
+ 
+ static void __maps__free_maps_by_name(struct maps *maps)
++	__must_hold(maps__lock(maps))
+ {
+ 	if (!maps__maps_by_name(maps))
+ 		return;
+@@ -308,7 +334,7 @@ static void __maps__free_maps_by_name(struct maps *maps)
+ 	/*
+ 	 * Free everything to try to do it from the rbtree in the next search
+ 	 */
+-	for (unsigned int i = 0; i < maps__nr_maps(maps); i++)
++	for (unsigned int i = 0; i < __maps__nr_maps(maps); i++)
+ 		map__put(maps__maps_by_name(maps)[i]);
+ 
+ 	zfree(&RC_CHK_ACCESS(maps)->maps_by_name);
+@@ -341,12 +367,13 @@ static int map__start_cmp(const void *a, const void *b)
+ }
+ 
+ static void __maps__sort_by_address(struct maps *maps)
++	__must_hold(maps__lock(maps))
+ {
+ 	if (maps__maps_by_address_sorted(maps))
+ 		return;
+ 
+ 	qsort(maps__maps_by_address(maps),
+-		maps__nr_maps(maps),
++		__maps__nr_maps(maps),
+ 		sizeof(struct map *),
+ 		map__start_cmp);
+ 	maps__set_maps_by_address_sorted(maps, true);
+@@ -389,7 +416,7 @@ static int maps__sort_by_name(struct maps *maps)
+ 				err = -ENOMEM;
+ 			else {
+ 				struct map **maps_by_address = maps__maps_by_address(maps);
+-				unsigned int n = maps__nr_maps(maps);
++				unsigned int n = __maps__nr_maps(maps);
+ 
+ 				maps__set_maps_by_name(maps, maps_by_name);
+ 				for (unsigned int i = 0; i < n; i++)
+@@ -398,7 +425,7 @@ static int maps__sort_by_name(struct maps *maps)
+ 		}
+ 		if (!err) {
+ 			qsort(maps_by_name,
+-				maps__nr_maps(maps),
++				__maps__nr_maps(maps),
+ 				sizeof(struct map *),
+ 				map__strcmp);
+ 			maps__set_maps_by_name_sorted(maps, true);
+@@ -410,18 +437,19 @@ static int maps__sort_by_name(struct maps *maps)
+ }
+ 
+ static unsigned int maps__by_address_index(const struct maps *maps, const struct map *map)
++	__must_hold_shared(maps__lock(maps))
+ {
+ 	struct map **maps_by_address = maps__maps_by_address(maps);
+ 
+ 	if (maps__maps_by_address_sorted(maps)) {
+ 		struct map **mapp =
+-			bsearch(&map, maps__maps_by_address(maps), maps__nr_maps(maps),
++			bsearch(&map, maps__maps_by_address(maps), __maps__nr_maps(maps),
+ 				sizeof(*mapp), map__start_cmp);
+ 
+ 		if (mapp)
+ 			return mapp - maps_by_address;
+ 	} else {
+-		for (unsigned int i = 0; i < maps__nr_maps(maps); i++) {
++		for (unsigned int i = 0; i < __maps__nr_maps(maps); i++) {
+ 			if (RC_CHK_ACCESS(maps_by_address[i]) == RC_CHK_ACCESS(map))
+ 				return i;
+ 		}
+@@ -431,18 +459,19 @@ static unsigned int maps__by_address_index(const struct maps *maps, const struct
+ }
+ 
+ static unsigned int maps__by_name_index(const struct maps *maps, const struct map *map)
++	__must_hold_shared(maps__lock(maps))
+ {
+ 	struct map **maps_by_name = maps__maps_by_name(maps);
+ 
+ 	if (maps__maps_by_name_sorted(maps)) {
+ 		struct map **mapp =
+-			bsearch(&map, maps_by_name, maps__nr_maps(maps),
++			bsearch(&map, maps_by_name, __maps__nr_maps(maps),
+ 				sizeof(*mapp), map__strcmp);
+ 
+ 		if (mapp)
+ 			return mapp - maps_by_name;
+ 	} else {
+-		for (unsigned int i = 0; i < maps__nr_maps(maps); i++) {
++		for (unsigned int i = 0; i < __maps__nr_maps(maps); i++) {
+ 			if (RC_CHK_ACCESS(maps_by_name[i]) == RC_CHK_ACCESS(map))
+ 				return i;
+ 		}
+@@ -471,10 +500,11 @@ static void map__set_kmap_maps(struct map *map, struct maps *maps)
+ }
+ 
+ static int __maps__insert(struct maps *maps, struct map *new)
++	__must_hold(maps__lock(maps))
+ {
+ 	struct map **maps_by_address = maps__maps_by_address(maps);
+ 	struct map **maps_by_name = maps__maps_by_name(maps);
+-	unsigned int nr_maps = maps__nr_maps(maps);
++	unsigned int nr_maps = __maps__nr_maps(maps);
+ 	unsigned int nr_allocate = RC_CHK_ACCESS(maps)->nr_maps_allocated;
+ 
+ 	if (nr_maps + 1 > nr_allocate) {
+@@ -541,10 +571,11 @@ int maps__insert(struct maps *maps, struct map *map)
+ }
+ 
+ static void __maps__remove(struct maps *maps, struct map *map)
++	__must_hold(maps__lock(maps))
+ {
+ 	struct map **maps_by_address = maps__maps_by_address(maps);
+ 	struct map **maps_by_name = maps__maps_by_name(maps);
+-	unsigned int nr_maps = maps__nr_maps(maps);
++	unsigned int nr_maps = __maps__nr_maps(maps);
+ 	unsigned int address_idx;
  
  	/* Slide later mappings over the one to remove */
- 	address_idx = maps__by_address_index(maps, map);
-+	if (address_idx >= nr_maps)
-+		return;
- 	map__put(maps_by_address[address_idx]);
- 	memmove(&maps_by_address[address_idx],
- 		&maps_by_address[address_idx + 1],
-@@ -556,10 +559,14 @@ static void __maps__remove(struct maps *maps, struct map *map)
- 	if (maps_by_name) {
- 		unsigned int name_idx = maps__by_name_index(maps, map);
+@@ -630,7 +661,7 @@ bool maps__empty(struct maps *maps)
+ 	bool res;
  
--		map__put(maps_by_name[name_idx]);
--		memmove(&maps_by_name[name_idx],
--			&maps_by_name[name_idx + 1],
--			(nr_maps - name_idx - 1) *  sizeof(*maps_by_name));
-+		if (name_idx < nr_maps) {
-+			map__put(maps_by_name[name_idx]);
-+			memmove(&maps_by_name[name_idx],
-+				&maps_by_name[name_idx + 1],
-+				(nr_maps - name_idx - 1) * sizeof(*maps_by_name));
-+		} else {
-+			__maps__free_maps_by_name(maps);
-+		}
- 	}
- 
- 	--RC_CHK_ACCESS(maps)->nr_maps;
-@@ -1459,10 +1466,15 @@ int maps__merge_in(struct maps *kmaps, struct map *new_map)
- 
- void maps__load_first(struct maps *maps)
- {
--	down_read(maps__lock(maps));
-+	struct map *first = NULL;
- 
-+	down_read(maps__lock(maps));
- 	if (maps__nr_maps(maps) > 0)
--		map__load(maps__maps_by_address(maps)[0]);
--
-+		first = map__get(maps__maps_by_address(maps)[0]);
+ 	down_read(maps__lock(maps));
+-	res = maps__nr_maps(maps) == 0;
++	res = __maps__nr_maps(maps) == 0;
  	up_read(maps__lock(maps));
-+
-+	if (first) {
-+		map__load(first);
-+		map__put(first);
-+	}
- }
+ 
+ 	return res;
+@@ -658,7 +689,7 @@ int maps__for_each_map(struct maps *maps, int (*cb)(struct map *map, void *data)
+ 			 * the array - this may cause maps to be skipped or
+ 			 * repeated.
+ 			 */
+-			for (unsigned int i = 0; i < maps__nr_maps(maps); i++) {
++			for (unsigned int i = 0; i < __maps__nr_maps(maps); i++) {
+ 				struct map **maps_by_address = maps__maps_by_address(maps);
+ 				struct map *map = maps_by_address[i];
+ 
+@@ -685,7 +716,7 @@ int maps__load_maps(struct maps *maps)
+ 		return 0;
+ 
+ 	down_read(maps__lock(maps));
+-	nr_maps = maps__nr_maps(maps);
++	nr_maps = __maps__nr_maps(maps);
+ 	if (nr_maps == 0) {
+ 		up_read(maps__lock(maps));
+ 		return 0;
+@@ -718,7 +749,7 @@ void maps__remove_maps(struct maps *maps, bool (*cb)(struct map *map, void *data
+ 	down_write(maps__lock(maps));
+ 
+ 	maps_by_address = maps__maps_by_address(maps);
+-	for (unsigned int i = 0; i < maps__nr_maps(maps);) {
++	for (unsigned int i = 0; i < __maps__nr_maps(maps);) {
+ 		if (cb(maps_by_address[i], data)) {
+ 			__maps__remove(maps, maps_by_address[i]);
+ 			removed = true;
+@@ -772,7 +803,7 @@ struct symbol *maps__find_symbol_by_name(struct maps *maps, const char *name, st
+ 	 * This prevents deadlocking if iteration triggers further map insertions.
+ 	 */
+ 	down_read(maps__lock(maps));
+-	nr_maps = maps__nr_maps(maps);
++	nr_maps = __maps__nr_maps(maps);
+ 	maps_copy = calloc(nr_maps, sizeof(*maps_copy));
+ 	if (maps_copy) {
+ 		for (unsigned int i = 0; i < nr_maps; i++) {
+@@ -857,9 +888,10 @@ size_t maps__fprintf(struct maps *maps, FILE *fp)
+  * Same as find_vma() in kernel.
+  */
+ static unsigned int first_ending_after(struct maps *maps, const struct map *map)
++	__must_hold_shared(maps__lock(maps))
+ {
+ 	struct map **maps_by_address = maps__maps_by_address(maps);
+-	int low = 0, high = (int)maps__nr_maps(maps) - 1, first = high + 1;
++	int low = 0, high = (int)__maps__nr_maps(maps) - 1, first = high + 1;
+ 
+ 	assert(maps__maps_by_address_sorted(maps));
+ 	if (low <= high && map__end(maps_by_address[0]) > map__start(map))
+@@ -884,10 +916,11 @@ static unsigned int first_ending_after(struct maps *maps, const struct map *map)
+ 
+ static int __maps__insert_sorted(struct maps *maps, unsigned int first_after_index,
+ 				 struct map *new1, struct map *new2)
++	__must_hold(maps__lock(maps))
+ {
+ 	struct map **maps_by_address = maps__maps_by_address(maps);
+ 	struct map **maps_by_name = maps__maps_by_name(maps);
+-	unsigned int nr_maps = maps__nr_maps(maps);
++	unsigned int nr_maps = __maps__nr_maps(maps);
+ 	unsigned int nr_allocate = RC_CHK_ACCESS(maps)->nr_maps_allocated;
+ 	unsigned int to_add = new2 ? 2 : 1;
+ 
+@@ -944,6 +977,7 @@ static int __maps__insert_sorted(struct maps *maps, unsigned int first_after_ind
+  * adjusted or removed so that new fits without overlapping any entries.
+  */
+ static int __maps__fixup_overlap_and_insert(struct maps *maps, struct map *new)
++	__must_hold(maps__lock(maps))
+ {
+ 	int err = 0;
+ 	unsigned int i, ni = INT_MAX; // Some gcc complain, but depends on maps_by_name...
+@@ -955,7 +989,7 @@ static int __maps__fixup_overlap_and_insert(struct maps *maps, struct map *new)
+ 	 * Iterate through entries where the end of the existing entry is
+ 	 * greater-than the new map's start.
+ 	 */
+-	for (i = first_ending_after(maps, new); i < maps__nr_maps(maps); ) {
++	for (i = first_ending_after(maps, new); i < __maps__nr_maps(maps); ) {
+ 		struct map **maps_by_address = maps__maps_by_address(maps);
+ 		struct map **maps_by_name = maps__maps_by_name(maps);
+ 		struct map *pos = maps_by_address[i];
+@@ -1066,7 +1100,7 @@ static int __maps__fixup_overlap_and_insert(struct maps *maps, struct map *new)
+ 			return err;
+ 		} else {
+ 			struct map *next = NULL;
+-			unsigned int nr_maps = maps__nr_maps(maps);
++			unsigned int nr_maps = __maps__nr_maps(maps);
+ 
+ 			if (i + 1 < nr_maps)
+ 				next = maps_by_address[i + 1];
+@@ -1150,8 +1184,8 @@ int maps__copy_from(struct maps *dest, struct maps *parent)
+ 	}
+ #endif
+ 	parent_maps_by_address = maps__maps_by_address(parent);
+-	n = maps__nr_maps(parent);
+-	if (maps__nr_maps(dest) == 0) {
++	n = __maps__nr_maps(parent);
++	if (__maps__nr_maps(dest) == 0) {
+ 		/* No existing mappings so just copy from parent to avoid reallocs in insert. */
+ 		unsigned int nr_maps_allocated = RC_CHK_ACCESS(parent)->nr_maps_allocated;
+ 		struct map **dest_maps_by_address =
+@@ -1235,7 +1269,7 @@ struct map *maps__find(struct maps *maps, u64 ip)
+ 		if (maps__maps_by_address_sorted(maps)) {
+ 			struct map **mapp = NULL;
+ 			struct map **maps_by_address = maps__maps_by_address(maps);
+-			unsigned int nr_maps = maps__nr_maps(maps);
++			unsigned int nr_maps = __maps__nr_maps(maps);
+ 
+ 			if (maps_by_address && nr_maps)
+ 				mapp = bsearch(&ip, maps_by_address, nr_maps, sizeof(*mapp),
+@@ -1271,7 +1305,7 @@ struct map *maps__find_by_name(struct maps *maps, const char *name)
+ 
+ 		/* First check last found entry. */
+ 		i = RC_CHK_ACCESS(maps)->last_search_by_name_idx;
+-		if (i < maps__nr_maps(maps) && maps__maps_by_name(maps)) {
++		if (i < __maps__nr_maps(maps) && maps__maps_by_name(maps)) {
+ 			struct dso *dso = map__dso(maps__maps_by_name(maps)[i]);
+ 
+ 			if (dso && strcmp(dso__short_name(dso), name) == 0) {
+@@ -1283,7 +1317,7 @@ struct map *maps__find_by_name(struct maps *maps, const char *name)
+ 		/* Second search sorted array. */
+ 		if (!done && maps__maps_by_name_sorted(maps)) {
+ 			struct map **mapp =
+-				bsearch(name, maps__maps_by_name(maps), maps__nr_maps(maps),
++				bsearch(name, maps__maps_by_name(maps), __maps__nr_maps(maps),
+ 					sizeof(*mapp), map__strcmp_name);
+ 
+ 			if (mapp) {
+@@ -1306,7 +1340,7 @@ struct map *maps__find_by_name(struct maps *maps, const char *name)
+ 
+ 				down_read(maps__lock(maps));
+ 				maps_by_address =  maps__maps_by_address(maps);
+-				n = maps__nr_maps(maps);
++				n = __maps__nr_maps(maps);
+ 				for (i = 0; i < n; i++) {
+ 					struct map *pos = maps_by_address[i];
+ 					struct dso *dso = map__dso(pos);
+@@ -1336,7 +1370,7 @@ struct map *maps__find_next_entry(struct maps *maps, struct map *map)
+ 		down_read(maps__lock(maps));
+ 	}
+ 	i = maps__by_address_index(maps, map);
+-	if (++i < maps__nr_maps(maps))
++	if (++i < __maps__nr_maps(maps))
+ 		result = map__get(maps__maps_by_address(maps)[i]);
+ 
+ 	up_read(maps__lock(maps));
+@@ -1353,7 +1387,7 @@ void maps__fixup_end(struct maps *maps)
+ 		__maps__sort_by_address(maps);
+ 
+ 	maps_by_address = maps__maps_by_address(maps);
+-	n = maps__nr_maps(maps);
++	n = __maps__nr_maps(maps);
+ 	for (unsigned int i = 1; i < n; i++) {
+ 		struct map *prev = maps_by_address[i - 1];
+ 		struct map *curr = maps_by_address[i];
+@@ -1400,7 +1434,7 @@ int maps__merge_in(struct maps *kmaps, struct map *new_map)
+ 	first_after_ = first_ending_after(kmaps, new_map);
+ 	kmaps_maps_by_address = maps__maps_by_address(kmaps);
+ 
+-	if (first_after_ >= maps__nr_maps(kmaps) ||
++	if (first_after_ >= __maps__nr_maps(kmaps) ||
+ 	    map__start(kmaps_maps_by_address[first_after_]) >= map__end(new_map)) {
+ 		/* No overlap so regular insert suffices. */
+ 		up_read(maps__lock(kmaps));
+@@ -1415,7 +1449,7 @@ int maps__merge_in(struct maps *kmaps, struct map *new_map)
+ 
+ 	first_after_ = first_ending_after(kmaps, new_map);
+ 	kmaps_maps_by_address = maps__maps_by_address(kmaps);
+-	kmaps__nr_maps = maps__nr_maps(kmaps);
++	kmaps__nr_maps = __maps__nr_maps(kmaps);
+ 
+ 	if (first_after_ >= kmaps__nr_maps ||
+ 	    map__start(kmaps_maps_by_address[first_after_]) >= map__end(new_map)) {
+@@ -1469,7 +1503,7 @@ void maps__load_first(struct maps *maps)
+ 	struct map *first = NULL;
+ 
+ 	down_read(maps__lock(maps));
+-	if (maps__nr_maps(maps) > 0)
++	if (__maps__nr_maps(maps) > 0)
+ 		first = map__get(maps__maps_by_address(maps)[0]);
+ 	up_read(maps__lock(maps));
+ 
 -- 
 2.56.0.218.g1ec904b173-goog
 
