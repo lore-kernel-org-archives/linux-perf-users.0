@@ -1,44 +1,44 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792622189;
-	b=WFW5Rvm+1GeYlxvmLwz9KLs9MF9Cs7hpv6RDSfFRpW7d0Xoc9ve8VgnZfWDoK69kBK1c
-	 igKPwmvuZqiBzq734rdukWNK6MCvFaH7FbS3/Yql9/94aeeHcbGM/4zpoFoS/NC1wJjjU
-	 +Sn46YUUfq9NHFSnr3pYEGHOy3jGquONVGvaECPn4dARoU8/QmxCHFy8WTH0GZpz2VeA7
-	 oHAXTWCWsHFXAH4rKJMikEVLHb/vwXELYJSKC9/7F6gBLhwwenS7sKXtQAoA//9VMn5RM
-	 XRvpdTwIgEFI6JznNM/eii4DBShCXgJ0aINK+6gVnIaGrXocuV0xC2yfjDWESsqeUqA==
+	t=1792622193;
+	b=aw+1oKsjVBa5+S96obRfiZZo/0m9wRb7C+WPyPdBMFqIermiznf7prBxAvh8jA+C0zg+
+	 +RJFXbx3Kx06NjxiB/IX8emMs2GhJuLVoxD28JeC4zleabEl3bPzjIlf39+TJ4rtVhrBG
+	 S2sc4rITYuyFUEzLvL1M1mpIrDNHXCrtNFh/XIcY30sYvI7L4Zjx+kdUkHQeEYGle/ctc
+	 N5XzpEkH8aR5VpXcyoScAEC7Qpzup5q0o8UDcqM5JOn7dZXeC/QeDQr898eYuSqcLIeKL
+	 /Wy2XM1tnZiFEvxW8zK9HvYaL8uU+kmu6QGXjyfJ9x0RmA7CMA3OppPkLY/0v0j6EZw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792622189;
+	a=rsa-sha256; c=relaxed/relaxed; t=1792622193;
 	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:X-Mailer:
 	 In-Reply-To:References:MIME-Version:Content-Transfer-Encoding;
-	bh=e4JybK43PGY9FZ811mlzmATVYgEM/4zuAuoBSEnmHc4=;
-	b=qJV9FrcFzqmh9A4jypZUuzVNswHgSjHPZF254KseDxQGUkPt3cUwE2BYqI9vb65jz3x4
-	 fNG5VoKiJF/kHZNqWQ51PU5C8uGgO/Bt/hOlbCQqTS3p4GNOZ2dOr1c7spMsLeuHloMhT
-	 afOGaz3QH9e92xMmT4jyknEb6xaLATNXwuo4CJmTQi99rGKtUtXIjVeCT44E2biYAlGFk
-	 YSV0yBRsYL0G92CLAw8khGHy70quv+JCqbPDbI6alKPFI26j1KiFMXERhRfdtjGpuF7ov
-	 fwhu4oegpEFpaMlagUvin9IazqHGYG2p+fPNpDxyDrYmoNqrr51qWZZUqixYoZkNJsw==
+	bh=od8WN8CVmg89zdoHb82fXFB7zIVfQy/GQmojzRyVr0I=;
+	b=cBvHSrJx5NlqDCxcUNfF0YRyiFZ/M3XrZcLEZai1ctYTsC1pKe7XqGzhrnW724lQNEm6
+	 voeZLf0e2OxZvXKLB0k6udVRjtGioms9Jnd1qoYNE3En0GEgxk0Ltb30mW2mAOc/IZvd9
+	 g+z9MWUq8YMVIciB2dq+N4zsdIYDLDcfowrHV8zXjGvQdriiB32PACEQt5sHFJQRrCpIV
+	 q7Z7N6A3V2vDCFFVlD2auOwwjWYi46zV4zuqtylEkyJcn1GQ3VwxeU5c9s75PBfjxit2I
+	 I1XQjS5455IIDvgI1H6ypxLlFFDxybPLiSDPWjjLGBtZ1YkZnoJ8G9iJvlFuCH/SLAg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=kdL8+O14;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ndkLDRu6;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8806D606A319
-	for <linux-perf-users@vger.kernel.org>; Wed, 21 Oct 2026 22:36:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C45E1606A319
+	for <linux-perf-users@vger.kernel.org>; Wed, 21 Oct 2026 22:36:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=kdL8+O14
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 03E6B1F000C3;
-	Wed, 21 Oct 2026 22:36:25 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ndkLDRu6
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 947961F000C1;
+	Wed, 21 Oct 2026 22:36:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1792622189;
-	bh=e4JybK43PGY9FZ811mlzmATVYgEM/4zuAuoBSEnmHc4=;
+	s=k20260515; t=1792622192;
+	bh=od8WN8CVmg89zdoHb82fXFB7zIVfQy/GQmojzRyVr0I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=kdL8+O14LGlvvylGEMomLA8ZSHQVrrHImh/RanURqOS9Y4yW5yHWFgdURKPLxcqrL
-	 sXW5BfSNM3Zbo3BQezHk0cYsWJI5EDSdSeAQbW/4g6zbf8KazwmpK+juxWir/nz1DY
-	 P75ySM7nvK6S+wlL1ta1J6KF6WlWpUxKksUVQc9B4L46vwW58KN8/nRGSfSV/z9WuO
-	 dEUWLo5VQ8VpvJ6uXBBguoFOf/Ub2WU+w5g76xdWceish+p+ypo2wpmGf+ePeCqFVt
-	 1C13ZaeIHRWP0yxvg05IrmVeMkwLOAY/7/eLufRls/AW3NDPXOQcqjc0CQA90o96EB
-	 GIIpEO2VrQlYg==
+	b=ndkLDRu6gIKubz81j6WnViMwPu5nr+jauPyK/e5IKQfMHCsB6LQ0xSXTxdRgYAQ5V
+	 cquE6Sk7okxlVItHbhP2dpouc2Jdn31OGTe0wcGDWxJ9PMQff40KB1Nt4FUMM7x0Wa
+	 PlbA1h9Ql2O/yRTohdnHuQfLil1Nm0pGBVzRMqF5+3X/zDVdAgojUqBupv6HoHYALP
+	 zJr/lBHlQOnN1zn/u6PmERWla8jGnOWtmMRwL7YxNhOclBC7Ip1aSMKTSV1ICAm00o
+	 4gzKO9YvQ6aMs/8QaxFlarkKwKEiMRg1yIMwzRzmqoLEwBf4nlManhrvXGEwNfguiF
+	 88LpuBt1V/x+w==
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Namhyung Kim <namhyung@kernel.org>
 Cc: Ingo Molnar <mingo@kernel.org>,
@@ -50,11 +50,10 @@ Cc: Ingo Molnar <mingo@kernel.org>,
 	Clark Williams <williams@redhat.com>,
 	linux-perf-users@vger.kernel.org,
 	Arnaldo Carvalho de Melo <acme@redhat.com>,
-	Mahe Tardy <mahe.tardy@gmail.com>,
 	Christian Brauner <brauner@kernel.org>
-Subject: [PATCH v2 07/12] perf beauty: Update copy of linux/socket.h with the kernel sources
-Date: Wed, 21 Oct 2026 19:35:46 -0300
-Message-ID: <20261021223555.28372-8-acme@kernel.org>
+Subject: [PATCH v2 08/12] tools headers: Sync UAPI linux/fcntl.h with the kernel sources
+Date: Wed, 21 Oct 2026 19:35:47 -0300
+Message-ID: <20261021223555.28372-9-acme@kernel.org>
 X-Mailer: git-send-email 2.54.0
 In-Reply-To: <20261021223555.28372-1-acme@kernel.org>
 References: <20261021223555.28372-1-acme@kernel.org>
@@ -73,54 +72,35 @@ From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
 To pick up the changes in:
 
-  be3a5e06b962 ("net: add SO_PASSPIDFD_THREAD to get a thread-specific SCM_PIDFD")
-  5bd369c05576 ("net: Add connect_socket() helper")
+  cdf930a00949 ("fs: support FD_FAILFS_ROOT in fchdir()")
 
 That don't result in changes to the string tables generated from this header.
 
 This addresses this perf build warning:
 
   Warning: Kernel ABI header differences:
-    diff -u tools/perf/trace/beauty/include/linux/socket.h include/linux/socket.h
+    diff -u tools/perf/trace/beauty/include/uapi/linux/fcntl.h include/uapi/linux/fcntl.h
 
 Please see tools/include/uapi/README for further details.
 
-Acked-by: Mahe Tardy <mahe.tardy@gmail.com>
 Cc: Christian Brauner <brauner@kernel.org>
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/trace/beauty/include/linux/socket.h | 11 +++++++----
- 1 file changed, 7 insertions(+), 4 deletions(-)
+ tools/perf/trace/beauty/include/uapi/linux/fcntl.h | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/tools/perf/trace/beauty/include/linux/socket.h b/tools/perf/trace/beauty/include/linux/socket.h
-index 2a8d7b14f1d11959..b17fdb7d38a7734a 100644
---- a/tools/perf/trace/beauty/include/linux/socket.h
-+++ b/tools/perf/trace/beauty/include/linux/socket.h
-@@ -189,10 +189,11 @@ static inline size_t msg_data_left(const struct msghdr *msg)
+diff --git a/tools/perf/trace/beauty/include/uapi/linux/fcntl.h b/tools/perf/trace/beauty/include/uapi/linux/fcntl.h
+index aadfbf6e0cb3a004..e43e3de3e9ee44a2 100644
+--- a/tools/perf/trace/beauty/include/uapi/linux/fcntl.h
++++ b/tools/perf/trace/beauty/include/uapi/linux/fcntl.h
+@@ -124,6 +124,7 @@ struct delegation {
  
- /* "Socket"-level control message types: */
+ #define FD_PIDFS_ROOT			-10002 /* Root of the pidfs filesystem */
+ #define FD_NSFS_ROOT			-10003 /* Root of the nsfs filesystem */
++#define FD_FAILFS_ROOT			-10004 /* Root of the failfs filesystem */
+ #define FD_INVALID			-10009 /* Invalid file descriptor: -10000 - EBADF = -10009 */
  
--#define	SCM_RIGHTS	0x01		/* rw: access rights (array of int) */
--#define SCM_CREDENTIALS 0x02		/* rw: struct ucred		*/
--#define SCM_SECURITY	0x03		/* rw: security label		*/
--#define SCM_PIDFD	0x04		/* ro: pidfd (int)		*/
-+#define	SCM_RIGHTS		0x01	/* rw: access rights (array of int) */
-+#define SCM_CREDENTIALS		0x02	/* rw: struct ucred		*/
-+#define SCM_SECURITY		0x03	/* rw: security label		*/
-+#define SCM_PIDFD		0x04	/* ro: pidfd (int)		*/
-+#define SCM_PIDFD_THREAD	0x05	/* ro: thread pidfd (int)	*/
- 
- struct ucred {
- 	__u32	pid;
-@@ -461,6 +462,8 @@ extern struct file *__sys_socket_file(int family, int type, int protocol);
- extern int __sys_bind(int fd, struct sockaddr __user *umyaddr, int addrlen);
- extern int __sys_bind_socket(struct socket *sock, struct sockaddr_storage *address,
- 			     int addrlen);
-+int connect_socket(struct socket *sock, struct sockaddr_storage *addr,
-+		   int addrlen, int flags);
- extern int __sys_connect_file(struct file *file, struct sockaddr_storage *addr,
- 			      int addrlen, int file_flags);
- extern int __sys_connect(int fd, struct sockaddr __user *uservaddr,
+ /* Generic flags for the *at(2) family of syscalls. */
 -- 
 2.56.0
 
