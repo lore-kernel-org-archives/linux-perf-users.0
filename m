@@ -1,44 +1,44 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792622175;
-	b=pLhV6jJ79Re3AQJfltohQsQe+wxXotOwB4JbpbL8QMP/fuyGZrSBCJU9ECRdDI2C091X
-	 yD8djNh2LlxIAMQJugiBGgiMWXpWfVlMATrrnDrnwJ4qmX+lWWgUwNVMTkFjIKFKjNJL2
-	 hUj3CU+pXEJRKElGsnskAsRyRjCEe+bOZj17Jr39obiVXN01MossnPHSwPF4yiTEMpam4
-	 DX2WOdTf0J1Dw4+o4HtDiOXBuHdoR3s87fIanWH3btWLDITiWCSME4UQdzhimAWPCOxQS
-	 CpT71k7/3OelO4DU9PeLTQp55wQhGoqPH39MLNPdjp2yB8AezRTdkT6ws9yyT6q2ZBA==
+	t=1792622178;
+	b=SnQH1P5S6QE6xK3D9Y7myp9PZOR6dATub7gnWRwy7I3IGnrr1HhhLwn8cL8EDHbH6xsV
+	 53VxjdT7SN4uNhcSeUNh4f7r6ZcouqZRMiWN95e846wxMneW7Vvn1FVuvIY+XSz41wtID
+	 GWzf0vUDulAWUESQ4VY/gLo3E3ltNKgVJeGIklDsnYidWAse2mhYFInkjIaS5l99YeOdL
+	 7WXTan1zWVfXTXYm9f19iOZ14T4jNl+HfBSfxyGXw88wEEZw9nSo2RXmNMav7igdMWp34
+	 A36oUM3jOMTfj4oeZY4I4sqcnIkPyNToE657klnQDWi8hmc41+iuPkf20l6pHvtX0mw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792622175;
+	a=rsa-sha256; c=relaxed/relaxed; t=1792622178;
 	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:X-Mailer:
 	 In-Reply-To:References:MIME-Version:Content-Transfer-Encoding;
-	bh=mCz5faZcAW52tJYBbukECioPM85ClEcij99Okwm51M0=;
-	b=n0990mRG+5dJlQyFtZX5nD5IBW32boRRKJFuV3xLEOh0oTTIpXggRPKKN1PCTdJHhnHR
-	 slnMIuUu9MSX+jreecsfMyPL+umGHtYG+c/8ZSygD+aj7JbjMK/cK6WOlq56ZZWLxnoju
-	 qInPVsl7b1HO0OuQXc4v6KLycWKuiKTQRj8NW27Oa4ZFHDAQuyzUncLxEtik9USKmurNx
-	 W5uNpUP2gSQ1yNp/mOl/U8PEj04jH2Lnq6KL0nCsvB6vaG6gWH37vvQynOg2BSuEfo5Yx
-	 SJ48/7gMOsrxaeHp8di2rkhWJixpANRXKmML9PwoybqEzn+ET/+/fo8KozMJtU6UAoA==
+	bh=C4qcYKKvyhn1Crgt+VJMLJb3fr6kFe4uBJb+QM5xlKs=;
+	b=5asBfUwWHtOBUHej1hFtsei7RXen95XMgg9qPhsi4gBwwcBcnFWj5jWixbOJ2Vmp1M2S
+	 PjEXXmXbp4Rcv03WYP4cf8/FegrAKO1LdzI79C3JFIefSSYgQ2yNhGqLQpH7bDbecMiSW
+	 o6AbsDwwFtTSFNuPg2JPgjBtpCh5+n9YevgreA7up9hKmi5LlQC4ixXcz6rywX2pzkk1/
+	 QwDIQD4rc9zxh3x5pfAoVB/1PzvO88qPxVMMTjVh40xccgBT8FRRJm9nXGBN2ScL8h59G
+	 YUxOjY8wIprlSSs4sQQmLWFZ6tywjHSrgF8EYwjciVczi5FLtgT/J7SepGQ4zGLEscg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b="WR/k/TqQ";
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=dk4aUohp;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 339D1606A319
-	for <linux-perf-users@vger.kernel.org>; Wed, 21 Oct 2026 22:36:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1349606A319
+	for <linux-perf-users@vger.kernel.org>; Wed, 21 Oct 2026 22:36:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=WR/k/TqQ
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F32851F000C1;
-	Wed, 21 Oct 2026 22:36:11 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=dk4aUohp
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5D23B1F000C3;
+	Wed, 21 Oct 2026 22:36:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1792622174;
-	bh=mCz5faZcAW52tJYBbukECioPM85ClEcij99Okwm51M0=;
+	s=k20260515; t=1792622178;
+	bh=C4qcYKKvyhn1Crgt+VJMLJb3fr6kFe4uBJb+QM5xlKs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=WR/k/TqQN9l4w9C7JGFWxcSWwgJFd5N/GY+vfBT4AadLtEEvnS1DKQcE0UwoxSyTR
-	 ia9afB81ytj8wVumuTokCBVvRCIhgbt/ScFtnGwdoiwfdLVzBi6NCzLOLhAmyIoK/O
-	 nnNtoHixNyNo4oWm1bydF/D7+ATol38vd/IahSdbu1vSq1fTZS6e7EAln3MZ5cMs4n
-	 orDUM3+SClcXDXb1BTxMyN9THhljUvqQW+LekBlZvX7SWh6CdsHPjdYIzlIpCOnaTE
-	 7k3q018WLSIDnPgmxa8FC9ciA0xPhZF2aGSInR8Pm2e9MiPOpP1JKWA2NBFggBaOPF
-	 v0MQs3IS232qA==
+	b=dk4aUohp5HC6x1/Z6X1NcwZnSMhjc/t8LMfKBCuFNjEUTLJHz/+Y9XhjzH24oqK9L
+	 cCRAwHJltY+4jO5MUT30gv3xnJiNi2p4uYmGN8Fkx9jVu5kt8Nn0j+8+fbsJZXjnzH
+	 L8QU5N0I3uLzHDU47U1UQNdl8Ny3FXTXTjhUBrh2gX1dtwevCwsGoI2vZHXXeJzUou
+	 yZcIVHGUEhgHDcPFxAV4+69JQEx8XXq2xvWqGEbQfRE4po41qlwYQJYk3yFYSYB69Y
+	 P41/LF3kX6WvFQ2BSDayYGDa4uegCqIpiwRHlj05CZXCmyGNekpHYenjC2MtBbNnrW
+	 B0tIpuSK47cMA==
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Namhyung Kim <namhyung@kernel.org>
 Cc: Ingo Molnar <mingo@kernel.org>,
@@ -50,10 +50,10 @@ Cc: Ingo Molnar <mingo@kernel.org>,
 	Clark Williams <williams@redhat.com>,
 	linux-perf-users@vger.kernel.org,
 	Arnaldo Carvalho de Melo <acme@redhat.com>,
-	Yuyang Huang <sigefriedhyy@gmail.com>
-Subject: [PATCH v2 03/12] tools headers UAPI: Sync linux/rtnetlink.h with the kernel sources
-Date: Wed, 21 Oct 2026 19:35:42 -0300
-Message-ID: <20261021223555.28372-4-acme@kernel.org>
+	Johannes Weiner <hannes@cmpxchg.org>
+Subject: [PATCH v2 04/12] tools headers: Sync linux/gfp_types.h with the kernel sources
+Date: Wed, 21 Oct 2026 19:35:43 -0300
+Message-ID: <20261021223555.28372-5-acme@kernel.org>
 X-Mailer: git-send-email 2.54.0
 In-Reply-To: <20261021223555.28372-1-acme@kernel.org>
 References: <20261021223555.28372-1-acme@kernel.org>
@@ -72,66 +72,46 @@ From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
 To pick up the changes in:
 
-  cc17e386f8a5 ("ipv6: add ip6_del_rt_reason()")
+  f6c786a95e95 ("mm: gfp_types: fix __GFP_ACCOUNT, GFP_KERNEL_ACCOUNT documentation")
 
 That just rebuilds perf, silencing this build warning.
 
 This addresses this perf build warning:
 
   Warning: Kernel ABI header differences:
-    diff -u tools/include/uapi/linux/rtnetlink.h include/uapi/linux/rtnetlink.h
+    diff -u tools/include/linux/gfp_types.h include/linux/gfp_types.h
 
 Please see tools/include/uapi/README for further details.
 
-Cc: Yuyang Huang <sigefriedhyy@gmail.com>
+Cc: Johannes Weiner <hannes@cmpxchg.org>
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/include/uapi/linux/rtnetlink.h | 25 +++++++++++++++++++++++++
- 1 file changed, 25 insertions(+)
+ tools/include/linux/gfp_types.h | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/tools/include/uapi/linux/rtnetlink.h b/tools/include/uapi/linux/rtnetlink.h
-index 27265fd31e5fc99c..3988b51db539fe4f 100644
---- a/tools/include/uapi/linux/rtnetlink.h
-+++ b/tools/include/uapi/linux/rtnetlink.h
-@@ -399,6 +399,7 @@ enum rtattr_type_t {
- 	RTA_DPORT,
- 	RTA_NH_ID,
- 	RTA_FLOWLABEL,
-+	RTA_DEL_REASON,
- 	__RTA_MAX
- };
- 
-@@ -407,6 +408,30 @@ enum rtattr_type_t {
- #define RTM_RTA(r)  ((struct rtattr*)(((char*)(r)) + NLMSG_ALIGN(sizeof(struct rtmsg))))
- #define RTM_PAYLOAD(n) NLMSG_PAYLOAD(n,sizeof(struct rtmsg))
- 
-+/* RTA_DEL_REASON: why the kernel deleted the route. u32.
-+ * Emitted only on RTM_DELROUTE notifications, and only when the deletion
-+ * path records a cause. Absence means either an older kernel or a
-+ * deletion path that does not (yet) record its cause - consumers must
-+ * treat "absent" and "unspec" identically. New causes may be appended.
-+ * Currently only IPv6 deletion paths record a cause.
-+ *
-+ * The attribute is notification-only: the kernel rejects it in
-+ * requests, so a notification must not be echoed back verbatim.
-+ *
-+ * The value space is family-agnostic: a value must never be
-+ * reinterpreted per address family. A cause that only one family can
-+ * produce still gets its own value rather than reusing another
-+ * family's.
-+ */
-+enum rt_del_reason {
-+	RT_DEL_REASON_UNSPEC,		/* cause not recorded */
-+	RT_DEL_REASON_EXPIRED,		/* RTF_EXPIRES lifetime ran out (GC) */
-+	RT_DEL_REASON_RA_WITHDRAWN,	/* zero-lifetime RA / PIO / RIO */
-+	__RT_DEL_REASON_MAX
-+};
-+
-+#define RT_DEL_REASON_MAX (__RT_DEL_REASON_MAX - 1)
-+
- /* RTM_MULTIPATH --- array of struct rtnexthop.
+diff --git a/tools/include/linux/gfp_types.h b/tools/include/linux/gfp_types.h
+index da47aa089f01c992..190191411009f265 100644
+--- a/tools/include/linux/gfp_types.h
++++ b/tools/include/linux/gfp_types.h
+@@ -134,7 +134,8 @@ enum {
+  * %__GFP_THISNODE forces the allocation to be satisfied from the requested
+  * node with no fallbacks or placement policy enforcements.
   *
-  * "struct rtnexthop" describes all necessary nexthop information,
+- * %__GFP_ACCOUNT causes the allocation to be accounted to kmemcg.
++ * %__GFP_ACCOUNT causes the allocation to be accounted to the active
++ * cgroup context.
+  */
+ #define __GFP_RECLAIMABLE ((__force gfp_t)___GFP_RECLAIMABLE)
+ #define __GFP_WRITE	((__force gfp_t)___GFP_WRITE)
+@@ -313,7 +314,7 @@ enum {
+  * %ZONE_NORMAL or a lower zone for direct access but can direct reclaim.
+  *
+  * %GFP_KERNEL_ACCOUNT is the same as GFP_KERNEL, except the allocation is
+- * accounted to kmemcg.
++ * accounted to the active cgroup context.
+  *
+  * %GFP_NOWAIT is for kernel allocations that should not stall for direct
+  * reclaim, start physical IO or use any filesystem callback.  It is very
 -- 
 2.56.0
 
