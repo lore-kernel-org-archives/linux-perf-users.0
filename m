@@ -1,74 +1,74 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.198
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792602723;
-	b=FcITN4Imn1Gy7m0CSHkZ+sFjMFDmrkvhvzhgJfw9yk0W7U3lqDU2+i17ZLxkaSLOjbh+
-	 38NCZ9MsHt7Jzn39+jw5cFPKCeA4iWIASNUu0vqpW3tMjessd1n5HGeZ1+W/41lgerEyN
-	 rMZiWyCDxhOiOH6mi2nuJz/hNO2D0tohGVUpIfsd5rOpXMbL7zRAIq7/u93kTTZFglYVb
-	 3ToPjAeStVYuEQjh6xkdJ1C5NviRk3axxC+VA25bpvxQg37BTjr12Q+a/twe27v6hJgJs
-	 K4scFkx0/+m/1JI/vhRpdT4axPUp2myZbIhEatVQu9sf3zNkIlETf4whY91/9X2noiQ==
+	t=1792602729;
+	b=yN2qWLJMS92ptBu+XB3o9dxGDsAKiCs6IOEMffko2U0LY/nsBBbfzWyfSrZUzWkn3v9V
+	 t7tAd6BI8PMd87enYBsUH4rQE50CSrHPAiPeRtJbUAJuWc+1TOSy6qhUqE+HacWlC/b3I
+	 IaymVU8ukVr4A18L7oxVSeMhSLnqDfVYui9oGhEKf1ptI8ZrdYaqsoJsAL5nNkWHVracp
+	 Uofb5z7d5y7h7LE5YrTzGXcfGs4KVXNxiR1qrWvGlUTXCC1J/v8N5OikRBvcQ8PVI6NI6
+	 zDLIs1P426o+6IlFxV4snJwG3NdvdASvf+j1Mx7qD5woPWpYJywaqCBY2bw87bY5/YQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792602723;
+	a=rsa-sha256; c=relaxed/relaxed; t=1792602729;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Received:Date:In-Reply-To:
 	 Mime-Version:References:X-Mailer:Message-ID:Subject:From:To:Cc:
 	 Content-Type;
-	bh=tSMiQ6NIUcAT0NRQb854JTEOyM6xl86cQuNOuZ1ci/Y=;
-	b=vyI24TQnWlvT4YRKWEPZmq08gp1YtVz1rrtca0g5Fpg1gY7D7h6SPmYjq9J6V+iH8Gwm
-	 y5rFGPcS1mU3NMYNKhEaQOUYlzkp35m0xPL0kCuLf+Apo1aUdaX6kbt411Ls9Tftxt5N2
-	 44cVws9jEa+nNzvorbNQwRkPvYH88B3MVfNa/R/CJQYLJC4HigJgWaaXCmx2RBSHQdBjV
-	 kKNPgACXZfkLUJWIzZ0RqLE6yZEZEd2TfNUYFq0+7sB/fvdrOzaPGa25JL2gI5DJdbaJr
-	 5X8QN6BxSGiTMVollCScNq9ANf+k1D5sW3Pc/Uswt1hNdZ3VbeFg+WiZ7WlIZKSQugQ==
+	bh=v2rrXS1ate7b8OOQCuZc5vd/vkFrx7oPEHSNFj+/YLY=;
+	b=2Mb2hTaRwE0dZ0zlGxv7QbWt6G58pkyvDAGreJG0oXWJTYcBO7hw58tJYx6H0g7DcV8e
+	 EQ317E00FK/g5m+jbUKDkzzov5wglcdtuebPIEWJ0kV5XBYVC+gK2C9AHSoflPxlWANVw
+	 sjKx3LipagrUvUOd02za5c5cNSq3QMK8Rok76JtZR7RMWg2HkbPYyvrTWN369YQiFMS8V
+	 7BPKPqYE87elmwEMsqQKDTD2AzJwHk64g3HGqgUX82Ou514czR5tGNCzsrMQC6J6uQ1Ku
+	 MT7sd5FCReQAsBeLVvHsr6FTiEH05gvuVVKyirEWCCtnL631PwtcCmowz10ta/GhypQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=google.com;
 	spf=pass smtp.mailfrom=flex--irogers.bounces.google.com;
-	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20251104 header.b=W64jZwJQ;
+	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20251104 header.b=CbbHbcMQ;
 	arc=none smtp.remote-ip=74.125.82.198
 Received: from mail-dy1-f198.google.com (mail-dy1-f198.google.com [74.125.82.198])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D1D2606A337
-	for <linux-perf-users@vger.kernel.org>; Wed, 21 Oct 2026 17:12:03 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 1D1D2606A337
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDD64606A326
+	for <linux-perf-users@vger.kernel.org>; Wed, 21 Oct 2026 17:12:08 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org BDD64606A326
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20251104 header.b=W64jZwJQ
-Received: by mail-dy1-f198.google.com with SMTP id 5a478bee46e88-35cbea41088so1724598eec.1
-        for <linux-perf-users@vger.kernel.org>; Wed, 21 Oct 2026 10:12:03 -0700 (PDT)
+	dkim=pass (2048-bit key, unprotected) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20251104 header.b=CbbHbcMQ
+Received: by mail-dy1-f198.google.com with SMTP id 5a478bee46e88-30c0d568830so2222278eec.1
+        for <linux-perf-users@vger.kernel.org>; Wed, 21 Oct 2026 10:12:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1792602722; x=1793207522; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1792602728; x=1793207528; darn=vger.kernel.org;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=tSMiQ6NIUcAT0NRQb854JTEOyM6xl86cQuNOuZ1ci/Y=;
-        b=W64jZwJQtnwxXEFM2ypwvFrA3vtOPWyIbthccSegGrphsx3BU5h4NGACZ575MmHB/t
-         Sh37cGJLHQt/YUoiYsmitLAiRjNdmnETUc73jBhdrE1sGI+BaWNMQCWUsedTFJ6odoaO
-         pOigGuUMZoIvUWAymeh6amaH0H7FkQXp5NfQp5Q7Xq4YQNnfGVsy1hCt3Tu8q96umhzr
-         Ag7JMYdaYy4i+0eATlYhvopBhvUNFX6ytMVwm9NpKpxueXZKq/0wGjqZf2MA8GpGLRCx
-         TuGNrIs4gOPuD1LBULUNICGuxHl5CQE6PMUhQYfRrv/yIa3QzMIqhuNs84LL38oEoIoX
-         B7oQ==
+        bh=v2rrXS1ate7b8OOQCuZc5vd/vkFrx7oPEHSNFj+/YLY=;
+        b=CbbHbcMQiZ+byJpSKHMsv41LI+BX1TPk5IL23P3fEgoK9+wgAxZDil/k8dLkwYd4PY
+         05RK+qAD11vMoG9GFnZB+97IK9QdM7tFGWONKWkRiEmR1ogJ60X21QlcWfGokt5SBy0Z
+         YQP0vw3K7kcfJS5F7myg4eluhhVo2E+f5s+onwOJH6yyCOft3T9A/fgaQYphvkreCDeF
+         E/ahRH1Yrpw9DUA1WbrXyZbX3jW5KflfLTJAEvAU2Wc99Jb0Ub+zOl90nMY/UxlfXnuD
+         HVz7fXn6h2lRm43PXRIx/8R2PiwQBDu/8Sr1ujy9NlHr2tNaguhDBSKhEgYJhBI3Jrgr
+         jiFw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1792602722; x=1793207522;
+        d=1e100.net; s=20260707; t=1792602728; x=1793207528;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=tSMiQ6NIUcAT0NRQb854JTEOyM6xl86cQuNOuZ1ci/Y=;
-        b=UgtEzS6jRs9IIzJ6B6OADbL1mn3kBWqdJuf9F5t8LGDu7Mehz9BERpxxMWspj6jlHv
-         9QpByVrSbRGSplBVExs4bAnE/KQDPYglF9vU3d/lhkRfTFsJk5k/otn0Ly6vgGjBFWQp
-         qMN9GUXNoWNkLbPvEvl61AtgGzMj398oXaKT1dSUIFtQtjLNw/6LwzOfKwPIbIC1UIiz
-         MUWPRfdhptl0c3RboEa22QQ0alSkidz//yMHdvqRDFkoo5zv+oHPrAXIsHv7KSA6BbO/
-         hk48kNHKKeJgNvHOgJdz/Hl+J7fbno4zxyh/WW5Q8JgsrxtPVSL4j2KdgoJejQT/oxi5
-         o2kQ==
-X-Forwarded-Encrypted: i=1; AKwUvBzKsW3t9jqtmln5NylqG9GpC1dmhZ7ZR+rJAco0IRiK95qqYExeSj/a76uoxwcf/tT2uX5O/Jf74jka/c4FlAPV@vger.kernel.org
-X-Gm-Message-State: AFq9FYK88SwzZ+bCcPmCsUcDIyarRp2FraiNXFwP023ajENiOClCkMwS
-	pK7DfHzf02lJFz+TrCDnxKsTapH30ec2cEe03z2rODxSVSGG63NXeKe1dzRkRal0+CoA4Vzf1zg
-	I4oJvsPag9w==
-X-Received: from dlbvg25.prod.google.com ([2002:a05:7022:7f19:b0:182:2feb:a149])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:701b:4642:b0:188:ea93:6cf9
- with SMTP id a92af1059eb24-190a709edf1mr2930187c88.43.1792602721780; Wed, 21
- Oct 2026 10:12:01 -0700 (PDT)
-Date: Wed, 21 Oct 2026 10:10:38 -0700
+        bh=v2rrXS1ate7b8OOQCuZc5vd/vkFrx7oPEHSNFj+/YLY=;
+        b=Mc1kgg6kDTeUfQHAjyCss4ngaRR5c+yQf1apuEewqavszzfTtxNsPBK2RVdvw6ZtES
+         kniOyp9t06uoysNpzw2xS5kc9f5NzS7C9FsZOAydSniTKJV/DP3bjgKnX+jvEx4tOciI
+         O9F9ouF1L8GBLT/YHpXnKYtxl/Fw8L4waSYTCa6AXmHG3sgcUtUL784l9+Yjiul+nTSH
+         gL3M9ez2ejYXamVcLhO9G8V1nQqmF3iffaqSH7k5/xI52a7XNfPdMu4AWPGy9HoeQBo7
+         PTUi9jEFIwbgREEE+4lmLwVFdTXHg1fP7fKQMQUkGOklqCxD9ZbeQZPfPVI95FrHn477
+         uRqA==
+X-Forwarded-Encrypted: i=1; AKwUvBxIPJfPDbPPkhEyCj2T71kozf8FZx84kpKl9n1J0jf2RQizwYJZwZPY/23p+iCYBEla0Q8UywtPDX5GfgVzTTzC@vger.kernel.org
+X-Gm-Message-State: AFq9FYJi7iV8D2Vg0uVVfJs5r4AuEUnuZU2IbZleHQAUiZsBIApuhRPX
+	YVwYPRwdao9YOC/lNBLn4eH8JLvSC5FXcnVSUnTTlyjBe2Srk/t76WAW+xmUwDpfD9dzZuzQgz3
+	ZQ1Mze6RzXw==
+X-Received: from dydr17.prod.google.com ([2002:a05:7300:50f1:b0:366:5b79:cc98])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7301:32cd:b0:35d:e0da:ad2d
+ with SMTP id 5a478bee46e88-3674cf378ddmr4074485eec.17.1792602727439; Wed, 21
+ Oct 2026 10:12:07 -0700 (PDT)
+Date: Wed, 21 Oct 2026 10:10:39 -0700
 In-Reply-To: <20261021171044.155240-1-irogers@google.com>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -81,9 +81,9 @@ Precedence: list
 Mime-Version: 1.0
 References: <20261020163640.746159-1-irogers@google.com> <20261021171044.155240-1-irogers@google.com>
 X-Mailer: git-send-email 2.56.0.218.g1ec904b173-goog
-Message-ID: <20261021171044.155240-13-irogers@google.com>
-Subject: [PATCH v6 12/17] perf thread: Expand context analysis annotations to
- threads and namespaces_lock
+Message-ID: <20261021171044.155240-14-irogers@google.com>
+Subject: [PATCH v6 13/17] perf intel-tpebs: Fix race in tpebs_stop() and
+ tpebs_cmd.out fd handling
 From: Ian Rogers <irogers@google.com>
 To: irogers@google.com, acme@kernel.org, elver@google.com, namhyung@kernel.org
 Cc: adrian.hunter@intel.com, james.clark@linaro.org, jolsa@kernel.org, 
@@ -93,160 +93,158 @@ Cc: adrian.hunter@intel.com, james.clark@linaro.org, jolsa@kernel.org,
 	ndesaulniers@google.com, peterz@infradead.org
 Content-Type: text/plain; charset="UTF-8"
 
-Annotate shard and last_match in struct threads_table_entry with
-__guarded_by(&lock) and add __must_hold_shared()/__must_hold() to the
-last_match helpers in util/threads.c.
+In tpebs_stop(), read tpebs_reader_thread into a local variable before
+releasing tpebs_mtx to call pthread_join().
 
-In util/thread.h and util/thread.c, add __returns_ctx_lock() to
-thread__namespaces_lock() and thread__comm_lock(), annotate
-namespaces_list and comm_list with __guarded_by(), and add
-__must_hold_shared()/__must_hold() to the namespaces_list helpers.
+Transfer ownership of tpebs_cmd.out to __sample_reader() by passing it as
+the thread argument and setting tpebs_cmd.out = -1 in
+evsel__tpebs_open() so tpebs_stop() does not double-close the fd closed
+by perf_session__delete(). Also reset tpebs_cmd.pid = 0 and tpebs_cmd.out = -1 and return early if
+start_command() fails in evsel__tpebs_start_perf_record(), as
+start_command() closes the pipe internally and may leave cmd->pid = -1
+on error, and join tpebs_reader_thread on error in evsel__tpebs_open()
+if it was already started.
+
+Include <pthread.h>, <signal.h>, <stdint.h>, <stdlib.h>, <string.h>, and
+<unistd.h> explicitly.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/thread.c  |  2 ++
- tools/perf/util/thread.h  | 28 +++++++++++++++++-----------
- tools/perf/util/threads.c |  4 ++++
- tools/perf/util/threads.h |  6 +++---
- 4 files changed, 26 insertions(+), 14 deletions(-)
+ tools/perf/util/intel-tpebs.c | 51 ++++++++++++++++++++++++++++++-----
+ 1 file changed, 44 insertions(+), 7 deletions(-)
 
-diff --git a/tools/perf/util/thread.c b/tools/perf/util/thread.c
-index 616d5bf87baf..af761b1fc5d5 100644
---- a/tools/perf/util/thread.c
-+++ b/tools/perf/util/thread.c
-@@ -149,6 +149,7 @@ void thread__put(struct thread *thread)
+diff --git a/tools/perf/util/intel-tpebs.c b/tools/perf/util/intel-tpebs.c
+index 7c0b8b15bd10..47c939fc2058 100644
+--- a/tools/perf/util/intel-tpebs.c
++++ b/tools/perf/util/intel-tpebs.c
+@@ -27,6 +27,12 @@
+ #include <errno.h>
+ #include <poll.h>
+ #include <math.h>
++#include <pthread.h>
++#include <signal.h>
++#include <stdint.h>
++#include <stdlib.h>
++#include <string.h>
++#include <unistd.h>
+ 
+ #define PERF_DATA		"-"
+ 
+@@ -120,10 +126,15 @@ static int evsel__tpebs_start_perf_record(struct evsel *evsel)
+ 	tpebs_cmd.out = -1;
+ 	ret = start_command(&tpebs_cmd);
+ 	zfree(&tpebs_cmd.argv);
++	if (ret) {
++		tpebs_cmd.pid = 0;
++		tpebs_cmd.out = -1;
++		return ret;
++	}
+ 	list_for_each_entry(t, &tpebs_results, nd)
+ 		t->started = true;
+ 
+-	return ret;
++	return 0;
  }
  
- static struct namespaces *__thread__namespaces(struct thread *thread)
-+	__must_hold_shared(thread__namespaces_lock(thread))
+ static bool is_child_pid(pid_t parent, pid_t child)
+@@ -220,13 +231,13 @@ static int process_sample_event(const struct perf_tool *tool __maybe_unused,
+ 	return 0;
+ }
+ 
+-static void *__sample_reader(void *arg __maybe_unused)
++static void *__sample_reader(void *arg)
  {
- 	if (list_empty(thread__namespaces_list(thread)))
+ 	struct perf_session *session;
+ 	struct perf_data data = {
+ 		.mode = PERF_DATA_MODE_READ,
+ 		.path = PERF_DATA,
+-		.file.fd = tpebs_cmd.out,
++		.file.fd = (int)(intptr_t)arg,
+ 	};
+ 	struct perf_tool tool;
+ 
+@@ -236,8 +247,10 @@ static void *__sample_reader(void *arg __maybe_unused)
+ 	tool.attr = perf_event__process_attr;
+ 
+ 	session = perf_session__new(&data, &tool);
+-	if (IS_ERR(session))
++	if (IS_ERR(session)) {
++		close(data.file.fd);
  		return NULL;
-@@ -169,6 +170,7 @@ struct namespaces *thread__namespaces(struct thread *thread)
++	}
+ 	perf_session__process_events(session);
+ 	perf_session__delete(session);
  
- static int __thread__set_namespaces(struct thread *thread, u64 timestamp,
- 				    struct perf_record_namespaces *event)
-+	__must_hold(thread__namespaces_lock(thread))
- {
- 	struct namespaces *new, *curr = __thread__namespaces(thread);
+@@ -331,12 +344,19 @@ static int tpebs_stop(void) __must_hold(tpebs_mtx_get())
+ 	/* Like tpebs_start, we should only run tpebs_end once. */
+ 	if (tpebs_cmd.pid != 0) {
+ 		pid_t actual_pid = tpebs_cmd.pid;
++		pthread_t reader_thread;
  
-diff --git a/tools/perf/util/thread.h b/tools/perf/util/thread.h
-index 9d0ce7742c06..a7850eebce4e 100644
---- a/tools/perf/util/thread.h
-+++ b/tools/perf/util/thread.h
-@@ -48,10 +48,10 @@ DECLARE_RC_STRUCT(thread) {
- 	bool			exited;
- 	bool			comm_set;
- 	int			comm_len;
--	struct list_head	namespaces_list;
- 	struct rw_semaphore	namespaces_lock;
--	struct list_head	comm_list;
-+	struct list_head	namespaces_list __guarded_by(&namespaces_lock);
- 	struct rw_semaphore	comm_lock;
-+	struct list_head	comm_list __guarded_by(&comm_lock);
- 	u64			db_id;
+ 		tpebs_stopping = true;
+ 		tpebs_send_record_cmd(EVLIST_CTL_CMD_STOP_TAG);
++		/*
++		 * tpebs_results is empty when stopping; clear pid so
++		 * process_sample_event() ignores any late samples while
++		 * draining the pipe.
++		 */
+ 		tpebs_cmd.pid = 0;
++		reader_thread = tpebs_reader_thread;
+ 		mutex_unlock(tpebs_mtx_get());
+-		pthread_join(tpebs_reader_thread, NULL);
++		pthread_join(reader_thread, NULL);
+ 		mutex_lock(tpebs_mtx_get());
+ 		if (control_fd[0] >= 0) {
+ 			close(control_fd[0]);
+@@ -515,6 +535,7 @@ int evsel__tpebs_open(struct evsel *evsel)
+ 	int ret;
+ 	bool tpebs_empty;
+ 	bool started_process = false;
++	bool started_thread = false;
  
- 	void			*priv;
-@@ -230,30 +230,36 @@ static inline void thread__set_comm_len(struct thread *thread, int len)
- 	RC_CHK_ACCESS(thread)->comm_len = len;
- }
+ 	/* We should only run tpebs_start when tpebs_recording is enabled. */
+ 	if (!tpebs_recording)
+@@ -567,12 +588,15 @@ int evsel__tpebs_open(struct evsel *evsel)
+ 			goto out;
  
--static inline struct list_head *thread__namespaces_list(struct thread *thread)
-+static inline struct rw_semaphore *thread__namespaces_lock(const struct thread *thread)
-+	__returns_ctx_lock(&RC_CHK_ACCESS(thread)->namespaces_lock)
- {
--	return &RC_CHK_ACCESS(thread)->namespaces_list;
-+	return (struct rw_semaphore *)&RC_CHK_ACCESS(thread)->namespaces_lock;
- }
+ 		if (pthread_create(&tpebs_reader_thread, /*attr=*/NULL, __sample_reader,
+-				   /*arg=*/NULL)) {
++				   (void *)(intptr_t)tpebs_cmd.out)) {
+ 			kill(tpebs_cmd.pid, SIGTERM);
+ 			pr_err("Could not create thread to process sample data.\n");
+ 			ret = -1;
+ 			goto out;
+ 		}
++		/* __sample_reader now owns and closes the output fd. */
++		tpebs_cmd.out = -1;
++		started_thread = true;
+ 		ret = tpebs_send_record_cmd(EVLIST_CTL_CMD_ENABLE_TAG);
+ 	}
+ out:
+@@ -586,9 +610,22 @@ int evsel__tpebs_open(struct evsel *evsel)
  
--static inline int thread__namespaces_list_empty(const struct thread *thread)
-+static inline struct list_head *thread__namespaces_list(struct thread *thread)
-+	__must_hold_shared(thread__namespaces_lock(thread))
- {
--	return list_empty(&RC_CHK_ACCESS(thread)->namespaces_list);
-+	/* Readers hold the shared lock; writers hold the exclusive lock. */
-+	return context_unsafe(&RC_CHK_ACCESS(thread)->namespaces_list);
- }
- 
--static inline struct rw_semaphore *thread__namespaces_lock(struct thread *thread)
-+static inline int thread__namespaces_list_empty(const struct thread *thread)
-+	__must_hold_shared(thread__namespaces_lock(thread))
- {
--	return &RC_CHK_ACCESS(thread)->namespaces_lock;
-+	return list_empty(&RC_CHK_ACCESS(thread)->namespaces_list);
- }
- 
--static inline struct rw_semaphore *thread__comm_lock(struct thread *thread)
-+static inline struct rw_semaphore *thread__comm_lock(const struct thread *thread)
-+	__returns_ctx_lock(&RC_CHK_ACCESS(thread)->comm_lock)
- {
--	return &RC_CHK_ACCESS(thread)->comm_lock;
-+	return (struct rw_semaphore *)&RC_CHK_ACCESS(thread)->comm_lock;
- }
- 
- static inline struct list_head *thread__comm_list(struct thread *thread)
- 	__must_hold_shared(thread__comm_lock(thread))
- {
--	return &RC_CHK_ACCESS(thread)->comm_list;
-+	/* Readers hold the shared lock; writers hold the exclusive lock. */
-+	return context_unsafe(&RC_CHK_ACCESS(thread)->comm_list);
- }
- 
- static inline u64 thread__db_id(const struct thread *thread)
-diff --git a/tools/perf/util/threads.c b/tools/perf/util/threads.c
-index 6ca0b178fb6c..39b3c420635a 100644
---- a/tools/perf/util/threads.c
-+++ b/tools/perf/util/threads.c
-@@ -21,6 +21,7 @@ static bool key_equal(long key1, long key2, void *ctx __maybe_unused)
- }
- 
- void threads__init(struct threads *threads)
-+	__context_unsafe(/* initialization */)
- {
- 	for (int i = 0; i < THREADS__TABLE_SIZE; i++) {
- 		struct threads_table_entry *table = &threads->table[i];
-@@ -32,6 +33,7 @@ void threads__init(struct threads *threads)
- }
- 
- void threads__exit(struct threads *threads)
-+	__context_unsafe(/* teardown */)
- {
- 	threads__remove_all_threads(threads);
- 	for (int i = 0; i < THREADS__TABLE_SIZE; i++) {
-@@ -63,6 +65,7 @@ size_t threads__nr(struct threads *threads)
-  */
- static struct thread *__threads_table_entry__get_last_match(struct threads_table_entry *table,
- 							    pid_t tid)
-+	__must_hold_shared(&table->lock)
- {
- 	struct thread *th, *res = NULL;
- 
-@@ -76,6 +79,7 @@ static struct thread *__threads_table_entry__get_last_match(struct threads_table
- 
- static void __threads_table_entry__set_last_match(struct threads_table_entry *table,
- 						  struct thread *th)
-+	__must_hold(&table->lock)
- {
- 	thread__put(table->last_match);
- 	table->last_match = thread__get(th);
-diff --git a/tools/perf/util/threads.h b/tools/perf/util/threads.h
-index da68d2223f18..54fba16657db 100644
---- a/tools/perf/util/threads.h
-+++ b/tools/perf/util/threads.h
-@@ -11,10 +11,10 @@ struct thread;
- #define THREADS__TABLE_SIZE	(1 << THREADS__TABLE_BITS)
- 
- struct threads_table_entry {
--	/* Key is tid, value is struct thread. */
--	struct hashmap	       shard;
- 	struct rw_semaphore    lock;
--	struct thread	       *last_match;
-+	/* Key is tid, value is struct thread. */
-+	struct hashmap	       shard __guarded_by(&lock);
-+	struct thread	       *last_match __guarded_by(&lock);
- };
- 
- struct threads {
+ 		if (started_process) {
+ 			if (tpebs_cmd.pid > 0) {
+-				kill(tpebs_cmd.pid, SIGTERM);
++				pid_t actual_pid = tpebs_cmd.pid;
++
++				tpebs_stopping = true;
++				kill(actual_pid, SIGTERM);
++				tpebs_cmd.pid = 0;
++				if (started_thread) {
++					pthread_t reader_thread = tpebs_reader_thread;
++
++					mutex_unlock(tpebs_mtx_get());
++					pthread_join(reader_thread, NULL);
++					mutex_lock(tpebs_mtx_get());
++				}
++				tpebs_cmd.pid = actual_pid;
+ 				finish_command(&tpebs_cmd);
+ 				tpebs_cmd.pid = 0;
++				tpebs_stopping = false;
+ 			}
+ 			if (tpebs_cmd.out >= 0) {
+ 				close(tpebs_cmd.out);
 -- 
 2.56.0.218.g1ec904b173-goog
 
