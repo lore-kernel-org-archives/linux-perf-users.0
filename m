@@ -1,68 +1,106 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=192.198.163.15
-ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792563369;
-	b=TUqq+54tj+jNR0hHN8SOfW28kAFlO4acspEC+ypJWGT0z45WzkYNQDhV5Nlh+UlZESUX
-	 KkxjwSji554Rpk1/ym89CTU5e7vW+mTE8XVQ6u9jjGJGrpYfHTuGnf56Jjb5Q97Qqg52M
-	 FicdgHRMnsWJ6EeTUCJvWihQZwstlwcPS/8VECwM2HvIb9+LGBbUNvq/7g6Ntp1U84SVg
-	 8DTdJpzNmEbYP0gcF9vr55CS6DdXI05sA9eAHDnM10DiTDErYturL8rvaKjRzUr8Pt2Hi
-	 HZuVQ11mw3UfQjrzGDdhLtXgrPJ0rbo4iHNadVPjmU6X/mhVAC0SFRNKUTE5NU5gbIQ==
-ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792563369;
-	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
-	 X-IronPort-AV:X-IronPort-AV:Received:X-CSE-ConnectionGUID:
-	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:Message-ID:Date:
-	 MIME-Version:User-Agent:Subject:To:Cc:References:Content-Language:
-	 From:In-Reply-To:Content-Type:Content-Transfer-Encoding;
-	bh=oL3FgeJI0x+Mx58M2ht11EIcuLnRTWJFAOeyZyFpYP0=;
-	b=fWl0IAxTCDWa4KhlhEY+O6rDX39bq2poZb48spaHfpwFeBfIfSpbh221jmMLP8K6cGBL
-	 uK+l/kxKy+hAkAtbnPg21b5b5pToqezndVtEKSVkvj029wps6OlmmnHlUgMAFrciCoLCw
-	 PKfwAYonAKs2P7LgsfopeFIra5xr39bcN/MKF5KweMe7tlZt+LFmpS27tC7aM0Fb3nmdp
-	 IdCjQtgPf0Lzb/5Iv+KTZ+tu7/WeCYKcXQVS6bPrDomN5yr/EhRTVNC6s4JEgoVdj4DXC
-	 4ADMT5xY004Os4odeR2ZaJKTk7oVRqaRASk8T07ywlpYC/mhFLszrT+BxOifYeL9SAQ==
-ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=linux.intel.com;
-	spf=pass smtp.mailfrom=linux.intel.com;
-	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=hr3ueABE;
-	arc=none smtp.remote-ip=192.198.163.15
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
-	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
+Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=185.203.200.13
+ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
+	t=1792565126;
+	b=Y6ni+6U/ZLcbBZp9GO1AJcl5sBNQx4dPzczCSv8MN3qjybaxdCWZzpGf3qpndqNOq/yG
+	 w3lr7LN79ArU7exTTWJ0zYcDcG7UHYo508A57dHFo5y7UBs+cCO5y39Lpq8RpYnPrU8e5
+	 QhUtO8S30EB9k+TPliaXJ4jpPdBGOnGxMhM7q76L2NGlxRXFE9P6JoLhgD0wIzc4bclMt
+	 USir6gk6ve1IFdkleuFrOdIQHtIHXwcoEri2nS70oCPZBnWbNj6KzyShYVNTs48vvGkeE
+	 gDY5hEcIP5T2DLukP0ZeEH9RibrWI7LHx7YCUqeJk8C/r3NJmI7sw/Xzq7jfR4SDMag==
+ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1792565126;
+	h=DMARC-Filter:Received:DKIM-Signature:Received:Received:Date:From:To:
+	 Cc:Subject:Message-ID:References:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To;
+	bh=bK22br5gUxVkzFqqNv2xUfxvigTGevWZC5+h9zTzvM4=;
+	b=fLQgLYt/QvStfBFDv+1aagg5mGKyMZDJ5kyFlWLGqIX96Rk/yGya+eaPb+r+niqFFs+o
+	 uslGalXS2YI8YOanxxXtmt0uTt1quoXLgn4gsGmmoHWuDK+iHtIsVCI5d4rPu0LMqSA5b
+	 VxH60Yw4yqNJbDpowfaCF/JJHYlVjvR9/R1T8e0ystUmb1UevyyML+Q/ipxCXBqR6Ha3/
+	 IdvfkwK6E261GBZ4z55PF7OKx6XGAUDshREctta76ObPWgLg2hNxFoyY+M5/RB0MLz0aJ
+	 SfaZW7tRoXnCW1sff4guoVwcGzFiAiUusk6pPSV93ZznPTiwxpYefurwp+4rVts96sg==
+ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
+	dmarc=none header.from=pengutronix.de;
+	spf=pass smtp.mailfrom=pengutronix.de;
+	dkim=pass header.d=pengutronix.de header.i=@pengutronix.de header.a=rsa-sha256 header.s=20260414 header.b=BG1ECo7a;
+	arc=pass header.oldest-pass=0 smtp.remote-ip=185.203.200.13
+Received: from mx1.white.stw.pengutronix.de (mx1.white.stw.pengutronix.de [185.203.200.13])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DB1E606A32F;
-	Wed, 21 Oct 2026 06:16:08 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 1DB1E606A32F
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3909E606A31B;
+	Wed, 21 Oct 2026 06:45:23 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 3909E606A31B
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=hr3ueABE
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1792563369; x=1824099369;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=ur4h1KqeZyzqwlQX1kA8jO9lL69B6yZ2nvZdtkJ9v5g=;
-  b=hr3ueABEzckop6O9hE/5spABsZef8ukqolJwsLWP8aT8Ph4UYntn1MXj
-   T3vndDH9yltetLkqaL2xN2UQ782aMblTqAk6kXFqXlZ4IBMdw/OGmlBMU
-   v+Y3iIwjCh2DYUlPUdhTLPh1kHVrOqZ++o70WOw2XZXvcyWYwA17LrwsX
-   dzffwQJluL2Ea2cTnKY+6odlU3sxMF3ZID/kaDadAI8buGfQgYLAinon6
-   iR8K6QhsCp7BxDofhiOXX3AfFGsGsQEvMrAVwWaWN4Q7K1wmYwgyz6eTg
-   erc20EXSDn7g0Wtt6bzNbr1egp5YXSH22sHTWlViGMyyM2FjoL5dYd55o
-   Q==;
-X-CSE-ConnectionGUID: LxpmZQ5STwmooT3VOlTs1A==
-X-CSE-MsgGUID: HXWeYBSmQNygwEkHYricwA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11941"; a="1292123"
-X-IronPort-AV: E=Sophos;i="6.27,169,1787036400"; 
-   d="scan'208";a="1292123"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Oct 2026 23:16:08 -0700
-X-CSE-ConnectionGUID: EebOYou+Ru6HIUCixuo2oQ==
-X-CSE-MsgGUID: pA6vuN6zSxOh4DhfzRrqkQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.27,169,1787036400"; 
-   d="scan'208";a="3071004"
-Received: from unknown (HELO [10.238.3.193]) ([10.238.3.193])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Oct 2026 23:16:07 -0700
-Message-ID: <e8e0c5e0-46c7-4f34-abff-5f24ceba12f7@linux.intel.com>
-Date: Wed, 21 Oct 2026 14:16:05 +0800
+	dkim=pass (2048-bit key, unprotected) header.d=pengutronix.de header.i=@pengutronix.de header.a=rsa-sha256 header.s=20260414 header.b=BG1ECo7a
+Received: from drehscheibe.grey.stw.pengutronix.de (drehscheibe.grey.stw.pengutronix.de [IPv6:2a0a:edc0:0:c01:1d::a2])
+	(Authenticated sender: relay-from-drehscheibe.grey.stw.pengutronix.de)
+	by mx1.white.stw.pengutronix.de (Postfix) with ESMTPSA id 5490F2022D8;
+	Wed, 21 Oct 2026 08:45:22 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pengutronix.de;
+	s=20260414; t=1792565122;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=bK22br5gUxVkzFqqNv2xUfxvigTGevWZC5+h9zTzvM4=;
+	b=BG1ECo7a/eUGPHyzUDzpCIueDb20L/00R6W3OjQBPK79ljMYmwzIcfF/iyZnisj3mEunJF
+	edV7kmLFrKtZpJEsxMRfCelBPAFbu5KX+IWGufI2l2XukAxQwHW3uZ50vlTJSQf35j6Xp/
+	5SEQRGk0NBge/YiJ0DnY1ZnB9nY/b0fA2qJsUv+RCkfip/CkC4fWGJHrJCiP+ipOEMLhpp
+	b0NWcZkw+FNid20dGDT8FOc2vGG9XUd1EGNsWB/SzzarVjJp2H9GAUp2muMOkLpiTNR1tx
+	vdAf3eyOJduRAaMScf4nI4fhDelaC+4gYdYrUdERP5PPJc0nw9WPB3faRqIqOg==
+ARC-Seal: i=1; s=20260414; d=pengutronix.de; t=1792565122; a=rsa-sha256;
+	cv=none;
+	b=UOyKV9kBE2PBMI0vpumPT7RSFX1Hxg1DhyN0epBwXEwSt3Cz2YgDhxwzbrOBEjVvrBSxU2
+	50yZcESH58Sl/3PojrLDm6XMK4nQtg6Co5CWkI7Rl+7R1QejbKggmicCPzU0kb4o5NVXGE
+	J60jUvgQJGOvWsqiD8Cgfduq+U4dBrwSnXC9n91q78Z6p9S3e9f8iaQlLDyQVaSuXdUhf8
+	33NGEHVmBPK6dPhVsncHe+sMfL6AZyE4KrnuR0TmyJnd6F1z2ehbeqmUMI7Po4I1GeCvt/
+	sdvtIDI6cYyk3mIV/Fc7oIdIylfEVGfMhVAPZklC6f7XKpiYIXUKCzR2YsRe+g==
+ARC-Authentication-Results: i=1;
+	ORIGINATING;
+	auth=pass smtp.auth=relay-from-drehscheibe.grey.stw.pengutronix.de smtp.mailfrom=mkl@pengutronix.de
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=pengutronix.de;
+	s=20260414; t=1792565122;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=bK22br5gUxVkzFqqNv2xUfxvigTGevWZC5+h9zTzvM4=;
+	b=d96X3CdYWS/PSFREaAqdpJtOuk4Xow16CQ/cfuAz4y9+zZK0jntOllrrtO91c1dtT646dz
+	flCfe7hzGw4RWhJq4CU2AzFbfRApt1kbyB4UpXNn6cyx3ZMYFZgnbY5tbjNgSlgEacZ0nS
+	e5QumnMgF53RnjlNwaDx7aDaUryF9ceWAj+hQXTXlGpaIFhG4or00G9QraWrpmgfHEG/5C
+	8ZT3AFxd/CYeRFfHNPwfNIzmaiGUi88959Ij2QIXzvqQlx8qWG+mBKq3WqJAinvf8xQ9G+
+	bqt21GwL1MxVBzwJ9kvW62l++JTLyo7h6AEoDwX2KUi1/ziT6+jKUX83FSeduQ==
+Received: from moin.white.stw.pengutronix.de ([2a0a:edc0:0:b01:1d::7b] helo=bjornoya.blackshift.org)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <mkl@pengutronix.de>)
+	id 1xJQ4g-000WDV-0k;
+	Wed, 21 Oct 2026 08:45:22 +0200
+Received: from pengutronix.de (p4ffb23c7.dip0.t-ipconnect.de [79.251.35.199])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange x25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	(Authenticated sender: mkl-all@blackshift.org)
+	by smtp.blackshift.org (Postfix) with ESMTPSA id DBACD5CAC5C;
+	Wed, 21 Oct 2026 06:45:21 +0000 (UTC)
+Date: Wed, 21 Oct 2026 08:45:21 +0200
+From: Marc Kleine-Budde <mkl@pengutronix.de>
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Ian Rogers <irogers@google.com>, Thomas Gleixner <tglx@kernel.org>, 
+	Andy Lutomirski <luto@kernel.org>, Vincenzo Frascino <vincenzo.frascino@arm.com>, 
+	Stefan Kerkmann <s.kerkmann@pengutronix.de>, Christophe Leroy <chleroy@kernel.org>, 
+	David Laight <david.laight.linux@gmail.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, 
+	Namhyung Kim <namhyung@kernel.org>, Eric Biggers <ebiggers@google.com>, 
+	Alexander Viro <viro@zeniv.linux.org.uk>, "Jason A . Donenfeld" <Jason@zx2c4.com>, 
+	linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 1/2] vdso: Add VDSO_UNALIGNED_PACKED config option for
+ ARMv5
+Message-ID: <20261020-groovy-chimpanzee-of-exercise-8a9174-mkl@pengutronix.de>
+References: <20261019201257.3805356-1-irogers@google.com>
+ <31fe09f6-0a14-40fc-8ad8-c03998fb1f5c@app.fastmail.com>
+ <20261020-succinct-zebu-of-vigor-6cb2cd-mkl@pengutronix.de>
+ <d2afb4cb-145e-488b-8f6e-c83e38735526@app.fastmail.com>
+ <20261020-nice-turquoise-dinosaur-3079bc-mkl@pengutronix.de>
+ <a34133df-224e-4cea-b574-097ad37a791a@app.fastmail.com>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -72,166 +110,116 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [Patch v4 1/5] perf/x86: Disable LBR if x86_pmu.lbr_nr exceeds
- MAX_LBR_ENTRIES
-To: sashiko-reviews@lists.linux.dev
-Cc: linux-perf-users@vger.kernel.org, bpf@vger.kernel.org
-References: <20261021050711.4043703-1-dapeng1.mi@linux.intel.com>
- <20261021050711.4043703-2-dapeng1.mi@linux.intel.com>
- <sashiko-outbox-179814@kernel.org>
-Content-Language: en-US
-From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-In-Reply-To: <sashiko-outbox-179814@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="ber3bezd7mvhap2o"
+Content-Disposition: inline
+In-Reply-To: <a34133df-224e-4cea-b574-097ad37a791a@app.fastmail.com>
 
 
-On 10/21/2026 1:42 PM, sashiko-bot@kernel.org wrote:
-> Thank you for your contribution! Sashiko AI review found 1 potential issue(s) to consider:
-> - [Medium] perf/x86: init_hw_perf_events() disables LBR too late after vendor PMU init
-> --
->
-> commit c6c1bbb1f4feb929dd247ddd507177ce58d871e1
-> Author: Dapeng Mi <dapeng1.mi@linux.intel.com>
->
-> perf/x86: Disable LBR if x86_pmu.lbr_nr exceeds MAX_LBR_ENTRIES
->
-> This commit disables last branch record support in init_hw_perf_events()
-> if x86_pmu.lbr_nr exceeds MAX_LBR_ENTRIES to prevent out-of-bounds
-> accesses in the cached branch stack handling path.
->
->> diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
->> index 4df792b139e05..002a04c149c29 100644
->> --- a/arch/x86/events/core.c
->> +++ b/arch/x86/events/core.c
->> @@ -2645,6 +2645,12 @@ static int __init init_hw_perf_events(void)
->>  	if (!x86_pmu.config_mask)
->>  		x86_pmu.config_mask = X86_RAW_EVENT_MASK;
->>  
->> +	if (x86_pmu.lbr_nr > MAX_LBR_ENTRIES) {
->> +		pr_warn("LBR entries %d exceeds max %d, disable LBR.\n",
->> +			x86_pmu.lbr_nr, MAX_LBR_ENTRIES);
->> +		x86_pmu.lbr_nr = 0;
->> +	}
->> +
->>  	perf_events_lapic_init();
->>  	register_nmi_handler(NMI_LOCAL, perf_event_nmi_handler, 0, "PMI");
-> [Severity: Medium]
-> Does zeroing x86_pmu.lbr_nr here in init_hw_perf_events() happen too late,
-> after intel_pmu_init() and amd_pmu_init() have already configured hardware
-> and driver state using the unvalidated x86_pmu.lbr_nr value?
->
-> In arch/x86/events/intel/lbr.c:intel_pmu_arch_lbr_init(), if lbr_nr exceeds
-> MAX_LBR_ENTRIES, initialization proceeds instead of taking the clear_arch_lbr
-> path:
->
-> 	lbr_nr = fls(eax.split.lbr_depth_mask) * 8;
-> 	if (!lbr_nr)
-> 		goto clear_arch_lbr;
->
-> 	/* Apply the max depth of Arch LBR */
-> 	if (wrmsrq_safe(MSR_ARCH_LBR_DEPTH, lbr_nr))
-> 		goto clear_arch_lbr;
-> 	...
-> 	x86_pmu.lbr_counters = ecx.split.lbr_counters;
-> 	x86_pmu.lbr_nr = lbr_nr;
->
-> 	if (!!x86_pmu.lbr_counters)
-> 		x86_pmu.flags |= PMU_FL_BR_CNTR | PMU_FL_DYN_CONSTRAINT;
->
-> Because clear_arch_lbr is skipped, X86_FEATURE_ARCH_LBR remains enabled,
-> MSR_ARCH_LBR_DEPTH is written, pmu->task_ctx_cache is allocated via
-> create_lbr_kmem_cache(), and x86_pmu.lbr_ctl_map and static branches are
-> configured.
->
-> Subsequently, arch/x86/events/intel/lbr.c:reserve_lbr_buffers() checks the
-> feature bit and task_ctx_cache rather than x86_pmu.lbr_nr:
->
-> 	if (!cpu_feature_enabled(X86_FEATURE_ARCH_LBR))
-> 		return;
->
-> 	for_each_possible_cpu(cpu) {
-> 		cpuc = per_cpu_ptr(&cpu_hw_events, cpu);
-> 		kmem_cache = x86_get_pmu(cpu)->task_ctx_cache;
-> 		if (!kmem_cache || cpuc->lbr_xsave)
-> 			continue;
->
-> 		cpuc->lbr_xsave = kmem_cache_alloc_node(kmem_cache,
-> 							GFP_KERNEL | __GFP_ZERO,
-> 							cpu_to_node(cpu));
-> 	}
->
-> Wouldn't this still allocate per-cpu cpuc->lbr_xsave buffers on hardware
-> reservation even after x86_pmu.lbr_nr is set to 0?
->
-> Similarly, in arch/x86/events/intel/core.c:lbr_is_visible(), leaving
-> PMU_FL_BR_CNTR set in x86_pmu.flags keeps branch_counter_nr and
-> branch_counter_width visible in sysfs when x86_pmu.lbr_nr is 0:
->
-> 	/* branches */
-> 	if (i == 0)
-> 		return x86_pmu.lbr_nr ? attr->mode : 0;
->
-> 	return (x86_pmu.flags & PMU_FL_BR_CNTR) ? attr->mode : 0;
->
-> In addition, both arch/x86/events/intel/core.c:intel_pmu_init() and
-> arch/x86/events/amd/core.c:amd_core_pmu_init() check x86_pmu.lbr_nr before
-> init_hw_perf_events() clears it:
->
-> 	if (x86_pmu.lbr_nr) {
-> 		intel_pmu_lbr_init();
->
-> 		pr_cont("%d-deep LBR, ", x86_pmu.lbr_nr);
->
-> 		/* only support branch_stack snapshot for perfmon >= v2 */
-> 		if (x86_pmu.disable_all == intel_pmu_disable_all) {
-> 			if (boot_cpu_has(X86_FEATURE_ARCH_LBR)) {
-> 				static_call_update(perf_snapshot_branch_stack,
-> 						   intel_pmu_snapshot_arch_branch_stack);
-> 			} else {
-> 				static_call_update(perf_snapshot_branch_stack,
-> 						   intel_pmu_snapshot_branch_stack);
-> 			}
-> 		}
-> 	}
->
-> And in amd_core_pmu_init():
->
-> 	if (!amd_pmu_lbr_init()) {
-> 		/* LBR requires flushing on context switch */
-> 		x86_pmu.sched_task = amd_pmu_lbr_sched_task;
-> 		static_call_update(amd_pmu_branch_hw_config, amd_pmu_lbr_hw_config);
-> 		static_call_update(amd_pmu_branch_reset, amd_pmu_lbr_reset);
-> 		static_call_update(amd_pmu_branch_add, amd_pmu_lbr_add);
-> 		static_call_update(amd_pmu_branch_del, amd_pmu_lbr_del);
->
-> 		/* Only support branch_stack snapshot on perfmon v2 */
-> 		if (x86_pmu.handle_irq == amd_pmu_v2_handle_irq)
-> 			static_call_update(perf_snapshot_branch_stack, amd_pmu_v2_snapshot_branch_stack);
-> 	} else if (!amd_brs_init()) {
->
-> If bpf_get_branch_snapshot() is later called when x86_pmu.lbr_nr is 0, won't
-> the registered perf_snapshot_branch_stack callback still run, manipulate
-> branch and global control registers, and unconditionally call
-> intel_pmu_enable_all(0) or amd_pmu_v2_enable_all(0)?
->
-> Should the MAX_LBR_ENTRIES check be performed before or during the
-> vendor-specific initialization routines (such as intel_pmu_lbr_init(),
-> intel_pmu_arch_lbr_init(), and amd_pmu_lbr_init()) so that None of the
-> hardware state, slab caches, flags, or static calls are enabled when
-> lbr_nr is out of range?
+--ber3bezd7mvhap2o
+Content-Type: text/plain; protected-headers=v1; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v1 1/2] vdso: Add VDSO_UNALIGNED_PACKED config option for
+ ARMv5
+MIME-Version: 1.0
 
-The change is good enough. The branch sampling perf event creation is
-guarded with x86_pmu.lbr_nr regardless of on Intel or AMD platforms. If
-x86_pmu.lbr_nr is 0, then no events with branch sampling can be created
-successfully, and if no active LBR event is present, the LBR hardware is
-not really enabled.
-
-Since it's a common validation for all x86 vendor platforms, it should be
-placed into the x86 common PMU initialization path.
-
-Thanks.
-
-
+On 20.10.2026 17:54:55, Arnd Bergmann wrote:
+> > When booted via NFS-root to the login prompt, we have about 570k System
+> > alignment fixups, all in the IP stack: :/
+> >
+> > __udp4_lib_rcv+0x78/0xc6c
+> > icmpv6_echo_reply+0x160/0x504
+> > ip_send_unicast_reply+0xf0/0x3f8
+> > ndisc_send_skb+0x15c/0x40c
+> > rawv6_recvmsg+0x114/0x3b4
+> > tcp_rcv_established+0x3ec/0xba0
+> > tcp_v4_fill_cb+0x70/0xec
+> > tcp_validate_incoming+0x540/0x868
 >
+> That is usually a bug in the ethernet driver, which should take care of
+> aligning the IP header in the rx skb. Many drivers do this using
+> netdev_alloc_skb_ip_align(), but I see that fec has its own buffer
+> management, so it may not be that easy to address here but would
+> boost performance quite a bit if you do.
+
+Thanks for the pointer - different topic though.
+
+> > Comparing v7.0.12 with mainline "unaligned.h" and reverting commit
+> > a339671db64b ("vdso: Switch get/put_unaligned() from packed struct to
+> > memcpy()") brings no difference with respect to alignment problems. But
+> > I see the increase in I/O performance (measured with "fio" [1]) on a
+> > UBIFS/NAND file system:
+    ^^^^^^^^^^
+
+> >
+> > - v7.0.12 NFS root
+> >   User:           0
+> >   System:         573956 (tcp_measure_rcv_mss+0xe4/0x1e0)
+> >   Skipped:        0
+> >   Half:           4
+> >   Word:           573940
+> >   DWord:          0
+> >   Multi:          34
+> >   User faults:    0 (ignored)
+> >
+> >   WRITE: bw=3D272KiB/s (278kB/s), 272KiB/s-272KiB/s (278kB/s-278kB/s),
+> > io=3D32.0MiB (33.6MB), run=3D120532-120532msec
+> >
+> > - v7.0.12 NFS root, reverted
+> >   User:           0
+> >   System:         574214 (tcp_measure_rcv_mss+0xe4/0x1e0)
+> >   Skipped:        0
+> >   Half:           4
+> >   Word:           574183
+> >   DWord:          0
+> >   Multi:          27
+> >   User faults:    0 (ignored)
+> >
+> >   WRITE: bw=3D343KiB/s (352kB/s), 343KiB/s-343KiB/s (352kB/s-352kB/s),
+> > io=3D32.0MiB (33.6MB), run=3D95439-95439msec
+>
+> Ok, so about the same improvement that you saw on ubifs.
+
+That test actually was running on the same UBIFS on NAND file system as
+Stefan's original test. Although I bootet the system by NFS root.
+
+> > Booting from UBIFS, so only the lab background IP noise...
+> >
+> > - v7.0.12 UBIFS/NAND root, reverted
+> >   User:           0
+> >   System:         164 (rawv6_recvmsg+0x114/0x3b4)
+> >   Skipped:        0
+> >   Half:           0
+> >   Word:           127
+> >   DWord:          0
+> >   Multi:          37
+> >   User faults:    0 (ignored)
+>
+> At least it seems fairly safe to assume that your original
+> finding is correct and my worry about adding more faults is
+> unfounded.
+
+Yes.
+
+regards,
+Marc
+
+--=20
+Pengutronix e.K.                 | Marc Kleine-Budde          |
+Embedded Linux                   | https://www.pengutronix.de |
+Vertretung N=C3=BCrnberg              | Phone: +49-5121-206917-129 |
+Amtsgericht Hildesheim, HRA 2686 | Fax:   +49-5121-206917-9   |
+
+--ber3bezd7mvhap2o
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQSl+MghEFFAdY3pYJLMOmT6rpmt0gUCathffwAKCRDMOmT6rpmt
+0tIAAP0dKhet7X01pv6Jrm8ojsxhxHRzlNFV5ftP9JAjAHmXVAEA7IQKE1OYnHIX
+RUf2A3flqLg1uXT4ilqnaAw0Jhg+3As=
+=eOTV
+-----END PGP SIGNATURE-----
+
+--ber3bezd7mvhap2o--
