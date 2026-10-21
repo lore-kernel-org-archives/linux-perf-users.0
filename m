@@ -1,44 +1,44 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792618231;
-	b=dHl2lqUto76T9wXPQuBseKC4TXUQpqounA0CI0B5xNsZprTJomGUdOr7o0tcOH2VxuqC
-	 ExVuKLC3KpTojE0ce3M6K4DhLWWoChLUpPxmK6VoFEJt3yHaljkAUn102pPNVGkWnQDHo
-	 +7Dlj8mTHzHljKTWbS+haD9r3jrXODiYSvE2cMYNqD71nRTVJg4T70V1AWXgl71lEVM/x
-	 BFa0cCOHve8NLMlQ3f1OtfNSnZrgM1yfVQfAB8w29fSmb98HB6gnQcyV35xeYPChI3JZG
-	 RPJ6a5fCP7FjF/K53iTmS1F4j19BhCl0oZWynzVbz7yUX/2YiBOwPP1n7nSNfFisEHA==
+	t=1792618248;
+	b=vCUWbl8aWp1oyxOD6YyVcy93AtLvJrSymh2oxTF7w2lto+dRHSeUjzfX62iAQMhb9LRO
+	 S5wvfOUYIpXBTjUKRK9ymlUws3gzUkFF8ZLo1imRiBEZYTH4oaZ4LxbHaFUkZ3oz5P72X
+	 EvbMjc+V7rZZ5zNdQLhZVdkLz/DgDxuZ4QdW0UoidIaMcDSaKxmXtBQyVXgTV7PYyv0e/
+	 pfAAmNTndvQ7idBgQbGwnA2MxvVaGKqAYBYqbgvwZcxA+wdPiz1d4UamKpPMckgEVdcej
+	 ybibebG7vNu7Hj9xMXyTzDkKX483HpBs8lSKijZsuK0QanBqQro+PvEg7eNSBTnSjUQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792618231;
+	a=rsa-sha256; c=relaxed/relaxed; t=1792618248;
 	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:X-Mailer:
 	 In-Reply-To:References:MIME-Version:Content-Transfer-Encoding;
-	bh=mCz5faZcAW52tJYBbukECioPM85ClEcij99Okwm51M0=;
-	b=tZmwyCMYT8IaekkwHflzW/aBZxdloBX6R4TyK5w2c21haKARGVNdoBR4EF4/GbjfUi7L
-	 VJfGzq64nA12+b9XVn6PrkzbfmIog4zj+vj1hpWcVdm5QBKVY8qRYqR5v2SGXegn2YqqF
-	 QC/NN72qK9zT3tCjPuTjIlMDDK+L47mEFt3dweK4KgnQxbpdvXD80EPYKTt1S1ysGVxR6
-	 joa7FNBx+DPSbkDQVFtJ4uGALcPcIyXTsZ8s3sqWvAUK1aTsLHj8zb9QF4v2ApCgpSH7x
-	 5rmVElkf9qB4qjYCqmzgPpjd0dR461JOuiX+AKkG6ecI4HtD4V/IWCyrJdHnsh+glsg==
+	bh=od8WN8CVmg89zdoHb82fXFB7zIVfQy/GQmojzRyVr0I=;
+	b=LwdpK7CKiKuRVwYFbJCr6AxrTCOqYleyyBWVQ3ptE2kmjbsE4vs9t+OfJe6Bvn/mxe6D
+	 dnJKHLheaF/VlIhY2ZD/dd8QJ6MLQJmcLT9PxS0sXQCdRsrvsVh97odM348eh1dvShPPL
+	 aByQCu/xxjGKmRbF5I5ipE7HmAkkBGg5fcOSRBfxK6SstR+vVUof3RS6EUoI8x8aPNcL9
+	 Atw/EAgVXh6sYTMsI5HlDNLOhe+k9LwUtwE2aZ7pNwx0O61VEe8DMuzlQZxAU2w0LbBuQ
+	 J47al7908klsKoLfW4pKRHmeUI6dFcrS5ulp+eRwyMl1mMGoCc/8/e2105Ocels/Fiw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=mAxgWfa4;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=FKiR+QQ9;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12F62606A327;
-	Wed, 21 Oct 2026 21:30:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4C4E60A2609;
+	Wed, 21 Oct 2026 21:30:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=mAxgWfa4
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AF5871F000C9;
-	Wed, 21 Oct 2026 21:30:27 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=FKiR+QQ9
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6FC991F000C1;
+	Wed, 21 Oct 2026 21:30:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1792618230;
-	bh=mCz5faZcAW52tJYBbukECioPM85ClEcij99Okwm51M0=;
+	s=k20260515; t=1792618248;
+	bh=od8WN8CVmg89zdoHb82fXFB7zIVfQy/GQmojzRyVr0I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=mAxgWfa4moiuQj+NDy1Q4ur0derQmf2NsUN8eZ+QDW/JKhZHml4TEfIg2d4f5ysqQ
-	 9QOX8An5Rlv89y+m5SlFnOGSVEqlBZf/OqxUUxZsN+959zBj4NqAEuB2BDXwbcIBtd
-	 3zXHFXZPSMsylLtO0mzdlJuBZ5MD46BaQU4JYRnlYuGQXIi4Z43hVXqIQhsQvzHkBx
-	 mvOCkX6gutiD+WyM03CcbnTUvuhR9vrTqDVxVNYOAqMd5+MHh7w9X/w7nU9lLY/jJo
-	 zDdbujLImnihCvL1TGeqijpoJzperpd2tOzmJFmqwUVpE9YblyDPrCt5bY9rGuUKbB
-	 jEcjJ5k7Bg4zA==
+	b=FKiR+QQ9W30QUx3DxkOWrNhXOe1rZoK9JRMrCo4cX1WSpRoT0w5haei24x4haBw8K
+	 IPmXclTh1az7TsBKTqCptY45LslwhiUzQyhXB1iy+YXHNKXdSR6egM1KF+Vymzvob2
+	 pMsVafrNl5ExIn8gUornZvII4sv7Bkm6BiPOqMhpM7q6EFhblBZeOJsDp5zd/iIt14
+	 0ZPNcgFG2xCgn4ck7KIJ7TL9jqv9HKtdZeNL7FaX+rQkZ3fLbrPIFAVttQqrshh6SP
+	 ETUYLwrQvUYmUqJNh/a4S5zImDg20iJgPfHapX/GK5zOXQ7G2aqlZA8qogXw3x4NuV
+	 Htr4L5VIL3r2w==
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Namhyung Kim <namhyung@kernel.org>
 Cc: Ingo Molnar <mingo@kernel.org>,
@@ -51,10 +51,10 @@ Cc: Ingo Molnar <mingo@kernel.org>,
 	linux-kernel@vger.kernel.org,
 	linux-perf-users@vger.kernel.org,
 	Arnaldo Carvalho de Melo <acme@redhat.com>,
-	Yuyang Huang <sigefriedhyy@gmail.com>
-Subject: [PATCH v1 03/12] tools headers UAPI: Sync linux/rtnetlink.h with the kernel sources
-Date: Wed, 21 Oct 2026 18:29:57 -0300
-Message-ID: <20261021213007.21046-4-acme@kernel.org>
+	Christian Brauner <brauner@kernel.org>
+Subject: [PATCH v1 08/12] tools headers: Sync UAPI linux/fcntl.h with the kernel sources
+Date: Wed, 21 Oct 2026 18:30:02 -0300
+Message-ID: <20261021213007.21046-9-acme@kernel.org>
 X-Mailer: git-send-email 2.54.0
 In-Reply-To: <20261021213007.21046-1-acme@kernel.org>
 References: <20261021213007.21046-1-acme@kernel.org>
@@ -73,66 +73,35 @@ From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
 To pick up the changes in:
 
-  cc17e386f8a5 ("ipv6: add ip6_del_rt_reason()")
+  cdf930a00949 ("fs: support FD_FAILFS_ROOT in fchdir()")
 
-That just rebuilds perf, silencing this build warning.
+That don't result in changes to the string tables generated from this header.
 
 This addresses this perf build warning:
 
   Warning: Kernel ABI header differences:
-    diff -u tools/include/uapi/linux/rtnetlink.h include/uapi/linux/rtnetlink.h
+    diff -u tools/perf/trace/beauty/include/uapi/linux/fcntl.h include/uapi/linux/fcntl.h
 
 Please see tools/include/uapi/README for further details.
 
-Cc: Yuyang Huang <sigefriedhyy@gmail.com>
+Cc: Christian Brauner <brauner@kernel.org>
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/include/uapi/linux/rtnetlink.h | 25 +++++++++++++++++++++++++
- 1 file changed, 25 insertions(+)
+ tools/perf/trace/beauty/include/uapi/linux/fcntl.h | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/tools/include/uapi/linux/rtnetlink.h b/tools/include/uapi/linux/rtnetlink.h
-index 27265fd31e5fc99c..3988b51db539fe4f 100644
---- a/tools/include/uapi/linux/rtnetlink.h
-+++ b/tools/include/uapi/linux/rtnetlink.h
-@@ -399,6 +399,7 @@ enum rtattr_type_t {
- 	RTA_DPORT,
- 	RTA_NH_ID,
- 	RTA_FLOWLABEL,
-+	RTA_DEL_REASON,
- 	__RTA_MAX
- };
+diff --git a/tools/perf/trace/beauty/include/uapi/linux/fcntl.h b/tools/perf/trace/beauty/include/uapi/linux/fcntl.h
+index aadfbf6e0cb3a004..e43e3de3e9ee44a2 100644
+--- a/tools/perf/trace/beauty/include/uapi/linux/fcntl.h
++++ b/tools/perf/trace/beauty/include/uapi/linux/fcntl.h
+@@ -124,6 +124,7 @@ struct delegation {
  
-@@ -407,6 +408,30 @@ enum rtattr_type_t {
- #define RTM_RTA(r)  ((struct rtattr*)(((char*)(r)) + NLMSG_ALIGN(sizeof(struct rtmsg))))
- #define RTM_PAYLOAD(n) NLMSG_PAYLOAD(n,sizeof(struct rtmsg))
+ #define FD_PIDFS_ROOT			-10002 /* Root of the pidfs filesystem */
+ #define FD_NSFS_ROOT			-10003 /* Root of the nsfs filesystem */
++#define FD_FAILFS_ROOT			-10004 /* Root of the failfs filesystem */
+ #define FD_INVALID			-10009 /* Invalid file descriptor: -10000 - EBADF = -10009 */
  
-+/* RTA_DEL_REASON: why the kernel deleted the route. u32.
-+ * Emitted only on RTM_DELROUTE notifications, and only when the deletion
-+ * path records a cause. Absence means either an older kernel or a
-+ * deletion path that does not (yet) record its cause - consumers must
-+ * treat "absent" and "unspec" identically. New causes may be appended.
-+ * Currently only IPv6 deletion paths record a cause.
-+ *
-+ * The attribute is notification-only: the kernel rejects it in
-+ * requests, so a notification must not be echoed back verbatim.
-+ *
-+ * The value space is family-agnostic: a value must never be
-+ * reinterpreted per address family. A cause that only one family can
-+ * produce still gets its own value rather than reusing another
-+ * family's.
-+ */
-+enum rt_del_reason {
-+	RT_DEL_REASON_UNSPEC,		/* cause not recorded */
-+	RT_DEL_REASON_EXPIRED,		/* RTF_EXPIRES lifetime ran out (GC) */
-+	RT_DEL_REASON_RA_WITHDRAWN,	/* zero-lifetime RA / PIO / RIO */
-+	__RT_DEL_REASON_MAX
-+};
-+
-+#define RT_DEL_REASON_MAX (__RT_DEL_REASON_MAX - 1)
-+
- /* RTM_MULTIPATH --- array of struct rtnexthop.
-  *
-  * "struct rtnexthop" describes all necessary nexthop information,
+ /* Generic flags for the *at(2) family of syscalls. */
 -- 
 2.56.0
 
