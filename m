@@ -1,100 +1,100 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.214.179
+Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.214.178
 ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1792599060;
-	b=dGiXHokmSN+tAwtO47OV1lssGKNfwQdhM7BjYE/zaTILYQOJpUNMnva/qP5DF4gQSUJu
-	 Nipi7V14ohWie1hg6HCWK9xAFQXXdWUGVB74gUOENT2ydZTYdHiLXzIPxgXBGF4vjvXJT
-	 ToJbVySaILWSPZIWvKe+l4v6XAaYXNuJBS/GhlGRWZXyFePjHPLsUXmjvfwOvNskXYWWI
-	 D9jGv9YcPXsMfa/PMGLrQSi9hLkOFjruy5hq3ceN9fzZG0MMGL1sVPB9mzF7MDuYn1uXf
-	 VrPfl9tsfTP4OWpgYCwqGye6CcpkfSt0ETxg+xyTjRfHf4NO5XDPP+1/j3+3ZQc/5Yg==
+	t=1792600634;
+	b=lA1t+uqnEf0kIi/XaShCWyFWzJwdv2ptcDM9nviuwq0cQSkEj7fvm/T0LFWAF0ozkmOJ
+	 VSGfITwNHTDWbOFnjTDEglzKsgO190V4ITUhpKiA/Kpo2ViWE1Vx1DEvOX/nMcObCSreM
+	 nEv7GTqJiFsV83bDds/j97BaakjnlxHdFlmYnXEk6MGjeg9fhXAdUC2MJ7JcEGsd5KWK3
+	 5Y6MdFunZScxoAVelasOBh2sWIzyZgH7tVYdTz1ALQqCvaEFaz7KA3dMwX67z4VTkOihm
+	 Vz7hz9b0YXX9AfzPfK/3BkGftJmBX4MnPV5FABNK5V5P6HjREd5KLlXm/UlcT48znLQ==
 ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792599060;
+	a=rsa-sha256; c=relaxed/relaxed; t=1792600634;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:
 	 MIME-Version:References:In-Reply-To:From:Date:X-Gm-Features:
 	 Message-ID:Subject:To:Cc:Content-Type:Content-Transfer-Encoding;
-	bh=dBMzagSihcLR+OgRyCjXq3R/npWvu2cSWMevTjvmpMA=;
-	b=l94TD8oFgFd8dVAyh+XaFzTUk1NNnNs6J+Er43x33l8p6Ijlo6VL1XYBEo15gBBAG1J1
-	 6JV+Q/B8FwSdGfv6KumwnQS12Hfzj9Lry7ui+pAnLdligH99d98ptiANqHp99AWh4S892
-	 RO9JyGWcFnGwThNhXr81dFiHYbLcoOFA0saeA9GOoNpKhQoXy++K9KdICbBJATrUx5yhc
-	 wWFBb/cuRuB2qvI/B7NchcT885jHXT0l83sf/RYeZAIKCXArqZuzL7yq6ah9EY9ytGIDs
-	 vwaYnBJl4Iz4NNG7qNztonEK7Cwrl/r7m/ozqX0JcNiWLJkiney3o59+kb/ZGNH2/kQ==
+	bh=zP9Muf+MYilb4BYiCx/EAnDIG/oBcn6Y/HsIeFeiBIA=;
+	b=rM/4r+WB2+eoqDsn7DFQUk9wPHKPHpkXyOPqO1/uDXdb0DFuK4KzGf1sI3l7d8yYurnL
+	 OY7xM4ZO8J8cKKc1HhcDkDjzL7KXuN+PMxsoBKOQGQKRXD1l2e75CAruGmG/kzcSZg1Z1
+	 WTUwHMdjgFUe96IjihI+/h9WS3zfsfPR6CfKwPYQ24dNyrWt4NIr9tNHxZImdF6pbhrO4
+	 yeeqj51MxlfuFFDmEuZZQ7dt1vacGQxkpbWs401lv097+Ur2FrqvOTZXEeqMw7Pz6vD2Q
+	 sDLdqWaavzxbzCgAR73/HKOumwW1zf6UeEXtkcJR6uWwFMEiLyscPRxI/XjapK+eloQ==
 ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=google.com;
 	spf=pass smtp.mailfrom=google.com;
-	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20251104 header.b=WOlWRiXV;
-	arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.214.179
-Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
+	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20251104 header.b=Xgjr1+Sc;
+	arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.214.178
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D465606A31B
-	for <linux-perf-users@vger.kernel.org>; Wed, 21 Oct 2026 16:10:59 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 1D465606A31B
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02368606A326
+	for <linux-perf-users@vger.kernel.org>; Wed, 21 Oct 2026 16:37:13 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 02368606A326
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20251104 header.b=WOlWRiXV
-Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-2e9f6a16afcso66595ad.1
-        for <linux-perf-users@vger.kernel.org>; Wed, 21 Oct 2026 09:10:59 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1792599059; cv=none;
+	dkim=pass (2048-bit key, unprotected) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20251104 header.b=Xgjr1+Sc
+Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-2db33db4de9so77115ad.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 21 Oct 2026 09:37:13 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1792600633; cv=none;
         d=google.com; s=arc-20260327;
-        b=iTgS+8kbzrOFXVzZMX9Q/Z9MYmDSvXxmr17okjf+YfTMEIEIFY2xGJqAe8h2+8VHOB
-         un9q9JxIJ3QosoykcvaeEHx1EhlQLq7QGeIsC4KbTcdGKWAq/cSuR+RXq8UjVViBWD02
-         x98bbmnFHpKCCvoXWg7IkF7u+1VQX8C12qFpRZMt96VIxAWgbShYolrGFBKlTGEBZcHZ
-         jfhC8YgjtlWDowaK/n/uU4dUvk8tYI3nkXCjZpZ6McIX0iRNUkR43DXK+L+KawxPFDtS
-         4hkYPtHKVbEJUqXUDUD1KqjR2SE0gusBvExtlFlE79a3bhu1c6bfuQuvUEqfGScChYY1
-         CMDg==
+        b=bHIhpyMroD3qlJ+ZK73gM2CcxvLB+sEJT05XD2RZYz2NY/KSSaoPBV36K1CkYghT6e
+         smmO+NRgHTrQWcHmABolTnbqftf7+MeJWyIbOpRJYNT8cqjUsBKAWzi3/NjwGoy/b3YF
+         qLvu4m57BNTgB9vBlfXK9VN8N0TS9xzOACqvvdiGE7/G7AXQ1MnXbnV1UG9NG4nSpdzr
+         UokKY2TWsI7sbBSelDDhWypgKXYdoSuQw+/4R5BvB1jd/O+xCqsAQVKtvpe+joI5sCjl
+         R+/+ew7wWyBSxamKZpzpZ1f5exN+IQN3rwTdXAYbQ9aHJjb0FjLBQoCfT6Cdyh8cnrBQ
+         //4g==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:dkim-signature;
-        bh=dBMzagSihcLR+OgRyCjXq3R/npWvu2cSWMevTjvmpMA=;
-        fh=skVKCGTy15ctFzdToIGcFjk/2AT33Q/WhUnEtO5AumM=;
-        b=bs5Ag4gfd4eQAQhSzDaaZySu8Hxloi5PVAns1xWT3D6fVLThu5icb+tjH91ml5bc2+
-         FG8zAgHxRRri4BzAUW5f33yFFNNpZrEobZ7qMpQftuIPVRQInk5n1Lwx31pQk8S3JQVJ
-         BcXELxvHTSW7pSAnG7Xs4KsUJpgWP5ftgrPNvF+sUxMoUl/mUGp1+F2aKcQul/W4G+rX
-         JS8+JcGHPeyf6C/HoQ7QvN4TiBwabub/d5EZ3jlZvrfZEMTggHark3rW+A9G7Ia/lMxz
-         yIPxcBzCvPQKdDGeFHqO8l5DaV9Gwi4I6MgWLr35yzBG33rN5/lpFOK6w0kc/bHwghf0
-         l+ug==;
+        bh=zP9Muf+MYilb4BYiCx/EAnDIG/oBcn6Y/HsIeFeiBIA=;
+        fh=Qu6sEgJyNiImy7Q3ayVYCRhFnLtYSfURInuzJ1Elqv0=;
+        b=i+l+GZEmbVwUplifpbyVfiJ4zJp7l9smo+TksrIVL3kHruwhSlG0SC9dBP3CeSa30h
+         qJsLL+/9VY7jf7l2EPnWtmbTqpSHwAIOofaDyR8lrXBDccxGQgpc5xnzPBU1C6G3JZAz
+         DdGSjzBFmPUBMgcOTExD75a3UZSHh+HzwfSGshnxEb43qLklJLOG2s1DBtR0TRv13yG3
+         JcHBRqkUPS4I6QgCKaRZ8ynPYJlMN2sZoaOJq5ww8ZdURoUaJIV0bCT8J8WXEtu1Q1ce
+         M12dTHWseCdZ3beb7wtqjznmTM5sWS/zZMsQmWv/TjzlRP2CgEfrKlJX7BKpUUwbK4H5
+         Mmpw==;
         darn=vger.kernel.org
 ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1792599059; x=1793203859; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1792600633; x=1793205433; darn=vger.kernel.org;
         h=content-transfer-encoding:content-type:cc:to:subject:message-id
          :date:from:in-reply-to:references:mime-version:from:to:cc:subject
          :date:message-id:reply-to:content-type;
-        bh=dBMzagSihcLR+OgRyCjXq3R/npWvu2cSWMevTjvmpMA=;
-        b=WOlWRiXVavEBBM5vAIph0iQUch6mB5PUDFp8xqBWZ6LohrmiMsn2Y7E2HLyhNP/zof
-         wf3uLhcaX2N2x4Q7b6lNhyPa6bsx2Zyw9amFhZztMOSxQIC+R7Ur61PS5jjiqUnhsrRA
-         gaEuruvHUCI1VtxKi7humVmBR0F4FUZCX1rNDPs0LbsgqBRjCIYETNYDot9PwIIb2iXE
-         BI4YOVK7a7qRJHEx5wTHGKW/+PyR73dj6+Q+YuaKg7iseaicGXpQYhNWvsEs/w+sD+Gj
-         xXR+AqwZwoGOAxT2OhNn4hIU43mtLUe0QbGquaDfLOV9LL1aEo2d+e6/OAe3XHeLKPf0
-         ow2A==
+        bh=zP9Muf+MYilb4BYiCx/EAnDIG/oBcn6Y/HsIeFeiBIA=;
+        b=Xgjr1+ScQwXxdZIiMN5iBW3+RDno/ba+XzBPiYT+g79T2NLYiIq/wBYM+/3vWjYyRU
+         iiIAP63AZVOwaCmhv7+Xxf7Wh2RWolIg80SzhhxoAkxtDRP5V6urR1ZlOXrdU8wPCxAb
+         TdQDNkL/3bOVbTVgfyMjpY9IwJ9Nyxem9Xslmj67T0EArm2pni++Q3fmHkv/BSStDYy7
+         1fzFOZ/L/gf086+EFbCh+k7Q0c3tx8jbrF+MtNz7gzmzbCgx0OzCTt5psv7/qq5g+BGL
+         /fQiDDFVjRzr+/Kc0U4vhM5sJNnEZELAh7VCyO5B3WVM2D7I1wS+s8aXlAdnbJ70/rGe
+         ayJQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1792599059; x=1793203859;
+        d=1e100.net; s=20260707; t=1792600633; x=1793205433;
         h=content-transfer-encoding:content-type:cc:to:subject:message-id
          :date:from:in-reply-to:references:mime-version:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=dBMzagSihcLR+OgRyCjXq3R/npWvu2cSWMevTjvmpMA=;
-        b=zTOQhPsUhIz4I4SmQibRt7yS7oP2KnMWuapOeztc+KdAEfjMzgMt7+vZ6cY0YjZypl
-         ZaVcTTv3l17notnnbXaFOy/lbkZBBMv1AEjKXg+g6Zb7VMM+YqGP+t6HF5zZG37DNMNU
-         bVC61f9KXx26Yt6NLEnihNXVAW+7osps1X0q88icAmDUG6x7uBz8ock0TyadqSJRN2sT
-         sIqxgnSfP5XC3S/E6TEg9GYYZNrJxg6HVx5wbNK98K2F1lh2v7JzIBC5tvjf43eCS3Ge
-         F/4xi1tmNHNrM6gRL7jkZKv+PSAdQWR5EZSN5p/Y/oTGhGUH1HwXBDRrRF1kZ3YlqLWB
-         X9Bw==
-X-Forwarded-Encrypted: i=1; AKwUvBwMqEAYK/5O1lt4A1SuFhNmC+HIVsZ3ptfJ78tDmDZwG9PTckxepbiL1zFzqRarxgXqq1DKrRpCUovOTWCi8+UG@vger.kernel.org
-X-Gm-Message-State: AFq9FYKdblU+ze7ZfwyZO5BTmYkQBMHZS6S25wxVVB+ZrZDvzaqd+Tjl
-	7WCcpHRLCpiZolhXVCkLNX/J4re4K/BhbIudPpp8GT4A6aYuJ3nreRpSODPcx+HaiogXp7ai9dr
-	g1kb4M/arYMFkYok412o3BFIR0WeC+3AwsbOhnnbLexAAPc0zNCjNPDofWV8=
-X-Gm-Gg: AYBFou0sGx2jMn9VGoeYRdRCligB77sVxvDgBgVPMcJaPtpFNtJrhyaiG466HGfWj0q
-	WTJnUFSxSFSAoPPA+k69ggFoyh4xF9hS1aBLquLxDY9g6BKHuQOY25BTDtkKZ3bsI8NeFSs4aT9
-	5WE1L4nRWv++VvydjOJzFOEGEA3kt7UcVEsXbSD1CIltVOpRUm9NXVh2EFmUDQqAU2m6xFjuEHb
-	TMB/o1IxqZiAAIhu//f2k6IDJwwYWBTwtqLPTtP1UOenCN9oQt0s/nMOSZiTcEN+5sb027Y/JU3
-	Rhfd/Y+w7NuJFdKAlu3Q1AkBqZ+d08wJgsbcB/QruWIf0MlKqXvUHcaCZWbgWuk/zsVRuT4iJrN
-	DHSc1aUBzbsm0cFZ8Rag4GrE4fLK3VS+RnavGaT30heGee30iuonZUhhJANuQb3JYLA==
-X-Received: by 2002:a17:902:f606:b0:2e3:981:4cc4 with SMTP id
- d9443c01a7336-2ea1e3c3553mr10748135ad.9.1792599058774; Wed, 21 Oct 2026
- 09:10:58 -0700 (PDT)
+        bh=zP9Muf+MYilb4BYiCx/EAnDIG/oBcn6Y/HsIeFeiBIA=;
+        b=vRww4RT26m8j0kuHY5HTVZBgBaL1OVat69DMNIGqfEIrXMS23q5mGdWl0akRCT3lx7
+         LIqhYfylUOLylmk5qSqilJfJTlDPPysHdyIAc0gQ2qtSkZTkboI8ihpTum2zZ3BeJvdo
+         WdWqit04DA3pXoBLhFlu6IEKSMf+PDhx9QZlQRIRSVNioyqU0cVk7FiAiYHt2yCf+zEr
+         bzqPFzFSzWcp6uiglVIMixue4qe7ZsTgzkmFnqHtAtawVyTZqP+xwqEgnwNu6kiAjfHc
+         0sz48h+UnIiJcKgMZC9HJAtW5Pd9dj5tojtZNnnBJRZOYAZ1vU2/gnJiOq/S1sHDxktP
+         PpmQ==
+X-Forwarded-Encrypted: i=1; AKwUvBwSE674n9VoToDPjihwzKBOLnOWAk2OH+sndUJcNRLAStcufzUsLj2eZhGcUwCneDGqThlday/e2ykjJnU3HthX@vger.kernel.org
+X-Gm-Message-State: AFq9FYJ9QV/nS7puQR+mKcJcCmq9eZQGwRIK8c723g2Aw150WFzWYK5D
+	yJ2ZMF0iwA4TyiYrwSwObmSsr8xC1cXr5DbR5s34oMB26w1FZCtalJBlqgFs/JzRbj7kdkAuzgp
+	eUXlsF5w0zcmhszCaV1rNnHyWHip9eTyKZpSVJtTT
+X-Gm-Gg: AYBFou2Qa1sSCwdIoViB9qmRLGl+ER64GyaAFsmM+oYDagbmPqvB/1RMPoz8TTfTXuj
+	TkM4vjKQxxVZYdb7VRnZ+w8073A9aqdWZEK1Rxx5xWYhAR81y/LGLNtIB4M9dhl5NkESz9VYEe5
+	6FQsiyD+sm1Cnk7ubzn6Y/9tXRjMFE3+5D6zx+hnUmsTSQcrMOL1NO32fSUHBo6bdRoylBZ0LXx
+	L1Nxdr3edEqxM2pyDc8qDaQ/SMme7PkFgSZT52X8BSXiFjQvwGXLaoQ6oUgx//tGV7cN0NGgHSU
+	ZG5wikYjOGJCENgUz1ZRl0wOLi06THL7ZpYeIITP0XZFIZ+oow8MEOKbpBz/CT8ZRFdsV7bcTVo
+	+xIUJMKNuf10beS49MypN/9uFY7bK83OepJ74ek8823dZAUo3h6iRO7orEfYwnuXxcA==
+X-Received: by 2002:a17:902:e84f:b0:2e6:344:7bc4 with SMTP id
+ d9443c01a7336-2ea1e4ab20emr8909755ad.15.1792600632440; Wed, 21 Oct 2026
+ 09:37:12 -0700 (PDT)
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -104,105 +104,447 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-References: <20261018133032.24467-1-breno3011alves@gmail.com>
- <20261018134322.26445-1-breno3011alves@gmail.com> <20261018134322.26445-3-breno3011alves@gmail.com>
-In-Reply-To: <20261018134322.26445-3-breno3011alves@gmail.com>
+References: <20261021023337.809936-1-atomlin@atomlin.com>
+In-Reply-To: <20261021023337.809936-1-atomlin@atomlin.com>
 From: Ian Rogers <irogers@google.com>
-Date: Wed, 21 Oct 2026 09:10:45 -0700
-X-Gm-Features: AclHuK_C5BpDKqLu193wcVkXT5s0qoAMdlZwM9YFf1CsJCDKK7jQ0mXPyuVrBug
-Message-ID: <CAP-5=fUs-+Tdv1XNcDX4o=tM_KXh59JuAewVPTsoi8EZia476g@mail.gmail.com>
-Subject: Re: [RFC PATCH v3 2/2] perf/tests: convert check_*.pl helpers to Python
-To: Breno Rodrigues Alves <breno3011alves@gmail.com>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, Arnaldo Carvalho de Melo <acme@kernel.org>, 
-	Namhyung Kim <namhyung@kernel.org>, Shuah Khan <shuah@kernel.org>
+Date: Wed, 21 Oct 2026 09:36:59 -0700
+X-Gm-Features: AclHuK_4kWLSrTFUgLHc3Agc7TGhfERibyWzUe_HPiiUS-OwrbU1tyOk_YippmY
+Message-ID: <CAP-5=fXx-0OmT4q0Y_nMGVQ35zOKaJ+bSLgHBvGJ7CFZVxL1cQ@mail.gmail.com>
+Subject: Re: [PATCH perf-tools-next v9 0/6] perf ftrace: Support inlined
+ functions and display enhancements in function graph tracer
+To: Aaron Tomlin <atomlin@atomlin.com>
+Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org, 
+	namhyung@kernel.org, mark.rutland@arm.com, alexander.shishkin@linux.intel.com, 
+	jolsa@kernel.org, adrian.hunter@intel.com, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Sun, Oct 18, 2026 at 6:43=E2=80=AFAM Breno Rodrigues Alves
-<breno3011alves@gmail.com> wrote:
+On Tue, Oct 20, 2026 at 7:33=E2=80=AFPM Aaron Tomlin <atomlin@atomlin.com> =
+wrote:
 >
-> Faithful re-implementations of the four Perl test helpers in
-> tools/perf/tests/shell/common/:
->   - check_all_patterns_found.pl
->   - check_no_patterns_found.pl
->   - check_all_lines_matched.pl
->   - check_errors_whitelisted.pl
+> The Linux kernel's function graph tracer operates at the machine
+> instruction level via compiler instrumentation
+> (-fpatchable-function-entry), recording entry and return events for
+> physical function calls. Consequently, functions inlined by the compiler
+> are invisible in the resulting call graph, as no discrete call or return
+> instructions are emitted for them. While technically expected, this
+> omission frequently obscures the logical execution flow when analysing
+> kernel subsystems heavily reliant upon inlining (such as the scheduler,
+> memory management, locking primitives, and RCU).
 >
-> Same CLI, same output, same exit codes. All use only the Python
-> standard library. TESTLOG_VERBOSITY and TESTLOG_ERR_MSG_MAX_LINES
-> environment handling is preserved.
+> When the kernel is configured with CONFIG_FUNCTION_GRAPH_RETADDR=3Dy, the
+> funcgraph-retaddr trace option records the caller's return address on eac=
+h
+> function entry, manifested in the trace stream as a comment
+> (e.g. /* <-wake_up_new_task+0x1d1/0x3e0 */). By interrogating DWARF debug
+> information from the kernel image (vmlinux) utilising libdw, perf ftrace
+> resolves this return address to its inlined callchain and synthesises the
+> intermediate inlined frames directly into the streamed call graph.
 >
-> Update all 37 call sites across base_probe/ and base_report/ to
-> invoke the .py versions. Update Makefile.perf's install-tests
-> target to install *.py files (in addition to *.sh) from
-> tests/shell/common/. Remove the four old .pl files.
+> This patch series addresses these challenges through six focused commits:
 >
-> All four were verified byte-for-byte identical to their Perl
-> counterparts on synthetic inputs.
+>     1.  Stack frame optimisation in __cmd_ftrace()
 >
-> Signed-off-by: Breno Rodrigues Alves <breno3011alves@gmail.com>
+>         Replaces the 4096-byte stack array in __cmd_ftrace() with
+>         dynamic heap allocation alongside struct strbuf streaming,
+>         reducing the stack frame footprint by over 96% (down to
+>         ~160 bytes) whilst ensuring complete line-delimited records,
+>         explicit NUL termination, and robust error unwind and EOF
+>         handling.
+>
+>     2.  Return address comment filtering
+>
+>         Introduces ftrace_parse_retaddr() and ftrace_filter_retaddr()
+>         with --filter-retaddr and --graph-opts filter-retaddr to strip
+>         caller comments from trace output, accompanied by an initial
+>         unit test suite in tools/perf/tests/ftrace.c.
+>
+>     3.  Preparatory vmlinux lookup helper
+>
+>         Introduces vmlinux_path__find() in tools/perf/util/symbol.c and
+>         symbol.h to search standard vmlinux paths and return the first
+>         accessible kernel image, providing a generic helper across
+>         tools/perf and avoiding hardcoded access() checks in tests.
+>
+>     4.  Inlined function call graph reconstruction
+>
+>         Introduces --inline and -k/--vmlinux, dynamically synthesising
+>         inlined frames marked with /* (inline) */. Correctly matches
+>         bare closing braces when funcgraph-tail is disabled, clamps stack
+>         depth to prevent indentation drift, and expands the automated tes=
+t
+>         suite to verify inline resolution, comment filtering, and stack
+>         saturation recovery utilising vmlinux_path__find().
+>
+>     5.  Execution duration suppression
+>
+>         Introduces --graph-opts noduration (accepting noduration=3D[0|1])
+>         to toggle the kernel's funcgraph-duration tracing option,
+>         omitting the duration column when the user is focused purely on
+>         call graph topology and inlined hierarchy. Rejects noduration
+>         when invoked under 'perf ftrace profile'.
+>
+>     6.  Extraneous function filtering in function graph tracer
+>
+>         Introduces userspace call graph filtering when targeted
+>         tracing (-G or --graph-funcs) is active. Suppresses transient
+>         unrelated entries arriving before filter activation as well
+>         as detached callee trees (such as ring-buffer wakeups)
+>         originating outside the target hierarchy. Dynamically resises
+>         the synthetic call stack to eliminate saturation edge cases and
+>         accurately suppresses detached subtrees without orphan exit name
+>         collisions.
+>
+> Synthesised inlined functions are rendered with an explicit /* (inline) *=
+/
+> annotation at both entry and exit:
+>
+>     # tracer: function_graph
+>     #
+>     # CPU               FUNCTION CALLS
+>     # |                 |   |   |   |
+>      0) enqueue_entity() {
+>      0)   update_cfs_group() { /* (inline) */
+>      0)     calc_concur_shares() {
+>      0)       tg_cpus() {
+>      0)         cpuset_num_cpus() {
+>      0)           class_rcu_constructor() { /* (inline) */
+>      0)             rcu_read_lock() { /* (inline) */
+>      0)               __rcu_read_lock();
+>      0)             } /* rcu_read_lock (inline) */
+>      0)           } /* class_rcu_constructor (inline) */
+>      0)           cgroup_e_css();
+>      0)           class_rcu_destructor() { /* (inline) */
+>      0)             rcu_read_unlock() { /* (inline) */
+>      0)               __rcu_read_unlock();
+>      0)             } /* rcu_read_unlock (inline) */
+>      0)           } /* class_rcu_destructor (inline) */
+>      0)         }
+>      0)       }
+>      0)       __calc_smp_shares();
+>      0)     reweight_entity();
+>      0)   } /* update_cfs_group (inline) */
+>      0) }
 
-Hi,
+Lots of tests, Sashiko is happy and a useful feature!  I'm not sure
+"--filter-retaddr" is the best name for an option to disable comments
+on return addresses, but naming things is hard.
 
-The build in perf-tools-next is now running mypy and pylint (when
-available) on all python scripts:
-https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.gi=
-t/tree/tools/perf/tests/Build?h=3Dperf-tools-next#n100
-We disable some options:
-https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.gi=
-t/tree/tools/perf/Makefile.perf?h=3Dperf-tools-next#n317
-Applying this patch breaks the build for me because of this and 1
-pylint issue. I see:
-```
-$ make -k -C tools/perf O=3D/tmp/perf12 DEBUG=3D1 all
-make: Entering directory '.../tools/perf'
-  BUILD:   Doing 'make -j28' parallel build
+Tested-by: Ian Rogers <irogers@google.com>
+Reviewed-by: Ian Rogers <irogers@google.com>
 
-Auto-detecting system features:
-...                                   libdw: [ on  ]
-...                                   glibc: [ on  ]
-...                                  libelf: [ on  ]
-...                                 libnuma: [ on  ]
-...                  numa_num_possible_cpus: [ on  ]
-...                           python-module: [ on  ]
-...                             libcapstone: [ on  ]
-...                               llvm-perf: [ on  ]
-...                                    zlib: [ on  ]
-...                                    lzma: [ on  ]
-...                                     bpf: [ on  ]
-...                                  libaio: [ on  ]
-...                                 libzstd: [ on  ]
-...                              libopenssl: [ on  ]
-...                                    rust: [ on  ]
-
-  INSTALL libsubcmd_headers
-  INSTALL libperf_headers
-  TEST    /tmp/perf12/tests/shell/common/check_errors_whitelisted.py.pylint=
-_log
-  INSTALL libsymbol_headers
-  INSTALL libapi_headers
-  INSTALL libbpf_headers
-************* Module check_errors_whitelisted
-tests/shell/common/check_errors_whitelisted.py:13:17: W1514: Using
-open without explicitly specifying an encoding (unspecified-encoding)
-
-------------------------------------------------------------------
-Your code has been rated at 9.76/10 (previous run: 9.76/10, +0.00)
-
-make[3]: *** [tests/Build:124:
-/tmp/perf12/tests/shell/common/check_errors_whitelisted.py.pylint_log]
-Error 1
-make[3]: Target 'pylint' not remade because of errors.
-make[2]: *** [Makefile.perf:690: pylint-tests] Error 2
-make[2]: Target 'all' not remade because of errors.
-make[1]: *** [Makefile.perf:343: sub-make] Error 2
-make[1]: Target 'all' not remade because of errors.
-make: *** [Makefile:82: all] Error 2
-```
-
-I like the change although the perf tool and kselftests may get merged
-through different trees. It may be better to separate the patches.
-
-Thanks,
+Thanks!
 Ian
+
+
+> Changes since v8:
+>
+>  - Preserved funcgraph-retval return value comments when filtering
+>    funcgraph-retaddr comments (/* <-caller ret=3D0x0 */ ->
+>    /* ret=3D0x0 */) in ftrace_filter_retaddr()
+>
+>  - Enhanced vmlinux_path__find() helper in tools/perf/util/symbol.c:
+>     - Avoided redundant memory allocation in vmlinux_path__init() when
+>       vmlinux_path is already initialised
+>     - Ensured symbol configuration is initialised via symbol__init() prio=
+r
+>       to path resolution
+>     - Guaranteed vmlinux_path memory cleanup by invoking
+>       vmlinux_path__exit() unconditionally in symbol__exit()
+>
+>  - Tracked raw (pre-inline-expansion) indentation on synthetic stack
+>    frames, ensuring bare closing braces ("}") are accurately matched
+>    against corresponding non-inlined frames without indentation
+>    distortion
+>
+>  - Unwound stale frames on untracked caller entries (caller_idx < 0) whos=
+e
+>    raw indentation is greater than or equal to the new entry, and closed
+>    trailing open inlined frames resulting from dropped exit events
+>
+>  - Pre-bound single-PID tracing across all CPUs in
+>    perf_ftrace__setup_inlines(), ensuring consistent synthetic call stack
+>    tracking across CPU migration when kernel context-switch banners are
+>    suppressed (verif_pid prev_pid =3D=3D -1)
+>
+>  - Strengthened error handling during DWARF/vmlinux initialisation in
+>    perf_ftrace__setup_inlines(), checking load return codes, emitting
+>    diagnostic warnings, and safely freeing ftrace->machine on failure
+>
+>  - Recognised interrupt/IRQ entry and exit markers ("=3D=3D=3D=3D=3D>" an=
+d "<=3D=3D=3D=3D=3D")
+>    alongside context-switch markers under --graph-opts noduration,
+>    preventing non-function lines from corrupting function column detectio=
+n
+>    or popping active stack frames
+>
+>  - Handled leaf function lines with trailing comments
+>    (e.g. funcgraph-retaddr or funcgraph-retval comments) in
+>    parse_func_duration() for 'perf ftrace profile', ensuring parentheses
+>    are stripped cleanly and leaf records match non-leaf entries in durati=
+on
+>    tracking
+>
+>  - Preserved tracked ancestor frames on cs->stack across dropped target
+>    root exits by verifying caller provenance
+>    (caller_idx < cs->target_root_depth) before checking indentation bound=
+s
+>    in ftrace_check_target_caller()
+>
+>  - Purged stale non-target frames below target root upon target root entr=
+y
+>    when caller_idx < 0, preventing unrelated ancestor frames from
+>    prematurely terminating subsequent target calls
+>
+>  - Prevented cs->orphan_depth lockouts when both an orphan exit and
+>    enclosing target root exit are dropped by resetting cs->orphan_depth o=
+n
+>    any line at or outside target root indentation
+>    (leading_spaces <=3D cs->target_root_indent), and allowing ancestor ex=
+its
+>    to fall through to match frames on cs->stack
+>
+>  - Preserved interrupt/IRQ markers inside active target callgraphs while
+>    suppressing those outside target filters under -G or --graph-funcs
+>
+>  - Fixed test_stack_saturation() to avoid premature frame unwinding,
+>    ensuring depth clamping and recovery are tested as intended
+>
+>  - Expanded automated test coverage in tools/perf/tests/ftrace.c:
+>     - Added test_context_switch_handling() for CPU migration and task
+>       tracking
+>     - Added test_column_layouts() covering standard, verbose, and
+>       noduration formats including IRQ and context-switch markers
+>     - Added regression tests in test_graph_target_filter() covering doubl=
+e
+>       dropped exits, ancestor frame preservation, leaf duration parsing,
+>       and deep orphan recovery
+>
+>  - Link to v8: https://lore.kernel.org/lkml/20261018023753.584873-1-atoml=
+in@atomlin.com/
+>
+> Changes since v7:
+>
+>  - Rebased onto latest perf-tools-next/perf-tools-next (commit 1c90f0a3c8=
+a1
+>    ("perf kvm: Cast tv_usec to long to fix build on MIPS 32-bits"))
+>
+>  - Link to v7: https://lore.kernel.org/all/20261018021346.582845-1-atomli=
+n@atomlin.com/
+>
+> Changes since v6:
+>
+>  - Expanded the series from 5 to 6 patches by introducing a standalone
+>    preparatory commit ("perf symbol: Introduce vmlinux_path__find()
+>    helper") in tools/perf/util/symbol.c and symbol.h to locate accessible
+>    kernel images via configured vmlinux paths, replacing ad-hoc
+>    access("vmlinux", R_OK) checks in unit tests (Ian Rogers)
+>
+>  - Explicitly included stdio.h in tools/perf/util/ftrace.h to declare the
+>    FILE type for ftrace_process_fgraph_line(), ensuring clean compilation
+>    under musl libc and non-glibc environments
+>
+>  - Prevented name collisions between orphan callee exits and active targe=
+t
+>    frames in ftrace_process_fgraph_line()
+>
+>  - Allowed dropped-orphan exit recovery on closing braces only when the
+>    exit explicitly names the target root function itself, ensuring that
+>    lost orphan exits do not swallow the target root's exit while protecti=
+ng
+>    intermediate callee frames from collisions
+>
+>  - Replaced the fixed-size array in struct ftrace_task_state with a
+>    dynamically resized stack grown via realloc(), completely eliminating
+>    cs->overflow_depth and its associated failure modes:
+>     - Fixed skipped filter teardown when a target function begins at the
+>       stack limit, ensuring standard teardown runs upon root exit and
+>       preventing subsequent sibling functions from leaking into filtered
+>       output
+>
+>     - Fixed orphan filter bypass during deep call stacks by preserving al=
+l
+>       caller frames on the stack, ensuring unknown callers (caller_idx < =
+0)
+>       are accurately identified as orphans and suppressed
+>
+>  - Link to v6: https://lore.kernel.org/all/20261016040310.482876-1-atomli=
+n@atomlin.com/
+>
+> Changes since v5:
+>
+>  - Prevented call stack desynchronisation on dropped orphan exit events b=
+y
+>    clearing orphan_depth when a named exit matches a tracked frame or an
+>    entry descends from the target callgraph
+>
+>  - Fixed premature target filter termination on child exits by capturing
+>    cs->target_root_depth after unwinding stale frames above the caller
+>
+>  - Ensured synthesised caller inlines above cs->target_root_depth are
+>    cleanly closed upon target function exit before resetting filter state
+>
+>  - Prevented legitimate deep calls exceeding FTRACE_MAX_STACK from being
+>    falsely dropped as orphans by checking cs->overflow_depth
+>
+>  - Expanded unit tests to cover dropped orphan exits, target root depth
+>    synchronisation after stale siblings, and deep call stack overflows
+>
+>  - Provided support for glob pattern matching with -G or --graph-funcs
+>
+>  - Link to v5: https://lore.kernel.org/all/20261015011155.414667-1-atomli=
+n@atomlin.com/
+>
+> Changes since v4:
+>
+>  - Handled non-fatal EAGAIN, EWOULDBLOCK, and EINTR in __cmd_ftrace()
+>    polling and draining loops to prevent premature session termination on
+>    non-blocking reads or signal interruptions
+>
+>  - Eliminated an unused local variable endptr in ftrace_parse_retaddr() b=
+y
+>    passing NULL to strtoull()
+>
+>  - Prevented stack buffer overflows in make_blank_prefix() by clamping th=
+e
+>    blanking loop bounds and end pointer to the destination buffer length
+>    when processing trace records with exceptionally long prefixes
+>
+>  - Tracked call stack saturation with overflow_depth to prevent untracked
+>    function exits with bare closing braces from prematurely popping track=
+ed
+>    frames from the parser stack on deep call chains exceeding
+>    FTRACE_MAX_STACK
+>
+>  - Ensured stale non-inlined callee frames resulting from dropped functio=
+n
+>    exits do not block inactive inlined frames from being closed upon
+>    subsequent entries by unwinding the stack down to caller_idx + 1 +
+>    common
+>
+>  - Fixed filter state not resetting for targeted leaf calls when --inline
+>    is active: synthesised inline frames inflated cs->depth beyond
+>    cs->target_root_depth, causing subsequent sibling functions to be
+>    falsely classified as detached orphans and bypassing inline unwinding;
+>    resolved by tracking target root entries (is_target_root), explicitly
+>    unwinding all synthesised inlines, and resetting filter state upon lea=
+f
+>    completion
+>
+>  - Expanded unit test coverage to verify recovery across dropped exit
+>    events and bare closing braces, and to verify that targeted leaf calls
+>    with synthesised inlined frames properly close inlines and reset filte=
+r
+>    state
+>
+>  - Link to v4: https://lore.kernel.org/lkml/20261014161457.373253-1-atoml=
+in@atomlin.com/
+>
+> Changes since v3:
+>
+>  - Explicitly rejected the noduration option when invoked under the profi=
+le
+>    subcommand, since profiling inherently requires function duration to
+>    compute timing statistics
+>
+>  - Fixed make_blank_prefix() clobbering the comm-pid column in verbose mo=
+de
+>    by searching backwards for the preceding "|" delimiter, and returning
+>    early when graph_noduration is active
+>
+>  - Fixed filter state not resetting for targeted leaf calls at non-zero
+>    call stack depths by checking cs->depth <=3D cs->target_root_depth and
+>    clearing cs->target_root_depth, preventing subsequent non-targeted
+>    sibling functions within the parent frame from leaking into trace outp=
+ut
+>
+>  - Expanded unit test coverage to verify comm-pid preservation under
+>    verbose and verbose-noduration inline modes, and to verify that target=
+ed
+>    leaf calls at depth > 0 properly reset the target filter state.
+>
+>  - Link to v3: https://lore.kernel.org/lkml/20261012003016.263063-1-atoml=
+in@atomlin.com/
+>
+> Changes since v2:
+>
+>  - Expanded the series from 4 to 5 patches by adding a dedicated commit
+>    ("perf ftrace: Filter extraneous functions in function graph tracer") =
+to
+>    enforce strict target callgraph boundaries when -G or --graph-funcs is
+>    specified
+>
+>  - Suppressed unrelated top-level functions that leak through the transie=
+nt
+>    tracefs filter initialisation window before RCU synchronisation
+>    completes
+>
+>  - Filtered detached/orphan calls from appearing as nested children withi=
+n
+>    the target graph by validating caller return addresses against the
+>    active target stack
+>
+>  - Tracked nested orphan scope depth (cs->orphan_depth) to cleanly suppre=
+ss
+>    child calls and closing delimiters of detached subtrees without
+>    desynchronising the target stack
+>
+>  - Added automated unit test coverage in tools/perf/tests/ftrace.c
+>    (test_graph_target_filter()) validating top-level suppression (both wi=
+th
+>    and without --inline) and detached orphan wakeup suppression
+>
+>  - Link to v2: https://lore.kernel.org/lkml/20261006232756.65620-1-atomli=
+n@atomlin.com/
+>
+> Changes since v1:
+>
+>  - Modularised the implementation into a 4-patch bisectable series rather
+>    than a monolithic commit
+>
+>  - Resolved potential infinite loop on poll() upon trace_pipe EOF
+>
+>  - Fixed stuck call stack frames when funcgraph-tail is disabled by
+>    supporting bare closing delimiters matching LIFO stack frames
+>
+>  - Prevented unbounded indentation growth on deep call trees by clamping
+>    inline expansion and synchronising cs->inlined_depth to frames
+>    successfully pushed onto cs->stack
+>
+>  - Added dedicated unit tests covering bare closing braces and stack
+>    saturation recovery
+>
+>  - Refined option documentation in perf-ftrace.txt
+>
+>  - Link to v1: https://lore.kernel.org/lkml/20261005211518.26786-1-atomli=
+n@atomlin.com/
+>
+> Aaron Tomlin (6):
+>   perf ftrace: Optimise __cmd_ftrace() stack frame with strbuf streaming
+>   perf ftrace: Support filtering return address comments
+>   perf symbol: Introduce vmlinux_path__find() helper
+>   perf ftrace: Support display of inlined functions in function graph
+>     tracer
+>   perf ftrace: Support omitting execution duration in function graph
+>     tracer
+>   perf ftrace: Filter extraneous functions in function graph tracer
+>
+>  tools/perf/Documentation/perf-ftrace.txt |   20 +
+>  tools/perf/builtin-ftrace.c              |  212 +-
+>  tools/perf/tests/Build                   |    1 +
+>  tools/perf/tests/builtin-test.c          |    1 +
+>  tools/perf/tests/ftrace.c                | 3271 ++++++++++++++++++++++
+>  tools/perf/tests/tests.h                 |    1 +
+>  tools/perf/util/Build                    |    1 +
+>  tools/perf/util/ftrace.c                 | 1634 +++++++++++
+>  tools/perf/util/ftrace.h                 |   28 +
+>  tools/perf/util/symbol.c                 |   38 +-
+>  tools/perf/util/symbol.h                 |    2 +
+>  11 files changed, 5180 insertions(+), 29 deletions(-)
+>  create mode 100644 tools/perf/tests/ftrace.c
+>  create mode 100644 tools/perf/util/ftrace.c
+>
+> --
+> 2.55.0
+>
