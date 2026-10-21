@@ -1,91 +1,58 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.169
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792622746;
-	b=r6bIPalr40vjaoV+ML9Ltt6iCwGptNST7QA8ozs5y3pJaIopAGlweWu4bckeBq5LIlzu
-	 bUAn8bt7D5wxttj23FFEkOiY0jGRq/mBFn6c6ur91LHO1fUV5zHJH/jo7TOtA0oOmu14U
-	 zH4vcoIKt1cdvXYANTn0ccJegjyGoOB8mWm2lYGV1rLBlC7FOAng3upQiOlYARDhumoI3
-	 v6KxaUG4GVnUJcSyQHxkOJ70X+1VGVr/DMN2epn1dkb84PYY0Aaxci8VPZ6m6BeX+0uWz
-	 WjoJ2hVUnkhWi+CDIqb/7KwtZWBGgtsWwIJdRAxcVD1Mrmsxm16nFU7C9n//4bj5JXw==
+	t=1792622782;
+	b=ZyvGCDOqM5CU66NmTfPBbvmGovWTOfFzCSGqrH3fF4V9ORRPU/oadcH6xF9L/sIHiuiy
+	 7qCW9Gcms/F9VpB5evHebrfsic0GCM4h0AprQ6suHa7FsxHMNkp1Z4Zi2gJ+dB5CFTG2c
+	 vxKam9i4Q87ujmX37y7I6sIsE/7eRsEv90I9CMUav+pNoXdRpdoP+/8j+oMMYnHkDJ/RA
+	 1sm7Lw9RV8BSNnkHzi4hZSBOECkfqNqXftJD9KAtnLeFBtY/YGYzx8lmt3RcXybJ4naa2
+	 //382TBU7Sd65zqtQHlf1lSLPCnG/HhyyZ6qyXpRrqN1/R5oCLhKEms4iwlWd4uTtWA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792622746;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Gm-Message-State:X-Gm-Gg:X-Received:Received:From:To:Cc:Subject:
-	 Date:Message-ID:X-Mailer:MIME-Version:Content-Transfer-Encoding;
-	bh=tUnY/xcLCCwsERt5Qg8FpPAZtwn+Co7y4pdL6+JKAOQ=;
-	b=BSadHXAFdwJV1UctQLf6HJrxLdfMBs1oZp2mD/Jv3VIvH5I4dg8hv2rNEUsMhbnMxLPV
-	 BA8ifgZDH+iZBZUto7Jdp3C/UIs0bdXK0SiUS7fABxQTF2zxsKioehnZ47sTjjEZ6lrNp
-	 GDC+tllgiyRIFcGFft7bekZrVHCgDRZoohrqO8kgwoWD3facBbgCQ+uduhOjMFyao/5CV
-	 ARcGhQEWR8PYoQM/U/T93g21jiGDwZ8IQcW1KsC+jpF47T3h/Wl9moj4tX3S01QaOOIhY
-	 Ph/QDaEFWSr2VreaDgDzrddJtPRdXnHZVZ1UtKzBA5fccHVPb3tLu1P9RDpWDhq24cw==
+	a=rsa-sha256; c=relaxed/relaxed; t=1792622782;
+	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
+	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
+	bh=8cswT1w7AQ6ktVQzL81xyl+8CDf9q3yxW4CVoYo1fzk=;
+	b=bWnMUAgn7F7fJAX8sDj8Cje2OY/xZpffVLGt7ppQO5z+OjsJh39Ee7xeb/cLltcvQm3z
+	 AD8wxotDwF63TfBxu+EwWv57jfjvnH1l7pdkMCceSgV6HBjoybxq5msIbI1Wv7X1tojD7
+	 h6Ur9DqQ0yyP7gP4ZWNEwX5kn6hS+x0259uFfxuuw8gmkhLhbNLAYfw14jNBHkW68A4XG
+	 hcp6JwUOlBKfHg151WuXMZWD9pmTLS1UjEzuTKtKJTefonOijHsZdn5u+E5A/qBgDSdDS
+	 8+n1AwRuYGFIpmusOZ1SVUU6YZ4/ehsr6EE1g/1nfnW6ZcYDjnzsxPxXMIbFXLGUyqw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=gmail.com;
-	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=XvG2xHd4;
-	arc=none smtp.remote-ip=74.125.82.169
-Received: from mail-dy1-f169.google.com (mail-dy1-f169.google.com [74.125.82.169])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=iWdQRdUi;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4983D606A31B
-	for <linux-perf-users@vger.kernel.org>; Wed, 21 Oct 2026 22:45:46 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 4983D606A31B
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFA1D606A31A
+	for <linux-perf-users@vger.kernel.org>; Wed, 21 Oct 2026 22:46:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=XvG2xHd4
-Received: by mail-dy1-f169.google.com with SMTP id 5a478bee46e88-35c76e9614aso2235721eec.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 21 Oct 2026 15:45:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1792622745; x=1793227545; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=tUnY/xcLCCwsERt5Qg8FpPAZtwn+Co7y4pdL6+JKAOQ=;
-        b=XvG2xHd4grqi9a9fxbz5jHP0bMpgMVZhZ9xyMFLxz68mceNmfZypX17VLqdN7xmUJ0
-         +cnqF70VZaMfa49HdP3yamdL9SxUYW5OMbJ46P9VmO54VrhdxPSAGCMarFJqaXRX1Ph7
-         7vIen3VW3hy8SAe87wtNS+aJbsqjfSj/XYNwyVW0l4LsPxMAPwZ6T4vLHAotoTnd+Ox/
-         YJ4ieQwtEKtSx+WF96ka/zJhwnkVpn+1GgxMDAwIXP6oseLMnm40RMcbmvv3s3dA8dtm
-         S5mgfcOpVlboGJDGRLfWLMenHxnkgTXs9GEzdT6gAYyFFQWGqFl+iQcv9y2dR/OWUeff
-         G+Og==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1792622745; x=1793227545;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=tUnY/xcLCCwsERt5Qg8FpPAZtwn+Co7y4pdL6+JKAOQ=;
-        b=UBPpST1MAGdsOgvA6R0ITnCiHmt6H4I4aqpMebMU0B51WzLRck85QUzdLkHqg3njdg
-         OLspfZH7Pv5/DpCQXeAmHgr77rghF9gIAvLjjeSOE+el38idQIvoiFMScri0XqvVj91O
-         CcXFUnM5y3hSC666tuOsWUu2ZpOSxXmwra6ljS7IexMx4QuwEkJMkhcblNtV+FKM6Rqe
-         c/Cdb/lhMPMPyX0Kz4jbTjszyBlNeBE+vKO2jhSpTsEr5fgQUk/PrwEhSOPXyYcWOfr6
-         fLmfmNldr7TRyvpo+OBZPk5JXmIqWZDm5kERSTq38G04HEOv3hQD0hGAqqv7jNRnxKIU
-         HKpw==
-X-Gm-Message-State: AFq9FYK0gP5usDXr2Jv8vHgutZdS4ptoDpzv9ldAq9EW96ywDwkxk5MO
-	KM+YQT8CDCnKLNEjWjMq5xn2vWRskp0OAihn9funWL6xsHNQkdJaJczEgctNxEAe
-X-Gm-Gg: AYBFou16as5PnTf2r8hU0m96lXl4HXVhQfwvyI4EMYVxlOxq0BvdV5QRa7Hdi1i3XTs
-	IYWsoh2nJ6r5eq66akb3N4Dg4qHhqqGtcfDVrPGrdpGjJeQfD7JnetiYzxvugBQoPyp9IUBB09k
-	19w+njTAih2BAoAWNXAgGVCPyyXj3WShCXcvXgbMcTJlFKM1+E8+AbZ6eyS/EJD5k3tQXzNXjCi
-	7T2cIQ9O9zdVy2WKblkGT9V4cfw3qgs7FAmDtdIqzVNJMQFBmXdGsl8nYewkY9spBs/LTiqhIPZ
-	4Kd5a3tVLbR+bijijUkOboltWIXjUwB0jNZ72Ns65iTQJmraL+L0O5AkhPoUZxpLgQ3W5kC/kYG
-	gl0HwPoGefaKImVLCme63+MtH+gus+MGE5wPPd6CxUF43gobh/TmTKxvv2ke3IU15i6jwh8MKwI
-	Int8TkcT3u77vyLvv1GJL7Xch/mbbPRd2Y2qRPktqOVcWYyfjXYO6GH02XDGxyyYHmaqukUGrW7
-	Uo5MSza4qCuhnpnVQdEXOMRCThsa3nvPcSM0j8HjdLUz6mRqOvRD1eMxp7poyud8kH3
-X-Received: by 2002:a05:7301:5808:b0:360:34e4:39d2 with SMTP id 5a478bee46e88-3674d44a645mr6606105eec.10.1792622745067;
-        Wed, 21 Oct 2026 15:45:45 -0700 (PDT)
-Received: from a1-free ([161.33.196.121])
-        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-36740cc88b5sm10770274eec.10.2026.10.21.15.45.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 21 Oct 2026 15:45:44 -0700 (PDT)
-From: TAKANO Mitsuhiro <takano32@gmail.com>
-To: linux-perf-users@vger.kernel.org,
-	Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Ilkka Koskinen <ilkka@os.amperecomputing.com>,
-	John Garry <john.garry@linux.dev>,
-	TAKANO Mitsuhiro <takano32@gmail.com>
-Subject: [PATCH] perf vendor events arm64 AmpereOneX: Drop stale BPU_FLUSH_MEM_FAULT entry
-Date: Wed, 21 Oct 2026 22:45:27 +0000
-Message-ID: <20261021224527.167637-1-takano32@gmail.com>
-X-Mailer: git-send-email 2.53.0
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=iWdQRdUi
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7903C1F000C5;
+	Wed, 21 Oct 2026 22:46:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1792622781;
+	bh=8cswT1w7AQ6ktVQzL81xyl+8CDf9q3yxW4CVoYo1fzk=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=iWdQRdUiidS8brOeBqoV8XyECJ7jHH4sxdlXNtMPXlss5ZqnGVyF40xDzA0p6J6ck
+	 A41W24b+uvtmjJRzoO7K3DUQsiQdGNZ5FuSg+5wFRqLHISb6g4k/5he5YeouEJY5k4
+	 jEZXaLmTHrarMdzox9dEYCPorYyOZXzP2aqbtm6g4y/uOmBBRcKV+wUmikaGfUx890
+	 1GYmXd1H0oi1EHsL+CXJ8TELUx6pFAbZKH2TVddoKAb6FyLeL3ZrX8NKRSNyIivOF5
+	 TqZ3f6nu08uD78gILoapCZDoQfyYIZFgFmvXfsXVCmQ0Z4V78/kluz1i8qGbxRT5G2
+	 cFvSjpslo0KnA==
+Message-ID: <sashiko-outbox-180735@kernel.org>
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v7 03/17] tools headers: Synchronize
+ linux/compiler-context-analysis.h with the kernel sources
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Ian Rogers" <irogers@google.com>
+Cc: linux-perf-users@vger.kernel.org
+In-Reply-To: <20261021223905.715051-4-irogers@google.com>
+References: <20261021171044.155240-1-irogers@google.com>
+ <20261021223905.715051-1-irogers@google.com>
+ <20261021223905.715051-4-irogers@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Wed, 21 Oct 2026 22:46:21 +0000
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -94,64 +61,17 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-AmpereOne carried BPU_FLUSH_MEM_FAULT for EventCode 0x121 until it was
-renamed to GPC_FLUSH_MEM_FAULT in 10a149e4b4a9; that rename and the
-AmpereOneX table were patches 3 and 4 of the same series, so the new file
-kept the old name.
+> Replace the no-op stub tools/include/linux/compiler-context-analysis.h
+> with the full kernel implementation from
+> include/linux/compiler-context-analysis.h and add it to
+> tools/perf/check-headers.sh so future changes are tracked.
+>=20
+> Signed-off-by: Ian Rogers <irogers@google.com>
 
-The result is a table that names the 0x121 counter twice:
-ampereonex/core-imp-def.json has GPC_FLUSH_MEM_FAULT, and
-ampereonex/memory.json adds BPU_FLUSH_MEM_FAULT with the same code and
-the same description.  On AmpereOneX perf therefore lists two events for
-one counter, one of them under a name the documentation does not use.
-No metric and no other file refers to either name, so removing the stale
-entry cannot change a metric.
+Sashiko has reviewed this patch and found no issues.
 
-It also leaves memory.json holding only the ArchStdEvent aliases the
-other files of that kind carry: AmpereOne's memory.json has no raw
-EventCode at all, and neither has any other file of the AmpereOneX set
-except the ones where raw codes belong.
-
-Nothing catches this at build time.  jevents.py asserts on duplicate
-event names, but x86 repeats an EventCode for many events because the
-code carries umask and unit bits (3756 times across its tables) and
-powerpc repeats five codes, so a duplicate-code check is not possible.
-arm64 is the only architecture where no table but this one repeats a
-code.
-
-Not tested on hardware: there is no AmpereOneX machine here, so perf was
-not run against the real PMU.  The change only edits a JSON table; the
-perf build was verified and the generated table for this PMU goes from
-two names for 0x121 to one (rebuilt, counted in pmu-events.c).
-
-Fixes: 16438b652b46 ("perf vendor events arm64 AmpereOneX: Add core PMU events and metrics")
-Assisted-by: LLM
-Signed-off-by: TAKANO Mitsuhiro <takano32@gmail.com>
----
- .../pmu-events/arch/arm64/ampere/ampereonex/memory.json     | 6 ------
- 1 file changed, 6 deletions(-)
-
-diff --git a/tools/perf/pmu-events/arch/arm64/ampere/ampereonex/memory.json b/tools/perf/pmu-events/arch/arm64/ampere/ampereonex/memory.json
-index 6c06bc928415..2a83782f51b0 100644
---- a/tools/perf/pmu-events/arch/arm64/ampere/ampereonex/memory.json
-+++ b/tools/perf/pmu-events/arch/arm64/ampere/ampereonex/memory.json
-@@ -33,11 +33,5 @@
-     },
-     {
-         "ArchStdEvent": "MEM_ACCESS_CHECKED_WR"
--    },
--    {
--        "PublicDescription": "Flushes due to memory hazards",
--        "EventCode": "0x121",
--        "EventName": "BPU_FLUSH_MEM_FAULT",
--        "BriefDescription": "Flushes due to memory hazards"
-     }
- ]
-
-base-commit: f47d223627f80cb7a1eb14c585fe6cb35de5e984
--- 
-2.53.0
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261021223905.7150=
+51-1-irogers@google.com?part=3D3
 
