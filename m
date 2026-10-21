@@ -1,100 +1,47 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.160.173
-ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1792546244;
-	b=FH9AdiUSgxnt+vPmQv8cGLA8Gz+hW/FIO8pB1BIS4EwIZnmLabLb5mJilxPzdUQZd1eX
-	 dnXwUUUjXXcvN01O1FNgeItFRL36aXE8eJjh50T5HyhKNBQ/MzNWXmzEibscKyL1rwK3D
-	 H8NkVUnZeQfDgE+F3sGQNaf/eIWq3HagpXdpMcovNCux1qTUyuQ0i/6Chvvki1NlJWsKg
-	 lMvSsY3qzkRpOJ+gj/6NKiagZO2Ha5m1alr87Q8/zkXC6y7fWGcCC4PPBU171nNeAF7tJ
-	 kjAXGnHWdy/mOfCfrWOt/aU9eAZo9sxEYSOImMXSyiYDYlVfB9h8rysufjtIjzqHc6A==
-ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792546244;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:
-	 MIME-Version:References:In-Reply-To:From:Date:X-Gm-Features:
-	 Message-ID:Subject:To:Cc:Content-Type:Content-Transfer-Encoding;
-	bh=PAUNdUhGhVk5P10frznxuicWSRes7WCpJcGSrDhd0Lk=;
-	b=Bm8u0qNW/EcVlFmGM38p0ylp7Zvj/FcmJZFf/m0hBNFmHVXMmxLXda7i/v69ShVuajRL
-	 Yvk/Kz1kC6eV4tXHjkdHtyIttuEA0eYUnJF6ymDtyzZGUvDFwnrNXzTvUmx+fC2Fi9X6s
-	 W5GtypIAc18BYz4wbZkdnVtZoC5uLmGxsy5wQuPLAyKOYWXaCdSsCoWWSXESGTmxjQINc
-	 nzrhUz0of2YDofk94D/FghSWLpsEO/ljkdOHX17KgSFT9C5F8I2HxOU/xqxjrHOq+QeWw
-	 Wq0pFZjC2bi8KeXPpXPDQwSvDfyv8cVZ6ocuOs09BpS8O71MGxOopZxCpb2K4FqzfAA==
-ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=google.com;
-	spf=pass smtp.mailfrom=google.com;
-	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20251104 header.b=hbm1n5Km;
-	arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.160.173
-Received: from mail-qt1-f173.google.com (mail-qt1-f173.google.com [209.85.160.173])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=45.249.212.56
+ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
+	t=1792547928;
+	b=GciQDWOR26vK6MM7YntfcKTfGpwRpTNU9cn2QxnGa+lr3lAFLRoqn0ylysl58YAsNZcz
+	 3PEoDnyeXrsAM12bVH7ep6mF9ENO4bYaPeRvlHJPs1DGZetE62FzSDeWSBvKOKpvOpe8a
+	 2eQw9ZqG6n9sZYcgirUylGb0F5XBO4W1mDNBkvLC0Ao93ahqxct+yoo7wyyll98/xtLwg
+	 ZMtyWywInXPv1E/zdMQ774PDSP8/a+WSJpWlhPjNv3A5O+MPbob3MQT+YWDgOApnmyjXS
+	 PQNw7u5NFB7dnyZn1r9ObEZnxlqVY0KxoYoVPuZply5CNFMpR6lJLXpRaVmdMR+XoUA==
+ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1792547928;
+	h=DMARC-Filter:Received:Received:Received:Message-ID:Date:MIME-Version:
+	 User-Agent:Subject:To:Cc:References:Content-Language:From:In-Reply-To:
+	 Content-Type:Content-Transfer-Encoding:X-CM-TRANSID:
+	 X-Coremail-Antispam:X-CM-SenderInfo;
+	bh=QqjFGGnFG6TPnVy9+6VBpXIM5ds0Ve0VY/HafKIxOyo=;
+	b=SmDioXIRMidNugVfAD4lqPktxbKwhGfZHpKxrLI8Q+2eslxnTlx97r3Ik5i1jBmxAONM
+	 /YkKqKvPy2Pn+H4yQbv2A0eMMO7gpMS+kDgUirlq6eMz2QTsfDhKTuR7eDmpioL6hISYV
+	 oCkMKnwZTe45X1kGYFrEuzO9AsX6BNLNOyyz0dlrIKQBI69GLk6fSpYH9o+7i1WmFEdJl
+	 nKMhlRPsHbrO0WUfXctW+3sYSyoYJKjuQ4CM0001a5XRn27UMNenUFB/PbjhUflHq++SV
+	 wocfelAQOOoeAVaXNAXdhH7hPeSxZjswNjp2XAKdDXRC31NeHMaHZOp4KijqYmwzNeg==
+ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
+	dmarc=none header.from=huaweicloud.com;
+	spf=pass smtp.mailfrom=huaweicloud.com;
+	arc=none smtp.remote-ip=45.249.212.56
+Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9F89606A31F
-	for <linux-perf-users@vger.kernel.org>; Wed, 21 Oct 2026 01:30:43 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org B9F89606A31F
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20251104 header.b=hbm1n5Km
-Received: by mail-qt1-f173.google.com with SMTP id d75a77b69052e-5337fa12431so91101cf.1
-        for <linux-perf-users@vger.kernel.org>; Tue, 20 Oct 2026 18:30:43 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1792546243; cv=none;
-        d=google.com; s=arc-20260327;
-        b=NoJuYLOoccI2zcbV/3QHtj0ZKNUgiDT8M/D/SuMhEsIpYMoLDyRLTmo3+lRl9ycS4X
-         TmK3UnnjlcFHJ7btOYRC1YVhJSTKFbM7kXOSO5kpB176SP1L7nOrprxdKHe8ujrcu+Ft
-         UDUce1IvqUltVxQV5qQgIH7ldcshmPCRXjIBBW2vj2fiC1UOQKx2inC9VcJbKPxs563B
-         0Uqfo3VwOmHDBbsNALQR0d+b4zOCh/DZOrPQxyKIglktgchCB0FZ0tkmjlu0I02J8xzm
-         a+0uy3/d4igLE0D/a4J3nQHYdcIbNfJ1u0bSoBd+Cm5e8GOwK2IQrO9YURV6GAKz6FsW
-         Fzcw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=PAUNdUhGhVk5P10frznxuicWSRes7WCpJcGSrDhd0Lk=;
-        fh=Q+dA45TyvzaM48lMlNzk/wq+6yGMLHzinDcQcUyFn/g=;
-        b=FtxjvB0pvaXpW/tjSHsp6av9e08wWj+tMSVlzOVtbUhD4etzPQg0A0U4fKq13XbtgD
-         POzn8BABOQAHdH4eAVgS+3XrgCUZcT6rdGGUVzC3v2O/1lDwsMCZPjz/dBi+UbefkKZm
-         7Iy3dUxRvP2FomrijrlhT5nhh5L1Vg7bfMQ0LgrVoZfVQnqXVOLF/HVmpECEknxt+Grw
-         R5/vmKZfxoY5W3yqIaKJ4QQY/GL4hhki00EfzxIr6DhaUzC5t2ydyCex3aVSXYhJ0jBh
-         MS4xEkP+fSkx9/RUc7iaToUps7eqESmelKvaNUR+cygCsNn5GNUGm4kbl52y1RZOY39F
-         /W9w==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1792546243; x=1793151043; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=PAUNdUhGhVk5P10frznxuicWSRes7WCpJcGSrDhd0Lk=;
-        b=hbm1n5KmqZ3I2eKENapPbC/2vdQHWHNUsuKkpm/gEN9PA/LdLIfkSMFh4zTJYHkpXH
-         OydBIU5v4tfZjPCnPx5eSSHfq9odcpSvYupQFgj5PPQZ/XOqvl13TRksTKDRPNRZrjxg
-         NeLMwpettJdn6Gu4iTgrth1NsFA3R4MGb/04YZnhKBLbjZP7AM1/e7jo27+mH67Fv3gw
-         cYTWygFp4fWQNfOPGyrw8IDUtmZ9PGlUaXaK7uVHrptvwifpR0Js6aG+rkYoU3dsfWW2
-         CuZdULSM2dx06x3F5G3hn8JyjDWJCQVrXmGClOcvIZ+wA2Vbu1Pjprt8DjXtlWhhcSPd
-         lnbA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1792546243; x=1793151043;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=PAUNdUhGhVk5P10frznxuicWSRes7WCpJcGSrDhd0Lk=;
-        b=j6b+7ejna7DoxnODq2nXzXM1A2VbT/VprGcQic3sbDAIPcCIh4s6wQqnt6wHLelD9X
-         d+FRwaAsgkiioIBzQwQwLAvwBeV2ExUfGx3KUI7e+R8LrThSL/OG3En4FR04xfUfVbCU
-         vsyG6pFEPlGFQEgJJYoPbpPiUQcUHl0FdpcuHllLfXnyA92CZBFrREB6uvdniyg49GWm
-         /s+mHnPeEXx3t+LiR3MS3pAGTnUs0ss70Uc0UutDQBlF3TlILmqjlGG6GLVV0X5+mb4K
-         VKzXD65XOhDqu20nUfFVUaWJwwHyi8vfj83t58/VMncL4ZAyjbByMhI1XB2xETpbSGHT
-         L/WA==
-X-Forwarded-Encrypted: i=1; AKwUvBwoxxAA8eAnI6cAmU1sV6VEqOYvdwn5S1e03rAZmvY9qdV3maFKLMWjSFU6rRUdXlkqBxHrmsz8tEcbjS3kmWWJ@vger.kernel.org
-X-Gm-Message-State: AFq9FYLJz+3G4JJ5MpmHXAgT2fBZOOLro6o1xALhrsgBg51KGuT9hJcN
-	FjHSd/yuZxy2IBOEup1XbLUyaKV9gnJPgWLOUUsEIBzIfvXMkcRvlgd73mv/IWCNdnmMsRT3jWx
-	uTtp988pPAa9X5U1kLLTYzD96iRjTX+ZB4bhpys1f
-X-Gm-Gg: AYBFou2O+jzzu06jVpcRECoygOkJPUXlE/GZxYdGGTWhj/x0FryFAOFfRl/kQTOY1DJ
-	CjYCzFdcbaRTsAEeixdUc2DfTt3t9IF0RWo5KoqtJarSeSUjYl8IUYwFbkhfdAGr+dNNqvWCzAE
-	Cxx1fPS3ThIxYEGfxq+MTSeubEDiDdmDv45gO0KvVYLclUEJrp21DPmjf8Nxgq/Flg8MJr9nV4t
-	tBBbM0YKpvHHJiTdFyFmVu4IiAWb74bziul2X0pSzUMVc7chn75Ne8/g8xj4lgQPPD1JNDnzSJi
-	eEVOoXtX3XkI8ZDxz7Y96xd9dHAniOPvvQaoKVa51UO+yXbd0CVXRienuxjuBTCX19htZoOgr49
-	bDsVYfj9ziMSZOJ9NeDtlvzuPqJ3qcITktv5iQg==
-X-Received: by 2002:a05:622a:a889:b0:52f:8389:29e0 with SMTP id
- d75a77b69052e-53684a855d1mr35309201cf.0.1792546242034; Tue, 20 Oct 2026
- 18:30:42 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F1CD606A330
+	for <linux-perf-users@vger.kernel.org>; Wed, 21 Oct 2026 01:58:45 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 3F1CD606A330
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.170])
+	by dggsgout12.his.huawei.com (SkyGuard) with ESMTPS id 4j8XWD35fVzKHLvP
+	for <linux-perf-users@vger.kernel.org>; Wed, 21 Oct 2026 09:58:32 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.128])
+	by mail.maildlp.com (Postfix) with ESMTP id 3939740561
+	for <linux-perf-users@vger.kernel.org>; Wed, 21 Oct 2026 09:58:43 +0800 (CST)
+Received: from [10.67.110.36] (unknown [10.67.110.36])
+	by APP4 (Coremail) with UTF8SMTPA id gCh0CgDXCelSHNhqIXfsBA--.22166S2;
+	Wed, 21 Oct 2026 09:58:43 +0800 (CST)
+Message-ID: <bf6719dd-7166-4b9f-91ac-bc7e266d6565@huaweicloud.com>
+Date: Wed, 21 Oct 2026 09:58:41 +0800
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -104,156 +51,286 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-References: <20261019164241.403644-1-bwicaksono@nvidia.com>
- <21f58af0-fa3f-41c5-ab03-216c60fbe2f1@linaro.org> <ate93zQFkfAecIv2@x2>
- <CAP-5=fXUMVJwtAp+8dA8V=hBD9q4x6J4YiUufwXAOXcAJoAKTg@mail.gmail.com> <SA1PR12MB6773C6D7355C7229EF1341F0A0672@SA1PR12MB6773.namprd12.prod.outlook.com>
-In-Reply-To: <SA1PR12MB6773C6D7355C7229EF1341F0A0672@SA1PR12MB6773.namprd12.prod.outlook.com>
-From: Ian Rogers <irogers@google.com>
-Date: Tue, 20 Oct 2026 18:30:30 -0700
-X-Gm-Features: AclHuK_s5I62ce-14bqNjkF3ExUlJi8orsBz0fc6wg1Ud9yaq6K2V9y2A5lKOFg
-Message-ID: <CAP-5=fVXO+2y=0S+hRYgAoO7Vsj7xs4dbgrJ+YzMHmnkHHgx8g@mail.gmail.com>
-Subject: Re: [PATCH 0/6] perf jevents: Add NVIDIA Tegra410 uncore PMU events
- and metrics
-To: Besar Wicaksono <bwicaksono@nvidia.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, James Clark <james.clark@linaro.org>, 
-	"namhyung@kernel.org" <namhyung@kernel.org>, 
-	"linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, 
-	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, 
-	"linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Vikram Sethi <vsethi@nvidia.com>, 
-	Rich Wiley <rwiley@nvidia.com>, Sean Kelley <skelley@nvidia.com>, Matt Ochs <mochs@nvidia.com>, 
-	Raj Joshi <rajjoshi@nvidia.com>, Thierry Reding <treding@nvidia.com>, 
-	Jon Hunter <jonathanh@nvidia.com>, "john.garry@linux.dev" <john.garry@linux.dev>, 
-	"will@kernel.org" <will@kernel.org>, "mike.leach@arm.com" <mike.leach@arm.com>, 
-	"leo.yan@linux.dev" <leo.yan@linux.dev>, "mark.rutland@arm.com" <mark.rutland@arm.com>, 
-	"alexander.shishkin@linux.intel.com" <alexander.shishkin@linux.intel.com>, "jolsa@kernel.org" <jolsa@kernel.org>, 
-	"adrian.hunter@intel.com" <adrian.hunter@intel.com>, "ctshao@google.com" <ctshao@google.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v8 05/15] perf annotate-arm64: Support load instruction
+ tracking
+To: sashiko-reviews@lists.linux.dev
+Cc: linux-perf-users@vger.kernel.org
+References: <cover.1792411435.git.wutengda@huaweicloud.com>
+ <a6085b6f08ba2ed533208ebe9227968770cd58ca.1792411435.git.wutengda@huaweicloud.com>
+ <sashiko-outbox-179159@kernel.org>
+Content-Language: en-US
+From: Tengda Wu <wutengda@huaweicloud.com>
+In-Reply-To: <sashiko-outbox-179159@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:gCh0CgDXCelSHNhqIXfsBA--.22166S2
+X-Coremail-Antispam: 1UD129KBjvJXoW3GF1DWw1rZF4xWFWrAFyxZrb_yoWfGr18pF
+	WkCay5Ka17Xr4IgrsIqr4rWry3Ww1xWr1xCry5Za1SyFnFvr1rKa93KrW3WFWrGrZxAr1U
+	Xw4jyrnxXw4jkaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUglb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k2
+	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
+	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7Cj
+	xVAFwI0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7
+	CjxVAFwI0_Cr1j6rxdM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02
+	F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4I
+	kC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Y
+	z7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zV
+	AF1VAY17CE14v26r1Y6r17MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4l
+	IxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCw
+	CI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVF
+	xhVjvjDU0xZFpf9x07UE-erUUUUU=
+X-CM-SenderInfo: pzxwv0hjgdqx5xdzvxpfor3voofrz/
 
-On Tue, Oct 20, 2026 at 3:15=E2=80=AFPM Besar Wicaksono <bwicaksono@nvidia.=
-com> wrote:
->
-> > -----Original Message-----
-> > From: Ian Rogers <irogers@google.com>
-> > Sent: Tuesday, October 20, 2026 8:33 PM
-> > To: Arnaldo Carvalho de Melo <acme@kernel.org>
-> > Cc: James Clark <james.clark@linaro.org>; Besar Wicaksono
-> > <bwicaksono@nvidia.com>; namhyung@kernel.org; linux-
-> > tegra@vger.kernel.org; linux-arm-kernel@lists.infradead.org; linux-perf=
--
-> > users@vger.kernel.org; linux-kernel@vger.kernel.org; Vikram Sethi
-> > <vsethi@nvidia.com>; Rich Wiley <rwiley@nvidia.com>; Sean Kelley
-> > <skelley@nvidia.com>; Matt Ochs <mochs@nvidia.com>; Raj Joshi
-> > <rajjoshi@nvidia.com>; Thierry Reding <treding@nvidia.com>; Jon Hunter
-> > <jonathanh@nvidia.com>; john.garry@linux.dev; will@kernel.org;
-> > mike.leach@arm.com; leo.yan@linux.dev; mark.rutland@arm.com;
-> > alexander.shishkin@linux.intel.com; jolsa@kernel.org;
-> > adrian.hunter@intel.com; ctshao@google.com
-> > Subject: Re: [PATCH 0/6] perf jevents: Add NVIDIA Tegra410 uncore PMU
-> > events and metrics
-> >
-> > External email: Use caution opening links or attachments
-> >
-> >
-> > On Tue, Oct 20, 2026 at 12:15=E2=80=AFPM Arnaldo Carvalho de Melo
-> > <acme@kernel.org> wrote:
-> > >
-> > > On Mon, Oct 19, 2026 at 06:23:16PM +0100, James Clark wrote:
-> > > > On 19/10/2026 17:42, Besar Wicaksono wrote:
-> > > > > Add event aliases and derived metrics for the NVIDIA Tegra410 unc=
-ore
-> > > > > PMUs.
-> > >
-> > > > Reviewed-by: James Clark <james.clark@linaro.org>
-> > >
-> > > Thanks, applied to perf-tools-next, for v7.4.
-> >
-> > Hi Arnaldo,
-> >
-> > can we not take these in v7.4 as there is unaddressed feedback:
-> > https://lore.kernel.org/linux-perf-users/CAP-
-> > 5=3DfWucvdYefDOL3Vn=3DO=3DYUPEXE+tngDDfPLv-
-> > T5i3WkCJVA@mail.gmail.com/
-> >
-> > The specific problem is that the NVidia PMUs have adopted a convention
-> > not supported by the perf tool of 'pmu_name_<socket>_rc_<num>'. rc
-> > stands for root complex. What ends up happening is that aggregation is
-> > broken as the json is claiming that pmu_name is the PMU's name while
-> > the suffix perf_pmus code thinks pmu_name_<socket>_rc is the pmu name.
-> > They've wrangled support via the json by claiming these are sys
-> > events.
-> >
-> > We can either:
-> > 1) support a new suffix convention of <num>_rc_<num>
-> > 2) push back and ask the driver writers to name their PMU correctly as
-> > defined in the ABI:
-> > https://web.git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/=
-tree
-> > /Documentation/ABI/testing/sysfs-bus-event_source-devices
-> >
-> > If we do (1) then it would be nice if the support for that could be
-> > contained in this patch series. In any case these events don't belong
-> > in sys.
->
-> Hi Ian,
->
-> Could you elaborate more on why these uncore events don't belong in sys
-> directory? Is it because T410 already has an entry in mapfile.csv?
 
-I think the meaning of sys and system events has always been unclear.
-The original patch series is:
-https://lore.kernel.org/lkml/1607080216-36968-1-git-send-email-john.garry@h=
-uawei.com/
-However, since it isn't tied to a CPUID it should refer to things like
-accelerator or network cards, not regular uncore PMUs.
-The whole notion of sys events/metrics needs TLC as it doesn't make
-sense for them to be in vendor directories if they aren't tied to
-CPUIDs.
 
-> I put them in sys so perf matches them to the PMU by its identifier ("Com=
-pat")
-> rather than by the CPU, similar to hisilicon/hip09/sys and thead/yitian71=
-0/sys.
+On 2026/10/20 22:36, sashiko-bot@kernel.org wrote:
+> Thank you for your contribution! Sashiko AI review found 2 potential issue(s) to consider:
+> - [Medium] perf annotate-arm64: unused type_die in propagate_load_reg_state()
+> - [Medium] perf annotate-arm64: missing reg2 extraction in ldp when reg1 is xzr/wzr
+> --
+> 
+> commit d4331cee155820a433821da388de2a7297699e0e
+> Author: Tengda Wu <wutengda@huaweicloud.com>
+> 
+> perf annotate-arm64: Support load instruction tracking
+> 
+> This commit extends update_insn_state_arm64() to track register state
+> changes across standard load and load-pair instructions, including
+> pre-index and post-index addressing modes.
+> 
+>> diff --git a/tools/perf/util/annotate-arch/annotate-arm64.c b/tools/perf/util/annotate-arch/annotate-arm64.c
+>> index c4cc8bca85cc0..0b5d1abbc5755 100644
+>> --- a/tools/perf/util/annotate-arch/annotate-arm64.c
+>> +++ b/tools/perf/util/annotate-arch/annotate-arm64.c
+>> @@ -527,11 +527,212 @@ static void invalidate_unhandled_insn_regs(struct type_state *state,
+>>  	/* TODO: Extend invalidation support to more special instructions. */
+>>  }
+>>  
+>> +static int arm64__reg_size(const char *reg)
+>> +{
+>> +	if (!reg || !*reg || !arm64__is_reg(reg))
+>> +		return -1;
+>> +
+>> +	if (reg[0] == 'w')
+>> +		return 4;
+>> +
+>> +	if (reg[0] == 'x' || !strncmp(reg, "sp", 2))
+>> +		return 8;
+>> +
+>> +	return -1;
+>> +}
+> 
+> [ ... ]
+> 
+>> +static int propagate_load_reg_state(struct type_state *state,
+>> +				    struct data_loc_info *dloc,
+>> +				    struct disasm_line *dl, int dreg,
+>> +				    struct annotated_op_loc *src,
+>> +				    struct type_state_reg **src_states,
+>> +				    int mem_spacing)
+>> +{
+>> +	struct type_state_reg *tsr;
+>> +	struct type_state_reg *src_tsr = src_states[0];
+>> +	Dwarf_Die type_die;
+>> +	u32 insn_offset = dl->al.offset;
+>> +	int sreg = src->reg1;
+>> +	int reg_offset;
+>> +
+>> +	if (!has_reg_type(state, dreg))
+>> +		return -1;
+>> +
+>> +	tsr = &state->regs[dreg];
+>> +	tsr->copied_from = -1;
+>> +	tsr->lifetime_active = false;
+>> +	tsr->lifetime_end = 0;
+>> +
+>> +retry:
+>> +	if (arch_get_reg_offset(dloc->arch, src, sreg, state, false, &reg_offset))
+>> +		goto load_non_regoff;
+>> +
+>> +	reg_offset += mem_spacing;
+>> +
+>> +	if (!src_tsr || !src_tsr->ok)
+>> +		return -1;
+>> +
+>> +	/* Dereference the pointer if it has one */
+>> +	if (src_tsr->kind == TSR_KIND_TYPE &&
+>> +	    die_deref_ptr_type(&src_tsr->type,
+>> +			       src_tsr->offset + reg_offset, &type_die)) {
+>> +		tsr->type = type_die;
+>> +		tsr->kind = TSR_KIND_TYPE;
+>> +		tsr->offset = 0;
+>> +		tsr->ok = true;
+>> +
+>> +		pr_debug_dtp("%s [%x] %#x(reg%d) -> reg%d",
+>> +			     dl->ins.name, insn_offset, reg_offset, sreg, dreg);
+>> +		pr_debug_type_name(&tsr->type, tsr->kind);
+>> +		return 0;
+>> +	}
+>> +
+>> +	/* Handle dereference of TSR_KIND_POINTER registers */
+>> +	if (src_tsr->kind == TSR_KIND_POINTER &&
+>> +	    die_get_member_type(&src_tsr->type,
+>> +				src_tsr->offset + reg_offset, &type_die)) {
+>> +		tsr->type = src_tsr->type;
+>> +		tsr->kind = TSR_KIND_TYPE;
+>> +		tsr->offset = src_tsr->offset + reg_offset;
+> 
+> [Severity: Medium]
+> Should tsr->type be assigned type_die and tsr->offset set to 0 here?
+> 
+> When DWARF describes a struct variable via a register-based memory
+> location (where var->is_reg_var_addr is true), update_var_state() sets
+> the base register to TSR_KIND_POINTER with reg->type set to the struct
+> DIE.
+> 
+> When a load instruction reads a member from that struct into dreg,
+> update_insn_state_arm64() -> update_load_insn_state() ->
+> propagate_load_reg_state() calls die_get_member_type() to resolve the
+> loaded member's type into type_die.
+> 
+> However, type_die is left unused, and tsr->type is set to src_tsr->type
+> (the outer struct DIE) with tsr->offset set to src_tsr->offset +
+> reg_offset and tsr->kind set to TSR_KIND_TYPE. When a subsequent
+> instruction dereferences dreg, check_matching_type() or
+> die_deref_ptr_type() inspects dreg->type, sees the outer struct type
+> instead of the member's pointer type, and fails with PERF_TMR_NO_POINTER.
+> 
 
-So it would be better to follow x86 as a model.
+A similar issue was already clarified in v6 [1], and this part of the code
+has been confirmed during actual debugging to resolve the data type
+correctly, so I will keep it consistent with x86 and not modify it.
 
-> For the aggregation concern, I replied on PATCH 4/6 and will look into
-> it further.
+[1] https://lore.kernel.org/all/228cf99e-2b8a-42a8-aab6-45cc4823d3b7@huaweicloud.com/#t
 
-So CT replied. The ABI document was created because the hex suffix
-broke aggregation, which we fixed. As your reply details, cross-PMU
-aggregation has been broken by your new suffix convention. With the
-conventions we have, PMU names like i915 will match a name of just "i"
-and ARM CPU names tend to be valid hex suffixes in things like
-armv8_pmu_a53 - so we ignore suffixes on core PMUs. The distinction
-between core and uncore PMUs in sysfs is also strange. Anyway, it
-isn't perfect, but we documented it so that future PMUs wouldn't break
-aggregation again - or if they did they can detail in the ABI and perf
-code what the new additional convention is.
+>> +		tsr->imm_value = 0;
+>> +		tsr->ok = true;
+>> +
+>> +		pr_debug_dtp("%s [%x] addr %#x(reg%d) -> reg%d",
+>> +			     dl->ins.name, insn_offset, reg_offset, sreg, dreg);
+>> +		pr_debug_type_name(&tsr->type, tsr->kind);
+>> +		return 0;
+>> +	}
+>> +
+>> +load_non_regoff:
+>> +	/* Try another register if any */
+>> +	if (src->multi_regs && src->reg1 != src->reg2 && sreg != src->reg2 &&
+>> +	    !(src->extend_type || src->shift_type)) {
+>> +		sreg = src->reg2;
+>> +		src_tsr = src_states[1];
+>> +		goto retry;
+>> +	}
+>> +
+>> +	return -1;
+>> +}
+>> +
+>> +static void update_load_insn_state(struct type_state *state,
+>> +				   struct data_loc_info *dloc,
+>> +				   struct disasm_line *dl,
+>> +				   struct annotated_op_loc *src,
+>> +				   struct annotated_op_loc *dst)
+>> +{
+>> +	struct type_state_reg snapshots[2];
+>> +	struct type_state_reg *src_states[2] = {};
+>> +	int mem_spacing = 0;
+>> +
+>> +	if (!src->mem_ref ||  /* exclude PC-relative loads */
+>> +	    !has_reg_type(state, src->reg1)) {
+>> +		/* Invalidate tracked destination registers */
+>> +		if (has_reg_type(state, dst->reg1))
+>> +			invalidate_reg_state(&state->regs[dst->reg1]);
+>> +		if (dst->multi_regs && has_reg_type(state, dst->reg2))
+>> +			invalidate_reg_state(&state->regs[dst->reg2]);
+>> +		goto out_adjust;
+>> +	}
+>> +
+>> +	/*
+>> +	 * Snapshot source register states before updating destination registers.
+>> +	 * This preserves the original source state for aliased loads (e.g.,
+>> +	 * ldp x0, x1, [x0]), where updating the first destination may overwrite
+>> +	 * the source register.
+>> +	 */
+>> +	snapshots[0] = state->regs[src->reg1];
+>> +	src_states[0] = &snapshots[0];
+>> +	if (src->multi_regs && has_reg_type(state, src->reg2)) {
+>> +		snapshots[1] = state->regs[src->reg2];
+>> +		src_states[1] = &snapshots[1];
+>> +	}
+>> +
+>> +	/* Handle the first destination register */
+>> +	if (has_reg_type(state, dst->reg1)) {
+>> +		if (propagate_load_reg_state(state, dloc, dl, dst->reg1,
+>> +					     src, src_states, mem_spacing))
+>> +			invalidate_reg_state(&state->regs[dst->reg1]);
+>> +	}
+>> +
+>> +	if (!dst->multi_regs || !has_reg_type(state, dst->reg2))
+>> +		goto out_adjust;
+> 
+> [Severity: Medium]
+> What happens here when an ldp instruction uses the zero register (xzr or
+> wzr) as its first destination operand, such as "ldp xzr, x19, [sp], #16"
+> or "ldp xzr, x1, [x0]"?
+> 
+> In update_load_insn_state(), dst->reg1 is guarded by has_reg_type(state,
+> dst->reg1) without returning early, and arm64__reg_size() recognizes
+> xzr/wzr via arm64__is_reg() so dst->reg2 can still be updated or
+> invalidated.
+> 
+> However, when update_insn_state_arm64() calls
+> annotate_get_insn_location() -> extract_op_location_arm64(),
+> arch__dwarf_regnum() returns -1 for xzr and wzr, and
+> extract_op_location_arm64() returns before parsing reg2:
+> 
+> tools/perf/util/annotate-arch/annotate-arm64.c:extract_op_location_arm64() {
+> 	...
+> 	/* Extract the primary register */
+> 	op_loc->reg1 = arch__dwarf_regnum(arch, s);
+> 	if (op_loc->reg1 == -1)
+> 		return;
+> 
+> 	s = next_operand_field(s);
+> 	if (s == NULL)
+> 		return;
+> 
+> 	/* Extract secondary register or immediate offset */
+> 	if (op_loc->multi_regs) {
+> 		op_loc->reg2 = arch__dwarf_regnum(arch, s);
+> 	...
+> }
+> 
+> Doesn't this leave dst->reg2 as -1, causing update_load_insn_state() (and
+> invalidate_unhandled_insn_regs()) to skip the second register instead of
+> propagating its type or invalidating its previous state?
+> 
 
-Ideally we wouldn't include anything fancy like physical addresses and
-socket numbers in PMU names. Such information is already present in
-/proc/iomem or the topology code, and the naming irregularities only
-serve to break aggregation. To add detail to the PMU, use the caps
-files. I don't think the perf tool should add new ways for every
-vendor to aggregate, determine sockets, etc. It is bad enough we have
-to carry fixes for ARM PMUs not honoring hot plugging and for the
-cpumasks not being set up properly on Intel PMUs for sub-NUMA
-clustering. Ideally, the perf tool could work in a user space
-emulator=E2=80=94say, an x86 perf tool running under QEMU user emulation on=
- an
-ARM64 CPU. Special-casing CPU type and PMU logic defeats this goal.
+So the root cause is that arch__dwarf_regnum does not currently support xzr/wzr;
+it is not a problem with this patch.
+
+I will take a targeted look at how to handle xzr/wzr in the future.
 
 Thanks,
-Ian
+Tengda
 
+>> +
+>> +	/* Handle the second destination register */
+>> +	if (!strcmp(dl->ins.name, "ldpsw"))
+>> +		mem_spacing = 4;  /* ldpsw loads two 32-bit signed words (4-byte spacing) */
+>> +	else
+>> +		mem_spacing = arm64__reg_size(dl->ops.target.raw);
+>> +
+>> +	if (mem_spacing < 0 ||
+>> +	    propagate_load_reg_state(state, dloc, dl, dst->reg2,
+>> +				     src, src_states, mem_spacing))
+>> +		invalidate_reg_state(&state->regs[dst->reg2]);
+>> +
+>> +out_adjust:
+>> +	adjust_reg_index_state(state, dloc, dl, src);
+>> +}
+> 
+> [ ... ]
+> 
+>>
+> 
 
-> Thanks,
-> Besar
->
-> >
-> > Thanks,
-> > Ian
-> >
-> > > - Arnaldo
