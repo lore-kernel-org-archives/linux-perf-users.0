@@ -1,47 +1,55 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=45.249.212.56
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792548425;
-	b=YvH7pnwCMeRAfSSPZeEW3Set7y+MXmvAtNdYGp2nPdQl2LPGmkitSY34IjP0EhKHfmXg
-	 Uzqri81j19F348/iApso4eqS9iQSjmC/3X7v6vqu/PpWx+nBSwZgPmuzofE7BomtxhEGu
-	 gYtM/QsfLuT+x1ToY6/K1BRpXywHj2jaG1hEEgM1Vcxp2VNDeFMSDD1FlQzxrP0FOeC+D
-	 a5vwHfaaiKQaJXjJIQ3pGjUpcPzlbSzqVqmdIr1MWeHNA4ctAn55fTvYZjTeiNFZvytsi
-	 A3+O9Drmzt7Tb3IsbBgrA53zqFkJXGNmVrDw9XyEhL1KXPXFbidLIxTyzS4FJPLRRYg==
+	t=1792548892;
+	b=dmDyXajn/bk312x2cg+QobH2WRUcncaCOrYqvwmADylMJ7sYVhH9DgdPEQshwn20x4wh
+	 WDEMKCmbbHDTZS+wnC+w/PQBmUDBf8K+bT9fE7bHUiBLhOnWluNJd+1NriRGCPTC7KzjJ
+	 b9CLNS4L6CC1jje1S0PUJ+ceY/O6KGVsYId6+5xIK46FLzFjVe57GzUyGTLDM3HK53zrn
+	 p++zzIcRLYM5GBClnGQuxPB7IO6y4nBac4jdZuk6dx3OER080vZgKf0eZ5HkNFWX2QYof
+	 npnMdjV8EgyOT7SYca/BVXnhhPZevyZkp3z/zh/+c/QRPBmJjF3I6aEe5yGeIQlrBYA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792548425;
-	h=DMARC-Filter:Received:Received:Received:Message-ID:Date:MIME-Version:
-	 User-Agent:Subject:To:Cc:References:Content-Language:From:In-Reply-To:
-	 Content-Type:Content-Transfer-Encoding:X-CM-TRANSID:
-	 X-Coremail-Antispam:X-CM-SenderInfo;
-	bh=l7KFQLIaTwlSBsukka0meVUJRSxCzsTjMjFc9CnbXDc=;
-	b=X53R1OTdDmkNRrXQ/kAXPPOucDPG5M/7U3K4CFLEe9t1+d21JIPo/r24BxrCOD2e9976
-	 CGPSY9sJWLP7pcTqSI/2TUgmykCM535NgeswrTNKKnYRK8jXE20dPERvFMzCo0RHHrapC
-	 oBYpqXYfc1EmFPkjv3Iq/8Q06A5alpsm81zuH4yopKnZ+SixUXBwEARbUoVi7TcNRO9oU
-	 XqzB6dBTZCxzgd9WUBpVwKFy9Ur+JtTZJpEkyVElEQnhBTJqd6jwPt0xPOmBawzmZnuQn
-	 BHh4BjUhx07pOES0P3YvQMlLzwsjoKgo5HCwhPBJAsyoDTGiR1oQXgkbSKtSyZfFNcg==
+	a=rsa-sha256; c=relaxed/relaxed; t=1792548892;
+	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
+	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
+	bh=CC9ZEH7TYZy17mupHpeJeG/kH88P+EfBdqRFPWmx4+w=;
+	b=MPtU3KJGcYGelPW02Uf3OIfqy+uM8MqaUMmyZNIchXv4qFVgCXrXAUVluIZA0mFH4zlP
+	 yJ2GWEhD2A+VpWCD3ge/GM2TAptSYmo4GfE0zvpUpkpG+sqKsd0hG+7dwiEZWWmQhd1yn
+	 AmpDMJRzEV6a9wR7CJk8kMx0U5+4xuBSYhIjVwpxnVbnS7vYVsjSJS1nKW1JtOSbONtdp
+	 OgHrxpO9vh5cr9QdYDKVEvydATZLHvOdXlc+u2rMlOb6ppR4VbF1FH3No0pyEdQizOkrP
+	 FSzcA4Slg7hBZyWNFt0DkwC6/0brngjUZP8ciN+1MmkHjRquwcYur2lOZjcgbmFK53g==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=none header.from=huaweicloud.com;
-	spf=none smtp.mailfrom=huaweicloud.com;
-	arc=none smtp.remote-ip=45.249.212.56
-Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Taby59BF;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23966606A31A
-	for <linux-perf-users@vger.kernel.org>; Wed, 21 Oct 2026 02:07:02 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 23966606A31A
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.177])
-	by dggsgout12.his.huawei.com (SkyGuard) with ESMTPS id 4j8Xhn5xKRzKHMJn
-	for <linux-perf-users@vger.kernel.org>; Wed, 21 Oct 2026 10:06:49 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.75])
-	by mail.maildlp.com (Postfix) with ESMTP id 974594065D
-	for <linux-perf-users@vger.kernel.org>; Wed, 21 Oct 2026 10:07:00 +0800 (CST)
-Received: from [10.67.110.36] (unknown [10.67.110.36])
-	by APP2 (Coremail) with UTF8SMTPA id Syh0CgD3xOpEHthqsiLhBA--.22682S2;
-	Wed, 21 Oct 2026 10:07:00 +0800 (CST)
-Message-ID: <d27f6108-fe6d-4d71-a601-b964e10e7f77@huaweicloud.com>
-Date: Wed, 21 Oct 2026 10:07:00 +0800
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95C28606A319
+	for <linux-perf-users@vger.kernel.org>; Wed, 21 Oct 2026 02:14:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Taby59BF
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 44F8F1F000CA;
+	Wed, 21 Oct 2026 02:14:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1792548892;
+	bh=CC9ZEH7TYZy17mupHpeJeG/kH88P+EfBdqRFPWmx4+w=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=Taby59BFx4qgANU7rHJxhxfvdHUrcjLBO+nv1khlA8DeC2Q7zJnrQNiZdCsPi3+4u
+	 pQFvoCYiMZtS6MQr8mjKQ3oObhWOEHohK465uEDWfM2WuSaYquiPPTARGgfZp73yY9
+	 vvRPYnvbKmtGHB/qrME931r+p7CTfFHCTsyLiMnEyBzX6ow2xoSDj9I0ZRP5aMPw43
+	 mQP2hcz6uOfMEW7WbIGT8t436JRbPU3ayjjzYP8O3uH6NMbzfD1hdri+CljRW+Ix4x
+	 GDJvkK9qfd7FP8q9Ut0nevPjs2Xs1aJrz3TKus8Ol+xr1bvY568VeRvUEU6/b4y+6l
+	 sQReWXewduHCg==
+Message-ID: <sashiko-outbox-179692@kernel.org>
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v2] perf: arm_spe: Support heterogeneous ACPI systems
+Reply-To: sashiko-reviews@lists.linux.dev
+To: Johnny.Fan <johnny.fan@cixtech.com>
+Cc: linux-perf-users@vger.kernel.org
+In-Reply-To: <20261021020322.3015121-1-johnny.fan@cixtech.com>
+References: <20261021020322.3015121-1-johnny.fan@cixtech.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Wed, 21 Oct 2026 02:14:51 +0000
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -50,128 +58,136 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v8 13/15] perf annotate-arm64: Support 'adrp' instruction
- to track global variables
-To: sashiko-reviews@lists.linux.dev
-Cc: linux-perf-users@vger.kernel.org
-References: <cover.1792411435.git.wutengda@huaweicloud.com>
- <145ac934f72c090987c2e6d0be28b28972f843c7.1792411435.git.wutengda@huaweicloud.com>
- <sashiko-outbox-179232@kernel.org>
-Content-Language: en-US
-From: Tengda Wu <wutengda@huaweicloud.com>
-In-Reply-To: <sashiko-outbox-179232@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:Syh0CgD3xOpEHthqsiLhBA--.22682S2
-X-Coremail-Antispam: 1UD129KBjvJXoWxuryDJrW7Kry5WF48Cw1ftFb_yoWrXry7pF
-	WDGFy5Gw42vF10grsIqrWfXFySga17GF1fKryDKF4IkFy2vrn3KF9Ika1Ygay7JrZxZw1U
-	Jan09rsrZF10ka7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUgmb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7Cj
-	xVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x
-	0267AKxVWxJr0_GcWle2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8C
-	rVC2j2WlYx0E2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4
-	IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkE
-	bVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67
-	AF67kF1VAFwI0_Jrv_JF1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI
-	42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMI
-	IF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2
-	KfnxnUUI43ZEXa7IU1wL05UUUUU==
-X-CM-SenderInfo: pzxwv0hjgdqx5xdzvxpfor3voofrz/
 
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+s) to consider:
+- [Medium] perf: arm_pmu_acpi: GSI leak in arm_acpi_register_group() when s=
+hared
+--
 
+commit 07d4d2d60385c80c0a1df910cfddbd2fb128123f
+Author: Johnny.Fan <Johnny.Fan@cixtech.com>
 
-On 2026/10/20 23:15, sashiko-bot@kernel.org wrote:
-> Thank you for your contribution! Sashiko AI review found 1 potential issue(s) to consider:
-> - [Medium] perf annotate-arm64: adjust_reg_index_state() drops global addr writeback
-> --
-> 
-> commit 329d013c0c7d0b8be3fe8f0ec1e0f669451e6cbd
-> Author: Tengda Wu <wutengda@huaweicloud.com>
-> 
-> perf annotate-arm64: Support 'adrp' instruction to track global variables
-> 
-> This commit extends arm64 data type profiling to track global variable
-> addresses calculated via page-relative adrp instructions. It introduces
-> TSR_KIND_GLOBAL_ADDR to store the page-aligned base address and resolves
-> the symbol address and DWARF type on subsequent add or load instructions.
-> 
->> diff --git a/tools/perf/util/annotate-arch/annotate-arm64.c b/tools/perf/util/annotate-arch/annotate-arm64.c
->> index 61df9c4f48776..bd060a823b765 100644
->> --- a/tools/perf/util/annotate-arch/annotate-arm64.c
->> +++ b/tools/perf/util/annotate-arch/annotate-arm64.c
-> [ ... ]
->> @@ -722,6 +722,33 @@ static int propagate_load_reg_state(struct type_state *state,
->>  		return 0;
->>  	}
->>  
->> +	/* Or check if it's a global variable */
->> +	if (src_tsr->kind == TSR_KIND_GLOBAL_ADDR) {
->> +		u64 ip = dloc->ms->sym->start + dl->al.offset;
->> +		u64 addr = src_tsr->imm_value + reg_offset;
->> +		int offset;
->> +
->> +		if (!get_global_var_type(cu_die, dloc, ip, addr, &offset, &type_die) ||
->> +		    !die_get_member_type(&type_die, offset, &type_die))
->> +			return -1;
-> [ ... ]
->> @@ -991,14 +1018,16 @@ static void update_add_insn_state(struct type_state *state,
->>  	if (arch_get_reg_offset(dloc->arch, src, sreg, state, false, &reg_offset))
->>  		goto add_non_regoff;
->>  
->> -	if (src_tsr.kind == TSR_KIND_CONST) {
->> +	if (src_tsr.kind == TSR_KIND_CONST || src_tsr.kind == TSR_KIND_GLOBAL_ADDR) {
->>  		tsr->kind = src_tsr.kind;
->> +		/* For 'adrp + add' pair: resolve the full global variable address. */
->>  		tsr->imm_value = src_tsr.imm_value + reg_offset;
->>  		tsr->offset = 0;
->>  		tsr->ok = src_tsr.ok;
-> 
-> [Severity: Medium]
-> What happens when a pre-indexed or post-indexed load or store instruction
-> (for example, ldr x0, [x19, #0x40]! or ldr x0, [x19], #8) uses a
-> TSR_KIND_GLOBAL_ADDR register as its base?
-> 
-> Both update_load_insn_state() and update_store_insn_state() call
-> adjust_reg_index_state(), which adds the writeback offset to tsr->offset:
-> 
-> tools/perf/util/annotate-arch/annotate-arm64.c:adjust_reg_index_state() {
-> 	...
-> 	if (arch_get_reg_offset(dloc->arch, op_loc, reg, state, true, &offset)) {
-> 		invalidate_reg_state(tsr);
-> 		return;
-> 	}
-> 
-> 	tsr->offset += offset;
-> 	...
-> }
-> 
-> However, TSR_KIND_GLOBAL_ADDR stores the base address in tsr->imm_value,
-> and all consumers — propagate_load_reg_state(), update_add_insn_state(),
-> and check_matching_type() in tools/perf/util/annotate-data.c — compute the
-> target address from imm_value + reg_offset while ignoring tsr->offset (and
-> update_add_insn_state() resets tsr->offset to 0).
-> 
-> Should adjust_reg_index_state() update tsr->imm_value (or should the
-> consumers include tsr->offset) so that pre/post-index writeback updates on
-> global address registers are not lost on subsequent instructions?
-> 
-> [ ... ]
-> 
+perf: arm_spe: Support heterogeneous ACPI systems
 
-The compiler does not combine them this way. The purpose of adrp + add is to
-compute the full address of a global variable into a register, so that the
-variable or its members can subsequently be accessed via [reg, #offset]. Once
-the address has been computed, there is no reason to use a pre-/post-indexed
-writeback on the same register, that would clobber the just-computed base
-address and misalign all subsequent accesses to the global variable. Unless
-there is some special compiler optimization?
+This commit updates ACPI registration for ARM SPE and TRBE to group CPUs by
+hetero ID and interrupt number, registering one platform device per group
+and passing the group's CPU mask via platform data.
 
-In any case, I will keep it unchanged.
+> diff --git a/drivers/perf/arm_pmu_acpi.c b/drivers/perf/arm_pmu_acpi.c
+> index ca6bf8f86cfe9..fdf39673648f3 100644
+> --- a/drivers/perf/arm_pmu_acpi.c
+> +++ b/drivers/perf/arm_pmu_acpi.c
+[ ... ]
+> +static bool arm_acpi_gsi_is_shared(struct arm_pmu_acpi_group *groups,
+> +				   int nr_groups, int idx)
+> +{
+> +	int i;
+> +
+> +	for (i =3D 0; i < nr_groups; i++) {
+> +		if (i !=3D idx && groups[i].gsi =3D=3D groups[idx].gsi)
+> +			return true;
+> +	}
+> +
+> +	return false;
+> +}
+> +
+> +static int arm_acpi_register_group(struct arm_pmu_acpi_group *group,
+> +				   const char *name, bool gsi_shared)
+> +{
+> +	struct arm_pmu_acpi_dev_data data =3D { };
+> +	struct platform_device *pdev;
+> +	struct resource res;
+> +	int irq, ret;
+> +
+> +	irq =3D acpi_register_gsi(NULL, group->gsi, ACPI_LEVEL_SENSITIVE,
+> +				ACPI_ACTIVE_HIGH);
+> +	if (irq < 0)
+> +		return irq;
+> +
+> +	pdev =3D platform_device_alloc(name, PLATFORM_DEVID_AUTO);
+> +	if (!pdev) {
+> +		ret =3D -ENOMEM;
+> +		goto err_unreg;
+> +	}
+> =20
+> -	if (pdev->resource[0].flags !=3D IORESOURCE_IRQ)
+> -		return -ENXIO;
+> +	res =3D DEFINE_RES_IRQ(irq);
+> +	data.cpus =3D group->cpus;
+> =20
+> +	ret =3D platform_device_add_resources(pdev, &res, 1);
+> +	if (ret)
+> +		goto err_put;
+> +
+> +	ret =3D platform_device_add_data(pdev, &data, sizeof(data));
+> +	if (ret)
+> +		goto err_put;
+> +
+> +	ret =3D platform_device_add(pdev);
+> +	if (!ret)
+> +		return 0;
+> +
+> +err_put:
+> +	platform_device_put(pdev);
+> +err_unreg:
+>  	/*
+> -	 * Sanity check all the GICC tables for the same interrupt
+> -	 * number. For now, only support homogeneous ACPI machines.
+> +	 * The GSI mapping is not reference counted, so only drop it if no
+> +	 * other group shares it.
+>  	 */
+> +	if (!gsi_shared)
+> +		acpi_unregister_gsi(group->gsi);
+> +
+> +	return ret;
+> +}
+> +
+> +static int __maybe_unused
+> +arm_acpi_register_pmu_devices(const char *name, u8 len,
+> +			      u16 (*parse_gsi)(struct acpi_madt_generic_interrupt *))
+> +{
+[ ... ]
+> +	for (i =3D 0; i < nr_groups; i++) {
+> +		ret =3D arm_acpi_register_group(&groups[i], name,
+> +					      arm_acpi_gsi_is_shared(groups,
+> +								     nr_groups, i));
+> +		if (ret) {
+> +			pr_warn("ACPI: %s: %*pbl: add device failed (%d)\n",
+> +				name, cpumask_pr_args(&groups[i].cpus), ret);
+> +			last_err =3D ret;
+> +		} else {
+> +			nr_devices++;
+> +		}
+> +	}
 
-Thanks,
-Tengda
+[Severity: Medium]
+Can this leak the GSI mapping if all groups sharing an interrupt fail to
+register their platform devices?
 
+In drivers/perf/arm_pmu_acpi.c, arm_acpi_register_pmu_devices() calls
+arm_acpi_gsi_is_shared(), which checks whether any other entry in groups[]
+has the same gsi, regardless of whether any of those groups actually
+succeeded in registering a platform device.
+
+When two or more groups share the same gsi, arm_acpi_gsi_is_shared() returns
+true for every group in that set. If the first group creates the mapping via
+acpi_register_gsi() in arm_acpi_register_group() and then fails in
+platform_device_alloc(), platform_device_add_resources(),
+platform_device_add_data(), or platform_device_add(), the err_unreg path se=
+es
+gsi_shared as true and skips acpi_unregister_gsi(group->gsi). If the
+remaining groups sharing that gsi also fail during registration, none of th=
+em
+will call acpi_unregister_gsi(group->gsi) either, leaving the GSI mapping
+registered with no platform device using it.
+
+Would it make sense to track whether another group sharing the gsi has
+already registered successfully, or clean up the mapping if all groups
+sharing that gsi fail?
+
+[ ... ]
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261021020322.3015=
+121-1-johnny.fan@cixtech.com?part=3D1
