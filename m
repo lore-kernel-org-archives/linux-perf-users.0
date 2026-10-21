@@ -1,44 +1,44 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792618245;
-	b=5XFZ4QobjmodHm1ziVZ+jlTc+XozDrFOg+6+1Ioxr3C2EvJ+6t8LydH7iICBddHzq5y9
-	 df5I84hifVQYlym9WXt8wqpLSrVwKZPO2mBc7Vf++kMmpbnfq4eEtZAfUMRZhglG/noOH
-	 tFaf1LYIf9jEVpWhGW8vcbwP7FJ+AE2J300KSQ0I8qXFRKI8LUBslrS9Oh/EJeBS8PXsT
-	 HulVOoYRw0EudSwXvHkeL44PQ5XqjlDpE8CcUjivS0nj6hnDrOQ/xO3DfsbPGJXvfgTQn
-	 nqq4YDX4g1mzl3HzDbVkXj57ybzw4L9EFqh8439EyCwjnRlKnSklydsHid6XoPKcSww==
+	t=1792618252;
+	b=fqvrjBstQ1NCZeQESwQtKX7ox0JfVL0uuCUzwqaA05tdKkgP5OJPGToQcYomEN+aqx7X
+	 jUkD4XoA6Z+iI0A1cQMtZ330DCN9yCI7fzSL724X8QiCcVUK+FCK8rmbhOLeR0dy12akQ
+	 VO7AanzrbXSwV6O3matFyd/5kCtU6V9b7oTlLhG7ER7lghQm101Rvd2SYHklc9ZSICeaM
+	 CN6IlSu5lvEkpE5B8DK+xYAPV+QFlz9be0y+sjxp3jZg9xMLQbX0kcEa22EF5R5exJEV+
+	 ZzTE/Cr4AeE32fXhoFrtBiVI07BqUgU23koj+5aHeOE2/Q/y/hyiBuAeumyDAIyeuDw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792618245;
+	a=rsa-sha256; c=relaxed/relaxed; t=1792618252;
 	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:X-Mailer:
 	 In-Reply-To:References:MIME-Version:Content-Transfer-Encoding;
-	bh=lS+slFaOZA/bTrv06t/lGxUwEamCYlMpmJqTfdXv4Sk=;
-	b=sGzbzNnPaYSJ89QzG7vo38tw24mHV3NQiA3+GhQFGdBlTYHEXDOZJ4kqL6unXo3pFsgI
-	 XjULb7gJYsT5RZ7M4pa/2DoHEnhTjSv57NSRzfIW2DhGPVsCWzAPMiFJSqQlCivgShycN
-	 ajC7aMTVbX048XlbfIHo+UIZNNCUU+XV6us8P+3O9ZQi7Ll5NL1mH1h5dKRKV7HChh88S
-	 Tl7daedo/rmW+ur1IneF0TgvE/fuu83eAkj7oEg9SnkeTkCtQ0AxM3iwiqAfi5yyfYQt2
-	 0Uskx6htBhKGw11QdnWERf/WyoCu7QiBVfHeXWT5fPqqKu9K9D4CKr08yKD5+M3M+PQ==
+	bh=DKR000uefef+Vmpc1ME2SEAH5liXbSLg55lYZ92unUA=;
+	b=VyPjZzwd14Q1Dx+X+wbVr5N2fqtonpO6+HK6Dbzjz19IBPHRsnbVXg4Bf/oN3EEea3s/
+	 mq+TDox2CeitoMkrV9iQQd5iGokG3UCteRAkl8VVLpbz5h/JA0GTw5XHWGqyK1eMycACM
+	 ggH66gzgzl7L+MLh3Ui+L/1lPpX/11HZroXwzW9VsRCJdhYAD8w9qnhy7LV+2frlVuCd3
+	 aQzdeLS8zyTbhySg77D5qgupZUsXQWXAiiwDT8S6Ez/AoJOS147lcf5a/skNfYWRJmOX/
+	 cSc2KQxEGjju1L1EoiglfNFEHHm70/K8UhRLLWFkZjUQRILMdcr+lgZmIHU3/PfX87A==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=JuJUyP4h;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=gOiuVxsh;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F339606A337;
-	Wed, 21 Oct 2026 21:30:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDADD606A31E;
+	Wed, 21 Oct 2026 21:30:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=JuJUyP4h
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B8EF41F000C4;
-	Wed, 21 Oct 2026 21:30:41 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=gOiuVxsh
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C92A11F000C2;
+	Wed, 21 Oct 2026 21:30:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1792618245;
-	bh=lS+slFaOZA/bTrv06t/lGxUwEamCYlMpmJqTfdXv4Sk=;
+	s=k20260515; t=1792618251;
+	bh=DKR000uefef+Vmpc1ME2SEAH5liXbSLg55lYZ92unUA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=JuJUyP4hsb7ggvWD9u3IEM8ww3jCMY4cqhx0JSwTDlj340KLeN1SSGJqDAEyI3mZ0
-	 nk+oTOoVh02YZlxtwBYqJxDJO2xn4YYs8qt89KuKvjfaX1tbHIhIxLrCx2fb/8zsyy
-	 RK4mKJy4f65O1JYbLZS64psahx0LziCl9kgIQfh8derXR7k6DGIRto8d3T511AE5lw
-	 HwK6/H2Cwe232zptIzDvbWolyEbj9VWOi2pNFMImLqM43WjrntEgCr9lV+lOeS0VNa
-	 0znOH000Bgq2rO4YedB3RD23qcDJN/Z8fgFCiPpWWFgXpX86zjPlM24zqmGYhuET++
-	 KXPc5vEaUUgvQ==
+	b=gOiuVxshlNyou4M4f2E2CE9UOYd9eJhOF+gTdnTA60u1ByYzjgZv0crLSIlNAjmsV
+	 rZsYcU3sOibWW3Ab6KhPbT3mrhDdBbbwPkerIKcUkj0hHhJIcnUwn7oA594UfcmP2s
+	 kBIDg14KMGrBt2vLs0nN1H+4PxSuLaEvir4CEPSyHYF6W7A51CscSNhOo5G8KPMIQu
+	 EJYToFtPOBdxwhbWunXnnMzokYuExVgWjHJbxSNd+Sf7szNXucxgDhdyUdtwqwfXmF
+	 LQ6kVJLLaXRiUh5yvT+HC6qb3FVs8vhmcWdud8XAS1z/ROrQYofaCyccazww8Lwx/P
+	 mpGMppuRKpmhQ==
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Namhyung Kim <namhyung@kernel.org>
 Cc: Ingo Molnar <mingo@kernel.org>,
@@ -51,11 +51,11 @@ Cc: Ingo Molnar <mingo@kernel.org>,
 	linux-kernel@vger.kernel.org,
 	linux-perf-users@vger.kernel.org,
 	Arnaldo Carvalho de Melo <acme@redhat.com>,
-	Christian Brauner <brauner@kernel.org>,
-	Mahe Tardy <mahe.tardy@gmail.com>
-Subject: [PATCH v1 07/12] perf beauty: Update copy of linux/socket.h with the kernel sources
-Date: Wed, 21 Oct 2026 18:30:01 -0300
-Message-ID: <20261021213007.21046-8-acme@kernel.org>
+	Hemanth Selam <hemanth.selam@gmail.com>,
+	"Kiryl Shutsemau (Meta)" <kas@kernel.org>
+Subject: [PATCH v1 09/12] tools headers: Sync UAPI linux/fs.h with the kernel sources
+Date: Wed, 21 Oct 2026 18:30:03 -0300
+Message-ID: <20261021213007.21046-10-acme@kernel.org>
 X-Mailer: git-send-email 2.54.0
 In-Reply-To: <20261021213007.21046-1-acme@kernel.org>
 References: <20261021213007.21046-1-acme@kernel.org>
@@ -74,54 +74,37 @@ From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
 To pick up the changes in:
 
-  be3a5e06b962 ("net: add SO_PASSPIDFD_THREAD to get a thread-specific SCM_PIDFD")
-  5bd369c05576 ("net: Add connect_socket() helper")
+  21a62663d473 ("fs: fix typos in comments")
+  338964881982 ("mm/pagemap: add PAGE_IS_ACCESSED for RWP tracking")
 
 That don't result in changes to the string tables generated from this header.
 
 This addresses this perf build warning:
 
   Warning: Kernel ABI header differences:
-    diff -u tools/perf/trace/beauty/include/linux/socket.h include/linux/socket.h
+    diff -u tools/perf/trace/beauty/include/uapi/linux/fs.h include/uapi/linux/fs.h
 
 Please see tools/include/uapi/README for further details.
 
-Cc: Christian Brauner <brauner@kernel.org>
-Cc: Mahe Tardy <mahe.tardy@gmail.com>
+Cc: Hemanth Selam <hemanth.selam@gmail.com>
+Cc: Kiryl Shutsemau (Meta) <kas@kernel.org>
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/trace/beauty/include/linux/socket.h | 11 +++++++----
- 1 file changed, 7 insertions(+), 4 deletions(-)
+ tools/perf/trace/beauty/include/uapi/linux/fs.h | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/tools/perf/trace/beauty/include/linux/socket.h b/tools/perf/trace/beauty/include/linux/socket.h
-index 2a8d7b14f1d11959..b17fdb7d38a7734a 100644
---- a/tools/perf/trace/beauty/include/linux/socket.h
-+++ b/tools/perf/trace/beauty/include/linux/socket.h
-@@ -189,10 +189,11 @@ static inline size_t msg_data_left(const struct msghdr *msg)
+diff --git a/tools/perf/trace/beauty/include/uapi/linux/fs.h b/tools/perf/trace/beauty/include/uapi/linux/fs.h
+index ee2203d606436f42..a46c33692aa21af0 100644
+--- a/tools/perf/trace/beauty/include/uapi/linux/fs.h
++++ b/tools/perf/trace/beauty/include/uapi/linux/fs.h
+@@ -471,6 +471,7 @@ typedef int __bitwise __kernel_rwf_t;
+ #define PAGE_IS_HUGE		(1 << 6)
+ #define PAGE_IS_SOFT_DIRTY	(1 << 7)
+ #define PAGE_IS_GUARD		(1 << 8)
++#define PAGE_IS_ACCESSED	(1 << 9)
  
- /* "Socket"-level control message types: */
- 
--#define	SCM_RIGHTS	0x01		/* rw: access rights (array of int) */
--#define SCM_CREDENTIALS 0x02		/* rw: struct ucred		*/
--#define SCM_SECURITY	0x03		/* rw: security label		*/
--#define SCM_PIDFD	0x04		/* ro: pidfd (int)		*/
-+#define	SCM_RIGHTS		0x01	/* rw: access rights (array of int) */
-+#define SCM_CREDENTIALS		0x02	/* rw: struct ucred		*/
-+#define SCM_SECURITY		0x03	/* rw: security label		*/
-+#define SCM_PIDFD		0x04	/* ro: pidfd (int)		*/
-+#define SCM_PIDFD_THREAD	0x05	/* ro: thread pidfd (int)	*/
- 
- struct ucred {
- 	__u32	pid;
-@@ -461,6 +462,8 @@ extern struct file *__sys_socket_file(int family, int type, int protocol);
- extern int __sys_bind(int fd, struct sockaddr __user *umyaddr, int addrlen);
- extern int __sys_bind_socket(struct socket *sock, struct sockaddr_storage *address,
- 			     int addrlen);
-+int connect_socket(struct socket *sock, struct sockaddr_storage *addr,
-+		   int addrlen, int flags);
- extern int __sys_connect_file(struct file *file, struct sockaddr_storage *addr,
- 			      int addrlen, int file_flags);
- extern int __sys_connect(int fd, struct sockaddr __user *uservaddr,
+ /*
+  * struct page_region - Page region with flags
 -- 
 2.56.0
 
