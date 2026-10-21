@@ -1,55 +1,47 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=45.249.212.51
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792548892;
-	b=dmDyXajn/bk312x2cg+QobH2WRUcncaCOrYqvwmADylMJ7sYVhH9DgdPEQshwn20x4wh
-	 WDEMKCmbbHDTZS+wnC+w/PQBmUDBf8K+bT9fE7bHUiBLhOnWluNJd+1NriRGCPTC7KzjJ
-	 b9CLNS4L6CC1jje1S0PUJ+ceY/O6KGVsYId6+5xIK46FLzFjVe57GzUyGTLDM3HK53zrn
-	 p++zzIcRLYM5GBClnGQuxPB7IO6y4nBac4jdZuk6dx3OER080vZgKf0eZ5HkNFWX2QYof
-	 npnMdjV8EgyOT7SYca/BVXnhhPZevyZkp3z/zh/+c/QRPBmJjF3I6aEe5yGeIQlrBYA==
+	t=1792549548;
+	b=2IdZBfJh5ILAV40AEsar/Qz2wRmwwDN+dwC7r0Q9vkvTMTbmtoIhXKof5pUOAA8Ly5Pm
+	 QJJpL3YngDmrif4Yyy8rzBB7ysGL3bgq/qU8oAtyQZ4t0LsYnZervsadd2xg8Lc1MCejB
+	 1PlyQLbegEgoYg0oEgwUY8RUzFwxUy/iX1HPZnSGNQ+sXm9LIkfJkA54xARVbB4TCakOK
+	 cpVC9VpLqIxqc3jG3aXmOxhlsZYv2kAHCrl959TS72ORO7+5nC50az0Ou4MV0uDacluxe
+	 juWJn301xTOIlgXIcLvNcS06f/eHdvU2qkMyyLYLyxAn2uo/7Kg7zSWHq+SA78NOrZw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792548892;
-	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
-	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=CC9ZEH7TYZy17mupHpeJeG/kH88P+EfBdqRFPWmx4+w=;
-	b=MPtU3KJGcYGelPW02Uf3OIfqy+uM8MqaUMmyZNIchXv4qFVgCXrXAUVluIZA0mFH4zlP
-	 yJ2GWEhD2A+VpWCD3ge/GM2TAptSYmo4GfE0zvpUpkpG+sqKsd0hG+7dwiEZWWmQhd1yn
-	 AmpDMJRzEV6a9wR7CJk8kMx0U5+4xuBSYhIjVwpxnVbnS7vYVsjSJS1nKW1JtOSbONtdp
-	 OgHrxpO9vh5cr9QdYDKVEvydATZLHvOdXlc+u2rMlOb6ppR4VbF1FH3No0pyEdQizOkrP
-	 FSzcA4Slg7hBZyWNFt0DkwC6/0brngjUZP8ciN+1MmkHjRquwcYur2lOZjcgbmFK53g==
+	a=rsa-sha256; c=relaxed/relaxed; t=1792549548;
+	h=DMARC-Filter:Received:Received:Received:Message-ID:Date:MIME-Version:
+	 User-Agent:Subject:To:Cc:References:Content-Language:From:In-Reply-To:
+	 Content-Type:Content-Transfer-Encoding:X-CM-TRANSID:
+	 X-Coremail-Antispam:X-CM-SenderInfo;
+	bh=bUpuMLN+Hzel+rwIg8x/V4c7BZp7NFus4wb/KBKZts8=;
+	b=5pAtrLzP3kYQogTVFaUQMFOVd04vSg7IvxrNbdWslKtZDIFF0u80sg4HSELoJj4d994N
+	 Yb/ERSF88rr61Ynmxyu/p7vLSrT5oPyiLdNOX0/4JxFb6azT1pd8XGugMTHJb2a9t6p6w
+	 tOjkmV03nKMbNM9gsTjRC6lFtVV1Bc9mll35TVk1n6Ml1f6eFHmwRA/DapKqCKJvsWRl2
+	 Fxk3JDYgpM+kDH9CJiwg8mc027x+rPo33qQytbTtvkkMhE07rBm7HaD+7JRhNyYaQK7fQ
+	 PdGUmHWBxDvDGA97y4CrerixdHbUYyIJKi/NgS53aF6Jm8AHPsYedw68QIBdkuuhFOw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Taby59BF;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	dmarc=none header.from=huaweicloud.com;
+	spf=pass smtp.mailfrom=huaweicloud.com;
+	arc=none smtp.remote-ip=45.249.212.51
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95C28606A319
-	for <linux-perf-users@vger.kernel.org>; Wed, 21 Oct 2026 02:14:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Taby59BF
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 44F8F1F000CA;
-	Wed, 21 Oct 2026 02:14:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1792548892;
-	bh=CC9ZEH7TYZy17mupHpeJeG/kH88P+EfBdqRFPWmx4+w=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=Taby59BFx4qgANU7rHJxhxfvdHUrcjLBO+nv1khlA8DeC2Q7zJnrQNiZdCsPi3+4u
-	 pQFvoCYiMZtS6MQr8mjKQ3oObhWOEHohK465uEDWfM2WuSaYquiPPTARGgfZp73yY9
-	 vvRPYnvbKmtGHB/qrME931r+p7CTfFHCTsyLiMnEyBzX6ow2xoSDj9I0ZRP5aMPw43
-	 mQP2hcz6uOfMEW7WbIGT8t436JRbPU3ayjjzYP8O3uH6NMbzfD1hdri+CljRW+Ix4x
-	 GDJvkK9qfd7FP8q9Ut0nevPjs2Xs1aJrz3TKus8Ol+xr1bvY568VeRvUEU6/b4y+6l
-	 sQReWXewduHCg==
-Message-ID: <sashiko-outbox-179692@kernel.org>
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v2] perf: arm_spe: Support heterogeneous ACPI systems
-Reply-To: sashiko-reviews@lists.linux.dev
-To: Johnny.Fan <johnny.fan@cixtech.com>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20261021020322.3015121-1-johnny.fan@cixtech.com>
-References: <20261021020322.3015121-1-johnny.fan@cixtech.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Wed, 21 Oct 2026 02:14:51 +0000
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F7C0606A31C;
+	Wed, 21 Oct 2026 02:25:45 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 6F7C0606A31C
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.177])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4j8Y6W4dywzYQtt1;
+	Wed, 21 Oct 2026 10:25:39 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.75])
+	by mail.maildlp.com (Postfix) with ESMTP id 839F1409D2;
+	Wed, 21 Oct 2026 10:25:42 +0800 (CST)
+Received: from [10.67.110.36] (unknown [10.67.110.36])
+	by APP2 (Coremail) with UTF8SMTPA id Syh0CgBnMeekIthqMcbiBA--.26564S2;
+	Wed, 21 Oct 2026 10:25:42 +0800 (CST)
+Message-ID: <18de9e8f-3709-4bc9-b11b-3813e1ba98b7@huaweicloud.com>
+Date: Wed, 21 Oct 2026 10:25:40 +0800
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -58,136 +50,187 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v8 00/15] perf annotate arm64: Support instruction
+ tracking for data type profiling
+To: Namhyung Kim <namhyung@kernel.org>, james.clark@linaro.org,
+ xueshuai@linux.alibaba.com, Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>, leo.yan@linux.dev,
+ Li Huafei <lihuafei1@huawei.com>, Ian Rogers <irogers@google.com>,
+ Kim Phillips <kim.phillips@arm.com>, Mark Rutland <mark.rutland@arm.com>,
+ Ingo Molnar <mingo@redhat.com>, Bill Wendling <morbo@google.com>,
+ Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Adrian Hunter <adrian.hunter@intel.com>, Zecheng Li <zli94@ncsu.edu>,
+ linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+ llvm@lists.linux.dev
+References: <cover.1792411435.git.wutengda@huaweicloud.com>
+Content-Language: en-US
+From: Tengda Wu <wutengda@huaweicloud.com>
+In-Reply-To: <cover.1792411435.git.wutengda@huaweicloud.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:Syh0CgBnMeekIthqMcbiBA--.26564S2
+X-Coremail-Antispam: 1UD129KBjvJXoWxuFyDuw43AF4rWrW3AF4DXFb_yoW7KrWkpa
+	93uw1fJryUtr4j9rnrJrZ7Xr43Wa1rXa4UGryrt34Syr12yF9YyF97K3WFyFWfAr98Cr17
+	Jw4vyFn8Xayj9aDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUv0b4IE77IF4wAFF20E14v26ryj6rWUM7CY07I20VC2zVCF04k2
+	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
+	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7Cj
+	xVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x
+	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
+	6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
+	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JM4IIrI8v6xkF7I0E8cxan2IY04v7MxkF7I0En4kS
+	14v26r4a6rW5MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I
+	8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVW8ZVWr
+	XwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x
+	0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_
+	Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU0
+	s2-5UUUUU==
+X-CM-SenderInfo: pzxwv0hjgdqx5xdzvxpfor3voofrz/
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
-s) to consider:
-- [Medium] perf: arm_pmu_acpi: GSI leak in arm_acpi_register_group() when s=
-hared
---
+Hi,
 
-commit 07d4d2d60385c80c0a1df910cfddbd2fb128123f
-Author: Johnny.Fan <Johnny.Fan@cixtech.com>
+On 2026/10/20 21:44, Tengda Wu wrote:
+> This series adds arm64 support to perf's data type profiling by
+> implementing instruction tracking for the arm64 architecture.
+> 
+> The main changes since v7 include:
+> v7: https://lore.kernel.org/all/cover.1791629326.git.wutengda@huaweicloud.com/
+> 
+>   * Patch 02: Minor optimizations to update_insn_state_arm64 to facilitate
+>     future extension, including:
+>     - Encapsulating call instruction handling into update_call_insn_state()
+>     - Encapsulating invalidate dst regs handling into invalidate_unhandled_insn_regs()
+>     - Renaming is_readonly_branch_or_cmp() to is_readonly_insn()
+>     No functional changes.
+> 
+>   * Fix issues raised by Sashiko:
+>     - Patch 06: Complete the status register invalidation logic for
+>       exclusive stores.
+>     - Patch 13 & 15: Complete the lifetime invalidation logic for adrp
+>       and mrs instructions.
+>     Regarding the status register invalidation issue for instructions
+>     such as cas/swp as well, we plan to support this incrementally
+>     after the relevant instructions are refined; this patch temporarily
+>     ignores and does not handle it (a TODO marker has already been
+>     reserved in patch 02)
+> 
+> Patch organization
+> ==================
+> 
+>   Patches 1-3:   Shared infrastructure. Extract invalidate_reg_state() as
+>                  a common helper, add the arch_get_reg_offset() helper for
+>                  computing operand base offsets, and wire up the arm64
+>                  entry points (arch_supports_insn_tracking(),
+>                  init_type_state(), and update_insn_state_arm64()).
+> 
+>   Patches 4-6:   Core instruction tracking for arm64: function return
+>                  types after calls, load instructions (ldr/ldp and their
+>                  addressing modes), and store instructions (str/stp).
+> 
+>   Patches 7-9:   Shared data structure improvements and an x86 fix.
+>                  Expand type_state_reg.imm_value to u64 so 64-bit
+>                  addresses can be tracked, preserve imm_value for stack
+>                  variables, and delete stale stack state on store of an
+>                  untracked register on x86.
+> 
+>   Patches 10-15: Remaining arm64 patterns: stack variable tracking,
+>                  'mov' (register and immediate forms), 'add' member
+>                  address calculation, 'adrp' global variable tracking,
+>                  per-cpu variable access, and 'mrs sp_el0' to resolve the
+>                  'current' pointer.
+> 
 
-perf: arm_spe: Support heterogeneous ACPI systems
+Just a quick note that this version of the patch series has addressed or
+clarified all the Sashiko review comments. I would appreciate it if you
+could take a look when you get a chance.
 
-This commit updates ACPI registration for ARM SPE and TRBE to group CPUs by
-hetero ID and interrupt number, registering one platform device per group
-and passing the group's CPU mask via platform data.
+Thanks,
+Tengda
 
-> diff --git a/drivers/perf/arm_pmu_acpi.c b/drivers/perf/arm_pmu_acpi.c
-> index ca6bf8f86cfe9..fdf39673648f3 100644
-> --- a/drivers/perf/arm_pmu_acpi.c
-> +++ b/drivers/perf/arm_pmu_acpi.c
-[ ... ]
-> +static bool arm_acpi_gsi_is_shared(struct arm_pmu_acpi_group *groups,
-> +				   int nr_groups, int idx)
-> +{
-> +	int i;
-> +
-> +	for (i =3D 0; i < nr_groups; i++) {
-> +		if (i !=3D idx && groups[i].gsi =3D=3D groups[idx].gsi)
-> +			return true;
-> +	}
-> +
-> +	return false;
-> +}
-> +
-> +static int arm_acpi_register_group(struct arm_pmu_acpi_group *group,
-> +				   const char *name, bool gsi_shared)
-> +{
-> +	struct arm_pmu_acpi_dev_data data =3D { };
-> +	struct platform_device *pdev;
-> +	struct resource res;
-> +	int irq, ret;
-> +
-> +	irq =3D acpi_register_gsi(NULL, group->gsi, ACPI_LEVEL_SENSITIVE,
-> +				ACPI_ACTIVE_HIGH);
-> +	if (irq < 0)
-> +		return irq;
-> +
-> +	pdev =3D platform_device_alloc(name, PLATFORM_DEVID_AUTO);
-> +	if (!pdev) {
-> +		ret =3D -ENOMEM;
-> +		goto err_unreg;
-> +	}
-> =20
-> -	if (pdev->resource[0].flags !=3D IORESOURCE_IRQ)
-> -		return -ENXIO;
-> +	res =3D DEFINE_RES_IRQ(irq);
-> +	data.cpus =3D group->cpus;
-> =20
-> +	ret =3D platform_device_add_resources(pdev, &res, 1);
-> +	if (ret)
-> +		goto err_put;
-> +
-> +	ret =3D platform_device_add_data(pdev, &data, sizeof(data));
-> +	if (ret)
-> +		goto err_put;
-> +
-> +	ret =3D platform_device_add(pdev);
-> +	if (!ret)
-> +		return 0;
-> +
-> +err_put:
-> +	platform_device_put(pdev);
-> +err_unreg:
->  	/*
-> -	 * Sanity check all the GICC tables for the same interrupt
-> -	 * number. For now, only support homogeneous ACPI machines.
-> +	 * The GSI mapping is not reference counted, so only drop it if no
-> +	 * other group shares it.
->  	 */
-> +	if (!gsi_shared)
-> +		acpi_unregister_gsi(group->gsi);
-> +
-> +	return ret;
-> +}
-> +
-> +static int __maybe_unused
-> +arm_acpi_register_pmu_devices(const char *name, u8 len,
-> +			      u16 (*parse_gsi)(struct acpi_madt_generic_interrupt *))
-> +{
-[ ... ]
-> +	for (i =3D 0; i < nr_groups; i++) {
-> +		ret =3D arm_acpi_register_group(&groups[i], name,
-> +					      arm_acpi_gsi_is_shared(groups,
-> +								     nr_groups, i));
-> +		if (ret) {
-> +			pr_warn("ACPI: %s: %*pbl: add device failed (%d)\n",
-> +				name, cpumask_pr_args(&groups[i].cpus), ret);
-> +			last_err =3D ret;
-> +		} else {
-> +			nr_devices++;
-> +		}
-> +	}
+> Each patch's type profiling results are as follows:
+> 
+> Patch | Feature                    | no_sym | no_var | no_typeinfo | bad_offset | insn_track | ok(%)
+> ------+----------------------------+--------+--------+-------------+------------+------------+------
+> base  | baseline                   | 6      | 493    | -           | -          | -          | 56.2%
+> 0002  | enable insn tracking       | 6      | 42     | 437         | 2          | 12         | 57.2%
+> 0005  | support 'load' insn        | 6      | 42     | 398         | 1          | 52         | 60.7%
+> 0006  | support 'store' insn       | 6      | 42     | 398         | 1          | 52         | 60.7%
+> 0010  | support stack variable     | 6      | 42     | 391         | 1          | 59         | 61.3%
+> 0011  | support 'mov' insn         | 6      | 42     | 372         | 3          | 76         | 62.8%
+> 0012  | support 'add' insn         | 6      | 42     | 318         | 7          | 126        | 67.2%
+> 0013  | support 'adrp' insn        | 6      | 42     | 238         | 8          | 205        | 74.2%
+> 0014  | support per-cpu variable   | 6      | 42     | 233         | 8          | 210        | 74.6%
+> 0015  | support 'mrs' insn         | 6      | 42     | 230         | 8          | 213        | 74.9%
+> 
+> Testing
+> =======
+> 
+> Tested on arm64 (all passed):
+> 
+>   # perf test -v "perf data type profiling tests"
+>   81: perf data type profiling tests                                                                  : Ok
+> 
+>   === Test Summary ===
+>   Passed main tests : 1
+>   Passed subtests   : 0
+>   Skipped tests     : 0
+>   Failed tests      : 0
+> 
+> Tested on x86. The profiling results show no change before/after applying
+> this patch series:
+> 
+>   before : total 880, ok 711 (80.8%), bad 169 (19.2%)
+>   after  : total 880, ok 711 (80.8%), bad 169 (19.2%)
+> 
+> Changelog
+> =========
+> v7 -> v8:
+>   - v7: https://lore.kernel.org/all/cover.1791629326.git.wutengda@huaweicloud.com/
+>   - Encapsulate invalidate dst regs handling into invalidate_unhandled_insn_regs()
+>   - Encapsulate invalidate dst regs handling into invalidate_unhandled_insn_regs()
+>   - Rename is_readonly_branch_or_cmp() to is_readonly_insn()
+>   - Complete the status register invalidation logic for exclusive stores.
+>   - Complete the lifetime invalidation logic for adrp and mrs instructions.
+> v6 -> v7:
+>   - v6: https://lore.kernel.org/all/cover.1789521520.git.wutengda@huaweicloud.com/
+>   - Invalidate lifetime in propagate_load_reg_state().
+>   - Remove the has_reg_type() guard in update_store_insn_state().
+>   - Fix the issue where TSR_KIND_PERCPU_BASE fails to retry as expected.
+> 
+> Please let me know if you have any feedback.
+> 
+> Thanks,
+> Tengda
+> 
+> Tengda Wu (15):
+>   perf annotate-data: Extract invalidate_reg_state() as a common helper
+>   perf annotate-arm64: Enable instruction tracking support
+>   perf annotate-data: Add arch_get_reg_offset helper
+>   perf annotate-arm64: Track return type after call instructions
+>   perf annotate-arm64: Support load instruction tracking
+>   perf annotate-arm64: Support store instruction tracking
+>   perf annotate-data: Expand type_state_reg imm_value to u64
+>   perf annotate-data: Track imm_value for stack variables
+>   perf annotate-x86: Delete stale stack state on store of untracked
+>     register
+>   perf annotate-arm64: Support stack variable tracking
+>   perf annotate-arm64: Support 'mov' instruction tracking
+>   perf annotate-arm64: Support 'add' instruction tracking
+>   perf annotate-arm64: Support 'adrp' instruction to track global
+>     variables
+>   perf annotate-arm64: Support per-cpu variable access tracking
+>   perf annotate-arm64: Support 'mrs' instruction to track 'current'
+>     pointer
+> 
+>  .../perf/util/annotate-arch/annotate-arm64.c  | 774 ++++++++++++++++++
+>  tools/perf/util/annotate-arch/annotate-x86.c  |  38 +-
+>  tools/perf/util/annotate-data.c               | 209 ++++-
+>  tools/perf/util/annotate-data.h               |  14 +-
+>  4 files changed, 987 insertions(+), 48 deletions(-)
+> 
+> 
+> base-commit: 2efb7a11f1aa4d2dc285fe2680cca22cb9f72f64
 
-[Severity: Medium]
-Can this leak the GSI mapping if all groups sharing an interrupt fail to
-register their platform devices?
-
-In drivers/perf/arm_pmu_acpi.c, arm_acpi_register_pmu_devices() calls
-arm_acpi_gsi_is_shared(), which checks whether any other entry in groups[]
-has the same gsi, regardless of whether any of those groups actually
-succeeded in registering a platform device.
-
-When two or more groups share the same gsi, arm_acpi_gsi_is_shared() returns
-true for every group in that set. If the first group creates the mapping via
-acpi_register_gsi() in arm_acpi_register_group() and then fails in
-platform_device_alloc(), platform_device_add_resources(),
-platform_device_add_data(), or platform_device_add(), the err_unreg path se=
-es
-gsi_shared as true and skips acpi_unregister_gsi(group->gsi). If the
-remaining groups sharing that gsi also fail during registration, none of th=
-em
-will call acpi_unregister_gsi(group->gsi) either, leaving the GSI mapping
-registered with no platform device using it.
-
-Would it make sense to track whether another group sharing the gsi has
-already registered successfully, or clean up the mapping if all groups
-sharing that gsi fail?
-
-[ ... ]
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261021020322.3015=
-121-1-johnny.fan@cixtech.com?part=3D1
