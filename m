@@ -1,103 +1,57 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.210.182
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792635743;
-	b=BBB8t/mti5sFNFfZTNySOEVGrUjvJ1VZdKweXRn5NQMLPiEX+31noninz1TREbdlLLDI
-	 wVfhbVOJ7fL/F+SUOEPQsC+WVex4gOUYoHhAwX7kscFPo/eRO1ccoTg8VG2SieLEPbo82
-	 yKs3UMSJ8yLCFNhvnKhUJZs8UyfUg2a9QMxAhpgJk+tfmrlOQm0GSbdt2S8Dgwv1LQkvx
-	 H3SQ680vEvdd9xPRbL5L40Cet82t6+VhbjGB8AIS+Lr9vI7Pe/WL84Vg317MVX1PJQyhB
-	 K67rUnjwPqn+o3PixSS4KxNL45DfiIXXkh/QDFsIGZ0qPobQuENLo7Ciqq9SuMGZe2A==
+	t=1792635828;
+	b=tg4M+aEna0RUXzVWZNWiDLf4LtbDHYwPwCdzI9DbKhh6OSRR/4XDRoqrlTbc5wF2HeWm
+	 tQQrC1hPHbh+q+s4Ap7WlX0SeZ4x/AjgX+lE59xDu7AB/ORF5J/GtsFWc4M1INzVIx8aW
+	 Shl0iM1s9HAGtBBjJnxzEfkKiQQK9eqyYGaZkbydmcL15iSMTFy2TsM5CKlvg2H0GUaY6
+	 EmrVVtdPW5gSGJGCUhcWqDC28TPSrQJgk+rI8A7I4maZ0zDHgdpUlNg3cSUV8eY4JGOCr
+	 T1Z8ecoQnax1iaBMzmFXenZIL8JC9CW7U62Tv852O1pFR4kBbQQHdTI69MKYcVbsD6g==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792635743;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
-	 Content-Type:Date:Message-Id:Subject:From:To:Cc:In-Reply-To:
-	 References:X-Mailer:Content-Transfer-Encoding:MIME-Version;
-	bh=XxjX1g1mQUEUPhKLrpLxYSgZ8S+x7GSgwLX7BwyjX7g=;
-	b=S/bRzdJe688YrLEgRs8srM7cXN8i/5O9zrXzwaiTBi3GW5fhj8x0JwyJbhxkC7R+g1zk
-	 urbk5M/vDZ8GE/l/JnD4pBXbzkLmhRlmFN5ghHcZkU6AfaG2o9Ac5vf7ejfz5EpPVWWyf
-	 B7qGe1TrXg1bu0FlL14mG3QMuYSBh+y6IhiuEOnbQctuuRUFuzWCdue7hwxB56oYKtCQi
-	 w0nt4UvcYZ8j0VhIRUBlWeiFhBAwg4OgnrHZiLwJPBawMaBNGLa35UBJRn25rQq5KuuTB
-	 55a4h6av92OC4FTVd4+C5OXRwf5/fH1XSbXekaugMvbTEpr/2rL2JJZnhqRTf8PKdKQ==
+	a=rsa-sha256; c=relaxed/relaxed; t=1792635828;
+	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
+	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
+	bh=mBLFTHurzlOVyM6uH/HHo/O74KxQ81dFv20NSPnPgsE=;
+	b=VcxICI6IGlaqPC0dgCoEdPnzLCrhp9nFXld1rGsANVdMpkf9vIuBSRhHbe5Wvx1+x+jE
+	 VuZltqNPua2Il9eJV2zD2JkMpGGeQD4W9icwGuTtSGjPyFx6NMtonlXpxUP9/gPfipd0U
+	 NzlqUUHvmUfsuvs6vFzvG5UcjTvb+LNUBZs/ysPeqJrv/aUFZ1wSQ9NgMXLe77eInEigy
+	 sYGwN9OakjzpLGHLOVG79d4PXJWmdwriVe1mRInie7tjEbouXfa1TYT9ptWEf0xiE0hbL
+	 ZE5UFXfWNO8JTOwiD+8wRkPV7EmqDWBBITPIn8mKch5CWgP2YzTsodKmR5WrzATI55g==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=gmail.com;
-	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=sS0MesHX;
-	arc=none smtp.remote-ip=209.85.210.182
-Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Q15zNXKK;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3C87606A319
-	for <linux-perf-users@vger.kernel.org>; Thu, 22 Oct 2026 02:22:22 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org F3C87606A319
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49E1A606A31A;
+	Thu, 22 Oct 2026 02:23:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=sS0MesHX
-Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-8a070b3f44aso491139b3a.2
-        for <linux-perf-users@vger.kernel.org>; Wed, 21 Oct 2026 19:22:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1792635742; x=1793240542; darn=vger.kernel.org;
-        h=mime-version:content-transfer-encoding:references:in-reply-to:cc:to
-         :from:subject:message-id:date:content-type:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=XxjX1g1mQUEUPhKLrpLxYSgZ8S+x7GSgwLX7BwyjX7g=;
-        b=sS0MesHX2nvWA2URY0k8Cne+sfJOI5PDPY0/f9zuTS95LHs/n/U9E8Pa4fzDUDcan+
-         Y9rcsec7bezD6Guv7ewLXhN25+qbv8/QYe+Nt37G/XwT4gtFsAw4dBx/scmdeSeprx8F
-         yyYmOQOxj61oR9X1k4gckGNgfuwxjCdGgyxCQFj1M4GVJ4knVIsYp4O+Vpxpl2Ncu06y
-         c78So+Vegffz8XffqmKkG/C++ukW6P3hjj0QtBPdRBMEZ3yxU/7oayY14RY5Y/KYxQ1q
-         zYqw5lr40dCQEe9v04A1K2soetRjLIKPH5jCosRLRnOIYPu5etD6U75ESDrikvZjJQvJ
-         nS8Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1792635742; x=1793240542;
-        h=mime-version:content-transfer-encoding:references:in-reply-to:cc:to
-         :from:subject:message-id:date:content-type:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=XxjX1g1mQUEUPhKLrpLxYSgZ8S+x7GSgwLX7BwyjX7g=;
-        b=awuZGZEPK1F/gE8HDH/XIyY3QiVD+W+Z5Tgj9NelBq6n+2mD2iucKnuTc/5slsazk1
-         sUTfhLAWumrC3yd38OlSCGJuuOrXdD1lRkPb0atrvNjjnQ8YRGEcM2BX/292gW45cyUs
-         P5AMHyW0iWMEC2gf7AOls6aG1oMKKjGzo2GU0mKAz6LQcQXJemRO4Fc+gdt2lVd40bqD
-         aaseJO7QBqrVxbsx8EOlVJUbK0yeosznxlF2y47qMi58ki52/Dg00C5DKyxJ6liQCV0X
-         wZJ6gOWSYiQGpmSTPmJ7fY3VPaTp0VtR2HNG6PuxIkzI8vn2ViMkhuVwjsVOzFQowPoR
-         jnZg==
-X-Forwarded-Encrypted: i=1; AKwUvBwDgYdPMIcF5e/ekKZWFDQ64kw85FMKAeda87VGDLgUfV3CP+5IpIwLcBcBqIEyWzTML2+liJnZdWMdyCVFox2j@vger.kernel.org
-X-Gm-Message-State: AFq9FYJb9MDCFY7No1aKZ2F+6r+qNWCLoYc/6sJGvueC+YgDPChSqzeF
-	HQFE4YXRkAbemHj9i39f5q04WCacBh+RzmxuG5C3Z+gUA9KQH6oPaxA8
-X-Gm-Gg: AYBFou3fJakHtikHqP1pX+PxsZoJy/M4i63DawFdeuxaHoUroNI/fFCSA+tRkWjF2xC
-	Ysj6L5tSEXpQRW16dQyb9pvexbS47JFrsg/MAxoQLySw3KXX+2oTiylMX6pnH+r1jk1nqjJOnkR
-	kTP46+D8QHlvjs7ddujx3aOoRastI3APlEccX8ivOImuyTuikKJRsIp+yny8X/0m/t+f4QYa7iB
-	NRqrVyDEW38u37IweX/vwQHIs9OnF0yUdZrB6AJnLjzW7QT7zBra2uxJvJnD13P66+rc1ZIceXH
-	3tbbTu69Rh/NObZPkkMfgRo0SHwsB3HgWJfWPeQeeaZoJBNx7eHngZ/f+tIL+48U0p2lQHC6lNM
-	3crRn5c/TqbeF4FmwFcP93Nrc1RtziqQFgJ084xX82eY32eQ3a2/9AauSFaDccIKH3LIdND4EPI
-	z5qwYFXkqkxxaf2806gLQ6RaMvVSICqQrKOT1aXgfNpTQP9ToQxJfJVDNaoxwm7i7LO9jEVOGxa
-	k7beWJoDgKhoTLF/AeozPBbkHj6mZWB1Ybg+CVLEDGuUIrRM4OmKXJ1VtlnePGJ22T+MEpKaEev
-	lnWeJEiYC369frG4JDW4mI1/RQDsh6YWvSaHPjc8VZzGREyzqAxd5f9DiVOa
-X-Received: by 2002:a05:6a00:b49:b0:89f:37a0:b2cb with SMTP id d2e1a72fcca58-8a089eba62amr2905819b3a.49.1792635742236;
-        Wed, 21 Oct 2026 19:22:22 -0700 (PDT)
-Received: from localhost ([153.61.198.248])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-8a0894b4206sm1450303b3a.18.2026.10.21.19.22.20
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 21 Oct 2026 19:22:21 -0700 (PDT)
-Content-Type: text/plain; charset=UTF-8
-Date: Thu, 22 Oct 2026 02:22:20 +0000
-Message-Id: <DMB0C24NTIST.YQZ2Y3E0I1I1@gmail.com>
-Subject: Re: [PATCH bpf-next 9/9] selftests/bpf: Test uprobes and fork()
- with busy mmap_lock
-From: "Alexei Starovoitov" <alexei.starovoitov@gmail.com>
-To: <sashiko-reviews@lists.linux.dev>, <bpf@vger.kernel.org>
-Cc: <daniel@iogearbox.net>, <andrii@kernel.org>, <eddyz87@gmail.com>,
- <memxor@gmail.com>, <oleg@redhat.com>, <peterz@infradead.org>,
- <mhiramat@kernel.org>, <jolsa@kernel.org>, <akpm@linux-foundation.org>,
- <liam@infradead.org>, <ljs@kernel.org>, <surenb@google.com>,
- <david@kernel.org>, <vbabka@kernel.org>, <jannh@google.com>,
- <hughd@google.com>, <kees@kernel.org>, <mingo@redhat.com>,
- <tglx@kernel.org>, <x86@kernel.org>, <linux-trace-kernel@vger.kernel.org>,
- <linux-mm@kvack.org>, <linux-perf-users@vger.kernel.org>
-In-Reply-To: <sashiko-outbox-180860@kernel.org>
-References: <20261022015712.1297331-1-alexei.starovoitov@gmail.com> <20261022015712.1297331-10-alexei.starovoitov@gmail.com> <sashiko-outbox-180860@kernel.org>
-X-Mailer: mkdraft (claude review draft; edit before sending)
-Content-Transfer-Encoding: 8bit
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Q15zNXKK
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 60D9D1F000C1;
+	Thu, 22 Oct 2026 02:23:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1792635827;
+	bh=mBLFTHurzlOVyM6uH/HHo/O74KxQ81dFv20NSPnPgsE=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=Q15zNXKKzoqGf8aAZ5Pu3S3PrJGW0I6NP4zEdzaVJ3YREoUIdN7leXcVKZ9DnnQfH
+	 eRk8fLDOhhNB/3DyUYR2cfpwOF0o7BKb/Z59liUY/1fdQQRa+4ptJJr5g+5J39TlI5
+	 i7tKgkQcwBwdK9fike9k6Qp59yQ5qWcTVRGpLSPW0x2kdVyxkSvZl1CmvRMSiYTTmj
+	 d/EDpLB3WMoJHOvJDw/UiSROEimsHsNOc+8tjCEU5UN5Z1WgtUcceEyN3xPMzoH1dU
+	 q1suCFGadz+fcFEtwQYF2ZjRFYk8i1XTuZdB9E+PuKqUwgR3yI1tb8DNlPrUr1/sd0
+	 6OTs6rHF7br2g==
+Message-ID: <sashiko-outbox-180866@kernel.org>
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH bpf-next 7/9] fork: Let the new task point to its mm
+ before uprobes can find it
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Alexei Starovoitov" <alexei.starovoitov@gmail.com>, bpf@vger.kernel.org
+Cc: daniel@iogearbox.net, andrii@kernel.org, eddyz87@gmail.com, memxor@gmail.com, oleg@redhat.com, peterz@infradead.org, mhiramat@kernel.org, jolsa@kernel.org, akpm@linux-foundation.org, liam@infradead.org, ljs@kernel.org, surenb@google.com, david@kernel.org, vbabka@kernel.org, jannh@google.com, hughd@google.com, kees@kernel.org, mingo@redhat.com, tglx@kernel.org, x86@kernel.org, linux-trace-kernel@vger.kernel.org, linux-mm@kvack.org, linux-perf-users@vger.kernel.org
+In-Reply-To: <20261022015712.1297331-8-alexei.starovoitov@gmail.com>
+References: <20261022015712.1297331-1-alexei.starovoitov@gmail.com>
+ <20261022015712.1297331-8-alexei.starovoitov@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Thu, 22 Oct 2026 02:23:45 +0000
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -106,23 +60,112 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
-MIME-Version: 1.0
 
-On Wed, Oct 21, 2026 at 07:10 PM sashiko-bot@kernel.org <sashiko-bot@kernel.org> wrote:
->> +#define AREA_MAX	(64UL << 30)
->
-> [ ... ]
->
->> +	area = mmap(NULL, AREA_MAX, PROT_READ, MAP_PRIVATE | MAP_ANONYMOUS | MAP_NORESERVE, -1, 0);
->> +	if (area == MAP_FAILED)
->> +		goto err;
->
-> [Severity: Medium]
-> In tools/testing/selftests/bpf/prog_tests/uprobe_busy_mm.c, does AREA_MAX
-> overflow on 32-bit architectures when passed to mmap() in hold_mmap_lock()?
->
-> Should AREA_MAX be sized appropriately for 32-bit architectures as well?
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+s) to consider:
+- [High] fork: clear p->mm under task_lock() before mmput() in bad_fork_cle=
+anup_mm
+--
 
-No. uprobe_multi link is 64-bit only.
-bpf_uprobe_multi_link_attach() returns -EOPNOTSUPP on 32-bit and
-three of four subtests attach with it.
+commit ec1e952207350f8b07e6038358df3fabd0496801
+Author: Alexei Starovoitov <ast@kernel.org>
+
+fork: Let the new task point to its mm before uprobes can find it
+
+This commit sets tsk->mm under task_lock() at the end of dup_mmap() before
+uprobe_end_dup_mmap() releases dup_mmap_sem, so that uprobe filters on
+inherited perf events can match the child's mm. It also clears tsk->mm under
+task_lock() if dup_mm() fails after dup_mmap() succeeds.
+
+> diff --git a/kernel/fork.c b/kernel/fork.c
+> index 2e125623cdbc3..a1042e370bdb8 100644
+> --- a/kernel/fork.c
+> +++ b/kernel/fork.c
+> @@ -1537,7 +1537,7 @@ static struct mm_struct *dup_mm(struct task_struct =
+*tsk,
+>  	if (!mm_init(mm, tsk))
+>  		goto fail_nomem;
+> =20
+> -	err =3D dup_mmap(mm, oldmm);
+> +	err =3D dup_mmap(tsk, mm, oldmm);
+>  	if (err)
+>  		goto free_pt;
+> =20
+> @@ -1550,6 +1550,13 @@ static struct mm_struct *dup_mm(struct task_struct=
+ *tsk,
+>  	return mm;
+> =20
+>  free_pt:
+> +	/*
+> +	 * dup_mmap() has set it if it succeeded. get_task_mm() must not find
+> +	 * it after the mmput() below.
+> +	 */
+> +	task_lock(tsk);
+> +	tsk->mm =3D NULL;
+> +	task_unlock(tsk);
+>  	/* don't put binfmt in mmput, we haven't got module yet */
+>  	mm->binfmt =3D NULL;
+>  	mm_init_owner(mm, NULL);
+
+[Severity: High]
+dup_mm() clears tsk->mm under task_lock(tsk) before calling mmput(mm) so
+that get_task_mm() cannot find a freed mm when dup_mm() fails. However,
+what happens if copy_process() fails after copy_mm() has already succeeded?
+
+In kernel/fork.c:copy_process(), perf_event_init_task() runs before
+copy_mm() and links inherited perf events (with event->hw.target =3D p) onto
+parent_event->child_list and uprobe filter->perf_events:
+
+kernel/fork.c:copy_process() {
+	...
+	retval =3D perf_event_init_task(p, clone_flags);
+	if (retval)
+		goto bad_fork_sched_cancel_fork;
+	...
+	retval =3D copy_mm(clone_flags, p);
+	if (retval)
+		goto bad_fork_cleanup_signal;
+
+If a later step in copy_process() fails (for example, copy_namespaces(),
+copy_io(), copy_thread(), alloc_pid(), cgroup_can_fork(), or
+fatal_signal_pending(current) after waiting in dup_userfaultfd_complete()),
+execution jumps to bad_fork_cleanup_mm:
+
+bad_fork_cleanup_mm:
+	sched_cache_fork_cleanup(p);
+	if (p->mm) {
+		mm_clear_owner(p->mm, p);
+		mmput(p->mm);
+	}
+	...
+bad_fork_cleanup_security:
+	security_task_free(p);
+bad_fork_cleanup_audit:
+	audit_free(p);
+bad_fork_cleanup_perf:
+	perf_event_free_task(p);
+
+Here mmput(p->mm) drops the reference and frees the mm, but p->mm is left
+non-null while teardown continues through exit_fs(p), exit_files(p), and
+security_task_free(p) before perf_event_free_task(p) detaches the inherited
+events.
+
+During this window, can a concurrent caller of get_task_mm(p) (such as
+perf_event_set_addr_filter() -> perf_event_for_each_child() ->
+perf_event_addr_filters_apply() in kernel/events/core.c) or bpf helpers like
+bpf_find_vma() and bpf_iter_task_vma_new() in kernel/bpf/task_iter.c (for
+instance from security_task_free(p)) observe the non-null p->mm under
+task_lock(p) and call mmget() on the already-freed mm_struct?
+
+Similarly, when perf_event_free_task(p) -> uprobe_perf_close() runs (or a
+concurrent uprobe_perf_filter() runs), trace_uprobe_filter_remove() and
+__uprobe_perf_filter() in kernel/trace/trace_uprobe.c read
+event->hw.target->mm and compare that dangling pointer against active
+mm_structs.
+
+Should bad_fork_cleanup_mm in copy_process() also clear p->mm under
+task_lock(p) before calling mmput()?
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261022015712.1297=
+331-1-alexei.starovoitov@gmail.com?part=3D7
