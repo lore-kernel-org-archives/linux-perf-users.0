@@ -1,58 +1,58 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792708038;
-	b=NOenTes/kWbHlxP7avWoyMJwu9Jju/oyzYAyoTvcQUx++ULW9BVzs0aPgLq3spVj6qIy
-	 cXZQs11hKTgIn4OfNbagHNR0NIlOO09X0eI/pysLgxRwIBw1e7/+osAYQE4sv025TrrqX
-	 yQEfnAKkxqpkBLEnIAYBDE+ndmN0egt66kQ82g+CmXt2RhoZC31GYWTnT21GfDEJk0kV4
-	 1YMDG/PRU6MbY+ZlukgL9OEhXuVOpMzV7oshZDdNPmIjjlY/vX+3h35XN7XIOUQd5vYF1
-	 EaE1ij+dhN5B/paJ0P5CjkWeKCHCp3ayjOoyqnwSWfyezcefff4Py5Fj134Z/QARjLg==
+	t=1792708114;
+	b=T6Y6TWm79MYPrL7jHDwzbJsqwWb92sPolaV9EUbyP/qRxN4QdlWT3Uut3bjqzBMoUFTa
+	 XLj8BLO1xbqncLv47vt9kbRlSUdbFM5vgWWiGGMwu49wyQyouYDVsyDZHxC79UcZYtYup
+	 dN63pBsHEpIORCYGcTVl9Q7GwG8b4ll9/bIIggHKpAGFZ4J4uWy0De4IddsP0BDx32pDF
+	 ZM5Br7qqdeYo859Ja7mldBFn1RdwV+DpxvKxRds7VwODLdSgMaknbTRmiA/x5IHr4y54v
+	 PENT+xwz85SGS7G7P250YpkGGn/9Ya4tGUo4oMFF4lnECsm+7AKmsRafpm3Oodckdow==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792708038;
+	a=rsa-sha256; c=relaxed/relaxed; t=1792708114;
 	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
 	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=c4Jk62lU82kiB3viB5v/zIJXmq5L89/j2YPrZFJdjjo=;
-	b=oOfKNLJSznlDYD2sPK+igR3MRA5dzln9wek5oYXsNIZdX7Ak4vcSXRrWWaBElHAfSj92
-	 1ZKA/kDZ0ziQ5bY6rYVdpAJXn8XtwlIDVVlfUuHiVm7sSdAncKJtdpT/jgb2XGJ5qaGH8
-	 nNiQJbz8Ol2pNRReUXsqj4MgH56v5B0WH9ABaKipebhTskHtMAKNSADG+OYsnWIz3xz3A
-	 1p6Hmf1ikSrKwhFFnbOQ2b5bHHqmNXFAxi4v5bfiKW9WT1Ic3t0tbS6ntNOPS/3RLprUd
-	 iM3efbS7nIYLn074ISEbbHrdmb54A+3e28yQNiOfWXhnZkxciMQ8y5Kh62XL3xZOWfA==
+	bh=lOcLFgeKMHnMqmCSC64f0kr0I4Eoin/ivK4WXw7mqio=;
+	b=zTwPdJDSV4/YpTEhm2Xovz+/o+ILpfMzDlCVv9h39dNjcoQa94wD+Z0DR+PuyWi07W36
+	 XxUutullcXfU3Tru6qQDmjElm8ysmrTxHVRwbyIHpvt0ZMbUs0HukJQEOfJdR35qkjDnH
+	 McFbPQBQw/ENpNbH/6Mb6Tjg5Yixwe4eqWx+qzQtf4kflJAEL34bk1E0dltrP8Ntc+eih
+	 vqL8MPQ3sw2OZQ7lUy5f3+0oiNZnf5NpBCFOwXNCwJwqvC1TEhEzUAIapXlNZB/rlxZMe
+	 tQgP51YDG/B7dJHYTX0ehpg1glA3feJxHannqBSMccWSaRcYKb5N4TajMCyb1OOgVgA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=gJyDCOUm;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=RsOxjNxb;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE6BA606A319
-	for <linux-perf-users@vger.kernel.org>; Thu, 22 Oct 2026 22:27:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0C03606A319
+	for <linux-perf-users@vger.kernel.org>; Thu, 22 Oct 2026 22:28:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=gJyDCOUm
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 42F1A1F01825;
-	Thu, 22 Oct 2026 22:27:17 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=RsOxjNxb
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 184CB1F01825;
+	Thu, 22 Oct 2026 22:28:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1792708037;
-	bh=c4Jk62lU82kiB3viB5v/zIJXmq5L89/j2YPrZFJdjjo=;
+	s=k20260515; t=1792708113;
+	bh=lOcLFgeKMHnMqmCSC64f0kr0I4Eoin/ivK4WXw7mqio=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=gJyDCOUmZW6Vb7PJZtljz853TDaH2SsgDm1yHZ+P/A7Cuj+ApuJgTznQlAauVCw7E
-	 lcXRqdLa0nHsBqu+R0uTdJUsu4NiiQwnQnO2a21hPbJuSdrlGrHIs0Xz4p8oxpwD4/
-	 M3RXhjxkimBfL3a3XBmFLd589Eu6IQWUf98NeDS7pB4MA/zZqR21OpL8myUeARBjxU
-	 o2p9Xl8jgQqAf7Opn7VTQdrr4WqipboVjOBM6Mi7P9FNermVxZ0Uz7+1XUWjKmUKub
-	 9xJHApubnbGljVbl5Otd8dJWDbwCzxFEI6XU1iTdTbmhuzYvipYkxFbdOgUSCAj/Mz
-	 8HeRQh2pwM3ZQ==
-Message-ID: <sashiko-outbox-182120@kernel.org>
+	b=RsOxjNxbrwvhRYw+sKavzw5FkTi/yB+Rjlq7hRDywLQM0DR3YEJJDSuswZtmw5Vjl
+	 2FUCw7CgPQMMPPoNVnpmoEXVddbyxtk+dSWXyz4kDIcGeoX6CY5zoeZX9/dA6Kb4s3
+	 04yamKl6huR5oago/mph199wUKkdGWenVxcJoh/EdqZ8jOHwgCr1R7b0L6aX8iNLpR
+	 KJMcObA8oge2MLpkjnsoDr0fSRebU2lMNmT6cNyTbGiddCb8ZolAGhFZYReW9HgMf3
+	 KMfBmQnCddjWAiPLNNkoDIxYiVaZzI9IGWR05Rkb5M3NyUEmoG6NBvxxzihYx4xTcA
+	 uRpmf/fK/oTVQ==
+Message-ID: <sashiko-outbox-182121@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v6 3/3] perf test: Don't count mlock budget wait time
- towards test timeout
+Subject: Re: [PATCH v6 2/3] perf test: Improve JUnit XML schema compliance
+ and completeness
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Ian Rogers" <irogers@google.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20261022222245.2064964-4-irogers@google.com>
+In-Reply-To: <20261022222245.2064964-3-irogers@google.com>
 References: <20261022210753.1851597-1-irogers@google.com>
  <20261022222245.2064964-1-irogers@google.com>
- <20261022222245.2064964-4-irogers@google.com>
+ <20261022222245.2064964-3-irogers@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Thu, 22 Oct 2026 22:27:16 +0000
+Date: Thu, 22 Oct 2026 22:28:32 +0000
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -62,22 +62,24 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 
-> When multiple parallel tests need room in kernel.perf_event_mlock_kb,
-> they take turns acquiring the shared mlock_budget->lock mutex in
-> run_test_case_mlocked() after being forked in start_test().
->=20
-> Because child->start_time is recorded in start_test() when the child
-> process is forked, any time a test spends waiting in the
-> mlock_budget->lock queue would otherwise be counted against both its
-> per-test timeout (causing tests later in the queue to time out before
-> they even start) and its JUnit XML testcase elapsed time.
->=20
-> Extend struct mlock_budget with a per-slot shared start_time and started
-> flag populated in run_test_case_mlocked() once the child acquires
-> mlock_budget->lock. In check_child_timeout(), skip tests that are still
-> waiting for mlock_budget->lock and measure the timeout from the lock
-> acquisition timestamp once started. Also use the post-lock start_time
-> when computing the test's elapsed duration.
+> Improve the JUnit XML output generated by 'perf test -j' so that it
+> validates cleanly against both the strict Apache Ant/Windy Road JUnit
+> schema (JUnit.xsd) and the Jenkins xUnit/Maven Surefire schema
+> (junit-10.xsd):
+> - Add the required 'package', 'id', 'timestamp' (ISO 8601 UTC),
+>   'hostname', and 'time' attributes to '<testsuite>'.
+> - Emit '<properties>' (populated with uname sysname, release, version,
+>   and machine when available) at the start of '<testsuite>' and
+>   '<system-out/>' and '<system-err/>' at the end, matching the element
+>   sequence required by JUnit.xsd.
+> - Add the required 'type=3D"failure"' attribute to '<failure>' elements
+>   and emit self-closing tags for passing '<testcase>' elements and
+>   '<failure>'/'<error>' elements with empty error output.
+> - Escape apostrophes ('&apos;') and validate UTF-8 multi-byte sequences
+>   against valid XML 1.0 codepoints in xml_escape().
+> - Use the actual suite description and '%.2f' time format for user
+>   override skipped tests ('-s'/'--skip').
+> - Document '-j[<file>]'/'--junit[=3D<file>]' in perf-test.txt.
 >=20
 > Signed-off-by: Ian Rogers <irogers@google.com>
 
@@ -85,5 +87,5 @@ Sashiko has reviewed this patch and found no issues.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261022222245.2064=
-964-1-irogers@google.com?part=3D3
+964-1-irogers@google.com?part=3D2
 
