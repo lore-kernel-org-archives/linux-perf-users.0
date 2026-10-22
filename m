@@ -1,57 +1,57 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792693697;
-	b=AQ1A3RoR7v+hdWxtYdK5sLGCN7vCQQQBfuVXOgDH8CrzNGVn6oDceKhyP4leb+LzRcsz
-	 oLtRR4dAWrJt96ffh4upwvRJDdz7SA9jcQWFE9M7K1GJai/Ve2hE6vlz2dfcQU/xTBTYw
-	 JhcO7SiKMLB11kTWl3fNsZ5/VlKRfdygUOEHjKhs9yUHW91gfAnB2WJsc5LKWoCEMQcp1
-	 qRiAFz8ETTrKetFkmVmlGtk/NyRyykGWNR5+rfVUIE+B+4J5LopiQ6PMSzRUlPDOlQvwd
-	 SxYOb4rTRdWgbXRLx/8qHGGTTpfivFGGKWB2L7W6friKqZXpxrbp7sqRVp/mQFWSAug==
+	t=1792693703;
+	b=QJwOfs7AYQ/yfem6QFKCeZ2H5s+DyRVAwIPwHs03wIGn+mE6MTHc5fgHdVF6WtJUM5yb
+	 +Rj3vQk1zoDI6hdp/YvK+R4tUL+Ai0uJWdUuydJgEita1iAX8P1w/wtjnw8rDt7GD7bSo
+	 8gEXpwUxIgjzmR/jv2HPCuEqoHYvBNIhAt6eVXePpdm6C0ThiDLsC4I8QgxJUKe++6ZbV
+	 K8TJn5Rs7qGEyb8ahsj2FJQXhfkMUpMqCTW39kAZUfUmYM5PUHZHMpExoD31Bt4oa8nba
+	 AAhPTIoLocQ6t7/SQvX86z+EmX2QtOgSgMhhErMeBbMvkwOTLAdC9N2Q3BhdR4HrPRQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792693697;
+	a=rsa-sha256; c=relaxed/relaxed; t=1792693703;
 	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
 	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=iOGMbXX3dNt7PnGRSv+MGRCjzv3sHLA4iYUuQ3vcKSg=;
-	b=eQ4p/I050z0hBUQfLO/ygwptFolaQr+ySE2NMxXzS1UgZEEXW6LAx4X5Nw9kNA4WFqAT
-	 /z0tSWPTxUn0ueoseib0S3rr8u7IcnCIC5SIQ1Xuo2k4d28LMVhuSQD+XOfU8NTnOaiDu
-	 M7lvC2u2vUiRpqO/WlWzDNsm4uPn9WkQ8kD18tcWyPBEsIwOb6MPt4GO3YwjVuLqrJckq
-	 coIz8TjORyfJGNAocqjVEjNPv5EBdSlWFASIULDyB7Dw217ulRHi8R1/VJPq4aH8ty/rB
-	 DQLG0dL8w5EskGYmJ/otwho1harJM13XC0yD+DfYTq6Q3QbGXpJHZYAIQjy7WsTFWoQ==
+	bh=2YSpTJSI/s7P3mPBxAW3T2mmso+JwW2VDLcIKYa6pg0=;
+	b=UVaIWuCf5lCG15sarR46H5xWWYP8qeffkO1QMXS/n5hewPCvODOvUr4Q1y+GGTyxnJ92
+	 akS9B6s/JIDkr2W7GSn9t0BUsEXtulAo3s+iZe5YelFJBqP07yh5yQ/EyetSeuy8LUU5/
+	 Ld8Tcpdu9FxsSISK+ycDISd71gSFuS6uQNNpTt09j/KMrgUJNyMUKl3xwbx8WSp1zqv4B
+	 e1c6ZMbYeQnJB/ywaU5ANaBbRSBpqulRtlXZFnY93UxsDxc76veR389obJ5U8oUY/SG8Z
+	 7V8CtBhUBoIfDHh7TjPbffPDAiSFNeW7L9wmub7zFNBy7+28ivDaVXDx+v03aoaYw5A==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=FpSZVP6a;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=lkHgeRIe;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61D17606A31A
-	for <linux-perf-users@vger.kernel.org>; Thu, 22 Oct 2026 18:28:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A578606A319
+	for <linux-perf-users@vger.kernel.org>; Thu, 22 Oct 2026 18:28:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=FpSZVP6a
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D19201F031E3;
-	Thu, 22 Oct 2026 18:28:16 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=lkHgeRIe
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B8CAC1F01825;
+	Thu, 22 Oct 2026 18:28:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1792693697;
-	bh=iOGMbXX3dNt7PnGRSv+MGRCjzv3sHLA4iYUuQ3vcKSg=;
+	s=k20260515; t=1792693703;
+	bh=2YSpTJSI/s7P3mPBxAW3T2mmso+JwW2VDLcIKYa6pg0=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=FpSZVP6aLdqkRU8bIh/kmKugmIGKfrwJwRSespJmhPN2aOMPNuQGf+oEUyxhL/SZN
-	 4g5Xx5FZmQOVbW4alqxcHrIYiI98gozNTvuWpCkOsOWl2BVbEzvsDbLx8JxfbG2MYa
-	 1tAs5VKNwsisBSR8AsrGeh+BTgTp/8R4vtWUzWhddo/yNQcPHqIn8T/1r/lb2hABXa
-	 GnPlhbDQumRIdSDT8VObtC/jqkzPdWbXc7CZzTHbJhMTVnU+Jjqjwe4UpOvc3qq+Lt
-	 B3SkdlVgTsKSf5dTgZL5OyrvNG0S+5CVdKzpTEhVbBxWxbb7Gh/8nvWXwEIZdJvYVA
-	 DkpoWvsZbCZlQ==
-Message-ID: <sashiko-outbox-181915@kernel.org>
+	b=lkHgeRIecf5VZWQr0w86TgHVDYecnfR0OxjVY42r0Tlxn5jsybn9rKgj/Q6T5aOfZ
+	 uQWPkJhUvvDgyfnPncMTRIVrr8W5RBrfmBu89vpLrMdHF5VFfSAg0ZEE+KTWIuFMMt
+	 mQYKxwjyyd14Z8d1FqsS6mTjhRfjotLp9EB2xVrMcnKa3xUIUS4LqH+k1WsHr3WL/n
+	 AnSVH/kAYlxeULwrvA2Pg1diSmvEkdgOGQ7iIGIGGdiKqi+oOrlaoxg/H7cqJC4gcn
+	 apsSUtnChG38Wzpm8GZbJ9QUnVrAf1gd0QF2q8JNdysIc4s9af2dCNaK9rxHmeBK91
+	 9IIJJcL4UkVNA==
+Message-ID: <sashiko-outbox-181916@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v3 02/10] tools headers UAPI: Sync linux/if_addr.h with
+Subject: Re: [PATCH v3 06/10] tools headers: Sync UAPI linux/fcntl.h with
  the kernel sources
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Arnaldo Carvalho de Melo" <acme@kernel.org>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20261022182431.25673-3-acme@kernel.org>
+In-Reply-To: <20261022182431.25673-7-acme@kernel.org>
 References: <20261022182431.25673-1-acme@kernel.org>
- <20261022182431.25673-3-acme@kernel.org>
+ <20261022182431.25673-7-acme@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Thu, 22 Oct 2026 18:28:16 +0000
+Date: Thu, 22 Oct 2026 18:28:22 +0000
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -65,24 +65,25 @@ Precedence: list
 >=20
 > To pick up the changes in:
 >=20
->   7cb8198761e6 ("net: ipv4: report multicast group user count")
+>   cdf930a00949 ("fs: support FD_FAILFS_ROOT in fchdir()")
 >=20
-> That just rebuilds perf, silencing this build warning.
+> That don't result in changes to the string tables generated from this hea=
+der.
 >=20
 > This addresses this perf build warning:
 >=20
 >   Warning: Kernel ABI header differences:
->     diff -u tools/include/uapi/linux/if_addr.h include/uapi/linux/if_addr=
-.h
+>     diff -u tools/perf/trace/beauty/include/uapi/linux/fcntl.h include/ua=
+pi/linux/fcntl.h
 >=20
 > Please see tools/include/uapi/README for further details.
 >=20
-> Cc: Yuyang Huang <sigefriedhyy@gmail.com>
+> Cc: Christian Brauner <brauner@kernel.org>
 > Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 
 Sashiko has reviewed this patch and found no issues.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261022182431.2567=
-3-1-acme@kernel.org?part=3D2
+3-1-acme@kernel.org?part=3D6
 
