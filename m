@@ -1,58 +1,58 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792700718;
-	b=qWcnRSImKKrfh0Edg0MU1dObNS+CbYkFrXBhZ0te+zwRYpDO2EH3hy6Gl7pHf557R0RY
-	 uDSSABVWoPfwrXK3j/Kngg9FYVpKJr55IW5Y6sbheUZ3lStUOkVurTPu1//igZtv4R5ic
-	 nmC1SfP8phirtWhbVs+/xfCpikTuadIU05GkIRlrniyGN59BNzYiFRKZfLsIScdu1ZHRL
-	 r+/y9uHk/Jk/3VfK4KARhyvdGEDp964Hgeo2zsm6/ZQ0Z8BnuUocMf1PTvZ8HQOecW8JH
-	 wKNoXvoQ+JC8VWvs92U0lqIq/4j3sb3PgIx38Z6ewEiapeX6CMvn+H9Jr9vchFiTYyQ==
+	t=1792700744;
+	b=UGwPI8cybBUS6rfn4CwOXNBLkfodFBiCDv8Ekh5nZh9BCayn/dh/R0OCts4K8NoisguF
+	 2gOMCx5phWFo3aZofWu+DEecf4t2RaHV92hBHLdaFwC5HaO1F1IsNr6QyX3Z9NUJO7HYS
+	 SEmnwri85rQhBdBPZMnuky7iIVsGhiXapvCsCZi+UbMod3tnu4IH/NgGTzWbdfidyDcQj
+	 tSpMyYl+OYqcirsOazgHZOwQS82961VMmtBMCLyq07iHaprEFvSlS50LdTpggi0UOUKb6
+	 aFMmXIOnHg99uTBbNyYiRo0HieDgR1VJgAtPKeajwpQ5et2LKwSPCzIKoHHojQOJosA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792700718;
+	a=rsa-sha256; c=relaxed/relaxed; t=1792700744;
 	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
 	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=6Sbsyc7DsEG4us9hJVxcRqvoD2ndc+1MMdWinIpHiNo=;
-	b=Hl15IdCn3Pt2VmLPRuz++YUDOP1ApLW1Z8aybHspX/nMZFLjfUFPgVh9mgd+qR49HtYP
-	 ATY+UTiWr8Hp55AQJDqiwi243j2cB5xO8zqZBgxE2/KE2Pkt5gyTpZYOgxIArTMryiCRT
-	 9Ifh4nMbCn7E8dQGOlMTd6vlg7dZQexbvSL/VZ5P9w1yFZA+dYXxBDDNILigRb8pdazp8
-	 mCT1mOU1ho1j6viCc+rrDWfIJSPXks5sBDHbT2bw2gXPzWJ3kvXvJqVNTvEjkjKHyu8Tw
-	 jG4hcbINY0yAUBGPOoWtaE7Udwacuwvtk3KU1k9KpKQjKLxwtHoN9mDS8M71QRs1QkA==
+	bh=MhGNhZvRtRtngGJmegra0t0WNyIKGy+2J/JPulUVuOA=;
+	b=Jb3d3DrKvhn8uFJMH4Pl6NiBXb+YvaefF4rAk3pWDLHiVhZ0zb16RG/httxapzpqe3vd
+	 D1jmdv4V9RAm50UUdO7VZMwJido2Yc3bykVZTczh/JjhE+a19hZoUe5TCjQ+0vg0ITBKq
+	 Ez+nYyfxUUNZbOW+duJYqDs06lUljpsjYv+qLW1p1U1Y/F++1stU8UlZw22/L0peLI5Gz
+	 LWbuU+CUHXsimsnbkmsTyq6K6C0pS17pqru7IkJdRnVlxqgx2ehlvszYVXuduqfJTtNgV
+	 FzjO5eK5QJioyglL/I8TezKjcQXxoi9ShzbDjRAJMpiZYOM0FeU/Y36zefT11oMYhZg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=FUV+RefF;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=J6sf5WJ6;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42474606A31B
-	for <linux-perf-users@vger.kernel.org>; Thu, 22 Oct 2026 20:25:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0ABA3606A326
+	for <linux-perf-users@vger.kernel.org>; Thu, 22 Oct 2026 20:25:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=FUV+RefF
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CF9D81F031E1;
-	Thu, 22 Oct 2026 20:25:17 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=J6sf5WJ6
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9AE431F01825;
+	Thu, 22 Oct 2026 20:25:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1792700718;
-	bh=6Sbsyc7DsEG4us9hJVxcRqvoD2ndc+1MMdWinIpHiNo=;
+	s=k20260515; t=1792700743;
+	bh=MhGNhZvRtRtngGJmegra0t0WNyIKGy+2J/JPulUVuOA=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=FUV+RefFrV9Lticsu4ysUuSHa851XbjrtyN1v1FFjjm2nOz1iZgnm3GEzG7o5Ky0i
-	 v/6oWLZoCND2fH882GXrTDp+w6JQqB+ukvXS8YCkSIYwQ8DqoyC04NfONCOOGJLPjV
-	 8wghlOPF4dcYfsGlIfsu4dr3FSfyi+Gj/zuM19WVRh/Ay7alah4dQguDG5M4gn3C9a
-	 cuXlEqHQxXiKst9WjbqMKIVSS+xBwH2oAgm8zjc9RC+oWudBhjvAJO/7ktG+ZMigro
-	 e6Fbx/qQ09q6TNr826oKRqOGGTJbmK3mO89Iv4RTZ+drrBvvGpNQ1ulHaAt1rgsCTp
-	 2iazmo2n8fuBA==
-Message-ID: <sashiko-outbox-181997@kernel.org>
+	b=J6sf5WJ64CtXQxsUO3nvHsOsYGJvPDXHbi6XhLqYODcFTvqOyncDFn6Qa7nsJB/+Z
+	 1M7D1ksYYb2218+NlbKBiq3DC3Goqlhg674GkfYjWQvD5KcjUYVT0NuIhG/DuS/+e6
+	 3l0y+9/oGUkCL0x77mAAgfZMrVlw9WYhoyatlj44sQvz2E5cLRHGeEep9WwjUSiFH1
+	 L4Onv0mwKGPFK6W8RD8pOT3NrrHa54Z/Ssp84aaE1M3OIXP2ht8DwqVlKWiGySLSyg
+	 eR0In24sv1tQeGq/Am+DpqaZyFpbeniZ5jSmJIjI0oiMcXU7g0dlgLHqA6bHlWIA2k
+	 4OaCLRl+P4oQA==
+Message-ID: <sashiko-outbox-181998@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v8 14/19] perf thread: Expand context analysis
- annotations to threads and namespaces_lock
+Subject: Re: [PATCH v8 10/19] perf dso: Pass dso_data to close_data_fd() and
+ dso__list_del()
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Ian Rogers" <irogers@google.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20261022201453.1717523-15-irogers@google.com>
+In-Reply-To: <20261022201453.1717523-11-irogers@google.com>
 References: <20261021223905.715051-1-irogers@google.com>
  <20261022201453.1717523-1-irogers@google.com>
- <20261022201453.1717523-15-irogers@google.com>
+ <20261022201453.1717523-11-irogers@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Thu, 22 Oct 2026 20:25:17 +0000
+Date: Thu, 22 Oct 2026 20:25:43 +0000
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -62,14 +62,16 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 
-> Annotate shard and last_match in struct threads_table_entry with
-> __guarded_by(&lock) and add __must_hold_shared()/__must_hold() to the
-> last_match helpers in util/threads.c.
+> close_data_fd() and dso__list_del() only operate on struct dso_data
+> fields, while close_first_dso() retrieves a struct dso_data * from
+> dso__data_open. Pass struct dso_data * directly to close_data_fd() and
+> dso__list_del() so close_first_dso() does not need to recover a
+> struct dso * from struct dso_data *.
 >=20
-> In util/thread.h and util/thread.c, add __returns_ctx_lock() to
-> thread__namespaces_lock() and thread__comm_lock(), annotate
-> namespaces_list and comm_list with __guarded_by(), and add
-> __must_hold_shared()/__must_hold() to the namespaces_list helpers.
+> This removes the REFCNT_CHECKING dso pointer from struct dso_data and
+> avoids dropping _dso__data_open_lock in dso__list_del() to call
+> dso__put(), preventing lock-order inversions and races during EMFILE
+> eviction.
 >=20
 > Signed-off-by: Ian Rogers <irogers@google.com>
 
@@ -77,5 +79,5 @@ Sashiko has reviewed this patch and found no issues.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261022201453.1717=
-523-1-irogers@google.com?part=3D14
+523-1-irogers@google.com?part=3D10
 
