@@ -1,58 +1,57 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792700744;
-	b=UGwPI8cybBUS6rfn4CwOXNBLkfodFBiCDv8Ekh5nZh9BCayn/dh/R0OCts4K8NoisguF
-	 2gOMCx5phWFo3aZofWu+DEecf4t2RaHV92hBHLdaFwC5HaO1F1IsNr6QyX3Z9NUJO7HYS
-	 SEmnwri85rQhBdBPZMnuky7iIVsGhiXapvCsCZi+UbMod3tnu4IH/NgGTzWbdfidyDcQj
-	 tSpMyYl+OYqcirsOazgHZOwQS82961VMmtBMCLyq07iHaprEFvSlS50LdTpggi0UOUKb6
-	 aFMmXIOnHg99uTBbNyYiRo0HieDgR1VJgAtPKeajwpQ5et2LKwSPCzIKoHHojQOJosA==
+	t=1792700755;
+	b=vH6gUaxd14YKS1PZmNo/m19nCmYWLYHLhilCaMHyXtcpbk/RLjoUkMbHj+7SGAZLW1pG
+	 ZAmC0BfgpdeXXS4JsqMmnsCh2eanWtYkFwmdV2BuG7tb3Evl0jjOKj6OHdL0csmQ69N59
+	 lpTiOTLoLp9ua4JEvd4yVAZToygh3KeQX+wXXnKESF/ezOhN1r9zbYsf9EVCu2oSxNr5d
+	 GHYBVhYgT5gs9iCawevSFByJ9NqaZF+eElrgsgiKxn99NcN5oJcAZSQ0HuN3yOfk3ei4R
+	 I3zZ0zafO9zaoMmpxNrJdED/zmMG4Pd7QMNjV1kvuweH5qUA9paU1JUVM/UF7ynpZnA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792700744;
+	a=rsa-sha256; c=relaxed/relaxed; t=1792700755;
 	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
 	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=MhGNhZvRtRtngGJmegra0t0WNyIKGy+2J/JPulUVuOA=;
-	b=Jb3d3DrKvhn8uFJMH4Pl6NiBXb+YvaefF4rAk3pWDLHiVhZ0zb16RG/httxapzpqe3vd
-	 D1jmdv4V9RAm50UUdO7VZMwJido2Yc3bykVZTczh/JjhE+a19hZoUe5TCjQ+0vg0ITBKq
-	 Ez+nYyfxUUNZbOW+duJYqDs06lUljpsjYv+qLW1p1U1Y/F++1stU8UlZw22/L0peLI5Gz
-	 LWbuU+CUHXsimsnbkmsTyq6K6C0pS17pqru7IkJdRnVlxqgx2ehlvszYVXuduqfJTtNgV
-	 FzjO5eK5QJioyglL/I8TezKjcQXxoi9ShzbDjRAJMpiZYOM0FeU/Y36zefT11oMYhZg==
+	bh=ohzQSJP5dcBE7DIaDZLAE4oM6uGS5JLtCq0YA6VOYHw=;
+	b=vOWBVjiKKtwfEgui9cGv9h0yLBj8ihsuiIyTF716rvAsnSiqqTgTLlY04G25Angzcgb/
+	 MktxFZA1taTzqZCBB7AZ/hl5J/3Vt7ov5M7aIFjkZiiQvgULRFqdlPsqlA207YILRPq8i
+	 rkkbawRXhPMMTIYTZNNX+xkNU8mBiqBXW2BFx8bFhBUT045IcqHWI89BC8O5Z32BpB8Vw
+	 bAe2KzvSmxMIZ2yTxmHzoUoCYnYaXlZAOHa7NMkqUqAJu9D7YXdNS25nUm/fzhcCWVVQR
+	 l8EkhkK5SyraROxKK+pNmxPBCTg+t79gBIKxulKWGvFB6GyAL9ra1j8tQg3Dd74o7jQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=J6sf5WJ6;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b="G/GCJirN";
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0ABA3606A326
-	for <linux-perf-users@vger.kernel.org>; Thu, 22 Oct 2026 20:25:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3C8C606A31A
+	for <linux-perf-users@vger.kernel.org>; Thu, 22 Oct 2026 20:25:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=J6sf5WJ6
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9AE431F01825;
-	Thu, 22 Oct 2026 20:25:43 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=G/GCJirN
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6CF521F01825;
+	Thu, 22 Oct 2026 20:25:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1792700743;
-	bh=MhGNhZvRtRtngGJmegra0t0WNyIKGy+2J/JPulUVuOA=;
+	s=k20260515; t=1792700754;
+	bh=ohzQSJP5dcBE7DIaDZLAE4oM6uGS5JLtCq0YA6VOYHw=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=J6sf5WJ64CtXQxsUO3nvHsOsYGJvPDXHbi6XhLqYODcFTvqOyncDFn6Qa7nsJB/+Z
-	 1M7D1ksYYb2218+NlbKBiq3DC3Goqlhg674GkfYjWQvD5KcjUYVT0NuIhG/DuS/+e6
-	 3l0y+9/oGUkCL0x77mAAgfZMrVlw9WYhoyatlj44sQvz2E5cLRHGeEep9WwjUSiFH1
-	 L4Onv0mwKGPFK6W8RD8pOT3NrrHa54Z/Ssp84aaE1M3OIXP2ht8DwqVlKWiGySLSyg
-	 eR0In24sv1tQeGq/Am+DpqaZyFpbeniZ5jSmJIjI0oiMcXU7g0dlgLHqA6bHlWIA2k
-	 4OaCLRl+P4oQA==
-Message-ID: <sashiko-outbox-181998@kernel.org>
+	b=G/GCJirNESU9Y4UgxNeRE32bubrJveoYORsY7TVwCDbZTTqOf1wk5xpxqYty1bOZJ
+	 3xsIH2cihlV1k2iTT4UTLF8kUgGmb4p4ZRCVSvMnIhoK6jFqWkAbK684iB44T9n2Yg
+	 YBhFBEVc9pEOC6w+p/RMXkOnrg6eHYpk8SaCwKKU9BnBav/5BQMDhGMIHXGrIRkcrl
+	 cNugsaBI0Buo/h3GVJAwk5RJklFTvx4RY+DV5cnpWYPwe8x4KUV7LgQOD8BLZCUWcJ
+	 jVgpHfJjH1fdv7H80xDAy5OB/A+U6HUMEcfzKcGmBA3jQscNTNdfBK72+bWKYrl+WC
+	 ycA1zIoCi/Qdg==
+Message-ID: <sashiko-outbox-181999@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v8 10/19] perf dso: Pass dso_data to close_data_fd() and
- dso__list_del()
+Subject: Re: [PATCH v8 19/19] perf maps: Add context analysis annotations
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Ian Rogers" <irogers@google.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20261022201453.1717523-11-irogers@google.com>
+In-Reply-To: <20261022201453.1717523-20-irogers@google.com>
 References: <20261021223905.715051-1-irogers@google.com>
  <20261022201453.1717523-1-irogers@google.com>
- <20261022201453.1717523-11-irogers@google.com>
+ <20261022201453.1717523-20-irogers@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Thu, 22 Oct 2026 20:25:43 +0000
+Date: Thu, 22 Oct 2026 20:25:53 +0000
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -62,16 +61,9 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 
-> close_data_fd() and dso__list_del() only operate on struct dso_data
-> fields, while close_first_dso() retrieves a struct dso_data * from
-> dso__data_open. Pass struct dso_data * directly to close_data_fd() and
-> dso__list_del() so close_first_dso() does not need to recover a
-> struct dso * from struct dso_data *.
->=20
-> This removes the REFCNT_CHECKING dso pointer from struct dso_data and
-> avoids dropping _dso__data_open_lock in dso__list_del() to call
-> dso__put(), preventing lock-order inversions and races during EMFILE
-> eviction.
+> Add __returns_ctx_lock() to maps__lock(), annotate DECLARE_RC_STRUCT(maps)
+> members protected by lock with __guarded_by(&lock), and annotate
+> internal maps helpers with __must_hold() and __must_hold_shared().
 >=20
 > Signed-off-by: Ian Rogers <irogers@google.com>
 
@@ -79,5 +71,5 @@ Sashiko has reviewed this patch and found no issues.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261022201453.1717=
-523-1-irogers@google.com?part=3D10
+523-1-irogers@google.com?part=3D19
 
