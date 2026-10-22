@@ -1,58 +1,75 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.198
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792701976;
-	b=Cp8m7V1lmPZ0UB3xbASvz04Wijq9jQl1kdRMOB6RPlealyTMcIGZ2jf/8XiGrr7yGetY
-	 EepU+5CddsgG+SFeXZ459gMwTNDjDlBLkKS2nvzefexeG7S0xLvy6NGQUe8F7HEOHleVR
-	 ilrbojIsgY3155E0aF6e7234pzGFBVCtvsHK0SpsX91KdW4MKb3Y9Opd4MXcmLuoJWv2z
-	 NgJadA4HHzgHDury56SiFqd6o8Mf0MFENtUiDkRxHDsKbqNS/+KZI10Hu9SVnorkHXsiW
-	 P2TRnQbmLpkBLVC3SmH4JuSJMk5xDdMuQ2sPYoIyZ+EKTpn7zyU1+l2wdixduoKxeiA==
+	t=1792701995;
+	b=030pfuN5eUat5LIx9n3eGPtcB334bIkq/Px/okENo71luY8Cf00mj6H6T8F8NuhDPBIJ
+	 oo5xLBHBVddMsesDhPiXI6/vlXM4r0ukj2GXvvW12rigsmNd6eyjRwXIy6ZW+034HpD+g
+	 e7CO2DO/uQ76FQgWBFtsQMjdNFlDkOIhNIpFSkhypFu45BEDzswAKyUIexYyNo/qAFcv6
+	 IRcF5eW5CNByjAFFD64htzFalBqXMORmEXGPSKeuimeSp+w6OnP9iTfC7o8aTN1MkIwxS
+	 pK8dHWnmqcix3pQK3YTK1DmY7NEwOwwhEzcVbfYprExxbbjRcQD3f5kPL8kFoN9QdkA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792701976;
-	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
-	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=k7o+bs1VyxclcJW8fnGRaqBybwBYed14ZKVZoCuR7fI=;
-	b=w1YHnXCZrrM902Gvild0+K5qEdnQ9aTPH+FBfzqn8n8hE9kuCxc4z5u3aT5TKzr5kIbh
-	 J6V6dn4lFTOAiHR/8eBjqHDM7szG6i+iTGE+69XCVktYfi7llVmTz3UlJ4OhEc9fxj3mJ
-	 KHQ4BqviIr0+LD7ZU/QYwylgprbOR3e9LNEg+lcx5dGpbp5hvTfAQqxX3mwSvtENY8YkI
-	 3uMr3vTOlMVoPgrpSYARJ/tN7wlbTEalVF3+5Tfg+vL+X2wBbXfIjne8ig2CBhXfqMDc+
-	 kSeVhtAnpnr+pFpKzg+e/7Ip5teOh0XDvv4cMeDVpzMu8dikk8tsSgA6vRLplGNQ2ow==
+	a=rsa-sha256; c=relaxed/relaxed; t=1792701995;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Received:Date:In-Reply-To:
+	 Mime-Version:References:X-Mailer:Message-ID:Subject:From:To:Cc:
+	 Content-Type;
+	bh=Ysl1d/0h3aeNG4530gdQo/Cgx+FMPRdnoywPZWHvZao=;
+	b=p79cyrSqC3To75qWqDPZID/Xra92CI+DyyNLOHhLpadbZFM6ac8xGJ8ea9av3FmO0seW
+	 3h4ERnwDy+LsBBOzrAvCUvg7rz3cMVgGumFwtfj/Gg6eQIWG+ajpe1hCL15dgW/RiS2HQ
+	 hxBwt+8hYGcx+hxNxbAAXp3LXg4MhfzBPTa634wazs9HYqcvnkuzRiPu4XGw5EgtiC/eH
+	 j4JwUisSMfA46+fzareZvAFi3yVw4Gmd+dhPJ60GkVgEcnI/cctbA6eUai6LWFkQ3XxZo
+	 kXybLfkPZTPVP2b+3MuM301e4UAjKuFo4AmQmCVZc3cmVVPevdwpwuZJ4Q65qwlxx1A==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=RIiuQsG5;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	dmarc=pass header.from=google.com;
+	spf=pass smtp.mailfrom=flex--irogers.bounces.google.com;
+	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20251104 header.b=aQbgPcX1;
+	arc=none smtp.remote-ip=74.125.82.198
+Received: from mail-dy1-f198.google.com (mail-dy1-f198.google.com [74.125.82.198])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDA07606A319
-	for <linux-perf-users@vger.kernel.org>; Thu, 22 Oct 2026 20:46:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4154606A31A
+	for <linux-perf-users@vger.kernel.org>; Thu, 22 Oct 2026 20:46:34 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org C4154606A31A
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=RIiuQsG5
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5A52C1F01829;
-	Thu, 22 Oct 2026 20:46:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1792701975;
-	bh=k7o+bs1VyxclcJW8fnGRaqBybwBYed14ZKVZoCuR7fI=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=RIiuQsG5L08RTIGVMev/Hzw7PGqOl5Eh9Q+YUynEwPeUkYT6FoIaL2Ss6CxplOrSI
-	 kdh9dUzK5tP1A8fcVHgF/BJYwXAqL/b+QJC1wwmHIsgGZ/uanw3efrC0SGx8yoqbqU
-	 TmANoN3iGyeGQ4j3ppBBTsadLF9K1+yQjyL7rwxuc+Yd0Xov9f6OGgS2c8gsRyb31C
-	 EOf2dc9E3Zsu4nvZVDPRf14YR6bFIKMt60rXESWRQgAMrw1bb4GUKmEz/+yWjJtTpo
-	 BKwD9I2asizzmYmPtlhRKXevZfL50wA4Pb2F031ys5Gv+S3tqipNUj1vkX38eZy5JC
-	 VkUXpg2Qy8g7g==
-Message-ID: <sashiko-outbox-182023@kernel.org>
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v6 05/11] perf bpf-filter: Add lock_held() sample filter
- for global mutexes
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Ian Rogers" <irogers@google.com>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20261022203003.1779152-6-irogers@google.com>
-References: <20261020205859.1080743-1-irogers@google.com>
- <20261022203003.1779152-1-irogers@google.com>
- <20261022203003.1779152-6-irogers@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Thu, 22 Oct 2026 20:46:15 +0000
+	dkim=pass (2048-bit key, unprotected) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20251104 header.b=aQbgPcX1
+Received: by mail-dy1-f198.google.com with SMTP id 5a478bee46e88-341eff9e381so467945eec.1
+        for <linux-perf-users@vger.kernel.org>; Thu, 22 Oct 2026 13:46:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1792701994; x=1793306794; darn=vger.kernel.org;
+        h=content-type:cc:to:from:subject:message-id:references:mime-version
+         :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=Ysl1d/0h3aeNG4530gdQo/Cgx+FMPRdnoywPZWHvZao=;
+        b=aQbgPcX1pBs8f1P4KXdtCBMhSowNeKF9oMdqJJPFRsHCO5joE2rxR9MLL60e0iQ+VC
+         kDRf8l78j1ccdlAYvqK+cYABojRKj2NWcTvIl/zm5eZXjNnHA76BVdn+r26/A9ceaTZi
+         176YSSWEDEloOPIGAPzsL5jIqsoHoy7HI5K46ubcgojk2rUgnyZNZ+VrLvx0ITT5Ru5O
+         QW0r/y8MexFXzN5KH78w6H60XwDlahNMkzNWfnoOI58b13yp2ad6nUDm/sCNljzjinQT
+         ZsIkox/7PHljmC5/VeAL1LhVBBc44GlGjlSS4n84n54sAIVej5sFJcCAv2bX8TkfNQu4
+         gppQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1792701994; x=1793306794;
+        h=content-type:cc:to:from:subject:message-id:references:mime-version
+         :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=Ysl1d/0h3aeNG4530gdQo/Cgx+FMPRdnoywPZWHvZao=;
+        b=LIUZCxycB3B/TRvT8r3faZaUaEVzorwdJ+9OhlpiQX//xuuUUa2ojnLxxQ6fN6f50h
+         q8tTbobUSWIRMCsmTVvA8lfVPQ59XA3ZaIIjf59wp4WS109sfhYDUrA3MhRgOk9ybYwp
+         93n5z9COZ0wLHPiuQBfaCLUVevMMg20AycAcG8TvIQWB+ZCNJRkXE9pMuYZnMHu5sTUs
+         A3NUB9ewnlabyPA1ClrBC6zjX0kY9kJ/CLVUUaPhLZhU45vuQe0swUfmHVdlsb2e8lCe
+         Ng5+8hZIPP+lQJXwt5F+CSD+MtxoFRiZqp8BFXAKtto/FGw/dbnIItSGbmkgnOobq7vn
+         S6Tw==
+X-Forwarded-Encrypted: i=1; AKwUvBzLArCzaVSkpjmhQeUtMy3G64Qq+JtuVFPudKB1r5OBprR41RslEJaNKpc0oWVTsiXXYIZpxEEvYLloWDydLW31@vger.kernel.org
+X-Gm-Message-State: AFq9FYICw02SE9oFXFvGs33eqkUAE5dp20/2kriPjpq9Yw3BLtxEfvJs
+	VT4IhKr5qWn6xWNpEM0vACt9qYCPauhF2iGLixUlUgr/or3AR0IDZxSMhrV+LRRzJY0a224Y0UP
+	18KvRhgiKJA==
+X-Received: from dyau28.prod.google.com ([2002:a05:7300:601c:b0:35a:f5b8:c8c])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:693c:87d7:10b0:366:83dd:46f7
+ with SMTP id 5a478bee46e88-369d98074admr318643eec.17.1792701993349; Thu, 22
+ Oct 2026 13:46:33 -0700 (PDT)
+Date: Thu, 22 Oct 2026 13:46:25 -0700
+In-Reply-To: <20261013231430.2163505-1-irogers@google.com>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -61,132 +78,58 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
+Mime-Version: 1.0
+References: <20261013231430.2163505-1-irogers@google.com>
+X-Mailer: git-send-email 2.56.0.307.g5fe7bd680c-goog
+Message-ID: <20261022204627.1813821-1-irogers@google.com>
+Subject: [PATCH v3 0/2] perf build: Support building BPF skeletons with bpf-gcc
+From: Ian Rogers <irogers@google.com>
+To: irogers@google.com, acme@kernel.org, cupertino.miranda@oracle.com, 
+	jose.marchesi@oracle.com, namhyung@kernel.org
+Cc: adrian.hunter@intel.com, andrii@kernel.org, eddyz87@gmail.com, 
+	james.clark@linaro.org, jolsa@kernel.org, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, mingo@redhat.com, peterz@infradead.org, 
+	yonghong.song@linux.dev
+Content-Type: text/plain; charset="UTF-8"
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
-s) to consider:
-- [Medium] perf bpf-filter: fix module symbol matching and _edata bound in =
-find_lock_sym_cb()
---
+Currently the perf build requires clang (>= 12.0.1) to compile BPF
+skeleton programs (.bpf.c -> .bpf.o). bpf-gcc (>= 14.0.0) also supports
+BPF CO-RE and BTF generation and is already supported in
+tools/testing/selftests/bpf/Makefile.
 
-commit 50246e2587ada8982167d48e27c24df7afceb9ec
-Author: Ian Rogers <irogers@google.com>
+This series updates the perf build to support both clang and bpf-gcc:
+- Patch 1 updates Makefile.config, Makefile.perf, and bpf_skel.mak to
+  prefer bpf-gcc when building perf with GCC (CC_NO_CLANG=1) and clang
+  when building with Clang/LLVM (CC_NO_CLANG=0), while respecting
+  explicit BPF_GCC=... or CLANG=... command-line overrides and falling
+  back to whichever compiler is available.
+- Patch 2 adds make_bpf_skel_clang and make_bpf_skel_bpf_gcc build-test
+  targets to tools/perf/tests/make, reuses tools/build/Makefile.feature
+  for feature detection, and verifies with
+  'perf check -q feature bpf_skeletons' that BPF skeleton support is
+  enabled (or disabled for make_no_bpf_skel) as expected.
 
-perf bpf-filter: Add lock_held() sample filter for global mutexes
+v3: Reuse tools/build/Makefile.feature and tools/scripts/utilities.mak
+    in tools/perf/tests/make rather than open-coding compiler feature
+    probes, and explicitly check for exit code 1 from 'perf check' in
+    make_no_bpf_skel so crashes are not masked by shell negation.
+v2: Pass only -dumpfullversion when querying BPF_GCC_VERSION, guard
+    against an empty version string, and fix version-ge3 / version-lt3
+    in tools/scripts/utilities.mak so empty or <3-component version
+    strings do not shift awk fields and evaluate as false in version-lt3.
 
-This commit adds BPF sample filter predicates such as lock_held(<lock>) to
-record perf event samples only when a specified kernel lock is held or not
-held. In this initial step, global and static kernel mutex symbols are
-resolved via /proc/kallsyms and inspected in kernel memory via
-get_lock_owner().
+Ian Rogers (2):
+  perf build: Support building BPF skeletons with bpf-gcc
+  perf test make: Add BPF skeleton build tests for clang and bpf-gcc
 
-> diff --git a/tools/perf/util/bpf-filter.c b/tools/perf/util/bpf-filter.c
-> index 0d3c700d3dcd5..639db6c031379 100644
-> --- a/tools/perf/util/bpf-filter.c
-> +++ b/tools/perf/util/bpf-filter.c
-[ ... ]
-> @@ -169,9 +178,263 @@ static int check_sample_flags(struct evsel *evsel, =
-struct perf_bpf_filter_expr *
-[ ... ]
-> +struct lock_sym_cb_args {
-> +	const char *name;
-> +	u64 addr;
-> +	bool in_text;
-> +	bool in_data;
-> +	bool found;
-> +};
-> +
-> +static int find_lock_sym_cb(void *arg, const char *name, char type, u64 =
-start)
-> +{
-> +	struct lock_sym_cb_args *args =3D arg;
-> +
-> +	if (!strcmp(name, "_text") || !strcmp(name, "_stext") ||
-> +	    !strcmp(name, "_sinittext")) {
-> +		args->in_text =3D true;
-> +		return 0;
-> +	}
-> +	if (!strcmp(name, "_etext") || !strcmp(name, "_einittext")) {
-> +		args->in_text =3D false;
-> +		return 0;
-> +	}
-> +	if (!strcmp(name, "_sdata") || !strcmp(name, "__bss_start")) {
-> +		args->in_text =3D false;
-> +		args->in_data =3D true;
-> +		return 0;
-> +	}
-> +	if (!strcmp(name, "__bss_stop")) {
-> +		args->in_data =3D false;
-> +		return 0;
-> +	}
-> +
-> +	/*
-> +	 * Ignore kernel text functions, module text functions, and
-> +	 * absolute/undefined symbols. On CONFIG_LTO_CLANG kernels, vmlinux
-> +	 * .data symbols between _sdata and _edata may have kallsyms type
-> +	 * 'T'/'t', so allow 'T'/'t' within vmlinux data/bss (args->in_data).
-> +	 */
-> +	if (args->in_text || type =3D=3D 'A' || type =3D=3D 'a' ||
-> +	    type =3D=3D 'U' || type =3D=3D 'u' ||
-> +	    (!args->in_data && kallsyms__is_function(type)))
-> +		return 0;
-> +
-> +	if (!strcmp(name, args->name)) {
-> +		args->found =3D true;
-> +		args->addr =3D start;
-> +		if (start !=3D 0)
-> +			return 1;
-> +	}
+ tools/perf/Makefile.config     | 83 +++++++++++++++++++++++++++-------
+ tools/perf/Makefile.perf       |  8 +++-
+ tools/perf/bpf_skel.mak        | 36 ++++++++++-----
+ tools/perf/tests/make          | 71 ++++++++++++++++++++++------
+ tools/scripts/Makefile.include |  1 +
+ tools/scripts/utilities.mak    |  4 +-
+ 6 files changed, 159 insertions(+), 44 deletions(-)
 
-[Severity: Medium]
-When resolving a lock symbol through the call chain:
+-- 
+2.56.0.307.g5fe7bd680c-goog
 
-  perf_bpf_filter__prepare()
-    -> get_filter_entries()
-      -> resolve_lock_expr()
-        -> find_kernel_lock_sym()
-          -> kallsyms__parse(..., find_lock_sym_cb)
-
-there appear to be two symbol resolution issues in find_lock_sym_cb() in
-tools/perf/util/bpf-filter.c:
-
-First, in tools/lib/symbol/kallsyms.c, kallsyms__parse() reads each symbol
-name up to the newline character:
-
-	for (i =3D 0; i < KSYM_NAME_LEN; i++) {
-		ch =3D io__get_char(&io);
-		if (ch < 0 || ch =3D=3D '\n')
-			break;
-		symbol_name[i]  =3D ch;
-	}
-	symbol_name[i]  =3D '\0';
-
-In /proc/kallsyms, module symbols are formatted with a trailing module name
-suffix ("\t[<module>]"). Because find_lock_sym_cb() compares names using
-!strcmp(name, args->name), will lock symbols residing in loaded kernel
-modules always fail to match? Other kallsyms callbacks such as
-kern_sym_name_match() in tools/perf/util/auxtrace.c handle this by allowing=
- a
-tab delimiter after the symbol name:
-
-static bool kern_sym_name_match(const char *kname, const char *name)
-{
-	size_t n =3D strlen(name);
-
-	return !strcmp(kname, name) ||
-	       (!strncmp(kname, name, n) && kname[n] =3D=3D '\t');
-}
-
-Second, find_lock_sym_cb() sets args->in_data =3D true at both _sdata and
-__bss_start, and the comment notes that .data symbols between _sdata and
-_edata may have type 'T' or 't'. However, only __bss_stop resets
-args->in_data to false. Should _edata also reset args->in_data =3D false so
-that sections between _edata and __bss_start (such as .exit.text outside
-_sinittext.._einittext) are not treated as vmlinux data/bss?
-
-> +	return 0;
-> +}
-[ ... ]
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261022203003.1779=
-152-1-irogers@google.com?part=3D5
