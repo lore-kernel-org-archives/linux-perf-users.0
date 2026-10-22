@@ -1,68 +1,49 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=198.175.65.14
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=132.226.202.154
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792650004;
-	b=utJivJl7VAp2cdmgNhTbfkbTDrs1+SWfIPwKX7U4+UCUGhqyJl/NnyEuFEiBWCCVcsiY
-	 ZOxeMKQHUBNzcREU0S8971BENw8UL/8EYS3FbBs/A1gIOEWS9/tJIokcASrqkp5GtNqMq
-	 jYbwSfXBFHITF5YQgcjPp/3QhSIqK7OVeGfaALMN3RX9eL/1eSNPS9lAqnj2vEVCJuDaU
-	 +xDPngO8Xdct3QrQhULGOdCfMcE/J6UBTBt2zwPwHCRsC3rZBOapZvSmpDvrE8NnpK9Yb
-	 gma5xlKqD0PvzEih/TS8yKqrRwZZ2aUUZM9e9+9x0/Rk2okV5z1IGZxwCJlLNCW330g==
+	t=1792657636;
+	b=mr4qbpc6Q2DY/l4Zc1FlxYK0xGmDpRGIpOhHSLerjcJsqgL1YcSoimJqmb1AtiZNLPob
+	 WrZAq8ryW6QT8N3TRuZHFejpS5pjn+wC5e4qK1uyWfA6BuQ9X4cxc97rfsmdUtxErNmGT
+	 sduI/yyR2E3SQSq2zY0MmfrsTDzGed8atB2mTQ0pf3b1l20Bpqy6/3PJQsTTs62fkRV0r
+	 eI2yu8ArOpst7T1GBG2QnuUC2kQy3UNAkR7Wh8tMekFnac52Bj5R4wB1sZZGffgHhlpL2
+	 ywadV+IeTBbFbKiIeb445KEE8z161BJDPNM5qj9IOPE1J3yYOimUECaloeuWYE75JoQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792650004;
-	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
-	 X-IronPort-AV:X-IronPort-AV:Received:X-CSE-ConnectionGUID:
-	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:Message-ID:Date:
-	 MIME-Version:User-Agent:Subject:To:Cc:References:Content-Language:
-	 From:In-Reply-To:Content-Type:Content-Transfer-Encoding;
-	bh=Ak030PKoYpRUQlgzvTjPjd4UCALDe994mmCbXVCPokI=;
-	b=jyN3YPHuNP5mvYtxwI1xJGXpE5dWoeoJUUU7ef6o+if4A7uyuh3Lt+z1LkIGIjrEpG2Z
-	 nIGU9BRmQHM4j+oy5c8T9DISM3gtmXSOyDOma2golN5GlwtXT9ZfbTZglBgSrIAC3JW4H
-	 h+jF4klwYZHWa9FBDRM/G0K7of9F7f58OTsQM5E3DlfyA5Bo1cE9z+JOGL3kznG1WpL2S
-	 O/IwhEv2LeFY8wSK5KiK1fxpxLhN6O+XDm3X3t3LGxz0E6EQeX/wqAx4Es4OrkaD43QTY
-	 VX59rcrZA70hmUVmeLLtHozMvklSlvaL9Y3QG/S0FwFuzsbp6hA/Uu3xrj0/Bi/fxCg==
+	a=rsa-sha256; c=relaxed/relaxed; t=1792657636;
+	h=DMARC-Filter:Received:X-Originating-IP:Date:X-CM-HeaderCharset:From:
+	 To:Cc:Subject:X-Priority:X-Mailer:X-CM-CTRLMSGS:
+	 Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:
+	 X-Coremail-Locale:X-CM-TRANSID:X-CM-SenderInfo:X-Coremail-Antispam;
+	bh=XGmy4ArqAz3uHMd2HGYmW7+u0TR2EjmYgc2yGlp0I6w=;
+	b=b4ILLnMdGFeik354I9ImUHyvGwDuiXTN3+FzmFDjsfOEXdqD5pDzaKdHFdrpkQUh9tjm
+	 U8nEWZD+aUjtPMS1pDPOsq5W2JGwhYFB+T7lR4LEqt/itgu1ZRsVVM7lKfU2tTL0V/1C1
+	 RUT2LFtve4AsHfIdPUKrDNr7v4YeZo++vCiNs0Gv7a87m9qHjrmuL89lesd6SA50h2VxK
+	 WmINPR5t1lRQGt+f0rf2RQeGIKP5NG2khzlP8BY4dD4k/35EEJgluqiyoUvd36kefTeLE
+	 0PO7epqXhuWKsZejp4GWhYGHugS0t59vZSfk5AFsfw2PhmVSESQmw00WsAPZgylUTXg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=linux.intel.com;
-	spf=pass smtp.mailfrom=linux.intel.com;
-	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=AtNqs3Dn;
-	arc=none smtp.remote-ip=198.175.65.14
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
-	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 839C8606A319;
-	Thu, 22 Oct 2026 06:20:03 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 839C8606A319
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=AtNqs3Dn
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1792650004; x=1824186004;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=pZAqtUAKS+V3y9BRC6MiOPSFzCs7ihb2KxPrNR3NPPE=;
-  b=AtNqs3DnwCPy5eYnrH2ExVMERQvFy9/AVfP8QfmjRk57X1vymEpGXyju
-   I8T0hhayx00ktFHPRCpPeIvXWJ2zyDYQfFsR9CfkL8lGdBUt0XR5i1yR4
-   csdlbF+9KltZv9p0IwAeaDVM+Y+o4jdLxZOgdm30/qTkFKCm372f6Nrw1
-   5Ky8ymsywe4Qn4mQJNi68nrjKev7PX0XC6VwceVPR5d92C/dD2/Q5vtaz
-   XmXCaf8hVkbmuFrHSYqITQS5othoXN4Qst9PwS0GOgzFXaDHg4737qXHR
-   TOC+3wy0/PeEIzlV0WunUm8/VfGE7s/mZS8FOSol6Ph6HEFI6zHO0wQur
-   w==;
-X-CSE-ConnectionGUID: CANBvo+pRqGphcuYjYGVvQ==
-X-CSE-MsgGUID: F0/tKTF9SrOs5SA5MrLemQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11942"; a="1260100"
-X-IronPort-AV: E=Sophos;i="6.27,171,1787036400"; 
-   d="scan'208";a="1260100"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Oct 2026 23:20:04 -0700
-X-CSE-ConnectionGUID: B6q9p7sATKu5pSgcdpVRSw==
-X-CSE-MsgGUID: Qf2E8D9URDmr2gDYO6uxlw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.27,171,1787036400"; 
-   d="scan'208";a="3165389"
-Received: from unknown (HELO [10.238.3.193]) ([10.238.3.193])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Oct 2026 23:20:02 -0700
-Message-ID: <bc06cae6-6f52-408f-985f-0f604a4bd272@linux.intel.com>
-Date: Thu, 22 Oct 2026 14:19:59 +0800
+	dmarc=none header.from=hust.edu.cn;
+	spf=pass smtp.mailfrom=hust.edu.cn;
+	arc=none smtp.remote-ip=132.226.202.154
+Received: from fraori-sdnproxy-3.icoremail.net (fraori-sdnproxy-3.icoremail.net [132.226.202.154])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E360F606A32A;
+	Thu, 22 Oct 2026 08:27:12 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org E360F606A32A
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hust.edu.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hust.edu.cn
+Received: from xuhx$hust.edu.cn ( [10.11.162.68] ) by ajax-webmail-app2
+ (Coremail) ; Thu, 22 Oct 2026 16:26:54 +0800 (GMT+08:00)
+Date: Thu, 22 Oct 2026 16:26:54 +0800 (GMT+08:00)
+X-CM-HeaderCharset: UTF-8
+From: =?UTF-8?B?5b6Q5pmX57+U?= <xuhx@hust.edu.cn>
+To: peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+	namhyung@kernel.org
+Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: perf: perf_pmu_free() kfree()s struct perf_cpu_pmu_context while
+  its mux hrtimer is still queued (use-after-free)
+X-Priority: 3
+X-Mailer: Coremail Webmail Server Version 2025.3-cmXT6 build
+ 20260810(6c94e3b5) Copyright (c) 2002-2026 www.mailtech.cn hust
+X-CM-CTRLMSGS: =?B?1razhjiH6nJ5xwDR7hwMki1N8jM=
+Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=UTF-8
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -72,361 +53,174 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [Patch v4 5/5] pef/x86/intel: Always snapshot live hardware LBR
- state for BPF path
-To: sashiko-reviews@lists.linux.dev, Sandipan Das <sandipan.das@amd.com>
-Cc: linux-perf-users@vger.kernel.org, bpf@vger.kernel.org
-References: <20261021050711.4043703-1-dapeng1.mi@linux.intel.com>
- <20261021050711.4043703-6-dapeng1.mi@linux.intel.com>
- <sashiko-outbox-179823@kernel.org>
-Content-Language: en-US
-From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-In-Reply-To: <sashiko-outbox-179823@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Message-ID: <ca4f133.14714.1a162b8654c.Coremail.xuhx@hust.edu.cn>
+X-Coremail-Locale: zh_CN
+X-CM-TRANSID:IQEQrMCWvXbOyNlq9eNTAA--.59095W
+X-CM-SenderInfo: bgsqjkayqyjmo6kx23oohg3hdfq/1tbiAgoIB2rY5eyE0QAAsp
+X-Coremail-Antispam: 1Ur529EdanIXcx71UUUUU7IcSsGvfJ3iIAIbVAYjsxI4VWkKw
+	CS07vEb4IE77IF4wCS07vE1I0E4x80FVAKz4kxMIAIbVAFxVCaYxvI4VCIwcAKzIAtYxBI
+	daVFxhVjvjDU=
 
+cGVyZl9wbXVfZnJlZSgpIGZyZWVzIGV2ZXJ5IG5vbi1lbWJlZGRlZCBzdHJ1Y3QgcGVyZl9jcHVf
+cG11X2NvbnRleHQKd2l0aCBhIHBsYWluIGtmcmVlKCkgd2l0aG91dCBjYW5jZWxsaW5nIGNwYy0+
+aHJ0aW1lciBmaXJzdCwgc28KdW5yZWdpc3RlcmluZyBhIFBNVSB3aG9zZSBtdWx0aXBsZXhpbmcg
+aHJ0aW1lcnMgYXJlIHF1ZXVlZCBsZWF2ZXMgbGl2ZQpocnRpbWVycyBsaW5rZWQgaW50byB0aGUg
+cGVyLUNQVSB0aW1lciByYnRyZWUgcG9pbnRpbmcgaW50byBmcmVlZAptZW1vcnkgLS0gYSB1c2Ut
+YWZ0ZXItZnJlZSAoY29uZmlybWVkIGJ5IEtBU0FOKSB0aGF0IGlzIHJlYWNoYWJsZSB3aXRoCnR3
+byBzZXF1ZW50aWFsIHJvb3Qgb3BlcmF0aW9ucyBhbmQgbm8gc2NoZWR1bGluZyByYWNlIGF0IGFs
+bC4KcGVyZl9wbXVfZnJlZSgpIGluIGtlcm5lbC9ldmVudHMvY29yZS5jIHJlbGVhc2VzIHRoZSBw
+ZXItQ1BVIFBNVQpjb250ZXh0cyB3aXRob3V0IGFueSBocnRpbWVyIHF1aWVzY2VuY2UsIHdoaWxl
+IHNldmVyYWwgb3JkaW5hcnkgY29kZQpwYXRocyBsZWF2ZSBjcGMtPmhydGltZXIgcXVldWVkIG9u
+IENQVXMgd2l0aG91dCBhbnkgZXZlbnQgYXR0YWNoZWQuCgoKVW5yZWdpc3RlcmluZyB0aGUgUE1V
+IHRoZW4gZnJlZXMgdGhlIGNwYyBvYmplY3RzIHVuZGVyIHRoZSBxdWV1ZWQKdGltZXJzOiBldmVy
+eSBsYXRlciBocnRpbWVyIGluc2VydGlvbi9yZW1vdmFsIG9uIHRoZSBhZmZlY3RlZCBDUFVzCnJl
+YWRzIGFuZCB3cml0ZXMgZnJlZWQgcmJ0cmVlIG5vZGVzLCBhbmQgYXQgZXhwaXJ5IF9fcnVuX2hy
+dGltZXIoKQpjYWxscyBwZXJmX211eF9ocnRpbWVyX2hhbmRsZXIoKSBvbiB0aGUgZnJlZWQgY3Bj
+LCB0YWtpbmcgdGhlIGZyZWVkCmNwYy0+aHJ0aW1lcl9sb2NrIGFuZCB3cml0aW5nIGNwYy0+aHJ0
+aW1lcl9hY3RpdmUuIFZlcmlmaWVkIGFuZApyZXByb2R1Y2VkIG9uIG1haW5saW5lIDcuMyB3aXRo
+IEtBU0FOOyB0aGUgaW52b2x2ZWQgY29kZSBpcyB1bmNoYW5nZWQKc2luY2UgYXQgbGVhc3QgNy4x
+LiBUcmlnZ2VyaW5nIHJlcXVpcmVzIG9ubHkgcm9vdCBzeXNmcyB3cml0ZXMgcGx1cyBhCnJ1bnRp
+bWUgUE1VIHVucmVnaXN0ZXIgKHVubG9hZGFibGUgUE1VIGRyaXZlciBtb2R1bGUgb3IsIG9uIG1h
+dGNoaW5nCmhhcmR3YXJlLCBJbnRlbCB1bmNvcmUgUENJIHVuYmluZCkuCgoKVGhlIGRldGFpbGVk
+IGRlc2NyaXB0aW9uOgoKCiogVGVzdCBlbnZpcm9ubWVudCAvIGFmZmVjdGVkIHZlcnNpb24KCkxp
+bnV4IHZlcnNpb24gNy4zLjAgKGdjYyAxMy4zLjAsIEdOVSBsZCAyLjQyKSAjMSBTTVAgUFJFRU1Q
+VF9EWU5BTUlDCi0tIHZhbmlsbGEgbWFpbmxpbmUgNy4zIHJlbGVhc2UgdGFyYmFsbCAoa2VybmVs
+Lm9yZywgdW5tb2RpZmllZCksCnJlYnVpbHQgd2l0aCBDT05GSUdfS0FTQU5fR0VORVJJQz15LCBD
+T05GSUdfS0FTQU5fT1VUTElORT15LApDT05GSUdfS0FTQU5fVk1BTExPQz15LCBDT05GSUdfUEVS
+Rl9FVkVOVFM9eSwgQ09ORklHX01PRFVMRVM9eSwKQ09ORklHX0haXzEwMDA9eSwgQ09ORklHX0hP
+VFBMVUdfQ1BVPXksIGJvb3RlZCBpbiBRRU1VL0tWTSBvbiB4ODZfNjQKKDQgdkNQVSkuIFRoZSBz
+YW1lIGRlZmVjdCBjb2RlIGlzIHByZXNlbnQgYW5kIGlkZW50aWNhbCBpbiA3LjEuNQoodmVyaWZp
+ZWQgYnkgZnVuY3Rpb24tbGV2ZWwgZGlmZik7IHRoZSA3LjMgbGluZSBudW1iZXJzIGJlbG93IGFy
+ZQpmcm9tIHRoZSA3LjMgdGFyYmFsbC4KCgoqIE1lY2hhbmlzbQoKMS4gV3JpdGluZyAvc3lzL2J1
+cy9ldmVudF9zb3VyY2UvZGV2aWNlcy88cG11Pi9wZXJmX2V2ZW50X211eF9pbnRlcnZhbF9tcwp0
+YWtlcyB0aGUgcGVyZl9ldmVudF9tdXhfaW50ZXJ2YWxfbXNfc3RvcmUoKSBwYXRoCihrZXJuZWwv
+ZXZlbnRzL2NvcmUuYzoxMjYxNSkuIEZvciBldmVyeSBvbmxpbmUgQ1BVIGl0IHN0b3JlcyB0aGUK
+bmV3IGludGVydmFsIGludG8gY3BjLT5ocnRpbWVyX2ludGVydmFsIGFuZCB0aGVuIGNhbGxzCmNw
+dV9mdW5jdGlvbl9jYWxsKGNwdSwgcGVyZl9tdXhfaHJ0aW1lcl9yZXN0YXJ0X2lwaSwgY3BjKQoo
+Y29yZS5jOjEyNjQzKS4gcGVyZl9tdXhfaHJ0aW1lcl9yZXN0YXJ0X2lwaSgpIC0+CnBlcmZfbXV4
+X2hydGltZXJfcmVzdGFydCgpIGFybXMgY3BjLT5ocnRpbWVyIGJhc2VkIHNvbGVseSBvbgpocnRp
+bWVyX2FjdGl2ZSgpLCByZWdhcmRsZXNzIG9mIHdoZXRoZXIgdGhlIFBNVSBoYXMgYW55IGV2ZW50
+czoKYW4gKmlkbGUqIFBNVSBlbmRzIHVwIHdpdGggYSBxdWV1ZWQgbXV4IGhydGltZXIgb24gZXZl
+cnkgb25saW5lCkNQVSBhZnRlciBvbmUgb3JkaW5hcnkgc3lzZnMgd3JpdGUuCgoKMi4gVW5yZWdp
+c3RlcmluZyB0aGUgUE1VIChwZXJmX3BtdV91bnJlZ2lzdGVyKCkgLT4KcGVyZl9wbXVfZnJlZSgp
+LCBjb3JlLmM6MTI4MDUpIHdhbGtzIGFsbCBwb3NzaWJsZSBDUFVzIGFuZCBmcmVlcwp0aGUgY29u
+dGV4dHM6CgpjcGMgPSAqcGVyX2NwdV9wdHIocG11LT5jcHVfcG11X2NvbnRleHQsIGNwdSk7Cmlm
+ICghY3BjKQpjb250aW51ZTsKaWYgKGNwYy0+ZXBjLmVtYmVkZGVkKSB7IC8qIHJlZmNvdW50IG1h
+bmFnZWQgKi8KcHV0X3BtdV9jdHgoJmNwYy0+ZXBjKTsKY29udGludWU7Cn0Ka2ZyZWUoY3BjKTsK
+ClRoZXJlIGlzIG5vIGhydGltZXJfY2FuY2VsKCkgKG9yIGFueSBocnRpbWVyIGNhbGwgYXQgYWxs
+KSBpbgpwZXJmX3BtdV9mcmVlKCksIHBlcmZfcG11X3VucmVnaXN0ZXIoKSwgb3IgYW55d2hlcmUg
+ZWxzZSBvbiB0aGUKdW5yZWdpc3RlciBwYXRoLiBUaGUgcXVldWVkIGNwYy0+aHJ0aW1lciBzdGF5
+cyBsaW5rZWQgaW4gZWFjaApDUFUncyBNT05PVE9OSUMgcmJ0cmVlIGFmdGVyIHRoZSBrZnJlZSgp
+LgoKCjMuIENvbnNlcXVlbmNlcywgYm90aCBvYnNlcnZlZDoKLSBJbW1lZGlhdGVseSBhZnRlciB0
+aGUgZnJlZTogYW55IGhydGltZXIgcXVldWVkIG9uIGFuIGFmZmVjdGVkCkNQVSB3YWxrcy9yb3Rh
+dGVzIHRoZSByYnRyZWUgdGhyb3VnaCB0aGUgZnJlZWQgbm9kZTsgS0FTQU4KcmVwb3J0cyBzbGFi
+LXVzZS1hZnRlci1mcmVlIGluIHJiX2VyYXNlL3JiX2luc2VydF9jb2xvci8KdGltZXJxdWV1ZV9h
+ZGQvX19yZW1vdmVfaHJ0aW1lciAocmVhZHMgKmFuZCB3cml0ZXMgb2YgZnJlZWQKbWVtb3J5LCBj
+b3JydXB0aW5nIGJvdGggdGhlIHRpbWVyIHRyZWUgYW5kIHRoZSBzbGFiJ3MgbmV3Cm93bmVyKS4K
+LSBBdCBleHBpcnkgKGludGVydmFsIGFmdGVyIHRoZSBmcmVlKTogX19ydW5faHJ0aW1lcigpIHJl
+YWRzCnRpbWVyLT5mdW5jdGlvbiBmcm9tIGZyZWVkIG1lbW9yeSBhbmQgcnVucwpwZXJmX211eF9o
+cnRpbWVyX2hhbmRsZXIoKSAoY29yZS5jOjEyNzgpIG9uIHRoZSBmcmVlZCBjcGM6IGl0CmNhbGxz
+IHBlcmZfcm90YXRlX2NvbnRleHQoKSwgdGFrZXMgdGhlIGZyZWVkIGNwYy0+aHJ0aW1lcl9sb2Nr
+CmFuZCB3cml0ZXMgY3BjLT5ocnRpbWVyX2FjdGl2ZS4gS0FTQU4gcmVwb3J0cyB0aGUgVUFGIGlu
+IGhhcmQKSVJRIGNvbnRleHQgKHN3YXBwZXIvTikuClRoZSBlbWJlZGRlZCB2YXJpYW50IChwdXRf
+cG11X2N0eCgpIGF0IGNvcmUuYzo1Mjc3IC0+CmZyZWVfY3BjX3JjdSgpIGF0IGNvcmUuYzo1MjYy
+KSBkZWZlcnMgdGhlIGtmcmVlIGJ5IG9uZSBSQ1UgZ3JhY2UKcGVyaW9kIGJ1dCBlcXVhbGx5IG5l
+dmVyIGNhbmNlbHMgdGhlIHRpbWVyLCBzbyB0aGUgd2luZG93IG1lcmVseQpzaGlmdHM7IHRoZSBw
+bGFpbi1rZnJlZSBwYXRoIGFib3ZlIG5lZWRzIG5vIGV2ZW50cyB0byBoYXZlIGV2ZXIKYmVlbiBv
+cGVuZWQgb24gdGhlIFBNVS4KCgoqIEhvdyB0byByZXByb2R1Y2UgKGRldGVybWluaXN0aWMsIH4z
+MCBzZWNvbmRzKQoKQSBtaW5pbWFsIFBNVSBkcml2ZXIgcmVnaXN0ZXJlZCB0aHJvdWdoIHRoZSBl
+eHBvcnRlZCBwZXJmIGNvcmUgQVBJCihwZXJmX3BtdV9yZWdpc3Rlci9wZXJmX3BtdV91bnJlZ2lz
+dGVyLCBFWFBPUlRfU1lNQk9MX0dQTCkgLS0gdGhlCnNhbWUgbGlmZWN5Y2xlIGFuIHVubG9hZGFi
+bGUgUE1VIHByb3ZpZGVyIG1vZHVsZSBvciBhbiBJbnRlbCB1bmNvcmUKUENJIGRyaXZlciAoYXJj
+aC94ODYvZXZlbnRzL2ludGVsL3VuY29yZS5jLCB1bmNvcmVfcGNpX3BtdV8KdW5yZWdpc3Rlcigp
+IGluIDcuMykgZ29lcyB0aHJvdWdoLiBNb2R1bGUgc291cmNlIGlzIGlubGluZWQgYXQgdGhlCmVu
+ZCBvZiB0aGlzIG1haWw7IHVzYWdlOgoKIyBidWlsZCBhZ2FpbnN0IHRoZSBrZXJuZWwgdW5kZXIg
+dGVzdAptYWtlIC1DIDxrZXJuZWwtYnVpbGQtZGlyPiBNPSRQV0QgbW9kdWxlcwoKIyBpbiB0aGUg
+Z3Vlc3QgKHJvb3QpOgppbnNtb2QgcjZfcmVwcm8ua28KZWNobyByZWdpc3RlciA+IC9zeXMvbW9k
+dWxlL3I2X3JlcHJvL3BhcmFtZXRlcnMvYWN0aW9uCmVjaG8gMTAwMDAgPiAvc3lzL2J1cy9ldmVu
+dF9zb3VyY2UvZGV2aWNlcy9yNnBtdS9wZXJmX2V2ZW50X211eF9pbnRlcnZhbF9tcwplY2hvIHVu
+cmVnaXN0ZXIgPiAvc3lzL21vZHVsZS9yNl9yZXByby9wYXJhbWV0ZXJzL2FjdGlvbgojIHdhaXQg
+dXAgdG8gMTAgcyBmb3IgZXhwaXJ5IChvciBqdXN0IGtlZXAgdGhlIHN5c3RlbSBidXN5KTsKIyBL
+QVNBTiBzcGxhdHMgc3RhcnQgaW1tZWRpYXRlbHkgYWZ0ZXIgJ3VucmVnaXN0ZXInCgoKVGhlcmUg
+aXMgbm8gaW50ZXJsZWF2aW5nIHdpbmRvdzogcmVnaXN0ZXIgLT4gc3lzZnMgd3JpdGUgLT4KdW5y
+ZWdpc3RlciBpcyBwdXJlbHkgc2VxdWVudGlhbC4gT24gdGhlIDQtdkNQVSBLQVNBTiBWTSB0aGlz
+CnByb2R1Y2VkIDcyIEtBU0FOIHNsYWItdXNlLWFmdGVyLWZyZWUgcmVwb3J0cyB3aXRoaW4gfjEw
+IHNlY29uZHMgb2YKdGhlIHVucmVnaXN0ZXIgKGhpc3RvZ3JhbTogcmJfaW5zZXJ0X2NvbG9yIDE5
+LCByYl9lcmFzZSAxOCwKcGVyZl9tdXhfaHJ0aW1lcl9oYW5kbGVyIDEyLCB0aW1lcnF1ZXVlX2xp
+bmtlZF9hZGQgNSwKcmJfZXJhc2VfbGlua2VkIDUsIF9faHJ0aW1lcl9ydW5fcXVldWVzIDQsIF9y
+YXdfc3Bpbl9sb2NrL3VubG9jayA2LApfX3JlbW92ZV9ocnRpbWVyIDIsIGhydGltZXJfc3RhcnRf
+cmFuZ2VfbnMgMSkuCgoKKiBLQVNBTiByZXBvcnQgKGV4cGlyeS1wYXRoIHdpdG5lc3MsIG9uZSBv
+ZiA3MikKCkJVRzogS0FTQU46IHNsYWItdXNlLWFmdGVyLWZyZWUgaW4gcGVyZl9tdXhfaHJ0aW1l
+cl9oYW5kbGVyKzB4OGIvMHg1ZTAKUmVhZCBvZiBzaXplIDggYXQgYWRkciBmZjExMDAwMDAxZDA5
+NjAwIGJ5IHRhc2sgc3dhcHBlci8yLzAKQ1BVOiAyIFVJRDogMCBQSUQ6IDAgQ29tbTogc3dhcHBl
+ci8yIC4uLiA3LjMuMCAjMSBQUkVFTVBUKGxhenkpCjxJUlE+CnBlcmZfbXV4X2hydGltZXJfaGFu
+ZGxlcisweDhiLzB4NWUwCl9faHJ0aW1lcl9ydW5fcXVldWVzKzB4MTY2LzB4MzQwCmhydGltZXJf
+aW50ZXJydXB0KzB4MWQyLzB4MzIwCl9fc3lzdmVjX2FwaWNfdGltZXJfaW50ZXJydXB0KzB4NjIv
+MHgxYTAKc3lzdmVjX2FwaWNfdGltZXJfaW50ZXJydXB0KzB4NjYvMHg4MAo8L0lSUT4KCgpBbGxv
+Y2F0ZWQgYnkgdGFzayAyOToKX19rbWFsbG9jX2NhY2hlX25vZGVfbm9wcm9mKzB4MTdjLzB4M2Ew
+CnBlcmZfcG11X3JlZ2lzdGVyKzB4MTk2LzB4NWEwCmFjdGlvbl93b3JrZm4rMHgxN2IvMHgyMzAg
+W3I2X3JlcHJvXQoKCkZyZWVkIGJ5IHRhc2sgNDg6CmtmcmVlKzB4MTIxLzB4MzkwCnBlcmZfcG11
+X2ZyZWUrMHhjMi8weDE5MApwZXJmX3BtdV91bnJlZ2lzdGVyKzB4NDk3LzB4NjIwCmFjdGlvbl93
+b3JrZm4rMHgyMTcvMHgyMzAgW3I2X3JlcHJvXQoKClRoZSBvYmplY3QgaXMgYSBzdHJ1Y3QgcGVy
+Zl9jcHVfcG11X2NvbnRleHQgKGttYWxsb2MtMjU2LCBLQVNBTgp0cmFja3MgdGhlIGFsbG9jYXRp
+b24gaW5zaWRlIHRoZSBwZXItQ1BVIGxvb3Agb2YKcGVyZl9wbXVfcmVnaXN0ZXIoKSkuIFRoZSBm
+dWxsIHNlcmlhbCBsb2cgKDcyIHJlcG9ydHMsIGFsbCB0aHJlZQpzdGFja3MgZm9yIGVhY2gpIGlz
+IGF2YWlsYWJsZSBvbiByZXF1ZXN0LgpUaGFua3MgZm9yIHRha2luZyBhIGxvb2suCgoKUmVnYXJk
+cywKSGFueGlhbmcgWHUKeHVoeEBodXN0LmVkdS5jbgotLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0KcmVwcm9kdWNl
+cjogcjZfcmVwcm8uYyAoYnVpbGQgd2l0aDogbWFrZSAtQyA8a2VybmVsLWJ1aWxkLWRpcj4gTT0k
+UFdECm1vZHVsZXM7IHJlcXVpcmVzIENPTkZJR19QRVJGX0VWRU5UUz15IGFuZCBDT05GSUdfTU9E
+VUxFUz15KQotLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0KLy8gU1BEWC1MaWNlbnNlLUlkZW50aWZpZXI6IEdQTC0y
+LjAKLyoKKiByNl9yZXByby5jIC0gbWluaW1hbCByZXByb2R1Y2VyIGZvciB0aGUgcGVyZiBtdXgg
+aHJ0aW1lcgoqIHVzZS1hZnRlci1mcmVlIGluIHBlcmZfcG11X2ZyZWUoKSAoa2VybmVsL2V2ZW50
+cy9jb3JlLmMpLgoqCiogaW5zbW9kIHI2X3JlcHJvLmtvCiogZWNobyByZWdpc3RlciA+IC9zeXMv
+bW9kdWxlL3I2X3JlcHJvL3BhcmFtZXRlcnMvYWN0aW9uCiogZWNobyAxMDAwMCA+IC9zeXMvYnVz
+L2V2ZW50X3NvdXJjZS9kZXZpY2VzL3I2cG11L3BlcmZfZXZlbnRfbXV4X2ludGVydmFsX21zCiog
+ZWNobyB1bnJlZ2lzdGVyID4gL3N5cy9tb2R1bGUvcjZfcmVwcm8vcGFyYW1ldGVycy9hY3Rpb24K
+KgoqIE5vIGtlcm5lbCBzb3VyY2UgbW9kaWZpY2F0aW9uOiBldmVyeXRoaW5nIGdvZXMgdGhyb3Vn
+aCB0aGUKKiBFWFBPUlRfU1lNQk9MX0dQTCBwZXJmIGNvcmUgQVBJLCBleGFjdGx5IGxpa2UgYSBy
+ZWFsIHVubG9hZGFibGUgUE1VCiogcHJvdmlkZXIgZHJpdmVyLgoqLwojZGVmaW5lIHByX2ZtdChm
+bXQpICJSNlJFUFJPOiAiIGZtdAojaW5jbHVkZSA8bGludXgvbW9kdWxlLmg+CiNpbmNsdWRlIDxs
+aW51eC9rZXJuZWwuaD4KI2luY2x1ZGUgPGxpbnV4L3dvcmtxdWV1ZS5oPgojaW5jbHVkZSA8bGlu
+dXgvcGVyZl9ldmVudC5oPgojaW5jbHVkZSA8bGludXgvZXJyLmg+CiNpbmNsdWRlIDxsaW51eC9z
+dHJpbmcuaD4Kc3RhdGljIHN0cnVjdCBwbXUgdGVzdF9wbXU7CnN0YXRpYyBpbnQgbXlfcmVnaXN0
+ZXJlZDsKc3RhdGljIGludCB0ZXN0X3R5cGUgPSAtMTsKc3RhdGljIGludCByZXByb19ldmVudF9p
+bml0KHN0cnVjdCBwZXJmX2V2ZW50ICpldmVudCkKewppZiAoZXZlbnQtPmF0dHIudHlwZSAhPSB0
+ZXN0X3R5cGUpCnJldHVybiAtRU5PRU5UOwpyZXR1cm4gMDsKfQpzdGF0aWMgdm9pZCByZXByb19w
+bXVfcmVzZXQodm9pZCkKewpzdGF0aWMgY29uc3Qgc3RydWN0IHBtdSB0bXBsID0gewoudGFza19j
+dHhfbnIgPSBwZXJmX2ludmFsaWRfY29udGV4dCwKLm1vZHVsZSA9IFRISVNfTU9EVUxFLAouY2Fw
+YWJpbGl0aWVzID0gUEVSRl9QTVVfQ0FQX05PX0lOVEVSUlVQVCB8ClBFUkZfUE1VX0NBUF9OT19F
+WENMVURFLAouZXZlbnRfaW5pdCA9IHJlcHJvX2V2ZW50X2luaXQsCn07CnRlc3RfcG11ID0gdG1w
+bDsKfQpzdGF0aWMgY2hhciBhY3Rpb25fY21kWzY0XTsKc3RhdGljIHZvaWQgYWN0aW9uX3dvcmtm
+bihzdHJ1Y3Qgd29ya19zdHJ1Y3QgKncpCnsKY2hhciBjbWRbNjRdOwpzdHJzY3B5KGNtZCwgc3Ry
+c3RyaXAoYWN0aW9uX2NtZCksIHNpemVvZihjbWQpKTsKaWYgKCFzdHJjbXAoY21kLCAicmVnaXN0
+ZXIiKSkgewppbnQgcmV0OwpyZXByb19wbXVfcmVzZXQoKTsKcmV0ID0gcGVyZl9wbXVfcmVnaXN0
+ZXIoJnRlc3RfcG11LCAicjZwbXUiLCAtMSk7CmlmIChyZXQpIHsKbXlfcmVnaXN0ZXJlZCA9IDA7
+Cn0gZWxzZSB7Cm15X3JlZ2lzdGVyZWQgPSAxOwp0ZXN0X3R5cGUgPSB0ZXN0X3BtdS50eXBlOwp9
+CnByX2luZm8oInJlZ2lzdGVyIHJjPSVkIHR5cGU9JWRcbiIsIHJldCwgdGVzdF90eXBlKTsKfSBl
+bHNlIGlmICghc3RyY21wKGNtZCwgInVucmVnaXN0ZXIiKSkgewppbnQgcmV0ID0gLUVJTlZBTDsK
+aWYgKG15X3JlZ2lzdGVyZWQpCnJldCA9IHBlcmZfcG11X3VucmVnaXN0ZXIoJnRlc3RfcG11KTsK
+aWYgKCFyZXQpCm15X3JlZ2lzdGVyZWQgPSAwOwpwcl9pbmZvKCJ1bnJlZ2lzdGVyIHJjPSVkXG4i
+LCByZXQpOwp9IGVsc2UgaWYgKCFzdHJjbXAoY21kLCAic3RhdHVzIikpIHsKcHJfaW5mbygic3Rh
+dHVzIHJlZ2lzdGVyZWQ9JWQgdHlwZT0lZFxuIiwKbXlfcmVnaXN0ZXJlZCwgdGVzdF90eXBlKTsK
+fSBlbHNlIHsKcHJfaW5mbygidW5rbm93biBhY3Rpb24gJyVzJ1xuIiwgY21kKTsKfQpwcl9pbmZv
+KCJBQ1RJT05fQ09NUExFVEVcbiIpOwp9CnN0YXRpYyBERUNMQVJFX1dPUksoYWN0aW9uX3dvcmss
+IGFjdGlvbl93b3JrZm4pOwpzdGF0aWMgaW50IGFjdGlvbl9zZXQoY29uc3QgY2hhciAqdmFsLCBj
+b25zdCBzdHJ1Y3Qga2VybmVsX3BhcmFtICprcCkKewppbnQgcmV0ID0gcGFyYW1fc2V0X2NvcHlz
+dHJpbmcodmFsLCBrcCk7CmlmIChyZXQgPT0gMCkKc2NoZWR1bGVfd29yaygmYWN0aW9uX3dvcmsp
+OwpyZXR1cm4gcmV0Owp9CnN0YXRpYyBjb25zdCBzdHJ1Y3Qga2VybmVsX3BhcmFtX29wcyBhY3Rp
+b25fb3BzID0gewouc2V0ID0gYWN0aW9uX3NldCwKLmdldCA9IHBhcmFtX2dldF9zdHJpbmcsCn07
+CnN0YXRpYyBzdHJ1Y3Qga3BhcmFtX3N0cmluZyBhY3Rpb25fcGFyYW0gPSB7Ci5tYXhsZW4gPSBz
+aXplb2YoYWN0aW9uX2NtZCksCi5zdHJpbmcgPSBhY3Rpb25fY21kLAp9Owptb2R1bGVfcGFyYW1f
+Y2IoYWN0aW9uLCAmYWN0aW9uX29wcywgJmFjdGlvbl9wYXJhbSwgMDIwMCk7Ck1PRFVMRV9QQVJN
+X0RFU0MoYWN0aW9uLCAicmVnaXN0ZXJ8dW5yZWdpc3RlcnxzdGF0dXMiKTsKc3RhdGljIGludCBf
+X2luaXQgcjZfcmVwcm9faW5pdCh2b2lkKQp7CnJlcHJvX3BtdV9yZXNldCgpOwpwcl9pbmZvKCJs
+b2FkZWQ7IHJlZ2lzdGVyIG1lLCB3cml0ZSBwZXJmX2V2ZW50X211eF9pbnRlcnZhbF9tcywgdGhl
+biB1bnJlZ2lzdGVyXG4iKTsKcmV0dXJuIDA7Cn0Kc3RhdGljIHZvaWQgX19leGl0IHI2X3JlcHJv
+X2V4aXQodm9pZCkKewpjYW5jZWxfd29ya19zeW5jKCZhY3Rpb25fd29yayk7CmlmIChteV9yZWdp
+c3RlcmVkKQpwZXJmX3BtdV91bnJlZ2lzdGVyKCZ0ZXN0X3BtdSk7CnByX2luZm8oInVubG9hZGVk
+XG4iKTsKfQptb2R1bGVfaW5pdChyNl9yZXByb19pbml0KTsKbW9kdWxlX2V4aXQocjZfcmVwcm9f
+ZXhpdCk7Ck1PRFVMRV9MSUNFTlNFKCJHUEwiKTsKTU9EVUxFX0RFU0NSSVBUSU9OKCJNaW5pbWFs
+IHJlcHJvZHVjZXI6IHBlcmYgbXV4IGhydGltZXIgVUFGIGluIHBlcmZfcG11X2ZyZWUoKSIpOwo=
 
-On 10/21/2026 2:05 PM, sashiko-bot@kernel.org wrote:
-> Thank you for your contribution! Sashiko AI review found 5 potential issue(s) to consider:
-> - [Critical] perf/x86/intel: LBR state corruption in __intel_pmu_snapshot_branch_stack()
-> - [High] perf/x86/intel: __intel_pmu_snapshot_branch_stack() enables PMU in PMI
-> - [Medium] perf/x86/intel: unfrozen LBRs and PMU re-enable in PMI branch snapshot
-> - [Medium] perf/x86: NMI race on lbr_snapshot in __intel_pmu_snapshot_branch_stack()
-> - [Medium] perf/x86/intel: unfiltered LBR branch counter bits in perf_branch_entry.reserved
-> --
->
-> commit 4d2b360d61a8a8f6825b3cd919182ee99dbe2d76
-> Author: Dapeng Mi <dapeng1.mi@linux.intel.com>
->
-> pef/x86/intel: Always snapshot live hardware LBR state for BPF path
->
-> This commit updates __intel_pmu_snapshot_branch_stack() to always read live
-> hardware LBR registers for the BPF snapshot path even when PEBS LBR users
-> are active. To avoid clobbering cached PEBS LBR data during a PMI, it saves
-> and restores cpuc->lbr_stack, cpuc->lbr_entries, and cpuc->lbr_counters
-> around intel_pmu_lbr_read() using a per-CPU buffer, and moves the
-> cpuc->lbr_users == cpuc->lbr_pebs_users check into intel_pmu_handle_irq().
->
->> diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
->> index 5dfb9e9156e88..07d1a8a7845b2 100644
->> --- a/arch/x86/events/intel/core.c
->> +++ b/arch/x86/events/intel/core.c
->> @@ -2815,16 +2815,50 @@ static void intel_pmu_enable_all(int added)
->>  	__intel_pmu_enable_all(added, false);
->>  }
->>  
->> +struct lbr_snapshot {
->> +	struct perf_branch_stack stack;
->> +	struct perf_branch_entry entries[MAX_LBR_ENTRIES];
->> +	u64 counters[MAX_LBR_ENTRIES];
->> +};
->> +static DEFINE_PER_CPU(struct lbr_snapshot, lbr_snapshot);
-> [Severity: Medium]
-> Can an NMI race on the per-CPU lbr_snapshot buffer when
-> __intel_pmu_snapshot_branch_stack() is called in non-NMI context?
->
-> In arch/x86/events/intel/core.c, intel_pmu_snapshot_branch_stack() and
-> intel_pmu_snapshot_arch_branch_stack() call local_irq_save(flags) and
-> __intel_pmu_disable_all(false) before invoking
-> __intel_pmu_snapshot_branch_stack(). However, local_irq_save() only masks
-> normal interrupts, and an in-flight PMI or another NMI can still arrive
-> after __intel_pmu_disable_all() due to NMI delivery latency.
->
-> When cpuc->lbr_pebs_users > 0 and a non-NMI BPF program (such as an
-> fentry/fexit trampoline via __bpf_prog_enter_recur() or a raw_tracepoint,
-> where bpf_prog_active is not incremented) calls:
->
->   bpf_get_branch_snapshot()
->     -> intel_pmu_snapshot_branch_stack()
->       -> __intel_pmu_snapshot_branch_stack()
->
-> an arriving PMI can still invoke bpf_overflow_handler() ->
-> bpf_get_branch_snapshot() -> __intel_pmu_snapshot_branch_stack() on the
-> same CPU, overwriting this_cpu_ptr(&lbr_snapshot) while the outer call is
-> between its save and restore steps. Even if the PMI does not call
-> bpf_get_branch_snapshot(), intel_pmu_handle_irq() updates cpuc->lbr_stack
-> and cpuc->lbr_entries while the interrupted snapshot is saving or
-> restoring them.
->
-> Since cpuc->lbr_stack only holds live sample data awaiting output during a
-> PMI, should the save and restore of cpuc->lbr_stack be restricted to NMI
-> context or otherwise protected against NMI reentrancy?
->
->> +
->>  static noinline int
->>  __intel_pmu_snapshot_branch_stack(struct perf_branch_entry *entries,
->>  				  unsigned int cnt, unsigned long flags)
->>  {
->>  	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
->> +	struct lbr_snapshot *snapshot = this_cpu_ptr(&lbr_snapshot);
->> +
->> +	/*
->> +	 * This may be called from bpf_event_handler() in a PMI context. If
->> +	 * a PEBS LBR user is active, the PEBS sample record has already updated
->> +	 * cpuc->lbr_stack. Reading the LBR registers here would overwrite that
->> +	 * cached PEBS LBR stack, so save it first and restore it afterward. This
->> +	 * keeps the cached LBR data available for later output to userspace in
->> +	 * the normal PEBS record path.
->> +	 */
->> +	if (cpuc->lbr_pebs_users) {
->> +		memcpy(&snapshot->stack, &cpuc->lbr_stack,
->> +		       sizeof(struct perf_branch_stack));
->> +		memcpy(snapshot->entries, cpuc->lbr_entries,
->> +		       sizeof(struct perf_branch_entry) * cpuc->lbr_stack.nr);
->> +		memcpy(snapshot->counters, cpuc->lbr_counters,
->> +		       sizeof(u64) * cpuc->lbr_stack.nr);
->> +	}
-> [Severity: Critical]
-> What happens in __intel_pmu_snapshot_branch_stack() when cpuc->lbr_users
-> is non-zero, but cpuc->lbr_pebs_users is 0?
->
-> In arch/x86/events/intel/lbr.c:intel_pmu_lbr_add(), cpuc->lbr_pebs_users
-> is only incremented when x86_pmu.intel_cap.pebs_baseline is set and
-> event->attr.precise_ip > 0:
->
-> 	if (x86_pmu.intel_cap.pebs_baseline && event->attr.precise_ip > 0)
-> 		cpuc->lbr_pebs_users++;
->
-> When non-PEBS hardware LBR events (precise_ip == 0), legacy PEBS LBR
-> events (pre-Ice Lake where pebs_baseline == 0), or Architectural PEBS LBR
-> events (arch/x86/events/intel/ds.c:setup_arch_pebs_sample_data(), where
-> pebs_baseline == 0) are active, cpuc->lbr_users > 0 while
-> cpuc->lbr_pebs_users == 0.
->
-> In those paths, handle_pmi_common(), setup_pebs_fixed_sample_data(), and
-> setup_arch_pebs_sample_data() call intel_pmu_lbr_save_brstack() before
-> perf_event_overflow() -> __perf_event_overflow() ->
-> bpf_overflow_handler():
->
-> 	if (has_branch_stack(event))
-> 		intel_pmu_lbr_save_brstack(&data, cpuc, event);
-> 	...
-> 	perf_event_overflow(event, &data, regs);
->
-> Inside include/linux/perf_event.h:perf_sample_save_brstack(), brs
-> (&cpuc->lbr_stack) is clamped in place and used to precompute
-> data->dyn_size:
->
-> 	brs->nr = min_t(u16, event->attr.sample_max_stack, brs->nr);
-> 	size += brs->nr * sizeof(struct perf_branch_entry);
-> 	if (brs_cntr)
-> 		size += brs->nr * sizeof(u64);
-> 	data->br_stack = brs;
-> 	data->br_stack_cntr = brs_cntr;
-> 	data->dyn_size += size;
-> 	data->sample_flags |= PERF_SAMPLE_BRANCH_STACK;
->
-> If bpf_overflow_handler() then calls bpf_get_branch_snapshot() ->
-> __intel_pmu_snapshot_branch_stack() with cpuc->lbr_pebs_users == 0, the
-> save and restore of cpuc->lbr_stack, cpuc->lbr_entries, and
-> cpuc->lbr_counters are skipped, and intel_pmu_lbr_read() overwrites them
-> in place:
->
-> 1. In kernel/events/core.c:perf_output_sample(), data->br_stack still
->    points to &cpuc->lbr_stack. Because intel_pmu_lbr_read() resets
->    cpuc->lbr_stack.nr up to x86_pmu.lbr_nr, undoing the sample_max_stack
->    clamp after data->dyn_size was already computed, perf_output_sample()
->    can copy more perf_branch_entry (and counter) elements than
->    perf_output_begin() reserved in the ring buffer.
->
-> 2. The frozen LBR entries captured at PMI entry (or from the Arch PEBS
->    record) in cpuc->lbr_entries are overwritten by unfrozen post-ack LBR
->    registers containing PMI handler branches.
->
-> 3. For branch counter groups, intel_pmu_lbr_counters_reorder() has already
->    extracted counter bits from cpuc->lbr_entries[i].reserved into
->    cpuc->lbr_counters[i] and cleared .reserved; calling
->    intel_pmu_lbr_read() -> intel_pmu_store_lbr() writes raw counter bits
->    back into cpuc->lbr_entries[i].reserved and desynchronizes
->    cpuc->lbr_counters[].
->
-> Should the save and restore in __intel_pmu_snapshot_branch_stack() be
-> gated on cpuc->lbr_users instead of cpuc->lbr_pebs_users (and save/restore
-> based on the pre-clamp entry count or full array when needed)?
->
->>  
->>  	intel_pmu_lbr_read();
->>  	cnt = min_t(unsigned int, cnt, cpuc->lbr_stack.nr);
->> -
->>  	memcpy(entries, cpuc->lbr_entries, sizeof(struct perf_branch_entry) * cnt);
-> [Severity: Medium]
-> On platforms with Architectural LBR and branch counter logging, does
-> copying cpuc->lbr_entries directly after intel_pmu_lbr_read() leak raw
-> branch counter bits in entries[i].reserved to BPF programs?
->
-> When intel_pmu_snapshot_arch_branch_stack() calls
-> __intel_pmu_snapshot_branch_stack(), intel_pmu_lbr_read() invokes
-> intel_pmu_arch_lbr_read() or intel_pmu_arch_lbr_read_xsave(), which calls
-> arch/x86/events/intel/lbr.c:intel_pmu_store_lbr():
->
-> 	/*
-> 	 * Leverage the reserved field of
-> 	 * cpuc->lbr_entries[i] to temporarily store the
-> 	 * branch counters information. The later code will
-> 	 * decide what content can be disclosed to the perf
-> 	 * tool. Pleae see intel_pmu_lbr_counters_reorder().
-> 	 */
-> 	.reserved = (info >> LBR_INFO_BR_CNTR_OFFSET) &
-> 		    LBR_INFO_BR_CNTR_FULL_MASK,
->
-> Normally intel_pmu_lbr_counters_reorder() filters those bits and clears
-> cpuc->lbr_entries[i].reserved to 0 before the entries are exposed. Since
-> __intel_pmu_snapshot_branch_stack() copies cpuc->lbr_entries directly into
-> entries without calling intel_pmu_lbr_counters_reorder(), won't the raw
-> hardware counter bits remain in the UAPI perf_branch_entry.reserved field
-> returned by bpf_get_branch_snapshot()?
->
->> +
->> +	if (cpuc->lbr_pebs_users) {
->> +		memcpy(&cpuc->lbr_stack, &snapshot->stack,
->> +		       sizeof(struct perf_branch_stack));
->> +		memcpy(cpuc->lbr_entries, snapshot->entries,
->> +		       sizeof(struct perf_branch_entry) * cpuc->lbr_stack.nr);
->> +		memcpy(cpuc->lbr_counters, snapshot->counters,
->> +		       sizeof(u64) * cpuc->lbr_stack.nr);
->> +	}
->> +
->>  	intel_pmu_enable_all(0);
-> [Severity: High]
-> Is it safe for __intel_pmu_snapshot_branch_stack() to unconditionally call
-> intel_pmu_enable_all(0) when invoked from bpf_overflow_handler() in a PMI?
->
-> In arch/x86/events/intel/core.c:intel_pmu_handle_irq(), the PMI handler
-> saves cpuc->enabled, sets cpuc->enabled = 0, and disables the PMU in
-> hardware:
->
-> 	pmu_enabled = cpuc->enabled;
-> 	...
-> 	cpuc->enabled = 0;
-> 	__intel_pmu_disable_all(true);
->
-> The PMI handler expects the PMU, PEBS, BTS, and LBRs to remain disabled in
-> hardware while handle_pmi_common() and __intel_pmu_pebs_last_event() drain
-> PEBS records and reprogram counter periods, only restoring the hardware
-> state at the done label if pmu_enabled was set:
->
-> 	/* Only restore PMU state when it's active. See x86_pmu_disable(). */
-> 	cpuc->enabled = pmu_enabled;
-> 	if (pmu_enabled)
-> 		__intel_pmu_enable_all(0, true);
->
-> When a BPF program runs via perf_event_overflow() ->
-> bpf_overflow_handler() during a PMI and calls bpf_get_branch_snapshot() ->
-> __intel_pmu_snapshot_branch_stack(), calling intel_pmu_enable_all(0)
-> invokes x86_pmu_pebs_enable_all() and __intel_pmu_enable_all(0, false)
-> while cpuc->enabled is 0. This re-enables MSR_IA32_PEBS_ENABLE, LBRs, BTS,
-> and MSR_CORE_PERF_GLOBAL_CTRL before __intel_pmu_pebs_last_event() and
-> handle_pmi_common() finish reprogramming counter periods, and leaves the
-> hardware PMU enabled after the PMI exits if the PMI interrupted an
-> x86_pmu_disable() section where pmu_enabled was 0.
->
-> Should __intel_pmu_snapshot_branch_stack() avoid calling
-> intel_pmu_enable_all(0) when cpuc->enabled is 0?
-
-Hi Sandipan,
-
-Although this issue is reported for Intel platform, it looks AMD platform
-has similar issue. To ensure AMD and Intel platform has consistent
-behavior, the below changes are made for AMD platform as well. Could you
-please double check if it's correct for AMD platform? Thanks.
-
-diff --git a/arch/x86/events/amd/core.c b/arch/x86/events/amd/core.c
-index bf631f60757c..d46e442c9d4a 100644
---- a/arch/x86/events/amd/core.c
-+++ b/arch/x86/events/amd/core.c
-@@ -930,24 +930,33 @@ static int amd_pmu_handle_irq(struct pt_regs *regs)
-  */
- static int amd_pmu_v2_snapshot_branch_stack(struct perf_branch_entry
-*entries, unsigned int cnt)
- {
--       struct cpu_hw_events *cpuc;
-+       struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
-        unsigned long flags;
-+       int pmu_enabled;
-
-        /*
-         * The sequence of steps to freeze LBR should be completely inlined
-         * and contain no branches to minimize contamination of LBR snapshot
-         */
-        local_irq_save(flags);
-+       pmu_enabled = cpuc->enabled;
-        amd_pmu_core_disable_all();
-        __amd_pmu_lbr_disable();
-
--       cpuc = this_cpu_ptr(&cpu_hw_events);
--
-        amd_pmu_lbr_read();
-        cnt = min(cnt, cpuc->lbr_stack.nr);
-        memcpy(entries, cpuc->lbr_entries, sizeof(struct perf_branch_entry)
-* cnt);
-
--       amd_pmu_v2_enable_all(0);
-+       if (pmu_enabled) {
-+               amd_pmu_v2_enable_all(0);
-+       } else {
-+               /*
-+                * When pmu_enabled is false, we are probably in the PMI
-handler.
-+                * LBR is frozen in PMI context, and there is no later explicit
-+                * LBR enable before the PMI returns, so re-enable it here.
-+                */
-+               amd_pmu_lbr_enable_all();
-+       }
-        local_irq_restore(flags);
-
-        return cnt;
-
-
-
->
->>  	local_irq_restore(flags);
->>  	return cnt;
->> @@ -4022,7 +4056,12 @@ static int intel_pmu_handle_irq(struct pt_regs *regs)
->>  
->>  	loops = 0;
->>  again:
->> -	intel_pmu_lbr_read();
->> +	/*
->> +	 * No need to read the LBR stack when all LBR users are PEBS events,
->> +	 * since the PEBS handler updates it.
->> +	 */
->> +	if (cpuc->lbr_users != cpuc->lbr_pebs_users)
->> +		intel_pmu_lbr_read();
->>  	intel_pmu_ack_status(status);
-> [Severity: Medium]
-> When cpuc->lbr_users == cpuc->lbr_pebs_users and a BPF program calls
-> bpf_get_branch_snapshot() from bpf_overflow_handler() during a PMI, haven't
-> the hardware LBR registers already been unfrozen by
-> intel_pmu_ack_status(status)?
->
-> In arch/x86/events/intel/core.c:intel_pmu_handle_irq(),
-> __intel_pmu_disable_all(true) clears MSR_CORE_PERF_GLOBAL_CTRL but does
-> not clear LBR enable bits in MSR_IA32_DEBUGCTLMSR or MSR_ARCH_LBR_CTL,
-> relying on GLOBAL_STATUS_LBRS_FROZEN to keep the LBR stack frozen.
->
-> As noted in arch/x86/events/intel/lbr.c:__intel_pmu_lbr_enable():
->
-> 	/*
-> 	 * No need to unfreeze manually, as v4 can do that as part
-> 	 * of the GLOBAL_STATUS ack.
-> 	 */
-> 	if (pmi && x86_pmu.version >= 4)
-> 		return;
->
-> On PMU v4+ platforms (which include all pebs_baseline platforms), calling
-> intel_pmu_ack_status(status) clears GLOBAL_STATUS_LBRS_FROZEN and
-> immediately unfreezes the hardware LBRs. By the time handle_pmi_common() ->
-> x86_pmu_drain_pebs() -> __intel_pmu_pebs_last_event() sets up the PEBS
-> sample and invokes bpf_overflow_handler() ->
-> __intel_pmu_snapshot_branch_stack(), the unfrozen hardware LBR MSRs have
-> been recording branches inside the PMI handler itself (and
-> __intel_pmu_snapshot_branch_stack() then also calls intel_pmu_enable_all(0)
-> before the PMI finishes).
->
-> Can __intel_pmu_snapshot_branch_stack() still obtain an unpolluted hardware
-> LBR snapshot in this PMI path after intel_pmu_ack_status(status) has
-> unfrozen the LBRs?
->
-> [ ... ]
->
