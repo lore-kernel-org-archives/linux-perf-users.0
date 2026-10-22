@@ -1,84 +1,84 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.214.172
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.216.46
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792634249;
-	b=IUHR1GcvoAKjHn2lxRHt/EpNxCdrHjShyieA7RcO1rcsbnoc29xxYhQKC2ioimDl7lrr
-	 K5B11guQ4bnxc7D6FH92+LDZh70MxejjlY+xERAK9yZ7ukzIdMqVlFEFgb6OgPZGlKXSN
-	 G4YHyAFbxa6XeeemPSoMZzFlNQ5MFQfiuPiGM2REzwCeyl1W3Apz/th+KW2ZyDby7I3Gb
-	 Vtii90nr3HK8IvmQm7buH5J7Msmciz0vJw82b3Ae2VoYxq3Nc7bupDk26ze5OW+UfleNy
-	 msS8RS6hEH09Go7zaRugsvZw+05CLb8Bmx81ENc/tDeW8c9+mCVzKW4UasXB+Dl9pVA==
+	t=1792634256;
+	b=Fs+71nIPOrZDcEuzhr+7O5wd3SeKBmH9VGPYE01isE3r8LMGqXMurgOcErUqpevs/gKv
+	 7q8X2PqkbF9g9X3vu35SvkJfOzlDtiiSVRXryJC/zIt8khbXLp19hLFpuYVfYBS1V7F6n
+	 67zcQ0B+n5YpEY81tcETyu/AMBvDY0XL9VoKSF+KZGmnQWVxC0mfXOfnOdrxcXgC8Mw/J
+	 cIFKfjEbv1FujJ24nSHFM1qDb2nSJmf4BQO8TCi9euT5Z6Gb+0pcRapBm5iemVHJGIsY8
+	 FhLOI/chtTNOHjrv07CPRZSysGilYy4lGnEicHJPohEhiILFcD1tq7z+o6XqyPl22aQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792634249;
+	a=rsa-sha256; c=relaxed/relaxed; t=1792634256;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
 	 From:To:Cc:Subject:Date:Message-ID:X-Mailer:In-Reply-To:References:
 	 MIME-Version:Content-Transfer-Encoding;
-	bh=/p+8Vl7+8PhXJMc34NF0xrQaeakIDsKG9S8+b35h8GU=;
-	b=wo5/E4ofYtfDBet0XRpGkF29J3SGznglR58bMJqQVJGwg6zst6E/pJaF5MNNIPX0nBr/
-	 9UNfomtJKJRvM9/kGOABaREbYjKSGeaQL8CgGz/1MOTq5ebtXKFS1qg1Cf9O/gs+AnodA
-	 mgbYEwrj3PSQEQsu3T5wY0DmmOJRR4zZDsxUVoC6JVSg2yZGe1ue9/7VhLeI6oLbBBjte
-	 Dk29dsNCycOMOqQdgyV3YQXa1n2ldJP5XWcksixI6DwwEXzRT5E1IXGmm/iuARZLRB7jt
-	 vESEJUwn/VsMPFi8eu06QVvN6MMH8iP/IBsTX7VWOjJeQR03ZuzRvIjb8BrPhp6ylPw==
+	bh=hzZTIl9xajYqJye47ARFhIH6S/mo0DE83iMFJBmKqCA=;
+	b=p8FRDq2CYe8M16JjLzeQIIOSohYiBOjWTUHNmCt/nnstwUnoGt6FLGd07uL77YuB19U6
+	 XQYPBFHpTiw68FVvf8bYewIImrlpdfV31JA3CaRKUhRjSFV8SubTwTOgnQHw/8V7s/5GN
+	 6IuOjbT5azRroYwnEj7aSlvpxCr9cARaz9tdh/uW/P17lwQ/j6Jz09ctQhe3g+dkIDtLo
+	 HOoeh0/D5q4A4hmSt/xr87ZNqwPQOgJlTIdgkHeofAGXmAnlES2ByiDm5IybDsJdcl21s
+	 9WqapponIsHx88PKvRkTu8um7ThU+3lvFU01ox3Zxbp/GKd7qtzomSgdc+fQKcgDDQQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=gmail.com;
 	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=hz7IhKS8;
-	arc=none smtp.remote-ip=209.85.214.172
-Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=ENH+XPCy;
+	arc=none smtp.remote-ip=209.85.216.46
+Received: from mail-pj1-f46.google.com (mail-pj1-f46.google.com [209.85.216.46])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EE87606A32A
-	for <linux-perf-users@vger.kernel.org>; Thu, 22 Oct 2026 01:57:28 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 2EE87606A32A
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4A29606A31B
+	for <linux-perf-users@vger.kernel.org>; Thu, 22 Oct 2026 01:57:35 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org D4A29606A31B
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=hz7IhKS8
-Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-2e9995ce866so10258865ad.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 21 Oct 2026 18:57:28 -0700 (PDT)
+	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=ENH+XPCy
+Received: by mail-pj1-f46.google.com with SMTP id 98e67ed59e1d1-38d489b6b71so838453a91.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 21 Oct 2026 18:57:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1792634248; x=1793239048; darn=vger.kernel.org;
+        d=gmail.com; s=20251104; t=1792634255; x=1793239055; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=/p+8Vl7+8PhXJMc34NF0xrQaeakIDsKG9S8+b35h8GU=;
-        b=hz7IhKS8JnGZgEIexGY3I/4re8TbOOzx4dsaeiqtAUO3Mlg2//pA7KdBy10wHrc/WE
-         oQkv3BwN0H+jxhBBiDVnqP7ZwfcFe/Dxi8cDyAm0+6qK3rEA+Rcl2yt2on5K7RkFfAd1
-         JjfV/kqtvP3+GekJ86lvyfLCOfqfl6iFx3ByUKBSkZqqEkHrve8O51W3bDBcuvkErXuh
-         /WNVdOyxsOBwIwnKzPKYLibS8H+/yd9dtsUyWlLO/PUUQdtPF++7YKthKoC6GJwUm/GS
-         Qwb9Ec4xTK+9kEgeBXfzU4KRlJJ0yqpphEfA5EmlI19T+diFkzHeCGq7ZMN2TI0CTJry
-         Z0PQ==
+        bh=hzZTIl9xajYqJye47ARFhIH6S/mo0DE83iMFJBmKqCA=;
+        b=ENH+XPCyJctxYy0tq/P/dNgxodBKniOt72zMFjcHfl88zP152hyucaTU7RJZf4QI1x
+         1VpGfRQTR9BMTIjq7PqmW4d78toRZTLTxsmwNZLt56CIZqKfeDGwd7/hVLiAQGUE9xLn
+         F6LDiVHHO3801WBDL3nqEPo57ozaTFsl5oZIT4EPDiOWTd41sFl/XYF6hvSs1r9WurX2
+         LXE4lsm4XWPQo2UgKi2+Q6LrGO/06MLbgfsSUUp8N/mlZQyiDVupLjeRTdemuXbfK63X
+         mPm1iX4y2RdwuUMCaRNX4Slq5YKvU1lf3YRAFvofA1yVVeHpFoFuPQvpIr8zc8Z0+B7Z
+         wHSA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1792634248; x=1793239048;
+        d=1e100.net; s=20260707; t=1792634255; x=1793239055;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=/p+8Vl7+8PhXJMc34NF0xrQaeakIDsKG9S8+b35h8GU=;
-        b=Zib4rY3VbwvUBvwPOfmw5it9LeVHrnyKJRFdPFpGO/BTgXS1Y+X0GXdpkj1Rpwf6qF
-         qhT/jAtc9ffvXioVcoJFx11keZOXqk1egbABUHsWrOXWE/BX+yMypZ1gTGiO14S6Ahmf
-         qcVuDlOUb6QH3TMtKtxQpYB3wSW7GbNZSRp3Xip1A+M3PTdBsXvQqHNGfMj5URp5ux3I
-         1II1ASRiZp9f9G776Wl5uISoRLfqOsyRajQpPJcMn1DA8aiuG8DFe8VjnZVgu5cBBka/
-         hHj6H3xwsWJoqzXMP9el9yGd4cFhEiDfUSTweJsA+5v13W/5pC1gQfybjMExW5tvfWa+
-         Nduw==
-X-Forwarded-Encrypted: i=1; AKwUvBxzKnVyT6qErRv999B3KR7J2HxyRJTEwrPnVacXnAJzSXqidyODKSzOX4BLoNz64VzfJuXWu3rWE5nBoL52r/rj@vger.kernel.org
-X-Gm-Message-State: AFq9FYJL9QxyOE9iYGKXoSRcmJxl2pQEg7zs4OrAqnWJ7MZmL2zW/k0f
-	PJ7MVZome93oXSlm9oiXFtKe9QZEG3n5a+og4zppbc5BULBMYG9EAwWR
-X-Gm-Gg: AYBFou1oKu/1MHxCzRQknlO6/kac6xFddxOusA2OLqeWoab/NbNqS46MaDqXdQjFeRr
-	CZBuLOL2NNZQ0syzielYJbsUpT+32Vnd/Ua+ZivGmc7qxH6V3JoFQ3qOZOOgOGo/kZbR/YQFehd
-	BCiutk4n7XXcBu2uONWH3R3Z/AARk/HyQXcvB6MjtRUOjUooSX34BJKK2qoh0/AtfKZxOS2g7Ky
-	gDtm4smMVP3KllyZuDbGMegA/7o+lVeHYc4gawW+R3OrkgOqpZETrHq6hTMbI3rAy4Un5cJA6op
-	rP86ZioTLoo2IEKTHUZ1JNbvaQQIqywQUEr3hfbR4oT7DRspBnfQyXTthC0FixvDoDD7MtDn6AV
-	OiWYEb1gpHi8ZsZzAM52mDlrtBedYJN/14tu4sZ6xcI1clAYcnHk4ieeLzTTDxdCsnh/8R8xIxh
-	+7wrjQmBg2LdKpyfhIZCR+C33sJoMZATAOjy6OGWxk3mxGRkxbl54pViLX30pzw/CiM/TBn35yb
-	jD6/Ccpep/YIk6yKhvoPPkztY7ADTx0P5OXv0NElXHNBu3Zw7powh4X3W/7SPC6IOlpVC8toaFu
-	tfZMe/W2PJqr0/yExjFSCGSavRRPG7R5PNdzvYy0Ptzr7/iGsl80hAnOeQXEtHq7HyVr6Ig6PyQ
-	ez0f51fXYDHXQcfee650CB29p
-X-Received: by 2002:a17:902:da8e:b0:2e9:5829:9b41 with SMTP id d9443c01a7336-2ea43e20647mr33495795ad.37.1792634248345;
-        Wed, 21 Oct 2026 18:57:28 -0700 (PDT)
-Received: from coder-ast-ast-dev-ml-0.tail2dda0.ts.net ([153.61.198.255])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2ea3b4addfbsm16725685ad.74.2026.10.21.18.57.26
+        bh=hzZTIl9xajYqJye47ARFhIH6S/mo0DE83iMFJBmKqCA=;
+        b=DHlxfCd5g1Z7trSxYGaUrzHg0ZqPFs0Xw6FDoi0nyWJyCkR+NRvPaELvo76CHM91a9
+         COW5DU5/JGNgIeqMhFUax1gg37bjMo8vZ8myx5xlXdnL5chyXogwEoIWh052UqDDiawS
+         7uRP07mdh0A7No6uCD4XKluJxO7Cy+JVi/ncZIQ13Cj9LkSRVYO+ZMBCBnNLuMEr3vL9
+         g4TbkKT5B77j9aVUq/ZrIYwBFZ8NpefxRO7+InTWjzFCG9FZQm4UHs2PMW9x2hvtmKC3
+         tpmrtgI3+RSmp1zyvPqgmgiYcXziGQbG2zh8CqS9iq1tj/ZH/aSCfDgUVKROPdzKL8KM
+         8hIw==
+X-Forwarded-Encrypted: i=1; AKwUvBwwNp+8WESEa4Ddhu8M95tFAZDjJFAia95zcxDQ/VReKLjwgp8DpX8tH6TjU0i1VJ9uMNnkOC8pVeUMeY/8lye2@vger.kernel.org
+X-Gm-Message-State: AFq9FYL+pZAC6bKgwhasLOp2lW/lTRGWvHEf/1UORUbJqZO8eFxcMUsV
+	b26mdgZKe4t2hqFIFvYDHhYlfvF7G1kHqrdcyvr2lP1FagffD1coNS72
+X-Gm-Gg: AYBFou0w8inDOpHh377cKBQhlb+FsltC28msOXK6UImDCNSEEK6T4a90Ets8h4REtzT
+	lyyClLEUUsaHVVJITtTyrS9G8sjOm3PJisUheaZ52ehF7LF1+mcbBA3CEw04Zn8rBrCGqiykr3H
+	XfMv6XQyApEUFo7YoYCl+KinXW5Wsd7gd4d01HWdrXScY0k+9N8+gG7xPkpMHk88U6bGkEe2aY0
+	FHMRa+8MD216wLSw0ePbrZZYQYbEJD0OrgjZf+YO6xTzVdJ8AIrdo4ZR+p0WL8p1qOaEQz9QOll
+	FsUZBb3/zPekW0LNooGAcmmjziMsaLQdevfz4LvpfNRg0biqORVsPga2lzEmu/Pl7F8OTzD5Ulp
+	qdZOFYHL82SMTQ29NkNVi7UEUlzY31APkMTx2qH+THVtDFrL9OzoDQoKHs7aKQUmUo9Ii6vQQLZ
+	UQfDXJpLuyytD9zpTK649u3UQbN5gVNLOUBhi5Sjhooe+wQJpfxoKkTt43X0D29vvuqfAmmdZzL
+	/9AmXpLZtmzwKJrcdSHB7lcxD7PwhHYfFbxFxbBazSEwoHjbH1YjNK7VWLP4vYnK2O0sXS36Cam
+	1utpefTyfxhRQNcYKiddsCN+BiLxnarJIvAYW81O+xv6Lf740E5k4wpcBNg5h2rOBNVS906Ojyq
+	1eJD7gKOfAAiqiET+v4UrbBXD
+X-Received: by 2002:a17:90b:1dc4:b0:3ac:8897:7baa with SMTP id 98e67ed59e1d1-3ad86d4e4abmr2953396a91.40.1792634255162;
+        Wed, 21 Oct 2026 18:57:35 -0700 (PDT)
+Received: from coder-ast-ast-dev-ml-0.tail2dda0.ts.net ([153.61.198.250])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3ad85fa6b87sm2978876a91.3.2026.10.21.18.57.33
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 21 Oct 2026 18:57:27 -0700 (PDT)
+        Wed, 21 Oct 2026 18:57:34 -0700 (PDT)
 From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
 To: bpf@vger.kernel.org
 Cc: daniel@iogearbox.net,
@@ -105,9 +105,9 @@ Cc: daniel@iogearbox.net,
 	linux-mm@kvack.org,
 	linux-perf-users@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH bpf-next 2/9] uprobes: Don't run exit_mmap() under dup_mmap_sem
-Date: Thu, 22 Oct 2026 01:57:05 +0000
-Message-ID: <20261022015712.1297331-3-alexei.starovoitov@gmail.com>
+Subject: [PATCH bpf-next 3/9] uprobes/x86: Finish an unoptimization which failed half-way
+Date: Thu, 22 Oct 2026 01:57:06 +0000
+Message-ID: <20261022015712.1297331-4-alexei.starovoitov@gmail.com>
 X-Mailer: git-send-email 2.55.0
 In-Reply-To: <20261022015712.1297331-1-alexei.starovoitov@gmail.com>
 References: <20261022015712.1297331-1-alexei.starovoitov@gmail.com>
@@ -124,40 +124,71 @@ Content-Transfer-Encoding: 8bit
 
 From: Alexei Starovoitov <ast@kernel.org>
 
-build_map_info() takes mm_users of every mm that maps the file and
-register_for_each_vma() drops it after the visit. When the process has
-exited meanwhile it's the last mmput(), and exit_mmap() of a large mm runs
-with dup_mmap_sem held for writing. Every fork() in the system waits for
-it. Use mmput_async().
+int3_update_unoptimize() restores optimized nop10 in three writes:
 
+  48 8d 64 24 80 e8 d0 d1 d2 d3    lea -0x80(%rsp),%rsp; call tramp
+  cc 8d 64 24 80 e8 d0 d1 d2 d3    1. trap new entries
+  cc 2e 0f 1f 84 e8 d0 d1 d2 d3    2. restore bytes 1..4
+  66 2e 0f 1f 84 e8 d0 d1 d2 d3    3. restore byte 0
+
+uprobe_write() can fail with -ENOMEM, or with -EINTR when the task is being
+killed. When the 2nd write fails the result of the 1st one stays. Byte 0 is
+a breakpoint and it works. But the next set_orig_insn() doesn't find lea in
+byte 0, takes it for a plain breakpoint and restores one byte:
+
+  66 8d 64 24 80 e8 d0 d1 d2 d3    lea -0x80(%rsp),%sp; call tramp
+
+Nothing recognizes these bytes anymore. The process keeps the call into
+uprobe trampoline, which can be unmapped already.
+
+Teach is_optimized() to recognize the half-way state, and let the 1st write
+of int3_update_unoptimize() skip what is already done.
+
+The failure wasn't reproduced, but the state can be made by hand. Attach to
+nop10, call it to get it optimized, write 0xcc over byte 0, detach.
+
+"uprobes: Don't sleep on mmap_lock under dup_mmap_sem" needs this. There
+fork() removes the breakpoint from its mm. When fork() is killed in
+the middle register_for_each_vma() removes it for the second time.
+
+Fixes: 554ba38456da ("uprobes/x86: Move optimized uprobe from nop5 to nop10")
 Signed-off-by: Alexei Starovoitov <ast@kernel.org>
 ---
- kernel/events/uprobes.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ arch/x86/kernel/uprobes.c | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
-diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
-index 7709ea882477..6792004be6fa 100644
---- a/kernel/events/uprobes.c
-+++ b/kernel/events/uprobes.c
-@@ -1250,7 +1250,7 @@ build_map_info(struct address_space *mapping, loff_t offset, bool is_register)
+diff --git a/arch/x86/kernel/uprobes.c b/arch/x86/kernel/uprobes.c
+index 65a2de82ecd2..62bbe41c6466 100644
+--- a/arch/x86/kernel/uprobes.c
++++ b/arch/x86/kernel/uprobes.c
+@@ -896,6 +896,9 @@ static int verify_insn(struct page *page, unsigned long vaddr, uprobe_opcode_t *
+ 	case EXPECT_OPTIMIZED:
+ 		if (is_opt_insns(&old_opcode[0]))
+ 			return 1;
++		/* An earlier attempt got this far and failed, nothing to write. */
++		if (is_swbp_opt_insns(&old_opcode[0]))
++			return 0;
+ 		break;
+ 	case EXPECT_SWBP_OPTIMIZED:
+ 		if (is_swbp_opt_insns(&old_opcode[0]))
+@@ -1109,6 +1112,17 @@ static bool __is_optimized(struct mm_struct *mm, uprobe_opcode_t *insn, unsigned
+ 		s32 raddr;
+ 	} *call = (struct __arch_relative_insn *)(insn + LEA_INSN_SIZE);
  
- 	prev = curr;
- 	while (curr) {
--		mmput(curr->mm);
-+		mmput_async(curr->mm);
- 		curr = curr->next;
- 	}
- 
-@@ -1324,7 +1324,8 @@ register_for_each_vma(struct uprobe *uprobe, struct uprobe_consumer *new)
-  unlock:
- 		mmap_write_unlock(mm);
-  free:
--		mmput(mm);
-+		/* exit_mmap() of the last user must not run under dup_mmap_sem */
-+		mmput_async(mm);
- 		info = free_map_info(info);
- 	}
-  out:
++	/*
++	 * INT3 followed by the rest of the optimized instructions is what is
++	 * left if int3_update_optimize() or int3_update_unoptimize() failed
++	 * half-way. It works as a breakpoint, but to restore the original
++	 * instruction it has to be unoptimized like a completely optimized one.
++	 * The same has to be done if a debugger has put its INT3 on top of an
++	 * optimized uprobe. The trampoline can be gone already, so do not look
++	 * at the target of the call.
++	 */
++	if (is_swbp_opt_insns(insn))
++		return true;
+ 	if (!is_opt_insns(insn))
+ 		return false;
+ 	return __in_uprobe_trampoline(mm, vaddr + OPT_INSN_SIZE + call->raddr);
 -- 
 2.55.0
 
