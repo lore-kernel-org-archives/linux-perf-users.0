@@ -1,74 +1,74 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.69
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.71
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792701018;
-	b=VD5gQrBeuv5F3kzUJJ1ipLkbVkQvM01QJeJT2S5jRWngdrtAFUKbJnrOOaSo6TShD/S1
-	 w5IOWmTmuv7axFjAQFGk24hQi3kZ1OYuZgBgFwEyWIwaBFHitiWC5ICh47h6A7j8ODn4y
-	 sVJ2IZ29IGRuytMY/t3Rod0nonafxa0PGsemN7CY9HkXQq3hNJz8bNBjBqpF+p2Xh9Ck4
-	 rzMeTzHTczE9Y5cz8pKiy6Rsk3U9gxoOUDLLjV0Lvwg+6aOLQCIF20RFByhVHi97kiCdN
-	 rn3hCVKddYBKnuO3hrPum3mjIfJfsGcO4mn3B8umqWwz7XHy5R8gysWG/PQRgbOItdA==
+	t=1792701023;
+	b=lURytfn9clokY02E0SInHVyueJGqH3TGtpIbU5x3+y2dJZ/Eq2PvBno6nzoZiPP290pj
+	 yyhNF9CYobUULD49o91O489hZhrg6YV8/9BoceR9khFwMQ7Ri7409PGQ8Fho8kcMrjIxI
+	 NhHSK341/MMi+9XDV+K3HB4HVsJ6tutBWG3ajRcxkiRc1u/G8KdCQzuFsxV1KDmIpJRyI
+	 ycra2SJmOqpDH+KJCnqibdzIVOuqdx9Zqtd/V/w5+Isqr9IccL1Bf1nMFxiTv4K0yj4w0
+	 dLzQYt4Z6LI88HIgE7QOWaQvz20SFY7L0MMTZVshnwQOQhmem5ma0rxIrLKWd54gnKQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792701018;
+	a=rsa-sha256; c=relaxed/relaxed; t=1792701023;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Received:Date:In-Reply-To:
 	 Mime-Version:References:X-Mailer:Message-ID:Subject:From:To:Cc:
 	 Content-Type;
-	bh=vb7f6vAkRYTChnspFzlOhx/ZS3V5rub8XJZ0s8BrIgE=;
-	b=oS8Tof+HQMQOC+TcfDcjZIseG9hilJsKun/eAtxrz0lVTKCRVkudeNEXWJWbxj6LUzsZ
-	 L19Gk7nipWESEBLRxByCnECk1E5XtQeUdv0jWDmreeNOg5iapDM07I3D1SXBLItRQlwQW
-	 mOkqnBjsm5Y4DX5oCz2u3ttpS20m+y2wLPTSBMXV7fSiqaEUd5bKz3W+zurx4nnOdlvuf
-	 LJRNDbLzbbDhgInQKXdpl7aHKDuBWB1JIEmhOWhVd90nfLAHXMrP7ecrKEbTciWB/Ngj3
-	 v3poN+w2MIicJOPYOOGPY+JYPAmGBt8Uu0RDcuHnRZHeJ6OqMoEkljVOvZ9P+JjmUQQ==
+	bh=jncnN8hNB149YV/7QR6pbWspMiNEL/g00PLfD5StrJE=;
+	b=in2B3QZucagELeG0BgK36D/E+lrh2ewSf1+WkcWmWuO9d/oFZadlWT7Q6vhJ4NbO9cps
+	 DXpdDLsneg7637nfHR6YqGdFyFfYgMWtPY6Z32vXRzrDj7ZVSvPHC+KU2Jw9pNs5Ws+o9
+	 qYpxLHVpLhAG2VvHncUN+zy2idrP1M2mQDBqxEEuYv4ZVYoptRrVdxoQc5x8uzUzQnV0k
+	 ig4aHsStuPRZpyipYaR2hTvxFYvWy7Dwr6pQfhpkv0sucU9bIZbQZfJhZsSWDcmE5Y+vW
+	 Xhm/2GOHe1wbBesp/j0BX9Jf14S31y+SBvexA6eFo4UhMy8Tv662nOhe7mfPv6O4Dfw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=google.com;
 	spf=pass smtp.mailfrom=flex--irogers.bounces.google.com;
-	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20251104 header.b=utXVQUCs;
-	arc=none smtp.remote-ip=74.125.82.69
-Received: from mail-dl1-f69.google.com (mail-dl1-f69.google.com [74.125.82.69])
+	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20251104 header.b=al2a4dDN;
+	arc=none smtp.remote-ip=74.125.82.71
+Received: from mail-dl1-f71.google.com (mail-dl1-f71.google.com [74.125.82.71])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE36360A260A
-	for <linux-perf-users@vger.kernel.org>; Thu, 22 Oct 2026 20:30:17 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org AE36360A260A
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABE0A606A325
+	for <linux-perf-users@vger.kernel.org>; Thu, 22 Oct 2026 20:30:22 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org ABE0A606A325
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20251104 header.b=utXVQUCs
-Received: by mail-dl1-f69.google.com with SMTP id a92af1059eb24-155a75f91e1so1210108c88.1
-        for <linux-perf-users@vger.kernel.org>; Thu, 22 Oct 2026 13:30:17 -0700 (PDT)
+	dkim=pass (2048-bit key, unprotected) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20251104 header.b=al2a4dDN
+Received: by mail-dl1-f71.google.com with SMTP id a92af1059eb24-155a75f91e1so1210231c88.1
+        for <linux-perf-users@vger.kernel.org>; Thu, 22 Oct 2026 13:30:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1792701017; x=1793305817; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1792701022; x=1793305822; darn=vger.kernel.org;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=vb7f6vAkRYTChnspFzlOhx/ZS3V5rub8XJZ0s8BrIgE=;
-        b=utXVQUCsXK7M2nYWH1xwTjO4uGneX70Zp7tYAGaTtv0sr1QHBdnts2h22mo6psWIcm
-         nPobu/9/pHCqKdm3RemdKv6h4/ABvflXf/KnG5MZijwKpdiAPtjCSC3wLEjLjDAw4oCI
-         bhU8lTIlurdN2t2apiIlOllaKf+b8scdn1l7oug3evBD2gOyOTRIs9ceKwaV4rO91Auw
-         iQ/9L69InwJwr7jQ9NucZ5YVsk8oy+tK2v4Qz0uQD47mf6GnCaMA9eopVVFAFjhwf7JR
-         oPQvGBjJ/zSDUIMvtE29WucNtids/7D2bcTi8SXGrM5hPCVu9S//KGUmOE0cYhtunwkx
-         NtRA==
+        bh=jncnN8hNB149YV/7QR6pbWspMiNEL/g00PLfD5StrJE=;
+        b=al2a4dDNtnNQKDJTNaWoOW/tX5Wu00kFM/0d+1ZnH73GlJT+0lOGpoW6Y5NJP76/B3
+         FJQ3w+agnI1YkkgU8a13Nc63DImxppMQLZvbFy/rcGLeUK9PSRDdn1X5WhhCjVu8Za1P
+         mu4cdknjbAiqmnwrGEx0uBflO3BxeqE2A28g3EkVToNWYOjhWmUUKJ1vtp+8SPtisA6h
+         2qZP8F3rLVhZ8iyN3H7OMRgLtWbMayLzrevPhLAheL6MO0Zf+Ta+bV2ly8MTRUkv+t9l
+         aLcPxtN3IZ9l2XZKqiTKhQGM7GNXwJbo9qNt/251YGAKzr9YOXCrTMoeItEA71GYVZAp
+         Q5Ew==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1792701017; x=1793305817;
+        d=1e100.net; s=20260707; t=1792701022; x=1793305822;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=vb7f6vAkRYTChnspFzlOhx/ZS3V5rub8XJZ0s8BrIgE=;
-        b=soCGbyXNPhKQYUNHt3JD8EEY1N1dgFeHGnxft2nfzvNpkqXsC3zlTDmnYU19Ude+yJ
-         jQm0plDWeBwlQGeNrgDui0mLjSWsNLwNMx2c+DgM996q7ocP8cmulvtgGL5xY4VXRYhl
-         E5iVf8R4ka00V+QH0SOe/+rNOPYc4r1roU3ecQqRKLXb5Pr+gOL4Qtc9dlMpC9P/+/CB
-         r2JaFB8kBxB2XurK51vZKxUlniUwjLtUE706z6NWSo/Kl17qWbiZZStP3MDCx7BpfnHp
-         NCIS1d4tHDdNqOlLALidHq2iJWwE6b7pMygPTuUujwd49aGxJczIV7Lfo/IyluwfzfO/
-         UlSQ==
-X-Forwarded-Encrypted: i=1; AKwUvByaxNPq0BirMo4vPOtKhySKmTJUdmkz7qIf2ag27qQdjOKfYdMlAQGHiKFpQj+I7xXQemIa9KoijMQOG+rep0pf@vger.kernel.org
-X-Gm-Message-State: AFq9FYKX/4IXQ9uOxVd9SsmpXPaBpB8vl8OFW3nvlIVWbXSJW+Qbf41H
-	H8A9t5REvBSpy4q2UEXMrkbvvz5ULNz8+2+XJmXJQtCoeNgoro0TwC1fZRUrhpekOG5vpef7Ubu
-	eqLezbJjHrg==
-X-Received: from dlah22.prod.google.com ([2002:a05:701b:2616:b0:195:23bc:a608])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:701b:241b:b0:194:e9e5:11b0
- with SMTP id a92af1059eb24-194e9e5190bmr1530404c88.14.1792701016450; Thu, 22
- Oct 2026 13:30:16 -0700 (PDT)
-Date: Thu, 22 Oct 2026 13:29:55 -0700
+        bh=jncnN8hNB149YV/7QR6pbWspMiNEL/g00PLfD5StrJE=;
+        b=GY7ouXD+MCmXKDU0YtqxXgMQmCtF1xjjG263lK+K39ye696HBfoKwIWlWuXvjo4Rdf
+         3KLzNsapzbFo/+t7nMRAwH88OFkz9vwXrqGV5mNb0j5fMXLoywzgVgTI0En9GquRaov8
+         mOwb9kTzifUCxK0CSQoB+Rdr8P1Sc27rcHsi4LdRtW3cKpjMshD7ulN4h/NrsitwpV2s
+         b/ZmEtpOe8l4bS3mixsdslkKEWHH8AbJuIFTsCMYKy7uAm8ZJexHkcog35XWCc/B/MWm
+         lalnu9oHACUltHusXPTbzZ+xlpFiQDcWf4qKYRQp0jxjq+z5qEgBW4GMU0gxx9Cu47lk
+         A4aQ==
+X-Forwarded-Encrypted: i=1; AKwUvBzOip2EYVh01xF6i6sQV2BiHiDTXYQXxJyBAVw4ss60fNaEK98YRQ0fhxc6YilvYXVhFy3SRY5BNTqeATlyrJSL@vger.kernel.org
+X-Gm-Message-State: AFq9FYJ/wTPeoUbydHRyd7N+vhd32X6N6s0GUpNf3xEzNxSNQ8km8Na1
+	18cR1B2n9Eee14z4DQAMnKTnOpdcJNlrAbRDNMmo8ACATWv2hhznujP4c9zR49c5xI1gd73YV2B
+	NWBHUUyCN2Q==
+X-Received: from dlea4-n2.prod.google.com ([2002:a05:701b:4204:20b0:189:5eec:837b])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:4081:b0:195:8fa1:b447
+ with SMTP id a92af1059eb24-1958fa1b4c4mr519494c88.12.1792701021167; Thu, 22
+ Oct 2026 13:30:21 -0700 (PDT)
+Date: Thu, 22 Oct 2026 13:29:56 -0700
 In-Reply-To: <20261022203003.1779152-1-irogers@google.com>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -81,9 +81,9 @@ Precedence: list
 Mime-Version: 1.0
 References: <20261020205859.1080743-1-irogers@google.com> <20261022203003.1779152-1-irogers@google.com>
 X-Mailer: git-send-email 2.56.0.307.g5fe7bd680c-goog
-Message-ID: <20261022203003.1779152-4-irogers@google.com>
-Subject: [PATCH v6 03/11] perf lock contention: Share common BPF and lock type
- definitions in lock_data.h
+Message-ID: <20261022203003.1779152-5-irogers@google.com>
+Subject: [PATCH v6 04/11] perf lock contention: Extend get_lock_owner() for
+ rt_mutex and mutex handoff
 From: Ian Rogers <irogers@google.com>
 To: irogers@google.com, acme@kernel.org, namhyung@kernel.org
 Cc: adrian.hunter@intel.com, ddhariwal@google.com, eranian@google.com, 
@@ -92,742 +92,146 @@ Cc: adrian.hunter@intel.com, ddhariwal@google.com, eranian@google.com,
 	rcu@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-Move lock_type_table, LCB_F_* flags, and the common BPF lock helpers
-(get_lock_owner, get_current_mmap_lock, get_current_siglock,
-get_lock_addr, check_lock_type, do_collect_zone_lock,
-do_collect_lock_syms, do_slab_cache_iter) and shared CO-RE structs into
-tools/perf/util/bpf_skel/lock_data.h and tools/perf/util/lock-contention.[ch]
-so they can be reused by BPF sample filtering.
+Extend get_lock_owner() in tools/perf/util/bpf_skel/lock_data.h to:
+- Support rt_mutex locks (LCB_F_RT) and CONFIG_PREEMPT_RT mutexes via
+  struct rt_mutex_base and struct rt_mutex___old, masking out the low
+  waiter bit (0x1UL).
+- Return NULL when a mutex has MUTEX_FLAG_HANDOFF (0x4UL) set on
+  owner.counter and is in the middle of being handed off rather than
+  actively held.
+
+Also add rw_semaphore.count and struct rt_mutex_base to the fallback
+tools/perf/util/bpf_skel/vmlinux/vmlinux.h.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/builtin-lock.c                     |  27 --
- .../perf/util/bpf_skel/lock_contention.bpf.c  | 235 +-------------
- tools/perf/util/bpf_skel/lock_data.h          | 303 ++++++++++++++++++
- tools/perf/util/lock-contention.c             |  19 ++
- tools/perf/util/lock-contention.h             |  13 +
- 5 files changed, 338 insertions(+), 259 deletions(-)
+ tools/perf/util/bpf_skel/lock_data.h       | 62 ++++++++++++++++++----
+ tools/perf/util/bpf_skel/vmlinux/vmlinux.h |  5 ++
+ 2 files changed, 58 insertions(+), 9 deletions(-)
 
-diff --git a/tools/perf/builtin-lock.c b/tools/perf/builtin-lock.c
-index d5c0d55cb82d..feaf1cfd08cf 100644
---- a/tools/perf/builtin-lock.c
-+++ b/tools/perf/builtin-lock.c
-@@ -1477,33 +1477,6 @@ static void sort_result(void)
- 	}
- }
- 
--static const struct {
--	unsigned int flags;
--	/*
--	 * Name of the lock flags (access), with delimeter ':'.
--	 * For example, rwsem:R of rwsem:W.
--	 */
--	const char *flags_name;
--	/* Name of the lock (type), for example, rwlock or rwsem. */
--	const char *lock_name;
--} lock_type_table[] = {
--	{ 0,				"semaphore",	"semaphore" },
--	{ LCB_F_SPIN,			"spinlock",	"spinlock" },
--	{ LCB_F_SPIN | LCB_F_READ,	"rwlock:R",	"rwlock" },
--	{ LCB_F_SPIN | LCB_F_WRITE,	"rwlock:W",	"rwlock" },
--	{ LCB_F_READ,			"rwsem:R",	"rwsem" },
--	{ LCB_F_WRITE,			"rwsem:W",	"rwsem" },
--	{ LCB_F_RT,			"rt-mutex",	"rt-mutex" },
--	{ LCB_F_RT | LCB_F_READ,	"rwlock-rt:R",	"rwlock-rt" },
--	{ LCB_F_RT | LCB_F_WRITE,	"rwlock-rt:W",	"rwlock-rt" },
--	{ LCB_F_PERCPU | LCB_F_READ,	"pcpu-sem:R",	"percpu-rwsem" },
--	{ LCB_F_PERCPU | LCB_F_WRITE,	"pcpu-sem:W",	"percpu-rwsem" },
--	{ LCB_F_MUTEX,			"mutex",	"mutex" },
--	{ LCB_F_MUTEX | LCB_F_SPIN,	"mutex",	"mutex" },
--	/* alias for optimistic spinning only */
--	{ LCB_F_MUTEX | LCB_F_SPIN,	"mutex:spin",	"mutex-spin" },
--};
--
- static const char *get_type_flags_name(unsigned int flags)
- {
- 	flags &= LCB_F_TYPE_MASK;
-diff --git a/tools/perf/util/bpf_skel/lock_contention.bpf.c b/tools/perf/util/bpf_skel/lock_contention.bpf.c
-index 0d9c6f55050e..c70c3955e559 100644
---- a/tools/perf/util/bpf_skel/lock_contention.bpf.c
-+++ b/tools/perf/util/bpf_skel/lock_contention.bpf.c
-@@ -8,23 +8,9 @@
- 
- #include "lock_data.h"
- 
--/* for collect_lock_syms().  4096 was rejected by the verifier */
--#define MAX_CPUS  1024
--
--/* for collect_zone_lock().  It should be more than the actual zones. */
--#define MAX_ZONES  10
--
- /* for do_lock_delay().  Arbitrarily set to 1 million. */
- #define MAX_LOOP  (1U << 20)
- 
--/* lock contention flags from include/trace/events/lock.h */
--#define LCB_F_SPIN	(1U << 0)
--#define LCB_F_READ	(1U << 1)
--#define LCB_F_WRITE	(1U << 2)
--#define LCB_F_RT	(1U << 3)
--#define LCB_F_PERCPU	(1U << 4)
--#define LCB_F_MUTEX	(1U << 5)
--
- /* callstack storage  */
- struct {
- 	__uint(type, BPF_MAP_TYPE_STACK_TRACE);
-@@ -159,22 +145,6 @@ struct {
- 	__uint(max_entries, 1);
- } lock_delays SEC(".maps");
- 
--struct rw_semaphore___old {
--	struct task_struct *owner;
--} __attribute__((preserve_access_index));
--
--struct rw_semaphore___new {
--	atomic_long_t owner;
--} __attribute__((preserve_access_index));
--
--struct mm_struct___old {
--	struct rw_semaphore mmap_sem;
--} __attribute__((preserve_access_index));
--
--struct mm_struct___new {
--	struct rw_semaphore mmap_lock;
--} __attribute__((preserve_access_index));
--
- struct cas_ctx {
- 	struct contention_data *data;
- 	u64 duration;
-@@ -182,8 +152,6 @@ struct cas_ctx {
- 	int min_done;
- };
- 
--extern struct kmem_cache *bpf_get_kmem_cache(u64 addr) __ksym __weak;
--
- /* control flags */
- const volatile int has_cpu;
- const volatile int has_task;
-@@ -222,8 +190,6 @@ int data_map_full;
- struct task_struct *bpf_task_from_pid(s32 pid) __ksym __weak;
- void bpf_task_release(struct task_struct *p) __ksym __weak;
- 
--static inline __u32 check_lock_type(__u64 lock, __u32 flags);
--
- static inline __u64 get_current_cgroup_id(void)
- {
- 	struct task_struct *task;
-@@ -347,85 +313,6 @@ static inline int update_task_data(struct task_struct *task)
- 	return 0;
- }
- 
--#ifndef __has_builtin
--# define __has_builtin(x) 0
--#endif
--
--static inline struct task_struct *get_lock_owner(__u64 lock, __u32 flags)
--{
--	struct task_struct *task;
--	__u64 owner = 0;
--
--	if (flags & LCB_F_MUTEX) {
--		struct mutex *mutex = (void *)lock;
--		owner = BPF_CORE_READ(mutex, owner.counter);
--	} else if (flags == LCB_F_READ || flags == LCB_F_WRITE) {
--	/*
--	 * Support for the BPF_TYPE_MATCHES argument to the
--	 * __builtin_preserve_type_info builtin was added at some point during
--	 * development of clang 15 and it's what is needed for
--	 * bpf_core_type_matches.
--	 */
--#if __has_builtin(__builtin_preserve_type_info) && __clang_major__ >= 15
--		if (bpf_core_type_matches(struct rw_semaphore___old)) {
--			struct rw_semaphore___old *rwsem = (void *)lock;
--			owner = (unsigned long)BPF_CORE_READ(rwsem, owner);
--		} else if (bpf_core_type_matches(struct rw_semaphore___new)) {
--			struct rw_semaphore___new *rwsem = (void *)lock;
--			owner = BPF_CORE_READ(rwsem, owner.counter);
--		}
--#else
--		/* assume new struct */
--		struct rw_semaphore *rwsem = (void *)lock;
--		owner = BPF_CORE_READ(rwsem, owner.counter);
--#endif
--	}
--
--	if (!owner)
--		return NULL;
--
--	task = (void *)(owner & ~7UL);
--	return task;
--}
--
--static inline __u32 check_lock_type(__u64 lock, __u32 flags)
--{
--	struct task_struct *curr;
--	struct mm_struct___old *mm_old;
--	struct mm_struct___new *mm_new;
--	struct sighand_struct *sighand;
--
--	switch (flags) {
--	case LCB_F_READ:  /* rwsem */
--	case LCB_F_WRITE:
--		curr = bpf_get_current_task_btf();
--		if (curr->mm == NULL)
--			break;
--		mm_new = (void *)curr->mm;
--		if (bpf_core_field_exists(mm_new->mmap_lock)) {
--			if (&mm_new->mmap_lock == (void *)lock)
--				return LCD_F_MMAP_LOCK;
--			break;
--		}
--		mm_old = (void *)curr->mm;
--		if (bpf_core_field_exists(mm_old->mmap_sem)) {
--			if (&mm_old->mmap_sem == (void *)lock)
--				return LCD_F_MMAP_LOCK;
--		}
--		break;
--	case LCB_F_SPIN:  /* spinlock */
--		curr = bpf_get_current_task_btf();
--		sighand = curr->sighand;
--
--		if (sighand && &sighand->siglock == (void *)lock)
--			return LCD_F_SIGHAND_LOCK;
--		break;
--	default:
--		break;
--	}
--	return 0;
--}
--
- static inline long delay_callback(__u64 idx, void *arg)
- {
- 	__u64 target = *(__u64 *)arg;
-@@ -908,99 +795,16 @@ int contention_end(u64 *ctx)
- 	return 0;
- }
- 
--extern struct rq runqueues __ksym;
--
- const volatile __u64 contig_page_data_addr;
- const volatile __u64 node_data_addr;
- const volatile int nr_nodes;
- const volatile int sizeof_zone;
- 
--struct rq___old {
--	raw_spinlock_t lock;
--} __attribute__((preserve_access_index));
--
--struct rq___new {
--	raw_spinlock_t __lock;
--} __attribute__((preserve_access_index));
--
--static void collect_zone_lock(void)
--{
--	__u64 nr_zones, zone_off;
--	__u64 lock_addr, lock_off;
--	__u32 lock_flag = LOCK_CLASS_ZONE_LOCK;
--
--	zone_off = offsetof(struct pglist_data, node_zones);
--	lock_off = offsetof(struct zone, lock);
--
--	if (contig_page_data_addr) {
--		struct pglist_data *contig_page_data;
--
--		contig_page_data = (void *)(long)contig_page_data_addr;
--		nr_zones = BPF_CORE_READ(contig_page_data, nr_zones);
--
--		for (int i = 0; i < MAX_ZONES; i++) {
--			__u64 zone_addr;
--
--			if (i >= nr_zones)
--				break;
--
--			zone_addr = contig_page_data_addr + (sizeof_zone * i) + zone_off;
--			lock_addr = zone_addr + lock_off;
--
--			bpf_map_update_elem(&lock_syms, &lock_addr, &lock_flag, BPF_ANY);
--		}
--	} else if (nr_nodes > 0) {
--		struct pglist_data **node_data = (void *)(long)node_data_addr;
--
--		for (int i = 0; i < nr_nodes; i++) {
--			struct pglist_data *pgdat = NULL;
--			int err;
--
--			err = bpf_core_read(&pgdat, sizeof(pgdat), &node_data[i]);
--			if (err < 0 || pgdat == NULL)
--				break;
--
--			nr_zones = BPF_CORE_READ(pgdat, nr_zones);
--			for (int k = 0; k < MAX_ZONES; k++) {
--				__u64 zone_addr;
--
--				if (k >= nr_zones)
--					break;
--
--				zone_addr = (__u64)(void *)pgdat + (sizeof_zone * k) + zone_off;
--				lock_addr = zone_addr + lock_off;
--
--				bpf_map_update_elem(&lock_syms, &lock_addr, &lock_flag, BPF_ANY);
--			}
--		}
--	}
--}
--
- SEC("raw_tp/bpf_test_finish")
- int BPF_PROG(collect_lock_syms)
- {
--	__u64 lock_addr, lock_off;
--	__u32 lock_flag;
--
--	if (bpf_core_field_exists(struct rq___new, __lock))
--		lock_off = offsetof(struct rq___new, __lock);
--	else
--		lock_off = offsetof(struct rq___old, lock);
--
--	for (int i = 0; i < MAX_CPUS; i++) {
--		struct rq *rq = bpf_per_cpu_ptr(&runqueues, i);
--
--		if (rq == NULL)
--			break;
--
--		lock_addr = (__u64)(void *)rq + lock_off;
--		lock_flag = LOCK_CLASS_RQLOCK;
--		bpf_map_update_elem(&lock_syms, &lock_addr, &lock_flag, BPF_ANY);
--	}
--
--	collect_zone_lock();
--
--	return 0;
-+	return do_collect_lock_syms(&lock_syms, contig_page_data_addr,
-+				    node_data_addr, nr_nodes, sizeof_zone);
- }
- 
- SEC("raw_tp/bpf_test_finish")
-@@ -1010,43 +814,10 @@ int BPF_PROG(end_timestamp)
- 	return 0;
- }
- 
--/*
-- * bpf_iter__kmem_cache added recently so old kernels don't have it in the
-- * vmlinux.h.  But we cannot add it here since it will cause a compiler error
-- * due to redefinition of the struct on later kernels.
-- *
-- * So it uses a CO-RE trick to access the member only if it has the type.
-- * This will support both old and new kernels without compiler errors.
-- */
--struct bpf_iter__kmem_cache___new {
--	struct kmem_cache *s;
--} __attribute__((preserve_access_index));
--
- SEC("iter/kmem_cache")
- int slab_cache_iter(void *ctx)
- {
--	struct kmem_cache *s = NULL;
--	struct slab_cache_data d;
--	const char *nameptr;
--
--	if (bpf_core_type_exists(struct bpf_iter__kmem_cache)) {
--		struct bpf_iter__kmem_cache___new *iter = ctx;
--
--		s = iter->s;
--	}
--
--	if (s == NULL)
--		return 0;
--
--	nameptr = s->name;
--	bpf_probe_read_kernel_str(d.name, sizeof(d.name), nameptr);
--
--	d.id = ++slab_cache_id << LCB_F_SLAB_ID_SHIFT;
--	if (d.id >= LCB_F_SLAB_ID_END)
--		return 0;
--
--	bpf_map_update_elem(&slab_caches, &s, &d, BPF_NOEXIST);
--	return 0;
-+	return do_slab_cache_iter(ctx, &slab_caches, &slab_cache_id);
- }
- 
- char LICENSE[] SEC("license") = "Dual BSD/GPL";
 diff --git a/tools/perf/util/bpf_skel/lock_data.h b/tools/perf/util/bpf_skel/lock_data.h
-index 652e114e6b87..91d464ac18bd 100644
+index 91d464ac18bd..43d8f5030bc1 100644
 --- a/tools/perf/util/bpf_skel/lock_data.h
 +++ b/tools/perf/util/bpf_skel/lock_data.h
-@@ -45,6 +45,14 @@ struct contention_task_data {
- #define LCB_F_SLAB_ID_END	(1U << 26)
- #define LCB_F_SLAB_ID_MASK	0x03FF0000U
+@@ -104,11 +104,24 @@ extern struct rq runqueues __ksym __weak;
+ # define __has_builtin(x) 0
+ #endif
  
-+/* lock contention flags from include/trace/events/lock.h */
-+#define LCB_F_SPIN	(1U << 0)
-+#define LCB_F_READ	(1U << 1)
-+#define LCB_F_WRITE	(1U << 2)
-+#define LCB_F_RT	(1U << 3)
-+#define LCB_F_PERCPU	(1U << 4)
-+#define LCB_F_MUTEX	(1U << 5)
-+
- #define LCB_F_TYPE_MAX		(1U << 7)
- #define LCB_F_TYPE_MASK		0x0000007FU
- 
-@@ -76,4 +84,299 @@ struct slab_cache_data {
- 	char name[SLAB_NAME_MAX];
- };
- 
-+/*
-+ * Common BPF CO-RE structures and helper functions shared between
-+ * lock_contention.bpf.c and sample_filter.bpf.c. Guarded by __BPF__
-+ * because lock_data.h is also included by userspace code.
-+ */
-+#ifdef __BPF__
-+
-+/* for collect_lock_syms(). 4096 was rejected by the verifier */
-+#define MAX_CPUS  1024
-+
-+/* for collect_zone_lock(). It should be more than the actual zones. */
-+#define MAX_ZONES  10
-+
-+extern struct kmem_cache *bpf_get_kmem_cache(u64 addr) __ksym __weak;
-+extern struct rq runqueues __ksym __weak;
-+
-+#ifndef __has_builtin
-+# define __has_builtin(x) 0
-+#endif
-+
-+struct rw_semaphore___old {
-+	struct task_struct *owner;
-+} __attribute__((preserve_access_index));
-+
-+struct rw_semaphore___new {
++struct mutex___non_rt {
 +	atomic_long_t owner;
 +} __attribute__((preserve_access_index));
 +
-+struct mm_struct___old {
-+	struct rw_semaphore mmap_sem;
++struct rt_mutex_base___new {
++	struct task_struct *owner;
 +} __attribute__((preserve_access_index));
 +
-+struct mm_struct___new {
-+	struct rw_semaphore mmap_lock;
++struct rt_mutex___old {
++	struct task_struct *owner;
 +} __attribute__((preserve_access_index));
 +
-+struct rq___old {
-+	raw_spinlock_t lock;
-+} __attribute__((preserve_access_index));
+ struct rw_semaphore___old {
+ 	struct task_struct *owner;
+ } __attribute__((preserve_access_index));
+ 
+ struct rw_semaphore___new {
++	atomic_long_t count;
+ 	atomic_long_t owner;
+ } __attribute__((preserve_access_index));
+ 
+@@ -146,9 +159,25 @@ static __always_inline struct task_struct *get_lock_owner(__u64 lock, __u32 flag
+ 	__u64 owner = 0;
+ 
+ 	if (flags & LCB_F_MUTEX) {
+-		struct mutex *mutex = (void *)lock;
+-
+-		owner = BPF_CORE_READ(mutex, owner.counter);
++		struct mutex___non_rt *mutex = (void *)lock;
 +
-+struct rq___new {
-+	raw_spinlock_t __lock;
-+} __attribute__((preserve_access_index));
++		if (bpf_core_field_exists(mutex->owner.counter)) {
++			owner = BPF_CORE_READ(mutex, owner.counter);
++			if (owner & 0x4UL)
++				return NULL;
++		} else if (bpf_core_type_exists(struct rt_mutex_base___new)) {
++			struct rt_mutex_base___new *rtm = (void *)lock;
 +
-+/*
-+ * bpf_iter__kmem_cache added recently so old kernels don't have it in the
-+ * vmlinux.h.  But we cannot add it here since it will cause a compiler error
-+ * due to redefinition of the struct on later kernels.
-+ *
-+ * So it uses a CO-RE trick to access the member only if it has the type.
-+ * This will support both old and new kernels without compiler errors.
-+ */
-+struct bpf_iter__kmem_cache___new {
-+	struct kmem_cache *s;
-+} __attribute__((preserve_access_index));
++			owner = (__u64)BPF_CORE_READ(rtm, owner);
++			return (void *)(owner & ~1UL);
++		} else {
++			struct rt_mutex___old *rtm = (void *)lock;
 +
-+static __always_inline struct task_struct *get_lock_owner(__u64 lock, __u32 flags)
-+{
-+	struct task_struct *task;
-+	__u64 owner = 0;
-+
-+	if (flags & LCB_F_MUTEX) {
-+		struct mutex *mutex = (void *)lock;
-+
-+		owner = BPF_CORE_READ(mutex, owner.counter);
-+	} else if (flags == LCB_F_READ || flags == LCB_F_WRITE) {
-+	/*
-+	 * Support for the BPF_TYPE_MATCHES argument to the
-+	 * __builtin_preserve_type_info builtin was added at some point during
-+	 * development of clang 15 and it's what is needed for
-+	 * bpf_core_type_matches.
-+	 */
-+#if __has_builtin(__builtin_preserve_type_info) && __clang_major__ >= 15
-+		if (bpf_core_type_matches(struct rw_semaphore___old)) {
-+			struct rw_semaphore___old *rwsem = (void *)lock;
-+
-+			owner = (unsigned long)BPF_CORE_READ(rwsem, owner);
-+		} else if (bpf_core_type_matches(struct rw_semaphore___new)) {
-+			struct rw_semaphore___new *rwsem = (void *)lock;
-+
-+			owner = BPF_CORE_READ(rwsem, owner.counter);
-+		}
-+#else
-+		/* assume new struct */
-+		struct rw_semaphore *rwsem = (void *)lock;
-+
-+		owner = BPF_CORE_READ(rwsem, owner.counter);
-+#endif
-+	}
-+
-+	if (!owner)
-+		return NULL;
-+
-+	task = (void *)(owner & ~7UL);
-+	return task;
-+}
-+
-+static __always_inline __u64 get_current_mmap_lock(__u64 curr)
-+{
-+	struct task_struct *task = (void *)curr;
-+	struct mm_struct___new *mm_new = NULL;
-+	struct mm_struct___old *mm_old = NULL;
-+	__u64 mm;
-+
-+	if (!curr)
-+		return 0;
-+
-+	mm = (__u64)BPF_CORE_READ(task, mm);
-+	if (!mm)
-+		return 0;
-+
-+	if (bpf_core_field_exists(mm_new->mmap_lock))
-+		return mm + bpf_core_field_offset(mm_new->mmap_lock);
-+
-+	if (bpf_core_field_exists(mm_old->mmap_sem))
-+		return mm + bpf_core_field_offset(mm_old->mmap_sem);
-+
-+	return 0;
-+}
-+
-+static __always_inline __u64 get_current_siglock(__u64 curr)
-+{
-+	struct task_struct *task = (void *)curr;
-+	struct sighand_struct *sighand = NULL;
-+	__u64 sh;
-+
-+	if (!curr)
-+		return 0;
-+
-+	sh = (__u64)BPF_CORE_READ(task, sighand);
-+	if (!sh)
-+		return 0;
-+
-+	return sh + bpf_core_field_offset(sighand->siglock);
-+}
-+
-+/*
-+ * Read the 1st function argument (`lock` / `sem` / `ssp`) as a 64-bit scalar.
-+ *
-+ * Using `bpf_get_func_arg()` rather than reading `ctx[0]` directly ensures the
-+ * BPF verifier tracks the address as a `SCALAR_VALUE` instead of a typed
-+ * `PTR_TO_BTF_ID`, which is required when passing the address to kfuncs such
-+ * as `bpf_get_kmem_cache(u64 addr)`.
-+ */
-+static __always_inline __u64 get_lock_addr(void *ctx)
-+{
-+	__u64 lock_addr = 0;
-+
-+	bpf_get_func_arg(ctx, 0, &lock_addr);
-+	return lock_addr;
-+}
-+
-+static __always_inline __u32 check_lock_type(__u64 lock, __u32 flags)
-+{
-+	__u64 curr;
-+
-+	switch (flags) {
-+	case LCB_F_READ:  /* rwsem */
-+	case LCB_F_WRITE:
-+		curr = bpf_get_current_task();
-+		if (get_current_mmap_lock(curr) == lock)
-+			return LCD_F_MMAP_LOCK;
-+		break;
-+	case LCB_F_SPIN:  /* spinlock */
-+		curr = bpf_get_current_task();
-+		if (get_current_siglock(curr) == lock)
-+			return LCD_F_SIGHAND_LOCK;
-+		break;
-+	default:
-+		break;
-+	}
-+	return 0;
-+}
-+
-+static __always_inline void do_collect_zone_lock(void *lock_syms_map,
-+						 __u64 contig_page_data_addr,
-+						 __u64 node_data_addr,
-+						 int nr_nodes,
-+						 int sizeof_zone)
-+{
-+	__u64 nr_zones, zone_off;
-+	__u64 lock_addr, lock_off;
-+	__u32 lock_flag = LOCK_CLASS_ZONE_LOCK;
-+
-+	zone_off = offsetof(struct pglist_data, node_zones);
-+	lock_off = offsetof(struct zone, lock);
-+
-+	if (contig_page_data_addr) {
-+		struct pglist_data *contig_page_data;
-+
-+		contig_page_data = (void *)(long)contig_page_data_addr;
-+		nr_zones = BPF_CORE_READ(contig_page_data, nr_zones);
-+
-+		for (int i = 0; i < MAX_ZONES; i++) {
-+			__u64 zone_addr;
-+
-+			if (i >= nr_zones)
-+				break;
-+
-+			zone_addr = contig_page_data_addr + (sizeof_zone * i) + zone_off;
-+			lock_addr = zone_addr + lock_off;
-+
-+			bpf_map_update_elem(lock_syms_map, &lock_addr, &lock_flag, BPF_ANY);
-+		}
-+	} else if (node_data_addr && nr_nodes > 0) {
-+		struct pglist_data **node_data = (void *)(long)node_data_addr;
-+
-+		for (int i = 0; i < nr_nodes; i++) {
-+			struct pglist_data *pgdat = NULL;
-+			int err;
-+
-+			err = bpf_core_read(&pgdat, sizeof(pgdat), &node_data[i]);
-+			if (err < 0)
-+				break;
-+			if (pgdat == NULL)
-+				continue;
-+
-+			nr_zones = BPF_CORE_READ(pgdat, nr_zones);
-+			for (int k = 0; k < MAX_ZONES; k++) {
-+				__u64 zone_addr;
-+
-+				if (k >= nr_zones)
-+					break;
-+
-+				zone_addr = (__u64)(void *)pgdat + (sizeof_zone * k) + zone_off;
-+				lock_addr = zone_addr + lock_off;
-+
-+				bpf_map_update_elem(lock_syms_map, &lock_addr, &lock_flag, BPF_ANY);
++			if (bpf_core_field_exists(rtm->owner)) {
++				owner = (__u64)BPF_CORE_READ(rtm, owner);
++				return (void *)(owner & ~1UL);
 +			}
 +		}
-+	}
-+}
+ 	} else if (flags == LCB_F_READ || flags == LCB_F_WRITE) {
+ 	/*
+ 	 * Support for the BPF_TYPE_MATCHES argument to the
+@@ -158,20 +187,35 @@ static __always_inline struct task_struct *get_lock_owner(__u64 lock, __u32 flag
+ 	 */
+ #if __has_builtin(__builtin_preserve_type_info) && __clang_major__ >= 15
+ 		if (bpf_core_type_matches(struct rw_semaphore___old)) {
+-			struct rw_semaphore___old *rwsem = (void *)lock;
++			struct rw_semaphore___old *old = (void *)lock;
+ 
+-			owner = (unsigned long)BPF_CORE_READ(rwsem, owner);
++			owner = (unsigned long)BPF_CORE_READ(old, owner);
+ 		} else if (bpf_core_type_matches(struct rw_semaphore___new)) {
+-			struct rw_semaphore___new *rwsem = (void *)lock;
++			struct rw_semaphore___new *new = (void *)lock;
+ 
+-			owner = BPF_CORE_READ(rwsem, owner.counter);
++			owner = BPF_CORE_READ(new, owner.counter);
+ 		}
+ #else
+ 		/* assume new struct */
+-		struct rw_semaphore *rwsem = (void *)lock;
++		struct rw_semaphore___new *new = (void *)lock;
+ 
+-		owner = BPF_CORE_READ(rwsem, owner.counter);
++		if (bpf_core_field_exists(new->owner.counter))
++			owner = BPF_CORE_READ(new, owner.counter);
+ #endif
++	} else if (flags == LCB_F_RT) {
++		if (bpf_core_type_exists(struct rt_mutex_base___new)) {
++			struct rt_mutex_base___new *rtm = (void *)lock;
 +
-+static __always_inline int do_collect_lock_syms(void *lock_syms_map,
-+						__u64 contig_page_data_addr,
-+						__u64 node_data_addr,
-+						int nr_nodes,
-+						int sizeof_zone)
-+{
-+	__u64 lock_addr, lock_off;
-+	__u32 lock_flag;
++			owner = (__u64)BPF_CORE_READ(rtm, owner);
++			return (void *)(owner & ~1UL);
++		} else {
++			struct rt_mutex___old *rtm = (void *)lock;
 +
-+	if (bpf_core_field_exists(struct rq___new, __lock))
-+		lock_off = offsetof(struct rq___new, __lock);
-+	else
-+		lock_off = offsetof(struct rq___old, lock);
-+
-+	if (&runqueues) {
-+		for (int i = 0; i < MAX_CPUS; i++) {
-+			struct rq *rq = bpf_per_cpu_ptr(&runqueues, i);
-+
-+			if (rq == NULL)
-+				break;
-+
-+			lock_addr = (__u64)(void *)rq + lock_off;
-+			lock_flag = LOCK_CLASS_RQLOCK;
-+			bpf_map_update_elem(lock_syms_map, &lock_addr, &lock_flag, BPF_ANY);
++			if (bpf_core_field_exists(rtm->owner)) {
++				owner = (__u64)BPF_CORE_READ(rtm, owner);
++				return (void *)(owner & ~1UL);
++			}
 +		}
-+	}
-+
-+	do_collect_zone_lock(lock_syms_map, contig_page_data_addr,
-+			     node_data_addr, nr_nodes, sizeof_zone);
-+
-+	return 0;
-+}
-+
-+static __always_inline int do_slab_cache_iter(void *ctx, void *slab_caches_map,
-+					      __u32 *slab_cache_id)
-+{
-+	struct kmem_cache *s = NULL;
-+	struct slab_cache_data d = {};
-+	const char *nameptr;
-+
-+	if (bpf_core_type_exists(struct bpf_iter__kmem_cache)) {
-+		struct bpf_iter__kmem_cache___new *iter = ctx;
-+
-+		s = iter->s;
-+	}
-+
-+	if (s == NULL)
-+		return 0;
-+
-+	nameptr = s->name;
-+	bpf_probe_read_kernel_str(d.name, sizeof(d.name), nameptr);
-+
-+	d.id = ++(*slab_cache_id) << LCB_F_SLAB_ID_SHIFT;
-+	if (d.id >= LCB_F_SLAB_ID_END)
-+		return 0;
-+
-+	bpf_map_update_elem(slab_caches_map, &s, &d, BPF_NOEXIST);
-+	return 0;
-+}
-+
-+#endif /* __BPF__ */
-+
- #endif /* UTIL_BPF_SKEL_LOCK_DATA_H */
-diff --git a/tools/perf/util/lock-contention.c b/tools/perf/util/lock-contention.c
-index 119a7206f3cd..f6e68d740860 100644
---- a/tools/perf/util/lock-contention.c
-+++ b/tools/perf/util/lock-contention.c
-@@ -6,6 +6,7 @@
- #include "symbol.h"
+ 	}
  
- #include <limits.h>
-+#include <stdlib.h>
- #include <string.h>
+ 	if (!owner)
+diff --git a/tools/perf/util/bpf_skel/vmlinux/vmlinux.h b/tools/perf/util/bpf_skel/vmlinux/vmlinux.h
+index 94e42b022ab1..b75ddc6846bb 100644
+--- a/tools/perf/util/bpf_skel/vmlinux/vmlinux.h
++++ b/tools/perf/util/bpf_skel/vmlinux/vmlinux.h
+@@ -76,6 +76,7 @@ struct signal_struct {
+ } __attribute__((preserve_access_index));
  
- #include <linux/hash.h>
-@@ -22,6 +23,24 @@ struct callstack_filter {
- static LIST_HEAD(callstack_filters);
- struct hlist_head *lockhash_table;
+ struct rw_semaphore {
++	atomic_long_t count;
+ 	atomic_long_t owner;
+ } __attribute__((preserve_access_index));
  
-+const struct perf_lock_type lock_type_table[] = {
-+	{ 0,				"semaphore",	"semaphore" },
-+	{ LCB_F_SPIN,			"spinlock",	"spinlock" },
-+	{ LCB_F_SPIN | LCB_F_READ,	"rwlock:R",	"rwlock" },
-+	{ LCB_F_SPIN | LCB_F_WRITE,	"rwlock:W",	"rwlock" },
-+	{ LCB_F_READ,			"rwsem:R",	"rwsem" },
-+	{ LCB_F_WRITE,			"rwsem:W",	"rwsem" },
-+	{ LCB_F_RT,			"rt-mutex",	"rt-mutex" },
-+	{ LCB_F_RT | LCB_F_READ,	"rwlock-rt:R",	"rwlock-rt" },
-+	{ LCB_F_RT | LCB_F_WRITE,	"rwlock-rt:W",	"rwlock-rt" },
-+	{ LCB_F_PERCPU | LCB_F_READ,	"pcpu-sem:R",	"percpu-rwsem" },
-+	{ LCB_F_PERCPU | LCB_F_WRITE,	"pcpu-sem:W",	"percpu-rwsem" },
-+	{ LCB_F_MUTEX,			"mutex",	"mutex" },
-+	{ LCB_F_MUTEX | LCB_F_SPIN,	"mutex",	"mutex" },
-+	/* alias for optimistic spinning only */
-+	{ LCB_F_MUTEX | LCB_F_SPIN,	"mutex:spin",	"mutex-spin" },
-+};
-+
- int parse_call_stack(const struct option *opt __maybe_unused, const char *str,
- 		     int unset __maybe_unused)
- {
-diff --git a/tools/perf/util/lock-contention.h b/tools/perf/util/lock-contention.h
-index 59c94190b092..68e9bd77e8a9 100644
---- a/tools/perf/util/lock-contention.h
-+++ b/tools/perf/util/lock-contention.h
-@@ -129,6 +129,19 @@ struct thread_stat {
- #define LCB_F_PERCPU	(1U << 4)
- #define LCB_F_MUTEX	(1U << 5)
+@@ -83,6 +84,10 @@ struct mutex {
+ 	atomic_long_t owner;
+ } __attribute__((preserve_access_index));
  
-+struct perf_lock_type {
-+	unsigned int flags;
-+	/*
-+	 * Name of the lock flags (access), with delimiter ':'.
-+	 * For example, rwsem:R or rwsem:W.
-+	 */
-+	const char *flags_name;
-+	/* Name of the lock (type), for example, rwlock or rwsem. */
-+	const char *lock_name;
-+};
++struct rt_mutex_base {
++	struct task_struct *owner;
++} __attribute__((preserve_access_index));
 +
-+extern const struct perf_lock_type lock_type_table[14];
-+
- struct evlist;
- struct machine;
- struct target;
+ struct kernfs_node {
+ 	u64 id;
+ } __attribute__((preserve_access_index));
 -- 
 2.56.0.307.g5fe7bd680c-goog
 
