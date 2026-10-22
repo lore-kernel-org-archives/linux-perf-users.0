@@ -1,58 +1,57 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792700650;
-	b=zpRIHLf+Kf3MOTkPGMc8cdzFNOJcipsUgluKyw1D30q8KncV2w1Z6xdLWnoWUdkgVkpi
-	 slNCa1jy+bfLfTFTTny54EdZj4bb3qmRXTppA6p2N38pXItWpDs2ddE83nliRrd53pUWt
-	 PEm8BnlXlBzKYP6G2RhRD3i4eDOKxhmGcQmdxapCzXahFdwZEAewWeCTpIH+gNHkNRhh3
-	 NJ4N7B4l494umgpsFM2+xdDYEpD3JCijAN9iEp22kxeU1Cwq+1jXKl5VhxxUWhMPv6Wx+
-	 lBj3saC4rc1fCi0+wB+E+ekdv1DruXr+dhacPm2RJ4t86tEhsqusmLrb1MS6ub13U8g==
+	t=1792700676;
+	b=QefNHLeespqLjMtX9MxjhpvbN4MuoZvx+zW9kHFT8+qMapjtBv3KZl7k5rsBN+qCRUyt
+	 9iPlIx7tDkA7vgeQhxb1d1auwu0IwiCa37czYG9xLq19gCNxDECVTi1RDMyJSxBr2FmzY
+	 89ElPRGnc0xFloo2ZjCeKt8vv2gh2zQk4ByrAdTr6RITVdo/4Y2gjTKNXHLhTkBRYTOad
+	 cyGo4mVW6eFxfg/N6rJVIceR2NlEGS96QIny4oHR+WgfS+RU7grB+2gks5armkTgqS5aQ
+	 uNW6OBmnwHtrAPvJZP6P4Nu6GYvrxH5RL5M8w87CAAy+SOD1UuwjBXTSrW1Glkt7v7g==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792700650;
+	a=rsa-sha256; c=relaxed/relaxed; t=1792700676;
 	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
 	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=ILZWyPMy7YeAtx299nxcKLMcvVtqvrtSaXbsooCBv0Y=;
-	b=pSDsVhirY5rLismlqFfXrqvGKrlywZHqYAGR0UPmZMJn6nbtOwOJNYbfVwD82ufCx5fd
-	 ye7AGx+E3zrr+Nc2jR6dixvvXXbUtukr/NiulfxezNb8cmqLf1eyqalp9DMh4wdxfJzOZ
-	 BO7qCPqC8aHB3zZHFfegmFht+f+AyAqfIThkfMamTAgMDXBUHWXq4NE8VQn8zDUUJpi6+
-	 vIq9g4JgLhsuF/Rbau0HdPdUXIB2f2RH93COI/7iaDw0IkbaOyJD4BZCjzDCIkQWqUpPD
-	 pVWVji8HP9fhAdR8h+Rhh2s9pZ5FR4jHY7FmnJ0PxlNu9uy1ILBQfUuRgZD2P8T+5YA==
+	bh=l3S112asDUN/QGwUY4Glzpg/ceiRTBTTSiVR2Jq7mGI=;
+	b=cnJM6t7isIgn6H+WNsYVU2D4nyBw2tB/TG8Cu9C6W4RT4yHCPPQMFyxshgiPa8CFpUWp
+	 dQTwZyb+Ur+O8GtYoSoVtR3mq29NwIvW6O/4gNmn8eSSA6zZ7VyMDg77i700CE9eqHamd
+	 iROO/qY0uQ7h+1tLqSrow34YdpJ9P2g2QZOIVeuGU93b7i0vPnvgfd4m+h4rIAKmQlmDX
+	 11v0peTPGljIieNJxp0dm/s0UO1pMWmVy4cd9S3bMiGSoGV+UqOUwei++yfHv2hRhBK5r
+	 m4vh43ztOClsKhQgEHZcKpg6WoLIaKpG26Y1SSCVL5toOkvHqCqSEq5yU3HtOLXBaBQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Ypiu8kSR;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=WUxFskYh;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 369FF606A31A
-	for <linux-perf-users@vger.kernel.org>; Thu, 22 Oct 2026 20:24:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8A5C606A319
+	for <linux-perf-users@vger.kernel.org>; Thu, 22 Oct 2026 20:24:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Ypiu8kSR
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CEFFF1F01825;
-	Thu, 22 Oct 2026 20:24:09 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=WUxFskYh
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 615D41F01825;
+	Thu, 22 Oct 2026 20:24:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1792700650;
-	bh=ILZWyPMy7YeAtx299nxcKLMcvVtqvrtSaXbsooCBv0Y=;
+	s=k20260515; t=1792700675;
+	bh=l3S112asDUN/QGwUY4Glzpg/ceiRTBTTSiVR2Jq7mGI=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=Ypiu8kSRKyNKCDvAA55y4kBl9wYU09ZL5yn+9Ip1uAgR9Hg2a7CpmXRfLy8Ow6L1m
-	 khzkFYX3xBQ+xHZbKE4VkpBjqONduZAW4yZ9jSwFp35ulp5RH9SuzBTrJF2P+Eo1h4
-	 f2VpnfhuaEqtvQKAoCWeTW8Yh6hoONcFNV/PwtOyvsrV7ASVBTT1bKaVsze9xNWB+p
-	 B0uk+08bTkO2OV/X3gk+OS4p60LrKScRJ2qH56uUUsYkyMpo0sxER889QE2hM5Bqxe
-	 rm8icpI0QtP5XVsAu/M2eoMvU2XKohy/H/LAOCAqf6Xk3nODaurc3St7WYD1QxLfav
-	 34FpefiPqfYcw==
-Message-ID: <sashiko-outbox-181993@kernel.org>
+	b=WUxFskYh4ChnsQ8xr657uYqnBhhkgVW+Se+gtZrYvM4K40m5VYR0PSn83Dn/StCRi
+	 Hz4LP5+1zxh4a//f4gGiImjWAyyUAUTI8F7IY+rL0DIlFeGx8vraFyzHhFQ/ofrJnQ
+	 qj0GEi5/4NyTUJThDwuP5H89auBhIChedPtDwfAO1Q6JKY6MqR7nGy0IgzldU90V7n
+	 45iYXylSnhx71lX8/lF175G+CxZ7f7Qcn+0J3LQBPmAtJ9N2LqfWgMhYGa5HbiO6m6
+	 FlOvKEv3ZUXBOC9sZwigYdPyFbY7uQJQmSf6aTBHODS/Gab1WCqBUKKeuvy5FECbfb
+	 QloUuGgjjYihg==
+Message-ID: <sashiko-outbox-181994@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v8 03/19] tools headers: Synchronize
- linux/compiler-context-analysis.h with the kernel sources
+Subject: Re: [PATCH v8 13/19] perf dso: Expand context analysis annotations
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Ian Rogers" <irogers@google.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20261022201453.1717523-4-irogers@google.com>
+In-Reply-To: <20261022201453.1717523-14-irogers@google.com>
 References: <20261021223905.715051-1-irogers@google.com>
  <20261022201453.1717523-1-irogers@google.com>
- <20261022201453.1717523-4-irogers@google.com>
+ <20261022201453.1717523-14-irogers@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Thu, 22 Oct 2026 20:24:09 +0000
+Date: Thu, 22 Oct 2026 20:24:35 +0000
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -62,10 +61,11 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 
-> Replace the no-op stub tools/include/linux/compiler-context-analysis.h
-> with the full kernel implementation from
-> include/linux/compiler-context-analysis.h and add it to
-> tools/perf/check-headers.sh so future changes are tracked.
+> Annotate struct dsos fields with __guarded_by(&lock), annotate dso__data_=
+open and
+> fd_limit in util/dso.c with __guarded_by(&dso__data_open_lock), and
+> tighten __dsos__findnew_id() and __dsos__addnew_id() from shared to
+> exclusive lock requirements.
 >=20
 > Signed-off-by: Ian Rogers <irogers@google.com>
 
@@ -73,5 +73,5 @@ Sashiko has reviewed this patch and found no issues.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261022201453.1717=
-523-1-irogers@google.com?part=3D3
+523-1-irogers@google.com?part=3D13
 
