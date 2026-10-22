@@ -1,58 +1,58 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792700687;
-	b=wezDXW8BNy1KOoE/LJ/PcWib6Xu3CLNkpWpRJD6iVajMOGOMUJ0WJAv32/vJvBnWwxKd
-	 1MXBc7oyjr37VBHeQSve5M6eFxFZz1ViI/3a7BhM0igEX+qb9FLtGsq+2qQ72EYBIFiny
-	 XyAc8LOEtpPA7j4o8HkC8D8Y4t9+CP00rv5N9TvI89Kcb5aI+z9XEcOUewKv+MncSlTWV
-	 cMYxyATUk70FzWF4s83P06/nvLf82iz9NG5BEeFm4R66Q7s2gpBSTOYOGGUlfJ2IREbd8
-	 7W4bJPGShDzI3pbX0oACpGLMxvRU5yoXO90PE1yBqCcENbmw7bqnSy/cNz0DhEU2PPg==
+	t=1792700718;
+	b=qWcnRSImKKrfh0Edg0MU1dObNS+CbYkFrXBhZ0te+zwRYpDO2EH3hy6Gl7pHf557R0RY
+	 uDSSABVWoPfwrXK3j/Kngg9FYVpKJr55IW5Y6sbheUZ3lStUOkVurTPu1//igZtv4R5ic
+	 nmC1SfP8phirtWhbVs+/xfCpikTuadIU05GkIRlrniyGN59BNzYiFRKZfLsIScdu1ZHRL
+	 r+/y9uHk/Jk/3VfK4KARhyvdGEDp964Hgeo2zsm6/ZQ0Z8BnuUocMf1PTvZ8HQOecW8JH
+	 wKNoXvoQ+JC8VWvs92U0lqIq/4j3sb3PgIx38Z6ewEiapeX6CMvn+H9Jr9vchFiTYyQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792700687;
+	a=rsa-sha256; c=relaxed/relaxed; t=1792700718;
 	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
 	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=cJdP7JiqLRQdpisMYozkKNOAHnZcvA6P8t6XW9fryvY=;
-	b=ylDI7b2MIhvyoUwTQxUfxD/xbNhV92/m7h8L8SMUFiwmqtaYk3aCf+C+XWwvVE/FWh0S
-	 53O3g9F/sj2UMHhQDsnDERANseYjT/EfCV8gWMEyL+s3lkITvpUfvJ/HwjYLBVq80TyNa
-	 aL7kLlkdFuRmGLvPRWbmFMGy48OcazW62gzOny1q3R1OET6jo13a0Q8nKnlA5LoC8P9JG
-	 Q2Zm2DRZJNgkRrbe+OoRaslEYGIG6xxtY1U7cIc2ggV+T2Z6kOQANr8Tj4SE0V1o4Ofz2
-	 439ByY48jaNp8Rwt5yueehREwp2T21S4SzN5sW9EhNXpccQNCHct7v51BDPPEw9xDKA==
+	bh=6Sbsyc7DsEG4us9hJVxcRqvoD2ndc+1MMdWinIpHiNo=;
+	b=Hl15IdCn3Pt2VmLPRuz++YUDOP1ApLW1Z8aybHspX/nMZFLjfUFPgVh9mgd+qR49HtYP
+	 ATY+UTiWr8Hp55AQJDqiwi243j2cB5xO8zqZBgxE2/KE2Pkt5gyTpZYOgxIArTMryiCRT
+	 9Ifh4nMbCn7E8dQGOlMTd6vlg7dZQexbvSL/VZ5P9w1yFZA+dYXxBDDNILigRb8pdazp8
+	 mCT1mOU1ho1j6viCc+rrDWfIJSPXks5sBDHbT2bw2gXPzWJ3kvXvJqVNTvEjkjKHyu8Tw
+	 jG4hcbINY0yAUBGPOoWtaE7Udwacuwvtk3KU1k9KpKQjKLxwtHoN9mDS8M71QRs1QkA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=cctUzYSr;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=FUV+RefF;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4764D606A31B
-	for <linux-perf-users@vger.kernel.org>; Thu, 22 Oct 2026 20:24:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42474606A31B
+	for <linux-perf-users@vger.kernel.org>; Thu, 22 Oct 2026 20:25:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=cctUzYSr
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EEBF91F01825;
-	Thu, 22 Oct 2026 20:24:46 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=FUV+RefF
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CF9D81F031E1;
+	Thu, 22 Oct 2026 20:25:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1792700687;
-	bh=cJdP7JiqLRQdpisMYozkKNOAHnZcvA6P8t6XW9fryvY=;
+	s=k20260515; t=1792700718;
+	bh=6Sbsyc7DsEG4us9hJVxcRqvoD2ndc+1MMdWinIpHiNo=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=cctUzYSr0NBLVJzScpSFsAmUBy49E2hxs6aFqNdCQlryObXHnlKqcnO+DruGDs5pd
-	 JJW4FNW3eFptX4HHumv2YknaOFSZf8aSbpInQJdzsAe/cShpiTJAb1cMiZ66DvASl5
-	 ZF6xI9t1yk3lNCedoRRAGUKFmGTgga7vpGf4F+GUh4qHnkP+cUKJrYjf1LuDcE7EtZ
-	 14Y1w5BM/mqThBN71GQ5BcKYuCgrwgsP58IwebPi8dKaQFwrpVH7z52HstuxxvCUlW
-	 BtFcDD68iWB6lqcwT8zZOYh7zrMd2b+lPdeGTjZqxpuL6Fkqgs4VS2l79Af+mwNfM9
-	 qziY2Ikkmw/IQ==
-Message-ID: <sashiko-outbox-181996@kernel.org>
+	b=FUV+RefFrV9Lticsu4ysUuSHa851XbjrtyN1v1FFjjm2nOz1iZgnm3GEzG7o5Ky0i
+	 v/6oWLZoCND2fH882GXrTDp+w6JQqB+ukvXS8YCkSIYwQ8DqoyC04NfONCOOGJLPjV
+	 8wghlOPF4dcYfsGlIfsu4dr3FSfyi+Gj/zuM19WVRh/Ay7alah4dQguDG5M4gn3C9a
+	 cuXlEqHQxXiKst9WjbqMKIVSS+xBwH2oAgm8zjc9RC+oWudBhjvAJO/7ktG+ZMigro
+	 e6Fbx/qQ09q6TNr826oKRqOGGTJbmK3mO89Iv4RTZ+drrBvvGpNQ1ulHaAt1rgsCTp
+	 2iazmo2n8fuBA==
+Message-ID: <sashiko-outbox-181997@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v8 02/19] tools headers compiler: Synchronize
- compiler_types.h with the kernel sources
+Subject: Re: [PATCH v8 14/19] perf thread: Expand context analysis
+ annotations to threads and namespaces_lock
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Ian Rogers" <irogers@google.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20261022201453.1717523-3-irogers@google.com>
+In-Reply-To: <20261022201453.1717523-15-irogers@google.com>
 References: <20261021223905.715051-1-irogers@google.com>
  <20261022201453.1717523-1-irogers@google.com>
- <20261022201453.1717523-3-irogers@google.com>
+ <20261022201453.1717523-15-irogers@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Thu, 22 Oct 2026 20:24:46 +0000
+Date: Thu, 22 Oct 2026 20:25:17 +0000
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -62,14 +62,14 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 
-> Synchronize the non-__KERNEL__ sections of
-> tools/include/linux/compiler_types.h and
-> tools/include/linux/compiler-gcc.h with the kernel sources (including
-> ___PASTE/__PASTE, BTF_TYPE_TAG, object-size helpers, asm_goto_output,
-> ASM_INPUT_*, asm_inline, __typeof_unqual__/__unqual_scalar_typeof,
-> __signed_scalar_typeof, __native_word, compiletime_assert, and the
-> __diag pragma helpers required by compiler-context-analysis.h), and
-> remove the duplicated definitions from tools/include/linux/compiler.h.
+> Annotate shard and last_match in struct threads_table_entry with
+> __guarded_by(&lock) and add __must_hold_shared()/__must_hold() to the
+> last_match helpers in util/threads.c.
+>=20
+> In util/thread.h and util/thread.c, add __returns_ctx_lock() to
+> thread__namespaces_lock() and thread__comm_lock(), annotate
+> namespaces_list and comm_list with __guarded_by(), and add
+> __must_hold_shared()/__must_hold() to the namespaces_list helpers.
 >=20
 > Signed-off-by: Ian Rogers <irogers@google.com>
 
@@ -77,5 +77,5 @@ Sashiko has reviewed this patch and found no issues.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261022201453.1717=
-523-1-irogers@google.com?part=3D2
+523-1-irogers@google.com?part=3D14
 
