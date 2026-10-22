@@ -1,74 +1,74 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.198
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.197
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792700123;
-	b=AmnZIPwtMj3iW63jKGgUPY0GvsZt5gGOQarhojX2REJ6X5eA9BT/O1zH6sij23O1ZIaZ
-	 4b8qo223OdG5atMYlkX5qKg69rlVxlcLn+encPTcVDdpRLuw+ppbn4DmMx24/9qFN2iYk
-	 jTsKh3eeL/sdBwtsf20qADC9KmxpKgalcw+53XGByLfvHIVJ1ZDPSWfuZlXKCgDKHoNSF
-	 8zC8benqwQ2kTlGZ/eXy1wZ4hl5lvO+mppIZQWpzPLgBNyW8Lmdx0uXdnUmaw5Ve6HtYH
-	 Z1+PiDLzpJnvln08yQFVZ7qKRX2OSHHhWKh9514IMNJvrVtCmu/srOsTpTbRXP0ULSA==
+	t=1792700120;
+	b=4uPMzFCVUzFBGn46Tip+Ocy6ts0aGzR6kVEGPOTu29rKATsfURrgFLZrOsGoN+7B2dSV
+	 syAxB41os7POKau2gxi0YGJHFMhYXJz4lTZ+BHdmvwSxsOy8TE/Zo3UnhEQl34S4+hHrD
+	 6jHbpSBHUyuc6xZ1aPHCZXrU9Bv2pYC2z10m6uz4jkc8lT2HOn5Uje/mXAo04gfUBFcPN
+	 4qLlK6qdIT+DJREjzLh738u0tf0rGluaZKIiOpzZZvlnLAxokPR6QY7BA7d/A9kkhZw2M
+	 xw1QBt7jZlyiMlQ/DP0giBsCp7wUln4Nw9oHIGhlANJ3YE3XFMBYO2KsaWixjN+9CTQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792700123;
+	a=rsa-sha256; c=relaxed/relaxed; t=1792700120;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Received:Date:In-Reply-To:
 	 Mime-Version:References:X-Mailer:Message-ID:Subject:From:To:Cc:
 	 Content-Type;
-	bh=Bm5F5L/Tc7r70KhD0cqJblZLBdriiRHdrl4SVSE1UvA=;
-	b=QxepvTTHrZhg2vM6fF3WdwmoaXTgirXND+nSQFFYEAAN6UqNGRvwF9pVHPORbh0yL+J+
-	 +uamzkFus4A2IeqU7q7rxB4Lw9VO1hy4xms/pAc7MHSWwTYm/CKWtLotp7XJDNcIOfq4n
-	 d5BY02C8kvSYuTlk1TZ//ipHvcZI9OQ8fTK13uP69zcIVycIbUX6rjALkNbcFT2DFlr6U
-	 0dFHAuCPrEe5XUV4vZ4UN/pWn/W79RTL3pawsO/tGI4gT1LGBbSKf3Z0xseMvMs4zFE3e
-	 vADq0qh1zzNZoGGu+eBoeX/St0s6sJjJEnJHUlpHMYv1+ID4lJhjY0uTtkNt7fap7Kw==
+	bh=6JUxMMI/25kOrfypmhpeOOpRGxtyrkB4sVFmB/HCDt8=;
+	b=hAcSNjKjOKgo0QN8gP4Y+uqVVycivzVk43AItcLZYDCW56KYRDaLPDUACCQmSbluPeLN
+	 QcO7J87kSbFyvt9321UTW6aa2LaRBUHBs5Ed3JOcUH1AG2Pt9nHvm301ltD+CiS2TcgLh
+	 Jofr4xYY8ibJ6ItjFXL82VHEy4CSayTEjSVKH3WzU4N9U9spoUg7XRr4E1amu9j7y4GNv
+	 jDjMht4aANOQnLeZzKNPZO77nTXQ8qZxLpeMP+0eGstwASzNj4fAqNL2YNAnltj6bkUJ5
+	 oFV/1jQBlJqx75oP4nSyjBsX+P/UbSk82cDr+wSNvfJ/aV2GxKBHPVoAVU9o3F506DA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=google.com;
 	spf=pass smtp.mailfrom=flex--irogers.bounces.google.com;
-	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20251104 header.b=Y1ViIcr7;
-	arc=none smtp.remote-ip=74.125.82.198
-Received: from mail-dy1-f198.google.com (mail-dy1-f198.google.com [74.125.82.198])
+	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20251104 header.b="OqeT0/xU";
+	arc=none smtp.remote-ip=74.125.82.197
+Received: from mail-dy1-f197.google.com (mail-dy1-f197.google.com [74.125.82.197])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CE19606A326
-	for <linux-perf-users@vger.kernel.org>; Thu, 22 Oct 2026 20:15:23 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 2CE19606A326
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DC48606A33C
+	for <linux-perf-users@vger.kernel.org>; Thu, 22 Oct 2026 20:15:20 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 5DC48606A33C
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20251104 header.b=Y1ViIcr7
-Received: by mail-dy1-f198.google.com with SMTP id 5a478bee46e88-35c3c370b17so306559eec.0
-        for <linux-perf-users@vger.kernel.org>; Thu, 22 Oct 2026 13:15:23 -0700 (PDT)
+	dkim=pass (2048-bit key, unprotected) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20251104 header.b=OqeT0/xU
+Received: by mail-dy1-f197.google.com with SMTP id 5a478bee46e88-36998507c13so228513eec.0
+        for <linux-perf-users@vger.kernel.org>; Thu, 22 Oct 2026 13:15:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1792700122; x=1793304922; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1792700119; x=1793304919; darn=vger.kernel.org;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=Bm5F5L/Tc7r70KhD0cqJblZLBdriiRHdrl4SVSE1UvA=;
-        b=Y1ViIcr7Z4Ei53rNSNxXvhYmvT5mW7KS5XAe+/ynQIncC3u+IskaWAgLMAHpJlgzQd
-         UloJfTCve6ZGxbXukIUqMsihjkHUyRLLhyPkOIgWnyn3+VCRU9aKn/7SrVLKqwyaMdot
-         fUrmkanM8RB3giIdrTJxhD/PmoFjvWmddyA017AY/NSAHC3woCWtc+Fazims0eoNwT21
-         KynuyscKt9bD+dIXvxQOpjVolXmwURxh5EAlxvCecaRQ1UyemvaPZ8qLKoCRvmkYtVwy
-         ncCFjGEGpuO2RjiwfUVE8/VK2NN3bsG/uJmpk3G9z2xLq7yppdgDQoz1rvf65W3nrHTU
-         ShDw==
+        bh=6JUxMMI/25kOrfypmhpeOOpRGxtyrkB4sVFmB/HCDt8=;
+        b=OqeT0/xUz8q+HIdEsUYuCV9zwwR65DHjwqMal9iuCvL4XHwN6yWKcg4Y+JVt6M9ElT
+         IVEYUQnjvUI5j81FpNDyqwaqzuXI7iwCZCU+9IBnHL5AwOvu/sZhxyyTTRdYiqh92ddT
+         1j2rH6zU2oSxdndOCpKW9nn23viv5/LPqjzekCdgNaVGJpjGEcQzZVdNn9SQLAP6Zip0
+         ms7ZHOOLEDwtyY7it3+z7hCrKub7jRZ+ytWud26voR04JuodkglPMwv/mCSDhsCcXCT3
+         kEPfnt6yONP6SucSrzCm/OYCpx5AJGLkx8gBWUoyrhumb+AwSr/EfpLI0fkFv5V9OC3P
+         07SQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1792700122; x=1793304922;
+        d=1e100.net; s=20260707; t=1792700119; x=1793304919;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=Bm5F5L/Tc7r70KhD0cqJblZLBdriiRHdrl4SVSE1UvA=;
-        b=llKJ1TJvKPNGNBpzAfuKwzEM93juC/ddk/zLuWMLq4wc/LHNV6AsakpTKx6nMUWk4P
-         1oIPIHJT3qkqZvAaVNwefeLBYkIp8Ni0TjCwN16AfdNb7CwIbJvs8pEIm+xAwCIrIfzL
-         FDYRRfXofi69GQgJr6T3Hg5VHlT3F8y/Uwj4S+xVOwb9a6N1GzgxBtKyCpyAP6pEvlbv
-         wBj0HLpqWA2jfuc83kq7Zk3O78aZcXZkKW3r0+bvWcND7HDpq9uF0jMlYIMXz5ZiuM45
-         /+tUf++sXvQqZYpdBEWa3gLMJSa4iED0Dv3JTus1orILHjmu6Rgumkag/yV8D3BBceTy
-         hwYA==
-X-Forwarded-Encrypted: i=1; AKwUvBxAo5ruM6sdo0YltujuINU2HhFVYLiK3iKKyxBGUd7ivRLrk6CpEDC1mY5Tb9/aX9sUmQ36sZYZny7CYwgPljJN@vger.kernel.org
-X-Gm-Message-State: AFq9FYL9MfLB5zVBOsgqszdI8qmtVtYYxTWa//Q/6nZFO4Qsbr6xoZRR
-	+tXA9KBaqdIl3C2/yffRGx4A9bwjrD2qNQMqpfIEyhYMrafcDRp7MraS85mUVt/9M7QW3m1Lu2g
-	xKeIt7sPLiw==
-X-Received: from dlbpu2.prod.google.com ([2002:a05:7022:e882:b0:166:1a44:a89])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:701b:2302:b0:168:3243:c91a
- with SMTP id a92af1059eb24-195c44b7990mr296334c88.13.1792700121995; Thu, 22
- Oct 2026 13:15:21 -0700 (PDT)
-Date: Thu, 22 Oct 2026 13:14:39 -0700
+        bh=6JUxMMI/25kOrfypmhpeOOpRGxtyrkB4sVFmB/HCDt8=;
+        b=hWWYbA/4rObeAhb6jQJMFzOu+wYoyxYffa+upKmEVXz0V0Qxmsn5JDz78qhDjPUWpI
+         QDYvZUaiuOC4UessE8XhZ+TwiY6G8YOKHz4uY9+v+MyzZ5Pc2Jwn71GaqdDIOqz0VCRc
+         UY7qg6aawrOXLECZ/skIGIEam9wYAJJbNROmU/JIhFHuvY+QrOezPbvclsSVckFfom4f
+         vjim7F0MHj/YL6gfFQqywpQsALYuuqURc3XbyajGcLxE8moQRC5zhTiY8MVfEzCACeCR
+         3U6viIWBhbd69MGHWFU2cfebvroxwp7wsN8yBdbiUP7w8nZd7ThXkj0FHdFj1MY5omk+
+         wRPw==
+X-Forwarded-Encrypted: i=1; AKwUvByVy3F4I4RC4ndBBv+QMNAo/4BG8ika3QX3ugz1Dhw5pC+zqqEKgTx3WCYHwoXAB6E3AJ/mWSXb7GWxBa8pKkn0@vger.kernel.org
+X-Gm-Message-State: AFq9FYI5+BQYHTdKulxH1h01ICrSJIqz36ZA0BhS4AFKPTSklu87Os8k
+	I5u0PaHPmU18O/IjrQTF9HkHe73pH4dThAygofJZgpMCOhOMHIAvzmkR4EqpIxnxQqV9WwsK/Zi
+	jJzoaWfWbcQ==
+X-Received: from dyev8.prod.google.com ([2002:a05:7300:4308:b0:368:d484:7709])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7301:6505:b0:366:fbdb:2070
+ with SMTP id 5a478bee46e88-369d989eb57mr380050eec.34.1792700119173; Thu, 22
+ Oct 2026 13:15:19 -0700 (PDT)
+Date: Thu, 22 Oct 2026 13:14:38 -0700
 In-Reply-To: <20261022201453.1717523-1-irogers@google.com>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -81,8 +81,8 @@ Precedence: list
 Mime-Version: 1.0
 References: <20261021223905.715051-1-irogers@google.com> <20261022201453.1717523-1-irogers@google.com>
 X-Mailer: git-send-email 2.56.0.307.g5fe7bd680c-goog
-Message-ID: <20261022201453.1717523-7-irogers@google.com>
-Subject: [PATCH v8 06/19] perf comm: Add __guarded_by annotations to struct comm_strs
+Message-ID: <20261022201453.1717523-6-irogers@google.com>
+Subject: [PATCH v8 05/19] perf build: Enable additional Clang thread-safety flags
 From: Ian Rogers <irogers@google.com>
 To: irogers@google.com, acme@kernel.org, namhyung@kernel.org
 Cc: adrian.hunter@intel.com, elver@google.com, james.clark@linaro.org, 
@@ -92,32 +92,35 @@ Cc: adrian.hunter@intel.com, elver@google.com, james.clark@linaro.org,
 	ndesaulniers@google.com, peterz@infradead.org
 Content-Type: text/plain; charset="UTF-8"
 
-Annotate strs, num_strs, and capacity in struct comm_strs with
-__guarded_by(&lock) and __pt_guarded_by(&lock) so Clang verifies all
-accesses hold comm_strs->lock.
+Align tools/perf's Clang thread-safety flags with the kernel's
+scripts/Makefile.context-analysis by adding -Wthread-safety-pointer,
+-Wthread-safety-beta, and (when supported by the compiler)
+-fexperimental-late-parse-attributes.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/comm.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ tools/perf/Makefile.config | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/util/comm.c b/tools/perf/util/comm.c
-index 6343a3c9debe..9fc4e91a36e9 100644
---- a/tools/perf/util/comm.c
-+++ b/tools/perf/util/comm.c
-@@ -16,9 +16,9 @@ DECLARE_RC_STRUCT(comm_str) {
+diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
+index 3eb8d095cda0..b50702bac53c 100644
+--- a/tools/perf/Makefile.config
++++ b/tools/perf/Makefile.config
+@@ -64,7 +64,13 @@ ifeq ($(CC_NO_CLANG), 0)
+   endif
  
- static struct comm_strs {
- 	struct rw_semaphore lock;
--	struct comm_str **strs;
--	int num_strs;
--	int capacity;
-+	struct comm_str **strs __pt_guarded_by(&lock) __guarded_by(&lock);
-+	int num_strs __guarded_by(&lock);
-+	int capacity __guarded_by(&lock);
- } _comm_strs;
+   # Enabled Wthread-safety analysis for clang builds.
+-  CFLAGS += -Wthread-safety -DWARN_CONTEXT_ANALYSIS
++  CFLAGS += -DWARN_CONTEXT_ANALYSIS -Wthread-safety
++  ifeq ($(shell $(CC) -Werror -Wthread-safety-pointer -Wthread-safety-beta -c -x c /dev/null -o /dev/null >/dev/null 2>&1 && echo 1), 1)
++    CFLAGS += -Wthread-safety-pointer -Wthread-safety-beta
++  endif
++  ifeq ($(shell $(CC) -Werror -fexperimental-late-parse-attributes -c -x c /dev/null -o /dev/null >/dev/null 2>&1 && echo 1), 1)
++    CFLAGS += -fexperimental-late-parse-attributes
++  endif
+ endif
  
- static void comm_strs__remove_if_last(struct comm_str *cs);
+ include $(srctree)/tools/scripts/Makefile.arch
 -- 
 2.56.0.307.g5fe7bd680c-goog
 
