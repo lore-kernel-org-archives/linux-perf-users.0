@@ -1,101 +1,99 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.128.44
+Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.218.41
 ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1792765983;
-	b=0HnSRdg0Sbi7GAqGUNoeUIxM4otWjzj3G10yFW4AvML0VTfXpcEmOQjp785WAbqy0EC+
-	 X4dbzAqvkqAq1oUxMem1bCDo/EEhEW85SRlbrCMY4Ec91Beulf3C8hZI6M8HYAXUD+MQi
-	 oiQMp+rU7KQXqW+Q9bhtFii7Pj6rthxaYe0IwMITCayI5yNMvzjX456QWKpqZxc3pZ5jl
-	 1rA8km0FAMWrK9k++X11S0FBrVK/OZjSSg26jEbXmknBtgejhnVPXsEsZpDkyTEw2hg+r
-	 TE2kMV9vv0CisRpkr96y6ckMChA97FBofPoMMqdxuXkH8y3+e/PFoBqG+taLYGJD6RQ==
+	t=1792768749;
+	b=B7827vfaiamETHXE/xzMAF73EdmlH/0oHq1X+srXyJuxI7cyQmleS3sLcDoSExde+571
+	 kYhdz7ectJS1c4Yn+0SAUUf+XSEnEYTo5a166WNF7Z8AmR38LIAlo8aLCAoJ+dkiBGHl1
+	 IRM74pOR+lf1DAZq+AhZJ9Ktf8U8L8hzkZquPVCKp11pB1XZoug8MclL4bUbBcyZFC8XX
+	 J3Wfig7qN3/OgSRjax33/td8Dzvnbt7+Dimf255wT6+th/zg1heyA4/tuoSzfCa4zWN+g
+	 M5j4gekkhgAtAr4UhNXUBj/evp9GRoEjJd3ETAYJnF8BgS2KpqBI1Ug1DyssWJwU5yw==
 ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792765983;
+	a=rsa-sha256; c=relaxed/relaxed; t=1792768749;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:
-	 MIME-Version:References:In-Reply-To:From:Date:X-Gm-Features:
-	 Message-ID:Subject:To:Cc:Content-Type:Content-Transfer-Encoding;
-	bh=jiORH5HeyqHq3S+unS2vP/s9eFYUlRmFwmUHIAZJbqE=;
-	b=AyO3eUCRfIci/U2/O1CwKcTKfvA0nByKivZNoYWazf3Ph57mrOtALkXku2TNRxx6JtTV
-	 Zp0vqEO7xTTWYqSSgH43RK7I/GHJwPIP9MtgAwHUcFnSF4FHrFewkbzwyLIrQa+q5jRvP
-	 Dw2rARWd5bDTWc+vevYVkGcJdBvZGqXta1LrSiEej0NzKuepgbJvTNZJ+GT7ZWSlHp2xV
-	 Dv2U1i1sN/Gc3TKvAFmxIgwnJ7Z9yraBmxUkiIGozW+YyxE/g/BybVzDMzO+TA3MKA2Zd
-	 4k9pYBk8Hrx+uxglzGwt8K8sqfIALJcEF0oFplT09hgRiLmDGsqbBZhljc6O8z9aZeQ==
+	 X-Gm-Message-State:X-Gm-Gg:X-Received:MIME-Version:References:
+	 In-Reply-To:From:Date:X-Gm-Features:Message-ID:Subject:To:Cc:
+	 Content-Type:Content-Transfer-Encoding;
+	bh=u6uT+2Bkvv4y7LHLfpq7KqJWTqLIyrtx0un1wUCzN+0=;
+	b=p0nKkKHEUV+2ADKU25VI4MdsKExurlV9F4dQPopdpu+3UrJKiSQ1Nzid0iZYQgjICiNS
+	 O3HGbrY/c1vD5KYEv4nR+2XJOeGZZyoMaqlLLK3kLm99Im7Tk4eSLa3CP47SKQUZ+B9DF
+	 kObSI9ZrmcyFJsc0RGNKfopcTvD8cZfomdLgbMWtJxgSILikYELWGEMzKJZMTjTb9veAY
+	 N97f+ibZoUzYPt2WZO1sBwbo9olu0nBQWA+rFXg1r3rxIizLh78ywQ0DuQ3ML5joc7iRD
+	 NtT2o75cwX5e+ECKImUeqPNDM8VOKcdvLaekDZYTG+Mcf8FA8nSgqRJaAJq+jIhT05w==
 ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
-	dmarc=none header.from=brainfault.org;
-	spf=none smtp.mailfrom=brainfault.org;
-	dkim=pass header.d=brainfault.org header.i=@brainfault.org header.a=rsa-sha256 header.s=google header.b=mRIYhGYU;
-	arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.128.44
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+	dmarc=pass header.from=gmail.com;
+	spf=pass smtp.mailfrom=gmail.com;
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b="W/iJnW0I";
+	arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.218.41
+Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 997B7606A320
-	for <linux-perf-users@vger.kernel.org>; Fri, 23 Oct 2026 14:33:02 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 997B7606A320
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brainfault.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=brainfault.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE7EA606A320
+	for <linux-perf-users@vger.kernel.org>; Fri, 23 Oct 2026 15:19:08 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org CE7EA606A320
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=brainfault.org header.i=@brainfault.org header.a=rsa-sha256 header.s=google header.b=mRIYhGYU
-Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-4956869750eso6351975e9.2
-        for <linux-perf-users@vger.kernel.org>; Fri, 23 Oct 2026 07:33:02 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1792765981; cv=none;
+	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=W/iJnW0I
+Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-c2055573c8cso132504466b.3
+        for <linux-perf-users@vger.kernel.org>; Fri, 23 Oct 2026 08:19:08 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1792768747; cv=none;
         d=google.com; s=arc-20260327;
-        b=cYyK/KemQBc9RoUJu6StxducP2khLc6RF3Ayl1ebmEie1fel6dDIBd6DYEwi+0aScF
-         5wMtO8Kncb99SyO8QvsjIP3lyoStt88vqXSie5egZhxmI5RmIZy2kgTsXvtRviP205fy
-         5QAvuZsSgy6dQzX+pknZGk6xgUd7EyPwlzUXFo1wmvvGi36206uPUVXBd9eoL2baVF9H
-         xqWB2HRpx+VGWUNPlJ0vJmARQu4Ut62HBfQ0IG4xiGbSWnbsfrpKvGXwqjqHzTQ5hslY
-         EovCwEMmt1jARsIOUuGus9eRpHR6J/SQPCcDCknq2hUnr9Q23L5nJXbYH9Wzuqj2ivwU
-         TVPQ==
+        b=MiSqGMRZU4AlXUrQ0Fwu+utSbv2Q9NfdiGqA5+5X6j/vC9o7JIpbXw0j4GFtFVcH59
+         OEWVpRvqNQc+n1Fk662LEe8mQbumNHHmVBPk+gQMfI9dBKdjp+v4hbloUvb4A/11jSWD
+         +pBHE0DNJ/jIJ++7WACBWUOcvZuh3ncV57DCb3zrsvvczqe7CqOHSN0L+nU4R49v3Yko
+         PeqWc/OTWbxhAjHO1I7uVVJgpNof9yUujf2c7V16TUt/v7DRdBfAAKd85+RDTXz+h7Lg
+         TlVppLpUB5RiLLtJxkpMGhQf3lzovAwMXA2/0q//cRk7XxXZDjaSvpzITKEtYAGbZTnh
+         0B+Q==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:dkim-signature;
-        bh=jiORH5HeyqHq3S+unS2vP/s9eFYUlRmFwmUHIAZJbqE=;
-        fh=rrI/sRrfcWzTL8vQkSE3ule7bnR40UK5PjgjsGx3Nwk=;
-        b=QzhS6qaCUT8qDS7kmvqV+ay8BSZYRQeZBRyWVK4JwzDKv43OtJnD2j9DOGOoP5XKRo
-         7skuId1Ldj+1DjaTTVF+uDSjJTS0ZmQoLNXyjJ1gzTLBTWPBt+8RHy3XfBywbjNPCC3J
-         hRGPPMdYrA+zWcS38+2+iIjQNp10oVIy1V4ouwIKKNucTXvvPHPI6EdkCCY7vvJlKLTI
-         YBJf6VH41A7syFIqVnsixan7FKPZFcRJsueThRluZGE1KmKQ/wI5Ncwwtf0ZSl3LDOME
-         NZwSgtBO+bxds9CGNAPkvarr6B8nQujmfrB1D+HAKaEjKTMtUBtfKFgwh3nt8EhNohAV
-         ni8A==;
+        bh=u6uT+2Bkvv4y7LHLfpq7KqJWTqLIyrtx0un1wUCzN+0=;
+        fh=0zVHGC//SC94CWFKHtFt4lnskmkXkJNNy7lE0FDd3Ck=;
+        b=EJsREWE3hNWuEGl3O1cDPML5+iC5I4rXP5Xj9wHFaG1MneW2UKyPeM3x+KBNVr8QGa
+         YO7iilq4NzKEVCQyFc8oGdUTQSmMIT30RHNuF8FHueUTzen42dyMSamNq/iXY0Fq0hal
+         uofvqlRMRsT74hibzDbLXh27g7F7LXaATUCzkzMScvZezj9N3s+jfAHqVB974kO6Ieut
+         lY4fKa/07/HjQv71gHTN/o/WtaJCQipQG7jxY/xrFNFioBT5DDKSqrvvtwbjN79U0kzX
+         gq64vrY9b0Y7KNKNYYepchOwbGPxw2W3f5PDNXov5EERQcttlzSKqLXHzA7ueR4lJxko
+         og1w==;
         darn=vger.kernel.org
 ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brainfault.org; s=google; t=1792765981; x=1793370781; darn=vger.kernel.org;
+        d=gmail.com; s=20251104; t=1792768747; x=1793373547; darn=vger.kernel.org;
         h=content-transfer-encoding:content-type:cc:to:subject:message-id
          :date:from:in-reply-to:references:mime-version:from:to:cc:subject
          :date:message-id:reply-to:content-type;
-        bh=jiORH5HeyqHq3S+unS2vP/s9eFYUlRmFwmUHIAZJbqE=;
-        b=mRIYhGYUtluI+yam/VC2VFEW8jmwjRf5KBZHQ9t2e6uHACgEJOWLmt7xAgBZF77gXT
-         QcUrihcjKIGNuhhdrIELfex+Of9qe1pjJFSBTDMDqxn/ICYjmwZqft57eDMTJseuLyIy
-         bAMiHedcN8ew+mNp84J0Y7xT717o7ZUAQo6FPJOloWFXJun6+JULF9hqYnkp67SA9jlJ
-         kjUDnuNfhd8QEQLA70XJINr945cAY/Tq0kz/qz/g8KlGoJs99ITinWTCVKxDt8G8EOdF
-         gIgsP09umVS/ZCbw83b/gZgZDxi1hubt0v6Ac8oNE04WTn3XbPyCNxpYUinG+Wglgl7u
-         HoHQ==
+        bh=u6uT+2Bkvv4y7LHLfpq7KqJWTqLIyrtx0un1wUCzN+0=;
+        b=W/iJnW0IzJNGtz9SIpPe0M2dKqo3PWcrMbT+/M5VrV3vaMXjAqEnTtU8OBRdP6ubuf
+         WX6QdSYRGbJkND3jhBoIGCximjOBUJs2zdW5Boqusk3MQMxdPaJcYQSegQeRiMai5dpu
+         wvtMBd/Z7OA5OoUXLD2YuNsyen8yGEU7WJfHRulScsnKM6XJ0jnUa3NmWOZrOmMhQlG+
+         Wtj4d+0o4NHzPVsjWCkimNoSsMzrrdlubJqdJfC0I1EHulWojdVT35pTVeDXHPJJBgxQ
+         qa36+BXG+JOGm5ixarKRTA9j6U/hhE5ssZ7IVulua9CszkVZ68wVN6aZxcj0gYqcuWcb
+         qqCw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1792765981; x=1793370781;
+        d=1e100.net; s=20260707; t=1792768747; x=1793373547;
         h=content-transfer-encoding:content-type:cc:to:subject:message-id
          :date:from:in-reply-to:references:mime-version:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=jiORH5HeyqHq3S+unS2vP/s9eFYUlRmFwmUHIAZJbqE=;
-        b=1gIy1XQ9Mu3xFjqA6CGFXmEnkoMzBd9uUVWSMFuw2OFyIzyQRUWWkV0ewZX8QX1zo8
-         Ex62vUp+tBqK9Fp0s+h9NPoOyv1aow3yn18N+XI0OgFv2TOJ5xPWRHpy+g0OwwYYzw06
-         zA9Z8H3JKhZeFoIrQxerJ5W6Ykrt8ZNtTBu2nr6fyATLWBrkd9AkGjkeke3MzQRoiwky
-         jKZch59Pw1B7Dd/DNedvfiVOZVlH6iJlrnJ9+JI2TL44iXbhNdhMUfHyC9E9cJ79RQds
-         yxtdsfQl4YvTHdTHCufzixcm779TFhsire0z55tW8imx+RQwZNb3gWWZoc37PXcK4Gtr
-         hIww==
-X-Forwarded-Encrypted: i=1; AKwUvBw0IBW1s5mkDKavRLiL97Lz+aG4yS6xCO7BbBi2h/6nEVXDlL9DCOSmB8VofYy5VyqxXqjAw+n8NUAHK9UdiZw/@vger.kernel.org
-X-Gm-Message-State: AFq9FYIC6jKIUDSNqKzgpnrAkn03CZdwC7NrUZKOpl0Vf3gUBpK9oG9H
-	WqnDzqAUWfaz6JF5Lfu3527kJR/4fnP/HlioPdiGoTZm2oPzj9O+2Pp9vug1HXF8dL7sTSgSGDw
-	dyeyWFYNb1R7H/gdxjfX9FenesBc77DKf853ClRqJH0N+3PyKf0T6F2Q=
-X-Gm-Gg: AYBFou0/MtSJA6Y0paTrkiuVptr+xfRWnePYp8CNZ/CNEjiEv+LQx5uAyND3UBKog13
-	aHRSAXHaTxAWetiaTJljpJ56+6YXTkcuCv6e3PPIoqyyeKwwsNwNXoybvrbzbJAb83u3w/oeqPN
-	iizeqV6bW3Z8uRym/1FGpzYMmPux+0o4Zr0Dqo9rMqTPe2LvssAprlQ7YQ/woUSujih1k6CeClh
-	ZdCJ3KG2e5aZml6Ci3CezDa8avc85W+v6eMdTOPJfclvOyO3Qu+5ipI0LibzSALFzcOtH6e4WCO
-	o5cQJ6elXmfCdt5WhUJYGFCybvdeliG6F5DImf7vzh7kud35UKvtovHdpdQaEhpJzsakMTnTGe6
-	lWts5/3zMdRBCl7SEjiDnMEroJZGAj6OYdb3PJpPS0Pttzt2VB2mlrluQZgAUC6GU1lpgig9zBb
-	0seei13jo9ggV2TrP/gavCmuRHSvODgZ3VWQVuD1YHlAPaIkYebfnyDRHh
-X-Received: by 2002:a05:600c:3111:b0:4a1:88de:9e8b with SMTP id
- 5b1f17b1804b1-4a211cd08b8mr40623715e9.5.1792765980770; Fri, 23 Oct 2026
- 07:33:00 -0700 (PDT)
+        bh=u6uT+2Bkvv4y7LHLfpq7KqJWTqLIyrtx0un1wUCzN+0=;
+        b=wJP3Zihu8HJ8EECGbxC3/vnimndntBpfVzS3Q8Fglg9XbuO+rXnCyLTSpGMsE2TMt7
+         4kRq1JGv5w1u40XI+PFuth06PCnfjh/0MVkb6cPHTbn89rB/yVNdCIWyQO7lYOv0TpBB
+         xAVUKg5hNK8LspkhcuxXN+jpOt6vPVRuc1u4N+99ZWRR2IUwuPi/WJz9w7UxEn8u+NzE
+         wK7DPY3gelU6WWpABlfTdbFFYJNtwFxNz6S2S92LO2jQ1/JuSHSKsmVSSxkSqROrzAo3
+         Lg3dctCMbKYkYD8IBl4/MgVoxACNDtzmNeKMD9mh5xUPG6JRMczYQR9bfd+QMGhw8GBQ
+         Uiyg==
+X-Gm-Message-State: AFq9FYIXX6sCm1kcd3/W3dvZy5JuR88hykm1bagoI+0anzvz9wbpl4Vr
+	/e5X7Gixc0zKpbcwNrjluZPboR4+yJWrRR6w706xoiZLu4cKq2qLhrGQmQoUZGqlkI2S2ozebJA
+	aK31xULm+7U2LO1umalP/1pUCMU6dBiJ1bKix/1LN3p0O
+X-Gm-Gg: AYBFou3fiCz94lLNutqZlGO02tHm6FctmV3opHcw9m0LCt4sQ5l2SxHQ/7Iwea9ueLx
+	rqXACmPCbN+GWcmyrKVZ+yFmNKr3aKz6kFME9z2pOPfxFWgzMfkWqr97fK6OMo/8k4OULqIpxMo
+	2FxXpsPcsYblgztlx9EhOKwtqRiTfMCY7pgTHmQv4GGo1xjJfs6bp44ApkdDtjV/2p/EfD7tvjX
+	xph2DowE9iGpC3HTlon7Puk2Yiu8qgaWBxaia79sqNHBMN1FHm0q+eokevbuYJu0NTnmKuVF6Bk
+	vJT7a94TVeZikLm/KK6S04/Ln4K/AFzimW81XJpsRqLmpguJzSBRSAh+hV3zH/hRhVSUoCeWsJu
+	6kOD//3qw4Zk9cBGmA1N6aKyqBQG+nzs72ZbHWYvXY/jMmIvicntE
+X-Received: by 2002:a17:907:3f21:b0:c26:1649:47ad with SMTP id
+ a640c23a62f3a-c46a942fd16mr354947966b.35.1792768746855; Fri, 23 Oct 2026
+ 08:19:06 -0700 (PDT)
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -105,324 +103,117 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-References: <20260807-counter_delegation-v9-0-58658104e487@meta.com> <20260807-counter_delegation-v9-12-58658104e487@meta.com>
-In-Reply-To: <20260807-counter_delegation-v9-12-58658104e487@meta.com>
-From: Anup Patel <anup@brainfault.org>
-Date: Fri, 23 Oct 2026 20:02:47 +0530
-X-Gm-Features: AclHuK_Te3oHQWEvlM580gwTI1GU6fdT3Cr7_323gvlKeM0VV47C7yWnVu4KXHg
-Message-ID: <CAAhSdy0PAGqhX2CaRDFKSVY45pQ-QAQ+Or8BWFY39N9bDBMmzA@mail.gmail.com>
-Subject: Re: [PATCH v9 12/20] RISC-V: perf: Modify the counter discovery mechanism
-To: Atish Patra <atish.patra@linux.dev>
-Cc: Will Deacon <will@kernel.org>, Arnaldo Carvalho de Melo <acme@kernel.org>, Ian Rogers <irogers@google.com>, 
-	Rob Herring <robh@kernel.org>, Paul Walmsley <pjw@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Jiri Olsa <jolsa@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	James Clark <james.clark@linaro.org>, Namhyung Kim <namhyung@kernel.org>, 
-	linux-riscv@lists.infradead.org, linux-arm-kernel@lists.infradead.org, 
-	Conor Dooley <conor@kernel.org>, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, devicetree@vger.kernel.org
+References: <20261023124157.75524-1-puranjay@kernel.org> <sashiko-outbox-182810@kernel.org>
+In-Reply-To: <sashiko-outbox-182810@kernel.org>
+From: Puranjay Mohan <puranjay12@gmail.com>
+Date: Fri, 23 Oct 2026 16:18:52 +0100
+X-Gm-Features: AclHuK_Rbmo7Ro6pTjXlkfAHO3a3wIhqADp6mC6QJTt3bJ2PjzxSLO5fGQVAMg0
+Message-ID: <CANk7y0jNvokRcBSFvg3UwYhAS1MkEa_KwH0FfJSD62-xLKPEYQ@mail.gmail.com>
+Subject: Re: [PATCH] perf/x86/amd/lbr: Freeze LBR on PMI only when kernel
+ branches are recorded
+To: sashiko-reviews@lists.linux.dev
+Cc: linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Aug 7, 2026 at 1:40=E2=80=AFPM Atish Patra <atish.patra@linux.dev> =
-wrote:
+On Fri, Oct 23, 2026 at 2:01=E2=80=AFPM <sashiko-bot@kernel.org> wrote:
 >
-> From: Atish Patra <atishp@rivosinc.com>
->
-> If both counter delegation and SBI PMU is present, the counter
-> delegation will be used for hardware pmu counters while the SBI PMU
-> will be used for firmware counters. Thus, the driver has to probe
-> the counters info via SBI PMU to distinguish the firmware counters.
->
-> The hybrid scheme also requires improvements of the informational
-> logging messages to indicate the user about underlying interface
-> used for each use case.
->
-> Signed-off-by: Atish Patra <atishp@rivosinc.com>
-
-LGTM.
-
-Reviewed-by: Anup Patel <anup@brainfault.org>
-
-Regards,
-Anup
-
-
-> ---
->  drivers/perf/riscv_pmu_sbi.c | 151 +++++++++++++++++++++++++++++++++----=
-------
->  1 file changed, 116 insertions(+), 35 deletions(-)
->
-> diff --git a/drivers/perf/riscv_pmu_sbi.c b/drivers/perf/riscv_pmu_sbi.c
-> index a8a197d341c3..1a1430059909 100644
-> --- a/drivers/perf/riscv_pmu_sbi.c
-> +++ b/drivers/perf/riscv_pmu_sbi.c
-> @@ -66,6 +66,20 @@ static bool sbi_v3_available;
->  static DEFINE_STATIC_KEY_FALSE(sbi_pmu_snapshot_available);
->  #define sbi_pmu_snapshot_available() \
->         static_branch_unlikely(&sbi_pmu_snapshot_available)
-> +static DEFINE_STATIC_KEY_FALSE(riscv_pmu_sbi_available);
-> +static DEFINE_STATIC_KEY_FALSE(riscv_pmu_cdeleg_available);
-> +
-> +/* Avoid unnecessary code patching in the one time booting path*/
-> +#define riscv_pmu_cdeleg_available_boot() \
-> +       static_key_enabled(&riscv_pmu_cdeleg_available)
-> +#define riscv_pmu_sbi_available_boot() \
-> +       static_key_enabled(&riscv_pmu_sbi_available)
-> +
-> +/* Perform a runtime code patching with static key */
-> +#define riscv_pmu_cdeleg_available() \
-> +       static_branch_unlikely(&riscv_pmu_cdeleg_available)
-> +#define riscv_pmu_sbi_available() \
-> +               static_branch_likely(&riscv_pmu_sbi_available)
->
->  static struct attribute *riscv_arch_formats_attr[] =3D {
->         &format_attr_event.attr,
-> @@ -88,7 +102,8 @@ static int sysctl_perf_user_access __read_mostly =3D S=
-YSCTL_USER_ACCESS;
->
->  /*
->   * This structure is SBI specific but counter delegation also require co=
-unter
-> - * width, csr mapping. Reuse it for now.
-> + * width, csr mapping. Reuse it for now we can have firmware counters fo=
-r
-> + * platfroms with counter delegation support.
->   * RISC-V doesn't have heterogeneous harts yet. This need to be part of
->   * per_cpu in case of harts with different pmu counters
->   */
-> @@ -100,6 +115,8 @@ static unsigned int riscv_pmu_irq;
->
->  /* Cache the available counters in a bitmask */
->  static unsigned long cmask;
-> +/* Cache the available firmware counters in another bitmask */
-> +static unsigned long firmware_cmask;
->
->  static int sbi_pmu_event_find_cache(u64 config);
->  struct sbi_pmu_event_data {
-> @@ -867,34 +884,44 @@ static int rvpmu_sbi_find_num_ctrs(void)
->                 return sbi_err_map_linux_errno(ret.error);
->  }
->
-> -static int rvpmu_sbi_get_ctrinfo(int nctr, unsigned long *mask)
-> +static u32 rvpmu_deleg_find_ctrs(void)
-> +{
-> +       /* TODO */
-> +       return 0;
-> +}
-> +
-> +static int rvpmu_sbi_get_ctrinfo(u32 nsbi_ctr, u32 *num_fw_ctr, u32 *num=
-_hw_ctr)
->  {
->         struct sbiret ret;
-> -       int i, num_hw_ctr =3D 0, num_fw_ctr =3D 0;
-> +       int i;
->         union sbi_pmu_ctr_info cinfo;
->
-> -       pmu_ctr_list =3D kzalloc_objs(*pmu_ctr_list, nctr);
-> -       if (!pmu_ctr_list)
-> -               return -ENOMEM;
-> -
-> -       for (i =3D 0; i < nctr; i++) {
-> +       for (i =3D 0; i < nsbi_ctr; i++) {
->                 ret =3D sbi_ecall(SBI_EXT_PMU, SBI_EXT_PMU_COUNTER_GET_IN=
-FO, i, 0, 0, 0, 0, 0);
->                 if (ret.error)
->                         /* The logical counter ids are not expected to be=
- contiguous */
->                         continue;
->
-> -               *mask |=3D BIT(i);
-> -
->                 cinfo.value =3D ret.value;
-> -               if (cinfo.type =3D=3D SBI_PMU_CTR_TYPE_FW)
-> -                       num_fw_ctr++;
-> -               else
-> -                       num_hw_ctr++;
-> -               pmu_ctr_list[i].value =3D cinfo.value;
-> +               if (cinfo.type =3D=3D SBI_PMU_CTR_TYPE_FW) {
-> +                       /* FW counters use SBI logical ids; skip any that=
- collide */
-> +                       if (cmask & BIT(i)) {
-> +                               pr_warn_once("SBI firmware counter %d ove=
-rlaps a delegated hardware counter, ignoring it\n",
-> +                                            i);
-> +                               continue;
-> +                       }
-> +                       /* Track firmware counters in a different mask */
-> +                       firmware_cmask |=3D BIT(i);
-> +                       pmu_ctr_list[i].value =3D cinfo.value;
-> +                       *num_fw_ctr =3D *num_fw_ctr + 1;
-> +               } else if (cinfo.type =3D=3D SBI_PMU_CTR_TYPE_HW &&
-> +                          !riscv_pmu_cdeleg_available_boot()) {
-> +                       *num_hw_ctr =3D *num_hw_ctr + 1;
-> +                       cmask |=3D BIT(i);
-> +                       pmu_ctr_list[i].value =3D cinfo.value;
-> +               }
->         }
->
-> -       pr_info("%d firmware and %d hardware counters\n", num_fw_ctr, num=
-_hw_ctr);
-> -
->         return 0;
->  }
->
-> @@ -905,7 +932,7 @@ static inline void rvpmu_sbi_stop_all(struct riscv_pm=
-u *pmu)
->          * which may include counters that are not enabled yet.
->          */
->         sbi_ecall(SBI_EXT_PMU, SBI_EXT_PMU_COUNTER_STOP,
-> -                 0, pmu->cmask, SBI_PMU_STOP_FLAG_RESET, 0, 0, 0);
-> +                 0, pmu->cmask | firmware_cmask, SBI_PMU_STOP_FLAG_RESET=
-, 0, 0, 0);
->  }
->
->  static inline void rvpmu_sbi_stop_hw_ctrs(struct riscv_pmu *pmu)
-> @@ -1158,16 +1185,54 @@ static void rvpmu_ctr_stop(struct perf_event *eve=
-nt, unsigned long flag)
->         /* TODO: Counter delegation implementation */
->  }
->
-> -static int rvpmu_find_num_ctrs(void)
-> +static int rvpmu_find_ctrs(void)
->  {
-> -       return rvpmu_sbi_find_num_ctrs();
-> -       /* TODO: Counter delegation implementation */
-> -}
-> +       int num_sbi_counters =3D 0;
-> +       u32 num_deleg_counters =3D 0;
-> +       u32 num_hw_ctr =3D 0, num_fw_ctr =3D 0, num_ctr =3D 0;
-> +       /*
-> +        * We don't know how many firmware counters are available. Just a=
-llocate
-> +        * for maximum counters the driver can support. The default is 64=
- anyways.
-> +        */
-> +       pmu_ctr_list =3D kcalloc(RISCV_MAX_COUNTERS, sizeof(*pmu_ctr_list=
-),
-> +                              GFP_KERNEL);
-> +       if (!pmu_ctr_list)
-> +               return -ENOMEM;
->
-> -static int rvpmu_get_ctrinfo(int nctr, unsigned long *mask)
-> -{
-> -       return rvpmu_sbi_get_ctrinfo(nctr, mask);
-> -       /* TODO: Counter delegation implementation */
-> +       if (riscv_pmu_cdeleg_available_boot())
-> +               num_deleg_counters =3D rvpmu_deleg_find_ctrs();
-> +
-> +       /* SBI PMU is only needed for firmware counters; delegation is in=
-dependent */
-> +       if (riscv_pmu_sbi_available_boot()) {
-> +               num_sbi_counters =3D rvpmu_sbi_find_num_ctrs();
-> +               if (num_sbi_counters < 0) {
-> +                       /* Keep going if delegation already gave us count=
-ers */
-> +                       if (!num_deleg_counters) {
-> +                               kfree(pmu_ctr_list);
-> +                               pmu_ctr_list =3D NULL;
-> +                               return num_sbi_counters;
-> +                       }
-> +                       pr_warn("Firmware counters unavailable (%d), cont=
-inuing with %u delegated hardware counters\n",
-> +                               num_sbi_counters, num_deleg_counters);
-> +                       num_sbi_counters =3D 0;
-> +               }
-> +               if (num_sbi_counters > RISCV_MAX_COUNTERS)
-> +                       num_sbi_counters =3D RISCV_MAX_COUNTERS;
-> +       }
-> +
-> +       /* cache all the information about counters now */
-> +       if (riscv_pmu_sbi_available_boot())
-> +               rvpmu_sbi_get_ctrinfo(num_sbi_counters, &num_fw_ctr, &num=
-_hw_ctr);
-> +
-> +       if (riscv_pmu_cdeleg_available_boot()) {
-> +               pr_info("%u firmware and %u hardware counters\n", num_fw_=
-ctr, num_deleg_counters);
-> +               num_ctr =3D num_fw_ctr + num_deleg_counters;
-> +       } else {
-> +               pr_info("%u firmware and %u hardware counters\n", num_fw_=
-ctr, num_hw_ctr);
-> +               num_ctr =3D num_sbi_counters;
-> +       }
-> +
-> +       return num_ctr;
->  }
->
->  static int rvpmu_event_map(struct perf_event *event, u64 *econfig)
-> @@ -1477,12 +1542,21 @@ static int rvpmu_device_probe(struct platform_dev=
-ice *pdev)
->         int num_counters;
->         bool irq_requested =3D false;
->
-> -       pr_info("SBI PMU extension is available\n");
-> +       if (riscv_pmu_cdeleg_available_boot()) {
-> +               pr_info("hpmcounters will use the counter delegation ISA =
-extension\n");
-> +               if (riscv_pmu_sbi_available_boot())
-> +                       pr_info("Firmware counters will use SBI PMU exten=
-sion\n");
-> +               else
-> +                       pr_info("Firmware counters will not be available =
-as SBI PMU extension is not present\n");
-> +       } else if (riscv_pmu_sbi_available_boot()) {
-> +               pr_info("Both hpmcounters and firmware counters will use =
-SBI PMU extension\n");
-> +       }
-> +
->         pmu =3D riscv_pmu_alloc();
->         if (!pmu)
->                 return -ENOMEM;
->
-> -       num_counters =3D rvpmu_find_num_ctrs();
-> +       num_counters =3D rvpmu_find_ctrs();
->         if (num_counters < 0) {
->                 pr_err("SBI PMU extension doesn't provide any counters\n"=
-);
->                 goto out_free;
-> @@ -1494,9 +1568,6 @@ static int rvpmu_device_probe(struct platform_devic=
-e *pdev)
->                 pr_info("SBI returned more than maximum number of counter=
-s. Limiting the number of counters to %d\n", num_counters);
->         }
->
-> -       /* cache all the information about counters now */
-> -       if (rvpmu_get_ctrinfo(num_counters, &cmask))
-> -               goto out_free;
->
->         ret =3D rvpmu_setup_irqs(pmu, pdev);
->         if (ret < 0) {
-> @@ -1598,13 +1669,23 @@ static int __init rvpmu_devinit(void)
->         int ret;
->         struct platform_device *pdev;
->
-> -       if (sbi_spec_version < sbi_mk_version(0, 3) ||
-> -           !sbi_probe_extension(SBI_EXT_PMU)) {
-> -               return 0;
-> -       }
-> +       if (sbi_spec_version >=3D sbi_mk_version(0, 3) &&
-> +           sbi_probe_extension(SBI_EXT_PMU))
-> +               static_branch_enable(&riscv_pmu_sbi_available);
->
->         if (sbi_spec_version >=3D sbi_mk_version(2, 0))
->                 sbi_v2_available =3D true;
-> +       /*
-> +        * We need all three extensions to be present to access the count=
-ers
-> +        * in S-mode via Supervisor Counter delegation.
-> +        */
-> +       if (riscv_isa_extension_available(NULL, SSCCFG) &&
-> +           riscv_isa_extension_available(NULL, SMCDELEG) &&
-> +           riscv_isa_extension_available(NULL, SSCSRIND))
-> +               static_branch_enable(&riscv_pmu_cdeleg_available);
-> +
-> +       if (!(riscv_pmu_sbi_available_boot() || riscv_pmu_cdeleg_availabl=
-e_boot()))
-> +               return 0;
->
->         if (sbi_spec_version >=3D sbi_mk_version(3, 0))
->                 sbi_v3_available =3D true;
->
+> Thank you for your contribution! Sashiko AI review found 1 potential issu=
+e(s) to consider:
+> - [Medium] perf/x86/amd/lbr: cleared lbr_select in amd_pmu_lbr_del() forc=
+es PMI freeze
 > --
-> 2.53.0-Meta
 >
+> commit 2fc471183ee73ff1339b34a8c3b4d4e03264c10b
+> Author: Puranjay Mohan <puranjay@kernel.org>
+>
+> perf/x86/amd/lbr: Freeze LBR on PMI only when kernel branches are recorde=
+d
+>
+> This commit skips setting DEBUGCTLMSR_FREEZE_LBRS_ON_PMI on CPUs with
+> X86_FEATURE_AMD_LBR_PMC_FREEZE when LBR_SELECT suppresses branches into t=
+he
+> kernel.
+>
+> > diff --git a/arch/x86/events/amd/lbr.c b/arch/x86/events/amd/lbr.c
+> > index a55646fcb8465..7ec50380ac81d 100644
+> > --- a/arch/x86/events/amd/lbr.c
+> > +++ b/arch/x86/events/amd/lbr.c
+> > @@ -392,7 +392,7 @@ void amd_pmu_lbr_sched_task(struct perf_event_pmu_c=
+ontext *pmu_ctx,
+> >  void amd_pmu_lbr_enable_all(void)
+> >  {
+> >       struct cpu_hw_events *cpuc =3D this_cpu_ptr(&cpu_hw_events);
+> > -     u64 lbr_select, dbg_ctl, dbg_extn_cfg;
+> > +     u64 lbr_select =3D 0, dbg_ctl, dbg_extn_cfg;
+> >
+> >       if (!cpuc->lbr_users || !x86_pmu.lbr_nr)
+> >               return;
+> > @@ -405,7 +405,12 @@ void amd_pmu_lbr_enable_all(void)
+> >
+> >       if (cpu_feature_enabled(X86_FEATURE_AMD_LBR_PMC_FREEZE)) {
+> >               rdmsrq(MSR_IA32_DEBUGCTLMSR, dbg_ctl);
+> > -             wrmsrq(MSR_IA32_DEBUGCTLMSR, dbg_ctl | DEBUGCTLMSR_FREEZE=
+_LBRS_ON_PMI);
+> > +             /* Freeze unless the filter suppresses branches into the =
+kernel */
+> > +             if (lbr_select & LBR_KERNEL)
+> > +                     dbg_ctl &=3D ~DEBUGCTLMSR_FREEZE_LBRS_ON_PMI;
+> > +             else
+> > +                     dbg_ctl |=3D DEBUGCTLMSR_FREEZE_LBRS_ON_PMI;
+> > +             wrmsrq(MSR_IA32_DEBUGCTLMSR, dbg_ctl);
+> >       }
+>
+> [Severity: Medium]
+> Can DEBUGCTLMSR_FREEZE_LBRS_ON_PMI still be set for user-only branch-stac=
+k
+> events when more than one branch-stack event is scheduled on the same CPU=
+?
+>
+> When two user-only branch-stack events are added via amd_pmu_lbr_add(),
+> cpuc->lbr_users is incremented to 2 and cpuc->lbr_select is set to 1.
+>
+> If one of those events is subsequently removed or scheduled out via
+> x86_pmu_del() -> amd_pmu_del_event() -> amd_pmu_lbr_del(), cpuc->lbr_sele=
+ct
+> is unconditionally cleared even though another branch-stack event remains
+> active:
+>
+> arch/x86/events/amd/lbr.c:amd_pmu_lbr_del() {
+>         if (!x86_pmu.lbr_nr)
+>                 return;
+>
+>         if (has_branch_stack(event))
+>                 cpuc->lbr_select =3D 0;
+>
+>         cpuc->lbr_users--;
+> }
+>
+> When amd_pmu_lbr_enable_all() then runs with cpuc->lbr_users =3D=3D 1 and
+> cpuc->lbr_select =3D=3D 0:
+>
+>         if (cpuc->lbr_select) {
+>                 lbr_select =3D cpuc->lbr_sel->config & LBR_SELECT_MASK;
+>                 wrmsrq(MSR_AMD64_LBR_SELECT, lbr_select);
+>         }
+>
+> the if (cpuc->lbr_select) block is skipped, leaving the local lbr_select =
+at
+> 0 (and also leaving MSR_AMD64_LBR_SELECT zeroed after a context switch ca=
+lls
+> amd_pmu_lbr_sched_task() -> amd_pmu_lbr_reset()).
+>
+> Wouldn't (lbr_select & LBR_KERNEL) then evaluate to false and re-enable
+> DEBUGCTLMSR_FREEZE_LBRS_ON_PMI despite the remaining active event
+> suppressing kernel branches?
+
+The behaviour is real, but it is not a regression: it is what
+amd_pmu_lbr_del() does today. It clears lbr_select while other
+branch-stack events remain, so LBR_SELECT is not reprogrammed.
+amd_pmu_lbr_reset() on sched-in can also leave it zeroed, which
+allows kernel branches. Clearing the freeze in that state would let
+the PMI handler's own branches into the LBR, so it has to stay set,
+as it does without this patch.
+
+Restoring the benefit means tracking the shared filter properly in
+lbr_del(), which is a separate change.
