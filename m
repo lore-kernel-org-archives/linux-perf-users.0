@@ -1,100 +1,57 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.160.173
-ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1792732788;
-	b=SAOAtkazuFTBgKZVfS86f13tfgoZHtHDsXploDCgrocaWjMp6TlwZnhI9b8F2pVEqJuZ
-	 vYEJpsla42doVKK3sfu6vpuMYTvix8Pjf18u8ZZo9b9lueEEpuGnUHIlDJgOJ4uM8bLRR
-	 BZsI4bt3CsLONSox5GB0mwc+VidK5XMgyMv3rL4xf02nKCYN5YAHuO/Ag9X623TsG4Mb/
-	 bb5V2mZ43SFR6S3ucDKtl2g0Ch/K0YoFyFcpSUPEdWoItnLoK3VnnV90T9dH9kYLuKoWY
-	 aQmrVgKXJDHEpQZK1h0GISWunwaEkyloJO7dMdL2JD52NuYE9O11Tof1fxAi5ONGjAA==
-ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792732788;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:
-	 MIME-Version:References:In-Reply-To:From:Date:X-Gm-Features:
-	 Message-ID:Subject:To:Cc:Content-Type:Content-Transfer-Encoding;
-	bh=/NaKMAAGxxDgzyHN/M6S08Zb78X5Vhy8kShaURHSxac=;
-	b=Jf8hW7Hy7Vo+9qxEVIO6d3qJNSgUYWya53eRPOuhs16lKQGsakfrd1APG5OM0x5I50mX
-	 04Ed7boarzwaNcU+XArXYMht6/IlNfMBizxTru5x3Vk6DjTjA3zXUsfuWksOnig3Z4jKQ
-	 V/0T3+CuuUpUTIRqToMxM4dkaqV4bSKP/CXxnINbQjLDG9iYwW/u0uZdUkFfgeUuRnaIo
-	 SK/PSCSt7ELOJm6LDwqqgX6Hd6r1lsYFQkHytF56vM2Did9cTwGzwNPKPrBr/jCI9WmgG
-	 bhqNClK93F97cRjTxqjpzv+as8A0tjs6jNZePg9qLBV3/e7MktuoOG50LALbADUIEBw==
-ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=google.com;
-	spf=pass smtp.mailfrom=google.com;
-	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20251104 header.b=dhN+jjhY;
-	arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.160.173
-Received: from mail-qt1-f173.google.com (mail-qt1-f173.google.com [209.85.160.173])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
+	t=1792733139;
+	b=rjPSB1DLID1quXtzLTpVgqwIRd2dZI9m4+1WQEWQ6mWMveE/I+fwxpt5bBQbjjQBQcrl
+	 dj1wpJNdSq6LC+gARHkqbLTLSVr/9rFZkWNSX0zxV5v/ZK0TBYfCPP74cpSihiaQsD3Q4
+	 1WLZfAHrGnb2XFNoC++lcVod9Y1Q1KvceSbsc/+M7kl9g3B27c/eqmZ6LgmQWGMqgg4jW
+	 lBqwVcjn6ZFyU6QSwOmeeHGMccC4loYe7jU7uj5D6uNdrnYM+iiyPqGPHBDNdoLzMHm1s
+	 Sazpi8jC3amca3j9KEccwOA0zbgC3LSGM7DmqLBfgCGoJzD5rjg2nvuNnyusoH+5MlA==
+ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1792733139;
+	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
+	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
+	bh=PgCVIhb5Gat9h7Q09t8qgBLwu1qeMpDt831Fn39JDA4=;
+	b=GJMfUmGDA+KTx9Xq2SWGHHO41o1/SpkN7cMy4DXKuLiZFOlvxIbavPBH/aZGuLX0ZLcl
+	 yvrPFmi2x2bvyUD4Qh2w2SlZGdgQZWvHScbyxgWPODL1BfHyfK/XASeJyl4aC0mpTJYrg
+	 zb4MTk+wTL5DWtPJ8GH4bNAJhJ1+rHd2A/qVCjaQrOFcnadaNo4kDmSvuKUKXMYoMa72X
+	 3kai5lACcPl0U6xVahWJBxmJUpI2QvPT45n38/a+Jjav3n9r/lwfxOqv57M4G65P3YFxa
+	 P5Enu8XkfOn90lf/4ITm9sq5uqPHZ1gKMO+mjamox9y1soLZcQJ9P38P8k50q6mSJbQ==
+ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Tw6hphYL;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0D5D606A319
-	for <linux-perf-users@vger.kernel.org>; Fri, 23 Oct 2026 05:19:47 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org A0D5D606A319
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8ACE60A2633
+	for <linux-perf-users@vger.kernel.org>; Fri, 23 Oct 2026 05:25:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20251104 header.b=dhN+jjhY
-Received: by mail-qt1-f173.google.com with SMTP id d75a77b69052e-5337fa12431so127361cf.1
-        for <linux-perf-users@vger.kernel.org>; Thu, 22 Oct 2026 22:19:47 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1792732786; cv=none;
-        d=google.com; s=arc-20260327;
-        b=sTasL1JxLm6qo40m69SsqRmSWMPtPLqxD6/yUduXdB0Bv+Z67D7KkteoBis8zrRHij
-         +WjOne1G7Njcd3cqrrwnniso0FIPOUtFqFPTsVTIR04IpIId+TEMEtjIkyzGYomDDK/0
-         VJMGXOY7TEOPa/Z9kS0oSKGAsvRE/pvBIpjRy0BWpsztpKniuWzCgdboXcSPx/rYc48L
-         vJ1EikCAoQGxxP77G6KW/voTWTwjQ/E5QdCI5I8/UkETBltVGGUW5YQHPDdSHJaUoUZf
-         asGD9643CfkJGHc22l42TWBsuQelHNxIGuMEFCi7NvcK+bqRQJMxa2UX//fw5Pq2blJl
-         PiIw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=/NaKMAAGxxDgzyHN/M6S08Zb78X5Vhy8kShaURHSxac=;
-        fh=Cxvh7HrtgtBXf1YoQ30qCjimZpdIYjOt43oW6Yr03WQ=;
-        b=DfpxVUDHmsw9x7fcHcNtc9x41oEDHQIbiVlouKUQ6yTxp5Ekt75sMAaPwSlVgBB4xo
-         znZLl3xY/FnWr7i/fbdGZ4ktazJZCUb8N066Kippm5bblgiz/50Q4h/JGEla9VOmv2+x
-         ne1tRjP4tey2qOWRXqaDReCtaF2rlG8KQF+oWVNnaSQ7bgPxF9UBT6YId3beponSUxD7
-         ddjozCmjqFhiGCbcLtj3KK+x90WMUBOfAXOCQn54IHN7Gwlwfrww+sCbtbS6wkaTH9Uc
-         +7p3bYbkNmkXCwgUFn0h+NI9KGeIRnhXbKDwEw0K3RUfs51nx7jVjGuBArYFgnOWk26x
-         7ZGA==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1792732786; x=1793337586; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=/NaKMAAGxxDgzyHN/M6S08Zb78X5Vhy8kShaURHSxac=;
-        b=dhN+jjhYDCzHhvHbn33fmDcad2jwo/QdsisYORyUbFD9+SyQfN1B+U21BPynozdCik
-         pJRzP91kzKB8uV0dCvorOtfJwoFvPDN1KJ1jFQmtJ7boJ9/GFh+VdTe+LSaszIikyc1k
-         +a6ZtlBhP9Gcz6qOLkBWf9KiF1z15aO4Cke0EzKemwnQlqR37Andcj0CmLkwSur/vQXr
-         2EyTIJ4ScuMh4Edk0uXxn1CtMI/0roJu+bUbfgXXYGcYq0A8Vdm9fGjm+ZOwJSgjHSc0
-         uqEcKEpuDUmFmPjcrYC5WEq90+naPV9OgYcG0qIXPmCEUc31AMRTbOCMXUX+SCjLIvWF
-         1c6Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1792732786; x=1793337586;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=/NaKMAAGxxDgzyHN/M6S08Zb78X5Vhy8kShaURHSxac=;
-        b=Gll4C1LnsIecXwI7ac7mr6dbTI37uS/N4UYYh7EPL2xP7QrNz+o1d+YBxoYnNCDgAe
-         rngMtAzYeun1e4AYnztMO43DkEBrNZGm4H3bf+CUzJW3WOPaRVtiRs3T6oXLerU6KEHH
-         hA/CsojlQDlNduPlGmJS82M1MYGd2GuMjP4lHtMhoeh02PKvWaQ+51ZuVzFWQ6z0ZUR8
-         +72kJJcpU/ZYkFqmlADzi22nhQnrmw01SfdDUQvLvEkfO6EQBbCWJ/TRW8+0lkMcOrvi
-         Lw1FMVxmtepCS5K09tGQWQNc/60ame2dp7xE7TgEtQoC6hTbC5KqvSYRpc1F7Q3VYEFg
-         pZ+g==
-X-Forwarded-Encrypted: i=1; AKwUvBxiq4FfNbJe0jehUG/s5Z8R7+xzzmhpSQhMj+wFL0LOKdt26tvzWa3/5FHe9ITWFkrN2vUx2bgn8B24mDAnDGUz@vger.kernel.org
-X-Gm-Message-State: AFq9FYKA0utXahi9XEb2itHZyrHL1rJpfrPSAw7CMzhovDuZMG5XyKRL
-	FB5ZSj4b5VU+jWMp0kbvUJB4IdJz7Il4AusT6KuG6mKIfvX5HcXNHcTEUuulA0qwm8xgDIxwIhw
-	b812QjYq0XKObXR6wOu6Z1TH/6TU6HGlPEJjxaXgT
-X-Gm-Gg: AYBFou2j6XKjoapd+6/m+5b48Fl4JrZS8n8LjIwqqhRQXqyJUsCUSubyt7bgiKhQ3GE
-	z0Lzp2n9CRP8yfoCTxgW89G6X36yDCW301eRK/Vr6PfwAZe4AonJTMZXxbyWm2Nk7K+0fWlaomH
-	npIni/4qgH9Lck2RhyWcTXfUgiqzvduylKSN5cAGArkohnr8oNr/5yNEOffBTnaP5SbrgCmGHHF
-	gA4KMk17G0FWNAMb1LbaeSgpHcu4K01YwdO4IrZ/vxqRLF8YuwCOKCyHTdHoGQuMWfG9hKJe41X
-	QuQPJ4MdsAQ9C683cvu8blZKWT24ceqg9RG9JwlBcOn4taAWQ4K/ktcS12NyJFYHik/17or7clu
-	B8au2nKn1jsXX8yuv2bIQONjVz4iLUTMUkMNuNg==
-X-Received: by 2002:a05:622a:410e:b0:531:282:6560 with SMTP id
- d75a77b69052e-536c499a845mr5631721cf.15.1792732786055; Thu, 22 Oct 2026
- 22:19:46 -0700 (PDT)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Tw6hphYL
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 62D121F031E1;
+	Fri, 23 Oct 2026 05:25:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1792733138;
+	bh=PgCVIhb5Gat9h7Q09t8qgBLwu1qeMpDt831Fn39JDA4=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=Tw6hphYLn5XNwpDOKkOkoZCDcZ7XYLJD+UCxm9/yW59tlKl2IXZls9EN+8/C/gbDl
+	 e8Jnhuyb3axmoZGG239ecw/luxv1ktb3yplNmE8uSybU37d5dcQ77fj43ljlXcmUj2
+	 lfx9MT5Xk/vw9X9jcgvFDSY5fWPkFi26FGYd+osUVp5+X6A8r0mtzVzyt32s45lism
+	 pQ6EvOQpFILgoBDfMWPbRrHuhMnKItGw02zZmftgcviYqLte8Um5iiU9eF8s0EDVIQ
+	 AYavC82xwtxbGNfgw+5Yzmmf9d119s1W5AvJnUftExCQO4RY+eTxlfGUzK1jtaMxra
+	 D5lRMLYb6sXMA==
+Message-ID: <sashiko-outbox-182309@kernel.org>
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v4 1/2] perf timechart: Add a --live mode to the TUI
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Ian Rogers" <irogers@google.com>
+Cc: linux-perf-users@vger.kernel.org
+In-Reply-To: <20261023050207.2449976-2-irogers@google.com>
+References: <20261023041819.2361900-1-irogers@google.com>
+ <20261023050207.2449976-1-irogers@google.com>
+ <20261023050207.2449976-2-irogers@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Fri, 23 Oct 2026 05:25:37 +0000
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -103,81 +60,246 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
-MIME-Version: 1.0
-References: <20261020205859.1080743-1-irogers@google.com> <20261022203003.1779152-1-irogers@google.com>
- <20261022203003.1779152-7-irogers@google.com> <atqUsIBhPaxjp3p8@google.com>
-In-Reply-To: <atqUsIBhPaxjp3p8@google.com>
-From: Ian Rogers <irogers@google.com>
-Date: Thu, 22 Oct 2026 22:19:34 -0700
-X-Gm-Features: AclHuK8074tTEIi4nbK08SZtgABfkl_zUHjYXnlEC7ftpUdA3DXoCtzUr3SI0rM
-Message-ID: <CAP-5=fUZ+=_b_1SL7B=wtab=8foQ6iDKXrxQ_k8wDZaJTd43Pg@mail.gmail.com>
-Subject: Re: [PATCH v6 06/11] perf bpf-filter: Extend lock_held() to other
- kernel lock types
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: acme@kernel.org, adrian.hunter@intel.com, ddhariwal@google.com, 
-	eranian@google.com, james.clark@linaro.org, jolsa@kernel.org, 
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
-	mingo@redhat.com, peterz@infradead.org, rcu@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Thu, Oct 22, 2026 at 3:56=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> =
-wrote:
->
-> On Thu, Oct 22, 2026 at 01:29:58PM -0700, Ian Rogers wrote:
-[snip]
-> > +static const struct lock_prog_desc lock_progs[] =3D {
-> > +     /* Mutex */
-> > +     LOCK_FPROG(fexit_mutex_lock, "mutex_lock", LOCK_PROG_MUTEX),
-> > +     LOCK_FPROG(fexit_mutex_lock_nested, "mutex_lock_nested", LOCK_PRO=
-G_MUTEX),
-> > +     LOCK_FPROG(fexit__mutex_lock_nest_lock, "_mutex_lock_nest_lock", =
-LOCK_PROG_MUTEX),
-> > +     LOCK_FPROG(fexit_mutex_lock_io, "mutex_lock_io", LOCK_PROG_MUTEX)=
-,
-> > +     LOCK_FPROG(fexit_mutex_lock_io_nested, "mutex_lock_io_nested", LO=
-CK_PROG_MUTEX),
-> > +     LOCK_FPROG(fexit_mutex_lock_interruptible, "mutex_lock_interrupti=
-ble", LOCK_PROG_MUTEX),
-> > +     LOCK_FPROG(fexit_mutex_lock_interruptible_nested, "mutex_lock_int=
-erruptible_nested",
-> > +                LOCK_PROG_MUTEX),
-> > +     LOCK_FPROG(fexit_mutex_lock_killable, "mutex_lock_killable", LOCK=
-_PROG_MUTEX),
-> > +     LOCK_FPROG(fexit__mutex_lock_killable, "_mutex_lock_killable", LO=
-CK_PROG_MUTEX),
-> > +     LOCK_FPROG(fexit_mutex_trylock, "mutex_trylock", LOCK_PROG_MUTEX)=
-,
-> > +     LOCK_FPROG(fexit__mutex_trylock_nest_lock, "_mutex_trylock_nest_l=
-ock", LOCK_PROG_MUTEX),
-> > +     LOCK_FPROG(fentry_mutex_unlock, "mutex_unlock", LOCK_PROG_MUTEX),
->
-> I'm not sure if these are still needed.. it can handle mutexes
-> specially, right?
+Thank you for your contribution! Sashiko AI review found 3 potential issue(=
+s) to consider:
+- [Medium] perf timechart: missing -a in LiveRecorder.start() breaks worklo=
+ad timelines
+- [Medium] perf timechart: backward prev.since reset in sched_switch() corr=
+upts totals
+- [Medium] perf timechart: unsynchronized concurrent teardown in LiveRecord=
+er.stop()
+--
 
-The direct lock->owner check only works when we already know the
-mutex's address, i.e. lock_held(<global mutex symbol>). In that case
-prescan_one_lock_expr() adds no LOCK_PROG_MUTEX group, and
-configure_lock_progs() turns autoload off for all of these programs,
-so none of them are loaded.
+commit 154f81d15ad61319be3006e45c11ac5951330583
+Author: Alice Rogers <alice.mei.rogers@gmail.com>
 
-They're still needed when the address isn't known up front, or the
-target matches many mutexes:
- - lock type filters, e.g. lock_held(mutex) or "lock_held(mutex) ||
-lock_held(rwsem)" for the direct reclaim use case. There we need to
-know whether the current task holds any mutex, which means tracking
-acquire/release in held_locks;
- - slab cache filters (lock_held(&<cache>)), where the lock is
-embedded in a dynamically allocated object and we match on the
-kmem_cache of the address recorded at acquire time;
- - hex addresses and symbols whose type can't be determined, where we
-hook every lock family.
+perf timechart: Add a --live mode to the TUI
 
-So they're only loaded when the filter actually needs them. I'll add a
-comment above lock_progs[] in the next version explaining this.
+This commit adds a --live option to perf timechart and ttimechart.py to
+record scheduler, power, or I/O events with perf record and display the
+most recent window of events interactively in the terminal UI.
 
-Thanks,
-Ian
+> diff --git a/tools/perf/python/ttimechart.py b/tools/perf/python/ttimecha=
+rt.py
+> index 34ecf84e68c1d..168f64c6b0fec 100755
+> --- a/tools/perf/python/ttimechart.py
+> +++ b/tools/perf/python/ttimechart.py
 
-> Thanks,
-> Namhyung
+[ ... ]
+
+> @@ -363,9 +524,14 @@ class TimechartData:
+>          if c.cur_tid =3D=3D -1 and prev_tid !=3D 0:
+>              # Assume the task was running from the start of the trace.
+>              c.cur_tid =3D prev_tid
+> -            c.since =3D self.first_time
+> +            c.since =3D self.state_start()
+>          if c.cur_tid > 0:
+>              c.run.add(c.since, time, 1, c.cur_tid)
+> +            if c.cur_tid !=3D prev_tid:
+> +                # The switch away from the task that was running was los=
+t.
+> +                old =3D self.tasks.get(c.cur_tid)
+> +                if old and old.state =3D=3D STATE_RUNNING and old.cpu =
+=3D=3D cpu:
+> +                    old.change_state(time, STATE_UNKNOWN)
+>          c.cur_tid =3D next_tid
+>          c.since =3D time
+> =20
+> @@ -373,7 +539,7 @@ class TimechartData:
+>              prev =3D self.task(prev_tid, prev_comm)
+>              if prev.state =3D=3D STATE_UNKNOWN:
+>                  prev.state =3D STATE_RUNNING
+> -                prev.since =3D self.first_time
+> +                prev.since =3D self.state_start()
+>                  prev.cpu =3D cpu
+
+[Severity: Medium]
+Can resetting prev.since to self.state_start() in
+TimechartData.sched_switch() move prev.since backwards before existing
+segments and corrupt Task.totals[STATE_RUNNING]?
+
+When c.cur_tid !=3D prev_tid above, a previously running task old is
+transitioned to STATE_UNKNOWN via old.change_state(time, STATE_UNKNOWN),
+which appends a segment ending at time (old.segs.ends[-1] =3D=3D time) and =
+sets
+old.since =3D time.
+
+If that task's subsequent switch-in event is also missed and the task is
+next seen switching out as prev_tid at time2 > time while still in
+STATE_UNKNOWN, setting prev.since =3D self.state_start() moves prev.since
+backwards to self.state_start() < prev.segs.ends[-1].
+
+When prev.change_state(time2, new_state) then runs:
+
+    if self.state in (STATE_RUNNING, STATE_WAITING, STATE_BLOCKED) and time=
+ > self.since:
+        self.segs.add(self.since, time, self.state, self.cpu)
+        self.totals[self.state] +=3D time - self.since
+
+SegmentList.add() clips start to self.ends[-1] (time), so the added segment
+has length (time2 - time), but Task.change_state() adds the unclipped
+(time2 - self.state_start()) to self.totals[STATE_RUNNING]. When
+Task.prune() later discards that segment, it only subtracts (time2 - time),
+leaving self.totals[STATE_RUNNING] permanently inflated by
+(time - self.state_start()).
+
+Should prev.since be set to max(prev.since, self.state_start()) here?
+
+[ ... ]
+
+> @@ -1727,52 +2178,358 @@ class TimechartApp(App):
+>          self.goto_task(waker, wake_time)
+> =20
+> =20
+> +class LiveRecorder:
+
+[ ... ]
+
+> +    def start(self) -> None:
+> +        """Start perf record, the data is then read from data_fd."""
+> +        output =3D open(self.output, "wb") if self.output else None
+> +        # perf record's ends of the control pipes, closed once it is sta=
+rted.
+> +        child_fds: List[int] =3D []
+> +        try:
+> +            ctl_r, self.ctl_fd =3D os.pipe()
+> +            child_fds.append(ctl_r)
+> +            self.ack_fd, ack_w =3D os.pipe()
+> +            child_fds.append(ack_w)
+> +            # Quiet so that only errors are written to stderr, see error=
+_text().
+> +            cmd =3D [self.perf_exe, "record", "-q", "-o", "-", "-R", "-c=
+", "1", "-k", "mono",
+> +                   "--synth=3Dtask", "--control", f"fd:{ctl_r},{ack_w}"]
+> +            filt =3D f"common_pid !=3D {os.getpid()}"
+> +            for name in self.events():
+> +                cmd +=3D ["-e", name]
+> +                if name.startswith("syscalls:"):
+> +                    cmd +=3D ["--filter", filt]
+> +            # Without a workload record the whole system until stopped.
+> +            cmd +=3D ["--", *self.workload] if self.workload else ["-a"]
+
+[Severity: Medium]
+Does omitting -a in LiveRecorder.start() when self.workload is specified
+break task, CPU, and power timelines for the recorded workload?
+
+Unlike timechart__record() and timechart__io_record() in
+tools/perf/builtin-timechart.c, which always pass -a, LiveRecorder.start()
+omits -a when a workload is given. That causes perf record to open
+sched:sched_switch, sched:sched_wakeup, sched:sched_wakeup_new,
+power:cpu_idle, and power:cpu_frequency as per-task events attached only to
+the workload tasks.
+
+In the kernel's __schedule() in kernel/sched/core.c:
+
+    trace_sched_switch(preempt, prev, next, prev_state);
+
+    /* Also unlocks the rq: */
+    rq =3D context_switch(rq, prev, next, &rf);
+
+trace_sched_switch() runs before context_switch() activates next's per-task
+perf_event_context, and TRACE_EVENT(sched_switch) does not target next via
+__perf_task(). As a result, per-task sched:sched_switch events only fire
+when a workload task switches out as prev, and never when an untraced task
+(such as swapper/idle or another process) switches into the workload task as
+next.
+
+In TimechartData.sched_switch(), when a workload task wakes up via
+sched:sched_wakeup (which does use __perf_task(p)) or is preempted, its
+state becomes STATE_WAITING. Because the subsequent switch-in from idle or
+an untraced task is never recorded, task.state remains STATE_WAITING across
+the entire CPU execution interval until the workload switches out, recording
+its running time as STATE_WAITING instead of STATE_RUNNING and leaving
+c.cur_tid on the Cpu object at 0 or at the previous untraced next_tid.
+
+In addition, trace_cpu_idle() only runs in the idle task (PID 0), so
+per-task recording on a workload captures no power:cpu_idle events, and
+running perf timechart --live -P -- <workload> exits with "Error: no
+scheduler, power or I/O events were recorded." if no CPU frequency change
+occurs within the workload's own task context.
+
+Should -a always be passed to perf record even when self.workload is
+present?
+
+[ ... ]
+
+> +    def stop(self) -> None:
+> +        """Stop recording, perf record then writes any remaining data an=
+d exits."""
+> +        self.stopping.set()
+> +        self.commands.put("")
+> +        proc =3D self.proc
+> +        if proc is not None and proc.poll() is None:
+> +            try:
+> +                proc.send_signal(signal.SIGINT)
+> +                proc.wait(timeout=3D1)
+> +            except subprocess.TimeoutExpired:
+> +                # Probably blocked writing data that is no longer proces=
+sed.
+> +                proc.kill()
+> +                proc.wait()
+> +        if self.tee_thread and self.tee_thread is not threading.current_=
+thread():
+> +            self.tee_thread.join(timeout=3D1)
+> +        if self.control_thread and self.control_thread is not threading.=
+current_thread():
+> +            self.control_thread.join(timeout=3D1)
+> +        self.close_control_fds()
+> +        self.close_data_fds()
+> +
+> +    def close_data_fds(self) -> None:
+> +        """Close the read ends of the data pipes.
+> +
+> +        perf.data() duplicates the file descriptor it reads from, so they
+> +        aren't needed once processing has started. Closing them means wr=
+ites
+> +        to them fail, rather than block, once they are no longer read.
+> +        """
+> +        self.data_fd =3D -1
+> +        tee_r, self.tee_r =3D self.tee_r, -1
+> +        if tee_r >=3D 0:
+> +            try:
+> +                os.close(tee_r)
+> +            except OSError:
+> +                pass
+> +        # Unless the tee thread is still reading from it.
+> +        if self.proc and self.proc.stdout and not (self.tee_thread and
+> +                                                   self.tee_thread.is_al=
+ive()):
+> +            self.proc.stdout.close()
+
+[Severity: Medium]
+Can concurrent calls to LiveRecorder.stop() from the UI thread and worker
+thread race during teardown?
+
+When quitting during live recording, TimechartApp.action_quit() (or
+TimechartApp.on_unmount()) calls TimechartApp.cancel_loading() on the UI
+thread:
+
+    loading =3D self.loading
+    if loading is not None:
+        loading.cancelled =3D True
+    if self.live:
+        self.live.stop()
+
+At the same time, the background worker in TimechartApp.record_events()
+exits read_events() (either via LoadCancelled or when perf record closes the
+pipe) and runs its finally block:
+
+    finally:
+        self.loading =3D None
+        live.stop()
+
+In LiveRecorder.stop(), both threads can concurrently inspect proc.poll()
+and call proc.send_signal(), proc.wait(), and proc.kill() without
+synchronization. If one thread reaps proc in wait() while the other calls
+send_signal() or kill(), an uncaught ProcessLookupError can be raised.
+Similarly, in LiveRecorder.close_data_fds(), self.tee_r and
+self.proc.stdout.close() are accessed without self.fd_lock (unlike
+LiveRecorder.close_control_fds()), allowing both threads to race on closing
+the pipe file descriptors and buffered stdout stream.
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261023050207.2449=
+976-1-irogers@google.com?part=3D1
