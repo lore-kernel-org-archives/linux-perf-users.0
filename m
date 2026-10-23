@@ -1,57 +1,57 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792740407;
-	b=qkMHaXVdwqipI083n75OoLfEd8dO6mhSCPqsVX8/QcB7mAnx10inCgvTq5TESLaNw/82
-	 GrtMnvX4Q5AFJSit+N8nTSd+vUOSWEvMNuYBjjHP5NwRAiJP/ZIkygu+YctG2jdhSQ9SU
-	 cLhhRP9D4KmepUidKgYP3iPtnF34EMINcmhoQMGog9skDgqxnCcWlNPhBG7nrQCLyAsxM
-	 UKNrq6usNj1B9dQUiCVoPrshS2vLJJ0N6PFZcXbNm0uQBAxLBuiU3DEsJlGf9K4BIHNno
-	 OhA3TLkc/JtL61L3RbvMklJwI21XP3YE2hVNxnl8WR8U+4/kdemDRKhjl5dX1oGv54A==
+	t=1792740517;
+	b=cvQOPOf8s0nv3fqozsbmWLdNTBjIXP+OrLreSHDebdvjVYboas9SYWztzYU5MYnKvDjp
+	 gctZXnmCnpgpW8mK+D7DlRq6NG8MKViWxi9L8f+2/Bv83O0znW251svOQP44QIR7kcWkv
+	 gmMgEYlg/Xt5xSsyPmtSOES423/HJZesdruW4Zljn/96DXf/YM8RetCtBdH8Nw2xfrH/p
+	 mxx5TUxpzuRv0FfgphMPYLYS2zevJyVB9H27fuWf9HxLhR6CjmOW4RYw5xWbbkss+M+/F
+	 56WqGphKyyGnYGt0LK6WBbl3dmNAm+G8JlKdXvVre+FX3OjkztIkQZXJSB0/NjnEd/w==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792740407;
+	a=rsa-sha256; c=relaxed/relaxed; t=1792740517;
 	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
 	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=dPOVJwJss1EIZjf8xg80+j8YmKECbrvmt8s9GBGBnxs=;
-	b=l3SaSQLRoJ2Ijc9Y47Xic2RRx23MeLDBh+xyMKBDr25pktEoHWkrTusegLfXWPoqAHDb
-	 GerzYS5ON/JsASG0IFbtB2cI2KyKxNPSlS47Af6C9vWALS/0+gFrbrPBVnIEzdC1/QK8F
-	 RuI/OY0bVeUd5C+mxr4b7PBYmYdEg7MTG9ZLvOLn+I41jetkenx1zbCXXGOmx4f5J4mfP
-	 t309iPU6ZEEnQJJJCxvS8qsLqXiIWmpTlIywlK5pt8tAntINNIljvp88nkDI6PZ3Qc1+P
-	 +kd+wmY+mQJ2yWMoz/p+ziBiho+YIBchyLqUHaC9MFSkN/gL4L5RaYT40As2a73ag3g==
+	bh=xixe4XdUuL7WZTyf8jgLSPiYOwBgMowaXqsd+tNWMo0=;
+	b=uwTvTWwt9eHxlFlAexydCkP9auyFn2vT0pssyBl362JzGN++PV1qHeX9FrmlrDP47oiC
+	 CNrHaKOSRJIsVerJR6Cb9L59Sn9bxlAze4Bt/HXbT9eNV0WZS0XF5qvD8mA2ysK+veZeE
+	 mKFM4IGBj6OxnwGVdtUvxdQ5X3xsv4mQo4RPoEjgLSkN9Db6zWcI7xuLDPidBhzgCEtGm
+	 YvO8BLC2g8kPvwRLOCduaQSgLEfCIUkvAePRn7saSQiG20YXSkajGAWhmGMNbbtMee1lx
+	 r8AG2QHDNUGNXHlCinZmxbLNKDlEPRqTdC+nu69NvBIaAuZGLpzX1Qe3SO81OVsGkng==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Km8tdETu;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=dNWFi7lq;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20752606A31A
-	for <linux-perf-users@vger.kernel.org>; Fri, 23 Oct 2026 07:26:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9544606A31A
+	for <linux-perf-users@vger.kernel.org>; Fri, 23 Oct 2026 07:28:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Km8tdETu
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 999411F01825;
-	Fri, 23 Oct 2026 07:26:46 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=dNWFi7lq
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 875921F01825;
+	Fri, 23 Oct 2026 07:28:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1792740406;
-	bh=dPOVJwJss1EIZjf8xg80+j8YmKECbrvmt8s9GBGBnxs=;
+	s=k20260515; t=1792740516;
+	bh=xixe4XdUuL7WZTyf8jgLSPiYOwBgMowaXqsd+tNWMo0=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=Km8tdETuAF1+8Lkef/PRO7+qelV9TuaDJ8Xo8cCOj67/lxqkwvTw3NYOYES1k9zbK
-	 Yl9C7qjLIj4RyrWQGOLm11iIuewc5INqjt96CZVSXA1VIX580uHEjnxmuqCT5QIqLa
-	 84VJhEYBlPhibAQ2gSHmnPlc3brdT3tgGDZnvDmvPkojvZFpMwMX0803VBNQm+TBe+
-	 U8BlR7Pzub9RzTv9RXwwqNZ+Ksd0fEE8oUi8nessjnaj1o7y5fF2MgiIQxAgq6uLmZ
-	 oHW3W2lWomMLzXXL8jnZ54USnqDXA9MFoh9NvbKgo0X5fvoRZ5KDymCbN2TeUUxTdE
-	 t1B0iYC3sQrow==
-Message-ID: <sashiko-outbox-182410@kernel.org>
+	b=dNWFi7lqShGbxXSe3VB5kmCxrYGai/pJscneMQBiQaplmzBoDGZUwt6GZcfJk0qj0
+	 umN42Z+yEn5RDlgi8QBnD9qszB7Lz4YhKquIOXVNO06jDYwZp97eIX4B/EpCI6seBr
+	 D1s6UHupIOnrm2AGs32jRJTjbMxM2/zGwE5ud8SlswSmsLPh+JzgkpBkH7D6h6Uias
+	 5LljcoexjGyDGA8Jwh8E8sBD8B1qWYZHCi2YEux4il99Yznkk28+tx2qu9f1L700EW
+	 dsZAHPRsb7TvKZlooLl/DFpaHF8Zg/096zIAztlYhfMWQ7gpKCx6I6WLh5Qn0+I39f
+	 tqQXumrPsBdWA==
+Message-ID: <sashiko-outbox-182413@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v1 04/11] perf tools: Defer /proc lookup until nsinfo is
- used
+Subject: Re: [PATCH v1 05/11] perf tools: Verify thread status and mount
+ namespace inode
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Namhyung Kim" <namhyung@kernel.org>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20261023071141.134149-5-namhyung@kernel.org>
+In-Reply-To: <20261023071141.134149-6-namhyung@kernel.org>
 References: <20261023071141.134149-1-namhyung@kernel.org>
- <20261023071141.134149-5-namhyung@kernel.org>
+ <20261023071141.134149-6-namhyung@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Fri, 23 Oct 2026 07:26:46 +0000
+Date: Fri, 23 Oct 2026 07:28:36 +0000
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -61,211 +61,185 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 
-Thank you for your contribution! Sashiko AI review found 3 potential issue(=
+Thank you for your contribution! Sashiko AI review found 2 potential issue(=
 s) to consider:
-- [Medium] perf namespaces: eager /proc lookup in nsinfo__copy() on vdso ma=
-ps
-- [Medium] perf namespaces: stale PID namespace fields after nsinfo__reset_=
-init()
-- [Medium] perf namespaces: unsynchronized in-place mutation of shared nsin=
-fo
+- [Medium] perf namespaces: nsinfo__init() clobbers tgid and pidns on TID r=
+ecycling
+- [Medium] perf namespaces: nsinfo__mountns_enter() sets exited on mntns in=
+ode change
 --
 
-commit 8a6dea83f2e96bc304e510d4de1293c50368eb01
+commit da6e91e676149798d39ba6f5e75c0b31c436121c
 Author: Namhyung Kim <namhyung@kernel.org>
 
-perf tools: Defer /proc lookup until nsinfo is used
+perf tools: Verify thread status and mount namespace inode
 
-This commit defers reading /proc/<pid>/task/<tid>/ in nsinfo__new_thread()
-until namespace information is queried or entered via nsinfo__ensure_init(),
-and resets the initialization state on exec and PERF_RECORD_NAMESPACES even=
-ts.
+This commit verifies that /proc/<pid>/task/<tid>/status exists and has a
+matching Tgid before accessing a thread's namespaces to guard against PID/T=
+ID
+recycling, and records the mount namespace inode to verify it via fstat() w=
+hen
+entering the namespace.
 
 > diff --git a/tools/perf/util/namespaces.c b/tools/perf/util/namespaces.c
-> index f426eba04d6ef..843d075d30409 100644
+> index 843d075d30409..bb119a6cc6064 100644
 > --- a/tools/perf/util/namespaces.c
 > +++ b/tools/perf/util/namespaces.c
 
 [ ... ]
 
-> @@ -196,6 +198,8 @@ struct nsinfo *nsinfo__copy(const struct nsinfo *nsi)
->  	if (nsi =3D=3D NULL)
->  		return NULL;
+> @@ -103,17 +105,34 @@ int nsinfo__init(struct nsinfo *nsi)
+>  	struct stat new_stat;
+>  	int rv =3D -1;
 > =20
-> +	nsinfo__ensure_init((struct nsinfo *)nsi);
+> -	if (!nsi)
+> +	if (!nsi || RC_CHK_ACCESS(nsi)->exited)
+>  		return -1;
+> =20
+>  	RC_CHK_ACCESS(nsi)->inited =3D true;
+> =20
+> +	/*
+> +	 * Verify that the thread (pid, tid) still exists in /proc and its Tgid
+> +	 * matches pid (guarding against PID/TID recycling), while resolving the
+> +	 * innermost tgid if the process is in a different PID namespace.
+> +	 */
+> +	if (snprintf(spath, PATH_MAX, "/proc/%d/task/%d/status",
+> +		     nsinfo__pid(nsi), nsinfo__tid(nsi)) >=3D PATH_MAX)
+> +		goto out;
 > +
->  	nnsi =3D nsinfo__alloc();
->  	if (!nnsi)
->  		return NULL;
-> @@ -204,7 +208,8 @@ struct nsinfo *nsinfo__copy(const struct nsinfo *nsi)
->  	RC_CHK_ACCESS(nnsi)->tid =3D nsinfo__tid(nsi);
->  	RC_CHK_ACCESS(nnsi)->tgid =3D nsinfo__tgid(nsi);
->  	RC_CHK_ACCESS(nnsi)->nstgid =3D nsinfo__nstgid(nsi);
-> -	RC_CHK_ACCESS(nnsi)->need_setns =3D nsinfo__need_setns(nsi);
-> +	RC_CHK_ACCESS(nnsi)->inited =3D RC_CHK_ACCESS(nsi)->inited;
-> +	RC_CHK_ACCESS(nnsi)->need_setns =3D RC_CHK_ACCESS(nsi)->need_setns;
->  	RC_CHK_ACCESS(nnsi)->in_pidns =3D nsinfo__in_pidns(nsi);
->  	if (nsinfo__mntns_path(nsi)) {
->  		RC_CHK_ACCESS(nnsi)->mntns_path =3D strdup(nsinfo__mntns_path(nsi));
+> +	rv =3D nsinfo__get_nspid(&RC_CHK_ACCESS(nsi)->tgid, &RC_CHK_ACCESS(nsi)=
+->nstgid,
+> +			       &RC_CHK_ACCESS(nsi)->in_pidns, spath);
+> +	if (rv < 0 || RC_CHK_ACCESS(nsi)->tgid !=3D nsinfo__pid(nsi)) {
+> +		nsinfo__set_exited(nsi);
+> +		rv =3D -1;
+> +		goto out;
+> +	}
 
 [Severity: Medium]
-Should nsinfo__copy() copy the raw fields of struct nsinfo without calling
-nsinfo__ensure_init(), nsinfo__tgid(), nsinfo__nstgid(), and
-nsinfo__in_pidns()?
+Can this overwrite tgid, nstgid, and in_pidns with an unrelated process's
+values when PID/TID recycling is detected?
 
-When a PERF_RECORD_MMAP or PERF_RECORD_MMAP2 event for a [vdso] mapping is
-processed in tools/perf/util/map.c:map__new() or
-tools/perf/builtin-inject.c:dso__findnew_id(), perf copies the thread's
-nsinfo and immediately clears need_setns on the copy:
+In nsinfo__new_thread(pid, tid), tgid and nstgid are initialized to pid and
+in_pidns to false as fallback values in case the thread exits before /proc =
+is
+queried.
 
-	if (vdso) {
-		nnsi =3D nsinfo__copy(nsi);
-		if (nnsi) {
-			nsinfo__put(nsi);
-			nsinfo__clear_need_setns(nnsi);
-			nsi =3D nnsi;
-		}
-	}
+If a process with pid =3D=3D tid exits before lazy initialization in
+nsinfo__init(), and its ID is recycled as a non-leader thread of an unrelat=
+ed
+process P2, /proc/<pid>/task/<tid>/status still resolves in procfs because
+both refer to the same thread group.
 
-Because nsinfo__copy() calls nsinfo__ensure_init() on the source nsinfo (as
-well as the getter helpers that also call nsinfo__ensure_init()), any proce=
-ss
-that maps [vdso] will still trigger an eager /proc/<pid>/task/<tid>/ns/mnt
-and /proc/<pid>/task/<tid>/status lookup and duplicate mntns_path only for
-nsinfo__clear_need_setns() to immediately free it, even when namespace
-information is never subsequently used.
+In that case, nsinfo__get_nspid() succeeds and writes P2's Tgid, NStgid, and
+in_pidns directly into nsi before the tgid !=3D nsinfo__pid(nsi) check dete=
+cts
+the mismatch. Calling nsinfo__set_exited(nsi) marks exited =3D true and cle=
+ars
+need_setns, but leaves the overwritten tgid, nstgid, and in_pidns in place.
 
-> @@ -251,21 +256,41 @@ void nsinfo__put(struct nsinfo *nsi)
-> =20
->  bool nsinfo__need_setns(const struct nsinfo *nsi)
->  {
-> +	if (!nsi)
-> +		return false;
-> +
-> +	nsinfo__ensure_init((struct nsinfo *)nsi);
->  	return RC_CHK_ACCESS(nsi)->need_setns;
+Downstream callers that query an exited nsinfo via nsinfo__tgid(),
+nsinfo__nstgid(), nsinfo__in_pidns(), or nsinfo__copy(), such as
+dso__find_perf_map() in tools/perf/util/symbol.c:
+
+	if (!nsinfo__need_setns(nsi)) {
+		...
+		nsinfo__clear_need_setns(nnsi);
+		snprintf(filebuf, bufsz, "/tmp/perf-%d.map", nsinfo__tgid(nnsi));
+
+as well as jr_entry_pid() and jit_detect() in tools/perf/util/jitdump.c, wi=
+ll
+then use P2's identifiers instead of the original process's pid.
+
+Should nsinfo__init() read into local variables first, similar to
+nsinfo__check_proc(), and only update nsi after verifying that tgid matches
+nsinfo__pid(nsi)?
+
+[ ... ]
+
+> @@ -273,15 +285,44 @@ void nsinfo__clear_need_setns(struct nsinfo *nsi)
+>  	zfree(&RC_CHK_ACCESS(nsi)->mntns_path);
 >  }
 > =20
->  void nsinfo__clear_need_setns(struct nsinfo *nsi)
+> -void nsinfo__reset_init(struct nsinfo *nsi)
+> +void nsinfo__set_exited(struct nsinfo *nsi)
 >  {
-> +	if (!nsi)
-> +		return;
-> +
-> +	RC_CHK_ACCESS(nsi)->inited =3D true;
->  	RC_CHK_ACCESS(nsi)->need_setns =3D false;
-> +	zfree(&RC_CHK_ACCESS(nsi)->mntns_path);
+>  	if (!nsi)
+>  		return;
+> =20
+> +	RC_CHK_ACCESS(nsi)->exited =3D true;
+> +	nsinfo__clear_need_setns(nsi);
 > +}
 > +
 > +void nsinfo__reset_init(struct nsinfo *nsi)
 > +{
-> +	if (!nsi)
+> +	if (!nsi || RC_CHK_ACCESS(nsi)->exited)
 > +		return;
 > +
-> +	nsinfo__clear_need_setns(nsi);
-> +	RC_CHK_ACCESS(nsi)->inited =3D false;
+>  	nsinfo__clear_need_setns(nsi);
+>  	RC_CHK_ACCESS(nsi)->inited =3D false;
 >  }
 
-[Severity: Medium]
-Does nsinfo__reset_init() leave stale PID namespace values in in_pidns, tgi=
-d,
-and nstgid?
+[ ... ]
 
-When nsinfo__new_thread() allocates a struct nsinfo, tgid and nstgid are set
-to pid and in_pidns is false. Once nsinfo__init() (or nsinfo__set_in_pidns(=
-))
-populates tgid, nstgid, and in_pidns for a task in a PID namespace, a
-subsequent exec or PERF_RECORD_NAMESPACES event calls nsinfo__reset_init(),
-which only clears need_setns, mntns_path, and inited.
-
-If the task exits or becomes inaccessible in /proc before the next
-nsinfo__ensure_init() call, nsinfo__init() sets inited =3D true at the star=
-t of
-the function and fails before or inside nsinfo__get_nspid():
-
-tools/perf/util/namespaces.c:nsinfo__init() {
-	...
-	RC_CHK_ACCESS(nsi)->inited =3D true;
-	...
-	if (stat(newns, &new_stat) < 0)
-		goto out;
-	...
-	rv =3D nsinfo__get_nspid(&RC_CHK_ACCESS(nsi)->tgid, &RC_CHK_ACCESS(nsi)->n=
-stgid,
-			       &RC_CHK_ACCESS(nsi)->in_pidns, spath);
-out:
-	free(newns);
-	return rv;
-}
-
-In that case, in_pidns, tgid, and nstgid will retain their stale pre-reset
-values instead of reverting to false and pid.
-
-> diff --git a/tools/perf/util/thread.c b/tools/perf/util/thread.c
-> index d12eb6bc63313..377c39ec624bb 100644
-> --- a/tools/perf/util/thread.c
-> +++ b/tools/perf/util/thread.c
-> @@ -199,6 +199,8 @@ int thread__set_namespaces(struct thread *thread, u64=
- timestamp,
->  	down_write(thread__namespaces_lock(thread));
->  	ret =3D __thread__set_namespaces(thread, timestamp, event);
->  	up_write(thread__namespaces_lock(thread));
-> +	if (!ret && event)
-> +		nsinfo__reset_init(thread__nsinfo(thread));
->  	return ret;
->  }
+> @@ -339,16 +384,26 @@ void nsinfo__mountns_enter(struct nsinfo *nsi,
+>  	if (!oldcwd)
+>  		return;
 > =20
-> @@ -282,6 +284,8 @@ int __thread__set_comm(struct thread *thread, const c=
-har *str, u64 timestamp,
->  	down_write(thread__comm_lock(thread));
->  	ret =3D ____thread__set_comm(thread, str, timestamp, exec);
->  	up_write(thread__comm_lock(thread));
-> +	if (!ret && exec)
-> +		nsinfo__reset_init(thread__nsinfo(thread));
->  	return ret;
->  }
+> -	oldns =3D open("/proc/self/ns/mnt", O_RDONLY);
+> -	if (oldns < 0)
+> -		goto errout;
+> +	if (RC_CHK_ACCESS(nsi)->need_setns) {
+> +		struct stat st;
+> +
+> +		oldns =3D open("/proc/self/ns/mnt", O_RDONLY | O_CLOEXEC);
+> +		if (oldns < 0)
+> +			goto errout;
+> =20
+> -	newns =3D open(nsinfo__mntns_path(nsi), O_RDONLY);
+> -	if (newns < 0)
+> -		goto errout;
+> +		newns =3D open(nsinfo__mntns_path(nsi), O_RDONLY | O_CLOEXEC);
+> +		if (newns < 0)
+> +			goto errout;
+> =20
+> -	if (setns(newns, CLONE_NEWNS) < 0)
+> -		goto errout;
+> +		if (fstat(newns, &st) < 0 ||
+> +		    st.st_ino !=3D RC_CHK_ACCESS(nsi)->mntns_ino) {
+> +			nsinfo__set_exited(nsi);
+> +			goto errout;
+> +		}
 
 [Severity: Medium]
-Can mutating thread__nsinfo(thread) in-place via nsinfo__reset_init() and
-nsinfo__ensure_init() cause a use-after-free on mntns_path or corrupt DSO
-namespace state?
+What happens if a live thread changes its mount namespace via
+unshare(CLONE_NEWNS) or setns(..., CLONE_NEWNS)?
 
-In tools/perf/util/map.c:map__new() and
-tools/perf/builtin-inject.c:dso__findnew_id(), dso->nsinfo takes a reference
-to thread__nsinfo(thread) via nsinfo__get(), so the same struct nsinfo
-instance is shared between the thread and its DSOs.
+If a thread in a non-root mount namespace is initialized via nsinfo__init()
+and later changes its mount namespace while still alive, procfs immediately
+updates the inode of /proc/<pid>/task/<tid>/ns/mnt.
 
-In multithreaded modes such as perf top (where display_thread resolves
-symbols via nsinfo__mountns_enter() while process_thread handles
-PERF_RECORD_COMM and PERF_RECORD_NAMESPACES events) or multithreaded event
-synthesis, one thread can check nsinfo__need_setns() and then pass
-nsinfo__mntns_path(nsi) to open() or strdup():
+If perf symbolizes an earlier sample or loads a DSO via
+dso__load() -> nsinfo__mountns_enter() before the corresponding
+PERF_RECORD_NAMESPACES or exec PERF_RECORD_COMM event is processed,
+nsinfo__check_proc(nsi) succeeds because the thread is still alive with
+Tgid =3D=3D pid, but fstat(newns, &st) sees st.st_ino !=3D nsi->mntns_ino a=
+nd calls
+nsinfo__set_exited(nsi).
 
-tools/perf/util/namespaces.c:nsinfo__mountns_enter() {
-	if (!nsi || !nsinfo__need_setns(nsi))
-		return;
-	...
-	newns =3D open(nsinfo__mntns_path(nsi), O_RDONLY);
-}
+Because dso->nsinfo shares the thread's struct nsinfo via
+nsinfo__get(thread__nsinfo(thread)) in map__new(), setting exited =3D true
+causes subsequent calls to nsinfo__reset_init() in thread__set_namespaces()
+and __thread__set_comm() to return early without resetting inited, permanen=
+tly
+disabling mount namespace entry and nsinfo__check_proc() checks for the rest
+of the thread's lifetime.
 
-while another thread calls thread__set_namespaces() or __thread__set_comm()
--> nsinfo__reset_init() -> nsinfo__clear_need_setns() ->
-zfree(&RC_CHK_ACCESS(nsi)->mntns_path) without synchronization, freeing and
-clearing mntns_path concurrently.
-
-Similarly, nsinfo__init() sets RC_CHK_ACCESS(nsi)->inited =3D true at the
-beginning of the function before setting need_setns, mntns_path, tgid,
-nstgid, and in_pidns, so a concurrent caller of nsinfo__ensure_init() can
-observe inited =3D=3D true and read partially initialized fields (or two th=
-reads
-can enter nsinfo__init() concurrently and leak the first mntns_path
-allocation).
-
-Furthermore, even in single-threaded mode, resetting thread__nsinfo(thread)
-in-place mutates the struct nsinfo already attached to DSOs mapped by the
-thread prior to the namespace change or exec. Would it be safer to replace
-thread->nsinfo with a newly allocated struct nsinfo on namespace changes and
-synchronize lazy initialization inside nsinfo__ensure_init()?
+Should a mount namespace inode mismatch here call nsinfo__clear_need_setns(=
+nsi)
+instead of nsinfo__set_exited(nsi) so that a subsequent namespace or exec
+event can still re-initialize the thread's nsinfo?
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261023071141.1341=
-49-1-namhyung@kernel.org?part=3D4
+49-1-namhyung@kernel.org?part=3D5
