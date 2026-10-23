@@ -1,57 +1,75 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.210.197
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792733139;
-	b=rjPSB1DLID1quXtzLTpVgqwIRd2dZI9m4+1WQEWQ6mWMveE/I+fwxpt5bBQbjjQBQcrl
-	 dj1wpJNdSq6LC+gARHkqbLTLSVr/9rFZkWNSX0zxV5v/ZK0TBYfCPP74cpSihiaQsD3Q4
-	 1WLZfAHrGnb2XFNoC++lcVod9Y1Q1KvceSbsc/+M7kl9g3B27c/eqmZ6LgmQWGMqgg4jW
-	 lBqwVcjn6ZFyU6QSwOmeeHGMccC4loYe7jU7uj5D6uNdrnYM+iiyPqGPHBDNdoLzMHm1s
-	 Sazpi8jC3amca3j9KEccwOA0zbgC3LSGM7DmqLBfgCGoJzD5rjg2nvuNnyusoH+5MlA==
+	t=1792734596;
+	b=J1jJlX4JbR+hNmkFjMFs62OjHN38tC5Jn2ylq5OsmkTVTXJZcwo/ccxB663lcgt9DO2U
+	 Ea3Zrmo18WSEcBtoxPKlkoRU8Y2hM6PqncGNb6QiZsTjEHe+GNCyOg+4I/dIrc1UarLkT
+	 zQNlnvLjIKvdqnspf3rCzz54ArloBn3Ui6Cv0G1cGn4HVnVuoZts1VV6TZHAauE2F6q+3
+	 sELzQFtRqo4260UGnSNmU1iSwOCkRUEX17EjArnreZ6trCAdvhR8qiIaeNJspf0fs6Wpm
+	 edyzaaAx9ShpQlkeBy8ZqXII2pyr0RCD726KmaYngwp7JXMVyqH3gbYRjgp/VeKXTRw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792733139;
-	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
-	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=PgCVIhb5Gat9h7Q09t8qgBLwu1qeMpDt831Fn39JDA4=;
-	b=GJMfUmGDA+KTx9Xq2SWGHHO41o1/SpkN7cMy4DXKuLiZFOlvxIbavPBH/aZGuLX0ZLcl
-	 yvrPFmi2x2bvyUD4Qh2w2SlZGdgQZWvHScbyxgWPODL1BfHyfK/XASeJyl4aC0mpTJYrg
-	 zb4MTk+wTL5DWtPJ8GH4bNAJhJ1+rHd2A/qVCjaQrOFcnadaNo4kDmSvuKUKXMYoMa72X
-	 3kai5lACcPl0U6xVahWJBxmJUpI2QvPT45n38/a+Jjav3n9r/lwfxOqv57M4G65P3YFxa
-	 P5Enu8XkfOn90lf/4ITm9sq5uqPHZ1gKMO+mjamox9y1soLZcQJ9P38P8k50q6mSJbQ==
+	a=rsa-sha256; c=relaxed/relaxed; t=1792734596;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Received:Date:In-Reply-To:
+	 Mime-Version:References:X-Mailer:Message-ID:Subject:From:To:Cc:
+	 Content-Type;
+	bh=PmRNqRMWYPJdyJeDx8osTz98COnYhm0n4Ki94bccpww=;
+	b=uLVh3Us5HhMmf6StpbaZwO8xtA875h663ycf4+gJva6OZkY+f3DgElqejZympI3WkjI5
+	 ndqCSv2thmZEFnXUrRuxYVi8YqcKjT8duQMB+XdcF5iEGgSLnmil4Ft8kUv30MdnF7jQG
+	 637LnbhIlHHo+NTvWoUviqO5xrEUefKnkKK0ZW9NEOvjyWfShvrq/MZz04eSSOMBEWzKA
+	 U4v0CHmHf84CK0Av9PbIokXXH4dxcF+9Ygr8osw3DJw4JE9vMFdrrwrdyhFuvm+o7FNZr
+	 2oYhZuxSVHmL/lmZYtcsAxWnU8lzbXYJtWPoAYbzefBbaCOerrr3VfZ9BhS48Twy3TQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Tw6hphYL;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	dmarc=pass header.from=google.com;
+	spf=pass smtp.mailfrom=flex--irogers.bounces.google.com;
+	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20251104 header.b=U9xSUVQV;
+	arc=none smtp.remote-ip=209.85.210.197
+Received: from mail-pf1-f197.google.com (mail-pf1-f197.google.com [209.85.210.197])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8ACE60A2633
-	for <linux-perf-users@vger.kernel.org>; Fri, 23 Oct 2026 05:25:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 339B3606A31A
+	for <linux-perf-users@vger.kernel.org>; Fri, 23 Oct 2026 05:49:56 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 339B3606A31A
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Tw6hphYL
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 62D121F031E1;
-	Fri, 23 Oct 2026 05:25:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1792733138;
-	bh=PgCVIhb5Gat9h7Q09t8qgBLwu1qeMpDt831Fn39JDA4=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=Tw6hphYLn5XNwpDOKkOkoZCDcZ7XYLJD+UCxm9/yW59tlKl2IXZls9EN+8/C/gbDl
-	 e8Jnhuyb3axmoZGG239ecw/luxv1ktb3yplNmE8uSybU37d5dcQ77fj43ljlXcmUj2
-	 lfx9MT5Xk/vw9X9jcgvFDSY5fWPkFi26FGYd+osUVp5+X6A8r0mtzVzyt32s45lism
-	 pQ6EvOQpFILgoBDfMWPbRrHuhMnKItGw02zZmftgcviYqLte8Um5iiU9eF8s0EDVIQ
-	 AYavC82xwtxbGNfgw+5Yzmmf9d119s1W5AvJnUftExCQO4RY+eTxlfGUzK1jtaMxra
-	 D5lRMLYb6sXMA==
-Message-ID: <sashiko-outbox-182309@kernel.org>
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v4 1/2] perf timechart: Add a --live mode to the TUI
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Ian Rogers" <irogers@google.com>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20261023050207.2449976-2-irogers@google.com>
-References: <20261023041819.2361900-1-irogers@google.com>
- <20261023050207.2449976-1-irogers@google.com>
- <20261023050207.2449976-2-irogers@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Fri, 23 Oct 2026 05:25:37 +0000
+	dkim=pass (2048-bit key, unprotected) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20251104 header.b=U9xSUVQV
+Received: by mail-pf1-f197.google.com with SMTP id d2e1a72fcca58-8a05b68f851so1552439b3a.1
+        for <linux-perf-users@vger.kernel.org>; Thu, 22 Oct 2026 22:49:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1792734595; x=1793339395; darn=vger.kernel.org;
+        h=content-type:cc:to:from:subject:message-id:references:mime-version
+         :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=PmRNqRMWYPJdyJeDx8osTz98COnYhm0n4Ki94bccpww=;
+        b=U9xSUVQVOlS4yMLTwJv9K9dG9uwXHnjhIJIwyegbA12VG8wpBcu2YepkY+fuFJ5TKl
+         vGKutMvaSqbdVdyIHx4h+QBR14mbn14lUNrUoa+ME4eRX5zhlX0hYr9giu+/SAmpyntN
+         1CTI1xfYqQSFGlVcjzVjq3n0WgIh7h+HQjEF+w9bkeAnt7mzIzsE/0Pc1HtmfIVL03Kd
+         PtYBx7WG8FxT534GnUA5O3qP6ByQY1dk486uU4Unrtbdz0SmqU8qGwcWP+9LULEs2x/u
+         2QqhdsJFhKEmPwv5lio+OdMMSd2BzcV87z/UNCb3KU5cKBoUKr2sz0ia7SyNUMR/dfgu
+         kg6g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1792734595; x=1793339395;
+        h=content-type:cc:to:from:subject:message-id:references:mime-version
+         :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=PmRNqRMWYPJdyJeDx8osTz98COnYhm0n4Ki94bccpww=;
+        b=ZBXWNAA6DEcelOdYlyS6idtEUA/2XtZ7ymN9D4+gkLNX6p1KPuGuSQRakXpTWVYzVW
+         YliN1ukqZpjuPlmerh+v65RgIa7twD/q0iE9wNn5LHJsv5+vBdm6xUImJctL7rDVhobz
+         bSHf2Ysyo9kx3yHVo1T4zXojeL3/iT44wulu389N/A1Me9b7AyHApn4XJiNP7LmpkTRQ
+         +VGKgMHjFQlP5ShREky9zkSropmQdSc1OthAXmxKbpW3pl2OBx7QuX1P0RlKRv/Ug1H0
+         Zl7HyYCy2aSxfo6Z9eh7EkLjbZBILO4rRi5oPy9TBsJyhKBHebCSlx+F88RqeR1W2dOF
+         q+lg==
+X-Forwarded-Encrypted: i=1; AKwUvBzM6pF6mXV0+B/fwyxEn486j76qySbKBQmLHUqU9tAsB7NXobEHfNpbflsw2YHmfYThSgLOuOO8I6ROdgDHI8M9@vger.kernel.org
+X-Gm-Message-State: AFq9FYLCcJDCHQW7t7q8xjzFPQ9c15RVjFBFq9wL40DmIId+rbISNdWK
+	Lftjw70OtkMtpnF4EEmNe86j25xQiiyGYB50Nk3pT3rzUr+BmBV4UL0KQGgUc2EA40ys13VfqL/
+	T5ru6JEz0Bg==
+X-Received: from pfnj2.prod.google.com ([2002:aa7:83c2:0:b0:8a0:cc:2b89])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:1ca9:b0:8a0:2882:852c
+ with SMTP id d2e1a72fcca58-8a0a0510b44mr2447924b3a.51.1792734595332; Thu, 22
+ Oct 2026 22:49:55 -0700 (PDT)
+Date: Thu, 22 Oct 2026 22:49:49 -0700
+In-Reply-To: <20261023050207.2449976-1-irogers@google.com>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -60,246 +78,82 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
+Mime-Version: 1.0
+References: <20261023050207.2449976-1-irogers@google.com>
+X-Mailer: git-send-email 2.56.0.307.g5fe7bd680c-goog
+Message-ID: <20261023054952.2503540-1-irogers@google.com>
+Subject: [PATCH v5 0/2] perf timechart: Add --live mode to the TUI and test
+From: Ian Rogers <irogers@google.com>
+To: irogers@google.com, acme@kernel.org, alice.mei.rogers@gmail.com, 
+	namhyung@kernel.org
+Cc: adrian.hunter@intel.com, atrajeev@linux.ibm.com, changbin.du@huawei.com, 
+	dapeng1.mi@linux.intel.com, james.clark@linaro.org, jolsa@kernel.org, 
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+	mingo@redhat.com, peterz@infradead.org, tanze@kylinos.cn, 
+	thomas.falcon@intel.com, wutengda@huaweicloud.com
+Content-Type: text/plain; charset="UTF-8"
 
-Thank you for your contribution! Sashiko AI review found 3 potential issue(=
-s) to consider:
-- [Medium] perf timechart: missing -a in LiveRecorder.start() breaks worklo=
-ad timelines
-- [Medium] perf timechart: backward prev.since reset in sched_switch() corr=
-upts totals
-- [Medium] perf timechart: unsynchronized concurrent teardown in LiveRecord=
-er.stop()
---
+Add a '--live' option to 'perf timechart' and 'ttimechart.py' that streams
+live scheduler, power, or I/O (-I/--io-only) events from a 'perf record'
+subprocess over a pipe and displays them in the Textual TUI with a rolling
+time window (--window, default 10s), pause/resume via the control pipe, an
+optional workload after '--' that stops recording when it exits, and
+optional output recording (-o), along with headless shell tests in
+test_ttimechart_python.sh.
 
-commit 154f81d15ad61319be3006e45c11ac5951330583
-Author: Alice Rogers <alice.mei.rogers@gmail.com>
+Assisted-by: Antigravity:gemini-3.1-pro
 
-perf timechart: Add a --live mode to the TUI
+v5: Address Sashiko review feedback:
+    - Patch 1: Always record system wide, as 'perf timechart record'
+      does, as switches into a task and idle states aren't seen by
+      per-task events when only a workload was recorded.
+    - Patch 1: Don't move a task's state start back before its recorded
+      history when its switch out and back in were lost, which inflated
+      its running time.
+    - Patch 1: Serialize LiveRecorder.stop() calls from the UI thread and
+      the thread processing events.
+    - Patch 2: Only run the live recording test when scheduler events can
+      be recorded system wide.
+    v4: https://lore.kernel.org/linux-perf-users/20261023050207.2449976-1-irogers@google.com/
 
-This commit adds a --live option to perf timechart and ttimechart.py to
-record scheduler, power, or I/O events with perf record and display the
-most recent window of events interactively in the terminal UI.
+v4: Address Sashiko review feedback on patch 1:
+    - Don't prune live history past the last event, so open states aren't
+      lost when no events arrive for a window, and don't count a still
+      running task's open segment as a switch.
+    - Keep showing the window at the end of recording, rather than jumping
+      back to already pruned history, and prune events flushed as perf
+      record exits.
+    - Close open task, CPU and I/O states when resuming after a pause,
+      rather than extending them across the unrecorded gap, and close the
+      running task when a switch away from it was lost.
+    - Stop perf record and close the files and pipes if
+      LiveRecorder.start() fails after starting it, and close the data pipe
+      read ends in LiveRecorder.stop().
+    v3: https://lore.kernel.org/linux-perf-users/20261023041819.2361900-1-irogers@google.com/
 
-> diff --git a/tools/perf/python/ttimechart.py b/tools/perf/python/ttimecha=
-rt.py
-> index 34ecf84e68c1d..168f64c6b0fec 100755
-> --- a/tools/perf/python/ttimechart.py
-> +++ b/tools/perf/python/ttimechart.py
+v3: Address Sashiko review feedback:
+    - Patch 1: Explicitly include <string.h> in builtin-timechart.c.
+    - Patch 1: Reject non-finite --window values (e.g. 'inf') that
+      overflowed converting to nanoseconds.
+    - Patch 2: Stop the fake recorder in a try/finally in the synthetic
+      live UI test so a failed check can't leave its background thread
+      running and hang the test.
+    Rebase onto the latest perf-tools-next.
+    v2: https://lore.kernel.org/linux-perf-users/20261014042249.2379829-1-irogers@google.com/
 
-[ ... ]
+v2: Rebase the remaining 2 patches onto perf-tools-next after patches 1-11
+    of v1 were merged.
 
-> @@ -363,9 +524,14 @@ class TimechartData:
->          if c.cur_tid =3D=3D -1 and prev_tid !=3D 0:
->              # Assume the task was running from the start of the trace.
->              c.cur_tid =3D prev_tid
-> -            c.since =3D self.first_time
-> +            c.since =3D self.state_start()
->          if c.cur_tid > 0:
->              c.run.add(c.since, time, 1, c.cur_tid)
-> +            if c.cur_tid !=3D prev_tid:
-> +                # The switch away from the task that was running was los=
-t.
-> +                old =3D self.tasks.get(c.cur_tid)
-> +                if old and old.state =3D=3D STATE_RUNNING and old.cpu =
-=3D=3D cpu:
-> +                    old.change_state(time, STATE_UNKNOWN)
->          c.cur_tid =3D next_tid
->          c.since =3D time
-> =20
-> @@ -373,7 +539,7 @@ class TimechartData:
->              prev =3D self.task(prev_tid, prev_comm)
->              if prev.state =3D=3D STATE_UNKNOWN:
->                  prev.state =3D STATE_RUNNING
-> -                prev.since =3D self.first_time
-> +                prev.since =3D self.state_start()
->                  prev.cpu =3D cpu
+Alice Rogers (2):
+  perf timechart: Add a --live mode to the TUI
+  perf test: Test perf timechart --live
 
-[Severity: Medium]
-Can resetting prev.since to self.state_start() in
-TimechartData.sched_switch() move prev.since backwards before existing
-segments and corrupt Task.totals[STATE_RUNNING]?
+ tools/perf/Documentation/perf-timechart.txt   |  20 +-
+ tools/perf/builtin-timechart.c                |  81 +-
+ tools/perf/python/ttimechart.py               | 901 ++++++++++++++++--
+ .../tests/shell/test_ttimechart_python.sh     | 310 ++++++
+ 4 files changed, 1237 insertions(+), 75 deletions(-)
 
-When c.cur_tid !=3D prev_tid above, a previously running task old is
-transitioned to STATE_UNKNOWN via old.change_state(time, STATE_UNKNOWN),
-which appends a segment ending at time (old.segs.ends[-1] =3D=3D time) and =
-sets
-old.since =3D time.
+-- 
+2.56.0.307.g5fe7bd680c-goog
 
-If that task's subsequent switch-in event is also missed and the task is
-next seen switching out as prev_tid at time2 > time while still in
-STATE_UNKNOWN, setting prev.since =3D self.state_start() moves prev.since
-backwards to self.state_start() < prev.segs.ends[-1].
-
-When prev.change_state(time2, new_state) then runs:
-
-    if self.state in (STATE_RUNNING, STATE_WAITING, STATE_BLOCKED) and time=
- > self.since:
-        self.segs.add(self.since, time, self.state, self.cpu)
-        self.totals[self.state] +=3D time - self.since
-
-SegmentList.add() clips start to self.ends[-1] (time), so the added segment
-has length (time2 - time), but Task.change_state() adds the unclipped
-(time2 - self.state_start()) to self.totals[STATE_RUNNING]. When
-Task.prune() later discards that segment, it only subtracts (time2 - time),
-leaving self.totals[STATE_RUNNING] permanently inflated by
-(time - self.state_start()).
-
-Should prev.since be set to max(prev.since, self.state_start()) here?
-
-[ ... ]
-
-> @@ -1727,52 +2178,358 @@ class TimechartApp(App):
->          self.goto_task(waker, wake_time)
-> =20
-> =20
-> +class LiveRecorder:
-
-[ ... ]
-
-> +    def start(self) -> None:
-> +        """Start perf record, the data is then read from data_fd."""
-> +        output =3D open(self.output, "wb") if self.output else None
-> +        # perf record's ends of the control pipes, closed once it is sta=
-rted.
-> +        child_fds: List[int] =3D []
-> +        try:
-> +            ctl_r, self.ctl_fd =3D os.pipe()
-> +            child_fds.append(ctl_r)
-> +            self.ack_fd, ack_w =3D os.pipe()
-> +            child_fds.append(ack_w)
-> +            # Quiet so that only errors are written to stderr, see error=
-_text().
-> +            cmd =3D [self.perf_exe, "record", "-q", "-o", "-", "-R", "-c=
-", "1", "-k", "mono",
-> +                   "--synth=3Dtask", "--control", f"fd:{ctl_r},{ack_w}"]
-> +            filt =3D f"common_pid !=3D {os.getpid()}"
-> +            for name in self.events():
-> +                cmd +=3D ["-e", name]
-> +                if name.startswith("syscalls:"):
-> +                    cmd +=3D ["--filter", filt]
-> +            # Without a workload record the whole system until stopped.
-> +            cmd +=3D ["--", *self.workload] if self.workload else ["-a"]
-
-[Severity: Medium]
-Does omitting -a in LiveRecorder.start() when self.workload is specified
-break task, CPU, and power timelines for the recorded workload?
-
-Unlike timechart__record() and timechart__io_record() in
-tools/perf/builtin-timechart.c, which always pass -a, LiveRecorder.start()
-omits -a when a workload is given. That causes perf record to open
-sched:sched_switch, sched:sched_wakeup, sched:sched_wakeup_new,
-power:cpu_idle, and power:cpu_frequency as per-task events attached only to
-the workload tasks.
-
-In the kernel's __schedule() in kernel/sched/core.c:
-
-    trace_sched_switch(preempt, prev, next, prev_state);
-
-    /* Also unlocks the rq: */
-    rq =3D context_switch(rq, prev, next, &rf);
-
-trace_sched_switch() runs before context_switch() activates next's per-task
-perf_event_context, and TRACE_EVENT(sched_switch) does not target next via
-__perf_task(). As a result, per-task sched:sched_switch events only fire
-when a workload task switches out as prev, and never when an untraced task
-(such as swapper/idle or another process) switches into the workload task as
-next.
-
-In TimechartData.sched_switch(), when a workload task wakes up via
-sched:sched_wakeup (which does use __perf_task(p)) or is preempted, its
-state becomes STATE_WAITING. Because the subsequent switch-in from idle or
-an untraced task is never recorded, task.state remains STATE_WAITING across
-the entire CPU execution interval until the workload switches out, recording
-its running time as STATE_WAITING instead of STATE_RUNNING and leaving
-c.cur_tid on the Cpu object at 0 or at the previous untraced next_tid.
-
-In addition, trace_cpu_idle() only runs in the idle task (PID 0), so
-per-task recording on a workload captures no power:cpu_idle events, and
-running perf timechart --live -P -- <workload> exits with "Error: no
-scheduler, power or I/O events were recorded." if no CPU frequency change
-occurs within the workload's own task context.
-
-Should -a always be passed to perf record even when self.workload is
-present?
-
-[ ... ]
-
-> +    def stop(self) -> None:
-> +        """Stop recording, perf record then writes any remaining data an=
-d exits."""
-> +        self.stopping.set()
-> +        self.commands.put("")
-> +        proc =3D self.proc
-> +        if proc is not None and proc.poll() is None:
-> +            try:
-> +                proc.send_signal(signal.SIGINT)
-> +                proc.wait(timeout=3D1)
-> +            except subprocess.TimeoutExpired:
-> +                # Probably blocked writing data that is no longer proces=
-sed.
-> +                proc.kill()
-> +                proc.wait()
-> +        if self.tee_thread and self.tee_thread is not threading.current_=
-thread():
-> +            self.tee_thread.join(timeout=3D1)
-> +        if self.control_thread and self.control_thread is not threading.=
-current_thread():
-> +            self.control_thread.join(timeout=3D1)
-> +        self.close_control_fds()
-> +        self.close_data_fds()
-> +
-> +    def close_data_fds(self) -> None:
-> +        """Close the read ends of the data pipes.
-> +
-> +        perf.data() duplicates the file descriptor it reads from, so they
-> +        aren't needed once processing has started. Closing them means wr=
-ites
-> +        to them fail, rather than block, once they are no longer read.
-> +        """
-> +        self.data_fd =3D -1
-> +        tee_r, self.tee_r =3D self.tee_r, -1
-> +        if tee_r >=3D 0:
-> +            try:
-> +                os.close(tee_r)
-> +            except OSError:
-> +                pass
-> +        # Unless the tee thread is still reading from it.
-> +        if self.proc and self.proc.stdout and not (self.tee_thread and
-> +                                                   self.tee_thread.is_al=
-ive()):
-> +            self.proc.stdout.close()
-
-[Severity: Medium]
-Can concurrent calls to LiveRecorder.stop() from the UI thread and worker
-thread race during teardown?
-
-When quitting during live recording, TimechartApp.action_quit() (or
-TimechartApp.on_unmount()) calls TimechartApp.cancel_loading() on the UI
-thread:
-
-    loading =3D self.loading
-    if loading is not None:
-        loading.cancelled =3D True
-    if self.live:
-        self.live.stop()
-
-At the same time, the background worker in TimechartApp.record_events()
-exits read_events() (either via LoadCancelled or when perf record closes the
-pipe) and runs its finally block:
-
-    finally:
-        self.loading =3D None
-        live.stop()
-
-In LiveRecorder.stop(), both threads can concurrently inspect proc.poll()
-and call proc.send_signal(), proc.wait(), and proc.kill() without
-synchronization. If one thread reaps proc in wait() while the other calls
-send_signal() or kill(), an uncaught ProcessLookupError can be raised.
-Similarly, in LiveRecorder.close_data_fds(), self.tee_r and
-self.proc.stdout.close() are accessed without self.fd_lock (unlike
-LiveRecorder.close_control_fds()), allowing both threads to race on closing
-the pipe file descriptors and buffered stdout stream.
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261023050207.2449=
-976-1-irogers@google.com?part=3D1
