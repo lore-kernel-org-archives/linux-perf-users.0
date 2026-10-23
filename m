@@ -1,93 +1,89 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.49
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.173
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792745760;
-	b=W/3CzkvxaSpb+AdBX5vGt5Ha8GscqCmiN6A6TkrAuGFAL68wZ7PJbu3Z/rhTl01BGwEa
-	 zt/le5klHbc5FVJ9gC/Zog2HkVCVNaPQ9tG1Q3me/0oAR53jvgTeXT0LsMb09yy9fvNjW
-	 uHFyE76tsFDuYAZoWpm2Kx5kr2DgNAbEItUUTKIwKTlyyko/U2/9NmBWGQX4XxwR2j2rr
-	 T4Oxige57oIUlPEekZgD2AvPUyH5zGqD2nj8jANXXA0iKKTM8tcVMoGCb1rJKECK7CfXB
-	 P21ommK4i36A6mY46icb3edjytrMAZDO7CyBpPYL0PZoaDqBAPwFhXGFZBgV45RW9nw==
+	t=1792745793;
+	b=fLS9S2x2S72IqPPuLpalxhbsXV978cnzgmjJ1+J4Pg0v4qZuMtl9ZFKzTNb7CbpJjesr
+	 c0e/GqrP0HtREV3L4tEsUQmHRImfS+5tThxQRqYLgQI04Y07JO2viuKe/wwqHIXLZ3KkG
+	 +SQiMop4OhS6HtZc6k6xit/l9KkKw5ZAYqxnJoEi6uyeepk044XM2nSpSTyHd8L5KKfoj
+	 0TH+1v8W+FNMdqghDLZhB+eAI1amGGS9wlIQI2QtqP+yNKtGmp/T5X+1qNSG92zKMzSZu
+	 MD40vleeCeH4GvsAZNjpOzF3J2mGMxEB5SyZPdu8AUjgMmLrTAr4r88zHWpLWslUelw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792745760;
+	a=rsa-sha256; c=relaxed/relaxed; t=1792745793;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Gm-Message-State:X-Gm-Gg:X-Received:Received:From:To:Cc:Subject:
-	 Date:Message-ID:X-Mailer:In-Reply-To:References:MIME-Version:
-	 Content-Transfer-Encoding;
-	bh=KqL98yyh7+lk5T29/nrd7/mf3OaIOAZcZAMihIvNM78=;
-	b=ReZlLAyyIRPrgymvYUZw05XjNsK4ylGLMR6uy5aSY0CGRY0W0tpnysY7xPXJQlHs961A
-	 1hh7gOu6ZMV5Ak8LM0LShU2hGgPb9ZT/h4fb0VlTA8qu6+U7MpuTV3uJ42wx3mk3pSuwd
-	 3SuZ89855Ruiqtsgzek3oAafsdvbqvpet9A9TpH5csexiuIaKL2OUwfxSgczS3LD/VBzW
-	 xeRvrK9YjdXnHp9tZYs0/OjYdhT0vAIM4CoUI4rrlIq3GSAEd4/XC3NL8wnzZ7ebRsYmH
-	 LZgHpvqkJvgn7sGODVezYt8vlj6qlBBjN3KL82PWsCfySi5Vg3QzdZzHCdYAWaJPpBA==
+	 Date:Message-ID:X-Mailer:MIME-Version:Content-Transfer-Encoding;
+	bh=MW9KGsZQePKlH0HZnpkH3ZhVJZOpK/B8rTMBwoNEOZU=;
+	b=ISUXisZkdHepYKPP6TXW4NbKwsmP+0dEwmoqPfZvOF92NtmAa4DRDIywi41NsjTBW9Lj
+	 JduX/B0L5jZE0GxlR04ugSUoNnTejKaiGPaGt00cKcVTefn6Sac5yNbRH2PqICduAJuQE
+	 mi+yY7qqrMvGi3g83LZpJUpT2PEZdjtno++CUqNje8BJoLMSJaVestAVmjPHj1VAcL0zu
+	 9sw3Vi3EN9egRTJksj0hF1gJ1wjj9I8W0gOzdcjKXhcOO4arbYBc4iHSN01JCY8NHPiLE
+	 28xEtpuR55ov/NYD2a1/J0S/RLcfucQvutkh/1PwckQrMmY0PKHgnII0S8OFFa1NIrA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=gmail.com;
 	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b="MBF6Tr5/";
-	arc=none smtp.remote-ip=74.125.82.49
-Received: from mail-dl1-f49.google.com (mail-dl1-f49.google.com [74.125.82.49])
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=s0qReEMX;
+	arc=none smtp.remote-ip=74.125.82.173
+Received: from mail-dy1-f173.google.com (mail-dy1-f173.google.com [74.125.82.173])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97432606A31B
-	for <linux-perf-users@vger.kernel.org>; Fri, 23 Oct 2026 08:55:59 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 97432606A31B
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 634C9606A31A
+	for <linux-perf-users@vger.kernel.org>; Fri, 23 Oct 2026 08:56:33 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 634C9606A31A
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=MBF6Tr5/
-Received: by mail-dl1-f49.google.com with SMTP id a92af1059eb24-1517bda04a0so740652c88.0
-        for <linux-perf-users@vger.kernel.org>; Fri, 23 Oct 2026 01:55:59 -0700 (PDT)
+	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=s0qReEMX
+Received: by mail-dy1-f173.google.com with SMTP id 5a478bee46e88-3514b90bb89so1515119eec.1
+        for <linux-perf-users@vger.kernel.org>; Fri, 23 Oct 2026 01:56:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1792745759; x=1793350559; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=KqL98yyh7+lk5T29/nrd7/mf3OaIOAZcZAMihIvNM78=;
-        b=MBF6Tr5/nehuQLNowxyoT61cngXLgr+SDYOovbJyVgPLYiX0WcIsGBeGLjemNYGKgw
-         KnYUIwVwb4COm784G8KkOZCMK3241ZSM/sTV3xPKvRJrxWyyP3czNkEENF0mKDwLcxcj
-         rA/MbGnwo0K7RwdtKUvAH693XBdAIID5AvAUh7bW9rnx3kb1k2fmqDrbWkPihHBlLj7P
-         /zytf7Fda6K4NA7c1hANSzM7hrA8lTgrnnZ9YOso+kzvEEPiXoU8AALhieLShb53j033
-         xGByghHYWwiKIaSOVg2IEH1ix4Xorp0frBID5QcmTpVkhgDRjY8QM+LZlRceyM93lSOF
-         5tfQ==
+        d=gmail.com; s=20251104; t=1792745792; x=1793350592; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=MW9KGsZQePKlH0HZnpkH3ZhVJZOpK/B8rTMBwoNEOZU=;
+        b=s0qReEMXKyjfRfNA6gN7LbSD6Hbtf0BVMUv5KXr/BGYrfwTUoAaOJG/fz6A+TNQESO
+         Rbylfbqu+vm3C1IbWRZxgNZOXVq2xfxxnFBk+0GTj5rCUriKTX691CgmYij+zAXs7OUA
+         1FlJUEJ5L0QNsN5CooHVmpU/iRE/5Tsif5tgoRnCNR0K/Hanlddaix5Ob9bgN16i99OA
+         WrS5Kj6X0zrqRc6BrCN8vpbaKqy/NWKorJ/Dozu2NhXCmtDzvm8Qgr/fk7u+8vZONxQk
+         jG0Arzi5mlhL6tEhpNqAg4zJeldc6G+dsj2cty/NvY9OyTCreD6vev7ZYovIOavYwnMY
+         jjfA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1792745759; x=1793350559;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=KqL98yyh7+lk5T29/nrd7/mf3OaIOAZcZAMihIvNM78=;
-        b=2JtMozTX2rXtm7eJ2DmylZtKbKwlXqBk3T9OzBiZydQIM5sKkFQIJ8qDPZQt5BOT3v
-         M27hB1IDJjQ7PXCFlGRlJyN4jh+WPJGOWcNH/oG1OOsz0ongd1V/OcqbrQCgx+iHqTu4
-         O2E3vfISBkRGwgArYmbWTpf3Ao4xA87ffp2nrtFwQFjcv5VkV6GoqLyxcvUz9nmjwrOe
-         EZnRU2U9VRFUOL1qSmFMe0gmA11WUdKZvBjWxsqMQS/VUWvqxChDBWwkXg4ck6wKH99v
-         7go8sY3M43RMpBKn2lQTiovaFCqeTh+KPFsk0qLKPz+dTcSKPZ5BPej6P1OJM8cbWJAw
-         OmfQ==
-X-Gm-Message-State: AFq9FYJI/wsuQahzUpVZ6v6wWcVowmDiQDogaBpCXYoiwtRAkWJ0I9UN
-	56GafcNwFxPN5gV8FFvQyz9J0CjDY7c/Q4UFo5hd/BaM31eEHVGWMMgO3LAhjw==
-X-Gm-Gg: AYBFou2HkQbTVtrZIJcBI/VrDrskEpIVkofz4NJWL/7k31zwqwny3HxmxWdPUNwErD9
-	ZbOx+9qtgIPpnRcgRvU6tNIw0VKrnuxBF1w82ANEM/KlHGtT37oy4daFR4+x8cBDE1MWmSN54kL
-	BwMBZO5EsSeQqXx17fRIjgeMUsnC5YDkyJX9PDf24DD2K+uMFSiNP9If3KHql+OZr7xhh6gD1ae
-	43XwwQuR+7cohprRI0tgObrNdztZFbBRa7rGom/UBuLL+9+wKkOzBB/gwfJjAzdDVNk7KL1/cx/
-	LiamABMHMsJak+cy5hJeqr/XFsrUf6vcbHvX7hpc9PeIN425HeoTxgJ+C/m2OQ+YXR6fk/FUC+B
-	gkLXhVe2vFJlHHu5QU/zZVu4IgsnzmgHR0vlSblMZFSU+0Va6rkAutNkLKS/EgS+PVkud42L1za
-	DVC8UkbYPb3GIu5CJseSpgKZDS4OPp0K6MVAvQYb+wTjOwQNu0ZSq7JkFcfGKqdcYfhOAUeWeF0
-	VWMQxtKnGPJ0IYtkDNUTDinegt3D1ab7JEdSrfW358PxZI=
-X-Received: by 2002:a05:7022:62a7:b0:191:a5b2:ef4a with SMTP id a92af1059eb24-195c6567c22mr3563761c88.28.1792745758367;
-        Fri, 23 Oct 2026 01:55:58 -0700 (PDT)
+        d=1e100.net; s=20260707; t=1792745792; x=1793350592;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=MW9KGsZQePKlH0HZnpkH3ZhVJZOpK/B8rTMBwoNEOZU=;
+        b=lKhsh+lcCIN80ZbRvEbWyLSqjNkP/rQz0Q6i152msfoKFxYSNnEafjECadBK8MOxld
+         oGzNJ3Aj+W7Sb3Uy8eb34DTx//hsZkovAmx+nd6ehsKe98cA7RzhFLO3p8vk7qUCM5+c
+         k6M/d+Rxqf2oc3/ug5SnBm5bKOA6qHfqW1+tVCGrEYnC17KwoOQ5UWFoeeYF9Gus1kje
+         V/z/3ZuikWIFH4HA/FqKOoTh+AT9rPtWCRNN35ce2jdTm/M0j2KRXl8mUer3BPhcTkb0
+         A2mQvpl9xDPUlOaTU3RyMwYeqW0U9+pQXcf4wcwfHoQ00zqhBtMfQ3n8GrdW9vOcwT/A
+         oGwA==
+X-Gm-Message-State: AFq9FYKme3iRWgmvRr8PBz/xr6h77MJYVjccZzR3If8o9iFquZBg3TNP
+	ayo6MEpk9ZrDbLOsIelMYPxRK9kBx2SoSwMIG/AuzrgzxhGhojpDUH2e5dXA4w==
+X-Gm-Gg: AYBFou0L7zxZp+3+6aVtDJV/0XG0KbM5GwG9lusLI7CG2a8l1y9Z2Ln6TplsH0mxxwt
+	hRBK1uoiL4MoJ3dwmmRTE9nzLTv6gSHvWktqiyZmjXL2249iW1zmbUAZClXJcE3/qG9jpEeZVex
+	Y0HZ5oR+/A/ywvJd2WyyzfgD+0JYnlSKADV4Jx+9NpqfDnUHo73XsgXuYlZ4SWJl1I9Jn69GOea
+	5P6kZSWAqksxdcc4EDEV3XqO1sFzG0spPVzXl1AYqjsg8gzgBkbokc8Wvoe0SdD4OZV9Sxn3s82
+	6gSLzARUJQ/a1ibwW5PbJG4f+Huf6fhHOZvB1fEXqkqbxvJvJ9wMQgg8pOQldRZbuc0yT4u1R4T
+	FVN5P56M+Mb1RqntqqAWM6vS5Cx1Fn4E1o51/0vPWQLlkVOSYpULJT1FvhiroxnEi9kkEOQ8wK1
+	p+grMJ5N3gYD2QrqLQELynwChIhN3YQZfiejFDdS2kecl8SEE8X+V3j6BX6iZYmg2g9B+/MIohD
+	uuQIolCdmFmcNqwkx2Gf/FSeHWp7pbMC0CsVx516P+wNsE=
+X-Received: by 2002:a05:7301:fa4:b0:369:d7b0:99f0 with SMTP id 5a478bee46e88-369d98380bemr2646988eec.21.1792745792302;
+        Fri, 23 Oct 2026 01:56:32 -0700 (PDT)
 Received: from a1-free ([161.33.196.121])
-        by smtp.gmail.com with ESMTPSA id a92af1059eb24-195ec82eabfsm9697111c88.19.2026.10.23.01.55.56
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-369d9c145ddsm5440758eec.1.2026.10.23.01.56.30
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 23 Oct 2026 01:55:57 -0700 (PDT)
+        Fri, 23 Oct 2026 01:56:31 -0700 (PDT)
 From: TAKANO Mitsuhiro <takano32@gmail.com>
 To: linux-perf-users@vger.kernel.org,
 	Arnaldo Carvalho de Melo <acme@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>,
 	Ian Rogers <irogers@google.com>,
 	TAKANO Mitsuhiro <takano32@gmail.com>
-Subject: [PATCH v2] perf stat: Start tool events when enable_on_exec is used
-Date: Fri, 23 Oct 2026 08:55:54 +0000
-Message-ID: <20261023085554.1694434-1-takano32@gmail.com>
+Subject: [PATCH] perf evsel: Skip group members without fds when walking a group
+Date: Fri, 23 Oct 2026 08:56:29 +0000
+Message-ID: <20261023085629.1694941-1-takano32@gmail.com>
 X-Mailer: git-send-email 2.53.0
-In-Reply-To: <20261022024919.263876-1-takano32@gmail.com>
-References: <20261022024919.263876-1-takano32@gmail.com>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -99,65 +95,76 @@ Precedence: list
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-When perf stat runs a workload, target__enable_on_exec() is true and the
-tool events are left to the kernel to start on exec.  Tool events are
-however emulated in perf (duration_time, user_time, system_time,
-num_cpus) and have nothing in the kernel to start them, so they stay
-disabled and are read as zero.
+A group led by a userspace PMU event and containing kernel events is
+opened with group_fd = -1 for the members, because the kernel cannot
+group a userspace PMU with a kernel one.  The members are therefore
+enabled from userspace when the leader is enabled, but their fd array is
+not set up in that case, so perf_evsel__enable_cpu() dereferences a NULL
+pointer:
 
-For duration_time this makes CPUs_utilized divide by zero, and plain
-"perf stat" prints "nan CPUs":
-
-  $ perf stat -e task-clock,duration_time -- sleep 0.1
-               0      duration_time
-
-Start the tool events explicitly in that case.  They are started through
-evsel__tool_pmu_enable() rather than evsel__enable(), because the latter
-also enables the members of a mixed PMU group, whose fds are not
-available in this process, and dereferences a NULL fd:
-
-  $ perf stat -e '{user_time,cycles}' -- sleep 0.1
+  $ perf stat -a -e '{user_time,cycles}' -- sleep 0.05
   Segmentation fault
 
-The kernel starts the kernel-side members of such a group on exec, so
-only the tool event itself is enabled here.
+  $ perf stat -a -e '{system_time,cycles}' -- sleep 0.05
+  Segmentation fault
+
+Only the leaders of such a group are opened with an fd in this path.
+Skip the members that have no fd, the same way __evlist__enable() skips
+leaders without one, in the four loops that walk the members of a group.
+
+Verified on an Ampere Altra (arm64, Neoverse-N1) with a perf built from
+this tree: the two commands above segfault before the change and print
+user_time/system_time after it, while plain groups such as
+'{cycles,instructions}', 'perf stat' with no event and '-r 2' are
+unchanged.
 
 Fixes: 0b18bced5444 ("perf tool_pmu: Make tool PMU events respect enable/disable")
 Assisted-by: LLM
-
----
-v1 -> v2: Do not call evsel__enable(), which also enables the members of a
-mixed PMU group and dereferences a NULL fd; call evsel__tool_pmu_enable()
-instead.  Reported by Sashiko review.
-
 Signed-off-by: TAKANO Mitsuhiro <takano32@gmail.com>
 ---
- tools/perf/builtin-stat.c | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ tools/perf/util/evsel.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-index c50cf230f16e..ca4483f34add 100644
---- a/tools/perf/builtin-stat.c
-+++ b/tools/perf/builtin-stat.c
-@@ -510,6 +510,18 @@ static int enable_counters(void)
- 	if (!target__enable_on_exec(&target)) {
- 		if (!all_counters_use_bpf)
- 			evlist__enable(evsel_list);
-+	} else {
-+		/*
-+		 * Tool events are emulated in perf, so enable_on_exec above
-+		 * does not start them.  Do not go through evsel__enable(),
-+		 * which would also enable the members of a mixed PMU group
-+		 * the kernel already handles.
-+		 */
-+		evlist__for_each_entry(evsel_list, evsel) {
-+			if (evsel__is_tool(evsel) &&
-+			    !evsel__tool_pmu_enable(evsel))
-+				evsel->disabled = false;
-+		}
- 	}
- 	return 0;
- }
+diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+index d4cb455f4a7d..32c54cd4acf0 100644
+--- a/tools/perf/util/evsel.c
++++ b/tools/perf/util/evsel.c
+@@ -1882,6 +1882,8 @@ int evsel__enable_cpu(struct evsel *evsel, int cpu_map_idx)
+ 		struct evsel *member;
+ 
+ 		for_each_group_member(member, evsel) {
++			if (!member->core.fd)
++				continue;
+ 			if (evsel__is_non_perf_event_open_pmu(evsel) ||
+ 			    evsel__is_non_perf_event_open_pmu(member)) {
+ 				/*
+@@ -1917,6 +1919,8 @@ int evsel__enable(struct evsel *evsel)
+ 		struct evsel *member;
+ 
+ 		for_each_group_member(member, evsel) {
++			if (!member->core.fd)
++				continue;
+ 			if (evsel__is_non_perf_event_open_pmu(evsel) ||
+ 			    evsel__is_non_perf_event_open_pmu(member)) {
+ 				/*
+@@ -1952,6 +1956,8 @@ int evsel__disable_cpu(struct evsel *evsel, int cpu_map_idx)
+ 		struct evsel *member;
+ 
+ 		for_each_group_member(member, evsel) {
++			if (!member->core.fd)
++				continue;
+ 			if (evsel__is_non_perf_event_open_pmu(evsel) ||
+ 			    evsel__is_non_perf_event_open_pmu(member)) {
+ 				/*
+@@ -1992,6 +1998,8 @@ int evsel__disable(struct evsel *evsel)
+ 		struct evsel *member;
+ 
+ 		for_each_group_member(member, evsel) {
++			if (!member->core.fd)
++				continue;
+ 			if (evsel__is_non_perf_event_open_pmu(evsel) ||
+ 			    evsel__is_non_perf_event_open_pmu(member)) {
+ 				/*
 
 base-commit: f47d223627f80cb7a1eb14c585fe6cb35de5e984
 -- 
