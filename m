@@ -1,74 +1,74 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.198
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792782385;
-	b=CMSQ71UBzeBehLb+9d/bP80BqZ7v8lUwO5/NSOGQuV7YU7AgklT6XyaPR1L2RGYWyEG0
-	 q99YkIayOlyc0EJV83E7Mijn2kEV3ql2D64Kq2aQ3RHeqQbLwC9lbgP+BoWw8nVQgyPJF
-	 F5ovsoZcNiXFTEtNNeZ4UlXcviW4jc8bOiqqmFFzYVMNraKgkUsaIrk85bFkbCPtaRQ4i
-	 H7GYeinWjHmLnHqmO+/I4oKRZkdUvwBYtMLGaJwr+M+N5mW9ax0ZvfOc6VgUpUcspQPhX
-	 WVy34JuyjsWHZEgH6PbtYb4wIGDIX/fL+eqU8ah0boIYgpQZKRmoS/cEcxlI6b6KGPw==
+	t=1792782380;
+	b=JGlFOsOQ3kN/gcZfmXQ+jkupOJIQ22sbri8HwM5AkYn+DUxYiooJoZsqbLdGBFsaOoQC
+	 yRXnMmvdjEN36FKVXD0jxWX4lA3IykMio2QusU1jhDZY1Ndjls8r6bdHEdGkp3RIOPIv/
+	 M1YDZJ2UQ02ytPjQyz/zNozoNvpw+IVV/7vFJ1/DKwu0Q4WcXLgp/yZgaEM/KiodascJ/
+	 y/qXNxbWrCbcclZBCjY+7dL1EyruZQCvvh56akEviIh+1nfHMt2ScM80wdomcO6aQ5rqk
+	 EWV7vlC95YgpMOethw/DiiH6uHXCmIM6q7Wn6nsTE05gf5Ab8LTUTvkVgDmdmp0XAhA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792782385;
+	a=rsa-sha256; c=relaxed/relaxed; t=1792782380;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Received:Date:In-Reply-To:
 	 Mime-Version:References:X-Mailer:Message-ID:Subject:From:To:Cc:
 	 Content-Type;
-	bh=9omYhE4qZ0KgG5FzmCc0p+7G2vpIrU9N2JvqXH0HeqY=;
-	b=PgKgWerQ+n/k0o65rKECjm5TRIKnNM3TeOQ62IgpISYVvmSHnZOnQIpKyanJVTb10xsB
-	 Rucc0Dm0327PoCDOszPzIZ6M6F4CQeg7Ia+57yMNsZZykQe1W7UyDMRWYShEImOMyrYDY
-	 93Bmr64ldKRwXh7NBiwLb3VxmSjeoT5xXXO9cQfQP1ft45I8b8l0gbytjDcjkZUQeRUF0
-	 WAQLpvxauMsl9/Fo2roK89WAOyAZgNj2uiZkjRUM537fz+fNeHdFGouAI2aj8lFUNRVm/
-	 bv5FfuJL1Is+zOvryyZqDwKX/w3Rdst39GxtEK4iwvlVKyXcAbEP0Ff+H9Cl5YJYZvg==
+	bh=oLvIkwC2TcW0ua8f6McCb78YZLdm5GJNtqjRJHDe24s=;
+	b=sE+uvEl5xpXHM8w0Mycx8peRlpdC5na/eTdggY+qHGNzJCDjyKkb4rMOi/5w0rUofDqM
+	 5KOluYpl2xFmqHZMKnku5OMX5rK0aijIGa5UunxJI7vq1zihYjfWnHYW3OaKjd5pGvAUW
+	 eiTdifPDl8fcKCFaNwMZlguzhYItm5j9IMy4MwmJmf1aXoCQhzkX84iHi+87+J4V7Jgmf
+	 jzBCva5ADBC6fjxxRque28MG7g6n4vRQvL8FuF9BVy7p5hMsCf6bNuG3k3VVNOcKL1yaO
+	 FNy/GAj8XMVOP+INqpoixTIaWTP2yxiLO4AqA6hPQLNMQkWie7PFNAR68FRHN7FcaPg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=google.com;
 	spf=pass smtp.mailfrom=flex--irogers.bounces.google.com;
-	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20251104 header.b=ZX+F0h0i;
+	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20251104 header.b=NHqGmQam;
 	arc=none smtp.remote-ip=74.125.82.198
 Received: from mail-dy1-f198.google.com (mail-dy1-f198.google.com [74.125.82.198])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7854E60A2602
-	for <linux-perf-users@vger.kernel.org>; Fri, 23 Oct 2026 19:06:23 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 7854E60A2602
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EB5C606A326
+	for <linux-perf-users@vger.kernel.org>; Fri, 23 Oct 2026 19:06:19 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 7EB5C606A326
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20251104 header.b=ZX+F0h0i
-Received: by mail-dy1-f198.google.com with SMTP id 5a478bee46e88-30bcb065bfdso1731277eec.0
-        for <linux-perf-users@vger.kernel.org>; Fri, 23 Oct 2026 12:06:23 -0700 (PDT)
+	dkim=pass (2048-bit key, unprotected) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20251104 header.b=NHqGmQam
+Received: by mail-dy1-f198.google.com with SMTP id 5a478bee46e88-33713e5e6daso1947031eec.0
+        for <linux-perf-users@vger.kernel.org>; Fri, 23 Oct 2026 12:06:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1792782383; x=1793387183; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1792782379; x=1793387179; darn=vger.kernel.org;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=9omYhE4qZ0KgG5FzmCc0p+7G2vpIrU9N2JvqXH0HeqY=;
-        b=ZX+F0h0iWncdHn7aqND7VxwBLWZ+vde8gacsBJnCd0MXhUd9roPHSI6p0SglfDmnML
-         PkclnUq4xlHaj0a28VF9YZLcD0FLPzgnYH5HPMlFjsdKZ/sFCpDXnjh4M0xxTOKycx1q
-         /KKR5wlm1I6iBbakLZ32cBG2+C5I4g/OBI4ZSVBBhQ27Twv/m4UO/oGmXuia0ZEd504M
-         QkTrFV4DOT77Diu8x3hvAGiBcDCWQ/Jx/yppRrpHTjO0OpnSEzXJlOoQ3t9kk/omY+za
-         3znKVgVCXwbl+pwI0FJbf0kYNVH/8R6fEd0ljDwJMLS1jZrGPFEuBNj2EMdHfSNmXLgw
-         2grQ==
+        bh=oLvIkwC2TcW0ua8f6McCb78YZLdm5GJNtqjRJHDe24s=;
+        b=NHqGmQamkOqgVBbZuy08hyywoeXE074BFPyLtt06CV6bylqim/ZKfI7Du+L067yn+p
+         tXWTaOPNr2EV924dO0VMlSpIPPGrra7fEIB8RdxbG6aLR54rnspi5ArkqqkIDMqTG66v
+         Mgwv7b7MxhQYAiCMxh+Ylv2PLL8Xy740J1UmGjdP7rmW6sOBppws/ju7tkLTCKi9vQzy
+         xLdAOj8fkbVekWJROYoqp+SGzpXDEeR0VeI193ejPksmh4x2mtjYU4yw2OhL+oCvT3EN
+         uDVZM8TXi7nYTYL3UaWRkkXnoiaZOXGXcyI8vqgLlyfSWPQ8nA1IMToQMj1ONZz1lA8E
+         /NiA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1792782383; x=1793387183;
+        d=1e100.net; s=20260707; t=1792782379; x=1793387179;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=9omYhE4qZ0KgG5FzmCc0p+7G2vpIrU9N2JvqXH0HeqY=;
-        b=bqbN61D2CdottNd3fm+xU0DijbgW3JmqfD+5/lKGwx2wqqLCeFX4vsSJfU5GCjhQI9
-         rojd1fcZfAio81TVxh3p4xjYkMyVaGH5Gv/GyciHlyoy233PBJjY/vaTKxdfk/LfzIC0
-         epVcAiv7IEaWYzpBEiS/7+n2i3vgd1MO4c+8D7L3L2E4zsyIbERojbWzswcB7gWPkhi3
-         4nQyMaQ5SLKix+kqgGkeVhIxLLv++NLin6lmu14/G7PLk2CeWXZUVL0y2R+7PF5y8Atz
-         OnRyZFem96LcyQZwfZOiuddBmHYInu6uhV7lICSdoi7IwlE+pAdGt1axTpjQFimj+ew0
-         6aog==
-X-Forwarded-Encrypted: i=1; AKwUvBxQpGuAZVml6nkG1vI3q9kndXuuijAiTYwtEE2tiDudsA2VYNjrG7hYYxwhzlLmpR8jS9noHCdbyra2DJOmAPK1@vger.kernel.org
-X-Gm-Message-State: AFq9FYKRGhVgtYvX6iTVEu5RsrtGzPUf929ntH7JXsnIFH/MuiE2nW/X
-	pvKYXJXxHEAxbzqSlAntIUuaWo01PwB0NTHjzCu1DqE4p49n5JbfABEEF0qs9g4Lc03iVbC67nH
-	N4MZ9xApqyg==
-X-Received: from dlbrl8.prod.google.com ([2002:a05:7022:f508:b0:167:1ca1:a37d])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:5f0c:b0:151:2e62:fe6e
- with SMTP id a92af1059eb24-195c6a34cb0mr3617221c88.19.1792782382110; Fri, 23
- Oct 2026 12:06:22 -0700 (PDT)
-Date: Fri, 23 Oct 2026 12:05:57 -0700
+        bh=oLvIkwC2TcW0ua8f6McCb78YZLdm5GJNtqjRJHDe24s=;
+        b=DIUL47rv9dfrDQb7hTUrQR4iURQsluKjtj+86Drb0oRN8tQAU+APMMq6jtWTmwslC2
+         SnSvo5SNAtqyexeaaDHogAshM37E+TZWDCuFqLukBLdG6uJJh0e3onBGwCkpHbU1T13Q
+         OKq4Gk3MCIV7dKobhY5MVx2t2vaeRLt2PAscq/RwYHBcU3uGUQjLzdfD2vyM7+l1h5sR
+         FZG4HcOzn9z2k59Ve8l6fOOeZg3F6+nHn2BcI0ZPy5Yl1XZ0BDs894RnM6RDe8Sz5enM
+         UuUdDTNg3offdtBOmSackzTGNR+jWbf0nSPg/CaK2QPPnCJ84DHvOUuqyPUMS9k2uogM
+         +MAA==
+X-Forwarded-Encrypted: i=1; AKwUvByUofRSigplEHfSkyHJHS7ZQ99XgoJ5aphiG0dFaCNmeJsNvMKGLXWYFUhSl3g1p11MtEE82L793b+WL0IM6gHQ@vger.kernel.org
+X-Gm-Message-State: AFq9FYJScLd/Ole553uDXqG8VH6W0nnkvAP9iv6OPWyyVqFFz3hB0jTH
+	VUX0ouGVePPbcjPsmZTyPltp02/i+O1K+fvERwn5Fu41+mxXER0Tw6EznZZAGBof44bzE9sDDzo
+	vHRpg76Td/g==
+X-Received: from dldyr13-n1.prod.google.com ([2002:a05:701b:450d:10b0:197:f679:f62d])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:3a07:b0:14c:1f57:3e86
+ with SMTP id a92af1059eb24-195c823b222mr4209148c88.47.1792782378230; Fri, 23
+ Oct 2026 12:06:18 -0700 (PDT)
+Date: Fri, 23 Oct 2026 12:05:55 -0700
 In-Reply-To: <20261023190558.3050796-1-irogers@google.com>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -81,9 +81,9 @@ Precedence: list
 Mime-Version: 1.0
 References: <20261022203003.1779152-1-irogers@google.com> <20261023190558.3050796-1-irogers@google.com>
 X-Mailer: git-send-email 2.56.0.307.g5fe7bd680c-goog
-Message-ID: <20261023190558.3050796-11-irogers@google.com>
-Subject: [PATCH v7 10/11] perf bpf-filter: Extend lock_held() to support RCU,
- Tasks Trace RCU, and SRCU
+Message-ID: <20261023190558.3050796-9-irogers@google.com>
+Subject: [PATCH v7 08/11] perf bpf-filter: Support slab cache locks (&<name>)
+ in lock_held()
 From: Ian Rogers <irogers@google.com>
 To: irogers@google.com, acme@kernel.org, namhyung@kernel.org
 Cc: adrian.hunter@intel.com, ddhariwal@google.com, eranian@google.com, 
@@ -92,884 +92,465 @@ Cc: adrian.hunter@intel.com, ddhariwal@google.com, eranian@google.com,
 	rcu@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-Extend the lock_held(<lock>) BPF sample filter to support RCU, Tasks
-Trace RCU, and SRCU locks:
+Extend the lock_held() BPF sample filter to support dynamically
+allocated kernel locks inside slab caches prefixed with '&' (e.g.
+lock_held(&dentry), lock_held_read(&dentry), lock_held_write(&dentry)).
 
-- 'rcu' (supports both read/shared and write/exclusive modes):
-  - Read/shared ('lock_held_read(rcu)', 'lock_held(rcu:R)',
-    'lock_held(rcu_read_lock)'): directly inspects
-    current->rcu_read_lock_nesting in perf_sample_filter via CO-RE (on
-    CONFIG_PREEMPT_RCU kernels), accounting for the baseline
-    rcu_read_lock() nesting acquired by the perf overflow handler itself
-    (bpf_overflow_handler() and do_perf_sw_event()) with zero extra
-    fentry/fexit tracing hooks.
-  - Write/exclusive ('lock_held_write(rcu)', 'lock_held(rcu:W)'):
-    attaches fentry/fexit hooks to synchronize_rcu(),
-    synchronize_rcu_expedited(), synchronize_rcu_tasks(), and
-    rcu_barrier() to track grace-period and barrier waits.
-- 'srcu' and specific SRCU symbols (e.g. '&srcu_symbol', supports both
-  read/shared and write/exclusive modes):
-  - Read/shared ('lock_held_read(srcu)', 'lock_held(srcu:R)'): attaches
-    fexit/__srcu_read_lock and fentry/__srcu_read_unlock.
-  - Write/exclusive ('lock_held_write(srcu)', 'lock_held(srcu:W)'):
-    attaches fentry/fexit on synchronize_srcu(),
-    synchronize_srcu_expedited(), and srcu_barrier().
-- 'rcu-trace' / 'rcu_trace' / 'rcu_read_lock_trace' (supports
-  read/shared mode only): directly inspects
-  current->trc_reader_nesting > 0 on CONFIG_TASKS_TRACE_RCU kernels
-  with zero extra tracing hooks.
-
-Example usage:
-
-  # perf record -a -g -e cycles --filter 'lock_held_read(rcu)' -- sleep 1
-  [ perf record: Woken up 1 times to write data ]
-  [ perf record: Captured and wrote 1.482 MB perf.data (412 samples) ]
-
-  # perf report --stdio --no-children
-  # Overhead  Command  Shared Object      Symbol
-  # ........  .......  .................  ........................
-  #
-      14.32%  perf     [kernel.kallsyms]  [k] __d_lookup_rcu
-              |
-              ---__d_lookup_rcu
-                 lookup_fast
-                 walk_component
-                 link_path_walk
-                 path_lookupat
-                 filename_lookup
-                 vfs_statx
-                 __do_sys_newstat
-                 do_syscall_64
-                 entry_SYSCALL_64_after_hwframe
-
-  # perf record -a -g -e task-clock --filter 'lock_held(rcu:W)' -- sleep 1
-  # perf record -a -g -e cycles --filter 'lock_held(srcu)' -- sleep 1
+Reuse do_slab_cache_iter() from lock_data.h via a SEC("iter/kmem_cache")
+program to resolve the requested slab cache name to its kernel
+struct kmem_cache * address, and use the bpf_get_kmem_cache() kfunc in
+record_lock_acquired_owner() and record_lock_released_addr() to match
+held locks allocated from that slab cache.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/Documentation/perf-record.txt     |  44 ++--
- tools/perf/tests/parse-events.c              |  13 +
- tools/perf/tests/shell/record_bpf_filter.sh  |  20 ++
- tools/perf/util/bpf-filter.c                 | 244 ++++++++++++++++++-
- tools/perf/util/bpf_skel/lock_data.h         |  47 +++-
- tools/perf/util/bpf_skel/sample-filter.h     |  14 ++
- tools/perf/util/bpf_skel/sample_filter.bpf.c | 136 ++++++++++-
- tools/perf/util/bpf_skel/vmlinux/vmlinux.h   |   2 +
- tools/perf/util/lock-contention.c            |   4 +
- tools/perf/util/lock-contention.h            |   4 +-
- 10 files changed, 497 insertions(+), 31 deletions(-)
+ tools/perf/Documentation/perf-record.txt     |  25 ++--
+ tools/perf/util/bpf-filter.c                 | 124 ++++++++++++++++---
+ tools/perf/util/bpf_skel/sample-filter.h     |   5 +
+ tools/perf/util/bpf_skel/sample_filter.bpf.c |  48 +++++++
+ 4 files changed, 175 insertions(+), 27 deletions(-)
 
 diff --git a/tools/perf/Documentation/perf-record.txt b/tools/perf/Documentation/perf-record.txt
-index 8a160317304a..6e30cbef1878 100644
+index 1c65f90dfb6b..8a160317304a 100644
 --- a/tools/perf/Documentation/perf-record.txt
 +++ b/tools/perf/Documentation/perf-record.txt
-@@ -230,11 +230,17 @@ OPTIONS
- 	'lock_held(cgroup_mutex)'), a hexadecimal lock address, a slab cache
- 	name prefixed with '&' (e.g. 'lock_held(&dentry)',
- 	'lock_held_read(&dentry)'), a well-known lock name ('mmap_lock',
--	'siglock', 'rq_lock', 'zone_lock'), or a lock type ('mutex',
--	'spinlock', 'rwsem', 'rwsem:R', 'rwsem:W', 'rwlock', 'rwlock:R',
--	'rwlock:W', 'rt-mutex', 'percpu-rwsem', 'pcpu-sem:W', 'semaphore').
--	Both read/shared and write/exclusive tracking are supported for
--	'rwsem' (including 'mmap_lock') and 'rwlock'; 'mutex', 'spinlock'
-+	'siglock', 'rq_lock', 'zone_lock', 'rcu', 'rcu-trace'), or a lock
-+	type ('mutex', 'spinlock', 'rwsem', 'rwsem:R', 'rwsem:W', 'rwlock',
-+	'rwlock:R', 'rwlock:W', 'rt-mutex', 'percpu-rwsem', 'pcpu-sem:W',
-+	'srcu', 'srcu:R', 'srcu:W', 'rcu:R', 'rcu:W', 'semaphore').  Both
-+	read/shared and write/exclusive tracking are supported for 'rwsem'
-+	(including 'mmap_lock'), 'rwlock', 'rcu', and 'srcu' (where
-+	read/shared mode matches 'rcu_read_lock()' / 'srcu_read_lock()'
-+	critical sections and write/exclusive mode matches grace-period
-+	waits 'synchronize_rcu*()', 'synchronize_srcu*()', 'rcu_barrier()',
-+	and 'srcu_barrier()'); 'rcu-trace' ('rcu_read_lock_trace()')
-+	supports read/shared tracking only; and 'mutex', 'spinlock'
- 	(including 'siglock', 'rq_lock', 'zone_lock'), 'rt-mutex',
+@@ -227,13 +227,15 @@ OPTIONS
+ 	(alias 'lock_held_exclusive(<lock>)'), or append ':R' or ':W' to
+ 	<lock> (e.g. 'lock_held(mmap_lock:R)' or 'lock_held(mmap_lock:W)').
+ 	<lock> can be a kernel lock symbol name (e.g.
+-	'lock_held(cgroup_mutex)'), a hexadecimal lock address, a well-known
+-	lock name ('mmap_lock', 'siglock', 'rq_lock', 'zone_lock'), or a lock
+-	type ('mutex', 'spinlock', 'rwsem', 'rwsem:R', 'rwsem:W', 'rwlock',
+-	'rwlock:R', 'rwlock:W', 'rt-mutex', 'percpu-rwsem', 'pcpu-sem:W',
+-	'semaphore').  Both read/shared and write/exclusive tracking are
+-	supported for 'rwsem' (including 'mmap_lock') and 'rwlock'; 'mutex',
+-	'spinlock' (including 'siglock', 'rq_lock', 'zone_lock'), 'rt-mutex',
++	'lock_held(cgroup_mutex)'), a hexadecimal lock address, a slab cache
++	name prefixed with '&' (e.g. 'lock_held(&dentry)',
++	'lock_held_read(&dentry)'), a well-known lock name ('mmap_lock',
++	'siglock', 'rq_lock', 'zone_lock'), or a lock type ('mutex',
++	'spinlock', 'rwsem', 'rwsem:R', 'rwsem:W', 'rwlock', 'rwlock:R',
++	'rwlock:W', 'rt-mutex', 'percpu-rwsem', 'pcpu-sem:W', 'semaphore').
++	Both read/shared and write/exclusive tracking are supported for
++	'rwsem' (including 'mmap_lock') and 'rwlock'; 'mutex', 'spinlock'
++	(including 'siglock', 'rq_lock', 'zone_lock'), 'rt-mutex',
  	'semaphore', and 'percpu-rwsem' ('percpu_down_write()') support
  	write/exclusive tracking only.  Note that 'semaphore' tracking
-@@ -256,19 +262,21 @@ OPTIONS
- 	      --filter 'lock_held(mutex) || lock_held(rwsem)'
+ 	('down*()' / 'up()') assumes binary mutex-like usage where the
+@@ -259,16 +261,17 @@ OPTIONS
+ 	'owner' field directly in kernel memory on each sample without attaching
+ 	any BPF fentry/fexit hooks.  For locks that do not maintain an
+ 	authoritative per-task owner pointer (such as spinlocks, rwlocks,
+-	semaphores, reader-locked rwsems, and lock type filters), it attaches
++	semaphores, reader-locked rwsems, and slab/type filters), it attaches
+ 	BPF fentry/fexit programs to kernel lock acquire and release functions
+ 	to track held locks in a BPF map.  These BPF hooks run on every kernel
+ 	lock acquisition and release for the attached lock family, even when no
+ 	perf sample is being taken.  To minimize this overhead, only the hooks
+ 	for the relevant lock family and mode are attached when known (for
+ 	example, 'lock_held_read(mmap_lock)' only hooks rwsem read functions
+-	and 'rq_lock' only hooks spinlock functions), whereas raw hex addresses
+-	or symbols without a recognizable lock-type suffix attach hooks across
+-	all lock families (including high-frequency spinlocks).
++	and 'rq_lock' only hooks spinlock functions), whereas slab filters
++	('&<slab>'), raw hex addresses, or symbols without a recognizable
++	lock-type suffix attach hooks across all lock families (including
++	high-frequency spinlocks).
  
- 	When filtering on a specific mutex symbol ('*_mutex'), rt-mutex symbol
--	('*_rt_mutex'), or write-locked 'mmap_lock' ('lock_held_write(mmap_lock)'
--	or 'lock_held(mmap_lock:W)'), 'perf_sample_filter' inspects the lock's
--	'owner' field directly in kernel memory on each sample without attaching
--	any BPF fentry/fexit hooks.  For locks that do not maintain an
--	authoritative per-task owner pointer (such as spinlocks, rwlocks,
--	semaphores, reader-locked rwsems, and slab/type filters), it attaches
--	BPF fentry/fexit programs to kernel lock acquire and release functions
--	to track held locks in a BPF map.  These BPF hooks run on every kernel
--	lock acquisition and release for the attached lock family, even when no
--	perf sample is being taken.  To minimize this overhead, only the hooks
--	for the relevant lock family and mode are attached when known (for
--	example, 'lock_held_read(mmap_lock)' only hooks rwsem read functions
--	and 'rq_lock' only hooks spinlock functions), whereas slab filters
-+	('*_rt_mutex'), write-locked 'mmap_lock' ('lock_held_write(mmap_lock)'
-+	or 'lock_held(mmap_lock:W)'), or 'rcu:R' / 'rcu-trace' (which inspect
-+	'current->rcu_read_lock_nesting' / 'current->trc_reader_nesting'),
-+	'perf_sample_filter' inspects the kernel fields directly on each sample
-+	without attaching any BPF fentry/fexit hooks.  For locks that do not
-+	maintain an authoritative per-task owner pointer (such as spinlocks,
-+	rwlocks, semaphores, reader-locked rwsems, SRCU locks, RCU synchronize
-+	waits, and slab/type filters), it attaches BPF fentry/fexit programs to
-+	kernel lock acquire and release functions to track held locks in a BPF
-+	map.  These BPF hooks run on every kernel lock acquisition and release
-+	for the attached lock family, even when no perf sample is being taken.
-+	To minimize this overhead, only the hooks for the relevant lock family
-+	and mode are attached when known (for example, 'lock_held_read(mmap_lock)'
-+	only hooks rwsem read functions, 'srcu' only hooks SRCU functions, and
-+	'rq_lock' only hooks spinlock functions), whereas slab filters
- 	('&<slab>'), raw hex addresses, or symbols without a recognizable
- 	lock-type suffix attach hooks across all lock families (including
- 	high-frequency spinlocks).
-diff --git a/tools/perf/tests/parse-events.c b/tools/perf/tests/parse-events.c
-index 4cf9192762f2..730466b7ebf6 100644
---- a/tools/perf/tests/parse-events.c
-+++ b/tools/perf/tests/parse-events.c
-@@ -2980,6 +2980,19 @@ static int do_test_bpf_filters(struct list_head *expr_head)
- 			expr->lock_name && !strcmp(expr->lock_name, "cgroup_mutex"));
- 	clear_bpf_filter_exprs(expr_head);
- 
-+	/* RCU and SRCU lock_held(rcu) || lock_held(srcu) */
-+	TEST_ASSERT_VAL("parse lock_held(rcu)",
-+			__perf_bpf_filter__parse(expr_head, "lock_held(rcu)") == 0);
-+	TEST_ASSERT_VAL("not empty", !list_empty(expr_head));
-+	expr = list_first_entry(expr_head, struct perf_bpf_filter_expr, list);
-+	TEST_ASSERT_VAL("term is PBF_TERM_LOCK_HELD", expr->term == PBF_TERM_LOCK_HELD);
-+	TEST_ASSERT_VAL("part is PBF_LOCK_MODE_ANY", expr->part == PBF_LOCK_MODE_ANY);
-+	TEST_ASSERT_VAL("op is PBF_OP_EQ", expr->op == PBF_OP_EQ);
-+	TEST_ASSERT_VAL("val is 1", expr->val == 1);
-+	TEST_ASSERT_VAL("lock_name is rcu",
-+			expr->lock_name && !strcmp(expr->lock_name, "rcu"));
-+	clear_bpf_filter_exprs(expr_head);
-+
- 	/* Read/shared and write/exclusive predicates */
- 	TEST_ASSERT_VAL("parse lock_held_read(&mmap_lock)",
- 			__perf_bpf_filter__parse(expr_head, "lock_held_read(&mmap_lock)") == 0);
-diff --git a/tools/perf/tests/shell/record_bpf_filter.sh b/tools/perf/tests/shell/record_bpf_filter.sh
-index ebaf8ee41622..47f697f53a85 100755
---- a/tools/perf/tests/shell/record_bpf_filter.sh
-+++ b/tools/perf/tests/shell/record_bpf_filter.sh
-@@ -247,6 +247,26 @@ test_bpf_filter_lock_held() {
-     return
-   fi
- 
-+  if ! perf record -e task-clock --filter 'lock_held_write(rcu) || lock_held(srcu)' \
-+       -o "${perfdata}" true 2> /dev/null
-+  then
-+    echo "Lock-held bpf-filter test [Failed rcu:W/srcu]"
-+    err=1
-+    return
-+  fi
-+
-+  if ! perf record -e task-clock --filter 'lock_held_read(rcu)' \
-+       -o "${perfdata}" true 2> /dev/null
-+  then
-+    if ! perf record -e task-clock --filter 'lock_held_read(rcu)' \
-+         -o /dev/null true 2>&1 | grep -q CONFIG_PREEMPT_RCU
-+    then
-+      echo "Lock-held bpf-filter test [Failed lock_held_read(rcu)]"
-+      err=1
-+      return
-+    fi
-+  fi
-+
-   if ! perf record -e task-clock \
-        --filter 'lock_held_read(mmap_lock) || lock_held_write(mmap_lock)' \
-        -o "${perfdata}" true 2> /dev/null
+ 	The <operator> can be one of:
+ 	  ==, !=, >, >=, <, <=, &
 diff --git a/tools/perf/util/bpf-filter.c b/tools/perf/util/bpf-filter.c
-index 97296b65709f..1b4bbf00c357 100644
+index 7b92cd1bf8a8..97296b65709f 100644
 --- a/tools/perf/util/bpf-filter.c
 +++ b/tools/perf/util/bpf-filter.c
-@@ -200,11 +200,19 @@ enum lock_prog_group {
- 	LOCK_PROG_RTMUTEX       = 1U << 6,
- 	LOCK_PROG_SEM           = 1U << 7,
- 	LOCK_PROG_PERCPU_RWSEM  = 1U << 8,
--	LOCK_PROG_ALL           = 0x1ffU & ~LOCK_PROG_SEM,
-+	LOCK_PROG_SRCU_READ     = 1U << 9,
-+	LOCK_PROG_SRCU_WRITE    = 1U << 10,
-+	LOCK_PROG_SRCU          = LOCK_PROG_SRCU_READ | LOCK_PROG_SRCU_WRITE,
-+	LOCK_PROG_RCU_WRITE     = 1U << 11,
-+	LOCK_PROG_ALL           = 0xfffU & ~LOCK_PROG_SEM,
- };
- 
- static unsigned int lock_flags_to_prog_group(unsigned int flags)
+@@ -693,10 +693,14 @@ static unsigned int supported_lock_prog_groups(struct btf *btf)
+ static int configure_lock_progs(struct sample_filter_bpf *skel, struct btf *btf,
+ 				unsigned int needed_groups,
+ 				unsigned int required_groups,
+-				bool needs_lock_syms, bool is_tracepoint)
++				bool needs_lock_syms, bool needs_slab_iter,
++				bool is_tracepoint)
  {
-+	if (flags & LCB_F_RCU)
-+		return (flags & LCB_F_WRITE) ? LOCK_PROG_RCU_WRITE : 0;
-+	if (flags & LCB_F_SRCU)
-+		return (flags & LCB_F_READ) ? LOCK_PROG_SRCU_READ : LOCK_PROG_SRCU_WRITE;
- 	if (flags & LCB_F_MUTEX)
- 		return LOCK_PROG_MUTEX;
- 	if (flags & LCB_F_RT)
-@@ -334,6 +342,32 @@ static const struct lock_prog_desc lock_progs[] = {
- 	/* Percpu-RWsem */
- 	LOCK_FPROG(fexit_percpu_down_write, "percpu_down_write", LOCK_PROG_PERCPU_RWSEM),
- 	LOCK_FPROG(fentry_percpu_up_write, "percpu_up_write", LOCK_PROG_PERCPU_RWSEM),
-+	/* SRCU */
-+	LOCK_FPROG(fexit_srcu_read_lock, "__srcu_read_lock", LOCK_PROG_SRCU_READ),
-+	LOCK_FPROG(fentry_srcu_read_unlock, "__srcu_read_unlock", LOCK_PROG_SRCU_READ),
-+	LOCK_FPROG(fexit_srcu_read_lock_nmisafe, "__srcu_read_lock_nmisafe",
-+		   LOCK_PROG_SRCU_READ),
-+	LOCK_FPROG(fentry_srcu_read_unlock_nmisafe, "__srcu_read_unlock_nmisafe",
-+		   LOCK_PROG_SRCU_READ),
-+	LOCK_FPROG(fentry_synchronize_srcu, "synchronize_srcu", LOCK_PROG_SRCU_WRITE),
-+	LOCK_FPROG(fexit_synchronize_srcu, "synchronize_srcu", LOCK_PROG_SRCU_WRITE),
-+	LOCK_FPROG(fentry_synchronize_srcu_expedited, "synchronize_srcu_expedited",
-+		   LOCK_PROG_SRCU_WRITE),
-+	LOCK_FPROG(fexit_synchronize_srcu_expedited, "synchronize_srcu_expedited",
-+		   LOCK_PROG_SRCU_WRITE),
-+	LOCK_FPROG(fentry_srcu_barrier, "srcu_barrier", LOCK_PROG_SRCU_WRITE),
-+	LOCK_FPROG(fexit_srcu_barrier, "srcu_barrier", LOCK_PROG_SRCU_WRITE),
-+	/* RCU grace-period synchronize / barrier */
-+	LOCK_FPROG(fentry_synchronize_rcu, "synchronize_rcu", LOCK_PROG_RCU_WRITE),
-+	LOCK_FPROG(fexit_synchronize_rcu, "synchronize_rcu", LOCK_PROG_RCU_WRITE),
-+	LOCK_FPROG(fentry_synchronize_rcu_expedited, "synchronize_rcu_expedited",
-+		   LOCK_PROG_RCU_WRITE),
-+	LOCK_FPROG(fexit_synchronize_rcu_expedited, "synchronize_rcu_expedited",
-+		   LOCK_PROG_RCU_WRITE),
-+	LOCK_FPROG(fentry_synchronize_rcu_tasks, "synchronize_rcu_tasks", LOCK_PROG_RCU_WRITE),
-+	LOCK_FPROG(fexit_synchronize_rcu_tasks, "synchronize_rcu_tasks", LOCK_PROG_RCU_WRITE),
-+	LOCK_FPROG(fentry_rcu_barrier, "rcu_barrier", LOCK_PROG_RCU_WRITE),
-+	LOCK_FPROG(fexit_rcu_barrier, "rcu_barrier", LOCK_PROG_RCU_WRITE),
- };
+ 	unsigned int supported_groups = supported_lock_prog_groups(btf);
+ 	unsigned int enabled_progs = 0;
++	bool has_slab_iter = needs_slab_iter && btf &&
++			     btf__find_by_name_kind(btf, "bpf_iter__kmem_cache",
++						    BTF_KIND_STRUCT) > 0;
  
- #undef LOCK_FPROG
-@@ -680,6 +714,18 @@ static unsigned int supported_lock_prog_groups(struct btf *btf)
- 	if (btf_has_func(btf, "percpu_down_write") && btf_has_func(btf, "percpu_up_write"))
- 		supported |= LOCK_PROG_PERCPU_RWSEM;
+ 	bpf_program__set_autoload(skel->progs.perf_sample_filter, !is_tracepoint);
+ 	bpf_program__set_autoload(skel->progs.perf_tp_sample_filter, is_tracepoint);
+@@ -729,6 +733,7 @@ static int configure_lock_progs(struct sample_filter_bpf *skel, struct btf *btf,
+ 	}
  
-+	if ((btf_has_func(btf, "__srcu_read_lock") ||
-+	     btf_has_func(btf, "__srcu_read_lock_nmisafe")) &&
-+	    (btf_has_func(btf, "__srcu_read_unlock") ||
-+	     btf_has_func(btf, "__srcu_read_unlock_nmisafe")))
-+		supported |= LOCK_PROG_SRCU_READ;
+ 	bpf_program__set_autoload(skel->progs.collect_lock_syms, needs_lock_syms);
++	bpf_program__set_autoload(skel->progs.slab_cache_iter, has_slab_iter);
+ 
+ 	if (needed_groups && !enabled_progs) {
+ 		pr_err("Error: Kernel BTF lacks required lock tracing entry points\n");
+@@ -871,7 +876,8 @@ static void prescan_one_lock_expr(struct perf_bpf_filter_expr *expr,
+ 				  unsigned int *prog_groups,
+ 				  unsigned int *required_groups,
+ 				  bool *needs_lock_syms,
+-				  bool *needs_zone_data)
++				  bool *needs_zone_data,
++				  bool *needs_slab_iter)
+ {
+ 	char base[128];
+ 	bool has_amp;
+@@ -889,9 +895,16 @@ static void prescan_one_lock_expr(struct perf_bpf_filter_expr *expr,
+ 			*btf = NULL;
+ 	}
+ 	if (split_lock_name_mode(expr->lock_name, expr->part, base,
+-				 sizeof(base), &has_amp, &mode) < 0 || has_amp)
++				 sizeof(base), &has_amp, &mode) < 0)
+ 		return;
+ 
++	/* Leading '&' is reserved for slab cache locks (e.g. '&dentry'). */
++	if (has_amp) {
++		*needs_slab_iter = true;
++		*prog_groups |= LOCK_PROG_ALL;
++		return;
++	}
 +
-+	if (btf_has_func(btf, "synchronize_srcu"))
-+		supported |= LOCK_PROG_SRCU_WRITE;
-+
-+	if (btf_has_func(btf, "synchronize_rcu"))
-+		supported |= LOCK_PROG_RCU_WRITE;
-+
- 	return supported;
+ 	if (!strcmp(base, "mmap_lock") || !strcmp(base, "mmap_sem")) {
+ 		/*
+ 		 * Write ownership of mm->mmap_lock is inspected directly via
+@@ -988,7 +1001,8 @@ static void prescan_lock_filters(struct evsel *evsel, struct btf **btf,
+ 				 unsigned int *prog_groups,
+ 				 unsigned int *required_groups,
+ 				 bool *needs_lock_syms,
+-				 bool *needs_zone_data)
++				 bool *needs_zone_data,
++				 bool *needs_slab_iter)
+ {
+ 	struct perf_bpf_filter_expr *expr, *group;
+ 
+@@ -998,21 +1012,73 @@ static void prescan_lock_filters(struct evsel *evsel, struct btf **btf,
+ 	*required_groups = 0;
+ 	*needs_lock_syms = false;
+ 	*needs_zone_data = false;
++	*needs_slab_iter = false;
+ 
+ 	list_for_each_entry(expr, &evsel->bpf_filters, list) {
+ 		prescan_one_lock_expr(expr, btf, has_lock_filter, prog_groups,
+ 				      required_groups, needs_lock_syms,
+-				      needs_zone_data);
++				      needs_zone_data, needs_slab_iter);
+ 		if (expr->op == PBF_OP_GROUP_BEGIN) {
+ 			list_for_each_entry(group, &expr->groups, list) {
+ 				prescan_one_lock_expr(group, btf, has_lock_filter,
+ 						      prog_groups, required_groups,
+-						      needs_lock_syms, needs_zone_data);
++						      needs_lock_syms, needs_zone_data,
++						      needs_slab_iter);
+ 			}
+ 		}
+ 	}
  }
  
-@@ -754,6 +800,7 @@ enum lock_sym_class {
- 	LOCK_SYM_SEM_OR_RWSEM,
- 	LOCK_SYM_SPIN,
- 	LOCK_SYM_RWLOCK,
-+	LOCK_SYM_SRCU,
- };
- 
- /*
-@@ -824,6 +871,8 @@ static enum lock_sym_class btf_lock_sym_class(struct btf *btf, const char *name)
- 			return LOCK_SYM_SEM;
- 		if (!strcmp(tname, "spinlock") || !strcmp(tname, "raw_spinlock"))
- 			return LOCK_SYM_SPIN;
-+		if (!strcmp(tname, "srcu_struct"))
-+			return LOCK_SYM_SRCU;
- 		break;
- 	}
- 	return LOCK_SYM_UNKNOWN;
-@@ -856,6 +905,8 @@ static enum lock_sym_class classify_lock_sym(struct btf *btf, const char *name)
- 		return LOCK_SYM_SPIN;
- 	if (str_ends_with(name, "rwlock"))
- 		return LOCK_SYM_RWLOCK;
-+	if (str_ends_with(name, "srcu"))
-+		return LOCK_SYM_SRCU;
- 	/*
- 	 * Both counting semaphores (e.g. console_sem) and rw_semaphores (e.g.
- 	 * namespace_sem, uts_sem) commonly use a "_sem" suffix.
-@@ -931,6 +982,19 @@ static void prescan_one_lock_expr(struct perf_bpf_filter_expr *expr,
- 			*needs_zone_data = true;
- 		return;
- 	}
-+	if (!strcmp(base, "rcu")) {
-+		if (mode & PBF_LOCK_MODE_WRITE) {
-+			*prog_groups |= LOCK_PROG_RCU_WRITE;
-+			*required_groups |= LOCK_PROG_RCU_WRITE;
-+		}
-+		return;
-+	}
-+	if (!strcmp(base, "rcu_read_lock") ||
-+	    !strcmp(base, "rcu-trace") || !strcmp(base, "rcu_trace") ||
-+	    !strcmp(base, "rcu_read_lock_trace")) {
-+		/* Inspected directly on task_struct; no tracing hooks needed. */
-+		return;
-+	}
- 	if (parse_lock_type_name(base, mode, NULL, NULL, &groups)) {
- 		*prog_groups |= groups;
- 		*required_groups |= groups;
-@@ -984,6 +1048,14 @@ static void prescan_one_lock_expr(struct perf_bpf_filter_expr *expr,
- 		*prog_groups |= groups;
- 		*required_groups |= groups;
- 		return;
-+	case LOCK_SYM_SRCU:
-+		if (mode & PBF_LOCK_MODE_READ)
-+			groups |= LOCK_PROG_SRCU_READ;
-+		if (mode & PBF_LOCK_MODE_WRITE)
-+			groups |= LOCK_PROG_SRCU_WRITE;
-+		*prog_groups |= groups;
-+		*required_groups |= groups;
-+		return;
- 	case LOCK_SYM_UNKNOWN:
- 	default:
- 		*prog_groups |= LOCK_PROG_ALL;
-@@ -1144,6 +1216,108 @@ static int normalize_lock_expr_op(const struct perf_bpf_filter_expr *expr,
- 	return -EINVAL;
- }
- 
-+static u64 rcu_min_depth(struct evsel *evsel)
++static void run_slab_cache_iter(struct sample_filter_bpf *skel)
 +{
-+	/*
-+	 * Non-sleepable BPF sample filter programs always run under at least
-+	 * one kernel rcu_read_lock():
-+	 * - PERF_TYPE_PERF_EVENT: bpf_overflow_handler() takes rcu_read_lock()
-+	 *   (and perf_swevent_event() takes an outer rcu_read_lock() for
-+	 *   non-timer PERF_TYPE_SOFTWARE events, giving depth 2).
-+	 * - Standard tracepoints: trace_call_bpf() takes rcu_read_lock().
-+	 * - Faultable syscall tracepoints: trace_call_bpf_faultable() invokes
-+	 *   bpf_prog_run_array_sleepable(), which takes guard(rcu)() for
-+	 *   non-sleepable programs (!prog->sleepable) such as
-+	 *   perf_sample_filter_tp.
-+	 */
-+	if (evsel && evsel->core.attr.type == PERF_TYPE_SOFTWARE &&
-+	    evsel->core.attr.config != PERF_COUNT_SW_CPU_CLOCK &&
-+	    evsel->core.attr.config != PERF_COUNT_SW_TASK_CLOCK)
-+		return 2;
-+	return 1;
++	struct bpf_link *link;
++	int fd;
++	char buf[256];
++
++	if (!bpf_program__autoload(skel->progs.slab_cache_iter))
++		return;
++
++	link = bpf_program__attach_iter(skel->progs.slab_cache_iter, NULL);
++	if (!link || IS_ERR(link)) {
++		pr_debug("cannot attach slab cache iter\n");
++		return;
++	}
++
++	fd = bpf_iter_create(bpf_link__fd(link));
++	if (fd >= 0) {
++		while (read(fd, buf, sizeof(buf)) > 0)
++			continue;
++		close(fd);
++	}
++
++	bpf_link__destroy(link);
 +}
 +
-+static u64 rcu_trace_min_depth(struct evsel *evsel, struct btf *btf)
++static bool find_slab_cache(struct sample_filter_bpf *skel, const char *name,
++			    u64 *kmem_cache_addr)
 +{
-+	const char *ev_name;
++	int cache_fd;
++	u64 key, *prev_key = NULL;
 +
-+	/*
-+	 * Only PERF_TYPE_PERF_EVENT and PERF_TYPE_TRACEPOINT events can attach
-+	 * sample_filter.bpf.c (kprobes and uprobes require BPF_PROG_TYPE_KPROBE
-+	 * in __perf_event_set_bpf_prog()).
-+	 *
-+	 * For syscall tracepoints:
-+	 * - raw_syscalls:sys_enter and raw_syscalls:sys_exit are defined with
-+	 *   TRACE_EVENT_SYSCALL(), whose __do_trace_sys_enter/exit wrapper
-+	 *   takes guard(rcu_tasks_trace)() (depth 1) before perf_trace_buf
-+	 *   submission calls trace_call_bpf().
-+	 * - syscalls:sys_enter_* and syscalls:sys_exit_* register
-+	 *   perf_syscall_enter/exit on the raw sys_enter/sys_exit tracepoints
-+	 *   (1st guard(rcu_tasks_trace)()) and, on kernels with
-+	 *   trace_call_bpf_faultable(), acquire a 2nd guard(rcu_tasks_trace)()
-+	 *   in trace_call_bpf_faultable() (depth 2).
-+	 */
-+	if (evsel && evsel->core.attr.type == PERF_TYPE_TRACEPOINT) {
-+		ev_name = evsel__name(evsel);
-+		if (!ev_name)
-+			return 0;
-+		if (strstarts(ev_name, "raw_syscalls:"))
-+			return 1;
-+		if (strstarts(ev_name, "syscalls:")) {
-+			if (!btf ||
-+			    btf__find_by_name_kind(btf, "trace_call_bpf_faultable",
-+						   BTF_KIND_FUNC) > 0)
-+				return 2;
-+			return 1;
-+		}
-+	}
-+	return 0;
-+}
-+
-+static bool btf_struct_has_field(const struct btf *btf, s32 type_id,
-+				 const char *field_name)
-+{
-+	const struct btf_type *t;
-+	const struct btf_member *m;
-+	u16 i, vlen;
-+
-+	type_id = btf__resolve_type(btf, type_id);
-+	if (type_id < 0)
++	if (!skel || !bpf_program__autoload(skel->progs.slab_cache_iter))
 +		return false;
 +
-+	t = btf__type_by_id(btf, type_id);
-+	if (!t || (!btf_is_struct(t) && !btf_is_union(t)))
-+		return false;
++	cache_fd = bpf_map__fd(skel->maps.slab_caches);
++	while (!bpf_map_get_next_key(cache_fd, prev_key, &key)) {
++		struct slab_cache_data data;
 +
-+	m = btf_members(t);
-+	vlen = btf_vlen(t);
-+	for (i = 0; i < vlen; i++, m++) {
-+		const char *name = btf__name_by_offset(btf, m->name_off);
++		if (bpf_map_lookup_elem(cache_fd, &key, &data) < 0)
++			break;
 +
-+		if (name && *name) {
-+			if (!strcmp(name, field_name))
-+				return true;
-+		} else if (btf_struct_has_field(btf, m->type, field_name)) {
++		if (!strcmp(data.name, name)) {
++			*kmem_cache_addr = key;
 +			return true;
 +		}
++		prev_key = &key;
 +	}
 +	return false;
 +}
 +
-+static bool btf_has_task_field(struct btf *btf, const char *field_name)
-+{
-+	s32 id;
-+
-+	if (!btf)
-+		return false;
-+
-+	id = btf__find_by_name_kind(btf, "task_struct", BTF_KIND_STRUCT);
-+	if (id < 0)
-+		return false;
-+
-+	return btf_struct_has_field(btf, id, field_name);
-+}
-+
- /*
-  * Resolve a `lock_held(<name>)` filter expression into `entry->op`,
-  * `entry->part` (`enum perf_bpf_lock_target_kind`), and `entry->value`,
-@@ -1151,15 +1325,15 @@ static int normalize_lock_expr_op(const struct perf_bpf_filter_expr *expr,
+ static int normalize_lock_expr_op(const struct perf_bpf_filter_expr *expr,
+ 				  enum perf_bpf_filter_op *op_out)
+ {
+@@ -1084,12 +1150,13 @@ static int normalize_lock_expr_op(const struct perf_bpf_filter_expr *expr,
+  * and populate the corresponding BPF filter maps and BSS control flags.
   *
   * Resolution order:
-  * 1. Slab cache name (when prefixed with '&', e.g. `&dentry`).
-- * 2. Well-known per-process / semi-global locks: `mmap_lock`, `siglock`,
-- *    `rq_lock`, `zone_lock`.
-+ * 2. Well-known per-process / semi-global / RCU locks: `mmap_lock`, `siglock`,
-+ *    `rq_lock`, `zone_lock`, `rcu`, `rcu-trace`.
-  * 3. Lock types / flags: `mutex`, `spinlock`, `rwsem`, `rwsem:R`, `rwsem:W`,
-- *    `rwlock`, `percpu-rwsem`, `semaphore`, etc.
-+ *    `rwlock`, `percpu-rwsem`, `srcu`, `semaphore`, etc.
-  * 4. Hexadecimal lock address.
-  * 5. Global/static kernel lock symbol in kallsyms (e.g. `cgroup_mutex`).
+- * 1. Well-known per-process / semi-global locks: `mmap_lock`, `siglock`,
++ * 1. Slab cache name (when prefixed with '&', e.g. `&dentry`).
++ * 2. Well-known per-process / semi-global locks: `mmap_lock`, `siglock`,
+  *    `rq_lock`, `zone_lock`.
+- * 2. Lock types / flags: `mutex`, `spinlock`, `rwsem`, `rwsem:R`, `rwsem:W`,
++ * 3. Lock types / flags: `mutex`, `spinlock`, `rwsem`, `rwsem:R`, `rwsem:W`,
+  *    `rwlock`, `percpu-rwsem`, `semaphore`, etc.
+- * 3. Hexadecimal lock address.
+- * 4. Global/static kernel lock symbol in kallsyms (e.g. `cgroup_mutex`).
++ * 4. Hexadecimal lock address.
++ * 5. Global/static kernel lock symbol in kallsyms (e.g. `cgroup_mutex`).
   */
--static int resolve_lock_expr(struct sample_filter_bpf *skel, struct btf *btf,
--			     struct perf_bpf_filter_expr *expr,
-+static int resolve_lock_expr(struct evsel *evsel, struct sample_filter_bpf *skel,
-+			     struct btf *btf, struct perf_bpf_filter_expr *expr,
- 			     struct perf_bpf_filter_entry *entry)
- {
- 	const char *name = expr->lock_name;
-@@ -1241,6 +1415,48 @@ static int resolve_lock_expr(struct sample_filter_bpf *skel, struct btf *btf,
- 		return 0;
+ static int resolve_lock_expr(struct sample_filter_bpf *skel, struct btf *btf,
+ 			     struct perf_bpf_filter_expr *expr,
+@@ -1108,11 +1175,25 @@ static int resolve_lock_expr(struct sample_filter_bpf *skel, struct btf *btf,
+ 		return ret;
+ 
+ 	if (split_lock_name_mode(name, expr->part, base, sizeof(base),
+-				 &has_amp, &mode) < 0 || has_amp) {
++				 &has_amp, &mode) < 0) {
+ 		pr_err("Error: Invalid kernel lock filter '%s'\n", name ?: "");
+ 		return -EINVAL;
  	}
  
-+	if (!strcmp(base, "rcu_read_lock")) {
-+		if (mode == PBF_LOCK_MODE_WRITE) {
-+			pr_err("Error: Lock '%s' only supports read/shared mode\n", name);
-+			return -EINVAL;
++	if (has_amp) {
++		if (find_slab_cache(skel, base, &addr)) {
++			int fd = bpf_map__fd(skel->maps.slab_filter);
++
++			entry->part = PBF_LOCK_SLAB | mode;
++			entry->value = addr;
++			bpf_map_update_elem(fd, &addr, &one, BPF_ANY);
++			skel->bss->has_lock_slab = 1;
++			return 0;
 +		}
-+		if (btf && !btf_has_task_field(btf, "rcu_read_lock_nesting")) {
-+			pr_err("Error: lock_held(rcu) requires CONFIG_PREEMPT_RCU\n");
-+			return -EOPNOTSUPP;
-+		}
-+		entry->part = PBF_LOCK_RCU | PBF_LOCK_MODE_READ;
-+		entry->value = rcu_min_depth(evsel);
-+		return 0;
++		pr_err("Error: Cannot resolve slab cache '%s'\n", name);
++		return -EINVAL;
 +	}
 +
-+	if (!strcmp(base, "rcu")) {
-+		if ((mode & PBF_LOCK_MODE_READ) && btf &&
-+		    !btf_has_task_field(btf, "rcu_read_lock_nesting")) {
-+			pr_err("Error: lock_held(rcu) requires CONFIG_PREEMPT_RCU\n");
-+			return -EOPNOTSUPP;
+ 	if (!strcmp(base, "mmap_lock") || !strcmp(base, "mmap_sem")) {
+ 		entry->part = PBF_LOCK_MMAP | mode;
+ 		entry->value = 0;
+@@ -1526,6 +1607,7 @@ int perf_bpf_filter__prepare(struct evsel *evsel, struct target *target)
+ 	bool needs_idx_hash = !target__has_cpu(target);
+ 	bool is_tracepoint = (evsel->core.attr.type == PERF_TYPE_TRACEPOINT);
+ 	bool has_lock_filter = false, needs_lock_syms = false, needs_zone_data = false;
++	bool needs_slab_iter = false;
+ 	unsigned int prog_groups = 0, required_groups = 0;
+ 
+ 	entry = calloc(MAX_FILTERS, sizeof(*entry));
+@@ -1533,7 +1615,8 @@ int perf_bpf_filter__prepare(struct evsel *evsel, struct target *target)
+ 		return -1;
+ 
+ 	prescan_lock_filters(evsel, &btf, &has_lock_filter, &prog_groups,
+-			     &required_groups, &needs_lock_syms, &needs_zone_data);
++			     &required_groups, &needs_lock_syms, &needs_zone_data,
++			     &needs_slab_iter);
+ 
+ 	if ((has_lock_filter || is_tracepoint) && geteuid() != 0 &&
+ 	    !perf_cap__capable(CAP_BPF)) {
+@@ -1597,6 +1680,10 @@ int perf_bpf_filter__prepare(struct evsel *evsel, struct target *target)
+ 	if (has_lock_filter) {
+ 		bpf_map__set_max_entries(skel->maps.held_locks, MAX_ENTRIES);
+ 		bpf_map__set_max_entries(skel->maps.lock_addr_filter, MAX_FILTERS);
++		if (needs_slab_iter) {
++			bpf_map__set_max_entries(skel->maps.slab_filter, MAX_FILTERS);
++			bpf_map__set_max_entries(skel->maps.slab_caches, MAX_ENTRIES);
 +		}
-+		entry->part = PBF_LOCK_RCU | mode;
-+		entry->value = rcu_min_depth(evsel);
-+		if ((mode & PBF_LOCK_MODE_WRITE) && skel)
-+			skel->bss->has_rcu_lock = 1;
-+		return 0;
-+	}
-+
-+	if (!strcmp(base, "rcu-trace") || !strcmp(base, "rcu_trace") ||
-+	    !strcmp(base, "rcu_read_lock_trace")) {
-+		if (!(mode & PBF_LOCK_MODE_READ) || mode == PBF_LOCK_MODE_WRITE) {
-+			pr_err("Error: Lock '%s' only supports read/shared mode\n", name);
-+			return -EINVAL;
-+		}
-+		if (btf && !btf_has_task_field(btf, "trc_reader_nesting")) {
-+			pr_err("Error: lock_held(rcu-trace) requires CONFIG_TASKS_TRACE_RCU\n");
-+			return -EOPNOTSUPP;
-+		}
-+		entry->part = PBF_LOCK_RCU_TRACE | PBF_LOCK_MODE_READ;
-+		entry->value = rcu_trace_min_depth(evsel, btf);
-+		return 0;
-+	}
-+
- 	if (parse_lock_type_name(base, mode, skel, &encoded_pair, NULL)) {
- 		entry->part = PBF_LOCK_TYPE | mode;
- 		entry->value = encoded_pair;
-@@ -1294,6 +1510,7 @@ static int resolve_lock_expr(struct sample_filter_bpf *skel, struct btf *btf,
- 			break;
- 		case LOCK_SYM_SEM_OR_RWSEM:
- 		case LOCK_SYM_RWLOCK:
-+		case LOCK_SYM_SRCU:
- 		case LOCK_SYM_UNKNOWN:
- 		default:
- 			break;
-@@ -1341,7 +1558,7 @@ static int get_filter_entries(struct evsel *evsel, struct sample_filter_bpf *ske
- 		entry[i].term = expr->term;
- 		entry[i].value = expr->val;
- 		if (expr->term == PBF_TERM_LOCK_HELD) {
--			ret = resolve_lock_expr(skel, btf, expr, &entry[i]);
-+			ret = resolve_lock_expr(evsel, skel, btf, expr, &entry[i]);
- 			if (ret < 0)
- 				return ret;
- 		}
-@@ -1359,7 +1576,7 @@ static int get_filter_entries(struct evsel *evsel, struct sample_filter_bpf *ske
- 				entry[i].term = group->term;
- 				entry[i].value = group->val;
- 				if (group->term == PBF_TERM_LOCK_HELD) {
--					ret = resolve_lock_expr(skel, btf, group, &entry[i]);
-+					ret = resolve_lock_expr(evsel, skel, btf, group, &entry[i]);
- 					if (ret < 0)
- 						return ret;
- 				}
-@@ -1691,6 +1908,17 @@ int perf_bpf_filter__prepare(struct evsel *evsel, struct target *target)
- 			if (ret < 0)
+ 		if (needs_lock_syms)
+ 			bpf_map__set_max_entries(skel->maps.lock_syms, MAX_ENTRIES);
+ 		if (needs_zone_data) {
+@@ -1605,11 +1692,12 @@ int perf_bpf_filter__prepare(struct evsel *evsel, struct target *target)
  				goto err;
  		}
-+		if (prog_groups & LOCK_PROG_RCU_WRITE) {
-+			u64 rcu_addr = 1ULL;
-+
-+			/*
-+			 * Offset by 1 byte so rcu_state_addr is distinct from
-+			 * &rcu_state.node[0].lock at offset 0 of rcu_state.
-+			 */
-+			if (find_kernel_lock_sym("rcu_state", &rcu_addr) == 0)
-+				rcu_addr += 1;
-+			skel->rodata->rcu_state_addr = rcu_addr;
-+		}
  		ret = configure_lock_progs(skel, btf, prog_groups, required_groups,
- 					   needs_lock_syms, needs_slab_iter,
- 					   is_tracepoint);
-diff --git a/tools/perf/util/bpf_skel/lock_data.h b/tools/perf/util/bpf_skel/lock_data.h
-index 43d8f5030bc1..f3f8076fdd0b 100644
---- a/tools/perf/util/bpf_skel/lock_data.h
-+++ b/tools/perf/util/bpf_skel/lock_data.h
-@@ -39,6 +39,7 @@ struct contention_task_data {
-  */
- #define LCD_F_MMAP_LOCK		(1U << 31)
- #define LCD_F_SIGHAND_LOCK	(1U << 30)
-+#define LCD_F_RCU_LOCK		(1U << 29)
- 
- #define LCB_F_SLAB_ID_SHIFT	16
- #define LCB_F_SLAB_ID_START	(1U << 16)
-@@ -52,9 +53,11 @@ struct contention_task_data {
- #define LCB_F_RT	(1U << 3)
- #define LCB_F_PERCPU	(1U << 4)
- #define LCB_F_MUTEX	(1U << 5)
-+#define LCB_F_SRCU	(1U << 6)
-+#define LCB_F_RCU	(1U << 7)
- 
--#define LCB_F_TYPE_MAX		(1U << 7)
--#define LCB_F_TYPE_MASK		0x0000007FU
-+#define LCB_F_TYPE_MAX		(1U << 8)
-+#define LCB_F_TYPE_MASK		0x000000FFU
- 
- #define SLAB_NAME_MAX  28
- 
-@@ -264,6 +267,43 @@ static __always_inline __u64 get_current_siglock(__u64 curr)
- 	return sh + bpf_core_field_offset(sighand->siglock);
- }
- 
-+/*
-+ * Check if `curr` is inside a preemptible RCU read-side critical section
-+ * (`rcu_read_lock()`).
-+ *
-+ * Because `bpf_overflow_handler()` in `kernel/events/core.c` acquires
-+ * `rcu_read_lock()` before invoking `perf_sample_filter` (and
-+ * `do_perf_sw_event()` acquires an additional `rcu_read_lock()` for
-+ * non-clock software events), `min_depth` is the baseline nesting count
-+ * contributed by the perf event overflow handler itself (1 or 2).
-+ */
-+static __always_inline bool is_rcu_lock_held(__u64 curr, int min_depth)
-+{
-+	struct task_struct *task = (void *)curr;
-+
-+	if (!curr || !bpf_core_field_exists(task->rcu_read_lock_nesting))
-+		return false;
-+
-+	return BPF_CORE_READ(task, rcu_read_lock_nesting) > min_depth;
-+}
-+
-+/*
-+ * Check if `curr` is inside a Tasks Trace RCU read-side critical section
-+ * (`rcu_read_lock_trace()`). `min_depth` accounts for any baseline nesting
-+ * contributed by the kernel tracing wrapper itself (2 on faultable
-+ * `syscalls:*` tracepoints via `__DECLARE_TRACE_SYSCALL` and
-+ * `trace_call_bpf_faultable()`, 1 on `raw_syscalls:*`, 0 otherwise).
-+ */
-+static __always_inline bool is_rcu_trace_lock_held(__u64 curr, int min_depth)
-+{
-+	struct task_struct *task = (void *)curr;
-+
-+	if (!curr || !bpf_core_field_exists(task->trc_reader_nesting))
-+		return false;
-+
-+	return BPF_CORE_READ(task, trc_reader_nesting) > min_depth;
-+}
-+
- /*
-  * Read the 1st function argument (`lock` / `sem` / `ssp`) as a 64-bit scalar.
-  *
-@@ -296,6 +336,9 @@ static __always_inline __u32 check_lock_type(__u64 lock, __u32 flags)
- 		if (get_current_siglock(curr) == lock)
- 			return LCD_F_SIGHAND_LOCK;
- 		break;
-+	case LCB_F_RCU:
-+	case LCB_F_RCU | LCB_F_WRITE:
-+		return LCD_F_RCU_LOCK;
- 	default:
- 		break;
+-					   needs_lock_syms, is_tracepoint);
++					   needs_lock_syms, needs_slab_iter,
++					   is_tracepoint);
+ 		if (ret < 0)
+ 			goto err;
+ 	} else {
+-		configure_lock_progs(skel, NULL, 0, 0, false, is_tracepoint);
++		configure_lock_progs(skel, NULL, 0, 0, false, false, is_tracepoint);
  	}
+ 
+ 	if (sample_filter_bpf__load(skel) < 0) {
+@@ -1618,6 +1706,9 @@ int perf_bpf_filter__prepare(struct evsel *evsel, struct target *target)
+ 		goto err;
+ 	}
+ 
++	if (has_lock_filter && needs_slab_iter)
++		run_slab_cache_iter(skel);
++
+ 	ret = get_filter_entries(evsel, skel, btf, entry);
+ 	if (ret < 0) {
+ 		pr_err("Failed to process filter entries\n");
+@@ -1638,6 +1729,7 @@ int perf_bpf_filter__prepare(struct evsel *evsel, struct target *target)
+ 		bpf_program__set_autoattach(skel->progs.perf_sample_filter, false);
+ 		bpf_program__set_autoattach(skel->progs.perf_tp_sample_filter, false);
+ 		bpf_program__set_autoattach(skel->progs.collect_lock_syms, false);
++		bpf_program__set_autoattach(skel->progs.slab_cache_iter, false);
+ 
+ 		ret = sample_filter_bpf__attach(skel);
+ 		if (ret < 0) {
+@@ -1920,7 +2012,7 @@ int perf_bpf_filter__pin(void)
+ 		goto err;
+ 	}
+ 
+-	configure_lock_progs(skel, NULL, 0, 0, false, false);
++	configure_lock_progs(skel, NULL, 0, 0, false, false, false);
+ 
+ 	/* pinned program will use pid-hash */
+ 	bpf_map__set_max_entries(skel->maps.filters, MAX_FILTERS);
+@@ -2017,7 +2109,7 @@ int perf_bpf_filter__unpin(void)
+ 		goto err;
+ 	}
+ 
+-	configure_lock_progs(skel, NULL, 0, 0, false, false);
++	configure_lock_progs(skel, NULL, 0, 0, false, false, false);
+ 	if (sample_filter_bpf__load(skel) < 0) {
+ 		ret = -errno;
+ 		pr_err("Failed to load perf sample-filter BPF skeleton\n");
 diff --git a/tools/perf/util/bpf_skel/sample-filter.h b/tools/perf/util/bpf_skel/sample-filter.h
-index a65ee780d64d..7abc530ed50d 100644
+index 836b398dc62b..a65ee780d64d 100644
 --- a/tools/perf/util/bpf_skel/sample-filter.h
 +++ b/tools/perf/util/bpf_skel/sample-filter.h
-@@ -101,6 +101,20 @@ enum perf_bpf_lock_target_kind {
- 	 * low two bytes: `flag1 | (flag2 << 8)` (with 0xff indicating unused).
+@@ -76,6 +76,11 @@ enum perf_bpf_lock_target_kind {
+ 	 * given as a hex address). `entry.value` holds the kernel address.
  	 */
- 	PBF_LOCK_TYPE,
+ 	PBF_LOCK_ADDR,
 +	/*
-+	 * Preemptible RCU read-side lock (`rcu` / `rcu_read_lock`).
-+	 * Inspected directly via `current->rcu_read_lock_nesting > entry.value`,
-+	 * where `entry.value` is the baseline RCU nesting depth added by the
-+	 * kernel perf overflow path.
++	 * Dynamic lock allocated inside a slab cache (`&slab_name`).
++	 * `entry.value` holds the kernel `struct kmem_cache *` address.
 +	 */
-+	PBF_LOCK_RCU,
-+	/*
-+	 * Tasks Trace RCU read-side lock (`rcu-trace` / `rcu_read_lock_trace`).
-+	 * Inspected directly via `current->trc_reader_nesting > entry.value`,
-+	 * where `entry.value` is the baseline nesting depth added by the
-+	 * kernel event tracing path.
-+	 */
-+	PBF_LOCK_RCU_TRACE,
- };
- 
- /*
++	PBF_LOCK_SLAB,
+ 	/*
+ 	 * Per-process `current->mm->mmap_lock` (or `mmap_sem`).
+ 	 */
 diff --git a/tools/perf/util/bpf_skel/sample_filter.bpf.c b/tools/perf/util/bpf_skel/sample_filter.bpf.c
-index d1192a93179e..60fe4c3a99a2 100644
+index 2087fb05e4c7..d1192a93179e 100644
 --- a/tools/perf/util/bpf_skel/sample_filter.bpf.c
 +++ b/tools/perf/util/bpf_skel/sample_filter.bpf.c
-@@ -129,6 +129,7 @@ volatile const int use_idx_hash;
+@@ -111,6 +111,20 @@ struct {
+ 	__uint(max_entries, 1);
+ } lock_syms SEC(".maps");
+ 
++struct {
++	__uint(type, BPF_MAP_TYPE_HASH);
++	__uint(key_size, sizeof(__u64));
++	__uint(value_size, sizeof(__u8));
++	__uint(max_entries, 1);
++} slab_filter SEC(".maps");
++
++struct {
++	__uint(type, BPF_MAP_TYPE_HASH);
++	__uint(key_size, sizeof(__u64));
++	__uint(value_size, sizeof(struct slab_cache_data));
++	__uint(max_entries, 1);
++} slab_caches SEC(".maps");
++
+ volatile const int use_idx_hash;
  
  const volatile __u64 contig_page_data_addr;
- const volatile __u64 node_data_addr;
-+const volatile __u64 rcu_state_addr;
+@@ -118,9 +132,12 @@ const volatile __u64 node_data_addr;
  const volatile int nr_nodes;
  const volatile int sizeof_zone;
  
-@@ -142,6 +143,7 @@ int has_lock_class;
++__u32 slab_cache_id;
++
+ /* Control flags set by userspace when lock_held(...) filters are active. */
+ int lock_enabled;
+ int has_lock_addr;
++int has_lock_slab;
+ int has_lock_class;
  int has_lock_type;
  int has_mmap_lock;
- int has_siglock;
-+int has_rcu_lock;
- int track_rwsem_read;
- __u8 lock_type_filter[LCB_F_TYPE_MAX];
+@@ -259,6 +276,9 @@ static __always_inline bool is_lock_held(struct perf_bpf_filter_entry *entry)
+ 	case PBF_LOCK_CLASS:
+ 		return is_lock_in_map(entry->value, PBF_LOCK_CLASS, mode, pid, cpu_id) != 0;
  
-@@ -282,6 +284,21 @@ static __always_inline bool is_lock_held(struct perf_bpf_filter_entry *entry)
++	case PBF_LOCK_SLAB:
++		return is_lock_in_map(entry->value, PBF_LOCK_SLAB, mode, pid, cpu_id) != 0;
++
  	case PBF_LOCK_TYPE:
  		return is_lock_type_in_map(entry->value, mode, pid, cpu_id) != 0;
  
-+	case PBF_LOCK_RCU:
-+		if ((mode & PBF_LOCK_MODE_READ) &&
-+		    is_rcu_lock_held(curr, (int)entry->value))
-+			return true;
-+		if ((mode & PBF_LOCK_MODE_WRITE) && rcu_state_addr &&
-+		    is_lock_in_map(rcu_state_addr, PBF_LOCK_ADDR, PBF_LOCK_MODE_WRITE, pid, cpu_id))
-+			return true;
-+		return false;
-+
-+	case PBF_LOCK_RCU_TRACE:
-+		if ((mode & PBF_LOCK_MODE_READ) &&
-+		    is_rcu_trace_lock_held(curr, (int)entry->value))
-+			return true;
-+		return false;
-+
- 	default:
- 		return false;
+@@ -697,6 +717,7 @@ static __always_inline int record_lock_acquired_owner(__u64 lock_addr, __u32 fla
+ 	bool matched = false;
+ 	bool is_read = (flags & LCB_F_READ) != 0;
+ 	__u32 class_id = 0;
++	__u64 kmem_cache_addr = 0;
+ 	__u32 type_flag = flags & LCB_F_TYPE_MASK;
+ 	bool match_type = false;
+ 
+@@ -723,6 +744,14 @@ static __always_inline int record_lock_acquired_owner(__u64 lock_addr, __u32 fla
+ 		}
  	}
-@@ -727,11 +744,12 @@ static __always_inline int record_lock_acquired_owner(__u64 lock_addr, __u32 fla
- 	if (has_lock_addr && bpf_map_lookup_elem(&lock_addr_filter, &lock_addr))
+ 
++	if (has_lock_slab && bpf_get_kmem_cache) {
++		kmem_cache_addr = (__u64)bpf_get_kmem_cache(lock_addr);
++		if (kmem_cache_addr && bpf_map_lookup_elem(&slab_filter, &kmem_cache_addr))
++			matched = true;
++		else
++			kmem_cache_addr = 0;
++	}
++
+ 	if (has_lock_type && type_flag < LCB_F_TYPE_MAX && lock_type_filter[type_flag]) {
+ 		match_type = true;
  		matched = true;
+@@ -769,6 +798,10 @@ static __always_inline int record_lock_acquired_owner(__u64 lock_addr, __u32 fla
  
--	if (has_mmap_lock || has_siglock) {
-+	if (has_mmap_lock || has_siglock || has_rcu_lock) {
- 		__u32 ltype = check_lock_type(lock_addr, type_flag);
+ 	if (class_id)
+ 		update_held_lock_count(class_id, owner_id, PBF_LOCK_CLASS, type_flag, true);
++	if (kmem_cache_addr) {
++		update_held_lock_count((__u64)kmem_cache_addr, owner_id,
++				       PBF_LOCK_SLAB, type_flag, true);
++	}
+ 	if (match_type)
+ 		update_held_lock_count(type_flag, owner_id, PBF_LOCK_TYPE, type_flag, true);
  
- 		if ((has_mmap_lock && ltype == LCD_F_MMAP_LOCK) ||
--		    (has_siglock && ltype == LCD_F_SIGHAND_LOCK))
-+		    (has_siglock && ltype == LCD_F_SIGHAND_LOCK) ||
-+		    (has_rcu_lock && ltype == LCD_F_RCU_LOCK))
- 			matched = true;
+@@ -824,6 +857,15 @@ static __always_inline int record_lock_released_addr(__u64 lock_addr, __u32 flag
+ 			update_held_lock_count(*cid, owner_id, PBF_LOCK_CLASS, flags, false);
  	}
  
-@@ -1391,6 +1409,120 @@ int BPF_PROG(fentry_percpu_up_write, void *sem)
- 	return record_lock_released(ctx, LCB_F_PERCPU | LCB_F_WRITE);
++	if (has_lock_slab && bpf_get_kmem_cache) {
++		__u64 kmem_cache_addr = (__u64)bpf_get_kmem_cache(lock_addr);
++
++		if (kmem_cache_addr && bpf_map_lookup_elem(&slab_filter, &kmem_cache_addr)) {
++			update_held_lock_count(kmem_cache_addr, owner_id,
++					       PBF_LOCK_SLAB, flags, false);
++		}
++	}
++
+ 	if (has_lock_type && type_flag < LCB_F_TYPE_MAX && lock_type_filter[type_flag])
+ 		update_held_lock_count(type_flag, owner_id, PBF_LOCK_TYPE, flags, false);
+ 
+@@ -1356,4 +1398,10 @@ int BPF_PROG(collect_lock_syms)
+ 				    node_data_addr, nr_nodes, sizeof_zone);
  }
  
-+/* SRCU acquire/release and synchronize hooks */
-+SEC("fexit/__srcu_read_lock")
-+int BPF_PROG(fexit_srcu_read_lock, void *ssp, int ret)
++SEC("iter/kmem_cache")
++int slab_cache_iter(void *ctx)
 +{
-+	return record_lock_acquired(ctx, LCB_F_SRCU | LCB_F_READ);
++	return do_slab_cache_iter(ctx, &slab_caches, &slab_cache_id);
 +}
 +
-+SEC("fentry/__srcu_read_unlock")
-+int BPF_PROG(fentry_srcu_read_unlock, void *ssp)
-+{
-+	return record_lock_released(ctx, LCB_F_SRCU | LCB_F_READ);
-+}
-+
-+SEC("fexit/__srcu_read_lock_nmisafe")
-+int BPF_PROG(fexit_srcu_read_lock_nmisafe, void *ssp, int ret)
-+{
-+	return record_lock_acquired(ctx, LCB_F_SRCU | LCB_F_READ);
-+}
-+
-+SEC("fentry/__srcu_read_unlock_nmisafe")
-+int BPF_PROG(fentry_srcu_read_unlock_nmisafe, void *ssp)
-+{
-+	return record_lock_released(ctx, LCB_F_SRCU | LCB_F_READ);
-+}
-+
-+SEC("fentry/synchronize_srcu")
-+int BPF_PROG(fentry_synchronize_srcu, void *ssp)
-+{
-+	return record_lock_acquired(ctx, LCB_F_SRCU | LCB_F_WRITE);
-+}
-+
-+SEC("fexit/synchronize_srcu")
-+int BPF_PROG(fexit_synchronize_srcu, void *ssp)
-+{
-+	return record_lock_released(ctx, LCB_F_SRCU | LCB_F_WRITE);
-+}
-+
-+SEC("fentry/synchronize_srcu_expedited")
-+int BPF_PROG(fentry_synchronize_srcu_expedited, void *ssp)
-+{
-+	return record_lock_acquired(ctx, LCB_F_SRCU | LCB_F_WRITE);
-+}
-+
-+SEC("fexit/synchronize_srcu_expedited")
-+int BPF_PROG(fexit_synchronize_srcu_expedited, void *ssp)
-+{
-+	return record_lock_released(ctx, LCB_F_SRCU | LCB_F_WRITE);
-+}
-+
-+SEC("fentry/srcu_barrier")
-+int BPF_PROG(fentry_srcu_barrier, void *ssp)
-+{
-+	return record_lock_acquired(ctx, LCB_F_SRCU | LCB_F_WRITE);
-+}
-+
-+SEC("fexit/srcu_barrier")
-+int BPF_PROG(fexit_srcu_barrier, void *ssp)
-+{
-+	return record_lock_released(ctx, LCB_F_SRCU | LCB_F_WRITE);
-+}
-+
-+/* RCU grace-period synchronize / barrier hooks */
-+SEC("fentry/synchronize_rcu")
-+int BPF_PROG(fentry_synchronize_rcu)
-+{
-+	return record_lock_acquired_owner(rcu_state_addr, LCB_F_RCU | LCB_F_WRITE,
-+					  get_lock_owner_id(LCB_F_RCU | LCB_F_WRITE));
-+}
-+
-+SEC("fexit/synchronize_rcu")
-+int BPF_PROG(fexit_synchronize_rcu)
-+{
-+	return record_lock_released_addr(rcu_state_addr, LCB_F_RCU | LCB_F_WRITE);
-+}
-+
-+SEC("fentry/synchronize_rcu_expedited")
-+int BPF_PROG(fentry_synchronize_rcu_expedited)
-+{
-+	return record_lock_acquired_owner(rcu_state_addr, LCB_F_RCU | LCB_F_WRITE,
-+					  get_lock_owner_id(LCB_F_RCU | LCB_F_WRITE));
-+}
-+
-+SEC("fexit/synchronize_rcu_expedited")
-+int BPF_PROG(fexit_synchronize_rcu_expedited)
-+{
-+	return record_lock_released_addr(rcu_state_addr, LCB_F_RCU | LCB_F_WRITE);
-+}
-+
-+SEC("fentry/synchronize_rcu_tasks")
-+int BPF_PROG(fentry_synchronize_rcu_tasks)
-+{
-+	return record_lock_acquired_owner(rcu_state_addr, LCB_F_RCU | LCB_F_WRITE,
-+					  get_lock_owner_id(LCB_F_RCU | LCB_F_WRITE));
-+}
-+
-+SEC("fexit/synchronize_rcu_tasks")
-+int BPF_PROG(fexit_synchronize_rcu_tasks)
-+{
-+	return record_lock_released_addr(rcu_state_addr, LCB_F_RCU | LCB_F_WRITE);
-+}
-+
-+SEC("fentry/rcu_barrier")
-+int BPF_PROG(fentry_rcu_barrier)
-+{
-+	return record_lock_acquired_owner(rcu_state_addr, LCB_F_RCU | LCB_F_WRITE,
-+					  get_lock_owner_id(LCB_F_RCU | LCB_F_WRITE));
-+}
-+
-+SEC("fexit/rcu_barrier")
-+int BPF_PROG(fexit_rcu_barrier)
-+{
-+	return record_lock_released_addr(rcu_state_addr, LCB_F_RCU | LCB_F_WRITE);
-+}
-+
- SEC("raw_tp/bpf_test_finish")
- int BPF_PROG(collect_lock_syms)
- {
-diff --git a/tools/perf/util/bpf_skel/vmlinux/vmlinux.h b/tools/perf/util/bpf_skel/vmlinux/vmlinux.h
-index b75ddc6846bb..1fb91a829d54 100644
---- a/tools/perf/util/bpf_skel/vmlinux/vmlinux.h
-+++ b/tools/perf/util/bpf_skel/vmlinux/vmlinux.h
-@@ -119,6 +119,8 @@ struct task_struct {
- 	struct signal_struct  *signal;
- 	struct sighand_struct *sighand;
- 	struct css_set	      *cgroups;
-+	int		      rcu_read_lock_nesting;
-+	int		      trc_reader_nesting;
- } __attribute__((preserve_access_index));
- 
- struct trace_entry {
-diff --git a/tools/perf/util/lock-contention.c b/tools/perf/util/lock-contention.c
-index f6e68d740860..37415f7b7f2c 100644
---- a/tools/perf/util/lock-contention.c
-+++ b/tools/perf/util/lock-contention.c
-@@ -39,6 +39,10 @@ const struct perf_lock_type lock_type_table[] = {
- 	{ LCB_F_MUTEX | LCB_F_SPIN,	"mutex",	"mutex" },
- 	/* alias for optimistic spinning only */
- 	{ LCB_F_MUTEX | LCB_F_SPIN,	"mutex:spin",	"mutex-spin" },
-+	{ LCB_F_SRCU | LCB_F_READ,	"srcu:R",	"srcu" },
-+	{ LCB_F_SRCU | LCB_F_WRITE,	"srcu:W",	"srcu" },
-+	{ LCB_F_RCU | LCB_F_READ,	"rcu:R",	"rcu" },
-+	{ LCB_F_RCU | LCB_F_WRITE,	"rcu:W",	"rcu" },
- };
- 
- int parse_call_stack(const struct option *opt __maybe_unused, const char *str,
-diff --git a/tools/perf/util/lock-contention.h b/tools/perf/util/lock-contention.h
-index 68e9bd77e8a9..88b2c11244ad 100644
---- a/tools/perf/util/lock-contention.h
-+++ b/tools/perf/util/lock-contention.h
-@@ -128,6 +128,8 @@ struct thread_stat {
- #define LCB_F_RT	(1U << 3)
- #define LCB_F_PERCPU	(1U << 4)
- #define LCB_F_MUTEX	(1U << 5)
-+#define LCB_F_SRCU	(1U << 6)
-+#define LCB_F_RCU	(1U << 7)
- 
- struct perf_lock_type {
- 	unsigned int flags;
-@@ -140,7 +142,7 @@ struct perf_lock_type {
- 	const char *lock_name;
- };
- 
--extern const struct perf_lock_type lock_type_table[14];
-+extern const struct perf_lock_type lock_type_table[18];
- 
- struct evlist;
- struct machine;
+ char LICENSE[] SEC("license") = "Dual BSD/GPL";
 -- 
 2.56.0.307.g5fe7bd680c-goog
 
