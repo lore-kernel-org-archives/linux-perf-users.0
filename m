@@ -1,57 +1,57 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792741459;
-	b=JZIG02XOcxjmrctvUFrcsD3BCD4cHbIs1rXheMcmGsTmQgoMrk8ubr+jH/jIwg5uy2oi
-	 IHowewy+ZvtpifwnzFhQFE4KZedTr7JEFN9A0hnXByiNpkHh+8mLawnwugf3fD5qcmZDB
-	 3ubh11KiLNjJ5CLKD63V24iuOdTBmP4FYJzYljQZzinNKtOmjd1nql399Ktb4WXN0sy8W
-	 aXnt3Es4Y9m2tt6qE/oH7JEtSHLS6chR/ugubJnzVIyEdbChPauzcGMwikL+6C8H7cqT9
-	 GpVA/BdtS4nd13Pp6kHxjKuf/9tygQZ7Q/y+jOHKBioU97y0KY6+dWDlWdU425kzhJA==
+	t=1792741622;
+	b=cgFGhtfrtDxuxIXp7/3AWaCBfLoddDTnuFsm7szJ6EE/l/TrMtEsgN75X0Kyrjitxl7N
+	 6iHK3frhVx8zLHYlxK8WhFt4Vr/CI4LZrs8M8qGpt88uC6JYOlxUbGp93ZN6o1GmbdpWH
+	 NqfGNyuM9aleUQl8yZ+4q7ZqIO2RAkPOTpo0UaigrXwOF2oZF17aJY4MN1K5C5aU74tCT
+	 KKAEzlLmGOhPrRu+wB+foMChAaWEN0SIEUET8cZRnXF+i0YbAh4GKLPL27DhYLXses/eR
+	 aENhmmHarMooZ6Aed0odss35o1SbuUaWaR70o1NyahjaupdRNJK3yd4HBavP4KyRiDg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792741459;
+	a=rsa-sha256; c=relaxed/relaxed; t=1792741622;
 	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
 	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=6sh+HgbHmGKW2p76RFFfcZnJYKqAPy+G06iw+nPADWs=;
-	b=mid5jPYHvD53sVSk5XZFqT/gSGqTOfsC8b5B8ZBbpZB30Rzk4/b7886oxBQBsst0YLD3
-	 9VluSFpP5fdxNgk2HNiQV8rAxqvDRsrMigWYU8x84Le19JS2CGs2AoKz7bbgk649H4/NA
-	 nP7F0R8zivYkDyFhNiOTQsQYHd25IRkRof3ZJyXQ1cYrlXO78jlt8IaYmfOSwyaPf+BPo
-	 LnEmisJ7guRB8Biq56DaZjocVERNMcYkI4xTV1/AOlJ7eCNQa8xaqyE3Fmsc0cDq1FmdA
-	 sez6ATGN0PoMVQx448N8M5tNOm1tjnYYTSVuOnTgCnCWBZcq3lwlF/xhcuLihRL/z5w==
+	bh=cIWuyHyTupV1aNVBpi8qiw/8xl/uN//Uj4h45Wlq+0s=;
+	b=uq2CBesjGJm6zPZOpu7+rzaCwpwJlgBUMIMlix+xomcMS1EmBqSo4TSdNgBxijFHR/Wh
+	 nV2xZtIuWEM/XEvpdo1Am2cDBpkzB+O4H2jXTu0wB0k1PL78xFwhw9oz9kQXPTcSBpu12
+	 nOcCus53qC+vkfU5ayC6M3g6jf1fK8CfNDMWm39DcirdahdH47nEP431Ma0LULG4mhbyC
+	 c5rYuCUCQvbcsa5L3g32y6O27+ITPIEDLdxQwnmDonz9YiPAWVKux9kmgoiSk4JMZ2RRN
+	 LTGT9g3jnRRLHBr+3NqgUL7gJKPAXHVh7+17Nu3KUtIYQGlMs62QQ7fVtKc6d2qAXSQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=UCHb55XO;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=W4EUI16C;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9152B606A31F
-	for <linux-perf-users@vger.kernel.org>; Fri, 23 Oct 2026 07:44:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 494D4606A31A
+	for <linux-perf-users@vger.kernel.org>; Fri, 23 Oct 2026 07:47:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=UCHb55XO
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 04C021F031E6;
-	Fri, 23 Oct 2026 07:44:18 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=W4EUI16C
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9ABF11F01828;
+	Fri, 23 Oct 2026 07:47:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1792741459;
-	bh=6sh+HgbHmGKW2p76RFFfcZnJYKqAPy+G06iw+nPADWs=;
+	s=k20260515; t=1792741621;
+	bh=cIWuyHyTupV1aNVBpi8qiw/8xl/uN//Uj4h45Wlq+0s=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=UCHb55XObaK/m1XeJ5Zx4cOVSSEM4fkdAp7e8ZZ0GmZ4dgNHbs6+5+kKCI/iwjKb3
-	 UB3Lnpq4wl+RaM9bHUaBwgjQFgEABDYLqbLmR9nb2nzvl7mcHll9+l3OykMA3pwhnM
-	 KqW8pFTDR5hLyoMgTpFkqmB0TOmT4FdwQKPRUta+uGBPYoDxV3lWuCc0MuNbSJl704
-	 IkU12sKXVvGWVseoMrbSa4s8lZ4ZEM7NjFWSITa1ATGUK46sPzBZ8aNjA8VDooAEJZ
-	 3U+eliH4fNKXh/AQygbrmU1nz428PwTwV7Lz+T0kJcLDqoBSesLCuT8IrIyPWTZUIh
-	 rJkCbrQ/5ZABA==
-Message-ID: <sashiko-outbox-182434@kernel.org>
+	b=W4EUI16CfUalbaWagpgwjyWCzJMeAKuIj5MAy269FHh2omCrmAX1DYgx3lWr8xOQm
+	 Cs/+p9Nhjr0qqTEG6BnpQQzDFB277DivMMbqc0JT3MgQxaVihEaTc35PvX7alk8cPW
+	 cRI62G2Noox0LaAAVJlkwy48SvPJFHbpy8IkYihDpXJ483KsxOHuPm8ezgG9iQr10S
+	 iDDUKAGO3Brnsr5fLm6Gsv/D+0biczWv38A2juGDnAj35g5X2TdvVF1rvnyvY8pIpz
+	 cbozUjnw+B1J3t7MZxxN6t+A/TA6ZUKH2tK+qs0KuQ4QPJ68NemhK4lx5mwVLqDs75
+	 HY4vVdYDGvdPg==
+Message-ID: <sashiko-outbox-182439@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v1 06/11] perf tools: Check thread liveness when
- accessing /proc
+Subject: Re: [PATCH v1 10/11] perf tools: Only enter mount namespace if
+ necessary
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Namhyung Kim" <namhyung@kernel.org>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20261023071141.134149-7-namhyung@kernel.org>
+In-Reply-To: <20261023071141.134149-11-namhyung@kernel.org>
 References: <20261023071141.134149-1-namhyung@kernel.org>
- <20261023071141.134149-7-namhyung@kernel.org>
+ <20261023071141.134149-11-namhyung@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Fri, 23 Oct 2026 07:44:18 +0000
+Date: Fri, 23 Oct 2026 07:47:01 +0000
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -61,276 +61,188 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 
-Thank you for your contribution! Sashiko AI review found 5 potential issue(=
+Thank you for your contribution! Sashiko AI review found 3 potential issue(=
 s) to consider:
-- [Medium] perf: mark replaced parent exited in machine__process_fork_event=
-()
-- [Medium] perf tools: missing thread__set_exited() in perf_event__exit_del=
-_thread()
-- [Medium] perf tools: premature perf_env__is_same_boot() call poisons env-=
->boot_id
-- [Medium] perf tools: unsynchronized nsinfo mutation in thread__set_exited=
-()
-- [Medium] perf thread: thread__e_machine_endian() bypasses thread__is_aliv=
-e() when pid !=3D tid
+- [Medium] perf tools: dso_binary_type__needs_ns() omits distro debuginfo t=
+ypes
+- [Medium] perf tools: commit message describes functions not modified by p=
+atch
+- [Medium] perf dso: missing mountns entry in dso__find_binary_type_locked(=
+) and callers
 --
 
-commit 8a3b91cf7c4d52fe98a2a5c0924575e60cc8f0b2
+commit 3413efb0cc2f846225d0adf449e8d23f1e99d575
 Author: Namhyung Kim <namhyung@kernel.org>
 
-perf tools: Check thread liveness when accessing /proc
+perf tools: Only enter mount namespace if necessary
 
-This commit adds thread__exited() and thread__is_alive(), marks threads and
-their nsinfo as exited upon PERF_RECORD_EXIT, PERF_RECORD_FORK replacement,
-or boot ID mismatch, and guards /proc accesses with thread__is_alive().
+This commit adds dso_binary_type__needs_ns() to identify DSO binary types
+that reside in a target process's mount namespace and chroot, and uses it
+to gate nsinfo__mountns_enter() and nsinfo__mountns_exit() calls.
 
-> diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
-> index 14f52234d4d99..8f6298aff681f 100644
-> --- a/tools/perf/util/machine.c
-> +++ b/tools/perf/util/machine.c
+>     perf tools: Only enter mount namespace if necessary
+>    =20
+>     Add dso_binary_type__needs_ns() to distinguish DSO binary types that
+>     reside inside the target process's mount namespace and chroot from
+>     host-side paths.
+>    =20
+>     Gate mount namespace entry in dso__data_file_size() and do_open() usi=
+ng
+>     dso_binary_type__needs_ns().  And remove redundant outer mountns entry
+>     in around dso__data_get_fd().
+>    =20
+>     Assisted-by: LLM
+>     Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+
+[Severity: Medium]
+Does the commit message match the functions modified in this patch?
+
+The description mentions gating mount namespace entry in
+dso__data_file_size() and do_open(), and removing an outer mountns entry
+around dso__data_get_fd(), but the patch actually modifies open_dso(),
+__dso__read_symbol(), and symbol__disassemble_capstone_powerpc().
+
 [ ... ]
-> @@ -1954,6 +1957,7 @@ int machine__process_fork_event(struct machine *mac=
-hine, union perf_event *event
+
+> diff --git a/tools/perf/util/dso.c b/tools/perf/util/dso.c
+> index 4331b48505b2b..50dd215f81f67 100644
+> --- a/tools/perf/util/dso.c
+> +++ b/tools/perf/util/dso.c
+> @@ -682,14 +682,15 @@ static int open_dso(struct dso *dso, struct machine=
+ *machine)
+>  {
+>  	int fd;
+>  	struct nscookie nsc;
+> +	bool nsenter =3D dso_binary_type__needs_ns(dso__binary_type(dso));
 > =20
->  	/* if a thread currently exists for the thread id remove it */
->  	if (thread !=3D NULL) {
-> +		thread__set_exited(thread, /*exited=3D*/true);
->  		machine__remove_thread(machine, thread);
->  		thread__put(thread);
+> -	if (dso__binary_type(dso) !=3D DSO_BINARY_TYPE__BUILD_ID_CACHE) {
+> +	if (nsenter) {
+>  		mutex_lock(dso__lock(dso));
+>  		nsinfo__mountns_enter(dso__nsinfo(dso), &nsc);
+>  		mutex_unlock(dso__lock(dso));
 >  	}
+>  	fd =3D __open_dso(dso, machine);
+> -	if (dso__binary_type(dso) !=3D DSO_BINARY_TYPE__BUILD_ID_CACHE)
+> +	if (nsenter)
+>  		nsinfo__mountns_exit(&nsc);
 
 [Severity: Medium]
-Should the replaced parent thread just above in machine__process_fork_event=
-()
-also be marked exited before it is removed?
+Will dso__binary_type(dso) ever be set to a namespace-dependent type if
+dso__find_binary_type_locked() does not enter the mount namespace while
+probing candidate paths?
 
-tools/perf/util/machine.c:machine__process_fork_event() {
-	if (parent !=3D NULL &&
-	    thread__pid(parent) !=3D (pid_t)event->fork.ppid) {
-		dump_printf("removing erroneous parent thread %d/%d\n",
-			    thread__pid(parent), thread__tid(parent));
-		machine__remove_thread(machine, parent);
-		thread__put(parent);
-		parent =3D machine__findnew_thread(machine, event->fork.ppid,
-						 event->fork.ptid);
-	}
+In the call chain try_to_open_dso() -> __dso__find_binary_type() ->
+dso__find_binary_type_locked(), each candidate type in binary_type_data[]
+is tested before open_dso() is called:
+
+tools/perf/util/dso.c:dso__find_binary_type_locked() {
+	...
+	do {
+		dso__set_binary_type(dso, binary_type_data[i++]);
+
+		errno =3D 0;
+		path =3D dso__get_filename(dso, "", &decomp, dso__binary_type(dso));
+		if (path =3D=3D NULL) {
+			if (errno =3D=3D EMFILE)
+				goto open_err;
+			continue;
+		}
+
+		errno =3D 0;
+		found =3D filename__has_section(path, ".text");
+	...
 }
 
-When a prior exit or fork event was lost and event->fork.ptid now belongs to
-a different process, parent is removed from machine->threads without calling
-thread__set_exited(parent, true).
+Because dso__find_binary_type_locked() does not call
+nsinfo__mountns_enter(dso__nsinfo(dso), &nsc) when
+dso_binary_type__needs_ns() is true (and an earlier commit in this series,
+"perf tools: Remove redundant chroot handling", removed the
+dso__filename_with_chroot() fallback from dso__get_filename()), probing a
+binary that only exists inside the target's mount namespace or chroot will
+fail to find the file on the host and leave dso->binary_type set to
+DSO_BINARY_TYPE__NOT_FOUND. When open_dso() then checks
+dso_binary_type__needs_ns(DSO_BINARY_TYPE__NOT_FOUND), nsenter will be
+false and __open_dso() will fail with -ENOENT (or inspect a host file if
+one happens to share the same path).
 
-As a result, parent->exited and parent->nsinfo->exited remain false (and
-nsinfo__clear_need_setns() is not called on parent->nsinfo). Any remaining
-references to parent or to parent->nsinfo (such as dso->nsinfo shared via
-map__new()) will continue to treat the removed thread's nsinfo as live, and
-if the TID is recycled again into the original process, nsinfo__check_proc()
-and thread__is_alive() can succeed against the wrong thread.
+Similarly, symbol__disassemble() in tools/perf/util/disasm.c calls
+dso__find_binary_type(dso) and dso__get_filename(dso, "", &decomp, dbt)
+outside the mount namespace before reaching __dso__read_symbol() or
+symbol__disassemble_capstone_powerpc(), and dso__find_dbginfo_type() and
+debuginfo__new() also call dso__get_filename() and inspect ELF sections
+without entering the target's mount namespace.
 
-> @@ -2001,9 +2005,8 @@ int machine__process_exit_event(struct machine *mac=
-hine, union perf_event *event
->  	/* There is no context switch out before exit, so we decrement here. */
->  	machine->parallelism--;
->  	if (thread !=3D NULL) {
-> -		if (symbol_conf.keep_exited_threads)
-> -			thread__set_exited(thread, /*exited=3D*/true);
-> -		else
-> +		thread__set_exited(thread, /*exited=3D*/true);
-> +		if (!symbol_conf.keep_exited_threads)
->  			machine__remove_thread(machine, thread);
->  	}
->  	thread__put(thread);
+[ ... ]
 
-[Severity: Medium]
-Does perf_event__exit_del_thread() in tools/perf/util/event.c also need a
-call to thread__set_exited(thread, true) before removing the thread?
-
-tools/perf/util/event.c:perf_event__exit_del_thread() {
-	if (thread) {
-		machine__remove_thread(machine, thread);
-		thread__put(thread);
-	}
-}
-
-In cmd_buildid_list() -> perf_session__list_build_ids(),
-build_id__mark_dso_hit_ops sets .exit =3D perf_event__exit_del_thread. When=
- a
-thread maps a DSO via perf_event__process_mmap2() -> map__new(),
-thread__nsinfo(thread) is attached to the DSO via dso__set_nsinfo().
-
-When that thread later exits, perf_event__exit_del_thread() removes the
-thread without calling thread__set_exited(thread, true), leaving
-nsi->exited false on the surviving dso->nsinfo reference. If a subsequent
-sample with DWARF callchain data is processed by build_id__mark_dso_hit() ->
-sample__for_each_callchain_node() -> __thread__resolve_callchain() ->
-thread__resolve_callchain_unwind() -> unwind__get_entries(), loading the DSO
-calls nsinfo__mountns_enter(dso__nsinfo(dso), &nsc) with nsi->exited still
-false, which can inspect /proc/<pid>/task/<tid>/ of a recycled PID on the
-same boot.
-
-> diff --git a/tools/perf/util/thread.c b/tools/perf/util/thread.c
-> index 377c39ec624bb..f75eafb25bfc0 100644
-> --- a/tools/perf/util/thread.c
-> +++ b/tools/perf/util/thread.c
-> @@ -37,6 +37,10 @@ int thread__init_maps(struct thread *thread, struct ma=
-chine *machine)
->  		}
->  	}
+> diff --git a/tools/perf/util/dso.h b/tools/perf/util/dso.h
+> index e53c83c23c578..c4ff19f575b88 100644
+> --- a/tools/perf/util/dso.h
+> +++ b/tools/perf/util/dso.h
+> @@ -141,6 +141,40 @@ enum dso_binary_type {
+>  	DSO_BINARY_TYPE__NOT_FOUND,
+>  };
 > =20
-> +	if (!machine || !machine__is_host(machine) ||
-> +	    !perf_env__is_same_boot(machine->env))
-> +		nsinfo__set_exited(thread__nsinfo(thread));
-> +
->  	return thread__maps(thread) ? 0 : -1;
->  }
-
-[Severity: Medium]
-Can calling perf_env__is_same_boot(machine->env) here during idle thread
-registration prematurely populate machine->env->boot_id with the local host=
-'s
-boot ID in pipe mode or featureless recordings?
-
-In perf_session__process_events(), perf_session__register_idle_thread() runs
-before __perf_session__process_pipe_events() reads any
-PERF_RECORD_HEADER_FEATURE events from the pipe:
-
-tools/perf/util/session.c:perf_session__process_events() {
-	if (perf_session__register_idle_thread(session) < 0)
-		return -ENOMEM;
-
-	if (perf_data__is_pipe(session->data))
-		return __perf_session__process_pipe_events(session);
-}
-
-perf_session__register_idle_thread() creates the idle thread (0, 0) via
-machine__idle_thread() -> machine__findnew_thread() -> thread__init_maps().
-Even though thread__nsinfo(thread) is NULL for tid 0, thread__init_maps()
-evaluates perf_env__is_same_boot(machine->env) -> perf_env__boot_id():
-
-tools/perf/util/env.c:perf_env__boot_id() {
-	if (env->arch || env->hostname) {
-		boot_id =3D NULL;
-		goto out;
-	}
-
-	env->boot_id =3D read_host_boot_id();
-	boot_id =3D env->boot_id;
-}
-
-Because env->arch, env->hostname, and env->boot_id are all still NULL before
-feature events are processed (or in interrupted recordings where
-f_header.data.size =3D=3D 0), perf_env__boot_id() assumes a live environmen=
-t and
-caches read_host_boot_id() in env->boot_id.
-
-If the stream lacks HEADER_BOOT_ID or is processed by a tool that does not
-populate session->header.env from feature events (such as perf inject or
-offline perf trace), env->boot_id remains set to the local host's boot ID,
-causing perf_env__is_same_boot(machine->env) to return true in
-thread__init_maps(), machine__update_thread_pid(), and thread__is_alive()
-during offline analysis.
-
-> @@ -289,6 +293,30 @@ int __thread__set_comm(struct thread *thread, const =
-char *str, u64 timestamp,
->  	return ret;
->  }
-> =20
-> +void thread__set_exited(struct thread *thread, bool exited)
+> +static inline bool dso_binary_type__needs_ns(enum dso_binary_type type)
 > +{
-> +	RC_CHK_ACCESS(thread)->exited =3D exited;
-> +	if (exited)
-> +		nsinfo__set_exited(thread__nsinfo(thread));
+> +	switch (type) {
+> +	case DSO_BINARY_TYPE__SYSTEM_PATH_DSO:
+> +	case DSO_BINARY_TYPE__SYSTEM_PATH_KMODULE:
+> +	case DSO_BINARY_TYPE__SYSTEM_PATH_KMODULE_COMP:
+> +	case DSO_BINARY_TYPE__DEBUGLINK:
+> +	case DSO_BINARY_TYPE__GNU_DEBUGDATA:
+> +		return true;
+> +	case DSO_BINARY_TYPE__KALLSYMS:
+> +	case DSO_BINARY_TYPE__GUEST_KALLSYMS:
+> +	case DSO_BINARY_TYPE__VMLINUX:
+> +	case DSO_BINARY_TYPE__GUEST_VMLINUX:
+> +	case DSO_BINARY_TYPE__JAVA_JIT:
+> +	case DSO_BINARY_TYPE__BUILD_ID_CACHE:
+> +	case DSO_BINARY_TYPE__BUILD_ID_CACHE_DEBUGINFO:
+> +	case DSO_BINARY_TYPE__FEDORA_DEBUGINFO:
+> +	case DSO_BINARY_TYPE__UBUNTU_DEBUGINFO:
+> +	case DSO_BINARY_TYPE__MIXEDUP_UBUNTU_DEBUGINFO:
+> +	case DSO_BINARY_TYPE__BUILDID_DEBUGINFO:
+> +	case DSO_BINARY_TYPE__GUEST_KMODULE:
+> +	case DSO_BINARY_TYPE__GUEST_KMODULE_COMP:
+> +	case DSO_BINARY_TYPE__KCORE:
+> +	case DSO_BINARY_TYPE__GUEST_KCORE:
+> +	case DSO_BINARY_TYPE__OPENEMBEDDED_DEBUGINFO:
+> +	case DSO_BINARY_TYPE__BPF_PROG_INFO:
+> +	case DSO_BINARY_TYPE__BPF_IMAGE:
+> +	case DSO_BINARY_TYPE__OOL:
+> +	case DSO_BINARY_TYPE__NOT_FOUND:
+> +	default:
+> +		return false;
+> +	}
 > +}
 
 [Severity: Medium]
-Can calling nsinfo__set_exited(thread__nsinfo(thread)) on every exit and
-fork replacement race with concurrent nsinfo users in multithreaded modes
-such as perf top?
+Should dso_binary_type__needs_ns() also return true for
+DSO_BINARY_TYPE__FEDORA_DEBUGINFO, DSO_BINARY_TYPE__UBUNTU_DEBUGINFO,
+DSO_BINARY_TYPE__MIXEDUP_UBUNTU_DEBUGINFO,
+DSO_BINARY_TYPE__BUILDID_DEBUGINFO, and
+DSO_BINARY_TYPE__OPENEMBEDDED_DEBUGINFO?
 
-A struct nsinfo instance is shared without an internal lock between
-thread->nsinfo and one or more dso->nsinfo pointers via map__new() ->
-dso__set_nsinfo(). Calling thread__set_exited() invokes nsinfo__set_exited()
--> nsinfo__clear_need_setns():
+In dso__read_binary_type_filename(), those five distribution debuginfo
+types construct target-filesystem paths via __symbol__join_symfs() (such as
+/usr/lib/debug/... or <dso_dir>/.debug/...), rather than host build-id
+cache paths like DSO_BINARY_TYPE__BUILD_ID_CACHE and
+DSO_BINARY_TYPE__BUILD_ID_CACHE_DEBUGINFO.
 
-tools/perf/util/namespaces.c:nsinfo__clear_need_setns() {
-	if (!nsi)
-		return;
+In tools/perf/util/symbol.c, dso__load() only exits the target's mount
+namespace for DSO_BINARY_TYPE__BUILD_ID_CACHE and
+DSO_BINARY_TYPE__BUILD_ID_CACHE_DEBUGINFO:
 
-	RC_CHK_ACCESS(nsi)->inited =3D true;
-	RC_CHK_ACCESS(nsi)->need_setns =3D false;
-	zfree(&RC_CHK_ACCESS(nsi)->mntns_path);
-}
+	nsexit =3D (symtab_type =3D=3D DSO_BINARY_TYPE__BUILD_ID_CACHE ||
+	    symtab_type =3D=3D DSO_BINARY_TYPE__BUILD_ID_CACHE_DEBUGINFO);
 
-In perf top, where process_thread processes PERF_RECORD_EXIT and
-PERF_RECORD_FORK events concurrently with display_thread resolving symbols
-and reading DSOs:
-
-1. nsinfo__mountns_enter() checks RC_CHK_ACCESS(nsi)->need_setns and then
-   calls open(nsinfo__mntns_path(nsi), ...), which can race with
-   nsinfo__clear_need_setns() freeing and zeroing mntns_path.
-
-2. nsinfo__copy() checks if (nsinfo__mntns_path(nsi)) and then calls
-   strdup(nsinfo__mntns_path(nsi)), which can pass NULL or a freed pointer
-   to strdup() if nsinfo__clear_need_setns() runs concurrently.
-
-3. Concurrent calls to nsinfo__set_exited() (for example, process_thread
-   handling PERF_RECORD_EXIT while display_thread calls
-   thread__e_machine_endian() -> thread__is_alive() -> nsinfo__check_proc()
-   or nsinfo__mountns_enter() -> nsinfo__check_proc()) can race in
-   zfree(&RC_CHK_ACCESS(nsi)->mntns_path) and double-free mntns_path.
-
-[ ... ]
-> @@ -541,7 +572,7 @@ uint16_t thread__e_machine_endian(struct thread *thre=
-ad, struct machine *machine
->  			is_live =3D !session || !session->data;
->  		}
->  		/* Read from /proc/pid/exe if live. */
-> -		if (is_live) {
-> +		if (is_live && thread__is_alive(thread)) {
->  			e_machine =3D read_proc_e_machine_for_pid(pid, &local_e_flags,
->  								&args.is_big_endian);
->  		} else if (machine && machine->env) {
-
-[Severity: Medium]
-What happens in thread__e_machine_endian() when thread is a non-leader
-sub-thread (pid !=3D tid) whose thread or leader has already exited?
-
-Earlier in thread__e_machine_endian(), before reaching the
-thread__is_alive(thread) check, a sub-thread delegates to its group leader:
-
-tools/perf/util/thread.c:thread__e_machine_endian() {
-	tid =3D thread__tid(thread);
-	pid =3D thread__pid(thread);
-	if (pid !=3D tid) {
-		struct thread *parent =3D machine__findnew_thread(machine, pid, pid);
-
-		if (parent) {
-			e_machine =3D thread__e_machine_endian(parent, machine, &local_e_flags,
-							     &args.is_big_endian);
-			thread__put(parent);
-			goto out;
-		}
-		/* Something went wrong, fallback. */
-	}
-}
-
-If the leader thread (pid, pid) has already exited and been removed from
-machine->threads (when symbol_conf.keep_exited_threads is false),
-machine__findnew_thread(machine, pid, pid) allocates a fresh parent thread
-with parent->exited =3D false and a new nsinfo for (pid, pid), and recurses=
- on
-parent.
-
-In the recursive call, thread__is_alive(parent) is checked instead of
-thread__is_alive(thread). Even if the sub-thread had thread->exited =3D=3D =
-true,
-parent->exited is false, and nsinfo__check_proc(parent->nsinfo) only checks
-whether /proc/<pid>/task/<pid>/status has Tgid =3D=3D <pid>, which will suc=
-ceed
-for any new process that recycled <pid> and cause
-read_proc_e_machine_for_pid(pid, ...) to read /proc/<pid>/exe of the
-recycled process.
+When dso__find_binary_type_locked() falls back to dso__symtab_type(dso) in
+binary_type_data[] (or when a later commit in this series, "perf tools:
+Scope mount namespace entry in dso__load()", replaces the nsexit check in
+dso__load() with dso_binary_type__needs_ns(symtab_type)), returning false
+for these five debuginfo types causes perf to skip entering the target
+container's mount namespace and chroot when resolving or opening them.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261023071141.1341=
-49-1-namhyung@kernel.org?part=3D6
+49-1-namhyung@kernel.org?part=3D10
