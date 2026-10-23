@@ -1,44 +1,44 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792739506;
-	b=q0ICKbaLOIdGWm1LphtE317yAylmkdZZ/XSrC8zsnU2MS6k9BGTTiWDf6ikmlPzc20I1
-	 3EURyX0S+YMK07asWPe+QRIn1BBAMhBR21/KVjhNbYxO98BqG81E8rROUNFm3S1/pOALf
-	 CxXNOPLF0ogTKoPZguPn49AiU2+Pr4h46rzRzyspcG+nL5D5HP4YN8JHOvK4eJPyNd+3N
-	 ZNlAvmYxhsUBIs6LjkA5ROzEa2lz91MBlrjXIDvEvkLEPNLgl+44bzR3Olr4F0XC75o4Y
-	 D6AMNK5QRTAp3Pthomcj5H/SToxMxOGa+CRnmqpXLAnz/S2Rv6wDXaXhl32dqSJOr+Q==
+	t=1792739507;
+	b=kt7O3wfJ/lDv6ulW6rpMMDhO5RQGansICTb7g4X98Oli+dvh40r0XqsOjpZ+Xcua1D/S
+	 n9sC2CfV2kBFkefPitxKN5M4FMM/ohPfEDOQzHfPPst39QTXBjKMWJHkJNOOOA0PD4M3h
+	 /mFqOXTDhrViUYUKZA1+ASjYLvyfX77M/uutT1/mQsqMVYqtKZMTW4Ej4z1o+jeienxsg
+	 cOyOPH7O95NwNxeiRrO5hnYF212BbPnTOdpM3ZVRFWKpz7HlC+7C6KSU86x90JTQk24Og
+	 S68UZTV5p6TPQ+Gv3cL2pFUVWsv2hemsbmyTtigqdOj34aGFyYAwsfNqEHSsN6nyjlg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792739506;
+	a=rsa-sha256; c=relaxed/relaxed; t=1792739507;
 	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:X-Mailer:
 	 In-Reply-To:References:MIME-Version:Content-Transfer-Encoding;
-	bh=CBhFesInQo6AwgVP391t6H+rj58+AqpJOgaeLasaGEM=;
-	b=Zq3AJ/QwLVwVacr9wHYZi2+BNRMV0bYASqaYXuu9SqyrPL7IhFFSH9pb5TyyNSMsBSck
-	 SIaHjS130HxUiiR7PAyLWTJ6lSJ6i7No1EDZ1MLacHNVR7pccP+v0ISyIcriyGjZ4hqpI
-	 RZJRX5L/Ja3pS5jVhl9R40Km1m1aizjltAGqc5sXMM2iJ3/pjJBLeWUWL76JRpk/42esL
-	 vhVzyqTGAlr+EqWZiSMAmKzsloYLJ9lH89umYdc8/48K5ZHE28rry6toeLWOkgI/91kes
-	 0qfRGK3qhYqPdrcoY5piySUVemhRp9JBkJmwF1PEIxHo2LeYkFgeKs81yJULzkNKMGg==
+	bh=DN9zsEUYSRkpbLEQ0Z8mTeGmjkFAnCeWoPoJg7B3w0s=;
+	b=aPvqKDt8oE1bDXCmyJGcDG//aG2psS49fS7x5hbhbOAF15vpaMyshHLB6AvnpJabI9r+
+	 U+pKcDnHzOQY7QFSdHeWN2gqm01yiLPs4m7BSVeOIJbz5xWrQd+Zc+e+Aug+d0sJRZjV0
+	 L0w7T5fJ7OhfBjVMpIsyupsslInX/atb/FH23nlxNkmalVv/nM3KwubNNJeeDifkHekPC
+	 o3EqWD6WPPWseIqYpNocIZWL084/NRYYX5SlbcA420ujHOd0Wc6Dd7pJgTBdrg6Y9qiXw
+	 qN7sOuMhugruBGf70wz8lo3Aa0tfqmY96w1pD28hSvEwL0cHt9h75Pxa+QnCOWfqCMA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=kd6drMG1;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=UiW2LznU;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 903E2606A321;
-	Fri, 23 Oct 2026 07:11:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D47860A2603;
+	Fri, 23 Oct 2026 07:11:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=kd6drMG1
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 40D161F01829;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=UiW2LznU
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 00D551F01829;
 	Fri, 23 Oct 2026 07:11:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1792739506;
-	bh=CBhFesInQo6AwgVP391t6H+rj58+AqpJOgaeLasaGEM=;
+	s=k20260515; t=1792739507;
+	bh=DN9zsEUYSRkpbLEQ0Z8mTeGmjkFAnCeWoPoJg7B3w0s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=kd6drMG1+lUm0b0BltI5UVfzzJwEIFDKEt5Zj2BrYzkDPlWROeoAxlfSchjLsvJey
-	 +WFF/kVXc6cdSq31ZD+mtdkAdJy/v9Yv0mN/zXvzT+3/Dz3fS6Jx2YL+LcWs0mXN1e
-	 eM/UqEoXDvT6KrZwdk8lRA6nDpLbo1nUtjEPTpxYHZr8w7Qx0osonFrLKh2xQRPLNb
-	 79aaEg7eub58Em4sgpSOR8gnaS2wuStg4QV/29vnhqEDm0B27SRj1zvDojQLLjB3iZ
-	 eJvUMP+b9lQtJ0MbDMMRM7mtwZOZCxUSI4TX2TOPLe4wWQeXVjKeIHmQHskJU46WKu
-	 swe1H3Hlz7rww==
+	b=UiW2LznUXAV5LRK4mfmFEd3vysR93hd3NwCoCIh1aIDhmBXwgy/TLwLAepkpefcrN
+	 s+Qj9PMQpw68vtBKAYgl9zy7yKE+t3UWFlx5Jx2IQYDcl+sy1PupON/66OCZypRv84
+	 /9zNwoAK//44543opcXEC3RANUwVQG5dfYl1j6+q09vzVdrBxEdPytHnoeKZRJc8Am
+	 h1HTIbSmT5D78fBe6D595TW5ZoAnzQ1Ba6TP3vJXOgXBjfTwNCIk28vWixmxre2Pe6
+	 c5twK/aMQ66S09HJXMFFPLPq65JLfs+ZK9MnD+db5AQlvfvA//IjglZ9AvRVSJTJmP
+	 P7JEy/T5KcrVg==
 From: Namhyung Kim <namhyung@kernel.org>
 To: Arnaldo Carvalho de Melo <acme@kernel.org>
 Cc: Ian Rogers <irogers@google.com>,
@@ -49,9 +49,9 @@ Cc: Ian Rogers <irogers@google.com>,
 	Ingo Molnar <mingo@kernel.org>,
 	LKML <linux-kernel@vger.kernel.org>,
 	linux-perf-users@vger.kernel.org
-Subject: [PATCH v1 07/11] perf tools: Handle chroot inside nsinfo__mountns_enter()
-Date: Fri, 23 Oct 2026 00:11:37 -0700
-Message-ID: <20261023071141.134149-8-namhyung@kernel.org>
+Subject: [PATCH v1 09/11] perf tools: Remove redundant chroot handling
+Date: Fri, 23 Oct 2026 00:11:39 -0700
+Message-ID: <20261023071141.134149-10-namhyung@kernel.org>
 X-Mailer: git-send-email 2.56.0.257.gf7497c7d27-goog
 In-Reply-To: <20261023071141.134149-1-namhyung@kernel.org>
 References: <20261023071141.134149-1-namhyung@kernel.org>
@@ -66,198 +66,157 @@ Precedence: list
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Read /proc/<pid>/task/<tid>/root in nsinfo__init() and enter/exit the
-chroot directory alongside the mount namespace inside
-nsinfo__mountns_enter() and nsinfo__mountns_exit().
+Now that nsinfo__mountns_enter() enters the target process's chroot
+alongside its mount namespace, callers inside a mountns context no
+longer need to manually prepend the target's root directory path via
+dso__filename_with_chroot() or filename_with_chroot().
+
+Remove dso__filename_with_chroot() and filename_with_chroot() and use
+the DSO path directly within the mountns scope.
 
 Assisted-by: LLM
 Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 ---
- tools/perf/util/namespaces.c | 60 +++++++++++++++++++++++++++++++++++-
- tools/perf/util/namespaces.h |  3 ++
- 2 files changed, 62 insertions(+), 1 deletion(-)
+ tools/perf/util/dso.c    | 29 ++---------------------------
+ tools/perf/util/dso.h    |  2 --
+ tools/perf/util/symbol.c |  8 --------
+ tools/perf/util/util.c   | 31 -------------------------------
+ tools/perf/util/util.h   |  2 --
+ 5 files changed, 2 insertions(+), 70 deletions(-)
 
-diff --git a/tools/perf/util/namespaces.c b/tools/perf/util/namespaces.c
-index bb119a6cc6064d89..1ec6b1ed4db23109 100644
---- a/tools/perf/util/namespaces.c
-+++ b/tools/perf/util/namespaces.c
-@@ -100,10 +100,12 @@ int nsinfo__init(struct nsinfo *nsi)
+diff --git a/tools/perf/util/dso.c b/tools/perf/util/dso.c
+index ce98613868e7d371..4331b48505b2b10e 100644
+--- a/tools/perf/util/dso.c
++++ b/tools/perf/util/dso.c
+@@ -585,11 +585,6 @@ static int do_open(char *name) EXCLUSIVE_LOCKS_REQUIRED(_dso__data_open_lock)
+ 	return -1;
+ }
+ 
+-char *dso__filename_with_chroot(const struct dso *dso, const char *filename)
+-{
+-	return filename_with_chroot(nsinfo__pid(dso__nsinfo_const(dso)), filename);
+-}
+-
+ char *dso__get_filename(struct dso *dso, const char *root_dir, bool *decomp,
+ 			enum dso_binary_type type)
  {
- 	char oldns[PATH_MAX];
- 	char spath[PATH_MAX];
-+	char rpath[64];
- 	char *newns = NULL;
- 	struct stat old_stat;
- 	struct stat new_stat;
- 	int rv = -1;
-+	ssize_t ret;
+@@ -603,28 +598,8 @@ char *dso__get_filename(struct dso *dso, const char *root_dir, bool *decomp,
+ 	if (dso__read_binary_type_filename(dso, type, root_dir, name, PATH_MAX))
+ 		goto out;
  
- 	if (!nsi || RC_CHK_ACCESS(nsi)->exited)
- 		return -1;
-@@ -150,6 +152,19 @@ int nsinfo__init(struct nsinfo *nsi)
- 		newns = NULL;
- 	}
+-	if (!is_regular_file(name)) {
+-		struct stat st;
+-		char *new_name;
+-
+-		/*
+-		 * errno only reflects the failure reason when stat() itself
+-		 * failed: a successful stat() on a non-regular file (e.g. a
+-		 * directory) leaves a stale errno, which a previous failed
+-		 * iteration of the try_to_open_dso() fallback loop may have
+-		 * set to ENOENT.
+-		 */
+-		if (stat(name, &st) == 0 || errno != ENOENT ||
+-		    dso__nsinfo(dso) == NULL)
+-			goto out;
+-
+-		new_name = dso__filename_with_chroot(dso, name);
+-		if (!new_name)
+-			goto out;
+-
+-		free(name);
+-		name = new_name;
+-	}
++	if (!is_regular_file(name))
++		goto out;
  
-+	/* Check if the task is in a chroot directory. */
-+	scnprintf(rpath, sizeof(rpath), "/proc/%d/task/%d/root",
-+		  nsinfo__pid(nsi), nsinfo__tid(nsi));
-+	ret = readlink(rpath, spath, sizeof(spath) - 1);
-+	if (ret > 0) {
-+		spath[ret] = '\0';
-+		if (strcmp(spath, "/") && !strstr(spath, "(deleted)")) {
-+			RC_CHK_ACCESS(nsi)->chroot = strdup(spath);
-+			if (RC_CHK_ACCESS(nsi)->chroot)
-+				RC_CHK_ACCESS(nsi)->in_chroot = true;
-+		}
-+	}
-+
- out:
- 	free(newns);
- 	return rv;
-@@ -201,6 +216,11 @@ static const char *nsinfo__mntns_path(const struct nsinfo *nsi)
- 	return RC_CHK_ACCESS(nsi)->mntns_path;
+ 	if (dso__needs_decompress(dso)) {
+ 		char newpath[KMOD_DECOMP_LEN];
+diff --git a/tools/perf/util/dso.h b/tools/perf/util/dso.h
+index 3329f417810c25a4..e53c83c23c578918 100644
+--- a/tools/perf/util/dso.h
++++ b/tools/perf/util/dso.h
+@@ -826,8 +826,6 @@ static inline bool dso__has_symbols(const struct dso *dso)
+ 	return !RB_EMPTY_ROOT(&RC_CHK_ACCESS(dso)->symbols.rb_root);
  }
  
-+static const char *nsinfo__chroot(const struct nsinfo *nsi)
-+{
-+	return RC_CHK_ACCESS(nsi)->chroot;
-+}
-+
- struct nsinfo *nsinfo__copy(const struct nsinfo *nsi)
- {
- 	struct nsinfo *nnsi;
-@@ -222,6 +242,7 @@ struct nsinfo *nsinfo__copy(const struct nsinfo *nsi)
- 	RC_CHK_ACCESS(nnsi)->inited = RC_CHK_ACCESS(nsi)->inited;
- 	RC_CHK_ACCESS(nnsi)->exited = RC_CHK_ACCESS(nsi)->exited;
- 	RC_CHK_ACCESS(nnsi)->need_setns = RC_CHK_ACCESS(nsi)->need_setns;
-+	RC_CHK_ACCESS(nnsi)->in_chroot = RC_CHK_ACCESS(nsi)->in_chroot;
- 	RC_CHK_ACCESS(nnsi)->in_pidns = nsinfo__in_pidns(nsi);
- 	if (nsinfo__mntns_path(nsi)) {
- 		RC_CHK_ACCESS(nnsi)->mntns_path = strdup(nsinfo__mntns_path(nsi));
-@@ -230,6 +251,13 @@ struct nsinfo *nsinfo__copy(const struct nsinfo *nsi)
- 			return NULL;
- 		}
- 	}
-+	if (nsinfo__chroot(nsi)) {
-+		RC_CHK_ACCESS(nnsi)->chroot = strdup(nsinfo__chroot(nsi));
-+		if (!RC_CHK_ACCESS(nnsi)->chroot) {
-+			nsinfo__put(nnsi);
-+			return NULL;
-+		}
-+	}
+-char *dso__filename_with_chroot(const struct dso *dso, const char *filename);
+-
+ bool dso__sorted_by_name(const struct dso *dso);
+ void dso__set_sorted_by_name(struct dso *dso);
+ void dso__sort_by_name(struct dso *dso);
+diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
+index b61a574ce9a30721..807e433c770812a4 100644
+--- a/tools/perf/util/symbol.c
++++ b/tools/perf/util/symbol.c
+@@ -1902,14 +1902,6 @@ int dso__load(struct dso *dso, struct map *map)
+ 			nsinfo__mountns_exit(&nsc);
  
- 	return nnsi;
- }
-@@ -244,6 +272,7 @@ static void nsinfo__delete(struct nsinfo *nsi)
- 	if (nsi) {
- 		WARN_ONCE(refcount_read(nsinfo__refcnt(nsi)) != 0, "nsinfo refcnt unbalanced\n");
- 		zfree(&RC_CHK_ACCESS(nsi)->mntns_path);
-+		zfree(&RC_CHK_ACCESS(nsi)->chroot);
- 		RC_CHK_FREE(nsi);
- 	}
- }
-@@ -272,7 +301,8 @@ bool nsinfo__need_setns(const struct nsinfo *nsi)
- 		return false;
+ 		is_reg = is_regular_file(name);
+-		if (!is_reg && errno == ENOENT && dso__nsinfo(dso)) {
+-			char *new_name = dso__filename_with_chroot(dso, name);
+-			if (new_name) {
+-				is_reg = is_regular_file(new_name);
+-				strlcpy(name, new_name, PATH_MAX);
+-				free(new_name);
+-			}
+-		}
  
- 	nsinfo__ensure_init((struct nsinfo *)nsi);
--	return !RC_CHK_ACCESS(nsi)->exited && RC_CHK_ACCESS(nsi)->need_setns;
-+	return !RC_CHK_ACCESS(nsi)->exited &&
-+	       (RC_CHK_ACCESS(nsi)->need_setns || RC_CHK_ACCESS(nsi)->in_chroot);
+ #ifdef HAVE_LIBBFD_SUPPORT
+ 		if (is_reg)
+diff --git a/tools/perf/util/util.c b/tools/perf/util/util.c
+index 8f7cd32f524dc10e..443b1d2b4748bfe4 100644
+--- a/tools/perf/util/util.c
++++ b/tools/perf/util/util.c
+@@ -451,37 +451,6 @@ void perf_debuginfod_setup(struct perf_debuginfod *di)
+ #endif
  }
  
- void nsinfo__clear_need_setns(struct nsinfo *nsi)
-@@ -282,7 +312,9 @@ void nsinfo__clear_need_setns(struct nsinfo *nsi)
+-/*
+- * Return a new filename prepended with task's root directory if it's in
+- * a chroot.  Callers should free the returned string.
+- */
+-char *filename_with_chroot(int pid, const char *filename)
+-{
+-	char buf[PATH_MAX];
+-	char proc_root[32];
+-	char *new_name = NULL;
+-	int ret;
+-
+-	scnprintf(proc_root, sizeof(proc_root), "/proc/%d/root", pid);
+-	ret = readlink(proc_root, buf, sizeof(buf) - 1);
+-	if (ret <= 0)
+-		return NULL;
+-
+-	/* readlink(2) does not append a null byte to buf */
+-	buf[ret] = '\0';
+-
+-	if (!strcmp(buf, "/"))
+-		return NULL;
+-
+-	if (strstr(buf, "(deleted)"))
+-		return NULL;
+-
+-	if (asprintf(&new_name, "%s/%s", buf, filename) < 0)
+-		return NULL;
+-
+-	return new_name;
+-}
+-
+ /*
+  * Reallocate an array *arr of size *arr_sz so that it is big enough to contain
+  * x elements of size msz, initializing new entries to *init_val or zero if
+diff --git a/tools/perf/util/util.h b/tools/perf/util/util.h
+index f8f1ff603c728086..b9adb58df976f29e 100644
+--- a/tools/perf/util/util.h
++++ b/tools/perf/util/util.h
+@@ -84,8 +84,6 @@ void perf_debuginfod_setup(struct perf_debuginfod *di);
  
- 	RC_CHK_ACCESS(nsi)->inited = true;
- 	RC_CHK_ACCESS(nsi)->need_setns = false;
-+	RC_CHK_ACCESS(nsi)->in_chroot = false;
- 	zfree(&RC_CHK_ACCESS(nsi)->mntns_path);
-+	zfree(&RC_CHK_ACCESS(nsi)->chroot);
- }
+ const char *perf_basename(const char *path);
  
- void nsinfo__set_exited(struct nsinfo *nsi)
-@@ -362,6 +394,7 @@ void nsinfo__mountns_enter(struct nsinfo *nsi,
- 	char curpath[PATH_MAX];
- 	int oldns = -1;
- 	int newns = -1;
-+	int oldroot = -1;
- 	char *oldcwd = NULL;
- 
- 	if (nc == NULL)
-@@ -369,6 +402,7 @@ void nsinfo__mountns_enter(struct nsinfo *nsi,
- 
- 	nc->oldns = -1;
- 	nc->newns = -1;
-+	nc->oldroot = -1;
- 	nc->oldcwd = NULL;
- 
- 	if (!nsi || !nsinfo__need_setns(nsi))
-@@ -405,13 +439,30 @@ void nsinfo__mountns_enter(struct nsinfo *nsi,
- 			goto errout;
- 	}
- 
-+	if (RC_CHK_ACCESS(nsi)->in_chroot) {
-+		oldroot = open("/", O_RDONLY | O_DIRECTORY | O_CLOEXEC);
-+		if (oldroot < 0)
-+			goto errout_setns;
-+
-+		if (chroot(nsinfo__chroot(nsi)) < 0)
-+			goto errout_setns;
-+	}
-+
- 	nc->oldcwd = oldcwd;
- 	nc->oldns = oldns;
- 	nc->newns = newns;
-+	nc->oldroot = oldroot;
- 	return;
- 
-+errout_setns:
-+	if (oldns > -1) {
-+		setns(oldns, CLONE_NEWNS);
-+		WARN_ON_ONCE(chdir(oldcwd));
-+	}
- errout:
- 	free(oldcwd);
-+	if (oldroot > -1)
-+		close(oldroot);
- 	if (oldns > -1)
- 		close(oldns);
- 	if (newns > -1)
-@@ -423,6 +474,13 @@ void nsinfo__mountns_exit(struct nscookie *nc)
- 	if (nc == NULL || !nc->oldcwd)
- 		return;
- 
-+	if (nc->oldroot > -1) {
-+		WARN_ON_ONCE(fchdir(nc->oldroot));
-+		WARN_ON_ONCE(chroot("."));
-+		close(nc->oldroot);
-+		nc->oldroot = -1;
-+	}
-+
- 	if (nc->oldns > -1) {
- 		setns(nc->oldns, CLONE_NEWNS);
- 		close(nc->oldns);
-diff --git a/tools/perf/util/namespaces.h b/tools/perf/util/namespaces.h
-index 165e9c9994461595..640ce537295a88e5 100644
---- a/tools/perf/util/namespaces.h
-+++ b/tools/perf/util/namespaces.h
-@@ -39,14 +39,17 @@ DECLARE_RC_STRUCT(nsinfo) {
- 	bool			inited;
- 	bool			exited;
- 	bool			need_setns;
-+	bool			in_chroot;
- 	bool			in_pidns;
- 	char			*mntns_path;
-+	char			*chroot;
- 	refcount_t		refcnt;
- };
- 
- struct nscookie {
- 	int			oldns;
- 	int			newns;
-+	int			oldroot;
- 	char			*oldcwd;
- };
+-char *filename_with_chroot(int pid, const char *filename);
+-
+ int do_realloc_array_as_needed(void **arr, size_t *arr_sz, size_t x,
+ 			       size_t msz, const void *init_val);
  
 -- 
 2.56.0.257.gf7497c7d27-goog
