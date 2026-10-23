@@ -1,58 +1,58 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792783358;
-	b=2K044Ka2gM/u3BflHF5683ywMLYS+yt7tqrLkNFg7rYW8JvEzgAoFMe6xwo1mDl3Mr3F
-	 5Id39eXadDKtA3hH3cVOdU9GxW4JtX64AQFyan/yVKTlca8ar4DJNTcGqq7IP+Oeo34cS
-	 mFgeYyJzaKAAfPqqURL5fo/FkCB3HvnND6M0wTVF37wm4gdQrfL8zcAPlksvHCoG4gDwV
-	 yvH9Q0yazVscYFSX8wG0i/2331LImRByrISvxl1R8eEQo2xoyWFQ9Hx8lfxis2o56YOWn
-	 Gn6FuvoJ0gYtB6WcgXzXoH6oMBPjrWyGP+31O+n+9+/ubAPR1eqgNk3jYdxGFL73sSQ==
+	t=1792783549;
+	b=WWBNltsa6xusgHbWessr/bQcaP2+/dcKjdk7Xw53h3mgFk1cYMk94YOWj50AzyYmxHx6
+	 5aV3rVRav427TT14t5QcFZKqjZR4HdAJlAFEdqnBpjSeADC/+LzOK49pHoTXE7GogEMo8
+	 NnJ/GE7HiM32h4X83JhMu9WUWqYoBlTC9WpRdTO9nahl6uIcrjD6AzZvxPw43EDoav/55
+	 fFYCG7NzvPGZz9LCe1pLLFRHWRrTf1kxl71exV1DRwV+YC5o0GhxvNB5rKnaWaG3crmmE
+	 PalBAePHYxIszG5l2zo3ilfn9cm7bRfzJI0uebFITBAEXR4aJlyww5H6NMvD9WNb3mg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792783358;
+	a=rsa-sha256; c=relaxed/relaxed; t=1792783549;
 	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
 	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=ii6ruMovvGBZisq5/39/6Y3bC/i2rEDElblpeO8EuVs=;
-	b=jxLxcg9+ibKUCo5mDH3B/J7ipD49itLBKYTgmZNTn5UjJxMb+xND61lW3OB9OR2Lsp6E
-	 FZCATosy3Fc4t4rLRAh37fJxq3HCbdGF0RSgUWRyVMBOu6ts6igbxbzQioZGHtMagq2fP
-	 DAks4VJ9BXxoB139yd8ZOBaEBTuaYNLoSaWdsZDDvN/NOHKIumLz7syehzj4CHHnboxR7
-	 319A5hDD5JfSuYCGenZStydsYdwBkV1Et7ufRprBnm8Ji+EWzrS1lSJ/zci2k8QQQFq35
-	 Sum19HP9AImCuM/gsy7ARkC+zBgdYF6Yue1sfPDi6CfO04//fcxeEzWh/N3YGWrhlYg==
+	bh=EVaAeruK1JlabJVm7NfEdm2Uob2SKF9RDR9EGSSZS9w=;
+	b=Gk7BC5YC7d0ETB1fom3naE8yHN08T7LCJNE70E9Jwj5wt+QYfxGinW9JNdB4jwpuUeHm
+	 pu0dAohKO964bA4V+jesOTI15tx40SGTmX9YiphbKZUZsfI8GWRaIH0fA0BYh+2BBr6wT
+	 krFZI8Mp0npXNV8Wru/jDMIA43tLyxQtt92zal0kz5OqOcxaEvQ+sOtNYoTE1NyiDJvoV
+	 nQQtlmL9aEWGC4wwuMEFdv+7Nt6E1hmlkOwp6mrLQmkFQITgPg1t0hdy8hQFEDrvoBl/8
+	 u6xkbbpwOhVZbjCkAyTYKvOAQqo2cNa8UhfFT5IUCeTR+SB6G8J9Fea5ZHcVFDLnL/A==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Pq1Gky4W;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ofO7eknE;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8280B606A31B
-	for <linux-perf-users@vger.kernel.org>; Fri, 23 Oct 2026 19:22:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34F99606A31A
+	for <linux-perf-users@vger.kernel.org>; Fri, 23 Oct 2026 19:25:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Pq1Gky4W
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EFF5C1F01825;
-	Fri, 23 Oct 2026 19:22:37 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ofO7eknE
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B6B131F01825;
+	Fri, 23 Oct 2026 19:25:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1792783358;
-	bh=ii6ruMovvGBZisq5/39/6Y3bC/i2rEDElblpeO8EuVs=;
+	s=k20260515; t=1792783548;
+	bh=EVaAeruK1JlabJVm7NfEdm2Uob2SKF9RDR9EGSSZS9w=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=Pq1Gky4WIm8JbzwLKxAdjZG3THoMr6TqYEcNvvvQ7QHxLDU3ViWfFX2774yL/27x0
-	 MTGmFBHrjm8ydgEqLUYGBtQ2k5+btT/rgF+Xiesww5jcqiFhilPZ0WjlZoMc0WjER4
-	 ikzG1APQUAFTQb/WWXLymzftAzaS8yrHxyDqKemMX5W16vLXqRGV2YPV2YP6n2p8hH
-	 rHklfHHZBMttDAlbp/VBmjsO6ayX81TE6hvX0LqwOBxC9MeJW3VkIj8IcCvMo+oP5z
-	 QH5JcynWs5s346+UXNMVim83HrB898FIZFAdHROGgfioM2v1x32mpv8M1Wk/R42SaR
-	 agbWc8hbWMnFA==
-Message-ID: <sashiko-outbox-183109@kernel.org>
+	b=ofO7eknEsIAKp1Vb5/H0CPXz4Ta579efiR3zd3T4iXBP7FqKYkJnkln/b+/03EWo7
+	 iXUnKZRQVIfzOMhSUmSWg9dmWwDsNf0eQpJSccmHwsyIB6cBBbYIRaQXboUEPAfdmZ
+	 v/esLoWOpOmwccUkCxn4ZZgS/37FNQ+C0cYbNeaTn8twgyjGiMWiIQE7VbPHHXMC6Y
+	 Ro+M6FXVHOqRSimTKoKK8j+oDZs73ocmOD1KLSAhP26qUW4ll/TIy60Ze4DJ8eFvKn
+	 bVHD1Edv1rIKNtozMum5dOjauhce3+xumMrtuKt54LWCgrzWD0JXCbZPs75dOEeqI7
+	 EwXprK1cUT0rA==
+Message-ID: <sashiko-outbox-183111@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v7 02/11] perf bpf-filter: Support BPF sample filters on
- tracepoint events
+Subject: Re: [PATCH v7 11/11] perf lock contention: Extend BPF lock
+ contention to RCU and SRCU
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Ian Rogers" <irogers@google.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20261023190558.3050796-3-irogers@google.com>
+In-Reply-To: <20261023190558.3050796-12-irogers@google.com>
 References: <20261022203003.1779152-1-irogers@google.com>
  <20261023190558.3050796-1-irogers@google.com>
- <20261023190558.3050796-3-irogers@google.com>
+ <20261023190558.3050796-12-irogers@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Fri, 23 Oct 2026 19:22:37 +0000
+Date: Fri, 23 Oct 2026 19:25:48 +0000
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -62,31 +62,35 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 
-> Commit 466db4275edd ("perf parse-events: Add parse_uid_filter helper")
-> updated set_filter() to route non-tracepoint filter terms (such as uid
-> and gid) on PERF_TYPE_TRACEPOINT events to evsel->bpf_filters instead
-> of the ftrace tracepoint predicate filter.
+> Extend 'perf lock contention --use-bpf' to track RCU and SRCU
+> grace-period and barrier waits:
 >=20
-> However, in the kernel's __perf_event_set_bpf_prog()
-> (kernel/events/core.c), attaching a BPF program to a perf_event fd
-> branches on perf_event_is_tracing(event):
-> - Non-tracing events (hardware PMU, software events, breakpoints) call
->   perf_event_set_bpf_handler(), which requires BPF_PROG_TYPE_PERF_EVENT
->   (SEC("perf_event")).
-> - Tracepoint events (event->pmu =3D=3D &perf_tracepoint) reject
->   BPF_PROG_TYPE_PERF_EVENT with -EINVAL and instead require
->   BPF_PROG_TYPE_TRACEPOINT (SEC("tracepoint")), which is attached to
->   event->tp_event->prog_array and executed in
-> [ ... ]
->   [ perf record: Woken up 1 times to write data ]
->   [ perf record: Captured and wrote 0.024 MB perf.data (42 samples) ]
+> - Attach fentry/fexit programs to synchronize_rcu(),
+>   synchronize_rcu_expedited(), synchronize_rcu_tasks(), rcu_barrier(),
+>   synchronize_srcu(), synchronize_srcu_expedited(), and srcu_barrier()
+>   when available in BTF.
+> - Support filtering by lock type ('-Y rcu', '-Y rcu:W', '-Y srcu',
+>   '-Y srcu:W') and by lock name ('-L rcu' or specific srcu_struct
+>   symbol names).
 >=20
-> Fixes: 466db4275edd ("perf parse-events: Add parse_uid_filter helper")
+> Example usage:
+>=20
+>   # perf lock con -a -b -Y rcu,srcu -F wait_total,avg_wait -- sleep 1
+>      total wait     avg wait         type   caller
+>=20
+>        35.12 ms      8.78 ms        rcu:W   cleanup_net+0x284
+>         7.84 ms      3.92 ms       srcu:W   __fsnotify_parent+0x114
+>=20
+>   # perf lock con -a -b -l -L rcu -F wait_total,avg_wait -- sleep 1
+>      total wait     avg wait            address   symbol
+>=20
+>        35.12 ms      8.78 ms   ffffffff83754dc0   rcu (rcu)
+>=20
 > Signed-off-by: Ian Rogers <irogers@google.com>
 
 Sashiko has reviewed this patch and found no issues.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261023190558.3050=
-796-1-irogers@google.com?part=3D2
+796-1-irogers@google.com?part=3D11
 
