@@ -1,57 +1,56 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792740103;
-	b=HFaWvllqohFHggO0m/tS7HcKqVxCDZbocj/QVDz8+npjMXD0+2XpYmGYh8wXeHuGfiF6
-	 ZcwLLtX7UsoHF+rRBZdinkoGOSm8mWyhra62CWVSg0DpC3RouNpFIt+1rhfu2eUAELiqL
-	 Ct/jcCQ3E/EVDWxJYhhhlHpx4Bnv2ZgG6+Pmr0XG6fd0Q5jS/VbFfmgQpyLr1JdYI75Mv
-	 v6PD5gcVYCycBm8IVvX4Cio+vwn82MaIc1Ch8dvulAsFe6QAjcsFz77618QWHyrZXRQyD
-	 1kpuhhDtrcJ3cLM41+4YJBzJbkF945RSWhcea8BA/sm9X/oQl1fCkJjuEzzIQFor72A==
+	t=1792740141;
+	b=PvLA5pkSoEYvpPOTn60+OC9QmFFavsKceyqFB83mS3ZbVRgZF0GvLxGaQoI96XrHeyzw
+	 ztaKjNT99qGKTBlQVh2GkJFh+Jl/bs/jqmEZRLwoVBRE29vewRAjYkWTAiVwsn4MoMOic
+	 aFxVMc55++INi3RtvPZ8oROCBw1Xae5BVpdMtgbC3Rl4ZR67NkCZVsyH2VmPmOwxLOvig
+	 eBJb94fE5EnFz3aKfv33rDMlFx9tslT65Fqq+ZieQi/JAWCF8Ud4V8GjNVw3pnr29Ccfr
+	 pSCxEzmoHlQeoZMjPnb1NnrU9H/DlNSmwMLEN5OAq+/0zZavtpfDhCxn+AzRL/zfscQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792740103;
+	a=rsa-sha256; c=relaxed/relaxed; t=1792740141;
 	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
 	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=wmtzw6VOOHUvX9qVEN2sGuhPfgk/VxJ6Ot3900iqrQs=;
-	b=QOS8sRJB7nBcTDCTu9oiN23iSHzPLAc0cZoWoYF/NpHwNBJgcjXReFegeup/HJVwPLN8
-	 VbideelXrC0B1M+h4oSQYKdCRu/Kpa5HjEgSGVpUgaSZ0x8tXktLPUppSE5fc956c3AJ2
-	 CJ29jEQZ2ROlZO8ypJAtuqY/kLGtVCD61lpE3rCkYlqCRx0PXeluYmKBnSGl29ELmCtwU
-	 YNNgf/Q6whRM472sz08cj+WoESnK0WaaEdi0Dix/3br9L2JMb/7GKKqA+Gp/KrimYpDWJ
-	 tx//W9KkOp4VyT5FZOYrqoge04KqgSLv2LfTqpzdKQYVKjqUP2x8KU98L89lB8MkdMw==
+	bh=NHxKCiFO0pzf6YLOcgCxk8Qqj+PFmka4L6O5dVPjdAo=;
+	b=AohRiLp0u3hgMrV9B9vPKapfo3uYBA6p6JCF5jvnTZjnTh7TiyPm5BqdBQ0G4xF3i0va
+	 AdpJgQ4/hhto1pW7YxLqphsW5BZC5EOol6Tu/3mr5ipb4oAcMpUC7PJPifkILpEdv3w5m
+	 8JqrrPELXtyhJvyFospjMcsSuT0F6Mp32SKZg15EDfAwRKHRenfuYQ0vfaGzevmdJVqri
+	 XdtYT+J4BpyqHlkNfMj5tqBUV2SI2O5dulFbV9BaLivXiAce8wEiREic+L/FTN9BBl2Xl
+	 mIGyOeISuDb30bEqimpGjsIQFOdlJaCDN6KAlf8b4qIRf4dRDwBuygT3svs3GkzP/Fg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=c4751oG5;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=lrFRp3sT;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB41D606A31A
-	for <linux-perf-users@vger.kernel.org>; Fri, 23 Oct 2026 07:21:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD9E4606A322
+	for <linux-perf-users@vger.kernel.org>; Fri, 23 Oct 2026 07:22:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=c4751oG5
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 661AA1F01825;
-	Fri, 23 Oct 2026 07:21:42 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=lrFRp3sT
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2C4F81F031E0;
+	Fri, 23 Oct 2026 07:22:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1792740102;
-	bh=wmtzw6VOOHUvX9qVEN2sGuhPfgk/VxJ6Ot3900iqrQs=;
+	s=k20260515; t=1792740140;
+	bh=NHxKCiFO0pzf6YLOcgCxk8Qqj+PFmka4L6O5dVPjdAo=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=c4751oG57er9nYxGfSLoIdUQYyGakPgJ2qkmbzlYxs+5IZtTBaN4/GSfF0g3Sc/Li
-	 7LvRvOU+8APa6jby/EGv9sWUj1UdSHw00FW8vQF3b/s8r0BSyJt3Qb2DZOLr9YO1hc
-	 q2xbbOX+NGAgmQwvYoG+Iw9QJsPAexlz6336GaxGUaTuvwqma8eqGM/Y7zIL8xnvnj
-	 a0t9aAagU1fZp3vo590z0DsVKp33/NlUtrEMT5fsdBRFZJu84Xk5i+NMnyYXPUHS9y
-	 zoGiR2RQCv4kA8yjI+he1CoWnbhFZfxX1EcIa3FqrVbJsG4JG3Zy76Q7jyKVQcLUIm
-	 UwFmV2U0ir2UA==
-Message-ID: <sashiko-outbox-182402@kernel.org>
+	b=lrFRp3sTMhvSUlcXAg8fR5RHApHxB5w804V+ZAdMmzi7ayQjv+c0h2Bzscv2cNAOR
+	 qaA7/pd9NhV9UykP9hERbTGhX67P6cxqb0zdYK08HfIc8whLzskM9pP9ECD9c+kFqI
+	 GNuOsNk/z5fXySf9Od3wTBxA0nmKBi8Ok02g6S3vAB/NqIaOSo4CSinZdl7Fhl2idt
+	 ZecSq2qcSW3H35PaQVI+sAwQjNFIR9sPrFCDKuqrHiT419EtHS/V46nyvaAYHpCSAa
+	 yGZv+KXRGm4sFlhz+SQFLg7LCWeNduqdLFwrM7b/fnUWr45wsYeQXAYJ/zGnwL720m
+	 unv56wEGlIqpQ==
+Message-ID: <sashiko-outbox-182405@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v1 03/11] perf tools: Add nsinfo__new_thread() to track
- tid
+Subject: Re: [PATCH v1 02/11] perf tools: Add perf_env__is_same_boot()
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Namhyung Kim" <namhyung@kernel.org>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20261023071141.134149-4-namhyung@kernel.org>
+In-Reply-To: <20261023071141.134149-3-namhyung@kernel.org>
 References: <20261023071141.134149-1-namhyung@kernel.org>
- <20261023071141.134149-4-namhyung@kernel.org>
+ <20261023071141.134149-3-namhyung@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Fri, 23 Oct 2026 07:21:42 +0000
+Date: Fri, 23 Oct 2026 07:22:19 +0000
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -61,10 +60,10 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 
-> Record the thread ID (tid) in struct nsinfo via nsinfo__new_thread() and
-> access /proc/<pid>/task/<tid>/ status and ns/mnt paths instead of only
-> /proc/<pid>/.  Also recreate thread->nsinfo when the pid of the thread
-> is updated.
+> Add perf_env__is_same_boot() to compare the recorded boot_id in struct
+> perf_env against the running host's /proc/sys/kernel/random/boot_id.
+> For live sessions where no offline header was populated, it falls back
+> to reading the host boot_id and returns true.
 >=20
 > Assisted-by: LLM
 > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
@@ -73,5 +72,5 @@ Sashiko has reviewed this patch and found no issues.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261023071141.1341=
-49-1-namhyung@kernel.org?part=3D3
+49-1-namhyung@kernel.org?part=3D2
 
