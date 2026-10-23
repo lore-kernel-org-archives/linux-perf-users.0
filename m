@@ -1,44 +1,44 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792739505;
-	b=h+gkocyAx8vhut+L4O+GkRYDPap2ieaFU7iyNs3lfK6JvoahNUv7fE+Hv1Rb/CucVSYn
-	 6K48tUg5GzwGH90kvFkDxTkF142MERZIBFtqQujEsZL5Hf/XAKO+9OI1JYHKbDzSzBwdd
-	 9kwwUF8wLNYUelqEVOLZ4RWmoKnARvUtRSZZvNtJx9pH8VtUo3jneZ9QYts/GfzGxmVrN
-	 7BNg5uwaFMKYdQfT673Nj3Gr5TXemJavCH1e8HCHRPX/0Makr0SpaGAy/U+UNLgee16ky
-	 jn4UtNiBQRg/R1ZibZjDULZoI4WECJl2IXs5MoEYcF1qBwEIYTUADXLVYruJVRBd6JA==
+	t=1792739507;
+	b=F7ZGQOTJg0OLXy6+DhwBRRnukMDLLn2oNkNjBi9dmIB3XiuRtmIioXYsyhcZt9BHjnIS
+	 YCUHjaKQhvBcqPAverWiDCvIUC5XLMUflrzduT05SuXglD14Rrs4FdvWMu7Kg5ubj5Vv5
+	 WTZqHOnMpIlYHGZ+tQZ+rtqWPx6K2ups6vub2qx7+CLnKPA1CuKubSuNpzODbLvjNmZgr
+	 dQ5v1zUtyco0zREgasabqwEGRGUYawOdZFYSgFh/XHV7xw1QpYV6ZJMpHLw3fep9s8kw8
+	 HjiiWA1aiKH80f3xjFGKTtnceBlsSChPW40/UuC56fHlSZIY65DXeQ4WxEYMziXxqgQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792739505;
+	a=rsa-sha256; c=relaxed/relaxed; t=1792739507;
 	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:X-Mailer:
 	 In-Reply-To:References:MIME-Version:Content-Transfer-Encoding;
-	bh=IwWZD9sHUSq7P87pCQy1Wdh+8Jv19KUXjSMxjy9Umy0=;
-	b=Wjn5oMc5qj/qkXlNXuMqcVFTspJF9ucl/AAZKjmsnSQtTjQDiFySWT9AynRYc58nfW6G
-	 zUMSwXxogg1jpOpx4QiGATTTbnhy51mpfFrza19nZyGyyx0J37CghVZ3OHMSjI1dIWpcy
-	 MezKMJ6Q20KUohpO6iB6I+S0JTVbZVCAPFXPBr403BAiQqoZeJDzgN//C6A6uBQqoVIky
-	 C8m/g4bu6uNLMkSMMG+eWvBcRosyGq0RfxsTG6WW8jYgfwtiRNuQpIgyY476i+YUAQgnR
-	 lnvOJ8blh72G7wdi7NbVXWhVdnJGh4vd+6BYMr7EloHVuVIBibQnLt3W4fMiRZ37ksA==
+	bh=DIEbvz97VAtUaSPV0gJ+LoxFrsTdceBEpalJykmJzrs=;
+	b=RDPS9ZQMnIrvSqI3TxTfEjZvt8IAnuUCcZC5/SCapMQFY98EO9HW+CE7+ltZRLj/+dqD
+	 ZLjT+NPpeov6iDs0DDbRXXynaJw/Ip2DpVsAY5jgsjwKaPs/bdbtOuzlY4HMe00vJzvjU
+	 jB0iFocQn+aQpUiiQm3UU2UAbOem0t4bFDgbMru0c++Jjnavsox2wIpnPXYA6Uy8EBMWg
+	 e9jlzVkBROtV8zM+kdUDL8QLjHf/YrVu+bHmGk0KXrfGVcmovwchO5nK+aHLIzxkQ6RvR
+	 tK9gAGDnrvjQhmGXoEV9tdb3BQnG+EkL63lkLRW+xhGk8UOjWpchuCXkJpBUCGXXbKw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=MNwn5ZdL;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=NtlvxPaX;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76148606A323;
-	Fri, 23 Oct 2026 07:11:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9013606A31E;
+	Fri, 23 Oct 2026 07:11:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=MNwn5ZdL
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 29C7F1F031E0;
-	Fri, 23 Oct 2026 07:11:45 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=NtlvxPaX
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9BB3B1F031E0;
+	Fri, 23 Oct 2026 07:11:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1792739505;
-	bh=IwWZD9sHUSq7P87pCQy1Wdh+8Jv19KUXjSMxjy9Umy0=;
+	s=k20260515; t=1792739506;
+	bh=DIEbvz97VAtUaSPV0gJ+LoxFrsTdceBEpalJykmJzrs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=MNwn5ZdLACJ3UEgzURI4TKXeM6yLpCriDy0fxpnTXfEVfQeV2n4kXFncdQARBcupI
-	 x7Wwq5gJKZslwbolFSadwQL4E2kO7ZE5vGmyuVTLtcFFEB3+wWIAo2pXu01vnR7K/y
-	 lOB+cyEuq6kN/XNSIG18kH+QHv9POGALrhJLZWzmO9k11YsXMRp28ZdIwm8WPcy1Yx
-	 Y0Dw5ENBxkMVP3ujGzKxsVPLRNHZmFXVkLxnWp68UxOqC6op87cHiMxsRydIc9Tull
-	 ZTC60PJqFYvpKb+tXz1QRTUsHCZzmtG93HY8in6lj7C+FoCH6aQQW1d+3shqBqrTGC
-	 S3H1OK8L6wpcA==
+	b=NtlvxPaX6oOhz4MjANWeq4BFv7mv03brFvQ3fdeeRu8kIRnUA65LECH96+sGutqc4
+	 LpjFdDkbsYrtOWmMbWlc7FAyN2bt/8oOyuBsZFriM3Qmqedmra3NYFebOJ/+8KiO5R
+	 wWmWgdc0B8u6Jz9hDTObDg4RBEDnaHv3p+tnaAtAPUwlokCC2OtPkHMYbY2mpGkg5j
+	 nqtp4tpebU0tPxNkzvHeRjEVafNNXHlnBrCNZZ0FnHyMiOuuZ/0i8B3p0gV1BHZYyh
+	 El+GKq4D06j1pc2c2WEUOnbGLb3iUAbMt/cb2v1L8zPMf7QQi6BrzjXxm4CuG+aD7H
+	 cG5eWo1EwKt3g==
 From: Namhyung Kim <namhyung@kernel.org>
 To: Arnaldo Carvalho de Melo <acme@kernel.org>
 Cc: Ian Rogers <irogers@google.com>,
@@ -49,9 +49,9 @@ Cc: Ian Rogers <irogers@google.com>,
 	Ingo Molnar <mingo@kernel.org>,
 	LKML <linux-kernel@vger.kernel.org>,
 	linux-perf-users@vger.kernel.org
-Subject: [PATCH v1 04/11] perf tools: Defer /proc lookup until nsinfo is used
-Date: Fri, 23 Oct 2026 00:11:34 -0700
-Message-ID: <20261023071141.134149-5-namhyung@kernel.org>
+Subject: [PATCH v1 08/11] perf tools: Export filename__read_build_id_ns()
+Date: Fri, 23 Oct 2026 00:11:38 -0700
+Message-ID: <20261023071141.134149-9-namhyung@kernel.org>
 X-Mailer: git-send-email 2.56.0.257.gf7497c7d27-goog
 In-Reply-To: <20261023071141.134149-1-namhyung@kernel.org>
 References: <20261023071141.134149-1-namhyung@kernel.org>
@@ -66,177 +66,135 @@ Precedence: list
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Do not read /proc/<pid>/task/<tid>/ eagerly in nsinfo__new_thread().
-Instead, initialize struct nsinfo on demand via nsinfo__ensure_init()
-when namespace information is queried or entered.
-
-Also reset the initialization state on exec and PERF_RECORD_NAMESPACES
-events so namespace changes are picked up.
+Export filename__read_build_id_ns() and use it in the dsos callback
+and perf-inject's dso__read_build_id() instead of open-coding
+nsinfo__mountns_enter() and dso__filename_with_chroot() fallbacks.
 
 Assisted-by: LLM
 Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 ---
- tools/perf/util/namespaces.c | 46 ++++++++++++++++++++++++++++--------
- tools/perf/util/namespaces.h |  2 ++
- tools/perf/util/thread.c     |  4 ++++
- 3 files changed, 42 insertions(+), 10 deletions(-)
+ tools/perf/builtin-inject.c | 12 +-----------
+ tools/perf/util/build-id.c  |  6 +++---
+ tools/perf/util/dsos.c      | 17 +++--------------
+ tools/perf/util/symbol.h    |  3 +++
+ 4 files changed, 10 insertions(+), 28 deletions(-)
 
-diff --git a/tools/perf/util/namespaces.c b/tools/perf/util/namespaces.c
-index f426eba04d6ef449..843d075d30409029 100644
---- a/tools/perf/util/namespaces.c
-+++ b/tools/perf/util/namespaces.c
-@@ -103,6 +103,11 @@ int nsinfo__init(struct nsinfo *nsi)
- 	struct stat new_stat;
- 	int rv = -1;
+diff --git a/tools/perf/builtin-inject.c b/tools/perf/builtin-inject.c
+index ddb21d888e00d143..2f044aef0bb32b94 100644
+--- a/tools/perf/builtin-inject.c
++++ b/tools/perf/builtin-inject.c
+@@ -894,24 +894,14 @@ static int perf_event__repipe_tracing_data(const struct perf_tool *tool,
  
-+	if (!nsi)
-+		return -1;
-+
-+	RC_CHK_ACCESS(nsi)->inited = true;
-+
- 	if (snprintf(oldns, PATH_MAX, "/proc/self/ns/mnt") >= PATH_MAX)
- 		return rv;
- 
-@@ -140,6 +145,12 @@ int nsinfo__init(struct nsinfo *nsi)
- 	return rv;
- }
- 
-+static void nsinfo__ensure_init(struct nsinfo *nsi)
-+{
-+	if (nsi && !RC_CHK_ACCESS(nsi)->inited)
-+		nsinfo__init(nsi);
-+}
-+
- static struct nsinfo *nsinfo__alloc(void)
+ static int dso__read_build_id(struct dso *dso)
  {
- 	struct nsinfo *res;
-@@ -167,15 +178,6 @@ struct nsinfo *nsinfo__new_thread(pid_t pid, pid_t tid)
- 	RC_CHK_ACCESS(nsi)->tid = tid;
- 	RC_CHK_ACCESS(nsi)->tgid = pid;
- 	RC_CHK_ACCESS(nsi)->nstgid = pid;
--	nsinfo__clear_need_setns(nsi);
--	RC_CHK_ACCESS(nsi)->in_pidns = false;
--	/* Init may fail if the process exits while we're trying to look at its
--	 * proc information. In that case, save the pid but don't try to enter
--	 * the namespace.
--	 */
--	if (nsinfo__init(nsi) == -1)
--		nsinfo__clear_need_setns(nsi);
+-	struct nscookie nsc;
+ 	struct build_id bid = { .size = 0, };
+ 
+ 	if (dso__has_build_id(dso))
+ 		return 0;
+ 
+ 	mutex_lock(dso__lock(dso));
+-	nsinfo__mountns_enter(dso__nsinfo(dso), &nsc);
+-	if (filename__read_build_id(dso__long_name(dso), &bid) > 0)
++	if (filename__read_build_id_ns(dso__long_name(dso), &bid, dso__nsinfo(dso)) > 0)
+ 		dso__set_build_id(dso, &bid);
+-	else if (dso__nsinfo(dso)) {
+-		char *new_name = dso__filename_with_chroot(dso, dso__long_name(dso));
 -
- 	return nsi;
+-		if (new_name && filename__read_build_id(new_name, &bid) > 0)
+-			dso__set_build_id(dso, &bid);
+-		free(new_name);
+-	}
+-	nsinfo__mountns_exit(&nsc);
+ 	mutex_unlock(dso__lock(dso));
+ 
+ 	return dso__has_build_id(dso) ? 0 : -1;
+diff --git a/tools/perf/util/build-id.c b/tools/perf/util/build-id.c
+index 02233ef0eafff2c2..db5ba9e91fba4d2d 100644
+--- a/tools/perf/util/build-id.c
++++ b/tools/perf/util/build-id.c
+@@ -847,9 +847,9 @@ int build_id_cache__remove_s(const char *sbuild_id)
+ 	return err;
  }
  
-@@ -196,6 +198,8 @@ struct nsinfo *nsinfo__copy(const struct nsinfo *nsi)
- 	if (nsi == NULL)
- 		return NULL;
- 
-+	nsinfo__ensure_init((struct nsinfo *)nsi);
-+
- 	nnsi = nsinfo__alloc();
- 	if (!nnsi)
- 		return NULL;
-@@ -204,7 +208,8 @@ struct nsinfo *nsinfo__copy(const struct nsinfo *nsi)
- 	RC_CHK_ACCESS(nnsi)->tid = nsinfo__tid(nsi);
- 	RC_CHK_ACCESS(nnsi)->tgid = nsinfo__tgid(nsi);
- 	RC_CHK_ACCESS(nnsi)->nstgid = nsinfo__nstgid(nsi);
--	RC_CHK_ACCESS(nnsi)->need_setns = nsinfo__need_setns(nsi);
-+	RC_CHK_ACCESS(nnsi)->inited = RC_CHK_ACCESS(nsi)->inited;
-+	RC_CHK_ACCESS(nnsi)->need_setns = RC_CHK_ACCESS(nsi)->need_setns;
- 	RC_CHK_ACCESS(nnsi)->in_pidns = nsinfo__in_pidns(nsi);
- 	if (nsinfo__mntns_path(nsi)) {
- 		RC_CHK_ACCESS(nnsi)->mntns_path = strdup(nsinfo__mntns_path(nsi));
-@@ -251,21 +256,41 @@ void nsinfo__put(struct nsinfo *nsi)
- 
- bool nsinfo__need_setns(const struct nsinfo *nsi)
+-static int filename__read_build_id_ns(const char *filename,
+-				      struct build_id *bid,
+-				      struct nsinfo *nsi)
++int filename__read_build_id_ns(const char *filename,
++			       struct build_id *bid,
++			       struct nsinfo *nsi)
  {
-+	if (!nsi)
-+		return false;
-+
-+	nsinfo__ensure_init((struct nsinfo *)nsi);
- 	return RC_CHK_ACCESS(nsi)->need_setns;
- }
+ 	struct nscookie nsc;
+ 	int ret;
+diff --git a/tools/perf/util/dsos.c b/tools/perf/util/dsos.c
+index e927e707abace9c6..a97fed55286aefca 100644
+--- a/tools/perf/util/dsos.c
++++ b/tools/perf/util/dsos.c
+@@ -4,11 +4,11 @@
+ #include "dso.h"
+ #include "util.h"
+ #include "vdso.h"
+-#include "namespaces.h"
+ #include <errno.h>
++#include <linux/perf_event.h>
+ #include <stdlib.h>
+ #include <string.h>
+-#include <symbol.h> // filename__read_build_id
++#include <symbol.h> // filename__read_build_id_ns
+ #include <unistd.h>
  
- void nsinfo__clear_need_setns(struct nsinfo *nsi)
+ void dsos__init(struct dsos *dsos)
+@@ -70,7 +70,6 @@ struct dsos__read_build_ids_cb_args {
+ static int dsos__read_build_ids_cb(struct dso *dso, void *data)
  {
-+	if (!nsi)
-+		return;
-+
-+	RC_CHK_ACCESS(nsi)->inited = true;
- 	RC_CHK_ACCESS(nsi)->need_setns = false;
-+	zfree(&RC_CHK_ACCESS(nsi)->mntns_path);
-+}
-+
-+void nsinfo__reset_init(struct nsinfo *nsi)
-+{
-+	if (!nsi)
-+		return;
-+
-+	nsinfo__clear_need_setns(nsi);
-+	RC_CHK_ACCESS(nsi)->inited = false;
+ 	struct dsos__read_build_ids_cb_args *args = data;
+-	struct nscookie nsc;
+ 	struct build_id bid = { .size = 0, };
+ 
+ 	if (args->with_hits && !dso__hit(dso) && !dso__is_vdso(dso))
+@@ -79,20 +78,10 @@ static int dsos__read_build_ids_cb(struct dso *dso, void *data)
+ 		args->have_build_id = true;
+ 		return 0;
+ 	}
+-	nsinfo__mountns_enter(dso__nsinfo(dso), &nsc);
+-	if (filename__read_build_id(dso__long_name(dso), &bid) > 0) {
++	if (filename__read_build_id_ns(dso__long_name(dso), &bid, dso__nsinfo(dso)) > 0) {
+ 		dso__set_build_id(dso, &bid);
+ 		args->have_build_id = true;
+-	} else if (errno == ENOENT && dso__nsinfo(dso)) {
+-		char *new_name = dso__filename_with_chroot(dso, dso__long_name(dso));
+-
+-		if (new_name && filename__read_build_id(new_name, &bid) > 0) {
+-			dso__set_build_id(dso, &bid);
+-			args->have_build_id = true;
+-		}
+-		free(new_name);
+ 	}
+-	nsinfo__mountns_exit(&nsc);
+ 	return 0;
  }
  
- pid_t nsinfo__tgid(const struct nsinfo  *nsi)
- {
-+	nsinfo__ensure_init((struct nsinfo *)nsi);
- 	return RC_CHK_ACCESS(nsi)->tgid;
- }
+diff --git a/tools/perf/util/symbol.h b/tools/perf/util/symbol.h
+index d0bac824c79c8283..9d86d2eb694298f7 100644
+--- a/tools/perf/util/symbol.h
++++ b/tools/perf/util/symbol.h
+@@ -28,6 +28,7 @@
+ struct dso;
+ struct map;
+ struct maps;
++struct nsinfo;
+ struct option;
+ struct build_id;
+ struct perf_env;
+@@ -221,6 +222,8 @@ struct symbol *dso__next_symbol(struct symbol *sym);
+ enum dso_type dso__type_fd(int fd);
  
- pid_t nsinfo__nstgid(const struct nsinfo  *nsi)
- {
-+	nsinfo__ensure_init((struct nsinfo *)nsi);
- 	return RC_CHK_ACCESS(nsi)->nstgid;
- }
- 
-@@ -281,6 +306,7 @@ pid_t nsinfo__tid(const struct nsinfo  *nsi)
- 
- bool nsinfo__in_pidns(const struct nsinfo *nsi)
- {
-+	nsinfo__ensure_init((struct nsinfo *)nsi);
- 	return RC_CHK_ACCESS(nsi)->in_pidns;
- }
- 
-diff --git a/tools/perf/util/namespaces.h b/tools/perf/util/namespaces.h
-index ea645954944de4be..77fe6f0eaf2f0618 100644
---- a/tools/perf/util/namespaces.h
-+++ b/tools/perf/util/namespaces.h
-@@ -35,6 +35,7 @@ DECLARE_RC_STRUCT(nsinfo) {
- 	pid_t			tid;
- 	pid_t			tgid;
- 	pid_t			nstgid;
-+	bool			inited;
- 	bool			need_setns;
- 	bool			in_pidns;
- 	char			*mntns_path;
-@@ -57,6 +58,7 @@ void nsinfo__put(struct nsinfo *nsi);
- 
- bool nsinfo__need_setns(const struct nsinfo *nsi);
- void nsinfo__clear_need_setns(struct nsinfo *nsi);
-+void nsinfo__reset_init(struct nsinfo *nsi);
- pid_t nsinfo__tgid(const struct nsinfo  *nsi);
- pid_t nsinfo__nstgid(const struct nsinfo  *nsi);
- pid_t nsinfo__pid(const struct nsinfo  *nsi);
-diff --git a/tools/perf/util/thread.c b/tools/perf/util/thread.c
-index d12eb6bc63313b00..377c39ec624bb7bb 100644
---- a/tools/perf/util/thread.c
-+++ b/tools/perf/util/thread.c
-@@ -199,6 +199,8 @@ int thread__set_namespaces(struct thread *thread, u64 timestamp,
- 	down_write(thread__namespaces_lock(thread));
- 	ret = __thread__set_namespaces(thread, timestamp, event);
- 	up_write(thread__namespaces_lock(thread));
-+	if (!ret && event)
-+		nsinfo__reset_init(thread__nsinfo(thread));
- 	return ret;
- }
- 
-@@ -282,6 +284,8 @@ int __thread__set_comm(struct thread *thread, const char *str, u64 timestamp,
- 	down_write(thread__comm_lock(thread));
- 	ret = ____thread__set_comm(thread, str, timestamp, exec);
- 	up_write(thread__comm_lock(thread));
-+	if (!ret && exec)
-+		nsinfo__reset_init(thread__nsinfo(thread));
- 	return ret;
- }
- 
+ int filename__read_build_id(const char *filename, struct build_id *id);
++int filename__read_build_id_ns(const char *filename, struct build_id *bid,
++			       struct nsinfo *nsi);
+ int sysfs__read_build_id(const char *filename, struct build_id *bid);
+ int modules__parse(const char *filename, void *arg,
+ 		   int (*process_module)(void *arg, const char *name,
 -- 
 2.56.0.257.gf7497c7d27-goog
 
