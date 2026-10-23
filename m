@@ -1,56 +1,93 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.170
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792747369;
-	b=A6gSeJURm7FYioBK4308K34ncqpQdB17Mec1GgL2bbZDQx7gJxp9cqNvwnmuDcDBotir
-	 IyxmseH7Xbq9gP4sz9yprusFyjhtMbNW/VsTBE9L4OyWgY9p6kBLvMHzf1TAio0Um2RN/
-	 KXJ8pBMy0Z8UJg50Pq/Ot11n4D9B8u2YLw3YJxZGwelvmKoF8+mfGdZxPczM2FfMDsQoP
-	 3M8Cb0X4hvVJ3bXsAwQ0hdew+yIDqj83PHDAMaDWYJvakbCCFN1HjQ1jou8DX1j4UN9fp
-	 1mxBANOqeMSqh92Q8aFadriM4+w8/6FVgdmu2vxuxrfn3iUY2gaEExFtQLmFCmZOx2g==
+	t=1792750381;
+	b=3TZ/J0sXL9kYkQVKj9Wy2GjWA42Cpo4eOSTTJo5Z+Fd9z7A8C7Y2c+OYs95+KwTvyyJg
+	 cR8vpbmLU6Xi51JnBskUjE1adNSaGoQJEtTLik9gPt6QOGviaufFqxrZHSrlW5XGUzbuW
+	 VZAl6d+zKBVho1aclESoowQhgE3HSSACF7JTZKHyASVUeauoJtrIVTCraJwFGGnz8ZBAi
+	 mS07By1DAg1CIPqD/Sc52Le4r/cg/KOmMh1s2wIENrAlZWHLqjPL/070gHRy/BksJ7JRB
+	 FTku7jqnQ8a4y2h+AAzAn6APiIVcZveK69C552uMqvAe7h0r7IpP3YttbXtXf+/MZJA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792747369;
-	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:
-	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=3n/MeGHffQWx1T9efnbXF6DwxtAKMZNMJuDqPOcgG6g=;
-	b=LIm3dekrMsXlFekgbiiwFjZAHW24pSwEv3+jtYNpDM7Enje7FuS2Y91F3HrBqHq8LsVz
-	 6xMZ+nlKW4UEqKQUU+i9BYBkNqwZdXYbWYFfu91lqFKB9pEX1H08rLf8TPy2mg5ajJfLV
-	 4PxFnrlQXCZ5/jW5VAsn1KO/xm2mVtzhQsa8RiYmJK2XrAR2ig2/0+jX7HVaz4hxCZFrI
-	 +TofqzMYuwZE4cLici71hLrkGCWQ1S3ITkhGaXcFcMDoxtrZytsm6Djca4e9QVayANs8m
-	 FIPvSt5fC5Uunvd0oOg8zUYVNDa/gNxpa3HZ8d17c4mduCovlVhAAKS+6CkSrGnrBQA==
+	a=rsa-sha256; c=relaxed/relaxed; t=1792750381;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Gm-Message-State:X-Gm-Gg:X-Received:Received:From:To:Cc:Subject:
+	 Date:Message-ID:X-Mailer:In-Reply-To:References:MIME-Version:
+	 Content-Transfer-Encoding;
+	bh=/gVKIE3a0X4lk1FYa+PkYFloniP/UNgT1s7zMDVr3EI=;
+	b=OjMVDCeYOW4IAHKegBUD09uH6xHfsVgG7azlnQxBQuuc++CpO4ei2dJyPJxLvctr6syH
+	 YfiH4S0a+z5LKl2bNXNzNxjJX0cpAgBJW3mvs44+v94Wi7I46rGcpkoPVt1NcV2uKqqSd
+	 yW8oZxryskh69pXfVC3evBNVruJoFRGhrpLZ2m0lTCrKSbO9VEK4B8XfBWlOZGjyk+nUr
+	 eQUZNRUCDt01SLbF+51ZSPK0RLNDHBFN7yTe94+oYkZzVpej8iLsKXoLGrsuklsFvgQvK
+	 RmK9SgRzKRuJtVnZ4eC7V+Yaq8JTkEtrkYEgWor4Zyp4DVm0HC9ZCqHq+6FnOrJWf1w==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=NvFpXI8B;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	dmarc=pass header.from=gmail.com;
+	spf=pass smtp.mailfrom=gmail.com;
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=IWEyo7WG;
+	arc=none smtp.remote-ip=74.125.82.170
+Received: from mail-dy1-f170.google.com (mail-dy1-f170.google.com [74.125.82.170])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DE1D606A31D
-	for <linux-perf-users@vger.kernel.org>; Fri, 23 Oct 2026 09:22:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92B87606A31A
+	for <linux-perf-users@vger.kernel.org>; Fri, 23 Oct 2026 10:13:00 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 92B87606A31A
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=NvFpXI8B
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D31011F01828;
-	Fri, 23 Oct 2026 09:22:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1792747369;
-	bh=3n/MeGHffQWx1T9efnbXF6DwxtAKMZNMJuDqPOcgG6g=;
-	h=From:Subject:Reply-To:To:In-Reply-To:References:Date;
-	b=NvFpXI8BIhjPgU/Y0+tVwH9j+DrVz0N4jkbednXaGP8O9nyATuuBTkHvtyNLmD+15
-	 6Qsia7fsD9BoLyFf8f+7reHp8ewfZpKI2cTsxXGRpIaDrBZUoFKU03g5lBNot93MzV
-	 Z01r+kL3Xem2kMbWcY1K2lxDACOJtsZ166sWVvSlwfJaf/j7iGrgHLk/exBGPT2XHi
-	 rSWx4GngugSYxlDdLRts02SxRFefKjOFz3EZ/jU4BViOId93SEMWzQviRLFPpWccRq
-	 00TgJnHmwTe2Js6nZnBzJFxu8RXcdsyJS+Hs56tKzM/sidc7fP6MF9tXxcClVH8ZDc
-	 0E/XStu44FgUw==
-Message-ID: <sashiko-outbox-182579@kernel.org>
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v2] perf stat: Start tool events when enable_on_exec is
- used
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "TAKANO Mitsuhiro" <takano32@gmail.com>, linux-perf-users@vger.kernel.org
+	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20251104 header.b=IWEyo7WG
+Received: by mail-dy1-f170.google.com with SMTP id 5a478bee46e88-35b2c599f43so1711032eec.0
+        for <linux-perf-users@vger.kernel.org>; Fri, 23 Oct 2026 03:13:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1792750380; x=1793355180; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=/gVKIE3a0X4lk1FYa+PkYFloniP/UNgT1s7zMDVr3EI=;
+        b=IWEyo7WGLB7YLSPFf39REJDzcWI3r0tD9PmcQ2/6f1jW95llGTxXxTmfdhfC51obrW
+         OdH9cQbY22DC+JO7gXv4qZ70+vieU+2G7uxQluQS/JLlw8lmI49K6Az3EP3ZRpGeXAl3
+         cqgCutQzJ1aqDwbjzxFNOk7+hiwUhNHEcrE+cilQR93zST76noUNBFAEJmdTt9D/NNr2
+         iPEdP/B3npG7f5KwNaKDb67VqfxLxMbRXiOnUPolTbx+G6eBkeakkmoiW6q49dXxGCUH
+         jL5NJox84uM+kCRXJmKJOak8QZAKK7tWHk2dVXUhwu2WFeaasKYEgB/ap0NiSU6fwe5t
+         FKTg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1792750380; x=1793355180;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to:content-type;
+        bh=/gVKIE3a0X4lk1FYa+PkYFloniP/UNgT1s7zMDVr3EI=;
+        b=hGdMxTgMR+gzp41Ne1bfVxB3nttwBupWfHNBdhNRp5G1LtzryE+hMiJO3oZU+FTZ4D
+         PN/4G8i90F5A5AtlW57VgktB5yQGkuXRfEwS98JUMSd1YA+NN7r+1WmO0ocUpFGqnfQE
+         tdHAWnHKy2tPhKsSR/OA3mgb5VSc7U4VCnc4ubBFE2TAeajZRFekx3YC7BlMNZdXqn8+
+         lok57l9mkQtDhyiiGoPsfH4kmpGJBbzzx+wLbCtAS8BwGziTa0XcstzalLwHKQ57xUWP
+         F8ljo1KqTXi8h6NmYbF0EVswF9dsVqX2//q42mTcLdcT6c3l6lZz2KkHi/Iyppf5EkCo
+         IIRg==
+X-Gm-Message-State: AFq9FYJ0VbYaUo6rFHq217sXlLMg3JwEiVjpLjnghCI2KUAvaukPMA41
+	naHHMgzFVb5hN/wml5tDgAGNFLroPcEsHZRX1+AkwjAmpA6qvMCGDHmaG0q08w==
+X-Gm-Gg: AYBFou274g5XwhVhHNyV2G50w7nrI4ob99p14fnGXQvdVWfvNulPn2MlspJ3w2CTsau
+	KfY3xZ27Gf0bROkHfd8EYwAlQCrW+HOP0KtrVQzXR/xftmSNzXh3qssiTHiMAxuIYCoOKSrLVGe
+	Y3MosV4OqGdyDLbNtGtJ3XmZ/o7Mv40UuNOw164m2e3snK1iDIhKjLk+m7qbgFALOuy8X4Fkhiu
+	XTpx5noI1tRsti9MlyBgfPsaCnEavY0IznTTibyTak8mMgByBVIapCGzcMghh7/EM/0pqp9KzOl
+	bSjB9BmgejQqqyqOvbzsrVRUwOq5OId9h6ZK9bBrPu5H1N8m191K+71jtCi5zdKG2s/OU0+eA4d
+	wgDosKp/YfaP7bl4VjBEk+9qbrmtyoeZlOMlYh5cd0IxSGUrfktbCh40h/eZrGIzafOF0kFgltY
+	4x6Y7i/MloEiirMvUbl3Pis6XYldn44QE4aF1+ZIheqO0KwciE1EZND7vG4NbAkj45dHweXt1eU
+	iPyi1TImHoNne00vkXN199jD5riy6pjdx3Gke7q3BdO8GM=
+X-Received: by 2002:a05:7300:fb15:b0:35d:4185:5395 with SMTP id 5a478bee46e88-369d975b13cmr2360685eec.16.1792750379489;
+        Fri, 23 Oct 2026 03:12:59 -0700 (PDT)
+Received: from a1-free ([161.33.196.121])
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-369d9c15883sm5655337eec.3.2026.10.23.03.12.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 23 Oct 2026 03:12:59 -0700 (PDT)
+From: TAKANO Mitsuhiro <takano32@gmail.com>
+To: linux-perf-users@vger.kernel.org,
+	Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Namhyung Kim <namhyung@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	TAKANO Mitsuhiro <takano32@gmail.com>
+Subject: [PATCH v3] perf stat: Start tool events when enable_on_exec is used
+Date: Fri, 23 Oct 2026 10:12:56 +0000
+Message-ID: <20261023101256.1752713-1-takano32@gmail.com>
+X-Mailer: git-send-email 2.53.0
 In-Reply-To: <20261023085554.1694434-1-takano32@gmail.com>
-References: <20261022024919.263876-1-takano32@gmail.com>
- <20261023085554.1694434-1-takano32@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Fri, 23 Oct 2026 09:22:48 +0000
+References: <20261023085554.1694434-1-takano32@gmail.com>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -59,163 +96,79 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-Thank you for your contribution! Sashiko AI review found 2 potential issue(=
-s) to consider:
-- [Medium] perf stat: NULL deref in enable_counters() on unsupported tool e=
-vent
-- [Medium] perf stat: inaccurate mixed group enable_on_exec handling and NU=
-LL fd crash
---
+When perf stat runs a workload, target__enable_on_exec() is true and the
+tool events are left to the kernel to start on exec.  Tool events are
+however emulated in perf (duration_time, user_time, system_time,
+num_cpus) and have nothing in the kernel to start them, so they stay
+disabled and are read as zero.
 
-commit 3216cd73e8c11e372e4510bb56208ee17997bddb
-Author: TAKANO Mitsuhiro <takano32@gmail.com>
+For duration_time this makes CPUs_utilized divide by zero, and plain
+"perf stat" prints "nan CPUs":
 
-perf stat: Start tool events when enable_on_exec is used
+  $ perf stat -e task-clock,duration_time -- sleep 0.1
+               0      duration_time
 
-This commit starts emulated tool events explicitly via
-evsel__tool_pmu_enable() in enable_counters() when target__enable_on_exec()
-is true, avoiding calling evsel__enable() on mixed PMU groups.
+Start the tool events explicitly in that case.  They are started through
+evsel__tool_pmu_enable() rather than evsel__enable(), because the latter
+also enables the members of a mixed PMU group, and those cannot be used
+here: get_group_fd() passes the leader's descriptor to
+sys_perf_event_open(), which fails with EINVAL for a userspace PMU
+leader, so the members end up unsupported with core.fd released.  Only
+the tool event itself is started; the kernel starts the members of a
+group it can open.
 
-> diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-> index c50cf230f16ed..ca4483f34addb 100644
-> --- a/tools/perf/builtin-stat.c
-> +++ b/tools/perf/builtin-stat.c
-> @@ -510,6 +510,18 @@ static int enable_counters(void)
->  	if (!target__enable_on_exec(&target)) {
->  		if (!all_counters_use_bpf)
->  			evlist__enable(evsel_list);
-> +	} else {
-> +		/*
-> +		 * Tool events are emulated in perf, so enable_on_exec above
-> +		 * does not start them.  Do not go through evsel__enable(),
-> +		 * which would also enable the members of a mixed PMU group
-> +		 * the kernel already handles.
-> +		 */
+Skip the events that failed to open, the same way the evlist and the
+counter read paths skip them, so a tool event that never opened is not
+started and then read through a NULL descriptor.
 
-[Severity: Medium]
-Is this comment and the commit message's explanation of mixed PMU groups
-accurate?
+Fixes: 0b18bced5444 ("perf tool_pmu: Make tool PMU events respect enable/disable")
+Assisted-by: LLM
 
-When running a mixed group led by a tool event such as
-perf stat -e "{user_time,cycles}" -- sleep 0.1,
-parse_events__sort_events_and_fix_groups() keeps both events in the same
-group because perf_pmu__is_software() returns true for PERF_PMU_TYPE_TOOL
-in evsel__compute_group_pmu_name().
+---
+v1 -> v2: Do not call evsel__enable(), which also enables the members of a
+mixed PMU group and dereferences a NULL fd; call evsel__tool_pmu_enable()
+instead.  Reported by Sashiko review.
 
-During __run_perf_stat(), evsel__tool_pmu_open() stores the procfs fd in
-FD(user_time, idx, thread). When opening the member cycles in
-evsel__open_cpu(), get_group_fd() in tools/perf/util/evsel.c does not check
-evsel__is_non_perf_event_open_pmu(leader):
+v2 -> v3: Also require evsel->supported, as reading a tool event that never
+opened dereferences a NULL core.fd, and correct the explanation of why the
+members of a mixed PMU group have no descriptor: get_group_fd() forwards the
+leader's descriptor to sys_perf_event_open(), which fails with EINVAL for a
+userspace PMU leader.  Reported by Sashiko review.
 
-tools/perf/util/evsel.c:get_group_fd() {
-	...
-	fd =3D FD(leader, cpu_map_idx, thread);
-	BUG_ON(fd =3D=3D -1 && leader->supported);
-	...
-	return fd =3D=3D -1 ? -2 : fd;
-}
+Signed-off-by: TAKANO Mitsuhiro <takano32@gmail.com>
+---
+ tools/perf/builtin-stat.c | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
-For user_time or system_time, get_group_fd() passes the procfs fd as
-group_fd to sys_perf_event_open(), which fails with -EINVAL, sets
-cycles->supported =3D false, and causes __run_perf_stat() to free
-cycles->core.fd to NULL via perf_evsel__free_fd(). (For
-"{duration_time,cycles}", FD(duration_time, 0, 0) is -1 while
-duration_time->supported is true, hitting BUG_ON(fd =3D=3D -1 &&
-leader->supported) in get_group_fd().)
+diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
+index c50cf230f16e..334b875d6a2f 100644
+--- a/tools/perf/builtin-stat.c
++++ b/tools/perf/builtin-stat.c
+@@ -510,6 +510,19 @@ static int enable_counters(void)
+ 	if (!target__enable_on_exec(&target)) {
+ 		if (!all_counters_use_bpf)
+ 			evlist__enable(evsel_list);
++	} else {
++		/*
++		 * Tool events are emulated in perf, so enable_on_exec above
++		 * does not start them.  Start them here rather than through
++		 * evsel__enable(), which also walks the members of a mixed
++		 * PMU group; those are not opened here and their core.fd can
++		 * be NULL.
++		 */
++		evlist__for_each_entry(evsel_list, evsel) {
++			if (evsel__is_tool(evsel) && evsel->supported &&
++			    !evsel__tool_pmu_enable(evsel))
++				evsel->disabled = false;
++		}
+ 	}
+ 	return 0;
+ }
 
-Additionally, in create_perf_stat_counter() in tools/perf/builtin-stat.c:
+base-commit: f47d223627f80cb7a1eb14c585fe6cb35de5e984
+-- 
+2.53.0
 
-	if (evsel__is_group_leader(evsel)) {
-		attr->disabled =3D 1;
-
-		if (target__enable_on_exec(&target))
-			attr->enable_on_exec =3D 1;
-	}
-
-attr->disabled and attr->enable_on_exec are only set on the group leader.
-Because of this:
-
-1. Kernel members under a tool group leader do not have enable_on_exec set,
-   and their fds are NULL here because sys_perf_event_open() failed with
-   -EINVAL in get_group_fd(), rather than being unavailable in this process
-   or started by the kernel on exec.
-
-2. Tool members under a kernel group leader (for example,
-   "{cycles,duration_time}" or "{cycles,user_time}") have attr->disabled =
-=3D=3D 0,
-   so evsel__tool_pmu_open() sets evsel->disabled =3D false and starts
-   counting immediately at open time rather than when enable_counters()
-   runs.
-
-3. Because this patch only avoids evsel__enable() in the
-   target__enable_on_exec(&target) branch of enable_counters(),
-   evsel__enable_cpu(), evsel__enable(), evsel__disable_cpu(), and
-   evsel__disable() in tools/perf/util/evsel.c still iterate over
-   for_each_group_member(member, evsel) without checking member->core.fd !=
-=3D
-   NULL, which will still dereference a NULL member->core.fd in
-   perf_evsel__run_ioctl() -> xyarray__max_y(evsel->fd) whenever
-   !target__enable_on_exec(&target) or !target__none(&target) is true (such
-   as with -a, -C, -p, -t, or -D).
-
-Should mixed group opening in get_group_fd(), member attribute setup in
-create_perf_stat_counter(), and NULL core.fd checks in the evsel
-enable/disable helpers be addressed instead?
-
-> +		evlist__for_each_entry(evsel_list, evsel) {
-> +			if (evsel__is_tool(evsel) &&
-> +			    !evsel__tool_pmu_enable(evsel))
-> +				evsel->disabled =3D false;
-> +		}
-
-[Severity: Medium]
-Can this loop dereference a NULL evsel->core.fd when a tool event is
-unsupported?
-
-Before calling enable_counters(), __run_perf_stat() in
-tools/perf/builtin-stat.c frees counter->core.fd (setting it to NULL) for
-any unsupported event:
-
-	evlist__for_each_entry(evsel_list, counter) {
-		if (!counter->supported) {
-			perf_evsel__free_fd(&counter->core);
-			continue;
-		}
-
-Unlike __evlist__enable() (which checks !pos->core.fd) and
-read_counter_cpu() (which checks !counter->supported), this loop calls
-evsel__tool_pmu_enable(evsel) without checking evsel->supported or
-evsel->core.fd.
-
-In evsel__tool_pmu_open() in tools/perf/util/tool_pmu.c:
-
-				if (evsel->core.attr.disabled) {
-					evsel->disabled =3D true;
-					*start_time =3D INVALID_START_TIME;
-
-evsel->disabled is set to true as soon as an entry is opened with
-attr.disabled =3D=3D 1, and out_close does not reset evsel->disabled if a f=
-ailure
-occurs.
-
-When target__enable_on_exec(&target) is true, a user_time or system_time
-event can end up with evsel->disabled =3D=3D true, evsel->supported =3D=3D =
-false,
-and evsel->core.fd =3D=3D NULL (for example, if a weak group "{user_time,cy=
-cles}:W"
-resets and fails to reopen user_time on the second pass, if a later CPU ind=
-ex
-fails to open when evlist__has_bpf_output() is true, or across repeat runs
-after --control disables counters).
-
-When that happens, evsel__tool_pmu_enable() -> evsel__tool_pmu_enable_cpu()
--> tool_pmu__read_stat() evaluates FD(evsel, cpu_map_idx, thread) and
-dereferences evsel->core.fd =3D=3D NULL.
-
-Should this check evsel->supported (or evsel->core.fd) before calling
-evsel__tool_pmu_enable(evsel)?
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261023085554.1694=
-434-1-takano32@gmail.com?part=3D1
