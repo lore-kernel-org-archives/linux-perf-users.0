@@ -1,57 +1,57 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792741622;
-	b=cgFGhtfrtDxuxIXp7/3AWaCBfLoddDTnuFsm7szJ6EE/l/TrMtEsgN75X0Kyrjitxl7N
-	 6iHK3frhVx8zLHYlxK8WhFt4Vr/CI4LZrs8M8qGpt88uC6JYOlxUbGp93ZN6o1GmbdpWH
-	 NqfGNyuM9aleUQl8yZ+4q7ZqIO2RAkPOTpo0UaigrXwOF2oZF17aJY4MN1K5C5aU74tCT
-	 KKAEzlLmGOhPrRu+wB+foMChAaWEN0SIEUET8cZRnXF+i0YbAh4GKLPL27DhYLXses/eR
-	 aENhmmHarMooZ6Aed0odss35o1SbuUaWaR70o1NyahjaupdRNJK3yd4HBavP4KyRiDg==
+	t=1792741916;
+	b=1sO7cd82xQge1sKeoGRjPjpAsl3kAzvptkw88eIZXYdA49eSca4QINp2z2QLsN2qj1Jd
+	 qaYs6Clw0AXO0dqcYNG/RejZAHotyViXz15o6o5lpMhyBpOsTDDeoh/gAqD6UFSDK1r2Q
+	 YQMvctH9aHPiSKEd1H5dh242LyW41nICH1/l7mX/GzpgeaZUCmNQ/P73SuoLj57wn4UBJ
+	 KKFF2iZzoXQ2vxuWuCtNKCK2ICNHAla6k9a7RmKw0cGaB3zsugEfqXaHpecw1Av8aeFYz
+	 a66xWRqb1Xd6Vd1QtLGtIy2uM/ouMS/xNrjYd/XVPTeNnNT6t4LQyMyjiwJubbTLf3g==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792741622;
+	a=rsa-sha256; c=relaxed/relaxed; t=1792741916;
 	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
 	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=cIWuyHyTupV1aNVBpi8qiw/8xl/uN//Uj4h45Wlq+0s=;
-	b=uq2CBesjGJm6zPZOpu7+rzaCwpwJlgBUMIMlix+xomcMS1EmBqSo4TSdNgBxijFHR/Wh
-	 nV2xZtIuWEM/XEvpdo1Am2cDBpkzB+O4H2jXTu0wB0k1PL78xFwhw9oz9kQXPTcSBpu12
-	 nOcCus53qC+vkfU5ayC6M3g6jf1fK8CfNDMWm39DcirdahdH47nEP431Ma0LULG4mhbyC
-	 c5rYuCUCQvbcsa5L3g32y6O27+ITPIEDLdxQwnmDonz9YiPAWVKux9kmgoiSk4JMZ2RRN
-	 LTGT9g3jnRRLHBr+3NqgUL7gJKPAXHVh7+17Nu3KUtIYQGlMs62QQ7fVtKc6d2qAXSQ==
+	bh=vzbgCmxRNry4f8QruF77U4zlFHlkJYFbRa3zih71aB4=;
+	b=AnSMUspUOrg5IBZBugmiqYZM+/2KU9P7ero1nvlPtjMWHXc9SgvdzX1+RzBo03rIvSKX
+	 XZEgyi7O//mBTfg/cvhMfYbbi5L3Zl36P9AWTONsMnWtH4zTU3Yx9ksQx/Ik8s+7mrVmg
+	 YHq+98pHNDaRCdWsnF3gOF6A/iCLcEz2+A0Ii/4zH+wZUl86bX5uw7s5vJF+EsVHQp9MX
+	 Rkad8nTYwhOSQ1ZDNt6mldK6msgi9Zs0kHlBLUsuefp6w4PyxaZ2NQob4VbCG58qyD0tA
+	 /jgUPlEyNa3ZBLjsRBDBto+pxR0ecX+2W4dmPKawMWG3wHF6+KROfukjCZpsjPHXlQw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=W4EUI16C;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ZsRJSOkR;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 494D4606A31A
-	for <linux-perf-users@vger.kernel.org>; Fri, 23 Oct 2026 07:47:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3308B60A2618
+	for <linux-perf-users@vger.kernel.org>; Fri, 23 Oct 2026 07:51:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=W4EUI16C
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9ABF11F01828;
-	Fri, 23 Oct 2026 07:47:01 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ZsRJSOkR
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ADFFE1F031E5;
+	Fri, 23 Oct 2026 07:51:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1792741621;
-	bh=cIWuyHyTupV1aNVBpi8qiw/8xl/uN//Uj4h45Wlq+0s=;
+	s=k20260515; t=1792741915;
+	bh=vzbgCmxRNry4f8QruF77U4zlFHlkJYFbRa3zih71aB4=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=W4EUI16CfUalbaWagpgwjyWCzJMeAKuIj5MAy269FHh2omCrmAX1DYgx3lWr8xOQm
-	 Cs/+p9Nhjr0qqTEG6BnpQQzDFB277DivMMbqc0JT3MgQxaVihEaTc35PvX7alk8cPW
-	 cRI62G2Noox0LaAAVJlkwy48SvPJFHbpy8IkYihDpXJ483KsxOHuPm8ezgG9iQr10S
-	 iDDUKAGO3Brnsr5fLm6Gsv/D+0biczWv38A2juGDnAj35g5X2TdvVF1rvnyvY8pIpz
-	 cbozUjnw+B1J3t7MZxxN6t+A/TA6ZUKH2tK+qs0KuQ4QPJ68NemhK4lx5mwVLqDs75
-	 HY4vVdYDGvdPg==
-Message-ID: <sashiko-outbox-182439@kernel.org>
+	b=ZsRJSOkR1yqyLtzxI3REp+tL/XqYonS3ffHMz4UAtTSAGKlIpT0x80dR5C+cuKQKg
+	 Cd+KToDMfHw2VuAk3qW70AEL3JSQk/IEdtENL37rk4Npx7OYkbjg4IOu1CriIfFd1J
+	 fx6wnLZSVUli9N/HrCS0XDTSTXgg9l5T9HN4C0IR1zUwRCTQL+rs6dHqs+UGXmFKit
+	 t8iXGXde6Kx3B5NqOCDAXRwNbvsVWd6fNQORylUyYNkex10rk/sE6zwpmm/gNwhoZA
+	 VuJY9VGpcs95euLATuR1prNWufQjTAokxPOge+ga9zVZca412fFy6I/Y1ngJo6IrEB
+	 P86JX0ZhFX9nQ==
+Message-ID: <sashiko-outbox-182448@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v1 10/11] perf tools: Only enter mount namespace if
- necessary
+Subject: Re: [PATCH v1 07/11] perf tools: Handle chroot inside
+ nsinfo__mountns_enter()
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Namhyung Kim" <namhyung@kernel.org>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20261023071141.134149-11-namhyung@kernel.org>
+In-Reply-To: <20261023071141.134149-8-namhyung@kernel.org>
 References: <20261023071141.134149-1-namhyung@kernel.org>
- <20261023071141.134149-11-namhyung@kernel.org>
+ <20261023071141.134149-8-namhyung@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Fri, 23 Oct 2026 07:47:01 +0000
+Date: Fri, 23 Oct 2026 07:51:55 +0000
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -61,188 +61,172 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 
-Thank you for your contribution! Sashiko AI review found 3 potential issue(=
+Thank you for your contribution! Sashiko AI review found 4 potential issue(=
 s) to consider:
-- [Medium] perf tools: dso_binary_type__needs_ns() omits distro debuginfo t=
-ypes
-- [Medium] perf tools: commit message describes functions not modified by p=
-atch
-- [Medium] perf dso: missing mountns entry in dso__find_binary_type_locked(=
-) and callers
+- [Medium] perf namespaces: missing chdir() after chroot() in nsinfo__mount=
+ns_enter()
+- [Medium] perf tools: chroot in nsinfo__mountns_enter() breaks symbol__dis=
+assemble()
+- [Medium] perf symbols: dso__load() stores unprefixed chroot path in symsr=
+c_filename
+- [Medium] perf namespaces: chroot() in nsinfo__mountns_enter() breaks DSO =
+path lookup
 --
 
-commit 3413efb0cc2f846225d0adf449e8d23f1e99d575
+commit 28000ab89e0070838a25b538801deec9ee819524
 Author: Namhyung Kim <namhyung@kernel.org>
 
-perf tools: Only enter mount namespace if necessary
+perf tools: Handle chroot inside nsinfo__mountns_enter()
 
-This commit adds dso_binary_type__needs_ns() to identify DSO binary types
-that reside in a target process's mount namespace and chroot, and uses it
-to gate nsinfo__mountns_enter() and nsinfo__mountns_exit() calls.
+This commit reads /proc/<pid>/task/<tid>/root in nsinfo__init() and enters
+and exits the chroot directory alongside the mount namespace in
+nsinfo__mountns_enter() and nsinfo__mountns_exit().
 
->     perf tools: Only enter mount namespace if necessary
->    =20
->     Add dso_binary_type__needs_ns() to distinguish DSO binary types that
->     reside inside the target process's mount namespace and chroot from
->     host-side paths.
->    =20
->     Gate mount namespace entry in dso__data_file_size() and do_open() usi=
-ng
->     dso_binary_type__needs_ns().  And remove redundant outer mountns entry
->     in around dso__data_get_fd().
->    =20
->     Assisted-by: LLM
->     Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-
-[Severity: Medium]
-Does the commit message match the functions modified in this patch?
-
-The description mentions gating mount namespace entry in
-dso__data_file_size() and do_open(), and removing an outer mountns entry
-around dso__data_get_fd(), but the patch actually modifies open_dso(),
-__dso__read_symbol(), and symbol__disassemble_capstone_powerpc().
+> diff --git a/tools/perf/util/namespaces.c b/tools/perf/util/namespaces.c
+> index bb119a6cc6064..1ec6b1ed4db23 100644
+> --- a/tools/perf/util/namespaces.c
+> +++ b/tools/perf/util/namespaces.c
 
 [ ... ]
 
-> diff --git a/tools/perf/util/dso.c b/tools/perf/util/dso.c
-> index 4331b48505b2b..50dd215f81f67 100644
-> --- a/tools/perf/util/dso.c
-> +++ b/tools/perf/util/dso.c
-> @@ -682,14 +682,15 @@ static int open_dso(struct dso *dso, struct machine=
- *machine)
->  {
->  	int fd;
->  	struct nscookie nsc;
-> +	bool nsenter =3D dso_binary_type__needs_ns(dso__binary_type(dso));
-> =20
-> -	if (dso__binary_type(dso) !=3D DSO_BINARY_TYPE__BUILD_ID_CACHE) {
-> +	if (nsenter) {
->  		mutex_lock(dso__lock(dso));
->  		nsinfo__mountns_enter(dso__nsinfo(dso), &nsc);
->  		mutex_unlock(dso__lock(dso));
+> @@ -405,13 +439,30 @@ void nsinfo__mountns_enter(struct nsinfo *nsi,
+>  			goto errout;
 >  	}
->  	fd =3D __open_dso(dso, machine);
-> -	if (dso__binary_type(dso) !=3D DSO_BINARY_TYPE__BUILD_ID_CACHE)
-> +	if (nsenter)
->  		nsinfo__mountns_exit(&nsc);
+> =20
+> +	if (RC_CHK_ACCESS(nsi)->in_chroot) {
+> +		oldroot =3D open("/", O_RDONLY | O_DIRECTORY | O_CLOEXEC);
+> +		if (oldroot < 0)
+> +			goto errout_setns;
+> +
+> +		if (chroot(nsinfo__chroot(nsi)) < 0)
+> +			goto errout_setns;
+> +	}
 
 [Severity: Medium]
-Will dso__binary_type(dso) ever be set to a namespace-dependent type if
-dso__find_binary_type_locked() does not enter the mount namespace while
-probing candidate paths?
+Should nsinfo__mountns_enter() in tools/perf/util/namespaces.c also call
+chdir("/") after chroot(nsinfo__chroot(nsi))?
 
-In the call chain try_to_open_dso() -> __dso__find_binary_type() ->
-dso__find_binary_type_locked(), each candidate type in binary_type_data[]
-is tested before open_dso() is called:
+Calling chroot() updates the process root directory without changing the
+current working directory. When need_setns is false, the working directory
+remains at oldcwd on the host filesystem, and when need_setns is true,
+setns(newns, CLONE_NEWNS) sets the working directory to "/" of the mount
+namespace, which is still outside the chroot subdirectory.
 
-tools/perf/util/dso.c:dso__find_binary_type_locked() {
-	...
-	do {
-		dso__set_binary_type(dso, binary_type_data[i++]);
+When a caller such as opt_set_target() -> nsinfo__realpath() in
+tools/perf/util/namespaces.c resolves a relative path for a chrooted target:
 
-		errno =3D 0;
-		path =3D dso__get_filename(dso, "", &decomp, dso__binary_type(dso));
-		if (path =3D=3D NULL) {
-			if (errno =3D=3D EMFILE)
-				goto open_err;
-			continue;
-		}
-
-		errno =3D 0;
-		found =3D filename__has_section(path, ".text");
-	...
+tools/perf/util/namespaces.c:nsinfo__realpath() {
+	nsinfo__mountns_enter(nsi, &nsc);
+	rpath =3D realpath(path, NULL);
+	nsinfo__mountns_exit(&nsc);
 }
 
-Because dso__find_binary_type_locked() does not call
-nsinfo__mountns_enter(dso__nsinfo(dso), &nsc) when
-dso_binary_type__needs_ns() is true (and an earlier commit in this series,
-"perf tools: Remove redundant chroot handling", removed the
-dso__filename_with_chroot() fallback from dso__get_filename()), probing a
-binary that only exists inside the target's mount namespace or chroot will
-fail to find the file on the host and leave dso->binary_type set to
-DSO_BINARY_TYPE__NOT_FOUND. When open_dso() then checks
-dso_binary_type__needs_ns(DSO_BINARY_TYPE__NOT_FOUND), nsenter will be
-false and __open_dso() will fail with -ENOENT (or inspect a host file if
-one happens to share the same path).
-
-Similarly, symbol__disassemble() in tools/perf/util/disasm.c calls
-dso__find_binary_type(dso) and dso__get_filename(dso, "", &decomp, dbt)
-outside the mount namespace before reaching __dso__read_symbol() or
-symbol__disassemble_capstone_powerpc(), and dso__find_dbginfo_type() and
-debuginfo__new() also call dso__get_filename() and inspect ELF sections
-without entering the target's mount namespace.
-
-[ ... ]
-
-> diff --git a/tools/perf/util/dso.h b/tools/perf/util/dso.h
-> index e53c83c23c578..c4ff19f575b88 100644
-> --- a/tools/perf/util/dso.h
-> +++ b/tools/perf/util/dso.h
-> @@ -141,6 +141,40 @@ enum dso_binary_type {
->  	DSO_BINARY_TYPE__NOT_FOUND,
->  };
-> =20
-> +static inline bool dso_binary_type__needs_ns(enum dso_binary_type type)
-> +{
-> +	switch (type) {
-> +	case DSO_BINARY_TYPE__SYSTEM_PATH_DSO:
-> +	case DSO_BINARY_TYPE__SYSTEM_PATH_KMODULE:
-> +	case DSO_BINARY_TYPE__SYSTEM_PATH_KMODULE_COMP:
-> +	case DSO_BINARY_TYPE__DEBUGLINK:
-> +	case DSO_BINARY_TYPE__GNU_DEBUGDATA:
-> +		return true;
-> +	case DSO_BINARY_TYPE__KALLSYMS:
-> +	case DSO_BINARY_TYPE__GUEST_KALLSYMS:
-> +	case DSO_BINARY_TYPE__VMLINUX:
-> +	case DSO_BINARY_TYPE__GUEST_VMLINUX:
-> +	case DSO_BINARY_TYPE__JAVA_JIT:
-> +	case DSO_BINARY_TYPE__BUILD_ID_CACHE:
-> +	case DSO_BINARY_TYPE__BUILD_ID_CACHE_DEBUGINFO:
-> +	case DSO_BINARY_TYPE__FEDORA_DEBUGINFO:
-> +	case DSO_BINARY_TYPE__UBUNTU_DEBUGINFO:
-> +	case DSO_BINARY_TYPE__MIXEDUP_UBUNTU_DEBUGINFO:
-> +	case DSO_BINARY_TYPE__BUILDID_DEBUGINFO:
-> +	case DSO_BINARY_TYPE__GUEST_KMODULE:
-> +	case DSO_BINARY_TYPE__GUEST_KMODULE_COMP:
-> +	case DSO_BINARY_TYPE__KCORE:
-> +	case DSO_BINARY_TYPE__GUEST_KCORE:
-> +	case DSO_BINARY_TYPE__OPENEMBEDDED_DEBUGINFO:
-> +	case DSO_BINARY_TYPE__BPF_PROG_INFO:
-> +	case DSO_BINARY_TYPE__BPF_IMAGE:
-> +	case DSO_BINARY_TYPE__OOL:
-> +	case DSO_BINARY_TYPE__NOT_FOUND:
-> +	default:
-> +		return false;
-> +	}
-> +}
+the kernel getcwd() syscall prepends "(unreachable)" because the working
+directory is outside the new root, causing glibc realpath() to fail with
+ENOENT, while relative paths passed to nsinfo__stat() resolve against the
+directory outside the chroot. Since nsinfo__mountns_enter() already saves
+oldcwd and nsinfo__mountns_exit() restores it via chdir(nc->oldcwd), calling
+chdir("/") right after chroot() would keep the working directory inside the
+new root.
 
 [Severity: Medium]
-Should dso_binary_type__needs_ns() also return true for
-DSO_BINARY_TYPE__FEDORA_DEBUGINFO, DSO_BINARY_TYPE__UBUNTU_DEBUGINFO,
-DSO_BINARY_TYPE__MIXEDUP_UBUNTU_DEBUGINFO,
-DSO_BINARY_TYPE__BUILDID_DEBUGINFO, and
-DSO_BINARY_TYPE__OPENEMBEDDED_DEBUGINFO?
+Does entering the chroot in nsinfo__mountns_enter() break symbol disassembly
+in symbol__disassemble() in tools/perf/util/disasm.c when profiling a
+chrooted process?
 
-In dso__read_binary_type_filename(), those five distribution debuginfo
-types construct target-filesystem paths via __symbol__join_symfs() (such as
-/usr/lib/debug/... or <dso_dir>/.debug/...), rather than host build-id
-cache paths like DSO_BINARY_TYPE__BUILD_ID_CACHE and
-DSO_BINARY_TYPE__BUILD_ID_CACHE_DEBUGINFO.
+In symbol__disassemble(), dso__find_binary_type() and dso__get_filename() a=
+re
+called outside nsinfo__mountns_enter():
 
-In tools/perf/util/symbol.c, dso__load() only exits the target's mount
-namespace for DSO_BINARY_TYPE__BUILD_ID_CACHE and
-DSO_BINARY_TYPE__BUILD_ID_CACHE_DEBUGINFO:
+tools/perf/util/disasm.c:symbol__disassemble() {
+	...
+	mutex_lock(dso__lock(dso));
+	symfs_filename =3D dso__get_filename(dso, "", &decomp, dbt);
+	mutex_unlock(dso__lock(dso));
+}
 
-	nsexit =3D (symtab_type =3D=3D DSO_BINARY_TYPE__BUILD_ID_CACHE ||
-	    symtab_type =3D=3D DSO_BINARY_TYPE__BUILD_ID_CACHE_DEBUGINFO);
+At this commit, when a chrooted binary does not exist at the same path in t=
+he
+host root, dso__get_filename() in tools/perf/util/dso.c falls back to
+dso__filename_with_chroot() and returns a path that already has the chroot
+prefix prepended. When symbol__disassemble() then calls
+symbol__disassemble_llvm(), symbol__disassemble_capstone(), or
+symbol__disassemble_capstone_powerpc(), __dso__read_symbol() in
+tools/perf/util/dso.c and symbol__disassemble_capstone_powerpc() in
+tools/perf/util/capstone.c enter the chroot via nsinfo__mountns_enter() and
+call open(symfs_filename, ...), resulting in a double chroot prefix and
+failing with ENOENT (or failing to open the host build-id cache path when t=
+he
+DSO comes from DSO_BINARY_TYPE__BUILD_ID_CACHE).
 
-When dso__find_binary_type_locked() falls back to dso__symtab_type(dso) in
-binary_type_data[] (or when a later commit in this series, "perf tools:
-Scope mount namespace entry in dso__load()", replaces the nsexit check in
-dso__load() with dso_binary_type__needs_ns(symtab_type)), returning false
-for these five debuginfo types causes perf to skip entering the target
-container's mount namespace and chroot when resolving or opening them.
+In the later commit in the series ("perf tools: Remove redundant chroot
+handling"), dso__filename_with_chroot() is removed from dso__get_filename(),
+while dso__find_binary_type_locked(), symbol__disassemble(),
+dso__find_dbginfo_type(), and debuginfo__new() still invoke
+dso__get_filename() outside nsinfo__mountns_enter(), causing
+is_regular_file(name) in dso__get_filename() to check the unprefixed path in
+the host root and return NULL.
+
+[Severity: Medium]
+When dso__load() in tools/perf/util/symbol.c runs inside
+nsinfo__mountns_enter() for a chrooted process, how will downstream callers
+that open dso__symsrc_filename(dso) outside nsinfo__mountns_enter() locate
+the binary?
+
+Inside dso__load(), because nsinfo__mountns_enter() has already chrooted in=
+to
+the target root directory, is_regular_file(name) succeeds on the unprefixed
+in-chroot path instead of falling back to dso__filename_with_chroot() (which
+is later removed in "perf tools: Remove redundant chroot handling"):
+
+tools/perf/util/symbol.c:dso__load() {
+	...
+	is_reg =3D is_regular_file(name);
+	if (!is_reg && errno =3D=3D ENOENT && dso__nsinfo(dso)) {
+		char *new_name =3D dso__filename_with_chroot(dso, name);
+		...
+	}
+	...
+	dso__set_symsrc_filename(dso, strdup(name));
+}
+
+As a result, dso__set_symsrc_filename() records the unprefixed in-chroot pa=
+th
+before nsinfo__mountns_exit() restores the host root. When
+dso__symsrc_filename(dso) is subsequently used outside
+nsinfo__mountns_enter() by dso__libdw_dwfl() in tools/perf/util/libdw.c,
+srcline_dso_name() in tools/perf/util/srcline.c (for cmd__addr2line() and
+libbfd__addr2line()), __find_debuginfo() in tools/perf/util/unwind-libdw.c,
+and read_unwind_spec_debug_frame() / __libunwind__find_proc_info() in
+tools/perf/util/unwind-libunwind.c, opening that path in the host root will
+either fail with ENOENT or open a different host binary.
+
+[Severity: Medium]
+Can calling chroot(nsinfo__chroot(nsi)) in nsinfo__mountns_enter() also bre=
+ak
+DSO path lookups for synthesized MMAP2 events and for processes that chroot
+after mapping libraries?
+
+First, when perf_event__synthesize_mmap_events() synthesizes MMAP2 events by
+reading /proc/<pid>/task/<pid>/maps from perf's own context, the kernel's
+show_map_vma() -> d_path() resolves each VMA file path relative to perf's r=
+oot
+(the root of the mount namespace), so event->mmap2.filename and
+dso__long_name(dso) already contain the chroot prefix (for example,
+"/var/chroot/usr/bin/app"). When perf_record_mmap2__read_build_id() in
+tools/perf/util/synthetic-events.c, dsos__read_build_ids_cb(), open_dso(),
+dso__load(), or dso__cache_build_id() enters nsinfo__mountns_enter() and
+chroots into "/var/chroot", opening that path resolves to
+"/var/chroot/var/chroot/usr/bin/app" and fails with ENOENT.
+
+Second, for daemons that map their executable and shared libraries before
+calling chroot() into an empty directory such as "/var/empty", both
+/proc/<pid>/task/<pid>/maps and kernel-generated PERF_RECORD_MMAP2 events
+record host-root-relative paths such as "/usr/sbin/sshd" and
+"/lib64/libc.so.6". Entering chroot("/var/empty") in nsinfo__mountns_enter()
+causes lookups of those pre-chroot paths to search inside "/var/empty" and
+fail with ENOENT.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261023071141.1341=
-49-1-namhyung@kernel.org?part=3D10
+49-1-namhyung@kernel.org?part=3D7
