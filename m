@@ -1,58 +1,58 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792783549;
-	b=WWBNltsa6xusgHbWessr/bQcaP2+/dcKjdk7Xw53h3mgFk1cYMk94YOWj50AzyYmxHx6
-	 5aV3rVRav427TT14t5QcFZKqjZR4HdAJlAFEdqnBpjSeADC/+LzOK49pHoTXE7GogEMo8
-	 NnJ/GE7HiM32h4X83JhMu9WUWqYoBlTC9WpRdTO9nahl6uIcrjD6AzZvxPw43EDoav/55
-	 fFYCG7NzvPGZz9LCe1pLLFRHWRrTf1kxl71exV1DRwV+YC5o0GhxvNB5rKnaWaG3crmmE
-	 PalBAePHYxIszG5l2zo3ilfn9cm7bRfzJI0uebFITBAEXR4aJlyww5H6NMvD9WNb3mg==
+	t=1792783595;
+	b=gL3zMYB/lnXnMIYrBr2M8J2TZMUcU0XZsxuB2hllIAmCFkoYQ6EX/rixMRfnUuRCDpfz
+	 Lbum2UPDlS9wF6GfZO2NImrJQNr5dGbsGez+DBS0mxNDXw9/5ToCNp2E4NwgyBH05yoC/
+	 qk94lQ50WI0oBMA9K9NuNtLT8frcFu+g0IsRizXHQycPoyF9xBUnD3HLsmc1GolcFeFXM
+	 G9/QcGUDw5lb8mscnbKNSM20E+9UZPnQRSaAZ+M7rHqkE/0yijFylHXI/0uiG9Kl7JM0Q
+	 BSK63Q2Be1Ki2kV3TuDSYVQwmjwthA82R3Yzn5pHv7jWWzD+WvUJg4mkXLKwl4Zn8DQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792783549;
+	a=rsa-sha256; c=relaxed/relaxed; t=1792783595;
 	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
 	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=EVaAeruK1JlabJVm7NfEdm2Uob2SKF9RDR9EGSSZS9w=;
-	b=Gk7BC5YC7d0ETB1fom3naE8yHN08T7LCJNE70E9Jwj5wt+QYfxGinW9JNdB4jwpuUeHm
-	 pu0dAohKO964bA4V+jesOTI15tx40SGTmX9YiphbKZUZsfI8GWRaIH0fA0BYh+2BBr6wT
-	 krFZI8Mp0npXNV8Wru/jDMIA43tLyxQtt92zal0kz5OqOcxaEvQ+sOtNYoTE1NyiDJvoV
-	 nQQtlmL9aEWGC4wwuMEFdv+7Nt6E1hmlkOwp6mrLQmkFQITgPg1t0hdy8hQFEDrvoBl/8
-	 u6xkbbpwOhVZbjCkAyTYKvOAQqo2cNa8UhfFT5IUCeTR+SB6G8J9Fea5ZHcVFDLnL/A==
+	bh=/NxTEchY+zOdklGokOpY0DS25Ousv1FbrgWrizI7wPM=;
+	b=tOxhJRGkog966PZsw4xwJKgx3RKpfnxrevNnnBz8DmzUNxOoRSQzGiFUjheB8icuy/dy
+	 0SHxgsFl763IOj0HQkmYCWXwa7lj43Gmwlm+Gx3526uHZ3nuQz4+3wSD/EjYeSa5hSO+A
+	 GwghkOPLtUo08ZL9Cn4VE+3ebPBE2FguDcpg2Q7ZBJ8qHSlpoWsCluG8laNpcDFiUHwW1
+	 fC6N1G/SUTQorgwDyVUEm6uXpV0wHk7IPp7yFhQf6fUqGIlevqqA50a6ej+gwgB0S8qCD
+	 xfD2bDKkFFYJCbBxPsTyhp+1cL+cgHMxHyNA2FJu/cMJcQE1LXW8/v/w9OGpJP+9Abw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ofO7eknE;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=GOmZ0FLA;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34F99606A31A
-	for <linux-perf-users@vger.kernel.org>; Fri, 23 Oct 2026 19:25:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABC93606A31A
+	for <linux-perf-users@vger.kernel.org>; Fri, 23 Oct 2026 19:26:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ofO7eknE
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B6B131F01825;
-	Fri, 23 Oct 2026 19:25:48 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=GOmZ0FLA
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 647571F01828;
+	Fri, 23 Oct 2026 19:26:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1792783548;
-	bh=EVaAeruK1JlabJVm7NfEdm2Uob2SKF9RDR9EGSSZS9w=;
+	s=k20260515; t=1792783594;
+	bh=/NxTEchY+zOdklGokOpY0DS25Ousv1FbrgWrizI7wPM=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=ofO7eknEsIAKp1Vb5/H0CPXz4Ta579efiR3zd3T4iXBP7FqKYkJnkln/b+/03EWo7
-	 iXUnKZRQVIfzOMhSUmSWg9dmWwDsNf0eQpJSccmHwsyIB6cBBbYIRaQXboUEPAfdmZ
-	 v/esLoWOpOmwccUkCxn4ZZgS/37FNQ+C0cYbNeaTn8twgyjGiMWiIQE7VbPHHXMC6Y
-	 Ro+M6FXVHOqRSimTKoKK8j+oDZs73ocmOD1KLSAhP26qUW4ll/TIy60Ze4DJ8eFvKn
-	 bVHD1Edv1rIKNtozMum5dOjauhce3+xumMrtuKt54LWCgrzWD0JXCbZPs75dOEeqI7
-	 EwXprK1cUT0rA==
-Message-ID: <sashiko-outbox-183111@kernel.org>
+	b=GOmZ0FLA7pIfIXeuowSh4Ry5OVSnv2MA4LIQYFueIqtowhKFVde7LVt05XT2TL3c+
+	 TCtHVdaT3ZcSn8AdsR42U+RWvESQki+kTmHsb8mWlaSyQ152aL6rTVEFJk33b+LEBD
+	 rMuPpafjKTD5LZ7LHSu3TR4JEJ6DpW0iux5UBmvgBzT1/jkF8OCnH5zaADoSRhBQz6
+	 8nWCpiODR7BvpWI/+2mgPKhB6NLuXLTpzK7dQ2uRe7USQIn++GaPjvaz+dWv80vH2h
+	 E0G1j5sPcvWlGCi/GnU7M+aSyKz6huT5Ml5zWeGfxry0B/hEOoy4igHh1xjorcDUHy
+	 7zYZgDzlvgGDw==
+Message-ID: <sashiko-outbox-183113@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v7 11/11] perf lock contention: Extend BPF lock
- contention to RCU and SRCU
+Subject: Re: [PATCH v7 06/11] perf bpf-filter: Extend lock_held() to other
+ kernel lock types
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Ian Rogers" <irogers@google.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20261023190558.3050796-12-irogers@google.com>
+In-Reply-To: <20261023190558.3050796-7-irogers@google.com>
 References: <20261022203003.1779152-1-irogers@google.com>
  <20261023190558.3050796-1-irogers@google.com>
- <20261023190558.3050796-12-irogers@google.com>
+ <20261023190558.3050796-7-irogers@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Fri, 23 Oct 2026 19:25:48 +0000
+Date: Fri, 23 Oct 2026 19:26:33 +0000
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -62,29 +62,34 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 
-> Extend 'perf lock contention --use-bpf' to track RCU and SRCU
-> grace-period and barrier waits:
+> Extend the lock_held() BPF sample filter beyond global mutexes to
+> support:
+> - Other global/static kernel lock symbols (rwsem, spinlock, rwlock,
+>   rt-mutex, percpu-rwsem, semaphore) and hexadecimal kernel lock
+>   addresses.
+> - Lock types and flags: mutex, spinlock, rwsem, rwsem:R, rwsem:W,
+>   rwlock, rwlock:R, rwlock:W, rt-mutex, percpu-rwsem, pcpu-sem:W,
+>   semaphore.
 >=20
-> - Attach fentry/fexit programs to synchronize_rcu(),
->   synchronize_rcu_expedited(), synchronize_rcu_tasks(), rcu_barrier(),
->   synchronize_srcu(), synchronize_srcu_expedited(), and srcu_barrier()
->   when available in BTF.
-> - Support filtering by lock type ('-Y rcu', '-Y rcu:W', '-Y srcu',
->   '-Y srcu:W') and by lock name ('-L rcu' or specific srcu_struct
->   symbol names).
+> For rt-mutexes and write-locked rwsems, perf_sample_filter inspects the
+> lock's owner field directly in kernel memory. For locks and modes without
+> an authoritative per-task owner pointer (spinlocks, rwlocks, semaphores,
+> reader-locked rwsems, percpu-rwsems, and lock type filters), attach BPF
+> fentry/fexit hooks on kernel lock acquire and release functions to track
+> held locks in the held_locks BPF LRU hash map.
 >=20
-> Example usage:
+> Use classify_lock_sym() both when selecting which hooks to load and when
+> resolving the filter, so the two agree. A '*_sem' suffix may be either a
+> semaphore (console_sem) or an rw_semaphore (namespace_sem), so hook both
+> and allow read mode.
 >=20
->   # perf lock con -a -b -Y rcu,srcu -F wait_total,avg_wait -- sleep 1
->      total wait     avg wait         type   caller
->=20
->        35.12 ms      8.78 ms        rcu:W   cleanup_net+0x284
->         7.84 ms      3.92 ms       srcu:W   __fsnotify_parent+0x114
->=20
->   # perf lock con -a -b -l -L rcu -F wait_total,avg_wait -- sleep 1
->      total wait     avg wait            address   symbol
->=20
->        35.12 ms      8.78 ms   ffffffff83754dc0   rcu (rcu)
+> Note that counting semaphores (down*() / up()) do not enforce same-task
+> ownership in the kernel: when a semaphore is used as a cross-task
+> completion/signaling mechanism, fexit/down and fentry/up will not pair
+> on the same task ID. Semaphore hooks are therefore only enabled when
+> 'semaphore' or a '*_sem' symbol (such as console_sem) is explicitly
+> specified, and held_locks uses BPF_MAP_TYPE_LRU_HASH so any unpaired
+> cross-task entries are automatically evicted.
 >=20
 > Signed-off-by: Ian Rogers <irogers@google.com>
 
@@ -92,5 +97,5 @@ Sashiko has reviewed this patch and found no issues.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261023190558.3050=
-796-1-irogers@google.com?part=3D11
+796-1-irogers@google.com?part=3D6
 
