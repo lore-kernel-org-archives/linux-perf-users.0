@@ -1,57 +1,57 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792878181;
-	b=OiR8drnMRuFDoIaxRCHDybb4Z8ffMByN4rgLOc8Xs+ARcbCCutApgcDSZOGXnUkNiLxW
-	 0371ej+azpL5TJC3OpzvINPVQ6UbuK2nR5KyNN6vuV7SYClAWi0OoSE7UA7/DGWVGeCDn
-	 cVlLTpBIP6rIhRvIA9Bkt3Pxploz51arDHOz4DsDo3RGn8pWMX61HrNkLlodTelvYVBOq
-	 emPJI96MyQDcKjULmpWUicFqYikhbNN6Abud+pMr9TZvMXGiVGSZulOA7BHcExUiT6jZQ
-	 pqePEpi+AyckoHsdBXEz69K6rjRq5KfcOw5YPsNenkQPH3b7KMfHOWrt7yee34ErX5A==
+	t=1792878212;
+	b=4OPKiuwLthdkcXnCmEHAUcyX9aCNiG1BzucfA+Gn9vEH+qhuTBdZfYnCpuHvK8qqSvOV
+	 rRmyt6jp4BsTdP0t8NQm1Apk5POljrxMXA5SFez3V5IBq1XvZ/tgUw3f1KGyTjg7iEex5
+	 oAijf2oZNTIfg/sQskKCjiFf+Z6RDmCWBk4lLE4dpXUtX9OP3bzoc8Y5bjPXSXvviEOnU
+	 JZcR2gmf6lOTutOu2jKeoXme2P1R30K33/k/HqIW5aeBZix04TjDRyBeC0GaH3ADxiEhe
+	 3wi4N0MRUKf0D3LiMGoOeaoSxgt0EKIAsnFap6/qrhZtya77f/uL/yyW+5PwqhKfD9w==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792878181;
+	a=rsa-sha256; c=relaxed/relaxed; t=1792878212;
 	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
 	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=nL5hiV1+SWG78u7+UXe0ystXqb/xVOZSy8Mlcjsf5SY=;
-	b=p5WraDqup4AB2Mx//nKX1mwBxD66Pn8LZwlmv6OjHWz+fDhfaS7Vs2NXsR3NlWhVsHRg
-	 Xg+l5si8tf7vAfH1qFMl0wBW+MsuSiyBMpo0lE965knAsB+8roY8zPUeOzxcwW36hAmZj
-	 qxyTuHVU4qZ2bAGPtP8fakVAmUuUqiBi5TvWLzZ0/NgafNssGBNMRfCn1810UDKY+vUvw
-	 bky4qAdntgHhiLL4rWMT0A+RKrIKLxtnvZxcMW/Ezj7tUZnpzF4frNu1FmMOsVKJLnGY/
-	 7j6O++s0c3OkOLS7BSEo5juYXD/so02g18+DB1DlPpYrpyAuLSxK1DjY36RltNuCRgg==
+	bh=uw+RPD8Ck0WQde9SdCEHr/+VAilSgWqGTlrpPGZXnHk=;
+	b=XPNLr1guC6InzRcPMF1VqSItYzv1ITRbw1hlAgtOr7nIBZkcu46ITk7uQIlKfu1YM8Mu
+	 xQOFMYJuqYLIC9sbrSxZ2bx3zrIJ+GKkP4MNSX7gcr7szTnWyZA63sManHT2SGmhC1axb
+	 8ouxtJFq8ENdc98XPc0zyN5rdf6B7FSyeDMFWtPKwDW0d7aB0y+K6RAaRtDJVKDmCQAB5
+	 XIFPV1KDJ4OFifYyzUO5Y5Q3qLAYHrRlPMktOlyfrptx5Eiy7wGGU0QiI1J+jGGDlsWt0
+	 CYz8faioFMVdfn3LSnkM2RWU8D9yBf0a7Eff/LRqIliQF9jjpFUT6ulBeA8EvZ2KdTQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=XjnE0vA3;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=KOMykpPD;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8BE4606A31A
-	for <linux-perf-users@vger.kernel.org>; Sat, 24 Oct 2026 21:43:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F045606A31D
+	for <linux-perf-users@vger.kernel.org>; Sat, 24 Oct 2026 21:43:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=XjnE0vA3
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5D63B1F01825;
-	Sat, 24 Oct 2026 21:43:00 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=KOMykpPD
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B15ED1F01825;
+	Sat, 24 Oct 2026 21:43:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1792878180;
-	bh=nL5hiV1+SWG78u7+UXe0ystXqb/xVOZSy8Mlcjsf5SY=;
+	s=k20260515; t=1792878211;
+	bh=uw+RPD8Ck0WQde9SdCEHr/+VAilSgWqGTlrpPGZXnHk=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=XjnE0vA3xbK1clyoLb0O7jDjD0ObYfUcBPt88/HGRRXqxDOQoLzdHGETbhhUfTMYm
-	 7RGJC0FGVf7qbut2ko4QDaVoJNBz087QBL4nmxIwM/hCXVtm2l/8uuC2JwdPVjkQVo
-	 cTJhM1At0datyVTWuJL3yJTEZXK2eEmFWw4Xc30u/aWZ8kNNFeg13TJVh60yVh3Gum
-	 EgJENCWuU4VPE+aTf7pzanXh42eQUZ7+VyiC3/5/I+vG8mgBUvAHh6kwXjziMH9OyV
-	 axLfPSDiA8EweXCXdLF3bcaPeJou9GB4pTIIhuAVkzUc4SeewTXDjdve1ZvWFP32Rc
-	 i71ebChbEx3kQ==
-Message-ID: <sashiko-outbox-183896@kernel.org>
+	b=KOMykpPD5+UR6rT8df8pJWxFDYnRaWytt9WsK9tX/rhUB7RSYtUmAbntt9vXkoSu3
+	 8oSVDGW6aH2zDIVWnJanXHKqAycaibRFmQyQQfkZJSiO9F5orzDL0n94m2UT6TEnyC
+	 OtnuDQvnapRf2jFpum9NLvzDi1Iu69z4IXClxEvYw1yVx98ovOVuG91JbTALh5b3Cx
+	 5T5a0KgLuDNfk/pbUK73FJo9KI6v1lo/O4znTdTWz5D4dKTtfblDKAKZlWUifOtQCL
+	 sDU3Wdz+mNxPAimk24JcmPPYfjOYuyPPLo+SmLkqTzFUbxQIXwDK94zsijA/DzfAje
+	 RzDj4dAAz0wMg==
+Message-ID: <sashiko-outbox-183897@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH perf-tools-next v10 04/10] perf ftrace: Add basic task
- call stack management
+Subject: Re: [PATCH perf-tools-next v10 09/10] perf ftrace: Support omitting
+ execution duration in function graph tracer
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Aaron Tomlin" <atomlin@atomlin.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20261024212549.450634-5-atomlin@atomlin.com>
+In-Reply-To: <20261024212549.450634-10-atomlin@atomlin.com>
 References: <20261024212549.450634-1-atomlin@atomlin.com>
- <20261024212549.450634-5-atomlin@atomlin.com>
+ <20261024212549.450634-10-atomlin@atomlin.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Sat, 24 Oct 2026 21:42:59 +0000
+Date: Sat, 24 Oct 2026 21:43:31 +0000
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -61,26 +61,25 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 
-> The function_graph tracer records kernel function entries and exits with
-> nested indentation. To perform call graph analysis and subsequent inlined
-> function reconstruction, userspace must track the active call stack on a
-> per-task and per-CPU basis.
+> The Linux kernel's function graph tracer displays the execution duration
+> of completed functions by default via the funcgraph-duration trace
+> option. Whilst informative, in scenarios where the user is solely
+> interested in the call graph topology, call flow sequence, or inlined
+> hierarchy, the duration column can add visual clutter and widen each
+> trace line.
 >=20
-> Introduce basic call stack management for the function graph tracer:
+> Introduce support for omitting function duration by exposing the
+> noduration sub-option under --graph-opts. Consistent with the existing
+> nosleep-time and noirqs sub-options, it accepts an optional value, so
+> noduration=3D0 explicitly retains the duration column; when specified
+> more than once, the last occurrence takes effect. When enabled, perf
+> ftrace configures the kernel's tracing instance option
+> funcgraph-duration to 0, and restores it to 1 upon resetting tracing
+> options.
 >=20
->     1.  Data structures
->=20
->         Define struct ftrace_stack_frame to track function names,
->         indentation, and inlined status.
->=20
->         Define struct ftrace_task_state with a dynamically resisable call
->         stack array, tracked in a hash table keyed by PID alongside per-C=
-PU
->         active task bindings (ftrace_cpu_tasks).
-> [ ... ]
->         Stream complete trace lines through ftrace_process_fgraph_line()
->         in __cmd_ftrace() and clean up allocated CPU states on exit via
->         ftrace_cpu_states__clear().
+> Because the profile subcommand fundamentally requires function execution
+> duration to compute timing statistics and call counts, combining
+> noduration with perf ftrace profile is rejected with an explicit error.
 >=20
 > Signed-off-by: Aaron Tomlin <atomlin@atomlin.com>
 
@@ -88,5 +87,5 @@ Sashiko has reviewed this patch and found no issues.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261024212549.4506=
-34-1-atomlin@atomlin.com?part=3D4
+34-1-atomlin@atomlin.com?part=3D9
 
