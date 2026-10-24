@@ -1,57 +1,57 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792878485;
-	b=P9c/UtCyQiRPtPDWqQH9eU1KpHKjP+CsHNfz1F0RT2MsiiZq88WZiTZ1SJpmmoEV/e/P
-	 S8afekOl3M0AKGrGwapcq13h6w/koYfxwBi87jyUZXtR6ZV7VHEUrZrfhc/97nAlSr3lB
-	 uyXMuCvC1RfK0ujVqFVh87x1kaiVWd4j0sJEfPjNPZ//LaH2cXqe4h9zDsA+2fj5kZbBl
-	 G4aEYYqwTyAnI23OveLeEJB+i+dvyogUxgqBc0FS5sy973i89mDDHATgszypk2aoCVq8h
-	 i8Ti8qeQ9oct4uAXu1IdE8gaaCEGcNMM/w8bVe2ahEl/RgJG83wYltJ1T+wdh9yW/gQ==
+	t=1792878556;
+	b=NDToUTLWmrKVMkeLX0yDKTQ+bx6FS/pGiaE4BzqjK4X4ghZzdV7d3TsyK2D/NBb7LKMz
+	 gAKpzmyu+eM+rRwzt+rZ+vqdY2ajt4Ipg3++dYVNLTXSOMnmAb+JuVT+4cfIV7bXMb83y
+	 hy/4FwKqiO5wmB4o/dfTPStjk12zu8+ZS3k3XXrh21LaKxPfZcLQ1M2pGDI9AA9GyncDi
+	 goCsefR31mvonxEXzO3R68yl1OsFQlqMlVXbkl/3wNjpI23Cd8trf4ABIec84oOOYk5ON
+	 4HK/K1eKbjFRL10YyWhJwOmSKa4FZpPMOLkYeM8htw5QQnh34hSX9Jq+n/n6YYvyylQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792878485;
+	a=rsa-sha256; c=relaxed/relaxed; t=1792878556;
 	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
 	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=JmD212dqiCvy6tSTM23Qs2hPsr1vYiQbhUa6mJU4vUA=;
-	b=mh5s5E/h2vqt0cNA/BkdF0FXRMpSmuYGBOorDnO2ghIvBSyD2enNZBSsOH0v9hIbc2+B
-	 5UuXQGV8bpOc7Mu2mMzBG60zutexk4Jb9sVwa/Lb4+WyF5IxXcgCt17yxmn8Q9iWTRkfh
-	 auFYw8Go7m0q/T25fJQIa2xLdR4p4yb+x2nTH0piEJK/Zh8j2ywgv6GO6tOJ/2ezGdeh6
-	 EyQYyq/w+KBbO7Z/KyPFgKzMNCJWuYB7eTOcbYL9uKsMkkczaZAHmrKv3zDcZEoa9m0qM
-	 Rd7F9kdoQEfRenehkHwFmWk8UP3U3Iu3znyosno9b1uk6MxNco9gmYIMEq8MzLN1lag==
+	bh=XIIESZxY1fVq0tkK8SFYCk5DSC9hDIR38W0IOX9ENcU=;
+	b=dvvzyrRTMm7yAvd2HFatQT05P1Je/7Eq+z1z0fZS3j/+eZr1+oAQV6IcSNAtGlwqOANf
+	 /ma0sHeT6CZCkQRJjizTujQ3Xdbwqu7k/ld3QVOXQI7wQjxdK0vPyx/zv2JXonWVQP3r6
+	 bq0hVJ0RNJmV3vW208phGTQ5Q5J4RNWJd3Ynjj6SEf7uYr9JjjEyPsYORuRbL3gSZjbAU
+	 Pvyo79Ea6/PEISjgaIVJjdjwBIuTImWCnHgIlj9C21L3LKuXEkdTv6E4E3NxgYw0H/NFj
+	 1i8C1yspllz8UYuwkTUicCEh3H0LQpSsMXFaTJcYky7o3T+gB35LzYgkBNc8ucZuhIA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=k7pEVGc8;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=CdgHz0Pj;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F58E606A31A
-	for <linux-perf-users@vger.kernel.org>; Sat, 24 Oct 2026 21:48:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78D85606A31A
+	for <linux-perf-users@vger.kernel.org>; Sat, 24 Oct 2026 21:49:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=k7pEVGc8
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 24AB21F01825;
-	Sat, 24 Oct 2026 21:48:05 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=CdgHz0Pj
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D34E11F01825;
+	Sat, 24 Oct 2026 21:49:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1792878485;
-	bh=JmD212dqiCvy6tSTM23Qs2hPsr1vYiQbhUa6mJU4vUA=;
+	s=k20260515; t=1792878556;
+	bh=XIIESZxY1fVq0tkK8SFYCk5DSC9hDIR38W0IOX9ENcU=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=k7pEVGc8NRPgg3S7fhLksLGaARQ9YF7EOz1FIlh5zriZjUc3jeD/4TblnKenNVRGs
-	 uvRo+UPVjgxp2UE74AbEiaFXv36xdViBB/FH4kDjgi3AnU7QLN5Ws3jRi8owJJVSnr
-	 OIm5/nnwxlZDsGEoHO9AI56zKx8diyeYPkGkfG4SmDJlcPxSwDHfnyBGvxNNExYrn5
-	 giC2LZGPc47E0yVCzBJ6eM2J1fXRUlSh4yb6LS24nv3y6JlfQeuwwcYx49wUqK9K9A
-	 pPBvzrE1n47Zl0YZ9+uS66GKrKIDgf1jxI/Sz7yZ+f71949dB5kwBKc69Bhq9/qHN/
-	 i4NzlBbTshiBg==
-Message-ID: <sashiko-outbox-183902@kernel.org>
+	b=CdgHz0Pj9FxqK0jY152Mt+iWY31PC0O3G1C3ST6LCKk8FBsjiwTjUTjw6N8KoqX4w
+	 zuL8QGuz9IRsS5S9ERZL+DFhuAkQHJDFaiuviYeEl23FP3th1eCWuhOn7xDus+CYzJ
+	 ZxiI5BGNIkyIzoxde4u5D7LY5MIHcSx2+n3TyBbUFzXm3P6HBWaAjVjn82PW5Iqc7E
+	 XRNuLYW9+oJz5OZ5J5UzVFgAza9PCEUnqOhAzQyeRqhWMJnWcwuENZ0zmph/g5L6a6
+	 jSFru6gPuCnx+ftyYgriPOjafmwbo7aLifSafpRO1rYjs/z6oah6Pz6lgXkoEb3SDy
+	 tI9W1KPldQBlw==
+Message-ID: <sashiko-outbox-183904@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH perf-tools-next v10 02/10] perf ftrace: Optimise
- __cmd_ftrace() stack frame with strbuf streaming
+Subject: Re: [PATCH perf-tools-next v10 06/10] perf ftrace: Support display
+ of inlined functions in function graph tracer
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Aaron Tomlin" <atomlin@atomlin.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20261024212549.450634-3-atomlin@atomlin.com>
+In-Reply-To: <20261024212549.450634-7-atomlin@atomlin.com>
 References: <20261024212549.450634-1-atomlin@atomlin.com>
- <20261024212549.450634-3-atomlin@atomlin.com>
+ <20261024212549.450634-7-atomlin@atomlin.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Sat, 24 Oct 2026 21:48:04 +0000
+Date: Sat, 24 Oct 2026 21:49:15 +0000
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -61,20 +61,25 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 
-> In __cmd_ftrace(), incoming trace data from trace_pipe was historically
-> buffered in a fixed 4096-byte array allocated directly on the stack
-> frame. Furthermore, reads were written directly to stdout via fwrite()
-> in arbitrary chunk sizes, rather than as discrete, well-delimited
-> trace lines.
+> The Linux kernel's function graph tracer operates at the machine
+> instruction level via compiler instrumentation
+> (-fpatchable-function-entry), recording entry and return events for
+> physical function calls. Consequently, functions inlined by the compiler
+> are invisible in the resulting call graph, as no discrete call or return
+> instructions are emitted for them. While technically expected, this
+> omission frequently obscures the logical execution flow when analysing
+> kernel subsystems heavily reliant upon inlining.
 >=20
-> Refactor __cmd_ftrace() to employ dynamic heap allocation for the read
-> buffer alongside a dynamic struct strbuf to accumulate streamed
-> characters into whole lines. Pre-allocating the strbuf ensures that
-> line processing incurs zero heap reallocations during steady-state
-> polling, whilst the stack frame of __cmd_ftrace() is reduced by over 96%
-> (down to ~160 bytes). Emitting complete lines provides discrete records
-> necessary for subsequent call graph parsing and inlined function
-> reconstruction.
+> Address this by introducing the --inline option to perf ftrace for the
+> function_graph tracer.
+>=20
+> When the kernel is configured with CONFIG_FUNCTION_GRAPH_RETADDR=3Dy, the
+> funcgraph-retaddr trace option records the caller's return address on
+> each function entry, manifested in the trace stream as a comment
+> [ ... ]
+>         Add --inline and -k/--vmlinux options in
+>         tools/perf/builtin-ftrace.c and document their usage in
+>         tools/perf/Documentation/perf-ftrace.txt.
 >=20
 > Signed-off-by: Aaron Tomlin <atomlin@atomlin.com>
 
@@ -82,5 +87,5 @@ Sashiko has reviewed this patch and found no issues.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261024212549.4506=
-34-1-atomlin@atomlin.com?part=3D2
+34-1-atomlin@atomlin.com?part=3D6
 
