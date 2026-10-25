@@ -1,62 +1,62 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=67.231.153.30
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=67.231.145.42
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792910374;
-	b=GF6O+nxnMpJyW5M+LrveiT0WdfItg9/oPKcs3GmeoLGyHYG75d8/7aK5ONZAWeC4G8N/
-	 zN7NL2c9ot3qFx0a7FIb19a5O2LxyOnvnBJZHIvEq1Q/TO8FgNun+WrE6gTIM+tuoF7Gt
-	 ttZ/ZDzR/7tVHQ8ikp0Ha1HGypWC+Wp7yNgLfaoMzgF4tq+R30/4BYLhqUbTcm1cUJAqT
-	 xzbaFqFzlf4XcgoHLDPU5G6n8brn2d4VGLsM5MgXRLMgkaWdHItiPAQFlcxDTeWjBB3Ur
-	 qYHsnPdtJQF8UhMqNyeRsdvj3zpf/oF+SxcIXeiQud47YbJeLjHypJXRXiouNcqccTg==
+	t=1792910375;
+	b=yvota41EUg8tezQxnHtZHWC2B318HmeFCj55VYisI2P067S8JDAF8MEOTsvvxXqMDi0C
+	 JKSkPcyVxkJYZVQVy/kPPg3kL98F5xGu4lmT1HU4MV6+Zdy+b6+9zKQcFQeTMqBgDLL+i
+	 5v2Jrar38+lMKkTVFVWzSyZo+SMT5s3dv/UjN1HgpN+fk4oVjQcCZGCTnyYkOthu2j72I
+	 V/Cbf6CJcoIoGh/X8fowWeWOZ+pduS6E0jVCqeoucqHhZ1xHbo3QusDxRVFbwJPAN2A99
+	 dWoyHy+eywpKuSa4sUNKzQmGx3DbHIzm38eLgumJ4BGMoeeOb8D0sYDvuxRRxu/CuLg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792910374;
+	a=rsa-sha256; c=relaxed/relaxed; t=1792910375;
 	h=DMARC-Filter:Received:DKIM-Signature:Received:Received:From:To:CC:
 	 Subject:Date:Message-ID:X-Mailer:In-Reply-To:References:MIME-Version:
 	 Content-Transfer-Encoding:Content-Type:X-Originating-IP:
-	 X-Proofpoint-GUID:X-Proofpoint-Spam-Details-Enc:
-	 X-Proofpoint-Spam-Info:X-Proofpoint-ORIG-GUID:X-Authority-Analysis:
+	 X-Proofpoint-Spam-Details-Enc:X-Proofpoint-GUID:
+	 X-Proofpoint-ORIG-GUID:X-Proofpoint-Spam-Info:X-Authority-Analysis:
 	 X-Proofpoint-Virus-Version;
-	bh=h5CPtsW845wIg8XT+7IjY3h0UyBjrJLt9Tps+aPI7oM=;
-	b=a6ebTIKvHrGaP0wM2L6CG76DhvlJyDcRwrznhQtFahXofaaV7JUeTZMAqy0btc9aqBv6
-	 VK8Uo9WpO39xPSD3evdWIPleKc6YgGP8MofW0jE+6zI/4edoavb971NOnYbhZtIMLKdBB
-	 pqUDNykwSyz4PJgxKHSKCupMi5ydLsbOkjtqZOsX4FtauO04NWtUGDRKLE1aSBxsXgua0
-	 ZorfsPCtTyHn6SiF9dfkJpFERk+Hz0R1Y7QKezoQv0uS4rcHad0arAQ/Kz7DKa0VTb9FR
-	 tp3H6zTJIdhKyzQAHVFQ3vNzC0LJFT7Ie2aL2d2T8uUJ0QoyxnNUaZG1/qFyNiunM1A==
+	bh=jw5VuQf1ANvsD9FFFvRp8AlB3r45zUeN3fSTLXP6SlM=;
+	b=GxpnFDhjxCWsvFdsENiZ3c9xifuoabC9Q+2HFZJS06f5UcTlmqV5zs3SEODtQBi2NMES
+	 Gh5+c8S3iJfM7GE6XyKl/PqXJSAPBJyt3S0WxAhQH9VvTF7H4TknbxuLi73jR3d2kFIzZ
+	 YL1f3VAKx7V4RikRz7tA13WlDgFohFG4VQ78LFAy5zBDgnpPsVSyC+s9UL7FxBpAX83Fp
+	 luAvbVEdwlhRlHOQR+0ZGoQUhVlo/y9RgxGcmE+zLRf72IuobSLUakcr2Vjcei010w34e
+	 y/GO9qpBR/P9FN0EJ7du3NwdIr5dnH5D6r88WduPPPgZlNRekUZN3r1nu1O/BGyjP3Q==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=fb.com;
 	spf=pass smtp.mailfrom=meta.com;
-	dkim=pass header.d=fb.com header.i=@fb.com header.a=rsa-sha256 header.s=pps82601-s2048-2026-q3 header.b=jBxiR8xc;
-	arc=none smtp.remote-ip=67.231.153.30
-Received: from mx0b-00082601.pphosted.com (mx0b-00082601.pphosted.com [67.231.153.30])
+	dkim=pass header.d=fb.com header.i=@fb.com header.a=rsa-sha256 header.s=pps82601-s2048-2026-q3 header.b=tGc83Fo9;
+	arc=none smtp.remote-ip=67.231.145.42
+Received: from mx0a-00082601.pphosted.com (mx0a-00082601.pphosted.com [67.231.145.42])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58E7E606A321;
-	Sun, 25 Oct 2026 06:39:33 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 58E7E606A321
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DA37606A32D;
+	Sun, 25 Oct 2026 06:39:34 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 9DA37606A32D
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fb.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=meta.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=fb.com header.i=@fb.com header.a=rsa-sha256 header.s=pps82601-s2048-2026-q3 header.b=jBxiR8xc
-Received: from pps.filterd (m0528005.ppops.net [127.0.0.1])
-	by mx0a-00082601.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 69P4sXJ23859554;
-	Sat, 24 Oct 2026 23:39:17 -0700
+	dkim=pass (2048-bit key, unprotected) header.d=fb.com header.i=@fb.com header.a=rsa-sha256 header.s=pps82601-s2048-2026-q3 header.b=tGc83Fo9
+Received: from pps.filterd (m0109334.ppops.net [127.0.0.1])
+	by mx0a-00082601.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 69P4sOTE544352;
+	Sat, 24 Oct 2026 23:39:19 -0700
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=cc
 	:content-transfer-encoding:content-type:date:from:in-reply-to
 	:message-id:mime-version:references:subject:to; s=
-	pps82601-s2048-2026-q3; bh=h5CPtsW845wIg8XT+7IjY3h0UyBjrJLt9Tps+
-	aPI7oM=; b=jBxiR8xcyDCJVIts4SXq8y7jVC444UPckSmMbsu9J9+ULY7p6lHEV
-	qSs5HfzzDJuwmDCrqIlPpnwcmv67lsExpUjnt/d988pBLsCIzzdW98ew/Xz+19Vn
-	oiOUw5Y6qsuavRPMw1EUyo8/G8shdW9gdU48VQd3ohv3AvfiwPOrNL3QKUl90W8i
-	mXoRMchheYVc2Ly50Y7/y3kdjGfMkVCqpgeitAgVb8wqL+XcNjKEwwAMtGFMj8lp
-	8huQ3nHFtMyIvKmmtAy3aLIAxRtBbPbGJlOH3gSjCLFs5njMEbcHaiMSPzKluZ4m
-	ktgRTZBnbF+dpaeOH3q3MTwU/al1z8tDA==
-Received: from mail.thefacebook.com ([163.114.134.16])
-	by mx0a-00082601.pphosted.com (PPS) with ESMTPS id 4hh7ucrreq-1
+	pps82601-s2048-2026-q3; bh=jw5VuQf1ANvsD9FFFvRp8AlB3r45zUeN3fSTL
+	XP6SlM=; b=tGc83Fo9azP9Hld1MGo4oT9nIU4PWshaC7wLq6VFFboPQtyqmwGvW
+	CkunPXf3yX9aldKbUUrJ1O+pNjhN19H4ahoZyLCqKOmKAfWQChPFTUcR19Qd+d9o
+	cT6Eq0x7ePKKZ14h5lMFxLc2a5kCdHcVrkrT+SeLBFKAd+1ymYQ+thwn88bgSvyx
+	pa6E2UwRxiFGpOoCDhVwXfxWTkqRaIa7zvsULib/wcWhCo7JY1K8U1gp5Ot3jkci
+	kXLmNcseO4wGFsqhkxw8WOidb297uknJ9gUS11S8JKYOW0kTLpH7wCQ6SMZZ78MT
+	dTgie5XEGdhYWOGE59ANb9WL1mZMFTIMQ==
+Received: from maileast.thefacebook.com ([163.114.135.16])
+	by mx0a-00082601.pphosted.com (PPS) with ESMTPS id 4hguyh32kw-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-	Sat, 24 Oct 2026 23:39:17 -0700 (PDT)
-Received: from localhost (2620:10d:c085:208::f) by mail.thefacebook.com
- (2620:10d:c08b:78::2ac9) with Microsoft SMTP Server (version=TLS1_2,
+	Sat, 24 Oct 2026 23:39:19 -0700 (PDT)
+Received: from localhost (2620:10d:c0a8:1c::1b) by mail.thefacebook.com
+ (2620:10d:c0a9:6f::237c) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.2.2562.56; Sun, 25 Oct
- 2026 06:39:15 +0000
+ 2026 06:39:17 +0000
 From: Amir Ayupov <aaupov@fb.com>
 To: James Clark <james.clark@linaro.org>, Leo Yan <leo.yan@arm.com>,
         Suzuki K
@@ -77,9 +77,9 @@ CC: Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
         <coresight@lists.linaro.org>, <linux-arm-kernel@lists.infradead.org>,
         <linux-perf-users@vger.kernel.org>, <linux-doc@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>
-Subject: [PATCH v3 2/7] coresight: syscfg: Fail to enable a configuration not loaded on the device
-Date: Sat, 24 Oct 2026 23:39:02 -0700
-Message-ID: <cc6b083f1ece4625e5bed0aa13b1eac7e4d1e274.1792907332.git.aaupov@fb.com>
+Subject: [PATCH v3 5/7] perf: arm_pmuv3: Add pmuv3_event_implemented()
+Date: Sat, 24 Oct 2026 23:39:05 -0700
+Message-ID: <cd3e622681f7254216b0488f09d2cb2d91a2d8ca.1792907333.git.aaupov@fb.com>
 X-Mailer: git-send-email 2.52.0
 In-Reply-To: <cover.1792907332.git.aaupov@fb.com>
 References: <20261012230527.750567-1-aaupov@fb.com> <cover.1792907332.git.aaupov@fb.com>
@@ -94,115 +94,97 @@ Precedence: list
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-Proofpoint-GUID: eU3vB3WLfXZqCIKVkUQDQPn0d30lVQ9l
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYxMDI1MDAyNiBTYWx0ZWRfX6E0cdc/hTyyY
- a6RB6yuOtrV4gpgWYL7g8FqqNarxMbOGZp9EWGtt281lA4noF6kGp5N3rjEf2UvvBiyJ3D4irOp
- IadlJ6viM1c9LeTQwqFNayMJowtRp819AhqB89QRk0XfBBaGfZ5CKT9vCA8aBJVVtFYQgFz9zF6
- RkxoqpRCILg19M1YWi1ktUYv8FJib41n8ypiaLl6v1Wedy8vkFFJwSA7KSNolEGPSbOsbeYAn18
- /5pKjzio0Ll7awEoR5sl9L3YUsOW/rtuJ2NR4Pk8cKiBmwJ57qWb1b/fsk83lmFKzOA9fN0T3/A
- QOlPW2geLPkOqUHALjVJNvonCWN9k9rjj5qJ1bumd9a4eYwsDg8NRjnr+fb6cUWyQCv4egc02GP
- 7pGPSDBmQQ0b7fjwHRe74Puiboe+Y9c+FF1PPS7HypA5SM7L/deiT/t0uZwJi2XljHME2jcCv6c
- 3ZBmgL46Bv2uM4svTWA==
-X-Proofpoint-Spam-Info: AW1haW4tMjYxMDI1MDAyNiBTYWx0ZWRfX7SdXJPkxnHWa
- w3zVd85r3DuAz0AOHv9wj6pbDDGrmdQZDH3CNBEHzh/GmNGbr1vJDKNS7jiHUKDJ5kagjYO2aDj
- HqbPU2nZWFkqFTBmfRxw9F/kYy3Kbg4=
-X-Proofpoint-ORIG-GUID: eU3vB3WLfXZqCIKVkUQDQPn0d30lVQ9l
-X-Authority-Analysis: v=2.4 cv=SN3Xx+vH c=1 sm=1 tr=0 ts=6adda415 cx=c_pps
- a=CB4LiSf2rd0gKozIdrpkBw==:117 a=CB4LiSf2rd0gKozIdrpkBw==:17
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYxMDI1MDAyNiBTYWx0ZWRfX3HpC6ZmlsThT
+ W54cJt5/0v7bB4BoRwEQauwZbrIsCgdYT3B6ceYi3edHzFAE76EMiovNjOsok3q9OxbaIDcBtY3
+ d9MFvBkNNKdxYY8Vv/TzGTn9aPekKsJJwICssCQWx/FOmPEhVmBvH1Gvrv+45uKO4PLgJZp+0rF
+ MDyHDpamEizJ9nug4so42zctRjHqQ71MVIlNQo6A8Wd9C4hJoQOtbN1FXhtVL5bHJg3Gw/+Pqka
+ U2i3DwQEUKa9AkBS/QYQYW6x1ywf7wFb056llmVpEURG94GEsauehr83jzl3VWOmjBL+m5+rYHU
+ kjJFpBfpzvqBkWy4XtWYPJVaRZGVHjWcPapns8wqvARmfmD9BvHMP0cXZX5DT9etkypE9bRg/oe
+ s6nJ/QFleJHl5gTLNFjXfBNrqasd0vzyrBYb6St0Jd2++lokKP4aK4wEuXiBjQ0/ObdETgVK1ur
+ 5DWYyYD6VTuaAIENp8w==
+X-Proofpoint-GUID: K2LKffOrXNyFHYQrvV1nbHrNZ-TI8Yx5
+X-Proofpoint-ORIG-GUID: K2LKffOrXNyFHYQrvV1nbHrNZ-TI8Yx5
+X-Proofpoint-Spam-Info: AW1haW4tMjYxMDI1MDAyNiBTYWx0ZWRfXwwWf5fIaDzp8
+ kfqlN4UavRsctlzP/hrDzA92SDzyBSuzB8pmHwzPMGZ7kYW8wW3CFv69l6LcvMC7f9iRDcrmYma
+ H5MyE3nrYNsi68TEEAAtAA5FY+6ml7E=
+X-Authority-Analysis: v=2.4 cv=FY+iV5+6 c=1 sm=1 tr=0 ts=6adda417 cx=c_pps
+ a=MfjaFnPeirRr97d5FC5oHw==:117 a=MfjaFnPeirRr97d5FC5oHw==:17
  a=660iZSQnnn4A:10 a=VkNPw1HP01LnGYTKEx00:22 a=7x6HtfJdh03M6CCDgxCd:22
- a=jCddH8ec0KUNCymVuxII:22 a=FOH2dFAWAAAA:8 a=7CQSdrXTAAAA:8
- a=HF-2DHWplcuDzBJEMXoA:9 a=a-qgeE7W1pNrGK8U0ZQC:22
+ a=crHB47gyY4rKiduisYu9:22 a=KKAkSRfTAAAA:8 a=FOH2dFAWAAAA:8
+ a=zNmvvb9I2tHsirClY3sA:9 a=cvBusfyB2V15izCimMoJ:22
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1176,Hydra:6.1.138,FMLib:17.12.100.49
  definitions=2026-10-25_02,2026-10-21_02,2025-10-01_01
 
-cscfg_csdev_enable_active_config() looks up the selected configuration in
-the device's loaded configurations, and returns success when it is not
-there. A configuration is only loaded on devices that match at least one
-of its features, so a perf session or sysfs enable that selects it on any
-other device runs without the configuration, with no error.
+Drivers outside the PMU driver may need to know whether the local CPU's
+PMU implements a common event before relying on it, for example a trace
+unit driver checking that the PMU counts its external outputs as
+TRCEXTOUTn.
 
-Return -EINVAL instead, so enabling the source fails on that device. The
-function is only called with a non-zero configuration hash, so sources
-enabled without a configuration are unaffected.
+Add pmuv3_event_implemented(), which reads PMCEID0/1 on the calling CPU:
+events 0x0000-0x003f are reported in bits [31:0], and the common events
+from ARMV8_PMUV3_EXT_COMMON_EVENT_BASE in bits [63:32] from PMUv3p1. Move
+ARMV8_PMUV3_EXT_COMMON_EVENT_BASE next to the event numbers in
+arm_pmuv3.h so it is available without CONFIG_ARM_PMU.
 
-Fixes: f8cce2ff3c04 ("coresight: syscfg: Add API to activate and enable configurations")
+Suggested-by: James Clark <james.clark@linaro.org>
 Assisted-by: Devmate:Opus-5.5
 Signed-off-by: Amir Ayupov <aaupov@fb.com>
-Reviewed-by: Leo Yan <leo.yan@arm.com>
 ---
- .../hwtracing/coresight/coresight-syscfg.c    | 53 ++++++++++---------
- 1 file changed, 28 insertions(+), 25 deletions(-)
+ include/linux/perf/arm_pmu.h   |  1 -
+ include/linux/perf/arm_pmuv3.h | 22 ++++++++++++++++++++++
+ 2 files changed, 22 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/hwtracing/coresight/coresight-syscfg.c b/drivers/hwtracing/coresight/coresight-syscfg.c
-index 2bfdd7b45e49c..a816c22c87bc8 100644
---- a/drivers/hwtracing/coresight/coresight-syscfg.c
-+++ b/drivers/hwtracing/coresight/coresight-syscfg.c
-@@ -1088,36 +1088,39 @@ int cscfg_csdev_enable_active_config(struct coresight_device *csdev,
- 	raw_spin_unlock_irqrestore(&csdev->cscfg_csdev_lock, flags);
+diff --git a/include/linux/perf/arm_pmu.h b/include/linux/perf/arm_pmu.h
+index 02d2c7f45b527..792283d29d7b5 100644
+--- a/include/linux/perf/arm_pmu.h
++++ b/include/linux/perf/arm_pmu.h
+@@ -124,7 +124,6 @@ struct arm_pmu {
+ 	u64		reg_brbidr;
+ #define ARMV8_PMUV3_MAX_COMMON_EVENTS		0x40
+ 	DECLARE_BITMAP(pmceid_bitmap, ARMV8_PMUV3_MAX_COMMON_EVENTS);
+-#define ARMV8_PMUV3_EXT_COMMON_EVENT_BASE	0x4000
+ 	DECLARE_BITMAP(pmceid_ext_bitmap, ARMV8_PMUV3_MAX_COMMON_EVENTS);
  
- 	/*
--	 * If found, attempt to enable
-+	 * The configuration is active but not loaded on this device, because
-+	 * none of its features match the device. Fail rather than trace
-+	 * without it.
- 	 */
--	if (config_csdev_active) {
-+	if (!config_csdev_active)
-+		return -EINVAL;
-+
-+	/*
-+	 * Call the generic routine that will program up the internal
-+	 * driver structures prior to programming up the hardware.
-+	 * This routine takes the driver spinlock saved in the configs.
-+	 */
-+	err = cscfg_csdev_enable_config(config_csdev_active, preset);
-+	if (!err) {
- 		/*
--		 * Call the generic routine that will program up the internal
--		 * driver structures prior to programming up the hardware.
--		 * This routine takes the driver spinlock saved in the configs.
-+		 * Successful programming. Check the active_cscfg_ctxt
-+		 * pointer to ensure no pre-emption disabled it via
-+		 * cscfg_csdev_disable_active_config() before
-+		 * we could start.
-+		 *
-+		 * Set enabled if OK, err if not.
- 		 */
--		err = cscfg_csdev_enable_config(config_csdev_active, preset);
--		if (!err) {
--			/*
--			 * Successful programming. Check the active_cscfg_ctxt
--			 * pointer to ensure no pre-emption disabled it via
--			 * cscfg_csdev_disable_active_config() before
--			 * we could start.
--			 *
--			 * Set enabled if OK, err if not.
--			 */
--			raw_spin_lock_irqsave(&csdev->cscfg_csdev_lock, flags);
--			if (csdev->active_cscfg_ctxt)
--				config_csdev_active->enabled = true;
--			else
--				err = -EBUSY;
--			raw_spin_unlock_irqrestore(&csdev->cscfg_csdev_lock, flags);
--		}
--
--		if (err)
--			cscfg_config_desc_put(config_desc);
-+		raw_spin_lock_irqsave(&csdev->cscfg_csdev_lock, flags);
-+		if (csdev->active_cscfg_ctxt)
-+			config_csdev_active->enabled = true;
-+		else
-+			err = -EBUSY;
-+		raw_spin_unlock_irqrestore(&csdev->cscfg_csdev_lock, flags);
- 	}
+ 	/* Only to be used by ACPI probing code */
+diff --git a/include/linux/perf/arm_pmuv3.h b/include/linux/perf/arm_pmuv3.h
+index d698efba28a27..965c40b28dd77 100644
+--- a/include/linux/perf/arm_pmuv3.h
++++ b/include/linux/perf/arm_pmuv3.h
+@@ -78,6 +78,9 @@
+ #define ARMV8_PMUV3_PERFCTR_STALL_SLOT_FRONTEND			0x003E
+ #define ARMV8_PMUV3_PERFCTR_STALL_SLOT				0x003F
  
-+	if (err)
-+		cscfg_config_desc_put(config_desc);
++/* Base of the common events reported in PMCEID{0,1}[63:32] from PMUv3p1 */
++#define ARMV8_PMUV3_EXT_COMMON_EVENT_BASE			0x4000
 +
- 	return err;
- }
- EXPORT_SYMBOL_GPL(cscfg_csdev_enable_active_config);
+ /* Statistical profiling extension microarchitectural events */
+ #define ARMV8_SPE_PERFCTR_SAMPLE_POP				0x4000
+ #define ARMV8_SPE_PERFCTR_SAMPLE_FEED				0x4001
+@@ -315,4 +318,23 @@
+ 
+ #include <asm/arm_pmuv3.h>
+ 
++/*
++ * Whether this CPU's PMU implements a common event, as reported by
++ * PMCEID{0,1}: events 0x0000-0x003f in bits [31:0], and from PMUv3p1 events
++ * 0x4000-0x403f in bits [63:32], which read as zero before PMUv3p1.
++ * Must run on the CPU whose PMU is queried.
++ */
++static inline bool pmuv3_event_implemented(u16 event)
++{
++	bool ext = event >= ARMV8_PMUV3_EXT_COMMON_EVENT_BASE;
++	u16 id = ext ? event - ARMV8_PMUV3_EXT_COMMON_EVENT_BASE : event;
++	u64 pmceid;
++
++	if (id >= 64 || !pmuv3_implemented(read_pmuver()))
++		return false;
++
++	pmceid = id < 32 ? read_pmceid0() : read_pmceid1();
++	return pmceid & BIT_ULL(id % 32 + (ext ? 32 : 0));
++}
++
+ #endif
 -- 
 2.52.0
 
