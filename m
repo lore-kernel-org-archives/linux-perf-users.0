@@ -1,57 +1,58 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792910704;
-	b=pEFuNtxePQCh8/62RGP4YmRof8BWBdjofO4XBfdRsh07xSrNjfJSLmNmpzvEm3vAPz2D
-	 nuOdbhhFTprxiUbikNY6cwc7hL6Zjg8/wVMLac6GDyszbxnF119wfX67HIEaf6R/pk75l
-	 ji6r90Kt5o+1rV3t8e0FI9RVqnj9Ynl8HYMloaz1UI9rCqtDGxgNLw+/6owkBPd9wt//m
-	 nrrF5Gb4ptboJ9/GuWyPpIYFrFOo4Z6gONCTH49zp0KKD+1tGn00IoquYLvWpQhBC6eU9
-	 6hhTFpUO4iu5yUZ6Z3ZNvfQbn1CX5L+o7uc29Gf4L4zyk/yQfMfE7/PIbDBnA6jo2Uw==
+	t=1792910774;
+	b=SDzsjyHggaFOX0yGwrD1Zlwd+hfo4HjZtaDndop+y6tyhzGj8Sm8e1+3Cs5Xcs0QcenJ
+	 69lvY1cSV7riG7B1y1387XUTNwc/ju1BdQutqCHvRwSDC7sNjfY5fcw1SaydGBl5VWhbf
+	 9hMhkup90IF4SDfE2w5JxbIgHCypfYAxsng3W6GZlUgWTNK2dWYRTwJFg7PrExXd1iy5b
+	 60PD4UZU/oZaazYhWtvxG7NrbFQjDs8pClQ4Ycg8YXfSmO9eaRG1ppPfRxf3pJPf9nQBL
+	 xeP9JqPQt861aAnt7b2Xd7Xr+ahS6R4vnTKJ6H4xgIlGrwGny8UUdy+vk4XmFeISu/g==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792910704;
+	a=rsa-sha256; c=relaxed/relaxed; t=1792910774;
 	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
 	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=fIaqEC56bO2bDv40ydu1kXGMM4arDlayRbU088Pok0k=;
-	b=w6n1VI2o2yLlQrABgmF5Xs7obVwdXn63dx64lHYR3sxb3TMNVJgaXLV7AN4WmZ+kNA3J
-	 Zjl/YyojFPM7stNVlb207GWUBzRE8bHP4MBgi7pooRiF5Il4lTA+MmGw238GxDR2vE+pO
-	 QNtE2EYyVqzsb7hpzxVIQlxVFHfQa3BKh5JrfU9jzjZJ0mdkJGgbUp9kjC2bSsc0Hh3YD
-	 Y5dGP0dvHzqNhSnBqEVt1h9k8ZkDtccCX5Hl3rakmw4HoE3XF4lrwE9Fx3EjGlN7vRqnt
-	 l9Cngo0RIXaEE0WmIayvgmNmtDQ8Kd1v/dbRspZgPV9ob2ZVsiiCYgdsvmElCyHsbUg==
+	bh=KyRaGNkRsZk+B3HSCMV7LmVS5AT7K0rsRyG5upIMpcM=;
+	b=2/bPBsOf4P/vdq19HaDcMWWSo7C0ilgmPRd6KuAQGzddZnD5nZagXod8XQw17QmB9bJ3
+	 nYww20/BvR0W1P8ZjJDHl8mH/q/qdBvOBs42vKQNaxvyUwOOZg0AC4Ql25CtVxdystf2g
+	 JO+dZCkhi0It8PklXUXIoNJn723Kr9O5Xsd+TKHuWrOmN3nGwI7/5Y9LTlfZR5joQjQ6x
+	 bFOPFseYk8KEjbstQSjGH7GpWVDDi/J94aSP3zDhz1cP8CwtWLrE3dvH+X0Jguz5m7frk
+	 GtLDZaP1FPQcqCFZqx2mPFT6Dc6ZHNWUEVPASCJUO55hkMmvEBN10Q155M9gX6nRKgQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=UhB0GCUf;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=mIl49aGU;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 264EE606A31B
-	for <linux-perf-users@vger.kernel.org>; Sun, 25 Oct 2026 06:45:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BA1D606A31A
+	for <linux-perf-users@vger.kernel.org>; Sun, 25 Oct 2026 06:46:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=UhB0GCUf
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4BC4A1F01825;
-	Sun, 25 Oct 2026 06:45:03 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=mIl49aGU
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E848B1F01825;
+	Sun, 25 Oct 2026 06:46:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1792910703;
-	bh=fIaqEC56bO2bDv40ydu1kXGMM4arDlayRbU088Pok0k=;
+	s=k20260515; t=1792910774;
+	bh=KyRaGNkRsZk+B3HSCMV7LmVS5AT7K0rsRyG5upIMpcM=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=UhB0GCUftRJ5BBDJv32/2PDp/W85ri5F4Md1/ZsQc+IARXmxcjTX46cIoW+I0QWaj
-	 MfKM8iQiOYijQlfEYy2GCRL/LlZ/NL72Y+A/ZjdT8sgIY/1CcsASkZOOADO1ZsyQ5p
-	 PKzB5aDMnVc7iHoW62tY6oOONRwPuQQ6P0eB88zxOUodqzQxNxPVEeYNauDN8rUstP
-	 zTuCNsU5oT7veYv9WadH9TZoEoKXQVE5b2zZW4Du2Xa4i8eWdqHatFMJifiYy2XPC1
-	 9yki11Dio/y1QmOHUC0HVQQHAhS1xKqNLPz1aoiueM0qLFZWq8oYE4WKZynJIHCvN/
-	 qmuvDeqcEKlFA==
-Message-ID: <sashiko-outbox-184099@kernel.org>
+	b=mIl49aGUWxAWHJbXESka0RoHWodypjJd1bdLuBP+G5UYw8ZetD2zy+0YPEV9Ajush
+	 uj0BvG8Jw1GAaLTBFnm8l0mKNj35xHfLJxR3VXvLIlZ25wYQLZYg1EkSSkIYIKeVMy
+	 WsrVPAnv/qYbbadFsyVhe1hbsynNcUijcD3OnNkDIoBy7i/Nerr8m0dqVfnQpuEy/L
+	 IqqY5cmrq8QEzyh7PZ+VOj3Sz0g1MvoItJA/puz5An7Hi4t59IPNlrfJl+07lh5Dn6
+	 I1sRr/IOosRqADfYVatZkP+x7mZA4d4xvR/ASDJeW0MLNT159GgXAMU9N59YnQU8zm
+	 FzW6vs/0/1X/A==
+Message-ID: <sashiko-outbox-184100@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v3 1/7] coresight: etm4x: Fix event count decoding
+Subject: Re: [PATCH v3 2/7] coresight: syscfg: Fail to enable a
+ configuration not loaded on the device
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Amir Ayupov" <aaupov@fb.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <4d45171946cf41751215e8c1cd9a8b14d38d3159.1792907332.git.aaupov@fb.com>
+In-Reply-To: <cc6b083f1ece4625e5bed0aa13b1eac7e4d1e274.1792907332.git.aaupov@fb.com>
 References: <20261012230527.750567-1-aaupov@fb.com>
  <cover.1792907332.git.aaupov@fb.com>
- <4d45171946cf41751215e8c1cd9a8b14d38d3159.1792907332.git.aaupov@fb.com>
+ <cc6b083f1ece4625e5bed0aa13b1eac7e4d1e274.1792907332.git.aaupov@fb.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Sun, 25 Oct 2026 06:45:02 +0000
+Date: Sun, 25 Oct 2026 06:46:13 +0000
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -61,32 +62,24 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 
-> From: Leo Yan <leo.yan@arm.com>
+> cscfg_csdev_enable_active_config() looks up the selected configuration in
+> the device's loaded configurations, and returns success when it is not
+> there. A configuration is only loaded on devices that match at least one
+> of its features, so a perf session or sysfs enable that selects it on any
+> other device runs without the configuration, with no error.
 >=20
-> TRCIDR0.NUMEVENT normally encodes the number of events minus one.
-> From ETMv4.3 onwards, including ETE, a zero TRCIDR4.NUMRSPAIR instead
-> means that no events are implemented and NUMEVENT is zero. The sysfs
-> event controls currently interpret this combination as one event and
-> allow writes to unsupported event fields.
+> Return -EINVAL instead, so enabling the source fails on that device. The
+> function is only called with a non-zero configuration hash, so sources
+> enabled without a configuration are unaffected.
 >=20
-> Decode NUMEVENT after NUMRSPAIR and store the actual number of events
-> in nr_event. Use the decoded resource count so that older ETM versions,
-> where a zero NUMRSPAIR represents one resource pair, still report at
-> least one event. Update both sysfs event controls to use the actual
-> count and clear their event fields when no events are implemented.
->=20
-> Also correct the instruction event enable mask for the single-event
-> case to use INSTEN[0]. The existing mask uses INSTEN[1], preventing
-> event 0 from being enabled.
->=20
-> This change depends on the recent driver refactoring. With no reported
-> failures, it is not intended for stable backporting.
->=20
-> Signed-off-by: Leo Yan <leo.yan@arm.com>
+> Fixes: f8cce2ff3c04 ("coresight: syscfg: Add API to activate and enable c=
+onfigurations")
+> Assisted-by: Devmate:Opus-5.5
+> Signed-off-by: Amir Ayupov <aaupov@fb.com>
 
 Sashiko has reviewed this patch and found no issues.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/cover.1792907332.gi=
-t.aaupov@fb.com?part=3D1
+t.aaupov@fb.com?part=3D2
 
