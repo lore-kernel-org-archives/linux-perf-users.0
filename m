@@ -1,57 +1,57 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792952946;
-	b=s0kF8g7YmcwqngvNoyXHwubxyhtPO090lNLMc8V1eOzqCHb9AUJwWAlHDMnTIJjFBEW4
-	 VNtBswGY5HDlTGNg6K48mpujqzDA0et3ZNICeaa/vGoUiS1mRehJmujjryFN3oxKELeOw
-	 R99aA27NYL0hONrfLN6Fh3Z5pVXcGNIMQw6SdQLZl3KnLj19CdcnJ2JVUOaPonR3kkcz6
-	 yrx/12tRSHzqIe1xVwRQG1sufs+4VtclpwD975O9pPbe4h8cDsUtLDVz/QsfHkodIRthv
-	 /z4BLZgJCl8HNKAhBp50cGPIF+6z0cU98SHsSByxqXmLviWwA1iewoaOhNKfQrxqdZw==
+	t=1792952991;
+	b=T1E/SW0o6YFBZhxVilzEbbNFvzPCp5mE4ojTujjqVawA+wJ7jK2zH5vbuziBeMu1fn5c
+	 SuTVcV3Ha5PMokLtfIwTLTRbqFpajrYTTyXB3cO9eH9booddE9a0ZbgiFZYOs+zvthRWt
+	 DKpipblgxXiCQZ/m9Gk46Q6eW7gwA6jtSUDsGoLRABDsBhSLIZ8FMLYSCbANpahTYmp6X
+	 wEH0nyAMK7QzozvZA37XWkZ7Ng2tZF6xDBrELAB2RhRyskIKNOWVFfwi2NZKTwG7yvFKT
+	 mElZNDhgYNHlyQcMO1Ei2fD169S7Y7yjS+0L9j75oDRqZcnIvGL1Iz5dPbc2uk2JzXg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792952946;
+	a=rsa-sha256; c=relaxed/relaxed; t=1792952991;
 	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
 	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=II15di91OMub+P+WrTZM1YdGSeHgKTqDbv56RBgHb1U=;
-	b=gQM6A/k4Jnl7yj1yin3W6oYhh+5U/V80cp0FQbohmfBq4bW+f973CiTGFintlhN+NJnt
-	 qw85eFwMfOz0d6IqYVpbAB8E4AvKo4/o4DFKWJjOaWrsL5th7u2e6hkdAoS4tsCKLmBHB
-	 JSICXqjCXK72Ll3eFBcsnE5iEp6VoqABaxcRVb9Sc059SgVwLJQeE8L6mFSns+0I6crK3
-	 PO9+x5O+rW+o2AWPo3FBdFA/EwvdQlcb7Q4JfPiNNUSa3549MTYdbwjl8cwoa4E2XxkD3
-	 UCQ/tfnHLCKtfxxxqXNrlgNoocpKihmXgbC49aT/O1RpPStp5YgXr3RSOmwVqSShN8Q==
+	bh=/1g1RvakKpXfTQfajgYeyvYFpgNj5zqyZxADhonaCsg=;
+	b=tNkeJbykJ7gMG/AIQ+UVHnSfy60HOpG01Y+YVUHjZCmHlz4PoDuRLY1lD6+OWLRDMeoM
+	 KNdN49ZOo6WPfRBsSWJlx6Dhrx2s0cbibgHxDFRif/3TECZFwEQBPHhQLpAqYp3iFoq4T
+	 nSdgPC/TYNgPpFgazLP2K7rPkBtQ4RXErMcbVs0lhy0e1Wq4PlMEeXtE4k3fSx7MXsvzl
+	 ia+vVr2lQDzZlaTpzhxc2DADwAriXVGltLH0dovt21Y9GTX9OsYMmMT9KQVLpagf+nS2b
+	 H+ghMLhNNwSlTXOYfHdiXbsdE9LJM1npF10ZnuszWwHy4jhfeC+KNOy/cLv3c6T7xYA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=kkf+qYIG;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=dKeMcrSy;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD603606A31A
-	for <linux-perf-users@vger.kernel.org>; Sun, 25 Oct 2026 18:29:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FB69606A32F
+	for <linux-perf-users@vger.kernel.org>; Sun, 25 Oct 2026 18:29:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=kkf+qYIG
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5E3EB1F01825;
-	Sun, 25 Oct 2026 18:29:05 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=dKeMcrSy
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 066FB1F01829;
+	Sun, 25 Oct 2026 18:29:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1792952945;
-	bh=II15di91OMub+P+WrTZM1YdGSeHgKTqDbv56RBgHb1U=;
+	s=k20260515; t=1792952991;
+	bh=/1g1RvakKpXfTQfajgYeyvYFpgNj5zqyZxADhonaCsg=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=kkf+qYIGZNhb6DCa0jFtMQpUfhOV7WrGNemJPrYODppBI2f2QSipllc++hyJQ6jim
-	 e6p9Q42TiX+gpdwa7A+Hs4mmtpuu2ohIRAZlBQcZ/TkJp01J6ecGfCyp/yN0R6IV4F
-	 PbFCie+eQQvs+b8wXVnJF6WPxP6LE+sCz8owxJQQqidzYTckIdm4A7iuXOHRe43pl0
-	 fbcTKojPkIwqDrvkJ2H9pymuPIXi5iDWABuKrNYJFCd+0bh5JpzB9VHTL94zz03o4N
-	 kt03sZTOvo2XOxbNv2FFsgKV2RXA+rgOZ1Gnv6OD/A+pKET7WDydT5baEGLq9KWxhS
-	 84um+YtCx6Z5A==
-Message-ID: <sashiko-outbox-184338@kernel.org>
+	b=dKeMcrSyTCrfnkjdjftGxVm9HeSGeqj+wUhEDeKyUVC6GmralCu8XBCdySbHK1odU
+	 FIqmLzWXFMPjX1nVWJdhwcipnfZJE89T9vjPWJVAuD2b+LboCvajvkOp1YgBwrsOhp
+	 YRltER4T1a/2MroL194dFJMEmxPwgZHfLNFpFurITz01Pil6NVYT6tvSRzsNfa/Fd9
+	 gDh93LmWEt3l0kKaIs4rR3l2hmo8jgZIEAzDGL8WK7/BnbylYHn0/ARznsixogwzHh
+	 daI/6hqs+1KNrTpgIw2yeBDR99mSqRAkkNS21uaVpd/hv6ICSrMRwOW0vC0gMNg3c2
+	 Af5YBBR7yelDA==
+Message-ID: <sashiko-outbox-184340@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH perf-tools-next v11 05/10] perf ftrace: Support context
- switch tracking in function graph tracer
+Subject: Re: [PATCH perf-tools-next v11 10/10] perf ftrace: Filter
+ extraneous functions in function graph tracer
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Aaron Tomlin" <atomlin@atomlin.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20261025181125.514372-6-atomlin@atomlin.com>
+In-Reply-To: <20261025181125.514372-11-atomlin@atomlin.com>
 References: <20261025181125.514372-1-atomlin@atomlin.com>
- <20261025181125.514372-6-atomlin@atomlin.com>
+ <20261025181125.514372-11-atomlin@atomlin.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Sun, 25 Oct 2026 18:29:04 +0000
+Date: Sun, 25 Oct 2026 18:29:50 +0000
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -63,230 +63,145 @@ Precedence: list
 
 Thank you for your contribution! Sashiko AI review found 2 potential issue(=
 s) to consider:
-- [Medium] perf ftrace: broken min_raw_indent tracking in ftrace_task_state=
-__rekey()
-- [Medium] perf ftrace: non-contiguous unknown-PID splice in ftrace_task_st=
-ate__rekey()
+- [Medium] perf ftrace: unshifted target_root_depth in ftrace_task_state__r=
+ekey()
+- [Low] perf tests ftrace: missing ensure_synthetic_inline() in test_graph_=
+target_filter()
 --
 
-commit 242f56625a11f73350f70f6bfa60c779b6624a22
+commit 79ad3a54d36210f71bcd95c62c94ed00575efdc0
 Author: Aaron Tomlin <atomlin@atomlin.com>
 
-perf ftrace: Support context switch tracking in function graph tracer
+perf ftrace: Filter extraneous functions in function graph tracer
 
-This commit adds context switch banner parsing and per-task call stack state
-tracking to the function graph tracer in perf ftrace, including task state
-rekeying and stack splicing across CPU migrations.
+This commit adds userspace callgraph target state tracking and return-addre=
+ss
+caller validation to perf ftrace so that extraneous top-level functions and
+detached orphan calls are suppressed when filtering with -G / --graph-funcs.
+It also replaces the fixed-size call stack with a dynamically reallocated
+array and adds unit tests in tools/perf/tests/ftrace.c.
+
+> diff --git a/tools/perf/tests/ftrace.c b/tools/perf/tests/ftrace.c
+> index 0aef2cd9b07fb..3591883b32041 100644
+> --- a/tools/perf/tests/ftrace.c
+> +++ b/tools/perf/tests/ftrace.c
+> @@ -1492,6 +1492,2259 @@ static int test_context_switch_handling(void)
+>  }
+>  #undef TEST_CS_ASSERT
+> =20
+> +static int test_graph_target_filter(void)
+> +{
+[ ... ]
+> +	vmlinux =3D vmlinux_path__find();
+> +
+> +	/* 6. Test targeted leaf call with synthesized DWARF inlines closing an=
+d resetting filter */
+> +	if (vmlinux) {
+> +		const char *inlined_names[FTRACE_MAX_INLINES];
+> +		int num_inlines;
+> +		int j;
+> +		const char *saved_vmlinux =3D symbol_conf.vmlinux_name;
+> +		bool saved_ignore_buildid =3D symbol_conf.ignore_vmlinux_buildid;
+> +
+> +		symbol_conf.vmlinux_name =3D vmlinux;
+> +		symbol_conf.ignore_vmlinux_buildid =3D true;
+> +		if (perf_ftrace__setup_inlines(&ftrace) =3D=3D 0 && ftrace.machine) {
+> +			num_inlines =3D ftrace_resolve_inlines(ftrace.machine,
+> +							     "wake_up_new_task", 0x1d1,
+> +							     inlined_names,
+> +							     FTRACE_MAX_INLINES);
+> +			if (num_inlines > 0 && !strcmp(inlined_names[0], "activate_task")) {
+
+[Severity: Low]
+In test_graph_target_filter(), perf_ftrace__setup_inlines() creates a fresh
+machine and loads vmlinux before querying ftrace_resolve_inlines() for
+wake_up_new_task at offset 0x1d1.
+
+Other inline tests in tools/perf/tests/ftrace.c, such as
+test_inline_processing(), test_stack_saturation(), and
+test_context_switch_handling(), call ensure_synthetic_inline() first:
+
+	if (perf_ftrace__setup_inlines(&ftrace) =3D=3D 0 && ftrace.machine) {
+		ensure_synthetic_inline(ftrace.machine, "wake_up_new_task", 0x1d1,
+					"activate_task");
+		num_inlines =3D ftrace_resolve_inlines(ftrace.machine,
+						     "wake_up_new_task", 0x1d1,
+						     inlined_names,
+						     FTRACE_MAX_INLINES);
+
+Should test_graph_target_filter() also call ensure_synthetic_inline() before
+ftrace_resolve_inlines() so that subtests 6, 6b, and 6c are not silently
+skipped when the host vmlinux does not have activate_task inlined at exact
+offset 0x1d1 of wake_up_new_task?
 
 > diff --git a/tools/perf/util/ftrace.c b/tools/perf/util/ftrace.c
-> index 95db57e70d11b..055b5eb6b8327 100644
+> index 384fc03850f27..4e916096a9380 100644
 > --- a/tools/perf/util/ftrace.c
 > +++ b/tools/perf/util/ftrace.c
 [ ... ]
-> @@ -124,6 +129,208 @@ static int ftrace_task_state__grow_stack(struct ftr=
-ace_task_state *cs)
->  	return 0;
->  }
+> @@ -313,6 +345,26 @@ static struct ftrace_task_state *ftrace_task_state__=
+rekey(struct ftrace_task_sta
+>  			for (j =3D to_copy; j < ts->depth; j++)
+>  				free(ts->stack[j].name);
 > =20
-> +/**
-> + * ftrace_task_state__rekey - Reassign a task state to a new PID
-> + * @ts: The task state to re-key
-> + * @new_pid: The new process ID to associate with the state
-> + *
-> + * Rehash @ts under @new_pid. If a task state for @new_pid already exist=
-s,
-> + * merge or replace it and update active CPU references accordingly.
-> + *
-> + * Return: A pointer to the active task state associated with @new_pid.
-> + */
-> +static struct ftrace_task_state *ftrace_task_state__rekey(struct ftrace_=
-task_state *ts,
-> +							  pid_t new_pid)
-> +{
-> +	struct ftrace_task_state *existing;
-> +	u32 key;
-> +	int j, c;
-> +	int to_copy;
-> +
-> +	if (ts->pid =3D=3D new_pid)
-> +		return ts;
-> +
-> +	hlist_del_init(&ts->node);
-> +
-> +	existing =3D find_task_state(new_pid);
-> +	if (existing) {
-> +		int split_idx =3D existing->depth;
-> +		int old_split_idx, post_count;
-> +		int base_raw_indent, post_raw_indent;
-> +
-> +		for (c =3D 0; c < FTRACE_MAX_CPUS; c++) {
-> +			if (ftrace_cpu_tasks[c] =3D=3D ts)
-> +				ftrace_cpu_tasks[c] =3D existing;
-> +		}
-> +
-> +		/*
-> +		 * Find the split point in existing where frames postdate ts.
-> +		 * Frames 0 .. split_idx - 1 were pushed prior to ts.
-> +		 * Frames split_idx .. existing->depth - 1 were pushed after ts.
-> +		 */
-> +		for (j =3D 0; j < existing->depth; j++) {
-> +			if (existing->stack[j].seq > ts->seq) {
-> +				split_idx =3D j;
-> +				break;
-> +			}
-> +		}
-> +		old_split_idx =3D split_idx;
-> +		post_count =3D existing->depth - old_split_idx;
-> +
-> +		/*
-> +		 * Prune pre-ts frames on existing that exited before or during ts
-> +		 * (i.e. whose raw_indent >=3D base_raw_indent, along with any
-> +		 * synthesized inlined frames).
-> +		 */
-> +		base_raw_indent =3D -1;
-> +		if (ts->depth > 0)
-> +			base_raw_indent =3D ts->stack[0].raw_indent;
-> +		if (ts->min_raw_indent >=3D 0 &&
-> +		    (base_raw_indent < 0 || ts->min_raw_indent < base_raw_indent))
-> +			base_raw_indent =3D ts->min_raw_indent;
-> +
-> +		if (base_raw_indent >=3D 0) {
-> +			while (split_idx > 0) {
-> +				struct ftrace_stack_frame *top =3D
-> +					&existing->stack[split_idx - 1];
-> +
-> +				if (top->inlined) {
-> +					free(top->name);
-> +					top->name =3D NULL;
-> +					if (existing->inlined_depth > 0)
-> +						existing->inlined_depth--;
-> +					split_idx--;
-> +					existing->depth--;
-> +				} else if (top->raw_indent >=3D base_raw_indent) {
-> +					free(top->name);
-> +					top->name =3D NULL;
-> +					split_idx--;
-> +					existing->depth--;
-> +				} else {
-> +					break;
+> +			if (ts->in_target &&
+> +			    ts->target_root_frame_idx < ts->depth) {
+> +				existing->in_target =3D true;
+> +				existing->target_root_depth =3D ts->target_root_depth;
+> +				existing->target_root_frame_idx =3D
+> +					split_idx + ts->target_root_frame_idx;
+> +				existing->target_root_indent =3D ts->target_root_indent;
+> +				strlcpy(existing->target_root_name,
+> +					ts->target_root_name,
+> +					sizeof(existing->target_root_name));
+> +				existing->orphan_depth =3D ts->orphan_depth;
+> +			} else if (existing->in_target) {
+> +				if (existing->target_root_frame_idx >=3D old_split_idx) {
+> +					existing->target_root_frame_idx +=3D
+> +						(split_idx + to_copy) - old_split_idx;
+> +					existing->target_root_depth +=3D
+> +						(split_idx + to_copy) - old_split_idx;
 > +				}
 > +			}
-> +		}
-
-[Severity: Medium]
-Can this split_idx search and pre-ts pruning loop in
-ftrace_task_state__rekey() drop active intermediate frames from
-existing->stack when an initial unknown-PID state accumulates events both
-before and after events on existing?
-
-In the kernel's function_graph tracer, verif_pid() only emits a per-CPU
-context switch banner when the traced PID on that CPU changes from its
-previous traced PID. Consider when task P starts on CPU 0 (tracked under
-ts =3D FTRACE_UNKNOWN_PID(0)), migrates to CPU 1, and then migrates back to
-CPU 0 before any other task produces a trace event on CPU 0:
-
-1. On CPU 0, task P pushes outer frames f1 (raw_indent =3D 2, seq =3D 1) and
-   f2 (raw_indent =3D 4, seq =3D 2) onto ts (FTRACE_UNKNOWN_PID(0)).
-
-2. Task P migrates to CPU 1, where a banner "other =3D> P" binds CPU 1 to
-   existing (PID P), and pushes intermediate frames f3 (raw_indent =3D 6,
-   seq =3D 3) and f4 (raw_indent =3D 8, seq =3D 4) onto existing->stack.
-
-3. Task P migrates back to CPU 0. Since no other task emitted a trace
-   record on CPU 0 in the meantime, no banner is emitted on CPU 0 and
-   CPU 0 remains bound to ts. Task P executes another traced event on
-   CPU 0 at seq =3D 5 (for example, a leaf call or inner frame f5 at
-   raw_indent =3D 10), updating ts->seq to 5.
-
-4. Later, another task runs on CPU 0 and emits "0) P =3D> next", triggering
-   ftrace_process_fgraph_line() -> parse_context_switch() ->
-   ftrace_task_state__rekey(ts, P).
-
-Because ts->seq is now 5 while existing->stack frames f3 and f4 have
-seq =3D 3 and 4, the loop checking existing->stack[j].seq > ts->seq finds no
-match and leaves split_idx =3D existing->depth. That classifies f3 and f4 as
-pre-ts frames, and the pruning loop then compares them against
-base_raw_indent =3D ts->stack[0].raw_indent (2 from f1), freeing and droppi=
-ng
-the active intermediate frames f3 and f4.
-
 > +
-> +		/*
-> +		 * If newer frames or exits exist on existing, prune any frames
-> +		 * on ts that exited before them.
-> +		 */
-> +		post_raw_indent =3D -1;
-> +		if (existing->seq > ts->seq) {
-> +			if (post_count > 0)
-> +				post_raw_indent =3D existing->stack[old_split_idx].raw_indent;
-> +			if (existing->min_raw_indent >=3D 0 &&
-> +			    (post_raw_indent < 0 || existing->min_raw_indent < post_raw_inden=
-t))
-> +				post_raw_indent =3D existing->min_raw_indent;
-> +		}
-[ ... ]
-> @@ -402,6 +725,9 @@ int ftrace_process_fgraph_line(struct perf_ftrace *ft=
-race, const char *line, FIL
->  	if (is_exit) {
->  		char exit_name[128];
-> =20
-> +		if (cs->min_raw_indent < 0 || leading_spaces < cs->min_raw_indent)
-> +			cs->min_raw_indent =3D leading_spaces;
-> +
->  		extract_exit_func_name(func_start, exit_name, sizeof(exit_name));
-> =20
->  		top_raw_indent =3D -1;
-> @@ -479,7 +805,9 @@ int ftrace_process_fgraph_line(struct perf_ftrace *ft=
-race, const char *line, FIL
->  			cs->stack[cs->depth].inlined =3D false;
->  			cs->stack[cs->depth].indent =3D leading_spaces;
->  			cs->stack[cs->depth].raw_indent =3D leading_spaces;
-> +			cs->stack[cs->depth].seq =3D cs->seq;
->  			cs->depth++;
-> +			cs->min_raw_indent =3D -1;
+>  			existing->depth =3D split_idx + to_copy + post_count;
 >  		}
->  	}
 
 [Severity: Medium]
-Does tracking min_raw_indent as a single unsequenced value that is reset to
--1 on function entry cause ftrace_task_state__rekey() to miscompute
-post_raw_indent and base_raw_indent across CPU migrations?
+When ftrace_task_state__rekey() splices ts->stack[0 .. to_copy - 1] into
+existing->stack at split_idx, existing->target_root_frame_idx is shifted by
+split_idx, and the else-if branch shifts both target_root_frame_idx and
+target_root_depth. However, in the ts->in_target branch,
+existing->target_root_depth is set to ts->target_root_depth without adding
+split_idx (and the guard checks ts->target_root_frame_idx < ts->depth rather
+than to_copy).
 
-There appear to be two ways this can corrupt the tracked call stack when
-ftrace_process_fgraph_line() -> parse_context_switch() ->
-ftrace_task_state__rekey() merges ts into existing:
+If a task enters non-target ancestor frames on one CPU (leaving split_idx >=
+ 0
+on existing->stack) and then migrates to another CPU where it enters a targ=
+et
+root function at ts->target_root_depth =3D=3D 0 before the context-switch b=
+anner
+is processed, existing->target_root_depth will remain 0 after the merge
+instead of split_idx.
 
-1. In ftrace_task_state__rekey(), existing->min_raw_indent is folded into
-   post_raw_indent whenever existing->seq > ts->seq, without checking
-   whether that minimum exit indentation was actually recorded after
-   ts->seq:
+When that happens, won't ftrace_check_target_caller() and
+ftrace_process_fgraph_line() treat the pre-migration non-target ancestor
+frames at indices 0 .. split_idx - 1 as being at or above target_root_depth:
 
-   - Suppose task P on CPU 0 (existing) exits a function at
-     leading_spaces =3D 2 (seq =3D 1), setting existing->min_raw_indent =3D=
- 2.
-   - Task P migrates to CPU 1 (ts =3D FTRACE_UNKNOWN_PID(1)) and enters
-     functions at indentations 2, 4, and 6 (seq =3D 2..4, so ts->seq =3D 4).
-   - Task P migrates back to CPU 0 (existing) at seq =3D 5 and executes a
-     leaf call at indent 8 or exits only the deepest frame at indent 6.
-     Now existing->seq is 5 (> ts->seq), while existing->min_raw_indent is
-     still 2 from seq =3D 1.
-   - When CPU 1 later emits its context switch banner and calls
-     ftrace_task_state__rekey(ts, P), existing->seq > ts->seq is true and
-     post_raw_indent becomes existing->min_raw_indent (2), causing the
-     post-ts pruning loop to pop and free the still-active frames on ts at
-     indentations 2 and 4.
+ftrace_check_target_caller()
+	if (has_retaddr && caller_idx >=3D 0 && caller_idx < cs->target_root_depth=
+) {
+		ftrace_unwind_to_depth(cs, caller_idx + 1, blank_prefix, out);
 
-2. In ftrace_process_fgraph_line(), pushing a new frame onto cs->stack
-   unconditionally sets cs->min_raw_indent =3D -1. If a task on ts (or
-   existing after ts) first exits a pre-migration frame at a shallow
-   indentation (such as leading_spaces =3D 2, setting cs->min_raw_indent =
-=3D 2)
-   and then enters a new function at a deeper indentation (such as
-   leading_spaces =3D 4), resetting cs->min_raw_indent =3D -1 erases the
-   shallow exit watermark. When ftrace_task_state__rekey() subsequently
-   computes base_raw_indent or post_raw_indent, it only sees indentation 4
-   and fails to prune the already-exited frame at indentation 2.
+ftrace_process_fgraph_line()
+	if (!has_filter || (cs->in_target && match_idx >=3D cs->target_root_depth)=
+) {
+
+allowing non-target ancestor calls and exits to leak into the filtered outp=
+ut,
+or unwinding into ancestor inline frames when the target root exits?
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261025181125.5143=
-72-1-atomlin@atomlin.com?part=3D5
+72-1-atomlin@atomlin.com?part=3D10
