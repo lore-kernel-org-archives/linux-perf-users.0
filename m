@@ -1,74 +1,74 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.197
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792965892;
-	b=loLhQikzTFbUBepud8i64AHWrK08Z9KE+5k/eq/h2fItLxB589nHyZLVXFhdbzP5Q7W2
-	 6cSseZDqkyEVnToZvWArzrEcSXBY0qAGUtS6SsAFVXIGpScuKWL8fdeWRBgtzLKCCp/QN
-	 hche/6sGQIBRYbvmHkVsUj4zm7ZvCUg0GPnklOTgpoOwQMR1br7s9d4F9axudSSLx+pYh
-	 LCV+TcuDralyWIAtPwNTSwEiVi5LdnrVw1DPSDLP0oQiabbtNp00aj7qiXznwPuhXnPDj
-	 gcFRoG4S8+pNZU20F/HIAsnLxueAzS7S+GnWLhEqe+JzfRF6c7ACneVp6pnOKz0JKMA==
+	t=1792965894;
+	b=CXqcQFeKrkdRA19icZRwl1Bv2YqqrBIgZ5zgt8IM5R4iGr4Es6tfIb+b724aVcDbTUPz
+	 1q0kbBcsnpjaDzneW1JlMwwid0aNyX4S+dXuGR7FBnqPcACWqpFOl3kVwXTK5tf/NcWLd
+	 Zy45ZuY76P5sddWIbdoJqovmxfkov6CBisw3d+ZH2eqJqM9KkhqhBBaX0N8rnAcUjXShE
+	 32XRbmn2T3VHdgWR6PBMe16IvzJr+2e57NYBONOqK9v9rFRjz628NmIXmG+ztbSwMMFUv
+	 WtPvBdSaPuZ4THApyYWOA0YvUBbqu8lk4szvZibpnBhXEmyBECFU57Ykd7OmzPDL26w==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792965892;
+	a=rsa-sha256; c=relaxed/relaxed; t=1792965894;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Received:Date:In-Reply-To:
 	 Mime-Version:References:X-Mailer:Message-ID:Subject:From:To:
 	 Content-Type;
-	bh=tl4JoUZ5KDYN7CQkr/t81Wpys8QU1n82R41inYKbgeI=;
-	b=hRqz++PzjZR9mNldR/zpRJn0Grl2srYsFMEX6vg8mZR+sFLcx4bgW6vVdcLZDP3VjQx/
-	 WKt5F06ZrD2fj4Z17XbCeuKbP0J4TT4dvbqP++ZF+uKGSs8aaB+h/qxg+Ysm9Z/vHF8e3
-	 lwL42W+bo7K3gzOyZf9TU7OfEx+FI6tkQFuqILQ9tVBSU+7tv3Ivx5zvW1LcR7r4dD6Fn
-	 mIpHhq2jY1D6sBOAO2TwmRwNAEM1NjkzZKxxkAQvASbAvSw9KfW08PSnHmoJDa91moEAq
-	 OKqN0Sny8fycd2wcOUp1WpKqGTNdmTQbUO2xO7VZs33E6Gx5LzJidajfn1soXvkqpQA==
+	bh=WqJecG14GS07cjQMqiYKTg40m/jsJ/DoHEnrZ2BoimU=;
+	b=XmRoxtgAnwmQkOMXG/Z5mNWmPRe4nvpbqXb6ScBeRqKfPgFVH7wO+M/tAQ9ipJ1jH+W9
+	 zLpSlAdzlc7ZdP9iHj7ioSzecyLbui8xsugOJss3HujmKTWAqU1ha0Aao4JSqcEI84FiC
+	 UaVfWLQ9X69BF3l+e7UXrHv5TpnZ6/tTquVKHzQS+rQtuIaYsc8fChIRUZPoOzXDLEOBi
+	 yOXPo1liDcDHwMSyjGXyVbECtAfGXXiOElT3LRuZOfjEx0r2o67uezasb4xSI2b7qfPIK
+	 QDy3cAUufMvCbwFSMXJ/D/0VWqFbzog0yZeuOVbJ84yXrmc7YcWgv3uS8qscZcoALcg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=google.com;
 	spf=pass smtp.mailfrom=flex--irogers.bounces.google.com;
-	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20251104 header.b=UyaMxvBU;
+	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20251104 header.b=AtGADeB0;
 	arc=none smtp.remote-ip=74.125.82.197
 Received: from mail-dy1-f197.google.com (mail-dy1-f197.google.com [74.125.82.197])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D57A1606A336
-	for <linux-perf-users@vger.kernel.org>; Sun, 25 Oct 2026 22:04:51 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org D57A1606A336
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1C82606A32D
+	for <linux-perf-users@vger.kernel.org>; Sun, 25 Oct 2026 22:04:53 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org A1C82606A32D
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20251104 header.b=UyaMxvBU
-Received: by mail-dy1-f197.google.com with SMTP id 5a478bee46e88-30c0d568830so6872693eec.1
-        for <linux-perf-users@vger.kernel.org>; Sun, 25 Oct 2026 15:04:51 -0700 (PDT)
+	dkim=pass (2048-bit key, unprotected) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20251104 header.b=AtGADeB0
+Received: by mail-dy1-f197.google.com with SMTP id 5a478bee46e88-359b81ad4e8so3596241eec.0
+        for <linux-perf-users@vger.kernel.org>; Sun, 25 Oct 2026 15:04:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1792965891; x=1793570691; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1792965893; x=1793570693; darn=vger.kernel.org;
         h=content-type:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=tl4JoUZ5KDYN7CQkr/t81Wpys8QU1n82R41inYKbgeI=;
-        b=UyaMxvBUJNhGg5Rr7hYmazOFO1Gi/qTimcPADFYX7goZl0pJ05EaxPZMXnCcsjtlHB
-         mvHNfq2c1wrUwkof3IRDzhLLGYdGlID1r+h14uE6o6tAW8g+iP1AzKIpfoh1/7Gblape
-         52D2TkV5IPXnVbHeQXub8jxyMYxcgSI6LKFMj9HNCeHNZ87Vin33W39ex8H3cH3fRk7f
-         41VX5xI/46cuPhsQgCwunBYZ8J80S/DS4MJ/9LWHm2Rjt514NJeP+A3Tms3CaLJFJl9a
-         ftUrgDwJsDogRujS+AVa9YBEQrVsFuW7G82/WBZAtO7ofVMfq9D6Bf+zwYcn0e3X+z3O
-         5kcQ==
+        bh=WqJecG14GS07cjQMqiYKTg40m/jsJ/DoHEnrZ2BoimU=;
+        b=AtGADeB08dC8Z0twUtwipae0nFTvl5qJrtGaxHO7MPr+8QgJz4FVSyHGXDeaFjzvS4
+         q2KtXxobDXdlxIKrnqlPe0+Q8R7XZhe5bfjSbnV1hUHDk0wrX9d6QiIeASjxW+hg1a6b
+         8M1wzoW84dpR6q5zeK5f81kZ2VasAUbaTGsc9XgOoZP7m8NmV8IawSfkGMGASR2tAO4h
+         nXZwIxUPrtQV3NyGHZbdMPE41yOkVjJYxvoWekbpDVewGnOMM8FPQDdKiZ6XEYWpPa7C
+         BgFOlxEWo6uRFsN5lm1pvhkt2gfaOfugnVxgijY824o5ZolnYGvhv8MzIv1tCa+5BM3F
+         xmxA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1792965891; x=1793570691;
+        d=1e100.net; s=20260707; t=1792965893; x=1793570693;
         h=content-type:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=tl4JoUZ5KDYN7CQkr/t81Wpys8QU1n82R41inYKbgeI=;
-        b=FHztIg2Em2VU4I3aaqH7a82SUVq6mt4f3AR501f8ksrBoOXAKpx2WucfNCQwMXs3Kw
-         ZyLPE7PwTEdRFDue/Dun1u8yzQoDSmn7OmlRVrfSIqNZku4Fg08+X/btEHSmA5LbMFzY
-         BBrcSVckAQX+tTgFKRa/paovu0vGmKXzUo+Bzz5YLleeo8vtUebH8xoIcXD8k3Ms8YTq
-         RMtM6o3QwHia/WO4xkin+REcv0xprrL5LcTmPFbwINTq11pi6K1yxyYFAFSSo4YzfEWI
-         wZTid3/6NvjQvzkW6ZxD+zcyZOr4gthwxJDWCNvOtO1uD/wp3Zy7Lq3EnbAWZ7c0tnNJ
-         Ku8w==
-X-Forwarded-Encrypted: i=1; AKwUvBwOpF0gzU5WUtUNDmHfllJN4Vg5cr92WSCUJIVGr8nBjYfbjYJWsoYOoSMCV1C3NflH5QHfUkF7pNFiQ1Ux3XfZ@vger.kernel.org
-X-Gm-Message-State: AFq9FYKeHnqkGfe03jDAXje9B3ZAgEpFrSjjU+ECuEZeGKHWIsllY84T
-	Yqvdol5A+FSaRubHUPkM+7SbgMgWI0TlsRrIRM8BiBneb+l8f86SWQxLNufvUY2jgJyMLHwn9Gx
-	fCP1YKGp2Wg==
-X-Received: from dlan2-n2.prod.google.com ([2002:a05:7022:eb42:20b0:191:778b:369d])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:701b:42cd:10b0:190:af51:d56c
- with SMTP id a92af1059eb24-19936d40791mr7754325c88.31.1792965890319; Sun, 25
- Oct 2026 15:04:50 -0700 (PDT)
-Date: Sun, 25 Oct 2026 15:03:46 -0700
+        bh=WqJecG14GS07cjQMqiYKTg40m/jsJ/DoHEnrZ2BoimU=;
+        b=bdf/+wIMSgGpGNiCmvqbpyoZShVsLYL46fJU9j6D1NhiEFJVu7ODGE4K40w8m1dSo9
+         SBIo72jc1L4DpQZUO8UaBXck0AvJlAq1G0T+uc7m9luucVhg0zN+XlM+84JXnkVgSOSj
+         CdNRtAxVCwA7wBIp1jvEf3JyCF2VW3QjKKMmzvh0JvmRhp51HkrUywplsaBZhzF7OSfv
+         rrVPAyKiPvLJCOEi+rti9ZIYvUFyUP425hbmi9ty8mII7Uw2Qf9mWSVL8/LSU86MG9rn
+         oDUOCk69KFBbY7x1dKsQmV9QWDyBDYmY6cqMZj4sgD4iQ7B8nLzOr6OD7x151NG7rFtE
+         veag==
+X-Forwarded-Encrypted: i=1; AKwUvBxWCXLB/lnMrYJYEcIWtx1W0GnBl9o3PkgwPCdQ0wFBpJDkZWM/S/LZuBTAQx9xoWvFIz3XY6jKcAE+1ccsTTLQ@vger.kernel.org
+X-Gm-Message-State: AFq9FYLLtgB5HmkL5qFvMS9A6vGiLci8Ga4PkudaAtWyqKMNdDVRwhcm
+	7tIIta1XQNYcffGp/ZyAS0vp6StKElkDyJd+CAVV0LpgnWJYRhTdmFxBnT8yRGLxAp4aexuoSxg
+	DeLHUANfj5w==
+X-Received: from dyba8.prod.google.com ([2002:a05:693c:63c8:b0:369:f2bd:5ab6])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7300:3f17:b0:369:d7b0:99f0
+ with SMTP id 5a478bee46e88-369e84a1c0amr9295533eec.21.1792965892350; Sun, 25
+ Oct 2026 15:04:52 -0700 (PDT)
+Date: Sun, 25 Oct 2026 15:03:47 -0700
 In-Reply-To: <20261025220349.1244499-1-irogers@google.com>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -81,8 +81,8 @@ Precedence: list
 Mime-Version: 1.0
 References: <20261025220349.1244499-1-irogers@google.com>
 X-Mailer: git-send-email 2.56.0.307.g5fe7bd680c-goog
-Message-ID: <20261025220349.1244499-4-irogers@google.com>
-Subject: [PATCH v1 4/7] perf maps: Check map__start_cmp() in __maps__insert()
+Message-ID: <20261025220349.1244499-5-irogers@google.com>
+Subject: [PATCH v1 5/7] perf inject: Use perf_tool__init() for --vm-time-correlation
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
@@ -92,40 +92,42 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-In __maps__insert(), maps_by_address_sorted is kept true if the previous
-map's end is less than or equal to the new map's start. However, when a
-map has an end of 0 (for example, an unmapped [0, 0) map or a map whose
-end has not been set yet) and a [0, 0) map is inserted after it,
-map__end(prev) <= map__start(new) evaluates to 0 <= 0 (true) even when
-map__start_cmp(&prev, &new) > 0 (either because map__start(prev) > 0 or
-because prev's pointer address is greater than new's pointer address).
-This leaves maps_by_address_sorted set to true on an array that is not
-ordered according to map__start_cmp(), causing bsearch() in
-maps__by_address_index() to fail and return -1 during __maps__remove().
+When cmd_inject() was converted to use perf_tool__init() in commit
+a37c0436f379 ("perf inject: Use perf_tool__init()"), the
+--vm-time-correlation branch in __cmd_inject() still called
+memset(&inject->tool, 0, sizeof(inject->tool)) to clear the default
+repipe callbacks. Zeroing out the struct overwrites all default stub
+handlers set by perf_tool__init() with NULL, causing a NULL function
+pointer dereference if any other event type is encountered.
 
-Also check map__start_cmp(&maps_by_address[nr_maps - 2], &new) <= 0 when
-updating maps_by_address_sorted in __maps__insert().
+Use perf_tool__init(&inject->tool, /*ordered_events=*/true) instead of
+memset() so that un-overridden callbacks retain their default stub
+handlers.
 
-Fixes: 659ad3492b91 ("perf maps: Switch from rbtree to lazily sorted array for addresses")
+Fixes: a37c0436f379 ("perf inject: Use perf_tool__init()")
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/maps.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ tools/perf/builtin-inject.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/tools/perf/util/maps.c b/tools/perf/util/maps.c
-index f808df2fe77b..675fe0223faa 100644
---- a/tools/perf/util/maps.c
-+++ b/tools/perf/util/maps.c
-@@ -519,7 +519,8 @@ static int __maps__insert(struct maps *maps, struct map *new)
- 		/* Sorted if maps were already sorted and this map starts after the last one. */
- 		maps__set_maps_by_address_sorted(maps,
- 			maps__maps_by_address_sorted(maps) &&
--			map__end(maps_by_address[nr_maps - 2]) <= map__start(new));
-+			map__end(maps_by_address[nr_maps - 2]) <= map__start(new) &&
-+			map__start_cmp(&maps_by_address[nr_maps - 2], &new) <= 0);
- 		maps__set_maps_by_name_sorted(maps, false);
- 	}
- 	if (map__end(new) < map__start(new))
+diff --git a/tools/perf/builtin-inject.c b/tools/perf/builtin-inject.c
+index ce7562fc788c..c30f5aaabf4c 100644
+--- a/tools/perf/builtin-inject.c
++++ b/tools/perf/builtin-inject.c
+@@ -2464,12 +2464,11 @@ static int __cmd_inject(struct perf_inject *inject)
+ 		}
+ 	} else if (inject->itrace_synth_opts.vm_time_correlation) {
+ 		session->itrace_synth_opts = &inject->itrace_synth_opts;
+-		memset(&inject->tool, 0, sizeof(inject->tool));
++		perf_tool__init(&inject->tool, /*ordered_events=*/true);
+ 		inject->tool.id_index	    = perf_event__process_id_index;
+ 		inject->tool.auxtrace_info  = perf_event__process_auxtrace_info;
+ 		inject->tool.auxtrace	    = perf_event__process_auxtrace;
+ 		inject->tool.auxtrace_error = perf_event__process_auxtrace_error;
+-		inject->tool.ordered_events = true;
+ 		inject->tool.ordering_requires_timestamps = true;
+ 	} else if (inject->itrace_synth_opts.set) {
+ 		session->itrace_synth_opts = &inject->itrace_synth_opts;
 -- 
 2.56.0.307.g5fe7bd680c-goog
 
