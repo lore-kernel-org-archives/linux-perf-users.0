@@ -1,74 +1,74 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.200
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.198
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792965896;
-	b=wLflC71djMFNm7BtWvEewRdYpF8pcxGKV5WYiUXSESysVtuKj8O50e5BV89DZKOud/58
-	 KXziAPKTewe98069Y55RB8GqIZHmZ283XyTi4jwhvCVhNWe074phCLWk3SF0CvLrS1SRI
-	 4I3QDj3D3dWlx/c/IhClFU9QBr2IAdGVfOwKPb6++5bUZGwGsjzCF9Sc39GtBNvJ8fLUV
-	 LFpfB2yRYjBSDRsa+Whm+VK46kNvQ/QP3b6c9n6h1RJuqCjsEPsdae7EXNkPlJ/5aBSCj
-	 VzkQThx7g8E4utxa2IVO53xZGxsn18Ux55gd98OqmKnNH8oxzKsBiG4u2u8PyP3s6IQ==
+	t=1792965898;
+	b=bYUOYkd/DndKiSNZfIM6SvnVMZ3tXXSog/IKXDeFnZHJmm2zwMgQHy8i83N9JXshGXYE
+	 l5QsnYunFmjUjUIo26kZhWuEuRaod5zHIIXBbyLPJvf8BQWJ/xIvMUiSzHdIbT08XAjtD
+	 uxrASjwmm9+q18kFX17T41M0PKL31+Y2mpCxHRcveB9+AU4JJAJk3iyJ5MU4HhdQA1TTX
+	 UBlj9Kref8FHXqPNkX/1XhxU3lPwhuFsrN0XJoYsDPZ+9MpWgltw4o5pTeEAIorQx8D4p
+	 m94Q695Vglii6NLnBRWZ/DFgmgS6ETN8BDKlhWGmR7ZI3HLTWQQRmA9C+SAJGzHHZ0Q==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792965896;
+	a=rsa-sha256; c=relaxed/relaxed; t=1792965898;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Received:Date:In-Reply-To:
 	 Mime-Version:References:X-Mailer:Message-ID:Subject:From:To:
 	 Content-Type;
-	bh=OfqLq2Wyjby8tJh1B5C3yDh0EX/uJgrZHG+gv1L4SSI=;
-	b=Jg/jyDTglxcW6swbDgig+iyCkpgqpZtf3oASgcFLxP3OAzatvnIs1HOsUj/BKZODpx1/
-	 NL4Pe20yBilQ2bud7hsCmOam9TNIEayaxU4Io099u8agSHStIy/iKc3a/WDcoDmQf8vyI
-	 1ahi704eAJeaaAg6AFJvTFAUdjQgqPAqg/Q9ClLMeeo2QLfsLtYJVoDqw4xP0ZD9lyiAd
-	 LOUN0DJNL0lcf8kNaIQk5Z7/7EfFxjVwNRXeiAOBggSEpijoaxc+o4enzJ5RvhfghvFDx
-	 DBrpuAcyZyJk1FiHZkFSeAk8BRI8geP/zLP0+LnygSJNqBrOU67/pKiIWCgHfcRC3rQ==
+	bh=aL/VaqLWH9lnIsP5naB5jHKeC9px7R9A0oK/nE/LFOM=;
+	b=X2tB32hMT4r3f5Ef4io0Xgb0EUFc03jk/gtaRdCSr4KaBOx/0tn46WjjIpd+bq4g4kNI
+	 7VgnFFdDvHWQ0EGc3w2KQmCOpe+kLvTE1xLkeQpl7XTNhI0tibjpbKtpVCqaU8oTCALQn
+	 /XPqG8Nem4y5MUhiTFS4IuuWL14oo+ofB+WGY8AYr8GQVS+2iSAu0StwCbuozHEmFeCjb
+	 /VudKJ7yrzvYYRJJBhF1psEqT+cUfSH5v7U/QbRgBtFLKnSZD9+shG65gsr3wH0wPEalc
+	 Alyq/RV5wQEuTk0R0kxFqfTeMq0JyOzONPEXAdglk0GIPQk5FiE8qhi0DNyeGgp95pw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=google.com;
 	spf=pass smtp.mailfrom=flex--irogers.bounces.google.com;
-	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20251104 header.b=RJgFPabG;
-	arc=none smtp.remote-ip=74.125.82.200
-Received: from mail-dy1-f200.google.com (mail-dy1-f200.google.com [74.125.82.200])
+	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20251104 header.b=u6UwIPrC;
+	arc=none smtp.remote-ip=74.125.82.198
+Received: from mail-dy1-f198.google.com (mail-dy1-f198.google.com [74.125.82.198])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3EEB606A33C
-	for <linux-perf-users@vger.kernel.org>; Sun, 25 Oct 2026 22:04:55 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org D3EEB606A33C
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8ADF606A339
+	for <linux-perf-users@vger.kernel.org>; Sun, 25 Oct 2026 22:04:57 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org E8ADF606A339
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20251104 header.b=RJgFPabG
-Received: by mail-dy1-f200.google.com with SMTP id 5a478bee46e88-35cbea41088so3838762eec.1
-        for <linux-perf-users@vger.kernel.org>; Sun, 25 Oct 2026 15:04:55 -0700 (PDT)
+	dkim=pass (2048-bit key, unprotected) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20251104 header.b=u6UwIPrC
+Received: by mail-dy1-f198.google.com with SMTP id 5a478bee46e88-33713e5e6daso4801662eec.0
+        for <linux-perf-users@vger.kernel.org>; Sun, 25 Oct 2026 15:04:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1792965895; x=1793570695; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1792965897; x=1793570697; darn=vger.kernel.org;
         h=content-type:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=OfqLq2Wyjby8tJh1B5C3yDh0EX/uJgrZHG+gv1L4SSI=;
-        b=RJgFPabGH1Z8HH02RP2SVN8f+xyQZsgoh148XWYjG1p4N6gpLZn1HyPXEedBYVMnV6
-         zxEOW7tV6pUDJTPd1fdHaPek8z/PSqshfv76M7ff9EJdr1oxFaYyBQGRw2CYdwj1rfTb
-         tX3oGW3N5hZ44a0oZbaUyrE+7xD2flgWCaufwYR8Gtgkk9X9rXUMA232H/VB9tp+1RjU
-         Y42v4FR2C0F8WZFJ9FvIbERa9/wk9NC6m5vz0syv7lF64KMKZtSSRJn+FbWQ7jSq4YBo
-         3Kn+C6hAG14LjQaORsrsgKnRXSOZZBDV2NuKR4L7L9cb8eFn/5etmvaFCjgd3nwo3ypx
-         Rqog==
+        bh=aL/VaqLWH9lnIsP5naB5jHKeC9px7R9A0oK/nE/LFOM=;
+        b=u6UwIPrCTQKmmEBfMsxfOJL1fS1Cbr/zEvTWGruSs32PgfFfXLjdbOFNj6BLfmJW+D
+         lbISytdeajDuLBMimSGk4v3f//jZGAJ4CXsHLrVn1HY8OtxwLjjacAjIvnQ/KZHBTE6H
+         idpBVhHYKUSYbb7V3HljoM8IRepbubMq6MwFSJOfrzJDotvifYgy0bT8R89v6HVHWSGo
+         YJhvmZu9zzAtFQ903Izot/Op/TY85fhaBcqnCH7uiFhL06Zsk/1upaWTsM5Hqazgtfhn
+         ha3MB2Ptr0vWrqUt8jtVuqdCjWUIkJDGOEVXj9vNwLjP8+e75ih9jTa9mHDfJfakLf66
+         P20g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1792965895; x=1793570695;
+        d=1e100.net; s=20260707; t=1792965897; x=1793570697;
         h=content-type:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=OfqLq2Wyjby8tJh1B5C3yDh0EX/uJgrZHG+gv1L4SSI=;
-        b=0wQwOI6TbP8zVuxFp/jh0zmkBD42rfuwYfb6w2G2wlm4nyFMC0Nr3+dh4QwIOaSdqr
-         MBmVUcuPCOX3yblVss54UOz4AvF6lISgU0baXbnxI4Mm9sUc98pwVjpybpMkYed2D6Ii
-         WluePFjsTHZ93jh0ljEg/0570dYGJTEnwn6Eg3WBedPlLgR2sB4Oec3GKplMOljVxoab
-         WZZNZ0Sohnb9603tD4kFrLx8Qzqj/lOZvuukrnxmmxnBcmg830RCkQmABubc2wpIBaYh
-         xisnEMiqOXjWPiEh4IH64UhjXkhhMv6AvyM8WI266srDkKW0IUcObo/FGdEg9a5oWiAS
-         LKqA==
-X-Forwarded-Encrypted: i=1; AKwUvBxSoMXWWBDxWisUrzpnLAjwD5SUb2cE7eFBVTfCB1X9MuIQOD1mOIHzs2IqOnt9NeuZZuWHi5dRYRMaJ0htbGpV@vger.kernel.org
-X-Gm-Message-State: AFq9FYLuk06VOQKoLeMH89N9+zkU6k2kMS/+59vxhw3VFIU6j2UvFo6a
-	0KbJjSR6FXc3cnI595RFkRfnC/pSkpmgHoakZHGUefTpzfRXp2l1wnL3FWjB+FOgBFJ/ia511lh
-	dDKSMUCkujg==
-X-Received: from dydxu14-n2.prod.google.com ([2002:a05:693c:894e:20b0:351:16da:ebbc])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7301:1403:b0:34d:755b:d60b
- with SMTP id 5a478bee46e88-369e8501bafmr7589789eec.34.1792965894554; Sun, 25
- Oct 2026 15:04:54 -0700 (PDT)
-Date: Sun, 25 Oct 2026 15:03:48 -0700
+        bh=aL/VaqLWH9lnIsP5naB5jHKeC9px7R9A0oK/nE/LFOM=;
+        b=Pk9mL6TiDTqyEwSE+OQy/bmFuO4/BhZ+RdruzEBxWEuliNmXfhDjDerxlysjdlu1Rq
+         UVak6oKMB2LUacza+uSgKY8x0fdXTfbNHri0bNqeUIX/FRGbhz4JUoQ8LsHWLXoan0Ld
+         am3MLO/w2zQKOgGbGjLP0s2IpznSXKcQ2XQwRkRaUKbU2VKYOu7mBLk0+noaRQ91md5L
+         3WwiG1HHNyeeyTlclvIIgyoTEPYXc2efL3CLOz5N1JZpYUbBesBDnzW775lcXUdMUXWE
+         WW1XB379q/S7GsWguCgc68OLN6gFor3vSLgvnd0xLntQus+Nfi7T+pJwgSjGXLt/157J
+         oleQ==
+X-Forwarded-Encrypted: i=1; AKwUvBx/UW+GjB1h6hUq9FFqELeMXg51qHUJJ4U3yKUfHW6lr6+Q9S02jZcAseOK4pnumulJASzssWZQ9hj1TDtKm+p5@vger.kernel.org
+X-Gm-Message-State: AFq9FYInwfs5MOW7iJc09I6bMWS3AcKEgkMrKnZPqJu0SycXkig2FTon
+	LovQpMTtK5sqW3wd+VF4wjsEQ/PEcTzRPKYQztrLV6u/QRKW/lsB0FBSzeDOOZD09Wut/H1/cCL
+	Yi7pr2q/6gA==
+X-Received: from dloo4.prod.google.com ([2002:a05:7023:a44:b0:199:4f68:8e41])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:7f06:b0:166:3e26:c4b5
+ with SMTP id a92af1059eb24-19935be7e56mr7748009c88.18.1792965896672; Sun, 25
+ Oct 2026 15:04:56 -0700 (PDT)
+Date: Sun, 25 Oct 2026 15:03:49 -0700
 In-Reply-To: <20261025220349.1244499-1-irogers@google.com>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -81,9 +81,8 @@ Precedence: list
 Mime-Version: 1.0
 References: <20261025220349.1244499-1-irogers@google.com>
 X-Mailer: git-send-email 2.56.0.307.g5fe7bd680c-goog
-Message-ID: <20261025220349.1244499-6-irogers@google.com>
-Subject: [PATCH v1 6/7] perf inject: Set ordering_requires_timestamps before
- creating session
+Message-ID: <20261025220349.1244499-7-irogers@google.com>
+Subject: [PATCH v1 7/7] perf session: Check lbr_stack for NULL in callchain__lbr_callstack_printf()
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
@@ -93,132 +92,30 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-In cmd_inject(), inject.tool.ordering_requires_timestamps was initialized
-after delegating tools (such as aslr_tool__new()) and __perf_session__new()
-had already been called, leaving delegate tools with the uninitialized
-value. Set ordering_requires_timestamps on inject.tool before creating
-delegate tools and the session.
+callchain__lbr_callstack_printf() can be called on an evsel with branch
+callstack enabled even if a particular sample has no branch_stack payload
+(sample->branch_stack == NULL). Check that lbr_stack is non-NULL before
+dereferencing lbr_stack->nr.
 
 Fixes: febea9ec382f ("perf inject/aslr: Add ASLR tool infrastructure and MMAP tracking")
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/builtin-inject.c | 49 ++++++++++++++++++++-----------------
- 1 file changed, 26 insertions(+), 23 deletions(-)
+ tools/perf/util/session.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/perf/builtin-inject.c b/tools/perf/builtin-inject.c
-index c30f5aaabf4c..3f3108fd3981 100644
---- a/tools/perf/builtin-inject.c
-+++ b/tools/perf/builtin-inject.c
-@@ -2463,13 +2463,18 @@ static int __cmd_inject(struct perf_inject *inject)
- #endif
- 		}
- 	} else if (inject->itrace_synth_opts.vm_time_correlation) {
-+		bool ordered_events = inject->tool.ordered_events;
-+		bool ordering_requires_timestamps =
-+			inject->tool.ordering_requires_timestamps;
-+
- 		session->itrace_synth_opts = &inject->itrace_synth_opts;
--		perf_tool__init(&inject->tool, /*ordered_events=*/true);
-+		perf_tool__init(&inject->tool, ordered_events);
- 		inject->tool.id_index	    = perf_event__process_id_index;
- 		inject->tool.auxtrace_info  = perf_event__process_auxtrace_info;
- 		inject->tool.auxtrace	    = perf_event__process_auxtrace;
- 		inject->tool.auxtrace_error = perf_event__process_auxtrace_error;
--		inject->tool.ordering_requires_timestamps = true;
-+		inject->tool.ordering_requires_timestamps =
-+			ordering_requires_timestamps;
- 	} else if (inject->itrace_synth_opts.set) {
- 		session->itrace_synth_opts = &inject->itrace_synth_opts;
- 		inject->itrace_synth_opts.inject = true;
-@@ -2482,8 +2487,6 @@ static int __cmd_inject(struct perf_inject *inject)
- 		inject->tool.aux	    = perf_event__drop_aux;
- 		inject->tool.itrace_start   = perf_event__drop_aux;
- 		inject->tool.aux_output_hw_id = perf_event__drop_aux;
--		inject->tool.ordered_events = true;
--		inject->tool.ordering_requires_timestamps = true;
- 		/* Allow space in the header for new attributes */
- 		output_data_offset = roundup(8192 + session->header.data_offset, 4096);
- 		if (inject->strip)
-@@ -2514,12 +2517,6 @@ static int __cmd_inject(struct perf_inject *inject)
- 		inject->tool.finished_round	= host__finished_round;
- 		/* Keep track of which CPU a VCPU is runnng on */
- 		inject->tool.context_switch	= host__context_switch;
--		/*
--		 * Must order events to be able to obey finished round
--		 * ordering.
--		 */
--		inject->tool.ordered_events	= true;
--		inject->tool.ordering_requires_timestamps = true;
- 		/* Set up a separate session to process guest perf.data file */
- 		ret = guest_session__start(gs, name, session->data->force);
- 		if (ret) {
-@@ -2536,8 +2533,6 @@ static int __cmd_inject(struct perf_inject *inject)
- 		inject->tool.exit	= perf_event__repipe_exit;
- 		inject->tool.mmap	= perf_event__repipe_mmap;
- 		inject->tool.mmap2	= perf_event__repipe_mmap2;
--		inject->tool.ordered_events = true;
--		inject->tool.ordering_requires_timestamps = true;
+diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
+index d9d06337933f..a58b4fe44b62 100644
+--- a/tools/perf/util/session.c
++++ b/tools/perf/util/session.c
+@@ -1302,7 +1302,7 @@ static void callchain__lbr_callstack_printf(struct perf_sample *sample)
+ 			break;
  	}
  
- 	if (!inject->itrace_synth_opts.set)
-@@ -2816,6 +2811,10 @@ int cmd_inject(int argc, const char **argv)
- 	data.path = inject.input_name;
- 
- 	ordered_events = inject.jit_mode || inject.sched_stat ||
-+		inject.itrace_synth_opts.vm_time_correlation ||
-+		inject.itrace_synth_opts.set ||
-+		inject.guest_session.perf_data_file ||
-+		inject.convert_callchain ||
- 		inject.build_id_style == BID_RWS__INJECT_HEADER_LAZY ||
- 		inject.build_id_style == BID_RWS__MMAP2_BUILDID_LAZY;
- 	perf_tool__init(&inject.tool, ordered_events);
-@@ -2862,6 +2861,21 @@ int cmd_inject(int argc, const char **argv)
- 	inject.tool.schedstat_domain	= perf_event__repipe_op2_synth;
- 	inject.tool.dont_split_sample_group = true;
- 	inject.tool.merge_deferred_callchains = false;
-+	if (inject.jit_mode ||
-+	    inject.itrace_synth_opts.vm_time_correlation ||
-+	    inject.itrace_synth_opts.set ||
-+	    inject.guest_session.perf_data_file ||
-+	    inject.convert_callchain ||
-+	    inject.build_id_style == BID_RWS__INJECT_HEADER_LAZY ||
-+	    inject.build_id_style == BID_RWS__MMAP2_BUILDID_LAZY) {
-+		/*
-+		 * to make sure the mmap records are ordered correctly
-+		 * and so that the correct especially due to jitted code
-+		 * mmaps. We cannot generate the buildid hit list and
-+		 * inject the jit mmaps at the same time for now.
-+		 */
-+		inject.tool.ordering_requires_timestamps = true;
-+	}
- 	if (inject.aslr) {
- 		tool = aslr_tool__new(&inject.tool);
- 		if (!tool) {
-@@ -2932,16 +2946,6 @@ int cmd_inject(int argc, const char **argv)
- 		}
- 	}
- 
--	if (inject.build_id_style == BID_RWS__INJECT_HEADER_LAZY ||
--	    inject.build_id_style == BID_RWS__MMAP2_BUILDID_LAZY) {
--		/*
--		 * to make sure the mmap records are ordered correctly
--		 * and so that the correct especially due to jitted code
--		 * mmaps. We cannot generate the buildid hit list and
--		 * inject the jit mmaps at the same time for now.
--		 */
--		inject.tool.ordering_requires_timestamps = true;
--	}
- 	if (inject.build_id_style != BID_RWS__NONE && known_build_ids != NULL) {
- 		inject.known_build_ids =
- 			perf_inject__parse_known_build_ids(known_build_ids);
-@@ -2978,7 +2982,6 @@ int cmd_inject(int argc, const char **argv)
- 	if (inject.jit_mode) {
- 		inject.tool.mmap2	   = perf_event__repipe_mmap2;
- 		inject.tool.mmap	   = perf_event__repipe_mmap;
--		inject.tool.ordering_requires_timestamps = true;
+-	if ((i != kernel_callchain_nr) && lbr_stack->nr) {
++	if ((i != kernel_callchain_nr) && lbr_stack && lbr_stack->nr) {
+ 		u64 total_nr;
  		/*
- 		 * JIT MMAP injection injects all MMAP events in one go, so it
- 		 * does not obey finished_round semantics.
+ 		 * LBR callstack can only get user call chain,
 -- 
 2.56.0.307.g5fe7bd680c-goog
 
