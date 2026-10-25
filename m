@@ -1,57 +1,57 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792952196;
-	b=UOwj3Bcr4idmDixCjtJtOVqwqnUR1Nzw430o1aJi/44D0e7yx7pxWjKVW7hefMLsEH44
-	 umIECIg+2Zy2Nz8/a33Aw5GWN71NHsGtrMKaVNs6lcpoSSpRQnX9IoIh0oyC8fJQOEbcY
-	 IwFjylnxfAYQjK1SE2rCPjaDtNM8rfd8NdsPIAx+i20gGMwfJ96hVEJuKmvK3Gc55Efgq
-	 /3ne/jDTLuGt7KLxyNLd6D3u/L3voyt3hiky8/gDVq6wDNnJb1qY2ud7voxRUg244AKCK
-	 Uv6wuv1H5PHPrvYupz4UuCZbOgFTy2cw/OMsbC14xyVwpo1FWlT6/9QdP1am7fia2cA==
+	t=1792952231;
+	b=wnKvPDndy9587O/4Z1e0qrxF2ivw8uMdfj4NbHSMd1u3RKHzKBbKQePsi0vxb8T3vwBI
+	 mqa8R0H7ww7y2Orc8Uw5CUuo5Jxc+DB4h1jxj3tPILdXGXuf498pO1k6An49Gk4e5NyAZ
+	 ij4nNO7EZTgdBdRywckYSDfZlqdripIkergAHzWJM9uIEMjyBvi+ysVl+4tOBNXl+WTYi
+	 tk0nnr5M8OUns9pjQNWEFunmZUCvjfH2hfVNd97dmH/vUUvMGOAxYxgWiaxXDzKFYRMJA
+	 FzD46AT4sf+CxEPfxoONZc/VFshGsJT+LoirK/J30qTgkFP7RUspjCe35/TdGIYUzuA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792952196;
+	a=rsa-sha256; c=relaxed/relaxed; t=1792952231;
 	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
 	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=qUGbGw6lhXSgFcYPpKmrjDekCemkuWrCSxYH09TQDRs=;
-	b=GB/NGeovMCnXWBpgqV3AAOBb3u6cIc6dgOiUoDs4s2aFREoZp589Ca8W59t8wEiDKSJ4
-	 Q2txFl4lFSqc8PWHZ1c72Mgv5C19Aaf/bgh1wl/imDB0hB0jRMaQO6iMFomAmFMx/MphL
-	 ePPpt0CH/hlgdXBqb14sAfP74S8YqGOX07z77F3QfJx+FLwETimns7drTtyKtAg9nqV3t
-	 5F1dQ7e8Nf/MjzMmNfgQgVCl+8GJ5QgA3ALZKn5Vh38rzXT+sKqPq9BkfbJbCXKbJjZXW
-	 RPdoymXH1TjxD1ukdOIr0pGgfHRBtjWw+7XqDcNPf+3YVcUJN7Eda1JIF5XGL5McquA==
+	bh=keC4b93GWAAkVL76YWzCbGB8TTsfZqreVdI3zf8U5vg=;
+	b=CY99xCVA0oTEx9amRNE3fCZmBW+ch4rm7cFoLlz9SCfWe743VzUApu5fPuooiotcF63K
+	 3/UT8MhCQoxRGfKw2cAjSDQ/ivuiYAnIeMUtsH5AShqkAAC6Gow5RZzAxwVYxWDakB6vn
+	 AgNh75NRj36L3cUa9rR6tVeV9Pb4JBoKY8D3oxkf9TmfSjkdIU2IfeEEX+kn0AiOELksx
+	 lh+4004Pm47EDKBVO/qEjMWIkyb7IvRbSZmEGd27MM0TWc1QdE+EtLH6EhOgMdIdjIdbv
+	 PfHuAAOEK/yvflDGHXNU29ijTnkXANbFzW5QnG2dSeHDww7WSdkf6D/b9qUz9qqzrFw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=YRAVETB6;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Ng6WXL7V;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03C92606A31A
-	for <linux-perf-users@vger.kernel.org>; Sun, 25 Oct 2026 18:16:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98C90606A31B
+	for <linux-perf-users@vger.kernel.org>; Sun, 25 Oct 2026 18:17:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=YRAVETB6
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 663C11F01825;
-	Sun, 25 Oct 2026 18:16:35 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Ng6WXL7V
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0E8831F01825;
+	Sun, 25 Oct 2026 18:17:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1792952195;
-	bh=qUGbGw6lhXSgFcYPpKmrjDekCemkuWrCSxYH09TQDRs=;
+	s=k20260515; t=1792952231;
+	bh=keC4b93GWAAkVL76YWzCbGB8TTsfZqreVdI3zf8U5vg=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=YRAVETB6om4HOjcsT66h5cz1ge7cl5UigAoki0cR3Eb19E+bW8nzDqWgVNv3lfkJo
-	 oDR2l+orkZyTWa1bvnTEvqW/VOXSeJ+VffJ9iAiQ/IhuALf+Id3vFZexh2FB147Mt1
-	 Dusm8m5MYejCowUkx6ZLCW3ELmi7NpZoKSTFprZ2ZWx5q4Tw+s3oVR3BO/X5aEZOAY
-	 WTAF040jiWURBlxvqO0RBaJs7nIe6D6MSu9K+kfntz8f6TWbFMqtft19RkFoQAbaxl
-	 VtIsXJeLFZBgaluwQ5XW/Cx3DxHOF50KiJps1gO13Zl7oBZLb00Ec70Sr798hrVU/5
-	 RWMECjCJgRpsA==
-Message-ID: <sashiko-outbox-184318@kernel.org>
+	b=Ng6WXL7V3iABNfKRVx+F7QsVlRWUq5mYtN/PGT07xA+uB1L4gXPFYgMBTIkKPd8li
+	 nvgnS6xnhL44KNEgiorN5ELWX7Q9lcBdK01mxDbCSMlC7Qt8ksPP45c6lDxrAEySlG
+	 O1vZ7JK/P6fP+GpjK47MlKJDuOm7fY+DnzgZOLdVsvp+j1yiXMje6tOwZcW0iA/l5W
+	 LHLiOTObroHzPgpJ9XZSOHfpHl2SBFv3tlBTlsJB2pHRlOJYxZNC9QQJErA4w9WxOy
+	 Y/qpJa1K/zTQjY5Ov0NY84E5fYBQ6GXPEmDnp6Z3TU+2ny62pC/n5Wtoqk9s8C3IYD
+	 6KyvAoVOCyTsg==
+Message-ID: <sashiko-outbox-184319@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH perf-tools-next v11 03/10] perf ftrace: Support
- filtering return address comments
+Subject: Re: [PATCH perf-tools-next v11 04/10] perf ftrace: Add basic task
+ call stack management
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Aaron Tomlin" <atomlin@atomlin.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20261025181125.514372-4-atomlin@atomlin.com>
+In-Reply-To: <20261025181125.514372-5-atomlin@atomlin.com>
 References: <20261025181125.514372-1-atomlin@atomlin.com>
- <20261025181125.514372-4-atomlin@atomlin.com>
+ <20261025181125.514372-5-atomlin@atomlin.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Sun, 25 Oct 2026 18:16:34 +0000
+Date: Sun, 25 Oct 2026 18:17:10 +0000
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -61,23 +61,24 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 
-> When tracing with the Linux kernel's function graph tracer, enabling
-> funcgraph-retaddr records the return address of each function entry as
-> a comment in the trace stream (e.g. /* <-load_elf_phdrs+0x6c/0xb0 */).
-> Whilst valuable for tracing execution origins, these trailing comments
-> can add considerable visual clutter to the call graph, particularly
-> when examining deeply nested call trees or when synthesising higher-level
-> abstractions.
+> The function_graph tracer records kernel function entries and exits with
+> nested indentation. To perform call graph analysis and subsequent inlined
+> function reconstruction, userspace must track the active call stack on a
+> per-task and per-CPU basis.
 >=20
-> Introduce support for filtering out return address comments from
-> function graph trace output whenever return address display is not
-> explicitly requested via --graph-opts retaddr.
+> Introduce basic call stack management for the function graph tracer:
 >=20
-> Key aspects of this implementation:
+>     1.  Data structures
 >=20
->     1.  Return address parsing and filtering
+>         Define struct ftrace_stack_frame to track function names,
+>         indentation, and inlined status.
+>=20
+>         Define struct ftrace_task_state with a dynamically resisable call
+>         stack array, tracked in a hash table keyed by PID alongside per-C=
+PU
+>         active task bindings (ftrace_cpu_tasks).
 > [ ... ]
->         parsing and string filtering across all supported formats.
+>         ftrace_cpu_states__clear().
 >=20
 > Tested-by: Ian Rogers <irogers@google.com>
 > Reviewed-by: Ian Rogers <irogers@google.com>
@@ -87,5 +88,5 @@ Sashiko has reviewed this patch and found no issues.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261025181125.5143=
-72-1-atomlin@atomlin.com?part=3D3
+72-1-atomlin@atomlin.com?part=3D4
 
