@@ -1,57 +1,57 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792910876;
-	b=Vnu16xDgdvG68IphGNIE8Fm1B9qVawLpbGCscsKb0sd8/h7l9fNZXb0tudrnLeoI2w15
-	 Sznim4TqmuxmOg9tQn5pqM9GGum9A07tzp69Q8uUk3MNRekUXWKFe4GYO0Nhs+nbwpQvv
-	 PI0VSfF41m0qxk1q6McjePv14kjF+OSEdthJOtL0yoDpAwQokiWWaFqnoat1t0OE0Gb6o
-	 DMtk+GRlu34dpaGjBnsM8S9HVK1elj6hVbb7J7Y6j7ofhUEO4n11Pvtrupo869ru3I7Yu
-	 Qwl6dplE5AGDYvbu182skSMmcmZ3sePJev97XOGPDHWw7U8bqZYnnJRlsmjsTfAR1nA==
+	t=1792911021;
+	b=Qy+hv8mA0voqNzpx7iKPVfogE2BXRhWs729lkBx0YiKttnyMJffbBMNDbVSnlkWxcsRA
+	 L34XvGjwZh67owfQEawThoM4+gAFfsn/QphH16GRSMqkmQSYwDqJ8xS4dtwTRcOFRYpUS
+	 6zkQbpVBVLBS3WA+5oSnQP5k19B4jgkRdvvTSrBfSiTHS7KoNyEvucuargv3xKeJrz7Ba
+	 HKBPrzwFEzlOiHaQ14sKwVSD7tH3lEkZWYX8z9YV3gegYkhXKZd2YCib3F5OnssesV9O6
+	 jh3HvFKerMz59XTcsqBf47b2A3191lxs15c2W5sQK1PVEGLWjJTauRpeWowqSTp5KvQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792910876;
+	a=rsa-sha256; c=relaxed/relaxed; t=1792911021;
 	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
 	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=2LujHc1JCCJPcZRGX2ZE1aJQ7hXrbVFOuJzFDNnODyo=;
-	b=CYgxNAhKO+52TzLOXqbmxbFeePHmJ4E6yU5OhdM43pQv/sOermrwuCvOWqx5dtAOALSi
-	 pSyOEMLITLhMQgcuM9MoCii8NLNyPenA8aEl68SM6iA42Sp5OZ3JAfn6cuo7ir47bH+w4
-	 WvOzzgXnbEyadxEA6SUOsD8DH7PNWR4zZuK2kV07yWUNF/5djLd9wM35gn4dgC0SWRyoG
-	 zJOKlPYL/6F4iSdeNuRv/wF9oosu2WlaCyRv/47BL5zfOkHvypwD64DvVEDCPhEGfsNgi
-	 PybAiUzUDOB9dMPmTd/GKdjbXMN+GSbeW7YNWJeKKv5AKyVvnYDqW9aUAF5ERDOPxYQ==
+	bh=fVHpdAvspCYMrkDcByy6lDPwg4zMKjKzaAgmFlr2Azg=;
+	b=yA5ZHQIpjDvZE6h68bWnQUBgzQ03whkTFI1bA17MHWRZ6e78VtXZEUuHQKU5eQXJBM2N
+	 BbqBhKrr5gp6qaxeC5Ac0w294327Z+mr12deVBzpO65U5YAHTQFUJSWxuUUcAdWjM36ND
+	 h9VQcVD9Yx7xQqY51u+bIx1jtUDKu46/+YI40+CyyFXO4xwq9sRKFJC0MNWX6XCNolFk0
+	 lbiUI0dZDaBUmTOGK0pxNnLMRjR2wbegZ5d6FIfA4obNPYKQrN6QeQfOBrle4DZiretMD
+	 ocunxOmTcUIc1UC+J2ENQprd1NfxlWhRvUw+vVkLktv+IG6f+h8aCbg54/XsJh+Hjew==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b="YMq2BAQ/";
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=BnibZCMU;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0AD7606A31B
-	for <linux-perf-users@vger.kernel.org>; Sun, 25 Oct 2026 06:47:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BB09606A31A
+	for <linux-perf-users@vger.kernel.org>; Sun, 25 Oct 2026 06:50:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=YMq2BAQ/
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 45F081F01825;
-	Sun, 25 Oct 2026 06:47:55 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=BnibZCMU
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 42E021F01825;
+	Sun, 25 Oct 2026 06:50:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1792910875;
-	bh=2LujHc1JCCJPcZRGX2ZE1aJQ7hXrbVFOuJzFDNnODyo=;
+	s=k20260515; t=1792911021;
+	bh=fVHpdAvspCYMrkDcByy6lDPwg4zMKjKzaAgmFlr2Azg=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=YMq2BAQ/zEZv6gXCJkfPYujZMIuIuin2TUyfTdxXAYzGGVjz5cqFR2F74p07i7J+F
-	 f6WMapx2txN3DEapqQ25x2s+CV1vuyKvc92XjiYPpOz1cB88hia3MGJR+4FdGyOW2g
-	 6lJJOTvOq2nx4MdyBLWUmizb2OcmMu+Elh54dlCWVa3FxOUxItaI0DJyZ2eHsaoFmw
-	 GBP1Nhty2D6/G2p9e0NecU5EIoNoIKU1QwMKsBw6t9w7OF6EpwsQ9b97yb9216irlt
-	 n0kv4OHNApT9fafLkp02aCH33X0MVnq/9UMoyE53Zky3ChkppxFIMe6RfQLxCmdclB
-	 buxaA4JWft9Cg==
-Message-ID: <sashiko-outbox-184102@kernel.org>
+	b=BnibZCMUGIbI6C5UlKZiijfl2LWuu4k6fqIVUaVTwG78Dd/7UOIQQm/NG1Hr74JGg
+	 /5n72h/0WNGhbw/C/RDnKymv1vpw/qrEZ5RJgoBq4HNJ1e92r1l2Hq6G/J19Q5nuvz
+	 3Oh1z47MwsNO9QsDAGnI/pj+DwZi5rNOocGogvV5tXmvox+vPaQ91294OikigvfYWt
+	 3HIncVKW65MunMUmvbBR29uO4N2TbcvB/jkRxspp6tsdfn8TU1qXwhk/JJPPvOou++
+	 Wn0tVVwUDIBPMAuWX5nWnYJkkBCzn9TL85eUnXgGnncmF0EjCbqcJ+DMyEzwcYFmiK
+	 JZglCPyZd+ZWw==
+Message-ID: <sashiko-outbox-184103@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v3 5/7] perf: arm_pmuv3: Add pmuv3_event_implemented()
+Subject: Re: [PATCH v3 7/7] coresight: Add pmu_pulse/extout_pulse
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Amir Ayupov" <aaupov@fb.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <cd3e622681f7254216b0488f09d2cb2d91a2d8ca.1792907333.git.aaupov@fb.com>
+In-Reply-To: <de0b4afa0952e145eae78eae2c81aa66d1247692.1792907333.git.aaupov@fb.com>
 References: <20261012230527.750567-1-aaupov@fb.com>
  <cover.1792907332.git.aaupov@fb.com>
- <cd3e622681f7254216b0488f09d2cb2d91a2d8ca.1792907333.git.aaupov@fb.com>
+ <de0b4afa0952e145eae78eae2c81aa66d1247692.1792907333.git.aaupov@fb.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Sun, 25 Oct 2026 06:47:54 +0000
+Date: Sun, 25 Oct 2026 06:50:20 +0000
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -63,90 +63,114 @@ Precedence: list
 
 Thank you for your contribution! Sashiko AI review found 1 potential issue(=
 s) to consider:
-- [Low] perf: arm_pmuv3: circular header inclusion in pmuv3_event_implement=
-ed()
+- [Medium] coresight: pmu_pulse loads on 1-event ETE lacking event 1 and TR=
+CEXTOUT1
 --
 
-commit fe846ad9d18510169af8401fb7c59990c15ea903
+commit 75adf8bc69eef9902a1a675969ecaf268f815f11
 Author: Amir Ayupov <aaupov@fb.com>
 
-perf: arm_pmuv3: Add pmuv3_event_implemented()
+coresight: Add pmu_pulse/extout_pulse
 
-This commit adds pmuv3_event_implemented() to include/linux/perf/arm_pmuv3.h
-to allow drivers outside the PMU driver to check whether the local CPU's PMU
-implements a common event via PMCEID0/1, and moves
-ARMV8_PMUV3_EXT_COMMON_EVENT_BASE into include/linux/perf/arm_pmuv3.h.
+This commit adds a built-in pmu_pulse configuration and extout_pulse feature
+for ETMv4/ETE trace units that program event 1 in TRCEVENTCTL0R to select t=
+he
+always-true resource and pulse external output 1 (TRCEXTOUT1) on every trac=
+ed
+cycle.
 
-> diff --git a/include/linux/perf/arm_pmuv3.h b/include/linux/perf/arm_pmuv=
-3.h
-> index d698efba28a27..965c40b28dd77 100644
-> --- a/include/linux/perf/arm_pmuv3.h
-> +++ b/include/linux/perf/arm_pmuv3.h
-
-[ ... ]
-
-> @@ -315,4 +318,23 @@
-> =20
->  #include <asm/arm_pmuv3.h>
-> =20
+> diff --git a/drivers/hwtracing/coresight/coresight-cfg-pmu-pulse.c b/driv=
+ers/hwtracing/coresight/coresight-cfg-pmu-pulse.c
+> new file mode 100644
+> index 0000000000000..61472154dd02a
+> --- /dev/null
+> +++ b/drivers/hwtracing/coresight/coresight-cfg-pmu-pulse.c
+> @@ -0,0 +1,55 @@
+> +// SPDX-License-Identifier: GPL-2.0
 > +/*
-> + * Whether this CPU's PMU implements a common event, as reported by
-> + * PMCEID{0,1}: events 0x0000-0x003f in bits [31:0], and from PMUv3p1 ev=
-ents
-> + * 0x4000-0x403f in bits [63:32], which read as zero before PMUv3p1.
-> + * Must run on the CPU whose PMU is queried.
+> + * Pulse ETM external output 1 on every traced cycle for a PMU event to =
+count.
+> + * Based on coresight-cfg-afdo.c
 > + */
-> +static inline bool pmuv3_event_implemented(u16 event)
-> +{
-> +	bool ext =3D event >=3D ARMV8_PMUV3_EXT_COMMON_EVENT_BASE;
-> +	u16 id =3D ext ? event - ARMV8_PMUV3_EXT_COMMON_EVENT_BASE : event;
-> +	u64 pmceid;
 > +
-> +	if (id >=3D 64 || !pmuv3_implemented(read_pmuver()))
-> +		return false;
+> +#include "coresight-config.h"
 > +
-> +	pmceid =3D id < 32 ? read_pmceid0() : read_pmceid1();
-> +	return pmceid & BIT_ULL(id % 32 + (ext ? 32 : 0));
-> +}
+> +/* ETMv4 includes and features */
+> +#if IS_ENABLED(CONFIG_CORESIGHT_SOURCE_ETM4X)
+> +#include "coresight-etm4x-cfg.h"
+> +
+> +/*
+> + * extout_pulse feature: event 1 selects the always-true resource, so ETM
+> + * external output 1 pulses on every cycle while the trace unit is enabl=
+ed. A
+> + * PMU event counting that output (TRCEXTOUT1), for example with
+> + * aux-action=3Dpause, then fires after as many traced cycles as its sam=
+ple
+> + * period. Event 0 is avoided because it is the trace unit trigger, and =
+the
+> + * TRBE driver treats a detected trigger as fatal.
+> + */
+> +static struct cscfg_regval_desc extout_pulse_regs[] =3D {
+> +	/* event 1: resource selector 1 (always true), drives external output 1=
+ */
+> +	{
+> +		.type =3D CS_CFG_REG_TYPE_STD | CS_CFG_REG_TYPE_VAL_MASK,
+> +		.offset =3D TRCEVENTCTL0R,
+> +		.val32 =3D 0x0100,
+> +		.mask32 =3D 0xff00,
+> +	},
+> +	/* end of regs */
+> +};
+> +
+> +struct cscfg_feature_desc extout_pulse_etm4x =3D {
+> +	.name =3D "extout_pulse",
+> +	.description =3D "Pulse external output 1 on every traced cycle.\n",
+> +	.match_flags =3D CS_CFG_MATCH_CLASS_SRC_ETM4 | CS_CFG_MATCH_CAP_TRCEXTO=
+UT,
+> +	.nr_regs =3D ARRAY_SIZE(extout_pulse_regs),
+> +	.regs_desc =3D extout_pulse_regs,
+> +};
 
-[Severity: Low]
-Does defining pmuv3_event_implemented() here break arm64 builds due to a
-circular header dependency when a translation unit includes
-<asm/arm_pmuv3.h> before <asm/kvm_host.h> or <linux/perf/arm_pmuv3.h>?
+[Severity: Medium]
+Can extout_pulse_etm4x load on a 1-event ETE that only implements event 0 a=
+nd
+TRCEXTOUT0, where event 1 (TRCEVENTCTL0R[15:8]) and TRCEXTOUT1 do not exist?
 
-For example, arch/arm64/kernel/cpufeature.c includes <asm/arm_pmuv3.h>
-first:
+In drivers/hwtracing/coresight/coresight-etm4x-core.c, on an ETE where
+TRCIDR4.NUMRSPAIR > 0 and TRCIDR0.NUMEVENT =3D=3D 0, etm4_init_arch_data() =
+sets
+drvdata->caps.nr_event =3D 1. When etm4_cscfg_register() checks
+etm4_pmu_counts_extout(), it only verifies the events up to caps.nr_event:
 
-    #include <asm/arm_pmuv3.h>
-    #include <asm/cpu.h>
-    #include <asm/cpufeature.h>
-    #include <asm/cpu_ops.h>
-    #include <asm/fpsimd.h>
-    #include <asm/hwcap.h>
-    #include <asm/insn.h>
-    #include <asm/kvm_host.h>
+static bool etm4_pmu_counts_extout(struct etmv4_drvdata *drvdata)
+{
+	int n;
 
-In arch/arm64/include/asm/arm_pmuv3.h, the header guard __ASM_PMUV3_H is
-defined and <asm/kvm_host.h> is included at the top before read_pmuver(),
-read_pmceid0(), read_pmceid1(), and pmuv3_implemented() are defined:
+	if (!etm4x_is_ete(drvdata) || !drvdata->caps.nr_event)
+		return false;
 
-    #ifndef __ASM_PMUV3_H
-    #define __ASM_PMUV3_H
+	for (n =3D 0; n < drvdata->caps.nr_event; n++) {
+		if (!pmuv3_event_implemented(ARMV8_PMUV3_PERFCTR_TRCEXTOUT0 + n))
+			return false;
+	}
 
-    #include <asm/kvm_host.h>
+	return true;
+}
 
-That triggers the inclusion chain:
+When drvdata->caps.nr_event =3D=3D 1 and ARMV8_PMUV3_PERFCTR_TRCEXTOUT0 is
+implemented, etm4_pmu_counts_extout() returns true and sets
+CS_CFG_MATCH_CAP_TRCEXTOUT without checking TRCEXTOUT1.
 
-    arch/arm64/include/asm/arm_pmuv3.h
-      -> arch/arm64/include/asm/kvm_host.h
-        -> include/kvm/arm_pmu.h
-          -> include/linux/perf/arm_pmuv3.h
+During feature loading in drivers/hwtracing/coresight/coresight-etm4x-cfg.c,
+etm4_cfg_load_feature() -> etm4_cfg_map_reg_offset() maps TRCEVENTCTL0R
+unconditionally via CHECKREG(TRCEVENTCTL0R, eventctrl0) without checking
+whether drvdata->caps.nr_event covers the event fields masked by the featur=
+e.
 
-When include/linux/perf/arm_pmuv3.h reaches #include <asm/arm_pmuv3.h>, it
-is skipped because __ASM_PMUV3_H is already defined, so
-pmuv3_event_implemented() is compiled before pmuv3_implemented(),
-read_pmuver(), read_pmceid0(), and read_pmceid1() have been declared.
+Should etm4_cfg_load_feature() or the capability check verify that
+drvdata->caps.nr_event >=3D 2 before allowing extout_pulse_etm4x to load and
+program TRCEVENTCTL0R[15:8]?
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/cover.1792907332.gi=
-t.aaupov@fb.com?part=3D5
+t.aaupov@fb.com?part=3D7
