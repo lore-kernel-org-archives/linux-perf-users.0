@@ -1,57 +1,72 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.199
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792952991;
-	b=T1E/SW0o6YFBZhxVilzEbbNFvzPCp5mE4ojTujjqVawA+wJ7jK2zH5vbuziBeMu1fn5c
-	 SuTVcV3Ha5PMokLtfIwTLTRbqFpajrYTTyXB3cO9eH9booddE9a0ZbgiFZYOs+zvthRWt
-	 DKpipblgxXiCQZ/m9Gk46Q6eW7gwA6jtSUDsGoLRABDsBhSLIZ8FMLYSCbANpahTYmp6X
-	 wEH0nyAMK7QzozvZA37XWkZ7Ng2tZF6xDBrELAB2RhRyskIKNOWVFfwi2NZKTwG7yvFKT
-	 mElZNDhgYNHlyQcMO1Ei2fD169S7Y7yjS+0L9j75oDRqZcnIvGL1Iz5dPbc2uk2JzXg==
+	t=1792964982;
+	b=Ih1Iy/KV5o8rSPQ3wMmOEczh0AaBIWdNbd44yGHkCSJxZFdQz4B7L1Bn+pgHpUjCguuB
+	 mallKYDhpc9Em6ZYLU+8NWQEdFNyOwhePpnPb9OKgo3jKGwD1oR97/I8O5kPiZTLzjuf9
+	 YHv1Of/SRnCC+6iDAdV+YeaA1TNjv0M72V38SJLI0ISJnwTRIT5GFtzSlPvroDqVgzxI3
+	 nk6/yVfjpWUXI4VIj9c5ETWUEFtAc+38AzpImlQ9vPiQ0ImRYF3WrDaqg63xVOYCwaeI3
+	 qKM9bidNcctppaHmt711gCLe+fv15VZSxjmx6bHlZExB/EVz67QnBHcTtFc0tXOfApQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792952991;
-	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
-	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=/1g1RvakKpXfTQfajgYeyvYFpgNj5zqyZxADhonaCsg=;
-	b=tNkeJbykJ7gMG/AIQ+UVHnSfy60HOpG01Y+YVUHjZCmHlz4PoDuRLY1lD6+OWLRDMeoM
-	 KNdN49ZOo6WPfRBsSWJlx6Dhrx2s0cbibgHxDFRif/3TECZFwEQBPHhQLpAqYp3iFoq4T
-	 nSdgPC/TYNgPpFgazLP2K7rPkBtQ4RXErMcbVs0lhy0e1Wq4PlMEeXtE4k3fSx7MXsvzl
-	 ia+vVr2lQDzZlaTpzhxc2DADwAriXVGltLH0dovt21Y9GTX9OsYMmMT9KQVLpagf+nS2b
-	 H+ghMLhNNwSlTXOYfHdiXbsdE9LJM1npF10ZnuszWwHy4jhfeC+KNOy/cLv3c6T7xYA==
+	a=rsa-sha256; c=relaxed/relaxed; t=1792964982;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Received:Date:Mime-Version:
+	 X-Mailer:Message-ID:Subject:From:To:Content-Type;
+	bh=rSl/IRl/7R53a17GL4J9p0EIN6qioPBOxysY/CGRCZ8=;
+	b=ISqUcJqgLGma7lz8ykh3NJWnzO+crFlIdM14DPBl89vMwzCwbp7N9t1OA8zglof38+BV
+	 MbuNAPZ3egb/ggM1HRQNzozJIte+OLI3VybMPPmHtnS3cxpQ1UWVTcMqj2FNaCK+cPTNR
+	 cjpEolT8ehX62LjBhOsgOCsRHuhUbM5PREnr/QMt2e2lgBCYlmwRl+eZp8yd4WgMwEjNO
+	 t3jr502vUZtv8zUExRs8fVXh2YMnkdFT6XowDukJ+KQX5HW7air2TlHUIH57Lqbr/83ZQ
+	 ylymTOt4Kquda6qQz8wCtuE8WrouBfCrrlOMMc8Cm075TZorlOgolQ4ue0M5nTob8gw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=dKeMcrSy;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	dmarc=pass header.from=google.com;
+	spf=pass smtp.mailfrom=flex--irogers.bounces.google.com;
+	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20251104 header.b=r2Rt2lom;
+	arc=none smtp.remote-ip=74.125.82.199
+Received: from mail-dy1-f199.google.com (mail-dy1-f199.google.com [74.125.82.199])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FB69606A32F
-	for <linux-perf-users@vger.kernel.org>; Sun, 25 Oct 2026 18:29:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32F0E606A31D
+	for <linux-perf-users@vger.kernel.org>; Sun, 25 Oct 2026 21:49:42 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 32F0E606A31D
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=dKeMcrSy
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 066FB1F01829;
-	Sun, 25 Oct 2026 18:29:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1792952991;
-	bh=/1g1RvakKpXfTQfajgYeyvYFpgNj5zqyZxADhonaCsg=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=dKeMcrSyTCrfnkjdjftGxVm9HeSGeqj+wUhEDeKyUVC6GmralCu8XBCdySbHK1odU
-	 FIqmLzWXFMPjX1nVWJdhwcipnfZJE89T9vjPWJVAuD2b+LboCvajvkOp1YgBwrsOhp
-	 YRltER4T1a/2MroL194dFJMEmxPwgZHfLNFpFurITz01Pil6NVYT6tvSRzsNfa/Fd9
-	 gDh93LmWEt3l0kKaIs4rR3l2hmo8jgZIEAzDGL8WK7/BnbylYHn0/ARznsixogwzHh
-	 daI/6hqs+1KNrTpgIw2yeBDR99mSqRAkkNS21uaVpd/hv6ICSrMRwOW0vC0gMNg3c2
-	 Af5YBBR7yelDA==
-Message-ID: <sashiko-outbox-184340@kernel.org>
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH perf-tools-next v11 10/10] perf ftrace: Filter
- extraneous functions in function graph tracer
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Aaron Tomlin" <atomlin@atomlin.com>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20261025181125.514372-11-atomlin@atomlin.com>
-References: <20261025181125.514372-1-atomlin@atomlin.com>
- <20261025181125.514372-11-atomlin@atomlin.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Sun, 25 Oct 2026 18:29:50 +0000
+	dkim=pass (2048-bit key, unprotected) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20251104 header.b=r2Rt2lom
+Received: by mail-dy1-f199.google.com with SMTP id 5a478bee46e88-30bcb065bfdso4373001eec.0
+        for <linux-perf-users@vger.kernel.org>; Sun, 25 Oct 2026 14:49:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1792964981; x=1793569781; darn=vger.kernel.org;
+        h=content-type:to:from:subject:message-id:mime-version:date:from:to
+         :cc:subject:date:message-id:reply-to:content-type;
+        bh=rSl/IRl/7R53a17GL4J9p0EIN6qioPBOxysY/CGRCZ8=;
+        b=r2Rt2lomB3QnV4EK1aO7dOz5gUTGEEkqARp7iXsYagt+c4tci0PiYaArEJe1ZQLGBg
+         JpOPpX8c0G2eCPDf0d+F5iwEvULjNxyE6Ru+CBExTrafav1hBwOghYNnEKMfQTEwGa6p
+         5heoT5JRt1kQWLDQELdMXxpZMLm+S8lMHye2ID6Tizv3CBKvtYhRHZ0RGT4vDjV+Utsj
+         yRJDyWe9tqPOgnA9lLAEmvoymLDgBbdh1o26c4mONZj2WW2Se0AGVW+HTBGD3SCrGPtN
+         6aXnjIWMPZFekkalYRe7OuGkLQVZpjib0/7nmlTc+RQeYWJBNERTPvWjZAcbrIKIMLA4
+         dCXQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1792964981; x=1793569781;
+        h=content-type:to:from:subject:message-id:mime-version:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=rSl/IRl/7R53a17GL4J9p0EIN6qioPBOxysY/CGRCZ8=;
+        b=AU5m7SECk0D/bkab935qwHRePUBm0Xy+CXfQwFfZvcBHNP/jwYYe/mOlQiEJY1wtep
+         H2reponQLneyOIEUWW3U9ERzlQw7WqYL8Wdziax8PKtjh0DJqBjk/ewvMOMhAtciy5Mj
+         EwRcClE5EkrYOGWYRJf1ZacJL8F1CMo0sew6lrJbArqKaiYOh/LAlGIZHHjgwISA0Pu6
+         9V8ruiePmbvWRajNlkJv2R8dUbNPm0VoDzzyVSmAJjBbz1ukDzBqTmqb/yGDLKjfi3fU
+         GqQT6AAeTHmnSu/NS1dzDqh1Yho2AC/KSG1wMq4Z2f8OjDOndRWj5ceTmL+JdWHW5BBo
+         +ZqA==
+X-Forwarded-Encrypted: i=1; AKwUvBwFzVREkMKynTgLobFEBme2KpQ5Aw0E5qvEUCALQO0lwie9yh19GnKAOvJ8+hspUg5jprCOSNPtC+v6C54F7Q5N@vger.kernel.org
+X-Gm-Message-State: AFq9FYIAbYRCB3SYWsOCcfBKemNfhsYiNJMPZbBi6yEUzAU4ZXKmUeao
+	yHnviI3OIp3mXtQFvSVFbtLKUJIMivecx87LCUSOF1QpUp3qfn8zi9qrot0KkxTxQ7fIjEKZJI+
+	LElp/fusPqw==
+X-Received: from dli20-n2.prod.google.com ([2002:a05:7022:294:20b0:19f:527d:96cf])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:701b:451c:20b0:193:5449:b889
+ with SMTP id a92af1059eb24-1993f6d2ccemr6647782c88.45.1792964980671; Sun, 25
+ Oct 2026 14:49:40 -0700 (PDT)
+Date: Sun, 25 Oct 2026 14:49:28 -0700
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -60,148 +75,80 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.56.0.307.g5fe7bd680c-goog
+Message-ID: <20261025214928.1225895-1-irogers@google.com>
+Subject: [PATCH v1] perf test task-exit: Fix POLLHUP busy-loop race waiting
+ for SIGCHLD
+From: Ian Rogers <irogers@google.com>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	James Clark <james.clark@linaro.org>, Leo Yan <leo.yan@linux.dev>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-Thank you for your contribution! Sashiko AI review found 2 potential issue(=
-s) to consider:
-- [Medium] perf ftrace: unshifted target_root_depth in ftrace_task_state__r=
-ekey()
-- [Low] perf tests ftrace: missing ensure_synthetic_inline() in test_graph_=
-target_filter()
---
+In the kernel's do_exit(), perf_event_exit_task() runs before exit_mm()
+and exit_notify() (which delivers SIGCHLD to the parent). Once
+perf_event_exit_task() completes, PERF_RECORD_EXIT is written to the
+ring buffer and POLLHUP is set on the perf event file descriptor.
 
-commit 79ad3a54d36210f71bcd95c62c94ed00575efdc0
-Author: Aaron Tomlin <atomlin@atomlin.com>
+In test__task_exit(), once POLLHUP is set on the fd, evlist__poll()
+returns immediately on every call without blocking. If the child is
+still in exit_mm()..exit_notify() on another CPU when the parent reads
+PERF_RECORD_EXIT, exited is still 0 and the retry loop spins through all
+1000 non-blocking poll() calls in less than a millisecond before SIGCHLD
+is delivered.
 
-perf ftrace: Filter extraneous functions in function graph tracer
+Sleep briefly with usleep(1000) on subsequent retries (which also wakes
+early on EINTR when SIGCHLD arrives), mark exited as volatile
+sig_atomic_t, and reset exited and nr_exit on test entry.
 
-This commit adds userspace callgraph target state tracking and return-addre=
-ss
-caller validation to perf ftrace so that extraneous top-level functions and
-detached orphan calls are suppressed when filtering with -G / --graph-funcs.
-It also replaces the fixed-size call stack with a dynamically reallocated
-array and adds unit tests in tools/perf/tests/ftrace.c.
+Fixes: 791ce9c48c79 ("perf test: Avoid infinite loop for task exit case")
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ tools/perf/tests/task-exit.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
-> diff --git a/tools/perf/tests/ftrace.c b/tools/perf/tests/ftrace.c
-> index 0aef2cd9b07fb..3591883b32041 100644
-> --- a/tools/perf/tests/ftrace.c
-> +++ b/tools/perf/tests/ftrace.c
-> @@ -1492,6 +1492,2259 @@ static int test_context_switch_handling(void)
->  }
->  #undef TEST_CS_ASSERT
-> =20
-> +static int test_graph_target_filter(void)
-> +{
-[ ... ]
-> +	vmlinux =3D vmlinux_path__find();
-> +
-> +	/* 6. Test targeted leaf call with synthesized DWARF inlines closing an=
-d resetting filter */
-> +	if (vmlinux) {
-> +		const char *inlined_names[FTRACE_MAX_INLINES];
-> +		int num_inlines;
-> +		int j;
-> +		const char *saved_vmlinux =3D symbol_conf.vmlinux_name;
-> +		bool saved_ignore_buildid =3D symbol_conf.ignore_vmlinux_buildid;
-> +
-> +		symbol_conf.vmlinux_name =3D vmlinux;
-> +		symbol_conf.ignore_vmlinux_buildid =3D true;
-> +		if (perf_ftrace__setup_inlines(&ftrace) =3D=3D 0 && ftrace.machine) {
-> +			num_inlines =3D ftrace_resolve_inlines(ftrace.machine,
-> +							     "wake_up_new_task", 0x1d1,
-> +							     inlined_names,
-> +							     FTRACE_MAX_INLINES);
-> +			if (num_inlines > 0 && !strcmp(inlined_names[0], "activate_task")) {
+diff --git a/tools/perf/tests/task-exit.c b/tools/perf/tests/task-exit.c
+index 9fac426ac2f9..1a9de2d13497 100644
+--- a/tools/perf/tests/task-exit.c
++++ b/tools/perf/tests/task-exit.c
+@@ -9,13 +9,14 @@
+ 
+ #include <errno.h>
+ #include <signal.h>
++#include <unistd.h>
+ #include <linux/string.h>
+ #include <perf/cpumap.h>
+ #include <perf/evlist.h>
+ #include <perf/mmap.h>
+ 
+-static int exited;
+-static int nr_exit;
++static volatile sig_atomic_t exited;
++static volatile int nr_exit;
+ 
+ static void sig_handler(int sig __maybe_unused)
+ {
+@@ -55,6 +56,8 @@ static int test__task_exit(struct test_suite *test __maybe_unused, int subtest _
+ 	struct mmap *md;
+ 	int retry_count = 0;
+ 
++	exited = 0;
++	nr_exit = 0;
+ 	signal(SIGCHLD, sig_handler);
+ 
+ 	evlist = evlist__new_dummy();
+@@ -135,6 +138,8 @@ static int test__task_exit(struct test_suite *test __maybe_unused, int subtest _
+ 			err = -1;
+ 			goto out_put_evlist;
+ 		}
++		if (retry_count > 1)
++			usleep(1000);
+ 
+ 		goto retry;
+ 	}
+-- 
+2.56.0.307.g5fe7bd680c-goog
 
-[Severity: Low]
-In test_graph_target_filter(), perf_ftrace__setup_inlines() creates a fresh
-machine and loads vmlinux before querying ftrace_resolve_inlines() for
-wake_up_new_task at offset 0x1d1.
-
-Other inline tests in tools/perf/tests/ftrace.c, such as
-test_inline_processing(), test_stack_saturation(), and
-test_context_switch_handling(), call ensure_synthetic_inline() first:
-
-	if (perf_ftrace__setup_inlines(&ftrace) =3D=3D 0 && ftrace.machine) {
-		ensure_synthetic_inline(ftrace.machine, "wake_up_new_task", 0x1d1,
-					"activate_task");
-		num_inlines =3D ftrace_resolve_inlines(ftrace.machine,
-						     "wake_up_new_task", 0x1d1,
-						     inlined_names,
-						     FTRACE_MAX_INLINES);
-
-Should test_graph_target_filter() also call ensure_synthetic_inline() before
-ftrace_resolve_inlines() so that subtests 6, 6b, and 6c are not silently
-skipped when the host vmlinux does not have activate_task inlined at exact
-offset 0x1d1 of wake_up_new_task?
-
-> diff --git a/tools/perf/util/ftrace.c b/tools/perf/util/ftrace.c
-> index 384fc03850f27..4e916096a9380 100644
-> --- a/tools/perf/util/ftrace.c
-> +++ b/tools/perf/util/ftrace.c
-[ ... ]
-> @@ -313,6 +345,26 @@ static struct ftrace_task_state *ftrace_task_state__=
-rekey(struct ftrace_task_sta
->  			for (j =3D to_copy; j < ts->depth; j++)
->  				free(ts->stack[j].name);
-> =20
-> +			if (ts->in_target &&
-> +			    ts->target_root_frame_idx < ts->depth) {
-> +				existing->in_target =3D true;
-> +				existing->target_root_depth =3D ts->target_root_depth;
-> +				existing->target_root_frame_idx =3D
-> +					split_idx + ts->target_root_frame_idx;
-> +				existing->target_root_indent =3D ts->target_root_indent;
-> +				strlcpy(existing->target_root_name,
-> +					ts->target_root_name,
-> +					sizeof(existing->target_root_name));
-> +				existing->orphan_depth =3D ts->orphan_depth;
-> +			} else if (existing->in_target) {
-> +				if (existing->target_root_frame_idx >=3D old_split_idx) {
-> +					existing->target_root_frame_idx +=3D
-> +						(split_idx + to_copy) - old_split_idx;
-> +					existing->target_root_depth +=3D
-> +						(split_idx + to_copy) - old_split_idx;
-> +				}
-> +			}
-> +
->  			existing->depth =3D split_idx + to_copy + post_count;
->  		}
-
-[Severity: Medium]
-When ftrace_task_state__rekey() splices ts->stack[0 .. to_copy - 1] into
-existing->stack at split_idx, existing->target_root_frame_idx is shifted by
-split_idx, and the else-if branch shifts both target_root_frame_idx and
-target_root_depth. However, in the ts->in_target branch,
-existing->target_root_depth is set to ts->target_root_depth without adding
-split_idx (and the guard checks ts->target_root_frame_idx < ts->depth rather
-than to_copy).
-
-If a task enters non-target ancestor frames on one CPU (leaving split_idx >=
- 0
-on existing->stack) and then migrates to another CPU where it enters a targ=
-et
-root function at ts->target_root_depth =3D=3D 0 before the context-switch b=
-anner
-is processed, existing->target_root_depth will remain 0 after the merge
-instead of split_idx.
-
-When that happens, won't ftrace_check_target_caller() and
-ftrace_process_fgraph_line() treat the pre-migration non-target ancestor
-frames at indices 0 .. split_idx - 1 as being at or above target_root_depth:
-
-ftrace_check_target_caller()
-	if (has_retaddr && caller_idx >=3D 0 && caller_idx < cs->target_root_depth=
-) {
-		ftrace_unwind_to_depth(cs, caller_idx + 1, blank_prefix, out);
-
-ftrace_process_fgraph_line()
-	if (!has_filter || (cs->in_target && match_idx >=3D cs->target_root_depth)=
-) {
-
-allowing non-target ancestor calls and exits to leak into the filtered outp=
-ut,
-or unwinding into ancestor inline frames when the target root exits?
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261025181125.5143=
-72-1-atomlin@atomlin.com?part=3D10
