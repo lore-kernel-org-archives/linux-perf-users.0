@@ -1,88 +1,103 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=67.231.153.30
-ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792993741;
-	b=NBftganerfzfk3zo6pZ8a5G2Lh4QWk+RPfSAXis4xKzYaEPbHqABDmsnr860IUdJH0/+
-	 JMpwAB6iL0Lv99IsvnAp0qOtCXipcZbepRcaJbyb6+j+w9CrQbJLHBnSslwYMtNZg6yS9
-	 oIi6G6+bbatNOZZfDmNHOvcycOWxsryMBBabramlcVz0mWBgwwjXYrVJOgBkCywK1AO1n
-	 SVE3svlhknQ1lp8JqNxA3JBpDjRKBxK4002B23QCZZHzeXdcNdH4NrNkrwYNRGP/Vty+Q
-	 0bMg42fJuGLScgokA1Fa6v6aA23nPDPqfSJCw6RCn3T67DH711W1RFmyPMB0JMPE94w==
-ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792993741;
-	h=DMARC-Filter:Received:DKIM-Signature:Received:Received:From:To:CC:
-	 Subject:Date:Message-ID:X-Mailer:In-Reply-To:References:MIME-Version:
-	 Content-Transfer-Encoding:Content-Type:X-Originating-IP:
-	 X-Proofpoint-Spam-Info:X-Proofpoint-Spam-Details-Enc:
-	 X-Authority-Analysis:X-Proofpoint-GUID:X-Proofpoint-ORIG-GUID:
-	 X-Proofpoint-Virus-Version;
-	bh=av06AcF1Tr2PwUb/RvCzEkpgnOdouTnt1W45a5B/3JI=;
-	b=JqcLZ08rWJlkYQHFfP/46jzrYggMMjrPh3CKg9ssW+UAvr/QtiiXiUl9Syk3zA2zcnqL
-	 QcbYNOCeRpPE4T4y+l1CTxwPx06TE6+oZp4JLMKkvh30jP6Y6pLOGqbhcMnFLoq8l2SoU
-	 4EmOT8SZf9xaNXDp9cg/Hsl8bJ24yFBPUZGQ/MhnDX+NAvptvrDIi/UZC63o//UfifJR1
-	 aB+nLVujzzN5DJWK4ELu76bh3BRhE+yXyUaKYYFMwfbNYYgUpQ5DQMZHayhZ/qc+jC1sP
-	 WrCOKBEXhpW9OcU/sKjlyjF7ZjUOEEeXzEzYGnUViPd76Wo+9mmpag73rm+lWeQekLw==
-ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=fb.com;
-	spf=pass smtp.mailfrom=meta.com;
-	dkim=pass header.d=fb.com header.i=@fb.com header.a=rsa-sha256 header.s=pps82601-s2048-2026-q3 header.b=NK8WaQdR;
-	arc=none smtp.remote-ip=67.231.153.30
-Received: from mx0b-00082601.pphosted.com (mx0b-00082601.pphosted.com [67.231.153.30])
+Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=52.101.57.24
+ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
+	t=1792993990;
+	b=jRTGWXlSu1cIIXO6dXJ5V7cPJcs6bJYVkYyrgAK0GQws4l0bOCAe17297zJCUYKzoOgA
+	 zlrZtuMymkJW+sT7EONE1ZdCViQ4vSCcGFC185YP2XMBr9Sg2c95ltSXkg8XM2KjIsujw
+	 RAEkY6hKV3Wj9TgqA8RK6ff94k8kTxkYsWw3CwI5kCKW8iwZlhSrTd1SuxITYzLcli45r
+	 h/BICsZ9i1z3btlKzZC09/7myl7TJe5/9eZPf877apTqn5tPU6KHtJIYWXIO1zYt7WhCV
+	 +So53xBNRMetMaKXEFUa6n/Cla0LWAr6s2+9VdjcK0VRbcu5dEYYNe8TWR4tb5QGZdA==
+ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1792993990;
+	h=DMARC-Filter:DKIM-Signature:Received:Received:Message-ID:Date:
+	 User-Agent:Subject:To:Cc:References:Content-Language:From:In-Reply-To:
+	 Content-Type:Content-Transfer-Encoding:X-ClientProxiedBy:MIME-Version:
+	 X-MS-PublicTrafficType:X-MS-TrafficTypeDiagnostic:
+	 X-MS-Office365-Filtering-Correlation-Id:X-MS-Exchange-SenderADCheck:
+	 X-MS-Exchange-AntiSpam-Relay:X-Microsoft-Antispam:
+	 X-Microsoft-Antispam-Message-Info:X-Forefront-Antispam-Report:
+	 X-MS-Exchange-AntiSpam-MessageData-ChunkCount:
+	 X-MS-Exchange-AntiSpam-MessageData-0:X-OriginatorOrg:
+	 X-MS-Exchange-CrossTenant-Network-Message-Id:
+	 X-MS-Exchange-CrossTenant-AuthSource:X-MS-Exchange-CrossTenant-AuthAs:
+	 X-MS-Exchange-CrossTenant-OriginalArrivalTime:
+	 X-MS-Exchange-CrossTenant-FromEntityHeader:
+	 X-MS-Exchange-CrossTenant-Id:X-MS-Exchange-CrossTenant-MailboxType:
+	 X-MS-Exchange-CrossTenant-UserPrincipalName:
+	 X-MS-Exchange-Transport-CrossTenantHeadersStamped;
+	bh=x3F88vnVkJzWlh0Om8exyg5wTJIs+txXUssPfeUr0TU=;
+	b=ASD8LY8N0hZJFlUYAMsnso4DwPCG3E1724X9vj7LwFv9Yohy5G3KTMvKoX/LPzUnXg6V
+	 4YZZppxfgHtMDzlR2EnBm+2zUDwV69dk7gUIytEXuDHQd0JqxdoLmf6K9Y51Es4Bvgx/k
+	 fjp1gWHkb8XZsHFKBdGt9KFiGjTOWaFDKJafTQ5Hd58fCkeVUamq9pWjr0V/PESndZG3D
+	 d311rzdcpxyTV1u7KzMP2sCOCdfuZ/aavx0+j9dJSd2NB47+9oiGBsoz4Kh0meboW1jk+
+	 prgKGRMN5qnXpyD8amaCjsNry096T7taO7icRKYdl8hbYoZQAHsSrKeLp92cGuJMzMA==
+ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
+	dmarc=pass header.from=amd.com;
+	spf=fail smtp.mailfrom=amd.com;
+	dkim=pass header.d=amd.com header.i=@amd.com header.a=rsa-sha256 header.s=selector1 header.b=ebDn8Jjd;
+	arc=pass header.oldest-pass=0 smtp.remote-ip=52.101.57.24
+Received: from BN8PR05CU002.outbound.protection.outlook.com (mail-eastus2azon11011024.outbound.protection.outlook.com [52.101.57.24])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	 key-exchange ECDHE (secp384r1) server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C587B606A33B;
-	Mon, 26 Oct 2026 05:49:00 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org C587B606A33B
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fb.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=meta.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C209606A31A;
+	Mon, 26 Oct 2026 05:53:09 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 0C209606A31A
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=fb.com header.i=@fb.com header.a=rsa-sha256 header.s=pps82601-s2048-2026-q3 header.b=NK8WaQdR
-Received: from pps.filterd (m0528006.ppops.net [127.0.0.1])
-	by mx0a-00082601.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 69Q38XNq2106021;
-	Sun, 25 Oct 2026 22:48:31 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=
-	pps82601-s2048-2026-q3; bh=av06AcF1Tr2PwUb/RvCzEkpgnOdouTnt1W45a
-	5B/3JI=; b=NK8WaQdRlyXz3/AATa2BLNtuDKV1UzhNmW/mc3jCTuRveoPz+2+pr
-	W0JO++baSX4+37Tctvjnlhk205awgnVPjNu/v4rxWkIIdwhsur1/eE0R+y72G1UP
-	dmEM6PahOqu2gBbG7XCANUhpCmBN5eR18N0872UKJ/PlmmWHmQuH5SB0MT3WdrcT
-	xxqj8bJnf8dAlzs0pOGxeG7TXKP6KW9ceX5MTvGIg78hYIzuyRLIhistLyVSnWDG
-	TCOD7XoV7rDZcIQzey2H5BBN/2MQ2NTXPfREKhuXdYQPXQ01kxpa68pBFOhZXUtS
-	m0cBWOS+SeGtVwDAUF60hQ1zRXDZZd08A==
-Received: from mail.thefacebook.com ([163.114.134.16])
-	by mx0a-00082601.pphosted.com (PPS) with ESMTPS id 4hhdahbhf1-4
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-	Sun, 25 Oct 2026 22:48:30 -0700 (PDT)
-Received: from localhost (2620:10d:c085:208::f) by mail.thefacebook.com
- (2620:10d:c08b:78::2ac9) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.2.2562.56; Mon, 26 Oct
- 2026 05:48:30 +0000
-From: Amir Ayupov <aaupov@fb.com>
-To: James Clark <james.clark@linaro.org>, Leo Yan <leo.yan@arm.com>,
-        Suzuki K
- Poulose <suzuki.poulose@arm.com>,
-        Mike Leach <mike.leach@arm.com>,
-        Alexander
- Shishkin <alexander.shishkin@linux.intel.com>
-CC: Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
-        Greg
- Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Randy Dunlap
-	<rdunlap@infradead.org>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Daniel
- Pereira <danielmaraboo@gmail.com>,
-        <coresight@lists.linaro.org>, <linux-arm-kernel@lists.infradead.org>,
-        <linux-perf-users@vger.kernel.org>, <linux-doc@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH v4 0/7] coresight: Pulse an ETM external output for a PMU event
-Date: Sun, 25 Oct 2026 22:48:20 -0700
-Message-ID: <cover.1792989860.git.aaupov@fb.com>
-X-Mailer: git-send-email 2.52.0
-In-Reply-To: <cover.1792907332.git.aaupov@fb.com>
-References: <cover.1792907332.git.aaupov@fb.com>
+	dkim=pass (1024-bit key, unprotected) header.d=amd.com header.i=@amd.com header.a=rsa-sha256 header.s=selector1 header.b=ebDn8Jjd
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=XhL298U9nWWg/RrTeL7Bhi7ILX04uL5zrdosPXR/aAwkDUgUsxNPlsks5DdTKvAfZKHhxz9G4nClkF9FoLf+zPYENS0teNsONWu+ETuSC3uI7KysaTGQTbvISiTTQ9mWvdsuhiqmAwtw4wuQVtctsHAzxnhnPuBi+9DaO5SNI6AH8HIDUeVMwTTLN+Ewhw/f1a3+lExM7n2CwyJvlgOIABRtSYc9YXmk+L0EHv44MpdLs7Q/k+/aZpgGAH1bgxCJREf2pubBJMa7lN0BSO0yldAzatliL+1I3eB3aB0DRKuoRCPlUJxK/pLelWY+9j/90wAaRArx35DvKoOpUnQZbQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=x3F88vnVkJzWlh0Om8exyg5wTJIs+txXUssPfeUr0TU=;
+ b=w4AYxBl4Zg0cwYkw/mUeifnJkr0+JDAPVZF5ohu3BYKdAw4O99RtrctGV4bGjzyDgfqj5N4SmpCaG1eMc5AkSucLNQC8pjpf3BTAaJSc81eyWqdHXoSDKy9x1xVqZavdE+5CJ4fzkLQFiraMMuEi0EP7WxVDvs7DJScW1nUojJnCiaK58eQsGhjK16j8WS9CrMymxlKkQ/Uthw1qdcjAef/ceCrgaDAqJejfKdUwdU6ScfZ8Z9lo6BbLoPFwCV2+QIe620Pz2680sFBAP006MFYzSJwCpo5XiJDpVWkttNzKfi1LRDMit7gqsUTCQxQyp0AGaFFLvqFVkEP/9Lao0Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=x3F88vnVkJzWlh0Om8exyg5wTJIs+txXUssPfeUr0TU=;
+ b=ebDn8JjdrD4p3arwRpFe/TYcrkjWGp7KDy1HDaJs/5umI9Kobiu8GBVUjH/+nn+9h58bwPAsHBci1wtoiHCsC2NmgoSqyBFdl+j0bgpJmdSwKCEcscmcnmwmySjP9qXKBZFE0vAm863gd+yiNZNz4ss78GLMOsVgjjwsaqOHiMI=
+Authentication-Results: mx.microsoft.com 1; dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from SA0PR12MB4383.namprd12.prod.outlook.com (2603:10b6:806:94::12)
+ by CH1PPF989868826.namprd12.prod.outlook.com (2603:10b6:61f:fc00::61d) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.546.22; Mon, 26 Oct
+ 2026 05:53:07 +0000
+Received: from SA0PR12MB4383.namprd12.prod.outlook.com
+ ([fe80::825f:2fc7:9ad8:520]) by SA0PR12MB4383.namprd12.prod.outlook.com
+ ([fe80::825f:2fc7:9ad8:520%3]) with mapi id 15.21.0546.021; Mon, 26 Oct 2026
+ 05:53:06 +0000
+Message-ID: <3e3e9a6d-4083-4454-97e1-d52c7c9504c0@amd.com>
+Date: Mon, 26 Oct 2026 11:22:56 +0530
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 2/3] perf/amd/ibs: Fix kernel address leak via
+ REGS_USER and REGS_INTR
+To: Ravi Bangoria <ravi.bangoria@amd.com>,
+ Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Jim Mattson <jmattson@google.com>
+Cc: Jayapal Ashwin Nair <janair@amd.com>,
+ Gennady Kupava <gennady.kupava@gmail.com>,
+ Dapeng Mi <dapeng1.mi@linux.intel.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
+ x86@kernel.org, linux-perf-users@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Santosh Shukla <santosh.shukla@amd.com>,
+ Ananth Narayan <ananth.narayan@amd.com>, Sandipan Das
+ <sandipan.das@amd.com>, Manali Shukla <manali.shukla@amd.com>
+References: <20261026041838.941-1-ravi.bangoria@amd.com>
+ <20261026041838.941-3-ravi.bangoria@amd.com>
+Content-Language: en-US
+From: Jayapal Ashwin Nair <jayapalashwin.nair@amd.com>
+In-Reply-To: <20261026041838.941-3-ravi.bangoria@amd.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: MA5P287CA0122.INDP287.PROD.OUTLOOK.COM
+ (2603:1096:a01:1d0::14) To SA0PR12MB4383.namprd12.prod.outlook.com
+ (2603:10b6:806:94::12)
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -92,100 +107,95 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Proofpoint-Spam-Info: AW1haW4tMjYxMDI2MDAyMiBTYWx0ZWRfX71AZXx627C61
- v/5RXHhR+OFJfdd8NU+uOPE1EC9uS0tYgoLKwD63VKh3uLculQL+udZHxSogugkfQvGm9zh6HSp
- 9dAPr5UYxxnGsV9u3uLHkZyOf9OnD4I=
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYxMDI2MDAyMiBTYWx0ZWRfX3nEGu23ik5EE
- pkaSMAlQ0mkq3Lp16ZID2TL8wFtYqwl20qa3H9TPbCV5grY2BIb1AIQJgiAC4dN5FZVHBClBBrY
- kVHSoXU1RX97vfjjuAkI0m7Hx93lXZXTCVj3RRufflJ6iE3h93arhruPStw4y+PRuPvn3DPJJ0z
- k6BfSzMYE6WtRZa1Ile4ceG/dG+8nerWf2QfarA2vGNrPnLnQPytlJz1b4tm2z2ZAmTUdxkYA2d
- 8+qFptG5oPYkhAUxOfP00FToYrLWkM6EuV5IiTk3m4CgLq3NJQyH3CtB1FP+HNu4GWVmCqK802P
- H/6oU6Qgnb8M0Tt6MkJyzS+E9zIa6qXOrmzm66p/CMOhmwHyRKFu3ZGWZnoUjDisNvTP5K25ZlX
- 45uZtPe2HhgDqlQU7T5aRpMnoCnQ/tMXrgpdGQQ+WWI13YMj7Nyiz4cKqqF8V60N4a4Y2roN6tT
- vfmaaEgX/um+9muQ4gA==
-X-Authority-Analysis: v=2.4 cv=CcWdd7rl c=1 sm=1 tr=0 ts=6adee9ae cx=c_pps
- a=CB4LiSf2rd0gKozIdrpkBw==:117 a=CB4LiSf2rd0gKozIdrpkBw==:17
- a=660iZSQnnn4A:10 a=VkNPw1HP01LnGYTKEx00:22 a=7x6HtfJdh03M6CCDgxCd:22
- a=kkcUborcUVj0H7zxAXTl:22 a=VwQbUJbxAAAA:8 a=FOH2dFAWAAAA:8
- a=kbJkffxul9eUBz7T3f8A:9
-X-Proofpoint-GUID: mRBOM1ZD71sonDUrnjYR8dqdMEb_Zxp_
-X-Proofpoint-ORIG-GUID: mRBOM1ZD71sonDUrnjYR8dqdMEb_Zxp_
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1176,Hydra:6.1.138,FMLib:17.12.100.49
- definitions=2026-10-26_01,2026-10-21_02,2025-10-01_01
-
-Add an ETMv4 configuration, pmu_pulse, that drives trace unit external
-output 1 on every traced cycle, so a PMU event counting it (TRCEXTOUT1)
-can end a fixed-length ETM window, for example with aux-action=pause.
-The feature only loads on an ETE whose PMU counts its external outputs.
-
-Patch 1 is Leo's fix for TRCIDR0.NUMEVENT decoding, which patch 6 relies
-on for the number of external outputs.
-
-Changes in v4:
-- Fix the arm64 build: v3 defined pmuv3_event_implemented() in
-  linux/perf/arm_pmuv3.h after including asm/arm_pmuv3.h, which broke
-  files that include asm/arm_pmuv3.h directly, such as
-  arch/arm64/kernel/cpufeature.c. Move it to the arm64 asm/arm_pmuv3.h,
-  after the helpers it uses.
-  Breakage reported by kernel test robot.
-- Link to v3: https://lore.kernel.org/r/cover.1792907332.git.aaupov@fb.com
-
-Changes in v3:
-- Rebase onto coresight next, which moves the capability fields into
-  drvdata->caps (Leo).
-- Carry Leo's "coresight: etm4x: Fix event count decoding" (Leo).
-- Add Leo's Reviewed-by to "Fail to enable a configuration not loaded on
-  the device".
-- Define CS_CFG_MATCH_CLASS_MASK and CS_CFG_MATCH_CAP_MASK with
-  GENMASK_U32() and split the match check into early returns (Leo). The
-  class check stays an intersection, as ETMv4 devices register with
-  SRC_ALL | SRC_ETM4 while the built-in features only set SRC_ETM4.
-- Remove the unused CS_CFG_MATCH_INST_ANY in a separate patch (Leo).
-- Replace the per-output CS_CFG_MATCH_CAP_PMU_EXTOUT(n) bits with a single
-  CS_CFG_MATCH_CAP_TRCEXTOUT, set on ETE only (Leo, James).
-- Check the PMU events through a new pmuv3_event_implemented() helper
-  instead of open-coding PMCEID0_EL0 in etm4x (James).
-- Use PMU-agnostic event names in the documentation example (Daniel).
-- Add Daniel's Reviewed-by to "Add pmu_pulse/extout_pulse".
-- Link to v2: https://lore.kernel.org/r/20261012230527.750567-1-aaupov@fb.com
-
-Amir Ayupov (6):
-  coresight: syscfg: Fail to enable a configuration not loaded on the
-    device
-  coresight: syscfg: Match feature capabilities separately from device
-    class
-  coresight: syscfg: Remove unused CS_CFG_MATCH_INST_ANY
-  perf: arm_pmuv3: Add pmuv3_event_implemented()
-  coresight: etm4x: Report whether the PMU counts the external outputs
-  coresight: Add pmu_pulse/extout_pulse
-
-Leo Yan (1):
-  coresight: etm4x: Fix event count decoding
-
- .../trace/coresight/coresight-config.rst      |  5 ++
- .../trace/coresight/coresight-perf.rst        | 15 ++++
- arch/arm64/include/asm/arm_pmuv3.h            | 19 ++++
- drivers/hwtracing/coresight/Makefile          |  1 +
- .../coresight/coresight-cfg-pmu-pulse.c       | 55 ++++++++++++
- .../coresight/coresight-cfg-preload.c         |  2 +
- .../coresight/coresight-cfg-preload.h         |  2 +
- .../hwtracing/coresight/coresight-config.h    | 11 ++-
- .../hwtracing/coresight/coresight-etm4x-cfg.c |  6 +-
- .../coresight/coresight-etm4x-core.c          | 39 +++++++-
- .../coresight/coresight-etm4x-sysfs.c         | 29 +++---
- drivers/hwtracing/coresight/coresight-etm4x.h |  3 +
- .../coresight/coresight-syscfg-configfs.c     |  3 +
- .../hwtracing/coresight/coresight-syscfg.c    | 90 +++++++++++--------
- include/linux/perf/arm_pmu.h                  |  1 -
- include/linux/perf/arm_pmuv3.h                |  3 +
- 16 files changed, 229 insertions(+), 55 deletions(-)
- create mode 100644 drivers/hwtracing/coresight/coresight-cfg-pmu-pulse.c
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SA0PR12MB4383:EE_|CH1PPF989868826:EE_
+X-MS-Office365-Filtering-Correlation-Id: 20e66d4c-2dc4-47a1-63ac-08df332567ff
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|7416014|23010399003|376014|1800799024|366016|4143699003|11063799006|56012099006|261009223027099003|261022075727099003|261022105027099003|261021121427099003|261021123027099003|10067099003|18002099003|22082099003|3023799007;
+X-Microsoft-Antispam-Message-Info:
+	VX+ikLant1dpFCP23zIMTZnmdIeNhrwOmf+mCD1Ezf3Gfd+OMDmaVMfI9wzKBgD9qpstLIQ5t+OAc6WbNeg1F3KGbdKJkomaVaCqcVbLqRltdwuMjK7NPTmqyBTmFav/QkxBUgOQI4Tl1OEncJN2hYsOml0XGSKYi5CznFl89OdOKQURLNUXP/3sROTB1+MP+eXvnUFysd9deEtlrK8wE5b52p7GhTWun5X6PnJfraP3/95hYFsWmh8bZgkdMovyqsQnTIKgNvLU4aXx3uKW6v3xn9J6CRGhuQpC/s200aEI6PMmejI5+qQJRtpfP8jI7ZujZTA/tN8ZJ7xOwal4evbMdV63MEcG54/puUAZMbYLRsN8+/pRirOnCr1Ni/UhHA7+nxttk3NJVo0z7PrTW1hH6ZRxV39vWEjwXexCPx9bQpd8PxJT7FOG/EpDUVF6fBa3/DxU3Ff/CqLfpq1gMmwZ9Sqw+HPICE4Pf9vzqRtit7FdRKSYLP0JPeIifNbz1xsjJtruy4S0VcndUYjPqxyIf0QtpJF3k+arq19fm2OCVe1ZbVq5oPuEdiVfCylbdRe7RfyVrbk0P9Tq2ZlqS8DgHQGPtMT1DljnI0FNcUVMv3ESukPfmKH5ze7I3kmc
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA0PR12MB4383.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(23010399003)(376014)(1800799024)(366016)(4143699003)(11063799006)(56012099006)(261009223027099003)(261022075727099003)(261022105027099003)(261021121427099003)(261021123027099003)(10067099003)(18002099003)(22082099003)(3023799007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?WllkTDFqS1YzUENTeDlweG4wMjlPUU9WTU51U2JOdzhYbHNDNWJORXluMk5m?=
+ =?utf-8?B?VHFZOUJyZjBBSWVlcythTWRjSE1MbXdDTEdJQzFpZkxzaldpSkdZVU9YT0h4?=
+ =?utf-8?B?VDdiU0NBd2JBTTZ6WGdLS3lERWR2YTY1WkQrMFkvTjJ6dmFaZFZnQnR6ODB2?=
+ =?utf-8?B?QkJHeTRHNGVqd2R2SDd5eGVrT2ZZaDR5VnRQTnZsVkJTT0IwTE5QaHVydyto?=
+ =?utf-8?B?Wnlvb1NvR1F4RlVwT1ZrQ1FWTXQvU2pNQWZ2TGZWWE1Kd1RDbkNibVU0bll6?=
+ =?utf-8?B?UjRzSi9VNHhNTHN4K1B1WFVlbVgrTDV0RlphZ3ZIZ2RubTZTR3BCZHRZK0FP?=
+ =?utf-8?B?ZWdjYWlqZTlGME5NSTU4TE01TmQwQmYxb1RrZWVWTEVwNXZGVWNCNnlHVkVo?=
+ =?utf-8?B?QVJweDliZENsZFlXQjRmYVQ5TlA2MHhSZzFjRGx2TmpWNENaOEMvVGcranRr?=
+ =?utf-8?B?NUE5UFhWVS9mNGx5Y0xianRMcUhOaWluSUIxMEk5SWx0YitlODRHSTZEdlYw?=
+ =?utf-8?B?S0dISFdxRTA4Nlh5S0lsOEdld29yOWFZY09Ga20rYW5haituNURVYnR0QU9H?=
+ =?utf-8?B?RWxKQzVSSkFMT0FMWXR3NFliV1NmRG9Cc2NYWEthSmhBRlpPQ3V4cTNPeVFv?=
+ =?utf-8?B?VXptSTFLZ1YyZG0zaHcrWHhJbzQzSms1QjVOU1lXbyt2UjRSUngxRGYybmZs?=
+ =?utf-8?B?VG4wRnNqM0h1VzRhdmUzOFdidU04c1ZpRTZtajdERFNmUXd0M2puam9ob3pj?=
+ =?utf-8?B?dzhrWlh4N2NYUmVDTEtNa0U2cktaSW1xQTRseGptbUNqSDNhMDgvZlErSWNS?=
+ =?utf-8?B?RERNbUV3czVqUDBZdmZlRUtPM0h6dzhkMWZBZllxRGRTak5QQTJKTEttNnBI?=
+ =?utf-8?B?RFpQSVQ4K0srditvWGc3WWFXdUhINkEwUGZUMFNvS3JqcTVBVWVpVmZNWWNM?=
+ =?utf-8?B?elRsWEwxRTllOTFSaTUxeThEZVVOcmZ3eHZLRzFMaHNtVTdvVWxPT1J5OVla?=
+ =?utf-8?B?WmFrLzJzMytiSlJqK1hxMmpWdFg1RHJlMEdGQk1wZ0VDSitzTXphOUFuUVht?=
+ =?utf-8?B?bEY0dFZiaWZNQXdpR05PZ2tEVmR2dTRTTi9TRC9MUWFoZm11dzBtUEYvdHZa?=
+ =?utf-8?B?MWVBamwvUmt4aEphM0o1NkRtWFFIY0g5RE0zbVRtVWJDQ1VscUdaUUl1OUhy?=
+ =?utf-8?B?aXVsNDRoYStINXFYVy9GbDQxQy9ZVXRqbDJCWnk1azc0RWhKM0Zidk5ndlQv?=
+ =?utf-8?B?ZmlEazBpV3VWeHMzREw2ZzdKa1BlVHRydWJOZTdGT1VLM2VBWWhpUmY3eWtu?=
+ =?utf-8?B?bzZteU05a1pjMUR6YnJDbFBMOHQ3VVRBYUdNbzBGTlFRMVZuV1ZLeUNZNjJU?=
+ =?utf-8?B?WXFRWE5SN2lkbVRzODhyV2MvZTJkc24wVS94VmFURGRQNVBoVFRpQklhYzRY?=
+ =?utf-8?B?ek4wU3dpb1A2bWVlelVhWjlCRkd4ZUFkazZ1SWNtazIrRENzeXYvOFphN1pT?=
+ =?utf-8?B?ZVV4UnlJYnc2empDeUxoTDd0ak9UMGpZNXMxWFNPRVROTVQwRFNibkJ6TDZJ?=
+ =?utf-8?B?NFk1ekNCeUNtR1BYZE5XUnJ5eVg1MWhPd0xxUlBSZlllcUpydytuSTl1M1BN?=
+ =?utf-8?B?cy9ISWp4UTEyYUh4eXF5NjFPbmFERjJTNlpQOFloaFFPN1VUR2YzZ3VrODRG?=
+ =?utf-8?B?dGwyVlBSakVQKzJCQW9TTEc5aDZMVDBmWE94QnlwYng4R3hKSDRxYm5ycE16?=
+ =?utf-8?B?NUwzUXhkQjUzTEhuTXowNXpLOWp2UVkzUVZPYmhwTEVDanNlZGh6TFVvUm5S?=
+ =?utf-8?B?UThyZnk4MjBsYXZPSUVjWXZoQlR6YTRXUTVmRkRZMXN2YWRyWWZCcUZGTHln?=
+ =?utf-8?B?QkhWWlc1RldpS1lZaEJ1TFA2STFTTEM0WFdMczlucWpHSVJVOEdhdVZ5ZnZt?=
+ =?utf-8?B?TVNBMFc0UWp1ODFZUTIxYTdZSU1ILzNENHpaaEMxYVEzeXhQN3ZaV0RjWTNp?=
+ =?utf-8?B?YU5kWk1JL0VnMWtSTkZnVGJxT21PRU1LQzE2cTJkbWVVK2RKelF4elBQM3U4?=
+ =?utf-8?B?aDBaT1VKcFZZellkRElEcWNWOVFHS2FKcmxFRUo0dU1WUFJzMWI1TmlFTnFQ?=
+ =?utf-8?B?K2h4QlBDMGthYmxpUEN2QWduNWNCU1pMNXBGZXVLWDhaZUREU2gzNUJtTUgx?=
+ =?utf-8?B?QkJmUUhjbFZnUm0xOTVuQmhFS1RvenF4b2pqc2FQNEdoZzdUSmNKOWd2YkFq?=
+ =?utf-8?B?VjV4QU96ZmRsdk1Tem5xQmQ0YjYxdFduQXpvNG84MlpKa2FjSXQvMlNrNXBl?=
+ =?utf-8?Q?+SJyRVIfMzrJ7jxhhQ?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 20e66d4c-2dc4-47a1-63ac-08df332567ff
+X-MS-Exchange-CrossTenant-AuthSource: SA0PR12MB4383.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Oct 2026 05:53:06.3083
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: byExloI1lb370ohJZC0nJzAxq6zoVUeJhjV/8sTmPuc/sLTNoueGFLn/MiBEXbNe
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH1PPF989868826
 
 
-base-commit: 343cfcbb3ecfdb80aa576a428cfa3b65ad783842
--- 
-2.52.0
+On 26-10-2026 09:48, Ravi Bangoria wrote:
+> IBS hardware captures a sample and raises an NMI. Since the NMI can be
+> delivered with a delay, a privilege change may occur between sample
+> capture and NMI delivery. Because IBS only provides the sample RIP, the
+> kernel records GPRs from the NMI pt_regs, which may reflect kernel mode
+> if a privilege switch occurred in the interim. This can leak kernel
+> addresses to unprivileged users through PERF_SAMPLE_REGS_USER and/or
+> PERF_SAMPLE_REGS_INTR.
+>
+> Fix this by using interrupt regs while preparing PERF_SAMPLE_REGS_USER
+> and PERF_SAMPLE_REGS_INTR. With the change, when IBS samples a user mode
+> instruction but the NMI is delivered in kernel mode, PERF_SAMPLE_REGS_USER
+> will source its register state from task_pt_regs(current) and
+> PERF_SAMPLE_REGS_INTR will be omitted from the data sent to userspace.
+>
+> In addition to fixing the kernel address leak, this change also ensures
+> GPR snapshot consistency, which resolves the DWARF unwinding issue with
+> IBS.
+>
+> Reported-by: Gennady Kupava <gennady.kupava@gmail.com>
+> Closes: https://lore.kernel.org/r/CAPu-DQqF0aF6=GS8Z6KKWeeX_V5LiXeKU_rJQZC+uGg8zuTPNw@mail.gmail.com
+> Reported-by: Jayapal Ashwin Nair <janair@amd.com>
+> Fixes: d29e744c7167 ("perf/x86: Relax privilege filter restriction on AMD IBS")
+> Signed-off-by: Ravi Bangoria <ravi.bangoria@amd.com>
+
+Tested-by: Jayapal Ashwin Nair <jayapalashwin.nair@amd.com>
 
