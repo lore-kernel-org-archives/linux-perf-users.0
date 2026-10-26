@@ -1,57 +1,57 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793052316;
-	b=Sze1XyCzojIyzbXruRGSvVEkVxaXU9hB7Zexc5g6LpfTdn7s8d+7EGMIMSwfNZDd5I1q
-	 IEhhuAf4lJg4SziMNDgtqiiDw4B5Xijv5zye/8FaUJPY01KeuKbRgnp6CIPmIeAnHDowI
-	 a8XoOucYzVY2qP8VTCHr5N982PqonfM7eJqI16XhD/ByapCyDLehToJnmW7Oks9xwLcxM
-	 H42h1+55GTv2TkpeI6id06DtQ54qdhTIjfErV8IApzjfJtHz0qa9WGW3gV9WIOeUY1LMy
-	 79/QhDYfZ6OEjKyYin100G2vVEAP94NIYdeSgljQAk00zqHGVp5i1UZjejGzJOdP22g==
+	t=1793052412;
+	b=RRO+XyaL3EcuPpFkd4UL+HPgxmnnDUlHCBioIyRTfM5DbK77yPXSZmkRz2wmd05T3fBR
+	 m/A4+lAB+nW14mFsPX4SFIB3L3dlXaj7fBYLtuERQhAnPkPU0HkV1FrPIaehZyEerISzh
+	 eK65Wqt+wL+7o9zIaer3uHkIjJzf0KHabLu2PSwQDWA3bfW7UQ9i4qM4GYX/gfT5M3u/t
+	 YGfvi67pTGtaxS8OxNS1edZFNtq4DZ5nOvZ/RalCk4GLXko3xPGaeVTP94/AFiBAR1nvN
+	 Gu9CnNqpCLqedWu9hIfQcV+pWHKZvtqYHetNX3H89AmPgavvwBdclkTDTSUiSyw5XzA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793052316;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793052412;
 	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
 	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=14N3scEcv3N5JxoIfImvwoCo08AW5NTfgN4DwzsA8jI=;
-	b=iPxuqrMjNq+XvXC3o17GOeW/ZngTyBliRM/ZFMF6H7Dn+hldGdEDDOMMm/YfMqgIEq46
-	 tV1yzDoFOinlQd6cW9rSy6E85aZel8rpR6kUhrQ0KXzh5US9wHXIm5ih7VXDjBUYj4Clw
-	 6xMPxh3BetzdXKjXpEWB4mrv316yBvhJR7f1WWIdJxEW8fQ4m+oXH+H4giJLsGd04iPgG
-	 9nd4FWuuMD447T7LsovWyPzizZzaCtfzpHxD3gEkeiOv2CqRZfeK/8Xd0XKHY/kvO21Wy
-	 Qqbc/I19tA6K2+MKI6fH9L7o8wbxca3ocKDAae7a3qGSnqMVpDPLNOyWQBtug1VEVyA==
+	bh=w/Z+clFb5OcsFT5CZgWyK9KSMEBhWASnf6wBQReNukg=;
+	b=MRjO7YfJiUVSV/ByS9MzQCVL169C/xgQ/FKxLcwCi25Ft7O7qSiiQOL8/qdERcbgTRZK
+	 HKfCPNwnTTCJw8cW5QeZBLRFXuQ8qs5kbt52D8wK/4h4/t5CQ33fG81HxYIsOa9s+vAX+
+	 t6SKKXwI+gsKTsrylmRRlKFK1NJtmnwNBIroDj1TJxHBSX2wZFGQkpzaA1jv8P14B1ltM
+	 iORxF3JU2SVJ70+MOkjTG9O5Si0jeL7/fh6MLSTeVu/goYuVHz5Yg1dfO3Qsx3HNUeeGL
+	 vLUcfubdZMOPQHU7R+bCKliJTSfUm6YRNo8IkVWr5+/tz+AYxMNRI3jv1Eu9FAoi0BA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=cuANxUhw;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b="fpS/wl1B";
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CFDB606A31A
-	for <linux-perf-users@vger.kernel.org>; Mon, 26 Oct 2026 22:05:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65CB2606A31A
+	for <linux-perf-users@vger.kernel.org>; Mon, 26 Oct 2026 22:06:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=cuANxUhw
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8881D1F01825;
-	Mon, 26 Oct 2026 22:05:15 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=fpS/wl1B
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D75A11F01825;
+	Mon, 26 Oct 2026 22:06:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793052315;
-	bh=14N3scEcv3N5JxoIfImvwoCo08AW5NTfgN4DwzsA8jI=;
+	s=k20260515; t=1793052412;
+	bh=w/Z+clFb5OcsFT5CZgWyK9KSMEBhWASnf6wBQReNukg=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=cuANxUhwIS1/+yE3mDT2pB5XrGXOHDqHxSR1/xAx70C5Ug4v7qARha1LK3ZNPkh8X
-	 vXwlw3bj8zFTXuXnqWaGRWUKsLuyNp39bHD0LgzUuvmyvsmLipYB4Z1Icb/Q2tPjRA
-	 V7XWrdOO0MgJoZfMvRVLzSxWJAhLUMuP6BZMmIIxk6tWSn/LBUvPJB8VsCO8NWjmQ+
-	 p8JVtx5XYp32LUCAxWOLbRxS8AGQHpFIJFCLlBNta6JhiOMDch9X+ELk56qq5FTykL
-	 tjw45qnPsgv+d+6WI47B0+HBThzM0T1L2Qh/u81s4qFSCMHU/8BJWCDoq4rE6vUB8Y
-	 1HkdLNpAby4BQ==
-Message-ID: <sashiko-outbox-185779@kernel.org>
+	b=fpS/wl1BZFQTcdQQtBHywFj9k3z0HqJkkhbuZw9VPR6zYTMCzzhCMhDCNgeXs+j+k
+	 J4G59X0acx0SrgU8tKR8tlashjtMoRbFWz3h4qT7/BUYfuV4+oKjQ5yl7Zsunn1ao8
+	 ttlgiaHkmIqYhFMbDZi7HAn1BPMBds02+/JY5yG7JHrc8Frm8gUikRrcA2jTUIkdhb
+	 SdXmkyu1KHvIvglUuQ+m6mVt/4JKqWeZIaC7/j6PXSa6DCMoP8nLNjGY6zLmY8QwNX
+	 Ryu3SpUtCaJZB6I7NjURYui/xeSb9QjW9yrzMEqt0Zit7M9xRg/Z1gcd2eHDgTFp7B
+	 qlNVCn4il5Zfg==
+Message-ID: <sashiko-outbox-185781@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [RFC PATCH 08/10] uaccess: Refuse and warn on
- __copy_from_user_inatomic() without an mm
+Subject: Re: [RFC PATCH 02/10] btrfs: Don't copy encoded read data to user
+ memory when canceled
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "James Houghton" <jthoughton@google.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20261026215226.3713941-9-jthoughton@google.com>
+In-Reply-To: <20261026215226.3713941-3-jthoughton@google.com>
 References: <20261026215226.3713941-1-jthoughton@google.com>
- <20261026215226.3713941-9-jthoughton@google.com>
+ <20261026215226.3713941-3-jthoughton@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Mon, 26 Oct 2026 22:05:15 +0000
+Date: Mon, 26 Oct 2026 22:06:51 +0000
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -61,31 +61,28 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 
-> __copy_from_user_inatomic() never called should_fail_usercopy(), so the
-> NULL current->mm check added to uaccess_should_fail() does not cover it.
-> It is used e.g. by KVM's kvm_read_guest_atomic(), by several
-> architectures' perf callchain and stack trace code, and by the generic
-> copy_from_user_inatomic_nontemporal().
+> btrfs_uring_read_finished() copies the data of an io_uring encoded read
+> to the submitter's buffers with copy_page_to_iter(). It runs as io_uring
+> task work, but io_uring may also run it with tw.cancel set from other
+> contexts when the submitting task can't run it: from a kworker when the
+> submitting task has exited (io_tctx_fallback_work()), or from
+> io_cancel_local_task_work() when a DEFER_TASKRUN ring is torn down.
 >=20
-> Split the NULL mm check out of uaccess_should_fail() into
-> uaccess_without_mm(), and use it in __copy_from_user_inatomic() to warn
-> and refuse the copy.
+> In a kworker, current->mm is NULL, and the copy does not reliably fail:
+> the user half of the address space belongs to whatever mm happens to be
+> lazily loaded, if any, so the data may be written into an unrelated
+> process.
 >=20
-> Don't use uaccess_should_fail() there, as that would also start injecting
-> failures into __copy_from_user_inatomic(), which some callers don't
-> expect to fail in practice, e.g. __wp_page_copy_user() warns if the copy
-> fails twice.
+> Don't copy the data when the task work is canceled, and complete the
+> command with -ECANCELED.
 >=20
-> copy_from_user_nofault() already fails quietly when current->mm is NULL,
-> and the generic user stack unwinding entry points (perf_callchain(),
-> get_perf_callchain() and stack_trace_save_user()) only unwind the user
-> stack of a user task with an mm, so neither is affected.
->=20
+> Fixes: 34310c442e17 ("btrfs: add io_uring command for encoded reads (ENCO=
+DED_READ ioctl)")
 > Signed-off-by: James Houghton <jthoughton@google.com>
 
 Sashiko has reviewed this patch and found no issues.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261026215226.3713=
-941-1-jthoughton@google.com?part=3D8
+941-1-jthoughton@google.com?part=3D2
 
