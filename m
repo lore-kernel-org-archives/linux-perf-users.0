@@ -1,57 +1,57 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793007468;
-	b=IOann1YFD1npOTnW9oU6S+cFwh76hlnET4Imutk2+GRN4y5z7TkSSXuV3Ui8E8/N3Xz+
-	 8vSUOZqNOySTDSn7mluNIwX4TBfSTgvrifK7i8UlWA+yvzoIVhjEVkR48enT31U7/Egow
-	 /ycDShUHCgiE4gKQD1H9QWQCgLnCdFTEpUrjlodyabtdAU2AYbHKnXNTGTQe7cO1u96gT
-	 ABXD2bjvnnvAzdlNs6cAlBQVZlTiwMo97VNxJrJ4VKxtmk+0RsPnOCXt9VGDRtF4kdxZm
-	 4W72rpkYQLdAxKOOPT+EfxIB/wrMsScZS7DiFfbNeInx5X8kJk3+RTUtRSAPRTMYs1Q==
+	t=1793007708;
+	b=U2w7gApFqKaia3nJkQyBGpCloQNCWGcUinvBLqFiV8urh4uVMfn6jyABpkRhBmDYR1qE
+	 RvVSzzmxiMUk8SA2sZuqB+fshsQ7gG1zVYv05ZRZqtjNIWYHeMJcVbIdOIIbP1ZDn//l+
+	 8Wyhcip4txPUPAuA8WQAG5UreYdLZEE0YI9nVFm2Pc3NXjmv933CVnWFtcFsl+CcANvgS
+	 4Y3lJXdk3fs4bsEAcwr4fJI5D8WzxUv5GfCoN1G3j6ZEY3h7r3xKOlSKadAu8cJ/LNZqF
+	 q8FApiMtRd0YKL1uz85Qd0kDtJEhbJJ3OU24tvsCJ6NIEVZ1MBYLQZ6kSwWp8TngjLg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793007468;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793007708;
 	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
 	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=BYc2HInoRHdSbriuiOfFWNEVrkV7wNqrvuZU9P2//8A=;
-	b=nSogZ1+deoxOuESfqva+AVxdNwB+K3rgnOLzNYs19o/1plhKleRuW4Ie+R+DD/I8qRPQ
-	 Y9BSzuZGRk109PP5ZjOs2AuY0FyAc39U8JXZzypCe24/kX4U+nzrFmleUIqom/+mNxSa1
-	 Z2eXGCR3xs51SQPLwG59mwzKUkYe160Haly8ON12V4/NbuBaKPSr8pDF1nOjhchpWlkx9
-	 bzJZezrbRP5nxH5rVqfDRY43bm8Xkjb0QBhQC4/gX8p3dXBudHGEp1rj+SDSwzBChcZLB
-	 KoQGoZ129OEKws8L6WsmXoXm30P1Y8YR7GZU6GvrRvS7vgiaCGxSFpGM1fG4wJHb2pw==
+	bh=jyC0SJCOSohzbYosMMLN8syzb/refnQu02+8F3/GEjI=;
+	b=IReOT6L1eLIAH/L1bj/ATKyzyp/eqQscUTMNTQA/UNAXwAQcqRXqhk8uSwpRADW/sKoy
+	 jpwT8uwR53czvaU4kxa6ovmwQ1k3TbS5RLUFTW4DqG1M7j9KJCez73EeLAmcHQp9i/QjL
+	 vcuxfDe0hk+pSwzT2CtO1dVCzgsv8ljrLceHsQ6FKQNW+5wd3O1MymjLr85qTQnaBqcF8
+	 BJzotJ/msDI/tC+IGafh/YaES6BPTZV4hrefd83oAG3Ucvy5POxcmJN30WLDd5tzYa0eZ
+	 pKWpSZtVzmTrkvJzF8B1k6X2i2dD+FyEiYeVV7UCFUg2qEykmk6T8YLV0PkQaHKTObw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=CMaE4k2Y;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=nRPz2qah;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D610A606A31A
-	for <linux-perf-users@vger.kernel.org>; Mon, 26 Oct 2026 09:37:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E776606A31F
+	for <linux-perf-users@vger.kernel.org>; Mon, 26 Oct 2026 09:41:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=CMaE4k2Y
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4A6A31F01825;
-	Mon, 26 Oct 2026 09:37:47 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=nRPz2qah
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 00A7E1F031ED;
+	Mon, 26 Oct 2026 09:41:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793007467;
-	bh=BYc2HInoRHdSbriuiOfFWNEVrkV7wNqrvuZU9P2//8A=;
+	s=k20260515; t=1793007696;
+	bh=jyC0SJCOSohzbYosMMLN8syzb/refnQu02+8F3/GEjI=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=CMaE4k2Ye/U+PA6Pj8LL2ykvoiQq4OVhmhmsKYX0j/oUY7FafZI1uZlENNPAVASub
-	 5clwY+CXy+GBhzq+bXkBvvwid+dpwOZIPz4ZF9oFjkYLoSXYK4KT0yI1LwnPY+6yr5
-	 qwwO8yakBapx1bBjuBa8ySbBYqJujMm/WRQ4ZnGyHL+ABnQmLmlXI4P7uVcJo0GFT1
-	 kG9MmJKVLGS2qLypouvHFJl3xVLGw1VERayueFPRC4DyKl97fUPIcYS/nVyeGgenDX
-	 sDnbA3VfqpwO/wWBhWuzBNPwi1O0n1mieWdMj70Vp/0CW7fP4ZVLCTZddIx0O8MIPu
-	 fDOpgWoylwWxA==
-Message-ID: <sashiko-outbox-184813@kernel.org>
+	b=nRPz2qahEbHFP4qnLD+YJLc//h7Dn4LIDga6SFkBoMFLyVtcLdHZylNTB0rxiBuFW
+	 7qmia1D3aE6k0HQkrjTrXKzNLdKziGAblXOrrZLeqZWI2Oo9KRfeuQaLZsAbtY8QdM
+	 oqO8OqjHbb7oKHkWTMBbOq0jxJH0ydfU/yVnJFGrWdszZJAS4V3/4A+mQMba5ybkYj
+	 MJbz2obQfdCFnRzPxmktkezShaxQsNuIna2XwWeD3sJVC40LEauKf7Hx/KYFKykPTW
+	 /kxn1CZt6ISEQGz0xkrPjbndrJzs+wT9Wn5eNJ4jfbv5AumqhtOuJy2t1bCPIuZJL0
+	 b5zQDEaRnFkmQ==
+Message-ID: <sashiko-outbox-184826@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH perf-tools-next v12 04/10] perf ftrace: Add basic task
- call stack management
+Subject: Re: [PATCH 3/3] perf hist: Do not delete cumulative caller entries
+ before stat_acc decays
 Reply-To: sashiko-reviews@lists.linux.dev
-To: "Aaron Tomlin" <atomlin@atomlin.com>
+To: "Ian Rogers" <irogers@google.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20261026025735.546101-5-atomlin@atomlin.com>
-References: <20261026025735.546101-1-atomlin@atomlin.com>
- <20261026025735.546101-5-atomlin@atomlin.com>
+In-Reply-To: <efe1d231090ef4dc43fe1f002a12c7c65c8ceda2.1792995775.git.irogers@google.com>
+References: <cover.1792995775.git.irogers@google.com>
+ <efe1d231090ef4dc43fe1f002a12c7c65c8ceda2.1792995775.git.irogers@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Mon, 26 Oct 2026 09:37:46 +0000
+Date: Mon, 26 Oct 2026 09:41:35 +0000
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -61,32 +61,27 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 
-> The function_graph tracer records kernel function entries and exits with
-> nested indentation. To perform call graph analysis and subsequent inlined
-> function reconstruction, userspace must track the active call stack on a
-> per-task and per-CPU basis.
+> When symbol_conf.cumulate_callchain is enabled (the default in
+> 'perf top -g'), callchain parent/caller entries have he->stat.period =3D=
+=3D 0
+> and accumulate their period in he->stat_acc->period.
 >=20
-> Introduce basic call stack management for the function graph tracer:
+> hists__decay_entry() decays both he->stat.period and he->stat_acc->period,
+> but only checks if he->stat.period =3D=3D 0 as the return condition for
+> deleting the entry in hists__decay_entries(). As a result, every callchain
+> caller entry with 0 self-period is unconditionally deleted from the
+> histogram on the first decay pass, destroying its callchain tree while it
+> still has non-zero cumulative period.
 >=20
->     1.  Data structures
+> Only mark an entry for deletion in hists__decay_entry() when both
+> he->stat.period =3D=3D 0 and (when cumulate_callchain is active)
+> he->stat_acc->period =3D=3D 0.
 >=20
->         Define struct ftrace_stack_frame to track function names,
->         indentation, and inlined status.
->=20
->         Define struct ftrace_task_state with a dynamically resisable call
->         stack array, tracked in a hash table keyed by PID alongside per-C=
-PU
->         active task bindings (ftrace_cpu_tasks).
-> [ ... ]
->         ftrace_cpu_states__clear().
->=20
-> Tested-by: Ian Rogers <irogers@google.com>
-> Reviewed-by: Ian Rogers <irogers@google.com>
-> Signed-off-by: Aaron Tomlin <atomlin@atomlin.com>
+> Signed-off-by: Ian Rogers <irogers@google.com>
 
 Sashiko has reviewed this patch and found no issues.
 
 --=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261026025735.5461=
-01-1-atomlin@atomlin.com?part=3D4
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/cover.1792995775.gi=
+t.irogers@google.com?part=3D3
 
