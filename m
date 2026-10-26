@@ -1,57 +1,68 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=198.175.65.20
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793004603;
-	b=sAqOUoRDZdtZ4a0uQU9fs1uSfRgJc//bNjRwHX5u1Nd9IyjpOidy9bFzq9JquEOnbPUl
-	 qJLSgKwAxpgzHBJqslSRkqnx2oyB5KswUTkcwoia7Nq21evQ/iyy3lUxd8v4ai4zNM9PV
-	 WbL1MJBveeMqBWHNUNrKtom83EUMs/oztF/13wO4ihXSO9qheP9arc1i4/5cBlxHaiXh8
-	 4ov+JIuTgSw5nxBvZDlOb2BrlKC6QtH0BJtC9OGusI7KQMj1K+pMPPQxOcmmS6j3Iiz6Q
-	 xwCUtdyG5kwEbhGIKykn5J8QXigfS6VHBXRxvnui+R43qPqOQoMludcZUidtU6eN9zw==
+	t=1793006102;
+	b=lSM+dQMHXD6OqA3MsOEyYOUDlMGyHznr+BXF0OQpPqOT5IIjSDXYDi8kyz87msmo++/7
+	 Wr+HeD+NtG78aaT2O+Pr6EiolVimyPqbxbPQu3bF8QFZuRbReB5aclrpdwiS98zNi6I3u
+	 i6dyLJLC0tMgAvyUyfjbu8ZaTn23q8Ef7hAP8BZORKE4HB9VbI1tQJ/LGXD1Ilx7K95Tm
+	 i3TCpi9wz3FO/NRNhpJdzYvaBqhsgHGX6Ti/IzPctoiZvQ3pPu+PfDZI8OaAJM/5uMLHc
+	 NPV31U3jkc5anEgX36RReS/HpeNJD0UNlGLP/jg/2LpdIiqJH9IVnC5/lSLT3qWHr0g==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793004603;
-	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
-	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=wzSKxc+ZPuU18dYT/cMcB4hbyiVD8dhB+pduVO/cbzQ=;
-	b=HwgyW+a+eYsh7U/4dM5sbX0iQDy7r9zyqnfzJyAnfNfLx3KtHSNFqQHfwgtzhegimRPv
-	 03aAAzcq+2ZDps7BM+sgoNKBh/i2BuOCRKVmkZ4U0HgN/y0yQgWjZQgo++TQ5d1irR3++
-	 zsQV4lioeu3wm+rh6n1pW7y45myZW+bzOJ0Gql2cN1XsqfhhSLIXsEhijtJtEVl+ZRtez
-	 ZdzoR/G2jrj3G48pSBHLCzhB0h/ZrfvwRUqmzu77ftVJla6h9RtBKy1Nm5OJMCHwJ+Uf7
-	 GTCd9Zr52gx/OFLWvYydSBAhG24dk0hiNY3K6YftSqih2rm9pNkUx9ooIgggQWngy7A==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793006102;
+	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
+	 X-IronPort-AV:X-IronPort-AV:Received:X-CSE-ConnectionGUID:
+	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:Message-ID:Date:
+	 MIME-Version:User-Agent:Subject:To:Cc:References:Content-Language:
+	 From:In-Reply-To:Content-Type:Content-Transfer-Encoding;
+	bh=3Cay3XJGA8mhwDRdi6OMoIdd/lKnH6RK+bTVGw2TBMw=;
+	b=Pyd+5gSCUfsxvzjawPVDUvC9ZSR4TzH02cf2r2z4Led/1ripWEQTIHhXe2jlFzWnAidD
+	 DH0pBC5AYXDKyEexWbtxm80DzNlYin1LBkvH/Ci2mxnLy8Jk7VIoSB6G2bYSLIgzetZjP
+	 7zA7FVwete6nqa70znSCYlq9OAXT7kawA+5nOyh2i49reMudV0yKmOw59wnUrtHnjboyA
+	 xhZtzeOMidnSOeT0ivWVk2r1HiBV1VNtopPUmVuelf9DQhgEMCAmVNBNOB42zlG8X/lMq
+	 eS6YHGlXz3VxeM2zT96kZkam1HpoeMz1Z+7MxZrgHcZ+LYZ+xjpaM3Ef+89CwCO+zTw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b="bpi/l4g6";
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	dmarc=pass header.from=linux.intel.com;
+	spf=pass smtp.mailfrom=linux.intel.com;
+	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=Si8JDsQQ;
+	arc=none smtp.remote-ip=198.175.65.20
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37BDF606A31B
-	for <linux-perf-users@vger.kernel.org>; Mon, 26 Oct 2026 08:50:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCFBC606A31A;
+	Mon, 26 Oct 2026 09:15:00 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org CCFBC606A31A
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=bpi/l4g6
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B93011F031E0;
-	Mon, 26 Oct 2026 08:50:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793004602;
-	bh=wzSKxc+ZPuU18dYT/cMcB4hbyiVD8dhB+pduVO/cbzQ=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=bpi/l4g6v+JAVrLkAlCaPNEnhPZldlTkKHUPnq2qJ0eH/F8qohQhnSc0sr+E7G4+r
-	 Z45facGgzboXVEZ76YRsDekf8EyuoEf/wXyIzeMcAL35Zt48rLrohMIxAt8FfSq35O
-	 I+T/9N3/xy3SiIq2PzB3wGPZLGsJQ+fNuFIr7IaW/OrmCNAiWrjJXCOvnR8FMCXfpJ
-	 xalriUZ+QsRKfmmqpOqCtpDqxqI2DLyRnKr3S0T+ST/gRPjUVvycaAEeYOA3CyN9Au
-	 zMPTZhUJ7FdYw0+0/H58CGl1V2LI5eEtBrZDtkFYP6WSTtUMgR/6sK76Xm83PaOtRO
-	 WwoAVzGS3gnig==
-Message-ID: <sashiko-outbox-184696@kernel.org>
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v4 7/7] coresight: Add pmu_pulse/extout_pulse
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Amir Ayupov" <aaupov@fb.com>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <02268c4958153f6d2e549e4bd7b93f11ed79fa90.1792989860.git.aaupov@fb.com>
-References: <cover.1792907332.git.aaupov@fb.com>
- <cover.1792989860.git.aaupov@fb.com>
- <02268c4958153f6d2e549e4bd7b93f11ed79fa90.1792989860.git.aaupov@fb.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Mon, 26 Oct 2026 08:50:02 +0000
+	dkim=pass (2048-bit key, unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=Si8JDsQQ
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1793006101; x=1824542101;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=mkjA0wjx5T4/havSH95hvAHbESqHIZHy27oTaCk4dxw=;
+  b=Si8JDsQQyDyWUdPoivtp91tixgGZH9Qkylc62hsERELIC+bWwlkvL6E6
+   CCqQ1aqP7dSO1GHV0TiR+/yMpua1qh0dOnxMB9sRu426HtvWXB2MmHEpE
+   5mgZBZkAoAeRBwEXjTnkehKBTlynYUXDTbzFUbH3ES2LmZdeD6pgZQ9XO
+   u6mq/7TjIWKpUTfkQtarf+trKVHn+bBL8R8TnnEsau7gXz8RsPmHSyEhb
+   WXEh7Hm2dGfCjhSx9DWVGpDtn2A2C0xz05lV2OJRD6By7YOgTPW8/3frU
+   P8P/uhjWPDSw6D34n3wlm87WqiwIG1SQmskwNsulcR+lj+Y5zyU2c9Hf3
+   Q==;
+X-CSE-ConnectionGUID: M2kP9l4BTICBEIUhDDyWxw==
+X-CSE-MsgGUID: xqDhMHw2Qa+p2J2wIqI4vQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11946"; a="1686782"
+X-IronPort-AV: E=Sophos;i="6.27,179,1787036400"; 
+   d="scan'208";a="1686782"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Oct 2026 02:15:00 -0700
+X-CSE-ConnectionGUID: uMAviPBQQxylIjMGhS5q6A==
+X-CSE-MsgGUID: 5GlWO6WIRzOCYqNULaw4jg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.27,179,1787036400"; 
+   d="scan'208";a="4244457"
+Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.241.239]) ([10.124.241.239])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Oct 2026 02:14:56 -0700
+Message-ID: <1190a947-b314-4df4-91ac-b4cafc2b527c@linux.intel.com>
+Date: Mon, 26 Oct 2026 17:14:54 +0800
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -60,102 +71,166 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 2/3] perf/amd/ibs: Fix kernel address leak via
+ REGS_USER and REGS_INTR
+To: Ravi Bangoria <ravi.bangoria@amd.com>,
+ Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Jim Mattson <jmattson@google.com>
+Cc: Jayapal Ashwin Nair <janair@amd.com>,
+ Gennady Kupava <gennady.kupava@gmail.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
+ x86@kernel.org, linux-perf-users@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Santosh Shukla <santosh.shukla@amd.com>,
+ Ananth Narayan <ananth.narayan@amd.com>, Sandipan Das
+ <sandipan.das@amd.com>, Manali Shukla <manali.shukla@amd.com>
+References: <20261026041838.941-1-ravi.bangoria@amd.com>
+ <20261026041838.941-3-ravi.bangoria@amd.com>
+Content-Language: en-US
+From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
+In-Reply-To: <20261026041838.941-3-ravi.bangoria@amd.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
-s) to consider:
-- [Medium] coresight: extout_pulse loads on ETE with single event lacking T=
-RCEXTOUT1
---
+LGTM. Thanks.
 
-commit 5f7a0d60c7147cc2e10191888168dd0008749154
-Author: Amir Ayupov <aaupov@fb.com>
+Reviewed-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
 
-coresight: Add pmu_pulse/extout_pulse
-
-This commit adds the built-in pmu_pulse configuration and extout_pulse
-feature for ETMv4/ETE to pulse external output 1 on every traced cycle
-for the PMU to count as TRCEXTOUT1.
-
-> diff --git a/drivers/hwtracing/coresight/coresight-cfg-pmu-pulse.c b/driv=
-ers/hwtracing/coresight/coresight-cfg-pmu-pulse.c
-> new file mode 100644
-> index 0000000000000..61472154dd02a
-> --- /dev/null
-> +++ b/drivers/hwtracing/coresight/coresight-cfg-pmu-pulse.c
-> @@ -0,0 +1,55 @@
-[ ... ]
-> +static struct cscfg_regval_desc extout_pulse_regs[] =3D {
-> +	/* event 1: resource selector 1 (always true), drives external output 1=
- */
-> +	{
-> +		.type =3D CS_CFG_REG_TYPE_STD | CS_CFG_REG_TYPE_VAL_MASK,
-> +		.offset =3D TRCEVENTCTL0R,
-> +		.val32 =3D 0x0100,
-> +		.mask32 =3D 0xff00,
-> +	},
-> +	/* end of regs */
-> +};
+On 10/26/2026 12:18 PM, Ravi Bangoria wrote:
+> IBS hardware captures a sample and raises an NMI. Since the NMI can be
+> delivered with a delay, a privilege change may occur between sample
+> capture and NMI delivery. Because IBS only provides the sample RIP, the
+> kernel records GPRs from the NMI pt_regs, which may reflect kernel mode
+> if a privilege switch occurred in the interim. This can leak kernel
+> addresses to unprivileged users through PERF_SAMPLE_REGS_USER and/or
+> PERF_SAMPLE_REGS_INTR.
+>
+> Fix this by using interrupt regs while preparing PERF_SAMPLE_REGS_USER
+> and PERF_SAMPLE_REGS_INTR. With the change, when IBS samples a user mode
+> instruction but the NMI is delivered in kernel mode, PERF_SAMPLE_REGS_USER
+> will source its register state from task_pt_regs(current) and
+> PERF_SAMPLE_REGS_INTR will be omitted from the data sent to userspace.
+>
+> In addition to fixing the kernel address leak, this change also ensures
+> GPR snapshot consistency, which resolves the DWARF unwinding issue with
+> IBS.
+>
+> Reported-by: Gennady Kupava <gennady.kupava@gmail.com>
+> Closes: https://lore.kernel.org/r/CAPu-DQqF0aF6=GS8Z6KKWeeX_V5LiXeKU_rJQZC+uGg8zuTPNw@mail.gmail.com
+> Reported-by: Jayapal Ashwin Nair <janair@amd.com>
+> Fixes: d29e744c7167 ("perf/x86: Relax privilege filter restriction on AMD IBS")
+> Signed-off-by: Ravi Bangoria <ravi.bangoria@amd.com>
+> ---
+>  arch/x86/events/amd/ibs.c  | 50 ++++++++++++++++++++++++++++++++++++++
+>  include/linux/perf_event.h |  6 +++++
+>  kernel/events/core.c       | 10 ++++----
+>  3 files changed, 61 insertions(+), 5 deletions(-)
+>
+> diff --git a/arch/x86/events/amd/ibs.c b/arch/x86/events/amd/ibs.c
+> index bfb51f8e184f..78a36ebf2d23 100644
+> --- a/arch/x86/events/amd/ibs.c
+> +++ b/arch/x86/events/amd/ibs.c
+> @@ -1533,6 +1533,56 @@ static int perf_ibs_handle_irq(struct perf_ibs *perf_ibs, struct pt_regs *iregs)
+>  		throttle = perf_event_account_interrupt(event);
+>  		goto out;
+>  	}
 > +
-> +struct cscfg_feature_desc extout_pulse_etm4x =3D {
-> +	.name =3D "extout_pulse",
-> +	.description =3D "Pulse external output 1 on every traced cycle.\n",
-> +	.match_flags =3D CS_CFG_MATCH_CLASS_SRC_ETM4 | CS_CFG_MATCH_CAP_TRCEXTO=
-UT,
-> +	.nr_regs =3D ARRAY_SIZE(extout_pulse_regs),
-> +	.regs_desc =3D extout_pulse_regs,
-> +};
-
-[Severity: Medium]
-Can extout_pulse_etm4x load and enable on an ETE implementation that only
-supports a single event (event 0 / TRCEXTOUT0), where event 1 and
-TRCEXTOUT1 do not exist?
-
-In drivers/hwtracing/coresight/coresight-etm4x-core.c, when TRCIDR0.NUMEVENT
-is 0 and resources are present, etm4_init_arch_data() sets caps->nr_event to
-1. Then etm4_pmu_counts_extout() checks whether the implemented events have
-matching PMU counters:
-
-drivers/hwtracing/coresight/coresight-etm4x-core.c:etm4_pmu_counts_extout()=
- {
-	if (!etm4x_is_ete(drvdata) || !drvdata->caps.nr_event)
-		return false;
-
-	for (n =3D 0; n < drvdata->caps.nr_event; n++) {
-		if (!pmuv3_event_implemented(ARMV8_PMUV3_PERFCTR_TRCEXTOUT0 + n))
-			return false;
-	}
-
-	return true;
-}
-
-When drvdata->caps.nr_event =3D=3D 1 and ARMV8_PMUV3_PERFCTR_TRCEXTOUT0 is
-implemented, etm4_pmu_counts_extout() returns true and etm4_cscfg_register()
-advertises CS_CFG_MATCH_CAP_TRCEXTOUT.
-
-When loading the feature, etm4_cfg_load_feature() -> etm4_cfg_map_reg_offse=
-t()
-maps TRCEVENTCTL0R without checking whether drvdata->caps.nr_event >=3D 2. =
-By
-contrast, event_store() in drivers/hwtracing/coresight/coresight-etm4x-sysf=
-s.c
-shows that EVENT1 (bits [15:8] of TRCEVENTCTL0R) is only implemented when
-caps->nr_event >=3D 2:
-
-	case 1:
-		/* EVENT0, bits[7:0] */
-		sysfs_config->eventctrl0 =3D val & 0xFF;
-		break;
-	case 2:
-		/* EVENT1, bits[15:8] */
-		sysfs_config->eventctrl0 =3D val & 0xFFFF;
-		break;
-
-On an ETE with caps.nr_event =3D=3D 1, enabling pmu_pulse will succeed and
-write 0x0100 to the unimplemented EVENT1 field in TRCEVENTCTL0R while
-TRCEXTOUT1 does not exist. Should CS_CFG_MATCH_CAP_TRCEXTOUT or the feature
-loading path verify that event 1 (caps.nr_event >=3D 2 and TRCEXTOUT1) is
-available?
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/cover.1792989860.gi=
-t.aaupov@fb.com?part=3D7
+> +	/*
+> +	 * IBS captured RIP is out of sync with NMI pt_regs due to NMI
+> +	 * delivery latency. Use NMI pt_regs for PERF_SAMPLE_REGS_USER.
+> +	 *
+> +	 * Note: Valid user regs are required for PERF_SAMPLE_STACK_USER.
+> +	 */
+> +	if (event->attr.sample_type & (PERF_SAMPLE_REGS_USER |
+> +				       PERF_SAMPLE_STACK_USER)) {
+> +		perf_sample_regs_user(&data.regs_user, iregs);
+> +
+> +		/*
+> +		 * Don't update dyn_size if user has not requrested for
+> +		 * PERF_SAMPLE_REGS_USER.
+> +		 */
+> +		if (event->attr.sample_type & PERF_SAMPLE_REGS_USER) {
+> +			/* regs dump ABI info */
+> +			int size = sizeof(u64);
+> +
+> +			if (data.regs_user.regs) {
+> +				u64 mask = event->attr.sample_regs_user;
+> +				size += hweight64(mask) * sizeof(u64);
+> +			}
+> +
+> +			data.dyn_size += size;
+> +		}
+> +
+> +		data.sample_flags |= PERF_SAMPLE_REGS_USER;
+> +	}
+> +
+> +	/*
+> +	 * IBS captured RIP is out of sync with NMI pt_regs due to NMI
+> +	 * delivery latency. Use NMI pt_regs for PERF_SAMPLE_REGS_INTR.
+> +	 */
+> +	if (event->attr.sample_type & PERF_SAMPLE_REGS_INTR) {
+> +		/* regs dump ABI info */
+> +		int size = sizeof(u64);
+> +
+> +		perf_sample_regs_intr(&data.regs_intr, iregs,
+> +				      event->attr.exclude_kernel);
+> +
+> +		if (data.regs_intr.regs) {
+> +			u64 mask = event->attr.sample_regs_intr;
+> +			size += hweight64(mask) * sizeof(u64);
+> +		}
+> +
+> +		data.dyn_size += size;
+> +		data.sample_flags |= PERF_SAMPLE_REGS_INTR;
+> +	}
+> +
+>  	/*
+>  	 * Prevent leaking physical addresses to unprivileged users. Skip
+>  	 * PERF_SAMPLE_PHYS_ADDR check since generic code prevents it for
+> diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
+> index 2d5e7687875b..ca495f6b03c4 100644
+> --- a/include/linux/perf_event.h
+> +++ b/include/linux/perf_event.h
+> @@ -1791,6 +1791,12 @@ extern unsigned long perf_misc_flags(struct perf_event *event, struct pt_regs *r
+>  extern unsigned long perf_instruction_pointer(struct perf_event *event,
+>  					      struct pt_regs *regs);
+>  
+> +extern void perf_sample_regs_user(struct perf_regs *regs_user,
+> +				  struct pt_regs *regs);
+> +extern void perf_sample_regs_intr(struct perf_regs *regs_intr,
+> +				  struct pt_regs *regs,
+> +				  bool exclude_kernel);
+> +
+>  #ifndef perf_arch_misc_flags
+>  # define perf_arch_misc_flags(regs) \
+>  		(user_mode(regs) ? PERF_RECORD_MISC_USER : PERF_RECORD_MISC_KERNEL)
+> diff --git a/kernel/events/core.c b/kernel/events/core.c
+> index 7846d70be57f..69b767ace309 100644
+> --- a/kernel/events/core.c
+> +++ b/kernel/events/core.c
+> @@ -7846,8 +7846,8 @@ perf_output_sample_regs(struct perf_output_handle *handle,
+>  	}
+>  }
+>  
+> -static void perf_sample_regs_user(struct perf_regs *regs_user,
+> -				  struct pt_regs *regs)
+> +void perf_sample_regs_user(struct perf_regs *regs_user,
+> +			   struct pt_regs *regs)
+>  {
+>  	if (user_mode(regs)) {
+>  		regs_user->abi = perf_reg_abi(current);
+> @@ -7860,9 +7860,9 @@ static void perf_sample_regs_user(struct perf_regs *regs_user,
+>  	}
+>  }
+>  
+> -static void perf_sample_regs_intr(struct perf_regs *regs_intr,
+> -				  struct pt_regs *regs,
+> -				  bool exclude_kernel)
+> +void perf_sample_regs_intr(struct perf_regs *regs_intr,
+> +			   struct pt_regs *regs,
+> +			   bool exclude_kernel)
+>  {
+>  	/*
+>  	 * Hardware skid can lead to a scenario where a PMI is
