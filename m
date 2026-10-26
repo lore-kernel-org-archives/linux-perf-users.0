@@ -1,13 +1,13 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=52.101.100.114
+Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=52.101.196.73
 ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1792982577;
-	b=SFz5mRb5Br7vtJMjX0UrbV/cw64fRU8zASJyor95fOOHh0rmk0exwUJHHBBEmNfugxQx
-	 BgN4dmeKh6+c6jYOPZ89hqfflsCJQwNM0WTmvZ8IE+k/VBiMu/oKJ4/tajiVo8OYAYG7f
-	 hQxwH84n1sO1biJ63WF1JD5ksl8pGDOmiyjyKzX+aVbA8IvwXahc3w6pRoJnLYkcrrT+K
-	 tPDRX+rNjwv3Jd2655uLf+qjy9ygDMY29Bz00EVHsQddLTHpAUK8pTvlqJKwYe3jlDdf7
-	 Nv9zcXS9imO0xujgOX0d2EVnXsioe18n/Cd5vRodruE6ALuP1JP9NXW6Q8SsN8B+oLw==
+	t=1792982717;
+	b=5KTmDA1zBZjTeCZR/YTQDTUrZFuM3rmQ3OKApm6vBmK4HbRaq0tC9R2Idg2hkXewCUCj
+	 42Yp/X1X2ewcImtXiyr1w3jScqcpemr2wyJTQnoXXfqviDv6D40j9Mc5NM93BiWYbiPhy
+	 Gj52r9yZCuICKo5meTfMcVRnnTdNgsfFN1+1TxZqbdcAQq4cGMVCKcOk1nXTGUMV8OQXF
+	 jfB0Pe8wN8HKrwWm7pV53c/rrTiceJ1WBW9WizYLVbX32g4z1nJtNaHGaLOTYTcYRzhFk
+	 dE0rDRkYQ8+bbfWGcTN/OhDlxAdpgsxfqsKIz2p7fZnzV4fD+gIkVbm4FeBgpRfngLw==
 ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792982577;
+	a=rsa-sha256; c=relaxed/relaxed; t=1792982717;
 	h=DMARC-Filter:Received:Received:Date:From:To:Cc:Subject:Message-ID:
 	 References:Content-Type:Content-Disposition:Content-Transfer-Encoding:
 	 In-Reply-To:X-ClientProxiedBy:MIME-Version:X-MS-PublicTrafficType:
@@ -24,31 +24,31 @@ ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
 	 X-MS-Exchange-CrossTenant-Id:X-MS-Exchange-CrossTenant-MailboxType:
 	 X-MS-Exchange-CrossTenant-UserPrincipalName:
 	 X-MS-Exchange-Transport-CrossTenantHeadersStamped;
-	bh=pt9jkWYfSuAUa9/8+aEBatxm99wliKDptIs9cZXx3Lk=;
-	b=O7tKABIkpTeo5/I2DnWr1DVayUIQf6Ek8cUd0UTfWwkZOm0D5Qo2dWN4GmPYnqT83M4I
-	 kpuYJf5oUx2Ec3G/TBnPzvqNJB7i+onx8fvJHHPaHFGeHSqttw4oJUe2Y1KznN6QJwLca
-	 eSO1K0kZUUf+2Alj6uoqqtSJ9acS6EwWcEETB0bNrKJ7eaBfleYDNB3ukJBD1tWuY94CF
-	 DFoEfgdh+WcXn/D4KGR9sOLfTYzhr0mnsa/qMkFwuW/kx0AzjTSs0uG9g20wkT8+VYfCv
-	 MQbwK+8PX7JDfcEq747WUt3QNvnKImWXwkCKBZ5CH1giocS6ZIfYNc1EkCC8zNLW+BA==
+	bh=h0nEinRlpbybUdQrVguh2XopPpg9hbAWT4zSalqImkc=;
+	b=5NqgMylENVFcMMXdGdo9O0EZPXh4mFABhBy1t+Ss7hoiVQOQOOkKyWMnaq6C+zHiefvO
+	 2UKmsNlJMH6gKBvGfQA3+G/mvEO4Rw2rJWq/0VBxc8mdCjA13eOW14lP19AjnRzMwWVfV
+	 yB2eOl3RaPBf68FLwY4kBAgP8KmgfgXBpBFlxdzEZPIB1QJGTCphj85CXXIWyhyYAX940
+	 it4gf48yzPNG2zLDBqrnisLcHfRGC5giYNJvP0Z8EzUyx6X/77LT/1R97AS2Mwn0xTWwW
+	 U9g80tWVuiw1vXFsZsmugDGIunhmi19MmaEA1eGuJPpkon3Vfrpu+0APTt2lhC83xkA==
 ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
 	dmarc=none header.from=atomlin.com;
 	spf=pass smtp.mailfrom=atomlin.com;
-	arc=pass header.oldest-pass=0 smtp.remote-ip=52.101.100.114
-Received: from CWXP265CU009.outbound.protection.outlook.com (mail-ukwestazon11021114.outbound.protection.outlook.com [52.101.100.114])
+	arc=pass header.oldest-pass=0 smtp.remote-ip=52.101.196.73
+Received: from LO3P265CU004.outbound.protection.outlook.com (mail-uksouthazon11020073.outbound.protection.outlook.com [52.101.196.73])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange ECDHE (secp384r1) server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A35B2606A31A
-	for <linux-perf-users@vger.kernel.org>; Mon, 26 Oct 2026 02:42:56 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org A35B2606A31A
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 998B4606A31A
+	for <linux-perf-users@vger.kernel.org>; Mon, 26 Oct 2026 02:45:16 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 998B4606A31A
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=atomlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=atomlin.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=nGS66ovb0dtk5tc58mGgsQdRNq1LgKEeL6XLYtfzQTgcmHzedW7/Qo2Gl6V0/4pXpsgLtO/gecHK8e5ts2E1jYOQgo6aRUpgteonl5x6ffDiJJoLDe/yzxidl/FpotCq9y9IRWzi6w2EEaGEsGRIpdPNMhpFoypYZmIE2ODTbJoXbnx8OXf014eQatcW1Y6NkC+jqUTfCcZ/B0iCTsLrjjOKucjyi/5lzlSWtbXW5YvBW+/t+4cB+SqDz1JJQsHtzrQmQ8roSWVxDyNEveTydjJBREk6oNOwMXMOqmpwvTAZkpo1yb3q/R2lF6FVuG9xA7gF3BWAi/fJzTlHw3biTA==
+ b=WiaXp4aNFeuGlW0WZ9qi+mzP0JTpS+Q07WIIhL1JCX0I00WgvUkrU71Q/wpA/nnLIPijkqvPi9BZCZdVgbsh8BdnHQ6NQlFuquMmE5IR0cN0e6hdlv3NxK1dsYBEJJAIVFcvy6WHFi+v+z1sYtcuWYUSCPHcN/BHXyBAkQi8i3FCB/cRu2JDIpkHh24oPLq5b6VL/qJywBV5a/am0P/Jk8zkesSA2i73n2BsuGcDeS0MIW3V9r+IPM0c+CJo2EUMBYGgjnNDy5rFaQrhkCvz8xap+zuN6HfgWQdcK6Ta4+B1l59NENuTRlJk5UGnSwbvuEdEvr9v6MtJjQCxw2RLBw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001; h=From:Date:Subject:Message-ID:MIME-Version;
- bh=pt9jkWYfSuAUa9/8+aEBatxm99wliKDptIs9cZXx3Lk=;
- b=p52fQWIAFbIBYlyk07edXP/fo5/vWKTI5QVrjxRtoKFtLdp879xlZHUke0X/bccNLWKjKMO2+qDGxW6f6xWIrn8jxAIpUmmd97zXvrTUURapzlGujE1DFFUCjjFmowObTUsFPPEi1jRGB1/oZGYsIMBk01iW4vfmS5FKXuUDRSldWx+kqWziSo/kLx7zFFeUUGTALSaYY9AUkfwvh5E2Y+6crrUaa05fOCt1lb9ZQvL6DYmKqE3rCgbUDhIQhvWXLS3Tl/BChnCpl+5aT2cSYAnBj37yb5lbOckj32StjxQ/dGHCQPbwZm8wr21CMcywHL109KylWzEfZHFIWqJkpQ==
+ bh=h0nEinRlpbybUdQrVguh2XopPpg9hbAWT4zSalqImkc=;
+ b=SA8R6smkupernRSUXnjoymw9QLx2WmrsZdrYDcU2Fma3jDXN/733kA6CKyF6HZgyTOw9VxSAjW8/0n4Hu5xRQQAHbacmSaJb6ic+edyBih7UpjaNiCRShW++jrdLiCiODz84hBTjYrX8nyfYo4aVKne9bZLXEqEwDnnyzV6oOFjgEZcMOsQ12jPXqMbLFkDFLZWdb35OzFdcRucTq58vz4hx1+UVVlm23ZJYEuD/Rqn7J0ZuwlyHGjp51tSG3FYvacnwDcZLSg6VACH7Y0ef99Q+2jDLsJd5znEmWYQUfXqN0rKylaOoE3sI9dCtRrBnU4ibHH6N74LebMif40l0Sg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=atomlin.com; dmarc=pass action=none header.from=atomlin.com;
  dkim=pass header.d=atomlin.com; arc=none
@@ -58,28 +58,28 @@ Received: from CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM (2603:10a6:400:183::5)
  by LO0P123MB5942.GBRP123.PROD.OUTLOOK.COM (2603:10a6:600:242::9) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.546.22; Mon, 26 Oct
- 2026 02:42:52 +0000
+ 2026 02:45:14 +0000
 Received: from CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM
  ([fe80::cec4:77ab:262e:d230]) by CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM
  ([fe80::cec4:77ab:262e:d230%5]) with mapi id 15.21.0546.021; Mon, 26 Oct 2026
- 02:42:52 +0000
-Date: Sun, 25 Oct 2026 22:42:47 -0400
+ 02:45:14 +0000
+Date: Sun, 25 Oct 2026 22:45:09 -0400
 From: Aaron Tomlin <atomlin@atomlin.com>
 To: sashiko-reviews@lists.linux.dev
 Cc: linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH perf-tools-next v11 05/10] perf ftrace: Support context
- switch tracking in function graph tracer
-Message-ID: <rmjfzveoeekolkvnsnaqxilxzyw7u6w5uzu5j52xm4mv27eqhr@weipa2yaaoev>
+Subject: Re: [PATCH perf-tools-next v11 10/10] perf ftrace: Filter extraneous
+ functions in function graph tracer
+Message-ID: <xsywpsoninmyql6w7f6uf5quktgvob35og25zsiiv6rn4pgsfa@yryvosduzgnq>
 References: <20261025181125.514372-1-atomlin@atomlin.com>
- <20261025181125.514372-6-atomlin@atomlin.com>
- <sashiko-outbox-184338@kernel.org>
+ <20261025181125.514372-11-atomlin@atomlin.com>
+ <sashiko-outbox-184340@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <sashiko-outbox-184338@kernel.org>
-X-ClientProxiedBy: BN9PR03CA0848.namprd03.prod.outlook.com
- (2603:10b6:408:13d::13) To LO6P123MB6616.GBRP123.PROD.OUTLOOK.COM
- (2603:10a6:600:2b2::11)
+In-Reply-To: <sashiko-outbox-184340@kernel.org>
+X-ClientProxiedBy: SA9PR13CA0142.namprd13.prod.outlook.com
+ (2603:10b6:806:27::27) To CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM
+ (2603:10a6:400:183::5)
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -91,315 +91,219 @@ Precedence: list
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
 X-MS-TrafficTypeDiagnostic: CWLP123MB6607:EE_|LO0P123MB5942:EE_
-X-MS-Office365-Filtering-Correlation-Id: a3f8761d-b32b-4f98-dd48-08df330ad459
+X-MS-Office365-Filtering-Correlation-Id: b436f658-78aa-45bc-eeda-08df330b2954
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|23010399003|366016|1800799024|4143699003|56012099006|261021123027099003|261021121427099003|261022105027099003|261022075727099003|261021135927099003|261009223027099003|10067099003|22082099003|18002099003|6133799003|3023799007;
+	BCL:0;ARA:13230040|376014|23010399003|366016|1800799024|4143699003|56012099006|261021123027099003|261021121427099003|261022105027099003|261022075727099003|261009223027099003|10067099003|22082099003|18002099003|6133799003|3023799007|27256017;
 X-Microsoft-Antispam-Message-Info:
-	mGZ93ZjlS5PulWqg7oMPi4QWcgWRy7BAByZjuzkn3zI2XjD7XqkkGOx7x0iKnSHNz1uKhcksYf1WOgfuQMHVkxoRzqz1AaojmRY4HrPBLWn/eA80sUWoVzYDmOuGK3/J8pbtS0vpnwcemIoGnz4oSPDDMvGACU+pXG1pB/qCvwK5fqU1x68Y3Px1PKMCyqc8C5DWE/mhGN6IdUYWvXU0Zoioq9glXtgeMmG0V8TeB2BdEnzA34RjfkCnWsQ7JMcdsK0ywPZrM/MaQCtV4rB9nIfek+8rCKxC2+h0euZNaqM970VIu0ZvX1hp7DG7+Y/epi9HHD2pXL4KEdzlz+KeNcqvS+GlX8dhNSCQAE9gvYO778nmk6DVSHAU7jKDHdnBK0scxaDG+fl3K6BcPWNBc2qYaUY4aDIiw8xWZPT/WEjLdfY2Li72JDy2wOrbq4I7ApAm3me9uGggOqETBoVpt/iXBW1j1gJH8xjEMbSzdq3YBkSnCRZRRIXmcJWn2abe2exGv3ho2QvfnWk2YcA1LOLNS5IaW0pxS8E4xxmz0o2+3piCiSvNeSMo/GOTeD2qXoJ1ma+mUZ9E3nTV6NFYc/u6hZsZeM2Dp17nb3xkWi4=
+	9ZGdhrq0fM4SIfeBXRZ/g7RYWvud+bDWpOiE05EpH8VT4Bt4EUtrdVYi/NFo7aGjiWA+Urrzqxm80TZDNoIgXksaSGhTisUB2YiXY3u3K7CJx1EpiA7QvGjF4d8cikxSQp8Yz6cHaMzWJI08HsQ06GgdTry+oP4VADaCOokv335hyAGLBzHHXrmn5SWwisvCuyhmlejmMlTstYGsJqC7+fhTvFmn4cNIdEMrBsvZriuS2JbvQ1q6XRto6jG55FDo9nPyo64PgEmg7xv1kpPch39l06fCfpR9EVYLWpvm1EcRRBU6NNHEq8PRsUuxm7EGC9qGIV/JQg7x1SdA7986s4xPkj4sQWdSI3M1jD3sbOD5ceiSCr7DdYurNLDwTFzQ8wmbUDPlWwPjOXWlUmQ/5ASxMjQzLC7+eqoHLMpcMNG9GxtmeqLar/R9iwpsgpYciVlDoyfwfwOybJxZeUusBbK7SJHIzJQAmscjpx3SrOhz5pq0Y/aKdxfr6FNW+7zCh+pzvyGwvG2neGkHQiM5OEGyX8N1Wgyxtgy4zKkhETF9Tah9D3Lx4qugVl5X1QeCHwG8D7J+m9rHPaOlv+htZmg3ryT0OK1RyvGej/iE0cjz9OW17abRFdxfco+zVwnuPBKHEj/JfgT3BcVsjU0LK/qB+zKATLJ1Ljcokl558T0=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(376014)(23010399003)(366016)(1800799024)(4143699003)(56012099006)(261021123027099003)(261021121427099003)(261022105027099003)(261022075727099003)(261021135927099003)(261009223027099003)(10067099003)(22082099003)(18002099003)(6133799003)(3023799007);DIR:OUT;SFP:1102;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(376014)(23010399003)(366016)(1800799024)(4143699003)(56012099006)(261021123027099003)(261021121427099003)(261022105027099003)(261022075727099003)(261009223027099003)(10067099003)(22082099003)(18002099003)(6133799003)(3023799007)(27256017);DIR:OUT;SFP:1102;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?MFcyQ3UzdERTbG5wekxNL2s3dWpTck8yOVZ2aGZ6L3FiU3MrUTNzWWVyaWV5?=
- =?utf-8?B?NEVHWGprWlBVSG54d2QrdFJ6S3R3cStjYldna3BVV3FMZmYwNnJwZVRlNEZH?=
- =?utf-8?B?enVqb0JhZWNPTFlTRWljdkNHTjBxQjZwUEtOaHl0Qll3WENLMTNvNllpOXBE?=
- =?utf-8?B?dzNRZVF3QzJqZDBPdXN1WkY4THlNSXdwODhMNDNyNitMeEV3WTFrNGppWXg5?=
- =?utf-8?B?dVZUNGJZcGxYb2M4TFRQVlkzUDN2VTJvRiszd0wwTy96S2V2Ny9sZFg3VjRm?=
- =?utf-8?B?K3hUR0F5Zkc0WExpVjZQUnZLOFVWc09STWNUTXBsK0JYNVFEME9Fbm16T3Qw?=
- =?utf-8?B?TTE4djBSK0srWEdjNVBCbGtmOEdLVEQ4OWRZVllvWG53bEVXb3ZIWlpZZ3ZY?=
- =?utf-8?B?ZjdXaml3OXhMdUgzWURVemdnUksyVDFBYlh6WkQ4SisvZjU2b3FCZ0h6MVd3?=
- =?utf-8?B?cFJlQ1JKRTBuSDZGOTZNWGEzRVBSak50dTU3SHduQjE1Zjh3VWl1U2hQa3Zj?=
- =?utf-8?B?Q3dBMGM1RnB3RjhrUXZzMzBNU3U1b2g2RmwvOXA3bVc4andTM0ZySHFUYlpG?=
- =?utf-8?B?elZHQldqQ0RnbTgzRnBVck1pSE5jbGhyS0dyTE16Zk1vMnNHUGhXLzVJMTFG?=
- =?utf-8?B?Z1B3eTBGNHpSRmZZYnFJMnF4V3l0TDFwd2ZJd0liY2ZQSUZzckZFSE12WHZi?=
- =?utf-8?B?bmZ1ZDdNREpjTk9uUkN5dzVtTXFUOE9NUWJFcTVzNFMrZXlLR25aOTNNeGxM?=
- =?utf-8?B?QU5YWnJOV2JXMzQ1dU5oQjRjYjd5UkdRY29SaVMvNERkbmNxMmNvZG1Zbnh5?=
- =?utf-8?B?QTUzQ2tKMHhuOG45TmZJUmYxTmpsSy9OUDZramR6NTVYTWRvV21WODlXL25T?=
- =?utf-8?B?MjcxZkU3dmZwek44dE1jZnBxOFN4M1VyYWJ5NnQzZ1ZydUpmN1hQcHZUSkYr?=
- =?utf-8?B?b29YcHYxbVh1T3pkZGFvT0VIRkZwaHB6RDZTaXBaOGJGcnBVL2V3bEN3Y2ps?=
- =?utf-8?B?dTRxNkw2NjJQdkdsS0FDUkJhWGxIWHNyV21KeXJpc0N4bEhLVGphV09rMzQ4?=
- =?utf-8?B?U1NheXNJa0pJbWxPS3BPVXQ5OFQxbC8xRzhGTWRxcUdzclE3WjJBMm9lWmxl?=
- =?utf-8?B?RXh4dk56bTcrRGttd3A2UlBuWFBJNU14akRSWG5WYytVWGpZT2VJQ1llcFZr?=
- =?utf-8?B?TjdKcFhrZ0VWUmRlOWx2RXRoTTZHMTdsZmxMOVlNSVJBZHZBaDlPeXg3SUZu?=
- =?utf-8?B?VFdFZmx2R0RjcnBORm1YMkpZV0ZadGpJdFFaR2FvNlpScHljMkJQWE5DenRZ?=
- =?utf-8?B?bVA3Wko4SE90Ty9aaGtMVmhZQVFOT0ZFcmpSaU4rWUoySmNPTk4vSzZtWFUv?=
- =?utf-8?B?RzJ5WnRiSG4ya0FGdjlRNkVwa0EzL0FaZXVZMlhJU2p3a1hiSXZtMnNEVFhB?=
- =?utf-8?B?NTFLSzUxcVBtUVRPYWxiYjVsaTVyVHQ5VDFIWEx6M2s2VHhDQWYwWFl0VHlT?=
- =?utf-8?B?bGEyUDBSVUV5dFVzU0sxaU9pOVJ1ZForMnp5VDRzeTNPQ0tXOUtvQmQ4YzVJ?=
- =?utf-8?B?YTNuSndrVHEyQlNKOXVyVDVEME5zZ1RLdTFSRlRibjNOMStPWnNmNVdPVGtj?=
- =?utf-8?B?MThTbXU1RjNEVTI3UWNFd200R2hsVHAyM0Y3dFk3clRHdUZ6TXM2VUc4OWRD?=
- =?utf-8?B?K21YNTJPTUNRcDNvaUJWRDEwRlVaZ1AwZkJ1UEROVXlNU2xwZERlUHMzcHV3?=
- =?utf-8?B?d1ptditjczBGZEZkdXVjM0VnMDYwRXd1L3k2MlJzSXhvWUZVeEpLTWpKNnZa?=
- =?utf-8?B?MTNtSXBSZWZtbW5mMzFvWldOTnAxVG5DL2xyWnVvWEpuTTBlMm5lb090V2x4?=
- =?utf-8?B?WC84V0hDM0RHekRsemlNR21qWm43RTUvbzg4M0NUVkJRMWlDYStCdlJiSE9J?=
- =?utf-8?B?cXp4Y1htNVB0SlpLcUdFZTVYOVhTM3hPWmdvLythSUFHeTVZTVNuOFkrN09U?=
- =?utf-8?B?Ui9kT21HOHFqTmJRNy92aXdESk5yeHo4RjR1VjVKK1FGZzlwVTZKOWR2Ylhz?=
- =?utf-8?B?ckV3MG9qTU5qRERWZU02OVQ0b2FTbWZpWkR1SVQ0Z3FqSjBwV2x6SlVjSnFX?=
- =?utf-8?B?RmJBcVlPT0hSU08vYXB0blU3Zk5rNFR4MGZpOEZGVzNpc1V3RVB2MU01K1dn?=
- =?utf-8?B?YlFrMG42WUd3MGhqemp3WG53cHkrcFpNbHFzQXFoTzVuMnhRVktuSXlQMWZy?=
- =?utf-8?B?SHRQN1MvM3h4WGdVOUlSTmVlYjdwQXRYbi9ZTWhLWER1YmNZTm5UbGJCYWxK?=
- =?utf-8?B?Tnl5WmxsVTI4QTBRM3BlZXB6M0pnVzB0L2pRbWtrbnBGbjJvWFJBUT09?=
+	=?utf-8?B?b3ZESjVYRlRaTzlzYkQ0YTRmTmM1aVpKOVcxa3BxeUE4V2RFb2EyNDd1Tita?=
+ =?utf-8?B?U0F4TnBBdjd3RVBZMFNDSmpmLy9TYVdHRjgrQzl2RE5HRzAwNURVWC8rS1BF?=
+ =?utf-8?B?MThVcVExL0dqS2UxdVpGL3BhbWZZYXFOaFppbTAzSUh6dkl3RFd6Q3lydm9u?=
+ =?utf-8?B?azJxU2dncHYxQUdDZ2I4dFV5YXVDNlNQMmlrcUZ0WHRRVVBleVRXbXh1c1JV?=
+ =?utf-8?B?RnJDYUxqQ1lVQmh5cGloZndRdldrYS9EWDFmRTBCckpuLzJmNGxKYk9JWUJZ?=
+ =?utf-8?B?Z0EyYzdQZWZMSU9VSmJyU0hVR2hvZHNvbHVPdWpmcWZiUjhoemljbTFMenpY?=
+ =?utf-8?B?MUhqUndySnVHLzZYaGx2cEFiNW45eCtjVk9sNnVIQ2I1T2FORXUxSEZBOFBq?=
+ =?utf-8?B?TXVnQ2lhM3NUemRoaDlJeE5Mc1pUNlBKMlpiWExJdGdkbXlXeExSS3JMQWVT?=
+ =?utf-8?B?S2JMcm9XNEorYWRrczUrYnJnM0J4WmNNdUhvd0NIRUIrSXZEYm81Mi9lQ00x?=
+ =?utf-8?B?bUhoREsxNlpNVmRORzhmWUkyVTRqVmZVTW5UaGRUNFdMYWo2WEpQRHVVdVZi?=
+ =?utf-8?B?dG1sd215NE04QjJFMzJ5ZE5CeHRBcmJKcVJkdjQ0RXRlZGVHZTA2bHRVMHkr?=
+ =?utf-8?B?RUREckt0YXdqb1lXUFF1bG5zSGNsVi94bHNpTTBSbnNrNFgwQklZSHRqaVFq?=
+ =?utf-8?B?anl2RXl2NEpVZFp5L0pvaXFrM3dOUXdicWxaWnUzS0ZMY3EyMlBTb0cwUjh0?=
+ =?utf-8?B?UTlRQXZZTDI1NTAwUEtqNXBUYURiRWh5dXgzOUUzMUFkQmNraXhvNmFFQURi?=
+ =?utf-8?B?cnhZRXIxa1RMcFBLQWNwanE4ak44WlU4N1VhNTVlbTFjT0MxZUlsL2k5aEhk?=
+ =?utf-8?B?SzJwQUhycDFLU0NySVAzU1RHRDI4ZGlJeG8vL0NvS1J2OTN6a3BOcEFTYWhl?=
+ =?utf-8?B?ZjlDNXBEK014dFJVcTdCZUVZMUdSR1dHZXorRVNzUzBZbmlzcGxObG1KemRE?=
+ =?utf-8?B?VUFUQ2hDTGhScjJxUFFyQS8zTEZmTGRkMlJKaGdwL2RvbktMOVRKL3dVeUxz?=
+ =?utf-8?B?cWRhTGprNjVtSXkxWmwwSU1POUVVQk12UDRaQUZ6RHRmL05nWWhUenZ0UDkz?=
+ =?utf-8?B?VGF2RFhYQ1JmMXJGRUN5Y2REK1NNaDF0bmxBdjBnR2pzRnFrdThCY1IxK2Qv?=
+ =?utf-8?B?TTNVemd5anMzdXg0Ykg4SDljcWVYN281bWJ6MkdOVGZNSEcrUWdGd0NOQ20x?=
+ =?utf-8?B?akZ1cDFLK01BaVoyVElESmtVczc0bms1SlA3WTdUOWhmbHVqaTVTak1RWlFC?=
+ =?utf-8?B?cHVhL2NPdXJVdzhlbkVKQ2ZOaUJSaThOS2paQTUxRjlaWWI2QjBNQ0RtVldY?=
+ =?utf-8?B?NjNVOTBCUUxSTDgwYThEdVMrd2FkRk94aytoM1ppVVhKS1hSSzRqeDArUi9l?=
+ =?utf-8?B?QjZrdVIwYTJCS1JoWEpybXVZSHh6T3oza1pMN2lMSi9rREV0L3JnUnRqYWVy?=
+ =?utf-8?B?RVlMT1BaMVg1ajF5bUpQSXFNNDNsWE1WMUZjQ0hYTU5rSW1kTWNaUWhtV0ZH?=
+ =?utf-8?B?UmFGYmE3Qi9Idy9sYzJYcUxMQTgvZ3RueDJuRGlqRUt1elZHZXpJa0Y0b0RX?=
+ =?utf-8?B?RjdueDhPUUpEcUxaazllQWFrNEdQQzRsaWJJQ2Q2V2tQWklNWmo1RWg5U3dp?=
+ =?utf-8?B?ZDVsNlI2emd2TzlJV2M5SlFPem5tTVljc2sxd2VTS0h2TTh2OWNKd2w4NE5I?=
+ =?utf-8?B?TWlmTVJCREgvR253MjM4c0x6V0hlalFoTW5FakJzd0NNeWxMNnU1SXhQZWtl?=
+ =?utf-8?B?OUorcFVrY25WRTBZdzJmZVp3S3lyU1dsZGV3ODJMY2JjNTRVbjBjVExHNVFE?=
+ =?utf-8?B?WlAxTmNBUkJkazFCcmRyQ2VMSUVtblJrRkM4MklrNkRhRmFLeHdEVTNXanB4?=
+ =?utf-8?B?VEF2eG5BdHZGcklmVUM5UWs5R2FiTDRIZW42RFFvY1JaTEZac0tHbHZlQzdv?=
+ =?utf-8?B?anFUYXNGdzF5VUdoa2NuN3ZzRVE0aU91bzZ1MHRUUmI3YjFzN3grMFBUSGN2?=
+ =?utf-8?B?VWFWdVNvaXpYMjVNbmVUd25yMGd1b3VrbXR4UXpBVC9pVGNMeHRoVkN1ai9N?=
+ =?utf-8?B?RzY5QXJMd0VEMjdhOGFzWnIyOGZCV2JoYUpxUjBPMGdzV05GN3hQbUhCcUZ4?=
+ =?utf-8?B?bnBta21Ra2pRWTQ0dWx1cURzSStRN2tlbGh3SlZwY1J1MnVMQmlsT0lYNWNU?=
+ =?utf-8?B?TGlDUERDUGZhaXZkQUhLRDFJM2lhYmpBZS8yOXVTckovNmRNRGh1Y01CVmVw?=
+ =?utf-8?B?R0lCNlE5T2tHSDhabXVFV3hpUGpvM3VPbUYvRWx2UWpHSXdaWG00QT09?=
 X-OriginatorOrg: atomlin.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a3f8761d-b32b-4f98-dd48-08df330ad459
-X-MS-Exchange-CrossTenant-AuthSource: LO6P123MB6616.GBRP123.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-Network-Message-Id: b436f658-78aa-45bc-eeda-08df330b2954
+X-MS-Exchange-CrossTenant-AuthSource: CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Oct 2026 02:42:51.9372
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Oct 2026 02:45:14.3593
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: e6a32402-7d7b-4830-9a2b-76945bbbcb57
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: DvkP+jqd0f+XDOgY3h6mefj29CtQEByt+PLj7XOgQkPnvvzfjOiPdO6+x9hfyjARgROdSxeLHS2LZ7NK7xf5YA==
+X-MS-Exchange-CrossTenant-UserPrincipalName: GNPdLcOrpohTABEErOWdMyYNiP+aJaEEqPjXgv5yWtG3PuekjGIPCLj3QbNaAI0BUYEHcXHs38DqyYhiWD9Zlw==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: LO0P123MB5942
 
-On Sun, Oct 25, 2026 at 06:29:04PM +0000, sashiko-bot@kernel.org wrote:
+On Sun, Oct 25, 2026 at 06:29:50PM +0000, sashiko-bot@kernel.org wrote:
 > Thank you for your contribution! Sashiko AI review found 2 potential issue(s) to consider:
-> - [Medium] perf ftrace: broken min_raw_indent tracking in ftrace_task_state__rekey()
-> - [Medium] perf ftrace: non-contiguous unknown-PID splice in ftrace_task_state__rekey()
+> - [Medium] perf ftrace: unshifted target_root_depth in ftrace_task_state__rekey()
+> - [Low] perf tests ftrace: missing ensure_synthetic_inline() in test_graph_target_filter()
 > --
 > 
-> commit 242f56625a11f73350f70f6bfa60c779b6624a22
+> commit 79ad3a54d36210f71bcd95c62c94ed00575efdc0
 > Author: Aaron Tomlin <atomlin@atomlin.com>
 > 
-> perf ftrace: Support context switch tracking in function graph tracer
+> perf ftrace: Filter extraneous functions in function graph tracer
 > 
-> This commit adds context switch banner parsing and per-task call stack state
-> tracking to the function graph tracer in perf ftrace, including task state
-> rekeying and stack splicing across CPU migrations.
+> This commit adds userspace callgraph target state tracking and return-address
+> caller validation to perf ftrace so that extraneous top-level functions and
+> detached orphan calls are suppressed when filtering with -G / --graph-funcs.
+> It also replaces the fixed-size call stack with a dynamically reallocated
+> array and adds unit tests in tools/perf/tests/ftrace.c.
+> 
+> > diff --git a/tools/perf/tests/ftrace.c b/tools/perf/tests/ftrace.c
+> > index 0aef2cd9b07fb..3591883b32041 100644
+> > --- a/tools/perf/tests/ftrace.c
+> > +++ b/tools/perf/tests/ftrace.c
+> > @@ -1492,6 +1492,2259 @@ static int test_context_switch_handling(void)
+> >  }
+> >  #undef TEST_CS_ASSERT
+> >  
+> > +static int test_graph_target_filter(void)
+> > +{
+> [ ... ]
+> > +	vmlinux = vmlinux_path__find();
+> > +
+> > +	/* 6. Test targeted leaf call with synthesized DWARF inlines closing and resetting filter */
+> > +	if (vmlinux) {
+> > +		const char *inlined_names[FTRACE_MAX_INLINES];
+> > +		int num_inlines;
+> > +		int j;
+> > +		const char *saved_vmlinux = symbol_conf.vmlinux_name;
+> > +		bool saved_ignore_buildid = symbol_conf.ignore_vmlinux_buildid;
+> > +
+> > +		symbol_conf.vmlinux_name = vmlinux;
+> > +		symbol_conf.ignore_vmlinux_buildid = true;
+> > +		if (perf_ftrace__setup_inlines(&ftrace) == 0 && ftrace.machine) {
+> > +			num_inlines = ftrace_resolve_inlines(ftrace.machine,
+> > +							     "wake_up_new_task", 0x1d1,
+> > +							     inlined_names,
+> > +							     FTRACE_MAX_INLINES);
+> > +			if (num_inlines > 0 && !strcmp(inlined_names[0], "activate_task")) {
+> 
+> [Severity: Low]
+> In test_graph_target_filter(), perf_ftrace__setup_inlines() creates a fresh
+> machine and loads vmlinux before querying ftrace_resolve_inlines() for
+> wake_up_new_task at offset 0x1d1.
+> 
+> Other inline tests in tools/perf/tests/ftrace.c, such as
+> test_inline_processing(), test_stack_saturation(), and
+> test_context_switch_handling(), call ensure_synthetic_inline() first:
+> 
+> 	if (perf_ftrace__setup_inlines(&ftrace) == 0 && ftrace.machine) {
+> 		ensure_synthetic_inline(ftrace.machine, "wake_up_new_task", 0x1d1,
+> 					"activate_task");
+> 		num_inlines = ftrace_resolve_inlines(ftrace.machine,
+> 						     "wake_up_new_task", 0x1d1,
+> 						     inlined_names,
+> 						     FTRACE_MAX_INLINES);
+> 
+> Should test_graph_target_filter() also call ensure_synthetic_inline() before
+> ftrace_resolve_inlines() so that subtests 6, 6b, and 6c are not silently
+> skipped when the host vmlinux does not have activate_task inlined at exact
+> offset 0x1d1 of wake_up_new_task?
+
+Acknowledged. In the next iteration, test_graph_target_filter() now calls
+ensure_synthetic_inline(ftrace.machine, "wake_up_new_task", 0x1d1,
+"activate_task") prior to ftrace_resolve_inlines(), matching the other
+inline test cases so that subtests 6, 6b, and 6c always execute
+deterministically regardless of the host vmlinux DWARF layout.
+
 > 
 > > diff --git a/tools/perf/util/ftrace.c b/tools/perf/util/ftrace.c
-> > index 95db57e70d11b..055b5eb6b8327 100644
+> > index 384fc03850f27..4e916096a9380 100644
 > > --- a/tools/perf/util/ftrace.c
 > > +++ b/tools/perf/util/ftrace.c
 > [ ... ]
-> > @@ -124,6 +129,208 @@ static int ftrace_task_state__grow_stack(struct ftrace_task_state *cs)
-> >  	return 0;
-> >  }
+> > @@ -313,6 +345,26 @@ static struct ftrace_task_state *ftrace_task_state__rekey(struct ftrace_task_sta
+> >  			for (j = to_copy; j < ts->depth; j++)
+> >  				free(ts->stack[j].name);
 > >  
-> > +/**
-> > + * ftrace_task_state__rekey - Reassign a task state to a new PID
-> > + * @ts: The task state to re-key
-> > + * @new_pid: The new process ID to associate with the state
-> > + *
-> > + * Rehash @ts under @new_pid. If a task state for @new_pid already exists,
-> > + * merge or replace it and update active CPU references accordingly.
-> > + *
-> > + * Return: A pointer to the active task state associated with @new_pid.
-> > + */
-> > +static struct ftrace_task_state *ftrace_task_state__rekey(struct ftrace_task_state *ts,
-> > +							  pid_t new_pid)
-> > +{
-> > +	struct ftrace_task_state *existing;
-> > +	u32 key;
-> > +	int j, c;
-> > +	int to_copy;
-> > +
-> > +	if (ts->pid == new_pid)
-> > +		return ts;
-> > +
-> > +	hlist_del_init(&ts->node);
-> > +
-> > +	existing = find_task_state(new_pid);
-> > +	if (existing) {
-> > +		int split_idx = existing->depth;
-> > +		int old_split_idx, post_count;
-> > +		int base_raw_indent, post_raw_indent;
-> > +
-> > +		for (c = 0; c < FTRACE_MAX_CPUS; c++) {
-> > +			if (ftrace_cpu_tasks[c] == ts)
-> > +				ftrace_cpu_tasks[c] = existing;
-> > +		}
-> > +
-> > +		/*
-> > +		 * Find the split point in existing where frames postdate ts.
-> > +		 * Frames 0 .. split_idx - 1 were pushed prior to ts.
-> > +		 * Frames split_idx .. existing->depth - 1 were pushed after ts.
-> > +		 */
-> > +		for (j = 0; j < existing->depth; j++) {
-> > +			if (existing->stack[j].seq > ts->seq) {
-> > +				split_idx = j;
-> > +				break;
-> > +			}
-> > +		}
-> > +		old_split_idx = split_idx;
-> > +		post_count = existing->depth - old_split_idx;
-> > +
-> > +		/*
-> > +		 * Prune pre-ts frames on existing that exited before or during ts
-> > +		 * (i.e. whose raw_indent >= base_raw_indent, along with any
-> > +		 * synthesized inlined frames).
-> > +		 */
-> > +		base_raw_indent = -1;
-> > +		if (ts->depth > 0)
-> > +			base_raw_indent = ts->stack[0].raw_indent;
-> > +		if (ts->min_raw_indent >= 0 &&
-> > +		    (base_raw_indent < 0 || ts->min_raw_indent < base_raw_indent))
-> > +			base_raw_indent = ts->min_raw_indent;
-> > +
-> > +		if (base_raw_indent >= 0) {
-> > +			while (split_idx > 0) {
-> > +				struct ftrace_stack_frame *top =
-> > +					&existing->stack[split_idx - 1];
-> > +
-> > +				if (top->inlined) {
-> > +					free(top->name);
-> > +					top->name = NULL;
-> > +					if (existing->inlined_depth > 0)
-> > +						existing->inlined_depth--;
-> > +					split_idx--;
-> > +					existing->depth--;
-> > +				} else if (top->raw_indent >= base_raw_indent) {
-> > +					free(top->name);
-> > +					top->name = NULL;
-> > +					split_idx--;
-> > +					existing->depth--;
-> > +				} else {
-> > +					break;
+> > +			if (ts->in_target &&
+> > +			    ts->target_root_frame_idx < ts->depth) {
+> > +				existing->in_target = true;
+> > +				existing->target_root_depth = ts->target_root_depth;
+> > +				existing->target_root_frame_idx =
+> > +					split_idx + ts->target_root_frame_idx;
+> > +				existing->target_root_indent = ts->target_root_indent;
+> > +				strlcpy(existing->target_root_name,
+> > +					ts->target_root_name,
+> > +					sizeof(existing->target_root_name));
+> > +				existing->orphan_depth = ts->orphan_depth;
+> > +			} else if (existing->in_target) {
+> > +				if (existing->target_root_frame_idx >= old_split_idx) {
+> > +					existing->target_root_frame_idx +=
+> > +						(split_idx + to_copy) - old_split_idx;
+> > +					existing->target_root_depth +=
+> > +						(split_idx + to_copy) - old_split_idx;
 > > +				}
 > > +			}
-> > +		}
-> 
-> [Severity: Medium]
-> Can this split_idx search and pre-ts pruning loop in
-> ftrace_task_state__rekey() drop active intermediate frames from
-> existing->stack when an initial unknown-PID state accumulates events both
-> before and after events on existing?
-> 
-> In the kernel's function_graph tracer, verif_pid() only emits a per-CPU
-> context switch banner when the traced PID on that CPU changes from its
-> previous traced PID. Consider when task P starts on CPU 0 (tracked under
-> ts = FTRACE_UNKNOWN_PID(0)), migrates to CPU 1, and then migrates back to
-> CPU 0 before any other task produces a trace event on CPU 0:
-> 
-> 1. On CPU 0, task P pushes outer frames f1 (raw_indent = 2, seq = 1) and
->    f2 (raw_indent = 4, seq = 2) onto ts (FTRACE_UNKNOWN_PID(0)).
-> 
-> 2. Task P migrates to CPU 1, where a banner "other => P" binds CPU 1 to
->    existing (PID P), and pushes intermediate frames f3 (raw_indent = 6,
->    seq = 3) and f4 (raw_indent = 8, seq = 4) onto existing->stack.
-> 
-> 3. Task P migrates back to CPU 0. Since no other task emitted a trace
->    record on CPU 0 in the meantime, no banner is emitted on CPU 0 and
->    CPU 0 remains bound to ts. Task P executes another traced event on
->    CPU 0 at seq = 5 (for example, a leaf call or inner frame f5 at
->    raw_indent = 10), updating ts->seq to 5.
-> 
-> 4. Later, another task runs on CPU 0 and emits "0) P => next", triggering
->    ftrace_process_fgraph_line() -> parse_context_switch() ->
->    ftrace_task_state__rekey(ts, P).
-> 
-> Because ts->seq is now 5 while existing->stack frames f3 and f4 have
-> seq = 3 and 4, the loop checking existing->stack[j].seq > ts->seq finds no
-> match and leaves split_idx = existing->depth. That classifies f3 and f4 as
-> pre-ts frames, and the pruning loop then compares them against
-> base_raw_indent = ts->stack[0].raw_indent (2 from f1), freeing and dropping
-> the active intermediate frames f3 and f4.
-
-Acknowledged. Assuming a single contiguous split point (split_idx) based on
-ts->seq breaks down when a task migrates away from and back to a CPU before
-another task emits a trace record on that CPU, as frames on ts and existing
-can interleave arbitrarily in sequence order.
-
-In the next iteration, the single-split splicing logic in
-ftrace_task_state__rekey() has been replaced with symmetric per-frame
-pruning via ftrace_task_state__prune_stack() followed by a general two-way
-merge ordered by frame->seq. Each frame is evaluated against only those
-indentation watermarks recorded on the other state with seq > frame->seq,
-and surviving frames from both stacks are merged in ascending sequence
-order so interleaved intermediate frames are preserved.
-
-
-> 
 > > +
-> > +		/*
-> > +		 * If newer frames or exits exist on existing, prune any frames
-> > +		 * on ts that exited before them.
-> > +		 */
-> > +		post_raw_indent = -1;
-> > +		if (existing->seq > ts->seq) {
-> > +			if (post_count > 0)
-> > +				post_raw_indent = existing->stack[old_split_idx].raw_indent;
-> > +			if (existing->min_raw_indent >= 0 &&
-> > +			    (post_raw_indent < 0 || existing->min_raw_indent < post_raw_indent))
-> > +				post_raw_indent = existing->min_raw_indent;
-> > +		}
-> [ ... ]
-> > @@ -402,6 +725,9 @@ int ftrace_process_fgraph_line(struct perf_ftrace *ftrace, const char *line, FIL
-> >  	if (is_exit) {
-> >  		char exit_name[128];
-> >  
-> > +		if (cs->min_raw_indent < 0 || leading_spaces < cs->min_raw_indent)
-> > +			cs->min_raw_indent = leading_spaces;
-> > +
-> >  		extract_exit_func_name(func_start, exit_name, sizeof(exit_name));
-> >  
-> >  		top_raw_indent = -1;
-> > @@ -479,7 +805,9 @@ int ftrace_process_fgraph_line(struct perf_ftrace *ftrace, const char *line, FIL
-> >  			cs->stack[cs->depth].inlined = false;
-> >  			cs->stack[cs->depth].indent = leading_spaces;
-> >  			cs->stack[cs->depth].raw_indent = leading_spaces;
-> > +			cs->stack[cs->depth].seq = cs->seq;
-> >  			cs->depth++;
-> > +			cs->min_raw_indent = -1;
+> >  			existing->depth = split_idx + to_copy + post_count;
 > >  		}
-> >  	}
 > 
 > [Severity: Medium]
-> Does tracking min_raw_indent as a single unsequenced value that is reset to
-> -1 on function entry cause ftrace_task_state__rekey() to miscompute
-> post_raw_indent and base_raw_indent across CPU migrations?
+> When ftrace_task_state__rekey() splices ts->stack[0 .. to_copy - 1] into
+> existing->stack at split_idx, existing->target_root_frame_idx is shifted by
+> split_idx, and the else-if branch shifts both target_root_frame_idx and
+> target_root_depth. However, in the ts->in_target branch,
+> existing->target_root_depth is set to ts->target_root_depth without adding
+> split_idx (and the guard checks ts->target_root_frame_idx < ts->depth rather
+> than to_copy).
 > 
-> There appear to be two ways this can corrupt the tracked call stack when
-> ftrace_process_fgraph_line() -> parse_context_switch() ->
-> ftrace_task_state__rekey() merges ts into existing:
+> If a task enters non-target ancestor frames on one CPU (leaving split_idx > 0
+> on existing->stack) and then migrates to another CPU where it enters a target
+> root function at ts->target_root_depth == 0 before the context-switch banner
+> is processed, existing->target_root_depth will remain 0 after the merge
+> instead of split_idx.
 > 
-> 1. In ftrace_task_state__rekey(), existing->min_raw_indent is folded into
->    post_raw_indent whenever existing->seq > ts->seq, without checking
->    whether that minimum exit indentation was actually recorded after
->    ts->seq:
+> When that happens, won't ftrace_check_target_caller() and
+> ftrace_process_fgraph_line() treat the pre-migration non-target ancestor
+> frames at indices 0 .. split_idx - 1 as being at or above target_root_depth:
 > 
->    - Suppose task P on CPU 0 (existing) exits a function at
->      leading_spaces = 2 (seq = 1), setting existing->min_raw_indent = 2.
->    - Task P migrates to CPU 1 (ts = FTRACE_UNKNOWN_PID(1)) and enters
->      functions at indentations 2, 4, and 6 (seq = 2..4, so ts->seq = 4).
->    - Task P migrates back to CPU 0 (existing) at seq = 5 and executes a
->      leaf call at indent 8 or exits only the deepest frame at indent 6.
->      Now existing->seq is 5 (> ts->seq), while existing->min_raw_indent is
->      still 2 from seq = 1.
->    - When CPU 1 later emits its context switch banner and calls
->      ftrace_task_state__rekey(ts, P), existing->seq > ts->seq is true and
->      post_raw_indent becomes existing->min_raw_indent (2), causing the
->      post-ts pruning loop to pop and free the still-active frames on ts at
->      indentations 2 and 4.
+> ftrace_check_target_caller()
+> 	if (has_retaddr && caller_idx >= 0 && caller_idx < cs->target_root_depth) {
+> 		ftrace_unwind_to_depth(cs, caller_idx + 1, blank_prefix, out);
 > 
-> 2. In ftrace_process_fgraph_line(), pushing a new frame onto cs->stack
->    unconditionally sets cs->min_raw_indent = -1. If a task on ts (or
->    existing after ts) first exits a pre-migration frame at a shallow
->    indentation (such as leading_spaces = 2, setting cs->min_raw_indent = 2)
->    and then enters a new function at a deeper indentation (such as
->    leading_spaces = 4), resetting cs->min_raw_indent = -1 erases the
->    shallow exit watermark. When ftrace_task_state__rekey() subsequently
->    computes base_raw_indent or post_raw_indent, it only sees indentation 4
->    and fails to prune the already-exited frame at indentation 2.
+> ftrace_process_fgraph_line()
+> 	if (!has_filter || (cs->in_target && match_idx >= cs->target_root_depth)) {
+> 
+> allowing non-target ancestor calls and exits to leak into the filtered output,
+> or unwinding into ancestor inline frames when the target root exits?
 
-Agreed. Tracking a single unsequenced min_raw_indent scalar cannot
-distinguish whether a shallow exit occurred before or after a given stack
-frame was pushed, and resetting it on function entry loses earlier shallow
-watermarks.
-
-In the next iteration, min_raw_indent has been replaced with a monotonic
-suffix-minima array of sequenced watermarks (struct
-ftrace_indent_watermark), maintained by ftrace_task_state__record_indent()
-and queried via ftrace_task_state__min_indent_after(other, frame->seq).
-During ftrace_task_state__rekey(), the watermark arrays from both states
-are also merged in sequence order so full indentation history is retained
-across multiple migrations.
-
+Indeed. In the next iteration, ftrace_task_state__rekey() validates
+ts->target_root_frame_idx against to_copy before merging, tracks the
+relocated index (new_t_root / new_e_root) of the outermost surviving target
+root frame during the sequence-ordered stack merge, and shifts both
+target_root_frame_idx and target_root_depth by the exact displacement
+(delta = new_t_root - ts->target_root_frame_idx). In addition,
+ftrace_task_state__prune_stack() and ftrace_task_state__rekey() now
+synchronise orphan tracking state against the merged watermark history and
+sequence order so pre-migration ancestor frames and stale orphan states are
+handled accurately.
 
 > 
 > -- 
-> Sashiko AI review · https://sashiko.dev/#/patchset/20261025181125.514372-1-atomlin@atomlin.com?part=5
+> Sashiko AI review · https://sashiko.dev/#/patchset/20261025181125.514372-1-atomlin@atomlin.com?part=10
 
 -- 
 Aaron Tomlin
