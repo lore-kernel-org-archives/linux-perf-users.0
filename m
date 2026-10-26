@@ -1,74 +1,74 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.216.70
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.214.200
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793051578;
-	b=5eh7u2engPa8GjSQ9TMywBjBxsPaBPPrTRy2F4uqjsL19n1li7RRqN11WT+09XP2R1is
-	 qdZJ0JWicZ/iXuxXiynKI/UW8rA4Mnu4L5cXUfWF7DSFJhkk7DwYDNGrc9aNmNjX8C6Ra
-	 mWKwfnHceBr82s9ltwXD41ME4yDQiMagRECK0VODyhWltk1k7f1U1+Czi3wgM2s/3L6Jv
-	 Ssoh24xGbo7Z+GU4KwQdFPOSS2FqXqPZe+ukOFZkUSdwdSjHd/gIQk/OhUnrpj+IW+3up
-	 5G+26n+fB4Tm6PGjTDmT+cflzMspJ9k32qkmhZoJ1x3cbAC/lpJXpXf9FmMDessf1Gw==
+	t=1793051580;
+	b=4ALTbLvN6ism/8Ayvjm9IfH120htQ6hKvFQ/P2FyjzN8HtNbxOctH6KioxpyUqKA3p0V
+	 cQe9YfPUx0lDPJT6GWhk8LtMaHKkSIINEENeQxLpDhSbfNYMtbBJmf65jBTsR/BqTTbe5
+	 bwIJ/XcvdrBjl1iZZzg+6qSEy5+nSlvCtyHUeCRMj8ZgdlCfe1jYfO9xs5S7cwNGRvC/L
+	 AS4wlj6gG+12eQJlxxwKy9R0dNlt4Zcx1LyM9PVZNtYDUIye9NZDTHuBRHT/KLxz4++/k
+	 x9VveKP9RK1C+DCS5ye3gq9uMCtI5k6W4xaEzxq9upTDim8Y5Nh6lVaAjdeCQlknSeQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793051578;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793051580;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Received:Date:In-Reply-To:
 	 Mime-Version:References:X-Mailer:Message-ID:Subject:From:To:Cc:
 	 Content-Type;
-	bh=HQqGCLRyEFq1Qmw7LfzuGpexsFHiUvTKIyODgPSn6eE=;
-	b=ndcYhv6vv/6cy7Iy15YLttHiQCoHJ60ymDsAnj/bgyM11UJ5dZ4DFCjWbTCKpyxmvO6T
-	 9uUphmHCaED/gm1Qi9/LuIcJ9ADB592drK64nAwU6sc0/opwmxGV02xgG1brpj+eS3yzM
-	 y6YsEtnrHrW3u9dAjfJjM16oMNoPFn4AUxRe16+bB1FeihTyrP3ozqT2OPyqs2QFoFPUD
-	 zcnVs/hIbiLMJFaRyHQMpHSOFvv+Z1daFNquEFZra2fJ4Dm+zYhinE4Tpe/0XFYjszBsN
-	 ZmVk98yEdm1pRHvG5XdooaQpN9FyRf0x52ILxXjjU/rFM1l6WynhItJhlmXVFflE6sA==
+	bh=bFIgocNkSNISRV4CHBI3t0UD1tr56XsmI6e/PuL6mFQ=;
+	b=jp+QFiV5+w0gXe/buL5pY39OVlix8k54wEcvsc7VzHEKe3vPuMMmgqSqc9/E1djOD6M+
+	 gzjhMnKKPSCa3KnHgqiXn4w0rIE9WN980dOfHMzFrdpmO0ce2GAexp6Unn5qw+4nqmxps
+	 GiX+806FqrGL/DLzWscnjjNAJEbWrIYeG15ay3eL9B7NamTVUFpEe+HUT+l6HuH9K8D/4
+	 McNtY8BgDYOfNBXuH/5gpb+CPb9TX5NfZQI+Q/EuCwphvi9uZt9Sat0KcVcI+oiKAKBB3
+	 jyuGa0aHccfwasRt8hltBMH0p/UxBrtvUxDyclGgo8d1vMpq76j0t8dFIW34mKPQToA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=google.com;
 	spf=pass smtp.mailfrom=flex--jthoughton.bounces.google.com;
-	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20251104 header.b=ZslLM7db;
-	arc=none smtp.remote-ip=209.85.216.70
-Received: from mail-pj1-f70.google.com (mail-pj1-f70.google.com [209.85.216.70])
+	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20251104 header.b="HZDE5/h8";
+	arc=none smtp.remote-ip=209.85.214.200
+Received: from mail-pl1-f200.google.com (mail-pl1-f200.google.com [209.85.214.200])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28946606B4D8
-	for <linux-perf-users@vger.kernel.org>; Mon, 26 Oct 2026 21:52:57 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 28946606B4D8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BF38606AB11
+	for <linux-perf-users@vger.kernel.org>; Mon, 26 Oct 2026 21:52:55 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 7BF38606AB11
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--jthoughton.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20251104 header.b=ZslLM7db
-Received: by mail-pj1-f70.google.com with SMTP id 98e67ed59e1d1-3ada8bc8575so5309150a91.3
-        for <linux-perf-users@vger.kernel.org>; Mon, 26 Oct 2026 14:52:57 -0700 (PDT)
+	dkim=pass (2048-bit key, unprotected) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20251104 header.b=HZDE5/h8
+Received: by mail-pl1-f200.google.com with SMTP id d9443c01a7336-2df8484f12cso33290715ad.3
+        for <linux-perf-users@vger.kernel.org>; Mon, 26 Oct 2026 14:52:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1793051576; x=1793656376; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1793051575; x=1793656375; darn=vger.kernel.org;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=HQqGCLRyEFq1Qmw7LfzuGpexsFHiUvTKIyODgPSn6eE=;
-        b=ZslLM7dbmVgAFSoPUZOqKRrOoyj122fasUGdKYfOjOXbcRPiRB7feP6J+Octqg8Oa7
-         CYkNSyaJ5iygpnvzIZzKMr56CyR1UQjGhD0SeSiR+jnjKI891alYSFsfCdQyY1fP7lfK
-         jjHyo984JGh2+H77mvNAAdFd04oUnBl94P2xuFqBjmjJW2DRxyJuLJmIcvB/faohDtvh
-         cqjWch4Zsyk+B3JEvHSIHxZJLF7Wuqc+8XgYW91lxZJfWyN17H1WnMId3q2wh0N/6TLC
-         csdE1br/thP+JMpWf4qCqC7rGrBz4jRcA0dSFFpspmprnoJ9hiOa+NbLKfXhqIJIfOQ1
-         +hfQ==
+        bh=bFIgocNkSNISRV4CHBI3t0UD1tr56XsmI6e/PuL6mFQ=;
+        b=HZDE5/h8w3OLnXIxK6aJgBJe5iwYfPAwmjEpbW/4ftuyFH9ujuIrSw0dznV9OUyE6F
+         vLLrtdw5C1f/2X+KE5a5AjTR0OVlTErAcMYLlhQ5t2W88/kgSbZ50jbWTAgaZjq8AYcS
+         4LLCa+on0oJ7TLoL82cJ6x9U3nUI29G0f4PX+yu671qzXzwpuN6+UwWx7JShwc/LkLfM
+         GRw34cZFEGEcFhzeutRJqBfkALCNUgi6P0+zbacA4vpG0KwtbVgvsMdzT9Ez5Kd0LgzS
+         r7YDxe2JSHaiPCcL0fARduZEtNb5N686qJeDu/bTRdIxd0MlXDFjjdccfXbzfnsu4WZc
+         oRRQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1793051576; x=1793656376;
+        d=1e100.net; s=20260707; t=1793051575; x=1793656375;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=HQqGCLRyEFq1Qmw7LfzuGpexsFHiUvTKIyODgPSn6eE=;
-        b=cWGtpcz5FMu0KXBXFpjFz1yL/FInPdR8RuNVrfsXOfbLO5jp2zIWQVU/AkUTpcVG6K
-         H90WAfRDYMTb3R+A2JVIkMBXE75soXeX6KAIRcsbMv9okGOlaLLIleOLd9uX8lFazAEu
-         uw76MqEBQ2AfOowSjzUBIqPyQYc4bL1R5U41+bwxxFb6/jIvJZCa1dceGujlvBXl5x5s
-         wMtS6USPVbQGbvebNXsEcg3zZKhcLTvF5Qnuh6hHB++fK1W+1BB0OYOxzAtj4IITyKes
-         Ipr7/X3H/zgj+1/XN13cnsXTHTHwNRFd8g7eSt3VnggdIfCLGFOKuWSyyS8v//vqW708
-         GDqA==
-X-Forwarded-Encrypted: i=1; AKwUvBz9pLGG5ULkCufAWNuD5PGgvI+XLQ8sf6RU1MwFQhz+7n0hYSM+KRyBbLi2RbMQ9tFeCJkL+ct7aXU0sEKrpfTe@vger.kernel.org
-X-Gm-Message-State: AFq9FYKscTOwlZ64UuzjYcUXJCz2v8cQvd2A4Jw/Uwm99WX2mwbkNA5X
-	/aZhoMIZD3Hok+emcfyIZzdm7s9kc9GB0LcH7WibZCp2Io0OWIMNJ6wcdfVWfTuhsO+ewt1dzdT
-	GXdFb1EfhzYEWuaoyU5CCpA==
-X-Received: from pjbst6.prod.google.com ([2002:a17:90b:1fc6:b0:3ac:989f:b65f])
+        bh=bFIgocNkSNISRV4CHBI3t0UD1tr56XsmI6e/PuL6mFQ=;
+        b=ux8teEK5U09Cke9Z54t+MglSSOYKvk8SoVqx9GEyu9/XDsD6oF6EjZ8qTCCd/hg4xb
+         G4BRs07hjSfhZQiflS08oUPtAcuI73+p0APr2MH01W5wEc2EsOMWQoauAMIPh1mqXuw6
+         uSMkRfP5TaNrQ5k/y5nOFa+T5K960gs8jsIQ3o6KgG5Ht9APe403j2nlKU/eDJ7RGpwD
+         eCD5wCFeEMb8kCv/NppRhLbsTj3Xm/uoNr9eWpNqJ64GYkLsrOdS+YHYshawHxDeFEAa
+         qFIAzlIzpL8TwEBPA6wbfQ0LmuHl/3D8DT3WurVAxdPYiFuKkkHS4zGumMDtkdpeETnQ
+         xnKg==
+X-Forwarded-Encrypted: i=1; AKwUvByy+HZpFUMBptbXGTJNmR9Bk7CJU3LfmcV1AALSvXUjxLOHFVX4kokbQmgZjQDuDt8qK93ognQxxcx+29bS9XMD@vger.kernel.org
+X-Gm-Message-State: AFq9FYIUjZP+PBIzPo+EI1i+V7q+oPsK7h+mFmSsiuPg6cL3MYuYDoAr
+	7NGG6ae95hRF4tx8b9gVxUPKLSvbX3KQCmL2AYObR5irH4Y/LqZkDNoaoRq5lxwosj5gr1e9TkS
+	nLf4I1WRZ8fRzXGNiu7hfQg==
+X-Received: from plblg15.prod.google.com ([2002:a17:902:fb8f:b0:2e5:712c:5c7])
  (user=jthoughton job=prod-delivery.src-stubby-dispatcher) by
- 2002:a17:90b:1a92:b0:3a8:211b:6c8c with SMTP id 98e67ed59e1d1-3adeaae6e15mr7057279a91.22.1793051576336;
- Mon, 26 Oct 2026 14:52:56 -0700 (PDT)
-Date: Mon, 26 Oct 2026 21:52:26 +0000
+ 2002:a17:902:ebc8:b0:2e2:e0f8:e57c with SMTP id d9443c01a7336-2ea9c95ba58mr63848015ad.70.1793051574627;
+ Mon, 26 Oct 2026 14:52:54 -0700 (PDT)
+Date: Mon, 26 Oct 2026 21:52:24 +0000
 In-Reply-To: <20261026215226.3713941-1-jthoughton@google.com>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -81,8 +81,9 @@ Precedence: list
 Mime-Version: 1.0
 References: <20261026215226.3713941-1-jthoughton@google.com>
 X-Mailer: git-send-email 2.56.0.307.g5fe7bd680c-goog
-Message-ID: <20261026215226.3713941-11-jthoughton@google.com>
-Subject: [RFC PATCH 10/10] uaccess: Move the NULL mm warning out of line
+Message-ID: <20261026215226.3713941-9-jthoughton@google.com>
+Subject: [RFC PATCH 08/10] uaccess: Refuse and warn on __copy_from_user_inatomic()
+ without an mm
 From: James Houghton <jthoughton@google.com>
 To: Andrew Morton <akpm@linux-foundation.org>, Alexander Viro <viro@zeniv.linux.org.uk>
 Cc: Thomas Gleixner <tglx@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Kees Cook <kees@kernel.org>, 
@@ -105,76 +106,83 @@ Cc: Thomas Gleixner <tglx@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Ke
 	linux-kernel@vger.kernel.org, James Houghton <jthoughton@google.com>
 Content-Type: text/plain; charset="UTF-8"
 
-uaccess_without_mm() is inlined into every user copy, including every
-copy_{to,from}_user() call site on architectures that define
-INLINE_COPY_USER, such as arm64. Each inlined WARN_ON_ONCE() adds its
-own __bug_table entry.
+__copy_from_user_inatomic() never called should_fail_usercopy(), so the
+NULL current->mm check added to uaccess_should_fail() does not cover it.
+It is used e.g. by KVM's kvm_read_guest_atomic(), by several
+architectures' perf callchain and stack trace code, and by the generic
+copy_from_user_inatomic_nontemporal().
 
-Keep the NULL current->mm check inline, but move the warning into a
-single out-of-line, __cold function, uaccess_warn_without_mm().
+Split the NULL mm check out of uaccess_should_fail() into
+uaccess_without_mm(), and use it in __copy_from_user_inatomic() to warn
+and refuse the copy.
 
-The trade-off is that only the first offending access in the system
-warns, rather than the first one from each call site. The stack trace
-still identifies the caller, and the access is refused either way.
+Don't use uaccess_should_fail() there, as that would also start injecting
+failures into __copy_from_user_inatomic(), which some callers don't
+expect to fail in practice, e.g. __wp_page_copy_user() warns if the copy
+fails twice.
 
-Compared to the base of this series, with defconfig + KVM:
-
-                     inline WARN_ON_ONCE()    out-of-line warning
-  x86_64 total       +5,884 B (+0.014%)       +9,714 B (+0.023%)
-  arm64  total      +40,948 B (+0.10%)       +24,609 B (+0.06%)
-
-On arm64, this removes the ~16 KB of __bug_table growth, while text
-size is unchanged, as a call is the same size as the inline brk. On
-x86_64, the call is larger than the inline ud2 and causes more .cold
-splitting, so this is a slight regression.
+copy_from_user_nofault() already fails quietly when current->mm is NULL,
+and the generic user stack unwinding entry points (perf_callchain(),
+get_perf_callchain() and stack_trace_save_user()) only unwind the user
+stack of a user task with an mm, so neither is affected.
 
 Signed-off-by: James Houghton <jthoughton@google.com>
 ---
-NOTE: This patch is included for reference only, to show the cost of the
-      inline warning.
----
- include/linux/uaccess.h | 8 +++++++-
- lib/usercopy.c          | 6 ++++++
- 2 files changed, 13 insertions(+), 1 deletion(-)
+ include/linux/uaccess.h | 25 ++++++++++++++++++++-----
+ 1 file changed, 20 insertions(+), 5 deletions(-)
 
 diff --git a/include/linux/uaccess.h b/include/linux/uaccess.h
-index 7d26d2de9599..6a5b6c2b3388 100644
+index 8ab24e706a22..eae204f7261b 100644
 --- a/include/linux/uaccess.h
 +++ b/include/linux/uaccess.h
-@@ -66,9 +66,15 @@
-  * that keeps user addresses belonging to a specific mm must check
-  * current->mm against that mm itself (see e.g. KVM's kvm->mm checks).
-  */
-+void __cold uaccess_warn_without_mm(void);
+@@ -51,20 +51,33 @@
+ #endif
+ 
+ /*
+- * Return true if a user copy must not be attempted, either because a failure
+- * is being injected, or because the current task has no mm.
++ * Return true, and warn, if the current task has no mm, in which case user
++ * memory must not be accessed.
+  *
+  * Accessing user memory without an mm (e.g. from a kernel thread that is not
+  * using kthread_use_mm(), or from a task that has already gone through
+  * exit_mm()) is always a bug: the user portion of the address space belongs to
+  * whatever mm happens to be lazily loaded, if any, so the access could
+  * silently hit another task's memory.
++ *
++ * Note that this only catches a missing mm. It cannot catch a valid mm that
++ * isn't the one the caller expects, e.g. when a file's release or ioctl
++ * handlers run in a different process than the one that created it. Code
++ * that keeps user addresses belonging to a specific mm must check
++ * current->mm against that mm itself (see e.g. KVM's kvm->mm checks).
++ */
++static __always_inline bool uaccess_without_mm(void)
++{
++	return WARN_ON_ONCE(!current->mm);
++}
 +
- static __always_inline bool uaccess_without_mm(void)
++/*
++ * Return true if a user copy must not be attempted, either because the
++ * current task has no mm, or because a failure is being injected.
+  */
+ static __always_inline bool uaccess_should_fail(void)
  {
--	return WARN_ON_ONCE(!current->mm);
-+	if (likely(current->mm))
-+		return false;
-+	/* Warn out of line to keep inlined user copies small. */
-+	uaccess_warn_without_mm();
-+	return true;
+-	if (WARN_ON_ONCE(!current->mm))
+-		return true;
+-	return should_fail_usercopy();
++	return uaccess_without_mm() || should_fail_usercopy();
  }
  
  /*
-diff --git a/lib/usercopy.c b/lib/usercopy.c
-index 9146c729c47a..3d547ecb74df 100644
---- a/lib/usercopy.c
-+++ b/lib/usercopy.c
-@@ -26,6 +26,12 @@ unsigned long _copy_to_user(void __user *to, const void *from, unsigned long n)
- EXPORT_SYMBOL(_copy_to_user);
- #endif
+@@ -117,6 +130,8 @@ __copy_from_user_inatomic(void *to, const void __user *from, unsigned long n)
+ {
+ 	unsigned long res;
  
-+void __cold uaccess_warn_without_mm(void)
-+{
-+	WARN_ON_ONCE(1);
-+}
-+EXPORT_SYMBOL(uaccess_warn_without_mm);
-+
- /**
-  * check_zeroed_user: check if a userspace buffer only contains zero bytes
-  * @from: Source address, in userspace.
++	if (uaccess_without_mm())
++		return n;
+ 	instrument_copy_from_user_before(to, from, n);
+ 	check_object_size(to, n, false);
+ 	res = raw_copy_from_user(to, from, n);
 -- 
 2.56.0.307.g5fe7bd680c-goog
 
