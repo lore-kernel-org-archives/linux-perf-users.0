@@ -1,74 +1,74 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.210.200
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.216.71
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793051572;
-	b=q/LW107bxbJR6PKjbgprdohcgWer4FrhNejxRsJflokoUyHvYeiwjr5Omo00NCH5YqKg
-	 d5FxklKdVlBf05ATCHk5YaW/blKSPBNdcONjo2kiw/fvSKLty4+327bsuojKo2e+7neqj
-	 xbsBK7C4W80dogJDmJK2ePhc/Q27Tecs4mdOT73NJfNCjK3Xj+ht110GqKynoP3HwfdPH
-	 rdF/ppqu4e5F9laiWQMYjWWOUXRFVJU7ljjYoDfP4xB27FwrP1iHoYDY9saqxv5QoIqtw
-	 8U7g8lYHFm+Teb7bMZ3M1O1i9EoYSs0J4WL3raqfKUJX8+WWutxOQUyIyw1VnjhtR+Q==
+	t=1793051573;
+	b=U1Snq17hf/6KQW7KzA5d+4ifw1q3YVnwGpMG2+7nX/sNbaKp4S8QXopv++4p572BWE9v
+	 z2K0mdFhlhRjSinTf/vw+YF9LyI6IDDz6x01q8GqL3zNSPPe1IGWdqk9k+qli+4DfWeeG
+	 3op/Qt4ijonhjp0BXDsIaiaifQ8zO02owrmXwUAh3YPb4eh2VhxS2lH/T+KjxURxv5Ob2
+	 JK0wiLL42S4xsA7vvlIaGRGg8DSIdL+C95M1SHcCztANcC5qPYalscllVGC0rEjSPX8wl
+	 QPSpcl4NxIxp4NtfuVtEjQ1KZFV+m3pwi9eFQl/20m8xO3Nc4dDJn1w5Pl4PtEbACYg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793051572;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793051573;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Received:Date:In-Reply-To:
 	 Mime-Version:References:X-Mailer:Message-ID:Subject:From:To:Cc:
 	 Content-Type;
-	bh=0zQfCS+xbNCI3ecGYMw9q9f4jA1EzYR8/pz81vPbgxA=;
-	b=tH3u3D/tFa90f91ica32+LEr9l5y+EgHe6BI4DhMhS1iUjGtmzdDBH4gAzDTQFIdx1bO
-	 /vhyGj5Z5VEWfQGyaqoDhCGzb7E3Hst/6vYA1d0I6DrD+IusnnZNMaDn6W8jBaGKWzwTN
-	 GLoG/IC8ujUnxt+N5GFQMXa6bwqQh5pYehc5Wr3BYezQTXNTMPqIrwqCgla5NCYqNFUl9
-	 SkebQQ+d7CUcYjydI113O8n3Hem+EFeIlcuc4cZA6Kzl+AcpT9WvxZJaMy37JKzZuRkoH
-	 Z3FTVnoA7Gqzs4PalAXCcmkEhuKWuCF4d1jJkXMfSQm9TPAK9RsKlbqtm/fAaU1SCdA==
+	bh=OQEJn1r6phHG9JJTEKXNjl8UbrwqhLU2o1gcr6ks6C0=;
+	b=I3I5MUDM+7pQe4Xs9ooO/hQu7U7rbbLTfrCK3sVeu1lopdnZjDNOv+gxjy6wvRUtFREx
+	 SaYdnPJQHQ97kaU5IXOipTM5VjWc83iB9gUpAy2IOqOpz8oSxVtz7iAAI4CAgwsbAf3Uh
+	 aj/c90v1oNM/X+szCk/yPVdmemM/S8mQu5PItfU/TUf0ya/1XlEebt5vgi2/2Le4asFJ7
+	 cXcoezv4Hq1BAfpHQ0NzD9cSE2NkQJW8lPMgFxtpjAmQWrB9R77Qlikj/10KQrYBiMxFj
+	 xJxyutVwvZH1R79CFp2UBJPBwYXgK6hr9JGUNivn+hRuJZ6vRRv8fF4mZ7Kh8BrPaZQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=google.com;
 	spf=pass smtp.mailfrom=flex--jthoughton.bounces.google.com;
-	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20251104 header.b=Kqiy+Ob4;
-	arc=none smtp.remote-ip=209.85.210.200
-Received: from mail-pf1-f200.google.com (mail-pf1-f200.google.com [209.85.210.200])
+	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20251104 header.b=ApDjmBZ2;
+	arc=none smtp.remote-ip=209.85.216.71
+Received: from mail-pj1-f71.google.com (mail-pj1-f71.google.com [209.85.216.71])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D6CA60A3815
-	for <linux-perf-users@vger.kernel.org>; Mon, 26 Oct 2026 21:52:51 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 0D6CA60A3815
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC52E60A382B
+	for <linux-perf-users@vger.kernel.org>; Mon, 26 Oct 2026 21:52:52 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org EC52E60A382B
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--jthoughton.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20251104 header.b=Kqiy+Ob4
-Received: by mail-pf1-f200.google.com with SMTP id d2e1a72fcca58-89e96c03cd0so2724348b3a.1
-        for <linux-perf-users@vger.kernel.org>; Mon, 26 Oct 2026 14:52:51 -0700 (PDT)
+	dkim=pass (2048-bit key, unprotected) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20251104 header.b=ApDjmBZ2
+Received: by mail-pj1-f71.google.com with SMTP id 98e67ed59e1d1-3ad436a9d00so3166599a91.0
+        for <linux-perf-users@vger.kernel.org>; Mon, 26 Oct 2026 14:52:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1793051571; x=1793656371; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1793051572; x=1793656372; darn=vger.kernel.org;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=0zQfCS+xbNCI3ecGYMw9q9f4jA1EzYR8/pz81vPbgxA=;
-        b=Kqiy+Ob4bSiepbdF/N+HCw9a9Ypov8HtKYAWKHLmMbdMoQ6/AQK8N+3/9GSPszOCs/
-         1wDw9g6G84lPjg+5wnqK7GtKOgVXqBV6g60MSjrdYOR6qiIDrhmWrnkvTapXpk3t5+aT
-         hq8wJ5b/uxQvjGqh0YiMIwILe8l+czxItEMT+zJ4ZtkENFNlAT9HnocU0M1kD6x4BmQb
-         r6bsNPbldLhR8EOtCoFFvhafOcZ8Ol+iWaiupqeMir9Atbgnv2A2OMD0tKsJD9WbmYwb
-         osWTHPRSBSi+yCRc08AKi5oB3BSbsJN6aXIdfxr7eCzW6nmLWMpzC3ngMIalK5Ey9Fgw
-         7pHg==
+        bh=OQEJn1r6phHG9JJTEKXNjl8UbrwqhLU2o1gcr6ks6C0=;
+        b=ApDjmBZ2P5IY9M07VtIw4q1PCPK6CpIgTYTWQMTnhd4WbvnSeK4y3f8atnn7QA9cjB
+         pATuIJVRmfxmUb6DVTcY2TSWeqihjk7sAkqWl2p7EJ+Outh4lOM6tfOP5bdm3xMdvvxm
+         Gz5j1WDaxuKn1Qo4ZRLEMmGLuAM8u+S9GjSAdvAH/B5Z9aOkw665P34Qp/haslR+DdAh
+         6Cf+TsLq3VxdxXfhvV5luqaTWzWAuM2gDcXBE0x9iCsw+vaQTyRrV4cFglmiecBVNbcN
+         5aCJa8Oo3N1GkKfrvyeHtHj7KXN2+Rosy5Vsb+br/0l+WNOkW/XGL3x3Tqqyd1sNMI9t
+         cLgw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1793051571; x=1793656371;
+        d=1e100.net; s=20260707; t=1793051572; x=1793656372;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=0zQfCS+xbNCI3ecGYMw9q9f4jA1EzYR8/pz81vPbgxA=;
-        b=D1KEEXYpP2htVKKpGHPdDtA+J7zEuwnCzTp4Ce+itMCLaanLg8zJiij4KiRF+J827Q
-         jDTu31dnlL1VNIM/ZpUpqDHH0wYkFwgw/1YKzqpdZziCh9RAvG9ob0QdlDJjT0apYnEq
-         PRcXDMYUnWREHrcSqSZQKQKbQIsnYgbLSoCPBUTMKl5pi03e5qD3Uk0W/825Rer3oaBv
-         hpBImfzN/ryJDuNsvNpmaoyVIucyuo7f6JOelbcT2Upl8eftQbEB4K4KAWKJTdz3jdaq
-         D/GWQl1HPJTCrJcTbtDUNwIWvD6FY+s492ro6eJuYEyMl/CI0ZlRh9v/Rf7TZeNpINeg
-         7yLA==
-X-Forwarded-Encrypted: i=1; AKwUvBzYxQprfuGpbef1myx67evtuNbER/EIWzoHE1yVgDD+fg4r8Q/9ppZ9g2B0tm0JNugde69jJ0IkZTi74pWJmDxj@vger.kernel.org
-X-Gm-Message-State: AFq9FYIlohaV1U7ZcwVNC5geDOJKCe7ZxRCgdDwJ7S6YXRE8jNbD+TE1
-	UOmlpyZrs2gumDc6jPMe8c/zcpKIQKILw3OtoVggQHF2d5tnr2zaDwuSKSodWqyt6zc8H8bTzXZ
-	pWITZl14CPwLaijokhdByFg==
-X-Received: from pfbho14.prod.google.com ([2002:a05:6a00:880e:b0:8a0:6a08:e927])
+        bh=OQEJn1r6phHG9JJTEKXNjl8UbrwqhLU2o1gcr6ks6C0=;
+        b=wPJ0/dDwlBkSWsAW0aNYTMuYsngY+UmnkJWYLERnhJJ/MTP4xLM07EF3AeTwotJwPP
+         fm/2y44jgP9Bf1gYHwhlD1yOXKn1H9lFysLHKlJZseU8Zl8vG/J3m19UrBhMqnK8fswY
+         1u9TLHqpxjoYzYFXDoMfMPOtFRnTm+FHJzNz2/FoJhMoquF2S3JdfNap84QZJXloGb8K
+         0DCSbJYcj/1sa4w8QhhEbMf5OvQEWN2IWxvJqZf/h7Hj+wuNoqqdHjaxIiaRhtA2NEyE
+         nWwTpu3BuG0OnpXVhPwh8OPCK5Qu2nWqVSAq8DlCDfcheZ1vW+yMHK0VfBvI9Si8PzHq
+         glJQ==
+X-Forwarded-Encrypted: i=1; AKwUvBxA8BwftrCI7Na25GbmVM7e5XhDCkLUWg1iNFIwufTNgDzSRNVTsPrJULPafZ1/mJXtxqiRmWvwxz2Oa17yhX9Q@vger.kernel.org
+X-Gm-Message-State: AFq9FYK5pXJTvXlAlm4EML0ZBd/7syVSri9onDssoouLr9Rfb8H5cNlV
+	nmLU8uO3RoI/bwbr2a3vPIYUMaxWXeIAIDqUjzCFQY85fkg2880UKD2iKckbB6WM53tsmWlbImv
+	aYPWm9entSrkoLHCYlTDA5g==
+X-Received: from pjbee5.prod.google.com ([2002:a17:90a:fc45:b0:3ad:f864:f94f])
  (user=jthoughton job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:6a00:bd81:b0:87c:e44e:5694 with SMTP id d2e1a72fcca58-8a366b88ce9mr5902881b3a.21.1793051571129;
- Mon, 26 Oct 2026 14:52:51 -0700 (PDT)
-Date: Mon, 26 Oct 2026 21:52:20 +0000
+ 2002:a17:90b:4d8c:b0:3ac:a521:95e with SMTP id 98e67ed59e1d1-3adead4f7ebmr6876350a91.47.1793051572060;
+ Mon, 26 Oct 2026 14:52:52 -0700 (PDT)
+Date: Mon, 26 Oct 2026 21:52:21 +0000
 In-Reply-To: <20261026215226.3713941-1-jthoughton@google.com>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -81,8 +81,8 @@ Precedence: list
 Mime-Version: 1.0
 References: <20261026215226.3713941-1-jthoughton@google.com>
 X-Mailer: git-send-email 2.56.0.307.g5fe7bd680c-goog
-Message-ID: <20261026215226.3713941-5-jthoughton@google.com>
-Subject: [RFC PATCH 04/10] stacktrace: Don't unwind the user stack without an mm
+Message-ID: <20261026215226.3713941-6-jthoughton@google.com>
+Subject: [RFC PATCH 05/10] perf/core: Don't unwind the user stack without an mm
 From: James Houghton <jthoughton@google.com>
 To: Andrew Morton <akpm@linux-foundation.org>, Alexander Viro <viro@zeniv.linux.org.uk>
 Cc: Thomas Gleixner <tglx@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Kees Cook <kees@kernel.org>, 
@@ -105,55 +105,54 @@ Cc: Thomas Gleixner <tglx@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Ke
 	linux-kernel@vger.kernel.org, James Houghton <jthoughton@google.com>
 Content-Type: text/plain; charset="UTF-8"
 
-stack_trace_save_user() only refuses to unwind the user stack of tasks
-with PF_KTHREAD set. That doesn't cover all tasks without an mm:
+get_perf_callchain() only checks is_user_task(current) when the regs it
+is given aren't user mode regs. However, BPF's bpf_get_task_stack() (and
+bpf_get_task_stack_sleepable()) pass task_pt_regs(current) when called on
+the current task, which are user mode regs for a user task, even if that
+task has already gone through exit_mm(), e.g. when called from a program
+attached to exit_files() or to the dying task's final sched_switch.
 
- - A user task that has already gone through exit_mm(), e.g. when an
-   event fires from exit_files(), exit_task_work() or the final context
-   switch in do_exit().
- - PID 1 before it execs init, and usermode helper children before they
-   exec, which are created with user_mode_thread() and don't have
-   PF_KTHREAD set. E.g. booting with trace_options=userstacktrace and
-   an event enabled with trace_event= unwinds PID 1's "user stack"
-   during initcalls.
+perf_callchain_user() then unwinds the user stack without an mm. That
+access does not reliably fail: the user half of the address space
+belongs to whatever mm happens to be lazily loaded, if any, so the
+unwinder may read another task's memory. This affects e.g. arm64,
+riscv, loongarch and csky, whose perf_callchain_user() doesn't check
+current->mm itself. perf events themselves are not affected, as
+perf_callchain() already clears the user callchain request when
+current is not a user task with an mm.
 
-With the ftrace userstacktrace option enabled, the architecture
-unwinders then read the user stack without an mm. That access does not
-reliably fail: the user half of the address space belongs to whatever
-mm happens to be lazily loaded, if any, so the unwinder may read
-another task's memory.
+Check is_user_task(current) regardless of the regs' mode.
 
-Use is_user_task() instead, which also checks current->mm, as perf
-already does for the same reason since commit 76ed27608f7d ("perf:
-sched: Fix perf crash with new is_user_task() helper"). This also stops
-unwinding the user stack of PF_USER_WORKER threads, which never run in
-user space, matching perf.
-
-Fixes: 214d8ca6ee85 ("stacktrace: Provide common infrastructure")
+Fixes: fa28dcb82a38 ("bpf: Introduce helper bpf_get_task_stack()")
 Signed-off-by: James Houghton <jthoughton@google.com>
 ---
- kernel/stacktrace.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ kernel/events/callchain.c | 12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
 
-diff --git a/kernel/stacktrace.c b/kernel/stacktrace.c
-index afb3c116da91..f96a5ec12f6c 100644
---- a/kernel/stacktrace.c
-+++ b/kernel/stacktrace.c
-@@ -228,8 +228,12 @@ unsigned int stack_trace_save_user(unsigned long *store, unsigned int size)
- 		.size	= size,
- 	};
+diff --git a/kernel/events/callchain.c b/kernel/events/callchain.c
+index 9d24b6e0c91f..a451ca2a5573 100644
+--- a/kernel/events/callchain.c
++++ b/kernel/events/callchain.c
+@@ -245,11 +245,15 @@ get_perf_callchain(struct pt_regs *regs, bool kernel, bool user,
+ 	}
  
--	/* Trace user stack if not a kernel thread */
--	if (current->flags & PF_KTHREAD)
-+	/*
-+	 * Trace user stack only if this is a user task that still has an mm,
-+	 * i.e. not a kernel thread or user worker, and not a task that has
-+	 * already gone through exit_mm().
-+	 */
-+	if (!is_user_task(current))
- 		return 0;
+ 	if (user && !crosstask) {
+-		if (!user_mode(regs)) {
+-			if (!is_user_task(current))
+-				goto exit_put;
++		/*
++		 * Even if @regs are user mode regs, e.g. task_pt_regs(current)
++		 * passed in by bpf_get_task_stack(), current may already have
++		 * gone through exit_mm().
++		 */
++		if (!is_user_task(current))
++			goto exit_put;
++		if (!user_mode(regs))
+ 			regs = task_pt_regs(current);
+-		}
  
- 	arch_stack_walk_user(consume_entry, &c, task_pt_regs(current));
+ 		if (defer_cookie) {
+ 			/*
 -- 
 2.56.0.307.g5fe7bd680c-goog
 
