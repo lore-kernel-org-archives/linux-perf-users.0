@@ -1,62 +1,62 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=67.231.153.30
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
 	t=1792993733;
-	b=pjdDXEkCEsVAPUzKrQ166zgOicr6GvwLquZewd9fCkEppzzPDf/yCdxb1XvfcHeMP7hn
-	 IWduksfYiyFruCyl8NhG07JMtKccd5yG/cSBaLaWRIucTJC8VqPeR/nhv/W41g9xBd68n
-	 xuU624yIQ5ITnuxglu+tkJ9/InyWyvIVM3J1v+V8QkuULG29IkR77Hpz9m9eshoaP8JWc
-	 2Wo5gLrhHw+lLpPh6OO8/uKVWNQMsyeu8+mvvIVC6MzSNipESOZSkam9HQGDwkrIDkJHS
-	 FgbX8eQ/RutvrQR2f7tZtteAQjJEXCJRiOmqm7q416wdy8SpiURNcC9B/sgfMkKcg1g==
+	b=weLdAwJyQ4jxZBaPo54vmQ+XWKzYQP13SYqWzuVvdbxry/OGeNt0yCxR0pShlpHdz6zs
+	 ZMXkunHaefKriPm2U1j8c1d8dWVDIq0JZgZ2syNWkDJjmTDwG8s7r6iA6lG3byNQJEq2q
+	 VKt6pF4Bg/SEUCLNb8mlJr7JEclKXz3kzgMX65jS7SVczCNrm0oU5IBKVS5rSH4NolXP1
+	 FEtrLf84yrpOiTT8Rvhx0KnImLTbn0OvR/KsQ9FejXPWZavYQ1vErWF/Xm7JJ826sqDcZ
+	 pbuLLg+XpLnAWSPEJuoIsrYQUY4qs1kaRo5bOydXBqvBm6hjtamHnzYkiPt/F+UPnRQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
 	a=rsa-sha256; c=relaxed/relaxed; t=1792993733;
 	h=DMARC-Filter:Received:DKIM-Signature:Received:Received:From:To:CC:
 	 Subject:Date:Message-ID:X-Mailer:In-Reply-To:References:MIME-Version:
 	 Content-Transfer-Encoding:Content-Type:X-Originating-IP:
-	 X-Proofpoint-ORIG-GUID:X-Proofpoint-Spam-Details-Enc:
-	 X-Authority-Analysis:X-Proofpoint-GUID:X-Proofpoint-Spam-Info:
+	 X-Proofpoint-GUID:X-Proofpoint-ORIG-GUID:X-Authority-Analysis:
+	 X-Proofpoint-Spam-Details-Enc:X-Proofpoint-Spam-Info:
 	 X-Proofpoint-Virus-Version;
-	bh=Pg8Aqzf4YTWn8AZZ/pOmWTp8sl99KiLblorXjm4EBdY=;
-	b=UnSMgQKYYYvGRArT/P5KHnjyuRs5Z8EkOmlBTFyVI3MQb9/56l/+5rqtJLjUoqTuPYwS
-	 1DQh3xsxYdV5t4kEzYtjfMmQ9GcSlb0Rxi/sOxZ+te8iVqBPDpl1gRQN4Mwt124vfZj4C
-	 RdCqUQldulr+Hhk1pcA/DEPJon74Ss1IsMm9YeXilqrZLXjhLR65FREjXbWBYg0AO0J75
-	 vcMiFc+581ArbIeq8rzyCnjG6stzkCyxCX6HnuA1KjNyY7TEQ4W9hMs2sVbuE++j9jebF
-	 w1jcqF3K9DbMISidhDqOacadqHU0fJqxmPto2chwyRbbll9384o2rVw8ni5wdXDfWxw==
+	bh=A9bl18hVVgrv7Ih87a3z0Wf/fVitBdQUFLUywp64nL8=;
+	b=aVUgokTcCM3MWf7/89GZAiIt8syON3dN4w42gUw64YcgWVSYTWqNQXXRUXQ/VuZT5d2N
+	 G1PJGbW1eQCZKj4rSzmVot8gmM329ywWWqdQpqCCmrz6VRrT4hiegrMctjweyjBA24gmt
+	 0hP1DyXcY0DhABqekwIkxhQ7I7DhFPVtzRCDOZQK7jZ8ooGscXr+0yaiSlFhqwR6Sd+XJ
+	 L/cot00KFrPyBgsJbO4N6rL1i6b81xzLKLdoymgFrPmPIeOACVc0eROzHaDwFJ20tkkfc
+	 6tcgCA9w6wYDYJ6xoK7lr/+Y4e5LTqy32dPov0fnFWjQEQs31RTzIx8Q8GYsSDM42HA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=fb.com;
 	spf=pass smtp.mailfrom=meta.com;
-	dkim=pass header.d=fb.com header.i=@fb.com header.a=rsa-sha256 header.s=pps82601-s2048-2026-q3 header.b=nq+smAEj;
+	dkim=pass header.d=fb.com header.i=@fb.com header.a=rsa-sha256 header.s=pps82601-s2048-2026-q3 header.b=f5vTNBuD;
 	arc=none smtp.remote-ip=67.231.153.30
 Received: from mx0b-00082601.pphosted.com (mx0b-00082601.pphosted.com [67.231.153.30])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E294A606A32E;
-	Mon, 26 Oct 2026 05:48:52 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org E294A606A32E
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41DA560A2608;
+	Mon, 26 Oct 2026 05:48:53 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 41DA560A2608
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fb.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=meta.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=fb.com header.i=@fb.com header.a=rsa-sha256 header.s=pps82601-s2048-2026-q3 header.b=nq+smAEj
-Received: from pps.filterd (m0109332.ppops.net [127.0.0.1])
-	by mx0a-00082601.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 69Q39JfO2876526;
-	Sun, 25 Oct 2026 22:48:35 -0700
+	dkim=pass (2048-bit key, unprotected) header.d=fb.com header.i=@fb.com header.a=rsa-sha256 header.s=pps82601-s2048-2026-q3 header.b=f5vTNBuD
+Received: from pps.filterd (m0109331.ppops.net [127.0.0.1])
+	by mx0a-00082601.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 69Q38wAL2861008;
+	Sun, 25 Oct 2026 22:48:34 -0700
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=cc
 	:content-transfer-encoding:content-type:date:from:in-reply-to
 	:message-id:mime-version:references:subject:to; s=
-	pps82601-s2048-2026-q3; bh=Pg8Aqzf4YTWn8AZZ/pOmWTp8sl99KiLblorXj
-	m4EBdY=; b=nq+smAEjkt2fl4EJ3FfQ1odHkGMCnecuBQtA8eMsaqbZjID9e8+lS
-	nWHyPxpn4e75OSXo81ci4oPw0szHHHU1336YnlnMl7oyFUvVqeIna6tgPrnje4sG
-	tpUHBEpfVRN4bZNEMxfhkjW3lJ0rcS+gS00gl/G+Da1BsuQNMnd9ZePCYkHSVuWm
-	JFODRkBZ6xTpn2nx0CXHkPBAPloMUk7R03LVGYvLirje0XYPkODefHS3meHOXXO8
-	07HrrN01ID4HXQPnRp/g3LubVjLt8dn63tMszXErr+2jgXSpOzYamMAekS+2QJ1C
-	2PiZULXKf/feA8UDTEVjfhxoKnhqZHFuA==
+	pps82601-s2048-2026-q3; bh=A9bl18hVVgrv7Ih87a3z0Wf/fVitBdQUFLUyw
+	p64nL8=; b=f5vTNBuD0MxMQjl00dAgjBxKRjB0ahl/o41lNuiuxOhvrMUv5GReQ
+	KYjiHWMHOSm5kJSaOLI7fvSXprxuclHkG6ZgW2AuFhNZrZRdNEKbJ8gjFXw1e6H4
+	vp8pv0N2tHg5krV8N1JILztRIQgcR5FPNfp0BsgZ2ekBfXbSnTXMvJL/7QPCDrt9
+	dhG9f3v8TMZ+oJklJrV7H7PLBu+5bcgY4oSewHXy2cuTwFcijW4baxUMX4VbTH+/
+	Lt/CK2qr3+45Tos52LPp/+tKxd3n/WFJtnVreQJzQtzqpA82W8ZlTF3e5WhKHOWR
+	JNcxxiLfoulysv4TdCVICDrl66j0VRcfg==
 Received: from maileast.thefacebook.com ([163.114.135.16])
-	by mx0a-00082601.pphosted.com (PPS) with ESMTPS id 4hgtdfeycu-1
+	by mx0a-00082601.pphosted.com (PPS) with ESMTPS id 4hgtg6exqn-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-	Sun, 25 Oct 2026 22:48:35 -0700 (PDT)
-Received: from localhost (2620:10d:c0a8:1b::2d) by mail.thefacebook.com
- (2620:10d:c0a9:6f::237c) with Microsoft SMTP Server (version=TLS1_2,
+	Sun, 25 Oct 2026 22:48:34 -0700 (PDT)
+Received: from localhost (2620:10d:c0a8:1c::11) by mail.thefacebook.com
+ (2620:10d:c0a9:6f::8fd4) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.2.2562.56; Mon, 26 Oct
- 2026 05:48:34 +0000
+ 2026 05:48:33 +0000
 From: Amir Ayupov <aaupov@fb.com>
 To: James Clark <james.clark@linaro.org>, Leo Yan <leo.yan@arm.com>,
         Suzuki K
@@ -77,9 +77,9 @@ CC: Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
         <coresight@lists.linaro.org>, <linux-arm-kernel@lists.infradead.org>,
         <linux-perf-users@vger.kernel.org>, <linux-doc@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>
-Subject: [PATCH v4 5/7] perf: arm_pmuv3: Add pmuv3_event_implemented()
-Date: Sun, 25 Oct 2026 22:48:25 -0700
-Message-ID: <23ffe461b8d7b04f78118154dfc9ea1d2a14978a.1792989860.git.aaupov@fb.com>
+Subject: [PATCH v4 4/7] coresight: syscfg: Remove unused CS_CFG_MATCH_INST_ANY
+Date: Sun, 25 Oct 2026 22:48:24 -0700
+Message-ID: <52b3c337cbf4a8460e399b084c6f854eb3beee89.1792989860.git.aaupov@fb.com>
 X-Mailer: git-send-email 2.52.0
 In-Reply-To: <cover.1792989860.git.aaupov@fb.com>
 References: <cover.1792907332.git.aaupov@fb.com> <cover.1792989860.git.aaupov@fb.com>
@@ -94,105 +94,53 @@ Precedence: list
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-Proofpoint-ORIG-GUID: 2QSWAs-7ibO6btODkITw20GjaiJ395ov
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYxMDI2MDAyMiBTYWx0ZWRfXxdFzOphN+o3E
- V86Xzl1ad46+uPP819/qLTSU6mLhnBNGkdoilHB8YoUNyQ2NHHBYfpEhsIYUtKhF3l25k3eenMe
- 2P+Rl97BwLPPpMhl6QBKbZcXnzlnlC1ukhWorbHKD9zSFwa+AxXAmUFSryKESRM6QDFWAvs7k3Q
- UpKkG3V+b36rAUNtZVbis2CE1fvceuJmOqN902dd8InUxZV/fZrBT6MsCi6fa72G5VzReF4wQLH
- +PHsyZK9vfSbzN8xBh10ExTaRFwW09O/Z2NMYLcl8aDenq3d8QGtnxLmzDOUdwXnVuOhrT+oj9d
- ekx51B+1Fc0LcHHPa7Uzbbu2iZIPvTvSJNCUkRGRFJNk9wLGC6AJrLK8QOtEAkGqzijzUiZQJ3a
- zLl5czudNvKDTnMHOUCw28A/+mhE2hxi536Fdjql9iEbTZns0FTpUlj7K+n2UQpmc5XgOSeSiRc
- /yj0hIrxVYcVMi7jI5g==
-X-Authority-Analysis: v=2.4 cv=V+noQuni c=1 sm=1 tr=0 ts=6adee9b3 cx=c_pps
+X-Proofpoint-GUID: i8xt5jn8lp9NkcowSxGYUivne0NqIKOl
+X-Proofpoint-ORIG-GUID: i8xt5jn8lp9NkcowSxGYUivne0NqIKOl
+X-Authority-Analysis: v=2.4 cv=OJqyTiaB c=1 sm=1 tr=0 ts=6adee9b2 cx=c_pps
  a=MfjaFnPeirRr97d5FC5oHw==:117 a=MfjaFnPeirRr97d5FC5oHw==:17
  a=660iZSQnnn4A:10 a=VkNPw1HP01LnGYTKEx00:22 a=7x6HtfJdh03M6CCDgxCd:22
- a=xtH7KyWI9dI7BmFOsl-x:22 a=KKAkSRfTAAAA:8 a=FOH2dFAWAAAA:8
- a=Wn0yR4sTO1dwKjUQqtIA:9 a=cvBusfyB2V15izCimMoJ:22
-X-Proofpoint-GUID: 2QSWAs-7ibO6btODkITw20GjaiJ395ov
-X-Proofpoint-Spam-Info: AW1haW4tMjYxMDI2MDAyMiBTYWx0ZWRfX8t5jb1K2AXH2
- io1PfsYRA68iXcJpBE1ocXmZDiSq+/ZWr+zncBrAa27XMoHYloo8B++rzjaxDnC8ZfBGRev3qnI
- 389vG61qPrt15v5OGHyMmFyu27JqHuY=
+ a=wpfVPzegXHpEFt3DAXn9:22 a=7CQSdrXTAAAA:8 a=FOH2dFAWAAAA:8
+ a=izEjV56Hqa_c8yfQj7cA:9 a=a-qgeE7W1pNrGK8U0ZQC:22
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYxMDI2MDAyMiBTYWx0ZWRfX+6yW8JK4MQTW
+ s8/TWcxLAyJHpRDMHviN9BpSkY6uApI4fPTM4wSkTU2cHmo+VDmIk3uxooUm6BRlkbgQAYnnSDM
+ bf3qJe43nsdnDDfRAMMzHtBxcZvaccMSFOBPar9Qb6liiWX+39u6XquRsLJwwSWFHvMSD4OBYi4
+ rsFhyL2QvNKU3wljsPmh6RRS9WwofiE3KW0Vki8X2vOodRe+KuxLZgbHmzp2NKLVTyZyyJCYqTT
+ drG+7YTmilI6oNzflQJkj4fFdO6JLOFiaciwDOPMt4A5HHNU8uSqqlmdvwaEECjRJcVHQXreIDy
+ 7QLGUl0JFVl0PIECr8mj7ZatWWQA4d7N1cbsjvf+ovFayImI/zmn5rXF/4bBXP5m/uoh7bJPZLA
+ zYB73uURN6z2jXLfsEUL7XKSsZl13uwwYTHnFq3nQoLnbzQ8EbFzPNt+G8bL44MCCXX9MYHiTQl
+ kE97ZtaHAi4ARGJVQEA==
+X-Proofpoint-Spam-Info: AW1haW4tMjYxMDI2MDAyMiBTYWx0ZWRfX4gbY4byeAoIK
+ 0h0aqKQNhfc8zzyklj+ggArzFFDh41PwA2BfUYss2rlpk6/jRIlKqjRnNTsv9v22dZ94vu0H+qU
+ KaS1tjl1ufP09DTG8VG2Hmneon6B+H8=
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1176,Hydra:6.1.138,FMLib:17.12.100.49
  definitions=2026-10-26_01,2026-10-21_02,2025-10-01_01
 
-Drivers outside the PMU driver may need to know whether the local CPU's
-PMU implements a common event before relying on it, for example a trace
-unit driver checking that the PMU counts its external outputs as
-TRCEXTOUTn.
+CS_CFG_MATCH_INST_ANY has been defined since the system configuration was
+introduced but is not used by any configuration, feature or device.
+Remove it.
 
-Add pmuv3_event_implemented() to the arm64 asm/arm_pmuv3.h, next to
-read_pmceid0() and read_pmceid1(). It reads PMCEID0/1 on the calling CPU:
-events 0x0000-0x003f are reported in bits [31:0], and the common events
-from ARMV8_PMUV3_EXT_COMMON_EVENT_BASE in bits [63:32] from PMUv3p1. Move
-ARMV8_PMUV3_EXT_COMMON_EVENT_BASE next to the event numbers in
-linux/perf/arm_pmuv3.h so it is available without CONFIG_ARM_PMU.
-
-Suggested-by: James Clark <james.clark@linaro.org>
+Suggested-by: Leo Yan <leo.yan@arm.com>
 Assisted-by: Devmate:Opus-5.5
 Signed-off-by: Amir Ayupov <aaupov@fb.com>
 ---
- arch/arm64/include/asm/arm_pmuv3.h | 19 +++++++++++++++++++
- include/linux/perf/arm_pmu.h       |  1 -
- include/linux/perf/arm_pmuv3.h     |  3 +++
- 3 files changed, 22 insertions(+), 1 deletion(-)
+ drivers/hwtracing/coresight/coresight-config.h | 3 ---
+ 1 file changed, 3 deletions(-)
 
-diff --git a/arch/arm64/include/asm/arm_pmuv3.h b/arch/arm64/include/asm/arm_pmuv3.h
-index 8a777dec8d88a..acd62c4f16743 100644
---- a/arch/arm64/include/asm/arm_pmuv3.h
-+++ b/arch/arm64/include/asm/arm_pmuv3.h
-@@ -173,6 +173,25 @@ static inline bool pmuv3_implemented(int pmuver)
- 		 pmuver == ID_AA64DFR0_EL1_PMUVer_NI);
- }
+diff --git a/drivers/hwtracing/coresight/coresight-config.h b/drivers/hwtracing/coresight/coresight-config.h
+index f04e73b91d9a6..220bc54f8e5e1 100644
+--- a/drivers/hwtracing/coresight/coresight-config.h
++++ b/drivers/hwtracing/coresight/coresight-config.h
+@@ -39,9 +39,6 @@
+  */
+ #define CS_CFG_MATCH_CAP_MASK		GENMASK_U32(15, 8)
  
-+/*
-+ * Whether this CPU's PMU implements a common event, as reported by
-+ * PMCEID{0,1}: events 0x0000-0x003f in bits [31:0], and from PMUv3p1 events
-+ * 0x4000-0x403f in bits [63:32], which read as zero before PMUv3p1.
-+ * Must run on the CPU whose PMU is queried.
-+ */
-+static inline bool pmuv3_event_implemented(u16 event)
-+{
-+	bool ext = event >= ARMV8_PMUV3_EXT_COMMON_EVENT_BASE;
-+	u16 id = ext ? event - ARMV8_PMUV3_EXT_COMMON_EVENT_BASE : event;
-+	u64 pmceid;
-+
-+	if (id >= 64 || !pmuv3_implemented(read_pmuver()))
-+		return false;
-+
-+	pmceid = id < 32 ? read_pmceid0() : read_pmceid1();
-+	return pmceid & BIT_ULL(id % 32 + (ext ? 32 : 0));
-+}
-+
- static inline bool is_pmuv3p4(int pmuver)
- {
- 	return pmuver >= ID_AA64DFR0_EL1_PMUVer_V3P4;
-diff --git a/include/linux/perf/arm_pmu.h b/include/linux/perf/arm_pmu.h
-index 02d2c7f45b527..792283d29d7b5 100644
---- a/include/linux/perf/arm_pmu.h
-+++ b/include/linux/perf/arm_pmu.h
-@@ -124,7 +124,6 @@ struct arm_pmu {
- 	u64		reg_brbidr;
- #define ARMV8_PMUV3_MAX_COMMON_EVENTS		0x40
- 	DECLARE_BITMAP(pmceid_bitmap, ARMV8_PMUV3_MAX_COMMON_EVENTS);
--#define ARMV8_PMUV3_EXT_COMMON_EVENT_BASE	0x4000
- 	DECLARE_BITMAP(pmceid_ext_bitmap, ARMV8_PMUV3_MAX_COMMON_EVENTS);
- 
- 	/* Only to be used by ACPI probing code */
-diff --git a/include/linux/perf/arm_pmuv3.h b/include/linux/perf/arm_pmuv3.h
-index d698efba28a27..c21f185a283d6 100644
---- a/include/linux/perf/arm_pmuv3.h
-+++ b/include/linux/perf/arm_pmuv3.h
-@@ -78,6 +78,9 @@
- #define ARMV8_PMUV3_PERFCTR_STALL_SLOT_FRONTEND			0x003E
- #define ARMV8_PMUV3_PERFCTR_STALL_SLOT				0x003F
- 
-+/* Base of the common events reported in PMCEID{0,1}[63:32] from PMUv3p1 */
-+#define ARMV8_PMUV3_EXT_COMMON_EVENT_BASE			0x4000
-+
- /* Statistical profiling extension microarchitectural events */
- #define ARMV8_SPE_PERFCTR_SAMPLE_POP				0x4000
- #define ARMV8_SPE_PERFCTR_SAMPLE_FEED				0x4001
+-/* flags defining device instance matching - used in config match desc data. */
+-#define CS_CFG_MATCH_INST_ANY		0x80000000 /* any instance of a class */
+-
+ /*
+  * Limit number of presets in a configuration
+  * This is related to the number of bits (4) we use to select the preset on
 -- 
 2.52.0
 
