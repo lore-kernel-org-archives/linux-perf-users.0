@@ -1,109 +1,88 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=52.101.57.8
-ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1792988364;
-	b=R3xEqFpp18RmXhTUM1+UBKJ594/kNTb/Xjb6tv3ZjQFlZg+Q05jaAmrmmxwvs54ApLyP
-	 lK3ISqsu7mG1Xdj8R9AzniH99zs6pbS8pS/VxMKmb2BOYYKfz0CfM20YMVyLnDULnUl7t
-	 UTb9i9H384CGUq782FGPZg/IkLD98di1hPkyl9Pe5DhcNN1LX1WfUKzzey05LKzQ+ayDX
-	 MWHBm+DfQ35R2vH0esQ2cBrmHFzQyUlHHckau/3NrEZp1z31LPa6wIbC+xCHqSUNrwYyf
-	 P84BrXakz1wI+2vqLZweRfiRpw1/uBzO96RS4T1+P1VxMpCJkGx2jy7fqyT1J1W+fiA==
-ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792988364;
-	h=DMARC-Filter:DKIM-Signature:Received:Received:
-	 X-MS-Exchange-Authentication-Results:Received-SPF:Received:Received:
-	 From:To:CC:Subject:Date:Message-ID:X-Mailer:In-Reply-To:References:
-	 MIME-Version:Content-Transfer-Encoding:Content-Type:X-Originating-IP:
-	 X-ClientProxiedBy:X-EOPAttributedMessage:X-MS-PublicTrafficType:
-	 X-MS-TrafficTypeDiagnostic:X-MS-Office365-Filtering-Correlation-Id:
-	 X-MS-Exchange-SenderADCheck:X-MS-Exchange-AntiSpam-Relay:
-	 X-Microsoft-Antispam:X-Microsoft-Antispam-Message-Info:
-	 X-Forefront-Antispam-Report:
-	 X-MS-Exchange-AntiSpam-MessageData-ChunkCount:
-	 X-MS-Exchange-AntiSpam-MessageData-0:X-OriginatorOrg:
-	 X-MS-Exchange-CrossTenant-OriginalArrivalTime:
-	 X-MS-Exchange-CrossTenant-Network-Message-Id:
-	 X-MS-Exchange-CrossTenant-Id:
-	 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp:
-	 X-MS-Exchange-CrossTenant-AuthSource:X-MS-Exchange-CrossTenant-AuthAs:
-	 X-MS-Exchange-CrossTenant-FromEntityHeader:
-	 X-MS-Exchange-Transport-CrossTenantHeadersStamped;
-	bh=eJmcRaPk3Eo9u2RhlJVCk8z9rcYG1xEXI0N+u/SwCbU=;
-	b=j6qQQHMn1olozKceg2yYUiS/OUZ7ZpJw8kil1cxtxTTr7muSZfb2JeHGfSABAOziKWUI
-	 i9tzzWmAS+fQNpp/b+8g2Uup2JxorcthA0nNZ4KpxY5fedeMrbJMdiAsNRmZMKaIybzCK
-	 51Cy//YnWjv6kRJtz/8G/gYgdJ+MdXkKDUS8GIGs83FVFK7VpjKqzXVZhFrvD8xGn7O82
-	 i7DUGr0dMHbJvXV8NEKG+azfYEPR6A9NeMaID/E05WNClMcpViP6xxMI5J8liasJqqo16
-	 q9AN2jJgybn4656LaJkJ9ZtGwP8cGrJ0nqXl58JVRApmmPhANzHvkoYBibiJUFXvqiA==
-ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=amd.com;
-	spf=fail smtp.mailfrom=amd.com;
-	dkim=pass header.d=amd.com header.i=@amd.com header.a=rsa-sha256 header.s=selector1 header.b=NijQRk6l;
-	arc=pass header.oldest-pass=0 smtp.remote-ip=52.101.57.8
-Received: from BN8PR05CU002.outbound.protection.outlook.com (mail-eastus2azon11011008.outbound.protection.outlook.com [52.101.57.8])
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=67.231.145.42
+ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
+	t=1792993733;
+	b=PysjYonu2iJIVzyt9qnxHKwV8etak6hy4BYvOFDcLbSWze3Mi3YOA+bKxrw3apDAa6NU
+	 mO9JdYHjf719R+nFAqqeU+QJIXUbNwORQxDcEVtfnJjn6QoHwDqXZSxxs7oam4H+hRN7b
+	 S+/4UQ5EavG+2t2LdmmLdlaT9gINwlQqlfBD3ieNg62rzBhTeY1PwODAgeCGg0UxnT11v
+	 exjMpFXnTNLQDiSotwGfLmsDt1fLN7+jNRT1WtUT4WbeMiHn8Gzo54c/Hoi3myyHuwOs/
+	 AuWWtR+ONSEbSBnolmuls2nDMEjv648V2LsLEHegyAdS0VtBXfgO32+aytKoKQpLJ+g==
+ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1792993733;
+	h=DMARC-Filter:Received:DKIM-Signature:Received:Received:From:To:CC:
+	 Subject:Date:Message-ID:X-Mailer:In-Reply-To:References:MIME-Version:
+	 Content-Transfer-Encoding:Content-Type:X-Originating-IP:
+	 X-Proofpoint-Spam-Details-Enc:X-Proofpoint-GUID:
+	 X-Proofpoint-ORIG-GUID:X-Authority-Analysis:X-Proofpoint-Spam-Info:
+	 X-Proofpoint-Virus-Version;
+	bh=h5CPtsW845wIg8XT+7IjY3h0UyBjrJLt9Tps+aPI7oM=;
+	b=kSIbji+nvD3qHIJ/3jmSdvJ7a1zPOI7B6cWa8fhnP29o23H9ZfgDSyMvxo2pw4XitSJE
+	 HX2xrTTQupMZxh3O0AQM8Pp0vX457anBCceuSCkx7AtMey20XRGPgNsd4CxBzF0MbKDGK
+	 2Jhwuk3JsD0BPoTQk9Ye/xH+PSsahtvAB7Wk5DckFS5tdUQMTzC738C/VBPEwXkEZmenX
+	 dD1hyOZwHxJnFsjc0KLReWWwilDFwCXxgVWMA8jPe9er3BaPUn+oDe1UeVKt17puEhX+O
+	 kihVogjyo6La2jmGCKuSLH5IExsxBrtopjNwbcqO8IyQx2aP4wsgmkKIKDZ0XLrW5pA==
+ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
+	dmarc=pass header.from=fb.com;
+	spf=pass smtp.mailfrom=meta.com;
+	dkim=pass header.d=fb.com header.i=@fb.com header.a=rsa-sha256 header.s=pps82601-s2048-2026-q3 header.b=aFBJWMos;
+	arc=none smtp.remote-ip=67.231.145.42
+Received: from mx0a-00082601.pphosted.com (mx0a-00082601.pphosted.com [67.231.145.42])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (secp384r1) server-signature ECDSA (prime256v1) server-digest SHA256)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F1DA606A31A;
-	Mon, 26 Oct 2026 04:19:23 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 7F1DA606A31A
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F15C606A32C;
+	Mon, 26 Oct 2026 05:48:51 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 0F15C606A32C
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fb.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=meta.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=amd.com header.i=@amd.com header.a=rsa-sha256 header.s=selector1 header.b=NijQRk6l
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=ZYMrUXitunZmbXgyd4YQUUDTca3OPalaCUPGDXjJ49MzqulgYMhGkY3Ssp0YkRKuHXBKwzj9BWhRE40819fAnTLWqV5LojRfliuiMA2w41glZYYxbsy6kgKX5M9QGVtN74Rk+y8WDG9g9R3R8/bLHL1De1omV4coUeUddQCbFUg8p0x2lMyyX+GNTsuaS647ao8qbjQjaoYA6kFWDCOvlNSSPYzXyOVqz+Fu0mGNXfF4gUkMOENwcJ6qm3dY08YQdG1jNW8Xz1IwKjlQpxN024btjOzLrB7NpKX+BAM9FNWVdb0k52fm2p3MMEQUvL39vK34J8f4Pfoa4N3EaKFJvA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=eJmcRaPk3Eo9u2RhlJVCk8z9rcYG1xEXI0N+u/SwCbU=;
- b=pZP+tuSi17Ucl2q/RBdspYeqNOBZRiHUtD9Adpbm7ex3u4NeKO11XRSBwtT8kFiAV4fxAyFQhjaqzecqG/X98+pyTOmo+LOHlHJa94IVD9NZC3Q6x78AORxJkw3VkQtClPQgIjDi9uaJJy58ZGyGib6cJleA39GTOJY/y9/GVgiVqSLcy9gw1Fd+VGXj0NBPoN0UPJ6z7bjt0BxUVsJByLB1nyu6194TY3b06QqIXa6RK93M4Q42ERXRk2evO1o0bZmHqsvH6y4/qPLfhalZEqpOR4/new78bIhRjZcpMVyC+YLk6IiPfs9IMkXybm5AhJfr0OKpsmMVyzhjkF7uMw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=infradead.org smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=eJmcRaPk3Eo9u2RhlJVCk8z9rcYG1xEXI0N+u/SwCbU=;
- b=NijQRk6lsqJNKstgGoaoNjwIfCbHczrnSmSkI7YA3Y4220KDC26nd5RuN26PGO6WqXEQoKSHZfr/q86Nssc82eI5+qcntSHTO8n6RTl+FWIqdEBTDjOXo4fbSUJ3bkIIEf7wRg9WXvVOw277vq5mGCou3RGTScBDhCqiRZrQPC4=
-Received: from SJ0PR03CA0047.namprd03.prod.outlook.com (2603:10b6:a03:33e::22)
- by PH9PR12MB497784.namprd12.prod.outlook.com (2603:10b6:510:411::8) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.546.22; Mon, 26 Oct
- 2026 04:19:17 +0000
-Received: from SJ1PEPF000037B4.namprd05.prod.outlook.com
- (2603:10b6:a03:33e:cafe::32) by SJ0PR03CA0047.outlook.office365.com
- (2603:10b6:a03:33e::22) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.21.546.22 via Frontend Transport; Mon,
- 26 Oct 2026 04:19:17 +0000
-X-MS-Exchange-Authentication-Results: mx.microsoft.com 1; spf=pass (sender IP
- is 165.204.84.17) smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=satlexmb07.amd.com; pr=C
-Received: from satlexmb07.amd.com (165.204.84.17) by
- SJ1PEPF000037B4.mail.protection.outlook.com (10.167.244.196) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.21.569.4 via Frontend Transport; Mon, 26 Oct 2026 04:19:17 +0000
-Received: from BLR-L-RBANGORI.amd.com (10.180.168.240) by satlexmb07.amd.com
- (10.181.42.216) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.53; Sun, 25 Oct
- 2026 23:19:12 -0500
-From: Ravi Bangoria <ravi.bangoria@amd.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	"Jim Mattson" <jmattson@google.com>
-CC: Ravi Bangoria <ravi.bangoria@amd.com>, Jayapal Ashwin Nair
-	<janair@amd.com>, Gennady Kupava <gennady.kupava@gmail.com>, Dapeng Mi
-	<dapeng1.mi@linux.intel.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
-	<x86@kernel.org>, <linux-perf-users@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, Santosh Shukla <santosh.shukla@amd.com>,
-	Ananth Narayan <ananth.narayan@amd.com>, Sandipan Das <sandipan.das@amd.com>,
-	Manali Shukla <manali.shukla@amd.com>
-Subject: [PATCH v3 3/3] perf/amd/ibs: Simplify event state handling with IBS_CAPS_DIS
-Date: Mon, 26 Oct 2026 04:18:37 +0000
-Message-ID: <20261026041838.941-4-ravi.bangoria@amd.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20261026041838.941-1-ravi.bangoria@amd.com>
-References: <20261026041838.941-1-ravi.bangoria@amd.com>
+	dkim=pass (2048-bit key, unprotected) header.d=fb.com header.i=@fb.com header.a=rsa-sha256 header.s=pps82601-s2048-2026-q3 header.b=aFBJWMos
+Received: from pps.filterd (m0044012.ppops.net [127.0.0.1])
+	by mx0a-00082601.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 69Q39JjW1063621;
+	Sun, 25 Oct 2026 22:48:33 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=
+	pps82601-s2048-2026-q3; bh=h5CPtsW845wIg8XT+7IjY3h0UyBjrJLt9Tps+
+	aPI7oM=; b=aFBJWMosNrA6X1Fv10uYkYPt8nn62qFrf5mCus4TmQenFDM/8MlTD
+	2U7vMsuEeJMYvpFpqaw3dT/AXAQ+2WozIGuhC9jrFECL1ndQH21V7NX7S8J3+Luw
+	QpjvYyaLaBA1Dc9+kF73HgWduW1/+4r57hhS/jOIbFGNynxJGj75PPdpLLhsen3J
+	aFd5Dh7BqrDL6tjVAgRh1BsVahYEVVU++5+V6NZaejtH5KH5UGIybxhjim4Jk5Db
+	EnNyJ+rcY10LONNINs4zts/MOuquh4uvPZfwmR3Gm44TCuKT1ZsLLahHwCcamvZN
+	2+Gm9xX4LcCsedLA23xROh38SLXjuvoLA==
+Received: from maileast.thefacebook.com ([163.114.135.16])
+	by mx0a-00082601.pphosted.com (PPS) with ESMTPS id 4hgtc0y640-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+	Sun, 25 Oct 2026 22:48:33 -0700 (PDT)
+Received: from localhost (2620:10d:c0a8:1b::30) by mail.thefacebook.com
+ (2620:10d:c0a9:6f::237c) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.2.2562.56; Mon, 26 Oct
+ 2026 05:48:32 +0000
+From: Amir Ayupov <aaupov@fb.com>
+To: James Clark <james.clark@linaro.org>, Leo Yan <leo.yan@arm.com>,
+        Suzuki K
+ Poulose <suzuki.poulose@arm.com>,
+        Mike Leach <mike.leach@arm.com>,
+        Alexander
+ Shishkin <alexander.shishkin@linux.intel.com>
+CC: Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+        Greg
+ Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Randy Dunlap
+	<rdunlap@infradead.org>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Daniel
+ Pereira <danielmaraboo@gmail.com>,
+        <coresight@lists.linaro.org>, <linux-arm-kernel@lists.infradead.org>,
+        <linux-perf-users@vger.kernel.org>, <linux-doc@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH v4 2/7] coresight: syscfg: Fail to enable a configuration not loaded on the device
+Date: Sun, 25 Oct 2026 22:48:22 -0700
+Message-ID: <cc6b083f1ece4625e5bed0aa13b1eac7e4d1e274.1792989860.git.aaupov@fb.com>
+X-Mailer: git-send-email 2.52.0
+In-Reply-To: <cover.1792989860.git.aaupov@fb.com>
+References: <cover.1792907332.git.aaupov@fb.com> <cover.1792989860.git.aaupov@fb.com>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -115,255 +94,115 @@ Precedence: list
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-ClientProxiedBy: satlexmb07.amd.com (10.181.42.216) To satlexmb07.amd.com
- (10.181.42.216)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ1PEPF000037B4:EE_|PH9PR12MB497784:EE_
-X-MS-Office365-Filtering-Correlation-Id: 1d1c8c31-7337-4f33-3b8b-08df33184d27
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|36860700016|82310400026|23010399003|7416014|1800799024|376014|18002099003|22082099003|56012099006|11063799006|261021123027099003|261021121427099003|10067099003|261009223027099003|261022075727099003|261022105027099003;
-X-Microsoft-Antispam-Message-Info:
-	IGH05gKIKM8/JSTomuwzPKlX11ptWVsSFrGbIeaPD5JwhO8JBzTxIhCpB3lMuYY5H/+gkfNV4XiY8Sw9ME8VsknsPaDOagoUZ0Wa/sVKQ+kQbzhFx279y4yCC/hF0+ZFpiF5Jf9gi1Y7VuzrPLJd8oHNcfcjzYNDKpa0gOtjQvj1vyCZs/pCo9QcbdHQtt9G2LWa/ZIwbqKxFf2AK92ZuWaIrOMs4CzSvqsPN7tNWvUQr+uMsJXNOJla6wpZ1QkKk7lk/Ka71gGmLNBt3HseRPffve0SnC+4Zrh4AeUEDgiWW/pLqyBvZ2ov/aWzXCsyCebonm+Qbujq/lpQsjvGxyHkGriL2OhEdIfew010qBduRYX4az6Kyyl2EcwelzQIU+CX15+BnpA0uXDZ2N4UAEv0XoBOKX+t0PbOKw0oCDdiAGbgYV9DP0R6zIPEGWN/eXdDaJdwplDvL93S2VIv6xk1ggtxg+gvXyZQl/e1Ao9OqmisknEVDpVOid22dXyRLUPBFMNKUjC6NuLEYJzmuQ1w5+ZFY8iumidf7SY7ZFq54ZRnJkqu/OAmiMxceScLOiikjFVT1owNmDa/rmZ/arkGjCQ+j8s28BwklPyqXKaT+nAXscezX608a6QtvOw3EeQ6VDDTuYw1oC66+gIPXcbB7mWRPFxDjyEOebRXi0w=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700016)(82310400026)(23010399003)(7416014)(1800799024)(376014)(18002099003)(22082099003)(56012099006)(11063799006)(261021123027099003)(261021121427099003)(10067099003)(261009223027099003)(261022075727099003)(261022105027099003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	J3Uho4JFvuXgK7Z+RPMjlo9Ma3lJ5U0nvBVYkOXOC9fxzo4CP+ID0LeJJFw9+h/XAj8Yru7zpHTb2ExFkTCsbGgleuGUFyP4Uc9pWctQcz/FLB7GMaqdcTTqBXvNKctNoeziZB0st02/b3t47rT6iHDDQvcVz6GlD7dsX60ETQ9HjctPKuHoTnSll7fv9NxFpB9Shaf8wR0tci5/08tF9jyCjtozb0GbRbJVLsKIUwkI4gwZzSU4txgZ0SSftFzClehKZRgubO0/lIiwnQ7g4oj4jnLtTCgEGfB3E3HdpgxVNjTgjwQ9g3xTLZVWb2+6j34cZGkI1ZNX41HJFUTu1XvzWVDfLaFezoX6fdJuy17uY6AfB/BwOLChcNlenBW7/sMSH/3BwLgYrYpjb6giAlzT1Y3avn4P9Fj/5WgDexgkjTFbONdTstGXVXmNNrLM
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Oct 2026 04:19:17.5263
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1d1c8c31-7337-4f33-3b8b-08df33184d27
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb07.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	SJ1PEPF000037B4.namprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH9PR12MB497784
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYxMDI2MDAyMiBTYWx0ZWRfX5L69hV7Xtd87
+ 8H6cf5+ZWHCEGdUHSdsdQ4y099yJdXLVx+isw5g0wJk3OCX43ukSOtgvpX9BupT21CEN05CyJyu
+ w2YVGEsLCclF9KSXNBMH+fGPAjxRvA/GhxKH7UVywuQ6GsII2nWxMcELxnZDhvahEl8U4t6tANB
+ K8AaHX02V/HSXp8+EFrtPFZhWApTUqxows4JKaYNvXZzG2tZsoqVhmI7b74UY0fZJoWcJpZt1Zr
+ YaKD2GL7A+MQLGaU6JYVHufDZSNKn4uSrG0EkmSwOWIrZFCmW5mh+4YJHSpwfuKyNbKx4iVH2kB
+ rem9CKgTFtp0WkO03+iHP3uKwT8BVeFzThv++kkysSBZbV/T5AsMmf7eN0S0YlicvPd3lEZ60l6
+ tKMlaeruAf4bJ2XbrAVhM/zF2sdIyURe0Bkn9bC84R/dyFRhO2vu+ieKC7D4VnTsCl5Lo14S79c
+ XenssXxBaAI4Tn6mWuw==
+X-Proofpoint-GUID: g1Aifh65k7-KI_eGbyqKsF3Ofe2YmTIr
+X-Proofpoint-ORIG-GUID: g1Aifh65k7-KI_eGbyqKsF3Ofe2YmTIr
+X-Authority-Analysis: v=2.4 cv=eIGGH3p1 c=1 sm=1 tr=0 ts=6adee9b1 cx=c_pps
+ a=MfjaFnPeirRr97d5FC5oHw==:117 a=MfjaFnPeirRr97d5FC5oHw==:17
+ a=660iZSQnnn4A:10 a=VkNPw1HP01LnGYTKEx00:22 a=7x6HtfJdh03M6CCDgxCd:22
+ a=PAz_-FQ8hEVmOPYdF0yf:22 a=FOH2dFAWAAAA:8 a=7CQSdrXTAAAA:8
+ a=HF-2DHWplcuDzBJEMXoA:9 a=a-qgeE7W1pNrGK8U0ZQC:22
+X-Proofpoint-Spam-Info: AW1haW4tMjYxMDI2MDAyMiBTYWx0ZWRfX0pjfGOs2QLky
+ UZkKQengl2V/vIdMa0q/GOp5ngq0mztwp52peIA7QYnRhJ86sHg7PrCnjWj6bs5+GEQyJs7G6OU
+ OcPIZTWpdGwsoq4B4KlJGatxANUI4No=
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1176,Hydra:6.1.138,FMLib:17.12.100.49
+ definitions=2026-10-26_01,2026-10-21_02,2025-10-01_01
 
-The IBS_{FETCH|OP}_CTL2[Dis] bit allows IBS sampling to be stopped without
-a RMW of IBS_{FETCH,OP}_CTL. Systems providing this bit therefore do not
-require the IBS_STARTED and IBS_STOPPED states used to coordinate control
-MSR updates with late NMIs.
+cscfg_csdev_enable_active_config() looks up the selected configuration in
+the device's loaded configurations, and returns success when it is not
+there. A configuration is only loaded on devices that match at least one
+of its features, so a perf session or sysfs enable that selects it on any
+other device runs without the configuration, with no error.
 
-Add a separate stop path for these systems. Preserve Val while disabling
-the event so that a delayed NMI can be identified and consumed, and wait
-briefly for such an NMI before restarting the event.
+Return -EINVAL instead, so enabling the source fails on that device. The
+function is only called with a non-zero configuration hash, so sources
+enabled without a configuration are unaffected.
 
-Leave the existing handling unchanged on systems without IBS_CAPS_DIS.
-
-Reported-by: Jim Mattson <jmattson@google.com>
-Closes: https://lore.kernel.org/r/20261007234815.4026028-1-jmattson@google.com
-Fixes: efa5700ec0da ("perf/amd/ibs: Support IBS_{FETCH|OP}_CTL2[Dis] to eliminate RMW race")
-Signed-off-by: Ravi Bangoria <ravi.bangoria@amd.com>
-Reviewed-by: Jim Mattson <jmattson@google.com>
+Fixes: f8cce2ff3c04 ("coresight: syscfg: Add API to activate and enable configurations")
+Assisted-by: Devmate:Opus-5.5
+Signed-off-by: Amir Ayupov <aaupov@fb.com>
+Reviewed-by: Leo Yan <leo.yan@arm.com>
 ---
- arch/x86/events/amd/ibs.c | 145 ++++++++++++++++++++++++++++++++------
- 1 file changed, 122 insertions(+), 23 deletions(-)
+ .../hwtracing/coresight/coresight-syscfg.c    | 53 ++++++++++---------
+ 1 file changed, 28 insertions(+), 25 deletions(-)
 
-diff --git a/arch/x86/events/amd/ibs.c b/arch/x86/events/amd/ibs.c
-index 78a36ebf2d23..714589570c21 100644
---- a/arch/x86/events/amd/ibs.c
-+++ b/arch/x86/events/amd/ibs.c
-@@ -28,6 +28,7 @@ static u32 ibs_caps;
- #include <linux/hardirq.h>
- 
- #include <asm/nmi.h>
-+#include <asm/delay.h>
- #include <asm/amd/ibs.h>
- 
- /* attr.config2 */
-@@ -73,7 +74,12 @@ static u32 ibs_caps;
-  *
-  * XXX: we could probably be using !atomic bitops for all this.
-  */
--
-+/*
-+ * NOTE: IBS_CAPS_DIS eliminates the RMW race on the IBS_{FETCH|OP}_CTL, making
-+ * IBS_STARTED and IBS_STOPPED states unnecessary. We use only IBS_ENABLED and
-+ * IBS_STOPPING states when IBS_CAPS_DIS is present. Semantics of IBS_STOPPING
-+ * changes a bit as well.
-+ */
- enum ibs_states {
- 	IBS_ENABLED	= 0,
- 	IBS_STARTED	= 1,
-@@ -557,7 +563,9 @@ static void perf_ibs_start(struct perf_event *event, int flags)
- 	struct hw_perf_event *hwc = &event->hw;
- 	struct perf_ibs *perf_ibs = container_of(event->pmu, struct perf_ibs, pmu);
- 	struct cpu_perf_ibs *pcpu = this_cpu_ptr(perf_ibs->pcpu);
-+	unsigned int delay = 50;
- 	u64 period, config = 0;
-+	u64 ctl;
- 
- 	if (WARN_ON_ONCE(!(hwc->state & PERF_HES_STOPPED)))
- 		return;
-@@ -575,23 +583,87 @@ static void perf_ibs_start(struct perf_event *event, int flags)
- 	}
- 	config |= period >> 4;
- 
--	/*
--	 * Reset the IBS_{FETCH|OP}_CTL MSR before updating pcpu->state.
--	 * Doing so prevents a race condition in which an NMI due to other
--	 * source might accidentally activate the event before we enable
--	 * it ourselves.
--	 */
--	perf_ibs_disable_event(perf_ibs, hwc, 0);
-+	if (ibs_caps & IBS_CAPS_DIS) {
-+		/*
-+		 *      IBS HW                     SW
-+		 *
-+		 *  o Capture sample       o ->stop()
-+		 *  o Set VAL bit            CTL2[Dis] = 1
-+		 *  o Raise NMI --.        o ...
-+		 *                 \       o ->start()
-+		 *                  \        wrmsr(IBS_{FETCH|OP}_CTL, new value);
-+		 *                   \       (wrmsr clears the VAL bit)
-+		 *                    `--> o Receives delayed NMI
-+		 *                           (Unknown NMI since VAL bit is cleared)
-+		 *
-+		 * Handle this with induced delay.
-+		 */
-+		rdmsrq(hwc->config_base, ctl);
-+		while ((ctl & perf_ibs->valid_mask) && delay--) {
-+			udelay(1);
-+			rdmsrq(hwc->config_base, ctl);
-+		}
-+	} else {
-+		/*
-+		 * Reset the IBS_{FETCH|OP}_CTL MSR before updating pcpu->state.
-+		 * Doing so prevents a race condition in which an NMI due to
-+		 * other source might accidentally activate the event before we
-+		 * enable it ourselves.
-+		 */
-+		perf_ibs_disable_event(perf_ibs, hwc, 0);
-+		/*
-+		 * Set STARTED before enabling the hardware, such that a
-+		 * subsequent NMI must observe it.
-+		 */
-+		set_bit(IBS_STARTED,    pcpu->state);
-+		clear_bit(IBS_STOPPING, pcpu->state);
-+	}
-+	perf_ibs_enable_event(perf_ibs, hwc, config);
-+
-+	perf_event_update_userpage(event);
-+}
-+
-+/* ->stop() for platforms with additional CTL2[Dis] bit. */
-+static void perf_ibs_stop_dis(struct perf_event *event, int flags)
-+{
-+	struct hw_perf_event *hwc = &event->hw;
-+	struct perf_ibs *perf_ibs = container_of(event->pmu, struct perf_ibs, pmu);
-+	struct cpu_perf_ibs *pcpu = this_cpu_ptr(perf_ibs->pcpu);
-+	u64 config;
-+	u64 ctl2;
-+
-+	WARN_ON_ONCE(test_bit(IBS_STOPPING, pcpu->state));
-+
-+	set_bit(IBS_STOPPING, pcpu->state);
-+
-+	rdmsrq(hwc->extra_reg.reg, ctl2);
-+	if (ctl2 & perf_ibs->disable_mask)
-+		goto reset_state;
-+
-+	wrmsrq(hwc->extra_reg.reg, perf_ibs->disable_mask);
-+
-+	WARN_ON_ONCE(hwc->state & PERF_HES_STOPPED);
-+	hwc->state |= PERF_HES_STOPPED;
-+
-+	if (hwc->state & PERF_HES_UPTODATE)
-+		goto reset_state;
-+
-+	rdmsrq(hwc->config_base, config);
-+
-+	config &= ~perf_ibs->valid_mask;
+diff --git a/drivers/hwtracing/coresight/coresight-syscfg.c b/drivers/hwtracing/coresight/coresight-syscfg.c
+index 2bfdd7b45e49c..a816c22c87bc8 100644
+--- a/drivers/hwtracing/coresight/coresight-syscfg.c
++++ b/drivers/hwtracing/coresight/coresight-syscfg.c
+@@ -1088,36 +1088,39 @@ int cscfg_csdev_enable_active_config(struct coresight_device *csdev,
+ 	raw_spin_unlock_irqrestore(&csdev->cscfg_csdev_lock, flags);
  
  	/*
--	 * Set STARTED before enabling the hardware, such that a subsequent NMI
--	 * must observe it.
-+	 * Clear the Val bit otherwise ->start() will unnecessarily
-+	 * wait for 50us.
+-	 * If found, attempt to enable
++	 * The configuration is active but not loaded on this device, because
++	 * none of its features match the device. Fail rather than trace
++	 * without it.
  	 */
--	set_bit(IBS_STARTED,    pcpu->state);
--	clear_bit(IBS_STOPPING, pcpu->state);
--	perf_ibs_enable_event(perf_ibs, hwc, config);
-+	if (in_nmi())
-+		wrmsrq(hwc->config_base, config);
- 
--	perf_event_update_userpage(event);
-+	perf_ibs_event_update(perf_ibs, event, &config);
-+	hwc->state |= PERF_HES_UPTODATE;
+-	if (config_csdev_active) {
++	if (!config_csdev_active)
++		return -EINVAL;
 +
-+reset_state:
-+	clear_bit(IBS_STOPPING, pcpu->state);
- }
- 
- static void perf_ibs_stop(struct perf_event *event, int flags)
-@@ -602,6 +674,9 @@ static void perf_ibs_stop(struct perf_event *event, int flags)
- 	u64 config;
- 	int stopping;
- 
-+	if (ibs_caps & IBS_CAPS_DIS)
-+		return perf_ibs_stop_dis(event, flags);
-+
- 	if (test_and_set_bit(IBS_STOPPING, pcpu->state))
- 		return;
- 
-@@ -1416,19 +1491,43 @@ static int perf_ibs_handle_irq(struct perf_ibs *perf_ibs, struct pt_regs *iregs)
- 	unsigned int msr;
- 	u64 *buf, *config, period, new_config = 0;
- 	int br_target_idx = -1;
-+	u64 ctl2, ctl;
- 
--	if (!test_bit(IBS_STARTED, pcpu->state)) {
--fail:
-+	if (ibs_caps & IBS_CAPS_DIS) {
++	/*
++	 * Call the generic routine that will program up the internal
++	 * driver structures prior to programming up the hardware.
++	 * This routine takes the driver spinlock saved in the configs.
++	 */
++	err = cscfg_csdev_enable_config(config_csdev_active, preset);
++	if (!err) {
  		/*
--		 * Catch spurious interrupts after stopping IBS: After
--		 * disabling IBS there could be still incoming NMIs
--		 * with samples that even have the valid bit cleared.
--		 * Mark all this NMIs as handled.
-+		 * ->stop() {
-+		 *     set_bit(IBS_STOPPING);
-+		 *                               <-- NMI (race 1)
-+		 *     CTL2[Dis]=1;
-+		 *     ...                       <-- NMI (race 2)
-+		 * }
+-		 * Call the generic routine that will program up the internal
+-		 * driver structures prior to programming up the hardware.
+-		 * This routine takes the driver spinlock saved in the configs.
++		 * Successful programming. Check the active_cscfg_ctxt
++		 * pointer to ensure no pre-emption disabled it via
++		 * cscfg_csdev_disable_active_config() before
++		 * we could start.
++		 *
++		 * Set enabled if OK, err if not.
  		 */
--		if (test_and_clear_bit(IBS_STOPPED, pcpu->state))
--			return 1;
-+		rdmsrq(perf_ibs->msr2, ctl2);
-+		if (test_bit(IBS_STOPPING, pcpu->state) /* race 1 */ ||
-+		    (ctl2 & perf_ibs->disable_mask) /* race 2 */) {
-+			rdmsrq(perf_ibs->msr, ctl);
-+			if (ctl & perf_ibs->valid_mask) {
-+				ctl &= ~(perf_ibs->enable_mask |
-+					 perf_ibs->valid_mask);
-+				wrmsrq(perf_ibs->msr, ctl);
-+				return 1;
-+			}
-+			return 0;
-+		}
-+	} else {
-+		if (!test_bit(IBS_STARTED, pcpu->state)) {
-+fail:
-+			/*
-+			 * Catch spurious interrupts after stopping IBS: After
-+			 * disabling IBS there could be still incoming NMIs
-+			 * with samples that even have the valid bit cleared.
-+			 * Mark all this NMIs as handled.
-+			 */
-+			if (test_and_clear_bit(IBS_STOPPED, pcpu->state))
-+				return 1;
- 
--		return 0;
-+			return 0;
-+		}
+-		err = cscfg_csdev_enable_config(config_csdev_active, preset);
+-		if (!err) {
+-			/*
+-			 * Successful programming. Check the active_cscfg_ctxt
+-			 * pointer to ensure no pre-emption disabled it via
+-			 * cscfg_csdev_disable_active_config() before
+-			 * we could start.
+-			 *
+-			 * Set enabled if OK, err if not.
+-			 */
+-			raw_spin_lock_irqsave(&csdev->cscfg_csdev_lock, flags);
+-			if (csdev->active_cscfg_ctxt)
+-				config_csdev_active->enabled = true;
+-			else
+-				err = -EBUSY;
+-			raw_spin_unlock_irqrestore(&csdev->cscfg_csdev_lock, flags);
+-		}
+-
+-		if (err)
+-			cscfg_config_desc_put(config_desc);
++		raw_spin_lock_irqsave(&csdev->cscfg_csdev_lock, flags);
++		if (csdev->active_cscfg_ctxt)
++			config_csdev_active->enabled = true;
++		else
++			err = -EBUSY;
++		raw_spin_unlock_irqrestore(&csdev->cscfg_csdev_lock, flags);
  	}
  
- 	if (WARN_ON_ONCE(!event))
++	if (err)
++		cscfg_config_desc_put(config_desc);
++
+ 	return err;
+ }
+ EXPORT_SYMBOL_GPL(cscfg_csdev_enable_active_config);
 -- 
-2.55.0
+2.52.0
 
