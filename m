@@ -1,118 +1,100 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.215.227
-ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793036967;
-	b=KIe0a8KTdrYdGQQgYjot9v5nycTEjcc5DcDoVdTX9wCWuzf/FSHxx6zC5yMhu+tFnEWA
-	 I19AUnPHLUbYpwnD69Xn4FhXSkBJlp9bjGknaODId91j0go/QHUDJGmtdbNtctDs/zvQT
-	 lD1XkLouuzKJSeMVygjoDvEWaWF9Sq8kB64YN57lW/kaUSyi7D/uOxs5FRkATO+WsdIsI
-	 vr6E18mlk0E/EabETggFujx/KsTNBEOOChgQYHG+rb7cgYGeQ3ci6ZWcNp+bp/co/nVBX
-	 utECXfTIs4yJdQWf4M8ORqwnnwbeyldRmFSYHi9S/2dm1dIbn6TctcM57dLTMgdf2Tg==
-ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793036967;
-	h=DMARC-Filter:Received:X-Google-DKIM-Signature:X-Forwarded-Encrypted:
-	 X-Gm-Message-State:X-Gm-Gg:X-Received:Received:X-Relaying-Domain:
-	 X-CFilter-Loop:Received:DKIM-Signature:X-Forwarded-Encrypted:
-	 X-Received:X-Received:Received:From:To:Cc:Subject:Date:Message-ID:
-	 X-Mailer:MIME-Version:Content-Transfer-Encoding:
-	 X-DetectorID-Processed;
-	bh=9TTg9pb/7fpyUF/iQ6S1hdT7qvfB/N3V50wHOOlSh9Q=;
-	b=dmOVM2QXX9WWO7FkXk0tVeg+5yW8bsTHS3uwKt8CZhYaQyGQjQtw4nvHOsHA/y0IWBvH
-	 9xRl/h4/2nl6EcqTJGagoO8aOR21/I+ogcgIfvG6qXZvgZIjI9ZWwLxNx2fs9a/GsTuZX
-	 Uj5BuTaPSg0XO+opewdM5USkIktyOYU2B19vrpDR8AK9szVC8vTtbhFV/cu5ESIUdJ8EF
-	 E7ubV6TWgg83EbJNXERW0ikxGydG7Ymdz4YAiHNIb83dwKuZJInww3k6R1EE8RcRgWyZo
-	 Hd6PN5Co2P4T3SmeVz6knd0mTTh+UUtkG8XET5b8UEJvvTc8pNjYabO4yhvbWF/YgAg==
-ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=broadcom.com;
-	spf=fail smtp.mailfrom=broadcom.com;
-	dkim=pass header.d=broadcom.com header.i=@broadcom.com header.a=rsa-sha256 header.s=google header.b=Q0zhGw+m;
-	arc=none smtp.remote-ip=209.85.215.227
-Received: from mail-pg1-f227.google.com (mail-pg1-f227.google.com [209.85.215.227])
+Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.208.49
+ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
+	t=1793037109;
+	b=S2h/CSfSpjaD2+bbFIIILHlanUKIrJSkkb465ymL7ZPQOQxRUtsJyQ0vZ6Fha5WvzkqX
+	 je/Onc2hVeir3WcC/FfO3E+BU+yYUTdsmnzT43zNMUDY2yeFyCe05RWPPrzKtsT84QDgH
+	 EBxGAWGMXwxe+E1EcNJ8HCEfRHTFg+eiL7R/yGv41+BEqGZOSUE4iYxu3KfsSPG0g8uT3
+	 ZjdyGbT/cCVK3ZCUqLtrJ6+G2NAHoZYtZWFw3Sr8liOOpH9GH2Q1pfEyyXb2CTZfob4hm
+	 C3lUpfgnHy/ykALVmUCnnCyOoIW8IeCYyd8Uymim5Q+oGjIiImGtiPRKzbIHWRGUnSA==
+ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793037109;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:
+	 MIME-Version:References:In-Reply-To:From:Date:X-Gm-Features:
+	 Message-ID:Subject:To:Cc:Content-Type:Content-Transfer-Encoding;
+	bh=x5IoPxKCD6gSAuyfPampTFdrhWai9Fe21YmZghCUFXg=;
+	b=JT2EzjDjxAXdDtlSc82MWwUcVG0m/LNdWbPm4bY/ANKWz2OD84JkAXeddr1kUyPQgcAJ
+	 QmRS4y+TjcnbUP+eOm4DGEbRH2LULEcAV0Fex9xHfUkYrWWMUXDWlCC8oMqnGW3kFMTxM
+	 stUqksx4Gfx/xVLcK3ypbyjDmqVG/sOqfp8Gcr03aw02BZbLKtTsuSsqCVkD8Rki5sBze
+	 5posstgPxyvEfENayljrTsiKzyFChp1qu8sHU6kubFGCbFFRb88QyTwvdRsAXQkQiXz++
+	 GaWRUr5S56oCTa1vUnfTRHewgJNDvlsowGRUVjcuEyPSDv3nJsbSwbKy/F2W9umfeqQ==
+ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
+	dmarc=pass header.from=google.com;
+	spf=pass smtp.mailfrom=google.com;
+	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20251104 header.b=PLrFlcyt;
+	arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.208.49
+Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 454E8606A31D
-	for <linux-perf-users@vger.kernel.org>; Mon, 26 Oct 2026 17:49:27 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 454E8606A31D
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=broadcom.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FEAA606A323
+	for <linux-perf-users@vger.kernel.org>; Mon, 26 Oct 2026 17:51:49 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 2FEAA606A323
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=broadcom.com header.i=@broadcom.com header.a=rsa-sha256 header.s=google header.b=Q0zhGw+m
-Received: by mail-pg1-f227.google.com with SMTP id 41be03b00d2f7-cc4dbcf2b85so1173600a12.3
-        for <linux-perf-users@vger.kernel.org>; Mon, 26 Oct 2026 10:49:27 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1793036966; x=1793641766;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:dkim-signature:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to:content-type;
-        bh=9TTg9pb/7fpyUF/iQ6S1hdT7qvfB/N3V50wHOOlSh9Q=;
-        b=lMAJDGvc8QaA+oWoBwd/o+1Fps62BTot2Jhans4Px2P6GHrd1FVgGrpnB3qNIYkNee
-         wWHQMRpvTY7IZV3CA2zwkEasr6yHJB5iTtJMIdpV9hdNHZfhniMipn1YOO7GaU7eVvuO
-         0N4X7lEeORuIyleVH1pN5RR2gukcRdYcGSiipbSdhNadgvGEZRKK6pO/ttKFyb2wIuyW
-         XBls1a3zKPDYXq0lIRkaBd+b8WeMb038raGCOxqxho3E6ll//Y1PB7LRO0er/siE2Jk7
-         61Si1BSprDms1E+uDyjIFYWHKRirLxQANbRsZCSIe3E5GDUKXfxjCLgF2sKqhL/HAfr5
-         QN3A==
-X-Forwarded-Encrypted: i=1; AKwUvBwTCSmC9VVzJ2Zn3i7xtDLAnQpN1iotkHGIA7NbwZrIWAlsTNAbA+B+vkM2Z8OHnFxwGxPkLKe4Mzk+c4AoVoqf@vger.kernel.org
-X-Gm-Message-State: AFq9FYIbVxFOe3YZTJHeTyjDbbxdOTIwifwwxoe2o1iyNRox7aeYJeWi
-	1IBfQsdDWKJUn0D2Ig1EPwrYMPvTxlqXlIvaLIX1baadHf9P2X+HYBRHiA2bo8fZRpL8zYVk3sP
-	rpIb73pV6LWJ3ZsJ6Arx9/6VziapugH3o6V4umzatUDBpUFsKfXJsjtij+gj0nbRyf8gyRK2J55
-	xKPvnqW1S/utAawsvbN0ji1BvianMPjVuf2elG0w9XjgoIX6YRqBVsPdj7nygosSWP9sW0qWW3F
-	Z3mpR1iGj2ybKlTHL5LuoEkz3dNCfZ5
-X-Gm-Gg: AYBFou1NK/E+V+4QV9YW3maRee+Z5U49nTZIktooGLB9+me5B0QNMJ3Zqi9RkiLFbBs
-	GYuOlUN9a4qvRUElCSm3FDA2TVJxNjXzFlw9Ori04rpzLgkYJIs5poWphU1mty6nmxdnlt+IhAO
-	XUh46eTI2Q1JDz67SoY3aYupgQyplufeJvMUzoLDoFm3+nN+kv6mkcxdLgoo+sdoG4XKPZwysSZ
-	iiJRQeeHKhgwfPj/sFPGlUf5QMJiCB42TCxEF74IKNECoed/prUr5z55J3ZtWsej3xqevJ0hN9o
-	Z3MXRdE8q8jfRPM3Cxr6bpuzJBkeDAeYdCLLv3t4KTGr5xMRZ2N8A8pnUNgu8Jne+rzU+gXCzt7
-	7Eh9u7E1RONMeh7+dKQdbhYWTbEooKtC3K7vaYDA5vrk1u3C0H6cqP9UaoSA4vnSbm6Y8mUAyW1
-	1ZGQp/LRZuXUGW3YqExq1IVtLudfnxkgWfu97ZloAw
-X-Received: by 2002:a17:90b:2552:b0:3ab:1481:69e5 with SMTP id 98e67ed59e1d1-3adea899389mr6454091a91.11.1793036966301;
-        Mon, 26 Oct 2026 10:49:26 -0700 (PDT)
-Received: from smtp-us-east1-p01-i01-si01.dlp.protect.broadcom.com (address-144-49-247-28.dlp.protect.broadcom.com. [144.49.247.28])
-        by smtp-relay.gmail.com with ESMTPS id 98e67ed59e1d1-3adeb83a327sm3444948a91.0.2026.10.26.10.49.25
-        for <linux-perf-users@vger.kernel.org>
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 26 Oct 2026 10:49:26 -0700 (PDT)
-X-Relaying-Domain: broadcom.com
-X-CFilter-Loop: Reflected
-Received: by mail-pj1-f69.google.com with SMTP id 98e67ed59e1d1-3adbc9a47fbso3106160a91.1
-        for <linux-perf-users@vger.kernel.org>; Mon, 26 Oct 2026 10:49:25 -0700 (PDT)
+	dkim=pass (2048-bit key, unprotected) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20251104 header.b=PLrFlcyt
+Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-6b1b12de661so1262a12.0
+        for <linux-perf-users@vger.kernel.org>; Mon, 26 Oct 2026 10:51:48 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1793037107; cv=none;
+        d=google.com; s=arc-20260327;
+        b=ZbTfLN+yJbclg7ap0e2bHamTllVRMGJg0JFoXX/SvuR9RY1CFGmpqHbItiD2Cz3SMx
+         U2HFaye3qPLBUgeBYxGhhAGgO86EM+pXBsMsf8TmGB/cpDqKD64dUfota+HDfPgR8ABk
+         HNfHtxe4OMLN1IT4akD+5eLO8gkdksvbqn+C0KONiYclczzxbVQiR6+QlDb8y9g9rKVk
+         EDanz0LmVmKVqzXFXMlhjSzit2mKJUst0RugmCsvBFgKxOGUGc+97jr0mfarW6hG/DPt
+         VQRJ6AV8f4knXy/D6EIjGde8GabSEydpY8eFLEXJ3qS4XVqQIZltWRT83Ws+NNrz4d8m
+         H0cw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=x5IoPxKCD6gSAuyfPampTFdrhWai9Fe21YmZghCUFXg=;
+        fh=WTl/0O1s0PnoXzmt96tcuoCVtAd6NUp9uTk/F+RFZ5Y=;
+        b=Uzzg49/JJgDLp/CO3e9LIbYpaWzBNfstrj7qeaCzmvUxyaeB0vAKRuSq/bV4+ynqnx
+         uzKywRo3ttKhUvbIpt8By1VOh25Q9Io9IZh4/dw0EW1O8SJI7tAqQ5ZIv5RnHaxO1Bv6
+         3YQTANeCaCKuW5J5V7OxeFcyJBucCfUa/xuVueDOnad58/D6Oy8p4J9+M874js2WxwO/
+         kWeBknQxwXUgwuqeouZiGnmmVn67/YXtooyPfQKzt1afSxvVz1AAQH3z1d84lIIDjPOS
+         3MumGDNMsSZ61xYuSGen08yshjj5VrnegiqjabScNVjS/SiI7GRLO51Vc2G0Pd9yjL1B
+         BIag==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google; t=1793036964; x=1793641764; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=9TTg9pb/7fpyUF/iQ6S1hdT7qvfB/N3V50wHOOlSh9Q=;
-        b=Q0zhGw+mt6YCGjF3nM38g4UbPRvYaQ477cR7Wg8wHCSHAFrWylGTIqiFtCwBC8CjYe
-         cfq4cjSlX3nTLeIHbvm+aF1LXWMB/jDKuoIwBJd6EViILdIi0mY1/TGZNj4oKV0P1bYc
-         S3mXeETOC9Y2AO84ebU4ltBh8cSz7MaXWIqoo=
-X-Forwarded-Encrypted: i=1; AKwUvBwjxfR/Ayu9neAhjAOTtlCFkM/lqkxiZaHCqHMB75IXsIDVrSg3xUs9UA+r3YbQsuKsRqbBN/VimQXhe4kjYGJC@vger.kernel.org
-X-Received: by 2002:a17:90a:d406:b0:3ac:b3ff:b476 with SMTP id 98e67ed59e1d1-3adead4c656mr6303055a91.38.1793036964457;
-        Mon, 26 Oct 2026 10:49:24 -0700 (PDT)
-X-Received: by 2002:a17:90a:d406:b0:3ac:b3ff:b476 with SMTP id 98e67ed59e1d1-3adead4c656mr6303022a91.38.1793036963981;
-        Mon, 26 Oct 2026 10:49:23 -0700 (PDT)
-Received: from fainelli-desktop.igp.broadcom.net ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2ea9b1210f0sm20400355ad.25.2026.10.26.10.49.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 26 Oct 2026 10:49:22 -0700 (PDT)
-From: Florian Fainelli <florian.fainelli@broadcom.com>
-To: linux-kernel@vger.kernel.org
-Cc: Florian Fainelli <florian.fainelli@broadcom.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	James Clark <james.clark@linaro.org>,
-	Thomas Richter <tmricht@linux.ibm.com>,
-	Faisal Bukhari <faisalbukhari523@gmail.com>,
-	Qinxin Xia <xiaqinxin@huawei.com>,
-	Thomas Falcon <thomas.falcon@intel.com>,
-	linux-perf-users@vger.kernel.org (open list:PERFORMANCE EVENTS SUBSYSTEM)
-Subject: [PATCH] perf parse-events: Include errno.h before kernel headers
-Date: Mon, 26 Oct 2026 10:48:10 -0700
-Message-ID: <20261026174814.3158229-1-florian.fainelli@broadcom.com>
-X-Mailer: git-send-email 2.53.0
+        d=google.com; s=20251104; t=1793037107; x=1793641907; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=x5IoPxKCD6gSAuyfPampTFdrhWai9Fe21YmZghCUFXg=;
+        b=PLrFlcytHLhsfFUTWuDHcrUInlXtdj+Bn8sw4p/4CVQcjYe8HCudqWvzQ6wsbPYSP0
+         K9b95dZ4gs6sUyI5I0vvSs0yEs5ttR+r65Oy63q/A0Rxrs/BYZ/115wxKJIhvPzM81D0
+         M76oShiHIWiE1YehZaPK7d5w5d2Ra1+iGvQZEyasiDrZQkeIMKbH7a2744pEAsN7CNeg
+         4DTzhijonK/RwDggd0T2MS6Mq6zY8Vdj/kD1OWigfQZsX5F3JiYv7EBIFWoam7Vge9bB
+         bsiJQZeAfm7jTYb9LY0egWFKv70DHny3bb8/MGACF8IDPYC9yGa+5SUYxNWaVLEVQJQ/
+         xcXQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1793037107; x=1793641907;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=x5IoPxKCD6gSAuyfPampTFdrhWai9Fe21YmZghCUFXg=;
+        b=KJA05UoqNlDA1ajtMK4FQsSsnQ8sOdlWWvlWZRd/Bq29C8wHOseOoAvfjiGXELyjU+
+         4ZT6l4BrejXQTzO4PhAoMlmbd6vsmZtnzcnqKoNi6AlVYDRm9Ixre+dsA4Rxdfm5SJhE
+         AIfQVhRRHR7rpDhU9MDoG/1VZmAwgzGzrho/h+lqevgoqm58hLqndeL0s76spGiCdpb/
+         pSQTNKCAZ3ij+oXCvhqBqOsL6h6LuXn13tANgzLbDuIo9k3Z1UwyxO3bheodBVnMEcRC
+         MxrEFTNK9VBlv8Ue9uPZ2jyCPoGPyKuDELts0IperscCC7Q9M++2LPZtGz+2cHVZmaDH
+         htNA==
+X-Forwarded-Encrypted: i=1; AKwUvByNHNBJz8pzRYaZ7lHpn7yDsvcEuduM1/dn80PirWlhtUGsifTf+BpPOndejQhuwmHpSzzTkOuovmeAa+9OhC+A@vger.kernel.org
+X-Gm-Message-State: AFq9FYJcRM/RrvJ4h30Nuf9U1B+zRPL1k5oYuOSfamcaBWjmJL1uCNsI
+	3w8Mx/TixbqYFhU4EuH1qVIVrwI/IEcK5y+im2M2B7O4f44qJPukGP9cXQTreHS2Wd8YbrG7Ck7
+	zrHjhOYjOLvNimJZgt3OzcEnvPsqEdlVZzkCv2fSk
+X-Gm-Gg: AYBFou1kim1cCOkBgoHfXOuE3bQriwnJYQoYOozryKjjNxzXZH+WWvv7inYS0586frX
+	etj6H99h2AIzMoAFgBmklvuZl+uJ+2Qay+QAjHa1ushhqs4JpDekfHDhq5gYHFszDP1Q2AXe6Uy
+	L15qzrVeuxpwwr78kzTcw7pTXIO+munWq3uHtV/FWP6ORcfN36kaVgTbxNK+7QKXf7+boj1jyM2
+	gdRWViBdHxPHsQQCDUAkE04ENPsK5+rGzo4u+TJM6zIRpVYpryZ43z5/dkcH3yOxbKnXwuWgKu8
+	yZdT7Fk4oQKXU6pnEHVU+2dBhjkrCvGludQUEfmKVYrsOUvLxA6GZNPy1w6m3mdnPVTzZITlvFv
+	NFFgJff9fDiiSPzcH8cxfECQJG2/qkD+pQp/zKQ==
+X-Received: by 2002:a05:6402:486:b0:6aa:128c:36ad with SMTP id
+ 4fb4d7f45d1cf-6b47c31cd5bmr1422a12.10.1793037107029; Mon, 26 Oct 2026
+ 10:51:47 -0700 (PDT)
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -122,42 +104,52 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-DetectorID-Processed: b00c1d49-9d2e-4205-b15f-d015386d3d5e
+References: <20261026041838.941-1-ravi.bangoria@amd.com> <20261026041838.941-3-ravi.bangoria@amd.com>
+In-Reply-To: <20261026041838.941-3-ravi.bangoria@amd.com>
+From: Jim Mattson <jmattson@google.com>
+Date: Mon, 26 Oct 2026 10:51:34 -0700
+X-Gm-Features: AclHuK8ntyEgwPTHmatXufpHpq3GjNdwMAlW9fpSt7ft02yt5TrTtwxApDC3KgE
+Message-ID: <CALMp9eRMNVHMtbN1U+X7Cdi0hvvY1nHZPf-kPZtFP62ND3jmsQ@mail.gmail.com>
+Subject: Re: [PATCH v2 2/3] perf/amd/ibs: Fix kernel address leak via
+ REGS_USER and REGS_INTR
+To: Ravi Bangoria <ravi.bangoria@amd.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Jayapal Ashwin Nair <janair@amd.com>, Gennady Kupava <gennady.kupava@gmail.com>, 
+	Dapeng Mi <dapeng1.mi@linux.intel.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, 
+	Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>, x86@kernel.org, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Santosh Shukla <santosh.shukla@amd.com>, Ananth Narayan <ananth.narayan@amd.com>, 
+	Sandipan Das <sandipan.das@amd.com>, Manali Shukla <manali.shukla@amd.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Building perf against uClibc fails in config_term_common():
-
-  util/parse-events.c:954:30: error: 'ERANGE' undeclared
-
-The kernel headers included before errno.h pull in asm/errno.h. uClibc's
-bits/errno.h undefines EDOM, EILSEQ and ERANGE before including
-linux/errno.h, but the kernel header include guards prevent these macros
-from being defined again.
-
-Include errno.h before the kernel headers so ERANGE remains defined.
-
-Fixes: 6b9c0261b3fb ("perf record: Add ratio-to-prev term")
-Signed-off-by: Florian Fainelli <florian.fainelli@broadcom.com>
----
- tools/perf/util/parse-events.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
-index cc7ad331a49f..efb46ba9ba22 100644
---- a/tools/perf/util/parse-events.c
-+++ b/tools/perf/util/parse-events.c
-@@ -1,10 +1,10 @@
- // SPDX-License-Identifier: GPL-2.0
-+#include <errno.h>
- #include <linux/hw_breakpoint.h>
- #include <linux/err.h>
- #include <linux/list_sort.h>
- #include <linux/zalloc.h>
- #include <dirent.h>
--#include <errno.h>
- #include <sys/ioctl.h>
- #include <sys/param.h>
- #include "cpumap.h"
--- 
-2.53.0
-
+On Sun, Oct 25, 2026 at 9:19=E2=80=AFPM Ravi Bangoria <ravi.bangoria@amd.co=
+m> wrote:
+>
+> IBS hardware captures a sample and raises an NMI. Since the NMI can be
+> delivered with a delay, a privilege change may occur between sample
+> capture and NMI delivery. Because IBS only provides the sample RIP, the
+> kernel records GPRs from the NMI pt_regs, which may reflect kernel mode
+> if a privilege switch occurred in the interim. This can leak kernel
+> addresses to unprivileged users through PERF_SAMPLE_REGS_USER and/or
+> PERF_SAMPLE_REGS_INTR.
+>
+> Fix this by using interrupt regs while preparing PERF_SAMPLE_REGS_USER
+> and PERF_SAMPLE_REGS_INTR. With the change, when IBS samples a user mode
+> instruction but the NMI is delivered in kernel mode, PERF_SAMPLE_REGS_USE=
+R
+> will source its register state from task_pt_regs(current) and
+> PERF_SAMPLE_REGS_INTR will be omitted from the data sent to userspace.
+>
+> In addition to fixing the kernel address leak, this change also ensures
+> GPR snapshot consistency, which resolves the DWARF unwinding issue with
+> IBS.
+>
+> Reported-by: Gennady Kupava <gennady.kupava@gmail.com>
+> Closes: https://lore.kernel.org/r/CAPu-DQqF0aF6=3DGS8Z6KKWeeX_V5LiXeKU_rJ=
+QZC+uGg8zuTPNw@mail.gmail.com
+> Reported-by: Jayapal Ashwin Nair <janair@amd.com>
+> Fixes: d29e744c7167 ("perf/x86: Relax privilege filter restriction on AMD=
+ IBS")
+> Signed-off-by: Ravi Bangoria <ravi.bangoria@amd.com>
+Reviewed-by: Jim Mattson <jmattson@google.com>
