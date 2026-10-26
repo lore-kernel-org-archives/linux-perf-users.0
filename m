@@ -1,57 +1,57 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793006608;
-	b=TzHqjd3i9jWIuhAxEVmR0osfhqLmbhAEX2rkfdNzmqGaURoCLFo1BsGs+R+jlA9X6fhp
-	 cyCmSXFEMO6F1PaaIJanW9WxGQDH13QSVhH9q6T9lRaRwUKCf/n7WuyXzQrrb8iKA8PhV
-	 nmv7n6Zi4M3v9Roa+1I4OjHhbaTF33FRUy7Qkgs2sYzzAofwrwru499OxeUcsWV6ZrPow
-	 KQOSyxEUTK+C9m0nDH6CAVtRzGDjdLtLSA9hIekgv5tLj0hje5/4bB91wypjjL2+tf/2a
-	 BGMl2K+YBcGuqez5BCzkwACyViG5K+Jd82UuGCONlNvqX6qCFHde2cHqDjS85HV9Z5Q==
+	t=1793006876;
+	b=lCIZWOvSBlENcfgk/SaGZ8jLwHmZJmIb8YK0zZ5dRV0qXE1YXlCYB5keQZucApq4LdEC
+	 3sAnlGNVyHr/1rjMEsL/GarKnReDBkNCpIw2qFJbEHDJts7/wPTzKfOl6Hc4jqBG2Y88w
+	 FmjAEpho9nyKRortYn5gR+X8+6HzX/yQQQBNWw/SqtQ9ZetQbK8OxlM44OGaXZNshkx+Q
+	 688r3dO/6thp+G7mO6t6aw823keveSFsxQSkOU+QW9DFvoXtqj199IsHLgJF40PeN1ZS8
+	 8CP6WEfO6bj/bxf4+y4zzSflyOUgoEt+KO3Ugl/vid5+tLfj88bpiV6cYinUdpPgL+w==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793006608;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793006876;
 	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
 	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=8eNjLVjBIE2lo/wVmsp7a2iyjvM3wb590o5iybcoAWM=;
-	b=BUiRlFb+xZZCcZ+LWv0NKpyu3zwiVBuLGLzgE9RVzpF7H1y9ejxMmjIEpnqlthmdQekc
-	 qsmeBk6afUd9+Wl/HhysoyxsH3WaEJ0YqN8PUMujrMuJ8gXD6XkwkvXy4ZVfqUGcWY7qw
-	 qrk6cD0La24dtjDlV0viLCRRjWYmo3a5j4W0Up12t/TjSUQM/XBcsfeennOkGqT44qrM3
-	 Vt7M2emztwz2OKYfIPrQSyVkKYpln/YjVMgcuBDwigebkbNji4BHj1HWu+Xj+H+yLWK5S
-	 nRI+Cg7kEZrsKDYDVa9V3U0jyWM0+9TGo5bmmn6GuucG1A+xevqcKJzHc4KUUlYTOVw==
+	bh=b4ABgCz4pAghF26Nk7C9bweEoTGMfkRGOJyuPLMwkeo=;
+	b=u4V+5yn2fYf6sg8J51D9JutgJPowUG6RM0G8r45tq7vi24zo2LrKx1NVDzqeLhMx6Wwz
+	 HXs22Yt9kNpFnkn/zQiOPpJCEdP88LdqPQE4+/gwdJxyxZNUrkpsrAEAnAlfGm/N2FROp
+	 XIoDH4DrOXHSKYjcDMEZvZQ8J+XNNjQW2OdXQpgk8PwIMEo12XuC/27kW5+jByEoVujYQ
+	 VGB+1xzRTNT95ZKd2N2ABjrMA/hSRJUJ8Qtr4azrE9zGN4aR18EVLY/u1C5nqhtH+eeYk
+	 0bFvYc7tFIBfvNKSPyXurSHQVtdhip7PYUbUMskOk9nWPlbKBERe3fumf0R94HsDDiA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=QE3jyX+Y;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=YwLXQeu3;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D201606A31A
-	for <linux-perf-users@vger.kernel.org>; Mon, 26 Oct 2026 09:23:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15FC9606A31B
+	for <linux-perf-users@vger.kernel.org>; Mon, 26 Oct 2026 09:27:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=QE3jyX+Y
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1A2C61F01825;
-	Mon, 26 Oct 2026 09:23:28 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=YwLXQeu3
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 934EE1F01825;
+	Mon, 26 Oct 2026 09:27:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793006608;
-	bh=8eNjLVjBIE2lo/wVmsp7a2iyjvM3wb590o5iybcoAWM=;
+	s=k20260515; t=1793006875;
+	bh=b4ABgCz4pAghF26Nk7C9bweEoTGMfkRGOJyuPLMwkeo=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=QE3jyX+YeupVa/Khma5zdBS3kVZAkp5S9xC0gL/wDTrU4/STipM/afr4MLucEIOjl
-	 FGtL5AnLqv1Sbvnh2ZFzS6rNjDoCZru0WlGs1N/MfEyaZzJpmKx6ppyFQVo3IDGQA3
-	 bT+ZWmDMnps5vwgvmMAvEW3cLDcULIKhEmVZJ2Cmh6epaQaFEA8Q6M2of5M0HNvL/r
-	 faelCpEMtuAVkeRNvRvwZXVnyjyKsrXJDzz4+CcufEnTeRzmovDqhj/E8Dqx+5yzjy
-	 ufo7ElmkYpkI2TTFK/42k+geI1CBJ9dalvOYUQt2wsH2dYoVIA2adgc3vqo6Tmd2Te
-	 x6GvMnxWHnznA==
-Message-ID: <sashiko-outbox-184773@kernel.org>
+	b=YwLXQeu3cy9OIUMkjS7WMMl8YH3Zbf8KukGbuOpDlL8NQ2Pmdp2YWew/9s0oXCbUu
+	 bhN8vtw8eB4dCms+ma1RigmALJPMfmqNvYd14jXV9HPjDvQgqhGlvQcLLczTfbMpPe
+	 zMuxUB9RVhq1BC/1ClOBRuMm5I/op4xZ78+fAnMsvnlu1PuV5gc5tJWqBXh0HUYDYn
+	 N7f4pxE/+EvgLgv8mtOBKJ9RJrqa7XdqhaJbz3CjYgDjMe7IXiredQghWW6z9gJt5R
+	 Mlb3liizXfDoUvXRmV5BnxpXaJVK0LZXZMpXR8cRvbrttl96PWaELLeczbXcqrC4Y/
+	 Tn/LEGsiZwTqQ==
+Message-ID: <sashiko-outbox-184788@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH perf-tools-next v12 01/10] perf ftrace: Handle signals,
- non-blocking reads and pager exits in __cmd_ftrace()
+Subject: Re: [PATCH perf-tools-next v12 02/10] perf ftrace: Optimise
+ __cmd_ftrace() stack frame with strbuf streaming
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Aaron Tomlin" <atomlin@atomlin.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20261026025735.546101-2-atomlin@atomlin.com>
+In-Reply-To: <20261026025735.546101-3-atomlin@atomlin.com>
 References: <20261026025735.546101-1-atomlin@atomlin.com>
- <20261026025735.546101-2-atomlin@atomlin.com>
+ <20261026025735.546101-3-atomlin@atomlin.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Mon, 26 Oct 2026 09:23:27 +0000
+Date: Mon, 26 Oct 2026 09:27:55 +0000
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -61,33 +61,21 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 
-> In __cmd_ftrace(), trace_fd is configured for non-blocking I/O via
-> fcntl(trace_fd, F_SETFL, O_NONBLOCK) and polled using poll(). However,
-> the polling loop previously treated any negative return code from poll()
-> or read() as an unrecoverable failure.
+> In __cmd_ftrace(), incoming trace data from trace_pipe was historically
+> buffered in a fixed 4096-byte array allocated directly on the stack
+> frame. Furthermore, reads were written directly to stdout via fwrite()
+> in arbitrary chunk sizes, rather than as discrete, well-delimited
+> trace lines.
 >=20
-> If poll() or read() is interrupted by a non-fatal signal (i.e. SIGWINCH
-> upon terminal resizing), errno is set to EINTR. Furthermore, read() on
-> trace_pipe can return EAGAIN/EWOULDBLOCK even after poll() indicates
-> POLLIN (for instance, under concurrent readers, spurious wakeups, or
-> block-mode trace iterator options). In all such cases, breaking from the
-> loop causes perf ftrace to terminate tracing prematurely.
+> Refactor __cmd_ftrace() to employ dynamic heap allocation for the read
+> buffer alongside a dynamic struct strbuf to accumulate streamed
+> characters into whole lines. Pre-allocating the strbuf ensures that
+> line processing incurs zero heap reallocations during steady-state
+> polling, whilst the stack frame of __cmd_ftrace() is reduced by over 96%
+> (down to ~160 bytes). Emitting complete lines provides discrete records
+> necessary for subsequent call graph parsing and inlined function
+> reconstruction.
 >=20
-> Additionally, output errors on stdout (i.e. when a pager or consumer
-> process exits, closing the downstream pipe) were ignored by fflush(),
-> leaving __cmd_ftrace() polling indefinitely until the workload
-> completes.
->=20
-> Resolve these concerns by retrying poll() upon receiving EINTR, retrying
-> read() on EAGAIN, EWOULDBLOCK, and EINTR, and breaking on EOF (n =3D=3D 0=
-).
-> Furthermore, detect stdout errors and broken pipes via fflush() and
-> ferror() to exit immediately when the downstream output sink closes, and
-> handle EINTR and ferror(stdout) cleanly in the subsequent buffer
-> draining loop.
->=20
-> Fixes: d01f4e8db22c ("perf ftrace: Introduce new 'ftrace' tool")
-> Cc: stable@vger.kernel.org
 > Tested-by: Ian Rogers <irogers@google.com>
 > Reviewed-by: Ian Rogers <irogers@google.com>
 > Signed-off-by: Aaron Tomlin <atomlin@atomlin.com>
@@ -96,5 +84,5 @@ Sashiko has reviewed this patch and found no issues.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261026025735.5461=
-01-1-atomlin@atomlin.com?part=3D1
+01-1-atomlin@atomlin.com?part=3D2
 
