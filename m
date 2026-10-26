@@ -1,50 +1,47 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=188.68.32.151
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=124.71.94.104
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792975461;
-	b=0Wg8Rr5LN2Mm5E8Sj8jZ1sEG6hAQrrJq0W2Hn81LjK6QXoQya3BOV9tTDSaIZUGI7iVI
-	 CxsUpgm/HilYfdhoY2hFUvtt/pird0bYN11ZUsSliMGbS/Grx7cITjGI5PL8w0He8rUq0
-	 MPYj7mfQN3CEugsMi15JeMNJm2sPcXs84EaJdRBESHzOYhaMaisyIZI2/MmjZy/QNaLdf
-	 z1cl4SS2qOlOFJ14GasVVSQb4+E1EqIhLlkzvAx6GaL/cfFzYTiEfu67VqqflD5VcCLJa
-	 lEN0KxL0TFgFkKyPxQ4dqJRY4SuBx09q1Plt8oahQtist2/t2jv5Sbs6sxIsshxFfoA==
+	t=1792976462;
+	b=kesVPR+OR4eMoLN8CFuC7LzPZVrZnd/6LgTxoBLYroh29dtUnpQTc0qrpoKHppJ67X+t
+	 gfLokgGpo8fZMlyeB/Watm4toTVJB8SHBeK4Vaua2Qh+dS9E7zWsYOsjHGruI4LEodN6U
+	 muQ8HltLlMoob2EwXF7V53O6Wpgw+URznXU1eCW+XpyIVP9t4gjRO/VGWniFzBrIa1w+1
+	 V2Cq8LjfEKDc5r68donvOtr7akfEGdUNhbPNc19iu8RQ+r5188SuxmC8AJtS2lmESQgIR
+	 jWp5ba2iv4qWY+cU8FJ/An5HPqOnps3PdPI7+E/Dxf9whE4av/b7XXzEdXgWDNlDdUA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792975461;
-	h=DMARC-Filter:Received:Date:From:To:Cc:Subject:Message-ID:References:
-	 MIME-Version:Content-Type:Content-Disposition:In-Reply-To:
-	 X-Operating-System:X-gpg-fingerprint:X-gpg-key:X-Echelon-Enable:
-	 X-TKUeV:X-message-flag;
-	bh=5V/5TAB96ndPwiAAKCMcB/cnjrnPTc++uezTCortw4s=;
-	b=ubXnskYDrPrBisjTrmljcjaAGRsxef+wT6qrBpeJj2T/+NzK2fkIDuHqALCh2/YBcHyx
-	 TOPIZ35jtLAplcY416MdFesiQVto0fnGFNDwEqH+xffmBe16Qf8RIe7lg4P8eBFH7tSCW
-	 GTycQLWHH37vTsY8+T2y11GYW2aSxRBTjIcUhNiTEYxXFHg9CiSF1Io87mVzA18I3ljvB
-	 8ofMiax0U9NztO0A/wE15TfPfjNErihNyD/hQwVMKPOuGFo02ukSiY6BgVdE4WyEAk7u8
-	 ZSrypAHIpoKIBDFIfj5ybgCtqWazBCxa0xfF4DqJJA6jWwayjT/G0cv0ZS6YKxZrw6A==
+	a=rsa-sha256; c=relaxed/relaxed; t=1792976462;
+	h=DMARC-Filter:Received:Received:Received:Message-ID:Date:MIME-Version:
+	 User-Agent:Subject:To:Cc:References:Content-Language:From:In-Reply-To:
+	 Content-Type:Content-Transfer-Encoding:X-CM-TRANSID:
+	 X-Coremail-Antispam:X-CM-SenderInfo;
+	bh=NG1AOAUUdBKLzUrMNajfQAQzLxhfZ9+5Z7BZccO0EP8=;
+	b=rhjKQWB1Xvdns6+nDbePoqtHvVNo7OE1WYkwjYGzxRq3PxUnQgG/POfZyquLt0s2cZmf
+	 QAasCakDpsuTq0+3RKw/z/O5bfoPPSWw5oBnq55K6MXYPPYzh0LaPDd0oN7DdYhBLbc7Z
+	 nN9OmHUZiu/rP7XnxUNRUiNRtCRbhKfWoHdyYGnOF3945T2zEHlKBJYZtiff7N3vd0CLw
+	 ojf3R/+1fl3N2C82NRC0cVgQOknGQgXpWxhFVD6jAx793X1o4nYK+pMT0mMIJK63/Y340
+	 N3E0YDxuNBfUuiLeXkQATek2+cp6yc7YoTgqnBmGtKIX14ILJSYasOnWwFfzXgiu9BA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=none header.from=lug-owl.de;
-	spf=pass smtp.mailfrom=lug-owl.de;
-	arc=none smtp.remote-ip=188.68.32.151
-Received: from lug-owl.de (lug-owl.de [188.68.32.151])
+	dmarc=none header.from=huaweicloud.com;
+	spf=pass smtp.mailfrom=huaweicloud.com;
+	arc=none smtp.remote-ip=124.71.94.104
+Received: from dggmsgout13.his.huawei.com (dggmsgout13.his.huawei.com [124.71.94.104])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0ECB606A31A;
-	Mon, 26 Oct 2026 00:44:19 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org E0ECB606A31A
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lug-owl.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lug-owl.de
-Received: by lug-owl.de (Postfix, from userid 1001)
-	id E4950422D6; Mon, 26 Oct 2026 01:44:11 +0100 (CET)
-Date: Mon, 26 Oct 2026 01:44:11 +0100
-From: Jan-Benedict Glaw <jbglaw@lug-owl.de>
-To: Matt Turner <mattst88@gmail.com>
-Cc: Richard Henderson <richard.henderson@linaro.org>,
-	Magnus Lindholm <linmag7@gmail.com>, linux-alpha@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-	linux-perf-users@vger.kernel.org, Ian Rogers <irogers@google.com>
-Subject: Re: [PATCH v3 4/5] alpha: add HAVE_PERF_REGS and
- HAVE_PERF_USER_STACK_DUMP support
-Message-ID: <at6iW11clMShlGCq@lug-owl.de>
-References: <20261018-alpha-perf-regs-v3-v3-0-52be85332c57@gmail.com>
- <20261018-alpha-perf-regs-v3-v3-4-52be85332c57@gmail.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76035606A31A;
+	Mon, 26 Oct 2026 01:00:59 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 76035606A31A
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.198])
+	by dggmsgout13.his.huawei.com (SkyGuard) with ESMTP id 4jCb090c86z1rrSW;
+	Mon, 26 Oct 2026 09:00:41 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.75])
+	by mail.maildlp.com (Postfix) with ESMTP id 1A5BB40576;
+	Mon, 26 Oct 2026 09:00:51 +0800 (CST)
+Received: from [10.67.110.36] (unknown [10.67.110.36])
+	by APP2 (Coremail) with UTF8SMTPA id Syh0CgDHletBpt5qDS1SBw--.17922S2;
+	Mon, 26 Oct 2026 09:00:50 +0800 (CST)
+Message-ID: <18c1e63e-bdfd-4e74-bda6-61b68c915c0c@huaweicloud.com>
+Date: Mon, 26 Oct 2026 09:00:49 +0800
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -54,114 +51,117 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="mslrvrPhqrcBcnNc"
-Content-Disposition: inline
-In-Reply-To: <20261018-alpha-perf-regs-v3-v3-4-52be85332c57@gmail.com>
-X-Operating-System: Linux chamaeleon 6.12.113+deb13-amd64 
-X-gpg-fingerprint: 250D 3BCF 7127 0D8C A444  A961 1DBD 5E75 8399 E1BB
-X-gpg-key: wwwkeys.de.pgp.net
-X-Echelon-Enable: howto poison arsenous mail psychological biological nuclear
- warfare test the bombastical terror of flooding the spy listeners explosion
- sex drugs and rock'n'roll
-X-TKUeV: howto poison arsenous mail psychological biological nuclear warfare
- test the bombastical terror of flooding the spy listeners explosion sex
- drugs and rock'n'roll
-X-message-flag: Please send plain text messages only. Do not send HTML
- emails. Thank you. 
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v8 00/15] perf annotate arm64: Support instruction
+ tracking for data type profiling
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Namhyung Kim <namhyung@kernel.org>, james.clark@linaro.org,
+ xueshuai@linux.alibaba.com, Peter Zijlstra <peterz@infradead.org>,
+ leo.yan@linux.dev, Li Huafei <lihuafei1@huawei.com>,
+ Ian Rogers <irogers@google.com>, Kim Phillips <kim.phillips@arm.com>,
+ Mark Rutland <mark.rutland@arm.com>, Ingo Molnar <mingo@redhat.com>,
+ Bill Wendling <morbo@google.com>,
+ Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Adrian Hunter <adrian.hunter@intel.com>, Zecheng Li <zli94@ncsu.edu>,
+ linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+ llvm@lists.linux.dev
+References: <cover.1792411435.git.wutengda@huaweicloud.com>
+ <18de9e8f-3709-4bc9-b11b-3813e1ba98b7@huaweicloud.com>
+ <atvNXkeWyJCGMrbF@phoenix2>
+Content-Language: en-US
+From: Tengda Wu <wutengda@huaweicloud.com>
+In-Reply-To: <atvNXkeWyJCGMrbF@phoenix2>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:Syh0CgDHletBpt5qDS1SBw--.17922S2
+X-Coremail-Antispam: 1UD129KBjvJXoWxAFy3Xw4UAr4UJF4fWFyfJFb_yoW5AFykpr
+	Z5Ca1rtFWDJr40yFsFqw47Xr4aga1rWr47Wrn5t34SkFn0vFn3tFs3K3W5WFZ3Cr15Cr17
+	Xw4jvF93Zw4jvFDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUvFb4IE77IF4wAFF20E14v26ryj6rWUM7CY07I20VC2zVCF04k2
+	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
+	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7Cj
+	xVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x
+	0267AKxVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02
+	F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4I
+	kC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lFIxGxcIEc7CjxVA2Y2ka0xkIwI1lc7CjxVAa
+	w2AFwI0_GFv_Wryl42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxV
+	Aqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r4a
+	6rW5MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6x
+	kF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AK
+	xVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvj
+	xUIa0PDUUUU
+X-CM-SenderInfo: pzxwv0hjgdqx5xdzvxpfor3voofrz/
 
 
---mslrvrPhqrcBcnNc
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-Hi,
+On 2026/10/24 5:10, Arnaldo Carvalho de Melo wrote:
+> On Wed, Oct 21, 2026 at 10:25:40AM +0800, Tengda Wu wrote:
+>> Hi,
+>>
+>> On 2026/10/20 21:44, Tengda Wu wrote:
+>>> This series adds arm64 support to perf's data type profiling by
+>>> implementing instruction tracking for the arm64 architecture.
+>>>
+>>> The main changes since v7 include:
+>>> v7: https://lore.kernel.org/all/cover.1791629326.git.wutengda@huaweicloud.com/
+>>>
+>>>   * Patch 02: Minor optimizations to update_insn_state_arm64 to facilitate
+>>>     future extension, including:
+>>>     - Encapsulating call instruction handling into update_call_insn_state()
+>>>     - Encapsulating invalidate dst regs handling into invalidate_unhandled_insn_regs()
+>>>     - Renaming is_readonly_branch_or_cmp() to is_readonly_insn()
+>>>     No functional changes.
+>>>
+>>>   * Fix issues raised by Sashiko:
+>>>     - Patch 06: Complete the status register invalidation logic for
+>>>       exclusive stores.
+>>>     - Patch 13 & 15: Complete the lifetime invalidation logic for adrp
+>>>       and mrs instructions.
+>>>     Regarding the status register invalidation issue for instructions
+>>>     such as cas/swp as well, we plan to support this incrementally
+>>>     after the relevant instructions are refined; this patch temporarily
+>>>     ignores and does not handle it (a TODO marker has already been
+>>>     reserved in patch 02)
+>>>
+>>> Patch organization
+>>> ==================
+>>>
+>>>   Patches 1-3:   Shared infrastructure. Extract invalidate_reg_state() as
+>>>                  a common helper, add the arch_get_reg_offset() helper for
+>>>                  computing operand base offsets, and wire up the arm64
+>>>                  entry points (arch_supports_insn_tracking(),
+>>>                  init_type_state(), and update_insn_state_arm64()).
+>>>
+>>>   Patches 4-6:   Core instruction tracking for arm64: function return
+>>>                  types after calls, load instructions (ldr/ldp and their
+>>>                  addressing modes), and store instructions (str/stp).
+>>>
+>>>   Patches 7-9:   Shared data structure improvements and an x86 fix.
+>>>                  Expand type_state_reg.imm_value to u64 so 64-bit
+>>>                  addresses can be tracked, preserve imm_value for stack
+>>>                  variables, and delete stale stack state on store of an
+>>>                  untracked register on x86.
+>>>
+>>>   Patches 10-15: Remaining arm64 patterns: stack variable tracking,
+>>>                  'mov' (register and immediate forms), 'add' member
+>>>                  address calculation, 'adrp' global variable tracking,
+>>>                  per-cpu variable access, and 'mrs sp_el0' to resolve the
+>>>                  'current' pointer.
+>>>
+>>
+>> Just a quick note that this version of the patch series has addressed or
+>> clarified all the Sashiko review comments. I would appreciate it if you
+>> could take a look when you get a chance.
+> 
+> Merged now, test built and pushed to perf-tools-next/perf-tools-next for
+> further build testing with linux-next, early next week I intend to push
+> it out to Linus for 7.4.
+> 
+> - Arnaldo
 
-On Sun, 2026-10-18 10:22:04 -0400, Matt Turner <mattst88@gmail.com> wrote:
-> Let perf sample registers and dump the user stack, which is what the
-> perf tool needs for --call-graph dwarf.
+Thanks a lot for the merge and for running the build tests. Much appreciated!
 
-After this patch series, it conflicts with previous upstream changes:
+Best regards,
+Tengda
 
-[=E2=80=A6]
-> diff --git a/arch/alpha/kernel/perf_regs.c b/arch/alpha/kernel/perf_regs.c
-> new file mode 100644
-> index 000000000000..33ea2e831ba0
-> --- /dev/null
-> +++ b/arch/alpha/kernel/perf_regs.c
-> @@ -0,0 +1,64 @@
-[=E2=80=A6]
-> +int perf_reg_validate(u64 mask)
-> +{
-> +	if (!mask || mask & REG_RESERVED)
-> +		return -EINVAL;
-> +
-> +	return 0;
-> +}
-[=E2=80=A6]
-
-# CC      arch/alpha/kernel/perf_regs.o
-  alpha-linux-gcc -Wp,-MMD,arch/alpha/kernel/.perf_regs.o.d -nostdinc -I./a=
-rch/alpha/include -I./arch/alpha/include/generated -I./include -I./include =
--I./arch/alpha/include/uapi -I./arch/alpha/include/generated/uapi -I./inclu=
-de/uapi -I./include/generated/uapi -include ./include/linux/compiler-versio=
-n.h -include ./include/linux/kconfig.h -include ./include/linux/compiler_ty=
-pes.h -D__KERNEL__ -fshort-wchar -funsigned-char -fno-common -fno-PIE -fno-=
-strict-aliasing -std=3Dgnu11 -fms-extensions -pipe -mno-fp-regs -ffixed-8 -=
-fno-jump-tables -mcpu=3Dev56 -mtune=3Dev6 -Wa,-mev6 -fno-delete-null-pointe=
-r-checks -O2 -fno-allow-store-data-races -fno-stack-protector -fno-omit-fra=
-me-pointer -fno-optimize-sibling-calls -ftrivial-auto-var-init=3Dzero -fzer=
-o-init-padding-bits=3Dall -fno-stack-clash-protection -fdiagnostics-show-co=
-ntext=3D2 -fstrict-flex-arrays=3D3 -fno-strict-overflow -fno-stack-check -f=
-conserve-stack -fno-builtin-wcslen -Wall -Wextra -Wundef -Werror=3Dimplicit=
--function-declaration -Werror=3Dimplicit-int -Werror=3Dreturn-type -Werror=
-=3Dstrict-prototypes -Wno-format-security -Wno-trigraphs -Wno-frame-address=
- -Wno-address-of-packed-member -Wmissing-declarations -Wmissing-prototypes =
--Wframe-larger-than=3D2048 -Wno-main -Wno-type-limits -Wno-dangling-pointer=
- -Wvla-larger-than=3D1 -Wno-pointer-sign -Wcast-function-type -Wno-untermin=
-ated-string-initialization -Wno-array-bounds -Wno-stringop-overflow -Wno-al=
-loc-size-larger-than -Wimplicit-fallthrough=3D5 -Werror=3Ddate-time -Werror=
-=3Dincompatible-pointer-types -Werror=3Ddesignated-init -Wenum-conversion -=
-Wunused -Wno-unused-but-set-variable -Wno-unused-const-variable -Wno-packed=
--not-aligned -Wno-format-overflow -Wno-format-truncation -Wno-stringop-trun=
-cation -Wno-override-init -Wno-missing-field-initializers -Wno-shift-negati=
-ve-value -Wno-maybe-uninitialized -Wno-sign-compare -Wno-unused-parameter -=
-g -Wno-sign-compare    -DKBUILD_MODFILE=3D'"arch/alpha/kernel/perf_regs"' -=
-DKBUILD_BASENAME=3D'"perf_regs"' -DKBUILD_MODNAME=3D'"perf_regs"' -D__KBUIL=
-D_MODNAME=3Dperf_regs -c -o arch/alpha/kernel/perf_regs.o arch/alpha/kernel=
-/perf_regs.c =20
-arch/alpha/kernel/perf_regs.c:46:5: error: conflicting types for 'perf_reg_=
-validate'; have 'int(u64)' {aka 'int(long long unsigned int)'}
-   46 | int perf_reg_validate(u64 mask)
-      |     ^~~~~~~~~~~~~~~~~
-In file included from ./include/linux/perf_event.h:50,
-                 from arch/alpha/kernel/perf_regs.c:4:
-=2E/include/linux/perf_regs.h:13:5: note: previous declaration of 'perf_reg=
-_validate' with type 'int(u64,  bool)' {aka 'int(long long unsigned int,  _=
-Bool)'}
-   13 | int perf_reg_validate(u64 mask, bool simd_enabled);
-      |     ^~~~~~~~~~~~~~~~~
-make[4]: *** [scripts/Makefile.build:290: arch/alpha/kernel/perf_regs.o] Er=
-ror 1
-make[3]: *** [scripts/Makefile.build:551: arch/alpha/kernel] Error 2
-make[2]: *** [scripts/Makefile.build:551: arch/alpha] Error 2
-make[1]: *** [/home/jenkins/workspace/linux-alpha-alpha-defconfig___3/linux=
-/Makefile:2229: .] Error 2
-make: *** [Makefile:248: __sub-make] Error 2
-
-MfG, JBG
-
---=20
-
---mslrvrPhqrcBcnNc
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iF0EABECAB0WIQQlDTvPcScNjKREqWEdvV51g5nhuwUCat6iWQAKCRAdvV51g5nh
-u/SNAJ9Mzo+AZmCGsEYWRkTnjDMxXtk7BQCfUU0klDfb7QJLLGqqt3J0mncTHNY=
-=eZNK
------END PGP SIGNATURE-----
-
---mslrvrPhqrcBcnNc--
