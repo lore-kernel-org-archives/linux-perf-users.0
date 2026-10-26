@@ -1,91 +1,50 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=192.198.163.8
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=188.68.32.151
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1792975457;
-	b=uN68qKq2b5pA30oV4ZVWnkpaouyr3ErJIqR9VnLGY+UKh/87Dpf8z7/dYIfkTmnMJYCU
-	 nnsoCyQsqxFpwEao5o6O10V6L8z1qwavn+dPR+lyNW8wHuTmwQM6L1nSe+HQB8z/M8xfX
-	 zP/Nqp8hMaC0YWNiJHJuXl63zN2dZa8WyLcFORDXXXj/rq45kBOKtAfPypbiKovT4D+wR
-	 Q1Uv7bJl7FDgo0hO6vgKtk12AlGaaCxKZL7WOvMYU8Q6CpdJiGuhk7/hKbLexbKqOcVcm
-	 e0nvbPt9dnbFeyqAGpEHHR+y9LqjS8TVkL6sFCE80T3pxtrXEQFJJm05fa7h/IX7AXw==
+	t=1792975461;
+	b=0Wg8Rr5LN2Mm5E8Sj8jZ1sEG6hAQrrJq0W2Hn81LjK6QXoQya3BOV9tTDSaIZUGI7iVI
+	 CxsUpgm/HilYfdhoY2hFUvtt/pird0bYN11ZUsSliMGbS/Grx7cITjGI5PL8w0He8rUq0
+	 MPYj7mfQN3CEugsMi15JeMNJm2sPcXs84EaJdRBESHzOYhaMaisyIZI2/MmjZy/QNaLdf
+	 z1cl4SS2qOlOFJ14GasVVSQb4+E1EqIhLlkzvAx6GaL/cfFzYTiEfu67VqqflD5VcCLJa
+	 lEN0KxL0TFgFkKyPxQ4dqJRY4SuBx09q1Plt8oahQtist2/t2jv5Sbs6sxIsshxFfoA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792975457;
-	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
-	 X-IronPort-AV:X-IronPort-AV:Received:X-CSE-ConnectionGUID:
-	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:Received:Date:From:To:
-	 Cc:Subject:Message-ID:References:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To;
-	bh=EtiE/FdWM7rG34+O2SLPeqmbkSmBbjQoRkkeXj5Nnfs=;
-	b=5bTlc1nr/m2xC3HlIpWugK0hysmjgpu/yOOR+rBG2F/BHkFYGbJMkypFOm6y5CfQ5AeT
-	 UmSvUSL43hJFT9PXkWuOHfJnGH5aCtMH3OHbswDwhdA/kcHZr9b8c1vSsYt74kNHK1g1q
-	 4w+vZigQ8/7fuZ37rCrk6zPncWBazcnA3n4q9Z4gPrYO7GXVKBkNXFbAFJ4CIx1AeORiM
-	 zdgBnyTdke3K75GMgHpqD0ISMAubpxUvKOrj6Bj0puBDMp4eQOW7G21lN+fZ3MnLZ1ilc
-	 Zt3UkLEtzGjzRWXsz14GfgU1MuAZIKa2jiF2jpn2IaKjGOZBCJMAlZCKLYvKSEPJKgA==
+	a=rsa-sha256; c=relaxed/relaxed; t=1792975461;
+	h=DMARC-Filter:Received:Date:From:To:Cc:Subject:Message-ID:References:
+	 MIME-Version:Content-Type:Content-Disposition:In-Reply-To:
+	 X-Operating-System:X-gpg-fingerprint:X-gpg-key:X-Echelon-Enable:
+	 X-TKUeV:X-message-flag;
+	bh=5V/5TAB96ndPwiAAKCMcB/cnjrnPTc++uezTCortw4s=;
+	b=ubXnskYDrPrBisjTrmljcjaAGRsxef+wT6qrBpeJj2T/+NzK2fkIDuHqALCh2/YBcHyx
+	 TOPIZ35jtLAplcY416MdFesiQVto0fnGFNDwEqH+xffmBe16Qf8RIe7lg4P8eBFH7tSCW
+	 GTycQLWHH37vTsY8+T2y11GYW2aSxRBTjIcUhNiTEYxXFHg9CiSF1Io87mVzA18I3ljvB
+	 8ofMiax0U9NztO0A/wE15TfPfjNErihNyD/hQwVMKPOuGFo02ukSiY6BgVdE4WyEAk7u8
+	 ZSrypAHIpoKIBDFIfj5ybgCtqWazBCxa0xfF4DqJJA6jWwayjT/G0cv0ZS6YKxZrw6A==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=intel.com;
-	spf=pass smtp.mailfrom=intel.com;
-	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=YbjwPIO2;
-	arc=none smtp.remote-ip=192.198.163.8
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
-	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
+	dmarc=none header.from=lug-owl.de;
+	spf=pass smtp.mailfrom=lug-owl.de;
+	arc=none smtp.remote-ip=188.68.32.151
+Received: from lug-owl.de (lug-owl.de [188.68.32.151])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55022606A31B;
-	Mon, 26 Oct 2026 00:44:15 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 55022606A31B
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=YbjwPIO2
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1792975455; x=1824511455;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=KtqGlUfYbHkNSyFkfxUygtbxGNdFcPZECBy9JtfaDBU=;
-  b=YbjwPIO2oeyZCRgMLUg/fSIn+emJ8BIguGd/7sA/FZ9h5Xa+QfI0E2Cj
-   3dBs5Afi2j75zXX7oy+Zpg5iPDmLCKJoG0zbrmPR8Sw5bgk/GIIgV0mTN
-   tZvnr9TnaAAU2TuoS82c1PQZEawhXE3tUHt+05VwamtB1iyAKHDPdZ+MZ
-   MtiSIRiYHl/bIMcMbBJjTpbOBcplXOFR1Lv6rorp71SRzh0oYD/vlEbPE
-   UgRa3m5sZ7fRKOgnvvNnexiU8lwz+z22CinxEl8As0XXwQ2afXa2F4qze
-   smikie29CYZm8nKZV41pFxFUFv/R1TZKKoajXB/PvbIk3Bx8wvghhGboL
-   w==;
-X-CSE-ConnectionGUID: gKnRcNhnToiKESTxy2sKSw==
-X-CSE-MsgGUID: hAgtFkLLTLGiQE2yO3q3rg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11946"; a="1531190"
-X-IronPort-AV: E=Sophos;i="6.27,178,1787036400"; 
-   d="scan'208";a="1531190"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Oct 2026 17:44:14 -0700
-X-CSE-ConnectionGUID: cxbaJDKtSH6ztnei4iFFFQ==
-X-CSE-MsgGUID: szcqLn1KTFunxeID2vIPFQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.27,178,1787036400"; 
-   d="scan'208";a="4503957"
-Received: from lkp-server01.sh.intel.com (HELO 0caa9d2d175c) ([10.239.97.150])
-  by fmviesa007.fm.intel.com with ESMTP; 25 Oct 2026 17:44:10 -0700
-Received: from kbuild by 0caa9d2d175c with local (Exim 4.98.2)
-	(envelope-from <lkp@intel.com>)
-	id 1xL8oo-00000000VJ8-42Gt;
-	Mon, 26 Oct 2026 00:44:06 +0000
-Date: Mon, 26 Oct 2026 08:43:52 +0800
-From: kernel test robot <lkp@intel.com>
-To: Amir Ayupov <aaupov@fb.com>, James Clark <james.clark@linaro.org>,
-	Leo Yan <leo.yan@arm.com>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Mike Leach <mike.leach@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: oe-kbuild-all@lists.linux.dev, Will Deacon <will@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Mathieu Poirier <mathieu.poirier@linaro.org>,
-	Randy Dunlap <rdunlap@infradead.org>,
-	Shuah Khan <skhan@linuxfoundation.org>,
-	Daniel Pereira <danielmaraboo@gmail.com>,
-	coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
-	linux-perf-users@vger.kernel.org, linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 5/7] perf: arm_pmuv3: Add pmuv3_event_implemented()
-Message-ID: <202610260838.P0WtLZz6-lkp@intel.com>
-References: <cd3e622681f7254216b0488f09d2cb2d91a2d8ca.1792907333.git.aaupov@fb.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0ECB606A31A;
+	Mon, 26 Oct 2026 00:44:19 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org E0ECB606A31A
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lug-owl.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lug-owl.de
+Received: by lug-owl.de (Postfix, from userid 1001)
+	id E4950422D6; Mon, 26 Oct 2026 01:44:11 +0100 (CET)
+Date: Mon, 26 Oct 2026 01:44:11 +0100
+From: Jan-Benedict Glaw <jbglaw@lug-owl.de>
+To: Matt Turner <mattst88@gmail.com>
+Cc: Richard Henderson <richard.henderson@linaro.org>,
+	Magnus Lindholm <linmag7@gmail.com>, linux-alpha@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+	linux-perf-users@vger.kernel.org, Ian Rogers <irogers@google.com>
+Subject: Re: [PATCH v3 4/5] alpha: add HAVE_PERF_REGS and
+ HAVE_PERF_USER_STACK_DUMP support
+Message-ID: <at6iW11clMShlGCq@lug-owl.de>
+References: <20261018-alpha-perf-regs-v3-v3-0-52be85332c57@gmail.com>
+ <20261018-alpha-perf-regs-v3-v3-4-52be85332c57@gmail.com>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -95,321 +54,114 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="mslrvrPhqrcBcnNc"
 Content-Disposition: inline
-In-Reply-To: <cd3e622681f7254216b0488f09d2cb2d91a2d8ca.1792907333.git.aaupov@fb.com>
-
-Hi Amir,
-
-kernel test robot noticed the following build errors:
-
-[auto build test ERROR on 343cfcbb3ecfdb80aa576a428cfa3b65ad783842]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Amir-Ayupov/coresight-etm4x-Fix-event-count-decoding/20261024-233901
-base:   343cfcbb3ecfdb80aa576a428cfa3b65ad783842
-patch link:    https://lore.kernel.org/r/cd3e622681f7254216b0488f09d2cb2d91a2d8ca.1792907333.git.aaupov%40fb.com
-patch subject: [PATCH v3 5/7] perf: arm_pmuv3: Add pmuv3_event_implemented()
-config: arm64-randconfig-1003-20261026 (https://download.01.org/0day-ci/archive/20261026/202610260838.P0WtLZz6-lkp@intel.com/config)
-compiler: aarch64-linux-gcc (GCC) 8.5.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20261026/202610260838.P0WtLZz6-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202610260838.P0WtLZz6-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
-   In file included from include/kvm/arm_pmu.h:11,
-                    from arch/arm64/include/asm/kvm_host.h:38,
-                    from arch/arm64/include/asm/arm_pmuv3.h:9,
-                    from arch/arm64/kernel/cpufeature.c:80:
-   include/linux/perf/arm_pmuv3.h: In function 'pmuv3_event_implemented':
-   include/linux/perf/arm_pmuv3.h:333:19: error: implicit declaration of function 'pmuv3_implemented'; did you mean 'pmuv3_event_implemented'? [-Werror=implicit-function-declaration]
-     if (id >= 64 || !pmuv3_implemented(read_pmuver()))
-                      ^~~~~~~~~~~~~~~~~
-                      pmuv3_event_implemented
-   include/linux/perf/arm_pmuv3.h:333:37: error: implicit declaration of function 'read_pmuver'; did you mean 'read_tcr'? [-Werror=implicit-function-declaration]
-     if (id >= 64 || !pmuv3_implemented(read_pmuver()))
-                                        ^~~~~~~~~~~
-                                        read_tcr
-   include/linux/perf/arm_pmuv3.h:336:21: error: implicit declaration of function 'read_pmceid0'; did you mean 'read_cpuid'? [-Werror=implicit-function-declaration]
-     pmceid = id < 32 ? read_pmceid0() : read_pmceid1();
-                        ^~~~~~~~~~~~
-                        read_cpuid
-   include/linux/perf/arm_pmuv3.h:336:38: error: implicit declaration of function 'read_pmceid1'; did you mean 'read_cpuid'? [-Werror=implicit-function-declaration]
-     pmceid = id < 32 ? read_pmceid0() : read_pmceid1();
-                                         ^~~~~~~~~~~~
-                                         read_cpuid
-   In file included from arch/arm64/kernel/cpufeature.c:80:
-   arch/arm64/include/asm/arm_pmuv3.h: At top level:
->> arch/arm64/include/asm/arm_pmuv3.h:49:19: error: conflicting types for 'read_pmuver'
-    static inline u32 read_pmuver(void)
-                      ^~~~~~~~~~~
-   In file included from include/kvm/arm_pmu.h:11,
-                    from arch/arm64/include/asm/kvm_host.h:38,
-                    from arch/arm64/include/asm/arm_pmuv3.h:9,
-                    from arch/arm64/kernel/cpufeature.c:80:
-   include/linux/perf/arm_pmuv3.h:333:37: note: previous implicit declaration of 'read_pmuver' was here
-     if (id >= 64 || !pmuv3_implemented(read_pmuver()))
-                                        ^~~~~~~~~~~
-   In file included from arch/arm64/kernel/cpufeature.c:80:
->> arch/arm64/include/asm/arm_pmuv3.h:160:19: error: conflicting types for 'read_pmceid0'
-    static inline u64 read_pmceid0(void)
-                      ^~~~~~~~~~~~
-   In file included from include/kvm/arm_pmu.h:11,
-                    from arch/arm64/include/asm/kvm_host.h:38,
-                    from arch/arm64/include/asm/arm_pmuv3.h:9,
-                    from arch/arm64/kernel/cpufeature.c:80:
-   include/linux/perf/arm_pmuv3.h:336:21: note: previous implicit declaration of 'read_pmceid0' was here
-     pmceid = id < 32 ? read_pmceid0() : read_pmceid1();
-                        ^~~~~~~~~~~~
-   In file included from arch/arm64/kernel/cpufeature.c:80:
->> arch/arm64/include/asm/arm_pmuv3.h:165:19: error: conflicting types for 'read_pmceid1'
-    static inline u64 read_pmceid1(void)
-                      ^~~~~~~~~~~~
-   In file included from include/kvm/arm_pmu.h:11,
-                    from arch/arm64/include/asm/kvm_host.h:38,
-                    from arch/arm64/include/asm/arm_pmuv3.h:9,
-                    from arch/arm64/kernel/cpufeature.c:80:
-   include/linux/perf/arm_pmuv3.h:336:38: note: previous implicit declaration of 'read_pmceid1' was here
-     pmceid = id < 32 ? read_pmceid0() : read_pmceid1();
-                                         ^~~~~~~~~~~~
-   In file included from arch/arm64/kernel/cpufeature.c:80:
->> arch/arm64/include/asm/arm_pmuv3.h:170:20: error: conflicting types for 'pmuv3_implemented'
-    static inline bool pmuv3_implemented(int pmuver)
-                       ^~~~~~~~~~~~~~~~~
-   In file included from include/kvm/arm_pmu.h:11,
-                    from arch/arm64/include/asm/kvm_host.h:38,
-                    from arch/arm64/include/asm/arm_pmuv3.h:9,
-                    from arch/arm64/kernel/cpufeature.c:80:
-   include/linux/perf/arm_pmuv3.h:333:19: note: previous implicit declaration of 'pmuv3_implemented' was here
-     if (id >= 64 || !pmuv3_implemented(read_pmuver()))
-                      ^~~~~~~~~~~~~~~~~
-   arch/arm64/kernel/cpufeature.c:3364:21: warning: initialized field overwritten [-Woverride-init]
-     HWCAP_CAP_MATCH_ID(has_sve_feature, ID_AA64ISAR2_EL1, LUT, LUT6, CAP_HWCAP, KERNEL_HWCAP_SVE_LUT6),
-                        ^~~~~~~~~~~~~~~
-   arch/arm64/kernel/cpufeature.c:3273:14: note: in definition of macro 'HWCAP_CAP_MATCH_ID'
-      .matches = match,      \
-                 ^~~~~
-   arch/arm64/kernel/cpufeature.c:3364:21: note: (near initialization for 'arm64_elf_hwcaps[44].matches')
-     HWCAP_CAP_MATCH_ID(has_sve_feature, ID_AA64ISAR2_EL1, LUT, LUT6, CAP_HWCAP, KERNEL_HWCAP_SVE_LUT6),
-                        ^~~~~~~~~~~~~~~
-   arch/arm64/kernel/cpufeature.c:3273:14: note: in definition of macro 'HWCAP_CAP_MATCH_ID'
-      .matches = match,      \
-                 ^~~~~
-   arch/arm64/kernel/cpufeature.c:3366:21: warning: initialized field overwritten [-Woverride-init]
-     HWCAP_CAP_MATCH_ID(has_sve_feature, ID_AA64ZFR0_EL1, SVEver, SVE2p3, CAP_HWCAP, KERNEL_HWCAP_SVE2P3),
-                        ^~~~~~~~~~~~~~~
-   arch/arm64/kernel/cpufeature.c:3273:14: note: in definition of macro 'HWCAP_CAP_MATCH_ID'
-      .matches = match,      \
-                 ^~~~~
-   arch/arm64/kernel/cpufeature.c:3366:21: note: (near initialization for 'arm64_elf_hwcaps[46].matches')
-     HWCAP_CAP_MATCH_ID(has_sve_feature, ID_AA64ZFR0_EL1, SVEver, SVE2p3, CAP_HWCAP, KERNEL_HWCAP_SVE2P3),
-                        ^~~~~~~~~~~~~~~
-   arch/arm64/kernel/cpufeature.c:3273:14: note: in definition of macro 'HWCAP_CAP_MATCH_ID'
-      .matches = match,      \
-                 ^~~~~
-   arch/arm64/kernel/cpufeature.c:3367:21: warning: initialized field overwritten [-Woverride-init]
-     HWCAP_CAP_MATCH_ID(has_sve_feature, ID_AA64ZFR0_EL1, SVEver, SVE2p2, CAP_HWCAP, KERNEL_HWCAP_SVE2P2),
-                        ^~~~~~~~~~~~~~~
-   arch/arm64/kernel/cpufeature.c:3273:14: note: in definition of macro 'HWCAP_CAP_MATCH_ID'
-      .matches = match,      \
-                 ^~~~~
-   arch/arm64/kernel/cpufeature.c:3367:21: note: (near initialization for 'arm64_elf_hwcaps[47].matches')
-     HWCAP_CAP_MATCH_ID(has_sve_feature, ID_AA64ZFR0_EL1, SVEver, SVE2p2, CAP_HWCAP, KERNEL_HWCAP_SVE2P2),
-                        ^~~~~~~~~~~~~~~
-   arch/arm64/kernel/cpufeature.c:3273:14: note: in definition of macro 'HWCAP_CAP_MATCH_ID'
-      .matches = match,      \
-                 ^~~~~
-   arch/arm64/kernel/cpufeature.c:3368:21: warning: initialized field overwritten [-Woverride-init]
-     HWCAP_CAP_MATCH_ID(has_sve_feature, ID_AA64ZFR0_EL1, SVEver, SVE2p1, CAP_HWCAP, KERNEL_HWCAP_SVE2P1),
-                        ^~~~~~~~~~~~~~~
-   arch/arm64/kernel/cpufeature.c:3273:14: note: in definition of macro 'HWCAP_CAP_MATCH_ID'
-      .matches = match,      \
-                 ^~~~~
-   arch/arm64/kernel/cpufeature.c:3368:21: note: (near initialization for 'arm64_elf_hwcaps[48].matches')
-     HWCAP_CAP_MATCH_ID(has_sve_feature, ID_AA64ZFR0_EL1, SVEver, SVE2p1, CAP_HWCAP, KERNEL_HWCAP_SVE2P1),
-                        ^~~~~~~~~~~~~~~
-   arch/arm64/kernel/cpufeature.c:3273:14: note: in definition of macro 'HWCAP_CAP_MATCH_ID'
-      .matches = match,      \
-                 ^~~~~
-   arch/arm64/kernel/cpufeature.c:3369:21: warning: initialized field overwritten [-Woverride-init]
-     HWCAP_CAP_MATCH_ID(has_sve_feature, ID_AA64ZFR0_EL1, SVEver, SVE2, CAP_HWCAP, KERNEL_HWCAP_SVE2),
-                        ^~~~~~~~~~~~~~~
-   arch/arm64/kernel/cpufeature.c:3273:14: note: in definition of macro 'HWCAP_CAP_MATCH_ID'
-      .matches = match,      \
-                 ^~~~~
-   arch/arm64/kernel/cpufeature.c:3369:21: note: (near initialization for 'arm64_elf_hwcaps[49].matches')
-     HWCAP_CAP_MATCH_ID(has_sve_feature, ID_AA64ZFR0_EL1, SVEver, SVE2, CAP_HWCAP, KERNEL_HWCAP_SVE2),
-                        ^~~~~~~~~~~~~~~
-   arch/arm64/kernel/cpufeature.c:3273:14: note: in definition of macro 'HWCAP_CAP_MATCH_ID'
-      .matches = match,      \
-                 ^~~~~
-   arch/arm64/kernel/cpufeature.c:3370:21: warning: initialized field overwritten [-Woverride-init]
-     HWCAP_CAP_MATCH_ID(has_sve_feature, ID_AA64ZFR0_EL1, AES, IMP, CAP_HWCAP, KERNEL_HWCAP_SVEAES),
-                        ^~~~~~~~~~~~~~~
-   arch/arm64/kernel/cpufeature.c:3273:14: note: in definition of macro 'HWCAP_CAP_MATCH_ID'
-      .matches = match,      \
-                 ^~~~~
-   arch/arm64/kernel/cpufeature.c:3370:21: note: (near initialization for 'arm64_elf_hwcaps[50].matches')
-     HWCAP_CAP_MATCH_ID(has_sve_feature, ID_AA64ZFR0_EL1, AES, IMP, CAP_HWCAP, KERNEL_HWCAP_SVEAES),
-                        ^~~~~~~~~~~~~~~
-   arch/arm64/kernel/cpufeature.c:3273:14: note: in definition of macro 'HWCAP_CAP_MATCH_ID'
-      .matches = match,      \
-                 ^~~~~
-   arch/arm64/kernel/cpufeature.c:3371:21: warning: initialized field overwritten [-Woverride-init]
-     HWCAP_CAP_MATCH_ID(has_sve_feature, ID_AA64ZFR0_EL1, AES, PMULL128, CAP_HWCAP, KERNEL_HWCAP_SVEPMULL),
-                        ^~~~~~~~~~~~~~~
-   arch/arm64/kernel/cpufeature.c:3273:14: note: in definition of macro 'HWCAP_CAP_MATCH_ID'
-      .matches = match,      \
-                 ^~~~~
-   arch/arm64/kernel/cpufeature.c:3371:21: note: (near initialization for 'arm64_elf_hwcaps[51].matches')
-     HWCAP_CAP_MATCH_ID(has_sve_feature, ID_AA64ZFR0_EL1, AES, PMULL128, CAP_HWCAP, KERNEL_HWCAP_SVEPMULL),
-                        ^~~~~~~~~~~~~~~
-   arch/arm64/kernel/cpufeature.c:3273:14: note: in definition of macro 'HWCAP_CAP_MATCH_ID'
-      .matches = match,      \
-                 ^~~~~
-   arch/arm64/kernel/cpufeature.c:3372:21: warning: initialized field overwritten [-Woverride-init]
-     HWCAP_CAP_MATCH_ID(has_sve_feature, ID_AA64ZFR0_EL1, AES, AES2, CAP_HWCAP, KERNEL_HWCAP_SVE_AES2),
-                        ^~~~~~~~~~~~~~~
-   arch/arm64/kernel/cpufeature.c:3273:14: note: in definition of macro 'HWCAP_CAP_MATCH_ID'
-      .matches = match,      \
-                 ^~~~~
-   arch/arm64/kernel/cpufeature.c:3372:21: note: (near initialization for 'arm64_elf_hwcaps[52].matches')
+In-Reply-To: <20261018-alpha-perf-regs-v3-v3-4-52be85332c57@gmail.com>
+X-Operating-System: Linux chamaeleon 6.12.113+deb13-amd64 
+X-gpg-fingerprint: 250D 3BCF 7127 0D8C A444  A961 1DBD 5E75 8399 E1BB
+X-gpg-key: wwwkeys.de.pgp.net
+X-Echelon-Enable: howto poison arsenous mail psychological biological nuclear
+ warfare test the bombastical terror of flooding the spy listeners explosion
+ sex drugs and rock'n'roll
+X-TKUeV: howto poison arsenous mail psychological biological nuclear warfare
+ test the bombastical terror of flooding the spy listeners explosion sex
+ drugs and rock'n'roll
+X-message-flag: Please send plain text messages only. Do not send HTML
+ emails. Thank you. 
 
 
-vim +/read_pmuver +49 arch/arm64/include/asm/arm_pmuv3.h
+--mslrvrPhqrcBcnNc
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-df29ddf4f04b00 Marc Zyngier      2023-03-17   48  
-df29ddf4f04b00 Marc Zyngier      2023-03-17  @49  static inline u32 read_pmuver(void)
-df29ddf4f04b00 Marc Zyngier      2023-03-17   50  {
-df29ddf4f04b00 Marc Zyngier      2023-03-17   51  	u64 dfr0 = read_sysreg(id_aa64dfr0_el1);
-df29ddf4f04b00 Marc Zyngier      2023-03-17   52  
-df29ddf4f04b00 Marc Zyngier      2023-03-17   53  	return cpuid_feature_extract_unsigned_field(dfr0,
-df29ddf4f04b00 Marc Zyngier      2023-03-17   54  			ID_AA64DFR0_EL1_PMUVer_SHIFT);
-df29ddf4f04b00 Marc Zyngier      2023-03-17   55  }
-df29ddf4f04b00 Marc Zyngier      2023-03-17   56  
-d8226d8cfbaf5e Rob Herring (Arm  2024-07-31   57) static inline bool pmuv3_has_icntr(void)
-d8226d8cfbaf5e Rob Herring (Arm  2024-07-31   58) {
-d8226d8cfbaf5e Rob Herring (Arm  2024-07-31   59) 	u64 dfr1 = read_sysreg(id_aa64dfr1_el1);
-d8226d8cfbaf5e Rob Herring (Arm  2024-07-31   60) 
-d8226d8cfbaf5e Rob Herring (Arm  2024-07-31   61) 	return !!cpuid_feature_extract_unsigned_field(dfr1,
-d8226d8cfbaf5e Rob Herring (Arm  2024-07-31   62) 			ID_AA64DFR1_EL1_PMICNTR_SHIFT);
-d8226d8cfbaf5e Rob Herring (Arm  2024-07-31   63) }
-d8226d8cfbaf5e Rob Herring (Arm  2024-07-31   64) 
-403edfa436286b Ilkka Koskinen    2023-11-02   65  static inline void write_pmcr(u64 val)
-df29ddf4f04b00 Marc Zyngier      2023-03-17   66  {
-df29ddf4f04b00 Marc Zyngier      2023-03-17   67  	write_sysreg(val, pmcr_el0);
-df29ddf4f04b00 Marc Zyngier      2023-03-17   68  }
-df29ddf4f04b00 Marc Zyngier      2023-03-17   69  
-403edfa436286b Ilkka Koskinen    2023-11-02   70  static inline u64 read_pmcr(void)
-df29ddf4f04b00 Marc Zyngier      2023-03-17   71  {
-df29ddf4f04b00 Marc Zyngier      2023-03-17   72  	return read_sysreg(pmcr_el0);
-df29ddf4f04b00 Marc Zyngier      2023-03-17   73  }
-df29ddf4f04b00 Marc Zyngier      2023-03-17   74  
-df29ddf4f04b00 Marc Zyngier      2023-03-17   75  static inline void write_pmselr(u32 val)
-df29ddf4f04b00 Marc Zyngier      2023-03-17   76  {
-df29ddf4f04b00 Marc Zyngier      2023-03-17   77  	write_sysreg(val, pmselr_el0);
-df29ddf4f04b00 Marc Zyngier      2023-03-17   78  }
-df29ddf4f04b00 Marc Zyngier      2023-03-17   79  
-df29ddf4f04b00 Marc Zyngier      2023-03-17   80  static inline void write_pmccntr(u64 val)
-df29ddf4f04b00 Marc Zyngier      2023-03-17   81  {
-df29ddf4f04b00 Marc Zyngier      2023-03-17   82  	write_sysreg(val, pmccntr_el0);
-df29ddf4f04b00 Marc Zyngier      2023-03-17   83  }
-df29ddf4f04b00 Marc Zyngier      2023-03-17   84  
-df29ddf4f04b00 Marc Zyngier      2023-03-17   85  static inline u64 read_pmccntr(void)
-df29ddf4f04b00 Marc Zyngier      2023-03-17   86  {
-df29ddf4f04b00 Marc Zyngier      2023-03-17   87  	return read_sysreg(pmccntr_el0);
-df29ddf4f04b00 Marc Zyngier      2023-03-17   88  }
-df29ddf4f04b00 Marc Zyngier      2023-03-17   89  
-d8226d8cfbaf5e Rob Herring (Arm  2024-07-31   90) static inline void write_pmicntr(u64 val)
-d8226d8cfbaf5e Rob Herring (Arm  2024-07-31   91) {
-d8226d8cfbaf5e Rob Herring (Arm  2024-07-31   92) 	write_sysreg_s(val, SYS_PMICNTR_EL0);
-d8226d8cfbaf5e Rob Herring (Arm  2024-07-31   93) }
-d8226d8cfbaf5e Rob Herring (Arm  2024-07-31   94) 
-d8226d8cfbaf5e Rob Herring (Arm  2024-07-31   95) static inline u64 read_pmicntr(void)
-d8226d8cfbaf5e Rob Herring (Arm  2024-07-31   96) {
-d8226d8cfbaf5e Rob Herring (Arm  2024-07-31   97) 	return read_sysreg_s(SYS_PMICNTR_EL0);
-d8226d8cfbaf5e Rob Herring (Arm  2024-07-31   98) }
-d8226d8cfbaf5e Rob Herring (Arm  2024-07-31   99) 
-a4a6e2078d85a9 Rob Herring (Arm  2024-07-31  100) static inline void write_pmcntenset(u64 val)
-df29ddf4f04b00 Marc Zyngier      2023-03-17  101  {
-df29ddf4f04b00 Marc Zyngier      2023-03-17  102  	write_sysreg(val, pmcntenset_el0);
-df29ddf4f04b00 Marc Zyngier      2023-03-17  103  }
-df29ddf4f04b00 Marc Zyngier      2023-03-17  104  
-a4a6e2078d85a9 Rob Herring (Arm  2024-07-31  105) static inline void write_pmcntenclr(u64 val)
-df29ddf4f04b00 Marc Zyngier      2023-03-17  106  {
-df29ddf4f04b00 Marc Zyngier      2023-03-17  107  	write_sysreg(val, pmcntenclr_el0);
-df29ddf4f04b00 Marc Zyngier      2023-03-17  108  }
-df29ddf4f04b00 Marc Zyngier      2023-03-17  109  
-a4a6e2078d85a9 Rob Herring (Arm  2024-07-31  110) static inline void write_pmintenset(u64 val)
-df29ddf4f04b00 Marc Zyngier      2023-03-17  111  {
-df29ddf4f04b00 Marc Zyngier      2023-03-17  112  	write_sysreg(val, pmintenset_el1);
-df29ddf4f04b00 Marc Zyngier      2023-03-17  113  }
-df29ddf4f04b00 Marc Zyngier      2023-03-17  114  
-a4a6e2078d85a9 Rob Herring (Arm  2024-07-31  115) static inline void write_pmintenclr(u64 val)
-df29ddf4f04b00 Marc Zyngier      2023-03-17  116  {
-df29ddf4f04b00 Marc Zyngier      2023-03-17  117  	write_sysreg(val, pmintenclr_el1);
-df29ddf4f04b00 Marc Zyngier      2023-03-17  118  }
-df29ddf4f04b00 Marc Zyngier      2023-03-17  119  
-403edfa436286b Ilkka Koskinen    2023-11-02  120  static inline void write_pmccfiltr(u64 val)
-df29ddf4f04b00 Marc Zyngier      2023-03-17  121  {
-df29ddf4f04b00 Marc Zyngier      2023-03-17  122  	write_sysreg(val, pmccfiltr_el0);
-df29ddf4f04b00 Marc Zyngier      2023-03-17  123  }
-df29ddf4f04b00 Marc Zyngier      2023-03-17  124  
-741ee5284551cf Rob Herring (Arm  2024-07-31  125) static inline u64 read_pmccfiltr(void)
-741ee5284551cf Rob Herring (Arm  2024-07-31  126) {
-741ee5284551cf Rob Herring (Arm  2024-07-31  127) 	return read_sysreg(pmccfiltr_el0);
-741ee5284551cf Rob Herring (Arm  2024-07-31  128) }
-741ee5284551cf Rob Herring (Arm  2024-07-31  129) 
-d8226d8cfbaf5e Rob Herring (Arm  2024-07-31  130) static inline void write_pmicfiltr(u64 val)
-d8226d8cfbaf5e Rob Herring (Arm  2024-07-31  131) {
-d8226d8cfbaf5e Rob Herring (Arm  2024-07-31  132) 	write_sysreg_s(val, SYS_PMICFILTR_EL0);
-d8226d8cfbaf5e Rob Herring (Arm  2024-07-31  133) }
-d8226d8cfbaf5e Rob Herring (Arm  2024-07-31  134) 
-d8226d8cfbaf5e Rob Herring (Arm  2024-07-31  135) static inline u64 read_pmicfiltr(void)
-d8226d8cfbaf5e Rob Herring (Arm  2024-07-31  136) {
-d8226d8cfbaf5e Rob Herring (Arm  2024-07-31  137) 	return read_sysreg_s(SYS_PMICFILTR_EL0);
-d8226d8cfbaf5e Rob Herring (Arm  2024-07-31  138) }
-d8226d8cfbaf5e Rob Herring (Arm  2024-07-31  139) 
-a4a6e2078d85a9 Rob Herring (Arm  2024-07-31  140) static inline void write_pmovsclr(u64 val)
-df29ddf4f04b00 Marc Zyngier      2023-03-17  141  {
-df29ddf4f04b00 Marc Zyngier      2023-03-17  142  	write_sysreg(val, pmovsclr_el0);
-df29ddf4f04b00 Marc Zyngier      2023-03-17  143  }
-df29ddf4f04b00 Marc Zyngier      2023-03-17  144  
-a4a6e2078d85a9 Rob Herring (Arm  2024-07-31  145) static inline u64 read_pmovsclr(void)
-df29ddf4f04b00 Marc Zyngier      2023-03-17  146  {
-df29ddf4f04b00 Marc Zyngier      2023-03-17  147  	return read_sysreg(pmovsclr_el0);
-df29ddf4f04b00 Marc Zyngier      2023-03-17  148  }
-df29ddf4f04b00 Marc Zyngier      2023-03-17  149  
-df29ddf4f04b00 Marc Zyngier      2023-03-17  150  static inline void write_pmuserenr(u32 val)
-df29ddf4f04b00 Marc Zyngier      2023-03-17  151  {
-df29ddf4f04b00 Marc Zyngier      2023-03-17  152  	write_sysreg(val, pmuserenr_el0);
-df29ddf4f04b00 Marc Zyngier      2023-03-17  153  }
-df29ddf4f04b00 Marc Zyngier      2023-03-17  154  
-0bbff9ed81654d Rob Herring (Arm  2024-10-02  155) static inline void write_pmuacr(u64 val)
-0bbff9ed81654d Rob Herring (Arm  2024-10-02  156) {
-0bbff9ed81654d Rob Herring (Arm  2024-10-02  157) 	write_sysreg_s(val, SYS_PMUACR_EL1);
-0bbff9ed81654d Rob Herring (Arm  2024-10-02  158) }
-0bbff9ed81654d Rob Herring (Arm  2024-10-02  159) 
-403edfa436286b Ilkka Koskinen    2023-11-02 @160  static inline u64 read_pmceid0(void)
-df29ddf4f04b00 Marc Zyngier      2023-03-17  161  {
-df29ddf4f04b00 Marc Zyngier      2023-03-17  162  	return read_sysreg(pmceid0_el0);
-df29ddf4f04b00 Marc Zyngier      2023-03-17  163  }
-df29ddf4f04b00 Marc Zyngier      2023-03-17  164  
-403edfa436286b Ilkka Koskinen    2023-11-02 @165  static inline u64 read_pmceid1(void)
-df29ddf4f04b00 Marc Zyngier      2023-03-17  166  {
-df29ddf4f04b00 Marc Zyngier      2023-03-17  167  	return read_sysreg(pmceid1_el0);
-df29ddf4f04b00 Marc Zyngier      2023-03-17  168  }
-df29ddf4f04b00 Marc Zyngier      2023-03-17  169  
-711432770f78e5 Zaid Al-Bassam    2023-03-17 @170  static inline bool pmuv3_implemented(int pmuver)
-711432770f78e5 Zaid Al-Bassam    2023-03-17  171  {
-711432770f78e5 Zaid Al-Bassam    2023-03-17  172  	return !(pmuver == ID_AA64DFR0_EL1_PMUVer_IMP_DEF ||
-711432770f78e5 Zaid Al-Bassam    2023-03-17  173  		 pmuver == ID_AA64DFR0_EL1_PMUVer_NI);
-711432770f78e5 Zaid Al-Bassam    2023-03-17  174  }
-711432770f78e5 Zaid Al-Bassam    2023-03-17  175  
+Hi,
 
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+On Sun, 2026-10-18 10:22:04 -0400, Matt Turner <mattst88@gmail.com> wrote:
+> Let perf sample registers and dump the user stack, which is what the
+> perf tool needs for --call-graph dwarf.
+
+After this patch series, it conflicts with previous upstream changes:
+
+[=E2=80=A6]
+> diff --git a/arch/alpha/kernel/perf_regs.c b/arch/alpha/kernel/perf_regs.c
+> new file mode 100644
+> index 000000000000..33ea2e831ba0
+> --- /dev/null
+> +++ b/arch/alpha/kernel/perf_regs.c
+> @@ -0,0 +1,64 @@
+[=E2=80=A6]
+> +int perf_reg_validate(u64 mask)
+> +{
+> +	if (!mask || mask & REG_RESERVED)
+> +		return -EINVAL;
+> +
+> +	return 0;
+> +}
+[=E2=80=A6]
+
+# CC      arch/alpha/kernel/perf_regs.o
+  alpha-linux-gcc -Wp,-MMD,arch/alpha/kernel/.perf_regs.o.d -nostdinc -I./a=
+rch/alpha/include -I./arch/alpha/include/generated -I./include -I./include =
+-I./arch/alpha/include/uapi -I./arch/alpha/include/generated/uapi -I./inclu=
+de/uapi -I./include/generated/uapi -include ./include/linux/compiler-versio=
+n.h -include ./include/linux/kconfig.h -include ./include/linux/compiler_ty=
+pes.h -D__KERNEL__ -fshort-wchar -funsigned-char -fno-common -fno-PIE -fno-=
+strict-aliasing -std=3Dgnu11 -fms-extensions -pipe -mno-fp-regs -ffixed-8 -=
+fno-jump-tables -mcpu=3Dev56 -mtune=3Dev6 -Wa,-mev6 -fno-delete-null-pointe=
+r-checks -O2 -fno-allow-store-data-races -fno-stack-protector -fno-omit-fra=
+me-pointer -fno-optimize-sibling-calls -ftrivial-auto-var-init=3Dzero -fzer=
+o-init-padding-bits=3Dall -fno-stack-clash-protection -fdiagnostics-show-co=
+ntext=3D2 -fstrict-flex-arrays=3D3 -fno-strict-overflow -fno-stack-check -f=
+conserve-stack -fno-builtin-wcslen -Wall -Wextra -Wundef -Werror=3Dimplicit=
+-function-declaration -Werror=3Dimplicit-int -Werror=3Dreturn-type -Werror=
+=3Dstrict-prototypes -Wno-format-security -Wno-trigraphs -Wno-frame-address=
+ -Wno-address-of-packed-member -Wmissing-declarations -Wmissing-prototypes =
+-Wframe-larger-than=3D2048 -Wno-main -Wno-type-limits -Wno-dangling-pointer=
+ -Wvla-larger-than=3D1 -Wno-pointer-sign -Wcast-function-type -Wno-untermin=
+ated-string-initialization -Wno-array-bounds -Wno-stringop-overflow -Wno-al=
+loc-size-larger-than -Wimplicit-fallthrough=3D5 -Werror=3Ddate-time -Werror=
+=3Dincompatible-pointer-types -Werror=3Ddesignated-init -Wenum-conversion -=
+Wunused -Wno-unused-but-set-variable -Wno-unused-const-variable -Wno-packed=
+-not-aligned -Wno-format-overflow -Wno-format-truncation -Wno-stringop-trun=
+cation -Wno-override-init -Wno-missing-field-initializers -Wno-shift-negati=
+ve-value -Wno-maybe-uninitialized -Wno-sign-compare -Wno-unused-parameter -=
+g -Wno-sign-compare    -DKBUILD_MODFILE=3D'"arch/alpha/kernel/perf_regs"' -=
+DKBUILD_BASENAME=3D'"perf_regs"' -DKBUILD_MODNAME=3D'"perf_regs"' -D__KBUIL=
+D_MODNAME=3Dperf_regs -c -o arch/alpha/kernel/perf_regs.o arch/alpha/kernel=
+/perf_regs.c =20
+arch/alpha/kernel/perf_regs.c:46:5: error: conflicting types for 'perf_reg_=
+validate'; have 'int(u64)' {aka 'int(long long unsigned int)'}
+   46 | int perf_reg_validate(u64 mask)
+      |     ^~~~~~~~~~~~~~~~~
+In file included from ./include/linux/perf_event.h:50,
+                 from arch/alpha/kernel/perf_regs.c:4:
+=2E/include/linux/perf_regs.h:13:5: note: previous declaration of 'perf_reg=
+_validate' with type 'int(u64,  bool)' {aka 'int(long long unsigned int,  _=
+Bool)'}
+   13 | int perf_reg_validate(u64 mask, bool simd_enabled);
+      |     ^~~~~~~~~~~~~~~~~
+make[4]: *** [scripts/Makefile.build:290: arch/alpha/kernel/perf_regs.o] Er=
+ror 1
+make[3]: *** [scripts/Makefile.build:551: arch/alpha/kernel] Error 2
+make[2]: *** [scripts/Makefile.build:551: arch/alpha] Error 2
+make[1]: *** [/home/jenkins/workspace/linux-alpha-alpha-defconfig___3/linux=
+/Makefile:2229: .] Error 2
+make: *** [Makefile:248: __sub-make] Error 2
+
+MfG, JBG
+
+--=20
+
+--mslrvrPhqrcBcnNc
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iF0EABECAB0WIQQlDTvPcScNjKREqWEdvV51g5nhuwUCat6iWQAKCRAdvV51g5nh
+u/SNAJ9Mzo+AZmCGsEYWRkTnjDMxXtk7BQCfUU0klDfb7QJLLGqqt3J0mncTHNY=
+=eZNK
+-----END PGP SIGNATURE-----
+
+--mslrvrPhqrcBcnNc--
