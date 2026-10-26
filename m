@@ -1,13 +1,13 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=52.101.85.71
+Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=40.93.201.11
 ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1792988359;
-	b=Chm354fVsNApFKXS8GoO3CT/tIEwg6eitYIHoApTDLUDXLGIRl6e4TjkSdZQWlGNujs2
-	 KEOsu2GAL2AEpyuD4e9rcZ47IChZ8XR0TGLqzcX9+vQ+Tulqt2kSc+oj/38wnjvyqYDvf
-	 BOi3/kHXvlXG50FoZxIQNRl3skI0w/LmhsjQeaAb3UIaLcC8zxmncY+olocBH/YNcawzl
-	 8Pp1FFfbU/E9d6duqlIdvDhB2xCN7spT3nzG2TcLsdvx/rGNShZu4O1pqEGexJE5N+NIs
-	 0y23pIWo2tnWeT6K0T0jC6lSL9VyWiGp5cRt21/GkLzKwk5bn20ukpslbqzwXSnw9vQ==
+	t=1792988356;
+	b=XMVvrYza0X3z0Lh8ubZEeW3YmfOiclY80SbnjgqLsQwBRqM8UGS4E6sC2HQgrqHEBuxj
+	 rRbW841saDuecMezDsy90mxY1WAN8BsW+DXhBiQWHrJbywCI9cgx+bVPQpwgUc93J2lDZ
+	 ZoPH7ccXxz0Vw+Wn1JA0nbtnNtXVMhD5b16MKPRRGJviAD65CJoMKd/Nq99Gx6gorD6Cz
+	 jpdWXr2HsqCrxiVUGMmWJF+18NU5Kfk4uijcd7prIxBLNeTXEBC9e1dnfqX5+lMzvsrJf
+	 Weq/rRoftmptpoJyEqJ9mliQRWv8gPMoDyKkyTBTLtrbNZUsF5WEUUXKQ2uUq2u44pA==
 ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1792988359;
+	a=rsa-sha256; c=relaxed/relaxed; t=1792988356;
 	h=DMARC-Filter:DKIM-Signature:Received:Received:
 	 X-MS-Exchange-Authentication-Results:Received-SPF:Received:Received:
 	 From:To:CC:Subject:Date:Message-ID:X-Mailer:In-Reply-To:References:
@@ -26,53 +26,53 @@ ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
 	 X-MS-Exchange-CrossTenant-AuthSource:X-MS-Exchange-CrossTenant-AuthAs:
 	 X-MS-Exchange-CrossTenant-FromEntityHeader:
 	 X-MS-Exchange-Transport-CrossTenantHeadersStamped;
-	bh=CBOa4pgC3dNBlpUinxHZnLe+/WVFqJ5XuLeHUANe2N0=;
-	b=DchUFr1BLSdTOHhijSnyrgmMQY4PENt4qCt+iGmeGRKrF5YU1kacYM0L7qarod9VTa8X
-	 zoenRATjgoVnY+VnbPCHbDsvkSZPvbG2dMeQjIT0a1g/IrX8lNLVGTsJrllXMcTECPDeB
-	 RXGfxW7/Y8ynlmXL0Gyrsu49u7S3Ch2O8YpbIRlX0oYo+Zqf/vzZmanjOWa/i2RhyBuYh
-	 2esbEA1nDYUnsBnUZxMJ/onLXaP4v+TUu6gmIDC6GP8mEn5f+2iiap+iECTpzemr7xVMx
-	 VT3YL4YCzJdBpc4USBGph0uMkAXa8rUxExaJSJrNfEto4/btvDUWGvp73aZdzPiEWsg==
+	bh=Mvxju5QfJBX9d52uchimZb1v9K4bJDX147BLM5KZGYk=;
+	b=uEGFHTZNTp78ucijHM6gwwKrOx2ACT5G5KgS7HO/rUQov1TFaypv2MlCkrgyTTZNU/uM
+	 r98BeT3FbNqO3RoQdziyE7sg/eT+lsr2hMWTc43Z0JOEhGjSNDQzEdZ5qzHC1uAbJPeJe
+	 fzK1kjCL3HNkIdZWDVjUZ375lrhao2c0fU3BUJDJPwwBUyrBJyGeCSXf3cDynTCWjc9HE
+	 /kR5AyMT2/8BQaFVlXLMuoVYkaC8ymIONQ374cJplz+DUgikfxMoWUp4ofFkk1FZUyiEB
+	 LY+zogY5qVj/owohe0cJcf4KuztisCzOytkiShTy+Xz0JlQNsDi0BV/q7/yJ7PIQfvA==
 ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=amd.com;
 	spf=fail smtp.mailfrom=amd.com;
-	dkim=pass header.d=amd.com header.i=@amd.com header.a=rsa-sha256 header.s=selector1 header.b=NvXXV1dl;
-	arc=pass header.oldest-pass=0 smtp.remote-ip=52.101.85.71
-Received: from BYAPR05CU005.outbound.protection.outlook.com (mail-westusazon11010071.outbound.protection.outlook.com [52.101.85.71])
+	dkim=pass header.d=amd.com header.i=@amd.com header.a=rsa-sha256 header.s=selector1 header.b=tjx3npli;
+	arc=pass header.oldest-pass=0 smtp.remote-ip=40.93.201.11
+Received: from CY3PR05CU001.outbound.protection.outlook.com (mail-westcentralusazon11013011.outbound.protection.outlook.com [40.93.201.11])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange ECDHE (secp384r1) server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFBD2606A31F;
-	Mon, 26 Oct 2026 04:19:18 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org BFBD2606A31F
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1722606A324;
+	Mon, 26 Oct 2026 04:19:15 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org C1722606A324
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=amd.com header.i=@amd.com header.a=rsa-sha256 header.s=selector1 header.b=NvXXV1dl
+	dkim=pass (1024-bit key, unprotected) header.d=amd.com header.i=@amd.com header.a=rsa-sha256 header.s=selector1 header.b=tjx3npli
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=OFQpqXlSeS1QzUFIB/tgUEpqbU5+ThY8t8SffbMD4cblUl3rtSsbZZfKUc/CbQJtCvezCC+igDYww3Wb0QxbPv2mTSzDa3WDAeEKKj36DaiVwu0UE9yZpjbgmpl/Fbq2p+V1s1ZJH+H3PoCr2ubB1D65Kyd1zuO/u24bHJpjB/8W3TNi8w/vrnyoLnhAzAFW6+hyB0KQnM3Ieu+hcFbG+oBzoUGJs2h3D818YlnLK1qljXTsCMaKnpZoVJf1U7ZFoY3OAbWCVw6YSl+Zp8mDuKawwp4CA/PBbgt0BTyXWryszjEf8AsgwCXy3FLUm/kz5J6UbWoVf+DbWWdEYwdQ4Q==
+ b=Kh1DgI3WokWX00Avk4VgDx0L8CizlMZYcb9mHpJARjxyj88xwynZQC1Z1glvykljGKh6a4YqrMvVo6PiNEiHwyvRalcaK3ohKenz+2IOxeKv58WvweUeflOh246atRJ29aqaPk3xYMjg7uh2wxkq45VgoZuHR3PI4hookxzVU1/ku4Ac59pFKHCFwwFzOc7MVCY3EiVK7f22/j6ylNKzE39ubebYGqh7Fkz8tliBCSjBROGpclbAX67i1bIZ/Om71HysCTVizaorpYf3LBEe22b7/61UMpxkjVMtAh/O6ryM4oMGW9bDyrO//G26tBtw727Cqx+yiVCPMlfi/6C6SA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=CBOa4pgC3dNBlpUinxHZnLe+/WVFqJ5XuLeHUANe2N0=;
- b=JmtJWFeXTi8grxPlKrwxfIFB0ft7fceADfPQxx33ZLl32XQ+g2aIGIm/pcObj+d+bu3yreobpvrqeITsyYDpUdYK5aShcBavKW8K05k1taHEwoJiStCbpg3txzOc7KoZR3CFKoXZfL21psLiYQVVSRBaxSHgj1kxbCjHqC0Xa9a7czFNoDVuhfCgHq0w4mUoCCUK/CJaZI2afR19mYsT452PQthlLQp0bMpt16JblWWDnMiiVn8Ri51RhtBjA/eD/U/TY6E3XphRtGd76fgle3J8MvsezF7E+BbuW7u2paslEv47mU1Re2llCSP4v+qqkhxdsOKXRFk9WBdjykzL7A==
+ bh=Mvxju5QfJBX9d52uchimZb1v9K4bJDX147BLM5KZGYk=;
+ b=JEBoOZkR71IEG277YgryBZ2/XiJVjqhA0cXY0+V+qQyBkJCGPFT4ARNpmPhcXNan+3SMK+vGMDXugSAsIKzS9vDEpbegSLxpre5HwJuwkLy+jVQiWADc6BUC1bxkvGtBGgR+OJrQPsoFx/9GWR31sP4zoGKAMQ5l6URD4VAHYHR+IoPG+k1F/M+VWxaUadVv2V9NvfhSKbw1Bd+BB7gdjWZoOJJ9o1P7pVejqBodCUEKXimjM+P1XhgVhUIUdPFouYG9SWe4iTpJAPoPxP8ZRTCJvsWyilhTUOjPUQvHxliQ3hMwv2X7RSL4iXrauVx0jkrGpcqTWBTyUpHlvX6nPw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  165.204.84.17) smtp.rcpttodomain=infradead.org smtp.mailfrom=amd.com;
  dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
  header.from=amd.com; dkim=none (message not signed); arc=none (0)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=CBOa4pgC3dNBlpUinxHZnLe+/WVFqJ5XuLeHUANe2N0=;
- b=NvXXV1dlPtQQk5lNCNoDgVlkSQZGR1pqRD9UsOcxbE2RZY4h9YvdVYxy9w1aatkAHitMMla30qiTy0RlsJTWeou4gLr8cfnic8jtoG5MRSiCHA02orEubtFOTszcbNvH+hsMc8yn1MPJ//dYc4YD2zLUfOsiQT8boWDkPtR+hzQ=
-Received: from SJ0PR03CA0058.namprd03.prod.outlook.com (2603:10b6:a03:33e::33)
- by DS7PR12MB6143.namprd12.prod.outlook.com (2603:10b6:8:99::16) with
+ bh=Mvxju5QfJBX9d52uchimZb1v9K4bJDX147BLM5KZGYk=;
+ b=tjx3nplib7B+owspcQWoZwzn0xg8A43VPWnpMtvFYbnqIsUCRTZfprmCT4jKKYEOgOej/CX64/y1u1lHoBdjhq8vMfJ8wU1iZCshR8xYGd+iv4GDIv24fJXzUaeBojcwrqVY4HZ+z/aFIed5PK8fZ8G2qYUeRuBLgPNF9cRnSDY=
+Received: from SJ0PR03CA0045.namprd03.prod.outlook.com (2603:10b6:a03:33e::20)
+ by DS7PR12MB5718.namprd12.prod.outlook.com (2603:10b6:8:71::10) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.546.22; Mon, 26 Oct
- 2026 04:19:12 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.546.16; Mon, 26 Oct
+ 2026 04:19:09 +0000
 Received: from SJ1PEPF000037B4.namprd05.prod.outlook.com
- (2603:10b6:a03:33e:cafe::29) by SJ0PR03CA0058.outlook.office365.com
- (2603:10b6:a03:33e::33) with Microsoft SMTP Server (version=TLS1_3,
+ (2603:10b6:a03:33e:cafe::16) by SJ0PR03CA0045.outlook.office365.com
+ (2603:10b6:a03:33e::20) with Microsoft SMTP Server (version=TLS1_3,
  cipher=TLS_AES_256_GCM_SHA384) id 15.21.546.22 via Frontend Transport; Mon,
- 26 Oct 2026 04:19:12 +0000
+ 26 Oct 2026 04:19:08 +0000
 X-MS-Exchange-Authentication-Results: mx.microsoft.com 1; spf=pass (sender IP
  is 165.204.84.17) smtp.mailfrom=amd.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=amd.com;
@@ -82,11 +82,11 @@ Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
 Received: from satlexmb07.amd.com (165.204.84.17) by
  SJ1PEPF000037B4.mail.protection.outlook.com (10.167.244.196) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.21.569.4 via Frontend Transport; Mon, 26 Oct 2026 04:19:12 +0000
+ 15.21.569.4 via Frontend Transport; Mon, 26 Oct 2026 04:19:08 +0000
 Received: from BLR-L-RBANGORI.amd.com (10.180.168.240) by satlexmb07.amd.com
  (10.181.42.216) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.53; Sun, 25 Oct
- 2026 23:19:07 -0500
+ 2026 23:19:02 -0500
 From: Ravi Bangoria <ravi.bangoria@amd.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	"Jim Mattson" <jmattson@google.com>
@@ -98,9 +98,9 @@ CC: Ravi Bangoria <ravi.bangoria@amd.com>, Jayapal Ashwin Nair
 	<linux-kernel@vger.kernel.org>, Santosh Shukla <santosh.shukla@amd.com>,
 	Ananth Narayan <ananth.narayan@amd.com>, Sandipan Das <sandipan.das@amd.com>,
 	Manali Shukla <manali.shukla@amd.com>
-Subject: [PATCH v2 2/3] perf/amd/ibs: Fix kernel address leak via REGS_USER and REGS_INTR
-Date: Mon, 26 Oct 2026 04:18:36 +0000
-Message-ID: <20261026041838.941-3-ravi.bangoria@amd.com>
+Subject: [PATCH v2 1/3] perf/amd/ibs: Reset CPU0 IBS state on syscore resume
+Date: Mon, 26 Oct 2026 04:18:35 +0000
+Message-ID: <20261026041838.941-2-ravi.bangoria@amd.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20261026041838.941-1-ravi.bangoria@amd.com>
 References: <20261026041838.941-1-ravi.bangoria@amd.com>
@@ -119,166 +119,56 @@ X-ClientProxiedBy: satlexmb07.amd.com (10.181.42.216) To satlexmb07.amd.com
  (10.181.42.216)
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ1PEPF000037B4:EE_|DS7PR12MB6143:EE_
-X-MS-Office365-Filtering-Correlation-Id: 0e86d8fa-ad70-44bd-87d4-08df33184a2e
+X-MS-TrafficTypeDiagnostic: SJ1PEPF000037B4:EE_|DS7PR12MB5718:EE_
+X-MS-Office365-Filtering-Correlation-Id: 5adbfa9e-4fc5-491f-5b7c-08df331847f2
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|7416014|376014|82310400026|36860700016|1800799024|23010399003|6133799003|22082099003|18002099003|3023799007|56012099006|11063799006|261022075727099003|261021121427099003|10067099003|261009223027099003|261022105027099003|261021123027099003;
+	BCL:0;ARA:13230040|1800799024|82310400026|7416014|23010399003|376014|36860700016|18002099003|22082099003|261022105027099003|261022075727099003|11063799006|261021121427099003|261009223027099003|10067099003|56012099006|261021123027099003;
 X-Microsoft-Antispam-Message-Info:
-	EF70RGmb8bVt+PbVoN++oKGH4DTZNBs/2ISSl+M6jq4LK4KCmOfdhYqZ5jA4cMy5V5C2ybL0o8XBf6UB33TAf9otpc0XbxssUq4RP1dKsxJRpqcTHsqisWAm0T7VjXiptjNqsSY/S7YVyPjmCgiRWzV9gxhVJ2LN0GowB1Hxm1aZywXJEUTdPmPyiK+HMRsvvO4efVmY81mIUXsQPmkmHOWQVxKe90pPrjUOu5aLglUCMFwUU9SSVnTbeFgbJNbo7qJdBqKcDsdExCBPZq4QQsyUrEXCm3GUGuH7BOArCbCy4qhQEe4pEM9OHvh47dzN76IwIdXRNeva0alAiCvWYDxJRyTXlsr+YvjDYKSsKfxo6aX8YdJyNUtC/CIniBwPJ+K5D32/sK/bA/OKJD/OuHZNGxydqwvLtKKk4ykNuuMyTCyVEiSCYTsqM+DWcCR1lV0VtBeZu2QNWUQ6fw5o9IPw6sw+VSS6Y9dJxVA7TBNGETMp0YrsO5DjJ4Xhd6/G0+aaVK2U2OGDZIemzlzehi07I6Rf+0NQxjHNz6dYeernem/6BSLkA70mRPsgW02ln/hdjILiyegqjitimyF7BdEkpur+8UhV+dL9D16jziFMlMFAXL76XuLEILpn2VSsibJx/wde447kPDGS7iSPVQ==
+	rw85uJIc1d7Z2hNq9zTEdNfSF7i/8k5skGFalnxz8p1EkkERMRbpSR2Hamu2YjrS+Y/fON8UlRPBz5ob3mbLjqwD3X9viWhDShyCidpATSuStcoPGE++2fYL8krSELMCgcRgGJXIQeOPrAu7XiLwartUL7u8+lyn8P9jYKmZ7sPpM+b6RW6fwHY9jwJa18lfiOT7TSNnNOCkpBa6xxDABYjy8e0Wj69wgjUJ3u6yGdwoaVz57RqFJ88omsYidTyjU+KnK7UUGxjFfSxm3CMUl1ETDR35G/pZMeOWTvYCnVHvV9SALfc2SOSASgz/AVdNkafEMyK7Q2A6HEz3+HjyzM13tLiCakPTtYhlP0IJsm2fLlEseXpsIs07RaJlFgInIXTp6Tm5ihd9iQQWDTFNpXwH6GJ/QlLVLtFkMKbptQqlGk6eGhMEV8H9NduoZLcWBolsecsCqxNyTCwQBmBFeYpscXFR/d/oqeWff2uK/fikI/5nvPNvl7y6YZV9xv5BXpVEeh+6T3To7f4VQKInBT90xDdRP7uSSldYcLX+avibgqwwPH2n41C+JyuDf6nl0c0U+BqX1LkWTm2JnAqHPUGK3IdogS29wus5nr34axvzZwiHZspbLkv716E4ibVjFfSBuRdEi4ljuYv6JTMBjLFgVAe7fdvOQo05vvmwQ4AEI9+JFwUknQ7V0D+ozC73jY3ZsO+sog3mFWtSH3CyVQ==
 X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(7416014)(376014)(82310400026)(36860700016)(1800799024)(23010399003)(6133799003)(22082099003)(18002099003)(3023799007)(56012099006)(11063799006)(261022075727099003)(261021121427099003)(10067099003)(261009223027099003)(261022105027099003)(261021123027099003);DIR:OUT;SFP:1101;
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(82310400026)(7416014)(23010399003)(376014)(36860700016)(18002099003)(22082099003)(261022105027099003)(261022075727099003)(11063799006)(261021121427099003)(261009223027099003)(10067099003)(56012099006)(261021123027099003);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	wdcjGfJZcP1WBGML8LaT5uji8bhQIoFh9IwsZ5b2+Xn9862uiqN5TD79Z6qlw4B2/XvLcqjPHLm2KcsWutOJQPBdlj4nBt11Dp3cdKcHpHNN/Y1G9wt0AOwLZtU1/4NMJ3fCwPl3CPwVrfbO5M1squblfwgTzHxI7FJ2zKnKFqxi4jsR66AGtHwqtnb20SFnXV4dEHDtCocSucUCilrYAwg8BuqO/BHJJ9Z8mjzDbz/UXQhK3Ek351cBRxe2jFx1gl0l4nXuIzUvh3jxoyI408bmAyn2cTBH/znk2Hx7/xWE4C/mEzgnmIt4uC3VmOWpe4MoAlBUD07pIUx2PuEEPb6gElVloiq1jjl/uF4P5zSiM9/iN0X0yoc6RWi4A8UjRiaHEF3+ud343SDvl72+MtpFqFJ22c5AAX1mxgbt1NoU3WjVqdHkDcyuY7rCl99c
+	YYktoKm/N9cm1wqVGRhv6ecy99a+7kuTZL5y5Tx83Yfnt8x5iezEUV61zHN9TtyJI4MbwgKgajLeEo+Lkap/OJ7gV0QHm5zURTAskhqaCkO3EbgE4ZimuN1PIr3Kz+3okhDsuhb+RCMjUT11B7jNAvUN4MM1wr9SPUP9Jbvut8YAgHYfNrO7XI+IN+DwnWQP8IBmb+Uf5Tg8c/j5liL98a36gbNiIKY7eA3ijPNEY/1zyyGpJaJsc8rU+auKLgIT+hWcc7TDT9xXUXMxtcu0LRVOXg0wceG3e4zfZO0JiN8mqe0N92d93RUDiD2q7RmPfKz0P6a60kX4ToIV6jHXhzsplhedEzmlEFGvyJbzUKrvweDe2GApoWGXAkNaG50UmufrSWWUS5ZEcoxBbJ9SYHZ/9H0skGbPOuZKfISW+5aX3ONeJcjBGiAgcoHfeT1w
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Oct 2026 04:19:12.5411
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Oct 2026 04:19:08.7927
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0e86d8fa-ad70-44bd-87d4-08df33184a2e
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5adbfa9e-4fc5-491f-5b7c-08df331847f2
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb07.amd.com]
 X-MS-Exchange-CrossTenant-AuthSource:
 	SJ1PEPF000037B4.namprd05.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR12MB6143
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR12MB5718
 
-IBS hardware captures a sample and raises an NMI. Since the NMI can be
-delivered with a delay, a privilege change may occur between sample
-capture and NMI delivery. Because IBS only provides the sample RIP, the
-kernel records GPRs from the NMI pt_regs, which may reflect kernel mode
-if a privilege switch occurred in the interim. This can leak kernel
-addresses to unprivileged users through PERF_SAMPLE_REGS_USER and/or
-PERF_SAMPLE_REGS_INTR.
+During a suspend/resume cycle, all CPUs except CPU0 go through hotplug
+callbacks, which sets up IBS state. CPU0 bypasses this path, leaving its
+IBS state stale after resume. Fix this by explicitly setting CPU0's IBS
+state in the syscore ->resume() callback.
 
-Fix this by using interrupt regs while preparing PERF_SAMPLE_REGS_USER
-and PERF_SAMPLE_REGS_INTR. With the change, when IBS samples a user mode
-instruction but the NMI is delivered in kernel mode, PERF_SAMPLE_REGS_USER
-will source its register state from task_pt_regs(current) and
-PERF_SAMPLE_REGS_INTR will be omitted from the data sent to userspace.
-
-In addition to fixing the kernel address leak, this change also ensures
-GPR snapshot consistency, which resolves the DWARF unwinding issue with
-IBS.
-
-Reported-by: Gennady Kupava <gennady.kupava@gmail.com>
-Closes: https://lore.kernel.org/r/CAPu-DQqF0aF6=GS8Z6KKWeeX_V5LiXeKU_rJQZC+uGg8zuTPNw@mail.gmail.com
-Reported-by: Jayapal Ashwin Nair <janair@amd.com>
-Fixes: d29e744c7167 ("perf/x86: Relax privilege filter restriction on AMD IBS")
+Fixes: efa5700ec0da ("perf/amd/ibs: Support IBS_{FETCH|OP}_CTL2[Dis] to eliminate RMW race")
 Signed-off-by: Ravi Bangoria <ravi.bangoria@amd.com>
+Reviewed-by: Jim Mattson <jmattson@google.com>
 ---
- arch/x86/events/amd/ibs.c  | 50 ++++++++++++++++++++++++++++++++++++++
- include/linux/perf_event.h |  6 +++++
- kernel/events/core.c       | 10 ++++----
- 3 files changed, 61 insertions(+), 5 deletions(-)
+ arch/x86/events/amd/ibs.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/arch/x86/events/amd/ibs.c b/arch/x86/events/amd/ibs.c
-index bfb51f8e184f..78a36ebf2d23 100644
+index 3531f9c23b8c..bfb51f8e184f 100644
 --- a/arch/x86/events/amd/ibs.c
 +++ b/arch/x86/events/amd/ibs.c
-@@ -1533,6 +1533,56 @@ static int perf_ibs_handle_irq(struct perf_ibs *perf_ibs, struct pt_regs *iregs)
- 		throttle = perf_event_account_interrupt(event);
- 		goto out;
- 	}
-+
-+	/*
-+	 * IBS captured RIP is out of sync with NMI pt_regs due to NMI
-+	 * delivery latency. Use NMI pt_regs for PERF_SAMPLE_REGS_USER.
-+	 *
-+	 * Note: Valid user regs are required for PERF_SAMPLE_STACK_USER.
-+	 */
-+	if (event->attr.sample_type & (PERF_SAMPLE_REGS_USER |
-+				       PERF_SAMPLE_STACK_USER)) {
-+		perf_sample_regs_user(&data.regs_user, iregs);
-+
-+		/*
-+		 * Don't update dyn_size if user has not requrested for
-+		 * PERF_SAMPLE_REGS_USER.
-+		 */
-+		if (event->attr.sample_type & PERF_SAMPLE_REGS_USER) {
-+			/* regs dump ABI info */
-+			int size = sizeof(u64);
-+
-+			if (data.regs_user.regs) {
-+				u64 mask = event->attr.sample_regs_user;
-+				size += hweight64(mask) * sizeof(u64);
-+			}
-+
-+			data.dyn_size += size;
-+		}
-+
-+		data.sample_flags |= PERF_SAMPLE_REGS_USER;
-+	}
-+
-+	/*
-+	 * IBS captured RIP is out of sync with NMI pt_regs due to NMI
-+	 * delivery latency. Use NMI pt_regs for PERF_SAMPLE_REGS_INTR.
-+	 */
-+	if (event->attr.sample_type & PERF_SAMPLE_REGS_INTR) {
-+		/* regs dump ABI info */
-+		int size = sizeof(u64);
-+
-+		perf_sample_regs_intr(&data.regs_intr, iregs,
-+				      event->attr.exclude_kernel);
-+
-+		if (data.regs_intr.regs) {
-+			u64 mask = event->attr.sample_regs_intr;
-+			size += hweight64(mask) * sizeof(u64);
-+		}
-+
-+		data.dyn_size += size;
-+		data.sample_flags |= PERF_SAMPLE_REGS_INTR;
-+	}
-+
- 	/*
- 	 * Prevent leaking physical addresses to unprivileged users. Skip
- 	 * PERF_SAMPLE_PHYS_ADDR check since generic code prevents it for
-diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
-index 2d5e7687875b..ca495f6b03c4 100644
---- a/include/linux/perf_event.h
-+++ b/include/linux/perf_event.h
-@@ -1791,6 +1791,12 @@ extern unsigned long perf_misc_flags(struct perf_event *event, struct pt_regs *r
- extern unsigned long perf_instruction_pointer(struct perf_event *event,
- 					      struct pt_regs *regs);
- 
-+extern void perf_sample_regs_user(struct perf_regs *regs_user,
-+				  struct pt_regs *regs);
-+extern void perf_sample_regs_intr(struct perf_regs *regs_intr,
-+				  struct pt_regs *regs,
-+				  bool exclude_kernel);
-+
- #ifndef perf_arch_misc_flags
- # define perf_arch_misc_flags(regs) \
- 		(user_mode(regs) ? PERF_RECORD_MISC_USER : PERF_RECORD_MISC_KERNEL)
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 7846d70be57f..69b767ace309 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -7846,8 +7846,8 @@ perf_output_sample_regs(struct perf_output_handle *handle,
- 	}
+@@ -1948,7 +1948,7 @@ static int perf_ibs_suspend(void *data)
+ static void perf_ibs_resume(void *data)
+ {
+ 	ibs_eilvt_setup();
+-	setup_APIC_ibs();
++	x86_pmu_amd_ibs_starting_cpu(smp_processor_id());
  }
  
--static void perf_sample_regs_user(struct perf_regs *regs_user,
--				  struct pt_regs *regs)
-+void perf_sample_regs_user(struct perf_regs *regs_user,
-+			   struct pt_regs *regs)
- {
- 	if (user_mode(regs)) {
- 		regs_user->abi = perf_reg_abi(current);
-@@ -7860,9 +7860,9 @@ static void perf_sample_regs_user(struct perf_regs *regs_user,
- 	}
- }
- 
--static void perf_sample_regs_intr(struct perf_regs *regs_intr,
--				  struct pt_regs *regs,
--				  bool exclude_kernel)
-+void perf_sample_regs_intr(struct perf_regs *regs_intr,
-+			   struct pt_regs *regs,
-+			   bool exclude_kernel)
- {
- 	/*
- 	 * Hardware skid can lead to a scenario where a PMI is
+ static const struct syscore_ops perf_ibs_syscore_ops = {
 -- 
 2.55.0
 
