@@ -1,97 +1,68 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=40.107.208.18
-ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1793092627;
-	b=ay3ulVl8rPz7/BjOABBNbc2DIczH23r9ZNZHrg/HA1EDmGKVNj5H7u8i4fWya58Riz5G
-	 JFQytJsqT56P2bqoOug1TwlPsL+Te5M+tt8QB8XD7f6X1TXKkO308lKLzd5fiNy6uSY9K
-	 fZoO47ExmlYkAl2eGklWRws5yQkzC4VQ9zmaspBr7E9YlI6ecGJrnG3xpS+HROncSod6C
-	 BJg+VD/kCP23A3q/k1Vn3NVC1Mp2TqvuBXxh35n/hN2UGhO2SHlVyyo1hc+eB+PNBb++7
-	 FZBlyD/Kb7XILUU3XgdRAqZPTQvwdDS1BPWBXn5xX/brU8seJTmns6LXY2Gw8cZyskA==
-ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793092627;
-	h=DMARC-Filter:DKIM-Signature:Received:Received:
-	 X-MS-Exchange-Authentication-Results:Received-SPF:Received:Received:
-	 Received:Message-ID:Date:MIME-Version:User-Agent:Subject:To:CC:
-	 References:Content-Language:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:X-EOPAttributedMessage:
-	 X-MS-PublicTrafficType:X-MS-TrafficTypeDiagnostic:
-	 X-MS-Office365-Filtering-Correlation-Id:X-MS-Exchange-SenderADCheck:
-	 X-MS-Exchange-AntiSpam-Relay:X-Microsoft-Antispam:
-	 X-Microsoft-Antispam-Message-Info:X-Forefront-Antispam-Report:
-	 X-MS-Exchange-AntiSpam-MessageData-ChunkCount:
-	 X-MS-Exchange-AntiSpam-MessageData-0:X-OriginatorOrg:
-	 X-MS-Exchange-CrossTenant-OriginalArrivalTime:
-	 X-MS-Exchange-CrossTenant-Network-Message-Id:
-	 X-MS-Exchange-CrossTenant-Id:
-	 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp:
-	 X-MS-Exchange-CrossTenant-AuthSource:X-MS-Exchange-CrossTenant-AuthAs:
-	 X-MS-Exchange-CrossTenant-FromEntityHeader:
-	 X-MS-Exchange-Transport-CrossTenantHeadersStamped;
-	bh=U9zYVVXlJgpX3/v0F55+JoW9OdbPKPL+KfxK6oXUrS0=;
-	b=479ftC1jSCNWGO1FLu1Usy6KAlvCbux8c25JwEQU058u5nl6nGpS//L92WbzH6y35lxQ
-	 2lip3ooqcmg8Oeoefxo/wstuad949OrUuGOysn5gsE3lgmXE5tjFPC/Nn/lMc6BlUCA6+
-	 raCDlvDpJqhG0471Iz+YXvT9UlY6sS64UX/56OK4PnkIOtN2a2Rn2RDkFG9x5F2pHE35B
-	 UPIgdwEIHmcztIzSkkJPDCXcHVoCipTYiG4Wnw9pIIHzT6/26AmS4fqzUjM6GWtoPOR33
-	 ySLfmHD8lr2yD3TKMp9B+pFcz3KjshIpK1jb3V0Mk5slQWozZ84ZkThS4qz4l9NnGkw==
-ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=amd.com;
-	spf=fail smtp.mailfrom=amd.com;
-	dkim=pass header.d=amd.com header.i=@amd.com header.a=rsa-sha256 header.s=selector1 header.b=QMLAvAbV;
-	arc=pass header.oldest-pass=0 smtp.remote-ip=40.107.208.18
-Received: from PH0PR06CU001.outbound.protection.outlook.com (mail-westus3azon11011018.outbound.protection.outlook.com [40.107.208.18])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (secp384r1) server-signature ECDSA (prime256v1) server-digest SHA256)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=198.175.65.18
+ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
+	t=1793096099;
+	b=eYui8yD8G0yRPQdhEVNtQdCdwrZAEX4uGZK3PYgP7W3n1sqm53W84JoPzl9RXtBATnQF
+	 S7XK7H7/In4CvsFtzfGMeiU9xpUaO8K8sFkZq5PjUcVn1Vtitq9ag4VeDqeLZ1x2iVUWa
+	 v/8QH2LoNwuwWtOeOhY3hAahvdU9dfwr/4r3ISd9iupfFUYYvTreB6D2BmPeT2NqWKTF8
+	 F5oU8r4vSUr9dFdvSZWVgPDB+7TFhioiRBl/rhJa5oSF7IyNxcWAtQvrdak3Miy10VysM
+	 je1Ad15em3KJRDAdZQfCfRsCjNvGNtnF4YVp+hKyl5VyDFrXq7vyz0RcTpU19MpNYOg==
+ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793096099;
+	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
+	 X-IronPort-AV:X-IronPort-AV:Received:X-CSE-ConnectionGUID:
+	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:Message-ID:Date:
+	 MIME-Version:User-Agent:Subject:To:Cc:References:Content-Language:
+	 From:In-Reply-To:Content-Type:Content-Transfer-Encoding;
+	bh=s13tSiff6fcPsfGnZQ/kV4hOjYGqsIat17pRr1AVdyQ=;
+	b=3JUl0SXxu5Z1BfxGhHENylT+eeJ5WIbu14tocPVgibVS4+1KmaNdguekOuBU/zVgmoza
+	 7/bFR3+gLRyvXivPTEo8mNCslA9GiT8BG0li4csEnr3F6bsKG3miCO/Ft8goiBr6617BT
+	 slm/p35T+8xZRMoY/CYmaSu5+X2uM++5UkpXK0X/+vqOlkzXo8GQMjj+MA1ov4CDKuQEM
+	 Qu+NjCxMEtxjMr/nbnWLltFsAcNDD56FlfPoYTO8GQ7dFbkYqg7AZzKSXyrc/3jGLhwV1
+	 wzglM3ISANNJcXigFQB43D0LThTj1atNFWAk4Gm8nrimlrZxdk/HchXmMsMj2QuA+MQ==
+ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
+	dmarc=pass header.from=linux.intel.com;
+	spf=pass smtp.mailfrom=linux.intel.com;
+	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=kMc6wTVi;
+	arc=none smtp.remote-ip=198.175.65.18
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 125D6606A31A;
-	Tue, 27 Oct 2026 09:17:06 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 125D6606A31A
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC18F606A324;
+	Tue, 27 Oct 2026 10:14:58 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org CC18F606A324
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=amd.com header.i=@amd.com header.a=rsa-sha256 header.s=selector1 header.b=QMLAvAbV
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=aOoWQx+kQ3nuXM0U0W39zen/AOQ4sbwPUCd7k0mkI1Phk6VxcievNZE5DRG8bJHsDSayVPxsA05qllfH80pXJnHl3Zy0dkJf9PSQ3qpxlk+NxUA/zXVkM0OUk7Xxv/WVLRJ5x0grXUP8r8B2X39cio2B+6/DN5OGVhdQh5e1VnsA+aflFK3rcm+f8YZoZe0AUpqjtTOLSdqWQhWkgIoLwHz2jbDhYF5/iMr/87nI4NwEwmqgER8IQ3bCSv6i+OWBz3URZ1Duwi8R+GeBlQA26w98vV5SHP/Ae+aqHEE18z4UFkg0mDbBze1JFRaXEx7DdH78OcK0llyqwWZ8/5Mwww==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=U9zYVVXlJgpX3/v0F55+JoW9OdbPKPL+KfxK6oXUrS0=;
- b=tJ3u0cjXFA3LVq2xqfu0rvdF8O7NhgkavJBMFfAyFo5S4WcDX3QYkKg7HPYgod0VS5kllS+DZg8DRcGX569I4IYLrrjUXBo5kMpZCvbZZ7iENjOh9DrKkSsXfSAZ1UK+0mHr7Ih0FuV2CTzRzbevJ6n9a4xM1FZZIhDlWmNcqJeGZC71KoupZGcuZXwxYOyWozQ0dnRLavZa6zWeIMGK0IsaWC5Legr25DEMrhRV4U7jwnep9iicGcY68Hr16b4mbjQbBnagKCNREU8/fpY5QAaxAUMDtjHROUzRHb3yazP1j2/ciM5hHSpq6Xx6/vItz4Y1zw3kRElf9dx3cs4TPQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=hygon.cn smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=U9zYVVXlJgpX3/v0F55+JoW9OdbPKPL+KfxK6oXUrS0=;
- b=QMLAvAbVWJmZ3JNqnicSY1L3UkVpBuprjbjdVSAHvlqIlSsd0O8ZVprVUSNWDocxs9a6/IUBbF5bxGf4Ijx/AC08pgsXGiIDBpPHVI43q9GxxR9jlDQIG6np6XZhhCA0NHO1DIShR7av6bhrYUeBP6/2MzsbB9ZaUgfEcv0GU3I=
-Received: from PH8PR07CA0035.namprd07.prod.outlook.com (2603:10b6:510:2cf::22)
- by PH8PR12MB999296.namprd12.prod.outlook.com (2603:10b6:510:40e::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.546.22; Tue, 27 Oct
- 2026 09:15:02 +0000
-Received: from PH3PEPF0005961B.namprd05.prod.outlook.com
- (2603:10b6:510:2cf:cafe::77) by PH8PR07CA0035.outlook.office365.com
- (2603:10b6:510:2cf::22) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.21.546.22 via Frontend Transport; Tue,
- 27 Oct 2026 09:15:02 +0000
-X-MS-Exchange-Authentication-Results: mx.microsoft.com 1; spf=pass (sender IP
- is 165.204.84.17) smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=satlexmb07.amd.com; pr=C
-Received: from satlexmb07.amd.com (165.204.84.17) by
- PH3PEPF0005961B.mail.protection.outlook.com (10.167.243.25) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.21.569.4 via Frontend Transport; Tue, 27 Oct 2026 09:15:01 +0000
-Received: from satlexmb08.amd.com (10.181.42.217) by satlexmb07.amd.com
- (10.181.42.216) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.53; Tue, 27 Oct
- 2026 04:15:00 -0500
-Received: from [10.136.37.101] (10.180.168.240) by satlexmb08.amd.com
- (10.181.42.217) with Microsoft SMTP Server id 15.2.2562.53 via Frontend
- Transport; Tue, 27 Oct 2026 04:14:54 -0500
-Message-ID: <5af2d381-408f-442e-bba3-5bfeca01161f@amd.com>
-Date: Tue, 27 Oct 2026 14:44:53 +0530
+	dkim=pass (2048-bit key, unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=kMc6wTVi
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1793096099; x=1824632099;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=s13tSiff6fcPsfGnZQ/kV4hOjYGqsIat17pRr1AVdyQ=;
+  b=kMc6wTVitpWizvB0mUe6cemWbvv4BNkZhd+yrhhdNdCBnCXdyRUsFvb0
+   UWRLi+Ndiv2Aaslx1qQXHKxLSc2hE5Ersg6C34pXGTHTT4bShejoa//WW
+   1a81ubNB/xjhGP1BgZPIi4or5+Naw3hAyOOZ9Hj9ZudS3RX0t7i+FITKl
+   MdBk1roWbzlmhFQnllF8GEi76tzVAliUrtSdfRD1Qd4L/hPPwz15FrE8M
+   zE9DqYTeO+ZQ5bzYcNjO2fHlydzojJ9xqmF7iCwx2RzvxhziAK0157bJe
+   dKrRX1KdLpThojFMoupxeqSVTvp0agI3LGOhfLXLtMOEENYuyolI5Gjhh
+   g==;
+X-CSE-ConnectionGUID: PMMLogEJTl2y7naF30MKeg==
+X-CSE-MsgGUID: V1MIN0maQ4KXyfyYVQuQjQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11947"; a="1799327"
+X-IronPort-AV: E=Sophos;i="6.27,181,1787036400"; 
+   d="scan'208";a="1799327"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Oct 2026 03:14:58 -0700
+X-CSE-ConnectionGUID: x4ttERJOQu2IwdVN1yETUw==
+X-CSE-MsgGUID: Vg6kYgviTHKas9yd051bPQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.27,181,1787036400"; 
+   d="scan'208";a="4547564"
+Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.241.239]) ([10.124.241.239])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Oct 2026 03:14:56 -0700
+Message-ID: <b8693216-9d8b-427e-9657-1b1a52cf08e7@linux.intel.com>
+Date: Tue, 27 Oct 2026 18:14:53 +0800
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -102,68 +73,439 @@ List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] perf/amd/ibs: add phy_addr_only software filter for
- ibs_op
-To: Huang Shijie <huangsj@hygon.cn>
-CC: <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
-	<namhyung@kernel.org>, <zhongyuan@hygon.cn>, <fangbaoshun@hygon.cn>,
-	<yingzhiwei@hygon.cn>, <mark.rutland@arm.com>,
-	<alexander.shishkin@linux.intel.com>, <jolsa@kernel.org>,
-	<irogers@google.com>, <adrian.hunter@intel.com>, <james.clark@linaro.org>,
-	<tglx@kernel.org>, <bp@alien8.de>, <dave.hansen@linux.intel.com>,
-	<x86@kernel.org>, <hpa@zytor.com>, <linux-perf-users@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <liuqi@hygon.cn>, <lijing@hygon.cn>,
-	<wangfengyu@hygon.cn>, <wujiangyong@hygon.cn>, <shijie8@gmail.com>, "Ravi
- Bangoria" <ravi.bangoria@amd.com>
-References: <20260902085251.4046240-1-huangsj@hygon.cn>
+Subject: Re: perf: perf_pmu_register() publishes sysfs attrs before per-CPU
+ contexts exist -> NULL/poisoned cpc deref in
+ perf_event_mux_interval_ms_store()
+To: =?UTF-8?B?5b6Q5pmX57+U?= <xuhx@hust.edu.cn>, peterz@infradead.org,
+ mingo@redhat.com, acme@kernel.org, namhyung@kernel.org
+Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <de936c3.1476b.1a162c34cec.Coremail.xuhx@hust.edu.cn>
 Content-Language: en-US
-From: Ravi Bangoria <ravi.bangoria@amd.com>
-In-Reply-To: <20260902085251.4046240-1-huangsj@hygon.cn>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH3PEPF0005961B:EE_|PH8PR12MB999296:EE_
-X-MS-Office365-Filtering-Correlation-Id: 8a5e881e-7192-4ff1-9b62-08df340ac7ba
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|23010399003|376014|7416014|1800799024|36860700016|82310400026|11063799006|56012099006|10067099003|261021121427099003|18002099003|22082099003;
-X-Microsoft-Antispam-Message-Info:
-	hBcDzaoBmHovO9tc4aL9+LRaTiZx4/7h5N9dolSDmtA1w95AP+WKxsIT0lyWEWroCGCYE+okCSj2qQ05uTvPXlm9gby0XSd0juUv+xPJv/kdUnDAwWXToMWHh98SPKmS2chZC0H9w4YJY6cuRmFEbUZTFkaB4U9b23TdnFQmAJcM5wav95C64gGo+RL2fVG4vy//rXgz0+OJz+t5zw4Mgof52jRJAh/PaB+aXqPytbasrjGP47MOH3fg3YgZH5V9iFp/77KafMVh6LNaQkwpiDCKe0JzRg10IOuXmooOPuM0lhLp1m5GUOe5UsdlZs4voMMQQ5p6OJaZWr+VAfUIGORt8ovEzG9n5kZKXISRHXH5S0ygnyaPNKXs6TfCX4LEXSvbrZ0IfZeOpAIv4u8Xte6xgD1frRbw1j9pDqAhWmETG6M+eqoC4kmm48MytEekTPmX3OJWFxuv8VhSWvY9fQAcXL8fgeOJNqVMCIOBkio296VWMNFWKehYRmr09QyTmw1SI82wQr23UIM308lNeKuDdhcnARjzkS44P6lqjysXufgN5/35SaJVztCstDaWF7RkGEXIbPcuoy8J9nSMDSK2dVEBoqga4038P/26vaNmRtY+H16YTi+gC/9aXLGFWlCoLLwMjZRTjDrP5b2SAp8ewTYt1fvd8JUrVG8F9uOs54mntUSqh46HJyJ4N8SmoQVB3FCvJmA2zBa6PUqo9w==
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(23010399003)(376014)(7416014)(1800799024)(36860700016)(82310400026)(11063799006)(56012099006)(10067099003)(261021121427099003)(18002099003)(22082099003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	logwr2nlVnf+w1E7PWwgbClGOfTm8RBj/O154LRnfTV0dW7ZCjQyjkbXWpFixvXtMQBncNLUKKDgt9aeYWGMFLY5jSxPI3i9Xc91U6mL+IZ/tnmYscf1zGOrEt4IOvafWScTjVCIQfDEav5Jn2unNRfkDffCChqqYR0avfp5M39TThQBxQwp7/H/fHkzufPuiK7ZAZpXNVCzQ3fqrjL5z34nIpwKEwG8xyRA2aAwo3GIpTeXW0RESlRrv3mZne2QJPZOYZ4YVrHYLDDljZoptVOOajGrwDjAzr7Q/jEmyyOUl+2lpFq309NCliAUAvBaieKB1K/gGvv6BBlJ+UMdYoaDYwMmJP+yBO42jaT/cJXM15sYYl5/c2FLRtClJGIrBf1oBIjHFJ0r3ZjBSQMV/uCGGYPXtkoijY1GFQGl3vMOwjfU4LBTCYMD5CH88MxV
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Oct 2026 09:15:01.4469
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8a5e881e-7192-4ff1-9b62-08df340ac7ba
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb07.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource: PH3PEPF0005961B.namprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH8PR12MB999296
+From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
+In-Reply-To: <de936c3.1476b.1a162c34cec.Coremail.xuhx@hust.edu.cn>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-> We use the following command to track a process's memory footprint:
->   #perf record -e ibs_fetch// -e ibs_op// -p xxx --phys-addr -- sleep 10
-> 
-> In the mysql tests, I catched over 1,804,973 records for ibs_op event.
-> I found that over 53% records(970,554) are like this:
->         ibs_op//:  ffffffffb6017739               0
-> 
-> The physical address is 0 for these records. These records are not needed
-> by us, and they wasted the CPU cycles.
-> 
-> This patch adds an ibs_op/phy_addr_only term that discards samples
-> without a valid physical address (dc_phy_addr_valid == 0) in the interrupt
-> handler. And it avoids the phys_addr=0 noise when used with --phys-data.
 
-Why not simply use the BPF filter?
+On 10/22/2026 4:38 PM, 徐晗翔 wrote:
+> perf_pmu_register() makes <pmu>/perf_event_mux_interval_ms writable
+> before the per-CPU PMU contexts are allocated and initialized, so a
+> concurrent write to that attribute dereferences a NULL or a published
+> -but-uninitialized cpc: a kernel oops writing to absolute address 0xf0
+> in task context, or a NULL+0xc deref on the target CPU in hardirq
+> context ending in "Fatal exception in interrupt" -- both verified
+> deterministically on mainline 7.3 and reached naturally by an ordinary
+> userspace write loop without any instrumentation.
+>
+>
+> The store side (perf_event_mux_interval_ms_store(),
+> kernel/events/core.c:12615) fetches cpc and writes through it with no
+> readiness/NULL check, while the register side publishes the sysfs
+> attributes first (pmu_dev_alloc() at core.c:12865) and installs the
+> per-CPU contexts afterwards (alloc_percpu at 12870; cpc pointer
+> published at 12877, its hrtimer initialized only at 12879 by
+> __perf_mux_hrtimer_init()). The registrant holds pmus_lock; sysfs
+> callbacks take no lock in common with it, so a root writer (default
+> attribute mode) racing a runtime PMU registration lands inside the
+> window. Verified on mainline 7.3 with KASAN: controlled-window
+> evidence pins both faulting instructions exactly, and a natural
+> write-hammer hits the window within ~0.6 s. The same publication
+> window also has a purely functional consequence (persistent
+> interval-configuration divergence) described at the end.
+>
+>
+> The detailed description:
+>
+>
+> * Test environment / affected version
+>
+> Linux version 7.3.0 (gcc 13.3.0, GNU ld 2.42) #1 SMP PREEMPT_DYNAMIC
+> -- vanilla mainline 7.3 release tarball (kernel.org, unmodified),
+> rebuilt with CONFIG_KASAN_GENERIC=y, CONFIG_KASAN_OUTLINE=y,
+> CONFIG_KASAN_VMALLOC=y, CONFIG_PERF_EVENTS=y, CONFIG_MODULES=y,
+> CONFIG_HZ_1000=y, booted in QEMU/KVM on x86_64 (4 and 64 vCPU
+> guests). The publication order and the store code are identical in
+> 7.1.5 (function-level diff); line numbers below are from 7.3.
+>
+>
+> * Mechanism
+>
+> perf_pmu_register() publishes first and initializes later:
+>
+>
+> if (pmu_bus_running && !pmu->dev) {
+> ret = pmu_dev_alloc(pmu); /* core.c:12865:
+> device_add() makes the
+> attribute group live */
+> ...
+> }
+> pmu->cpu_pmu_context = alloc_percpu(...); /* core.c:12870 */
+> for_each_possible_cpu(cpu) {
+> cpc = kmalloc_node(...); /* per-CPU allocs */
+> *per_cpu_ptr(pmu->cpu_pmu_context, cpu) = cpc; /* :12877 */
+> __perf_init_event_pmu_context(&cpc->epc, pmu);
+> __perf_mux_hrtimer_init(cpc, cpu); /* :12879 */
+> }
+>
+>
+> and the store path has no readiness check:
+>
+>
+> for_each_online_cpu(cpu) {
+> struct perf_cpu_pmu_context *cpc;
+> cpc = *per_cpu_ptr(pmu->cpu_pmu_context, cpu); /* :12640 */
+> cpc->hrtimer_interval = ns_to_ktime(...); /* :12641 */
+> cpu_function_call(cpu, perf_mux_hrtimer_restart_ipi, cpc);
+> /* :12643 */
+> }
+>
+>
+> Two windows follow:
+>
+>
+> - Window A (array published, slots still NULL; register thread is in
+> the per-CPU kmalloc_node loop): the write faults at :12641 with a
+> NULL cpc. In the 7.3 build the store does
+> "mov %r14, 0xf0(%rsi)" with rsi==0 -- a write to absolute address
+> 0xf0.
+>
+> - Window B (cpc pointer already published at :12877, but
+> __perf_mux_hrtimer_init() at :12879 has not run yet, so the
+> embedded hrtimer is all-zero): the write itself succeeds and the
+> IPI at :12643 executes perf_mux_hrtimer_restart() ->
+> hrtimer_forward_now() -> hrtimer_cb_get_time() on the remote CPU,
+> which reads timer->base->clockid with timer->base == NULL (offset
+> 0xc) in hardirq context.
+>
+>
+> pmu_dev_is_visible() (core.c:12709) does not mask the interval
+> attribute, and there is no lock common to the registrant (pmus_lock)
+> and the sysfs callback.
+>
+>
+> * Controlled-window evidence (deterministic, both fault forms)
+>
+>
+> Stalling the registering thread briefly (kprobe on the first per-CPU
+> cpc allocation for window A, on the first hrtimer_setup call for
+> window B; a 400 ms stall, writer runs during it) produces exactly
+> the predicted faults, nothing else:
+>
+>
+> Window A:
+> BUG: kernel NULL pointer dereference, address: 00000000000000f0
+> #PF: supervisor write access in kernel mode
+> RIP: 0010:perf_event_mux_interval_ms_store+0x18a/0x250
+> (Code: ... <4d> 89 be f0 00 00 00 ... /* mov %r14,0xf0(%rsi) */)
+>
+>
+> Window B:
+> BUG: kernel NULL pointer dereference, address: 00000000000000c
+> CPU: 0 ... Comm: swapper/0
+> RIP: 0010:hrtimer_cb_get_time+0x1e/0x70
+> __flush_smp_call_function_queue
+> remote_function
+> perf_mux_hrtimer_restart
+> hrtimer_cb_get_time
+> Kernel panic - not syncing: Fatal exception in interrupt
+>
+>
+> The kprobe module used for the stalls is available on request; it is
+> only a controlled-window amplifier and is NOT needed to hit the bug
+> naturally (next section).
 
-  $ perf record -e ibs_op// --phys-data --filter 'phys_addr != 0' ...
+It looks a real issue. I suppose the changes below would fix the issue. The
+changes only pass the building, not validated yet.
 
-Thanks,
-Ravi
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index 7cdd02dba4f1..e088c31534bc 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -12831,6 +12831,9 @@ perf_event_mux_interval_ms_store(struct device *dev,
+        if (timer == pmu->hrtimer_interval_ms)
+                return count;
+
++       if (!pmu->cpu_pmu_context)
++               return -ENODEV;
++
+        mutex_lock(&mux_interval_mutex);
+        pmu->hrtimer_interval_ms = timer;
+
+@@ -13062,12 +13065,6 @@ int perf_pmu_register(struct pmu *_pmu, const char
+*name, int type)
+        pmu->type = pmu_type.id;
+        atomic_set(&pmu->exclusive_cnt, 0);
+
+-       if (pmu_bus_running && !pmu->dev) {
+-               int ret = pmu_dev_alloc(pmu);
+-               if (ret)
+-                       return ret;
+-       }
+-
+        pmu->cpu_pmu_context = alloc_percpu(struct perf_cpu_pmu_context *);
+        if (!pmu->cpu_pmu_context)
+                return -ENOMEM;
+@@ -13086,6 +13083,12 @@ int perf_pmu_register(struct pmu *_pmu, const char
+*name, int type)
+                __perf_mux_hrtimer_init(cpc, cpu);
+        }
+
++       if (pmu_bus_running && !pmu->dev) {
++               int ret = pmu_dev_alloc(pmu);
++               if (ret)
++                       return ret;
++       }
++
+        if (!pmu->start_txn) {
+                if (pmu->pmu_enable) {
+                        /*
+
+
+
+>
+>
+> * Natural reachability (no instrumentation)
+>
+>
+> A minimal PMU driver registered/unregistered in a loop through the
+> exported perf core API (same lifecycle as an unloadable PMU module
+> or an Intel uncore PCI rebind), while userspace runs a tight loop
+> writing the attribute as soon as it appears (alternating values, so
+> every write passes the same-value fast path). On a 64-vCPU KASAN
+> VM (7.3) the first slab-use-after-free appears ~0.6 s after the
+> hammer starts (94 reports within the run; the writes that land late
+> in the window successfully arm cpc->hrtimer and are then freed by
+> the unregister of the same round -- that use-after-free in
+> perf_pmu_free() is a separate defect I am reporting in its own
+> mail). A fault dump in the same run shows the writer's path
+> stopping exactly at perf_event_mux_interval_ms_store+0x18a, the
+> same instruction as the controlled window-A witness. On 7.1.5 the
+> same uninstrumented hammer also faulted naturally inside the store
+> (dangling percpu array read at store+0x149).
+>
+>
+> * Reproducer
+>
+> Module source inlined at the end of this mail; usage:
+>
+> # build against the kernel under test
+> make -C <kernel-build-dir> M=$PWD modules
+>
+> # in the guest (root):
+> insmod r4_repro.ko
+> # terminal A: writer hammer
+> while :; do
+> F=/sys/bus/event_source/devices/r4pmu/perf_event_mux_interval_ms
+> [ -e $F ] && { echo 100 > $F 2>/dev/null; echo 200 > $F 2>/dev/null; }
+> done
+> # terminal B:
+> echo "regloop 400" > /sys/module/r4_repro/parameters/action
+>
+>
+> Triggering requires a runtime PMU registration (unloadable PMU
+> driver, uncore PCI rebind on matching hardware) plus a root writer
+> (attribute mode 0644); the window is the registration interval
+> (device_add done -> last cpc timer initialized), sub-millisecond to
+> milliseconds per round, trivially hit by a write loop.
+>
+>
+> * Additional symptom of the same window (functional, no memory fault)
+>
+>
+> If the store lands between __perf_mux_hrtimer_init()'s "is the
+> field unset" read and its default assignment (the default is
+> PERF_CPU_HRTIMER = 1000/HZ; the assignment writes
+> pmu->hrtimer_interval_ms), the PMU ends up with
+> pmu->hrtimer_interval_ms == default while every cpc actually runs
+> the user's value -- and because the store's same-value fast path
+> returns early on an equal value, writing the field value back is a
+> permanent no-op: the divergence cannot be repaired by re-writing
+> the same number. Same fix point (normalize defaults before
+> publication), so reported here rather than separately.
+>
+>
+> Thanks for taking a look.
+>
+> Regards,
+> Hanxiang Xu
+> xuhx@hust.edu.cn
+>
+> ------------------------------------------------------------------------
+> reproducer: r4_repro.c (build with: make -C <kernel-build-dir> M=$PWD
+> modules; requires CONFIG_PERF_EVENTS=y and CONFIG_MODULES=y)
+> ------------------------------------------------------------------------
+> // SPDX-License-Identifier: GPL-2.0
+> /*
+> * r4_repro.c - minimal reproducer for the premature-sysfs-publication
+> * NULL dereference in perf_event_mux_interval_ms_store()
+> * (kernel/events/core.c).
+> *
+> * perf_pmu_register() publishes the PMU device and its sysfs attributes
+> * (pmu_dev_alloc() -> device_add()) *before* allocating and installing the
+> * per-CPU perf_cpu_pmu_context array and initializing each cpc's hrtimer.
+> * A concurrent root write to perf_event_mux_interval_ms during that window
+> * reaches:
+> *
+> * cpc = *per_cpu_ptr(pmu->cpu_pmu_context, cpu);
+> * cpc->hrtimer_interval = ...; <- NULL cpc => write to 0xf0
+> *
+> * or, one window later (cpc published, timer not yet initialized), the
+> * restart IPI runs perf_mux_hrtimer_restart() on a zeroed hrtimer and
+> * dereferences timer->base == NULL in hrtimer_forward_now().
+> *
+> * Usage (from userspace):
+> *
+> * insmod r4_repro.ko
+> * # terminal A: writer hammer on the freshly (re)created sysfs node
+> * while :; do
+> * for F in /sys/bus/event_source/devices/r4pmu/perf_event_mux_interval_ms; do
+> * [ -e $F ] && { echo 100 > $F 2>/dev/null; echo 200 > $F 2>/dev/null; }
+> * done
+> * done
+> * # terminal B: registration churn through the exported perf core API
+> * echo "regloop 400" > /sys/module/r4_repro/parameters/action
+> *
+> * Alternating values bypass the same-value fast path so every open of the
+> * node performs a full store. On a KASAN kernel, a write landing inside
+> * the window produces an immediate NULL-pointer oops in
+> * perf_event_mux_interval_ms_store() (write fault at address 0xf0), or an
+> * IRQ-context panic via perf_mux_hrtimer_restart() -> hrtimer_cb_get_time()
+> * (NULL+0xc). Writes landing in a later part of the window succeed in
+> * arming cpc->hrtimer and will surface as use-after-free reports when the
+> * same registration round unregisters again (that is the related
+> * perf_pmu_free() defect; see the report text).
+> *
+> * No kernel source modification: everything goes through the
+> * EXPORT_SYMBOL_GPL perf core API, exactly like a real unloadable PMU
+> * provider driver (e.g. Intel uncore PCI drivers via bind/unbind).
+> */
+> #define pr_fmt(fmt) "R4REPRO: " fmt
+> #include <linux/module.h>
+> #include <linux/kernel.h>
+> #include <linux/kthread.h>
+> #include <linux/sched.h>
+> #include <linux/delay.h>
+> #include <linux/workqueue.h>
+> #include <linux/perf_event.h>
+> #include <linux/err.h>
+> #include <linux/string.h>
+> static struct pmu test_pmu;
+> static int my_registered;
+> static int test_type = -1;
+> static unsigned long stat_reg_ok, stat_reg_fail, stat_unreg_ok, stat_unreg_fail;
+> static int repro_event_init(struct perf_event *event)
+> {
+> if (event->attr.type != test_type)
+> return -ENOENT;
+> return 0;
+> }
+> static void repro_pmu_reset(void)
+> {
+> static const struct pmu tmpl = {
+> .task_ctx_nr = perf_invalid_context,
+> .module = THIS_MODULE,
+> .capabilities = PERF_PMU_CAP_NO_INTERRUPT |
+> PERF_PMU_CAP_NO_EXCLUDE,
+> .event_init = repro_event_init,
+> };
+> test_pmu = tmpl;
+> }
+> static int do_register(void)
+> {
+> int ret;
+> repro_pmu_reset();
+> ret = perf_pmu_register(&test_pmu, "r4pmu", -1);
+> if (ret) {
+> stat_reg_fail++;
+> my_registered = 0;
+> } else {
+> stat_reg_ok++;
+> my_registered = 1;
+> test_type = test_pmu.type;
+> }
+> return ret;
+> }
+> static int do_unregister(void)
+> {
+> int ret = -EINVAL;
+> if (my_registered)
+> ret = perf_pmu_unregister(&test_pmu);
+> if (ret) {
+> stat_unreg_fail++;
+> } else {
+> stat_unreg_ok++;
+> my_registered = 0;
+> }
+> return ret;
+> }
+> static char action_cmd[64];
+> static void action_workfn(struct work_struct *w)
+> {
+> char cmd[64];
+> char *p, *cp;
+> long n = 0;
+> strscpy(cmd, strstrip(action_cmd), sizeof(cmd));
+> cp = cmd;
+> p = strsep(&cp, " ");
+> if (cp && cp[0])
+> if (kstrtol(cp, 0, &n))
+> n = 0;
+> if (!strcmp(p, "register")) {
+> pr_info("register rc=%d type=%d\n", do_register(), test_type);
+> } else if (!strcmp(p, "unregister")) {
+> pr_info("unregister rc=%d\n", do_unregister());
+> } else if (!strcmp(p, "regloop") && n > 0) {
+> long i;
+> for (i = 0; i < n; i++) {
+> if (my_registered)
+> do_unregister();
+> do_register();
+> usleep_range(0, 50);
+> }
+> pr_info("REGLOOP_DONE n=%ld reg_ok=%lu reg_fail=%lu unreg_ok=%lu unreg_fail=%lu\n",
+> n, stat_reg_ok, stat_reg_fail, stat_unreg_ok,
+> stat_unreg_fail);
+> } else if (!strcmp(p, "status")) {
+> pr_info("status registered=%d type=%d reg_ok=%lu reg_fail=%lu unreg_ok=%lu unreg_fail=%lu\n",
+> my_registered, test_type, stat_reg_ok, stat_reg_fail,
+> stat_unreg_ok, stat_unreg_fail);
+> } else {
+> pr_info("unknown action '%s'\n", p);
+> }
+> pr_info("ACTION_COMPLETE\n");
+> }
+> static DECLARE_WORK(action_work, action_workfn);
+> static int action_set(const char *val, const struct kernel_param *kp)
+> {
+> int ret = param_set_copystring(val, kp);
+> if (ret == 0)
+> schedule_work(&action_work);
+> return ret;
+> }
+> static const struct kernel_param_ops action_ops = {
+> .set = action_set,
+> .get = param_get_string,
+> };
+> static struct kparam_string action_param = {
+> .maxlen = sizeof(action_cmd),
+> .string = action_cmd,
+> };
+> module_param_cb(action, &action_ops, &action_param, 0200);
+> MODULE_PARM_DESC(action, "register|unregister|regloop N|status");
+> static int __init r4_repro_init(void)
+> {
+> repro_pmu_reset();
+> pr_info("loaded; start the userspace writer hammer, then run regloop\n");
+> return 0;
+> }
+> static void __exit r4_repro_exit(void)
+> {
+> cancel_work_sync(&action_work);
+> if (my_registered)
+> do_unregister();
+> pr_info("unloaded\n");
+> }
+> module_init(r4_repro_init);
+> module_exit(r4_repro_exit);
+> MODULE_LICENSE("GPL");
+> MODULE_DESCRIPTION("Minimal reproducer: premature sysfs publication NULL deref in perf_event_mux_interval_ms_store()");
