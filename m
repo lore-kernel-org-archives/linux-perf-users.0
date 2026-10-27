@@ -1,13 +1,13 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=52.101.196.76
+Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=52.101.195.120
 ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1793132781;
-	b=CN+KYaHjxGuK9k0rJ400/BT6DRY7v5OLHgGzrlrCVMnF4JvZE4NWDxU2rXsaHusHooww
-	 KG57h1hCIk2WSuH9OGsaQvXhTP/2iKC09BUKmalGeDUS6iKZY9gVkpkOgfh6odKKCRYkM
-	 MYhz0Uu+aQUqXbi+krc0NMP1S2gBx4kcywXnQrYYoyvKUdwWq2zGaozN9cFpCuVxoAkRn
-	 QvbR7vdM9aRKnz09t9uaimWy8kiSiRUyWPkaHdpPge8/EqXSjIxvqwZGD2Rd1KlkJK/jr
-	 Ehk4QqVrpYW8rGQ1XgidL8fYiQBNrWl4I1deZScz9Fz+DhxZS4a9yQJqeu57cK9QiXw==
+	t=1793132862;
+	b=LuJ4blLZZxBowSXn8WGcBgcSb7CEP+5MPJS9yaVVO9C37H9zfXqQ0gBSr2N0w+A7sMpK
+	 EvWMuJKQFkyObkmlOQNtoxJyUcnUIA1LqbMxaEt4TaAXA1srPMu57Tm5aLcCHqGeGGc6t
+	 YcoSvmNvbIs3v8xPGr6dt0g456iOaFi3FsGk87OG2eWKLP8cz80R6J8H/qkzfjlyPQB8L
+	 v5TaEE0kEk/Iqf2DmeF8aLdRY/Y4Y0rBGOcEsu4whlH5R3yKd3M/7SlDIS4/v+QwiwWim
+	 SNlW2ytiJnb5TCj85q3Wdp4IQ1qXnpn8tU2OsqGlzj5k5XbBSj1rsKG50dYX/q8WFpw==
 ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793132781;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793132862;
 	h=DMARC-Filter:Received:Received:Date:From:To:Cc:Subject:Message-ID:
 	 References:Content-Type:Content-Disposition:In-Reply-To:
 	 X-ClientProxiedBy:MIME-Version:X-MS-PublicTrafficType:
@@ -24,31 +24,31 @@ ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
 	 X-MS-Exchange-CrossTenant-Id:X-MS-Exchange-CrossTenant-MailboxType:
 	 X-MS-Exchange-CrossTenant-UserPrincipalName:
 	 X-MS-Exchange-Transport-CrossTenantHeadersStamped;
-	bh=p/kGq+QwfEMYNE6SzfHZXGafcdo2h5wlqVOSBdnFbVw=;
-	b=VpNX5GPmoV65/+UYS15B1DqAiYlV2fCrM4s7lwhLIItYeq1rzB6th5QTlCLxqMjlLnms
-	 ZsgkjIJzXW9O15eP+yCvHtl5VZPEB71O+HCxG7EnZo51nIQQrQ+TpuZE/bF5eOtvtz9gC
-	 Fp2VSm8v91Ej9tRgfIQibL1VHoLA2XZHjnvO1RRRmRJfCfkiFMbi4mbSK4HzcBA+AkAH2
-	 +sRULxK6fp+1hSXsx+9T33QR1HFj6ZAuKe5laJOAILHWc3l3nvjCCZf+ORH5iEgICZxYu
-	 58M9r6oHunKjHPKhffRnNQlTwsZQJoehtM0LvEloYuArykRGif1FtyYxRoVPviSNj6w==
+	bh=xlljtLpVa3TC22agk4PtilGIM17Uc5+2eANTfGm4074=;
+	b=2NFE9fE/4SfwNv16FLM3gExE2Xigor9goElSBF8aZexSOpcOlDBguPmpVT4cXzUGYuhC
+	 7Lc9ctp8gt/pEYXhbIURsx48vCCwNQhPNx5rivfGLFyF46KTIXOqyEA8ETr0qU6jF1KPr
+	 VJlF7lDQoaz9uVb4cEsqgBF5IPyc/xKtZEJbWd+F4k1WpA2NoX6QVmu7nQpeZqVl2ZBpi
+	 6YI+lC1/ubHUNn/qX4yRwMvHeU7atKDr4kmDCVy4jZrdum+RaTC5+f0kXmW3PETv3LiC7
+	 dyXc87hB65rif3bWMBfHqGxqvfPVrkiGMF6yfixVxGqeNJTO6wwguG5hCK8anUZt/yw==
 ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
 	dmarc=none header.from=atomlin.com;
 	spf=pass smtp.mailfrom=atomlin.com;
-	arc=pass header.oldest-pass=0 smtp.remote-ip=52.101.196.76
-Received: from LO3P265CU004.outbound.protection.outlook.com (mail-uksouthazon11020076.outbound.protection.outlook.com [52.101.196.76])
+	arc=pass header.oldest-pass=0 smtp.remote-ip=52.101.195.120
+Received: from CWXP265CU008.outbound.protection.outlook.com (mail-ukwestazon11020120.outbound.protection.outlook.com [52.101.195.120])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange ECDHE (secp384r1) server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7ECF1606A900;
-	Tue, 27 Oct 2026 20:26:20 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 7ECF1606A900
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCBC5606A31E;
+	Tue, 27 Oct 2026 20:27:41 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org CCBC5606A31E
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=atomlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=atomlin.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=RWmAndaYLB0uHBCrwaKNo6KAErEKIceubBFN7Xw5L6JCUfF65e5Pxx+Cbm4RnquWZGCZUKCcgbA9wKQPopiT7wCsDkpxXsCxU+qsKob4jk2+HSANxk/FfvWszqEZKwwDuCHXhyQZZIIIloTgyKaAfPz161YQXMpFTnV193D0IXMwrv12CvGv0VK+6PXjxWg/BuDD8CXSPdnxABDeKnAjnm6iVqIK+2JHYPvbV0LLgnUuoX2ribhgK5/6zYFDFG/B4Gg0oESlbhIrozLqCuNtLU6H5/qVgqHWtUKvWxNS5WQt2HXOqKRTsrQZ/PEh6Zda2QXUPIxOhu5vvIPFokljCg==
+ b=Mb9fcaWWt89Tk2ayhbL2k2MlYuDl/EHFOM2kgF6K4Sa/dzzaKh1miSmlPFNQdPS6PElXhrGj2WDA4Rba4IDhBclA3EfIOLePXNZoa4pTlrgXYQBEUqQtOKUNXPl65BWVsUZ2+X1QRT2hW+auVIKrkXjX59t99A3Mfn0hU5DqQK6o5gu5KeuJHcdJydL4iHGeJV76r9+L5Sw9NHLCx17PPpBe0eO8Fkvurbhk0BJbt7Ip38MQqld7sVrSVmvKJYJHmIjNXFZXnJWsFaYhlULqjVN/kO8cqswk+ctq0KEvtmH/Vq82SwcvLajRmYOF1A9ebEq150d2HBX61cUEgrq86g==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001; h=From:Date:Subject:Message-ID:MIME-Version;
- bh=p/kGq+QwfEMYNE6SzfHZXGafcdo2h5wlqVOSBdnFbVw=;
- b=J6o4USQi+QoEQzIdzwyfaIEtq8rFz3wj1QmCBL0hhBfXbC5ItDzuf2aKdwvRkfD4ACdXhfvzhVjlrPbdITA9tQhc3XbRZtfiGF1MVYe3gWIlDK8OA1PREuqUu80E8+vqn/kAOpPiy9/E5sStLBuqTz8prAi4kRBfy1Z+hUMRnvYhw0Pz2vMiQUHgoQHr6gJCGSKEGXMaGWELhFnlHey556aysSSxcZstgIZ4RRioBofomqqsK7dJO76ZIbm96op9d2lYJ9X7uIQz6TB92WFOnQHO9wuxTMt4khyBbqqlE/M5cTJFop4gT1WM8iNO6Nz+4Au4qDUqLsLcw5ULm1BD4g==
+ bh=xlljtLpVa3TC22agk4PtilGIM17Uc5+2eANTfGm4074=;
+ b=COpcrEyBBUo3SsNdy3x4QFTk4vuUvTl7jQgrCrqhfB0ZfCihSFjPrqJQve2ldjrvyxLlGZ6sSERGrCdY7VuKMbdqozLs0f92GLNvcOKDxYgeweB5GxqxgvuSbjld9xvy4NdNJwyEkyAzU3wcbZEpYa5up5Oo0ChHoHx31zEnuol/tesNJAUGJwoYY3wl385CTZg/txHCyt5KdhrtZMGnkTrBT40ovjsP5IQk/frjFk+5yPa+YSo3FFQ1qK7vsNSN/X8SXYlc2Hm/VhdtHZcCnba5p1x5etALy2S3xwsRKp9ppBdsAzJrSC5I5v9j9OTs1KlagzCvg2zcJEp7+Hyklw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=atomlin.com; dmarc=pass action=none header.from=atomlin.com;
  dkim=pass header.d=atomlin.com; arc=none
@@ -58,12 +58,12 @@ Received: from CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM (2603:10a6:400:183::5)
  by CW1P123MB392182.GBRP123.PROD.OUTLOOK.COM (2603:10a6:400:282::6) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.546.22; Tue, 27 Oct
- 2026 20:26:16 +0000
+ 2026 20:27:39 +0000
 Received: from CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM
  ([fe80::cec4:77ab:262e:d230]) by CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM
  ([fe80::cec4:77ab:262e:d230%5]) with mapi id 15.21.0546.021; Tue, 27 Oct 2026
- 20:26:16 +0000
-Date: Tue, 27 Oct 2026 16:26:11 -0400
+ 20:27:39 +0000
+Date: Tue, 27 Oct 2026 16:27:34 -0400
 From: Aaron Tomlin <atomlin@atomlin.com>
 To: Ian Rogers <irogers@google.com>
 Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
@@ -71,16 +71,16 @@ Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	Adrian Hunter <adrian.hunter@intel.com>, James Clark <james.clark@linaro.org>, 
 	Zhan Xusheng <zhanxusheng1024@gmail.com>, Dapeng Mi <dapeng1.mi@linux.intel.com>, 
 	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 5/7] perf inject: Use perf_tool__init() for
- --vm-time-correlation
-Message-ID: <xrwroz6mycibzep7cqos6v5kvsbrztni4lbqobe2gbsz7kuwpa@o4bf76aka2ax>
+Subject: Re: [PATCH v1 6/7] perf inject: Set ordering_requires_timestamps
+ before creating session
+Message-ID: <3n2avzhpvlafgmzgcrnpila4gxxomeav3bedihrhuq5uu6yzfm@it3qjkjx5bsq>
 References: <20261025220349.1244499-1-irogers@google.com>
- <20261025220349.1244499-5-irogers@google.com>
+ <20261025220349.1244499-6-irogers@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20261025220349.1244499-5-irogers@google.com>
-X-ClientProxiedBy: MN2PR06CA0002.namprd06.prod.outlook.com
- (2603:10b6:208:23d::7) To CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM
+In-Reply-To: <20261025220349.1244499-6-irogers@google.com>
+X-ClientProxiedBy: DS7PR06CA0037.namprd06.prod.outlook.com
+ (2603:10b6:8:54::12) To CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM
  (2603:10a6:400:183::5)
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -93,105 +93,195 @@ Precedence: list
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
 X-MS-TrafficTypeDiagnostic: CWLP123MB6607:EE_|CW1P123MB392182:EE_
-X-MS-Office365-Filtering-Correlation-Id: a10c01ff-e3eb-4bff-cc71-08df34688d1b
+X-MS-Office365-Filtering-Correlation-Id: 5615283c-408d-47ca-ff6a-08df3468bef8
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|23010399003|366016|376014|7416014|1800799024|56012099006|261021121427099003|4143699003|261021123027099003|261022105027099003|261009223027099003|10067099003|18002099003|6133799003|22082099003|3023799007|261026140227099003;
+	BCL:0;ARA:13230040|23010399003|366016|376014|7416014|1800799024|261026121527099003|56012099006|261021121427099003|4143699003|261021123027099003|261022075727099003|261022105027099003|261009223027099003|10067099003|18002099003|6133799003|22082099003|3023799007|261026140227099003;
 X-Microsoft-Antispam-Message-Info:
-	DohuczveYwvbwagtjDgD6VFcdvHNhrH7SqbJ3rmVQ6dwLfC8tloYtqiyhUOzx5HQ+gTCVS7+o/6mnOXL7Qq3o4COFA+bgMqeEZ3C6EfpYz6VFhioGVFS/h+V/1CAWb20blIxJwUu/+NCVh1KmXuh7/fUPUYPf8F+0mrnL5TjWcI/gbiCPToQUzQoTm0TcnZpH40e15GjwdzjXEcrLYhT61S5UUW3+k0DGFhjdh5w1R45p5VMx5eDliNU2tKfFVmMTOY0Y9v3e/518wx1XYuiCxtnwZiRH4c+4lAXecXk6HFWUvgj8taR37Ovo0T+r3zT96vtUOHQ+2ZmHqa6VF+GLdRs0EczH3UVPhssZQIDO0iq7OwcqbjpKuVYtXQP5WNtjXiVQkd/dhm4RM5WsUM3ox8DRHZUZLw5hhvswCwamjPA/0Oqpku7ozjUCsD8kfzHpUuTvVl3SA9hOb3DVV0PPFpHXbc76fhW83aacCFJdYUyeO8r1AUrsT2NyEy3bAHmzWndu3+Do+JbMZ2SMbhkNYmGbnWgQBWbslYkqIhlM+TDDQ0+lnZhcfFwefVILp6VKNPvxT2Qq37uMR79jiHB1WA2kb0n/qWrmMis2r92/HaPHYl587D71lUH6rbMKDP7ww4EUg0WqU4dT+5axN5ryhZFfyjEUDXvwX6Jt9GH1Qw=
+	PhAMtWMZVYWmWMKO7FzWcC7u6Y5SJqdPgab2fzKYWGCTnMRzYHku+CUJc/3o7O+t49GMRB72/oQhXEglfzFB6gUmtg75NejeCHMYqJ7FTx/7TbaN5h+gGe2sdR8b5TFJNjfp3MafGkHavj2sSq3V2J9GDdLAd2fog6V4V8dicK7e4Pc/b21U16SuUsEH4KcYJgbdFfo//ekIrg57up+/5mdArIeq1/rxLt+39JLK1VyauPf1XQLEIdYOQPZi86c6Y+A/Xh5r4LpJ7vPylnvUCxjFvaniRzblzToHvUblhTunpT9Qmp3HX0ZACJkoye5z40WK+1VQ04f05PXZWpkKjo8ioPeg5Frteot2qMOfcBQNY+RHfO0CbGSTVvASQsH8tw1nXahC15NmgobCKnvRAT/13y75J79z72sDjv7pnL32G9MXYT7meYMB2nEJp0s9RZzbHX+TIHjBCi4QnptNq2TporPxW7a/MGb+xneFR6cXEid0wBE27j5EuLmb0ys3VPqXmBL0PNHNqs6J4LhmJwiJ3i8OByUqmT5NRIUNMLyNkcSp9stJM7gZqQvFNahS/dlOvlIDPstDVxG+FRsGUDWQ9GUbvOaLJGsZXGzBUrRuuis7bAwAqmI0RFf+fEMSAjn+eXBLVyXlEMxW6+uLU9JpvTzIBO1FJ7SaeYRqqrc=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(23010399003)(366016)(376014)(7416014)(1800799024)(56012099006)(261021121427099003)(4143699003)(261021123027099003)(261022105027099003)(261009223027099003)(10067099003)(18002099003)(6133799003)(22082099003)(3023799007)(261026140227099003);DIR:OUT;SFP:1102;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(23010399003)(366016)(376014)(7416014)(1800799024)(261026121527099003)(56012099006)(261021121427099003)(4143699003)(261021123027099003)(261022075727099003)(261022105027099003)(261009223027099003)(10067099003)(18002099003)(6133799003)(22082099003)(3023799007)(261026140227099003);DIR:OUT;SFP:1102;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?b21OK0hiNC9LTytYcWJnZ1JLeSt6K2wreERLUExyRHRwT1hOZEhOb2I4ZGJ6?=
- =?utf-8?B?OERXTVIydXA3em83ZUVDU0NzKytZRUZtY0pxQU5ERERkb1llaWVXR293MnUy?=
- =?utf-8?B?aWRuUWQ3MTJGRE5DNGZKQThlMlRSNElScnpIaW9VVW8xY295Rm5NK3dhdUFa?=
- =?utf-8?B?V3VManpVc2FrcFpVUlBoRjBjWnRZTzJnWTc3TjhQZVJzU3YzMjVxK3lra1Vm?=
- =?utf-8?B?S09YZ0FpdHg1WHArZTJmMFZYcXF5NEtEdFMxZWE3dW1mMTNlZHBTeEhHdmxE?=
- =?utf-8?B?a1RvUW9ZWVErMkJqSXdBQjhIQjFRMGUwWUVGQmdvUUovak54eDZGWCsvVWdw?=
- =?utf-8?B?TnpjWmluY1VrbHR5MGYvYzBtelNzWEFRQ1JhL3RRZmE3QnlITDNQeTdWNDFG?=
- =?utf-8?B?WUcxTGQ2WXVvZEZvZFpGelVUbVlBSGt5Ly82QTE1R0pXNnQvVVI0REpsb21J?=
- =?utf-8?B?MFk4VmJmem9WVDNUYktqaS9jUmlHTXh0bjV5NnlaamJIdDdhY3Q2SG9aNm9V?=
- =?utf-8?B?RnZzcmdENjVXM1lURndxMGNZclp2QkhkS29tYXhic05lckFaSXpyRnVzcEZ1?=
- =?utf-8?B?UHoxMVRnTnFvYWZnQ3QwcjAxYlhtL0ZEZjZCVGtCY2Z0OXoraHIzZVBpdDRI?=
- =?utf-8?B?VWtBY1hZNWJZQmJIejhUWURraVI0dmJua3ZiUVJKQmFBZlFoRW9QcUJGOXpi?=
- =?utf-8?B?K0h1Z2pNUGZJVGg3My90YlRFYy85RFI1Ymk5c3pQNUdlZjZZTFFXdEU3NDZ3?=
- =?utf-8?B?VUNXUDAzcDVsYWFzNTBwSHl6M2RXR0ZnbDFPLyt1SkNwOC9qeXB4bWVlc09P?=
- =?utf-8?B?RE1NTjl4NGVvdDMwNFZtTks5dFl2aWM3UkdZZFk3Qk1NWE85RndqY2IwdjU4?=
- =?utf-8?B?ZWYzVVpTRk0wMitLallhN3BBYzF4YXZjb0gwWStoaDB2eVZ0UUlkTlN5THV5?=
- =?utf-8?B?NlRubW5nckFxQjBuK0Z4N3pIdE9WVE81OEMxWmZZdU9ZZHZ0MDJneXJLSEl1?=
- =?utf-8?B?bnZvVXdWUklRMlFyQURLa2NWL28rakhjOEdOS3NPMkc2azZ6NFJoMTlaSHRj?=
- =?utf-8?B?dUt0Uk5GcWNZN2gzYm9qaG1yeDlTN0hpb0JGVUw1a0UyaTRMTVQ0bG1WTloz?=
- =?utf-8?B?a3MwRTF5Uk5nZ3dneXdzNHlmT01JbEVaRFFLK1Y5MmtpaHp5Nkx0VWJSb1Ny?=
- =?utf-8?B?YWdsYWIzb2dwcjVERVBRWWpVQm41R3d2R0R4LzR6bzUwc3Y3Zy9qdkdlTlpN?=
- =?utf-8?B?NTliU3NMemhnWmcxZ1lvbmRobzBabVZ6dTlWeE9jK1hpUUMyMWxVUDRHeG5K?=
- =?utf-8?B?RXFnSjlHR3l6VEJhTnZaVDVoa0FhamRrSlB0elUrZ0VOY1VIc1dXMEluWkdR?=
- =?utf-8?B?cjJUSW9BNldRSHNXd0JYajAyNXlXYlB5T3YwaW0rMDBTeXFZNFY3MW1tckN1?=
- =?utf-8?B?R1RBM3FZVGlCZncvM0o2Q0NkNDg0VzBVam14Ujg3SDhMM0c4dTBGVFgvblBK?=
- =?utf-8?B?WE9Zd3JJckQ4bVhVT1dZVFhZajdrUHV0MU4vWUx4eCtpOFZhVEVQSGpVMFk3?=
- =?utf-8?B?bm5ZVzcyNWpqNnE1QUpqV2JGbnNxRkxUbUFMTjhSbjVwSStkOGZKcXpuTW5r?=
- =?utf-8?B?cnJJRGwzZWhYck96QVFqWDdmWk1lSGppRVNZSlVVWE1vazE1QjVNR21DNHEz?=
- =?utf-8?B?azJHaXFFNFR4VWRwWGJGVUZJWWVsSkRHUU5BSi81WWlDcE1tS3BwbEFIZnRi?=
- =?utf-8?B?bGZGWkxYL3p0VHMwRVFaZ3JYNmpOQUpBZXNoVTlJRUhGTVhrZm84SURSaFRN?=
- =?utf-8?B?T1MvNGtUQVYzajdQenlMUzgxRlliQVhIR2RvY1A0N3FVZTV1UktCQjBhNWo4?=
- =?utf-8?B?RXdWOHVnYTVFMU12c0Y5ekRyc2dVdlBienhIemxpa3B4ejBGQXZIME9PSUV4?=
- =?utf-8?B?SURFVkhITUZ3QWFlVVhiang0RUJGTG0ybDNhaTE2ay8zbEtuNzQzMVlEclhH?=
- =?utf-8?B?ZE9KdWQ5MjIyZmFBNFlDZW5pYUVGRlNsZzNZelBVYnFtZDJXY21mRWJiUHpk?=
- =?utf-8?B?L0pjQytLa21OU01wU3JYQndNUG5iUkh4L3I2QTd0YlBqWkZleXl0U1p0ejll?=
- =?utf-8?B?MHEyTHRLaE1JVFVjNUQvbDhXMkhlTy9wM29peWxoYlhvdTFQd3lTZTYyRi8r?=
- =?utf-8?B?WHZXbERtUCthd251NU8wc0lSb1hFckkxOGp2dFVwOHBZS0M3OFJwdXczWWJa?=
- =?utf-8?B?TlovazlMNXlGMU9BMDZZNDRodnEyQjdkV0dYbHh4TDJnOXprUXVXcGljblJN?=
- =?utf-8?B?S1d5dmNabUMveEZ5R2xwQ0xGREcwMW4xK0ttak9ZdjAvODA2VERDZz09?=
+	=?utf-8?B?eGJSeUxtRTRvQ1JrV3BYeGJKL2hpbk9yQ1N2QUNDWDBseEE0RkE1bWZoQTJz?=
+ =?utf-8?B?TW9vZjEwSVhXaVRMaExyRGpyRzZYQTZZdmpoNHFIV0JEalYzdlI3bFd5UERJ?=
+ =?utf-8?B?OUpGbU9DUmxzc09xWDNKREU2Q3hVSk1JeE9HMm9BZzh1aS9xR0MrUFRTVlF5?=
+ =?utf-8?B?d25Hb0lHL3JDOGRSMmg5K1dwZDBZdlgrdTErTUMwUVhESmpiMW5FeHRHM1dv?=
+ =?utf-8?B?bDQ4RkxWYmlIYlFNVUlDajNuaHJwb1JTVE00SXFzWDYwK3hVQ1VxclNzWlFs?=
+ =?utf-8?B?WWJlVEFzRW8veUxwVFRpbVZIc3Q3YmoyT2tjckJ1b3UxOThCU3JMWU05aUFz?=
+ =?utf-8?B?TU1ERGFwWHFhNkhxMXpydDh2Rk9hcVN4enBHRFpZTlZKUFJTNXNGTWtpa3J6?=
+ =?utf-8?B?NlExYkVYNmMvS1NteHdZY2NxRlIrVGNmSzBWQnJpalltUUJkN2J6RGNGbkR3?=
+ =?utf-8?B?WmtlcGkyQjU5ZUM2ZjFyd3U1Z0hnUStwVGQ3MkFnMG13YTcwN3VSOTlFMmpM?=
+ =?utf-8?B?NnlNRzdTL1FKTGNTRkp6ZThsb1hoZ0xST3JZK21hMU9JblhiY2trYzVmR0xv?=
+ =?utf-8?B?ZHFvWjFCOFVYQWhZS2c5TmZINzZoSUgrRTEwdzhaNXlmYVA2SUZJVDJTNW8x?=
+ =?utf-8?B?aHRyQXZsR1ZTYUl1bkJrWmkyKzI2OGYzd1hvSXkxUnEveXJwRFhqQjFSUjFw?=
+ =?utf-8?B?bngzTGdWajkwamhTMVFLb0sxUFhrOE40Nm5NV01DMEtQQi9heE5qVitlNnpZ?=
+ =?utf-8?B?Z3plcjNyd3BkdHFha3orK2R2ODhaOVhXV3EyK0NYRXBoMEh3dy8zZlBteXpr?=
+ =?utf-8?B?dTBVaEpjZEFvSlA0TS80UTNUVEZ0MkVhWEY0TWFYdW1Ob21OZWZ6MXBjK2dF?=
+ =?utf-8?B?V0R4cFI5cHB1K1lxU0pqTzhIdlpxL1MvblFWakk0S3gyUVd3bUhyMTMvQ3BH?=
+ =?utf-8?B?N0lVN3VGYlBSMUM2VDdRVXFRUHZ2Tk51ZkswZmRBUktQUUxmbFJBTXMzbFR5?=
+ =?utf-8?B?alovYllQQkNZN2lGRFp3S3Y4dG5VSTVOdDFyRzYxVjhIWmp3eG5pRnJaN3ZH?=
+ =?utf-8?B?Rm1vdTByczFkdHB0akIzcGFoM2lLNW1MT2w1dFJTWU9yTFBnWFk5R2ZnbWZJ?=
+ =?utf-8?B?NFc3VkhRcHQ5VTJlNlRCeHdTaUhRdDYyZVdDRU1ZTXdGQXFGNXNWNGlFWFBR?=
+ =?utf-8?B?dTBnTzZQMFVqV0xheVlvT1lhZkoyYVZvQ0N6bW42QUVPYkxXRFVmOUVYSnhu?=
+ =?utf-8?B?aDFVYjg0WVVPZXBCYlgvYUtxVUFDdzNQeVhuYnVzNWxlTzZNa045VXh0K1pU?=
+ =?utf-8?B?Y3RBU1M3cUt1cmxNMTNZZk42Z3RPQ2MzTGFsKzNoeCtzTnJvTTBLc1RKazFv?=
+ =?utf-8?B?MGtPQjdYUUFhcGVMeGx6eU16QWttdDZ1cmtpMExxOS9zQ21VN0pYM0pKa3Vj?=
+ =?utf-8?B?U0xjanpqaEJpb1h4OTVJLzkxNlRvZTYzZ3ZuNnRtdlJLTVNSQ3dXU1o5Z21O?=
+ =?utf-8?B?NFAyUVZiZmZHcHI2MVduNytLczlsMWlxcVUrd0d2MEpqcXlwZFJkaElRYXdp?=
+ =?utf-8?B?MjZkZTFWbEdmZW1CL3BzaS9sWDZVcXVHazlzVGhMbjVhUXlIVkIxUE9lZlZV?=
+ =?utf-8?B?cmNkUGc3TmQwUmdhNzc0TitFeklxaUNDTkRUZkVrc2NaWkhMQXZrclZHNDJh?=
+ =?utf-8?B?RHQ3SkZHMlhHajZERlJBRnNVNWZibmdlQXZpa0FLZlJZcFZ5dndEU2Nsd3Rm?=
+ =?utf-8?B?SVZjZXpsNytMc1poZGlGSkZUVXdtWE8vVTBpRWRjdGlDUkpGRGJoaUxiNXg1?=
+ =?utf-8?B?TFNVQ09pNU05ZG1HTmFjTHFNN0U5NXFYSElJaVEwTTZpdkVjUjhpTCtIRFE4?=
+ =?utf-8?B?YTBvaC9CNEg3WnFpMFRaYm1MZzhQV09Oc3ZWaUhibEkzUlc5all6d1Q2M25L?=
+ =?utf-8?B?N2dDRUFZamZkWG5TNkRMSStKUE1FblAvRXpMcWw3MkJLNW8rbWpIdUNsMzlu?=
+ =?utf-8?B?K3R2YVpEQjFjRUJTbWNIWFB5VWFWKzlmeUlqb3R1VkhhOVJ5ZExYTmJCZ3RV?=
+ =?utf-8?B?UE00K3dUd1hTb3Q0U09DSnR0RkMyb3gvMzJLWU1maHlTVnplT2p1ODJLQTZP?=
+ =?utf-8?B?N3JzZE1wZ3NOWXQzM3FWRHA2ODlFWTNVeUxuekxCRVE1NzRiNU52OVltYWtq?=
+ =?utf-8?B?TDlHdkdIdlhzMXRQWVFiY2ptd2E1cUNXK0Q0SW0ySmVVWjl3bTNPRjdmZlkr?=
+ =?utf-8?B?NWY3OVUwV0hWaUxxRDNpUDBhUmRDVHgxbFYrQjZONzBhYzNGQVFtWnowbDVp?=
+ =?utf-8?B?Njlzc3BIL0tqMmZzTWx1SUxTajk2RjBDN29rZ0N6dWkzZld0bE1iQT09?=
 X-OriginatorOrg: atomlin.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a10c01ff-e3eb-4bff-cc71-08df34688d1b
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5615283c-408d-47ca-ff6a-08df3468bef8
 X-MS-Exchange-CrossTenant-AuthSource: CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Oct 2026 20:26:15.9510
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Oct 2026 20:27:39.7133
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: e6a32402-7d7b-4830-9a2b-76945bbbcb57
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: t62oCQYK+YAqDpUgkYnXiFz0/1Aae2DXkLCmZVuawyRle0jpC58hSZE+Cp72GpyoWd58b1Z8oGKB9mmEqvnMdg==
+X-MS-Exchange-CrossTenant-UserPrincipalName: +lnj/LUCAOuxMYl2613N48wNtU+1B7CSg64MZRN73EnOywiwp0dvlja6758PlHk8MfhJYUiScStXIHob85AYYw==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: CW1P123MB392182
 
-On Sun, Oct 25, 2026 at 03:03:47PM -0700, Ian Rogers wrote:
-> When cmd_inject() was converted to use perf_tool__init() in commit
-> a37c0436f379 ("perf inject: Use perf_tool__init()"), the
-> --vm-time-correlation branch in __cmd_inject() still called
-> memset(&inject->tool, 0, sizeof(inject->tool)) to clear the default
-> repipe callbacks. Zeroing out the struct overwrites all default stub
-> handlers set by perf_tool__init() with NULL, causing a NULL function
-> pointer dereference if any other event type is encountered.
+On Sun, Oct 25, 2026 at 03:03:48PM -0700, Ian Rogers wrote:
+> In cmd_inject(), inject.tool.ordering_requires_timestamps was initialized
+> after delegating tools (such as aslr_tool__new()) and __perf_session__new()
+> had already been called, leaving delegate tools with the uninitialized
+> value. Set ordering_requires_timestamps on inject.tool before creating
+> delegate tools and the session.
 > 
-> Use perf_tool__init(&inject->tool, /*ordered_events=*/true) instead of
-> memset() so that un-overridden callbacks retain their default stub
-> handlers.
-> 
-> Fixes: a37c0436f379 ("perf inject: Use perf_tool__init()")
+> Fixes: febea9ec382f ("perf inject/aslr: Add ASLR tool infrastructure and MMAP tracking")
 > Signed-off-by: Ian Rogers <irogers@google.com>
 > ---
->  tools/perf/builtin-inject.c | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
+>  tools/perf/builtin-inject.c | 49 ++++++++++++++++++++-----------------
+>  1 file changed, 26 insertions(+), 23 deletions(-)
 > 
 > diff --git a/tools/perf/builtin-inject.c b/tools/perf/builtin-inject.c
-> index ce7562fc788c..c30f5aaabf4c 100644
+> index c30f5aaabf4c..3f3108fd3981 100644
 > --- a/tools/perf/builtin-inject.c
 > +++ b/tools/perf/builtin-inject.c
-> @@ -2464,12 +2464,11 @@ static int __cmd_inject(struct perf_inject *inject)
+> @@ -2463,13 +2463,18 @@ static int __cmd_inject(struct perf_inject *inject)
+>  #endif
 >  		}
 >  	} else if (inject->itrace_synth_opts.vm_time_correlation) {
+> +		bool ordered_events = inject->tool.ordered_events;
+> +		bool ordering_requires_timestamps =
+> +			inject->tool.ordering_requires_timestamps;
+> +
 >  		session->itrace_synth_opts = &inject->itrace_synth_opts;
-> -		memset(&inject->tool, 0, sizeof(inject->tool));
-> +		perf_tool__init(&inject->tool, /*ordered_events=*/true);
+> -		perf_tool__init(&inject->tool, /*ordered_events=*/true);
+> +		perf_tool__init(&inject->tool, ordered_events);
 >  		inject->tool.id_index	    = perf_event__process_id_index;
 >  		inject->tool.auxtrace_info  = perf_event__process_auxtrace_info;
 >  		inject->tool.auxtrace	    = perf_event__process_auxtrace;
 >  		inject->tool.auxtrace_error = perf_event__process_auxtrace_error;
-> -		inject->tool.ordered_events = true;
->  		inject->tool.ordering_requires_timestamps = true;
+> -		inject->tool.ordering_requires_timestamps = true;
+> +		inject->tool.ordering_requires_timestamps =
+> +			ordering_requires_timestamps;
 >  	} else if (inject->itrace_synth_opts.set) {
 >  		session->itrace_synth_opts = &inject->itrace_synth_opts;
+>  		inject->itrace_synth_opts.inject = true;
+> @@ -2482,8 +2487,6 @@ static int __cmd_inject(struct perf_inject *inject)
+>  		inject->tool.aux	    = perf_event__drop_aux;
+>  		inject->tool.itrace_start   = perf_event__drop_aux;
+>  		inject->tool.aux_output_hw_id = perf_event__drop_aux;
+> -		inject->tool.ordered_events = true;
+> -		inject->tool.ordering_requires_timestamps = true;
+>  		/* Allow space in the header for new attributes */
+>  		output_data_offset = roundup(8192 + session->header.data_offset, 4096);
+>  		if (inject->strip)
+> @@ -2514,12 +2517,6 @@ static int __cmd_inject(struct perf_inject *inject)
+>  		inject->tool.finished_round	= host__finished_round;
+>  		/* Keep track of which CPU a VCPU is runnng on */
+>  		inject->tool.context_switch	= host__context_switch;
+> -		/*
+> -		 * Must order events to be able to obey finished round
+> -		 * ordering.
+> -		 */
+> -		inject->tool.ordered_events	= true;
+> -		inject->tool.ordering_requires_timestamps = true;
+>  		/* Set up a separate session to process guest perf.data file */
+>  		ret = guest_session__start(gs, name, session->data->force);
+>  		if (ret) {
+> @@ -2536,8 +2533,6 @@ static int __cmd_inject(struct perf_inject *inject)
+>  		inject->tool.exit	= perf_event__repipe_exit;
+>  		inject->tool.mmap	= perf_event__repipe_mmap;
+>  		inject->tool.mmap2	= perf_event__repipe_mmap2;
+> -		inject->tool.ordered_events = true;
+> -		inject->tool.ordering_requires_timestamps = true;
+>  	}
+>  
+>  	if (!inject->itrace_synth_opts.set)
+> @@ -2816,6 +2811,10 @@ int cmd_inject(int argc, const char **argv)
+>  	data.path = inject.input_name;
+>  
+>  	ordered_events = inject.jit_mode || inject.sched_stat ||
+> +		inject.itrace_synth_opts.vm_time_correlation ||
+> +		inject.itrace_synth_opts.set ||
+> +		inject.guest_session.perf_data_file ||
+> +		inject.convert_callchain ||
+>  		inject.build_id_style == BID_RWS__INJECT_HEADER_LAZY ||
+>  		inject.build_id_style == BID_RWS__MMAP2_BUILDID_LAZY;
+>  	perf_tool__init(&inject.tool, ordered_events);
+> @@ -2862,6 +2861,21 @@ int cmd_inject(int argc, const char **argv)
+>  	inject.tool.schedstat_domain	= perf_event__repipe_op2_synth;
+>  	inject.tool.dont_split_sample_group = true;
+>  	inject.tool.merge_deferred_callchains = false;
+> +	if (inject.jit_mode ||
+> +	    inject.itrace_synth_opts.vm_time_correlation ||
+> +	    inject.itrace_synth_opts.set ||
+> +	    inject.guest_session.perf_data_file ||
+> +	    inject.convert_callchain ||
+> +	    inject.build_id_style == BID_RWS__INJECT_HEADER_LAZY ||
+> +	    inject.build_id_style == BID_RWS__MMAP2_BUILDID_LAZY) {
+> +		/*
+> +		 * to make sure the mmap records are ordered correctly
+> +		 * and so that the correct especially due to jitted code
+> +		 * mmaps. We cannot generate the buildid hit list and
+> +		 * inject the jit mmaps at the same time for now.
+> +		 */
+> +		inject.tool.ordering_requires_timestamps = true;
+> +	}
+>  	if (inject.aslr) {
+>  		tool = aslr_tool__new(&inject.tool);
+>  		if (!tool) {
+> @@ -2932,16 +2946,6 @@ int cmd_inject(int argc, const char **argv)
+>  		}
+>  	}
+>  
+> -	if (inject.build_id_style == BID_RWS__INJECT_HEADER_LAZY ||
+> -	    inject.build_id_style == BID_RWS__MMAP2_BUILDID_LAZY) {
+> -		/*
+> -		 * to make sure the mmap records are ordered correctly
+> -		 * and so that the correct especially due to jitted code
+> -		 * mmaps. We cannot generate the buildid hit list and
+> -		 * inject the jit mmaps at the same time for now.
+> -		 */
+> -		inject.tool.ordering_requires_timestamps = true;
+> -	}
+>  	if (inject.build_id_style != BID_RWS__NONE && known_build_ids != NULL) {
+>  		inject.known_build_ids =
+>  			perf_inject__parse_known_build_ids(known_build_ids);
+> @@ -2978,7 +2982,6 @@ int cmd_inject(int argc, const char **argv)
+>  	if (inject.jit_mode) {
+>  		inject.tool.mmap2	   = perf_event__repipe_mmap2;
+>  		inject.tool.mmap	   = perf_event__repipe_mmap;
+> -		inject.tool.ordering_requires_timestamps = true;
+>  		/*
+>  		 * JIT MMAP injection injects all MMAP events in one go, so it
+>  		 * does not obey finished_round semantics.
 > -- 
 > 2.56.0.307.g5fe7bd680c-goog
 > 
