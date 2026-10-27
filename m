@@ -1,75 +1,75 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.70
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.210.199
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793142966;
-	b=wUXkkcGr8qUL+7rzUEDX6MfK3wjwKYHU7hOxmhaZLWnCDQ9SitNGbEHT822VkcWi3Y7F
-	 xEsdHcxlrJhudqV3YM49X3USGYZRT2f8qvmwLGFlRDOIIfMtQNnMazJ5bsp0oVStMBXq4
-	 CzRhP5JxtfNuisGunDukuaKQci7JF1EzIpGDtvf6de2V/ZzvxjJe42iNp+oiGx4T1OnC4
-	 q91t0smzc/+y/fLuJIGncBNQna2c68nVSf2CgHgFivv92jWjqAsM/KQ4BgS+95ehnaSGY
-	 EQ6lKoB/hjsZ538lBpKjioyXAwNOYHd+HBN9M6yLxoORn6yeBwF9cchE+K5SAEvWgGg==
+	t=1793143050;
+	b=AxL67d52cVLMpM4caHXi5VjDegvCWiYiaY8t1dcoZgo+//t47u0ZyM1j/VCbtvRMfk4B
+	 d21kNAMWOi4mCN6PRc9bFX9RvGZlYLgRY/ratlqSRZt/gU0LlSfEpmoVEinPZrxhZvCJr
+	 kNMjm6VfYE+KfRs8FY3yW7kGC3H15KCwJf3vM6cVMTxJ3HMUe8kTY0X6eZa6AAui3xfJA
+	 OOVJ4xGTJ6/5r6OPeZ8P9D4uDsSQSz+NPZdHLQPzd4DyB8+PFVE1V40APJEFUWxmzDODN
+	 nrw65iMJFiktJfeZs0sLlvq0PzkWz5VIaspDgtK0QsQcV76H3G9z+3R948ZL3CRl8xg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793142966;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793143050;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Received:Date:In-Reply-To:
 	 Mime-Version:References:X-Mailer:Message-ID:Subject:From:To:Cc:
 	 Content-Type;
-	bh=pe3GSuD4LGl6lVRKcgy65zyTo8/iD3NoWxDHxP9Zlm8=;
-	b=2my5YmPvRJa5wi0M1nYzNdMZA3vZvWk2C4fSy9BEXa0R1CkWXIpX6RRcR5kExKFV2Bmp
-	 KGb8DSXjCSMY8u4NQvzw3d+jvcthU3unkY2ZIh3bAk9/mHFAzk+ohEO/XTr4Gk74ZGMuA
-	 Pv8YIi6P2meLd57B84URlPo1L/yeZvOyOZgQqdOUy3TT9q6mkqo7l/y/MyC0/ZJEjd/dG
-	 u53jeBJMg+sgso0RqkAbw56ziJa4u8mPgdekIjt1TyAMWBuljX6Y+ywiTJgl8HENCKZ7/
-	 7mRREw5Jo3MxgeWhV4dBQ1Sil7/+D2B2AAa1ePRk4LmjfVVzUCGFt6Iy0HWVIHKx0cw==
+	bh=ZDGRVgYI+YuLX6sEG6mHKRJT8belKw9rO3epzepDmXc=;
+	b=SzaCuzgnSdHKWf1v93ThlzEdXvGveCLKSpAJ4gTRvQl7R+SYtV5TZOa0NzjI+Lvke3Tq
+	 tr/w9dKOwQXiMAtjitlF51naRR26f5VYst9HjpmjAA4u5g4c76bZybnfcWEShEWZg62rz
+	 BBOiXCL1HDz4Lb8yHIuurhxnMer+e3EUvhCfoIzowXsZ/UNbmohCzyryeVDGxS3whlqkA
+	 KwTdX1Eg+1xv1AN1lkDRApPDy0PB8mgKwj+E2VmKnKydiI/DlszHC3Hc19QnrajTeSbP2
+	 48cXZ7RlSNOaWcgoEPANMbjGYSLyTrInz+twFmpXF/TbX7MzcSf+wvaaGN4pgBQui+A==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=google.com;
-	spf=pass smtp.mailfrom=flex--irogers.bounces.google.com;
-	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=o2Uxtmxj;
-	arc=none smtp.remote-ip=74.125.82.70
-Received: from mail-dl1-f70.google.com (mail-dl1-f70.google.com [74.125.82.70])
+	spf=pass smtp.mailfrom=flex--jthoughton.bounces.google.com;
+	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b="PE/zx+6A";
+	arc=none smtp.remote-ip=209.85.210.199
+Received: from mail-pf1-f199.google.com (mail-pf1-f199.google.com [209.85.210.199])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79E9560A383C
-	for <linux-perf-users@vger.kernel.org>; Tue, 27 Oct 2026 23:16:05 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 79E9560A383C
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD629606A31D
+	for <linux-perf-users@vger.kernel.org>; Tue, 27 Oct 2026 23:17:29 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org AD629606A31D
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--jthoughton.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=o2Uxtmxj
-Received: by mail-dl1-f70.google.com with SMTP id a92af1059eb24-139b62317d0so1089229c88.0
-        for <linux-perf-users@vger.kernel.org>; Tue, 27 Oct 2026 16:16:05 -0700 (PDT)
+	dkim=pass (2048-bit key, unprotected) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=PE/zx+6A
+Received: by mail-pf1-f199.google.com with SMTP id d2e1a72fcca58-8a0688a43d3so320372b3a.0
+        for <linux-perf-users@vger.kernel.org>; Tue, 27 Oct 2026 16:17:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20260707; t=1793142965; x=1793747765; darn=vger.kernel.org;
+        d=google.com; s=20260707; t=1793143049; x=1793747849; darn=vger.kernel.org;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=pe3GSuD4LGl6lVRKcgy65zyTo8/iD3NoWxDHxP9Zlm8=;
-        b=o2UxtmxjVvAB6Rci3S+LSIE0BF6fLZrXhU/6xG08l7S4pknv18DcJPTSziiktSmuQg
-         2lDaJLEt64O53e7sa19/0iHJ4Ey+qZdy2Ip2xsFytQyDiIwuUNLWCqzjGVzueqsHs55s
-         ARvDVdNq89nRMadItdowhnY+mhPZ03uupHr6D2Wz2d7pd5A4Se3wnD4YoRvzq17ivwYM
-         qr79TigjTO5COEoptaqqPE8QxBgo5Lt9gjPru3QQ/5IFzCZfySwAgMtxSPJsvkNvxwfE
-         OL6rmeQifI7PV2PtOLhYqsrsrJvOm5CWTIfiXMilOzh6Qbb4M61tCpFK0zHWdrl/WB90
-         3Pnw==
+        bh=ZDGRVgYI+YuLX6sEG6mHKRJT8belKw9rO3epzepDmXc=;
+        b=PE/zx+6Af4cB6kwCb3KWCo2kLDvj8fl2ys7izWUyFpH5zLYmX810u3AzXitpejplQE
+         /jQClQeXVkg24Hq2EtapZZmYZqBqVAzhuerBOXqcEml3pCLmsPFzhUKaKVVRYh78e5jo
+         h8KkCLUPmxBFXlpb/JITMIblABhQ7NlF7KMjGGjdd9IyszPk9+1oO7oOT2MoBvY5XheR
+         C7sZ+dVfMbfS+HyT7uTrugl1sk73k+pwHG2Pfa3KfOiBB28qEE/Udtp4Y7cVn9gp7foT
+         HEcU/cZ1gEdP98XXJk+xlaxcfEGrza6u+gZED9q0MMpJmn/0VM46cFjFyrKNEI0geaag
+         VHHA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1793142965; x=1793747765;
+        d=1e100.net; s=20260707; t=1793143049; x=1793747849;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=pe3GSuD4LGl6lVRKcgy65zyTo8/iD3NoWxDHxP9Zlm8=;
-        b=GE2fmlrOuoaFTejW9SeVfLSjEvP0hQLDA2BfpG244555n+7283JEWVhn1dLBsg998Z
-         Zr5Ga4rhgam3d6URpkIIfs87s6nWh5nbKAAomEEpN4pVY7ygjGd/sus2SSM9ZmcQDUxn
-         M8vgG+HVItgtX/ehyp8U+3GII9bYaot3qU6D/keswlDRIGi1r+w6p3O+oW49SGK1JA7w
-         x79+PGwR+b0bkm1SM9b6UbSyT1t0XUtT0SC3tGQQ8JzXVjqn5SA57zRU3q5hIXrslmE9
-         /LPy349fztOuBIVjBom7wbx1t1JXQ+yf7OZRVuTuYvv1ZnSjonzNs5EfmEL/qB7Smph3
-         FC+A==
-X-Forwarded-Encrypted: i=1; AKwUvBwQPxY/uVd41oYfcZUh66X8gZ7WsJRwtjnvw6F5wOP2AE4yeOcsCdrOdcTkYf/zcejyhyC3YuYxCIusLKcR3ZW2@vger.kernel.org
-X-Gm-Message-State: AFq9FYIJBFGWT+GxaUCAyB9ModYeNjPK5foyTbSkJNrYbFtRmgqgoboN
-	Q82nE6GUBQHWsWUviTVMmgVphcrXImi0fg7Mg+OGLqU1U7bgDPXoUT/D6gVJXyHh+pljY9otKqZ
-	UiVyIrMId/A==
-X-Received: from dlbcf38.prod.google.com ([2002:a05:7022:45a6:b0:195:8b4e:20b7])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:1716:b0:186:3f0c:bd09
- with SMTP id a92af1059eb24-1a6c800e43amr1004776c88.5.1793142964241; Tue, 27
- Oct 2026 16:16:04 -0700 (PDT)
-Date: Tue, 27 Oct 2026 16:15:12 -0700
-In-Reply-To: <20261027231513.816148-1-irogers@google.com>
+        bh=ZDGRVgYI+YuLX6sEG6mHKRJT8belKw9rO3epzepDmXc=;
+        b=MxocQ6WjAQZgQP2DalGu8PV6Z5jp7dqY9Y4hQowTSknD3qStTMIwalsHqxbdoqzOyc
+         QIlLJxuoq6zfEw5da8t6Rjdu5+YHcC+5kdglF0jGEcfyxSGJmVWib+cn/FVDbY0IZ64M
+         xjKMDzQ/YtSTjL+xXiFwomJJXJub3c8hZfiNWBfRsQg4GXk+N+6oIamO2W48XSSLFGhP
+         0B1a6HRz1HDkiQ68hIQWubX4NQNzHj5Ds0C3RLWxDOXrlr/xQ5Sq5+ONK0vSfADIssjs
+         JYYcUpEQopy3au4D5lindioeAKvu8GKlpkSf92UrEX3i3rB7PK/QoZHR66tSVxM+S1+E
+         K2Sg==
+X-Forwarded-Encrypted: i=1; AKwUvBwJn2+ezhk15B+01Z8/tAr6oAHw469Qz+HZ+pwRqZ8lZNXGJTY3YTUpsZ3Ta935/605RiFVwmh2z75RyQg90rEC@vger.kernel.org
+X-Gm-Message-State: AFq9FYKXboQJPNxzGEJeieOTFYjcRYPRrqYLdCyR6d8TYEI4XY/zAgOV
+	W0DvQnOGOyETmQe0ZxpC0gqVYkIdf95hzMLdgMXNwjSwYCxZhxq4xbSQTC4XDWVAz22F4rAHwVx
+	iF4NvHQAcWs/xjPiYq0cKiQ==
+X-Received: from pgcgn27-n2.prod.google.com ([2002:a05:6a02:6a1b:20b0:cda:df40:b50f])
+ (user=jthoughton job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:6a20:b7a6:b0:3e2:4c65:5905 with SMTP id adf61e73a8af0-3e902404531mr513567637.60.1793143048797;
+ Tue, 27 Oct 2026 16:17:28 -0700 (PDT)
+Date: Tue, 27 Oct 2026 23:17:28 +0000
+In-Reply-To: <ac22215d-3e58-4aab-851e-47c30836e058@app.fastmail.com>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -79,462 +79,192 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 Mime-Version: 1.0
-References: <20260928075237.3055101-1-irogers@google.com> <20261027231513.816148-1-irogers@google.com>
-X-Mailer: git-send-email 2.56.0.313.g2479322e68-goog
-Message-ID: <20261027231513.816148-19-irogers@google.com>
-Subject: [PATCH v2 18/18] perf test symbols: Add tests for symbol shrinking
- and session alloc wrappers
-From: Ian Rogers <irogers@google.com>
-To: irogers@google.com, acme@kernel.org, namhyung@kernel.org
-Cc: adrian.hunter@intel.com, haghdoost@uber.com, james.clark@linaro.org, 
-	jolsa@kernel.org, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, mingo@redhat.com, peterz@infradead.org
+References: <ac22215d-3e58-4aab-851e-47c30836e058@app.fastmail.com>
+X-Mailer: git-send-email 2.56.0.307.g5fe7bd680c-goog
+Message-ID: <20261027231728.1466446-1-jthoughton@google.com>
+Subject: Re: [RFC PATCH 00/10] uaccess: Refuse and warn on user accesses when
+ current->mm is NULL
+From: James Houghton <jthoughton@google.com>
+To: arnd@arndb.de
+Cc: James.Bottomley@hansenpartnership.com, acme@kernel.org, 
+	akpm@linux-foundation.org, asml.silence@gmail.com, ast@kernel.org, 
+	axboe@kernel.dk, bpf@vger.kernel.org, daniel@iogearbox.net, david@kernel.org, 
+	dsterba@suse.com, io-uring@vger.kernel.org, jmattson@google.com, 
+	john.fastabend@gmail.com, jpoimboe@kernel.org, jthoughton@google.com, 
+	kees@kernel.org, kvm@vger.kernel.org, liam@infradead.org, 
+	linux-btrfs@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
+	linux-perf-users@vger.kernel.org, linux-scsi@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, ljs@kernel.org, mason@kernel.org, 
+	mathieu.desnoyers@efficios.com, mhiramat@kernel.org, mhocko@suse.com, 
+	mingo@redhat.com, mkp@kernel.org, namhyung@kernel.org, pbonzini@redhat.com, 
+	peterz@infradead.org, rostedt@goodmis.org, rppt@kernel.org, seanjc@google.com, 
+	surenb@google.com, tglx@kernel.org, vbabka@kernel.org, 
+	viro@zeniv.linux.org.uk
 Content-Type: text/plain; charset="UTF-8"
 
-Ensure the new symbol sorting, reference-counted symbol and DSO
-shrinking, transparent DSO reload with retained-symbol pointer
-preservation, and session-scoped allocation wrappers are verified by
-'perf test symbols' (including under REFCNT_CHECKING=1).
+On Tue, Oct 27, 2026 at 11:32 AM Arnd Bergmann <arnd@arndb.de> wrote:
+>
+> On Tue, Oct 27, 2026, at 18:29, James Houghton wrote:
+> > On Mon, Oct 26, 2026 at 5:13 PM Arnd Bergmann <arnd@arndb.de> wrote:
+> >>
+> >> E.g. on arm64 with CONFIG_ARM64_SW_TTBR0_PAN, the page table base for
+> >> the current process is only set in user_access_begin() and would
+> >> not point to any task here. Without ttbr0_pan, it should be
+> >> covered by cpu_set_reserved_ttbr0() turning off all user space access
+> >> for kernel threads.
+> >>
+> >> Should this perhaps be addressed in architecture specific code
+> >> instead of in a common place?
+> >
+> > You're right that whether corruption can actually occur depends on the
+> > architecture and config. I'll write a note about this in the v2 cover
+> > letter.
+> >
+> > That being said, I still think the right thing to do is to have the
+> > new check(s) in common code. Instances of improper uaccesses are still
+> > bugs, even if no corruption occurs.
+>
+> I agree we have to do something to prevent the problem for most
+> configurations and find any newly introduced bugs.  The questions
+> that need to be properly decided are
+>
+>  - does there need to be any compile-time configuration to skip
+>    the extra checks and/or the warnings?
 
-Add unit tests to 'perf test symbols' covering:
-- test_symbols_sorted_insert(): Verify ascending symbols__insert(),
-  out-of-order dso__insert_symbol() maintaining sorted order, and
-  unsorted symbols__insert() followed by sort-on-lookup in
-  dso__find_symbol().
-- test_symbols_shrink(): Verify symbols__shrink() evicts unreferenced
-  symbols (refcnt == 1), retains symbols with active external references
-  (refcnt > 1), and sets symbols.shrunk.
-- test_dsos_shrink(): Verify dsos__shrink() evicts unreferenced user
-  DSOs with no remaining symbols while retaining DSOs with active
-  external references.
-- test_session_alloc_shrink(): Verify machine__session(),
-  dso__session(), perf_session__malloc/zalloc/calloc/realloc/strdup(),
-  and perf_session__shrink().
-- test_dso_shrink_and_reload(): Verify dso__shrink() on a loaded ELF
-  binary followed by map__find_symbol() transparently reloads evicted
-  symbols while preserving pointer identity for retained symbols.
+Since patch 10 moves the warning out of line, it costs nothing on the
+fast path, so making the WARN configurable wouldn't save anything. The
+question is really whether the mm check itself should be configurable,
+and that check is also what makes the access safe.
 
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/tests/symbols.c | 372 +++++++++++++++++++++++++++++++++++++
- 1 file changed, 372 insertions(+)
+The text size increase seems manageable[1], but it would be great to
+hear other people's thoughts. For the runtime cost, I'll do some
+performance testing. My guess is that a load of current->mm and a
+well-predicted branch per user access will be negligible, but I'll get
+numbers.
 
-diff --git a/tools/perf/tests/symbols.c b/tools/perf/tests/symbols.c
-index d70adbad3978..1a773c535732 100644
---- a/tools/perf/tests/symbols.c
-+++ b/tools/perf/tests/symbols.c
-@@ -1,13 +1,21 @@
- // SPDX-License-Identifier: GPL-2.0
- #include <linux/compiler.h>
- #include <linux/string.h>
-+#include <linux/zalloc.h>
- #include <sys/mman.h>
-+#include <errno.h>
- #include <inttypes.h>
- #include <limits.h>
-+#include <stdbool.h>
-+#include <stddef.h>
-+#include <stdio.h>
-+#include <stdlib.h>
-+#include <string.h>
- #include "debug.h"
- #include "dso.h"
- #include "env.h"
- #include "machine.h"
-+#include "session.h"
- #include "thread.h"
- #include "symbol.h"
- #include "map.h"
-@@ -179,6 +187,264 @@ static int process_subdivided_dso(struct machine *machine, struct dso *dso)
- 	return ret < 0 ? TEST_FAIL : TEST_OK;
- }
- 
-+static int test_symbols_shrink(void)
-+{
-+	struct symbols symbols;
-+	struct symbol *sym1, *sym2, *sym3, *held;
-+	int ret = TEST_FAIL;
-+
-+	symbols__init(&symbols);
-+
-+	sym1 = symbol__new(0x100, 0x50, STB_GLOBAL, STT_FUNC, "sym1");
-+	sym2 = symbol__new(0x200, 0x50, STB_GLOBAL, STT_FUNC, "sym2");
-+	sym3 = symbol__new(0x300, 0x50, STB_GLOBAL, STT_FUNC, "sym3");
-+	if (!sym1 || !sym2 || !sym3) {
-+		symbol__put(sym1);
-+		symbol__put(sym2);
-+		symbol__put(sym3);
-+		goto out;
-+	}
-+
-+	/* Hold an active reference on sym1; sym2 and sym3 only have the table ref. */
-+	held = symbol__get(sym1);
-+
-+	symbols__insert(&symbols, sym1);
-+	symbols__insert(&symbols, sym2);
-+	symbols__insert(&symbols, sym3);
-+
-+	/*
-+	 * First shrink: sym2 and sym3 (refcnt == 1) are evicted; sym1 has
-+	 * refcnt > 1 and is retained.
-+	 */
-+	if (symbols__shrink(&symbols) != 2 || symbols.cnt != 1 || !symbols.shrunk) {
-+		pr_debug("First symbols__shrink failed (cnt=%u)!\n", symbols.cnt);
-+		symbol__put(held);
-+		goto out;
-+	}
-+
-+	/*
-+	 * Drop caller reference on sym1 and shrink again: sym1 is now evicted.
-+	 */
-+	symbol__put(held);
-+	if (symbols__shrink(&symbols) != 1 || symbols.cnt != 0) {
-+		pr_debug("Second symbols__shrink failed (cnt=%u)!\n", symbols.cnt);
-+		goto out;
-+	}
-+
-+	ret = TEST_OK;
-+out:
-+	symbols__exit(&symbols);
-+	return ret;
-+}
-+
-+static int test_dsos_shrink(void)
-+{
-+	struct dsos dsos;
-+	struct dso *dso1, *dso2;
-+	int ret = TEST_FAIL;
-+
-+	dsos__init(&dsos);
-+
-+	dso1 = dsos__findnew_id(&dsos, "/tmp/perf_test_dso1", NULL);
-+	dso2 = dsos__findnew_id(&dsos, "/tmp/perf_test_dso2", NULL);
-+	if (!dso1 || !dso2) {
-+		dso__put(dso1);
-+		dso__put(dso2);
-+		goto out;
-+	}
-+
-+	/* Keep the caller's active reference on dso1; drop caller reference on dso2. */
-+	dso__put(dso2);
-+
-+	/*
-+	 * First shrink: dso2 has refcnt == 1 and no symbols, so it is evicted;
-+	 * dso1 has refcnt == 2, so it is retained.
-+	 */
-+	if (dsos__shrink(&dsos) != 1 || dsos.cnt != 1) {
-+		pr_debug("First dsos__shrink failed (cnt=%u)!\n", dsos.cnt);
-+		dso__put(dso1);
-+		goto out;
-+	}
-+
-+	dso__put(dso1);
-+	if (dsos__shrink(&dsos) != 1 || dsos.cnt != 0) {
-+		pr_debug("Second dsos__shrink failed (cnt=%u)!\n", dsos.cnt);
-+		goto out;
-+	}
-+
-+	ret = TEST_OK;
-+out:
-+	dsos__exit(&dsos);
-+	return ret;
-+}
-+
-+static int test_session_alloc_shrink(void)
-+{
-+	struct perf_session *session = zalloc(sizeof(*session));
-+	struct dso *dso;
-+	char *p1 = NULL, *p2 = NULL, *p3 = NULL, *s = NULL;
-+	int ret = TEST_FAIL;
-+
-+	if (!session)
-+		return TEST_FAIL;
-+
-+	if (machines__init(&session->machines, session))
-+		goto out;
-+	if (machine__session(&session->machines.host) != session) {
-+		pr_debug("machine__session did not return owning session!\n");
-+		goto out;
-+	}
-+
-+	dso = machine__findnew_dso(&session->machines.host, "/tmp/perf_test_session_dso");
-+	if (!dso)
-+		goto out;
-+	if (dso__session(dso) != session) {
-+		pr_debug("dso__session did not return owning session!\n");
-+		dso__put(dso);
-+		goto out;
-+	}
-+	dso__put(dso);
-+
-+	p1 = perf_session__malloc(session, 64);
-+	p2 = perf_session__zalloc(session, 64);
-+	p3 = perf_session__calloc(session, 4, 16);
-+	s = perf_session__strdup(session, "perf_session_alloc_test");
-+	if (!p1 || !p2 || !p3 || !s || strcmp(s, "perf_session_alloc_test") != 0) {
-+		pr_debug("perf_session allocation wrappers failed!\n");
-+		goto out;
-+	}
-+
-+	p1 = perf_session__realloc(session, p1, 128);
-+	if (!p1) {
-+		pr_debug("perf_session__realloc failed!\n");
-+		goto out;
-+	}
-+
-+	if (perf_session__shrink(session) == 0 || session->machines.host.dsos.cnt != 0) {
-+		pr_debug("perf_session__shrink failed to evict unreferenced DSO!\n");
-+		goto out;
-+	}
-+
-+	ret = TEST_OK;
-+out:
-+	free(p1);
-+	free(p2);
-+	free(p3);
-+	free(s);
-+	machines__exit(&session->machines);
-+	free(session);
-+	return ret;
-+}
-+
-+struct shrink_reload_find_args {
-+	struct symbol *kept;
-+	u64 first_start;
-+	u64 second_start;
-+	char *second_name;
-+	u64 max_end;
-+};
-+
-+static int shrink_reload_find_cb(struct symbol *sym, void *data)
-+{
-+	struct shrink_reload_find_args *args = data;
-+
-+	if (!args->kept) {
-+		args->kept = symbol__get(sym);
-+		args->first_start = symbol__start(sym);
-+		args->max_end = symbol__end(sym);
-+		return 0;
-+	}
-+	if (!args->second_name && symbol__start(sym) >= args->max_end) {
-+		args->second_start = symbol__start(sym);
-+		args->second_name = strdup(symbol__name(sym));
-+		if (!args->second_name)
-+			return -ENOMEM;
-+	}
-+	if (symbol__end(sym) > args->max_end)
-+		args->max_end = symbol__end(sym);
-+	return 0;
-+}
-+
-+static int test_dso_shrink_and_reload(struct dso *dso, struct map *map)
-+{
-+	struct shrink_reload_find_args args = {
-+		.kept = NULL,
-+		.first_start = 0,
-+		.second_start = 0,
-+		.second_name = NULL,
-+		.max_end = 0,
-+	};
-+	struct symbol *sym, *reloaded;
-+	size_t removed;
-+
-+	if (!dso__can_shrink_symbols(dso) || dso__kernel(dso))
-+		return TEST_OK;
-+	if (dso__for_each_symbol(dso, shrink_reload_find_cb, &args) < 0) {
-+		symbol__put(args.kept);
-+		return TEST_FAIL;
-+	}
-+	if (!args.second_name) {
-+		symbol__put(args.kept);
-+		return TEST_OK;
-+	}
-+
-+	/* Unreferenced symbols have refcnt == 1 and are evicted immediately. */
-+	removed = dso__shrink(dso);
-+	if (removed == 0 || !dso__symbols_shrunk(dso)) {
-+		pr_debug("dso__shrink did not evict any symbols!\n");
-+		free(args.second_name);
-+		symbol__put(args.kept);
-+		return TEST_FAIL;
-+	}
-+
-+	/* Kept symbol is still found without reloading. */
-+	sym = dso__find_symbol(dso, args.first_start);
-+	if (!RC_CHK_EQUAL(sym, args.kept)) {
-+		pr_debug("Kept symbol not found after dso__shrink!\n");
-+		symbol__put(sym);
-+		free(args.second_name);
-+		symbol__put(args.kept);
-+		return TEST_FAIL;
-+	}
-+	symbol__put(sym);
-+
-+	/* Evicted symbol is no longer in dso->symbols before reload. */
-+	sym = dso__find_symbol(dso, args.second_start);
-+	if (sym != NULL) {
-+		pr_debug("Evicted symbol still found after dso__shrink!\n");
-+		symbol__put(sym);
-+		free(args.second_name);
-+		symbol__put(args.kept);
-+		return TEST_FAIL;
-+	}
-+
-+	/* Lookup via map__find_symbol transparently reloads the DSO. */
-+	reloaded = map__find_symbol(map, args.second_start);
-+	if (!reloaded || strcmp(symbol__name(reloaded), args.second_name) != 0) {
-+		pr_debug("Failed to reload evicted symbol %s!\n", args.second_name);
-+		symbol__put(reloaded);
-+		free(args.second_name);
-+		symbol__put(args.kept);
-+		return TEST_FAIL;
-+	}
-+	symbol__put(reloaded);
-+
-+	/* Kept symbol pointer was preserved across reload deduplication. */
-+	sym = dso__find_symbol(dso, args.first_start);
-+	if (!RC_CHK_EQUAL(sym, args.kept)) {
-+		pr_debug("Kept symbol pointer was not preserved across reload!\n");
-+		symbol__put(sym);
-+		free(args.second_name);
-+		symbol__put(args.kept);
-+		return TEST_FAIL;
-+	}
-+	symbol__put(sym);
-+	symbol__zput(args.kept);
-+
-+	free(args.second_name);
-+	return TEST_OK;
-+}
-+
- static int test_file(struct test_info *ti, char *filename)
- {
- 	struct map *map = NULL;
-@@ -210,18 +476,124 @@ static int test_file(struct test_info *ti, char *filename)
- 	/* Module dso is split into many dsos by section */
- 	if (ret == TEST_OK && dso__kernel(dso) != DSO_SPACE__USER)
- 		ret = process_subdivided_dso(ti->machine, dso);
-+
-+	if (ret == TEST_OK)
-+		ret = test_dso_shrink_and_reload(dso, map);
- out_put:
- 	map__put(map);
- 
- 	return ret;
- }
- 
-+static int test_symbols_sorted_insert(void)
-+{
-+	struct dso *dso = dso__new("/tmp/perf_test_sorted_insert");
-+	struct symbols *symbols;
-+	int ret = TEST_FAIL;
-+
-+	if (!dso)
-+		return TEST_FAIL;
-+
-+	symbols = dso__symbols(dso);
-+
-+	/*
-+	 * Insert 100 odd-indexed symbols in ascending order via
-+	 * symbols__insert(), then insert 5 even-indexed symbols out of order via
-+	 * dso__insert_symbol() and verify symbols->sorted remains true.
-+	 */
-+	for (unsigned int i = 0; i < 100; i++) {
-+		char name[32];
-+		u64 addr = (u64)(i * 2 + 1) * 0x100;
-+		struct symbol *sym;
-+
-+		snprintf(name, sizeof(name), "sym_%u", i * 2 + 1);
-+		sym = symbol__new(addr, 0x40, STB_GLOBAL, STT_FUNC, name);
-+		if (!sym || symbols__insert(symbols, sym))
-+			goto out;
-+	}
-+	if (!symbols->sorted || symbols->cnt != 100) {
-+		pr_debug("Expected sorted=true, cnt=100 after ordered inserts\n");
-+		goto out;
-+	}
-+
-+	for (unsigned int i = 0; i < 5; i++) {
-+		char name[32];
-+		u64 addr = (u64)(i * 20) * 0x100;
-+		struct symbol *sym;
-+
-+		snprintf(name, sizeof(name), "ins_%u", i * 20);
-+		sym = symbol__new(addr, 0x40, STB_GLOBAL, STT_FUNC, name);
-+		if (!sym || dso__insert_symbol(dso, sym))
-+			goto out;
-+		if (!symbols->sorted) {
-+			pr_debug("dso__insert_symbol did not preserve sorted invariant!\n");
-+			goto out;
-+		}
-+	}
-+
-+	/*
-+	 * Now append 95 remaining even-indexed symbols in descending order via
-+	 * symbols__insert() to exercise the unsorted append + sort-on-lookup path.
-+	 */
-+	for (unsigned int i = 99; i > 0; i--) {
-+		char name[32];
-+		u64 addr;
-+		struct symbol *sym;
-+
-+		if ((i * 2) % 20 == 0 && (i * 2) < 100)
-+			continue;
-+		addr = (u64)(i * 2) * 0x100;
-+		snprintf(name, sizeof(name), "ins_%u", i * 2);
-+		sym = symbol__new(addr, 0x40, STB_GLOBAL, STT_FUNC, name);
-+		if (!sym || symbols__insert(symbols, sym))
-+			goto out;
-+	}
-+	if (symbols->sorted || symbols->cnt != 200) {
-+		pr_debug("Unexpected sorted=%d cnt=%u before lookup\n",
-+			 symbols->sorted, symbols->cnt);
-+		goto out;
-+	}
-+
-+	for (unsigned int i = 0; i < 200; i++) {
-+		u64 addr = (u64)i * 0x100 + 0x10;
-+		struct symbol *sym = dso__find_symbol(dso, addr);
-+
-+		if (!sym || symbol__start(sym) != (u64)i * 0x100) {
-+			pr_debug("Lookup failed at idx %u (addr=%#" PRIx64 ")\n", i, addr);
-+			symbol__put(sym);
-+			goto out;
-+		}
-+		symbol__put(sym);
-+	}
-+
-+	ret = TEST_OK;
-+out:
-+	dso__put(dso);
-+	return ret;
-+}
-+
- static int test__symbols(struct test_suite *test __maybe_unused, int subtest __maybe_unused)
- {
- 	char filename[PATH_MAX];
- 	struct test_info ti;
- 	int ret;
- 
-+	ret = test_symbols_sorted_insert();
-+	if (ret != TEST_OK)
-+		return ret;
-+
-+	ret = test_symbols_shrink();
-+	if (ret != TEST_OK)
-+		return ret;
-+
-+	ret = test_dsos_shrink();
-+	if (ret != TEST_OK)
-+		return ret;
-+
-+	ret = test_session_alloc_shrink();
-+	if (ret != TEST_OK)
-+		return ret;
-+
- 	ret = init_test_info(&ti);
- 	if (ret != TEST_OK)
- 		return ret;
--- 
-2.56.0.313.g2479322e68-goog
+>  - are there any cheaper ways to make it safe than to add a
+>    condition on each user access?
+>    E.g. the original lazy mm switch was intended to avoid
+>    expensive TLB flushes when switching to a kernel thread and
+>    back to the original task on 32-bit x86. On modern CPUs,
+>    the MMU can deal with multiple ASIDs cheaply, so turning
+>    off user access in a kernel thread may be cheaper than
+>    adding code to uaccess depending on the architecture.
 
+That's a fair point. If user memory were inaccessible in kernel threads
+and after exit_mm(), every such access would fault, and the fault
+handler could WARN about it (x86's do_user_addr_fault() already has a
+!mm branch), so it could still be loud without a check on every access.
+
+I'll look into disabling lazy mm switching on x86 and doing some
+performance testing with that (like comparing the per-uaccess check
+with the added cost of non-lazy mm switching).
+
+Other than the performance difference, I see these issues with making
+uaccess safe entirely with the mm switch mechanics:
+
+ - It only helps on architectures (and configs) that implement it,
+   while the common check works everywhere today.
+
+ - The fault handler would need to tell legitimate faults apart from
+   bugs, e.g. copy_from_user_nofault() from BPF or perf in a kernel
+   thread is fine and must stay quiet. The series handles that today by
+   checking current->mm in the nofault helpers (patch 6).
+
+The two approaches are mostly complementary: if non-lazy switching
+turns out to be cheap enough, an architecture that does this will have
+better defense against uaccess bugs. But I'd still like the common
+check so that these bugs are reported on every architecture.
+
+> >> I would think that user_access_begin() is a more natural place
+> >> for the added checks, as this should be called exactly once for
+> >> any function that accesses user space and also stays out of the
+> >> way of the copy_from_kernel_nofault() etc.
+> >
+> > user_access_begin() isn't used in a lot of places that I want to
+> > catch, including the KVM case. Roughly:
+> >
+> >   kvm_write_guest_cached() --> __copy_to_user() --> raw_copy_to_user()
+> >
+> > There's no user_access_begin() in there. :/
+>
+> Good point, yes. After the changes described in
+> https://lwn.net/Articles/1102061/, I had assumed that all
+> __copy_{from,to}_user() are going from common code, but it looks
+> like the series so far only touches __{get,put}_user().
+>
+> There are of course few enough of these left that I think
+> we can consider doing the same thing here and turn them all
+> into the checking version:
+>
+> $ git grep -wl __copy_'\(from\|to\)'_user  drivers mm virt
+> drivers/gpu/drm/i915/gem/i915_gem_execbuffer.c
+> drivers/gpu/drm/i915/i915_gem.c
+> drivers/gpu/drm/i915/i915_query.c
+> drivers/usb/gadget/udc/atmel_usba_udc.c
+> drivers/vhost/scsi.c
+> drivers/vhost/vhost.c
+> mm/kasan/kasan_test_c.c
+> virt/kvm/kvm_main.c
+
+Agreed, I think we should clean those up, but that can be done
+separately. This series already adds the check to the common
+__copy_{from,to}_user() and __copy_{from,to}_user_inatomic() wrappers
+in include/linux/uaccess.h (patches 7 and 8), so the KVM path is
+covered without converting the callers first.
+
+> > I do think user_access_begin() should have the new check though, so
+> > I've added it in the v2.
+>
+> I had the details confused here. Seing that user_access_begin()
+> and the other accessors always call access_ok() at some
+> point, maybe that would be enough?:
+>
+> --- a/include/asm-generic/access_ok.h
+> +++ b/include/asm-generic/access_ok.h
+> @@ -33,6 +33,9 @@ static inline int __access_ok(const void __user *ptr, unsigned long size)
+>         unsigned long limit = TASK_SIZE_MAX;
+>         unsigned long addr = (unsigned long)ptr;
+>
+> +       if (WARN_ONCE(!current->mm))
+> +               return false;
+> +
+>         if (IS_ENABLED(CONFIG_ALTERNATE_USER_ADDRESS_SPACE) ||
+>             !IS_ENABLED(CONFIG_MMU))
+>                 return true;
+>
+> (plus the few extra copies of access_ok()/__access_ok())
+>
+> As a quick fix I would probably start with just the 'if (!mm) return false'
+> bit here to get something merged while we still discuss the other
+> details.
+
+Making the same point as Sean[2] but with a little more detail, I had
+thought about making the change in access_ok(), but:
+
+ - On x86-64 and powerpc, the masked user access paths don't call
+   access_ok() at all. That includes copy_from_user(),
+   strncpy_from_user(), strnlen_user() and every scoped_user_*_access()
+   block, which is where many of the converted __get_user() users ended
+   up.
+
+ - __copy_{from,to}_user() and __copy_from_user_inatomic() skip it too,
+   and the KVM bug followed exactly that pattern: the range was checked
+   once up front, and the access came much later from a different
+   context.
+
+ - access_ok() is also used as a plain range check where having no mm
+   is fine. For example, copy_{from,to}_user_nofault() call
+   __access_ok()/access_ok(), and BPF and perf legitimately call those
+   from kernel threads, so a WARN there would fire on valid tracing.
+
+Even the quiet 'if (!mm) return false' version would have missed the
+KVM case, because of the first two points. I don't think there's really
+a "small" fix here, unfortunately. :/
+
+Thanks again for all the feedback, Arnd. I really hope we can get this
+series into a mergeable state. :)
+
+[1] https://lore.kernel.org/linux-mm/CADrL8HUZ3t8RdMEeBPfqsy1_1rN0Ty9B2c4iP6OzNS12te6vOg@mail.gmail.com/
+[2] https://lore.kernel.org/kvm/auEVMrMDqVuKtDqh@google.com/
