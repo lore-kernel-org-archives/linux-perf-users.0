@@ -1,55 +1,56 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793120958;
-	b=g5HITRtBybPaJUELvferX1o4+HppI0Pk8Tv9nweeQrlITZOstcYGHsV9pxiIfd98Rsf9
-	 QTkvpOOf8tHnSF/mgtMg2alUAOg/fCjKO9UhCE7KMvFYblrldZwRh1HRDFm7UXMHLcCZ5
-	 mQZIyDvpq6R9Mis9/pu6mjYsJMPV5YI2jIV6/7o7XPwJxgHThWJWFZRWfbeGVMq8ycFDJ
-	 X3/r1d7Rx8gZNonMR4DqTfAIn3CjapDNz0Xkuj6tNwVLPdD9yL8EmwR6jF3yTIlelUxhE
-	 Y5le9Rf7nFpI+faj2XU6jfmcsooopKzMd/QY3vIEFOQaxm8BiMC1nL7JmdkgNPxvxDw==
+	t=1793121175;
+	b=5F+D7kcR1G3qZZBQlBLwdauJVZQd9cyUyjQMo7d5Va/eHUuRXNsR6o4gdhwPhtBEXB3r
+	 tpxLQYP/rSVX3OeewX8aVhZq4ZJ1YxcQ2MxJ/rNHWSio7XZGNFmej4yQUQTF362HtmjPA
+	 L33toDDA0Ejj89H90aXFnbB59pnOyLy7j/GYpK0lAOHfmALyRwTunCrLTaaNbCJ/lb0I4
+	 WhBhrblW3zDZFAI/ICDxB6NYdFcK0KGlUgSPm4h/HKhfKnWUnGI5IuuzLAgn0sD7kKXyG
+	 ec8yWwA7S0VvBjd5YDOwpwtxKy0Ut+KBEAOZLZdHBzMrcS3iOIjLgmWgSgjpzuW0vaw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793120958;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793121175;
 	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:
 	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=QEfZZvlVdfCgH6Pzx2kpJS3ntrmyjRFO2pUJMviMrzM=;
-	b=LEixyD23cv8UgZg1jNed4aaOoSTxdd/5i+P7vMpsPJaQqUhbMFWhCUxy04r9HPI/yP9l
-	 5ujMKS8Kt+Quacw6S6SPf1BoE2WicqMbBhzUhY1pcpOcOB+Ng5IXb8jAm1/Mc/3lbpz1v
-	 wDFIA6eqYDXqkuD3duEU5GSxuS5dR4qsG9rny2AekS0efGe1HUSDipNbiA9l3mgNEihAO
-	 +pvfHiTCMnpdN+ibt112UbpQOr4zY8S/K8wSooxigoAl/+T0wOpn0eBRRwn/T4JoTnCuu
-	 Wkn4VPX7bsrLE/A+FPyIP5qm+UEDpl7imPBS0BkvzkQpm1+Ketg5+A+sGlvPGkU3Klg==
+	bh=tHwr8PwLjd0XDF4TaX+r26R/GG/jTdnYPsJQNjaG4hY=;
+	b=Sdi+/qjhy2slnFejCZ15pTig9I8m8faYhxCN8vh531DQFvy0/AUy0VifRrvLLDhmCJc3
+	 whGdUtPjuGLCNCV8TYGdmEp1lTTC00sUruS+KqcximkpOofKStaO7NvgPGtQkaNK0UTDf
+	 Zl8zrbRPnpXtUL+kc5QqPzW3l7Jft5F1L4rhMznkGnxXIb/eGV566VHDttBjDoKDpIiks
+	 uy6boeNxJgSiQ0F9V7W7qyskGrPML4E5tiR3vYMzHAD+XNDFIOru67PscZqv+3ifCDqmC
+	 gsDkeH3AnUl9uxwkQx8Ad+ezsBCy+76zL5hXJKaTHJkMZ0oMl1rqlz36yQFcfx+RCWA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Oyp5Kub4;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b="OD7cSi/d";
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62976606A31B
-	for <linux-perf-users@vger.kernel.org>; Tue, 27 Oct 2026 17:09:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FDD2606A31A
+	for <linux-perf-users@vger.kernel.org>; Tue, 27 Oct 2026 17:12:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Oyp5Kub4
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DB5371F01825;
-	Tue, 27 Oct 2026 17:09:17 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=OD7cSi/d
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 823871F01825;
+	Tue, 27 Oct 2026 17:12:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793120958;
-	bh=QEfZZvlVdfCgH6Pzx2kpJS3ntrmyjRFO2pUJMviMrzM=;
+	s=k20260515; t=1793121174;
+	bh=tHwr8PwLjd0XDF4TaX+r26R/GG/jTdnYPsJQNjaG4hY=;
 	h=From:Subject:Reply-To:To:In-Reply-To:References:Date;
-	b=Oyp5Kub4J+uyO6GDyxJbg6+ti6ZboTnJG/hDhfojxaVMGROLqtgqkPwDl4kZLQ4oa
-	 m9A80KgS68Y54Aib4tqhuAa6FN4KcO0JcfDCXMbEWjVyAAQNBUQC1F+CqkzvJQXYW4
-	 RwVr8u5BgRZ4D0GYOu3ZRjXLekLWGSY1woGKNI4zpGpUJaY/NnHJ11IH7vwSMbFkdS
-	 MOwqvyzFESagh4JkWRk548CLUGGjLsh/czKifu4oj7cYntctpTcUC+AC4BcaidNutb
-	 WDG/Wx3CGwTEKcCxALCxEK0BMSqLxeWWbin1L+tGURr84RSbhF4iF5KmUAmbLVR+S2
-	 iPBmaYrXjbuBA==
-Message-ID: <sashiko-outbox-186973@kernel.org>
+	b=OD7cSi/dEDFHKPhihOYyri3MWcIGU5sidkPuxMCnzKF2rmoEKXvDEzYJZN5Wq7Npd
+	 zrWUEnLt/toDXrVP8mMfuPvPhiQl/JgoWgLi+HkkmtewuCdY29ycHpItcUtUOoISZf
+	 fYSQAPE+RLHJBe8UKsISaNjXm37vE7OKIIA252UmLjcllrTtqxRdbi2CNLwaNEtwbX
+	 WUt9NaHwm6iZliVNjwEpykSEVFTzk0ubyEcXMjVc4Ei7BLfHHsGyR/BM1wU/iE2nlz
+	 orc4zVxkvu1dDvRePl1BoES2WJziju4TVfo2Os+fdp4SpDdG1vfABKWovTdZwQLL4u
+	 7utbjmdsnNfjw==
+Message-ID: <sashiko-outbox-186976@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v1 3/4] perf off-cpu: Fix cgroup_filter map sizing
+Subject: Re: [PATCH v1 2/4] perf off-cpu: Write the sample ID for
+ PERF_SAMPLE_ID
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Ian Rogers" <irogers@google.com>, linux-perf-users@vger.kernel.org
-In-Reply-To: <20261027170415.2815859-3-irogers@google.com>
+In-Reply-To: <20261027170415.2815859-2-irogers@google.com>
 References: <20261027170415.2815859-1-irogers@google.com>
- <20261027170415.2815859-3-irogers@google.com>
+ <20261027170415.2815859-2-irogers@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Tue, 27 Oct 2026 17:09:17 +0000
+Date: Tue, 27 Oct 2026 17:12:54 +0000
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -59,22 +60,18 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 
-> off_cpu_prepare() assumed that if evlist__first(evlist)->cgrp is set,
-> the number of cgroups is evlist__nr_entries(evlist) - 1 (excluding the
-> dummy bpf-output event). This can under-size cgroup_filter when
-> non-cgroup events precede cgroup events or when no dummy bpf-output
-> event is added.
+> OFFCPU_SAMPLE_TYPES allows PERF_SAMPLE_ID, and the sample ID is
+> computed, but off_cpu_write() only wrote it for PERF_SAMPLE_IDENTIFIER.
+> When PERF_SAMPLE_ID was set the synthesized samples were one u64 short,
+> so the remaining fields were misparsed. Write the ID after the time as
+> the sample format requires.
 >=20
-> Count the number of evsels in evlist that have a cgroup set and use that
-> count to size and populate cgroup_filter.
->=20
-> Fixes: 685439a7a037 ("perf record: Add cgroup support for off-cpu profili=
-ng")
+> Fixes: edc41a1099c2 ("perf record: Enable off-cpu analysis with BPF")
 > Signed-off-by: Ian Rogers <irogers@google.com>
 
 Sashiko has reviewed this patch and found no issues.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261027170415.2815=
-859-1-irogers@google.com?part=3D3
+859-1-irogers@google.com?part=3D2
 
