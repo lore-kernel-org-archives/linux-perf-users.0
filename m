@@ -1,54 +1,62 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793133292;
-	b=o9irWP49oOA+qzvzjJjfY5Ru0X09OkUZckVt385EuZZdJlFroGljAOyzUJi4Djbt18ZA
-	 J45sUrKfXfjU4sCH1sSEqY/jgp4fLdtjpgfBnII9mjnbur10C2xpzWkcU2BiyhCOIMu9o
-	 3ijwRe8vyrlYEgUnGxVpllK4YhI+ZUKDsanrZi/fJ13W2dGH3ovF2DRttVQjly8mJJXfT
-	 bzc7VXtPnR+PAXqfGhESSgwMO+CPpQyBv2kyy+B3/rv1g4w4c/YtCib1bOsBIrPGZycgK
-	 +zkeYsxxIQcnLFeQNJxRO3gZMxc7wKZ3+MFh0HrawFsqjC6Q314/WFVpxSgXG5W8A/g==
+	t=1793133453;
+	b=EWcmxrtFTvE+OXNlUaRYaRTANNBs0QKB1wa+XEgHYsOdFvnUteYCld2xBUqrxaObKAB1
+	 SblGc6gV18ZTQZz/zcMyN3ystw54ipHLJYN1sTFmgdBPG5vRlaKf9aHsjkaaRC/lgyCiq
+	 ihSETjmfn5EKNuzy2XJ4Q2wGTBYV8EdwyZsB7pG7H4DJ0nvf5fa4Vcscuc0ih4tRQc+Oa
+	 8JO6sr96SXX+sUMhigkA1ep7eDXP8P8P4YshdD+/z8vNVoN9l1RBOfYGHCkPw6UeHHPxK
+	 v3HlkQVkgMtwmEKWfPIN+Fum5TQp/udRk7UHT7zj011zw6Cx0ZyuahgQDmWJQ3K6hrQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793133292;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793133453;
 	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
-	 References:MIME-Version:Content-Type:Content-Disposition:In-Reply-To;
-	bh=Jg3dAtp+gEQ8TJgbywQ+F/EtAoNNgFn4vT8jAZyRUok=;
-	b=eWfIjSlXv/lHxAfBXAxThMeS5JktTl9E65BfPzh0b4q5Bmine9e2Lz2UmYgr8kpTIbmZ
-	 Vl1jbMmDqYbDhZW4qQoOplSLE/G/flKyqWaaVhGc+QEtjHRbkUeFyMuHro0//DgR/X9ic
-	 Jip+xfLspl6gbxjGoq8X0kc7cy4ZkmkxBidHwZKhhx1LoO57mL+1Hs/C8ltcWH2C5QUsf
-	 b8oT9a9a7veshKmNuRgodgjUIW4OE+Pb8hkTJlejqF7g8s6spUIRYQuIhU+1QxYGMrBdL
-	 +FRChH/IgXPr/FH7icylP4UAlD8K/jiJJpsJQQLpi0D0w580p22E7hmBf5GNpfnJURQ==
+	 References:MIME-Version:Content-Type:Content-Disposition:
+	 Content-Transfer-Encoding:In-Reply-To;
+	bh=wUv2shmSnp3EKpQLizhxLT20/UDWKKocXenHDKyrGK0=;
+	b=WLRn4EXTvSRJVp+jd5/AnWGrX0mOEHPRLQOf/xTdlwu7HQLFEo1GvQ46GWHp35kcLHV/
+	 0h4Tgbvk2M+YWXCcr8007/OiKN8z05Yo8IMyZO1dAEBGcpibiYR0Epl8xB/5VnCIgKtAg
+	 gWthnTb67k/KjultTj1tEsRMKnCFt/0SJjEHu64LIMYmC92KX1K7aRDOnEobJBJhcyaMR
+	 97kRfAoX4l1nfOK/xZi2C2b6+W94EMz1VxCsn3lbUnflw7Kx7m9n9UZ4lVTZM02y/GLYE
+	 VyPJiP1r0EWcd8oF2MjY6XsZiVc9pQxNgdXthUd0YjdXz8ZHpCcdsqw3r2abX8lh43g==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=kphSUMe8;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=XNuZTYRU;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 137CB606A31F
-	for <linux-perf-users@vger.kernel.org>; Tue, 27 Oct 2026 20:34:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE01E606A31A;
+	Tue, 27 Oct 2026 20:37:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=kphSUMe8
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 363A41F01825;
-	Tue, 27 Oct 2026 20:34:51 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=XNuZTYRU
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C73F31F01825;
+	Tue, 27 Oct 2026 20:37:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793133291;
-	bh=Jg3dAtp+gEQ8TJgbywQ+F/EtAoNNgFn4vT8jAZyRUok=;
+	s=k20260515; t=1793133452;
+	bh=wUv2shmSnp3EKpQLizhxLT20/UDWKKocXenHDKyrGK0=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=kphSUMe8xZO6rGp9xO8f/rjEFu/r7wCNM3c6jrD8rDUGKiTSF94TxKwlDXlYBqiZi
-	 SQEaU4IuI/AQ53ts+WrWcdjvQ4NDB/l1FK8XJidqGjDaM2ylzQfWTQZ2ISml9+1Y23
-	 Y7r3gcTk+CG75BRPz7w+VzdZwU5OC+oD1JoRQx9YpyUn1bJrZQixaxsckkxi83HwNv
-	 4g6mvD5BFW83iN9g76/2TWnkq2OqbwpN5IAqGec0A66AcIOL1sDun9PlcKwWBtXoA2
-	 RRx+hHRidrSdou3de/7K5ERzhtpwbFDnu3ekDt36qXTRmsNo+TEpHQ4W932oE6bEXt
-	 mg0N4B3QDto6A==
-Date: Tue, 27 Oct 2026 17:34:48 -0300
+	b=XNuZTYRUhFIfqgBAa5IwJ+aEhapNxOJ6L/8Y/USHryvJNiBhpKSmrjbhzjFTtSwuS
+	 jAeoFYlJO6AKdm06N7r5SnRMqYc+U3G0+5/og3DS62czFxyiUApuCQip2ERCo2I4md
+	 47NaqmkvzqTedhcTyTcTgFaGqJP7Yuy/19wQNqwc02ZLwrIPX2CnyFvXXo6VrAJ5ga
+	 ambIg6mvv5gaBudoBQ5QJN8a/Eks//bC1dIkdNHCTIadEqXli2vtCgbSkTq2ULUgZR
+	 v2DdFlP3wk4YgCOq5gPe9XY00TafymmJAQ/9qMv+hyHjzCHRJYpaHkevOiTLFwRIbM
+	 iOFYMDj+drckg==
+Date: Tue, 27 Oct 2026 17:37:29 -0300
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Ilkka Koskinen <ilkka@os.amperecomputing.com>
-Cc: TAKANO Mitsuhiro <takano32@gmail.com>, linux-perf-users@vger.kernel.org,
-	Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
-	John Garry <john.garry@linux.dev>
-Subject: Re: [PATCH] perf vendor events arm64 AmpereOneX: Drop stale
- BPU_FLUSH_MEM_FAULT entry
-Message-ID: <auEK6E-jX12Bi8u_@phoenix2>
-References: <20261021224527.167637-1-takano32@gmail.com>
+To: Ian Rogers <irogers@google.com>
+Cc: lv.yating@zte.com.cn, peterz@infradead.org, mingo@redhat.com,
+	namhyung@kernel.org, mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+	adrian.hunter@intel.com, james.clark@linaro.org,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	liu.qingtao2@zte.com.cn, he.yilin@zte.com.cn,
+	zhang.cheng35@zte.com.cn, ye.zhihao1@zte.com.cn,
+	shen.lin1@zte.com.cn, dai.hualiang@zte.com.cn,
+	stable@vger.kernel.org, hu.shengming@zte.com.cn
+Subject: Re: [PATCH] perf machine: Fix NULL deref in
+ thread__resolve_callchain_sample()
+Message-ID: <auELiZHf3HldL5wQ@phoenix2>
+References: <202610271154.69RBsOlq045164@mse-fl2.zte.com.cn>
+ <CAP-5=fUbpxz9HQV+BRd62Yk+mQ5Bq-G3XvcK8ea3W8E3BqM6jg@mail.gmail.com>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -58,73 +66,36 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20261021224527.167637-1-takano32@gmail.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAP-5=fUbpxz9HQV+BRd62Yk+mQ5Bq-G3XvcK8ea3W8E3BqM6jg@mail.gmail.com>
 
-On Wed, Oct 21, 2026 at 10:45:27PM +0000, TAKANO Mitsuhiro wrote:
-> AmpereOne carried BPU_FLUSH_MEM_FAULT for EventCode 0x121 until it was
-> renamed to GPC_FLUSH_MEM_FAULT in 10a149e4b4a9; that rename and the
-> AmpereOneX table were patches 3 and 4 of the same series, so the new file
-> kept the old name.
-> 
-> The result is a table that names the 0x121 counter twice:
-> ampereonex/core-imp-def.json has GPC_FLUSH_MEM_FAULT, and
-> ampereonex/memory.json adds BPU_FLUSH_MEM_FAULT with the same code and
-> the same description.  On AmpereOneX perf therefore lists two events for
-> one counter, one of them under a name the documentation does not use.
-> No metric and no other file refers to either name, so removing the stale
-> entry cannot change a metric.
-> 
-> It also leaves memory.json holding only the ArchStdEvent aliases the
-> other files of that kind carry: AmpereOne's memory.json has no raw
-> EventCode at all, and neither has any other file of the AmpereOneX set
-> except the ones where raw codes belong.
+On Tue, Oct 27, 2026 at 08:21:16AM -0700, Ian Rogers wrote:
+> On Tue, Oct 27, 2026 at 4:54 AM <lv.yating@zte.com.cn> wrote:
+> > When recording with -j stack, resolve_lbr_callchain_sample() can
+> > dereference a NULL 'chain' pointer while resolving the branch
+> > stack.
+
+> > $ perf record -j stack -e branches:u uname
+> > perf: Segmentation fault
+
+> > Fix it by checking 'chain' for NULL before dereferencing it.
+
+> > Fixes: 29be60c93d2d ("perf build-id: Mark DSO in sample callchains")
+> > Signed-off-by: lvyating <lv.yating@zte.com.cn>
+> > Cc: stable@vger.kernel.org
  
-> Nothing catches this at build time.  jevents.py asserts on duplicate
-> event names, but x86 repeats an EventCode for many events because the
-> code carries umask and unit bits (3756 times across its tables) and
-> powerpc repeats five codes, so a duplicate-code check is not possible.
-> arm64 is the only architecture where no table but this one repeats a
-> code.
+> Tested-by: Ian Rogers <irogers@google.com>
+> Reviewed-by: Ian Rogers <irogers@google.com>
 
-Maybe a followup improvement to jevents.py?
+Thanks, applied for v7.4.
  
-> Not tested on hardware: there is no AmpereOneX machine here, so perf was
-> not run against the real PMU.  The change only edits a JSON table; the
-> perf build was verified and the generated table for this PMU goes from
-> two names for 0x121 to one (rebuilt, counted in pmu-events.c).
+> I wonder - this failure points to a lack of test coverage. For LBR the
+> main coverage comes from:
+> https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tree/tools/perf/tests/shell/record_lbr.sh?h=perf-tools-next
+> Could you help expand the tests to avoid regressions?
 
-Ilkka, can I have your Reviewed-by or Acked-by?
-
-Thanks,
+That would be great indeed,
 
 - Arnaldo
- 
-> Fixes: 16438b652b46 ("perf vendor events arm64 AmpereOneX: Add core PMU events and metrics")
-> Assisted-by: LLM
-> Signed-off-by: TAKANO Mitsuhiro <takano32@gmail.com>
-> ---
->  .../pmu-events/arch/arm64/ampere/ampereonex/memory.json     | 6 ------
->  1 file changed, 6 deletions(-)
-> 
-> diff --git a/tools/perf/pmu-events/arch/arm64/ampere/ampereonex/memory.json b/tools/perf/pmu-events/arch/arm64/ampere/ampereonex/memory.json
-> index 6c06bc928415..2a83782f51b0 100644
-> --- a/tools/perf/pmu-events/arch/arm64/ampere/ampereonex/memory.json
-> +++ b/tools/perf/pmu-events/arch/arm64/ampere/ampereonex/memory.json
-> @@ -33,11 +33,5 @@
->      },
->      {
->          "ArchStdEvent": "MEM_ACCESS_CHECKED_WR"
-> -    },
-> -    {
-> -        "PublicDescription": "Flushes due to memory hazards",
-> -        "EventCode": "0x121",
-> -        "EventName": "BPU_FLUSH_MEM_FAULT",
-> -        "BriefDescription": "Flushes due to memory hazards"
->      }
->  ]
-> 
-> base-commit: f47d223627f80cb7a1eb14c585fe6cb35de5e984
-> -- 
-> 2.53.0
