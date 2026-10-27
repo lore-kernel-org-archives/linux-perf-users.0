@@ -1,60 +1,56 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793133586;
-	b=rKSQEGBFDzmV/zqRQkeij9X6tUdCQccQQoOcSS2yyiFTMA6qwmP9OgQoTwIa49fgAuCx
-	 Ag4MyjtTmZSBFbTvNGI8JpdJwawoQ0GYZF/6Vh2M6Q9YRnjblrjNB25+VJPIB0wj+yVYX
-	 6BY9pwDPfzJylF8jFjLc6C3tmz75rhnBcll4Bx/R1vcYv0oMiINZ81iS6YGqGANHOvusw
-	 yj+J3cBHnMSjpF4ThrFaiHWt6c35SA64yLyNRShxGhOFnEQK1Q/ptXK/z2yjA2wyVAn1U
-	 1uoRHy9nUTQCEo+2ns3Ob3LcQblvoeWJ08WhGVxHFRSmvJNQERIyPPCiCtsIlNLRi9g==
+	t=1793133648;
+	b=R7XHbKeRuAYUZa7yKnf75xlDZg0vklgBSzSFAAXZL7gsDKpiPfj+eKbINgr3lzCORQYb
+	 +iJibPPayNf3kBnl07gjkL88VYs3Rg7K+k3wgje0tmIvMZK8e3zseTmnwFs1rrMzqBwez
+	 JHmKF1+60z1jtz1k8Vmm0YbN0drum7OL7sajYzyH1vqK+3PBm9nlje8/SBtBe8cPZGrTS
+	 /A7HEUKVVZMwj5FQrMROM+2p+/ftpFlJ1fHROFojy+jYBnCa8gVjaSEbbVpOOPv0B9baD
+	 Ep3V4xfXBWEnWOlsowRRyhs789u30aO20DKs5eHLNpkdc02Vc6TLhM74k+VwsOhvRmw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793133586;
-	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
-	 References:MIME-Version:Content-Type:Content-Disposition:In-Reply-To;
-	bh=0XiO9UdlKPvO9Od25ZU7uv870UVuHz4UbUNzzmJtAJQ=;
-	b=Nifz/gnuvHRucURaGf4Cs2sD1uxk6hMCAsMGsYTmws1CjV9hk9DVgwecSs8+kWewCv5Y
-	 v04NlpivrvABjGXkhH+nEe+P5tOk9dv0iFgfo9u1da2nXpdSZ5NOXaG8KFtiEFBC86jDS
-	 BLWU7ig6IYqXSV2kpgo99pu4BRxnCoOHQFt7YL7LAIcc3SPNoiM8tEt1cRbxWNDE4Yfbo
-	 eP/XCg6dTuz2f+/chj5V5ualZFIB5Clbrvax4ZAaOqvDFuJ1KLG93rDAF1mxK1rngeWrG
-	 g8OMt7i7doznYn+R5Be/rNlsc6m1ak9GEM7TLubIAl+izGTywruidTnrwnJJMcyFcuQ==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793133648;
+	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
+	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
+	bh=vcxPYYVgrTpztiwV7VZuV/wg8ukn22PC4lJu9DlIBRs=;
+	b=KC8OqGSMx0jDG/AHKzGp1m4CUhfRJByF6xUq1Z9XPRe+U2kZb6x+mZ9LdWCAzdAFES9c
+	 RAqYJ3n5iA3a1XHeYXcgWcO6yTfhNg4gmGJqh0KuWkNOkPtqCbUetGEgQMwwVOBzN5bLa
+	 n9UiPtrpC6zlo/UVev7RpnRzVaFbZmOfWxPjs2Bsx8bVlghC2wYyWKLZNqbL1fH/d8W2e
+	 zUNPPVTBkRnzKtT/Y36jxy2qNvpjyGmctdYIFtkjMnDF3GY/XyZms9X5Qkn+G4vnFhei5
+	 lcC8D8h93y9c6esTglF5CIqp+iCgihutWB/eLL+VJDTpTOFBjylKy8UqRi+Tn9Q9Yiw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Lc5n6gOF;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=fVmRByH1;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79E1E606A323;
-	Tue, 27 Oct 2026 20:39:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05502606A31D
+	for <linux-perf-users@vger.kernel.org>; Tue, 27 Oct 2026 20:40:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Lc5n6gOF
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9ED501F031E2;
-	Tue, 27 Oct 2026 20:39:45 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=fVmRByH1
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B43231F01825;
+	Tue, 27 Oct 2026 20:40:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793133586;
-	bh=0XiO9UdlKPvO9Od25ZU7uv870UVuHz4UbUNzzmJtAJQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=Lc5n6gOFv+T3jwvrET1ilzd9TXkiWRL0whCU0wRbqrNjjSMLfg2apqLkmcDqe6dI8
-	 HWaNgti/uToQ3LrbTIRCT9I/FIa7xKufq7yxKFYX88ooQwNxqvZS0g62bA6RhI3vAE
-	 O/AnvVo0ATIlrZeiHqQ+0m33Er8Gsz1zsllCop4mNG2taAGX4u7YD+FnlutuZ66C75
-	 xkZHVz39l9E6YqgQAH/WDUz1TiltQ7Dqehx17YhUV6blfTpMOn/EcN8K/YtFYFftpY
-	 EYrcZmEDejDFQ+NRPDD8PlvdHpn+PY54qcd7TMT5TQy87L4d4k4fcKQpmL61iGZup5
-	 afLMrpH+nRpSQ==
-Date: Tue, 27 Oct 2026 17:39:43 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: James Clark <james.clark@linaro.org>
-Cc: Florian Fainelli <florian.fainelli@broadcom.com>,
-	linux-kernel@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Andi Kleen <ak@linux.intel.com>,
-	"open list:PERFORMANCE EVENTS SUBSYSTEM" <linux-perf-users@vger.kernel.org>
-Subject: Re: [PATCH] perf print_insn: Include sys/types.h for ssize_t
-Message-ID: <auEMDz98qPMsFXiu@phoenix2>
-References: <20261026174535.3157580-1-florian.fainelli@broadcom.com>
- <297198e4-3179-4de6-b5c4-ede4faa92ebf@linaro.org>
+	s=k20260515; t=1793133647;
+	bh=vcxPYYVgrTpztiwV7VZuV/wg8ukn22PC4lJu9DlIBRs=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=fVmRByH1ASjwjNeu4bpF6R48N01idga+stVV4ZX2xX3qfNGtqn9cZCsf1PcIBGPCl
+	 GNFQOuOT78saPhKfIJZ8ymsBvKgYZOX/C4SC7ca+UvigWJBuhC5zapwhgPeA0EPxmN
+	 aVPqeY47SlHV5FzX1PixDQfNRT+7wZYPJoUW7AZt9abiWuxuQpelgiKTBgfhyS0kiC
+	 Kq5PvFdrecb5SW0N9Png9ANWp+wJChVBG3w22miRDl2vKsJM5nE5GMY5Yg7MndDVIw
+	 VJph27iX0fshz9hakVIa6TByYO9V3IxMEU9UKZSrVF1m5i3OgTRs3CvaN1TVmKEcHp
+	 rL4pVo9S0X4WA==
+Message-ID: <sashiko-outbox-187095@kernel.org>
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v6] perf stat: Include PMU name and split uncore events
+ per PMU in metric-only JSON output
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Chun-Tse Shao" <ctshao@google.com>
+Cc: linux-perf-users@vger.kernel.org
+In-Reply-To: <20261027203115.2647914-1-ctshao@google.com>
+References: <20261027203115.2647914-1-ctshao@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Tue, 27 Oct 2026 20:40:47 +0000
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -63,22 +59,34 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <297198e4-3179-4de6-b5c4-ede4faa92ebf@linaro.org>
 
-On Mon, Oct 26, 2026 at 06:27:25PM +0000, James Clark wrote:
-> On 26/10/2026 17:45, Florian Fainelli wrote:
-> > +++ b/tools/perf/util/print_insn.h
-> > @@ -4,6 +4,7 @@
-> >   #include <stddef.h>
-> >   #include <stdio.h>
-> > +#include <sys/types.h>
-> >   #include <linux/types.h>
-> 
-> Reviewed-by: James Clark <james.clark@linaro.org>
+> When running `perf stat` with `-A` (--no-aggr) and `--metric-only` in
+> JSON output mode (`-j`), `perf stat` evaluates metric expressions
+> across all matching PMUs (including uncore PMUs like `uncore_iio_0`,
+> `uncore_iio_1`, etc.).
+>=20
+> However, `perf stat` previously formatted JSON output by printing only
+> "cpu" : "<id>" and grouping all metric values on a single line per CPU
+> without identifying which PMU instance evaluated each metric. As a
+> result, when an uncore event spans multiple PMU boxes, `perf stat`
+> printed repeated, ambiguous metric keys without PMU names.
+>=20
+> Fix this by:
+> 1. Including "pmu" : "<pmu_name>" in print_aggr_id_json when evsel->pmu
+>    is a non-core or hybrid PMU in AGGR_NONE mode (-A). Tool events are
+>    not labeled as they don't belong to a hardware PMU instance.
+> [ ... ]
+>   {"interval" : 1.000314908, "cpu" : "56", "pmu" : "uncore_iio_1", "MB/s =
+ iio_bandwidth_read" : "0.0"}
+>   {"interval" : 1.000314908, "cpu" : "56", "pmu" : "uncore_iio_11", "MB/s=
+  iio_bandwidth_read" : "0.0"}
+>=20
+> Assisted-by: Gemini:gemini-3.1-pro-preview
+> Signed-off-by: Chun-Tse Shao <ctshao@google.com>
 
-Thanks, applied for v7.4.
+Sashiko has reviewed this patch and found no issues.
 
-- Arnaldo
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261027203115.2647=
+914-1-ctshao@google.com?part=3D1
+
