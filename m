@@ -1,85 +1,88 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.43
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.46
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793068890;
-	b=KhCJYDE9w4dgEp+YhB9t9JFAM33V5FyeT3rho0i6n6dUeozvbC41ZmeSIav4pgRd5kja
-	 o/cQpEdX9BmV/mFrORMETvQIdqqF8+Fkp/Bxw23Nea0Fg4O7s3BEdrM12wqKb1SOOiRj+
-	 ze+CRF+wCX4rKm/P3uu1WY6zJlX5gI0+DGoCqgPbWtSy1FovFW8pafktAhTCtpT9f1XAr
-	 xXk3yFhfiRODwRxjqlSKKKPnxCzDPp+K0P/FvE+GW3XWu2zgPyEIzXZkdUxaeGJ609LT/
-	 CFsAjrf5ZAAH+b4QFS1bHmJe8hKSuazyi3w6yAVJ8hNZnA1vHZvP7UEpOI4O6QQn2tg==
+	t=1793068958;
+	b=2H9gTbjDQenFKfv/219TF83PEs4vsdHKUKY/fz7QUKfa6Azv8/sCIo0HgYGX9flDvofo
+	 pokrArDDDLKcpPNUr119EUdfl7eH0w99kNjqo6BEFc1EWQrWdzFWqvm6nzRRjPf0WGI3D
+	 9Rg6CRQXjxZKql4Y4IOZOCZzWR4Mm5Z3+8pqoSif9/ip/NTRvshb7OSmr7SY6fHSZ+sGc
+	 PlowCMUdP2y4eBsq8/GzxhA86ymho+vbE02HrClliPpsfQcG5hE2dOXx+nGSXt98j4N9u
+	 asGSC0qXBX3+JlV+RmX5IKeYTh2Xwp/kve3mt2YWTmHC08G6eynjWdvTwRxZJ6J2MRA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793068890;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793068958;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
 	 Message-ID:Date:MIME-Version:User-Agent:Subject:To:Cc:References:
 	 Content-Language:From:In-Reply-To:Content-Type:
 	 Content-Transfer-Encoding;
 	bh=/+f5haOvY7V5aJLRvqMe+OKgyMJap2D1kg9AHRnXBFo=;
-	b=2U680O0znIrDLYboQYSen6VujqaGXN4EQi3ptoV3TXkim4t4y8IHxQ8s8KTLwPlG6x+j
-	 U8v4CPcLSU0BlrAUHX50zvU4xd6s/bWNvRGQ4PutB7WNaeJx1W0Xw0uYCuWdrg66bVUbV
-	 cXgzUjb2OtnVu2P8GpaHg4hjNHcu88UApwkoS8W7qnoJ5MDQfVtgKPrit2gm34/EfTsBE
-	 WcXdLQhW9joNeZGu95huWBRsW6JFA83GoWorgdRKFPVovpyRPhlpLmxKNM/08CrXliEMF
-	 ZYGx5mlqbLBdfaNHylg9j5APu8z6OO8k2j4se7VvJk0dEIo30CHC1FbcUpYNSCJtscQ==
+	b=WAs/tUuWdovI21rEJt9lBAJGrPqRzS88w6LSKso0G9UgCHZyWulMskxaaz7n8m8lILqH
+	 /QpiaPVim1FDOpHRXeUv7my4aX1C+ZOuijTOiGbwenmewzasHXjiupjHgObjeRwjzTi5j
+	 ygaxFp68DLP3NcSlvQxO8VIpYMcZgRuItJEXhZGfuKYsz0d/8xM8cuZOwVNCEa579m/7V
+	 91cWR6PlOjCE+q3eJnJDTPHkYl6+62QUYCNDuKEXPtcvRBvtGuakItvL7ClvvTV5FTV6z
+	 nB2nn3z2lNgM7s27i6YeF6dutK+DsVRSWmsjybSTteE3xzcUW2kckqwKMVmcN9kooSQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=none header.from=kernel.dk;
 	spf=pass smtp.mailfrom=kernel.dk;
-	arc=none smtp.remote-ip=74.125.82.43
-Received: from mail-dl1-f43.google.com (mail-dl1-f43.google.com [74.125.82.43])
+	dkim=pass header.d=kernel-dk.20251104.gappssmtp.com header.i=@kernel-dk.20251104.gappssmtp.com header.a=rsa-sha256 header.s=20251104 header.b=nAMLJ4po;
+	arc=none smtp.remote-ip=74.125.82.46
+Received: from mail-dl1-f46.google.com (mail-dl1-f46.google.com [74.125.82.46])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65656606A321
-	for <linux-perf-users@vger.kernel.org>; Tue, 27 Oct 2026 02:41:24 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 65656606A321
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5479F606A31B
+	for <linux-perf-users@vger.kernel.org>; Tue, 27 Oct 2026 02:42:38 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 5479F606A31B
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
-Received: by mail-dl1-f43.google.com with SMTP id a92af1059eb24-18cdcfc05ffso4488338c88.1
-        for <linux-perf-users@vger.kernel.org>; Mon, 26 Oct 2026 19:41:24 -0700 (PDT)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel-dk.20251104.gappssmtp.com header.i=@kernel-dk.20251104.gappssmtp.com header.a=rsa-sha256 header.s=20251104 header.b=nAMLJ4po
+Received: by mail-dl1-f46.google.com with SMTP id a92af1059eb24-1846bc43c28so4071750c88.0
+        for <linux-perf-users@vger.kernel.org>; Mon, 26 Oct 2026 19:42:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20251104.gappssmtp.com; s=20251104; t=1793068884; x=1793673684; darn=vger.kernel.org;
+        d=kernel-dk.20251104.gappssmtp.com; s=20251104; t=1793068957; x=1793673757; darn=vger.kernel.org;
         h=content-transfer-encoding:content-type:in-reply-to:from
          :content-language:references:cc:to:subject:user-agent:mime-version
          :date:message-id:from:to:cc:subject:date:message-id:reply-to
          :content-type;
         bh=/+f5haOvY7V5aJLRvqMe+OKgyMJap2D1kg9AHRnXBFo=;
-        b=oc6cZqFau/HqROtNMBTq8ZP3TLLLzMKPOdbVxFYEww/DOpOMHzAfKhTORNvN4KTBkp
-         LUp5Moi9eFCEYu5/4XDZT8WcjpiPsCN+0zUGPUekQp2yZJY0zBe8yl4kYAkKqjEdTrbQ
-         qqNSykJeEwW7qBFZEoQS1rQ+7ZwY381+e8TxKyiv+Q5rLJiCFF4PtyVkTxWHTKQMc6vO
-         +lb3qFo71UgGSSnv6IseZ7y8wLhEFz6jBXh4HUpywe8jgXN4FoqKQy7CyAzCO9Yfeytz
-         HBIYtHcP3MQ7eijYy79F5eSeZqsN4/+XnIDB6Cna6QVY5R0NQaf50jlOwAuklcgL/mVV
-         dVQA==
+        b=nAMLJ4pov/UKnTCLgH305UyFiee1Kbb1n3tCzOl712VaepOkFQaBHOfe8TqG3p1lZU
+         FcmqVqrrqUreTloBdzXh9C3S8RzvKdqK0Wdm3ymTtA2e7F8hg+g3tAXi0qMz5tjjKhfg
+         XZsmI+gaR0xwl7nmIQiVOSWVXQuFdQ0nDSV/JTrdP8vh+zCmGEp4ByKhGzO7Q9EFAqG7
+         Z9UxSRbzl1SyjYddPBfqeotnjUxiWUf5QMQHMI+2cHXwFS8e7Vcd6faApvoLAEI8hyVq
+         H9p+0vB8HKXlTDO8gBcIdyEeUOqojMCpKudjjewsxrlbiMp0bSMq+X14CJGfZa/XuOHM
+         djkQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1793068884; x=1793673684;
+        d=1e100.net; s=20260707; t=1793068957; x=1793673757;
         h=content-transfer-encoding:content-type:in-reply-to:from
          :content-language:references:cc:to:subject:user-agent:mime-version
          :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
         bh=/+f5haOvY7V5aJLRvqMe+OKgyMJap2D1kg9AHRnXBFo=;
-        b=vsOSDg4pODpsYte54JnQ1OSA8K8NQN1qmWnZD5kVDFaYJ4tFVE33FfZCWQnj7jJ3Hh
-         mnkACV0zYc9smx9HknO52VbPD6QuE6iez4AWAaCEV17q7EubrLYx8CY7sw5tSus4f4zt
-         wfNZTlRedFwYvMLQk5LW58TQ4fqZ2hfgDBOBmu1q5/uMUXWZ3hD+o2GUmOeleuWiEdLB
-         nM17RxuC1Ndmr7HoAb7DEl45vse6lAYUzMaJD02cjuG4k/vbh5Nb/sNQqPu3gVAVYl6U
-         ZKuq/jxUYn7gAwxUhIIUHGj49SmaV7JcDa9OUgwPGSwYCB6lwJSK4t5gNIuHphA3jE/+
-         uhMg==
-X-Forwarded-Encrypted: i=1; AKwUvByi45icKi18DVQrlaoDvQZJYZd1k4UXNNmMdri3nGrXDN4XfHCZkAtHDz7b5KIURcjcQmskfqloN24lqrcTo4v4@vger.kernel.org
-X-Gm-Message-State: AFq9FYJLE5itPxgJwXG8kOMeJ8UFa2xr6/XXDKbY0sDxKAmg00+r7ps6
-	BMBvmS0PgPC3Lu8ooSi90Dhw/JB1rRnVXscxYlXB64c8spsyQW3IEs5xZBVagb2WOU8=
-X-Gm-Gg: AYBFou3asp+GJTUOMfhKePp1BUDkSbbN3BwFF6DX8Sssx2+S9WEBZzYOXctcd5bGUVq
-	pncLqCio5VtGkyLy1eRp8j/SXWqKnRSX2cZnsF4cx/MSAltqEUq+CTZii89t8G9VGTzldbQAA2f
-	0PrwcT+Vhwnv/Sip9Whe6dUeIImlBtisxrcaLa+swYzK216w/MnwTv2xXwrlOue6EUav0StY1cN
-	p7xAgoVDRhEBKHtSdSSb3d0hA667ZNPOjBZ2LtoCJUSxNhuKClnESwpCIw9+PKXGkm4Ma5Jz0LV
-	tdLuD2bVzK70Cr4Fe+vbaXZJKkW20B/TC7C2i/yt0I05HtG5cj/L9oevOSnZ4+QL4Os5rXHtutt
-	JAk26g7FloPMgS0I86ykYs2fg3eW6bdS+yqLBXfmdj84G30A3BYcMmRwLfUtZyzq4AgEXbhCIx5
-	DWKjEIMYqbB7gbZBbqekETbDHIIJXv9npQUBRHvhOIeeWOpvDz2LPIg8KXqRY0KYhzsdaDOKVdD
-	DIlzd1gf8PN7hM6iZ9t/Dp81jD8PmZsjNcqMzYNs61AbeO46QTCknGOGu9H3LtPtO/cv1UvtSsH
-	5iSNzpT86JebKZbVAFTSjfMngcXR5gywQzrGYsI=
-X-Received: by 2002:a05:701b:4184:20b0:191:444:425 with SMTP id a92af1059eb24-199290fe40cmr12440066c88.2.1793068884148;
-        Mon, 26 Oct 2026 19:41:24 -0700 (PDT)
+        b=TO+Gn6uJbEqUGageke9LDS/O4kkoa/2j0inaLe+ohiXdo+q7ctMgCpoh02nlKbH+ri
+         EKKGOsvN7NymZhz66Ihzh3XmGr/IAA7FgwxKg2Sh641jCTDOrntxqx4Aun/qHYzsFUuN
+         btqBcyLEXK070IHRy/UbZ6c4ZJFN9UF1qm6YM/Ewc3t3EmGs1nI9Y8147zaaFMiWjNy+
+         wR79qrxEwwPzdLzWYshkkT3q51VJRYMtueGIlG1wq/UpY36khpEI7FFwZ6KsGO7v+HVb
+         iwtGjylEkplfam/N+REE8n09jY3Cjk/dda5BkbdsOMb0khHlQ1MIDpjQ3qA2gO0vFYcG
+         wbUQ==
+X-Forwarded-Encrypted: i=1; AKwUvBzql+YEinj/v5/6uVsJk65dRn3Jcee/E79XQBqLn5jhygaZSp4QSFKJpBSKKOtBrXAWnWvvSzxlofleQdx2OA2J@vger.kernel.org
+X-Gm-Message-State: AFq9FYLjU0Xejl0w/BGhM2AV9A/iC4fdFa/ch6dkMBGdzjIEcOyU9IBH
+	LgBLg68xQxntZod8p5AqdGz9rcYa/m2sbjbwve/muVWG6AsZob55+bOzlprjID0gRII=
+X-Gm-Gg: AYBFou1Ja3DS8ex7e6Y8OaVmTp/SMUGT8fMVUoYm6OGihWz07Q/2oBExsfRdIZi7v9C
+	a1FUkt/wyrhAtfwzbkBb5etbJq2panSe7tmIh0gviqbHM6L5Ij5nwfCKBXreh2mnIdzeEbzVATC
+	LxF4/6FsZmlHj4Y/GKXxpQGXCIl10oRnaVU6Jua8ULm13MC7h+HTVTbmiZ3lNOUFpdw/VAiERKO
+	2EFPqFImA8lUKljrKvArnCMQGBok9Ky8RgzKlauZr+lEhDCsRHNW8fNj/Ge7fn4tr3LsPgdEJQN
+	AxVjEBfzhSyMVGbztjTJdNJwLY5CVNiG5qPCJ5XsRtPoGwvqXc0ECSkhAi/P85B/NxUFMSkQhN1
+	FKJMz1si8rbCqiFU79mYoXVky9K8V3cEmIYUt8H5VZUCQfLlYnqUM3HpUkLbUFyleYgIEfwmb3s
+	Q1t7YXlZIbfE0lfGGTZW4N7m0PCulRSQAqRvD86LHhHTA3OEyVv86EwS7RC8tgh2WhMmGUgL/fY
+	t4xYeXZfVxjsLcYRrJP6jGgmrFBq8NEN0NvRzUIregahdL+5b/RzAUy06a6uGkJBMkzi+wBnx3V
+	x4SZOT3bXl1ChCdMg/CMuYVEquDWrRPy1g/nQ88=
+X-Received: by 2002:a05:701a:ca07:b0:144:fd7c:84fe with SMTP id a92af1059eb24-19937307669mr13761314c88.35.1793068957501;
+        Mon, 26 Oct 2026 19:42:37 -0700 (PDT)
 Received: from [192.168.1.106] ([198.8.77.135])
-        by smtp.gmail.com with ESMTPSA id a92af1059eb24-198a1bfaf25sm29293759c88.14.2026.10.26.19.41.22
+        by smtp.gmail.com with ESMTPSA id a92af1059eb24-198a249c331sm59514670c88.17.2026.10.26.19.42.35
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 26 Oct 2026 19:41:23 -0700 (PDT)
-Message-ID: <1ee97e9e-3658-41a7-a879-348f51ab547d@kernel.dk>
-Date: Mon, 26 Oct 2026 20:41:21 -0600
+        Mon, 26 Oct 2026 19:42:36 -0700 (PDT)
+Message-ID: <30b1cf28-61e6-4f28-8e28-79815bd87617@kernel.dk>
+Date: Mon, 26 Oct 2026 20:42:35 -0600
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -90,8 +93,8 @@ List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH 01/10] scsi: bsg: Don't copy sense data to user memory
- when canceled
+Subject: Re: [RFC PATCH 02/10] btrfs: Don't copy encoded read data to user
+ memory when canceled
 To: James Houghton <jthoughton@google.com>,
  Andrew Morton <akpm@linux-foundation.org>,
  Alexander Viro <viro@zeniv.linux.org.uk>
@@ -119,10 +122,10 @@ Cc: Thomas Gleixner <tglx@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
  linux-trace-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
  linux-kernel@vger.kernel.org
 References: <20261026215226.3713941-1-jthoughton@google.com>
- <20261026215226.3713941-2-jthoughton@google.com>
+ <20261026215226.3713941-3-jthoughton@google.com>
 Content-Language: en-US
 From: Jens Axboe <axboe@kernel.dk>
-In-Reply-To: <20261026215226.3713941-2-jthoughton@google.com>
+In-Reply-To: <20261026215226.3713941-3-jthoughton@google.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
