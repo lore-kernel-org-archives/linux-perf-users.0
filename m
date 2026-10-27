@@ -1,56 +1,62 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793133648;
-	b=R7XHbKeRuAYUZa7yKnf75xlDZg0vklgBSzSFAAXZL7gsDKpiPfj+eKbINgr3lzCORQYb
-	 +iJibPPayNf3kBnl07gjkL88VYs3Rg7K+k3wgje0tmIvMZK8e3zseTmnwFs1rrMzqBwez
-	 JHmKF1+60z1jtz1k8Vmm0YbN0drum7OL7sajYzyH1vqK+3PBm9nlje8/SBtBe8cPZGrTS
-	 /A7HEUKVVZMwj5FQrMROM+2p+/ftpFlJ1fHROFojy+jYBnCa8gVjaSEbbVpOOPv0B9baD
-	 Ep3V4xfXBWEnWOlsowRRyhs789u30aO20DKs5eHLNpkdc02Vc6TLhM74k+VwsOhvRmw==
+	t=1793133731;
+	b=DGXMhZAV6yoVZZFhVGoLG+SYXpLo1hEZYD2Gv3xYhleBKU9y8lknXXmv1uFjPQDxQoU1
+	 OPqkIg7ZUKq4ke7GXB5kuHyughO3Cjs93SWk67MiB5wrEA1unIF5AkVVvfUKk3RmeVpgI
+	 DZyaUY+g5n7uPhe0+2jTDcLWy2lXWLSdAAoy52cPiBwzXypBwi+sKAtlyvkOQStJPVEtk
+	 wlUSU5pAfLvRiD/GVXUQ6x4qeHdAJyzaYPJqCqIqhpgFlNwaL4d600Of5iGaMl/dFKj1y
+	 EzXTnh3LePTXi2cUY/LzDRkpVtpjtvYhc+gz5H3gQnoa1VuAqrC2auHvzXhhcgVq/+g==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793133648;
-	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
-	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=vcxPYYVgrTpztiwV7VZuV/wg8ukn22PC4lJu9DlIBRs=;
-	b=KC8OqGSMx0jDG/AHKzGp1m4CUhfRJByF6xUq1Z9XPRe+U2kZb6x+mZ9LdWCAzdAFES9c
-	 RAqYJ3n5iA3a1XHeYXcgWcO6yTfhNg4gmGJqh0KuWkNOkPtqCbUetGEgQMwwVOBzN5bLa
-	 n9UiPtrpC6zlo/UVev7RpnRzVaFbZmOfWxPjs2Bsx8bVlghC2wYyWKLZNqbL1fH/d8W2e
-	 zUNPPVTBkRnzKtT/Y36jxy2qNvpjyGmctdYIFtkjMnDF3GY/XyZms9X5Qkn+G4vnFhei5
-	 lcC8D8h93y9c6esTglF5CIqp+iCgihutWB/eLL+VJDTpTOFBjylKy8UqRi+Tn9Q9Yiw==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793133731;
+	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
+	 References:MIME-Version:Content-Type:Content-Disposition:In-Reply-To;
+	bh=xsAXCmPy2AQ6xbWetWn8WV29UW1AEYzY6mgJ9A0JnoU=;
+	b=f3Cv2rFVPa3hdw2hpxo4Qf1tSw9ybR3dJTdj5em3ao1ULYG/qgXUCmaVHjcs13njPeK/
+	 gtxmJ/ZVhzuYcPUwzcyXeA88sWS0x69Ik0X6a59p5oBZl6Q1/R3B7QC8XFvTJlXlZU6i2
+	 6xB28kMr8pIo4wjSu2jQPdtmAAsIvGKbJ+lzU7dZ5WsRO0CyRsWxX7lP4JL301TVLmnPv
+	 kFRUPDYu92gKbHsyR8qeD5ttIrSi6E2uotRiysMcwWrY+9uCTOiHDLPOjNIYTqc8U7VLN
+	 sezWDxM72HU34gvzJ6tt/lOxnJqxu8IfSX7C41o6EelIyQjFmQ5AEgqBg/wEsjDe4kg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=fVmRByH1;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=JoR1pyrb;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05502606A31D
-	for <linux-perf-users@vger.kernel.org>; Tue, 27 Oct 2026 20:40:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 225B4606A31D;
+	Tue, 27 Oct 2026 20:42:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=fVmRByH1
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B43231F01825;
-	Tue, 27 Oct 2026 20:40:47 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=JoR1pyrb
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7B9E71F01825;
+	Tue, 27 Oct 2026 20:42:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793133647;
-	bh=vcxPYYVgrTpztiwV7VZuV/wg8ukn22PC4lJu9DlIBRs=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=fVmRByH1ASjwjNeu4bpF6R48N01idga+stVV4ZX2xX3qfNGtqn9cZCsf1PcIBGPCl
-	 GNFQOuOT78saPhKfIJZ8ymsBvKgYZOX/C4SC7ca+UvigWJBuhC5zapwhgPeA0EPxmN
-	 aVPqeY47SlHV5FzX1PixDQfNRT+7wZYPJoUW7AZt9abiWuxuQpelgiKTBgfhyS0kiC
-	 Kq5PvFdrecb5SW0N9Png9ANWp+wJChVBG3w22miRDl2vKsJM5nE5GMY5Yg7MndDVIw
-	 VJph27iX0fshz9hakVIa6TByYO9V3IxMEU9UKZSrVF1m5i3OgTRs3CvaN1TVmKEcHp
-	 rL4pVo9S0X4WA==
-Message-ID: <sashiko-outbox-187095@kernel.org>
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v6] perf stat: Include PMU name and split uncore events
- per PMU in metric-only JSON output
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Chun-Tse Shao" <ctshao@google.com>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20261027203115.2647914-1-ctshao@google.com>
-References: <20261027203115.2647914-1-ctshao@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Tue, 27 Oct 2026 20:40:47 +0000
+	s=k20260515; t=1793133731;
+	bh=xsAXCmPy2AQ6xbWetWn8WV29UW1AEYzY6mgJ9A0JnoU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=JoR1pyrbKliOTl832yMruH2Wv1mnDA/1SHx2q1wwi9Y4BuMI1zd5PVFubby1xx0Bv
+	 e+QOjvl2R5iWZpSWOiKzBo9eqUPMm3YhCmr73b9HW5pQ64/lD9DWrACWiduFN9d2+T
+	 DgJpSLw2nmAAEdhwTDcr81u31H9a2lxgmQOoKPNHkgACT6KgPqO7qo1Q90yUcALmMq
+	 l2kgslucL4936HG+AVTWclD2El2YAsxoiDvv0NNteFFd4BRacr42vUUmJK8Yt6xU0m
+	 s7WAXbnNVhGahsaVvQuqB5nLuglhOHY5+B5DQcVmlSfVi8ZvQ6ifRVobFP6CY9yAsH
+	 Egfy1ZHb+5Qlg==
+Date: Tue, 27 Oct 2026 17:42:07 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Ian Rogers <irogers@google.com>
+Cc: Namhyung Kim <namhyung@kernel.org>,
+	Alireza Haghdoost <haghdoost@uber.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>, Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	James Clark <james.clark@linaro.org>,
+	Alessio Podda <aleph.pi.gh@gmail.com>,
+	Michael Liang <mliang@purestorage.com>,
+	Shimin Guo <shimin.guo@skydio.com>,
+	Tanushree Shah <tshah@linux.ibm.com>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/3] perf: Fix libdw addr2line fallback, pr_debugN
+ overhead, and cumulative hist decay
+Message-ID: <auEMn2SA50YBXBPC@phoenix2>
+References: <cover.1792995775.git.irogers@google.com>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -59,34 +65,15 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cover.1792995775.git.irogers@google.com>
 
-> When running `perf stat` with `-A` (--no-aggr) and `--metric-only` in
-> JSON output mode (`-j`), `perf stat` evaluates metric expressions
-> across all matching PMUs (including uncore PMUs like `uncore_iio_0`,
-> `uncore_iio_1`, etc.).
->=20
-> However, `perf stat` previously formatted JSON output by printing only
-> "cpu" : "<id>" and grouping all metric values on a single line per CPU
-> without identifying which PMU instance evaluated each metric. As a
-> result, when an uncore event spans multiple PMU boxes, `perf stat`
-> printed repeated, ambiguous metric keys without PMU names.
->=20
-> Fix this by:
-> 1. Including "pmu" : "<pmu_name>" in print_aggr_id_json when evsel->pmu
->    is a non-core or hybrid PMU in AGGR_NONE mode (-A). Tool events are
->    not labeled as they don't belong to a hardware PMU instance.
-> [ ... ]
->   {"interval" : 1.000314908, "cpu" : "56", "pmu" : "uncore_iio_1", "MB/s =
- iio_bandwidth_read" : "0.0"}
->   {"interval" : 1.000314908, "cpu" : "56", "pmu" : "uncore_iio_11", "MB/s=
-  iio_bandwidth_read" : "0.0"}
->=20
-> Assisted-by: Gemini:gemini-3.1-pro-preview
-> Signed-off-by: Chun-Tse Shao <ctshao@google.com>
+On Sun, Oct 25, 2026 at 11:50:42PM -0700, Ian Rogers wrote:
+> Three standalone fixes found while profiling `perf top` and DSO symbol/DWARF
+> resolution:
 
-Sashiko has reviewed this patch and found no issues.
+Thanks, applied for v7.4.
 
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261027203115.2647=
-914-1-ctshao@google.com?part=3D1
-
+- Arnaldo
