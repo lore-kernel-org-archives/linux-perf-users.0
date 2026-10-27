@@ -1,88 +1,83 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.46
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=198.175.65.13
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793068958;
-	b=2H9gTbjDQenFKfv/219TF83PEs4vsdHKUKY/fz7QUKfa6Azv8/sCIo0HgYGX9flDvofo
-	 pokrArDDDLKcpPNUr119EUdfl7eH0w99kNjqo6BEFc1EWQrWdzFWqvm6nzRRjPf0WGI3D
-	 9Rg6CRQXjxZKql4Y4IOZOCZzWR4Mm5Z3+8pqoSif9/ip/NTRvshb7OSmr7SY6fHSZ+sGc
-	 PlowCMUdP2y4eBsq8/GzxhA86ymho+vbE02HrClliPpsfQcG5hE2dOXx+nGSXt98j4N9u
-	 asGSC0qXBX3+JlV+RmX5IKeYTh2Xwp/kve3mt2YWTmHC08G6eynjWdvTwRxZJ6J2MRA==
+	t=1793069927;
+	b=BPmVZFFPXXRFgAqCjpO8lj4vb578LqNSVNA0yOtXaZ5fTtEbmjiLFHos77P+a451SdcU
+	 eoQGQ4+NzKUipYSgZMppYZKshieuGlZm/01rrPB6skdAa1mEOs/dOuwAyiiMES0HBDJTG
+	 wV6YAicoCTgoRL96Y1xM1Hm5ANfgxPgr7AnRPNz3SuON3+1hQEeD0WeqogIbnhVhCOAGp
+	 1NA1S3qDebclNDtI89pKAowGK+yt8ZeFQmHu3WaVB5sJvbFlkH1E/MiG8uXYYnCrzsvJy
+	 4A90VTgctkJ8ZFRIWFBZF6Fa/loFx59/Frd9tFrRDjbdK3IV3Bzj/cUo4recdTv5OMA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793068958;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
-	 Message-ID:Date:MIME-Version:User-Agent:Subject:To:Cc:References:
-	 Content-Language:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding;
-	bh=/+f5haOvY7V5aJLRvqMe+OKgyMJap2D1kg9AHRnXBFo=;
-	b=WAs/tUuWdovI21rEJt9lBAJGrPqRzS88w6LSKso0G9UgCHZyWulMskxaaz7n8m8lILqH
-	 /QpiaPVim1FDOpHRXeUv7my4aX1C+ZOuijTOiGbwenmewzasHXjiupjHgObjeRwjzTi5j
-	 ygaxFp68DLP3NcSlvQxO8VIpYMcZgRuItJEXhZGfuKYsz0d/8xM8cuZOwVNCEa579m/7V
-	 91cWR6PlOjCE+q3eJnJDTPHkYl6+62QUYCNDuKEXPtcvRBvtGuakItvL7ClvvTV5FTV6z
-	 nB2nn3z2lNgM7s27i6YeF6dutK+DsVRSWmsjybSTteE3xzcUW2kckqwKMVmcN9kooSQ==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793069927;
+	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
+	 X-IronPort-AV:X-IronPort-AV:Received:X-CSE-ConnectionGUID:
+	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:Date:From:To:Cc:
+	 Subject:Message-ID:MIME-Version:Content-Type:Content-Disposition:
+	 In-Reply-To;
+	bh=LHj3dpiOEHeWThVmDG4/ErTtGI5tqYkReM3/zTDeKD0=;
+	b=oCbcqxgO4wU/dTBFxyvBhvRdt+UYsmqA/sVRmaEHewqxFROO8I7LD6/NwH1keRQXu6Cl
+	 DK8Nd7J9swIU9uRFoJO0e4NtNkES02Gje2MrwEm24wUCJwNUPZSCoiZKSPc4Dy6mgOdWV
+	 dkWAeSeA2DUL1cxH59gd0PRW4L5eLOZH5OLoI5IVrcxOPP/v/z/XPZgl9XN58dCpUPqWp
+	 Soe+gjA79RRATXKJAYwj5zr2S2u9IXAcqacdEEdkF3OyceHAQFXpZ6ZMjrmZ+sCtWWRXM
+	 ZxE3kcUbm6SNeeXMiiox/iF6SczymlGDmcmHpdIGpxbMQRyMTE5tiogdN93ISto4LrQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=none header.from=kernel.dk;
-	spf=pass smtp.mailfrom=kernel.dk;
-	dkim=pass header.d=kernel-dk.20251104.gappssmtp.com header.i=@kernel-dk.20251104.gappssmtp.com header.a=rsa-sha256 header.s=20251104 header.b=nAMLJ4po;
-	arc=none smtp.remote-ip=74.125.82.46
-Received: from mail-dl1-f46.google.com (mail-dl1-f46.google.com [74.125.82.46])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	dmarc=pass header.from=intel.com;
+	spf=pass smtp.mailfrom=intel.com;
+	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=fOcgGP4s;
+	arc=none smtp.remote-ip=198.175.65.13
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5479F606A31B
-	for <linux-perf-users@vger.kernel.org>; Tue, 27 Oct 2026 02:42:38 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 5479F606A31B
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65F67606A31A;
+	Tue, 27 Oct 2026 02:58:45 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 65F67606A31A
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel-dk.20251104.gappssmtp.com header.i=@kernel-dk.20251104.gappssmtp.com header.a=rsa-sha256 header.s=20251104 header.b=nAMLJ4po
-Received: by mail-dl1-f46.google.com with SMTP id a92af1059eb24-1846bc43c28so4071750c88.0
-        for <linux-perf-users@vger.kernel.org>; Mon, 26 Oct 2026 19:42:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20251104.gappssmtp.com; s=20251104; t=1793068957; x=1793673757; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:in-reply-to:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=/+f5haOvY7V5aJLRvqMe+OKgyMJap2D1kg9AHRnXBFo=;
-        b=nAMLJ4pov/UKnTCLgH305UyFiee1Kbb1n3tCzOl712VaepOkFQaBHOfe8TqG3p1lZU
-         FcmqVqrrqUreTloBdzXh9C3S8RzvKdqK0Wdm3ymTtA2e7F8hg+g3tAXi0qMz5tjjKhfg
-         XZsmI+gaR0xwl7nmIQiVOSWVXQuFdQ0nDSV/JTrdP8vh+zCmGEp4ByKhGzO7Q9EFAqG7
-         Z9UxSRbzl1SyjYddPBfqeotnjUxiWUf5QMQHMI+2cHXwFS8e7Vcd6faApvoLAEI8hyVq
-         H9p+0vB8HKXlTDO8gBcIdyEeUOqojMCpKudjjewsxrlbiMp0bSMq+X14CJGfZa/XuOHM
-         djkQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1793068957; x=1793673757;
-        h=content-transfer-encoding:content-type:in-reply-to:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=/+f5haOvY7V5aJLRvqMe+OKgyMJap2D1kg9AHRnXBFo=;
-        b=TO+Gn6uJbEqUGageke9LDS/O4kkoa/2j0inaLe+ohiXdo+q7ctMgCpoh02nlKbH+ri
-         EKKGOsvN7NymZhz66Ihzh3XmGr/IAA7FgwxKg2Sh641jCTDOrntxqx4Aun/qHYzsFUuN
-         btqBcyLEXK070IHRy/UbZ6c4ZJFN9UF1qm6YM/Ewc3t3EmGs1nI9Y8147zaaFMiWjNy+
-         wR79qrxEwwPzdLzWYshkkT3q51VJRYMtueGIlG1wq/UpY36khpEI7FFwZ6KsGO7v+HVb
-         iwtGjylEkplfam/N+REE8n09jY3Cjk/dda5BkbdsOMb0khHlQ1MIDpjQ3qA2gO0vFYcG
-         wbUQ==
-X-Forwarded-Encrypted: i=1; AKwUvBzql+YEinj/v5/6uVsJk65dRn3Jcee/E79XQBqLn5jhygaZSp4QSFKJpBSKKOtBrXAWnWvvSzxlofleQdx2OA2J@vger.kernel.org
-X-Gm-Message-State: AFq9FYLjU0Xejl0w/BGhM2AV9A/iC4fdFa/ch6dkMBGdzjIEcOyU9IBH
-	LgBLg68xQxntZod8p5AqdGz9rcYa/m2sbjbwve/muVWG6AsZob55+bOzlprjID0gRII=
-X-Gm-Gg: AYBFou1Ja3DS8ex7e6Y8OaVmTp/SMUGT8fMVUoYm6OGihWz07Q/2oBExsfRdIZi7v9C
-	a1FUkt/wyrhAtfwzbkBb5etbJq2panSe7tmIh0gviqbHM6L5Ij5nwfCKBXreh2mnIdzeEbzVATC
-	LxF4/6FsZmlHj4Y/GKXxpQGXCIl10oRnaVU6Jua8ULm13MC7h+HTVTbmiZ3lNOUFpdw/VAiERKO
-	2EFPqFImA8lUKljrKvArnCMQGBok9Ky8RgzKlauZr+lEhDCsRHNW8fNj/Ge7fn4tr3LsPgdEJQN
-	AxVjEBfzhSyMVGbztjTJdNJwLY5CVNiG5qPCJ5XsRtPoGwvqXc0ECSkhAi/P85B/NxUFMSkQhN1
-	FKJMz1si8rbCqiFU79mYoXVky9K8V3cEmIYUt8H5VZUCQfLlYnqUM3HpUkLbUFyleYgIEfwmb3s
-	Q1t7YXlZIbfE0lfGGTZW4N7m0PCulRSQAqRvD86LHhHTA3OEyVv86EwS7RC8tgh2WhMmGUgL/fY
-	t4xYeXZfVxjsLcYRrJP6jGgmrFBq8NEN0NvRzUIregahdL+5b/RzAUy06a6uGkJBMkzi+wBnx3V
-	x4SZOT3bXl1ChCdMg/CMuYVEquDWrRPy1g/nQ88=
-X-Received: by 2002:a05:701a:ca07:b0:144:fd7c:84fe with SMTP id a92af1059eb24-19937307669mr13761314c88.35.1793068957501;
-        Mon, 26 Oct 2026 19:42:37 -0700 (PDT)
-Received: from [192.168.1.106] ([198.8.77.135])
-        by smtp.gmail.com with ESMTPSA id a92af1059eb24-198a249c331sm59514670c88.17.2026.10.26.19.42.35
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 26 Oct 2026 19:42:36 -0700 (PDT)
-Message-ID: <30b1cf28-61e6-4f28-8e28-79815bd87617@kernel.dk>
-Date: Mon, 26 Oct 2026 20:42:35 -0600
+	dkim=pass (2048-bit key, unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=fOcgGP4s
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1793069925; x=1824605925;
+  h=date:from:to:cc:subject:message-id:mime-version:
+   in-reply-to;
+  bh=eCiI7o2t0XbFM58qMLr33ebJIB2N8TI9bAvNikXpoYM=;
+  b=fOcgGP4sdfrMonNRbUkjO3xjiiXS14aOPRuvzArPl+qjT+5HSTAFoeml
+   ysBT8hLlXz5jL9SILZiJFO7D+/N7hXy0UcXxX1fqh+4PljXK+gzKgotw/
+   YCXhtR6yiDFV+m/C7B4AWdpB/JO4oO6nnM0sOSmS7vAiIzanwmufR8xkq
+   Wgzp1C9ftJmfd1Py9RnOYWgTp8cq7TeEpHEp2E3tUUHHogPH2D2jUMYE4
+   p5fIaEldkWGzMcPAlhU0Ahr0v9b79+nL9ejcRutSO+unXpvED9FTin3R1
+   nVMRBfqbZ+UTW819fU8akfpqzU9oHLNhqRlsyng4TUjNB7uxikn0tbnva
+   g==;
+X-CSE-ConnectionGUID: OmwXzQkWRMy6LzhM7OBZtg==
+X-CSE-MsgGUID: 5kN6p0mqS2abg4ZmkwAHlA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11947"; a="1636086"
+X-IronPort-AV: E=Sophos;i="6.27,180,1787036400"; 
+   d="scan'208";a="1636086"
+Received: from fmviesa012.fm.intel.com ([10.60.135.152])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Oct 2026 19:58:45 -0700
+X-CSE-ConnectionGUID: IYecuHH7R7S93/j8VxFMhA==
+X-CSE-MsgGUID: gvr9i+26Q3qyD48d2Vyj1A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.27,180,1787036400"; 
+   d="scan'208";a="6180282"
+Received: from ly-workstation.sh.intel.com (HELO ly-workstation) ([10.239.182.64])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Oct 2026 19:58:41 -0700
+Date: Tue, 27 Oct 2026 10:58:37 +0800
+From: kernel test robot <yi1.lai@intel.com>
+To: Ivan Shapovalov <intelfx@intelfx.name>
+Cc: oe-lkp@lists.linux.dev, lkp@intel.com, linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	James Clark <james.clark@linaro.org>,
+	Nick Terrell <terrelln@fb.com>, David Sterba <dsterba@suse.com>,
+	Ivan Shapovalov <intelfx@intelfx.name>, yi1.lai@intel.com
+Subject: Re: [PATCH 4/4] perf: support zstd-compressed kernel modules
+Message-ID: <202610271022.fab706ea-lkp@intel.com>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -92,45 +87,63 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH 02/10] btrfs: Don't copy encoded read data to user
- memory when canceled
-To: James Houghton <jthoughton@google.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- Alexander Viro <viro@zeniv.linux.org.uk>
-Cc: Thomas Gleixner <tglx@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
- Kees Cook <kees@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
- David Hildenbrand <david@kernel.org>, Lorenzo Stoakes <ljs@kernel.org>,
- "Liam R. Howlett" <liam@infradead.org>, Vlastimil Babka <vbabka@kernel.org>,
- Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>,
- Michal Hocko <mhocko@suse.com>, Sean Christopherson <seanjc@google.com>,
- Paolo Bonzini <pbonzini@redhat.com>, Jim Mattson <jmattson@google.com>,
- Pavel Begunkov <asml.silence@gmail.com>,
- "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
- "Martin K. Petersen" <mkp@kernel.org>, David Sterba <dsterba@suse.com>,
- Chris Mason <mason@kernel.org>, Alexei Starovoitov <ast@kernel.org>,
- Daniel Borkmann <daniel@iogearbox.net>,
- John Fastabend <john.fastabend@gmail.com>,
- Josh Poimboeuf <jpoimboe@kernel.org>, Steven Rostedt <rostedt@goodmis.org>,
- Masami Hiramatsu <mhiramat@kernel.org>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, linux-mm@kvack.org,
- linux-fsdevel@vger.kernel.org, kvm@vger.kernel.org,
- io-uring@vger.kernel.org, linux-scsi@vger.kernel.org,
- linux-btrfs@vger.kernel.org, bpf@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20261026215226.3713941-1-jthoughton@google.com>
- <20261026215226.3713941-3-jthoughton@google.com>
-Content-Language: en-US
-From: Jens Axboe <axboe@kernel.dk>
-In-Reply-To: <20261026215226.3713941-3-jthoughton@google.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20261014-perf-zstd-v1-4-9652727886fa@intelfx.name>
 
-Reviewed-by: Jens Axboe <axboe@kernel.dk>
 
--- 
-Jens Axboe
+Hello,
+
+kernel test robot noticed "perf-sanity-tests.kmod_path_parse.fail" on:
+
+commit: de7d5e445f2f9dfc4186dc2bd86287d27c9e00bd ("[PATCH 4/4] perf: support zstd-compressed kernel modules")
+url: https://github.com/intel-lab-lkp/linux/commits/Ivan-Shapovalov/perf-zstd-zstd_decompress_stream-zstd_decompress_buffer/20261014-203407
+patch link: https://lore.kernel.org/all/20261014-perf-zstd-v1-4-9652727886fa@intelfx.name/
+patch subject: [PATCH 4/4] perf: support zstd-compressed kernel modules
+
+in testcase: perf-sanity-tests
+with following parameters:
+
+	perf_compiler: gcc
+	group: group-01
+
+
+config: x86_64-rhel-9.4-bpf
+compiler: gcc-14
+test machine: 16 threads 1 sockets Intel(R) Xeon(R) E-2278G CPU @ 3.40GHz (Coffee Lake-E) with 32G memory
+
+(please refer to attached dmesg/kmsg for entire log/backtrace)
+
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <yi1.lai@intel.com>
+| Closes: https://lore.kernel.org/oe-lkp/202610271022.fab706ea-lkp@intel.com
+
+
+2026-10-25 22:43:28 sudo ASAN_OPTIONS=fast_unwind_on_malloc=0 /usr/src/linux-perf-x86_64-rhel-9.4-bpf-de7d5e445f2f9dfc4186dc2bd86287d27c9e00bd/tools/perf/perf test 34 -v
+ 34: kmod_path__parse                                                                                          : Running (1 active)
+---- start ----
+...
+FAILED tests/kmod-path.c:23 wrong kmod
+FAILED tests/kmod-path.c:63 failed
+---- end(-1) ----
+...
+==11697==ERROR: LeakSanitizer: detected memory leaks
+
+...
+    #17 0x7f7a0d1b9d64 in __libc_start_main (/lib/x86_64-linux-gnu/libc.so.6+0x29d64) (BuildId: 5e5b51f4c39af9ac589408c1dc432ba390a273cc)
+    #18 0x5569eccabb90 in _start (/usr/src/perf_selftests-x86_64-rhel-9.4-bpf-de7d5e445f2f9dfc4186dc2bd86287d27c9e00bd/tools/perf/perf+0x11edb90) (BuildId: c1567a8473607a54274bd80d073619ea9cdc5d77)
+
+SUMMARY: AddressSanitizer: 8 byte(s) leaked in 1 allocation(s).
+ 34: kmod_path__parse                                                                                          : FAILED!
+
+
+The kernel config and materials to reproduce are available at:
+https://download.01.org/0day-ci/archive/20261027/202610271022.fab706ea-lkp@intel.com
+
+
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
+
 
