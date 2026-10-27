@@ -1,87 +1,74 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=52.101.195.120
-ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1793132862;
-	b=LuJ4blLZZxBowSXn8WGcBgcSb7CEP+5MPJS9yaVVO9C37H9zfXqQ0gBSr2N0w+A7sMpK
-	 EvWMuJKQFkyObkmlOQNtoxJyUcnUIA1LqbMxaEt4TaAXA1srPMu57Tm5aLcCHqGeGGc6t
-	 YcoSvmNvbIs3v8xPGr6dt0g456iOaFi3FsGk87OG2eWKLP8cz80R6J8H/qkzfjlyPQB8L
-	 v5TaEE0kEk/Iqf2DmeF8aLdRY/Y4Y0rBGOcEsu4whlH5R3yKd3M/7SlDIS4/v+QwiwWim
-	 SNlW2ytiJnb5TCj85q3Wdp4IQ1qXnpn8tU2OsqGlzj5k5XbBSj1rsKG50dYX/q8WFpw==
-ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793132862;
-	h=DMARC-Filter:Received:Received:Date:From:To:Cc:Subject:Message-ID:
-	 References:Content-Type:Content-Disposition:In-Reply-To:
-	 X-ClientProxiedBy:MIME-Version:X-MS-PublicTrafficType:
-	 X-MS-TrafficTypeDiagnostic:X-MS-Office365-Filtering-Correlation-Id:
-	 X-MS-Exchange-SenderADCheck:X-MS-Exchange-AntiSpam-Relay:
-	 X-Microsoft-Antispam:X-Microsoft-Antispam-Message-Info:
-	 X-Forefront-Antispam-Report:
-	 X-MS-Exchange-AntiSpam-MessageData-ChunkCount:
-	 X-MS-Exchange-AntiSpam-MessageData-0:X-OriginatorOrg:
-	 X-MS-Exchange-CrossTenant-Network-Message-Id:
-	 X-MS-Exchange-CrossTenant-AuthSource:X-MS-Exchange-CrossTenant-AuthAs:
-	 X-MS-Exchange-CrossTenant-OriginalArrivalTime:
-	 X-MS-Exchange-CrossTenant-FromEntityHeader:
-	 X-MS-Exchange-CrossTenant-Id:X-MS-Exchange-CrossTenant-MailboxType:
-	 X-MS-Exchange-CrossTenant-UserPrincipalName:
-	 X-MS-Exchange-Transport-CrossTenantHeadersStamped;
-	bh=xlljtLpVa3TC22agk4PtilGIM17Uc5+2eANTfGm4074=;
-	b=2NFE9fE/4SfwNv16FLM3gExE2Xigor9goElSBF8aZexSOpcOlDBguPmpVT4cXzUGYuhC
-	 7Lc9ctp8gt/pEYXhbIURsx48vCCwNQhPNx5rivfGLFyF46KTIXOqyEA8ETr0qU6jF1KPr
-	 VJlF7lDQoaz9uVb4cEsqgBF5IPyc/xKtZEJbWd+F4k1WpA2NoX6QVmu7nQpeZqVl2ZBpi
-	 6YI+lC1/ubHUNn/qX4yRwMvHeU7atKDr4kmDCVy4jZrdum+RaTC5+f0kXmW3PETv3LiC7
-	 dyXc87hB65rif3bWMBfHqGxqvfPVrkiGMF6yfixVxGqeNJTO6wwguG5hCK8anUZt/yw==
-ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
-	dmarc=none header.from=atomlin.com;
-	spf=pass smtp.mailfrom=atomlin.com;
-	arc=pass header.oldest-pass=0 smtp.remote-ip=52.101.195.120
-Received: from CWXP265CU008.outbound.protection.outlook.com (mail-ukwestazon11020120.outbound.protection.outlook.com [52.101.195.120])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (secp384r1) server-signature ECDSA (prime256v1) server-digest SHA256)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.214.200
+ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
+	t=1793133090;
+	b=g1X68CRS4kvlYkJCcTpMYuqQLZp1yjZnAO1NC0bnGNT+l4dYMMdN3gilT7XEr/rJXxnp
+	 veqnUzG2r1XSsAoBQMYjdgz3OdaCsEUE0pXLoi+F96L3cS6OXpQ3IHHgMmH45tiR/FEdn
+	 xRtDge72GgtjIMf3HQDZYe7tBZ0QMM1pzkfp35zm6tk9F8l0ZxRWVHga27j3d03naYZZv
+	 XzIcOoY1HNI6+ysHBs6QP1dbdhv6Ny9riBUMcjiYE+Yrsj9t84l+7LM4W+fAQSVvZ/JME
+	 SU5B1C1WrMJfGuJPWzlzHC3qmTiIlP9Ky6Fgo6v1lm7pe58VdOZzloBrtcDV2n1TOiA==
+ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793133090;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Received:Date:Mime-Version:
+	 X-Mailer:Message-ID:Subject:From:To:Cc:Content-Type:
+	 Content-Transfer-Encoding;
+	bh=yQw8l80OTevP6nVCCabCl0MW8z0aTAgvbDhANDTS3S8=;
+	b=TST1xDIgQMV5FiOh01kFm0MsR0daQK+fAYMYMNmjYkAdNWwR6FXxkR+L3zgDE4FIHhjJ
+	 jbH/m/5xvFUstqgenhHmYzqmrdXJ5spF1Rhp8iDaYKSHjeCWPRZPgic0Akl15DpWow8BZ
+	 s8UuHo2BK65u9gYCPBHWk0OkAGIE0R8CxeGaZXX4gI7e7Qqsh8HQGTPSGEUPfkx3xgQYq
+	 Xcbtla0lKLOE4EKI6DMEcKABWb58IrqTDfaaB+DgsC78QQFgPQcpxkgSt3JIrty043Si8
+	 nolr2CKRJdk8W2u+nep8R9m2N9ChWk4tP+R+5akBBXB9ynvp6j9elhznfpfnQq35Nkg==
+ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
+	dmarc=pass header.from=google.com;
+	spf=pass smtp.mailfrom=flex--ctshao.bounces.google.com;
+	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=SBHkJp9L;
+	arc=none smtp.remote-ip=209.85.214.200
+Received: from mail-pl1-f200.google.com (mail-pl1-f200.google.com [209.85.214.200])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCBC5606A31E;
-	Tue, 27 Oct 2026 20:27:41 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org CCBC5606A31E
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=atomlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=atomlin.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Mb9fcaWWt89Tk2ayhbL2k2MlYuDl/EHFOM2kgF6K4Sa/dzzaKh1miSmlPFNQdPS6PElXhrGj2WDA4Rba4IDhBclA3EfIOLePXNZoa4pTlrgXYQBEUqQtOKUNXPl65BWVsUZ2+X1QRT2hW+auVIKrkXjX59t99A3Mfn0hU5DqQK6o5gu5KeuJHcdJydL4iHGeJV76r9+L5Sw9NHLCx17PPpBe0eO8Fkvurbhk0BJbt7Ip38MQqld7sVrSVmvKJYJHmIjNXFZXnJWsFaYhlULqjVN/kO8cqswk+ctq0KEvtmH/Vq82SwcvLajRmYOF1A9ebEq150d2HBX61cUEgrq86g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001; h=From:Date:Subject:Message-ID:MIME-Version;
- bh=xlljtLpVa3TC22agk4PtilGIM17Uc5+2eANTfGm4074=;
- b=COpcrEyBBUo3SsNdy3x4QFTk4vuUvTl7jQgrCrqhfB0ZfCihSFjPrqJQve2ldjrvyxLlGZ6sSERGrCdY7VuKMbdqozLs0f92GLNvcOKDxYgeweB5GxqxgvuSbjld9xvy4NdNJwyEkyAzU3wcbZEpYa5up5Oo0ChHoHx31zEnuol/tesNJAUGJwoYY3wl385CTZg/txHCyt5KdhrtZMGnkTrBT40ovjsP5IQk/frjFk+5yPa+YSo3FFQ1qK7vsNSN/X8SXYlc2Hm/VhdtHZcCnba5p1x5etALy2S3xwsRKp9ppBdsAzJrSC5I5v9j9OTs1KlagzCvg2zcJEp7+Hyklw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=atomlin.com; dmarc=pass action=none header.from=atomlin.com;
- dkim=pass header.d=atomlin.com; arc=none
-Authentication-Results: mx.microsoft.com 1; dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=atomlin.com;
-Received: from CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM (2603:10a6:400:183::5)
- by CW1P123MB392182.GBRP123.PROD.OUTLOOK.COM (2603:10a6:400:282::6) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.546.22; Tue, 27 Oct
- 2026 20:27:39 +0000
-Received: from CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM
- ([fe80::cec4:77ab:262e:d230]) by CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM
- ([fe80::cec4:77ab:262e:d230%5]) with mapi id 15.21.0546.021; Tue, 27 Oct 2026
- 20:27:39 +0000
-Date: Tue, 27 Oct 2026 16:27:34 -0400
-From: Aaron Tomlin <atomlin@atomlin.com>
-To: Ian Rogers <irogers@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, James Clark <james.clark@linaro.org>, 
-	Zhan Xusheng <zhanxusheng1024@gmail.com>, Dapeng Mi <dapeng1.mi@linux.intel.com>, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 6/7] perf inject: Set ordering_requires_timestamps
- before creating session
-Message-ID: <3n2avzhpvlafgmzgcrnpila4gxxomeav3bedihrhuq5uu6yzfm@it3qjkjx5bsq>
-References: <20261025220349.1244499-1-irogers@google.com>
- <20261025220349.1244499-6-irogers@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20261025220349.1244499-6-irogers@google.com>
-X-ClientProxiedBy: DS7PR06CA0037.namprd06.prod.outlook.com
- (2603:10b6:8:54::12) To CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM
- (2603:10a6:400:183::5)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCB4F606A31E
+	for <linux-perf-users@vger.kernel.org>; Tue, 27 Oct 2026 20:31:29 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org DCB4F606A31E
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ctshao.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key, unprotected) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=SBHkJp9L
+Received: by mail-pl1-f200.google.com with SMTP id d9443c01a7336-2e9572e892dso1481825ad.1
+        for <linux-perf-users@vger.kernel.org>; Tue, 27 Oct 2026 13:31:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20260707; t=1793133089; x=1793737889; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:cc:to:from:subject
+         :message-id:mime-version:date:from:to:cc:subject:date:message-id
+         :reply-to:content-type;
+        bh=yQw8l80OTevP6nVCCabCl0MW8z0aTAgvbDhANDTS3S8=;
+        b=SBHkJp9L9t4q9mCF6VX5/6JPD404MoqoxycjaQIZJwEEtOpZ2ogkczGK+lWrKuZFmg
+         JW17fin1XKAXhQ7Ccj8QMUxQKN0Cn1UHenlrlLMiS0j68foxaZ4BNaco5U9wNMeSrGJo
+         s/QCxtfyrW+IDWyiVF+qwiCRq7gxdHFAJJ7E8ygUeLCQ0cwT4JfOl0mg87kgY5nQlYYC
+         TnRQV242H21s4CUb8bQtJucbso1GcgPwJopYZw9ekN//aA2atwWJJtTSqBJ7K18m2AQX
+         2s/qI0Q2nerCe5CXZW3pKi6dUkg0hoLV9eM8+w5CQdzlPQtXrAbMTqmnvQkeb8XetuWI
+         liXw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1793133089; x=1793737889;
+        h=content-transfer-encoding:content-type:cc:to:from:subject
+         :message-id:mime-version:date:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=yQw8l80OTevP6nVCCabCl0MW8z0aTAgvbDhANDTS3S8=;
+        b=tQAbQSDFxCtjJlmmGyY1Zah4XDMDrvSR0Nm1SmKB1igAuZ7AcCdvjdSJn860GDd4Fq
+         Zy0yaPKTNs3kETuZqb17DzpL2hfe2TmWAcpA+tAFl79RVfo7ywrU+8nd9CHw5HMeMQT0
+         YHO44ShdUboydc1p/mTynSAmdomPa3akosmrxegkOsj+CvooeOv8Ik5o0prhToOYCtTg
+         GOzxeEgYCZKEierE2xftyet2WzC7+vTRWFkWregtYZgcHnxgFfgVYkBI2U2X/vHuFEw7
+         Y3qivNZ6ZK5ESWtj5sbReccNPEymTPOPugU8Ze5JTVf7rsUCUT98ECMkXj3g2FKMmpxO
+         DZGw==
+X-Forwarded-Encrypted: i=1; AKwUvBzD1lkx8e2n1MBOYSNkNwCKMAPBojYJcWQvxsw0sBxozljUDNs+Zfs3rf+goTjrcO2DCMa3YnaPO91Ih7C/HToL@vger.kernel.org
+X-Gm-Message-State: AFq9FYKj6DyOim9kdsPSyuO3XKOdcYwGiyTzYh4/f4/ccM9vB1u2HiV6
+	iEaFBD67lWfA25V4Pudsq0CfN+1ouXEFxQe9M0d2M5dw0FTFSHSnx8hL2cuNZW2HWdcK6IflqYO
+	3Og/gIA==
+X-Received: from pjbgc15.prod.google.com ([2002:a17:90b:310f:b0:3a5:f1d:43a6])
+ (user=ctshao job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:4b89:b0:3ac:9ed8:f309
+ with SMTP id 98e67ed59e1d1-3ae580a0212mr181890a91.29.1793133088948; Tue, 27
+ Oct 2026 13:31:28 -0700 (PDT)
+Date: Tue, 27 Oct 2026 13:31:15 -0700
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -90,203 +77,323 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
-MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CWLP123MB6607:EE_|CW1P123MB392182:EE_
-X-MS-Office365-Filtering-Correlation-Id: 5615283c-408d-47ca-ff6a-08df3468bef8
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|23010399003|366016|376014|7416014|1800799024|261026121527099003|56012099006|261021121427099003|4143699003|261021123027099003|261022075727099003|261022105027099003|261009223027099003|10067099003|18002099003|6133799003|22082099003|3023799007|261026140227099003;
-X-Microsoft-Antispam-Message-Info:
-	PhAMtWMZVYWmWMKO7FzWcC7u6Y5SJqdPgab2fzKYWGCTnMRzYHku+CUJc/3o7O+t49GMRB72/oQhXEglfzFB6gUmtg75NejeCHMYqJ7FTx/7TbaN5h+gGe2sdR8b5TFJNjfp3MafGkHavj2sSq3V2J9GDdLAd2fog6V4V8dicK7e4Pc/b21U16SuUsEH4KcYJgbdFfo//ekIrg57up+/5mdArIeq1/rxLt+39JLK1VyauPf1XQLEIdYOQPZi86c6Y+A/Xh5r4LpJ7vPylnvUCxjFvaniRzblzToHvUblhTunpT9Qmp3HX0ZACJkoye5z40WK+1VQ04f05PXZWpkKjo8ioPeg5Frteot2qMOfcBQNY+RHfO0CbGSTVvASQsH8tw1nXahC15NmgobCKnvRAT/13y75J79z72sDjv7pnL32G9MXYT7meYMB2nEJp0s9RZzbHX+TIHjBCi4QnptNq2TporPxW7a/MGb+xneFR6cXEid0wBE27j5EuLmb0ys3VPqXmBL0PNHNqs6J4LhmJwiJ3i8OByUqmT5NRIUNMLyNkcSp9stJM7gZqQvFNahS/dlOvlIDPstDVxG+FRsGUDWQ9GUbvOaLJGsZXGzBUrRuuis7bAwAqmI0RFf+fEMSAjn+eXBLVyXlEMxW6+uLU9JpvTzIBO1FJ7SaeYRqqrc=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(23010399003)(366016)(376014)(7416014)(1800799024)(261026121527099003)(56012099006)(261021121427099003)(4143699003)(261021123027099003)(261022075727099003)(261022105027099003)(261009223027099003)(10067099003)(18002099003)(6133799003)(22082099003)(3023799007)(261026140227099003);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?eGJSeUxtRTRvQ1JrV3BYeGJKL2hpbk9yQ1N2QUNDWDBseEE0RkE1bWZoQTJz?=
- =?utf-8?B?TW9vZjEwSVhXaVRMaExyRGpyRzZYQTZZdmpoNHFIV0JEalYzdlI3bFd5UERJ?=
- =?utf-8?B?OUpGbU9DUmxzc09xWDNKREU2Q3hVSk1JeE9HMm9BZzh1aS9xR0MrUFRTVlF5?=
- =?utf-8?B?d25Hb0lHL3JDOGRSMmg5K1dwZDBZdlgrdTErTUMwUVhESmpiMW5FeHRHM1dv?=
- =?utf-8?B?bDQ4RkxWYmlIYlFNVUlDajNuaHJwb1JTVE00SXFzWDYwK3hVQ1VxclNzWlFs?=
- =?utf-8?B?WWJlVEFzRW8veUxwVFRpbVZIc3Q3YmoyT2tjckJ1b3UxOThCU3JMWU05aUFz?=
- =?utf-8?B?TU1ERGFwWHFhNkhxMXpydDh2Rk9hcVN4enBHRFpZTlZKUFJTNXNGTWtpa3J6?=
- =?utf-8?B?NlExYkVYNmMvS1NteHdZY2NxRlIrVGNmSzBWQnJpalltUUJkN2J6RGNGbkR3?=
- =?utf-8?B?WmtlcGkyQjU5ZUM2ZjFyd3U1Z0hnUStwVGQ3MkFnMG13YTcwN3VSOTlFMmpM?=
- =?utf-8?B?NnlNRzdTL1FKTGNTRkp6ZThsb1hoZ0xST3JZK21hMU9JblhiY2trYzVmR0xv?=
- =?utf-8?B?ZHFvWjFCOFVYQWhZS2c5TmZINzZoSUgrRTEwdzhaNXlmYVA2SUZJVDJTNW8x?=
- =?utf-8?B?aHRyQXZsR1ZTYUl1bkJrWmkyKzI2OGYzd1hvSXkxUnEveXJwRFhqQjFSUjFw?=
- =?utf-8?B?bngzTGdWajkwamhTMVFLb0sxUFhrOE40Nm5NV01DMEtQQi9heE5qVitlNnpZ?=
- =?utf-8?B?Z3plcjNyd3BkdHFha3orK2R2ODhaOVhXV3EyK0NYRXBoMEh3dy8zZlBteXpr?=
- =?utf-8?B?dTBVaEpjZEFvSlA0TS80UTNUVEZ0MkVhWEY0TWFYdW1Ob21OZWZ6MXBjK2dF?=
- =?utf-8?B?V0R4cFI5cHB1K1lxU0pqTzhIdlpxL1MvblFWakk0S3gyUVd3bUhyMTMvQ3BH?=
- =?utf-8?B?N0lVN3VGYlBSMUM2VDdRVXFRUHZ2Tk51ZkswZmRBUktQUUxmbFJBTXMzbFR5?=
- =?utf-8?B?alovYllQQkNZN2lGRFp3S3Y4dG5VSTVOdDFyRzYxVjhIWmp3eG5pRnJaN3ZH?=
- =?utf-8?B?Rm1vdTByczFkdHB0akIzcGFoM2lLNW1MT2w1dFJTWU9yTFBnWFk5R2ZnbWZJ?=
- =?utf-8?B?NFc3VkhRcHQ5VTJlNlRCeHdTaUhRdDYyZVdDRU1ZTXdGQXFGNXNWNGlFWFBR?=
- =?utf-8?B?dTBnTzZQMFVqV0xheVlvT1lhZkoyYVZvQ0N6bW42QUVPYkxXRFVmOUVYSnhu?=
- =?utf-8?B?aDFVYjg0WVVPZXBCYlgvYUtxVUFDdzNQeVhuYnVzNWxlTzZNa045VXh0K1pU?=
- =?utf-8?B?Y3RBU1M3cUt1cmxNMTNZZk42Z3RPQ2MzTGFsKzNoeCtzTnJvTTBLc1RKazFv?=
- =?utf-8?B?MGtPQjdYUUFhcGVMeGx6eU16QWttdDZ1cmtpMExxOS9zQ21VN0pYM0pKa3Vj?=
- =?utf-8?B?U0xjanpqaEJpb1h4OTVJLzkxNlRvZTYzZ3ZuNnRtdlJLTVNSQ3dXU1o5Z21O?=
- =?utf-8?B?NFAyUVZiZmZHcHI2MVduNytLczlsMWlxcVUrd0d2MEpqcXlwZFJkaElRYXdp?=
- =?utf-8?B?MjZkZTFWbEdmZW1CL3BzaS9sWDZVcXVHazlzVGhMbjVhUXlIVkIxUE9lZlZV?=
- =?utf-8?B?cmNkUGc3TmQwUmdhNzc0TitFeklxaUNDTkRUZkVrc2NaWkhMQXZrclZHNDJh?=
- =?utf-8?B?RHQ3SkZHMlhHajZERlJBRnNVNWZibmdlQXZpa0FLZlJZcFZ5dndEU2Nsd3Rm?=
- =?utf-8?B?SVZjZXpsNytMc1poZGlGSkZUVXdtWE8vVTBpRWRjdGlDUkpGRGJoaUxiNXg1?=
- =?utf-8?B?TFNVQ09pNU05ZG1HTmFjTHFNN0U5NXFYSElJaVEwTTZpdkVjUjhpTCtIRFE4?=
- =?utf-8?B?YTBvaC9CNEg3WnFpMFRaYm1MZzhQV09Oc3ZWaUhibEkzUlc5all6d1Q2M25L?=
- =?utf-8?B?N2dDRUFZamZkWG5TNkRMSStKUE1FblAvRXpMcWw3MkJLNW8rbWpIdUNsMzlu?=
- =?utf-8?B?K3R2YVpEQjFjRUJTbWNIWFB5VWFWKzlmeUlqb3R1VkhhOVJ5ZExYTmJCZ3RV?=
- =?utf-8?B?UE00K3dUd1hTb3Q0U09DSnR0RkMyb3gvMzJLWU1maHlTVnplT2p1ODJLQTZP?=
- =?utf-8?B?N3JzZE1wZ3NOWXQzM3FWRHA2ODlFWTNVeUxuekxCRVE1NzRiNU52OVltYWtq?=
- =?utf-8?B?TDlHdkdIdlhzMXRQWVFiY2ptd2E1cUNXK0Q0SW0ySmVVWjl3bTNPRjdmZlkr?=
- =?utf-8?B?NWY3OVUwV0hWaUxxRDNpUDBhUmRDVHgxbFYrQjZONzBhYzNGQVFtWnowbDVp?=
- =?utf-8?B?Njlzc3BIL0tqMmZzTWx1SUxTajk2RjBDN29rZ0N6dWkzZld0bE1iQT09?=
-X-OriginatorOrg: atomlin.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5615283c-408d-47ca-ff6a-08df3468bef8
-X-MS-Exchange-CrossTenant-AuthSource: CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Oct 2026 20:27:39.7133
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: e6a32402-7d7b-4830-9a2b-76945bbbcb57
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: +lnj/LUCAOuxMYl2613N48wNtU+1B7CSg64MZRN73EnOywiwp0dvlja6758PlHk8MfhJYUiScStXIHob85AYYw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CW1P123MB392182
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.56.0.317.g454f8302e1-goog
+Message-ID: <20261027203115.2647914-1-ctshao@google.com>
+Subject: [PATCH v6] perf stat: Include PMU name and split uncore events per
+ PMU in metric-only JSON output
+From: Chun-Tse Shao <ctshao@google.com>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	James Clark <james.clark@linaro.org>, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Chun-Tse Shao <ctshao@google.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Sun, Oct 25, 2026 at 03:03:48PM -0700, Ian Rogers wrote:
-> In cmd_inject(), inject.tool.ordering_requires_timestamps was initialized
-> after delegating tools (such as aslr_tool__new()) and __perf_session__new()
-> had already been called, leaving delegate tools with the uninitialized
-> value. Set ordering_requires_timestamps on inject.tool before creating
-> delegate tools and the session.
-> 
-> Fixes: febea9ec382f ("perf inject/aslr: Add ASLR tool infrastructure and MMAP tracking")
-> Signed-off-by: Ian Rogers <irogers@google.com>
-> ---
->  tools/perf/builtin-inject.c | 49 ++++++++++++++++++++-----------------
->  1 file changed, 26 insertions(+), 23 deletions(-)
-> 
-> diff --git a/tools/perf/builtin-inject.c b/tools/perf/builtin-inject.c
-> index c30f5aaabf4c..3f3108fd3981 100644
-> --- a/tools/perf/builtin-inject.c
-> +++ b/tools/perf/builtin-inject.c
-> @@ -2463,13 +2463,18 @@ static int __cmd_inject(struct perf_inject *inject)
->  #endif
->  		}
->  	} else if (inject->itrace_synth_opts.vm_time_correlation) {
-> +		bool ordered_events = inject->tool.ordered_events;
-> +		bool ordering_requires_timestamps =
-> +			inject->tool.ordering_requires_timestamps;
-> +
->  		session->itrace_synth_opts = &inject->itrace_synth_opts;
-> -		perf_tool__init(&inject->tool, /*ordered_events=*/true);
-> +		perf_tool__init(&inject->tool, ordered_events);
->  		inject->tool.id_index	    = perf_event__process_id_index;
->  		inject->tool.auxtrace_info  = perf_event__process_auxtrace_info;
->  		inject->tool.auxtrace	    = perf_event__process_auxtrace;
->  		inject->tool.auxtrace_error = perf_event__process_auxtrace_error;
-> -		inject->tool.ordering_requires_timestamps = true;
-> +		inject->tool.ordering_requires_timestamps =
-> +			ordering_requires_timestamps;
->  	} else if (inject->itrace_synth_opts.set) {
->  		session->itrace_synth_opts = &inject->itrace_synth_opts;
->  		inject->itrace_synth_opts.inject = true;
-> @@ -2482,8 +2487,6 @@ static int __cmd_inject(struct perf_inject *inject)
->  		inject->tool.aux	    = perf_event__drop_aux;
->  		inject->tool.itrace_start   = perf_event__drop_aux;
->  		inject->tool.aux_output_hw_id = perf_event__drop_aux;
-> -		inject->tool.ordered_events = true;
-> -		inject->tool.ordering_requires_timestamps = true;
->  		/* Allow space in the header for new attributes */
->  		output_data_offset = roundup(8192 + session->header.data_offset, 4096);
->  		if (inject->strip)
-> @@ -2514,12 +2517,6 @@ static int __cmd_inject(struct perf_inject *inject)
->  		inject->tool.finished_round	= host__finished_round;
->  		/* Keep track of which CPU a VCPU is runnng on */
->  		inject->tool.context_switch	= host__context_switch;
-> -		/*
-> -		 * Must order events to be able to obey finished round
-> -		 * ordering.
-> -		 */
-> -		inject->tool.ordered_events	= true;
-> -		inject->tool.ordering_requires_timestamps = true;
->  		/* Set up a separate session to process guest perf.data file */
->  		ret = guest_session__start(gs, name, session->data->force);
->  		if (ret) {
-> @@ -2536,8 +2533,6 @@ static int __cmd_inject(struct perf_inject *inject)
->  		inject->tool.exit	= perf_event__repipe_exit;
->  		inject->tool.mmap	= perf_event__repipe_mmap;
->  		inject->tool.mmap2	= perf_event__repipe_mmap2;
-> -		inject->tool.ordered_events = true;
-> -		inject->tool.ordering_requires_timestamps = true;
->  	}
->  
->  	if (!inject->itrace_synth_opts.set)
-> @@ -2816,6 +2811,10 @@ int cmd_inject(int argc, const char **argv)
->  	data.path = inject.input_name;
->  
->  	ordered_events = inject.jit_mode || inject.sched_stat ||
-> +		inject.itrace_synth_opts.vm_time_correlation ||
-> +		inject.itrace_synth_opts.set ||
-> +		inject.guest_session.perf_data_file ||
-> +		inject.convert_callchain ||
->  		inject.build_id_style == BID_RWS__INJECT_HEADER_LAZY ||
->  		inject.build_id_style == BID_RWS__MMAP2_BUILDID_LAZY;
->  	perf_tool__init(&inject.tool, ordered_events);
-> @@ -2862,6 +2861,21 @@ int cmd_inject(int argc, const char **argv)
->  	inject.tool.schedstat_domain	= perf_event__repipe_op2_synth;
->  	inject.tool.dont_split_sample_group = true;
->  	inject.tool.merge_deferred_callchains = false;
-> +	if (inject.jit_mode ||
-> +	    inject.itrace_synth_opts.vm_time_correlation ||
-> +	    inject.itrace_synth_opts.set ||
-> +	    inject.guest_session.perf_data_file ||
-> +	    inject.convert_callchain ||
-> +	    inject.build_id_style == BID_RWS__INJECT_HEADER_LAZY ||
-> +	    inject.build_id_style == BID_RWS__MMAP2_BUILDID_LAZY) {
-> +		/*
-> +		 * to make sure the mmap records are ordered correctly
-> +		 * and so that the correct especially due to jitted code
-> +		 * mmaps. We cannot generate the buildid hit list and
-> +		 * inject the jit mmaps at the same time for now.
-> +		 */
-> +		inject.tool.ordering_requires_timestamps = true;
-> +	}
->  	if (inject.aslr) {
->  		tool = aslr_tool__new(&inject.tool);
->  		if (!tool) {
-> @@ -2932,16 +2946,6 @@ int cmd_inject(int argc, const char **argv)
->  		}
->  	}
->  
-> -	if (inject.build_id_style == BID_RWS__INJECT_HEADER_LAZY ||
-> -	    inject.build_id_style == BID_RWS__MMAP2_BUILDID_LAZY) {
-> -		/*
-> -		 * to make sure the mmap records are ordered correctly
-> -		 * and so that the correct especially due to jitted code
-> -		 * mmaps. We cannot generate the buildid hit list and
-> -		 * inject the jit mmaps at the same time for now.
-> -		 */
-> -		inject.tool.ordering_requires_timestamps = true;
-> -	}
->  	if (inject.build_id_style != BID_RWS__NONE && known_build_ids != NULL) {
->  		inject.known_build_ids =
->  			perf_inject__parse_known_build_ids(known_build_ids);
-> @@ -2978,7 +2982,6 @@ int cmd_inject(int argc, const char **argv)
->  	if (inject.jit_mode) {
->  		inject.tool.mmap2	   = perf_event__repipe_mmap2;
->  		inject.tool.mmap	   = perf_event__repipe_mmap;
-> -		inject.tool.ordering_requires_timestamps = true;
->  		/*
->  		 * JIT MMAP injection injects all MMAP events in one go, so it
->  		 * does not obey finished_round semantics.
-> -- 
-> 2.56.0.307.g5fe7bd680c-goog
-> 
+When running `perf stat` with `-A` (--no-aggr) and `--metric-only` in
+JSON output mode (`-j`), `perf stat` evaluates metric expressions
+across all matching PMUs (including uncore PMUs like `uncore_iio_0`,
+`uncore_iio_1`, etc.).
 
-Reviewed-by: Aaron Tomlin <atomlin@atomlin.com>
+However, `perf stat` previously formatted JSON output by printing only
+"cpu" : "<id>" and grouping all metric values on a single line per CPU
+without identifying which PMU instance evaluated each metric. As a
+result, when an uncore event spans multiple PMU boxes, `perf stat`
+printed repeated, ambiguous metric keys without PMU names.
 
--- 
-Aaron Tomlin
+Fix this by:
+1. Including "pmu" : "<pmu_name>" in print_aggr_id_json when evsel->pmu
+   is a non-core or hybrid PMU in AGGR_NONE mode (-A). Tool events are
+   not labeled as they don't belong to a hardware PMU instance.
+2. Starting a new JSON metric line in AGGR_NONE mode (-A) whenever the
+   PMU name changes, so that a line only has metrics from the PMU it is
+   labeled with.
+3. Opening a metric line only for events that have a metric, as other
+   events print nothing in metric-only mode. This avoids spurious lines
+   like {"cpu" : "0", "pmu" : "tool"} for events like user_time, while
+   metrics on tool events, like tma_info_system_time (duration_time),
+   are still printed with the line prefix.
+4. Updating perf_json_output_lint.py to recognize the new "pmu" key in
+   the JSON test suite.
+
+Before the fix:
+  $ perf stat -M iio_bandwidth_read -a -A --metric-only -j -I 1000
+  {"interval" : 1.001017947, "cpu" : "0", "MB/s  iio_bandwidth_read" : "0.0=
+", "MB/s  iio_bandwidth_read" : "0.0", "MB/s  iio_bandwidth_read" : "22.5",=
+ "MB/s  iio_bandwidth_read" : "0.0", "MB/s  iio_bandwidth_read" : "0.2", "M=
+B/s  iio_bandwidth_read" : "0.0", "MB/s  iio_bandwidth_read" : "0.0", "MB/s=
+  iio_bandwidth_read" : "0.0", "MB/s  iio_bandwidth_read" : "0.0", "MB/s  i=
+io_bandwidth_read" : "0.0"}
+
+There is no way to determine which uncore device generated the metrics.
+
+After:
+  $ perf stat -M iio_bandwidth_read -a -A --metric-only -j -I 1000
+  {"interval" : 1.000314908, "cpu" : "0", "pmu" : "uncore_iio_0", "MB/s  ii=
+o_bandwidth_read" : "0.0"}
+  {"interval" : 1.000314908, "cpu" : "0", "pmu" : "uncore_iio_1", "MB/s  ii=
+o_bandwidth_read" : "0.1"}
+  {"interval" : 1.000314908, "cpu" : "0", "pmu" : "uncore_iio_11", "MB/s  i=
+io_bandwidth_read" : "0.0"}
+  ...
+  {"interval" : 1.000314908, "cpu" : "56", "pmu" : "uncore_iio_0", "MB/s  i=
+io_bandwidth_read" : "0.0"}
+  {"interval" : 1.000314908, "cpu" : "56", "pmu" : "uncore_iio_1", "MB/s  i=
+io_bandwidth_read" : "0.0"}
+  {"interval" : 1.000314908, "cpu" : "56", "pmu" : "uncore_iio_11", "MB/s  =
+iio_bandwidth_read" : "0.0"}
+
+Assisted-by: Gemini:gemini-3.1-pro-preview
+Signed-off-by: Chun-Tse Shao <ctshao@google.com>
+---
+v6:
+  - Open metric lines for events that have a metric instead of skipping
+    tool events, so metrics on tool events (e.g. tma_info_system_time)
+    keep the line prefix and are terminated properly. (Sashiko)
+  - Split JSON lines only when the shown PMU name changes. Tool event
+    metrics are no longer mislabeled with an uncore PMU name, and the
+    STD and CSV output are no longer split.
+  - Rebase onto the latest perf-tools-next.
+v5: lore.kernel.org/20260811230518.3360-2-ctshao@google.com
+  - Fix perf test "perf stat JSON output linter" failure.
+v4: lore.kernel.org/20260804210659.112192-1-ctshao@google.com
+  - Fix the line splitting issue, causing spurious empty {"pmu": "tool"}
+    objects and order-dependent PMU mislabeling.
+v3: lore.kernel.org/20260729170416.41904-1-ctshao@google.com
+  - Add before the fix output.
+v2: lore.kernel.org/20260715203055.2981363-1-ctshao@google.com
+  - Fix print_metric_begin() initialization in print_no_aggr_metric()
+    to ensure tool events always open lines cleanly.
+
+ .../tests/shell/lib/perf_json_output_lint.py  |  5 +-
+ tools/perf/util/stat-display.c                | 74 ++++++++++++++++---
+ 2 files changed, 66 insertions(+), 13 deletions(-)
+
+diff --git a/tools/perf/tests/shell/lib/perf_json_output_lint.py b/tools/pe=
+rf/tests/shell/lib/perf_json_output_lint.py
+index 8cde22ac9d97..982be893bd69 100644
+--- a/tools/perf/tests/shell/lib/perf_json_output_lint.py
++++ b/tools/perf/tests/shell/lib/perf_json_output_lint.py
+@@ -65,6 +65,7 @@ def check_json_output(expected_count):
+       'metricgroup': lambda x: True,
+       'node': lambda x: True,
+       'pcnt-running': isfloat,
++      'pmu': lambda x: True,
+       'socket': lambda x: True,
+       'thread': lambda x: True,
+       'unit': lambda x: True,
+@@ -99,8 +100,10 @@ def check_json_output(expected_count):
+ try:
+   if args.no_args or args.system_wide or args.event:
+     expected_items =3D [5, 7]
+-  elif args.interval or args.per_thread or args.system_wide_no_aggr:
++  elif args.interval or args.per_thread:
+     expected_items =3D [6, 8]
++  elif args.system_wide_no_aggr:
++    expected_items =3D [6, 7, 8, 9]
+   elif args.per_core or args.per_socket or args.per_node or args.per_die o=
+r args.per_cluster or args.per_cache:
+     expected_items =3D [7, 9]
+   elif args.metric_only:
+diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.=
+c
+index b337cc23f413..9f1d74019d1e 100644
+--- a/tools/perf/util/stat-display.c
++++ b/tools/perf/util/stat-display.c
+@@ -1,6 +1,7 @@
+ #include <stdlib.h>
+ #include <stdio.h>
+ #include <inttypes.h>
++#include <string.h>
+ #include <linux/string.h>
+ #include <linux/time64.h>
+ #include <math.h>
+@@ -23,6 +24,7 @@
+ #include "pmu.h"
+ #include "pmus.h"
+ #include "tool_pmu.h"
++#include "metricgroup.h"
+=20
+ #define CNTR_NOT_SUPPORTED	"<not supported>"
+ #define CNTR_NOT_COUNTED	"<not counted>"
+@@ -361,9 +363,33 @@ static void print_aggr_id_csv(struct perf_stat_config =
+*config,
+ 	}
+ }
+=20
++/*
++ * In no-aggregation mode, JSON output includes the PMU name of non-core a=
+nd
++ * hybrid events so that events and metrics from different PMU instances, =
+like
++ * uncore_iio_0 and uncore_iio_1, can be told apart. Tool events don't bel=
+ong
++ * to a hardware PMU instance and so are not labeled.
++ */
++static const char *json_pmu_name(const struct evsel *evsel)
++{
++	if (!evsel || !evsel->pmu || evsel__is_tool(evsel))
++		return NULL;
++	if (evsel->pmu->is_core && !evsel__is_hybrid(evsel))
++		return NULL;
++	return evsel->pmu->name;
++}
++
++static bool json_pmu_name_changed(const char *name, const char *prev)
++{
++	if (!name || !prev)
++		return name !=3D prev;
++	return strcmp(name, prev) !=3D 0;
++}
++
+ static void print_aggr_id_json(struct perf_stat_config *config, struct out=
+state *os,
+ 			       struct evsel *evsel, struct aggr_cpu_id id, int aggr_nr)
+ {
++	const char *pmu_name;
++
+ 	switch (config->aggr_mode) {
+ 	case AGGR_CORE:
+ 		json_out(os, "\"core\" : \"S%d-D%d-C%d\", \"counters\" : %d",
+@@ -397,6 +423,9 @@ static void print_aggr_id_json(struct perf_stat_config =
+*config, struct outstate
+ 			json_out(os, "\"cpu\" : \"%d\"",
+ 				id.cpu.cpu);
+ 		}
++		pmu_name =3D json_pmu_name(evsel);
++		if (pmu_name)
++			json_out(os, "\"pmu\" : \"%s\"", pmu_name);
+ 		break;
+ 	case AGGR_THREAD:
+ 		json_out(os, "\"thread\" : \"%s-%d\"",
+@@ -1012,11 +1041,12 @@ static void print_counter_aggrdata(struct perf_stat=
+_config *config,
+=20
+ static void print_metric_begin(struct perf_stat_config *config,
+ 			       struct evlist *evlist,
+-			       struct outstate *os, int aggr_idx)
++			       struct outstate *os, int aggr_idx,
++			       struct evsel *counter)
+ {
+ 	struct perf_stat_aggr *aggr;
+ 	struct aggr_cpu_id id;
+-	struct evsel *evsel;
++	struct evsel *evsel =3D counter ?: evlist__first(evlist);
+=20
+ 	os->first =3D true;
+ 	if (!config->metric_only)
+@@ -1031,7 +1061,6 @@ static void print_metric_begin(struct perf_stat_confi=
+g *config,
+ 		else
+ 			fprintf(config->output, "%s", os->timestamp);
+ 	}
+-	evsel =3D evlist__first(evlist);
+ 	id =3D config->aggr_map->map[aggr_idx];
+ 	aggr =3D &evsel->stats->aggr[aggr_idx];
+ 	aggr_printout(config, os, evsel, id, aggr->nr);
+@@ -1069,7 +1098,7 @@ static void print_aggr(struct perf_stat_config *confi=
+g,
+ 	 * Without each counter has its own line.
+ 	 */
+ 	cpu_aggr_map__for_each_idx(aggr_idx, config->aggr_map) {
+-		print_metric_begin(config, evlist, os, aggr_idx);
++		print_metric_begin(config, evlist, os, aggr_idx, NULL);
+=20
+ 		evlist__for_each_entry(evlist, counter) {
+ 			print_counter_aggrdata(config, counter, aggr_idx, os);
+@@ -1095,7 +1124,7 @@ static void print_aggr_cgroup(struct perf_stat_config=
+ *config,
+ 		os->cgrp =3D evsel->cgrp;
+=20
+ 		cpu_aggr_map__for_each_idx(aggr_idx, config->aggr_map) {
+-			print_metric_begin(config, evlist, os, aggr_idx);
++			print_metric_begin(config, evlist, os, aggr_idx, NULL);
+=20
+ 			evlist__for_each_entry(evlist, counter) {
+ 				if (counter->cgrp !=3D os->cgrp)
+@@ -1131,7 +1160,8 @@ static void print_no_aggr_metric(struct perf_stat_con=
+fig *config,
+=20
+ 	perf_cpu_map__for_each_cpu(cpu, all_idx, evlist__core(evlist)->user_reque=
+sted_cpus) {
+ 		struct evsel *counter;
+-		bool first =3D true;
++		const char *line_pmu =3D NULL;
++		bool line_open =3D false;
+=20
+ 		evlist__for_each_entry(evlist, counter) {
+ 			u64 ena, run, val;
+@@ -1146,12 +1176,32 @@ static void print_no_aggr_metric(struct perf_stat_c=
+onfig *config,
+ 				if (config->aggr_map->map[aggr_idx].cpu.cpu =3D=3D cpu.cpu)
+ 					break;
+ 			}
++			if (aggr_idx >=3D config->aggr_map->nr)
++				continue;
+=20
+ 			os->evsel =3D counter;
+ 			os->id =3D aggr_cpu_id__cpu(cpu, /*data=3D*/NULL);
+-			if (first) {
+-				print_metric_begin(config, evlist, os, aggr_idx);
+-				first =3D false;
++
++			/*
++			 * Only events with a metric print something in metric-only
++			 * mode, so let them open the line. For JSON, start a new
++			 * line when the PMU name changes so that a line only has
++			 * metrics from the PMU it is labeled with.
++			 */
++			if (config->iostat_run ||
++			    metricgroup__lookup(evlist__metric_events(evlist), counter, false))=
+ {
++				const char *pmu_name =3D json_pmu_name(counter);
++
++				if (line_open && config->json_output &&
++				    json_pmu_name_changed(pmu_name, line_pmu)) {
++					print_metric_end(config, os);
++					line_open =3D false;
++				}
++				if (!line_open) {
++					print_metric_begin(config, evlist, os, aggr_idx, counter);
++					line_pmu =3D pmu_name;
++					line_open =3D true;
++				}
+ 			}
+ 			val =3D ps->aggr[aggr_idx].counts.val;
+ 			ena =3D ps->aggr[aggr_idx].counts.ena;
+@@ -1160,7 +1210,7 @@ static void print_no_aggr_metric(struct perf_stat_con=
+fig *config,
+ 			uval =3D val * counter->scale;
+ 			printout(config, os, uval, run, ena, 1.0, aggr_idx);
+ 		}
+-		if (!first)
++		if (line_open)
+ 			print_metric_end(config, os);
+ 	}
+ }
+@@ -1523,7 +1573,7 @@ static void print_cgroup_counter(struct perf_stat_con=
+fig *config, struct evlist
+ 				print_metric_end(config, os);
+=20
+ 			os->cgrp =3D counter->cgrp;
+-			print_metric_begin(config, evlist, os, /*aggr_idx=3D*/0);
++			print_metric_begin(config, evlist, os, /*aggr_idx=3D*/0, NULL);
+ 		}
+=20
+ 		print_counter(config, counter, os);
+@@ -1573,7 +1623,7 @@ void evlist__print_counters(struct evlist *evlist, st=
+ruct perf_stat_config *conf
+ 		} else if (config->cgroup_list) {
+ 			print_cgroup_counter(config, evlist, &os);
+ 		} else {
+-			print_metric_begin(config, evlist, &os, /*aggr_idx=3D*/0);
++			print_metric_begin(config, evlist, &os, /*aggr_idx=3D*/0, NULL);
+ 			evlist__for_each_entry(evlist, counter) {
+ 				print_counter(config, counter, &os);
+ 			}
+--=20
+2.56.0.317.g454f8302e1-goog
+
