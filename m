@@ -1,100 +1,59 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.160.173
-ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1793114490;
-	b=SSw1giQOqzvqYB2oA3LWYKaK37asPeyZm1NeK92yifAmOZNG3vHfPWehxzQ1g4/wtf+S
-	 VPt8o0KKkwUP9A/HZdQ298nW1i94EQWLW+GC+hvWtdGyEp90QvKffJI+qpptPDTBuDMrO
-	 j4csI4AMu1Ehlw89ShuX+BzxqToVMHZoXrAlVJSsat5Bwi6Vhb371rKwdQVlBVSzpkD4E
-	 rd65qGPjO6fMqXeWplpbfjhJUBRCxZgcbknUysGyqBS7bfI9n/R1tpsZQivk7peH8+mcH
-	 x0y9e+OOoyhzi8p7hoGQ/W7nOEzcItBJw4ah0Z/auHpiZqh0UJ4sNJr9Hvqw4RwiA1g==
-ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793114490;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:
-	 MIME-Version:References:In-Reply-To:From:Date:X-Gm-Features:
-	 Message-ID:Subject:To:Cc:Content-Type:Content-Transfer-Encoding;
-	bh=NxM/SdWC3JhodFrjdCzECkyQ1tsAfroiL6zHs8mPuAM=;
-	b=zxCDNSh+4cab6913pIcJmTnaoYnGA0IMNqui6ksWLtyeUvq/qj3rkFwXjK6DvRWVgGBv
-	 V5Qn3wXUIHWnIrnEBf0Jjf0enC3oaktVuAzCEZ+/VVVsNMjI335Eg7+OCuCQryb9xvVCS
-	 qVe5pOk9ol9CzfPclEod2+xwXt8R2bLqbBxGZgdf8z/dngBjZAQe1gzzIotWV0FJBSv0P
-	 XnkzTPx42oVqpkPx02ac7OKPqkTgmLa7bpTOlWT6lmRa1waJuKw/BSHbUvA38y/lYPvz4
-	 elaJztvTpeYNBt0jZ++YrAmBCOlBUeroxYj25rvfO7tceaOU8qU8fOeIKP5rK+Nrhfg==
-ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=google.com;
-	spf=pass smtp.mailfrom=google.com;
-	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=VxSejD1G;
-	arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.160.173
-Received: from mail-qt1-f173.google.com (mail-qt1-f173.google.com [209.85.160.173])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
+	t=1793115510;
+	b=NB66UjMNv4dfkTZUGmEUKzG2JcuRoGSZwB1nc7HR0GqRjZD17CqiCOAyafR/vUBRWUN9
+	 hPLeKIjYovm5KslLwTDnMc53LBFqrSykNcl0YEQaQIY4FoNjHRBR4JUROVC/ApxlPlWUY
+	 d9WU5CUxBf8YQFh+mqqP9oyRT2vALN39jIpIUQp3o4U+g8jZrzFwZuaajjk5BknMonu5v
+	 gTK1TPqNDaMm6MLbkB76YmQgxbr7ho/1FBYFHG8zkIdbpbxblzUaob3nvpxxX4QQk+pLD
+	 x7OlrufvMLsrXNbdHzu8ZMRU5+jUnXjSnHIKkGzV+BEeU2JsmwYvEutyqpTgbCDtxsw==
+ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793115510;
+	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
+	 References:MIME-Version:Content-Type:Content-Disposition:In-Reply-To;
+	bh=P4QDwDejSsPjI6QsC7K2e4l+YE6idf6liU1KvYAti6A=;
+	b=v6WpV/E4FiSHEu8weAE9ogXFOtccFnxrFs91FNr7nd6qR+/RbzjlYUHJb2AWcsFL3gwS
+	 re77p6cYEA3NRjfEz7Yp4PY3jFBqnTm7LbZeRbMuhOH2FMvKJKQHmFbbZKMP2hYW2vPkD
+	 iK9oRuRMrFLGU+AmRiSxX4Jglp1Fw7AVivgY17z5eX4cNAWfMmnQ/QSjCiPOO1+3AabRk
+	 NuYoQRGc8HzY/a3VZIVbxmtGFaMCJHvglxCVD4E7KnmYL5cSU75qMdnIit3W2vRemdSx8
+	 DzyfK8P/SOLvM4bCb01UVS+MbdMl2URWSh3MiUnQHlGEkqRrMgDDVx4uc7PXfrydtqw==
+ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=n3PnWGSE;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F39B4606A325
-	for <linux-perf-users@vger.kernel.org>; Tue, 27 Oct 2026 15:21:29 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org F39B4606A325
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13DFF606A31B;
+	Tue, 27 Oct 2026 15:38:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=VxSejD1G
-Received: by mail-qt1-f173.google.com with SMTP id d75a77b69052e-535f598d126so264701cf.1
-        for <linux-perf-users@vger.kernel.org>; Tue, 27 Oct 2026 08:21:29 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1793114489; cv=none;
-        d=google.com; s=arc-20260327;
-        b=QT8jo+6SZ38Nuy18wfcNZ1jlhMPh1dhidBiCvN+jzBPTQ9QMxl4AR4wKiem6e4xZ8B
-         PLAqDebA7O2l0vByi7S2gHAYvQyqmZERuUUYVTSHV/DrMPJcrzby64NyvXk36a5wBqmw
-         1DTeAosilHE5JWcEkuCLGOWl9q7WOfuhdbaZ/MXINnPL6euajcqvV2UWdEROxHLDGDUQ
-         K5scZxgGW563ymh4R7NowsJDJ8ppGJje6mwS8I7ROu6yGS5CpCVYeu6IUJieyucDIhed
-         Nwccj47rHJvMCthBl2xFkD8O5Wg7d6rnOs/vm7FApumQHnocU83YhTM8slWehJ02KdA2
-         ABig==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=NxM/SdWC3JhodFrjdCzECkyQ1tsAfroiL6zHs8mPuAM=;
-        fh=KZywdn87yi3do73kR+iCEh8UTo0su6SK6LAcGY/34qs=;
-        b=E/4jkofS5R8VJ9xpiLmfN8XMAMdRsol/+/Iq9Qf0q6YW5aqKiCagAnIes92bVTnuTx
-         O4+zS9L2UdNRdxJCY+ab+QMa6Z9L2PfNCTu34x7WpwBlRPZY3+kwkEGow2p86UAWOgn1
-         2Al9dPC/eBemJf26r1AEZ1+dM2JI1jHG0c72PpaCmuM1BqEqWk31/3Dzmubj2WAMTV1m
-         nGM9m5EPuHPUN4SPwSv7yqC7GyJGQ+wJUlaioSMvaJ3swWFoAgV7tBggAq3ffBf5jI59
-         VW+a6I8hiFwKygZqm4+mysimE5di7YJRTd9bZBjBUv2Kvz8SCtim7yR1PWTNZORrDYLv
-         9+dQ==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20260707; t=1793114489; x=1793719289; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=NxM/SdWC3JhodFrjdCzECkyQ1tsAfroiL6zHs8mPuAM=;
-        b=VxSejD1GY4Qc2u3eW5yvsiYM9LBwpqsts/mjdAkJVQ/2lULtq9froTo4Cgq7uu5dHv
-         DHWfY55AT8HWvd4LKYMeOsmwEfRUboaavssASngFTT5BRbMV57W7++Suo0neLAwmTQKA
-         FUagRvaiXngimTt6jzyu2ETpXw9JB1GL/lXc4ZRsqGlzvsxoSFRfG2jmnX5CRNOuzuVx
-         +3fsQgjP80RTEKK3IXzsQypHyhKt1ckPLS+duuV4Jeu8IuSIAXeNx8hPlvIc0/9bwYtf
-         RueBJIYhFbqJGbx2cbiM7nQiJsCcEKd1Zvutt/C0qoKHtvmUhUKUhl/7jB8sfTsTx0SS
-         dLzQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1793114489; x=1793719289;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=NxM/SdWC3JhodFrjdCzECkyQ1tsAfroiL6zHs8mPuAM=;
-        b=ge6LMzSiten6xoH43hoJkrrKm0nGLS+06bnm3DCzr6hGIdENjKvQJiM0u/ElU3cl+4
-         QPIQ4GWEWEjzxpGTAC3Imw2mutr4nDrpVgJJiADObJ50FZPc3yb4KjX2BVUVbZkVcVx/
-         3qSR83ckBdcVOuobYrGdKiEpOFd2+HRtWe4Hsd4gfyPpA6RJKUqykw8Rj3QV2nO0oO2b
-         r5RbjzIEH7md8kT/0Wq4PJ+U77KNLeeLXSu6JuoS8F6dKLfFgLjvGKwJ90SqI6pyr221
-         NRjQO0oUOvTC3q5Srx4PvBRXSEbMMi2t2XEV2+az4tRGG8ota8FkdGr3BX7n/tWHkwTl
-         WLog==
-X-Forwarded-Encrypted: i=1; AKwUvBy8m07R6hAp4NRH05MFHjykMWi0sQ4bHB661JIombXURBL5KH6BSAm6AQ2/0cSELzSLfQnPT6pmd0Jgp0wmeoMw@vger.kernel.org
-X-Gm-Message-State: AFq9FYL1gtMnBhmXD66Q1jZW3k6OcXKC6RLbOnlYbhJZQ8ztOWm7lWqg
-	e8HCMCAR2DWin1IlqKzM9OeqcE/QgnpVuIKWGsfMjSTGSwUiGZbey3AGMbKJCI+wSg2GxDOexW+
-	VU5FtZwsIBl029NxhKKFOOQ59Jt1kVetF85uYqErS
-X-Gm-Gg: AYBFou0IOYZqvauBPPqSww463VHVxMcHTP8W4AyN0LEMaUSDBo8yhc8E05MVqRBqews
-	HhK/2G7klda+KOxpm9i/Lbtd9LJS1uu/1p54AfiruondMTA0bR8Km7K1NXh4citfdxi7Zur9f1P
-	SW+Oqhj6+XzzIoBa86C+o6rJZBuo8+o1dC47+dalCInjKzxjgPFlatm7fZLPS124W2GKeSd+3iH
-	Dqk8694YbRH3v6fDCVdvyH+a4SdXpEcLEjHH10OGa1DrAkfKVLUUekEYUXDFhSOOV2ZwrwapOQI
-	Yr6r2pWH7xlWQr4SWaBToUMmu36ny9l5tZFWl8jFpNyMFbsOD3dVAkdCuqss7AAEWR0qSRRVdl6
-	O0wuLRyw1JTklqwP0IZ/6dcI23/QZHhY0vc9fOKZ8HNJXeOrnXYT9auuhUm8RkynoxUo=
-X-Received: by 2002:a05:622a:4087:b0:535:8515:b4e5 with SMTP id
- d75a77b69052e-53e55c28435mr21394481cf.6.1793114488268; Tue, 27 Oct 2026
- 08:21:28 -0700 (PDT)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=n3PnWGSE
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B2E4A1F01825;
+	Tue, 27 Oct 2026 15:38:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1793115509;
+	bh=P4QDwDejSsPjI6QsC7K2e4l+YE6idf6liU1KvYAti6A=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=n3PnWGSEy63TkshTbN+NH8Lz7qKC2SA8BzUpk+tmV1MeonlnzUWDIuBkzYaozxT3Z
+	 TJuesb05R2Pm5JRavby+Id3CDOR+kOvkFdCodgze+hSIFOYNb0H3jPFqCe8pAWDr+h
+	 QV0ABQe5oaV3oQvreewvONhUys5vgEHtAqlstJ/rjTPZYP0XClTFKPjezt4pZtzYPy
+	 F1cnDPPZQYxciQ7wC+9ibZoYSUUWqMclFS2Ymoq0Ma232n5JNGXX3/RYFcSWnSS7Ai
+	 ppF8o8avIYgpka5fUBCD16Z1rhQ9NYdLIYFPlOzOV36IyZnqZg4rOn9rcyDk8FbuTn
+	 WeSaUXLtumYBA==
+Date: Tue, 27 Oct 2026 15:38:20 +0000
+From: "Lorenzo Stoakes (ARM)" <ljs@kernel.org>
+To: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc: bpf@vger.kernel.org, daniel@iogearbox.net, andrii@kernel.org, 
+	eddyz87@gmail.com, memxor@gmail.com, oleg@redhat.com, peterz@infradead.org, 
+	mhiramat@kernel.org, jolsa@kernel.org, akpm@linux-foundation.org, liam@infradead.org, 
+	surenb@google.com, david@kernel.org, vbabka@kernel.org, jannh@google.com, 
+	hughd@google.com, kees@kernel.org, mingo@redhat.com, tglx@kernel.org, 
+	x86@kernel.org, linux-trace-kernel@vger.kernel.org, linux-mm@kvack.org, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH bpf-next 6/9] uprobes: Don't sleep on mmap_lock with
+ dup_mmap_sem held in dup_mmap()
+Message-ID: <auDApO7ECoVLs-Jp@gremlin>
+References: <20261022015712.1297331-1-alexei.starovoitov@gmail.com>
+ <20261022015712.1297331-7-alexei.starovoitov@gmail.com>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -104,71 +63,192 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-References: <202610271154.69RBsOlq045164@mse-fl2.zte.com.cn>
-In-Reply-To: <202610271154.69RBsOlq045164@mse-fl2.zte.com.cn>
-From: Ian Rogers <irogers@google.com>
-Date: Tue, 27 Oct 2026 08:21:16 -0700
-X-Gm-Features: AclHuK-Woavtv1Cz-seB3sJDtW9u6Dt6v2zVol6SMqMjeJi6wKjBOrgCgGvWdGE
-Message-ID: <CAP-5=fUbpxz9HQV+BRd62Yk+mQ5Bq-G3XvcK8ea3W8E3BqM6jg@mail.gmail.com>
-Subject: Re: [PATCH] perf machine: Fix NULL deref in thread__resolve_callchain_sample()
-To: lv.yating@zte.com.cn
-Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org, 
-	namhyung@kernel.org, mark.rutland@arm.com, alexander.shishkin@linux.intel.com, 
-	jolsa@kernel.org, adrian.hunter@intel.com, james.clark@linaro.org, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	liu.qingtao2@zte.com.cn, he.yilin@zte.com.cn, zhang.cheng35@zte.com.cn, 
-	ye.zhihao1@zte.com.cn, shen.lin1@zte.com.cn, dai.hualiang@zte.com.cn, 
-	stable@vger.kernel.org, hu.shengming@zte.com.cn
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20261022015712.1297331-7-alexei.starovoitov@gmail.com>
 
-On Tue, Oct 27, 2026 at 4:54=E2=80=AFAM <lv.yating@zte.com.cn> wrote:
+On Thu, Oct 22, 2026 at 01:57:09AM +0000, Alexei Starovoitov wrote:
+> From: Alexei Starovoitov <ast@kernel.org>
 >
-> From: lvyating <lv.yating@zte.com.cn>
+> dup_mm() takes dup_mmap_sem for reading and then dup_mmap() sleeps on
+> mmap_lock of the parent. When another thread keeps that mmap_lock busy
+> register_for_each_vma() waits for the reader, and every other fork() in
+> the system waits for the writer. The parent doesn't have to map the file:
 >
-> When recording with -j stack, resolve_lbr_callchain_sample() can
-> dereference a NULL 'chain' pointer while resolving the branch
-> stack.
+>   A thread 1:  mmap(MAP_POPULATE) -> mmap_read_lock(A)
+>   A thread 2:  fork() -> percpu_down_read(&dup_mmap_sem),
+>                mmap_write_lock_killable(A) sleeps
+>   tracer:      percpu_down_write(&dup_mmap_sem) sleeps
+>   others:      fork() -> percpu_down_read(&dup_mmap_sem) sleeps
 >
-> $ perf record -j stack -e branches:u uname
-> perf: Segmentation fault
+> dup_mmap() needs both locks. Don't sleep on one of them while holding
+> the other. Sleep on mmap_lock and trylock dup_mmap_sem. If that fails sleep
+> on dup_mmap_sem and trylock mmap_lock, and so on. Taking mmap_lock and then
+> sleeping on dup_mmap_sem is simpler, but then all threads of the parent
+> wait for mmap_lock as long as the writer holds dup_mmap_sem.
 >
-> Fix it by checking 'chain' for NULL before dereferencing it.
+> Both are taken in dup_mmap() now, so release dup_mmap_sem there too.
+> Commit 8ac662f5da19 ("fork: avoid inappropriate uprobe access to invalid
+> mm") moved that to dup_mm() to hide the child from uprobes until mmput()
+> when dup_mmap() fails. Since commit 43873af772f8 ("mm: change dup_mmap()
+> recovery") dup_mmap() removes all vmas of such child before it drops
+> mmap_lock.
 >
-> Fixes: 29be60c93d2d ("perf build-id: Mark DSO in sample callchains")
-> Signed-off-by: lvyating <lv.yating@zte.com.cn>
-> Cc: stable@vger.kernel.org
-
-Tested-by: Ian Rogers <irogers@google.com>
-Reviewed-by: Ian Rogers <irogers@google.com>
-
-I wonder - this failure points to a lack of test coverage. For LBR the
-main coverage comes from:
-https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.gi=
-t/tree/tools/perf/tests/shell/record_lbr.sh?h=3Dperf-tools-next
-Could you help expand the tests to avoid regressions?
-
-Thanks,
-Ian
-
+> dup_mmap_sem is released before dup_userfaultfd_complete(), so the monitor
+> that doesn't read UFFD_EVENT_FORK no longer blocks every fork(). During
+> that wait register_for_each_vma() can find the child, while no task points
+> to its mm. The next patch deals with that.
+>
+> Thread 1 of process A loops over mmap(4G, MAP_POPULATE) and munmap().
+> Thread 2 calls fork() in a loop. Nobody maps the file. Process B calls
+> fork() in a loop. 32 cpu VM. Median (max) of 15-25 runs, msec:
+>
+>                          the longest fork() in B    attach
+>                          before      after          before  after
+>  uprobe_multi, 1 uprobe  206 (219)   0.10 (0.30)       220   11.7
+>  uprobe_multi, 4 uprobes 208 (428)   0.08 (0.32)       219   13.5
+>  perf_event, 4 uprobes   419 (424)   0.10 (0.44)       632   11.4
+>
+> During detach: 265-293 -> 0.19-0.37.
+>
+> Signed-off-by: Alexei Starovoitov <ast@kernel.org>
 > ---
->  tools/perf/util/machine.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  include/linux/uprobes.h |  5 +++++
+>  kernel/events/uprobes.c |  5 +++++
+>  kernel/fork.c           |  4 ----
+>  mm/mmap.c               | 19 +++++++++++++++++--
+>  4 files changed, 27 insertions(+), 6 deletions(-)
 >
-> diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
-> index f86b3b7df742..10a88c070814 100644
-> --- a/tools/perf/util/machine.c
-> +++ b/tools/perf/util/machine.c
-> @@ -2858,7 +2858,7 @@ static int thread__resolve_callchain_sample(struct =
-thread *thread,
->         if (chain)
->                 chain_nr =3D chain->nr;
+> diff --git a/include/linux/uprobes.h b/include/linux/uprobes.h
+> index d34dbc0fbbfe..6d74efa80d04 100644
+> --- a/include/linux/uprobes.h
+> +++ b/include/linux/uprobes.h
+> @@ -211,6 +211,7 @@ extern void uprobe_unregister_sync(void);
+>  extern int uprobe_mmap(struct vm_area_struct *vma);
+>  extern void uprobe_munmap(struct vm_area_struct *vma, unsigned long start, unsigned long end);
+>  extern void uprobe_start_dup_mmap(void);
+> +extern bool uprobe_try_start_dup_mmap(void);
+>  extern void uprobe_end_dup_mmap(void);
+>  extern void uprobe_dup_mmap(struct mm_struct *oldmm, struct mm_struct *newmm);
+>  extern void uprobe_free_utask(struct task_struct *t);
+> @@ -277,6 +278,10 @@ uprobe_munmap(struct vm_area_struct *vma, unsigned long start, unsigned long end
+>  static inline void uprobe_start_dup_mmap(void)
+>  {
+>  }
+> +static inline bool uprobe_try_start_dup_mmap(void)
+> +{
+> +	return true;
+> +}
+>  static inline void uprobe_end_dup_mmap(void)
+>  {
+>  }
+> diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
+> index a9274016c55d..92ccb730278f 100644
+> --- a/kernel/events/uprobes.c
+> +++ b/kernel/events/uprobes.c
+> @@ -1927,6 +1927,11 @@ void uprobe_start_dup_mmap(void)
+>  	percpu_down_read(&dup_mmap_sem);
+>  }
 >
-> -       if (evsel__has_branch_callstack(evsel)) {
-> +       if (chain && evsel__has_branch_callstack(evsel)) {
->                 struct perf_env *env =3D evsel__env(evsel);
+> +bool uprobe_try_start_dup_mmap(void)
+> +{
+> +	return percpu_down_read_trylock(&dup_mmap_sem);
+> +}
+> +
+>  void uprobe_end_dup_mmap(void)
+>  {
+>  	percpu_up_read(&dup_mmap_sem);
+> diff --git a/kernel/fork.c b/kernel/fork.c
+> index 10f2d05d816a..8fd6be932afe 100644
+> --- a/kernel/fork.c
+> +++ b/kernel/fork.c
+> @@ -1539,11 +1539,9 @@ static struct mm_struct *dup_mm(struct task_struct *tsk,
+>  	if (!mm_init(mm, tsk))
+>  		goto fail_nomem;
 >
->                 err =3D resolve_lbr_callchain_sample(thread, cursor, samp=
-le, parent,
+> -	uprobe_start_dup_mmap();
+>  	err = dup_mmap(mm, oldmm);
+>  	if (err)
+>  		goto free_pt;
+> -	uprobe_end_dup_mmap();
+>
+>  	mm->hiwater_rss = get_mm_rss(mm);
+>  	mm->hiwater_vm = mm->total_vm;
+> @@ -1558,8 +1556,6 @@ static struct mm_struct *dup_mm(struct task_struct *tsk,
+>  	mm->binfmt = NULL;
+>  	mm_init_owner(mm, NULL);
+>  	mmput(mm);
+> -	if (err)
+> -		uprobe_end_dup_mmap();
+>
+>  fail_nomem:
+>  	return NULL;
+> diff --git a/mm/mmap.c b/mm/mmap.c
+> index 4bf26b0f1e6e..6ce654e33e3b 100644
+> --- a/mm/mmap.c
+> +++ b/mm/mmap.c
+> @@ -1713,8 +1713,22 @@ __latent_entropy int dup_mmap(struct mm_struct *mm, struct mm_struct *oldmm)
+>  	LIST_HEAD(uf);
+>  	VMA_ITERATOR(vmi, mm, 0);
+>
+> -	if (mmap_write_lock_killable(oldmm))
+> -		return -EINTR;
+> +	/*
+> +	 * Take mmap_lock of oldmm and dup_mmap_sem of uprobes.
+> +	 * Don't sleep on one of them while holding the other.
+> +	 */
+> +	for (;;) {
+> +		if (mmap_write_lock_killable(oldmm))
+> +			return -EINTR;
+> +		if (uprobe_try_start_dup_mmap())
+> +			break;
+> +		mmap_write_unlock(oldmm);
+> +
+> +		uprobe_start_dup_mmap();
+> +		if (mmap_write_trylock(oldmm))
+> +			break;
+> +		uprobe_end_dup_mmap();
+> +	}
+
+This isn't beautiful :)
+
+As David says, we have an incoming fix that moves things around, i.e. this will
+no longer actually live in dup_mmap() but rather dup_mm() [which, by the by, I
+do want to move into mm], but that'd just move this there i guess?
+
+I'm concerned by what Jann says re: a livelock here though. I'm not sure this
+should be unbounded, and fork is a super-sensitive time for mm.
+
+I would feel more comfortable with it if it were bounded, and really it'd be
+nice if this was abstracted into its own function too rather than something
+open-coded.
+
+Do you have numbers on how many loops you are usually observing? Could you get
+most of the way there by just doing a trylock on uprobe before trying to take
+the mmap write lock?
+
+I mean if 99% of the time you only need 1 iteration, for example, then the fix
+looks a lot more sensible.
+
+All in all it feels a bit egregious for core mm to be held hostage to uprobe
+like this, isn't a better fix possible? Does uprobe actually need to exclude
+fork, or could it just eat the cost of checking to see if something forked
+since?
+
+>  	flush_cache_dup_mm(oldmm);
+>  	uprobe_dup_mmap(oldmm, mm);
+>  	/*
+> @@ -1883,6 +1897,7 @@ __latent_entropy int dup_mmap(struct mm_struct *mm, struct mm_struct *oldmm)
+>  	mmap_write_unlock(mm);
+>  	flush_tlb_mm(oldmm);
+>  	mmap_write_unlock(oldmm);
+> +	uprobe_end_dup_mmap();
+>  	if (!retval)
+>  		dup_userfaultfd_complete(&uf);
+>  	else
 > --
-> 2.27.0
+> 2.55.0
+>
+
+--
+Cheers, Lorenzo
