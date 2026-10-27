@@ -1,74 +1,54 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.214.200
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793133090;
-	b=g1X68CRS4kvlYkJCcTpMYuqQLZp1yjZnAO1NC0bnGNT+l4dYMMdN3gilT7XEr/rJXxnp
-	 veqnUzG2r1XSsAoBQMYjdgz3OdaCsEUE0pXLoi+F96L3cS6OXpQ3IHHgMmH45tiR/FEdn
-	 xRtDge72GgtjIMf3HQDZYe7tBZ0QMM1pzkfp35zm6tk9F8l0ZxRWVHga27j3d03naYZZv
-	 XzIcOoY1HNI6+ysHBs6QP1dbdhv6Ny9riBUMcjiYE+Yrsj9t84l+7LM4W+fAQSVvZ/JME
-	 SU5B1C1WrMJfGuJPWzlzHC3qmTiIlP9Ky6Fgo6v1lm7pe58VdOZzloBrtcDV2n1TOiA==
+	t=1793133292;
+	b=o9irWP49oOA+qzvzjJjfY5Ru0X09OkUZckVt385EuZZdJlFroGljAOyzUJi4Djbt18ZA
+	 J45sUrKfXfjU4sCH1sSEqY/jgp4fLdtjpgfBnII9mjnbur10C2xpzWkcU2BiyhCOIMu9o
+	 3ijwRe8vyrlYEgUnGxVpllK4YhI+ZUKDsanrZi/fJ13W2dGH3ovF2DRttVQjly8mJJXfT
+	 bzc7VXtPnR+PAXqfGhESSgwMO+CPpQyBv2kyy+B3/rv1g4w4c/YtCib1bOsBIrPGZycgK
+	 +zkeYsxxIQcnLFeQNJxRO3gZMxc7wKZ3+MFh0HrawFsqjC6Q314/WFVpxSgXG5W8A/g==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793133090;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Received:Date:Mime-Version:
-	 X-Mailer:Message-ID:Subject:From:To:Cc:Content-Type:
-	 Content-Transfer-Encoding;
-	bh=yQw8l80OTevP6nVCCabCl0MW8z0aTAgvbDhANDTS3S8=;
-	b=TST1xDIgQMV5FiOh01kFm0MsR0daQK+fAYMYMNmjYkAdNWwR6FXxkR+L3zgDE4FIHhjJ
-	 jbH/m/5xvFUstqgenhHmYzqmrdXJ5spF1Rhp8iDaYKSHjeCWPRZPgic0Akl15DpWow8BZ
-	 s8UuHo2BK65u9gYCPBHWk0OkAGIE0R8CxeGaZXX4gI7e7Qqsh8HQGTPSGEUPfkx3xgQYq
-	 Xcbtla0lKLOE4EKI6DMEcKABWb58IrqTDfaaB+DgsC78QQFgPQcpxkgSt3JIrty043Si8
-	 nolr2CKRJdk8W2u+nep8R9m2N9ChWk4tP+R+5akBBXB9ynvp6j9elhznfpfnQq35Nkg==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793133292;
+	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
+	 References:MIME-Version:Content-Type:Content-Disposition:In-Reply-To;
+	bh=Jg3dAtp+gEQ8TJgbywQ+F/EtAoNNgFn4vT8jAZyRUok=;
+	b=eWfIjSlXv/lHxAfBXAxThMeS5JktTl9E65BfPzh0b4q5Bmine9e2Lz2UmYgr8kpTIbmZ
+	 Vl1jbMmDqYbDhZW4qQoOplSLE/G/flKyqWaaVhGc+QEtjHRbkUeFyMuHro0//DgR/X9ic
+	 Jip+xfLspl6gbxjGoq8X0kc7cy4ZkmkxBidHwZKhhx1LoO57mL+1Hs/C8ltcWH2C5QUsf
+	 b8oT9a9a7veshKmNuRgodgjUIW4OE+Pb8hkTJlejqF7g8s6spUIRYQuIhU+1QxYGMrBdL
+	 +FRChH/IgXPr/FH7icylP4UAlD8K/jiJJpsJQQLpi0D0w580p22E7hmBf5GNpfnJURQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=google.com;
-	spf=pass smtp.mailfrom=flex--ctshao.bounces.google.com;
-	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=SBHkJp9L;
-	arc=none smtp.remote-ip=209.85.214.200
-Received: from mail-pl1-f200.google.com (mail-pl1-f200.google.com [209.85.214.200])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=kphSUMe8;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCB4F606A31E
-	for <linux-perf-users@vger.kernel.org>; Tue, 27 Oct 2026 20:31:29 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org DCB4F606A31E
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ctshao.bounces.google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 137CB606A31F
+	for <linux-perf-users@vger.kernel.org>; Tue, 27 Oct 2026 20:34:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=SBHkJp9L
-Received: by mail-pl1-f200.google.com with SMTP id d9443c01a7336-2e9572e892dso1481825ad.1
-        for <linux-perf-users@vger.kernel.org>; Tue, 27 Oct 2026 13:31:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20260707; t=1793133089; x=1793737889; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:cc:to:from:subject
-         :message-id:mime-version:date:from:to:cc:subject:date:message-id
-         :reply-to:content-type;
-        bh=yQw8l80OTevP6nVCCabCl0MW8z0aTAgvbDhANDTS3S8=;
-        b=SBHkJp9L9t4q9mCF6VX5/6JPD404MoqoxycjaQIZJwEEtOpZ2ogkczGK+lWrKuZFmg
-         JW17fin1XKAXhQ7Ccj8QMUxQKN0Cn1UHenlrlLMiS0j68foxaZ4BNaco5U9wNMeSrGJo
-         s/QCxtfyrW+IDWyiVF+qwiCRq7gxdHFAJJ7E8ygUeLCQ0cwT4JfOl0mg87kgY5nQlYYC
-         TnRQV242H21s4CUb8bQtJucbso1GcgPwJopYZw9ekN//aA2atwWJJtTSqBJ7K18m2AQX
-         2s/qI0Q2nerCe5CXZW3pKi6dUkg0hoLV9eM8+w5CQdzlPQtXrAbMTqmnvQkeb8XetuWI
-         liXw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1793133089; x=1793737889;
-        h=content-transfer-encoding:content-type:cc:to:from:subject
-         :message-id:mime-version:date:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=yQw8l80OTevP6nVCCabCl0MW8z0aTAgvbDhANDTS3S8=;
-        b=tQAbQSDFxCtjJlmmGyY1Zah4XDMDrvSR0Nm1SmKB1igAuZ7AcCdvjdSJn860GDd4Fq
-         Zy0yaPKTNs3kETuZqb17DzpL2hfe2TmWAcpA+tAFl79RVfo7ywrU+8nd9CHw5HMeMQT0
-         YHO44ShdUboydc1p/mTynSAmdomPa3akosmrxegkOsj+CvooeOv8Ik5o0prhToOYCtTg
-         GOzxeEgYCZKEierE2xftyet2WzC7+vTRWFkWregtYZgcHnxgFfgVYkBI2U2X/vHuFEw7
-         Y3qivNZ6ZK5ESWtj5sbReccNPEymTPOPugU8Ze5JTVf7rsUCUT98ECMkXj3g2FKMmpxO
-         DZGw==
-X-Forwarded-Encrypted: i=1; AKwUvBzD1lkx8e2n1MBOYSNkNwCKMAPBojYJcWQvxsw0sBxozljUDNs+Zfs3rf+goTjrcO2DCMa3YnaPO91Ih7C/HToL@vger.kernel.org
-X-Gm-Message-State: AFq9FYKj6DyOim9kdsPSyuO3XKOdcYwGiyTzYh4/f4/ccM9vB1u2HiV6
-	iEaFBD67lWfA25V4Pudsq0CfN+1ouXEFxQe9M0d2M5dw0FTFSHSnx8hL2cuNZW2HWdcK6IflqYO
-	3Og/gIA==
-X-Received: from pjbgc15.prod.google.com ([2002:a17:90b:310f:b0:3a5:f1d:43a6])
- (user=ctshao job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:4b89:b0:3ac:9ed8:f309
- with SMTP id 98e67ed59e1d1-3ae580a0212mr181890a91.29.1793133088948; Tue, 27
- Oct 2026 13:31:28 -0700 (PDT)
-Date: Tue, 27 Oct 2026 13:31:15 -0700
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=kphSUMe8
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 363A41F01825;
+	Tue, 27 Oct 2026 20:34:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1793133291;
+	bh=Jg3dAtp+gEQ8TJgbywQ+F/EtAoNNgFn4vT8jAZyRUok=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=kphSUMe8xZO6rGp9xO8f/rjEFu/r7wCNM3c6jrD8rDUGKiTSF94TxKwlDXlYBqiZi
+	 SQEaU4IuI/AQ53ts+WrWcdjvQ4NDB/l1FK8XJidqGjDaM2ylzQfWTQZ2ISml9+1Y23
+	 Y7r3gcTk+CG75BRPz7w+VzdZwU5OC+oD1JoRQx9YpyUn1bJrZQixaxsckkxi83HwNv
+	 4g6mvD5BFW83iN9g76/2TWnkq2OqbwpN5IAqGec0A66AcIOL1sDun9PlcKwWBtXoA2
+	 RRx+hHRidrSdou3de/7K5ERzhtpwbFDnu3ekDt36qXTRmsNo+TEpHQ4W932oE6bEXt
+	 mg0N4B3QDto6A==
+Date: Tue, 27 Oct 2026 17:34:48 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Ilkka Koskinen <ilkka@os.amperecomputing.com>
+Cc: TAKANO Mitsuhiro <takano32@gmail.com>, linux-perf-users@vger.kernel.org,
+	Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
+	John Garry <john.garry@linux.dev>
+Subject: Re: [PATCH] perf vendor events arm64 AmpereOneX: Drop stale
+ BPU_FLUSH_MEM_FAULT entry
+Message-ID: <auEK6E-jX12Bi8u_@phoenix2>
+References: <20261021224527.167637-1-takano32@gmail.com>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -77,323 +57,74 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.56.0.317.g454f8302e1-goog
-Message-ID: <20261027203115.2647914-1-ctshao@google.com>
-Subject: [PATCH v6] perf stat: Include PMU name and split uncore events per
- PMU in metric-only JSON output
-From: Chun-Tse Shao <ctshao@google.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	James Clark <james.clark@linaro.org>, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Chun-Tse Shao <ctshao@google.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20261021224527.167637-1-takano32@gmail.com>
 
-When running `perf stat` with `-A` (--no-aggr) and `--metric-only` in
-JSON output mode (`-j`), `perf stat` evaluates metric expressions
-across all matching PMUs (including uncore PMUs like `uncore_iio_0`,
-`uncore_iio_1`, etc.).
+On Wed, Oct 21, 2026 at 10:45:27PM +0000, TAKANO Mitsuhiro wrote:
+> AmpereOne carried BPU_FLUSH_MEM_FAULT for EventCode 0x121 until it was
+> renamed to GPC_FLUSH_MEM_FAULT in 10a149e4b4a9; that rename and the
+> AmpereOneX table were patches 3 and 4 of the same series, so the new file
+> kept the old name.
+> 
+> The result is a table that names the 0x121 counter twice:
+> ampereonex/core-imp-def.json has GPC_FLUSH_MEM_FAULT, and
+> ampereonex/memory.json adds BPU_FLUSH_MEM_FAULT with the same code and
+> the same description.  On AmpereOneX perf therefore lists two events for
+> one counter, one of them under a name the documentation does not use.
+> No metric and no other file refers to either name, so removing the stale
+> entry cannot change a metric.
+> 
+> It also leaves memory.json holding only the ArchStdEvent aliases the
+> other files of that kind carry: AmpereOne's memory.json has no raw
+> EventCode at all, and neither has any other file of the AmpereOneX set
+> except the ones where raw codes belong.
+ 
+> Nothing catches this at build time.  jevents.py asserts on duplicate
+> event names, but x86 repeats an EventCode for many events because the
+> code carries umask and unit bits (3756 times across its tables) and
+> powerpc repeats five codes, so a duplicate-code check is not possible.
+> arm64 is the only architecture where no table but this one repeats a
+> code.
 
-However, `perf stat` previously formatted JSON output by printing only
-"cpu" : "<id>" and grouping all metric values on a single line per CPU
-without identifying which PMU instance evaluated each metric. As a
-result, when an uncore event spans multiple PMU boxes, `perf stat`
-printed repeated, ambiguous metric keys without PMU names.
+Maybe a followup improvement to jevents.py?
+ 
+> Not tested on hardware: there is no AmpereOneX machine here, so perf was
+> not run against the real PMU.  The change only edits a JSON table; the
+> perf build was verified and the generated table for this PMU goes from
+> two names for 0x121 to one (rebuilt, counted in pmu-events.c).
 
-Fix this by:
-1. Including "pmu" : "<pmu_name>" in print_aggr_id_json when evsel->pmu
-   is a non-core or hybrid PMU in AGGR_NONE mode (-A). Tool events are
-   not labeled as they don't belong to a hardware PMU instance.
-2. Starting a new JSON metric line in AGGR_NONE mode (-A) whenever the
-   PMU name changes, so that a line only has metrics from the PMU it is
-   labeled with.
-3. Opening a metric line only for events that have a metric, as other
-   events print nothing in metric-only mode. This avoids spurious lines
-   like {"cpu" : "0", "pmu" : "tool"} for events like user_time, while
-   metrics on tool events, like tma_info_system_time (duration_time),
-   are still printed with the line prefix.
-4. Updating perf_json_output_lint.py to recognize the new "pmu" key in
-   the JSON test suite.
+Ilkka, can I have your Reviewed-by or Acked-by?
 
-Before the fix:
-  $ perf stat -M iio_bandwidth_read -a -A --metric-only -j -I 1000
-  {"interval" : 1.001017947, "cpu" : "0", "MB/s  iio_bandwidth_read" : "0.0=
-", "MB/s  iio_bandwidth_read" : "0.0", "MB/s  iio_bandwidth_read" : "22.5",=
- "MB/s  iio_bandwidth_read" : "0.0", "MB/s  iio_bandwidth_read" : "0.2", "M=
-B/s  iio_bandwidth_read" : "0.0", "MB/s  iio_bandwidth_read" : "0.0", "MB/s=
-  iio_bandwidth_read" : "0.0", "MB/s  iio_bandwidth_read" : "0.0", "MB/s  i=
-io_bandwidth_read" : "0.0"}
+Thanks,
 
-There is no way to determine which uncore device generated the metrics.
-
-After:
-  $ perf stat -M iio_bandwidth_read -a -A --metric-only -j -I 1000
-  {"interval" : 1.000314908, "cpu" : "0", "pmu" : "uncore_iio_0", "MB/s  ii=
-o_bandwidth_read" : "0.0"}
-  {"interval" : 1.000314908, "cpu" : "0", "pmu" : "uncore_iio_1", "MB/s  ii=
-o_bandwidth_read" : "0.1"}
-  {"interval" : 1.000314908, "cpu" : "0", "pmu" : "uncore_iio_11", "MB/s  i=
-io_bandwidth_read" : "0.0"}
-  ...
-  {"interval" : 1.000314908, "cpu" : "56", "pmu" : "uncore_iio_0", "MB/s  i=
-io_bandwidth_read" : "0.0"}
-  {"interval" : 1.000314908, "cpu" : "56", "pmu" : "uncore_iio_1", "MB/s  i=
-io_bandwidth_read" : "0.0"}
-  {"interval" : 1.000314908, "cpu" : "56", "pmu" : "uncore_iio_11", "MB/s  =
-iio_bandwidth_read" : "0.0"}
-
-Assisted-by: Gemini:gemini-3.1-pro-preview
-Signed-off-by: Chun-Tse Shao <ctshao@google.com>
----
-v6:
-  - Open metric lines for events that have a metric instead of skipping
-    tool events, so metrics on tool events (e.g. tma_info_system_time)
-    keep the line prefix and are terminated properly. (Sashiko)
-  - Split JSON lines only when the shown PMU name changes. Tool event
-    metrics are no longer mislabeled with an uncore PMU name, and the
-    STD and CSV output are no longer split.
-  - Rebase onto the latest perf-tools-next.
-v5: lore.kernel.org/20260811230518.3360-2-ctshao@google.com
-  - Fix perf test "perf stat JSON output linter" failure.
-v4: lore.kernel.org/20260804210659.112192-1-ctshao@google.com
-  - Fix the line splitting issue, causing spurious empty {"pmu": "tool"}
-    objects and order-dependent PMU mislabeling.
-v3: lore.kernel.org/20260729170416.41904-1-ctshao@google.com
-  - Add before the fix output.
-v2: lore.kernel.org/20260715203055.2981363-1-ctshao@google.com
-  - Fix print_metric_begin() initialization in print_no_aggr_metric()
-    to ensure tool events always open lines cleanly.
-
- .../tests/shell/lib/perf_json_output_lint.py  |  5 +-
- tools/perf/util/stat-display.c                | 74 ++++++++++++++++---
- 2 files changed, 66 insertions(+), 13 deletions(-)
-
-diff --git a/tools/perf/tests/shell/lib/perf_json_output_lint.py b/tools/pe=
-rf/tests/shell/lib/perf_json_output_lint.py
-index 8cde22ac9d97..982be893bd69 100644
---- a/tools/perf/tests/shell/lib/perf_json_output_lint.py
-+++ b/tools/perf/tests/shell/lib/perf_json_output_lint.py
-@@ -65,6 +65,7 @@ def check_json_output(expected_count):
-       'metricgroup': lambda x: True,
-       'node': lambda x: True,
-       'pcnt-running': isfloat,
-+      'pmu': lambda x: True,
-       'socket': lambda x: True,
-       'thread': lambda x: True,
-       'unit': lambda x: True,
-@@ -99,8 +100,10 @@ def check_json_output(expected_count):
- try:
-   if args.no_args or args.system_wide or args.event:
-     expected_items =3D [5, 7]
--  elif args.interval or args.per_thread or args.system_wide_no_aggr:
-+  elif args.interval or args.per_thread:
-     expected_items =3D [6, 8]
-+  elif args.system_wide_no_aggr:
-+    expected_items =3D [6, 7, 8, 9]
-   elif args.per_core or args.per_socket or args.per_node or args.per_die o=
-r args.per_cluster or args.per_cache:
-     expected_items =3D [7, 9]
-   elif args.metric_only:
-diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.=
-c
-index b337cc23f413..9f1d74019d1e 100644
---- a/tools/perf/util/stat-display.c
-+++ b/tools/perf/util/stat-display.c
-@@ -1,6 +1,7 @@
- #include <stdlib.h>
- #include <stdio.h>
- #include <inttypes.h>
-+#include <string.h>
- #include <linux/string.h>
- #include <linux/time64.h>
- #include <math.h>
-@@ -23,6 +24,7 @@
- #include "pmu.h"
- #include "pmus.h"
- #include "tool_pmu.h"
-+#include "metricgroup.h"
-=20
- #define CNTR_NOT_SUPPORTED	"<not supported>"
- #define CNTR_NOT_COUNTED	"<not counted>"
-@@ -361,9 +363,33 @@ static void print_aggr_id_csv(struct perf_stat_config =
-*config,
- 	}
- }
-=20
-+/*
-+ * In no-aggregation mode, JSON output includes the PMU name of non-core a=
-nd
-+ * hybrid events so that events and metrics from different PMU instances, =
-like
-+ * uncore_iio_0 and uncore_iio_1, can be told apart. Tool events don't bel=
-ong
-+ * to a hardware PMU instance and so are not labeled.
-+ */
-+static const char *json_pmu_name(const struct evsel *evsel)
-+{
-+	if (!evsel || !evsel->pmu || evsel__is_tool(evsel))
-+		return NULL;
-+	if (evsel->pmu->is_core && !evsel__is_hybrid(evsel))
-+		return NULL;
-+	return evsel->pmu->name;
-+}
-+
-+static bool json_pmu_name_changed(const char *name, const char *prev)
-+{
-+	if (!name || !prev)
-+		return name !=3D prev;
-+	return strcmp(name, prev) !=3D 0;
-+}
-+
- static void print_aggr_id_json(struct perf_stat_config *config, struct out=
-state *os,
- 			       struct evsel *evsel, struct aggr_cpu_id id, int aggr_nr)
- {
-+	const char *pmu_name;
-+
- 	switch (config->aggr_mode) {
- 	case AGGR_CORE:
- 		json_out(os, "\"core\" : \"S%d-D%d-C%d\", \"counters\" : %d",
-@@ -397,6 +423,9 @@ static void print_aggr_id_json(struct perf_stat_config =
-*config, struct outstate
- 			json_out(os, "\"cpu\" : \"%d\"",
- 				id.cpu.cpu);
- 		}
-+		pmu_name =3D json_pmu_name(evsel);
-+		if (pmu_name)
-+			json_out(os, "\"pmu\" : \"%s\"", pmu_name);
- 		break;
- 	case AGGR_THREAD:
- 		json_out(os, "\"thread\" : \"%s-%d\"",
-@@ -1012,11 +1041,12 @@ static void print_counter_aggrdata(struct perf_stat=
-_config *config,
-=20
- static void print_metric_begin(struct perf_stat_config *config,
- 			       struct evlist *evlist,
--			       struct outstate *os, int aggr_idx)
-+			       struct outstate *os, int aggr_idx,
-+			       struct evsel *counter)
- {
- 	struct perf_stat_aggr *aggr;
- 	struct aggr_cpu_id id;
--	struct evsel *evsel;
-+	struct evsel *evsel =3D counter ?: evlist__first(evlist);
-=20
- 	os->first =3D true;
- 	if (!config->metric_only)
-@@ -1031,7 +1061,6 @@ static void print_metric_begin(struct perf_stat_confi=
-g *config,
- 		else
- 			fprintf(config->output, "%s", os->timestamp);
- 	}
--	evsel =3D evlist__first(evlist);
- 	id =3D config->aggr_map->map[aggr_idx];
- 	aggr =3D &evsel->stats->aggr[aggr_idx];
- 	aggr_printout(config, os, evsel, id, aggr->nr);
-@@ -1069,7 +1098,7 @@ static void print_aggr(struct perf_stat_config *confi=
-g,
- 	 * Without each counter has its own line.
- 	 */
- 	cpu_aggr_map__for_each_idx(aggr_idx, config->aggr_map) {
--		print_metric_begin(config, evlist, os, aggr_idx);
-+		print_metric_begin(config, evlist, os, aggr_idx, NULL);
-=20
- 		evlist__for_each_entry(evlist, counter) {
- 			print_counter_aggrdata(config, counter, aggr_idx, os);
-@@ -1095,7 +1124,7 @@ static void print_aggr_cgroup(struct perf_stat_config=
- *config,
- 		os->cgrp =3D evsel->cgrp;
-=20
- 		cpu_aggr_map__for_each_idx(aggr_idx, config->aggr_map) {
--			print_metric_begin(config, evlist, os, aggr_idx);
-+			print_metric_begin(config, evlist, os, aggr_idx, NULL);
-=20
- 			evlist__for_each_entry(evlist, counter) {
- 				if (counter->cgrp !=3D os->cgrp)
-@@ -1131,7 +1160,8 @@ static void print_no_aggr_metric(struct perf_stat_con=
-fig *config,
-=20
- 	perf_cpu_map__for_each_cpu(cpu, all_idx, evlist__core(evlist)->user_reque=
-sted_cpus) {
- 		struct evsel *counter;
--		bool first =3D true;
-+		const char *line_pmu =3D NULL;
-+		bool line_open =3D false;
-=20
- 		evlist__for_each_entry(evlist, counter) {
- 			u64 ena, run, val;
-@@ -1146,12 +1176,32 @@ static void print_no_aggr_metric(struct perf_stat_c=
-onfig *config,
- 				if (config->aggr_map->map[aggr_idx].cpu.cpu =3D=3D cpu.cpu)
- 					break;
- 			}
-+			if (aggr_idx >=3D config->aggr_map->nr)
-+				continue;
-=20
- 			os->evsel =3D counter;
- 			os->id =3D aggr_cpu_id__cpu(cpu, /*data=3D*/NULL);
--			if (first) {
--				print_metric_begin(config, evlist, os, aggr_idx);
--				first =3D false;
-+
-+			/*
-+			 * Only events with a metric print something in metric-only
-+			 * mode, so let them open the line. For JSON, start a new
-+			 * line when the PMU name changes so that a line only has
-+			 * metrics from the PMU it is labeled with.
-+			 */
-+			if (config->iostat_run ||
-+			    metricgroup__lookup(evlist__metric_events(evlist), counter, false))=
- {
-+				const char *pmu_name =3D json_pmu_name(counter);
-+
-+				if (line_open && config->json_output &&
-+				    json_pmu_name_changed(pmu_name, line_pmu)) {
-+					print_metric_end(config, os);
-+					line_open =3D false;
-+				}
-+				if (!line_open) {
-+					print_metric_begin(config, evlist, os, aggr_idx, counter);
-+					line_pmu =3D pmu_name;
-+					line_open =3D true;
-+				}
- 			}
- 			val =3D ps->aggr[aggr_idx].counts.val;
- 			ena =3D ps->aggr[aggr_idx].counts.ena;
-@@ -1160,7 +1210,7 @@ static void print_no_aggr_metric(struct perf_stat_con=
-fig *config,
- 			uval =3D val * counter->scale;
- 			printout(config, os, uval, run, ena, 1.0, aggr_idx);
- 		}
--		if (!first)
-+		if (line_open)
- 			print_metric_end(config, os);
- 	}
- }
-@@ -1523,7 +1573,7 @@ static void print_cgroup_counter(struct perf_stat_con=
-fig *config, struct evlist
- 				print_metric_end(config, os);
-=20
- 			os->cgrp =3D counter->cgrp;
--			print_metric_begin(config, evlist, os, /*aggr_idx=3D*/0);
-+			print_metric_begin(config, evlist, os, /*aggr_idx=3D*/0, NULL);
- 		}
-=20
- 		print_counter(config, counter, os);
-@@ -1573,7 +1623,7 @@ void evlist__print_counters(struct evlist *evlist, st=
-ruct perf_stat_config *conf
- 		} else if (config->cgroup_list) {
- 			print_cgroup_counter(config, evlist, &os);
- 		} else {
--			print_metric_begin(config, evlist, &os, /*aggr_idx=3D*/0);
-+			print_metric_begin(config, evlist, &os, /*aggr_idx=3D*/0, NULL);
- 			evlist__for_each_entry(evlist, counter) {
- 				print_counter(config, counter, &os);
- 			}
---=20
-2.56.0.317.g454f8302e1-goog
-
+- Arnaldo
+ 
+> Fixes: 16438b652b46 ("perf vendor events arm64 AmpereOneX: Add core PMU events and metrics")
+> Assisted-by: LLM
+> Signed-off-by: TAKANO Mitsuhiro <takano32@gmail.com>
+> ---
+>  .../pmu-events/arch/arm64/ampere/ampereonex/memory.json     | 6 ------
+>  1 file changed, 6 deletions(-)
+> 
+> diff --git a/tools/perf/pmu-events/arch/arm64/ampere/ampereonex/memory.json b/tools/perf/pmu-events/arch/arm64/ampere/ampereonex/memory.json
+> index 6c06bc928415..2a83782f51b0 100644
+> --- a/tools/perf/pmu-events/arch/arm64/ampere/ampereonex/memory.json
+> +++ b/tools/perf/pmu-events/arch/arm64/ampere/ampereonex/memory.json
+> @@ -33,11 +33,5 @@
+>      },
+>      {
+>          "ArchStdEvent": "MEM_ACCESS_CHECKED_WR"
+> -    },
+> -    {
+> -        "PublicDescription": "Flushes due to memory hazards",
+> -        "EventCode": "0x121",
+> -        "EventName": "BPU_FLUSH_MEM_FAULT",
+> -        "BriefDescription": "Flushes due to memory hazards"
+>      }
+>  ]
+> 
+> base-commit: f47d223627f80cb7a1eb14c585fe6cb35de5e984
+> -- 
+> 2.53.0
